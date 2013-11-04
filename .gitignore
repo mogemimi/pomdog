@@ -1,4 +1,4 @@
-﻿*.a
+*.a
 *.exe
 *.filters
 *.lib
@@ -20,3 +20,8 @@
 /build/lib/
 /tools/gyp
 /tools/python
+
+# PyCharm
+.idea/
+build/.idea/
+tools/.idea/
