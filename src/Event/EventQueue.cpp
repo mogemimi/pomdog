@@ -42,22 +42,6 @@ EventQueue::Impl::Impl()
 	: slots(std::move(std::make_shared<EventSlotCollection>()))
 {}
 //-----------------------------------------------------------------------
-EventQueue::EventQueue()
-	: impl(new Impl())
-{}
-//-----------------------------------------------------------------------
-EventQueue::~EventQueue()
-{}
-//-----------------------------------------------------------------------
-EventConnection EventQueue::Connect(std::function<void(Event const&)> const& slot)
-{
-	POMDOG_ASSERT(slot);
-	POMDOG_ASSERT(impl);
-	POMDOG_ASSERT(impl->slots);
-
-	return impl->slots->Connect(slot);
-}
-//-----------------------------------------------------------------------
 void EventQueue::Impl::EnqueueEvent(std::shared_ptr<Event const> const& event)
 {
 	POMDOG_ASSERT(event);
@@ -83,6 +67,22 @@ void EventQueue::Impl::Tick()
 		POMDOG_ASSERT(event);
 		slots->Trigger(*event);
 	});
+}
+//-----------------------------------------------------------------------
+EventQueue::EventQueue()
+	: impl(new Impl())
+{}
+//-----------------------------------------------------------------------
+EventQueue::~EventQueue()
+{}
+//-----------------------------------------------------------------------
+EventConnection EventQueue::Connect(std::function<void(Event const&)> const& slot)
+{
+	POMDOG_ASSERT(slot);
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->slots);
+
+	return impl->slots->Connect(slot);
 }
 //-----------------------------------------------------------------------
 void EventQueue::Enqueue(std::shared_ptr<Event const> const& event)
