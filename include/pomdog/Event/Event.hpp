@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -15,7 +15,7 @@
 
 #include "../Utility/Assert.hpp"
 #include "detail/EventArguments.hpp"
-#include "EventCategoryID.hpp"
+#include "EventCode.hpp"
 #include <type_traits>
 #include <utility>
 #include <memory>
@@ -29,7 +29,7 @@ namespace Pomdog {
 class Event: public std::enable_shared_from_this<Event>
 {
 public:
-	explicit Event(EventCategoryID const& categoryID);
+	explicit Event(EventCode const& categoryID);
 
 	Event() = delete;
 	Event(Event const&) = delete;
@@ -41,7 +41,7 @@ public:
 	//Event& operator=(Event &&) = default;
 
 	template <typename T>
-	Event(EventCategoryID const& categoryID, T && arguments)
+	Event(EventCode const& categoryID, T && arguments)
 		: categoryID (categoryID)
 	{
 		static_assert(std::is_object<typename std::remove_reference<T>::type>::value, "T is object type.");
@@ -60,7 +60,7 @@ public:
 		data = std::move(std::unique_ptr<Container>(new Container(std::forward<T>(arguments))));
 	}
 
-	EventCategoryID const& GetCategoryID() const;
+	EventCode const& GetCategoryID() const;
 
 	template <class T>
 	bool Has() const
@@ -97,7 +97,7 @@ public:
 	}
 
 private:
-	EventCategoryID const categoryID;
+	EventCode const categoryID;
 	std::unique_ptr<Details::EventArguments> data;
 };
 

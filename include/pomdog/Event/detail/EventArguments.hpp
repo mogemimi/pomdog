@@ -29,8 +29,8 @@ namespace Details {
 ///		float x, y;
 ///	};
 ///
-///	auto a = std::make_shared<Event>(EventCategoryID());
-///	auto b = std::make_shared<Event>(EventCategoryID(), CollisionEvent{1234, 3.0f, 4.0f});
+///	auto a = std::make_shared<Event>(EventCode());
+///	auto b = std::make_shared<Event>(EventCode(), CollisionEvent{1234, 3.0f, 4.0f});
 ///
 ///	std::cout << "arguments in a: " << a->Has<CollisionEvent>() << std::endl;
 ///	std::cout << "arguments in b: " << b->Has<CollisionEvent>() << std::endl;

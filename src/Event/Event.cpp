@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -10,11 +10,11 @@
 
 namespace Pomdog {
 
-Event::Event(EventCategoryID const& categoryID)
+Event::Event(EventCode const& categoryID)
 	: categoryID (categoryID)
 {}
 //-----------------------------------------------------------------------
-EventCategoryID const& Event::GetCategoryID() const
+EventCode const& Event::GetCategoryID() const
 {
 	return categoryID;
 }

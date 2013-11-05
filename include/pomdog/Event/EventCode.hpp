@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_EVENTCATEGORYID_H
-#define POMDOG_EVENTCATEGORYID_H
+#ifndef POMDOG_EVENTCODE_H
+#define POMDOG_EVENTCODE_H
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -21,15 +21,15 @@ namespace Details {
 
 namespace Tags
 {
-	struct EventCategoryID {};
+	struct EventCode {};
 }// namespace Tags
 
 }// namespace Details
 
 typedef Details::Tagged<
-	std::uint32_t, Details::Tags::EventCategoryID
-> EventCategoryID;
+	std::uint32_t, Details::Tags::EventCode
+> EventCode;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EVENTCATEGORYID_H)
+#endif // !defined(POMDOG_EVENTCODE_H)
