@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include "../Core/FundamentalTypes.hpp"
+#include "../Config/FundamentalTypes.hpp"
 
 namespace Pomdog {
 

@@ -33,10 +33,11 @@
         '../include',
       ],
       'sources': [
-        '../include/pomdog/Core/Assert.hpp',
-        '../include/pomdog/Core/FundamentalTypes.hpp',
-        '../include/pomdog/Core/Platform.hpp',
+        '../include/pomdog/Config/FundamentalTypes.hpp',
+        '../include/pomdog/Config/Platform.hpp',
         '../include/pomdog/Math/Color.hpp',
+        '../include/pomdog/Utility/Assert.hpp',
+        '../include/pomdog/Utility/Noncopyable.hpp',
         '../src/Math/Color.cpp',
       ],
       'xcode_settings': {

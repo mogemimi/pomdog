@@ -7,7 +7,7 @@
 //
 
 #include <pomdog/Math/Color.hpp>
-#include <pomdog/Core/Assert.hpp>
+#include <pomdog/Utility/Assert.hpp>
 #include <type_traits>
 
 namespace Pomdog {

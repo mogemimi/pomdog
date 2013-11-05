@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include "Platform.hpp"
+#include "../Config/Platform.hpp"
 #include <cassert>
 
 #if defined(POMDOG_COMPILER_MSVC)
