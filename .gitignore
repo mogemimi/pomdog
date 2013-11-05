@@ -13,10 +13,9 @@
 *.xcodeproj
 .DS_Store
 /out/
+/build.xcodefiles
 /build/Debug
 /build/Release
-/build/build
-/build/xcodefiles
 /build/lib/
 /tools/gyp
 /tools/python
