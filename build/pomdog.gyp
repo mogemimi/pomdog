@@ -38,6 +38,7 @@
         '../include/pomdog/Math/Color.hpp',
         '../include/pomdog/Utility/Assert.hpp',
         '../include/pomdog/Utility/Noncopyable.hpp',
+        '../include/pomdog/Utility/detail/Tagged.hpp',
         '../src/Math/Color.cpp',
       ],
       'xcode_settings': {
