@@ -26,7 +26,9 @@ namespace Tags
 
 }// namespace Details
 
-typedef Details::Tagged<std::uint32_t,  Details::Tags::EventCategoryID> EventCategoryID;
+typedef Details::Tagged<
+	std::uint32_t, Details::Tags::EventCategoryID
+> EventCategoryID;
 
 }// namespace Pomdog
 

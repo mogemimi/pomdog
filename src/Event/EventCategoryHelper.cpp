@@ -37,3 +37,12 @@ EventCategoryID EventCategoryHelper::CreateCategoryID(std::string const& categor
 }
 
 }// namespace Pomdog
+//-----------------------------------------------------------------------
+namespace std {
+
+std::string to_string(Pomdog::EventCategoryID const& categoryID)
+{
+	return std::to_string(categoryID.value);
+}
+
+}// namespace std

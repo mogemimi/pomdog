@@ -9,33 +9,24 @@
 #include <iostream>
 #include <pomdog/Math/Color.hpp>
 #include <pomdog/Event/EventCategoryHelper.hpp>
-
-namespace Pomdog {
-namespace Details {
-
-}// namespace Details
-}// namespace Pomdog
+#include <pomdog/Event/Event.hpp>
+#include <pomdog/Event/EventConnection.hpp>
+#include <pomdog/Event/EventQueue.hpp>
 
 int main()
 {
-	for (auto i = 0; i < 3; ++i) {
-		auto id = Pomdog::EventCategoryHelper::CreateCategoryID("trivial event");
-		std::cout << "trivial event => " << id.value << std::endl;
-	}
+	using namespace Pomdog;
+
+	EventQueue queue;
 	
-	auto id = Pomdog::EventCategoryHelper::CreateCategoryID("Trivial Event");
-	std::cout << "Trivial Event => " << id.value << std::endl;
+	auto connection = queue.Connect([](Event const& event){
+		std::cout << "Hello, world." << std::to_string(event.GetCategoryID()) << std::endl;
+	});
 	
-	id = Pomdog::EventCategoryHelper::CreateCategoryID("trivial_event");
-	std::cout << "trivial_event => " << id.value << std::endl;
-
-	Pomdog::Color color {1, 1, 1, 1};
-
-	std::cout << color.r << ", " << color.g << ", " << color.b << std::endl;
-	std::cout << "Hello, world." << std::endl;
-
-	char a;
-	std::cin >> a;
+	auto event = std::make_shared<Event>(EventCategoryID(1234));
+	
+	queue.Enqueue(event);
+	queue.Tick();
 
 	return 0;
 }

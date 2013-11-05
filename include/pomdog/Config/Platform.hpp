@@ -18,9 +18,7 @@ namespace Details {
 
 /// @addtogroup Framework
 /// @{
-/// @addtogroup Core
-/// @{
-/// @addtogroup Preprocessor
+/// @addtogroup Config
 /// @{
 
 //----------------------------
@@ -247,7 +245,6 @@ namespace Details {
 #	define POMDOG_DEBUG
 #endif
 
-/// @}
 /// @}
 /// @}
 

@@ -35,4 +35,10 @@ struct EventCategoryHelper
 
 }// namespace Pomdog
 
+namespace std {
+
+std::string to_string(Pomdog::EventCategoryID const& categoryID);
+
+}// namespace std
+
 #endif // !defined(POMDOG_EVENTCATEGORYHELPER_H)

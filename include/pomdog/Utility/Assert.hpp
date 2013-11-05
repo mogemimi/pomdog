@@ -25,7 +25,7 @@ namespace Details {
 
 /// @addtogroup Framework
 /// @{
-/// @addtogroup Core
+/// @addtogroup Utility
 /// @{
 /// @addtogroup Preprocessor
 /// @{
