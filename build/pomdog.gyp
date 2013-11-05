@@ -35,11 +35,17 @@
       'sources': [
         '../include/pomdog/Config/FundamentalTypes.hpp',
         '../include/pomdog/Config/Platform.hpp',
+        '../include/pomdog/Event/EventCategoryHelper.hpp',
+        '../include/pomdog/Event/EventCategoryID.hpp',
         '../include/pomdog/Math/Color.hpp',
         '../include/pomdog/Utility/Assert.hpp',
         '../include/pomdog/Utility/Noncopyable.hpp',
         '../include/pomdog/Utility/detail/Tagged.hpp',
+        '../src/Event/EventCategoryHelper.cpp',
         '../src/Math/Color.cpp',
+        '../src/Utility/CRC32.cpp',
+        '../src/Utility/CRC32.hpp',
+        '../src/Utility/HashingHelper.hpp',
       ],
       'xcode_settings': {
         'OTHER_CPLUSPLUSFLAGS': ['-std=c++11','-stdlib=libc++'],
