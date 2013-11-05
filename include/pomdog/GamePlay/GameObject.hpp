@@ -50,9 +50,9 @@ namespace Pomdog {
 /// 水陸両用の乗り物を定義する場合は、GameObject に VehicleComponent と BoatComponent を追加します。
 ///
 /// コンポーネントを用いれば MovableObject といったインターフェイスを定義する必要はありません。
-/// GameEntity に Transform コンポーネントを追加するだけで済みます。
+/// GameObject に Transform コンポーネントを追加するだけで済みます。
 /// 最初に例をあげた設計は、is-a の関係を使っています。
-/// それに対し、コンポーネントとコンポーネントのハブとなるエンティティの場合 has-a の関係になります。
+/// それに対し、コンポーネントとコンポーネントのハブとなるゲームオブジェクトの場合 has-a の関係になります。
 /// 疎結合のため、より柔軟なゲーム内オブジェクトを定義することが可能です。
 class GameObject: Noncopyable
 {

@@ -64,6 +64,7 @@
         '../src/Utility/CRC32.cpp',
         '../src/Utility/CRC32.hpp',
         '../src/Utility/HashingHelper.hpp',
+        '../src/Utility/ScopeGuard.hpp',
       ],
       'xcode_settings': {
         'OTHER_CPLUSPLUSFLAGS': ['-std=c++11','-stdlib=libc++'],
