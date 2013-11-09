@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_RADIAN_H
-#define POMDOG_RADIAN_H
+#ifndef POMDOG_RADIAN_HPP
+#define POMDOG_RADIAN_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -62,4 +62,4 @@ class Radian: public Details::TaggedArithmetic<T, Details::Tags::radian_tag, std
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_RADIAN_H)
+#endif // !defined(POMDOG_RADIAN_HPP)

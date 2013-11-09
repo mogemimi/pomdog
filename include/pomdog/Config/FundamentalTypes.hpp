@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_FUNDAMENTALTYPES_H
-#define POMDOG_FUNDAMENTALTYPES_H
+#ifndef POMDOG_FUNDAMENTALTYPES_HPP
+#define POMDOG_FUNDAMENTALTYPES_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -48,4 +48,4 @@ namespace Details {
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_FUNDAMENTALTYPES_H)
+#endif // !defined(POMDOG_FUNDAMENTALTYPES_HPP)

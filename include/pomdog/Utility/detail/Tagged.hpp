@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_DETAIL_TAGGED_H
-#define POMDOG_DETAIL_TAGGED_H
+#ifndef POMDOG_DETAIL_TAGGED_HPP
+#define POMDOG_DETAIL_TAGGED_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -83,4 +83,4 @@ struct hash<Pomdog::Details::Tagged<T, U>>
 
 }// namespace std
 
-#endif // !defined(POMDOG_DETAIL_TAGGED_H)
+#endif // !defined(POMDOG_DETAIL_TAGGED_HPP)

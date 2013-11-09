@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_DEGREE_H
-#define POMDOG_DEGREE_H
+#ifndef POMDOG_DEGREE_HPP
+#define POMDOG_DEGREE_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -60,4 +60,4 @@ struct Degree : public Details::TaggedArithmetic<T, Details::Tags::degree_tag, s
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DEGREE_H)
+#endif // !defined(POMDOG_DEGREE_HPP)

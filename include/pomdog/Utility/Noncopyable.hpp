@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_NONCOPYABLE_H
-#define POMDOG_NONCOPYABLE_H
+#ifndef POMDOG_NONCOPYABLE_HPP
+#define POMDOG_NONCOPYABLE_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -47,4 +47,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_NONCOPYABLE_H)
+#endif // !defined(POMDOG_NONCOPYABLE_HPP)

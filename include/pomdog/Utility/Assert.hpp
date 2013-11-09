@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_ASSERT_H
-#define POMDOG_ASSERT_H
+#ifndef POMDOG_ASSERT_HPP
+#define POMDOG_ASSERT_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -80,4 +80,4 @@ namespace Details {
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_ASSERT_H)
+#endif // !defined(POMDOG_ASSERT_HPP)

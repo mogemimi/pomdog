@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_LOGENTRY_H
-#define POMDOG_LOGENTRY_H
+#ifndef POMDOG_LOGENTRY_HPP
+#define POMDOG_LOGENTRY_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -55,4 +55,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_LOGENTRY_H)
+#endif // !defined(POMDOG_LOGENTRY_HPP)

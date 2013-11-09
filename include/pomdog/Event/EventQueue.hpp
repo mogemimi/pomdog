@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_EVENTQUEUE_H
-#define POMDOG_EVENTQUEUE_H
+#ifndef POMDOG_EVENTQUEUE_HPP
+#define POMDOG_EVENTQUEUE_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -40,4 +40,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EVENTQUEUE_H)
+#endif // !defined(POMDOG_EVENTQUEUE_HPP)

@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_PIXEL_H
-#define POMDOG_PIXEL_H
+#ifndef POMDOG_PIXEL_HPP
+#define POMDOG_PIXEL_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -59,4 +59,4 @@ struct Pixel : public Details::TaggedArithmetic<T, Details::Tags::pixel_tag>
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_PIXEL_H)
+#endif // !defined(POMDOG_PIXEL_HPP)

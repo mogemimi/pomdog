@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_LOGGINGLEVEL_H
-#define POMDOG_LOGGINGLEVEL_H
+#ifndef POMDOG_LOGGINGLEVEL_HPP
+#define POMDOG_LOGGINGLEVEL_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -54,4 +54,4 @@ enum class LoggingLevel: std::uint16_t
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_LOGGINGLEVEL_H)
+#endif // !defined(POMDOG_LOGGINGLEVEL_HPP)

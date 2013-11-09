@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_PLATFORM_H
-#define POMDOG_PLATFORM_H
+#ifndef POMDOG_PLATFORM_HPP
+#define POMDOG_PLATFORM_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -263,4 +263,4 @@ namespace Details {
 #	endif
 #endif // defined(POMDOG_PLATFORM_WIN32)
 
-#endif // !defined(POMDOG_PLATFORM_H)
+#endif // !defined(POMDOG_PLATFORM_HPP)

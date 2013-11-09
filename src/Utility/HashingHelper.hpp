@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_HASHINGHELPER_H
-#define POMDOG_HASHINGHELPER_H
+#ifndef POMDOG_HASHINGHELPER_HPP
+#define POMDOG_HASHINGHELPER_HPP
 
 #include <pomdog/Config/FundamentalTypes.hpp>
 #include "CRC32.hpp"
@@ -32,4 +32,4 @@ struct HashingHelper
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_HASHINGHELPER_H)
+#endif // !defined(POMDOG_HASHINGHELPER_HPP)

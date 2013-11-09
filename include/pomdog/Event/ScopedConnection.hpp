@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_SCOPEDCONNECTION_H
-#define POMDOG_SCOPEDCONNECTION_H
+#ifndef POMDOG_SCOPEDCONNECTION_HPP
+#define POMDOG_SCOPEDCONNECTION_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -63,4 +63,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SCOPEDCONNECTION_H)
+#endif // !defined(POMDOG_SCOPEDCONNECTION_HPP)

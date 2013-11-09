@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_TAGGEDARITHMETIC_H
-#define POMDOG_TAGGEDARITHMETIC_H
+#ifndef POMDOG_TAGGEDARITHMETIC_HPP
+#define POMDOG_TAGGEDARITHMETIC_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -202,4 +202,4 @@ public:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_TAGGEDARITHMETIC_H)
+#endif // !defined(POMDOG_TAGGEDARITHMETIC_HPP)

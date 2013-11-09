@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_SCOPEGUARD_H
-#define POMDOG_SCOPEGUARD_H
+#ifndef POMDOG_SCOPEGUARD_HPP
+#define POMDOG_SCOPEGUARD_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -45,4 +45,4 @@ private:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SCOPEGUARD_H)
+#endif // !defined(POMDOG_SCOPEGUARD_HPP)

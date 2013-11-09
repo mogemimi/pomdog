@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_COLOR_H
-#define POMDOG_COLOR_H
+#ifndef POMDOG_COLOR_HPP
+#define POMDOG_COLOR_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -109,4 +109,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_COLOR_H)
+#endif // !defined(POMDOG_COLOR_HPP)

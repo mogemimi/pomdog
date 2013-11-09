@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_EVENTCODEHELPER_H
-#define POMDOG_EVENTCODEHELPER_H
+#ifndef POMDOG_EVENTCODEHELPER_HPP
+#define POMDOG_EVENTCODEHELPER_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -41,4 +41,4 @@ struct EventCodeHelper
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EventCodeHelper_H)
+#endif // !defined(POMDOG_EventCodeHelper_HPP)

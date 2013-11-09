@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_GAMEOBJECT_H
-#define POMDOG_GAMEOBJECT_H
+#ifndef POMDOG_GAMEOBJECT_HPP
+#define POMDOG_GAMEOBJECT_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -191,4 +191,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_GAMEOBJECT_H)
+#endif // !defined(POMDOG_GAMEOBJECT_HPP)
