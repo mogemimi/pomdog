@@ -25,7 +25,7 @@ if (arg_count <= 2) and (arg_count < 3):
 elif (arg_count <= 3):
 	include_guard_element += argvs[2]
 	
-include_guard_element += "_H"
+include_guard_element += "_HPP"
 	
 include_guard_begin = "#ifndef " + include_guard_element + "\n" + "#define " + include_guard_element + "\n" +"""
 #if (_MSC_VER > 1000)

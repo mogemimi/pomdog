@@ -42,3 +42,16 @@ TEST(SecondTestCase, ColorTest)
 	EXPECT_EQ(Color::TransparentBlack, Color(0.0f, 0.0f, 0.0f, 0.0f));
 	EXPECT_EQ(Color::CornflowerBlue,   Color(100.0f/255, 149.0f/255, 237.0f/255, 1.0f));
 }
+
+TEST(DoubleColor, ColorTest)
+{
+	typedef Pomdog::Details::FloatingPointColor<double> Color;
+	EXPECT_EQ(Color::Black,  Color(0, 0, 0, 1));
+	EXPECT_EQ(Color::White,  Color(1, 1, 1, 1));
+	EXPECT_EQ(Color::Red,    Color(1, 0, 0, 1));
+	EXPECT_EQ(Color::Green,  Color(0, 1, 0, 1));
+	EXPECT_EQ(Color::Blue,   Color(0, 0, 1, 1));
+	EXPECT_EQ(Color::Yellow, Color(1, 1, 0, 1));
+	EXPECT_EQ(Color::TransparentBlack, Color(0, 0, 0, 0));
+	EXPECT_EQ(Color::CornflowerBlue,   Color(100.0/255, 149.0/255, 237.0/255, 1));
+}

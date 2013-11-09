@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_TAGGEDARITHMETIC_HPP
-#define POMDOG_TAGGEDARITHMETIC_HPP
+#ifndef POMDOG_DETAIL_TAGGEDARITHMETIC_HPP
+#define POMDOG_DETAIL_TAGGEDARITHMETIC_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
