@@ -31,39 +31,42 @@ namespace Details {
 template <typename T>
 class FloatingPointColor
 {
-private:
-	static_assert(std::is_floating_point<T>::value, "T is floating point number");
-	static std::size_t const static_size = 4;
-
 public:
+	static_assert(std::is_floating_point<T>::value, "T is floating point number");
+
 	T r, g, b, a;
 
 public:
 	FloatingPointColor() = default;
-	virtual ~FloatingPointColor() = default;
-
+	FloatingPointColor(FloatingPointColor const&) = default;
+	FloatingPointColor(FloatingPointColor &&) = default;
+	
 	FloatingPointColor(T red, T green, T blue, T alpha);
 
+	virtual ~FloatingPointColor() = default;
+
 	// assignment operators
-	FloatingPointColor & operator += (FloatingPointColor const&);
-	FloatingPointColor & operator -= (FloatingPointColor const&);
-	FloatingPointColor & operator *= (T);
-	FloatingPointColor & operator /= (T);
+	FloatingPointColor & operator=(FloatingPointColor const&) = default;
+	FloatingPointColor & operator=(FloatingPointColor &&) = default;
+	FloatingPointColor & operator+=(FloatingPointColor const&);
+	FloatingPointColor & operator-=(FloatingPointColor const&);
+	FloatingPointColor & operator*=(T);
+	FloatingPointColor & operator/=(T);
 
 	// unary operators
-	FloatingPointColor operator + () const;
-	FloatingPointColor operator - () const;
+	FloatingPointColor operator+() const;
+	FloatingPointColor operator-() const;
 
 	// binary operators
-	FloatingPointColor operator + (FloatingPointColor const&) const;
-	FloatingPointColor operator - (FloatingPointColor const&) const;
-	FloatingPointColor operator * (T) const;
-	FloatingPointColor operator / (T) const;
+	FloatingPointColor operator+(FloatingPointColor const&) const;
+	FloatingPointColor operator-(FloatingPointColor const&) const;
+	FloatingPointColor operator*(T) const;
+	FloatingPointColor operator/(T) const;
 
 	friend FloatingPointColor operator*(T, FloatingPointColor const&);
 
-	bool operator == (FloatingPointColor const&) const;
-	bool operator != (FloatingPointColor const&) const;
+	bool operator==(FloatingPointColor const&) const;
+	bool operator!=(FloatingPointColor const&) const;
 
 	///@~Japanese
 	/// @brief 各要素の値を設定します。

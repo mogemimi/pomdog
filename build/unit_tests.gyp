@@ -48,6 +48,7 @@
       'sources': [
         '../test/FrameworkTest/main.cpp',
         '../test/FrameworkTest/Math/ColorTest.cpp',
+        '../test/FrameworkTest/Math/Vector2Test.cpp',
       ],
       'xcode_settings': {
         'OTHER_CPLUSPLUSFLAGS': ['-std=c++11','-stdlib=libc++'],
