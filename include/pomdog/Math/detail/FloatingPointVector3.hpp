@@ -46,9 +46,14 @@ public:
 public:
 	// Constructors:
 	FloatingPointVector3() = default;
+	
+	///@brief Copy constructor.
 	FloatingPointVector3(FloatingPointVector3 const&) = default;
+	
+	///@brief Move constructor.
 	FloatingPointVector3(FloatingPointVector3 &&) = default;
 	
+	///@brief Construct from floating-point values.
 	FloatingPointVector3(T x, T y, T z);
 	FloatingPointVector3(FloatingPointVector2<T> const& vec, T z);
 	

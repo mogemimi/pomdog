@@ -39,9 +39,14 @@ public:
 public:
 	// Constructors:
 	FloatingPointColor() = default;
+	
+	///@brief Copy constructor.
 	FloatingPointColor(FloatingPointColor const&) = default;
+	
+	///@brief Move constructor.
 	FloatingPointColor(FloatingPointColor &&) = default;
 	
+	///@brief Construct from floating-point values.
 	FloatingPointColor(T red, T green, T blue, T alpha);
 
 	virtual ~FloatingPointColor() = default;

@@ -43,11 +43,16 @@ public:
 public:
 	// Constructors:
 	FloatingPointVector4() = default;
+	
+	///@brief Copy constructor.
 	FloatingPointVector4(FloatingPointVector4 const&) = default;
+	
+	///@brief Move constructor.
 	FloatingPointVector4(FloatingPointVector4 &&) = default;
 
-	FloatingPointVector4(FloatingPointVector3<T> const& xyz, T w);
+	///@brief Construct from floating-point values.
 	FloatingPointVector4(T x, T y, T z, T w);
+	FloatingPointVector4(FloatingPointVector3<T> const& xyz, T w);
 	
 	virtual ~FloatingPointVector4() = default;
 

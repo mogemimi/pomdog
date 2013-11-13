@@ -1,4 +1,4 @@
-//
+﻿//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_DETAIL_FLOATINGPOINTMATRIX4X4_HPP
-#define POMDOG_DETAIL_FLOATINGPOINTMATRIX4X4_HPP
+#ifndef POMDOG_DETAIL_FLOATINGPOINTMATRIX3X3_HPP
+#define POMDOG_DETAIL_FLOATINGPOINTMATRIX3X3_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -28,25 +28,25 @@ namespace Details {
 ///@~Japanese
 /// @brief 4x4 の浮動小数点数の行列を定義します。
 template <typename T>
-class FloatingPointMatrix4x4
+class FloatingPointMatrix3x3
 {
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");
 	typedef T value_type;
 	
-	std::array<std::array<T, 4>, 4> m;
+	std::array<std::array<T, 3>, 3> m;
 
 public:
 	// Constructors:
-	FloatingPointMatrix4x4() = default;
-	FloatingPointMatrix4x4(FloatingPointMatrix4x4 const&) = default;
-	FloatingPointMatrix4x4(FloatingPointMatrix4x4 &&) = default;
+	FloatingPointMatrix3x3() = default;
+	FloatingPointMatrix3x3(FloatingPointMatrix3x3 const&) = default;
+	FloatingPointMatrix3x3(FloatingPointMatrix3x3 &&) = default;
 	
-	virtual ~FloatingPointMatrix4x4() = default;
+	virtual ~FloatingPointMatrix3x3() = default;
 	
 	// Assignment operators:
-	FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 const&) = default;
-	FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 &&) = default;
+	FloatingPointMatrix3x3 & operator=(FloatingPointMatrix3x3 const&) = default;
+	FloatingPointMatrix3x3 & operator=(FloatingPointMatrix3x3 &&) = default;
 };
 
 /// @}
@@ -55,4 +55,4 @@ public:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DETAIL_FLOATINGPOINTMATRIX4X4_HPP)
+#endif // !defined(POMDOG_DETAIL_FLOATINGPOINTMATRIX3X3_HPP)
