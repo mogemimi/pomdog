@@ -168,43 +168,42 @@ FloatingPointVector3<T> FloatingPointVector3<T>::operator/(T scaleFactor) const
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> operator+(T left, FloatingPointVector3<T> const& right)
+FloatingPointVector3<T> operator+(T scaleFactor, FloatingPointVector3<T> const& vec)
 {
 	return FloatingPointVector3<T>(
-		left + right.x,
-		left + right.y,
-		left + right.z
+		scaleFactor + vec.x,
+		scaleFactor + vec.y,
+		scaleFactor + vec.z
 	);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> operator-(T left, FloatingPointVector3<T> const& right)
+FloatingPointVector3<T> operator-(T scaleFactor, FloatingPointVector3<T> const& vec)
 {
 	return FloatingPointVector3<T>(
-		left - right.x,
-		left - right.y,
-		left - right.z
+		scaleFactor - vec.x,
+		scaleFactor - vec.y,
+		scaleFactor - vec.z
 	);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> operator*(T left, FloatingPointVector3<T> const& right)
+FloatingPointVector3<T> operator*(T scaleFactor, FloatingPointVector3<T> const& vec)
 {
 	return FloatingPointVector3<T>(
-		left * right.x,
-		left * right.y,
-		left * right.z
+		scaleFactor * vec.x,
+		scaleFactor * vec.y,
+		scaleFactor * vec.z
 	);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T>
-operator / (T left, FloatingPointVector3<T> const& right)
+FloatingPointVector3<T> operator/(T scaleFactor, FloatingPointVector3<T> const& vec)
 {
 	return FloatingPointVector3<T>(
-		left / right.x,
-		left / right.y,
-		left / right.z
+		scaleFactor / vec.x,
+		scaleFactor / vec.y,
+		scaleFactor / vec.z
 	);
 }
 //-----------------------------------------------------------------------
@@ -308,7 +307,7 @@ FloatingPointVector3<T>::SmoothStep(FloatingPointVector3 const& a, FloatingPoint
 template <typename T>
 void FloatingPointVector3<T>::Normalize()
 {
-	(*this) = Normalize(*this);
+	*this = Normalize(*this);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -327,7 +326,8 @@ void FloatingPointVector3<T>::Normalize(FloatingPointVector3 const& source, Floa
 
 	if (length > std::numeric_limits<decltype(length)>::epsilon())
 	{
-		auto const inverseLength = static_cast<T>(1) / length;
+		constexpr T One = 1;
+		auto const inverseLength = One / length;
 		result.x = source.x * inverseLength;
 		result.y = source.y * inverseLength;
 		result.z = source.z * inverseLength;

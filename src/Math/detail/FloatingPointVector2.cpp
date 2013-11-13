@@ -127,51 +127,33 @@ bool FloatingPointVector2<T>::operator!=(FloatingPointVector2 const& other) cons
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T
-FloatingPointVector2<T>::Length() const
+T FloatingPointVector2<T>::Length() const
 {
 	return std::sqrt(x * x + y * y);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T
-FloatingPointVector2<T>::LengthSquared() const
+T FloatingPointVector2<T>::LengthSquared() const
 {
 	return x * x + y * y;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T
-FloatingPointVector2<T>::Distance(FloatingPointVector2 const& a, FloatingPointVector2 const& b)
+T FloatingPointVector2<T>::Distance(FloatingPointVector2 const& a, FloatingPointVector2 const& b)
 {
 	return (a - b).Length();
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T
-FloatingPointVector2<T>::Dot(FloatingPointVector2 const& a, FloatingPointVector2 const& b)
+T FloatingPointVector2<T>::Dot(FloatingPointVector2 const& a, FloatingPointVector2 const& b)
 {
 	return a.x * b.x + a.y * b.y;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-void
-FloatingPointVector2<T>::Normalize()
+void FloatingPointVector2<T>::Normalize()
 {
-	auto const length = Length();
-
-	if (length > std::numeric_limits<decltype(length)>::epsilon())
-	{
-		POMDOG_ASSERT(length != static_cast<T>(0));
-		auto const InverseLength = static_cast<T>(1) / length;
-		x *= InverseLength;
-		y *= InverseLength;
-		return;
-	}
-	else {
-		x = static_cast<T>(0);
-		y = static_cast<T>(0);
-	}
+	*this = Normalize(*this);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -191,14 +173,12 @@ FloatingPointVector2<T>::Normalize(FloatingPointVector2 const& source, FloatingP
 
 	if (length > std::numeric_limits<decltype(length)>::epsilon())
 	{
-		POMDOG_ASSERT(length != static_cast<T>(0));
-		auto const InverseLength = static_cast<T>(1) / length;
+		constexpr T One = 1;
+		auto const InverseLength = One / length;
 		result.x = source.x * InverseLength;
 		result.y = source.y * InverseLength;
 		return;
 	}
-	result.x = static_cast<T>(0);
-	result.y = static_cast<T>(0);
 }
 //-----------------------------------------------------------------------
 template <typename T>

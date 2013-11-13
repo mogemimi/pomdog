@@ -50,6 +50,7 @@
         '../test/FrameworkTest/Math/ColorTest.cpp',
         '../test/FrameworkTest/Math/Vector2Test.cpp',
         '../test/FrameworkTest/Math/Vector3Test.cpp',
+        '../test/FrameworkTest/Math/Vector4Test.cpp',
       ],
       'xcode_settings': {
         'OTHER_CPLUSPLUSFLAGS': ['-std=c++11','-stdlib=libc++'],

@@ -49,6 +49,7 @@
         '../include/pomdog/Math/Degree.hpp',
         '../include/pomdog/Math/Vector2.hpp',
         '../include/pomdog/Math/Vector3.hpp',
+        '../include/pomdog/Math/Vector4.hpp',
         '../include/pomdog/Math/MathHelper.hpp',
         '../include/pomdog/Math/Pixel.hpp',
         '../include/pomdog/Math/Radian.hpp',

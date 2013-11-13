@@ -41,8 +41,6 @@ public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");
 	typedef T value_type;
 
-	static std::size_t const static_size = 3;
-
 	T x, y, z;
 
 public:
