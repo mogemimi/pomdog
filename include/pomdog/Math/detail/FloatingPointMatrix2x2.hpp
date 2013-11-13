@@ -33,11 +33,12 @@ class FloatingPointMatrix2x2
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");
 	typedef T value_type;
-	
+		
+	std::array<std::array<T, 2>, 2> m;
+
+private:
 	constexpr std::size_t RowSize(){ return 2; };
 	constexpr std::size_t ColumnSize(){ return 2; };
-	
-	std::array<std::array<T, 2>, 2> m;
 
 public:
 	// Constructors:
@@ -57,7 +58,6 @@ public:
 	// Assignment operators:
 	///@brief Assignment.
 	FloatingPointMatrix2x2 & operator=(FloatingPointMatrix2x2 const&) = default;
-	
 	///@brief Move assignment.
 	FloatingPointMatrix2x2 & operator=(FloatingPointMatrix2x2 &&) = default;
 	
@@ -68,7 +68,7 @@ public:
 	FloatingPointMatrix2x2 & operator/=(T scaleFactor);
 	
 	// Unary operators:
-	FloatingPointMatrix2x2 operator + () const;
+	FloatingPointMatrix2x2 operator+() const;
 	FloatingPointMatrix2x2 operator-() const;
 
 	// Binary operators:
@@ -78,7 +78,7 @@ public:
 	FloatingPointMatrix2x2 operator*(T scaleFactor) const;
 	FloatingPointMatrix2x2 operator/(T scaleFactor) const;
 	
-	friend FloatingPointMatrix2x2 operator*(T, FloatingPointMatrix2x2 const& other);
+	friend FloatingPointMatrix2x2 operator*(T scaleFactor, FloatingPointMatrix2x2 const& matrix);
 
 	bool operator==(FloatingPointMatrix2x2 const& other) const;
 	bool operator!=(FloatingPointMatrix2x2 const& other) const;

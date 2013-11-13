@@ -31,7 +31,7 @@ struct radian_tag {};
 /// @{
 
 template <typename T>
-using Radian = Details::TaggedArithmetic<T, Details::Tags::radian_tag, std::is_floating_point<T>::value>;
+using Radian = Details::TaggedArithmetic<T, Details::Tags::radian_tag>;
 
 /// @}
 /// @}

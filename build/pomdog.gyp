@@ -51,7 +51,6 @@
         '../include/pomdog/Math/Matrix2x2.hpp',
         '../include/pomdog/Math/Matrix3x3.hpp',
         '../include/pomdog/Math/Matrix4x4.hpp',
-        '../include/pomdog/Math/Pixel.hpp',
         '../include/pomdog/Math/Radian.hpp',
         '../include/pomdog/Math/Vector2.hpp',
         '../include/pomdog/Math/Vector3.hpp',

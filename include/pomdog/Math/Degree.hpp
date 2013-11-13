@@ -31,7 +31,7 @@ struct degree_tag {};
 /// @{
 
 template <typename T>
-using Degree = Details::TaggedArithmetic<T, Details::Tags::degree_tag, std::is_floating_point<T>::value>;
+using Degree = Details::TaggedArithmetic<T, Details::Tags::degree_tag>;
 
 /// @}
 /// @}

@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include "../Config/FundamentalTypes.hpp"
-#include "../Utility/Assert.hpp"
+#include "../../Config/FundamentalTypes.hpp"
+#include "../../Utility/Assert.hpp"
 #include <type_traits>
 
 namespace Pomdog {
@@ -25,6 +25,14 @@ namespace Details {
 /// @addtogroup Math
 /// @{
 
+///@code
+/// struct pixel_tag {};
+///
+/// template <typename T>
+/// using Pixel = TaggedArithmetic<T, pixel_tag>;
+///
+/// Pixel<int> pixel = 32; // 32px
+///@endcode
 template <typename T, class PhantomType>
 class TaggedArithmetic
 {
