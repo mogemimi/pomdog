@@ -1,4 +1,4 @@
-//
+﻿//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,10 +6,10 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <iutest/iutest.hpp>
+#include "MathHelper.hpp"
 
-int main(int argc, char** argv)
-{
-    IUTEST_INIT(&argc, argv);
-    return IUTEST_RUN_ALL_TESTS();
-}
+namespace Pomdog {
+namespace Details {
+
+}// namespace Details
+}// namespace Pomdog

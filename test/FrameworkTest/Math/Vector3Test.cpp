@@ -7,17 +7,19 @@
 //
 
 #include <iutest/gtest/iutest_switch.hpp>
-#include <pomdog/Math/Vector2.hpp>
+#include <pomdog/Math/Vector3.hpp>
 
-TEST(TrivialCase, Vector2Test)
+TEST(TrivialCase, Vector3Test)
 {
-	using Pomdog::Vector2;
+	using Pomdog::Vector3;
 	
-	Vector2 vec {0, 0};
+	Vector3 vec {0, 0, 0};
 	EXPECT_EQ(vec.x, 0.0f);
 	EXPECT_EQ(vec.y, 0.0f);
+	EXPECT_EQ(vec.z, 0.0f);
 	
-	vec = {1, 2};
+	vec = {1, 2, 3};
 	EXPECT_EQ(vec.x, 1.0f);
 	EXPECT_EQ(vec.y, 2.0f);
+	EXPECT_EQ(vec.z, 3.0f);
 }

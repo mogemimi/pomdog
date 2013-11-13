@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2013 the Pomdog Engine authors.
+//  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
 //  See accompanying file LICENSE.md or copy at
@@ -36,13 +36,14 @@ public:
 	T x, y, z, w;
 
 public:
+	// Constructors:
 	FloatingPointQuaternion() = default;
 	FloatingPointQuaternion(FloatingPointQuaternion const&) = default;
 	FloatingPointQuaternion(FloatingPointQuaternion &&) = default;
 	
 	virtual ~FloatingPointQuaternion() = default;
 	
-	// assignment operators
+	// Assignment operators:
 	FloatingPointQuaternion & operator=(FloatingPointQuaternion const&) = default;
 	FloatingPointQuaternion & operator=(FloatingPointQuaternion &&) = default;
 };

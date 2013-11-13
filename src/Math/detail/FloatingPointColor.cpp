@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2013 the Pomdog Engine authors.
+//  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
 //  See accompanying file LICENSE.md or copy at
@@ -8,6 +8,7 @@
 
 #include <pomdog/Math/detail/FloatingPointColor.hpp>
 #include <pomdog/Utility/Assert.hpp>
+#include <pomdog/Math/MathHelper.hpp>
 
 namespace Pomdog {
 namespace Details {
@@ -149,25 +150,14 @@ void FloatingPointColor<T>::Set(T red, T green, T blue, T alpha)
 	this->b = blue;
 	this->a = alpha;
 }
-//-----------------------------------------------------------------------
-template <typename T>
-static T SaturateImpl(T x)
-{
-	static_assert(std::is_floating_point<T>::value, "");
-	if (x < static_cast<T>(0))
-		return static_cast<T>(0);
-	else if (x > static_cast<T>(1))
-		return static_cast<T>(1);
-	return x;
-}
 //-------------------------------------------------------------------
 template <typename T>
 void FloatingPointColor<T>::Saturate()
 {
-	r = SaturateImpl(r);
-	g = SaturateImpl(g);
-	b = SaturateImpl(b);
-	a = SaturateImpl(a);
+	r = MathHelper::Saturate(r);
+	g = MathHelper::Saturate(g);
+	b = MathHelper::Saturate(b);
+	a = MathHelper::Saturate(a);
 }
 //-----------------------------------------------------------------------
 template <typename T>

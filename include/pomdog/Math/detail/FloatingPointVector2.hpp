@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2013 the Pomdog Engine authors.
+//  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
 //  See accompanying file LICENSE.md or copy at
@@ -44,6 +44,7 @@ public:
 	T x, y;
 
 public:
+	// Constructors:
 	FloatingPointVector2() = default;
 	FloatingPointVector2(FloatingPointVector2 const&) = default;
 	FloatingPointVector2(FloatingPointVector2 &&) = default;
@@ -52,7 +53,7 @@ public:
 	
 	virtual ~FloatingPointVector2() = default;
 	
-	// assignment operators
+	// Assignment operators:
 	FloatingPointVector2 & operator=(FloatingPointVector2 const&) = default;
 	FloatingPointVector2 & operator=(FloatingPointVector2 &&) = default;
 	FloatingPointVector2 & operator+=(FloatingPointVector2 const&);
@@ -60,11 +61,11 @@ public:
 	FloatingPointVector2 & operator*=(T);
 	FloatingPointVector2 & operator/=(T);
 
-	// unary operators
+	// Unary operators:
 	FloatingPointVector2 operator+() const;
 	FloatingPointVector2 operator-() const;
 
-	// binary operators
+	// Binary operators:
 	FloatingPointVector2 operator+(FloatingPointVector2 const&) const;
 	FloatingPointVector2 operator-(FloatingPointVector2 const&) const;
 	FloatingPointVector2 operator*(FloatingPointVector2 const&) const;
@@ -79,7 +80,7 @@ public:
 	bool operator==(FloatingPointVector2 const& other) const;
 	bool operator!=(FloatingPointVector2 const& other) const;
 
-	// products, length, and normalize
+	// Products, length, and normalize:
 	
 	///@~Japanese
 	/// @brief ベクトルの長さを計算します。

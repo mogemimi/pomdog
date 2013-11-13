@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2013 the Pomdog Engine authors.
+//  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
 //  See accompanying file LICENSE.md or copy at
@@ -37,6 +37,7 @@ public:
 	T r, g, b, a;
 
 public:
+	// Constructors:
 	FloatingPointColor() = default;
 	FloatingPointColor(FloatingPointColor const&) = default;
 	FloatingPointColor(FloatingPointColor &&) = default;
@@ -45,7 +46,7 @@ public:
 
 	virtual ~FloatingPointColor() = default;
 
-	// assignment operators
+	// Assignment operators:
 	FloatingPointColor & operator=(FloatingPointColor const&) = default;
 	FloatingPointColor & operator=(FloatingPointColor &&) = default;
 	FloatingPointColor & operator+=(FloatingPointColor const&);
@@ -53,11 +54,11 @@ public:
 	FloatingPointColor & operator*=(T);
 	FloatingPointColor & operator/=(T);
 
-	// unary operators
+	// Unary operators:
 	FloatingPointColor operator+() const;
 	FloatingPointColor operator-() const;
 
-	// binary operators
+	// Binary operators:
 	FloatingPointColor operator+(FloatingPointColor const&) const;
 	FloatingPointColor operator-(FloatingPointColor const&) const;
 	FloatingPointColor operator*(T) const;

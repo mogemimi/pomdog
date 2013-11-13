@@ -34,14 +34,20 @@ public:
 	T value;
 
 public:
+	// Constructors:
 	TaggedArithmetic() = default;
+	TaggedArithmetic(TaggedArithmetic const&) = default;
+	TaggedArithmetic(TaggedArithmetic &&) = default;
 
 	explicit TaggedArithmetic(T v)
 		: value(v){};
 
 	virtual ~TaggedArithmetic() = default;
 
-	// assignment operators
+	// Assignment operators:
+	TaggedArithmetic & operator=(TaggedArithmetic const&) = default;
+	TaggedArithmetic & operator=(TaggedArithmetic &&) = default;
+
 	TaggedArithmetic& operator+=(TaggedArithmetic const& v)
 	{
 		value += v.value;
@@ -80,7 +86,7 @@ public:
 		return *this;
 	}
 
-	// unary operators
+	// Unary operators:
 	TaggedArithmetic operator+() const
 	{
 		return TaggedArithmetic(+value);
@@ -91,7 +97,7 @@ public:
 		return TaggedArithmetic(-value);
 	}
 
-	// binary operators
+	// Binary operators:
 	TaggedArithmetic operator+(TaggedArithmetic const& v) const
 	{
 		return TaggedArithmetic(value + v.value);

@@ -1,5 +1,5 @@
-﻿//
-//  Copyright (C) 2013 the Pomdog Engine authors.
+//
+//  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
 //  See accompanying file LICENSE.md or copy at
@@ -30,32 +30,11 @@ struct pixel_tag {};
 /// @addtogroup Math
 /// @{
 
-#if !defined(_MSC_VER) || (_MSC_VER >= 1800)
-//
-// C++11 (Templates aliases supported)
-//
 template <typename T>
 using Pixel = Details::TaggedArithmetic<T, Details::Tags::pixel_tag>;
 
-#else
-//
-// C++03 (Templates aliases not supported)
-// See also:
-// http://msdn.microsoft.com/en-us/library/hh567368.aspx
-//
-template <typename T>
-struct Pixel : public Details::TaggedArithmetic<T, Details::Tags::pixel_tag>
-{
-	Pixel(){};
-	explicit Pixel(T v): TaggedArithmetic(v){}
-
-	Pixel(TaggedArithmetic const & v): TaggedArithmetic(v){}
-
-	Pixel & operator=(TaggedArithmetic const & v)
-		{ value += v.value; return *this; }
-};
-
-#endif // !defined(_MSC_VER)
+/// @}
+/// @}
 
 }// namespace Pomdog
 

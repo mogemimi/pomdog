@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2013 the Pomdog Engine authors.
+//  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
 //  See accompanying file LICENSE.md or copy at
@@ -37,13 +37,14 @@ public:
 	std::array<std::array<T, 4>, 4> m;
 
 public:
+	// Constructors:
 	FloatingPointMatrix4x4() = default;
 	FloatingPointMatrix4x4(FloatingPointMatrix4x4 const&) = default;
 	FloatingPointMatrix4x4(FloatingPointMatrix4x4 &&) = default;
 	
 	virtual ~FloatingPointMatrix4x4() = default;
 	
-	// assignment operators
+	// Assignment operators:
 	FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 const&) = default;
 	FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 &&) = default;
 };
