@@ -101,9 +101,9 @@ public:
 	bool operator != (FloatingPointMatrix3x3 const& other) const;
 	
 	// Function-call operators:
-	T & operator()(std::size_t row, std::size_t column);
 	T const& operator()(std::size_t row, std::size_t column) const;
-	
+	T & operator()(std::size_t row, std::size_t column);
+
 	// Subscript operators:
 	///@brief Array-indexing support.
 	std::array<T, 3> const& operator[](std::size_t row) const;
