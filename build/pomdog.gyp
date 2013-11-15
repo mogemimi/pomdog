@@ -85,6 +85,7 @@
         '../src/Math/detail/FloatingPointMatrix2x2.cpp',
         '../src/Math/detail/FloatingPointMatrix3x3.cpp',
         '../src/Math/detail/FloatingPointMatrix4x4.cpp',
+        '../src/Math/detail/FloatingPointQuaternion.cpp',
         '../src/Math/detail/FloatingPointVector2.cpp',
         '../src/Math/detail/FloatingPointVector3.cpp',
         '../src/Math/detail/FloatingPointVector4.cpp',
