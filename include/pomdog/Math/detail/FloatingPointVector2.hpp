@@ -76,11 +76,10 @@ public:
 	FloatingPointVector2 operator*(FloatingPointVector2 const&) const;
 	FloatingPointVector2 operator/(FloatingPointVector2 const&) const;
 	
-	FloatingPointVector2 operator*(T) const;
-	FloatingPointVector2 operator/(T) const;
+	FloatingPointVector2 operator*(T scaleFactor) const;
+	FloatingPointVector2 operator/(T scaleFactor) const;
 
-	friend FloatingPointVector2 operator*(T, FloatingPointVector2 const&);
-	friend FloatingPointVector2 operator/(T, FloatingPointVector2 const&);
+	friend FloatingPointVector2 operator*(T scaleFactor, FloatingPointVector2 const&);
 
 	bool operator==(FloatingPointVector2 const& other) const;
 	bool operator!=(FloatingPointVector2 const& other) const;

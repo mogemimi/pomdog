@@ -78,18 +78,6 @@ FloatingPointVector2<T> FloatingPointVector2<T>::operator/(T scaleFactor) const
 	return FloatingPointVector2(this->x / scaleFactor, this->y / scaleFactor);
 }
 //-----------------------------------------------------------------------
-template <typename T> 
-FloatingPointVector2<T> operator*(T scaleFactor, FloatingPointVector2<T> const& other)
-{
-	return FloatingPointVector2<T>(scaleFactor * other.x, scaleFactor * other.y);
-}
-//-----------------------------------------------------------------------
-template <typename T> 
-FloatingPointVector2<T> operator/(T scaleFactor, FloatingPointVector2<T> const& other)
-{
-	return FloatingPointVector2<T>(scaleFactor / other.x, scaleFactor / other.y);
-}
-//-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T> FloatingPointVector2<T>::operator+(FloatingPointVector2 const& other) const
 {
@@ -118,6 +106,12 @@ template <typename T>
 bool FloatingPointVector2<T>::operator==(FloatingPointVector2 const& other) const
 {
 	return this->x == other.x && this->y == other.y;
+}
+//-----------------------------------------------------------------------
+template <typename T> 
+FloatingPointVector2<T> operator*(T scaleFactor, FloatingPointVector2<T> const& vector)
+{
+	return FloatingPointVector2<T>(scaleFactor * vector.x, scaleFactor * vector.y);
 }
 //-----------------------------------------------------------------------
 template <typename T>

@@ -198,16 +198,6 @@ FloatingPointVector3<T> operator*(T scaleFactor, FloatingPointVector3<T> const& 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> operator/(T scaleFactor, FloatingPointVector3<T> const& vec)
-{
-	return FloatingPointVector3<T>(
-		scaleFactor / vec.x,
-		scaleFactor / vec.y,
-		scaleFactor / vec.z
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
 bool FloatingPointVector3<T>::operator==(FloatingPointVector3 const& other) const
 {
 	return (x == other.x && y == other.y && z == other.z);

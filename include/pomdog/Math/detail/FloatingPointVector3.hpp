@@ -77,15 +77,14 @@ public:
 	FloatingPointVector3 operator*(FloatingPointVector3 const&) const;
 	FloatingPointVector3 operator/(FloatingPointVector3 const&) const;
 	
-	FloatingPointVector3 operator+(T) const;
-	FloatingPointVector3 operator-(T) const;
-	FloatingPointVector3 operator*(T) const;
-	FloatingPointVector3 operator/(T) const;
+	FloatingPointVector3 operator+(T scaleFactor) const;
+	FloatingPointVector3 operator-(T scaleFactor) const;
+	FloatingPointVector3 operator*(T scaleFactor) const;
+	FloatingPointVector3 operator/(T scaleFactor) const;
 
-	friend FloatingPointVector3 operator+(T, FloatingPointVector3 const&);
-	friend FloatingPointVector3 operator-(T, FloatingPointVector3 const&);
-	friend FloatingPointVector3 operator*(T, FloatingPointVector3 const&);
-	friend FloatingPointVector3 operator/(T, FloatingPointVector3 const&);
+	friend FloatingPointVector3 operator+(T scaleFactor, FloatingPointVector3 const&);
+	friend FloatingPointVector3 operator-(T scaleFactor, FloatingPointVector3 const&);
+	friend FloatingPointVector3 operator*(T scaleFactor, FloatingPointVector3 const&);
 
 	bool operator==(FloatingPointVector3 const& other) const;
 	bool operator!=(FloatingPointVector3 const& other) const;

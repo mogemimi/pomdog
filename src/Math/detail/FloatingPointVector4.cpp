@@ -200,17 +200,6 @@ FloatingPointVector4<T> operator*(T scaleFactor, FloatingPointVector4<T> const& 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector4<T> operator/(T scaleFactor, FloatingPointVector4<T> const& vec)
-{
-	return FloatingPointVector4<T>(
-		scaleFactor / vec.x,
-		scaleFactor / vec.y,
-		scaleFactor / vec.z,
-		scaleFactor / vec.w
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
 bool FloatingPointVector4<T>::operator==(FloatingPointVector4 const& other) const
 {
 	return (x == other.x && y == other.y && z == other.z && w == other.w);

@@ -82,7 +82,6 @@ public:
 	friend FloatingPointVector4 operator+(T scaleFactor, FloatingPointVector4 const&);
 	friend FloatingPointVector4 operator-(T scaleFactor, FloatingPointVector4 const&);
 	friend FloatingPointVector4 operator*(T scaleFactor, FloatingPointVector4 const&);
-	friend FloatingPointVector4 operator/(T scaleFactor, FloatingPointVector4 const&);
 
 	bool operator == (FloatingPointVector4 const& other) const;
 	bool operator != (FloatingPointVector4 const& other) const;
