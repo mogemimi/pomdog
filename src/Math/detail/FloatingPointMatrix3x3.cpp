@@ -20,6 +20,13 @@ namespace Details {
 
 //-----------------------------------------------------------------------
 template <typename T>
+FloatingPointMatrix3x3<T> const FloatingPointMatrix3x3<T>::Identity(
+	1, 0, 0,
+	0, 1, 0,
+	0, 0, 1
+);
+//-----------------------------------------------------------------------
+template <typename T>
 FloatingPointMatrix3x3<T>::FloatingPointMatrix3x3(
 	T m00, T m01, T m02, 
 	T m10, T m11, T m12, 
@@ -372,34 +379,10 @@ FloatingPointMatrix3x3<T>::Invert(FloatingPointMatrix3x3 const& matrix)
 }
 //-----------------------------------------------------------------------
 template <typename T>
-void
-FloatingPointMatrix3x3<T>::CreateIdentity(FloatingPointMatrix3x3 & result)
-{	
-	result.m[0][0] = 1;
-	result.m[0][1] = 0;
-	result.m[0][2] = 0;
-	result.m[1][0] = 0;
-	result.m[1][1] = 1;
-	result.m[1][2] = 0;
-	result.m[2][0] = 0;
-	result.m[2][1] = 0;
-	result.m[2][2] = 1;
-}
-//-----------------------------------------------------------------------
-template <typename T>
-FloatingPointMatrix3x3<T>
-FloatingPointMatrix3x3<T>::CreateIdentity()
-{
-	FloatingPointMatrix3x3 result;
-	CreateIdentity(result);
-	return result;
-}
-//-----------------------------------------------------------------------
-template <typename T>
 FloatingPointMatrix3x3<T>
 FloatingPointMatrix3x3<T>::CreateTranslation(FloatingPointVector2<T> const& position, FloatingPointMatrix3x3 & result)
 {
-	CreateIdentity(result);
+	result = Identity;
 	result[2][0] = position.x;
 	result[2][1] = position.y;
 }
@@ -446,18 +429,18 @@ void
 FloatingPointMatrix3x3<T>::CreateRotationX(Radian<T> const& angle, FloatingPointMatrix3x3 & result)
 {
 	static_assert(std::is_same<T, decltype(angle.value)>::value, "The angle value is T");
-	auto const sin_angle = std::sin(angle.value);
-	auto const cos_angle = std::cos(angle.value);
+	auto const sinAngle = std::sin(angle.value);
+	auto const cosAngle = std::cos(angle.value);
 
 	result.m[0][0] = 1;
 	result.m[0][1] = 0;
 	result.m[0][2] = 0;
 	result.m[1][0] = 0;
-	result.m[1][1] = cos_angle;
-	result.m[1][2] = sin_angle;
+	result.m[1][1] = cosAngle;
+	result.m[1][2] = sinAngle;
 	result.m[2][0] = 0;
-	result.m[2][1] = -sin_angle;
-	result.m[2][2] = cos_angle;
+	result.m[2][1] = -sinAngle;
+	result.m[2][2] = cosAngle;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -474,18 +457,18 @@ void
 FloatingPointMatrix3x3<T>::CreateRotationY(Radian<T> const& angle, FloatingPointMatrix3x3 & result)
 {
 	static_assert(std::is_same<T, decltype(angle.value)>::value, "The angle value is T");
-	auto const sin_angle = std::sin(angle.value);
-	auto const cos_angle = std::cos(angle.value);
+	auto const sinAngle = std::sin(angle.value);
+	auto const cosAngle = std::cos(angle.value);
 
-	result.m[0][0] = cos_angle;
+	result.m[0][0] = cosAngle;
 	result.m[0][1] = 0;
-	result.m[0][2] = -sin_angle;
+	result.m[0][2] = -sinAngle;
 	result.m[1][0] = 0;
 	result.m[1][1] = 1;
 	result.m[1][2] = 0;
-	result.m[2][0] = sin_angle;
+	result.m[2][0] = sinAngle;
 	result.m[2][1] = 0;
-	result.m[2][2] = cos_angle;		
+	result.m[2][2] = cosAngle;		
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -502,14 +485,14 @@ void
 FloatingPointMatrix3x3<T>::CreateRotationZ(Radian<T> const& angle, FloatingPointMatrix3x3 & result)
 {
 	static_assert(std::is_same<T, decltype(angle.value)>::value, "angle is T");
-	auto const sin_angle = std::sin(angle.value);
-	auto const cos_angle = std::cos(angle.value);
+	auto const sinAngle = std::sin(angle.value);
+	auto const cosAngle = std::cos(angle.value);
 
-	result.m[0][0] = cos_angle;
-	result.m[0][1] = sin_angle;
+	result.m[0][0] = cosAngle;
+	result.m[0][1] = sinAngle;
 	result.m[0][2] = 0;
-	result.m[1][0] = -sin_angle;
-	result.m[1][1] = cos_angle;
+	result.m[1][0] = -sinAngle;
+	result.m[1][1] = cosAngle;
 	result.m[1][2] = 0;
 	result.m[2][0] = 0;
 	result.m[2][1] = 0;
@@ -590,10 +573,10 @@ FloatingPointMatrix3x3<T>
 FloatingPointMatrix3x3<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& axis,
 	Radian<T> const& angle, FloatingPointMatrix3x3 & result)
 {
-	auto const sin_angle = std::sin(angle.value);
-	auto const cos_angle = std::cos(angle.value);
+	auto const sinAngle = std::sin(angle.value);
+	auto const cosAngle = std::cos(angle.value);
 	
-	auto const t  = static_cast<T>(1) - cos_angle;
+	auto const t  = static_cast<T>(1) - cosAngle;
 	auto const xx = axis.x * axis.x;
 	auto const yy = axis.y * axis.y;
 	auto const zz = axis.z * axis.z;
@@ -603,15 +586,15 @@ FloatingPointMatrix3x3<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& ax
 
 	//axis.Normalize();
 
-	result.m[0][0] = t * xx + cos_angle;
-	result.m[0][1] = t * xy + sin_angle * axis.z;
-	result.m[0][2] = t * xz - sin_angle * axis.y;
-	result.m[1][0] = t * xy - sin_angle * axis.z;
-	result.m[1][1] = t * yy + cos_angle;
-	result.m[1][2] = t * yz + sin_angle * axis.x;
-	result.m[2][0] = t * xz + sin_angle * axis.y;
-	result.m[2][1] = t * yz - sin_angle * axis.x;
-	result.m[2][2] = t * zz + cos_angle;
+	result.m[0][0] = t * xx + cosAngle;
+	result.m[0][1] = t * xy + sinAngle * axis.z;
+	result.m[0][2] = t * xz - sinAngle * axis.y;
+	result.m[1][0] = t * xy - sinAngle * axis.z;
+	result.m[1][1] = t * yy + cosAngle;
+	result.m[1][2] = t * yz + sinAngle * axis.x;
+	result.m[2][0] = t * xz + sinAngle * axis.y;
+	result.m[2][1] = t * yz - sinAngle * axis.x;
+	result.m[2][2] = t * zz + cosAngle;
 }
 //-----------------------------------------------------------------------
 template <typename T>

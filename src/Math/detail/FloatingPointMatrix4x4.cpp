@@ -19,6 +19,15 @@ namespace Details {
 
 //-----------------------------------------------------------------------
 template <typename T>
+FloatingPointMatrix4x4<T> const
+FloatingPointMatrix4x4<T>::Identity(
+	1, 0, 0, 0,
+	0, 1, 0, 0,
+	0, 0, 1, 0,
+	0, 0, 0, 1
+);
+//-----------------------------------------------------------------------
+template <typename T>
 FloatingPointMatrix4x4<T>::FloatingPointMatrix4x4(
 	T m00, T m01, T m02, T m03,
 	T m10, T m11, T m12, T m13,
@@ -466,35 +475,34 @@ FloatingPointMatrix4x4<T>::Invert(FloatingPointMatrix4x4 const& source)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::CreateIdentity(FloatingPointMatrix4x4 & result)
+FloatingPointMatrix4x4<T>::Lerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2,
+	T amount, FloatingPointMatrix4x4 & result)
 {
-	result.m[0][0] = 1;
-	result.m[0][1] = 0;
-	result.m[0][2] = 0;
-	result.m[0][3] = 0;
-	
-	result.m[1][0] = 0;
-	result.m[1][1] = 1;
-	result.m[1][2] = 0;
-	result.m[1][3] = 0;
-	
-	result.m[2][0] = 0;
-	result.m[2][1] = 0;
-	result.m[2][2] = 1;
-	result.m[2][3] = 0;
-	
-	result.m[3][0] = 0;
-	result.m[3][1] = 0;
-	result.m[3][2] = 0;
-	result.m[3][3] = 1;
+	result.m[0][0] = source1.m[0][0] + ((source2.m[0][0] - source1.m[0][0]) * amount);
+	result.m[0][1] = source1.m[0][1] + ((source2.m[0][1] - source1.m[0][1]) * amount);
+	result.m[0][2] = source1.m[0][2] + ((source2.m[0][2] - source1.m[0][2]) * amount);
+	result.m[0][3] = source1.m[0][3] + ((source2.m[0][3] - source1.m[0][3]) * amount);
+	result.m[1][0] = source1.m[1][0] + ((source2.m[1][0] - source1.m[1][0]) * amount);
+	result.m[1][1] = source1.m[1][1] + ((source2.m[1][1] - source1.m[1][1]) * amount);
+	result.m[1][2] = source1.m[1][2] + ((source2.m[1][2] - source1.m[1][2]) * amount);
+	result.m[1][3] = source1.m[1][3] + ((source2.m[1][3] - source1.m[1][3]) * amount);
+	result.m[2][0] = source1.m[2][0] + ((source2.m[2][0] - source1.m[2][0]) * amount);
+	result.m[2][1] = source1.m[2][1] + ((source2.m[2][1] - source1.m[2][1]) * amount);
+	result.m[2][2] = source1.m[2][2] + ((source2.m[2][2] - source1.m[2][2]) * amount);
+	result.m[2][3] = source1.m[2][3] + ((source2.m[2][3] - source1.m[2][3]) * amount);
+	result.m[3][0] = source1.m[3][0] + ((source2.m[3][0] - source1.m[3][0]) * amount);
+	result.m[3][1] = source1.m[3][1] + ((source2.m[3][1] - source1.m[3][1]) * amount);
+	result.m[3][2] = source1.m[3][2] + ((source2.m[3][2] - source1.m[3][2]) * amount);
+	result.m[3][3] = source1.m[3][3] + ((source2.m[3][3] - source1.m[3][3]) * amount);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateIdentity()
+FloatingPointMatrix4x4<T>::Lerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2,
+	T amount)
 {
 	FloatingPointMatrix4x4 result;
-	CreateIdentity(result);
+	Lerp(source1, source2, amount, result);
 	return result;
 }
 //-----------------------------------------------------------------------
@@ -502,7 +510,7 @@ template <typename T>
 void
 FloatingPointMatrix4x4<T>::CreateTranslation(FloatingPointVector3<T> const& position, FloatingPointMatrix4x4 & result)
 {
-	CreateIdentity(result);
+	result = Identity;
 	result.m[3][0] = position.x;
 	result.m[3][1] = position.y;
 	result.m[3][2] = position.z;
@@ -521,7 +529,7 @@ template <typename T>
 void
 FloatingPointMatrix4x4<T>::CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix4x4 & result)
 {
-	CreateIdentity(result);
+	result = Identity;
 	result.m[0][0] = scale.x;
 	result.m[1][1] = scale.y;
 	result.m[2][2] = scale.z;
@@ -540,14 +548,14 @@ template <typename T>
 void
 FloatingPointMatrix4x4<T>::CreateRotationX(Radian<T> const& angle, FloatingPointMatrix4x4 & result)
 {
-	CreateIdentity(result);
-	auto const sin_angle = std::sin(angle.value);
-	auto const cos_angle = std::cos(angle.value);
+	result = Identity;
+	auto const sinAngle = std::sin(angle.value);
+	auto const cosAngle = std::cos(angle.value);
 
-	result.m[1][1] = cos_angle;
-	result.m[1][2] = sin_angle;
-	result.m[2][1] = -sin_angle;
-	result.m[2][2] = cos_angle;
+	result.m[1][1] = cosAngle;
+	result.m[1][2] = sinAngle;
+	result.m[2][1] = -sinAngle;
+	result.m[2][2] = cosAngle;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -563,14 +571,14 @@ template <typename T>
 void
 FloatingPointMatrix4x4<T>::CreateRotationY(Radian<T> const& angle, FloatingPointMatrix4x4 & result)
 {
-	CreateIdentity(result);
-	auto const sin_angle = std::sin(angle.value);
-	auto const cos_angle = std::cos(angle.value);
+	result = Identity;
+	auto const sinAngle = std::sin(angle.value);
+	auto const cosAngle = std::cos(angle.value);
 	
-	result.m[0][0] = cos_angle;
-	result.m[0][2] = -sin_angle;
-	result.m[2][0] = sin_angle;
-	result.m[2][2] = cos_angle;
+	result.m[0][0] = cosAngle;
+	result.m[0][2] = -sinAngle;
+	result.m[2][0] = sinAngle;
+	result.m[2][2] = cosAngle;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -586,14 +594,14 @@ template <typename T>
 void
 FloatingPointMatrix4x4<T>::CreateRotationZ(Radian<T> const& angle, FloatingPointMatrix4x4 & result)
 {
-	CreateIdentity(result);
-	auto const sin_angle = std::sin(angle.value);
-	auto const cos_angle = std::cos(angle.value);
+	result = Identity;
+	auto const sinAngle = std::sin(angle.value);
+	auto const cosAngle = std::cos(angle.value);
 
-	result.m[0][0] = cos_angle;
-	result.m[0][1] = sin_angle;
-	result.m[1][0] = -sin_angle;
-	result.m[1][1] = cos_angle;
+	result.m[0][0] = cosAngle;
+	result.m[0][1] = sinAngle;
+	result.m[1][0] = -sinAngle;
+	result.m[1][1] = cosAngle;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -1180,64 +1188,45 @@ FloatingPointMatrix4x4<T>::CreateOrthographicRH(T width, T height, T zNearPlane,
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateLerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2, T amount)
+void
+FloatingPointMatrix4x4<T>::CreateFromAxisAngle(
+	FloatingPointVector3<T> const& axis, Radian<T> const& angle, FloatingPointMatrix4x4 & result)
 {
-	return FloatingPointMatrix4x4
-		( source1.m[0][0] + ((source2.m[0][0] - source1.m[0][0]) * amount)
-		, source1.m[0][1] + ((source2.m[0][1] - source1.m[0][1]) * amount)
-		, source1.m[0][2] + ((source2.m[0][2] - source1.m[0][2]) * amount)
-		, source1.m[0][3] + ((source2.m[0][3] - source1.m[0][3]) * amount)
-
-		, source1.m[1][0] + ((source2.m[1][0] - source1.m[1][0]) * amount)
-		, source1.m[1][1] + ((source2.m[1][1] - source1.m[1][1]) * amount)
-		, source1.m[1][2] + ((source2.m[1][2] - source1.m[1][2]) * amount)
-		, source1.m[1][3] + ((source2.m[1][3] - source1.m[1][3]) * amount)
-
-		, source1.m[2][0] + ((source2.m[2][0] - source1.m[2][0]) * amount)
-		, source1.m[2][1] + ((source2.m[2][1] - source1.m[2][1]) * amount)
-		, source1.m[2][2] + ((source2.m[2][2] - source1.m[2][2]) * amount)
-		, source1.m[2][3] + ((source2.m[2][3] - source1.m[2][3]) * amount)
-
-		, source1.m[3][0] + ((source2.m[3][0] - source1.m[3][0]) * amount)
-		, source1.m[3][1] + ((source2.m[3][1] - source1.m[3][1]) * amount)
-		, source1.m[3][2] + ((source2.m[3][2] - source1.m[3][2]) * amount)
-		, source1.m[3][3] + ((source2.m[3][3] - source1.m[3][3]) * amount)
-		);
+	auto const sinAngle = std::sin(angle.value);
+	auto const cosAngle = std::cos(angle.value);
+	auto const scaleFactor = static_cast<T>(1) - cosAngle;
+	auto const xx = axis.x * axis.x;
+	auto const yy = axis.y * axis.y;
+	auto const zz = axis.z * axis.z;
+	auto const xy = axis.x * axis.y;
+	auto const xz = axis.x * axis.z;
+	auto const yz = axis.y * axis.z;
+	
+	result.m[0][0] = scaleFactor * xx + cosAngle;
+	result.m[0][1] = scaleFactor * xy + sinAngle * axis.z;
+	result.m[0][2] = scaleFactor * xz - sinAngle * axis.y;
+	result.m[0][3] = 0;
+	result.m[1][0] = scaleFactor * xy - sinAngle * axis.z;
+	result.m[1][1] = scaleFactor * yy + cosAngle;
+	result.m[1][2] = scaleFactor * yz + sinAngle * axis.x;
+	result.m[1][3] = 0;
+	result.m[2][0] = scaleFactor * xz + sinAngle * axis.y;
+	result.m[2][1] = scaleFactor * yz - sinAngle * axis.x;
+	result.m[2][2] = scaleFactor * zz + cosAngle;
+	result.m[2][3] = 0;
+	result.m[3][0] = 0;
+	result.m[3][1] = 0;
+	result.m[3][2] = 0;
+	result.m[3][3] = 1;
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
 FloatingPointMatrix4x4<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle)
 {
-	auto const sin_angle = std::sin(angle.value);
-	auto const cos_angle = std::cos(angle.value);
-	auto const t         = 1 - cos_angle;
-	auto const xx        = axis.x * axis.x;
-	auto const yy        = axis.y * axis.y;
-	auto const zz        = axis.z * axis.z;
-	auto const xy        = axis.x * axis.y;
-	auto const xz        = axis.x * axis.z;
-	auto const yz        = axis.y * axis.z;
-
-	return FloatingPointMatrix4x4
-		( t * xx + cos_angle
-		, t * xy + sin_angle * axis.z
-		, t * xz - sin_angle * axis.y
-		, 0
-
-		, t * xy - sin_angle * axis.z
-		, t * yy + cos_angle
-		, t * yz + sin_angle * axis.x
-		, 0
-
-		, t * xz + sin_angle * axis.y
-		, t * yz - sin_angle * axis.x
-		, t * zz + cos_angle
-		, 0
-
-		, 0, 0, 0, 1
-		);
+	FloatingPointMatrix4x4 result;
+	CreateFromAxisAngle(axis, angle, result);
+	return result;
 }
 //-----------------------------------------------------------------------
 template <typename T>

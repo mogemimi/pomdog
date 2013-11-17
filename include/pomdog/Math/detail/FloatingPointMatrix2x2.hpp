@@ -117,6 +117,10 @@ public:
 	///@~Japanese
 	/// @brief 最初の要素へのポインタを返します。
 	T* Data();
+	
+	///@~Japanese
+	/// @brief 単位行列です。
+	static FloatingPointMatrix2x2 const Identity;
 };
 
 /// @}

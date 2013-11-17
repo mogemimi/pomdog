@@ -157,14 +157,15 @@ public:
 	Invert(FloatingPointMatrix4x4 const& matrix);
 
 	///@~Japanese
-	/// @brief 単位行列を作成します。
+	/// @brief 2つの行列間の対応する値を線形補間した行列を作成します。
 	static void
-	CreateIdentity(FloatingPointMatrix4x4 & result);
-	
+	Lerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2, T amount,
+		FloatingPointMatrix4x4 & result);
+
 	///@~Japanese
-	/// @brief 単位行列を作成します。
+	/// @brief 2つの行列間の対応する値を線形補間した行列を作成します。
 	static FloatingPointMatrix4x4
-	CreateIdentity();
+	Lerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2, T amount);
 
 	///@~Japanese
 	/// @brief オフセットを指定して、平行移動行列を作成します。
@@ -365,9 +366,9 @@ public:
 	CreateOrthographicOffCenterRH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane);
 
 	///@~Japanese
-	/// @brief 2つの行列間の対応する値を線形補間した行列を作成します。
-	static FloatingPointMatrix4x4
-	CreateLerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2, T amount);
+	/// @brief 任意の軸を回転軸とした回転行列を作成します。
+	static void
+	CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle, FloatingPointMatrix4x4 & result);
 
 	///@~Japanese
 	/// @brief 任意の軸を回転軸とした回転行列を作成します。
@@ -385,6 +386,10 @@ public:
 	///@~Japanese
 	/// @brief 最初の要素へのポインタを返します。
 	T* Data();
+	
+	///@~Japanese
+	/// @brief 単位行列です。
+	static FloatingPointMatrix4x4 const Identity;
 };
 
 /// @}

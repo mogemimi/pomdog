@@ -305,7 +305,8 @@ FloatingPointVector3<T>::SmoothStep(FloatingPointVector3 const& a, FloatingPoint
 }
 //-----------------------------------------------------------------------
 template <typename T>
-void FloatingPointVector3<T>::Normalize()
+void
+FloatingPointVector3<T>::Normalize()
 {
 	*this = Normalize(*this);
 }
@@ -320,7 +321,8 @@ FloatingPointVector3<T>::Normalize(FloatingPointVector3 const& source)
 }
 //-----------------------------------------------------------------------
 template <typename T>
-void FloatingPointVector3<T>::Normalize(FloatingPointVector3 const& source, FloatingPointVector3 & result)
+void
+FloatingPointVector3<T>::Normalize(FloatingPointVector3 const& source, FloatingPointVector3 & result)
 {
 	auto const length = source.Length();
 

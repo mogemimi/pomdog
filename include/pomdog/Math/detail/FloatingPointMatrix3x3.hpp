@@ -154,16 +154,6 @@ public:
 	Invert(FloatingPointMatrix3x3 const& matrix);
 
 	///@~Japanese
-	/// @brief 単位行列を作成します。
-	static void
-	CreateIdentity(FloatingPointMatrix3x3 & result);
-
-	///@~Japanese
-	/// @brief 単位行列を作成します。
-	static FloatingPointMatrix3x3
-	CreateIdentity();
-
-	///@~Japanese
 	/// @brief オフセットを指定して、平行移動行列を作成します。
 	static FloatingPointMatrix3x3
 	CreateTranslation(FloatingPointVector2<T> const& position, FloatingPointMatrix3x3 & result);
@@ -256,6 +246,10 @@ public:
 	///@~Japanese
 	/// @brief 最初の要素へのポインタを返します。
 	T* Data();
+	
+	///@~Japanese
+	/// @brief 単位行列です。
+	static FloatingPointMatrix3x3 const Identity;
 };
 
 /// @}
