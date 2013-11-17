@@ -20,7 +20,7 @@ namespace Pomdog {
 namespace Details {
 namespace Tags {
 
-struct radian_tag {};
+struct RadianTag {};
 
 }// namespace Tags
 }// namespace Details
@@ -31,7 +31,7 @@ struct radian_tag {};
 /// @{
 
 template <typename T>
-using Radian = Details::TaggedArithmetic<T, Details::Tags::radian_tag>;
+using Radian = Details::TaggedArithmetic<T, Details::Tags::RadianTag>;
 
 /// @}
 /// @}

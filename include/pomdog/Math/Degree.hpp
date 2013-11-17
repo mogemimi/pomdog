@@ -20,7 +20,7 @@ namespace Pomdog {
 namespace Details {
 namespace Tags {
 
-struct degree_tag {};
+struct DegreeTag {};
 
 }// namespace Tags
 }// namespace Details
@@ -31,7 +31,7 @@ struct degree_tag {};
 /// @{
 
 template <typename T>
-using Degree = Details::TaggedArithmetic<T, Details::Tags::degree_tag>;
+using Degree = Details::TaggedArithmetic<T, Details::Tags::DegreeTag>;
 
 /// @}
 /// @}

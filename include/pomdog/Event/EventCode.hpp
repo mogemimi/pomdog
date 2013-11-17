@@ -18,16 +18,15 @@
 
 namespace Pomdog {
 namespace Details {
+namespace Tags {
 
-namespace Tags
-{
-	struct EventCode {};
+struct EventCodeTag {};
+
 }// namespace Tags
-
 }// namespace Details
 
 typedef Details::Tagged<
-	std::uint32_t, Details::Tags::EventCode
+	std::uint32_t, Details::Tags::EventCodeTag
 > EventCode;
 
 }// namespace Pomdog

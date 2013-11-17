@@ -6,127 +6,139 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_DETAIL_COORDINATE2DIMPLEMENTATION_HPP
-#define POMDOG_DETAIL_COORDINATE2DIMPLEMENTATION_HPP
+#ifndef POMDOG_DETAIL_COORDINATE3DIMPLEMENTATION_HPP
+#define POMDOG_DETAIL_COORDINATE3DIMPLEMENTATION_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
 #endif
 
-//#include "../Coordinate2D.hpp"
+//#include "../Coordinate3D.hpp"
 
 namespace Pomdog {
 
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T>::Coordinate2D(T x, T y)
-	: x(x), y(y)
+Coordinate3D<T>::Coordinate3D(T x, T y, T z)
+	: x(x), y(y), z(z)
 {}
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> & Coordinate2D<T>::operator+=(Coordinate2D const& other)
+Coordinate3D<T> & Coordinate3D<T>::operator+=(Coordinate3D const& other)
 {
 	x += other.x;
 	y += other.y;
+	z += other.z;
 	return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> & Coordinate2D<T>::operator-=(Coordinate2D const& other)
+Coordinate3D<T> & Coordinate3D<T>::operator-=(Coordinate3D const& other)
 {
 	x -= other.x;
 	y -= other.y;
+	z -= other.z;
 	return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> & Coordinate2D<T>::operator*=(T scaleFactor)
+Coordinate3D<T> & Coordinate3D<T>::operator*=(T scaleFactor)
 {
 	x *= scaleFactor;
 	y *= scaleFactor;
+	z *= scaleFactor;
 	return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> & Coordinate2D<T>::operator/=(T scaleFactor)
+Coordinate3D<T> & Coordinate3D<T>::operator/=(T scaleFactor)
 {
 	x /= scaleFactor;
 	y /= scaleFactor;
+	z /= scaleFactor;
 	return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> Coordinate2D<T>::operator+() const
+Coordinate3D<T> Coordinate3D<T>::operator+() const
 {
 	return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> Coordinate2D<T>::operator-() const
+Coordinate3D<T> Coordinate3D<T>::operator-() const
 {
-	return Coordinate2D(-x, -y);
+	return Coordinate3D(-x, -y, -z);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> Coordinate2D<T>::operator+(Coordinate2D const& other) const
+Coordinate3D<T> Coordinate3D<T>::operator+(Coordinate3D const& other) const
 {
-	return Coordinate2D(x + other.x, y + other.y);
+	return Coordinate3D(x + other.x, y + other.y, z + other.z);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> Coordinate2D<T>::operator-(Coordinate2D const& other) const
+Coordinate3D<T> Coordinate3D<T>::operator-(Coordinate3D const& other) const
 {
-	return Coordinate2D(x - other.x, y - other.y);
+	return Coordinate3D(x - other.x, y - other.y, z - other.z);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> Coordinate2D<T>::operator*(Coordinate2D const& other) const
+Coordinate3D<T> Coordinate3D<T>::operator*(Coordinate3D const& other) const
 {
-	return Coordinate2D(x * other.x, y * other.y);
+	return Coordinate3D(x * other.x, y * other.y, z * other.z);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> Coordinate2D<T>::operator/(Coordinate2D const& other) const
+Coordinate3D<T> Coordinate3D<T>::operator/(Coordinate3D const& other) const
 {
-	return Coordinate2D(x / other.x, y / other.y);
+	return Coordinate3D(x / other.x, y / other.y, z / other.z);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> Coordinate2D<T>::operator*(T scaleFactor) const
+Coordinate3D<T> Coordinate3D<T>::operator*(T scaleFactor) const
 {
-	return Coordinate2D(x * scaleFactor, y * scaleFactor);
+	return Coordinate3D(x * scaleFactor, y * scaleFactor, z * scaleFactor);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> Coordinate2D<T>::operator/(T scaleFactor) const
+Coordinate3D<T> Coordinate3D<T>::operator/(T scaleFactor) const
 {
-	return Coordinate2D(x / scaleFactor, y / scaleFactor);
+	return Coordinate3D(x / scaleFactor, y / scaleFactor, z / scaleFactor);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-bool Coordinate2D<T>::operator==(Coordinate2D const& other) const
+bool Coordinate3D<T>::operator==(Coordinate3D const& other) const
 {
-	return (x == other.x && y == other.y);
+	return (x == other.x && y == other.y && z == other.z);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-bool Coordinate2D<T>::operator!=(Coordinate2D const& other) const
+bool Coordinate3D<T>::operator!=(Coordinate3D const& other) const
 {
-	return (x != other.x || y != other.y);
+	return (x != other.x || y != other.y || z != other.z);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> operator*(T scaleFactor, Coordinate2D<T> const& coordinate)
+Coordinate3D<T> operator*(T scaleFactor, Coordinate3D<T> const& coordinate)
 {
-	return Coordinate2D<T>(scaleFactor * coordinate.x, scaleFactor * coordinate.y);
+	return Coordinate3D<T>(
+		scaleFactor * coordinate.x,
+		scaleFactor * coordinate.y,
+		scaleFactor * coordinate.z
+	);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> operator/(T scaleFactor, Coordinate2D<T> const& coordinate)
+Coordinate3D<T> operator/(T scaleFactor, Coordinate3D<T> const& coordinate)
 {
-	return Coordinate2D<T>(scaleFactor / coordinate.x, scaleFactor / coordinate.y);
+	return Coordinate3D<T>(
+		scaleFactor / coordinate.x,
+		scaleFactor / coordinate.y,
+		scaleFactor / coordinate.z
+	);
 }
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DETAIL_COORDINATE2DIMPLEMENTATION_HPP)
+#endif // !defined(POMDOG_DETAIL_COORDINATE3DIMPLEMENTATION_HPP)

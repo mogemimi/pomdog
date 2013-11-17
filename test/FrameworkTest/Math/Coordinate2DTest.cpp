@@ -8,7 +8,6 @@
 
 #include <iutest/gtest/iutest_switch.hpp>
 #include <pomdog/Math/Coordinate2D.hpp>
-#include <pomdog/Math/Vector2.hpp>
 
 TEST(FirstTestCase, Coordinate2DTest)
 {

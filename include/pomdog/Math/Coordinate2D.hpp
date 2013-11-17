@@ -24,7 +24,7 @@ namespace Pomdog {
 /// @{
 
 template <typename T>
-class Coordinate2D
+class Coordinate2D final
 {
 public:
 	static_assert(std::is_arithmetic<T>::value, "You can only use arithmetic types.");
@@ -44,6 +44,8 @@ public:
 	
 	///@brief Construct from T values.
 	Coordinate2D(T x, T y);
+	
+	~Coordinate2D() = default;
 
 	// Assignment operators:
 	Coordinate2D & operator=(Coordinate2D const&) = default;
@@ -67,8 +69,6 @@ public:
 
 	bool operator==(Coordinate2D const&) const;
 	bool operator!=(Coordinate2D const&) const;
-
-	static Coordinate2D const Zero;
 };
 
 template <typename T>
@@ -81,4 +81,4 @@ Coordinate2D<T> operator*(T scaleFactor, Coordinate2D<T> const& coordinate);
 
 #include "detail/Coordinate2DImplementation.hpp"
 
-#endif // !defined(POMDOG_COORD2D_HPP)
+#endif // !defined(POMDOG_COORDINATE2D_HPP)
