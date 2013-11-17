@@ -16,6 +16,7 @@
 //#include "../Coordinate2D.hpp"
 
 namespace Pomdog {
+namespace Details {
 
 //-----------------------------------------------------------------------
 template <typename T> inline
@@ -127,6 +128,7 @@ Coordinate2D<T> operator/(T scaleFactor, Coordinate2D<T> const& coordinate)
 	return Coordinate2D<T>(scaleFactor / coordinate.x, scaleFactor / coordinate.y);
 }
 
+}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_DETAIL_COORDINATE2DIMPLEMENTATION_HPP)

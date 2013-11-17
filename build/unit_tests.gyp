@@ -48,8 +48,8 @@
       'sources': [
         '../test/FrameworkTest/main.cpp',
         '../test/FrameworkTest/Math/ColorTest.cpp',
-        '../test/FrameworkTest/Math/Coordinate2DTest.cpp',
-        '../test/FrameworkTest/Math/Coordinate3DTest.cpp',
+        '../test/FrameworkTest/Math/Point2DTest.cpp',
+        '../test/FrameworkTest/Math/Point3DTest.cpp',
         '../test/FrameworkTest/Math/QuaternionTest.cpp',
         '../test/FrameworkTest/Math/Vector2Test.cpp',
         '../test/FrameworkTest/Math/Vector3Test.cpp',

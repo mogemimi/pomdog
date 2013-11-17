@@ -16,6 +16,7 @@
 //#include "../Coordinate3D.hpp"
 
 namespace Pomdog {
+namespace Details {
 
 //-----------------------------------------------------------------------
 template <typename T> inline
@@ -139,6 +140,7 @@ Coordinate3D<T> operator/(T scaleFactor, Coordinate3D<T> const& coordinate)
 	);
 }
 
+}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_DETAIL_COORDINATE3DIMPLEMENTATION_HPP)

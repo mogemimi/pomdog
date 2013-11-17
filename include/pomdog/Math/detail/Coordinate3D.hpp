@@ -6,17 +6,17 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_COORDINATE3D_HPP
-#define POMDOG_COORDINATE3D_HPP
+#ifndef POMDOG_DETAIL_COORDINATE3D_HPP
+#define POMDOG_DETAIL_COORDINATE3D_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
 #endif
 
-#include "../Config/FundamentalTypes.hpp"
 #include <type_traits>
 
 namespace Pomdog {
+namespace Details {
 
 /// @addtogroup Framework
 /// @{
@@ -77,8 +77,9 @@ Coordinate3D<T> operator*(T scaleFactor, Coordinate3D<T> const& coordinate);
 /// @}
 /// @}
 
+}// namespace Details
 }// namespace Pomdog
 
-#include "detail/Coordinate3DImplementation.hpp"
+#include "Coordinate3DImplementation.hpp"
 
-#endif // !defined(POMDOG_COORDINATE3D_HPP)
+#endif // !defined(POMDOG_DETAIL_COORDINATE3D_HPP)
