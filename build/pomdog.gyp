@@ -46,6 +46,7 @@
         '../include/pomdog/GamePlay/GameObject.hpp',
         '../include/pomdog/GamePlay/detail/GameComponent.hpp',
         '../include/pomdog/Math/Color.hpp',
+        '../include/pomdog/Math/ContainmentType.hpp',
         '../include/pomdog/Math/Degree.hpp',
         '../include/pomdog/Math/MathHelper.hpp',
         '../include/pomdog/Math/Matrix2x2.hpp',
