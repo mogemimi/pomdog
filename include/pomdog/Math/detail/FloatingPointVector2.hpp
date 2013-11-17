@@ -79,8 +79,6 @@ public:
 	FloatingPointVector2 operator*(T scaleFactor) const;
 	FloatingPointVector2 operator/(T scaleFactor) const;
 
-	friend FloatingPointVector2 operator*(T scaleFactor, FloatingPointVector2 const&);
-
 	bool operator==(FloatingPointVector2 const& other) const;
 	bool operator!=(FloatingPointVector2 const& other) const;
 
@@ -138,6 +136,9 @@ public:
 	/// @brief 最初の要素へのポインタを返します。
 	T* Data();
 };
+
+template <typename T>
+FloatingPointVector2<T> operator*(T scaleFactor, FloatingPointVector2<T> const& vector);
 
 /// @}
 /// @}

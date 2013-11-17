@@ -80,8 +80,6 @@ public:
 	FloatingPointQuaternion operator*(T scaleFactor) const;
 	FloatingPointQuaternion operator/(T scaleFactor) const;
 
-	friend FloatingPointQuaternion operator*(T scaleFactor, FloatingPointQuaternion const& quaternion);
-
 	bool operator==(FloatingPointQuaternion const&) const;
 	bool operator!=(FloatingPointQuaternion const&) const;
 
@@ -190,6 +188,9 @@ public:
 	/// @remarks それぞれ (x, y, z, w) に対応して、(0, 0, 0, 1) となるクォータニオンです。
 	static FloatingPointQuaternion const Identity;
 };
+
+template <typename T>
+FloatingPointQuaternion<T> operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion);
 
 /// @}
 /// @}

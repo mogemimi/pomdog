@@ -55,3 +55,34 @@ TEST(DoubleColor, ColorTest)
 	EXPECT_EQ(Color::TransparentBlack, Color(0, 0, 0, 0));
 	EXPECT_EQ(Color::CornflowerBlue,   Color(100.0/255, 149.0/255, 237.0/255, 1));
 }
+
+TEST(Addition, ColorTest)
+{
+	using Pomdog::Color;
+	
+	EXPECT_EQ(Color(1.f + 5.f, 2.f + 6.f, 3.f + 7.f, 4.f + 8.f), Color(1, 2, 3, 4) + Color(5, 6, 7, 8));
+	EXPECT_EQ(Color(1.f - 5.f, 2.f - 6.f, 3.f - 7.f, 4.f - 8.f), Color(1, 2, 3, 4) + Color(-5, -6, -7, -8));
+}
+
+TEST(Subtraction, ColorTest)
+{
+	using Pomdog::Color;
+	
+	EXPECT_EQ(Color(1.f - 5.f, 2.f - 6.f, 3.f - 7.f, 4.f - 8.f), Color(1, 2, 3, 4) - Color(5, 6, 7, 8));
+	EXPECT_EQ(Color(1.f + 5.f, 2.f + 6.f, 3.f + 7.f, 4.f + 8.f), Color(1, 2, 3, 4) - Color(-5, -6, -7, -8));
+}
+
+TEST(Multiply, ColorTest)
+{
+	using Pomdog::Color;
+	
+	EXPECT_EQ(Color(4.f * 3.f, 5.f * 3.f, 6.f * 3.f, 7.f * 3.f), Color(4, 5, 6, 7) * 3);
+	EXPECT_EQ(Color(4.f * 3.f, 5.f * 3.f, 6.f * 3.f, 7.f * 3.f), 3.0f * Color(4, 5, 6, 7));
+}
+
+TEST(Division, ColorTest)
+{
+	using Pomdog::Color;
+	
+	EXPECT_EQ(Color(4.f / 3.f, 5.f / 3.f, 6.f / 3.f, 7.f / 3.f), Color(4, 5, 6, 7) / 3.0f);
+}

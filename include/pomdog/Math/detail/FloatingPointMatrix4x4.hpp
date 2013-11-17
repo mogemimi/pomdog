@@ -79,18 +79,16 @@ public:
 	FloatingPointMatrix4x4 & operator*=(T scaleFactor);
 	FloatingPointMatrix4x4 & operator/=(T scaleFactor);
 
-	// unary operators
+	// Unary operators:
 	FloatingPointMatrix4x4 operator+() const;
 	FloatingPointMatrix4x4 operator-() const;
 
-	// binary operators
+	// Binary operators:
 	FloatingPointMatrix4x4 operator+(FloatingPointMatrix4x4 const&) const;
 	FloatingPointMatrix4x4 operator-(FloatingPointMatrix4x4 const&) const;
 	FloatingPointMatrix4x4 operator*(FloatingPointMatrix4x4 const&) const;
 	FloatingPointMatrix4x4 operator*(T scaleFactor) const;
 	FloatingPointMatrix4x4 operator/(T scaleFactor) const;
-
-	friend FloatingPointMatrix4x4 operator*(T scaleFactor, FloatingPointMatrix4x4 const& matrix);
 
 	bool operator==(FloatingPointMatrix4x4 const&) const;
 	bool operator!=(FloatingPointMatrix4x4 const&) const;
@@ -391,6 +389,9 @@ public:
 	/// @brief 単位行列です。
 	static FloatingPointMatrix4x4 const Identity;
 };
+
+template <typename T>
+FloatingPointMatrix4x4<T> operator*(T scaleFactor, FloatingPointMatrix4x4<T> const& matrix);
 
 /// @}
 /// @}

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -74,15 +74,9 @@ public:
 	FloatingPointVector4 operator-(FloatingPointVector4 const& other) const;
 	FloatingPointVector4 operator*(FloatingPointVector4 const& other) const;
 	FloatingPointVector4 operator/(FloatingPointVector4 const& other) const;
-	FloatingPointVector4 operator+(T scaleFactor) const;
-	FloatingPointVector4 operator-(T scaleFactor) const;
 	FloatingPointVector4 operator*(T scaleFactor) const;
 	FloatingPointVector4 operator/(T scaleFactor) const;
-
-	friend FloatingPointVector4 operator+(T scaleFactor, FloatingPointVector4 const&);
-	friend FloatingPointVector4 operator-(T scaleFactor, FloatingPointVector4 const&);
-	friend FloatingPointVector4 operator*(T scaleFactor, FloatingPointVector4 const&);
-
+	
 	bool operator == (FloatingPointVector4 const& other) const;
 	bool operator != (FloatingPointVector4 const& other) const;
 
@@ -128,6 +122,9 @@ public:
 	/// @brief 最初の要素へのポインタを返します。
 	T* Data();
 };
+
+template <typename T>
+FloatingPointVector4<T> operator*(T scaleFactor, FloatingPointVector4<T> const& vector);
 
 /// @}
 /// @}

@@ -121,16 +121,6 @@ FloatingPointColor<T> FloatingPointColor<T>::operator/(T scaleFactor) const
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointColor<T> operator*(T scaleFactor, FloatingPointColor<T> const& other)
-{
-	return FloatingPointColor<T>(
-		other.r * scaleFactor,
-		other.g * scaleFactor,
-		other.b * scaleFactor,
-		other.a * scaleFactor);
-}
-//-----------------------------------------------------------------------
-template <typename T>
 bool FloatingPointColor<T>::operator==(FloatingPointColor const& other) const
 {
 	return (r == other.r && g == other.g && b == other.b && a == other.a);
@@ -140,15 +130,6 @@ template <typename T>
 bool FloatingPointColor<T>::operator!=(FloatingPointColor const& other) const
 {
 	return (r != other.r || g != other.g || b != other.b || a != other.a);
-}
-//-----------------------------------------------------------------------
-template <typename T>
-void FloatingPointColor<T>::Set(T red, T green, T blue, T alpha)
-{
-	this->r = red;
-	this->g = green;
-	this->b = blue;
-	this->a = alpha;
 }
 //-------------------------------------------------------------------
 template <typename T>
@@ -231,15 +212,29 @@ FloatingPointColor<T> FloatingPointColor<T>::CreateLerp(
 		source0.a + amount * (source1.a - source0.a));
 }
 //-----------------------------------------------------------------------
+template <typename T>
+FloatingPointColor<T> operator*(T scaleFactor, FloatingPointColor<T> const& color)
+{
+	return FloatingPointColor<T>(
+		color.r * scaleFactor,
+		color.g * scaleFactor,
+		color.b * scaleFactor,
+		color.a * scaleFactor
+	);
+}
+//-----------------------------------------------------------------------
 // explicit instantiations
 template class FloatingPointColor<float>;
+template FloatingPointColor<float> operator*<float>(float, FloatingPointColor<float> const&);
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointColor<double>;
+template FloatingPointColor<double> operator*<double>(double, FloatingPointColor<double> const&);
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointColor<long double>;
+template FloatingPointColor<long double> operator*<long double>(long double, FloatingPointColor<long double> const&);
 #endif
 
 }// namespace Details

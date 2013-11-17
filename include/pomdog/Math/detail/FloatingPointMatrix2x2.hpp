@@ -78,8 +78,6 @@ public:
 	FloatingPointMatrix2x2 operator*(T scaleFactor) const;
 	FloatingPointMatrix2x2 operator/(T scaleFactor) const;
 	
-	friend FloatingPointMatrix2x2 operator*(T scaleFactor, FloatingPointMatrix2x2 const& matrix);
-
 	bool operator==(FloatingPointMatrix2x2 const& other) const;
 	bool operator!=(FloatingPointMatrix2x2 const& other) const;
 
@@ -122,6 +120,9 @@ public:
 	/// @brief 単位行列です。
 	static FloatingPointMatrix2x2 const Identity;
 };
+
+template <typename T>
+FloatingPointMatrix2x2<T> operator*(T scaleFactor, FloatingPointMatrix2x2<T> const& matrix);
 
 /// @}
 /// @}

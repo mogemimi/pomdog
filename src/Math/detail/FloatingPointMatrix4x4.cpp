@@ -262,12 +262,6 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator/(T scaleFactor) co
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> operator*(T scaleFactor, FloatingPointMatrix4x4<T> const& matrix)
-{
-	return matrix.Concatenate(scaleFactor);
-}
-//-----------------------------------------------------------------------
-template <typename T>
 bool FloatingPointMatrix4x4<T>::operator==(FloatingPointMatrix4x4 const& other) const
 {
 	return (
@@ -1243,15 +1237,24 @@ T* FloatingPointMatrix4x4<T>::Data()
 	return m[0].data();
 }
 //-----------------------------------------------------------------------
+template <typename T>
+FloatingPointMatrix4x4<T> operator*(T scaleFactor, FloatingPointMatrix4x4<T> const& matrix)
+{
+	return matrix.Concatenate(scaleFactor);
+}
+//-----------------------------------------------------------------------
 // explicit instantiations
 template class FloatingPointMatrix4x4<float>;
+template FloatingPointMatrix4x4<float> operator*<float>(float, FloatingPointMatrix4x4<float> const&);
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointMatrix4x4<double>;
+template FloatingPointMatrix4x4<double> operator*<double>(double, FloatingPointMatrix4x4<double> const&);
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointMatrix4x4<long double>;
+template FloatingPointMatrix4x4<long double> operator*<long double>(long double, FloatingPointMatrix4x4<long double> const&);
 #endif
 
 }// namespace Details

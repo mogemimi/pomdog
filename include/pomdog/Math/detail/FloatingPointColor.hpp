@@ -69,14 +69,8 @@ public:
 	FloatingPointColor operator*(T) const;
 	FloatingPointColor operator/(T) const;
 
-	friend FloatingPointColor operator*(T, FloatingPointColor const&);
-
 	bool operator==(FloatingPointColor const&) const;
 	bool operator!=(FloatingPointColor const&) const;
-
-	///@~Japanese
-	/// @brief 各要素の値を設定します。
-	void Set(T red, T green, T blue, T alpha);
 
 	///@~Japanese
 	/// @brief 0.0 ~ 1.0 の間に値をクランプします。
@@ -114,6 +108,9 @@ public:
 	static FloatingPointColor CornflowerBlue;
 	static FloatingPointColor TransparentBlack;//(0, 0, 0, 0)
 };
+
+template <typename T>
+FloatingPointColor<T> operator*(T scaleFactor, FloatingPointColor<T> const& color);
 
 /// @}
 /// @}

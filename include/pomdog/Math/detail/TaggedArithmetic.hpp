@@ -143,12 +143,6 @@ public:
 		return TaggedArithmetic(scaleFactor * v.value);
 	}
 
-	friend TaggedArithmetic operator/(T scaleFactor, TaggedArithmetic const& v)
-	{
-		POMDOG_ASSERT(v.value != static_cast<T>(0));
-		return TaggedArithmetic(scaleFactor / v.value);
-	}
-
 	bool operator==(TaggedArithmetic const& v) const
 	{
 		return value == v.value;

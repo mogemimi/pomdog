@@ -108,12 +108,6 @@ bool FloatingPointVector2<T>::operator==(FloatingPointVector2 const& other) cons
 	return this->x == other.x && this->y == other.y;
 }
 //-----------------------------------------------------------------------
-template <typename T> 
-FloatingPointVector2<T> operator*(T scaleFactor, FloatingPointVector2<T> const& vector)
-{
-	return FloatingPointVector2<T>(scaleFactor * vector.x, scaleFactor * vector.y);
-}
-//-----------------------------------------------------------------------
 template <typename T>
 bool FloatingPointVector2<T>::operator!=(FloatingPointVector2 const& other) const
 {
@@ -223,15 +217,24 @@ T* FloatingPointVector2<T>::Data()
 	return &x;
 }
 //-----------------------------------------------------------------------
+template <typename T> 
+FloatingPointVector2<T> operator*(T scaleFactor, FloatingPointVector2<T> const& vector)
+{
+	return FloatingPointVector2<T>(scaleFactor * vector.x, scaleFactor * vector.y);
+}
+//-----------------------------------------------------------------------
 // explicit instantiations
 template class FloatingPointVector2<float>;
+template FloatingPointVector2<float> operator*<float>(float, FloatingPointVector2<float> const&);
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointVector2<double>;
+template FloatingPointVector2<double> operator*<double>(double, FloatingPointVector2<double> const&);
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointVector2<long double>;
+template FloatingPointVector2<long double> operator*<long double>(long double, FloatingPointVector2<long double> const&);
 #endif
 
 }// namespace Details

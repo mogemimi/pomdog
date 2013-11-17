@@ -185,12 +185,6 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator/(T scaleFactor) co
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix3x3<T> operator*(T scaleFactor, FloatingPointMatrix3x3<T> const& matrix)
-{
-	return matrix.Concatenate(scaleFactor);
-}
-//-----------------------------------------------------------------------
-template <typename T>
 bool FloatingPointMatrix3x3<T>::operator==(FloatingPointMatrix3x3 const& other) const
 {
 	return (
@@ -620,15 +614,24 @@ T* FloatingPointMatrix3x3<T>::Data()
 	return m[0].data();
 }
 //-----------------------------------------------------------------------
+template <typename T>
+FloatingPointMatrix3x3<T> operator*(T scaleFactor, FloatingPointMatrix3x3<T> const& matrix)
+{
+	return matrix.Concatenate(scaleFactor);
+}
+//-----------------------------------------------------------------------
 // explicit instantiations
 template class FloatingPointMatrix3x3<float>;
+template FloatingPointMatrix3x3<float> operator*<float>(float, FloatingPointMatrix3x3<float> const&);
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointMatrix3x3<double>;
+template FloatingPointMatrix3x3<double> operator*<double>(double, FloatingPointMatrix3x3<double> const&);
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointMatrix3x3<long double>;
+template FloatingPointMatrix3x3<long double> operator*<long double>(long double, FloatingPointMatrix3x3<long double> const&);
 #endif
 
 }// namespace Details

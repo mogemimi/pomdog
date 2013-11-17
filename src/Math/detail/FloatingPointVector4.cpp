@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -123,28 +123,6 @@ FloatingPointVector4<T> FloatingPointVector4<T>::operator/(FloatingPointVector4 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector4<T> FloatingPointVector4<T>::operator+(T scaleFactor) const
-{
-	return FloatingPointVector4(
-		x + scaleFactor,
-		y + scaleFactor,
-		z + scaleFactor,
-		w + scaleFactor
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
-FloatingPointVector4<T> FloatingPointVector4<T>::operator-(T scaleFactor) const
-{
-	return FloatingPointVector4(
-		x - scaleFactor,
-		y - scaleFactor,
-		z - scaleFactor,
-		w - scaleFactor
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
 FloatingPointVector4<T> FloatingPointVector4<T>::operator*(T scaleFactor) const
 {
 	return FloatingPointVector4(
@@ -163,39 +141,6 @@ FloatingPointVector4<T> FloatingPointVector4<T>::operator/(T scaleFactor) const
 		y / scaleFactor,
 		z / scaleFactor,
 		w / scaleFactor
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
-FloatingPointVector4<T> operator+(T scaleFactor, FloatingPointVector4<T> const& vec)
-{
-	return FloatingPointVector4<T>(
-		scaleFactor + vec.x,
-		scaleFactor + vec.y,
-		scaleFactor + vec.z,
-		scaleFactor + vec.w
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
-FloatingPointVector4<T> operator-(T scaleFactor, FloatingPointVector4<T> const& vec)
-{
-	return FloatingPointVector4<T>(
-		scaleFactor - vec.x,
-		scaleFactor - vec.y,
-		scaleFactor - vec.z,
-		scaleFactor - vec.w
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
-FloatingPointVector4<T> operator*(T scaleFactor, FloatingPointVector4<T> const& vec)
-{
-	return FloatingPointVector4<T>(
-		scaleFactor * vec.x,
-		scaleFactor * vec.y,
-		scaleFactor * vec.z,
-		scaleFactor * vec.w
 	);
 }
 //-----------------------------------------------------------------------
@@ -280,15 +225,29 @@ T* FloatingPointVector4<T>::Data()
 	return &x;
 }
 //-----------------------------------------------------------------------
+template <typename T>
+FloatingPointVector4<T> operator*(T scaleFactor, FloatingPointVector4<T> const& vector)
+{
+	return FloatingPointVector4<T>(
+		scaleFactor * vector.x,
+		scaleFactor * vector.y,
+		scaleFactor * vector.z,
+		scaleFactor * vector.w
+	);
+}
+//-----------------------------------------------------------------------
 // explicit instantiations
 template class FloatingPointVector4<float>;
+template FloatingPointVector4<float> operator*<float>(float, FloatingPointVector4<float> const&);
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointVector4<double>;
+template FloatingPointVector4<double> operator*<double>(double, FloatingPointVector4<double> const&);
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointVector4<long double>;
+template FloatingPointVector4<long double> operator*<long double>(long double, FloatingPointVector4<long double> const&);
 #endif
 
 }// namespace Details

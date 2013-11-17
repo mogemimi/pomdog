@@ -128,26 +128,6 @@ FloatingPointVector3<T> FloatingPointVector3<T>::operator/(FloatingPointVector3 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> FloatingPointVector3<T>::operator+(T scaleFactor) const
-{
-	return FloatingPointVector3(
-		x + scaleFactor,
-		y + scaleFactor,
-		z + scaleFactor
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
-FloatingPointVector3<T> FloatingPointVector3<T>::operator-(T scaleFactor) const
-{
-	return FloatingPointVector3(
-		x - scaleFactor,
-		y - scaleFactor,
-		z - scaleFactor
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
 FloatingPointVector3<T> FloatingPointVector3<T>::operator*(T scaleFactor) const
 {
 	return FloatingPointVector3(
@@ -164,36 +144,6 @@ FloatingPointVector3<T> FloatingPointVector3<T>::operator/(T scaleFactor) const
 		x / scaleFactor,
 		y / scaleFactor,
 		z / scaleFactor
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
-FloatingPointVector3<T> operator+(T scaleFactor, FloatingPointVector3<T> const& vec)
-{
-	return FloatingPointVector3<T>(
-		scaleFactor + vec.x,
-		scaleFactor + vec.y,
-		scaleFactor + vec.z
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
-FloatingPointVector3<T> operator-(T scaleFactor, FloatingPointVector3<T> const& vec)
-{
-	return FloatingPointVector3<T>(
-		scaleFactor - vec.x,
-		scaleFactor - vec.y,
-		scaleFactor - vec.z
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
-FloatingPointVector3<T> operator*(T scaleFactor, FloatingPointVector3<T> const& vec)
-{
-	return FloatingPointVector3<T>(
-		scaleFactor * vec.x,
-		scaleFactor * vec.y,
-		scaleFactor * vec.z
 	);
 }
 //-----------------------------------------------------------------------
@@ -362,15 +312,28 @@ T* FloatingPointVector3<T>::Data()
 	return &x;
 }
 //-----------------------------------------------------------------------
+template <typename T>
+FloatingPointVector3<T> operator*(T scaleFactor, FloatingPointVector3<T> const& vector)
+{
+	return FloatingPointVector3<T>(
+		scaleFactor * vector.x,
+		scaleFactor * vector.y,
+		scaleFactor * vector.z
+	);
+}
+//-----------------------------------------------------------------------
 // explicit instantiations
 template class FloatingPointVector3<float>;
+template FloatingPointVector3<float> operator*<float>(float, FloatingPointVector3<float> const&);
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointVector3<double>;
+template FloatingPointVector3<double> operator*<double>(double, FloatingPointVector3<double> const&);
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointVector3<long double>;
+template FloatingPointVector3<long double> operator*<long double>(long double, FloatingPointVector3<long double> const&);
 #endif
 
 }// namespace Details

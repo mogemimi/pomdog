@@ -145,17 +145,6 @@ FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator/(T scaleFactor) 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> operator*(T scaleFactor, FloatingPointQuaternion<T> const& other)
-{
-	return FloatingPointQuaternion<T>(
-		scaleFactor * other.x,
-		scaleFactor * other.y,
-		scaleFactor * other.z,
-		scaleFactor * other.w
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
 bool FloatingPointQuaternion<T>::operator==(FloatingPointQuaternion const& other) const
 {
 	return (
@@ -436,15 +425,29 @@ T* FloatingPointQuaternion<T>::Data()
 	return &x;
 }
 //-----------------------------------------------------------------------
+template <typename T>
+FloatingPointQuaternion<T> operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion)
+{
+	return FloatingPointQuaternion<T>(
+		scaleFactor * quaternion.x,
+		scaleFactor * quaternion.y,
+		scaleFactor * quaternion.z,
+		scaleFactor * quaternion.w
+	);
+}
+//-----------------------------------------------------------------------
 // explicit instantiations
 template class FloatingPointQuaternion<float>;
+template FloatingPointQuaternion<float> operator*<float>(float, FloatingPointQuaternion<float> const&);
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointQuaternion<double>;
+template FloatingPointQuaternion<double> operator*<double>(double, FloatingPointQuaternion<double> const&);
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointQuaternion<long double>;
+template FloatingPointQuaternion<long double> operator*<long double>(long double, FloatingPointQuaternion<long double> const&);
 #endif
 
 }// namespace Details

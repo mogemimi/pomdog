@@ -95,8 +95,6 @@ public:
 	FloatingPointMatrix3x3 operator*(T scaleFactor) const;
 	FloatingPointMatrix3x3 operator/(T scaleFactor) const;
 
-	friend FloatingPointMatrix3x3 operator*(T scaleFactor, FloatingPointMatrix3x3 const& matrix);
-
 	bool operator == (FloatingPointMatrix3x3 const& other) const;
 	bool operator != (FloatingPointMatrix3x3 const& other) const;
 	
@@ -251,6 +249,9 @@ public:
 	/// @brief 単位行列です。
 	static FloatingPointMatrix3x3 const Identity;
 };
+
+template <typename T>
+FloatingPointMatrix3x3<T> operator*(T scaleFactor, FloatingPointMatrix3x3<T> const& matrix);
 
 /// @}
 /// @}

@@ -147,12 +147,6 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator/(T scaleFactor) co
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix2x2<T> operator*(T scaleFactor, FloatingPointMatrix2x2<T> const& matrix)
-{
-	return matrix.Concatenate(scaleFactor);
-}
-//-----------------------------------------------------------------------
-template <typename T>
 bool FloatingPointMatrix2x2<T>::operator==(FloatingPointMatrix2x2 const& other) const
 {
 	return (
@@ -242,15 +236,24 @@ T* FloatingPointMatrix2x2<T>::Data()
 	return m[0].data();
 }
 //-----------------------------------------------------------------------
+template <typename T>
+FloatingPointMatrix2x2<T> operator*(T scaleFactor, FloatingPointMatrix2x2<T> const& matrix)
+{
+	return matrix.Concatenate(scaleFactor);
+}
+//-----------------------------------------------------------------------
 // explicit instantiations
 template class FloatingPointMatrix2x2<float>;
+template FloatingPointMatrix2x2<float> operator*<float>(float, FloatingPointMatrix2x2<float> const&);
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointMatrix2x2<double>;
+template FloatingPointMatrix2x2<double> operator*<double>(double, FloatingPointMatrix2x2<double> const&);
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointMatrix2x2<long double>;
+template FloatingPointMatrix2x2<long double> operator*<long double>(long double, FloatingPointMatrix2x2<long double> const&);
 #endif
 
 }// namespace Details

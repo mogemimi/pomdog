@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -76,15 +76,8 @@ public:
 	FloatingPointVector3 operator-(FloatingPointVector3 const&) const;
 	FloatingPointVector3 operator*(FloatingPointVector3 const&) const;
 	FloatingPointVector3 operator/(FloatingPointVector3 const&) const;
-	
-	FloatingPointVector3 operator+(T scaleFactor) const;
-	FloatingPointVector3 operator-(T scaleFactor) const;
 	FloatingPointVector3 operator*(T scaleFactor) const;
 	FloatingPointVector3 operator/(T scaleFactor) const;
-
-	friend FloatingPointVector3 operator+(T scaleFactor, FloatingPointVector3 const&);
-	friend FloatingPointVector3 operator-(T scaleFactor, FloatingPointVector3 const&);
-	friend FloatingPointVector3 operator*(T scaleFactor, FloatingPointVector3 const&);
 
 	bool operator==(FloatingPointVector3 const& other) const;
 	bool operator!=(FloatingPointVector3 const& other) const;
@@ -141,7 +134,8 @@ public:
 	/// result.x = MathHelper::Clamp(source.x, min.x, max.x);
 	/// result.y = MathHelper::Clamp(source.y, min.y, max.y);
 	/// result.z = MathHelper::Clamp(source.z, min.z, max.z);
-	static FloatingPointVector3 Clamp(FloatingPointVector3 const& source, FloatingPointVector3 const& min, FloatingPointVector3 const& max);
+	static FloatingPointVector3 Clamp(FloatingPointVector3 const& source,
+		FloatingPointVector3 const& min, FloatingPointVector3 const& max);
 
 	///@~Japanese
 	/// @brief 2 つのベクトル間のスムーズな補間を計算します。
@@ -199,6 +193,9 @@ public:
 	///@note (0, 0, 1)
 	static FloatingPointVector3 const UnitZ;
 };
+
+template <typename T>
+FloatingPointVector3<T> operator*(T scaleFactor, FloatingPointVector3<T> const& vector);
 
 /// @}
 /// @}
