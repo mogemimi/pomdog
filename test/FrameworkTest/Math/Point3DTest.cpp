@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -7,7 +7,7 @@
 //
 
 #include <iutest/gtest/iutest_switch.hpp>
-#include <pomdog/Math/Point3D.hpp>
+#include <Pomdog/Math/Point3D.hpp>
 
 TEST(FirstTestCase, Point3DTest)
 {

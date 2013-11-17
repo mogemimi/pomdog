@@ -9,7 +9,7 @@
 #ifndef POMDOG_CRC32_HPP
 #define POMDOG_CRC32_HPP
 
-#include <pomdog/Config/FundamentalTypes.hpp>
+#include <Pomdog/Config/FundamentalTypes.hpp>
 
 namespace Pomdog {
 namespace Hashing {

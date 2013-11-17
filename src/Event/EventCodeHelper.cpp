@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <pomdog/Event/EventCodeHelper.hpp>
-#include <pomdog/Utility/Assert.hpp>
+#include <Pomdog/Event/EventCodeHelper.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 #include "../Utility/HashingHelper.hpp"
 #include <algorithm>
 #include <string>

@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include <pomdog/Utility/Assert.hpp>
-#include <pomdog/Utility/Noncopyable.hpp>
+#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Utility/Noncopyable.hpp>
 #include <functional>
 #include <utility>
 

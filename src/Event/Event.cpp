@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <pomdog/Event/Event.hpp>
+#include <Pomdog/Event/Event.hpp>
 
 namespace Pomdog {
 

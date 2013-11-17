@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <pomdog/Math/Rectangle.hpp>
-#include <pomdog/Utility/Assert.hpp>
+#include <Pomdog/Math/Rectangle.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
 

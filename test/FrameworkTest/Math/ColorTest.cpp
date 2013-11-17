@@ -7,7 +7,7 @@
 //
 
 #include <iutest/gtest/iutest_switch.hpp>
-#include <pomdog/Math/Color.hpp>
+#include <Pomdog/Math/Color.hpp>
 
 TEST(FirstTestCase, ColorTest)
 {

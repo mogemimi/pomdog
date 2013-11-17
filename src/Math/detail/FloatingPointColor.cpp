@@ -6,9 +6,9 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <pomdog/Math/detail/FloatingPointColor.hpp>
-#include <pomdog/Utility/Assert.hpp>
-#include <pomdog/Math/MathHelper.hpp>
+#include <Pomdog/Math/detail/FloatingPointColor.hpp>
+#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Math/MathHelper.hpp>
 
 namespace Pomdog {
 namespace Details {

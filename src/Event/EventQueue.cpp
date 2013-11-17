@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <pomdog/Event/EventQueue.hpp>
-#include <pomdog/Utility/Assert.hpp>
+#include <Pomdog/Event/EventQueue.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 #include <algorithm>
 #include <vector>
 #include <mutex>

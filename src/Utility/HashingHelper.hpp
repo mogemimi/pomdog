@@ -9,7 +9,7 @@
 #ifndef POMDOG_HASHINGHELPER_HPP
 #define POMDOG_HASHINGHELPER_HPP
 
-#include <pomdog/Config/FundamentalTypes.hpp>
+#include <Pomdog/Config/FundamentalTypes.hpp>
 #include "CRC32.hpp"
 #include <string>
 

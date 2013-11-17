@@ -6,13 +6,13 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <pomdog/Math/detail/FloatingPointVector3.hpp>
-#include <pomdog/Utility/Assert.hpp>
+#include <Pomdog/Math/detail/FloatingPointVector3.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 #include <cmath>
 #include <limits>
-#include <pomdog/Math/detail/FloatingPointMatrix4x4.hpp>
-#include <pomdog/Math/detail/FloatingPointVector2.hpp>
-#include <pomdog/Math/MathHelper.hpp>
+#include <Pomdog/Math/detail/FloatingPointMatrix4x4.hpp>
+#include <Pomdog/Math/detail/FloatingPointVector2.hpp>
+#include <Pomdog/Math/MathHelper.hpp>
 
 namespace Pomdog {
 namespace Details {

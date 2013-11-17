@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include <pomdog/Utility/Noncopyable.hpp>
-#include <pomdog/Event/EventConnection.hpp>
+#include <Pomdog/Utility/Noncopyable.hpp>
+#include <Pomdog/Event/EventConnection.hpp>
 #include <functional>
 #include <memory>
 

@@ -8,9 +8,9 @@
 
 #include "EventSlotCollection.hpp"
 #include "EventSlot.hpp"
-#include <pomdog/Config/FundamentalTypes.hpp>
-#include <pomdog/Utility/Assert.hpp>
-#include <pomdog/Utility/Exception.hpp>
+#include <Pomdog/Config/FundamentalTypes.hpp>
+#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Utility/Exception.hpp>
 #include <algorithm>
 #include <vector>
 #include <limits>

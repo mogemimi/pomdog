@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <pomdog/Event/EventConnection.hpp>
+#include <Pomdog/Event/EventConnection.hpp>
 #include "detail/EventSlot.hpp"
 #include <utility>
 

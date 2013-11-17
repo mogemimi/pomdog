@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <pomdog/Math/detail/FloatingPointMatrix2x2.hpp>
-#include <pomdog/Utility/Assert.hpp>
+#include <Pomdog/Math/detail/FloatingPointMatrix2x2.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 #include <cmath>
 #include <limits>
 

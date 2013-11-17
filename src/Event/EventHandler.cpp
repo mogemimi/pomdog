@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <pomdog/Event/EventHandler.hpp>
-#include <pomdog/Utility/Assert.hpp>
+#include <Pomdog/Event/EventHandler.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 #include "detail/EventSlot.hpp"
 #include "detail/EventSlotCollection.hpp"
 

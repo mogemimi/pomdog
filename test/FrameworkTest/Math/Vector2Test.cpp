@@ -7,7 +7,7 @@
 //
 
 #include <iutest/gtest/iutest_switch.hpp>
-#include <pomdog/Math/Vector2.hpp>
+#include <Pomdog/Math/Vector2.hpp>
 
 TEST(TrivialCase, Vector2Test)
 {

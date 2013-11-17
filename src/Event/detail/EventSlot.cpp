@@ -8,7 +8,7 @@
 
 #include "EventSlot.hpp"
 #include "EventSlotCollection.hpp"
-#include <pomdog/Utility/Assert.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
 namespace Details {

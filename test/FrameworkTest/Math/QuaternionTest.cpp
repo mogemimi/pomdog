@@ -7,7 +7,7 @@
 //
 
 #include <iutest/gtest/iutest_switch.hpp>
-#include <pomdog/Math/Quaternion.hpp>
+#include <Pomdog/Math/Quaternion.hpp>
 
 TEST(TrivialCase, QuaternionTest)
 {
