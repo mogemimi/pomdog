@@ -9,10 +9,10 @@
 #include <iutest/gtest/iutest_switch.hpp>
 #include <Pomdog/Math/Vector2.hpp>
 
+using Pomdog::Vector2;
+
 TEST(TrivialCase, Vector2Test)
 {
-	using Pomdog::Vector2;
-	
 	Vector2 vec {0, 0};
 	EXPECT_EQ(vec.x, 0.0f);
 	EXPECT_EQ(vec.y, 0.0f);
@@ -24,23 +24,17 @@ TEST(TrivialCase, Vector2Test)
 
 TEST(Addition, Vector2Test)
 {
-	using Pomdog::Vector2;
-	
 	EXPECT_EQ(Vector2(5, 7), Vector2(2, 3) + Vector2(3, 4));
 }
 
 TEST(Subtraction, Vector2Test)
 {
-	using Pomdog::Vector2;
-	
 	EXPECT_EQ(Vector2(-4, -5), Vector2(2, 3) - Vector2(6, 8));
 	EXPECT_EQ(Vector2(+4, +5), Vector2(6, 8) - Vector2(2, 3));
 }
 
 TEST(Multiply, Vector2Test)
 {
-	using Pomdog::Vector2;
-	
 	Vector2 const result(4.0f * 3.0f, 7.0f * 3.0f);
 	
 	EXPECT_EQ(result, Vector2(4, 7) * 3);
@@ -51,8 +45,6 @@ TEST(Multiply, Vector2Test)
 
 TEST(Division, Vector2Test)
 {
-	using Pomdog::Vector2;
-	
 	EXPECT_EQ(Vector2(10.0f/2, 8.0f/2), Vector2(10, 8) / 2);
 	EXPECT_EQ(Vector2(10.0f/2, 8.0f/2), Vector2(10, 8) / Vector2(2, 2));
 }

@@ -23,31 +23,37 @@ namespace Pomdog {
 /// @addtogroup Logging
 /// @{
 
-///@~English
 ///@~Japanese
 /// @brief メッセージ情報を含むログエントリです。
 class LogEntry
 {
 public:
-	///@~English 
 	///@~Japanese
-	/// @brief ログメッセージあるいはトレースメッセージです。
-	std::string Message;
+	/// @brief ログメッセージまたはトレースメッセージです。
+	std::string message;
 
-	///@~English 
 	///@~Japanese
 	/// @brief ログの冗長レベルです。
-	LoggingLevel Verbosity;
+	LoggingLevel verbosity;
 
 public:
+	LogEntry() = delete;
+	LogEntry(LogEntry const&) = default;
+	LogEntry(LogEntry &&) = default;
+	
 	///@~Japanese
 	/// @brief コンストラクタです。
 	/// @param message ログメッセージを指定します。
 	/// @param verbosity ログ出力レベル（冗長レベル）を指定します。
 	LogEntry(std::string const& message, LoggingLevel verbosity)
-		: Message    (message)
-		, Verbosity  (verbosity)
+		: message(message)
+		, verbosity(verbosity)
 	{}
+	
+	virtual ~LogEntry() = default;
+	
+	LogEntry & operator=(LogEntry const&) = default;
+	LogEntry & operator=(LogEntry &&) = default;
 };
 
 /// @}

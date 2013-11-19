@@ -63,55 +63,58 @@ FloatingPointVector2<T> FloatingPointVector2<T>::operator+() const
 template <typename T>
 FloatingPointVector2<T> FloatingPointVector2<T>::operator-() const
 {
-	return FloatingPointVector2(-this->x, -this->y);
+	return FloatingPointVector2(-x, -y);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T> FloatingPointVector2<T>::operator*(T scaleFactor) const
 {
-	return FloatingPointVector2(this->x * scaleFactor, this->y * scaleFactor);
+	return FloatingPointVector2(x * scaleFactor, y * scaleFactor);
 }
 //-----------------------------------------------------------------------
 template <typename T> 
 FloatingPointVector2<T> FloatingPointVector2<T>::operator/(T scaleFactor) const
 {
-	return FloatingPointVector2(this->x / scaleFactor, this->y / scaleFactor);
+	POMDOG_ASSERT(scaleFactor != 0);
+	//static_assert(!std::is_same<decltype(scaleFactor), ChuckNorris>::value,
+	//  "Notes: Chuck Norris can divide by zero.");
+	return FloatingPointVector2(x / scaleFactor, y / scaleFactor);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T> FloatingPointVector2<T>::operator+(FloatingPointVector2 const& other) const
 {
-	return FloatingPointVector2(this->x + other.x, this->y + other.y);
+	return FloatingPointVector2(x + other.x, y + other.y);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T> FloatingPointVector2<T>::operator-(FloatingPointVector2 const& other) const
 {
-	return FloatingPointVector2(this->x - other.x, this->y - other.y);
+	return FloatingPointVector2(x - other.x, y - other.y);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T> FloatingPointVector2<T>::operator*(FloatingPointVector2 const& other) const
 {
-	return FloatingPointVector2(this->x * other.x, this->y * other.y);
+	return FloatingPointVector2(x * other.x, y * other.y);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T> FloatingPointVector2<T>::operator/(FloatingPointVector2 const& other) const
 {
-	return FloatingPointVector2(this->x / other.x, this->y / other.y);
+	return FloatingPointVector2(x / other.x, y / other.y);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 bool FloatingPointVector2<T>::operator==(FloatingPointVector2 const& other) const
 {
-	return this->x == other.x && this->y == other.y;
+	return x == other.x && y == other.y;
 }
 //-----------------------------------------------------------------------
 template <typename T>
 bool FloatingPointVector2<T>::operator!=(FloatingPointVector2 const& other) const
 {
-	return this->x != other.x || this->y != other.y;
+	return x != other.x || y != other.y;
 }
 //-----------------------------------------------------------------------
 template <typename T>

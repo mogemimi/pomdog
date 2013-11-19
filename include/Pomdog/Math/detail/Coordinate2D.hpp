@@ -69,6 +69,8 @@ public:
 
 	bool operator==(Coordinate2D const&) const;
 	bool operator!=(Coordinate2D const&) const;
+	
+	static Coordinate2D const Zero;
 };
 
 template <typename T>

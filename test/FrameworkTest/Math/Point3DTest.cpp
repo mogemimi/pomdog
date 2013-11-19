@@ -9,9 +9,10 @@
 #include <iutest/gtest/iutest_switch.hpp>
 #include <Pomdog/Math/Point3D.hpp>
 
+using Pomdog::Point3D;
+
 TEST(FirstTestCase, Point3DTest)
 {
-	using Pomdog::Point3D;
 	Point3D coodinate{0, 0, 0};
 	EXPECT_EQ(coodinate.x, 0);
 	EXPECT_EQ(coodinate.y, 0);
@@ -34,23 +35,18 @@ TEST(FirstTestCase, Point3DTest)
 
 TEST(Addition, Point3DTest)
 {
-	using Pomdog::Point3D;
-	
 	EXPECT_EQ(Point3D(0, 0, 0), Point3D(0, 0, 0) + Point3D(0, 0, 0));
 	EXPECT_EQ(Point3D(7, 9, 11), Point3D(2, 3, 4) + Point3D(5, 6, 7));
 }
 
 TEST(Subtraction, Point3DTest)
 {
-	using Pomdog::Point3D;
-	
 	EXPECT_EQ(Point3D(0, 0, 0), Point3D(0, 0, 0) - Point3D(0, 0, 0));
 	EXPECT_EQ(Point3D(2 - 5, 3 - 6, 4 - 7), Point3D(2, 3, 4) - Point3D(5, 6, 7));
 }
 
 TEST(Multiply, Point3DTest)
 {
-	using Pomdog::Point3D;
 	Point3D const coordinate{3, 4, 5};
 	
 	EXPECT_EQ(Point3D(9, 16, 25), coordinate * coordinate);
@@ -60,7 +56,6 @@ TEST(Multiply, Point3DTest)
 
 TEST(Division, Point3DTest)
 {
-	using Pomdog::Point3D;
 	Point3D const coordinate{6, 8, 10};
 	
 	EXPECT_EQ(Point3D(1, 1, 1), coordinate / coordinate);

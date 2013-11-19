@@ -69,6 +69,8 @@ public:
 
 	bool operator==(Coordinate3D const&) const;
 	bool operator!=(Coordinate3D const&) const;
+	
+	static Coordinate3D const Zero;
 };
 
 template <typename T>

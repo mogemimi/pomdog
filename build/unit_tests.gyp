@@ -47,6 +47,8 @@
       ],
       'sources': [
         '../test/FrameworkTest/main.cpp',
+        '../test/FrameworkTest/Logging/LogChannelTest.cpp',
+        '../test/FrameworkTest/Logging/LogStreamTest.cpp',
         '../test/FrameworkTest/Math/ColorTest.cpp',
         '../test/FrameworkTest/Math/Point2DTest.cpp',
         '../test/FrameworkTest/Math/Point3DTest.cpp',

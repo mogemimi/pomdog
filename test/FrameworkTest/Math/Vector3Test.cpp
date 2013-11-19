@@ -9,10 +9,10 @@
 #include <iutest/gtest/iutest_switch.hpp>
 #include <Pomdog/Math/Vector3.hpp>
 
+using Pomdog::Vector3;
+
 TEST(TrivialCase, Vector3Test)
 {
-	using Pomdog::Vector3;
-	
 	Vector3 vec {0, 0, 0};
 	EXPECT_EQ(vec.x, 0.0f);
 	EXPECT_EQ(vec.y, 0.0f);
@@ -26,24 +26,18 @@ TEST(TrivialCase, Vector3Test)
 
 TEST(Addition, Vector3Test)
 {
-	using Pomdog::Vector3;
-	
 	EXPECT_EQ(Vector3(1.0f + 4.0f, 2.0f + 5.0f, 3.0f + 6.0f), Vector3(1, 2, 3) + Vector3(4, 5, 6));
 	EXPECT_EQ(Vector3(1.0f - 4.0f, 2.0f - 5.0f, 3.0f - 6.0f), Vector3(1, 2, 3) + Vector3(-4, -5, -6));
 }
 
 TEST(Subtraction, Vector3Test)
 {
-	using Pomdog::Vector3;
-
 	EXPECT_EQ(Vector3(1.0f - 4.0f, 2.0f - 5.0f, 3.0f - 6.0f), Vector3(1, 2, 3) - Vector3(4, 5, 6));
 	EXPECT_EQ(Vector3(4.0f - 1.0f, 5.0f - 2.0f, 6.0f - 3.0f), Vector3(4, 5, 6) - Vector3(1, 2, 3));
 }
 
 TEST(Multiply, Vector3Test)
 {
-	using Pomdog::Vector3;
-	
 	EXPECT_EQ(Vector3(4.0f * 3.0f, 5.0f * 3.0f, 6.0f * 3.0f), Vector3(4, 5, 6) * Vector3(3, 3, 3));
 	EXPECT_EQ(Vector3(4.0f * 3.0f, 5.0f * 3.0f, 6.0f * 3.0f), Vector3(3, 3, 3) * Vector3(4, 5, 6));
 	EXPECT_EQ(Vector3(4.0f * 3.0f, 5.0f * 3.0f, 6.0f * 3.0f), Vector3(4, 5, 6) * 3.0f);
@@ -52,8 +46,6 @@ TEST(Multiply, Vector3Test)
 
 TEST(Division, Vector3Test)
 {
-	using Pomdog::Vector3;
-	
 	EXPECT_EQ(Vector3(4.0f/3.0f, 5.0f/3.0f, 6.0f/3.0f), Vector3(4, 5, 6) / Vector3(3, 3, 3));
 	EXPECT_EQ(Vector3(4.0f/3.0f, 5.0f/3.0f, 6.0f/3.0f), Vector3(4, 5, 6) / 3.0f);
 	EXPECT_EQ(Vector3(3.0f/4.0f, 3.0f/5.0f, 3.0f/6.0f), Vector3(3, 3, 3) / Vector3(4, 5, 6));

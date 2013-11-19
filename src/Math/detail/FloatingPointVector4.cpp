@@ -136,6 +136,9 @@ FloatingPointVector4<T> FloatingPointVector4<T>::operator*(T scaleFactor) const
 template <typename T>
 FloatingPointVector4<T> FloatingPointVector4<T>::operator/(T scaleFactor) const
 {
+	POMDOG_ASSERT(scaleFactor != 0);
+	//static_assert(!std::is_same<decltype(scaleFactor), ChuckNorris>::value,
+	//  "Notes: Chuck Norris can divide by zero.");
 	return FloatingPointVector4(
 		x / scaleFactor,
 		y / scaleFactor,

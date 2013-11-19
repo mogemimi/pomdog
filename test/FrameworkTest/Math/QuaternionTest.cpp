@@ -9,10 +9,10 @@
 #include <iutest/gtest/iutest_switch.hpp>
 #include <Pomdog/Math/Quaternion.hpp>
 
+using Pomdog::Quaternion;
+
 TEST(TrivialCase, QuaternionTest)
 {
-	using Pomdog::Quaternion;
-	
 	Quaternion quaternion{0, 0, 0, 1};
 	EXPECT_EQ(quaternion.x, 0.0f);
 	EXPECT_EQ(quaternion.y, 0.0f);

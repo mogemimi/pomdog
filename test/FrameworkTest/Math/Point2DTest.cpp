@@ -9,9 +9,11 @@
 #include <iutest/gtest/iutest_switch.hpp>
 #include <Pomdog/Math/Point2D.hpp>
 
+using Pomdog::Point2D;
+
 TEST(FirstTestCase, Point2DTest)
 {
-	Pomdog::Point2D coodinate{0, 0};
+	Point2D coodinate{0, 0};
 	EXPECT_EQ(coodinate.x, 0);
 	EXPECT_EQ(coodinate.y, 0);
 	
@@ -29,16 +31,12 @@ TEST(FirstTestCase, Point2DTest)
 
 TEST(Addition, Point2DTest)
 {
-	using Pomdog::Point2D;
-	
 	EXPECT_EQ(Point2D(0, 0), Point2D(0, 0) + Point2D(0, 0));
 	EXPECT_EQ(Point2D(6, 8), Point2D(2, 3) + Point2D(4, 5));
 }
 
 TEST(Subtraction, Point2DTest)
 {
-	using Pomdog::Point2D;
-	
 	EXPECT_EQ(Point2D(0, 0), Point2D(0, 0) - Point2D(0, 0));
 	EXPECT_EQ(Point2D(-4, -5), Point2D(2, 3) - Point2D(6, 8));
 	EXPECT_EQ(Point2D(+4, +5), Point2D(6, 8) - Point2D(2, 3));
@@ -46,7 +44,6 @@ TEST(Subtraction, Point2DTest)
 
 TEST(Multiply, Point2DTest)
 {
-	using Pomdog::Point2D;
 	Point2D const coordinate{3, 4};
 	
 	EXPECT_EQ(Point2D(9, 16), coordinate * coordinate);
@@ -56,7 +53,6 @@ TEST(Multiply, Point2DTest)
 
 TEST(Division, Point2DTest)
 {
-	using Pomdog::Point2D;
 	Point2D const coordinate{6, 8};
 	
 	EXPECT_EQ(Point2D(1, 1), coordinate / coordinate);
