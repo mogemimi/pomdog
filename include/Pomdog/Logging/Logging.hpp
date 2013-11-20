@@ -72,7 +72,7 @@ struct Log
 	
 	///@~Japanese
 	/// @brief 指定されたチャンネルの冗長レベルを設定します。
-	static void SetVerbosity(LoggingLevel verbosity, std::string const& channelName);
+	static void SetVerbosity(std::string const& channelName, LoggingLevel verbosity);
 	
 	///@~Japanese
 	/// @brief 既定のチャンネルに接続します。

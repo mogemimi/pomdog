@@ -53,8 +53,8 @@ TEST(LoggingTest, StreamWithDefaultChannel)
 
 TEST(LoggingTest, AddAndRemoveChannel)
 {
-	EXPECT_EQ(false, Log::ExistChannel("Test"));
-	EXPECT_EQ(false, Log::ExistChannel("Test2"));
+	ASSERT_EQ(false, Log::ExistChannel("Test"));
+	ASSERT_EQ(false, Log::ExistChannel("Test2"));
 	
 	Log::AddChannel("Test", LoggingLevel::Internal);
 	EXPECT_EQ(true, Log::ExistChannel("Test"));
@@ -91,6 +91,59 @@ TEST(LoggingTest, AddAndRemoveChannel)
 	Log::RemoveChannel("Test");
 	EXPECT_EQ(false, Log::ExistChannel("Test"));
 	EXPECT_EQ(false, Log::ExistChannel("Test2"));
+}
+
+TEST(LoggingTest, SetDefaultVerbosityLevels)
+{
+	auto verbosity = Log::GetVerbosity();
+
+	Log::SetVerbosity(LoggingLevel::Internal);
+	EXPECT_EQ(LoggingLevel::Internal, Log::GetVerbosity());
+	
+	Log::SetVerbosity(LoggingLevel::Verbose);
+	EXPECT_EQ(LoggingLevel::Verbose, Log::GetVerbosity());
+	
+	Log::SetVerbosity(LoggingLevel::Brief);
+	EXPECT_EQ(LoggingLevel::Brief, Log::GetVerbosity());
+	
+	Log::SetVerbosity(LoggingLevel::Critical);
+	EXPECT_EQ(LoggingLevel::Critical, Log::GetVerbosity());
+	
+	Log::SetVerbosity(verbosity);
+}
+
+TEST(LoggingTest, SetVerbosityLevels)
+{
+	ASSERT_EQ(false, Log::ExistChannel("Test"));
+
+	Log::AddChannel("Test", LoggingLevel::Internal);
+	EXPECT_EQ(LoggingLevel::Internal, Log::GetVerbosity("Test"));
+	
+	Log::RemoveChannel("Test");
+	Log::AddChannel("Test", LoggingLevel::Verbose);
+	EXPECT_EQ(LoggingLevel::Verbose, Log::GetVerbosity("Test"));
+	
+	Log::RemoveChannel("Test");
+	Log::AddChannel("Test", LoggingLevel::Brief);
+	EXPECT_EQ(LoggingLevel::Brief, Log::GetVerbosity("Test"));
+	
+	Log::RemoveChannel("Test");
+	Log::AddChannel("Test", LoggingLevel::Critical);
+	EXPECT_EQ(LoggingLevel::Critical, Log::GetVerbosity("Test"));
+	
+	Log::SetVerbosity("Test", LoggingLevel::Internal);
+	EXPECT_EQ(LoggingLevel::Internal, Log::GetVerbosity("Test"));
+	
+	Log::SetVerbosity("Test", LoggingLevel::Verbose);
+	EXPECT_EQ(LoggingLevel::Verbose, Log::GetVerbosity("Test"));
+	
+	Log::SetVerbosity("Test", LoggingLevel::Brief);
+	EXPECT_EQ(LoggingLevel::Brief, Log::GetVerbosity("Test"));
+	
+	Log::SetVerbosity("Test", LoggingLevel::Critical);
+	EXPECT_EQ(LoggingLevel::Critical, Log::GetVerbosity("Test"));
+	
+	Log::RemoveChannel("Test");
 }
 
 TEST(LoggingTest, SendToUserChannel)

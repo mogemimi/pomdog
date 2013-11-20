@@ -163,10 +163,10 @@ LoggingLevel Log::GetVerbosity(std::string const& channelName)
 	return channel.GetLevel();
 }
 //-----------------------------------------------------------------------
-void Log::SetVerbosity(LoggingLevel verbosity, std::string const& channelName)
+void Log::SetVerbosity(std::string const& channelName, LoggingLevel verbosity)
 {
 	auto& manager = LogManager::GetInstance();
-	if (!manager.HasChannel(channelName)) {
+	if (manager.HasChannel(channelName)) {
 		auto& channel = manager.FindChannel(channelName);
 		channel.SetLevel(verbosity);
 	}
