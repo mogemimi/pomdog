@@ -31,11 +31,15 @@ public:
 	///@~Japanese
 	/// @brief ログメッセージまたはトレースメッセージです。
 	std::string message;
+	
+	///@~Japanese
+	/// @brief ソースとなるチャンネルです。
+	std::string source;
 
 	///@~Japanese
 	/// @brief ログの冗長レベルです。
 	LoggingLevel verbosity;
-
+	
 public:
 	LogEntry() = delete;
 	LogEntry(LogEntry const&) = default;
@@ -44,9 +48,11 @@ public:
 	///@~Japanese
 	/// @brief コンストラクタです。
 	/// @param message ログメッセージを指定します。
+	/// @param source ソースとなるチャンネル名を指定します。
 	/// @param verbosity ログ出力レベル（冗長レベル）を指定します。
-	LogEntry(std::string const& message, LoggingLevel verbosity)
+	LogEntry(std::string const& message, std::string const& source, LoggingLevel verbosity)
 		: message(message)
+		, source(source)
 		, verbosity(verbosity)
 	{}
 	

@@ -1,5 +1,5 @@
-About open source software included in the Pomdog
-=================================================
+Open source software used in Pomdog
+===============================
 
 ## iutest - iris unit test framework
 

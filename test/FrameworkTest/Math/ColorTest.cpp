@@ -11,7 +11,7 @@
 
 using Pomdog::Color;
 
-TEST(FirstTestCase, ColorTest)
+TEST(ColorTest, FirstTestCase)
 {
 	Color color{1, 1, 1, 1};
 	EXPECT_EQ(color.r, 1.0f);
@@ -32,7 +32,7 @@ TEST(FirstTestCase, ColorTest)
 	EXPECT_EQ(color.a, 4.0f);
 }
 
-TEST(SecondTestCase, ColorTest)
+TEST(ColorTest, SecondTestCase)
 {
 	EXPECT_EQ(Color::Black,  Color(0.0f, 0.0f, 0.0f, 1.0f));
 	EXPECT_EQ(Color::White,  Color(1.0f, 1.0f, 1.0f, 1.0f));
@@ -44,7 +44,7 @@ TEST(SecondTestCase, ColorTest)
 	EXPECT_EQ(Color::CornflowerBlue,   Color(100.0f/255, 149.0f/255, 237.0f/255, 1.0f));
 }
 
-TEST(DoubleColor, ColorTest)
+TEST(ColorTest, DoubleColor)
 {
 	typedef Pomdog::Details::FloatingPointColor<double> Color;
 	EXPECT_EQ(Color::Black,  Color(0, 0, 0, 1));
@@ -57,19 +57,19 @@ TEST(DoubleColor, ColorTest)
 	EXPECT_EQ(Color::CornflowerBlue,   Color(100.0/255, 149.0/255, 237.0/255, 1));
 }
 
-TEST(Addition, ColorTest)
+TEST(ColorTest, Addition)
 {
 	EXPECT_EQ(Color(1.f + 5.f, 2.f + 6.f, 3.f + 7.f, 4.f + 8.f), Color(1, 2, 3, 4) + Color(5, 6, 7, 8));
 	EXPECT_EQ(Color(1.f - 5.f, 2.f - 6.f, 3.f - 7.f, 4.f - 8.f), Color(1, 2, 3, 4) + Color(-5, -6, -7, -8));
 }
 
-TEST(Subtraction, ColorTest)
+TEST(ColorTest, Subtraction)
 {
 	EXPECT_EQ(Color(1.f - 5.f, 2.f - 6.f, 3.f - 7.f, 4.f - 8.f), Color(1, 2, 3, 4) - Color(5, 6, 7, 8));
 	EXPECT_EQ(Color(1.f + 5.f, 2.f + 6.f, 3.f + 7.f, 4.f + 8.f), Color(1, 2, 3, 4) - Color(-5, -6, -7, -8));
 }
 
-TEST(Multiply, ColorTest)
+TEST(ColorTest, Multiply)
 {
 	EXPECT_EQ(Color(4.f * 3.f, 5.f * 3.f, 6.f * 3.f, 7.f * 3.f), Color(4, 5, 6, 7) * 3);
 	EXPECT_EQ(Color(4.f * 3.f, 5.f * 3.f, 6.f * 3.f, 7.f * 3.f), 3.0f * Color(4, 5, 6, 7));

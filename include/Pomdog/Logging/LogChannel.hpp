@@ -44,7 +44,7 @@ public:
 
 	///@~Japanese
 	/// @brief 指定されたスロットを接続します。
-	EventConnection Connect(std::function<void(LogEntry const& log)> const& slot);
+	EventConnection Connect(std::function<void(LogEntry const&)> const& slot);
 
 	///@~Japanese
 	/// @brief チャンネルを識別する名前を取得します。

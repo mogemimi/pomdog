@@ -19,7 +19,7 @@
 namespace Pomdog {
 
 template <typename T>
-class ScopedConnection
+class ScopedConnection final
 {
 public:
 	ScopedConnection() = default;
@@ -34,7 +34,7 @@ public:
 		: connection(std::move(connection))
 	{}
 	
-	virtual ~ScopedConnection()
+	~ScopedConnection()
 	{
 		connection.Disconnect();
 	}

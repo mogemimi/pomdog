@@ -17,7 +17,7 @@ using Pomdog::LogEntry;
 using Pomdog::LoggingLevel;
 using Pomdog::ScopedConnection;
 
-TEST(LoggingLevel, LogChannelTest)
+TEST(LogChannelTest, LoggingLevel)
 {
 	EXPECT_TRUE(LoggingLevel::Critical < LoggingLevel::Brief);
 	EXPECT_TRUE(LoggingLevel::Critical < LoggingLevel::Verbose);
@@ -27,7 +27,7 @@ TEST(LoggingLevel, LogChannelTest)
 	EXPECT_TRUE(LoggingLevel::Verbose < LoggingLevel::Internal);
 }
 
-TEST(LogMessage, LogChannelTest)
+TEST(LogChannelTest, LogMessage)
 {
 	LogChannel channel("test");
 	std::string message;
@@ -43,7 +43,7 @@ TEST(LogMessage, LogChannelTest)
 	EXPECT_EQ(message, "With his bare hands.");
 }
 
-TEST(Disconnect, LogChannelTest)
+TEST(LogChannelTest, Disconnect)
 {
 	LogChannel channel("test");
 	std::string message;
@@ -62,7 +62,7 @@ TEST(Disconnect, LogChannelTest)
 	EXPECT_TRUE(message.empty());
 }
 
-TEST(Connection, LogChannelTest)
+TEST(LogChannelTest, Connection)
 {
 	LogChannel channel("test");
 	std::string message;
@@ -88,7 +88,19 @@ TEST(Connection, LogChannelTest)
 	EXPECT_EQ(message, "connection(B): A disconnect");
 }
 
-TEST(SetLoggingLevel, LogChannelTest)
+TEST(LogChannelTest, GetName)
+{
+	{
+		LogChannel channel("test");
+		EXPECT_EQ("test", channel.GetName());
+	}
+	{
+		LogChannel channel("Chuck Norris");
+		EXPECT_EQ("Chuck Norris", channel.GetName());
+	}
+}
+
+TEST(LogChannelTest, SetLoggingLevel)
 {
 	LogChannel channel("test");
 	
@@ -105,7 +117,7 @@ TEST(SetLoggingLevel, LogChannelTest)
 	EXPECT_EQ(channel.GetLevel(), LoggingLevel::Internal);
 }
 
-TEST(VerbosityLevelThreshold, LogChannelTest)
+TEST(LogChannelTest, VerbosityLevelThreshold)
 {
 	LogChannel channel("test");
 	std::string message;

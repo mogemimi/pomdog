@@ -20,7 +20,7 @@ using Pomdog::LoggingLevel;
 using Pomdog::LogStream;
 using Pomdog::ScopedConnection;
 
-TEST(LogStreamFlush, LogStreamTest)
+TEST(LogStreamTest, LogStreamFlush)
 {
 	LogChannel channel("test");
 	LogStream stream(channel, LoggingLevel::Critical);
@@ -45,7 +45,7 @@ TEST(LogStreamFlush, LogStreamTest)
 	EXPECT_EQ(message, "Chuck Norris makes onions cry!");
 }
 
-TEST(EnumerationToString, LogStreamTest)
+TEST(LogStreamTest, EnumerationToString)
 {
 	LogChannel channel("test");
 	LogStream stream(channel, LoggingLevel::Critical);
@@ -85,7 +85,7 @@ TEST(EnumerationToString, LogStreamTest)
 	EXPECT_EQ(message, "42");
 }
 
-TEST(CopyConstrunctor, LogStreamTest)
+TEST(LogStreamTest, CopyConstrunctor)
 {
 	LogChannel channel("test");
 	std::string message;
@@ -103,7 +103,7 @@ TEST(CopyConstrunctor, LogStreamTest)
 	EXPECT_EQ(message, "Chuck Norris");
 }
 
-TEST(MoveConstrunctor, LogStreamTest)
+TEST(LogStreamTest, MoveConstrunctor)
 {
 	LogChannel channel("test");
 	std::string message;

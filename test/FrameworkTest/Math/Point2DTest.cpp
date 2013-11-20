@@ -11,7 +11,7 @@
 
 using Pomdog::Point2D;
 
-TEST(FirstTestCase, Point2DTest)
+TEST(Point2DTest, FirstTestCase)
 {
 	Point2D coodinate{0, 0};
 	EXPECT_EQ(coodinate.x, 0);
@@ -29,20 +29,20 @@ TEST(FirstTestCase, Point2DTest)
 	EXPECT_EQ(coodinate.y, std::numeric_limits<int>::min());
 }
 
-TEST(Addition, Point2DTest)
+TEST(Point2DTest, Addition)
 {
 	EXPECT_EQ(Point2D(0, 0), Point2D(0, 0) + Point2D(0, 0));
 	EXPECT_EQ(Point2D(6, 8), Point2D(2, 3) + Point2D(4, 5));
 }
 
-TEST(Subtraction, Point2DTest)
+TEST(Point2DTest, Subtraction)
 {
 	EXPECT_EQ(Point2D(0, 0), Point2D(0, 0) - Point2D(0, 0));
 	EXPECT_EQ(Point2D(-4, -5), Point2D(2, 3) - Point2D(6, 8));
 	EXPECT_EQ(Point2D(+4, +5), Point2D(6, 8) - Point2D(2, 3));
 }
 
-TEST(Multiply, Point2DTest)
+TEST(Point2DTest, Multiply)
 {
 	Point2D const coordinate{3, 4};
 	
@@ -51,7 +51,7 @@ TEST(Multiply, Point2DTest)
 	EXPECT_EQ(Point2D(6, 8), 2 * coordinate);
 }
 
-TEST(Division, Point2DTest)
+TEST(Point2DTest, Division)
 {
 	Point2D const coordinate{6, 8};
 	
