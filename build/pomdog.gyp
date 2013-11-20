@@ -114,5 +114,23 @@
         'OTHER_CPLUSPLUSFLAGS': ['-std=c++11','-stdlib=libc++'],
       },
     },
+    {
+      'target_name': 'pomdog',
+      'product_name': 'PomdogEngine',
+      'type': 'static_library',
+      'dependencies': [
+        'pomdog-core',
+      ],
+      'include_dirs': [
+        '../include',
+      ],
+      'sources': [
+        '../include/Pomdog/Graphics/Viewport.hpp',
+        '../src/Graphics/Viewport.cpp',
+      ],
+      'xcode_settings': {
+        'OTHER_CPLUSPLUSFLAGS': ['-std=c++11','-stdlib=libc++'],
+      },
+    },
   ],# "targets"
 }
