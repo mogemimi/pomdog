@@ -1,0 +1,18 @@
+//
+//  Copyright (C) 2013 mogemimi.
+//
+//  Distributed under the MIT License.
+//  See accompanying file LICENSE.md or copy at
+//  http://enginetrouble.net/pomdog/LICENSE.md for details.
+//
+
+#import "AppDelegate.h"
+
+@implementation AppDelegate
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+	// Insert code here to initialize your application
+}
+
+@end
