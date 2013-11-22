@@ -14,6 +14,7 @@
 #endif
 
 #include "../../Config/FundamentalTypes.hpp"
+#include "ForwardDeclarations.hpp"
 #include <type_traits>
 #include <array>
 

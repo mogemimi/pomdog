@@ -14,16 +14,11 @@
 #endif
 
 #include "../../Config/FundamentalTypes.hpp"
+#include "ForwardDeclarations.hpp"
 #include <type_traits>
 
 namespace Pomdog {
 namespace Details {
-
-template <typename T>
-class FloatingPointVector2;
-
-template <typename T>
-class FloatingPointMatrix4x4;
 
 /// @addtogroup Framework
 /// @{

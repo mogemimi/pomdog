@@ -24,7 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 3x3 の float 型の行列を定義します。
-typedef Details::FloatingPointMatrix3x3<float> Matrix3x3;
+using Matrix3x3 = Details::FloatingPointMatrix3x3<float>;
 
 /// @}
 /// @}

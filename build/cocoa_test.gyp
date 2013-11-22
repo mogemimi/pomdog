@@ -76,6 +76,7 @@
         'INFOPLIST_FILE': '../test/CocoaTest/CocoaTest-Info.plist',
         'OTHER_CPLUSPLUSFLAGS': ['-std=c++11','-stdlib=libc++'],
         'OTHER_LDFLAGS': ['-stdlib=libc++'],
+        'CLANG_ENABLE_OBJC_ARC': 'YES',
       },
     },
   ],# "targets"

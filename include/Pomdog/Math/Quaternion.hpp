@@ -24,7 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 四元数（クォータニオン）を表す 4 次元ベクトルを定義します。
-typedef Details::FloatingPointQuaternion<float> Quaternion;
+using Quaternion = Details::FloatingPointQuaternion<float>;
 
 /// @}
 /// @}

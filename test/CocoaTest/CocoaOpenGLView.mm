@@ -12,26 +12,10 @@
 
 @implementation CocoaOpenGLView
 
-@synthesize openGLContext = openGLContext_;
-@synthesize pixelFormat = pixelFormat_;
-
-- (id)initWithFrame:(NSRect)frame
-{
-	self = [super initWithFrame:frame];
-	if (self) {
-		[[NSNotificationCenter defaultCenter] addObserver:self
-			selector:@selector(_surfaceNeedsUpdate:)
-			name:NSViewGlobalFrameDidChangeNotification
-			object:self];
-	}
-	return self;
-}
-
-- (id)initWithFrame:(NSRect)frameRect pixelFormat:(NSOpenGLPixelFormat*)format
+- (id)initWithFrame:(NSRect)frameRect
 {
 	self = [super initWithFrame:frameRect];
 	if (self) {
-		pixelFormat_ = format;
 		[[NSNotificationCenter defaultCenter] addObserver:self
 			selector:@selector(_surfaceNeedsUpdate:)
 			name:NSViewGlobalFrameDidChangeNotification
@@ -40,12 +24,12 @@
 	return self;
 }
 
-- (void) _surfaceNeedsUpdate:(NSNotification*)notification
+- (void)_surfaceNeedsUpdate:(NSNotification*)notification
 {
 	[self update];
 }
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
 	[super awakeFromNib];
 	
@@ -58,6 +42,9 @@
 		NSOpenGLPFAWindow,
 		NSOpenGLPFADoubleBuffer,
 		NSOpenGLPFADepthSize, 24,
+		NSOpenGLPFAStencilSize, 8,
+		NSOpenGLPFAColorSize, 24,
+		NSOpenGLPFAAlphaSize, 8,
 		NSOpenGLPFANoRecovery,
 		NSOpenGLPFAAccelerated,
 		0
@@ -67,27 +54,35 @@
 
 - (void)prepareOpenGL
 {
-	if (openGLContext_) {
+	if (contextOSX && contextOSX->GetNSOpenGLContext()) {
 		return;
 	}
 	
-	if ([self pixelFormat] == nil) {
-		[self setPixelFormat:[CocoaOpenGLView defaultPixelFormat]];
-	}
-	
-	[self setOpenGLContext:[[NSOpenGLContext alloc] initWithFormat:pixelFormat_ shareContext: nil]];
-	[[self openGLContext] makeCurrentContext];
+	NSOpenGLPixelFormat* pixelFormat = [CocoaOpenGLView defaultPixelFormat];
+
+	contextOSX.reset(new Pomdog::Details::OSX::GLContextOSX(pixelFormat));
 }
 
-- (void)update {
+- (void)clearGLContext
+{
+	contextOSX.reset();
 }
 
-- (void)reshape {
+- (void)update
+{
+}
+
+- (void)reshape
+{
 }
 
 - (void)lockFocus
 {
-	NSOpenGLContext* context = [self openGLContext];
+	if (!contextOSX) {
+		return;
+	}
+
+	NSOpenGLContext* context = contextOSX->GetNSOpenGLContext();
 	
 	[super lockFocus];
 	if ([context view] != self) {
@@ -96,9 +91,13 @@
 	[context makeCurrentContext];
 }
 
--(void) viewDidMoveToWindow
+-(void)viewDidMoveToWindow
 {
-	NSOpenGLContext* context = [self openGLContext];
+	if (!contextOSX) {
+		return;
+	}
+
+	NSOpenGLContext* context = contextOSX->GetNSOpenGLContext();
 
 	[super viewDidMoveToWindow];
 	if ([self window] == nil) {
@@ -106,17 +105,9 @@
 	}
 }
 
-- (void)clearGLContext {
-	if (openGLContext_ != nil) {
-		[self setOpenGLContext:nil];
-	}
-}
-
 - (void)drawRect:(NSRect)dirtyRect
 {
-	NSOpenGLContext* context = [self openGLContext];
-
-	[context makeCurrentContext];
+	contextOSX->BindCurrentContext();
 	
 	auto color = Pomdog::Color::CornflowerBlue;
 	glClearColor(color.r, color.g, color.b, 1.0f);
@@ -124,7 +115,7 @@
 	
 	glFlush();
 
-	[context flushBuffer];
+	contextOSX->SwapBuffers();
 }
 
 @end

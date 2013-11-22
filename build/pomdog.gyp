@@ -4,6 +4,26 @@
     ['CXX','/usr/bin/clang++'],
     ['LINK','/usr/bin/clang++'],
   ],
+  'conditions': [
+    ['OS == "win"', {
+      'variables': {
+        'renderer%': 'd3d11',
+        #'input_device%': 'dinput8',
+      },
+    }],
+    ['OS == "mac"', {
+      'variables': {
+        'renderer%': 'gl',
+		#'input_device%': 'none',
+      },
+    }],
+    ['OS == "linux"', {
+      'variables': {
+        'renderer%': 'gl',
+		#'input_device%': 'none',
+      },
+    }],
+  ],
   'target_defaults': {
     'dependencies': [
       #'glew.gyp:glew',
@@ -77,6 +97,7 @@
         '../include/Pomdog/Math/detail/FloatingPointVector2.hpp',
         '../include/Pomdog/Math/detail/FloatingPointVector3.hpp',
         '../include/Pomdog/Math/detail/FloatingPointVector4.hpp',
+        '../include/Pomdog/Math/detail/ForwardDeclarations.hpp',
         '../include/Pomdog/Math/detail/TaggedArithmetic.hpp',
         '../include/Pomdog/Utility/Assert.hpp',
         '../include/Pomdog/Utility/Exception.hpp',
@@ -125,10 +146,48 @@
         '../include',
       ],
       'sources': [
+        '../include/Pomdog/Graphics/GraphicsContext.hpp',
         '../include/Pomdog/Graphics/Viewport.hpp',
+        '../src/Graphics/GraphicsContext.cpp',
         '../src/Graphics/Viewport.cpp',
+        '../src/RenderSystem/NativeGraphicsContext.hpp',
+        '../src/RenderSystem/InternalAttorney.hpp',
+      ],
+      'conditions': [
+        ['renderer == "d3d11"', {
+          'sources': [
+          ],
+          'link_settings': {
+            'libraries': [
+              '-ldxgi.lib',
+              '-ld3d11.lib',
+              '-ld3dcompiler.lib',
+            ],
+          },
+        }],
+        ['renderer == "gl"', {
+          'sources': [
+            '../src/GL4/GL4Prerequisites.hpp',
+            '../src/GL4/GLContext.hpp',
+            '../src/GL4/GraphicsContextGL4.cpp',
+            '../src/GL4/GraphicsContextGL4.hpp',
+          ],
+        }],
+        ['OS == "mac" and renderer == "gl"', {
+          'sources': [
+            '../src/OSX/GLContextOSX.hpp',
+            '../src/OSX/GLContextOSX.mm',
+          ],
+          'link_settings': {
+            'libraries': [
+              '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
+              '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
+            ],
+          },
+        }], # OS == "mac"
       ],
       'xcode_settings': {
+        'CLANG_ENABLE_OBJC_ARC': 'YES',
         'OTHER_CPLUSPLUSFLAGS': ['-std=c++11','-stdlib=libc++'],
       },
     },

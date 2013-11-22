@@ -26,7 +26,7 @@ namespace Pomdog {
 ///// @brief RGBA color.
 /////@~Japanese
 ///// @brief 赤、緑、青、およびアルファ（不透明度）の 4 成分を持つ色を定義します。
-typedef Details::FloatingPointColor<float> Color;
+using Color = Details::FloatingPointColor<float>;
 
 /// @}
 /// @}

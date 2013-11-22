@@ -25,7 +25,7 @@
       }], # target_archs == "mipsel"
       ['target_arch == "x64"', {
         'xcode_settings': {
-          'ARCHS': ['x86_64'],
+          'ARCHS': ['x86_64'], # For the non-fragile objective-c ABI.
         },
       }], # target_archs == "x64"
     ],

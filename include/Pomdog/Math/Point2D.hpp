@@ -23,7 +23,7 @@ namespace Pomdog {
 /// @addtogroup Math
 /// @{
 
-typedef Details::Coordinate2D<std::int32_t> Point2D;
+using Point2D = Details::Coordinate2D<std::int32_t>;
 
 /// @}
 /// @}

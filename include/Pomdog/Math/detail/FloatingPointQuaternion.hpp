@@ -14,20 +14,12 @@
 #endif
 
 #include "../../Config/FundamentalTypes.hpp"
+#include "ForwardDeclarations.hpp"
 #include "../Radian.hpp"
 #include <type_traits>
 
 namespace Pomdog {
 namespace Details {
-
-template <typename T>
-class FloatingPointMatrix3x3;
-
-template <typename T>
-class FloatingPointMatrix4x4;
-
-template <typename T>
-class FloatingPointVector3;
 
 /// @addtogroup Framework
 /// @{

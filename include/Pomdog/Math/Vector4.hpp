@@ -26,7 +26,7 @@ namespace Pomdog {
 /// @brief vector in four-dimensional space.
 ///@~Japanese
 /// @brief 4 つの要素を持つベクトル（4 次元ベクトル）を定義します。
-typedef Details::FloatingPointVector4<float> Vector4;
+using Vector4 = Details::FloatingPointVector4<float>;
 
 /// @}
 /// @}
