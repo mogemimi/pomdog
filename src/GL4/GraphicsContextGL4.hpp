@@ -25,6 +25,10 @@ namespace GL4 {
 class GraphicsContextGL4 final: public RenderSystem::NativeGraphicsContext
 {
 public:
+	GraphicsContextGL4() = delete;
+
+	explicit GraphicsContextGL4(std::shared_ptr<GLContext> openGLContext);
+	
 	~GraphicsContextGL4() = default;
 	
 	void Clear(Color const& color);
@@ -32,7 +36,7 @@ public:
 	void Present();
 	
 private:
-	std::unique_ptr<GLContext> context;
+	std::shared_ptr<GLContext> nativeContext;
 };
 
 }// namespace GL4

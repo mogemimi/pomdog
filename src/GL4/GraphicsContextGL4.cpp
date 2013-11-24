@@ -8,11 +8,17 @@
 
 #include "GraphicsContextGL4.hpp"
 #include <Pomdog/Math/Color.hpp>
+#include <utility>
 
 namespace Pomdog {
 namespace Details {
 namespace GL4 {
 
+//-----------------------------------------------------------------------
+GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<GLContext> openGLContext)
+	: nativeContext(openGLContext)
+{
+}
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Clear(Color const& color)
 {
@@ -24,7 +30,7 @@ void GraphicsContextGL4::Present()
 {
 	glFlush();
 
-	context->SwapBuffers();
+	nativeContext->SwapBuffers();
 }
 
 }// namespace GL4

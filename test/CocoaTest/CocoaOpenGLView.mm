@@ -61,6 +61,7 @@
 	NSOpenGLPixelFormat* pixelFormat = [CocoaOpenGLView defaultPixelFormat];
 
 	contextOSX.reset(new Pomdog::Details::OSX::GLContextOSX(pixelFormat));
+	graphicsContext.reset(new Pomdog::Details::GL4::GraphicsContextGL4(contextOSX));
 }
 
 - (void)clearGLContext
@@ -110,12 +111,9 @@
 	contextOSX->BindCurrentContext();
 	
 	auto color = Pomdog::Color::CornflowerBlue;
-	glClearColor(color.r, color.g, color.b, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	graphicsContext->Clear(color);
 	
-	glFlush();
-
-	contextOSX->SwapBuffers();
+	graphicsContext->Present();
 }
 
 @end

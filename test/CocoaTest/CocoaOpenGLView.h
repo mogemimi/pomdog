@@ -9,21 +9,23 @@
 #import <Cocoa/Cocoa.h>
 #include <memory>
 #include "../../src/OSX/GLContextOSX.hpp"
+#include "../../src/GL4/GraphicsContextGL4.hpp"
 
 @class NSOpenGLContext, NSOpenGLPixelFormat;
 
 @interface CocoaOpenGLView : NSView
 {
 @private
-	std::unique_ptr<Pomdog::Details::OSX::GLContextOSX> contextOSX;
+	std::shared_ptr<Pomdog::Details::OSX::GLContextOSX> contextOSX;
+	std::unique_ptr<Pomdog::Details::GL4::GraphicsContextGL4> graphicsContext;
 }
 
 - (id)initWithFrame:(NSRect)frameRect;
 
+- (void)prepareOpenGL;
+//- (void)prepareOpenGL(std::shared_ptr<GLContextOSX>) context;
+
 - (void)update;
 - (void)reshape;
-
-- (void)prepareOpenGL;
-- (void)clearGLContext;
 
 @end

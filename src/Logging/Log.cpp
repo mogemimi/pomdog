@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <Pomdog/Logging/Logging.hpp>
+#include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
 #include <Pomdog/Logging/LogChannel.hpp>
 #include <Pomdog/Event/EventConnection.hpp>

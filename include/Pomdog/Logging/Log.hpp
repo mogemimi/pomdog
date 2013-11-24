@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_LOGGING_HPP
-#define POMDOG_LOGGING_HPP
+#ifndef POMDOG_LOG_HPP
+#define POMDOG_LOG_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -89,4 +89,4 @@ struct Log
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_LOGGING_HPP)
+#endif // !defined(POMDOG_LOG_HPP)
