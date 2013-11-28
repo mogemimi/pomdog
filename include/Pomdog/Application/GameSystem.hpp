@@ -14,8 +14,10 @@
 #endif
 
 #include "../Config/FundamentalTypes.hpp"
+#include "../Utility/Noncopyable.hpp"
 #include <string>
 #include <memory>
+#include <functional>
 
 namespace Pomdog {
 namespace Details {
@@ -63,7 +65,6 @@ public:
 
 	///@~Japanese 
 	/// @brief 現在のヒープの状況を取得します。
-	/// @return 現在使用しているメモリのサイズ（バイト単位）を返却します。
 	//void GetMemoryUsage(MemorySizer & sizer);
 
 	///@~Japanese

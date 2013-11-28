@@ -13,16 +13,25 @@
 #	pragma once
 #endif
 
+#include <Pomdog/Application/GameSystem.hpp>
+#include <Pomdog/Graphics/GraphicsContext.hpp>
+
 namespace Pomdog {
 
 class CocoaTestGame
 {
 public:
+	explicit CocoaTestGame(GameSystem & rootSystem);
+
 	void Initialize();
 	
 	void Update();
 	
 	void Draw();
+	
+private:
+	std::shared_ptr<GameSystem> gameSystem;
+	std::shared_ptr<GraphicsContext> graphicsContext;
 };
 
 }// namespace Pomdog

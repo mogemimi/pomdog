@@ -146,11 +146,13 @@
         '../include',
       ],
       'sources': [
+        '../include/Pomdog/Application/Bootstrapper.hpp',
         '../include/Pomdog/Application/GameSystem.hpp',
         '../include/Pomdog/Application/detail/SystemHub.hpp',
         '../include/Pomdog/Graphics/GraphicsContext.hpp',
         '../include/Pomdog/Graphics/Viewport.hpp',
         '../src/Application/GameSystem.cpp',
+        '../src/Application/detail/SystemHub.cpp',
         '../src/Graphics/GraphicsContext.cpp',
         '../src/Graphics/Viewport.cpp',
         '../src/RenderSystem/NativeGraphicsContext.hpp',
@@ -178,6 +180,8 @@
         }],
         ['OS == "mac" and renderer == "gl"', {
           'sources': [
+            #'../src/OSX/CocoaOpenGLView.h',
+            #'../src/OSX/CocoaOpenGLView.mm',
             '../src/OSX/GLContextOSX.hpp',
             '../src/OSX/GLContextOSX.mm',
           ],

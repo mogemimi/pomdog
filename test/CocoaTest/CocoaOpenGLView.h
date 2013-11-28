@@ -23,7 +23,6 @@
 - (id)initWithFrame:(NSRect)frameRect;
 
 - (void)prepareOpenGL;
-//- (void)prepareOpenGL(std::shared_ptr<GLContextOSX>) context;
 
 - (void)update;
 - (void)reshape;

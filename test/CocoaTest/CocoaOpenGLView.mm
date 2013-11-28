@@ -8,6 +8,8 @@
 
 #import "CocoaOpenGLView.h"
 #include <OpenGL/gl.h>
+#include <Pomdog/Application/GameSystem.hpp>
+#include <Pomdog/Application/detail/SystemHub.hpp>
 #include <Pomdog/Math/Color.hpp>
 
 @implementation CocoaOpenGLView
@@ -108,12 +110,31 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
+	auto gameSystem = ([]() {
+		if (auto systemHub = Pomdog::Details::GlobalSystemHub().lock()) {
+			return systemHub->GameSystem.lock();
+		}
+		return std::shared_ptr<Pomdog::GameSystem>();
+	})();
+	
+	if (!gameSystem) {
+		return;
+	}
+
+	gameSystem->Update();
+	gameSystem->RenderBegin();
+
 	contextOSX->BindCurrentContext();
 	
-	auto color = Pomdog::Color::CornflowerBlue;
-	graphicsContext->Clear(color);
+	gameSystem->Render();
+	{
+		auto color = Pomdog::Color::CornflowerBlue;
+		graphicsContext->Clear(color);
+		
+		graphicsContext->Present();
+	}
 	
-	graphicsContext->Present();
+	gameSystem->RenderEnd();
 }
 
 @end

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -17,15 +17,22 @@
 
 namespace Pomdog {
 
+class GameSystem;
 class GraphicsContext;
 
 namespace Details {
 
-class SystemHub
+class SystemHub: public std::enable_shared_from_this<SystemHub>
 {
 public:
+	std::weak_ptr<GameSystem> GameSystem;
 	std::weak_ptr<GraphicsContext> GraphicsContext;
 };
+
+void ResetGlobalSystemHub(std::weak_ptr<SystemHub> systemHub);
+void ResetGlobalSystemHub();
+
+std::weak_ptr<SystemHub> GlobalSystemHub();
 
 }// namespace Details
 }// namespace Pomdog

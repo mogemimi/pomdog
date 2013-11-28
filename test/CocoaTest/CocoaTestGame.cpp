@@ -7,27 +7,30 @@
 //
 
 #include "CocoaTestGame.hpp"
+#include <Pomdog/Math/Color.hpp>
 
 namespace Pomdog {
 
-static int a = 0;
+CocoaTestGame::CocoaTestGame(GameSystem & rootSystem)
+{
+	gameSystem = rootSystem.shared_from_this();
+	//graphicsContext = rootSystem.GetGraphicsContext();
+}
 
 void CocoaTestGame::Initialize()
 {
-	//
-	a += 100;
 }
 
 void CocoaTestGame::Update()
 {
-	//
-	a += 2;
 }
 
 void CocoaTestGame::Draw()
 {
-	//
-	a += 3;
+//	auto color = Pomdog::Color::CornflowerBlue;
+//	graphicsContext->Clear(color);
+//	
+//	graphicsContext->Present();
 }
 
 }// namespace Pomdog

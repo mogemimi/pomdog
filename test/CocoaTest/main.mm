@@ -8,7 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
+#include <Pomdog/Application/GameSystem.hpp>
+#include <Pomdog/Application/Bootstrapper.hpp>
+
 int main(int argc, const char * argv[])
 {
+	Pomdog::Bootstrapper bootstrapper;
 	return NSApplicationMain(argc, argv);
 }

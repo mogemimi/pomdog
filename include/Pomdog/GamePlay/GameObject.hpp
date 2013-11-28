@@ -168,7 +168,7 @@ public:
 	}
 
 	///@~Japanese
-	///@brief 指定されたコンポーネントを削除します。
+	/// @brief 指定されたコンポーネントを削除します。
 	template <class T>
 	void RemoveComponent()
 	{
