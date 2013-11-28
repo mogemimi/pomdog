@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -11,10 +11,10 @@
 
 namespace Pomdog {
 
-CocoaTestGame::CocoaTestGame(GameSystem & rootSystem)
+CocoaTestGame::CocoaTestGame(GameHost & host)
+	: gameHost(host.shared_from_this())
 {
-	gameSystem = rootSystem.shared_from_this();
-	//graphicsContext = rootSystem.GetGraphicsContext();
+	//graphicsContext = host.GetGraphicsContext();
 }
 
 void CocoaTestGame::Initialize()

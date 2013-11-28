@@ -25,8 +25,9 @@ namespace Pomdog {
 /// @addtogroup Logging
 /// @{
 
-struct Log
+class Log
 {
+public:
 	///@~Japanese
 	/// @brief 既定のチャンネルにログを出力します。
 	static void LogMessage(std::string const& message,
@@ -36,7 +37,7 @@ struct Log
 	/// @brief 指定されたチャンネルにログを出力します。
 	static void LogMessage(std::string const& message, std::string const& channelName,
 		LoggingLevel verbosity = LoggingLevel::Verbose);
-	
+
 	///@~Japanese
 	/// @brief 既定のチャンネルのストリームを取得します。
 	static LogStream Stream(LoggingLevel verbosity = LoggingLevel::Verbose);

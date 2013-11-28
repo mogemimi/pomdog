@@ -20,17 +20,10 @@
 #include <functional>
 
 // for implemetation
-#include <Pomdog/Application/GameSystem.hpp>
-#include <Pomdog/Application/detail/SystemHub.hpp>
+#include <Pomdog/Application/GameHost.hpp>
+#include "../../../src/Platform.Cocoa/CocoaGameHost.hpp"
 
 namespace Pomdog {
-namespace Details {
-
-class SystemHub;
-
-}// namespace Details
-
-class GameSystem;
 
 /// @addtogroup Framework
 /// @{
@@ -42,22 +35,12 @@ class GameSystem;
 class Bootstrapper final
 {
 private:
-	std::shared_ptr<Details::SystemHub> systemHub;
-	std::shared_ptr<GameSystem> gameSystem;
+	std::shared_ptr<GameHost> gameHost;
 	
 public:
 	Bootstrapper()
 	{
-		systemHub = std::make_shared<Details::SystemHub>();
-		Details::ResetGlobalSystemHub(systemHub);
-
-		gameSystem = std::make_shared<GameSystem>(systemHub);
-		systemHub->GameSystem = gameSystem;
-	}
-	
-	~Bootstrapper()
-	{
-		Details::ResetGlobalSystemHub();
+		gameHost = std::make_shared<Details::Cocoa::CocoaGameHost>();
 	}
 };
 

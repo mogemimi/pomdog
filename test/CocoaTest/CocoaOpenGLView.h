@@ -8,15 +8,15 @@
 
 #import <Cocoa/Cocoa.h>
 #include <memory>
-#include "../../src/OSX/GLContextOSX.hpp"
-#include "../../src/GL4/GraphicsContextGL4.hpp"
+#include "../../src/Platform.Cocoa/CocoaGLContext.hpp"
+#include "../../src/RenderSystem.GL4/GraphicsContextGL4.hpp"
 
 @class NSOpenGLContext, NSOpenGLPixelFormat;
 
 @interface CocoaOpenGLView : NSView
 {
 @private
-	std::shared_ptr<Pomdog::Details::OSX::GLContextOSX> contextOSX;
+	std::shared_ptr<Pomdog::Details::Cocoa::CocoaGLContext> contextOSX;
 	std::unique_ptr<Pomdog::Details::GL4::GraphicsContextGL4> graphicsContext;
 }
 

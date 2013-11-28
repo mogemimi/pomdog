@@ -6,16 +6,16 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "GLContextOSX.hpp"
+#include "CocoaGLContext.hpp"
 #include <Pomdog/Utility/Assert.hpp>
 #include <OpenGL/gl.h>
 
 namespace Pomdog {
 namespace Details {
-namespace OSX {
+namespace Cocoa {
 
 //-----------------------------------------------------------------------
-GLContextOSX::GLContextOSX(NSOpenGLPixelFormat* pixelFormat)
+CocoaGLContext::CocoaGLContext(NSOpenGLPixelFormat* pixelFormat)
 	: openGLContext(nil)
 	, pixelFormat(pixelFormat)
 {
@@ -29,7 +29,7 @@ GLContextOSX::GLContextOSX(NSOpenGLPixelFormat* pixelFormat)
 	[openGLContext makeCurrentContext];
 }
 //-----------------------------------------------------------------------
-GLContextOSX::~GLContextOSX()
+CocoaGLContext::~CocoaGLContext()
 {
 #if !__has_feature(objc_arc)
 	[openGLContext release];
@@ -37,29 +37,29 @@ GLContextOSX::~GLContextOSX()
 #endif
 }
 //-----------------------------------------------------------------------
-void GLContextOSX::BindCurrentContext()
+void CocoaGLContext::BindCurrentContext()
 {
 	POMDOG_ASSERT(openGLContext != nil);
 	[openGLContext makeCurrentContext];
 }
 //-----------------------------------------------------------------------
-void GLContextOSX::UnbindCurrentContext()
+void CocoaGLContext::UnbindCurrentContext()
 {
 	POMDOG_ASSERT(openGLContext != nil);
 	[NSOpenGLContext clearCurrentContext];
 }
 //-----------------------------------------------------------------------
-void GLContextOSX::SwapBuffers()
+void CocoaGLContext::SwapBuffers()
 {
 	POMDOG_ASSERT(openGLContext != nil);
 	[openGLContext flushBuffer];
 }
 //-----------------------------------------------------------------------
-NSOpenGLContext* GLContextOSX::GetNSOpenGLContext()
+NSOpenGLContext* CocoaGLContext::GetNSOpenGLContext()
 {
 	return openGLContext;
 }
 
-}// namespace OSX
+}// namespace Cocoa
 }// namespace Details
 }// namespace Pomdog

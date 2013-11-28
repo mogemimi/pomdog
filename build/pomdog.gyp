@@ -147,11 +147,11 @@
       ],
       'sources': [
         '../include/Pomdog/Application/Bootstrapper.hpp',
-        '../include/Pomdog/Application/GameSystem.hpp',
+        '../include/Pomdog/Application/Game.hpp',
+        '../include/Pomdog/Application/GameHost.hpp',
         '../include/Pomdog/Application/detail/SystemHub.hpp',
         '../include/Pomdog/Graphics/GraphicsContext.hpp',
         '../include/Pomdog/Graphics/Viewport.hpp',
-        '../src/Application/GameSystem.cpp',
         '../src/Application/detail/SystemHub.cpp',
         '../src/Graphics/GraphicsContext.cpp',
         '../src/Graphics/Viewport.cpp',
@@ -172,18 +172,18 @@
         }],
         ['renderer == "gl"', {
           'sources': [
-            '../src/GL4/GL4Prerequisites.hpp',
-            '../src/GL4/GLContext.hpp',
-            '../src/GL4/GraphicsContextGL4.cpp',
-            '../src/GL4/GraphicsContextGL4.hpp',
+            '../src/RenderSystem.GL4/GL4Prerequisites.hpp',
+            '../src/RenderSystem.GL4/GLContext.hpp',
+            '../src/RenderSystem.GL4/GraphicsContextGL4.cpp',
+            '../src/RenderSystem.GL4/GraphicsContextGL4.hpp',
           ],
         }],
         ['OS == "mac" and renderer == "gl"', {
           'sources': [
-            #'../src/OSX/CocoaOpenGLView.h',
-            #'../src/OSX/CocoaOpenGLView.mm',
-            '../src/OSX/GLContextOSX.hpp',
-            '../src/OSX/GLContextOSX.mm',
+            '../src/Platform.Cocoa/CocoaGameHost.cpp',
+            '../src/Platform.Cocoa/CocoaGameHost.hpp',
+            '../src/Platform.Cocoa/CocoaGLContext.hpp',
+            '../src/Platform.Cocoa/CocoaGLContext.mm',
           ],
           'link_settings': {
             'libraries': [

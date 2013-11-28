@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,15 +13,16 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Application/GameSystem.hpp>
+#include <Pomdog/Application/Game.hpp>
+#include <Pomdog/Application/GameHost.hpp>
 #include <Pomdog/Graphics/GraphicsContext.hpp>
 
 namespace Pomdog {
 
-class CocoaTestGame
+class CocoaTestGame: public Game
 {
 public:
-	explicit CocoaTestGame(GameSystem & rootSystem);
+	explicit CocoaTestGame(GameHost & gameHost);
 
 	void Initialize();
 	
@@ -30,7 +31,7 @@ public:
 	void Draw();
 	
 private:
-	std::shared_ptr<GameSystem> gameSystem;
+	std::shared_ptr<GameHost> gameHost;
 	std::shared_ptr<GraphicsContext> graphicsContext;
 };
 

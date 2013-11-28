@@ -17,6 +17,43 @@
 #include <mutex>
 
 namespace Pomdog {
+//namespace Drafts {
+//
+//class Logger
+//{
+//public:
+//	///@~Japanese
+//	/// @param message メッセージの内容です。
+//	static void Info(std::string const& message);
+//
+//	///@~Japanese
+//	/// @brief 深刻なエラーや未定義の動作を引き起こしかねない場合に、警告の通知を受け取ります。
+//	/// @param message 警告の詳細な内容です。
+//	static void Warning(std::string const& message);
+//	
+//	///@~Japanese
+//	/// @brief 回復することが不可能なエラーが起きた場合、呼び出します。
+//	/// @param message エラーの詳細なメッセージを渡します。
+//	static void FatalError(std::string const& message);
+//};
+//
+////-----------------------------------------------------------------------
+//void Logger::Info(std::string const& message)
+//{
+//	Log::LogMessage(message, LoggingLevel::Brief);
+//}
+////-----------------------------------------------------------------------
+//void Logger::Warning(std::string const& message)
+//{
+//	Log::LogMessage(message, LoggingLevel::Brief);
+//}
+////-----------------------------------------------------------------------
+//void Logger::FatalError(std::string const& message)
+//{
+//	Log::LogMessage(message, LoggingLevel::Critical);
+//}
+//
+//}// namespace Drafts
 
 class LogManager final
 {

@@ -7,11 +7,9 @@
 //
 
 #import "AppDelegate.h"
-#include <Pomdog/Application/GameSystem.hpp>
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
 
-using Pomdog::GameSystem;
 using Pomdog::Log;
 using Pomdog::LogEntry;
 using LogConnection = Pomdog::ScopedConnection<Pomdog::EventConnection>;

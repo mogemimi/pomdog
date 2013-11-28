@@ -17,7 +17,6 @@
 
 namespace Pomdog {
 
-class GameSystem;
 class GraphicsContext;
 
 namespace Details {
@@ -25,7 +24,6 @@ namespace Details {
 class SystemHub: public std::enable_shared_from_this<SystemHub>
 {
 public:
-	std::weak_ptr<GameSystem> GameSystem;
 	std::weak_ptr<GraphicsContext> GraphicsContext;
 };
 

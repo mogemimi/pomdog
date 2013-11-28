@@ -31,9 +31,9 @@ public:
 	
 	~GraphicsContextGL4() = default;
 	
-	void Clear(Color const& color);
+	void Clear(Color const& color) override;
 	
-	void Present();
+	void Present() override;
 	
 private:
 	std::shared_ptr<GLContext> nativeContext;

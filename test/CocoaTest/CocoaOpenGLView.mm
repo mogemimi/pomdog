@@ -8,8 +8,8 @@
 
 #import "CocoaOpenGLView.h"
 #include <OpenGL/gl.h>
-#include <Pomdog/Application/GameSystem.hpp>
-#include <Pomdog/Application/detail/SystemHub.hpp>
+//#include <Pomdog/Application/GameSystem.hpp>
+//#include <Pomdog/Application/detail/SystemHub.hpp>
 #include <Pomdog/Math/Color.hpp>
 
 @implementation CocoaOpenGLView
@@ -62,7 +62,7 @@
 	
 	NSOpenGLPixelFormat* pixelFormat = [CocoaOpenGLView defaultPixelFormat];
 
-	contextOSX.reset(new Pomdog::Details::OSX::GLContextOSX(pixelFormat));
+	contextOSX.reset(new Pomdog::Details::Cocoa::CocoaGLContext(pixelFormat));
 	graphicsContext.reset(new Pomdog::Details::GL4::GraphicsContextGL4(contextOSX));
 }
 
@@ -110,23 +110,23 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-	auto gameSystem = ([]() {
-		if (auto systemHub = Pomdog::Details::GlobalSystemHub().lock()) {
-			return systemHub->GameSystem.lock();
-		}
-		return std::shared_ptr<Pomdog::GameSystem>();
-	})();
-	
-	if (!gameSystem) {
-		return;
-	}
+//	auto gameSystem = ([]() {
+//		if (auto systemHub = Pomdog::Details::GlobalSystemHub().lock()) {
+//			return systemHub->GameSystem.lock();
+//		}
+//		return std::shared_ptr<Pomdog::GameSystem>();
+//	})();
+//	
+//	if (!gameSystem) {
+//		return;
+//	}
 
-	gameSystem->Update();
-	gameSystem->RenderBegin();
+//	gameSystem->Update();
+//	gameSystem->RenderBegin();
 
 	contextOSX->BindCurrentContext();
 	
-	gameSystem->Render();
+//	gameSystem->Render();
 	{
 		auto color = Pomdog::Color::CornflowerBlue;
 		graphicsContext->Clear(color);
@@ -134,7 +134,7 @@
 		graphicsContext->Present();
 	}
 	
-	gameSystem->RenderEnd();
+//	gameSystem->RenderEnd();
 }
 
 @end

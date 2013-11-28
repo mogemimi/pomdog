@@ -6,29 +6,36 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <Pomdog/Application/detail/SystemHub.hpp>
-#include <utility>
+#include "CocoaGameHost.hpp"
 
 namespace Pomdog {
 namespace Details {
-
-static std::weak_ptr<SystemHub> globalSystemHub;
+namespace Cocoa {
 
 //-----------------------------------------------------------------------
-void ResetGlobalSystemHub(std::weak_ptr<SystemHub> systemHub)
+CocoaGameHost::CocoaGameHost()
+	: exitRequest(false)
 {
-	globalSystemHub = std::move(systemHub);
+	systemHub = std::make_shared<Details::SystemHub>();
+	Details::ResetGlobalSystemHub(systemHub);
 }
 //-----------------------------------------------------------------------
-void ResetGlobalSystemHub()
+CocoaGameHost::~CocoaGameHost()
 {
-	globalSystemHub.reset();
+	Details::ResetGlobalSystemHub();
 }
 //-----------------------------------------------------------------------
-std::weak_ptr<SystemHub> GlobalSystemHub()
+void CocoaGameHost::Run()
 {
-	return globalSystemHub;
+	///@todo Not implemented
+	/// Insert code here to run your application
+}
+//-----------------------------------------------------------------------
+void CocoaGameHost::Exit()
+{
+	exitRequest = true;
 }
 
+}// namespace Cocoa
 }// namespace Details
 }// namespace Pomdog
