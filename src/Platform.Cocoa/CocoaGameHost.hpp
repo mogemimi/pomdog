@@ -14,7 +14,6 @@
 #endif
 
 #include <Pomdog/Application/GameHost.hpp>
-#include <Pomdog/Application/detail/SystemHub.hpp>
 #include <memory>
 
 namespace Pomdog {
@@ -33,7 +32,6 @@ public:
 	void Exit() override;
 	
 private:
-	std::shared_ptr<Details::SystemHub> systemHub;
 	bool exitRequest;
 };
 

@@ -25,7 +25,7 @@ public:
 	ScopedConnection() = default;
 	ScopedConnection(ScopedConnection const&) = delete;
 	ScopedConnection(ScopedConnection &&) = default;
-
+	
 	explicit ScopedConnection(T const& connection)
 		: connection(connection)
 	{}
@@ -38,6 +38,9 @@ public:
 	{
 		connection.Disconnect();
 	}
+	
+	ScopedConnection & operator=(ScopedConnection const&) = delete;
+	ScopedConnection & operator=(ScopedConnection &&) = default;
 
 	void Reset()
 	{
@@ -57,7 +60,7 @@ public:
 	}
 
 private:
-	static_assert(std::is_class<T>::value, "");
+	static_assert(std::is_class<T>::value, "T is class");
 	T connection;
 };
 

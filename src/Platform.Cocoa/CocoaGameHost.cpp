@@ -16,19 +16,19 @@ namespace Cocoa {
 CocoaGameHost::CocoaGameHost()
 	: exitRequest(false)
 {
-	systemHub = std::make_shared<Details::SystemHub>();
-	Details::ResetGlobalSystemHub(systemHub);
 }
 //-----------------------------------------------------------------------
 CocoaGameHost::~CocoaGameHost()
 {
-	Details::ResetGlobalSystemHub();
 }
 //-----------------------------------------------------------------------
 void CocoaGameHost::Run()
 {
 	///@todo Not implemented
 	/// Insert code here to run your application
+	
+	//while (!exitRequest) {
+	//}
 }
 //-----------------------------------------------------------------------
 void CocoaGameHost::Exit()

@@ -21,9 +21,12 @@
 
 // for implemetation
 #include <Pomdog/Application/GameHost.hpp>
-#include "../../../src/Platform.Cocoa/CocoaGameHost.hpp"
+#include <Pomdog/Application/detail/PlatformSystem.hpp>
 
 namespace Pomdog {
+
+class Game;
+class GameHost;
 
 /// @addtogroup Framework
 /// @{
@@ -31,16 +34,24 @@ namespace Pomdog {
 /// @{
 
 ///@~Japanese
-///  @brief GameSystem を含むすべてのサブシステムをの起動、およびアプリケーションの実行を行います。
+/// @brief すべてのサブシステムをの起動、およびアプリケーションの実行を行います。
+template <class GameClass>
 class Bootstrapper final
 {
 private:
-	std::shared_ptr<GameHost> gameHost;
+	static_assert(std::is_base_of<Game, GameClass>::value, "GameClass is base of Pomdog::Game.");
+	static_assert(!std::is_abstract<GameClass>::value, "GameClass is not abstract.");
 	
+	std::shared_ptr<GameHost> gameHost;
+	std::shared_ptr<GameClass> game;
+
 public:
 	Bootstrapper()
 	{
-		gameHost = std::make_shared<Details::Cocoa::CocoaGameHost>();
+		using Pomdog::Details::PlatformSystem;
+		
+		gameHost = PlatformSystem::CreateGameHost();
+		game = std::make_shared<GameClass>(*gameHost);
 	}
 };
 

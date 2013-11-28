@@ -149,10 +149,9 @@
         '../include/Pomdog/Application/Bootstrapper.hpp',
         '../include/Pomdog/Application/Game.hpp',
         '../include/Pomdog/Application/GameHost.hpp',
-        '../include/Pomdog/Application/detail/SystemHub.hpp',
+        '../include/Pomdog/Application/detail/PlatformSystem.hpp',
         '../include/Pomdog/Graphics/GraphicsContext.hpp',
         '../include/Pomdog/Graphics/Viewport.hpp',
-        '../src/Application/detail/SystemHub.cpp',
         '../src/Graphics/GraphicsContext.cpp',
         '../src/Graphics/Viewport.cpp',
         '../src/RenderSystem/NativeGraphicsContext.hpp',
@@ -184,6 +183,7 @@
             '../src/Platform.Cocoa/CocoaGameHost.hpp',
             '../src/Platform.Cocoa/CocoaGLContext.hpp',
             '../src/Platform.Cocoa/CocoaGLContext.mm',
+            '../src/Platform.Cocoa/PlatformSystemCocoa.cpp',
           ],
           'link_settings': {
             'libraries': [
