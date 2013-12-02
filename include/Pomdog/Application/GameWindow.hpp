@@ -31,7 +31,7 @@ class Rectangle;
 class GameWindow: Noncopyable
 {
 public:	
-	virtual	~GameWindow() = default;
+	virtual ~GameWindow() = default;
 
 	///@~Japanese
 	/// @brief プレイヤーによるウィンドウサイズの変更を許可するかどうかを取得します。

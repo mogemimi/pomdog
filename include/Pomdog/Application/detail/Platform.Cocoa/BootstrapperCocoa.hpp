@@ -69,4 +69,4 @@ public:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_BOOTSTRAPPER_HPP)
+#endif // !defined(POMDOG_DETAIL_BOOTSTRAPPERCOCOA_HPP)

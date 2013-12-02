@@ -43,7 +43,7 @@ bool CocoaGameWindow::GetAllowPlayerResizing() const
 {
 	///@todo Not implemented
 	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "CocoaGameWindow::SetAllowPlayerResizing");
+		"Not implemented", "CocoaGameWindow::GetAllowPlayerResizing");
 }
 //-----------------------------------------------------------------------
 void CocoaGameWindow::SetAllowPlayerResizing(bool allowResizing)
