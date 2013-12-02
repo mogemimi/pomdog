@@ -27,11 +27,12 @@ public:
 
 	~CocoaGameHost();
 
-	void Run() override;
+	void Run(std::weak_ptr<Game> game) override;
 	
 	void Exit() override;
 	
 private:
+	std::weak_ptr<Game> game;
 	bool exitRequest;
 };
 

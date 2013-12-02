@@ -19,6 +19,8 @@
 
 namespace Pomdog {
 
+class Game;
+
 /// @addtogroup Framework
 /// @{
 /// @addtogroup Application
@@ -31,8 +33,7 @@ public:
 	
 	///@~Japanese
 	/// @brief アプリケーションを実行します。
-	virtual void Run() = 0;
-	//virtual void Run(std::shared_ptr<Game> game) = 0;
+	virtual void Run(std::weak_ptr<Game> game) = 0;
 	
 	///@~Japanese
 	/// @brief 実行中のゲームおよびアプリケーションを終了します。

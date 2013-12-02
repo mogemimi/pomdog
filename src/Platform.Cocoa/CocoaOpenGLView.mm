@@ -6,14 +6,12 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#import "CocoaOpenGLView.h"
+#import "CocoaOpenGLView.hpp"
 #include <OpenGL/gl.h>
-//#include <Pomdog/Application/GameSystem.hpp>
-//#include <Pomdog/Application/detail/SystemHub.hpp>
 #include <Pomdog/Math/Color.hpp>
 
 @implementation CocoaOpenGLView
-
+//-----------------------------------------------------------------------
 - (id)initWithFrame:(NSRect)frameRect
 {
 	self = [super initWithFrame:frameRect];
@@ -25,19 +23,19 @@
 	}
 	return self;
 }
-
+//-----------------------------------------------------------------------
 - (void)_surfaceNeedsUpdate:(NSNotification*)notification
 {
 	[self update];
 }
-
+//-----------------------------------------------------------------------
 - (void)awakeFromNib
 {
 	[super awakeFromNib];
 	
 	[self prepareOpenGL];
 }
-
+//-----------------------------------------------------------------------
 + (NSOpenGLPixelFormat*)defaultPixelFormat
 {
 	NSOpenGLPixelFormatAttribute attribute[] = {
@@ -53,7 +51,7 @@
 	};
 	return [[NSOpenGLPixelFormat alloc] initWithAttributes:attribute];
 }
-
+//-----------------------------------------------------------------------
 - (void)prepareOpenGL
 {
 	if (contextOSX && contextOSX->GetNSOpenGLContext()) {
@@ -65,20 +63,20 @@
 	contextOSX.reset(new Pomdog::Details::Cocoa::CocoaGLContext(pixelFormat));
 	graphicsContext.reset(new Pomdog::Details::GL4::GraphicsContextGL4(contextOSX));
 }
-
+//-----------------------------------------------------------------------
 - (void)clearGLContext
 {
 	contextOSX.reset();
 }
-
+//-----------------------------------------------------------------------
 - (void)update
 {
 }
-
+//-----------------------------------------------------------------------
 - (void)reshape
 {
 }
-
+//-----------------------------------------------------------------------
 - (void)lockFocus
 {
 	if (!contextOSX) {
@@ -93,7 +91,7 @@
 	}
 	[context makeCurrentContext];
 }
-
+//-----------------------------------------------------------------------
 -(void)viewDidMoveToWindow
 {
 	if (!contextOSX) {
@@ -107,7 +105,7 @@
 		[context clearDrawable];
 	}
 }
-
+//-----------------------------------------------------------------------
 - (void)drawRect:(NSRect)dirtyRect
 {
 //	auto gameSystem = ([]() {

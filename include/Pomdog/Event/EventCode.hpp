@@ -25,9 +25,9 @@ struct EventCodeTag {};
 }// namespace Tags
 }// namespace Details
 
-typedef Details::Tagged<
+using EventCode = Details::Tagged<
 	std::uint32_t, Details::Tags::EventCodeTag
-> EventCode;
+>;
 
 }// namespace Pomdog
 

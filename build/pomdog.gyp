@@ -146,9 +146,9 @@
         '../include',
       ],
       'sources': [
-        '../include/Pomdog/Application/Bootstrapper.hpp',
         '../include/Pomdog/Application/Game.hpp',
         '../include/Pomdog/Application/GameHost.hpp',
+        '../include/Pomdog/Application/GameWindow.hpp',
         '../include/Pomdog/Application/detail/PlatformSystem.hpp',
         '../include/Pomdog/Graphics/GraphicsContext.hpp',
         '../include/Pomdog/Graphics/Viewport.hpp',
@@ -179,10 +179,16 @@
         }],
         ['OS == "mac" and renderer == "gl"', {
           'sources': [
+            '../include/Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp',
+            '../src/Platform.Cocoa/BootstrapperCocoa.mm',
             '../src/Platform.Cocoa/CocoaGameHost.cpp',
             '../src/Platform.Cocoa/CocoaGameHost.hpp',
+            '../src/Platform.Cocoa/CocoaGameWindow.hpp',
+            '../src/Platform.Cocoa/CocoaGameWindow.mm',
             '../src/Platform.Cocoa/CocoaGLContext.hpp',
             '../src/Platform.Cocoa/CocoaGLContext.mm',
+            '../src/Platform.Cocoa/CocoaOpenGLView.hpp',
+            '../src/Platform.Cocoa/CocoaOpenGLView.mm',
             '../src/Platform.Cocoa/PlatformSystemCocoa.cpp',
           ],
           'link_settings': {

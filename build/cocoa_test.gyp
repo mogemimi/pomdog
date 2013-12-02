@@ -57,8 +57,6 @@
             '../test/CocoaTest/CocoaTest-Prefix.pch',
             '../test/CocoaTest/AppDelegate.h',
             '../test/CocoaTest/AppDelegate.mm',
-            '../test/CocoaTest/CocoaOpenGLView.h',
-            '../test/CocoaTest/CocoaOpenGLView.mm',
             '../test/CocoaTest/CocoaTestGame.cpp',
             '../test/CocoaTest/CocoaTestGame.hpp',
           ],

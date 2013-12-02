@@ -7,6 +7,7 @@
 //
 
 #include "CocoaGameHost.hpp"
+#include "Game.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -22,13 +23,21 @@ CocoaGameHost::~CocoaGameHost()
 {
 }
 //-----------------------------------------------------------------------
-void CocoaGameHost::Run()
+void CocoaGameHost::Run(std::weak_ptr<Game> weakGame)
 {
-	///@todo Not implemented
-	/// Insert code here to run your application
+	auto game = weakGame.lock();
 	
-	//while (!exitRequest) {
-	//}
+	if (!game) {
+		return;
+	}
+	
+	game->Initialize();
+	
+	while (!exitRequest)
+	{
+		game->Update();
+		game->Draw();
+	}
 }
 //-----------------------------------------------------------------------
 void CocoaGameHost::Exit()
