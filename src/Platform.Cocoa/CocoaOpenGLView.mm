@@ -9,6 +9,7 @@
 #import "CocoaOpenGLView.hpp"
 #include <OpenGL/gl.h>
 #include <Pomdog/Math/Color.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 
 @implementation CocoaOpenGLView
 //-----------------------------------------------------------------------
@@ -108,31 +109,19 @@
 //-----------------------------------------------------------------------
 - (void)drawRect:(NSRect)dirtyRect
 {
-//	auto gameSystem = ([]() {
-//		if (auto systemHub = Pomdog::Details::GlobalSystemHub().lock()) {
-//			return systemHub->GameSystem.lock();
-//		}
-//		return std::shared_ptr<Pomdog::GameSystem>();
-//	})();
-//	
-//	if (!gameSystem) {
-//		return;
-//	}
-
-//	gameSystem->Update();
-//	gameSystem->RenderBegin();
+	NSOpenGLContext* openGLContext = contextOSX->GetNSOpenGLContext();
+	POMDOG_ASSERT(openGLContext);
+	
+	CGLLockContext((CGLContextObj)[openGLContext CGLContextObj]);
 
 	contextOSX->BindCurrentContext();
 	
-//	gameSystem->Render();
-	{
-		auto color = Pomdog::Color::CornflowerBlue;
-		graphicsContext->Clear(color);
-		
-		graphicsContext->Present();
-	}
+	auto color = Pomdog::Color::CornflowerBlue;
+	graphicsContext->Clear(color);
 	
-//	gameSystem->RenderEnd();
+	graphicsContext->Present();
+
+	CGLUnlockContext((CGLContextObj)[openGLContext CGLContextObj]);
 }
 
 @end

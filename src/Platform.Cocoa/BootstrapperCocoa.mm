@@ -7,9 +7,9 @@
 //
 
 #include <Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp>
-#include <Pomdog/Application/detail/PlatformSystem.hpp>
 #include <Pomdog/Utility/Assert.hpp>
 #include "CocoaGameWindow.hpp"
+#include "CocoaGameHost.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -17,15 +17,16 @@ namespace Cocoa {
 //-----------------------------------------------------------------------
 BootstrapperCocoa::BootstrapperCocoa()
 {
-	using Pomdog::Details::PlatformSystem;
-	
-	gameHost = PlatformSystem::CreateGameHost();
 }
 //-----------------------------------------------------------------------
 void BootstrapperCocoa::BuildOpenGLView(NSWindow* nativeWindow)
 {
 	POMDOG_ASSERT(nativeWindow != nil);
-	gameWindow = std::make_shared<CocoaGameWindow>(nativeWindow);
+	auto window = std::make_shared<CocoaGameWindow>(nativeWindow);
+	auto host = std::make_shared<CocoaGameHost>(window);
+	
+	gameWindow = window;
+	gameHost = host;
 }
 
 }// namespace Cocoa

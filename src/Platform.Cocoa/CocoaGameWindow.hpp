@@ -15,7 +15,6 @@
 
 #include <Pomdog/Application/GameWindow.hpp>
 #include <Pomdog/Math/Rectangle.hpp>
-
 #import <Cocoa/Cocoa.h>
 
 @class NSWindow, CocoaOpenGLView;
@@ -54,6 +53,13 @@ public:
 	/// @copydoc GameWindow
 	void SetClientBounds(Rectangle const& clientBounds) override;
 	
+	///@~English
+	/// @return true if the window is minimized, false otherwise.
+	///@~Japanese
+	/// @brief ウィンドウが最小化状態かどうかを取得します。
+	/// @return ウィンドウが最小化のときは true を、それ以外は false を返します。
+	bool IsMinimized() const;
+		
 private:
 	NSWindow* nativeWindow;
 	CocoaOpenGLView* openGLView;

@@ -8,14 +8,18 @@
 
 #include "CocoaGameHost.hpp"
 #include "Game.hpp"
+#include <utility>
+#include "CocoaGameWindow.hpp"
+#include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
 //-----------------------------------------------------------------------
-CocoaGameHost::CocoaGameHost()
+CocoaGameHost::CocoaGameHost(std::shared_ptr<CocoaGameWindow> window)
 	: exitRequest(false)
+	, gameWindow(window)
 {
 }
 //-----------------------------------------------------------------------
@@ -36,13 +40,24 @@ void CocoaGameHost::Run(std::weak_ptr<Game> weakGame)
 	while (!exitRequest)
 	{
 		game->Update();
-		game->Draw();
+		RenderFrame(*game);
 	}
 }
 //-----------------------------------------------------------------------
 void CocoaGameHost::Exit()
 {
 	exitRequest = true;
+}
+//-----------------------------------------------------------------------
+void CocoaGameHost::RenderFrame(Game & game)
+{
+	POMDOG_ASSERT(gameWindow);
+
+	if (!gameWindow || gameWindow->IsMinimized()) {
+		// skip rendering
+		return;
+	}
+	game.Draw();
 }
 
 }// namespace Cocoa

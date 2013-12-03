@@ -181,8 +181,8 @@
           'sources': [
             '../include/Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp',
             '../src/Platform.Cocoa/BootstrapperCocoa.mm',
-            '../src/Platform.Cocoa/CocoaGameHost.cpp',
             '../src/Platform.Cocoa/CocoaGameHost.hpp',
+            '../src/Platform.Cocoa/CocoaGameHost.mm',
             '../src/Platform.Cocoa/CocoaGameWindow.hpp',
             '../src/Platform.Cocoa/CocoaGameWindow.mm',
             '../src/Platform.Cocoa/CocoaOpenGLContext.hpp',

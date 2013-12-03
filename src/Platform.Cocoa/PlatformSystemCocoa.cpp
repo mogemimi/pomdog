@@ -15,11 +15,12 @@ namespace Details {
 
 using Cocoa::CocoaGameHost;
 
-std::shared_ptr<GameHost> PlatformSystem::CreateGameHost()
-{
-	auto gameHost = std::make_shared<CocoaGameHost>();
-	return std::move(gameHost);
-}
+//std::shared_ptr<GameHost> PlatformSystem::CreateGameHost()
+//{
+//	//auto gameHost = std::make_shared<CocoaGameHost>();
+//	//return std::move(gameHost);
+//	return {};
+//}
 
 }// namespace Details
 }// namespace Pomdog

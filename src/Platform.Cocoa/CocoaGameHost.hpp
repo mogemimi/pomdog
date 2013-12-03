@@ -20,10 +20,12 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
+class CocoaGameWindow;
+
 class CocoaGameHost final: public GameHost
 {
 public:
-	CocoaGameHost();
+	explicit CocoaGameHost(std::shared_ptr<CocoaGameWindow> window);
 
 	~CocoaGameHost();
 
@@ -32,7 +34,11 @@ public:
 	void Exit() override;
 	
 private:
+	void RenderFrame(Game & game);
+	
+private:
 	std::weak_ptr<Game> game;
+	std::shared_ptr<CocoaGameWindow> gameWindow;
 	bool exitRequest;
 };
 

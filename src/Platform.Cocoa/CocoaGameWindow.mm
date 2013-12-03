@@ -86,6 +86,11 @@ void CocoaGameWindow::SetClientBounds(Rectangle const& clientBounds)
 
 	[nativeWindow setFrame:bounds display:YES animate:YES];
 }
+//-----------------------------------------------------------------------
+bool CocoaGameWindow::IsMinimized() const
+{
+	return [nativeWindow isMiniaturized] == TRUE;
+}
 
 }// namespace Cocoa
 }// namespace Details
