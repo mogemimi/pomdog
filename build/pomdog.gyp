@@ -172,9 +172,9 @@
         ['renderer == "gl"', {
           'sources': [
             '../src/RenderSystem.GL4/GL4Prerequisites.hpp',
-            '../src/RenderSystem.GL4/GLContext.hpp',
             '../src/RenderSystem.GL4/GraphicsContextGL4.cpp',
             '../src/RenderSystem.GL4/GraphicsContextGL4.hpp',
+            '../src/RenderSystem.GL4/OpenGLContext.hpp',
           ],
         }],
         ['OS == "mac" and renderer == "gl"', {
@@ -185,8 +185,8 @@
             '../src/Platform.Cocoa/CocoaGameHost.hpp',
             '../src/Platform.Cocoa/CocoaGameWindow.hpp',
             '../src/Platform.Cocoa/CocoaGameWindow.mm',
-            '../src/Platform.Cocoa/CocoaGLContext.hpp',
-            '../src/Platform.Cocoa/CocoaGLContext.mm',
+            '../src/Platform.Cocoa/CocoaOpenGLContext.hpp',
+            '../src/Platform.Cocoa/CocoaOpenGLContext.mm',
             '../src/Platform.Cocoa/CocoaOpenGLView.hpp',
             '../src/Platform.Cocoa/CocoaOpenGLView.mm',
             '../src/Platform.Cocoa/PlatformSystemCocoa.cpp',

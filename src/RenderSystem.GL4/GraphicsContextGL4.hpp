@@ -15,7 +15,7 @@
 
 #include "GL4Prerequisites.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
-#include "GLContext.hpp"
+#include "OpenGLContext.hpp"
 #include <memory>
 
 namespace Pomdog {
@@ -27,7 +27,7 @@ class GraphicsContextGL4 final: public RenderSystem::NativeGraphicsContext
 public:
 	GraphicsContextGL4() = delete;
 
-	explicit GraphicsContextGL4(std::shared_ptr<GLContext> openGLContext);
+	explicit GraphicsContextGL4(std::shared_ptr<OpenGLContext> openGLContext);
 	
 	~GraphicsContextGL4() = default;
 	
@@ -36,7 +36,7 @@ public:
 	void Present() override;
 	
 private:
-	std::shared_ptr<GLContext> nativeContext;
+	std::shared_ptr<OpenGLContext> nativeContext;
 };
 
 }// namespace GL4

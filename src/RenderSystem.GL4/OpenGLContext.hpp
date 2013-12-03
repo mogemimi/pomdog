@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_GL4_GLCONTEXT_HPP
-#define POMDOG_GL4_GLCONTEXT_HPP
+#ifndef POMDOG_GL4_OPENGLCONTEXT_HPP
+#define POMDOG_GL4_OPENGLCONTEXT_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -19,10 +19,10 @@ namespace Pomdog {
 namespace Details {
 namespace GL4 {
 
-class GLContext: Noncopyable
+class OpenGLContext: Noncopyable
 {
 public:
-	virtual ~GLContext() = default;
+	virtual ~OpenGLContext() = default;
 
 	virtual void BindCurrentContext() = 0;
 
@@ -35,4 +35,4 @@ public:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_GL4_GLCONTEXT_HPP)
+#endif // !defined(POMDOG_GL4_OPENGLCONTEXT_HPP)

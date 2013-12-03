@@ -6,14 +6,14 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_COCOA_GLCONTEXT_HPP
-#define POMDOG_COCOA_GLCONTEXT_HPP
+#ifndef POMDOG_COCOA_OPENGLCONTEXT_HPP
+#define POMDOG_COCOA_OPENGLCONTEXT_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
 #endif
 
-#include "../RenderSystem.GL4/GLContext.hpp"
+#include "../RenderSystem.GL4/OpenGLContext.hpp"
 #import <Cocoa/Cocoa.h>
 
 @class NSOpenGLContext, NSOpenGLPixelFormat;
@@ -22,14 +22,14 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
-class CocoaGLContext final: public GL4::GLContext
+class CocoaOpenGLContext final: public GL4::OpenGLContext
 {
 public:
-	CocoaGLContext() = delete;
+	CocoaOpenGLContext() = delete;
 
-	explicit CocoaGLContext(NSOpenGLPixelFormat* pixelFormat);
+	explicit CocoaOpenGLContext(NSOpenGLPixelFormat* pixelFormat);
 	
-	~CocoaGLContext();
+	~CocoaOpenGLContext();
 
 	void BindCurrentContext() override;
 
@@ -48,4 +48,4 @@ private:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_COCOA_GLCONTEXT_HPP)
+#endif // !defined(POMDOG_COCOA_OPENGLCONTEXT_HPP)

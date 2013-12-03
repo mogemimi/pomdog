@@ -60,7 +60,7 @@
 	
 	NSOpenGLPixelFormat* pixelFormat = [CocoaOpenGLView defaultPixelFormat];
 
-	contextOSX.reset(new Pomdog::Details::Cocoa::CocoaGLContext(pixelFormat));
+	contextOSX.reset(new Pomdog::Details::Cocoa::CocoaOpenGLContext(pixelFormat));
 	graphicsContext.reset(new Pomdog::Details::GL4::GraphicsContextGL4(contextOSX));
 }
 //-----------------------------------------------------------------------

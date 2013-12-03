@@ -15,7 +15,7 @@ namespace Details {
 namespace GL4 {
 
 //-----------------------------------------------------------------------
-GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<GLContext> openGLContext)
+GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> openGLContext)
 	: nativeContext(openGLContext)
 {
 }
