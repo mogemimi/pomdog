@@ -14,7 +14,7 @@ Event::Event(EventCode const& categoryID)
 	: categoryID (categoryID)
 {}
 //-----------------------------------------------------------------------
-EventCode const& Event::GetCategoryID() const
+EventCode const& Event::GetCode() const
 {
 	return categoryID;
 }

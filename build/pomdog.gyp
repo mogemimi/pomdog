@@ -104,6 +104,7 @@
         '../include/Pomdog/Utility/Exception.hpp',
         '../include/Pomdog/Utility/Noncopyable.hpp',
         '../include/Pomdog/Utility/detail/Tagged.hpp',
+        '../src/Application/SystemEventDispatcher.hpp',
         '../src/Event/Event.cpp',
         '../src/Event/EventCodeHelper.cpp',
         '../src/Event/EventConnection.cpp',
@@ -190,6 +191,8 @@
             '../src/Platform.Cocoa/CocoaOpenGLContext.mm',
             '../src/Platform.Cocoa/CocoaOpenGLView.hpp',
             '../src/Platform.Cocoa/CocoaOpenGLView.mm',
+            '../src/Platform.Cocoa/CocoaWindowDelegate.hpp',
+            '../src/Platform.Cocoa/CocoaWindowDelegate.mm',
             '../src/Platform.Cocoa/PlatformSystemCocoa.cpp',
           ],
           'link_settings': {

@@ -12,48 +12,48 @@
 #include <utility>
 
 #include "CocoaOpenGLContext.hpp"
-#import "CocoaOpenGLView.hpp"
+#include "CocoaOpenGLView.hpp"
+#include "CocoaWindowDelegate.hpp"
 
 namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
 //-----------------------------------------------------------------------
-void CocoaGameWindow::ResetGLContext(std::shared_ptr<CocoaOpenGLContext> context)
-{
-	POMDOG_ASSERT(context);
-	
-	openGLContext = std::move(context);
-	
-	POMDOG_ASSERT(openGLContext);
-	[openGLView setOpenGLContext:openGLContext->GetNSOpenGLContext()];
-}
-//-----------------------------------------------------------------------
-void CocoaGameWindow::ResetGLContext()
-{
-	openGLContext.reset();
-	[openGLView clearGLContext];
-}
-//-----------------------------------------------------------------------
-CocoaGameWindow::CocoaGameWindow(NSWindow* nativeWindow)
-	: nativeWindow(nativeWindow)
+CocoaGameWindow::CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDispatcher> eventDispatcher)
+	: nativeWindow(window)
 	, openGLView(nil)
+	, windowDelegate(nil)
 {
 #if !__has_feature(objc_arc)
 	[this->nativeWindow retain];
 #endif
 
-	NSRect frameRect = [this->nativeWindow frame];
+	//NSRect frameRect = [this->nativeWindow frame];
+	NSRect frameRect = [[nativeWindow contentView] bounds];
+	
+	// Create OpenGLView
 	openGLView = [[CocoaOpenGLView alloc] initWithFrame:frameRect];
 	[openGLView setHidden:NO];
 	[openGLView setNeedsDisplay:YES];
-	[this->nativeWindow setContentView:openGLView];
+	[[nativeWindow contentView] addSubview:openGLView];
+
+	// Create WindowDelegate
+	windowDelegate = [[CocoaWindowDelegate alloc] initWithEventDispatcher:eventDispatcher];
+	[nativeWindow setDelegate:windowDelegate];
 }
 //-----------------------------------------------------------------------
 CocoaGameWindow::~CocoaGameWindow()
 {
+	// Remove delegate from window:
+	[nativeWindow setDelegate:nil];
+	
+	// Remove OpenGLView from window:
+	[openGLView removeFromSuperview];
+	
 #if !__has_feature(objc_arc)
-	[this->nativeWindow release];
+	[openGLView release];
+	[nativeWindow release];
 #endif
 }
 //-----------------------------------------------------------------------
@@ -105,9 +105,39 @@ void CocoaGameWindow::SetClientBounds(Rectangle const& clientBounds)
 	[nativeWindow setFrame:bounds display:YES animate:YES];
 }
 //-----------------------------------------------------------------------
+#pragma mark -
+#pragma mark Low-Level API for CocoaGameHost
+//-----------------------------------------------------------------------
 bool CocoaGameWindow::IsMinimized() const
 {
 	return [nativeWindow isMiniaturized] == TRUE;
+}
+//-----------------------------------------------------------------------
+void CocoaGameWindow::Close()
+{
+	// Removes the window from the screen list, which hides the window:
+	//[nativeWindow orderOut:nil];
+	
+	[nativeWindow close];
+}
+//-----------------------------------------------------------------------
+#pragma mark -
+#pragma mark OpenGLView
+//-----------------------------------------------------------------------
+void CocoaGameWindow::ResetGLContext(std::shared_ptr<CocoaOpenGLContext> context)
+{
+	POMDOG_ASSERT(context);
+	
+	openGLContext = std::move(context);
+	
+	POMDOG_ASSERT(openGLContext);
+	[openGLView setOpenGLContext:openGLContext->GetNSOpenGLContext()];
+}
+//-----------------------------------------------------------------------
+void CocoaGameWindow::ResetGLContext()
+{
+	openGLContext.reset();
+	[openGLView clearGLContext];
 }
 
 }// namespace Cocoa

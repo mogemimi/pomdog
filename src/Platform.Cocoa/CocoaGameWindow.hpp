@@ -13,11 +13,13 @@
 #	pragma once
 #endif
 
+#import <Cocoa/Cocoa.h>
 #include <Pomdog/Application/GameWindow.hpp>
 #include <Pomdog/Math/Rectangle.hpp>
-#import <Cocoa/Cocoa.h>
+#include "../Application/SystemEventDispatcher.hpp"
 
 @class NSWindow, CocoaOpenGLView;
+@class CocoaWindowDelegate;
 
 namespace Pomdog {
 namespace Details {
@@ -28,7 +30,7 @@ class CocoaOpenGLContext;
 class CocoaGameWindow final: public GameWindow
 {
 public:
-	explicit CocoaGameWindow(NSWindow* nativeWindow);
+	CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDispatcher> eventDipatcher);
 	~CocoaGameWindow();
 
 	///@copydoc GameWindow
@@ -59,9 +61,14 @@ public:
 	void ResetGLContext(std::shared_ptr<CocoaOpenGLContext> context);
 	void ResetGLContext();
 
+	///@~Japanese
+	/// @brief ウィンドウを閉じます。
+	void Close();
+
 private:
 	NSWindow* nativeWindow;
 	CocoaOpenGLView* openGLView;
+	CocoaWindowDelegate* windowDelegate;
 	
 	std::shared_ptr<CocoaOpenGLContext> openGLContext;
 };

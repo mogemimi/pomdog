@@ -59,7 +59,12 @@ public:
 		
 		auto game = std::make_shared<GameClass>(gameHost);
 		gameHost->Run(game);
+		
+		EndRun();
 	}
+	
+private:
+	void EndRun();
 };
 
 /// @}

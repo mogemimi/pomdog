@@ -60,7 +60,7 @@ public:
 		data = std::move(std::unique_ptr<Container>(new Container(std::forward<T>(arguments))));
 	}
 
-	EventCode const& GetCategoryID() const;
+	EventCode const& GetCode() const;
 
 	template <class T>
 	bool Has() const

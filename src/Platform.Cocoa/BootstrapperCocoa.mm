@@ -21,12 +21,23 @@ BootstrapperCocoa::BootstrapperCocoa()
 //-----------------------------------------------------------------------
 void BootstrapperCocoa::BuildOpenGLView(NSWindow* nativeWindow)
 {
+	auto eventDispatcher = std::make_shared<SystemEventDispatcher>();
+
 	POMDOG_ASSERT(nativeWindow != nil);
-	auto window = std::make_shared<CocoaGameWindow>(nativeWindow);
-	auto host = std::make_shared<CocoaGameHost>(window);
+	auto window = std::make_shared<CocoaGameWindow>(nativeWindow, eventDispatcher);
+	auto host = std::make_shared<CocoaGameHost>(window, eventDispatcher);
 	
 	gameWindow = window;
 	gameHost = host;
+}
+//-----------------------------------------------------------------------
+void BootstrapperCocoa::EndRun()
+{
+	gameHost.reset();
+	gameWindow.reset();
+	
+	///@note Shutdown your application:
+	[NSApp terminate:nil];
 }
 
 }// namespace Cocoa

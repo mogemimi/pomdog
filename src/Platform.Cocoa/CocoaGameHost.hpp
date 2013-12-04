@@ -15,18 +15,18 @@
 
 #include <Pomdog/Application/GameHost.hpp>
 #include <memory>
+#include "../Application/SystemEventDispatcher.hpp"
 
 namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
-class CocoaOpenGLContext;
 class CocoaGameWindow;
 
 class CocoaGameHost final: public GameHost
 {
 public:
-	explicit CocoaGameHost(std::shared_ptr<CocoaGameWindow> window);
+	CocoaGameHost(std::shared_ptr<CocoaGameWindow> window, std::shared_ptr<SystemEventDispatcher> dispatcher);
 
 	~CocoaGameHost();
 
@@ -41,18 +41,10 @@ public:
 	
 	///@copydoc GameHost
 	std::shared_ptr<GraphicsContext> GetGraphicsContext();
-	
+
 private:
-	void RenderFrame(Game & game);
-	
-private:
-	std::weak_ptr<Game> game;
-	std::shared_ptr<CocoaGameWindow> gameWindow;
-	
-	std::shared_ptr<CocoaOpenGLContext> openGLContext;
-	std::shared_ptr<GraphicsContext> graphicsContext;
-	
-	bool exitRequest;
+	class Impl;
+	std::unique_ptr<Impl> impl;
 };
 
 }// namespace Cocoa

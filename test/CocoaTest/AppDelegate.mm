@@ -14,6 +14,7 @@
 
 using Pomdog::Log;
 using Pomdog::LogEntry;
+using Pomdog::LoggingLevel;
 using LogConnection = Pomdog::ScopedConnection<Pomdog::EventConnection>;
 using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 
@@ -34,6 +35,7 @@ using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 	}));
 #endif
 
+	Log::SetVerbosity(LoggingLevel::Internal);
 	Log::LogMessage("applicationDidFinishLaunching");
 
 	bootstrapper.BuildOpenGLView([self window]);
@@ -44,11 +46,6 @@ using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 
 	Log::LogMessage("game mainloop thread run");
 }
-
-//- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
-//{
-//	return YES;
-//}
 
 - (void)runGame
 {
