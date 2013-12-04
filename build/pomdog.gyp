@@ -63,7 +63,7 @@
         '../include/Pomdog/Event/EventQueue.hpp',
         '../include/Pomdog/Event/ScopedConnection.hpp',
         '../include/Pomdog/Event/detail/EventArguments.hpp',
-        '../include/Pomdog/Event/detail/Foward.hpp',
+        '../include/Pomdog/Event/detail/FowardDeclarations.hpp',
         '../include/Pomdog/GamePlay/GameObject.hpp',
         '../include/Pomdog/GamePlay/detail/GameComponent.hpp',
         '../include/Pomdog/Logging/Log.hpp',

@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_DETAIL_COORDINATE2D_HPP
-#define POMDOG_DETAIL_COORDINATE2D_HPP
+#ifndef POMDOG_MATH_DETAIL_COORDINATE2D_HPP
+#define POMDOG_MATH_DETAIL_COORDINATE2D_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -84,4 +84,4 @@ Coordinate2D<T> operator*(T scaleFactor, Coordinate2D<T> const& coordinate);
 
 #include "Coordinate2DImplementation.hpp"
 
-#endif // !defined(POMDOG_DETAIL_COORDINATE2D_HPP)
+#endif // !defined(POMDOG_MATH_DETAIL_COORDINATE2D_HPP)

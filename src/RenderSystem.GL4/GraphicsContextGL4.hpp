@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_GL4_GRAPHICSCONTEXTGL4_HPP
-#define POMDOG_GL4_GRAPHICSCONTEXTGL4_HPP
+#ifndef POMDOG_SRC_GL4_GRAPHICSCONTEXTGL4_HPP
+#define POMDOG_SRC_GL4_GRAPHICSCONTEXTGL4_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -43,4 +43,4 @@ private:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_GL4_GRAPHICSCONTEXTGL4_HPP)
+#endif // !defined(POMDOG_SRC_GL4_GRAPHICSCONTEXTGL4_HPP)

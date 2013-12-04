@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_CRC32_HPP
-#define POMDOG_CRC32_HPP
+#ifndef POMDOG_SRC_CRC32_HPP
+#define POMDOG_SRC_CRC32_HPP
 
 #include <Pomdog/Config/FundamentalTypes.hpp>
 
@@ -23,4 +23,4 @@ namespace CRC32
 }// namespace Hashing
 }// namespace Pomdof
 
-#endif // !defined(POMDOG_CRC32_HPP)
+#endif // !defined(POMDOG_SRC_CRC32_HPP)

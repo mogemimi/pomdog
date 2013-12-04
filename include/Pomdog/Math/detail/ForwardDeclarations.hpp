@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_FORWARDDECLARATIONS_HPP
-#define POMDOG_FORWARDDECLARATIONS_HPP
+#ifndef POMDOG_MATH_DETAIL_FORWARDDECLARATIONS_HPP
+#define POMDOG_MATH_DETAIL_FORWARDDECLARATIONS_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -57,4 +57,4 @@ using Color = Details::FloatingPointColor<float>;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_FORWARDDECLARATIONS_HPP)
+#endif // !defined(POMDOG_MATH_DETAIL_FORWARDDECLARATIONS_HPP)

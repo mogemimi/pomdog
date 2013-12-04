@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_DETAIL_COORDINATE3DIMPLEMENTATION_HPP
-#define POMDOG_DETAIL_COORDINATE3DIMPLEMENTATION_HPP
+#ifndef POMDOG_MATH_DETAIL_COORDINATE3DIMPLEMENTATION_HPP
+#define POMDOG_MATH_DETAIL_COORDINATE3DIMPLEMENTATION_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -146,4 +146,4 @@ Coordinate3D<T> operator/(T scaleFactor, Coordinate3D<T> const& coordinate)
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DETAIL_COORDINATE3DIMPLEMENTATION_HPP)
+#endif // !defined(POMDOG_MATH_DETAIL_COORDINATE3DIMPLEMENTATION_HPP)

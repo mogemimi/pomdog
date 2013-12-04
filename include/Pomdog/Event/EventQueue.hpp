@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include "detail/Foward.hpp"
+#include "detail/FowardDeclarations.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include <memory>
 #include <functional>

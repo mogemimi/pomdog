@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_COCOA_GAMEWINDOW_HPP
-#define POMDOG_COCOA_GAMEWINDOW_HPP
+#ifndef POMDOG_SRC_COCOA_GAMEWINDOW_HPP
+#define POMDOG_SRC_COCOA_GAMEWINDOW_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -69,4 +69,4 @@ private:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_COCOAGAMEWINDOW_HPP)
+#endif // !defined(POMDOG_SRC_COCOAGAMEWINDOW_HPP)

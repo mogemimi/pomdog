@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_DETAIL_FLOATINGPOINTMATRIX4X4_HPP
-#define POMDOG_DETAIL_FLOATINGPOINTMATRIX4X4_HPP
+#ifndef POMDOG_MATH_DETAIL_FLOATINGPOINTMATRIX4X4_HPP
+#define POMDOG_MATH_DETAIL_FLOATINGPOINTMATRIX4X4_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -391,4 +391,4 @@ FloatingPointMatrix4x4<T> operator*(T scaleFactor, FloatingPointMatrix4x4<T> con
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DETAIL_FLOATINGPOINTMATRIX4X4_HPP)
+#endif // !defined(POMDOG_MATH_DETAIL_FLOATINGPOINTMATRIX4X4_HPP)

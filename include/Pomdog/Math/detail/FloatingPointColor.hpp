@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_DETAIL_FLOATINGPOINTCOLOR_HPP
-#define POMDOG_DETAIL_FLOATINGPOINTCOLOR_HPP
+#ifndef POMDOG_MATH_DETAIL_FLOATINGPOINTCOLOR_HPP
+#define POMDOG_MATH_DETAIL_FLOATINGPOINTCOLOR_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -118,4 +118,4 @@ FloatingPointColor<T> operator*(T scaleFactor, FloatingPointColor<T> const& colo
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_FLOATINGPOINTCOLOR_HPP)
+#endif // !defined(POMDOG_MATH_DETAIL_FLOATINGPOINTCOLOR_HPP)

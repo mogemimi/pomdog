@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_DETAIL_GAMECOMPONENT_HPP
-#define POMDOG_DETAIL_GAMECOMPONENT_HPP
+#ifndef POMDOG_DETAIL_GAMEPLAY_GAMECOMPONENT_HPP
+#define POMDOG_DETAIL_GAMEPLAY_GAMECOMPONENT_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -19,7 +19,7 @@
 namespace Pomdog {
 namespace Details {
 
-// in C++03:
+// In C++03:
 //template <class T>
 //struct ComponentTypeID
 //{
@@ -90,4 +90,4 @@ private:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DETAIL_GAMECOMPONENT_HPP)
+#endif // !defined(POMDOG_DETAIL_GAMEPLAY_GAMECOMPONENT_HPP)

@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_DETAIL_NATIVEGRAPHICSCONTEXT_HPP
-#define POMDOG_DETAIL_NATIVEGRAPHICSCONTEXT_HPP
+#ifndef POMDOG_SRC_RENDERSYSTEM_NATIVEGRAPHICSCONTEXT_HPP
+#define POMDOG_SRC_RENDERSYSTEM_NATIVEGRAPHICSCONTEXT_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -34,4 +34,4 @@ public:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DETAIL_NATIVEGRAPHICSCONTEXT_HPP)
+#endif // !defined(POMDOG_SRC_RENDERSYSTEM_NATIVEGRAPHICSCONTEXT_HPP)

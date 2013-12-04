@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_DETAIL_FLOATINGPOINTQUATERNION_HPP
-#define POMDOG_DETAIL_FLOATINGPOINTQUATERNION_HPP
+#ifndef POMDOG_MATH_DETAIL_FLOATINGPOINTQUATERNION_HPP
+#define POMDOG_MATH_DETAIL_FLOATINGPOINTQUATERNION_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -190,4 +190,4 @@ FloatingPointQuaternion<T> operator*(T scaleFactor, FloatingPointQuaternion<T> c
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DETAIL_FLOATINGPOINTQUATERNION_HPP)
+#endif // !defined(POMDOG_MATH_DETAIL_FLOATINGPOINTQUATERNION_HPP)

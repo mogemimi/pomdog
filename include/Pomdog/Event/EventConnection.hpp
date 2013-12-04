@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include "detail/Foward.hpp"
+#include "detail/FowardDeclarations.hpp"
 #include <memory>
 
 namespace Pomdog {

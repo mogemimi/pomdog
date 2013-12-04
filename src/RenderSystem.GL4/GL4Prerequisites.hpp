@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_GL4_PREREQUISITES_HPP
-#define POMDOG_GL4_PREREQUISITES_HPP
+#ifndef POMDOG_SRC_GL4_PREREQUISITES_HPP
+#define POMDOG_SRC_GL4_PREREQUISITES_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -27,4 +27,4 @@
 #   //include <OpenGL/glu.h>
 #endif
 
-#endif // !defined(POMDOG_GL4_PREREQUISITES_HPP)
+#endif // !defined(POMDOG_SRC_GL4_PREREQUISITES_HPP)

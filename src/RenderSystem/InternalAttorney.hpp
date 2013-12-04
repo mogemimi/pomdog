@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_INTERNALATTORNEY_HPP
-#define POMDOG_INTERNALATTORNEY_HPP
+#ifndef POMDOG_SRC_RENDERSYSTEM_INTERNALATTORNEY_HPP
+#define POMDOG_SRC_RENDERSYSTEM_INTERNALATTORNEY_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -32,4 +32,4 @@ public:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_INTERNALATTORNEY_HPP)
+#endif // !defined(POMDOG_SRC_RENDERSYSTEM_INTERNALATTORNEY_HPP)
