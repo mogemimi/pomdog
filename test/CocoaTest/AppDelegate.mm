@@ -33,10 +33,10 @@ using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 	}));
 
 	Log::LogMessage("applicationDidFinishLaunching");
-	
+
 	bootstrapper.BuildOpenGLView([self window]);
 	[[self window] makeKeyAndOrderFront:self];
-	
+
 	gameRunThread = [[NSThread alloc] initWithTarget:self selector:@selector(runGame) object:nil];
 	[gameRunThread start];
 

@@ -25,6 +25,30 @@ namespace Pomdog {
 /// @addtogroup Logging
 /// @{
 
+///@todo [My idea]: Replace singleton by DI(Dependency injection) logger
+///@code
+/// // Before:
+/// class UserApplication
+/// {
+/// public:
+///     void Process() {
+///         Log::LogMessage(...); // call singleton object
+///     }
+/// };
+///
+/// // After:
+/// class UserApplication
+/// {
+///     shared_ptr<Logger> logger;
+/// public:
+///     explicit UserApplication(shared_ptr<Logger> logger)
+///     : logger(std::move()logger){}
+///
+///     void Process() {
+///         logger.LogMessage(...); // call without singleton
+///     }
+/// };
+///@endcode
 class Log
 {
 public:

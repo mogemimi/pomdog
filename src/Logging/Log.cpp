@@ -58,7 +58,10 @@ namespace Pomdog {
 class LogManager final
 {
 public:
-	LogManager() = default;
+	LogManager()
+		:defaultChannel("")
+	{}
+	
 	LogManager(LogManager const&) = delete;
 	LogManager(LogManager &&) = delete;
 	~LogManager() = default;
@@ -121,8 +124,8 @@ private:
 	std::vector<std::unique_ptr<LogChannel>> channels;
 	ScopedConnection<EventConnection> connection;
 	std::recursive_mutex channelsProtection;
-	
-	static LogChannel defaultChannel;
+
+	LogChannel defaultChannel;
 	
 public:
 	static LogManager & GetInstance()
@@ -131,8 +134,6 @@ public:
 		return manager;
 	}
 };
-
-LogChannel LogManager::defaultChannel("");
 
 //-----------------------------------------------------------------------
 void Log::LogMessage(std::string const& message, LoggingLevel verbosity)
@@ -190,7 +191,7 @@ void Log::SetVerbosity(LoggingLevel verbosity)
 {
 	auto& manager = LogManager::GetInstance();
 	auto& channel = manager.GetDefault();
-	return channel.SetLevel(verbosity);
+	channel.SetLevel(verbosity);
 }
 //-----------------------------------------------------------------------
 LoggingLevel Log::GetVerbosity(std::string const& channelName)

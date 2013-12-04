@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,28 +13,25 @@
 #	pragma once
 #endif
 
+#include "detail/Foward.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include <memory>
 #include <functional>
 
 namespace Pomdog {
 
-class Event;
-class EventConnection;
-
 class EventHandler: Noncopyable
 {
 public:
 	EventHandler();
-	virtual ~EventHandler();
+	virtual ~EventHandler() = default;
 
 	EventConnection Connect(std::function<void(Event const&)> const& slot);
 
 	void Trigger(std::shared_ptr<Event const> const& event);
 
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+	std::shared_ptr<Details::EventInternal::EventSlotCollection> slots;
 };
 
 }// namespace Pomdog

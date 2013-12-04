@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,16 +13,10 @@
 #	pragma once
 #endif
 
+#include "detail/Foward.hpp"
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
-namespace EventInternal {
-
-class EventSlot;
-
-}// namespace EventInternal
-}// namespace Details
 
 class EventConnection
 {

@@ -13,14 +13,12 @@
 #	pragma once
 #endif
 
+#include "detail/Foward.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include <memory>
 #include <functional>
 
 namespace Pomdog {
-
-class Event;
-class EventConnection;
 
 class EventQueue: Noncopyable
 {

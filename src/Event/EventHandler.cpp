@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -17,42 +17,24 @@ using Details::EventInternal::EventSlot;
 using Details::EventInternal::EventSlotCollection;
 
 //-----------------------------------------------------------------------
-class EventHandler::Impl
-{
-public:
-	Impl();
-
-public:
-	std::shared_ptr<EventSlotCollection> slots;
-};
-//-----------------------------------------------------------------------
-EventHandler::Impl::Impl()
-	: slots(std::move(std::make_shared<EventSlotCollection>()))
-{}
-//-----------------------------------------------------------------------
 EventHandler::EventHandler()
-	: impl(new Impl())
-{}
-//-----------------------------------------------------------------------
-EventHandler::~EventHandler()
+	: slots(std::make_shared<EventSlotCollection>())
 {}
 //-----------------------------------------------------------------------
 EventConnection EventHandler::Connect(std::function<void(Event const&)> const& slot)
 {
 	POMDOG_ASSERT(slot);
-	POMDOG_ASSERT(impl);
-	POMDOG_ASSERT(impl->slots);
+	POMDOG_ASSERT(slots);
 
-	return impl->slots->Connect(slot);
+	return slots->Connect(slot);
 }
 //-----------------------------------------------------------------------
 void EventHandler::Trigger(std::shared_ptr<Event const> const& event)
 {
 	POMDOG_ASSERT(event);
-	POMDOG_ASSERT(impl);
-	POMDOG_ASSERT(impl->slots);
+	POMDOG_ASSERT(slots);
 
-	impl->slots->Trigger(*event);
+	slots->Trigger(*event);
 }
 
 }// namespace Pomdog

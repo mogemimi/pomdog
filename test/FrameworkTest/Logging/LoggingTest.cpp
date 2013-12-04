@@ -7,7 +7,7 @@
 //
 
 #include <iutest/gtest/iutest_switch.hpp>
-#include <Pomdog/Logging/Logging.hpp>
+#include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
 #include <vector>
