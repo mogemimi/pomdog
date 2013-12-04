@@ -15,7 +15,6 @@
 
 #include <Pomdog/Application/GameHost.hpp>
 #include <memory>
-#include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -40,17 +39,18 @@ public:
 	///@copydoc GameHost
 	std::shared_ptr<GameWindow> GetWindow() override;
 	
+	///@copydoc GameHost
+	std::shared_ptr<GraphicsContext> GetGraphicsContext();
+	
 private:
 	void RenderFrame(Game & game);
-	
-	void TestDraw();
 	
 private:
 	std::weak_ptr<Game> game;
 	std::shared_ptr<CocoaGameWindow> gameWindow;
 	
 	std::shared_ptr<CocoaOpenGLContext> openGLContext;
-	std::shared_ptr<GL4::GraphicsContextGL4> graphicsContext;
+	std::shared_ptr<GraphicsContext> graphicsContext;
 	
 	bool exitRequest;
 };

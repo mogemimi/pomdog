@@ -47,7 +47,7 @@ public:
 	
 	///@~Japanese
 	/// @brief グラフィックスコンテキストを取得します。
-	//virtual std::shared_ptr<GraphicsContext> GetGraphicsContext() = 0;
+	virtual std::shared_ptr<GraphicsContext> GetGraphicsContext() = 0;
 };
 
 /// @}

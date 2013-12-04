@@ -9,6 +9,7 @@
 #import "CocoaOpenGLView.hpp"
 #include <OpenGL/gl.h>
 #include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Math/Rectangle.hpp>
 
 @implementation CocoaOpenGLView
 
@@ -45,6 +46,10 @@
 //-----------------------------------------------------------------------
 - (void)reshape
 {
+	///@todo Not implemented
+	//NSRect bounds = [self bounds];
+	//Pomdog::Rectangle rect{bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height};
+	// send event
 }
 //-----------------------------------------------------------------------
 - (void)lockFocus

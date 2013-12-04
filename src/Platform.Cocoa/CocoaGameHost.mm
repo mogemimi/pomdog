@@ -12,10 +12,10 @@
 #include "CocoaGameWindow.hpp"
 #include <Pomdog/Utility/Assert.hpp>
 
-#include <Pomdog/Math/Color.hpp>
-#include "CocoaOpenGLContext.hpp"
-#include "../../src/RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include <OpenGL/OpenGL.h>
+#include <Pomdog/Graphics/GraphicsContext.hpp>
+#include "CocoaOpenGLContext.hpp"
+#include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -38,13 +38,19 @@ static NSOpenGLPixelFormat* CreateDefaultPixelFormat()
 	return [[NSOpenGLPixelFormat alloc] initWithAttributes:attribute];
 }
 //-----------------------------------------------------------------------
+static std::shared_ptr<CocoaOpenGLContext> CreateOpenGLContext()
+{
+	NSOpenGLPixelFormat* pixelFormat = CreateDefaultPixelFormat();
+	return std::make_shared<CocoaOpenGLContext>(pixelFormat);
+}
+//-----------------------------------------------------------------------
 CocoaGameHost::CocoaGameHost(std::shared_ptr<CocoaGameWindow> window)
 	: exitRequest(false)
 	, gameWindow(window)
+	, openGLContext(CreateOpenGLContext())
 {
-	NSOpenGLPixelFormat* pixelFormat = CreateDefaultPixelFormat();
-	openGLContext = std::make_shared<CocoaOpenGLContext>(pixelFormat);
-	graphicsContext = std::make_shared<GL4::GraphicsContextGL4>(openGLContext);
+	auto nativeContext = std::unique_ptr<GL4::GraphicsContextGL4>(new GL4::GraphicsContextGL4(openGLContext));
+	graphicsContext = std::make_shared<GraphicsContext>(std::move(nativeContext));
 	
 	window->ResetGLContext(openGLContext);
 }
@@ -84,6 +90,11 @@ std::shared_ptr<GameWindow> CocoaGameHost::GetWindow()
 	return gameWindow;
 }
 //-----------------------------------------------------------------------
+std::shared_ptr<GraphicsContext> CocoaGameHost::GetGraphicsContext()
+{
+	return graphicsContext;
+}
+//-----------------------------------------------------------------------
 void CocoaGameHost::RenderFrame(Game & game)
 {
 	POMDOG_ASSERT(gameWindow);
@@ -92,22 +103,17 @@ void CocoaGameHost::RenderFrame(Game & game)
 		// skip rendering
 		return;
 	}
-	TestDraw();
-	game.Draw();
-}
-//-----------------------------------------------------------------------
-void CocoaGameHost::TestDraw()
-{
+	
+	// RenderBegin:
 	CGLContextObj coreOpenGLContext = static_cast<CGLContextObj>([openGLContext->GetNSOpenGLContext() CGLContextObj]);
 	CGLLockContext(coreOpenGLContext);
 	
 	openGLContext->BindCurrentContext();
 
-	auto color = Pomdog::Color::CornflowerBlue;
-	graphicsContext->Clear(color);
-
-	graphicsContext->Present();
+	// Render:
+	game.Draw();
 	
+	// RenderEnd:
 	CGLUnlockContext(coreOpenGLContext);
 }
 
