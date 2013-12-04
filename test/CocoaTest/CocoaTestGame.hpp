@@ -22,7 +22,7 @@ namespace Pomdog {
 class CocoaTestGame: public Game
 {
 public:
-	explicit CocoaTestGame(GameHost & gameHost);
+	explicit CocoaTestGame(std::shared_ptr<GameHost> host);
 
 	void Initialize();
 	

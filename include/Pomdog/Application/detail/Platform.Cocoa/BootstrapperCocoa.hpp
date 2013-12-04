@@ -57,7 +57,7 @@ public:
 		static_assert(std::is_base_of<Game, GameClass>::value, "GameClass is base of Pomdog::Game.");
 		static_assert(!std::is_abstract<GameClass>::value, "GameClass is not abstract.");
 		
-		auto game = std::make_shared<GameClass>(*gameHost);
+		auto game = std::make_shared<GameClass>(gameHost);
 		gameHost->Run(game);
 	}
 };

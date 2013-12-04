@@ -15,11 +15,13 @@
 
 #include <Pomdog/Application/GameHost.hpp>
 #include <memory>
+#include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 
 namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
+class CocoaOpenGLContext;
 class CocoaGameWindow;
 
 class CocoaGameHost final: public GameHost
@@ -29,16 +31,27 @@ public:
 
 	~CocoaGameHost();
 
+	///@copydoc GameHost
 	void Run(std::weak_ptr<Game> game) override;
 	
+	///@copydoc GameHost
 	void Exit() override;
+
+	///@copydoc GameHost
+	std::shared_ptr<GameWindow> GetWindow() override;
 	
 private:
 	void RenderFrame(Game & game);
 	
+	void TestDraw();
+	
 private:
 	std::weak_ptr<Game> game;
 	std::shared_ptr<CocoaGameWindow> gameWindow;
+	
+	std::shared_ptr<CocoaOpenGLContext> openGLContext;
+	std::shared_ptr<GL4::GraphicsContextGL4> graphicsContext;
+	
 	bool exitRequest;
 };
 

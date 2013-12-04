@@ -45,6 +45,11 @@ using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 	Log::LogMessage("game mainloop thread run");
 }
 
+//- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
+//{
+//	return YES;
+//}
+
 - (void)runGame
 {
 	bootstrapper.Run<Pomdog::CocoaTestGame>();

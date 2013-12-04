@@ -15,22 +15,21 @@
 
 #import <Cocoa/Cocoa.h>
 #include <memory>
-#include "../../src/Platform.Cocoa/CocoaOpenGLContext.hpp"
-#include "../../src/RenderSystem.GL4/GraphicsContextGL4.hpp"
+#include <functional>
 
 @class NSOpenGLContext, NSOpenGLPixelFormat;
 
 @interface CocoaOpenGLView : NSView
 {
 @private
-	std::shared_ptr<Pomdog::Details::Cocoa::CocoaOpenGLContext> contextOSX;
-	std::unique_ptr<Pomdog::Details::GL4::GraphicsContextGL4> graphicsContext;
+	NSOpenGLContext* openGLContext_;
 }
+
+@property (nonatomic, retain) NSOpenGLContext* openGLContext;
 
 - (id)initWithFrame:(NSRect)frameRect;
 
-- (void)prepareOpenGL;
-
+- (void)clearGLContext;
 - (void)update;
 - (void)reshape;
 

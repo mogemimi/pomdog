@@ -20,6 +20,8 @@
 namespace Pomdog {
 
 class Game;
+class GameWindow;
+class GraphicsContext;
 
 /// @addtogroup Framework
 /// @{
@@ -38,6 +40,14 @@ public:
 	///@~Japanese
 	/// @brief 実行中のゲームおよびアプリケーションを終了します。
 	virtual void Exit() = 0;
+	
+	///@~Japanese
+	/// @brief ウィンドウを取得します。
+	virtual std::shared_ptr<GameWindow> GetWindow() = 0;
+	
+	///@~Japanese
+	/// @brief グラフィックスコンテキストを取得します。
+	//virtual std::shared_ptr<GraphicsContext> GetGraphicsContext() = 0;
 };
 
 /// @}

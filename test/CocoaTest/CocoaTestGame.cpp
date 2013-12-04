@@ -8,17 +8,21 @@
 
 #include "CocoaTestGame.hpp"
 #include <Pomdog/Math/Color.hpp>
+#include <Pomdog/Application/GameWindow.hpp>
+#include <utility>
 
 namespace Pomdog {
 
-CocoaTestGame::CocoaTestGame(GameHost & host)
-	: gameHost(host.shared_from_this())
+CocoaTestGame::CocoaTestGame(std::shared_ptr<GameHost> host)
+	: gameHost(std::move(host))
 {
-	//graphicsContext = host.GetGraphicsContext();
+	//graphicsContext = host->GetGraphicsContext();
 }
 
 void CocoaTestGame::Initialize()
 {
+	auto window = gameHost->GetWindow();
+	window->SetCaption("Cocoa Test Game");
 }
 
 void CocoaTestGame::Update()

@@ -7,14 +7,33 @@
 //
 
 #include "CocoaGameWindow.hpp"
-#include <utility>
 #include <Pomdog/Utility/Exception.hpp>
+#include <Pomdog/Utility/Assert.hpp>
+#include <utility>
 
+#include "CocoaOpenGLContext.hpp"
 #import "CocoaOpenGLView.hpp"
 
 namespace Pomdog {
 namespace Details {
 namespace Cocoa {
+
+//-----------------------------------------------------------------------
+void CocoaGameWindow::ResetGLContext(std::shared_ptr<CocoaOpenGLContext> context)
+{
+	POMDOG_ASSERT(context);
+	
+	openGLContext = std::move(context);
+	
+	POMDOG_ASSERT(openGLContext);
+	[openGLView setOpenGLContext:openGLContext->GetNSOpenGLContext()];
+}
+//-----------------------------------------------------------------------
+void CocoaGameWindow::ResetGLContext()
+{
+	openGLContext.reset();
+	[openGLView clearGLContext];
+}
 //-----------------------------------------------------------------------
 CocoaGameWindow::CocoaGameWindow(NSWindow* nativeWindow)
 	: nativeWindow(nativeWindow)
@@ -26,7 +45,6 @@ CocoaGameWindow::CocoaGameWindow(NSWindow* nativeWindow)
 
 	NSRect frameRect = [this->nativeWindow frame];
 	openGLView = [[CocoaOpenGLView alloc] initWithFrame:frameRect];
-	[openGLView prepareOpenGL];
 	[openGLView setHidden:NO];
 	[openGLView setNeedsDisplay:YES];
 	[this->nativeWindow setContentView:openGLView];

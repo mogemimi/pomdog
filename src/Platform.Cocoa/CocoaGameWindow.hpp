@@ -23,34 +23,30 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
+class CocoaOpenGLContext;
+
 class CocoaGameWindow final: public GameWindow
 {
 public:
 	explicit CocoaGameWindow(NSWindow* nativeWindow);
 	~CocoaGameWindow();
 
-	///@~Japanese
-	/// @copydoc GameWindow
+	///@copydoc GameWindow
 	bool GetAllowPlayerResizing() const override;
 
-	///@~Japanese
-	/// @copydoc GameWindow
+	///@copydoc GameWindow
 	void SetAllowPlayerResizing(bool allowResizing) override;
 
-	///@~Japanese
-	/// @copydoc GameWindow
+	///@copydoc GameWindow
 	std::string GetCaption() const override;
 
-	///@~Japanese
-	/// @copydoc GameWindow
+	///@copydoc GameWindow
 	void SetCaption(std::string const& caption) override;
 
-	///@~Japanese
-	/// @copydoc GameWindow
+	///@copydoc GameWindow
 	Rectangle GetClientBounds() const override;
 
-	///@~Japanese
-	/// @copydoc GameWindow
+	///@copydoc GameWindow
 	void SetClientBounds(Rectangle const& clientBounds) override;
 	
 	///@~English
@@ -59,10 +55,15 @@ public:
 	/// @brief ウィンドウが最小化状態かどうかを取得します。
 	/// @return ウィンドウが最小化のときは true を、それ以外は false を返します。
 	bool IsMinimized() const;
-		
+	
+	void ResetGLContext(std::shared_ptr<CocoaOpenGLContext> context);
+	void ResetGLContext();
+
 private:
 	NSWindow* nativeWindow;
 	CocoaOpenGLView* openGLView;
+	
+	std::shared_ptr<CocoaOpenGLContext> openGLContext;
 };
 
 }// namespace Cocoa
