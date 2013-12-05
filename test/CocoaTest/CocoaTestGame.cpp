@@ -10,6 +10,7 @@
 #include <Pomdog/Math/Color.hpp>
 #include <Pomdog/Application/GameWindow.hpp>
 #include <Pomdog/Graphics/GraphicsContext.hpp>
+#include <Pomdog/Logging/Log.hpp>
 #include <utility>
 
 namespace Pomdog {
@@ -24,6 +25,7 @@ void CocoaTestGame::Initialize()
 {
 	auto window = gameHost->GetWindow();
 	window->SetCaption("Cocoa Test Game");
+	window->SetAllowPlayerResizing(false);
 }
 //-----------------------------------------------------------------------
 void CocoaTestGame::Update()

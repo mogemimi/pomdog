@@ -7,7 +7,6 @@
 //
 
 #include "CocoaGameWindow.hpp"
-#include <Pomdog/Utility/Exception.hpp>
 #include <Pomdog/Utility/Assert.hpp>
 #include <utility>
 
@@ -59,16 +58,23 @@ CocoaGameWindow::~CocoaGameWindow()
 //-----------------------------------------------------------------------
 bool CocoaGameWindow::GetAllowPlayerResizing() const
 {
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "CocoaGameWindow::GetAllowPlayerResizing");
+	NSUInteger styleMask = [nativeWindow styleMask];
+	return (styleMask & NSResizableWindowMask) == NSResizableWindowMask;
 }
 //-----------------------------------------------------------------------
 void CocoaGameWindow::SetAllowPlayerResizing(bool allowResizing)
 {
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "CocoaGameWindow::SetAllowPlayerResizing");
+	NSUInteger styleMask = [nativeWindow styleMask];
+	if (allowResizing) {
+		styleMask |= NSResizableWindowMask;
+		POMDOG_ASSERT((styleMask & NSResizableWindowMask) == NSResizableWindowMask);
+	}
+	else {
+		styleMask |= NSResizableWindowMask;
+		styleMask ^= NSResizableWindowMask;
+		POMDOG_ASSERT((styleMask & NSResizableWindowMask) != NSResizableWindowMask);
+	}
+	[nativeWindow setStyleMask:styleMask];
 }
 //-----------------------------------------------------------------------
 std::string CocoaGameWindow::GetCaption() const
@@ -110,7 +116,7 @@ void CocoaGameWindow::SetClientBounds(Rectangle const& clientBounds)
 //-----------------------------------------------------------------------
 bool CocoaGameWindow::IsMinimized() const
 {
-	return [nativeWindow isMiniaturized] == TRUE;
+	return [nativeWindow isMiniaturized] == YES;
 }
 //-----------------------------------------------------------------------
 void CocoaGameWindow::Close()
