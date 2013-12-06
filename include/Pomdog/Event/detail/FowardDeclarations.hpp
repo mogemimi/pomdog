@@ -27,6 +27,7 @@ class Event;
 class EventConnection;
 class EventHandler;
 class EventQueue;
+class ScopedConnection;
 
 }// namespace Pomdog
 

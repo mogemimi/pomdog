@@ -15,13 +15,13 @@
 using Pomdog::Log;
 using Pomdog::LogEntry;
 using Pomdog::LoggingLevel;
-using LogConnection = Pomdog::ScopedConnection<Pomdog::EventConnection>;
+using Pomdog::ScopedConnection;
 using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 
 @implementation AppDelegate
 {
 	Bootstrapper bootstrapper;
-	LogConnection connection;
+	ScopedConnection connection;
 	
 	NSThread* gameRunThread;
 }
@@ -29,10 +29,10 @@ using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 #ifdef DEBUG
-	connection.Reset(Log::Connect([](Pomdog::LogEntry entry) {
+	connection = Log::Connect([](Pomdog::LogEntry entry) {
 		NSString* log = [NSString stringWithUTF8String:entry.message.c_str()];
 		NSLog(@"%@", log);
-	}));
+	});
 #endif
 
 	Log::SetVerbosity(LoggingLevel::Internal);

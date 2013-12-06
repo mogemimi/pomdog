@@ -110,6 +110,7 @@
         '../src/Event/EventConnection.cpp',
         '../src/Event/EventHandler.cpp',
         '../src/Event/EventQueue.cpp',
+        '../src/Event/ScopedConnection.cpp',
         '../src/Event/detail/EventSlot.cpp',
         '../src/Event/detail/EventSlot.hpp',
         '../src/Event/detail/EventSlotCollection.cpp',

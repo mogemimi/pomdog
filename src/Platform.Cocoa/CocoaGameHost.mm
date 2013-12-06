@@ -13,7 +13,6 @@
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/EventCodeHelper.hpp>
-#include <Pomdog/Event/EventConnection.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
 #include <Pomdog/Logging/Log.hpp>
 
@@ -89,7 +88,7 @@ private:
 	std::shared_ptr<CocoaGameWindow> gameWindow;
 
 	std::shared_ptr<SystemEventDispatcher> systemEventDispatcher;
-	ScopedConnection<EventConnection> systemEventConnection;
+	ScopedConnection systemEventConnection;
 	
 	std::shared_ptr<CocoaOpenGLContext> openGLContext;
 	std::shared_ptr<GraphicsContext> graphicsContext;
@@ -110,9 +109,9 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> window, std::shared_p
 	gameWindow->ResetGLContext(openGLContext);
 	
 	POMDOG_ASSERT(systemEventDispatcher);
-	systemEventConnection.Reset(systemEventDispatcher->Connect([this](Event const& event){
+	systemEventConnection = systemEventDispatcher->Connect([this](Event const& event){
 		ProcessSystemEvents(event);
-	}));
+	});
 }
 //-----------------------------------------------------------------------
 void CocoaGameHost::Impl::Run(std::weak_ptr<Game> weakGame)

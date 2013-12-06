@@ -17,13 +17,13 @@ using Pomdog::LogChannel;
 using Pomdog::LogEntry;
 using Pomdog::LoggingLevel;
 using Pomdog::LogStream;
-typedef Pomdog::ScopedConnection<Pomdog::EventConnection> Connection;
+using Pomdog::ScopedConnection;
 
 TEST(LoggingTest, LogMessageWithDefaultChannel)
 {
 	std::string message;
 	std::string source;
-	Connection connection(Log::Connect([&](LogEntry const& entry) {
+	ScopedConnection connection(Log::Connect([&](LogEntry const& entry) {
 		message = entry.message;
 		source = entry.source;
 	}));
@@ -41,7 +41,7 @@ TEST(LoggingTest, StreamWithDefaultChannel)
 {
 	std::string message;
 	std::string source;
-	Connection connection(Log::Connect([&](LogEntry const& entry){
+	ScopedConnection connection(Log::Connect([&](LogEntry const& entry){
 		message = entry.message;
 		source = entry.source;
 	}));
@@ -160,7 +160,7 @@ TEST(LoggingTest, SendToUserChannel)
 	Log::AddChannel("Test", LoggingLevel::Internal);
 	EXPECT_TRUE(Log::ExistChannel("Test"));
 	
-	Connection connection(Log::Connect(handler, "Test"));
+	ScopedConnection connection(Log::Connect(handler, "Test"));
 	
 	Log::LogMessage("Hello, world.", "Test");
 	Log::LogMessage("Nyan Nyan Cat", "NyanCat");
@@ -168,11 +168,11 @@ TEST(LoggingTest, SendToUserChannel)
 	Log::RemoveChannel("Test");
 	ASSERT_TRUE(!Log::ExistChannel("Test"));
 
-	connection.Reset(Log::Connect(handler, "Test"));
+	connection = Log::Connect(handler, "Test");
 	Log::LogMessage("Create new channel and connect", "Test");
 	
 	Log::AddChannel("Test");
-	connection.Reset(Log::Connect(handler, "Test"));
+	connection = Log::Connect(handler, "Test");
 	Log::LogMessage("Send to existent channel", "Test");
 	
 	ASSERT_EQ(3, messages.size());
@@ -203,9 +203,9 @@ TEST(LoggingTest, SendToUserChannels)
 	ASSERT_TRUE(Log::ExistChannel("Test2"));
 	ASSERT_TRUE(!Log::ExistChannel("Nyan Nyan Cat"));
 	
-	Connection connection0(Log::Connect(handler));
-	Connection connection1(Log::Connect(handler, "Test1"));
-	Connection connection2(Log::Connect(handler, "Test2"));
+	ScopedConnection connection0(Log::Connect(handler));
+	ScopedConnection connection1(Log::Connect(handler, "Test1"));
+	ScopedConnection connection2(Log::Connect(handler, "Test2"));
 	
 	Log::LogMessage("(A) Send to default channel");
 	Log::LogMessage("(B) Send to channel Test1", "Test1");
@@ -216,11 +216,11 @@ TEST(LoggingTest, SendToUserChannels)
 	Log::AddChannel("Nyan Nyan Cat", LoggingLevel::Internal);
 	ASSERT_TRUE(Log::ExistChannel("Nyan Nyan Cat"));
 	
-	Connection connection3(Log::Connect(handler, "Nyan Nyan Cat"));
+	ScopedConnection connection3(Log::Connect(handler, "Nyan Nyan Cat"));
 	Log::LogMessage("(E) Send to new channel", "Nyan Nyan Cat");
 	
 	// Disconnect
-	connection1.Reset();
+	connection1.Disconnect();
 	Log::LogMessage("(F) Send to channel Test1", "Test1");
 	Log::LogMessage("(G) Send to channel Test2", "Test2");
 
@@ -249,19 +249,19 @@ TEST(LoggingTest, SendToUserChannels)
 TEST(LoggingTest, CallToDisconnectInCallback)
 {
 	std::vector<std::string> messages;
-	Connection connectionA, connectionB;
+	ScopedConnection connectionA, connectionB;
 	
-	connectionA.Reset(Log::Connect([&](LogEntry const& entry){
+	connectionA = Log::Connect([&](LogEntry const& entry){
 		messages.push_back(entry.message + " at A");
 
 		if (entry.message == "Disconnect B") {
-			connectionB.Reset(); // Discconect
+			connectionB.Disconnect();
 		}
-	}));
+	});
 	
-	connectionB.Reset(Log::Connect([&](LogEntry const& entry){
+	connectionB = Log::Connect([&](LogEntry const& entry){
 		messages.push_back(entry.message + " at B");
-	}));
+	});
 	
 	Log::LogMessage("Hello");
 	Log::LogMessage("Hi");
@@ -280,15 +280,15 @@ TEST(LoggingTest, CallToDisconnectInCallback)
 TEST(LoggingTest, CallToDisconnectSelfInCallback)
 {
 	std::vector<std::string> messages;
-	Connection connectionA;
+	ScopedConnection connectionA;
 	
-	connectionA.Reset(Log::Connect([&](LogEntry const& entry){
+	connectionA = Log::Connect([&](LogEntry const& entry){
 		messages.push_back(entry.message + " at A");
 
 		if (entry.message == "Disconnect") {
-			connectionA.Reset(); // Discconect
+			connectionA.Disconnect();
 		}
-	}));
+	});
 	
 	Log::LogMessage("Hello");
 	Log::LogMessage("Hi");

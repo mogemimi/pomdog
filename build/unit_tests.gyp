@@ -47,6 +47,8 @@
       ],
       'sources': [
         '../test/FrameworkTest/main.cpp',
+        '../test/FrameworkTest/Event/EventConnectionTest.cpp',
+        '../test/FrameworkTest/Event/ScopedConnectionTest.cpp',
         '../test/FrameworkTest/Logging/LogChannelTest.cpp',
         '../test/FrameworkTest/Logging/LoggingTest.cpp',
         '../test/FrameworkTest/Logging/LogStreamTest.cpp',

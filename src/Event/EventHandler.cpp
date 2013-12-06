@@ -15,7 +15,6 @@ namespace Pomdog {
 
 using Details::EventInternal::EventSlot;
 using Details::EventInternal::EventSlotCollection;
-
 //-----------------------------------------------------------------------
 EventHandler::EventHandler()
 	: slots(std::make_shared<EventSlotCollection>())

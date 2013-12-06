@@ -9,7 +9,6 @@
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
 #include <Pomdog/Logging/LogChannel.hpp>
-#include <Pomdog/Event/EventConnection.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
 #include <memory>
 #include <vector>
@@ -122,7 +121,7 @@ public:
 
 private:
 	std::vector<std::unique_ptr<LogChannel>> channels;
-	ScopedConnection<EventConnection> connection;
+	ScopedConnection connection;
 	std::recursive_mutex channelsProtection;
 
 	LogChannel defaultChannel;

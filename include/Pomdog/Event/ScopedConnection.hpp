@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,64 +6,42 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_SCOPEDCONNECTION_HPP
-#define POMDOG_SCOPEDCONNECTION_HPP
+#ifndef POMDOG_SCOPEDCONNECTION_8CA9B8CF_5D85_11E3_807D_A8206655A22B_HPP
+#define POMDOG_SCOPEDCONNECTION_8CA9B8CF_5D85_11E3_807D_A8206655A22B_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
 #endif
 
-#include <type_traits>
-#include <utility>
+#include "detail/FowardDeclarations.hpp"
+#include "EventConnection.hpp"
 
 namespace Pomdog {
 
-template <typename T>
 class ScopedConnection final
 {
+private:
+	EventConnection connection;
+
 public:
 	ScopedConnection() = default;
 	ScopedConnection(ScopedConnection const&) = delete;
 	ScopedConnection(ScopedConnection &&) = default;
 	
-	explicit ScopedConnection(T const& connection)
-		: connection(connection)
-	{}
+	explicit ScopedConnection(EventConnection const& connection);
+	explicit ScopedConnection(EventConnection && connection);
 	
-	explicit ScopedConnection(T && connection)
-		: connection(std::move(connection))
-	{}
-	
-	~ScopedConnection()
-	{
-		connection.Disconnect();
-	}
+	~ScopedConnection();
 	
 	ScopedConnection & operator=(ScopedConnection const&) = delete;
 	ScopedConnection & operator=(ScopedConnection &&) = default;
 
-	void Reset()
-	{
-		connection.Disconnect();
-	}
+	ScopedConnection & operator=(EventConnection const& c);
+	ScopedConnection & operator=(EventConnection && c);
 
-	void Reset(T const& c)
-	{
-		connection.Disconnect();
-		connection = c;
-	}
-	
-	void Reset(T && c)
-	{
-		connection.Disconnect();
-		connection = std::move(c);
-	}
-
-private:
-	static_assert(std::is_class<T>::value, "T is class");
-	T connection;
+	void Disconnect();
 };
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SCOPEDCONNECTION_HPP)
+#endif // !defined(POMDOG_SCOPEDCONNECTION_8CA9B8CF_5D85_11E3_807D_A8206655A22B_HPP)
