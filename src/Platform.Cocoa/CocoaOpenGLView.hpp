@@ -17,9 +17,11 @@
 {
 @private
 	NSOpenGLContext* openGLContext_;
+	NSResponder* delegate_;
 }
 
 @property (nonatomic, retain) NSOpenGLContext* openGLContext;
+@property (nonatomic, retain) NSResponder* delegate;
 
 - (id)initWithFrame:(NSRect)frameRect;
 

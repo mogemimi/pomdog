@@ -13,6 +13,7 @@
 #include "CocoaOpenGLContext.hpp"
 #include "CocoaOpenGLView.hpp"
 #include "CocoaWindowDelegate.hpp"
+#include "CocoaOpenGLViewDelegate.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -23,6 +24,7 @@ CocoaGameWindow::CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDi
 	: nativeWindow(window)
 	, openGLView(nil)
 	, windowDelegate(nil)
+	, viewDelegate(nil)
 {
 #if !__has_feature(objc_arc)
 	[this->nativeWindow retain];
@@ -40,6 +42,10 @@ CocoaGameWindow::CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDi
 	// Create WindowDelegate
 	windowDelegate = [[CocoaWindowDelegate alloc] initWithEventDispatcher:eventDispatcher];
 	[nativeWindow setDelegate:windowDelegate];
+	
+	// Create WindowDelegate
+	viewDelegate = [[CocoaOpenGLViewDelegate alloc] initWithEventDispatcher:eventDispatcher];
+	[openGLView setDelegate:viewDelegate];
 }
 //-----------------------------------------------------------------------
 CocoaGameWindow::~CocoaGameWindow()
@@ -144,6 +150,15 @@ void CocoaGameWindow::ResetGLContext()
 {
 	openGLContext.reset();
 	[openGLView clearGLContext];
+}
+//-----------------------------------------------------------------------
+#pragma mark -
+#pragma mark Input Device
+//-----------------------------------------------------------------------
+void CocoaGameWindow::BindToDelegate(std::shared_ptr<CocoaMouse> mouse)
+{
+	POMDOG_ASSERT(mouse);
+	[viewDelegate resetMouse:mouse];
 }
 
 }// namespace Cocoa

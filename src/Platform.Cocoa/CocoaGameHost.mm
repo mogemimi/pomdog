@@ -20,6 +20,7 @@
 #include <Pomdog/Graphics/GraphicsContext.hpp>
 #include "CocoaOpenGLContext.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
+#include "CocoaMouse.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -99,12 +100,14 @@ private:
 	std::shared_ptr<CocoaOpenGLContext> openGLContext;
 	std::shared_ptr<GraphicsContext> graphicsContext;
 	
+	std::shared_ptr<CocoaMouse> mouse;
+	
 	bool exitRequest;
 };
 //-----------------------------------------------------------------------
-CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> window, std::shared_ptr<SystemEventDispatcher> eventDispatcher)
+CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> window_, std::shared_ptr<SystemEventDispatcher> eventDispatcher)
 	: exitRequest(false)
-	, gameWindow(std::move(window))
+	, gameWindow(std::move(window_))
 	, systemEventDispatcher(std::move(eventDispatcher))
 	, openGLContext(CreateOpenGLContext())
 {
@@ -117,6 +120,9 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> window, std::shared_p
 	systemEventConnection = systemEventDispatcher->Connect([this](Event const& event){
 		ProcessSystemEvents(event);
 	});
+	
+	mouse = std::make_shared<CocoaMouse>();
+	gameWindow->BindToDelegate(mouse);
 }
 //-----------------------------------------------------------------------
 void CocoaGameHost::Impl::Run(std::weak_ptr<Game> weakGame)

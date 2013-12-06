@@ -20,17 +20,19 @@
 
 @class NSWindow, CocoaOpenGLView;
 @class CocoaWindowDelegate;
+@class CocoaOpenGLViewDelegate;
 
 namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
 class CocoaOpenGLContext;
+class CocoaMouse;
 
 class CocoaGameWindow final: public GameWindow
 {
 public:
-	CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDispatcher> eventDipatcher);
+	CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDispatcher> eventDispatcher);
 	~CocoaGameWindow();
 
 	///@copydoc GameWindow
@@ -64,11 +66,16 @@ public:
 	///@~Japanese
 	/// @brief ウィンドウを閉じます。
 	void Close();
+	
+	///@~Japanese
+	/// @brief マウスをビューデリゲートに接続します。
+	void BindToDelegate(std::shared_ptr<CocoaMouse> mouse);
 
 private:
 	NSWindow* nativeWindow;
 	CocoaOpenGLView* openGLView;
 	CocoaWindowDelegate* windowDelegate;
+	CocoaOpenGLViewDelegate* viewDelegate;
 	
 	std::shared_ptr<CocoaOpenGLContext> openGLContext;
 };

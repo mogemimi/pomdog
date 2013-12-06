@@ -12,8 +12,13 @@
 #include <Pomdog/Math/Rectangle.hpp>
 
 @implementation CocoaOpenGLView
+{
+	NSTrackingRectTag trackingRect;
+	BOOL wasAcceptingMouseEvents;
+}
 
 @synthesize openGLContext = openGLContext_;
+@synthesize delegate = delegate_;
 
 //-----------------------------------------------------------------------
 - (id)initWithFrame:(NSRect)frameRect
@@ -25,6 +30,7 @@
 			name:NSViewGlobalFrameDidChangeNotification
 			object:self];
 	}
+	wasAcceptingMouseEvents = NO;
 	return self;
 }
 //-----------------------------------------------------------------------
@@ -74,6 +80,95 @@
 	if ([self window] == nil) {
 		[[self openGLContext] clearDrawable];
 	}
+	
+	trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
 }
+//-----------------------------------------------------------------------
+#pragma mark -
+#pragma mark Mouse-Tracking and Cursor
+//-----------------------------------------------------------------------
+- (void)setFrame:(NSRect)frame
+{
+	[super setFrame:frame];
+	[self removeTrackingRect:trackingRect];
+	trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
+}
+//-----------------------------------------------------------------------
+- (void)setBounds:(NSRect)bounds
+{
+	[super setBounds:bounds];
+	[self removeTrackingRect:trackingRect];
+	trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
+}
+//-----------------------------------------------------------------------
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow
+{
+	if ([self window] && trackingRect) {
+		[self removeTrackingRect:trackingRect];
+	}
+}
+//-----------------------------------------------------------------------
+#pragma mark -
+#pragma mark Mouse Event Delegated
+//-----------------------------------------------------------------------
+- (void)mouseEntered:(NSEvent *)theEvent
+{
+	if (![self delegate]) {
+		return;
+	}
 
+	wasAcceptingMouseEvents = [[self window] acceptsMouseMovedEvents];
+	[[self window] setAcceptsMouseMovedEvents:YES];
+	[[self window] makeFirstResponder:self];
+	
+	[[self delegate] mouseEntered:theEvent];
+}
+//-----------------------------------------------------------------------
+-(void)mouseMoved:(NSEvent *)theEvent
+{
+	[[self delegate] mouseMoved:theEvent];
+}
+//-----------------------------------------------------------------------
+- (void)mouseExited:(NSEvent *)theEvent
+{
+	[[self window] setAcceptsMouseMovedEvents:wasAcceptingMouseEvents];
+	
+	[[self delegate] mouseExited:theEvent];
+}
+//-----------------------------------------------------------------------
+-(void)mouseDown:(NSEvent *)theEvent
+{
+	[[self delegate] mouseDown:theEvent];
+}
+//-----------------------------------------------------------------------
+-(void)mouseUp:(NSEvent *)theEvent
+{
+	[[self delegate] mouseUp:theEvent];
+}
+//-----------------------------------------------------------------------
+-(void)rightMouseDown:(NSEvent *)theEvent
+{
+	[[self delegate] rightMouseDown:theEvent];
+}
+//-----------------------------------------------------------------------
+-(void)rightMouseUp:(NSEvent *)theEvent
+{
+	[[self delegate] rightMouseUp:theEvent];
+}
+//-----------------------------------------------------------------------
+-(void)otherMouseDown:(NSEvent *)theEvent
+{
+	[[self delegate] otherMouseDown:theEvent];
+}
+//-----------------------------------------------------------------------
+-(void)otherMouseUp:(NSEvent *)theEvent
+{
+	[[self delegate] otherMouseUp:theEvent];
+}
+//-----------------------------------------------------------------------
+-(void)scrollWheel:(NSEvent *)theEvent
+{
+	[[self delegate] scrollWheel:theEvent];
+}
+//-----------------------------------------------------------------------
 @end

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#import <CocoaWindowDelegate.hpp>
+#import "CocoaWindowDelegate.hpp"
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/EventCodeHelper.hpp>
