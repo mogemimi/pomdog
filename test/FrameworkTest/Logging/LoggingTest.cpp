@@ -103,8 +103,11 @@ TEST(LoggingTest, SetDefaultVerbosityLevels)
 	Log::SetVerbosity(LoggingLevel::Verbose);
 	EXPECT_EQ(LoggingLevel::Verbose, Log::GetVerbosity());
 	
-	Log::SetVerbosity(LoggingLevel::Brief);
-	EXPECT_EQ(LoggingLevel::Brief, Log::GetVerbosity());
+	Log::SetVerbosity(LoggingLevel::Info);
+	EXPECT_EQ(LoggingLevel::Info, Log::GetVerbosity());
+	
+	Log::SetVerbosity(LoggingLevel::Warning);
+	EXPECT_EQ(LoggingLevel::Warning, Log::GetVerbosity());
 	
 	Log::SetVerbosity(LoggingLevel::Critical);
 	EXPECT_EQ(LoggingLevel::Critical, Log::GetVerbosity());
@@ -124,8 +127,12 @@ TEST(LoggingTest, SetVerbosityLevels)
 	EXPECT_EQ(LoggingLevel::Verbose, Log::GetVerbosity("Test"));
 	
 	Log::RemoveChannel("Test");
-	Log::AddChannel("Test", LoggingLevel::Brief);
-	EXPECT_EQ(LoggingLevel::Brief, Log::GetVerbosity("Test"));
+	Log::AddChannel("Test", LoggingLevel::Info);
+	EXPECT_EQ(LoggingLevel::Info, Log::GetVerbosity("Test"));
+	
+	Log::RemoveChannel("Test");
+	Log::AddChannel("Test", LoggingLevel::Warning);
+	EXPECT_EQ(LoggingLevel::Warning, Log::GetVerbosity("Test"));
 	
 	Log::RemoveChannel("Test");
 	Log::AddChannel("Test", LoggingLevel::Critical);
@@ -137,8 +144,11 @@ TEST(LoggingTest, SetVerbosityLevels)
 	Log::SetVerbosity("Test", LoggingLevel::Verbose);
 	EXPECT_EQ(LoggingLevel::Verbose, Log::GetVerbosity("Test"));
 	
-	Log::SetVerbosity("Test", LoggingLevel::Brief);
-	EXPECT_EQ(LoggingLevel::Brief, Log::GetVerbosity("Test"));
+	Log::SetVerbosity("Test", LoggingLevel::Info);
+	EXPECT_EQ(LoggingLevel::Info, Log::GetVerbosity("Test"));
+	
+	Log::SetVerbosity("Test", LoggingLevel::Warning);
+	EXPECT_EQ(LoggingLevel::Warning, Log::GetVerbosity("Test"));
 	
 	Log::SetVerbosity("Test", LoggingLevel::Critical);
 	EXPECT_EQ(LoggingLevel::Critical, Log::GetVerbosity("Test"));

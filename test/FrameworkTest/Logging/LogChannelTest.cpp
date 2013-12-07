@@ -19,12 +19,16 @@ using Pomdog::ScopedConnection;
 
 TEST(LogChannelTest, LoggingLevel)
 {
-	EXPECT_TRUE(LoggingLevel::Critical < LoggingLevel::Brief);
-	EXPECT_TRUE(LoggingLevel::Critical < LoggingLevel::Verbose);
-	EXPECT_TRUE(LoggingLevel::Critical < LoggingLevel::Internal);
-	EXPECT_TRUE(LoggingLevel::Brief < LoggingLevel::Verbose);
-	EXPECT_TRUE(LoggingLevel::Brief < LoggingLevel::Internal);
-	EXPECT_TRUE(LoggingLevel::Verbose < LoggingLevel::Internal);
+	static_assert(LoggingLevel::Critical < LoggingLevel::Warning, "TEST(LogChannelTest, LoggingLevel)");
+	static_assert(LoggingLevel::Critical < LoggingLevel::Info, "TEST(LogChannelTest, LoggingLevel)");
+	static_assert(LoggingLevel::Critical < LoggingLevel::Verbose, "TEST(LogChannelTest, LoggingLevel)");
+	static_assert(LoggingLevel::Critical < LoggingLevel::Internal, "TEST(LogChannelTest, LoggingLevel)");
+	static_assert(LoggingLevel::Warning < LoggingLevel::Info, "TEST(LogChannelTest, LoggingLevel)");
+	static_assert(LoggingLevel::Warning < LoggingLevel::Verbose, "TEST(LogChannelTest, LoggingLevel)");
+	static_assert(LoggingLevel::Warning < LoggingLevel::Internal, "TEST(LogChannelTest, LoggingLevel)");
+	static_assert(LoggingLevel::Info < LoggingLevel::Verbose, "TEST(LogChannelTest, LoggingLevel)");
+	static_assert(LoggingLevel::Info < LoggingLevel::Internal, "TEST(LogChannelTest, LoggingLevel)");
+	static_assert(LoggingLevel::Verbose < LoggingLevel::Internal, "TEST(LogChannelTest, LoggingLevel)");
 }
 
 TEST(LogChannelTest, LogMessage)
@@ -107,8 +111,11 @@ TEST(LogChannelTest, SetLoggingLevel)
 	channel.SetLevel(LoggingLevel::Critical);
 	EXPECT_EQ(channel.GetLevel(), LoggingLevel::Critical);
 	
-	channel.SetLevel(LoggingLevel::Brief);
-	EXPECT_EQ(channel.GetLevel(), LoggingLevel::Brief);
+	channel.SetLevel(LoggingLevel::Warning);
+	EXPECT_EQ(channel.GetLevel(), LoggingLevel::Warning);
+	
+	channel.SetLevel(LoggingLevel::Info);
+	EXPECT_EQ(channel.GetLevel(), LoggingLevel::Info);
 	
 	channel.SetLevel(LoggingLevel::Verbose);
 	EXPECT_EQ(channel.GetLevel(), LoggingLevel::Verbose);
@@ -136,17 +143,33 @@ TEST(LogChannelTest, VerbosityLevelThreshold)
 	channel.SetLevel(LoggingLevel::Critical);
 	ResetMessageAndSendLog(LoggingLevel::Critical);
 	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Brief);
+	ResetMessageAndSendLog(LoggingLevel::Warning);
+	EXPECT_TRUE(message.empty());
+	ResetMessageAndSendLog(LoggingLevel::Info);
 	EXPECT_TRUE(message.empty());
 	ResetMessageAndSendLog(LoggingLevel::Verbose);
 	EXPECT_TRUE(message.empty());
 	ResetMessageAndSendLog(LoggingLevel::Internal);
 	EXPECT_TRUE(message.empty());
 	
-	channel.SetLevel(LoggingLevel::Brief);
+	channel.SetLevel(LoggingLevel::Warning);
 	ResetMessageAndSendLog(LoggingLevel::Critical);
 	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Brief);
+	ResetMessageAndSendLog(LoggingLevel::Warning);
+	EXPECT_EQ(message, facts);
+	ResetMessageAndSendLog(LoggingLevel::Info);
+	EXPECT_TRUE(message.empty());
+	ResetMessageAndSendLog(LoggingLevel::Verbose);
+	EXPECT_TRUE(message.empty());
+	ResetMessageAndSendLog(LoggingLevel::Internal);
+	EXPECT_TRUE(message.empty());
+	
+	channel.SetLevel(LoggingLevel::Info);
+	ResetMessageAndSendLog(LoggingLevel::Critical);
+	EXPECT_EQ(message, facts);
+	ResetMessageAndSendLog(LoggingLevel::Warning);
+	EXPECT_EQ(message, facts);
+	ResetMessageAndSendLog(LoggingLevel::Info);
 	EXPECT_EQ(message, facts);
 	ResetMessageAndSendLog(LoggingLevel::Verbose);
 	EXPECT_TRUE(message.empty());
@@ -156,7 +179,9 @@ TEST(LogChannelTest, VerbosityLevelThreshold)
 	channel.SetLevel(LoggingLevel::Verbose);
 	ResetMessageAndSendLog(LoggingLevel::Critical);
 	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Brief);
+	ResetMessageAndSendLog(LoggingLevel::Warning);
+	EXPECT_EQ(message, facts);
+	ResetMessageAndSendLog(LoggingLevel::Info);
 	EXPECT_EQ(message, facts);
 	ResetMessageAndSendLog(LoggingLevel::Verbose);
 	EXPECT_EQ(message, facts);
@@ -166,7 +191,9 @@ TEST(LogChannelTest, VerbosityLevelThreshold)
 	channel.SetLevel(LoggingLevel::Internal);
 	ResetMessageAndSendLog(LoggingLevel::Critical);
 	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Brief);
+	ResetMessageAndSendLog(LoggingLevel::Warning);
+	EXPECT_EQ(message, facts);
+	ResetMessageAndSendLog(LoggingLevel::Info);
 	EXPECT_EQ(message, facts);
 	ResetMessageAndSendLog(LoggingLevel::Verbose);
 	EXPECT_EQ(message, facts);

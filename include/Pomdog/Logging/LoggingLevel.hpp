@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_LOGGINGLEVEL_HPP
-#define POMDOG_LOGGINGLEVEL_HPP
+#ifndef POMDOG_LOGGINGLEVEL_1CAC8226_5F2C_11E3_90C6_A8206655A22B_HPP
+#define POMDOG_LOGGINGLEVEL_1CAC8226_5F2C_11E3_90C6_A8206655A22B_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -33,16 +33,20 @@ enum class LoggingLevel: std::uint16_t
 	Critical = 0,
 
 	///@~Japanese
-	/// @brief 特定の重要なイベントログのみを示します。
-	Brief = 1,
+	/// @brief 警告メッセージを示します。
+	Warning = 1,
 
 	///@~Japanese
+	/// @brief 日常的なログを示します。
+	Info = 2,
+	
+	///@~Japanese
 	/// @brief エンジンの内部処理に関するログを除くすべてのメッセージを示します。
-	Verbose = 2,
+	Verbose = 3,
 
 	///@~Japanese
 	/// @brief エンジンの内部処理に関わるログなどを含めたすべてのログを示します。
-	Internal = 3
+	Internal = 4
 };
 
 /// @}
@@ -50,4 +54,4 @@ enum class LoggingLevel: std::uint16_t
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_LOGGINGLEVEL_HPP)
+#endif // !defined(POMDOG_LOGGINGLEVEL_1CAC8226_5F2C_11E3_90C6_A8206655A22B_HPP)
