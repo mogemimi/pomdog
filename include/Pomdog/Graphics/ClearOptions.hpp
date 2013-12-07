@@ -52,8 +52,7 @@ enum class ClearOptions: std::uint8_t
 	ClearOptions_Details_TargetDepth = 0x4 | 0x1,
 };
 
-inline constexpr ClearOptions
-operator|(ClearOptions a, ClearOptions b)
+inline constexpr ClearOptions operator|(ClearOptions a, ClearOptions b)
 {
 	return static_cast<ClearOptions>(static_cast<std::uint8_t>(a) | static_cast<std::uint8_t>(b));
 }

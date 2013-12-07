@@ -7,11 +7,6 @@
 //
 
 #include "CocoaTestGame.hpp"
-#include <Pomdog/Math/Color.hpp>
-#include <Pomdog/Application/GameWindow.hpp>
-#include <Pomdog/Graphics/ClearOptions.hpp>
-#include <Pomdog/Graphics/Viewport.hpp>
-#include <Pomdog/Logging/Log.hpp>
 #include <utility>
 
 namespace Pomdog {

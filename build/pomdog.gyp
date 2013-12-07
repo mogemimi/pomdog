@@ -160,6 +160,7 @@
         '../include/Pomdog/Input/ButtonState.hpp',
         '../include/Pomdog/Input/Mouse.hpp',
         '../include/Pomdog/Input/MouseState.hpp',
+        '../include/Pomdog/Pomdog.hpp',
         '../src/Graphics/GraphicsContext.cpp',
         '../src/Graphics/Viewport.cpp',
         '../src/Input/MouseState.cpp',

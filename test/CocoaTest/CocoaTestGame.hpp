@@ -13,9 +13,7 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Application/Game.hpp>
-#include <Pomdog/Application/GameHost.hpp>
-#include <Pomdog/Graphics/GraphicsContext.hpp>
+#include <Pomdog/Pomdog.hpp>
 
 namespace Pomdog {
 
