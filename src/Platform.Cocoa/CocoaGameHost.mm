@@ -58,8 +58,10 @@ static std::shared_ptr<CocoaOpenGLContext> CreateOpenGLContext()
 static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 	std::shared_ptr<CocoaOpenGLContext> openGLContext, std::weak_ptr<GameWindow> gameWindow)
 {
-	auto nativeContext = std::unique_ptr<GL4::GraphicsContextGL4>(new GL4::GraphicsContextGL4(
+	using RenderSystem::GL4::GraphicsContextGL4;
+	auto nativeContext = std::unique_ptr<GraphicsContextGL4>(new GraphicsContextGL4(
 		std::move(openGLContext), std::move(gameWindow)));
+	
 	return std::make_shared<GraphicsContext>(std::move(nativeContext));
 }
 //-----------------------------------------------------------------------

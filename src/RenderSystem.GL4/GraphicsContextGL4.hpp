@@ -22,11 +22,12 @@ namespace Pomdog {
 class GameWindow;
 
 namespace Details {
+namespace RenderSystem {
 namespace GL4 {
 
 class OpenGLContext;
 
-class GraphicsContextGL4 final: public RenderSystem::NativeGraphicsContext
+class GraphicsContextGL4 final: public NativeGraphicsContext
 {
 public:
 	GraphicsContextGL4() = delete;
@@ -53,6 +54,7 @@ private:
 };
 
 }// namespace GL4
+}// namespace RenderSystem
 }// namespace Details
 }// namespace Pomdog
 

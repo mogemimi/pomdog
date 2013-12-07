@@ -31,7 +31,14 @@
 #include <Pomdog/Event/ScopedConnection.hpp>
 #include <Pomdog/GamePlay/GameObject.hpp>
 #include <Pomdog/Graphics/ClearOptions.hpp>
+#include <Pomdog/Graphics/ComparisonFunction.hpp>
+//#include <Pomdog/Graphics/CullMode.hpp>
+#include <Pomdog/Graphics/DepthStencilDescription.hpp>
+#include <Pomdog/Graphics/DepthStencilOperation.hpp>
+#include <Pomdog/Graphics/DepthStencilState.hpp>
+//#include <Pomdog/Graphics/FillMode.hpp>
 #include <Pomdog/Graphics/GraphicsContext.hpp>
+#include <Pomdog/Graphics/StencilOperation.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
 #include <Pomdog/Input/ButtonState.hpp>
 #include <Pomdog/Input/Mouse.hpp>

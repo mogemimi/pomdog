@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -18,11 +18,22 @@
 namespace Pomdog {
 
 // Class
+class BlendDescription;
+class DepthStencilDescription;
+class DepthStencilOperation;
+class DepthStencilState;
 class GraphicsContext;
+class GraphicsDevice;
+class SamplerDescription;
+class RasterizerDescription;
 class Viewport;
 
 // Enumerations
 enum class ClearOptions: std::uint8_t;
+enum class ComparisonFunction: std::uint16_t;
+enum class CullMode: std::uint16_t;
+enum class FillMode: std::uint16_t;
+enum class StencilOperation: std::uint16_t;
 
 }// namespace Pomdog
 

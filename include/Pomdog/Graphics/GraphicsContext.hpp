@@ -24,7 +24,6 @@ namespace Details {
 namespace RenderSystem {
 
 class NativeGraphicsContext;
-class InternalAttorney;
 
 }// namespace RenderSystem
 }// namespace Details
@@ -39,6 +38,8 @@ class InternalAttorney;
 class GraphicsContext: Noncopyable
 {
 public:
+	GraphicsContext() = delete;
+
 	explicit GraphicsContext(std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext);
 	virtual ~GraphicsContext();
 	
@@ -63,8 +64,8 @@ public:
 	void SetViewport(Viewport const& viewport);
 	
 private:
-	friend class Details::RenderSystem::InternalAttorney;
-	Details::RenderSystem::NativeGraphicsContext* NativeContext();
+	//friend class Details::RenderSystem::InternalAttorney;
+	//Details::RenderSystem::NativeGraphicsContext* NativeGraphicsContext();
 	
 private:
 	class Impl;

@@ -17,8 +17,8 @@
 
 namespace Pomdog {
 namespace Details {
+namespace RenderSystem {
 namespace GL4 {
-
 //-----------------------------------------------------------------------
 GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> openGLContext, std::weak_ptr<GameWindow> window)
 	: nativeContext(std::move(openGLContext))
@@ -82,5 +82,6 @@ void GraphicsContextGL4::SetViewport(Viewport const& viewport)
 }
 
 }// namespace GL4
+}// namespace RenderSystem
 }// namespace Details
 }// namespace Pomdog

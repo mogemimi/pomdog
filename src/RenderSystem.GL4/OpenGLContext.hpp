@@ -17,6 +17,7 @@
 
 namespace Pomdog {
 namespace Details {
+namespace RenderSystem {
 namespace GL4 {
 
 class OpenGLContext: Noncopyable
@@ -32,6 +33,7 @@ public:
 };
 
 }// namespace GL4
+}// namespace RenderSystem
 }// namespace Details
 }// namespace Pomdog
 
