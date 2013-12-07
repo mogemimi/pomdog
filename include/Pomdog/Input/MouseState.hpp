@@ -75,8 +75,6 @@ public:
 	
 public:
 	MouseState();
-	MouseState(MouseState const&) = default;
-	MouseState(MouseState &&) = default;
 };
 
 /// @}

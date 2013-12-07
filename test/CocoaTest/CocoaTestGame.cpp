@@ -9,7 +9,8 @@
 #include "CocoaTestGame.hpp"
 #include <Pomdog/Math/Color.hpp>
 #include <Pomdog/Application/GameWindow.hpp>
-#include <Pomdog/Graphics/GraphicsContext.hpp>
+#include <Pomdog/Graphics/ClearOptions.hpp>
+#include <Pomdog/Graphics/Viewport.hpp>
 #include <Pomdog/Logging/Log.hpp>
 #include <utility>
 
@@ -35,7 +36,7 @@ void CocoaTestGame::Update()
 void CocoaTestGame::Draw()
 {
 	auto color = Pomdog::Color::CornflowerBlue;
-	graphicsContext->Clear(color);
+	graphicsContext->Clear(ClearOptions::RenderTarget|ClearOptions::DepthBuffer, color, 0.0f, 0);
 	
 	graphicsContext->Present();
 }

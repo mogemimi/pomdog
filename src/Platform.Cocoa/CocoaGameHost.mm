@@ -55,9 +55,11 @@ static std::shared_ptr<CocoaOpenGLContext> CreateOpenGLContext()
 	return std::make_shared<CocoaOpenGLContext>(pixelFormat);
 }
 //-----------------------------------------------------------------------
-static std::shared_ptr<GraphicsContext> CreateGraphicsContext(std::shared_ptr<CocoaOpenGLContext> openGLContext)
+static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
+	std::shared_ptr<CocoaOpenGLContext> openGLContext, std::weak_ptr<GameWindow> gameWindow)
 {
-	auto nativeContext = std::unique_ptr<GL4::GraphicsContextGL4>(new GL4::GraphicsContextGL4(std::move(openGLContext)));
+	auto nativeContext = std::unique_ptr<GL4::GraphicsContextGL4>(new GL4::GraphicsContextGL4(
+		std::move(openGLContext), std::move(gameWindow)));
 	return std::make_shared<GraphicsContext>(std::move(nativeContext));
 }
 //-----------------------------------------------------------------------
@@ -111,7 +113,7 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> window_, std::shared_
 	, systemEventDispatcher(std::move(eventDispatcher))
 	, openGLContext(CreateOpenGLContext())
 {
-	graphicsContext = CreateGraphicsContext(openGLContext);
+	graphicsContext = CreateGraphicsContext(openGLContext, gameWindow);
 	
 	POMDOG_ASSERT(gameWindow);
 	gameWindow->ResetGLContext(openGLContext);

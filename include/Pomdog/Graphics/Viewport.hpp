@@ -36,9 +36,6 @@ public:
 
 public:
 	Viewport() = default;
-	Viewport(Viewport const&) = default;
-	Viewport(Viewport &&) = default;
-
 	explicit Viewport(Rectangle const& bounds);
 	Viewport(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height);
 	Viewport(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, float minDepth, float maxDepth);

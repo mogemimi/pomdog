@@ -15,6 +15,7 @@
 
 #include <Pomdog/Utility/Noncopyable.hpp>
 #include <Pomdog/Math/detail/ForwardDeclarations.hpp>
+#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 
 namespace Pomdog {
 namespace Details {
@@ -25,9 +26,17 @@ class NativeGraphicsContext: Noncopyable
 public:
 	virtual ~NativeGraphicsContext() = default;
 	
+	///@copydoc Pomdog::GraphicsContext
 	virtual void Clear(Color const& color) = 0;
 	
+	///@copydoc Pomdog::GraphicsContext
+	virtual void Clear(ClearOptions options, Color const& color, float depth, std::int32_t stencil) = 0;
+	
+	///@copydoc Pomdog::GraphicsContext
 	virtual void Present() = 0;
+
+	///@copydoc Pomdog::GraphicsContext
+	virtual void SetViewport(Viewport const& viewport) = 0;
 };
 
 }// namespace RenderSystem
