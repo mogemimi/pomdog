@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -7,7 +7,9 @@
 //
 
 #include "GraphicsDeviceGL4.hpp"
+#include "BlendStateGL4.hpp"
 #include "DepthStencilStateGL4.hpp"
+#include "RasterizerStateGL4.hpp"
 #include <Pomdog/Utility/Exception.hpp>
 
 namespace Pomdog {
@@ -19,13 +21,15 @@ namespace GL4 {
 std::unique_ptr<NativeBlendState>
 GraphicsDeviceGL4::CreateBlendState(BlendDescription const& description)
 {
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "GraphicsDeviceGL4::CreateBlendState");
+	static_assert(__cplusplus < 201401L, "TODO: support for std::make_unique");
+	//return std::make_unique<BlendStateGL4>(description); // C++14
+	return std::unique_ptr<BlendStateGL4>(new BlendStateGL4(description));
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeDepthStencilState>
 GraphicsDeviceGL4::CreateDepthStencilState(DepthStencilDescription const& description)
 {
+	static_assert(__cplusplus < 201401L, "TODO: support for std::make_unique");
 	//return std::make_unique<DepthStencilStateGL4>(description); // C++14
 	return std::unique_ptr<DepthStencilStateGL4>(new DepthStencilStateGL4(description));
 }
@@ -40,8 +44,9 @@ GraphicsDeviceGL4::CreateSamplerState(SamplerDescription const& description)
 std::unique_ptr<NativeRasterizerState>
 GraphicsDeviceGL4::CreateRasterizerState(RasterizerDescription const& description)
 {
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "GraphicsDeviceGL4::CreateRasterizerState");
+	static_assert(__cplusplus < 201401L, "TODO: support for std::make_unique");
+	//return std::make_unique<DepthStencilStateGL4>(description); // C++14
+	return std::unique_ptr<RasterizerStateGL4>(new RasterizerStateGL4(description));
 }
 //-----------------------------------------------------------------------
 	

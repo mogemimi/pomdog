@@ -1,4 +1,4 @@
-//
+﻿//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,15 +6,15 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_SRC_GL4_DEPTHSTENCILSTATEGL4_8C88FD85_5F33_11E3_A3DA_A8206655A22B_HPP
-#define POMDOG_SRC_GL4_DEPTHSTENCILSTATEGL4_8C88FD85_5F33_11E3_A3DA_A8206655A22B_HPP
+#ifndef POMDOG_SRC_GL4_RASTERIZERSTATEGL4_1AEAC68F_5FFF_11E3_8B02_A8206655A22B_HPP
+#define POMDOG_SRC_GL4_RASTERIZERSTATEGL4_1AEAC68F_5FFF_11E3_8B02_A8206655A22B_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
 #endif
 
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
-#include "../RenderSystem/NativeDepthStencilState.hpp"
+#include "../RenderSystem/NativeRasterizerState.hpp"
 #include <memory>
 
 namespace Pomdog {
@@ -22,16 +22,16 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
-class DepthStencilStateGL4 final: public NativeDepthStencilState
+class RasterizerStateGL4 final: public NativeRasterizerState
 {
 public:
-	DepthStencilStateGL4() = delete;
+	RasterizerStateGL4() = delete;
 	
-	explicit DepthStencilStateGL4(DepthStencilDescription const& description);
+	explicit RasterizerStateGL4(RasterizerDescription const& description);
 	
-	~DepthStencilStateGL4();
+	~RasterizerStateGL4();
 	
-	///@copydoc NativeDepthStencilState
+	///@copydoc NativeRasterizerState
 	void Apply() override;
 	
 private:
@@ -44,4 +44,4 @@ private:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SRC_GL4_DEPTHSTENCILSTATEGL4_8C88FD85_5F33_11E3_A3DA_A8206655A22B_HPP)
+#endif // !defined(POMDOG_SRC_GL4_RASTERIZERSTATEGL4_1AEAC68F_5FFF_11E3_8B02_A8206655A22B_HPP)

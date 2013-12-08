@@ -13,15 +13,19 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Utility/Noncopyable.hpp>
+#include <Pomdog/Config/Platform.hpp>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeDepthStencilState: Noncopyable
+class NativeDepthStencilState
 {
 public:
+	NativeDepthStencilState() = default;
+	NativeDepthStencilState(NativeDepthStencilState const&) = delete;
+	NativeDepthStencilState& operator=(NativeDepthStencilState const&) = delete;
+
 	virtual ~NativeDepthStencilState() = default;
 	
 	///@~Japanese

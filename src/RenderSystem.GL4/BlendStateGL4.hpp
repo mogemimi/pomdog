@@ -31,7 +31,8 @@ public:
 	
 	~BlendStateGL4();
 	
-	void Apply();
+	///@copydoc NativeBlendState
+	void Apply() override;
 	
 private:
 	class Impl;

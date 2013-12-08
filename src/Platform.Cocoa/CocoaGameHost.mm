@@ -148,7 +148,6 @@ void CocoaGameHost::Impl::Run(std::weak_ptr<Game> weakGame)
 	
 	///@note make current context on this thread
 	//openGLContext->BindCurrentContext();// badcode
-	
 	game->Initialize();
 
 	if (!game->CompleteInitialize()) {

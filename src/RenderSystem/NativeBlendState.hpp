@@ -13,15 +13,19 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Utility/Noncopyable.hpp>
+#include <Pomdog/Config/Platform.hpp>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeBlendState: Noncopyable
+class NativeBlendState
 {
 public:
+	NativeBlendState() = default;
+	NativeBlendState(NativeBlendState const&) = delete;
+	NativeBlendState& operator=(NativeBlendState const&) = delete;
+
 	virtual ~NativeBlendState() = default;
 	
 	///@~Japanese
