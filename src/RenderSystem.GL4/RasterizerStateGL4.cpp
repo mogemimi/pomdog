@@ -44,15 +44,24 @@ public:
 private:
 	FillModeGL4 fillMode;
 	CullMode cullMode;
+	GLfloat depthBias;
+	GLfloat slopeScaledDepthBias;
+	bool multisampleAntiAliasEnable;
+	bool scissorTestEnable;
 };
 //-----------------------------------------------------------------------
 RasterizerStateGL4::Impl::Impl(RasterizerDescription const& description)
-	: fillMode(ToFillModeGL4(description.fillMode))
-	, cullMode(description.cullMode)
+	: fillMode(ToFillModeGL4(description.FillMode))
+	, cullMode(description.CullMode)
+	, depthBias(static_cast<GLfloat>(description.DepthBias))
+	, slopeScaledDepthBias(static_cast<GLfloat>(description.SlopeScaledDepthBias))
+	, multisampleAntiAliasEnable(description.MultisampleEnable)
+	, scissorTestEnable(description.ScissorTestEnable)
 {}
 //-----------------------------------------------------------------------
 void RasterizerStateGL4::Impl::Apply()
 {
+	// CullMode:
 	switch (cullMode) {
 	case CullMode::None:
 		glDisable(GL_CULL_FACE);
@@ -67,7 +76,34 @@ void RasterizerStateGL4::Impl::Apply()
 		break;
 	};
 
+	// FillMode:
 	glPolygonMode(GL_FRONT_AND_BACK, fillMode.value);
+	
+	// Scissor Test:
+	if (scissorTestEnable) {
+		glEnable(GL_SCISSOR_TEST);
+	}
+	else {
+		glDisable(GL_SCISSOR_TEST);
+	}
+	
+	// Depth bias:
+	if (depthBias != 0.0f && slopeScaledDepthBias != 0.0f)
+	{
+		glEnable(GL_POLYGON_OFFSET_FILL);
+		glPolygonOffset(slopeScaledDepthBias, depthBias);
+	}
+	else {
+		glDisable(GL_POLYGON_OFFSET_FILL);
+	}
+	
+	// Multisample Anti-Aliasing:
+	if (multisampleAntiAliasEnable) {
+		glEnable(GL_MULTISAMPLE);
+	}
+	else {
+		glDisable(GL_MULTISAMPLE);
+	}
 }
 //-----------------------------------------------------------------------
 RasterizerStateGL4::RasterizerStateGL4(RasterizerDescription const& description)

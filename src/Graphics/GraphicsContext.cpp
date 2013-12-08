@@ -99,6 +99,20 @@ void GraphicsContext::SetViewport(Viewport const& viewport)
 	impl->nativeContext->SetViewport(viewport);
 }
 //-----------------------------------------------------------------------
+Rectangle GraphicsContext::GetScissorRectangle() const
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
+	return impl->nativeContext->GetScissorRectangle();
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetScissorRectangle(Pomdog::Rectangle const& rectangle)
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
+	impl->nativeContext->SetScissorRectangle(rectangle);
+}
+//-----------------------------------------------------------------------
 void GraphicsContext::SetBlendState(std::shared_ptr<BlendState> const& blendState)
 {
 	POMDOG_ASSERT(impl);

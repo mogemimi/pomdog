@@ -8,10 +8,12 @@
 
 #include "GraphicsContextGL4.hpp"
 #include <Pomdog/Math/Color.hpp>
+#include <Pomdog/Math/Rectangle.hpp>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/ClearOptions.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
 #include <Pomdog/Application/GameWindow.hpp>
+#include <array>
 #include <utility>
 #include "OpenGLContext.hpp"
 
@@ -80,7 +82,19 @@ void GraphicsContextGL4::SetViewport(Viewport const& viewport)
 		static_cast<GLsizei>(viewport.GetHeight())
 	);
 }
-
+//-----------------------------------------------------------------------
+Rectangle GraphicsContextGL4::GetScissorRectangle() const
+{
+	std::array<GLint, 4> scissorBox;
+	glGetIntegerv(GL_SCISSOR_BOX, scissorBox.data());
+	return Rectangle{ scissorBox[0], scissorBox[1], scissorBox[2], scissorBox[3] };
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::SetScissorRectangle(Rectangle const& rectangle)
+{
+	glScissor(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+}
+//-----------------------------------------------------------------------
 }// namespace GL4
 }// namespace RenderSystem
 }// namespace Details

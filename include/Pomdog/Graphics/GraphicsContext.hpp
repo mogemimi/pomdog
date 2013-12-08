@@ -64,6 +64,14 @@ public:
 	void SetViewport(Viewport const& viewport);
 	
 	///@~Japanese
+	/// @brief シザーテストで用いるシザー矩形を取得します。
+	Rectangle GetScissorRectangle() const;
+	
+	///@~Japanese
+	/// @brief シザーテストで用いるシザー矩形を設定します。
+	void SetScissorRectangle(Rectangle const& rectangle);
+	
+	///@~Japanese
 	/// @brief ブレンディングステートを設定します。
 	void SetBlendState(std::shared_ptr<BlendState> const& blendState);
 

@@ -13,10 +13,18 @@
 #	pragma once
 #endif
 
+#include <Pomdog/Config/FundamentalTypes.hpp>
+
 // Forward declarations of Math
 
 namespace Pomdog {
 namespace Details {
+
+template <typename T>
+class Coordinate2D;
+
+template <typename T>
+class Coordinate3D;
 
 template <typename T>
 class FloatingPointCoordinate2D;
@@ -54,6 +62,21 @@ class TaggedArithmetic;
 }// namespace Details
 
 using Color = Details::FloatingPointColor<float>;
+using Matrix2x2 = Details::FloatingPointMatrix2x2<float>;
+using Matrix3x3 = Details::FloatingPointMatrix3x3<float>;
+using Matrix4x4 = Details::FloatingPointMatrix4x4<float>;
+using Point2D = Details::Coordinate2D<std::int32_t>;
+using Point3D = Details::Coordinate3D<std::int32_t>;
+using Quaternion = Details::FloatingPointQuaternion<float>;
+using Vector2 = Details::FloatingPointVector2<float>;
+using Vector3 = Details::FloatingPointVector3<float>;
+using Vector4 = Details::FloatingPointVector4<float>;
+
+// Structures:
+class Rectangle;
+
+// Enumerations:
+enum class ContainmentType: std::uint16_t;
 
 }// namespace Pomdog
 

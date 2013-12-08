@@ -37,6 +37,12 @@ public:
 
 	///@copydoc Pomdog::GraphicsContext
 	virtual void SetViewport(Viewport const& viewport) = 0;
+	
+	///@copydoc Pomdog::GraphicsContext
+	virtual Rectangle GetScissorRectangle() const = 0;
+	
+	///@copydoc Pomdog::GraphicsContext
+	virtual void SetScissorRectangle(Rectangle const& rectangle) = 0;
 };
 
 }// namespace RenderSystem

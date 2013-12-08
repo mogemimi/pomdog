@@ -48,6 +48,12 @@ public:
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
 	void SetViewport(Viewport const& viewport) override;
 	
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	Rectangle GetScissorRectangle() const override;
+	
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	void SetScissorRectangle(Rectangle const& rectangle) override;
+	
 private:
 	std::shared_ptr<OpenGLContext> nativeContext;
 	std::weak_ptr<GameWindow> gameWindow;
