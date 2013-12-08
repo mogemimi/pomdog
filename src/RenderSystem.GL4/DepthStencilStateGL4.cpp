@@ -10,28 +10,18 @@
 #include "GL4Prerequisites.hpp"
 #include <Pomdog/Graphics/DepthStencilDescription.hpp>
 #include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Utility/detail/Tagged.hpp>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
-struct DepthStencilFaceOperationGL4 final
-{
-	GLenum stencilFunction;
-	GLenum stencilFail;
-	GLenum stencilDepthBufferFail;
-	GLenum stencilPass;
+using ComparisonFunctionGL4 = Tagged<GLenum, ComparisonFunction>;
+using StencilOperationGL4 = Tagged<GLenum, StencilOperation>;
 
-	DepthStencilFaceOperationGL4()
-		: stencilFunction(GL_ALWAYS)
-		, stencilDepthBufferFail(GL_KEEP)
-		, stencilFail(GL_KEEP)
-		, stencilPass(GL_KEEP)
-	{}
-};
 //-----------------------------------------------------------------------
-static GLenum ToComparisonFunctionGL4(ComparisonFunction const& comparison)
+static GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction const& comparison)
 {
 	switch (comparison)
 	{
@@ -44,10 +34,12 @@ static GLenum ToComparisonFunctionGL4(ComparisonFunction const& comparison)
 	case ComparisonFunction::Never: return GL_NEVER;
 	case ComparisonFunction::NotEqual: return GL_NOTEQUAL;
 	}
+#ifdef _MSC_VER
 	return GL_LEQUAL;
+#endif
 }
 //-----------------------------------------------------------------------
-static GLenum ToStencilOperationGL4(StencilOperation const& operation)
+static GLenum ToStencilOperationGL4NonTypesafe(StencilOperation const& operation)
 {
 	switch (operation)
 	{
@@ -60,8 +52,39 @@ static GLenum ToStencilOperationGL4(StencilOperation const& operation)
 	case StencilOperation::Replace: return GL_REPLACE;
 	case StencilOperation::Zero: return GL_ZERO;
 	}
+#ifdef _MSC_VER
 	return GL_KEEP;
+#endif
 }
+//-----------------------------------------------------------------------
+static ComparisonFunctionGL4 ToComparisonFunctionGL4(ComparisonFunction const& comparison)
+{
+	return ComparisonFunctionGL4{
+		ToComparisonFunctionGL4NonTypesafe(comparison)
+	};
+}
+//-----------------------------------------------------------------------
+static StencilOperationGL4 ToStencilOperationGL4(StencilOperation const& operation)
+{
+	return StencilOperationGL4{
+		ToStencilOperationGL4NonTypesafe(operation)
+	};
+}
+//-----------------------------------------------------------------------
+struct DepthStencilFaceOperationGL4 final
+{
+	ComparisonFunctionGL4 stencilFunction;
+	StencilOperationGL4 stencilFail;
+	StencilOperationGL4 stencilDepthBufferFail;
+	StencilOperationGL4 stencilPass;
+
+	DepthStencilFaceOperationGL4()
+		: stencilFunction(GL_ALWAYS)
+		, stencilDepthBufferFail(GL_KEEP)
+		, stencilFail(GL_KEEP)
+		, stencilPass(GL_KEEP)
+	{}
+};
 //-----------------------------------------------------------------------
 static void ToDepthStencilFaceOperationGL4(DepthStencilOperation const& face, DepthStencilFaceOperationGL4 & result)
 {
@@ -85,14 +108,14 @@ public:
 public:
 	DepthStencilFaceOperationGL4 clockwiseFace;
 	DepthStencilFaceOperationGL4 counterClockwiseFace;
-	GLenum const depthFunction;
+	ComparisonFunctionGL4 const depthFunction;
 	
 	GLint const referenceStencil;
 	GLuint const stencilMask;
 	GLuint const stencilWriteMask;
+	GLboolean const depthBufferWriteEnable;
 	bool const stencilEnable;
 	bool const depthBufferEnable;
-	GLboolean const depthBufferWriteEnable;
 };
 //-----------------------------------------------------------------------
 DepthStencilStateGL4::Impl::Impl(DepthStencilDescription const& description)
@@ -133,7 +156,7 @@ void DepthStencilStateGL4::Impl::ApplyDepthTest()
 	glDepthMask(depthBufferWriteEnable);
 
 	// depth function
-	glDepthFunc(depthFunction);
+	glDepthFunc(depthFunction.value);
 }
 //-----------------------------------------------------------------------
 void DepthStencilStateGL4::Impl::ApplyStencilTest()
@@ -145,18 +168,28 @@ void DepthStencilStateGL4::Impl::ApplyStencilTest()
 
 	glEnable(GL_STENCIL_TEST);
 
-	glStencilFuncSeparate(GL_FRONT, counterClockwiseFace.stencilFunction, referenceStencil, stencilMask);
+	// CounterClockwiseFace:
+	glStencilFuncSeparate(GL_FRONT,
+		counterClockwiseFace.stencilFunction.value,
+		referenceStencil,
+		stencilMask
+	);
 	glStencilOpSeparate(GL_FRONT,
-		counterClockwiseFace.stencilFail,
-		counterClockwiseFace.stencilDepthBufferFail,
-		counterClockwiseFace.stencilPass
+		counterClockwiseFace.stencilFail.value,
+		counterClockwiseFace.stencilDepthBufferFail.value,
+		counterClockwiseFace.stencilPass.value
 	);
 
-	glStencilFuncSeparate(GL_BACK, clockwiseFace.stencilFunction, referenceStencil, stencilMask);
+	// ClockwiseFace:
+	glStencilFuncSeparate(GL_BACK,
+		clockwiseFace.stencilFunction.value,
+		referenceStencil,
+		stencilMask
+	);
 	glStencilOpSeparate(GL_BACK,
-		clockwiseFace.stencilFail,
-		clockwiseFace.stencilDepthBufferFail,
-		clockwiseFace.stencilPass
+		clockwiseFace.stencilFail.value,
+		clockwiseFace.stencilDepthBufferFail.value,
+		clockwiseFace.stencilPass.value
 	);
 	
 	glStencilMask(stencilWriteMask);
