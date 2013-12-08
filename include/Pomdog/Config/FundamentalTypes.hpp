@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_FUNDAMENTALTYPES_HPP
-#define POMDOG_FUNDAMENTALTYPES_HPP
+#ifndef POMDOG_FUNDAMENTALTYPES_2E64F0B3_6011_11E3_B322_A8206655A22B_HPP
+#define POMDOG_FUNDAMENTALTYPES_2E64F0B3_6011_11E3_B322_A8206655A22B_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -48,4 +48,4 @@ namespace Details {
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_FUNDAMENTALTYPES_HPP)
+#endif // !defined(POMDOG_FUNDAMENTALTYPES_2E64F0B3_6011_11E3_B322_A8206655A22B_HPP)

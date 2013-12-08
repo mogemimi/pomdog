@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_EXCEPTION_HPP
-#define POMDOG_EXCEPTION_HPP
+#ifndef POMDOG_EXCEPTION_13C6CDE8_6011_11E3_86BE_A8206655A22B_HPP
+#define POMDOG_EXCEPTION_13C6CDE8_6011_11E3_86BE_A8206655A22B_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -80,4 +80,4 @@ namespace ExceptionInternal
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EXCEPTION_HPP)
+#endif // !defined(POMDOG_EXCEPTION_13C6CDE8_6011_11E3_86BE_A8206655A22B_HPP)
