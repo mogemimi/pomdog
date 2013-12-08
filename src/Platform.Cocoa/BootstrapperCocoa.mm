@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -19,7 +19,7 @@ BootstrapperCocoa::BootstrapperCocoa()
 {
 }
 //-----------------------------------------------------------------------
-void BootstrapperCocoa::BuildOpenGLView(NSWindow* nativeWindow)
+void BootstrapperCocoa::BeginRun(NSWindow* nativeWindow)
 {
 	auto eventDispatcher = std::make_shared<SystemEventDispatcher>();
 

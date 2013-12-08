@@ -56,6 +56,7 @@
 	//NSRect bounds = [self bounds];
 	//Pomdog::Rectangle rect{bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height};
 	// send event
+	//[delegate reshape:bounds];
 }
 //-----------------------------------------------------------------------
 - (void)lockFocus

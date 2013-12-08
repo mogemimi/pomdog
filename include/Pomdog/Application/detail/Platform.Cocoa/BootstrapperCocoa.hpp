@@ -42,21 +42,17 @@ namespace Cocoa {
 /// @brief すべてのサブシステムをの起動、およびアプリケーションの実行を行います。
 class BootstrapperCocoa final
 {
-private:
-	std::shared_ptr<GameHost> gameHost;
-	std::shared_ptr<GameWindow> gameWindow;
-
 public:
 	BootstrapperCocoa();
 	
-	void BuildOpenGLView(NSWindow* nativeWindow);
-	
 	template <class GameClass>
-	void Run()
+	void Run(NSWindow* nativeWindow)
 	{
 		static_assert(std::is_base_of<Game, GameClass>::value, "GameClass is base of Pomdog::Game.");
 		static_assert(!std::is_abstract<GameClass>::value, "GameClass is not abstract.");
-		
+	
+		BeginRun(nativeWindow);
+				
 		auto game = std::make_shared<GameClass>(gameHost);
 		gameHost->Run(game);
 		
@@ -64,6 +60,11 @@ public:
 	}
 	
 private:
+	std::shared_ptr<GameHost> gameHost;
+	std::shared_ptr<GameWindow> gameWindow;
+	
+private:
+	void BeginRun(NSWindow* nativeWindow);
 	void EndRun();
 };
 

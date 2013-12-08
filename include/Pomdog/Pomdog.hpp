@@ -30,6 +30,9 @@
 #include <Pomdog/Event/EventQueue.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
 #include <Pomdog/GamePlay/GameObject.hpp>
+#include <Pomdog/Graphics/Blend.hpp>
+#include <Pomdog/Graphics/BlendDescription.hpp>
+#include <Pomdog/Graphics/BlendFunction.hpp>
 #include <Pomdog/Graphics/BufferUsage.hpp>
 #include <Pomdog/Graphics/ClearOptions.hpp>
 #include <Pomdog/Graphics/ComparisonFunction.hpp>

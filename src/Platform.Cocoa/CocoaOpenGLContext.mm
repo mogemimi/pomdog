@@ -13,7 +13,6 @@
 namespace Pomdog {
 namespace Details {
 namespace Cocoa {
-
 //-----------------------------------------------------------------------
 CocoaOpenGLContext::CocoaOpenGLContext(NSOpenGLPixelFormat* pixelFormat)
 	: openGLContext(nil)
@@ -55,11 +54,25 @@ void CocoaOpenGLContext::SwapBuffers()
 	[openGLContext flushBuffer];
 }
 //-----------------------------------------------------------------------
+void CocoaOpenGLContext::LockContext()
+{
+	POMDOG_ASSERT(openGLContext != nil);
+	CGLContextObj coreOpenGLContext = static_cast<CGLContextObj>([openGLContext CGLContextObj]);
+	CGLLockContext(coreOpenGLContext);
+}
+//-----------------------------------------------------------------------
+void CocoaOpenGLContext::UnlockContext()
+{
+	POMDOG_ASSERT(openGLContext != nil);
+	CGLContextObj coreOpenGLContext = static_cast<CGLContextObj>([openGLContext CGLContextObj]);
+	CGLUnlockContext(coreOpenGLContext);
+}
+//-----------------------------------------------------------------------
 NSOpenGLContext* CocoaOpenGLContext::GetNSOpenGLContext()
 {
 	return openGLContext;
 }
-
+//-----------------------------------------------------------------------
 }// namespace Cocoa
 }// namespace Details
 }// namespace Pomdog

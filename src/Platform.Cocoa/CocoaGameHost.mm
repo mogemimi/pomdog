@@ -146,8 +146,11 @@ void CocoaGameHost::Impl::Run(std::weak_ptr<Game> weakGame)
 		return;
 	}
 	
-	game->Initialize();
+	///@note make current context on this thread
+	//openGLContext->BindCurrentContext();// badcode
 	
+	game->Initialize();
+
 	if (!game->CompleteInitialize()) {
 		return;
 	}
@@ -193,16 +196,14 @@ void CocoaGameHost::Impl::RenderFrame(Game & game)
 	}
 	
 	// RenderBegin:
-	CGLContextObj coreOpenGLContext = static_cast<CGLContextObj>([openGLContext->GetNSOpenGLContext() CGLContextObj]);
-	CGLLockContext(coreOpenGLContext);
-	
+	openGLContext->LockContext();
 	openGLContext->BindCurrentContext();
 
 	// Render:
 	game.Draw();
 	
 	// RenderEnd:
-	CGLUnlockContext(coreOpenGLContext);
+	openGLContext->UnlockContext();
 }
 //-----------------------------------------------------------------------
 void CocoaGameHost::Impl::DoEvents()

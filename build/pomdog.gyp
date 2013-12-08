@@ -181,6 +181,7 @@
         '../src/Graphics/GraphicsDevice.cpp',
         '../src/Graphics/Viewport.cpp',
         '../src/Input/MouseState.cpp',
+        '../src/RenderSystem/NativeBlendState.hpp',
         '../src/RenderSystem/NativeDepthStencilState.hpp',
         '../src/RenderSystem/NativeGraphicsContext.hpp',
         '../src/RenderSystem/NativeGraphicsDevice.hpp',
@@ -200,6 +201,8 @@
         }],
         ['renderer == "gl"', {
           'sources': [
+            '../src/RenderSystem.GL4/BlendStateGL4.cpp',
+            '../src/RenderSystem.GL4/BlendStateGL4.hpp',
             '../src/RenderSystem.GL4/DepthStencilStateGL4.cpp',
             '../src/RenderSystem.GL4/DepthStencilStateGL4.hpp',
             '../src/RenderSystem.GL4/GL4Prerequisites.hpp',

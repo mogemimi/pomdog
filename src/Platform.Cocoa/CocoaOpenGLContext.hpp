@@ -37,6 +37,10 @@ public:
 
 	void SwapBuffers() override;
 	
+	void LockContext();
+	
+	void UnlockContext();
+	
 	NSOpenGLContext* GetNSOpenGLContext();
 	
 private:
