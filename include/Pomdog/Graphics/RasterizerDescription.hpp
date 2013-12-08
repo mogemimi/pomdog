@@ -26,7 +26,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief ラスタライズ処理を記述します。
-class RasterizerDescription final
+class RasterizerDescription
 {
 public:
 	///@~Japanese

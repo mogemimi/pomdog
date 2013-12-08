@@ -42,8 +42,11 @@
 #include <Pomdog/Graphics/DepthStencilState.hpp>
 #include <Pomdog/Graphics/FillMode.hpp>
 #include <Pomdog/Graphics/GraphicsContext.hpp>
+#include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include <Pomdog/Graphics/RasterizerDescription.hpp>
 #include <Pomdog/Graphics/StencilOperation.hpp>
+#include <Pomdog/Graphics/TextureAddressMode.hpp>
+#include <Pomdog/Graphics/TextureFilter.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
 #include <Pomdog/Input/ButtonState.hpp>
 #include <Pomdog/Input/Mouse.hpp>

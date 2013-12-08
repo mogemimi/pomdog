@@ -40,6 +40,8 @@ enum class ComparisonFunction: std::uint16_t;
 enum class CullMode: std::uint16_t;
 enum class FillMode: std::uint16_t;
 enum class StencilOperation: std::uint16_t;
+enum class TextureAddressMode: std::uint16_t;
+enum class TextureFilter: std::uint16_t;
 
 }// namespace Pomdog
 

@@ -172,6 +172,8 @@
         #'../include/Pomdog/Graphics/SamplerDescription.hpp',
         #'../include/Pomdog/Graphics/SamplerState.hpp',
         '../include/Pomdog/Graphics/StencilOperation.hpp',
+        '../include/Pomdog/Graphics/TextureAddressMode.hpp',
+        '../include/Pomdog/Graphics/TextureFilter.hpp',
         '../include/Pomdog/Graphics/Viewport.hpp',
         '../include/Pomdog/Graphics/detail/ForwardDeclarations.hpp',
         '../include/Pomdog/Input/ButtonState.hpp',
