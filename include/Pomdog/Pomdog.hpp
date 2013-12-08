@@ -30,6 +30,7 @@
 #include <Pomdog/Event/EventQueue.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
 #include <Pomdog/GamePlay/GameObject.hpp>
+#include <Pomdog/Graphics/BufferUsage.hpp>
 #include <Pomdog/Graphics/ClearOptions.hpp>
 #include <Pomdog/Graphics/ComparisonFunction.hpp>
 //#include <Pomdog/Graphics/CullMode.hpp>

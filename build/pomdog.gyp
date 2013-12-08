@@ -153,6 +153,7 @@
         '../include/Pomdog/Application/GameHost.hpp',
         '../include/Pomdog/Application/GameWindow.hpp',
         '../include/Pomdog/Application/detail/PlatformSystem.hpp',
+        '../include/Pomdog/Graphics/BufferUsage.hpp',
         '../include/Pomdog/Graphics/ClearOptions.hpp',
         '../include/Pomdog/Graphics/ComparisonFunction.hpp',
         #'../include/Pomdog/Graphics/CullMode.hpp',
