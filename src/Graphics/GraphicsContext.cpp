@@ -8,9 +8,12 @@
 
 #include <Pomdog/Graphics/GraphicsContext.hpp>
 #include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Utility/Exception.hpp>
+#include <Pomdog/Graphics/DepthStencilState.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
 #include <utility>
 #include "../RenderSystem/NativeGraphicsContext.hpp"
+#include "../RenderSystem/NativeDepthStencilState.hpp"
 
 namespace Pomdog {
 
@@ -34,6 +37,7 @@ public:
 public:
 	std::unique_ptr<NativeGraphicsContext> nativeContext;
 	Viewport viewport;
+	std::shared_ptr<DepthStencilState> depthStencilState;
 };
 //-----------------------------------------------------------------------
 GraphicsContext::Impl::Impl(std::unique_ptr<NativeGraphicsContext> nativeContext)
@@ -94,5 +98,33 @@ void GraphicsContext::SetViewport(Viewport const& viewport)
 	impl->viewport = viewport;
 	impl->nativeContext->SetViewport(viewport);
 }
-
+//-----------------------------------------------------------------------
+void GraphicsContext::SetBlendState(std::shared_ptr<BlendState> const& blendState)
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_THROW_EXCEPTION(std::runtime_error,
+		"Not implemented", "GraphicsContext::SetBlendState");
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilState)
+{
+	POMDOG_ASSERT(impl);
+	impl->depthStencilState = depthStencilState;
+	impl->depthStencilState->GetNativeDepthStencilState()->Apply();
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetSamplerState(std::size_t index, std::shared_ptr<SamplerState> const& samplerState)
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_THROW_EXCEPTION(std::runtime_error,
+		"Not implemented", "GraphicsContext::SetSamplerState");
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState)
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_THROW_EXCEPTION(std::runtime_error,
+		"Not implemented", "GraphicsContext::SetRasterizerState");
+}
+//-----------------------------------------------------------------------
 }// namespace Pomdog

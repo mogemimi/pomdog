@@ -18,8 +18,10 @@
 
 #include <OpenGL/OpenGL.h>
 #include <Pomdog/Graphics/GraphicsContext.hpp>
+#include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include "CocoaOpenGLContext.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
+#include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 #include "CocoaMouse.hpp"
 
 namespace Pomdog {
@@ -86,6 +88,9 @@ public:
 	
 	///@copydoc GameHost
 	std::shared_ptr<GraphicsContext> GetGraphicsContext();
+	
+	///@copydoc GameHost
+	std::shared_ptr<GraphicsDevice> GetGraphicsDevice() override;
 
 public:
 	void RenderFrame(Game & game);
@@ -103,6 +108,7 @@ private:
 	
 	std::shared_ptr<CocoaOpenGLContext> openGLContext;
 	std::shared_ptr<GraphicsContext> graphicsContext;
+	std::shared_ptr<GraphicsDevice> graphicsDevice;
 	
 	std::shared_ptr<CocoaMouse> mouse;
 	
@@ -115,6 +121,9 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> window_, std::shared_
 	, systemEventDispatcher(std::move(eventDispatcher))
 	, openGLContext(CreateOpenGLContext())
 {
+	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
+	graphicsDevice = std::make_shared<GraphicsDevice>(std::unique_ptr<GraphicsDeviceGL4>{new GraphicsDeviceGL4()});
+
 	graphicsContext = CreateGraphicsContext(openGLContext, gameWindow);
 	
 	POMDOG_ASSERT(gameWindow);
@@ -167,6 +176,11 @@ std::shared_ptr<GameWindow> CocoaGameHost::Impl::GetWindow()
 std::shared_ptr<GraphicsContext> CocoaGameHost::Impl::GetGraphicsContext()
 {
 	return graphicsContext;
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<GraphicsDevice> CocoaGameHost::Impl::GetGraphicsDevice()
+{
+	return graphicsDevice;
 }
 //-----------------------------------------------------------------------
 void CocoaGameHost::Impl::RenderFrame(Game & game)
@@ -240,6 +254,12 @@ std::shared_ptr<GraphicsContext> CocoaGameHost::GetGraphicsContext()
 {
 	POMDOG_ASSERT(impl);
 	return impl->GetGraphicsContext();
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<GraphicsDevice> CocoaGameHost::GetGraphicsDevice()
+{
+	POMDOG_ASSERT(impl);
+	return impl->GetGraphicsDevice();
 }
 
 }// namespace Cocoa

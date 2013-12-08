@@ -22,6 +22,13 @@ void CocoaTestGame::Initialize()
 	auto window = gameHost->GetWindow();
 	window->SetCaption("Cocoa Test Game");
 	window->SetAllowPlayerResizing(false);
+	
+	auto graphicsDevice = gameHost->GetGraphicsDevice();
+	
+	DepthStencilDescription description;
+	auto state = std::make_shared<DepthStencilState>(graphicsDevice, description);
+	
+	graphicsContext->SetDepthStencilState(state);
 }
 //-----------------------------------------------------------------------
 void CocoaTestGame::Update()

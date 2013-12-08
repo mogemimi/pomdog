@@ -19,13 +19,16 @@ namespace Pomdog {
 
 // Class
 class BlendDescription;
+class BlendState;
 class DepthStencilDescription;
 class DepthStencilOperation;
 class DepthStencilState;
 class GraphicsContext;
 class GraphicsDevice;
 class SamplerDescription;
+class SamplerState;
 class RasterizerDescription;
+class RasterizerState;
 class Viewport;
 
 // Enumerations

@@ -63,6 +63,22 @@ public:
 	/// @brief ビューポートを設定します。
 	void SetViewport(Viewport const& viewport);
 	
+	///@~Japanese
+	/// @brief ブレンディングステートを設定します。
+	void SetBlendState(std::shared_ptr<BlendState> const& blendState);
+
+	///@~Japanese
+	/// @brief 深度ステンシルステートを設定します。
+	void SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilState);
+
+	///@~Japanese
+	/// @brief テクスチャサンプラーステートを設定します。
+	void SetSamplerState(std::size_t index, std::shared_ptr<SamplerState> const& samplerState);
+
+	///@~Japanese
+	/// @brief ラスタライザーステートを設定します。
+	void SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState);
+	
 private:
 	//friend class Details::RenderSystem::InternalAttorney;
 	//Details::RenderSystem::NativeGraphicsContext* NativeGraphicsContext();

@@ -80,7 +80,7 @@ public:
 	Impl& operator = (Impl const&) = delete;
 
 	void ApplyDepthTest();
-	void ApplyDepthStencil();
+	void ApplyStencilTest();
 
 public:
 	DepthStencilFaceOperationGL4 clockwiseFace;
@@ -136,7 +136,7 @@ void DepthStencilStateGL4::Impl::ApplyDepthTest()
 	glDepthFunc(depthFunction);
 }
 //-----------------------------------------------------------------------
-void DepthStencilStateGL4::Impl::ApplyDepthStencil()
+void DepthStencilStateGL4::Impl::ApplyStencilTest()
 {
 	if (!stencilEnable) {
 		glDisable(GL_STENCIL_TEST);
@@ -173,7 +173,7 @@ void DepthStencilStateGL4::Apply()
 {
 	POMDOG_ASSERT(impl);
 	impl->ApplyDepthTest();
-	impl->ApplyDepthStencil();
+	impl->ApplyStencilTest();
 }
 
 }// namespace GL4

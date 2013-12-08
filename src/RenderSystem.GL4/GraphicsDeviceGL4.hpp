@@ -24,7 +24,7 @@ namespace GL4 {
 class GraphicsDeviceGL4 final: public NativeGraphicsDevice
 {
 public:
-	GraphicsDeviceGL4();
+	GraphicsDeviceGL4() = default;
 
 	~GraphicsDeviceGL4() = default;
 	

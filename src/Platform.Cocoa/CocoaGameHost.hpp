@@ -40,7 +40,10 @@ public:
 	std::shared_ptr<GameWindow> GetWindow() override;
 	
 	///@copydoc GameHost
-	std::shared_ptr<GraphicsContext> GetGraphicsContext();
+	std::shared_ptr<GraphicsContext> GetGraphicsContext() override;
+	
+	///@copydoc GameHost
+	std::shared_ptr<GraphicsDevice> GetGraphicsDevice() override;
 
 private:
 	class Impl;

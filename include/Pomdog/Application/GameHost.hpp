@@ -22,6 +22,7 @@ namespace Pomdog {
 class Game;
 class GameWindow;
 class GraphicsContext;
+class GraphicsDevice;
 
 /// @addtogroup Framework
 /// @{
@@ -48,6 +49,10 @@ public:
 	///@~Japanese
 	/// @brief グラフィックスコンテキストを取得します。
 	virtual std::shared_ptr<GraphicsContext> GetGraphicsContext() = 0;
+	
+	///@~Japanese
+	/// @brief グラフィックスデバイスを取得します。
+	virtual std::shared_ptr<GraphicsDevice> GetGraphicsDevice() = 0;
 };
 
 /// @}
