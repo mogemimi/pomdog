@@ -16,7 +16,6 @@
 #include "../Config/FundamentalTypes.hpp"
 #include "ComparisonFunction.hpp"
 #include "DepthStencilOperation.hpp"
-#include <limits>
 
 namespace Pomdog {
 
@@ -74,15 +73,7 @@ public:
 	bool StencilEnable;
 
 public:
-	DepthStencilDescription()
-		: DepthBufferEnable(true)
-		, DepthBufferWriteEnable(true)
-		, DepthBufferFunction(ComparisonFunction::LessEqual)
-		, ReferenceStencil(0)
-		, StencilEnable(false)
-		, StencilMask(std::numeric_limits<std::uint32_t>::max())
-		, StencilWriteMask(std::numeric_limits<std::uint32_t>::max())
-	{}
+	DepthStencilDescription();
 };
 
 /// @}

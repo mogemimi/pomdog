@@ -17,6 +17,11 @@
 
 namespace Pomdog {
 
+/// @addtogroup Framework
+/// @{
+/// @addtogroup Graphics
+/// @{
+
 enum class ClearOptions: std::uint8_t
 {
 	///@~English
@@ -71,6 +76,9 @@ inline ClearOptions & operator|=(ClearOptions & a, ClearOptions b)
 	a = a | b;
 	return a;
 }
+
+/// @}
+/// @}
 
 }// namespace Pomdog
 

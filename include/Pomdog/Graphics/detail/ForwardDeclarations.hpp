@@ -32,6 +32,8 @@ class RasterizerState;
 class Viewport;
 
 // Enumerations
+enum class Blend: std::uint16_t;
+enum class BlendFunction: std::uint16_t;
 enum class BufferUsage: std::uint8_t;
 enum class ClearOptions: std::uint8_t;
 enum class ComparisonFunction: std::uint16_t;
