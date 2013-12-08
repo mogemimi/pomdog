@@ -35,11 +35,11 @@ enum class CullMode: std::uint16_t
 	ClockwiseFace,
 
 	///@~Japanese
-	/// @brief ワインディング順序が反時計回りの頂点列に対して背面カリングを行います。既定値です。
+	/// @brief ワインディング順序が反時計回りの頂点列に対して背面カリングを行います。デフォルト値です。
 	CounterClockwiseFace,
 };
 
-///	@}
+/// @}
 /// @}
 
 }// namespace Pomdog

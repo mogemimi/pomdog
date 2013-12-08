@@ -35,7 +35,7 @@ enum class FillMode: std::uint16_t
 	Solid,
 };
 
-///	@}
+/// @}
 /// @}
 
 }// namespace Pomdog

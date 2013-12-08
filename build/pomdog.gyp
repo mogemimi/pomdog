@@ -169,7 +169,7 @@
         '../include/Pomdog/Graphics/GraphicsDevice.hpp',
         '../include/Pomdog/Graphics/RasterizerDescription.hpp',
         #'../include/Pomdog/Graphics/RasterizerState.hpp',
-        #'../include/Pomdog/Graphics/SamplerDescription.hpp',
+        '../include/Pomdog/Graphics/SamplerDescription.hpp',
         #'../include/Pomdog/Graphics/SamplerState.hpp',
         '../include/Pomdog/Graphics/StencilOperation.hpp',
         '../include/Pomdog/Graphics/TextureAddressMode.hpp',
@@ -192,7 +192,7 @@
         '../src/RenderSystem/NativeGraphicsContext.hpp',
         '../src/RenderSystem/NativeGraphicsDevice.hpp',
         '../src/RenderSystem/NativeRasterizerState.hpp',
-        #'../src/RenderSystem/NativeSamplerState.hpp',
+        '../src/RenderSystem/NativeSamplerState.hpp',
         '../src/RenderSystem/InternalAttorney.hpp',
       ],
       'conditions': [

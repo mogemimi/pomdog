@@ -20,18 +20,26 @@
 #include <Pomdog/Utility/Exception.hpp>
 #include <Pomdog/Utility/Noncopyable.hpp>
 
+// Application
 #include <Pomdog/Application/Game.hpp>
 #include <Pomdog/Application/GameHost.hpp>
 #include <Pomdog/Application/GameWindow.hpp>
+
+// Event
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/EventCode.hpp>
 #include <Pomdog/Event/EventCodeHelper.hpp>
 #include <Pomdog/Event/EventHandler.hpp>
 #include <Pomdog/Event/EventQueue.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
+
+// GamePlay
 #include <Pomdog/GamePlay/GameObject.hpp>
+
+// Graphics
 #include <Pomdog/Graphics/Blend.hpp>
 #include <Pomdog/Graphics/BlendDescription.hpp>
+//#include <Pomdog/Graphics/BlendState.hpp>
 #include <Pomdog/Graphics/BlendFunction.hpp>
 #include <Pomdog/Graphics/BufferUsage.hpp>
 #include <Pomdog/Graphics/ClearOptions.hpp>
@@ -44,18 +52,27 @@
 #include <Pomdog/Graphics/GraphicsContext.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include <Pomdog/Graphics/RasterizerDescription.hpp>
+//#include <Pomdog/Graphics/RasterizerState.hpp>
+#include <Pomdog/Graphics/SamplerDescription.hpp>
+//#include <Pomdog/Graphics/SamplerState.hpp>
 #include <Pomdog/Graphics/StencilOperation.hpp>
 #include <Pomdog/Graphics/TextureAddressMode.hpp>
 #include <Pomdog/Graphics/TextureFilter.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
+
+// Input
 #include <Pomdog/Input/ButtonState.hpp>
 #include <Pomdog/Input/Mouse.hpp>
 #include <Pomdog/Input/MouseState.hpp>
+
+// Logging
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LogChannel.hpp>
 #include <Pomdog/Logging/LogEntry.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
 #include <Pomdog/Logging/LoggingLevel.hpp>
+
+// Math
 #include <Pomdog/Math/Color.hpp>
 #include <Pomdog/Math/ContainmentType.hpp>
 #include <Pomdog/Math/Degree.hpp>

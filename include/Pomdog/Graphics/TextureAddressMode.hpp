@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -45,7 +45,7 @@ enum class TextureAddressMode: std::uint16_t
 	Clamp,
 };
 
-///	@}
+/// @}
 /// @}
 
 }// namespace Pomdog

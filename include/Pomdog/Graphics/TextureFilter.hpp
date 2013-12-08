@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -16,6 +16,11 @@
 #include "../Config/FundamentalTypes.hpp"
 
 namespace Pomdog {
+
+/// @addtogroup Framework
+/// @{
+/// @addtogroup Graphics
+/// @{
 
 ///@~Japanese
 /// @brief テクスチャサンプリング時のフィルタリングオプションを定義します。
@@ -58,7 +63,7 @@ enum class TextureFilter: std::uint16_t
 	MinPointMagLinearMipPoint,
 };
 
-///	@}
+/// @}
 /// @}
 
 }// namespace Pomdog

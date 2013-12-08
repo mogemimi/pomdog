@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -30,11 +30,11 @@ class RasterizerDescription
 {
 public:
 	///@~Japanese
-	/// @brief カリングモードを指定します。
+	/// @brief カリングモードを指定します。デフォルト値は CullMode::CounterClockwiseFace です。
 	CullMode CullMode;
 
 	///@~Japanese
-	/// @brief 三角形の塗りつぶし方法を指定します。
+	/// @brief 三角形の塗りつぶし方法を指定します。デフォルト値は FillMode::Solid です。
 	FillMode FillMode;
 	
 	///@~Japanese
@@ -67,7 +67,7 @@ public:
 	{}
 };
 
-///	@}
+/// @}
 /// @}
 
 }// namespace Pomdog

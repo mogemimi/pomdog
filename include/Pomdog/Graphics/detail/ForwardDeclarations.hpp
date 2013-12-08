@@ -25,10 +25,10 @@ class DepthStencilOperation;
 class DepthStencilState;
 class GraphicsContext;
 class GraphicsDevice;
-class SamplerDescription;
-class SamplerState;
 class RasterizerDescription;
 class RasterizerState;
+class SamplerDescription;
+class SamplerState;
 class Viewport;
 
 // Enumerations
