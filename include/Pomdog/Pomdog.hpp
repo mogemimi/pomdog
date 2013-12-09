@@ -14,6 +14,7 @@
 #endif
 
 #include <Pomdog/Config/Platform.hpp>
+#include <Pomdog/Config/Export.hpp>
 #include <Pomdog/Config/FundamentalTypes.hpp>
 
 #include <Pomdog/Utility/Assert.hpp>

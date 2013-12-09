@@ -53,6 +53,7 @@
         '../include',
       ],
       'sources': [
+        '../include/Pomdog/Config/Export.hpp',
         '../include/Pomdog/Config/FundamentalTypes.hpp',
         '../include/Pomdog/Config/Platform.hpp',
         '../include/Pomdog/Event/Event.hpp',

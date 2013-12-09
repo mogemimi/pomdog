@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 #include "ComparisonFunction.hpp"
 #include "DepthStencilOperation.hpp"
@@ -26,7 +27,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 深度ステンシルテストを記述します。
-class DepthStencilDescription
+class POMDOG_EXPORT DepthStencilDescription
 {
 public:
 	///@~Japanese
