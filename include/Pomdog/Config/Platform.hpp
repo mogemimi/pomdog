@@ -58,8 +58,8 @@ namespace Details {
 #elif defined(ANDROID) || defined(__ANDROID__)
 #	// Android OS
 #	define POMDOG_PLATFORM_ANDROID
-#elif defined(__APPLE_CC__) && ((__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 50000) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000))
-#	// Apple iOS 5 or later
+#elif defined(__APPLE_CC__) && ((__IPHONE_OS_VERSION_MIN_REQUIRED >= 60000) || (__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 60000))
+#	// Apple iOS 6 or later
 #	define POMDOG_PLATFORM_APPLE_IOS
 #elif defined(__APPLE_CC__)
 #	// Mac OSX

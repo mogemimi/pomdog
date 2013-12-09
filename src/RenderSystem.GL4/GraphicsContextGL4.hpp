@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include "GL4Prerequisites.hpp"
+#include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include <memory>
 

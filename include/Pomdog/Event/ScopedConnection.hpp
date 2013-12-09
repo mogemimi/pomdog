@@ -28,8 +28,8 @@ public:
 	ScopedConnection(ScopedConnection const&) = delete;
 	ScopedConnection(ScopedConnection &&) = default;
 	
-	explicit ScopedConnection(EventConnection const& connection);
-	explicit ScopedConnection(EventConnection && connection);
+	ScopedConnection(EventConnection const& connection);
+	ScopedConnection(EventConnection && connection);
 	
 	~ScopedConnection();
 	

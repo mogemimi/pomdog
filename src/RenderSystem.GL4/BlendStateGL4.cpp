@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -7,7 +7,7 @@
 //
 
 #include "BlendStateGL4.hpp"
-#include "GL4Prerequisites.hpp"
+#include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Graphics/BlendDescription.hpp>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>

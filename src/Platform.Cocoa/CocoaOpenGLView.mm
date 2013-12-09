@@ -7,7 +7,7 @@
 //
 
 #import "CocoaOpenGLView.hpp"
-#include <OpenGL/gl.h>
+#include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Math/Rectangle.hpp>
 

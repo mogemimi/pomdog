@@ -8,7 +8,7 @@
 
 #include "CocoaOpenGLContext.hpp"
 #include <Pomdog/Utility/Assert.hpp>
-#include <OpenGL/gl.h>
+#include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
 
 namespace Pomdog {
 namespace Details {

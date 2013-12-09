@@ -7,7 +7,7 @@
 //
 
 #include "RasterizerStateGL4.hpp"
-#include "GL4Prerequisites.hpp"
+#include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>
 #include <Pomdog/Graphics/RasterizerDescription.hpp>

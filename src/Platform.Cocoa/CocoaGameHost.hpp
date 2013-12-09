@@ -26,7 +26,8 @@ class CocoaGameWindow;
 class CocoaGameHost final: public GameHost
 {
 public:
-	CocoaGameHost(std::shared_ptr<CocoaGameWindow> window, std::shared_ptr<SystemEventDispatcher> dispatcher);
+	CocoaGameHost(std::shared_ptr<CocoaGameWindow> const& window,
+		std::shared_ptr<SystemEventDispatcher> const& dispatcher);
 
 	~CocoaGameHost();
 

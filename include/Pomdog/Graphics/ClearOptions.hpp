@@ -57,25 +57,12 @@ enum class ClearOptions: std::uint8_t
 	ClearOptions_Details_TargetDepth = 0x4 | 0x1,
 };
 
-inline constexpr ClearOptions operator|(ClearOptions a, ClearOptions b)
+constexpr ClearOptions operator|(ClearOptions a, ClearOptions b)
 {
 	return static_cast<ClearOptions>(static_cast<std::uint8_t>(a) | static_cast<std::uint8_t>(b));
 }
 
-inline ClearOptions & operator|=(ClearOptions & a, ClearOptions b)
-{
-	static_assert(ClearOptions::ClearOptions_Details_DepthStecil == (
-		ClearOptions::DepthBuffer | ClearOptions::Stencil), "");
-	static_assert(ClearOptions::ClearOptions_Details_TargetStencil == (
-		ClearOptions::RenderTarget | ClearOptions::Stencil), "");
-	static_assert(ClearOptions::ClearOptions_Details_TargetDepth == (
-		ClearOptions::DepthBuffer | ClearOptions::RenderTarget), "");
-	static_assert(ClearOptions::ClearOptions_Details_TargetDepthStencil == (
-		ClearOptions::RenderTarget | ClearOptions::DepthBuffer | ClearOptions::Stencil), "");
-
-	a = a | b;
-	return a;
-}
+ClearOptions & operator|=(ClearOptions & a, ClearOptions b);
 
 /// @}
 /// @}

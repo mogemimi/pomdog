@@ -73,7 +73,8 @@ static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 class CocoaGameHost::Impl final: public GameHost
 {
 public:
-	Impl(std::shared_ptr<CocoaGameWindow> window, std::shared_ptr<SystemEventDispatcher> dipatcher);
+	Impl(std::shared_ptr<CocoaGameWindow> const& window,
+		std::shared_ptr<SystemEventDispatcher> const& dipatcher);
 
 	~Impl() = default;
 
@@ -115,10 +116,11 @@ private:
 	bool exitRequest;
 };
 //-----------------------------------------------------------------------
-CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> window_, std::shared_ptr<SystemEventDispatcher> eventDispatcher)
+CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
+	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
 	: exitRequest(false)
-	, gameWindow(std::move(window_))
-	, systemEventDispatcher(std::move(eventDispatcher))
+	, gameWindow(window)
+	, systemEventDispatcher(eventDispatcher)
 	, openGLContext(CreateOpenGLContext())
 {
 	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
@@ -225,7 +227,8 @@ void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
 #pragma mark -
 #pragma mark CocoaGameHost
 //-----------------------------------------------------------------------
-CocoaGameHost::CocoaGameHost(std::shared_ptr<CocoaGameWindow> window, std::shared_ptr<SystemEventDispatcher> eventDispatcher)
+CocoaGameHost::CocoaGameHost(std::shared_ptr<CocoaGameWindow> const& window,
+	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
 	: impl(new Impl(window, eventDispatcher))
 {}
 //-----------------------------------------------------------------------
