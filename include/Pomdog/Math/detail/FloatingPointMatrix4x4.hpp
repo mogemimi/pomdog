@@ -60,7 +60,7 @@ public:
 		T m30, T m31, T m32, T m33
 	);
 	
-	virtual ~FloatingPointMatrix4x4() = default;
+	~FloatingPointMatrix4x4() = default;
 	
 	// Assignment operators:
 	FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 const&) = default;

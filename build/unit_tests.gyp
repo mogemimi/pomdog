@@ -30,6 +30,7 @@
       'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
       'CLANG_CXX_LANGUAGE_STANDARD': 'c++0x',
       'MACOSX_DEPLOYMENT_TARGET': '10.8', # OS X Deployment Target: 10.8
+      'CLANG_CXX_LIBRARY': 'libc++', # libc++ requires OS X 10.7 or later
     },
   },
   'targets': [
@@ -61,8 +62,6 @@
         '../test/FrameworkTest/Math/Vector4Test.cpp',
       ],
       'xcode_settings': {
-        'OTHER_CPLUSPLUSFLAGS': ['-std=c++11','-stdlib=libc++'],
-        'OTHER_LDFLAGS': ['-stdlib=libc++'],
       },
       'conditions': [
         ['OS == "mac"', {

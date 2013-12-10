@@ -24,7 +24,7 @@ class EventQueue: Noncopyable
 {
 public:
 	EventQueue();
-	virtual ~EventQueue();
+	~EventQueue();
 
 	EventConnection Connect(std::function<void(Event const&)> const& slot);
 

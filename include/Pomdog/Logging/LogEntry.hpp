@@ -57,7 +57,7 @@ public:
 		, verbosity(verbosity)
 	{}
 	
-	virtual ~LogEntry() = default;
+	~LogEntry() = default;
 	
 	LogEntry & operator=(LogEntry const&) = default;
 	LogEntry & operator=(LogEntry &&) = default;

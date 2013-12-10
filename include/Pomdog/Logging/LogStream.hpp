@@ -44,7 +44,7 @@ public:
 	LogStream & operator=(LogStream const&) = delete;
 	LogStream & operator=(LogStream &&) = delete;
 	
-	virtual ~LogStream();
+	~LogStream();
 
 	template <typename T>
 	LogStream & operator<<(T const& message);

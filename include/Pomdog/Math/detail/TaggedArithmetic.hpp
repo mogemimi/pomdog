@@ -34,7 +34,7 @@ namespace Details {
 /// Pixel<int> pixel = 32; // 32px
 ///@endcode
 template <typename T, class PhantomType>
-class TaggedArithmetic
+class TaggedArithmetic final
 {
 public:
 	static_assert(std::is_arithmetic<T>::value, "T is arithmetic type.");
@@ -50,7 +50,7 @@ public:
 	explicit TaggedArithmetic(T v)
 		: value(v){};
 
-	virtual ~TaggedArithmetic() = default;
+	~TaggedArithmetic() = default;
 
 	// Assignment operators:
 	TaggedArithmetic & operator=(TaggedArithmetic const&) = default;

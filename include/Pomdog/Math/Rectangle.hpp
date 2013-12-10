@@ -56,7 +56,7 @@ public:
 	Rectangle(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height);
 	Rectangle(Point2D const& position, std::int32_t width, std::int32_t height);
 
-	virtual ~Rectangle() = default;
+	~Rectangle() = default;
 
 	// Assignment operators:
 	Rectangle & operator=(Rectangle const&) = default;

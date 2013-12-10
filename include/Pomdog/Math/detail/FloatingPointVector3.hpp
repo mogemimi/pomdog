@@ -52,7 +52,7 @@ public:
 	FloatingPointVector3(T x, T y, T z);
 	FloatingPointVector3(FloatingPointVector2<T> const& vec, T z);
 	
-	virtual ~FloatingPointVector3() = default;
+	~FloatingPointVector3() = default;
 	
 	// Assignment operators:
 	FloatingPointVector3 & operator=(FloatingPointVector3 const&) = default;

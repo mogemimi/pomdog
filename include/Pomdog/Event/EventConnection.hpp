@@ -26,8 +26,7 @@ private:
 
 public:
 	EventConnection() = default;
-	
-	virtual ~EventConnection() = default;
+	~EventConnection() = default;
 
 	EventConnection(EventConnection const& slot);
 	

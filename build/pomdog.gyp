@@ -42,6 +42,7 @@
       'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
       'CLANG_CXX_LANGUAGE_STANDARD': 'c++0x',
       'MACOSX_DEPLOYMENT_TARGET': '10.8', # OS X Deployment Target: 10.8
+      'CLANG_CXX_LIBRARY': 'libc++', # libc++ requires OS X 10.7 or later
     },
   },
   'targets': [
@@ -136,13 +137,16 @@
         '../src/Utility/ScopeGuard.hpp',
       ],
       'xcode_settings': {
-        'OTHER_CPLUSPLUSFLAGS': ['-std=c++11','-stdlib=libc++'],
+        'GCC_INLINES_ARE_PRIVATE_EXTERN': 'YES', # '-fvisibility-inlines-hidden'
+        'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES', # '-fvisibility=hidden'
       },
     },
     {
       'target_name': 'pomdog',
       'product_name': 'PomdogEngine',
-      'type': 'static_library',
+      'type': 'shared_library',
+      'defines': ['POMDOG_BUILDING_LIBRARY_EXPORTS=1'],
+      'mac_bundle': 1,
       'dependencies': [
         'pomdog-core',
       ],
@@ -258,8 +262,11 @@
         }], # OS == "mac"
       ],
       'xcode_settings': {
+        'INFOPLIST_FILE': '../src/Platform.Cocoa/Xcode/Pomdog-Info.plist',
+        'DYLIB_INSTALL_NAME_BASE': '@executable_path/../../..',
         'CLANG_ENABLE_OBJC_ARC': 'YES',
-        'OTHER_CPLUSPLUSFLAGS': ['-std=c++11','-stdlib=libc++'],
+        'GCC_INLINES_ARE_PRIVATE_EXTERN': 'YES', # '-fvisibility-inlines-hidden'
+        'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES', # '-fvisibility=hidden'
       },
     },
   ],# "targets"

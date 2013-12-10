@@ -59,7 +59,7 @@ public:
 		T m20, T m21, T m22
 	);
 	
-	virtual ~FloatingPointMatrix3x3() = default;
+	~FloatingPointMatrix3x3() = default;
 	
 	// Assignment operators:
 	///@brief Assignment.

@@ -36,7 +36,8 @@ public:
 	LogChannel() = delete;
 	LogChannel(LogChannel const&) = delete;
 	LogChannel(LogChannel &&) = delete;
-	virtual ~LogChannel() = default;
+	
+	~LogChannel() = default;
 
 	///@~Japanese
 	/// @brief メッセージを送ります。

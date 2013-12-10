@@ -50,7 +50,7 @@ public:
 	///@brief Construct from floating-point values.
 	FloatingPointQuaternion(T x, T y, T z, T w);
 	
-	virtual ~FloatingPointQuaternion() = default;
+	~FloatingPointQuaternion() = default;
 	
 	// Assignment operators:
 	FloatingPointQuaternion & operator=(FloatingPointQuaternion const&) = default;

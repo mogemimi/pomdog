@@ -49,7 +49,7 @@ public:
 	///@brief Construct from floating-point values.
 	FloatingPointColor(T red, T green, T blue, T alpha);
 
-	virtual ~FloatingPointColor() = default;
+	~FloatingPointColor() = default;
 
 	// Assignment operators:
 	FloatingPointColor & operator=(FloatingPointColor const&) = default;

@@ -45,7 +45,7 @@ namespace Details {
 class EventArguments
 {
 public:
-	virtual ~EventArguments(){}
+	virtual ~EventArguments() = default;
 };
 
 template <typename T>

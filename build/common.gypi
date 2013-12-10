@@ -8,7 +8,7 @@
       }],
     ],
     #'target_arch%': '<(target_arch)',
-    'component%': 'static_library', # static_library or shared_library
+    #'component%': 'shared_library', # static_library or shared_library
   },
   'target_defaults': {
     'default_configuration': 'Release',
@@ -18,7 +18,9 @@
         # arm
       }], # target_archs == "arm"
       ['target_arch == "ia32"', {
-        # ia32
+        'xcode_settings': {
+          'ARCHS': ['i386'],
+        },
       }], # target_archs == "ia32"
       ['target_arch == "mipsel"', {
         # mipsel

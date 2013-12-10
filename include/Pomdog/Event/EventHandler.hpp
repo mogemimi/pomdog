@@ -24,7 +24,7 @@ class EventHandler: Noncopyable
 {
 public:
 	EventHandler();
-	virtual ~EventHandler() = default;
+	~EventHandler() = default;
 
 	EventConnection Connect(std::function<void(Event const&)> const& slot);
 
