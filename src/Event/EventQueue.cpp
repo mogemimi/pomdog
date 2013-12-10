@@ -85,6 +85,15 @@ EventConnection EventQueue::Connect(std::function<void(Event const&)> const& slo
 	return impl->slots->Connect(slot);
 }
 //-----------------------------------------------------------------------
+EventConnection EventQueue::Connect(std::function<void(Event const&)> && slot)
+{
+	POMDOG_ASSERT(slot);
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->slots);
+
+	return impl->slots->Connect(slot);
+}
+//-----------------------------------------------------------------------
 void EventQueue::Enqueue(std::shared_ptr<Event const> const& event)
 {
 	POMDOG_ASSERT(impl);

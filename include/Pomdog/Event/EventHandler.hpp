@@ -28,6 +28,8 @@ public:
 
 	EventConnection Connect(std::function<void(Event const&)> const& slot);
 
+	EventConnection Connect(std::function<void(Event const&)> && slot);
+
 	void Trigger(std::shared_ptr<Event const> const& event);
 
 private:

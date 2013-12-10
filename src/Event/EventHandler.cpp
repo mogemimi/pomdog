@@ -28,6 +28,14 @@ EventConnection EventHandler::Connect(std::function<void(Event const&)> const& s
 	return slots->Connect(slot);
 }
 //-----------------------------------------------------------------------
+EventConnection EventHandler::Connect(std::function<void(Event const&)> && slot)
+{
+	POMDOG_ASSERT(slot);
+	POMDOG_ASSERT(slots);
+
+	return slots->Connect(slot);
+}
+//-----------------------------------------------------------------------
 void EventHandler::Trigger(std::shared_ptr<Event const> const& event)
 {
 	POMDOG_ASSERT(event);

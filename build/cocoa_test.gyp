@@ -1,5 +1,5 @@
 # Examples:
-# gyp build/cocoa_tests.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
+# gyp build/cocoa_test.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
 {
   'includes': ['common.gypi'],
   'make_global_settings': [

@@ -31,7 +31,7 @@ private:
 public:
 	Impl();
 
-	EventConnection Connect(function_type const& slot, std::shared_ptr<EventSlotCollection> const& slots);
+	EventConnection Connect(function_type slot, std::shared_ptr<EventSlotCollection> && slots);
 
 	void Disconnect(EventSlot const* observer);
 
@@ -59,12 +59,12 @@ EventSlotCollection::Impl::Impl()
 	dummyObserver = std::make_shared<EventSlot>([](event_type const&){}, std::weak_ptr<EventSlotCollection>());
 }
 //-----------------------------------------------------------------------
-EventConnection EventSlotCollection::Impl::Connect(function_type const& slot, std::shared_ptr<EventSlotCollection> const& slots)
+EventConnection EventSlotCollection::Impl::Connect(function_type slot, std::shared_ptr<EventSlotCollection> && slots)
 {
 	POMDOG_ASSERT(slot);
 	POMDOG_ASSERT(slots);
 
-	auto observer = std::make_shared<EventSlot>(slot, slots);
+	auto observer = std::make_shared<EventSlot>(std::move(slot), std::move(slots));
 	{
 		std::lock_guard<std::recursive_mutex> lock(addingProtection);
 
@@ -191,6 +191,12 @@ EventConnection EventSlotCollection::Connect(function_type const& slot)
 {
 	POMDOG_ASSERT(impl);
 	return impl->Connect(slot, shared_from_this());
+}
+//-----------------------------------------------------------------------
+EventConnection EventSlotCollection::Connect(function_type && slot)
+{
+	POMDOG_ASSERT(impl);
+	return impl->Connect(std::move(slot), shared_from_this());
 }
 //-----------------------------------------------------------------------
 void EventSlotCollection::Disconnect(EventSlot const* observer)

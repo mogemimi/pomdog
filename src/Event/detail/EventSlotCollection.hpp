@@ -38,6 +38,8 @@ public:
 	~EventSlotCollection();
 
 	EventConnection Connect(function_type const& slot);
+	EventConnection Connect(function_type && slot);
+	
 	void Disconnect(EventSlot const* observer);
 
 	void Trigger(event_type const& event);
