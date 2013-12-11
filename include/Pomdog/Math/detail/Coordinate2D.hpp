@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../../Config/Export.hpp"
 #include <type_traits>
 
 namespace Pomdog {
@@ -24,7 +25,7 @@ namespace Details {
 /// @{
 
 template <typename T>
-class Coordinate2D final
+class POMDOG_EXPORT Coordinate2D final
 {
 public:
 	static_assert(std::is_arithmetic<T>::value, "You can only use arithmetic types.");

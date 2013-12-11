@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../../Config/Export.hpp"
 #include "../../Config/FundamentalTypes.hpp"
 #include <type_traits>
 #include <functional>
@@ -21,7 +22,7 @@ namespace Pomdog {
 namespace Details {
 
 template <typename T, class U>
-class Tagged final
+class POMDOG_EXPORT Tagged final
 {
 public:
 	static_assert(std::is_pod<T>::value, "Can only use plain-old-data types");

@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "LogEntry.hpp"
 #include "LogStream.hpp"
 #include "../Event/EventConnection.hpp"
@@ -49,7 +50,7 @@ namespace Pomdog {
 ///     }
 /// };
 ///@endcode
-class Log
+class POMDOG_EXPORT Log
 {
 public:
 	///@~Japanese

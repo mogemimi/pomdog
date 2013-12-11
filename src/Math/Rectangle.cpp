@@ -11,18 +11,18 @@
 
 namespace Pomdog {
 
-Rectangle::Rectangle(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height)
-	: x(x)
-	, y(y)
-	, width(width)
-	, height(height)
+Rectangle::Rectangle(std::int32_t x_, std::int32_t y_, std::int32_t width_, std::int32_t height_)
+	: x(x_)
+	, y(y_)
+	, width(width_)
+	, height(height_)
 {}
 //-----------------------------------------------------------------------
-Rectangle::Rectangle(Point2D const& position, std::int32_t width, std::int32_t height)
+Rectangle::Rectangle(Point2D const& position, std::int32_t width_, std::int32_t height_)
 	: x(position.x)
 	, y(position.y)
-	, width(width)
-	, height(height)
+	, width(width_)
+	, height(height_)
 {}
 //-----------------------------------------------------------------------
 bool Rectangle::operator==(Rectangle const& other) const

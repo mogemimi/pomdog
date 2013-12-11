@@ -373,7 +373,7 @@ FloatingPointMatrix3x3<T>::Invert(FloatingPointMatrix3x3 const& matrix)
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix3x3<T>
+void
 FloatingPointMatrix3x3<T>::CreateTranslation(FloatingPointVector2<T> const& position, FloatingPointMatrix3x3 & result)
 {
 	result = Identity;
@@ -563,7 +563,7 @@ FloatingPointMatrix3x3<T>::CreateLerp(FloatingPointMatrix3x3 const& source1,
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix3x3<T>
+void
 FloatingPointMatrix3x3<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& axis,
 	Radian<T> const& angle, FloatingPointMatrix3x3 & result)
 {

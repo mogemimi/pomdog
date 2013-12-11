@@ -21,12 +21,12 @@ EventConnection::EventConnection(EventConnection && connection)
 	: slot(std::forward<weak_slot>(connection.slot))
 {}
 //-----------------------------------------------------------------------
-EventConnection::EventConnection(weak_slot const& slot)
-	: slot(slot)
+EventConnection::EventConnection(weak_slot const& slot_)
+	: slot(slot_)
 {}
 //-----------------------------------------------------------------------
-EventConnection::EventConnection(weak_slot && slot)
-	: slot(std::forward<weak_slot>(slot))
+EventConnection::EventConnection(weak_slot && slot_)
+	: slot(std::forward<weak_slot>(slot_))
 {}
 //-----------------------------------------------------------------------
 auto EventConnection::operator=(EventConnection const& connection)->EventConnection&

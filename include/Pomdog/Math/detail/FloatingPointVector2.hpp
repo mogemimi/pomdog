@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../../Config/Export.hpp"
 #include "../../Config/FundamentalTypes.hpp"
 #include "ForwardDeclarations.hpp"
 #include <type_traits>
@@ -30,7 +31,7 @@ namespace Details {
 ///@~Japanese
 /// @brief 2 つの要素を持つベクトル（2 次元ベクトル）を定義します。
 template <typename T>
-class FloatingPointVector2
+class POMDOG_EXPORT FloatingPointVector2
 {
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");

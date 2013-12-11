@@ -43,13 +43,34 @@
       'CLANG_CXX_LANGUAGE_STANDARD': 'c++0x',
       'MACOSX_DEPLOYMENT_TARGET': '10.8', # OS X Deployment Target: 10.8
       'CLANG_CXX_LIBRARY': 'libc++', # libc++ requires OS X 10.7 or later
+      'GCC_WARN_64_TO_32_BIT_CONVERSION': 'YES',
+      'GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS': 'YES',
+      'GCC_WARN_ABOUT_MISSING_NEWLINE': 'YES',
+      'GCC_WARN_ABOUT_RETURN_TYPE': 'YES',
+      'GCC_WARN_CHECK_SWITCH_STATEMENTS': 'YES',
+      'GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS': 'YES',
+      #'GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED': 'YES',
+      'GCC_WARN_NON_VIRTUAL_DESTRUCTOR': 'YES',
+      #'GCC_WARN_SHADOW': 'YES',
+      'GCC_WARN_SIGN_COMPARE': 'YES',
+      'GCC_WARN_TYPECHECK_CALLS_TO_PRINTF': 'YES',
+      'GCC_WARN_UNUSED_FUNCTION': 'YES',
+      'GCC_WARN_UNUSED_LABEL': 'YES',
+      'GCC_WARN_UNUSED_VALUE': 'YES',
+      'GCC_WARN_UNUSED_VARIABLE': 'YES',
+      'GCC_TREAT_WARNINGS_AS_ERRORS': 'YES',
     },
   },
   'targets': [
     {
-      'target_name': 'pomdog-core',
-      'product_name': 'PomdogCore',
-      'type': 'static_library',
+      'target_name': 'pomdog',
+      'product_name': 'Pomdog',
+      'type': 'shared_library',
+      'defines': ['POMDOG_BUILDING_LIBRARY_EXPORTS=1'],
+      'mac_bundle': 1,
+      'dependencies': [
+        #'pomdog-common',
+      ],
       'include_dirs': [
         '../include',
       ],
@@ -135,25 +156,7 @@
         '../src/Utility/CRC32.hpp',
         '../src/Utility/HashingHelper.hpp',
         '../src/Utility/ScopeGuard.hpp',
-      ],
-      'xcode_settings': {
-        'GCC_INLINES_ARE_PRIVATE_EXTERN': 'YES', # '-fvisibility-inlines-hidden'
-        'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES', # '-fvisibility=hidden'
-      },
-    },
-    {
-      'target_name': 'pomdog',
-      'product_name': 'PomdogEngine',
-      'type': 'shared_library',
-      'defines': ['POMDOG_BUILDING_LIBRARY_EXPORTS=1'],
-      'mac_bundle': 1,
-      'dependencies': [
-        'pomdog-core',
-      ],
-      'include_dirs': [
-        '../include',
-      ],
-      'sources': [
+
         '../include/Pomdog/Application/Game.hpp',
         '../include/Pomdog/Application/GameHost.hpp',
         '../include/Pomdog/Application/GameWindow.hpp',

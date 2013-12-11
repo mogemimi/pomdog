@@ -14,9 +14,9 @@ namespace Pomdog {
 namespace Details {
 namespace EventInternal {
 
-EventSlot::EventSlot(function_type const& invoker, std::weak_ptr<EventSlotCollection> const& slots)
-	: invoker(invoker)
-	, slots(slots)
+EventSlot::EventSlot(function_type const& invoker_, std::weak_ptr<EventSlotCollection> const& slots_)
+	: invoker(invoker_)
+	, slots(slots_)
 {}
 //-----------------------------------------------------------------------
 void EventSlot::Disconnect()

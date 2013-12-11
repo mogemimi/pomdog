@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../../Config/Export.hpp"
 #include "../../Config/FundamentalTypes.hpp"
 #include "ForwardDeclarations.hpp"
 #include "../Radian.hpp"
@@ -30,7 +31,7 @@ namespace Details {
 ///@~Japanese
 /// @brief 4x4 の浮動小数点数の行列を定義します。
 template <typename T>
-class FloatingPointMatrix3x3
+class POMDOG_EXPORT FloatingPointMatrix3x3
 {
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");
@@ -142,7 +143,7 @@ public:
 
 	///@~Japanese
 	/// @brief オフセットを指定して、平行移動行列を作成します。
-	static FloatingPointMatrix3x3
+	static void
 	CreateTranslation(FloatingPointVector2<T> const& position, FloatingPointMatrix3x3 & result);
 
 	///@~Japanese
@@ -214,7 +215,7 @@ public:
 
 	///@~Japanese
 	/// @brief 任意の軸を回転軸とした回転行列を作成します。
-	static FloatingPointMatrix3x3
+	static void
 	CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle, FloatingPointMatrix3x3 & result);
 
 	///@~Japanese

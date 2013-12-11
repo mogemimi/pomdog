@@ -37,6 +37,7 @@ static auto WindowShouldCloseEvent = EventCodeHelper::CreateCode("WindowShouldCl
 {
 	auto event = std::make_shared<Event>(WindowShouldCloseEvent);
 	eventDispatcher->Enqueue(event);
+    return NO;
 }
 //-----------------------------------------------------------------------
 - (void)windowWillClose:(NSNotification *)notification

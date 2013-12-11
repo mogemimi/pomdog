@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 
 namespace Pomdog {
@@ -26,7 +27,7 @@ namespace Pomdog {
 /// @brief verbosity level of logging.
 ///@~Japanese
 /// @brief ログの出力における冗長レベルです。
-enum class LoggingLevel: std::uint16_t
+enum class POMDOG_EXPORT LoggingLevel: std::uint16_t
 {
 	///@~Japanese
 	/// @brief 致命的なエラーです。回復することが不可能な状態を示します。

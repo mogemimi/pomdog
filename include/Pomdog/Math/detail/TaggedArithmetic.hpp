@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../../Config/Export.hpp"
 #include "../../Config/FundamentalTypes.hpp"
 #include "../../Utility/Assert.hpp"
 #include <type_traits>
@@ -34,7 +35,7 @@ namespace Details {
 /// Pixel<int> pixel = 32; // 32px
 ///@endcode
 template <typename T, class PhantomType>
-class TaggedArithmetic final
+class POMDOG_EXPORT TaggedArithmetic final
 {
 public:
 	static_assert(std::is_arithmetic<T>::value, "T is arithmetic type.");

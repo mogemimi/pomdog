@@ -11,12 +11,12 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-ScopedConnection::ScopedConnection(EventConnection const& connection)
-	: connection(connection)
+ScopedConnection::ScopedConnection(EventConnection const& eventConnection)
+	: connection(eventConnection)
 {}
 //-----------------------------------------------------------------------
-ScopedConnection::ScopedConnection(EventConnection && connection)
-	: connection(std::move(connection))
+ScopedConnection::ScopedConnection(EventConnection && eventConnection)
+	: connection(std::move(eventConnection))
 {}
 //-----------------------------------------------------------------------
 ScopedConnection::~ScopedConnection()

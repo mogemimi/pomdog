@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../../Config/Export.hpp"
 #include "../../Config/FundamentalTypes.hpp"
 #include "ForwardDeclarations.hpp"
 #include "../Radian.hpp"
@@ -29,7 +30,7 @@ namespace Details {
 ///@~Japanese
 /// @brief 四元数（クォータニオン）を表す 4 次元ベクトルを定義します。
 template <typename T>
-class FloatingPointQuaternion
+class POMDOG_EXPORT FloatingPointQuaternion
 {
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");

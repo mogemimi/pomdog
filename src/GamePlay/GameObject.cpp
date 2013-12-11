@@ -10,12 +10,12 @@
 
 namespace Pomdog {
 
-GameObject::GameObject(std::int32_t instanceID)
-	: instanceID(instanceID)
+GameObject::GameObject(std::int32_t instanceID_)
+	: instanceID(instanceID_)
 {}
 //-----------------------------------------------------------------------
-GameObject::GameObject(std::int32_t instanceID, std::size_t minimumCapacity)
-	: instanceID(instanceID)
+GameObject::GameObject(std::int32_t instanceID_, std::size_t minimumCapacity)
+	: instanceID(instanceID_)
 {
 	components.reserve(minimumCapacity);
 }

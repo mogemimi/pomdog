@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "LoggingLevel.hpp"
 #include <type_traits>
 #include <sstream>
@@ -28,7 +29,7 @@ class LogChannel;
 
 ///@~Japanese
 /// @brief ログストリームです。
-class LogStream
+class POMDOG_EXPORT LogStream
 {
 private:
 	std::stringstream cache;

@@ -14,6 +14,7 @@
 #endif
 
 #include <Pomdog/Config/FundamentalTypes.hpp>
+#include <Pomdog/Config/Export.hpp>
 #include <memory>
 #include <type_traits>
 #include <array>
@@ -40,7 +41,7 @@ namespace Cocoa {
 
 ///@~Japanese
 /// @brief すべてのサブシステムをの起動、およびアプリケーションの実行を行います。
-class BootstrapperCocoa final
+class POMDOG_EXPORT BootstrapperCocoa final
 {
 public:
 	BootstrapperCocoa();

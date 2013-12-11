@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Utility/Assert.hpp"
 #include "detail/EventArguments.hpp"
 #include "EventCode.hpp"
@@ -26,23 +27,23 @@ namespace Pomdog {
 /// @brief イベントです。
 /// @remarks ID に使うハッシュ値の計算は、毎フレーム行わず、
 /// ゲーム起動直後など、事前に行うことを推奨しています。
-class Event: public std::enable_shared_from_this<Event>
+class POMDOG_EXPORT Event: public std::enable_shared_from_this<Event>
 {
 public:
-	explicit Event(EventCode const& categoryID);
+	explicit Event(EventCode const& eventCode);
 
 	Event() = delete;
 	Event(Event const&) = delete;
-	//Event(Event &&) = default;
+	Event(Event &&) = default;
 	
-	virtual ~Event() = default;
+	~Event() = default;
 
 	Event& operator=(Event const&) = delete;
-	//Event& operator=(Event &&) = default;
+	Event& operator=(Event &&) = default;
 
 	template <typename T>
-	Event(EventCode const& categoryID, T && arguments)
-		: categoryID (categoryID)
+	Event(EventCode const& eventCode, T && arguments)
+		: code(eventCode)
 	{
 		static_assert(std::is_object<typename std::remove_reference<T>::type>::value, "T is object type.");
 		static_assert(!std::is_pointer<T>::value, "pointer type is not supported.");
@@ -97,7 +98,7 @@ public:
 	}
 
 private:
-	EventCode const categoryID;
+	EventCode const code;
 	std::unique_ptr<Details::EventArguments> data;
 };
 

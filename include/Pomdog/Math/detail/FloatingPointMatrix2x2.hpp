@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../../Config/Export.hpp"
 #include "../../Config/FundamentalTypes.hpp"
 #include "ForwardDeclarations.hpp"
 #include <type_traits>
@@ -29,7 +30,7 @@ namespace Details {
 ///@~Japanese
 /// @brief 2x2 の浮動小数点数の行列を定義します。
 template <typename T>
-class FloatingPointMatrix2x2
+class POMDOG_EXPORT FloatingPointMatrix2x2
 {
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");

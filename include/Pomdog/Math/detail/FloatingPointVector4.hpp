@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../../Config/Export.hpp"
 #include "../../Config/FundamentalTypes.hpp"
 #include "ForwardDeclarations.hpp"
 #include <type_traits>
@@ -30,7 +31,7 @@ namespace Details {
 ///@~Japanese
 /// @brief 4 つの要素を持つベクトル（4 次元ベクトル）を定義します。
 template <typename T>
-class FloatingPointVector4
+class POMDOG_EXPORT FloatingPointVector4
 {
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");

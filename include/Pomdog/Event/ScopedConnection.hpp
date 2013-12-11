@@ -13,12 +13,13 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "detail/FowardDeclarations.hpp"
 #include "EventConnection.hpp"
 
 namespace Pomdog {
 
-class ScopedConnection final
+class POMDOG_EXPORT ScopedConnection final
 {
 private:
 	EventConnection connection;

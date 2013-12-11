@@ -14,6 +14,7 @@
 #endif
 
 #include "detail/ForwardDeclarations.hpp"
+#include "../Config/Export.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include "DepthStencilDescription.hpp"
 #include <memory>
@@ -34,7 +35,7 @@ class NativeDepthStencilState;
 
 ///@~Japanese
 /// @brief 深度ステンシルステートを定義します。
-class DepthStencilState: Noncopyable
+class POMDOG_EXPORT DepthStencilState: Noncopyable
 {
 public:
 	DepthStencilState() = delete;

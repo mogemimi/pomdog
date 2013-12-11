@@ -14,6 +14,7 @@
 #endif
 
 #include "../Config/FundamentalTypes.hpp"
+#include "../Config/Export.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include "../Math/detail/ForwardDeclarations.hpp"
 #include "detail/ForwardDeclarations.hpp"
@@ -35,7 +36,7 @@ class NativeGraphicsContext;
 
 ///@~Japanese
 /// @brief 下位レベルの API を提供するグラフィックスコンテキストです。レンダリングコマンドを生成するために使用します。
-class GraphicsContext: Noncopyable
+class POMDOG_EXPORT GraphicsContext: Noncopyable
 {
 public:
 	GraphicsContext() = delete;

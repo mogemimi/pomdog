@@ -11,7 +11,6 @@
     #'component%': 'shared_library', # static_library or shared_library
   },
   'target_defaults': {
-    'default_configuration': 'Release',
     'defines': [],
     'conditions': [
       ['target_arch == "arm"', {
@@ -31,24 +30,25 @@
         },
       }], # target_archs == "x64"
     ],
+    'msvs_configuration_attributes': {
+      #'CharacterSet': '1', # Unicode
+      #'OutputDirectory': '$(SolutionDir)$(ConfigurationName)',
+      'IntermediateDirectory': '$(SolutionDir)..\\out\\obj\\$(ConfigurationName)\\$(ProjectName)',
+    },
+    'msvs_settings': {
+      'VCCLCompilerTool': {
+        'WarningLevel': '4',   # /W4
+        'PreprocessorDefinitions': [
+          '_WIN32_WINNT=0x0600', # Windows Vista or later
+          'WIN32_LEAN_AND_MEAN',
+          'NOMINMAX',
+        ],
+      },
+    },
+    'default_configuration': 'Release',#'Debug',
     'configurations': {
       'Common': {
         'abstract': 1,
-        'msvs_configuration_attributes': {
-          #'CharacterSet': '1', # Unicode
-          #'OutputDirectory': '$(SolutionDir)$(ConfigurationName)',
-          'IntermediateDirectory': '$(SolutionDir)..\\out\\obj\\$(ConfigurationName)\\$(ProjectName)',
-        },
-        'msvs_settings': {
-          'VCCLCompilerTool': {
-            'WarningLevel': '4',   # /W4
-            'PreprocessorDefinitions': [
-              '_WIN32_WINNT=0x0600', # Windows Vista or later
-              'WIN32_LEAN_AND_MEAN',
-              'NOMINMAX',
-            ],
-          },
-        },
       }, # Common
       'Debug': {
         'inherit_from': ['Common'],

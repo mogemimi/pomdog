@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../../Config/Export.hpp"
 #include "../../Config/FundamentalTypes.hpp"
 #include "ForwardDeclarations.hpp"
 #include "../Radian.hpp"
@@ -30,7 +31,7 @@ namespace Details {
 ///@~Japanese
 /// @brief 4x4 の浮動小数点数の行列を定義します。
 template <typename T>
-class FloatingPointMatrix4x4
+class POMDOG_EXPORT FloatingPointMatrix4x4
 {
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");
