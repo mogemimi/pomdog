@@ -13,7 +13,6 @@
 #	pragma once
 #endif
 
-#include "../Config/Export.hpp"
 #include "LoggingLevel.hpp"
 #include <string>
 
@@ -26,7 +25,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief メッセージ情報を含むログエントリです。
-class POMDOG_EXPORT LogEntry
+class LogEntry
 {
 public:
 	///@~Japanese

@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 #include "../Math/Rectangle.hpp"
 
@@ -27,7 +28,7 @@ class Rectangle;
 
 ///@~Japanese
 /// @brief ビューポートです。
-class Viewport
+class POMDOG_EXPORT Viewport
 {
 public:
 	Rectangle bounds;

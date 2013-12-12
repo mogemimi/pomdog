@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 #include "../Math/Point2D.hpp"
 #include "ButtonState.hpp"
@@ -26,7 +27,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief マウスの状態を表します。
-class MouseState
+class POMDOG_EXPORT MouseState
 {
 public: 
 	///@~English

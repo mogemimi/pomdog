@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 #include "../Utility/Noncopyable.hpp"
 
@@ -27,7 +28,7 @@ namespace Pomdog {
 /// @brief ゲームの内容を記述します。
 /// @remarks プラットフォームを意識することなくゲームのコンテンツ開発に集中できる
 /// ようにします。
-class Game: Noncopyable
+class POMDOG_EXPORT Game: Noncopyable
 {
 public:
 	virtual ~Game() = default;

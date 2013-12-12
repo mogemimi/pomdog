@@ -13,8 +13,9 @@
 #	pragma once
 #endif
 
-#include "detail/ForwardDeclarations.hpp"
+#include "../Config/Export.hpp"
 #include "../Utility/Noncopyable.hpp"
+#include "detail/ForwardDeclarations.hpp"
 #include <memory>
 
 namespace Pomdog {
@@ -31,7 +32,7 @@ class NativeGraphicsDevice;
 /// @addtogroup Graphics
 /// @{
 
-class GraphicsDevice: Noncopyable
+class POMDOG_EXPORT GraphicsDevice: Noncopyable
 {
 public:
 	GraphicsDevice() = delete;

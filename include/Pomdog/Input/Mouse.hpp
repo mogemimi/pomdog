@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Utility/Noncopyable.hpp"
 
 namespace Pomdog {
@@ -26,7 +27,7 @@ class MouseState;
 
 ///@~Japanese
 /// @brief マウスによる入力を取得するのに使います。
-class Mouse: Noncopyable
+class POMDOG_EXPORT Mouse: Noncopyable
 {
 public:
 	virtual ~Mouse() = default;

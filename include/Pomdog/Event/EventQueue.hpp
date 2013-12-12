@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "detail/FowardDeclarations.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include <memory>
@@ -20,7 +21,7 @@
 
 namespace Pomdog {
 
-class EventQueue: Noncopyable
+class POMDOG_EXPORT EventQueue: Noncopyable
 {
 public:
 	EventQueue();

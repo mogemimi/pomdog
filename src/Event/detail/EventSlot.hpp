@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_SRC_EVENT_EVENTSLOT_HPP
-#define POMDOG_SRC_EVENT_EVENTSLOT_HPP
+#ifndef POMDOG_SRC_EVENT_EVENTSLOT_8B2CC092_083F_444A_A39A_00594B32E90B_HPP
+#define POMDOG_SRC_EVENT_EVENTSLOT_8B2CC092_083F_444A_A39A_00594B32E90B_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -47,4 +47,4 @@ private:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SRC_EVENT_EVENTSLOT_HPP)
+#endif // !defined(POMDOG_SRC_EVENT_EVENTSLOT_8B2CC092_083F_444A_A39A_00594B32E90B_HPP)

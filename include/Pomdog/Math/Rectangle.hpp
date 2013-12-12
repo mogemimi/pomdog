@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 #include "Point2D.hpp"
 
@@ -41,7 +42,7 @@ namespace Pomdog {
 /// //    Bottom = y + height		
 /// //
 /// @endcode
-class Rectangle
+class POMDOG_EXPORT Rectangle
 {
 public:
 	std::int32_t x, y;

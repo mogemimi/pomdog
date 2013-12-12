@@ -13,12 +13,13 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "detail/FowardDeclarations.hpp"
 #include <memory>
 
 namespace Pomdog {
 
-class EventConnection
+class POMDOG_EXPORT EventConnection
 {
 private:
 	typedef std::weak_ptr<Details::EventInternal::EventSlot> weak_slot;

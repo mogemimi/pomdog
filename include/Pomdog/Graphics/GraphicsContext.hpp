@@ -88,8 +88,7 @@ public:
 	/// @brief ラスタライザーステートを設定します。
 	void SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState);
 	
-private:
-	//friend class Details::RenderSystem::InternalAttorney;
+public:
 	//Details::RenderSystem::NativeGraphicsContext* NativeGraphicsContext();
 	
 private:

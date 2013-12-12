@@ -40,7 +40,8 @@
       'type': 'executable',
       'mac_bundle': 1,
       'dependencies': [
-        'pomdog.gyp:pomdog-static',
+        'pomdog.gyp:pomdog-shared',
+        #'pomdog.gyp:pomdog-static',
       ],
       'include_dirs': [
         '../include',

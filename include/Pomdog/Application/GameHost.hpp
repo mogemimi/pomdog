@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include <memory>
@@ -29,7 +30,7 @@ class GraphicsDevice;
 /// @addtogroup Application
 /// @{
 
-class GameHost: Noncopyable, public std::enable_shared_from_this<GameHost>
+class POMDOG_EXPORT GameHost: Noncopyable, public std::enable_shared_from_this<GameHost>
 {
 public:
 	virtual ~GameHost() = default;

@@ -13,19 +13,21 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "EventCode.hpp"
 #include <string>
 
 namespace std {
 
-std::string to_string(Pomdog::EventCode const& categoryID);
+POMDOG_EXPORT std::string to_string(Pomdog::EventCode const& categoryID);
 
 }// namespace std
 
 namespace Pomdog {
 
-struct EventCodeHelper
+class POMDOG_EXPORT EventCodeHelper
 {
+public:
 	///@~Japanese
 	/// @brief 任意の文字列から一意の ID を生成します。
 	/// @remarks 半角英数字の文字列のみサポートしています。

@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include <string>
@@ -28,7 +29,7 @@ class Rectangle;
 
 ///@~Japanese
 /// @brief ゲームウィンドウです。
-class GameWindow: Noncopyable
+class POMDOG_EXPORT GameWindow: Noncopyable
 {
 public:	
 	virtual ~GameWindow() = default;
