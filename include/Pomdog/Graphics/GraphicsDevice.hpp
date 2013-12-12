@@ -46,7 +46,7 @@ public:
 	Details::RenderSystem::NativeGraphicsDevice* GetNativeGraphicsDevice();
 	
 private:
-	std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> nativeDevice;
+	std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> nativeGraphicsDevice;
 };
 
 /// @}

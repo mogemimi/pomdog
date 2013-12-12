@@ -7,19 +7,13 @@
 //
 
 #include "DepthStencilStateGL4.hpp"
-#include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Graphics/DepthStencilDescription.hpp>
 #include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/detail/Tagged.hpp>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
-
-using ComparisonFunctionGL4 = Tagged<GLenum, ComparisonFunction>;
-using StencilOperationGL4 = Tagged<GLenum, StencilOperation>;
-
 //-----------------------------------------------------------------------
 static GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction const& comparison)
 {
@@ -71,21 +65,6 @@ static StencilOperationGL4 ToStencilOperationGL4(StencilOperation const& operati
 	};
 }
 //-----------------------------------------------------------------------
-struct DepthStencilFaceOperationGL4 final
-{
-	ComparisonFunctionGL4 stencilFunction;
-	StencilOperationGL4 stencilFail;
-	StencilOperationGL4 stencilDepthBufferFail;
-	StencilOperationGL4 stencilPass;
-
-	DepthStencilFaceOperationGL4()
-		: stencilFunction(GL_ALWAYS)
-		, stencilFail(GL_KEEP)
-		, stencilDepthBufferFail(GL_KEEP)
-		, stencilPass(GL_KEEP)
-	{}
-};
-//-----------------------------------------------------------------------
 static void ToDepthStencilFaceOperationGL4(DepthStencilOperation const& face, DepthStencilFaceOperationGL4 & result)
 {
 	result.stencilFunction = ToComparisonFunctionGL4(face.StencilFunction);
@@ -94,31 +73,7 @@ static void ToDepthStencilFaceOperationGL4(DepthStencilOperation const& face, De
 	result.stencilPass = ToStencilOperationGL4(face.StencilPass);
 }
 //-----------------------------------------------------------------------
-class DepthStencilStateGL4::Impl final
-{
-public:
-	explicit Impl(DepthStencilDescription const& description);
-
-	Impl(Impl const&) = delete;
-	Impl& operator = (Impl const&) = delete;
-
-	void ApplyDepthTest();
-	void ApplyStencilTest();
-
-public:
-	DepthStencilFaceOperationGL4 clockwiseFace;
-	DepthStencilFaceOperationGL4 counterClockwiseFace;
-	ComparisonFunctionGL4 const depthFunction;
-	
-	GLint const referenceStencil;
-	GLuint const stencilMask;
-	GLuint const stencilWriteMask;
-	GLboolean const depthBufferWriteEnable;
-	bool const stencilEnable;
-	bool const depthBufferEnable;
-};
-//-----------------------------------------------------------------------
-DepthStencilStateGL4::Impl::Impl(DepthStencilDescription const& description)
+DepthStencilStateGL4::DepthStencilStateGL4(DepthStencilDescription const& description)
 	: depthFunction(ToComparisonFunctionGL4(description.DepthBufferFunction))
 	, referenceStencil(static_cast<GLint>(description.ReferenceStencil))
 	, stencilMask(static_cast<GLuint>(description.StencilMask))
@@ -134,7 +89,7 @@ DepthStencilStateGL4::Impl::Impl(DepthStencilDescription const& description)
 	ToDepthStencilFaceOperationGL4(description.CounterClockwiseFace, counterClockwiseFace);
 }
 //-----------------------------------------------------------------------
-void DepthStencilStateGL4::Impl::ApplyDepthTest()
+void DepthStencilStateGL4::ApplyDepthTest()
 {
 	if (!depthBufferEnable) {
 		///@note
@@ -159,7 +114,7 @@ void DepthStencilStateGL4::Impl::ApplyDepthTest()
 	glDepthFunc(depthFunction.value);
 }
 //-----------------------------------------------------------------------
-void DepthStencilStateGL4::Impl::ApplyStencilTest()
+void DepthStencilStateGL4::ApplyStencilTest()
 {
 	if (!stencilEnable) {
 		glDisable(GL_STENCIL_TEST);
@@ -195,18 +150,10 @@ void DepthStencilStateGL4::Impl::ApplyStencilTest()
 	glStencilMask(stencilWriteMask);
 }
 //-----------------------------------------------------------------------
-DepthStencilStateGL4::DepthStencilStateGL4(DepthStencilDescription const& description)
-	: impl(new Impl(description))
-{}
-//-----------------------------------------------------------------------
-DepthStencilStateGL4::~DepthStencilStateGL4()
-{}
-//-----------------------------------------------------------------------
 void DepthStencilStateGL4::Apply()
 {
-	POMDOG_ASSERT(impl);
-	impl->ApplyDepthTest();
-	impl->ApplyStencilTest();
+	ApplyDepthTest();
+	ApplyStencilTest();
 }
 
 }// namespace GL4

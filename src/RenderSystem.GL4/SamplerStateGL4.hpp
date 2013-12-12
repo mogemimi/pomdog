@@ -13,14 +13,18 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeSamplerState.hpp"
-#include <memory>
+#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include <Pomdog/Utility/detail/Tagged.hpp>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
+
+using TextureAddressModeGL4 = Tagged<GLenum, TextureAddressMode>;
+using SamplerObjectGL4 = Tagged<GLenum, SamplerState>;
 
 class SamplerStateGL4 final: public NativeSamplerState
 {
@@ -29,14 +33,18 @@ public:
 	
 	explicit SamplerStateGL4(SamplerDescription const& description);
 	
-	~SamplerStateGL4();
+	~SamplerStateGL4() override;
 	
 	///@copydoc NativeSamplerState
 	void Apply(std::size_t index) override;
 	
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+	// C++14:
+	// std::optional<SamplerObjectGL4> samplerObject;
+
+	// Older C++:
+	SamplerObjectGL4 samplerObject;
+	bool samplerObjectEnable;
 };
 
 }// namespace GL4

@@ -14,9 +14,9 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 GraphicsDevice::GraphicsDevice(std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> device)
-	: nativeDevice(std::move(device))
+	: nativeGraphicsDevice(std::move(device))
 {
-	POMDOG_ASSERT(nativeDevice);
+	POMDOG_ASSERT(nativeGraphicsDevice);
 }
 //-----------------------------------------------------------------------
 GraphicsDevice::~GraphicsDevice()
@@ -25,8 +25,8 @@ GraphicsDevice::~GraphicsDevice()
 //-----------------------------------------------------------------------
 Details::RenderSystem::NativeGraphicsDevice* GraphicsDevice::GetNativeGraphicsDevice()
 {
-	POMDOG_ASSERT(nativeDevice);
-	return nativeDevice.get();
+	POMDOG_ASSERT(nativeGraphicsDevice);
+	return nativeGraphicsDevice.get();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

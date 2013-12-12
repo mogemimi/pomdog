@@ -7,20 +7,14 @@
 //
 
 #include "BlendStateGL4.hpp"
-#include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Graphics/BlendDescription.hpp>
 #include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/detail/Tagged.hpp>
 #include <utility>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
-
-using BlendGL4 = Tagged<GLenum, Blend>;
-using BlendFunctionGL4 = Tagged<GLenum, BlendFunction>;
-
 //-----------------------------------------------------------------------
 static GLenum ToBlendGL4NonTypesafe(Blend blend)
 {
@@ -74,28 +68,7 @@ static BlendFunctionGL4 ToBlendFunctionGL4(BlendFunction func)
 	});
 }
 //-----------------------------------------------------------------------
-class BlendStateGL4::Impl final
-{
-public:
-	Impl() = delete;
-	
-	explicit Impl(BlendDescription const& description);
-
-	void Apply();
-	
-private:
-	Color blendColor;
-
-	BlendFunctionGL4 const alphaFunction;
-	BlendGL4 const alphaSource;
-	BlendGL4 const alphaDestination;
-
-	BlendFunctionGL4 const colorFunction;
-	BlendGL4 const colorSource;
-	BlendGL4 const colorDestination;
-};
-//-----------------------------------------------------------------------
-BlendStateGL4::Impl::Impl(BlendDescription const& description)
+BlendStateGL4::BlendStateGL4(BlendDescription const& description)
 	// Blend factor
 	: blendColor(description.BlendFactor)
 	// Alpha data
@@ -109,7 +82,7 @@ BlendStateGL4::Impl::Impl(BlendDescription const& description)
 {
 }
 //-----------------------------------------------------------------------
-void BlendStateGL4::Impl::Apply()
+void BlendStateGL4::Apply()
 {
 	glEnable(GL_BLEND);
 
@@ -134,21 +107,6 @@ void BlendStateGL4::Impl::Apply()
 	//	glEnable(GL_MULTISAMPLE);
 	//	glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
 	//}
-}
-//-----------------------------------------------------------------------
-BlendStateGL4::BlendStateGL4(BlendDescription const& description)
-	: impl(new Impl(description))
-{
-}
-//-----------------------------------------------------------------------
-BlendStateGL4::~BlendStateGL4()
-{
-}
-//-----------------------------------------------------------------------
-void BlendStateGL4::Apply()
-{
-	POMDOG_ASSERT(impl);
-	impl->Apply();
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

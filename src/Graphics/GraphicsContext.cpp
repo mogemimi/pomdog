@@ -9,11 +9,18 @@
 #include <Pomdog/Graphics/GraphicsContext.hpp>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Utility/Exception.hpp>
+#include <Pomdog/Graphics/BlendState.hpp>
 #include <Pomdog/Graphics/DepthStencilState.hpp>
+#include <Pomdog/Graphics/RasterizerState.hpp>
+#include <Pomdog/Graphics/SamplerState.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
+#include <array>
 #include <utility>
 #include "../RenderSystem/NativeGraphicsContext.hpp"
+#include "../RenderSystem/NativeBlendState.hpp"
 #include "../RenderSystem/NativeDepthStencilState.hpp"
+#include "../RenderSystem/NativeRasterizerState.hpp"
+#include "../RenderSystem/NativeSamplerState.hpp"
 
 namespace Pomdog {
 
@@ -37,7 +44,10 @@ public:
 public:
 	std::unique_ptr<NativeGraphicsContext> nativeContext;
 	Viewport viewport;
+	std::shared_ptr<BlendState> blendState;
 	std::shared_ptr<DepthStencilState> depthStencilState;
+	std::shared_ptr<RasterizerState> rasterizerState;
+	std::array<std::shared_ptr<SamplerState>, 16> samplerStates;
 };
 //-----------------------------------------------------------------------
 GraphicsContext::Impl::Impl(std::unique_ptr<NativeGraphicsContext> nativeContext)
@@ -116,29 +126,36 @@ void GraphicsContext::SetScissorRectangle(Pomdog::Rectangle const& rectangle)
 void GraphicsContext::SetBlendState(std::shared_ptr<BlendState> const& blendState)
 {
 	POMDOG_ASSERT(impl);
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "GraphicsContext::SetBlendState");
+	POMDOG_ASSERT(blendState);
+	impl->blendState = blendState;
+	impl->blendState->GetNativeBlendState()->Apply();
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilState)
 {
 	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(depthStencilState);
 	impl->depthStencilState = depthStencilState;
 	impl->depthStencilState->GetNativeDepthStencilState()->Apply();
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetSamplerState(std::size_t index, std::shared_ptr<SamplerState> const& samplerState)
-{
-	POMDOG_ASSERT(impl);
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "GraphicsContext::SetSamplerState");
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState)
 {
 	POMDOG_ASSERT(impl);
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "GraphicsContext::SetRasterizerState");
+	POMDOG_ASSERT(rasterizerState);
+	impl->rasterizerState = rasterizerState;
+	impl->rasterizerState->GetNativeRasterizerState()->Apply();
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetSamplerState(std::size_t index, std::shared_ptr<SamplerState> const& samplerState)
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(samplerState);
+	
+	POMDOG_ASSERT(impl->samplerStates.size() > index);
+	
+	impl->samplerStates[index] = samplerState;
+	impl->samplerStates[index]->GetNativeSamplerState()->Apply(index);
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

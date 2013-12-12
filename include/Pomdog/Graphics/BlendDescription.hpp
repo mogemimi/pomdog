@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 #include "Blend.hpp"
 #include "BlendFunction.hpp"
@@ -27,7 +28,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief ブレンディング処理を記述します。
-class BlendDescription
+class POMDOG_EXPORT BlendDescription
 {
 public:
 	///@~Japanese

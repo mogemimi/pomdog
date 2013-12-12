@@ -40,7 +40,7 @@
 // Graphics
 #include <Pomdog/Graphics/Blend.hpp>
 #include <Pomdog/Graphics/BlendDescription.hpp>
-//#include <Pomdog/Graphics/BlendState.hpp>
+#include <Pomdog/Graphics/BlendState.hpp>
 #include <Pomdog/Graphics/BlendFunction.hpp>
 #include <Pomdog/Graphics/BufferUsage.hpp>
 #include <Pomdog/Graphics/ClearOptions.hpp>
@@ -53,9 +53,9 @@
 #include <Pomdog/Graphics/GraphicsContext.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include <Pomdog/Graphics/RasterizerDescription.hpp>
-//#include <Pomdog/Graphics/RasterizerState.hpp>
+#include <Pomdog/Graphics/RasterizerState.hpp>
 #include <Pomdog/Graphics/SamplerDescription.hpp>
-//#include <Pomdog/Graphics/SamplerState.hpp>
+#include <Pomdog/Graphics/SamplerState.hpp>
 #include <Pomdog/Graphics/StencilOperation.hpp>
 #include <Pomdog/Graphics/TextureAddressMode.hpp>
 #include <Pomdog/Graphics/TextureFilter.hpp>

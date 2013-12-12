@@ -81,13 +81,13 @@ public:
 	void SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilState);
 
 	///@~Japanese
+	/// @brief ラスタライザーステートを設定します。
+	void SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState);
+
+	///@~Japanese
 	/// @brief テクスチャサンプラーステートを設定します。
 	void SetSamplerState(std::size_t index, std::shared_ptr<SamplerState> const& samplerState);
 
-	///@~Japanese
-	/// @brief ラスタライザーステートを設定します。
-	void SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState);
-	
 public:
 	//Details::RenderSystem::NativeGraphicsContext* NativeGraphicsContext();
 	

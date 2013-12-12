@@ -25,10 +25,26 @@ void CocoaTestGame::Initialize()
 	
 	auto graphicsDevice = gameHost->GetGraphicsDevice();
 	
-	DepthStencilDescription description;
-	auto state = std::make_shared<DepthStencilState>(graphicsDevice, description);
-	
-	graphicsContext->SetDepthStencilState(state);
+	{
+		BlendDescription description;
+		auto blendState = std::make_shared<BlendState>(graphicsDevice, description);
+		graphicsContext->SetBlendState(blendState);
+	}
+	{
+		DepthStencilDescription description;
+		auto depthStencilState = std::make_shared<DepthStencilState>(graphicsDevice, description);
+		graphicsContext->SetDepthStencilState(depthStencilState);
+	}
+	{
+		RasterizerDescription description;
+		auto rasterizerState = std::make_shared<RasterizerState>(graphicsDevice, description);
+		graphicsContext->SetRasterizerState(rasterizerState);
+	}
+	{
+		SamplerDescription description;
+		auto samplerState = std::make_shared<SamplerState>(graphicsDevice, description);
+		graphicsContext->SetSamplerState(0, samplerState);
+	}
 }
 //-----------------------------------------------------------------------
 void CocoaTestGame::Update()

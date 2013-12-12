@@ -10,6 +10,7 @@
 #include "BlendStateGL4.hpp"
 #include "DepthStencilStateGL4.hpp"
 #include "RasterizerStateGL4.hpp"
+#include "SamplerStateGL4.hpp"
 #include <Pomdog/Utility/Exception.hpp>
 
 namespace Pomdog {
@@ -37,8 +38,9 @@ GraphicsDeviceGL4::CreateDepthStencilState(DepthStencilDescription const& descri
 std::unique_ptr<NativeSamplerState>
 GraphicsDeviceGL4::CreateSamplerState(SamplerDescription const& description)
 {
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "GraphicsDeviceGL4::CreateSamplerState");
+	static_assert(__cplusplus < 201401L, "TODO: support for std::make_unique");
+	//return std::make_unique<SamplerStateGL4>(description); // C++14
+	return std::unique_ptr<SamplerStateGL4>(new SamplerStateGL4(description));
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeRasterizerState>

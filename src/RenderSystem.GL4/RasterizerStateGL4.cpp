@@ -7,18 +7,13 @@
 //
 
 #include "RasterizerStateGL4.hpp"
-#include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/detail/Tagged.hpp>
 #include <Pomdog/Graphics/RasterizerDescription.hpp>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
-
-using FillModeGL4 = Tagged<GLenum, FillMode>;
-
 //-----------------------------------------------------------------------
 static FillModeGL4 ToFillModeGL4(FillMode const& fillMode)
 {
@@ -32,34 +27,17 @@ static FillModeGL4 ToFillModeGL4(FillMode const& fillMode)
 #endif
 }
 //-----------------------------------------------------------------------
-class RasterizerStateGL4::Impl final
-{
-public:
-	Impl() = delete;
-	
-	explicit Impl(RasterizerDescription const& description);
-	
-	void Apply();
-	
-private:
-	FillModeGL4 fillMode;
-	CullMode cullMode;
-	GLfloat depthBias;
-	GLfloat slopeScaledDepthBias;
-	bool multisampleAntiAliasEnable;
-	bool scissorTestEnable;
-};
-//-----------------------------------------------------------------------
-RasterizerStateGL4::Impl::Impl(RasterizerDescription const& description)
+RasterizerStateGL4::RasterizerStateGL4(RasterizerDescription const& description)
 	: fillMode(ToFillModeGL4(description.FillMode))
 	, cullMode(description.CullMode)
 	, depthBias(static_cast<GLfloat>(description.DepthBias))
 	, slopeScaledDepthBias(static_cast<GLfloat>(description.SlopeScaledDepthBias))
 	, multisampleAntiAliasEnable(description.MultisampleEnable)
 	, scissorTestEnable(description.ScissorTestEnable)
-{}
+{
+}
 //-----------------------------------------------------------------------
-void RasterizerStateGL4::Impl::Apply()
+void RasterizerStateGL4::Apply()
 {
 	// CullMode:
 	switch (cullMode) {
@@ -104,21 +82,6 @@ void RasterizerStateGL4::Impl::Apply()
 	else {
 		glDisable(GL_MULTISAMPLE);
 	}
-}
-//-----------------------------------------------------------------------
-RasterizerStateGL4::RasterizerStateGL4(RasterizerDescription const& description)
-	: impl(new Impl(description))
-{
-}
-//-----------------------------------------------------------------------
-RasterizerStateGL4::~RasterizerStateGL4()
-{
-}
-//-----------------------------------------------------------------------
-void RasterizerStateGL4::Apply()
-{
-	POMDOG_ASSERT(impl);
-	impl->Apply();
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

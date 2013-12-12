@@ -13,14 +13,19 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeBlendState.hpp"
-#include <memory>
+#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include <Pomdog/Utility/detail/Tagged.hpp>
+#include <Pomdog/Math/Color.hpp>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
+
+using BlendGL4 = Tagged<GLenum, Blend>;
+using BlendFunctionGL4 = Tagged<GLenum, BlendFunction>;
 
 class BlendStateGL4 final: public NativeBlendState
 {
@@ -29,14 +34,21 @@ public:
 	
 	explicit BlendStateGL4(BlendDescription const& description);
 	
-	~BlendStateGL4();
+	~BlendStateGL4() = default;
 	
 	///@copydoc NativeBlendState
 	void Apply() override;
 	
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+	Color blendColor;
+
+	BlendFunctionGL4 const alphaFunction;
+	BlendGL4 const alphaSource;
+	BlendGL4 const alphaDestination;
+
+	BlendFunctionGL4 const colorFunction;
+	BlendGL4 const colorSource;
+	BlendGL4 const colorDestination;
 };
 
 }// namespace GL4

@@ -16,10 +16,10 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 DepthStencilState::DepthStencilState(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	DepthStencilDescription const& description)
-	: nativeState(graphicsDevice->GetNativeGraphicsDevice()->CreateDepthStencilState(description))
+	: nativeDepthStencilState(graphicsDevice->GetNativeGraphicsDevice()->CreateDepthStencilState(description))
 	, description(description)
 {
-	POMDOG_ASSERT(nativeState);
+	POMDOG_ASSERT(nativeDepthStencilState);
 }
 //-----------------------------------------------------------------------
 DepthStencilState::~DepthStencilState()
@@ -71,8 +71,8 @@ bool DepthStencilState::IsStencilEnable() const
 	return description.StencilEnable;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<DepthStencilState> DepthStencilState::CreateReadWriteDepth(
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+std::shared_ptr<DepthStencilState>
+DepthStencilState::CreateReadWriteDepth(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
 	DepthStencilDescription desc;
 	desc.DepthBufferEnable = true;
@@ -82,8 +82,8 @@ std::shared_ptr<DepthStencilState> DepthStencilState::CreateReadWriteDepth(
 	return std::make_shared<DepthStencilState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<DepthStencilState> DepthStencilState::CreateReadOnlyDepth(
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+std::shared_ptr<DepthStencilState>
+DepthStencilState::CreateReadOnlyDepth(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
 	DepthStencilDescription desc;
 	desc.DepthBufferEnable = true;
@@ -93,8 +93,8 @@ std::shared_ptr<DepthStencilState> DepthStencilState::CreateReadOnlyDepth(
 	return std::make_shared<DepthStencilState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<DepthStencilState> DepthStencilState::CreateNone(
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+std::shared_ptr<DepthStencilState>
+DepthStencilState::CreateNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
 	DepthStencilDescription desc;
 	desc.DepthBufferEnable = false;
@@ -106,7 +106,7 @@ std::shared_ptr<DepthStencilState> DepthStencilState::CreateNone(
 //-----------------------------------------------------------------------
 Details::RenderSystem::NativeDepthStencilState* DepthStencilState::GetNativeDepthStencilState()
 {
-	return nativeState.get();
+	return nativeDepthStencilState.get();
 }
-
+//-----------------------------------------------------------------------
 }// namespace Pomdog

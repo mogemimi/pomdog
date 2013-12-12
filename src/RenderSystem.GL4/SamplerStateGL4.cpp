@@ -7,10 +7,8 @@
 //
 
 #include "SamplerStateGL4.hpp"
-#include "OpenGLPrerequisites.hpp"
 #include "ErrorChecker.hpp"
 #include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/detail/Tagged.hpp>
 #include <Pomdog/Graphics/SamplerDescription.hpp>
 #include <algorithm>
 
@@ -18,10 +16,6 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
-
-using TextureAddressModeGL4 = Tagged<GLenum, TextureAddressMode>;
-using SamplerObjectGL4 = Tagged<GLenum, SamplerState>;
-
 //-----------------------------------------------------------------------
 static TextureAddressModeGL4 ToTextureAddressModeGL4(TextureAddressMode const& address)
 {
@@ -36,25 +30,11 @@ static TextureAddressModeGL4 ToTextureAddressModeGL4(TextureAddressMode const& a
 #endif
 }
 //-----------------------------------------------------------------------
-class SamplerStateGL4::Impl final
-{
-public:
-	Impl() = delete;
-	
-	explicit Impl(SamplerDescription const& description);
-	~Impl();
-	
-	void Apply(std::size_t index);
-	
-private:
-	SamplerObjectGL4 samplerObject;
-	bool samplerObjectEnable;
-};
-//-----------------------------------------------------------------------
-SamplerStateGL4::Impl::Impl(SamplerDescription const& description)
+SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 	: samplerObjectEnable(false)
 {
 	glGenSamplers(1, &samplerObject);
+	samplerObjectEnable = true;
 	
 	glSamplerParameteri(samplerObject.value, GL_TEXTURE_WRAP_S, ToTextureAddressModeGL4(description.AddressU).value);
 	glSamplerParameteri(samplerObject.value, GL_TEXTURE_WRAP_T, ToTextureAddressModeGL4(description.AddressV).value);
@@ -148,18 +128,16 @@ SamplerStateGL4::Impl::Impl(SamplerDescription const& description)
 		ErrorChecker::CheckError("glSamplerParameteri", __FILE__, __LINE__);
 		#endif
 	}
-	
-	samplerObjectEnable = true;
 }
 //-----------------------------------------------------------------------
-SamplerStateGL4::Impl::~Impl()
+SamplerStateGL4::~SamplerStateGL4()
 {
 	if (samplerObjectEnable) {
 		glDeleteSamplers(1, &samplerObject);
 	}
 }
 //-----------------------------------------------------------------------
-void SamplerStateGL4::Impl::Apply(std::size_t index)
+void SamplerStateGL4::Apply(std::size_t index)
 {
 	POMDOG_ASSERT(samplerObjectEnable);
 
@@ -172,21 +150,6 @@ void SamplerStateGL4::Impl::Apply(std::size_t index)
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindSampler", __FILE__, __LINE__);
 	#endif
-}
-//-----------------------------------------------------------------------
-SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
-	: impl(new  Impl(description))
-{
-}
-//-----------------------------------------------------------------------
-SamplerStateGL4::~SamplerStateGL4()
-{
-}
-//-----------------------------------------------------------------------
-void SamplerStateGL4::Apply(std::size_t index)
-{
-	POMDOG_ASSERT(impl);
-	impl->Apply(index);
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

@@ -87,21 +87,24 @@ public:
 	/// @brief 深度ステンシルバッファを有効化するステートを作成します。
 	/// @remarks 既定値に設定されたステートを生成します。
 	/// @details このステートはデフォルトで設定されています。
-	static std::shared_ptr<DepthStencilState> CreateReadWriteDepth(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+	static std::shared_ptr<DepthStencilState>
+	CreateReadWriteDepth(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 	///@~Japanese
 	/// @brief 読み取り専用の深度ステンシルバッファを有効化するステートを作成します。
-	static std::shared_ptr<DepthStencilState> CreateReadOnlyDepth(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+	static std::shared_ptr<DepthStencilState>
+	CreateReadOnlyDepth(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 	///@~Japanese
 	/// @brief 深度ステンシルバッファを使用しないステートを作成します。
-	static std::shared_ptr<DepthStencilState> CreateNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+	static std::shared_ptr<DepthStencilState>
+	CreateNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 public:
 	Details::RenderSystem::NativeDepthStencilState* GetNativeDepthStencilState();
 	
 private:
-	std::unique_ptr<Details::RenderSystem::NativeDepthStencilState> nativeState;
+	std::unique_ptr<Details::RenderSystem::NativeDepthStencilState> nativeDepthStencilState;
 	DepthStencilDescription description;
 };
 

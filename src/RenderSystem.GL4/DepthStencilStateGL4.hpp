@@ -13,14 +13,33 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeDepthStencilState.hpp"
-#include <memory>
+#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include <Pomdog/Utility/detail/Tagged.hpp>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
+
+using ComparisonFunctionGL4 = Tagged<GLenum, ComparisonFunction>;
+using StencilOperationGL4 = Tagged<GLenum, StencilOperation>;
+
+struct DepthStencilFaceOperationGL4 final
+{
+	ComparisonFunctionGL4 stencilFunction;
+	StencilOperationGL4 stencilFail;
+	StencilOperationGL4 stencilDepthBufferFail;
+	StencilOperationGL4 stencilPass;
+
+	DepthStencilFaceOperationGL4()
+		: stencilFunction(GL_ALWAYS)
+		, stencilFail(GL_KEEP)
+		, stencilDepthBufferFail(GL_KEEP)
+		, stencilPass(GL_KEEP)
+	{}
+};
 
 class DepthStencilStateGL4 final: public NativeDepthStencilState
 {
@@ -29,14 +48,26 @@ public:
 	
 	explicit DepthStencilStateGL4(DepthStencilDescription const& description);
 	
-	~DepthStencilStateGL4();
+	~DepthStencilStateGL4() = default;
 	
 	///@copydoc NativeDepthStencilState
 	void Apply() override;
 	
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+	void ApplyDepthTest();
+	void ApplyStencilTest();
+	
+private:
+	DepthStencilFaceOperationGL4 clockwiseFace;
+	DepthStencilFaceOperationGL4 counterClockwiseFace;
+	ComparisonFunctionGL4 const depthFunction;
+	
+	GLint const referenceStencil;
+	GLuint const stencilMask;
+	GLuint const stencilWriteMask;
+	GLboolean const depthBufferWriteEnable;
+	bool const stencilEnable;
+	bool const depthBufferEnable;
 };
 
 }// namespace GL4

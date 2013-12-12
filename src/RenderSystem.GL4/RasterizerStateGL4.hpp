@@ -13,14 +13,17 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeRasterizerState.hpp"
-#include <memory>
+#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include <Pomdog/Utility/detail/Tagged.hpp>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
+
+using FillModeGL4 = Tagged<GLenum, FillMode>;
 
 class RasterizerStateGL4 final: public NativeRasterizerState
 {
@@ -29,14 +32,18 @@ public:
 	
 	explicit RasterizerStateGL4(RasterizerDescription const& description);
 	
-	~RasterizerStateGL4();
+	~RasterizerStateGL4() = default;
 	
 	///@copydoc NativeRasterizerState
 	void Apply() override;
 	
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+	FillModeGL4 fillMode;
+	CullMode cullMode;
+	GLfloat depthBias;
+	GLfloat slopeScaledDepthBias;
+	bool multisampleAntiAliasEnable;
+	bool scissorTestEnable;
 };
 
 }// namespace GL4

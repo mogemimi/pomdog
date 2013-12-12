@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Config/Platform.hpp>
+#include <Pomdog/Config/FundamentalTypes.hpp>
 
 namespace Pomdog {
 namespace Details {
