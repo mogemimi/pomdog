@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_param_direct_tests_HPP_8C9EC454_788D_4605_984B_0686C969E531_
-#define INCG_IRIS_iutest_param_direct_tests_HPP_8C9EC454_788D_4605_984B_0686C969E531_
+#ifndef INCG_IRIS_IUTEST_PARAM_DIRECT_TESTS_HPP_8C9EC454_788D_4605_984B_0686C969E531_
+#define INCG_IRIS_IUTEST_PARAM_DIRECT_TESTS_HPP_8C9EC454_788D_4605_984B_0686C969E531_
 
 //======================================================================
 // include
@@ -51,8 +51,15 @@
 		s_##prefix_##_##testcase_##_EvalGenerator_(void) {									\
 			return IUTEST_CAST_TO_PARAM_GENERATOR_(testcase_::ParamType, __VA_ARGS__); }	\
 		int s_##prefix_##_##testcase_##_dummy =												\
-			IIUT_GetTestCasePatternHolder(testcase_, IUTEST_TO_NAME_STR_(testcase_), IUTEST_GET_PACKAGENAME_())		\
+			IIUT_GETTESTCASEPATTERNHOLDER(testcase_, IUTEST_TO_NAME_STR_(testcase_), IUTEST_GET_PACKAGENAME_())		\
 				->AddTestCaseInstantiation(#prefix_, s_##prefix_##_##testcase_##_EvalGenerator_)
+
+
+#if !defined(IUTEST_NO_VARIADIC_MACROS)
+#  define IUTEST_CAST_TO_PARAM_GENERATOR_(type, ...)	::iutest::tr1::iuCastToParamGenerator<type>(__VA_ARGS__)
+#else
+#  define IUTEST_CAST_TO_PARAM_GENERATOR_(type, gen)	gen
+#endif
 
 /**
  * @}
@@ -76,12 +83,6 @@ detail::iuIParamGenerator<T>* iuCastToParamGenerator(detail::iuIParamGenerator<T
 template<typename T>
 detail::iuIParamGenerator<T>* iuCastToParamGenerator(::std::initializer_list<T> l) { return new detail::iuValuesInParamsGenerator<T>(l); }
 #endif
-
-#define IUTEST_CAST_TO_PARAM_GENERATOR_(type, ...)	::iutest::tr1::iuCastToParamGenerator<type>(__VA_ARGS__)
-
-#else
-
-#define IUTEST_CAST_TO_PARAM_GENERATOR_(type, gen)	gen
 
 #endif
 

@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_stream_HPP_3A4AF139_9F24_4730_81D0_DADFCE6DCF99_
-#define INCG_IRIS_iutest_stream_HPP_3A4AF139_9F24_4730_81D0_DADFCE6DCF99_
+#ifndef INCG_IRIS_IUTEST_STREAM_HPP_3A4AF139_9F24_4730_81D0_DADFCE6DCF99_
+#define INCG_IRIS_IUTEST_STREAM_HPP_3A4AF139_9F24_4730_81D0_DADFCE6DCF99_
 
 //======================================================================
 // include

@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_switch_assume_HPP_E22A3162_D581_4F4F_A344_F5D701B21F53_
-#define INCG_IRIS_iutest_switch_assume_HPP_E22A3162_D581_4F4F_A344_F5D701B21F53_
+#ifndef INCG_IRIS_IUTEST_SWITCH_ASSUME_HPP_E22A3162_D581_4F4F_A344_F5D701B21F53_
+#define INCG_IRIS_IUTEST_SWITCH_ASSUME_HPP_E22A3162_D581_4F4F_A344_F5D701B21F53_
 
 #if !defined(IUTEST_USE_GTEST)
 
@@ -63,7 +63,7 @@
 
 //======================================================================
 // undef
-#ifdef INCG_IRIS_iutest_HPP_
+#ifdef INCG_IRIS_IUTEST_HPP_
 
 #undef IUTEST_ASSUME_TRUE
 #undef IUTEST_ASSUME_FALSE
@@ -81,7 +81,6 @@
 #undef IUTEST_ASSUME_DOUBLE_EQ
 #undef IUTEST_ASSUME_STREQ
 #undef IUTEST_ASSUME_STRNE
-#undef IUTEST_ASSUME_STRLNEQ
 #undef IUTEST_ASSUME_STRCASEEQ
 #undef IUTEST_ASSUME_STRCASENE
 #undef IUTEST_ASSUME_THROW
@@ -207,7 +206,6 @@
 #define IUTEST_ASSUME_DOUBLE_EQ				ASSUME_DOUBLE_EQ
 #define IUTEST_ASSUME_STREQ					ASSUME_STREQ
 #define IUTEST_ASSUME_STRNE					ASSUME_STRNE
-#define IUTEST_ASSUME_STRLNEQ(len, v2)		ASSUME_PRED_FORMAT2(iuutil::CmpHelperSTRLNEQ, len, v2)
 #define IUTEST_ASSUME_STRCASEEQ				ASSUME_STRCASEEQ
 #define IUTEST_ASSUME_STRCASENE				ASSUME_STRCASENE
 #define IUTEST_ASSUME_NO_THROW(statement)	ASSUME_NO_THROW((void)(statement))

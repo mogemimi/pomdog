@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_prod_HPP_7A316C18_042D_4e48_BC31_E6AE8B6C2E28_
-#define INCG_IRIS_iutest_prod_HPP_7A316C18_042D_4e48_BC31_E6AE8B6C2E28_
+#ifndef INCG_IRIS_IUTEST_PROD_HPP_7A316C18_042D_4E48_BC31_E6AE8B6C2E28_
+#define INCG_IRIS_IUTEST_PROD_HPP_7A316C18_042D_4E48_BC31_E6AE8B6C2E28_
 
 //======================================================================
 // define

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_MATH_DETAIL_FORWARDDECLARATIONS_HPP
-#define POMDOG_MATH_DETAIL_FORWARDDECLARATIONS_HPP
+#ifndef POMDOG_MATH_DETAIL_FORWARDDECLARATIONS_2B34361D_7375_4924_99CD_35FB0E09144C_HPP
+#define POMDOG_MATH_DETAIL_FORWARDDECLARATIONS_2B34361D_7375_4924_99CD_35FB0E09144C_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -80,4 +80,4 @@ enum class ContainmentType: std::uint16_t;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_MATH_DETAIL_FORWARDDECLARATIONS_HPP)
+#endif // !defined(POMDOG_MATH_DETAIL_FORWARDDECLARATIONS_2B34361D_7375_4924_99CD_35FB0E09144C_HPP)

@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_option_message_HPP_00EB9B17_0615_4678_9AD0_1F5B295B404F_
-#define INCG_IRIS_iutest_option_message_HPP_00EB9B17_0615_4678_9AD0_1F5B295B404F_
+#ifndef INCG_IRIS_IUTEST_OPTION_MESSAGE_HPP_00EB9B17_0615_4678_9AD0_1F5B295B404F_
+#define INCG_IRIS_IUTEST_OPTION_MESSAGE_HPP_00EB9B17_0615_4678_9AD0_1F5B295B404F_
 
 //======================================================================
 // include
@@ -147,6 +147,10 @@ inline void iuOptionMessage::ShowFeature(void)
 	SHOW_MACRO(IUTEST_PLATFORM);
 	SHOW_MACRO(IUTEST_REPORT_SKIPPED);
 	SHOW_MACRO(IUTEST_USE_THROW_ON_ASSERT_FAILURE);
+
+#ifdef _MSC_FULL_VER
+	SHOW_MACRO(_MSC_FULL_VER);
+#endif
 
 #undef SHOW_MACRO
 }

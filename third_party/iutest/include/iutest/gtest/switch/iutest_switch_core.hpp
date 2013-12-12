@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_switch_core_HPP_0385C393_90D3_4b06_A027_4B07A17A33CB_
-#define INCG_IRIS_iutest_switch_core_HPP_0385C393_90D3_4b06_A027_4B07A17A33CB_
+#ifndef INCG_IRIS_IUTEST_SWITCH_CORE_HPP_0385C393_90D3_4B06_A027_4B07A17A33CB_
+#define INCG_IRIS_IUTEST_SWITCH_CORE_HPP_0385C393_90D3_4B06_A027_4B07A17A33CB_
 
 #if !defined(IUTEST_USE_GTEST)
 
@@ -82,7 +82,7 @@
 
 //======================================================================
 // undef
-#ifdef INCG_IRIS_iutest_HPP_
+#ifdef INCG_IRIS_IUTEST_HPP_
 
 #undef IUTEST_RUN_ALL_TESTS
 #undef IUTEST_INIT

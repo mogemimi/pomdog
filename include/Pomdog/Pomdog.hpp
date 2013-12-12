@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_C69A833A_5F22_11E3_8353_A8206655A22B_HPP
-#define POMDOG_C69A833A_5F22_11E3_8353_A8206655A22B_HPP
+#ifndef POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP
+#define POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -90,4 +90,4 @@
 #include <Pomdog/Math/Vector3.hpp>
 #include <Pomdog/Math/Vector4.hpp>
 
-#endif // !defined(POMDOG_C69A833A_5F22_11E3_8353_A8206655A22B_HPP)
+#endif // !defined(POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP)

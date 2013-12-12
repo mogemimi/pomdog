@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_printers_HPP_A6A321C9_9279_4336_8167_058C59EC0FD0_
-#define INCG_IRIS_iutest_printers_HPP_A6A321C9_9279_4336_8167_058C59EC0FD0_
+#ifndef INCG_IRIS_IUTEST_PRINTERS_HPP_A6A321C9_9279_4336_8167_058C59EC0FD0_
+#define INCG_IRIS_IUTEST_PRINTERS_HPP_A6A321C9_9279_4336_8167_058C59EC0FD0_
 
 //======================================================================
 // include
@@ -35,6 +35,7 @@ namespace detail
 
 inline void PrintBytesInObjectTo(const unsigned char* buf, size_t size, iu_ostream* os)
 {
+IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_BEGIN()
 	const size_t kMaxCount = detail::kValues::MaxPrintContainerCount;
 	*os << size << "-Byte object < ";
 	for( size_t i=0; i < size; ++i )
@@ -47,6 +48,7 @@ inline void PrintBytesInObjectTo(const unsigned char* buf, size_t size, iu_ostre
 		}
 	}
 	*os << ">";
+IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_END()
 }
 
 namespace printer_internal
@@ -63,7 +65,7 @@ struct Printer
 	static void Print(const T& value, iu_ostream* os)
 	{
 		const unsigned char* ptr = reinterpret_cast<const unsigned char*>(&value);
-		size_t size = sizeof(T);
+		const size_t size = sizeof(T);
 		PrintBytesInObjectTo(ptr, size, os);
 	}
 };
@@ -178,7 +180,10 @@ inline void DefaultPrintTo(IsContainerHelper::yes_t
 		*os << " ";
 		UniversalPrint(*it, os);
 	}
-	if( count > 0 ) *os << " ";
+	if( count > 0 )
+	{
+		*os << " ";
+	}
 	*os << "}";
 }
 template<typename T>
@@ -258,13 +263,25 @@ inline void PrintTo(const ::std::pair<T1, T2>& value, iu_ostream* os)
 // char or unsigned char ÇÃéûÇ…ÅA 0 Ç™ NULL ï∂éöÇ…Ç»ÇÁÇ»Ç¢ÇÊÇ§Ç…èCê≥
 inline void PrintTo(const char value, iu_ostream* os)
 {
-	if( value == 0 ) *os << "\\0";
-	else *os << "\'" << value << "\'";
+	if( value == 0 )
+	{
+		*os << "\\0";
+	}
+	else
+	{
+		*os << "\'" << value << "\'";
+	}
 }
 inline void PrintTo(const wchar_t value, iu_ostream* os)
 {
-	if( value == 0 ) *os << "\\0";
-	else *os << "\'" << value << "\'";
+	if( value == 0 )
+	{
+		*os << "\\0";
+	}
+	else
+	{
+		*os << "\'" << value << "\'";
+	}
 }
 inline void PrintTo(const unsigned char value, iu_ostream* os)
 {
@@ -350,8 +367,14 @@ inline void	IUTEST_ATTRIBUTE_UNUSED_ UniversalTersePrint(const T& value, iu_ostr
 
 inline void IUTEST_ATTRIBUTE_UNUSED_ UniversalTersePrint(const char* str, iu_ostream* os)
 {
-	if( str == NULL ) *os << kStrings::Null;
-	else UniversalPrint(::std::string(str), os);
+	if( str == NULL )
+	{
+		*os << kStrings::Null;
+	}
+	else
+	{
+		UniversalPrint(::std::string(str), os);
+	}
 }
 inline void IUTEST_ATTRIBUTE_UNUSED_ UniversalTersePrint(char* str, iu_ostream* os)
 {
@@ -359,8 +382,14 @@ inline void IUTEST_ATTRIBUTE_UNUSED_ UniversalTersePrint(char* str, iu_ostream* 
 }
 inline void IUTEST_ATTRIBUTE_UNUSED_ UniversalTersePrint(const wchar_t* str, iu_ostream* os)
 {
-	if( str == NULL ) *os << kStrings::Null;
-	else UniversalPrint(detail::ShowWideCString(str), os);
+	if( str == NULL )
+	{
+		*os << kStrings::Null;
+	}
+	else
+	{
+		UniversalPrint(detail::ShowWideCString(str), os);
+	}
 }
 inline void IUTEST_ATTRIBUTE_UNUSED_ UniversalTersePrint(wchar_t* str, iu_ostream* os)
 {
@@ -369,8 +398,14 @@ inline void IUTEST_ATTRIBUTE_UNUSED_ UniversalTersePrint(wchar_t* str, iu_ostrea
 #if IUTEST_HAS_CHAR16_T
 inline void IUTEST_ATTRIBUTE_UNUSED_ UniversalTersePrint(const char16_t* str, iu_ostream* os)
 {
-	if( str == NULL ) *os << kStrings::Null;
-	else UniversalPrint(detail::ShowWideCString(str), os);
+	if( str == NULL )
+	{
+		*os << kStrings::Null;
+	}
+	else
+	{
+		UniversalPrint(detail::ShowWideCString(str), os);
+	}
 }
 inline void IUTEST_ATTRIBUTE_UNUSED_ UniversalTersePrint(char16_t* str, iu_ostream* os)
 {
@@ -398,7 +433,10 @@ inline void PrintRawArrayTo(const T* a, size_t cnt, iu_ostream* os)
 template<typename T>
 inline void IUTEST_ATTRIBUTE_UNUSED_ UniversalPrintArray(const T* begin, size_t N, iu_ostream* os)
 {
-	if( N == 0 ) *os << "{}";
+	if( N == 0 )
+	{
+		*os << "{}";
+	}
 	else
 	{
 		*os << "{";

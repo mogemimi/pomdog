@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_listener_IPP_C94B8142_F8B3_413f_B479_8AA2B78604CE_
-#define INCG_IRIS_iutest_listener_IPP_C94B8142_F8B3_413f_B479_8AA2B78604CE_
+#ifndef INCG_IRIS_IUTEST_LISTENER_IPP_C94B8142_F8B3_413F_B479_8AA2B78604CE_
+#define INCG_IRIS_IUTEST_LISTENER_IPP_C94B8142_F8B3_413F_B479_8AA2B78604CE_
 
 //======================================================================
 // include

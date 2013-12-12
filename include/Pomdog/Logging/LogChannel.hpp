@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_LOGCHANNEL_HPP
-#define POMDOG_LOGCHANNEL_HPP
+#ifndef POMDOG_LOGCHANNEL_4C388D05_4E15_4A29_8E76_D0A535C514F5_HPP
+#define POMDOG_LOGCHANNEL_4C388D05_4E15_4A29_8E76_D0A535C514F5_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -70,4 +70,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_LOGCHANNEL_HPP)
+#endif // !defined(POMDOG_LOGCHANNEL_4C388D05_4E15_4A29_8E76_D0A535C514F5_HPP)

@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_port_IPP_7893F685_A1A9_477a_82E8_BF06237697FF_
-#define INCG_IRIS_iutest_port_IPP_7893F685_A1A9_477a_82E8_BF06237697FF_
+#ifndef INCG_IRIS_IUTEST_PORT_IPP_7893F685_A1A9_477A_82E8_BF06237697FF_
+#define INCG_IRIS_IUTEST_PORT_IPP_7893F685_A1A9_477A_82E8_BF06237697FF_
 
 //======================================================================
 // include
@@ -104,7 +104,10 @@ IUTEST_IPP_INLINE int PutEnv(const char* expr)
 IUTEST_IPP_INLINE const char* GetCWD(char* buf, size_t length)
 {
 #if	defined(IUTEST_OS_WINDOWS_MOBILE) || defined(IUTEST_NO_GETCWD)
-	if( buf == NULL || length < 3 ) return NULL;
+	if( buf == NULL || length < 3 )
+	{
+		return NULL;
+	}
 	buf[0] = '.';
 	buf[1] = '/';
 	buf[2] = '\0';
@@ -178,14 +181,23 @@ IUTEST_IPP_INLINE bool SetEnvironmentVariable(const char* name, const char* valu
 IUTEST_IPP_INLINE bool GetEnvironmentVariable(const char* name, char* buf, size_t size)
 {
 #if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE)
-	DWORD ret = ::GetEnvironmentVariableA(name, buf, static_cast<DWORD>(size));
-	if( ret == 0 ) return false;
-	if( ret > size ) return false;
+	const DWORD ret = ::GetEnvironmentVariableA(name, buf, static_cast<DWORD>(size));
+	if( ret == 0 )
+	{
+		return false;
+	}
+	if( ret > size )
+	{
+		return false;
+	}
 	return true;
 #else
 	IUTEST_UNUSED_VAR(size);
 	const char* env = internal::posix::GetEnv(name);
-	if( env == NULL ) return false;
+	if( env == NULL )
+	{
+		return false;
+	}
 	strcpy(buf, env);
 	return true;
 #endif
@@ -195,12 +207,18 @@ IUTEST_IPP_INLINE bool GetEnvironmentVariable(const char* name, ::std::string& v
 {
 #if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE)
 	char buf[2048];
-	if( !GetEnvironmentVariable(name, buf, sizeof(buf)) ) return false;
+	if( !GetEnvironmentVariable(name, buf, sizeof(buf)) )
+	{
+		return false;
+	}
 	var = buf;
 	return true;
 #else
 	const char* env = internal::posix::GetEnv(name);
-	if( env == NULL ) return false;
+	if( env == NULL )
+	{
+		return false;
+	}
 	var = env;
 	return true;
 #endif
@@ -210,13 +228,19 @@ IUTEST_IPP_INLINE bool GetEnvironmentInt(const char* name, int& var)
 {
 #if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE)
 	char buf[128] = {0};
-	if( !GetEnvironmentVariable(name, buf, sizeof(buf)) ) return false;
+	if( !GetEnvironmentVariable(name, buf, sizeof(buf)) )
+	{
+		return false;
+	}
 	char* end = NULL;
 	var = static_cast<int>(strtol(buf, &end, 0));
 	return true;
 #else
 	const char* env = internal::posix::GetEnv(name);
-	if( env == NULL ) return false;
+	if( env == NULL )
+	{
+		return false;
+	}
 	char* end = NULL;
 	var = static_cast<int>(strtol(env, &end, 0));
 	return true;
@@ -285,7 +309,7 @@ IUTEST_IPP_INLINE ::std::string GetHResultString(HRESULT hr)
 IUTEST_IPP_INLINE IUTestLog::IUTestLog(Level level, const char* file, int line)
 	: kLevel(level)
 {
-	const char* tag = 
+	const char* const tag = 
 		(level == LOG_INFO   ) ? "[  INFO ] ":
 		(level == LOG_WARNING) ? "[WARNING] ":
 		(level == LOG_ERROR  ) ? "[ ERROR ] ":

@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_sstp_notifier_HPP_1187A63F_E99B_4289_A562_3C87B9739B7D_
-#define INCG_IRIS_iutest_sstp_notifier_HPP_1187A63F_E99B_4289_A562_3C87B9739B7D_
+#ifndef INCG_IRIS_IUTEST_SSTP_NOTIFIER_HPP_1187A63F_E99B_4289_A562_3C87B9739B7D_
+#define INCG_IRIS_IUTEST_SSTP_NOTIFIER_HPP_1187A63F_E99B_4289_A562_3C87B9739B7D_
 
 //======================================================================
 // include

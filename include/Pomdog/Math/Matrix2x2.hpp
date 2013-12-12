@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_MATRIX2X2_HPP
-#define POMDOG_MATRIX2X2_HPP
+#ifndef POMDOG_MATRIX2X2_F528F6C6_5BF2_4AE4_989C_137A44E0B0E7_HPP
+#define POMDOG_MATRIX2X2_F528F6C6_5BF2_4AE4_989C_137A44E0B0E7_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -31,4 +31,4 @@ using Matrix2x2 = Details::FloatingPointMatrix2x2<float>;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_MATRIX2X2_HPP)
+#endif // !defined(POMDOG_MATRIX2X2_F528F6C6_5BF2_4AE4_989C_137A44E0B0E7_HPP)

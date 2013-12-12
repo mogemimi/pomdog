@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_iutest_streaming_listener_IPP_1187A63F_E99B_4289_A562_3C87B9739B7D_
-#define INCG_IRIS_iutest_iutest_streaming_listener_IPP_1187A63F_E99B_4289_A562_3C87B9739B7D_
+#ifndef INCG_IRIS_IUTEST_IUTEST_STREAMING_LISTENER_IPP_1187A63F_E99B_4289_A562_3C87B9739B7D_
+#define INCG_IRIS_IUTEST_IUTEST_STREAMING_LISTENER_IPP_1187A63F_E99B_4289_A562_3C87B9739B7D_
 
 //======================================================================
 // include
@@ -27,7 +27,9 @@ namespace iutest
 IUTEST_IPP_INLINE StreamResultListener::StreamResultListener(const char* host, const char* port)
 {
 	if( !m_socket.Open(host, port) )
+	{
 		IUTEST_LOG_(WARNING) << "StreamResultListener: failed connect to " << host << ":" << port;
+	}
 }
 
 IUTEST_IPP_INLINE void StreamResultListener::OnTestProgramStart(const UnitTest& test)
@@ -53,7 +55,10 @@ IUTEST_IPP_INLINE void StreamResultListener::OnTestStart(const TestInfo& test_in
 IUTEST_IPP_INLINE void StreamResultListener::OnTestPartResult(const TestPartResult& test_part_result)
 {
 	const char* filename = test_part_result.file_name();
-	if( filename == NULL ) filename = "";
+	if( filename == NULL )
+	{
+		filename = "";
+	}
 	SendLn("event=TestPartResult&file=" + UrlEncode(filename)
 		+ "&line=" + detail::StreamableToString(test_part_result.line_number())
 		+ "&message=" + UrlEncode(test_part_result.message()));

@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_message_IPP_0A05C876_F204_41F5_895F_F8454AB283B1_
-#define INCG_IRIS_iutest_message_IPP_0A05C876_F204_41F5_895F_F8454AB283B1_
+#ifndef INCG_IRIS_IUTEST_MESSAGE_IPP_0A05C876_F204_41F5_895F_F8454AB283B1_
+#define INCG_IRIS_IUTEST_MESSAGE_IPP_0A05C876_F204_41F5_895F_F8454AB283B1_
 
 //======================================================================
 // include
@@ -48,19 +48,29 @@ IUTEST_IPP_INLINE ::std::string	iuCodeMessage::make_message(void) const
 IUTEST_IPP_INLINE ::std::string FormatFileLocation(const char* file, int line)
 {
 	const char* const file_name = file == NULL ? kStrings::UnkownFile : file;
-	if( line < 0 ) return file;
+	if( line < 0 )
+	{
+		return file;
+	}
 	iuStringStream::type strm;
 	if( TestFlag::IsEnableFlag(TestFlag::FILELOCATION_STYLE_MSVC) )
+	{
 		strm << file_name << "(" << line << ")";
+	}
 	else
+	{
 		strm << file_name << ":" << line;
+	}
 	return strm.str();
 }
 
 IUTEST_IPP_INLINE ::std::string FormatCompilerIndependentFileLocation(const char* file, int line)
 {
 	const char* const file_name = file == NULL ? kStrings::UnkownFile : file;
-	if( line < 0 ) return file;
+	if( line < 0 )
+	{
+		return file;
+	}
 	iuStringStream::type strm;
 	strm << file_name << ":" << line;
 	return strm.str();

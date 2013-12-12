@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_assertion_HPP_E6AF3476_DA81_46f7_A961_ACCEF7363932_
-#define INCG_IRIS_iutest_assertion_HPP_E6AF3476_DA81_46f7_A961_ACCEF7363932_
+#ifndef INCG_IRIS_IUTEST_ASSERTION_HPP_E6AF3476_DA81_46F7_A961_ACCEF7363932_
+#define INCG_IRIS_IUTEST_ASSERTION_HPP_E6AF3476_DA81_46F7_A961_ACCEF7363932_
 
 //======================================================================
 // include
@@ -251,12 +251,15 @@ private:
 
 public:
 	/** @private */
-	void	operator = (const Fixed& fixed)
+	void operator = (const Fixed& fixed)
 	{
 		OnFixed(fixed);
 #if IUTEST_HAS_EXCEPTIONS && IUTEST_USE_THROW_ON_ASSERT_FAILURE
 		{
-			if( m_part_result.type() == TestPartResult::kFatalFailure ) throw TestPartResult::kFatalFailure;
+			if( m_part_result.type() == TestPartResult::kFatalFailure )
+			{
+				throw TestPartResult::kFatalFailure;
+			}
 		}
 #endif
 	}
@@ -271,7 +274,7 @@ public:
 #endif
 
 private:
-	void	OnFixed(const Fixed& fixed) IUTEST_CXX_NOTHROW
+	void OnFixed(const Fixed& fixed)
 	{
 		// OnFixed で throw しないこと！テスト側の例外キャッチにかからなくなる
 
@@ -298,12 +301,10 @@ private:
 			ReportTestPartResult(m_part_result);
 		}
 
-		if( m_part_result.type() != TestPartResult::kSuccess )
+		if( m_part_result.type() != TestPartResult::kSuccess
+			&& TestFlag::IsEnableFlag(iutest::TestFlag::BREAK_ON_FAILURE) )
 		{
-			if( TestFlag::IsEnableFlag(iutest::TestFlag::BREAK_ON_FAILURE) )
-			{
-				IUTEST_BREAK();
-			}
+			IUTEST_BREAK();
 		}
 	}
 
@@ -372,8 +373,14 @@ inline AssertionResult EqFailure(const char* expected_expression, const char* ac
 	strm << "error: Value of " << actual_expression
 		<< "\n  Actual: " << actual
 		<< "\nExpected: " << expected_expression;
-	if( ignoring_case ) strm << " (ignoring case)";
-	if( !detail::IsStringEqual(expected_expression, expected) ) strm << "\nWhich is: " << expected;
+	if( ignoring_case )
+	{
+		strm << " (ignoring case)";
+	}
+	if( !detail::IsStringEqual(expected_expression, expected) )
+	{
+		strm << "\nWhich is: " << expected;
+	}
 	return AssertionFailure() << strm.str();
 }
 
@@ -384,8 +391,8 @@ inline AssertionResult EqFailure(const char* expected_expression, const char* ac
 #define DECL_COMPARE_HELPER_I_(op_name, op, type1, type2)									\
 	inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelper##op_name(						\
 			const char* expr1, const char* expr2, type1 val1, type2 val2) {					\
-	if( val1 op val2 ) return AssertionSuccess();											\
-	else {																					\
+	if( val1 op val2 ) { return AssertionSuccess();											\
+	} else {																				\
 	return AssertionFailure() << "error: Expected: " << expr1 << " " #op " " << expr2		\
 		<< "\n  Actual: " << FormatForComparisonFailureMessage(val1, val2)					\
 		<< " vs " << FormatForComparisonFailureMessage(val2, val1);							\
@@ -420,20 +427,49 @@ DECL_COMPARE_HELPER_(GT, > )
  * @}
 */
 
-template<typename T>
-inline AssertionResult	CmpHelperNull(const char* expr, const T* val)
+/**
+* @brief	Null Helper
+* @tparam	IsNullLiteral	= val が NULL リテラルかどうか
+*/
+template<bool IsNullLiteral>
+class NullHelper
 {
-	if( NULL == val ) return AssertionSuccess();
+public:
+	template<typename T>
+	static AssertionResult Compare(const char* expr, const T* val)
+	{
+		if( NULL == val )
+		{
+			return AssertionSuccess();
+		}
 
-	return AssertionFailure() << "error: Value of " << expr
-		<< "\n  Actual: " << val
-		<< "\nExpected: NULL";
-}
+		return AssertionFailure() << "error: Value of " << expr
+			<< "\n  Actual: " << val
+			<< "\nExpected: NULL";
+	}
+};
+
+/**
+* @brief	NullHelper 特殊化
+*/
+template<>
+class NullHelper<true>
+{
+public:
+	template<typename T>
+	static AssertionResult Compare(const char*, T)
+	{
+		return AssertionSuccess();
+	}
+};
 
 template<typename T>
 inline AssertionResult	CmpHelperNotNull(const char* expr, const T* val)
 {
-	if( NULL != val ) return AssertionSuccess();
+	if( NULL != val )
+	{
+		return AssertionSuccess();
+	}
 
 	return AssertionFailure() << "error: Value of " << expr
 		<< "\n  Actual: NULL\nExpected: not NULL";
@@ -443,7 +479,10 @@ template<typename T1, typename T2>
 inline AssertionResult	CmpHelperSame(const char* expected_str, const char* actual_str
 									  , const T1& expected, const T2& actual)
 {
-	if( &expected == &actual ) return AssertionSuccess();
+	if( &expected == &actual )
+	{
+		return AssertionSuccess();
+	}
 
 	return AssertionFailure() << "error: Expected: &(" << expected_str << ") == &(" << actual_str
 		<< ")\n  Actual: " << FormatForComparisonFailureMessage(&expected, &actual)
@@ -459,7 +498,10 @@ inline AssertionResult CmpHelperEQ(const char* expected_str, const char* actual_
 IUTEST_PARGMA_WARN_PUSH()
 IUTEST_PRAGMA_WARN_DISABLE_SIGN_COMPARE()
 
-	if( actual == expected ) return AssertionSuccess();
+	if( actual == expected )
+	{
+		return AssertionSuccess();
+	}
 
 	return EqFailure(expected_str, actual_str
 		, FormatForComparisonFailureMessage(expected, actual).c_str()
@@ -562,9 +604,15 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperNearFloatingPoint(const
 													, RawType val1, RawType val2, RawType abs_v)
 {
 	RawType diff = val1 > val2 ? val1 - val2 : val2 - val1;
-	if( diff < abs_v ) return AssertionSuccess();
+	if( diff < abs_v )
+	{
+		return AssertionSuccess();
+	}
 	floating_point<RawType> f1(diff), f2(abs_v);
-	if( f1.AlmostEquals(f2) ) return AssertionSuccess();
+	if( f1.AlmostEquals(f2) )
+	{
+		return AssertionSuccess();
+	}
 	return AssertionFailure() << "error: Value of: abs(" << expr1 << " - " << expr2 << ") <= " << absc
 		<< "\n  Actual: abs(" << val1 << " - " << val2 << ") : " << diff
 		<< "\nExpected: " << FormatForComparisonFailureMessage(abs_v, diff) ;
@@ -580,7 +628,10 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperNear(const char* expr1,
 													, const T& val1, const T& val2, const A& abs_v)
 {
 	T diff = val1 > val2 ? val1 - val2 : val2 - val1;
-	if( diff <= abs_v ) return AssertionSuccess();
+	if( diff <= abs_v )
+	{
+		return AssertionSuccess();
+	}
 	return AssertionFailure() << "error: Value of: abs(" << expr1 << " - " << expr2 << ") <= " << absc
 		<< "\n  Actual: abs(" << val1 << " - " << val2 << ") : " << diff << "\nExpected: " << FormatForComparisonFailureMessage(abs_v, diff) ;
 }
@@ -603,12 +654,16 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1
 {
 	if( val1 == NULL || val2 == NULL ) 
 	{
-		if( val1 == val2 ) return AssertionSuccess();
+		if( val1 == val2 )
+		{
+			return AssertionSuccess();
+		}
 	}
-	else
+	else if( strcmp(val1, val2) == 0 )
 	{
-		if( strcmp(val1, val2) == 0 ) return AssertionSuccess();
+		return AssertionSuccess();
 	}
+
 	return EqFailure(expr1, expr2
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str() );
@@ -618,12 +673,16 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1
 {
 	if( val1 == NULL || val2 == NULL ) 
 	{
-		if( val1 == val2 ) return AssertionSuccess();
+		if( val1 == val2 )
+		{
+			return AssertionSuccess();
+		}
 	}
-	else
+	else if( wcscmp(val1, val2) == 0 )
 	{
-		if( wcscmp(val1, val2) == 0 ) return AssertionSuccess();
+		return AssertionSuccess();
 	}
+
 	return EqFailure(expr1, expr2
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str() );
@@ -633,7 +692,10 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1
 																   , const ::std::basic_string<Elem, Traits, Ax>& val1
 																   , const ::std::basic_string<Elem, Traits, Ax>& val2)
 {
-	if( val1 == val2 ) return AssertionSuccess();
+	if( val1 == val2 )
+	{
+		return AssertionSuccess();
+	}
 	return EqFailure(expr1, expr2
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str() );
@@ -643,7 +705,10 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1
 																   , const Elem* val1
 																   , const ::std::basic_string<Elem, Traits, Ax>& val2)
 {
-	if( val2 == val1 ) return AssertionSuccess();
+	if( val2 == val1 )
+	{
+		return AssertionSuccess();
+	}
 	return EqFailure(expr1, expr2
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str() );
@@ -653,7 +718,10 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1
 																   , const ::std::basic_string<Elem, Traits, Ax>& val1
 																   , const Elem* val2)
 {
-	if( val1 == val2 ) return AssertionSuccess();
+	if( val1 == val2 )
+	{
+		return AssertionSuccess();
+	}
 	return EqFailure(expr1, expr2
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str() );
@@ -662,9 +730,9 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1, const char* expr2
 															   , const char16_t* val1, const char16_t* val2)
 {
-	if( val1 == NULL || val2 == NULL ) 
+	if( val1 == NULL && val2 == NULL ) 
 	{
-		if( val1 == val2 ) return AssertionSuccess();
+		return AssertionSuccess();
 	}
 	::std::u16string v1 = val1;
 	return CmpHelperSTREQ(expr1, expr2, v1, val2);
@@ -674,9 +742,9 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1, const char* expr2
 															   , const char32_t* val1, const char32_t* val2)
 {
-	if( val1 == NULL || val2 == NULL ) 
+	if( val1 == NULL && val2 == NULL ) 
 	{
-		if( val1 == val2 ) return AssertionSuccess();
+		return AssertionSuccess();
 	}
 	::std::u32string v1 = val1;
 	return CmpHelperSTREQ(expr1, expr2, v1, val2);
@@ -688,12 +756,16 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1
 {
 	if( val1 == NULL || val2 == NULL ) 
 	{
-		if( val1 != val2 ) return AssertionSuccess();
+		if( val1 != val2 )
+		{
+			return AssertionSuccess();
+		}
 	}
-	else
+	else if( strcmp(val1, val2) != 0 )
 	{
-		if( strcmp(val1, val2) != 0 ) return AssertionSuccess();
+		return AssertionSuccess();
 	}
+
 	return AssertionFailure() << "error: Expected: " << expr1 << " != " << expr2
 		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
 		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
@@ -703,12 +775,16 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1
 {
 	if( val1 == NULL || val2 == NULL ) 
 	{
-		if( val1 != val2 ) return AssertionSuccess();
+		if( val1 != val2 )
+		{
+			return AssertionSuccess();
+		}
 	}
-	else
+	else if( wcscmp(val1, val2) != 0 )
 	{
-		if( wcscmp(val1, val2) != 0 ) return AssertionSuccess();
+		return AssertionSuccess();
 	}
+
 	return AssertionFailure() << "error: Expected: " << expr1 << " != " << expr2
 		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
 		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
@@ -718,7 +794,10 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1
 															   , const ::std::basic_string<Elem, Traits, Ax>& val1
 															   , const ::std::basic_string<Elem, Traits, Ax>& val2)
 {
-	if( val1 != val2 ) return AssertionSuccess();
+	if( val1 != val2 )
+	{
+		return AssertionSuccess();
+	}
 	return AssertionFailure() << "error: Expected: " << expr1 << " != " << expr2
 		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
 		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
@@ -728,7 +807,10 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1
 															   , const Elem* val1
 															   , const ::std::basic_string<Elem, Traits, Ax>& val2)
 {
-	if( val2 != val1 ) return AssertionSuccess();
+	if( val2 != val1 )
+	{
+		return AssertionSuccess();
+	}
 	return AssertionFailure() << "error: Expected: " << expr1 << " != " << expr2
 		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
 		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
@@ -738,7 +820,10 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1
 															   , const ::std::basic_string<Elem, Traits, Ax>& val1
 															   , const Elem* val2)
 {
-	if( val1 != val2 ) return AssertionSuccess();
+	if( val1 != val2 )
+	{
+		return AssertionSuccess();
+	}
 	return AssertionFailure() << "error: Expected: " << expr1 << " != " << expr2
 		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
 		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
@@ -747,9 +832,10 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1, const char* expr2
 															   , const char16_t* val1, const char16_t* val2)
 {
-	if( val1 == NULL || val2 == NULL ) 
+	if( (val1 == NULL || val2 == NULL)
+		&& val1 != val2 )
 	{
-		if( val1 != val2 ) return AssertionSuccess();
+		return AssertionSuccess();
 	}
 	::std::u16string v1 = val1;
 	return CmpHelperSTRNE(expr1, expr2, v1, val2);
@@ -759,9 +845,10 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1, const char* expr2
 															   , const char32_t* val1, const char32_t* val2)
 {
-	if( val1 == NULL || val2 == NULL ) 
+	if( (val1 == NULL || val2 == NULL)
+		&& val1 != val2 )
 	{
-		if( val1 != val2 ) return AssertionSuccess();
+		return AssertionSuccess();
 	}
 	::std::u32string v1 = val1;
 	return CmpHelperSTRNE(expr1, expr2, v1, val2);
@@ -773,12 +860,16 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASEEQ(const char* e
 {
 	if( val1 == NULL || val2 == NULL ) 
 	{
-		if( val1 == val2 ) return AssertionSuccess();
+		if( val1 == val2 )
+		{
+			return AssertionSuccess();
+		}
 	}
-	else
+	else if( detail::iu_stricmp(val1, val2) == 0 )
 	{
-		if( detail::iu_stricmp(val1, val2) == 0 ) return AssertionSuccess();
+		return AssertionSuccess();
 	}
+
 	return EqFailure(expr1, expr2
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str()
@@ -789,12 +880,16 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASEEQ(const char* e
 {
 	if( val1 == NULL || val2 == NULL ) 
 	{
-		if( val1 == val2 ) return AssertionSuccess();
+		if( val1 == val2 )
+		{
+			return AssertionSuccess();
+		}
 	}
-	else
+	else if( detail::iu_wcsicmp(val1, val2) == 0 )
 	{
-		if( detail::iu_wcsicmp(val1, val2) == 0 ) return AssertionSuccess();
+		return AssertionSuccess();
 	}
+
 	return EqFailure(expr1, expr2
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str()
@@ -826,12 +921,16 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASENE(const char* e
 {
 	if( val1 == NULL || val2 == NULL ) 
 	{
-		if( val1 != val2 ) return AssertionSuccess();
+		if( val1 != val2 )
+		{
+			return AssertionSuccess();
+		}
 	}
-	else
+	else if( detail::iu_stricmp(val1, val2) != 0 )
 	{
-		if( detail::iu_stricmp(val1, val2) != 0 ) return AssertionSuccess();
+		return AssertionSuccess();
 	}
+
 	return AssertionFailure() << "error: Expected: " << expr1 << " != " << expr2 << " (ignoring case)"
 		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
 		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
@@ -841,12 +940,16 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASENE(const char* e
 {
 	if( val1 == NULL || val2 == NULL ) 
 	{
-		if( val1 != val2 ) return AssertionSuccess();
+		if( val1 != val2 )
+		{
+			return AssertionSuccess();
+		}
 	}
-	else
+	else if( detail::iu_wcsicmp(val1, val2) != 0 )
 	{
-		if( detail::iu_wcsicmp(val1, val2) != 0 ) return AssertionSuccess();
+		return AssertionSuccess();
 	}
+
 	return AssertionFailure() << "error: Expected: " << expr1 << " != " << expr2 << " (ignoring case)"
 		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
 		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
@@ -879,7 +982,10 @@ static AssertionResult CmpHelperFloatingPointEQ(const char* expr1, const char* e
 							   , RawType val1, RawType val2)
 {
 	floating_point<RawType> f1(val1), f2(val2);
-	if( f1.AlmostEquals(f2) ) return AssertionSuccess();
+	if( f1.AlmostEquals(f2) )
+	{
+		return AssertionSuccess();
+	}
 	return EqFailure(expr1, expr2
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str() );
@@ -889,9 +995,15 @@ template<typename RawType>
 static AssertionResult	CmpHelperFloatingPointLE(const char* expr1, const char* expr2
 							   , RawType val1, RawType val2)
 {
-	if( val1 < val2 ) return AssertionSuccess();
+	if( val1 < val2 )
+	{
+		return AssertionSuccess();
+	}
 	floating_point<RawType> f1(val1), f2(val2);
-	if( f1.AlmostEquals(f2) ) return AssertionSuccess();
+	if( f1.AlmostEquals(f2) )
+	{
+		return AssertionSuccess();
+	}
 	return EqFailure(expr1, expr2
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
 		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str() );
@@ -913,13 +1025,19 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ DoubleLE(const char* expr1, cons
 
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ IsHRESULTSuccess(const char* expr, HRESULT hr)
 {
-	if( SUCCEEDED(hr) ) return AssertionSuccess();
+	if( SUCCEEDED(hr) )
+	{
+		return AssertionSuccess();
+	}
 	return AssertionFailure() << "error: Expected: SUCCEEDED(" << expr << ")"
 		<< "\n  Actual: " << hr << ": " << detail::win::GetHResultString(hr);
 }
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ IsHRESULTFailure(const char* expr, HRESULT hr)
 {
-	if( FAILED(hr) ) return AssertionSuccess();
+	if( FAILED(hr) )
+	{
+		return AssertionSuccess();
+	}
 	return AssertionFailure() << "error: Expected : FAILED(" << expr << ")"
 		<< "\n  Actual: " << hr;
 }

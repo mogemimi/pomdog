@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_case_IPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
-#define INCG_IRIS_iutest_case_IPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
+#ifndef INCG_IRIS_IUTEST_CASE_IPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
+#define INCG_IRIS_IUTEST_CASE_IPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
 
 //======================================================================
 // include
@@ -26,7 +26,10 @@ namespace iutest
 
 IUTEST_IPP_INLINE bool	TestCase::Run(void)
 {
-	if( !should_run() ) return true;
+	if( !should_run() )
+	{
+		return true;
+	}
 
 	if( TestFlag::IsEnableFlag(TestFlag::SHUFFLE_TESTS) )
 	{
@@ -59,13 +62,11 @@ IUTEST_IPP_INLINE bool TestCase::RunImpl(void)
 		sw.start();
 		for( iuTestInfos::iterator it = m_testinfos.begin(), end=m_testinfos.end(); it != end; ++it )
 		{
-			if( (it)->should_run() )
+			// ŽÀs
+			if( (it)->should_run()
+				&& !(it)->Run() )
 			{
-				// ŽÀs
-				if( !(it)->Run() )
-				{
-					result = false;
-				}
+				result = false;
 			}
 		}
 		m_elapsedmsec = sw.stop();
@@ -113,39 +114,57 @@ IUTEST_IPP_INLINE int TestCase::reportable_test_count(void) const
 
 IUTEST_IPP_INLINE int TestCase::failed_test_count(void) const
 {
-	if( !should_run() ) return 0;
+	if( !should_run() )
+	{
+		return 0;
+	}
 	//if( m_ad_hoc_testresult.Failed() ) return m_testinfos.count();
 	return detail::CountIf(m_testinfos, IsFaildTest);
 }
 
 IUTEST_IPP_INLINE int TestCase::successful_test_count(void) const
 {
-	if( !should_run() ) return 0;
+	if( !should_run() )
+	{
+		return 0;
+	}
 	//if( m_ad_hoc_testresult.Failed() ) return 0;
 	return detail::CountIf(m_testinfos, IsSuccessfulTest);
 }
 
 IUTEST_IPP_INLINE int TestCase::skip_test_count(void) const
 {
-	if( !should_run() ) return total_test_count();
+	if( !should_run() )
+	{
+		return total_test_count();
+	}
 	return detail::CountIf(m_testinfos, IsSkipTest);
 }
 
 IUTEST_IPP_INLINE int TestCase::reportable_skip_test_count(void) const
 {
-	if( !should_run() ) return reportable_test_count();
+	if( !should_run() )
+	{
+		return reportable_test_count();
+	}
 	return detail::CountIf(m_testinfos, IsReportableSkipTest);
 }
 
 IUTEST_IPP_INLINE int TestCase::test_run_skipped_count(void) const
 {
-	if( !should_run() ) return 0;
+	if( !should_run() )
+	{
+		return 0;
+	}
 	return detail::CountIf(m_testinfos, IsRunSkippedTest);
 }
 
 IUTEST_IPP_INLINE int TestCase::reportable_test_run_skipped_count(void) const
 {
-	if( !should_run() ) return 0;
+	if( !should_run() )
+	{
+		return 0;
+	}
 	return detail::CountIf(m_testinfos, IsReportableRunSkippedTest);
 }
 

@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_charcode_HPP_D444FB3E_3AFA_46d0_AD69_33FAAF5615E3_
-#define INCG_IRIS_iutest_charcode_HPP_D444FB3E_3AFA_46d0_AD69_33FAAF5615E3_
+#ifndef INCG_IRIS_IUTEST_CHARCODE_HPP_D444FB3E_3AFA_46D0_AD69_33FAAF5615E3_
+#define INCG_IRIS_IUTEST_CHARCODE_HPP_D444FB3E_3AFA_46D0_AD69_33FAAF5615E3_
 
 //======================================================================
 // include
@@ -84,7 +84,10 @@ namespace detail
 
 inline ::std::string ShowWideCString(const wchar_t* wide_c_str)
 {
-	if( wide_c_str == NULL ) return "(null)";
+	if( wide_c_str == NULL )
+	{
+		return "(null)";
+	}
 #if IUTEST_MBS_CODE == IUTEST_MBS_CODE_UTF8
 	return WideStringToUTF8(wide_c_str);
 #elif defined(IUTEST_OS_WINDOWS) && IUTEST_MBS_CODE == IUTEST_MBS_CODE_WINDOWS31J
@@ -97,7 +100,10 @@ inline ::std::string ShowWideCString(const wchar_t* wide_c_str)
 #if IUTEST_HAS_CHAR16_T
 inline ::std::string ShowWideCString(const char16_t* wide_c_str)
 {
-	if(wide_c_str == NULL) return "(null)";
+	if(wide_c_str == NULL)
+	{
+		return "(null)";
+	}
 #if IUTEST_HAS_CXX_HDR_CODECVT
 #if IUTEST_MBS_CODE == IUTEST_MBS_CODE_UTF8
 	return UTF16ToUTF8(wide_c_str);

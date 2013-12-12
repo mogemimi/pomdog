@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_body_HPP_3EEA6706_9954_4330_B292_129667FA6B96_
-#define INCG_IRIS_iutest_body_HPP_3EEA6706_9954_4330_B292_129667FA6B96_
+#ifndef INCG_IRIS_IUTEST_BODY_HPP_3EEA6706_9954_4330_B292_129667FA6B96_
+#define INCG_IRIS_IUTEST_BODY_HPP_3EEA6706_9954_4330_B292_129667FA6B96_
 
 //======================================================================
 // include
@@ -62,14 +62,17 @@ public:
 	static const TestInfo*	GetCurrentTestInfo(void)
 	{
 		const Test* curr = GetCurrentTest();
-		if( curr == NULL || curr->m_test_info == NULL ) return NULL;
+		if( curr == NULL || curr->m_test_info == NULL )
+		{
+			return NULL;
+		}
 		return curr->m_test_info->ptr();
 	}
 
 	/**
 	 * @brief	実行中の Test の取得
 	*/
-	static Test*			GetCurrentTest(void) { return CurrentTestObserver::GetCurrentTest(); }
+	static Test* GetCurrentTest(void) { return CurrentTestObserver::GetCurrentTest(); }
 
 
 	/**
@@ -175,7 +178,7 @@ private:
 	class TestRecordPropertyHelper
 	{
 	public:
-		static 	void RecordProperty(const TestProperty& prop);
+		static void RecordProperty(const TestProperty& prop);
 	};
 protected:
 	const TestInfo* test_info_;	//!< テスト中に簡単にアクセス可能なように

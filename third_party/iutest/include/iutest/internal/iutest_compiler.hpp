@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_compiler_HPP_6DDB27E8_E2FF_4754_80B0_F500025820C4_
-#define INCG_IRIS_iutest_compiler_HPP_6DDB27E8_E2FF_4754_80B0_F500025820C4_
+#ifndef INCG_IRIS_IUTEST_COMPILER_HPP_6DDB27E8_E2FF_4754_80B0_F500025820C4_
+#define INCG_IRIS_IUTEST_COMPILER_HPP_6DDB27E8_E2FF_4754_80B0_F500025820C4_
 
 //======================================================================
 // include
@@ -162,7 +162,11 @@
 #      define IUTEST_HAS_CONSTEXPR	0
 #    endif
 #  elif	defined(_MSC_VER)
-#    define IUTEST_HAS_CONSTEXPR	0
+#    if _MSC_FULL_VER == 180021114
+#      define IUTEST_HAS_CONSTEXPR	1
+#    else
+#      define IUTEST_HAS_CONSTEXPR	0
+#    endif
 #  elif	defined(__MWERKS__)
 #    define IUTEST_HAS_CONSTEXPR	0
 #  else
@@ -288,7 +292,7 @@
 #    endif
 #  elif	defined(__GNUC__)
 	// http://gcc.gnu.org/bugzilla/show_bug.cgi?id=35722
-#    if defined(__VARIADIC_TEMPLATES) || (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7) && defined(__GXX_EXPERIMENTAL_CXX0X__))
+#    if defined(__VARIADIC_TEMPLATES) || ( ((__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7))) && defined(__GXX_EXPERIMENTAL_CXX0X__) )
 #      define IUTEST_HAS_VARIADIC_TEMPLATES	1
 #    endif
 #  elif	defined(_MSC_VER)
@@ -311,7 +315,7 @@
 #      define IUTEST_HAS_VARIADIC_TEMPLATE_TEMPLATES	1
 #    endif
 #  elif	defined(__GNUC__)
-#    if defined(__VARIADIC_TEMPLATES) || (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 7)) || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7) && (__GNUC_PATCHLEVEL__ >= 1) && defined(__GXX_EXPERIMENTAL_CXX0X__))
+#    if defined(__VARIADIC_TEMPLATES) || ( ((__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 7)) || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7) && (__GNUC_PATCHLEVEL__ >= 1))) && defined(__GXX_EXPERIMENTAL_CXX0X__) )
 #      define IUTEST_HAS_VARIADIC_TEMPLATE_TEMPLATES	1
 #    endif
 #  elif	defined(_MSC_VER)
@@ -454,6 +458,9 @@
 #      define IUTEST_HAS_NOEXCEPT	1
 #    endif
 #  elif defined(_MSC_VER)
+#    if _MSC_FULL_VER == 180021114
+//#      define IUTEST_HAS_NOEXCEPT	1	// build fail
+#    endif
 #  endif
 #endif
 

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_BUFFERUSAGE_2EBC62CA_5FBF_11E3_9D25_A8206655A22B_HPP
-#define POMDOG_BUFFERUSAGE_2EBC62CA_5FBF_11E3_9D25_A8206655A22B_HPP
+#ifndef POMDOG_BUFFERUSAGE_E289E712_AF1F_4E88_A9E7_2E7BB5F1CB33_HPP
+#define POMDOG_BUFFERUSAGE_E289E712_AF1F_4E88_A9E7_2E7BB5F1CB33_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -35,4 +35,4 @@ enum class BufferUsage: std::uint8_t
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_BUFFERUSAGE_2EBC62CA_5FBF_11E3_9D25_A8206655A22B_HPP)
+#endif // !defined(POMDOG_BUFFERUSAGE_E289E712_AF1F_4E88_A9E7_2E7BB5F1CB33_HPP)

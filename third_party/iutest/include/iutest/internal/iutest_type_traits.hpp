@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_type_traits_HPP_6F091F15_784A_4f50_BD18_B8F67C5AF0CF_
-#define INCG_IRIS_iutest_type_traits_HPP_6F091F15_784A_4f50_BD18_B8F67C5AF0CF_
+#ifndef INCG_IRIS_IUTEST_TYPE_TRAITS_HPP_6F091F15_784A_4F50_BD18_B8F67C5AF0CF_
+#define INCG_IRIS_IUTEST_TYPE_TRAITS_HPP_6F091F15_784A_4F50_BD18_B8F67C5AF0CF_
 
 //======================================================================
 // include

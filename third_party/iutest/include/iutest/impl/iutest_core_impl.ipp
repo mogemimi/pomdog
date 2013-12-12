@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_core_impl_IPP_D5ABC7DE_C751_4ac0_922F_547880163891_
-#define INCG_IRIS_iutest_core_impl_IPP_D5ABC7DE_C751_4ac0_922F_547880163891_
+#ifndef INCG_IRIS_IUTEST_CORE_IMPL_IPP_D5ABC7DE_C751_4AC0_922F_547880163891_
+#define INCG_IRIS_IUTEST_CORE_IMPL_IPP_D5ABC7DE_C751_4AC0_922F_547880163891_
 
 //======================================================================
 // include
@@ -206,7 +206,8 @@ namespace detail
 IUTEST_IPP_INLINE ::std::string MakeIndexTestName(const char* basename, int index)
 {
 	::std::string name = basename;
-	iuStringStream::type strm; strm << index;
+	iuStringStream::type strm;
+	strm << index;
 	name += "/";
 	name += strm.str();
 	return name;
@@ -215,7 +216,10 @@ IUTEST_IPP_INLINE ::std::string MakeIndexTestName(const char* basename, int inde
 IUTEST_IPP_INLINE ::std::string MakePrefixedIndexTestName(const char* prefix, const char* basename, int index)
 {
 	::std::string name = prefix;
-	if( !name.empty() ) name += "/";
+	if( !name.empty() )
+	{
+		name += "/";
+	}
 	name += MakeIndexTestName(basename, index);
 	return name;
 }

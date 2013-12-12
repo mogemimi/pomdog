@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_spi_switch_HPP_673AE7AC_6F80_4be0_9209_581E3A568525_
-#define INCG_IRIS_iutest_spi_switch_HPP_673AE7AC_6F80_4be0_9209_581E3A568525_
+#ifndef INCG_IRIS_IUTEST_SPI_SWITCH_HPP_673AE7AC_6F80_4BE0_9209_581E3A568525_
+#define INCG_IRIS_IUTEST_SPI_SWITCH_HPP_673AE7AC_6F80_4BE0_9209_581E3A568525_
 
 #include "iutest_switch.hpp"
 
@@ -46,7 +46,7 @@
 #  endif
 #endif
 
-#ifdef INCG_IRIS_iutest_spi_HPP_
+#ifdef INCG_IRIS_IUTEST_SPI_HPP_
 #undef IUTEST_ASSERT_FATAL_FAILURE
 #undef IUTEST_EXPECT_FATAL_FAILURE
 #undef IUTEST_ASSERT_NONFATAL_FAILURE

@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_util_quiet_result_printer_HPP_0DF65DD7_C97C_44ba_940D_D22ED6AF9494_
-#define INCG_IRIS_iutest_util_quiet_result_printer_HPP_0DF65DD7_C97C_44ba_940D_D22ED6AF9494_
+#ifndef INCG_IRIS_IUTEST_UTIL_QUIET_RESULT_PRINTER_HPP_0DF65DD7_C97C_44BA_940D_D22ED6AF9494_
+#define INCG_IRIS_IUTEST_UTIL_QUIET_RESULT_PRINTER_HPP_0DF65DD7_C97C_44BA_940D_D22ED6AF9494_
 
 //======================================================================
 // include

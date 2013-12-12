@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_DEGREE_HPP
-#define POMDOG_DEGREE_HPP
+#ifndef POMDOG_DEGREE_8B079286_FF3F_4EEC_BDD2_85D914A0B064_HPP
+#define POMDOG_DEGREE_8B079286_FF3F_4EEC_BDD2_85D914A0B064_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -38,4 +38,4 @@ using Degree = Details::TaggedArithmetic<T, Details::Tags::DegreeTag>;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DEGREE_HPP)
+#endif // !defined(POMDOG_DEGREE_8B079286_FF3F_4EEC_BDD2_85D914A0B064_HPP)

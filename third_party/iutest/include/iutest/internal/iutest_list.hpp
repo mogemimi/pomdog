@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_list_HPP_CB5AECEA_6147_4a89_BB97_236338CA177E_
-#define INCG_IRIS_iutest_list_HPP_CB5AECEA_6147_4a89_BB97_236338CA177E_
+#ifndef INCG_IRIS_IUTEST_LIST_HPP_CB5AECEA_6147_4A89_BB97_236338CA177E_
+#define INCG_IRIS_IUTEST_LIST_HPP_CB5AECEA_6147_4A89_BB97_236338CA177E_
 
 //======================================================================
 // include
@@ -84,7 +84,10 @@ public:
 
 	_Myt		operator + (int n)
 	{
-		if( n == 0 ) return *this;
+		if( n == 0 )
+		{
+			return *this;
+		}
 		if( n > 0 )
 		{
 			return this->operator +(static_cast<unsigned int>(n));
@@ -147,11 +150,14 @@ public:
 	}
 public:
 	// ソートして挿入
-	void		sort_insert(node_ptr p)
+	void sort_insert(node_ptr p)
 	{
-		if(p == NULL) return;
+		if( p == NULL )
+		{
+			return;
+		}
 
-		if(m_node == NULL)
+		if( m_node == NULL )
 		{
 			m_node = p;
 			return;
@@ -188,20 +194,27 @@ public:
 		}
 	}
 	// 追加
-	void		push_back(node_ptr p)
+	void push_back(node_ptr p)
 	{
-		if(p == NULL) return;
+		if( p == NULL )
+		{
+			return;
+		}
 
-		if(m_node == NULL) 
+		if( m_node == NULL )
 		{
 			m_node = p;
 			return;
 		}
+
 		node_ptr prev = m_node;
 		node_ptr cur = m_node->next;
 		while(cur != NULL)
 		{
-			if( prev == p ) return;
+			if( prev == p )
+			{
+				return;
+			}
 			prev = cur;
 			cur = prev->next;
 		}
@@ -209,11 +222,17 @@ public:
 		p->prev = prev;
 	}
 	// 削除
-	void		erase(node_ptr p)
+	void erase(node_ptr p)
 	{
-		if(p == NULL) return;
-		if(m_node == NULL) return;
-		if(p->prev == NULL)
+		if( p == NULL )
+		{
+			return;
+		}
+		if( m_node == NULL )
+		{
+			return;
+		}
+		if( p->prev == NULL )
 		{
 			m_node = p->next;
 			if( m_node != NULL )
@@ -224,11 +243,14 @@ public:
 		else
 		{
 			p->prev->next = p->next;
-			p->next->prev = p->prev;
+			if( p->next != NULL )
+			{
+				p->next->prev = p->prev;
+			}
 		}
 		p->prev = p->next = NULL;
 	}
-	void		erase(iterator it)
+	void erase(iterator it)
 	{
 		erase(it.ptr());
 	}
@@ -238,7 +260,7 @@ public:
 	 * @tparam	F = 比較オブジェクト
 	*/
 	template<typename F>
-	void	shuffle(F& r)
+	void shuffle(F& r)
 	{
 		for( unsigned int i=2, n=count(); i<n; ++i )
 		{
@@ -247,11 +269,20 @@ public:
 	}
 
 public:
-	void		swap(iterator a, iterator b)
+	void swap(iterator a, iterator b)
 	{
-		if( a == b ) return;
-		if( a.ptr() == m_node ) m_node = b.ptr();
-		else if( b.ptr() == m_node ) m_node = a.ptr();
+		if( a == b )
+		{
+			return;
+		}
+		if( a.ptr() == m_node )
+		{
+			m_node = b.ptr();
+		}
+		else if( b.ptr() == m_node )
+		{
+			m_node = a.ptr();
+		}
 
 		if( a->next == b.ptr() )
 		{
@@ -259,8 +290,14 @@ public:
 			b->next = a.ptr();
 			b->prev = a->prev;
 			a->prev = b.ptr();
-			if( a->next != NULL ) a->next->prev = a.ptr();
-			if( b->prev != NULL ) b->prev->next = b.ptr();
+			if( a->next != NULL )
+			{
+				a->next->prev = a.ptr();
+			}
+			if( b->prev != NULL )
+			{
+				b->prev->next = b.ptr();
+			}
 		}
 		else if( a->prev == b.ptr() )
 		{
@@ -268,8 +305,14 @@ public:
 			a->next = b.ptr();
 			a->prev = b->prev;
 			b->prev = a.ptr();
-			if( b->next != NULL ) b->next->prev = b.ptr();
-			if( a->prev != NULL ) a->prev->next = a.ptr();
+			if( b->next != NULL )
+			{
+				b->next->prev = b.ptr();
+			}
+			if( a->prev != NULL )
+			{
+				a->prev->next = a.ptr();
+			}
 		}
 		else
 		{
@@ -279,27 +322,39 @@ public:
 			tmp = a->prev;
 			a->prev = b->prev;
 			b->prev = tmp;
-			if( a->next != NULL ) a->next->prev = a.ptr();
-			if( b->next != NULL ) b->next->prev = b.ptr();
-			if( a->prev != NULL ) a->prev->next = a.ptr();
-			if( b->prev != NULL ) b->prev->next = b.ptr();
+			if( a->next != NULL )
+			{
+				a->next->prev = a.ptr();
+			}
+			if( b->next != NULL )
+			{
+				b->next->prev = b.ptr();
+			}
+			if( a->prev != NULL )
+			{
+				a->prev->next = a.ptr();
+			}
+			if( b->prev != NULL )
+			{
+				b->prev->next = b.ptr();
+			}
 		}
 	}
 
 public:
-	iterator	begin(void) IUTEST_CXX_NOEXCEPT_SPEC
+	iterator begin(void) IUTEST_CXX_NOEXCEPT_SPEC
 	{
 		return m_node;
 	}
-	iterator	end(void) IUTEST_CXX_NOEXCEPT_SPEC
+	iterator end(void) IUTEST_CXX_NOEXCEPT_SPEC
 	{
 		return iterator(NULL);
 	}
-	const_iterator	begin(void) const IUTEST_CXX_NOEXCEPT_SPEC
+	const_iterator begin(void) const IUTEST_CXX_NOEXCEPT_SPEC
 	{
 		return m_node;
 	}
-	const_iterator	end(void) const IUTEST_CXX_NOEXCEPT_SPEC
+	const_iterator end(void) const IUTEST_CXX_NOEXCEPT_SPEC
 	{
 		return const_iterator(NULL);
 	}
@@ -309,27 +364,33 @@ public:
 	struct EqualOp
 	{
 		template<typename T>
-		bool	operator () (const T* lhs, const T* rhs)	const	{ return *lhs == *rhs; }
+		bool operator () (const T* lhs, const T* rhs) const	{ return *lhs == *rhs; }
 	};
 public:
 	template<typename FUNC>
-	node_ptr	find(node_ptr p, FUNC& f) const
+	node_ptr find(node_ptr p, FUNC& f) const
 	{
 		node_ptr cur = m_node;
 		while( cur != NULL )
 		{
-			if( f(cur, p) ) return cur;
+			if( f(cur, p) )
+			{
+				return cur;
+			}
 			cur = cur->next;
 		}
 		return NULL;
 	}
 	template<typename FUNC>
-	node_ptr	find(FUNC& f) const
+	node_ptr find(FUNC& f) const
 	{
 		node_ptr cur = m_node;
 		while( cur != NULL )
 		{
-			if( f(cur) ) return cur;
+			if( f(cur) )
+			{
+				return cur;
+			}
 			cur = cur->next;
 		}
 		return NULL;
@@ -346,7 +407,10 @@ public:
 		for( int i=0; i < index; ++i )
 		{
 			cur = cur->next;
-			if( cur == NULL ) break;
+			if( cur == NULL )
+			{
+				break;
+			}
 		}
 		return cur;
 	}
@@ -408,7 +472,10 @@ Node FindList(const ::std::vector<Node>& list, Fn& f)
 {
 	for( typename ::std::vector<Node>::const_iterator it=list.begin(), end=list.end(); it != end; ++it )
 	{
-		if( f(*it) ) return *it;
+		if( f(*it) )
+		{
+			return *it;
+		}
 	}
 	return NULL;
 }
@@ -422,7 +489,10 @@ int CountIf(const iu_list<Node>& list, Fn& f)
 	int count = 0;
 	for( typename iu_list<Node>::const_iterator it = list.begin(), end=list.end(); it != end; ++it )
 	{
-		if( f(it) ) ++count;
+		if( f(it) )
+		{
+			++count;
+		}
 	}
 	return count;
 }

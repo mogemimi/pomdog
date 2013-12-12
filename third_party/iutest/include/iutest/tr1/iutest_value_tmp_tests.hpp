@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_value_tmp_tests_HPP_8C9EC454_788D_4605_984B_0686C969E531_
-#define INCG_IRIS_iutest_value_tmp_tests_HPP_8C9EC454_788D_4605_984B_0686C969E531_
+#ifndef INCG_IRIS_IUTEST_VALUE_TMP_TESTS_HPP_8C9EC454_788D_4605_984B_0686C969E531_
+#define INCG_IRIS_IUTEST_VALUE_TMP_TESTS_HPP_8C9EC454_788D_4605_984B_0686C969E531_
 
 //======================================================================
 // include

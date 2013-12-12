@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_case_HPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
-#define INCG_IRIS_iutest_case_HPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
+#ifndef INCG_IRIS_IUTEST_CASE_HPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
+#define INCG_IRIS_IUTEST_CASE_HPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
 
 //======================================================================
 // include

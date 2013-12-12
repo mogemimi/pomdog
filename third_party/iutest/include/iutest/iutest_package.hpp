@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_package_HPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
-#define INCG_IRIS_iutest_package_HPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
+#ifndef INCG_IRIS_IUTEST_PACKAGE_HPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
+#define INCG_IRIS_IUTEST_PACKAGE_HPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
 
 //======================================================================
 // include
@@ -26,6 +26,7 @@
 /**
  * @ingroup	TESTDEF
  * @brief	パッケージ名前空間の定義
+ * @param	name	= パッケージ名
 */
 #define IUTEST_PACKAGE(name)	IIUT_PACKAGE_(name)
 
@@ -36,7 +37,7 @@
 
 #if IUTEST_HAS_PACKAGE
 
-#define IUTEST_CONCAT_PACKAGE_(testcase_name)	IIUT_CONCAT_PACKAGE_I(testcase_name)
+#define IUTEST_CONCAT_PACKAGE_(testcase_name)	IIUT_CONCAT_PACKAGE_I(testcase_name).c_str()
 #define IIUT_CONCAT_PACKAGE_I(testcase_name)					\
 	iuTest_ConcatTestCaseName( iuTest_GetTestCasePackageName(	\
 	static_cast<iuTest_TestCasePackage*>(NULL))					\
@@ -92,6 +93,7 @@
 #define IUTEST_CONCAT_PACKAGE_(testcase_name)	IIUT_CONCAT_PACKAGE_I(testcase_name)
 #define IIUT_CONCAT_PACKAGE_I(testcase_name)	#testcase_name
 #define IIUT_PACKAGE_(name)						namespace name
+#define IUTEST_GET_PACKAGENAME_()				""
 
 #endif
 

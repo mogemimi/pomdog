@@ -18,8 +18,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_HPP_
-#define INCG_IRIS_iutest_HPP_
+#ifndef INCG_IRIS_IUTEST_HPP_
+#define INCG_IRIS_IUTEST_HPP_
 
 //======================================================================
 // include
@@ -165,6 +165,7 @@ namespace iutest
 /**
  * @ingroup		IUTEST_UTIL
  * @brief		明示的な成功
+ * @details		明示的に成功を報告します
 */
 #ifndef IUTEST_SUCCEED
 #  define IUTEST_SUCCEED()							IIUT_SUCCEED()
@@ -173,6 +174,7 @@ namespace iutest
 /**
  * @ingroup		IUTEST_UTIL
  * @brief		明示的な失敗
+ * @details		明示的に致命的な失敗を報告します
 */
 #ifndef IUTEST_FAIL
 #  define IUTEST_FAIL()								IIUT_FAIL()
@@ -181,6 +183,7 @@ namespace iutest
 /**
  * @ingroup		IUTEST_UTIL
  * @brief		明示的な失敗
+ * @details		明示的に致命的でない失敗を報告します
 */
 #ifndef IUTEST_ADD_FAILURE
 #  define IUTEST_ADD_FAILURE()						IIUT_ADD_FAILURE()
@@ -189,6 +192,7 @@ namespace iutest
 /**
  * @ingroup		IUTEST_UTIL
  * @brief		明示的な失敗
+ * @details		明示的に致命的でない失敗を報告します
  * @param		file	= ファイルパス
  * @param		line	= 行番号
 */
@@ -197,8 +201,9 @@ namespace iutest
 #endif
 
 /**
- * @ingroup	IUTEST_UTIL
- * @brief	テストの明示的なスキップ
+ * @ingroup		IUTEST_UTIL
+ * @brief		テストの明示的なスキップ
+ * @details		明示的にスキップを報告します
 */
 #ifndef IUTEST_SKIP
 #  define IUTEST_SKIP()								IUTEST_TEST_SKIP()
@@ -214,6 +219,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	== テスト
+ * @param	expected	= 期待値
+ * @param	actual		= 検査対象
 */
 #ifndef IUTEST_ASSERT_EQ
 #  define	IUTEST_ASSERT_EQ(expected, actual)		IUTEST_TEST_EQ(expected, actual, IUTEST_ASSERT_FAILURE)
@@ -221,6 +228,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	!= テスト
+ * @details	v1 と v2 が等しくないことを検証します
 */
 #ifndef IUTEST_ASSERT_NE
 #  define	IUTEST_ASSERT_NE(v1, v2)				IUTEST_TEST_NE(v1, v2, IUTEST_ASSERT_FAILURE)
@@ -228,6 +236,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	<= テスト
+ * @details	v1 <= v2 が成り立つことを検証します
 */
 #ifndef IUTEST_ASSERT_LE
 #  define	IUTEST_ASSERT_LE(v1, v2)				IUTEST_TEST_LE(v1, v2, IUTEST_ASSERT_FAILURE)
@@ -235,6 +244,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	< テスト
+ * @details	v1 < v2 が成り立つことを検証します
 */
 #ifndef IUTEST_ASSERT_LT
 #  define	IUTEST_ASSERT_LT(v1, v2)				IUTEST_TEST_LT(v1, v2, IUTEST_ASSERT_FAILURE)
@@ -242,13 +252,15 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	>= テスト
+ * @details	v1 >= v2 が成り立つことを検証します
 */
 #ifndef IUTEST_ASSERT_GE
 #  define	IUTEST_ASSERT_GE(v1, v2)				IUTEST_TEST_GE(v1, v2, IUTEST_ASSERT_FAILURE)
 #endif
 /**
  * @ingroup	IUTEST_ASSERT_
- * @brief	> テスト
+ * @brief	\> テスト
+ * @details	v1 > v2 が成り立つことを検証します
 */
 #ifndef IUTEST_ASSERT_GT
 #  define	IUTEST_ASSERT_GT(v1, v2)				IUTEST_TEST_GT(v1, v2, IUTEST_ASSERT_FAILURE)
@@ -257,6 +269,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	TRUE テスト
+ * @details	v が真であることを検証します
 */
 #ifndef IUTEST_ASSERT_TRUE
 #  define	IUTEST_ASSERT_TRUE(v)					IUTEST_TEST_TRUE(v, #v, IUTEST_ASSERT_FAILURE)
@@ -264,6 +277,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	FALSE テスト
+ * @details	v が偽であることを検証します
 */
 #ifndef IUTEST_ASSERT_FALSE
 #  define	IUTEST_ASSERT_FALSE(v)					IUTEST_TEST_FALSE(v, #v, IUTEST_ASSERT_FAILURE)
@@ -272,6 +286,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	NULL テスト
+ * @details	v が NULL であることを検証します
 */
 #ifndef IUTEST_ASSERT_NULL
 #  define	IUTEST_ASSERT_NULL(v)					IUTEST_TEST_NULL(v, IUTEST_ASSERT_FAILURE)
@@ -279,6 +294,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	NOT NULL テスト
+ * @details	v が NULL でないことを検証します
 */
 #ifndef IUTEST_ASSERT_NOTNULL
 #  define	IUTEST_ASSERT_NOTNULL(v)				IUTEST_TEST_NOTNULL(v, IUTEST_ASSERT_FAILURE)
@@ -287,6 +303,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	アドレス一致 テスト
+ * @details	v1 と v2 のアドレスが同じであることを検証します
 */
 #ifndef IUTEST_ASSERT_SAME
 #  define	IUTEST_ASSERT_SAME(v1, v2)				IUTEST_TEST_SAME(v1, v2, IUTEST_ASSERT_FAILURE)
@@ -295,6 +312,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	float の比較 テスト
+ * @param	expected	= 期待値
+ * @param	actual		= 検査対象
 */
 #ifndef IUTEST_ASSERT_FLOAT_EQ
 #  define	IUTEST_ASSERT_FLOAT_EQ(expected, actual)	IUTEST_TEST_FLOAT_EQ(expected, actual, IUTEST_ASSERT_FAILURE)
@@ -302,6 +321,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	double の比較 テスト
+ * @param	expected	= 期待値
+ * @param	actual		= 検査対象
 */
 #ifndef IUTEST_ASSERT_DOUBLE_EQ
 #  define	IUTEST_ASSERT_DOUBLE_EQ(expected, actual)	IUTEST_TEST_DOUBLE_EQ(expected, actual, IUTEST_ASSERT_FAILURE)
@@ -310,6 +331,9 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	２値の差の範囲 テスト
+ * @param	v1		= 値1
+ * @param	v2		= 値2
+ * @param	abs_v	= v1 と v2 の差分の期待値
 */
 #ifndef IUTEST_ASSERT_NEAR
 #  define	IUTEST_ASSERT_NEAR(v1, v2, abs_v)		IUTEST_TEST_NEAR(v1, v2, abs_v, IUTEST_ASSERT_FAILURE)
@@ -318,6 +342,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	文字列の一致 テスト
+ * @param	expected_str	= 期待値
+ * @param	actual_str		= 検査対象
 */
 #ifndef IUTEST_ASSERT_STREQ
 #  define	IUTEST_ASSERT_STREQ(expected_str, actual_str)	IUTEST_TEST_STREQ(expected_str, actual_str, IUTEST_ASSERT_FAILURE)
@@ -325,6 +351,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	文字列の不一致 テスト
+ * @details	v1 と v2 文字列が異なることを検証します
 */
 #ifndef IUTEST_ASSERT_STRNE
 #  define	IUTEST_ASSERT_STRNE(v1, v2)				IUTEST_TEST_STRNE(v1, v2, IUTEST_ASSERT_FAILURE)
@@ -333,6 +360,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	文字列の一致（大文字小文字区別なし） テスト
+ * @param	expected_str	= 期待値
+ * @param	actual_str		= 検査対象
 */
 #ifndef IUTEST_ASSERT_STRCASEEQ
 #  define	IUTEST_ASSERT_STRCASEEQ(expected_str, actual_str)	IUTEST_TEST_STRCASEEQ(expected_str, actual_str, IUTEST_ASSERT_FAILURE)
@@ -340,6 +369,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	文字列の不一致（大文字小文字区別なし） テスト
+ * @details	v1 と v2 文字列が異なることを検証します（大文字小文字区別なし）
 */
 #ifndef IUTEST_ASSERT_STRCASENE
 #  define	IUTEST_ASSERT_STRCASENE(v1, v2)			IUTEST_TEST_STRCASENE(v1, v2, IUTEST_ASSERT_FAILURE)
@@ -348,6 +378,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	HRESULT の成功 テスト
+ * @details	HRESULT が成功であることを検証します
 */
 #ifndef IUTEST_ASSERT_HRESULT_SUCCEEDED
 #  define IUTEST_ASSERT_HRESULT_SUCCEEDED(hr)		IUTEST_TEST_HRESULT_SUCCEEDED(hr, IUTEST_ASSERT_FAILURE)
@@ -355,6 +386,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	HRESULT の失敗 テスト
+ * @details	HRESULT が失敗であることを検証します
 */
 #ifndef IUTEST_ASSERT_HRESULT_FAILED
 #  define IUTEST_ASSERT_HRESULT_FAILED(hr)			IUTEST_TEST_HRESULT_FAILED(hr, IUTEST_ASSERT_FAILURE)
@@ -365,6 +397,9 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	throw テスト
+ * @details	statement が expected_exception を throw することを検証します
+ * @param	statement	= ステートメント
+ * @param	expected_exception = 期待する例外
 */
 #ifndef IUTEST_ASSERT_THROW
 #  define IUTEST_ASSERT_THROW(statement, expected_exception)	\
@@ -374,6 +409,10 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	throw value == テスト
+ * @details	statement が expected_exception を throw し、その値が expected_value と等しいことを検証します
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	expected_value		= 期待値
 */
 #ifndef IUTEST_ASSERT_THROW_VALUE_EQ
 #  define IUTEST_ASSERT_THROW_VALUE_EQ(statement, expected_exception, expected_value)	\
@@ -383,33 +422,47 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	throw value != テスト
+ * @details	statement が expected_exception を throw し、その値が v と等しくないことを検証します
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	v					= 値
 */
 #ifndef IUTEST_ASSERT_THROW_VALUE_NE
-#  define IUTEST_ASSERT_THROW_VALUE_NE(statement, expected_exception, expected_value)	\
-													IUTEST_TEST_THROW_VALUE_NE_(statement, expected_exception, expected_value, IUTEST_ASSERT_FAILURE)
+#  define IUTEST_ASSERT_THROW_VALUE_NE(statement, expected_exception, v)	\
+													IUTEST_TEST_THROW_VALUE_NE_(statement, expected_exception, v, IUTEST_ASSERT_FAILURE)
 #endif
 
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	throw value 文字列一致 テスト
+ * @details	statement が expected_exception を throw し、その文字列が expected_str と等しいことを検証します
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	expected_str		= 期待文字列
 */
 #ifndef IUTEST_ASSERT_THROW_VALUE_STREQ
-#  define IUTEST_ASSERT_THROW_VALUE_STREQ(statement, expected_exception, expected_value)	\
-													IUTEST_TEST_THROW_VALUE_STREQ_(statement, expected_exception, expected_value, IUTEST_ASSERT_FAILURE)
+#  define IUTEST_ASSERT_THROW_VALUE_STREQ(statement, expected_exception, expected_str)	\
+													IUTEST_TEST_THROW_VALUE_STREQ_(statement, expected_exception, expected_str, IUTEST_ASSERT_FAILURE)
 #endif
 
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	throw value 文字列一致（大文字小文字区別なし） テスト
+ * @details	statement が expected_exception を throw し、その文字列が expected_str と等しいことを検証します（大文字小文字区別なし）
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	expected_str		= 期待文字列
 */
 #ifndef IUTEST_ASSERT_THROW_VALUE_STRCASEEQ
-#  define IUTEST_ASSERT_THROW_VALUE_STRCASEEQ(statement, expected_exception, expected_value)	\
-													IUTEST_TEST_THROW_VALUE_STRCASEEQ_(statement, expected_exception, expected_value, IUTEST_ASSERT_FAILURE)
+#  define IUTEST_ASSERT_THROW_VALUE_STRCASEEQ(statement, expected_exception, expected_str)	\
+													IUTEST_TEST_THROW_VALUE_STRCASEEQ_(statement, expected_exception, expected_str, IUTEST_ASSERT_FAILURE)
 #endif
 
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	any throw テスト
+ * @details	statement が何らかの例外を投げることを検証します
+ * @param	statement = ステートメント
 */
 #ifndef IUTEST_ASSERT_ANY_THROW
 #  define IUTEST_ASSERT_ANY_THROW(statement)		IUTEST_TEST_ANY_THROW_(statement, IUTEST_ASSERT_FAILURE)
@@ -418,6 +471,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	no throw テスト
+ * @details	statement が例外を投げないことを検証します
+ * @param	statement = ステートメント
 */
 #ifndef IUTEST_ASSERT_NO_THROW
 #  define IUTEST_ASSERT_NO_THROW(statement)			IUTEST_TEST_NO_THROW_(statement, IUTEST_ASSERT_FAILURE)
@@ -427,15 +482,9 @@ namespace iutest
 
 /**
  * @ingroup	IUTEST_ASSERT_
- * @brief	no new fatal failure テスト
-*/
-#ifndef IUTEST_ASSERT_NO_FATAL_FAILURE
-#  define IUTEST_ASSERT_NO_FATAL_FAILURE(statement)	IUTEST_TEST_NO_FATAL_FAILURE_(statement, IUTEST_ASSERT_FAILURE)
-#endif
-
-/**
- * @ingroup	IUTEST_ASSERT_
  * @brief	no new failure テスト
+ * @details	statement で失敗がないことを検証します
+ * @param	statement = ステートメント
 */
 #ifndef IUTEST_ASSERT_NO_FAILURE
 #  define IUTEST_ASSERT_NO_FAILURE(statement)		IUTEST_TEST_NO_FAILURE_(statement, IUTEST_ASSERT_FAILURE)
@@ -443,7 +492,18 @@ namespace iutest
 
 /**
  * @ingroup	IUTEST_ASSERT_
+ * @brief	no new fatal failure テスト
+ * @details	statement で致命的な失敗がないことを検証します
+ * @param	statement = ステートメント
+*/
+#ifndef IUTEST_ASSERT_NO_FATAL_FAILURE
+#  define IUTEST_ASSERT_NO_FATAL_FAILURE(statement)	IUTEST_TEST_NO_FATAL_FAILURE_(statement, IUTEST_ASSERT_FAILURE)
+#endif
+
+/**
+ * @ingroup	IUTEST_ASSERT_
  * @brief	明示的な失敗
+ * @details		明示的に致命的な失敗を報告します
 */
 #ifndef IUTEST_ASSERT_FAIL
 #  define IUTEST_ASSERT_FAIL()						IIUT_FAIL()
@@ -460,6 +520,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	== テスト
+ * @param	expected	= 期待値
+ * @param	actual		= 検査対象
 */
 #ifndef IUTEST_EXPECT_EQ
 #  define	IUTEST_EXPECT_EQ(expected, actual)		IUTEST_TEST_EQ(expected, actual, IUTEST_EXPECT_FAILURE)
@@ -467,6 +529,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	!= テスト
+ * @details	v1 と v2 が等しくないことを検証します
 */
 #ifndef IUTEST_EXPECT_NE
 #  define	IUTEST_EXPECT_NE(v1, v2)				IUTEST_TEST_NE(v1, v2, IUTEST_EXPECT_FAILURE)
@@ -474,6 +537,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	<= テスト
+ * @details	v1 <= v2 が成り立つことを検証します
 */
 #ifndef IUTEST_EXPECT_LE
 #  define	IUTEST_EXPECT_LE(v1, v2)				IUTEST_TEST_LE(v1, v2, IUTEST_EXPECT_FAILURE)
@@ -481,6 +545,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	< テスト
+ * @details	v1 < v2 が成り立つことを検証します
 */
 #ifndef IUTEST_EXPECT_LT
 #  define	IUTEST_EXPECT_LT(v1, v2)				IUTEST_TEST_LT(v1, v2, IUTEST_EXPECT_FAILURE)
@@ -488,13 +553,15 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	>= テスト
+ * @details	v1 >= v2 が成り立つことを検証します
 */
 #ifndef IUTEST_EXPECT_GE
 #  define	IUTEST_EXPECT_GE(v1, v2)				IUTEST_TEST_GE(v1, v2, IUTEST_EXPECT_FAILURE)
 #endif
 /**
  * @ingroup	IUTEST_EXPECT_
- * @brief	> テスト
+ * @brief	\> テスト
+ * @details	v1 > v2 が成り立つことを検証します
 */
 #ifndef IUTEST_EXPECT_GT
 #  define	IUTEST_EXPECT_GT(v1, v2)				IUTEST_TEST_GT(v1, v2, IUTEST_EXPECT_FAILURE)
@@ -503,6 +570,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	TRUE テスト
+ * @details	v が真であることを検証します
 */
 #ifndef IUTEST_EXPECT_TRUE
 #  define	IUTEST_EXPECT_TRUE(v)					IUTEST_TEST_TRUE(v, #v, IUTEST_EXPECT_FAILURE)
@@ -510,6 +578,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	FALSE テスト
+ * @details	v が偽であることを検証します
 */
 #ifndef IUTEST_EXPECT_FALSE
 #  define	IUTEST_EXPECT_FALSE(v)					IUTEST_TEST_FALSE(v, #v, IUTEST_EXPECT_FAILURE)
@@ -518,6 +587,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	NULL テスト
+ * @details	v が NULL であることを検証します
 */
 #ifndef IUTEST_EXPECT_NULL
 #  define	IUTEST_EXPECT_NULL(v)					IUTEST_TEST_NULL(v, IUTEST_EXPECT_FAILURE)
@@ -525,6 +595,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	NOT NULL テスト
+ * @details	v が NULL でないことを検証します
 */
 #ifndef IUTEST_EXPECT_NOTNULL
 #  define	IUTEST_EXPECT_NOTNULL(v)				IUTEST_TEST_NOTNULL(v, IUTEST_EXPECT_FAILURE)
@@ -533,6 +604,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	アドレス一致 テスト
+ * @details	v1 と v2 のアドレスが同じであることを検証します
 */
 #ifndef IUTEST_EXPECT_SAME
 #  define	IUTEST_EXPECT_SAME(v1, v2)				IUTEST_TEST_SAME(v1, v2, IUTEST_EXPECT_FAILURE)
@@ -541,6 +613,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	float の比較 テスト
+ * @param	expected	= 期待値
+ * @param	actual		= 検査対象
 */
 #ifndef IUTEST_EXPECT_FLOAT_EQ
 #  define	IUTEST_EXPECT_FLOAT_EQ(expected, actual)	IUTEST_TEST_FLOAT_EQ(expected, actual, IUTEST_EXPECT_FAILURE)
@@ -548,6 +622,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	double の比較 テスト
+ * @param	expected	= 期待値
+ * @param	actual		= 検査対象
 */
 #ifndef IUTEST_EXPECT_DOUBLE_EQ
 #  define	IUTEST_EXPECT_DOUBLE_EQ(expected, actual)	IUTEST_TEST_DOUBLE_EQ(expected, actual, IUTEST_EXPECT_FAILURE)
@@ -556,6 +632,9 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	２値の差の範囲 テスト
+ * @param	v1		= 値1
+ * @param	v2		= 値2
+ * @param	abs_v	= v1 と v2 の差分の期待値
 */
 #ifndef IUTEST_EXPECT_NEAR
 #  define	IUTEST_EXPECT_NEAR(v1, v2, abs_v)		IUTEST_TEST_NEAR(v1, v2, abs_v, IUTEST_EXPECT_FAILURE)
@@ -564,6 +643,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	文字列の一致 テスト
+ * @param	expected_str	= 期待値
+ * @param	actual_str		= 検査対象
 */
 #ifndef IUTEST_EXPECT_STREQ
 #  define	IUTEST_EXPECT_STREQ(expected_str, actual_str)	IUTEST_TEST_STREQ(expected_str, actual_str, IUTEST_EXPECT_FAILURE)
@@ -571,6 +652,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	文字列の不一致 テスト
+ * @details	v1 と v2 文字列が異なることを検証します
 */
 #ifndef IUTEST_EXPECT_STRNE
 #  define	IUTEST_EXPECT_STRNE(v1, v2)				IUTEST_TEST_STRNE(v1, v2, IUTEST_EXPECT_FAILURE)
@@ -579,6 +661,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	文字列の一致（大文字小文字区別なし） テスト
+ * @param	expected_str	= 期待値
+ * @param	actual_str		= 検査対象
 */
 #ifndef IUTEST_EXPECT_STRCASEEQ
 #  define	IUTEST_EXPECT_STRCASEEQ(expected_str, actual_str)	IUTEST_TEST_STRCASEEQ(expected_str, actual_str, IUTEST_EXPECT_FAILURE)
@@ -586,6 +670,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	文字列の不一致（大文字小文字区別なし） テスト
+ * @details	v1 と v2 文字列が異なることを検証します（大文字小文字区別なし）
 */
 #ifndef IUTEST_EXPECT_STRCASENE
 #  define	IUTEST_EXPECT_STRCASENE(v1, v2)			IUTEST_TEST_STRCASENE(v1, v2, IUTEST_EXPECT_FAILURE)
@@ -594,6 +679,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	HRESULT の成功 テスト
+ * @details	HRESULT が成功であることを検証します
 */
 #ifndef IUTEST_EXPECT_HRESULT_SUCCEEDED
 #  define IUTEST_EXPECT_HRESULT_SUCCEEDED(hr)		IUTEST_TEST_HRESULT_SUCCEEDED(hr, IUTEST_EXPECT_FAILURE)
@@ -601,6 +687,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	HRESULT の失敗 テスト
+ * @details	HRESULT が失敗であることを検証します
 */
 #ifndef IUTEST_EXPECT_HRESULT_FAILED
 #  define IUTEST_EXPECT_HRESULT_FAILED(hr)			IUTEST_TEST_HRESULT_FAILED(hr, IUTEST_EXPECT_FAILURE)
@@ -611,6 +698,9 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	throw テスト
+ * @details	statement が expected_exception を throw することを検証します
+ * @param	statement	= ステートメント
+ * @param	expected_exception = 期待する例外
 */
 #ifndef IUTEST_EXPECT_THROW
 #  define IUTEST_EXPECT_THROW(statement, expected_exception)	\
@@ -620,6 +710,10 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	throw value == テスト
+ * @details	statement が expected_exception を throw し、その値が expected_value と等しいことを検証します
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	expected_value		= 期待値
 */
 #ifndef IUTEST_EXPECT_THROW_VALUE_EQ
 #  define IUTEST_EXPECT_THROW_VALUE_EQ(statement, expected_exception, expected_value)	\
@@ -629,33 +723,47 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	throw value != テスト
+ * @details	statement が expected_exception を throw し、その値が v と等しくないことを検証します
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	v					= 値
 */
 #ifndef IUTEST_EXPECT_THROW_VALUE_NE
-#  define IUTEST_EXPECT_THROW_VALUE_NE(statement, expected_exception, expected_value)	\
-													IUTEST_TEST_THROW_VALUE_NE_(statement, expected_exception, expected_value, IUTEST_EXPECT_FAILURE)
+#  define IUTEST_EXPECT_THROW_VALUE_NE(statement, expected_exception, v)	\
+													IUTEST_TEST_THROW_VALUE_NE_(statement, expected_exception, v, IUTEST_EXPECT_FAILURE)
 #endif
 
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	throw value 文字列一致 テスト
+ * @details	statement が expected_exception を throw し、その文字列が expected_str と等しいことを検証します
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	expected_str		= 期待文字列
 */
 #ifndef IUTEST_EXPECT_THROW_VALUE_STREQ
-#  define IUTEST_EXPECT_THROW_VALUE_STREQ(statement, expected_exception, expected_value)	\
-													IUTEST_TEST_THROW_VALUE_STREQ_(statement, expected_exception, expected_value, IUTEST_EXPECT_FAILURE)
+#  define IUTEST_EXPECT_THROW_VALUE_STREQ(statement, expected_exception, expected_str)	\
+													IUTEST_TEST_THROW_VALUE_STREQ_(statement, expected_exception, expected_str, IUTEST_EXPECT_FAILURE)
 #endif
 
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	throw value 文字列一致（大文字小文字区別なし） テスト
+ * @details	statement が expected_exception を throw し、その文字列が expected_str と等しいことを検証します（大文字小文字区別なし）
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	expected_str		= 期待文字列
 */
 #ifndef IUTEST_EXPECT_THROW_VALUE_STRCASEEQ
-#  define IUTEST_EXPECT_THROW_VALUE_STRCASEEQ(statement, expected_exception, expected_value)	\
-													IUTEST_TEST_THROW_VALUE_STRCASEEQ_(statement, expected_exception, expected_value, IUTEST_EXPECT_FAILURE)
+#  define IUTEST_EXPECT_THROW_VALUE_STRCASEEQ(statement, expected_exception, expected_str)	\
+													IUTEST_TEST_THROW_VALUE_STRCASEEQ_(statement, expected_exception, expected_str, IUTEST_EXPECT_FAILURE)
 #endif
 
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	any throw テスト
+ * @details	statement が何らかの例外を投げることを検証します
+ * @param	statement = ステートメント
 */
 #ifndef IUTEST_EXPECT_ANY_THROW
 #  define IUTEST_EXPECT_ANY_THROW(statement)		IUTEST_TEST_ANY_THROW_(statement, IUTEST_EXPECT_FAILURE)
@@ -664,6 +772,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	no throw テスト
+ * @details	statement が例外を投げないことを検証します
+ * @param	statement = ステートメント
 */
 #ifndef IUTEST_EXPECT_NO_THROW
 #  define IUTEST_EXPECT_NO_THROW(statement)			IUTEST_TEST_NO_THROW_(statement, IUTEST_EXPECT_FAILURE)
@@ -673,15 +783,9 @@ namespace iutest
 
 /**
  * @ingroup	IUTEST_EXPECT_
- * @brief	no new fatal failure テスト
-*/
-#ifndef IUTEST_EXPECT_NO_FATAL_FAILURE
-#  define IUTEST_EXPECT_NO_FATAL_FAILURE(statement)	IUTEST_TEST_NO_FATAL_FAILURE_(statement, IUTEST_EXPECT_FAILURE)
-#endif
-
-/**
- * @ingroup	IUTEST_EXPECT_
  * @brief	no new failure テスト
+ * @details	statement で失敗がないことを検証します
+ * @param	statement = ステートメント
 */
 #ifndef IUTEST_EXPECT_NO_FAILURE
 #  define IUTEST_EXPECT_NO_FAILURE(statement)		IUTEST_TEST_NO_FAILURE_(statement, IUTEST_EXPECT_FAILURE)
@@ -689,7 +793,18 @@ namespace iutest
 
 /**
  * @ingroup	IUTEST_EXPECT_
+ * @brief	no new fatal failure テスト
+ * @details	statement で致命的な失敗がないことを検証します
+ * @param	statement = ステートメント
+*/
+#ifndef IUTEST_EXPECT_NO_FATAL_FAILURE
+#  define IUTEST_EXPECT_NO_FATAL_FAILURE(statement)	IUTEST_TEST_NO_FATAL_FAILURE_(statement, IUTEST_EXPECT_FAILURE)
+#endif
+
+/**
+ * @ingroup	IUTEST_EXPECT_
  * @brief	明示的な失敗
+ * @details	明示的に致命的でない失敗を報告します
 */
 #ifndef IUTEST_EXPECT_FAIL
 #  define IUTEST_EXPECT_FAIL()						IIUT_ADD_FAILURE()
@@ -698,6 +813,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	明示的な失敗
+ * @details	明示的に致命的でない失敗を報告します
 */
 #ifndef IUTEST_EXPECT_FAIL_AT
 #  define IUTEST_EXPECT_FAIL_AT(file, line)			IIUT_ADD_FAILURE_AT(file, line)
@@ -714,6 +830,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	== テスト
+ * @param	expected	= 期待値
+ * @param	actual		= 検査対象
 */
 #ifndef IUTEST_INFORM_EQ
 #  define	IUTEST_INFORM_EQ(expected, actual)		IUTEST_TEST_EQ(expected, actual, IUTEST_INFORM_FAILURE)
@@ -721,6 +839,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	!= テスト
+ * @details	v1 と v2 が等しくないことを検証します
 */
 #ifndef IUTEST_INFORM_NE
 #  define	IUTEST_INFORM_NE(v1, v2)				IUTEST_TEST_NE(v1, v2, IUTEST_INFORM_FAILURE)
@@ -728,6 +847,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	<= テスト
+ * @details	v1 <= v2 が成り立つことを検証します
 */
 #ifndef IUTEST_INFORM_LE
 #  define	IUTEST_INFORM_LE(v1, v2)				IUTEST_TEST_LE(v1, v2, IUTEST_INFORM_FAILURE)
@@ -735,6 +855,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	< テスト
+ * @details	v1 < v2 が成り立つことを検証します
 */
 #ifndef IUTEST_INFORM_LT
 #  define	IUTEST_INFORM_LT(v1, v2)				IUTEST_TEST_LT(v1, v2, IUTEST_INFORM_FAILURE)
@@ -742,13 +863,15 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	>= テスト
+ * @details	v1 >= v2 が成り立つことを検証します
 */
 #ifndef IUTEST_INFORM_GE
 #  define	IUTEST_INFORM_GE(v1, v2)				IUTEST_TEST_GE(v1, v2, IUTEST_INFORM_FAILURE)
 #endif
 /**
  * @ingroup	IUTEST_INFORM_
- * @brief	> テスト
+ * @brief	\> テスト
+ * @details	v1 > v2 が成り立つことを検証します
 */
 #ifndef IUTEST_INFORM_GT
 #  define	IUTEST_INFORM_GT(v1, v2)				IUTEST_TEST_GT(v1, v2, IUTEST_INFORM_FAILURE)
@@ -757,6 +880,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	TRUE テスト
+ * @details	v が真であることを検証します
 */
 #ifndef IUTEST_INFORM_TRUE
 #  define	IUTEST_INFORM_TRUE(v)					IUTEST_TEST_TRUE(v, #v, IUTEST_INFORM_FAILURE)
@@ -764,6 +888,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	FALSE テスト
+ * @details	v が偽であることを検証します
 */
 #ifndef IUTEST_INFORM_FALSE
 #  define	IUTEST_INFORM_FALSE(v)					IUTEST_TEST_FALSE(v, #v, IUTEST_INFORM_FAILURE)
@@ -772,6 +897,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	NULL テスト
+ * @details	v が NULL であることを検証します
 */
 #ifndef IUTEST_INFORM_NULL
 #  define	IUTEST_INFORM_NULL(v)					IUTEST_TEST_NULL(v, IUTEST_INFORM_FAILURE)
@@ -779,6 +905,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	NOT NULL テスト
+ * @details	v が NULL でないことを検証します
 */
 #ifndef IUTEST_INFORM_NOTNULL
 #  define	IUTEST_INFORM_NOTNULL(v)				IUTEST_TEST_NOTNULL(v, IUTEST_INFORM_FAILURE)
@@ -787,6 +914,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	アドレス一致 テスト
+ * @details	v1 と v2 のアドレスが同じであることを検証します
 */
 #ifndef IUTEST_INFORM_SAME
 #  define	IUTEST_INFORM_SAME(v1, v2)				IUTEST_TEST_SAME(v1, v2, IUTEST_INFORM_FAILURE)
@@ -795,6 +923,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	float の比較 テスト
+ * @param	expected	= 期待値
+ * @param	actual		= 検査対象
 */
 #ifndef IUTEST_INFORM_FLOAT_EQ
 #  define	IUTEST_INFORM_FLOAT_EQ(expected, actual)	IUTEST_TEST_FLOAT_EQ(expected, actual, IUTEST_INFORM_FAILURE)
@@ -802,6 +932,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	double の比較 テスト
+ * @param	expected	= 期待値
+ * @param	actual		= 検査対象
 */
 #ifndef IUTEST_INFORM_DOUBLE_EQ
 #  define	IUTEST_INFORM_DOUBLE_EQ(expected, actual)	IUTEST_TEST_DOUBLE_EQ(expected, actual, IUTEST_INFORM_FAILURE)
@@ -810,6 +942,9 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	２値の差の範囲 テスト
+ * @param	v1		= 値1
+ * @param	v2		= 値2
+ * @param	abs_v	= v1 と v2 の差分の期待値
 */
 #ifndef IUTEST_INFORM_NEAR
 #  define	IUTEST_INFORM_NEAR(v1, v2, abs_v)		IUTEST_TEST_NEAR(v1, v2, abs_v, IUTEST_INFORM_FAILURE)
@@ -818,6 +953,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	文字列の一致 テスト
+ * @param	expected_str	= 期待値
+ * @param	actual_str		= 検査対象
 */
 #ifndef IUTEST_INFORM_STREQ
 #  define	IUTEST_INFORM_STREQ(expected_str, actual_str)	IUTEST_TEST_STREQ(expected_str, actual_str, IUTEST_INFORM_FAILURE)
@@ -825,6 +962,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	文字列の不一致 テスト
+ * @details	v1 と v2 文字列が異なることを検証します
 */
 #ifndef IUTEST_INFORM_STRNE
 #  define	IUTEST_INFORM_STRNE(v1, v2)				IUTEST_TEST_STRNE(v1, v2, IUTEST_INFORM_FAILURE)
@@ -833,6 +971,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	文字列の一致（大文字小文字区別なし） テスト
+ * @param	expected_str	= 期待値
+ * @param	actual_str		= 検査対象
 */
 #ifndef IUTEST_INFORM_STRCASEEQ
 #  define	IUTEST_INFORM_STRCASEEQ(expected_str, actual_str)	IUTEST_TEST_STRCASEEQ(expected_str, actual_str, IUTEST_INFORM_FAILURE)
@@ -840,6 +980,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	文字列の不一致（大文字小文字区別なし） テスト
+ * @details	v1 と v2 文字列が異なることを検証します（大文字小文字区別なし）
 */
 #ifndef IUTEST_INFORM_STRCASENE
 #  define	IUTEST_INFORM_STRCASENE(v1, v2)			IUTEST_TEST_STRCASENE(v1, v2, IUTEST_INFORM_FAILURE)
@@ -848,6 +989,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	HRESULT の成功 テスト
+ * @details	HRESULT が成功であることを検証します
 */
 #ifndef IUTEST_INFORM_HRESULT_SUCCEEDED
 #  define IUTEST_INFORM_HRESULT_SUCCEEDED(hr)		IUTEST_TEST_HRESULT_SUCCEEDED(hr, IUTEST_INFORM_FAILURE)
@@ -855,6 +997,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	HRESULT の失敗 テスト
+ * @details	HRESULT が失敗であることを検証します
 */
 #ifndef IUTEST_INFORM_HRESULT_FAILED
 #  define IUTEST_INFORM_HRESULT_FAILED(hr)			IUTEST_TEST_HRESULT_FAILED(hr, IUTEST_INFORM_FAILURE)
@@ -865,6 +1008,9 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	throw テスト
+ * @details	statement が expected_exception を throw することを検証します
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
 */
 #ifndef IUTEST_INFORM_THROW
 #  define IUTEST_INFORM_THROW(statement, expected_exception)	\
@@ -874,6 +1020,10 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	throw value == テスト
+ * @details	statement が expected_exception を throw し、その値が expected_value と等しいことを検証します
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	expected_value		= 期待値
 */
 #ifndef IUTEST_INFORM_THROW_VALUE_EQ
 #  define IUTEST_INFORM_THROW_VALUE_EQ(statement, expected_exception, expected_value)	\
@@ -883,33 +1033,47 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	throw value != テスト
+ * @details	statement が expected_exception を throw し、その値が v と等しくないことを検証します
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	v					= 値
 */
 #ifndef IUTEST_INFORM_THROW_VALUE_NE
-#  define IUTEST_INFORM_THROW_VALUE_NE(statement, expected_exception, expected_value)	\
-													IUTEST_TEST_THROW_VALUE_NE_(statement, expected_exception, expected_value, IUTEST_INFORM_FAILURE)
+#  define IUTEST_INFORM_THROW_VALUE_NE(statement, expected_exception, v)	\
+													IUTEST_TEST_THROW_VALUE_NE_(statement, expected_exception, v, IUTEST_INFORM_FAILURE)
 #endif
 
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	throw value 文字列一致 テスト
+ * @details	statement が expected_exception を throw し、その文字列が expected_str と等しいことを検証します
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	expected_str		= 期待文字列
 */
 #ifndef IUTEST_INFORM_THROW_VALUE_STREQ
-#  define IUTEST_INFORM_THROW_VALUE_STREQ(statement, expected_exception, expected_value)	\
-													IUTEST_TEST_THROW_VALUE_STREQ_(statement, expected_exception, expected_value, IUTEST_INFORM_FAILURE)
+#  define IUTEST_INFORM_THROW_VALUE_STREQ(statement, expected_exception, expected_str)	\
+													IUTEST_TEST_THROW_VALUE_STREQ_(statement, expected_exception, expected_str, IUTEST_INFORM_FAILURE)
 #endif
 
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	throw value 文字列一致（大文字小文字区別なし） テスト
+ * @details	statement が expected_exception を throw し、その文字列が expected_str と等しいことを検証します（大文字小文字区別なし）
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	expected_str		= 期待文字列
 */
 #ifndef IUTEST_INFORM_THROW_VALUE_STRCASEEQ
-#  define IUTEST_INFORM_THROW_VALUE_STRCASEEQ(statement, expected_exception, expected_value)	\
-													IUTEST_TEST_THROW_VALUE_STRCASEEQ_(statement, expected_exception, expected_value, IUTEST_INFORM_FAILURE)
+#  define IUTEST_INFORM_THROW_VALUE_STRCASEEQ(statement, expected_exception, expected_str)	\
+													IUTEST_TEST_THROW_VALUE_STRCASEEQ_(statement, expected_exception, expected_str, IUTEST_INFORM_FAILURE)
 #endif
 
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	any throw テスト
+ * @details	statement が何らかの例外を投げることを検証します
+ * @param	statement = ステートメント
 */
 #ifndef IUTEST_INFORM_ANY_THROW
 #  define IUTEST_INFORM_ANY_THROW(statement)		IUTEST_TEST_ANY_THROW_(statement, IUTEST_INFORM_FAILURE)
@@ -918,6 +1082,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	no throw テスト
+ * @details	statement が例外を投げないことを検証します
+ * @param	statement = ステートメント
 */
 #ifndef IUTEST_INFORM_NO_THROW
 #  define IUTEST_INFORM_NO_THROW(statement)			IUTEST_TEST_NO_THROW_(statement, IUTEST_INFORM_FAILURE)
@@ -927,7 +1093,9 @@ namespace iutest
 
 /**
  * @ingroup	IUTEST_INFORM_
- * @brief	no new fatal failure テスト
+ * @brief	no new failure テスト
+ * @details	statement で失敗がないことを検証します
+ * @param	statement = ステートメント
 */
 #ifndef IUTEST_INFORM_NO_FAILURE
 #  define IUTEST_INFORM_NO_FAILURE(statement)		IUTEST_TEST_NO_FAILURE_(statement, IUTEST_INFORM_FAILURE)
@@ -935,7 +1103,9 @@ namespace iutest
 
 /**
  * @ingroup	IUTEST_INFORM_
- * @brief	no new failure テスト
+ * @brief	no new fatal failure テスト
+ * @details	statement で致命的な失敗がないことを検証します
+ * @param	statement = ステートメント
 */
 #ifndef IUTEST_INFORM_NO_FATAL_FAILURE
 #  define IUTEST_INFORM_NO_FATAL_FAILURE(statement)	IUTEST_TEST_NO_FATAL_FAILURE_(statement, IUTEST_INFORM_FAILURE)
@@ -950,6 +1120,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	== テスト
+ * @param	expected	= 期待値
+ * @param	actual		= 検査対象
 */
 #ifndef IUTEST_ASSUME_EQ
 #  define	IUTEST_ASSUME_EQ(expected, actual)		IUTEST_TEST_EQ(expected, actual, IUTEST_ASSUME_FAILURE)
@@ -957,6 +1129,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	!= テスト
+ * @details	v1 と v2 が等しくないことを検証します
 */
 #ifndef IUTEST_ASSUME_NE
 #  define	IUTEST_ASSUME_NE(v1, v2)				IUTEST_TEST_NE(v1, v2, IUTEST_ASSUME_FAILURE)
@@ -964,6 +1137,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	<= テスト
+ * @details	v1 <= v2 が成り立つことを検証します
 */
 #ifndef IUTEST_ASSUME_LE
 #  define	IUTEST_ASSUME_LE(v1, v2)				IUTEST_TEST_LE(v1, v2, IUTEST_ASSUME_FAILURE)
@@ -971,6 +1145,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	< テスト
+ * @details	v1 < v2 が成り立つことを検証します
 */
 #ifndef IUTEST_ASSUME_LT
 #  define	IUTEST_ASSUME_LT(v1, v2)				IUTEST_TEST_LT(v1, v2, IUTEST_ASSUME_FAILURE)
@@ -978,13 +1153,15 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	>= テスト
+ * @details	v1 >= v2 が成り立つことを検証します
 */
 #ifndef IUTEST_ASSUME_GE
 #  define	IUTEST_ASSUME_GE(v1, v2)				IUTEST_TEST_GE(v1, v2, IUTEST_ASSUME_FAILURE)
 #endif
 /**
  * @ingroup	IUTEST_ASSUME_
- * @brief	> テスト
+ * @brief	\> テスト
+ * @details	v1 > v2 が成り立つことを検証します
 */
 #ifndef IUTEST_ASSUME_GT
 #  define	IUTEST_ASSUME_GT(v1, v2)				IUTEST_TEST_GT(v1, v2, IUTEST_ASSUME_FAILURE)
@@ -993,6 +1170,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	TRUE テスト
+ * @details	v が真であることを検証します
 */
 #ifndef IUTEST_ASSUME_TRUE
 #  define	IUTEST_ASSUME_TRUE(v)					IUTEST_TEST_TRUE(v, #v, IUTEST_ASSUME_FAILURE)
@@ -1000,6 +1178,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	FALSE テスト
+ * @details	v が偽であることを検証します
 */
 #ifndef IUTEST_ASSUME_FALSE
 #  define	IUTEST_ASSUME_FALSE(v)					IUTEST_TEST_FALSE(v, #v, IUTEST_ASSUME_FAILURE)
@@ -1008,6 +1187,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	NULL テスト
+ * @details	v が NULL であることを検証します
 */
 #ifndef IUTEST_ASSUME_NULL
 #  define	IUTEST_ASSUME_NULL(v)					IUTEST_TEST_NULL(v, IUTEST_ASSUME_FAILURE)
@@ -1015,6 +1195,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	NOT NULL テスト
+ * @details	v が NULL でないことを検証します
 */
 #ifndef IUTEST_ASSUME_NOTNULL
 #  define	IUTEST_ASSUME_NOTNULL(v)				IUTEST_TEST_NOTNULL(v, IUTEST_ASSUME_FAILURE)
@@ -1023,6 +1204,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	アドレス一致 テスト
+ * @details	v1 と v2 のアドレスが同じであることを検証します
 */
 #ifndef IUTEST_ASSUME_SAME
 #  define	IUTEST_ASSUME_SAME(v1, v2)				IUTEST_TEST_SAME(v1, v2, IUTEST_ASSUME_FAILURE)
@@ -1031,6 +1213,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	float の比較 テスト
+ * @param	expected	= 期待値
+ * @param	actual		= 検査対象
 */
 #ifndef IUTEST_ASSUME_FLOAT_EQ
 #  define	IUTEST_ASSUME_FLOAT_EQ(expected, actual)	IUTEST_TEST_FLOAT_EQ(expected, actual, IUTEST_ASSUME_FAILURE)
@@ -1038,6 +1222,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	double の比較 テスト
+ * @param	expected	= 期待値
+ * @param	actual		= 検査対象
 */
 #ifndef IUTEST_ASSUME_DOUBLE_EQ
 #  define	IUTEST_ASSUME_DOUBLE_EQ(expected, actual)	IUTEST_TEST_DOUBLE_EQ(expected, actual, IUTEST_ASSUME_FAILURE)
@@ -1046,6 +1232,9 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	２値の差の範囲 テスト
+ * @param	v1		= 値1
+ * @param	v2		= 値2
+ * @param	abs_v	= v1 と v2 の差分の期待値
 */
 #ifndef IUTEST_ASSUME_NEAR
 #  define	IUTEST_ASSUME_NEAR(v1, v2, abs_v)		IUTEST_TEST_NEAR(v1, v2, abs_v, IUTEST_ASSUME_FAILURE)
@@ -1054,6 +1243,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	文字列の一致 テスト
+ * @param	expected_str	= 期待値
+ * @param	actual_str		= 検査対象
 */
 #ifndef IUTEST_ASSUME_STREQ
 #  define	IUTEST_ASSUME_STREQ(expected_str, actual_str)	IUTEST_TEST_STREQ(expected_str, actual_str, IUTEST_ASSUME_FAILURE)
@@ -1061,6 +1252,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	文字列の不一致 テスト
+ * @details	v1 と v2 文字列が異なることを検証します
 */
 #ifndef IUTEST_ASSUME_STRNE
 #  define	IUTEST_ASSUME_STRNE(v1, v2)				IUTEST_TEST_STRNE(v1, v2, IUTEST_ASSUME_FAILURE)
@@ -1069,6 +1261,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	文字列の一致（大文字小文字区別なし） テスト
+ * @param	expected_str	= 期待値
+ * @param	actual_str		= 検査対象
 */
 #ifndef IUTEST_ASSUME_STRCASEEQ
 #  define	IUTEST_ASSUME_STRCASEEQ(expected_str, actual_str)	IUTEST_TEST_STRCASEEQ(expected_str, actual_str, IUTEST_ASSUME_FAILURE)
@@ -1076,6 +1270,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	文字列の不一致（大文字小文字区別なし） テスト
+ * @details	v1 と v2 文字列が異なることを検証します（大文字小文字区別なし）
 */
 #ifndef IUTEST_ASSUME_STRCASENE
 #  define	IUTEST_ASSUME_STRCASENE(v1, v2)			IUTEST_TEST_STRCASENE(v1, v2, IUTEST_ASSUME_FAILURE)
@@ -1084,6 +1279,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	HRESULT の成功 テスト
+ * @details	HRESULT が成功であることを検証します
 */
 #ifndef IUTEST_ASSUME_HRESULT_SUCCEEDED
 #  define IUTEST_ASSUME_HRESULT_SUCCEEDED(hr)		IUTEST_TEST_HRESULT_SUCCEEDED(hr, IUTEST_ASSUME_FAILURE)
@@ -1091,6 +1287,7 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	HRESULT の失敗 テスト
+ * @details	HRESULT が失敗であることを検証します
 */
 #ifndef IUTEST_ASSUME_HRESULT_FAILED
 #  define IUTEST_ASSUME_HRESULT_FAILED(hr)			IUTEST_TEST_HRESULT_FAILED(hr, IUTEST_ASSUME_FAILURE)
@@ -1101,6 +1298,9 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	throw テスト
+ * @details	statement が expected_exception を throw することを検証します
+ * @param	statement	= ステートメント
+ * @param	expected_exception = 期待する例外
 */
 #ifndef IUTEST_ASSUME_THROW
 #  define IUTEST_ASSUME_THROW(statement, expected_exception)	\
@@ -1110,6 +1310,10 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	throw value == テスト
+ * @details	statement が expected_exception を throw し、その値が expected_value と等しいことを検証します
+ * @param	statement	= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	expected_value		= 期待値
 */
 #ifndef IUTEST_ASSUME_THROW_VALUE_EQ
 #  define IUTEST_ASSUME_THROW_VALUE_EQ(statement, expected_exception, expected_value)	\
@@ -1119,33 +1323,47 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	throw value != テスト
+ * @details	statement が expected_exception を throw し、その値が v と等しくないことを検証します
+ * @param	statement	= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	v			= 値
 */
 #ifndef IUTEST_ASSUME_THROW_VALUE_NE
-#  define IUTEST_ASSUME_THROW_VALUE_NE(statement, expected_exception, expected_value)	\
-													IUTEST_TEST_THROW_VALUE_NE_(statement, expected_exception, expected_value, IUTEST_ASSUME_FAILURE)
+#  define IUTEST_ASSUME_THROW_VALUE_NE(statement, expected_exception, v)	\
+													IUTEST_TEST_THROW_VALUE_NE_(statement, expected_exception, v, IUTEST_ASSUME_FAILURE)
 #endif
 
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	throw value 文字列一致 テスト
+ * @details	statement が expected_exception を throw し、その文字列が expected_str と等しいことを検証します
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	expected_str		= 期待文字列
 */
 #ifndef IUTEST_ASSUME_THROW_VALUE_STREQ
-#  define IUTEST_ASSUME_THROW_VALUE_STREQ(statement, expected_exception, expected_value)	\
-													IUTEST_TEST_THROW_VALUE_STREQ_(statement, expected_exception, expected_value, IUTEST_ASSUME_FAILURE)
+#  define IUTEST_ASSUME_THROW_VALUE_STREQ(statement, expected_exception, expected_str)	\
+													IUTEST_TEST_THROW_VALUE_STREQ_(statement, expected_exception, expected_str, IUTEST_ASSUME_FAILURE)
 #endif
 
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	throw value 文字列一致（大文字小文字区別なし） テスト
+ * @details	statement が expected_exception を throw し、その文字列が expected_str と等しいことを検証します（大文字小文字区別なし）
+ * @param	statement			= ステートメント
+ * @param	expected_exception	= 期待する例外
+ * @param	expected_str		= 期待文字列
 */
 #ifndef IUTEST_ASSUME_THROW_VALUE_STRCASEEQ
-#  define IUTEST_ASSUME_THROW_VALUE_STRCASEEQ(statement, expected_exception, expected_value)	\
-													IUTEST_TEST_THROW_VALUE_STRCASEEQ_(statement, expected_exception, expected_value, IUTEST_ASSUME_FAILURE)
+#  define IUTEST_ASSUME_THROW_VALUE_STRCASEEQ(statement, expected_exception, expected_str)	\
+													IUTEST_TEST_THROW_VALUE_STRCASEEQ_(statement, expected_exception, expected_str, IUTEST_ASSUME_FAILURE)
 #endif
 
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	any throw テスト
+ * @details	statement が何らかの例外を投げることを検証します
+ * @param	statement = ステートメント
 */
 #ifndef IUTEST_ASSUME_ANY_THROW
 #  define IUTEST_ASSUME_ANY_THROW(statement)		IUTEST_TEST_ANY_THROW_(statement, IUTEST_ASSUME_FAILURE)
@@ -1154,6 +1372,8 @@ namespace iutest
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	no throw テスト
+ * @details	statement が例外を投げないことを検証します
+ * @param	statement = ステートメント
 */
 #ifndef IUTEST_ASSUME_NO_THROW
 #  define IUTEST_ASSUME_NO_THROW(statement)			IUTEST_TEST_NO_THROW_(statement, IUTEST_ASSUME_FAILURE)
@@ -1163,7 +1383,9 @@ namespace iutest
 
 /**
  * @ingroup	IUTEST_ASSUME_
- * @brief	no new fatal failure テスト
+ * @brief	no new failure テスト
+ * @details	statement で失敗がないことを検証します
+ * @param	statement = ステートメント
 */
 #ifndef IUTEST_ASSUME_NO_FAILURE
 #  define IUTEST_ASSUME_NO_FAILURE(statement)		IUTEST_TEST_NO_FAILURE_(statement, IUTEST_ASSUME_FAILURE)
@@ -1171,7 +1393,9 @@ namespace iutest
 
 /**
  * @ingroup	IUTEST_ASSUME_
- * @brief	no new failure テスト
+ * @brief	no new fatal failure テスト
+ * @details	statement で致命的な失敗がないことを検証します
+ * @param	statement = ステートメント
 */
 #ifndef IUTEST_ASSUME_NO_FATAL_FAILURE
 #  define IUTEST_ASSUME_NO_FATAL_FAILURE(statement)	IUTEST_TEST_NO_FATAL_FAILURE_(statement, IUTEST_ASSUME_FAILURE)
@@ -1258,7 +1482,8 @@ inline void	IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(int* pargc, const wchar_t*
 template<typename CharType>
 inline void	IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(::std::vector< ::std::basic_string<CharType> >& argv)
 {
-	TestEnv::ParseCommandLine(argv); UnitTestSource::GetInstance().Initialize();
+	TestEnv::ParseCommandLine(argv);
+	UnitTestSource::GetInstance().Initialize();
 }
 
 /**
@@ -1267,7 +1492,7 @@ inline void	IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(::std::vector< ::std::basi
  * @return	登録されたクラスアドレス
  * @note	メモリ管理はしない。new した Environment はユーザーが解放する
 */
-inline Environment IUTEST_ATTRIBUTE_UNUSED_ * AddGlobalTestEnvironment(Environment* env)
+inline Environment* IUTEST_ATTRIBUTE_UNUSED_ AddGlobalTestEnvironment(Environment* env)
 {
 	return TestEnv::AddGlobalTestEnvironment(env);
 }

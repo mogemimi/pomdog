@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_time_IPP_C6B9E65B_4059_4175_A6DB_397DBF338AA8_
-#define INCG_IRIS_iutest_time_IPP_C6B9E65B_4059_4175_A6DB_397DBF338AA8_
+#ifndef INCG_IRIS_IUTEST_TIME_IPP_C6B9E65B_4059_4175_A6DB_397DBF338AA8_
+#define INCG_IRIS_IUTEST_TIME_IPP_C6B9E65B_4059_4175_A6DB_397DBF338AA8_
 
 //======================================================================
 // include
@@ -44,7 +44,10 @@ IUTEST_IPP_INLINE ::std::string	FormatTimeInMillisecAsIso8601(TimeInMillisec mse
 IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_BEGIN()
 	const struct tm* const t = localtime(&sec);
 IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
-	if( t == NULL ) return "";
+	if( t == NULL )
+	{
+		return "";
+	}
 
 	detail::iuStringStream::type ss;
 	ss << (t->tm_year+1900);

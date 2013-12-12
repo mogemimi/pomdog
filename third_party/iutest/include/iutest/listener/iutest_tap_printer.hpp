@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_tap_printer_HPP_77055C2B_AAE1_4944_A61C_26C58B04B37B_
-#define INCG_IRIS_iutest_tap_printer_HPP_77055C2B_AAE1_4944_A61C_26C58B04B37B_
+#ifndef INCG_IRIS_IUTEST_TAP_PRINTER_HPP_77055C2B_AAE1_4944_A61C_26C58B04B37B_
+#define INCG_IRIS_IUTEST_TAP_PRINTER_HPP_77055C2B_AAE1_4944_A61C_26C58B04B37B_
 
 //======================================================================
 // include
@@ -188,7 +188,10 @@ inline void TAPFileGeneratorListener::OnTestProgramEnd(const UnitTest& test)
 
 		IUTEST_UNUSED_VAR(test);
 		IFile* fp = detail::IFileSystem::New();
-		if( fp == NULL ) return;
+		if( fp == NULL )
+		{
+			return;
+		}
 
 		::std::string filepath = m_output_path;
 		::std::string name = test_case.name();

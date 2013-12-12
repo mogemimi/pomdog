@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_DETAIL_TAGGED_HPP
-#define POMDOG_DETAIL_TAGGED_HPP
+#ifndef POMDOG_DETAIL_TAGGED_1B3449F5_9833_496C_A481_71FB7536CBF5_HPP
+#define POMDOG_DETAIL_TAGGED_1B3449F5_9833_496C_A481_71FB7536CBF5_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -84,4 +84,4 @@ struct hash<Pomdog::Details::Tagged<T, U>>
 
 }// namespace std
 
-#endif // !defined(POMDOG_DETAIL_TAGGED_HPP)
+#endif // !defined(POMDOG_DETAIL_TAGGED_1B3449F5_9833_496C_A481_71FB7536CBF5_HPP)

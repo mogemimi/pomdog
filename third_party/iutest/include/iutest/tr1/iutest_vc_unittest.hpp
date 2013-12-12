@@ -14,8 +14,9 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_vc_unittest_HPP_5CA7C30C_2D2A_40a1_A9DE_83EAB4527787_
-#define INCG_IRIS_iutest_vc_unittest_HPP_5CA7C30C_2D2A_40a1_A9DE_83EAB4527787_
+#ifndef INCG_IRIS_IUTEST_VC_UNITTEST_HPP_5CA7C30C_2D2A_40A1_A9DE_83EAB4527787_
+#define INCG_IRIS_IUTEST_VC_UNITTEST_HPP_5CA7C30C_2D2A_40A1_A9DE_83EAB4527787_
+
 
 //======================================================================
 // include
@@ -114,8 +115,8 @@ IUTEST_MAKE_SCOPED_PEEP(::iutest::detail::iuFactoryBase* ::iutest::TestInfo::*, 
 	private: static int	AddRegister(void) {													\
 			static ::iutest::detail::ParamTestInstance< className > testinfo(#testname_);	\
 			::iutest::UnitTest::GetInstance()->parameterized_test_registry().				\
-			GetTestCasePatternHolder< testcase_ >(#testcase_)->AddTestPattern(&testinfo);	\
-			return 0;																		\
+			GetTestCasePatternHolder< testcase_ >(#testcase_, IUTEST_GET_PACKAGENAME_())	\
+				->AddTestPattern(&testinfo); return 0;										\
 		}																					\
 		static int dummy_;																	\
 	};																						\
@@ -228,7 +229,10 @@ public:
 	void OnTestStart(const char* testcase_name, const char* testinfo_name)
 	{
 		const ::iutest::TestInfo* testinfo = iuutil::FindTestInfo(testcase_name, testinfo_name);
-		if( testinfo == NULL ) return;
+		if( testinfo == NULL )
+		{
+			return;
+		}
 		::iutest::TestEventListeners& listeners = ::iutest::UnitTest::GetInstance()->listeners();
 		::iutest::TestEventListener* repeator = 
 #define testing	iutest
@@ -239,7 +243,10 @@ public:
 	void OnTestEnd(const char* testcase_name, const char* testinfo_name)
 	{
 		const ::iutest::TestInfo* testinfo = iuutil::FindTestInfo(testcase_name, testinfo_name);
-		if( testinfo == NULL ) return;
+		if( testinfo == NULL )
+		{
+			return;
+		}
 		::iutest::TestEventListeners& listeners = ::iutest::UnitTest::GetInstance()->listeners();
 		::iutest::TestEventListener* repeator = 
 #define testing	iutest
@@ -259,7 +266,10 @@ public:
 	virtual void voutput(const char* fmt, va_list va)
 	{
 		int length = _vscprintf(fmt, va);
-		if( length <= 0 ) return;
+		if( length <= 0 )
+		{
+			return;
+		}
 		length += 1;
 		char* buf = new char [length];
 		vsprintf_s(buf, length, fmt, va);

@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_ignore_HPP_D87CADCE_110D_43CE_9E68_3B6BB0B91E66_
-#define INCG_IRIS_iutest_ignore_HPP_D87CADCE_110D_43CE_9E68_3B6BB0B91E66_
+#ifndef INCG_IRIS_IUTEST_IGNORE_HPP_D87CADCE_110D_43CE_9E68_3B6BB0B91E66_
+#define INCG_IRIS_IUTEST_IGNORE_HPP_D87CADCE_110D_43CE_9E68_3B6BB0B91E66_
 
 //======================================================================
 // define

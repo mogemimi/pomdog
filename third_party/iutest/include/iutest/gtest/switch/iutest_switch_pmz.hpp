@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_switch_pmz_HPP_3913D1E7_E6FD_49b9_BB4C_795939FEB5C5_
-#define INCG_IRIS_iutest_switch_pmz_HPP_3913D1E7_E6FD_49b9_BB4C_795939FEB5C5_
+#ifndef INCG_IRIS_IUTEST_SWITCH_PMZ_HPP_3913D1E7_E6FD_49B9_BB4C_795939FEB5C5_
+#define INCG_IRIS_IUTEST_SWITCH_PMZ_HPP_3913D1E7_E6FD_49B9_BB4C_795939FEB5C5_
 
 #if !defined(IUTEST_USE_GTEST)
 
@@ -26,7 +26,7 @@
 
 //======================================================================
 // undef
-#ifdef INCG_IRIS_iutest_HPP_
+#ifdef INCG_IRIS_IUTEST_HPP_
 
 #undef IUTEST_HAS_PARAM_METHOD_TEST
 

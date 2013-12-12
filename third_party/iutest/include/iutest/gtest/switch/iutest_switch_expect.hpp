@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_switch_expect_HPP_F4AD6E1B_4B1F_40ee_A0CC_D454587B2C39_
-#define INCG_IRIS_iutest_switch_expect_HPP_F4AD6E1B_4B1F_40ee_A0CC_D454587B2C39_
+#ifndef INCG_IRIS_IUTEST_SWITCH_EXPECT_HPP_F4AD6E1B_4B1F_40EE_A0CC_D454587B2C39_
+#define INCG_IRIS_IUTEST_SWITCH_EXPECT_HPP_F4AD6E1B_4B1F_40EE_A0CC_D454587B2C39_
 
 #if !defined(IUTEST_USE_GTEST)
 
@@ -105,7 +105,7 @@
 
 //======================================================================
 // undef
-#ifdef INCG_IRIS_iutest_HPP_
+#ifdef INCG_IRIS_IUTEST_HPP_
 
 #undef IUTEST_EXPECT_TRUE
 #undef IUTEST_EXPECT_FALSE
@@ -123,7 +123,6 @@
 #undef IUTEST_EXPECT_DOUBLE_EQ
 #undef IUTEST_EXPECT_STREQ
 #undef IUTEST_EXPECT_STRNE
-#undef IUTEST_EXPECT_STRLNEQ
 #undef IUTEST_EXPECT_STRCASEEQ
 #undef IUTEST_EXPECT_STRCASENE
 #undef IUTEST_EXPECT_THROW
@@ -171,7 +170,6 @@
 #define IUTEST_EXPECT_DOUBLE_EQ	EXPECT_DOUBLE_EQ
 #define IUTEST_EXPECT_STREQ		EXPECT_STREQ
 #define IUTEST_EXPECT_STRNE		EXPECT_STRNE
-#define IUTEST_EXPECT_STRLNEQ(len, v2)			EXPECT_PRED_FORMAT2(iuutil::CmpHelperSTRLNEQ, len, v2)
 #define IUTEST_EXPECT_STRCASEEQ	EXPECT_STRCASEEQ
 #define IUTEST_EXPECT_STRCASENE	EXPECT_STRCASENE
 #define IUTEST_EXPECT_THROW(statement, expected_exception)	EXPECT_THROW((void)(statement), expected_exception)

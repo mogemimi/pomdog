@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_typed_util_HPP_32A6F7CF_36C6_4ede_AD19_04965FBFBB37_
-#define INCG_IRIS_iutest_typed_util_HPP_32A6F7CF_36C6_4ede_AD19_04965FBFBB37_
+#ifndef INCG_IRIS_IUTEST_TYPED_UTIL_HPP_32A6F7CF_36C6_4EDE_AD19_04965FBFBB37_
+#define INCG_IRIS_IUTEST_TYPED_UTIL_HPP_32A6F7CF_36C6_4EDE_AD19_04965FBFBB37_
 
 //======================================================================
 // include

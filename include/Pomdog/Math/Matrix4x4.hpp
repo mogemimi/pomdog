@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_MATRIX4X4_HPP
-#define POMDOG_MATRIX4X4_HPP
+#ifndef POMDOG_MATRIX4X4_DC5BAB37_3C3F_40B9_9EF7_BE8427EBBD06_HPP
+#define POMDOG_MATRIX4X4_DC5BAB37_3C3F_40B9_9EF7_BE8427EBBD06_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -31,4 +31,4 @@ using Matrix4x4 = Details::FloatingPointMatrix4x4<float>;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_MATRIX4X4_HPP)
+#endif // !defined(POMDOG_MATRIX4X4_DC5BAB37_3C3F_40B9_9EF7_BE8427EBBD06_HPP)

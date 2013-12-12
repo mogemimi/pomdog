@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_genparams_HPP_7845F59A_825C_426a_B451_573245408998_
-#define INCG_IRIS_iutest_genparams_HPP_7845F59A_825C_426a_B451_573245408998_
+#ifndef INCG_IRIS_IUTEST_GENPARAMS_HPP_7845F59A_825C_426A_B451_573245408998_
+#define INCG_IRIS_IUTEST_GENPARAMS_HPP_7845F59A_825C_426A_B451_573245408998_
 
 //======================================================================
 // include
@@ -117,7 +117,7 @@ public:
 	virtual	void	Begin(void) { m_cur = m_begin; }
 	virtual T		GetCurrent(void) const	{ return m_cur; }
 	virtual void	Next(void)	{ m_cur += m_step; }
-	virtual bool	IsEnd(void) const	{ if( m_cur < m_end ) return false; return true; }
+	virtual bool	IsEnd(void) const	{ return !( m_cur < m_end ); }
 };
 
 /**
@@ -138,7 +138,7 @@ public:
 	virtual	void	Begin(void) { m_cur = 0; m_n = 0; }
 	virtual T		GetCurrent(void) const	{ return m_cur; }
 	virtual void	Next(void)	{ ++m_n; m_cur = !m_cur; }
-	virtual bool	IsEnd(void) const	{ if( m_n < 2 ) return false; return true; }
+	virtual bool	IsEnd(void) const	{ return (m_n >= 2); }
 };
 
 /**
@@ -883,7 +883,10 @@ private:
 		{
 			ParamIndexes<N>& indexes = *it;
 			if( indexes.index[pair_info.raw1] == pair_info.idx1 
-				&& indexes.index[pair_info.raw2] == pair_info.idx2 ) return it;
+				&& indexes.index[pair_info.raw2] == pair_info.idx2 )
+			{
+				return it;
+			}
 		}
 		return list.end();
 	}
@@ -922,7 +925,10 @@ private:
 				UInt32 overlap = 0;
 				for( int i=0; i < N; ++i )
 				{
-					if( indexes.index[i] == -1 || i == free_raw ) continue;
+					if( indexes.index[i] == -1 || i == free_raw )
+					{
+						continue;
+					}
 					PairInfo tmp = { i, free_raw, indexes.index[i], free_idx };
 					iterator it2 = Find(list, tmp, list.begin());
 					while(it2 != end)
@@ -932,7 +938,10 @@ private:
 						it2 = Find(list, tmp, it2);
 					}
 				}
-				if( overlap == 0 ) return it;
+				if( overlap == 0 )
+				{
+					return it;
+				}
 				if( find == list.end()
 					|| (overlap < max_overlap) )
 				{
@@ -952,7 +961,9 @@ private:
 		{
 			ParamIndexes<N>& indexes = *it;
 			if( indexes.index[pair_info.raw1] == -1 && indexes.index[pair_info.raw2] == -1 )
+			{
 				return it;
+			}
 		}
 		return list.end();
 	}
@@ -1106,12 +1117,18 @@ public:
 	}
 	virtual void	Next(void)
 	{
-		if( m_g2.IsEnd() ) return;
+		if( m_g2.IsEnd() ) 
+		{
+			return;
+		}
 		m_g2.Next();
 		if( m_g2.IsEnd() )
 		{
 			m_g1.Next();
-			if( !m_g1.IsEnd() ) m_g2.Begin();
+			if( !m_g1.IsEnd() )
+			{
+				m_g2.Begin();
+			}
 		}
 	}
 	virtual bool	IsEnd(void) const
@@ -1350,7 +1367,10 @@ public:
 		for(;;)
 		{
 			type val =  m_rnd.genrand();
-			if( (m_fn)(val) ) return val;
+			if( (m_fn)(val) )
+			{
+				return val;
+			}
 		}
 	}
 private:

@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_switch_HPP_9E5FA1C8_EFB5_40a9_A3AD_971584ECAE56_
-#define INCG_IRIS_iutest_switch_HPP_9E5FA1C8_EFB5_40a9_A3AD_971584ECAE56_
+#ifndef INCG_IRIS_IUTEST_SWITCH_HPP_
+#define INCG_IRIS_IUTEST_SWITCH_HPP_
 
 #if !defined(IUTEST_USE_GTEST)
 
@@ -134,7 +134,7 @@ namespace testing = iutest;
 
 #else
 
-#ifdef INCG_IRIS_iutest_HPP_
+#ifdef INCG_IRIS_IUTEST_HPP_
 #  if IUTEST_HAS_TUPLE
 #    define GTEST_USE_OWN_TR1_TUPLE	0
 #  endif
@@ -167,7 +167,7 @@ namespace tr1
 //======================================================================
 // define
 
-#ifdef INCG_IRIS_iutest_HPP_
+#ifdef INCG_IRIS_IUTEST_HPP_
 #undef IUTEST_SUCCEED
 #undef IUTEST_FAIL
 #undef IUTEST_ADD_FAILURE
@@ -319,7 +319,7 @@ namespace iusupport
 	template<int x>struct StaticAssertionTest {};
 }
 
-#ifdef INCG_IRIS_iutest_HPP_
+#ifdef INCG_IRIS_IUTEST_HPP_
 // iutest.hpp がすでにインクルードされていた場合
 
 namespace iusupport
@@ -356,7 +356,7 @@ typedef ::std::ostream	iu_ostream;
 
 }	// end of namespace testing
 
-#ifdef INCG_IRIS_iutest_HPP_
+#ifdef INCG_IRIS_IUTEST_HPP_
 // すでに iutest namespace が存在するので、define で対応
 #  define iutest testing
 #else
@@ -365,8 +365,8 @@ namespace iutest = testing;
 
 #include "../iutest_util.hpp"
 
-#ifndef INCG_IRIS_iutest_HPP_
-#  define INCG_IRIS_iutest_HPP_	// 以降で、iutest が include されないようにする
+#ifndef INCG_IRIS_IUTEST_HPP_
+#  define INCG_IRIS_IUTEST_HPP_	// 以降で、iutest が include されないようにする
 #endif
 
 #endif

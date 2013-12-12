@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_socket_HPP_77654A63_0A08_43CA_950E_61232690163B_
-#define INCG_IRIS_iutest_socket_HPP_77654A63_0A08_43CA_950E_61232690163B_
+#ifndef INCG_IRIS_IUTEST_SOCKET_HPP_77654A63_0A08_43CA_950E_61232690163B_
+#define INCG_IRIS_IUTEST_SOCKET_HPP_77654A63_0A08_43CA_950E_61232690163B_
 
 //======================================================================
 // include
@@ -89,14 +89,20 @@ public:
 public:
 	bool Open(const char* host, const char* port)
 	{
-		if( m_socket != INVALID_DESCRIPTOR ) return true;
+		if( m_socket != INVALID_DESCRIPTOR )
+		{
+			return true;
+		}
 		addrinfo* servinfo = NULL;
 		addrinfo hints;
 		memset(&hints, 0, sizeof(hints));
 		hints.ai_family = AF_UNSPEC;
 		hints.ai_socktype = SOCK_STREAM;
 		const int err_no = getaddrinfo(host, port, &hints, &servinfo);
-		if( err_no != 0 ) return false;
+		if( err_no != 0 )
+		{
+			return false;
+		}
 
 		for( addrinfo* curr=servinfo; curr != NULL; curr = curr->ai_next )
 		{
@@ -172,8 +178,11 @@ public:
 public:
 	virtual bool Write(const void* buf, size_t size, size_t cnt) IUTEST_CXX_OVERRIDE
 	{
-		if( !IsValid() ) return false;
-		int size_ = static_cast<int>(size);
+		if( !IsValid() )
+		{
+			return false;
+		}
+		const int size_ = static_cast<int>(size);
 		for( size_t i=0; i < cnt; ++i )
 		{
 #ifdef IUTEST_OS_WINDOWS
@@ -184,7 +193,9 @@ public:
 			}
 #else
 			if( write(m_socket, buf, size_) == -1 )
+			{
 				return false;
+			}
 #endif
 		}
 		return true;
@@ -203,8 +214,11 @@ public:
 public:
 	bool Read(void* buf, size_t size)
 	{
-		if( !IsValid() ) return false;
-		int size_ = static_cast<int>(size);
+		if( !IsValid() )
+		{
+			return false;
+		}
+		const int size_ = static_cast<int>(size);
 #ifdef IUTEST_OS_WINDOWS
 		if( recv(m_socket, static_cast<char*>(buf), size_, 0) == SOCKET_ERROR )
 		{
@@ -213,7 +227,9 @@ public:
 		}
 #else
 		if( read(m_socket, buf, size_) == -1 )
+		{
 			return false;
+		}
 #endif
 		return true;
 	}

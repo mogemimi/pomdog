@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_filepath_IPP_D69E7545_BF8A_4edc_9493_9105C69F9378_
-#define INCG_IRIS_iutest_filepath_IPP_D69E7545_BF8A_4edc_9493_9105C69F9378_
+#ifndef INCG_IRIS_IUTEST_FILEPATH_IPP_D69E7545_BF8A_4EDC_9493_9105C69F9378_
+#define INCG_IRIS_IUTEST_FILEPATH_IPP_D69E7545_BF8A_4EDC_9493_9105C69F9378_
 
 //======================================================================
 // include
@@ -34,9 +34,15 @@ IUTEST_IPP_INLINE bool	iuFilePath::IsDirectory(void) const
 IUTEST_IPP_INLINE bool	iuFilePath::IsRootDirectory(void) const
 {
 #ifdef IUTEST_OS_WINDOWS
-	if( length() != 3 ) return false;
+	if( length() != 3 )
+	{
+		return false;
+	}
 #else
-	if( length() != 3 ) return false;
+	if( length() != 3 )
+	{
+		return false;
+	}
 #endif
 	return IsAbsolutePath();
 }
@@ -44,7 +50,10 @@ IUTEST_IPP_INLINE bool	iuFilePath::IsRootDirectory(void) const
 IUTEST_IPP_INLINE bool	iuFilePath::IsAbsolutePath(void) const
 {
 #ifdef IUTEST_OS_WINDOWS
-	if( length() < 3 ) return false;
+	if( length() < 3 )
+	{
+		return false;
+	}
 	const char* name = m_path.c_str();
 
 	if( IsDBCSLeadByte(name[0]) )
@@ -66,10 +75,13 @@ IUTEST_IPP_INLINE iuFilePath	iuFilePath::RemoveExtension(const char* extention) 
 {
 	const char* const path = m_path.c_str();
 	const char* const ext = strrchr(path, '.');
-	if( ext == NULL ) return *this;
-	if( extention != NULL )
+	if( ext == NULL )
 	{
-		if( !IsStringCaseEqual(ext+1, extention) ) return *this;
+		return *this;
+	}
+	if( extention != NULL && !IsStringCaseEqual(ext + 1, extention) )
+	{
+		return *this;
 	}
 	const size_t length = ext - path;
 	return iuFilePath(std::string(path, length));
@@ -84,8 +96,11 @@ IUTEST_IPP_INLINE iuFilePath	iuFilePath::RemoveDirectoryName(void) const
 IUTEST_IPP_INLINE iuFilePath	iuFilePath::RemoveFileName(void) const
 {
 	const char* sep = FindLastPathSeparator();
-	if( sep == NULL ) return GetRelativeCurrentDir();
-	size_t length = sep - c_str() + 1;
+	if( sep == NULL )
+	{
+		return GetRelativeCurrentDir();
+	}
+	const size_t length = sep - c_str() + 1;
 	return iuFilePath(std::string(c_str(), length));
 }
 
@@ -93,23 +108,41 @@ IUTEST_IPP_INLINE bool		iuFilePath::CreateFolder(void) const
 {
 #if		defined(IUTEST_OS_WINDOWS_MOBILE)
 #elif	defined(IUTEST_OS_WINDOWS_MINGW)
-	if( mkdir(c_str()) == 0 ) return true;
+	if( mkdir(c_str()) == 0 )
+	{
+		return true;
+	}
 #elif	defined(IUTEST_OS_WINDOWS)
-	if( _mkdir(c_str()) == 0 ) return true;
+	if( _mkdir(c_str()) == 0 )
+	{
+		return true;
+	}
 #else
-	if( mkdir(c_str(), 0777) == 0 ) return true;
+	if( mkdir(c_str(), 0777) == 0 )
+	{
+		return true;
+	}
 #endif
 	return DirectoryExists();
 }
 
 IUTEST_IPP_INLINE bool		iuFilePath::CreateDirectoriesRecursively(void) const
 {
-	if( !IsDirectory() ) return false;
+	if( !IsDirectory() )
+	{
+		return false;
+	}
 
-	if( length() == 0 || DirectoryExists() ) return true;
+	if( length() == 0 || DirectoryExists() )
+	{
+		return true;
+	}
 
-	iuFilePath parent = RemoveTrailingPathSeparator().RemoveFileName();
-	if( !parent.CreateDirectoriesRecursively() ) return false;
+	const iuFilePath parent = RemoveTrailingPathSeparator().RemoveFileName();
+	if( !parent.CreateDirectoriesRecursively() )
+	{
+		return false;
+	}
 	return CreateFolder();
 }
 
@@ -142,7 +175,10 @@ IUTEST_IPP_INLINE bool		iuFilePath::DirectoryExists(void) const
 IUTEST_IPP_INLINE const char* iuFilePath::FindLastPathSeparator(void) const
 {
 	const char* ps = c_str();
-	if( ps == NULL ) return NULL;
+	if( ps == NULL )
+	{
+		return NULL;
+	}
 	const char* pe = ps + length() - 1;
 	while( pe >= ps )
 	{
@@ -183,12 +219,18 @@ IUTEST_IPP_INLINE iuFilePath	iuFilePath::GetExecFilePath(void)
 	int exe_path_mib[4] = { CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, getpid() };
 	char buf[1024];
 	size_t length = 0;
-	if( sysctl(exe_path_mib, 4, buf, &length, NULL, 0) != 0 ) return iuFilePath();
+	if( sysctl(exe_path_mib, 4, buf, &length, NULL, 0) != 0 )
+	{
+		return iuFilePath();
+	}
 	return iuFilePath(buf);
 #elif	defined(IUTEST_OS_LINUX) || defined(IUTEST_OS_CYGWIN)
 	char buf[1024];
-	ssize_t len = ::readlink("/proc/self/exe", buf, sizeof(buf)-1);
-	if( len == -1 ) return iuFilePath();
+	const ssize_t len = ::readlink("/proc/self/exe", buf, sizeof(buf)-1);
+	if( len == -1 )
+	{
+		return iuFilePath();
+	}
 	buf[len] = '\0';
 	return iuFilePath(buf);
 #else
@@ -254,7 +296,10 @@ IUTEST_IPP_INLINE void iuFilePath::Normalize(void)
 IUTEST_IPP_INLINE bool iuFilePath::IsPathSeparator(char c) IUTEST_CXX_NOEXCEPT_SPEC
 {
 #ifdef IUTEST_OS_WINDOWS
-	if( c == '\\' ) return true;
+	if( c == '\\' )
+	{
+		return true;
+	}
 #endif
 	return c == '/';
 }
@@ -262,7 +307,10 @@ IUTEST_IPP_INLINE bool iuFilePath::IsPathSeparator(char c) IUTEST_CXX_NOEXCEPT_S
 IUTEST_IPP_INLINE bool iuFilePath::IsAltPathSeparator(char c) IUTEST_CXX_NOEXCEPT_SPEC
 {
 #ifdef IUTEST_OS_WINDOWS
-	if( c == '/' ) return true;
+	if( c == '/' )
+	{
+		return true;
+	}
 #else
 	IUTEST_UNUSED_VAR(c);
 #endif

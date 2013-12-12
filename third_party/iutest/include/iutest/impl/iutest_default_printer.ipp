@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_default_printer_IPP_77055C2B_AAE1_4944_A61C_26C58B04B37B_
-#define INCG_IRIS_iutest_default_printer_IPP_77055C2B_AAE1_4944_A61C_26C58B04B37B_
+#ifndef INCG_IRIS_IUTEST_DEFAULT_PRINTER_IPP_77055C2B_AAE1_4944_A61C_26C58B04B37B_
+#define INCG_IRIS_IUTEST_DEFAULT_PRINTER_IPP_77055C2B_AAE1_4944_A61C_26C58B04B37B_
 
 //======================================================================
 // include

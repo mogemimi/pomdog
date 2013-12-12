@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_param_tests_HPP_3DBBF55E_A076_4207_B49E_34734EE333EE_
-#define INCG_IRIS_iutest_param_tests_HPP_3DBBF55E_A076_4207_B49E_34734EE333EE_
+#ifndef INCG_IRIS_IUTEST_PARAM_TESTS_HPP_3DBBF55E_A076_4207_B49E_34734EE333EE_
+#define INCG_IRIS_IUTEST_PARAM_TESTS_HPP_3DBBF55E_A076_4207_B49E_34734EE333EE_
 
 //======================================================================
 // include
@@ -87,10 +87,10 @@
 */
 
 #if !defined(IUTEST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-#  define IIUT_GetTestCasePatternHolder(T, testcase_, package_)	\
+#  define IIUT_GETTESTCASEPATTERNHOLDER(T, testcase_, package_)	\
 	::iutest::UnitTest::GetInstance()->parameterized_test_registry().GetTestCasePatternHolder<T>(testcase_, package_)
 #else
-#  define IIUT_GetTestCasePatternHolder(T, testcase_, package_)	\
+#  define IIUT_GETTESTCASEPATTERNHOLDER(T, testcase_, package_)	\
 	::iutest::UnitTest::GetInstance()->parameterized_test_registry().GetTestCasePatternHolder(testcase_, package_, &::iutest::detail::type<T>())
 #endif
 
@@ -111,7 +111,7 @@
 		IUTEST_TEST_P_EVALGENERATOR_NAME_(prefix_, testcase_)(void) { return generator_; }	\
 		int IUTEST_TEST_P_INSTANTIATIONREGISTER_NAME_(prefix_, testcase_)(void) {			\
 			::iutest::ParamTestCaseInfo< IUTEST_TO_VARNAME_(testcase_) >* p =				\
-				IIUT_GetTestCasePatternHolder( IUTEST_TO_VARNAME_(testcase_)				\
+				IIUT_GETTESTCASEPATTERNHOLDER( IUTEST_TO_VARNAME_(testcase_)				\
 					, IUTEST_TO_NAME_STR_(testcase_), IUTEST_GET_PACKAGENAME_());			\
 			return p->AddTestCaseInstantiation(#prefix_, IUTEST_TEST_P_EVALGENERATOR_NAME_(prefix_, testcase_));	\
 		} IUTEST_TEST_P_INSTANTIATIONREGISTER_(prefix_, testcase_)
@@ -127,7 +127,7 @@
 		private: static int	AddRegister(void) {														\
 			static ::iutest::detail::ParamTestInstance< IUTEST_TEST_CLASS_NAME_(testcase_			\
 				, testname_) > testinfo(IUTEST_TO_NAME_STR_(testname_));							\
-			IIUT_GetTestCasePatternHolder(IUTEST_TO_VARNAME_(testcase_), IUTEST_TO_NAME_STR_(testcase_)	\
+			IIUT_GETTESTCASEPATTERNHOLDER(IUTEST_TO_VARNAME_(testcase_), IUTEST_TO_NAME_STR_(testcase_)	\
 					, IUTEST_GET_PACKAGENAME_())->AddTestPattern(&testinfo); return 0;				\
 		}																							\
 		static int dummy_;																			\
@@ -145,7 +145,7 @@
 		private: static int	AddRegister(void) {														\
 			static ::iutest::detail::ParamTestInstance< IUTEST_TEST_CLASS_NAME_(testcase_			\
 				, testname_) > testinfo(IUTEST_TO_NAME_STR_(testname_));							\
-			IIUT_GetTestCasePatternHolder(IUTEST_TO_VARNAME_(testcase_), IUTEST_TO_NAME_STR_(testcase_)	\
+			IIUT_GETTESTCASEPATTERNHOLDER(IUTEST_TO_VARNAME_(testcase_), IUTEST_TO_NAME_STR_(testcase_)	\
 				, IUTEST_GET_PACKAGENAME_())->AddTestPattern(&testinfo); return 0;					\
 		}																							\
 		static int dummy_;																			\

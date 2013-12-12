@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_progress_printer_HPP_D31CE626_EA82_4265_B2B6_50EC5C63CFB6_
-#define INCG_IRIS_iutest_progress_printer_HPP_D31CE626_EA82_4265_B2B6_50EC5C63CFB6_
+#ifndef INCG_IRIS_IUTEST_PROGRESS_PRINTER_HPP_D31CE626_EA82_4265_B2B6_50EC5C63CFB6_
+#define INCG_IRIS_IUTEST_PROGRESS_PRINTER_HPP_D31CE626_EA82_4265_B2B6_50EC5C63CFB6_
 
 //======================================================================
 // include

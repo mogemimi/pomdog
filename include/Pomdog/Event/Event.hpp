@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_EVENT_HPP
-#define POMDOG_EVENT_HPP
+#ifndef POMDOG_EVENT_56ECB270_07B0_4678_BE7E_FF46C5D1A02B_HPP
+#define POMDOG_EVENT_56ECB270_07B0_4678_BE7E_FF46C5D1A02B_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -104,4 +104,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EVENT_HPP)
+#endif // !defined(POMDOG_EVENT_56ECB270_07B0_4678_BE7E_FF46C5D1A02B_HPP)

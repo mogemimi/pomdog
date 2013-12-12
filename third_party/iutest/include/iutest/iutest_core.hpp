@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_core_HPP_33560431_783B_4ae7_8FC8_6E78355CAF87_
-#define INCG_IRIS_iutest_core_HPP_33560431_783B_4ae7_8FC8_6E78355CAF87_
+#ifndef INCG_IRIS_IUTEST_CORE_HPP_33560431_783B_4AE7_8FC8_6E78355CAF87_
+#define INCG_IRIS_IUTEST_CORE_HPP_33560431_783B_4AE7_8FC8_6E78355CAF87_
 
 //======================================================================
 // include
@@ -220,14 +220,14 @@ template<class Tester>
 class TestInstance
 {
 public:
-	// コンストラクタ
+	/** コンストラクタ */
 	TestInstance(const char* testcase, const char* name, TestTypeId id, SetUpMethod setup, TearDownMethod teardown)
 		: m_mediator(AddTestCase(testcase, id, setup, teardown))
 		, m_info(&m_mediator, name, &m_factory)
 	{
 		UnitTest::instance().AddTestInfo(m_mediator.ptr(), &m_info);
 	}
-	// コンストラクタ
+	/** コンストラクタ */
 	TestInstance(const char* testcase, const char* name, const char*  value_params, TestTypeId id, SetUpMethod setup, TearDownMethod teardown)
 		: m_mediator(AddTestCase(testcase, id, setup, teardown))
 		, m_info(&m_mediator, name, &m_factory)

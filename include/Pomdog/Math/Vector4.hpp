@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_VECTOR4_HPP
-#define POMDOG_VECTOR4_HPP
+#ifndef POMDOG_VECTOR4_142CAE48_C528_4EAE_B8D1_9D04F174FDF1_HPP
+#define POMDOG_VECTOR4_142CAE48_C528_4EAE_B8D1_9D04F174FDF1_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -33,4 +33,4 @@ using Vector4 = Details::FloatingPointVector4<float>;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_VECTOR4_HPP)
+#endif // !defined(POMDOG_VECTOR4_142CAE48_C528_4EAE_B8D1_9D04F174FDF1_HPP)

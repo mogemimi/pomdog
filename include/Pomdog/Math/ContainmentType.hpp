@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_CONTAINMENTTYPE_HPP
-#define POMDOG_CONTAINMENTTYPE_HPP
+#ifndef POMDOG_CONTAINMENTTYPE_21BFFFDA_D1CD_4222_B556_0EFF89954D5D_HPP
+#define POMDOG_CONTAINMENTTYPE_21BFFFDA_D1CD_4222_B556_0EFF89954D5D_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -34,4 +34,4 @@ enum class ContainmentType: std::uint16_t
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_CONTAINMENTTYPE_HPP)
+#endif // !defined(POMDOG_CONTAINMENTTYPE_21BFFFDA_D1CD_4222_B556_0EFF89954D5D_HPP)

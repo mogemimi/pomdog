@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_LOG_HPP
-#define POMDOG_LOG_HPP
+#ifndef POMDOG_LOG_B5157F87_E1D1_460C_8346_161983EF05D9_HPP
+#define POMDOG_LOG_B5157F87_E1D1_460C_8346_161983EF05D9_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -115,4 +115,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_LOG_HPP)
+#endif // !defined(POMDOG_LOG_B5157F87_E1D1_460C_8346_161983EF05D9_HPP)

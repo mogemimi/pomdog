@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_info_IPP_764A79A8_E822_4c0f_8CB7_82C635BA28BA_
-#define INCG_IRIS_iutest_info_IPP_764A79A8_E822_4c0f_8CB7_82C635BA28BA_
+#ifndef INCG_IRIS_IUTEST_INFO_IPP_764A79A8_E822_4C0F_8CB7_82C635BA28BA_
+#define INCG_IRIS_IUTEST_INFO_IPP_764A79A8_E822_4C0F_8CB7_82C635BA28BA_
 
 //======================================================================
 // include
@@ -29,7 +29,10 @@ namespace iutest
 */
 IUTEST_IPP_INLINE bool	TestInfo::Run(void)
 {
-	if( !m_should_run ) return true;
+	if( !m_should_run )
+	{
+		return true;
+	}
 
 	// テスト開始
 	TestEnv::event_listeners().OnTestStart(*this);
@@ -66,19 +69,28 @@ IUTEST_IPP_INLINE void	TestInfo::RunImpl(void)
 		{
 			elapsedmsec = sw.stop();
 			iutest::AssertionHelper(NULL, -1, detail::FormatCxxException(e.what()), TestPartResult::kFatalFailure).OnFixed(AssertionHelper::Fixed());
-			if( TestFlag::IsEnableFlag(TestFlag::THROW_ON_FAILURE) ) throw;
+			if( TestFlag::IsEnableFlag(TestFlag::THROW_ON_FAILURE) )
+			{
+				throw;
+			}
 		}
 		catch (TestPartResult::Type& eType)
 		{
-			(void)eType;
+			IUTEST_UNUSED_VAR(eType);
 			elapsedmsec = sw.stop();
-			if( TestFlag::IsEnableFlag(TestFlag::THROW_ON_FAILURE) ) throw;
+			if( TestFlag::IsEnableFlag(TestFlag::THROW_ON_FAILURE) )
+			{
+				throw;
+			}
 		}
 		catch (...)
 		{
 			elapsedmsec = sw.stop();
 			iutest::AssertionHelper(NULL, -1, detail::FormatCxxException(NULL), TestPartResult::kFatalFailure).OnFixed(AssertionHelper::Fixed());
-			if( TestFlag::IsEnableFlag(TestFlag::THROW_ON_FAILURE) ) throw;
+			if( TestFlag::IsEnableFlag(TestFlag::THROW_ON_FAILURE) )
+			{
+				throw;
+			}
 		}
 	}
 	else

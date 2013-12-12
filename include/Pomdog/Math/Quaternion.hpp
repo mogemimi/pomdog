@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_QUATERNION_HPP
-#define POMDOG_QUATERNION_HPP
+#ifndef POMDOG_QUATERNION_601F9EDC_AA32_4901_8824_EDD91E38D6E2_HPP
+#define POMDOG_QUATERNION_601F9EDC_AA32_4901_8824_EDD91E38D6E2_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -31,4 +31,4 @@ using Quaternion = Details::FloatingPointQuaternion<float>;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_QUATERNION_HPP)
+#endif // !defined(POMDOG_QUATERNION_601F9EDC_AA32_4901_8824_EDD91E38D6E2_HPP)

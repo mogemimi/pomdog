@@ -14,19 +14,19 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_util_output_HPP_44C683CF_3452_4f68_B34E_10606EB9E190_
-#define INCG_IRIS_iutest_util_output_HPP_44C683CF_3452_4f68_B34E_10606EB9E190_
+#ifndef INCG_IRIS_IUTEST_UTIL_OUTPUT_HPP_44C683CF_3452_4F68_B34E_10606EB9E190_
+#define INCG_IRIS_IUTEST_UTIL_OUTPUT_HPP_44C683CF_3452_4F68_B34E_10606EB9E190_
 
 //======================================================================
 // include
-#ifdef INCG_IRIS_iutest_switch_HPP_9E5FA1C8_EFB5_40a9_A3AD_971584ECAE56_
+#ifdef INCG_IRIS_IUTEST_SWITCH_HPP_
 #  ifdef IUTEST_USE_GTEST
 #    ifndef iutest
 #      define iutest	testing
 #      include "../internal/iutest_console.hpp"
 #      undef iutest
 #    else
-#      undef INCG_IRIS_iutest_console_HPP_DCAC5025_B7BB_424e_A849_9E6FE0A3B460_
+#      undef INCG_IRIS_IUTEST_CONSOLE_HPP_DCAC5025_B7BB_424E_A849_9E6FE0A3B460_
 #      include "../internal/iutest_console.hpp"
 #    endif
 #  endif

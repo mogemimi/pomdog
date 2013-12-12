@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_assertion_only_HPP_9E5FA1C8_EFB5_40a9_A3AD_971584ECAE56_
-#define INCG_IRIS_iutest_assertion_only_HPP_9E5FA1C8_EFB5_40a9_A3AD_971584ECAE56_
+#ifndef INCG_IRIS_IUTEST_ASSERTION_ONLY_HPP_9E5FA1C8_EFB5_40A9_A3AD_971584ECAE56_
+#define INCG_IRIS_IUTEST_ASSERTION_ONLY_HPP_9E5FA1C8_EFB5_40A9_A3AD_971584ECAE56_
 
 #if !defined(IUTEST_USE_GTEST)
 

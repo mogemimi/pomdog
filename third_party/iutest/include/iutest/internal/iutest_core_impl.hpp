@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_core_impl_HPP_D5ABC7DE_C751_4ac0_922F_547880163891_
-#define INCG_IRIS_iutest_core_impl_HPP_D5ABC7DE_C751_4ac0_922F_547880163891_
+#ifndef INCG_IRIS_IUTEST_CORE_IMPL_HPP_D5ABC7DE_C751_4AC0_922F_547880163891_
+#define INCG_IRIS_IUTEST_CORE_IMPL_HPP_D5ABC7DE_C751_4AC0_922F_547880163891_
 
 //======================================================================
 // include

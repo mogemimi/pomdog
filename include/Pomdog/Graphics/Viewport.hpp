@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_VIEWPORT_HPP
-#define POMDOG_VIEWPORT_HPP
+#ifndef POMDOG_VIEWPORT_AA637108_9222_46B7_BC9D_293048246897_HPP
+#define POMDOG_VIEWPORT_AA637108_9222_46B7_BC9D_293048246897_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -66,4 +66,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_VIEWPORT_HPP)
+#endif // !defined(POMDOG_VIEWPORT_AA637108_9222_46B7_BC9D_293048246897_HPP)

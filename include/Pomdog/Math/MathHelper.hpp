@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_MATHHELPER_HPP
-#define POMDOG_MATHHELPER_HPP
+#ifndef POMDOG_MATHHELPER_F07877B3_827B_4997_8895_51BD6934A0B7_HPP
+#define POMDOG_MATHHELPER_F07877B3_827B_4997_8895_51BD6934A0B7_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -68,4 +68,4 @@ static T SmoothStep(T min, T max, T amount)
 }// namespace MathHelper
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_MATHHELPER_HPP)
+#endif // !defined(POMDOG_MATHHELPER_F07877B3_827B_4997_8895_51BD6934A0B7_HPP)

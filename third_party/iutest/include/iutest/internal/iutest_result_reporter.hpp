@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_result_reporter_HPP_803FD1F7_1FD2_4d1e_9AFC_A5851284316F_
-#define INCG_IRIS_iutest_result_reporter_HPP_803FD1F7_1FD2_4d1e_9AFC_A5851284316F_
+#ifndef INCG_IRIS_IUTEST_RESULT_REPORTER_HPP_803FD1F7_1FD2_4D1E_9AFC_A5851284316F_
+#define INCG_IRIS_IUTEST_RESULT_REPORTER_HPP_803FD1F7_1FD2_4D1E_9AFC_A5851284316F_
 
 //======================================================================
 // include
@@ -62,6 +62,15 @@ public:
 		bool operator ()(const TestPartResult& result)
 		{
 			return result.type() != Type;
+		}
+	};
+
+	template<TestPartResult::Type Type>
+	struct CondGt
+	{
+		bool operator ()(const TestPartResult& result)
+		{
+			return result.type() > Type;
 		}
 	};
 public:

@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_default_xml_generator_HPP_791DCB98_05CC_49ba_8518_0EC9CA2B5450_
-#define INCG_IRIS_iutest_default_xml_generator_HPP_791DCB98_05CC_49ba_8518_0EC9CA2B5450_
+#ifndef INCG_IRIS_IUTEST_DEFAULT_XML_GENERATOR_HPP_791DCB98_05CC_49BA_8518_0EC9CA2B5450_
+#define INCG_IRIS_IUTEST_DEFAULT_XML_GENERATOR_HPP_791DCB98_05CC_49BA_8518_0EC9CA2B5450_
 
 //======================================================================
 // include
@@ -120,7 +120,9 @@ private:
 	*/
 	static IUTEST_CXX_CONSTEXPR bool IsValidXmlCharacter(char c)
 	{
+IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_BEGIN()
 		return IsWhitespace(c) || c >= 0x20;
+IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_END()
 	}
 
 public:

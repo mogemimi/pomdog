@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_switch_skip_HPP_3CFB2B8D_9C8D_4b4f_9843_2FE38126BB31_
-#define INCG_IRIS_iutest_switch_skip_HPP_3CFB2B8D_9C8D_4b4f_9843_2FE38126BB31_
+#ifndef INCG_IRIS_IUTEST_SWITCH_SKIP_HPP_3CFB2B8D_9C8D_4B4F_9843_2FE38126BB31_
+#define INCG_IRIS_IUTEST_SWITCH_SKIP_HPP_3CFB2B8D_9C8D_4B4F_9843_2FE38126BB31_
 
 #if !defined(IUTEST_USE_GTEST)
 
@@ -26,7 +26,7 @@
 
 //======================================================================
 // undef
-#ifdef INCG_IRIS_iutest_HPP_
+#ifdef INCG_IRIS_IUTEST_HPP_
 
 #undef IUTEST_SKIP
 

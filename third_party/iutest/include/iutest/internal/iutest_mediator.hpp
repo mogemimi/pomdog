@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_mediator_HPP_BFBE202B_0E60_4e44_8BDA_CB801D264F3E_
-#define INCG_IRIS_iutest_mediator_HPP_BFBE202B_0E60_4e44_8BDA_CB801D264F3E_
+#ifndef INCG_IRIS_IUTEST_MEDIATOR_HPP_BFBE202B_0E60_4E44_8BDA_CB801D264F3E_
+#define INCG_IRIS_IUTEST_MEDIATOR_HPP_BFBE202B_0E60_4E44_8BDA_CB801D264F3E_
 
 //======================================================================
 // include

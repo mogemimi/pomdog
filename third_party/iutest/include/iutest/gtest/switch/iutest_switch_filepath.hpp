@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_switch_filepath_HPP_D92E9CDC_9C63_4008_BE35_6E32177B28D2_
-#define INCG_IRIS_iutest_switch_filepath_HPP_D92E9CDC_9C63_4008_BE35_6E32177B28D2_
+#ifndef INCG_IRIS_IUTEST_SWITCH_FILEPATH_HPP_D92E9CDC_9C63_4008_BE35_6E32177B28D2_
+#define INCG_IRIS_IUTEST_SWITCH_FILEPATH_HPP_D92E9CDC_9C63_4008_BE35_6E32177B28D2_
 
 #if !defined(IUTEST_USE_GTEST)
 

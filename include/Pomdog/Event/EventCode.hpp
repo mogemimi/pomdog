@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_EVENTCODE_HPP
-#define POMDOG_EVENTCODE_HPP
+#ifndef POMDOG_EVENTCODE_56ECB270_07B0_4678_BE7E_FF46C5D1A02B_HPP
+#define POMDOG_EVENTCODE_56ECB270_07B0_4678_BE7E_FF46C5D1A02B_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -31,4 +31,4 @@ using EventCode = Details::Tagged<
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EVENTCODE_HPP)
+#endif // !defined(POMDOG_EVENTCODE_56ECB270_07B0_4678_BE7E_FF46C5D1A02B_HPP)

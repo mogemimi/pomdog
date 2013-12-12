@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_default_xml_generator_IPP_791DCB98_05CC_49ba_8518_0EC9CA2B5450_
-#define INCG_IRIS_iutest_default_xml_generator_IPP_791DCB98_05CC_49ba_8518_0EC9CA2B5450_
+#ifndef INCG_IRIS_IUTEST_DEFAULT_XML_GENERATOR_IPP_791DCB98_05CC_49BA_8518_0EC9CA2B5450_
+#define INCG_IRIS_IUTEST_DEFAULT_XML_GENERATOR_IPP_791DCB98_05CC_49BA_8518_0EC9CA2B5450_
 
 //======================================================================
 // include
@@ -37,7 +37,10 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnTestProgramEnd(const UnitT
 	if( m_fp == NULL ) 
 	{
 		FileOpen(m_output_path.c_str());
-		if( m_fp == NULL ) return;
+		if( m_fp == NULL )
+		{
+			return;
+		}
 	}
 
 	m_fp->Printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -75,7 +78,10 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnTestProgramEnd(const UnitT
 
 IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnReportTestCase(IFile* file, const TestCase& test_case)
 {
-	if( test_case.reportable_test_count() == 0 ) return;
+	if( test_case.reportable_test_count() == 0 )
+	{
+		return;
+	}
 
 	file->Printf("  <testsuite ");
 	OutputXmlAttribute(file, "name"
@@ -106,7 +112,10 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnReportTestCase(IFile* file
 
 IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnReportTestInfo(IFile* file, const TestInfo& test_info)
 {
-	if( !test_info.is_reportable() ) return;
+	if( !test_info.is_reportable() )
+	{
+		return;
+	}
 
 	file->Printf("    <testcase ");
 	OutputXmlAttribute(file, "name", EscapeXmlAttribute(test_info.name()).c_str() );
@@ -129,9 +138,13 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnReportTestInfo(IFile* file
 	}
 
 	if( test_info.is_ran() )
+	{
 		file->Printf("status=\"run\" ");
+	}
 	else
+	{
 		file->Printf("status=\"notrun\" ");
+	}
 	file->Printf("time=\"%s\" "
 		, detail::FormatTimeInMillisecAsSecond(test_info.elapsed_time()).c_str()
 		);
@@ -148,7 +161,10 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnReportTestInfo(IFile* file
 		for( int i=0, count=test_info.result()->total_part_count(); i < count; ++i )
 		{
 			const TestPartResult& part = test_info.result()->GetTestPartResult(i);
-			if( part.passed() ) continue;
+			if( part.passed() )
+			{
+				continue;
+			}
 
 			file->Printf("      <failure ");
 			OutputXmlAttribute(file, "message"
@@ -244,7 +260,10 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnReportTestProperty(IFile* 
 IUTEST_IPP_INLINE bool DefaultXmlGeneratorListener::FileOpen(const char* path)
 {
 	m_fp = detail::IFileSystem::New();
-	if( m_fp == NULL ) return false;
+	if( m_fp == NULL )
+	{
+		return false;
+	}
 
 	if( !m_fp->Open(path, IFile::OpenWrite) )
 	{
@@ -257,7 +276,10 @@ IUTEST_IPP_INLINE bool DefaultXmlGeneratorListener::FileOpen(const char* path)
 
 IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::FileClose(void)
 {
-	if( m_fp == NULL ) return;
+	if( m_fp == NULL )
+	{
+		return;
+	}
 	m_fp->Close();
 	detail::IFileSystem::Free(m_fp);
 	m_fp = NULL;
@@ -278,6 +300,7 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OutputXmlAttribute(IFile* fi
 
 IUTEST_IPP_INLINE ::std::string DefaultXmlGeneratorListener::EscapeXml(const char* str, bool is_attribute)
 {
+IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_BEGIN()
 	::std::string msg;
 	if( str != NULL )
 	{
@@ -295,22 +318,16 @@ IUTEST_IPP_INLINE ::std::string DefaultXmlGeneratorListener::EscapeXml(const cha
 				msg += "&amp;";
 				break;
 			case '\'':
-				if( is_attribute )
-					msg += "&apos;";
-				else
-					msg += "\'";
+				msg += is_attribute ? "&apos;" : "\'";
 				break;
 			case '\"':
-				if( is_attribute )
-					msg += "&quot;";
-				else
-					msg += "\"";
+				msg += is_attribute ? "&quot;" : "\"";
 				break;
 			default:
 				{
 #if !defined(IUTEST_OS_WINDOWS_MOBILE)
 					wchar_t wc = 0;
-					int len = detail::iu_mbtowc(&wc, src, MB_CUR_MAX);
+					const int len = detail::iu_mbtowc(&wc, src, MB_CUR_MAX);
 					if( len > 1 )
 					{
 						msg += detail::WideStringToUTF8(&wc, 1);
@@ -339,6 +356,7 @@ IUTEST_IPP_INLINE ::std::string DefaultXmlGeneratorListener::EscapeXml(const cha
 		}
 	}
 	return msg;
+IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_END()
 }
 
 IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()

@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_pragma_HPP_FBC5A1DE_3D0C_443e_84B1_5F0618DF9A6B_
-#define INCG_IRIS_iutest_pragma_HPP_FBC5A1DE_3D0C_443e_84B1_5F0618DF9A6B_
+#ifndef INCG_IRIS_IUTEST_PRAGMA_HPP_FBC5A1DE_3D0C_443E_84B1_5F0618DF9A6B_
+#define INCG_IRIS_IUTEST_PRAGMA_HPP_FBC5A1DE_3D0C_443E_84B1_5F0618DF9A6B_
 
 //======================================================================
 // define
@@ -127,6 +127,16 @@
 #  define IUTEST_PRAGMA_EXTERN_TEMPLATE_WARN_DISABLE_BEGIN()
 #  define IUTEST_PRAGMA_EXTERN_TEMPLATE_WARN_DISABLE_END()
 #endif
+
+#if defined(_MSC_VER) && IUTEST_HAS_CONSTEXPR
+#  define IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_BEGIN()	IUTEST_PRAGMA_MSC_WARN_PUSH()	\
+																			IUTEST_PRAGMA_MSC_WARN_DISABLE(4592)
+#  define IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_END()		IUTEST_PRAGMA_MSC_WARN_POP()
+#else
+#  define IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_BEGIN()
+#  define IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_END()
+#endif
+
 
 #if		defined(_MSC_VER)
 #  define IUTEST_PRAGMA_WARN_DISABLE_SIGN_COMPARE()	IUTEST_PRAGMA(warning (disable:4389))

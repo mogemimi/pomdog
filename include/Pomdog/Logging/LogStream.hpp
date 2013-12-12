@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_LOGSTREAM_HPP
-#define POMDOG_LOGSTREAM_HPP
+#ifndef POMDOG_LOGSTREAM_9EF46BAA_9822_46E4_BCC6_DC71864ADAE5_HPP
+#define POMDOG_LOGSTREAM_9EF46BAA_9822_46E4_BCC6_DC71864ADAE5_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -88,4 +88,4 @@ LogStream & LogStream::operator<<(T const& message)
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_LOGSTREAM_HPP)
+#endif // !defined(POMDOG_LOGSTREAM_9EF46BAA_9822_46E4_BCC6_DC71864ADAE5_HPP)

@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_internal_HPP_A5BD9FBB_B57A_4c1d_B205_0ADB7798DBF9_
-#define INCG_IRIS_iutest_internal_HPP_A5BD9FBB_B57A_4c1d_B205_0ADB7798DBF9_
+#ifndef INCG_IRIS_IUTEST_INTERNAL_HPP_A5BD9FBB_B57A_4C1D_B205_0ADB7798DBF9_
+#define INCG_IRIS_IUTEST_INTERNAL_HPP_A5BD9FBB_B57A_4C1D_B205_0ADB7798DBF9_
 
 //======================================================================
 // include
@@ -83,7 +83,7 @@
 	};																						\
 	::iutest::detail::TestInstance<IUTEST_TEST_CLASS_NAME_(testcase_, testname_)>			\
 	IUTEST_TEST_INSTANCE_NAME_(testcase_, testname_)(										\
-		IUTEST_CONCAT_PACKAGE_(IUTEST_TO_NAME_(testcase_)).c_str(), IUTEST_TO_NAME_STR_(testname_)	\
+		IUTEST_CONCAT_PACKAGE_(IUTEST_TO_NAME_(testcase_)), IUTEST_TO_NAME_STR_(testname_)	\
 		, type_id_, parent_class_::SetUpTestCase, parent_class_::TearDownTestCase);			\
 	void IUTEST_TEST_CLASS_NAME_(testcase_, testname_)::Body(void)
 
@@ -101,7 +101,7 @@
 	};																						\
 	::iutest::detail::TestInstance<IUTEST_TEST_CLASS_NAME_(testcase_, testname_)>			\
 	IUTEST_TEST_INSTANCE_NAME_(testcase_, testname_)(										\
-		IUTEST_CONCAT_PACKAGE_(IUTEST_TO_NAME_(testcase_)).c_str(), IUTEST_TO_NAME_STR_(testname_)	\
+		IUTEST_CONCAT_PACKAGE_(IUTEST_TO_NAME_(testcase_)), IUTEST_TO_NAME_STR_(testname_)	\
 		, type_id_, parent_class_::SetUpTestCase, parent_class_::TearDownTestCase);			\
 	template<typename T>void IUTEST_TEST_CLASS_NAME_(testcase_, testname_ )::Body(void)
 
@@ -126,7 +126,7 @@
 	};																							\
 	::iutest::detail::TestInstance<IUTEST_PMZ_TEST_CLASS_NAME_(testcase_, testname_)>			\
 	IUTEST_PP_CAT( IUTEST_TEST_INSTANCE_NAME_(testcase_, testname_), __LINE__)(					\
-		IUTEST_CONCAT_PACKAGE_(IUTEST_TO_NAME_(testcase_)).c_str()								\
+		IUTEST_CONCAT_PACKAGE_(IUTEST_TO_NAME_(testcase_))										\
 		, IUTEST_PMZ_TEST_CLASS_NAME_(testcase_, testname_)::MakeTestName().c_str()				\
 		, #__VA_ARGS__, type_id_, parent_class_::SetUpTestCase, parent_class_::TearDownTestCase)
 
@@ -374,7 +374,7 @@
 #define IUTEST_TEST_HRESULT_SUCCEEDED(hr, on_failure)	IUTEST_PRED_FORMAT1_( ::iutest::internal::IsHRESULTSuccess, hr, on_failure )
 #define IUTEST_TEST_HRESULT_FAILED(hr, on_failure)		IUTEST_PRED_FORMAT1_( ::iutest::internal::IsHRESULTFailure, hr, on_failure )
 
-#define IUTEST_TEST_NULL(v, on_failure)					IUTEST_THROUGH_ANALYSIS_ASSUME_(v==NULL, IUTEST_PRED_FORMAT1_( ::iutest::internal::CmpHelperNull, v, on_failure ))
+#define IUTEST_TEST_NULL(v, on_failure)					IUTEST_THROUGH_ANALYSIS_ASSUME_(v==NULL, IUTEST_PRED_FORMAT1_( ::iutest::internal::NullHelper<IUTEST_IS_NULLLITERAL(v)>::Compare, v, on_failure ))
 #define IUTEST_TEST_NOTNULL(v, on_failure)				IUTEST_THROUGH_ANALYSIS_ASSUME_(v!=NULL, IUTEST_PRED_FORMAT1_( ::iutest::internal::CmpHelperNotNull, v, on_failure ))
 
 #define IUTEST_TEST_SAME(v1, v2, on_failure)			IUTEST_PRED_FORMAT2_( ::iutest::internal::CmpHelperSame, v1, v2, on_failure )
@@ -383,7 +383,7 @@
 	IUTEST_AMBIGUOUS_ELSE_BLOCKER_											\
 	if( ::iutest::detail::AlwaysTrue() ) {									\
 		::iutest::detail::NewTestPartResultCheckHelper::Counter<			\
-			::iutest::detail::NewTestPartResultCheckHelper::CondNe<			\
+			::iutest::detail::NewTestPartResultCheckHelper::CondGt<			\
 			::iutest::TestPartResult::kSuccess> >	iutest_failure_checker;	\
 		IUTEST_SUPPRESS_UNREACHABLE_CODE_WARNING( { (void)0; statement; } )	\
 		if( iutest_failure_checker.count() > 0 ) {							\

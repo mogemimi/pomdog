@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_core_IPP_33560431_783B_4ae7_8FC8_6E78355CAF87_
-#define INCG_IRIS_iutest_core_IPP_33560431_783B_4ae7_8FC8_6E78355CAF87_
+#ifndef INCG_IRIS_IUTEST_CORE_IPP_33560431_783B_4AE7_8FC8_6E78355CAF87_
+#define INCG_IRIS_IUTEST_CORE_IPP_33560431_783B_4AE7_8FC8_6E78355CAF87_
 
 //======================================================================
 // include
@@ -81,10 +81,16 @@ IUTEST_IPP_INLINE int UnitTest::failed_test_case_count(void) const
 
 IUTEST_IPP_INLINE bool UnitTest::Passed(void) const
 {
-	if( m_ad_hoc_testresult.Failed() ) return false;
+	if( m_ad_hoc_testresult.Failed() )
+	{
+		return false;
+	}
 	for( iuTestCases::const_iterator it=m_testcases.begin(), end=m_testcases.end(); it != end; ++it )
 	{
-		if( (it)->Failed() ) return false;
+		if( (it)->Failed() )
+		{
+			return false;
+		}
 	}
 	return true;
 }
@@ -102,7 +108,10 @@ IUTEST_IPP_INLINE int UnitTest::Run(void)
 		}
 	}
 
-	if( !PreRunner() ) return 0;
+	if( !PreRunner() )
+	{
+		return 0;
+	}
 
 	int ret = 1;
 #if IUTEST_HAS_EXCEPTIONS
@@ -157,7 +166,10 @@ IUTEST_IPP_INLINE int UnitTest::RunImpl(void)
 {
 	m_repeat_counter = 0;
 	int repeat = TestEnv::get_repeat_count();
-	if( repeat == 0 ) return 0;
+	if( repeat == 0 )
+	{
+		return 0;
+	}
 
 	m_start_timestamp = detail::GetTimeInMillis();
 	TestProgramStart();
@@ -175,7 +187,10 @@ IUTEST_IPP_INLINE int UnitTest::RunImpl(void)
 		listeners().OnTestIterationEnd(*this, m_repeat_counter);
 
 		++m_repeat_counter;
-		if( repeat > 0 ) --repeat;
+		if( repeat > 0 )
+		{
+			--repeat;
+		}
 	}
 
 	TestProgramEnd();
@@ -191,7 +206,10 @@ IUTEST_IPP_INLINE bool	UnitTest::RunOnce(void)
 	ClearNonAdHocTestResult();
 
 	// 実行対象のテストがない場合は何もしない
-	if( test_to_run_count() == 0 ) return Passed();
+	if( test_to_run_count() == 0 )
+	{
+		return Passed();
+	}
 
 	// シャッフル
 	if( TestFlag::IsEnableFlag(TestFlag::SHUFFLE_TESTS) )
@@ -212,7 +230,10 @@ IUTEST_IPP_INLINE bool	UnitTest::RunOnce(void)
 		sw.start();
 		for( iuTestCases::iterator it=m_testcases.begin(), end=m_testcases.end(); it != end; ++it )
 		{
-			if( !(it)->should_run() ) continue;
+			if( !(it)->should_run() )
+			{
+				continue;
+			}
 
 			m_current_testcase = it;
 			(it)->Run();
@@ -284,7 +305,10 @@ IUTEST_IPP_INLINE void	UnitTest::EnvironmentTearDown(void)
 
 IUTEST_IPP_INLINE void	UnitTest::TestProgramEnd(void)
 {
-	if( !m_test_started ) return;
+	if( !m_test_started )
+	{
+		return;
+	}
 	listeners().OnTestProgramEnd(*this);
 	m_test_started = false;
 }
@@ -308,7 +332,10 @@ IUTEST_IPP_INLINE void	UnitTest::Initialize(void)
 	}
 
 	// 以降初回のみ
-	if( m_init_iutest_count != 1 ) return;
+	if( m_init_iutest_count != 1 )
+	{
+		return;
+	}
 
 #if IUTEST_HAS_PARAM_TEST
 	m_param_testcase_holder.RegisterTests();

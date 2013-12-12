@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_typed_tests_HPP_DA9562C6_8CAB_4242_9E9E_22FFB490DE30_
-#define INCG_IRIS_iutest_typed_tests_HPP_DA9562C6_8CAB_4242_9E9E_22FFB490DE30_
+#ifndef INCG_IRIS_IUTEST_TYPED_TESTS_HPP_DA9562C6_8CAB_4242_9E9E_22FFB490DE30_
+#define INCG_IRIS_IUTEST_TYPED_TESTS_HPP_DA9562C6_8CAB_4242_9E9E_22FFB490DE30_
 
 //======================================================================
 // include
@@ -289,8 +289,8 @@ class TypeParamTestInstance
 
 public:
 	// コンストラクタ
-	TypeParamTestInstance(const ::std::string& testcase, const char* name)
-		: m_tests(testcase.c_str(), name, 0)
+	TypeParamTestInstance(const char* testcase, const char* name)
+		: m_tests(testcase, name, 0)
 	{
 		m_tests.AddTest();
 	}
@@ -342,21 +342,33 @@ public:
 private:
 	bool	Verify(const char* names)
 	{
+		IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_BEGIN()
 #if IUTEST_TYPED_TEST_P_STRICT
-		if( names == NULL ) return true;
+		if( names == NULL )
+		{
+			return true;
+		}
 		const char* comma = FindComma(names);
 		::std::string name;
-		if( comma == NULL ) name = names;
+		if( comma == NULL )
+		{
+			name = names;
+		}
 		else
 		{
 			name.append(names, comma - names);
 			++comma;
 		}
-		if( m_list.find(name.c_str()) == m_list.end() ) return false;
+		if( m_list.find(name.c_str()) == m_list.end() )
+		{
+			return false;
+		}
 		return Verify(SkipSpace(comma));
 #else
+		IUTEST_UNUSED_VAR(names);
 		return true;
 #endif
+		IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_END()
 	}
 
 private:
@@ -400,6 +412,7 @@ class TypeParameterizedTestCase
 		// テストの登録
 		static void Register(TestCase* testcase, const char* test_names)
 		{
+IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_BEGIN()
 			const char* str = detail::SkipSpace(test_names);
 			const char* comma = strchr(str, ',');
 			::std::string test_name;
@@ -417,6 +430,7 @@ class TypeParameterizedTestCase
 			detail::iuPool<IEachTest>::GetInstance().push(test);
 
 			EachTest<TypeParam, typename TestsList::Tail>::Register(testcase, detail::SkipSpace(comma));
+IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_END()
 		}
 	private:
 		TestCaseMediator	m_mediator;

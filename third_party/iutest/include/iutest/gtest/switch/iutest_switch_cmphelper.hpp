@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_switch_cmphelper_HPP_0378DF29_2DE7_4c60_8E12_32FEA8BEAA7C_
-#define INCG_IRIS_iutest_switch_cmphelper_HPP_0378DF29_2DE7_4c60_8E12_32FEA8BEAA7C_
+#ifndef INCG_IRIS_IUTEST_SWITCH_CMPHELPER_HPP_0378DF29_2DE7_4C60_8E12_32FEA8BEAA7C_
+#define INCG_IRIS_IUTEST_SWITCH_CMPHELPER_HPP_0378DF29_2DE7_4C60_8E12_32FEA8BEAA7C_
 
 #if !defined(IUTEST_USE_GTEST)
 

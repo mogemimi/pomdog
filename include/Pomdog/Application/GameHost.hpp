@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_GAMEHOST_HPP
-#define POMDOG_GAMEHOST_HPP
+#ifndef POMDOG_GAMEHOST_FDAA974D_DBD8_44E8_84CD_F6FAA243957B_HPP
+#define POMDOG_GAMEHOST_FDAA974D_DBD8_44E8_84CD_F6FAA243957B_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -60,4 +60,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_GAMEHOST_HPP)
+#endif // !defined(POMDOG_GAMEHOST_FDAA974D_DBD8_44E8_84CD_F6FAA243957B_HPP)

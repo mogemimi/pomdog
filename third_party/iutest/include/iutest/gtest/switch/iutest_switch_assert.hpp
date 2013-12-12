@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_switch_assert_HPP_F4AD6E1B_4B1F_40ee_A0CC_D454587B2C39_
-#define INCG_IRIS_iutest_switch_assert_HPP_F4AD6E1B_4B1F_40ee_A0CC_D454587B2C39_
+#ifndef INCG_IRIS_IUTEST_SWITCH_ASSERT_HPP_F4AD6E1B_4B1F_40EE_A0CC_D454587B2C39_
+#define INCG_IRIS_IUTEST_SWITCH_ASSERT_HPP_F4AD6E1B_4B1F_40EE_A0CC_D454587B2C39_
 
 #if !defined(IUTEST_USE_GTEST)
 
@@ -104,7 +104,7 @@
 
 //======================================================================
 // undef
-#ifdef INCG_IRIS_iutest_HPP_
+#ifdef INCG_IRIS_IUTEST_HPP_
 
 #undef IUTEST_ASSERT_TRUE
 #undef IUTEST_ASSERT_FALSE
@@ -122,7 +122,6 @@
 #undef IUTEST_ASSERT_DOUBLE_EQ
 #undef IUTEST_ASSERT_STREQ
 #undef IUTEST_ASSERT_STRNE
-#undef IUTEST_ASSERT_STRLNEQ
 #undef IUTEST_ASSERT_STRCASEEQ
 #undef IUTEST_ASSERT_STRCASENE
 #undef IUTEST_ASSERT_THROW
@@ -169,7 +168,6 @@
 #define IUTEST_ASSERT_DOUBLE_EQ	ASSERT_DOUBLE_EQ
 #define IUTEST_ASSERT_STREQ		ASSERT_STREQ
 #define IUTEST_ASSERT_STRNE		ASSERT_STRNE
-#define IUTEST_ASSERT_STRLNEQ(len, v2)			ASSERT_PRED_FORMAT2(iuutil::CmpHelperSTRLNEQ, len, v2)
 #define IUTEST_ASSERT_STRCASEEQ	ASSERT_STRCASEEQ
 #define IUTEST_ASSERT_STRCASENE	ASSERT_STRCASENE
 #define IUTEST_ASSERT_THROW(statement, expected_exception)		ASSERT_THROW((void)(statement), expected_exception)

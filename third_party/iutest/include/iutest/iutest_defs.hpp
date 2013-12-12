@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_defs_HPP_839F06DB_E0B6_4e6a_84F2_D99C0A44E06C_
-#define INCG_IRIS_iutest_defs_HPP_839F06DB_E0B6_4e6a_84F2_D99C0A44E06C_
+#ifndef INCG_IRIS_IUTEST_DEFS_HPP_839F06DB_E0B6_4E6A_84F2_D99C0A44E06C_
+#define INCG_IRIS_IUTEST_DEFS_HPP_839F06DB_E0B6_4E6A_84F2_D99C0A44E06C_
 
 //======================================================================
 // include
@@ -108,7 +108,7 @@ template<typename T>bool TestTypeIdHelper<T>::_dummy = false;
   * @brief	TypeId Generator
 */
 template<typename T>
-inline IUTEST_CXX_CONSTEXPR TypeId	GetTypeId(void)
+inline TypeId	GetTypeId(void)
 {
 	return &(helper::TestTypeIdHelper<T>::_dummy);
 }
@@ -181,7 +181,10 @@ public:
 		const Int v1 = m_v.iv < 0 ? ~m_v.iv + 1 : m_v.iv;
 		const Int v2 = rhs.m_v.iv < 0 ? ~rhs.m_v.iv + 1 : rhs.m_v.iv;
 		const Int diff = (v1 > v2) ? v1 - v2 : v2 - v1;
-		if( diff <= kMaxUlps ) return true;
+		if( diff <= kMaxUlps )
+		{
+			return true;
+		}
 		return false;
 	}
 

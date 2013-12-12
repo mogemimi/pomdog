@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_menu_tests_HPP_52925DE1_A4AE_4CCB_B524_8E97AA73E03D_
-#define INCG_IRIS_iutest_menu_tests_HPP_52925DE1_A4AE_4CCB_B524_8E97AA73E03D_
+#ifndef INCG_IRIS_IUTEST_MENU_TESTS_HPP_52925DE1_A4AE_4CCB_B524_8E97AA73E03D_
+#define INCG_IRIS_IUTEST_MENU_TESTS_HPP_52925DE1_A4AE_4CCB_B524_8E97AA73E03D_
 
 //======================================================================
 // include
@@ -46,11 +46,17 @@ public:
 public:
 	bool Create(HMENU hMenu)
 	{
-		if( hMenu == NULL ) return false;
+		if( hMenu == NULL )
+		{
+			return false;
+		}
 
 		// テストを列挙
 		HMENU hRoot = AppendPopup(hMenu, "TestList");
-		if( hRoot == NULL ) return false;
+		if( hRoot == NULL )
+		{
+			return false;
+		}
 
 		Append(hRoot, "以下をすべて実行", m_nID);
 		++m_nID;
@@ -118,7 +124,9 @@ private:
 		strcpy_s(str, lpszName);
 		const int num = ::GetMenuItemCount(hMenu);
 		if( !::InsertMenuItemA(hMenu, num, TRUE, &mii) )
+		{
 			return false;
+		}
 		return true;
 	}
 	static HMENU AppendPopup(HMENU hMenu, const char* lpszName)
@@ -134,7 +142,9 @@ private:
 		strcpy_s(str, lpszName);
 		const int num = ::GetMenuItemCount(hMenu);
 		if( !::InsertMenuItemA(hMenu, num, TRUE, &mii) )
+		{
 			return NULL;
+		}
 		return hSubMenu;
 	}
 };

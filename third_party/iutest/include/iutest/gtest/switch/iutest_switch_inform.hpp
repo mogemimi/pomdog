@@ -14,8 +14,8 @@
 */
 //-----------------------------------------------------------------------
 //======================================================================
-#ifndef INCG_IRIS_iutest_switch_inform_HPP_F4AD6E1B_4B1F_40ee_A0CC_D454587B2C39_
-#define INCG_IRIS_iutest_switch_inform_HPP_F4AD6E1B_4B1F_40ee_A0CC_D454587B2C39_
+#ifndef INCG_IRIS_IUTEST_SWITCH_INFORM_HPP_F4AD6E1B_4B1F_40EE_A0CC_D454587B2C39_
+#define INCG_IRIS_IUTEST_SWITCH_INFORM_HPP_F4AD6E1B_4B1F_40EE_A0CC_D454587B2C39_
 
 #if !defined(IUTEST_USE_GTEST)
 
@@ -63,7 +63,7 @@
 
 //======================================================================
 // undef
-#ifdef INCG_IRIS_iutest_HPP_
+#ifdef INCG_IRIS_IUTEST_HPP_
 
 #undef IUTEST_INFORM_TRUE
 #undef IUTEST_INFORM_FALSE
@@ -81,7 +81,6 @@
 #undef IUTEST_INFORM_DOUBLE_EQ
 #undef IUTEST_INFORM_STREQ
 #undef IUTEST_INFORM_STRNE
-#undef IUTEST_INFORM_STRLNEQ
 #undef IUTEST_INFORM_STRCASEEQ
 #undef IUTEST_INFORM_STRCASENE
 #undef IUTEST_INFORM_THROW
@@ -207,7 +206,6 @@
 #define IUTEST_INFORM_DOUBLE_EQ				INFORM_DOUBLE_EQ
 #define IUTEST_INFORM_STREQ					INFORM_STREQ
 #define IUTEST_INFORM_STRNE					INFORM_STRNE
-#define IUTEST_INFORM_STRLNEQ(len, v2)		INFORM_PRED_FORMAT2(iuutil::CmpHelperSTRLNEQ, len, v2)
 #define IUTEST_INFORM_STRCASEEQ				INFORM_STRCASEEQ
 #define IUTEST_INFORM_STRCASENE				INFORM_STRCASENE
 #define IUTEST_INFORM_NO_THROW(statement)	INFORM_NO_THROW((void)(statement))
