@@ -80,8 +80,8 @@ struct DepthStencilFaceOperationGL4 final
 
 	DepthStencilFaceOperationGL4()
 		: stencilFunction(GL_ALWAYS)
-		, stencilDepthBufferFail(GL_KEEP)
 		, stencilFail(GL_KEEP)
+		, stencilDepthBufferFail(GL_KEEP)
 		, stencilPass(GL_KEEP)
 	{}
 };
@@ -123,9 +123,9 @@ DepthStencilStateGL4::Impl::Impl(DepthStencilDescription const& description)
 	, referenceStencil(static_cast<GLint>(description.ReferenceStencil))
 	, stencilMask(static_cast<GLuint>(description.StencilMask))
 	, stencilWriteMask(static_cast<GLuint>(description.StencilWriteMask))
+	, depthBufferWriteEnable(description.DepthBufferWriteEnable ? GL_TRUE: GL_FALSE)
 	, stencilEnable(description.StencilEnable)
 	, depthBufferEnable(description.DepthBufferEnable)
-	, depthBufferWriteEnable(description.DepthBufferWriteEnable ? GL_TRUE: GL_FALSE)
 {
 	static_assert(std::is_same<GLuint, std::uint32_t>::value, "");
 	static_assert(std::is_same<GLint, std::int32_t>::value, "");

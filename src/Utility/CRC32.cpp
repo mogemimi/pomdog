@@ -52,7 +52,7 @@ void CRC32::make_crc_table() throw()
 #else
 // !defined(POMDOG_CRC32_CREATE_CRC_TABLE)
 static std::array<std::uint32_t, 256U> const crctable =
-{
+{{
 	0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 
 	0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
 	0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 
@@ -117,7 +117,7 @@ static std::array<std::uint32_t, 256U> const crctable =
 	0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf,
 	0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 
 	0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
-};
+}};
 #endif // !defined(POMDOG_CRC32_CREATE_CRC_TABLE)
 
 constexpr std::uint32_t CRC32_InitValue = 0xffffffffUL;

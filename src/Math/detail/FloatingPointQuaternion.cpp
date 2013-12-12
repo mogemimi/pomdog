@@ -332,7 +332,7 @@ void CreateFromRotationMatrixImplementation(MatrixClass const& rotation, Floatin
 		std::size_t const k = indices[j];
 		
 		auto root = std::sqrt(rotation[i][i] - rotation[j][j] - rotation[k][k] + static_cast<T>(1));
-		std::array<T*, 3> const quat = { &result.x, &result.y, &result.z };
+		std::array<T*, 3> const quat = {{ &result.x, &result.y, &result.z }};
 		*quat[i] = half * root;
 		root = half / root;
 		result.w = (rotation[k][j] - rotation[j][k]) * root;

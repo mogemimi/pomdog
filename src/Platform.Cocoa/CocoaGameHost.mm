@@ -118,10 +118,10 @@ private:
 //-----------------------------------------------------------------------
 CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
-	: exitRequest(false)
-	, gameWindow(window)
+	: gameWindow(window)
 	, systemEventDispatcher(eventDispatcher)
 	, openGLContext(CreateOpenGLContext())
+	, exitRequest(false)
 {
 	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
 	graphicsDevice = std::make_shared<GraphicsDevice>(std::unique_ptr<GraphicsDeviceGL4>{new GraphicsDeviceGL4()});
