@@ -7,8 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#include <Pomdog/Logging/Log.hpp>
-#include <Pomdog/Event/ScopedConnection.hpp>
+#include <Pomdog/Pomdog.hpp>
 #include <Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp>
 #include "CocoaTestGame.hpp"
 
@@ -31,7 +30,7 @@ using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 #ifdef DEBUG
 	connection = Log::Connect([](Pomdog::LogEntry entry) {
 		NSString* log = [NSString stringWithUTF8String:entry.message.c_str()];
-		NSLog(@"%@", log);
+		NSLog(@"\n%@", log);
 	});
 #endif
 

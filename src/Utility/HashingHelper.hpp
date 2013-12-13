@@ -9,9 +9,9 @@
 #ifndef POMDOG_SRC_UTILITY_HASHINGHELPER_E07C1EDA_1E17_4606_B969_9B8679E00806_HPP
 #define POMDOG_SRC_UTILITY_HASHINGHELPER_E07C1EDA_1E17_4606_B969_9B8679E00806_HPP
 
+#include <string>
 #include <Pomdog/Config/FundamentalTypes.hpp>
 #include "CRC32.hpp"
-#include <string>
 
 namespace Pomdog {
 

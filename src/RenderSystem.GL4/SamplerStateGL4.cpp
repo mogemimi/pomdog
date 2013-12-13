@@ -7,10 +7,10 @@
 //
 
 #include "SamplerStateGL4.hpp"
-#include "ErrorChecker.hpp"
+#include <algorithm>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/SamplerDescription.hpp>
-#include <algorithm>
+#include "ErrorChecker.hpp"
 
 namespace Pomdog {
 namespace Details {

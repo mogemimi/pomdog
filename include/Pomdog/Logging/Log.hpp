@@ -13,13 +13,15 @@
 #	pragma once
 #endif
 
-#include "../Config/Export.hpp"
-#include "LogEntry.hpp"
-#include "LogStream.hpp"
-#include "../Event/EventConnection.hpp"
 #include <functional>
+#include "../Config/Export.hpp"
+#include "../Event/EventConnection.hpp"
+#include "LoggingLevel.hpp"
 
 namespace Pomdog {
+
+class LogEntry;
+class LogStream;
 
 /// @addtogroup Framework
 /// @{

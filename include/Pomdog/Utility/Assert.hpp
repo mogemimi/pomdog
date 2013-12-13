@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Config/Platform.hpp>
 #include <cassert>
+#include <Pomdog/Config/Platform.hpp>
 
 #if defined(POMDOG_COMPILER_MSVC)
 #	include <xutility>

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -7,10 +7,11 @@
 //
 
 #include "ErrorChecker.hpp"
-#include "OpenGLPrerequisites.hpp"
+#include <sstream>
 #include <Pomdog/Utility/detail/Tagged.hpp>
 #include <Pomdog/Logging/Log.hpp>
-#include <sstream>
+#include <Pomdog/Logging/LogStream.hpp>
+#include "OpenGLPrerequisites.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -54,7 +55,6 @@ void ErrorChecker::CheckError(char const* command, char const* filename, int lin
 	if (lines < maxLine)
 	{
 		Log::Stream(LoggingLevel::Critical)
-			<< "\n"
 			<< ">>> File " << filename << ", line " << line << ", in " << command << "\n"
 			<< "OpenGL Error: " << ToString(errorCode);
 

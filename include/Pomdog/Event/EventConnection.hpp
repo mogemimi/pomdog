@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include <memory>
 #include "../Config/Export.hpp"
 #include "detail/FowardDeclarations.hpp"
-#include <memory>
 
 namespace Pomdog {
 

@@ -7,10 +7,10 @@
 //
 
 #include "BlendStateGL4.hpp"
-#include "ErrorChecker.hpp"
+#include <utility>
 #include <Pomdog/Graphics/BlendDescription.hpp>
 #include <Pomdog/Utility/Assert.hpp>
-#include <utility>
+#include "ErrorChecker.hpp"
 
 namespace Pomdog {
 namespace Details {

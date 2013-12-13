@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include "LoggingLevel.hpp"
 #include <string>
+#include "LoggingLevel.hpp"
 
 namespace Pomdog {
 

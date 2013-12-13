@@ -7,10 +7,10 @@
 //
 
 #include <Pomdog/Event/EventCodeHelper.hpp>
-#include <Pomdog/Utility/Assert.hpp>
-#include "../Utility/HashingHelper.hpp"
 #include <algorithm>
 #include <string>
+#include <Pomdog/Utility/Assert.hpp>
+#include "../Utility/HashingHelper.hpp"
 
 namespace Pomdog {
 

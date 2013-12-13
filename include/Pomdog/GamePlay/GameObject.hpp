@@ -13,13 +13,13 @@
 #	pragma once
 #endif
 
-#include "detail/GameComponent.hpp"
+#include <type_traits>
+#include <algorithm>
+#include <memory>
+#include <vector>
 #include "../Utility/Assert.hpp"
 #include "../Utility/Noncopyable.hpp"
-#include <vector>
-#include <memory>
-#include <algorithm>
-#include <type_traits>
+#include "detail/GameComponent.hpp"
 
 namespace Pomdog {
 

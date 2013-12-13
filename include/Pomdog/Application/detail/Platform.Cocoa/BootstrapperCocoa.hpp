@@ -13,15 +13,15 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Config/FundamentalTypes.hpp>
-#include <Pomdog/Config/Export.hpp>
-#include <memory>
+#import <Cocoa/Cocoa.h>
+
 #include <type_traits>
+#include <memory>
 #include <array>
 #include <functional>
+#include <Pomdog/Config/FundamentalTypes.hpp>
+#include <Pomdog/Config/Export.hpp>
 #include <Pomdog/Application/GameHost.hpp>
-
-#import <Cocoa/Cocoa.h>
 
 @class NSWindow;
 

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,10 +13,10 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 #include "TextureAddressMode.hpp"
 #include "TextureFilter.hpp"
-#include <limits>
 
 namespace Pomdog {
 
@@ -27,7 +27,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief サンプラーステートの設定を記述します。
-class SamplerDescription
+class POMDOG_EXPORT SamplerDescription
 {
 public:
 	///@~Japanese
@@ -81,17 +81,7 @@ public:
 	//float MipMapLevelOfDetailBias;
 
 public:
-	SamplerDescription()
-		: MaxAnisotropy(0)
-		, MinMipLevel(std::numeric_limits<float>::min())
-		, MaxMipLevel(std::numeric_limits<float>::max())
-		, Filter(TextureFilter::Linear)
-		, AddressU(TextureAddressMode::Clamp)
-		, AddressV(TextureAddressMode::Clamp)
-		, AddressW(TextureAddressMode::Clamp)
-		//, BorderColor(Color::TransparentBlack)
-		//, MipMapLevelOfDetailBias(0.0f)
-	{}
+	SamplerDescription();
 };
 
 /// @}

@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include <string>
 #include "../Config/Export.hpp"
 #include "EventCode.hpp"
-#include <string>
 
 namespace std {
 

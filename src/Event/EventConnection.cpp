@@ -7,8 +7,8 @@
 //
 
 #include <Pomdog/Event/EventConnection.hpp>
-#include "detail/EventSlot.hpp"
 #include <utility>
+#include "detail/EventSlot.hpp"
 
 namespace Pomdog {
 

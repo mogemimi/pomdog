@@ -7,6 +7,8 @@
 //
 
 #include <Pomdog/Graphics/GraphicsContext.hpp>
+#include <vector>
+#include <utility>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Utility/Exception.hpp>
 #include <Pomdog/Graphics/BlendState.hpp>
@@ -14,8 +16,6 @@
 #include <Pomdog/Graphics/RasterizerState.hpp>
 #include <Pomdog/Graphics/SamplerState.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
-#include <vector>
-#include <utility>
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include "../RenderSystem/NativeBlendState.hpp"

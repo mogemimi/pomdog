@@ -7,8 +7,8 @@
 //
 
 #include "CocoaGameWindow.hpp"
-#include <Pomdog/Utility/Assert.hpp>
 #include <utility>
+#include <Pomdog/Utility/Assert.hpp>
 
 #include "CocoaOpenGLContext.hpp"
 #include "CocoaOpenGLView.hpp"

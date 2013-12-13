@@ -7,11 +7,11 @@
 //
 
 #include <Pomdog/Event/EventQueue.hpp>
-#include <Pomdog/Utility/Assert.hpp>
 #include <algorithm>
 #include <vector>
 #include <mutex>
 #include <utility>
+#include <Pomdog/Utility/Assert.hpp>
 #include "detail/EventSlot.hpp"
 #include "detail/EventSlotCollection.hpp"
 

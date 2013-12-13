@@ -13,13 +13,13 @@
 #	pragma once
 #endif
 
+#include <type_traits>
+#include <utility>
+#include <memory>
 #include "../Config/Export.hpp"
 #include "../Utility/Assert.hpp"
 #include "detail/EventArguments.hpp"
 #include "EventCode.hpp"
-#include <type_traits>
-#include <utility>
-#include <memory>
 
 namespace Pomdog {
 

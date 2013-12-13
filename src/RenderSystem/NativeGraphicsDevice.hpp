@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include <memory>
 #include <Pomdog/Utility/Noncopyable.hpp>
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
-#include <memory>
 
 namespace Pomdog {
 namespace Details {

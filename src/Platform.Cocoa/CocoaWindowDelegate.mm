@@ -7,6 +7,7 @@
 //
 
 #import "CocoaWindowDelegate.hpp"
+
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/EventCodeHelper.hpp>

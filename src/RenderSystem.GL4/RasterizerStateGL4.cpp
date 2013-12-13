@@ -7,9 +7,9 @@
 //
 
 #include "RasterizerStateGL4.hpp"
-#include "ErrorChecker.hpp"
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/RasterizerDescription.hpp>
+#include "ErrorChecker.hpp"
 
 namespace Pomdog {
 namespace Details {

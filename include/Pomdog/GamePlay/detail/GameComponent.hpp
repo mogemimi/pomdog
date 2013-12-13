@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include "../../Config/FundamentalTypes.hpp"
 #include <typeinfo>
+#include "../../Config/FundamentalTypes.hpp"
 
 namespace Pomdog {
 namespace Details {

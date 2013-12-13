@@ -7,18 +7,19 @@
 //
 
 #include "GraphicsContextGL4.hpp"
+#include <array>
+#include <utility>
 #include <Pomdog/Math/Color.hpp>
 #include <Pomdog/Math/Rectangle.hpp>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/ClearOptions.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
 #include <Pomdog/Application/GameWindow.hpp>
-#include <array>
-#include <utility>
 #include "OpenGLContext.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 
 #include <Pomdog/Logging/Log.hpp>
+#include <Pomdog/Logging/LogStream.hpp>
 
 namespace Pomdog {
 namespace Details {
@@ -29,8 +30,8 @@ GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> openGLCont
 	: nativeContext(std::move(openGLContext))
 	, gameWindow(std::move(window))
 {
-	const GLubyte * a = glGetString(GL_VERSION);
-	Log::Stream() << "GL Version: " << (char *)a << "\n";
+	auto version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
+	Log::Stream(LoggingLevel::Internal) << "OpenGL Version: " << version << "\n";
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Clear(Color const& color)

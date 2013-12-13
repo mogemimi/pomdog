@@ -7,8 +7,8 @@
 //
 
 #include <Pomdog/Logging/LogStream.hpp>
-#include <Pomdog/Logging/LogChannel.hpp>
 #include <utility>
+#include <Pomdog/Logging/LogChannel.hpp>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

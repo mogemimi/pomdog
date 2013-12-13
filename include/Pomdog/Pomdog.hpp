@@ -34,14 +34,38 @@
 #include <Pomdog/Event/EventQueue.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
 
+// Math
+#include <Pomdog/Math/Color.hpp>
+#include <Pomdog/Math/ContainmentType.hpp>
+#include <Pomdog/Math/Degree.hpp>
+#include <Pomdog/Math/MathHelper.hpp>
+#include <Pomdog/Math/Matrix2x2.hpp>
+#include <Pomdog/Math/Matrix3x3.hpp>
+#include <Pomdog/Math/Matrix4x4.hpp>
+#include <Pomdog/Math/Point2D.hpp>
+#include <Pomdog/Math/Point3D.hpp>
+#include <Pomdog/Math/Quaternion.hpp>
+#include <Pomdog/Math/Radian.hpp>
+#include <Pomdog/Math/Rectangle.hpp>
+#include <Pomdog/Math/Vector2.hpp>
+#include <Pomdog/Math/Vector3.hpp>
+#include <Pomdog/Math/Vector4.hpp>
+
+// Logging
+#include <Pomdog/Logging/Log.hpp>
+#include <Pomdog/Logging/LogChannel.hpp>
+#include <Pomdog/Logging/LogEntry.hpp>
+#include <Pomdog/Logging/LogStream.hpp>
+#include <Pomdog/Logging/LoggingLevel.hpp>
+
 // GamePlay
 #include <Pomdog/GamePlay/GameObject.hpp>
 
 // Graphics
 #include <Pomdog/Graphics/Blend.hpp>
 #include <Pomdog/Graphics/BlendDescription.hpp>
-#include <Pomdog/Graphics/BlendState.hpp>
 #include <Pomdog/Graphics/BlendFunction.hpp>
+#include <Pomdog/Graphics/BlendState.hpp>
 #include <Pomdog/Graphics/BufferUsage.hpp>
 #include <Pomdog/Graphics/ClearOptions.hpp>
 #include <Pomdog/Graphics/ComparisonFunction.hpp>
@@ -65,29 +89,5 @@
 #include <Pomdog/Input/ButtonState.hpp>
 #include <Pomdog/Input/Mouse.hpp>
 #include <Pomdog/Input/MouseState.hpp>
-
-// Logging
-#include <Pomdog/Logging/Log.hpp>
-#include <Pomdog/Logging/LogChannel.hpp>
-#include <Pomdog/Logging/LogEntry.hpp>
-#include <Pomdog/Logging/LogStream.hpp>
-#include <Pomdog/Logging/LoggingLevel.hpp>
-
-// Math
-#include <Pomdog/Math/Color.hpp>
-#include <Pomdog/Math/ContainmentType.hpp>
-#include <Pomdog/Math/Degree.hpp>
-#include <Pomdog/Math/MathHelper.hpp>
-#include <Pomdog/Math/Matrix2x2.hpp>
-#include <Pomdog/Math/Matrix3x3.hpp>
-#include <Pomdog/Math/Matrix4x4.hpp>
-#include <Pomdog/Math/Point2D.hpp>
-#include <Pomdog/Math/Point3D.hpp>
-#include <Pomdog/Math/Quaternion.hpp>
-#include <Pomdog/Math/Radian.hpp>
-#include <Pomdog/Math/Rectangle.hpp>
-#include <Pomdog/Math/Vector2.hpp>
-#include <Pomdog/Math/Vector3.hpp>
-#include <Pomdog/Math/Vector4.hpp>
 
 #endif // !defined(POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP)

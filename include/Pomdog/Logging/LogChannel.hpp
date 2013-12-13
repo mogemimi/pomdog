@@ -13,12 +13,12 @@
 #	pragma once
 #endif
 
-#include "LogEntry.hpp"
+#include <functional>
+#include <string>
 #include "../Config/Export.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include "../Event/EventHandler.hpp"
-#include <functional>
-#include <string>
+#include "LogEntry.hpp"
 
 namespace Pomdog {
 

@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 #include "CullMode.hpp"
 #include "FillMode.hpp"
@@ -26,7 +27,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief ラスタライズ処理を記述します。
-class RasterizerDescription
+class POMDOG_EXPORT RasterizerDescription
 {
 public:
 	///@~Japanese
@@ -57,14 +58,7 @@ public:
 	bool ScissorTestEnable;
 	
 public:
-	RasterizerDescription()
-		: DepthBias(0)
-		, SlopeScaledDepthBias(0.0f)
-		, CullMode(CullMode::CounterClockwiseFace)
-		, FillMode(FillMode::Solid)
-		, MultisampleEnable(false)
-		, ScissorTestEnable(false)
-	{}
+	RasterizerDescription();
 };
 
 /// @}

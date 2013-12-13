@@ -13,12 +13,12 @@
 #	pragma once
 #endif
 
+#include <memory>
 #include "../Config/FundamentalTypes.hpp"
 #include "../Config/Export.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include "../Math/detail/ForwardDeclarations.hpp"
 #include "detail/ForwardDeclarations.hpp"
-#include <memory>
 
 namespace Pomdog {
 namespace Details {

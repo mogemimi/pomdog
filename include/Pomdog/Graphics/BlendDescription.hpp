@@ -15,9 +15,9 @@
 
 #include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
+#include "../Math/Color.hpp"
 #include "Blend.hpp"
 #include "BlendFunction.hpp"
-#include "../Math/Color.hpp"
 
 namespace Pomdog {
 

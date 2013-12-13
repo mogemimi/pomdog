@@ -7,8 +7,8 @@
 //
 
 #include <Pomdog/Application/detail/PlatformSystem.hpp>
-#include "CocoaGameHost.hpp"
 #include <utility>
+#include "CocoaGameHost.hpp"
 
 namespace Pomdog {
 namespace Details {

@@ -7,19 +7,19 @@
 //
 
 #include "CocoaGameHost.hpp"
-#include "Game.hpp"
 #include <utility>
 #include <vector>
-#include "CocoaGameWindow.hpp"
+#include <OpenGL/OpenGL.h>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/EventCodeHelper.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
 #include <Pomdog/Logging/Log.hpp>
-
-#include <OpenGL/OpenGL.h>
 #include <Pomdog/Graphics/GraphicsContext.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include <Pomdog/Application/Game.hpp>
+
+#include "CocoaGameWindow.hpp"
 #include "CocoaOpenGLContext.hpp"
 #include "../RenderSystem/PresentationParameters.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"

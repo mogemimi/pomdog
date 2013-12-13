@@ -13,10 +13,10 @@
 #	pragma once
 #endif
 
+#include <memory>
 #include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 #include "../Utility/Noncopyable.hpp"
-#include <memory>
 
 namespace Pomdog {
 

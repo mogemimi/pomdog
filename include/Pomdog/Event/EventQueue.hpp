@@ -13,18 +13,22 @@
 #	pragma once
 #endif
 
-#include "../Config/Export.hpp"
-#include "detail/FowardDeclarations.hpp"
-#include "../Utility/Noncopyable.hpp"
 #include <memory>
 #include <functional>
+#include "../Config/Export.hpp"
+#include "detail/FowardDeclarations.hpp"
 
 namespace Pomdog {
 
-class POMDOG_EXPORT EventQueue: Noncopyable
+class POMDOG_EXPORT EventQueue
 {
 public:
 	EventQueue();
+	EventQueue(EventQueue const&) = delete;
+	EventQueue(EventQueue &&) = default;
+	EventQueue& operator=(EventQueue const&) = delete;
+	EventQueue& operator=(EventQueue &&) = default;
+
 	~EventQueue();
 
 	EventConnection Connect(std::function<void(Event const&)> const& slot);

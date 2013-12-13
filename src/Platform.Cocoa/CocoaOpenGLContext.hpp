@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include "../RenderSystem.GL4/OpenGLContext.hpp"
 #import <Cocoa/Cocoa.h>
+#include "../RenderSystem.GL4/OpenGLContext.hpp"
 
 @class NSOpenGLContext, NSOpenGLPixelFormat;
 

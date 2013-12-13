@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
-#include "../../Config/FundamentalTypes.hpp"
 #include <type_traits>
 #include <utility>
+#include "../../Config/FundamentalTypes.hpp"
 
 namespace Pomdog {
 namespace Details {

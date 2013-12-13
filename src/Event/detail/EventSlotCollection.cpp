@@ -7,16 +7,16 @@
 //
 
 #include "EventSlotCollection.hpp"
-#include "EventSlot.hpp"
-#include <Pomdog/Config/FundamentalTypes.hpp>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/Exception.hpp>
 #include <algorithm>
 #include <vector>
 #include <limits>
 #include <utility>
 #include <mutex>
 #include <type_traits>
+#include <Pomdog/Config/FundamentalTypes.hpp>
+#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Utility/Exception.hpp>
+#include "EventSlot.hpp"
 
 namespace Pomdog {
 namespace Details {

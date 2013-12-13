@@ -7,11 +7,11 @@
 //
 
 #include "GraphicsDeviceGL4.hpp"
+#include <Pomdog/Utility/Exception.hpp>
 #include "BlendStateGL4.hpp"
 #include "DepthStencilStateGL4.hpp"
 #include "RasterizerStateGL4.hpp"
 #include "SamplerStateGL4.hpp"
-#include <Pomdog/Utility/Exception.hpp>
 
 namespace Pomdog {
 namespace Details {

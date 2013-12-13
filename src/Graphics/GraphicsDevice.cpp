@@ -7,8 +7,8 @@
 //
 
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
-#include <Pomdog/Utility/Assert.hpp>
 #include <utility>
+#include <Pomdog/Utility/Assert.hpp>
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 
 namespace Pomdog {
