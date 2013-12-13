@@ -39,7 +39,7 @@ public:
 	
 	explicit GraphicsDevice(std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> nativeDevice);
 	
-	virtual ~GraphicsDevice();
+	~GraphicsDevice();
 	
 public:
 	///@brief internal method

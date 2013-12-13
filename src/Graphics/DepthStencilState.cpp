@@ -26,49 +26,9 @@ DepthStencilState::~DepthStencilState()
 {
 }
 //-----------------------------------------------------------------------
-DepthStencilOperation const& DepthStencilState::GetClockwiseFace() const
+DepthStencilDescription DepthStencilState::GetDescription() const
 {
-	return description.ClockwiseFace;
-}
-//-----------------------------------------------------------------------
-DepthStencilOperation const& DepthStencilState::GetCounterClockwiseFace() const
-{
-	return description.CounterClockwiseFace;
-}
-//-----------------------------------------------------------------------
-ComparisonFunction DepthStencilState::GetDepthBufferFunction() const
-{
-	return description.DepthBufferFunction;
-}
-//-----------------------------------------------------------------------
-std::int32_t DepthStencilState::GetReferenceStencil() const
-{
-	return description.ReferenceStencil;
-}
-//-----------------------------------------------------------------------
-std::uint32_t DepthStencilState::GetStencilMask() const
-{
-	return description.StencilMask;
-}
-//-----------------------------------------------------------------------
-std::uint32_t DepthStencilState::GetStencilWriteMask() const
-{
-	return description.StencilWriteMask;
-}
-//-----------------------------------------------------------------------
-bool DepthStencilState::IsDepthBufferEnable() const
-{
-	return description.DepthBufferEnable;
-}
-//-----------------------------------------------------------------------
-bool DepthStencilState::IsDepthBufferWriteEnable() const
-{
-	return description.DepthBufferWriteEnable;
-}
-//-----------------------------------------------------------------------
-bool DepthStencilState::IsStencilEnable() const
-{
-	return description.StencilEnable;
+	return description;
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<DepthStencilState>

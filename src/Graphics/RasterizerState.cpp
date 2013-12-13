@@ -26,6 +26,11 @@ RasterizerState::~RasterizerState()
 {
 }
 //-----------------------------------------------------------------------
+RasterizerDescription RasterizerState::GetDescription() const
+{
+	return description;
+}
+//-----------------------------------------------------------------------
 std::shared_ptr<RasterizerState>
 RasterizerState::CreateCullClockwise(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {

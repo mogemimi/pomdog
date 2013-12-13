@@ -26,6 +26,11 @@ SamplerState::~SamplerState()
 {
 }
 //-----------------------------------------------------------------------
+SamplerDescription SamplerState::GetDescription() const
+{
+	return description;
+}
+//-----------------------------------------------------------------------
 std::shared_ptr<SamplerState>
 SamplerState::CreateAnisotropicClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {

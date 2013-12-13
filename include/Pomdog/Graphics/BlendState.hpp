@@ -34,7 +34,7 @@ class NativeBlendState;
 ///	@{
 
 ///@~Japanese
-/// @brief カラーブレンディングステートです。
+/// @brief ブレンディングステートです。
 class POMDOG_EXPORT BlendState: Noncopyable
 {
 public:
@@ -42,43 +42,11 @@ public:
 
 	BlendState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, BlendDescription const& description);
 
-	virtual ~BlendState();
+	~BlendState();
 
 	///@~Japanese
-	/// @brief ブレンディング係数を指定します。
-	Color BlendFactor() const;
-
-	///@~Japanese
-	/// @brief RGB カラーのブレンディングの組み合わせ方法を取得します。
-	BlendFunction GetColorBlendFunction() const;
-
-	///@~Japanese
-	/// @brief アルファ値のブレンディングの組み合わせ方法を取得します。
-	BlendFunction GetAlphaBlendFunction() const;
-
-	///@~Japanese
-	/// @brief ソースカラーのブレンディング係数を取得します。
-	Blend GetColorSourceBlend() const;
-	
-	///@~Japanese
-	/// @brief ソースアルファのブレンディング係数を取得します。
-	Blend GetAlphaSourceBlend() const;
-
-	///@~Japanese
-	/// @brief ディスティネーションカラーのブレンディング係数を取得します。
-	Blend GetColorDestinationBlend() const;
-
-	///@~Japanese
-	/// @brief ディスティネーションアルファのブレンディング係数を取得します。
-	Blend GetAlphaDestinationBlend() const;
-
-	///@~Japanese
-	/// @brief マルチサンプリング時の書き込み位置を取得したビットマスクです。
-	std::uint32_t GetMultiSampleMask() const;
-
-	///@~Japanese
-	/// @brief マルチサンプリングテクニックとしてアルファトゥカバレッジを使用するかどうかを取得します。
-	bool IsAlphaToCoverageEnable() const;
+	/// @brief ブレンディングステートを作成するために記述したブレンディングステートの設定内容を取得します。
+	BlendDescription GetDescription() const;
 
 	///@~Japanese
 	/// @brief 加算ブレンディングを有効にするブレンディングステートです。

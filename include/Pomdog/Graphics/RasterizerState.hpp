@@ -34,7 +34,7 @@ class NativeRasterizerState;
 /// @{
 
 ///@~Japanese
-/// @brief ラスタライザーステートです。
+/// @brief ラスタライザステートです。
 class POMDOG_EXPORT RasterizerState: Noncopyable
 {
 public:
@@ -42,24 +42,37 @@ public:
 
 	RasterizerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, RasterizerDescription const& description);
 
-	virtual ~RasterizerState();
+	~RasterizerState();
 
 	///@~Japanese
-	/// @brief 
-	/// @details CullMode::ClockwiseFace, FillMode::Solid
+	/// @brief ラスタライザステートを作成するために記述したラスタライザステートの設定内容を取得します。
+	RasterizerDescription GetDescription() const;
+
+	///@~Japanese
+	/// @brief ワインディング順序が時計回りの頂点列に対して背面カリングを有効にするラスタライザステートを作成します。
+	/// @details
+	/// RasterizerDescription desc;
+	/// desc.CullMode = CullMode::ClockwiseFace;
+	/// desc.FillMode = FillMode::Solid;
 	static std::shared_ptr<RasterizerState>
 	CreateCullClockwise(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 	///@~Japanese
-	/// @brief
+	/// @brief ワインディング順序が反時計回りの頂点列に対して背面カリングを有効にするラスタライザステートを作成します。
 	/// @remarks RasterizerState のデフォルト値です。
-	/// @details CullMode::CounterClockwiseFace, FillMode::Solid
+	/// @details
+	/// RasterizerDescription desc;
+	/// desc.CullMode = CullMode::CounterClockwiseFace;
+	/// desc.FillMode = FillMode::Solid;
 	static std::shared_ptr<RasterizerState>
 	CreateCullCounterClockwise(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 	///@~Japanese
-	/// @brief 
-	/// @details CullMode::None, FillMode::Solid
+	/// @brief カリングを無効化する設定を持つラスタライザステートを作成します。
+	/// @details
+	/// RasterizerDescription desc;
+	/// desc.CullMode = CullMode::None;
+	/// desc.FillMode = FillMode::Solid;
 	static std::shared_ptr<RasterizerState>
 	CreateCullNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	

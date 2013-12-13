@@ -45,7 +45,7 @@ public:
 	GraphicsContext(std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
 		Details::RenderSystem::PresentationParameters const& presentationParameters);
 	
-	virtual ~GraphicsContext();
+	~GraphicsContext();
 	
 	///@~Japanese
 	/// @brief 現在バインドされているレンダーターゲットを指定された色でクリアーします。

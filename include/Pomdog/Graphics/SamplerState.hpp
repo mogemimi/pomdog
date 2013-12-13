@@ -44,35 +44,45 @@ public:
 
 	SamplerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, SamplerDescription const& description);
 	
-	virtual ~SamplerState();
+	~SamplerState();
 
 	///@~Japanese
-	/// @brief
+	/// @brief サンプラーステートを作成するために記述したサンプラーステートの設定内容を取得します。
+	SamplerDescription GetDescription() const;
+
+	///@~Japanese
+	/// @brief 異方性フィルタリングを有効にするサンプラステートを作成します。
+	/// 範囲外テクスチャ座標のアドレッシング方法は TextureAddressMode::Clamp を使用します。
 	static std::shared_ptr<SamplerState>
 	CreateAnisotropicClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 	///@~Japanese
-	/// @brief
+	/// @brief 異方性フィルタリングを有効にするサンプラステートを作成します。
+	/// 範囲外テクスチャ座標のアドレッシング方法は TextureAddressMode::Wrap を使用します。
 	static std::shared_ptr<SamplerState>
 	CreateAnisotropicWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 	///@~Japanese
-	/// @brief
+	/// @brief 線形フィルタリングを有効にするサンプラステートを作成します。
+	/// 範囲外テクスチャ座標のアドレッシング方法は TextureAddressMode::Clamp を使用します。
 	static std::shared_ptr<SamplerState>
 	CreateLinearClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 	///@~Japanese
-	/// @brief
+	/// @brief 線形フィルタリングを有効にするサンプラステートを作成します。
+	/// 範囲外テクスチャ座標のアドレッシング方法は TextureAddressMode::Wrap を使用します。
 	static std::shared_ptr<SamplerState>
 	CreateLinearWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 	///@~Japanese
-	/// @brief
+	/// @brief ポイントフィルタリングを有効にするサンプラステートを作成します。
+	/// 範囲外テクスチャ座標のアドレッシング方法は TextureAddressMode::Clamp を使用します。
 	static std::shared_ptr<SamplerState>
 	CreatePointClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 	///@~Japanese
-	/// @brief
+	/// @brief ポイントフィルタリングを有効にするサンプラステートを作成します。
+	/// 範囲外テクスチャ座標のアドレッシング方法は TextureAddressMode::Wrap を使用します。
 	static std::shared_ptr<SamplerState>
 	CreatePointWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
