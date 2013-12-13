@@ -24,7 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief テクスチャの境界である 0.0 から 1.0 の範囲外にあるテクスチャ座標のアドレッシング方法を定義します。
-enum class TextureAddressMode: std::uint16_t
+enum class TextureAddressMode: std::uint8_t
 {
 	///@~Japanese
 	/// @brief 整数境界ごとにテクスチャを繰り返します。

@@ -7,6 +7,7 @@
 //
 
 #include "DepthStencilStateGL4.hpp"
+#include "ErrorChecker.hpp"
 #include <Pomdog/Graphics/DepthStencilDescription.hpp>
 #include <Pomdog/Utility/Assert.hpp>
 
@@ -112,6 +113,10 @@ void DepthStencilStateGL4::ApplyDepthTest()
 
 	// depth function
 	glDepthFunc(depthFunction.value);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glDepthFunc", __FILE__, __LINE__);
+	#endif
 }
 //-----------------------------------------------------------------------
 void DepthStencilStateGL4::ApplyStencilTest()
@@ -148,6 +153,10 @@ void DepthStencilStateGL4::ApplyStencilTest()
 	);
 	
 	glStencilMask(stencilWriteMask);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glStencilMask", __FILE__, __LINE__);
+	#endif
 }
 //-----------------------------------------------------------------------
 void DepthStencilStateGL4::Apply()

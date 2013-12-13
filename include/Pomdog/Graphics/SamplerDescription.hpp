@@ -31,26 +31,6 @@ class SamplerDescription
 {
 public:
 	///@~Japanese
-	/// @brief テクスチャサンプリング時に使用するフィルタリングオプションです。
-	/// デフォルト値は TextureFilter::Linear です。
-	TextureFilter Filter;
-
-	///@~Japanese
-	/// @brief 0.0 から 1.0 の範囲外にあるテクスチャの u 座標を解決するために使用されるテクスチャアドレッシングモードです。
-	/// デフォルト値は TextureAddressMode::Clamp です。
-	TextureAddressMode AddressU;
-
-	///@~Japanese
-	/// @brief 0.0 から 1.0 の範囲外にあるテクスチャの v 座標を解決するために使用されるテクスチャアドレッシングモードです。
-	/// デフォルト値は TextureAddressMode::Clamp です。
-	TextureAddressMode AddressV;
-
-	///@~Japanese
-	/// @brief 0.0 から 1.0 の範囲外にあるテクスチャの w 座標を解決するために使用されるテクスチャアドレッシングモードです。
-	/// デフォルト値は TextureAddressMode::Clamp です。
-	TextureAddressMode AddressW;
-	
-	///@~Japanese
 	/// @brief 異方性フィルタリングで使用される最大異方性を表すクランプ値です。
 	/// @remarks 異方性フィルタリングとして有効な値は 1 から 16 です。デフォルト値は 16 です。
 	/// SamplerDescription::Filter に TextureFilter::Anisotropic を指定している時、この値が有効になります。
@@ -77,18 +57,38 @@ public:
 	/// Direct3D の場合、D3D11_SAMPLER_DESC::MaxLOD のデフォルト値は D3D11_FLOAT32_MAX です。
 	float MaxMipLevel;
 
+	///@~Japanese
+	/// @brief テクスチャサンプリング時に使用するフィルタリングオプションです。
+	/// デフォルト値は TextureFilter::Linear です。
+	TextureFilter Filter;
+
+	///@~Japanese
+	/// @brief 0.0 から 1.0 の範囲外にあるテクスチャの u 座標を解決するために使用されるテクスチャアドレッシングモードです。
+	/// デフォルト値は TextureAddressMode::Clamp です。
+	TextureAddressMode AddressU;
+
+	///@~Japanese
+	/// @brief 0.0 から 1.0 の範囲外にあるテクスチャの v 座標を解決するために使用されるテクスチャアドレッシングモードです。
+	/// デフォルト値は TextureAddressMode::Clamp です。
+	TextureAddressMode AddressV;
+
+	///@~Japanese
+	/// @brief 0.0 から 1.0 の範囲外にあるテクスチャの w 座標を解決するために使用されるテクスチャアドレッシングモードです。
+	/// デフォルト値は TextureAddressMode::Clamp です。
+	TextureAddressMode AddressW;
+	
 	//Color BorderColor;
 	//float MipMapLevelOfDetailBias;
 
 public:
 	SamplerDescription()
-		: Filter(TextureFilter::Linear)
+		: MaxAnisotropy(0)
+		, MinMipLevel(std::numeric_limits<float>::min())
+		, MaxMipLevel(std::numeric_limits<float>::max())
+		, Filter(TextureFilter::Linear)
 		, AddressU(TextureAddressMode::Clamp)
 		, AddressV(TextureAddressMode::Clamp)
 		, AddressW(TextureAddressMode::Clamp)
-		, MaxAnisotropy(0)
-		, MinMipLevel(std::numeric_limits<float>::min())
-		, MaxMipLevel(std::numeric_limits<float>::max())
 		//, BorderColor(Color::TransparentBlack)
 		//, MipMapLevelOfDetailBias(0.0f)
 	{}

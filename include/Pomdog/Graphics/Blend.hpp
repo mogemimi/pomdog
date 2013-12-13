@@ -24,7 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief ブレンディングオプション（ブレンディング係数）を定義します。
-enum class Blend: std::uint16_t
+enum class Blend: std::uint8_t
 {
 	///@~Japanese
 	/// @brief ソースカラーは黒 (0, 0, 0, 0) です。

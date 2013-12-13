@@ -18,6 +18,8 @@
 #include "OpenGLContext.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 
+#include <Pomdog/Logging/Log.hpp>
+
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
@@ -27,6 +29,8 @@ GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> openGLCont
 	: nativeContext(std::move(openGLContext))
 	, gameWindow(std::move(window))
 {
+	const GLubyte * a = glGetString(GL_VERSION);
+	Log::Stream() << "GL Version: " << (char *)a << "\n";
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Clear(Color const& color)

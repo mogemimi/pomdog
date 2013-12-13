@@ -54,6 +54,7 @@ void ErrorChecker::CheckError(char const* command, char const* filename, int lin
 	if (lines < maxLine)
 	{
 		Log::Stream(LoggingLevel::Critical)
+			<< "\n"
 			<< ">>> File " << filename << ", line " << line << ", in " << command << "\n"
 			<< "OpenGL Error: " << ToString(errorCode);
 

@@ -40,12 +40,12 @@ static auto WindowShouldCloseEvent = EventCodeHelper::CreateCode("WindowShouldCl
 static NSOpenGLPixelFormat* CreatePixelFormat(DepthFormat depthFormat)
 {
 	std::vector<NSOpenGLPixelFormatAttribute> attributes = {
-		NSOpenGLPFAWindow, // is not multi-screen
 		NSOpenGLPFADoubleBuffer,
+		NSOpenGLPFAAccelerated,
+		NSOpenGLPFANoRecovery,
+		NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
 		NSOpenGLPFAColorSize, 24,
 		NSOpenGLPFAAlphaSize, 8,
-		NSOpenGLPFANoRecovery,
-		NSOpenGLPFAAccelerated,
 	};
 	
 	switch (depthFormat) {

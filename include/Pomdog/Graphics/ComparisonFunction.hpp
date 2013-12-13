@@ -24,7 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 深度バッファテストまたはアルファステンシルテストで用いる比較関数を定義します。
-enum class ComparisonFunction: std::uint16_t
+enum class ComparisonFunction: std::uint8_t
 {
 	///@~Japanese
 	/// @brief テストは常に失敗します。

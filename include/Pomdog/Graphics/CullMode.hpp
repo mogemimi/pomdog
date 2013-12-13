@@ -24,7 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 背面カリングに使用するプリミティブのワインディング順序を定義します。
-enum class CullMode: std::uint16_t
+enum class CullMode: std::uint8_t
 {
 	///@~Japanese
 	/// @brief 常にすべての三角形を描画します。

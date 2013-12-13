@@ -7,6 +7,7 @@
 //
 
 #include "BlendStateGL4.hpp"
+#include "ErrorChecker.hpp"
 #include <Pomdog/Graphics/BlendDescription.hpp>
 #include <Pomdog/Utility/Assert.hpp>
 #include <utility>
@@ -93,6 +94,10 @@ void BlendStateGL4::Apply()
 		alphaSource.value,
 		alphaDestination.value
 	);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glBlendFuncSeparate", __FILE__, __LINE__);
+	#endif
 
 	glBlendColor(
 		blendColor.r,
@@ -100,6 +105,10 @@ void BlendStateGL4::Apply()
 		blendColor.b,
 		blendColor.a
 	);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glBlendColor", __FILE__, __LINE__);
+	#endif
 	
 	///@todo Not implemented alpha to coverage.
 	//{

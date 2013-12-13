@@ -39,10 +39,6 @@ public:
 	DepthStencilOperation CounterClockwiseFace;
 
 	///@~Japanese
-	/// @brief 深度テストで使用する比較関数を指定します。デフォルト値は ComparisonFunction::LessEqual です。
-	ComparisonFunction DepthBufferFunction;
-
-	///@~Japanese
 	/// @brief ステンシルテストの比較に使用する基準値を指定します。デフォルト値は 0 です。
 	std::int32_t ReferenceStencil;
 
@@ -57,6 +53,10 @@ public:
 	/// デフォルト値は std::numeric_limits<std::uint32_t>::max() です。
 	/// @remarks デフォルト値は、全てのビットが 1 になっている符号なし整数の最大値です。
 	std::uint32_t StencilWriteMask;
+
+	///@~Japanese
+	/// @brief 深度テストで使用する比較関数を指定します。デフォルト値は ComparisonFunction::LessEqual です。
+	ComparisonFunction DepthBufferFunction;
 
 	///@~Japanese
 	/// @brief 深度テストを有効または無効にします。デフォルト値は有効 (true) です。

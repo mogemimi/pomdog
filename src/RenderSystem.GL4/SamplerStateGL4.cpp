@@ -36,6 +36,10 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 	glGenSamplers(1, &samplerObject);
 	samplerObjectEnable = true;
 	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glGenSamplers", __FILE__, __LINE__);
+	#endif
+	
 	glSamplerParameteri(samplerObject.value, GL_TEXTURE_WRAP_S, ToTextureAddressModeGL4(description.AddressU).value);
 	glSamplerParameteri(samplerObject.value, GL_TEXTURE_WRAP_T, ToTextureAddressModeGL4(description.AddressV).value);
 	glSamplerParameteri(samplerObject.value, GL_TEXTURE_WRAP_R, ToTextureAddressModeGL4(description.AddressW).value);

@@ -32,17 +32,17 @@ class SamplerState;
 class Viewport;
 
 // Enumerations
-enum class Blend: std::uint16_t;
-enum class BlendFunction: std::uint16_t;
+enum class Blend: std::uint8_t;
+enum class BlendFunction: std::uint8_t;
 enum class BufferUsage: std::uint8_t;
 enum class ClearOptions: std::uint8_t;
-enum class ComparisonFunction: std::uint16_t;
-enum class CullMode: std::uint16_t;
+enum class ComparisonFunction: std::uint8_t;
+enum class CullMode: std::uint8_t;
 enum class DepthFormat: std::uint8_t;
-enum class FillMode: std::uint16_t;
-enum class StencilOperation: std::uint16_t;
-enum class TextureAddressMode: std::uint16_t;
-enum class TextureFilter: std::uint16_t;
+enum class FillMode: std::uint8_t;
+enum class StencilOperation: std::uint8_t;
+enum class TextureAddressMode: std::uint8_t;
+enum class TextureFilter: std::uint8_t;
 
 }// namespace Pomdog
 

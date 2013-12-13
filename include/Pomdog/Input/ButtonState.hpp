@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,6 +13,8 @@
 #	pragma once
 #endif
 
+#include "../Config/FundamentalTypes.hpp"
+
 namespace Pomdog {
 
 /// @addtogroup Framework
@@ -22,15 +24,15 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief ボタンが押されているかどうかの状態を表す列挙体です。
-enum class ButtonState: bool
+enum class ButtonState: std::uint8_t
 {
 	///@~Japanese
 	/// @brief ボタンが離されている状態を表します。
-	Released = false,
+	Released,
 
 	///@~Japanese
 	/// @brief ボタンが押されている状態を表します。
-	Pressed  = true
+	Pressed
 };
 
 /// @}

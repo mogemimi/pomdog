@@ -24,7 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief ソースカラーとデスティネーションカラーのブレンディング処理を定義します。
-enum class BlendFunction: std::uint16_t
+enum class BlendFunction: std::uint8_t
 {
 	///@~Japanese
 	/// @brief ソースとデスティネーションを加算します。

@@ -13,13 +13,13 @@ namespace Pomdog {
 
 BlendDescription::BlendDescription()
 	: BlendFactor(Color::White)
+	, MultiSampleMask(std::numeric_limits<std::uint32_t>::max())
 	, ColorBlendFunction	(BlendFunction::Add)
 	, AlphaBlendFunction	(BlendFunction::Add)
 	, ColorSourceBlend		(Blend::One)
 	, AlphaSourceBlend		(Blend::One)
 	, ColorDestinationBlend	(Blend::One)
 	, AlphaDestinationBlend	(Blend::One)
-	, MultiSampleMask(std::numeric_limits<std::uint32_t>::max())
 	, AlphaToCoverageEnable(false)
 {}
 

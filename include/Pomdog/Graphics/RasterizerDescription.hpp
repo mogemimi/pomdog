@@ -30,20 +30,20 @@ class RasterizerDescription
 {
 public:
 	///@~Japanese
-	/// @brief カリングモードを指定します。デフォルト値は CullMode::CounterClockwiseFace です。
-	CullMode CullMode;
-
-	///@~Japanese
-	/// @brief 三角形の塗りつぶし方法を指定します。デフォルト値は FillMode::Solid です。
-	FillMode FillMode;
-	
-	///@~Japanese
 	/// @brief 深度テストの時にピクセルに加算される深度バイアスです。デフォルト値は 0 です。
 	std::int32_t DepthBias;
 	
 	///@~Japanese
 	/// @note 深度バイアスに掛ける係数です。デフォルト値は 0.0f です。
 	float SlopeScaledDepthBias;
+
+	///@~Japanese
+	/// @brief カリングモードを指定します。デフォルト値は CullMode::CounterClockwiseFace です。
+	CullMode CullMode;
+
+	///@~Japanese
+	/// @brief 三角形の塗りつぶし方法を指定します。デフォルト値は FillMode::Solid です。
+	FillMode FillMode;
 	
 	///@~Japanese
 	/// @brief マルチサンプリングのアンチエイリアシングが有効かどうか指定します。デフォルト値は無効 (false) です。
@@ -58,10 +58,10 @@ public:
 	
 public:
 	RasterizerDescription()
-		: CullMode(CullMode::CounterClockwiseFace)
-		, FillMode(FillMode::Solid)
-		, DepthBias(0)
+		: DepthBias(0)
 		, SlopeScaledDepthBias(0.0f)
+		, CullMode(CullMode::CounterClockwiseFace)
+		, FillMode(FillMode::Solid)
 		, MultisampleEnable(false)
 		, ScissorTestEnable(false)
 	{}

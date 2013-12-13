@@ -45,23 +45,60 @@ public:
 	virtual ~BlendState();
 
 	///@~Japanese
-	/// @brief
+	/// @brief ブレンディング係数を指定します。
+	Color BlendFactor() const;
+
+	///@~Japanese
+	/// @brief RGB カラーのブレンディングの組み合わせ方法を取得します。
+	BlendFunction GetColorBlendFunction() const;
+
+	///@~Japanese
+	/// @brief アルファ値のブレンディングの組み合わせ方法を取得します。
+	BlendFunction GetAlphaBlendFunction() const;
+
+	///@~Japanese
+	/// @brief ソースカラーのブレンディング係数を取得します。
+	Blend GetColorSourceBlend() const;
+	
+	///@~Japanese
+	/// @brief ソースアルファのブレンディング係数を取得します。
+	Blend GetAlphaSourceBlend() const;
+
+	///@~Japanese
+	/// @brief ディスティネーションカラーのブレンディング係数を取得します。
+	Blend GetColorDestinationBlend() const;
+
+	///@~Japanese
+	/// @brief ディスティネーションアルファのブレンディング係数を取得します。
+	Blend GetAlphaDestinationBlend() const;
+
+	///@~Japanese
+	/// @brief マルチサンプリング時の書き込み位置を取得したビットマスクです。
+	std::uint32_t GetMultiSampleMask() const;
+
+	///@~Japanese
+	/// @brief マルチサンプリングテクニックとしてアルファトゥカバレッジを使用するかどうかを取得します。
+	bool IsAlphaToCoverageEnable() const;
+
+	///@~Japanese
+	/// @brief 加算ブレンディングを有効にするブレンディングステートです。
 	static std::shared_ptr<BlendState>
 	CreateAdditive(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 	///@~Japanese
-	/// @brief
+	/// @brief 乗算済みアルファを使用したアルファブレンディングを有効にするブレンディングステートです。
+	/// @remarks 補間アルファを使用したアルファブレンディングの場合は、CreateNonPremultiplied を使います。
 	static std::shared_ptr<BlendState>
 	CreateAlphaBlend(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 	///@~Japanese
-	/// @brief 
+	/// @brief 補間アルファを使用したアルファブレンディングを有効にするブレンディングステートです。
 	static std::shared_ptr<BlendState>
 	CreateNonPremultiplied(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 	///@~Japanese
-	/// @brief 
-	/// @details デフォルトです。
+	/// @brief 不透明ブレンディングを有効にするブレンディングステートです。
+	/// @remarks デフォルト値です。
 	static std::shared_ptr<BlendState>
 	CreateOpaque(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	

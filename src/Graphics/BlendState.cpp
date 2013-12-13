@@ -26,6 +26,51 @@ BlendState::~BlendState()
 {
 }
 //-----------------------------------------------------------------------
+Color BlendState::BlendFactor() const
+{
+	return description.BlendFactor;
+}
+//-----------------------------------------------------------------------
+BlendFunction BlendState::GetColorBlendFunction() const
+{
+	return description.ColorBlendFunction;
+}
+//-----------------------------------------------------------------------
+BlendFunction BlendState::GetAlphaBlendFunction() const
+{
+	return description.AlphaBlendFunction;
+}
+//-----------------------------------------------------------------------
+Blend BlendState::GetColorSourceBlend() const
+{
+	return description.ColorSourceBlend;
+}
+//-----------------------------------------------------------------------
+Blend BlendState::GetAlphaSourceBlend() const
+{
+	return description.AlphaSourceBlend;
+}
+//-----------------------------------------------------------------------
+Blend BlendState::GetColorDestinationBlend() const
+{
+	return description.ColorDestinationBlend;
+}
+//-----------------------------------------------------------------------
+Blend BlendState::GetAlphaDestinationBlend() const
+{
+	return description.AlphaDestinationBlend;
+}
+//-----------------------------------------------------------------------
+std::uint32_t BlendState::GetMultiSampleMask() const
+{
+	return description.MultiSampleMask;
+}
+//-----------------------------------------------------------------------
+bool BlendState::IsAlphaToCoverageEnable() const
+{
+	return description.AlphaToCoverageEnable;
+}
+//-----------------------------------------------------------------------
 std::shared_ptr<BlendState>
 BlendState::CreateAdditive(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {

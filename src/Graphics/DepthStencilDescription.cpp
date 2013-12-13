@@ -12,10 +12,10 @@
 namespace Pomdog {
 
 DepthStencilDescription::DepthStencilDescription()
-	: DepthBufferFunction(ComparisonFunction::LessEqual)
-	, ReferenceStencil(0)
+	: ReferenceStencil(0)
 	, StencilMask(std::numeric_limits<std::uint32_t>::max())
 	, StencilWriteMask(std::numeric_limits<std::uint32_t>::max())
+	, DepthBufferFunction(ComparisonFunction::LessEqual)
 	, DepthBufferEnable(true)
 	, DepthBufferWriteEnable(true)
 	, StencilEnable(false)
