@@ -76,6 +76,8 @@
 #include <Pomdog/Graphics/FillMode.hpp>
 #include <Pomdog/Graphics/GraphicsContext.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include <Pomdog/Graphics/IndexElementSize.hpp>
+#include <Pomdog/Graphics/PrimitiveTopology.hpp>
 #include <Pomdog/Graphics/RasterizerDescription.hpp>
 #include <Pomdog/Graphics/RasterizerState.hpp>
 #include <Pomdog/Graphics/SamplerDescription.hpp>
@@ -83,6 +85,9 @@
 #include <Pomdog/Graphics/StencilOperation.hpp>
 #include <Pomdog/Graphics/TextureAddressMode.hpp>
 #include <Pomdog/Graphics/TextureFilter.hpp>
+#include <Pomdog/Graphics/VertexElement.hpp>
+#include <Pomdog/Graphics/VertexElementFormat.hpp>
+#include <Pomdog/Graphics/VertexElementUsage.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
 
 // Input
