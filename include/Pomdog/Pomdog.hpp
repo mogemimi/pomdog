@@ -85,6 +85,7 @@
 #include <Pomdog/Graphics/StencilOperation.hpp>
 #include <Pomdog/Graphics/TextureAddressMode.hpp>
 #include <Pomdog/Graphics/TextureFilter.hpp>
+#include <Pomdog/Graphics/VertexDeclaration.hpp>
 #include <Pomdog/Graphics/VertexElement.hpp>
 #include <Pomdog/Graphics/VertexElementFormat.hpp>
 #include <Pomdog/Graphics/VertexElementUsage.hpp>

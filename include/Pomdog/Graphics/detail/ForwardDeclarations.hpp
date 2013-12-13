@@ -29,6 +29,8 @@ class RasterizerDescription;
 class RasterizerState;
 class SamplerDescription;
 class SamplerState;
+class VertexDeclaration;
+class VertexElement;
 class Viewport;
 
 // Enumerations
@@ -40,9 +42,13 @@ enum class ComparisonFunction: std::uint8_t;
 enum class CullMode: std::uint8_t;
 enum class DepthFormat: std::uint8_t;
 enum class FillMode: std::uint8_t;
+enum class IndexElementSize: std::uint8_t;
+enum class PrimitiveTopology: std::uint8_t;
 enum class StencilOperation: std::uint8_t;
 enum class TextureAddressMode: std::uint8_t;
 enum class TextureFilter: std::uint8_t;
+enum class VertexElementFormat: std::uint8_t;
+enum class VertexElementUsage: std::uint8_t;
 
 }// namespace Pomdog
 

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -30,7 +30,7 @@ class VertexElement
 {
 public:
 	///@~Japanese
-	/// @brief バイト単位のオフセットを指定します。
+	/// @brief 頂点データの先頭から頂点要素までのバイト単位のオフセットを指定します。
 	std::uint16_t Offset;
 
 	///@~Japanese
