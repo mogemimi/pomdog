@@ -26,8 +26,8 @@
 #	//include <stdint.h>
 #endif
 
-#include <cstddef> //size_t
-#include <cfloat>  //float, double
+#include <cstddef> // size_t
+#include <cfloat>  // float, double
 
 namespace Pomdog {
 namespace Details {

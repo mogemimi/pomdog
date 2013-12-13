@@ -16,6 +16,7 @@
 #include <array>
 #include <utility>
 #include "OpenGLContext.hpp"
+#include "../RenderSystem/GraphicsCapabilities.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -61,6 +62,18 @@ void GraphicsContextGL4::Present()
 	glFlush();
 
 	nativeContext->SwapBuffers();
+}
+//-----------------------------------------------------------------------
+GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const
+{
+	GraphicsCapabilities capabilities;
+
+	GLint maxTextureUnits = 0;
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
+	POMDOG_ASSERT(maxTextureUnits > 0);
+	
+	capabilities.SamplerSlotCount = maxTextureUnits;
+	return capabilities;
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetViewport(Viewport const& viewport)

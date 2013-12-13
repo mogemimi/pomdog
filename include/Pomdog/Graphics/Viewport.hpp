@@ -42,6 +42,14 @@ public:
 	Viewport(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, float minDepth, float maxDepth);
 
 	///@~Japanese
+	/// @brief 矩形の水平方向の長さを設定します。
+	void SetWidth(std::int32_t width);
+	
+	///@~Japanese
+	/// @brief 矩形の垂直方向の高さを設定します。
+	void SetHeight(std::int32_t height);
+
+	///@~Japanese
 	/// @brief 矩形の水平方向の長さを計算します。
 	std::int32_t GetWidth() const;
 	

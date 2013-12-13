@@ -38,6 +38,7 @@ enum class BufferUsage: std::uint8_t;
 enum class ClearOptions: std::uint8_t;
 enum class ComparisonFunction: std::uint16_t;
 enum class CullMode: std::uint16_t;
+enum class DepthFormat: std::uint8_t;
 enum class FillMode: std::uint16_t;
 enum class StencilOperation: std::uint16_t;
 enum class TextureAddressMode: std::uint16_t;

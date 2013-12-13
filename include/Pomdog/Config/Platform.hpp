@@ -67,6 +67,9 @@ namespace Details {
 #elif defined(__QNXNTO__)
 #	// QNX Neutrino
 #	define POMDOG_PLATFORM_QNXNTO
+#elif defined(__native_client__)
+#	// Google Native Client(NaCl)
+#	define POMDOG_PLATFORM_NACL
 #elif defined(__CYGWIN__)
 #	// Cygwin
 #	define POMDOG_PLATFORM_CYGWIN

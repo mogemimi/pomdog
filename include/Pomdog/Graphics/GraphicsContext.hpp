@@ -25,6 +25,7 @@ namespace Details {
 namespace RenderSystem {
 
 class NativeGraphicsContext;
+class PresentationParameters;
 
 }// namespace RenderSystem
 }// namespace Details
@@ -41,7 +42,9 @@ class POMDOG_EXPORT GraphicsContext: Noncopyable
 public:
 	GraphicsContext() = delete;
 
-	explicit GraphicsContext(std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext);
+	GraphicsContext(std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
+		Details::RenderSystem::PresentationParameters const& presentationParameters);
+	
 	virtual ~GraphicsContext();
 	
 	///@~Japanese

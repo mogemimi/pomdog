@@ -14,17 +14,20 @@
 #include <Pomdog/Graphics/RasterizerState.hpp>
 #include <Pomdog/Graphics/SamplerState.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
-#include <array>
+#include <vector>
 #include <utility>
+#include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include "../RenderSystem/NativeBlendState.hpp"
 #include "../RenderSystem/NativeDepthStencilState.hpp"
 #include "../RenderSystem/NativeRasterizerState.hpp"
 #include "../RenderSystem/NativeSamplerState.hpp"
+#include "../RenderSystem/PresentationParameters.hpp"
 
 namespace Pomdog {
 
 using Details::RenderSystem::NativeGraphicsContext;
+using Details::RenderSystem::PresentationParameters;
 
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -39,28 +42,107 @@ public:
 	Impl(Impl const&) = delete;
 	Impl(Impl &&) = default;
 	
-	explicit Impl(std::unique_ptr<NativeGraphicsContext> nativeContext);
+	Impl(std::unique_ptr<NativeGraphicsContext> nativeContext, PresentationParameters const& presentationParameters);
+	
+	void BuildResources(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+	
+	///@copydoc GraphicsContext
+	void SetViewport(Viewport const& viewport);
+	
+	///@copydoc GraphicsContext
+	void SetSamplerState(std::size_t samplerSlot, std::shared_ptr<SamplerState> const& samplerState);
 	
 public:
-	std::unique_ptr<NativeGraphicsContext> nativeContext;
 	Viewport viewport;
+	std::vector<std::shared_ptr<SamplerState>> samplerStates;
 	std::shared_ptr<BlendState> blendState;
 	std::shared_ptr<DepthStencilState> depthStencilState;
 	std::shared_ptr<RasterizerState> rasterizerState;
-	std::array<std::shared_ptr<SamplerState>, 16> samplerStates;
+	std::unique_ptr<NativeGraphicsContext> nativeContext;
 };
 //-----------------------------------------------------------------------
-GraphicsContext::Impl::Impl(std::unique_ptr<NativeGraphicsContext> nativeContext)
-	: nativeContext(std::move(nativeContext))
-{}
+GraphicsContext::Impl::Impl(std::unique_ptr<NativeGraphicsContext> nativeGraphicsContext,
+	PresentationParameters const& presentationParameters)
+	: nativeContext(std::move(nativeGraphicsContext))
+{
+	POMDOG_ASSERT(nativeContext);
+	auto graphicsCapbilities = nativeContext->GetCapabilities();
+
+	POMDOG_ASSERT(graphicsCapbilities.SamplerSlotCount > 0);
+	samplerStates.resize(graphicsCapbilities.SamplerSlotCount);
+	
+	viewport.SetWidth(presentationParameters.BackBufferWidth);
+	viewport.SetHeight(presentationParameters.BackBufferHeight);
+	SetViewport(viewport);
+	
+	//BuildResources();
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+{
+	POMDOG_ASSERT(nativeContext);
+	POMDOG_ASSERT(graphicsDevice);
+	
+//	viewport.SetWidth(presentationParameters.BackBufferWidth);
+//	viewport.SetHeight(presentationParameters.BackBufferHeight);
+//	SetViewport(viewport);
+	
+	blendState = BlendState::CreateAdditive(graphicsDevice);
+	rasterizerState = RasterizerState::CreateCullCounterClockwise(graphicsDevice);
+	depthStencilState = DepthStencilState::CreateReadOnlyDepth(graphicsDevice);
+	
+	POMDOG_ASSERT(!samplerStates.empty());
+	for (std::size_t index = 0; index < samplerStates.size(); ++index) {
+		samplerStates[index] = SamplerState::CreateLinearClamp(graphicsDevice);
+	}
+
+	if (blendState) {
+		blendState->GetNativeBlendState()->Apply();
+	}
+	if (depthStencilState) {
+		depthStencilState->GetNativeDepthStencilState()->Apply();
+	}
+	if (rasterizerState) {
+		rasterizerState->GetNativeRasterizerState()->Apply();
+	}
+	for (std::size_t index = 0; index < samplerStates.size(); ++index) {
+		if (samplerStates[index]) {
+			samplerStates[index]->GetNativeSamplerState()->Apply(index);
+		}
+	}
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::Impl::SetViewport(Viewport const& newViewport)
+{
+	POMDOG_ASSERT(nativeContext);
+	POMDOG_ASSERT(newViewport.GetWidth() > 0);
+	POMDOG_ASSERT(newViewport.GetHeight() > 0);
+
+	this->viewport = newViewport;
+	nativeContext->SetViewport(this->viewport);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::Impl::SetSamplerState(std::size_t samplerSlot, std::shared_ptr<SamplerState> const& newSamplerState)
+{
+	POMDOG_ASSERT(newSamplerState);
+	POMDOG_ASSERT(!samplerStates.empty());
+	POMDOG_ASSERT(samplerStates.size() > samplerSlot);
+	
+	if (samplerStates.size() > samplerSlot)
+	{
+		samplerStates[samplerSlot] = newSamplerState;
+		samplerStates[samplerSlot]->GetNativeSamplerState()->Apply(samplerSlot);
+	}
+}
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark -
 #pragma mark GraphicsContext class
 #endif
 //-----------------------------------------------------------------------
-GraphicsContext::GraphicsContext(std::unique_ptr<NativeGraphicsContext> nativeContext)
-	: impl(new Impl(std::move(nativeContext)))
+GraphicsContext::GraphicsContext(std::unique_ptr<NativeGraphicsContext> nativeContext,
+	Details::RenderSystem::PresentationParameters const& presentationParameters)
+	: impl(new Impl(std::move(nativeContext), presentationParameters))
 {}
 //-----------------------------------------------------------------------
 GraphicsContext::~GraphicsContext()
@@ -101,12 +183,7 @@ Viewport const& GraphicsContext::GetViewport() const
 void GraphicsContext::SetViewport(Viewport const& viewport)
 {
 	POMDOG_ASSERT(impl);
-	POMDOG_ASSERT(impl->nativeContext);
-	POMDOG_ASSERT(viewport.GetWidth() > 0);
-	POMDOG_ASSERT(viewport.GetHeight() > 0);
-
-	impl->viewport = viewport;
-	impl->nativeContext->SetViewport(viewport);
+	impl->SetViewport(viewport);
 }
 //-----------------------------------------------------------------------
 Rectangle GraphicsContext::GetScissorRectangle() const
@@ -151,11 +228,7 @@ void GraphicsContext::SetSamplerState(std::size_t index, std::shared_ptr<Sampler
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(samplerState);
-	
-	POMDOG_ASSERT(impl->samplerStates.size() > index);
-	
-	impl->samplerStates[index] = samplerState;
-	impl->samplerStates[index]->GetNativeSamplerState()->Apply(index);
+	impl->SetSamplerState(index, samplerState);
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

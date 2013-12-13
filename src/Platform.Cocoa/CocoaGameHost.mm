@@ -9,6 +9,7 @@
 #include "CocoaGameHost.hpp"
 #include "Game.hpp"
 #include <utility>
+#include <vector>
 #include "CocoaGameWindow.hpp"
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Event/Event.hpp>
@@ -20,6 +21,7 @@
 #include <Pomdog/Graphics/GraphicsContext.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include "CocoaOpenGLContext.hpp"
+#include "../RenderSystem/PresentationParameters.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 #include "CocoaMouse.hpp"
@@ -35,36 +37,59 @@ static auto WindowShouldCloseEvent = EventCodeHelper::CreateCode("WindowShouldCl
 #pragma mark -
 #pragma mark OpenGL Helper Functions
 //-----------------------------------------------------------------------
-static NSOpenGLPixelFormat* CreateDefaultPixelFormat()
+static NSOpenGLPixelFormat* CreatePixelFormat(DepthFormat depthFormat)
 {
-	NSOpenGLPixelFormatAttribute attribute[] = {
-		NSOpenGLPFAWindow,
+	std::vector<NSOpenGLPixelFormatAttribute> attributes = {
+		NSOpenGLPFAWindow, // is not multi-screen
 		NSOpenGLPFADoubleBuffer,
-		NSOpenGLPFADepthSize, 24,
-		NSOpenGLPFAStencilSize, 8,
 		NSOpenGLPFAColorSize, 24,
 		NSOpenGLPFAAlphaSize, 8,
 		NSOpenGLPFANoRecovery,
 		NSOpenGLPFAAccelerated,
-		0
 	};
-	return [[NSOpenGLPixelFormat alloc] initWithAttributes:attribute];
+	
+	switch (depthFormat) {
+	case DepthFormat::Depth16:
+		attributes.push_back(NSOpenGLPFADepthSize);
+		attributes.push_back(16);
+		break;
+	case DepthFormat::Depth24:
+		attributes.push_back(NSOpenGLPFADepthSize);
+		attributes.push_back(24);
+		break;
+	case DepthFormat::Depth24Stencil8:
+		attributes.push_back(NSOpenGLPFADepthSize);
+		attributes.push_back(24);
+		attributes.push_back(NSOpenGLPFAStencilSize);
+		attributes.push_back(8);
+		break;
+	case DepthFormat::None:
+		break;
+	}
+	
+	attributes.push_back(0);
+	return [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes.data()];
 }
 //-----------------------------------------------------------------------
-static std::shared_ptr<CocoaOpenGLContext> CreateOpenGLContext()
+static std::shared_ptr<CocoaOpenGLContext> CreateOpenGLContext(DepthFormat depthFormat)
 {
-	NSOpenGLPixelFormat* pixelFormat = CreateDefaultPixelFormat();
+	NSOpenGLPixelFormat* pixelFormat = CreatePixelFormat(depthFormat);
 	return std::make_shared<CocoaOpenGLContext>(pixelFormat);
 }
 //-----------------------------------------------------------------------
+using RenderSystem::PresentationParameters;
+
 static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
-	std::shared_ptr<CocoaOpenGLContext> openGLContext, std::weak_ptr<GameWindow> gameWindow)
+	std::shared_ptr<CocoaOpenGLContext> openGLContext, std::weak_ptr<GameWindow> gameWindow,
+	PresentationParameters const& presentationParameters)
 {
+	POMDOG_ASSERT(openGLContext);
 	using RenderSystem::GL4::GraphicsContextGL4;
+
 	auto nativeContext = std::unique_ptr<GraphicsContextGL4>(new GraphicsContextGL4(
 		std::move(openGLContext), std::move(gameWindow)));
-	
-	return std::make_shared<GraphicsContext>(std::move(nativeContext));
+			
+	return std::make_shared<GraphicsContext>(std::move(nativeContext), presentationParameters);
 }
 //-----------------------------------------------------------------------
 #pragma mark -
@@ -120,13 +145,21 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
 	: gameWindow(window)
 	, systemEventDispatcher(eventDispatcher)
-	, openGLContext(CreateOpenGLContext())
 	, exitRequest(false)
 {
 	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
+
+	PresentationParameters presentationParameters;
+	presentationParameters.DepthFormat = DepthFormat::Depth24Stencil8;
+	presentationParameters.BackBufferWidth = gameWindow->GetClientBounds().width;
+	presentationParameters.BackBufferHeight = gameWindow->GetClientBounds().height;
+	presentationParameters.IsFullScreen = false; ///@todo Not implemented.
+
+	openGLContext = CreateOpenGLContext(presentationParameters.DepthFormat);
+
 	graphicsDevice = std::make_shared<GraphicsDevice>(std::unique_ptr<GraphicsDeviceGL4>{new GraphicsDeviceGL4()});
 
-	graphicsContext = CreateGraphicsContext(openGLContext, gameWindow);
+	graphicsContext = CreateGraphicsContext(openGLContext, gameWindow, presentationParameters);
 	
 	POMDOG_ASSERT(gameWindow);
 	gameWindow->ResetGLContext(openGLContext);

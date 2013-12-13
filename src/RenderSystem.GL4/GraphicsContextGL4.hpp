@@ -45,6 +45,9 @@ public:
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
 	void Present() override;
 	
+	///@brief Pomdog::Details::RenderSystem::NativeGraphicsContext
+	GraphicsCapabilities GetCapabilities() const override;
+	
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
 	void SetViewport(Viewport const& viewport) override;
 	

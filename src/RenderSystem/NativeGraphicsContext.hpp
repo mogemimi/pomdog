@@ -21,6 +21,8 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
+class GraphicsCapabilities;
+
 class NativeGraphicsContext: Noncopyable
 {
 public:
@@ -34,6 +36,9 @@ public:
 	
 	///@copydoc Pomdog::GraphicsContext
 	virtual void Present() = 0;
+	
+	///@brief Retrieves the capabilities of a GraphicsContext
+	virtual GraphicsCapabilities GetCapabilities() const = 0;
 
 	///@copydoc Pomdog::GraphicsContext
 	virtual void SetViewport(Viewport const& viewport) = 0;
