@@ -14,8 +14,8 @@
 #endif
 
 #include <memory>
+#include "detail/ForwardDeclarations.hpp"
 #include "IndexBuffer.hpp"
-#include "BufferUsage.hpp"
 #include "IndexElementSize.hpp"
 
 namespace Pomdog {
@@ -34,6 +34,9 @@ public:
 	ImmutableIndexBuffer(ImmutableIndexBuffer const&) = delete;
 	ImmutableIndexBuffer(ImmutableIndexBuffer &&) = default;
 
+	ImmutableIndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		IndexElementSize indexElementSize, void const* indices, std::size_t indexCount);
+
 	~ImmutableIndexBuffer() override;
 
 	ImmutableIndexBuffer & operator=(ImmutableIndexBuffer const&) = delete;
@@ -41,24 +44,23 @@ public:
 
 	///@~Japanese
 	/// @brief インデックスの個数を取得します。
-	std::size_t GetIndexCount() const;
+	std::size_t GetIndexCount() const override;
 
 	///@~Japanese
 	/// @brief インデックスの要素 1 つ分のサイズを取得します。
-	IndexElementSize GetElementSize() const;
+	IndexElementSize GetElementSize() const override;
 
 	///@~Japanese
 	/// @brief バッファの使用方法を取得します。
-	BufferUsage GetBufferUsage() const;
+	BufferUsage GetBufferUsage() const override;
 	
 public:
-	Details::RenderSystem::NativeIndexBuffer* GetNativeIndexBuffer();
+	Details::RenderSystem::NativeIndexBuffer* GetNativeIndexBuffer() override;
 	
 private:
 	std::unique_ptr<Details::RenderSystem::NativeIndexBuffer> nativeIndexBuffer;
 	std::size_t indexCount;
 	IndexElementSize elementSize;
-	BufferUsage bufferUsage;
 };
 
 /// @}

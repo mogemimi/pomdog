@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -28,6 +28,16 @@ public:
 
 	~GraphicsDeviceGL4() = default;
 	
+	///@copydoc NativeGraphicsDevice
+	std::unique_ptr<NativeIndexBuffer>
+	CreateIndexBuffer(void const* indices, std::size_t indexCount,
+		IndexElementSize elementSize, BufferUsage bufferUsage) override;
+	
+	///@copydoc NativeGraphicsDevice
+	std::unique_ptr<NativeVertexBuffer>
+	CreateVertexBuffer(void const* vertices, std::size_t vertexCount,
+		VertexDeclaration const& vertexDeclaration, BufferUsage bufferUsage) override;
+
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeBlendState>
 	CreateBlendState(BlendDescription const& description) override;

@@ -10,14 +10,31 @@
 #include <Pomdog/Utility/Exception.hpp>
 #include "BlendStateGL4.hpp"
 #include "DepthStencilStateGL4.hpp"
+#include "IndexBufferGL4.hpp"
 #include "RasterizerStateGL4.hpp"
 #include "SamplerStateGL4.hpp"
+#include "VertexBufferGL4.hpp"
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
-
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeIndexBuffer>
+GraphicsDeviceGL4::CreateIndexBuffer(void const* indices, std::size_t indexCount,
+	IndexElementSize elementSize, BufferUsage bufferUsage)
+{
+	return std::unique_ptr<IndexBufferGL4>(new IndexBufferGL4(
+		indices, indexCount, elementSize, bufferUsage));
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeVertexBuffer>
+GraphicsDeviceGL4::CreateVertexBuffer(void const* vertices, std::size_t vertexCount,
+	VertexDeclaration const& vertexDeclaration, BufferUsage bufferUsage)
+{
+	return std::unique_ptr<VertexBufferGL4>(new VertexBufferGL4(
+		vertices, vertexCount, vertexDeclaration, bufferUsage));
+}
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBlendState>
 GraphicsDeviceGL4::CreateBlendState(BlendDescription const& description)

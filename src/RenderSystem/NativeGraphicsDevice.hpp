@@ -23,8 +23,10 @@ namespace RenderSystem {
 
 class NativeBlendState;
 class NativeDepthStencilState;
+class NativeIndexBuffer;
 class NativeSamplerState;
 class NativeRasterizerState;
+class NativeVertexBuffer;
 
 ///@~Japanese
 /// @brief グラフィックスリソースの作成を行います。
@@ -32,6 +34,18 @@ class NativeGraphicsDevice: Noncopyable
 {
 public:
 	virtual ~NativeGraphicsDevice() = default;
+
+	///@~Japanese
+	/// @brief インデックスバッファを作成します。
+	virtual std::unique_ptr<NativeIndexBuffer> CreateIndexBuffer(
+		void const* indices, std::size_t indexCount,
+		IndexElementSize elementSize, BufferUsage bufferUsage) = 0;
+	
+	///@~Japanese
+	/// @brief 頂点バッファを作成します。
+	virtual std::unique_ptr<NativeVertexBuffer> CreateVertexBuffer(
+		void const* vertices, std::size_t vertexCount,
+		VertexDeclaration const& vertexDeclaration, BufferUsage bufferUsage) = 0;
 	
 	///@~Japanese
 	/// @brief ブレンディングステートを作成します。

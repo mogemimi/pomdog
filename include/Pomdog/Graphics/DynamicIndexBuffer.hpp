@@ -14,8 +14,8 @@
 #endif
 
 #include <memory>
+#include "detail/ForwardDeclarations.hpp"
 #include "IndexBuffer.hpp"
-#include "BufferUsage.hpp"
 #include "IndexElementSize.hpp"
 
 namespace Pomdog {
@@ -41,15 +41,15 @@ public:
 
 	///@~Japanese
 	/// @brief インデックスの個数を取得します。
-	std::size_t GetIndexCount() const;
+	std::size_t GetIndexCount() const override;
 
 	///@~Japanese
 	/// @brief インデックスの要素 1 つ分のサイズを取得します。
-	IndexElementSize GetElementSize() const;
+	IndexElementSize GetElementSize() const override;
 
 	///@~Japanese
 	/// @brief バッファの使用方法を取得します。
-	BufferUsage GetBufferUsage() const;
+	BufferUsage GetBufferUsage() const override;
 
 	///@~Japanese
 	/// @brief インデックスデータを格納します。
@@ -64,7 +64,6 @@ private:
 	std::unique_ptr<Details::RenderSystem::NativeIndexBuffer> nativeIndexBuffer;
 	std::size_t indexCount;
 	IndexElementSize elementSize;
-	BufferUsage bufferUsage;
 };
 
 /// @}

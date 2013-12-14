@@ -14,8 +14,8 @@
 #endif
 
 #include <memory>
+#include "detail/ForwardDeclarations.hpp"
 #include "VertexBuffer.hpp"
-#include "BufferUsage.hpp"
 #include "VertexDeclaration.hpp"
 
 namespace Pomdog {
@@ -34,6 +34,12 @@ public:
 	DynamicVertexBuffer(DynamicVertexBuffer const&) = delete;
 	DynamicVertexBuffer(DynamicVertexBuffer &&) = default;
 
+	DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		VertexDeclaration const& vertexDeclaration, void const* vertices, std::size_t vertexCount);
+
+	DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		VertexDeclaration && vertexDeclaration, void const* vertices, std::size_t vertexCount);
+
 	~DynamicVertexBuffer() override;
 
 	DynamicVertexBuffer & operator=(DynamicVertexBuffer const&) = delete;
@@ -41,15 +47,15 @@ public:
 
 	///@~Japanese
 	/// @brief 頂点データの定義を取得します。
-	VertexDeclaration const& GetVertexDeclaration() const;
+	VertexDeclaration const& GetVertexDeclaration() const override;
 
 	///@~Japanese
 	/// @brief バッファの使用方法を取得します。
-	BufferUsage GetBufferUsage() const;
+	BufferUsage GetBufferUsage() const override;
 
 	///@~Japanese
 	/// @brief 頂点の数を取得します。
-	std::size_t GetVertexCount() const;
+	std::size_t GetVertexCount() const override;
 
 	///@~Japanese
 	/// @brief 頂点データを格納します。
@@ -58,13 +64,12 @@ public:
 	void SetData(void const* source, std::size_t vertexCount);
 	
 public:
-	Details::RenderSystem::NativeVertexBuffer* GetNativeVertexBuffer();
+	Details::RenderSystem::NativeVertexBuffer* GetNativeVertexBuffer() override;
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
 	VertexDeclaration vertexDeclaration;
+	std::unique_ptr<Details::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
 	std::size_t vertexCount;
-	BufferUsage bufferUsage;
 };
 
 /// @}

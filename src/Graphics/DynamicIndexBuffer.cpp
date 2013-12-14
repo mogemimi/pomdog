@@ -7,6 +7,10 @@
 //
 
 #include <Pomdog/Graphics/DynamicIndexBuffer.hpp>
+#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include "../RenderSystem/NativeGraphicsDevice.hpp"
+#include "BufferUsage.hpp"
 
 namespace Pomdog {
 
