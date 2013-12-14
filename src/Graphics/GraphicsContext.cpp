@@ -172,6 +172,40 @@ void GraphicsContext::Present()
 	impl->nativeContext->Present();
 }
 //-----------------------------------------------------------------------
+void GraphicsContext::Draw(PrimitiveTopology primitiveTopology)
+{
+	POMDOG_ASSERT(impl);
+	
+	POMDOG_THROW_EXCEPTION(std::runtime_error,
+		"Not implemented", "GraphicsContext::Draw");
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::DrawIndexed(PrimitiveTopology primitiveTopology,
+	std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount)
+{
+	POMDOG_ASSERT(impl);
+	
+	POMDOG_THROW_EXCEPTION(std::runtime_error,
+		"Not implemented", "GraphicsContext::DrawIndexed");
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::DrawInstanced(PrimitiveTopology primitiveTopology, std::size_t instanceCount)
+{
+	POMDOG_ASSERT(impl);
+	
+	POMDOG_THROW_EXCEPTION(std::runtime_error,
+		"Not implemented", "GraphicsContext::DrawInstanced");
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
+	std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount)
+{
+	POMDOG_ASSERT(impl);
+	
+	POMDOG_THROW_EXCEPTION(std::runtime_error,
+		"Not implemented", "GraphicsContext::DrawIndexedInstanced");
+}
+//-----------------------------------------------------------------------
 Viewport const& GraphicsContext::GetViewport() const
 {
 	POMDOG_ASSERT(impl);
