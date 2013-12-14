@@ -13,8 +13,6 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Config/Platform.hpp>
-
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
