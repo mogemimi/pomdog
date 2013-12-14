@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -24,7 +24,7 @@ namespace Pomdog {
 /// @{
 
 ///@~Japanese
-/// @brief エフェクトパラメータの要素を定義します。
+/// @brief エフェクトパラメータの要素の型を示すメタデータです。
 class EffectAnnotation
 {
 public:

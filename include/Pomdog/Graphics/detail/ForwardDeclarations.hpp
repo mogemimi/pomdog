@@ -26,6 +26,8 @@ class DepthStencilState;
 class DynamicIndexBuffer;
 class DynamicVertexBuffer;
 class EffectAnnotation;
+class EffectParameter;
+class EffectPass;
 class GraphicsContext;
 class GraphicsDevice;
 class IndexBuffer;
