@@ -20,20 +20,17 @@ DynamicVertexBuffer::DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& 
 	VertexDeclaration const& newVertexDeclaration, void const* vertices, std::size_t newVertexCount)
 	: vertexDeclaration(newVertexDeclaration)
 	, nativeVertexBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateVertexBuffer(
-		vertices, newVertexCount,
-		vertexDeclaration,
-		BufferUsage::Dynamic))
+		vertices, newVertexCount, vertexDeclaration, BufferUsage::Dynamic))
 	, vertexCount(newVertexCount)
 {
+	POMDOG_ASSERT(nativeVertexBuffer);
 }
 //-----------------------------------------------------------------------
 DynamicVertexBuffer::DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	VertexDeclaration && newVertexDeclaration, void const* vertices, std::size_t newVertexCount)
 	: vertexDeclaration(std::move(newVertexDeclaration))
 	, nativeVertexBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateVertexBuffer(
-		vertices, newVertexCount,
-		vertexDeclaration,
-		BufferUsage::Dynamic))
+		vertices, newVertexCount, vertexDeclaration, BufferUsage::Dynamic))
 	, vertexCount(newVertexCount)
 {
 	POMDOG_ASSERT(nativeVertexBuffer);
@@ -69,6 +66,7 @@ void DynamicVertexBuffer::SetData(void const* source, std::size_t vertexCount)
 //-----------------------------------------------------------------------
 Details::RenderSystem::NativeVertexBuffer* DynamicVertexBuffer::GetNativeVertexBuffer()
 {
+	POMDOG_ASSERT(nativeVertexBuffer);
 	return nativeVertexBuffer.get();
 }
 //-----------------------------------------------------------------------

@@ -34,6 +34,9 @@ public:
 	DynamicIndexBuffer(DynamicIndexBuffer const&) = delete;
 	DynamicIndexBuffer(DynamicIndexBuffer &&) = default;
 
+	DynamicIndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		IndexElementSize elementSize, void const* indices, std::size_t indexCount);
+
 	~DynamicIndexBuffer() override;
 
 	DynamicIndexBuffer & operator=(DynamicIndexBuffer const&) = delete;
@@ -58,7 +61,7 @@ public:
 	void SetData(void const* source, std::size_t indexCount);
 	
 public:
-	Details::RenderSystem::NativeIndexBuffer* GetNativeIndexBuffer();
+	Details::RenderSystem::NativeIndexBuffer* GetNativeIndexBuffer() override;
 	
 private:
 	std::unique_ptr<Details::RenderSystem::NativeIndexBuffer> nativeIndexBuffer;
