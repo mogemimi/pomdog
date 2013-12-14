@@ -19,13 +19,6 @@
 #include "VertexDeclaration.hpp"
 
 namespace Pomdog {
-namespace Details {
-namespace RenderSystem {
-
-class NativeDynamicVertexBuffer;
-
-}// namespace RenderSystem
-}// namespace Details
 
 /// @addtogroup Framework
 /// @{
@@ -68,7 +61,7 @@ public:
 	Details::RenderSystem::NativeVertexBuffer* GetNativeVertexBuffer();
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeDynamicVertexBuffer> nativeVertexBuffer;
+	std::unique_ptr<Details::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
 	VertexDeclaration vertexDeclaration;
 	std::size_t vertexCount;
 	BufferUsage bufferUsage;

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,6 +13,9 @@
 #	pragma once
 #endif
 
+#include <Pomdog/Config/FundamentalTypes.hpp>
+#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
@@ -20,7 +23,18 @@ namespace RenderSystem {
 class NativeIndexBuffer
 {
 public:
+	NativeIndexBuffer() = default;
+	NativeIndexBuffer(NativeIndexBuffer const&) = delete;
+	NativeIndexBuffer& operator=(NativeIndexBuffer const&) = delete;
+
 	virtual ~NativeIndexBuffer() = default;
+	
+	///@~Japanese
+	/// @brief インデックスデータを格納します。
+	/// @remarks イミュータブルなインデックスバッファでは使用しないでください。
+	/// @param source ソースバッファを指定します。
+	/// @param indexCount インデックスの要素数を指定します。
+	virtual void SetData(void const* source, std::size_t indexCount, IndexElementSize elementSize) = 0;
 };
 
 }// namespace RenderSystem

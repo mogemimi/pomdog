@@ -19,13 +19,6 @@
 #include "IndexElementSize.hpp"
 
 namespace Pomdog {
-namespace Details {
-namespace RenderSystem {
-
-class NativeDynamicIndexBuffer;
-
-}// namespace RenderSystem
-}// namespace Details
 
 /// @addtogroup Framework
 /// @{
@@ -68,7 +61,7 @@ public:
 	Details::RenderSystem::NativeIndexBuffer* GetNativeIndexBuffer();
 	
 private:
-	std::unique_ptr<Details::RenderSystem::NativeDynamicIndexBuffer> nativeIndexBuffer;
+	std::unique_ptr<Details::RenderSystem::NativeIndexBuffer> nativeIndexBuffer;
 	std::size_t indexCount;
 	IndexElementSize elementSize;
 	BufferUsage bufferUsage;

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -19,13 +19,6 @@
 #include "VertexDeclaration.hpp"
 
 namespace Pomdog {
-namespace Details {
-namespace RenderSystem {
-
-class NativeImmutableVertexBuffer;
-
-}// namespace RenderSystem
-}// namespace Details
 
 /// @addtogroup Framework
 /// @{
@@ -62,7 +55,7 @@ public:
 	Details::RenderSystem::NativeVertexBuffer* GetNativeVertexBuffer();
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeImmutableVertexBuffer> nativeVertexBuffer;
+	std::unique_ptr<Details::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
 	VertexDeclaration vertexDeclaration;
 	std::size_t vertexCount;
 	BufferUsage bufferUsage;

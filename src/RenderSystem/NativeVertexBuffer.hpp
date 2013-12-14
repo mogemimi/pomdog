@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,6 +13,9 @@
 #	pragma once
 #endif
 
+#include <Pomdog/Config/FundamentalTypes.hpp>
+#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
@@ -20,7 +23,19 @@ namespace RenderSystem {
 class NativeVertexBuffer
 {
 public:
+	NativeVertexBuffer() = default;
+	NativeVertexBuffer(NativeVertexBuffer const&) = delete;
+	NativeVertexBuffer& operator=(NativeVertexBuffer const&) = delete;
+
 	virtual ~NativeVertexBuffer() = default;
+	
+	///@~Japanese
+	/// @brief 頂点データを格納します。
+	/// @remarks イミュータブルな頂点バッファでは使用しないでください。
+	/// @param source ソースバッファを指定します。
+	/// @param vertexCount 頂点の数を指定します。
+	virtual void SetData(void const* source, std::size_t vertexCount,
+		VertexDeclaration const& vertexDeclaration) = 0;
 };
 
 }// namespace RenderSystem

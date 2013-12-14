@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -19,13 +19,6 @@
 #include "IndexElementSize.hpp"
 
 namespace Pomdog {
-namespace Details {
-namespace RenderSystem {
-
-class NativeImmutableIndexBuffer;
-
-}// namespace RenderSystem
-}// namespace Details
 
 /// @addtogroup Framework
 /// @{
@@ -62,7 +55,7 @@ public:
 	Details::RenderSystem::NativeIndexBuffer* GetNativeIndexBuffer();
 	
 private:
-	std::unique_ptr<Details::RenderSystem::NativeImmutableIndexBuffer> nativeIndexBuffer;
+	std::unique_ptr<Details::RenderSystem::NativeIndexBuffer> nativeIndexBuffer;
 	std::size_t indexCount;
 	IndexElementSize elementSize;
 	BufferUsage bufferUsage;

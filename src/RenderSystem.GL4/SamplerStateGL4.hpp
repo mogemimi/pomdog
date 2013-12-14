@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -23,8 +23,7 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
-using TextureAddressModeGL4 = Tagged<GLenum, TextureAddressMode>;
-using SamplerObjectGL4 = Tagged<GLenum, SamplerState>;
+using SamplerObjectGL4 = Tagged<GLuint, SamplerState>;
 
 class SamplerStateGL4 final: public NativeSamplerState
 {
@@ -39,10 +38,7 @@ public:
 	void Apply(std::size_t index) override;
 	
 private:
-	// C++14:
-	// std::optional<SamplerObjectGL4> samplerObject;
-
-	// Older C++:
+	// TODO: std::optional<SamplerObjectGL4> using C++14
 	SamplerObjectGL4 samplerObject;
 	bool samplerObjectEnable;
 };

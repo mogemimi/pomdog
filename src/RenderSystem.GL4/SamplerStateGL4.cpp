@@ -17,6 +17,8 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
+using TextureAddressModeGL4 = Tagged<GLenum, TextureAddressMode>;
+//-----------------------------------------------------------------------
 static TextureAddressModeGL4 ToTextureAddressModeGL4(TextureAddressMode const& address)
 {
 	switch (address)
@@ -31,7 +33,8 @@ static TextureAddressModeGL4 ToTextureAddressModeGL4(TextureAddressMode const& a
 }
 //-----------------------------------------------------------------------
 SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
-	: samplerObjectEnable(false)
+	: samplerObject(0U)
+	, samplerObjectEnable(false)
 {
 	glGenSamplers(1, &samplerObject);
 	samplerObjectEnable = true;
@@ -143,8 +146,6 @@ SamplerStateGL4::~SamplerStateGL4()
 //-----------------------------------------------------------------------
 void SamplerStateGL4::Apply(std::size_t index)
 {
-	POMDOG_ASSERT(samplerObjectEnable);
-
 	static_assert(GL_TEXTURE19 == (GL_TEXTURE0 + 19), "");
 	POMDOG_ASSERT(index <= 19);
 
