@@ -22,6 +22,28 @@
 
 namespace Pomdog {
 namespace Details {
+namespace Assertion {
+
+//inline void ReportAssertionFailure(char const* expression,
+//	char const* filename, int line, char const* function){
+//	// notes: std::cerr in <iostream>
+//	std::cerr << "Assertion failed: " << expression << ", function "
+//		<< function << ", file " << filename << ", line " << line << ".\n";
+//}
+
+inline void RuntimeAssertion(char const* /*expression*/, char const* /*filename*/, int /*line*/)
+{
+	//ReportAssertionFailure(expression, filename, line, "(unknown)");
+	assert(false);
+}
+
+inline constexpr bool ConstexprAssert(bool condition,
+	char const* expression, char const* filename, int line) {
+	return condition ? true: (RuntimeAssertion(expression, filename, line), false);
+}
+
+}// namespace Assertion
+
 
 /// @addtogroup Framework
 /// @{
@@ -37,7 +59,7 @@ namespace Details {
 // @endcode
 
 #if defined(DEBUG) && defined(__APPLE_CC__)
-#	// Debug mode for Xcode's autocomplete ;)
+#	// Debug mode for Xcode 5
 #	define POMDOG_ASSERT(expression) POMDOG_ASSERT_MESSAGE(expression, "POMDOG_ASSERT")
 #	define POMDOG_ASSERT_MESSAGE(expression, message) \
 		do {\
@@ -45,6 +67,9 @@ namespace Details {
 				assert(message && expression);\
 			}\
 		} while(false)
+#	define POMDOG_CONSTEXPR_ASSERT(expression) \
+		static_cast<void>(Pomdog::Details::Assertion::ConstexprAssert(\
+			static_cast<bool>(expression), #expression, __FILE__, __LINE__))
 #elif defined(DEBUG) && defined(_MSC_VER)
 #	// Debug mode under Visual Studio
 #	define POMDOG_ASSERT(expression) POMDOG_ASSERT_MESSAGE(expression, "POMDOG_ASSERT")

@@ -8,6 +8,8 @@
 
 #include <iutest/gtest/iutest_switch.hpp>
 #include <Pomdog/Logging/Log.hpp>
+#include <Pomdog/Logging/LogChannel.hpp>
+#include <Pomdog/Logging/LogStream.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
 #include <vector>

@@ -149,6 +149,7 @@
       '../src/Utility/CRC32.cpp',
       '../src/Utility/CRC32.hpp',
       '../src/Utility/HashingHelper.hpp',
+      '../src/Utility/Optional.hpp',
       '../src/Utility/ScopeGuard.hpp',
     ],
     'pomdog_library_application_sources': [
