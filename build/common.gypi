@@ -76,6 +76,7 @@
       }, # Debug
       'Release': {
         'inherit_from': ['Common'],
+        'defines': ['NDEBUG=1'],
         'cflags': ['-O3'],
         'msvs_settings':{
           'VCCLCompilerTool': {

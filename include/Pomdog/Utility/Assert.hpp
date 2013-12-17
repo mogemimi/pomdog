@@ -104,6 +104,7 @@ inline constexpr bool ConstexprAssert(bool condition,
 #	// Release mode
 #	define POMDOG_ASSERT(expression)
 #	define POMDOG_ASSERT_MESSAGE(expression, message)
+#	define POMDOG_CONSTEXPR_ASSERT(expression) static_cast<void const>(0)
 #endif
 
 /// @}
