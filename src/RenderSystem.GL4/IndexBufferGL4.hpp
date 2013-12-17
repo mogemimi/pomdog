@@ -17,6 +17,7 @@
 #include "../RenderSystem/NativeIndexBuffer.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>
+#include "../Utility/Optional.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -38,8 +39,7 @@ public:
 	void SetData(void const* source, std::size_t indexCount, IndexElementSize elementSize) override;
 	
 private:
-	IndexBufferObjectGL4 bufferObject;
-	bool bufferObjectEnable;
+	Optional<IndexBufferObjectGL4> bufferObject;
 };
 
 }// namespace GL4

@@ -7,6 +7,7 @@
 //
 
 #include "IndexBufferGL4.hpp"
+#include <utility>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/BufferUsage.hpp>
 #include <Pomdog/Graphics/IndexElementSize.hpp>
@@ -50,8 +51,6 @@ static GLsizeiptr ToIndexElementOffsetBytes(IndexElementSize elementSize)
 //-----------------------------------------------------------------------
 IndexBufferGL4::IndexBufferGL4(void const* indices, std::size_t indexCount,
 	IndexElementSize elementSize, BufferUsage bufferUsage)
-	: bufferObject(0L)
-	, bufferObjectEnable(false)
 {
 	auto const oldBufferObject = TypesafeHelperGL4::Get<IndexBufferObjectGL4>();
 	ScopeGuard scope([&oldBufferObject]{
@@ -59,9 +58,13 @@ IndexBufferGL4::IndexBufferGL4(void const* indices, std::size_t indexCount,
 	});
 
 	// Generate index buffer
-	glGenBuffers(1, &bufferObject);
+	bufferObject = ([](){
+		IndexBufferObjectGL4 indexBuffer;
+		glGenBuffers(1, &indexBuffer);
+		return std::move(indexBuffer);
+	})();
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject.value);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*bufferObject).value);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
@@ -78,8 +81,8 @@ IndexBufferGL4::IndexBufferGL4(void const* indices, std::size_t indexCount,
 //-----------------------------------------------------------------------
 IndexBufferGL4::~IndexBufferGL4()
 {
-	if (bufferObjectEnable) {
-		glDeleteBuffers(1, &bufferObject);
+	if (bufferObject) {
+		glDeleteBuffers(1, &(*bufferObject).value);
 	}
 }
 //-----------------------------------------------------------------------
@@ -93,8 +96,8 @@ void IndexBufferGL4::SetData(void const* source, std::size_t indexCount, IndexEl
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, oldBufferObject.value);
 	});
 
-	POMDOG_ASSERT(bufferObjectEnable);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject.value);
+	POMDOG_ASSERT(bufferObject);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*bufferObject).value);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);

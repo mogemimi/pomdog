@@ -17,6 +17,7 @@
 #include "../RenderSystem/NativeVertexBuffer.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>
+#include "../Utility/Optional.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -39,9 +40,7 @@ public:
 		VertexDeclaration const& vertexDeclaration) override;
 	
 private:
-	// TODO: std::optional<VertexBufferObjectGL4> using C++14
-	VertexBufferObjectGL4 bufferObject;
-	bool bufferObjectEnable;
+	Optional<VertexBufferObjectGL4> bufferObject;
 };
 
 }// namespace GL4

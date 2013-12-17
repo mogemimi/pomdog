@@ -15,6 +15,7 @@
 
 #include <type_traits>
 #include <functional>
+#include <utility>
 #include "../../Config/Export.hpp"
 #include "../../Config/FundamentalTypes.hpp"
 
@@ -44,8 +45,11 @@ public:
 
 	explicit Tagged(value_type const& v)
 		: value(v) {}
+		
+	explicit Tagged(value_type && v)
+		: value(std::move(v)) {}
 
-	T const* operator&() const
+	constexpr T const* operator&() const
 	{
 		return &value;
 	}
@@ -55,12 +59,12 @@ public:
 		return &value;
 	}
 
-	bool operator==(Tagged const& v) const
+	constexpr bool operator==(Tagged const& v) const
 	{
 		return value == v.value;
 	}
 
-	bool operator!=(Tagged const& v) const
+	constexpr bool operator!=(Tagged const& v) const
 	{
 		return value != v.value;
 	}

@@ -17,6 +17,7 @@
 #include "../RenderSystem/NativeSamplerState.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>
+#include "../Utility/Optional.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -38,9 +39,7 @@ public:
 	void Apply(std::size_t index) override;
 	
 private:
-	// TODO: std::optional<SamplerObjectGL4> using C++14
-	SamplerObjectGL4 samplerObject;
-	bool samplerObjectEnable;
+	Optional<SamplerObjectGL4> samplerObject;
 };
 
 }// namespace GL4

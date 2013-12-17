@@ -30,6 +30,8 @@ using EffectParameterCollection = std::unordered_map<std::string, std::shared_pt
 class EffectPass
 {
 public:
+	EffectPass() = delete;
+
 	~EffectPass() = default;
 
 	///@~Japanese

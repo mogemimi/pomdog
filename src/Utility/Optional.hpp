@@ -68,13 +68,15 @@ public:
 	Optional & operator=(T const& v)
 	{
 		this->valid = true;
-		this->value = v;
+		this->data = v;
+		return *this;
 	}
 	
 	Optional & operator=(T && v)
 	{
 		this->valid = true;
-		this->value = std::move(v);
+		this->data = std::move(v);
+		return *this;
 	}
 	
 	constexpr T const* operator->() const
@@ -106,6 +108,12 @@ public:
 	constexpr T const& value() const
 	{
 		return POMDOG_CONSTEXPR_ASSERT(valid), data;
+	}
+	
+	T & value()
+	{
+		POMDOG_ASSERT(valid);
+		return data;
 	}
 };
 

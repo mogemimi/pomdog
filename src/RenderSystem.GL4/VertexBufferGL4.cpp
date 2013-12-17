@@ -7,6 +7,7 @@
 //
 
 #include "VertexBufferGL4.hpp"
+#include <utility>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/BufferUsage.hpp>
 #include <Pomdog/Graphics/VertexDeclaration.hpp>
@@ -38,8 +39,6 @@ static GLenum ToVertexBufferUsage(BufferUsage bufferUsage)
 //-----------------------------------------------------------------------
 VertexBufferGL4::VertexBufferGL4(void const* vertices, std::size_t vertexCount,
 	VertexDeclaration const& vertexDeclaration, BufferUsage bufferUsage)
-	: bufferObject(0U)
-	, bufferObjectEnable(false)
 {
 	POMDOG_ASSERT(vertices != nullptr);
 	POMDOG_ASSERT(vertexCount > 0);
@@ -50,10 +49,13 @@ VertexBufferGL4::VertexBufferGL4(void const* vertices, std::size_t vertexCount,
 	});
 
 	// Generate vertex buffer
-	glGenBuffers(1, &bufferObject);
-	bufferObjectEnable = true;
+	bufferObject = ([](){
+		VertexBufferObjectGL4 vertexBuffer;
+		glGenBuffers(1, &vertexBuffer);
+		return std::move(vertexBuffer);
+	})();
 	
-	glBindBuffer(GL_ARRAY_BUFFER, bufferObject.value);
+	glBindBuffer(GL_ARRAY_BUFFER, (*bufferObject).value);
 	
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
@@ -70,8 +72,8 @@ VertexBufferGL4::VertexBufferGL4(void const* vertices, std::size_t vertexCount,
 //-----------------------------------------------------------------------
 VertexBufferGL4::~VertexBufferGL4()
 {
-	if (bufferObjectEnable) {
-		glDeleteBuffers(1, &bufferObject);
+	if (bufferObject) {
+		glDeleteBuffers(1, &(*bufferObject));
 	}
 }
 //-----------------------------------------------------------------------
@@ -86,8 +88,8 @@ void VertexBufferGL4::SetData(void const* source, std::size_t vertexCount,
 		glBindBuffer(GL_ARRAY_BUFFER, oldBufferObject.value);
 	});
 
-	POMDOG_ASSERT(bufferObjectEnable);
-	glBindBuffer(GL_ARRAY_BUFFER, oldBufferObject.value);
+	POMDOG_ASSERT(bufferObject);
+	glBindBuffer(GL_ARRAY_BUFFER, (*bufferObject).value);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
