@@ -49,12 +49,12 @@ public:
 	explicit Tagged(value_type && v)
 		: value(std::move(v)) {}
 
-	constexpr T const* operator&() const
+	constexpr T const* data() const noexcept
 	{
 		return &value;
 	}
 
-	T* operator&()
+	T* data() noexcept
 	{
 		return &value;
 	}

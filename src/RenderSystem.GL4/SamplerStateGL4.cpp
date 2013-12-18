@@ -41,21 +41,17 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 {
 	samplerObject = ([](){
 		SamplerObjectGL4 sampler;
-		glGenSamplers(1, &sampler);
+		glGenSamplers(1, sampler.data());
 		return std::move(sampler);
 	})();
 	
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glGenSamplers", __FILE__, __LINE__);
 	#endif
-	
-	auto const value = [](Optional<SamplerObjectGL4> const& samplerObject){
-		return (*samplerObject).value;
-	};
-	
-	glSamplerParameteri(value(samplerObject), GL_TEXTURE_WRAP_S, ToTextureAddressModeGL4(description.AddressU).value);
-	glSamplerParameteri(value(samplerObject), GL_TEXTURE_WRAP_T, ToTextureAddressModeGL4(description.AddressV).value);
-	glSamplerParameteri(value(samplerObject), GL_TEXTURE_WRAP_R, ToTextureAddressModeGL4(description.AddressW).value);
+		
+	glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_S, ToTextureAddressModeGL4(description.AddressU).value);
+	glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_T, ToTextureAddressModeGL4(description.AddressV).value);
+	glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_R, ToTextureAddressModeGL4(description.AddressW).value);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glSamplerParameteri", __FILE__, __LINE__);
@@ -64,42 +60,42 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 	switch (description.Filter)
 	{
 	case TextureFilter::Linear:
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		break;
 	case TextureFilter::Point:
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		break;
 	case TextureFilter::LinearMipPoint:
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		break;
 	case TextureFilter::PointMipLinear:
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		break;
 	case TextureFilter::MinLinearMagPointMipLinear:
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		break;
 	case TextureFilter::MinLinearMagPointMipPoint:
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		break;
 	case TextureFilter::MinPointMagLinearMipLinear:
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		break;
 	case TextureFilter::MinPointMagLinearMipPoint:
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		break;
 	case TextureFilter::Anisotropic:
 		{
 			///@todo Not implemented:
-			glSamplerParameteri(value(samplerObject), GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glSamplerParameteri(value(samplerObject), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 			#ifdef DEBUG
 			ErrorChecker::CheckError("glSamplerParameteri", __FILE__, __LINE__);
@@ -117,7 +113,7 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 
 			deviceMaxAnisotropy = std::min(deviceMaxAnisotropy, static_cast<GLfloat>(description.MaxAnisotropy));
 
-			glSamplerParameterf(value(samplerObject), GL_TEXTURE_MAX_ANISOTROPY_EXT, deviceMaxAnisotropy);
+			glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_ANISOTROPY_EXT, deviceMaxAnisotropy);
 			
 			#ifdef DEBUG
 			ErrorChecker::CheckError("glSamplerParameterf", __FILE__, __LINE__);
@@ -130,7 +126,7 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 		// Note: GL_TEXTURE_MIN_LOD: The initial value is -1000.
 		POMDOG_ASSERT(description.MinMipLevel < description.MaxMipLevel);
 		GLint const minMipLevel = std::max(1, static_cast<GLint>(std::max(description.MinMipLevel, -1000.0f)));
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MIN_LOD, minMipLevel);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_LOD, minMipLevel);
 		
 		#ifdef DEBUG
 		ErrorChecker::CheckError("glSamplerParameteri", __FILE__, __LINE__);
@@ -139,7 +135,7 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 	{
 		POMDOG_ASSERT(description.MaxMipLevel != 0);
 		GLint const maxMipLevel = std::max(1, static_cast<GLint>(std::min(description.MaxMipLevel, 1000.0f)));
-		glSamplerParameteri(value(samplerObject), GL_TEXTURE_MAX_LOD, maxMipLevel);
+		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAX_LOD, maxMipLevel);
 
 		#ifdef DEBUG
 		ErrorChecker::CheckError("glSamplerParameteri", __FILE__, __LINE__);
@@ -150,7 +146,7 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 SamplerStateGL4::~SamplerStateGL4()
 {
 	if (samplerObject) {
-		glDeleteSamplers(1, &samplerObject.value());
+		glDeleteSamplers(1, samplerObject->data());
 	}
 }
 //-----------------------------------------------------------------------
@@ -161,7 +157,7 @@ void SamplerStateGL4::Apply(std::size_t index)
 
 	// Bind sampler
 	POMDOG_ASSERT(samplerObject);
-	glBindSampler(static_cast<GLuint>(index), (*samplerObject).value);
+	glBindSampler(static_cast<GLuint>(index), samplerObject->value);
 	
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindSampler", __FILE__, __LINE__);

@@ -79,14 +79,15 @@ public:
 		return *this;
 	}
 	
-	constexpr T const* operator->() const
-	{
-		return &data;
-	}
-	
-	T* operator->()
+	constexpr T const* operator->() const noexcept
 	{
 		return POMDOG_CONSTEXPR_ASSERT(valid), &data;
+	}
+	
+	T* operator->() noexcept
+	{
+		POMDOG_ASSERT(valid);
+		return &data;
 	}
 	
 	constexpr T const& operator*() const
@@ -100,7 +101,7 @@ public:
 		return data;
 	}
 	
-	constexpr explicit operator bool() const
+	constexpr explicit operator bool() const noexcept
 	{
 		return valid;
 	}

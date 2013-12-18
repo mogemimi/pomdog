@@ -55,7 +55,7 @@ VertexBufferGL4::VertexBufferGL4(void const* vertices, std::size_t vertexCount,
 	// Generate vertex buffer
 	bufferObject = ([](){
 		VertexBufferObjectGL4 vertexBuffer;
-		glGenBuffers(1, &vertexBuffer);
+		glGenBuffers(1, vertexBuffer.data());
 		return std::move(vertexBuffer);
 	})();
 	
@@ -77,7 +77,7 @@ VertexBufferGL4::VertexBufferGL4(void const* vertices, std::size_t vertexCount,
 VertexBufferGL4::~VertexBufferGL4()
 {
 	if (bufferObject) {
-		glDeleteBuffers(1, &(*bufferObject));
+		glDeleteBuffers(1, bufferObject->data());
 	}
 }
 //-----------------------------------------------------------------------
