@@ -20,11 +20,8 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
-template<> struct TypesafeHelperGL4::OpenGLGetTraits<IndexBufferObjectGL4>
-{
-	constexpr static GLenum parameter_name = GL_ELEMENT_ARRAY_BUFFER_BINDING;
-};
-//-----------------------------------------------------------------------
+namespace {
+
 static GLenum ToIndexBufferUsage(BufferUsage bufferUsage)
 {
 	switch (bufferUsage) {
@@ -45,9 +42,16 @@ static GLsizeiptr ToIndexElementOffsetBytes(IndexElementSize elementSize)
 	case IndexElementSize::SixteenBits: return 2;
 	};
 #ifdef _MSC_VER
-	return 1;// FUS RO DAH!!!
+	return 4;// FUS RO DAH!!!
 #endif
 }
+
+}// unnamed namespace
+//-----------------------------------------------------------------------
+template<> struct TypesafeHelperGL4::OpenGLGetTraits<IndexBufferObjectGL4>
+{
+	constexpr static GLenum parameter_name = GL_ELEMENT_ARRAY_BUFFER_BINDING;
+};
 //-----------------------------------------------------------------------
 IndexBufferGL4::IndexBufferGL4(void const* indices, std::size_t indexCount,
 	IndexElementSize elementSize, BufferUsage bufferUsage)

@@ -16,6 +16,8 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
+namespace {
+
 static GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction const& comparison)
 {
 	switch (comparison)
@@ -73,6 +75,8 @@ static void ToDepthStencilFaceOperationGL4(DepthStencilOperation const& face, De
 	result.stencilFail = ToStencilOperationGL4(face.StencilFail);
 	result.stencilPass = ToStencilOperationGL4(face.StencilPass);
 }
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 DepthStencilStateGL4::DepthStencilStateGL4(DepthStencilDescription const& description)
 	: depthFunction(ToComparisonFunctionGL4(description.DepthBufferFunction))

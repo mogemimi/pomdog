@@ -13,9 +13,10 @@
 #include "../Utility/HashingHelper.hpp"
 
 namespace Pomdog {
+namespace {
 
-template <typename T>
-static EventCode CreateCategoryID_Impl(T categoryName)
+template <typename T> static
+EventCode CreateCategoryID_Impl(T categoryName)
 {
 	std::string lowerString(categoryName);
 	std::transform(std::begin(lowerString), std::end(lowerString), std::begin(lowerString), tolower);
@@ -23,6 +24,8 @@ static EventCode CreateCategoryID_Impl(T categoryName)
 	auto const ident = HashingHelper::Hash(lowerString);
 	return EventCode(ident);
 }
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 EventCode EventCodeHelper::CreateCode(char const* categoryName)
 {

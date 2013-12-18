@@ -17,10 +17,12 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
+//-----------------------------------------------------------------------
+namespace {
 
 struct ErrorCodeTag;
 using ErrorCodeGL4 = Tagged<GLenum, ErrorCodeTag>;
-//-----------------------------------------------------------------------
+
 static std::string ToString(Pomdog::Details::RenderSystem::GL4::ErrorCodeGL4 const& errorCode)
 {
 	switch (errorCode.value)
@@ -40,6 +42,8 @@ static std::string ToString(Pomdog::Details::RenderSystem::GL4::ErrorCodeGL4 con
 	ss << "ErrorCode '" << reinterpret_cast<void const*>(errorCode.value) << "'";
 	return ss.str();
 }
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 void ErrorChecker::CheckError(char const* command, char const* filename, int line)
 {

@@ -18,8 +18,10 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
+namespace {
+
 using TextureAddressModeGL4 = Tagged<GLenum, TextureAddressMode>;
-//-----------------------------------------------------------------------
+
 static TextureAddressModeGL4 ToTextureAddressModeGL4(TextureAddressMode const& address)
 {
 	switch (address)
@@ -32,6 +34,8 @@ static TextureAddressModeGL4 ToTextureAddressModeGL4(TextureAddressMode const& a
 	return TextureAddressModeGL4{ GL_REPEAT };
 #endif
 }
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 {

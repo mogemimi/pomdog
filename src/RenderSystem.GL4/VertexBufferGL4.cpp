@@ -20,11 +20,8 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
-template<> struct TypesafeHelperGL4::OpenGLGetTraits<VertexBufferObjectGL4>
-{
-	constexpr static GLenum parameter_name = GL_ARRAY_BUFFER_BINDING;
-};
-//-----------------------------------------------------------------------
+namespace {
+
 static GLenum ToVertexBufferUsage(BufferUsage bufferUsage)
 {
 	switch (bufferUsage) {
@@ -36,6 +33,13 @@ static GLenum ToVertexBufferUsage(BufferUsage bufferUsage)
 	return GL_STATIC_DRAW;
 #endif
 }
+
+}// unnamed namespace
+//-----------------------------------------------------------------------
+template<> struct TypesafeHelperGL4::OpenGLGetTraits<VertexBufferObjectGL4>
+{
+	constexpr static GLenum parameter_name = GL_ARRAY_BUFFER_BINDING;
+};
 //-----------------------------------------------------------------------
 VertexBufferGL4::VertexBufferGL4(void const* vertices, std::size_t vertexCount,
 	VertexDeclaration const& vertexDeclaration, BufferUsage bufferUsage)

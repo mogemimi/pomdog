@@ -8,10 +8,12 @@
 
 #include "CRC32.hpp"
 #include <array>
+#include <utility>
 
 namespace Pomdog {
 namespace Hashing {
 namespace CRC32 {
+namespace {
 
 //
 // CRC-32
@@ -20,38 +22,41 @@ namespace CRC32 {
 
 #if defined(POMDOG_CRC32_CREATE_CRC_TABLE)
 
-static std::array<std::uint32_t, 256U> crctable;
-
-//
-// if you need to make crc32 table
-//
-void CRC32::make_crc_table() throw()
+// if you need to make crc32 table:
+static std::array<std::uint32_t, 256U> MakeCRCTable()
 {
-#	if defined(POMDOG_CRC32_MAKE_XOR_PATTERN_FROM_POLYNOMIAL)
-	static std::array<std::uint8_t, 14> const p = { 0, 1, 2, 4, 5, 7, 8, 10, 11, 12, 16, 22, 23, 26 };
+#if defined(POMDOG_CRC32_MAKE_XOR_PATTERN_FROM_POLYNOMIAL)
+	constexpr std::array<std::uint8_t, 14> p = {{
+		0, 1, 2, 4, 5, 7, 8, 10, 11, 12, 16, 22, 23, 26
+	}};
 
 	std::uint32_t poly = 0L;
-	for (std::size_t i = 0; i < p.size(); ++i)
-	{
-		poly |= 1L << (31 - p[i]);
+	for (auto iter: p) {
+		poly |= 1L << (31 - iter);
 	}
-#	else
-	std::uint32_t const poly = 0xedb88320L;
-#	endif // defined(POMDOG_CRC32_MAKE_XOR_PATTERN_FROM_POLYNOMIAL)
-	for (std::size_t i = 0; i < crctable.size(); ++i)
+#else
+	constexpr std::uint32_t poly = 0xedb88320L;
+#endif // defined(POMDOG_CRC32_MAKE_XOR_PATTERN_FROM_POLYNOMIAL)
+
+	std::array<std::uint32_t, 256U> crctable;
+
+	for (std::uint32_t i = 0; i < crctable.size(); ++i)
 	{
-		std::uint32_t c	= static_cast<std::uint32_t>(i);
+		std::uint32_t c	= i;
 		for (std::size_t j = 0; j < 8; ++j)
 		{
 			c = (c & 1) ? poly ^ (c >> 1) : (c >> 1);
 		}
 		crctable[i] = c;
 	}
+	return std::move(crctable);
 }
 
-#else
-// !defined(POMDOG_CRC32_CREATE_CRC_TABLE)
-static std::array<std::uint32_t, 256U> const crctable =
+static const std::array<std::uint32_t, 256U> crctable = MakeCRCTable();
+
+#else // !defined(POMDOG_CRC32_CREATE_CRC_TABLE)
+
+static constexpr std::array<std::uint32_t, 256U> crctable =
 {{
 	0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 
 	0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
@@ -120,10 +125,10 @@ static std::array<std::uint32_t, 256U> const crctable =
 }};
 #endif // !defined(POMDOG_CRC32_CREATE_CRC_TABLE)
 
-constexpr std::uint32_t CRC32_InitValue = 0xffffffffUL;
-constexpr std::uint32_t CRC32_XorValue  = 0xffffffffUL;
+constexpr std::uint32_t InitValueCRC32 = 0xffffffffUL;
+constexpr std::uint32_t XorValueCRC32  = 0xffffffffUL;
 
-static void update_checksum(std::uint32_t & crcvalue, std::uint8_t const* data, std::size_t length)
+static void UpdateChecksum(std::uint32_t & crcvalue, std::uint8_t const* data, std::size_t length)
 {
 	std::uint32_t crc = crcvalue;
 	while (length--)
@@ -133,16 +138,18 @@ static void update_checksum(std::uint32_t & crcvalue, std::uint8_t const* data, 
 	crcvalue = crc;
 }
 
-static void finish_checksum(std::uint32_t & crcvalue)
+static void FinishChecksum(std::uint32_t & crcvalue)
 {
-	crcvalue ^= CRC32_XorValue;
+	crcvalue ^= XorValueCRC32;
 }
+
+}// unnamed namespace
 
 std::uint32_t BlockChecksum(std::uint8_t const* data, std::size_t length)
 {
-	std::uint32_t crc = CRC32_InitValue;
-	update_checksum(crc, data, length);
-	finish_checksum(crc);
+	std::uint32_t crc = InitValueCRC32;
+	UpdateChecksum(crc, data, length);
+	FinishChecksum(crc);
 	return crc;
 }
 

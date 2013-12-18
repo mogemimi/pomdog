@@ -16,6 +16,8 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
+namespace {
+
 static FillModeGL4 ToFillModeGL4(FillMode const& fillMode)
 {
 	switch (fillMode)
@@ -27,6 +29,8 @@ static FillModeGL4 ToFillModeGL4(FillMode const& fillMode)
 	return FillModeGL4{ GL_FILL };
 #endif
 }
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 RasterizerStateGL4::RasterizerStateGL4(RasterizerDescription const& description)
 	: fillMode(ToFillModeGL4(description.FillMode))

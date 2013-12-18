@@ -17,6 +17,8 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
+namespace {
+
 static GLenum ToBlendGL4NonTypesafe(Blend blend)
 {
 	switch (blend)
@@ -68,6 +70,8 @@ static BlendFunctionGL4 ToBlendFunctionGL4(BlendFunction func)
 		ToBlendFunctionGL4NonTypesafe(func)
 	});
 }
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 BlendStateGL4::BlendStateGL4(BlendDescription const& description)
 	// Blend factor
