@@ -20,6 +20,8 @@ namespace Pomdog {
 // Class
 class BlendDescription;
 class BlendState;
+template <typename T, typename... Arguments>
+class CustomVertex;
 class DepthStencilDescription;
 class DepthStencilOperation;
 class DepthStencilState;
@@ -36,6 +38,7 @@ class RasterizerState;
 class SamplerDescription;
 class SamplerState;
 class VertexBuffer;
+class VertexBufferBinding;
 class VertexDeclaration;
 class VertexElement;
 class Viewport;

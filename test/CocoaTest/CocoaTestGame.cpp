@@ -72,6 +72,7 @@ void CocoaTestGame::Draw()
 	auto color = Pomdog::Color::CornflowerBlue;
 	graphicsContext->Clear(ClearOptions::RenderTarget|ClearOptions::DepthBuffer, color, 0.0f, 0);
 	
+	graphicsContext->SetVertexBuffer(vertexBuffer);
 	//effectPass->Apply();
 	//graphicsContext->Draw(PrimitiveTopology::TriangleStrip);
 	

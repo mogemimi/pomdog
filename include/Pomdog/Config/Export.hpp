@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -21,8 +21,8 @@ namespace Pomdog {
 #	error "exporting error"
 #endif
 
-#if defined(_MSC_VER) || defined(_WIN32)
-#	// Win32
+#if defined(_MSC_VER) && defined(_WIN32)
+#	// MSVC
 #	if defined(POMDOG_BUILDING_LIBRARY_EXPORTS)
 #		define POMDOG_EXPORT __declspec(dllexport)
 #	elif defined(POMDOG_USING_LIBRARY_EXPORTS)

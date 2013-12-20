@@ -97,6 +97,7 @@
 #include "Graphics/TextureAddressMode.hpp"
 #include "Graphics/TextureFilter.hpp"
 #include "Graphics/VertexBuffer.hpp"
+#include "Graphics/VertexBufferBinding.hpp"
 #include "Graphics/VertexDeclaration.hpp"
 #include "Graphics/VertexElement.hpp"
 #include "Graphics/VertexElementFormat.hpp"

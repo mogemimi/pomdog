@@ -15,6 +15,7 @@
 
 #include <utility>
 #include <vector>
+#include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 #include "../Math/detail/ForwardDeclarations.hpp"
 #include "VertexDeclaration.hpp"
@@ -43,21 +44,7 @@ template <> struct ToVertexElementFormat<Quaternion> {
 	static constexpr VertexElementFormat value = VertexElementFormat::Float4;
 };
 
-inline std::uint8_t ToByteWidth(VertexElementFormat format)
-{
-	switch (format) {
-	case VertexElementFormat::Byte4: return 4;
-	case VertexElementFormat::Float: return 4;
-	case VertexElementFormat::Float2: return 8;
-	case VertexElementFormat::Float3: return 12;
-	case VertexElementFormat::Float4: return 16;
-	case VertexElementFormat::HalfFloat2: return 4;
-	case VertexElementFormat::HalfFloat4: return 16;
-	}
-#ifdef _MSC_VER
-	return 4;
-#endif
-}
+std::uint8_t POMDOG_EXPORT ToByteWidth(VertexElementFormat format);
 
 template <VertexElementFormat... Formats>
 std::vector<VertexElement> VertexCombined()
@@ -96,21 +83,18 @@ struct VertexElementTuple<Head, Elements...> {
 /// @addtogroup Graphics
 /// @{
 
-template <typename Format, typename... Arguments>
-class CustomVertex;
-
-template <typename Format, typename... Arguments>
+template <typename T, typename... Arguments>
 class CustomVertex
 {
 public:
-	Details::Graphics::VertexElementTuple<Format, Arguments...> vertex;
+	Details::Graphics::VertexElementTuple<T, Arguments...> vertex;
 
 	static VertexDeclaration Declaration()
 	{
 		using Details::Graphics::VertexCombined;
 		using Details::Graphics::ToVertexElementFormat;
 		return VertexDeclaration(VertexCombined<
-			ToVertexElementFormat<Format>::value,
+			ToVertexElementFormat<T>::value,
 			ToVertexElementFormat<Arguments>::value...
 		>());
 	}

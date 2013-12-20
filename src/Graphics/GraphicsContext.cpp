@@ -15,6 +15,7 @@
 #include <Pomdog/Graphics/DepthStencilState.hpp>
 #include <Pomdog/Graphics/RasterizerState.hpp>
 #include <Pomdog/Graphics/SamplerState.hpp>
+#include <Pomdog/Graphics/VertexBufferBinding.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
@@ -54,6 +55,7 @@ public:
 	
 public:
 	Viewport viewport;
+	std::vector<VertexBufferBinding> vertexBufferBindings;
 	std::vector<std::shared_ptr<SamplerState>> samplerStates;
 	std::shared_ptr<BlendState> blendState;
 	std::shared_ptr<DepthStencilState> depthStencilState;
@@ -263,6 +265,22 @@ void GraphicsContext::SetSamplerState(std::size_t index, std::shared_ptr<Sampler
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(samplerState);
 	impl->SetSamplerState(index, samplerState);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetVertexBuffer(std::shared_ptr<VertexBuffer> const& vertexBuffer)
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(vertexBuffer);
+	impl->vertexBufferBindings = {
+		VertexBufferBinding{vertexBuffer, 0, 0}
+	};
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers)
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(vertexBuffers.empty());
+	impl->vertexBufferBindings = vertexBuffers;
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

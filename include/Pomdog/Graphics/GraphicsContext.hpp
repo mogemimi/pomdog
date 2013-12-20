@@ -14,6 +14,7 @@
 #endif
 
 #include <memory>
+#include <vector>
 #include "../Config/FundamentalTypes.hpp"
 #include "../Config/Export.hpp"
 #include "../Utility/Noncopyable.hpp"
@@ -118,6 +119,14 @@ public:
 	///@~Japanese
 	/// @brief テクスチャサンプラーステートを設定します。
 	void SetSamplerState(std::size_t index, std::shared_ptr<SamplerState> const& samplerState);
+
+	///@~Japanese
+	/// @brief 頂点バッファを設定します。
+	void SetVertexBuffer(std::shared_ptr<VertexBuffer> const& vertexBuffer);
+	
+	///@~Japanese
+	/// @brief 頂点バッファの配列を設定します。
+	void SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers);
 
 public:
 	//Details::RenderSystem::NativeGraphicsContext* NativeGraphicsContext();
