@@ -22,7 +22,7 @@ class NativeDepthStencilState
 public:
 	NativeDepthStencilState() = default;
 	NativeDepthStencilState(NativeDepthStencilState const&) = delete;
-	NativeDepthStencilState& operator=(NativeDepthStencilState const&) = delete;
+	NativeDepthStencilState & operator=(NativeDepthStencilState const&) = delete;
 
 	virtual ~NativeDepthStencilState() = default;
 	

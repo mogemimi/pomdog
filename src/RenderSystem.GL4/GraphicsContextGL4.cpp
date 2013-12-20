@@ -15,9 +15,10 @@
 #include <Pomdog/Graphics/ClearOptions.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
 #include <Pomdog/Application/GameWindow.hpp>
-#include "OpenGLContext.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
+#include "OpenGLContext.hpp"
 
+// logging
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
 
@@ -67,6 +68,28 @@ void GraphicsContextGL4::Present()
 	glFlush();
 
 	nativeContext->SwapBuffers();
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology)
+{
+	///@todo Not implemented
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
+	std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount)
+{
+	///@todo Not implemented
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std::size_t instanceCount)
+{
+	///@todo Not implemented
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
+	std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount)
+{
+	///@todo Not implemented
 }
 //-----------------------------------------------------------------------
 GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const

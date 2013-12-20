@@ -47,19 +47,24 @@ void CocoaTestGame::Initialize()
 	}
 	{
 		using VertexCombined = CustomVertex<
-			Vector3, Vector2, Vector3
+			Vector3, Vector2//, Vector3
 		>;
 		std::array<VertexCombined, 4> verticesCombo = {
-			Vector3(+1.f, -1.f, 0.f), Vector2(1.f, 0.f), Vector3(1.f, 0.f, 0.f),
-			Vector3(+1.f, +1.f, 0.f), Vector2(1.f, 1.f), Vector3(0.f, 1.f, 0.f),
-			Vector3(-1.f, +1.f, 0.f), Vector2(0.f, 1.f), Vector3(0.f, 0.f, 1.f),
-			Vector3(-1.f, -1.f, 0.f), Vector2(0.f, 0.f), Vector3(0.f, 0.f, 0.f),
+			Vector3(+1.f, -1.f, 0.f), Vector2(1.f, 0.f), //Vector3(1.f, 0.f, 0.f),
+			Vector3(+1.f, +1.f, 0.f), Vector2(1.f, 1.f), //Vector3(0.f, 1.f, 0.f),
+			Vector3(-1.f, +1.f, 0.f), Vector2(0.f, 1.f), //Vector3(0.f, 0.f, 1.f),
+			Vector3(-1.f, -1.f, 0.f), Vector2(0.f, 0.f), //Vector3(0.f, 0.f, 0.f),
 		};
 		vertexBuffer = std::make_shared<ImmutableVertexBuffer>(graphicsDevice,
 			VertexCombined::Declaration(), verticesCombo.data(), verticesCombo.size());
-	}
-	{
+
 		effectPass = std::make_shared<EffectPass>(graphicsDevice);
+	
+		std::vector<VertexBufferBinding> vertexBinding {
+			{ VertexCombined::Declaration(), 0, 0 },
+			//{ VertexCombined::Declaration(), 0, 1 }
+		};
+		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass, vertexBinding);
 	}
 }
 //-----------------------------------------------------------------------
@@ -72,7 +77,8 @@ void CocoaTestGame::Draw()
 	auto color = Pomdog::Color::CornflowerBlue;
 	graphicsContext->Clear(ClearOptions::RenderTarget|ClearOptions::DepthBuffer, color, 0.0f, 0);
 	
-	graphicsContext->SetVertexBuffer(vertexBuffer);
+	//graphicsContext->SetInputLayout(inputLayout);
+	//graphicsContext->SetVertexBuffer(vertexBuffer);
 	//effectPass->Apply();
 	//graphicsContext->Draw(PrimitiveTopology::TriangleStrip);
 	

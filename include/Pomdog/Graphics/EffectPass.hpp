@@ -63,6 +63,9 @@ public:
 	/// @brief エフェクトパラメータのコンテナを取得します。
 	EffectParameterCollection const& Parameters() const;
 	
+public:
+	Details::RenderSystem::NativeEffectPass* GetNativeEffectPass();
+	
 private:
 	EffectParameterCollection effectParameters;
 	std::unique_ptr<Details::RenderSystem::NativeEffectPass> nativeEffectPass;

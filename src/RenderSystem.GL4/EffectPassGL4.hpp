@@ -40,6 +40,8 @@ public:
 
 	void ApplyShaders() override;
 	
+	ShaderProgramGL4 GetShaderProgram() const;
+	
 private:
 	Optional<ShaderProgramGL4> shaderProgram;
 };

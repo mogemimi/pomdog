@@ -29,14 +29,17 @@ using Details::RenderSystem::ShaderBytecode;
 std::string const vertexShader = POMDOG_TOSTRING_SORRY_FOR_USING_MACRO(
 //====================================================================
 layout(location = 0) in vec3 Position;
+layout(location = 1) in vec2 TextureCoord;
 
 out VertexData {
 	vec4 Position;
+	vec2 TextureCoord;
 } Out;
 
 void main()
 {
 	Out.Position = vec4(Position.xyz, 1.0);
+	Out.TextureCoord = TextureCoord.xy;
 }
 //====================================================================
 );
@@ -45,6 +48,7 @@ std::string const pixelShader = POMDOG_TOSTRING_SORRY_FOR_USING_MACRO(
 //====================================================================
 in VertexData {
 	vec4 Position;
+	vec2 TextureCoord;
 } In;
 
 out vec4 FragColor;
@@ -95,6 +99,11 @@ std::unique_ptr<EffectParameter> const& EffectPass::Parameters(std::string const
 EffectParameterCollection const& EffectPass::Parameters() const
 {
 	return effectParameters;
+}
+//-----------------------------------------------------------------------
+Details::RenderSystem::NativeEffectPass* EffectPass::GetNativeEffectPass()
+{
+	return this->nativeEffectPass.get();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

@@ -23,12 +23,6 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
-class InputLayoutGL4
-{
-public:
-
-};
-
 namespace {
 namespace Tags {
 
@@ -182,12 +176,18 @@ void EffectPassGL4::ApplyShaders()
 	POMDOG_ASSERT(shaderProgram);
 	glUseProgram(shaderProgram->value);
 
-#ifdef DEBUG
+	#ifdef DEBUG
 	ErrorChecker::CheckError("glUseProgram", __FILE__, __LINE__);
-#endif
+	#endif
 
 	//POMDOG_ASSERT(uniforms);
 	//uniforms->ApplyUniforms();
+}
+//-----------------------------------------------------------------------
+ShaderProgramGL4 EffectPassGL4::GetShaderProgram() const
+{
+	POMDOG_ASSERT(shaderProgram);
+	return shaderProgram.value();
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

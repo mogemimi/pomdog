@@ -7,26 +7,32 @@
 //
 
 #include <Pomdog/Graphics/VertexBufferBinding.hpp>
+#include <utility>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-VertexBufferBinding::VertexBufferBinding(
-	std::shared_ptr<Pomdog::VertexBuffer> const& vertexBufferIn)
-: VertexBuffer(vertexBufferIn)
+VertexBufferBinding::VertexBufferBinding(VertexDeclaration const& vertexDeclarationIn)
+: Declaration(vertexDeclarationIn)
 , VertexOffset(0)
 , InstanceFrequency(0)
 {}
 //-----------------------------------------------------------------------
-VertexBufferBinding::VertexBufferBinding(
-	std::shared_ptr<Pomdog::VertexBuffer> const& vertexBufferIn, std::uint32_t vertexOffsetIn)
-: VertexBuffer(vertexBufferIn)
+VertexBufferBinding::VertexBufferBinding(VertexDeclaration && vertexDeclarationIn)
+: Declaration(std::move(vertexDeclarationIn))
+, VertexOffset(0)
+, InstanceFrequency(0)
+{}
+//-----------------------------------------------------------------------
+VertexBufferBinding::VertexBufferBinding(VertexDeclaration const& vertexDeclarationIn,
+	std::uint32_t vertexOffsetIn)
+: Declaration(vertexDeclarationIn)
 , VertexOffset(vertexOffsetIn)
 , InstanceFrequency(0)
 {}
 //-----------------------------------------------------------------------
-VertexBufferBinding::VertexBufferBinding(
-	std::shared_ptr<Pomdog::VertexBuffer> const& vertexBufferIn, std::uint32_t vertexOffsetIn, std::uint32_t instanceFrequencyIn)
-: VertexBuffer(vertexBufferIn)
+VertexBufferBinding::VertexBufferBinding(VertexDeclaration const& vertexDeclarationIn,
+	std::uint32_t vertexOffsetIn, std::uint32_t instanceFrequencyIn)
+: Declaration(vertexDeclarationIn)
 , VertexOffset(vertexOffsetIn)
 , InstanceFrequency(instanceFrequencyIn)
 {}

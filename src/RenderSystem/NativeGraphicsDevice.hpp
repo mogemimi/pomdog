@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -14,6 +14,7 @@
 #endif
 
 #include <memory>
+#include <vector>
 #include <Pomdog/Utility/Noncopyable.hpp>
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 
@@ -25,6 +26,7 @@ class NativeBlendState;
 class NativeDepthStencilState;
 class NativeEffectPass;
 class NativeIndexBuffer;
+class NativeInputLayout;
 class NativeSamplerState;
 class NativeRasterizerState;
 class NativeVertexBuffer;
@@ -74,6 +76,16 @@ public:
 	virtual std::unique_ptr<NativeEffectPass> CreateEffectPass(
 		ShaderBytecode const& vertexShaderBytecode,
 		ShaderBytecode const& pixelShaderBytecode) = 0;
+	
+	///@~Japanese
+	/// @brief 入力レイアウトを作成します。
+	virtual std::unique_ptr<NativeInputLayout> CreateInputLayout(
+		NativeEffectPass* nativeEffectPass) = 0;
+	
+	///@~Japanese
+	/// @brief 入力レイアウトを作成します。
+	virtual std::unique_ptr<NativeInputLayout> CreateInputLayout(
+		NativeEffectPass* nativeEffectPass, std::vector<VertexBufferBinding> const& vertexBufferBindings) = 0;
 };
 
 }// namespace RenderSystem

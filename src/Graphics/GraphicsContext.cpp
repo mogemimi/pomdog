@@ -55,11 +55,13 @@ public:
 	
 public:
 	Viewport viewport;
-	std::vector<VertexBufferBinding> vertexBufferBindings;
+	std::vector<std::shared_ptr<VertexBuffer>> vertexBuffers;
 	std::vector<std::shared_ptr<SamplerState>> samplerStates;
 	std::shared_ptr<BlendState> blendState;
 	std::shared_ptr<DepthStencilState> depthStencilState;
 	std::shared_ptr<RasterizerState> rasterizerState;
+	std::shared_ptr<InputLayout> inputLayout;
+	
 	std::unique_ptr<NativeGraphicsContext> nativeContext;
 };
 //-----------------------------------------------------------------------
@@ -267,20 +269,35 @@ void GraphicsContext::SetSamplerState(std::size_t index, std::shared_ptr<Sampler
 	impl->SetSamplerState(index, samplerState);
 }
 //-----------------------------------------------------------------------
+void GraphicsContext::SetInputLayout(std::shared_ptr<InputLayout> const& inputLayout)
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(inputLayout);
+	impl->inputLayout = inputLayout;
+	
+	///@todo Not implemented.
+	//impl->nativeContext->SetInputLayout(inputLayout);
+}
+//-----------------------------------------------------------------------
 void GraphicsContext::SetVertexBuffer(std::shared_ptr<VertexBuffer> const& vertexBuffer)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(vertexBuffer);
-	impl->vertexBufferBindings = {
-		VertexBufferBinding{vertexBuffer, 0, 0}
-	};
+	impl->vertexBuffers.clear();
+	impl->vertexBuffers.push_back(vertexBuffer);
+	
+	///@todo Not implemented.
+	//impl->nativeContext->SetVertexBuffers(impl->vertexBuffers);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers)
+void GraphicsContext::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(vertexBuffers.empty());
-	impl->vertexBufferBindings = vertexBuffers;
+	impl->vertexBuffers = vertexBuffers;
+	
+	///@todo Not implemented.
+	//impl->nativeContext->SetVertexBuffers(impl->vertexBuffers);
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

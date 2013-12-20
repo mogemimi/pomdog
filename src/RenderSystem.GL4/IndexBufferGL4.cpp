@@ -56,19 +56,19 @@ template<> struct TypesafeHelperGL4::OpenGLGetTraits<IndexBufferObjectGL4>
 IndexBufferGL4::IndexBufferGL4(void const* indices, std::size_t indexCount,
 	IndexElementSize elementSize, BufferUsage bufferUsage)
 {
-	auto const oldBufferObject = TypesafeHelperGL4::Get<IndexBufferObjectGL4>();
-	ScopeGuard scope([&oldBufferObject]{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, oldBufferObject.value);
-	});
-
 	// Generate index buffer
 	bufferObject = ([](){
 		IndexBufferObjectGL4 indexBuffer;
 		glGenBuffers(1, indexBuffer.data());
 		return std::move(indexBuffer);
 	})();
+	
+	auto const oldBufferObject = TypesafeHelperGL4::Get<IndexBufferObjectGL4>();
+	ScopeGuard scope([&oldBufferObject]{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, oldBufferObject.value);
+	});
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*bufferObject).value);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject->value);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
@@ -101,7 +101,7 @@ void IndexBufferGL4::SetData(void const* source, std::size_t indexCount, IndexEl
 	});
 
 	POMDOG_ASSERT(bufferObject);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*bufferObject).value);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject->value);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);

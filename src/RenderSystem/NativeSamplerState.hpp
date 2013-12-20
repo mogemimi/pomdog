@@ -24,7 +24,7 @@ class NativeSamplerState
 public:
 	NativeSamplerState() = default;
 	NativeSamplerState(NativeSamplerState const&) = delete;
-	NativeSamplerState& operator=(NativeSamplerState const&) = delete;
+	NativeSamplerState & operator=(NativeSamplerState const&) = delete;
 	
 	virtual ~NativeSamplerState() = default;
 	

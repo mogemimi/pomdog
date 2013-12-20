@@ -14,9 +14,9 @@
 #endif
 
 #include "OpenGLPrerequisites.hpp"
-#include "../RenderSystem/NativeVertexBuffer.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>
+#include "../RenderSystem/NativeVertexBuffer.hpp"
 #include "../Utility/Optional.hpp"
 
 namespace Pomdog {
@@ -38,6 +38,8 @@ public:
 	///@copydoc NativeVertexBuffer
 	void SetData(void const* source, std::size_t vertexCount,
 		VertexDeclaration const& vertexDeclaration) override;
+	
+	void BindBuffer();
 	
 private:
 	Optional<VertexBufferObjectGL4> bufferObject;

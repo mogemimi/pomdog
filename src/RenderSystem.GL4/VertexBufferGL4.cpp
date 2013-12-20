@@ -47,11 +47,6 @@ VertexBufferGL4::VertexBufferGL4(void const* vertices, std::size_t vertexCount,
 	POMDOG_ASSERT(vertices != nullptr);
 	POMDOG_ASSERT(vertexCount > 0);
 
-	auto const oldBufferObject = TypesafeHelperGL4::Get<VertexBufferObjectGL4>();
-	ScopeGuard scope([&oldBufferObject]{
-		glBindBuffer(GL_ARRAY_BUFFER, oldBufferObject.value);
-	});
-
 	// Generate vertex buffer
 	bufferObject = ([](){
 		VertexBufferObjectGL4 vertexBuffer;
@@ -59,7 +54,12 @@ VertexBufferGL4::VertexBufferGL4(void const* vertices, std::size_t vertexCount,
 		return std::move(vertexBuffer);
 	})();
 	
-	glBindBuffer(GL_ARRAY_BUFFER, (*bufferObject).value);
+	auto const oldBufferObject = TypesafeHelperGL4::Get<VertexBufferObjectGL4>();
+	ScopeGuard scope([&oldBufferObject]{
+		glBindBuffer(GL_ARRAY_BUFFER, oldBufferObject.value);
+	});
+	
+	glBindBuffer(GL_ARRAY_BUFFER, bufferObject->value);
 	
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
@@ -93,7 +93,7 @@ void VertexBufferGL4::SetData(void const* source, std::size_t vertexCount,
 	});
 
 	POMDOG_ASSERT(bufferObject);
-	glBindBuffer(GL_ARRAY_BUFFER, (*bufferObject).value);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferObject->value);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
@@ -105,6 +105,12 @@ void VertexBufferGL4::SetData(void const* source, std::size_t vertexCount,
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBufferSubData", __FILE__, __LINE__);
 	#endif
+}
+//-----------------------------------------------------------------------
+void VertexBufferGL4::BindBuffer()
+{
+	POMDOG_ASSERT(bufferObject);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferObject->value);
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

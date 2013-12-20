@@ -45,7 +45,21 @@ public:
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
 	void Present() override;
 	
-	///@brief Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	void Draw(PrimitiveTopology primitiveTopology) override;
+
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	void DrawIndexed(PrimitiveTopology primitiveTopology,
+		std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount) override;
+
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	void DrawInstanced(PrimitiveTopology primitiveTopology, std::size_t instanceCount) override;
+
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
+		std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount) override;
+	
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
 	GraphicsCapabilities GetCapabilities() const override;
 	
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext

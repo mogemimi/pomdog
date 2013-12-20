@@ -24,7 +24,7 @@ class NativeEffectPass
 public:
 	NativeEffectPass() = default;
 	NativeEffectPass(NativeEffectPass const&) = delete;
-	NativeEffectPass& operator=(NativeEffectPass const&) = delete;
+	NativeEffectPass & operator=(NativeEffectPass const&) = delete;
 
 	virtual ~NativeEffectPass() = default;
 	

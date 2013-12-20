@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,23 +13,68 @@
 #	pragma once
 #endif
 
+#include "OpenGLPrerequisites.hpp"
+#include <vector>
+#include <limits>
+#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include <Pomdog/Utility/detail/Tagged.hpp>
+#include "../RenderSystem/NativeInputLayout.hpp"
+#include "../Utility/Optional.hpp"
+
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
-class InputLayoutGL4
+class EffectPassGL4;
+class VertexBufferGL4;
+
+namespace Tags {
+
+struct ScalarDataTypeTag {};
+
+}// namespace Tags
+
+using ScalarTypeGL4 = Tagged<GLuint, Tags::ScalarDataTypeTag>;
+using VertexArrayGL4 = Tagged<GLuint, InputLayout>;
+
+struct InputElementGL4
+{
+	// Attribute location.
+	GLuint StartSlot;
+
+	// Specifies the scalar data type.
+	ScalarTypeGL4 ScalarType;
+
+	// Must be 1, 2, 3, and 4.
+	std::int8_t Components;
+	
+	// Input element size.
+	std::uint8_t ByteWidth;
+};
+
+struct InputBindingGL4
+{
+	std::vector<InputElementGL4> InputElements;
+	std::uint32_t InstanceFrequency;
+};
+
+class InputLayoutGL4: public NativeInputLayout
 {
 public:
 	InputLayoutGL4() = delete;
 	
-	//InputLayoutGL4();
+	explicit InputLayoutGL4(EffectPassGL4* effectPass);
+	
+	InputLayoutGL4(EffectPassGL4* effectPass, std::vector<VertexBufferBinding> const& vertexBufferBinding);
 	
 	~InputLayoutGL4();
 
-	void Apply();
+	void Apply(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers);
 	
 private:
+	std::vector<InputBindingGL4> inputBindings;
+	Optional<VertexArrayGL4> inputLayout;
 };
 
 }// namespace GL4

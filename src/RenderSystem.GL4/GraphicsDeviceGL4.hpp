@@ -58,6 +58,15 @@ public:
 	std::unique_ptr<NativeEffectPass>
 	CreateEffectPass(ShaderBytecode const& vertexShaderBytecode,
 		ShaderBytecode const& pixelShaderBytecode) override;
+	
+	///@copydoc NativeGraphicsDevice
+	std::unique_ptr<NativeInputLayout>
+	CreateInputLayout(NativeEffectPass* nativeEffectPass) override;
+	
+	///@copydoc NativeGraphicsDevice
+	std::unique_ptr<NativeInputLayout>
+	CreateInputLayout(NativeEffectPass* nativeEffectPass,
+		std::vector<VertexBufferBinding> const& vertexBufferBindings) override;
 };
 
 }// namespace GL4

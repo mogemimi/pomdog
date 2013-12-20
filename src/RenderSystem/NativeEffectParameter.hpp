@@ -24,7 +24,7 @@ class NativeEffectParameter
 public:
 	NativeEffectParameter() = default;
 	NativeEffectParameter(NativeEffectParameter const&) = delete;
-	NativeEffectParameter& operator=(NativeEffectParameter const&) = delete;
+	NativeEffectParameter & operator=(NativeEffectParameter const&) = delete;
 
 	virtual ~NativeEffectParameter() = default;
 };

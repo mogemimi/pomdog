@@ -12,6 +12,7 @@
 #include "DepthStencilStateGL4.hpp"
 #include "EffectPassGL4.hpp"
 #include "IndexBufferGL4.hpp"
+#include "InputLayoutGL4.hpp"
 #include "RasterizerStateGL4.hpp"
 #include "SamplerStateGL4.hpp"
 #include "VertexBufferGL4.hpp"
@@ -64,6 +65,31 @@ std::unique_ptr<NativeEffectPass>
 GraphicsDeviceGL4::CreateEffectPass(ShaderBytecode const& vertexShaderBytecode, ShaderBytecode const& pixelShaderBytecode)
 {
 	return MakeUnique<EffectPassGL4>(vertexShaderBytecode, pixelShaderBytecode);
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeInputLayout>
+GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass* nativeEffectPass)
+{
+	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(nativeEffectPass);
+	POMDOG_ASSERT(effectPassGL4 != nullptr);
+	
+	if (!effectPassGL4) {
+		return std::unique_ptr<NativeInputLayout>();
+	}
+	return MakeUnique<InputLayoutGL4>(effectPassGL4);
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeInputLayout>
+GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass* nativeEffectPass,
+	std::vector<VertexBufferBinding> const& vertexBufferBindings)
+{
+	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(nativeEffectPass);
+	POMDOG_ASSERT(effectPassGL4 != nullptr);
+	
+	if (!effectPassGL4) {
+		return std::unique_ptr<NativeInputLayout>();
+	}
+	return MakeUnique<InputLayoutGL4>(effectPassGL4, vertexBufferBindings);
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

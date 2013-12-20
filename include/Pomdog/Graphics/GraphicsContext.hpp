@@ -121,12 +121,16 @@ public:
 	void SetSamplerState(std::size_t index, std::shared_ptr<SamplerState> const& samplerState);
 
 	///@~Japanese
+	/// @brief 入力レイアウトを設定します。
+	void SetInputLayout(std::shared_ptr<InputLayout> const& inputLayout);
+
+	///@~Japanese
 	/// @brief 頂点バッファを設定します。
 	void SetVertexBuffer(std::shared_ptr<VertexBuffer> const& vertexBuffer);
 	
 	///@~Japanese
 	/// @brief 頂点バッファの配列を設定します。
-	void SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers);
+	void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers);
 
 public:
 	//Details::RenderSystem::NativeGraphicsContext* NativeGraphicsContext();

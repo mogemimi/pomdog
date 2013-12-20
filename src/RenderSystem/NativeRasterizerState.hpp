@@ -22,7 +22,7 @@ class NativeRasterizerState
 public:
 	NativeRasterizerState() = default;
 	NativeRasterizerState(NativeRasterizerState const&) = delete;
-	NativeRasterizerState& operator=(NativeRasterizerState const&) = delete;
+	NativeRasterizerState & operator=(NativeRasterizerState const&) = delete;
 	
 	virtual ~NativeRasterizerState() = default;
 	

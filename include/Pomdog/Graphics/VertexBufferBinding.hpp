@@ -14,7 +14,9 @@
 #endif
 
 #include <memory>
-#include "detail/ForwardDeclarations.hpp"
+#include "../Config/Export.hpp"
+#include "../Config/FundamentalTypes.hpp"
+#include "VertexDeclaration.hpp"
 
 namespace Pomdog {
 
@@ -23,18 +25,22 @@ namespace Pomdog {
 /// @addtogroup Graphics
 /// @{
 
-class VertexBufferBinding
+class POMDOG_EXPORT VertexBufferBinding
 {
 public:
-	std::shared_ptr<VertexBuffer> VertexBuffer;
+	VertexDeclaration Declaration;
 	std::uint32_t VertexOffset;
 	std::uint32_t InstanceFrequency;
+	
+	VertexBufferBinding(VertexDeclaration const& vertexDeclaration);
+	
+	VertexBufferBinding(VertexDeclaration && vertexDeclaration);
+	
+	VertexBufferBinding(VertexDeclaration const& vertexDeclaration,
+		std::uint32_t vertexOffset);
 
-	VertexBufferBinding(std::shared_ptr<Pomdog::VertexBuffer> const&);
-
-	VertexBufferBinding(std::shared_ptr<Pomdog::VertexBuffer> const&, std::uint32_t vertexOffset);
-
-	VertexBufferBinding(std::shared_ptr<Pomdog::VertexBuffer> const&, std::uint32_t vertexOffset, std::uint32_t instanceFrequency);
+	VertexBufferBinding(VertexDeclaration const& vertexDeclaration,
+		std::uint32_t vertexOffset, std::uint32_t instanceFrequency);
 };
 
 /// @}

@@ -33,6 +33,7 @@ class EffectPass;
 class GraphicsContext;
 class GraphicsDevice;
 class IndexBuffer;
+class InputLayout;
 class RasterizerDescription;
 class RasterizerState;
 class SamplerDescription;

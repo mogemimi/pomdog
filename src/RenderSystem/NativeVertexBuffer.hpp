@@ -25,7 +25,7 @@ class NativeVertexBuffer
 public:
 	NativeVertexBuffer() = default;
 	NativeVertexBuffer(NativeVertexBuffer const&) = delete;
-	NativeVertexBuffer& operator=(NativeVertexBuffer const&) = delete;
+	NativeVertexBuffer & operator=(NativeVertexBuffer const&) = delete;
 
 	virtual ~NativeVertexBuffer() = default;
 	

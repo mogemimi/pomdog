@@ -25,7 +25,7 @@ class NativeIndexBuffer
 public:
 	NativeIndexBuffer() = default;
 	NativeIndexBuffer(NativeIndexBuffer const&) = delete;
-	NativeIndexBuffer& operator=(NativeIndexBuffer const&) = delete;
+	NativeIndexBuffer & operator=(NativeIndexBuffer const&) = delete;
 
 	virtual ~NativeIndexBuffer() = default;
 	
