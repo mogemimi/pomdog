@@ -53,6 +53,11 @@ public:
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeRasterizerState>
 	CreateRasterizerState(RasterizerDescription const& description) override;
+	
+	///@copydoc NativeGraphicsDevice
+	std::unique_ptr<NativeEffectPass>
+	CreateEffectPass(ShaderBytecode const& vertexShaderBytecode,
+		ShaderBytecode const& pixelShaderBytecode) override;
 };
 
 }// namespace GL4

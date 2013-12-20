@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <Pomdog/Config/Export.hpp>
 #include <Pomdog/Config/FundamentalTypes.hpp>
 
 // Forward declarations of Math
@@ -26,35 +27,29 @@ class Coordinate2D;
 template <typename T>
 class Coordinate3D;
 
-template <typename T>
-class FloatingPointCoordinate2D;
-
-template <typename T>
-class FloatingPointCoordinate3D;
+template <typename RealType>
+class POMDOG_EXPORT FloatingPointColor;
 
 template <typename RealType>
-class FloatingPointColor;
+class POMDOG_EXPORT FloatingPointMatrix2x2;
 
 template <typename RealType>
-class FloatingPointMatrix2x2;
+class POMDOG_EXPORT FloatingPointMatrix3x3;
 
 template <typename RealType>
-class FloatingPointMatrix3x3;
+class POMDOG_EXPORT FloatingPointMatrix4x4;
 
 template <typename RealType>
-class FloatingPointMatrix4x4;
+class POMDOG_EXPORT FloatingPointQuaternion;
 
 template <typename RealType>
-class FloatingPointQuaternion;
+class POMDOG_EXPORT FloatingPointVector2;
 
 template <typename RealType>
-class FloatingPointVector2;
+class POMDOG_EXPORT FloatingPointVector3;
 
 template <typename RealType>
-class FloatingPointVector3;
-
-template <typename RealType>
-class FloatingPointVector4;
+class POMDOG_EXPORT FloatingPointVector4;
 
 template <typename T, class PhantomType>
 class TaggedArithmetic;

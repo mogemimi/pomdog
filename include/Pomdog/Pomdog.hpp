@@ -70,6 +70,7 @@
 #include "Graphics/ClearOptions.hpp"
 #include "Graphics/ComparisonFunction.hpp"
 #include "Graphics/CullMode.hpp"
+#include "Graphics/CustomVertex.hpp"
 #include "Graphics/DepthStencilDescription.hpp"
 #include "Graphics/DepthStencilOperation.hpp"
 #include "Graphics/DepthStencilState.hpp"
@@ -99,7 +100,6 @@
 #include "Graphics/VertexDeclaration.hpp"
 #include "Graphics/VertexElement.hpp"
 #include "Graphics/VertexElementFormat.hpp"
-#include "Graphics/VertexElementUsage.hpp"
 #include "Graphics/Viewport.hpp"
 
 // Input

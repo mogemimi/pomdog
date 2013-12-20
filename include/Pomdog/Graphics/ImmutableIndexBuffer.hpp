@@ -14,6 +14,7 @@
 #endif
 
 #include <memory>
+#include "../Config/Export.hpp"
 #include "detail/ForwardDeclarations.hpp"
 #include "IndexBuffer.hpp"
 #include "IndexElementSize.hpp"
@@ -27,7 +28,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 静的なインデックスバッファです。
-class ImmutableIndexBuffer: public IndexBuffer
+class POMDOG_EXPORT ImmutableIndexBuffer: public IndexBuffer
 {
 public:
 	ImmutableIndexBuffer() = delete;

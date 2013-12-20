@@ -16,23 +16,38 @@
 #include <memory>
 #include <unordered_map>
 #include <string>
+#include "../Config/Export.hpp"
 #include "detail/ForwardDeclarations.hpp"
 
 namespace Pomdog {
+namespace Details {
+namespace RenderSystem {
+
+class NativeEffectPass;
+
+}// namespace RenderSystem
+}// namespace Details
 
 /// @addtogroup Framework
 /// @{
 /// @addtogroup Graphics
 /// @{
 
-using EffectParameterCollection = std::unordered_map<std::string, std::shared_ptr<EffectParameter>>;
+using EffectParameterCollection = std::unordered_map<std::string, std::unique_ptr<EffectParameter>>;
 
-class EffectPass
+class POMDOG_EXPORT EffectPass
 {
 public:
 	EffectPass() = delete;
+	EffectPass(EffectPass const&) = delete;
+	EffectPass(EffectPass &&) = default;
+	
+	explicit EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	~EffectPass() = default;
+	~EffectPass();
+	
+	EffectPass & operator=(EffectPass const&) = delete;
+	EffectPass & operator=(EffectPass &&) = default;
 
 	///@~Japanese
 	/// @brief エフェクトを適用します。
@@ -42,7 +57,7 @@ public:
 
 	///@~Japanese
 	/// @brief エフェクトパラメータを取得します。
-	std::shared_ptr<EffectParameter> const& Parameters(std::string const& parameterName) const;
+	std::unique_ptr<EffectParameter> const& Parameters(std::string const& parameterName) const;
 	
 	///@~Japanese
 	/// @brief エフェクトパラメータのコンテナを取得します。
@@ -50,8 +65,9 @@ public:
 	
 private:
 	EffectParameterCollection effectParameters;
+	std::unique_ptr<Details::RenderSystem::NativeEffectPass> nativeEffectPass;
 };
-	
+
 /// @}
 /// @}
 

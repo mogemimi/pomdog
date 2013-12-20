@@ -57,7 +57,6 @@ enum class StencilOperation: std::uint8_t;
 enum class TextureAddressMode: std::uint8_t;
 enum class TextureFilter: std::uint8_t;
 enum class VertexElementFormat: std::uint8_t;
-enum class VertexElementUsage: std::uint8_t;
 
 }// namespace Pomdog
 

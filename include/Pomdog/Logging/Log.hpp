@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <string>
 #include <functional>
 #include "../Config/Export.hpp"
 #include "../Event/EventConnection.hpp"

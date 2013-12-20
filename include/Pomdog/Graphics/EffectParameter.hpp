@@ -14,6 +14,7 @@
 #endif
 
 #include <vector>
+#include "../Config/Export.hpp"
 #include "detail/ForwardDeclarations.hpp"
 #include "../Math/detail/ForwardDeclarations.hpp"
 
@@ -26,7 +27,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief エフェクトパラメータです。
-class EffectParameter
+class POMDOG_EXPORT EffectParameter
 {
 public:
 	EffectParameter() = default;

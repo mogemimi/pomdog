@@ -28,7 +28,7 @@ public:
 
 	virtual ~NativeEffectPass() = default;
 	
-	///@copybrief EffectPass
+	///@copybrief EffectPass::Apply
 	virtual void ApplyShaders() = 0;
 };
 

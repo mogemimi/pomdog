@@ -14,6 +14,7 @@
 #endif
 
 #include <memory>
+#include "../Config/Export.hpp"
 #include "detail/ForwardDeclarations.hpp"
 #include "IndexBuffer.hpp"
 #include "IndexElementSize.hpp"
@@ -27,7 +28,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 動的なインデックスバッファです。
-class DynamicIndexBuffer: public IndexBuffer
+class POMDOG_EXPORT DynamicIndexBuffer: public IndexBuffer
 {
 public: 
 	DynamicIndexBuffer() = delete;

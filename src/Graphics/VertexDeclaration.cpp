@@ -13,8 +13,11 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
+namespace {
+
 static std::uint16_t ToByteSize(VertexElementFormat format)
 {
+	static_assert(sizeof(float) == 4, "FUS RO DAH");
 	switch (format)
 	{
 	case VertexElementFormat::Float:
@@ -47,9 +50,19 @@ static std::uint32_t AccumulateStrideBytes(std::vector<VertexElement> const& ele
 	}
 	return strideBytes;
 }
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 VertexDeclaration::VertexDeclaration(std::vector<VertexElement> && vertexElements)
 	: elements(std::move(vertexElements))
+	, strideBytes(AccumulateStrideBytes(elements))
+{
+	POMDOG_ASSERT(!elements.empty());
+	this->internalHashKey = HashingHelper::Hash(elements.data(), elements.size());
+}
+//-----------------------------------------------------------------------
+VertexDeclaration::VertexDeclaration(std::initializer_list<VertexElement> vertexElements)
+	: elements(vertexElements)
 	, strideBytes(AccumulateStrideBytes(elements))
 {
 	POMDOG_ASSERT(!elements.empty());

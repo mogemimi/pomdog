@@ -14,6 +14,7 @@
 #endif
 
 #include <memory>
+#include "../Config/Export.hpp"
 #include "detail/ForwardDeclarations.hpp"
 #include "VertexBuffer.hpp"
 #include "VertexDeclaration.hpp"
@@ -27,7 +28,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 動的な頂点バッファです。
-class DynamicVertexBuffer: public VertexBuffer
+class POMDOG_EXPORT DynamicVertexBuffer: public VertexBuffer
 {
 public:
 	DynamicVertexBuffer() = delete;

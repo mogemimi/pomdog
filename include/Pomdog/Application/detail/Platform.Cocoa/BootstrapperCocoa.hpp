@@ -19,9 +19,12 @@
 #include <memory>
 #include <array>
 #include <functional>
+#include <exception>
 #include <Pomdog/Config/FundamentalTypes.hpp>
 #include <Pomdog/Config/Export.hpp>
 #include <Pomdog/Application/GameHost.hpp>
+#include <Pomdog/Logging/Log.hpp>
+#include <Pomdog/Logging/LoggingLevel.hpp>
 
 @class NSWindow;
 
@@ -51,11 +54,16 @@ public:
 	{
 		static_assert(std::is_base_of<Game, GameClass>::value, "GameClass is base of Pomdog::Game.");
 		static_assert(!std::is_abstract<GameClass>::value, "GameClass is not abstract.");
-	
+		
 		BeginRun(nativeWindow);
-				
-		auto game = std::make_shared<GameClass>(gameHost);
-		gameHost->Run(game);
+		
+		try {
+			auto game = std::make_shared<GameClass>(gameHost);
+			gameHost->Run(game);
+		}
+		catch (std::exception const& e) {
+			Log::LogMessage(e.what(), LoggingLevel::Critical);
+		}
 		
 		EndRun();
 	}

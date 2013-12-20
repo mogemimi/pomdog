@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -14,6 +14,7 @@
 #endif
 
 #include <vector>
+#include "../Config/Export.hpp"
 #include "VertexElement.hpp"
 
 namespace Pomdog {
@@ -25,18 +26,20 @@ namespace Pomdog {
 
 ///@~Japanese 
 /// @brief 頂点を定義します。
-class VertexDeclaration
+class POMDOG_EXPORT VertexDeclaration
 {
 public:
 	VertexDeclaration() = delete;
 	VertexDeclaration(VertexDeclaration const&) = default;
 	VertexDeclaration(VertexDeclaration &&) = default;
 
+	VertexDeclaration(std::initializer_list<VertexElement> vertexElements);
+
 	explicit VertexDeclaration(std::vector<VertexElement> const& vertexElements);
 
 	explicit VertexDeclaration(std::vector<VertexElement> && vertexElements);
 	
-	explicit VertexDeclaration(VertexElement const* vertexElements, std::size_t elementCount);
+	VertexDeclaration(VertexElement const* vertexElements, std::size_t elementCount);
 
 	~VertexDeclaration() = default;
 

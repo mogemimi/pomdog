@@ -20,10 +20,12 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
-class EffectParameterGL4 final: public NativeEffectParameter
+class EffectParameterGL4: public NativeEffectParameter
 {
 public:
-
+	///@~Japanese
+	/// @brief 現在有効になっているシェーダプログラムにコンスタントバッファを適用します。
+	virtual void ApplyConstant() = 0;
 };
 
 }// namespace GL4

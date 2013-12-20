@@ -10,6 +10,7 @@
 #include <Pomdog/Utility/Exception.hpp>
 #include "BlendStateGL4.hpp"
 #include "DepthStencilStateGL4.hpp"
+#include "EffectPassGL4.hpp"
 #include "IndexBufferGL4.hpp"
 #include "RasterizerStateGL4.hpp"
 #include "SamplerStateGL4.hpp"
@@ -57,6 +58,12 @@ std::unique_ptr<NativeRasterizerState>
 GraphicsDeviceGL4::CreateRasterizerState(RasterizerDescription const& description)
 {
 	return MakeUnique<RasterizerStateGL4>(description);
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeEffectPass>
+GraphicsDeviceGL4::CreateEffectPass(ShaderBytecode const& vertexShaderBytecode, ShaderBytecode const& pixelShaderBytecode)
+{
+	return MakeUnique<EffectPassGL4>(vertexShaderBytecode, pixelShaderBytecode);
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

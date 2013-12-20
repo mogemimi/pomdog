@@ -38,7 +38,7 @@ public:
 	
 	~EffectPassGL4();
 
-	void ApplyShaders();
+	void ApplyShaders() override;
 	
 private:
 	Optional<ShaderProgramGL4> shaderProgram;

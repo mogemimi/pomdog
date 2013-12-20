@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "detail/ForwardDeclarations.hpp"
 
 namespace Pomdog {
@@ -31,7 +32,7 @@ class NativeVertexBuffer;
 
 ///@~Japanese
 /// @brief 頂点バッファです。
-class VertexBuffer
+class POMDOG_EXPORT VertexBuffer
 {
 public:
 	virtual	~VertexBuffer() = default;

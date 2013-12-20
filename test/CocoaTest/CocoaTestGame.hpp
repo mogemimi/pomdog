@@ -31,6 +31,8 @@ public:
 private:
 	std::shared_ptr<GameHost> gameHost;
 	std::shared_ptr<GraphicsContext> graphicsContext;
+	std::shared_ptr<VertexBuffer> vertexBuffer;
+	std::shared_ptr<EffectPass> effectPass;
 };
 
 }// namespace Pomdog

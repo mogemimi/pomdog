@@ -16,7 +16,7 @@
 #include <Pomdog/Utility/Exception.hpp>
 #include "../Utility/ScopeGuard.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
-
+#include "ErrorChecker.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -52,6 +52,9 @@ CompileShader(ShaderBytecode const& source)
 		std::integral_constant<GLenum, GL_VERTEX_SHADER>,
 		std::integral_constant<GLenum, GL_FRAGMENT_SHADER>
 	>::type();
+	
+	static_assert((std::is_same<Tag, Tags::VertexShaderTag>::value && (pipelineStage == GL_VERTEX_SHADER)) ||
+		(std::is_same<Tag, Tags::PixelShaderTag>::value && (pipelineStage == GL_FRAGMENT_SHADER)), "");
 
 	Tagged<GLuint, Tag> result{
 		glCreateShader(pipelineStage)
@@ -176,6 +179,15 @@ EffectPassGL4::~EffectPassGL4()
 //-----------------------------------------------------------------------
 void EffectPassGL4::ApplyShaders()
 {
+	POMDOG_ASSERT(shaderProgram);
+	glUseProgram(shaderProgram->value);
+
+#ifdef DEBUG
+	ErrorChecker::CheckError("glUseProgram", __FILE__, __LINE__);
+#endif
+
+	//POMDOG_ASSERT(uniforms);
+	//uniforms->ApplyUniforms();
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

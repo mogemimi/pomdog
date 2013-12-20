@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 #include "VertexElementFormat.hpp"
-#include "VertexElementUsage.hpp"
 
 namespace Pomdog {
 
@@ -26,7 +26,7 @@ namespace Pomdog {
 
 ///@~Japanese 
 /// @brief 頂点を構成する要素を定義します。
-class VertexElement
+class POMDOG_EXPORT VertexElement
 {
 public:
 	///@~Japanese
@@ -36,10 +36,6 @@ public:
 	///@~Japanese
 	/// @brief 頂点を構成する要素のフォーマットを指定します。
 	VertexElementFormat VertexElementFormat;
-
-	///@~Japanese
-	/// @brief 頂点を構成する要素の使用方法を指定します。
-	VertexElementUsage VertexElementUsage;
 };
 
 /// @}

@@ -23,10 +23,12 @@ namespace RenderSystem {
 
 class NativeBlendState;
 class NativeDepthStencilState;
+class NativeEffectPass;
 class NativeIndexBuffer;
 class NativeSamplerState;
 class NativeRasterizerState;
 class NativeVertexBuffer;
+class ShaderBytecode;
 
 ///@~Japanese
 /// @brief グラフィックスリソースの作成を行います。
@@ -66,6 +68,12 @@ public:
 	/// @brief ラスタライザーステートを作成します。
 	virtual std::unique_ptr<NativeRasterizerState> CreateRasterizerState(
 		RasterizerDescription const& description) = 0;
+		
+	///@~Japanese
+	/// @brief エフェクトパスを作成します。
+	virtual std::unique_ptr<NativeEffectPass> CreateEffectPass(
+		ShaderBytecode const& vertexShaderBytecode,
+		ShaderBytecode const& pixelShaderBytecode) = 0;
 };
 
 }// namespace RenderSystem
