@@ -58,7 +58,7 @@ void CocoaTestGame::Initialize()
 		vertexBuffer = std::make_shared<ImmutableVertexBuffer>(graphicsDevice,
 			VertexCombined::Declaration(), verticesCombo.data(), verticesCombo.size());
 
-		effectPass = std::make_shared<EffectPass>(graphicsDevice);
+		effectPass = std::make_shared<EffectPass>(graphicsDevice, graphicsContext);
 	
 		std::vector<VertexBufferBinding> vertexBinding {
 			{ VertexCombined::Declaration(), 0, 0 },
@@ -77,10 +77,10 @@ void CocoaTestGame::Draw()
 	auto color = Pomdog::Color::CornflowerBlue;
 	graphicsContext->Clear(ClearOptions::RenderTarget|ClearOptions::DepthBuffer, color, 0.0f, 0);
 	
-	//graphicsContext->SetInputLayout(inputLayout);
-	//graphicsContext->SetVertexBuffer(vertexBuffer);
-	//effectPass->Apply();
-	//graphicsContext->Draw(PrimitiveTopology::TriangleStrip);
+	graphicsContext->SetInputLayout(inputLayout);
+	graphicsContext->SetVertexBuffer(vertexBuffer);
+	effectPass->Apply();
+	graphicsContext->Draw(PrimitiveTopology::TriangleStrip);
 	
 	graphicsContext->Present();
 }

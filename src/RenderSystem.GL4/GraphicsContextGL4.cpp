@@ -9,14 +9,20 @@
 #include "GraphicsContextGL4.hpp"
 #include <array>
 #include <utility>
+#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Utility/Exception.hpp>
 #include <Pomdog/Math/Color.hpp>
 #include <Pomdog/Math/Rectangle.hpp>
-#include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/ClearOptions.hpp>
+#include <Pomdog/Graphics/InputLayout.hpp>
+#include <Pomdog/Graphics/PrimitiveTopology.hpp>
+#include <Pomdog/Graphics/VertexBuffer.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
 #include <Pomdog/Application/GameWindow.hpp>
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "OpenGLContext.hpp"
+#include "EffectPassGL4.hpp"
+#include "InputLayoutGL4.hpp"
 
 // logging
 #include <Pomdog/Logging/Log.hpp>
@@ -26,6 +32,24 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
+//-----------------------------------------------------------------------
+namespace {
+
+static GLenum ToPrimitiveTopology(PrimitiveTopology const& primitiveTopology)
+{
+	switch (primitiveTopology)
+	{
+	case PrimitiveTopology::TriangleList: return GL_TRIANGLES;
+	case PrimitiveTopology::TriangleStrip: return GL_TRIANGLE_STRIP;
+	case PrimitiveTopology::LineList: return GL_LINES;
+	case PrimitiveTopology::LineStrip: return GL_LINE_STRIP;
+	}
+#ifdef _MSC_VER
+	return GL_TRIANGLES;
+#endif
+}
+
+}// namespace
 //-----------------------------------------------------------------------
 GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> openGLContext, std::weak_ptr<GameWindow> window)
 	: nativeContext(std::move(openGLContext))
@@ -72,24 +96,45 @@ void GraphicsContextGL4::Present()
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology)
 {
-	///@todo Not implemented
+	{
+		POMDOG_ASSERT(inputLayout);
+		POMDOG_ASSERT(!vertexBuffers.empty());
+	
+		inputLayout->Apply(vertexBuffers);
+	}
+	{
+		POMDOG_ASSERT(effectPass);
+		effectPass->ApplyShaders();
+	}
+	
+	glDrawArrays(
+		ToPrimitiveTopology(primitiveTopology),
+		0,
+		static_cast<GLsizei>(vertexBuffers.front()->GetVertexCount())
+	);
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 	std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount)
 {
 	///@todo Not implemented
+	POMDOG_THROW_EXCEPTION(std::runtime_error,
+		"Not implemented", "GraphicsContextGL4::DrawIndexed");
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std::size_t instanceCount)
 {
 	///@todo Not implemented
+	POMDOG_THROW_EXCEPTION(std::runtime_error,
+		"Not implemented", "GraphicsContextGL4::DrawInstanced");
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
 	std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount)
 {
 	///@todo Not implemented
+	POMDOG_THROW_EXCEPTION(std::runtime_error,
+		"Not implemented", "GraphicsContextGL4::DrawIndexedInstanced");
 }
 //-----------------------------------------------------------------------
 GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const
@@ -134,6 +179,30 @@ Rectangle GraphicsContextGL4::GetScissorRectangle() const
 void GraphicsContextGL4::SetScissorRectangle(Rectangle const& rectangle)
 {
 	glScissor(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::SetInputLayout(std::shared_ptr<InputLayout> const& inputLayoutIn)
+{
+	POMDOG_ASSERT(inputLayoutIn);
+	
+	auto nativeInputLayout = dynamic_cast<InputLayoutGL4*>(inputLayoutIn->GetNativeInputLayout());
+	POMDOG_ASSERT(nativeInputLayout);
+
+	if (nativeInputLayout != nullptr) {
+		this->inputLayout = std::shared_ptr<InputLayoutGL4>(inputLayoutIn, nativeInputLayout);
+	}
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffersIn)
+{
+	POMDOG_ASSERT(!vertexBuffersIn.empty());
+	this->vertexBuffers = vertexBuffersIn;
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::SetEffectPass(std::shared_ptr<EffectPassGL4> const& nativeEffectPassIn)
+{
+	POMDOG_ASSERT(nativeEffectPassIn);
+	this->effectPass = nativeEffectPassIn;
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

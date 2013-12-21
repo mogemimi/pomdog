@@ -62,8 +62,13 @@ void main()
 
 }// namespace
 //-----------------------------------------------------------------------
-EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	std::shared_ptr<GraphicsContext> const& graphicsContextIn)
+	: graphicsContext(graphicsContextIn)
 {
+	POMDOG_ASSERT(graphicsContextIn);
+	POMDOG_ASSERT(!this->graphicsContext.expired());
+
 	nativeEffectPass = graphicsDevice->GetNativeGraphicsDevice()->CreateEffectPass(
 		ShaderBytecode{
 			vertexShader.data(),
@@ -82,6 +87,12 @@ EffectPass::~EffectPass()
 //-----------------------------------------------------------------------
 void EffectPass::Apply()
 {
+	POMDOG_ASSERT(nativeEffectPass);
+	POMDOG_ASSERT(!graphicsContext.expired());
+	if (auto sharedContext = graphicsContext.lock())
+	{
+		nativeEffectPass->Apply(*sharedContext, shared_from_this());
+	}
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<EffectParameter> const& EffectPass::Parameters(std::string const& parameterName) const

@@ -133,7 +133,7 @@ public:
 	void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers);
 
 public:
-	//Details::RenderSystem::NativeGraphicsContext* NativeGraphicsContext();
+	Details::RenderSystem::NativeGraphicsContext* GetNativeGraphicsContext();
 	
 private:
 	class Impl;

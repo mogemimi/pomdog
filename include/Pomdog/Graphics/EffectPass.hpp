@@ -35,14 +35,15 @@ class NativeEffectPass;
 
 using EffectParameterCollection = std::unordered_map<std::string, std::unique_ptr<EffectParameter>>;
 
-class POMDOG_EXPORT EffectPass
+class POMDOG_EXPORT EffectPass: public std::enable_shared_from_this<EffectPass>
 {
 public:
 	EffectPass() = delete;
 	EffectPass(EffectPass const&) = delete;
 	EffectPass(EffectPass &&) = default;
 	
-	explicit EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+	EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		std::shared_ptr<GraphicsContext> const& graphicsContext);
 
 	~EffectPass();
 	
@@ -68,6 +69,7 @@ public:
 	
 private:
 	EffectParameterCollection effectParameters;
+	std::weak_ptr<GraphicsContext> graphicsContext;
 	std::unique_ptr<Details::RenderSystem::NativeEffectPass> nativeEffectPass;
 };
 

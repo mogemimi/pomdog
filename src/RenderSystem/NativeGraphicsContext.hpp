@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <vector>
 #include <Pomdog/Utility/Noncopyable.hpp>
 #include <Pomdog/Math/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
@@ -22,6 +23,7 @@ namespace Details {
 namespace RenderSystem {
 
 class GraphicsCapabilities;
+class NativeEffectPass;
 
 class NativeGraphicsContext: Noncopyable
 {
@@ -64,7 +66,7 @@ public:
 	/// @param instanceCount レンダリングするプリミティブのインスタンスの数を指定します。
 	virtual void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
 		std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount) = 0;
-	
+		
 	///@brief Retrieves the capabilities of a GraphicsContext
 	virtual GraphicsCapabilities GetCapabilities() const = 0;
 
@@ -76,6 +78,12 @@ public:
 	
 	///@copydoc Pomdog::GraphicsContext
 	virtual void SetScissorRectangle(Rectangle const& rectangle) = 0;
+	
+	///@copydoc Pomdog::GraphicsContext
+	virtual void SetInputLayout(std::shared_ptr<InputLayout> const& inputLayout) = 0;
+	
+	///@copydoc Pomdog::GraphicsContext
+	virtual void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) = 0;
 };
 
 }// namespace RenderSystem

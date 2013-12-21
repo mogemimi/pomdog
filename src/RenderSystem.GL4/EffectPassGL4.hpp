@@ -38,7 +38,10 @@ public:
 	
 	~EffectPassGL4();
 
-	void ApplyShaders() override;
+	void Apply(GraphicsContext & graphicsContext,
+		std::shared_ptr<EffectPass> const& sharedThisEffectPass) override;
+	
+	void ApplyShaders();
 	
 	ShaderProgramGL4 GetShaderProgram() const;
 	

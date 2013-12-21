@@ -14,6 +14,7 @@
 #endif
 
 #include <Pomdog/Config/FundamentalTypes.hpp>
+#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 
 namespace Pomdog {
 namespace Details {
@@ -28,8 +29,9 @@ public:
 
 	virtual ~NativeEffectPass() = default;
 	
-	///@copybrief EffectPass::Apply
-	virtual void ApplyShaders() = 0;
+	///@copybrief EffectPass
+	virtual void Apply(GraphicsContext & graphicsContext,
+		std::shared_ptr<EffectPass> const& sharedThisEffectPass) = 0;
 };
 
 }// namespace RenderSystem

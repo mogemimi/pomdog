@@ -14,8 +14,10 @@
 #include <Pomdog/Logging/LoggingLevel.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
 #include <Pomdog/Utility/Exception.hpp>
+#include <Pomdog/Graphics/GraphicsContext.hpp>
 #include "../Utility/ScopeGuard.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
+#include "GraphicsContextGL4.hpp"
 #include "ErrorChecker.hpp"
 
 namespace Pomdog {
@@ -168,6 +170,21 @@ EffectPassGL4::~EffectPassGL4()
 {
 	if (shaderProgram) {
 		glDeleteProgram(shaderProgram->value);
+	}
+}
+//-----------------------------------------------------------------------
+void EffectPassGL4::Apply(GraphicsContext & graphicsContext,
+	std::shared_ptr<EffectPass> const& sharedThisEffectPass)
+{
+	POMDOG_ASSERT(shaderProgram);
+	POMDOG_ASSERT(sharedThisEffectPass);
+	
+	auto sharedThis = std::shared_ptr<EffectPassGL4>(sharedThisEffectPass, this);
+	auto nativeContext = dynamic_cast<GraphicsContextGL4*>(graphicsContext.GetNativeGraphicsContext());
+	POMDOG_ASSERT(nativeContext);
+	
+	if (nativeContext != nullptr) {
+		nativeContext->SetEffectPass(sharedThis);
 	}
 }
 //-----------------------------------------------------------------------

@@ -180,8 +180,7 @@ void GraphicsContext::Draw(PrimitiveTopology primitiveTopology)
 {
 	POMDOG_ASSERT(impl);
 	
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "GraphicsContext::Draw");
+	impl->nativeContext->Draw(primitiveTopology);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::DrawIndexed(PrimitiveTopology primitiveTopology,
@@ -271,33 +270,41 @@ void GraphicsContext::SetSamplerState(std::size_t index, std::shared_ptr<Sampler
 //-----------------------------------------------------------------------
 void GraphicsContext::SetInputLayout(std::shared_ptr<InputLayout> const& inputLayout)
 {
-	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(inputLayout);
-	impl->inputLayout = inputLayout;
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
 	
-	///@todo Not implemented.
-	//impl->nativeContext->SetInputLayout(inputLayout);
+	impl->inputLayout = inputLayout;
+	impl->nativeContext->SetInputLayout(inputLayout);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetVertexBuffer(std::shared_ptr<VertexBuffer> const& vertexBuffer)
 {
-	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(vertexBuffer);
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
+	
 	impl->vertexBuffers.clear();
 	impl->vertexBuffers.push_back(vertexBuffer);
 	
-	///@todo Not implemented.
-	//impl->nativeContext->SetVertexBuffers(impl->vertexBuffers);
+	impl->nativeContext->SetVertexBuffers(impl->vertexBuffers);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers)
 {
-	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(vertexBuffers.empty());
-	impl->vertexBuffers = vertexBuffers;
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
 	
-	///@todo Not implemented.
-	//impl->nativeContext->SetVertexBuffers(impl->vertexBuffers);
+	impl->vertexBuffers = vertexBuffers;
+	impl->nativeContext->SetVertexBuffers(impl->vertexBuffers);
+}
+//-----------------------------------------------------------------------
+Details::RenderSystem::NativeGraphicsContext* GraphicsContext::GetNativeGraphicsContext()
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
+	return impl->nativeContext.get();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

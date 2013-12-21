@@ -26,6 +26,8 @@ namespace RenderSystem {
 namespace GL4 {
 
 class OpenGLContext;
+class EffectPassGL4;
+class InputLayoutGL4;
 
 class GraphicsContextGL4 final: public NativeGraphicsContext
 {
@@ -71,8 +73,20 @@ public:
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
 	void SetScissorRectangle(Rectangle const& rectangle) override;
 	
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	void SetInputLayout(std::shared_ptr<InputLayout> const& inputLayout) override;
+	
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) override;
+	
+	///@details EffectPass::Apply から呼ばれます。
+	void SetEffectPass(std::shared_ptr<EffectPassGL4> const& nativeEffectPass);
+	
 private:
+	std::vector<std::shared_ptr<VertexBuffer>> vertexBuffers;
 	std::shared_ptr<OpenGLContext> nativeContext;
+	std::shared_ptr<InputLayoutGL4> inputLayout;
+	std::shared_ptr<EffectPassGL4> effectPass;
 	std::weak_ptr<GameWindow> gameWindow;
 };
 
