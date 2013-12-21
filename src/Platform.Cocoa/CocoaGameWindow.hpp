@@ -72,12 +72,11 @@ public:
 	void BindToDelegate(std::shared_ptr<CocoaMouse> mouse);
 
 private:
+	std::shared_ptr<CocoaOpenGLContext> openGLContext;
 	NSWindow* nativeWindow;
 	CocoaOpenGLView* openGLView;
 	CocoaWindowDelegate* windowDelegate;
 	CocoaOpenGLViewDelegate* viewDelegate;
-	
-	std::shared_ptr<CocoaOpenGLContext> openGLContext;
 };
 
 }// namespace Cocoa

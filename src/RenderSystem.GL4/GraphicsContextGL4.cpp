@@ -22,6 +22,7 @@
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "OpenGLContext.hpp"
 #include "EffectPassGL4.hpp"
+#include "ErrorChecker.hpp"
 #include "InputLayoutGL4.hpp"
 
 // logging
@@ -112,6 +113,10 @@ void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology)
 		0,
 		static_cast<GLsizei>(vertexBuffers.front()->GetVertexCount())
 	);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glDrawArrays", __FILE__, __LINE__);
+	#endif
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,

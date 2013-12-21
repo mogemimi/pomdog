@@ -26,17 +26,21 @@ void CocoaTestGame::Initialize()
 	auto graphicsDevice = gameHost->GetGraphicsDevice();
 	
 	{
-		BlendDescription description;
-		auto blendState = std::make_shared<BlendState>(graphicsDevice, description);
+		auto blendState = BlendState::CreateAdditive(graphicsDevice);
+		//BlendDescription description;
+		//auto blendState = std::make_shared<BlendState>(graphicsDevice, description);
 		graphicsContext->SetBlendState(blendState);
 	}
 	{
+		//auto depthStencilState = DepthStencilState::CreateReadOnlyDepth(graphicsDevice);
 		DepthStencilDescription description;
 		auto depthStencilState = std::make_shared<DepthStencilState>(graphicsDevice, description);
 		graphicsContext->SetDepthStencilState(depthStencilState);
 	}
 	{
+		//auto rasterizerState = RasterizerState::CreateCullCounterClockwise(graphicsDevice);
 		RasterizerDescription description;
+		description.CullMode = CullMode::None;
 		auto rasterizerState = std::make_shared<RasterizerState>(graphicsDevice, description);
 		graphicsContext->SetRasterizerState(rasterizerState);
 	}
@@ -59,12 +63,13 @@ void CocoaTestGame::Initialize()
 			VertexCombined::Declaration(), verticesCombo.data(), verticesCombo.size());
 
 		effectPass = std::make_shared<EffectPass>(graphicsDevice, graphicsContext);
+		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	
-		std::vector<VertexBufferBinding> vertexBinding {
-			{ VertexCombined::Declaration(), 0, 0 },
-			//{ VertexCombined::Declaration(), 0, 1 }
-		};
-		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass, vertexBinding);
+//		std::vector<VertexBufferBinding> vertexBinding {
+//			{ VertexCombined::Declaration(), 0, 0 },
+//			//{ VertexCombined::Declaration(), 0, 1 }
+//		};
+//		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass, vertexBinding);
 	}
 }
 //-----------------------------------------------------------------------
@@ -74,8 +79,7 @@ void CocoaTestGame::Update()
 //-----------------------------------------------------------------------
 void CocoaTestGame::Draw()
 {
-	auto color = Pomdog::Color::CornflowerBlue;
-	graphicsContext->Clear(ClearOptions::RenderTarget|ClearOptions::DepthBuffer, color, 0.0f, 0);
+	graphicsContext->Clear(Color::CornflowerBlue);
 	
 	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffer(vertexBuffer);

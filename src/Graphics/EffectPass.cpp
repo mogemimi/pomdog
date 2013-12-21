@@ -55,7 +55,7 @@ out vec4 FragColor;
 
 void main()
 {
-	FragColor = vec4(In.Position.xy, 1.0, 1.0);
+	FragColor = vec4(In.TextureCoord.xy, 1.0, 1.0);
 }
 //====================================================================
 );

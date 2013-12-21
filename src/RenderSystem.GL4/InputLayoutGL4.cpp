@@ -521,7 +521,7 @@ void InputLayoutGL4::Apply(std::vector<std::shared_ptr<VertexBuffer>> const& ver
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindVertexArray", __FILE__, __LINE__);
 	#endif
-	
+
 //	for (auto& bindings: inputBindings) {
 //		EnableAttributes(bindings.InputElements);
 //	}

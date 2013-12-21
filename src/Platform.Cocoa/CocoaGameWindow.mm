@@ -96,7 +96,8 @@ void CocoaGameWindow::SetCaption(std::string const& caption)
 //-----------------------------------------------------------------------
 Rectangle CocoaGameWindow::GetClientBounds() const
 {
-	NSRect bounds = [nativeWindow frame];
+	POMDOG_ASSERT(openGLView != nil);
+	NSRect bounds = [openGLView frame];
 	Rectangle rect {
 		bounds.origin.x,
 		bounds.origin.y,

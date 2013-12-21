@@ -75,6 +75,8 @@ GraphicsContext::Impl::Impl(std::unique_ptr<NativeGraphicsContext> nativeGraphic
 	POMDOG_ASSERT(graphicsCapbilities.SamplerSlotCount > 0);
 	samplerStates.resize(graphicsCapbilities.SamplerSlotCount);
 	
+	viewport.bounds.x = 0;
+	viewport.bounds.y = 0;
 	viewport.SetWidth(presentationParameters.BackBufferWidth);
 	viewport.SetHeight(presentationParameters.BackBufferHeight);
 	SetViewport(viewport);

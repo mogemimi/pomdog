@@ -39,7 +39,8 @@ static auto WindowShouldCloseEvent = EventCodeHelper::CreateCode("WindowShouldCl
 //-----------------------------------------------------------------------
 static NSOpenGLPixelFormat* CreatePixelFormat(DepthFormat depthFormat)
 {
-	std::vector<NSOpenGLPixelFormatAttribute> attributes = {
+	std::vector<NSOpenGLPixelFormatAttribute> attributes =
+	{
 		NSOpenGLPFADoubleBuffer,
 		NSOpenGLPFAAccelerated,
 		NSOpenGLPFANoRecovery,
@@ -188,12 +189,16 @@ void CocoaGameHost::Impl::Run(std::weak_ptr<Game> weakGame)
 	if (!game->CompleteInitialize()) {
 		return;
 	}
-		
+	
+	//CocoaOpenGLView* openGLView = gameWindow->GetOpenGLView();
+	
 	while (!exitRequest)
 	{
-		DoEvents();
-		game->Update();
-		RenderFrame(*game);
+		//@synchronized(openGLView) {
+			DoEvents();
+			game->Update();
+			RenderFrame(*game);
+		//}
 	}
 	
 	gameWindow->Close();
