@@ -16,7 +16,7 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 ImmutableIndexBuffer::ImmutableIndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	IndexElementSize newElementSize, void const* indices, std::size_t newIndexCount)
+	IndexElementSize newElementSize, void const* indices, std::uint32_t newIndexCount)
 	: nativeIndexBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateIndexBuffer(
 		indices, newIndexCount, newElementSize, BufferUsage::Immutable))
 	, indexCount(newIndexCount)
@@ -29,7 +29,7 @@ ImmutableIndexBuffer::~ImmutableIndexBuffer()
 {
 }
 //-----------------------------------------------------------------------
-std::size_t ImmutableIndexBuffer::GetIndexCount() const
+std::uint32_t ImmutableIndexBuffer::GetIndexCount() const
 {
 	return indexCount;
 }

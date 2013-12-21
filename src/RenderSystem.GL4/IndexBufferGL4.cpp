@@ -53,7 +53,7 @@ template<> struct TypesafeHelperGL4::OpenGLGetTraits<IndexBufferObjectGL4>
 	constexpr static GLenum parameter_name = GL_ELEMENT_ARRAY_BUFFER_BINDING;
 };
 //-----------------------------------------------------------------------
-IndexBufferGL4::IndexBufferGL4(void const* indices, std::size_t indexCount,
+IndexBufferGL4::IndexBufferGL4(void const* indices, std::uint32_t indexCount,
 	IndexElementSize elementSize, BufferUsage bufferUsage)
 {
 	// Generate index buffer
@@ -90,7 +90,7 @@ IndexBufferGL4::~IndexBufferGL4()
 	}
 }
 //-----------------------------------------------------------------------
-void IndexBufferGL4::SetData(void const* source, std::size_t indexCount, IndexElementSize elementSize)
+void IndexBufferGL4::SetData(void const* source, std::uint32_t indexCount, IndexElementSize elementSize)
 {
 	POMDOG_ASSERT(source != nullptr);
 	POMDOG_ASSERT(indexCount > 0);
@@ -113,6 +113,16 @@ void IndexBufferGL4::SetData(void const* source, std::size_t indexCount, IndexEl
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBufferSubData", __FILE__, __LINE__);
+	#endif
+}
+//-----------------------------------------------------------------------
+void IndexBufferGL4::BindBuffer()
+{
+	POMDOG_ASSERT(bufferObject);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject->value);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif
 }
 //-----------------------------------------------------------------------

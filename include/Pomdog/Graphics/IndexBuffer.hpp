@@ -41,7 +41,7 @@ public:
 
 	///@~Japanese
 	/// @brief インデックスの個数を取得します。
-	virtual std::size_t GetIndexCount() const = 0;
+	virtual std::uint32_t GetIndexCount() const = 0;
 
 	///@~Japanese
 	/// @brief インデックスの要素 1 つ分のサイズを取得します。

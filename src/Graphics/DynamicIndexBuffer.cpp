@@ -16,7 +16,7 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 DynamicIndexBuffer::DynamicIndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	IndexElementSize newElementSize, void const* indices, std::size_t newIndexCount)
+	IndexElementSize newElementSize, void const* indices, std::uint32_t newIndexCount)
 	: nativeIndexBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateIndexBuffer(
 		indices, newIndexCount, newElementSize, BufferUsage::Dynamic))
 	, indexCount(newIndexCount)
@@ -29,7 +29,7 @@ DynamicIndexBuffer::~DynamicIndexBuffer()
 {
 }
 //-----------------------------------------------------------------------
-std::size_t DynamicIndexBuffer::GetIndexCount() const
+std::uint32_t DynamicIndexBuffer::GetIndexCount() const
 {
 	return indexCount;
 }
@@ -44,7 +44,7 @@ BufferUsage DynamicIndexBuffer::GetBufferUsage() const
 	return BufferUsage::Dynamic;
 }
 //-----------------------------------------------------------------------
-void DynamicIndexBuffer::SetData(void const* source, std::size_t indexCount)
+void DynamicIndexBuffer::SetData(void const* source, std::uint32_t indexCount)
 {
 	POMDOG_ASSERT(source != nullptr);
 	POMDOG_ASSERT(indexCount > 0);

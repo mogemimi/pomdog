@@ -42,13 +42,13 @@ public:
 	///@~Japanese
 	/// @brief インデックスバッファを作成します。
 	virtual std::unique_ptr<NativeIndexBuffer> CreateIndexBuffer(
-		void const* indices, std::size_t indexCount,
+		void const* indices, std::uint32_t indexCount,
 		IndexElementSize elementSize, BufferUsage bufferUsage) = 0;
 	
 	///@~Japanese
 	/// @brief 頂点バッファを作成します。
 	virtual std::unique_ptr<NativeVertexBuffer> CreateVertexBuffer(
-		void const* vertices, std::size_t vertexCount,
+		void const* vertices, std::uint32_t vertexCount,
 		VertexDeclaration const& vertexDeclaration, BufferUsage bufferUsage) = 0;
 	
 	///@~Japanese

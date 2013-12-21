@@ -181,34 +181,35 @@ void GraphicsContext::Present()
 void GraphicsContext::Draw(PrimitiveTopology primitiveTopology)
 {
 	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
 	
 	impl->nativeContext->Draw(primitiveTopology);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::DrawIndexed(PrimitiveTopology primitiveTopology,
-	std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount)
+	std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount)
 {
 	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
 	
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "GraphicsContext::DrawIndexed");
+	impl->nativeContext->DrawIndexed(primitiveTopology, indexBuffer, indexCount);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::DrawInstanced(PrimitiveTopology primitiveTopology, std::size_t instanceCount)
+void GraphicsContext::DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t instanceCount)
 {
 	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
 	
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "GraphicsContext::DrawInstanced");
+	impl->nativeContext->DrawInstanced(primitiveTopology, instanceCount);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
-	std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount)
+	std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount)
 {
 	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
 	
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "GraphicsContext::DrawIndexedInstanced");
+	impl->nativeContext->DrawIndexedInstanced(primitiveTopology, indexBuffer, indexCount, instanceCount);
 }
 //-----------------------------------------------------------------------
 Viewport const& GraphicsContext::GetViewport() const

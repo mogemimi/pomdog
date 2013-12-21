@@ -30,12 +30,12 @@ public:
 	
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeIndexBuffer>
-	CreateIndexBuffer(void const* indices, std::size_t indexCount,
+	CreateIndexBuffer(void const* indices, std::uint32_t indexCount,
 		IndexElementSize elementSize, BufferUsage bufferUsage) override;
 	
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeVertexBuffer>
-	CreateVertexBuffer(void const* vertices, std::size_t vertexCount,
+	CreateVertexBuffer(void const* vertices, std::uint32_t vertexCount,
 		VertexDeclaration const& vertexDeclaration, BufferUsage bufferUsage) override;
 
 	///@copydoc NativeGraphicsDevice

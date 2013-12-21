@@ -14,6 +14,7 @@
 #include <Pomdog/Math/Color.hpp>
 #include <Pomdog/Math/Rectangle.hpp>
 #include <Pomdog/Graphics/ClearOptions.hpp>
+#include <Pomdog/Graphics/IndexBuffer.hpp>
 #include <Pomdog/Graphics/InputLayout.hpp>
 #include <Pomdog/Graphics/PrimitiveTopology.hpp>
 #include <Pomdog/Graphics/VertexBuffer.hpp>
@@ -23,6 +24,7 @@
 #include "OpenGLContext.hpp"
 #include "EffectPassGL4.hpp"
 #include "ErrorChecker.hpp"
+#include "IndexBufferGL4.hpp"
 #include "InputLayoutGL4.hpp"
 
 // logging
@@ -36,7 +38,7 @@ namespace GL4 {
 //-----------------------------------------------------------------------
 namespace {
 
-static GLenum ToPrimitiveTopology(PrimitiveTopology const& primitiveTopology)
+static GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology)
 {
 	switch (primitiveTopology)
 	{
@@ -47,6 +49,21 @@ static GLenum ToPrimitiveTopology(PrimitiveTopology const& primitiveTopology)
 	}
 #ifdef _MSC_VER
 	return GL_TRIANGLES;
+#endif
+}
+//-----------------------------------------------------------------------
+static GLenum ToIndexElementType(IndexElementSize indexElementSize)
+{
+	static_assert(sizeof(GLushort) == 2, "GLushort is not SixteenBits.");
+	static_assert(sizeof(GLuint) == 4, "GLuint is not ThirtyTwoBits.");
+
+	switch (indexElementSize)
+	{
+	case IndexElementSize::SixteenBits: return GL_UNSIGNED_SHORT;
+	case IndexElementSize::ThirtyTwoBits: return GL_UNSIGNED_INT;
+	}
+#ifdef _MSC_VER
+	return GL_UNSIGNED_INT;
 #endif
 }
 
@@ -86,6 +103,10 @@ void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float d
 	}
 	
 	glClear(mask);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glClear", __FILE__, __LINE__);
+	#endif
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Present()
@@ -97,21 +118,23 @@ void GraphicsContextGL4::Present()
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology)
 {
-	{
-		POMDOG_ASSERT(inputLayout);
-		POMDOG_ASSERT(!vertexBuffers.empty());
+	// Bind input-layout to the input-assembler stage:
+	POMDOG_ASSERT(inputLayout);
+	POMDOG_ASSERT(!vertexBuffers.empty());
+	inputLayout->Apply(vertexBuffers);
 	
-		inputLayout->Apply(vertexBuffers);
-	}
-	{
-		POMDOG_ASSERT(effectPass);
-		effectPass->ApplyShaders();
-	}
+	// Use shader program:
+	POMDOG_ASSERT(effectPass);
+	effectPass->ApplyShaders();
+	
+	// Draw:
+	POMDOG_ASSERT(!vertexBuffers.empty());
+	POMDOG_ASSERT(vertexBuffers.front());
 	
 	glDrawArrays(
 		ToPrimitiveTopology(primitiveTopology),
 		0,
-		static_cast<GLsizei>(vertexBuffers.front()->GetVertexCount())
+		vertexBuffers.front()->GetVertexCount()
 	);
 	
 	#ifdef DEBUG
@@ -120,26 +143,103 @@ void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology)
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
-	std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount)
+	std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount)
 {
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "GraphicsContextGL4::DrawIndexed");
+	// Bind input-layout to the input-assembler stage:
+	POMDOG_ASSERT(inputLayout);
+	POMDOG_ASSERT(!vertexBuffers.empty());
+	inputLayout->Apply(vertexBuffers);
+	
+	// Use shader program:
+	POMDOG_ASSERT(effectPass);
+	effectPass->ApplyShaders();
+
+	// Bind index-buffer:
+	POMDOG_ASSERT(indexCount > 0);
+	POMDOG_ASSERT(indexCount <= indexBuffer->GetIndexCount());
+	POMDOG_ASSERT(indexBuffer);
+
+	auto nativeIndexBuffer = dynamic_cast<IndexBufferGL4*>(indexBuffer->GetNativeIndexBuffer());
+	POMDOG_ASSERT(nativeIndexBuffer != nullptr);
+
+	nativeIndexBuffer->BindBuffer();
+
+	glDrawElements(
+		ToPrimitiveTopology(primitiveTopology),
+		indexCount,
+		ToIndexElementType(indexBuffer->GetElementSize()),
+		nullptr
+	);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glDrawElements", __FILE__, __LINE__);
+	#endif
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std::size_t instanceCount)
+void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t instanceCount)
 {
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "GraphicsContextGL4::DrawInstanced");
+	// Bind input-layout to the input-assembler stage:
+	POMDOG_ASSERT(inputLayout);
+	POMDOG_ASSERT(!vertexBuffers.empty());
+	inputLayout->Apply(vertexBuffers);
+	
+	// Use shader program:
+	POMDOG_ASSERT(effectPass);
+	effectPass->ApplyShaders();
+
+	// Draw
+	POMDOG_ASSERT(!vertexBuffers.empty());
+	POMDOG_ASSERT(vertexBuffers.front());
+	POMDOG_ASSERT(0 < instanceCount);
+
+	glDrawArraysInstanced(
+		ToPrimitiveTopology(primitiveTopology),
+		0,
+		vertexBuffers.front()->GetVertexCount(),
+		instanceCount
+	);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glDrawArraysInstanced", __FILE__, __LINE__);
+	#endif
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
-	std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount)
+	std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount)
 {
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "GraphicsContextGL4::DrawIndexedInstanced");
+	// Bind input-layout to the input-assembler stage:
+	POMDOG_ASSERT(inputLayout);
+	POMDOG_ASSERT(!vertexBuffers.empty());
+	inputLayout->Apply(vertexBuffers);
+	
+	// Use shader program:
+	POMDOG_ASSERT(effectPass);
+	effectPass->ApplyShaders();
+
+	// Bind index-buffer:
+	POMDOG_ASSERT(indexCount > 0);
+	POMDOG_ASSERT(indexCount <= indexBuffer->GetIndexCount());
+	POMDOG_ASSERT(indexBuffer);
+
+	auto nativeIndexBuffer = dynamic_cast<IndexBufferGL4*>(indexBuffer->GetNativeIndexBuffer());
+	POMDOG_ASSERT(nativeIndexBuffer != nullptr);
+
+	nativeIndexBuffer->BindBuffer();
+
+	// Draw
+	POMDOG_ASSERT(0 < instanceCount);
+
+	glDrawElementsInstanced(
+		ToPrimitiveTopology(primitiveTopology),
+		indexCount,
+		ToIndexElementType(indexBuffer->GetElementSize()),
+		nullptr,
+		instanceCount
+	);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glDrawElementsInstanced", __FILE__, __LINE__);
+	#endif
 }
 //-----------------------------------------------------------------------
 GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const

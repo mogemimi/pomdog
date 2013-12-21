@@ -17,7 +17,7 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 DynamicVertexBuffer::DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	VertexDeclaration const& newVertexDeclaration, void const* vertices, std::size_t newVertexCount)
+	VertexDeclaration const& newVertexDeclaration, void const* vertices, std::uint32_t newVertexCount)
 	: vertexDeclaration(newVertexDeclaration)
 	, nativeVertexBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateVertexBuffer(
 		vertices, newVertexCount, vertexDeclaration, BufferUsage::Dynamic))
@@ -27,7 +27,7 @@ DynamicVertexBuffer::DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& 
 }
 //-----------------------------------------------------------------------
 DynamicVertexBuffer::DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	VertexDeclaration && newVertexDeclaration, void const* vertices, std::size_t newVertexCount)
+	VertexDeclaration && newVertexDeclaration, void const* vertices, std::uint32_t newVertexCount)
 	: vertexDeclaration(std::move(newVertexDeclaration))
 	, nativeVertexBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateVertexBuffer(
 		vertices, newVertexCount, vertexDeclaration, BufferUsage::Dynamic))
@@ -50,12 +50,12 @@ BufferUsage DynamicVertexBuffer::GetBufferUsage() const
 	return BufferUsage::Dynamic;
 }
 //-----------------------------------------------------------------------
-std::size_t DynamicVertexBuffer::GetVertexCount() const
+std::uint32_t DynamicVertexBuffer::GetVertexCount() const
 {
 	return vertexCount;
 }
 //-----------------------------------------------------------------------
-void DynamicVertexBuffer::SetData(void const* source, std::size_t vertexCount)
+void DynamicVertexBuffer::SetData(void const* source, std::uint32_t vertexCount)
 {
 	POMDOG_ASSERT(source != nullptr);
 	POMDOG_ASSERT(vertexCount > 0);

@@ -41,7 +41,7 @@ template<> struct TypesafeHelperGL4::OpenGLGetTraits<VertexBufferObjectGL4>
 	constexpr static GLenum parameter_name = GL_ARRAY_BUFFER_BINDING;
 };
 //-----------------------------------------------------------------------
-VertexBufferGL4::VertexBufferGL4(void const* vertices, std::size_t vertexCount,
+VertexBufferGL4::VertexBufferGL4(void const* vertices, std::uint32_t vertexCount,
 	VertexDeclaration const& vertexDeclaration, BufferUsage bufferUsage)
 {
 	POMDOG_ASSERT(vertices != nullptr);
@@ -81,7 +81,7 @@ VertexBufferGL4::~VertexBufferGL4()
 	}
 }
 //-----------------------------------------------------------------------
-void VertexBufferGL4::SetData(void const* source, std::size_t vertexCount,
+void VertexBufferGL4::SetData(void const* source, std::uint32_t vertexCount,
 	VertexDeclaration const& vertexDeclaration)
 {
 	POMDOG_ASSERT(source != nullptr);

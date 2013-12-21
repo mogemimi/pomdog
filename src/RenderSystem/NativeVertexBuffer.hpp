@@ -34,7 +34,7 @@ public:
 	/// @remarks イミュータブルな頂点バッファでは使用しないでください。
 	/// @param source ソースバッファを指定します。
 	/// @param vertexCount 頂点の数を指定します。
-	virtual void SetData(void const* source, std::size_t vertexCount,
+	virtual void SetData(void const* source, std::uint32_t vertexCount,
 		VertexDeclaration const& vertexDeclaration) = 0;
 };
 

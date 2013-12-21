@@ -34,7 +34,7 @@ public:
 	/// @remarks イミュータブルなインデックスバッファでは使用しないでください。
 	/// @param source ソースバッファを指定します。
 	/// @param indexCount インデックスの要素数を指定します。
-	virtual void SetData(void const* source, std::size_t indexCount, IndexElementSize elementSize) = 0;
+	virtual void SetData(void const* source, std::uint32_t indexCount, IndexElementSize elementSize) = 0;
 };
 
 }// namespace RenderSystem

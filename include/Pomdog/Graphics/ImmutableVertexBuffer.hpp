@@ -36,10 +36,10 @@ public:
 	ImmutableVertexBuffer(ImmutableVertexBuffer &&) = default;
 
 	ImmutableVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		VertexDeclaration const& vertexDeclaration, void const* vertices, std::size_t vertexCount);
+		VertexDeclaration const& vertexDeclaration, void const* vertices, std::uint32_t vertexCount);
 
 	ImmutableVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		VertexDeclaration && vertexDeclaration, void const* vertices, std::size_t vertexCount);
+		VertexDeclaration && vertexDeclaration, void const* vertices, std::uint32_t vertexCount);
 
 	~ImmutableVertexBuffer() override;
 
@@ -56,7 +56,7 @@ public:
 
 	///@~Japanese
 	/// @brief 頂点の数を取得します。
-	std::size_t GetVertexCount() const override;
+	std::uint32_t GetVertexCount() const override;
 	
 public:
 	Details::RenderSystem::NativeVertexBuffer* GetNativeVertexBuffer() override;
@@ -64,7 +64,7 @@ public:
 private:
 	VertexDeclaration vertexDeclaration;
 	std::unique_ptr<Details::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
-	std::size_t vertexCount;
+	std::uint32_t vertexCount;
 };
 
 /// @}

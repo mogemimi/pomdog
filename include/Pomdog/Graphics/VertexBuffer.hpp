@@ -43,7 +43,7 @@ public:
 
 	///@~Japanese
 	/// @brief 頂点の数を取得します。
-	virtual std::size_t GetVertexCount() const = 0;
+	virtual std::uint32_t GetVertexCount() const = 0;
 
 	///@~Japanese
 	/// @brief バッファの使用方法を取得します。

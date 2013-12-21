@@ -36,10 +36,10 @@ public:
 	DynamicVertexBuffer(DynamicVertexBuffer &&) = default;
 
 	DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		VertexDeclaration const& vertexDeclaration, void const* vertices, std::size_t vertexCount);
+		VertexDeclaration const& vertexDeclaration, void const* vertices, std::uint32_t vertexCount);
 
 	DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		VertexDeclaration && vertexDeclaration, void const* vertices, std::size_t vertexCount);
+		VertexDeclaration && vertexDeclaration, void const* vertices, std::uint32_t vertexCount);
 
 	~DynamicVertexBuffer() override;
 
@@ -56,13 +56,13 @@ public:
 
 	///@~Japanese
 	/// @brief 頂点の数を取得します。
-	std::size_t GetVertexCount() const override;
+	std::uint32_t GetVertexCount() const override;
 
 	///@~Japanese
 	/// @brief 頂点データを格納します。
 	/// @param source ソースバッファを指定します。
 	/// @param vertexCount 頂点の数を指定します。
-	void SetData(void const* source, std::size_t vertexCount);
+	void SetData(void const* source, std::uint32_t vertexCount);
 	
 public:
 	Details::RenderSystem::NativeVertexBuffer* GetNativeVertexBuffer() override;
@@ -70,7 +70,7 @@ public:
 private:
 	VertexDeclaration vertexDeclaration;
 	std::unique_ptr<Details::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
-	std::size_t vertexCount;
+	std::uint32_t vertexCount;
 };
 
 /// @}

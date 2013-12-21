@@ -17,7 +17,7 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 ImmutableVertexBuffer::ImmutableVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	VertexDeclaration const& newVertexDeclaration, void const* vertices, std::size_t newVertexCount)
+	VertexDeclaration const& newVertexDeclaration, void const* vertices, std::uint32_t newVertexCount)
 	: vertexDeclaration(newVertexDeclaration)
 	, nativeVertexBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateVertexBuffer(
 		vertices, newVertexCount, vertexDeclaration, BufferUsage::Immutable))
@@ -27,7 +27,7 @@ ImmutableVertexBuffer::ImmutableVertexBuffer(std::shared_ptr<GraphicsDevice> con
 }
 //-----------------------------------------------------------------------
 ImmutableVertexBuffer::ImmutableVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	VertexDeclaration && newVertexDeclaration, void const* vertices, std::size_t newVertexCount)
+	VertexDeclaration && newVertexDeclaration, void const* vertices, std::uint32_t newVertexCount)
 	: vertexDeclaration(std::move(newVertexDeclaration))
 	, nativeVertexBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateVertexBuffer(
 		vertices, newVertexCount, vertexDeclaration, BufferUsage::Immutable))
@@ -50,7 +50,7 @@ BufferUsage ImmutableVertexBuffer::GetBufferUsage() const
 	return BufferUsage::Immutable;
 }
 //-----------------------------------------------------------------------
-std::size_t ImmutableVertexBuffer::GetVertexCount() const
+std::uint32_t ImmutableVertexBuffer::GetVertexCount() const
 {
 	return vertexCount;
 }

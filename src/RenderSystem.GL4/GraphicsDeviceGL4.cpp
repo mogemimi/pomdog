@@ -24,14 +24,14 @@ namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeIndexBuffer>
-GraphicsDeviceGL4::CreateIndexBuffer(void const* indices, std::size_t indexCount,
+GraphicsDeviceGL4::CreateIndexBuffer(void const* indices, std::uint32_t indexCount,
 	IndexElementSize elementSize, BufferUsage bufferUsage)
 {
 	return MakeUnique<IndexBufferGL4>(indices, indexCount, elementSize, bufferUsage);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeVertexBuffer>
-GraphicsDeviceGL4::CreateVertexBuffer(void const* vertices, std::size_t vertexCount,
+GraphicsDeviceGL4::CreateVertexBuffer(void const* vertices, std::uint32_t vertexCount,
 	VertexDeclaration const& vertexDeclaration, BufferUsage bufferUsage)
 {
 	return MakeUnique<VertexBufferGL4>(vertices, vertexCount, vertexDeclaration, bufferUsage);

@@ -71,13 +71,13 @@ public:
 	/// @param indexBuffer インデックスバッファを指定します。
 	/// @param indexCount インデックスの要素数を指定します。
 	void DrawIndexed(PrimitiveTopology primitiveTopology,
-		std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount);
+		std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount);
 
 	///@~Japanese
 	/// @brief インデックスを持たない、インスタンス化されたプリミティブを描画します。
 	/// @param primitiveTopology プリミティブの位相を指定します。
 	/// @param instanceCount レンダリングするプリミティブのインスタンスの数を指定します。
-	void DrawInstanced(PrimitiveTopology primitiveTopology, std::size_t instanceCount);
+	void DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t instanceCount);
 
 	///@~Japanese
 	/// @brief インデックス付けされた頂点データに基づき、インスタンス化されたプリミティブを描画します。
@@ -86,7 +86,7 @@ public:
 	/// @param indexCount インデックスの要素数を指定します。
 	/// @param instanceCount レンダリングするプリミティブのインスタンスの数を指定します。
 	void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
-		std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount);
+		std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount);
 	
 	///@~Japanese
 	/// @brief ビューポートを取得します。

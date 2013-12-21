@@ -31,12 +31,14 @@ class IndexBufferGL4 final: public NativeIndexBuffer
 public:
 	IndexBufferGL4() = delete;
 	
-	IndexBufferGL4(void const* indices, std::size_t indexCount,
+	IndexBufferGL4(void const* indices, std::uint32_t indexCount,
 		IndexElementSize elementSize, BufferUsage bufferUsage);
 	
 	~IndexBufferGL4() override;
 	
-	void SetData(void const* source, std::size_t indexCount, IndexElementSize elementSize) override;
+	void SetData(void const* source, std::uint32_t indexCount, IndexElementSize elementSize) override;
+	
+	void BindBuffer();
 	
 private:
 	Optional<IndexBufferObjectGL4> bufferObject;

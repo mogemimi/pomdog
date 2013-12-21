@@ -36,7 +36,7 @@ public:
 	DynamicIndexBuffer(DynamicIndexBuffer &&) = default;
 
 	DynamicIndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		IndexElementSize elementSize, void const* indices, std::size_t indexCount);
+		IndexElementSize elementSize, void const* indices, std::uint32_t indexCount);
 
 	~DynamicIndexBuffer() override;
 
@@ -45,7 +45,7 @@ public:
 
 	///@~Japanese
 	/// @brief インデックスの個数を取得します。
-	std::size_t GetIndexCount() const override;
+	std::uint32_t GetIndexCount() const override;
 
 	///@~Japanese
 	/// @brief インデックスの要素 1 つ分のサイズを取得します。
@@ -59,14 +59,14 @@ public:
 	/// @brief インデックスデータを格納します。
 	/// @param source ソースバッファを指定します。
 	/// @param indexCount インデックスの要素数を指定します。
-	void SetData(void const* source, std::size_t indexCount);
+	void SetData(void const* source, std::uint32_t indexCount);
 	
 public:
 	Details::RenderSystem::NativeIndexBuffer* GetNativeIndexBuffer() override;
 	
 private:
 	std::unique_ptr<Details::RenderSystem::NativeIndexBuffer> nativeIndexBuffer;
-	std::size_t indexCount;
+	std::uint32_t indexCount;
 	IndexElementSize elementSize;
 };
 
