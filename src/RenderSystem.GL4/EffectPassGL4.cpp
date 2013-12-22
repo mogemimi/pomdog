@@ -117,7 +117,7 @@ LinkShaders(VertexShaderGL4 const& vertexShader, PixelShaderGL4 const& pixelShad
 			<< "Failed to link shaders.\nerror: " << message.c_str();
 #endif // defined(DEBUG)
 
-		glDeleteShader(program.value);
+		glDeleteProgram(program.value);
 		return OptionalType::NullOptional;
 	}
 	return program;
