@@ -17,21 +17,21 @@ using Pomdog::LogEntry;
 using Pomdog::LoggingLevel;
 using Pomdog::ScopedConnection;
 
-TEST(LogChannelTest, LoggingLevel)
+TEST(LogChannel, LoggingLevel)
 {
-	static_assert(LoggingLevel::Critical < LoggingLevel::Warning, "TEST(LogChannelTest, LoggingLevel)");
-	static_assert(LoggingLevel::Critical < LoggingLevel::Info, "TEST(LogChannelTest, LoggingLevel)");
-	static_assert(LoggingLevel::Critical < LoggingLevel::Verbose, "TEST(LogChannelTest, LoggingLevel)");
-	static_assert(LoggingLevel::Critical < LoggingLevel::Internal, "TEST(LogChannelTest, LoggingLevel)");
-	static_assert(LoggingLevel::Warning < LoggingLevel::Info, "TEST(LogChannelTest, LoggingLevel)");
-	static_assert(LoggingLevel::Warning < LoggingLevel::Verbose, "TEST(LogChannelTest, LoggingLevel)");
-	static_assert(LoggingLevel::Warning < LoggingLevel::Internal, "TEST(LogChannelTest, LoggingLevel)");
-	static_assert(LoggingLevel::Info < LoggingLevel::Verbose, "TEST(LogChannelTest, LoggingLevel)");
-	static_assert(LoggingLevel::Info < LoggingLevel::Internal, "TEST(LogChannelTest, LoggingLevel)");
-	static_assert(LoggingLevel::Verbose < LoggingLevel::Internal, "TEST(LogChannelTest, LoggingLevel)");
+	static_assert(LoggingLevel::Critical < LoggingLevel::Warning, "TEST(LogChannel, LoggingLevel)");
+	static_assert(LoggingLevel::Critical < LoggingLevel::Info, "TEST(LogChannel, LoggingLevel)");
+	static_assert(LoggingLevel::Critical < LoggingLevel::Verbose, "TEST(LogChannel, LoggingLevel)");
+	static_assert(LoggingLevel::Critical < LoggingLevel::Internal, "TEST(LogChannel, LoggingLevel)");
+	static_assert(LoggingLevel::Warning < LoggingLevel::Info, "TEST(LogChannel, LoggingLevel)");
+	static_assert(LoggingLevel::Warning < LoggingLevel::Verbose, "TEST(LogChannel, LoggingLevel)");
+	static_assert(LoggingLevel::Warning < LoggingLevel::Internal, "TEST(LogChannel, LoggingLevel)");
+	static_assert(LoggingLevel::Info < LoggingLevel::Verbose, "TEST(LogChannel, LoggingLevel)");
+	static_assert(LoggingLevel::Info < LoggingLevel::Internal, "TEST(LogChannel, LoggingLevel)");
+	static_assert(LoggingLevel::Verbose < LoggingLevel::Internal, "TEST(LogChannel, LoggingLevel)");
 }
 
-TEST(LogChannelTest, LogMessage)
+TEST(LogChannel, LogMessage)
 {
 	LogChannel channel("test");
 	std::string message;
@@ -47,7 +47,7 @@ TEST(LogChannelTest, LogMessage)
 	EXPECT_EQ(message, "With his bare hands.");
 }
 
-TEST(LogChannelTest, Disconnect)
+TEST(LogChannel, Disconnect)
 {
 	LogChannel channel("test");
 	std::string message;
@@ -66,7 +66,7 @@ TEST(LogChannelTest, Disconnect)
 	EXPECT_TRUE(message.empty());
 }
 
-TEST(LogChannelTest, Connection)
+TEST(LogChannel, Connection)
 {
 	LogChannel channel("test");
 	std::string message;
@@ -92,7 +92,7 @@ TEST(LogChannelTest, Connection)
 	EXPECT_EQ(message, "connection(B): A disconnect");
 }
 
-TEST(LogChannelTest, GetName)
+TEST(LogChannel, GetName)
 {
 	{
 		LogChannel channel("test");
@@ -104,7 +104,7 @@ TEST(LogChannelTest, GetName)
 	}
 }
 
-TEST(LogChannelTest, SetLoggingLevel)
+TEST(LogChannel, SetLoggingLevel)
 {
 	LogChannel channel("test");
 	
@@ -124,7 +124,7 @@ TEST(LogChannelTest, SetLoggingLevel)
 	EXPECT_EQ(channel.GetLevel(), LoggingLevel::Internal);
 }
 
-TEST(LogChannelTest, VerbosityLevelThreshold)
+TEST(LogChannel, VerbosityLevelThreshold)
 {
 	LogChannel channel("test");
 	std::string message;

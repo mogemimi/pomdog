@@ -64,12 +64,16 @@ void CocoaTestGame::Initialize()
 
 		effectPass = std::make_shared<EffectPass>(graphicsDevice, graphicsContext);
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
-	
-//		std::vector<VertexBufferBinding> vertexBinding {
-//			{ VertexCombined::Declaration(), 0, 0 },
-//			//{ VertexCombined::Declaration(), 0, 1 }
-//		};
-//		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass, vertexBinding);
+	}
+	{
+		std::array<std::uint16_t, 6> indices = {
+			0, 1, 2,
+			2, 3, 0
+		};
+
+		// Create index buffer
+		indexBuffer = std::make_shared<ImmutableIndexBuffer>(graphicsDevice,
+			IndexElementSize::SixteenBits, indices.data(), indices.size());
 	}
 }
 //-----------------------------------------------------------------------
@@ -84,8 +88,7 @@ void CocoaTestGame::Draw()
 	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffer(vertexBuffer);
 	effectPass->Apply();
-	graphicsContext->Draw(PrimitiveTopology::TriangleStrip);
-	
+	graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList, indexBuffer, indexBuffer->GetIndexCount());
 	graphicsContext->Present();
 }
 //-----------------------------------------------------------------------

@@ -19,7 +19,7 @@ using Pomdog::EventConnection;
 using Pomdog::EventHandler;
 using Pomdog::ScopedConnection;
 
-TEST(ScopedConnectionTest, ScopeGuard)
+TEST(ScopedConnection, ScopeGuard)
 {
 	EventHandler eventHandler;
 	EventCode result{0};
@@ -38,7 +38,7 @@ TEST(ScopedConnectionTest, ScopeGuard)
 	EXPECT_EQ(EventCode{123}, result);
 }
 
-TEST(ScopedConnectionTest, ExplicitDisconnect)
+TEST(ScopedConnection, ExplicitDisconnect)
 {
 	EventHandler eventHandler;
 	EventCode result{0};
@@ -58,7 +58,7 @@ TEST(ScopedConnectionTest, ExplicitDisconnect)
 	EXPECT_EQ(EventCode{123}, result);
 }
 
-TEST(ScopedConnectionTest, MoveAssignmentOperatorScopedConnection)
+TEST(ScopedConnection, MoveAssignment)
 {
 	EventHandler eventHandler;
 	EventCode result{0};
@@ -86,7 +86,7 @@ TEST(ScopedConnectionTest, MoveAssignmentOperatorScopedConnection)
 	EXPECT_EQ(EventCode{123}, result);
 }
 
-TEST(ScopedConnectionTest, CopyAssignmentOperatorEventConnection)
+TEST(ScopedConnection, CopyAssignmentEventConnection)
 {
 	EventHandler eventHandler;
 	EventCode result{0};
@@ -114,7 +114,7 @@ TEST(ScopedConnectionTest, CopyAssignmentOperatorEventConnection)
 	EXPECT_EQ(EventCode{123}, result);
 }
 
-TEST(ScopedConnectionTest, MoveAssignmentOperatorEventConnection)
+TEST(ScopedConnection, MoveAssignmentEventConnection)
 {
 	EventHandler eventHandler;
 	EventCode result{0};

@@ -11,7 +11,7 @@
 
 using Pomdog::Point3D;
 
-TEST(Point3DTest, FirstTestCase)
+TEST(Point3D, FirstTestCase)
 {
 	Point3D coodinate{0, 0, 0};
 	EXPECT_EQ(coodinate.x, 0);
@@ -33,19 +33,19 @@ TEST(Point3DTest, FirstTestCase)
 	EXPECT_EQ(coodinate.z, std::numeric_limits<int>::denorm_min());
 }
 
-TEST(Point3DTest, Addition)
+TEST(Point3D, Addition)
 {
 	EXPECT_EQ(Point3D(0, 0, 0), Point3D(0, 0, 0) + Point3D(0, 0, 0));
 	EXPECT_EQ(Point3D(7, 9, 11), Point3D(2, 3, 4) + Point3D(5, 6, 7));
 }
 
-TEST(Point3DTest, Subtraction)
+TEST(Point3D, Subtraction)
 {
 	EXPECT_EQ(Point3D(0, 0, 0), Point3D(0, 0, 0) - Point3D(0, 0, 0));
 	EXPECT_EQ(Point3D(2 - 5, 3 - 6, 4 - 7), Point3D(2, 3, 4) - Point3D(5, 6, 7));
 }
 
-TEST(Point3DTest, Multiply)
+TEST(Point3D, Multiply)
 {
 	Point3D const coordinate{3, 4, 5};
 	
@@ -54,7 +54,7 @@ TEST(Point3DTest, Multiply)
 	EXPECT_EQ(Point3D(6, 8, 10), 2 * coordinate);
 }
 
-TEST(Point3DTest, Division)
+TEST(Point3D, Division)
 {
 	Point3D const coordinate{6, 8, 10};
 	

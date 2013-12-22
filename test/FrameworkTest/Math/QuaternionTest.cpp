@@ -11,7 +11,7 @@
 
 using Pomdog::Quaternion;
 
-TEST(QuaternionTest, TrivialCase)
+TEST(Quaternion, TrivialCase)
 {
 	Quaternion quaternion{0, 0, 0, 1};
 	EXPECT_EQ(quaternion.x, 0.0f);

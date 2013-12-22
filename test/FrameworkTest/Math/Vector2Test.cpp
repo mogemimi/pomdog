@@ -11,7 +11,7 @@
 
 using Pomdog::Vector2;
 
-TEST(Vector2Test, TrivialCase)
+TEST(Vector2, TrivialCase)
 {
 	Vector2 vec {0, 0};
 	EXPECT_EQ(vec.x, 0.0f);
@@ -22,18 +22,18 @@ TEST(Vector2Test, TrivialCase)
 	EXPECT_EQ(vec.y, 2.0f);
 }
 
-TEST(Vector2Test, Addition)
+TEST(Vector2, Addition)
 {
 	EXPECT_EQ(Vector2(5, 7), Vector2(2, 3) + Vector2(3, 4));
 }
 
-TEST(Vector2Test, Subtraction)
+TEST(Vector2, Subtraction)
 {
 	EXPECT_EQ(Vector2(-4, -5), Vector2(2, 3) - Vector2(6, 8));
 	EXPECT_EQ(Vector2(+4, +5), Vector2(6, 8) - Vector2(2, 3));
 }
 
-TEST(Vector2Test, Multiply)
+TEST(Vector2, Multiply)
 {
 	Vector2 const result(4.0f * 3.0f, 7.0f * 3.0f);
 	
@@ -43,7 +43,7 @@ TEST(Vector2Test, Multiply)
 	EXPECT_EQ(result, 3.0f * Vector2(4, 7));
 }
 
-TEST(Vector2Test, Division)
+TEST(Vector2, Division)
 {
 	EXPECT_EQ(Vector2(10.0f/2, 8.0f/2), Vector2(10, 8) / 2);
 	EXPECT_EQ(Vector2(10.0f/2, 8.0f/2), Vector2(10, 8) / Vector2(2, 2));

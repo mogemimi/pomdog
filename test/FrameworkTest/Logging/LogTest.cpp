@@ -21,7 +21,7 @@ using Pomdog::LoggingLevel;
 using Pomdog::LogStream;
 using Pomdog::ScopedConnection;
 
-TEST(LoggingTest, LogMessageWithDefaultChannel)
+TEST(Log, LogMessageWithDefaultChannel)
 {
 	std::string message;
 	std::string source;
@@ -39,7 +39,7 @@ TEST(LoggingTest, LogMessageWithDefaultChannel)
 	EXPECT_TRUE(source.empty());
 }
 
-TEST(LoggingTest, StreamWithDefaultChannel)
+TEST(Log, StreamWithDefaultChannel)
 {
 	std::string message;
 	std::string source;
@@ -53,7 +53,7 @@ TEST(LoggingTest, StreamWithDefaultChannel)
 	EXPECT_TRUE(source.empty());
 }
 
-TEST(LoggingTest, AddAndRemoveChannel)
+TEST(Log, AddAndRemoveChannel)
 {
 	ASSERT_EQ(false, Log::ExistChannel("Test"));
 	ASSERT_EQ(false, Log::ExistChannel("Test2"));
@@ -95,7 +95,7 @@ TEST(LoggingTest, AddAndRemoveChannel)
 	EXPECT_EQ(false, Log::ExistChannel("Test2"));
 }
 
-TEST(LoggingTest, SetDefaultVerbosityLevels)
+TEST(Log, SetDefaultVerbosityLevels)
 {
 	auto verbosity = Log::GetVerbosity();
 
@@ -117,7 +117,7 @@ TEST(LoggingTest, SetDefaultVerbosityLevels)
 	Log::SetVerbosity(verbosity);
 }
 
-TEST(LoggingTest, SetVerbosityLevels)
+TEST(Log, SetVerbosityLevels)
 {
 	ASSERT_EQ(false, Log::ExistChannel("Test"));
 
@@ -158,7 +158,7 @@ TEST(LoggingTest, SetVerbosityLevels)
 	Log::RemoveChannel("Test");
 }
 
-TEST(LoggingTest, SendToUserChannel)
+TEST(Log, SendToUserChannel)
 {
 	std::vector<std::string> messages, sources;
 	auto handler = [&](LogEntry const& entry) {
@@ -200,7 +200,7 @@ TEST(LoggingTest, SendToUserChannel)
 	Log::RemoveChannel("Test");
 }
 
-TEST(LoggingTest, SendToUserChannels)
+TEST(Log, SendToUserChannels)
 {
 	Log::AddChannel("Test1", LoggingLevel::Internal);
 	Log::AddChannel("Test2", LoggingLevel::Internal);
@@ -258,7 +258,7 @@ TEST(LoggingTest, SendToUserChannels)
 	Log::RemoveChannel("Nyan Nyan Cat");
 }
 
-TEST(LoggingTest, CallToDisconnectInCallback)
+TEST(Log, CallToDisconnectInCallback)
 {
 	std::vector<std::string> messages;
 	ScopedConnection connectionA, connectionB;
@@ -289,7 +289,7 @@ TEST(LoggingTest, CallToDisconnectInCallback)
 	EXPECT_EQ(messages[5], "Chuck Norris at A");
 }
 
-TEST(LoggingTest, CallToDisconnectSelfInCallback)
+TEST(Log, CallToDisconnectSelfInCallback)
 {
 	std::vector<std::string> messages;
 	ScopedConnection connectionA;

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -20,7 +20,7 @@ using Pomdog::LoggingLevel;
 using Pomdog::LogStream;
 using Pomdog::ScopedConnection;
 
-TEST(LogStreamTest, LogStreamFlush)
+TEST(LogStream, LogStreamFlush)
 {
 	LogChannel channel("test");
 	LogStream stream(channel, LoggingLevel::Critical);
@@ -45,7 +45,7 @@ TEST(LogStreamTest, LogStreamFlush)
 	EXPECT_EQ(message, "Chuck Norris makes onions cry!");
 }
 
-TEST(LogStreamTest, EnumerationToString)
+TEST(LogStream, EnumerationToString)
 {
 	LogChannel channel("test");
 	LogStream stream(channel, LoggingLevel::Critical);
@@ -85,7 +85,7 @@ TEST(LogStreamTest, EnumerationToString)
 	EXPECT_EQ(message, "42");
 }
 
-TEST(LogStreamTest, CopyConstrunctor)
+TEST(LogStream, CopyConstrunctor)
 {
 	LogChannel channel("test");
 	std::string message;
@@ -103,7 +103,7 @@ TEST(LogStreamTest, CopyConstrunctor)
 	EXPECT_EQ(message, "Chuck Norris");
 }
 
-TEST(LogStreamTest, MoveConstrunctor)
+TEST(LogStream, MoveConstrunctor)
 {
 	LogChannel channel("test");
 	std::string message;

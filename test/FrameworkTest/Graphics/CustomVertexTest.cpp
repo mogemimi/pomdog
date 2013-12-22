@@ -11,6 +11,11 @@
 #include <Pomdog/Graphics/CustomVertex.hpp>
 #include <Pomdog/Graphics/VertexDeclaration.hpp>
 #include <Pomdog/Graphics/VertexElementFormat.hpp>
+#include <Pomdog/Math/Color.hpp>
+#include <Pomdog/Math/Vector2.hpp>
+#include <Pomdog/Math/Vector3.hpp>
+#include <Pomdog/Math/Vector4.hpp>
+#include <Pomdog/Math/Quaternion.hpp>
 
 using Pomdog::CustomVertex;
 using Pomdog::VertexDeclaration;

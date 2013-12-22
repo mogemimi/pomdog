@@ -23,16 +23,16 @@ namespace Pomdog {
 /// @{
 
 ///@~Japanese
-/// @brief ボタンが押されているかどうかの状態を表す列挙体です。
-enum class ButtonState: std::uint8_t
+/// @brief ボタンが押されているかどうかの状態を表します。
+enum class ButtonState: bool
 {
 	///@~Japanese
 	/// @brief ボタンが離されている状態を表します。
-	Released,
+	Released = false,
 
 	///@~Japanese
 	/// @brief ボタンが押されている状態を表します。
-	Pressed
+	Pressed = true
 };
 
 /// @}

@@ -17,7 +17,7 @@ using Pomdog::EventCode;
 using Pomdog::EventHandler;
 using Pomdog::EventConnection;
 
-TEST(EventConnectionTest, Disconnect)
+TEST(EventConnection, Disconnect)
 {
 	EventHandler eventHandler;
 	EventCode result{0};
@@ -37,7 +37,7 @@ TEST(EventConnectionTest, Disconnect)
 	EXPECT_EQ(EventCode{123}, result);
 }
 
-TEST(EventConnectionTest, CopyAssignmentOperator)
+TEST(EventConnection, CopyAssignmentOperator)
 {
 	EventHandler eventHandler;
 	EventCode result{0};
@@ -65,7 +65,7 @@ TEST(EventConnectionTest, CopyAssignmentOperator)
 	EXPECT_EQ(EventCode{123}, result);
 }
 
-TEST(EventConnectionTest, MoveAssignmentOperator)
+TEST(EventConnection, MoveAssignmentOperator)
 {
 	EventHandler eventHandler;
 	EventCode result{0};

@@ -106,6 +106,9 @@
 
 // Input
 #include "Input/ButtonState.hpp"
+#include "Input/KeyboardState.hpp"
+#include "Input/Keys.hpp"
+#include "Input/KeyState.hpp"
 #include "Input/Mouse.hpp"
 #include "Input/MouseState.hpp"
 

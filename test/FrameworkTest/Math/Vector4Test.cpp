@@ -11,7 +11,7 @@
 
 using Pomdog::Vector4;
 
-TEST(Vector4Test, TrivialCase)
+TEST(Vector4, TrivialCase)
 {
 	Vector4 vec {0, 0, 0, 0};
 	EXPECT_EQ(vec.x, 0.0f);
@@ -26,19 +26,19 @@ TEST(Vector4Test, TrivialCase)
 	EXPECT_EQ(vec.w, 4.0f);
 }
 
-TEST(Vector4Test, Addition)
+TEST(Vector4, Addition)
 {
 	EXPECT_EQ(Vector4(1.f + 5.f, 2.f + 6.f, 3.f + 7.f, 4.f + 8.f), Vector4(1, 2, 3, 4) + Vector4(5, 6, 7, 8));
 	EXPECT_EQ(Vector4(1.f - 5.f, 2.f - 6.f, 3.f - 7.f, 4.f - 8.f), Vector4(1, 2, 3, 4) + Vector4(-5, -6, -7, -8));
 }
 
-TEST(Vector4Test, Subtraction)
+TEST(Vector4, Subtraction)
 {
 	EXPECT_EQ(Vector4(1.f - 5.f, 2.f - 6.f, 3.f - 7.f, 4.f - 8.f), Vector4(1, 2, 3, 4) - Vector4(5, 6, 7, 8));
 	EXPECT_EQ(Vector4(1.f + 5.f, 2.f + 6.f, 3.f + 7.f, 4.f + 8.f), Vector4(1, 2, 3, 4) - Vector4(-5, -6, -7, -8));
 }
 
-TEST(Vector4Test, Multiply)
+TEST(Vector4, Multiply)
 {
 	EXPECT_EQ(Vector4(4.f * 3.f, 5.f * 3.f, 6.f * 3.f, 7.f * 3.f), Vector4(4, 5, 6, 7) * Vector4(3, 3, 3, 3));
 	EXPECT_EQ(Vector4(4.f * 3.f, 5.f * 3.f, 6.f * 3.f, 7.f * 3.f), Vector4(3, 3, 3, 3) * Vector4(4, 5, 6, 7));
@@ -46,7 +46,7 @@ TEST(Vector4Test, Multiply)
 	EXPECT_EQ(Vector4(4.f * 3.f, 5.f * 3.f, 6.f * 3.f, 7.f * 3.f), 3.0f * Vector4(4, 5, 6, 7));
 }
 
-TEST(Vector4Test, Division)
+TEST(Vector4, Division)
 {
 	EXPECT_EQ(Vector4(4.f / 3.f, 5.f / 3.f, 6.f / 3.f, 7.f / 3.f), Vector4(4, 5, 6, 7) / Vector4(3, 3, 3, 3));
 	EXPECT_EQ(Vector4(3.f / 4.f, 3.f / 5.f, 3.f / 6.f, 3.f / 7.f), Vector4(3, 3, 3, 3) / Vector4(4, 5, 6, 7));
