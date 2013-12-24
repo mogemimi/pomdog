@@ -8,7 +8,7 @@
       }],
     ],
     #'target_arch%': '<(target_arch)',
-    #'component%': 'static_library', # static_library or shared_library
+    'component%': 'shared_library', # static_library or shared_library
   },
   'target_defaults': {
     'defines': [],

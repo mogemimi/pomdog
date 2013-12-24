@@ -10,8 +10,8 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-Viewport::Viewport(Rectangle const& bounds)
-	: bounds(bounds)
+Viewport::Viewport(Rectangle const& boundsIn)
+	: bounds(boundsIn)
 	, minDepth(0.0f)
 	, maxDepth(1.0f)
 {}

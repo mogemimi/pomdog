@@ -8,10 +8,10 @@
 
 #include <Pomdog/Graphics/ImmutableIndexBuffer.hpp>
 #include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Graphics/BufferUsage.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeIndexBuffer.hpp"
-#include "BufferUsage.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

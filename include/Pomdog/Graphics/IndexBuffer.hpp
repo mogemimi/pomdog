@@ -1,4 +1,4 @@
-//
+﻿//
 //  Copyright (C) 2013 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -14,6 +14,7 @@
 #endif
 
 #include <memory>
+#include "../Config/Export.hpp"
 #include "detail/ForwardDeclarations.hpp"
 #include "BufferUsage.hpp"
 #include "IndexElementSize.hpp"
@@ -34,7 +35,7 @@ class NativeIndexBuffer;
 
 ///@~Japanese
 /// @brief インデックスバッファです。
-class IndexBuffer
+class POMDOG_EXPORT IndexBuffer
 {
 public:
 	virtual	~IndexBuffer() = default;

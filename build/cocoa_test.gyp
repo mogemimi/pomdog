@@ -1,5 +1,9 @@
-# Examples:
+# Examples(Xcode):
 # gyp build/cocoa_test.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
+#
+# Examples(MSVS 2013):
+# gyp build/cocoa_test.gyp --depth=. -f msvs -G msvs_version=2013 --generator-output=./build.msvc/
+
 {
   'includes': ['common.gypi'],
   'make_global_settings': [
@@ -39,16 +43,21 @@
       'product_name': 'CocoaTest',
       'type': 'executable',
       'mac_bundle': 1,
-      'dependencies': [
-        'pomdog.gyp:pomdog-shared',
-        #'pomdog.gyp:pomdog-static',
-      ],
       'include_dirs': [
         '../include',
       ],
       'sources': [
       ],
       'conditions': [
+        ['component == "shared_library"', {
+          'dependencies': [
+            'pomdog.gyp:pomdog-shared',
+          ],
+        }, {
+          'dependencies': [
+            'pomdog.gyp:pomdog-static',
+          ],
+        }],
         ['OS == "win"', {
           'sources': [
           ],

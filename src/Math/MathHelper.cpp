@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "MathHelper.hpp"
+#include <Pomdog/Math/MathHelper.hpp>
 
 namespace Pomdog {
 namespace Details {

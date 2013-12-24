@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "GameObject.hpp"
+#include <Pomdog/GamePlay/GameObject.hpp>
 
 namespace Pomdog {
 
