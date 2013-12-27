@@ -13,12 +13,21 @@
 #	pragma once
 #endif
 
+#include <memory>
 #include <vector>
 #include "../Config/Export.hpp"
-#include "detail/ForwardDeclarations.hpp"
 #include "../Math/detail/ForwardDeclarations.hpp"
+#include "detail/ForwardDeclarations.hpp"
+#include "EffectAnnotation.hpp"
 
 namespace Pomdog {
+namespace Details {
+namespace RenderSystem {
+
+class NativeEffectParameter;
+
+}// namespace RenderSystem
+}// namespace Details
 
 /// @addtogroup Framework
 /// @{
@@ -30,11 +39,13 @@ namespace Pomdog {
 class POMDOG_EXPORT EffectParameter
 {
 public:
-	EffectParameter() = default;
+	EffectParameter();
 	EffectParameter(EffectParameter const&) = delete;
 	EffectParameter & operator=(EffectParameter const&) = delete;
 
-	~EffectParameter() = default;
+	explicit EffectParameter(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+
+	~EffectParameter();
 
 	///@~Japanese
 	/// @brief エフェクトパラメータのメタデータを取得します。
@@ -127,6 +138,13 @@ public:
 	void SetValue(Matrix3x3 const* matrix, std::size_t count);
 	void SetValue(Matrix4x4 const* matrix, std::size_t count);
 	void SetValue(Quaternion const* quaternion, std::size_t count);
+	
+public:
+	Details::RenderSystem::NativeEffectParameter* GetNativeEffectParameter();
+	
+private:
+	std::unique_ptr<Details::RenderSystem::NativeEffectParameter> nativeEffectParameter;
+	EffectAnnotation effectAnnotation;
 };
 	
 /// @}

@@ -13,7 +13,9 @@
 #	pragma once
 #endif
 
+#include <vector>
 #include <Pomdog/Config/FundamentalTypes.hpp>
+#include <Pomdog/Math/detail/ForwardDeclarations.hpp>
 
 namespace Pomdog {
 namespace Details {
@@ -27,6 +29,102 @@ public:
 	NativeEffectParameter & operator=(NativeEffectParameter const&) = delete;
 
 	virtual ~NativeEffectParameter() = default;
+	
+	///@copydoc EffectParameter
+	virtual bool GetValueBool() const = 0;
+
+	///@copydoc EffectParameter
+	virtual std::int32_t GetValueInt32() const = 0;
+
+	///@copydoc EffectParameter
+	virtual std::vector<std::int32_t> GetValueInt32Array() const = 0;
+
+	///@copydoc EffectParameter
+	virtual float GetValueFloat() const = 0;
+
+	///@copydoc EffectParameter
+	virtual std::vector<float> GetValueFloatArray() const = 0;
+
+	///@copydoc EffectParameter
+	virtual Vector2 GetValueVector2() const = 0;
+
+	///@copydoc EffectParameter
+	virtual std::vector<Vector2> GetValueVector2Array() const = 0;
+
+	///@copydoc EffectParameter
+	virtual Vector3 GetValueVector3() const = 0;
+
+	///@copydoc EffectParameter
+	virtual std::vector<Vector3> GetValueVector3Array() const = 0;
+
+	///@copydoc EffectParameter
+	virtual Vector4 GetValueVector4() const = 0;
+		
+	///@copydoc EffectParameter
+	virtual std::vector<Vector4> GetValueVector4Array() const = 0;
+
+	///@copydoc EffectParameter
+	virtual Quaternion GetValueQuaternion() const = 0;
+
+	///@copydoc EffectParameter
+	virtual std::vector<Quaternion> GetValueQuaternionArray() const = 0;
+
+	///@copydoc EffectParameter
+	virtual void SetValue(bool value) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(std::int32_t value) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(float value) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(Vector2 const& vector) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(Vector3 const& vector) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(Vector4 const& vector) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(Matrix2x2 const& matrix) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(Matrix3x3 const& matrix) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(Matrix4x4 const& matrix) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(Quaternion const& quaternion) = 0;
+
+	///@copydoc EffectParameter
+	virtual void SetValue(float const* source, std::size_t count) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(std::int32_t const* source, std::size_t count) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(Vector2 const* vector, std::size_t count) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(Vector3 const* vector, std::size_t count) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(Vector4 const* vector, std::size_t count) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(Matrix2x2 const* matrix, std::size_t count) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(Matrix3x3 const* matrix, std::size_t count) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(Matrix4x4 const* matrix, std::size_t count) = 0;
+	
+	///@copydoc EffectParameter
+	virtual void SetValue(Quaternion const* quaternion, std::size_t count) = 0;
 };
 
 }// namespace RenderSystem

@@ -27,7 +27,7 @@ namespace TypesafeHelperGL4 {
 template <class TaggedClass>
 struct OpenGLGetTraits {};
 
-template <class TaggedClass> static
+template <class TaggedClass>
 TaggedClass Get(OpenGLGetTraits<TaggedClass>* = nullptr)
 {
 	typedef typename TaggedClass::value_type value_type;
@@ -35,12 +35,21 @@ TaggedClass Get(OpenGLGetTraits<TaggedClass>* = nullptr)
 	static_assert(std::is_fundamental<value_type>::value, "");
 	static_assert(std::is_integral<value_type>::value, "");
 
-	constexpr GLenum parameterName = OpenGLGetTraits<TaggedClass>::parameter_name;
-
 	GLint oldBuffer = 0;
-	glGetIntegerv(parameterName, &oldBuffer);
-
+	::glGetIntegerv(
+		OpenGLGetTraits<TaggedClass>::bufferObjectBinding,
+		&oldBuffer
+	);
 	return TaggedClass(static_cast<value_type>(oldBuffer));
+}
+
+template <class TaggedClass>
+void BindBuffer(TaggedClass const& bufferObject)
+{
+	::glBindBuffer(
+		OpenGLGetTraits<TaggedClass>::bufferObjectTarget,
+		bufferObject.value
+	);
 }
 
 }// namespace TypesafeHelperGL4

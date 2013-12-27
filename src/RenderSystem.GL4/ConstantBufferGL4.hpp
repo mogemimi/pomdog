@@ -13,23 +13,38 @@
 #	pragma once
 #endif
 
+#include "OpenGLPrerequisites.hpp"
+#include <Pomdog/Config/FundamentalTypes.hpp>
+#include <Pomdog/Utility/detail/Tagged.hpp>
+//#include "../RenderSystem/NativeConstantBuffer.hpp"
+#include "../Utility/Optional.hpp"
+
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
-class ConstantBufferGL4
+namespace Tags {
+
+struct ConstantBufferObjectTag {};
+
+}// namespace Tags
+
+using ConstantBufferObjectGL4 = Tagged<GLuint, Tags::ConstantBufferObjectTag>;
+
+class ConstantBufferGL4 final
 {
 public:
 	ConstantBufferGL4() = delete;
 	
-	//ConstantBufferGL4();
+	explicit ConstantBufferGL4(std::uint32_t byteLength);
 	
 	~ConstantBufferGL4();
 
-	void Apply();
+	void SetData(void const* source, std::uint32_t byteLength);
 	
 private:
+	Optional<ConstantBufferObjectGL4> bufferObject;
 };
 
 }// namespace GL4

@@ -50,7 +50,8 @@ static GLsizeiptr ToIndexElementOffsetBytes(IndexElementSize elementSize)
 //-----------------------------------------------------------------------
 template<> struct TypesafeHelperGL4::OpenGLGetTraits<IndexBufferObjectGL4>
 {
-	constexpr static GLenum parameter_name = GL_ELEMENT_ARRAY_BUFFER_BINDING;
+	constexpr static GLenum bufferObjectBinding = GL_ELEMENT_ARRAY_BUFFER_BINDING;
+	constexpr static GLenum bufferObjectTarget = GL_ELEMENT_ARRAY_BUFFER;
 };
 //-----------------------------------------------------------------------
 IndexBufferGL4::IndexBufferGL4(void const* indices, std::uint32_t indexCount,
@@ -65,10 +66,11 @@ IndexBufferGL4::IndexBufferGL4(void const* indices, std::uint32_t indexCount,
 	
 	auto const oldBufferObject = TypesafeHelperGL4::Get<IndexBufferObjectGL4>();
 	ScopeGuard scope([&oldBufferObject]{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, oldBufferObject.value);
+		TypesafeHelperGL4::BindBuffer(oldBufferObject);
 	});
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject->value);
+	POMDOG_ASSERT(bufferObject);
+	TypesafeHelperGL4::BindBuffer(*bufferObject);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
@@ -97,11 +99,11 @@ void IndexBufferGL4::SetData(void const* source, std::uint32_t indexCount, Index
 
 	auto const oldBufferObject = TypesafeHelperGL4::Get<IndexBufferObjectGL4>();
 	ScopeGuard scope([&oldBufferObject]{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, oldBufferObject.value);
+		TypesafeHelperGL4::BindBuffer(oldBufferObject);
 	});
 
 	POMDOG_ASSERT(bufferObject);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject->value);
+	TypesafeHelperGL4::BindBuffer(*bufferObject);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
@@ -119,7 +121,7 @@ void IndexBufferGL4::SetData(void const* source, std::uint32_t indexCount, Index
 void IndexBufferGL4::BindBuffer()
 {
 	POMDOG_ASSERT(bufferObject);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject->value);
+	TypesafeHelperGL4::BindBuffer(*bufferObject);
 	
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);

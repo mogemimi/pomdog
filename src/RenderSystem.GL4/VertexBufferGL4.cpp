@@ -38,7 +38,8 @@ static GLenum ToVertexBufferUsage(BufferUsage bufferUsage)
 //-----------------------------------------------------------------------
 template<> struct TypesafeHelperGL4::OpenGLGetTraits<VertexBufferObjectGL4>
 {
-	constexpr static GLenum parameter_name = GL_ARRAY_BUFFER_BINDING;
+	constexpr static GLenum bufferObjectBinding = GL_ARRAY_BUFFER_BINDING;
+	constexpr static GLenum bufferObjectTarget = GL_ARRAY_BUFFER;
 };
 //-----------------------------------------------------------------------
 VertexBufferGL4::VertexBufferGL4(void const* vertices, std::uint32_t vertexCount,
@@ -56,10 +57,11 @@ VertexBufferGL4::VertexBufferGL4(void const* vertices, std::uint32_t vertexCount
 	
 	auto const oldBufferObject = TypesafeHelperGL4::Get<VertexBufferObjectGL4>();
 	ScopeGuard scope([&oldBufferObject]{
-		glBindBuffer(GL_ARRAY_BUFFER, oldBufferObject.value);
+		TypesafeHelperGL4::BindBuffer(oldBufferObject);
 	});
 	
-	glBindBuffer(GL_ARRAY_BUFFER, bufferObject->value);
+	POMDOG_ASSERT(bufferObject);
+	TypesafeHelperGL4::BindBuffer(*bufferObject);
 	
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
@@ -89,11 +91,11 @@ void VertexBufferGL4::SetData(void const* source, std::uint32_t vertexCount,
 
 	auto const oldBufferObject = TypesafeHelperGL4::Get<VertexBufferObjectGL4>();
 	ScopeGuard scope([&oldBufferObject]{
-		glBindBuffer(GL_ARRAY_BUFFER, oldBufferObject.value);
+		TypesafeHelperGL4::BindBuffer(oldBufferObject);
 	});
 
 	POMDOG_ASSERT(bufferObject);
-	glBindBuffer(GL_ARRAY_BUFFER, bufferObject->value);
+	TypesafeHelperGL4::BindBuffer(*bufferObject);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
@@ -110,7 +112,7 @@ void VertexBufferGL4::SetData(void const* source, std::uint32_t vertexCount,
 void VertexBufferGL4::BindBuffer()
 {
 	POMDOG_ASSERT(bufferObject);
-	glBindBuffer(GL_ARRAY_BUFFER, bufferObject->value);
+	TypesafeHelperGL4::BindBuffer(*bufferObject);
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

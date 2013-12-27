@@ -130,7 +130,7 @@ public:
 	void ProcessSystemEvents(Event const& event);
 
 private:
-	std::weak_ptr<Game> game;
+	//std::weak_ptr<Game> game;
 	std::shared_ptr<CocoaGameWindow> gameWindow;
 
 	std::shared_ptr<SystemEventDispatcher> systemEventDispatcher;
@@ -196,18 +196,14 @@ void CocoaGameHost::Impl::Run(std::weak_ptr<Game> weakGame)
 	if (!game->CompleteInitialize()) {
 		return;
 	}
-	
-	//CocoaOpenGLView* openGLView = gameWindow->GetOpenGLView();
-	
+
 	while (!exitRequest)
 	{
-		//@synchronized(openGLView) {
-			DoEvents();
-			game->Update();
-			RenderFrame(*game);
-		//}
+		DoEvents();
+		game->Update();
+		RenderFrame(*game);
 	}
-	
+
 	gameWindow->Close();
 	//DoEvents();
 }

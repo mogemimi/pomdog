@@ -20,12 +20,109 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
-class EffectParameterGL4: public NativeEffectParameter
+class EffectParameterGL4 final: public NativeEffectParameter
 {
+public:
+	///@copydoc EffectParameter
+	bool GetValueBool() const override;
+	
+	///@copydoc EffectParameter
+	std::int32_t GetValueInt32() const override;
+	
+	///@copydoc EffectParameter
+	std::vector<std::int32_t> GetValueInt32Array() const override;
+	
+	///@copydoc EffectParameter
+	float GetValueFloat() const override;
+	
+	///@copydoc EffectParameter
+	std::vector<float> GetValueFloatArray() const override;
+	
+	///@copydoc EffectParameter
+	Vector2 GetValueVector2() const override;
+
+	///@copydoc EffectParameter
+	std::vector<Vector2> GetValueVector2Array() const override;
+
+	///@copydoc EffectParameter
+	Vector3 GetValueVector3() const override;
+
+	///@copydoc EffectParameter
+	std::vector<Vector3> GetValueVector3Array() const override;
+
+	///@copydoc EffectParameter
+	Vector4 GetValueVector4() const override;
+
+	///@copydoc EffectParameter
+	std::vector<Vector4> GetValueVector4Array() const override;
+
+	///@copydoc EffectParameter
+	Quaternion GetValueQuaternion() const override;
+
+	///@copydoc EffectParameter
+	std::vector<Quaternion> GetValueQuaternionArray() const override;
+
+	///@copydoc EffectParameter
+	void SetValue(bool) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(std::int32_t) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(float) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(Vector2 const&) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(Vector3 const&) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(Vector4 const&) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(Matrix2x2 const&) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(Matrix3x3 const&) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(Matrix4x4 const&) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(Quaternion const&) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(float const*, std::size_t) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(std::int32_t const*, std::size_t) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(Vector2 const*, std::size_t) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(Vector3 const*, std::size_t) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(Vector4 const*, std::size_t) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(Matrix2x2 const*, std::size_t) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(Matrix3x3 const*, std::size_t) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(Matrix4x4 const*, std::size_t) override;
+	
+	///@copydoc EffectParameter
+	void SetValue(Quaternion const*, std::size_t) override;
+
 public:
 	///@~Japanese
 	/// @brief 現在有効になっているシェーダプログラムにコンスタントバッファを適用します。
-	virtual void ApplyConstant() = 0;
+	void Apply();
 };
 
 }// namespace GL4

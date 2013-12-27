@@ -447,7 +447,7 @@ static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings
 //-----------------------------------------------------------------------
 template<> struct TypesafeHelperGL4::OpenGLGetTraits<VertexArrayGL4>
 {
-	constexpr static GLenum parameter_name = GL_VERTEX_ARRAY_BINDING;
+	constexpr static GLenum bufferObjectBinding = GL_VERTEX_ARRAY_BINDING;
 };
 //-----------------------------------------------------------------------
 InputLayoutGL4::InputLayoutGL4(EffectPassGL4* effectPass)

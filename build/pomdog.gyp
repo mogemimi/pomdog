@@ -222,6 +222,7 @@
       '../src/Graphics/DepthStencilState.cpp',
       '../src/Graphics/DynamicIndexBuffer.cpp',
       '../src/Graphics/DynamicVertexBuffer.cpp',
+      '../src/Graphics/EffectParameter.cpp',
       '../src/Graphics/EffectPass.cpp',
       '../src/Graphics/GraphicsContext.cpp',
       '../src/Graphics/GraphicsDevice.cpp',

@@ -26,37 +26,29 @@ void CocoaTestGame::Initialize()
 	auto graphicsDevice = gameHost->GetGraphicsDevice();
 	
 	{
-		//auto blendState = BlendState::CreateAdditive(graphicsDevice);
-		//BlendDescription description;
-		//auto blendState = std::make_shared<BlendState>(graphicsDevice, description);
-		//graphicsContext->SetBlendState(blendState);
+		auto blendState = BlendState::CreateOpaque(graphicsDevice);
+		graphicsContext->SetBlendState(blendState);
 	}
 	{
-		//auto depthStencilState = DepthStencilState::CreateReadOnlyDepth(graphicsDevice);
-		DepthStencilDescription description;
-		auto depthStencilState = std::make_shared<DepthStencilState>(graphicsDevice, description);
+		auto depthStencilState = DepthStencilState::CreateReadWriteDepth(graphicsDevice);
 		graphicsContext->SetDepthStencilState(depthStencilState);
 	}
 	{
-		//auto rasterizerState = RasterizerState::CreateCullCounterClockwise(graphicsDevice);
-		RasterizerDescription description;
-		description.CullMode = CullMode::None;
-		auto rasterizerState = std::make_shared<RasterizerState>(graphicsDevice, description);
+		auto rasterizerState = RasterizerState::CreateCullCounterClockwise(graphicsDevice);
 		graphicsContext->SetRasterizerState(rasterizerState);
 	}
 	{
-		SamplerDescription description;
-		auto samplerState = std::make_shared<SamplerState>(graphicsDevice, description);
+		auto samplerState = SamplerState::CreateLinearClamp(graphicsDevice);
 		graphicsContext->SetSamplerState(0, samplerState);
 	}
 	{
 		using VertexCombined = CustomVertex<Vector3, Vector2>;
 		
 		std::array<VertexCombined, 4> const verticesCombo = {
-			Vector3( 0.8f, -0.8f, 0.0f), Vector2(1.0f, 0.0f),
-			Vector3( 0.8f,  0.8f, 0.0f), Vector2(1.0f, 1.0f),
-			Vector3(-0.8f,  0.8f, 0.0f), Vector2(0.0f, 1.0f),
 			Vector3(-0.8f, -0.8f, 0.0f), Vector2(0.0f, 0.0f),
+			Vector3(-0.8f,  0.8f, 0.0f), Vector2(0.0f, 1.0f),
+			Vector3( 0.8f,  0.8f, 0.0f), Vector2(1.0f, 1.0f),
+			Vector3( 0.8f, -0.8f, 0.0f), Vector2(1.0f, 0.0f),
 		};
 		vertexBuffer = std::make_shared<ImmutableVertexBuffer>(graphicsDevice,
 			VertexCombined::Declaration(), verticesCombo.data(), verticesCombo.size());
