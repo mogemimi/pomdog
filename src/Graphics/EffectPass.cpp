@@ -38,6 +38,7 @@ out VertexData {
 
 void main()
 {
+	gl_Position = vec4(Position.xyz, 1.0);
 	Out.Position = vec4(Position.xyz, 1.0);
 	Out.TextureCoord = TextureCoord.xy;
 }
