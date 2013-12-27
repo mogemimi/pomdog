@@ -50,14 +50,13 @@ void CocoaTestGame::Initialize()
 		graphicsContext->SetSamplerState(0, samplerState);
 	}
 	{
-		using VertexCombined = CustomVertex<
-			Vector3, Vector2//, Vector3
-		>;
-		std::array<VertexCombined, 4> verticesCombo = {
-			Vector3(+1.f, -1.f, 0.f), Vector2(1.f, 0.f), //Vector3(1.f, 0.f, 0.f),
-			Vector3(+1.f, +1.f, 0.f), Vector2(1.f, 1.f), //Vector3(0.f, 1.f, 0.f),
-			Vector3(-1.f, +1.f, 0.f), Vector2(0.f, 1.f), //Vector3(0.f, 0.f, 1.f),
-			Vector3(-1.f, -1.f, 0.f), Vector2(0.f, 0.f), //Vector3(0.f, 0.f, 0.f),
+		using VertexCombined = CustomVertex<Vector3, Vector2>;
+		
+		std::array<VertexCombined, 4> const verticesCombo = {
+			Vector3( 0.8f, -0.8f, 0.0f), Vector2(1.0f, 0.0f),
+			Vector3( 0.8f,  0.8f, 0.0f), Vector2(1.0f, 1.0f),
+			Vector3(-0.8f,  0.8f, 0.0f), Vector2(0.0f, 1.0f),
+			Vector3(-0.8f, -0.8f, 0.0f), Vector2(0.0f, 0.0f),
 		};
 		vertexBuffer = std::make_shared<ImmutableVertexBuffer>(graphicsDevice,
 			VertexCombined::Declaration(), verticesCombo.data(), verticesCombo.size());
@@ -66,7 +65,7 @@ void CocoaTestGame::Initialize()
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}
 	{
-		std::array<std::uint16_t, 6> indices = {
+		std::array<std::uint16_t, 6> const indices = {
 			0, 1, 2,
 			2, 3, 0
 		};

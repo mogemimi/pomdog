@@ -28,28 +28,6 @@ namespace GL4 {
 namespace {
 
 //-----------------------------------------------------------------------
-//struct VertexElementGL4
-//{
-//	GLuint StartSlot;
-//
-//	// Specifies the scalar data type.
-//	GLenum ScalarType;
-//
-//	// Must be 1, 2, 3, and 4.
-//	std::int16_t Components;
-//
-//	///@~Japanese
-//	/// @brief 頂点を構成する 1 要素のバイト単位のサイズです。
-//	std::uint16_t ByteWidth;
-//
-//	VertexElementGL4()
-//		: StartSlot  (0)
-//		, ScalarType (GL_FLOAT)
-//		, Components (4)
-//		, ByteWidth  (0)
-//	{}
-//};
-//-----------------------------------------------------------------------
 static ScalarTypeGL4 ToScalarType(GLenum attributeClass)
 {
 	switch (attributeClass)
@@ -409,6 +387,13 @@ static std::vector<InputBindingGL4> BuildInputBindings(
 	return std::move(result);
 }
 //-----------------------------------------------------------------------
+template <typename T> static
+GLubyte const* ComputeBufferOffset(T const offsetBytes)
+{
+	static_assert(std::is_unsigned<T>::value, "T is unsigned type.");
+	return reinterpret_cast<GLubyte const*>(0) + offsetBytes;
+}
+//-----------------------------------------------------------------------
 static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings,
 	std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers)
 {
@@ -439,7 +424,7 @@ static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings
 				attribute.ScalarType.value,
 				GL_FALSE,
 				strideBytes,
-				reinterpret_cast<GLvoid const*>(offsetBytes)
+				ComputeBufferOffset(offsetBytes)
 			);
 			#ifdef DEBUG
 			ErrorChecker::CheckError("glVertexAttribPointer", __FILE__, __LINE__);
@@ -522,9 +507,9 @@ void InputLayoutGL4::Apply(std::vector<std::shared_ptr<VertexBuffer>> const& ver
 	ErrorChecker::CheckError("glBindVertexArray", __FILE__, __LINE__);
 	#endif
 
-//	for (auto& bindings: inputBindings) {
-//		EnableAttributes(bindings.InputElements);
-//	}
+	//for (auto& bindings: inputBindings) {
+	//	EnableAttributes(bindings.InputElements);
+	//}
 	
 	ApplyInputBindings(inputBindings, vertexBuffers);
 }

@@ -53,6 +53,9 @@
           'dependencies': [
             'pomdog.gyp:pomdog-shared',
           ],
+          'defines': [
+            'POMDOG_USING_LIBRARY_EXPORTS=1',
+          ],
         }, {
           'dependencies': [
             'pomdog.gyp:pomdog-static',

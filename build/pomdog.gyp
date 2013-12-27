@@ -302,7 +302,6 @@
       'target_name': 'pomdog-testable',
       'product_name': 'pomdog-testable',
       'type': 'static_library',
-      'defines': ['POMDOG_USING_LIBRARY_EXPORTS=1'],
       'dependencies': [
       ],
       'include_dirs': [
@@ -316,7 +315,6 @@
       'target_name': 'pomdog-static',
       'product_name': 'pomdog', # libpomdog.a or libpomdog.lib
       'type': 'static_library',
-      'defines': ['POMDOG_USING_LIBRARY_EXPORTS=1'],
       'dependencies': [
       ],
       'include_dirs': [
