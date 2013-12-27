@@ -102,6 +102,10 @@ LinkShaders(VertexShaderGL4 const& vertexShader, PixelShaderGL4 const& pixelShad
 
 	glLinkProgram(program.value);
 
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glLinkProgram", __FILE__, __LINE__);
+	#endif
+
 	GLint linkSuccess = 0;
 	glGetProgramiv(program.value, GL_LINK_STATUS, &linkSuccess);
 
@@ -120,6 +124,7 @@ LinkShaders(VertexShaderGL4 const& vertexShader, PixelShaderGL4 const& pixelShad
 		glDeleteProgram(program.value);
 		return OptionalType::NullOptional;
 	}
+		
 	return program;
 }
 

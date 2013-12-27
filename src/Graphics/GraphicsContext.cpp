@@ -80,7 +80,7 @@ GraphicsContext::Impl::Impl(std::unique_ptr<NativeGraphicsContext> nativeGraphic
 	viewport.SetWidth(presentationParameters.BackBufferWidth);
 	viewport.SetHeight(presentationParameters.BackBufferHeight);
 	SetViewport(viewport);
-	
+		
 	//BuildResources();
 }
 //-----------------------------------------------------------------------

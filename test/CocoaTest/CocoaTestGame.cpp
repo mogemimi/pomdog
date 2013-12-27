@@ -26,10 +26,10 @@ void CocoaTestGame::Initialize()
 	auto graphicsDevice = gameHost->GetGraphicsDevice();
 	
 	{
-		auto blendState = BlendState::CreateAdditive(graphicsDevice);
+		//auto blendState = BlendState::CreateAdditive(graphicsDevice);
 		//BlendDescription description;
 		//auto blendState = std::make_shared<BlendState>(graphicsDevice, description);
-		graphicsContext->SetBlendState(blendState);
+		//graphicsContext->SetBlendState(blendState);
 	}
 	{
 		//auto depthStencilState = DepthStencilState::CreateReadOnlyDepth(graphicsDevice);

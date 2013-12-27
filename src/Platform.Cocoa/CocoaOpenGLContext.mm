@@ -25,6 +25,7 @@ CocoaOpenGLContext::CocoaOpenGLContext(NSOpenGLPixelFormat* pixelFormat_)
 #endif
 
 	openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext: nil];
+			
 	[openGLContext makeCurrentContext];
 }
 //-----------------------------------------------------------------------

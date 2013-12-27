@@ -29,6 +29,7 @@
 namespace Pomdog {
 namespace Details {
 namespace Cocoa {
+namespace {
 
 static auto WindowWillCloseEvent = EventCodeHelper::CreateCode("WindowWillClose");
 static auto WindowShouldCloseEvent = EventCodeHelper::CreateCode("WindowShouldClose");
@@ -92,6 +93,8 @@ static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 			
 	return std::make_shared<GraphicsContext>(std::move(nativeContext), presentationParameters);
 }
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 #pragma mark -
 #pragma mark CocoaGameHost::Impl
@@ -157,7 +160,11 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	presentationParameters.IsFullScreen = false; ///@todo Not implemented.
 
 	openGLContext = CreateOpenGLContext(presentationParameters.DepthFormat);
-
+	{
+		GLint const swapInterval = 1;
+		[openGLContext->GetNSOpenGLContext() setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
+	}
+	
 	graphicsDevice = std::make_shared<GraphicsDevice>(std::unique_ptr<GraphicsDeviceGL4>{new GraphicsDeviceGL4()});
 
 	graphicsContext = CreateGraphicsContext(openGLContext, gameWindow, presentationParameters);
