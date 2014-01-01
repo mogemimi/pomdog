@@ -19,6 +19,7 @@
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "GraphicsContextGL4.hpp"
 #include "ErrorChecker.hpp"
+#include "ShaderReflectionGL4.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -169,6 +170,8 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 	// build uniforms
 	// build input layout
 	// build effect parameters
+	
+	ShaderReflectionGL4::TestUniformBlocks(*this); // debug code
 }
 //-----------------------------------------------------------------------
 EffectPassGL4::~EffectPassGL4()

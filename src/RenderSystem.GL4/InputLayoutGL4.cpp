@@ -450,15 +450,13 @@ template<> struct TypesafeHelperGL4::OpenGLGetTraits<VertexArrayGL4>
 	constexpr static GLenum bufferObjectBinding = GL_VERTEX_ARRAY_BINDING;
 };
 //-----------------------------------------------------------------------
-InputLayoutGL4::InputLayoutGL4(EffectPassGL4* effectPass)
+InputLayoutGL4::InputLayoutGL4(EffectPassGL4 & effectPass)
 	: InputLayoutGL4(effectPass, {})
 {
 }
 //-----------------------------------------------------------------------
-InputLayoutGL4::InputLayoutGL4(EffectPassGL4* effectPass, std::vector<VertexBufferBinding> const& vertexBinding)
+InputLayoutGL4::InputLayoutGL4(EffectPassGL4 & effectPass, std::vector<VertexBufferBinding> const& vertexBinding)
 {
-	POMDOG_ASSERT(effectPass != nullptr);
-
 	// Build vertex array object
 	inputLayout = ([](){
 		VertexArrayGL4 vertexArray;
@@ -477,7 +475,7 @@ InputLayoutGL4::InputLayoutGL4(EffectPassGL4* effectPass, std::vector<VertexBuff
 	ErrorChecker::CheckError("glBindVertexArray", __FILE__, __LINE__);
 	#endif
 	
-	auto const attributes = BuildAttributes(effectPass->GetShaderProgram());
+	auto const attributes = BuildAttributes(effectPass.GetShaderProgram());
 	
 	if (vertexBinding.empty()) {
 		this->inputBindings = BuildInputBindings(attributes);

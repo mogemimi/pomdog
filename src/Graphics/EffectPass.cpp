@@ -49,11 +49,24 @@ in VertexData {
 	vec2 TextureCoord;
 } In;
 
+uniform Material {
+	vec4 Ambient;
+	vec4 Diffuse[2];
+	vec3 Specular;
+	float Emissive[4];
+};
+
+uniform ViewProjection {
+	mat3 View;
+	mat4 Projection;
+};
+
 out vec4 FragColor;
 
 void main()
 {
-	FragColor = vec4(In.TextureCoord.xy, 1.0, 1.0);
+	FragColor = vec4(In.TextureCoord.xy, 1.0, 1.0)
+	* Ambient * Diffuse[0].r * Specular.r * Emissive[3] * View[0].x * Projection[0].y; // Debug code
 }
 //====================================================================
 );

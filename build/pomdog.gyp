@@ -274,6 +274,8 @@
       '../src/RenderSystem.GL4/RasterizerStateGL4.hpp',
       '../src/RenderSystem.GL4/SamplerStateGL4.cpp',
       '../src/RenderSystem.GL4/SamplerStateGL4.hpp',
+      '../src/RenderSystem.GL4/ShaderReflectionGL4.cpp',
+      '../src/RenderSystem.GL4/ShaderReflectionGL4.hpp',
       '../src/RenderSystem.GL4/TypesafeHelperGL4.hpp',
       '../src/RenderSystem.GL4/VertexBufferGL4.cpp',
       '../src/RenderSystem.GL4/VertexBufferGL4.hpp',

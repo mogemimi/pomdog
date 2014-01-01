@@ -64,9 +64,9 @@ class InputLayoutGL4: public NativeInputLayout
 public:
 	InputLayoutGL4() = delete;
 	
-	explicit InputLayoutGL4(EffectPassGL4* effectPass);
+	explicit InputLayoutGL4(EffectPassGL4 & effectPass);
 	
-	InputLayoutGL4(EffectPassGL4* effectPass, std::vector<VertexBufferBinding> const& vertexBufferBinding);
+	InputLayoutGL4(EffectPassGL4 & effectPass, std::vector<VertexBufferBinding> const& vertexBufferBinding);
 	
 	~InputLayoutGL4();
 

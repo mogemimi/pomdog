@@ -76,7 +76,7 @@ GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass* nativeEffectPass)
 	if (!effectPassGL4) {
 		return std::unique_ptr<NativeInputLayout>();
 	}
-	return MakeUnique<InputLayoutGL4>(effectPassGL4);
+	return MakeUnique<InputLayoutGL4>(*effectPassGL4);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeInputLayout>
@@ -89,7 +89,7 @@ GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass* nativeEffectPass,
 	if (!effectPassGL4) {
 		return std::unique_ptr<NativeInputLayout>();
 	}
-	return MakeUnique<InputLayoutGL4>(effectPassGL4, vertexBufferBindings);
+	return MakeUnique<InputLayoutGL4>(*effectPassGL4, vertexBufferBindings);
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

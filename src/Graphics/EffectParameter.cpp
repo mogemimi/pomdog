@@ -17,6 +17,7 @@
 #include <Pomdog/Math/Matrix4x4.hpp>
 #include <Pomdog/Math/Quaternion.hpp>
 #include <Pomdog/Math/Color.hpp>
+#include <Pomdog/Graphics/EffectAnnotation.hpp>
 #include "../RenderSystem/NativeEffectParameter.hpp"
 #include "../Utility/MakeUnique.hpp"
 
@@ -26,6 +27,9 @@ namespace {
 class DummyEffectParameter final: public Details::RenderSystem::NativeEffectParameter
 {
 public:
+	EffectAnnotation GetAnnotation() const override
+	{ return EffectAnnotation{}; }
+
 	bool GetValueBool() const override
 	{ return false; }
 	
@@ -104,7 +108,8 @@ EffectParameter::~EffectParameter()
 //-----------------------------------------------------------------------
 EffectAnnotation EffectParameter::GetAnnotation() const
 {
-	return effectAnnotation;
+	POMDOG_ASSERT(nativeEffectParameter);
+	return nativeEffectParameter->GetAnnotation();
 }
 //-----------------------------------------------------------------------
 bool EffectParameter::GetValueBool() const

@@ -18,7 +18,6 @@
 #include "../Config/Export.hpp"
 #include "../Math/detail/ForwardDeclarations.hpp"
 #include "detail/ForwardDeclarations.hpp"
-#include "EffectAnnotation.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -144,7 +143,6 @@ public:
 	
 private:
 	std::unique_ptr<Details::RenderSystem::NativeEffectParameter> nativeEffectParameter;
-	EffectAnnotation effectAnnotation;
 };
 	
 /// @}

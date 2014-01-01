@@ -56,11 +56,6 @@ public:
 	/// @brief 頂点宣言の要素のリストを取得します。
 	std::vector<VertexElement> const& GetVertexElements() const;
 
-	///@~Japanese
-	/// @brief 頂点の構造を表す一意の識別子を取得します。この関数は内部的な実装で使用されます。
-	/// @remarks 入力レイアウトの生成に使用されます。
-	std::uint32_t GetInternalHashKey() const;
-
 private:
 	///@~Japanese
 	/// @brief 頂点宣言の要素のリストです。
@@ -69,10 +64,6 @@ private:
 	///@~Japanese
 	/// @brief 1 つの頂点の先頭から次の頂点までのバイト数です。
 	std::uint32_t strideBytes;
-
-	///@~Japanese
-	/// @brief 頂点の構造を表す一意の識別子です。
-	std::uint32_t internalHashKey;
 };
 
 /// @}

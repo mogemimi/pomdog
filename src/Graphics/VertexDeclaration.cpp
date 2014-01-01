@@ -9,7 +9,6 @@
 #include <Pomdog/Graphics/VertexDeclaration.hpp>
 #include <algorithm>
 #include <Pomdog/Utility/Assert.hpp>
-#include "../Utility/HashingHelper.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
@@ -58,7 +57,7 @@ VertexDeclaration::VertexDeclaration(std::vector<VertexElement> && vertexElement
 	, strideBytes(AccumulateStrideBytes(elements))
 {
 	POMDOG_ASSERT(!elements.empty());
-	this->internalHashKey = HashingHelper::Hash(elements.data(), elements.size());
+	POMDOG_ASSERT(strideBytes > 0);
 }
 //-----------------------------------------------------------------------
 VertexDeclaration::VertexDeclaration(std::initializer_list<VertexElement> vertexElements)
@@ -66,7 +65,7 @@ VertexDeclaration::VertexDeclaration(std::initializer_list<VertexElement> vertex
 	, strideBytes(AccumulateStrideBytes(elements))
 {
 	POMDOG_ASSERT(!elements.empty());
-	this->internalHashKey = HashingHelper::Hash(elements.data(), elements.size());
+	POMDOG_ASSERT(strideBytes > 0);
 }
 //-----------------------------------------------------------------------
 VertexDeclaration::VertexDeclaration(std::vector<VertexElement> const& vertexElements)
@@ -74,7 +73,7 @@ VertexDeclaration::VertexDeclaration(std::vector<VertexElement> const& vertexEle
 	, strideBytes(AccumulateStrideBytes(elements))
 {
 	POMDOG_ASSERT(!elements.empty());
-	this->internalHashKey = HashingHelper::Hash(elements.data(), elements.size());
+	POMDOG_ASSERT(strideBytes > 0);
 }
 //-----------------------------------------------------------------------
 VertexDeclaration::VertexDeclaration(VertexElement const* vertexElements, std::size_t elementCount)
@@ -90,7 +89,7 @@ VertexDeclaration::VertexDeclaration(VertexElement const* vertexElements, std::s
 	POMDOG_ASSERT(!elements.empty());
 
 	strideBytes = AccumulateStrideBytes(elements);
-	this->internalHashKey = HashingHelper::Hash(elements.data(), elements.size());
+	POMDOG_ASSERT(strideBytes > 0);
 }
 //-----------------------------------------------------------------------
 std::vector<VertexElement> const& VertexDeclaration::GetVertexElements() const
@@ -101,11 +100,6 @@ std::vector<VertexElement> const& VertexDeclaration::GetVertexElements() const
 std::uint32_t VertexDeclaration::GetStrideBytes() const
 {
 	return strideBytes;
-}
-//-----------------------------------------------------------------------
-std::uint32_t VertexDeclaration::GetInternalHashKey() const
-{
-	return internalHashKey;
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

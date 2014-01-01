@@ -49,9 +49,9 @@ namespace Details {
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
 #	// BSD
 #	define POMDOG_PLATFORM_BSD
-#elif (defined(_XBOX_VER) || defined(_XBOX)) && (200 <=_XBOX_VER)
-#	// Xbox 360 or later
-#	define POMDOG_PLATFORM_XBOX360
+#elif defined(_XBOX_ONE) && defined(__TITLE)
+#	// Xbox One
+#	define POMDOG_PLATFORM_XBOX_ONE
 #elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 #	// Windows
 #	define POMDOG_PLATFORM_WIN32

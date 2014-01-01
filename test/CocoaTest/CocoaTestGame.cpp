@@ -66,10 +66,39 @@ void CocoaTestGame::Initialize()
 		indexBuffer = std::make_shared<ImmutableIndexBuffer>(graphicsDevice,
 			IndexElementSize::SixteenBits, indices.data(), indices.size());
 	}
+	{
+//		// Draft:
+//		struct ViewProjection
+//		{
+//			Matrix4x4 view;
+//			Matrix4x4 projection;
+//		};
+//	
+//		struct Material
+//		{
+//			Color ambient;
+//			Color diffuse;
+//			Color specular;
+//		};
+//
+//		ViewProjection viewProjection;
+//		Material material;
+//		
+//		// set value
+//		effectPass->Parameter("World")->SetValue(Float4x4::Identity);
+//		effectPass->Parameter("ViewProjection")->SetValue(viewProjection);
+//		effectPass->Parameter("Material")->SetValue(material);
+//		
+//		// shader reflection
+//      auto shaderReflection = std::make_unique<ShaderReflection>(graphicsDevice);
+//		auto parameterAnnotations = shaderReflection->GetParameters(effectPass);
+	}
 }
 //-----------------------------------------------------------------------
 void CocoaTestGame::Update()
 {
+//	auto parameter = effectPass->Parameters("AmbientColor");
+//	parameter->SetValue(Color{0.9f, 0.7f, 0.5f, 1.0f});
 }
 //-----------------------------------------------------------------------
 void CocoaTestGame::Draw()
