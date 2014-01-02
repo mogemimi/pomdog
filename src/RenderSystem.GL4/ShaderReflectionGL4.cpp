@@ -8,8 +8,6 @@
 
 #include "ShaderReflectionGL4.hpp"
 #include <utility>
-#include <string>
-#include <vector>
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LoggingLevel.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
@@ -73,25 +71,6 @@ std::vector<GLuint> GetActiveUniformBlockIndices(ShaderProgramGL4 const& shaderP
 	std::vector<GLuint> result(uniformIndices.begin(), uniformIndices.end());
 	return std::move(result);
 }
-//-----------------------------------------------------------------------
-struct UniformVariableGL4
-{
-	std::string Name;
-	GLuint Offset;
-	GLenum ByteLength;
-	GLenum Type;
-	GLuint ArrayStride;
-	GLuint MatrixStride;
-	bool IsRowMajor;
-};
-
-struct UniformBlockGL4
-{
-	std::vector<UniformVariableGL4> Uniforms;
-	std::string Name;
-	GLuint StartSlot;
-	GLsizei ByteConstants;
-};
 //-----------------------------------------------------------------------
 template <typename Func>
 static void
@@ -171,9 +150,11 @@ EnumerateUniformBlocks(ShaderProgramGL4 const& shaderProgram)
 		UniformBlockGL4 uniformBlock;
 		
 		uniformBlock.Name = GetActiveUniformBlockName(shaderProgram, uniformBlockIndex);
-		uniformBlock.StartSlot = GetActiveUniformBlockIntValue(shaderProgram, uniformBlockIndex, GL_UNIFORM_BLOCK_BINDING);
 		uniformBlock.ByteConstants = GetActiveUniformBlockIntValue(shaderProgram, uniformBlockIndex, GL_UNIFORM_BLOCK_DATA_SIZE);
+		//uniformBlock.BindingPoint = GetActiveUniformBlockIntValue(shaderProgram, uniformBlockIndex, GL_UNIFORM_BLOCK_BINDING);
 		uniformBlock.Uniforms = EnumerateUniformVariables(shaderProgram, uniformBlockIndex);
+		//uniformBlock.BlockIndex = uniformBlockIndex;
+		uniformBlock.BlockIndex = glGetUniformBlockIndex(shaderProgram.value, uniformBlock.Name.data());
 		
 		uniformBlocks.emplace_back(std::move(uniformBlock));
 	}
@@ -181,15 +162,10 @@ EnumerateUniformBlocks(ShaderProgramGL4 const& shaderProgram)
 	return std::move(uniformBlocks);
 }
 //-----------------------------------------------------------------------
-
-}// unnamed namespace
-//-----------------------------------------------------------------------
-void ShaderReflectionGL4::TestUniformBlocks(EffectPassGL4 & effectPass)
+#ifdef DEBUG
+static
+void DebugLogUniformBlocks(std::vector<UniformBlockGL4> const& uniformBlocks)
 {
-	auto shaderProgram = effectPass.GetShaderProgram();
-
-	auto uniformBlocks = EnumerateUniformBlocks(shaderProgram);
-	
 	auto stream = Log::Stream(LoggingLevel::Internal);
 	
 	for (auto const& uniformBlock: uniformBlocks)
@@ -197,13 +173,13 @@ void ShaderReflectionGL4::TestUniformBlocks(EffectPassGL4 & effectPass)
 		stream
 		<< "-[UniformBlock]-------------------\n"
 		<< "         Name: " << uniformBlock.Name << "\n"
+		<< "   BlockIndex: " << uniformBlock.BlockIndex << "\n"
 		<< "ByteConstants: " << uniformBlock.ByteConstants << "\n"
-		<< "    StartSlot: " << uniformBlock.StartSlot << "\n"
 		<< "Uniforms.size: " << uniformBlock.Uniforms.size() << "\n";
-				
+
 		for (auto const& uniform: uniformBlock.Uniforms) {
 			stream
-			<< "- - - - - - - - - - - - - -\n"
+			<< ":- - - - - - - - - - - - - -\n"
 			<< "         Name: " << uniform.Name << "\n"
 			<< "       Offset: " << uniform.Offset << "\n"
 			<< "   ByteLength: " << uniform.ByteLength << "\n"
@@ -215,6 +191,23 @@ void ShaderReflectionGL4::TestUniformBlocks(EffectPassGL4 & effectPass)
 	}
 	
 	stream << "--------------------\n";
+}
+#endif
+//-----------------------------------------------------------------------
+
+}// unnamed namespace
+//-----------------------------------------------------------------------
+std::vector<UniformBlockGL4> ShaderReflectionGL4::GetUniformBlocks(EffectPassGL4 & effectPass)
+{
+	auto shaderProgram = effectPass.GetShaderProgram();
+
+	auto uniformBlocks = EnumerateUniformBlocks(shaderProgram);
+	
+	#ifdef DEBUG
+	DebugLogUniformBlocks(uniformBlocks);
+	#endif
+	
+	return std::move(uniformBlocks);
 }
 
 }// namespace GL4

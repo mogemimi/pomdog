@@ -47,10 +47,6 @@ public:
 	~EffectParameter();
 
 	///@~Japanese
-	/// @brief エフェクトパラメータのメタデータを取得します。
-	EffectAnnotation GetAnnotation() const;
-
-	///@~Japanese
 	/// @brief bool 値として取得します。
 	/// @details キャストできなかった場合 std::runtime_error を投げます。
 	bool GetValueBool() const;

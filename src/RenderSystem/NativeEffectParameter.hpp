@@ -30,10 +30,7 @@ public:
 	NativeEffectParameter & operator=(NativeEffectParameter const&) = delete;
 
 	virtual ~NativeEffectParameter() = default;
-	
-	///@copydoc EffectParameter
-	virtual EffectAnnotation GetAnnotation() const = 0;
-	
+
 	///@copydoc EffectParameter
 	virtual bool GetValueBool() const = 0;
 

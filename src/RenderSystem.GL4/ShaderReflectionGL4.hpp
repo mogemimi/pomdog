@@ -13,6 +13,8 @@
 #	pragma once
 #endif
 
+#include <string>
+#include <vector>
 #include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Config/FundamentalTypes.hpp>
 
@@ -23,12 +25,29 @@ namespace GL4 {
 
 class EffectPassGL4;
 
+struct UniformVariableGL4
+{
+	std::string Name;
+	GLuint Offset;
+	GLenum ByteLength;
+	GLenum Type;
+	GLuint ArrayStride;
+	GLuint MatrixStride;
+	bool IsRowMajor;
+};
+
+struct UniformBlockGL4
+{
+	std::vector<UniformVariableGL4> Uniforms;
+	std::string Name;
+	std::uint32_t ByteConstants;
+	std::uint32_t BlockIndex;
+};
+
 class ShaderReflectionGL4
 {
 public:
-	//static void TestUniformsWithoutUniformBlock(EffectPassGL4 & effectPass);
-
-	static void TestUniformBlocks(EffectPassGL4 & effectPass);
+	static std::vector<UniformBlockGL4> GetUniformBlocks(EffectPassGL4 & effectPass);
 };
 
 }// namespace GL4

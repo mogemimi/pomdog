@@ -21,10 +21,21 @@
 #include "ErrorChecker.hpp"
 #include "ShaderReflectionGL4.hpp"
 
+// Debug
+#include "ConstantBufferGL4.hpp"
+#include "../Utility/MakeUnique.hpp"
+
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
+
+struct ConstantBufferBindingGL4
+{
+	std::unique_ptr<ConstantBufferGL4> ConstantBuffer;
+	std::uint32_t SlotIndex;
+};
+
 //-----------------------------------------------------------------------
 namespace {
 namespace Tags {
@@ -166,12 +177,27 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 			"Failed to link shader program.", "EffectPassGL4::EffectPassGL4");
 	}
 	
-	// build attributes
-	// build uniforms
-	// build input layout
-	// build effect parameters
+	///@note Drafts:
+	auto uniformBlocks = ShaderReflectionGL4::GetUniformBlocks(*this);
 	
-	ShaderReflectionGL4::TestUniformBlocks(*this); // debug code
+	std::vector<ConstantBufferBindingGL4> constantBufferBindings;
+	{// [Draft] create constant buffers:
+		std::uint32_t slotIndex = 0;
+		for (auto & uniformBlock: uniformBlocks) {
+			ConstantBufferBindingGL4 binding;
+			binding.ConstantBuffer = MakeUnique<ConstantBufferGL4>(uniformBlock.ByteConstants);
+			binding.SlotIndex = slotIndex;
+
+			glUniformBlockBinding(shaderProgram->value, uniformBlock.BlockIndex, binding.SlotIndex);
+			
+			++slotIndex;
+		}
+	}
+	{// [Draft] apply constant buffers:
+		for (auto & binding: constantBufferBindings) {
+			binding.ConstantBuffer->Apply(binding.SlotIndex);
+		}
+	}
 }
 //-----------------------------------------------------------------------
 EffectPassGL4::~EffectPassGL4()

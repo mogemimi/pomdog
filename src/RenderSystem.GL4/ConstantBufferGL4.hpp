@@ -43,6 +43,8 @@ public:
 
 	void SetData(void const* source, std::uint32_t byteLength);
 	
+	void Apply(std::uint32_t slotIndex);
+	
 private:
 	Optional<ConstantBufferObjectGL4> bufferObject;
 };

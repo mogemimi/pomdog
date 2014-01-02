@@ -13,7 +13,6 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Graphics/EffectAnnotation.hpp>
 #include "../RenderSystem/NativeEffectParameter.hpp"
 
 namespace Pomdog {
@@ -24,9 +23,6 @@ namespace GL4 {
 class EffectParameterGL4 final: public NativeEffectParameter
 {
 public:
-	///@copydoc EffectParameter
-	EffectAnnotation GetAnnotation() const override;
-
 	///@copydoc EffectParameter
 	bool GetValueBool() const override;
 	
@@ -129,7 +125,6 @@ public:
 	void Apply();
 	
 private:
-	EffectAnnotation effectAnnotation;
 };
 
 }// namespace GL4

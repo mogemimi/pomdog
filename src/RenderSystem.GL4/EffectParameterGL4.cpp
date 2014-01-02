@@ -21,11 +21,6 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
-EffectAnnotation EffectParameterGL4::GetAnnotation() const
-{
-	return effectAnnotation;
-}
-//-----------------------------------------------------------------------
 bool EffectParameterGL4::GetValueBool() const
 {
 	///@todo Not implemented

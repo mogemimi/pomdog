@@ -83,6 +83,25 @@ void ConstantBufferGL4::SetData(void const* source, std::uint32_t byteLength)
 	#endif
 }
 //-----------------------------------------------------------------------
+void ConstantBufferGL4::Apply(std::uint32_t slotIndex)
+{
+	POMDOG_ASSERT(bufferObject);
+	
+	#ifdef DEBUG
+	{
+		static auto const maxUniformBufferBindings = ([]() {
+			GLint value = 0;
+			glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &value);
+			return value;
+		})();
+		
+		POMDOG_ASSERT(slotIndex < static_cast<std::uint32_t>(maxUniformBufferBindings));
+	}
+	#endif
+	
+	glBindBufferBase(GL_UNIFORM_BUFFER, slotIndex, bufferObject->value);
+}
+//-----------------------------------------------------------------------
 }// namespace GL4
 }// namespace RenderSystem
 }// namespace Details
