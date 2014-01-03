@@ -10,6 +10,7 @@
 #include <type_traits>
 #include <array>
 #include <string>
+#include <algorithm>
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LoggingLevel.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
@@ -23,19 +24,12 @@
 
 // Debug
 #include "ConstantBufferGL4.hpp"
-#include "../Utility/MakeUnique.hpp"
+#include "EffectParameterGL4.hpp"
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
-
-struct ConstantBufferBindingGL4
-{
-	std::unique_ptr<ConstantBufferGL4> ConstantBuffer;
-	std::uint32_t SlotIndex;
-};
-
 //-----------------------------------------------------------------------
 namespace {
 namespace Tags {
@@ -177,33 +171,56 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 			"Failed to link shader program.", "EffectPassGL4::EffectPassGL4");
 	}
 	
-	///@note Drafts:
-	auto uniformBlocks = ShaderReflectionGL4::GetUniformBlocks(*this);
-	
-	std::vector<ConstantBufferBindingGL4> constantBufferBindings;
-	{// [Draft] create constant buffers:
+	// Create default constant buffers:
+	auto uniformBlocks = ShaderReflectionGL4::GetNativeUniformBlocks(*shaderProgram);
+	{
 		std::uint32_t slotIndex = 0;
 		for (auto & uniformBlock: uniformBlocks) {
 			ConstantBufferBindingGL4 binding;
-			binding.ConstantBuffer = MakeUnique<ConstantBufferGL4>(uniformBlock.ByteConstants);
+			//binding.ConstantBuffer = std::make_shared<ConstantBufferGL4>(uniformBlock.ByteConstants);
+			binding.Name = uniformBlock.Name;
 			binding.SlotIndex = slotIndex;
-
-			glUniformBlockBinding(shaderProgram->value, uniformBlock.BlockIndex, binding.SlotIndex);
 			
+			glUniformBlockBinding(shaderProgram->value, uniformBlock.BlockIndex, binding.SlotIndex);
+			constantBufferBindings.push_back(std::move(binding));
 			++slotIndex;
-		}
-	}
-	{// [Draft] apply constant buffers:
-		for (auto & binding: constantBufferBindings) {
-			binding.ConstantBuffer->Apply(binding.SlotIndex);
 		}
 	}
 }
 //-----------------------------------------------------------------------
 EffectPassGL4::~EffectPassGL4()
 {
+	constantBufferBindings.clear();
+
 	if (shaderProgram) {
 		glDeleteProgram(shaderProgram->value);
+	}
+}
+//-----------------------------------------------------------------------
+void EffectPassGL4::SetConstant(std::string const& constantName, std::shared_ptr<NativeEffectParameter> const& effectParameter)
+{
+	auto iter = std::find_if(std::begin(constantBufferBindings), std::end(constantBufferBindings),
+		[&constantName](ConstantBufferBindingGL4 const& binding) { return binding.Name == constantName; });
+
+	POMDOG_ASSERT(std::end(constantBufferBindings) != iter);
+
+	auto nativeParameter = std::dynamic_pointer_cast<EffectParameterGL4>(effectParameter);
+	POMDOG_ASSERT(effectParameter);
+
+	if (std::end(constantBufferBindings) != iter) {
+		iter->ConstantBuffer = nativeParameter;
+	}
+}
+//-----------------------------------------------------------------------
+void EffectPassGL4::SetConstant(std::string const& constantName)
+{
+	auto iter = std::find_if(std::begin(constantBufferBindings), std::end(constantBufferBindings),
+		[&constantName](ConstantBufferBindingGL4 const& binding) { return binding.Name == constantName; });
+
+	POMDOG_ASSERT(std::end(constantBufferBindings) != iter);
+
+	if (std::end(constantBufferBindings) != iter) {
+		iter->ConstantBuffer.reset();
 	}
 }
 //-----------------------------------------------------------------------
@@ -230,9 +247,14 @@ void EffectPassGL4::ApplyShaders()
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glUseProgram", __FILE__, __LINE__);
 	#endif
-
-	//POMDOG_ASSERT(uniforms);
-	//uniforms->ApplyUniforms();
+	
+	// Apply constant buffers:
+	for (auto & binding: constantBufferBindings)
+	{
+		if (binding.ConstantBuffer) {
+			binding.ConstantBuffer->Apply(binding.SlotIndex);
+		}
+	}
 }
 //-----------------------------------------------------------------------
 ShaderProgramGL4 EffectPassGL4::GetShaderProgram() const

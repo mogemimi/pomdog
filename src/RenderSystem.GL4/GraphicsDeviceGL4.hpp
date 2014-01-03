@@ -60,12 +60,20 @@ public:
 		ShaderBytecode const& pixelShaderBytecode) override;
 	
 	///@copydoc NativeGraphicsDevice
-	std::unique_ptr<NativeInputLayout>
-	CreateInputLayout(NativeEffectPass* nativeEffectPass) override;
+	std::unique_ptr<NativeEffectParameter> CreateEffectParameter(
+		std::uint32_t byteConstants) override;
+	
+	///@copydoc NativeGraphicsDevice
+	std::unique_ptr<NativeShaderReflection> CreateShaderReflection(
+		NativeEffectPass & nativeEffectPass) override;
 	
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeInputLayout>
-	CreateInputLayout(NativeEffectPass* nativeEffectPass,
+	CreateInputLayout(NativeEffectPass & nativeEffectPass) override;
+	
+	///@copydoc NativeGraphicsDevice
+	std::unique_ptr<NativeInputLayout>
+	CreateInputLayout(NativeEffectPass & nativeEffectPass,
 		std::vector<VertexBufferBinding> const& vertexBufferBindings) override;
 };
 

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -11,9 +11,8 @@
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LoggingLevel.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
-#include "EffectPassGL4.hpp"
+#include "../RenderSystem/EffectBufferDescription.hpp"
 #include "ErrorChecker.hpp"
-
 
 namespace Pomdog {
 namespace Details {
@@ -197,10 +196,13 @@ void DebugLogUniformBlocks(std::vector<UniformBlockGL4> const& uniformBlocks)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-std::vector<UniformBlockGL4> ShaderReflectionGL4::GetUniformBlocks(EffectPassGL4 & effectPass)
+ShaderReflectionGL4::ShaderReflectionGL4(ShaderProgramGL4 const& shaderProgramIn)
+	: shaderProgram(shaderProgramIn)
 {
-	auto shaderProgram = effectPass.GetShaderProgram();
-
+}
+//-----------------------------------------------------------------------
+std::vector<UniformBlockGL4> ShaderReflectionGL4::GetNativeUniformBlocks(ShaderProgramGL4 const& shaderProgram)
+{
 	auto uniformBlocks = EnumerateUniformBlocks(shaderProgram);
 	
 	#ifdef DEBUG
@@ -208,6 +210,23 @@ std::vector<UniformBlockGL4> ShaderReflectionGL4::GetUniformBlocks(EffectPassGL4
 	#endif
 	
 	return std::move(uniformBlocks);
+}
+//-----------------------------------------------------------------------
+std::vector<EffectBufferDescription> ShaderReflectionGL4::GetConstantBuffers() const
+{
+	auto uniformBlocks = EnumerateUniformBlocks(shaderProgram);
+	
+	std::vector<EffectBufferDescription> result;
+	
+	for (auto & uniformBlock: uniformBlocks)
+	{
+		EffectBufferDescription description;
+		description.Name = uniformBlock.Name;
+		description.ByteConstants = uniformBlock.ByteConstants;
+		result.push_back(std::move(description));
+	}
+	
+	return std::move(result);
 }
 
 }// namespace GL4

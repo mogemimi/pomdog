@@ -11,10 +11,12 @@
 #include "BlendStateGL4.hpp"
 #include "DepthStencilStateGL4.hpp"
 #include "EffectPassGL4.hpp"
+#include "EffectParameterGL4.hpp"
 #include "IndexBufferGL4.hpp"
 #include "InputLayoutGL4.hpp"
 #include "RasterizerStateGL4.hpp"
 #include "SamplerStateGL4.hpp"
+#include "ShaderReflectionGL4.hpp"
 #include "VertexBufferGL4.hpp"
 #include "../Utility/MakeUnique.hpp"
 
@@ -67,29 +69,47 @@ GraphicsDeviceGL4::CreateEffectPass(ShaderBytecode const& vertexShaderBytecode, 
 	return MakeUnique<EffectPassGL4>(vertexShaderBytecode, pixelShaderBytecode);
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeInputLayout>
-GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass* nativeEffectPass)
+std::unique_ptr<NativeEffectParameter>
+GraphicsDeviceGL4::CreateEffectParameter(std::uint32_t byteConstants)
 {
-	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(nativeEffectPass);
+	return MakeUnique<EffectParameterGL4>(byteConstants);
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeShaderReflection>
+GraphicsDeviceGL4::CreateShaderReflection(NativeEffectPass & nativeEffectPass)
+{
+	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(&nativeEffectPass);
 	POMDOG_ASSERT(effectPassGL4 != nullptr);
 	
 	if (!effectPassGL4) {
-		return std::unique_ptr<NativeInputLayout>();
+		return std::unique_ptr<ShaderReflectionGL4>();
 	}
-	return MakeUnique<InputLayoutGL4>(*effectPassGL4);
+	return MakeUnique<ShaderReflectionGL4>(effectPassGL4->GetShaderProgram());
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeInputLayout>
-GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass* nativeEffectPass,
-	std::vector<VertexBufferBinding> const& vertexBufferBindings)
+GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass & nativeEffectPass)
 {
-	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(nativeEffectPass);
+	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(&nativeEffectPass);
 	POMDOG_ASSERT(effectPassGL4 != nullptr);
 	
 	if (!effectPassGL4) {
-		return std::unique_ptr<NativeInputLayout>();
+		return std::unique_ptr<InputLayoutGL4>();
 	}
-	return MakeUnique<InputLayoutGL4>(*effectPassGL4, vertexBufferBindings);
+	return MakeUnique<InputLayoutGL4>(effectPassGL4->GetShaderProgram());
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeInputLayout>
+GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass & nativeEffectPass,
+	std::vector<VertexBufferBinding> const& vertexBufferBindings)
+{
+	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(&nativeEffectPass);
+	POMDOG_ASSERT(effectPassGL4 != nullptr);
+	
+	if (!effectPassGL4) {
+		return std::unique_ptr<InputLayoutGL4>();
+	}
+	return MakeUnique<InputLayoutGL4>(effectPassGL4->GetShaderProgram(), vertexBufferBindings);
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

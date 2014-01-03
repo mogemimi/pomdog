@@ -10,18 +10,21 @@
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/EffectParameter.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
-#include "../Utility/MakeUnique.hpp"
+#include "../RenderSystem/EffectBufferDescription.hpp"
 #include "../RenderSystem/NativeEffectPass.hpp"
+#include "../RenderSystem/NativeEffectParameter.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
+#include "../RenderSystem/NativeShaderReflection.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
 namespace {
 
-static auto dummyParameter = Details::MakeUnique<EffectParameter>();
+static auto dummyParameter = std::make_shared<EffectParameter>();
 
 using Details::RenderSystem::ShaderBytecode;
+using Details::RenderSystem::NativeEffectParameter;
 
 #define POMDOG_TOSTRING_SORRY_FOR_USING_MACRO(x) \
 	"#version 330 \n" + std::string(#x)
@@ -80,7 +83,9 @@ EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	POMDOG_ASSERT(graphicsContextIn);
 	POMDOG_ASSERT(!this->graphicsContext.expired());
 
-	nativeEffectPass = graphicsDevice->GetNativeGraphicsDevice()->CreateEffectPass(
+	auto nativeDevice = graphicsDevice->GetNativeGraphicsDevice();
+
+	nativeEffectPass = nativeDevice->CreateEffectPass(
 		ShaderBytecode{
 			vertexShader.data(),
 			vertexShader.size()
@@ -90,10 +95,35 @@ EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 			pixelShader.size()
 		}
 	);
+	
+	// Create shader reflection:
+	POMDOG_ASSERT(nativeEffectPass);
+	auto shaderReflection = nativeDevice->CreateShaderReflection(*nativeEffectPass);
+	
+	POMDOG_ASSERT(shaderReflection);
+	auto constantBuffers = shaderReflection->GetConstantBuffers();
+	
+	// Create effect parameters:
+	for (auto & constantBuffer: constantBuffers)
+	{
+		auto effectParameter = std::make_shared<EffectParameter>(graphicsDevice, constantBuffer.ByteConstants);
+		effectParameters[constantBuffer.Name] = std::move(effectParameter);
+	}
+	
+	// Bind constant buffers:
+	for (auto & parameter: effectParameters)
+	{
+		std::shared_ptr<NativeEffectParameter> nativeEffectParameter(
+			parameter.second, parameter.second->GetNativeEffectParameter());
+
+		nativeEffectPass->SetConstant(parameter.first, nativeEffectParameter);
+	}
 }
 //-----------------------------------------------------------------------
 EffectPass::~EffectPass()
 {
+	effectParameters.clear();
+	nativeEffectPass.reset();
 }
 //-----------------------------------------------------------------------
 void EffectPass::Apply()
@@ -106,7 +136,7 @@ void EffectPass::Apply()
 	}
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<EffectParameter> const& EffectPass::Parameters(std::string const& parameterName) const
+std::shared_ptr<EffectParameter> const& EffectPass::Parameters(std::string const& parameterName) const
 {
 	POMDOG_ASSERT(!parameterName.empty());
 	POMDOG_ASSERT(!effectParameters.empty());

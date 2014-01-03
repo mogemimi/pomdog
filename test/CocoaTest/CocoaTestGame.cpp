@@ -66,7 +66,7 @@ void CocoaTestGame::Initialize()
 		indexBuffer = std::make_shared<ImmutableIndexBuffer>(graphicsDevice,
 			IndexElementSize::SixteenBits, indices.data(), indices.size());
 	}
-	{
+//	{
 //		// Draft:
 //		struct ViewProjection
 //		{
@@ -84,14 +84,23 @@ void CocoaTestGame::Initialize()
 //		ViewProjection viewProjection;
 //		Material material;
 //		
+//		// shared constant buffer
+//		auto effectConstant = effectPass->GetConstant("World");
+//		otherEffectPass->ResetConstant("World", effectConstant);
+//		
 //		// set value
-//		effectPass->Parameter("World")->SetValue(Float4x4::Identity);
-//		effectPass->Parameter("ViewProjection")->SetValue(viewProjection);
-//		effectPass->Parameter("Material")->SetValue(material);
+//		effectPass->GetConstant("World")->SetValue(Float4x4::Identity);
+//		effectPass->GetConstant("ViewProjection")->SetValue(viewProjection);
+//		effectPass->GetConstant("Material")->SetValue(material);
 //		
 //		// shader reflection
 //      auto shaderReflection = std::make_unique<ShaderReflection>(graphicsDevice);
 //		auto parameterAnnotations = shaderReflection->GetParameters(effectPass);
+//	}
+	{
+		for (auto & parameter: effectPass->Parameters()) {
+			Log::Stream() << "EffectParameter: " << parameter.first;
+		}
 	}
 }
 //-----------------------------------------------------------------------

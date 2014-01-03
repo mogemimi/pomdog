@@ -16,7 +16,6 @@
 #include <Pomdog/Graphics/VertexBuffer.hpp>
 #include <Pomdog/Graphics/VertexBufferBinding.hpp>
 #include "../Utility/ScopeGuard.hpp"
-#include "EffectPassGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
 #include "VertexBufferGL4.hpp"
@@ -450,12 +449,12 @@ template<> struct TypesafeHelperGL4::OpenGLGetTraits<VertexArrayGL4>
 	constexpr static GLenum bufferObjectBinding = GL_VERTEX_ARRAY_BINDING;
 };
 //-----------------------------------------------------------------------
-InputLayoutGL4::InputLayoutGL4(EffectPassGL4 & effectPass)
-	: InputLayoutGL4(effectPass, {})
+InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram)
+	: InputLayoutGL4(shaderProgram, {})
 {
 }
 //-----------------------------------------------------------------------
-InputLayoutGL4::InputLayoutGL4(EffectPassGL4 & effectPass, std::vector<VertexBufferBinding> const& vertexBinding)
+InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::vector<VertexBufferBinding> const& vertexBinding)
 {
 	// Build vertex array object
 	inputLayout = ([](){
@@ -475,7 +474,7 @@ InputLayoutGL4::InputLayoutGL4(EffectPassGL4 & effectPass, std::vector<VertexBuf
 	ErrorChecker::CheckError("glBindVertexArray", __FILE__, __LINE__);
 	#endif
 	
-	auto const attributes = BuildAttributes(effectPass.GetShaderProgram());
+	auto const attributes = BuildAttributes(shaderProgram);
 	
 	if (vertexBinding.empty()) {
 		this->inputBindings = BuildInputBindings(attributes);

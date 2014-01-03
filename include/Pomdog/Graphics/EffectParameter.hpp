@@ -42,7 +42,8 @@ public:
 	EffectParameter(EffectParameter const&) = delete;
 	EffectParameter & operator=(EffectParameter const&) = delete;
 
-	explicit EffectParameter(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+	EffectParameter(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		std::uint32_t byteConstants);
 
 	~EffectParameter();
 

@@ -33,7 +33,7 @@ class NativeEffectPass;
 /// @addtogroup Graphics
 /// @{
 
-using EffectParameterCollection = std::unordered_map<std::string, std::unique_ptr<EffectParameter>>;
+using EffectParameterCollection = std::unordered_map<std::string, std::shared_ptr<EffectParameter>>;
 
 class POMDOG_EXPORT EffectPass: public std::enable_shared_from_this<EffectPass>
 {
@@ -58,7 +58,7 @@ public:
 
 	///@~Japanese
 	/// @brief エフェクトパラメータを取得します。
-	std::unique_ptr<EffectParameter> const& Parameters(std::string const& parameterName) const;
+	std::shared_ptr<EffectParameter> const& Parameters(std::string const& parameterName) const;
 	
 	///@~Japanese
 	/// @brief エフェクトパラメータのコンテナを取得します。

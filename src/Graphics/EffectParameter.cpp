@@ -17,7 +17,9 @@
 #include <Pomdog/Math/Matrix4x4.hpp>
 #include <Pomdog/Math/Quaternion.hpp>
 #include <Pomdog/Math/Color.hpp>
+#include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include "../RenderSystem/NativeEffectParameter.hpp"
+#include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../Utility/MakeUnique.hpp"
 
 namespace Pomdog {
@@ -93,9 +95,11 @@ EffectParameter::EffectParameter()
 {
 }
 //-----------------------------------------------------------------------
-EffectParameter::EffectParameter(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+EffectParameter::EffectParameter(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	std::uint32_t byteConstants)
+	: nativeEffectParameter(graphicsDevice->GetNativeGraphicsDevice()->CreateEffectParameter(byteConstants))
 {
-	///@todo Not implemented
+	POMDOG_ASSERT(byteConstants > 0);
 }
 //-----------------------------------------------------------------------
 EffectParameter::~EffectParameter()

@@ -25,9 +25,11 @@ namespace RenderSystem {
 class NativeBlendState;
 class NativeDepthStencilState;
 class NativeEffectPass;
+class NativeEffectParameter;
 class NativeIndexBuffer;
 class NativeInputLayout;
 class NativeSamplerState;
+class NativeShaderReflection;
 class NativeRasterizerState;
 class NativeVertexBuffer;
 class ShaderBytecode;
@@ -78,14 +80,24 @@ public:
 		ShaderBytecode const& pixelShaderBytecode) = 0;
 	
 	///@~Japanese
-	/// @brief 入力レイアウトを作成します。
-	virtual std::unique_ptr<NativeInputLayout> CreateInputLayout(
-		NativeEffectPass* nativeEffectPass) = 0;
+	/// @brief エフェクトパラメータを作成します。
+	virtual std::unique_ptr<NativeEffectParameter> CreateEffectParameter(
+		std::uint32_t byteConstants) = 0;
+	
+	///@~Japanese
+	/// @brief 指定されたエフェクトパスからシェーダリフレクションを作成します。
+	virtual std::unique_ptr<NativeShaderReflection> CreateShaderReflection(
+		NativeEffectPass & nativeEffectPass) = 0;
 	
 	///@~Japanese
 	/// @brief 入力レイアウトを作成します。
 	virtual std::unique_ptr<NativeInputLayout> CreateInputLayout(
-		NativeEffectPass* nativeEffectPass, std::vector<VertexBufferBinding> const& vertexBufferBindings) = 0;
+		NativeEffectPass & nativeEffectPass) = 0;
+	
+	///@~Japanese
+	/// @brief 入力レイアウトを作成します。
+	virtual std::unique_ptr<NativeInputLayout> CreateInputLayout(
+		NativeEffectPass & nativeEffectPass, std::vector<VertexBufferBinding> const& vertexBufferBindings) = 0;
 };
 
 }// namespace RenderSystem

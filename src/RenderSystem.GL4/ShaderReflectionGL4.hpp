@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -17,13 +17,13 @@
 #include <vector>
 #include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Config/FundamentalTypes.hpp>
+#include "../RenderSystem/NativeShaderReflection.hpp"
+#include "TypesafeGL4.hpp"
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
-
-class EffectPassGL4;
 
 struct UniformVariableGL4
 {
@@ -44,10 +44,21 @@ struct UniformBlockGL4
 	std::uint32_t BlockIndex;
 };
 
-class ShaderReflectionGL4
+class ShaderReflectionGL4: public NativeShaderReflection
 {
 public:
-	static std::vector<UniformBlockGL4> GetUniformBlocks(EffectPassGL4 & effectPass);
+	ShaderReflectionGL4() = delete;
+	
+	explicit ShaderReflectionGL4(ShaderProgramGL4 const& shaderProgram);
+	~ShaderReflectionGL4() = default;
+
+	std::vector<EffectBufferDescription> GetConstantBuffers() const override;
+
+public:
+	static std::vector<UniformBlockGL4> GetNativeUniformBlocks(ShaderProgramGL4 const& shaderProgram);
+	
+private:
+	ShaderProgramGL4 shaderProgram;
 };
 
 }// namespace GL4

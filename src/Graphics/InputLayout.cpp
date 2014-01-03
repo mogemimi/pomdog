@@ -24,8 +24,7 @@ InputLayout::InputLayout(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	POMDOG_ASSERT(nativeEffectPass != nullptr);
 	
 	nativeInputLayout = graphicsDevice->GetNativeGraphicsDevice()->CreateInputLayout(
-		nativeEffectPass
-	);
+		*nativeEffectPass);
 }
 //-----------------------------------------------------------------------
 InputLayout::InputLayout(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
@@ -36,9 +35,7 @@ InputLayout::InputLayout(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	POMDOG_ASSERT(nativeEffectPass != nullptr);
 
 	nativeInputLayout = graphicsDevice->GetNativeGraphicsDevice()->CreateInputLayout(
-		nativeEffectPass,
-		vertexBindings
-	);
+		*nativeEffectPass, vertexBindings);
 }
 //-----------------------------------------------------------------------
 InputLayout::~InputLayout()

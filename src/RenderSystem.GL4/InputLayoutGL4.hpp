@@ -20,13 +20,13 @@
 #include <Pomdog/Utility/detail/Tagged.hpp>
 #include "../RenderSystem/NativeInputLayout.hpp"
 #include "../Utility/Optional.hpp"
+#include "TypesafeGL4.hpp"
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
-class EffectPassGL4;
 class VertexBufferGL4;
 
 namespace Tags {
@@ -64,9 +64,9 @@ class InputLayoutGL4: public NativeInputLayout
 public:
 	InputLayoutGL4() = delete;
 	
-	explicit InputLayoutGL4(EffectPassGL4 & effectPass);
+	explicit InputLayoutGL4(ShaderProgramGL4 const& shaderProgram);
 	
-	InputLayoutGL4(EffectPassGL4 & effectPass, std::vector<VertexBufferBinding> const& vertexBufferBinding);
+	InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::vector<VertexBufferBinding> const& vertexBufferBinding);
 	
 	~InputLayoutGL4();
 

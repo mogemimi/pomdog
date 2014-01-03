@@ -15,11 +15,28 @@
 #include <Pomdog/Math/Matrix3x3.hpp>
 #include <Pomdog/Math/Matrix4x4.hpp>
 #include <Pomdog/Math/Quaternion.hpp>
+#include "../Utility/MakeUnique.hpp"
+#include "ConstantBufferGL4.hpp"
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
+//-----------------------------------------------------------------------
+EffectParameterGL4::EffectParameterGL4(std::uint32_t byteConstant)
+{
+	constantBuffer = MakeUnique<ConstantBufferGL4>(byteConstant);
+}
+//-----------------------------------------------------------------------
+EffectParameterGL4::~EffectParameterGL4()
+{
+}
+//-----------------------------------------------------------------------
+void EffectParameterGL4::Apply(std::uint32_t slotIndex)
+{
+	POMDOG_ASSERT(constantBuffer);
+	constantBuffer->Apply(slotIndex);
+}
 //-----------------------------------------------------------------------
 bool EffectParameterGL4::GetValueBool() const
 {

@@ -13,12 +13,19 @@
 #	pragma once
 #endif
 
+#include <memory>
+#include <string>
+#include <unordered_map>
 #include <Pomdog/Config/FundamentalTypes.hpp>
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
+
+using EffectParameterCollection = std::unordered_map<std::string, std::shared_ptr<EffectParameter>>;
+
+class NativeEffectParameter;
 
 class NativeEffectPass
 {
@@ -28,6 +35,10 @@ public:
 	NativeEffectPass & operator=(NativeEffectPass const&) = delete;
 
 	virtual ~NativeEffectPass() = default;
+	
+	virtual void SetConstant(std::string const& constantName, std::shared_ptr<NativeEffectParameter> const& effectParameter) = 0;
+	
+	virtual void SetConstant(std::string const& constantName) = 0;
 	
 	///@copybrief EffectPass
 	virtual void Apply(GraphicsContext & graphicsContext,

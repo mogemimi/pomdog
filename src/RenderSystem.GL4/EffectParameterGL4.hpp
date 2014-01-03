@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <memory>
 #include "../RenderSystem/NativeEffectParameter.hpp"
 
 namespace Pomdog {
@@ -20,9 +21,17 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
+class ConstantBufferGL4;
+
 class EffectParameterGL4 final: public NativeEffectParameter
 {
 public:
+	EffectParameterGL4() = delete;
+	
+	explicit EffectParameterGL4(std::uint32_t byteConstant);
+	
+	~EffectParameterGL4();
+
 	///@copydoc EffectParameter
 	bool GetValueBool() const override;
 	
@@ -121,10 +130,11 @@ public:
 
 public:
 	///@~Japanese
-	/// @brief 現在有効になっているシェーダプログラムに定数バッファを適用します。
-	void Apply();
+	/// @brief シェーダプログラムに定数バッファを適用します。
+	void Apply(std::uint32_t slotIndex);
 	
 private:
+	std::unique_ptr<ConstantBufferGL4> constantBuffer;
 };
 
 }// namespace GL4

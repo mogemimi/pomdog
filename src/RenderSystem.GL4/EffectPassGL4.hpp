@@ -13,11 +13,12 @@
 #	pragma once
 #endif
 
+#include <vector>
 #include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
-#include <Pomdog/Utility/detail/Tagged.hpp>
 #include "../RenderSystem/NativeEffectPass.hpp"
 #include "../Utility/Optional.hpp"
+#include "TypesafeGL4.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -27,7 +28,16 @@ class ShaderBytecode;
 
 namespace GL4 {
 
-using ShaderProgramGL4 = Tagged<GLuint, EffectPass>;
+//class ConstantBufferGL4;
+class EffectParameterGL4;
+
+struct ConstantBufferBindingGL4
+{
+	//std::shared_ptr<ConstantBufferGL4> ConstantBuffer;
+	std::shared_ptr<EffectParameterGL4> ConstantBuffer;
+	std::string Name;
+	std::uint32_t SlotIndex;
+};
 
 class EffectPassGL4 final: public NativeEffectPass
 {
@@ -37,6 +47,10 @@ public:
 	EffectPassGL4(ShaderBytecode const& vertexShaderBytecode, ShaderBytecode const& pixelShaderBytecode);
 	
 	~EffectPassGL4();
+	
+	void SetConstant(std::string const& constantName, std::shared_ptr<NativeEffectParameter> const& effectParameter) override;
+	
+	void SetConstant(std::string const& constantName) override;
 
 	void Apply(GraphicsContext & graphicsContext,
 		std::shared_ptr<EffectPass> const& sharedThisEffectPass) override;
@@ -46,6 +60,7 @@ public:
 	ShaderProgramGL4 GetShaderProgram() const;
 	
 private:
+	std::vector<ConstantBufferBindingGL4> constantBufferBindings;
 	Optional<ShaderProgramGL4> shaderProgram;
 };
 
