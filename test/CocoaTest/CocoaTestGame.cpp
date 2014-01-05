@@ -106,8 +106,22 @@ void CocoaTestGame::Initialize()
 //-----------------------------------------------------------------------
 void CocoaTestGame::Update()
 {
-//	auto parameter = effectPass->Parameters("AmbientColor");
-//	parameter->SetValue(Color{0.9f, 0.7f, 0.5f, 1.0f});
+	//auto parameter = effectPass->Parameters("AmbientColor");
+	//parameter->SetValue(Color{0.9f, 0.7f, 0.5f, 1.0f});
+	
+	static float value = 0.0f;
+	value += 0.008f;
+	if (value > 1.0f) {
+		value = -1.0f;
+	}
+	
+	Vector2 vec {
+		std::abs(value),
+		(1.0f + value) * 0.5f
+	};
+	
+	auto parameter = effectPass->Parameters("TestStructure");
+	parameter->SetValue(vec);
 }
 //-----------------------------------------------------------------------
 void CocoaTestGame::Draw()

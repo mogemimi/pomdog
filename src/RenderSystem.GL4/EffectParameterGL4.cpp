@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -116,99 +116,10 @@ std::vector<Quaternion> EffectParameterGL4::GetValueQuaternionArray() const
 	return std::vector<Quaternion>{};
 }
 //-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(bool value)
+void EffectParameterGL4::SetValue(std::uint8_t const* data, std::uint32_t byteLength)
 {
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(std::int32_t value)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(float value)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(Vector2 const& value)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(Vector3 const& value)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(Vector4 const& value)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(Matrix2x2 const& value)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(Matrix3x3 const& value)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(Matrix4x4 const& value)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(Quaternion const& value)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(float const*, std::size_t)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(std::int32_t const*, std::size_t)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(Vector2 const*, std::size_t)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(Vector3 const*, std::size_t)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(Vector4 const*, std::size_t)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(Matrix2x2 const*, std::size_t)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(Matrix3x3 const*, std::size_t)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(Matrix4x4 const*, std::size_t)
-{
-	///@todo Not implemented
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(Quaternion const*, std::size_t)
-{
-	///@todo Not implemented
+	POMDOG_ASSERT(byteLength > 0);
+	constantBuffer->SetData(data, byteLength);
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -18,6 +18,7 @@
 #include "../Config/Export.hpp"
 #include "../Math/detail/ForwardDeclarations.hpp"
 #include "detail/ForwardDeclarations.hpp"
+#include "detail/EffectBinaryParameter.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -111,33 +112,33 @@ public:
 	/// @brief Quaternion の配列として取得します。
 	/// @details キャストできなかった場合 std::runtime_error を投げます。
 	std::vector<Quaternion> GetValueQuaternionArray() const;
+	
+	///@~Japanese
+	/// @brief エフェクトパラメータに値を設定します。
+	template <typename T>
+	void SetValue(T const& value)
+	{
+		Details::EffectBinaryParameter::Set(*this, value);
+	}
+	
+	///@~Japanese
+	/// @brief エフェクトパラメータに値を設定します。
+	//template <typename T>
+	//void SetValue(T const& data, std::uint32_t count)
+	//{
+	//	POMDOG_ASSERT(count > 0);
+	//	Details::EffectBinaryParameter::Set(*this, data, count);
+	//}
 
 	///@~Japanese
 	/// @brief エフェクトパラメータに値を設定します。
-	void SetValue(bool value);
-	void SetValue(std::int32_t value);
-	void SetValue(float value);
-	void SetValue(Vector2 const& vector);
-	void SetValue(Vector3 const& vector);
-	void SetValue(Vector4 const& vector);
-	void SetValue(Matrix2x2 const& matrix);
-	void SetValue(Matrix3x3 const& matrix);
-	void SetValue(Matrix4x4 const& matrix);
-	void SetValue(Quaternion const& quaternion);
-	void SetValue(Color const& color);
-	void SetValue(float const* source, std::size_t count);
-	void SetValue(std::int32_t const* source, std::size_t count);
-	void SetValue(Vector2 const* vector, std::size_t count);
-	void SetValue(Vector3 const* vector, std::size_t count);
-	void SetValue(Vector4 const* vector, std::size_t count);
-	void SetValue(Matrix2x2 const* matrix, std::size_t count);
-	void SetValue(Matrix3x3 const* matrix, std::size_t count);
-	void SetValue(Matrix4x4 const* matrix, std::size_t count);
-	void SetValue(Quaternion const* quaternion, std::size_t count);
-	
+	/// @param data バイナリデータの先頭を表すポインタ
+	/// @param byteLength バイト単位のデータサイズ。
+	void SetValue(std::uint8_t const* data, std::uint32_t byteLength);
+
 public:
 	Details::RenderSystem::NativeEffectParameter* GetNativeEffectParameter();
-	
+
 private:
 	std::unique_ptr<Details::RenderSystem::NativeEffectParameter> nativeEffectParameter;
 };

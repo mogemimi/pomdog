@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -69,63 +69,9 @@ public:
 
 	///@copydoc EffectParameter
 	virtual std::vector<Quaternion> GetValueQuaternionArray() const = 0;
-
-	///@copydoc EffectParameter
-	virtual void SetValue(bool value) = 0;
 	
 	///@copydoc EffectParameter
-	virtual void SetValue(std::int32_t value) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(float value) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(Vector2 const& vector) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(Vector3 const& vector) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(Vector4 const& vector) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(Matrix2x2 const& matrix) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(Matrix3x3 const& matrix) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(Matrix4x4 const& matrix) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(Quaternion const& quaternion) = 0;
-
-	///@copydoc EffectParameter
-	virtual void SetValue(float const* source, std::size_t count) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(std::int32_t const* source, std::size_t count) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(Vector2 const* vector, std::size_t count) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(Vector3 const* vector, std::size_t count) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(Vector4 const* vector, std::size_t count) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(Matrix2x2 const* matrix, std::size_t count) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(Matrix3x3 const* matrix, std::size_t count) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(Matrix4x4 const* matrix, std::size_t count) = 0;
-	
-	///@copydoc EffectParameter
-	virtual void SetValue(Quaternion const* quaternion, std::size_t count) = 0;
+	virtual void SetValue(std::uint8_t const* data, std::uint32_t byteLength) = 0;
 };
 
 }// namespace RenderSystem

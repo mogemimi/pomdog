@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -70,63 +70,9 @@ public:
 
 	///@copydoc EffectParameter
 	std::vector<Quaternion> GetValueQuaternionArray() const override;
-
-	///@copydoc EffectParameter
-	void SetValue(bool) override;
 	
 	///@copydoc EffectParameter
-	void SetValue(std::int32_t) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(float) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(Vector2 const&) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(Vector3 const&) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(Vector4 const&) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(Matrix2x2 const&) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(Matrix3x3 const&) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(Matrix4x4 const&) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(Quaternion const&) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(float const*, std::size_t) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(std::int32_t const*, std::size_t) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(Vector2 const*, std::size_t) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(Vector3 const*, std::size_t) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(Vector4 const*, std::size_t) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(Matrix2x2 const*, std::size_t) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(Matrix3x3 const*, std::size_t) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(Matrix4x4 const*, std::size_t) override;
-	
-	///@copydoc EffectParameter
-	void SetValue(Quaternion const*, std::size_t) override;
+	void SetValue(std::uint8_t const* data, std::uint32_t byteLength) override;
 
 public:
 	///@~Japanese

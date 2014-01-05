@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -67,25 +67,7 @@ public:
 	std::vector<Quaternion> GetValueQuaternionArray() const override
 	{ return std::vector<Quaternion>{}; }
 
-	void SetValue(bool) override {}
-	void SetValue(std::int32_t) override {}
-	void SetValue(float) override {}
-	void SetValue(Vector2 const&) override {}
-	void SetValue(Vector3 const&) override {}
-	void SetValue(Vector4 const&) override {}
-	void SetValue(Matrix2x2 const&) override {}
-	void SetValue(Matrix3x3 const&) override {}
-	void SetValue(Matrix4x4 const&) override {}
-	void SetValue(Quaternion const&) override {}
-	void SetValue(float const*, std::size_t) override {}
-	void SetValue(std::int32_t const*, std::size_t) override {}
-	void SetValue(Vector2 const*, std::size_t) override {}
-	void SetValue(Vector3 const*, std::size_t) override {}
-	void SetValue(Vector4 const*, std::size_t) override {}
-	void SetValue(Matrix2x2 const*, std::size_t) override {}
-	void SetValue(Matrix3x3 const*, std::size_t) override {}
-	void SetValue(Matrix4x4 const*, std::size_t) override {}
-	void SetValue(Quaternion const*, std::size_t) override {}
+	void SetValue(std::uint8_t const*, std::uint32_t) override {}
 };
 
 }// unnamed namespace
@@ -184,144 +166,12 @@ std::vector<Quaternion> EffectParameter::GetValueQuaternionArray() const
 	return nativeEffectParameter->GetValueQuaternionArray();
 }
 //-----------------------------------------------------------------------
-void EffectParameter::SetValue(bool value)
+void EffectParameter::SetValue(std::uint8_t const* data, std::uint32_t byteLength)
 {
+	POMDOG_ASSERT(data != nullptr);
+	POMDOG_ASSERT(byteLength > 0);
 	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(value);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(std::int32_t value)
-{
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(value);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(float value)
-{
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(value);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Vector2 const& value)
-{
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(value);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Vector3 const& value)
-{
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(value);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Vector4 const& value)
-{
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(value);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Matrix2x2 const& value)
-{
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(value);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Matrix3x3 const& value)
-{
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(value);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Matrix4x4 const& value)
-{
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(value);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Quaternion const& value)
-{
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(value);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Color const& color)
-{
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(Vector4{
-		color.r, color.g, color.b, color.a
-	});
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(float const* source, std::size_t count)
-{
-	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(count > 0);
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(source, count);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(std::int32_t const* source, std::size_t count)
-{
-	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(count > 0);
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(source, count);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Vector2 const* source, std::size_t count)
-{
-	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(count > 0);
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(source, count);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Vector3 const* source, std::size_t count)
-{
-	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(count > 0);
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(source, count);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Vector4 const* source, std::size_t count)
-{
-	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(count > 0);
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(source, count);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Matrix2x2 const* source, std::size_t count)
-{
-	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(count > 0);
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(source, count);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Matrix3x3 const* source, std::size_t count)
-{
-	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(count > 0);
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(source, count);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Matrix4x4 const* source, std::size_t count)
-{
-	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(count > 0);
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(source, count);
-}
-//-----------------------------------------------------------------------
-void EffectParameter::SetValue(Quaternion const* source, std::size_t count)
-{
-	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(count > 0);
-	POMDOG_ASSERT(nativeEffectParameter);
-	return nativeEffectParameter->SetValue(source, count);
+	return nativeEffectParameter->SetValue(data, byteLength);
 }
 //-----------------------------------------------------------------------
 Details::RenderSystem::NativeEffectParameter* EffectParameter::GetNativeEffectParameter()

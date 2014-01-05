@@ -75,6 +75,14 @@ void ConstantBufferGL4::SetData(void const* source, std::uint32_t byteLength)
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif
+	
+	#if defined(DEBUG) && !defined(NDEBUG) 
+	{
+		GLint bufferSize = 0;
+		glGetBufferParameteriv(GL_UNIFORM_BUFFER, GL_BUFFER_SIZE, &bufferSize);
+		POMDOG_ASSERT(byteLength <= static_cast<std::size_t>(bufferSize));
+	}
+	#endif
 
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, byteLength, source);
 
