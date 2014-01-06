@@ -28,51 +28,15 @@ class EffectParameterGL4 final: public NativeEffectParameter
 public:
 	EffectParameterGL4() = delete;
 	
-	explicit EffectParameterGL4(std::uint32_t byteConstant);
+	explicit EffectParameterGL4(std::uint32_t byteWidth);
 	
 	~EffectParameterGL4();
 
-	///@copydoc EffectParameter
-	bool GetValueBool() const override;
-	
-	///@copydoc EffectParameter
-	std::int32_t GetValueInt32() const override;
-	
-	///@copydoc EffectParameter
-	std::vector<std::int32_t> GetValueInt32Array() const override;
-	
-	///@copydoc EffectParameter
-	float GetValueFloat() const override;
-	
-	///@copydoc EffectParameter
-	std::vector<float> GetValueFloatArray() const override;
-	
-	///@copydoc EffectParameter
-	Vector2 GetValueVector2() const override;
+	///@copydoc NativeEffectParameter
+	void GetValue(std::uint32_t byteWidth, std::uint8_t* result) const override;
 
-	///@copydoc EffectParameter
-	std::vector<Vector2> GetValueVector2Array() const override;
-
-	///@copydoc EffectParameter
-	Vector3 GetValueVector3() const override;
-
-	///@copydoc EffectParameter
-	std::vector<Vector3> GetValueVector3Array() const override;
-
-	///@copydoc EffectParameter
-	Vector4 GetValueVector4() const override;
-
-	///@copydoc EffectParameter
-	std::vector<Vector4> GetValueVector4Array() const override;
-
-	///@copydoc EffectParameter
-	Quaternion GetValueQuaternion() const override;
-
-	///@copydoc EffectParameter
-	std::vector<Quaternion> GetValueQuaternionArray() const override;
-	
-	///@copydoc EffectParameter
-	void SetValue(std::uint8_t const* data, std::uint32_t byteLength) override;
+	///@copydoc NativeEffectParameter
+	void SetValue(std::uint8_t const* data, std::uint32_t byteWidth) override;
 
 public:
 	///@~Japanese

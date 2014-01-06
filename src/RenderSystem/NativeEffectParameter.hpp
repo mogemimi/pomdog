@@ -13,10 +13,7 @@
 #	pragma once
 #endif
 
-#include <vector>
 #include <Pomdog/Config/FundamentalTypes.hpp>
-#include <Pomdog/Math/detail/ForwardDeclarations.hpp>
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 
 namespace Pomdog {
 namespace Details {
@@ -32,46 +29,10 @@ public:
 	virtual ~NativeEffectParameter() = default;
 
 	///@copydoc EffectParameter
-	virtual bool GetValueBool() const = 0;
-
-	///@copydoc EffectParameter
-	virtual std::int32_t GetValueInt32() const = 0;
-
-	///@copydoc EffectParameter
-	virtual std::vector<std::int32_t> GetValueInt32Array() const = 0;
-
-	///@copydoc EffectParameter
-	virtual float GetValueFloat() const = 0;
-
-	///@copydoc EffectParameter
-	virtual std::vector<float> GetValueFloatArray() const = 0;
-
-	///@copydoc EffectParameter
-	virtual Vector2 GetValueVector2() const = 0;
-
-	///@copydoc EffectParameter
-	virtual std::vector<Vector2> GetValueVector2Array() const = 0;
-
-	///@copydoc EffectParameter
-	virtual Vector3 GetValueVector3() const = 0;
-
-	///@copydoc EffectParameter
-	virtual std::vector<Vector3> GetValueVector3Array() const = 0;
-
-	///@copydoc EffectParameter
-	virtual Vector4 GetValueVector4() const = 0;
-		
-	///@copydoc EffectParameter
-	virtual std::vector<Vector4> GetValueVector4Array() const = 0;
-
-	///@copydoc EffectParameter
-	virtual Quaternion GetValueQuaternion() const = 0;
-
-	///@copydoc EffectParameter
-	virtual std::vector<Quaternion> GetValueQuaternionArray() const = 0;
+	virtual void GetValue(std::uint32_t byteWidth, std::uint8_t* result) const = 0;
 	
 	///@copydoc EffectParameter
-	virtual void SetValue(std::uint8_t const* data, std::uint32_t byteLength) = 0;
+	virtual void SetValue(std::uint8_t const* data, std::uint32_t byteWidth) = 0;
 };
 
 }// namespace RenderSystem

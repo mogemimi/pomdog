@@ -82,7 +82,7 @@ public:
 	///@~Japanese
 	/// @brief エフェクトパラメータを作成します。
 	virtual std::unique_ptr<NativeEffectParameter> CreateEffectParameter(
-		std::uint32_t byteConstants) = 0;
+		std::uint32_t byteWidth) = 0;
 	
 	///@~Japanese
 	/// @brief 指定されたエフェクトパスからシェーダリフレクションを作成します。

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -37,11 +37,13 @@ class ConstantBufferGL4 final
 public:
 	ConstantBufferGL4() = delete;
 	
-	explicit ConstantBufferGL4(std::uint32_t byteLength);
+	explicit ConstantBufferGL4(std::uint32_t byteWidth);
 	
 	~ConstantBufferGL4();
 
-	void SetData(void const* source, std::uint32_t byteLength);
+	void GetData(std::uint32_t byteWidth, void * result) const;
+
+	void SetData(void const* source, std::uint32_t byteWidth);
 	
 	void Apply(std::uint32_t slotIndex);
 	

@@ -26,7 +26,7 @@ template <typename T, class Tag>
 class POMDOG_EXPORT Tagged final
 {
 public:
-	static_assert(std::is_pod<T>::value, "Can only use plain-old-data types");
+	static_assert(std::is_pod<T>::value, "You can only use plain-old-data types");
 
 	typedef T value_type;
 	typedef Tag tag_type;

@@ -8,13 +8,6 @@
 
 #include "EffectParameterGL4.hpp"
 #include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Math/Vector2.hpp>
-#include <Pomdog/Math/Vector3.hpp>
-#include <Pomdog/Math/Vector4.hpp>
-#include <Pomdog/Math/Matrix2x2.hpp>
-#include <Pomdog/Math/Matrix3x3.hpp>
-#include <Pomdog/Math/Matrix4x4.hpp>
-#include <Pomdog/Math/Quaternion.hpp>
 #include "../Utility/MakeUnique.hpp"
 #include "ConstantBufferGL4.hpp"
 
@@ -23,9 +16,9 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
-EffectParameterGL4::EffectParameterGL4(std::uint32_t byteConstant)
+EffectParameterGL4::EffectParameterGL4(std::uint32_t byteWidth)
 {
-	constantBuffer = MakeUnique<ConstantBufferGL4>(byteConstant);
+	constantBuffer = MakeUnique<ConstantBufferGL4>(byteWidth);
 }
 //-----------------------------------------------------------------------
 EffectParameterGL4::~EffectParameterGL4()
@@ -38,88 +31,16 @@ void EffectParameterGL4::Apply(std::uint32_t slotIndex)
 	constantBuffer->Apply(slotIndex);
 }
 //-----------------------------------------------------------------------
-bool EffectParameterGL4::GetValueBool() const
+void EffectParameterGL4::GetValue(std::uint32_t byteWidth, std::uint8_t* result) const
 {
-	///@todo Not implemented
-	return false;
+	POMDOG_ASSERT(byteWidth > 0);
+	constantBuffer->GetData(byteWidth, result);
 }
 //-----------------------------------------------------------------------
-std::int32_t EffectParameterGL4::GetValueInt32() const
+void EffectParameterGL4::SetValue(std::uint8_t const* data, std::uint32_t byteWidth)
 {
-	///@todo Not implemented
-	return 0;
-}
-//-----------------------------------------------------------------------
-std::vector<std::int32_t> EffectParameterGL4::GetValueInt32Array() const
-{
-	///@todo Not implemented
-	return std::vector<std::int32_t>{};
-}
-//-----------------------------------------------------------------------
-float EffectParameterGL4::GetValueFloat() const
-{
-	///@todo Not implemented
-	return 0.0f;
-}
-//-----------------------------------------------------------------------
-std::vector<float> EffectParameterGL4::GetValueFloatArray() const
-{
-	///@todo Not implemented
-	return std::vector<float>{};
-}
-//-----------------------------------------------------------------------
-Vector2 EffectParameterGL4::GetValueVector2() const
-{
-	///@todo Not implemented
-	return Vector2(0, 0);
-}
-//-----------------------------------------------------------------------
-std::vector<Vector2> EffectParameterGL4::GetValueVector2Array() const
-{
-	///@todo Not implemented
-	return std::vector<Vector2>{};
-}
-//-----------------------------------------------------------------------
-Vector3 EffectParameterGL4::GetValueVector3() const
-{
-	///@todo Not implemented
-	return Vector3(0, 0, 0);
-}
-//-----------------------------------------------------------------------
-std::vector<Vector3> EffectParameterGL4::GetValueVector3Array() const
-{
-	///@todo Not implemented
-	return std::vector<Vector3>{};
-}
-//-----------------------------------------------------------------------
-Vector4 EffectParameterGL4::GetValueVector4() const
-{
-	///@todo Not implemented
-	return Vector4(0, 0, 0, 0);
-}
-//-----------------------------------------------------------------------
-std::vector<Vector4> EffectParameterGL4::GetValueVector4Array() const
-{
-	///@todo Not implemented
-	return std::vector<Vector4>{};
-}
-//-----------------------------------------------------------------------
-Quaternion EffectParameterGL4::GetValueQuaternion() const
-{
-	///@todo Not implemented
-	return Quaternion::Identity;
-}
-//-----------------------------------------------------------------------
-std::vector<Quaternion> EffectParameterGL4::GetValueQuaternionArray() const
-{
-	///@todo Not implemented
-	return std::vector<Quaternion>{};
-}
-//-----------------------------------------------------------------------
-void EffectParameterGL4::SetValue(std::uint8_t const* data, std::uint32_t byteLength)
-{
-	POMDOG_ASSERT(byteLength > 0);
-	constantBuffer->SetData(data, byteLength);
+	POMDOG_ASSERT(byteWidth > 0);
+	constantBuffer->SetData(data, byteWidth);
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

@@ -32,12 +32,46 @@ std::uint8_t const* BinaryCast(T const* data)
 	return reinterpret_cast<std::uint8_t const*>(data);
 }
 
+template <typename T> static
+std::uint8_t * BinaryCast(T * data)
+{
+	static_assert(!std::is_pointer<T>::value, "T is not pointer.");
+	return reinterpret_cast<std::uint8_t *>(data);
+}
+
 }// unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark -
 #pragma mark Fundamental types(Scalars)
 #endif
+//-----------------------------------------------------------------------
+void Get(EffectParameter & effectParameter, bool & value)
+{
+	std::uint32_t unsignedValue = 0;
+	effectParameter.GetValue(sizeof(unsignedValue), BinaryCast(&unsignedValue));
+	value = (unsignedValue != 0);
+}
+//-----------------------------------------------------------------------
+void Get(EffectParameter & effectParameter, std::int32_t & value)
+{
+	effectParameter.GetValue(sizeof(value), BinaryCast(&value));
+}
+//-----------------------------------------------------------------------
+void Get(EffectParameter & effectParameter, std::uint32_t & value)
+{
+	effectParameter.GetValue(sizeof(value), BinaryCast(&value));
+}
+//-----------------------------------------------------------------------
+void Get(EffectParameter & effectParameter, float & value)
+{
+	effectParameter.GetValue(sizeof(value), BinaryCast(&value));
+}
+//-----------------------------------------------------------------------
+void Get(EffectParameter & effectParameter, double & value)
+{
+	effectParameter.GetValue(sizeof(value), BinaryCast(&value));
+}
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, bool value)
 {
@@ -63,6 +97,47 @@ void Set(EffectParameter & effectParameter, float value)
 void Set(EffectParameter & effectParameter, double value)
 {
 	effectParameter.SetValue(BinaryCast(&value), sizeof(value));
+}
+//-----------------------------------------------------------------------
+#if defined(POMDOG_COMPILER_CLANG)
+#pragma mark -
+#pragma mark Arrays
+#endif
+//-----------------------------------------------------------------------
+void Set(EffectParameter & effectParameter, std::int32_t const* data, std::uint32_t count)
+{
+	using type = typename std::remove_pointer<decltype(data)>::type;
+	static_assert(std::is_same<type, std::int32_t const>::value, "");
+	
+	POMDOG_ASSERT(count > 0);
+	effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
+}
+//-----------------------------------------------------------------------
+void Set(EffectParameter & effectParameter, std::uint32_t const* data, std::uint32_t count)
+{
+	using type = typename std::remove_pointer<decltype(data)>::type;
+	static_assert(std::is_same<type, std::uint32_t const>::value, "");
+	
+	POMDOG_ASSERT(count > 0);
+	effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
+}
+//-----------------------------------------------------------------------
+void Set(EffectParameter & effectParameter, float const* data, std::uint32_t count)
+{
+	using type = typename std::remove_pointer<decltype(data)>::type;
+	static_assert(std::is_same<type, float const>::value, "");
+	
+	POMDOG_ASSERT(count > 0);
+	effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
+}
+//-----------------------------------------------------------------------
+void Set(EffectParameter & effectParameter, double const* data, std::uint32_t count)
+{
+	using type = typename std::remove_pointer<decltype(data)>::type;
+	static_assert(std::is_same<type, double const>::value, "");
+	
+	POMDOG_ASSERT(count > 0);
+	effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)

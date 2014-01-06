@@ -122,6 +122,8 @@ void CocoaTestGame::Update()
 	
 	auto parameter = effectPass->Parameters("TestStructure");
 	parameter->SetValue(vec);
+	
+	auto vector2 = parameter->GetValue<Vector2>();
 }
 //-----------------------------------------------------------------------
 void CocoaTestGame::Draw()
