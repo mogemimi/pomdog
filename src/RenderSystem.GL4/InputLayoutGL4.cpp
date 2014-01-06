@@ -265,7 +265,7 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
 			attribute.StartSlot = attributeLocation;
 			attribute.ScalarType = attributeScalarType;
 			attribute.Components = static_cast<GLint>(attributeSize.ComponentCount);
-			attribute.ByteWidth = ToByteWithFromScalarTypeGL4(attribute.ScalarType) * attribute.Components;
+			attribute.ByteOffset = 0; // Note: See CalculateByteOffset function.
 
 			POMDOG_ASSERT(attribute.Components >= 1 && attribute.Components <= 4);
 			attributes.push_back(attribute);
@@ -280,7 +280,7 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
 			#endif // defined(DEBUG)
 		}
 	}
-
+	
 	std::sort(std::begin(attributes), std::end(attributes), [](InputElementGL4 const& a, InputElementGL4 const& b){
 		return a.StartSlot < b.StartSlot;
 	});
@@ -325,6 +325,16 @@ static void EnableAttributes(std::vector<InputElementGL4> const& attributes)
 	}
 }
 //-----------------------------------------------------------------------
+static std::uint32_t CalculateByteOffset(std::uint32_t const offsetBytes, InputElementGL4 & attribute)
+{
+	attribute.ByteOffset = offsetBytes;
+
+	std::uint32_t const byteWidth = ToByteWithFromScalarTypeGL4(attribute.ScalarType) * attribute.Components;
+	POMDOG_ASSERT(byteWidth > 0);
+
+	return offsetBytes + byteWidth;
+}
+//-----------------------------------------------------------------------
 static std::vector<InputBindingGL4> BuildInputBindings(std::vector<InputElementGL4> const& attributes)
 {
 	POMDOG_ASSERT(!attributes.empty());
@@ -335,9 +345,11 @@ static std::vector<InputBindingGL4> BuildInputBindings(std::vector<InputElementG
 	InputBindingGL4 & inputBinding = result.front();
 	inputBinding.InstanceFrequency = 0;
 
+	std::uint32_t offsetBytes = 0;
 	for (auto const& attribute: attributes)
 	{
 		inputBinding.InputElements.push_back(attribute);
+		offsetBytes = CalculateByteOffset(offsetBytes, inputBinding.InputElements.back());
 	}
 	return std::move(result);
 }
@@ -353,11 +365,11 @@ static std::vector<InputBindingGL4> BuildInputBindings(
 	
 	auto attributeIter = std::begin(attributes);
 
-	for (auto& binding: vertexBindings)
+	for (auto & binding: vertexBindings)
 	{
 		auto const strideBytes = binding.Declaration.GetStrideBytes();
 		
-		std::size_t offsetBytes = 0;
+		std::uint32_t offsetBytes = 0;
 		POMDOG_ASSERT(attributeIter != std::end(attributes));
 		
 		InputBindingGL4 inputBinding;
@@ -366,10 +378,7 @@ static std::vector<InputBindingGL4> BuildInputBindings(
 		attributeIter = std::find_if(attributeIter, std::end(attributes), [&](InputElementGL4 const& attribute)
 		{
 			inputBinding.InputElements.push_back(attribute);
-
-			POMDOG_ASSERT(attribute.ByteWidth > 0);
-			offsetBytes += attribute.ByteWidth;
-
+			offsetBytes = CalculateByteOffset(offsetBytes, inputBinding.InputElements.back());
 			return offsetBytes >= strideBytes;
 		});
 		
@@ -401,21 +410,18 @@ static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings
 	
 	auto vertexBufferIter = std::begin(vertexBuffers);
 
-	for (auto& binding: inputBindings)
+	for (auto & binding: inputBindings)
 	{
 		POMDOG_ASSERT(vertexBufferIter != std::end(vertexBuffers));
 		
-		auto vertexBuffer = dynamic_cast<VertexBufferGL4*>((*vertexBufferIter)->GetNativeVertexBuffer());
+		auto nativeVertexBuffer = dynamic_cast<VertexBufferGL4*>((*vertexBufferIter)->GetNativeVertexBuffer());
 		
-		POMDOG_ASSERT(vertexBuffer);
-		vertexBuffer->BindBuffer(); // Note: glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-		
-		std::size_t offsetBytes = 0;
-		static_assert(sizeof(offsetBytes) == sizeof(GLvoid const*), "");
-		
+		POMDOG_ASSERT(nativeVertexBuffer);
+		nativeVertexBuffer->BindBuffer(); // Note: glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+
 		auto const strideBytes = (*vertexBufferIter)->GetVertexDeclaration().GetStrideBytes();
 		
-		for (auto& attribute: binding.InputElements)
+		for (auto & attribute: binding.InputElements)
 		{
 			glVertexAttribPointer(
 				attribute.StartSlot,
@@ -423,7 +429,7 @@ static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings
 				attribute.ScalarType.value,
 				GL_FALSE,
 				strideBytes,
-				ComputeBufferOffset(offsetBytes)
+				ComputeBufferOffset(attribute.ByteOffset)
 			);
 			#ifdef DEBUG
 			ErrorChecker::CheckError("glVertexAttribPointer", __FILE__, __LINE__);
@@ -433,8 +439,6 @@ static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings
 			#ifdef DEBUG
 			ErrorChecker::CheckError("glVertexAttribDivisor", __FILE__, __LINE__);
 			#endif
-			
-			offsetBytes += attribute.ByteWidth;
 		}
 		
 		++vertexBufferIter;

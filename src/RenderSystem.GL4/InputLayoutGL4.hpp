@@ -43,14 +43,14 @@ struct InputElementGL4
 	// Attribute location.
 	GLuint StartSlot;
 
+	// Input element offset.
+	std::uint32_t ByteOffset;
+
 	// Specifies the scalar data type.
 	ScalarTypeGL4 ScalarType;
 
 	// Must be 1, 2, 3, and 4.
 	std::int8_t Components;
-	
-	// Input element size.
-	std::uint8_t ByteWidth;
 };
 
 struct InputBindingGL4

@@ -30,11 +30,11 @@ class EffectAnnotation
 public:
 	///@~Japanese
 	/// @brief 列の数です。
-	std::uint16_t ColumnCount;
+	std::uint8_t ColumnCount;
 
 	///@~Japanese
 	/// @brief 行の数です。
-	std::uint16_t RowCount;
+	std::uint8_t RowCount;
 	
 	///@~Japanese
 	/// @brief パラメータのクラスです。

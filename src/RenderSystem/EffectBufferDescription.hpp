@@ -15,15 +15,24 @@
 
 #include <string>
 #include <Pomdog/Config/FundamentalTypes.hpp>
+#include <Pomdog/Graphics/EffectAnnotation.hpp>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
+class EffectVariableDescription
+{
+public:
+	std::string Name;
+	EffectAnnotation Annotation;
+	std::uint32_t ByteSize;
+};
+
 class EffectBufferDescription
 {
 public:
-	//std::vector<EffectVariableDescription> Variables;
+	std::vector<EffectVariableDescription> Variables;
 	std::string Name;
 	std::uint32_t ByteConstants;
 };

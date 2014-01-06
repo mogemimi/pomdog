@@ -54,8 +54,7 @@ public:
 
 	std::vector<EffectBufferDescription> GetConstantBuffers() const override;
 
-public:
-	static std::vector<UniformBlockGL4> GetNativeUniformBlocks(ShaderProgramGL4 const& shaderProgram);
+	std::vector<UniformBlockGL4> GetNativeUniformBlocks();
 	
 private:
 	ShaderProgramGL4 shaderProgram;

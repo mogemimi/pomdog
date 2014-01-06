@@ -8,6 +8,7 @@
 
 #include "ShaderReflectionGL4.hpp"
 #include <utility>
+#include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LoggingLevel.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
@@ -161,6 +162,353 @@ EnumerateUniformBlocks(ShaderProgramGL4 const& shaderProgram)
 	return std::move(uniformBlocks);
 }
 //-----------------------------------------------------------------------
+static EffectParameterType ToEffectParameterType(GLenum uniformType)
+{
+	switch (uniformType)
+	{
+	case GL_FLOAT:
+	case GL_FLOAT_VEC2:
+	case GL_FLOAT_VEC3:
+	case GL_FLOAT_VEC4:
+	case GL_FLOAT_MAT2:
+	case GL_FLOAT_MAT3:
+	case GL_FLOAT_MAT4:
+	case GL_FLOAT_MAT2x3:
+	case GL_FLOAT_MAT2x4:
+	case GL_FLOAT_MAT3x2:
+	case GL_FLOAT_MAT3x4:
+	case GL_FLOAT_MAT4x2:
+	case GL_FLOAT_MAT4x3:
+		return EffectParameterType::Float;
+
+	case GL_INT: 
+	case GL_INT_VEC2:
+	case GL_INT_VEC3:
+	case GL_INT_VEC4:
+		return EffectParameterType::Int32;
+
+	case GL_UNSIGNED_INT:
+	case GL_UNSIGNED_INT_VEC2:
+	case GL_UNSIGNED_INT_VEC3:
+	case GL_UNSIGNED_INT_VEC4:
+		return EffectParameterType::UInt32;
+
+	case GL_DOUBLE:
+	case GL_DOUBLE_VEC2:
+	case GL_DOUBLE_VEC3:
+	case GL_DOUBLE_VEC4:
+	case GL_DOUBLE_MAT2:
+	case GL_DOUBLE_MAT3:
+	case GL_DOUBLE_MAT4:
+	case GL_DOUBLE_MAT2x3:
+	case GL_DOUBLE_MAT2x4:
+	case GL_DOUBLE_MAT3x2:
+	case GL_DOUBLE_MAT3x4:
+	case GL_DOUBLE_MAT4x2:
+	case GL_DOUBLE_MAT4x3:
+		return EffectParameterType::Double;
+
+	case GL_BOOL:
+	case GL_BOOL_VEC2:
+	case GL_BOOL_VEC3:
+	case GL_BOOL_VEC4:
+		return EffectParameterType::Bool;
+	
+	case GL_SAMPLER_1D:
+		return EffectParameterType::Texture1D;
+	case GL_SAMPLER_2D:
+		return EffectParameterType::Texture2D;
+	case GL_SAMPLER_3D:
+		return EffectParameterType::Texture3D;
+	case GL_SAMPLER_CUBE:
+		return EffectParameterType::TextureCube;
+	
+	case GL_SAMPLER_BUFFER:
+		//return EffectParameterType::TextureBuffer; // See also: D3D_SVT_TBUFFER
+	case GL_SAMPLER_1D_ARRAY:
+		//return EffectParameterType::Texture1DArray; // See also: D3D_SVT_TEXTURE1DARRAY
+	case GL_SAMPLER_2D_ARRAY:
+		//return EffectParameterType::Texture2DArray; // See also: D3D_SVT_TEXTURE2DARRAY
+	case GL_SAMPLER_2D_MULTISAMPLE:
+		//return EffectParameterType::Texture2DMultiSample; // See also: D3D_SVT_TEXTURE2DMS
+	case GL_SAMPLER_2D_MULTISAMPLE_ARRAY:
+		//return EffectParameterType::Texture2DMultiSampleArray; // See also: D3D_SVT_TEXTURE2DMSARRAY
+	case GL_SAMPLER_1D_SHADOW:
+	case GL_SAMPLER_2D_SHADOW:
+	case GL_SAMPLER_1D_ARRAY_SHADOW:
+	case GL_SAMPLER_2D_ARRAY_SHADOW:
+	case GL_SAMPLER_CUBE_SHADOW:
+	case GL_SAMPLER_2D_RECT:
+	case GL_SAMPLER_2D_RECT_SHADOW:
+	case GL_INT_SAMPLER_1D:
+	case GL_INT_SAMPLER_2D:
+	case GL_INT_SAMPLER_3D:
+	case GL_INT_SAMPLER_CUBE:
+	case GL_INT_SAMPLER_1D_ARRAY:
+	case GL_INT_SAMPLER_2D_ARRAY:
+	case GL_INT_SAMPLER_2D_MULTISAMPLE:
+	case GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
+	case GL_INT_SAMPLER_BUFFER:
+	case GL_INT_SAMPLER_2D_RECT:
+	case GL_UNSIGNED_INT_SAMPLER_1D:
+	case GL_UNSIGNED_INT_SAMPLER_2D:
+	case GL_UNSIGNED_INT_SAMPLER_3D:
+	case GL_UNSIGNED_INT_SAMPLER_CUBE:
+	case GL_UNSIGNED_INT_SAMPLER_1D_ARRAY:
+	case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+	case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE:
+	case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
+	case GL_UNSIGNED_INT_SAMPLER_BUFFER:
+	case GL_UNSIGNED_INT_SAMPLER_2D_RECT:
+		// Not supported:
+		POMDOG_ASSERT(uniformType);
+		break;
+	}
+
+#ifdef DEBUG
+	Log::Stream(LoggingLevel::Internal)
+		<< "Failed to find effect parameter type '"  << uniformType << "'.";
+#endif
+	return EffectParameterType::Float;
+}
+//-----------------------------------------------------------------------
+static EffectParameterClass ToEffectParameterClass(GLenum uniformType)
+{
+	switch (uniformType)
+	{
+	case GL_FLOAT:
+	case GL_DOUBLE:
+	case GL_INT:
+	case GL_UNSIGNED_INT:
+	case GL_BOOL:
+		return EffectParameterClass::Scalar;
+	
+	case GL_FLOAT_VEC2:
+	case GL_FLOAT_VEC3:
+	case GL_FLOAT_VEC4:
+	case GL_DOUBLE_VEC2:
+	case GL_DOUBLE_VEC3:
+	case GL_DOUBLE_VEC4:
+	case GL_INT_VEC2:
+	case GL_INT_VEC3:
+	case GL_INT_VEC4:
+	case GL_UNSIGNED_INT_VEC2:
+	case GL_UNSIGNED_INT_VEC3:
+	case GL_UNSIGNED_INT_VEC4:
+	case GL_BOOL_VEC2:
+	case GL_BOOL_VEC3:
+	case GL_BOOL_VEC4:
+		return EffectParameterClass::Vector;
+	
+	case GL_FLOAT_MAT2:
+	case GL_FLOAT_MAT3:
+	case GL_FLOAT_MAT4:
+	case GL_FLOAT_MAT2x3:
+	case GL_FLOAT_MAT2x4:
+	case GL_FLOAT_MAT3x2:
+	case GL_FLOAT_MAT3x4:
+	case GL_FLOAT_MAT4x2:
+	case GL_FLOAT_MAT4x3:
+	case GL_DOUBLE_MAT2:
+	case GL_DOUBLE_MAT3:
+	case GL_DOUBLE_MAT4:
+	case GL_DOUBLE_MAT2x3:
+	case GL_DOUBLE_MAT2x4:
+	case GL_DOUBLE_MAT3x2:
+	case GL_DOUBLE_MAT3x4:
+	case GL_DOUBLE_MAT4x2:
+	case GL_DOUBLE_MAT4x3:
+		return EffectParameterClass::Matrix;
+
+	case GL_SAMPLER_1D:
+	case GL_SAMPLER_2D:
+	case GL_SAMPLER_3D:
+	case GL_SAMPLER_CUBE:
+	case GL_SAMPLER_BUFFER:
+	case GL_SAMPLER_1D_ARRAY:
+	case GL_SAMPLER_2D_ARRAY:
+	case GL_SAMPLER_2D_MULTISAMPLE:
+	case GL_SAMPLER_2D_MULTISAMPLE_ARRAY:
+	case GL_SAMPLER_1D_SHADOW:
+	case GL_SAMPLER_2D_SHADOW:
+	case GL_SAMPLER_1D_ARRAY_SHADOW:
+	case GL_SAMPLER_2D_ARRAY_SHADOW:
+	case GL_SAMPLER_CUBE_SHADOW:
+	case GL_SAMPLER_2D_RECT:
+	case GL_SAMPLER_2D_RECT_SHADOW:
+	case GL_INT_SAMPLER_1D:
+	case GL_INT_SAMPLER_2D:
+	case GL_INT_SAMPLER_3D:
+	case GL_INT_SAMPLER_CUBE:
+	case GL_INT_SAMPLER_1D_ARRAY:
+	case GL_INT_SAMPLER_2D_ARRAY:
+	case GL_INT_SAMPLER_2D_MULTISAMPLE:
+	case GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
+	case GL_INT_SAMPLER_BUFFER:
+	case GL_INT_SAMPLER_2D_RECT:
+	case GL_UNSIGNED_INT_SAMPLER_1D:
+	case GL_UNSIGNED_INT_SAMPLER_2D:
+	case GL_UNSIGNED_INT_SAMPLER_3D:
+	case GL_UNSIGNED_INT_SAMPLER_CUBE:
+	case GL_UNSIGNED_INT_SAMPLER_1D_ARRAY:
+	case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+	case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE:
+	case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
+	case GL_UNSIGNED_INT_SAMPLER_BUFFER:
+	case GL_UNSIGNED_INT_SAMPLER_2D_RECT:
+		return EffectParameterClass::Object;
+	}
+
+#ifdef DEBUG
+	Log::Stream(LoggingLevel::Internal)
+		<< "Failed to find effect parameter class '"  << uniformType << "'.";
+#endif
+	return EffectParameterClass::Struct;
+}
+//-----------------------------------------------------------------------
+static void ToComponents(GLenum uniformType, std::uint8_t & RowCount, std::uint8_t ColumnCount)
+{
+	switch (uniformType)
+	{
+	case GL_FLOAT:
+	case GL_DOUBLE:
+	case GL_INT:
+	case GL_UNSIGNED_INT:
+	case GL_BOOL:
+	case GL_BYTE: 
+	case GL_UNSIGNED_BYTE:
+	case GL_SHORT:
+	case GL_UNSIGNED_SHORT:
+	case GL_SAMPLER_1D:
+	case GL_SAMPLER_2D:
+	case GL_SAMPLER_3D:
+	case GL_SAMPLER_CUBE:
+	case GL_SAMPLER_BUFFER:
+	case GL_SAMPLER_1D_ARRAY:
+	case GL_SAMPLER_2D_ARRAY:
+	case GL_SAMPLER_2D_MULTISAMPLE:
+	case GL_SAMPLER_2D_MULTISAMPLE_ARRAY:
+	case GL_SAMPLER_1D_SHADOW:
+	case GL_SAMPLER_2D_SHADOW:
+	case GL_SAMPLER_1D_ARRAY_SHADOW:
+	case GL_SAMPLER_2D_ARRAY_SHADOW:
+	case GL_SAMPLER_CUBE_SHADOW:
+	case GL_SAMPLER_2D_RECT:
+	case GL_SAMPLER_2D_RECT_SHADOW:
+	case GL_INT_SAMPLER_1D:
+	case GL_INT_SAMPLER_2D:
+	case GL_INT_SAMPLER_3D:
+	case GL_INT_SAMPLER_CUBE:
+	case GL_INT_SAMPLER_1D_ARRAY:
+	case GL_INT_SAMPLER_2D_ARRAY:
+	case GL_INT_SAMPLER_2D_MULTISAMPLE:
+	case GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
+	case GL_INT_SAMPLER_BUFFER:
+	case GL_INT_SAMPLER_2D_RECT:
+	case GL_UNSIGNED_INT_SAMPLER_1D:
+	case GL_UNSIGNED_INT_SAMPLER_2D:
+	case GL_UNSIGNED_INT_SAMPLER_3D:
+	case GL_UNSIGNED_INT_SAMPLER_CUBE:
+	case GL_UNSIGNED_INT_SAMPLER_1D_ARRAY:
+	case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+	case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE:
+	case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
+	case GL_UNSIGNED_INT_SAMPLER_BUFFER:
+	case GL_UNSIGNED_INT_SAMPLER_2D_RECT:
+		RowCount = 1; ColumnCount = 1;
+
+	case GL_FLOAT_VEC2:
+	case GL_INT_VEC2:
+	case GL_UNSIGNED_INT_VEC2:
+	case GL_DOUBLE_VEC2:
+	case GL_BOOL_VEC2:
+		RowCount = 1; ColumnCount = 2; return;
+
+	case GL_FLOAT_VEC3:
+	case GL_INT_VEC3:
+	case GL_UNSIGNED_INT_VEC3:
+	case GL_DOUBLE_VEC3:
+	case GL_BOOL_VEC3:
+		RowCount = 1; ColumnCount = 3; return;
+
+	case GL_FLOAT_VEC4:
+	case GL_INT_VEC4:
+	case GL_UNSIGNED_INT_VEC4:
+	case GL_DOUBLE_VEC4:
+	case GL_BOOL_VEC4:
+		RowCount = 1; ColumnCount = 4; return;
+
+	case GL_FLOAT_MAT2:
+	case GL_DOUBLE_MAT2:
+		RowCount = 2; ColumnCount = 2; return;
+
+	case GL_FLOAT_MAT3:
+	case GL_DOUBLE_MAT3:
+		RowCount = 3; ColumnCount = 3; return;
+
+	case GL_FLOAT_MAT4:
+	case GL_DOUBLE_MAT4:
+		RowCount = 4; ColumnCount = 4; return;
+
+	case GL_FLOAT_MAT2x3:
+	case GL_DOUBLE_MAT2x3:
+		RowCount = 2; ColumnCount = 3; return;
+
+	case GL_FLOAT_MAT3x2:
+	case GL_DOUBLE_MAT3x2:
+		RowCount = 3; ColumnCount = 2; return;
+
+	case GL_FLOAT_MAT2x4:
+	case GL_DOUBLE_MAT2x4:
+		RowCount = 2; ColumnCount = 4; return;
+
+	case GL_FLOAT_MAT4x2:
+	case GL_DOUBLE_MAT4x2:
+		RowCount = 4; ColumnCount = 2; return;
+
+	case GL_FLOAT_MAT3x4:
+	case GL_DOUBLE_MAT3x4:
+		RowCount = 3; ColumnCount = 4; return;
+
+	case GL_FLOAT_MAT4x3: 
+	case GL_DOUBLE_MAT4x3:
+		RowCount = 4; ColumnCount = 3; return;
+	}
+
+#ifdef DEBUG
+	Log::Stream(LoggingLevel::Internal)
+		<< "Failed to find uniform type '"  << uniformType << "'.";
+#endif
+}
+//-----------------------------------------------------------------------
+static
+EffectAnnotation ToEffectAnnotation(UniformVariableGL4 const& uniform)
+{
+	EffectAnnotation annotation;
+	
+	annotation.ParameterType = ToEffectParameterType(uniform.Type);
+	annotation.ParameterClass = ToEffectParameterClass(uniform.Type);
+	ToComponents(uniform.Type, annotation.RowCount, annotation.ColumnCount);
+	
+	return std::move(annotation);
+}
+//-----------------------------------------------------------------------
+static
+std::vector<EffectVariableDescription> GetEffectVariables(std::vector<UniformVariableGL4> const& uniforms)
+{
+	std::vector<EffectVariableDescription> result;
+	result.reserve(uniforms.size());
+	
+	for (auto & uniform: uniforms)
+	{
+		EffectVariableDescription effectVariable;
+		effectVariable.Name = uniform.Name;
+		effectVariable.ByteSize = uniform.ByteLength;
+		effectVariable.Annotation = ToEffectAnnotation(uniform);
+	}
+	return std::move(result);
+}
+//-----------------------------------------------------------------------
 #ifdef DEBUG
 static
 void DebugLogUniformBlocks(std::vector<UniformBlockGL4> const& uniformBlocks)
@@ -201,7 +549,7 @@ ShaderReflectionGL4::ShaderReflectionGL4(ShaderProgramGL4 const& shaderProgramIn
 {
 }
 //-----------------------------------------------------------------------
-std::vector<UniformBlockGL4> ShaderReflectionGL4::GetNativeUniformBlocks(ShaderProgramGL4 const& shaderProgram)
+std::vector<UniformBlockGL4> ShaderReflectionGL4::GetNativeUniformBlocks()
 {
 	auto uniformBlocks = EnumerateUniformBlocks(shaderProgram);
 	
@@ -223,6 +571,7 @@ std::vector<EffectBufferDescription> ShaderReflectionGL4::GetConstantBuffers() c
 		EffectBufferDescription description;
 		description.Name = uniformBlock.Name;
 		description.ByteConstants = uniformBlock.ByteConstants;
+		description.Variables = GetEffectVariables(uniformBlock.Uniforms);
 		result.push_back(std::move(description));
 	}
 	
