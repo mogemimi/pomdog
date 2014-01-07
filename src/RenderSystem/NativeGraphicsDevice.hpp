@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -29,7 +29,7 @@ class NativeEffectParameter;
 class NativeIndexBuffer;
 class NativeInputLayout;
 class NativeSamplerState;
-class NativeShaderReflection;
+class NativeEffectReflection;
 class NativeRasterizerState;
 class NativeVertexBuffer;
 class ShaderBytecode;
@@ -85,8 +85,8 @@ public:
 		std::uint32_t byteWidth) = 0;
 	
 	///@~Japanese
-	/// @brief 指定されたエフェクトパスからシェーダリフレクションを作成します。
-	virtual std::unique_ptr<NativeShaderReflection> CreateShaderReflection(
+	/// @brief 指定されたエフェクトパスからエフェクトリフレクションを作成します。
+	virtual std::unique_ptr<NativeEffectReflection> CreateEffectReflection(
 		NativeEffectPass & nativeEffectPass) = 0;
 	
 	///@~Japanese

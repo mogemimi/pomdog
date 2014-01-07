@@ -64,7 +64,7 @@ public:
 		std::uint32_t byteConstants) override;
 	
 	///@copydoc NativeGraphicsDevice
-	std::unique_ptr<NativeShaderReflection> CreateShaderReflection(
+	std::unique_ptr<NativeEffectReflection> CreateEffectReflection(
 		NativeEffectPass & nativeEffectPass) override;
 	
 	///@copydoc NativeGraphicsDevice

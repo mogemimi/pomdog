@@ -81,6 +81,8 @@
 #include "Graphics/EffectParameterClass.hpp"
 #include "Graphics/EffectParameterType.hpp"
 #include "Graphics/EffectPass.hpp"
+#include "Graphics/EffectReflection.hpp"
+#include "Graphics/EffectVariable.hpp"
 #include "Graphics/FillMode.hpp"
 #include "Graphics/GraphicsContext.hpp"
 #include "Graphics/GraphicsDevice.hpp"

@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "ShaderReflectionGL4.hpp"
+#include "EffectReflectionGL4.hpp"
 #include <utility>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Logging/Log.hpp>
@@ -544,12 +544,12 @@ void DebugLogUniformBlocks(std::vector<UniformBlockGL4> const& uniformBlocks)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-ShaderReflectionGL4::ShaderReflectionGL4(ShaderProgramGL4 const& shaderProgramIn)
+EffectReflectionGL4::EffectReflectionGL4(ShaderProgramGL4 const& shaderProgramIn)
 	: shaderProgram(shaderProgramIn)
 {
 }
 //-----------------------------------------------------------------------
-std::vector<UniformBlockGL4> ShaderReflectionGL4::GetNativeUniformBlocks()
+std::vector<UniformBlockGL4> EffectReflectionGL4::GetNativeUniformBlocks()
 {
 	auto uniformBlocks = EnumerateUniformBlocks(shaderProgram);
 	
@@ -560,7 +560,7 @@ std::vector<UniformBlockGL4> ShaderReflectionGL4::GetNativeUniformBlocks()
 	return std::move(uniformBlocks);
 }
 //-----------------------------------------------------------------------
-std::vector<EffectBufferDescription> ShaderReflectionGL4::GetConstantBuffers() const
+std::vector<EffectBufferDescription> EffectReflectionGL4::GetConstantBuffers() const
 {
 	auto uniformBlocks = EnumerateUniformBlocks(shaderProgram);
 	

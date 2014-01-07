@@ -14,7 +14,7 @@
 #include "../RenderSystem/NativeEffectPass.hpp"
 #include "../RenderSystem/NativeEffectParameter.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
-#include "../RenderSystem/NativeShaderReflection.hpp"
+#include "../RenderSystem/NativeEffectReflection.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
 
 namespace Pomdog {
@@ -100,12 +100,12 @@ EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		}
 	);
 	
-	// Create shader reflection:
+	// Create effect reflection:
 	POMDOG_ASSERT(nativeEffectPass);
-	auto shaderReflection = nativeDevice->CreateShaderReflection(*nativeEffectPass);
+	auto effectReflection = nativeDevice->CreateEffectReflection(*nativeEffectPass);
 	
-	POMDOG_ASSERT(shaderReflection);
-	auto constantBuffers = shaderReflection->GetConstantBuffers();
+	POMDOG_ASSERT(effectReflection);
+	auto constantBuffers = effectReflection->GetConstantBuffers();
 	
 	// Create effect parameters:
 	for (auto & constantBuffer: constantBuffers)

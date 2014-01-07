@@ -20,8 +20,8 @@
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "GraphicsContextGL4.hpp"
 #include "ErrorChecker.hpp"
-#include "ShaderReflectionGL4.hpp"
 #include "EffectParameterGL4.hpp"
+#include "EffectReflectionGL4.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -169,7 +169,7 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 	}
 	
 	// Create default constant buffers:
-	ShaderReflectionGL4 shaderReflection(*shaderProgram);
+	EffectReflectionGL4 shaderReflection(*shaderProgram);
 	auto uniformBlocks = shaderReflection.GetNativeUniformBlocks();
 	{
 		std::uint32_t slotIndex = 0;

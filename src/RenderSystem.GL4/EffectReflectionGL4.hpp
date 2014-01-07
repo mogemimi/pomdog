@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_SRC_GL4_SHADERREFLECTIONGL4_98947466_A9FF_4349_A3F0_876FEF470821_HPP
-#define POMDOG_SRC_GL4_SHADERREFLECTIONGL4_98947466_A9FF_4349_A3F0_876FEF470821_HPP
+#ifndef POMDOG_SRC_GL4_EFFECTREFLECTIONGL4_98947466_A9FF_4349_A3F0_876FEF470821_HPP
+#define POMDOG_SRC_GL4_EFFECTREFLECTIONGL4_98947466_A9FF_4349_A3F0_876FEF470821_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -17,7 +17,7 @@
 #include <vector>
 #include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Config/FundamentalTypes.hpp>
-#include "../RenderSystem/NativeShaderReflection.hpp"
+#include "../RenderSystem/NativeEffectReflection.hpp"
 #include "TypesafeGL4.hpp"
 
 namespace Pomdog {
@@ -44,13 +44,13 @@ struct UniformBlockGL4
 	std::uint32_t BlockIndex;
 };
 
-class ShaderReflectionGL4: public NativeShaderReflection
+class EffectReflectionGL4: public NativeEffectReflection
 {
 public:
-	ShaderReflectionGL4() = delete;
+	EffectReflectionGL4() = delete;
 	
-	explicit ShaderReflectionGL4(ShaderProgramGL4 const& shaderProgram);
-	~ShaderReflectionGL4() = default;
+	explicit EffectReflectionGL4(ShaderProgramGL4 const& shaderProgram);
+	~EffectReflectionGL4() = default;
 
 	std::vector<EffectBufferDescription> GetConstantBuffers() const override;
 
@@ -65,4 +65,4 @@ private:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SRC_GL4_SHADERREFLECTIONGL4_98947466_A9FF_4349_A3F0_876FEF470821_HPP)
+#endif // !defined(POMDOG_SRC_GL4_EFFECTREFLECTIONGL4_98947466_A9FF_4349_A3F0_876FEF470821_HPP)

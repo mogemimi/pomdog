@@ -30,6 +30,8 @@ class DynamicVertexBuffer;
 class EffectAnnotation;
 class EffectParameter;
 class EffectPass;
+class EffectReflection;
+class EffectVariable;
 class GraphicsContext;
 class GraphicsDevice;
 class IndexBuffer;

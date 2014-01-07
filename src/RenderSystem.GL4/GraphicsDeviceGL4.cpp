@@ -12,11 +12,11 @@
 #include "DepthStencilStateGL4.hpp"
 #include "EffectPassGL4.hpp"
 #include "EffectParameterGL4.hpp"
+#include "EffectReflectionGL4.hpp"
 #include "IndexBufferGL4.hpp"
 #include "InputLayoutGL4.hpp"
 #include "RasterizerStateGL4.hpp"
 #include "SamplerStateGL4.hpp"
-#include "ShaderReflectionGL4.hpp"
 #include "VertexBufferGL4.hpp"
 #include "../Utility/MakeUnique.hpp"
 
@@ -75,16 +75,16 @@ GraphicsDeviceGL4::CreateEffectParameter(std::uint32_t byteConstants)
 	return MakeUnique<EffectParameterGL4>(byteConstants);
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeShaderReflection>
-GraphicsDeviceGL4::CreateShaderReflection(NativeEffectPass & nativeEffectPass)
+std::unique_ptr<NativeEffectReflection>
+GraphicsDeviceGL4::CreateEffectReflection(NativeEffectPass & nativeEffectPass)
 {
 	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(&nativeEffectPass);
 	POMDOG_ASSERT(effectPassGL4 != nullptr);
 	
 	if (!effectPassGL4) {
-		return std::unique_ptr<ShaderReflectionGL4>();
+		return std::unique_ptr<EffectReflectionGL4>();
 	}
-	return MakeUnique<ShaderReflectionGL4>(effectPassGL4->GetShaderProgram());
+	return MakeUnique<EffectReflectionGL4>(effectPassGL4->GetShaderProgram());
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeInputLayout>
