@@ -77,6 +77,7 @@
 #include "Graphics/DynamicIndexBuffer.hpp"
 #include "Graphics/DynamicVertexBuffer.hpp"
 #include "Graphics/EffectAnnotation.hpp"
+#include "Graphics/EffectConstantDescription.hpp"
 #include "Graphics/EffectParameter.hpp"
 #include "Graphics/EffectParameterClass.hpp"
 #include "Graphics/EffectParameterType.hpp"

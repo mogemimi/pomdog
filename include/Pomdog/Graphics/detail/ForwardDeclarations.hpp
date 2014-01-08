@@ -28,6 +28,7 @@ class DepthStencilState;
 class DynamicIndexBuffer;
 class DynamicVertexBuffer;
 class EffectAnnotation;
+class EffectConstantDescription;
 class EffectParameter;
 class EffectPass;
 class EffectReflection;

@@ -14,8 +14,7 @@
 #endif
 
 #include <string>
-#include "EffectParameterClass.hpp"
-#include "EffectParameterType.hpp"
+#include "EffectAnnotation.hpp"
 
 namespace Pomdog {
 
@@ -25,25 +24,14 @@ namespace Pomdog {
 /// @{
 
 ///@~Japanese
-/// @brief 定数バッファの要素の型を示すメタデータです。
+/// @brief 定数バッファの要素です。
 class EffectVariable
 {
 public:
-	///@~Japanese
-	/// @brief 列の数です。
-	std::uint8_t ColumnCount;
-
-	///@~Japanese
-	/// @brief 行の数です。
-	std::uint8_t RowCount;
-	
-	///@~Japanese
-	/// @brief パラメータのクラスです。
-	EffectParameterClass ParameterClass;
-
-	///@~Japanese
-	/// @brief パラメータの型です。
-	EffectParameterType ParameterType;
+	std::string Name;
+	EffectAnnotation Annotation;
+	std::uint32_t StartOffset;
+	std::uint32_t ByteSize;
 };
 
 /// @}

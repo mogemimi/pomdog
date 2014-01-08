@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,12 +13,51 @@
 #	pragma once
 #endif
 
-namespace Pomdog {
+#include <memory>
+#include <vector>
+#include "../Config/Export.hpp"
+#include "detail/ForwardDeclarations.hpp"
+#include "EffectConstantDescription.hpp"
 
-class EffectReflection
+namespace Pomdog {
+namespace Details {
+namespace RenderSystem {
+
+class NativeEffectReflection;
+
+}// namespace RenderSystem
+}// namespace Details
+
+/// @addtogroup Framework
+/// @{
+/// @addtogroup Graphics
+/// @{
+
+///@~Japanese
+/// @brief エフェクトリフレクションです。
+class POMDOG_EXPORT EffectReflection
 {
 public:
+	EffectReflection() = delete;
+	EffectReflection(EffectReflection const&) = delete;
+	EffectReflection(EffectReflection &&) = default;
+	
+	EffectReflection(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		std::shared_ptr<EffectPass> const& effectPass);
+
+	~EffectReflection();
+	
+	std::vector<EffectConstantDescription> GetConstantBuffers() const;
+	
+public:
+	Details::RenderSystem::NativeEffectReflection* GetNativeEffectReflection();
+	
+private:
+	std::unique_ptr<Details::RenderSystem::NativeEffectReflection> nativeEffectReflection;
 };
+
+/// @}
+/// @}
 
 }// namespace Pomdog
 

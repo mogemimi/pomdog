@@ -12,7 +12,7 @@
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LoggingLevel.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
-#include "../RenderSystem/EffectBufferDescription.hpp"
+#include <Pomdog/Graphics/EffectConstantDescription.hpp>
 #include "ErrorChecker.hpp"
 
 namespace Pomdog {
@@ -95,10 +95,10 @@ EnumerateUniformVariables(ShaderProgramGL4 const& shaderProgram, GLuint uniformB
 	std::vector<UniformVariableGL4> uniforms(uniformIndices.size());
 	
 	GetActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_OFFSET,
-		[&](GLsizei index, GLint value){ uniforms[index].Offset = value; });
+		[&](GLsizei index, GLint value){ uniforms[index].StartOffset = value; });
 	
 	GetActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_SIZE,
-		[&](GLsizei index, GLint value){ uniforms[index].ByteLength = value; });
+		[&](GLsizei index, GLint value){ uniforms[index].ByteSize = value; });
 	
 	GetActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_TYPE,
 		[&](GLsizei index, GLint value){ uniforms[index].Type = value; });
@@ -150,7 +150,7 @@ EnumerateUniformBlocks(ShaderProgramGL4 const& shaderProgram)
 		UniformBlockGL4 uniformBlock;
 		
 		uniformBlock.Name = GetActiveUniformBlockName(shaderProgram, uniformBlockIndex);
-		uniformBlock.ByteConstants = GetActiveUniformBlockIntValue(shaderProgram, uniformBlockIndex, GL_UNIFORM_BLOCK_DATA_SIZE);
+		uniformBlock.ByteSize = GetActiveUniformBlockIntValue(shaderProgram, uniformBlockIndex, GL_UNIFORM_BLOCK_DATA_SIZE);
 		//uniformBlock.BindingPoint = GetActiveUniformBlockIntValue(shaderProgram, uniformBlockIndex, GL_UNIFORM_BLOCK_BINDING);
 		uniformBlock.Uniforms = EnumerateUniformVariables(shaderProgram, uniformBlockIndex);
 		//uniformBlock.BlockIndex = uniformBlockIndex;
@@ -494,17 +494,19 @@ EffectAnnotation ToEffectAnnotation(UniformVariableGL4 const& uniform)
 }
 //-----------------------------------------------------------------------
 static
-std::vector<EffectVariableDescription> GetEffectVariables(std::vector<UniformVariableGL4> const& uniforms)
+std::vector<EffectVariable> GetEffectVariables(std::vector<UniformVariableGL4> const& uniforms)
 {
-	std::vector<EffectVariableDescription> result;
+	std::vector<EffectVariable> result;
 	result.reserve(uniforms.size());
 	
 	for (auto & uniform: uniforms)
 	{
-		EffectVariableDescription effectVariable;
+		EffectVariable effectVariable;
 		effectVariable.Name = uniform.Name;
-		effectVariable.ByteSize = uniform.ByteLength;
+		effectVariable.ByteSize = uniform.ByteSize;
+		effectVariable.StartOffset = uniform.StartOffset;
 		effectVariable.Annotation = ToEffectAnnotation(uniform);
+		result.push_back(std::move(effectVariable));
 	}
 	return std::move(result);
 }
@@ -521,15 +523,15 @@ void DebugLogUniformBlocks(std::vector<UniformBlockGL4> const& uniformBlocks)
 		<< "-[UniformBlock]-------------------\n"
 		<< "         Name: " << uniformBlock.Name << "\n"
 		<< "   BlockIndex: " << uniformBlock.BlockIndex << "\n"
-		<< "ByteConstants: " << uniformBlock.ByteConstants << "\n"
+		<< "     ByteSize: " << uniformBlock.ByteSize << "\n"
 		<< "Uniforms.size: " << uniformBlock.Uniforms.size() << "\n";
 
 		for (auto const& uniform: uniformBlock.Uniforms) {
 			stream
 			<< ":- - - - - - - - - - - - - -\n"
 			<< "         Name: " << uniform.Name << "\n"
-			<< "       Offset: " << uniform.Offset << "\n"
-			<< "   ByteLength: " << uniform.ByteLength << "\n"
+			<< "  StartOffset: " << uniform.StartOffset << "\n"
+			<< "     ByteSize: " << uniform.ByteSize << "\n"
 			<< "         Type: " << uniform.Type << "\n"
 			<< "  ArrayStride: " << uniform.ArrayStride << "\n"
 			<< " MatrixStride: " << uniform.MatrixStride << "\n"
@@ -560,17 +562,17 @@ std::vector<UniformBlockGL4> EffectReflectionGL4::GetNativeUniformBlocks()
 	return std::move(uniformBlocks);
 }
 //-----------------------------------------------------------------------
-std::vector<EffectBufferDescription> EffectReflectionGL4::GetConstantBuffers() const
+std::vector<EffectConstantDescription> EffectReflectionGL4::GetConstantBuffers() const
 {
 	auto uniformBlocks = EnumerateUniformBlocks(shaderProgram);
 	
-	std::vector<EffectBufferDescription> result;
+	std::vector<EffectConstantDescription> result;
 	
 	for (auto & uniformBlock: uniformBlocks)
 	{
-		EffectBufferDescription description;
+		EffectConstantDescription description;
 		description.Name = uniformBlock.Name;
-		description.ByteConstants = uniformBlock.ByteConstants;
+		description.ByteSize = uniformBlock.ByteSize;
 		description.Variables = GetEffectVariables(uniformBlock.Uniforms);
 		result.push_back(std::move(description));
 	}

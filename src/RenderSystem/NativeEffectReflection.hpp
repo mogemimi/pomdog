@@ -14,12 +14,11 @@
 #endif
 
 #include <vector>
+#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
-
-class EffectBufferDescription;
 
 class NativeEffectReflection
 {
@@ -30,7 +29,7 @@ public:
 	
 	virtual ~NativeEffectReflection() = default;
 
-	virtual std::vector<EffectBufferDescription> GetConstantBuffers() const = 0;
+	virtual std::vector<EffectConstantDescription> GetConstantBuffers() const = 0;
 };
 
 }// namespace RenderSystem

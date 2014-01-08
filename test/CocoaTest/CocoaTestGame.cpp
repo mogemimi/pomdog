@@ -66,40 +66,19 @@ void CocoaTestGame::Initialize()
 		indexBuffer = std::make_shared<ImmutableIndexBuffer>(graphicsDevice,
 			IndexElementSize::SixteenBits, indices.data(), indices.size());
 	}
-//	{
-//		// Draft:
-//		struct ViewProjection
-//		{
-//			Matrix4x4 view;
-//			Matrix4x4 projection;
-//		};
-//	
-//		struct Material
-//		{
-//			Color ambient;
-//			Color diffuse;
-//			Color specular;
-//		};
-//
-//		ViewProjection viewProjection;
-//		Material material;
-//		
-//		// shared constant buffer
-//		auto effectConstant = effectPass->GetConstant("World");
-//		otherEffectPass->ResetConstant("World", effectConstant);
-//		
-//		// set value
-//		effectPass->GetConstant("World")->SetValue(Float4x4::Identity);
-//		effectPass->GetConstant("ViewProjection")->SetValue(viewProjection);
-//		effectPass->GetConstant("Material")->SetValue(material);
-//		
-//		// shader reflection
-//      auto shaderReflection = std::make_unique<ShaderReflection>(graphicsDevice);
-//		auto parameterAnnotations = shaderReflection->GetParameters(effectPass);
-//	}
 	{
 		for (auto & parameter: effectPass->Parameters()) {
 			Log::Stream() << "EffectParameter: " << parameter.first;
+		}
+		
+		auto effectReflection = std::make_shared<EffectReflection>(graphicsDevice, effectPass);
+	
+		auto stream = Log::Stream();
+		for (auto & description: effectReflection->GetConstantBuffers()) {
+			stream << "-----------------------" << "\n";
+			stream << "     Name: " << description.Name << "\n";
+			stream << " ByteSize: " << description.ByteSize << "\n";
+			stream << "Variables: " << description.Variables.size() << "\n";
 		}
 	}
 }

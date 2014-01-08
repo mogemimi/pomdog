@@ -10,12 +10,12 @@
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/EffectParameter.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
-#include "../RenderSystem/EffectBufferDescription.hpp"
 #include "../RenderSystem/NativeEffectPass.hpp"
 #include "../RenderSystem/NativeEffectParameter.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeEffectReflection.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
+#include "EffectConstantDescription.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
@@ -56,24 +56,11 @@ uniform TestStructure {
 	vec2 Rotation;
 };
 
-//uniform Material {
-//	vec4 Ambient;
-//	vec4 Diffuse[2];
-//	vec3 Specular;
-//	float Emissive[4];
-//};
-//
-//uniform ViewProjection {
-//	mat3 View;
-//	mat4 Projection;
-//};
-
 out vec4 FragColor;
 
 void main()
 {
 	FragColor = vec4(In.TextureCoord.xy, Rotation.y, 1.0) * Rotation.x;
-	//* Ambient * Diffuse[0].r * Specular.r * Emissive[3] * View[0].x * Projection[0].y; // Debug code
 }
 //====================================================================
 );
@@ -110,7 +97,7 @@ EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	// Create effect parameters:
 	for (auto & constantBuffer: constantBuffers)
 	{
-		auto effectParameter = std::make_shared<EffectParameter>(graphicsDevice, constantBuffer.ByteConstants);
+		auto effectParameter = std::make_shared<EffectParameter>(graphicsDevice, constantBuffer.ByteSize);
 		effectParameters[constantBuffer.Name] = std::move(effectParameter);
 	}
 	

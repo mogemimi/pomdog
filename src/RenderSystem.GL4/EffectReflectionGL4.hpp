@@ -28,8 +28,8 @@ namespace GL4 {
 struct UniformVariableGL4
 {
 	std::string Name;
-	GLuint Offset;
-	GLenum ByteLength;
+	GLuint StartOffset;
+	GLenum ByteSize;
 	GLenum Type;
 	GLuint ArrayStride;
 	GLuint MatrixStride;
@@ -40,7 +40,7 @@ struct UniformBlockGL4
 {
 	std::vector<UniformVariableGL4> Uniforms;
 	std::string Name;
-	std::uint32_t ByteConstants;
+	std::uint32_t ByteSize;
 	std::uint32_t BlockIndex;
 };
 
@@ -52,7 +52,7 @@ public:
 	explicit EffectReflectionGL4(ShaderProgramGL4 const& shaderProgram);
 	~EffectReflectionGL4() = default;
 
-	std::vector<EffectBufferDescription> GetConstantBuffers() const override;
+	std::vector<EffectConstantDescription> GetConstantBuffers() const override;
 
 	std::vector<UniformBlockGL4> GetNativeUniformBlocks();
 	
