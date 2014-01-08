@@ -16,8 +16,8 @@
 #include <Pomdog/Logging/LogStream.hpp>
 #include <Pomdog/Utility/Exception.hpp>
 #include <Pomdog/Graphics/GraphicsContext.hpp>
+#include <Pomdog/Graphics/detail/ShaderBytecode.hpp>
 #include "../Utility/ScopeGuard.hpp"
-#include "../RenderSystem/ShaderBytecode.hpp"
 #include "GraphicsContextGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "EffectParameterGL4.hpp"

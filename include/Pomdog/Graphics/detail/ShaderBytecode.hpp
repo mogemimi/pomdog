@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_SRC_RENDERSYSTEM_SHADERBYTECODE_02AC7B6D_D9F3_4354_AFF4_63F439E542DC_HPP
-#define POMDOG_SRC_RENDERSYSTEM_SHADERBYTECODE_02AC7B6D_D9F3_4354_AFF4_63F439E542DC_HPP
+#ifndef POMDOG_DETAIL_GRAPHICS_SHADERBYTECODE_02AC7B6D_D9F3_4354_AFF4_63F439E542DC_HPP
+#define POMDOG_DETAIL_GRAPHICS_SHADERBYTECODE_02AC7B6D_D9F3_4354_AFF4_63F439E542DC_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -17,7 +17,6 @@
 
 namespace Pomdog {
 namespace Details {
-namespace RenderSystem {
 
 class ShaderBytecode
 {
@@ -26,8 +25,7 @@ public:
 	std::size_t ByteLength;
 };
 
-}// namespace RenderSystem
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SRC_RENDERSYSTEM_SHADERBYTECODE_02AC7B6D_D9F3_4354_AFF4_63F439E542DC_HPP)
+#endif // !defined(POMDOG_DETAIL_GRAPHICS_SHADERBYTECODE_02AC7B6D_D9F3_4354_AFF4_63F439E542DC_HPP)

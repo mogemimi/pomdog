@@ -21,6 +21,9 @@
 
 namespace Pomdog {
 namespace Details {
+
+class ShaderBytecode;
+
 namespace RenderSystem {
 
 class NativeEffectPass;
@@ -43,7 +46,9 @@ public:
 	EffectPass(EffectPass &&) = default;
 	
 	EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		std::shared_ptr<GraphicsContext> const& graphicsContext);
+		std::shared_ptr<GraphicsContext> const& graphicsContext,
+		Details::ShaderBytecode const& vertexShader,
+		Details::ShaderBytecode const& pixelShader);
 
 	~EffectPass();
 	

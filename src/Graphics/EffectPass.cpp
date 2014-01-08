@@ -14,7 +14,6 @@
 #include "../RenderSystem/NativeEffectParameter.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeEffectReflection.hpp"
-#include "../RenderSystem/ShaderBytecode.hpp"
 #include "EffectConstantDescription.hpp"
 
 namespace Pomdog {
@@ -22,53 +21,13 @@ namespace Pomdog {
 namespace {
 
 static auto dummyParameter = std::make_shared<EffectParameter>();
-
-using Details::RenderSystem::ShaderBytecode;
 using Details::RenderSystem::NativeEffectParameter;
-
-#define POMDOG_TOSTRING_SORRY_FOR_USING_MACRO(x) \
-	"#version 330 \n" + std::string(#x)
-
-std::string const vertexShader = POMDOG_TOSTRING_SORRY_FOR_USING_MACRO(
-//====================================================================
-layout(location = 0) in vec3 Position;
-layout(location = 1) in vec2 TextureCoord;
-
-out VertexData {
-	vec2 TextureCoord;
-} Out;
-
-void main()
-{
-	gl_Position = vec4(Position.xyz, 1.0);
-	Out.TextureCoord = TextureCoord.xy;
-}
-//====================================================================
-);
-
-std::string const pixelShader = POMDOG_TOSTRING_SORRY_FOR_USING_MACRO(
-//====================================================================
-in VertexData {
-	vec2 TextureCoord;
-} In;
-
-uniform TestStructure {
-	vec2 Rotation;
-};
-
-out vec4 FragColor;
-
-void main()
-{
-	FragColor = vec4(In.TextureCoord.xy, Rotation.y, 1.0) * Rotation.x;
-}
-//====================================================================
-);
 
 }// namespace
 //-----------------------------------------------------------------------
 EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	std::shared_ptr<GraphicsContext> const& graphicsContextIn)
+	std::shared_ptr<GraphicsContext> const& graphicsContextIn,
+	Details::ShaderBytecode const& vertexShader, Details::ShaderBytecode const& pixelShader)
 	: graphicsContext(graphicsContextIn)
 {
 	POMDOG_ASSERT(graphicsContextIn);
@@ -76,16 +35,7 @@ EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 
 	auto nativeDevice = graphicsDevice->GetNativeGraphicsDevice();
 
-	nativeEffectPass = nativeDevice->CreateEffectPass(
-		ShaderBytecode{
-			vertexShader.data(),
-			vertexShader.size()
-		},
-		ShaderBytecode{
-			pixelShader.data(),
-			pixelShader.size()
-		}
-	);
+	nativeEffectPass = nativeDevice->CreateEffectPass(vertexShader, pixelShader);
 	
 	// Create effect reflection:
 	POMDOG_ASSERT(nativeEffectPass);

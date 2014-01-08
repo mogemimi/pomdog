@@ -220,6 +220,7 @@
       '../include/Pomdog/Graphics/VertexBuffer.hpp',
       '../include/Pomdog/Graphics/VertexBufferBinding.hpp',
       '../include/Pomdog/Graphics/detail/EffectBinaryParameter.hpp',
+      '../include/Pomdog/Graphics/detail/ShaderBytecode.hpp',
       '../include/Pomdog/Input/Mouse.hpp',
       '../src/Application/SystemEventDispatcher.hpp',
       '../src/Graphics/BlendState.cpp',
@@ -252,7 +253,6 @@
       '../src/RenderSystem/NativeSamplerState.hpp',
       '../src/RenderSystem/NativeVertexBuffer.hpp',
       '../src/RenderSystem/PresentationParameters.hpp',
-      '../src/RenderSystem/ShaderBytecode.hpp',
     ],
     'pomdog_library_opengl4_sources': [
       '../src/RenderSystem.GL4/BlendStateGL4.cpp',

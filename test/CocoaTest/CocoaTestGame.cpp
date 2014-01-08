@@ -8,8 +8,49 @@
 
 #include "CocoaTestGame.hpp"
 #include <utility>
+#include <Pomdog/Graphics/detail/ShaderBytecode.hpp>
 
 namespace Pomdog {
+
+#define POMDOG_TOSTRING_SORRY_FOR_USING_MACRO(x) \
+	"#version 330 \n" + std::string(#x)
+
+std::string const vertexShader = POMDOG_TOSTRING_SORRY_FOR_USING_MACRO(
+//====================================================================
+layout(location = 0) in vec3 Position;
+layout(location = 1) in vec2 TextureCoord;
+
+out VertexData {
+	vec2 TextureCoord;
+} Out;
+
+void main()
+{
+	gl_Position = vec4(Position.xyz, 1.0);
+	Out.TextureCoord = TextureCoord.xy;
+}
+//====================================================================
+);
+
+std::string const pixelShader = POMDOG_TOSTRING_SORRY_FOR_USING_MACRO(
+//====================================================================
+in VertexData {
+	vec2 TextureCoord;
+} In;
+
+uniform TestStructure {
+	vec2 Rotation;
+};
+
+out vec4 FragColor;
+
+void main()
+{
+	FragColor = vec4(In.TextureCoord.xy, Rotation.y, 1.0) * Rotation.x;
+}
+//====================================================================
+);
+
 //-----------------------------------------------------------------------
 CocoaTestGame::CocoaTestGame(std::shared_ptr<GameHost> host)
 	: gameHost(std::move(host))
@@ -53,7 +94,10 @@ void CocoaTestGame::Initialize()
 		vertexBuffer = std::make_shared<ImmutableVertexBuffer>(graphicsDevice,
 			VertexCombined::Declaration(), verticesCombo.data(), verticesCombo.size());
 
-		effectPass = std::make_shared<EffectPass>(graphicsDevice, graphicsContext);
+		effectPass = std::make_shared<EffectPass>(graphicsDevice, graphicsContext,
+			Details::ShaderBytecode { vertexShader.data(), vertexShader.size() },
+			Details::ShaderBytecode { pixelShader.data(), pixelShader.size() }
+		);
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}
 	{
@@ -85,9 +129,6 @@ void CocoaTestGame::Initialize()
 //-----------------------------------------------------------------------
 void CocoaTestGame::Update()
 {
-	//auto parameter = effectPass->Parameters("AmbientColor");
-	//parameter->SetValue(Color{0.9f, 0.7f, 0.5f, 1.0f});
-	
 	static float value = 0.0f;
 	value += 0.008f;
 	if (value > 1.0f) {

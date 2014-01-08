@@ -20,6 +20,9 @@
 
 namespace Pomdog {
 namespace Details {
+
+class ShaderBytecode;
+
 namespace RenderSystem {
 
 class NativeBlendState;
@@ -32,7 +35,6 @@ class NativeSamplerState;
 class NativeEffectReflection;
 class NativeRasterizerState;
 class NativeVertexBuffer;
-class ShaderBytecode;
 
 ///@~Japanese
 /// @brief グラフィックスリソースの作成を行います。
