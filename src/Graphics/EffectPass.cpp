@@ -33,8 +33,11 @@ EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	POMDOG_ASSERT(graphicsContextIn);
 	POMDOG_ASSERT(!this->graphicsContext.expired());
 
+	POMDOG_ASSERT(graphicsDevice);
 	auto nativeDevice = graphicsDevice->GetNativeGraphicsDevice();
-
+	
+	// Create effect pass:
+	POMDOG_ASSERT(nativeDevice);
 	nativeEffectPass = nativeDevice->CreateEffectPass(vertexShader, pixelShader);
 	
 	// Create effect reflection:
