@@ -10,6 +10,7 @@
 #include <cmath>
 #include <limits>
 #include <array>
+#include <utility>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Math/detail/FloatingPointMatrix3x3.hpp>
 #include <Pomdog/Math/detail/FloatingPointMatrix4x4.hpp>
@@ -213,7 +214,7 @@ FloatingPointQuaternion<T>::Normalize(FloatingPointQuaternion const& source)
 {
 	FloatingPointQuaternion result;
 	Normalize(source, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -241,7 +242,7 @@ FloatingPointQuaternion<T>::Slerp(FloatingPointQuaternion const& begin, Floating
 {
 	FloatingPointQuaternion result;
 	Slerp(begin, end, amount, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -267,7 +268,7 @@ FloatingPointQuaternion<T>::Inverse(FloatingPointQuaternion const& source)
 {
 	FloatingPointQuaternion result;
 	Inverse(source, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -291,7 +292,7 @@ FloatingPointQuaternion<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& a
 {
 	FloatingPointQuaternion result;
 	CreateFromAxisAngle(axis, angle, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <class MatrixClass, typename T> static
@@ -354,7 +355,7 @@ FloatingPointQuaternion<T>::CreateFromRotationMatrix(FloatingPointMatrix4x4<T> c
 {
 	FloatingPointQuaternion result;
 	CreateFromRotationMatrix(rotation, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -408,7 +409,7 @@ FloatingPointQuaternion<T>::CreateFromYawPitchRoll(
 {
 	FloatingPointQuaternion result;
 	CreateFromYawPitchRoll(yaw, pitch, roll, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>

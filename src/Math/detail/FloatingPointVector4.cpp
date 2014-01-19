@@ -9,6 +9,7 @@
 #include <Pomdog/Math/detail/FloatingPointVector4.hpp>
 #include <cmath>
 #include <limits>
+#include <utility>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Math/detail/FloatingPointVector3.hpp>
 
@@ -195,7 +196,7 @@ FloatingPointVector4<T>::Normalize(FloatingPointVector4 const& source)
 {
 	FloatingPointVector4 result;
 	Normalize(source, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>

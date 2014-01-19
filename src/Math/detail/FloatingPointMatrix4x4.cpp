@@ -9,6 +9,7 @@
 #include <Pomdog/Math/detail/FloatingPointMatrix4x4.hpp>
 #include <cmath>
 #include <limits>
+#include <utility>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Math/detail/FloatingPointMatrix3x3.hpp>
 #include <Pomdog/Math/detail/FloatingPointQuaternion.hpp>
@@ -464,7 +465,7 @@ FloatingPointMatrix4x4<T>::Invert(FloatingPointMatrix4x4 const& source)
 {
 	FloatingPointMatrix4x4 result;
 	Invert(source, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -497,7 +498,7 @@ FloatingPointMatrix4x4<T>::Lerp(FloatingPointMatrix4x4 const& source1, FloatingP
 {
 	FloatingPointMatrix4x4 result;
 	Lerp(source1, source2, amount, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -516,7 +517,7 @@ FloatingPointMatrix4x4<T>::CreateTranslation(FloatingPointVector3<T> const& posi
 {
 	FloatingPointMatrix4x4 result;
 	CreateTranslation(position, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -535,7 +536,7 @@ FloatingPointMatrix4x4<T>::CreateScale(FloatingPointVector3<T> const& scale)
 {
 	FloatingPointMatrix4x4 result;
 	CreateScale(scale, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -558,7 +559,7 @@ FloatingPointMatrix4x4<T>::CreateRotationX(Radian<T> const& angle)
 {
 	FloatingPointMatrix4x4 result;
 	CreateRotationX(angle, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -581,7 +582,7 @@ FloatingPointMatrix4x4<T>::CreateRotationY(Radian<T> const& angle)
 {
 	FloatingPointMatrix4x4 result;
 	CreateRotationY(angle, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -604,7 +605,7 @@ FloatingPointMatrix4x4<T>::CreateRotationZ(Radian<T> const& angle)
 {
 	FloatingPointMatrix4x4 result;
 	CreateRotationZ(angle, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -648,7 +649,7 @@ FloatingPointMatrix4x4<T>::CreateFromQuaternion(FloatingPointQuaternion<T> const
 {
 	FloatingPointMatrix4x4 result;
 	CreateFromQuaternion(quaternion, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -698,7 +699,7 @@ FloatingPointMatrix4x4<T>::CreateLookAtLH(FloatingPointVector3<T> const& eye, Fl
 {// Left-handed Cartesian Coordinates
 	FloatingPointMatrix4x4 result;
 	CreateLookAtLH(eye, at, up, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -748,7 +749,7 @@ FloatingPointMatrix4x4<T>::CreateLookAtRH(FloatingPointVector3<T> const& eye, Fl
 {// Right-handed Cartesian Coordinates
 	FloatingPointMatrix4x4 result;
 	FloatingPointMatrix4x4::CreateLookAtRH(eye, at, up, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -885,7 +886,7 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy,
 {// Left-handed Cartesian Coordinates
 	FloatingPointMatrix4x4 result;
 	CreatePerspectiveFieldOfViewLH(fovy, aspect, zNear, zFar, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -940,7 +941,7 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(Radian<T> const& fovy,
 {// Right-handed Cartesian Coordinates
 	FloatingPointMatrix4x4 result;
 	CreatePerspectiveFieldOfViewRH(fovy, aspect, zNear, zFar, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -991,7 +992,7 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterLH(T left, T right, T botto
 {// Left-handed Cartesian Coordinates
 	FloatingPointMatrix4x4 result;
 	CreatePerspectiveOffCenterLH(left, right, bottom, top, zNear, zFar, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -1042,7 +1043,7 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterRH(T left, T right, T botto
 {// Right-handed Cartesian Coordinates
 	FloatingPointMatrix4x4 result;
 	CreatePerspectiveOffCenterRH(left, right, bottom, top, zNear, zFar, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -1093,7 +1094,7 @@ FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterLH(T left, T right, T bott
 {// Left-handed Cartesian Coordinates
 	FloatingPointMatrix4x4 result;
 	CreateOrthographicOffCenterLH(left, right, bottom, top, zNearPlane, zFarPlane, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -1144,7 +1145,7 @@ FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterRH(T left, T right, T bott
 {// Right-handed Cartesian Coordinates
 	FloatingPointMatrix4x4 result;
 	CreateOrthographicOffCenterRH(left, right, bottom, top, zNearPlane, zFarPlane, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -1161,7 +1162,7 @@ FloatingPointMatrix4x4<T>::CreateOrthographicLH(T width, T height, T zNearPlane,
 {// Left-handed Cartesian Coordinates
 	FloatingPointMatrix4x4 result;
 	CreateOrthographicLH(width, height, zNearPlane, zFarPlane, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -1178,7 +1179,7 @@ FloatingPointMatrix4x4<T>::CreateOrthographicRH(T width, T height, T zNearPlane,
 {// Right-handed Cartesian Coordinates
 	FloatingPointMatrix4x4 result;
 	CreateOrthographicRH(width, height, zNearPlane, zFarPlane, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -1220,7 +1221,7 @@ FloatingPointMatrix4x4<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& ax
 {
 	FloatingPointMatrix4x4 result;
 	CreateFromAxisAngle(axis, angle, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>

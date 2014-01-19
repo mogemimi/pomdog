@@ -9,6 +9,7 @@
 #include <Pomdog/Math/detail/FloatingPointVector3.hpp>
 #include <cmath>
 #include <limits>
+#include <utility>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Math/detail/FloatingPointMatrix4x4.hpp>
 #include <Pomdog/Math/detail/FloatingPointVector2.hpp>
@@ -260,7 +261,7 @@ FloatingPointVector3<T>::Normalize(FloatingPointVector3 const& source)
 {
 	FloatingPointVector3 result;
 	Normalize(source, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>

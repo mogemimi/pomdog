@@ -9,6 +9,7 @@
 #include <Pomdog/Math/detail/FloatingPointMatrix3x3.hpp>
 #include <cmath>
 #include <limits>
+#include <utility>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Math/detail/FloatingPointMatrix2x2.hpp>
 #include <Pomdog/Math/detail/FloatingPointQuaternion.hpp>
@@ -387,7 +388,7 @@ FloatingPointMatrix3x3<T>::CreateTranslation(FloatingPointVector2<T> const& posi
 {
 	FloatingPointMatrix3x3 result;
 	CreateTranslation(position, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -415,7 +416,7 @@ FloatingPointMatrix3x3<T>::CreateScale(FloatingPointVector3<T> const& scale)
 {
 	FloatingPointMatrix3x3 result;
 	CreateScale(scale, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -443,7 +444,7 @@ FloatingPointMatrix3x3<T>::CreateRotationX(Radian<T> const& angle)
 {
 	FloatingPointMatrix3x3 result;
 	CreateRotationX(angle, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -471,7 +472,7 @@ FloatingPointMatrix3x3<T>::CreateRotationY(Radian<T> const& angle)
 {
 	FloatingPointMatrix3x3 result;
 	CreateRotationY(angle, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -499,7 +500,7 @@ FloatingPointMatrix3x3<T>::CreateRotationZ(Radian<T> const& angle)
 {
 	FloatingPointMatrix3x3 result;
 	CreateRotationZ(angle, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -533,7 +534,7 @@ FloatingPointMatrix3x3<T>::CreateFromQuaternion(FloatingPointQuaternion<T> const
 {
 	FloatingPointMatrix3x3 result;
 	CreateFromQuaternion(quaternion, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -559,7 +560,7 @@ FloatingPointMatrix3x3<T>::CreateLerp(FloatingPointMatrix3x3 const& source1,
 {
 	FloatingPointMatrix3x3 result;
 	CreateLerp(source1, source2, amount, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -597,7 +598,7 @@ FloatingPointMatrix3x3<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& ax
 {
 	FloatingPointMatrix3x3 result;
 	CreateFromAxisAngle(axis, angle, result);
-	return result;
+	return std::move(result);
 }
 //-----------------------------------------------------------------------
 template <typename T>

@@ -11,7 +11,6 @@
 #include <limits>
 #include <Pomdog/Utility/Assert.hpp>
 
-
 namespace Pomdog {
 namespace Details {
 

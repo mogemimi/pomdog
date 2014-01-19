@@ -7,6 +7,7 @@
 //
 
 #include <Pomdog/Math/detail/FloatingPointColor.hpp>
+#include <utility>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Math/MathHelper.hpp>
 
@@ -174,7 +175,7 @@ FloatingPointColor<T> FloatingPointColor<T>::CreateHexRGBA(std::uint32_t rgba)
 #else
 #	error "Byte order undefined or not supported."
 #endif
-	return color;
+	return std::move(color);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -196,7 +197,7 @@ FloatingPointColor<T> FloatingPointColor<T>::CreateHexARGB(std::uint32_t argb)
 #else
 #	error "Byte order undefined or not supported."
 #endif
-	return color;
+	return std::move(color);
 }
 //-----------------------------------------------------------------------
 template <typename T>
