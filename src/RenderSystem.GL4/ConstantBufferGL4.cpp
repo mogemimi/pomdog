@@ -59,7 +59,7 @@ ConstantBufferGL4::~ConstantBufferGL4()
 	}
 }
 //-----------------------------------------------------------------------
-void ConstantBufferGL4::GetData(std::uint32_t byteWidth, void * result) const
+void ConstantBufferGL4::GetData(std::uint32_t byteWidth, std::uint8_t * result) const
 {
 	POMDOG_ASSERT(result != nullptr);
 	POMDOG_ASSERT(byteWidth > 0);
@@ -91,7 +91,7 @@ void ConstantBufferGL4::GetData(std::uint32_t byteWidth, void * result) const
 	#endif
 }
 //-----------------------------------------------------------------------
-void ConstantBufferGL4::SetData(void const* source, std::uint32_t byteWidth)
+void ConstantBufferGL4::SetData(std::uint8_t const* source, std::uint32_t byteWidth)
 {
 	POMDOG_ASSERT(source != nullptr);
 	POMDOG_ASSERT(byteWidth > 0);

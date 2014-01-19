@@ -60,7 +60,7 @@ public:
 		ShaderBytecode const& pixelShaderBytecode) override;
 	
 	///@copydoc NativeGraphicsDevice
-	std::unique_ptr<NativeEffectParameter> CreateEffectParameter(
+	std::unique_ptr<NativeConstantBuffer> CreateConstantBuffer(
 		std::uint32_t byteConstants) override;
 	
 	///@copydoc NativeGraphicsDevice

@@ -10,8 +10,8 @@
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/EffectParameter.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include "../RenderSystem/NativeConstantBuffer.hpp"
 #include "../RenderSystem/NativeEffectPass.hpp"
-#include "../RenderSystem/NativeEffectParameter.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeEffectReflection.hpp"
 #include "EffectConstantDescription.hpp"
@@ -21,7 +21,7 @@ namespace Pomdog {
 namespace {
 
 static auto dummyParameter = std::make_shared<EffectParameter>();
-using Details::RenderSystem::NativeEffectParameter;
+using Details::RenderSystem::NativeConstantBuffer;
 
 }// namespace
 //-----------------------------------------------------------------------
@@ -57,10 +57,10 @@ EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	// Bind constant buffers:
 	for (auto & parameter: effectParameters)
 	{
-		std::shared_ptr<NativeEffectParameter> nativeEffectParameter(
-			parameter.second, parameter.second->GetNativeEffectParameter());
+		std::shared_ptr<NativeConstantBuffer> nativeConstantBuffer(
+			parameter.second, parameter.second->GetNativeConstantBuffer());
 
-		nativeEffectPass->SetConstant(parameter.first, nativeEffectParameter);
+		nativeEffectPass->SetConstant(parameter.first, nativeConstantBuffer);
 	}
 }
 //-----------------------------------------------------------------------

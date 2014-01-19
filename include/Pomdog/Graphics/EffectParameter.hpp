@@ -24,7 +24,7 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeEffectParameter;
+class NativeConstantBuffer;
 
 }// namespace RenderSystem
 }// namespace Details
@@ -91,10 +91,10 @@ public:
 	void SetValue(std::uint8_t const* data, std::uint32_t byteWidth);
 
 public:
-	Details::RenderSystem::NativeEffectParameter* GetNativeEffectParameter();
+	Details::RenderSystem::NativeConstantBuffer* GetNativeConstantBuffer();
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeEffectParameter> nativeEffectParameter;
+	std::unique_ptr<Details::RenderSystem::NativeConstantBuffer> nativeConstantBuffer;
 };
 	
 /// @}

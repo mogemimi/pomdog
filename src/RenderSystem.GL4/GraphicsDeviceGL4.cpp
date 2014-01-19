@@ -9,9 +9,9 @@
 #include "GraphicsDeviceGL4.hpp"
 #include <Pomdog/Utility/Exception.hpp>
 #include "BlendStateGL4.hpp"
+#include "ConstantBufferGL4.hpp"
 #include "DepthStencilStateGL4.hpp"
 #include "EffectPassGL4.hpp"
-#include "EffectParameterGL4.hpp"
 #include "EffectReflectionGL4.hpp"
 #include "IndexBufferGL4.hpp"
 #include "InputLayoutGL4.hpp"
@@ -69,10 +69,10 @@ GraphicsDeviceGL4::CreateEffectPass(ShaderBytecode const& vertexShaderBytecode, 
 	return MakeUnique<EffectPassGL4>(vertexShaderBytecode, pixelShaderBytecode);
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeEffectParameter>
-GraphicsDeviceGL4::CreateEffectParameter(std::uint32_t byteConstants)
+std::unique_ptr<NativeConstantBuffer>
+GraphicsDeviceGL4::CreateConstantBuffer(std::uint32_t byteConstants)
 {
-	return MakeUnique<EffectParameterGL4>(byteConstants);
+	return MakeUnique<ConstantBufferGL4>(byteConstants);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectReflection>

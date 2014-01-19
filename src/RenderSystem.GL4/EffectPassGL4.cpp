@@ -18,9 +18,9 @@
 #include <Pomdog/Graphics/GraphicsContext.hpp>
 #include <Pomdog/Graphics/detail/ShaderBytecode.hpp>
 #include "../Utility/ScopeGuard.hpp"
+#include "ConstantBufferGL4.hpp"
 #include "GraphicsContextGL4.hpp"
 #include "ErrorChecker.hpp"
-#include "EffectParameterGL4.hpp"
 #include "EffectReflectionGL4.hpp"
 
 namespace Pomdog {
@@ -195,18 +195,18 @@ EffectPassGL4::~EffectPassGL4()
 	}
 }
 //-----------------------------------------------------------------------
-void EffectPassGL4::SetConstant(std::string const& constantName, std::shared_ptr<NativeEffectParameter> const& effectParameter)
+void EffectPassGL4::SetConstant(std::string const& constantName, std::shared_ptr<NativeConstantBuffer> const& constantBuffer)
 {
 	auto iter = std::find_if(std::begin(constantBufferBindings), std::end(constantBufferBindings),
 		[&constantName](ConstantBufferBindingGL4 const& binding) { return binding.Name == constantName; });
 
 	POMDOG_ASSERT(std::end(constantBufferBindings) != iter);
 
-	auto nativeParameter = std::dynamic_pointer_cast<EffectParameterGL4>(effectParameter);
-	POMDOG_ASSERT(effectParameter);
+	auto nativeConstantBuffer = std::dynamic_pointer_cast<ConstantBufferGL4>(constantBuffer);
+	POMDOG_ASSERT(nativeConstantBuffer);
 
 	if (std::end(constantBufferBindings) != iter) {
-		iter->ConstantBuffer = nativeParameter;
+		iter->ConstantBuffer = nativeConstantBuffer;
 	}
 }
 //-----------------------------------------------------------------------

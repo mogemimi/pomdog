@@ -28,13 +28,11 @@ class ShaderBytecode;
 namespace RenderSystem {
 namespace GL4 {
 
-//class ConstantBufferGL4;
-class EffectParameterGL4;
+class ConstantBufferGL4;
 
 struct ConstantBufferBindingGL4
 {
-	//std::shared_ptr<ConstantBufferGL4> ConstantBuffer;
-	std::shared_ptr<EffectParameterGL4> ConstantBuffer;
+	std::shared_ptr<ConstantBufferGL4> ConstantBuffer;
 	std::string Name;
 	std::uint32_t SlotIndex;
 };
@@ -48,7 +46,7 @@ public:
 	
 	~EffectPassGL4();
 	
-	void SetConstant(std::string const& constantName, std::shared_ptr<NativeEffectParameter> const& effectParameter) override;
+	void SetConstant(std::string const& constantName, std::shared_ptr<NativeConstantBuffer> const& constantBuffer) override;
 	
 	void SetConstant(std::string const& constantName) override;
 

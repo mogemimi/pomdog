@@ -26,9 +26,9 @@ class ShaderBytecode;
 namespace RenderSystem {
 
 class NativeBlendState;
+class NativeConstantBuffer;
 class NativeDepthStencilState;
 class NativeEffectPass;
-class NativeEffectParameter;
 class NativeIndexBuffer;
 class NativeInputLayout;
 class NativeSamplerState;
@@ -82,8 +82,8 @@ public:
 		ShaderBytecode const& pixelShaderBytecode) = 0;
 	
 	///@~Japanese
-	/// @brief エフェクトパラメータを作成します。
-	virtual std::unique_ptr<NativeEffectParameter> CreateEffectParameter(
+	/// @brief 定数バッファを作成します。
+	virtual std::unique_ptr<NativeConstantBuffer> CreateConstantBuffer(
 		std::uint32_t byteWidth) = 0;
 	
 	///@~Japanese

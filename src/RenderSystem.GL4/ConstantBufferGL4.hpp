@@ -16,7 +16,7 @@
 #include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Config/FundamentalTypes.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>
-//#include "../RenderSystem/NativeConstantBuffer.hpp"
+#include "../RenderSystem/NativeConstantBuffer.hpp"
 #include "../Utility/Optional.hpp"
 
 namespace Pomdog {
@@ -32,7 +32,7 @@ struct ConstantBufferObjectTag {};
 
 using ConstantBufferObjectGL4 = Tagged<GLuint, Tags::ConstantBufferObjectTag>;
 
-class ConstantBufferGL4 final
+class ConstantBufferGL4 final: public NativeConstantBuffer
 {
 public:
 	ConstantBufferGL4() = delete;
@@ -40,11 +40,15 @@ public:
 	explicit ConstantBufferGL4(std::uint32_t byteWidth);
 	
 	~ConstantBufferGL4();
-
-	void GetData(std::uint32_t byteWidth, void * result) const;
-
-	void SetData(void const* source, std::uint32_t byteWidth);
 	
+	///@copydoc NativeConstantBuffer
+	void GetData(std::uint32_t byteWidth, std::uint8_t* result) const override;
+
+	///@copydoc NativeConstantBuffer
+	void SetData(std::uint8_t const* data, std::uint32_t byteWidth) override;
+	
+	///@~Japanese
+	/// @brief シェーダプログラムに定数バッファを適用します。
 	void Apply(std::uint32_t slotIndex);
 	
 private:

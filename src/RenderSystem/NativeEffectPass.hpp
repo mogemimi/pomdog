@@ -23,9 +23,7 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-using EffectParameterCollection = std::unordered_map<std::string, std::shared_ptr<EffectParameter>>;
-
-class NativeEffectParameter;
+class NativeConstantBuffer;
 
 class NativeEffectPass
 {
@@ -36,7 +34,7 @@ public:
 
 	virtual ~NativeEffectPass() = default;
 	
-	virtual void SetConstant(std::string const& constantName, std::shared_ptr<NativeEffectParameter> const& effectParameter) = 0;
+	virtual void SetConstant(std::string const& constantName, std::shared_ptr<NativeConstantBuffer> const& constantBuffer) = 0;
 	
 	virtual void SetConstant(std::string const& constantName) = 0;
 	
