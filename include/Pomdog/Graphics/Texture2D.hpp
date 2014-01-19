@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../Config/Export.hpp"
 #include "../Config/FundamentalTypes.hpp"
 #include "SurfaceFormat.hpp"
 
@@ -25,7 +26,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 2 次元テクスチャです。
-class Texture2D //: public Texture
+class POMDOG_EXPORT Texture2D //: public Texture
 {
 public: 
 	~Texture2D();

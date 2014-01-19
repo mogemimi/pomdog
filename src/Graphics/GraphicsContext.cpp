@@ -43,7 +43,8 @@ public:
 	Impl(Impl const&) = delete;
 	Impl(Impl &&) = default;
 	
-	Impl(std::unique_ptr<NativeGraphicsContext> nativeContext, PresentationParameters const& presentationParameters);
+	Impl(std::unique_ptr<NativeGraphicsContext> nativeContext,
+		PresentationParameters const& presentationParameters);
 	
 	void BuildResources(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
@@ -73,6 +74,7 @@ GraphicsContext::Impl::Impl(std::unique_ptr<NativeGraphicsContext> nativeGraphic
 	auto graphicsCapbilities = nativeContext->GetCapabilities();
 
 	POMDOG_ASSERT(graphicsCapbilities.SamplerSlotCount > 0);
+	samplerStates.clear();
 	samplerStates.resize(graphicsCapbilities.SamplerSlotCount);
 	
 	viewport.bounds.x = 0;
@@ -80,22 +82,16 @@ GraphicsContext::Impl::Impl(std::unique_ptr<NativeGraphicsContext> nativeGraphic
 	viewport.SetWidth(presentationParameters.BackBufferWidth);
 	viewport.SetHeight(presentationParameters.BackBufferHeight);
 	SetViewport(viewport);
-		
-	//BuildResources();
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
 	POMDOG_ASSERT(nativeContext);
 	POMDOG_ASSERT(graphicsDevice);
-	
-//	viewport.SetWidth(presentationParameters.BackBufferWidth);
-//	viewport.SetHeight(presentationParameters.BackBufferHeight);
-//	SetViewport(viewport);
-	
-	blendState = BlendState::CreateAdditive(graphicsDevice);
+		
+	blendState = BlendState::CreateOpaque(graphicsDevice);
 	rasterizerState = RasterizerState::CreateCullCounterClockwise(graphicsDevice);
-	depthStencilState = DepthStencilState::CreateReadOnlyDepth(graphicsDevice);
+	depthStencilState = DepthStencilState::CreateReadWriteDepth(graphicsDevice);
 	
 	POMDOG_ASSERT(!samplerStates.empty());
 	for (std::size_t index = 0; index < samplerStates.size(); ++index) {
@@ -146,10 +142,15 @@ void GraphicsContext::Impl::SetSamplerState(std::size_t samplerSlot, std::shared
 #pragma mark GraphicsContext class
 #endif
 //-----------------------------------------------------------------------
-GraphicsContext::GraphicsContext(std::unique_ptr<NativeGraphicsContext> nativeContext,
-	Details::RenderSystem::PresentationParameters const& presentationParameters)
+GraphicsContext::GraphicsContext(
+	std::unique_ptr<NativeGraphicsContext> nativeContext,
+	Details::RenderSystem::PresentationParameters const& presentationParameters,
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	: impl(new Impl(std::move(nativeContext), presentationParameters))
-{}
+{
+	POMDOG_ASSERT(graphicsDevice);
+	impl->BuildResources(graphicsDevice);
+}
 //-----------------------------------------------------------------------
 GraphicsContext::~GraphicsContext()
 {}

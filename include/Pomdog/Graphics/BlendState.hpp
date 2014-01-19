@@ -66,7 +66,8 @@ public:
 
 	///@~Japanese
 	/// @brief 不透明ブレンディングを有効にするブレンディングステートです。
-	/// @remarks デフォルト値です。
+	/// @remarks BlendDescription の既定値を設定したステートを生成します。
+	/// @details このステートはデフォルトで設定されています。
 	static std::shared_ptr<BlendState>
 	CreateOpaque(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	

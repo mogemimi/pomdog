@@ -83,7 +83,8 @@ using RenderSystem::PresentationParameters;
 
 static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 	std::shared_ptr<CocoaOpenGLContext> openGLContext, std::weak_ptr<GameWindow> gameWindow,
-	PresentationParameters const& presentationParameters)
+	PresentationParameters const& presentationParameters,
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
 	POMDOG_ASSERT(openGLContext);
 	using RenderSystem::GL4::GraphicsContextGL4;
@@ -91,7 +92,7 @@ static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 	auto nativeContext = std::unique_ptr<GraphicsContextGL4>(new GraphicsContextGL4(
 		std::move(openGLContext), std::move(gameWindow)));
 			
-	return std::make_shared<GraphicsContext>(std::move(nativeContext), presentationParameters);
+	return std::make_shared<GraphicsContext>(std::move(nativeContext), presentationParameters, graphicsDevice);
 }
 
 }// unnamed namespace
@@ -167,7 +168,7 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	
 	graphicsDevice = std::make_shared<GraphicsDevice>(std::unique_ptr<GraphicsDeviceGL4>{new GraphicsDeviceGL4()});
 
-	graphicsContext = CreateGraphicsContext(openGLContext, gameWindow, presentationParameters);
+	graphicsContext = CreateGraphicsContext(openGLContext, gameWindow, presentationParameters, graphicsDevice);
 	
 	POMDOG_ASSERT(gameWindow);
 	gameWindow->ResetGLContext(openGLContext);

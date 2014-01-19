@@ -50,7 +50,7 @@ public:
 
 	///@~Japanese
 	/// @brief 深度ステンシルバッファを有効化するステートを作成します。
-	/// @remarks 既定値に設定されたステートを生成します。
+	/// @remarks DepthStencilDescription の既定値を設定したステートを生成します。
 	/// @details このステートはデフォルトで設定されています。
 	static std::shared_ptr<DepthStencilState>
 	CreateReadWriteDepth(std::shared_ptr<GraphicsDevice> const& graphicsDevice);

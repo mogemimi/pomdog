@@ -67,22 +67,6 @@ void CocoaTestGame::Initialize()
 	auto graphicsDevice = gameHost->GetGraphicsDevice();
 	
 	{
-		auto blendState = BlendState::CreateOpaque(graphicsDevice);
-		graphicsContext->SetBlendState(blendState);
-	}
-	{
-		auto depthStencilState = DepthStencilState::CreateReadWriteDepth(graphicsDevice);
-		graphicsContext->SetDepthStencilState(depthStencilState);
-	}
-	{
-		auto rasterizerState = RasterizerState::CreateCullCounterClockwise(graphicsDevice);
-		graphicsContext->SetRasterizerState(rasterizerState);
-	}
-	{
-		auto samplerState = SamplerState::CreateLinearClamp(graphicsDevice);
-		graphicsContext->SetSamplerState(0, samplerState);
-	}
-	{
 		using VertexCombined = CustomVertex<Vector3, Vector2>;
 		
 		std::array<VertexCombined, 4> const verticesCombo = {

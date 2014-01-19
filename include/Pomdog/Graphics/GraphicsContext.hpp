@@ -44,7 +44,8 @@ public:
 	GraphicsContext() = delete;
 
 	GraphicsContext(std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
-		Details::RenderSystem::PresentationParameters const& presentationParameters);
+		Details::RenderSystem::PresentationParameters const& presentationParameters,
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 	~GraphicsContext();
 	
