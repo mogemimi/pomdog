@@ -28,7 +28,7 @@ For more information, see
 First, install GYP from https://chromium.googlesource.com/external/.  
 Make sure git is installed.
 From the root of your engine directory, run:  
-```
+```bash
 git clone https://chromium.googlesource.com/external/gyp.git tools/gyp
 ```
 
@@ -47,15 +47,26 @@ cd tools/gyp
 
 On Windows systems you can do:
 
-```
-$ cd tools/gyp
-$ python setup.py install
+```bash
+cd tools/gyp
+python setup.py install
 ```
 
 ### Building under Xcode (Apple LLVM Clang++)
 
-From the root of your engine directory, run:  
+**1. Generating the Xcode project file**
+
 ```bash
 gyp build/cocoa_test.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
+```
+
+**2. Building (Release/Debug)**
+
+```
 xcodebuild -project build.xcodefiles/build/cocoa_test.xcodeproj
+```
+
+To build in release mode, use `-configuration` option:  
+```bash
+xcodebuild -project build.xcodefiles/build/test_app.xcodeproj -configuration Release
 ```
