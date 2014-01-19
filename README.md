@@ -13,13 +13,13 @@ For more information, see
 
 ## Requirements
 
-* OS X 10.9
+* Mac OS X 10.9
 * Xcode 5
 * OpenGL 4.0 or Direct3D 11
 * Python 2.7+
 
 >**Note: Support Windows 8 Desktop and Windows Store**  
->Pomdog will support development of Windows 8 Desktop and Windows Store apps; however, Visual C++ Compiler (Nov 2013 CTP) doesn't completely support C++11. Please 
+>Pomdog will support development of Windows 8 Desktop and Windows Store apps; however, Visual C++ Compiler (Nov 2013 CTP) doesn't completely support C++11.
 
 ## How to build
 
@@ -30,8 +30,26 @@ Make sure git is installed.
 From the root of your engine directory, run:  
 ```
 git clone https://chromium.googlesource.com/external/gyp.git tools/gyp
+```
+
+Second, run setup.py.
+
+**Linux and Mac OS X**
+
+To install globally with gyp:
+
+```bash
 cd tools/gyp
 [sudo] python setup.py install
+```
+
+**Windows**
+
+On Windows systems you can do:
+
+```
+$ cd tools/gyp
+$ python setup.py install
 ```
 
 ### Building under Xcode (Apple LLVM Clang++)
