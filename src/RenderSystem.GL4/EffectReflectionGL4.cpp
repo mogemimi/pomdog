@@ -162,7 +162,7 @@ EnumerateUniformBlocks(ShaderProgramGL4 const& shaderProgram)
 	return std::move(uniformBlocks);
 }
 //-----------------------------------------------------------------------
-static EffectParameterType ToEffectParameterType(GLenum uniformType)
+static EffectVariableType ToEffectVariableType(GLenum uniformType)
 {
 	switch (uniformType)
 	{
@@ -179,19 +179,19 @@ static EffectParameterType ToEffectParameterType(GLenum uniformType)
 	case GL_FLOAT_MAT3x4:
 	case GL_FLOAT_MAT4x2:
 	case GL_FLOAT_MAT4x3:
-		return EffectParameterType::Float;
+		return EffectVariableType::Float;
 
 	case GL_INT: 
 	case GL_INT_VEC2:
 	case GL_INT_VEC3:
 	case GL_INT_VEC4:
-		return EffectParameterType::Int32;
+		return EffectVariableType::Int32;
 
 	case GL_UNSIGNED_INT:
 	case GL_UNSIGNED_INT_VEC2:
 	case GL_UNSIGNED_INT_VEC3:
 	case GL_UNSIGNED_INT_VEC4:
-		return EffectParameterType::UInt32;
+		return EffectVariableType::UInt32;
 
 	case GL_DOUBLE:
 	case GL_DOUBLE_VEC2:
@@ -206,33 +206,33 @@ static EffectParameterType ToEffectParameterType(GLenum uniformType)
 	case GL_DOUBLE_MAT3x4:
 	case GL_DOUBLE_MAT4x2:
 	case GL_DOUBLE_MAT4x3:
-		return EffectParameterType::Double;
+		return EffectVariableType::Double;
 
 	case GL_BOOL:
 	case GL_BOOL_VEC2:
 	case GL_BOOL_VEC3:
 	case GL_BOOL_VEC4:
-		return EffectParameterType::Bool;
+		return EffectVariableType::Bool;
 	
 	case GL_SAMPLER_1D:
-		return EffectParameterType::Texture1D;
+		return EffectVariableType::Texture1D;
 	case GL_SAMPLER_2D:
-		return EffectParameterType::Texture2D;
+		return EffectVariableType::Texture2D;
 	case GL_SAMPLER_3D:
-		return EffectParameterType::Texture3D;
+		return EffectVariableType::Texture3D;
 	case GL_SAMPLER_CUBE:
-		return EffectParameterType::TextureCube;
+		return EffectVariableType::TextureCube;
 	
 	case GL_SAMPLER_BUFFER:
-		//return EffectParameterType::TextureBuffer; // See also: D3D_SVT_TBUFFER
+		//return EffectVariableType::TextureBuffer; // See also: D3D_SVT_TBUFFER
 	case GL_SAMPLER_1D_ARRAY:
-		//return EffectParameterType::Texture1DArray; // See also: D3D_SVT_TEXTURE1DARRAY
+		//return EffectVariableType::Texture1DArray; // See also: D3D_SVT_TEXTURE1DARRAY
 	case GL_SAMPLER_2D_ARRAY:
-		//return EffectParameterType::Texture2DArray; // See also: D3D_SVT_TEXTURE2DARRAY
+		//return EffectVariableType::Texture2DArray; // See also: D3D_SVT_TEXTURE2DARRAY
 	case GL_SAMPLER_2D_MULTISAMPLE:
-		//return EffectParameterType::Texture2DMultiSample; // See also: D3D_SVT_TEXTURE2DMS
+		//return EffectVariableType::Texture2DMultiSample; // See also: D3D_SVT_TEXTURE2DMS
 	case GL_SAMPLER_2D_MULTISAMPLE_ARRAY:
-		//return EffectParameterType::Texture2DMultiSampleArray; // See also: D3D_SVT_TEXTURE2DMSARRAY
+		//return EffectVariableType::Texture2DMultiSampleArray; // See also: D3D_SVT_TEXTURE2DMSARRAY
 	case GL_SAMPLER_1D_SHADOW:
 	case GL_SAMPLER_2D_SHADOW:
 	case GL_SAMPLER_1D_ARRAY_SHADOW:
@@ -269,10 +269,10 @@ static EffectParameterType ToEffectParameterType(GLenum uniformType)
 	Log::Stream(LoggingLevel::Internal)
 		<< "Failed to find effect parameter type '"  << uniformType << "'.";
 #endif
-	return EffectParameterType::Float;
+	return EffectVariableType::Float;
 }
 //-----------------------------------------------------------------------
-static EffectParameterClass ToEffectParameterClass(GLenum uniformType)
+static EffectVariableClass ToEffectVariableClass(GLenum uniformType)
 {
 	switch (uniformType)
 	{
@@ -281,7 +281,7 @@ static EffectParameterClass ToEffectParameterClass(GLenum uniformType)
 	case GL_INT:
 	case GL_UNSIGNED_INT:
 	case GL_BOOL:
-		return EffectParameterClass::Scalar;
+		return EffectVariableClass::Scalar;
 	
 	case GL_FLOAT_VEC2:
 	case GL_FLOAT_VEC3:
@@ -298,7 +298,7 @@ static EffectParameterClass ToEffectParameterClass(GLenum uniformType)
 	case GL_BOOL_VEC2:
 	case GL_BOOL_VEC3:
 	case GL_BOOL_VEC4:
-		return EffectParameterClass::Vector;
+		return EffectVariableClass::Vector;
 	
 	case GL_FLOAT_MAT2:
 	case GL_FLOAT_MAT3:
@@ -318,7 +318,7 @@ static EffectParameterClass ToEffectParameterClass(GLenum uniformType)
 	case GL_DOUBLE_MAT3x4:
 	case GL_DOUBLE_MAT4x2:
 	case GL_DOUBLE_MAT4x3:
-		return EffectParameterClass::Matrix;
+		return EffectVariableClass::Matrix;
 
 	case GL_SAMPLER_1D:
 	case GL_SAMPLER_2D:
@@ -356,14 +356,14 @@ static EffectParameterClass ToEffectParameterClass(GLenum uniformType)
 	case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
 	case GL_UNSIGNED_INT_SAMPLER_BUFFER:
 	case GL_UNSIGNED_INT_SAMPLER_2D_RECT:
-		return EffectParameterClass::Object;
+		return EffectVariableClass::Object;
 	}
 
 #ifdef DEBUG
 	Log::Stream(LoggingLevel::Internal)
 		<< "Failed to find effect parameter class '"  << uniformType << "'.";
 #endif
-	return EffectParameterClass::Struct;
+	return EffectVariableClass::Struct;
 }
 //-----------------------------------------------------------------------
 static void ToComponents(GLenum uniformType, std::uint8_t & RowCount, std::uint8_t ColumnCount)
@@ -486,8 +486,8 @@ EffectAnnotation ToEffectAnnotation(UniformVariableGL4 const& uniform)
 {
 	EffectAnnotation annotation;
 	
-	annotation.ParameterType = ToEffectParameterType(uniform.Type);
-	annotation.ParameterClass = ToEffectParameterClass(uniform.Type);
+	annotation.VariableType = ToEffectVariableType(uniform.Type);
+	annotation.VariableClass = ToEffectVariableClass(uniform.Type);
 	ToComponents(uniform.Type, annotation.RowCount, annotation.ColumnCount);
 	
 	return std::move(annotation);

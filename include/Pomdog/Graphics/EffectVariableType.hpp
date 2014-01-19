@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_EFFECTPARAMETERTYPE_54C9D81C_73AF_47EF_828C_CAF40803402F_HPP
-#define POMDOG_EFFECTPARAMETERTYPE_54C9D81C_73AF_47EF_828C_CAF40803402F_HPP
+#ifndef POMDOG_EFFECTVARIABLETYPE_54C9D81C_73AF_47EF_828C_CAF40803402F_HPP
+#define POMDOG_EFFECTVARIABLETYPE_54C9D81C_73AF_47EF_828C_CAF40803402F_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -24,7 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief エフェクトパラメータの要素の型を定義します。
-enum class EffectParameterType: std::uint8_t
+enum class EffectVariableType: std::uint8_t
 {
 	///@~Japanese
 	/// @brief true または false の 2 値で表される Bool 値です。
@@ -84,4 +84,4 @@ enum class EffectParameterType: std::uint8_t
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EFFECTPARAMETERTYPE_54C9D81C_73AF_47EF_828C_CAF40803402F_HPP)
+#endif // !defined(POMDOG_EFFECTVARIABLETYPE_54C9D81C_73AF_47EF_828C_CAF40803402F_HPP)

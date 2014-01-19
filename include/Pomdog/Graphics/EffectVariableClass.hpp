@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_EFFECTPARAMETERCLASS_0B44E0FB_0B71_45D3_9981_8089B38B8655_HPP
-#define POMDOG_EFFECTPARAMETERCLASS_0B44E0FB_0B71_45D3_9981_8089B38B8655_HPP
+#ifndef POMDOG_EFFECTVARIABLECLASS_0B44E0FB_0B71_45D3_9981_8089B38B8655_HPP
+#define POMDOG_EFFECTVARIABLECLASS_0B44E0FB_0B71_45D3_9981_8089B38B8655_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -24,7 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief エフェクトパラメータの要素のクラスを定義します。
-enum class EffectParameterClass: std::uint8_t
+enum class EffectVariableClass: std::uint8_t
 {
 	///@~Japanese スカラーです。
 	Scalar,
@@ -47,4 +47,4 @@ enum class EffectParameterClass: std::uint8_t
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EFFECTPARAMETERCLASS_0B44E0FB_0B71_45D3_9981_8089B38B8655_HPP)
+#endif // !defined(POMDOG_EFFECTVARIABLECLASS_0B44E0FB_0B71_45D3_9981_8089B38B8655_HPP)

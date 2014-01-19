@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include "EffectParameterClass.hpp"
-#include "EffectParameterType.hpp"
+#include "EffectVariableClass.hpp"
+#include "EffectVariableType.hpp"
 
 namespace Pomdog {
 
@@ -38,11 +38,11 @@ public:
 	
 	///@~Japanese
 	/// @brief パラメータのクラスです。
-	EffectParameterClass ParameterClass;
+	EffectVariableClass VariableClass;
 
 	///@~Japanese
 	/// @brief パラメータの型です。
-	EffectParameterType ParameterType;
+	EffectVariableType VariableType;
 };
 
 /// @}
