@@ -98,6 +98,7 @@
 #include "Graphics/SamplerDescription.hpp"
 #include "Graphics/SamplerState.hpp"
 #include "Graphics/StencilOperation.hpp"
+#include "Graphics/SurfaceFormat.hpp"
 #include "Graphics/TextureAddressMode.hpp"
 #include "Graphics/TextureFilter.hpp"
 #include "Graphics/VertexBuffer.hpp"

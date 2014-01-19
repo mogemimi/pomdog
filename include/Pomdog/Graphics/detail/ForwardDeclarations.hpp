@@ -17,35 +17,39 @@
 
 namespace Pomdog {
 
-// Class
-class BlendDescription;
+// Classes
 class BlendState;
 template <typename T, typename... Arguments>
 class CustomVertex;
-class DepthStencilDescription;
-class DepthStencilOperation;
 class DepthStencilState;
 class DynamicIndexBuffer;
 class DynamicVertexBuffer;
-class EffectAnnotation;
 class EffectConstantDescription;
 class EffectParameter;
 class EffectPass;
 class EffectReflection;
-class EffectVariable;
 class GraphicsContext;
 class GraphicsDevice;
 class IndexBuffer;
 class InputLayout;
-class RasterizerDescription;
 class RasterizerState;
-class SamplerDescription;
+class RenderTarget2D;
 class SamplerState;
+class Texture2D;
 class VertexBuffer;
-class VertexBufferBinding;
+
+// Structures
+class BlendDescription;
+class DepthStencilDescription;
+class DepthStencilOperation;
+class EffectAnnotation;
+class EffectVariable;
+class RasterizerDescription;
+class SamplerDescription;
 class VertexDeclaration;
 class VertexElement;
 class Viewport;
+class VertexBufferBinding;
 
 // Enumerations
 enum class Blend: std::uint8_t;
@@ -61,6 +65,7 @@ enum class FillMode: std::uint8_t;
 enum class IndexElementSize: std::uint8_t;
 enum class PrimitiveTopology: std::uint8_t;
 enum class StencilOperation: std::uint8_t;
+enum class SurfaceFormat: std::uint8_t;
 enum class TextureAddressMode: std::uint8_t;
 enum class TextureFilter: std::uint8_t;
 enum class VertexElementFormat: std::uint8_t;
