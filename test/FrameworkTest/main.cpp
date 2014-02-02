@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <iutest/iutest.hpp>
+#include <iutest.hpp>
 
 int main(int argc, char** argv)
 {

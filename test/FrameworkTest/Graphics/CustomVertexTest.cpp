@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <iutest/gtest/iutest_switch.hpp>
+#include <gtest/iutest_switch.hpp>
 #include <Pomdog/Math/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Graphics/CustomVertex.hpp>
 #include <Pomdog/Graphics/VertexDeclaration.hpp>

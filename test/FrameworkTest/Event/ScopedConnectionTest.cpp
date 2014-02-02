@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <iutest/gtest/iutest_switch.hpp>
+#include <gtest/iutest_switch.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/EventConnection.hpp>
 #include <Pomdog/Event/EventHandler.hpp>

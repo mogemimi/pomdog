@@ -14,6 +14,7 @@
 *.xcodeproj
 .DS_Store
 /out/
+/build/build
 /build.xcodefiles
 /build.msvc*/
 /build/Debug

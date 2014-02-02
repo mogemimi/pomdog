@@ -38,7 +38,6 @@
       'target_name': 'unit_tests',
       'product_name': 'unit_tests',
       'type': 'executable',
-      'mac_bundle': 1,
       'dependencies': [
         'pomdog.gyp:pomdog-testable',
       ],
