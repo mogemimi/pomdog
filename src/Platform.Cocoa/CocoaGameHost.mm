@@ -35,8 +35,7 @@ static auto WindowWillCloseEvent = EventCodeHelper::CreateCode("WindowWillClose"
 static auto WindowShouldCloseEvent = EventCodeHelper::CreateCode("WindowShouldClose");
 
 //-----------------------------------------------------------------------
-#pragma mark -
-#pragma mark OpenGL Helper Functions
+#pragma mark - OpenGL Helper Functions
 //-----------------------------------------------------------------------
 static NSOpenGLPixelFormat* CreatePixelFormat(DepthFormat depthFormat)
 {
@@ -97,8 +96,7 @@ static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-#pragma mark -
-#pragma mark CocoaGameHost::Impl
+#pragma mark - CocoaGameHost::Impl
 //-----------------------------------------------------------------------
 class CocoaGameHost::Impl final: public GameHost
 {
@@ -266,8 +264,7 @@ void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
 	}
 }
 //-----------------------------------------------------------------------
-#pragma mark -
-#pragma mark CocoaGameHost
+#pragma mark - CocoaGameHost
 //-----------------------------------------------------------------------
 CocoaGameHost::CocoaGameHost(std::shared_ptr<CocoaGameWindow> const& window,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)

@@ -42,8 +42,7 @@ std::uint8_t * BinaryCast(T * data)
 }// unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
-#pragma mark -
-#pragma mark Fundamental types(Scalars)
+#pragma mark - Fundamental types(Scalars)
 #endif
 //-----------------------------------------------------------------------
 void Get(EffectParameter & effectParameter, bool & value)
@@ -100,8 +99,7 @@ void Set(EffectParameter & effectParameter, double value)
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
-#pragma mark -
-#pragma mark Arrays
+#pragma mark - Arrays
 #endif
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, std::int32_t const* data, std::uint32_t count)
@@ -141,8 +139,7 @@ void Set(EffectParameter & effectParameter, double const* data, std::uint32_t co
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
-#pragma mark -
-#pragma mark Vectors and Matrices
+#pragma mark - Vectors and Matrices
 #endif
 //-----------------------------------------------------------------------
 template <typename T> void
@@ -202,8 +199,7 @@ Set(EffectParameter & effectParameter, FloatingPointQuaternion<T> const& value)
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
-#pragma mark -
-#pragma mark Explicit instantiations
+#pragma mark - Explicit instantiations
 #endif
 //-----------------------------------------------------------------------
 template void Set<float>(EffectParameter & effectParameter, FloatingPointVector2<float> const& value);

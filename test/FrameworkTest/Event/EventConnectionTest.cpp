@@ -13,83 +13,92 @@
 #include <utility>
 
 using Pomdog::Event;
-using Pomdog::EventCode;
 using Pomdog::EventHandler;
 using Pomdog::EventConnection;
 
 TEST(EventConnection, Disconnect)
 {
 	EventHandler eventHandler;
-	EventCode result{0};
-	
 	EventConnection connection;
-	
+	int count = 0;
+
 	connection = eventHandler.Connect([&](Event const& event){
-		result = event.GetCode();
+		++count;
 	});
 	
-	eventHandler.Trigger(std::make_shared<Event>(EventCode{123}));
-	EXPECT_EQ(EventCode{123}, result);
+	eventHandler.Trigger(std::make_shared<Event>("event"));
+	EXPECT_EQ(1, count);
+	eventHandler.Trigger(std::make_shared<Event>("event"));
+	EXPECT_EQ(2, count);
+	eventHandler.Trigger(std::make_shared<Event>("event"));
+	EXPECT_EQ(3, count);
 	
 	connection.Disconnect();
 	
-	eventHandler.Trigger(std::make_shared<Event>(EventCode{456}));
-	EXPECT_EQ(EventCode{123}, result);
+	eventHandler.Trigger(std::make_shared<Event>("event"));
+	EXPECT_EQ(3, count);
 }
 
 TEST(EventConnection, CopyAssignmentOperator)
 {
 	EventHandler eventHandler;
-	EventCode result{0};
+	int count = 0;
 	
 	EventConnection connection1;
 	{
 		EventConnection connection2;
 		
 		connection2 = eventHandler.Connect([&](Event const& event){
-			result = event.GetCode();
+			++count;
 		});
 		
-		eventHandler.Trigger(std::make_shared<Event>(EventCode{789}));
-		ASSERT_EQ(EventCode{789}, result);
+		eventHandler.Trigger(std::make_shared<Event>("event"));
+		EXPECT_EQ(1, count);
 		
 		connection1 = connection2;
 	}
 	
-	eventHandler.Trigger(std::make_shared<Event>(EventCode{123}));
-	EXPECT_EQ(EventCode{123}, result);
+	eventHandler.Trigger(std::make_shared<Event>("event"));
+	EXPECT_EQ(2, count);
 	
 	connection1.Disconnect();
 	
-	eventHandler.Trigger(std::make_shared<Event>(EventCode{456}));
-	EXPECT_EQ(EventCode{123}, result);
+	eventHandler.Trigger(std::make_shared<Event>("event"));
+	EXPECT_EQ(2, count);
 }
 
 TEST(EventConnection, MoveAssignmentOperator)
 {
 	EventHandler eventHandler;
-	EventCode result{0};
+	int count = 0;
 	
 	EventConnection connection1;
 	{
 		EventConnection connection2;
 		
 		connection2 = eventHandler.Connect([&](Event const& event){
-			result = event.GetCode();
+			++count;
 		});
 		
-		eventHandler.Trigger(std::make_shared<Event>(EventCode{789}));
-		ASSERT_EQ(EventCode{789}, result);
+		eventHandler.Trigger(std::make_shared<Event>("event"));
+		EXPECT_EQ(1, count);
 		
 		connection1 = std::move(connection2);
+		
+		eventHandler.Trigger(std::make_shared<Event>("event"));
+		EXPECT_EQ(2, count);
+		
 		connection2.Disconnect();
+		
+		eventHandler.Trigger(std::make_shared<Event>("event"));
+		EXPECT_EQ(3, count);
 	}
 	
-	eventHandler.Trigger(std::make_shared<Event>(EventCode{123}));
-	EXPECT_EQ(EventCode{123}, result);
+	eventHandler.Trigger(std::make_shared<Event>("event"));
+	EXPECT_EQ(4, count);
 	
 	connection1.Disconnect();
 	
-	eventHandler.Trigger(std::make_shared<Event>(EventCode{456}));
-	EXPECT_EQ(EventCode{123}, result);
+	eventHandler.Trigger(std::make_shared<Event>("event"));
+	EXPECT_EQ(4, count);
 }

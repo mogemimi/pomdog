@@ -32,8 +32,7 @@ using Details::RenderSystem::PresentationParameters;
 
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
-#pragma mark -
-#pragma mark GraphicsContext::Impl class
+#pragma mark - GraphicsContext::Impl class
 #endif
 //-----------------------------------------------------------------------
 class GraphicsContext::Impl final
@@ -138,8 +137,7 @@ void GraphicsContext::Impl::SetSamplerState(std::size_t samplerSlot, std::shared
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
-#pragma mark -
-#pragma mark GraphicsContext class
+#pragma mark - GraphicsContext class
 #endif
 //-----------------------------------------------------------------------
 GraphicsContext::GraphicsContext(

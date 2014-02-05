@@ -8,15 +8,3 @@
 
 #include <Pomdog/Event/Event.hpp>
 
-namespace Pomdog {
-//-----------------------------------------------------------------------
-Event::Event(EventCode const& eventCode)
-	: code (eventCode)
-{}
-//-----------------------------------------------------------------------
-EventCode const& Event::GetCode() const
-{
-	return code;
-}
-//-----------------------------------------------------------------------
-}// namespace Pomdog

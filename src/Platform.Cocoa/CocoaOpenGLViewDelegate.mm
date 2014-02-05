@@ -44,8 +44,7 @@ using Pomdog::ButtonState;
 	mouse_.reset();
 }
 //-----------------------------------------------------------------------
-#pragma mark -
-#pragma mark Mouse Event Handling
+#pragma mark - Mouse Event Handling
 //-----------------------------------------------------------------------
 - (void)mouseEntered:(NSEvent *)theEvent
 {

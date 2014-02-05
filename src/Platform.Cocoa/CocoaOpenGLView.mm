@@ -89,8 +89,7 @@
 	trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
 }
 //-----------------------------------------------------------------------
-#pragma mark -
-#pragma mark Mouse-Tracking and Cursor
+#pragma mark - Mouse-Tracking and Cursor
 //-----------------------------------------------------------------------
 - (void)setFrame:(NSRect)frame
 {
@@ -113,8 +112,7 @@
 	}
 }
 //-----------------------------------------------------------------------
-#pragma mark -
-#pragma mark Mouse Event Delegated
+#pragma mark - Mouse Event Delegated
 //-----------------------------------------------------------------------
 - (void)mouseEntered:(NSEvent *)theEvent
 {

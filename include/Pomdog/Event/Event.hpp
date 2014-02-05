@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -16,10 +16,11 @@
 #include <type_traits>
 #include <utility>
 #include <memory>
+#include <string>
 #include "../Config/Export.hpp"
 #include "../Utility/Assert.hpp"
 #include "detail/EventArguments.hpp"
-#include "EventCode.hpp"
+
 
 namespace Pomdog {
 
@@ -30,8 +31,6 @@ namespace Pomdog {
 class POMDOG_EXPORT Event: public std::enable_shared_from_this<Event>
 {
 public:
-	explicit Event(EventCode const& eventCode);
-
 	Event() = delete;
 	Event(Event const&) = delete;
 	Event(Event &&) = default;
@@ -41,16 +40,20 @@ public:
 	Event& operator=(Event const&) = delete;
 	Event& operator=(Event &&) = default;
 
+	explicit Event(char const* arguments)
+		: Event(std::string{arguments})
+	{}
+
 	template <typename T>
-	Event(EventCode const& eventCode, T && arguments)
-		: code(eventCode)
+	explicit Event(T && arguments)
 	{
 		static_assert(std::is_object<typename std::remove_reference<T>::type>::value, "T is object type.");
 		static_assert(!std::is_pointer<T>::value, "pointer type is not supported.");
 
 		typedef Details::EventArgumentContainer<typename std::remove_reference<T>::type> Container;
 
-		static_assert(std::is_base_of<Details::EventArguments, Container>::value, "Container is not a base class of 'EventArguments'");
+		static_assert(std::is_base_of<Details::EventArguments, Container>::value,
+			"Container is not a base class of 'EventArguments'");
 
 		///@todo
 		/// In C++11:
@@ -59,12 +62,11 @@ public:
 		/// In C++14 or later:
 		///    std::make_unique<Container>(...)
 		data = std::move(std::unique_ptr<Container>(new Container(std::forward<T>(arguments))));
+		//data = std::make_unique<Container>(std::forward<T>(arguments));
 	}
 
-	EventCode const& GetCode() const;
-
 	template <class T>
-	bool Has() const
+	bool Is() const
 	{
 		static_assert(!std::is_reference<T>::value, "reference type is not supported.");
 		static_assert(!std::is_pointer<T>::value, "pointer type is not supported.");
@@ -72,13 +74,18 @@ public:
 
 		typedef Details::EventArgumentContainer<T> Container;
 
-		static_assert(std::is_base_of<Details::EventArguments, Container>::value, "T is not a base class of 'EventArguments'.");
+		static_assert(std::is_base_of<Details::EventArguments, Container>::value,
+			"T is not a base class of 'EventArguments'.");
 
+		POMDOG_ASSERT(data);
+		POMDOG_ASSERT((data && (data->GetHashCode() == Details::EventComponentTypeID<T>::value)) ||
+			dynamic_cast<Container const*>(data.get()) == nullptr);
+		
 		return dynamic_cast<Container const*>(data.get()) != nullptr;
 	}
 
 	template <class T>
-	T const* Get() const
+	T const* As() const
 	{
 		static_assert(!std::is_reference<T>::value, "reference type is not supported.");
 		static_assert(!std::is_pointer<T>::value, "pointer type is not supported.");
@@ -86,19 +93,22 @@ public:
 
 		typedef Details::EventArgumentContainer<T> Container;
 
-		static_assert(std::is_base_of<Details::EventArguments, Container>::value, "T is not a base class of 'EventArguments'.");
+		static_assert(std::is_base_of<Details::EventArguments, Container>::value,
+			"T is not a base class of 'EventArguments'.");
+
+		POMDOG_ASSERT(data);
+		POMDOG_ASSERT((data && (data->GetHashCode() == Details::EventComponentTypeID<T>::value)) ||
+			dynamic_cast<Container const*>(data.get()) == nullptr);
 
 		if (auto p = dynamic_cast<Container const*>(data.get()))
 		{
-			POMDOG_ASSERT(data);
-			POMDOG_ASSERT(Has<T>());
+			POMDOG_ASSERT(Is<T>());
 			return &p->data;
 		}
 		return nullptr;
 	}
 
 private:
-	EventCode const code;
 	std::unique_ptr<Details::EventArguments> data;
 };
 

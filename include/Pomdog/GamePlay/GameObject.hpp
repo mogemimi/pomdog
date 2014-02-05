@@ -76,7 +76,7 @@ public:
 		auto const iter = std::find_if(std::begin(components), std::end(components),
 			[](std::unique_ptr<Details::GameComponent> const& component) {
 				POMDOG_ASSERT(component);
-				return component->GetHashCode() == Details::ComponentTypeID<T>::value;
+				return component->GetHashCode() == Details::GameComponentTypeID<T>::value;
 		});
 
 		if (iter != std::end(components)) {
@@ -98,7 +98,7 @@ public:
 		auto const iter = std::find_if(std::begin(components), std::end(components),
 			[](std::unique_ptr<Details::GameComponent> const& component) {
 				POMDOG_ASSERT(component);
-				return component->GetHashCode() == Details::ComponentTypeID<T>::value;
+				return component->GetHashCode() == Details::GameComponentTypeID<T>::value;
 		});
 
 		if (iter != std::end(components)) {
@@ -120,7 +120,7 @@ public:
 		auto const iter = std::find_if(std::begin(components), std::end(components),
 			[](std::unique_ptr<Details::GameComponent> const& component) {
 				POMDOG_ASSERT(component);
-				return component->GetHashCode() == Details::ComponentTypeID<T>::value;
+				return component->GetHashCode() == Details::GameComponentTypeID<T>::value;
 		});
 
 		POMDOG_ASSERT(([&]()->bool {
@@ -145,7 +145,7 @@ public:
 		POMDOG_ASSERT(std::end(components) == std::find_if(std::begin(components), std::end(components),
 			[](std::unique_ptr<Details::GameComponent> const& component) {
 				POMDOG_ASSERT(component);
-				return component->GetHashCode() == Details::ComponentTypeID<T>::value;
+				return component->GetHashCode() == Details::GameComponentTypeID<T>::value;
 		}));
 
 		components.emplace_back(
@@ -160,7 +160,7 @@ public:
 		POMDOG_ASSERT(std::end(components) == std::find_if(std::begin(components), std::end(components),
 			[](std::unique_ptr<Details::GameComponent> const& component) {
 				POMDOG_ASSERT(component);
-				return component->GetHashCode() == Details::ComponentTypeID<T>::value;
+				return component->GetHashCode() == Details::GameComponentTypeID<T>::value;
 		}));
 
 		components.emplace_back(
@@ -174,7 +174,7 @@ public:
 	{
 		components.erase(std::remove_if(std::begin(components), std::end(components),
 			[](std::unique_ptr<Details::GameComponent> const& component) {
-				auto const hashCode = Details::ComponentTypeID<T>::value;
+				auto const hashCode = Details::GameComponentTypeID<T>::value;
 				
 				POMDOG_ASSERT(component);
 				return hashCode == component->GetHashCode();

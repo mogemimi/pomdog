@@ -22,8 +22,8 @@ void LogChannel::LogMessage(std::string const& message, LoggingLevel verbosity)
 {
 	if (verbosity <= this->threshold)
 	{
-		eventHandler.Trigger(std::make_shared<Event>(EventCode(0),
-			LogEntry(message, name, verbosity)));
+		eventHandler.Trigger(std::make_shared<Event>(
+			LogEntry{message, name, verbosity}));
 	}
 }
 //-----------------------------------------------------------------------
@@ -33,7 +33,7 @@ EventConnection LogChannel::Connect(std::function<void(LogEntry const& log)> con
 
 	return eventHandler.Connect([slot](Event const& event)
 	{
-		if (auto log = event.Get<LogEntry>()) {
+		if (auto log = event.As<LogEntry>()) {
 			slot(*log);
 		}
 	});

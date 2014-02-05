@@ -13,31 +13,12 @@
 #	pragma once
 #endif
 
-#include "Platform.hpp"
-
-// stdint
-#if (defined(POMDOG_COMPILER_MSVC) && (_MSC_VER > 1500)) \
-	|| defined(POMDOG_COMPILER_CLANG) \
-	|| (defined(POMDOG_COMPILER_GNUC) && defined(__GXX_EXPERIMENTAL_CXX0X__))
-#	// C++11 types support
-#	include <cstdint>
-#else
-#	error "C++11/C++0x is not supported."
-#	//include <stdint.h>
-#endif
-
-#include <cstddef> // size_t
-#include <cfloat>  // float, double
+#include <cstddef>
+#include <cstdint>
+#include <cfloat>
 
 namespace Pomdog {
 namespace Details {
-
-//using std::int8_t;
-//using std::int16_t;
-//using std::int32_t;
-//using std::uint8_t;
-//using std::uint16_t;
-//using std::uint32_t;
 
 #if defined(_SIZE_T_DEFINED) || defined(__SIZE_TYPE__)
 	using std::size_t;

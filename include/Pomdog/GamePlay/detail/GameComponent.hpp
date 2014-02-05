@@ -19,26 +19,14 @@
 namespace Pomdog {
 namespace Details {
 
-// In C++03:
-//template <class T>
-//struct ComponentTypeID
-//{
-//	static std::size_t const value;
-//private:
-//	static std::uint8_t const storage = 0;
-//};
-//
-//template <class T>
-//std::size_t const ComponentTypeID<T>::value = reinterpret_cast<std::size_t>(&ComponentTypeID<T>::storage);
-
 template <class T>
-struct ComponentTypeID
+struct GameComponentTypeID
 {
 	static std::size_t const value;
 };
 
 template <class T>
-std::size_t const ComponentTypeID<T>::value = typeid(T).hash_code();
+std::size_t const GameComponentTypeID<T>::value = typeid(T).hash_code();
 
 class GameComponent
 {
@@ -68,9 +56,9 @@ public:
 		: data(source)
 	{}
 
-	std::size_t GetHashCode() const
+	std::size_t GetHashCode() const override
 	{
-		return ComponentTypeID<T>::value;
+		return GameComponentTypeID<T>::value;
 	}
 	
 	T const* Get() const

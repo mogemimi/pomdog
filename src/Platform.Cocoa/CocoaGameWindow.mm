@@ -118,8 +118,7 @@ void CocoaGameWindow::SetClientBounds(Rectangle const& clientBounds)
 	[nativeWindow setFrame:bounds display:YES animate:YES];
 }
 //-----------------------------------------------------------------------
-#pragma mark -
-#pragma mark Low-Level API for CocoaGameHost
+#pragma mark - Low-Level API for CocoaGameHost
 //-----------------------------------------------------------------------
 bool CocoaGameWindow::IsMinimized() const
 {
@@ -134,8 +133,7 @@ void CocoaGameWindow::Close()
 	[nativeWindow close];
 }
 //-----------------------------------------------------------------------
-#pragma mark -
-#pragma mark OpenGLView
+#pragma mark - OpenGLView
 //-----------------------------------------------------------------------
 void CocoaGameWindow::ResetGLContext(std::shared_ptr<CocoaOpenGLContext> context)
 {
@@ -153,8 +151,7 @@ void CocoaGameWindow::ResetGLContext()
 	[openGLView clearGLContext];
 }
 //-----------------------------------------------------------------------
-#pragma mark -
-#pragma mark Input Device
+#pragma mark - Input Device
 //-----------------------------------------------------------------------
 void CocoaGameWindow::BindToDelegate(std::shared_ptr<CocoaMouse> mouse)
 {
