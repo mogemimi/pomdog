@@ -12,7 +12,6 @@
 #include <OpenGL/OpenGL.h>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Event/Event.hpp>
-#include <Pomdog/Event/EventCodeHelper.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Graphics/GraphicsContext.hpp>
@@ -30,9 +29,6 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 namespace {
-
-static auto WindowWillCloseEvent = EventCodeHelper::CreateCode("WindowWillClose");
-static auto WindowShouldCloseEvent = EventCodeHelper::CreateCode("WindowShouldClose");
 
 //-----------------------------------------------------------------------
 #pragma mark - OpenGL Helper Functions
@@ -254,13 +250,13 @@ void CocoaGameHost::Impl::DoEvents()
 //-----------------------------------------------------------------------
 void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
 {
-	if (event.GetCode() == WindowShouldCloseEvent) {
+	if (event.Is<WindowShouldCloseEvent>()) {
 		Log::LogMessage("WindowShouldCloseEvent", LoggingLevel::Internal);
 		this->Exit();
 	}
-	else if (event.GetCode() == WindowWillCloseEvent) {
+	else if (event.Is<WindowWillCloseEvent>()) {
 		Log::LogMessage("WindowWillCloseEvent", LoggingLevel::Internal);
-		// Not implemented
+		///@todo Not implemented
 	}
 }
 //-----------------------------------------------------------------------

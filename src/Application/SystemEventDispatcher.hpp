@@ -20,13 +20,8 @@ namespace Details {
 
 using SystemEventDispatcher = EventQueue;
 
-///@code
-///  //
-///  auto WindowWillCloseEvent = EventCodeHelper::CreateCode("WindowWillClose");
-///
-///  //
-///  auto WindowShouldCloseEvent = EventCodeHelper::CreateCode("WindowShouldClose");
-///@endcode
+struct WindowWillCloseEvent {};
+struct WindowShouldCloseEvent {};
 
 }// namespace Details
 }// namespace Pomdog

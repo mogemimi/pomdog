@@ -78,9 +78,6 @@ public:
 			"T is not a base class of 'EventArguments'.");
 
 		POMDOG_ASSERT(data);
-		POMDOG_ASSERT((data && (data->GetHashCode() == Details::EventComponentTypeID<T>::value)) ||
-			dynamic_cast<Container const*>(data.get()) == nullptr);
-		
 		return dynamic_cast<Container const*>(data.get()) != nullptr;
 	}
 
@@ -97,8 +94,6 @@ public:
 			"T is not a base class of 'EventArguments'.");
 
 		POMDOG_ASSERT(data);
-		POMDOG_ASSERT((data && (data->GetHashCode() == Details::EventComponentTypeID<T>::value)) ||
-			dynamic_cast<Container const*>(data.get()) == nullptr);
 
 		if (auto p = dynamic_cast<Container const*>(data.get()))
 		{

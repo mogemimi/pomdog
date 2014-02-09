@@ -10,11 +10,9 @@
 
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Event/Event.hpp>
-#include <Pomdog/Event/EventCodeHelper.hpp>
 #include "CocoaMouse.hpp"
 
 using Pomdog::Event;
-using Pomdog::EventCodeHelper;
 using Pomdog::ButtonState;
 
 @implementation CocoaOpenGLViewDelegate

@@ -28,8 +28,6 @@
 
 // Event
 #include "Event/Event.hpp"
-#include "Event/EventCode.hpp"
-#include "Event/EventCodeHelper.hpp"
 #include "Event/EventHandler.hpp"
 #include "Event/EventQueue.hpp"
 #include "Event/ScopedConnection.hpp"
