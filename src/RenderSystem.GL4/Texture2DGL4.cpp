@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -18,8 +18,7 @@ Texture2DGL4::Texture2DGL4(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
 	std::uint32_t mipmapLevels, SurfaceFormat surfaceFormat)
 {
 	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "Texture2DGL4::Texture2DGL4");
+	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
 }// namespace GL4

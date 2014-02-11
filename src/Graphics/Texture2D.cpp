@@ -26,29 +26,25 @@ Texture2D::~Texture2D() = default;
 std::uint32_t Texture2D::GetWidth() const
 {
 	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "Texture2D::GetWidth");
+	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
 std::uint32_t Texture2D::GetHeight() const
 {
 	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "Texture2D::GetHeight");
+	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
 SurfaceFormat Texture2D::GetFormat() const
 {
 	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "Texture2D::GetFormat");
+	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
 std::uint32_t Texture2D::GetLevelCount() const
 {
 	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error,
-		"Not implemented", "Texture2D::GetLevelCount");
+	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

@@ -159,8 +159,7 @@ void EventSlotCollection::Impl::Trigger(event_type const& event)
 	}
 
 	if (nestedMethodCallCount >= std::numeric_limits<std::uint16_t>::max()) {
-		POMDOG_THROW_EXCEPTION(std::overflow_error,
-			"stack overflow", "EventSlotCollection::Impl::Tick");
+		POMDOG_THROW_EXCEPTION(std::overflow_error, "stack overflow");
 	}
 
 	try {

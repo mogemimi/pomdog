@@ -41,13 +41,13 @@ namespace ExceptionInternal
 	T CreateException(std::string const& description, std::string const& source, char const* filename, int line)
 	{
 		static_assert(std::is_base_of<std::exception, T>::value, "T is base of std::exception");
-
+			
 		// examples:
 		// > File "filename", line 4 in source
 		// > Runtime error exception: description
 		std::stringstream ss;
 		ss << "File \"" << filename << "\", line " << line
-			<< " in " << (source.empty()? source: "?") << std::endl
+			<< " in " << (source.empty()? "?": source) << std::endl
 			<< ExceptionInternal::ToString<T>()
 			<< ": " << description;
 		
@@ -68,10 +68,9 @@ namespace ExceptionInternal
 /// @brief 例外を投げます。
 /// @param exceptionCode ExceptionCode を指定します。
 /// @param description エラーの詳細です。
-/// @param source エラーの原因となったオブジェクトやエラーの発生源であるメソッド名を指定します。
-#define POMDOG_THROW_EXCEPTION(exceptionClass, description, source) \
+#define POMDOG_THROW_EXCEPTION(exceptionClass, description) \
 	throw Pomdog::Details::ExceptionInternal::CreateException< \
-		exceptionClass>(description, source, __FILE__, __LINE__)
+		exceptionClass>(description, __func__, __FILE__, __LINE__)
 
 /// @}
 /// @}

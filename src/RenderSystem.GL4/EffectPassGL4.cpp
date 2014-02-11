@@ -139,7 +139,7 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 	auto vertexShader = CompileShader<VertexShaderGL4::tag_type>(vertexShaderBytecode);
 	if (!vertexShader) {
 		POMDOG_THROW_EXCEPTION(std::domain_error,
-			"Failed to compile vertex shader.", "EffectPassGL4::EffectPassGL4");
+			"Failed to compile vertex shader.");
 	}
 	
 	ScopeGuard vertexScope([&](){
@@ -150,7 +150,7 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 	auto pixelShader = CompileShader<PixelShaderGL4::tag_type>(pixelShaderBytecode);
 	if (!pixelShader) {
 		POMDOG_THROW_EXCEPTION(std::domain_error,
-			"Failed to compile pixel shader.", "EffectPassGL4::EffectPassGL4");
+			"Failed to compile pixel shader.");
 	}
 	
 	ScopeGuard pixelScope([&](){
@@ -165,7 +165,7 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 	
 	if (!pixelShader) {
 		POMDOG_THROW_EXCEPTION(std::domain_error,
-			"Failed to link shader program.", "EffectPassGL4::EffectPassGL4");
+			"Failed to link shader program.");
 	}
 	
 	// Create default constant buffers:
