@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,35 +13,14 @@
 #	pragma once
 #endif
 
-#include <memory>
 #include <functional>
 
 namespace Pomdog {
-
-class Event;
-
 namespace Details {
 namespace EventInternal {
 
-class EventSlotCollection;
-
-class EventSlot
-{
-private:
-	typedef Event event_type;
-	typedef std::function<void(event_type const&)> function_type;
-
-public:
-	EventSlot(function_type const& invoker, std::weak_ptr<EventSlotCollection> const& slots);
-
-	void Disconnect();
-
-	void Invoke(event_type const& event);
-
-private:
-	function_type invoker;
-	std::weak_ptr<EventSlotCollection> slots;
-};
+template <typename Function>
+using EventSlot = std::function<Function>;
 
 }// namespace EventInternal
 }// namespace Details

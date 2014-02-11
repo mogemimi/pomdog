@@ -22,22 +22,24 @@ namespace Pomdog {
 class POMDOG_EXPORT EventConnection
 {
 private:
-	typedef std::weak_ptr<Details::EventInternal::EventSlot> weak_slot;
+	typedef std::weak_ptr<Details::EventInternal::EventSlot<void(Event const&)>> weak_slot;
+	typedef std::weak_ptr<Details::EventInternal::EventSlotCollection> weak_slot_collection;
+	
 	weak_slot slot;
+	weak_slot_collection collection;
 
 public:
 	EventConnection() = default;
 	~EventConnection() = default;
 
-	EventConnection(EventConnection const& slot);
+	EventConnection(EventConnection const& connection) = default;
+	EventConnection(EventConnection && connection) = default;
 	
-	EventConnection(EventConnection && connection);
+	EventConnection & operator=(EventConnection const& connection) = default;
+	EventConnection & operator=(EventConnection && connection) = default;
 
-	explicit EventConnection(weak_slot const& slot);
-	explicit EventConnection(weak_slot && slot);
-
-	auto operator=(EventConnection const& connection)->EventConnection&;
-	auto operator=(EventConnection && connection)->EventConnection&;
+	EventConnection(weak_slot const& slot, weak_slot_collection && collection);
+	EventConnection(weak_slot && slot, weak_slot_collection && collection);
 
 	void Disconnect();
 };

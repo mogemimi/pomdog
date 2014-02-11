@@ -9,44 +9,34 @@
 #include <Pomdog/Event/EventConnection.hpp>
 #include <utility>
 #include "detail/EventSlot.hpp"
+#include "detail/EventSlotCollection.hpp"
 
 namespace Pomdog {
 
 //-----------------------------------------------------------------------
-EventConnection::EventConnection(EventConnection const& connection)
-	: slot(connection.slot)
+EventConnection::EventConnection(weak_slot const& slotIn, weak_slot_collection && collectionIn)
+	: slot(slotIn)
+	, collection(std::move(collectionIn))
 {}
 //-----------------------------------------------------------------------
-EventConnection::EventConnection(EventConnection && connection)
-	: slot(std::forward<weak_slot>(connection.slot))
+EventConnection::EventConnection(weak_slot && slotIn, weak_slot_collection && collectionIn)
+	: slot(std::forward<weak_slot>(slotIn))
+	, collection(std::move(collectionIn))
 {}
-//-----------------------------------------------------------------------
-EventConnection::EventConnection(weak_slot const& slot_)
-	: slot(slot_)
-{}
-//-----------------------------------------------------------------------
-EventConnection::EventConnection(weak_slot && slot_)
-	: slot(std::forward<weak_slot>(slot_))
-{}
-//-----------------------------------------------------------------------
-auto EventConnection::operator=(EventConnection const& connection)->EventConnection&
-{
-	slot = connection.slot;
-	return *this;
-}
-//-----------------------------------------------------------------------
-auto EventConnection::operator=(EventConnection && connection)->EventConnection&
-{
-	slot = std::move(connection.slot);
-	return *this;
-}
 //-----------------------------------------------------------------------
 void EventConnection::Disconnect()
 {
-	if (auto p = slot.lock()) {
-		p->Disconnect();
-		slot.reset();
+	auto locked_slot = slot.lock();
+	if (!locked_slot) {
+		return;
 	}
+
+	if (auto locked_collection = collection.lock()) {
+		locked_collection->Disconnect(locked_slot.get());
+		collection.reset();
+	}
+
+	slot.reset();
 }
 
 }// namespace Pomdog

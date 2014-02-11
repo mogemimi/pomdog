@@ -13,11 +13,15 @@
 #	pragma once
 #endif
 
+#include <functional>
+
 namespace Pomdog {
 namespace Details {
 namespace EventInternal {
 
-class EventSlot;
+template <typename Function>
+using EventSlot = std::function<Function>;
+
 class EventSlotCollection;
 
 }// namespace EventInternal

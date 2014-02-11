@@ -17,6 +17,7 @@
 #include <Pomdog/Event/EventConnection.hpp>
 #include <functional>
 #include <memory>
+#include "EventSlot.hpp"
 
 namespace Pomdog {
 
@@ -25,13 +26,11 @@ class Event;
 namespace Details {
 namespace EventInternal {
 
-class EventSlot;
-
 class EventSlotCollection: Noncopyable, public std::enable_shared_from_this<EventSlotCollection>
 {
 private:
 	typedef Event event_type;
-	typedef std::function<void(event_type const&)> function_type;
+	typedef std::function<void(Event const&)> function_type;
 
 public:
 	EventSlotCollection();
@@ -40,7 +39,7 @@ public:
 	EventConnection Connect(function_type const& slot);
 	EventConnection Connect(function_type && slot);
 	
-	void Disconnect(EventSlot const* observer);
+	void Disconnect(EventSlot<void(Event const&)> const* observer);
 
 	void Invoke(event_type const& event);
 

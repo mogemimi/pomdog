@@ -27,13 +27,14 @@ class EventSlotCollection::Impl
 private:
 	typedef Event event_type;
 	typedef std::function<void(event_type const&)> function_type;
+	typedef EventSlot<void(Event const&)> SlotType;
 
 public:
 	Impl();
 
-	EventConnection Connect(function_type slot, std::shared_ptr<EventSlotCollection> && slots);
+	EventConnection Connect(function_type && slot, std::weak_ptr<EventSlotCollection> && slots);
 
-	void Disconnect(EventSlot const* observer);
+	void Disconnect(SlotType const* observer);
 
 	void Invoke(event_type const& event);
 
@@ -42,9 +43,9 @@ private:
 	void EraseRemovedListeners();
 
 private:
-	std::vector<std::shared_ptr<EventSlot> > observers;
-	std::vector<std::shared_ptr<EventSlot> > addedObservers;
-	std::shared_ptr<EventSlot> dummyObserver;
+	std::vector<std::shared_ptr<SlotType>> observers;
+	std::vector<std::shared_ptr<SlotType>> addedObservers;
+	std::shared_ptr<SlotType> dummyObserver;
 
 	std::recursive_mutex addingProtection;
 	std::recursive_mutex slotsProtection;
@@ -56,15 +57,15 @@ EventSlotCollection::Impl::Impl()
 	: nestedMethodCallCount(0)
 {
 	POMDOG_ASSERT(!dummyObserver);
-	dummyObserver = std::make_shared<EventSlot>([](event_type const&){}, std::weak_ptr<EventSlotCollection>());
+	dummyObserver = std::make_shared<SlotType>([](event_type const&){});
 }
 //-----------------------------------------------------------------------
-EventConnection EventSlotCollection::Impl::Connect(function_type slot, std::shared_ptr<EventSlotCollection> && slots)
+EventConnection EventSlotCollection::Impl::Connect(function_type && slot, std::weak_ptr<EventSlotCollection> && slots)
 {
 	POMDOG_ASSERT(slot);
-	POMDOG_ASSERT(slots);
+	POMDOG_ASSERT(!slots.expired());
 
-	auto observer = std::make_shared<EventSlot>(std::move(slot), std::move(slots));
+	auto observer = std::make_shared<SlotType>(std::move(slot));
 	{
 		std::lock_guard<std::recursive_mutex> lock(addingProtection);
 
@@ -72,26 +73,26 @@ EventConnection EventSlotCollection::Impl::Connect(function_type slot, std::shar
 		addedObservers.push_back(observer);
 	}
 
-	return std::move(EventConnection(std::move(observer)));
+	return std::move(EventConnection{std::move(observer), std::move(slots)});
 }
 //-----------------------------------------------------------------------
-void EventSlotCollection::Impl::Disconnect(EventSlot const* observer)
+void EventSlotCollection::Impl::Disconnect(SlotType const* observer)
 {
 	POMDOG_ASSERT(observer);
 	{
 		std::lock_guard<std::recursive_mutex> lock(addingProtection);
 
-		addedObservers.erase(
-			std::remove_if(std::begin(addedObservers), std::end(addedObservers), [observer](std::shared_ptr<EventSlot> const& p){
+		addedObservers.erase(std::remove_if(std::begin(addedObservers), std::end(addedObservers),
+			[observer](std::shared_ptr<SlotType> const& p){
 				return p.get() == observer;
 			}),
-			std::end(addedObservers)
-		);
+			std::end(addedObservers));
 	}
 
-	auto const iter	= std::find_if(std::begin(observers), std::end(observers), [observer](std::shared_ptr<EventSlot> const& p){
-		return p.get() == observer;
-	});
+	auto const iter	= std::find_if(std::begin(observers), std::end(observers),
+		[observer](std::shared_ptr<SlotType> const& p) {
+			return p.get() == observer;
+		});
 
 	if (std::end(observers) == iter) {
 		// FUS RO DAH
@@ -104,7 +105,7 @@ void EventSlotCollection::Impl::Disconnect(EventSlot const* observer)
 //-----------------------------------------------------------------------
 void EventSlotCollection::Impl::PushBackAddedListeners()
 {
-	std::vector<std::shared_ptr<EventSlot> > temporarySlots;
+	std::vector<std::shared_ptr<SlotType>> temporarySlots;
 	{
 		std::lock_guard<std::recursive_mutex> lock(addingProtection);
 
@@ -124,15 +125,14 @@ void EventSlotCollection::Impl::EraseRemovedListeners()
 {
 	std::lock_guard<std::recursive_mutex> lock(slotsProtection);
 
-	observers.erase(
-		std::remove(std::begin(observers), std::end(observers), dummyObserver),
-		std::end(observers)
-	);
+	observers.erase(std::remove(std::begin(observers), std::end(observers), dummyObserver),
+		std::end(observers));
 }
 //-----------------------------------------------------------------------
 template <typename T>
-struct ScopedRecursiveCounter
+class ScopedRecursiveCounter
 {
+public:
 	explicit ScopedRecursiveCounter(T & c)
 		: counter(c)
 	{
@@ -145,10 +145,10 @@ struct ScopedRecursiveCounter
 		--counter;
 	}
 
-private:
-	ScopedRecursiveCounter(ScopedRecursiveCounter const&);
-	ScopedRecursiveCounter& operator = (ScopedRecursiveCounter const&);
+	ScopedRecursiveCounter(ScopedRecursiveCounter const&) = delete;
+	ScopedRecursiveCounter& operator = (ScopedRecursiveCounter const&) = delete;
 
+private:
 	T & counter;
 };
 //-----------------------------------------------------------------------
@@ -166,8 +166,9 @@ void EventSlotCollection::Impl::Invoke(event_type const& event)
 		ScopedRecursiveCounter<std::uint32_t> scopedCounter(nestedMethodCallCount);
 
 		for (auto & observer: observers) {
-			auto const scoped = observer;
-			scoped->Invoke(event);
+			auto scoped = observer;
+			POMDOG_ASSERT(scoped);
+			scoped->operator()(event);
 		}
 	}
 	catch (std::exception const& e) {
@@ -188,7 +189,7 @@ EventSlotCollection::~EventSlotCollection() = default;
 EventConnection EventSlotCollection::Connect(function_type const& slot)
 {
 	POMDOG_ASSERT(impl);
-	return impl->Connect(slot, shared_from_this());
+	return impl->Connect(function_type{slot}, shared_from_this());
 }
 //-----------------------------------------------------------------------
 EventConnection EventSlotCollection::Connect(function_type && slot)
@@ -197,7 +198,7 @@ EventConnection EventSlotCollection::Connect(function_type && slot)
 	return impl->Connect(std::move(slot), shared_from_this());
 }
 //-----------------------------------------------------------------------
-void EventSlotCollection::Disconnect(EventSlot const* observer)
+void EventSlotCollection::Disconnect(EventSlot<void(Event const&)> const* observer)
 {
 	POMDOG_ASSERT(impl);
 	impl->Disconnect(observer);
