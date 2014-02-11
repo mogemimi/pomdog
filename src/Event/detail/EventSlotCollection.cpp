@@ -113,10 +113,10 @@ void EventSlotCollection::Impl::PushBackAddedListeners()
 	{
 		std::lock_guard<std::recursive_mutex> lock(slotsProtection);
 
-		std::for_each(std::begin(temporarySlots), std::end(temporarySlots), [this](std::shared_ptr<EventSlot> const& slot) {
+		for (auto & slot: temporarySlots) {
 			POMDOG_ASSERT(std::end(observers) == std::find(std::begin(observers), std::end(observers), slot));
 			observers.push_back(slot);
-		});
+		}
 	}
 }
 //-----------------------------------------------------------------------
@@ -165,10 +165,10 @@ void EventSlotCollection::Impl::Invoke(event_type const& event)
 	try {
 		ScopedRecursiveCounter<std::uint32_t> scopedCounter(nestedMethodCallCount);
 
-		std::for_each(std::begin(observers), std::end(observers), [&event](std::shared_ptr<EventSlot> const& observer) {
+		for (auto & observer: observers) {
 			auto const scoped = observer;
 			scoped->Invoke(event);
-		});
+		}
 	}
 	catch (std::exception const& e) {
 		throw e;

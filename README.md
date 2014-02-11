@@ -1,7 +1,7 @@
 Pomdog
 =======
 
-## Pomdog is
+Pomdog is
 
 * game engine for C++11 or later
 * completely open source (distributed under the [MIT License](http://opensource.org/licenses/mit-license.php))
@@ -13,9 +13,9 @@ For more information, see
 
 ## Requirements
 
-* Mac OS X 10.9
+* Mac OS X 10.9+
 * Xcode 5
-* OpenGL 4.0 or Direct3D 11
+* OpenGL 4 or Direct3D 11
 * Python 2.7+
 
 >**Note: Support Windows 8 Desktop and Windows Store**  

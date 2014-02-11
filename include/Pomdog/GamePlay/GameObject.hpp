@@ -18,7 +18,6 @@
 #include <memory>
 #include <vector>
 #include "../Utility/Assert.hpp"
-#include "../Utility/Noncopyable.hpp"
 #include "detail/GameComponent.hpp"
 
 namespace Pomdog {
@@ -29,35 +28,14 @@ namespace Pomdog {
 /// @{
 
 ///@~Japanese
-/// @brief コンポーネントを保持するハブの役割を担うゲームオブジェクトです。
-/// @remarks ビデオゲームに出てくるオブジェクトは、それぞれ固有の情報を持っています。
-/// 例えば、現在の位置や、衝突判定用のモデル、レンダリングで用いるマテリアル情報、ヒットポイント(health) など様々です。
-/// これらを管理するために GameObject インターフェイスがあるとします。
-/// GameObject を継承して次のようなクラスを定義したとします：
-/// * 位置座標などを持つ MovableObject クラス
-/// * 物理で用いる PhysicsObject クラス
-/// * レンダリングで使用する RenderableObject クラス
-///
-/// このような設計では GameObject を継承してそれぞれ、陸地を走る Vehicle クラス、
-/// 水辺を走る Boat クラスを作ることになります。
-/// ここで、水陸両用の乗り物を定義するにはどうすればよいでしょうか。
-/// Vehicle と Boat を多重継承するべきでしょうか。
-///
-/// これらの問題を解決するために、コンポーネントの概念を扱います。
-/// また GameObject はコンポーネントを保持するハブ、またはコンテナと考えることができます。
-/// GameComponent インターフェイスを継承し、陸地を走るために必要な情報を VehicleComponent と定義し、
-/// 水辺を走るために必要な情報を BoatComponent と定義します。
-/// 水陸両用の乗り物を定義する場合は、GameObject に VehicleComponent と BoatComponent を追加します。
-///
-/// コンポーネントを用いれば MovableObject といったインターフェイスを定義する必要はありません。
-/// GameObject に Transform コンポーネントを追加するだけで済みます。
-/// 最初に例をあげた設計は、is-a の関係を使っています。
-/// それに対し、コンポーネントとコンポーネントのハブとなるゲームオブジェクトの場合 has-a の関係になります。
-/// 疎結合のため、より柔軟なゲーム内オブジェクトを定義することが可能です。
-class GameObject: Noncopyable
+/// @brief コンポーネントを保持するゲームオブジェクトです。複数のコンポーネントを格納するコンテナの役割を担います。
+class GameObject
 {
 public:
 	GameObject() = default;
+	GameObject(GameObject const&) = delete;
+	GameObject & operator=(GameObject const&) = delete;
+	
 	virtual ~GameObject() = default;
 
 	explicit GameObject(std::int32_t instanceID);
