@@ -13,23 +13,38 @@
 #	pragma once
 #endif
 
+#include <typeinfo>
 #include <type_traits>
 #include <utility>
-#include "../../Config/FundamentalTypes.hpp"
+#include <cstddef>
 
 namespace Pomdog {
 namespace Details {
 
-///@~Japanese
-/// @brief イベントに含まれるイベントデータです。
+template <class T>
+struct EventComponentHashCode
+{
+	static_assert(!std::is_pointer<T>::value, "T is not pointer.");
+	static_assert(std::is_object<T>::value, "T is not object type.");
+
+	static std::size_t const value;
+};
+
+template <class T>
+std::size_t const EventComponentHashCode<T>::value = typeid(T const*).hash_code();
+
+
 class EventArguments
 {
 public:
 	virtual ~EventArguments() = default;
+	
+	virtual std::size_t GetHashCode() const = 0;
 };
 
+
 template <typename T>
-class EventArgumentContainer final: public EventArguments
+class EventArgumentsContainer final: public EventArguments
 {
 public:
 	typedef typename std::remove_reference<T>::type value_type;
@@ -38,12 +53,17 @@ public:
 	static_assert(!std::is_pointer<T>::value, "pointer type is not supported.");
 	static_assert(std::is_object<T>::value, "T is object type.");
 
-	~EventArgumentContainer() override = default;
+	~EventArgumentsContainer() override = default;
 
 	template <typename C>
-	explicit EventArgumentContainer(C && argument)
+	explicit EventArgumentsContainer(C && argument)
 		: data(std::forward<C>(argument))
 	{}
+	
+	std::size_t GetHashCode() const override
+	{
+		return EventComponentHashCode<T>::value;
+	}
 
 	T data;
 };

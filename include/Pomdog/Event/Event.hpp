@@ -26,8 +26,6 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief イベントです。
-/// @remarks ID に使うハッシュ値の計算は、毎フレーム行わず、
-/// ゲーム起動直後など、事前に行うことを推奨しています。
 class POMDOG_EXPORT Event: public std::enable_shared_from_this<Event>
 {
 public:
@@ -50,7 +48,7 @@ public:
 		static_assert(std::is_object<typename std::remove_reference<T>::type>::value, "T is object type.");
 		static_assert(!std::is_pointer<T>::value, "pointer type is not supported.");
 
-		typedef Details::EventArgumentContainer<typename std::remove_reference<T>::type> Container;
+		typedef Details::EventArgumentsContainer<typename std::remove_reference<T>::type> Container;
 
 		static_assert(std::is_base_of<Details::EventArguments, Container>::value,
 			"Container is not a base class of 'EventArguments'");
@@ -72,13 +70,8 @@ public:
 		static_assert(!std::is_pointer<T>::value, "pointer type is not supported.");
 		static_assert(std::is_object<T>::value, "T is object type.");
 
-		typedef Details::EventArgumentContainer<T> Container;
-
-		static_assert(std::is_base_of<Details::EventArguments, Container>::value,
-			"T is not a base class of 'EventArguments'.");
-
 		POMDOG_ASSERT(data);
-		return dynamic_cast<Container const*>(data.get()) != nullptr;
+		return data && (data->GetHashCode() == Details::EventComponentHashCode<T>::value);
 	}
 
 	template <class T>
@@ -88,7 +81,7 @@ public:
 		static_assert(!std::is_pointer<T>::value, "pointer type is not supported.");
 		static_assert(std::is_object<T>::value, "T is object type.");
 
-		typedef Details::EventArgumentContainer<T> Container;
+		typedef Details::EventArgumentsContainer<T> Container;
 
 		static_assert(std::is_base_of<Details::EventArguments, Container>::value,
 			"T is not a base class of 'EventArguments'.");
