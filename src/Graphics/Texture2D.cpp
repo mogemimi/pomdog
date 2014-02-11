@@ -8,12 +8,20 @@
 
 #include <Pomdog/Graphics/Texture2D.hpp>
 #include <Pomdog/Utility/Exception.hpp>
+#include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include "../RenderSystem/NativeGraphicsDevice.hpp"
+#include "../RenderSystem/NativeTexture2D.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-Texture2D::~Texture2D()
+Texture2D::Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	std::uint32_t width, std::uint32_t height)
+	: nativeTexture2D(graphicsDevice->GetNativeGraphicsDevice()->CreateTexture2D(
+		width, height, 0, SurfaceFormat::R8G8B8A8_UNorm))
 {
 }
+//-----------------------------------------------------------------------
+Texture2D::~Texture2D() = default;
 //-----------------------------------------------------------------------
 std::uint32_t Texture2D::GetWidth() const
 {

@@ -73,8 +73,7 @@ EventQueue::EventQueue()
 	: impl(new Impl())
 {}
 //-----------------------------------------------------------------------
-EventQueue::~EventQueue()
-{}
+EventQueue::~EventQueue() = default;
 //-----------------------------------------------------------------------
 EventConnection EventQueue::Connect(std::function<void(Event const&)> const& slot)
 {

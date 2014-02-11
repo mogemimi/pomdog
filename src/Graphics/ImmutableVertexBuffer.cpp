@@ -36,9 +36,7 @@ ImmutableVertexBuffer::ImmutableVertexBuffer(std::shared_ptr<GraphicsDevice> con
 	POMDOG_ASSERT(nativeVertexBuffer);
 }
 //-----------------------------------------------------------------------
-ImmutableVertexBuffer::~ImmutableVertexBuffer()
-{
-}
+ImmutableVertexBuffer::~ImmutableVertexBuffer() = default;
 //-----------------------------------------------------------------------
 VertexDeclaration const& ImmutableVertexBuffer::GetVertexDeclaration() const
 {

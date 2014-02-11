@@ -47,7 +47,7 @@ namespace Cocoa {
 class POMDOG_EXPORT BootstrapperCocoa final
 {
 public:
-	BootstrapperCocoa();
+	BootstrapperCocoa() = default;
 	
 	template <class GameClass>
 	void Run(NSWindow* nativeWindow)

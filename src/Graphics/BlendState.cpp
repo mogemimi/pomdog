@@ -22,9 +22,7 @@ BlendState::BlendState(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	POMDOG_ASSERT(nativeBlendState);
 }
 //-----------------------------------------------------------------------
-BlendState::~BlendState()
-{
-}
+BlendState::~BlendState() = default;
 //-----------------------------------------------------------------------
 BlendDescription BlendState::GetDescription() const
 {

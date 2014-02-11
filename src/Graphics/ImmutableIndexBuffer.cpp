@@ -25,9 +25,7 @@ ImmutableIndexBuffer::ImmutableIndexBuffer(std::shared_ptr<GraphicsDevice> const
 	POMDOG_ASSERT(nativeIndexBuffer);
 }
 //-----------------------------------------------------------------------
-ImmutableIndexBuffer::~ImmutableIndexBuffer()
-{
-}
+ImmutableIndexBuffer::~ImmutableIndexBuffer() = default;
 //-----------------------------------------------------------------------
 std::uint32_t ImmutableIndexBuffer::GetIndexCount() const
 {

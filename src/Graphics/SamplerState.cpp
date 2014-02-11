@@ -22,9 +22,7 @@ SamplerState::SamplerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice
 	POMDOG_ASSERT(nativeSamplerState);
 }
 //-----------------------------------------------------------------------
-SamplerState::~SamplerState()
-{
-}
+SamplerState::~SamplerState() = default;
 //-----------------------------------------------------------------------
 SamplerDescription SamplerState::GetDescription() const
 {

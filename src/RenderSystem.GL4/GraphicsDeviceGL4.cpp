@@ -17,6 +17,7 @@
 #include "InputLayoutGL4.hpp"
 #include "RasterizerStateGL4.hpp"
 #include "SamplerStateGL4.hpp"
+#include "Texture2DGL4.hpp"
 #include "VertexBufferGL4.hpp"
 #include "../Utility/MakeUnique.hpp"
 
@@ -110,6 +111,13 @@ GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass & nativeEffectPass,
 		return std::unique_ptr<InputLayoutGL4>();
 	}
 	return MakeUnique<InputLayoutGL4>(effectPassGL4->GetShaderProgram(), vertexBufferBindings);
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeTexture2D>
+GraphicsDeviceGL4::CreateTexture2D(std::uint32_t width, std::uint32_t height, std::uint32_t mipmapLevels,
+	SurfaceFormat format)
+{
+	return MakeUnique<Texture2DGL4>(width, height, mipmapLevels, format);
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

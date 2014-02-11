@@ -23,9 +23,7 @@ EffectReflection::EffectReflection(std::shared_ptr<GraphicsDevice> const& graphi
 	nativeEffectReflection = graphicsDevice->GetNativeGraphicsDevice()->CreateEffectReflection(*effectPass->GetNativeEffectPass());
 }
 //-----------------------------------------------------------------------
-EffectReflection::~EffectReflection()
-{
-}
+EffectReflection::~EffectReflection() = default;
 //-----------------------------------------------------------------------
 std::vector<EffectConstantDescription> EffectReflection::GetConstantBuffers() const
 {

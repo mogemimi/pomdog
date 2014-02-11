@@ -36,9 +36,7 @@ DynamicVertexBuffer::DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& 
 	POMDOG_ASSERT(nativeVertexBuffer);
 }
 //-----------------------------------------------------------------------
-DynamicVertexBuffer::~DynamicVertexBuffer()
-{
-}
+DynamicVertexBuffer::~DynamicVertexBuffer() = default;
 //-----------------------------------------------------------------------
 VertexDeclaration const& DynamicVertexBuffer::GetVertexDeclaration() const
 {

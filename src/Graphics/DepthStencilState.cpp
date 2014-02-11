@@ -22,9 +22,7 @@ DepthStencilState::DepthStencilState(std::shared_ptr<GraphicsDevice> const& grap
 	POMDOG_ASSERT(nativeDepthStencilState);
 }
 //-----------------------------------------------------------------------
-DepthStencilState::~DepthStencilState()
-{
-}
+DepthStencilState::~DepthStencilState() = default;
 //-----------------------------------------------------------------------
 DepthStencilDescription DepthStencilState::GetDescription() const
 {

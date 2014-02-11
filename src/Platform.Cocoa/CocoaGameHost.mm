@@ -23,6 +23,7 @@
 #include "../RenderSystem/PresentationParameters.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
+#include "../Utility/MakeUnique.hpp"
 #include "CocoaMouse.hpp"
 
 namespace Pomdog {
@@ -264,11 +265,10 @@ void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
 //-----------------------------------------------------------------------
 CocoaGameHost::CocoaGameHost(std::shared_ptr<CocoaGameWindow> const& window,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
-	: impl(new Impl(window, eventDispatcher))
+	: impl(MakeUnique<Impl>(window, eventDispatcher))
 {}
 //-----------------------------------------------------------------------
-CocoaGameHost::~CocoaGameHost()
-{}
+CocoaGameHost::~CocoaGameHost() = default;
 //-----------------------------------------------------------------------
 void CocoaGameHost::Run(std::weak_ptr<Game> weakGame)
 {

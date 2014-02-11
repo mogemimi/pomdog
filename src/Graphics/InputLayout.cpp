@@ -38,9 +38,7 @@ InputLayout::InputLayout(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		*nativeEffectPass, vertexBindings);
 }
 //-----------------------------------------------------------------------
-InputLayout::~InputLayout()
-{
-}
+InputLayout::~InputLayout() = default;
 //-----------------------------------------------------------------------
 Details::RenderSystem::NativeInputLayout* InputLayout::GetNativeInputLayout()
 {

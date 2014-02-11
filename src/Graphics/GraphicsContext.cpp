@@ -24,6 +24,7 @@
 #include "../RenderSystem/NativeRasterizerState.hpp"
 #include "../RenderSystem/NativeSamplerState.hpp"
 #include "../RenderSystem/PresentationParameters.hpp"
+#include "../Utility/MakeUnique.hpp"
 
 namespace Pomdog {
 
@@ -144,14 +145,13 @@ GraphicsContext::GraphicsContext(
 	std::unique_ptr<NativeGraphicsContext> nativeContext,
 	Details::RenderSystem::PresentationParameters const& presentationParameters,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
-	: impl(new Impl(std::move(nativeContext), presentationParameters))
+	: impl(Details::MakeUnique<Impl>(std::move(nativeContext), presentationParameters))
 {
 	POMDOG_ASSERT(graphicsDevice);
 	impl->BuildResources(graphicsDevice);
 }
 //-----------------------------------------------------------------------
-GraphicsContext::~GraphicsContext()
-{}
+GraphicsContext::~GraphicsContext() = default;
 //-----------------------------------------------------------------------
 void GraphicsContext::Clear(Color const& color)
 {

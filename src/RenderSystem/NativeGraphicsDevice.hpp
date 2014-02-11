@@ -29,11 +29,13 @@ class NativeBlendState;
 class NativeConstantBuffer;
 class NativeDepthStencilState;
 class NativeEffectPass;
+class NativeEffectReflection;
 class NativeIndexBuffer;
 class NativeInputLayout;
-class NativeSamplerState;
-class NativeEffectReflection;
 class NativeRasterizerState;
+class NativeRenderTarget2D;
+class NativeSamplerState;
+class NativeTexture2D;
 class NativeVertexBuffer;
 
 ///@~Japanese
@@ -45,61 +47,68 @@ public:
 
 	///@~Japanese
 	/// @brief インデックスバッファを作成します。
-	virtual std::unique_ptr<NativeIndexBuffer> CreateIndexBuffer(
-		void const* indices, std::uint32_t indexCount,
+	virtual std::unique_ptr<NativeIndexBuffer>
+	CreateIndexBuffer(void const* indices, std::uint32_t indexCount,
 		IndexElementSize elementSize, BufferUsage bufferUsage) = 0;
 	
 	///@~Japanese
 	/// @brief 頂点バッファを作成します。
-	virtual std::unique_ptr<NativeVertexBuffer> CreateVertexBuffer(
-		void const* vertices, std::uint32_t vertexCount,
+	virtual std::unique_ptr<NativeVertexBuffer>
+	CreateVertexBuffer(void const* vertices, std::uint32_t vertexCount,
 		VertexDeclaration const& vertexDeclaration, BufferUsage bufferUsage) = 0;
 	
 	///@~Japanese
 	/// @brief ブレンディングステートを作成します。
-	virtual std::unique_ptr<NativeBlendState> CreateBlendState(
-		BlendDescription const& description) = 0;
+	virtual std::unique_ptr<NativeBlendState>
+	CreateBlendState(BlendDescription const& description) = 0;
 
 	///@~Japanese
 	/// @brief 深度ステンシルステートを作成します。
-	virtual std::unique_ptr<NativeDepthStencilState> CreateDepthStencilState(
-		DepthStencilDescription const& description) = 0;
+	virtual std::unique_ptr<NativeDepthStencilState>
+	CreateDepthStencilState(DepthStencilDescription const& description) = 0;
 
 	///@~Japanese
 	/// @brief サンプラーステートを作成します。
-	virtual std::unique_ptr<NativeSamplerState> CreateSamplerState(
-		SamplerDescription const& description) = 0;
+	virtual std::unique_ptr<NativeSamplerState>
+	CreateSamplerState(SamplerDescription const& description) = 0;
 
 	///@~Japanese
 	/// @brief ラスタライザーステートを作成します。
-	virtual std::unique_ptr<NativeRasterizerState> CreateRasterizerState(
-		RasterizerDescription const& description) = 0;
+	virtual std::unique_ptr<NativeRasterizerState>
+	CreateRasterizerState(RasterizerDescription const& description) = 0;
 		
 	///@~Japanese
 	/// @brief エフェクトパスを作成します。
-	virtual std::unique_ptr<NativeEffectPass> CreateEffectPass(
-		ShaderBytecode const& vertexShaderBytecode,
+	virtual std::unique_ptr<NativeEffectPass>
+	CreateEffectPass(ShaderBytecode const& vertexShaderBytecode,
 		ShaderBytecode const& pixelShaderBytecode) = 0;
 	
 	///@~Japanese
 	/// @brief 定数バッファを作成します。
-	virtual std::unique_ptr<NativeConstantBuffer> CreateConstantBuffer(
-		std::uint32_t byteWidth) = 0;
+	virtual std::unique_ptr<NativeConstantBuffer>
+	CreateConstantBuffer(std::uint32_t byteWidth) = 0;
 	
 	///@~Japanese
 	/// @brief 指定されたエフェクトパスからエフェクトリフレクションを作成します。
-	virtual std::unique_ptr<NativeEffectReflection> CreateEffectReflection(
-		NativeEffectPass & nativeEffectPass) = 0;
+	virtual std::unique_ptr<NativeEffectReflection>
+	CreateEffectReflection(NativeEffectPass & nativeEffectPass) = 0;
 	
 	///@~Japanese
 	/// @brief 入力レイアウトを作成します。
-	virtual std::unique_ptr<NativeInputLayout> CreateInputLayout(
-		NativeEffectPass & nativeEffectPass) = 0;
+	virtual std::unique_ptr<NativeInputLayout>
+	CreateInputLayout(NativeEffectPass & nativeEffectPass) = 0;
 	
 	///@~Japanese
 	/// @brief 入力レイアウトを作成します。
-	virtual std::unique_ptr<NativeInputLayout> CreateInputLayout(
-		NativeEffectPass & nativeEffectPass, std::vector<VertexBufferBinding> const& vertexBufferBindings) = 0;
+	virtual std::unique_ptr<NativeInputLayout>
+	CreateInputLayout(NativeEffectPass & nativeEffectPass,
+		std::vector<VertexBufferBinding> const& vertexBufferBindings) = 0;
+
+	///@~Japanese
+	/// @brief 2 次元テクスチャを作成します。
+	virtual std::unique_ptr<NativeTexture2D>
+	CreateTexture2D(std::uint32_t width, std::uint32_t height,
+		std::uint32_t mipmapLevels, SurfaceFormat format) = 0;
 };
 
 }// namespace RenderSystem

@@ -15,10 +15,6 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 //-----------------------------------------------------------------------
-BootstrapperCocoa::BootstrapperCocoa()
-{
-}
-//-----------------------------------------------------------------------
 void BootstrapperCocoa::BeginRun(NSWindow* nativeWindow)
 {
 	auto eventDispatcher = std::make_shared<SystemEventDispatcher>();

@@ -20,7 +20,8 @@ GameObject::GameObject(std::int32_t instanceID_, std::size_t minimumCapacity)
 	components.reserve(minimumCapacity);
 }
 //-----------------------------------------------------------------------
-std::int32_t GameObject::GetInstanceID() const {
+std::int32_t GameObject::GetInstanceID() const
+{
 	return instanceID;
 }
 

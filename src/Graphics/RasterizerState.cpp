@@ -22,9 +22,7 @@ RasterizerState::RasterizerState(std::shared_ptr<GraphicsDevice> const& graphics
 	POMDOG_ASSERT(nativeRasterizerState);
 }
 //-----------------------------------------------------------------------
-RasterizerState::~RasterizerState()
-{
-}
+RasterizerState::~RasterizerState() = default;
 //-----------------------------------------------------------------------
 RasterizerDescription RasterizerState::GetDescription() const
 {

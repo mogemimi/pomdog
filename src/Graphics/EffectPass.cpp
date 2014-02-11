@@ -64,11 +64,7 @@ EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	}
 }
 //-----------------------------------------------------------------------
-EffectPass::~EffectPass()
-{
-	effectParameters.clear();
-	nativeEffectPass.reset();
-}
+EffectPass::~EffectPass() = default;
 //-----------------------------------------------------------------------
 void EffectPass::Apply()
 {

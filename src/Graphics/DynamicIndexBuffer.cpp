@@ -25,9 +25,7 @@ DynamicIndexBuffer::DynamicIndexBuffer(std::shared_ptr<GraphicsDevice> const& gr
 	POMDOG_ASSERT(nativeIndexBuffer);
 }
 //-----------------------------------------------------------------------
-DynamicIndexBuffer::~DynamicIndexBuffer()
-{
-}
+DynamicIndexBuffer::~DynamicIndexBuffer() = default;
 //-----------------------------------------------------------------------
 std::uint32_t DynamicIndexBuffer::GetIndexCount() const
 {

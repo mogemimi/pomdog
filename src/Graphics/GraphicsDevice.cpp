@@ -19,9 +19,7 @@ GraphicsDevice::GraphicsDevice(std::unique_ptr<Details::RenderSystem::NativeGrap
 	POMDOG_ASSERT(nativeGraphicsDevice);
 }
 //-----------------------------------------------------------------------
-GraphicsDevice::~GraphicsDevice()
-{
-}
+GraphicsDevice::~GraphicsDevice() = default;
 //-----------------------------------------------------------------------
 Details::RenderSystem::NativeGraphicsDevice* GraphicsDevice::GetNativeGraphicsDevice()
 {

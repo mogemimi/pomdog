@@ -39,9 +39,7 @@ EffectParameter::EffectParameter(std::shared_ptr<GraphicsDevice> const& graphics
 	POMDOG_ASSERT(byteConstants > 0);
 }
 //-----------------------------------------------------------------------
-EffectParameter::~EffectParameter()
-{
-}
+EffectParameter::~EffectParameter() = default;
 //-----------------------------------------------------------------------
 void EffectParameter::GetValue(std::uint32_t byteWidth, std::uint8_t * result) const
 {
