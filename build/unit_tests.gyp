@@ -48,6 +48,7 @@
       'sources': [
         '../test/FrameworkTest/main.cpp',
         '../test/FrameworkTest/Event/EventConnectionTest.cpp',
+        '../test/FrameworkTest/Event/EventTest.cpp',
         '../test/FrameworkTest/Event/ScopedConnectionTest.cpp',
         '../test/FrameworkTest/Graphics/CustomVertexTest.cpp',
         '../test/FrameworkTest/Graphics/VertexDeclarationTest.cpp',

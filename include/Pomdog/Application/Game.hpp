@@ -14,7 +14,6 @@
 #endif
 
 #include "../Config/Export.hpp"
-#include "../Config/FundamentalTypes.hpp"
 #include "../Utility/Noncopyable.hpp"
 
 namespace Pomdog {

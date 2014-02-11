@@ -21,12 +21,11 @@
 #include "../Utility/Assert.hpp"
 #include "detail/EventArguments.hpp"
 
-
 namespace Pomdog {
 
 ///@~Japanese
 /// @brief イベントです。
-class POMDOG_EXPORT Event: public std::enable_shared_from_this<Event>
+class POMDOG_EXPORT Event
 {
 public:
 	Event() = delete;
