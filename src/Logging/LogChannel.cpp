@@ -22,8 +22,7 @@ void LogChannel::LogMessage(std::string const& message, LoggingLevel verbosity)
 {
 	if (verbosity <= this->threshold)
 	{
-		eventHandler.Trigger(std::make_shared<Event>(
-			LogEntry{message, name, verbosity}));
+		eventHandler.Invoke(LogEntry{message, name, verbosity});
 	}
 }
 //-----------------------------------------------------------------------

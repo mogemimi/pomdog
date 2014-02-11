@@ -35,7 +35,7 @@ public:
 
 	void Disconnect(EventSlot const* observer);
 
-	void Trigger(event_type const& event);
+	void Invoke(event_type const& event);
 
 private:
 	void PushBackAddedListeners();
@@ -152,7 +152,7 @@ private:
 	T & counter;
 };
 //-----------------------------------------------------------------------
-void EventSlotCollection::Impl::Trigger(event_type const& event)
+void EventSlotCollection::Impl::Invoke(event_type const& event)
 {
 	if (nestedMethodCallCount == 0) {
 		PushBackAddedListeners();
@@ -183,8 +183,7 @@ EventSlotCollection::EventSlotCollection()
 	: impl(new Impl)
 {}
 //-----------------------------------------------------------------------
-EventSlotCollection::~EventSlotCollection()
-{}
+EventSlotCollection::~EventSlotCollection() = default;
 //-----------------------------------------------------------------------
 EventConnection EventSlotCollection::Connect(function_type const& slot)
 {
@@ -204,10 +203,10 @@ void EventSlotCollection::Disconnect(EventSlot const* observer)
 	impl->Disconnect(observer);
 }
 //-----------------------------------------------------------------------
-void EventSlotCollection::Trigger(event_type const& event)
+void EventSlotCollection::Invoke(event_type const& event)
 {
 	POMDOG_ASSERT(impl);
-	impl->Trigger(event);
+	impl->Invoke(event);
 }
 
 }// namespace EventInternal

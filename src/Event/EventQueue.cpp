@@ -12,6 +12,7 @@
 #include <mutex>
 #include <utility>
 #include <Pomdog/Utility/Assert.hpp>
+#include "Event.hpp"
 #include "detail/EventSlot.hpp"
 #include "detail/EventSlotCollection.hpp"
 
@@ -28,11 +29,12 @@ class EventQueue::Impl
 public:
 	Impl();
 
-	void EnqueueEvent(std::shared_ptr<Event const> const&);
+	void EnqueueEvent(Event && event);
+	
 	void Tick();
 
 public:
-	std::vector<std::shared_ptr<Event const>> events;
+	std::vector<Event const> events;
 	std::shared_ptr<EventSlotCollection> slots;
 
 	std::recursive_mutex notificationProtection;
@@ -42,31 +44,29 @@ EventQueue::Impl::Impl()
 	: slots(std::move(std::make_shared<EventSlotCollection>()))
 {}
 //-----------------------------------------------------------------------
-void EventQueue::Impl::EnqueueEvent(std::shared_ptr<Event const> const& event)
+void EventQueue::Impl::EnqueueEvent(Event && event)
 {
-	POMDOG_ASSERT(event);
 	POMDOG_ASSERT(slots);
 
 	std::lock_guard<std::recursive_mutex> lock(notificationProtection);
 
-	events.push_back(event);
+	events.emplace_back(std::move(event));
 }
 //-----------------------------------------------------------------------
 void EventQueue::Impl::Tick()
 {
 	POMDOG_ASSERT(slots);
 
-	std::vector<std::shared_ptr<Event const>> notifications;
+	std::vector<Event const> notifications;
 	{
 		std::lock_guard<std::recursive_mutex> lock(notificationProtection);
 
 		std::swap(notifications, events);
 	}
 
-	std::for_each(std::begin(notifications), std::end(notifications), [this](std::shared_ptr<Event const> const& event){
-		POMDOG_ASSERT(event);
-		slots->Trigger(*event);
-	});
+	for (auto & event: notifications) {
+		slots->Invoke(event);
+	}
 }
 //-----------------------------------------------------------------------
 EventQueue::EventQueue()
@@ -93,10 +93,10 @@ EventConnection EventQueue::Connect(std::function<void(Event const&)> && slot)
 	return impl->slots->Connect(slot);
 }
 //-----------------------------------------------------------------------
-void EventQueue::Enqueue(std::shared_ptr<Event const> const& event)
+void EventQueue::Enqueue(Event && event)
 {
 	POMDOG_ASSERT(impl);
-	impl->EnqueueEvent(event);
+	impl->EnqueueEvent(std::move(event));
 }
 //-----------------------------------------------------------------------
 void EventQueue::Tick()

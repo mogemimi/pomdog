@@ -29,15 +29,15 @@ TEST(ScopedConnection, ScopeGuard)
 			++count;
 		});
 		
-		eventHandler.Trigger(std::make_shared<Event>("event"));
+		eventHandler.Invoke("event");
 		EXPECT_EQ(1, count);
-		eventHandler.Trigger(std::make_shared<Event>("event"));
+		eventHandler.Invoke("event");
 		EXPECT_EQ(2, count);
 	}
 	
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(2, count);
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(2, count);
 }
 
@@ -51,16 +51,16 @@ TEST(ScopedConnection, ExplicitDisconnect)
 		++count;
 	});
 	
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(1, count);
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(2, count);
 	
 	connection.Disconnect();
 	
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(2, count);
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(2, count);
 }
 
@@ -77,24 +77,24 @@ TEST(ScopedConnection, MoveAssignment)
 			++count;
 		});
 		
-		eventHandler.Trigger(std::make_shared<Event>("event"));
+		eventHandler.Invoke("event");
 		EXPECT_EQ(1, count);
-		eventHandler.Trigger(std::make_shared<Event>("event"));
+		eventHandler.Invoke("event");
 		EXPECT_EQ(2, count);
 		
 		connection1 = std::move(connection2);
 	}
 	
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(3, count);
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(4, count);
 	
 	connection1.Disconnect();
 	
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(4, count);
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(4, count);
 }
 
@@ -111,25 +111,25 @@ TEST(ScopedConnection, CopyAssignmentEventConnection)
 			++count;
 		});
 		
-		eventHandler.Trigger(std::make_shared<Event>("event"));
+		eventHandler.Invoke("event");
 		EXPECT_EQ(1, count);
 		
 		connection1 = connection2;
 		
-		eventHandler.Trigger(std::make_shared<Event>("event"));
+		eventHandler.Invoke("event");
 		EXPECT_EQ(2, count);
 	}
 	
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(3, count);
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(4, count);
 	
 	connection1.Disconnect();
 	
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(4, count);
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(4, count);
 }
 
@@ -146,25 +146,25 @@ TEST(ScopedConnection, MoveAssignmentEventConnection)
 			++count;
 		});
 		
-		eventHandler.Trigger(std::make_shared<Event>("event"));
+		eventHandler.Invoke("event");
 		EXPECT_EQ(1, count);
 		
 		connection1 = std::move(connection2);
 		
-		eventHandler.Trigger(std::make_shared<Event>("event"));
+		eventHandler.Invoke("event");
 		EXPECT_EQ(2, count);
 		
 		connection2.Disconnect();
 		
-		eventHandler.Trigger(std::make_shared<Event>("event"));
+		eventHandler.Invoke("event");
 		EXPECT_EQ(3, count);
 	}
 	
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(4, count);
 	
 	connection1.Disconnect();
 	
-	eventHandler.Trigger(std::make_shared<Event>("event"));
+	eventHandler.Invoke("event");
 	EXPECT_EQ(4, count);
 }

@@ -36,12 +36,11 @@ EventConnection EventHandler::Connect(std::function<void(Event const&)> && slot)
 	return slots->Connect(slot);
 }
 //-----------------------------------------------------------------------
-void EventHandler::Trigger(std::shared_ptr<Event const> const& event)
+void EventHandler::Invoke(Event && event)
 {
-	POMDOG_ASSERT(event);
 	POMDOG_ASSERT(slots);
 
-	slots->Trigger(*event);
+	slots->Invoke(std::move(event));
 }
 
 }// namespace Pomdog

@@ -42,7 +42,7 @@ public:
 	
 	void Disconnect(EventSlot const* observer);
 
-	void Trigger(event_type const& event);
+	void Invoke(event_type const& event);
 
 private:
 	class Impl;

@@ -35,7 +35,14 @@ public:
 
 	EventConnection Connect(std::function<void(Event const&)> && slot);
 
-	void Enqueue(std::shared_ptr<Event const> const& event);
+	void Enqueue(Event && event);
+
+	template <typename T>
+	void Enqueue(T && arguments)
+	{
+		Enqueue(std::move(Event{std::forward<typename std::remove_reference<T>::type>(arguments)}));
+	}
+
 	void Tick();
 
 private:

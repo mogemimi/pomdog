@@ -35,7 +35,13 @@ public:
 
 	EventConnection Connect(std::function<void(Event const&)> && slot);
 
-	void Trigger(std::shared_ptr<Event const> const& event);
+	void Invoke(Event && event);
+
+	template <typename T>
+	void Invoke(T && arguments)
+	{
+		Invoke(std::move(Event{std::forward<typename std::remove_reference<T>::type>(arguments)}));
+	}
 
 private:
 	std::shared_ptr<Details::EventInternal::EventSlotCollection> slots;
