@@ -38,14 +38,14 @@ public:
 
 	void Invoke(Event && event);
 
-	template <typename T>
-	void Invoke(T && arguments)
+	template <typename T, typename...Arguments>
+	void Invoke(Arguments && ...arguments)
 	{
-		Invoke(std::move(Event{std::forward<typename std::remove_reference<T>::type>(arguments)}));
+		Invoke(Event{T{std::forward<typename std::remove_reference<Arguments>::type>(arguments)...}});
 	}
 
 private:
-	std::shared_ptr<Details::EventInternal::EventSlotCollection> slots;
+	std::shared_ptr<Details::SignalsAndSlots::Signal<void(Event const&)>> signal;
 };
 
 }// namespace Pomdog

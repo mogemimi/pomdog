@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -8,56 +8,41 @@
 
 #include <Pomdog/Event/EventQueue.hpp>
 #include <algorithm>
-#include <vector>
-#include <mutex>
-#include <utility>
 #include <Pomdog/Utility/Assert.hpp>
-#include "Event.hpp"
-#include "detail/EventSlot.hpp"
-#include "detail/EventSlotCollection.hpp"
+#include <Pomdog/Event/detail/Signal.hpp>
+#include <Pomdog/Event/EventConnection.hpp>
 
 namespace Pomdog {
-
-typedef std::function<void(Event const&)> function_type;
-
-using Details::EventInternal::EventSlot;
-using Details::EventInternal::EventSlotCollection;
-
 //-----------------------------------------------------------------------
-class EventQueue::Impl
-{
-public:
-	Impl();
-
-	void EnqueueEvent(Event && event);
-	
-	void Tick();
-
-public:
-	std::vector<Event const> events;
-	std::shared_ptr<EventSlotCollection> slots;
-
-	std::recursive_mutex notificationProtection;
-};
-//-----------------------------------------------------------------------
-EventQueue::Impl::Impl()
-	: slots(std::move(std::make_shared<EventSlotCollection>()))
+EventQueue::EventQueue()
+	: signal(std::move(std::make_shared<SignalType>()))
 {}
 //-----------------------------------------------------------------------
-void EventQueue::Impl::EnqueueEvent(Event && event)
+EventConnection EventQueue::Connect(std::function<void(Event const&)> const& slot)
 {
-	POMDOG_ASSERT(slots);
-
+	POMDOG_ASSERT(slot);
+	POMDOG_ASSERT(signal);
+	return EventConnection{signal->Connect(slot)};
+}
+//-----------------------------------------------------------------------
+EventConnection EventQueue::Connect(std::function<void(Event const&)> && slot)
+{
+	POMDOG_ASSERT(slot);
+	POMDOG_ASSERT(signal);
+	return EventConnection{signal->Connect(slot)};
+}
+//-----------------------------------------------------------------------
+void EventQueue::Enqueue(Event && event)
+{
 	std::lock_guard<std::recursive_mutex> lock(notificationProtection);
-
 	events.emplace_back(std::move(event));
 }
 //-----------------------------------------------------------------------
-void EventQueue::Impl::Tick()
+void EventQueue::Tick()
 {
-	POMDOG_ASSERT(slots);
+	POMDOG_ASSERT(signal);
 
-	std::vector<Event const> notifications;
+	std::vector<Event> notifications;
 	{
 		std::lock_guard<std::recursive_mutex> lock(notificationProtection);
 
@@ -65,44 +50,8 @@ void EventQueue::Impl::Tick()
 	}
 
 	for (auto & event: notifications) {
-		slots->Invoke(event);
+		signal->operator()(event);
 	}
-}
-//-----------------------------------------------------------------------
-EventQueue::EventQueue()
-	: impl(new Impl())
-{}
-//-----------------------------------------------------------------------
-EventQueue::~EventQueue() = default;
-//-----------------------------------------------------------------------
-EventConnection EventQueue::Connect(std::function<void(Event const&)> const& slot)
-{
-	POMDOG_ASSERT(slot);
-	POMDOG_ASSERT(impl);
-	POMDOG_ASSERT(impl->slots);
-
-	return impl->slots->Connect(slot);
-}
-//-----------------------------------------------------------------------
-EventConnection EventQueue::Connect(std::function<void(Event const&)> && slot)
-{
-	POMDOG_ASSERT(slot);
-	POMDOG_ASSERT(impl);
-	POMDOG_ASSERT(impl->slots);
-
-	return impl->slots->Connect(slot);
-}
-//-----------------------------------------------------------------------
-void EventQueue::Enqueue(Event && event)
-{
-	POMDOG_ASSERT(impl);
-	impl->EnqueueEvent(std::move(event));
-}
-//-----------------------------------------------------------------------
-void EventQueue::Tick()
-{
-	POMDOG_ASSERT(impl);
-	impl->Tick();
 }
 
 }// namespace Pomdog

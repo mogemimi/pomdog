@@ -7,8 +7,8 @@
 //
 
 #include <gtest/iutest_switch.hpp>
-#include <Pomdog/Event/Event.hpp>
 #include <utility>
+#include <Pomdog/Event/Event.hpp>
 
 using Pomdog::Event;
 

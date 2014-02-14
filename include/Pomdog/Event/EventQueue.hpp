@@ -16,8 +16,11 @@
 #include <memory>
 #include <functional>
 #include <utility>
+#include <vector>
+#include <mutex>
 #include "../Config/Export.hpp"
 #include "detail/FowardDeclarations.hpp"
+#include "Event.hpp"
 
 namespace Pomdog {
 
@@ -26,11 +29,10 @@ class POMDOG_EXPORT EventQueue
 public:
 	EventQueue();
 	EventQueue(EventQueue const&) = delete;
-	EventQueue(EventQueue &&) = default;
+	EventQueue(EventQueue &&) = delete;
 	EventQueue& operator=(EventQueue const&) = delete;
-	EventQueue& operator=(EventQueue &&) = default;
-
-	~EventQueue();
+	EventQueue& operator=(EventQueue &&) = delete;
+	~EventQueue() = default;
 
 	EventConnection Connect(std::function<void(Event const&)> const& slot);
 
@@ -38,17 +40,20 @@ public:
 
 	void Enqueue(Event && event);
 
-	template <typename T>
-	void Enqueue(T && arguments)
+	template <typename T, typename...Arguments>
+	void Enqueue(Arguments && ...arguments)
 	{
-		Enqueue(std::move(Event{std::forward<typename std::remove_reference<T>::type>(arguments)}));
+		Enqueue(Event{T{std::forward<typename std::remove_reference<T>::type>(arguments)...}});
 	}
 
 	void Tick();
 
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+	typedef Details::SignalsAndSlots::Signal<void(Event const&)> SignalType;
+
+	std::vector<Event> events;
+	std::shared_ptr<SignalType> signal;
+	std::recursive_mutex notificationProtection;
 };
 
 }// namespace Pomdog

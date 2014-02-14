@@ -14,19 +14,17 @@
 #endif
 
 #include <memory>
+#include <utility>
 #include "../Config/Export.hpp"
 #include "detail/FowardDeclarations.hpp"
+#include "detail/Signal.hpp"
 
 namespace Pomdog {
 
 class POMDOG_EXPORT EventConnection
 {
 private:
-	typedef std::weak_ptr<Details::EventInternal::EventSlot<void(Event const&)>> weak_slot;
-	typedef std::weak_ptr<Details::EventInternal::EventSlotCollection> weak_slot_collection;
-	
-	weak_slot slot;
-	weak_slot_collection collection;
+	std::weak_ptr<Details::SignalsAndSlots::ConnectionBody> weakConnectionBody;
 
 public:
 	EventConnection() = default;
@@ -37,9 +35,13 @@ public:
 	
 	EventConnection & operator=(EventConnection const& connection) = default;
 	EventConnection & operator=(EventConnection && connection) = default;
-
-	EventConnection(weak_slot const& slot, weak_slot_collection && collection);
-	EventConnection(weak_slot && slot, weak_slot_collection && collection);
+	
+	template <typename Function>
+	explicit EventConnection(std::weak_ptr<Details::SignalsAndSlots::ConnectionBodyOverride<Function>> && connectionBodyIn)
+		: weakConnectionBody(std::forward<
+			std::weak_ptr<Details::SignalsAndSlots::ConnectionBodyOverride<Function>>
+		>(connectionBodyIn))
+	{}
 
 	void Disconnect();
 };

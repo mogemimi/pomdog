@@ -17,14 +17,15 @@
 
 namespace Pomdog {
 namespace Details {
-namespace EventInternal {
+namespace SignalsAndSlots {
 
 template <typename Function>
-using EventSlot = std::function<Function>;
+using Slot = std::function<Function>;
 
-class EventSlotCollection;
+template <typename Function>
+class Signal;
 
-}// namespace EventInternal
+}// namespace SignalsAndSlots
 }// namespace Details
 
 class Event;

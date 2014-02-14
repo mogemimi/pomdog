@@ -7,11 +7,11 @@
 //
 
 #include <gtest/iutest_switch.hpp>
+#include <utility>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/EventConnection.hpp>
 #include <Pomdog/Event/EventHandler.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
-#include <utility>
 
 using Pomdog::Event;
 using Pomdog::EventConnection;
@@ -29,15 +29,15 @@ TEST(ScopedConnection, ScopeGuard)
 			++count;
 		});
 		
-		eventHandler.Invoke("event");
+		eventHandler.Invoke<std::string>("event");
 		EXPECT_EQ(1, count);
-		eventHandler.Invoke("event");
+		eventHandler.Invoke<std::string>("event");
 		EXPECT_EQ(2, count);
 	}
 	
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(2, count);
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(2, count);
 }
 
@@ -51,16 +51,16 @@ TEST(ScopedConnection, ExplicitDisconnect)
 		++count;
 	});
 	
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(1, count);
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(2, count);
 	
 	connection.Disconnect();
 	
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(2, count);
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(2, count);
 }
 
@@ -77,24 +77,24 @@ TEST(ScopedConnection, MoveAssignment)
 			++count;
 		});
 		
-		eventHandler.Invoke("event");
+		eventHandler.Invoke<std::string>("event");
 		EXPECT_EQ(1, count);
-		eventHandler.Invoke("event");
+		eventHandler.Invoke<std::string>("event");
 		EXPECT_EQ(2, count);
 		
 		connection1 = std::move(connection2);
 	}
 	
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(3, count);
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(4, count);
 	
 	connection1.Disconnect();
 	
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(4, count);
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(4, count);
 }
 
@@ -111,25 +111,25 @@ TEST(ScopedConnection, CopyAssignmentEventConnection)
 			++count;
 		});
 		
-		eventHandler.Invoke("event");
+		eventHandler.Invoke<std::string>("event");
 		EXPECT_EQ(1, count);
 		
 		connection1 = connection2;
 		
-		eventHandler.Invoke("event");
+		eventHandler.Invoke<std::string>("event");
 		EXPECT_EQ(2, count);
 	}
 	
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(3, count);
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(4, count);
 	
 	connection1.Disconnect();
 	
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(4, count);
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(4, count);
 }
 
@@ -146,25 +146,25 @@ TEST(ScopedConnection, MoveAssignmentEventConnection)
 			++count;
 		});
 		
-		eventHandler.Invoke("event");
+		eventHandler.Invoke<std::string>("event");
 		EXPECT_EQ(1, count);
 		
 		connection1 = std::move(connection2);
 		
-		eventHandler.Invoke("event");
+		eventHandler.Invoke<std::string>("event");
 		EXPECT_EQ(2, count);
 		
 		connection2.Disconnect();
 		
-		eventHandler.Invoke("event");
+		eventHandler.Invoke<std::string>("event");
 		EXPECT_EQ(3, count);
 	}
 	
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(4, count);
 	
 	connection1.Disconnect();
 	
-	eventHandler.Invoke("event");
+	eventHandler.Invoke<std::string>("event");
 	EXPECT_EQ(4, count);
 }

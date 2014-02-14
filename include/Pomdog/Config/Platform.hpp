@@ -49,7 +49,7 @@ namespace Details {
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
 #	// BSD
 #	define POMDOG_PLATFORM_BSD
-#elif defined(_XBOX_ONE) && defined(__TITLE)
+#elif defined(_XBOX_ONE) && defined(_TITLE)
 #	// Xbox One
 #	define POMDOG_PLATFORM_XBOX_ONE
 #elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)

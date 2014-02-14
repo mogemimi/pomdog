@@ -37,6 +37,10 @@ std::size_t const EventComponentHashCode<T>::value = typeid(T const*).hash_code(
 class EventArguments
 {
 public:
+	EventArguments() = default;
+	EventArguments(EventArguments const&) = delete;
+	EventArguments & operator=(EventArguments const&) = delete;
+
 	virtual ~EventArguments() = default;
 	
 	virtual std::size_t GetHashCode() const = 0;
