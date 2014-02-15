@@ -39,7 +39,7 @@ static TextureAddressModeGL4 ToTextureAddressModeGL4(TextureAddressMode const& a
 //-----------------------------------------------------------------------
 SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 {
-	samplerObject = ([](){
+	samplerObject = ([]{
 		SamplerObjectGL4 sampler;
 		glGenSamplers(1, sampler.data());
 		return std::move(sampler);

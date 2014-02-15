@@ -15,20 +15,34 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include <Pomdog/Utility/detail/Tagged.hpp>
 #include "../RenderSystem/NativeTexture2D.hpp"
+#include "../Utility/Optional.hpp"
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
+using Texture2DObjectGL4 = Tagged<GLuint, Texture2D>;
+
 class Texture2DGL4 final: public NativeTexture2D
 {
 public:
 	Texture2DGL4(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
-		std::uint32_t mipmapLevels, SurfaceFormat surfaceFormat);
+		std::uint32_t levelCount, SurfaceFormat format);
 	
-	~Texture2DGL4() = default;
+	~Texture2DGL4();
+	
+	void SetData(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
+		std::uint32_t levelCount, SurfaceFormat format, void const* pixelData);
+	
+	//std::vector<std::uint8_t> Data() const;
+	
+	void Apply(std::uint32_t index);
+	
+private:
+	Optional<Texture2DObjectGL4> textureObject;
 };
 
 }// namespace GL4

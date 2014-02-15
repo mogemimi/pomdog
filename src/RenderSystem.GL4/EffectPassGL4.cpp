@@ -142,7 +142,7 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 			"Failed to compile vertex shader.");
 	}
 	
-	ScopeGuard vertexScope([&](){
+	ScopeGuard vertexScope([&]{
 		POMDOG_ASSERT(vertexShader);
 		glDeleteShader(vertexShader->value);
 	});
@@ -153,7 +153,7 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 			"Failed to compile pixel shader.");
 	}
 	
-	ScopeGuard pixelScope([&](){
+	ScopeGuard pixelScope([&]{
 		POMDOG_ASSERT(pixelShader);
 		glDeleteShader(pixelShader->value);
 	});

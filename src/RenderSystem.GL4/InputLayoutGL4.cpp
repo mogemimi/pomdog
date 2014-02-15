@@ -461,7 +461,7 @@ InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram)
 InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::vector<VertexBufferBinding> const& vertexBinding)
 {
 	// Build vertex array object
-	inputLayout = ([](){
+	inputLayout = ([]{
 		VertexArrayGL4 vertexArray;
 		glGenVertexArrays(1, vertexArray.data());
 		return std::move(vertexArray);

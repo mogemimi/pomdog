@@ -25,7 +25,7 @@ namespace GL4 {
 namespace TypesafeHelperGL4 {
 
 template <class TaggedClass>
-struct OpenGLGetTraits {};
+struct OpenGLGetTraits;
 
 template <class TaggedClass>
 TaggedClass Get(OpenGLGetTraits<TaggedClass>* = nullptr)
@@ -49,6 +49,15 @@ void BindBuffer(TaggedClass const& bufferObject)
 	::glBindBuffer(
 		OpenGLGetTraits<TaggedClass>::bufferObjectTarget,
 		bufferObject.value
+	);
+}
+
+template <class TaggedClass>
+void BindTexture(TaggedClass const& textureObject)
+{
+	::glBindTexture(
+		OpenGLGetTraits<TaggedClass>::textureObjectTarget,
+		textureObject.value
 	);
 }
 

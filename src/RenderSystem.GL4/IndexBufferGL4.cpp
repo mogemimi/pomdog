@@ -11,9 +11,9 @@
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/BufferUsage.hpp>
 #include <Pomdog/Graphics/IndexElementSize.hpp>
+#include "../Utility/ScopeGuard.hpp"
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
-#include "../Utility/ScopeGuard.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -58,7 +58,7 @@ IndexBufferGL4::IndexBufferGL4(void const* indices, std::uint32_t indexCount,
 	IndexElementSize elementSize, BufferUsage bufferUsage)
 {
 	// Generate index buffer
-	bufferObject = ([](){
+	bufferObject = ([]{
 		IndexBufferObjectGL4 indexBuffer;
 		glGenBuffers(1, indexBuffer.data());
 		return std::move(indexBuffer);

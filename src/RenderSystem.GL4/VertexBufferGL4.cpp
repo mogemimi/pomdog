@@ -11,9 +11,9 @@
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/BufferUsage.hpp>
 #include <Pomdog/Graphics/VertexDeclaration.hpp>
+#include "../Utility/ScopeGuard.hpp"
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
-#include "../Utility/ScopeGuard.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -49,7 +49,7 @@ VertexBufferGL4::VertexBufferGL4(void const* vertices, std::uint32_t vertexCount
 	POMDOG_ASSERT(vertexCount > 0);
 
 	// Generate vertex buffer
-	bufferObject = ([](){
+	bufferObject = ([]{
 		VertexBufferObjectGL4 vertexBuffer;
 		glGenBuffers(1, vertexBuffer.data());
 		return std::move(vertexBuffer);

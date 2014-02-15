@@ -9,9 +9,9 @@
 #include "ConstantBufferGL4.hpp"
 #include <utility>
 #include <Pomdog/Utility/Assert.hpp>
+#include "../Utility/ScopeGuard.hpp"
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
-#include "../Utility/ScopeGuard.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -27,7 +27,7 @@ template<> struct TypesafeHelperGL4::OpenGLGetTraits<ConstantBufferObjectGL4>
 ConstantBufferGL4::ConstantBufferGL4(std::uint32_t byteWidth)
 {
 	// Generate constant buffer
-	bufferObject = ([](){
+	bufferObject = ([]{
 		ConstantBufferObjectGL4 constantBuffer;
 		glGenBuffers(1, constantBuffer.data());
 		return std::move(constantBuffer);
@@ -129,7 +129,7 @@ void ConstantBufferGL4::Apply(std::uint32_t slotIndex)
 	
 	#ifdef DEBUG
 	{
-		static auto const maxUniformBufferBindings = ([]() {
+		static auto const maxUniformBufferBindings = ([]{
 			GLint value = 0;
 			glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &value);
 			return value;
