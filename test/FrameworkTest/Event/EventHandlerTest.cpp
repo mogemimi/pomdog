@@ -20,11 +20,14 @@ struct EventHandlerTest: public ::testing::Test
 {
 	EventHandler handler;
 	std::vector<int> integers;
+	std::vector<std::string> names;
 	std::function<void(Event const&)> slot;
 
 	void SetUp() override
 	{
 		integers.clear();
+		names.clear();
+		
 		EventHandler eventHandlerNew;
 		handler = std::move(eventHandlerNew);
 		
@@ -47,6 +50,32 @@ TEST_F(EventHandlerTest, InvokeInt)
 	EXPECT_EQ(42, integers[0]);
 	EXPECT_EQ(43, integers[1]);
 	EXPECT_EQ(44, integers[2]);
+}
+
+TEST_F(EventHandlerTest, InvokePODStruct)
+{
+	struct User
+	{
+		std::string name;
+		int id;
+	};
+
+	handler.Connect([&](Event const& event){
+		ASSERT_TRUE(event.Is<User>());
+		auto user = event.As<User>();
+		names.push_back(user->name);
+		integers.push_back(user->id);
+	});
+
+	handler.Invoke<User>("Donald", 42);
+	handler.Invoke<User>("Goofy", 43);
+
+	ASSERT_EQ(2, names.size());
+	EXPECT_EQ("Donald", names[0]);
+	EXPECT_EQ("Goofy", names[1]);
+	ASSERT_EQ(2, integers.size());
+	EXPECT_EQ(42, integers[0]);
+	EXPECT_EQ(43, integers[1]);
 }
 
 TEST_F(EventHandlerTest, Disconnect)

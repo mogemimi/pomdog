@@ -19,11 +19,13 @@ using Pomdog::EventConnection;
 struct EventQueueTest: public ::testing::Test
 {
 	std::vector<int> integers;
+	std::vector<std::string> names;
 	std::function<void(Event const&)> slot;
 
 	void SetUp() override
 	{
 		integers.clear();
+		names.clear();
 		
 		slot = [&](Event const& event) {
 			ASSERT_TRUE(event.Is<int>());
@@ -48,6 +50,36 @@ TEST_F(EventQueueTest, InvokeInt)
 	EXPECT_EQ(42, integers[0]);
 	EXPECT_EQ(43, integers[1]);
 	EXPECT_EQ(44, integers[2]);
+}
+
+TEST_F(EventQueueTest, InvokePODStruct)
+{
+	struct User
+	{
+		std::string name;
+		int id;
+	};
+
+	EventQueue eventQueue;
+	eventQueue.Connect([&](Event const& event){
+		ASSERT_TRUE(event.Is<User>());
+		auto user = event.As<User>();
+		names.push_back(user->name);
+		integers.push_back(user->id);
+	});
+
+	eventQueue.Enqueue<User>("Donald", 42);
+	eventQueue.Enqueue<User>("Goofy", 43);
+	ASSERT_TRUE(names.empty());
+	ASSERT_TRUE(integers.empty());
+	
+	eventQueue.Tick();
+	ASSERT_EQ(2, names.size());
+	EXPECT_EQ("Donald", names[0]);
+	EXPECT_EQ("Goofy", names[1]);
+	ASSERT_EQ(2, integers.size());
+	EXPECT_EQ(42, integers[0]);
+	EXPECT_EQ(43, integers[1]);
 }
 
 TEST_F(EventQueueTest, Disconnect)

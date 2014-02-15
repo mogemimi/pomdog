@@ -44,6 +44,7 @@ public:
 	template <typename T>
 	explicit Event(T && arguments)
 	{
+		static_assert(!std::is_same<Event, typename std::remove_reference<T>::type>::value, "T is not Event type.");
 		static_assert(std::is_object<typename std::remove_reference<T>::type>::value, "T is object type.");
 		static_assert(!std::is_pointer<T>::value, "pointer type is not supported.");
 
