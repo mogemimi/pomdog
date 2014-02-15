@@ -45,8 +45,8 @@ class LogStream;
 /// {
 ///     shared_ptr<Logger> logger;
 /// public:
-///     explicit UserApplication(shared_ptr<Logger> logger)
-///     : logger(std::move()logger){}
+///     explicit UserApplication(shared_ptr<Logger> const& loggerIn)
+///     : logger(loggerIn){}
 ///
 ///     void Process() {
 ///         logger.LogMessage(...); // call without singleton

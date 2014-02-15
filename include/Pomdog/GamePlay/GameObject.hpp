@@ -38,13 +38,13 @@ public:
 	
 	virtual ~GameObject() = default;
 
-	explicit GameObject(std::int32_t instanceID);
+	explicit GameObject(std::uint32_t instanceID);
 
-	GameObject(std::int32_t instanceID, std::size_t minimumCapacity);
+	GameObject(std::uint32_t instanceID, std::size_t minimumCapacity);
 
 	///@~Japanese
 	/// @brief インスタンス固有の値である 32 ビットの ID を取得します。
-	std::int32_t GetInstanceID() const;
+	std::uint32_t GetInstanceID() const;
 
 	///@~Japanese
 	/// @brief コンポーネントを取得します。
@@ -161,7 +161,7 @@ public:
 
 private:
 	std::vector<std::unique_ptr<Details::GameComponent>> components;
-	std::int32_t instanceID;
+	std::uint32_t instanceID;
 };
 
 /// @}

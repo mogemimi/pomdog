@@ -16,7 +16,6 @@
 #include <functional>
 #include <string>
 #include "../Config/Export.hpp"
-#include "../Utility/Noncopyable.hpp"
 #include "../Event/EventHandler.hpp"
 #include "LogEntry.hpp"
 
@@ -29,14 +28,16 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 登録されたリスナーに向けてログを送り出すロガーです。
-class POMDOG_EXPORT LogChannel: Noncopyable
+class POMDOG_EXPORT LogChannel
 {
 public:
 	explicit LogChannel(std::string const& name);
 
 	LogChannel() = delete;
 	LogChannel(LogChannel const&) = delete;
+	LogChannel & operator=(LogChannel const&) = delete;
 	LogChannel(LogChannel &&) = delete;
+	LogChannel & operator=(LogChannel &&) = delete;
 	
 	~LogChannel() = default;
 

@@ -12,10 +12,6 @@
 #include <Pomdog/Event/Event.hpp>
 #include "../Application/SystemEventDispatcher.hpp"
 
-using Pomdog::Event;
-using Pomdog::Details::WindowShouldCloseEvent;
-using Pomdog::Details::WindowWillCloseEvent;
-
 @implementation CocoaWindowDelegate
 {
 	std::shared_ptr<Pomdog::Details::SystemEventDispatcher> eventDispatcher;
@@ -34,15 +30,15 @@ using Pomdog::Details::WindowWillCloseEvent;
 //-----------------------------------------------------------------------
 - (BOOL)windowShouldClose:(id)sender
 {
-	auto event = std::make_shared<Event>(WindowShouldCloseEvent{});
-	eventDispatcher->Enqueue(event);
+	using Pomdog::Details::WindowShouldCloseEvent;
+	eventDispatcher->Enqueue<WindowShouldCloseEvent>();
     return NO;
 }
 //-----------------------------------------------------------------------
 - (void)windowWillClose:(NSNotification *)notification
 {
-	auto event = std::make_shared<Event>(WindowWillCloseEvent{});
-	eventDispatcher->Enqueue(event);
+	using Pomdog::Details::WindowWillCloseEvent;
+	eventDispatcher->Enqueue<WindowWillCloseEvent>();
 }
 //-----------------------------------------------------------------------
 @end

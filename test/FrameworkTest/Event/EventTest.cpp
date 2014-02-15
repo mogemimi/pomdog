@@ -14,7 +14,7 @@ using Pomdog::Event;
 
 TEST(Event, String)
 {
-	Event event("ChuckNorris");
+	Event event(std::string{"ChuckNorris"});
 	
 	EXPECT_TRUE(event.Is<std::string>());
 	ASSERT_NE(nullptr, event.As<std::string>());

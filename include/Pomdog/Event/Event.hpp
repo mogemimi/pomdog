@@ -16,7 +16,6 @@
 #include <type_traits>
 #include <utility>
 #include <memory>
-#include <string>
 #include "../Config/Export.hpp"
 #include "../Utility/Assert.hpp"
 #include "detail/EventArguments.hpp"
@@ -36,10 +35,6 @@ public:
 
 	Event& operator=(Event const&) = delete;
 	Event& operator=(Event &&) = default;
-
-	explicit Event(char const* arguments)
-		: Event(std::string{arguments})
-	{}
 
 	template <typename T>
 	explicit Event(T && arguments)
