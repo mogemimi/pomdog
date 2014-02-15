@@ -236,10 +236,6 @@ namespace Details {
 //----------------------------
 // debug or release
 //----------------------------
-//#if defined(DEBUG) && defined(NDEBUG)
-//#	undef NDEBUG // badcode
-//#endif
-
 #if defined(DEBUG) && defined(NDEBUG)
 #	error "Both DEBUG and NDEBUG are defined."
 #endif

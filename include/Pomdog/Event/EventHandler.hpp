@@ -17,7 +17,7 @@
 #include <functional>
 #include <utility>
 #include "../Config/Export.hpp"
-#include "detail/FowardDeclarations.hpp"
+#include "detail/ForwardDeclarations.hpp"
 
 namespace Pomdog {
 

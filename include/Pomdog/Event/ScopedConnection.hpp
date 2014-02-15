@@ -14,7 +14,7 @@
 #endif
 
 #include "../Config/Export.hpp"
-#include "detail/FowardDeclarations.hpp"
+#include "detail/ForwardDeclarations.hpp"
 #include "EventConnection.hpp"
 
 namespace Pomdog {
