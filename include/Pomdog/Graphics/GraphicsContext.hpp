@@ -23,10 +23,12 @@
 
 namespace Pomdog {
 namespace Details {
+
+class PresentationParameters;
+
 namespace RenderSystem {
 
 class NativeGraphicsContext;
-class PresentationParameters;
 
 }// namespace RenderSystem
 }// namespace Details
@@ -44,7 +46,7 @@ public:
 	GraphicsContext() = delete;
 
 	GraphicsContext(std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
-		Details::RenderSystem::PresentationParameters const& presentationParameters,
+		Details::PresentationParameters const& presentationParameters,
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 	~GraphicsContext();

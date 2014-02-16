@@ -18,17 +18,25 @@
 
 namespace Pomdog {
 
+class GraphicsContext;
 class GraphicsDevice;
 
 namespace Details {
 
+struct AssetLoaderContext;
+
 template <typename T>
-struct AssetLoader;
+struct AssetLoader
+{
+	std::shared_ptr<T> operator()(AssetLoaderContext const& loaderContext,
+		std::string const& assetPath);
+};
 
 struct AssetLoaderContext
 {
 	std::string rootDirectory;
-	std::shared_ptr<GraphicsDevice> graphicsDevice;
+	std::weak_ptr<GraphicsContext> graphicsContext;
+	std::weak_ptr<GraphicsDevice> graphicsDevice;
 };
 
 }// namespace Details

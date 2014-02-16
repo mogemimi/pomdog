@@ -18,7 +18,6 @@
 
 namespace Pomdog {
 namespace Details {
-namespace RenderSystem {
 
 class PresentationParameters
 {
@@ -29,7 +28,6 @@ public:
 	bool IsFullScreen;
 };
 
-}// namespace RenderSystems
 }// namespace Details
 }// namespace Pomdog
 

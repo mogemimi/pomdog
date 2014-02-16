@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <utility>
 #include "detail/AssetLoader.hpp"
 
 namespace Pomdog {
@@ -31,11 +32,16 @@ public:
 
 	///@~Japanese
 	/// @brief アセットを読み込みます。
-	template <class T>
-	std::shared_ptr<T> Load(std::string const& assetName)
+	template <typename T>
+	std::shared_ptr<T> Load(std::string const& assetPath)
 	{
 		Details::AssetLoader<T> loader;
-		return loader(loaderContext, assetName);
+		return loader(loaderContext, assetPath);
+	}
+	
+	std::string RootDirectory() const
+	{
+		return loaderContext.rootDirectory;
 	}
 	
 private:

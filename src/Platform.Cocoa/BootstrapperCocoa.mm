@@ -8,6 +8,7 @@
 
 #include <Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp>
 #include <Pomdog/Utility/Assert.hpp>
+#include "../RenderSystem/PresentationParameters.hpp"
 #include "CocoaGameWindow.hpp"
 #include "CocoaGameHost.hpp"
 
@@ -21,9 +22,15 @@ void BootstrapperCocoa::BeginRun(NSWindow* nativeWindow)
 
 	POMDOG_ASSERT(nativeWindow != nil);
 	auto window = std::make_shared<CocoaGameWindow>(nativeWindow, eventDispatcher);
-	auto host = std::make_shared<CocoaGameHost>(window, eventDispatcher);
-	
 	gameWindow = window;
+	
+	PresentationParameters presentationParameters;
+	presentationParameters.DepthFormat = DepthFormat::Depth24Stencil8;
+	presentationParameters.BackBufferWidth = gameWindow->GetClientBounds().width;
+	presentationParameters.BackBufferHeight = gameWindow->GetClientBounds().height;
+	presentationParameters.IsFullScreen = false; ///@todo Not implemented.
+	
+	auto host = std::make_shared<CocoaGameHost>(window, eventDispatcher, presentationParameters);
 	gameHost = host;
 }
 //-----------------------------------------------------------------------

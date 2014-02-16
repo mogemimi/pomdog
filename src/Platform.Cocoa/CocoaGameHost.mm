@@ -76,8 +76,6 @@ static std::shared_ptr<CocoaOpenGLContext> CreateOpenGLContext(DepthFormat depth
 	return std::make_shared<CocoaOpenGLContext>(pixelFormat);
 }
 //-----------------------------------------------------------------------
-using RenderSystem::PresentationParameters;
-
 static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 	std::shared_ptr<CocoaOpenGLContext> openGLContext, std::weak_ptr<GameWindow> gameWindow,
 	PresentationParameters const& presentationParameters,
@@ -100,7 +98,8 @@ class CocoaGameHost::Impl final
 {
 public:
 	Impl(std::shared_ptr<CocoaGameWindow> const& window,
-		std::shared_ptr<SystemEventDispatcher> const& dipatcher);
+		std::shared_ptr<SystemEventDispatcher> const& dipatcher,
+		PresentationParameters const& presentationParameters);
 
 	~Impl() = default;
 
@@ -147,18 +146,13 @@ private:
 };
 //-----------------------------------------------------------------------
 CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
-	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
+	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
+	PresentationParameters const& presentationParameters)
 	: gameWindow(window)
 	, systemEventDispatcher(eventDispatcher)
 	, exitRequest(false)
 {
 	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
-
-	PresentationParameters presentationParameters;
-	presentationParameters.DepthFormat = DepthFormat::Depth24Stencil8;
-	presentationParameters.BackBufferWidth = gameWindow->GetClientBounds().width;
-	presentationParameters.BackBufferHeight = gameWindow->GetClientBounds().height;
-	presentationParameters.IsFullScreen = false; ///@todo Not implemented.
 
 	openGLContext = CreateOpenGLContext(presentationParameters.DepthFormat);
 	{
@@ -181,7 +175,15 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	mouse = std::make_shared<CocoaMouse>();
 	gameWindow->BindToDelegate(mouse);
 	
-	assetManager = MakeUnique<AssetManager>(Details::AssetLoaderContext{"", graphicsDevice});///@todo
+	{
+		NSString* path = [[NSBundle mainBundle] resourcePath];
+		Details::AssetLoaderContext loaderContext{
+			[path UTF8String],
+			graphicsContext,
+			graphicsDevice
+		};
+		assetManager = MakeUnique<AssetManager>(std::move(loaderContext));
+	}
 }
 //-----------------------------------------------------------------------
 void CocoaGameHost::Impl::Run(std::weak_ptr<Game> weakGame)
@@ -277,8 +279,9 @@ void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
 #pragma mark - CocoaGameHost
 //-----------------------------------------------------------------------
 CocoaGameHost::CocoaGameHost(std::shared_ptr<CocoaGameWindow> const& window,
-	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
-	: impl(MakeUnique<Impl>(window, eventDispatcher))
+	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
+	PresentationParameters const& presentationParameters)
+	: impl(MakeUnique<Impl>(window, eventDispatcher, presentationParameters))
 {}
 //-----------------------------------------------------------------------
 CocoaGameHost::~CocoaGameHost() = default;

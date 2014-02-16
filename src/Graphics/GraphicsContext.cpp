@@ -29,7 +29,7 @@
 namespace Pomdog {
 
 using Details::RenderSystem::NativeGraphicsContext;
-using Details::RenderSystem::PresentationParameters;
+using Details::PresentationParameters;
 
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -143,7 +143,7 @@ void GraphicsContext::Impl::SetSamplerState(std::size_t samplerSlot, std::shared
 //-----------------------------------------------------------------------
 GraphicsContext::GraphicsContext(
 	std::unique_ptr<NativeGraphicsContext> nativeContext,
-	Details::RenderSystem::PresentationParameters const& presentationParameters,
+	Details::PresentationParameters const& presentationParameters,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	: impl(Details::MakeUnique<Impl>(std::move(nativeContext), presentationParameters))
 {

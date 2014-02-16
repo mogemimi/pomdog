@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "../../Config/Export.hpp"
 #include "AssetLoader.hpp"
 
 namespace Pomdog {
@@ -22,9 +23,9 @@ class Texture2D;
 namespace Details {
 
 template <>
-struct AssetLoader<Texture2D>
+struct POMDOG_EXPORT AssetLoader<Texture2D>
 {
-	std::shared_ptr<Texture2D> Load(AssetLoaderContext const& loaderContext)
+	std::shared_ptr<Texture2D> operator()(AssetLoaderContext const& loaderContext)
 	{
 		///@todo Not implemented
 	}

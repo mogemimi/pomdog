@@ -85,6 +85,8 @@
       'mac_bundle_resources': [
 		'../test/CocoaTest/Base.lproj/MainMenu.xib',
         '../test/CocoaTest/English.lproj/InfoPlist.strings',
+        '../test/CocoaTest/Content/',
+        #'../test/CocoaTest/Images.xcassets/',
       ],
       'xcode_settings': {
         'INFOPLIST_FILE': '../test/CocoaTest/CocoaTest-Info.plist',
