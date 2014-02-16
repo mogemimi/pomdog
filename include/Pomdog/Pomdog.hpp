@@ -26,6 +26,9 @@
 #include "Application/GameHost.hpp"
 #include "Application/GameWindow.hpp"
 
+// Content
+#include "Content/AssetManager.hpp"
+
 // Event
 #include "Event/Event.hpp"
 #include "Event/EventConnection.hpp"
@@ -98,6 +101,7 @@
 #include "Graphics/SamplerState.hpp"
 #include "Graphics/StencilOperation.hpp"
 #include "Graphics/SurfaceFormat.hpp"
+#include "Graphics/Texture2D.hpp"
 #include "Graphics/TextureAddressMode.hpp"
 #include "Graphics/TextureFilter.hpp"
 #include "Graphics/VertexBuffer.hpp"

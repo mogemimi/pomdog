@@ -17,6 +17,7 @@
 #include <Pomdog/Graphics/GraphicsContext.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include <Pomdog/Application/Game.hpp>
+#include <Pomdog/Content/AssetManager.hpp>
 
 #include "CocoaGameWindow.hpp"
 #include "CocoaOpenGLContext.hpp"
@@ -95,7 +96,7 @@ static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 //-----------------------------------------------------------------------
 #pragma mark - CocoaGameHost::Impl
 //-----------------------------------------------------------------------
-class CocoaGameHost::Impl final: public GameHost
+class CocoaGameHost::Impl final
 {
 public:
 	Impl(std::shared_ptr<CocoaGameWindow> const& window,
@@ -104,19 +105,22 @@ public:
 	~Impl() = default;
 
 	///@copydoc GameHost
-	void Run(std::weak_ptr<Game> game) override;
+	void Run(std::weak_ptr<Game> game);
 	
 	///@copydoc GameHost
-	void Exit() override;
+	void Exit();
 
 	///@copydoc GameHost
-	std::shared_ptr<GameWindow> GetWindow() override;
+	std::shared_ptr<GameWindow> GetWindow();
 	
 	///@copydoc GameHost
 	std::shared_ptr<GraphicsContext> GetGraphicsContext();
 	
 	///@copydoc GameHost
-	std::shared_ptr<GraphicsDevice> GetGraphicsDevice() override;
+	std::shared_ptr<GraphicsDevice> GetGraphicsDevice();
+	
+	///@copydoc GameHost
+	std::shared_ptr<AssetManager> GetAssetManager(std::shared_ptr<GameHost> && gameHost);
 
 public:
 	void RenderFrame(Game & game);
@@ -135,6 +139,7 @@ private:
 	std::shared_ptr<CocoaOpenGLContext> openGLContext;
 	std::shared_ptr<GraphicsContext> graphicsContext;
 	std::shared_ptr<GraphicsDevice> graphicsDevice;
+	std::unique_ptr<AssetManager> assetManager;
 	
 	std::shared_ptr<CocoaMouse> mouse;
 	
@@ -175,6 +180,8 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	
 	mouse = std::make_shared<CocoaMouse>();
 	gameWindow->BindToDelegate(mouse);
+	
+	assetManager = MakeUnique<AssetManager>(Details::AssetLoaderContext{"", graphicsDevice});///@todo
 }
 //-----------------------------------------------------------------------
 void CocoaGameHost::Impl::Run(std::weak_ptr<Game> weakGame)
@@ -222,6 +229,12 @@ std::shared_ptr<GraphicsContext> CocoaGameHost::Impl::GetGraphicsContext()
 std::shared_ptr<GraphicsDevice> CocoaGameHost::Impl::GetGraphicsDevice()
 {
 	return graphicsDevice;
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<AssetManager> CocoaGameHost::Impl::GetAssetManager(std::shared_ptr<GameHost> && gameHost)
+{
+	std::shared_ptr<AssetManager> sharedAssetManager(gameHost, assetManager.get());
+	return std::move(sharedAssetManager);
 }
 //-----------------------------------------------------------------------
 void CocoaGameHost::Impl::RenderFrame(Game & game)
@@ -298,6 +311,12 @@ std::shared_ptr<GraphicsDevice> CocoaGameHost::GetGraphicsDevice()
 {
 	POMDOG_ASSERT(impl);
 	return impl->GetGraphicsDevice();
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<AssetManager> CocoaGameHost::GetAssetManager()
+{
+	POMDOG_ASSERT(impl);
+	return impl->GetAssetManager(shared_from_this());
 }
 
 }// namespace Cocoa

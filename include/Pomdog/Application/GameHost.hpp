@@ -19,6 +19,7 @@
 
 namespace Pomdog {
 
+class AssetManager;
 class Game;
 class GameWindow;
 class GraphicsContext;
@@ -53,6 +54,10 @@ public:
 	///@~Japanese
 	/// @brief グラフィックスデバイスを取得します。
 	virtual std::shared_ptr<GraphicsDevice> GetGraphicsDevice() = 0;
+	
+	///@~Japanese
+	/// @brief アセットマネージャを取得します。
+	virtual std::shared_ptr<AssetManager> GetAssetManager() = 0;
 };
 
 /// @}

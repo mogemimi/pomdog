@@ -109,6 +109,10 @@ void CocoaTestGame::Initialize()
 			stream << "Variables: " << description.Variables.size() << "\n";
 		}
 	}
+//	{
+//		auto assets = gameHost->GetAssetManager();
+//		auto texture = assets->Load<Texture2D>("");
+//	}
 }
 //-----------------------------------------------------------------------
 void CocoaTestGame::Update()

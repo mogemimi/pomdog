@@ -78,11 +78,9 @@ namespace std {
 template <typename T, class U>
 struct hash<Pomdog::Details::Tagged<T, U>>
 {
-	// for std::unordered_map/set
 	std::size_t operator()(Pomdog::Details::Tagged<T, U> const& key)
 	{
-		std::hash<T> h;
-		return h(key.value);
+		return std::hash<T>()(key.value);
 	}
 };
 

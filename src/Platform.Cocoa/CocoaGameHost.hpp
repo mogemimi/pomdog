@@ -45,6 +45,9 @@ public:
 	
 	///@copydoc GameHost
 	std::shared_ptr<GraphicsDevice> GetGraphicsDevice() override;
+	
+	///@copydoc GameHost
+	std::shared_ptr<AssetManager> GetAssetManager() override;
 
 private:
 	class Impl;
