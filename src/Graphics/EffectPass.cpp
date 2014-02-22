@@ -34,7 +34,7 @@ EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	POMDOG_ASSERT(!this->graphicsContext.expired());
 
 	POMDOG_ASSERT(graphicsDevice);
-	auto nativeDevice = graphicsDevice->GetNativeGraphicsDevice();
+	auto nativeDevice = graphicsDevice->NativeGraphicsDevice();
 	
 	// Create effect pass:
 	POMDOG_ASSERT(nativeDevice);
@@ -58,7 +58,7 @@ EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	for (auto & parameter: effectParameters)
 	{
 		std::shared_ptr<NativeConstantBuffer> nativeConstantBuffer(
-			parameter.second, parameter.second->GetNativeConstantBuffer());
+			parameter.second, parameter.second->NativeConstantBuffer());
 
 		nativeEffectPass->SetConstant(parameter.first, nativeConstantBuffer);
 	}
@@ -93,7 +93,7 @@ EffectParameterCollection const& EffectPass::Parameters() const
 	return effectParameters;
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeEffectPass* EffectPass::GetNativeEffectPass()
+Details::RenderSystem::NativeEffectPass* EffectPass::NativeEffectPass()
 {
 	return this->nativeEffectPass.get();
 }

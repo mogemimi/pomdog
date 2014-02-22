@@ -32,10 +32,10 @@ TEST(CustomVertex, Float)
 	using VertexCombined = CustomVertex<float>;
 	auto declaration = VertexCombined::Declaration();
 	
-	EXPECT_EQ(4, declaration.GetStrideBytes());
-	ASSERT_EQ(1, declaration.GetVertexElements().size());
-	EXPECT_EQ(VertexElementFormat::Float, declaration.GetVertexElements()[0].VertexElementFormat);
-	EXPECT_EQ(0, declaration.GetVertexElements()[0].Offset);
+	EXPECT_EQ(4, declaration.StrideBytes());
+	ASSERT_EQ(1, declaration.VertexElements().size());
+	EXPECT_EQ(VertexElementFormat::Float, declaration.VertexElements()[0].VertexElementFormat);
+	EXPECT_EQ(0, declaration.VertexElements()[0].Offset);
 }
 
 TEST(CustomVertex, Vector2)
@@ -43,10 +43,10 @@ TEST(CustomVertex, Vector2)
 	using VertexCombined = CustomVertex<Vector2>;
 	auto declaration = VertexCombined::Declaration();
 
-	EXPECT_EQ(8, declaration.GetStrideBytes());
-	ASSERT_EQ(1, declaration.GetVertexElements().size());
-	EXPECT_EQ(VertexElementFormat::Float2, declaration.GetVertexElements()[0].VertexElementFormat);
-	EXPECT_EQ(0, declaration.GetVertexElements()[0].Offset);
+	EXPECT_EQ(8, declaration.StrideBytes());
+	ASSERT_EQ(1, declaration.VertexElements().size());
+	EXPECT_EQ(VertexElementFormat::Float2, declaration.VertexElements()[0].VertexElementFormat);
+	EXPECT_EQ(0, declaration.VertexElements()[0].Offset);
 }
 
 TEST(CustomVertex, Vector3)
@@ -54,10 +54,10 @@ TEST(CustomVertex, Vector3)
 	using VertexCombined = CustomVertex<Vector3>;
 	auto declaration = VertexCombined::Declaration();
 
-	EXPECT_EQ(12, declaration.GetStrideBytes());
-	ASSERT_EQ(1, declaration.GetVertexElements().size());
-	EXPECT_EQ(VertexElementFormat::Float3, declaration.GetVertexElements()[0].VertexElementFormat);
-	EXPECT_EQ(0, declaration.GetVertexElements()[0].Offset);
+	EXPECT_EQ(12, declaration.StrideBytes());
+	ASSERT_EQ(1, declaration.VertexElements().size());
+	EXPECT_EQ(VertexElementFormat::Float3, declaration.VertexElements()[0].VertexElementFormat);
+	EXPECT_EQ(0, declaration.VertexElements()[0].Offset);
 }
 
 TEST(CustomVertex, Vector4)
@@ -65,10 +65,10 @@ TEST(CustomVertex, Vector4)
 	using VertexCombined = CustomVertex<Vector4>;
 	auto declaration = VertexCombined::Declaration();
 
-	EXPECT_EQ(16, declaration.GetStrideBytes());
-	ASSERT_EQ(1, declaration.GetVertexElements().size());
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[0].VertexElementFormat);
-	EXPECT_EQ(0, declaration.GetVertexElements()[0].Offset);
+	EXPECT_EQ(16, declaration.StrideBytes());
+	ASSERT_EQ(1, declaration.VertexElements().size());
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
+	EXPECT_EQ(0, declaration.VertexElements()[0].Offset);
 }
 
 TEST(CustomVertex, Color)
@@ -76,10 +76,10 @@ TEST(CustomVertex, Color)
 	using VertexCombined = CustomVertex<Color>;
 	auto declaration = VertexCombined::Declaration();
 
-	EXPECT_EQ(16, declaration.GetStrideBytes());
-	ASSERT_EQ(1, declaration.GetVertexElements().size());
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[0].VertexElementFormat);
-	EXPECT_EQ(0, declaration.GetVertexElements()[0].Offset);
+	EXPECT_EQ(16, declaration.StrideBytes());
+	ASSERT_EQ(1, declaration.VertexElements().size());
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
+	EXPECT_EQ(0, declaration.VertexElements()[0].Offset);
 }
 
 TEST(CustomVertex, Quaternion)
@@ -87,10 +87,10 @@ TEST(CustomVertex, Quaternion)
 	using VertexCombined = CustomVertex<Quaternion>;
 	auto declaration = VertexCombined::Declaration();
 
-	EXPECT_EQ(16, declaration.GetStrideBytes());
-	ASSERT_EQ(1, declaration.GetVertexElements().size());
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[0].VertexElementFormat);
-	EXPECT_EQ(0, declaration.GetVertexElements()[0].Offset);
+	EXPECT_EQ(16, declaration.StrideBytes());
+	ASSERT_EQ(1, declaration.VertexElements().size());
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
+	EXPECT_EQ(0, declaration.VertexElements()[0].Offset);
 }
 
 TEST(CustomVertex, Vector4Two)
@@ -98,12 +98,12 @@ TEST(CustomVertex, Vector4Two)
 	using VertexCombined = CustomVertex<Vector4, Vector4>;
 	auto declaration = VertexCombined::Declaration();
 
-	EXPECT_EQ(16 * 2, declaration.GetStrideBytes());
-	ASSERT_EQ(2, declaration.GetVertexElements().size());
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[0].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[1].VertexElementFormat);
-	EXPECT_EQ(0, declaration.GetVertexElements()[0].Offset);
-	EXPECT_EQ(16, declaration.GetVertexElements()[1].Offset);
+	EXPECT_EQ(16 * 2, declaration.StrideBytes());
+	ASSERT_EQ(2, declaration.VertexElements().size());
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[1].VertexElementFormat);
+	EXPECT_EQ(0, declaration.VertexElements()[0].Offset);
+	EXPECT_EQ(16, declaration.VertexElements()[1].Offset);
 }
 
 TEST(CustomVertex, Vector4Three)
@@ -111,14 +111,14 @@ TEST(CustomVertex, Vector4Three)
 	using VertexCombined = CustomVertex<Vector4, Vector4, Vector4>;
 	auto declaration = VertexCombined::Declaration();
 	
-	EXPECT_EQ(16 * 3, declaration.GetStrideBytes());
-	ASSERT_EQ(3, declaration.GetVertexElements().size());
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[0].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[1].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[2].VertexElementFormat);
-	EXPECT_EQ(0, declaration.GetVertexElements()[0].Offset);
-	EXPECT_EQ(16, declaration.GetVertexElements()[1].Offset);
-	EXPECT_EQ(32, declaration.GetVertexElements()[2].Offset);
+	EXPECT_EQ(16 * 3, declaration.StrideBytes());
+	ASSERT_EQ(3, declaration.VertexElements().size());
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[1].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[2].VertexElementFormat);
+	EXPECT_EQ(0, declaration.VertexElements()[0].Offset);
+	EXPECT_EQ(16, declaration.VertexElements()[1].Offset);
+	EXPECT_EQ(32, declaration.VertexElements()[2].Offset);
 }
 
 TEST(CustomVertex, Vector4Four)
@@ -126,16 +126,16 @@ TEST(CustomVertex, Vector4Four)
 	using VertexCombined = CustomVertex<Vector4, Vector4, Vector4, Vector4>;
 	auto declaration = VertexCombined::Declaration();
 	
-	EXPECT_EQ(16 * 4, declaration.GetStrideBytes());
-	ASSERT_EQ(4, declaration.GetVertexElements().size());
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[0].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[1].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[2].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[3].VertexElementFormat);
-	EXPECT_EQ(0, declaration.GetVertexElements()[0].Offset);
-	EXPECT_EQ(16, declaration.GetVertexElements()[1].Offset);
-	EXPECT_EQ(32, declaration.GetVertexElements()[2].Offset);
-	EXPECT_EQ(48, declaration.GetVertexElements()[3].Offset);
+	EXPECT_EQ(16 * 4, declaration.StrideBytes());
+	ASSERT_EQ(4, declaration.VertexElements().size());
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[1].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[2].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[3].VertexElementFormat);
+	EXPECT_EQ(0, declaration.VertexElements()[0].Offset);
+	EXPECT_EQ(16, declaration.VertexElements()[1].Offset);
+	EXPECT_EQ(32, declaration.VertexElements()[2].Offset);
+	EXPECT_EQ(48, declaration.VertexElements()[3].Offset);
 }
 
 TEST(CustomVertex, VectorTuple2)
@@ -143,12 +143,12 @@ TEST(CustomVertex, VectorTuple2)
 	using VertexCombined = CustomVertex<Vector4, Vector3>;
 	auto declaration = VertexCombined::Declaration();
 	
-	EXPECT_EQ(16+12, declaration.GetStrideBytes());
-	ASSERT_EQ(2, declaration.GetVertexElements().size());
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[0].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float3, declaration.GetVertexElements()[1].VertexElementFormat);
-	EXPECT_EQ(0, declaration.GetVertexElements()[0].Offset);
-	EXPECT_EQ(16, declaration.GetVertexElements()[1].Offset);
+	EXPECT_EQ(16+12, declaration.StrideBytes());
+	ASSERT_EQ(2, declaration.VertexElements().size());
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float3, declaration.VertexElements()[1].VertexElementFormat);
+	EXPECT_EQ(0, declaration.VertexElements()[0].Offset);
+	EXPECT_EQ(16, declaration.VertexElements()[1].Offset);
 }
 
 TEST(CustomVertex, VectorTuple3)
@@ -156,14 +156,14 @@ TEST(CustomVertex, VectorTuple3)
 	using VertexCombined = CustomVertex<Vector4, Vector3, Vector2>;
 	auto declaration = VertexCombined::Declaration();
 	
-	EXPECT_EQ(16+12+8, declaration.GetStrideBytes());
-	ASSERT_EQ(3, declaration.GetVertexElements().size());
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[0].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float3, declaration.GetVertexElements()[1].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float2, declaration.GetVertexElements()[2].VertexElementFormat);
-	EXPECT_EQ(0, declaration.GetVertexElements()[0].Offset);
-	EXPECT_EQ(16, declaration.GetVertexElements()[1].Offset);
-	EXPECT_EQ(16+12, declaration.GetVertexElements()[2].Offset);
+	EXPECT_EQ(16+12+8, declaration.StrideBytes());
+	ASSERT_EQ(3, declaration.VertexElements().size());
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float3, declaration.VertexElements()[1].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float2, declaration.VertexElements()[2].VertexElementFormat);
+	EXPECT_EQ(0, declaration.VertexElements()[0].Offset);
+	EXPECT_EQ(16, declaration.VertexElements()[1].Offset);
+	EXPECT_EQ(16+12, declaration.VertexElements()[2].Offset);
 }
 
 TEST(CustomVertex, VectorTuple4)
@@ -171,16 +171,16 @@ TEST(CustomVertex, VectorTuple4)
 	using VertexCombined = CustomVertex<Vector4, Vector3, Vector2, float>;
 	auto declaration = VertexCombined::Declaration();
 	
-	EXPECT_EQ(16+12+8+4, declaration.GetStrideBytes());
-	ASSERT_EQ(4, declaration.GetVertexElements().size());
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[0].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float3, declaration.GetVertexElements()[1].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float2, declaration.GetVertexElements()[2].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float,  declaration.GetVertexElements()[3].VertexElementFormat);
-	EXPECT_EQ(0, declaration.GetVertexElements()[0].Offset);
-	EXPECT_EQ(16, declaration.GetVertexElements()[1].Offset);
-	EXPECT_EQ(16+12, declaration.GetVertexElements()[2].Offset);
-	EXPECT_EQ(16+12+8, declaration.GetVertexElements()[3].Offset);
+	EXPECT_EQ(16+12+8+4, declaration.StrideBytes());
+	ASSERT_EQ(4, declaration.VertexElements().size());
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float3, declaration.VertexElements()[1].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float2, declaration.VertexElements()[2].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float,  declaration.VertexElements()[3].VertexElementFormat);
+	EXPECT_EQ(0, declaration.VertexElements()[0].Offset);
+	EXPECT_EQ(16, declaration.VertexElements()[1].Offset);
+	EXPECT_EQ(16+12, declaration.VertexElements()[2].Offset);
+	EXPECT_EQ(16+12+8, declaration.VertexElements()[3].Offset);
 }
 
 TEST(CustomVertex, VectorTuple8)
@@ -191,22 +191,22 @@ TEST(CustomVertex, VectorTuple8)
 	>;
 	auto declaration = VertexCombined::Declaration();
 	
-	EXPECT_EQ(16+12+8+4+16+12+8+4, declaration.GetStrideBytes());
-	ASSERT_EQ(8, declaration.GetVertexElements().size());
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[0].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float3, declaration.GetVertexElements()[1].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float2, declaration.GetVertexElements()[2].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float,  declaration.GetVertexElements()[3].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float4, declaration.GetVertexElements()[4].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float3, declaration.GetVertexElements()[5].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float2, declaration.GetVertexElements()[6].VertexElementFormat);
-	EXPECT_EQ(VertexElementFormat::Float,  declaration.GetVertexElements()[7].VertexElementFormat);
-	EXPECT_EQ(0, declaration.GetVertexElements()[0].Offset);
-	EXPECT_EQ(16, declaration.GetVertexElements()[1].Offset);
-	EXPECT_EQ(16+12, declaration.GetVertexElements()[2].Offset);
-	EXPECT_EQ(16+12+8, declaration.GetVertexElements()[3].Offset);
-	EXPECT_EQ(16+12+8+4, declaration.GetVertexElements()[4].Offset);
-	EXPECT_EQ(16+12+8+4+16, declaration.GetVertexElements()[5].Offset);
-	EXPECT_EQ(16+12+8+4+16+12, declaration.GetVertexElements()[6].Offset);
-	EXPECT_EQ(16+12+8+4+16+12+8, declaration.GetVertexElements()[7].Offset);
+	EXPECT_EQ(16+12+8+4+16+12+8+4, declaration.StrideBytes());
+	ASSERT_EQ(8, declaration.VertexElements().size());
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float3, declaration.VertexElements()[1].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float2, declaration.VertexElements()[2].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float,  declaration.VertexElements()[3].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[4].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float3, declaration.VertexElements()[5].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float2, declaration.VertexElements()[6].VertexElementFormat);
+	EXPECT_EQ(VertexElementFormat::Float,  declaration.VertexElements()[7].VertexElementFormat);
+	EXPECT_EQ(0, declaration.VertexElements()[0].Offset);
+	EXPECT_EQ(16, declaration.VertexElements()[1].Offset);
+	EXPECT_EQ(16+12, declaration.VertexElements()[2].Offset);
+	EXPECT_EQ(16+12+8, declaration.VertexElements()[3].Offset);
+	EXPECT_EQ(16+12+8+4, declaration.VertexElements()[4].Offset);
+	EXPECT_EQ(16+12+8+4+16, declaration.VertexElements()[5].Offset);
+	EXPECT_EQ(16+12+8+4+16+12, declaration.VertexElements()[6].Offset);
+	EXPECT_EQ(16+12+8+4+16+12+8, declaration.VertexElements()[7].Offset);
 }

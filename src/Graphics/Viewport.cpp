@@ -28,22 +28,22 @@ Viewport::Viewport(std::int32_t x, std::int32_t y, std::int32_t width, std::int3
 	, maxDepth(maxDepth)
 {}
 //-----------------------------------------------------------------------
-void Viewport::SetWidth(std::int32_t width)
+void Viewport::Width(std::int32_t width)
 {
 	bounds.width = width;
 }
 //-----------------------------------------------------------------------
-void Viewport::SetHeight(std::int32_t height)
-{
-	bounds.height = height;
-}
-//-----------------------------------------------------------------------
-std::int32_t Viewport::GetWidth() const
+std::int32_t Viewport::Width() const
 {
 	return bounds.width;
 }
 //-----------------------------------------------------------------------
-std::int32_t Viewport::GetHeight() const
+void Viewport::Height(std::int32_t height)
+{
+	bounds.height = height;
+}
+//-----------------------------------------------------------------------
+std::int32_t Viewport::Height() const
 {
 	return bounds.height;
 }

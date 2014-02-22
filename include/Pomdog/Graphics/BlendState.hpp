@@ -46,7 +46,7 @@ public:
 
 	///@~Japanese
 	/// @brief ブレンディングステートを作成するために記述したブレンディングステートの設定内容を取得します。
-	BlendDescription GetDescription() const;
+	BlendDescription Description() const;
 
 	///@~Japanese
 	/// @brief 加算ブレンディングを有効にするブレンディングステートです。
@@ -72,7 +72,7 @@ public:
 	CreateOpaque(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 public:
-	Details::RenderSystem::NativeBlendState* GetNativeBlendState();
+	Details::RenderSystem::NativeBlendState* NativeBlendState();
 	
 private:
 	std::unique_ptr<Details::RenderSystem::NativeBlendState> nativeBlendState;

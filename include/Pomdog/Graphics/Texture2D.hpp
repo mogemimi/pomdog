@@ -52,23 +52,23 @@ public:
 
 	///@~Japanese
 	/// @brief テクスチャの水平方向の幅（ピクセル単位）を取得します。
-	std::uint32_t GetWidth() const;
+	std::uint32_t Width() const;
 
 	///@~Japanese
 	/// @brief テクスチャの垂直方向の幅（ピクセル単位）を取得します。
-	std::uint32_t GetHeight() const;
+	std::uint32_t Height() const;
 
 	///@~Japanese
 	/// @brief ミップマップレベルを取得します。
 	/// @remarks ミップマップレベルは 1 以上を有効とします。
-	std::uint32_t GetLevelCount() const;
+	std::uint32_t LevelCount() const;
 
 	///@~Japanese
 	/// @brief テクスチャのフォーマットを取得します。
-	SurfaceFormat GetFormat() const;
+	SurfaceFormat Format() const;
 
 public:
-	Details::RenderSystem::NativeTexture2D* GetNativeTexture2D();
+	Details::RenderSystem::NativeTexture2D* NativeTexture2D();
 	
 private:
 	std::unique_ptr<Details::RenderSystem::NativeTexture2D> nativeTexture2D;

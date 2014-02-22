@@ -28,7 +28,6 @@
 
 namespace Pomdog {
 
-using Details::RenderSystem::NativeGraphicsContext;
 using Details::PresentationParameters;
 
 //-----------------------------------------------------------------------
@@ -43,7 +42,7 @@ public:
 	Impl(Impl const&) = delete;
 	Impl(Impl &&) = default;
 	
-	Impl(std::unique_ptr<NativeGraphicsContext> nativeContext,
+	Impl(std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
 		PresentationParameters const& presentationParameters);
 	
 	void BuildResources(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
@@ -63,10 +62,10 @@ public:
 	std::shared_ptr<RasterizerState> rasterizerState;
 	std::shared_ptr<InputLayout> inputLayout;
 	
-	std::unique_ptr<NativeGraphicsContext> nativeContext;
+	std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext;
 };
 //-----------------------------------------------------------------------
-GraphicsContext::Impl::Impl(std::unique_ptr<NativeGraphicsContext> nativeGraphicsContext,
+GraphicsContext::Impl::Impl(std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeGraphicsContext,
 	PresentationParameters const& presentationParameters)
 	: nativeContext(std::move(nativeGraphicsContext))
 {
@@ -79,8 +78,8 @@ GraphicsContext::Impl::Impl(std::unique_ptr<NativeGraphicsContext> nativeGraphic
 	
 	viewport.bounds.x = 0;
 	viewport.bounds.y = 0;
-	viewport.SetWidth(presentationParameters.BackBufferWidth);
-	viewport.SetHeight(presentationParameters.BackBufferHeight);
+	viewport.Width(presentationParameters.BackBufferWidth);
+	viewport.Height(presentationParameters.BackBufferHeight);
 	SetViewport(viewport);
 }
 //-----------------------------------------------------------------------
@@ -99,17 +98,17 @@ void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const
 	}
 
 	if (blendState) {
-		blendState->GetNativeBlendState()->Apply();
+		blendState->NativeBlendState()->Apply();
 	}
 	if (depthStencilState) {
-		depthStencilState->GetNativeDepthStencilState()->Apply();
+		depthStencilState->NativeDepthStencilState()->Apply();
 	}
 	if (rasterizerState) {
-		rasterizerState->GetNativeRasterizerState()->Apply();
+		rasterizerState->NativeRasterizerState()->Apply();
 	}
 	for (std::size_t index = 0; index < samplerStates.size(); ++index) {
 		if (samplerStates[index]) {
-			samplerStates[index]->GetNativeSamplerState()->Apply(index);
+			samplerStates[index]->NativeSamplerState()->Apply(index);
 		}
 	}
 }
@@ -117,8 +116,8 @@ void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const
 void GraphicsContext::Impl::SetViewport(Viewport const& newViewport)
 {
 	POMDOG_ASSERT(nativeContext);
-	POMDOG_ASSERT(newViewport.GetWidth() > 0);
-	POMDOG_ASSERT(newViewport.GetHeight() > 0);
+	POMDOG_ASSERT(newViewport.Width() > 0);
+	POMDOG_ASSERT(newViewport.Height() > 0);
 
 	this->viewport = newViewport;
 	nativeContext->SetViewport(this->viewport);
@@ -133,7 +132,7 @@ void GraphicsContext::Impl::SetSamplerState(std::size_t samplerSlot, std::shared
 	if (samplerStates.size() > samplerSlot)
 	{
 		samplerStates[samplerSlot] = newSamplerState;
-		samplerStates[samplerSlot]->GetNativeSamplerState()->Apply(samplerSlot);
+		samplerStates[samplerSlot]->NativeSamplerState()->Apply(samplerSlot);
 	}
 }
 //-----------------------------------------------------------------------
@@ -142,7 +141,7 @@ void GraphicsContext::Impl::SetSamplerState(std::size_t samplerSlot, std::shared
 #endif
 //-----------------------------------------------------------------------
 GraphicsContext::GraphicsContext(
-	std::unique_ptr<NativeGraphicsContext> nativeContext,
+	std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
 	Details::PresentationParameters const& presentationParameters,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	: impl(Details::MakeUnique<Impl>(std::move(nativeContext), presentationParameters))
@@ -244,7 +243,7 @@ void GraphicsContext::SetBlendState(std::shared_ptr<BlendState> const& blendStat
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(blendState);
 	impl->blendState = blendState;
-	impl->blendState->GetNativeBlendState()->Apply();
+	impl->blendState->NativeBlendState()->Apply();
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilState)
@@ -252,7 +251,7 @@ void GraphicsContext::SetDepthStencilState(std::shared_ptr<DepthStencilState> co
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(depthStencilState);
 	impl->depthStencilState = depthStencilState;
-	impl->depthStencilState->GetNativeDepthStencilState()->Apply();
+	impl->depthStencilState->NativeDepthStencilState()->Apply();
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState)
@@ -260,7 +259,7 @@ void GraphicsContext::SetRasterizerState(std::shared_ptr<RasterizerState> const&
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(rasterizerState);
 	impl->rasterizerState = rasterizerState;
-	impl->rasterizerState->GetNativeRasterizerState()->Apply();
+	impl->rasterizerState->NativeRasterizerState()->Apply();
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetSamplerState(std::size_t index, std::shared_ptr<SamplerState> const& samplerState)
@@ -302,7 +301,7 @@ void GraphicsContext::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>
 	impl->nativeContext->SetVertexBuffers(impl->vertexBuffers);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeGraphicsContext* GraphicsContext::GetNativeGraphicsContext()
+Details::RenderSystem::NativeGraphicsContext* GraphicsContext::NativeGraphicsContext()
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);

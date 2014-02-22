@@ -91,7 +91,7 @@ public:
 	void SetValue(std::uint8_t const* data, std::uint32_t byteWidth);
 
 public:
-	Details::RenderSystem::NativeConstantBuffer* GetNativeConstantBuffer();
+	Details::RenderSystem::NativeConstantBuffer* NativeConstantBuffer();
 
 private:
 	std::unique_ptr<Details::RenderSystem::NativeConstantBuffer> nativeConstantBuffer;

@@ -21,7 +21,7 @@ GraphicsDevice::GraphicsDevice(std::unique_ptr<Details::RenderSystem::NativeGrap
 //-----------------------------------------------------------------------
 GraphicsDevice::~GraphicsDevice() = default;
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeGraphicsDevice* GraphicsDevice::GetNativeGraphicsDevice()
+Details::RenderSystem::NativeGraphicsDevice* GraphicsDevice::NativeGraphicsDevice()
 {
 	POMDOG_ASSERT(nativeGraphicsDevice);
 	return nativeGraphicsDevice.get();

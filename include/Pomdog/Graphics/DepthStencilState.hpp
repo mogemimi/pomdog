@@ -46,7 +46,7 @@ public:
 
 	///@~Japanese
 	/// @brief 深度ステンシルステートを作成するために記述した深度ステンシルステートの設定内容を取得します。
-	DepthStencilDescription GetDescription() const;
+	DepthStencilDescription Description() const;
 
 	///@~Japanese
 	/// @brief 深度ステンシルバッファを有効化するステートを作成します。
@@ -66,7 +66,7 @@ public:
 	CreateNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 public:
-	Details::RenderSystem::NativeDepthStencilState* GetNativeDepthStencilState();
+	Details::RenderSystem::NativeDepthStencilState* NativeDepthStencilState();
 	
 private:
 	std::unique_ptr<Details::RenderSystem::NativeDepthStencilState> nativeDepthStencilState;

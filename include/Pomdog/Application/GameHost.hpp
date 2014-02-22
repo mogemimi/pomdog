@@ -45,19 +45,19 @@ public:
 	
 	///@~Japanese
 	/// @brief ウィンドウを取得します。
-	virtual std::shared_ptr<GameWindow> GetWindow() = 0;
+	virtual std::shared_ptr<GameWindow> Window() = 0;
 	
 	///@~Japanese
 	/// @brief グラフィックスコンテキストを取得します。
-	virtual std::shared_ptr<GraphicsContext> GetGraphicsContext() = 0;
+	virtual std::shared_ptr<GraphicsContext> GraphicsContext() = 0;
 	
 	///@~Japanese
 	/// @brief グラフィックスデバイスを取得します。
-	virtual std::shared_ptr<GraphicsDevice> GetGraphicsDevice() = 0;
+	virtual std::shared_ptr<GraphicsDevice> GraphicsDevice() = 0;
 	
 	///@~Japanese
 	/// @brief アセットマネージャを取得します。
-	virtual std::shared_ptr<AssetManager> GetAssetManager() = 0;
+	virtual std::shared_ptr<AssetManager> AssetManager() = 0;
 };
 
 /// @}

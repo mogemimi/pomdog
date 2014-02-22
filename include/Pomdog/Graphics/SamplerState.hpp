@@ -48,7 +48,7 @@ public:
 
 	///@~Japanese
 	/// @brief サンプラーステートを作成するために記述したサンプラーステートの設定内容を取得します。
-	SamplerDescription GetDescription() const;
+	SamplerDescription Description() const;
 
 	///@~Japanese
 	/// @brief 異方性フィルタリングを有効にするサンプラステートを作成します。
@@ -87,7 +87,7 @@ public:
 	CreatePointWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 public:
-	Details::RenderSystem::NativeSamplerState* GetNativeSamplerState();
+	Details::RenderSystem::NativeSamplerState* NativeSamplerState();
 	
 private:
 	std::unique_ptr<Details::RenderSystem::NativeSamplerState> nativeSamplerState;

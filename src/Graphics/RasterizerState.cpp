@@ -16,7 +16,7 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 RasterizerState::RasterizerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	RasterizerDescription const& description)
-	: nativeRasterizerState(graphicsDevice->GetNativeGraphicsDevice()->CreateRasterizerState(description))
+	: nativeRasterizerState(graphicsDevice->NativeGraphicsDevice()->CreateRasterizerState(description))
 	, description(description)
 {
 	POMDOG_ASSERT(nativeRasterizerState);
@@ -24,7 +24,7 @@ RasterizerState::RasterizerState(std::shared_ptr<GraphicsDevice> const& graphics
 //-----------------------------------------------------------------------
 RasterizerState::~RasterizerState() = default;
 //-----------------------------------------------------------------------
-RasterizerDescription RasterizerState::GetDescription() const
+RasterizerDescription RasterizerState::Description() const
 {
 	return description;
 }
@@ -59,7 +59,7 @@ RasterizerState::CreateCullNone(std::shared_ptr<GraphicsDevice> const& graphicsD
 	return std::make_shared<RasterizerState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeRasterizerState* RasterizerState::GetNativeRasterizerState()
+Details::RenderSystem::NativeRasterizerState* RasterizerState::NativeRasterizerState()
 {
 	return nativeRasterizerState.get();
 }

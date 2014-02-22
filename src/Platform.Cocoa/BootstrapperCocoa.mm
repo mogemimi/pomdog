@@ -26,8 +26,9 @@ void BootstrapperCocoa::BeginRun(NSWindow* nativeWindow)
 	
 	PresentationParameters presentationParameters;
 	presentationParameters.DepthFormat = DepthFormat::Depth24Stencil8;
-	presentationParameters.BackBufferWidth = gameWindow->GetClientBounds().width;
-	presentationParameters.BackBufferHeight = gameWindow->GetClientBounds().height;
+	auto clientBounds = gameWindow->ClientBounds();
+	presentationParameters.BackBufferWidth = clientBounds.width;
+	presentationParameters.BackBufferHeight = clientBounds.height;
 	presentationParameters.IsFullScreen = false; ///@todo Not implemented.
 	
 	auto host = std::make_shared<CocoaGameHost>(window, eventDispatcher, presentationParameters);

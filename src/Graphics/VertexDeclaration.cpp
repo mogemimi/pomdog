@@ -92,12 +92,12 @@ VertexDeclaration::VertexDeclaration(VertexElement const* vertexElements, std::s
 	POMDOG_ASSERT(strideBytes > 0);
 }
 //-----------------------------------------------------------------------
-std::vector<VertexElement> const& VertexDeclaration::GetVertexElements() const
+std::vector<VertexElement> const& VertexDeclaration::VertexElements() const
 {
 	return elements;
 }
 //-----------------------------------------------------------------------
-std::uint32_t VertexDeclaration::GetStrideBytes() const
+std::uint32_t VertexDeclaration::StrideBytes() const
 {
 	return strideBytes;
 }

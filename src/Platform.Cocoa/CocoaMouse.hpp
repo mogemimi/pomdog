@@ -24,7 +24,7 @@ class CocoaMouse final: public Pomdog::Mouse
 {
 public:
 	///@copydoc Pomdog::Mouse
-	MouseState const& GetState() const override;
+	MouseState const& State() const override;
 	
 	void SetPosition(Point2D const& position);
 	void SetScrollWheel(std::int32_t scrollWheel);

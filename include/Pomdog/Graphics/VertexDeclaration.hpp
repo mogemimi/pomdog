@@ -50,11 +50,11 @@ public:
 	/// @brief 頂点データ 1 つ分のサイズをバイト単位で取得します。
 	/// @remarks 1 つの頂点の先頭から次の頂点までのバイト数です。
 	/// @return 頂点データ 1 つ分のサイズ（バイト単位）を返却します。
-	std::uint32_t GetStrideBytes() const;
+	std::uint32_t StrideBytes() const;
 
 	///@~Japanese
 	/// @brief 頂点宣言の要素のリストを取得します。
-	std::vector<VertexElement> const& GetVertexElements() const;
+	std::vector<VertexElement> const& VertexElements() const;
 
 private:
 	///@~Japanese

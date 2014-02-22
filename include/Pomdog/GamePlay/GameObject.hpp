@@ -49,7 +49,7 @@ public:
 	///@~Japanese
 	/// @brief コンポーネントを取得します。
 	template <class T>
-	T const* GetComponent() const
+	T const* Component() const
 	{
 		auto const iter = std::find_if(std::begin(components), std::end(components),
 			[](std::unique_ptr<Details::GameComponent> const& component) {
@@ -71,7 +71,7 @@ public:
 	///@~Japanese
 	/// @brief コンポーネントを取得します。
 	template <class T>
-	T* GetComponent()
+	T* Component()
 	{
 		auto const iter = std::find_if(std::begin(components), std::end(components),
 			[](std::unique_ptr<Details::GameComponent> const& component) {

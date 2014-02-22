@@ -17,7 +17,7 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 ImmutableIndexBuffer::ImmutableIndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	IndexElementSize newElementSize, void const* indices, std::uint32_t newIndexCount)
-	: nativeIndexBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateIndexBuffer(
+	: nativeIndexBuffer(graphicsDevice->NativeGraphicsDevice()->CreateIndexBuffer(
 		indices, newIndexCount, newElementSize, BufferUsage::Immutable))
 	, indexCount(newIndexCount)
 	, elementSize(newElementSize)
@@ -27,22 +27,22 @@ ImmutableIndexBuffer::ImmutableIndexBuffer(std::shared_ptr<GraphicsDevice> const
 //-----------------------------------------------------------------------
 ImmutableIndexBuffer::~ImmutableIndexBuffer() = default;
 //-----------------------------------------------------------------------
-std::uint32_t ImmutableIndexBuffer::GetIndexCount() const
+std::uint32_t ImmutableIndexBuffer::IndexCount() const
 {
 	return indexCount;
 }
 //-----------------------------------------------------------------------
-IndexElementSize ImmutableIndexBuffer::GetElementSize() const
+IndexElementSize ImmutableIndexBuffer::ElementSize() const
 {
 	return elementSize;
 }
 //-----------------------------------------------------------------------
-BufferUsage ImmutableIndexBuffer::GetBufferUsage() const
+BufferUsage ImmutableIndexBuffer::BufferUsage() const
 {
 	return BufferUsage::Immutable;
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeIndexBuffer* ImmutableIndexBuffer::GetNativeIndexBuffer()
+Details::RenderSystem::NativeIndexBuffer* ImmutableIndexBuffer::NativeIndexBuffer()
 {
 	POMDOG_ASSERT(nativeIndexBuffer);
 	return nativeIndexBuffer.get();

@@ -20,10 +20,10 @@ InputLayout::InputLayout(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::shared_ptr<EffectPass> const& effectPass)
 	//: nativeInputLayout(graphicsDevice->)
 {
-	auto nativeEffectPass = effectPass->GetNativeEffectPass();
+	auto nativeEffectPass = effectPass->NativeEffectPass();
 	POMDOG_ASSERT(nativeEffectPass != nullptr);
 	
-	nativeInputLayout = graphicsDevice->GetNativeGraphicsDevice()->CreateInputLayout(
+	nativeInputLayout = graphicsDevice->NativeGraphicsDevice()->CreateInputLayout(
 		*nativeEffectPass);
 }
 //-----------------------------------------------------------------------
@@ -31,16 +31,16 @@ InputLayout::InputLayout(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::shared_ptr<EffectPass> const& effectPass,
 	std::vector<VertexBufferBinding> const& vertexBindings)
 {
-	auto nativeEffectPass = effectPass->GetNativeEffectPass();
+	auto nativeEffectPass = effectPass->NativeEffectPass();
 	POMDOG_ASSERT(nativeEffectPass != nullptr);
 
-	nativeInputLayout = graphicsDevice->GetNativeGraphicsDevice()->CreateInputLayout(
+	nativeInputLayout = graphicsDevice->NativeGraphicsDevice()->CreateInputLayout(
 		*nativeEffectPass, vertexBindings);
 }
 //-----------------------------------------------------------------------
 InputLayout::~InputLayout() = default;
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeInputLayout* InputLayout::GetNativeInputLayout()
+Details::RenderSystem::NativeInputLayout* InputLayout::NativeInputLayout()
 {
 	return nativeInputLayout.get();
 }

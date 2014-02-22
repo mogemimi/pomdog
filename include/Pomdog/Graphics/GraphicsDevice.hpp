@@ -43,7 +43,7 @@ public:
 	
 public:
 	///@brief internal method
-	Details::RenderSystem::NativeGraphicsDevice* GetNativeGraphicsDevice();
+	Details::RenderSystem::NativeGraphicsDevice* NativeGraphicsDevice();
 	
 private:
 	std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> nativeGraphicsDevice;

@@ -28,7 +28,7 @@ using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 #ifdef DEBUG
-	connection = Log::Connect([](Pomdog::LogEntry entry) {
+	connection = Log::Connect([](Pomdog::LogEntry const& entry) {
 		NSString* log = [NSString stringWithUTF8String:entry.message.c_str()];
 		NSLog(@"\n%@", log);
 	});

@@ -20,11 +20,11 @@ TEST(VertexDeclaration, CopyConstructor)
 	};
 	VertexDeclaration declaration(elements);
 	ASSERT_EQ(4, sizeof(float));
-	EXPECT_EQ(sizeof(float), declaration.GetStrideBytes());
+	EXPECT_EQ(sizeof(float), declaration.StrideBytes());
 	
-	ASSERT_FALSE(declaration.GetVertexElements().empty());
-	ASSERT_EQ(1, declaration.GetVertexElements().size());
-	auto element = declaration.GetVertexElements()[0];
+	ASSERT_FALSE(declaration.VertexElements().empty());
+	ASSERT_EQ(1, declaration.VertexElements().size());
+	auto element = declaration.VertexElements()[0];
 	
 	EXPECT_EQ(VertexElementFormat::Float, element.VertexElementFormat);
 	EXPECT_EQ(0, element.Offset);
@@ -39,11 +39,11 @@ TEST(VertexDeclaration, Constructor_InitializerList)
 		{ 48, VertexElementFormat::Float }
 	};
 	ASSERT_EQ(4, sizeof(float));
-	EXPECT_EQ(48 + 4, declaration.GetStrideBytes());
+	EXPECT_EQ(48 + 4, declaration.StrideBytes());
 	
-	ASSERT_FALSE(declaration.GetVertexElements().empty());
-	ASSERT_EQ(4, declaration.GetVertexElements().size());
-	auto elements = declaration.GetVertexElements();
+	ASSERT_FALSE(declaration.VertexElements().empty());
+	ASSERT_EQ(4, declaration.VertexElements().size());
+	auto elements = declaration.VertexElements();
 	
 	EXPECT_EQ(VertexElementFormat::Float4, elements[0].VertexElementFormat);
 	EXPECT_EQ(VertexElementFormat::Float3, elements[1].VertexElementFormat);

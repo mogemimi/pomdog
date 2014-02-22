@@ -36,32 +36,32 @@ public:
 	///@~Japanese
 	/// @brief プレイヤーによるウィンドウサイズの変更を許可するかどうかを取得します。
 	/// @return プレイヤーによるウィンドウサイズの変更を許可する場合は true を返却します。
-	virtual bool GetAllowPlayerResizing() const = 0;
+	virtual bool AllowPlayerResizing() const = 0;
 
 	///@~Japanese
 	/// @brief プレイヤーによるウィンドウサイズの変更を許可するかどうかを設定します。
 	/// @param allowResizing プレイヤーによるウィンドウサイズの変更を許可する場合は true を指定します。 
-	virtual void SetAllowPlayerResizing(bool allowResizing) = 0;
+	virtual void AllowPlayerResizing(bool allowResizing) = 0;
 
 	///@~Japanese
 	/// @brief 現在のキャプション（ウィンドウタイトル）を取得します。
 	/// @return 現在のキャプションを文字列として返却します。
-	virtual std::string GetCaption() const = 0;
+	virtual std::string Caption() const = 0;
 
 	///@~Japanese
 	/// @brief キャプション（ウィンドウタイトル）を設定します。
 	/// @param caption キャプションを指定します。
-	virtual void SetCaption(std::string const& caption) = 0;
+	virtual void Caption(std::string const& caption) = 0;
 
 	///@~Japanese
 	/// @brief 現在のクライアント領域のサイズを取得します。
 	/// @return クライアント領域を表すサイズを返却します。
-	virtual Rectangle GetClientBounds() const = 0;
+	virtual Rectangle ClientBounds() const = 0;
 
 	///@~Japanese
 	/// @brief ゲームウィンドウのクライアント領域のサイズを設定します。
 	/// @param clientBounds ゲームウィンドウのクライアント領域のサイズを指定します。
-	virtual void SetClientBounds(Rectangle const& clientBounds) = 0;
+	virtual void ClientBounds(Rectangle const& clientBounds) = 0;
 };
 
 /// @}

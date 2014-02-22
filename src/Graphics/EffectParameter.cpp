@@ -34,7 +34,7 @@ EffectParameter::EffectParameter()
 //-----------------------------------------------------------------------
 EffectParameter::EffectParameter(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::uint32_t byteConstants)
-	: nativeConstantBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateConstantBuffer(byteConstants))
+	: nativeConstantBuffer(graphicsDevice->NativeGraphicsDevice()->CreateConstantBuffer(byteConstants))
 {
 	POMDOG_ASSERT(byteConstants > 0);
 }
@@ -57,7 +57,7 @@ void EffectParameter::SetValue(std::uint8_t const* data, std::uint32_t byteWidth
 	return nativeConstantBuffer->SetData(data, byteWidth);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeConstantBuffer* EffectParameter::GetNativeConstantBuffer()
+Details::RenderSystem::NativeConstantBuffer* EffectParameter::NativeConstantBuffer()
 {
 	return nativeConstantBuffer.get();
 }

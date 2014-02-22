@@ -43,19 +43,19 @@ public:
 
 	///@~Japanese
 	/// @brief 矩形の水平方向の長さを設定します。
-	void SetWidth(std::int32_t width);
-	
-	///@~Japanese
-	/// @brief 矩形の垂直方向の高さを設定します。
-	void SetHeight(std::int32_t height);
+	void Width(std::int32_t width);
 
 	///@~Japanese
 	/// @brief 矩形の水平方向の長さを計算します。
-	std::int32_t GetWidth() const;
+	std::int32_t Width() const;
+	
+	///@~Japanese
+	/// @brief 矩形の垂直方向の高さを設定します。
+	void Height(std::int32_t height);
 	
 	///@~Japanese
 	/// @brief 矩形の垂直方向の高さを計算します。
-	std::int32_t GetHeight() const;
+	std::int32_t Height() const;
 	
 	///@~Japanese
 	/// @brief 矩形の左端の X 座標を計算します。

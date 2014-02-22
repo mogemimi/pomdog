@@ -16,7 +16,7 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 BlendState::BlendState(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	BlendDescription const& description)
-	: nativeBlendState(graphicsDevice->GetNativeGraphicsDevice()->CreateBlendState(description))
+	: nativeBlendState(graphicsDevice->NativeGraphicsDevice()->CreateBlendState(description))
 	, description(description)
 {
 	POMDOG_ASSERT(nativeBlendState);
@@ -24,7 +24,7 @@ BlendState::BlendState(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 //-----------------------------------------------------------------------
 BlendState::~BlendState() = default;
 //-----------------------------------------------------------------------
-BlendDescription BlendState::GetDescription() const
+BlendDescription BlendState::Description() const
 {
 	return description;
 }
@@ -89,7 +89,7 @@ BlendState::CreateOpaque(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	return std::make_shared<BlendState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeBlendState* BlendState::GetNativeBlendState()
+Details::RenderSystem::NativeBlendState* BlendState::NativeBlendState()
 {
 	return nativeBlendState.get();
 }

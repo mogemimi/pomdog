@@ -134,7 +134,7 @@ void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology)
 	glDrawArrays(
 		ToPrimitiveTopology(primitiveTopology),
 		0,
-		vertexBuffers.front()->GetVertexCount()
+		vertexBuffers.front()->VertexCount()
 	);
 	
 	#ifdef DEBUG
@@ -156,10 +156,10 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 
 	// Bind index-buffer:
 	POMDOG_ASSERT(indexCount > 0);
-	POMDOG_ASSERT(indexCount <= indexBuffer->GetIndexCount());
+	POMDOG_ASSERT(indexCount <= indexBuffer->IndexCount());
 	POMDOG_ASSERT(indexBuffer);
 
-	auto nativeIndexBuffer = dynamic_cast<IndexBufferGL4*>(indexBuffer->GetNativeIndexBuffer());
+	auto nativeIndexBuffer = dynamic_cast<IndexBufferGL4*>(indexBuffer->NativeIndexBuffer());
 	POMDOG_ASSERT(nativeIndexBuffer != nullptr);
 
 	nativeIndexBuffer->BindBuffer();
@@ -167,7 +167,7 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 	glDrawElements(
 		ToPrimitiveTopology(primitiveTopology),
 		indexCount,
-		ToIndexElementType(indexBuffer->GetElementSize()),
+		ToIndexElementType(indexBuffer->ElementSize()),
 		nullptr
 	);
 	
@@ -195,7 +195,7 @@ void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std:
 	glDrawArraysInstanced(
 		ToPrimitiveTopology(primitiveTopology),
 		0,
-		vertexBuffers.front()->GetVertexCount(),
+		vertexBuffers.front()->VertexCount(),
 		instanceCount
 	);
 	
@@ -218,10 +218,10 @@ void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopolog
 
 	// Bind index-buffer:
 	POMDOG_ASSERT(indexCount > 0);
-	POMDOG_ASSERT(indexCount <= indexBuffer->GetIndexCount());
+	POMDOG_ASSERT(indexCount <= indexBuffer->IndexCount());
 	POMDOG_ASSERT(indexBuffer);
 
-	auto nativeIndexBuffer = dynamic_cast<IndexBufferGL4*>(indexBuffer->GetNativeIndexBuffer());
+	auto nativeIndexBuffer = dynamic_cast<IndexBufferGL4*>(indexBuffer->NativeIndexBuffer());
 	POMDOG_ASSERT(nativeIndexBuffer != nullptr);
 
 	nativeIndexBuffer->BindBuffer();
@@ -232,7 +232,7 @@ void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopolog
 	glDrawElementsInstanced(
 		ToPrimitiveTopology(primitiveTopology),
 		indexCount,
-		ToIndexElementType(indexBuffer->GetElementSize()),
+		ToIndexElementType(indexBuffer->ElementSize()),
 		nullptr,
 		instanceCount
 	);
@@ -256,12 +256,12 @@ GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetViewport(Viewport const& viewport)
 {
-	POMDOG_ASSERT(viewport.GetWidth() > 0);
-	POMDOG_ASSERT(viewport.GetHeight() > 0);
+	POMDOG_ASSERT(viewport.Width() > 0);
+	POMDOG_ASSERT(viewport.Height() > 0);
 
 	GLint viewportY = viewport.TopLeftY();
 	if (auto window = gameWindow.lock()) {
-		viewportY = window->GetClientBounds().height - (viewport.TopLeftY() + viewport.GetHeight());
+		viewportY = window->ClientBounds().height - (viewport.TopLeftY() + viewport.Height());
 	}
 
 	// Notes: glViewport(x, y, width, height)
@@ -269,8 +269,8 @@ void GraphicsContextGL4::SetViewport(Viewport const& viewport)
 	glViewport(
 		static_cast<GLint>(viewport.TopLeftX()),
 		static_cast<GLint>(viewportY),
-		static_cast<GLsizei>(viewport.GetWidth()), 
-		static_cast<GLsizei>(viewport.GetHeight())
+		static_cast<GLsizei>(viewport.Width()),
+		static_cast<GLsizei>(viewport.Height())
 	);
 }
 //-----------------------------------------------------------------------
@@ -290,7 +290,7 @@ void GraphicsContextGL4::SetInputLayout(std::shared_ptr<InputLayout> const& inpu
 {
 	POMDOG_ASSERT(inputLayoutIn);
 	
-	auto nativeInputLayout = dynamic_cast<InputLayoutGL4*>(inputLayoutIn->GetNativeInputLayout());
+	auto nativeInputLayout = dynamic_cast<InputLayoutGL4*>(inputLayoutIn->NativeInputLayout());
 	POMDOG_ASSERT(nativeInputLayout);
 
 	if (nativeInputLayout != nullptr) {

@@ -70,7 +70,7 @@ public:
 	EffectParameterCollection const& Parameters() const;
 	
 public:
-	Details::RenderSystem::NativeEffectPass* GetNativeEffectPass();
+	Details::RenderSystem::NativeEffectPass* NativeEffectPass();
 	
 private:
 	EffectParameterCollection effectParameters;

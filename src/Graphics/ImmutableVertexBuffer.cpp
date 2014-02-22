@@ -17,9 +17,9 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 ImmutableVertexBuffer::ImmutableVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	VertexDeclaration const& newVertexDeclaration, void const* vertices, std::uint32_t newVertexCount)
+	Pomdog::VertexDeclaration const& newVertexDeclaration, void const* vertices, std::uint32_t newVertexCount)
 	: vertexDeclaration(newVertexDeclaration)
-	, nativeVertexBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateVertexBuffer(
+	, nativeVertexBuffer(graphicsDevice->NativeGraphicsDevice()->CreateVertexBuffer(
 		vertices, newVertexCount, vertexDeclaration, BufferUsage::Immutable))
 	, vertexCount(newVertexCount)
 {
@@ -27,9 +27,9 @@ ImmutableVertexBuffer::ImmutableVertexBuffer(std::shared_ptr<GraphicsDevice> con
 }
 //-----------------------------------------------------------------------
 ImmutableVertexBuffer::ImmutableVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	VertexDeclaration && newVertexDeclaration, void const* vertices, std::uint32_t newVertexCount)
+	Pomdog::VertexDeclaration && newVertexDeclaration, void const* vertices, std::uint32_t newVertexCount)
 	: vertexDeclaration(std::move(newVertexDeclaration))
-	, nativeVertexBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateVertexBuffer(
+	, nativeVertexBuffer(graphicsDevice->NativeGraphicsDevice()->CreateVertexBuffer(
 		vertices, newVertexCount, vertexDeclaration, BufferUsage::Immutable))
 	, vertexCount(newVertexCount)
 {
@@ -38,22 +38,22 @@ ImmutableVertexBuffer::ImmutableVertexBuffer(std::shared_ptr<GraphicsDevice> con
 //-----------------------------------------------------------------------
 ImmutableVertexBuffer::~ImmutableVertexBuffer() = default;
 //-----------------------------------------------------------------------
-VertexDeclaration const& ImmutableVertexBuffer::GetVertexDeclaration() const
+VertexDeclaration const& ImmutableVertexBuffer::VertexDeclaration() const
 {
 	return vertexDeclaration;
 }
 //-----------------------------------------------------------------------
-BufferUsage ImmutableVertexBuffer::GetBufferUsage() const
+BufferUsage ImmutableVertexBuffer::BufferUsage() const
 {
 	return BufferUsage::Immutable;
 }
 //-----------------------------------------------------------------------
-std::uint32_t ImmutableVertexBuffer::GetVertexCount() const
+std::uint32_t ImmutableVertexBuffer::VertexCount() const
 {
 	return vertexCount;
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeVertexBuffer* ImmutableVertexBuffer::GetNativeVertexBuffer()
+Details::RenderSystem::NativeVertexBuffer* ImmutableVertexBuffer::NativeVertexBuffer()
 {
 	POMDOG_ASSERT(nativeVertexBuffer);
 	return nativeVertexBuffer.get();

@@ -16,7 +16,7 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 Texture2D::Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::uint32_t pixelWidthIn, std::uint32_t pixelHeightIn)
-	: nativeTexture2D(graphicsDevice->GetNativeGraphicsDevice()->CreateTexture2D(
+	: nativeTexture2D(graphicsDevice->NativeGraphicsDevice()->CreateTexture2D(
 		pixelWidthIn, pixelHeightIn, 0, SurfaceFormat::R8G8B8A8_UNorm))
 	, pixelWidth(pixelWidthIn)
 	, pixelHeight(pixelHeightIn)
@@ -27,22 +27,22 @@ Texture2D::Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 //-----------------------------------------------------------------------
 Texture2D::~Texture2D() = default;
 //-----------------------------------------------------------------------
-std::uint32_t Texture2D::GetWidth() const
+std::uint32_t Texture2D::Width() const
 {
 	return pixelWidth;
 }
 //-----------------------------------------------------------------------
-std::uint32_t Texture2D::GetHeight() const
+std::uint32_t Texture2D::Height() const
 {
 	return pixelHeight;
 }
 //-----------------------------------------------------------------------
-std::uint32_t Texture2D::GetLevelCount() const
+std::uint32_t Texture2D::LevelCount() const
 {
 	return levelCount;
 }
 //-----------------------------------------------------------------------
-SurfaceFormat Texture2D::GetFormat() const
+SurfaceFormat Texture2D::Format() const
 {
 	return format;
 }

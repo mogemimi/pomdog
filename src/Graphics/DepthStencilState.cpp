@@ -16,7 +16,7 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 DepthStencilState::DepthStencilState(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	DepthStencilDescription const& description)
-	: nativeDepthStencilState(graphicsDevice->GetNativeGraphicsDevice()->CreateDepthStencilState(description))
+	: nativeDepthStencilState(graphicsDevice->NativeGraphicsDevice()->CreateDepthStencilState(description))
 	, description(description)
 {
 	POMDOG_ASSERT(nativeDepthStencilState);
@@ -24,7 +24,7 @@ DepthStencilState::DepthStencilState(std::shared_ptr<GraphicsDevice> const& grap
 //-----------------------------------------------------------------------
 DepthStencilState::~DepthStencilState() = default;
 //-----------------------------------------------------------------------
-DepthStencilDescription DepthStencilState::GetDescription() const
+DepthStencilDescription DepthStencilState::Description() const
 {
 	return description;
 }
@@ -62,7 +62,7 @@ DepthStencilState::CreateNone(std::shared_ptr<GraphicsDevice> const& graphicsDev
 	return std::make_shared<DepthStencilState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeDepthStencilState* DepthStencilState::GetNativeDepthStencilState()
+Details::RenderSystem::NativeDepthStencilState* DepthStencilState::NativeDepthStencilState()
 {
 	return nativeDepthStencilState.get();
 }

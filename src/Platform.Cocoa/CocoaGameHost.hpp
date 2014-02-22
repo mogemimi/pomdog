@@ -42,16 +42,16 @@ public:
 	void Exit() override;
 
 	///@copydoc GameHost
-	std::shared_ptr<GameWindow> GetWindow() override;
+	std::shared_ptr<Pomdog::GameWindow> Window() override;
 	
 	///@copydoc GameHost
-	std::shared_ptr<GraphicsContext> GetGraphicsContext() override;
+	std::shared_ptr<Pomdog::GraphicsContext> GraphicsContext() override;
 	
 	///@copydoc GameHost
-	std::shared_ptr<GraphicsDevice> GetGraphicsDevice() override;
+	std::shared_ptr<Pomdog::GraphicsDevice> GraphicsDevice() override;
 	
 	///@copydoc GameHost
-	std::shared_ptr<AssetManager> GetAssetManager() override;
+	std::shared_ptr<Pomdog::AssetManager> AssetManager() override;
 
 private:
 	class Impl;

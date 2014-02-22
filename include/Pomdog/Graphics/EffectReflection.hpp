@@ -50,7 +50,7 @@ public:
 	std::vector<EffectConstantDescription> GetConstantBuffers() const;
 	
 public:
-	Details::RenderSystem::NativeEffectReflection* GetNativeEffectReflection();
+	Details::RenderSystem::NativeEffectReflection* NativeEffectReflection();
 	
 private:
 	std::unique_ptr<Details::RenderSystem::NativeEffectReflection> nativeEffectReflection;

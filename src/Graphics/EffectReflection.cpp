@@ -18,9 +18,9 @@ namespace Pomdog {
 EffectReflection::EffectReflection(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::shared_ptr<EffectPass> const& effectPass)
 {
-	POMDOG_ASSERT(graphicsDevice && graphicsDevice->GetNativeGraphicsDevice());
-	POMDOG_ASSERT(effectPass && effectPass->GetNativeEffectPass());
-	nativeEffectReflection = graphicsDevice->GetNativeGraphicsDevice()->CreateEffectReflection(*effectPass->GetNativeEffectPass());
+	POMDOG_ASSERT(graphicsDevice && graphicsDevice->NativeGraphicsDevice());
+	POMDOG_ASSERT(effectPass && effectPass->NativeEffectPass());
+	nativeEffectReflection = graphicsDevice->NativeGraphicsDevice()->CreateEffectReflection(*effectPass->NativeEffectPass());
 }
 //-----------------------------------------------------------------------
 EffectReflection::~EffectReflection() = default;

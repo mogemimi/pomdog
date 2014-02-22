@@ -36,10 +36,10 @@ public:
 	ImmutableVertexBuffer(ImmutableVertexBuffer &&) = default;
 
 	ImmutableVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		VertexDeclaration const& vertexDeclaration, void const* vertices, std::uint32_t vertexCount);
+		Pomdog::VertexDeclaration const& vertexDeclaration, void const* vertices, std::uint32_t vertexCount);
 
 	ImmutableVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		VertexDeclaration && vertexDeclaration, void const* vertices, std::uint32_t vertexCount);
+		Pomdog::VertexDeclaration && vertexDeclaration, void const* vertices, std::uint32_t vertexCount);
 
 	~ImmutableVertexBuffer() override;
 
@@ -48,21 +48,21 @@ public:
 
 	///@~Japanese
 	/// @brief 頂点データの定義を取得します。
-	VertexDeclaration const& GetVertexDeclaration() const override;
+	Pomdog::VertexDeclaration const& VertexDeclaration() const override;
 
 	///@~Japanese
 	/// @brief バッファの使用方法を取得します。
-	BufferUsage GetBufferUsage() const override;
+	Pomdog::BufferUsage BufferUsage() const override;
 
 	///@~Japanese
 	/// @brief 頂点の数を取得します。
-	std::uint32_t GetVertexCount() const override;
+	std::uint32_t VertexCount() const override;
 	
 public:
-	Details::RenderSystem::NativeVertexBuffer* GetNativeVertexBuffer() override;
+	Details::RenderSystem::NativeVertexBuffer* NativeVertexBuffer() override;
 
 private:
-	VertexDeclaration vertexDeclaration;
+	Pomdog::VertexDeclaration vertexDeclaration;
 	std::unique_ptr<Details::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
 	std::uint32_t vertexCount;
 };

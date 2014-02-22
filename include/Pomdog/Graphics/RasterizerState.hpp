@@ -46,7 +46,7 @@ public:
 
 	///@~Japanese
 	/// @brief ラスタライザステートを作成するために記述したラスタライザステートの設定内容を取得します。
-	RasterizerDescription GetDescription() const;
+	RasterizerDescription Description() const;
 
 	///@~Japanese
 	/// @brief ワインディング順序が時計回りの頂点列に対して背面カリングを有効にするラスタライザステートを作成します。
@@ -77,7 +77,7 @@ public:
 	CreateCullNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 public:
-	Details::RenderSystem::NativeRasterizerState* GetNativeRasterizerState();
+	Details::RenderSystem::NativeRasterizerState* NativeRasterizerState();
 	
 private:
 	std::unique_ptr<Details::RenderSystem::NativeRasterizerState> nativeRasterizerState;

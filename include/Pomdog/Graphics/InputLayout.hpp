@@ -53,7 +53,7 @@ public:
 	~InputLayout();
 
 public:
-	Details::RenderSystem::NativeInputLayout* GetNativeInputLayout();
+	Details::RenderSystem::NativeInputLayout* NativeInputLayout();
 
 private:
 	std::unique_ptr<Details::RenderSystem::NativeInputLayout> nativeInputLayout;

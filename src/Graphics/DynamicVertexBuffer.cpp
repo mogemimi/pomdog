@@ -17,9 +17,9 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 DynamicVertexBuffer::DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	VertexDeclaration const& newVertexDeclaration, void const* vertices, std::uint32_t newVertexCount)
+	Pomdog::VertexDeclaration const& newVertexDeclaration, void const* vertices, std::uint32_t newVertexCount)
 	: vertexDeclaration(newVertexDeclaration)
-	, nativeVertexBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateVertexBuffer(
+	, nativeVertexBuffer(graphicsDevice->NativeGraphicsDevice()->CreateVertexBuffer(
 		vertices, newVertexCount, vertexDeclaration, BufferUsage::Dynamic))
 	, vertexCount(newVertexCount)
 {
@@ -27,9 +27,9 @@ DynamicVertexBuffer::DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& 
 }
 //-----------------------------------------------------------------------
 DynamicVertexBuffer::DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	VertexDeclaration && newVertexDeclaration, void const* vertices, std::uint32_t newVertexCount)
+	Pomdog::VertexDeclaration && newVertexDeclaration, void const* vertices, std::uint32_t newVertexCount)
 	: vertexDeclaration(std::move(newVertexDeclaration))
-	, nativeVertexBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateVertexBuffer(
+	, nativeVertexBuffer(graphicsDevice->NativeGraphicsDevice()->CreateVertexBuffer(
 		vertices, newVertexCount, vertexDeclaration, BufferUsage::Dynamic))
 	, vertexCount(newVertexCount)
 {
@@ -38,17 +38,17 @@ DynamicVertexBuffer::DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& 
 //-----------------------------------------------------------------------
 DynamicVertexBuffer::~DynamicVertexBuffer() = default;
 //-----------------------------------------------------------------------
-VertexDeclaration const& DynamicVertexBuffer::GetVertexDeclaration() const
+VertexDeclaration const& DynamicVertexBuffer::VertexDeclaration() const
 {
 	return vertexDeclaration;
 }
 //-----------------------------------------------------------------------
-BufferUsage DynamicVertexBuffer::GetBufferUsage() const
+BufferUsage DynamicVertexBuffer::BufferUsage() const
 {
 	return BufferUsage::Dynamic;
 }
 //-----------------------------------------------------------------------
-std::uint32_t DynamicVertexBuffer::GetVertexCount() const
+std::uint32_t DynamicVertexBuffer::VertexCount() const
 {
 	return vertexCount;
 }
@@ -62,7 +62,7 @@ void DynamicVertexBuffer::SetData(void const* source, std::uint32_t vertexCount)
 	nativeVertexBuffer->SetData(source, vertexCount, vertexDeclaration);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeVertexBuffer* DynamicVertexBuffer::GetNativeVertexBuffer()
+Details::RenderSystem::NativeVertexBuffer* DynamicVertexBuffer::NativeVertexBuffer()
 {
 	POMDOG_ASSERT(nativeVertexBuffer);
 	return nativeVertexBuffer.get();

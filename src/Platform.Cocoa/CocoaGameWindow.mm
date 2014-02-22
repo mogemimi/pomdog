@@ -62,13 +62,13 @@ CocoaGameWindow::~CocoaGameWindow()
 #endif
 }
 //-----------------------------------------------------------------------
-bool CocoaGameWindow::GetAllowPlayerResizing() const
+bool CocoaGameWindow::AllowPlayerResizing() const
 {
 	NSUInteger styleMask = [nativeWindow styleMask];
 	return (styleMask & NSResizableWindowMask) == NSResizableWindowMask;
 }
 //-----------------------------------------------------------------------
-void CocoaGameWindow::SetAllowPlayerResizing(bool allowResizing)
+void CocoaGameWindow::AllowPlayerResizing(bool allowResizing)
 {
 	NSUInteger styleMask = [nativeWindow styleMask];
 	if (allowResizing) {
@@ -83,18 +83,18 @@ void CocoaGameWindow::SetAllowPlayerResizing(bool allowResizing)
 	[nativeWindow setStyleMask:styleMask];
 }
 //-----------------------------------------------------------------------
-std::string CocoaGameWindow::GetCaption() const
+std::string CocoaGameWindow::Caption() const
 {
 	std::string caption = [[nativeWindow title] UTF8String];
 	return std::move(caption);
 }
 //-----------------------------------------------------------------------
-void CocoaGameWindow::SetCaption(std::string const& caption)
+void CocoaGameWindow::Caption(std::string const& caption)
 {
 	[nativeWindow setTitle:[NSString stringWithUTF8String:caption.c_str()]];
 }
 //-----------------------------------------------------------------------
-Rectangle CocoaGameWindow::GetClientBounds() const
+Rectangle CocoaGameWindow::ClientBounds() const
 {
 	POMDOG_ASSERT(openGLView != nil);
 	NSRect bounds = [openGLView frame];
@@ -107,7 +107,7 @@ Rectangle CocoaGameWindow::GetClientBounds() const
 	return std::move(rect);
 }
 //-----------------------------------------------------------------------
-void CocoaGameWindow::SetClientBounds(Rectangle const& clientBounds)
+void CocoaGameWindow::ClientBounds(Rectangle const& clientBounds)
 {
 	NSRect bounds;
 	bounds.origin.x = clientBounds.x;

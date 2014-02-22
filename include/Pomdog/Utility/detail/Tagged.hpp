@@ -17,7 +17,6 @@
 #include <functional>
 #include <utility>
 #include "../../Config/Export.hpp"
-#include "../../Config/FundamentalTypes.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -40,8 +39,8 @@ public:
 	
 	~Tagged() = default;
 	
-	Tagged& operator=(Tagged const&) = default;
-	Tagged& operator=(Tagged &&) = default;
+	Tagged & operator=(Tagged const&) = default;
+	Tagged & operator=(Tagged &&) = default;
 
 	explicit Tagged(value_type const& v)
 		: value(v) {}

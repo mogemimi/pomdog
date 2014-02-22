@@ -17,7 +17,7 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 DynamicIndexBuffer::DynamicIndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	IndexElementSize newElementSize, void const* indices, std::uint32_t newIndexCount)
-	: nativeIndexBuffer(graphicsDevice->GetNativeGraphicsDevice()->CreateIndexBuffer(
+	: nativeIndexBuffer(graphicsDevice->NativeGraphicsDevice()->CreateIndexBuffer(
 		indices, newIndexCount, newElementSize, BufferUsage::Dynamic))
 	, indexCount(newIndexCount)
 	, elementSize(newElementSize)
@@ -27,17 +27,17 @@ DynamicIndexBuffer::DynamicIndexBuffer(std::shared_ptr<GraphicsDevice> const& gr
 //-----------------------------------------------------------------------
 DynamicIndexBuffer::~DynamicIndexBuffer() = default;
 //-----------------------------------------------------------------------
-std::uint32_t DynamicIndexBuffer::GetIndexCount() const
+std::uint32_t DynamicIndexBuffer::IndexCount() const
 {
 	return indexCount;
 }
 //-----------------------------------------------------------------------
-IndexElementSize DynamicIndexBuffer::GetElementSize() const
+IndexElementSize DynamicIndexBuffer::ElementSize() const
 {
 	return elementSize;
 }
 //-----------------------------------------------------------------------
-BufferUsage DynamicIndexBuffer::GetBufferUsage() const
+BufferUsage DynamicIndexBuffer::BufferUsage() const
 {
 	return BufferUsage::Dynamic;
 }
@@ -51,7 +51,7 @@ void DynamicIndexBuffer::SetData(void const* source, std::uint32_t indexCount)
 	nativeIndexBuffer->SetData(source, indexCount, elementSize);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeIndexBuffer* DynamicIndexBuffer::GetNativeIndexBuffer()
+Details::RenderSystem::NativeIndexBuffer* DynamicIndexBuffer::NativeIndexBuffer()
 {
 	POMDOG_ASSERT(nativeIndexBuffer);
 	return nativeIndexBuffer.get();

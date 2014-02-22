@@ -45,15 +45,15 @@ public:
 
 	///@~Japanese
 	/// @brief インデックスの個数を取得します。
-	std::uint32_t GetIndexCount() const override;
+	std::uint32_t IndexCount() const override;
 
 	///@~Japanese
 	/// @brief インデックスの要素 1 つ分のサイズを取得します。
-	IndexElementSize GetElementSize() const override;
+	IndexElementSize ElementSize() const override;
 
 	///@~Japanese
 	/// @brief バッファの使用方法を取得します。
-	BufferUsage GetBufferUsage() const override;
+	Pomdog::BufferUsage BufferUsage() const override;
 
 	///@~Japanese
 	/// @brief インデックスデータを格納します。
@@ -62,7 +62,7 @@ public:
 	void SetData(void const* source, std::uint32_t indexCount);
 	
 public:
-	Details::RenderSystem::NativeIndexBuffer* GetNativeIndexBuffer() override;
+	Details::RenderSystem::NativeIndexBuffer* NativeIndexBuffer() override;
 	
 private:
 	std::unique_ptr<Details::RenderSystem::NativeIndexBuffer> nativeIndexBuffer;

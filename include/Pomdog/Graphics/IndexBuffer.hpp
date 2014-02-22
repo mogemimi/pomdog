@@ -42,18 +42,18 @@ public:
 
 	///@~Japanese
 	/// @brief インデックスの個数を取得します。
-	virtual std::uint32_t GetIndexCount() const = 0;
+	virtual std::uint32_t IndexCount() const = 0;
 
 	///@~Japanese
 	/// @brief インデックスの要素 1 つ分のサイズを取得します。
-	virtual IndexElementSize GetElementSize() const = 0;
+	virtual IndexElementSize ElementSize() const = 0;
 
 	///@~Japanese
 	/// @brief バッファの使用方法を取得します。
-	virtual BufferUsage GetBufferUsage() const = 0;
+	virtual BufferUsage BufferUsage() const = 0;
 
 public:
-	virtual Details::RenderSystem::NativeIndexBuffer* GetNativeIndexBuffer() = 0;
+	virtual Details::RenderSystem::NativeIndexBuffer* NativeIndexBuffer() = 0;
 };
 
 /// @}

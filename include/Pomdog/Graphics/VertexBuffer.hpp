@@ -39,18 +39,18 @@ public:
 
 	///@~Japanese
 	/// @brief 頂点データの定義を取得します。
-	virtual VertexDeclaration const& GetVertexDeclaration() const = 0;
+	virtual VertexDeclaration const& VertexDeclaration() const = 0;
 
 	///@~Japanese
 	/// @brief 頂点の数を取得します。
-	virtual std::uint32_t GetVertexCount() const = 0;
+	virtual std::uint32_t VertexCount() const = 0;
 
 	///@~Japanese
 	/// @brief バッファの使用方法を取得します。
-	virtual BufferUsage GetBufferUsage() const = 0;
+	virtual BufferUsage BufferUsage() const = 0;
 	
 public:
-	virtual Details::RenderSystem::NativeVertexBuffer* GetNativeVertexBuffer() = 0;
+	virtual Details::RenderSystem::NativeVertexBuffer* NativeVertexBuffer() = 0;
 };
 
 /// @}

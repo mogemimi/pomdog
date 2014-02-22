@@ -14,18 +14,18 @@ namespace Pomdog {
 CocoaTestGame::CocoaTestGame(std::shared_ptr<GameHost> host)
 	: gameHost(std::move(host))
 {
-	graphicsContext = gameHost->GetGraphicsContext();
+	graphicsContext = gameHost->GraphicsContext();
 }
 //-----------------------------------------------------------------------
 void CocoaTestGame::Initialize()
 {
-	auto window = gameHost->GetWindow();
-	window->SetCaption("Cocoa Test Game");
-	window->SetAllowPlayerResizing(false);
+	auto window = gameHost->Window();
+	window->Caption("Cocoa Test Game");
+	window->AllowPlayerResizing(false);
 	
-	auto graphicsDevice = gameHost->GetGraphicsDevice();
+	auto graphicsDevice = gameHost->GraphicsDevice();
 	
-	auto assets = gameHost->GetAssetManager();
+	auto assets = gameHost->AssetManager();
 
 	{
 		using VertexCombined = CustomVertex<Vector3, Vector2>;
@@ -66,7 +66,7 @@ void CocoaTestGame::Initialize()
 			stream << " ByteSize: " << description.ByteSize << "\n";
 			stream << "Variables: " << description.Variables.size() << "\n";
 		}
-	}
+	}	
 //	{
 //		auto assets = gameHost->GetAssetManager();
 //		auto texture = assets->Load<Texture2D>("");
@@ -99,7 +99,7 @@ void CocoaTestGame::Draw()
 	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffer(vertexBuffer);
 	effectPass->Apply();
-	graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList, indexBuffer, indexBuffer->GetIndexCount());
+	graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList, indexBuffer, indexBuffer->IndexCount());
 	graphicsContext->Present();
 }
 //-----------------------------------------------------------------------

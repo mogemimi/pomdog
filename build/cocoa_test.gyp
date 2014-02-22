@@ -83,7 +83,7 @@
         }], # OS == "mac"
       ],
       'mac_bundle_resources': [
-		'../test/CocoaTest/Base.lproj/MainMenu.xib',
+        '../test/CocoaTest/Base.lproj/MainMenu.xib',
         '../test/CocoaTest/English.lproj/InfoPlist.strings',
         '../test/CocoaTest/Content/',
         #'../test/CocoaTest/Images.xcassets/',

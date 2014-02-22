@@ -36,22 +36,22 @@ public:
 	~CocoaGameWindow();
 
 	///@copydoc GameWindow
-	bool GetAllowPlayerResizing() const override;
+	bool AllowPlayerResizing() const override;
 
 	///@copydoc GameWindow
-	void SetAllowPlayerResizing(bool allowResizing) override;
+	void AllowPlayerResizing(bool allowResizing) override;
 
 	///@copydoc GameWindow
-	std::string GetCaption() const override;
+	std::string Caption() const override;
 
 	///@copydoc GameWindow
-	void SetCaption(std::string const& caption) override;
+	void Caption(std::string const& caption) override;
 
 	///@copydoc GameWindow
-	Rectangle GetClientBounds() const override;
+	Rectangle ClientBounds() const override;
 
 	///@copydoc GameWindow
-	void SetClientBounds(Rectangle const& clientBounds) override;
+	void ClientBounds(Rectangle const& clientBounds) override;
 	
 	///@~English
 	/// @return true if the window is minimized, false otherwise.

@@ -14,7 +14,7 @@ namespace Details {
 namespace Cocoa {
 
 //-----------------------------------------------------------------------
-MouseState const& CocoaMouse::GetState() const
+MouseState const& CocoaMouse::State() const
 {
 	return mouseState;
 }

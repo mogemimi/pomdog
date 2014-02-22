@@ -67,7 +67,7 @@ VertexBufferGL4::VertexBufferGL4(void const* vertices, std::uint32_t vertexCount
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif
 	
-	glBufferData(GL_ARRAY_BUFFER, vertexDeclaration.GetStrideBytes() * vertexCount,
+	glBufferData(GL_ARRAY_BUFFER, vertexDeclaration.StrideBytes() * vertexCount,
 		static_cast<GLvoid const*>(vertices),
 		ToVertexBufferUsage(bufferUsage));
 
@@ -101,8 +101,8 @@ void VertexBufferGL4::SetData(void const* source, std::uint32_t vertexCount,
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif
 
-	POMDOG_ASSERT(vertexDeclaration.GetStrideBytes() > 0);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, vertexDeclaration.GetStrideBytes() * vertexCount, source);
+	POMDOG_ASSERT(vertexDeclaration.StrideBytes() > 0);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, vertexDeclaration.StrideBytes() * vertexCount, source);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBufferSubData", __FILE__, __LINE__);

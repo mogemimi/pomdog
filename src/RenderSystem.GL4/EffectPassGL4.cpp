@@ -229,7 +229,7 @@ void EffectPassGL4::Apply(GraphicsContext & graphicsContext,
 	POMDOG_ASSERT(sharedThisEffectPass);
 	
 	auto sharedThis = std::shared_ptr<EffectPassGL4>(sharedThisEffectPass, this);
-	auto nativeContext = dynamic_cast<GraphicsContextGL4*>(graphicsContext.GetNativeGraphicsContext());
+	auto nativeContext = dynamic_cast<GraphicsContextGL4*>(graphicsContext.NativeGraphicsContext());
 	POMDOG_ASSERT(nativeContext);
 	
 	if (nativeContext != nullptr) {
