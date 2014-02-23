@@ -38,17 +38,17 @@ EventConnection LogChannel::Connect(std::function<void(LogEntry const& log)> con
 	});
 }
 //-----------------------------------------------------------------------
-std::string const& LogChannel::GetName() const
+std::string const& LogChannel::Name() const
 {
 	return name;
 }
 //-----------------------------------------------------------------------
-LoggingLevel LogChannel::GetLevel() const
+LoggingLevel LogChannel::Level() const
 {
 	return this->threshold;
 }
 //-----------------------------------------------------------------------
-void LogChannel::SetLevel(LoggingLevel threshold)
+void LogChannel::Level(LoggingLevel threshold)
 {
 	this->threshold = threshold;
 }

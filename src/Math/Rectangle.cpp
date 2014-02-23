@@ -70,12 +70,12 @@ Point2D Rectangle::Center() const
 	return Point2D(x + width / 2, y + height / 2);
 }
 //-----------------------------------------------------------------------
-Point2D Rectangle::GetLocation() const
+Point2D Rectangle::Location() const
 {
 	return Point2D(x, y);
 }
 //-----------------------------------------------------------------------
-void Rectangle::SetLocation(Point2D const& position)
+void Rectangle::Location(Point2D const& position)
 {
 	this->x = position.x;
 	this->y = position.y;

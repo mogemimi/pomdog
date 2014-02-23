@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -74,7 +74,7 @@ public:
 	{
 		auto iter = std::find_if(std::begin(channels), std::end(channels),
 			[&name](std::unique_ptr<LogChannel> const& channel) {
-				return name == channel->GetName();
+				return name == channel->Name();
 		});
 
 		if (std::end(channels) != iter) {
@@ -87,7 +87,7 @@ public:
 	{
 		auto iter = std::find_if(std::begin(channels), std::end(channels),
 			[&name](std::unique_ptr<LogChannel> const& channel) {
-				return name == channel->GetName();
+				return name == channel->Name();
 		});
 
 		return (std::end(channels) != iter);
@@ -102,7 +102,7 @@ public:
 		std::lock_guard<std::recursive_mutex> lock(channelsProtection);
 		
 		auto channel = std::unique_ptr<LogChannel>(new LogChannel(name));
-		channel->SetLevel(verbosity);
+		channel->Level(verbosity);
 		channels.push_back(std::move(channel));
 	}
 	
@@ -112,10 +112,10 @@ public:
 	
 		channels.erase(std::remove_if(std::begin(channels), std::end(channels),
 			[&name](std::unique_ptr<LogChannel> const& channel) {
-				return name == channel->GetName();
+				return name == channel->Name();
 		}), std::end(channels));
 	}
-		
+
 	LogChannel & GetDefault()
 	{
 		return defaultChannel;
@@ -185,21 +185,21 @@ LoggingLevel Log::GetVerbosity()
 {
 	auto& manager = LogManager::GetInstance();
 	auto& channel = manager.GetDefault();
-	return channel.GetLevel();
+	return channel.Level();
 }
 //-----------------------------------------------------------------------
 void Log::SetVerbosity(LoggingLevel verbosity)
 {
 	auto& manager = LogManager::GetInstance();
 	auto& channel = manager.GetDefault();
-	channel.SetLevel(verbosity);
+	channel.Level(verbosity);
 }
 //-----------------------------------------------------------------------
 LoggingLevel Log::GetVerbosity(std::string const& channelName)
 {
 	auto& manager = LogManager::GetInstance();
 	auto& channel = manager.FindChannel(channelName);
-	return channel.GetLevel();
+	return channel.Level();
 }
 //-----------------------------------------------------------------------
 void Log::SetVerbosity(std::string const& channelName, LoggingLevel verbosity)
@@ -207,7 +207,7 @@ void Log::SetVerbosity(std::string const& channelName, LoggingLevel verbosity)
 	auto& manager = LogManager::GetInstance();
 	if (manager.HasChannel(channelName)) {
 		auto& channel = manager.FindChannel(channelName);
-		channel.SetLevel(verbosity);
+		channel.Level(verbosity);
 	}
 }
 //-----------------------------------------------------------------------

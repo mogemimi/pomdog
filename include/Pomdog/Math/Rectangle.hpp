@@ -89,11 +89,11 @@ public:
 
 	///@~Japanese
 	/// @brief 矩形の左上隅の位置を取得します。
-	Point2D GetLocation() const;
+	Point2D Location() const;
 
 	///@~Japanese
 	/// @brief 矩形の左上隅の位置を設定します。
-	void SetLocation(Point2D const& position);
+	void Location(Point2D const& position);
 
 	///@~Japanese
 	/// @brief 矩形の位置をオフセット値で変更します。

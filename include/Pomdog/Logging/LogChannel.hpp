@@ -51,15 +51,15 @@ public:
 
 	///@~Japanese
 	/// @brief チャンネルを識別する名前を取得します。
-	std::string const& GetName() const;
+	std::string const& Name() const;
 
 	///@~Japanese
 	/// @brief ロギングの冗長レベルを取得します。
-	LoggingLevel GetLevel() const;
+	LoggingLevel Level() const;
 
 	///@~Japanese
 	/// @brief ロギングの冗長レベルを設定します。
-	void SetLevel(LoggingLevel threshold);
+	void Level(LoggingLevel threshold);
 
 private:
 	EventHandler eventHandler;
