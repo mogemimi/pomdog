@@ -1,18 +1,17 @@
-Open source software used in Pomdog
-===============================
+Open Source Software used in Pomdog
+-----------------------------------
 
-## iutest - iris unit test framework
-
-Project page:
+### iutest - iris unit test framework
 
 * [SourceForge](http://iutest.sourceforge.jp/)
-* [Github](https://github.com/srz-zumix/iutest)
+* [GitHub](https://github.com/srz-zumix/iutest)
 
-### License
+See accompanying file [third_party/iutest/LICENSE][license-iutest].
+[license-iutest]: iutest/LICENSE
 
->Copyright (c) 2011-2014, Takazumi-Shirayanagi,  
->All rights reserved.
->
->This software is released under the new(3-clause) BSD License.
+### zlib
 
-See accompanying file third_party/iutest/LICENSE.
+* [zlib Home Site](http://www.zlib.net/)
+
+See accompanying file [third_party/zlib/LICENSE][license-zlib].
+[license-zlib]: zlib/LICENSE
