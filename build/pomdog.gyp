@@ -331,6 +331,7 @@
       'product_name': 'pomdog', # libpomdog.a or libpomdog.lib
       'type': 'static_library',
       'dependencies': [
+        '../third_party/libpng/libpng.gyp:libpng_static',
       ],
       'include_dirs': [
         '../include',
@@ -378,6 +379,7 @@
       'mac_bundle': 1,
       'defines': ['POMDOG_BUILDING_LIBRARY_EXPORTS=1'],
       'dependencies': [
+        '../third_party/libpng/libpng.gyp:libpng_static',
       ],
       'include_dirs': [
         '../include',

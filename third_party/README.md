@@ -9,6 +9,15 @@ Open Source Software used in Pomdog
 See accompanying file [third_party/iutest/LICENSE][license-iutest].
 [license-iutest]: iutest/LICENSE
 
+### libpng
+
+* [libpng Home Page](http://www.libpng.org/pub/png/libpng.html)
+
+License:  
+See accompanying file [third_party/libpng/LICENSE][license-libpng].
+[license-libpng]: libpng/LICENSE
+
+
 ### zlib
 
 * [zlib Home Site](http://www.zlib.net/)
