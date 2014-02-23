@@ -19,44 +19,44 @@ MouseState const& CocoaMouse::State() const
 	return mouseState;
 }
 //-----------------------------------------------------------------------
-void CocoaMouse::SetPosition(Point2D const& position)
+void CocoaMouse::Position(Point2D const& position)
 {
 	mouseState.Position = position;
 }
 //-----------------------------------------------------------------------
-void CocoaMouse::SetScrollWheel(std::int32_t scrollWheel)
+void CocoaMouse::ScrollWheel(std::int32_t scrollWheel)
 {
 	//Log::Stream() << "ScrollWheel: " << scrollWheel;
 	mouseState.ScrollWheel = scrollWheel;
 }
 //-----------------------------------------------------------------------
-void CocoaMouse::SetLeftButton(ButtonState buttonState)
+void CocoaMouse::LeftButton(ButtonState buttonState)
 {
 	//Log::Stream() << "LeftButton" << ": "
 	//	<< (buttonState == ButtonState::Released ? "Released": "Pressed");
 	mouseState.LeftButton = buttonState;
 }
 //-----------------------------------------------------------------------
-void CocoaMouse::SetRightButton(ButtonState buttonState)
+void CocoaMouse::RightButton(ButtonState buttonState)
 {
 	//Log::Stream() << "RightButton" << ": "
 	//	<< (buttonState == ButtonState::Released ? "Released": "Pressed");
 	mouseState.RightButton = buttonState;
 }
 //-----------------------------------------------------------------------
-void CocoaMouse::SetMiddleButton(ButtonState buttonState)
+void CocoaMouse::MiddleButton(ButtonState buttonState)
 {
 	//Log::Stream() << "MiddleButton" << ": "
 	//	<< (buttonState == ButtonState::Released ? "Released": "Pressed");
 	mouseState.MiddleButton = buttonState;
 }
 //-----------------------------------------------------------------------
-void CocoaMouse::SetXButton1(ButtonState buttonState)
+void CocoaMouse::XButton1(ButtonState buttonState)
 {
 	mouseState.XButton1 = buttonState;
 }
 //-----------------------------------------------------------------------
-void CocoaMouse::SetXButton2(ButtonState buttonState)
+void CocoaMouse::XButton2(ButtonState buttonState)
 {
 	mouseState.XButton2 = buttonState;
 }

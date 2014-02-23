@@ -13,19 +13,21 @@
 #	pragma once
 #endif
 
+#include <cstddef>
+#include <type_traits>
 #include <typeinfo>
-#include "../../Config/FundamentalTypes.hpp"
+#include <utility>
 
 namespace Pomdog {
 namespace Details {
 
-template <class T>
+template <typename T>
 struct GameComponentTypeID
 {
 	static std::size_t const value;
 };
 
-template <class T>
+template <typename T>
 std::size_t const GameComponentTypeID<T>::value = typeid(T).hash_code();
 
 class GameComponent
@@ -37,8 +39,8 @@ public:
 
 	virtual ~GameComponent() = default;
 
-	GameComponent& operator=(GameComponent const&) = default;
-	GameComponent& operator=(GameComponent &&) = default;
+	GameComponent & operator=(GameComponent const&) = default;
+	GameComponent & operator=(GameComponent &&) = default;
 
 	virtual std::size_t GetHashCode() const = 0;
 };
@@ -47,13 +49,15 @@ template <class T>
 class IntrusiveComponent final: public GameComponent
 {
 public:
-	static_assert(std::is_class<T>::value || std::is_enum<T>::value, "T is class or enum");
+	static_assert(std::is_fundamental<T>::value ||
+		std::is_class<T>::value || std::is_enum<T>::value, "T is class or enum");
 	
 	IntrusiveComponent() = default;
 	~IntrusiveComponent() = default;
 	
-	explicit IntrusiveComponent(T const& source)
-		: data(source)
+	template <typename...Arguments>
+	explicit IntrusiveComponent(Arguments && ...arguments)
+		: value(std::forward<Arguments>(arguments)...)
 	{}
 
 	std::size_t GetHashCode() const override
@@ -61,18 +65,18 @@ public:
 		return GameComponentTypeID<T>::value;
 	}
 	
-	T const* Get() const
+	T const& Value() const
 	{
-		return &data;
+		return value;
 	}
 	
-	T* Get()
+	T & Value()
 	{
-		return &data;
+		return value;
 	}
 
 private:
-	T data;
+	T value;
 };
 
 }// namespace Details

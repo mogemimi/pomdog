@@ -48,7 +48,7 @@ using Pomdog::ButtonState;
 {
 	if (mouse_) {
 		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->SetPosition({locationInWindow.x, locationInWindow.y});
+		mouse_->Position({locationInWindow.x, locationInWindow.y});
 	}
 }
 //-----------------------------------------------------------------------
@@ -56,7 +56,7 @@ using Pomdog::ButtonState;
 {
 	if (mouse_) {
 		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->SetPosition({locationInWindow.x, locationInWindow.y});
+		mouse_->Position({locationInWindow.x, locationInWindow.y});
 	}
 }
 //-----------------------------------------------------------------------
@@ -64,35 +64,35 @@ using Pomdog::ButtonState;
 {
 	if (mouse_) {
 		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->SetPosition({locationInWindow.x, locationInWindow.y});
+		mouse_->Position({locationInWindow.x, locationInWindow.y});
 	}
 }
 //-----------------------------------------------------------------------
 -(void)mouseDown:(NSEvent *)theEvent
 {
 	if (mouse_) {
-		mouse_->SetLeftButton(ButtonState::Pressed);
+		mouse_->LeftButton(ButtonState::Pressed);
 	}
 }
 //-----------------------------------------------------------------------
 -(void)mouseUp:(NSEvent *)theEvent
 {
 	if (mouse_) {
-		mouse_->SetLeftButton(ButtonState::Released);
+		mouse_->LeftButton(ButtonState::Released);
 	}
 }
 //-----------------------------------------------------------------------
 -(void)rightMouseDown:(NSEvent *)theEvent
 {
 	if (mouse_) {
-		mouse_->SetRightButton(ButtonState::Pressed);
+		mouse_->RightButton(ButtonState::Pressed);
 	}
 }
 //-----------------------------------------------------------------------
 -(void)rightMouseUp:(NSEvent *)theEvent
 {
 	if (mouse_) {
-		mouse_->SetRightButton(ButtonState::Released);
+		mouse_->RightButton(ButtonState::Released);
 	}
 }
 //-----------------------------------------------------------------------
@@ -105,13 +105,13 @@ using Pomdog::ButtonState;
 	NSInteger buttonNumber = [theEvent buttonNumber];
 	
 	if (buttonNumber == 2) {
-		mouse_->SetMiddleButton(ButtonState::Pressed);
+		mouse_->MiddleButton(ButtonState::Pressed);
 	}
 	else if (buttonNumber == 3) {
-		mouse_->SetXButton1(ButtonState::Pressed);
+		mouse_->XButton1(ButtonState::Pressed);
 	}
 	else if (buttonNumber == 4) {
-		mouse_->SetXButton2(ButtonState::Pressed);
+		mouse_->XButton2(ButtonState::Pressed);
 	}
 }
 //-----------------------------------------------------------------------
@@ -124,20 +124,20 @@ using Pomdog::ButtonState;
 	NSInteger buttonNumber = [theEvent buttonNumber];
 	
 	if (buttonNumber == 2) {
-		mouse_->SetMiddleButton(ButtonState::Released);
+		mouse_->MiddleButton(ButtonState::Released);
 	}
 	else if (buttonNumber == 3) {
-		mouse_->SetXButton1(ButtonState::Released);
+		mouse_->XButton1(ButtonState::Released);
 	}
 	else if (buttonNumber == 4) {
-		mouse_->SetXButton2(ButtonState::Released);
+		mouse_->XButton2(ButtonState::Released);
 	}
 }
 //-----------------------------------------------------------------------
 -(void)scrollWheel:(NSEvent *)theEvent
 {
 	CGFloat scrollWheel = [theEvent scrollingDeltaY];
-	mouse_->SetScrollWheel(scrollWheel);
+	mouse_->ScrollWheel(scrollWheel);
 }
 //-----------------------------------------------------------------------
 @end

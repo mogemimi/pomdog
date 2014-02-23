@@ -44,14 +44,12 @@ public:
 	virtual void AllowPlayerResizing(bool allowResizing) = 0;
 
 	///@~Japanese
-	/// @brief 現在のキャプション（ウィンドウタイトル）を取得します。
-	/// @return 現在のキャプションを文字列として返却します。
-	virtual std::string Caption() const = 0;
+	/// @brief 現在のウィンドウタイトルをを文字列として取得します。
+	virtual std::string Title() const = 0;
 
 	///@~Japanese
-	/// @brief キャプション（ウィンドウタイトル）を設定します。
-	/// @param caption キャプションを指定します。
-	virtual void Caption(std::string const& caption) = 0;
+	/// @brief ウィンドウタイトルを設定します。
+	virtual void Title(std::string const& title) = 0;
 
 	///@~Japanese
 	/// @brief 現在のクライアント領域のサイズを取得します。

@@ -26,13 +26,13 @@ public:
 	///@copydoc Pomdog::Mouse
 	MouseState const& State() const override;
 	
-	void SetPosition(Point2D const& position);
-	void SetScrollWheel(std::int32_t scrollWheel);
-	void SetLeftButton(ButtonState buttonState);
-	void SetRightButton(ButtonState buttonState);
-	void SetMiddleButton(ButtonState buttonState);
-	void SetXButton1(ButtonState buttonState);
-	void SetXButton2(ButtonState buttonState);
+	void Position(Point2D const& position);
+	void ScrollWheel(std::int32_t scrollWheel);
+	void LeftButton(ButtonState buttonState);
+	void RightButton(ButtonState buttonState);
+	void MiddleButton(ButtonState buttonState);
+	void XButton1(ButtonState buttonState);
+	void XButton2(ButtonState buttonState);
 	
 private:
 	MouseState mouseState;

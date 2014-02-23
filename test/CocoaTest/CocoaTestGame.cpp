@@ -20,7 +20,7 @@ CocoaTestGame::CocoaTestGame(std::shared_ptr<GameHost> host)
 void CocoaTestGame::Initialize()
 {
 	auto window = gameHost->Window();
-	window->Caption("Cocoa Test Game");
+	window->Title("Cocoa Test Game");
 	window->AllowPlayerResizing(false);
 	
 	auto graphicsDevice = gameHost->GraphicsDevice();

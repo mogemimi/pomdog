@@ -83,15 +83,15 @@ void CocoaGameWindow::AllowPlayerResizing(bool allowResizing)
 	[nativeWindow setStyleMask:styleMask];
 }
 //-----------------------------------------------------------------------
-std::string CocoaGameWindow::Caption() const
+std::string CocoaGameWindow::Title() const
 {
-	std::string caption = [[nativeWindow title] UTF8String];
-	return std::move(caption);
+	std::string title = [[nativeWindow title] UTF8String];
+	return std::move(title);
 }
 //-----------------------------------------------------------------------
-void CocoaGameWindow::Caption(std::string const& caption)
+void CocoaGameWindow::Title(std::string const& title)
 {
-	[nativeWindow setTitle:[NSString stringWithUTF8String:caption.c_str()]];
+	[nativeWindow setTitle:[NSString stringWithUTF8String:title.c_str()]];
 }
 //-----------------------------------------------------------------------
 Rectangle CocoaGameWindow::ClientBounds() const

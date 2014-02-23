@@ -72,7 +72,7 @@ Point2D Rectangle::Center() const
 //-----------------------------------------------------------------------
 Point2D Rectangle::Location() const
 {
-	return Point2D(x, y);
+	return {x, y};
 }
 //-----------------------------------------------------------------------
 void Rectangle::Location(Point2D const& position)

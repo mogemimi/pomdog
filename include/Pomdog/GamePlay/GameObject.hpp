@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,9 +13,12 @@
 #	pragma once
 #endif
 
+#include <cstddef>
+#include <cstdint>
 #include <type_traits>
 #include <algorithm>
 #include <memory>
+#include <utility>
 #include <vector>
 #include "../Utility/Assert.hpp"
 #include "detail/GameComponent.hpp"
@@ -38,17 +41,17 @@ public:
 	
 	virtual ~GameObject() = default;
 
-	explicit GameObject(std::uint32_t instanceID);
+	explicit GameObject(std::uint64_t instanceID);
 
-	GameObject(std::uint32_t instanceID, std::size_t minimumCapacity);
+	GameObject(std::uint64_t instanceID, std::size_t minimumCapacity);
 
 	///@~Japanese
 	/// @brief インスタンス固有の値である 32 ビットの ID を取得します。
-	std::uint32_t GetInstanceID() const;
+	std::uint64_t InstanceID() const;
 
 	///@~Japanese
 	/// @brief コンポーネントを取得します。
-	template <class T>
+	template <typename T>
 	T const* Component() const
 	{
 		auto const iter = std::find_if(std::begin(components), std::end(components),
@@ -59,9 +62,9 @@ public:
 
 		if (iter != std::end(components)) {
 			POMDOG_ASSERT(*iter);
+			POMDOG_ASSERT(HasComponent<T>());
 			if (auto p = dynamic_cast<Details::IntrusiveComponent<T> const*>((*iter).get())) {
-				POMDOG_ASSERT(p->Get());
-				return p->Get();
+				return &(p->Value());
 			}
 		}
 
@@ -70,7 +73,7 @@ public:
 	
 	///@~Japanese
 	/// @brief コンポーネントを取得します。
-	template <class T>
+	template <typename T>
 	T* Component()
 	{
 		auto const iter = std::find_if(std::begin(components), std::end(components),
@@ -81,9 +84,9 @@ public:
 
 		if (iter != std::end(components)) {
 			POMDOG_ASSERT(*iter);
+			POMDOG_ASSERT(HasComponent<T>());
 			if (auto p = dynamic_cast<Details::IntrusiveComponent<T>*>((*iter).get())) {
-				POMDOG_ASSERT(p->Get());
-				return p->Get();
+				return &(p->Value());
 			}
 		}
 
@@ -92,7 +95,7 @@ public:
 	
 	///@~Japanese
 	/// @brief 指定されたコンポーネントを持っているかどうか取得します。
-	template <class T>
+	template <typename T>
 	bool HasComponent() const
 	{
 		auto const iter = std::find_if(std::begin(components), std::end(components),
@@ -100,25 +103,13 @@ public:
 				POMDOG_ASSERT(component);
 				return component->GetHashCode() == Details::GameComponentTypeID<T>::value;
 		});
-
-		POMDOG_ASSERT(([&]()->bool {
-			if (iter == std::end(components)) {
-				return true;
-			}
-			POMDOG_ASSERT(*iter);
-			if (auto p = dynamic_cast<Details::IntrusiveComponent<T> const*>((*iter).get())) {
-				POMDOG_ASSERT(p->Get());
-				return p->Get() != nullptr;
-			}
-			return false;
-		})());
 		return iter != std::end(components);
 	}
 
 	///@~Japanese
 	/// @brief コンポーネントを追加します。
-	template <class T>
-	void AddComponent()
+	template <typename T, typename...Arguments>
+	void AddComponent(Arguments && ...arguments)
 	{
 		POMDOG_ASSERT(std::end(components) == std::find_if(std::begin(components), std::end(components),
 			[](std::unique_ptr<Details::GameComponent> const& component) {
@@ -127,41 +118,27 @@ public:
 		}));
 
 		components.emplace_back(
-			std::unique_ptr<Details::GameComponent>(new Details::IntrusiveComponent<T>));
-	}
-
-	///@~Japanese
-	/// @brief コンポーネントを追加します。
-	template <class T>
-	void AddComponent(T const& source)
-	{
-		POMDOG_ASSERT(std::end(components) == std::find_if(std::begin(components), std::end(components),
-			[](std::unique_ptr<Details::GameComponent> const& component) {
-				POMDOG_ASSERT(component);
-				return component->GetHashCode() == Details::GameComponentTypeID<T>::value;
-		}));
-
-		components.emplace_back(
-			std::unique_ptr<Details::GameComponent>(new Details::IntrusiveComponent<T>(source)));
+			//std::make_unique<Details::IntrusiveComponent<T>>(
+			std::unique_ptr<Details::GameComponent>(new Details::IntrusiveComponent<T>(
+				std::forward<Arguments>(arguments)...
+			)));
 	}
 
 	///@~Japanese
 	/// @brief 指定されたコンポーネントを削除します。
-	template <class T>
+	template <typename T>
 	void RemoveComponent()
 	{
 		components.erase(std::remove_if(std::begin(components), std::end(components),
 			[](std::unique_ptr<Details::GameComponent> const& component) {
-				auto const hashCode = Details::GameComponentTypeID<T>::value;
-				
 				POMDOG_ASSERT(component);
-				return hashCode == component->GetHashCode();
+				return Details::GameComponentTypeID<T>::value == component->GetHashCode();
 			}), std::end(components));
 	}
 
 private:
 	std::vector<std::unique_ptr<Details::GameComponent>> components;
-	std::uint32_t instanceID;
+	std::uint64_t instanceID;
 };
 
 /// @}

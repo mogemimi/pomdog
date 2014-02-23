@@ -42,10 +42,10 @@ public:
 	void AllowPlayerResizing(bool allowResizing) override;
 
 	///@copydoc GameWindow
-	std::string Caption() const override;
+	std::string Title() const override;
 
 	///@copydoc GameWindow
-	void Caption(std::string const& caption) override;
+	void Title(std::string const& title) override;
 
 	///@copydoc GameWindow
 	Rectangle ClientBounds() const override;
