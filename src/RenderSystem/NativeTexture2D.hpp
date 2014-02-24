@@ -27,6 +27,9 @@ public:
 	NativeTexture2D & operator=(NativeTexture2D const&) = delete;
 
 	virtual ~NativeTexture2D() = default;
+	
+	virtual void SetData(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
+		std::uint32_t levelCount, SurfaceFormat format, void const* pixelData) = 0;
 };
 
 }// namespace RenderSystem

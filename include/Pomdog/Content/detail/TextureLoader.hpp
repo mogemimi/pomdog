@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -22,14 +22,11 @@ class Texture2D;
 
 namespace Details {
 
+// explicit instantiations
 template <>
-struct POMDOG_EXPORT AssetLoader<Texture2D>
-{
-	std::shared_ptr<Texture2D> operator()(AssetLoaderContext const& loaderContext)
-	{
-		///@todo Not implemented
-	}
-};
+std::shared_ptr<Texture2D> POMDOG_EXPORT
+AssetLoader<Texture2D>::operator()(AssetLoaderContext const& loaderContext,
+	std::string const& assetPath);
 
 }// namespace Details
 }// namespace Pomdog

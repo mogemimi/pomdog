@@ -45,6 +45,9 @@ public:
 	Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		std::uint32_t width, std::uint32_t height);
 
+	Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		std::uint32_t width, std::uint32_t height, std::uint32_t levelCount, SurfaceFormat format);
+
 	~Texture2D();
 	
 	Texture2D & operator=(Texture2D const&) = delete;
@@ -66,6 +69,10 @@ public:
 	///@~Japanese
 	/// @brief テクスチャのフォーマットを取得します。
 	SurfaceFormat Format() const;
+	
+	///@~Japanese
+	/// @brief ピクセルデータを格納します。
+	void SetData(std::uint8_t const* pixelData);
 
 public:
 	Details::RenderSystem::NativeTexture2D* NativeTexture2D();

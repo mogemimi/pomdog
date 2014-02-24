@@ -34,9 +34,9 @@ struct AssetLoader
 
 struct AssetLoaderContext
 {
-	std::string rootDirectory;
-	std::weak_ptr<GraphicsContext> graphicsContext;
-	std::weak_ptr<GraphicsDevice> graphicsDevice;
+	std::string RootDirectory;
+	std::weak_ptr<Pomdog::GraphicsContext> GraphicsContext;
+	std::weak_ptr<Pomdog::GraphicsDevice> GraphicsDevice;
 };
 
 }// namespace Details

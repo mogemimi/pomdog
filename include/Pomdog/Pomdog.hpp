@@ -29,6 +29,7 @@
 // Content
 #include "Content/AssetManager.hpp"
 #include "Content/detail/EffectLoader.hpp"
+#include "Content/detail/TextureLoader.hpp"
 
 // Event
 #include "Event/Event.hpp"

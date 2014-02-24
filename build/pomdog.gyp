@@ -25,11 +25,8 @@
     }],
   ],
   'target_defaults': {
-    #'dependencies': [
-    #],
     'include_dirs': [
       '../include',
-      '../third_party/boost/include',
     ],
     'msvs_settings':{
       'VCCLCompilerTool': {
@@ -224,6 +221,7 @@
       '../src/Application/SystemEventDispatcher.hpp',
       '../src/Content/AssetManager.cpp',
       '../src/Content/EffectLoader.cpp',
+      '../src/Content/TextureLoader.cpp',
       '../src/Graphics/BlendState.cpp',
       '../src/Graphics/DepthStencilState.cpp',
       '../src/Graphics/DynamicIndexBuffer.cpp',
@@ -383,6 +381,7 @@
       ],
       'include_dirs': [
         '../include',
+        '../third_party/libpng',
       ],
       'sources': [
         '<@(pomdog_library_testable_sources)',

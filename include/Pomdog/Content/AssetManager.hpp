@@ -41,7 +41,7 @@ public:
 	
 	std::string RootDirectory() const
 	{
-		return loaderContext.rootDirectory;
+		return loaderContext.RootDirectory;
 	}
 	
 private:

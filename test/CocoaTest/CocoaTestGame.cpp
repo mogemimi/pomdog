@@ -66,10 +66,19 @@ void CocoaTestGame::Initialize()
 			stream << " ByteSize: " << description.ByteSize << "\n";
 			stream << "Variables: " << description.Variables.size() << "\n";
 		}
-	}	
+	}
 //	{
-//		auto assets = gameHost->GetAssetManager();
-//		auto texture = assets->Load<Texture2D>("");
+//		auto texture = assets->Load<Texture2D>("Content/logo.png");
+//		
+//		if (texture) {
+//			Log::Stream()
+//				<< "PNG to Texture2D: OK" << "\n"
+//				<< "        Width: " << texture->Width() << "\n"
+//				<< "       Height: " << texture->Height() << "\n"
+//				<< "   LevelCount: " << texture->LevelCount() << "\n"
+//				<< "SurfaceFormat: " << static_cast<int>(texture->Format()) << "\n"
+//			;
+//		}
 //	}
 }
 //-----------------------------------------------------------------------

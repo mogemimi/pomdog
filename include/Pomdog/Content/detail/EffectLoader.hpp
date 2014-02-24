@@ -25,7 +25,8 @@ namespace Details {
 
 // explicit instantiations
 template <>
-std::shared_ptr<EffectPass> POMDOG_EXPORT AssetLoader<EffectPass>::operator()(AssetLoaderContext const& loaderContext,
+std::shared_ptr<EffectPass> POMDOG_EXPORT
+AssetLoader<EffectPass>::operator()(AssetLoaderContext const& loaderContext,
 	std::string const& assetPath);
 
 }// namespace Details

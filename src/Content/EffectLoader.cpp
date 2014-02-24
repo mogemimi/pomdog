@@ -19,16 +19,16 @@ namespace Pomdog {
 namespace Details {
 namespace {
 
-std::vector<std::uint8_t> ReadBinaryFile(std::string const& filename)
+static std::vector<std::uint8_t> ReadBinaryFile(std::string const& filename)
 {
-	std::ifstream is(filename, std::ios::binary);
+	std::ifstream stream(filename, std::ios::binary);
 	
-	is.seekg (0, is.end);
-	auto const length = is.tellg();
-	is.seekg (0, is.beg);
+	stream.seekg(0, stream.end);
+	auto const length = stream.tellg();
+	stream.seekg(0, stream.beg);
 	
 	std::vector<std::uint8_t> result(length, 0);
-	is.read(reinterpret_cast<char*>(result.data()), result.size());
+	stream.read(reinterpret_cast<char*>(result.data()), result.size());
 	return std::move(result);
 }
 
@@ -38,11 +38,11 @@ template <>
 std::shared_ptr<EffectPass> AssetLoader<EffectPass>::operator()(AssetLoaderContext const& loaderContext,
 	std::string const& assetPath)
 {
-	auto const vertexShader = ReadBinaryFile(loaderContext.rootDirectory + "/" + assetPath + "/VertexShader.glsl");
-	auto const pixelShader = ReadBinaryFile(loaderContext.rootDirectory + "/" + assetPath + "/PixelShader.glsl");
+	auto const vertexShader = ReadBinaryFile(loaderContext.RootDirectory + "/" + assetPath + "/VertexShader.glsl");
+	auto const pixelShader = ReadBinaryFile(loaderContext.RootDirectory + "/" + assetPath + "/PixelShader.glsl");
 
-	auto graphicsContext = loaderContext.graphicsContext.lock();
-	auto graphicsDevice = loaderContext.graphicsDevice.lock();
+	auto graphicsContext = loaderContext.GraphicsContext.lock();
+	auto graphicsDevice = loaderContext.GraphicsDevice.lock();
 	
 	if (!graphicsContext || !graphicsDevice) {
 		POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid graphics context or device.");

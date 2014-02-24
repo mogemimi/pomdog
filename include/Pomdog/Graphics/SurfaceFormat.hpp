@@ -31,10 +31,24 @@ enum class SurfaceFormat: std::uint8_t
 	///@~Japanese
 	/// @brief 8 bit アルファの符号なし整数フォーマット（Unsigned Normalized Intager）です。
 	A8_UNorm,
-
+	
+	///@~English
+	/// @brief 8-bit alpha only.
 	///@~Japanese
-	/// @brief 32 bit の浮動小数点フォーマットです。32 bit の赤のチャンネルのみ使用します。
-	R32_Float,
+	/// @brief 8 bit の符号なし整数フォーマット（Unsigned Normalized Intager）です。
+	R8_UNorm,
+	
+	///@~English
+	/// @remarks UNorm means "unsigned normalized" integer.
+	///@~Japanese
+	/// @brief 2 チャンネル、16 bit の符号なし整数フォーマットです。各チャンネルにそれぞれ 8 bit 使用します。
+	R8G8_UNorm,
+	
+	///@~English
+	/// @remarks UNorm means "unsigned normalized" integer.
+	///@~Japanese
+	/// @brief 3 チャンネル、24 bit の符号なし整数フォーマットです。各チャンネルにそれぞれ 8 bit 使用します。
+	R8G8B8_UNorm,
 
 	///@~English
 	/// @remarks UNorm means "unsigned normalized" integer.
@@ -43,22 +57,26 @@ enum class SurfaceFormat: std::uint8_t
 	R8G8B8A8_UNorm,
 
 	///@~Japanese
-	/// @brief 4 チャンネル、128 bit の浮動小数点フォーマットです。各チャンネルにそれぞれ 32 bit 使用します。
-	R32G32B32A32_Float,
-
-	///@~Japanese
 	/// @brief 0.0 ~ 1.0 の範囲を表す符号なし正規化値の 32 bit フォーマットです。RGB 各チャンネルにそれぞれ 10 bit, Alpha に 2 bit を使用します。
 	R10G10B10A2_UNorm,
-
-	///@~Japanese
-	/// @brief 2 成分の 32 bit 浮動小数点フォーマットです。1 成分にそれぞれ 16 bit 使用します。
-	R16G16_Float,
 
 	///@~English
 	/// @remarks UNorm means "unsigned normalized" integer.
 	///@~Japanese
 	/// @brief 4 チャンネル、32 bit の浮動小数点フォーマットです。各チャンネルにそれぞれ 8 bit 使います。
 	B8G8R8A8_UNorm,
+
+	///@~Japanese
+	/// @brief 32 bit の浮動小数点フォーマットです。32 bit の赤のチャンネルのみ使用します。
+	R32_Float,
+
+	///@~Japanese
+	/// @brief 4 チャンネル、128 bit の浮動小数点フォーマットです。各チャンネルにそれぞれ 32 bit 使用します。
+	R32G32B32A32_Float,
+
+	///@~Japanese
+	/// @brief 2 成分の 32 bit 浮動小数点フォーマットです。1 成分にそれぞれ 16 bit 使用します。
+	R16G16_Float,
 
 	///@~English
 	/// @remarks UNorm means "unsigned normalized" integer.
