@@ -57,19 +57,19 @@ public:
 	TaggedArithmetic & operator=(TaggedArithmetic const&) = default;
 	TaggedArithmetic & operator=(TaggedArithmetic &&) = default;
 
-	TaggedArithmetic& operator+=(TaggedArithmetic const& v)
+	TaggedArithmetic & operator+=(TaggedArithmetic const& v)
 	{
 		value += v.value;
 		return *this;
 	}
 
-	TaggedArithmetic& operator-=(TaggedArithmetic const& v)
+	TaggedArithmetic & operator-=(TaggedArithmetic const& v)
 	{
 		value -= v.value;
 		return *this;
 	}
 
-	TaggedArithmetic& operator*=(TaggedArithmetic const& v)
+	TaggedArithmetic & operator*=(TaggedArithmetic const& v)
 	{
 		value *= v.value;
 		return *this;

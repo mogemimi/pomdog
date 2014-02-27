@@ -55,9 +55,7 @@ CompileShader(ShaderBytecode const& source)
 	static_assert((std::is_same<Tag, Tags::VertexShaderTag>::value && (pipelineStage == GL_VERTEX_SHADER)) ||
 		(std::is_same<Tag, Tags::PixelShaderTag>::value && (pipelineStage == GL_FRAGMENT_SHADER)), "");
 
-	Tagged<GLuint, Tag> result{
-		glCreateShader(pipelineStage)
-	};
+	auto result = MakeTagged<GLuint, Tag>(glCreateShader(pipelineStage));
 
 	std::array<GLchar const*, 1> shaderSource = {{
 		reinterpret_cast<GLchar const*>(source.Code)

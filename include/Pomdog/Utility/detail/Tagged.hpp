@@ -69,6 +69,13 @@ public:
 	}
 };
 
+template <typename T, class Tag, class...Arguments>
+Tagged<T, Tag> MakeTagged(Arguments &&... arguments)
+{
+	static_assert(std::is_pod<T>::value, "You can only use plain-old-data types");
+	return Tagged<T, Tag>(std::forward<T>(arguments)...);
+}
+
 }// namespace Details
 }// namespace Pomdog
 
