@@ -30,7 +30,7 @@ static std::string MakeAssetFilePath(AssetLoaderContext const& loaderContext, st
 	POMDOG_ASSERT(!assetPath.empty());
 	return loaderContext.RootDirectory + "/" + assetPath;
 }
-
+//-----------------------------------------------------------------------
 namespace BinaryReader
 {
 	template <class Stream>
@@ -69,7 +69,7 @@ namespace BinaryReader
 		return *ReadArray<T>(stream, 1);
 	}
 }
-
+//-----------------------------------------------------------------------
 static bool IsPNGFormat(std::array<std::uint8_t, 8> const& signature)
 {
 	std::array<std::uint8_t, 8> const pngSignature {{
@@ -78,7 +78,7 @@ static bool IsPNGFormat(std::array<std::uint8_t, 8> const& signature)
 	return std::equal(std::begin(signature), std::end(signature),
 		std::begin(pngSignature));
 }
-
+//-----------------------------------------------------------------------
 struct ImageBinary
 {
 	std::uint8_t const* Data;
@@ -99,7 +99,7 @@ struct Texture2DParsingData
 	std::uint32_t Width;
 	SurfaceFormat Format;
 };
-
+//-----------------------------------------------------------------------
 static void ReadPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_size_t length)
 {
 	auto context = static_cast<PNGBinaryContext*>(::png_get_io_ptr(png_ptr));
@@ -112,7 +112,7 @@ static void ReadPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_s
 		png_error(png_ptr, "ReadPngCallback failed.");
 	}
 }
-
+//-----------------------------------------------------------------------
 static Texture2DParsingData ReadPNG(ImageBinary const& binary)
 {
 	auto pngPtr = ::png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -177,12 +177,13 @@ static Texture2DParsingData ReadPNG(ImageBinary const& binary)
 	
 	// Read PNG Image Data
 	auto const rowBytes = ::png_get_rowbytes(pngPtr, infoPtr);
-	std::vector<std::uint8_t> rowData(rowBytes * pixelHeight);
-	
+	std::vector<std::uint8_t> rowData(rowBytes * pixelHeight * sizeof(png_byte));
+
 	std::vector<::png_bytep> bytePointers(pixelHeight, nullptr);
 	
 	for (std::uint32_t index = 0; index < pixelHeight; ++index) {
-		bytePointers[index] = &rowData[index];
+		POMDOG_ASSERT(rowData.size() > rowBytes * index);
+		bytePointers[index] = &rowData[rowBytes * index];
 	}
 	
 	::png_read_image(pngPtr, bytePointers.data());
@@ -209,12 +210,12 @@ static Texture2DParsingData ReadPNG(ImageBinary const& binary)
 	})(colorType);
 	
 	parsingData.Binary = std::move(rowData);
-	
+
 	return std::move(parsingData);
 }
 
 }// unnamed namespace
-
+//-----------------------------------------------------------------------
 template <>
 std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(AssetLoaderContext const& loaderContext,
 	std::string const& assetPath)
@@ -254,6 +255,8 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(AssetLoaderContext
 		POMDOG_ASSERT(graphicsDevice);
 		
 		auto texture = std::make_shared<Texture2D>(graphicsDevice, parsingData.Width, parsingData.Height, 1, parsingData.Format);
+		
+		POMDOG_ASSERT(!parsingData.Binary.empty());
 		texture->SetData(parsingData.Binary.data());
 		return std::move(texture);
 	}
@@ -263,5 +266,6 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(AssetLoaderContext
 
 	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
 }
+//-----------------------------------------------------------------------
 }// namespace Details
 }// namespace Pomdog

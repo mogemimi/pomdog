@@ -67,4 +67,9 @@ void Texture2D::SetData(std::uint8_t const* pixelData)
 	nativeTexture2D->SetData(pixelWidth, pixelHeight, levelCount, format, pixelData);
 }
 //-----------------------------------------------------------------------
+Details::RenderSystem::NativeTexture2D* Texture2D::NativeTexture2D()
+{
+	return nativeTexture2D.get();
+}
+//-----------------------------------------------------------------------
 }// namespace Pomdog

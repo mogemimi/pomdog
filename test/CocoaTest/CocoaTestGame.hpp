@@ -35,6 +35,7 @@ private:
 	std::shared_ptr<IndexBuffer> indexBuffer;
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<InputLayout> inputLayout;
+	std::shared_ptr<Texture2D> texture;
 };
 
 }// namespace Pomdog

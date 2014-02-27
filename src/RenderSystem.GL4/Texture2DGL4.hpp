@@ -37,9 +37,11 @@ public:
 	void SetData(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
 		std::uint32_t levelCount, SurfaceFormat format, void const* pixelData) override;
 	
-	//std::vector<std::uint8_t> Data() const;
+	///@copydoc NativeTexture2D
+	void Apply(std::uint32_t index) override;
 	
-	void Apply(std::uint32_t index);
+	///@copydoc NativeTexture2D
+	void UnbindFromTextureUnit(std::uint32_t index) override;
 	
 private:
 	Optional<Texture2DObjectGL4> textureObject;

@@ -121,7 +121,7 @@ public:
 
 	///@~Japanese
 	/// @brief テクスチャサンプラーステートを設定します。
-	void SetSamplerState(std::size_t index, std::shared_ptr<SamplerState> const& samplerState);
+	void SetSamplerState(std::uint32_t index, std::shared_ptr<SamplerState> const& samplerState);
 
 	///@~Japanese
 	/// @brief 入力レイアウトを設定します。
@@ -134,6 +134,17 @@ public:
 	///@~Japanese
 	/// @brief 頂点バッファの配列を設定します。
 	void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers);
+
+	///@~Japanese
+	/// @brief グラフィックスコンテキストに設定されているテクスチャをテクスチャユニットから外します。
+	/// @param index 0 から始まるテクスチャスロットのインデックスを指定します。
+	void SetTexture(std::uint32_t index);
+
+	///@~Japanese
+	/// @brief 指定されたテクスチャスロットにテクスチャを設定します。
+	/// @param index 0 から始まるテクスチャスロットのインデックスを指定します。
+	/// @param texture テクスチャスロットにバインドするテクスチャ
+	void SetTexture(std::uint32_t index, std::shared_ptr<Texture2D> const& texture);
 
 public:
 	Details::RenderSystem::NativeGraphicsContext* NativeGraphicsContext();

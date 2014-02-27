@@ -30,7 +30,7 @@ public:
 	
 	///@~Japanese
 	/// @brief レンダリングの直前にサンプラーステートを適用します。
-	virtual void Apply(std::size_t index) = 0;
+	virtual void Apply(std::uint32_t index) = 0;
 };
 
 }// namespace RenderSystem

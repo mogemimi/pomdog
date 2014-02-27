@@ -72,6 +72,7 @@ void EffectPass::Apply()
 	POMDOG_ASSERT(!graphicsContext.expired());
 	if (auto sharedContext = graphicsContext.lock())
 	{
+		POMDOG_ASSERT(shared_from_this());
 		nativeEffectPass->Apply(*sharedContext, shared_from_this());
 	}
 }

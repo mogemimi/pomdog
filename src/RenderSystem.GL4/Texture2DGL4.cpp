@@ -289,9 +289,9 @@ Texture2DGL4::Texture2DGL4(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
 	POMDOG_ASSERT(pixelWidth > 0);
 	POMDOG_ASSERT(pixelHeight > 0);
 	POMDOG_ASSERT(levelCount >= 1);
+	POMDOG_ASSERT(levelCount <= std::numeric_limits<GLsizei>::max());
 	
-	GLsizei const mipmapLevel = (levelCount - 1);
-	glTexStorage2D(GL_TEXTURE_2D, mipmapLevel, ToInternalFormatGL4(format), pixelWidth, pixelHeight);
+	glTexStorage2D(GL_TEXTURE_2D, levelCount, ToInternalFormatGL4(format), pixelWidth, pixelHeight);
 	
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glTexStorage2D", __FILE__, __LINE__);
@@ -341,7 +341,7 @@ void Texture2DGL4::SetData(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
 //-----------------------------------------------------------------------
 void Texture2DGL4::Apply(std::uint32_t index)
 {
-	#ifdef DEBUG
+	#if defined(DEBUG) && !defined(NDEBUG)
 	{
 		static std::uint32_t const maxCombinedTextureImageUnits = ([]{
 			GLint maxCombinedTextureImageUnits = 0;
@@ -363,6 +363,21 @@ void Texture2DGL4::Apply(std::uint32_t index)
 	POMDOG_ASSERT(textureObject);
 	glBindTexture(GL_TEXTURE_2D, textureObject->value);
 
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glBindTexture", __FILE__, __LINE__);
+	#endif
+}
+//-----------------------------------------------------------------------
+void Texture2DGL4::UnbindFromTextureUnit(std::uint32_t index)
+{
+	glActiveTexture(ToTextureUnitIndexGL4(index));
+
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glActiveTexture", __FILE__, __LINE__);
+	#endif
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindTexture", __FILE__, __LINE__);
 	#endif

@@ -170,8 +170,9 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 	
 	// Create default constant buffers:
 	EffectReflectionGL4 shaderReflection(*shaderProgram);
-	auto uniformBlocks = shaderReflection.GetNativeUniformBlocks();
 	{
+		auto uniformBlocks = shaderReflection.GetNativeUniformBlocks();
+	
 		std::uint32_t slotIndex = 0;
 		for (auto & uniformBlock: uniformBlocks) {
 			ConstantBufferBindingGL4 binding;
@@ -181,6 +182,43 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 			
 			glUniformBlockBinding(shaderProgram->value, uniformBlock.BlockIndex, binding.SlotIndex);
 			constantBufferBindings.push_back(std::move(binding));
+			++slotIndex;
+		}
+	}
+	{
+		auto uniforms = shaderReflection.GetNativeUniforms();
+
+		std::uint32_t slotIndex = 0;
+		for (auto & uniform: uniforms)
+		{
+			switch (uniform.Type)
+			{
+			case GL_SAMPLER_1D:
+			case GL_SAMPLER_2D:
+			case GL_SAMPLER_3D:
+			case GL_SAMPLER_CUBE:
+			case GL_SAMPLER_1D_SHADOW:
+			case GL_SAMPLER_2D_SHADOW:
+			case GL_SAMPLER_1D_ARRAY:
+			case GL_SAMPLER_2D_ARRAY:
+			case GL_SAMPLER_1D_ARRAY_SHADOW:
+			case GL_SAMPLER_2D_ARRAY_SHADOW:
+			case GL_SAMPLER_2D_MULTISAMPLE:
+			case GL_SAMPLER_2D_MULTISAMPLE_ARRAY:
+			case GL_SAMPLER_CUBE_SHADOW:
+			case GL_SAMPLER_BUFFER:
+			case GL_SAMPLER_2D_RECT:
+			case GL_SAMPLER_2D_RECT_SHADOW:
+				break;
+			default:
+				continue;
+				break;
+			}
+			
+			TextureBindingGL4 binding;
+			binding.UniformLocation = uniform.Location;
+			binding.SlotIndex = slotIndex;
+			textureBindings.push_back(binding);
 			++slotIndex;
 		}
 	}
@@ -252,6 +290,15 @@ void EffectPassGL4::ApplyShaders()
 		if (binding.ConstantBuffer) {
 			binding.ConstantBuffer->Apply(binding.SlotIndex);
 		}
+	}
+	
+	for (auto & binding: textureBindings)
+	{
+		glUniform1i(binding.UniformLocation, binding.SlotIndex);
+		
+		#ifdef DEBUG
+		ErrorChecker::CheckError("glUniform1i", __FILE__, __LINE__);
+		#endif
 	}
 }
 //-----------------------------------------------------------------------

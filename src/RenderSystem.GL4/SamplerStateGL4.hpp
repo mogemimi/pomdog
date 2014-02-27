@@ -36,7 +36,7 @@ public:
 	~SamplerStateGL4() override;
 	
 	///@copydoc NativeSamplerState
-	void Apply(std::size_t index) override;
+	void Apply(std::uint32_t index) override;
 	
 private:
 	Optional<SamplerObjectGL4> samplerObject;

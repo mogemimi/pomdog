@@ -44,6 +44,14 @@ struct UniformBlockGL4
 	std::uint32_t BlockIndex;
 };
 
+struct UniformGL4
+{
+	std::string Name;
+	GLint Location;
+	GLenum Type;
+	GLuint ArrayCount;
+};
+
 class EffectReflectionGL4: public NativeEffectReflection
 {
 public:
@@ -55,6 +63,8 @@ public:
 	std::vector<EffectConstantDescription> GetConstantBuffers() const override;
 
 	std::vector<UniformBlockGL4> GetNativeUniformBlocks();
+	
+	std::vector<UniformGL4> GetNativeUniforms();
 	
 private:
 	ShaderProgramGL4 shaderProgram;

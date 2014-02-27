@@ -37,6 +37,12 @@ struct ConstantBufferBindingGL4
 	std::uint32_t SlotIndex;
 };
 
+struct TextureBindingGL4
+{
+	GLint UniformLocation;
+	std::uint32_t SlotIndex;
+};
+
 class EffectPassGL4 final: public NativeEffectPass
 {
 public:
@@ -59,6 +65,7 @@ public:
 	
 private:
 	std::vector<ConstantBufferBindingGL4> constantBufferBindings;
+	std::vector<TextureBindingGL4> textureBindings;
 	Optional<ShaderProgramGL4> shaderProgram;
 };
 

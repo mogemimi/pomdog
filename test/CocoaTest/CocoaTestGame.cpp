@@ -67,19 +67,21 @@ void CocoaTestGame::Initialize()
 			stream << "Variables: " << description.Variables.size() << "\n";
 		}
 	}
-//	{
-//		auto texture = assets->Load<Texture2D>("Content/logo.png");
-//		
-//		if (texture) {
-//			Log::Stream()
-//				<< "PNG to Texture2D: OK" << "\n"
-//				<< "        Width: " << texture->Width() << "\n"
-//				<< "       Height: " << texture->Height() << "\n"
-//				<< "   LevelCount: " << texture->LevelCount() << "\n"
-//				<< "SurfaceFormat: " << static_cast<int>(texture->Format()) << "\n"
-//			;
-//		}
-//	}
+	{
+		auto sampler = SamplerState::CreatePointClamp(graphicsDevice);
+		graphicsContext->SetSamplerState(0, sampler);
+		
+		texture = assets->Load<Texture2D>("Content/pomdog.png");
+		
+		if (texture) {
+			Log::Stream()
+				<< "PNG to Texture2D: OK" << "\n"
+				<< "        Width: " << texture->Width() << "\n"
+				<< "       Height: " << texture->Height() << "\n"
+				<< "   LevelCount: " << texture->LevelCount() << "\n"
+				<< "SurfaceFormat: " << static_cast<int>(texture->Format()) << "\n";
+		}
+	}
 }
 //-----------------------------------------------------------------------
 void CocoaTestGame::Update()
@@ -105,6 +107,7 @@ void CocoaTestGame::Draw()
 {
 	graphicsContext->Clear(Color::CornflowerBlue);
 	
+	graphicsContext->SetTexture(0, texture);
 	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffer(vertexBuffer);
 	effectPass->Apply();
