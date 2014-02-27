@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -11,6 +11,7 @@
 #include <Pomdog/GamePlay/GameObject.hpp>
 
 using Pomdog::GameObject;
+using Pomdog::GameObjectID;
 
 struct TransformInteger
 {
@@ -83,4 +84,13 @@ TEST(GameObject, RemoveComponent)
 	gameObject.RemoveComponent<TransformInteger>();
 	EXPECT_FALSE(gameObject.HasComponent<TransformInteger>());
 	EXPECT_EQ(nullptr, gameObject.Component<TransformInteger>());
+}
+
+TEST(GameObject, GameObjectID)
+{
+	GameObjectID const gameObjectID { 42 };
+	GameObject gameObject { gameObjectID };
+	
+	EXPECT_EQ(gameObjectID, gameObject.ID());
+	EXPECT_EQ(42, gameObject.ID().value);
 }

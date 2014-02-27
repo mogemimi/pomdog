@@ -22,6 +22,7 @@
 #include <vector>
 #include "../Utility/Assert.hpp"
 #include "detail/GameComponent.hpp"
+#include "GameObjectID.hpp"
 
 namespace Pomdog {
 
@@ -41,13 +42,15 @@ public:
 	
 	virtual ~GameObject() = default;
 
-	explicit GameObject(std::uint64_t instanceID);
+	explicit GameObject(GameObjectID const& instanceID);
+	explicit GameObject(GameObjectID && instanceID);
 
-	GameObject(std::uint64_t instanceID, std::size_t minimumCapacity);
+	GameObject(GameObjectID const& instanceID, std::size_t minimumCapacity);
+	GameObject(GameObjectID && instanceID, std::size_t minimumCapacity);
 
 	///@~Japanese
 	/// @brief インスタンス固有の値である 32 ビットの ID を取得します。
-	std::uint64_t InstanceID() const;
+	GameObjectID const& ID() const;
 
 	///@~Japanese
 	/// @brief コンポーネントを取得します。
@@ -138,7 +141,7 @@ public:
 
 private:
 	std::vector<std::unique_ptr<Details::GameComponent>> components;
-	std::uint64_t instanceID;
+	GameObjectID instanceID;
 };
 
 /// @}

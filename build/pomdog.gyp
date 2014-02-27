@@ -79,6 +79,7 @@
       '../include/Pomdog/Event/detail/ForwardDeclarations.hpp',
       '../include/Pomdog/Event/detail/Signal.hpp',
       '../include/Pomdog/GamePlay/GameObject.hpp',
+      '../include/Pomdog/GamePlay/GameObjectID.hpp',
       '../include/Pomdog/GamePlay/detail/GameComponent.hpp',
       '../include/Pomdog/Graphics/Blend.hpp',
       '../include/Pomdog/Graphics/BlendDescription.hpp',
