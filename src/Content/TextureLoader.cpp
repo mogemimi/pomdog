@@ -12,14 +12,11 @@
 #include <vector>
 #include <algorithm>
 #include <utility>
-extern "C" {
-	#include <png.h>
-}
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Utility/Exception.hpp>
-#include <Pomdog/Graphics/Texture2D.hpp>
-#include <Pomdog/Graphics/SurfaceFormat.hpp>
-#include "../Utility/ScopeGuard.hpp"
+#include "Utility/MakeFourCC.hpp"
+#include "Utility/DDSTextureReader.hpp"
+#include "Utility/PNGTextureReader.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -79,139 +76,11 @@ static bool IsPNGFormat(std::array<std::uint8_t, 8> const& signature)
 		std::begin(pngSignature));
 }
 //-----------------------------------------------------------------------
-struct ImageBinary
+static bool IsDDSFormat(std::array<std::uint8_t, 8> const& signature)
 {
-	std::uint8_t const* Data;
-	std::size_t ByteLength;
-};
-
-struct PNGBinaryContext
-{
-	std::uint8_t const* Data;
-	std::size_t ByteLength;
-	std::size_t Offset;
-};
-
-struct Texture2DParsingData
-{
-	std::vector<std::uint8_t> Binary;
-	std::uint32_t Height;
-	std::uint32_t Width;
-	SurfaceFormat Format;
-};
-//-----------------------------------------------------------------------
-static void ReadPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_size_t length)
-{
-	auto context = static_cast<PNGBinaryContext*>(::png_get_io_ptr(png_ptr));
-
-	if ((context->Offset + length) <= context->ByteLength) {
-		std::memcpy(data, context->Data + context->Offset, length);
-		context->Offset += length;
-	}
-	else {
-		png_error(png_ptr, "ReadPngCallback failed.");
-	}
-}
-//-----------------------------------------------------------------------
-static Texture2DParsingData ReadPNG(ImageBinary const& binary)
-{
-	auto pngPtr = ::png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-	if (nullptr == pngPtr) {
-		POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
-	}
-	
-	ScopeGuard scopedDestroyReadStruct([&] {
-		if (nullptr != pngPtr) {
-			::png_destroy_read_struct(&pngPtr, nullptr, nullptr);
-		}
-	});
-	
-	auto infoPtr = ::png_create_info_struct(pngPtr);
-	if (nullptr == infoPtr) {
-		POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
-	}
-	
-	PNGBinaryContext context;
-	context.Data = binary.Data;
-	context.ByteLength = binary.ByteLength;
-	context.Offset = 0;
-	::png_set_read_fn(pngPtr, &context, ReadPNGDataCallback);
-	
-	constexpr auto pngSignatureByteLength = sizeof(std::uint8_t) * 8;
-	::png_set_sig_bytes(pngPtr, pngSignatureByteLength);
-	
-	// Read PNG Header
-	::png_read_info(pngPtr, infoPtr);
-	auto const originalColorType = ::png_get_color_type(pngPtr, infoPtr);
-	auto const originalBitDepth = ::png_get_bit_depth(pngPtr, infoPtr);
-	
-	// Settings
-	if ((PNG_COLOR_TYPE_GRAY == originalColorType) && (originalBitDepth < 8)) {
-		::png_set_expand_gray_1_2_4_to_8(pngPtr);
-	}
-	else if (originalBitDepth < 8) {
-		::png_set_packing(pngPtr);
-	}
-	else if (originalBitDepth == 16) {
-		::png_set_strip_16(pngPtr);
-	}
-	
-	if (PNG_COLOR_TYPE_PALETTE == originalColorType) {
-		::png_set_palette_to_rgb(pngPtr);
-	}
-	
-	if (::png_get_valid(pngPtr, infoPtr, PNG_INFO_tRNS)) {
-		::png_set_tRNS_to_alpha(pngPtr);
-	}
-	
-	::png_read_update_info(pngPtr, infoPtr);
-	
-	// Texture2D Info
-	auto const pixelWidth = ::png_get_image_width(pngPtr, infoPtr);
-	auto const pixelHeight = ::png_get_image_height(pngPtr, infoPtr);
-	auto const colorType = ::png_get_color_type(pngPtr, infoPtr);
-	//auto const bitDepth = ::png_get_bit_depth(pngPtr, infoPtr);
-	
-	POMDOG_ASSERT(pixelWidth > 0);
-	POMDOG_ASSERT(pixelHeight > 0);
-	
-	// Read PNG Image Data
-	auto const rowBytes = ::png_get_rowbytes(pngPtr, infoPtr);
-	std::vector<std::uint8_t> rowData(rowBytes * pixelHeight * sizeof(png_byte));
-
-	std::vector<::png_bytep> bytePointers(pixelHeight, nullptr);
-	
-	for (std::uint32_t index = 0; index < pixelHeight; ++index) {
-		POMDOG_ASSERT(rowData.size() > rowBytes * index);
-		bytePointers[index] = &rowData[rowBytes * index];
-	}
-	
-	::png_read_image(pngPtr, bytePointers.data());
-	::png_read_end(pngPtr, nullptr);
-	
-	Texture2DParsingData parsingData;
-	parsingData.Width = pixelWidth;
-	parsingData.Height = pixelHeight;
-	parsingData.Format = ([](::png_byte colorType)->SurfaceFormat{
-		switch (colorType) {
-		case PNG_COLOR_TYPE_GRAY:
-			return SurfaceFormat::R8_UNorm;
-		case PNG_COLOR_TYPE_GRAY_ALPHA:
-			return SurfaceFormat::R8G8_UNorm;
-		case PNG_COLOR_TYPE_RGB:
-			return SurfaceFormat::R8G8B8_UNorm;
-		case PNG_COLOR_TYPE_RGB_ALPHA:
-			return SurfaceFormat::R8G8B8A8_UNorm;
-		default:
-			POMDOG_ASSERT(colorType != PNG_COLOR_TYPE_PALETTE);
-			break;
-		}
-		return SurfaceFormat::A8_UNorm;
-	})(colorType);
-	
-	parsingData.Binary = std::move(rowData);
-
-	return std::move(parsingData);
+	constexpr auto fourCC = MakeFourCC('D','D','S',' ');
+	static_assert(fourCC == 0x20534444, "The four character code value is 'DDS '");
+	return (MakeFourCC(signature[0], signature[1], signature[2], signature[3]) == fourCC);
 }
 
 }// unnamed namespace
@@ -227,10 +96,8 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(AssetLoaderContext
 		POMDOG_THROW_EXCEPTION(std::invalid_argument, "Cannot open file: " + filePath);
 	}
 	
-	constexpr auto SignatureLength = sizeof(std::uint8_t) * 8;
-	
 	auto const fileSize = BinaryReader::GetBinarySize(stream);
-	if (fileSize < SignatureLength) {
+	if (fileSize < (sizeof(std::uint8_t) * 8)) {
 		POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
 	}
 
@@ -239,29 +106,37 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(AssetLoaderContext
 		POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
 	}
 	
-	if (IsPNGFormat(signature)) {
+	if (IsPNGFormat(signature))
+	{
+		constexpr auto SignatureLength = sizeof(std::uint8_t) * 8;
+	
 		POMDOG_ASSERT(stream.tellg() == SignatureLength);
 		
-		std::vector<std::uint8_t> bufferWithoutSignature(fileSize - SignatureLength);
-		stream.read(reinterpret_cast<char*>(bufferWithoutSignature.data()), bufferWithoutSignature.size());
-		
-		ImageBinary binary;
-		binary.Data = bufferWithoutSignature.data();
-		binary.ByteLength = bufferWithoutSignature.size();
-		
-		auto parsingData = ReadPNG(binary);
+		std::vector<std::uint8_t> binaryWithoutSignature(fileSize - SignatureLength);
+		stream.read(reinterpret_cast<char*>(binaryWithoutSignature.data()), binaryWithoutSignature.size());
 		
 		auto graphicsDevice = loaderContext.GraphicsDevice.lock();
 		POMDOG_ASSERT(graphicsDevice);
 		
-		auto texture = std::make_shared<Texture2D>(graphicsDevice, parsingData.Width, parsingData.Height, 1, parsingData.Format);
-		
-		POMDOG_ASSERT(!parsingData.Binary.empty());
-		texture->SetData(parsingData.Binary.data());
-		return std::move(texture);
+		return PNGTextureReader::Read(graphicsDevice, binaryWithoutSignature.data(), binaryWithoutSignature.size());
 	}
-	else {
-		POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
+	else if (IsDDSFormat(signature))
+	{
+		constexpr auto FourCCLength = sizeof(std::uint8_t) * 4;
+		
+		stream.seekg(FourCCLength, stream.beg);
+		
+		std::vector<std::uint8_t> binaryWithoutFourCC(fileSize - FourCCLength);
+		stream.read(reinterpret_cast<char*>(binaryWithoutFourCC.data()), binaryWithoutFourCC.size());
+		
+		auto graphicsDevice = loaderContext.GraphicsDevice.lock();
+		POMDOG_ASSERT(graphicsDevice);
+		
+		return DDSTextureReader::Read(graphicsDevice, binaryWithoutFourCC.data(), binaryWithoutFourCC.size());
+	}
+	else
+	{
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid/unsupported texture format.");
 	}
 
 	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");

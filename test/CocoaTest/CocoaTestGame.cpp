@@ -70,7 +70,7 @@ void CocoaTestGame::Initialize()
 	{
 		auto sampler = SamplerState::CreatePointClamp(graphicsDevice);
 		graphicsContext->SetSamplerState(0, sampler);
-		
+
 		texture = assets->Load<Texture2D>("Content/pomdog.png");
 		
 		if (texture) {
