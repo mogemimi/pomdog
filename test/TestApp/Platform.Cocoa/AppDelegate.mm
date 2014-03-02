@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #include <Pomdog/Pomdog.hpp>
 #include <Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp>
-#include "CocoaTestGame.hpp"
+#include "../TestAppGame.hpp"
 
 using Pomdog::Log;
 using Pomdog::LogEntry;
@@ -47,7 +47,7 @@ using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 
 - (void)runGame
 {
-	bootstrapper.Run<Pomdog::CocoaTestGame>([self window]);
+	bootstrapper.Run<TestApp::TestAppGame>([self window]);
 }
 
 @end

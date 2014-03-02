@@ -1,5 +1,5 @@
 # Examples:
-# gyp build/unit_tests.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
+# gyp build/unittest.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
 {
   'includes': ['common.gypi'],
   'make_global_settings': [
@@ -9,7 +9,6 @@
   'target_defaults': {
     'include_dirs': [
       '../include',
-      '../third_party/boost/include',
     ],
     'configurations': {
       'Debug': {
@@ -35,8 +34,8 @@
   },
   'targets': [
     {
-      'target_name': 'unit_tests',
-      'product_name': 'unit_tests',
+      'target_name': 'unittest',
+      'product_name': 'unittest',
       'type': 'executable',
       'dependencies': [
         'pomdog.gyp:pomdog-testable',

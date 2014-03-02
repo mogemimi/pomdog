@@ -57,16 +57,22 @@ python setup.py install
 **1. Generating the Xcode project file**
 
 ```bash
-gyp build/cocoa_test.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
+gyp build/TestApp.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
 ```
 
 **2. Building (Release/Debug)**
 
 ```
-xcodebuild -project build.xcodefiles/build/cocoa_test.xcodeproj
+xcodebuild -project build.xcodefiles/build/TestApp.xcodeproj
 ```
 
 To build in release mode, use `-configuration` option:  
 ```bash
-xcodebuild -project build.xcodefiles/build/test_app.xcodeproj -configuration Release
+xcodebuild -project build.xcodefiles/build/TestApp.xcodeproj -configuration Release
+```
+
+**3. Running app**
+
+```bash
+open build/build/Release/TestApp.app
 ```

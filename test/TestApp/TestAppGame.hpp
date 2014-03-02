@@ -15,12 +15,14 @@
 
 #include <Pomdog/Pomdog.hpp>
 
-namespace Pomdog {
+namespace TestApp {
 
-class CocoaTestGame: public Game
+using namespace Pomdog;
+
+class TestAppGame: public Game
 {
 public:
-	explicit CocoaTestGame(std::shared_ptr<GameHost> host);
+	explicit TestAppGame(std::shared_ptr<GameHost> const& host);
 
 	void Initialize();
 	
@@ -39,6 +41,6 @@ private:
 	std::shared_ptr<RenderTarget2D> renderTarget;
 };
 
-}// namespace Pomdog
+}// namespace TestApp
 
 #endif // !defined(POMDOG_COCOATESTGAME_HPP)

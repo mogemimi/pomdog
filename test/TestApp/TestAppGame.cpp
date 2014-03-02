@@ -6,21 +6,22 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "CocoaTestGame.hpp"
+#include "TestAppGame.hpp"
 #include <utility>
 
-namespace Pomdog {
+namespace TestApp {
 //-----------------------------------------------------------------------
-CocoaTestGame::CocoaTestGame(std::shared_ptr<GameHost> host)
-	: gameHost(std::move(host))
+TestAppGame::TestAppGame(std::shared_ptr<GameHost> const& gameHostIn)
+	: gameHost(gameHostIn)
 {
+	POMDOG_ASSERT(gameHostIn);
 	graphicsContext = gameHost->GraphicsContext();
 }
 //-----------------------------------------------------------------------
-void CocoaTestGame::Initialize()
+void TestAppGame::Initialize()
 {
 	auto window = gameHost->Window();
-	window->Title("Cocoa Test Game");
+	window->Title("TestApp - Enjoy Game Dev, Have Fun.");
 	window->AllowPlayerResizing(false);
 	
 	auto graphicsDevice = gameHost->GraphicsDevice();
@@ -88,7 +89,7 @@ void CocoaTestGame::Initialize()
 	}
 }
 //-----------------------------------------------------------------------
-void CocoaTestGame::Update()
+void TestAppGame::Update()
 {
 	static float value = 0.0f;
 	value += 0.008f;
@@ -107,12 +108,10 @@ void CocoaTestGame::Update()
 	auto vector2 = parameter->GetValue<Vector2>();
 }
 //-----------------------------------------------------------------------
-void CocoaTestGame::Draw()
+void TestAppGame::Draw()
 {
 	graphicsContext->Clear(Color::CornflowerBlue);
 	
-	graphicsContext->SetTexture(0, texture);
-	graphicsContext->SetTexture(0);
 	graphicsContext->SetTexture(0, texture);
 	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffer(vertexBuffer);
@@ -122,4 +121,4 @@ void CocoaTestGame::Draw()
 	graphicsContext->Present();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+}// namespace TestApp

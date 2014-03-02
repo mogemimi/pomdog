@@ -1,8 +1,8 @@
 # Examples(Xcode):
-# gyp build/cocoa_test.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
+# gyp build/TestApp.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
 #
 # Examples(MSVS 2013):
-# gyp build/cocoa_test.gyp --depth=. -f msvs -G msvs_version=2013 --generator-output=./build.msvc/
+# gyp build/TestApp.gyp --depth=. -f msvs -G msvs_version=2013 --generator-output=./build.msvc/
 
 {
   'includes': ['common.gypi'],
@@ -38,14 +38,16 @@
   },
   'targets': [
     {
-      'target_name': 'cocoa_test',
-      'product_name': 'CocoaTest',
+      'target_name': 'testapp',
+      'product_name': 'TestApp',
       'type': 'executable',
       'mac_bundle': 1,
       'include_dirs': [
         '../include',
       ],
       'sources': [
+        '../test/TestApp/TestAppGame.cpp',
+        '../test/TestApp/TestAppGame.hpp',
       ],
       'conditions': [
         ['component == "shared_library"', {
@@ -66,12 +68,10 @@
         }], # OS == "win"
         ['OS == "mac"', {
           'sources': [
-            '../test/CocoaTest/main.mm',
-            '../test/CocoaTest/CocoaTest-Prefix.pch',
-            '../test/CocoaTest/AppDelegate.h',
-            '../test/CocoaTest/AppDelegate.mm',
-            '../test/CocoaTest/CocoaTestGame.cpp',
-            '../test/CocoaTest/CocoaTestGame.hpp',
+            '../test/TestApp/Platform.Cocoa/main.mm',
+            '../test/TestApp/Platform.Cocoa/TestApp-Prefix.pch',
+            '../test/TestApp/Platform.Cocoa/AppDelegate.h',
+            '../test/TestApp/Platform.Cocoa/AppDelegate.mm',
           ],
           'link_settings': {
             'libraries': [
@@ -82,13 +82,13 @@
         }], # OS == "mac"
       ],
       'mac_bundle_resources': [
-        '../test/CocoaTest/Base.lproj/MainMenu.xib',
-        '../test/CocoaTest/English.lproj/InfoPlist.strings',
-        '../test/CocoaTest/Content/',
-        #'../test/CocoaTest/Images.xcassets/',
+        '../test/TestApp/Content/',
+        '../test/TestApp/Platform.Cocoa/Base.lproj/MainMenu.xib',
+        '../test/TestApp/Platform.Cocoa/English.lproj/InfoPlist.strings',
+        #'../test/TestApp/Platform.Cocoa/Images.xcassets/',
       ],
       'xcode_settings': {
-        'INFOPLIST_FILE': '../test/CocoaTest/CocoaTest-Info.plist',
+        'INFOPLIST_FILE': '../test/TestApp/Platform.Cocoa/TestApp-Info.plist',
         'CLANG_ENABLE_OBJC_ARC': 'YES',
       },
     },

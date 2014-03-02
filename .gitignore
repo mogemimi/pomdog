@@ -20,6 +20,8 @@
 /build/Debug
 /build/Release
 /build/lib/
+/third-party/libpng/build
+/third-party/zlib/build
 /tools/gyp
 /tools/python
 

@@ -28,6 +28,7 @@ See accompanying file [third_party/libpng/LICENSE][license-libpng].
 **Project page**
 
 * [zlib Home Site](http://www.zlib.net/)
+* [GitHub](https://github.com/madler/zlib)
 
 **License**  
 See accompanying file [third_party/zlib/LICENSE][license-zlib].
