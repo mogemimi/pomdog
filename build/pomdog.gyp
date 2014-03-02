@@ -338,13 +338,14 @@
     },
     {
       'target_name': 'pomdog-static',
-      'product_name': 'pomdog', # libpomdog.a or libpomdog.lib
+      'product_name': 'pomdog',
       'type': 'static_library',
       'dependencies': [
         '../third_party/libpng/libpng.gyp:libpng_static',
       ],
       'include_dirs': [
         '../include',
+        '../third_party/libpng',
       ],
       'sources': [
         '<@(pomdog_library_testable_sources)',

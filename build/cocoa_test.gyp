@@ -13,7 +13,6 @@
   'target_defaults': {
     'include_dirs': [
       '../include',
-      '../third_party/boost/include',
     ],
     'configurations': {
       'Debug': {
