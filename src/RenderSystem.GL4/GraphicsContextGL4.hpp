@@ -15,6 +15,8 @@
 
 #include <memory>
 #include "OpenGLPrerequisites.hpp"
+#include <Pomdog/Utility/detail/Tagged.hpp>
+#include "../Utility/Optional.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 
 namespace Pomdog {
@@ -25,9 +27,18 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
+namespace Tags {
+
+struct FrameBufferTag;
+
+}// namespace Tags
+
+using FrameBufferGL4 = Tagged<GLuint, Tags::FrameBufferTag>;
+
 class OpenGLContext;
 class EffectPassGL4;
 class InputLayoutGL4;
+class RenderTarget2DGL4;
 
 class GraphicsContextGL4 final: public NativeGraphicsContext
 {
@@ -36,7 +47,7 @@ public:
 
 	GraphicsContextGL4(std::shared_ptr<OpenGLContext> openGLContext, std::weak_ptr<GameWindow> window);
 	
-	~GraphicsContextGL4() = default;
+	~GraphicsContextGL4();
 	
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
 	void Clear(Color const& color) override;
@@ -79,6 +90,21 @@ public:
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
 	void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) override;
 	
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	void SetTexture(std::uint32_t index) override;
+
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	void SetTexture(std::uint32_t index, Texture2D & texture) override;
+	
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	void SetTexture(std::uint32_t index, RenderTarget2D & texture) override;
+	
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	void SetRenderTarget() override;
+
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets) override;
+	
 	///@details EffectPass::Apply から呼ばれます。
 	void SetEffectPass(std::shared_ptr<EffectPassGL4> const& nativeEffectPass);
 	
@@ -88,6 +114,9 @@ private:
 	std::shared_ptr<InputLayoutGL4> inputLayout;
 	std::shared_ptr<EffectPassGL4> effectPass;
 	std::weak_ptr<GameWindow> gameWindow;
+	std::vector<Optional<GLenum>> textures;
+	Optional<FrameBufferGL4> frameBuffer;
+	std::vector<std::shared_ptr<RenderTarget2DGL4>> renderTargets;
 };
 
 }// namespace GL4

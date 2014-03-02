@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -29,7 +29,7 @@ ConstantBufferGL4::ConstantBufferGL4(std::uint32_t byteWidth)
 	// Generate constant buffer
 	bufferObject = ([]{
 		ConstantBufferObjectGL4 constantBuffer;
-		glGenBuffers(1, constantBuffer.data());
+		glGenBuffers(1, constantBuffer.Data());
 		return std::move(constantBuffer);
 	})();
 	
@@ -55,7 +55,7 @@ ConstantBufferGL4::ConstantBufferGL4(std::uint32_t byteWidth)
 ConstantBufferGL4::~ConstantBufferGL4()
 {
 	if (bufferObject) {
-		glDeleteBuffers(1, bufferObject->data());
+		glDeleteBuffers(1, bufferObject->Data());
 	}
 }
 //-----------------------------------------------------------------------

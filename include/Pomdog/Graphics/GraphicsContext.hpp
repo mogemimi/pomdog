@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -145,6 +145,29 @@ public:
 	/// @param index 0 から始まるテクスチャスロットのインデックスを指定します。
 	/// @param texture テクスチャスロットにバインドするテクスチャ
 	void SetTexture(std::uint32_t index, std::shared_ptr<Texture2D> const& texture);
+	
+	///@~Japanese
+	/// @brief 指定されたテクスチャスロットにテクスチャを設定します。
+	/// @param index 0 から始まるテクスチャスロットのインデックスを指定します。
+	/// @param texture テクスチャスロットにバインドするテクスチャ
+	void SetTexture(std::uint32_t index, std::shared_ptr<RenderTarget2D> const& texture);
+
+	///@~Japanese
+	/// @brief レンダーターゲットを設定します。
+	/// @details 引数に何も指定していない場合、現在設定されているすべてのレンダーターゲットを取り外します。
+	void SetRenderTarget();
+
+	///@~Japanese
+	/// @brief レンダーターゲットを設定します。
+	void SetRenderTarget(std::shared_ptr<RenderTarget2D> const& renderTarget);
+
+	///@~Japanese
+	/// @brief 複数のレンダーターゲットを設定します。
+	void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets);
+
+	///@~Japanese
+	/// @brief 複数のレンダーターゲットを設定します。
+	void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets);
 
 public:
 	Details::RenderSystem::NativeGraphicsContext* NativeGraphicsContext();

@@ -32,10 +32,6 @@ public:
 		std::uint32_t levelCount, SurfaceFormat format, void const* pixelData) = 0;
 	
 	virtual void Apply(std::uint32_t index) = 0;
-	
-	///@~Japanese
-	/// @brief バインドされているテクスチャをテクスチャユニットから外します。
-	virtual void UnbindFromTextureUnit(std::uint32_t index) = 0;
 };
 
 }// namespace RenderSystem

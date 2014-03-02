@@ -18,6 +18,7 @@
 #include "RasterizerStateGL4.hpp"
 #include "SamplerStateGL4.hpp"
 #include "Texture2DGL4.hpp"
+#include "RenderTarget2DGL4.hpp"
 #include "VertexBufferGL4.hpp"
 #include "../Utility/MakeUnique.hpp"
 
@@ -118,6 +119,13 @@ GraphicsDeviceGL4::CreateTexture2D(std::uint32_t width, std::uint32_t height, st
 	SurfaceFormat format)
 {
 	return MakeUnique<Texture2DGL4>(width, height, mipmapLevels, format);
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeRenderTarget2D>
+GraphicsDeviceGL4::CreateRenderTarget2D(std::uint32_t width, std::uint32_t height,
+	std::uint32_t mipmapLevels, SurfaceFormat format, DepthFormat depthStencilFormat)
+{
+	return MakeUnique<RenderTarget2DGL4>(width, height, mipmapLevels, format, depthStencilFormat);
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

@@ -36,6 +36,7 @@ private:
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<InputLayout> inputLayout;
 	std::shared_ptr<Texture2D> texture;
+	std::shared_ptr<RenderTarget2D> renderTarget;
 };
 
 }// namespace Pomdog

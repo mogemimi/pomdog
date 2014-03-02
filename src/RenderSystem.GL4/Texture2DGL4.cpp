@@ -161,19 +161,8 @@ static GLenum ToTextureUnitIndexGL4(T index)
 	static_assert(GL_TEXTURE7  == (GL_TEXTURE0 + 7), "");
 	static_assert(GL_TEXTURE8  == (GL_TEXTURE0 + 8), "");
 	static_assert(GL_TEXTURE9  == (GL_TEXTURE0 + 9), "");
-	static_assert(GL_TEXTURE10 == (GL_TEXTURE0 + 10), "");
-	static_assert(GL_TEXTURE11 == (GL_TEXTURE0 + 11), "");
-	static_assert(GL_TEXTURE12 == (GL_TEXTURE0 + 12), "");
-	static_assert(GL_TEXTURE13 == (GL_TEXTURE0 + 13), "");
-	static_assert(GL_TEXTURE14 == (GL_TEXTURE0 + 14), "");
-	static_assert(GL_TEXTURE15 == (GL_TEXTURE0 + 15), "");
-	static_assert(GL_TEXTURE16 == (GL_TEXTURE0 + 16), "");
-	static_assert(GL_TEXTURE17 == (GL_TEXTURE0 + 17), "");
-	static_assert(GL_TEXTURE18 == (GL_TEXTURE0 + 18), "");
-	static_assert(GL_TEXTURE19 == (GL_TEXTURE0 + 19), "");
 
-	POMDOG_ASSERT(index <= 19);
-	return static_cast<GLenum>(index + GL_TEXTURE0);
+	return static_cast<GLenum>(GL_TEXTURE0 + index);
 }
 //-----------------------------------------------------------------------
 static GLsizei MipmapImageDataBytes(GLsizei pixelWidth, GLsizei pixelHeight, GLsizei bytesPerBlock)
@@ -270,13 +259,13 @@ Texture2DGL4::Texture2DGL4(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
 	// Create Texture2D
 	textureObject = ([]{
 		Texture2DObjectGL4 textureObject;
-		glGenTextures(1, textureObject.data());
+		glGenTextures(1, textureObject.Data());
 		return std::move(textureObject);
 	})();
 	
-	auto const oldTextureObject = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
-	ScopeGuard scope([&oldTextureObject]{
-		TypesafeHelperGL4::BindTexture(oldTextureObject);
+	auto const prevTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
+	ScopeGuard scope([&prevTexture]{
+		TypesafeHelperGL4::BindTexture(prevTexture);
 	});
 
 	POMDOG_ASSERT(textureObject);
@@ -296,12 +285,17 @@ Texture2DGL4::Texture2DGL4(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glTexStorage2D", __FILE__, __LINE__);
 	#endif
+	
+	// Set mipmap levels.
+	POMDOG_ASSERT(levelCount >= 1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, levelCount - 1);
 }
 //-----------------------------------------------------------------------
 Texture2DGL4::~Texture2DGL4()
 {
 	if (textureObject) {
-		glDeleteTextures(1, textureObject->data());
+		glDeleteTextures(1, textureObject->Data());
 	}
 }
 //-----------------------------------------------------------------------
@@ -368,19 +362,28 @@ void Texture2DGL4::Apply(std::uint32_t index)
 	#endif
 }
 //-----------------------------------------------------------------------
-void Texture2DGL4::UnbindFromTextureUnit(std::uint32_t index)
+void Texture2DGL4::GenerateMipmap()
 {
-	glActiveTexture(ToTextureUnitIndexGL4(index));
+	POMDOG_ASSERT(textureObject);
 
-	#ifdef DEBUG
-	ErrorChecker::CheckError("glActiveTexture", __FILE__, __LINE__);
-	#endif
+	auto const prevTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
+	ScopeGuard scope([&prevTexture]{
+		TypesafeHelperGL4::BindTexture(prevTexture);
+	});
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+	// Generate mipmap
+	glBindTexture(GL_TEXTURE_2D, textureObject->value);
+	glGenerateMipmap(GL_TEXTURE_2D);
 	
 	#ifdef DEBUG
-	ErrorChecker::CheckError("glBindTexture", __FILE__, __LINE__);
+	ErrorChecker::CheckError("glGenerateMipmap", __FILE__, __LINE__);
 	#endif
+}
+//-----------------------------------------------------------------------
+Texture2DObjectGL4 const& Texture2DGL4::NativeHandle() const
+{
+	POMDOG_ASSERT(textureObject);
+	return textureObject.value();
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

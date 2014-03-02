@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -84,6 +84,21 @@ public:
 	
 	///@copydoc Pomdog::GraphicsContext
 	virtual void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) = 0;
+	
+	///@copydoc Pomdog::GraphicsContext
+	virtual void SetTexture(std::uint32_t index) = 0;
+
+	///@copydoc Pomdog::GraphicsContext
+	virtual void SetTexture(std::uint32_t index, Texture2D & texture) = 0;
+	
+	///@copydoc Pomdog::GraphicsContext
+	virtual void SetTexture(std::uint32_t index, RenderTarget2D & texture) = 0;
+	
+	///@copydoc Pomdog::GraphicsContext
+	virtual void SetRenderTarget() = 0;
+
+	///@copydoc Pomdog::GraphicsContext
+	virtual void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets) = 0;
 };
 
 }// namespace RenderSystem

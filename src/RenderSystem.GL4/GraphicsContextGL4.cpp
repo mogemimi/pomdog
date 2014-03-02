@@ -17,15 +17,22 @@
 #include <Pomdog/Graphics/IndexBuffer.hpp>
 #include <Pomdog/Graphics/InputLayout.hpp>
 #include <Pomdog/Graphics/PrimitiveTopology.hpp>
+#include <Pomdog/Graphics/RenderTarget2D.hpp>
+#include <Pomdog/Graphics/Texture2D.hpp>
 #include <Pomdog/Graphics/VertexBuffer.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
 #include <Pomdog/Application/GameWindow.hpp>
 #include "../RenderSystem/GraphicsCapabilities.hpp"
+#include "../RenderSystem/NativeRenderTarget2D.hpp"
+#include "../RenderSystem/NativeTexture2D.hpp"
+#include "../Utility/ScopeGuard.hpp"
 #include "OpenGLContext.hpp"
 #include "EffectPassGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "IndexBufferGL4.hpp"
 #include "InputLayoutGL4.hpp"
+#include "RenderTarget2DGL4.hpp"
+#include "TypesafeHelperGL4.hpp"
 
 // logging
 #include <Pomdog/Logging/Log.hpp>
@@ -66,8 +73,76 @@ static GLenum ToIndexElementType(IndexElementSize indexElementSize)
 	return GL_UNSIGNED_INT;
 #endif
 }
+//-----------------------------------------------------------------------
+template <typename T>
+static GLenum ToTextureUnitIndexGL4(T index)
+{
+	static_assert(std::is_unsigned<T>::value, "T is unsigned type.");
+	static_assert(GL_TEXTURE0  == (GL_TEXTURE0 + 0), "");
+	static_assert(GL_TEXTURE1  == (GL_TEXTURE0 + 1), "");
+	static_assert(GL_TEXTURE2  == (GL_TEXTURE0 + 2), "");
+	static_assert(GL_TEXTURE3  == (GL_TEXTURE0 + 3), "");
+	static_assert(GL_TEXTURE4  == (GL_TEXTURE0 + 4), "");
+	static_assert(GL_TEXTURE5  == (GL_TEXTURE0 + 5), "");
+	static_assert(GL_TEXTURE6  == (GL_TEXTURE0 + 6), "");
+	static_assert(GL_TEXTURE7  == (GL_TEXTURE0 + 7), "");
+	static_assert(GL_TEXTURE8  == (GL_TEXTURE0 + 8), "");
+	static_assert(GL_TEXTURE9  == (GL_TEXTURE0 + 9), "");
 
-}// namespace
+	return static_cast<GLenum>(GL_TEXTURE0 + index);
+}
+//-----------------------------------------------------------------------
+template <typename T>
+static GLenum ToColorAttachment(T index)
+{
+	static_assert(std::is_unsigned<T>::value, "T is unsigned type.");
+	static_assert(GL_COLOR_ATTACHMENT0  == (GL_COLOR_ATTACHMENT0 + 0), "");
+	static_assert(GL_COLOR_ATTACHMENT1  == (GL_COLOR_ATTACHMENT0 + 1), "");
+	static_assert(GL_COLOR_ATTACHMENT2  == (GL_COLOR_ATTACHMENT0 + 2), "");
+	static_assert(GL_COLOR_ATTACHMENT3  == (GL_COLOR_ATTACHMENT0 + 3), "");
+	static_assert(GL_COLOR_ATTACHMENT4  == (GL_COLOR_ATTACHMENT0 + 4), "");
+	static_assert(GL_COLOR_ATTACHMENT5  == (GL_COLOR_ATTACHMENT0 + 5), "");
+	static_assert(GL_COLOR_ATTACHMENT6  == (GL_COLOR_ATTACHMENT0 + 6), "");
+	static_assert(GL_COLOR_ATTACHMENT7  == (GL_COLOR_ATTACHMENT0 + 7), "");
+	static_assert(GL_COLOR_ATTACHMENT8  == (GL_COLOR_ATTACHMENT0 + 8), "");
+	static_assert(GL_COLOR_ATTACHMENT9  == (GL_COLOR_ATTACHMENT0 + 9), "");
+
+	return static_cast<GLenum>(index + GL_COLOR_ATTACHMENT0);
+}
+//-----------------------------------------------------------------------
+static Optional<FrameBufferGL4> CreateFrameBuffer()
+{
+	auto const prevFrameBuffer = TypesafeHelperGL4::Get<FrameBufferGL4>();
+	ScopeGuard scope([&prevFrameBuffer] {
+		glBindFramebuffer(GL_FRAMEBUFFER, prevFrameBuffer.value);
+	});
+
+	FrameBufferGL4 frameBuffer;
+	glGenFramebuffers(1, frameBuffer.Data());
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.value);
+	
+	// Check framebuffer
+	auto const status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	
+	if (GL_FRAMEBUFFER_UNSUPPORTED == status)
+	{
+		return OptionalType::NullOptional;
+	}
+	
+	return std::move(frameBuffer);
+}
+
+}// unnamed namespace
+//-----------------------------------------------------------------------
+template<> struct TypesafeHelperGL4::OpenGLGetTraits<FrameBufferGL4>
+{
+	constexpr static GLenum bufferObjectBinding = GL_FRAMEBUFFER_BINDING;
+};
+//-----------------------------------------------------------------------
+#if defined(POMDOG_COMPILER_CLANG)
+#pragma mark - GraphicsContextGL4
+#endif
 //-----------------------------------------------------------------------
 GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> openGLContext, std::weak_ptr<GameWindow> window)
 	: nativeContext(std::move(openGLContext))
@@ -75,6 +150,25 @@ GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> openGLCont
 {
 	auto version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
 	Log::Stream(LoggingLevel::Internal) << "OpenGL Version: " << version << "\n";
+	
+	auto capabilities = GetCapabilities();
+	if (capabilities.SamplerSlotCount > 0)
+	{
+		textures.resize(capabilities.SamplerSlotCount);
+	}
+	
+	frameBuffer = CreateFrameBuffer();
+}
+//-----------------------------------------------------------------------
+GraphicsContextGL4::~GraphicsContextGL4()
+{
+	renderTargets.clear();
+
+	if (frameBuffer)
+	{
+		glDeleteFramebuffers(1, frameBuffer->Data());
+		frameBuffer = OptionalType::NullOptional;
+	}
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Clear(Color const& color)
@@ -308,6 +402,185 @@ void GraphicsContextGL4::SetEffectPass(std::shared_ptr<EffectPassGL4> const& nat
 {
 	POMDOG_ASSERT(nativeEffectPassIn);
 	this->effectPass = nativeEffectPassIn;
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::SetTexture(std::uint32_t textureUnit)
+{
+	POMDOG_ASSERT(!textures.empty());
+	POMDOG_ASSERT(textureUnit < textures.size());
+
+	if (textures[textureUnit])
+	{
+		glActiveTexture(ToTextureUnitIndexGL4(textureUnit));
+
+		#ifdef DEBUG
+		ErrorChecker::CheckError("glActiveTexture", __FILE__, __LINE__);
+		#endif
+	
+		glBindTexture(*textures[textureUnit], 0);
+	
+		#ifdef DEBUG
+		ErrorChecker::CheckError("glBindTexture", __FILE__, __LINE__);
+		#endif
+	}
+	
+	textures[textureUnit] = OptionalType::NullOptional;
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::SetTexture(std::uint32_t textureUnit, Texture2D & textureIn)
+{
+	POMDOG_ASSERT(!textures.empty());
+	POMDOG_ASSERT(textureUnit < textures.size());
+
+	constexpr GLenum textureType = GL_TEXTURE_2D;
+
+	if (textures[textureUnit] && *textures[textureUnit] != textureType)
+	{
+		// Unbind texture
+		SetTexture(textureUnit);
+	}
+
+	textures[textureUnit] = textureType;
+	
+	POMDOG_ASSERT(textureIn.NativeTexture2D());
+	textureIn.NativeTexture2D()->Apply(textureUnit);
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::SetTexture(std::uint32_t textureUnit, RenderTarget2D & textureIn)
+{
+	POMDOG_ASSERT(!textures.empty());
+	POMDOG_ASSERT(textureUnit < textures.size());
+
+	constexpr GLenum textureType = GL_TEXTURE_2D;
+
+	if (textures[textureUnit] && *textures[textureUnit] != textureType)
+	{
+		// Unbind texture
+		SetTexture(textureUnit);
+	}
+
+	textures[textureUnit] = textureType;
+	
+	POMDOG_ASSERT(textureIn.NativeRenderTarget2D());
+	textureIn.NativeRenderTarget2D()->Apply(textureUnit);
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::SetRenderTarget()
+{
+	POMDOG_ASSERT(frameBuffer);
+
+	auto const prevFrameBuffer = TypesafeHelperGL4::Get<FrameBufferGL4>();
+	ScopeGuard scope([&prevFrameBuffer] {
+		glBindFramebuffer(GL_FRAMEBUFFER, prevFrameBuffer.value);
+	});
+	
+	// Bind framebuffer
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->value);
+
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glBindFramebuffer", __FILE__, __LINE__);
+	#endif
+
+	// Unbind render targets
+	{
+		std::size_t index = 0;
+		for (auto const& renderTarget: renderTargets)
+		{
+			POMDOG_ASSERT(renderTarget);
+			renderTarget->UnbindFromFramebuffer(ToColorAttachment(index));
+			++index;
+		}
+	}
+	renderTargets.clear();
+
+	// Unbind depth stencil buffer
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glFramebufferRenderbuffer", __FILE__, __LINE__);
+	#endif
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargetsIn)
+{
+	POMDOG_ASSERT(!renderTargetsIn.empty());
+	POMDOG_ASSERT(frameBuffer);
+	
+	auto const prevFrameBuffer = TypesafeHelperGL4::Get<FrameBufferGL4>();
+	ScopeGuard scope([&prevFrameBuffer] {
+		glBindFramebuffer(GL_FRAMEBUFFER, prevFrameBuffer.value);
+	});
+	
+	// Bind framebuffer
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->value);
+
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glBindFramebuffer", __FILE__, __LINE__);
+	#endif
+
+	// Unbind render targets
+	{
+		std::size_t index = 0;
+		for (auto const& renderTarget: renderTargets)
+		{
+			POMDOG_ASSERT(renderTarget);
+			renderTarget->UnbindFromFramebuffer(ToColorAttachment(index));
+			++index;
+		}
+	}
+	renderTargets.clear();
+
+	// Unbind depth stencil buffer
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glFramebufferRenderbuffer", __FILE__, __LINE__);
+	#endif
+
+	std::vector<GLenum> attachments;
+	attachments.reserve(renderTargetsIn.size());
+	renderTargets.reserve(renderTargetsIn.size());
+
+	// Attach textures
+	std::uint32_t index = 0;
+	for (auto const& renderTarget: renderTargetsIn)
+	{
+		POMDOG_ASSERT(renderTarget);
+		POMDOG_ASSERT(renderTarget->NativeRenderTarget2D());
+		auto const nativeRenderTarget = dynamic_cast<RenderTarget2DGL4*>(renderTarget->NativeRenderTarget2D());
+		
+		POMDOG_ASSERT(nativeRenderTarget);
+		nativeRenderTarget->BindToFramebuffer(ToColorAttachment(index));
+
+		renderTargets.emplace_back(renderTarget, nativeRenderTarget);
+
+		attachments.push_back(ToColorAttachment(index));
+		++index;
+	}
+
+	// Attach depth stencil buffer
+	{
+		POMDOG_ASSERT(renderTargets.front());
+		auto const& renderTarget = renderTargets.front();
+		
+		POMDOG_ASSERT(renderTarget);
+		renderTarget->BindDepthStencilBuffer();
+	}
+
+	// Check framebuffer status
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		// FUS RO DAH!
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to make complete framebuffer.");
+	}
+	
+	POMDOG_ASSERT(!attachments.empty());
+	POMDOG_ASSERT(std::numeric_limits<GLsizei>::max() >= attachments.size());
+	glDrawBuffers(static_cast<GLsizei>(attachments.size()), attachments.data());
+
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glDrawBuffers", __FILE__, __LINE__);
+	#endif
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

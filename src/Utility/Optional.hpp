@@ -60,6 +60,7 @@ public:
 	{
 		valid = false;
 		data.~T();
+		return *this;
 	}
 	
 	Optional & operator=(Optional const&) = default;

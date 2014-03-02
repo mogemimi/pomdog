@@ -40,8 +40,9 @@ public:
 	///@copydoc NativeTexture2D
 	void Apply(std::uint32_t index) override;
 	
-	///@copydoc NativeTexture2D
-	void UnbindFromTextureUnit(std::uint32_t index) override;
+	void GenerateMipmap();
+	
+	Texture2DObjectGL4 const& NativeHandle() const;
 	
 private:
 	Optional<Texture2DObjectGL4> textureObject;

@@ -109,6 +109,12 @@ public:
 	virtual std::unique_ptr<NativeTexture2D>
 	CreateTexture2D(std::uint32_t width, std::uint32_t height,
 		std::uint32_t mipmapLevels, SurfaceFormat format) = 0;
+	
+	///@~Japanese
+	/// @brief 2 次元のレンダーターゲットを作成します。
+	virtual std::unique_ptr<NativeRenderTarget2D>
+	CreateRenderTarget2D(std::uint32_t width, std::uint32_t height,
+		std::uint32_t mipmapLevels, SurfaceFormat format, DepthFormat depthStencilFormat) = 0;
 };
 
 }// namespace RenderSystem

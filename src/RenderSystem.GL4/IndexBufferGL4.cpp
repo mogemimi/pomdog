@@ -60,7 +60,7 @@ IndexBufferGL4::IndexBufferGL4(void const* indices, std::uint32_t indexCount,
 	// Generate index buffer
 	bufferObject = ([]{
 		IndexBufferObjectGL4 indexBuffer;
-		glGenBuffers(1, indexBuffer.data());
+		glGenBuffers(1, indexBuffer.Data());
 		return std::move(indexBuffer);
 	})();
 	
@@ -88,7 +88,7 @@ IndexBufferGL4::IndexBufferGL4(void const* indices, std::uint32_t indexCount,
 IndexBufferGL4::~IndexBufferGL4()
 {
 	if (bufferObject) {
-		glDeleteBuffers(1, bufferObject->data());
+		glDeleteBuffers(1, bufferObject->Data());
 	}
 }
 //-----------------------------------------------------------------------

@@ -463,7 +463,7 @@ InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::vecto
 	// Build vertex array object
 	inputLayout = ([]{
 		VertexArrayGL4 vertexArray;
-		glGenVertexArrays(1, vertexArray.data());
+		glGenVertexArrays(1, vertexArray.Data());
 		return std::move(vertexArray);
 	})();
 	
@@ -495,7 +495,7 @@ InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::vecto
 InputLayoutGL4::~InputLayoutGL4()
 {
 	if (inputLayout) {
-		glDeleteVertexArrays(1, inputLayout->data());
+		glDeleteVertexArrays(1, inputLayout->Data());
 	}
 }
 //-----------------------------------------------------------------------

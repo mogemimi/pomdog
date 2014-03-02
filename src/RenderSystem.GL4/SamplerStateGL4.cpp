@@ -41,7 +41,7 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 {
 	samplerObject = ([]{
 		SamplerObjectGL4 sampler;
-		glGenSamplers(1, sampler.data());
+		glGenSamplers(1, sampler.Data());
 		return std::move(sampler);
 	})();
 	
@@ -146,7 +146,7 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 SamplerStateGL4::~SamplerStateGL4()
 {
 	if (samplerObject) {
-		glDeleteSamplers(1, samplerObject->data());
+		glDeleteSamplers(1, samplerObject->Data());
 	}
 }
 //-----------------------------------------------------------------------

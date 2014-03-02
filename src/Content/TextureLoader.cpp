@@ -15,6 +15,7 @@
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Utility/Exception.hpp>
 #include "Utility/MakeFourCC.hpp"
+#include "Utility/BinaryReader.hpp"
 #include "Utility/DDSTextureReader.hpp"
 #include "Utility/PNGTextureReader.hpp"
 
@@ -26,45 +27,6 @@ static std::string MakeAssetFilePath(AssetLoaderContext const& loaderContext, st
 {
 	POMDOG_ASSERT(!assetPath.empty());
 	return loaderContext.RootDirectory + "/" + assetPath;
-}
-//-----------------------------------------------------------------------
-namespace BinaryReader
-{
-	template <class Stream>
-	static std::size_t GetBinarySize(Stream & stream)
-	{
-		stream.seekg(0, stream.end);
-		auto const length = stream.tellg();
-		stream.seekg(0, stream.beg);
-		return length;
-	}
-
-	template <typename T, class Stream>
-	std::vector<T> ReadArray(Stream & stream, std::size_t elementCount)
-	{
-		static_assert(std::is_pod<T>::value, "");
-		
-		std::vector<T> result(elementCount);
-		stream.read(reinterpret_cast<char*>(result.data()), sizeof(T) * result.size());
-		return std::move(result);
-	}
-	
-	template <typename T, std::size_t ElementCount, class Stream>
-	std::array<T, ElementCount> ReadArray(Stream & stream)
-	{
-		static_assert(std::is_pod<T>::value, "");
-		
-		std::array<T, ElementCount> result;
-		stream.read(reinterpret_cast<char*>(result.data()), sizeof(T) * result.size());
-		return std::move(result);
-	}
-	
-	template <typename T, class Stream>
-	T Read(Stream & stream)
-	{
-		static_assert(std::is_pod<T>::value, "");
-		return *ReadArray<T>(stream, 1);
-	}
 }
 //-----------------------------------------------------------------------
 static bool IsPNGFormat(std::array<std::uint8_t, 8> const& signature)

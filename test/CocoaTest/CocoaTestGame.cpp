@@ -82,6 +82,10 @@ void CocoaTestGame::Initialize()
 				<< "SurfaceFormat: " << static_cast<int>(texture->Format()) << "\n";
 		}
 	}
+	{
+		renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
+			window->ClientBounds().width, window->ClientBounds().height);
+	}
 }
 //-----------------------------------------------------------------------
 void CocoaTestGame::Update()
@@ -108,10 +112,13 @@ void CocoaTestGame::Draw()
 	graphicsContext->Clear(Color::CornflowerBlue);
 	
 	graphicsContext->SetTexture(0, texture);
+	graphicsContext->SetTexture(0);
+	graphicsContext->SetTexture(0, texture);
 	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffer(vertexBuffer);
 	effectPass->Apply();
 	graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList, indexBuffer, indexBuffer->IndexCount());
+	
 	graphicsContext->Present();
 }
 //-----------------------------------------------------------------------

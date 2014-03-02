@@ -13,6 +13,7 @@
 #include <Pomdog/Graphics/Texture2D.hpp>
 #include <Pomdog/Graphics/SurfaceFormat.hpp>
 #include "MakeFourCC.hpp"
+#include "BinaryReader.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -88,25 +89,6 @@ namespace DirectDrawPixelFormat
 	static constexpr std::uint32_t Alpha       = 0x00000002; // DDPF_ALPHA
 	static constexpr std::uint32_t RGB         = 0x00000040; // DDPF_RGB
 	static constexpr std::uint32_t Luminance   = 0x00020000; // DDPF_LUMINANCE
-}
-//-----------------------------------------------------------------------
-namespace BinaryReader
-{
-	template <typename T>
-	static bool CanRead(std::size_t byteLength)
-	{
-		return sizeof(T) <= byteLength;
-	}
-
-	template <typename T>
-	static T Read(std::uint8_t const* data)
-	{
-		POMDOG_ASSERT(data);
-		static_assert(std::is_pod<T>::value, "You can only use POD types.");
-		T value;
-		std::memcpy(&value, data, sizeof(value));
-		return std::move(value);
-	}
 }
 //-----------------------------------------------------------------------
 static SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(DDSPixelFormat const& pixelFormat)

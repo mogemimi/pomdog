@@ -35,6 +35,7 @@ class InputLayout;
 class RasterizerState;
 class RenderTarget2D;
 class SamplerState;
+class Texture;
 class Texture2D;
 class VertexBuffer;
 
