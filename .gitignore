@@ -15,13 +15,12 @@
 .DS_Store
 /out/
 /build/build
-/build.xcodefiles
-/build.msvc*/
 /build/Debug
 /build/Release
-/build/lib/
-/third-party/libpng/build
-/third-party/zlib/build
+/build.xcodefiles
+/build.msvs
+/third_party/libpng/build
+/third_party/zlib/build
 /tools/gyp
 /tools/python
 
