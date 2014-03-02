@@ -7,30 +7,51 @@
 //
 
 #include "RenderTarget2D.hpp"
+#include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 
 namespace Pomdog {
+namespace {
+
+static std::uint32_t ComputeMipmapLevelCount(std::uint32_t pixelWidth, std::uint32_t pixelHeight)
+{
+	auto mipMapPixelWidth = pixelWidth;
+	auto mipMapPixelHeight = pixelHeight;
+	
+	std::uint32_t levelCount = 0;
+
+	do {
+		++levelCount;
+		mipMapPixelWidth = (mipMapPixelWidth >> 1);
+		mipMapPixelHeight = (mipMapPixelHeight >> 1);
+	} while (mipMapPixelWidth > 1 && mipMapPixelHeight > 1);
+	
+	return levelCount;
+}
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::uint32_t pixelWidthIn, std::uint32_t pixelHeightIn)
 	: RenderTarget2D(graphicsDevice, pixelWidthIn, pixelHeightIn,
-		1, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None)
+		false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None)
 {
 }
 //-----------------------------------------------------------------------
 RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	std::uint32_t pixelWidthIn, std::uint32_t pixelHeightIn, std::uint32_t levelCountIn,
-	SurfaceFormat formatIn, DepthFormat depthStencilFormatIn)
-	: nativeRenderTarget2D(graphicsDevice->NativeGraphicsDevice()->CreateRenderTarget2D(
-		pixelWidthIn, pixelHeightIn, levelCountIn, formatIn, depthStencilFormatIn))
-	, pixelWidth(pixelWidthIn)
+	std::uint32_t pixelWidthIn, std::uint32_t pixelHeightIn,
+	bool generateMipmap, SurfaceFormat formatIn, DepthFormat depthStencilFormatIn)
+	: pixelWidth(pixelWidthIn)
 	, pixelHeight(pixelHeightIn)
-	, levelCount(levelCountIn)
+	, levelCount(generateMipmap ? ComputeMipmapLevelCount(pixelWidthIn, pixelHeightIn): 1)
 	, format(formatIn)
 	, depthStencilFormat(depthStencilFormatIn)
 {
+	POMDOG_ASSERT(levelCount >= 1);
+	nativeRenderTarget2D = graphicsDevice->NativeGraphicsDevice()->CreateRenderTarget2D(
+		pixelWidth, pixelHeight, levelCount, format, depthStencilFormat);
 }
 //-----------------------------------------------------------------------
 RenderTarget2D::~RenderTarget2D() = default;

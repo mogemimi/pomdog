@@ -49,7 +49,7 @@ public:
 		std::uint32_t width, std::uint32_t height);
 
 	RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		std::uint32_t width, std::uint32_t height, std::uint32_t levelCount,
+		std::uint32_t width, std::uint32_t height, bool generateMipmap,
 		SurfaceFormat format, DepthFormat depthStencilFormat);
 
 	~RenderTarget2D();
