@@ -14,22 +14,45 @@
 #endif
 
 #include <cstddef>
+#include <cstdint>
 #include <type_traits>
 #include <typeinfo>
 #include <utility>
+#include <limits>
+#include "../../Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Details {
 
-template <typename T>
-struct GameComponentTypeID
+struct ComponentBitIndexCounter
 {
-	static std::size_t const value;
+	template <typename T>
+	static T Count()
+	{
+		static_assert(std::is_unsigned<T>::value, "T is unsigned integer.");
+		static T count = 0;
+		POMDOG_ASSERT(count < std::numeric_limits<T>::max());
+		++count;
+		POMDOG_ASSERT(count > 0);
+		return count;
+	}
 };
 
-template <typename T>
-std::size_t const GameComponentTypeID<T>::value = typeid(T).hash_code();
+template <typename T, typename IdentType>
+struct GameComponentHashCode
+{
+	static_assert(!std::is_pointer<T>::value, "T is not pointer.");
+	static_assert(std::is_object<T>::value, "T is not object type.");
+	static_assert(std::is_unsigned<IdentType>::value, "IdentType is unsigned integer.");
 
+	static IdentType const value;
+};
+
+template <typename T, typename IdentType>
+IdentType const GameComponentHashCode<T, IdentType>::value = ComponentBitIndexCounter::Count<IdentType>();
+
+
+template <typename HashCodeType>
 class GameComponent
 {
 public:
@@ -42,11 +65,14 @@ public:
 	GameComponent & operator=(GameComponent const&) = default;
 	GameComponent & operator=(GameComponent &&) = default;
 
-	virtual std::size_t GetHashCode() const = 0;
+	static_assert(std::is_unsigned<HashCodeType>::value, "HashCodeType is unsigned integer.");
+
+	virtual HashCodeType GetHashCode() const = 0;
 };
 
-template <class T>
-class IntrusiveComponent final: public GameComponent
+
+template <class T, typename HashCodeType>
+class IntrusiveComponent final: public GameComponent<HashCodeType>
 {
 public:
 	static_assert(std::is_fundamental<T>::value ||
@@ -60,9 +86,9 @@ public:
 		: value(std::forward<Arguments>(arguments)...)
 	{}
 
-	std::size_t GetHashCode() const override
+	HashCodeType GetHashCode() const override
 	{
-		return GameComponentTypeID<T>::value;
+		return GameComponentHashCode<T, HashCodeType>::value;
 	}
 	
 	T const& Value() const

@@ -54,6 +54,12 @@ class POMDOG_EXPORT FloatingPointVector4;
 template <typename T, class PhantomType>
 class TaggedArithmetic;
 
+namespace Tags {
+
+struct RadianTag;
+
+}
+
 }// namespace Details
 
 using Color = Details::FloatingPointColor<float>;
@@ -66,6 +72,9 @@ using Quaternion = Details::FloatingPointQuaternion<float>;
 using Vector2 = Details::FloatingPointVector2<float>;
 using Vector3 = Details::FloatingPointVector3<float>;
 using Vector4 = Details::FloatingPointVector4<float>;
+
+template <typename T>
+using Radian = Details::TaggedArithmetic<T, Details::Tags::RadianTag>;
 
 // Structures:
 class Rectangle;

@@ -42,10 +42,10 @@ public:
 	Tagged & operator=(Tagged const&) = default;
 	Tagged & operator=(Tagged &&) = default;
 
-	explicit Tagged(value_type const& v)
+	Tagged(value_type const& v)
 		: value(v) {}
 		
-	explicit Tagged(value_type && v)
+	Tagged(value_type && v)
 		: value(std::move(v)) {}
 
 	constexpr T const* Data() const noexcept

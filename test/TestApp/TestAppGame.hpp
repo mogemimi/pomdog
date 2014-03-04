@@ -14,6 +14,9 @@
 #endif
 
 #include <Pomdog/Pomdog.hpp>
+#include "Camera.hpp"
+#include "Scene.hpp"
+
 
 namespace TestApp {
 
@@ -39,6 +42,9 @@ private:
 	std::shared_ptr<InputLayout> inputLayout;
 	std::shared_ptr<Texture2D> texture;
 	std::shared_ptr<RenderTarget2D> renderTarget;
+	
+	GameWorld gameWorld;
+	//std::shared_ptr<Scene> hierarchy;
 };
 
 }// namespace TestApp

@@ -52,6 +52,7 @@
         '../test/FrameworkTest/Event/EventTest.cpp',
         '../test/FrameworkTest/Event/ScopedConnectionTest.cpp',
         '../test/FrameworkTest/GamePlay/GameObjectTest.cpp',
+        '../test/FrameworkTest/GamePlay/GameWorldTest.cpp',
         '../test/FrameworkTest/Graphics/CustomVertexTest.cpp',
         '../test/FrameworkTest/Graphics/VertexDeclarationTest.cpp',
         '../test/FrameworkTest/Input/ButtonStateTest.cpp',

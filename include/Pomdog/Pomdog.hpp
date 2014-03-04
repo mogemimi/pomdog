@@ -65,6 +65,7 @@
 // GamePlay
 #include "GamePlay/GameObject.hpp"
 #include "GamePlay/GameObjectID.hpp"
+#include "GamePlay/GameWorld.hpp"
 
 // Graphics
 #include "Graphics/Blend.hpp"

@@ -69,10 +69,10 @@ void TestAppGame::Initialize()
 		}
 	}
 	{
-		auto sampler = SamplerState::CreatePointClamp(graphicsDevice);
+		auto sampler = SamplerState::CreatePointWrap(graphicsDevice);
 		graphicsContext->SetSamplerState(0, sampler);
 
-		texture = assets->Load<Texture2D>("Content/pomdog.png");
+		texture = assets->Load<Texture2D>("Content/stone.png");
 		
 		if (texture) {
 			Log::Stream()
@@ -87,6 +87,14 @@ void TestAppGame::Initialize()
 		renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
 			window->ClientBounds().width, window->ClientBounds().height);
 	}
+	
+	auto gameObject = gameWorld.CreateObject();
+	gameObject->AddComponent<Camera>();
+	
+	//auto a = gameWorld.QueryComponents<Camera>();
+	
+	//hierarchy = std::make_shared<Scene>(graphicsContext);
+	//hierarchy->AddChild(gameObject);
 }
 //-----------------------------------------------------------------------
 void TestAppGame::Update()

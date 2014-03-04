@@ -17,6 +17,7 @@
 #include "../../Config/FundamentalTypes.hpp"
 #include "../../Utility/Assert.hpp"
 #include <type_traits>
+#include <utility>
 
 namespace Pomdog {
 namespace Details {
@@ -39,6 +40,7 @@ class POMDOG_EXPORT TaggedArithmetic final
 {
 public:
 	static_assert(std::is_arithmetic<T>::value, "T is arithmetic type.");
+	static_assert(std::is_pod<T>::value, "T is pod type.");
 
 	T value;
 
@@ -48,7 +50,7 @@ public:
 	TaggedArithmetic(TaggedArithmetic const&) = default;
 	TaggedArithmetic(TaggedArithmetic &&) = default;
 
-	explicit TaggedArithmetic(T v)
+	TaggedArithmetic(T v)
 		: value(v){};
 
 	~TaggedArithmetic() = default;
