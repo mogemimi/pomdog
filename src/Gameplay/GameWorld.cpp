@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <Pomdog/GamePlay/GameWorld.hpp>
+#include <Pomdog/Gameplay/GameWorld.hpp>
 
 namespace Pomdog {
 namespace Details {

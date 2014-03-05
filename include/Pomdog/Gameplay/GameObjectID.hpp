@@ -18,7 +18,7 @@
 
 namespace Pomdog {
 namespace Details {
-namespace GamePlay {
+namespace Gameplay {
 
 namespace Tags {
 
@@ -26,15 +26,15 @@ struct GameObjectIDTag {};
 
 }// namespace Tags
 
-}// namespace GamePlay
+}// namespace Gameplay
 }// namespace Details
 
 /// @addtogroup Framework
 /// @{
-/// @addtogroup GamePlay
+/// @addtogroup Gameplay
 /// @{
 
-using GameObjectID = Details::Tagged<std::uint64_t, Details::GamePlay::Tags::GameObjectIDTag>;
+using GameObjectID = Details::Tagged<std::uint64_t, Details::Gameplay::Tags::GameObjectIDTag>;
 
 /// @}
 /// @}

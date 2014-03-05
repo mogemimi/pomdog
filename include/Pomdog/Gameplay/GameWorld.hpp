@@ -28,7 +28,7 @@ struct Not {};
 }// namespace ComponentQuery
 
 namespace Details {
-namespace GamePlay {
+namespace Gameplay {
 
 template <typename...T>
 struct HasComponents;
@@ -60,7 +60,7 @@ struct HasComponents<T, Arguments...>
 	}
 };
 
-}// namespace GamePlay
+}// namespace Gameplay
 }// namespace Details
 
 class GameObject;
@@ -93,7 +93,7 @@ public:
 	
 		for (auto & gameObject: gameObjects)
 		{
-			if (Details::GamePlay::HasComponents<T, Components...>()(*gameObject)) {
+			if (Details::Gameplay::HasComponents<T, Components...>()(*gameObject)) {
 				result.push_back(gameObject);
 			}
 		}

@@ -8,8 +8,8 @@
 
 #include <gtest/iutest_switch.hpp>
 #include <cstdint>
-#include <Pomdog/GamePlay/GameWorld.hpp>
-#include <Pomdog/GamePlay/GameObject.hpp>
+#include <Pomdog/Gameplay/GameWorld.hpp>
+#include <Pomdog/Gameplay/GameObject.hpp>
 
 using namespace Pomdog;
 

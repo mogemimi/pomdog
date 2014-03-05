@@ -8,7 +8,7 @@
 
 #include <gtest/iutest_switch.hpp>
 #include <cstdint>
-#include <Pomdog/GamePlay/GameObject.hpp>
+#include <Pomdog/Gameplay/GameObject.hpp>
 
 using Pomdog::GameObject;
 using Pomdog::GameObjectID;

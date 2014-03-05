@@ -30,7 +30,7 @@ namespace Pomdog {
 
 /// @addtogroup Framework
 /// @{
-/// @addtogroup GamePlay
+/// @addtogroup Gameplay
 /// @{
 
 ///@~Japanese

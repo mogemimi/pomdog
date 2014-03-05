@@ -62,10 +62,10 @@
 #include "Logging/LogStream.hpp"
 #include "Logging/LoggingLevel.hpp"
 
-// GamePlay
-#include "GamePlay/GameObject.hpp"
-#include "GamePlay/GameObjectID.hpp"
-#include "GamePlay/GameWorld.hpp"
+// Gameplay
+#include "Gameplay/GameObject.hpp"
+#include "Gameplay/GameObjectID.hpp"
+#include "Gameplay/GameWorld.hpp"
 
 // Graphics
 #include "Graphics/Blend.hpp"
