@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -7,9 +7,20 @@
 //
 
 #include <Pomdog/Gameplay/GameWorld.hpp>
+#include <Pomdog/Gameplay/GameObject.hpp>
 
 namespace Pomdog {
-namespace Details {
-    // Insert code here to run your application
-}// namespace Details
+//-----------------------------------------------------------------------
+GameWorld::GameWorld()
+	: incrementalObjectID(0)
+{}
+//-----------------------------------------------------------------------
+std::shared_ptr<GameObject> GameWorld::CreateObject()
+{
+	++incrementalObjectID.value;
+	auto gameObject = std::make_shared<GameObject>(incrementalObjectID);
+	gameObjects.push_back(gameObject);
+	return std::move(gameObject);
+}
+//-----------------------------------------------------------------------
 }// namespace Pomdog

@@ -81,13 +81,13 @@ public:
 	///@~Japanese
 	/// @brief コンポーネントを追加します。
 	template <typename T, typename...Arguments>
-	void AddComponent(Arguments && ...arguments);
+	T* AddComponent(Arguments && ...arguments);
 
 	///@~Japanese
 	/// @brief 指定されたコンポーネントを削除します。
 	template <typename T>
 	void RemoveComponent();
-
+	
 private:
 	std::bitset<MaxComponentCapacity> componentBitMask;
 	std::vector<std::unique_ptr<ComponentType>> components;
@@ -148,7 +148,7 @@ bool GameObject::HasComponent() const
 }
 
 template <typename T, typename...Arguments>
-void GameObject::AddComponent(Arguments && ...arguments)
+T* GameObject::AddComponent(Arguments && ...arguments)
 {
 	POMDOG_ASSERT(components.size() < MaxComponentCapacity);
 	
@@ -166,6 +166,8 @@ void GameObject::AddComponent(Arguments && ...arguments)
 	POMDOG_ASSERT(hashCode < MaxComponentCapacity);
 	POMDOG_ASSERT(!componentBitMask[hashCode]);
 	componentBitMask[hashCode] = 1;
+	
+	return &(dynamic_cast<IntrusiveComponentType<T>*>((components.back()).get())->Value());
 }
 
 template <typename T>

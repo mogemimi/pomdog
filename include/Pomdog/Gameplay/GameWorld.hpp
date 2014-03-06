@@ -65,26 +65,23 @@ struct HasComponents<T, Arguments...>
 
 class GameObject;
 
+/// @addtogroup Framework
+/// @{
+/// @addtogroup Gameplay
+/// @{
+
 class POMDOG_EXPORT GameWorld
 {
 public:
-	GameWorld()
-		: incrementalObjectID(0)
-	{}
+	GameWorld();
 	
 	GameWorld(GameWorld const&) = delete;
 	GameWorld(GameWorld &&) = default;
 	
 	GameWorld & operator=(GameWorld const&) = delete;
 	GameWorld & operator=(GameWorld &&) = default;
-	
-	std::shared_ptr<GameObject> CreateObject()
-	{
-		++incrementalObjectID.value;
-		auto gameObject = std::make_shared<GameObject>(incrementalObjectID);
-		gameObjects.push_back(gameObject);
-		return std::move(gameObject);
-	}
+
+	std::shared_ptr<GameObject> CreateObject();
 	
 	template <typename T, typename...Components>
 	std::vector<std::shared_ptr<GameObject>> QueryComponents()
@@ -104,6 +101,9 @@ private:
 	std::vector<std::shared_ptr<GameObject>> gameObjects;
 	GameObjectID incrementalObjectID;
 };
+
+/// @}
+/// @}
 
 }// namespace Pomdog
 
