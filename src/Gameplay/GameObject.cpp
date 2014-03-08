@@ -9,22 +9,27 @@
 #include <Pomdog/Gameplay/GameObject.hpp>
 
 namespace Pomdog {
-
-GameObject::GameObject(GameObjectID const& instanceIDIn)
-	: instanceID(instanceIDIn)
+//-----------------------------------------------------------------------
+GameObject::GameObject(std::shared_ptr<GameObjectContext> const& contextIn)
+	: context(contextIn)
+	, id(contextIn->Create())
 {
-	components.reserve(4);
 }
 //-----------------------------------------------------------------------
-GameObject::GameObject(GameObjectID && instanceIDIn)
-	: instanceID(std::move(instanceIDIn))
+GameObject::GameObject(std::shared_ptr<GameObjectContext> && contextIn)
+	: context(std::move(contextIn))
+	, id(context->Create())
 {
-	components.reserve(4);
 }
 //-----------------------------------------------------------------------
-GameObjectID const& GameObject::ID() const
+GameObject::~GameObject()
 {
-	return instanceID;
+	context->Destroy(id);
 }
-
+//-----------------------------------------------------------------------
+GameObjectID GameObject::ID() const
+{
+	return id;
+}
+//-----------------------------------------------------------------------
 }// namespace Pomdog

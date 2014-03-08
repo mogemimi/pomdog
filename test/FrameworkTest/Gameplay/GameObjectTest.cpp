@@ -12,6 +12,7 @@
 
 using Pomdog::GameObject;
 using Pomdog::GameObjectID;
+using Pomdog::GameObjectContext;
 
 struct TransformInteger
 {
@@ -25,7 +26,8 @@ struct TransformInteger
 
 TEST(GameObject, AddComponentWithoutArguments)
 {
-	GameObject gameObject;
+	auto objectContext = std::make_shared<GameObjectContext>();
+	GameObject gameObject{ objectContext };
 	gameObject.AddComponent<int>();
 	gameObject.AddComponent<std::uint16_t>();
 	gameObject.AddComponent<std::uint32_t>();
@@ -50,7 +52,8 @@ TEST(GameObject, AddComponentWithoutArguments)
 
 TEST(GameObject, AddComponentWithArguments)
 {
-	GameObject gameObject;
+	auto objectContext = std::make_shared<GameObjectContext>();
+	GameObject gameObject{ objectContext };
 	gameObject.AddComponent<int>(42);
 	gameObject.AddComponent<std::uint16_t>(42);
 	gameObject.AddComponent<std::uint32_t>(42);
@@ -77,7 +80,8 @@ TEST(GameObject, AddComponentWithArguments)
 
 TEST(GameObject, RemoveComponent)
 {
-	GameObject gameObject;
+	auto objectContext = std::make_shared<GameObjectContext>();
+	GameObject gameObject{ objectContext };
 	gameObject.AddComponent<TransformInteger>();
 	ASSERT_TRUE(gameObject.HasComponent<TransformInteger>());
 	
@@ -88,9 +92,145 @@ TEST(GameObject, RemoveComponent)
 
 TEST(GameObject, GameObjectID)
 {
-	GameObjectID const gameObjectID { 42 };
-	GameObject gameObject { gameObjectID };
+	auto objectContext = std::make_shared<GameObjectContext>();
+	GameObject gameObject { objectContext };
 	
-	EXPECT_EQ(gameObjectID, gameObject.ID());
-	EXPECT_EQ(42, gameObject.ID().value);
+	auto id = gameObject.ID();
+	EXPECT_EQ(id, gameObject.ID());
+	
+	GameObject gameObject2 { objectContext };
+	
+	EXPECT_NE(gameObject.ID(), gameObject2.ID());
+	EXPECT_EQ(0, gameObject.ID().Index());
+	EXPECT_EQ(1, gameObject2.ID().Index());
+	EXPECT_EQ(1, gameObject.ID().SequenceNumber());
+	EXPECT_EQ(1, gameObject2.ID().SequenceNumber());
+}
+
+TEST(GameObject, Component_Const)
+{
+	auto objectContext = std::make_shared<GameObjectContext>();
+	auto gameObject = std::make_shared<GameObject>(objectContext);
+	
+	EXPECT_FALSE(gameObject->HasComponent<int>());
+	EXPECT_EQ(nullptr, gameObject->Component<int>());
+	
+	gameObject->AddComponent<int>(42);
+
+	EXPECT_TRUE(gameObject->HasComponent<int>());
+	ASSERT_NE(nullptr, gameObject->Component<int>());
+	EXPECT_EQ(42, *gameObject->Component<int>());
+	
+	{
+		std::shared_ptr<GameObject const> gameObjectConstRef = gameObject;
+		auto component = gameObjectConstRef->Component<int>();
+		
+		EXPECT_TRUE(gameObjectConstRef->HasComponent<int>());
+		EXPECT_EQ(42, *gameObjectConstRef->Component<int>());
+	}
+}
+
+TEST(GameObject, GameObjectID_Sequence)
+{
+	auto objectContext = std::make_shared<GameObjectContext>();
+	auto gameObject = std::make_shared<GameObject>(objectContext);
+
+	EXPECT_EQ(0, gameObject->ID().Index());
+	EXPECT_NE(0, gameObject->ID().SequenceNumber());
+	EXPECT_EQ(1, gameObject->ID().SequenceNumber());
+	{
+		auto gameObject = std::make_shared<GameObject>(objectContext);
+		EXPECT_EQ(1, gameObject->ID().Index());
+		EXPECT_NE(0, gameObject->ID().SequenceNumber());
+		EXPECT_EQ(1, gameObject->ID().SequenceNumber());
+	}
+	{
+		auto gameObject = std::make_shared<GameObject>(objectContext);
+		EXPECT_EQ(1, gameObject->ID().Index());
+		EXPECT_NE(0, gameObject->ID().SequenceNumber());
+		EXPECT_EQ(2, gameObject->ID().SequenceNumber());
+	}
+	{
+		auto gameObject = std::make_shared<GameObject>(objectContext);
+		EXPECT_EQ(1, gameObject->ID().Index());
+		EXPECT_NE(0, gameObject->ID().SequenceNumber());
+		EXPECT_EQ(3, gameObject->ID().SequenceNumber());
+	}
+	{
+		auto gameObject1 = std::make_shared<GameObject>(objectContext);
+		EXPECT_EQ(1, gameObject1->ID().Index());
+		EXPECT_NE(0, gameObject1->ID().SequenceNumber());
+		EXPECT_EQ(4, gameObject1->ID().SequenceNumber());
+		
+		auto gameObject2 = std::make_shared<GameObject>(objectContext);
+		EXPECT_EQ(2, gameObject2->ID().Index());
+		EXPECT_NE(0, gameObject2->ID().SequenceNumber());
+		EXPECT_EQ(1, gameObject2->ID().SequenceNumber());
+		
+		auto gameObject3 = std::make_shared<GameObject>(objectContext);
+		EXPECT_EQ(3, gameObject3->ID().Index());
+		EXPECT_NE(0, gameObject3->ID().SequenceNumber());
+		EXPECT_EQ(1, gameObject3->ID().SequenceNumber());
+	}
+}
+
+TEST(GameObject, GameObjectID_Unique)
+{
+	std::vector<std::shared_ptr<GameObject>> objects;
+	std::vector<std::uint64_t> uniqueIdents;
+
+	auto objectContext = std::make_shared<GameObjectContext>();
+
+	std::mt19937 random;
+
+	std::uint32_t maxSequenceNumber = 0;
+	std::uint32_t maxIndex = 0;
+
+	for (std::size_t count = 0; count < 262144; ++count)
+	{
+		if (count % 3 != 0)
+		{
+			auto gameObject = std::make_shared<GameObject>(objectContext);
+			objects.push_back(gameObject);
+			uniqueIdents.push_back(gameObject->ID().Value());
+			
+			//printf("### Create Object: %llu(%u, %u) \n",
+			//	gameObject->ID().Value(),
+			//	gameObject->ID().SequenceNumber(),
+			//	gameObject->ID().Index());
+			
+			maxSequenceNumber = std::max(maxSequenceNumber, gameObject->ID().SequenceNumber());
+			maxIndex = std::max(maxIndex, gameObject->ID().Index());
+		}
+		if (count % 11 == 8)
+		{
+			if (!objects.empty())
+			{
+				objects.erase(objects.begin());
+				//printf("### Remove Object \n");
+			}
+		}
+		if (count % 14 == 9)
+		{
+			if (!objects.empty())
+			{
+				std::uniform_int_distribution<std::uint32_t> distribution(1, 13);
+				auto const randomNumber = distribution(random);
+			
+				objects.erase(std::remove_if(std::begin(objects), std::end(objects),
+					[&](std::shared_ptr<Pomdog::GameObject> const& a) {
+						return (a->ID().Value() % randomNumber == 0);
+					}), std::end(objects));
+				
+				//printf("### Remove Objects \n");
+			}
+		}
+	}
+	
+	//printf("## maxSequenceNumber = %u\n## maxIndex = %u\n", maxSequenceNumber, maxIndex);
+	
+	std::sort(std::begin(uniqueIdents), std::end(uniqueIdents));
+	auto iter = std::adjacent_find(std::begin(uniqueIdents), std::end(uniqueIdents));
+	
+	EXPECT_EQ(std::end(uniqueIdents), iter);
 }

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -16,7 +16,8 @@ using namespace Pomdog;
 
 TEST(Transform2D, TrivialCase)
 {
-	GameObject gameObject;
+	auto objectContext = std::make_shared<GameObjectContext>();
+	GameObject gameObject{ objectContext };
 	gameObject.AddComponent<Transform2D>();
 	EXPECT_TRUE(gameObject.HasComponent<Transform2D>());
 	EXPECT_NE(nullptr, gameObject.Component<Transform2D>());

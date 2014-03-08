@@ -12,13 +12,13 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 GameWorld::GameWorld()
-	: incrementalObjectID(0)
+	: objectContext(std::make_shared<GameObjectContext>())
 {}
 //-----------------------------------------------------------------------
 std::shared_ptr<GameObject> GameWorld::CreateObject()
 {
-	++incrementalObjectID.value;
-	auto gameObject = std::make_shared<GameObject>(incrementalObjectID);
+	POMDOG_ASSERT(objectContext);
+	auto gameObject = std::make_shared<GameObject>(objectContext);
 	gameObjects.push_back(gameObject);
 	return std::move(gameObject);
 }

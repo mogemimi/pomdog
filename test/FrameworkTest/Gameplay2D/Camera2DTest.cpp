@@ -16,7 +16,8 @@ using namespace Pomdog;
 
 TEST(Camera2D, TrivialCase)
 {
-	GameObject gameObject;
+	auto objectContext = std::make_shared<GameObjectContext>();
+	GameObject gameObject{ objectContext };
 	gameObject.AddComponent<Camera2D>();
 	EXPECT_TRUE(gameObject.HasComponent<Camera2D>());
 	EXPECT_NE(nullptr, gameObject.Component<Camera2D>());

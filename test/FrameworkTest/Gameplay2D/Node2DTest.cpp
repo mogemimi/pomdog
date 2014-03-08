@@ -15,13 +15,14 @@ using namespace Pomdog;
 
 TEST(Node2D, TrivialCase)
 {
-	auto rootObject = std::make_shared<GameObject>();
+	auto objectContext = std::make_shared<GameObjectContext>();
+	auto rootObject = std::make_shared<GameObject>(objectContext);
 	
 	auto rootNode = rootObject->AddComponent<Node2D>(rootObject);
 	EXPECT_TRUE(rootObject->HasComponent<Node2D>());
 	EXPECT_NE(nullptr, rootObject->Component<Node2D>());
 	
-	auto childObject = std::make_shared<GameObject>();
+	auto childObject = std::make_shared<GameObject>(objectContext);
 	rootNode->AddChild(childObject);
 	
 	ASSERT_FALSE(rootNode->Children().empty());
@@ -37,13 +38,14 @@ TEST(Node2D, TrivialCase)
 
 TEST(Node2D, DeleteChildObjectCase)
 {
-	auto rootObject = std::make_shared<GameObject>();
+	auto objectContext = std::make_shared<GameObjectContext>();
+	auto rootObject = std::make_shared<GameObject>(objectContext);
 	
 	auto rootNode = rootObject->AddComponent<Node2D>(rootObject);
 	EXPECT_TRUE(rootObject->HasComponent<Node2D>());
 	EXPECT_NE(nullptr, rootObject->Component<Node2D>());
 	
-	auto childObject = std::make_shared<GameObject>();
+	auto childObject = std::make_shared<GameObject>(objectContext);
 	rootNode->AddChild(childObject);
 	
 	ASSERT_FALSE(rootNode->Children().empty());
@@ -61,13 +63,14 @@ TEST(Node2D, DeleteChildObjectCase)
 
 TEST(Node2D, RemoveChildNodeComponentCase)
 {
-	auto rootObject = std::make_shared<GameObject>();
+	auto objectContext = std::make_shared<GameObjectContext>();
+	auto rootObject = std::make_shared<GameObject>(objectContext);
 	
 	auto rootNode = rootObject->AddComponent<Node2D>(rootObject);
 	EXPECT_TRUE(rootObject->HasComponent<Node2D>());
 	EXPECT_NE(nullptr, rootObject->Component<Node2D>());
 	
-	auto childObject = std::make_shared<GameObject>();
+	auto childObject = std::make_shared<GameObject>(objectContext);
 	rootNode->AddChild(childObject);
 	
 	ASSERT_FALSE(rootNode->Children().empty());
@@ -84,13 +87,14 @@ TEST(Node2D, RemoveChildNodeComponentCase)
 
 TEST(Node2D, RemoveNode)
 {
-	auto rootObject = std::make_shared<GameObject>();
+	auto objectContext = std::make_shared<GameObjectContext>();
+	auto rootObject = std::make_shared<GameObject>(objectContext);
 
 	auto rootNode = rootObject->AddComponent<Node2D>(rootObject);
 	EXPECT_TRUE(rootObject->HasComponent<Node2D>());
 	EXPECT_NE(nullptr, rootObject->Component<Node2D>());
 	
-	auto childObject = std::make_shared<GameObject>();
+	auto childObject = std::make_shared<GameObject>(objectContext);
 	rootNode->AddChild(childObject);
 
 	ASSERT_EQ(childObject, rootNode->Children().front());

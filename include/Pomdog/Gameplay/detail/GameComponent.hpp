@@ -23,6 +23,7 @@
 
 namespace Pomdog {
 namespace Details {
+namespace Gameplay {
 
 struct ComponentBitIndexCounter
 {
@@ -105,6 +106,7 @@ private:
 	T value;
 };
 
+}// namespace Gameplay
 }// namespace Details
 }// namespace Pomdog
 

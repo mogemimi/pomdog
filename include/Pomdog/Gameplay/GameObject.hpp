@@ -19,12 +19,12 @@
 #include <algorithm>
 #include <memory>
 #include <utility>
-#include <vector>
-#include <bitset>
 #include "../Config/Export.hpp"
 #include "../Utility/Assert.hpp"
 #include "detail/GameComponent.hpp"
 #include "GameObjectID.hpp"
+#include "GameObjectContext.hpp"
+
 
 namespace Pomdog {
 
@@ -37,31 +37,19 @@ namespace Pomdog {
 /// @brief コンポーネントを保持するゲームオブジェクトです。複数のコンポーネントを格納するコンテナの役割を担います。
 class POMDOG_EXPORT GameObject
 {
-private:
-	typedef std::uint8_t HashCodeType;
-	typedef Details::GameComponent<HashCodeType> ComponentType;
-	
-	template <typename T>
-	using ComponentHash = Details::GameComponentHashCode<T, HashCodeType>;
-	
-	template <typename T>
-	using IntrusiveComponentType = Details::IntrusiveComponent<T, HashCodeType>;
-	
-	static constexpr HashCodeType MaxComponentCapacity = 96;
-
 public:
 	GameObject() = default;
 	GameObject(GameObject const&) = delete;
 	GameObject & operator=(GameObject const&) = delete;
 	
-	virtual ~GameObject() = default;
-
-	explicit GameObject(GameObjectID const& instanceID);
-	explicit GameObject(GameObjectID && instanceID);
-
+	explicit GameObject(std::shared_ptr<GameObjectContext> const& context);
+	explicit GameObject(std::shared_ptr<GameObjectContext> && context);
+	
+	~GameObject();
+	
 	///@~Japanese
 	/// @brief インスタンス固有の値である 32 ビットの ID を取得します。
-	GameObjectID const& ID() const;
+	GameObjectID ID() const;
 
 	///@~Japanese
 	/// @brief コンポーネントを取得します。
@@ -89,9 +77,8 @@ public:
 	void RemoveComponent();
 	
 private:
-	std::bitset<MaxComponentCapacity> componentBitMask;
-	std::vector<std::unique_ptr<ComponentType>> components;
-	GameObjectID instanceID;
+	std::shared_ptr<GameObjectContext> context;
+	GameObjectID id;
 };
 
 /// @}
@@ -101,86 +88,36 @@ private:
 template <typename T>
 T const* GameObject::Component() const
 {
-	auto const iter = std::find_if(std::begin(components), std::end(components),
-		[](std::unique_ptr<ComponentType> const& component) {
-			POMDOG_ASSERT(component);
-			return component->GetHashCode() == ComponentHash<T>::value;
-	});
-
-	if (iter != std::end(components))
-	{
-		POMDOG_ASSERT(*iter);
-		POMDOG_ASSERT(HasComponent<T>());
-		if (auto p = dynamic_cast<IntrusiveComponentType<T> const*>((*iter).get()))
-		{
-			return &(p->Value());
-		}
-	}
-	return nullptr;
+	POMDOG_ASSERT(context);
+	return context->Component<T>(id);
 }
 
 template <typename T>
 T* GameObject::Component()
 {
-	auto const iter = std::find_if(std::begin(components), std::end(components),
-		[](std::unique_ptr<ComponentType> const& component) {
-			POMDOG_ASSERT(component);
-			return component->GetHashCode() == ComponentHash<T>::value;
-	});
-
-	if (iter != std::end(components))
-	{
-		POMDOG_ASSERT(*iter);
-		POMDOG_ASSERT(HasComponent<T>());
-		if (auto p = dynamic_cast<IntrusiveComponentType<T>*>((*iter).get()))
-		{
-			return &(p->Value());
-		}
-	}
-	return nullptr;
+	POMDOG_ASSERT(context);
+	return context->Component<T>(id);
 }
 
 template <typename T>
 bool GameObject::HasComponent() const
 {
-	POMDOG_ASSERT(ComponentHash<T>::value < MaxComponentCapacity);
-	return componentBitMask[ComponentHash<T>::value];
+	POMDOG_ASSERT(context);
+	return context->HasComponent<T>(id);
 }
 
 template <typename T, typename...Arguments>
 T* GameObject::AddComponent(Arguments && ...arguments)
 {
-	POMDOG_ASSERT(components.size() < MaxComponentCapacity);
-	
-	auto const hashCode = ComponentHash<T>::value;
-
-	POMDOG_ASSERT(std::end(components) == std::find_if(std::begin(components), std::end(components),
-		[&](std::unique_ptr<ComponentType> const& component) { return component->GetHashCode() == hashCode; }));
-
-	components.push_back(
-		//std::make_unique<IntrusiveComponentType<T>>(
-		std::unique_ptr<IntrusiveComponentType<T>>(new IntrusiveComponentType<T>(
-			std::forward<Arguments>(arguments)...
-		)));
-	
-	POMDOG_ASSERT(hashCode < MaxComponentCapacity);
-	POMDOG_ASSERT(!componentBitMask[hashCode]);
-	componentBitMask[hashCode] = 1;
-	
-	return &(dynamic_cast<IntrusiveComponentType<T>*>((components.back()).get())->Value());
+	POMDOG_ASSERT(context);
+	return context->AddComponent<T>(id, std::forward<Arguments>(arguments)...);
 }
 
 template <typename T>
 void GameObject::RemoveComponent()
 {
-	components.erase(std::remove_if(std::begin(components), std::end(components),
-		[](std::unique_ptr<ComponentType> const& component) {
-			POMDOG_ASSERT(component);
-			return component->GetHashCode() == ComponentHash<T>::value;
-		}), std::end(components));
-
-	POMDOG_ASSERT(ComponentHash<T>::value < MaxComponentCapacity);
-	componentBitMask[ComponentHash<T>::value] = 0;
+	POMDOG_ASSERT(context);
+	context->RemoveComponent<T>(id);
 }
 
 }// namespace Pomdog

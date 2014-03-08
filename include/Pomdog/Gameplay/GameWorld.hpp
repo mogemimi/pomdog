@@ -99,7 +99,7 @@ public:
 	
 private:
 	std::vector<std::shared_ptr<GameObject>> gameObjects;
-	GameObjectID incrementalObjectID;
+	std::shared_ptr<GameObjectContext> objectContext;
 };
 
 /// @}

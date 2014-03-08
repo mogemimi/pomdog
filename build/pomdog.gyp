@@ -79,6 +79,7 @@
       '../include/Pomdog/Event/detail/ForwardDeclarations.hpp',
       '../include/Pomdog/Event/detail/Signal.hpp',
       '../include/Pomdog/Gameplay/GameObject.hpp',
+      '../include/Pomdog/Gameplay/GameObjectContext.hpp',
       '../include/Pomdog/Gameplay/GameObjectID.hpp',
       '../include/Pomdog/Gameplay/GameWorld.hpp',
       '../include/Pomdog/Gameplay/detail/GameComponent.hpp',
