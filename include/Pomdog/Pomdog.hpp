@@ -64,6 +64,7 @@
 
 // Gameplay
 #include "Gameplay/GameObject.hpp"
+#include "Gameplay/GameObjectContext.hpp"
 #include "Gameplay/GameObjectID.hpp"
 #include "Gameplay/GameWorld.hpp"
 
