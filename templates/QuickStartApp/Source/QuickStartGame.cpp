@@ -39,7 +39,7 @@ void CocoaTestGame::Initialize()
 		vertexBuffer = std::make_shared<ImmutableVertexBuffer>(graphicsDevice,
 			VertexCombined::Declaration(), verticesCombo.data(), verticesCombo.size());
 
-		effectPass = assets->Load<EffectPass>("Content/SimpleEffect");
+		effectPass = assets->Load<EffectPass>("SimpleEffect");
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}
 	{
@@ -71,7 +71,7 @@ void CocoaTestGame::Initialize()
 		auto sampler = SamplerState::CreatePointClamp(graphicsDevice);
 		graphicsContext->SetSamplerState(0, sampler);
 
-		texture = assets->Load<Texture2D>("Content/pomdog.png");
+		texture = assets->Load<Texture2D>("pomdog.png");
 		
 		if (texture) {
 			Log::Stream()

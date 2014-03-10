@@ -178,7 +178,7 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	{
 		NSString* path = [[NSBundle mainBundle] resourcePath];
 		Details::AssetLoaderContext loaderContext{
-			[path UTF8String],
+			[[path stringByAppendingPathComponent: @"Content"] UTF8String],
 			graphicsContext,
 			graphicsDevice
 		};

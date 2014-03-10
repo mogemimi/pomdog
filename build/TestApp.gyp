@@ -81,6 +81,15 @@
               '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
             ],
           },
+          'actions': [
+            {
+              'action_name': 'XcodeResourcesUpdater',
+              'description': 'Always update resources on Xcode',
+              'inputs': [],
+              'outputs': [],
+              'action': ['./update-bundle-resources.sh', '${SOURCE_ROOT}/../test/TestApp/Content/.'],
+            },
+          ],
         }], # OS == "mac"
       ],
       'mac_bundle_resources': [

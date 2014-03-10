@@ -34,7 +34,7 @@ void TestAppGame::Initialize()
 		auto sampler = SamplerState::CreatePointWrap(graphicsDevice);
 		graphicsContext->SetSamplerState(0, sampler);
 
-		texture = assets->Load<Texture2D>("Content/pomdog.png");
+		texture = assets->Load<Texture2D>("pomdog.png");
 	}
 	
 	spriteRenderer = std::unique_ptr<SpriteRenderer>(new SpriteRenderer(gameHost));

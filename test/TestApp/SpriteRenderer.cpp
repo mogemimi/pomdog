@@ -29,7 +29,7 @@ SpriteRenderer::SpriteRenderer(std::shared_ptr<GameHost> const& gameHost)
 			PositionTextureCoord::Declaration(), verticesCombo.data(), verticesCombo.size());
 	}
 	{
-		effectPass = assets->Load<EffectPass>("Content/SpriteEffect");
+		effectPass = assets->Load<EffectPass>("SpriteEffect");
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}
 	{
