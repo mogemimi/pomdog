@@ -15,6 +15,7 @@
 
 #include <memory>
 #include <vector>
+#include <Pomdog/Config/Export.hpp>
 
 namespace Pomdog {
 
@@ -25,7 +26,7 @@ class GameObject;
 /// @addtogroup Gameplay2D
 /// @{
 
-class Node2D
+class POMDOG_EXPORT Node2D
 {
 public:
 	Node2D() = delete;

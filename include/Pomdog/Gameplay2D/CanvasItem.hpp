@@ -6,16 +6,14 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_TRANSFORM2D_9973161D_D63B_499A_9158_F635629B7A26_HPP
-#define POMDOG_TRANSFORM2D_9973161D_D63B_499A_9158_F635629B7A26_HPP
+#ifndef POMDOG_CANVASITEM_2E0BA3CA_4A40_4E8F_A355_E153025587B9_HPP
+#define POMDOG_CANVASITEM_2E0BA3CA_4A40_4E8F_A355_E153025587B9_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
 #endif
 
 #include <Pomdog/Config/Export.hpp>
-#include <Pomdog/Math/Vector2.hpp>
-#include <Pomdog/Math/Radian.hpp>
 
 namespace Pomdog {
 
@@ -24,14 +22,14 @@ namespace Pomdog {
 /// @addtogroup Gameplay2D
 /// @{
 
-class POMDOG_EXPORT Transform2D
+class POMDOG_EXPORT CanvasItem
 {
 public:
-	Vector2 Position;
-	Vector2 Scale;
-	Radian<float> Rotation;
+	bool Visibile;
 	
-	Transform2D();
+	CanvasItem()
+		: Visibile(true)
+	{}
 };
 
 /// @}
@@ -39,4 +37,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_TRANSFORM2D_9973161D_D63B_499A_9158_F635629B7A26_HPP)
+#endif // !defined(POMDOG_CANVASITEM_2E0BA3CA_4A40_4E8F_A355_E153025587B9_HPP)

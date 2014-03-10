@@ -6,8 +6,15 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
+#include <Pomdog/Gameplay2D/Transform2D.hpp>
+
 namespace Pomdog {
-namespace Details {
-    // Insert code here to run your application
-}// namespace Details
+
+Transform2D::Transform2D()
+: Position(0.0f, 0.0f)
+, Scale(1.0f, 1.0f)
+, Rotation(0.0f)
+{
+}
+
 }// namespace Pomdog

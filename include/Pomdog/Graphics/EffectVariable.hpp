@@ -31,7 +31,6 @@ public:
 	std::string Name;
 	EffectAnnotation Annotation;
 	std::uint32_t StartOffset;
-	std::uint32_t ByteSize;
 };
 
 /// @}

@@ -81,7 +81,9 @@ GetActiveUniformsIntValue(ShaderProgramGL4 const& shaderProgram, std::vector<GLu
 
 	std::vector<GLint> values(uniformIndices.size());
 	glGetActiveUniformsiv(shaderProgram.value, uniformCount, uniformIndices.data(), parameter, values.data());
-	for (GLsizei index = 0; index < uniformCount; ++index) {
+	
+	for (GLsizei index = 0; index < uniformCount; ++index)
+	{
 		func(index, values[index]);
 	}
 }
@@ -98,7 +100,7 @@ EnumerateUniformVariables(ShaderProgramGL4 const& shaderProgram, GLuint uniformB
 		[&](GLsizei index, GLint value){ uniforms[index].StartOffset = value; });
 	
 	GetActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_SIZE,
-		[&](GLsizei index, GLint value){ uniforms[index].ByteSize = value; });
+		[&](GLsizei index, GLint value){ uniforms[index].Elements = value; });
 	
 	GetActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_TYPE,
 		[&](GLsizei index, GLint value){ uniforms[index].Type = value; });
@@ -558,7 +560,8 @@ EffectAnnotation ToEffectAnnotation(UniformVariableGL4 const& uniform)
 	annotation.VariableType = ToEffectVariableType(uniform.Type);
 	annotation.VariableClass = ToEffectVariableClass(uniform.Type);
 	ToComponents(uniform.Type, annotation.RowCount, annotation.ColumnCount);
-	
+	annotation.Elements = (uniform.Elements > 1) ? uniform.Elements: 0;
+	POMDOG_ASSERT(annotation.Elements != 1);
 	return std::move(annotation);
 }
 //-----------------------------------------------------------------------
@@ -572,7 +575,6 @@ std::vector<EffectVariable> GetEffectVariables(std::vector<UniformVariableGL4> c
 	{
 		EffectVariable effectVariable;
 		effectVariable.Name = uniform.Name;
-		effectVariable.ByteSize = uniform.ByteSize;
 		effectVariable.StartOffset = uniform.StartOffset;
 		effectVariable.Annotation = ToEffectAnnotation(uniform);
 		result.push_back(std::move(effectVariable));
@@ -600,7 +602,7 @@ void DebugLogUniformBlocks(std::vector<UniformBlockGL4> const& uniformBlocks)
 			<< ":- - - - - - - - - - - - - -\n"
 			<< "         Name: " << uniform.Name << "\n"
 			<< "  StartOffset: " << uniform.StartOffset << "\n"
-			<< "     ByteSize: " << uniform.ByteSize << "\n"
+			<< "     Elements: " << uniform.Elements << "\n"
 			<< "         Type: " << uniform.Type << "\n"
 			<< "  ArrayStride: " << uniform.ArrayStride << "\n"
 			<< " MatrixStride: " << uniform.MatrixStride << "\n"

@@ -29,7 +29,7 @@ struct UniformVariableGL4
 {
 	std::string Name;
 	GLuint StartOffset;
-	GLenum ByteSize;
+	GLenum Elements;
 	GLenum Type;
 	GLuint ArrayStride;
 	GLuint MatrixStride;

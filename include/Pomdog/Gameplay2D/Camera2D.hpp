@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <Pomdog/Config/Export.hpp>
 #include <Pomdog/Math/Radian.hpp>
 
 namespace Pomdog {
@@ -22,7 +23,7 @@ namespace Pomdog {
 /// @addtogroup Gameplay2D
 /// @{
 
-class Camera2D
+class POMDOG_EXPORT Camera2D
 {
 public:
 };

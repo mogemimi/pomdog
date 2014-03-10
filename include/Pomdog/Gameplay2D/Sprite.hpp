@@ -6,16 +6,16 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_TRANSFORM2D_9973161D_D63B_499A_9158_F635629B7A26_HPP
-#define POMDOG_TRANSFORM2D_9973161D_D63B_499A_9158_F635629B7A26_HPP
+#ifndef POMDOG_SPRITE_3EEA26CB_0AA7_4E99_9D42_A28F19EFD4FC_HPP
+#define POMDOG_SPRITE_3EEA26CB_0AA7_4E99_9D42_A28F19EFD4FC_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
 #endif
 
 #include <Pomdog/Config/Export.hpp>
+#include <Pomdog/Math/Rectangle.hpp>
 #include <Pomdog/Math/Vector2.hpp>
-#include <Pomdog/Math/Radian.hpp>
 
 namespace Pomdog {
 
@@ -24,14 +24,17 @@ namespace Pomdog {
 /// @addtogroup Gameplay2D
 /// @{
 
-class POMDOG_EXPORT Transform2D
+class POMDOG_EXPORT Sprite
 {
 public:
-	Vector2 Position;
-	Vector2 Scale;
-	Radian<float> Rotation;
+	Rectangle Subrect;
+	Vector2 Origin;
+	//float LayerDepth; //ZOrder
 	
-	Transform2D();
+	Sprite()
+		: Subrect(0, 0, 1.0f, 1.0f)
+		, Origin(0.5f, 0.5f)
+	{}
 };
 
 /// @}
@@ -39,4 +42,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_TRANSFORM2D_9973161D_D63B_499A_9158_F635629B7A26_HPP)
+#endif // !defined(POMDOG_SPRITE_3EEA26CB_0AA7_4E99_9D42_A28F19EFD4FC_HPP)

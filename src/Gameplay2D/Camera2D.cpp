@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
+#include <Pomdog/Gameplay2D/Camera2D.hpp>
+
 namespace Pomdog {
-namespace Details {
-    // Insert code here to run your application
-}// namespace Details
+
 }// namespace Pomdog

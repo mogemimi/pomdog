@@ -8,6 +8,7 @@
 
 #include "TestAppGame.hpp"
 #include <utility>
+#include "SpriteRenderer.hpp"
 
 namespace TestApp {
 //-----------------------------------------------------------------------
@@ -18,6 +19,8 @@ TestAppGame::TestAppGame(std::shared_ptr<GameHost> const& gameHostIn)
 	graphicsContext = gameHost->GraphicsContext();
 }
 //-----------------------------------------------------------------------
+TestAppGame::~TestAppGame() = default;
+//-----------------------------------------------------------------------
 void TestAppGame::Initialize()
 {
 	auto window = gameHost->Window();
@@ -25,106 +28,64 @@ void TestAppGame::Initialize()
 	window->AllowPlayerResizing(false);
 	
 	auto graphicsDevice = gameHost->GraphicsDevice();
-	
 	auto assets = gameHost->AssetManager();
 
-	{
-		using VertexCombined = CustomVertex<Vector3, Vector2>;
-		
-		std::array<VertexCombined, 4> const verticesCombo = {
-			Vector3(-0.8f, -0.8f, 0.0f), Vector2(0.0f, 0.0f),
-			Vector3(-0.8f,  0.8f, 0.0f), Vector2(0.0f, 1.0f),
-			Vector3( 0.8f,  0.8f, 0.0f), Vector2(1.0f, 1.0f),
-			Vector3( 0.8f, -0.8f, 0.0f), Vector2(1.0f, 0.0f),
-		};
-		vertexBuffer = std::make_shared<ImmutableVertexBuffer>(graphicsDevice,
-			VertexCombined::Declaration(), verticesCombo.data(), verticesCombo.size());
-
-		effectPass = assets->Load<EffectPass>("Content/SimpleEffect");
-		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
-	}
-	{
-		std::array<std::uint16_t, 6> const indices = {
-			0, 1, 2,
-			2, 3, 0
-		};
-
-		// Create index buffer
-		indexBuffer = std::make_shared<ImmutableIndexBuffer>(graphicsDevice,
-			IndexElementSize::SixteenBits, indices.data(), indices.size());
-	}
-	{
-		for (auto & parameter: effectPass->Parameters()) {
-			Log::Stream() << "EffectParameter: " << parameter.first;
-		}
-		
-		auto effectReflection = std::make_shared<EffectReflection>(graphicsDevice, effectPass);
-	
-		auto stream = Log::Stream();
-		for (auto & description: effectReflection->GetConstantBuffers()) {
-			stream << "-----------------------" << "\n";
-			stream << "     Name: " << description.Name << "\n";
-			stream << " ByteSize: " << description.ByteSize << "\n";
-			stream << "Variables: " << description.Variables.size() << "\n";
-		}
-	}
 	{
 		auto sampler = SamplerState::CreatePointWrap(graphicsDevice);
 		graphicsContext->SetSamplerState(0, sampler);
 
-		texture = assets->Load<Texture2D>("Content/stone.png");
-		
-		if (texture) {
-			Log::Stream()
-				<< "PNG to Texture2D: OK" << "\n"
-				<< "        Width: " << texture->Width() << "\n"
-				<< "       Height: " << texture->Height() << "\n"
-				<< "   LevelCount: " << texture->LevelCount() << "\n"
-				<< "SurfaceFormat: " << static_cast<int>(texture->Format()) << "\n";
-		}
+		texture = assets->Load<Texture2D>("Content/pomdog.png");
 	}
-	{
-		renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
-			window->ClientBounds().width, window->ClientBounds().height);
-	}
+	
+	spriteRenderer = std::unique_ptr<SpriteRenderer>(new SpriteRenderer(gameHost));
 	
 	auto gameObject = gameWorld.CreateObject();
-	gameObject->AddComponent<Camera>();
-	
-	//auto a = gameWorld.QueryComponents<Camera>();
-	
-	//hierarchy = std::make_shared<Scene>(graphicsContext);
-	//hierarchy->AddChild(gameObject);
+	gameObject->AddComponent<CanvasItem>();
+	gameObject->AddComponent<Transform2D>();
+	gameObject->AddComponent<Sprite>();
 }
 //-----------------------------------------------------------------------
 void TestAppGame::Update()
 {
 	static float value = 0.0f;
-	value += 0.008f;
-	if (value > 1.0f) {
-		value = -1.0f;
+		value += 0.008f;
+		if (value > 1.0f) {
+			value = -1.0f;
+		}
+
+	for (auto gameObject: gameWorld.QueryComponents<CanvasItem, Transform2D>())
+	{
+		auto transform = gameObject->Component<Transform2D>();
+		transform->Position.x += 1.0f;
+		transform->Position.x = std::min(200.0f, transform->Position.x);
+		transform->Scale.x = transform->Scale.y = 4.0f * (0.5f + (value * 0.5f));
+		transform->Rotation = MathConstants<float>::Pi() * value;
+		
+		auto sprite = gameObject->Component<Sprite>();
+		sprite->Origin = Vector2{0.5f, 0.5f};
+		sprite->Subrect = Rectangle(0, 0, 16, 28);
 	}
-	
-	Vector2 vec {
-		std::abs(value),
-		(1.0f + value) * 0.5f
-	};
-	
-	auto parameter = effectPass->Parameters("TestStructure");
-	parameter->SetValue(vec);
-	
-	auto vector2 = parameter->GetValue<Vector2>();
 }
 //-----------------------------------------------------------------------
 void TestAppGame::Draw()
 {
 	graphicsContext->Clear(Color::CornflowerBlue);
 	
-	graphicsContext->SetTexture(0, texture);
-	graphicsContext->SetInputLayout(inputLayout);
-	graphicsContext->SetVertexBuffer(vertexBuffer);
-	effectPass->Apply();
-	graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList, indexBuffer, indexBuffer->IndexCount());
+	POMDOG_ASSERT(spriteRenderer);
+	
+	for (auto gameObject: gameWorld.QueryComponents<CanvasItem, Transform2D>())
+	{
+		auto canvasItem = gameObject->Component<CanvasItem>();
+		if (!canvasItem->Visibile) {
+			continue;
+		}
+		
+		auto transform = gameObject->Component<Transform2D>();
+		auto sprite = gameObject->Component<Sprite>();
+		
+		float layerDepth = 0.0f;
+		spriteRenderer->Draw(texture, transform->Position, transform->Scale, transform->Rotation, sprite->Subrect, sprite->Origin, layerDepth);
+	}
 	
 	graphicsContext->Present();
 }

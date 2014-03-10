@@ -46,20 +46,10 @@
         '../include',
       ],
       'sources': [
+        '../test/TestApp/SpriteRenderer.cpp',
+        '../test/TestApp/SpriteRenderer.hpp',
         '../test/TestApp/TestAppGame.cpp',
         '../test/TestApp/TestAppGame.hpp',
-        '../test/TestApp/Camera.cpp',
-        '../test/TestApp/Camera.hpp',
-        '../test/TestApp/ProjectionType.hpp',
-        '../test/TestApp/Scene.hpp',
-        '../test/TestApp/Scene.cpp',
-        '../test/TestApp/RenderNode.hpp',
-        '../test/TestApp/PrimitiveAxes.cpp',
-        '../test/TestApp/PrimitiveAxes.hpp',
-        '../test/TestApp/PrimitiveGrid.cpp',
-        '../test/TestApp/PrimitiveGrid.hpp',
-        '../test/TestApp/Transform3D.cpp',
-        '../test/TestApp/Transform3D.hpp',
       ],
       'conditions': [
         ['component == "shared_library"', {
