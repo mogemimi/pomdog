@@ -110,10 +110,10 @@ Rectangle CocoaGameWindow::ClientBounds() const
 void CocoaGameWindow::ClientBounds(Rectangle const& clientBounds)
 {
 	NSRect bounds;
-	bounds.origin.x = clientBounds.x;
-	bounds.origin.y = clientBounds.y;
-	bounds.size.width = clientBounds.width;
-	bounds.size.height = clientBounds.height;
+	bounds.origin.x = clientBounds.X;
+	bounds.origin.y = clientBounds.Y;
+	bounds.size.width = clientBounds.Width;
+	bounds.size.height = clientBounds.Height;
 
 	[nativeWindow setFrame:bounds display:YES animate:YES];
 }

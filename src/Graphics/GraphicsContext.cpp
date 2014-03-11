@@ -102,8 +102,8 @@ GraphicsContext::Impl::Impl(std::unique_ptr<Details::RenderSystem::NativeGraphic
 	textures.clear();
 	textures.resize(graphicsCapbilities.SamplerSlotCount);
 	
-	viewport.bounds.x = 0;
-	viewport.bounds.y = 0;
+	viewport.bounds.X = 0;
+	viewport.bounds.Y = 0;
 	viewport.Width(presentationParameters.BackBufferWidth);
 	viewport.Height(presentationParameters.BackBufferHeight);
 	SetViewport(viewport);

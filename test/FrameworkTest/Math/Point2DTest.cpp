@@ -14,19 +14,19 @@ using Pomdog::Point2D;
 TEST(Point2D, FirstTestCase)
 {
 	Point2D coodinate{0, 0};
-	EXPECT_EQ(coodinate.x, 0);
-	EXPECT_EQ(coodinate.y, 0);
+	EXPECT_EQ(coodinate.X, 0);
+	EXPECT_EQ(coodinate.Y, 0);
 	
 	coodinate = {1, 2};
-	EXPECT_EQ(coodinate.x, 1);
-	EXPECT_EQ(coodinate.y, 2);
+	EXPECT_EQ(coodinate.X, 1);
+	EXPECT_EQ(coodinate.Y, 2);
 	
 	coodinate = {
 		std::numeric_limits<int>::max(),
 		std::numeric_limits<int>::min()
 	};
-	EXPECT_EQ(coodinate.x, std::numeric_limits<int>::max());
-	EXPECT_EQ(coodinate.y, std::numeric_limits<int>::min());
+	EXPECT_EQ(coodinate.X, std::numeric_limits<int>::max());
+	EXPECT_EQ(coodinate.Y, std::numeric_limits<int>::min());
 }
 
 TEST(Point2D, Addition)

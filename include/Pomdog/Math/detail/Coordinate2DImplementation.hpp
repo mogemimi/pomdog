@@ -23,39 +23,39 @@ template <typename T>
 Coordinate2D<T> const Coordinate2D<T>::Zero(0, 0);
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T>::Coordinate2D(T x_, T y_)
-	: x(x_), y(y_)
+Coordinate2D<T>::Coordinate2D(T x, T y)
+	: X(x), Y(y)
 {}
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> & Coordinate2D<T>::operator+=(Coordinate2D const& other)
 {
-	x += other.x;
-	y += other.y;
+	X += other.X;
+	Y += other.Y;
 	return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> & Coordinate2D<T>::operator-=(Coordinate2D const& other)
 {
-	x -= other.x;
-	y -= other.y;
+	X -= other.X;
+	Y -= other.Y;
 	return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> & Coordinate2D<T>::operator*=(T scaleFactor)
 {
-	x *= scaleFactor;
-	y *= scaleFactor;
+	X *= scaleFactor;
+	Y *= scaleFactor;
 	return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> & Coordinate2D<T>::operator/=(T scaleFactor)
 {
-	x /= scaleFactor;
-	y /= scaleFactor;
+	X /= scaleFactor;
+	Y /= scaleFactor;
 	return *this;
 }
 //-----------------------------------------------------------------------
@@ -68,67 +68,67 @@ Coordinate2D<T> Coordinate2D<T>::operator+() const
 template <typename T> inline
 Coordinate2D<T> Coordinate2D<T>::operator-() const
 {
-	return Coordinate2D(-x, -y);
+	return Coordinate2D(-X, -Y);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> Coordinate2D<T>::operator+(Coordinate2D const& other) const
 {
-	return Coordinate2D(x + other.x, y + other.y);
+	return Coordinate2D(X + other.X, Y + other.Y);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> Coordinate2D<T>::operator-(Coordinate2D const& other) const
 {
-	return Coordinate2D(x - other.x, y - other.y);
+	return Coordinate2D(X - other.X, Y - other.Y);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> Coordinate2D<T>::operator*(Coordinate2D const& other) const
 {
-	return Coordinate2D(x * other.x, y * other.y);
+	return Coordinate2D(X * other.X, Y * other.Y);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> Coordinate2D<T>::operator/(Coordinate2D const& other) const
 {
-	return Coordinate2D(x / other.x, y / other.y);
+	return Coordinate2D(X / other.X, Y / other.Y);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> Coordinate2D<T>::operator*(T scaleFactor) const
 {
-	return Coordinate2D(x * scaleFactor, y * scaleFactor);
+	return Coordinate2D(X * scaleFactor, Y * scaleFactor);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> Coordinate2D<T>::operator/(T scaleFactor) const
 {
-	return Coordinate2D(x / scaleFactor, y / scaleFactor);
+	return Coordinate2D(X / scaleFactor, Y / scaleFactor);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 bool Coordinate2D<T>::operator==(Coordinate2D const& other) const
 {
-	return (x == other.x && y == other.y);
+	return (X == other.X && Y == other.Y);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 bool Coordinate2D<T>::operator!=(Coordinate2D const& other) const
 {
-	return (x != other.x || y != other.y);
+	return (X != other.X || Y != other.Y);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> operator*(T scaleFactor, Coordinate2D<T> const& coordinate)
 {
-	return Coordinate2D<T>(scaleFactor * coordinate.x, scaleFactor * coordinate.y);
+	return Coordinate2D<T>(scaleFactor * coordinate.X, scaleFactor * coordinate.Y);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> operator/(T scaleFactor, Coordinate2D<T> const& coordinate)
 {
-	return Coordinate2D<T>(scaleFactor / coordinate.x, scaleFactor / coordinate.y);
+	return Coordinate2D<T>(scaleFactor / coordinate.X, scaleFactor / coordinate.Y);
 }
 
 }// namespace Details

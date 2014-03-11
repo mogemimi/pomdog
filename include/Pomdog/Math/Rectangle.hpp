@@ -45,8 +45,8 @@ namespace Pomdog {
 class POMDOG_EXPORT Rectangle
 {
 public:
-	std::int32_t x, y;
-	std::int32_t width, height;
+	std::int32_t X, Y;
+	std::int32_t Width, Height;
 
 public:
 	// Constructors:

@@ -47,8 +47,8 @@ void TestAppGame::Initialize()
 		auto transform = gameObject->AddComponent<Transform2D>();
 		gameObject->AddComponent<Sprite>();
 		
-		transform->Position.x = i * 28 - 200;
-		transform->Position.y = (i % 5) * 40;
+		transform->Position.X = i * 28 - 200;
+		transform->Position.Y = (i % 5) * 40;
 	}
 }
 //-----------------------------------------------------------------------
@@ -63,17 +63,23 @@ void TestAppGame::Update()
 	for (auto gameObject: gameWorld.QueryComponents<CanvasItem, Transform2D>())
 	{
 		auto transform = gameObject->Component<Transform2D>();
-		transform->Position.x += 1.0f;
-		if (transform->Position.x > 350.0f) {
-			transform->Position.x = -140.0f;
+		transform->Position.X += 1.0f;
+		if (transform->Position.X > 350.0f) {
+			transform->Position.X = -140.0f;
 		}
-		transform->Scale.x = transform->Scale.y = 2.0f;//(0.5f + (value * 0.5f));
+		transform->Scale.X = transform->Scale.Y = 2.0f;//(0.5f + (value * 0.5f));
 		transform->Rotation = MathConstants<float>::Pi() * value;
 		
 		auto sprite = gameObject->Component<Sprite>();
 		sprite->Origin = Vector2{0.5f, 0.5f};
 		sprite->Subrect = Rectangle(0, 0, 16, 28);
 	}
+	
+//	if (auto gameObject = gameWorld.QueryComponents<CanvasItem, Transform2D>().front())
+//	{
+//		auto transform = gameObject->Component<Transform2D>();
+//		transform->Position.x = 2;
+//	}
 }
 //-----------------------------------------------------------------------
 void TestAppGame::Draw()

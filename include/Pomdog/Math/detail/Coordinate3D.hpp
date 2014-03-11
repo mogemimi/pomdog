@@ -31,7 +31,7 @@ public:
 	static_assert(std::is_arithmetic<T>::value, "You can only use arithmetic types.");
 	typedef T value_type;
 
-	T x, y, z;
+	T X, Y, Z;
 
 public:
 	// Constructors:

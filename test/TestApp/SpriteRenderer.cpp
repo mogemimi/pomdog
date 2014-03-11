@@ -64,7 +64,7 @@ SpriteRenderer::SpriteRenderer(std::shared_ptr<GameHost> const& gameHost)
 void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture,
 	Vector2 const& position, Vector2 const& scale, Radian<float> const& rotation, Rectangle const& sourceRect, Vector2 const& originPivot, float layerDepth)
 {
-	if (scale.x == 0.0f || scale.y == 0.0f) {
+	if (scale.X == 0.0f || scale.Y == 0.0f) {
 		return;
 	}
 
@@ -93,7 +93,7 @@ void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture,
 			Vector4(scaleX, 0.0f, 0.0f, None),
 			Vector4(0.0f, scaleY, 0.0f, None),
 			Vector4(0.0f, 0.0f, 1.0f, None),
-			Vector4(inverseTexturePixelWidth.x, inverseTexturePixelWidth.y, None, None),
+			Vector4(inverseTexturePixelWidth.X, inverseTexturePixelWidth.Y, None, None),
 		};
 		
 		auto parameter = effectPass->Parameters("SpriteBatchInfo");
@@ -110,13 +110,13 @@ void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture,
 		POMDOG_ASSERT(layerDepth >= 0.0f);
 		POMDOG_ASSERT(layerDepth <= 1.0f);
 		
-		POMDOG_ASSERT(sourceRect.width > 0);
-		POMDOG_ASSERT(sourceRect.height > 0);
+		POMDOG_ASSERT(sourceRect.Width > 0);
+		POMDOG_ASSERT(sourceRect.Height > 0);
 		
 		SpriteInfo info;
-		info.Translation = Vector4(position.x, position.y, scale.x, scale.y);
-		info.SourceRect = Vector4(sourceRect.x, sourceRect.y, sourceRect.width, sourceRect.height);
-		info.OriginRotationLayerDepth = Vector4(originPivot.x, originPivot.y, rotation.value, layerDepth);
+		info.Translation = Vector4(position.X, position.Y, scale.X, scale.Y);
+		info.SourceRect = Vector4(sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
+		info.OriginRotationLayerDepth = Vector4(originPivot.X, originPivot.Y, rotation.value, layerDepth);
 		
 		auto parameter = effectPass->Parameters("SpriteInfo");
 		parameter->SetValue(info);

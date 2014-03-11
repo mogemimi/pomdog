@@ -23,27 +23,27 @@ template <typename T>
 FloatingPointQuaternion<T> const FloatingPointQuaternion<T>::Identity(0, 0, 0, 1);
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T>::FloatingPointQuaternion(T xIn, T yIn, T zIn, T wIn)
-	: x(xIn), y(yIn), z(zIn), w(wIn)
+FloatingPointQuaternion<T>::FloatingPointQuaternion(T x, T y, T z, T w)
+	: X(x), Y(y), Z(z), W(w)
 {}
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator+=(FloatingPointQuaternion const& other)
 {
-	x += other.x;
-	y += other.y;
-	z += other.z;
-	w += other.w;
+	X += other.X;
+	Y += other.Y;
+	Z += other.Z;
+	W += other.W;
 	return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator-=(FloatingPointQuaternion const& other)
 {
-	x -= other.x;
-	y -= other.y;
-	z -= other.z;
-	w -= other.w;
+	X -= other.X;
+	Y -= other.Y;
+	Z -= other.Z;
+	W -= other.W;
 	return *this;
 }
 //-----------------------------------------------------------------------
@@ -56,20 +56,21 @@ FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator*=(FloatingPoin
 template <typename T>
 FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator*=(T scaleFactor)
 {
-	x *= scaleFactor;
-	y *= scaleFactor;
-	z *= scaleFactor;
-	w *= scaleFactor;
+	X *= scaleFactor;
+	Y *= scaleFactor;
+	Z *= scaleFactor;
+	W *= scaleFactor;
 	return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator/=(T scaleFactor)
 {
-	x /= scaleFactor;
-	y /= scaleFactor;
-	z /= scaleFactor;
-	w /= scaleFactor;
+	POMDOG_ASSERT(scaleFactor != 0);
+	X /= scaleFactor;
+	W /= scaleFactor;
+	Z /= scaleFactor;
+	W /= scaleFactor;
 	return *this;
 }
 //-----------------------------------------------------------------------
@@ -82,55 +83,50 @@ FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator+() const
 template <typename T>
 FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator-() const
 {
-	return FloatingPointQuaternion(-x, -y, -z, -w);
+	return FloatingPointQuaternion(-X, -Y, -Z, -W);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator+(FloatingPointQuaternion const& other) const
 {
 	return FloatingPointQuaternion(
-		x + other.x,
-		y + other.y,
-		z + other.z,
-		w + other.w
-	);
+		X + other.X,
+		Y + other.Y,
+		Z + other.Z,
+		W + other.W);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator-(FloatingPointQuaternion const& other) const
 {
 	return FloatingPointQuaternion(
-		x - other.x,
-		y - other.y,
-		z - other.z,
-		w - other.w
-	);
+		X - other.X,
+		Y - other.Y,
+		Z - other.Z,
+		W - other.W);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator*(FloatingPointQuaternion const& other) const
 {
 	// Quaternion(
-	//     w * other.xyz + xyz * other.w + Vector3::Cross(this->xyz, other.xyz),
-	//     w * other.w - Vector3::Dot(this->xyz, other.xyz)
-	// );
+	//     w * other.Xyz + xyz * other.W + Vector3::Cross(this->xyz, other.Xyz),
+	//     w * other.W - Vector3::Dot(this->xyz, other.Xyz));
 	return FloatingPointQuaternion(
-		w * other.x + x * other.w + y * other.z - z * other.y,
-		w * other.y + y * other.w + z * other.x - x * other.z,
-		w * other.z + z * other.w + x * other.y - y * other.x,
-		w * other.w - x * other.x - y * other.y - z * other.z
-	);
+		W * other.X + X * other.W + Y * other.Z - Z * other.Y,
+		W * other.Y + Y * other.W + Z * other.X - X * other.Z,
+		W * other.Z + Z * other.W + X * other.Y - Y * other.X,
+		W * other.W - X * other.X - Y * other.Y - Z * other.Z);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator*(T scaleFactor) const
 {
 	return FloatingPointQuaternion(
-		x * scaleFactor,
-		y * scaleFactor,
-		z * scaleFactor,
-		w * scaleFactor
-	);
+		X * scaleFactor,
+		Y * scaleFactor,
+		Z * scaleFactor,
+		W * scaleFactor);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -138,51 +134,48 @@ FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator/(T scaleFactor) 
 {
 	POMDOG_ASSERT(scaleFactor != 0);
 	return FloatingPointQuaternion(
-		x / scaleFactor,
-		y / scaleFactor,
-		z / scaleFactor,
-		w / scaleFactor
-	);
+		X / scaleFactor,
+		Y / scaleFactor,
+		Z / scaleFactor,
+		W / scaleFactor);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 bool FloatingPointQuaternion<T>::operator==(FloatingPointQuaternion const& other) const
 {
 	return (
-		x == other.x &&
-		y == other.y &&
-		z == other.z &&
-		w == other.w
-	);
+		X == other.X &&
+		Y == other.Y &&
+		Z == other.Z &&
+		W == other.W);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 bool FloatingPointQuaternion<T>::operator!=(FloatingPointQuaternion const& other) const
 {
 	return (
-		x != other.x ||
-		y != other.y ||
-		z != other.z ||
-		w != other.w
-	);
+		X != other.X ||
+		Y != other.Y ||
+		Z != other.Z ||
+		W != other.W);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 T FloatingPointQuaternion<T>::Length() const
 {
-	return std::sqrt(x * x + y * y + z * z + w * w);
+	return std::sqrt(X * X + Y * Y + Z * Z + W * W);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 T FloatingPointQuaternion<T>::LengthSquared() const
 {
-	return (x * x + y * y + z * z + w * w);
+	return (X * X + Y * Y + Z * Z + W * W);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 T FloatingPointQuaternion<T>::Dot(FloatingPointQuaternion const& a, FloatingPointQuaternion const& b)
 {
-	return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+	return a.X * b.X + a.Y * b.Y + a.Z * b.Z + a.W * b.W;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -201,10 +194,10 @@ FloatingPointQuaternion<T>::Normalize(FloatingPointQuaternion const& source, Flo
 	if (length > std::numeric_limits<decltype(length)>::epsilon())
 	{
 		auto const InverseLength = 1 / length;
-		result.x = source.x * InverseLength;
-		result.y = source.y * InverseLength;
-		result.z = source.z * InverseLength;
-		result.w = source.w * InverseLength;
+		result.X = source.X * InverseLength;
+		result.Y = source.Y * InverseLength;
+		result.Z = source.Z * InverseLength;
+		result.W = source.W * InverseLength;
 	}
 }
 //-----------------------------------------------------------------------
@@ -230,10 +223,10 @@ FloatingPointQuaternion<T>::Slerp(FloatingPointQuaternion const& begin, Floating
 	auto const coefficient1 = std::sin((1 - amount) * angle) * inverseSinAngle;
 	auto const coefficient2 = std::sin(amount * angle) * inverseSinAngle;
 	
-	result.x = coefficient1 * begin.x + coefficient2 * end.x;
-	result.y = coefficient1 * begin.y + coefficient2 * end.y;
-	result.z = coefficient1 * begin.z + coefficient2 * end.z;
-	result.w = coefficient1 * begin.w + coefficient2 * end.w;
+	result.X = coefficient1 * begin.X + coefficient2 * end.X;
+	result.Y = coefficient1 * begin.Y + coefficient2 * end.Y;
+	result.Z = coefficient1 * begin.Z + coefficient2 * end.Z;
+	result.W = coefficient1 * begin.W + coefficient2 * end.W;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -253,10 +246,10 @@ FloatingPointQuaternion<T>::Inverse(FloatingPointQuaternion const& source, Float
 	if (0 < lengthSquared)
 	{
 		auto const inverseLengthSquared = 1 / lengthSquared;
-		result.x = source.x * -inverseLengthSquared;
-		result.y = source.y * -inverseLengthSquared;
-		result.z = source.z * -inverseLengthSquared;
-		result.w = source.w *  inverseLengthSquared;
+		result.X = source.X * -inverseLengthSquared;
+		result.Y = source.Y * -inverseLengthSquared;
+		result.Z = source.Z * -inverseLengthSquared;
+		result.W = source.W *  inverseLengthSquared;
 	}
 	// Failed to calculate inverse
 	//result = Identity;
@@ -280,10 +273,10 @@ FloatingPointQuaternion<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& a
 	auto const sinAngle(std::sin(halfAngle));
 	auto const cosAngle(std::cos(halfAngle));
 
-	result.x = axis.x * sinAngle;
-	result.y = axis.y * sinAngle;
-	result.z = axis.z * sinAngle;
-	result.w = cosAngle;
+	result.X = axis.X * sinAngle;
+	result.Y = axis.Y * sinAngle;
+	result.Z = axis.Z * sinAngle;
+	result.W = cosAngle;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -310,11 +303,11 @@ void CreateFromRotationMatrixImplementation(MatrixClass const& rotation, Floatin
 	if (trace > 0)
 	{
 		auto root = std::sqrt(trace + 1);
-		result.w = half * root;
+		result.W = half * root;
 		root = half / root;
-		result.x = (rotation[2][1] - rotation[1][2]) * root;
-		result.y = (rotation[0][2] - rotation[2][0]) * root;
-		result.z = (rotation[1][0] - rotation[0][1]) * root;
+		result.X = (rotation[2][1] - rotation[1][2]) * root;
+		result.Y = (rotation[0][2] - rotation[2][0]) * root;
+		result.Z = (rotation[1][0] - rotation[0][1]) * root;
 	}
 	else
 	{
@@ -333,10 +326,10 @@ void CreateFromRotationMatrixImplementation(MatrixClass const& rotation, Floatin
 		std::size_t const k = indices[j];
 		
 		auto root = std::sqrt(rotation[i][i] - rotation[j][j] - rotation[k][k] + static_cast<T>(1));
-		std::array<T*, 3> const quat = {{ &result.x, &result.y, &result.z }};
+		std::array<T*, 3> const quat = {{ &result.X, &result.Y, &result.Z }};
 		*quat[i] = half * root;
 		root = half / root;
-		result.w = (rotation[k][j] - rotation[j][k]) * root;
+		result.W = (rotation[k][j] - rotation[j][k]) * root;
 		*quat[j] = (rotation[j][i] + rotation[i][j]) * root;
 		*quat[k] = (rotation[k][i] + rotation[i][k]) * root;
 	}
@@ -396,10 +389,10 @@ FloatingPointQuaternion<T>::CreateFromYawPitchRoll(
 	auto const cosRollCosPitch = cosRoll * cosPitch;
 	auto const sinRollSinPitch = sinRoll * sinPitch;
 
-	result.x = (sinRollCosPitch * cosYaw) - (cosRollSinPitch * sinYaw);
-	result.y = (cosRollSinPitch * cosYaw) + (sinRollCosPitch * sinYaw);
-	result.z = (cosRollCosPitch * sinYaw) - (sinRollSinPitch * cosYaw);
-	result.w = (cosRollCosPitch * cosYaw) + (sinRollSinPitch * sinYaw);
+	result.X = (sinRollCosPitch * cosYaw) - (cosRollSinPitch * sinYaw);
+	result.Y = (cosRollSinPitch * cosYaw) + (sinRollCosPitch * sinYaw);
+	result.Z = (cosRollCosPitch * sinYaw) - (sinRollSinPitch * cosYaw);
+	result.W = (cosRollCosPitch * cosYaw) + (sinRollSinPitch * sinYaw);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -416,25 +409,24 @@ template <typename T>
 T const* FloatingPointQuaternion<T>::Data() const
 {
 	static_assert(std::is_floating_point<T>::value, "T is floating point number");
-	return &x;
+	return &X;
 }
 //-----------------------------------------------------------------------
 template <typename T>
 T* FloatingPointQuaternion<T>::Data()
 {
 	static_assert(std::is_floating_point<T>::value, "T is floating point number");
-	return &x;
+	return &X;
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T> operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion)
 {
 	return FloatingPointQuaternion<T>(
-		scaleFactor * quaternion.x,
-		scaleFactor * quaternion.y,
-		scaleFactor * quaternion.z,
-		scaleFactor * quaternion.w
-	);
+		scaleFactor * quaternion.X,
+		scaleFactor * quaternion.Y,
+		scaleFactor * quaternion.Z,
+		scaleFactor * quaternion.W);
 }
 //-----------------------------------------------------------------------
 // explicit instantiations

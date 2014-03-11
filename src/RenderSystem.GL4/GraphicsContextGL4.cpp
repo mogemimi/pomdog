@@ -355,7 +355,7 @@ void GraphicsContextGL4::SetViewport(Viewport const& viewport)
 
 	GLint viewportY = viewport.TopLeftY();
 	if (auto window = gameWindow.lock()) {
-		viewportY = window->ClientBounds().height - (viewport.TopLeftY() + viewport.Height());
+		viewportY = window->ClientBounds().Height - (viewport.TopLeftY() + viewport.Height());
 	}
 
 	// Notes: glViewport(x, y, width, height)
@@ -377,7 +377,7 @@ Rectangle GraphicsContextGL4::GetScissorRectangle() const
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetScissorRectangle(Rectangle const& rectangle)
 {
-	glScissor(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+	glScissor(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetInputLayout(std::shared_ptr<InputLayout> const& inputLayoutIn)

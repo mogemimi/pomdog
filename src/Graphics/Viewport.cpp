@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -30,38 +30,38 @@ Viewport::Viewport(std::int32_t x, std::int32_t y, std::int32_t width, std::int3
 //-----------------------------------------------------------------------
 void Viewport::Width(std::int32_t width)
 {
-	bounds.width = width;
+	bounds.Width = width;
 }
 //-----------------------------------------------------------------------
 std::int32_t Viewport::Width() const
 {
-	return bounds.width;
+	return bounds.Width;
 }
 //-----------------------------------------------------------------------
 void Viewport::Height(std::int32_t height)
 {
-	bounds.height = height;
+	bounds.Height = height;
 }
 //-----------------------------------------------------------------------
 std::int32_t Viewport::Height() const
 {
-	return bounds.height;
+	return bounds.Height;
 }
 //-----------------------------------------------------------------------
 std::int32_t Viewport::TopLeftX() const
 {
-	return bounds.x;
+	return bounds.X;
 }
 //-----------------------------------------------------------------------
 std::int32_t Viewport::TopLeftY() const
 {
-	return bounds.y;
+	return bounds.Y;
 }
 //-----------------------------------------------------------------------
 float Viewport::AspectRatio() const
 {
-	if (bounds.height != 0) {
-		return static_cast<float>(bounds.width) / static_cast<float>(bounds.height);
+	if (bounds.Height != 0) {
+		return static_cast<float>(bounds.Width) / static_cast<float>(bounds.Height);
 	}
 	return 0.0f;
 }

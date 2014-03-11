@@ -238,9 +238,9 @@ std::array<T, 3> & FloatingPointMatrix3x3<T>::operator[](std::size_t row)
 template <typename T>
 void FloatingPointMatrix3x3<T>::SetScale(FloatingPointVector3<T> const& scale)
 {
-	this->m[0][0] = scale.x;
-	this->m[1][1] = scale.y;
-	this->m[2][2] = scale.z;
+	this->m[0][0] = scale.X;
+	this->m[1][1] = scale.Y;
+	this->m[2][2] = scale.Z;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -378,8 +378,8 @@ void
 FloatingPointMatrix3x3<T>::CreateTranslation(FloatingPointVector2<T> const& position, FloatingPointMatrix3x3 & result)
 {
 	result = Identity;
-	result[2][0] = position.x;
-	result[2][1] = position.y;
+	result[2][0] = position.X;
+	result[2][1] = position.Y;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -395,19 +395,19 @@ template <typename T>
 void
 FloatingPointMatrix3x3<T>::CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix3x3 & result)
 {
-	static_assert(std::is_same<T, decltype(scale.x)>::value, "scale is T");
-	static_assert(std::is_same<T, decltype(scale.y)>::value, "scale is T");
-	static_assert(std::is_same<T, decltype(scale.z)>::value, "scale is T");
+	static_assert(std::is_same<T, decltype(scale.X)>::value, "scale is T");
+	static_assert(std::is_same<T, decltype(scale.Y)>::value, "scale is T");
+	static_assert(std::is_same<T, decltype(scale.Z)>::value, "scale is T");
 
-	result.m[0][0] = scale.x;
+	result.m[0][0] = scale.X;
 	result.m[0][1] = 0;
 	result.m[0][2] = 0;
 	result.m[1][0] = 0;
-	result.m[1][1] = scale.y;
+	result.m[1][1] = scale.Y;
 	result.m[1][2] = 0;
 	result.m[2][0] = 0;
 	result.m[2][1] = 0;
-	result.m[2][2] = scale.z;
+	result.m[2][2] = scale.Z;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -507,15 +507,15 @@ template <typename T>
 void
 FloatingPointMatrix3x3<T>::CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion, FloatingPointMatrix3x3 & result)
 {
-	auto const xx = quaternion.x * quaternion.x;
-	auto const yy = quaternion.y * quaternion.y;
-	auto const zz = quaternion.z * quaternion.z;
-	auto const xy = quaternion.x * quaternion.y;
-	auto const zw = quaternion.z * quaternion.w;
-	auto const zx = quaternion.z * quaternion.x;
-	auto const yw = quaternion.y * quaternion.w;
-	auto const yz = quaternion.y * quaternion.z;
-	auto const xw = quaternion.x * quaternion.w;
+	auto const xx = quaternion.X * quaternion.X;
+	auto const yy = quaternion.Y * quaternion.Y;
+	auto const zz = quaternion.Z * quaternion.Z;
+	auto const xy = quaternion.X * quaternion.Y;
+	auto const zw = quaternion.Z * quaternion.W;
+	auto const zx = quaternion.Z * quaternion.X;
+	auto const yw = quaternion.Y * quaternion.W;
+	auto const yz = quaternion.Y * quaternion.Z;
+	auto const xw = quaternion.Z * quaternion.W;
 
 	result.m[0][0] = 1 - (2 * (yy + zz));
 	result.m[0][1] = 2 * (xy + zw);
@@ -572,23 +572,23 @@ FloatingPointMatrix3x3<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& ax
 	auto const cosAngle = std::cos(angle.value);
 	
 	auto const t  = static_cast<T>(1) - cosAngle;
-	auto const xx = axis.x * axis.x;
-	auto const yy = axis.y * axis.y;
-	auto const zz = axis.z * axis.z;
-	auto const xy = axis.x * axis.y;
-	auto const xz = axis.x * axis.z;
-	auto const yz = axis.y * axis.z;
+	auto const xx = axis.X * axis.X;
+	auto const yy = axis.Y * axis.Y;
+	auto const zz = axis.Z * axis.Z;
+	auto const xy = axis.X * axis.Y;
+	auto const xz = axis.X * axis.Z;
+	auto const yz = axis.Y * axis.Z;
 
 	//axis.Normalize();
 
 	result.m[0][0] = t * xx + cosAngle;
-	result.m[0][1] = t * xy + sinAngle * axis.z;
-	result.m[0][2] = t * xz - sinAngle * axis.y;
-	result.m[1][0] = t * xy - sinAngle * axis.z;
+	result.m[0][1] = t * xy + sinAngle * axis.Z;
+	result.m[0][2] = t * xz - sinAngle * axis.Y;
+	result.m[1][0] = t * xy - sinAngle * axis.Z;
 	result.m[1][1] = t * yy + cosAngle;
-	result.m[1][2] = t * yz + sinAngle * axis.x;
-	result.m[2][0] = t * xz + sinAngle * axis.y;
-	result.m[2][1] = t * yz - sinAngle * axis.x;
+	result.m[1][2] = t * yz + sinAngle * axis.X;
+	result.m[2][0] = t * xz + sinAngle * axis.Y;
+	result.m[2][1] = t * yz - sinAngle * axis.X;
 	result.m[2][2] = t * zz + cosAngle;
 }
 //-----------------------------------------------------------------------

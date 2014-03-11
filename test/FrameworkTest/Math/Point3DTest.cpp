@@ -14,23 +14,23 @@ using Pomdog::Point3D;
 TEST(Point3D, FirstTestCase)
 {
 	Point3D coodinate{0, 0, 0};
-	EXPECT_EQ(coodinate.x, 0);
-	EXPECT_EQ(coodinate.y, 0);
-	EXPECT_EQ(coodinate.z, 0);
+	EXPECT_EQ(coodinate.X, 0);
+	EXPECT_EQ(coodinate.Y, 0);
+	EXPECT_EQ(coodinate.Z, 0);
 	
 	coodinate = {1, 2, 3};
-	EXPECT_EQ(coodinate.x, 1);
-	EXPECT_EQ(coodinate.y, 2);
-	EXPECT_EQ(coodinate.z, 3);
+	EXPECT_EQ(coodinate.X, 1);
+	EXPECT_EQ(coodinate.Y, 2);
+	EXPECT_EQ(coodinate.Z, 3);
 	
 	coodinate = {
 		std::numeric_limits<int>::max(),
 		std::numeric_limits<int>::min(),
 		std::numeric_limits<int>::denorm_min()
 	};
-	EXPECT_EQ(coodinate.x, std::numeric_limits<int>::max());
-	EXPECT_EQ(coodinate.y, std::numeric_limits<int>::min());
-	EXPECT_EQ(coodinate.z, std::numeric_limits<int>::denorm_min());
+	EXPECT_EQ(coodinate.X, std::numeric_limits<int>::max());
+	EXPECT_EQ(coodinate.Y, std::numeric_limits<int>::min());
+	EXPECT_EQ(coodinate.Z, std::numeric_limits<int>::denorm_min());
 }
 
 TEST(Point3D, Addition)

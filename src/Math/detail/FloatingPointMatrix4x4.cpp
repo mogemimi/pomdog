@@ -340,9 +340,9 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Concatenate(T scaleFactor) 
 template <typename T>
 void FloatingPointMatrix4x4<T>::SetTranslation(FloatingPointVector3<T> const& position)
 {
-	m[3][0] = position.x;
-	m[3][1] = position.y;
-	m[3][2] = position.z;
+	m[3][0] = position.X;
+	m[3][1] = position.Y;
+	m[3][2] = position.Z;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -354,9 +354,9 @@ FloatingPointVector3<T> FloatingPointMatrix4x4<T>::GetTranslation() const
 template <typename T>
 void FloatingPointMatrix4x4<T>::SetScale(FloatingPointVector3<T> const& scale)
 {
-	m[0][0] = scale.x;
-	m[1][1] = scale.y;
-	m[2][2] = scale.z;
+	m[0][0] = scale.X;
+	m[1][1] = scale.Y;
+	m[2][2] = scale.Z;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -506,9 +506,9 @@ void
 FloatingPointMatrix4x4<T>::CreateTranslation(FloatingPointVector3<T> const& position, FloatingPointMatrix4x4 & result)
 {
 	result = Identity;
-	result.m[3][0] = position.x;
-	result.m[3][1] = position.y;
-	result.m[3][2] = position.z;
+	result.m[3][0] = position.X;
+	result.m[3][1] = position.Y;
+	result.m[3][2] = position.Z;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -525,9 +525,9 @@ void
 FloatingPointMatrix4x4<T>::CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix4x4 & result)
 {
 	result = Identity;
-	result.m[0][0] = scale.x;
-	result.m[1][1] = scale.y;
-	result.m[2][2] = scale.z;
+	result.m[0][0] = scale.X;
+	result.m[1][1] = scale.Y;
+	result.m[2][2] = scale.Z;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -612,15 +612,15 @@ template <typename T>
 void
 FloatingPointMatrix4x4<T>::CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion, FloatingPointMatrix4x4 & result)
 {
-	auto const xx = quaternion.x * quaternion.x;
-	auto const yy = quaternion.y * quaternion.y;
-	auto const zz = quaternion.z * quaternion.z;
-	auto const xy = quaternion.x * quaternion.y;
-	auto const zw = quaternion.z * quaternion.w;
-	auto const zx = quaternion.z * quaternion.x;
-	auto const yw = quaternion.y * quaternion.w;
-	auto const yz = quaternion.y * quaternion.z;
-	auto const xw = quaternion.x * quaternion.w;
+	auto const xx = quaternion.X * quaternion.X;
+	auto const yy = quaternion.Y * quaternion.Y;
+	auto const zz = quaternion.Z * quaternion.Z;
+	auto const xy = quaternion.X * quaternion.Y;
+	auto const zw = quaternion.Z * quaternion.W;
+	auto const zx = quaternion.Z * quaternion.X;
+	auto const yw = quaternion.Y * quaternion.W;
+	auto const yz = quaternion.Y * quaternion.Z;
+	auto const xw = quaternion.X * quaternion.W;
 
 	result.m[0][0] = 1 - (2 * (yy + zz));
 	result.m[0][1] = 2 * (xy + zw);
@@ -671,19 +671,19 @@ FloatingPointMatrix4x4<T>::CreateLookAtLH(FloatingPointVector3<T> const & eye, F
 	auto const xaxis = Vector3::Normalize(FloatingPointVector3<T>::Cross(up, zaxis));
 	auto const yaxis = Vector3::Cross(zaxis, xaxis);
 
-	result.m[0][0] = xaxis.x;
-	result.m[0][1] = yaxis.x;
-	result.m[0][2] = zaxis.x;
+	result.m[0][0] = xaxis.X;
+	result.m[0][1] = yaxis.X;
+	result.m[0][2] = zaxis.X;
 	result.m[0][3] = 0;
 	
-	result.m[1][0] = xaxis.y;
-	result.m[1][1] = yaxis.y;
-	result.m[1][2] = zaxis.y;
+	result.m[1][0] = xaxis.Y;
+	result.m[1][1] = yaxis.Y;
+	result.m[1][2] = zaxis.Y;
 	result.m[1][3] = 0;
 	
-	result.m[2][0] = xaxis.z;
-	result.m[2][1] = yaxis.z;
-	result.m[2][2] = zaxis.z;
+	result.m[2][0] = xaxis.Z;
+	result.m[2][1] = yaxis.Z;
+	result.m[2][2] = zaxis.Z;
 	result.m[2][3] = 0;
 
 	result.m[3][0] = -Vector3::Dot(xaxis, eye);
@@ -721,19 +721,19 @@ FloatingPointMatrix4x4<T>::CreateLookAtRH(FloatingPointVector3<T> const& eye, Fl
 	auto const xaxis = Vector3::Normalize(FloatingPointVector3<T>::Cross(up, zaxis));
 	auto const yaxis = Vector3::Cross(zaxis, xaxis);
 
-	result.m[0][0] = xaxis.x;
-	result.m[0][1] = yaxis.x;
-	result.m[0][2] = zaxis.x;
+	result.m[0][0] = xaxis.X;
+	result.m[0][1] = yaxis.X;
+	result.m[0][2] = zaxis.X;
 	result.m[0][3] = 0;
 	
-	result.m[1][0] = xaxis.y;
-	result.m[1][1] = yaxis.y;
-	result.m[1][2] = zaxis.y;
+	result.m[1][0] = xaxis.Y;
+	result.m[1][1] = yaxis.Y;
+	result.m[1][2] = zaxis.Y;
 	result.m[1][3] = 0;
 	
-	result.m[2][0] = xaxis.z;
-	result.m[2][1] = yaxis.z;
-	result.m[2][2] = zaxis.z;
+	result.m[2][0] = xaxis.Z;
+	result.m[2][1] = yaxis.Z;
+	result.m[2][2] = zaxis.Z;
 	result.m[2][3] = 0;
 
 	result.m[3][0] = -Vector3::Dot(xaxis, eye);
@@ -1190,23 +1190,23 @@ FloatingPointMatrix4x4<T>::CreateFromAxisAngle(
 	auto const sinAngle = std::sin(angle.value);
 	auto const cosAngle = std::cos(angle.value);
 	auto const scaleFactor = static_cast<T>(1) - cosAngle;
-	auto const xx = axis.x * axis.x;
-	auto const yy = axis.y * axis.y;
-	auto const zz = axis.z * axis.z;
-	auto const xy = axis.x * axis.y;
-	auto const xz = axis.x * axis.z;
-	auto const yz = axis.y * axis.z;
+	auto const xx = axis.X * axis.X;
+	auto const yy = axis.Y * axis.Y;
+	auto const zz = axis.Z * axis.Z;
+	auto const xy = axis.X * axis.Y;
+	auto const xz = axis.X * axis.Z;
+	auto const yz = axis.Y * axis.Z;
 	
 	result.m[0][0] = scaleFactor * xx + cosAngle;
-	result.m[0][1] = scaleFactor * xy + sinAngle * axis.z;
-	result.m[0][2] = scaleFactor * xz - sinAngle * axis.y;
+	result.m[0][1] = scaleFactor * xy + sinAngle * axis.Z;
+	result.m[0][2] = scaleFactor * xz - sinAngle * axis.Y;
 	result.m[0][3] = 0;
-	result.m[1][0] = scaleFactor * xy - sinAngle * axis.z;
+	result.m[1][0] = scaleFactor * xy - sinAngle * axis.Z;
 	result.m[1][1] = scaleFactor * yy + cosAngle;
-	result.m[1][2] = scaleFactor * yz + sinAngle * axis.x;
+	result.m[1][2] = scaleFactor * yz + sinAngle * axis.X;
 	result.m[1][3] = 0;
-	result.m[2][0] = scaleFactor * xz + sinAngle * axis.y;
-	result.m[2][1] = scaleFactor * yz - sinAngle * axis.x;
+	result.m[2][0] = scaleFactor * xz + sinAngle * axis.Y;
+	result.m[2][1] = scaleFactor * yz - sinAngle * axis.X;
 	result.m[2][2] = scaleFactor * zz + cosAngle;
 	result.m[2][3] = 0;
 	result.m[3][0] = 0;

@@ -36,7 +36,7 @@ public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");
 	typedef T value_type;
 
-	T x, y, z, w;
+	T X, Y, Z, W;
 
 public:
 	// Constructors:

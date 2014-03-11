@@ -14,14 +14,14 @@ using Pomdog::Vector3;
 TEST(Vector3, TrivialCase)
 {
 	Vector3 vec {0, 0, 0};
-	EXPECT_EQ(vec.x, 0.0f);
-	EXPECT_EQ(vec.y, 0.0f);
-	EXPECT_EQ(vec.z, 0.0f);
+	EXPECT_EQ(vec.X, 0.0f);
+	EXPECT_EQ(vec.Y, 0.0f);
+	EXPECT_EQ(vec.Z, 0.0f);
 	
 	vec = {1, 2, 3};
-	EXPECT_EQ(vec.x, 1.0f);
-	EXPECT_EQ(vec.y, 2.0f);
-	EXPECT_EQ(vec.z, 3.0f);
+	EXPECT_EQ(vec.X, 1.0f);
+	EXPECT_EQ(vec.Y, 2.0f);
+	EXPECT_EQ(vec.Z, 3.0f);
 }
 
 TEST(Vector3, Addition)

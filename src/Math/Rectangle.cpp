@@ -11,86 +11,78 @@
 
 namespace Pomdog {
 
-Rectangle::Rectangle(std::int32_t x_, std::int32_t y_, std::int32_t width_, std::int32_t height_)
-	: x(x_)
-	, y(y_)
-	, width(width_)
-	, height(height_)
+Rectangle::Rectangle(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height)
+	: X(x)
+	, Y(y)
+	, Width(width)
+	, Height(height)
 {}
 //-----------------------------------------------------------------------
-Rectangle::Rectangle(Point2D const& position, std::int32_t width_, std::int32_t height_)
-	: x(position.x)
-	, y(position.y)
-	, width(width_)
-	, height(height_)
+Rectangle::Rectangle(Point2D const& position, std::int32_t width, std::int32_t height)
+	: X(position.X)
+	, Y(position.Y)
+	, Width(width)
+	, Height(height)
 {}
 //-----------------------------------------------------------------------
 bool Rectangle::operator==(Rectangle const& other) const
 {
-	return (
-		x == other.x &&
-		y == other.y &&
-		width  == other.width &&
-		height == other.height
-	);
+	return (X == other.X && Y == other.Y &&
+		Width  == other.Width && Height == other.Height);
 }
 //-----------------------------------------------------------------------
 bool Rectangle::operator!=(Rectangle const& other) const
 {
-	return (
-		x != other.x ||
-		y != other.y ||
-		width  != other.width ||
-		height != other.height
-	);
+	return (X != other.X || Y != other.Y ||
+		Width  != other.Width || Height != other.Height);
 }
 //-----------------------------------------------------------------------
 std::int32_t Rectangle::Bottom() const
 {
-	return y + height;
+	return Y + Height;
 }
 //-----------------------------------------------------------------------
 std::int32_t Rectangle::Right() const
 {
-	return x + width;
+	return X + Width;
 }
 //-----------------------------------------------------------------------
 std::int32_t Rectangle::Top() const
 {
-	return y;
+	return Y;
 }
 //-----------------------------------------------------------------------
 std::int32_t Rectangle::Left() const
 {
-	return x;
+	return X;
 }
 //-----------------------------------------------------------------------
 Point2D Rectangle::Center() const
 {
-	return Point2D(x + width / 2, y + height / 2);
+	return Point2D(X + Width / 2, Y + Height / 2);
 }
 //-----------------------------------------------------------------------
 Point2D Rectangle::Location() const
 {
-	return {x, y};
+	return {X, Y};
 }
 //-----------------------------------------------------------------------
 void Rectangle::Location(Point2D const& position)
 {
-	this->x = position.x;
-	this->y = position.y;
+	this->X = position.X;
+	this->Y = position.Y;
 }
 //-----------------------------------------------------------------------
 void Rectangle::Offset(std::int32_t offsetX, std::int32_t offsetY)
 {
-	this->x += offsetX;
-	this->y += offsetY;
+	this->X += offsetX;
+	this->Y += offsetY;
 }
 //-----------------------------------------------------------------------
 void Rectangle::Offset(Point2D const& offset)
 {
-	x += offset.x;
-	y += offset.y;
+	X += offset.X;
+	Y += offset.Y;
 }
 
 }// namespace Pomdog
