@@ -15,9 +15,9 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 BlendState::BlendState(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	BlendDescription const& description)
-	: nativeBlendState(graphicsDevice->NativeGraphicsDevice()->CreateBlendState(description))
-	, description(description)
+	BlendDescription const& descriptionIn)
+	: nativeBlendState(graphicsDevice->NativeGraphicsDevice()->CreateBlendState(descriptionIn))
+	, description(descriptionIn)
 {
 	POMDOG_ASSERT(nativeBlendState);
 }

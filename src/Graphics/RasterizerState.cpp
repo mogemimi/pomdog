@@ -15,9 +15,9 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 RasterizerState::RasterizerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	RasterizerDescription const& description)
-	: nativeRasterizerState(graphicsDevice->NativeGraphicsDevice()->CreateRasterizerState(description))
-	, description(description)
+	RasterizerDescription const& descriptionIn)
+	: nativeRasterizerState(graphicsDevice->NativeGraphicsDevice()->CreateRasterizerState(descriptionIn))
+	, description(descriptionIn)
 {
 	POMDOG_ASSERT(nativeRasterizerState);
 }

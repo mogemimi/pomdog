@@ -61,8 +61,8 @@ public:
 	///@~Japanese
 	/// @brief 頂点データを格納します。
 	/// @param source ソースバッファを指定します。
-	/// @param vertexCount 頂点の数を指定します。
-	void SetData(void const* source, std::uint32_t vertexCount);
+	/// @param elementCount 頂点の数を指定します。
+	void SetData(void const* source, std::uint32_t elementCount);
 	
 public:
 	Details::RenderSystem::NativeVertexBuffer* NativeVertexBuffer() override;

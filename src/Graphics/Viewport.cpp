@@ -22,10 +22,10 @@ Viewport::Viewport(std::int32_t x, std::int32_t y, std::int32_t width, std::int3
 	, maxDepth(1.0f)
 {}
 //-----------------------------------------------------------------------
-Viewport::Viewport(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, float minDepth, float maxDepth)
+Viewport::Viewport(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, float minDepthIn, float maxDepthIn)
 	: bounds(x, y, width, height)
-	, minDepth(minDepth)
-	, maxDepth(maxDepth)
+	, minDepth(minDepthIn)
+	, maxDepth(maxDepthIn)
 {}
 //-----------------------------------------------------------------------
 void Viewport::Width(std::int32_t width)

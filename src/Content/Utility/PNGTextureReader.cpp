@@ -137,8 +137,8 @@ static Texture2DParsingData ReadPNG(std::uint8_t const* data, std::size_t byteLe
 	parsingData.Width = pixelWidth;
 	parsingData.Height = pixelHeight;
 	parsingData.MipmapLevelCount = 1;
-	parsingData.Format = ([](::png_byte colorType)->SurfaceFormat{
-		switch (colorType) {
+	parsingData.Format = ([](::png_byte colorTypeIn)->SurfaceFormat{
+		switch (colorTypeIn) {
 		case PNG_COLOR_TYPE_GRAY:
 			return SurfaceFormat::R8_UNorm;
 		case PNG_COLOR_TYPE_GRAY_ALPHA:
@@ -148,7 +148,7 @@ static Texture2DParsingData ReadPNG(std::uint8_t const* data, std::size_t byteLe
 		case PNG_COLOR_TYPE_RGB_ALPHA:
 			return SurfaceFormat::R8G8B8A8_UNorm;
 		default:
-			POMDOG_ASSERT(colorType != PNG_COLOR_TYPE_PALETTE);
+			POMDOG_ASSERT(colorTypeIn != PNG_COLOR_TYPE_PALETTE);
 			break;
 		}
 		return SurfaceFormat::A8_UNorm;

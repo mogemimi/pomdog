@@ -31,13 +31,13 @@ template <typename T>
 FloatingPointVector3<T> const FloatingPointVector3<T>::UnitZ(0, 0, 1);
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T>::FloatingPointVector3(T x, T y, T z)
-	: x(x), y(y), z(z)
+FloatingPointVector3<T>::FloatingPointVector3(T xIn, T yIn, T zIn)
+	: x(xIn), y(yIn), z(zIn)
 {}
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T>::FloatingPointVector3(FloatingPointVector2<T> const& vec, T z)
-	: x(vec.x), y(vec.y), z(z)
+FloatingPointVector3<T>::FloatingPointVector3(FloatingPointVector2<T> const& vec, T zIn)
+	: x(vec.x), y(vec.y), z(zIn)
 {}
 //-----------------------------------------------------------------------
 template <typename T>

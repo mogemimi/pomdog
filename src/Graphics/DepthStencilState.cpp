@@ -15,9 +15,9 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 DepthStencilState::DepthStencilState(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	DepthStencilDescription const& description)
-	: nativeDepthStencilState(graphicsDevice->NativeGraphicsDevice()->CreateDepthStencilState(description))
-	, description(description)
+	DepthStencilDescription const& descriptionIn)
+	: nativeDepthStencilState(graphicsDevice->NativeGraphicsDevice()->CreateDepthStencilState(descriptionIn))
+	, description(descriptionIn)
 {
 	POMDOG_ASSERT(nativeDepthStencilState);
 }

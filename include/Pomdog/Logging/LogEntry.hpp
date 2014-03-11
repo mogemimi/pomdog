@@ -50,10 +50,10 @@ public:
 	/// @param message ログメッセージを指定します。
 	/// @param source ソースとなるチャンネル名を指定します。
 	/// @param verbosity ログ出力レベル（冗長レベル）を指定します。
-	LogEntry(std::string const& message, std::string const& source, LoggingLevel verbosity)
-		: message(message)
-		, source(source)
-		, verbosity(verbosity)
+	LogEntry(std::string const& messageIn, std::string const& sourceIn, LoggingLevel verbosityIn)
+		: message(messageIn)
+		, source(sourceIn)
+		, verbosity(verbosityIn)
 	{}
 	
 	~LogEntry() = default;

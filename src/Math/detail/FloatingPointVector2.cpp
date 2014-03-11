@@ -18,8 +18,8 @@ namespace Details {
 
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector2<T>::FloatingPointVector2(T x, T y)
-	: x(x), y(y)
+FloatingPointVector2<T>::FloatingPointVector2(T xIn, T yIn)
+	: x(xIn), y(yIn)
 {}
 //-----------------------------------------------------------------------
 template <typename T>

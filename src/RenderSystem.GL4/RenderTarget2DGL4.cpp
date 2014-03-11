@@ -41,9 +41,9 @@ RenderTarget2DGL4::RenderTarget2DGL4(std::uint32_t pixelWidth, std::uint32_t pix
 	if (DepthFormat::None != depthStencilFormat)
 	{
 		renderBuffer = ([] {
-			RenderBuffer2DGL4 renderBuffer;
-			glGenRenderbuffers(1, renderBuffer.Data());
-			return std::move(renderBuffer);
+			RenderBuffer2DGL4 nativeBuffer;
+			glGenRenderbuffers(1, nativeBuffer.Data());
+			return std::move(nativeBuffer);
 		})();
 		
 		POMDOG_ASSERT(renderBuffer);

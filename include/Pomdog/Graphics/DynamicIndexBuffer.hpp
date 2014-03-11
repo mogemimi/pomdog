@@ -58,8 +58,8 @@ public:
 	///@~Japanese
 	/// @brief インデックスデータを格納します。
 	/// @param source ソースバッファを指定します。
-	/// @param indexCount インデックスの要素数を指定します。
-	void SetData(void const* source, std::uint32_t indexCount);
+	/// @param elementCount インデックスの要素数を指定します。
+	void SetData(void const* source, std::uint32_t elementCount);
 	
 public:
 	Details::RenderSystem::NativeIndexBuffer* NativeIndexBuffer() override;

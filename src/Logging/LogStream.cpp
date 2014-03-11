@@ -12,9 +12,9 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-LogStream::LogStream(LogChannel & channel, LoggingLevel verbosity)
-	: channel(channel)
-	, verbosity(verbosity)
+LogStream::LogStream(LogChannel & channelIn, LoggingLevel verbosityIn)
+	: channel(channelIn)
+	, verbosity(verbosityIn)
 {}
 //-----------------------------------------------------------------------
 LogStream::LogStream(LogStream const& other)

@@ -42,13 +42,13 @@ BufferUsage DynamicIndexBuffer::BufferUsage() const
 	return BufferUsage::Dynamic;
 }
 //-----------------------------------------------------------------------
-void DynamicIndexBuffer::SetData(void const* source, std::uint32_t indexCount)
+void DynamicIndexBuffer::SetData(void const* source, std::uint32_t elementCount)
 {
 	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(indexCount > 0);
+	POMDOG_ASSERT(elementCount > 0);
 	
 	POMDOG_ASSERT(nativeIndexBuffer);
-	nativeIndexBuffer->SetData(source, indexCount, elementSize);
+	nativeIndexBuffer->SetData(source, elementCount, elementSize);
 }
 //-----------------------------------------------------------------------
 Details::RenderSystem::NativeIndexBuffer* DynamicIndexBuffer::NativeIndexBuffer()

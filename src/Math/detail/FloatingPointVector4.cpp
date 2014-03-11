@@ -18,13 +18,13 @@ namespace Details {
 
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector4<T>::FloatingPointVector4(FloatingPointVector3<T> const& xyz, T w)
-	: x(xyz.x), y(xyz.y), z(xyz.z), w(w)
+FloatingPointVector4<T>::FloatingPointVector4(FloatingPointVector3<T> const& xyz, T wIn)
+	: x(xyz.x), y(xyz.y), z(xyz.z), w(wIn)
 {}
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector4<T>::FloatingPointVector4(T x, T y, T z, T w)
-	: x(x), y(y), z(z), w(w)
+FloatingPointVector4<T>::FloatingPointVector4(T xIn, T yIn, T zIn, T wIn)
+	: x(xIn), y(yIn), z(zIn), w(wIn)
 {}
 //-----------------------------------------------------------------------
 template <typename T>

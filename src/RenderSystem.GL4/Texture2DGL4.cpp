@@ -258,9 +258,9 @@ Texture2DGL4::Texture2DGL4(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
 {
 	// Create Texture2D
 	textureObject = ([]{
-		Texture2DObjectGL4 textureObject;
-		glGenTextures(1, textureObject.Data());
-		return std::move(textureObject);
+		Texture2DObjectGL4 nativeTexture;
+		glGenTextures(1, nativeTexture.Data());
+		return std::move(nativeTexture);
 	})();
 	
 	auto const prevTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
@@ -337,13 +337,13 @@ void Texture2DGL4::Apply(std::uint32_t index)
 {
 	#if defined(DEBUG) && !defined(NDEBUG)
 	{
-		static std::uint32_t const maxCombinedTextureImageUnits = ([]{
+		static std::uint32_t const MaxCombinedTextureImageUnits = ([]{
 			GLint maxCombinedTextureImageUnits = 0;
 			glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxCombinedTextureImageUnits);
 			return maxCombinedTextureImageUnits;
 		})();
 
-		POMDOG_ASSERT(index < maxCombinedTextureImageUnits);
+		POMDOG_ASSERT(index < MaxCombinedTextureImageUnits);
 	}
 	#endif
 

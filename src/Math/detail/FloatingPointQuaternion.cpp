@@ -23,8 +23,8 @@ template <typename T>
 FloatingPointQuaternion<T> const FloatingPointQuaternion<T>::Identity(0, 0, 0, 1);
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T>::FloatingPointQuaternion(T x, T y, T z, T w)
-	: x(x), y(y), z(z), w(w)
+FloatingPointQuaternion<T>::FloatingPointQuaternion(T xIn, T yIn, T zIn, T wIn)
+	: x(xIn), y(yIn), z(zIn), w(wIn)
 {}
 //-----------------------------------------------------------------------
 template <typename T>

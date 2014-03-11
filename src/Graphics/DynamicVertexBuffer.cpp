@@ -53,13 +53,13 @@ std::uint32_t DynamicVertexBuffer::VertexCount() const
 	return vertexCount;
 }
 //-----------------------------------------------------------------------
-void DynamicVertexBuffer::SetData(void const* source, std::uint32_t vertexCount)
+void DynamicVertexBuffer::SetData(void const* source, std::uint32_t elementCount)
 {
 	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(vertexCount > 0);
+	POMDOG_ASSERT(elementCount > 0);
 
 	POMDOG_ASSERT(nativeVertexBuffer);
-	nativeVertexBuffer->SetData(source, vertexCount, vertexDeclaration);
+	nativeVertexBuffer->SetData(source, elementCount, vertexDeclaration);
 }
 //-----------------------------------------------------------------------
 Details::RenderSystem::NativeVertexBuffer* DynamicVertexBuffer::NativeVertexBuffer()
