@@ -39,10 +39,17 @@ void TestAppGame::Initialize()
 	
 	spriteRenderer = std::unique_ptr<SpriteRenderer>(new SpriteRenderer(gameHost));
 	
-	auto gameObject = gameWorld.CreateObject();
-	gameObject->AddComponent<CanvasItem>();
-	gameObject->AddComponent<Transform2D>();
-	gameObject->AddComponent<Sprite>();
+	
+	for (int i = 0; i < 10; ++i)
+	{
+		auto gameObject = gameWorld.CreateObject();
+		gameObject->AddComponent<CanvasItem>();
+		auto transform = gameObject->AddComponent<Transform2D>();
+		gameObject->AddComponent<Sprite>();
+		
+		transform->Position.x = i * 28 - 200;
+		transform->Position.y = (i % 5) * 40;
+	}
 }
 //-----------------------------------------------------------------------
 void TestAppGame::Update()
@@ -57,8 +64,10 @@ void TestAppGame::Update()
 	{
 		auto transform = gameObject->Component<Transform2D>();
 		transform->Position.x += 1.0f;
-		transform->Position.x = std::min(200.0f, transform->Position.x);
-		transform->Scale.x = transform->Scale.y = 4.0f * (0.5f + (value * 0.5f));
+		if (transform->Position.x > 350.0f) {
+			transform->Position.x = -140.0f;
+		}
+		transform->Scale.x = transform->Scale.y = 2.0f;//(0.5f + (value * 0.5f));
 		transform->Rotation = MathConstants<float>::Pi() * value;
 		
 		auto sprite = gameObject->Component<Sprite>();

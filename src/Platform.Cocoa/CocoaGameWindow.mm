@@ -99,10 +99,10 @@ Rectangle CocoaGameWindow::ClientBounds() const
 	POMDOG_ASSERT(openGLView != nil);
 	NSRect bounds = [openGLView frame];
 	Rectangle rect {
-		bounds.origin.x,
-		bounds.origin.y,
-		bounds.size.width,
-		bounds.size.height
+		static_cast<std::int32_t>(bounds.origin.x),
+		static_cast<std::int32_t>(bounds.origin.y),
+		static_cast<std::int32_t>(bounds.size.width),
+		static_cast<std::int32_t>(bounds.size.height)
 	};
 	return std::move(rect);
 }

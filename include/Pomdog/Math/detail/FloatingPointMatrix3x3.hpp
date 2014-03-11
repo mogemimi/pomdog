@@ -40,8 +40,8 @@ public:
 	std::array<std::array<T, 3>, 3> m;
 
 private:
-	constexpr std::size_t RowSize(){ return 3; };
-	constexpr std::size_t ColumnSize(){ return 3; };
+	static constexpr std::size_t RowSize() { return 3; }
+	static constexpr std::size_t ColumnSize() { return 3; }
 
 public:
 	// Constructors:

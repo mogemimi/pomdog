@@ -48,7 +48,9 @@ using Pomdog::ButtonState;
 {
 	if (mouse_) {
 		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position({locationInWindow.x, locationInWindow.y});
+		mouse_->Position({
+			static_cast<std::int32_t>(locationInWindow.x),
+			static_cast<std::int32_t>(locationInWindow.y)});
 	}
 }
 //-----------------------------------------------------------------------
@@ -56,7 +58,9 @@ using Pomdog::ButtonState;
 {
 	if (mouse_) {
 		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position({locationInWindow.x, locationInWindow.y});
+		mouse_->Position({
+			static_cast<std::int32_t>(locationInWindow.x),
+			static_cast<std::int32_t>(locationInWindow.y)});
 	}
 }
 //-----------------------------------------------------------------------
@@ -64,7 +68,9 @@ using Pomdog::ButtonState;
 {
 	if (mouse_) {
 		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position({locationInWindow.x, locationInWindow.y});
+		mouse_->Position({
+			static_cast<std::int32_t>(locationInWindow.x),
+			static_cast<std::int32_t>(locationInWindow.y)});
 	}
 }
 //-----------------------------------------------------------------------

@@ -39,8 +39,8 @@ public:
 	std::array<std::array<T, 2>, 2> m;
 
 private:
-	constexpr std::size_t RowSize(){ return 2; };
-	constexpr std::size_t ColumnSize(){ return 2; };
+	static constexpr std::size_t RowSize() { return 2; }
+	static constexpr std::size_t ColumnSize() { return 2; }
 
 public:
 	// Constructors:

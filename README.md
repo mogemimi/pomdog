@@ -14,8 +14,8 @@ For more information, see
 ## Requirements
 
 * Mac OS X 10.9+
-* Xcode 5
-* OpenGL 4 or Direct3D 11
+* Xcode 5.1+ (Apple LLVM 5.1/Clang 3.4)
+* OpenGL 4 and Direct3D 11.2/12
 * Python 2.7+
 
 >**Note: Support Windows 8 Desktop and Windows Store**  
@@ -52,7 +52,7 @@ cd tools/gyp
 python setup.py install
 ```
 
-### Building under Xcode (Apple LLVM Clang++)
+### Building under Mac OS X and Xcode
 
 **1. Generating the Xcode project file**
 
