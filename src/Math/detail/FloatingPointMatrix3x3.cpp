@@ -515,7 +515,7 @@ FloatingPointMatrix3x3<T>::CreateFromQuaternion(FloatingPointQuaternion<T> const
 	auto const zx = quaternion.Z * quaternion.X;
 	auto const yw = quaternion.Y * quaternion.W;
 	auto const yz = quaternion.Y * quaternion.Z;
-	auto const xw = quaternion.Z * quaternion.W;
+	auto const xw = quaternion.X * quaternion.W;
 
 	result.m[0][0] = 1 - (2 * (yy + zz));
 	result.m[0][1] = 2 * (xy + zw);
