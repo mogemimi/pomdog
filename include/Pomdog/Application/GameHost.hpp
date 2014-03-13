@@ -24,6 +24,7 @@ class Game;
 class GameWindow;
 class GraphicsContext;
 class GraphicsDevice;
+class Mouse;
 
 /// @addtogroup Framework
 /// @{
@@ -58,6 +59,10 @@ public:
 	///@~Japanese
 	/// @brief アセットマネージャを取得します。
 	virtual std::shared_ptr<AssetManager> AssetManager() = 0;
+	
+	///@~Japanese
+	/// @brief マウスを取得します。
+	virtual std::shared_ptr<Mouse> Mouse() = 0;
 };
 
 /// @}

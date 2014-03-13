@@ -50,6 +50,8 @@ void TestAppGame::Initialize()
 		transform->Position.X = i * 28 - 200;
 		transform->Position.Y = (i % 5) * 40;
 	}
+	
+	playerID = gameWorld.QueryComponents<Transform2D, CanvasItem, Sprite>().front()->ID();
 }
 //-----------------------------------------------------------------------
 void TestAppGame::Update()
@@ -75,11 +77,21 @@ void TestAppGame::Update()
 		sprite->Subrect = Rectangle(0, 0, 16, 28);
 	}
 	
-//	if (auto gameObject = gameWorld.QueryComponents<CanvasItem, Transform2D>().front())
-//	{
-//		auto transform = gameObject->Component<Transform2D>();
-//		transform->Position.x = 2;
-//	}
+	auto mouse = gameHost->Mouse();
+	
+	if (auto transform = gameWorld.Component<Transform2D>(playerID))
+	{
+		if (mouse->State().LeftButton == ButtonState::Pressed)
+		{
+			transform->Position.X -= 5.0f;
+		}
+		if (mouse->State().RightButton == ButtonState::Pressed)
+		{
+			transform->Position.X += 5.0f;
+		}
+		
+		transform->Rotation += float(mouse->State().ScrollWheel) * 0.1f;
+	}
 }
 //-----------------------------------------------------------------------
 void TestAppGame::Draw()

@@ -53,6 +53,9 @@ public:
 	///@copydoc GameHost
 	std::shared_ptr<Pomdog::AssetManager> AssetManager() override;
 
+	///@copydoc GameHost
+	std::shared_ptr<Pomdog::Mouse> Mouse() override;
+
 private:
 	class Impl;
 	std::unique_ptr<Impl> impl;

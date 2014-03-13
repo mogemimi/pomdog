@@ -84,18 +84,13 @@ public:
 	std::shared_ptr<GameObject> CreateObject();
 	
 	template <typename T, typename...Components>
-	std::vector<std::shared_ptr<GameObject>> QueryComponents()
-	{
-		std::vector<std::shared_ptr<GameObject>> result;
+	std::vector<std::shared_ptr<GameObject>> QueryComponents();
 	
-		for (auto & gameObject: gameObjects)
-		{
-			if (Details::Gameplay::HasComponents<T, Components...>()(*gameObject)) {
-				result.push_back(gameObject);
-			}
-		}
-		return std::move(result);
-	}
+	template <typename T>
+	T const* Component(GameObjectID objectID) const;
+	
+	template <typename T>
+	T* Component(GameObjectID objectID);
 	
 private:
 	std::vector<std::shared_ptr<GameObject>> gameObjects;
@@ -104,6 +99,39 @@ private:
 
 /// @}
 /// @}
+
+
+template <typename T, typename...Components>
+std::vector<std::shared_ptr<GameObject>> GameWorld::QueryComponents()
+{
+	static_assert(std::is_object<T>::value, "");
+	
+	std::vector<std::shared_ptr<GameObject>> result;
+
+	for (auto & gameObject: gameObjects)
+	{
+		if (Details::Gameplay::HasComponents<T, Components...>()(*gameObject)) {
+			result.push_back(gameObject);
+		}
+	}
+	return std::move(result);
+}
+
+template <typename T>
+T const* GameWorld::Component(GameObjectID objectID) const
+{
+	static_assert(std::is_object<T>::value, "");
+	POMDOG_ASSERT(objectContext);
+	return objectContext->Component<T>(objectID);
+}
+
+template <typename T>
+T* GameWorld::Component(GameObjectID objectID)
+{
+	static_assert(std::is_object<T>::value, "");
+	POMDOG_ASSERT(objectContext);
+	return objectContext->Component<T>(objectID);
+}
 
 }// namespace Pomdog
 

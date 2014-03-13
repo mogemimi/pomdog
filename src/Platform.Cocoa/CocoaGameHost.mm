@@ -120,6 +120,9 @@ public:
 	
 	///@copydoc GameHost
 	std::shared_ptr<Pomdog::AssetManager> AssetManager(std::shared_ptr<GameHost> && gameHost);
+	
+	///@copydoc GameHost
+	std::shared_ptr<Pomdog::Mouse> Mouse();
 
 public:
 	void RenderFrame(Game & game);
@@ -239,6 +242,11 @@ std::shared_ptr<Pomdog::AssetManager> CocoaGameHost::Impl::AssetManager(std::sha
 	return std::move(sharedAssetManager);
 }
 //-----------------------------------------------------------------------
+std::shared_ptr<Pomdog::Mouse> CocoaGameHost::Impl::Mouse()
+{
+	return mouse;
+}
+//-----------------------------------------------------------------------
 void CocoaGameHost::Impl::RenderFrame(Game & game)
 {
 	POMDOG_ASSERT(gameWindow);
@@ -320,6 +328,12 @@ std::shared_ptr<Pomdog::AssetManager> CocoaGameHost::AssetManager()
 {
 	POMDOG_ASSERT(impl);
 	return impl->AssetManager(shared_from_this());
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<Pomdog::Mouse> CocoaGameHost::Mouse()
+{
+	POMDOG_ASSERT(impl);
+	return impl->Mouse();
 }
 
 }// namespace Cocoa

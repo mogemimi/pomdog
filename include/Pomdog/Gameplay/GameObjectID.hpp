@@ -27,6 +27,8 @@ namespace Pomdog {
 class POMDOG_EXPORT GameObjectID
 {
 public:
+	GameObjectID(): id(0x0) {}
+
 	GameObjectID(std::uint32_t sequenceNumber, std::uint32_t index)
 		: id((static_cast<uint64_t>(sequenceNumber) << 32) | (index & 0xffffffffUL))
 	{}

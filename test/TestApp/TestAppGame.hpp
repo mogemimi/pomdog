@@ -42,6 +42,7 @@ private:
 	std::unique_ptr<SpriteRenderer> spriteRenderer;
 	
 	GameWorld gameWorld;
+	GameObjectID playerID;
 	//std::shared_ptr<Scene> hierarchy;
 };
 
