@@ -43,7 +43,7 @@ public:
 	template <typename T, typename...Arguments>
 	void Enqueue(Arguments && ...arguments)
 	{
-		Enqueue(Event{T{std::forward<typename std::remove_reference<Arguments>::type>(arguments)...}});
+		Enqueue(Event{T{std::forward<Arguments>(arguments)...}});
 	}
 
 	void Tick();

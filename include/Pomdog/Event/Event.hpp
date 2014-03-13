@@ -48,14 +48,11 @@ public:
 		static_assert(std::is_base_of<Details::EventArguments, Container>::value,
 			"Container is not a base class of 'EventArguments'");
 
-		///@todo
-		/// In C++11:
-		///    std::unique_ptr<Container>(new Container(...))
-		///
-		/// In C++14 or later:
-		///    std::make_unique<Container>(...)
-		data = std::move(std::unique_ptr<Container>(new Container(std::forward<T>(arguments))));
-		//data = std::make_unique<Container>(std::forward<T>(arguments));
+	#if (__cplusplus <= 201103L)
+		data = std::unique_ptr<Container>(new Container(std::forward<T>(arguments)));
+	#else
+		data = std::make_unique<Container>(std::forward<T>(arguments));
+	#endif
 	}
 
 	template <class T>

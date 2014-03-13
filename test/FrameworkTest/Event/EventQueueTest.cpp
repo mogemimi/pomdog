@@ -153,3 +153,30 @@ TEST_F(EventQueueTest, CallingDisconnect)
 	eventQueue.Tick();
 	ASSERT_TRUE(integers.empty());
 }
+
+TEST_F(EventQueueTest, ArgumentPerfectForwarding)
+{
+	EventQueue eventQueue;
+	auto connection = eventQueue.Connect([&](Event const& event){
+		ASSERT_TRUE(event.Is<std::shared_ptr<int>>());
+	});
+
+	{
+		auto pointer = std::make_shared<int>(42);
+		ASSERT_TRUE(pointer);
+		eventQueue.Enqueue<std::shared_ptr<int>>(pointer);
+		EXPECT_TRUE(pointer);
+	}
+	{
+		auto pointer = std::make_shared<int>(42);
+		ASSERT_TRUE(pointer);
+		eventQueue.Enqueue<std::shared_ptr<int>>(std::move(pointer));
+		EXPECT_FALSE(pointer);
+	}
+	{
+		auto const pointer = std::make_shared<int>(42);
+		ASSERT_TRUE(pointer);
+		eventQueue.Enqueue<std::shared_ptr<int>>(pointer);
+		EXPECT_TRUE(pointer);
+	}
+}

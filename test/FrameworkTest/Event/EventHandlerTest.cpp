@@ -172,3 +172,29 @@ TEST_F(EventHandlerTest, DisconnectSlots)
 	EXPECT_EQ(72, integers[3]);
 	EXPECT_EQ(72, integers[4]);
 }
+
+TEST_F(EventHandlerTest, ArgumentPerfectForwarding)
+{
+	auto connection = handler.Connect([&](Event const& event){
+		ASSERT_TRUE(event.Is<std::shared_ptr<int>>());
+	});
+
+	{
+		auto pointer = std::make_shared<int>(42);
+		ASSERT_TRUE(pointer);
+		handler.Invoke<std::shared_ptr<int>>(pointer);
+		EXPECT_TRUE(pointer);
+	}
+	{
+		auto pointer = std::make_shared<int>(42);
+		ASSERT_TRUE(pointer);
+		handler.Invoke<std::shared_ptr<int>>(std::move(pointer));
+		EXPECT_FALSE(pointer);
+	}
+	{
+		auto const pointer = std::make_shared<int>(42);
+		ASSERT_TRUE(pointer);
+		handler.Invoke<std::shared_ptr<int>>(pointer);
+		EXPECT_TRUE(pointer);
+	}
+}

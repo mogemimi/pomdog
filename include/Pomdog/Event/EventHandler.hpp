@@ -42,7 +42,7 @@ public:
 	template <typename T, typename...Arguments>
 	void Invoke(Arguments && ...arguments)
 	{
-		Invoke(Event{T{std::forward<typename std::remove_reference<Arguments>::type>(arguments)...}});
+		Invoke(Event{T{std::forward<Arguments>(arguments)...}});
 	}
 
 private:

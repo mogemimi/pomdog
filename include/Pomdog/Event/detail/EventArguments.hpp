@@ -58,10 +58,10 @@ public:
 	static_assert(std::is_object<T>::value, "T is object type.");
 
 	~EventArgumentsContainer() override = default;
-
-	template <typename C>
-	explicit EventArgumentsContainer(C && argument)
-		: data(std::forward<C>(argument))
+	
+	template <typename...Arguments>
+	explicit EventArgumentsContainer(Arguments &&...argument)
+		: data(std::forward<Arguments>(argument)...)
 	{}
 	
 	std::size_t GetHashCode() const override
