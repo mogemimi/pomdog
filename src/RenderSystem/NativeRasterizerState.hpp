@@ -17,8 +17,7 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeRasterizerState
-{
+class NativeRasterizerState {
 public:
 	NativeRasterizerState() = default;
 	NativeRasterizerState(NativeRasterizerState const&) = delete;

@@ -27,8 +27,7 @@ namespace GL4 {
 using BlendGL4 = Tagged<GLenum, Blend>;
 using BlendFunctionGL4 = Tagged<GLenum, BlendFunction>;
 
-class BlendStateGL4 final: public NativeBlendState
-{
+class BlendStateGL4 final: public NativeBlendState {
 public:
 	BlendStateGL4() = delete;
 	

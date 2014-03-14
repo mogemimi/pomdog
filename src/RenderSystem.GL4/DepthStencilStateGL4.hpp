@@ -26,8 +26,7 @@ namespace GL4 {
 using ComparisonFunctionGL4 = Tagged<GLenum, ComparisonFunction>;
 using StencilOperationGL4 = Tagged<GLenum, StencilOperation>;
 
-struct DepthStencilFaceOperationGL4 final
-{
+struct DepthStencilFaceOperationGL4 final {
 	ComparisonFunctionGL4 stencilFunction;
 	StencilOperationGL4 stencilFail;
 	StencilOperationGL4 stencilDepthBufferFail;
@@ -41,8 +40,7 @@ struct DepthStencilFaceOperationGL4 final
 	{}
 };
 
-class DepthStencilStateGL4 final: public NativeDepthStencilState
-{
+class DepthStencilStateGL4 final: public NativeDepthStencilState {
 public:
 	DepthStencilStateGL4() = delete;
 	

@@ -24,8 +24,7 @@ namespace Pomdog {
 /// @addtogroup Gameplay2D
 /// @{
 
-class POMDOG_EXPORT Sprite
-{
+class POMDOG_EXPORT Sprite {
 public:
 	Rectangle Subrect;
 	Vector2 Origin;

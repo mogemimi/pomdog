@@ -26,8 +26,7 @@ namespace Pomdog {
 
 ///@~Japanese 
 /// @brief 頂点を定義します。
-class POMDOG_EXPORT VertexDeclaration
-{
+class POMDOG_EXPORT VertexDeclaration {
 public:
 	VertexDeclaration() = delete;
 	VertexDeclaration(VertexDeclaration const&) = default;

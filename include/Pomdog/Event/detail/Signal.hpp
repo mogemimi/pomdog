@@ -34,16 +34,14 @@ using Slot = std::function<Function>;
 template <typename Function>
 class Signal;
 
-class ConnectionBody
-{
+class ConnectionBody {
 public:
 	virtual ~ConnectionBody() = default;
 	virtual void Disconnect() = 0;
 };
 
 template <typename Function>
-class ConnectionBodyOverride final: public ConnectionBody
-{
+class ConnectionBodyOverride final: public ConnectionBody {
 private:
 	typedef std::weak_ptr<Slot<Function>> WeakSlot;
 	typedef std::weak_ptr<Signal<Function>> WeakSignal;
@@ -76,8 +74,7 @@ public:
 
 template <typename...Arguments>
 class Signal<void(Arguments...)>
-	: public std::enable_shared_from_this<Signal<void(Arguments...)>>
-{
+	: public std::enable_shared_from_this<Signal<void(Arguments...)>> {
 private:
 	typedef Slot<void(Arguments...)> SlotType;
 	typedef ConnectionBodyOverride<void(Arguments...)> ConnectionBodyType;

@@ -20,8 +20,7 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeIndexBuffer
-{
+class NativeIndexBuffer {
 public:
 	NativeIndexBuffer() = default;
 	NativeIndexBuffer(NativeIndexBuffer const&) = delete;

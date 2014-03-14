@@ -29,8 +29,7 @@ namespace Cocoa {
 class CocoaOpenGLContext;
 class CocoaMouse;
 
-class CocoaGameWindow final: public GameWindow
-{
+class CocoaGameWindow final: public GameWindow {
 public:
 	CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDispatcher> eventDispatcher);
 	~CocoaGameWindow();

@@ -20,8 +20,7 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeVertexBuffer
-{
+class NativeVertexBuffer {
 public:
 	NativeVertexBuffer() = default;
 	NativeVertexBuffer(NativeVertexBuffer const&) = delete;

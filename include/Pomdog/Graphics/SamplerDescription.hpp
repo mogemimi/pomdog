@@ -27,8 +27,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief サンプラーステートの設定を記述します。
-class POMDOG_EXPORT SamplerDescription
-{
+class POMDOG_EXPORT SamplerDescription {
 public:
 	///@~Japanese
 	/// @brief 異方性フィルタリングで使用される最大異方性を表すクランプ値です。

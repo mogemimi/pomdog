@@ -13,14 +13,13 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Config/FundamentalTypes.hpp>
+#include <cstddef>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class GraphicsCapabilities
-{
+class GraphicsCapabilities {
 public:
 	std::size_t SamplerSlotCount;
 };

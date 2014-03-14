@@ -16,5 +16,5 @@ void EventConnection::Disconnect()
 		locked_body->Disconnect();
 	}
 }
-
+//-----------------------------------------------------------------------
 }// namespace Pomdog

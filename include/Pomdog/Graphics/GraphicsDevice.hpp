@@ -32,8 +32,7 @@ class NativeGraphicsDevice;
 /// @addtogroup Graphics
 /// @{
 
-class POMDOG_EXPORT GraphicsDevice: Noncopyable
-{
+class POMDOG_EXPORT GraphicsDevice: Noncopyable {
 public:
 	GraphicsDevice() = delete;
 	

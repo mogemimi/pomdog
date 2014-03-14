@@ -28,8 +28,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 動的な頂点バッファです。
-class POMDOG_EXPORT DynamicVertexBuffer: public VertexBuffer
-{
+class POMDOG_EXPORT DynamicVertexBuffer: public VertexBuffer {
 public:
 	DynamicVertexBuffer() = delete;
 	DynamicVertexBuffer(DynamicVertexBuffer const&) = delete;

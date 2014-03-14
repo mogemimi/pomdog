@@ -38,8 +38,7 @@ class NativeEffectPass;
 
 using EffectParameterCollection = std::unordered_map<std::string, std::shared_ptr<EffectParameter>>;
 
-class POMDOG_EXPORT EffectPass: public std::enable_shared_from_this<EffectPass>
-{
+class POMDOG_EXPORT EffectPass: public std::enable_shared_from_this<EffectPass> {
 public:
 	EffectPass() = delete;
 	EffectPass(EffectPass const&) = delete;

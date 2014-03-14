@@ -25,8 +25,7 @@ namespace GL4 {
 
 using FillModeGL4 = Tagged<GLenum, FillMode>;
 
-class RasterizerStateGL4 final: public NativeRasterizerState
-{
+class RasterizerStateGL4 final: public NativeRasterizerState {
 public:
 	RasterizerStateGL4() = delete;
 	

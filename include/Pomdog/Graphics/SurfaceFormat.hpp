@@ -24,8 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief サーフェスフォーマットです。
-enum class SurfaceFormat: std::uint8_t
-{
+enum class SurfaceFormat: std::uint8_t {
 	///@~English
 	/// @brief 8-bit alpha only.
 	///@~Japanese

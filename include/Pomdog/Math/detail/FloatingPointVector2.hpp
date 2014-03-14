@@ -31,8 +31,7 @@ namespace Details {
 ///@~Japanese
 /// @brief 2 つの要素を持つベクトル（2 次元ベクトル）を定義します。
 template <typename T>
-class POMDOG_EXPORT FloatingPointVector2
-{
+class POMDOG_EXPORT FloatingPointVector2 {
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");
 	typedef T value_type;

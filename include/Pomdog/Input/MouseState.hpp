@@ -27,8 +27,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief マウスの状態を表します。
-class POMDOG_EXPORT MouseState
-{
+class POMDOG_EXPORT MouseState {
 public: 
 	///@~English
 	/// @brief Position of the mouse cursor

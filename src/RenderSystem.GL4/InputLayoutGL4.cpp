@@ -26,7 +26,6 @@ namespace RenderSystem {
 namespace GL4 {
 namespace {
 
-//-----------------------------------------------------------------------
 static ScalarTypeGL4 ToScalarType(GLenum attributeClass)
 {
 	switch (attributeClass)
@@ -97,8 +96,7 @@ static ScalarTypeGL4 ToScalarType(GLenum attributeClass)
 	return ScalarTypeGL4(GL_FLOAT);
 }
 //-----------------------------------------------------------------------
-struct InputElementSize
-{
+struct InputElementSize {
 	///@note
 	/// float: 1
 	/// Vector2: 1
@@ -448,8 +446,8 @@ static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings
 //-----------------------------------------------------------------------
 }// unnamed namespace
 //-----------------------------------------------------------------------
-template<> struct TypesafeHelperGL4::OpenGLGetTraits<VertexArrayGL4>
-{
+template<>
+struct TypesafeHelperGL4::OpenGLGetTraits<VertexArrayGL4> {
 	constexpr static GLenum bufferObjectBinding = GL_VERTEX_ARRAY_BINDING;
 };
 //-----------------------------------------------------------------------

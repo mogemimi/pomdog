@@ -18,7 +18,6 @@
 namespace Pomdog {
 namespace Details {
 
-//-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T> const
 FloatingPointMatrix4x4<T>::Identity(

@@ -28,12 +28,11 @@ class Rectangle;
 
 ///@~Japanese
 /// @brief ビューポートです。
-class POMDOG_EXPORT Viewport
-{
+class POMDOG_EXPORT Viewport {
 public:
-	Rectangle bounds;
-	float minDepth;
-	float maxDepth;
+	Rectangle Bounds;
+	float MinDepth;
+	float MaxDepth;
 
 public:
 	Viewport() = default;

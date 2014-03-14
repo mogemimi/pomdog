@@ -58,7 +58,7 @@ namespace Tags {
 
 struct RadianTag;
 
-}
+}// namespace Tags
 
 }// namespace Details
 

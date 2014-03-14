@@ -24,8 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief プリミティブの位相を定義します。
-enum class PrimitiveTopology: std::uint8_t
-{
+enum class PrimitiveTopology: std::uint8_t {
 	///@brief A triangle list.
 	TriangleList,
 	

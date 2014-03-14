@@ -37,8 +37,7 @@ class GraphicsDevice;
 
 ///@~Japanese
 /// @brief テクスチャのサンプリング方法を指定するサンプラーステートです。
-class POMDOG_EXPORT SamplerState: Noncopyable
-{
+class POMDOG_EXPORT SamplerState: Noncopyable {
 public:
 	SamplerState() = delete;
 

@@ -21,11 +21,12 @@
 namespace Pomdog {
 namespace Details {
 
-namespace DDSTextureReader
-{
-	std::shared_ptr<Texture2D> Read(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		std::uint8_t const* data, std::size_t byteLength);
-}
+namespace DDSTextureReader {
+
+std::shared_ptr<Texture2D> Read(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	std::uint8_t const* data, std::size_t byteLength);
+
+}// namespace DDSTextureReader
 
 }// namespace Details
 }// namespace Pomdog

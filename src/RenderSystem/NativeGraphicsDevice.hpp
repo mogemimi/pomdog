@@ -40,8 +40,7 @@ class NativeVertexBuffer;
 
 ///@~Japanese
 /// @brief グラフィックスリソースの作成を行います。
-class NativeGraphicsDevice: Noncopyable
-{
+class NativeGraphicsDevice: Noncopyable {
 public:
 	virtual ~NativeGraphicsDevice() = default;
 

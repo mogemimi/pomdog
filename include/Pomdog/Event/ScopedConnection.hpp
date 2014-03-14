@@ -19,8 +19,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT ScopedConnection final
-{
+class POMDOG_EXPORT ScopedConnection final {
 private:
 	EventConnection connection;
 

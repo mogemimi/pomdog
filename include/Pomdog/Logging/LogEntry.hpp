@@ -25,8 +25,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief メッセージ情報を含むログエントリです。
-class LogEntry
-{
+class LogEntry {
 public:
 	///@~Japanese
 	/// @brief ログメッセージまたはトレースメッセージです。

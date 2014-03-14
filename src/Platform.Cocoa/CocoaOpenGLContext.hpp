@@ -22,8 +22,7 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
-class CocoaOpenGLContext final: public RenderSystem::GL4::OpenGLContext
-{
+class CocoaOpenGLContext final: public RenderSystem::GL4::OpenGLContext {
 public:
 	CocoaOpenGLContext() = delete;
 

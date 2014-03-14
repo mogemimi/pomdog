@@ -22,8 +22,7 @@ namespace Pomdog {
 /// @addtogroup Graphics
 /// @{
 
-enum class ClearOptions: std::uint8_t
-{
+enum class ClearOptions: std::uint8_t {
 	///@~English
 	/// @brief Clear the depth buffer.
 	///@~Japanese

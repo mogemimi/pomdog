@@ -17,8 +17,7 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeDepthStencilState
-{
+class NativeDepthStencilState {
 public:
 	NativeDepthStencilState() = default;
 	NativeDepthStencilState(NativeDepthStencilState const&) = delete;

@@ -30,8 +30,7 @@ namespace Details {
 ///@~Japanese
 /// @brief 四元数（クォータニオン）を表す 4 次元ベクトルを定義します。
 template <typename T>
-class POMDOG_EXPORT FloatingPointQuaternion
-{
+class POMDOG_EXPORT FloatingPointQuaternion {
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");
 	typedef T value_type;

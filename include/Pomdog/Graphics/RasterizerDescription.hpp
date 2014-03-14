@@ -27,8 +27,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief ラスタライズ処理を記述します。
-class POMDOG_EXPORT RasterizerDescription
-{
+class POMDOG_EXPORT RasterizerDescription {
 public:
 	///@~Japanese
 	/// @brief 深度テストの時にピクセルに加算される深度バイアスです。デフォルト値は 0 です。

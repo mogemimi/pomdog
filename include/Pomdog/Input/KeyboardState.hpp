@@ -29,8 +29,7 @@ enum class Keys: std::uint8_t;
 /// @{
 
 /// @brief キーボードの状態です。
-class POMDOG_EXPORT KeyboardState
-{
+class POMDOG_EXPORT KeyboardState {
 public:
 	KeyboardState() = default;
 	~KeyboardState() = default;

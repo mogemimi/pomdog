@@ -15,8 +15,8 @@
 
 namespace Pomdog {
 
-struct HashingHelper
-{
+class HashingHelper {
+public:
 	static std::uint32_t Hash(std::string const& data)
 	{
 		return Hashing::CRC32::BlockChecksum(

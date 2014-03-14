@@ -24,8 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief キーが押されているかどうかの状態を表します。
-enum class KeyState: bool
-{
+enum class KeyState: bool {
 	///@~Japanese
 	/// @brief キーが離されている状態です。
 	Released = false,

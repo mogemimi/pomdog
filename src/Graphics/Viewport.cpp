@@ -7,61 +7,63 @@
 //
 
 #include <Pomdog/Graphics/Viewport.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
 Viewport::Viewport(Rectangle const& boundsIn)
-	: bounds(boundsIn)
-	, minDepth(0.0f)
-	, maxDepth(1.0f)
+	: Bounds(boundsIn)
+	, MinDepth(0.0f)
+	, MaxDepth(1.0f)
 {}
 //-----------------------------------------------------------------------
 Viewport::Viewport(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height)
-	: bounds(x, y, width, height)
-	, minDepth(0.0f)
-	, maxDepth(1.0f)
+	: Bounds(x, y, width, height)
+	, MinDepth(0.0f)
+	, MaxDepth(1.0f)
 {}
 //-----------------------------------------------------------------------
 Viewport::Viewport(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, float minDepthIn, float maxDepthIn)
-	: bounds(x, y, width, height)
-	, minDepth(minDepthIn)
-	, maxDepth(maxDepthIn)
+	: Bounds(x, y, width, height)
+	, MinDepth(minDepthIn)
+	, MaxDepth(maxDepthIn)
 {}
 //-----------------------------------------------------------------------
 void Viewport::Width(std::int32_t width)
 {
-	bounds.Width = width;
+	Bounds.Width = width;
 }
 //-----------------------------------------------------------------------
 std::int32_t Viewport::Width() const
 {
-	return bounds.Width;
+	return Bounds.Width;
 }
 //-----------------------------------------------------------------------
 void Viewport::Height(std::int32_t height)
 {
-	bounds.Height = height;
+	Bounds.Height = height;
 }
 //-----------------------------------------------------------------------
 std::int32_t Viewport::Height() const
 {
-	return bounds.Height;
+	return Bounds.Height;
 }
 //-----------------------------------------------------------------------
 std::int32_t Viewport::TopLeftX() const
 {
-	return bounds.X;
+	return Bounds.X;
 }
 //-----------------------------------------------------------------------
 std::int32_t Viewport::TopLeftY() const
 {
-	return bounds.Y;
+	return Bounds.Y;
 }
 //-----------------------------------------------------------------------
 float Viewport::AspectRatio() const
 {
-	if (bounds.Height != 0) {
-		return static_cast<float>(bounds.Width) / static_cast<float>(bounds.Height);
+	POMDOG_ASSERT(Bounds.Height != 0);
+	if (Bounds.Height != 0) {
+		return static_cast<float>(Bounds.Width) / Bounds.Height;
 	}
 	return 0.0f;
 }

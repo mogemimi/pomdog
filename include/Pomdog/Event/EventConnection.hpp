@@ -21,8 +21,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT EventConnection
-{
+class POMDOG_EXPORT EventConnection {
 private:
 	std::weak_ptr<Details::SignalsAndSlots::ConnectionBody> weakConnectionBody;
 

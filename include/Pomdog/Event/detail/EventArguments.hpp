@@ -22,8 +22,8 @@ namespace Pomdog {
 namespace Details {
 
 template <class T>
-struct EventComponentHashCode
-{
+class EventComponentHashCode {
+public:
 	static_assert(!std::is_pointer<T>::value, "T is not pointer.");
 	static_assert(std::is_object<T>::value, "T is not object type.");
 
@@ -34,8 +34,7 @@ template <class T>
 std::size_t const EventComponentHashCode<T>::value = typeid(T const*).hash_code();
 
 
-class EventArguments
-{
+class EventArguments {
 public:
 	EventArguments() = default;
 	EventArguments(EventArguments const&) = delete;
@@ -48,8 +47,7 @@ public:
 
 
 template <typename T>
-class EventArgumentsContainer final: public EventArguments
-{
+class EventArgumentsContainer final: public EventArguments {
 public:
 	typedef typename std::remove_reference<T>::type value_type;
 

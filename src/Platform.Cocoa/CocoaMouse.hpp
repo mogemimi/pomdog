@@ -20,8 +20,7 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
-class CocoaMouse final: public Pomdog::Mouse
-{
+class CocoaMouse final: public Pomdog::Mouse {
 public:
 	///@copydoc Pomdog::Mouse
 	MouseState const& State() const override;

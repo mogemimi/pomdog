@@ -20,8 +20,7 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeInputLayout
-{
+class NativeInputLayout {
 public:
 	NativeInputLayout() = default;
 	NativeInputLayout(NativeInputLayout const&) = delete;

@@ -24,8 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief プリミティブを形成する各頂点とそれらを結ぶラインの塗りつぶしモードを定義します。
-enum class FillMode: std::uint8_t
-{
+enum class FillMode: std::uint8_t {
 	///@~Japanese
 	/// @brief 各頂点を結ぶラインを描画します。
 	WireFrame,

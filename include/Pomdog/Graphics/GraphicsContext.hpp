@@ -40,8 +40,7 @@ class NativeGraphicsContext;
 
 ///@~Japanese
 /// @brief 下位レベルの API を提供するグラフィックスコンテキストです。レンダリングコマンドを生成するために使用します。
-class POMDOG_EXPORT GraphicsContext: Noncopyable
-{
+class POMDOG_EXPORT GraphicsContext: Noncopyable {
 public:
 	GraphicsContext() = delete;
 

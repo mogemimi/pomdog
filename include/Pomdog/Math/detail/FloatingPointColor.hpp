@@ -30,8 +30,7 @@ namespace Details {
 ///@~Japanese
 /// @brief 赤、緑、青、およびアルファ（不透明度）の 4 成分を持つ色を定義します。
 template <typename T>
-class POMDOG_EXPORT FloatingPointColor
-{
+class POMDOG_EXPORT FloatingPointColor {
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point number");
 

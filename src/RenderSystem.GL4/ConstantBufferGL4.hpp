@@ -32,8 +32,7 @@ struct ConstantBufferObjectTag {};
 
 using ConstantBufferObjectGL4 = Tagged<GLuint, Tags::ConstantBufferObjectTag>;
 
-class ConstantBufferGL4 final: public NativeConstantBuffer
-{
+class ConstantBufferGL4 final: public NativeConstantBuffer {
 public:
 	ConstantBufferGL4() = delete;
 	

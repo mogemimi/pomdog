@@ -30,21 +30,18 @@ namespace GL4 {
 
 class ConstantBufferGL4;
 
-struct ConstantBufferBindingGL4
-{
+struct ConstantBufferBindingGL4 {
 	std::shared_ptr<ConstantBufferGL4> ConstantBuffer;
 	std::string Name;
 	std::uint32_t SlotIndex;
 };
 
-struct TextureBindingGL4
-{
+struct TextureBindingGL4 {
 	GLint UniformLocation;
 	std::uint32_t SlotIndex;
 };
 
-class EffectPassGL4 final: public NativeEffectPass
-{
+class EffectPassGL4 final: public NativeEffectPass {
 public:
 	EffectPassGL4() = delete;
 	

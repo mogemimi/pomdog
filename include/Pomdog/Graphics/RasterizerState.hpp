@@ -35,8 +35,7 @@ class NativeRasterizerState;
 
 ///@~Japanese
 /// @brief ラスタライザステートです。
-class POMDOG_EXPORT RasterizerState: Noncopyable
-{
+class POMDOG_EXPORT RasterizerState: Noncopyable {
 public:
 	RasterizerState() = delete;
 

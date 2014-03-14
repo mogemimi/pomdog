@@ -23,7 +23,7 @@ namespace {
 static auto dummyParameter = std::make_shared<EffectParameter>();
 using Details::RenderSystem::NativeConstantBuffer;
 
-}// namespace
+}// unnamed namespace
 //-----------------------------------------------------------------------
 EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::shared_ptr<GraphicsContext> const& graphicsContextIn,

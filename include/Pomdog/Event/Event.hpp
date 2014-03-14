@@ -24,8 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief イベントです。
-class POMDOG_EXPORT Event
-{
+class POMDOG_EXPORT Event {
 public:
 	Event() = delete;
 	Event(Event const&) = delete;

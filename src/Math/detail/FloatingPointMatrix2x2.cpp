@@ -14,7 +14,6 @@
 namespace Pomdog {
 namespace Details {
 
-//-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix2x2<T> const FloatingPointMatrix2x2<T>::Identity(
 	1, 0,

@@ -23,8 +23,7 @@ namespace Pomdog {
 /// @addtogroup Gameplay2D
 /// @{
 
-class POMDOG_EXPORT Camera2D
-{
+class POMDOG_EXPORT Camera2D {
 public:
 };
 

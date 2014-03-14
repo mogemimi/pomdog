@@ -40,5 +40,5 @@ LogStream & LogStream::operator<<(Flush const&)
 	cache.clear();
 	return *this;
 }
-
+//-----------------------------------------------------------------------
 }// namespace Pomdog

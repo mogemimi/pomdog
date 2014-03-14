@@ -53,8 +53,7 @@ class LogStream;
 ///     }
 /// };
 ///@endcode
-class POMDOG_EXPORT Log
-{
+class POMDOG_EXPORT Log {
 public:
 	///@~Japanese
 	/// @brief 既定のチャンネルにログを出力します。

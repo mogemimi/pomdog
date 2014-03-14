@@ -38,8 +38,7 @@ struct ScalarDataTypeTag {};
 using ScalarTypeGL4 = Tagged<GLuint, Tags::ScalarDataTypeTag>;
 using VertexArrayGL4 = Tagged<GLuint, InputLayout>;
 
-struct InputElementGL4
-{
+struct InputElementGL4 {
 	// Attribute location.
 	GLuint StartSlot;
 
@@ -53,14 +52,12 @@ struct InputElementGL4
 	std::int8_t Components;
 };
 
-struct InputBindingGL4
-{
+struct InputBindingGL4 {
 	std::vector<InputElementGL4> InputElements;
 	std::uint32_t InstanceFrequency;
 };
 
-class InputLayoutGL4: public NativeInputLayout
-{
+class InputLayoutGL4: public NativeInputLayout {
 public:
 	InputLayoutGL4() = delete;
 	

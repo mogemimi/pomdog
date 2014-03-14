@@ -21,8 +21,7 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
-class GraphicsDeviceGL4 final: public NativeGraphicsDevice
-{
+class GraphicsDeviceGL4 final: public NativeGraphicsDevice {
 public:
 	GraphicsDeviceGL4() = default;
 

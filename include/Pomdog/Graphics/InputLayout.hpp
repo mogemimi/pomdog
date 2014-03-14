@@ -36,8 +36,7 @@ class NativeInputLayout;
 
 ///@~Japanese
 /// @brief 入力レイアウトを記述します。
-class POMDOG_EXPORT InputLayout: Noncopyable
-{
+class POMDOG_EXPORT InputLayout: Noncopyable {
 public:
 	InputLayout() = delete;
 	InputLayout(InputLayout const&) = delete;

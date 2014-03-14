@@ -21,15 +21,13 @@ namespace Pomdog {
 namespace Details {
 namespace {
 
-struct PNGBinaryContext
-{
+struct PNGBinaryContext {
 	std::uint8_t const* Data;
 	std::size_t ByteLength;
 	std::size_t Offset;
 };
 
-struct Texture2DParsingData
-{
+struct Texture2DParsingData {
 	std::vector<std::uint8_t> Binary;
 	std::uint32_t Height;
 	std::uint32_t Width;

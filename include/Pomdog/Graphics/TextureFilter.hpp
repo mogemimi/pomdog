@@ -24,8 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief テクスチャサンプリング時のフィルタリングオプションを定義します。
-enum class TextureFilter: std::uint8_t
-{
+enum class TextureFilter: std::uint8_t {
 	///@~Japanese
 	/// @brief 縮小、拡大およびミップレベルのサンプリングに線形フィルタリングを使用します。
 	Linear,

@@ -24,8 +24,7 @@ namespace Pomdog {
 /// @addtogroup Gameplay2D
 /// @{
 
-class POMDOG_EXPORT Transform2D
-{
+class POMDOG_EXPORT Transform2D {
 public:
 	Vector2 Position;
 	Vector2 Scale;

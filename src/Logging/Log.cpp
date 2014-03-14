@@ -16,8 +16,9 @@
 #include <Pomdog/Logging/LogChannel.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
 
-
 namespace Pomdog {
+namespace {
+
 //namespace Drafts {
 //
 //class Logger
@@ -56,8 +57,7 @@ namespace Pomdog {
 //
 //}// namespace Drafts
 
-class LogManager final
-{
+class LogManager final {
 public:
 	LogManager()
 		:defaultChannel("")
@@ -136,6 +136,7 @@ public:
 	}
 };
 
+}// unnamed namespace
 //-----------------------------------------------------------------------
 void Log::LogMessage(std::string const& message, LoggingLevel verbosity)
 {
@@ -227,5 +228,5 @@ EventConnection Log::Connect(std::function<void(LogEntry const&)> callback, std:
 	auto& channel = manager.FindChannel(channelName);
 	return channel.Connect(callback);
 }
-
+//-----------------------------------------------------------------------
 }// namespace Pomdog

@@ -25,8 +25,7 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
-struct UniformVariableGL4
-{
+struct UniformVariableGL4 {
 	std::string Name;
 	GLuint StartOffset;
 	GLenum Elements;
@@ -36,24 +35,21 @@ struct UniformVariableGL4
 	bool IsRowMajor;
 };
 
-struct UniformBlockGL4
-{
+struct UniformBlockGL4 {
 	std::vector<UniformVariableGL4> Uniforms;
 	std::string Name;
 	std::uint32_t ByteSize;
 	std::uint32_t BlockIndex;
 };
 
-struct UniformGL4
-{
+struct UniformGL4 {
 	std::string Name;
 	GLint Location;
 	GLenum Type;
 	GLuint ArrayCount;
 };
 
-class EffectReflectionGL4: public NativeEffectReflection
-{
+class EffectReflectionGL4: public NativeEffectReflection {
 public:
 	EffectReflectionGL4() = delete;
 	

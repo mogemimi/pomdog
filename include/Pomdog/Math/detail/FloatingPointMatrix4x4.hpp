@@ -31,8 +31,7 @@ namespace Details {
 ///@~Japanese
 /// @brief 4x4 の浮動小数点数の行列を定義します。
 template <typename T>
-class POMDOG_EXPORT FloatingPointMatrix4x4
-{
+class POMDOG_EXPORT FloatingPointMatrix4x4 {
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");
 	typedef T value_type;

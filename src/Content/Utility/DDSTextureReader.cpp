@@ -35,8 +35,7 @@ namespace {
 #	error "'POMDOG_DETAIL_PACKED' is not supported in this compiler."
 #endif
 
-struct DDSPixelFormat
-{
+struct DDSPixelFormat {
 	std::uint32_t ByteSize;
 	std::uint32_t Flags;
 	std::uint32_t FourCC;
@@ -47,8 +46,7 @@ struct DDSPixelFormat
 	std::uint32_t AlphaBitMask;
 } POMDOG_DETAIL_PACKED;
 
-struct DDSHeader
-{
+struct DDSHeader {
 	std::uint32_t  ByteSize;
 	std::uint32_t  Flags;
 	std::uint32_t  PixelHeight;
@@ -65,8 +63,7 @@ struct DDSHeader
 	std::uint32_t  Reserved2;
 } POMDOG_DETAIL_PACKED;
 
-struct DDSHeaderDXT10
-{
+struct DDSHeaderDXT10 {
 	std::uint32_t DxgiFormat;        // Note: enum DXGI_FORMAT
 	std::uint32_t ResourceDimension; // Note: enum D3D10_RESOURCE_DIMENSION
 	std::uint32_t MiscFlag;
@@ -82,14 +79,15 @@ struct DDSHeaderDXT10
 #pragma pack(pop)
 #endif
 
-namespace DirectDrawPixelFormat
-{
-	static constexpr std::uint32_t FourCC      = 0x00000004; // DDPF_FOURCC
-	static constexpr std::uint32_t AlphaPixels = 0x00000001; // DDPF_ALPHAPIXELS
-	static constexpr std::uint32_t Alpha       = 0x00000002; // DDPF_ALPHA
-	static constexpr std::uint32_t RGB         = 0x00000040; // DDPF_RGB
-	static constexpr std::uint32_t Luminance   = 0x00020000; // DDPF_LUMINANCE
-}
+namespace DirectDrawPixelFormat {
+
+static constexpr std::uint32_t FourCC      = 0x00000004; // DDPF_FOURCC
+static constexpr std::uint32_t AlphaPixels = 0x00000001; // DDPF_ALPHAPIXELS
+static constexpr std::uint32_t Alpha       = 0x00000002; // DDPF_ALPHA
+static constexpr std::uint32_t RGB         = 0x00000040; // DDPF_RGB
+static constexpr std::uint32_t Luminance   = 0x00020000; // DDPF_LUMINANCE
+
+}// namespace DirectDrawPixelFormat
 //-----------------------------------------------------------------------
 static SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(DDSPixelFormat const& pixelFormat)
 {

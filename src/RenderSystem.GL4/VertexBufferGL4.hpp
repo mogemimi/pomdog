@@ -26,8 +26,7 @@ namespace GL4 {
 
 using VertexBufferObjectGL4 = Tagged<GLuint, VertexBuffer>;
 
-class VertexBufferGL4 final: public NativeVertexBuffer
-{
+class VertexBufferGL4 final: public NativeVertexBuffer {
 public:
 	VertexBufferGL4() = delete;
 	~VertexBufferGL4() override;

@@ -20,8 +20,7 @@
 namespace Pomdog {
 namespace Details {
 
-class ScopeGuard final
-{
+class ScopeGuard final {
 public:
 	ScopeGuard() = delete;
 	ScopeGuard(ScopeGuard const&) = delete;

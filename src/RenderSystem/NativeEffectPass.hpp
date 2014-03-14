@@ -15,7 +15,6 @@
 
 #include <memory>
 #include <string>
-#include <unordered_map>
 #include <Pomdog/Config/FundamentalTypes.hpp>
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 
@@ -25,8 +24,7 @@ namespace RenderSystem {
 
 class NativeConstantBuffer;
 
-class NativeEffectPass
-{
+class NativeEffectPass {
 public:
 	NativeEffectPass() = default;
 	NativeEffectPass(NativeEffectPass const&) = delete;
@@ -34,7 +32,8 @@ public:
 
 	virtual ~NativeEffectPass() = default;
 	
-	virtual void SetConstant(std::string const& constantName, std::shared_ptr<NativeConstantBuffer> const& constantBuffer) = 0;
+	virtual void SetConstant(std::string const& constantName,
+		std::shared_ptr<NativeConstantBuffer> const& constantBuffer) = 0;
 	
 	virtual void SetConstant(std::string const& constantName) = 0;
 	

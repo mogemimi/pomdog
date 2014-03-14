@@ -24,8 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief ステンシルテスト時のステンシルバッファの処理を定義します。
-enum class StencilOperation: std::uint8_t
-{
+enum class StencilOperation: std::uint8_t {
 	///@~Japanese
 	/// @brief 既存のステンシルデータを保ちます。
 	/// @remarks デフォルト値です。

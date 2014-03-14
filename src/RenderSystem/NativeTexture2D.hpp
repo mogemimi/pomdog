@@ -19,8 +19,7 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeTexture2D
-{
+class NativeTexture2D {
 public:
 	NativeTexture2D() = default;
 	NativeTexture2D(NativeTexture2D const&) = delete;

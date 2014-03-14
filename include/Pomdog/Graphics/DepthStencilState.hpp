@@ -35,8 +35,7 @@ class NativeDepthStencilState;
 
 ///@~Japanese
 /// @brief 深度ステンシルステートを定義します。
-class POMDOG_EXPORT DepthStencilState: Noncopyable
-{
+class POMDOG_EXPORT DepthStencilState: Noncopyable {
 public:
 	DepthStencilState() = delete;
 

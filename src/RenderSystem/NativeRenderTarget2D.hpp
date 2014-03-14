@@ -17,8 +17,7 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeRenderTarget2D
-{
+class NativeRenderTarget2D {
 public:
 	NativeRenderTarget2D() = default;
 	NativeRenderTarget2D(NativeRenderTarget2D const&) = delete;

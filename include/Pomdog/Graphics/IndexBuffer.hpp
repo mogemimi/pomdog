@@ -35,8 +35,7 @@ class NativeIndexBuffer;
 
 ///@~Japanese
 /// @brief インデックスバッファです。
-class POMDOG_EXPORT IndexBuffer
-{
+class POMDOG_EXPORT IndexBuffer {
 public:
 	virtual	~IndexBuffer() = default;
 

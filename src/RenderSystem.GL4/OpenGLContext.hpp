@@ -20,8 +20,7 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
-class OpenGLContext: Noncopyable
-{
+class OpenGLContext: Noncopyable {
 public:
 	virtual ~OpenGLContext() = default;
 

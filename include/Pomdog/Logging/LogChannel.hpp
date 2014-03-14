@@ -28,8 +28,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 登録されたリスナーに向けてログを送り出すロガーです。
-class POMDOG_EXPORT LogChannel
-{
+class POMDOG_EXPORT LogChannel {
 public:
 	explicit LogChannel(std::string const& name);
 

@@ -22,8 +22,7 @@ namespace Pomdog {
 namespace Details {
 
 template <typename T, class Tag>
-class POMDOG_EXPORT Tagged final
-{
+class POMDOG_EXPORT Tagged final {
 public:
 	static_assert(std::is_pod<T>::value, "You can only use plain-old-data types");
 
@@ -82,8 +81,7 @@ Tagged<T, Tag> MakeTagged(Arguments &&... arguments)
 namespace std {
 
 template <typename T, class U>
-struct hash<Pomdog::Details::Tagged<T, U>>
-{
+struct hash<Pomdog::Details::Tagged<T, U>> {
 	std::size_t operator()(Pomdog::Details::Tagged<T, U> const& key)
 	{
 		return std::hash<T>()(key.value);

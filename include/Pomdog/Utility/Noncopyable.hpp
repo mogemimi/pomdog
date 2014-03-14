@@ -15,8 +15,7 @@
 
 namespace Pomdog {
 
-class Noncopyable
-{
+class Noncopyable {
 public:
 	Noncopyable() = default;
 	Noncopyable(Noncopyable const&) = delete;

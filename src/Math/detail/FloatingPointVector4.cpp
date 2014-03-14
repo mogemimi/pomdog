@@ -16,7 +16,6 @@
 namespace Pomdog {
 namespace Details {
 
-//-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector4<T>::FloatingPointVector4(FloatingPointVector3<T> const& xyz, T w)
 	: X(xyz.X), Y(xyz.Y), Z(xyz.Z), W(w)

@@ -28,8 +28,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 静的な頂点バッファです。
-class POMDOG_EXPORT ImmutableVertexBuffer: public VertexBuffer
-{
+class POMDOG_EXPORT ImmutableVertexBuffer: public VertexBuffer {
 public:
 	ImmutableVertexBuffer() = delete;
 	ImmutableVertexBuffer(ImmutableVertexBuffer const&) = delete;

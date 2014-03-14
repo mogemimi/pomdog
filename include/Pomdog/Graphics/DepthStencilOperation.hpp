@@ -25,8 +25,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief ステンシルテストの結果に応じたステンシル処理を記述します。
-class DepthStencilOperation
-{
+class DepthStencilOperation {
 public:
 	///@~Japanese
 	/// @brief ステンシルテストに合格し、深度テストで不合格となった場合に行うステンシル処理を指定します。

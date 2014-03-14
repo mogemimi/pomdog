@@ -35,8 +35,7 @@ class NativeBlendState;
 
 ///@~Japanese
 /// @brief ブレンディングステートです。
-class POMDOG_EXPORT BlendState: Noncopyable
-{
+class POMDOG_EXPORT BlendState: Noncopyable {
 public:
 	BlendState() = delete;
 

@@ -27,8 +27,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 深度ステンシルテストを記述します。
-class POMDOG_EXPORT DepthStencilDescription
-{
+class POMDOG_EXPORT DepthStencilDescription {
 public:
 	///@~Japanese
 	/// @brief ワインディング順序が時計回りの三角形の深度ステンシルテストの結果の使用方法を指定します。

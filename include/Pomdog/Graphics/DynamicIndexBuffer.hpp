@@ -28,8 +28,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 動的なインデックスバッファです。
-class POMDOG_EXPORT DynamicIndexBuffer: public IndexBuffer
-{
+class POMDOG_EXPORT DynamicIndexBuffer: public IndexBuffer {
 public: 
 	DynamicIndexBuffer() = delete;
 	DynamicIndexBuffer(DynamicIndexBuffer const&) = delete;

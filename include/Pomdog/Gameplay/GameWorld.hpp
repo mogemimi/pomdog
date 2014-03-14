@@ -70,8 +70,7 @@ class GameObject;
 /// @addtogroup Gameplay
 /// @{
 
-class POMDOG_EXPORT GameWorld
-{
+class POMDOG_EXPORT GameWorld {
 public:
 	GameWorld();
 	

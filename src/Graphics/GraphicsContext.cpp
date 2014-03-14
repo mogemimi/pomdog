@@ -36,8 +36,7 @@ using Details::PresentationParameters;
 #pragma mark - GraphicsContext::Impl class
 #endif
 //-----------------------------------------------------------------------
-class GraphicsContext::Impl final
-{
+class GraphicsContext::Impl final {
 public:
 	Impl() = delete;
 	Impl(Impl const&) = delete;
@@ -102,8 +101,8 @@ GraphicsContext::Impl::Impl(std::unique_ptr<Details::RenderSystem::NativeGraphic
 	textures.clear();
 	textures.resize(graphicsCapbilities.SamplerSlotCount);
 	
-	viewport.bounds.X = 0;
-	viewport.bounds.Y = 0;
+	viewport.Bounds.X = 0;
+	viewport.Bounds.Y = 0;
 	viewport.Width(presentationParameters.BackBufferWidth);
 	viewport.Height(presentationParameters.BackBufferHeight);
 	SetViewport(viewport);

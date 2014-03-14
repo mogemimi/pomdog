@@ -13,8 +13,7 @@
 
 @class NSOpenGLContext, NSOpenGLPixelFormat;
 
-@interface CocoaOpenGLView : NSView
-{
+@interface CocoaOpenGLView : NSView {
 @private
 	NSOpenGLContext* openGLContext_;
 	NSResponder* delegate_;

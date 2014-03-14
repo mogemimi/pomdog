@@ -24,8 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief エフェクトパラメータの要素の型を定義します。
-enum class EffectVariableType: std::uint8_t
-{
+enum class EffectVariableType: std::uint8_t {
 	///@~Japanese
 	/// @brief true または false の 2 値で表される Bool 値です。
 	Bool,

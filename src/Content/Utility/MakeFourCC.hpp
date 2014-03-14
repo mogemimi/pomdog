@@ -20,8 +20,7 @@ namespace Pomdog {
 namespace Details {
 
 template <typename Character>
-constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Character c3)
-{
+constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Character c3) {
 	static_assert(std::is_integral<Character>::value, "");
 	static_assert(sizeof(Character) == 1, "");
 

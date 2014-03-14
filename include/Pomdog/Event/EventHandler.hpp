@@ -22,8 +22,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT EventHandler
-{
+class POMDOG_EXPORT EventHandler {
 public:
 	EventHandler();
 	EventHandler(EventHandler const&) = delete;

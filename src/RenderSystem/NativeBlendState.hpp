@@ -17,8 +17,7 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeBlendState
-{
+class NativeBlendState {
 public:
 	NativeBlendState() = default;
 	NativeBlendState(NativeBlendState const&) = delete;

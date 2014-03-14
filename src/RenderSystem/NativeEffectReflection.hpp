@@ -20,8 +20,7 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeEffectReflection
-{
+class NativeEffectReflection {
 public:
 	NativeEffectReflection() = default;
 	NativeEffectReflection(NativeEffectReflection const&) = delete;

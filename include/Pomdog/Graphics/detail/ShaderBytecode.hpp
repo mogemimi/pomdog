@@ -13,13 +13,12 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Config/FundamentalTypes.hpp>
+#include <cstddef>
 
 namespace Pomdog {
 namespace Details {
 
-class ShaderBytecode
-{
+class ShaderBytecode {
 public:
 	void const* Code;
 	std::size_t ByteLength;

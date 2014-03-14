@@ -18,7 +18,6 @@
 namespace Pomdog {
 namespace Details {
 
-//-----------------------------------------------------------------------
 template <typename T>
 Coordinate2D<T> const Coordinate2D<T>::Zero(0, 0);
 //-----------------------------------------------------------------------

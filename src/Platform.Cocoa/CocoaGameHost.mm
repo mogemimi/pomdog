@@ -94,8 +94,7 @@ static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 //-----------------------------------------------------------------------
 #pragma mark - CocoaGameHost::Impl
 //-----------------------------------------------------------------------
-class CocoaGameHost::Impl final
-{
+class CocoaGameHost::Impl final {
 public:
 	Impl(std::shared_ptr<CocoaGameWindow> const& window,
 		std::shared_ptr<SystemEventDispatcher> const& dipatcher,

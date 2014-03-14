@@ -19,8 +19,7 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeSamplerState
-{
+class NativeSamplerState {
 public:
 	NativeSamplerState() = default;
 	NativeSamplerState(NativeSamplerState const&) = delete;

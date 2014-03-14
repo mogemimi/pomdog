@@ -38,8 +38,7 @@ class NativeRenderTarget2D;
 
 ///@~Japanese
 /// @brief 深度バッファを含む、2 次元のレンダーターゲットです。
-class POMDOG_EXPORT RenderTarget2D : public Texture
-{
+class POMDOG_EXPORT RenderTarget2D : public Texture {
 public:
 	RenderTarget2D() = delete;
 	RenderTarget2D(RenderTarget2D const&) = delete;

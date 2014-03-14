@@ -26,8 +26,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief エフェクト定数バッファを定義します。
-class EffectConstantDescription
-{
+class EffectConstantDescription {
 public:
 	std::vector<EffectVariable> Variables;
 	std::string Name;

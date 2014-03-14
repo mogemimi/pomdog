@@ -53,5 +53,5 @@ void EventQueue::Tick()
 		signal->operator()(event);
 	}
 }
-
+//-----------------------------------------------------------------------
 }// namespace Pomdog

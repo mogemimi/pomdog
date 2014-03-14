@@ -135,8 +135,8 @@ static Optional<FrameBufferGL4> CreateFrameBuffer()
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-template<> struct TypesafeHelperGL4::OpenGLGetTraits<FrameBufferGL4>
-{
+template<>
+struct TypesafeHelperGL4::OpenGLGetTraits<FrameBufferGL4> {
 	constexpr static GLenum bufferObjectBinding = GL_FRAMEBUFFER_BINDING;
 };
 //-----------------------------------------------------------------------

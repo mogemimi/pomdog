@@ -25,8 +25,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief アセットを読み込みます。
-class AssetManager
-{
+class AssetManager {
 public:
 	AssetManager(Details::AssetLoaderContext && loaderContext);
 

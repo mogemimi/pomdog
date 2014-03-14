@@ -24,8 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief エフェクトパラメータの要素のクラスを定義します。
-enum class EffectVariableClass: std::uint8_t
-{
+enum class EffectVariableClass: std::uint8_t {
 	///@~Japanese スカラーです。
 	Scalar,
 

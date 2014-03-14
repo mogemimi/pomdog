@@ -32,8 +32,7 @@ class NativeVertexBuffer;
 
 ///@~Japanese
 /// @brief 頂点バッファです。
-class POMDOG_EXPORT VertexBuffer
-{
+class POMDOG_EXPORT VertexBuffer {
 public:
 	virtual	~VertexBuffer() = default;
 

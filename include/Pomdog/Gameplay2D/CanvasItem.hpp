@@ -22,8 +22,7 @@ namespace Pomdog {
 /// @addtogroup Gameplay2D
 /// @{
 
-class POMDOG_EXPORT CanvasItem
-{
+class POMDOG_EXPORT CanvasItem {
 public:
 	bool Visibile;
 	

@@ -24,8 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 深度ステンシルフォーマットです。
-enum class DepthFormat: std::uint8_t
-{
+enum class DepthFormat: std::uint8_t {
 	///@~English
 	/// @brief 16-bit buffer format. 16 bits for depth.
 	Depth16,

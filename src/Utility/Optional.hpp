@@ -20,14 +20,12 @@
 namespace Pomdog {
 namespace Details {
 
-enum class OptionalType
-{
+enum class OptionalType {
 	NullOptional,
 };
 
 template <typename T>
-class Optional final
-{
+class Optional final {
 private:
 	T data;
 	bool valid;

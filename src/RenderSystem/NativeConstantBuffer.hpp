@@ -19,8 +19,7 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeConstantBuffer
-{
+class NativeConstantBuffer {
 public:
 	NativeConstantBuffer() = default;
 	NativeConstantBuffer(NativeConstantBuffer const&) = delete;

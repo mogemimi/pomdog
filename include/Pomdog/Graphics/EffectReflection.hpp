@@ -35,8 +35,7 @@ class NativeEffectReflection;
 
 ///@~Japanese
 /// @brief エフェクトリフレクションです。
-class POMDOG_EXPORT EffectReflection
-{
+class POMDOG_EXPORT EffectReflection {
 public:
 	EffectReflection() = delete;
 	EffectReflection(EffectReflection const&) = delete;

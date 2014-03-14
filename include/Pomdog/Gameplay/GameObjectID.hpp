@@ -24,8 +24,7 @@ namespace Pomdog {
 /// @addtogroup Gameplay
 /// @{
 
-class POMDOG_EXPORT GameObjectID
-{
+class POMDOG_EXPORT GameObjectID {
 public:
 	GameObjectID(): id(0x0) {}
 
@@ -69,8 +68,7 @@ private:
 namespace std {
 
 template<>
-struct std::hash<Pomdog::GameObjectID>
-{
+struct std::hash<Pomdog::GameObjectID> {
 	std::size_t operator()(Pomdog::GameObjectID const& key)
 	{
 		return std::hash<std::uint64_t>()(key.Value());

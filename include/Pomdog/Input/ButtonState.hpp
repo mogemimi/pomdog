@@ -24,8 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief ボタンが押されているかどうかの状態を表します。
-enum class ButtonState: bool
-{
+enum class ButtonState: bool {
 	///@~Japanese
 	/// @brief ボタンが離されている状態を表します。
 	Released = false,

@@ -25,8 +25,7 @@ namespace Details {
 /// @{
 
 template <typename T>
-class POMDOG_EXPORT Coordinate2D final
-{
+class POMDOG_EXPORT Coordinate2D final {
 public:
 	static_assert(std::is_arithmetic<T>::value, "You can only use arithmetic types.");
 	typedef T value_type;

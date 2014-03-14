@@ -23,17 +23,16 @@ class GraphicsDevice;
 
 namespace Details {
 
-struct AssetLoaderContext;
+class AssetLoaderContext;
 
 template <typename T>
-struct AssetLoader
-{
+struct AssetLoader {
 	std::shared_ptr<T> operator()(AssetLoaderContext const& loaderContext,
 		std::string const& assetPath);
 };
 
-struct AssetLoaderContext
-{
+class AssetLoaderContext {
+public:
 	std::string RootDirectory;
 	std::weak_ptr<Pomdog::GraphicsContext> GraphicsContext;
 	std::weak_ptr<Pomdog::GraphicsDevice> GraphicsDevice;

@@ -25,8 +25,7 @@ namespace RenderSystem {
 class GraphicsCapabilities;
 class NativeEffectPass;
 
-class NativeGraphicsContext: Noncopyable
-{
+class NativeGraphicsContext: Noncopyable {
 public:
 	virtual ~NativeGraphicsContext() = default;
 	

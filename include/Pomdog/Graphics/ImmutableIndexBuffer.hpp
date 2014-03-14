@@ -28,8 +28,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 静的なインデックスバッファです。
-class POMDOG_EXPORT ImmutableIndexBuffer: public IndexBuffer
-{
+class POMDOG_EXPORT ImmutableIndexBuffer: public IndexBuffer {
 public:
 	ImmutableIndexBuffer() = delete;
 	ImmutableIndexBuffer(ImmutableIndexBuffer const&) = delete;

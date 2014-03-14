@@ -44,8 +44,7 @@ namespace Cocoa {
 
 ///@~Japanese
 /// @brief すべてのサブシステムをの起動、およびアプリケーションの実行を行います。
-class POMDOG_EXPORT BootstrapperCocoa final
-{
+class POMDOG_EXPORT BootstrapperCocoa final {
 public:
 	BootstrapperCocoa() = default;
 	

@@ -16,7 +16,6 @@
 namespace Pomdog {
 namespace Details {
 
-//-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>::FloatingPointVector2(T x, T y)
 	: X(x), Y(y)

@@ -25,8 +25,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief エフェクト変数の型を示すメタデータです。
-class EffectAnnotation
-{
+class EffectAnnotation {
 public:
 	///@~Japanese
 	/// @brief エフェクト変数のクラスです。

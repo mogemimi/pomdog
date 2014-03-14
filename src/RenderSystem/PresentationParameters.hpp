@@ -19,8 +19,7 @@
 namespace Pomdog {
 namespace Details {
 
-class PresentationParameters
-{
+class PresentationParameters {
 public:
 	DepthFormat DepthFormat;
 	std::uint32_t BackBufferWidth;

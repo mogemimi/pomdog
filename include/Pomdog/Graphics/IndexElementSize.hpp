@@ -24,8 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief インデックスバッファの要素のビット単位のサイズを定義します。
-enum class IndexElementSize: std::uint8_t
-{
+enum class IndexElementSize: std::uint8_t {
 	///@brief 16 bit.
 	SixteenBits,
 	

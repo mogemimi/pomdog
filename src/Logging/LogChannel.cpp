@@ -12,7 +12,7 @@
 #include <Pomdog/Event/EventConnection.hpp>
 
 namespace Pomdog {
-
+//-----------------------------------------------------------------------
 LogChannel::LogChannel(std::string const& channnelName)
 	: name(channnelName)
 	, threshold(LoggingLevel::Verbose)
@@ -52,5 +52,5 @@ void LogChannel::Level(LoggingLevel thresholdIn)
 {
 	this->threshold = thresholdIn;
 }
-
+//-----------------------------------------------------------------------
 }// namespace Pomdog

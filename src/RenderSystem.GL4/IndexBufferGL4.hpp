@@ -26,8 +26,7 @@ namespace GL4 {
 
 using IndexBufferObjectGL4 = Tagged<GLuint, IndexBuffer>;
 
-class IndexBufferGL4 final: public NativeIndexBuffer
-{
+class IndexBufferGL4 final: public NativeIndexBuffer {
 public:
 	IndexBufferGL4() = delete;
 	

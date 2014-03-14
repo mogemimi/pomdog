@@ -35,8 +35,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief コンポーネントを保持するゲームオブジェクトです。複数のコンポーネントを格納するコンテナの役割を担います。
-class POMDOG_EXPORT GameObject
-{
+class POMDOG_EXPORT GameObject {
 public:
 	GameObject() = default;
 	GameObject(GameObject const&) = delete;

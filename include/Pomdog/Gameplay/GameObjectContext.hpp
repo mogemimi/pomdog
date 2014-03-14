@@ -31,8 +31,7 @@ namespace Details {
 namespace Gameplay {
 
 template <std::uint8_t MaxComponentCapacity>
-class POMDOG_EXPORT EntityDescription
-{
+class POMDOG_EXPORT EntityDescription {
 public:
 	std::bitset<MaxComponentCapacity> ComponentBitMask;
 	std::uint32_t IncremantalCounter;
@@ -43,8 +42,7 @@ public:
 };
 
 template <std::uint8_t MaxComponentCapacity>
-class POMDOG_EXPORT EntityContext
-{
+class POMDOG_EXPORT EntityContext {
 private:
 	typedef std::uint8_t HashCodeType;
 	typedef GameComponent<HashCodeType> ComponentType;

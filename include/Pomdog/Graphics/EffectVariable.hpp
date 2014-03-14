@@ -25,8 +25,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 定数バッファの要素です。
-class EffectVariable
-{
+class EffectVariable {
 public:
 	std::string Name;
 	EffectAnnotation Annotation;

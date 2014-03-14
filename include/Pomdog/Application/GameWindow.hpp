@@ -28,8 +28,7 @@ class Rectangle;
 
 ///@~Japanese
 /// @brief ゲームウィンドウです。
-class POMDOG_EXPORT GameWindow: Noncopyable
-{
+class POMDOG_EXPORT GameWindow: Noncopyable {
 public:	
 	virtual ~GameWindow() = default;
 

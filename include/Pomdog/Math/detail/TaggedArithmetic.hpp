@@ -36,8 +36,7 @@ namespace Details {
 /// Pixel<int> pixel = 32; // 32px
 ///@endcode
 template <typename T, class PhantomType>
-class POMDOG_EXPORT TaggedArithmetic final
-{
+class POMDOG_EXPORT TaggedArithmetic final {
 public:
 	static_assert(std::is_arithmetic<T>::value, "T is arithmetic type.");
 	static_assert(std::is_pod<T>::value, "T is pod type.");

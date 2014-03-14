@@ -27,8 +27,7 @@ namespace Pomdog {
 /// @brief ゲームの内容を記述します。
 /// @remarks プラットフォームを意識することなくゲームのコンテンツ開発に集中できる
 /// ようにします。
-class POMDOG_EXPORT Game: Noncopyable
-{
+class POMDOG_EXPORT Game: Noncopyable {
 public:
 	virtual ~Game() = default;
 

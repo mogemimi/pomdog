@@ -27,8 +27,7 @@ class MouseState;
 
 ///@~Japanese
 /// @brief マウスによる入力を取得するのに使います。
-class POMDOG_EXPORT Mouse: Noncopyable
-{
+class POMDOG_EXPORT Mouse: Noncopyable {
 public:
 	virtual ~Mouse() = default;
 

@@ -36,8 +36,8 @@ static GLenum ToVertexBufferUsage(BufferUsage bufferUsage)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-template<> struct TypesafeHelperGL4::OpenGLGetTraits<VertexBufferObjectGL4>
-{
+template<>
+struct TypesafeHelperGL4::OpenGLGetTraits<VertexBufferObjectGL4> {
 	constexpr static GLenum bufferObjectBinding = GL_ARRAY_BUFFER_BINDING;
 	constexpr static GLenum bufferObjectTarget = GL_ARRAY_BUFFER;
 };

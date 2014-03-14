@@ -25,8 +25,7 @@ namespace Pomdog {
 /// @addtogroup Graphics
 /// @{
 
-class POMDOG_EXPORT VertexBufferBinding
-{
+class POMDOG_EXPORT VertexBufferBinding {
 public:
 	VertexDeclaration Declaration;
 	std::uint32_t VertexOffset;

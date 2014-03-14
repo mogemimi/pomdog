@@ -36,8 +36,7 @@ class NativeTexture2D;
 
 ///@~Japanese
 /// @brief 2 次元テクスチャです。
-class POMDOG_EXPORT Texture2D : public Texture
-{
+class POMDOG_EXPORT Texture2D : public Texture {
 public:
 	Texture2D() = delete;
 	Texture2D(Texture2D const&) = delete;

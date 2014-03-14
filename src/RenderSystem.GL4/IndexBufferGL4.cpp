@@ -48,8 +48,8 @@ static GLsizeiptr ToIndexElementOffsetBytes(IndexElementSize elementSize)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-template<> struct TypesafeHelperGL4::OpenGLGetTraits<IndexBufferObjectGL4>
-{
+template<>
+struct TypesafeHelperGL4::OpenGLGetTraits<IndexBufferObjectGL4> {
 	constexpr static GLenum bufferObjectBinding = GL_ELEMENT_ARRAY_BUFFER_BINDING;
 	constexpr static GLenum bufferObjectTarget = GL_ELEMENT_ARRAY_BUFFER;
 };

@@ -18,8 +18,8 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
-template<> struct TypesafeHelperGL4::OpenGLGetTraits<ConstantBufferObjectGL4>
-{
+template<>
+struct TypesafeHelperGL4::OpenGLGetTraits<ConstantBufferObjectGL4> {
 	constexpr static GLenum bufferObjectBinding = GL_UNIFORM_BUFFER_BINDING;
 	constexpr static GLenum bufferObjectTarget = GL_UNIFORM_BUFFER;
 };
@@ -76,7 +76,7 @@ void ConstantBufferGL4::GetData(std::uint32_t byteWidth, std::uint8_t * result) 
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif
 	
-	#if defined(DEBUG) && !defined(NDEBUG) 
+	#if defined(DEBUG) && !defined(NDEBUG)
 	{
 		GLint bufferSize = 0;
 		glGetBufferParameteriv(GL_UNIFORM_BUFFER, GL_BUFFER_SIZE, &bufferSize);
@@ -108,7 +108,7 @@ void ConstantBufferGL4::SetData(std::uint8_t const* source, std::uint32_t byteWi
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif
 	
-	#if defined(DEBUG) && !defined(NDEBUG) 
+	#if defined(DEBUG) && !defined(NDEBUG)
 	{
 		GLint bufferSize = 0;
 		glGetBufferParameteriv(GL_UNIFORM_BUFFER, GL_BUFFER_SIZE, &bufferSize);
@@ -127,7 +127,7 @@ void ConstantBufferGL4::Apply(std::uint32_t slotIndex)
 {
 	POMDOG_ASSERT(bufferObject);
 	
-	#ifdef DEBUG
+	#if defined(DEBUG) && !defined(NDEBUG)
 	{
 		static auto const maxUniformBufferBindings = ([]{
 			GLint value = 0;

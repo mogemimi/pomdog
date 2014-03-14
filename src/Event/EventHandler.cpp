@@ -35,5 +35,5 @@ void EventHandler::Invoke(Event && event)
 	POMDOG_ASSERT(signal);
 	signal->operator()(std::move(event));
 }
-
+//-----------------------------------------------------------------------
 }// namespace Pomdog

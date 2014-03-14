@@ -12,7 +12,6 @@
 namespace Pomdog {
 namespace Details {
 namespace Cocoa {
-
 //-----------------------------------------------------------------------
 MouseState const& CocoaMouse::State() const
 {
@@ -61,7 +60,6 @@ void CocoaMouse::XButton2(ButtonState buttonState)
 	mouseState.XButton2 = buttonState;
 }
 //-----------------------------------------------------------------------
-
 }// namespace Cocoa
 }// namespace Details
 }// namespace Pomdog

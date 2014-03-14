@@ -21,8 +21,7 @@ class GameHost;
 
 namespace Details {
 
-//class PlatformSystem
-//{
+//class PlatformSystem {
 //public:
 //	//static std::shared_ptr<GameHost> CreateGameHost();
 //};

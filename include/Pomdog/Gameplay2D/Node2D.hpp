@@ -26,8 +26,7 @@ class GameObject;
 /// @addtogroup Gameplay2D
 /// @{
 
-class POMDOG_EXPORT Node2D
-{
+class POMDOG_EXPORT Node2D {
 public:
 	Node2D() = delete;
 	

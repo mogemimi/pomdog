@@ -28,8 +28,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief ブレンディング処理を記述します。
-class POMDOG_EXPORT BlendDescription
-{
+class POMDOG_EXPORT BlendDescription {
 public:
 	///@~Japanese
 	/// @brief ブレンディング係数を指定します。デフォルト値は Color::White です。

@@ -29,8 +29,7 @@ class LogChannel;
 
 ///@~Japanese
 /// @brief ログストリームです。
-class POMDOG_EXPORT LogStream
-{
+class POMDOG_EXPORT LogStream {
 private:
 	std::stringstream cache;
 	LogChannel & channel;

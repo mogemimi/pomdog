@@ -24,8 +24,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief テクスチャです。
-class POMDOG_EXPORT Texture
-{
+class POMDOG_EXPORT Texture {
 public:
 	Texture() = default;
 	Texture(Texture const&) = delete;
