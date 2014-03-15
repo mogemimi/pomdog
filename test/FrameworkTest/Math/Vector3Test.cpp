@@ -24,6 +24,14 @@ TEST(Vector3, TrivialCase)
 	EXPECT_EQ(vec.Z, 3.0f);
 }
 
+TEST(Vector3, Constants)
+{
+	EXPECT_EQ(Vector3(1.0f, 0.0f, 0.0f), Vector3::UnitX);
+	EXPECT_EQ(Vector3(0.0f, 1.0f, 0.0f), Vector3::UnitY);
+	EXPECT_EQ(Vector3(0.0f, 0.0f, 1.0f), Vector3::UnitZ);
+	EXPECT_EQ(Vector3(0.0f, 0.0f, 0.0f), Vector3::Zero);
+}
+
 TEST(Vector3, Addition)
 {
 	EXPECT_EQ(Vector3(1.0f + 4.0f, 2.0f + 5.0f, 3.0f + 6.0f), Vector3(1, 2, 3) + Vector3(4, 5, 6));

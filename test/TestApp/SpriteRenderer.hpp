@@ -19,8 +19,7 @@ namespace TestApp {
 
 using namespace Pomdog;
 
-class SpriteRenderer
-{
+class SpriteRenderer {
 public:
 	explicit SpriteRenderer(std::shared_ptr<GameHost> const& gameHost);
 	

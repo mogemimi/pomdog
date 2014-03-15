@@ -123,9 +123,8 @@ TEST(GameObject, Component_Const)
 	
 	{
 		std::shared_ptr<GameObject const> gameObjectConstRef = gameObject;
-		auto component = gameObjectConstRef->Component<int>();
-		
 		EXPECT_TRUE(gameObjectConstRef->HasComponent<int>());
+		ASSERT_NE(nullptr, gameObjectConstRef->Component<int>());
 		EXPECT_EQ(42, *gameObjectConstRef->Component<int>());
 	}
 }

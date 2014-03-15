@@ -51,7 +51,7 @@ void main()
 	
 	vec3 position = (vec3(PositionTextureCoord.xy - OriginRotationDepth.xy, 1.0) * transform);
 
-	gl_Position = vec4(position.xy, 0.0, 1.0);
+	gl_Position = vec4(position.xy, OriginRotationDepth.w, 1.0);
 	
 	Out.TextureCoord = (PositionTextureCoord.zw * SourceRect.zw + SourceRect.xy) * Projection2D[3].xy;
 	//Out.TextureCoord = PositionTextureCoord.zw;
