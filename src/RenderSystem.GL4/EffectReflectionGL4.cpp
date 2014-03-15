@@ -437,7 +437,7 @@ static EffectVariableClass ToEffectVariableClass(GLenum uniformType)
 	return EffectVariableClass::Struct;
 }
 //-----------------------------------------------------------------------
-static void ToComponents(GLenum uniformType, std::uint8_t & RowCount, std::uint8_t ColumnCount)
+static void ToComponents(GLenum uniformType, std::uint8_t & RowCount, std::uint8_t & ColumnCount)
 {
 	switch (uniformType)
 	{

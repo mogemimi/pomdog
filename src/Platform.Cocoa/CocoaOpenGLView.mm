@@ -30,8 +30,8 @@
 			selector:@selector(_surfaceNeedsUpdate:)
 			name:NSViewGlobalFrameDidChangeNotification
 			object:self];
+		wasAcceptingMouseEvents = NO;
 	}
-	wasAcceptingMouseEvents = NO;
 	return self;
 }
 //-----------------------------------------------------------------------
