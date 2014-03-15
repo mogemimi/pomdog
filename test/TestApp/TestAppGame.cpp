@@ -11,6 +11,16 @@
 #include "SpriteRenderer.hpp"
 
 namespace TestApp {
+namespace {
+
+static Matrix3x3 CreateViewMatrix2D(Transform2D const& transform, Camera2D const& camera)
+{
+	return Matrix3x3::CreateTranslation({-transform.Position.X, -transform.Position.Y})*
+		Matrix3x3::CreateRotationZ(-transform.Rotation) *
+		Matrix3x3::CreateScale({camera.Zoom(), camera.Zoom(), 1});
+}
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 TestAppGame::TestAppGame(std::shared_ptr<GameHost> const& gameHostIn)
 	: gameHost(gameHostIn)
@@ -40,18 +50,32 @@ void TestAppGame::Initialize()
 	spriteRenderer = std::unique_ptr<SpriteRenderer>(new SpriteRenderer(gameHost));
 	
 	
+	{
+		// NOTE: Create main camera:
+		auto gameObject = gameWorld.CreateObject();;
+		mainCameraID = gameObject->ID();
+		
+		auto transform = gameObject->AddComponent<Transform2D>();
+		gameObject->AddComponent<CanvasItem>();
+		auto sprite = gameObject->AddComponent<Sprite>();
+		auto camera = gameObject->AddComponent<Camera2D>();
+		sprite->Origin = Vector2{0.5f, 0.5f};
+		sprite->Subrect = Rectangle(0, 0, 16, 28);
+		transform->Scale = Vector2{2.5f, 2.5f};
+	}
+	
 	for (int i = 0; i < 10; ++i)
 	{
 		auto gameObject = gameWorld.CreateObject();
 		gameObject->AddComponent<CanvasItem>();
 		auto transform = gameObject->AddComponent<Transform2D>();
-		gameObject->AddComponent<Sprite>();
+		auto sprite = gameObject->AddComponent<Sprite>();
 		
 		transform->Position.X = i * 28 - 200;
 		transform->Position.Y = (i % 5) * 40;
+		sprite->Origin = Vector2{0.5f, 0.5f};
+		sprite->Subrect = Rectangle(0, 0, 16, 28);
 	}
-	
-	playerID = gameWorld.QueryComponents<Transform2D, CanvasItem, Sprite>().front()->ID();
 }
 //-----------------------------------------------------------------------
 void TestAppGame::Update()
@@ -64,6 +88,10 @@ void TestAppGame::Update()
 
 	for (auto gameObject: gameWorld.QueryComponents<CanvasItem, Transform2D>())
 	{
+		if (gameObject->ID() == mainCameraID) {
+			continue;
+		}
+	
 		auto transform = gameObject->Component<Transform2D>();
 		transform->Position.X += 1.0f;
 		if (transform->Position.X > 350.0f) {
@@ -71,15 +99,11 @@ void TestAppGame::Update()
 		}
 		transform->Scale.X = transform->Scale.Y = 2.0f;//(0.5f + (value * 0.5f));
 		transform->Rotation = MathConstants<float>::Pi() * value;
-		
-		auto sprite = gameObject->Component<Sprite>();
-		sprite->Origin = Vector2{0.5f, 0.5f};
-		sprite->Subrect = Rectangle(0, 0, 16, 28);
 	}
 	
 	auto mouse = gameHost->Mouse();
 	
-	if (auto transform = gameWorld.Component<Transform2D>(playerID))
+	if (auto transform = gameWorld.Component<Transform2D>(mainCameraID))
 	{
 		if (mouse->State().LeftButton == ButtonState::Pressed)
 		{
@@ -89,8 +113,12 @@ void TestAppGame::Update()
 		{
 			transform->Position.X += 5.0f;
 		}
-		
-		transform->Rotation += float(mouse->State().ScrollWheel) * 0.1f;
+		transform->Rotation += float(mouse->State().ScrollWheel) * 0.01f;
+	}
+	
+	if (auto camera = gameWorld.Component<Camera2D>(mainCameraID))
+	{
+		camera->Zoom(camera->Zoom() + float(mouse->State().ScrollWheel) * 0.01f);
 	}
 }
 //-----------------------------------------------------------------------
@@ -100,7 +128,14 @@ void TestAppGame::Draw()
 	
 	POMDOG_ASSERT(spriteRenderer);
 	
-	for (auto gameObject: gameWorld.QueryComponents<CanvasItem, Transform2D>())
+	auto camera = gameWorld.Component<Camera2D>(mainCameraID);
+	auto transform = gameWorld.Component<Transform2D>(mainCameraID);
+	
+	Matrix3x3 viewMatrix = CreateViewMatrix2D(*transform, *camera);
+	
+	spriteRenderer->Begin(viewMatrix);
+	
+	for (auto gameObject: gameWorld.QueryComponents<CanvasItem, Transform2D, Sprite>())
 	{
 		auto canvasItem = gameObject->Component<CanvasItem>();
 		if (!canvasItem->Visibile) {
@@ -111,8 +146,11 @@ void TestAppGame::Draw()
 		auto sprite = gameObject->Component<Sprite>();
 		
 		float layerDepth = 0.0f;
+
 		spriteRenderer->Draw(texture, transform->Position, transform->Scale, transform->Rotation, sprite->Subrect, sprite->Origin, layerDepth);
 	}
+	
+	spriteRenderer->End();
 	
 	graphicsContext->Present();
 }

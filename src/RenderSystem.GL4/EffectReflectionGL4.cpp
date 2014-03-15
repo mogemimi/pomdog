@@ -582,7 +582,7 @@ std::vector<EffectVariable> GetEffectVariables(std::vector<UniformVariableGL4> c
 	return std::move(result);
 }
 //-----------------------------------------------------------------------
-#ifdef DEBUG
+#if defined(DEBUG) && !defined(NDEBUG)
 static
 void DebugLogUniformBlocks(std::vector<UniformBlockGL4> const& uniformBlocks)
 {

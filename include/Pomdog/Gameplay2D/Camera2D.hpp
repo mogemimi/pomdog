@@ -14,7 +14,8 @@
 #endif
 
 #include <Pomdog/Config/Export.hpp>
-#include <Pomdog/Math/Radian.hpp>
+#include <algorithm>
+#include <limits>
 
 namespace Pomdog {
 
@@ -25,6 +26,22 @@ namespace Pomdog {
 
 class POMDOG_EXPORT Camera2D {
 public:
+	Camera2D()
+		: zoom(1.0f)
+	{}
+	
+	void Zoom(float value)
+	{
+		this->zoom = std::max(value, std::numeric_limits<float>::epsilon());
+	}
+	
+	float Zoom() const
+	{
+		return this->zoom;
+	}
+	
+private:
+	float zoom;
 };
 
 /// @}

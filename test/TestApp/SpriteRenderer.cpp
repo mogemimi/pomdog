@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -12,6 +12,7 @@ namespace TestApp {
 //-----------------------------------------------------------------------
 SpriteRenderer::SpriteRenderer(std::shared_ptr<GameHost> const& gameHost)
 	: graphicsContext(gameHost->GraphicsContext())
+	, transformMatrix(Matrix3x3::Identity)
 {
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
@@ -61,6 +62,17 @@ SpriteRenderer::SpriteRenderer(std::shared_ptr<GameHost> const& gameHost)
 #endif
 }
 //-----------------------------------------------------------------------
+void SpriteRenderer::Begin(Matrix3x3 const& transformMatrixIn)
+{
+	this->transformMatrix = transformMatrixIn;
+}
+//-----------------------------------------------------------------------
+void SpriteRenderer::End()
+{
+	///@todo Not implemented
+	/// Batch draw
+}
+//-----------------------------------------------------------------------
 void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture,
 	Vector2 const& position, Vector2 const& scale, Radian<float> const& rotation, Rectangle const& sourceRect, Vector2 const& originPivot, float layerDepth)
 {
@@ -87,12 +99,20 @@ void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture,
 		auto scaleX = (viewport.Width() > 0.0f) ? (2.0f/viewport.Width()): 0.0f;
 		auto scaleY = (viewport.Height() > 0.0f) ? (2.0f/viewport.Height()): 0.0f;
 		
+		Matrix3x3 projection2D {
+			scaleX, 0.0f, 0.0f,
+			0.0f, scaleY, 0.0f,
+			0.0f, 0.0f, 1.0f,
+		};
+		
+		projection2D = transformMatrix * projection2D;
+		
 		constexpr float None = 0.0f;
 		
 		alignas(16) SpriteBatchInfo info = {
-			Vector4(scaleX, 0.0f, 0.0f, None),
-			Vector4(0.0f, scaleY, 0.0f, None),
-			Vector4(0.0f, 0.0f, 1.0f, None),
+			Vector4(projection2D(0, 0), projection2D(1, 0), projection2D(2, 0), None),
+			Vector4(projection2D(0, 1), projection2D(1, 1), projection2D(2, 1), None),
+			Vector4(projection2D(0, 2), projection2D(1, 2), projection2D(2, 2), None),
 			Vector4(inverseTexturePixelWidth.X, inverseTexturePixelWidth.Y, None, None),
 		};
 		

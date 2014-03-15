@@ -20,11 +20,12 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
-class CocoaMouse final: public Pomdog::Mouse {
+class CocoaMouse final: public Mouse {
 public:
 	///@copydoc Pomdog::Mouse
 	MouseState const& State() const override;
 	
+	void Update();
 	void Position(Point2D const& position);
 	void ScrollWheel(std::int32_t scrollWheel);
 	void LeftButton(ButtonState buttonState);

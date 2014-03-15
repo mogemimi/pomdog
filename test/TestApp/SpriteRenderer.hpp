@@ -23,9 +23,13 @@ class SpriteRenderer {
 public:
 	explicit SpriteRenderer(std::shared_ptr<GameHost> const& gameHost);
 	
+	void Begin(Matrix3x3 const& transformMatrix);
+	
 	void Draw(std::shared_ptr<Texture2D> const& texture,
 		Vector2 const& position, Vector2 const& scale, Radian<float> const& rotation,
 		Rectangle const& sourceRect, Vector2 const& originPivot, float layerDepth);
+		
+	void End();
 	
 private:
 	std::shared_ptr<GraphicsContext> graphicsContext;
@@ -33,6 +37,7 @@ private:
 	std::shared_ptr<IndexBuffer> indexBuffer;
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<InputLayout> inputLayout;
+	Matrix3x3 transformMatrix;
 };
 
 }// namespace TestApp

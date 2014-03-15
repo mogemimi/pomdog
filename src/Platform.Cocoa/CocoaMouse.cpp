@@ -7,6 +7,7 @@
 //
 
 #include "CocoaMouse.hpp"
+#include <algorithm>
 //#include <Pomdog/Logging/Log.hpp>
 
 namespace Pomdog {
@@ -16,6 +17,16 @@ namespace Cocoa {
 MouseState const& CocoaMouse::State() const
 {
 	return mouseState;
+}
+//-----------------------------------------------------------------------
+void CocoaMouse::Update()
+{
+	if (mouseState.ScrollWheel > 0) {
+		mouseState.ScrollWheel = std::max(mouseState.ScrollWheel - 2, 0);
+	}
+	else if (mouseState.ScrollWheel < 0) {
+		mouseState.ScrollWheel = std::min(mouseState.ScrollWheel + 2, 0);
+	}
 }
 //-----------------------------------------------------------------------
 void CocoaMouse::Position(Point2D const& position)

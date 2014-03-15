@@ -268,6 +268,10 @@ void CocoaGameHost::Impl::RenderFrame(Game & game)
 //-----------------------------------------------------------------------
 void CocoaGameHost::Impl::DoEvents()
 {
+	if (mouse) {
+		mouse->Update(); ///@todo badcode
+	}
+
 	systemEventDispatcher->Tick();
 }
 //-----------------------------------------------------------------------

@@ -240,10 +240,6 @@ namespace Details {
 #	error "Both DEBUG and NDEBUG are defined."
 #endif
 
-#if !defined(POMDOG_DEBUG)
-#	define POMDOG_DEBUG
-#endif
-
 /// @}
 /// @}
 
