@@ -521,6 +521,25 @@ FloatingPointMatrix4x4<T>::CreateTranslation(FloatingPointVector3<T> const& posi
 //-----------------------------------------------------------------------
 template <typename T>
 void
+FloatingPointMatrix4x4<T>::CreateScale(T scale, FloatingPointMatrix4x4 & result)
+{
+	result = Identity;
+	result.m[0][0] = scale;
+	result.m[1][1] = scale;
+	result.m[2][2] = scale;
+}
+//-----------------------------------------------------------------------
+template <typename T>
+FloatingPointMatrix4x4<T>
+FloatingPointMatrix4x4<T>::CreateScale(T scale)
+{
+	FloatingPointMatrix4x4 result;
+	CreateScale(scale, result);
+	return std::move(result);
+}
+//-----------------------------------------------------------------------
+template <typename T>
+void
 FloatingPointMatrix4x4<T>::CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix4x4 & result)
 {
 	result = Identity;

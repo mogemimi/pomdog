@@ -144,6 +144,11 @@
 	[[self delegate] mouseDown:theEvent];
 }
 //-----------------------------------------------------------------------
+-(void)mouseDragged:(NSEvent *)theEvent
+{
+	[[self delegate] mouseDragged:theEvent];
+}
+//-----------------------------------------------------------------------
 -(void)mouseUp:(NSEvent *)theEvent
 {
 	[[self delegate] mouseUp:theEvent];
@@ -154,6 +159,11 @@
 	[[self delegate] rightMouseDown:theEvent];
 }
 //-----------------------------------------------------------------------
+-(void)rightMouseDragged:(NSEvent *)theEvent
+{
+	[[self delegate] rightMouseDragged:theEvent];
+}
+//-----------------------------------------------------------------------
 -(void)rightMouseUp:(NSEvent *)theEvent
 {
 	[[self delegate] rightMouseUp:theEvent];
@@ -162,6 +172,11 @@
 -(void)otherMouseDown:(NSEvent *)theEvent
 {
 	[[self delegate] otherMouseDown:theEvent];
+}
+//-----------------------------------------------------------------------
+-(void)otherMouseDragged:(NSEvent *)theEvent
+{
+	[[self delegate] otherMouseDragged:theEvent];
 }
 //-----------------------------------------------------------------------
 -(void)otherMouseUp:(NSEvent *)theEvent

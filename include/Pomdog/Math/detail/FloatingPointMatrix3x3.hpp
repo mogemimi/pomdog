@@ -153,6 +153,16 @@ public:
 	///@~Japanese
 	/// @brief スケーリング行列を作成します。
 	static void
+	CreateScale(T scale, FloatingPointMatrix3x3 & result);
+
+	///@~Japanese
+	/// @brief スケーリング行列を作成します。
+	static FloatingPointMatrix3x3
+	CreateScale(T scale);
+	
+	///@~Japanese
+	/// @brief スケーリング行列を作成します。
+	static void
 	CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix3x3 & result);
 
 	///@~Japanese

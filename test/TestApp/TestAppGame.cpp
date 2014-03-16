@@ -112,24 +112,15 @@ void TestAppGame::Update()
 		transform->Rotation = MathConstants<float>::Pi() * value;
 	}
 	
-	auto mouse = gameHost->Mouse();
-	
-	if (auto transform = gameWorld.Component<Transform2D>(mainCameraID))
 	{
-		if (mouse->State().LeftButton == ButtonState::Pressed)
+		auto mouse = gameHost->Mouse();
+		auto transform = gameWorld.Component<Transform2D>(mainCameraID);
+		auto camera = gameWorld.Component<Camera2D>(mainCameraID);
+		
+		if (transform && camera)
 		{
-			transform->Position.X -= 5.0f;
+			cameraView.Input(mouse->State(), graphicsContext->GetViewport().Bounds, *transform, *camera);
 		}
-		if (mouse->State().RightButton == ButtonState::Pressed)
-		{
-			transform->Position.X += 5.0f;
-		}
-		transform->Rotation += float(mouse->State().ScrollWheel) * 0.01f;
-	}
-	
-	if (auto camera = gameWorld.Component<Camera2D>(mainCameraID))
-	{
-		camera->Zoom(camera->Zoom() + float(mouse->State().ScrollWheel) * 0.01f);
 	}
 }
 //-----------------------------------------------------------------------
@@ -140,15 +131,14 @@ void TestAppGame::Draw()
 	auto camera = gameWorld.Component<Camera2D>(mainCameraID);
 	auto transform = gameWorld.Component<Transform2D>(mainCameraID);
 	
-	auto axesScaling = Matrix4x4::CreateScale({4096.0f, 4096.0f, 4096.0f});
 	auto vierMatrix3D = CreateViewMatrix3D(*transform, *camera);;
 	auto projectionMatrix3D = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
 	
 	POMDOG_ASSERT(primitiveGrid);
-	primitiveGrid->Draw(vierMatrix3D * projectionMatrix3D);
+	primitiveGrid->Draw(*graphicsContext, vierMatrix3D * projectionMatrix3D);
 	
 	POMDOG_ASSERT(primitiveAxes);
-	primitiveAxes->Draw((axesScaling * vierMatrix3D * projectionMatrix3D));
+	primitiveAxes->Draw(*graphicsContext, vierMatrix3D * projectionMatrix3D);
 	
 	auto viewMatrix2D = CreateViewMatrix2D(*transform, *camera);
 	

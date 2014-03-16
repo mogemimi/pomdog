@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -96,6 +96,10 @@ public:
 	static T Dot(FloatingPointVector2 const& a, FloatingPointVector2 const& b);
 
 	///@~Japanese
+	/// @brief 2 つのベクトルの外積を計算します。
+	static T Cross(FloatingPointVector2 const& a, FloatingPointVector2 const& b);
+
+	///@~Japanese
 	/// @brief 現在のベクトルを単位ベクトルに変換します。
 	void Normalize();
 	
@@ -130,6 +134,9 @@ public:
 	///@~Japanese
 	/// @brief 最初の要素へのポインタを返します。
 	T* Data();
+	
+	///@note (0, 0, 0)
+	static FloatingPointVector2 const Zero;
 };
 
 template <typename T>

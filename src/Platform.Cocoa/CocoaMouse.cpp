@@ -21,12 +21,7 @@ MouseState const& CocoaMouse::State() const
 //-----------------------------------------------------------------------
 void CocoaMouse::Update()
 {
-	if (mouseState.ScrollWheel > 0) {
-		mouseState.ScrollWheel = std::max(mouseState.ScrollWheel - 2, 0);
-	}
-	else if (mouseState.ScrollWheel < 0) {
-		mouseState.ScrollWheel = std::min(mouseState.ScrollWheel + 2, 0);
-	}
+	mouseState.ScrollWheel = (float(mouseState.ScrollWheel) * 0.2f);///@todo badcode
 }
 //-----------------------------------------------------------------------
 void CocoaMouse::Position(Point2D const& position)

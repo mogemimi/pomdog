@@ -14,6 +14,7 @@
 #endif
 
 #include <Pomdog/Pomdog.hpp>
+#include "CameraView2D.hpp"
 
 namespace TestApp {
 
@@ -43,6 +44,8 @@ private:
 	std::unique_ptr<PrimitiveAxes> primitiveAxes;
 	std::unique_ptr<PrimitiveGrid> primitiveGrid;
 	std::unique_ptr<SpriteRenderer> spriteRenderer;
+	
+	CameraView2D cameraView;
 	
 	GameWorld gameWorld;
 	GameObjectID mainCameraID;

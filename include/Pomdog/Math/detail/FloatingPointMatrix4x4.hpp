@@ -170,6 +170,16 @@ public:
 	///@~Japanese
 	/// @brief スケーリング行列を作成します。
 	static void
+	CreateScale(T scale, FloatingPointMatrix4x4 & result);
+
+	///@~Japanese
+	/// @brief スケーリング行列を作成します。
+	static FloatingPointMatrix4x4
+	CreateScale(T scale);
+
+	///@~Japanese
+	/// @brief スケーリング行列を作成します。
+	static void
 	CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix4x4 & result);
 
 	///@~Japanese

@@ -15,6 +15,15 @@
 using Pomdog::Event;
 using Pomdog::ButtonState;
 
+namespace {
+
+static Pomdog::Point2D ToPoint2D(NSPoint const& point)
+{
+	return {static_cast<std::int32_t>(point.x), static_cast<std::int32_t>(point.y)};
+}
+
+}// unnamed namespace
+
 @implementation CocoaOpenGLViewDelegate
 {
 	std::shared_ptr<Pomdog::Details::SystemEventDispatcher> eventDispatcher;
@@ -48,9 +57,7 @@ using Pomdog::ButtonState;
 {
 	if (mouse_) {
 		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position({
-			static_cast<std::int32_t>(locationInWindow.x),
-			static_cast<std::int32_t>(locationInWindow.y)});
+		mouse_->Position(ToPoint2D(locationInWindow));
 	}
 }
 //-----------------------------------------------------------------------
@@ -58,9 +65,7 @@ using Pomdog::ButtonState;
 {
 	if (mouse_) {
 		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position({
-			static_cast<std::int32_t>(locationInWindow.x),
-			static_cast<std::int32_t>(locationInWindow.y)});
+		mouse_->Position(ToPoint2D(locationInWindow));
 	}
 }
 //-----------------------------------------------------------------------
@@ -68,9 +73,7 @@ using Pomdog::ButtonState;
 {
 	if (mouse_) {
 		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position({
-			static_cast<std::int32_t>(locationInWindow.x),
-			static_cast<std::int32_t>(locationInWindow.y)});
+		mouse_->Position(ToPoint2D(locationInWindow));
 	}
 }
 //-----------------------------------------------------------------------
@@ -78,6 +81,19 @@ using Pomdog::ButtonState;
 {
 	if (mouse_) {
 		mouse_->LeftButton(ButtonState::Pressed);
+		
+		NSPoint locationInWindow = [theEvent locationInWindow];
+		mouse_->Position(ToPoint2D(locationInWindow));
+	}
+}
+//-----------------------------------------------------------------------
+-(void)mouseDragged:(NSEvent *)theEvent
+{
+	if (mouse_) {
+		mouse_->LeftButton(ButtonState::Pressed);
+		
+		NSPoint locationInWindow = [theEvent locationInWindow];
+		mouse_->Position(ToPoint2D(locationInWindow));
 	}
 }
 //-----------------------------------------------------------------------
@@ -85,6 +101,9 @@ using Pomdog::ButtonState;
 {
 	if (mouse_) {
 		mouse_->LeftButton(ButtonState::Released);
+		
+		NSPoint locationInWindow = [theEvent locationInWindow];
+		mouse_->Position(ToPoint2D(locationInWindow));
 	}
 }
 //-----------------------------------------------------------------------
@@ -92,6 +111,19 @@ using Pomdog::ButtonState;
 {
 	if (mouse_) {
 		mouse_->RightButton(ButtonState::Pressed);
+		
+		NSPoint locationInWindow = [theEvent locationInWindow];
+		mouse_->Position(ToPoint2D(locationInWindow));
+	}
+}
+//-----------------------------------------------------------------------
+-(void)rightMouseDragged:(NSEvent *)theEvent
+{
+	if (mouse_) {
+		mouse_->RightButton(ButtonState::Pressed);
+		
+		NSPoint locationInWindow = [theEvent locationInWindow];
+		mouse_->Position(ToPoint2D(locationInWindow));
 	}
 }
 //-----------------------------------------------------------------------
@@ -99,6 +131,9 @@ using Pomdog::ButtonState;
 {
 	if (mouse_) {
 		mouse_->RightButton(ButtonState::Released);
+		
+		NSPoint locationInWindow = [theEvent locationInWindow];
+		mouse_->Position(ToPoint2D(locationInWindow));
 	}
 }
 //-----------------------------------------------------------------------
@@ -119,6 +154,31 @@ using Pomdog::ButtonState;
 	else if (buttonNumber == 4) {
 		mouse_->XButton2(ButtonState::Pressed);
 	}
+	
+	NSPoint locationInWindow = [theEvent locationInWindow];
+	mouse_->Position(ToPoint2D(locationInWindow));
+}
+//-----------------------------------------------------------------------
+-(void)otherMouseDragged:(NSEvent *)theEvent
+{
+	if (!mouse_) {
+		return;
+	}
+	
+	NSInteger buttonNumber = [theEvent buttonNumber];
+	
+	if (buttonNumber == 2) {
+		mouse_->MiddleButton(ButtonState::Pressed);
+	}
+	else if (buttonNumber == 3) {
+		mouse_->XButton1(ButtonState::Pressed);
+	}
+	else if (buttonNumber == 4) {
+		mouse_->XButton2(ButtonState::Pressed);
+	}
+	
+	NSPoint locationInWindow = [theEvent locationInWindow];
+	mouse_->Position(ToPoint2D(locationInWindow));
 }
 //-----------------------------------------------------------------------
 -(void)otherMouseUp:(NSEvent *)theEvent
@@ -138,6 +198,9 @@ using Pomdog::ButtonState;
 	else if (buttonNumber == 4) {
 		mouse_->XButton2(ButtonState::Released);
 	}
+	
+	NSPoint locationInWindow = [theEvent locationInWindow];
+	mouse_->Position(ToPoint2D(locationInWindow));
 }
 //-----------------------------------------------------------------------
 -(void)scrollWheel:(NSEvent *)theEvent

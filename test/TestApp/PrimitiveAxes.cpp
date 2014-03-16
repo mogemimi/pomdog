@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -11,7 +11,6 @@
 namespace TestApp {
 //-----------------------------------------------------------------------
 PrimitiveAxes::PrimitiveAxes(std::shared_ptr<GameHost> const& gameHost)
-	: graphicsContext(gameHost->GraphicsContext())
 {
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
@@ -39,15 +38,18 @@ PrimitiveAxes::PrimitiveAxes(std::shared_ptr<GameHost> const& gameHost)
 	}
 }
 //-----------------------------------------------------------------------
-void PrimitiveAxes::Draw(Matrix4x4 const& transformMatrix)
+void PrimitiveAxes::Draw(GraphicsContext & graphicsContext, Matrix4x4 const& transformMatrix)
 {
-	auto parameter = effectPass->Parameters("Matrices");
-	parameter->SetValue(transformMatrix.Transpose());
+	constexpr float axesPixelSize = 4096.0f;
+	auto axesScaling = Matrix4x4::CreateScale({axesPixelSize, axesPixelSize, axesPixelSize});
 
-	graphicsContext->SetInputLayout(inputLayout);
-	graphicsContext->SetVertexBuffer(vertexBuffer);
+	auto parameter = effectPass->Parameters("Matrices");
+	parameter->SetValue((axesScaling * transformMatrix).Transpose());
+
+	graphicsContext.SetInputLayout(inputLayout);
+	graphicsContext.SetVertexBuffer(vertexBuffer);
 	effectPass->Apply();
-	graphicsContext->Draw(PrimitiveTopology::LineList);
+	graphicsContext.Draw(PrimitiveTopology::LineList);
 }
 
 }// namespace TestApp

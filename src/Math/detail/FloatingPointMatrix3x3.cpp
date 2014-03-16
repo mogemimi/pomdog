@@ -392,6 +392,30 @@ FloatingPointMatrix3x3<T>::CreateTranslation(FloatingPointVector2<T> const& posi
 //-----------------------------------------------------------------------
 template <typename T>
 void
+FloatingPointMatrix3x3<T>::CreateScale(T scale, FloatingPointMatrix3x3 & result)
+{
+	result.m[0][0] = scale;
+	result.m[0][1] = 0;
+	result.m[0][2] = 0;
+	result.m[1][0] = 0;
+	result.m[1][1] = scale;
+	result.m[1][2] = 0;
+	result.m[2][0] = 0;
+	result.m[2][1] = 0;
+	result.m[2][2] = scale;
+}
+//-----------------------------------------------------------------------
+template <typename T>
+FloatingPointMatrix3x3<T>
+FloatingPointMatrix3x3<T>::CreateScale(T scale)
+{
+	FloatingPointMatrix3x3 result;
+	CreateScale(scale, result);
+	return std::move(result);
+}
+//-----------------------------------------------------------------------
+template <typename T>
+void
 FloatingPointMatrix3x3<T>::CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix3x3 & result)
 {
 	static_assert(std::is_same<T, decltype(scale.X)>::value, "scale is T");

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -11,7 +11,6 @@
 namespace TestApp {
 //-----------------------------------------------------------------------
 PrimitiveGrid::PrimitiveGrid(std::shared_ptr<GameHost> const& gameHost)
-	: graphicsContext(gameHost->GraphicsContext())
 {
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
@@ -19,7 +18,7 @@ PrimitiveGrid::PrimitiveGrid(std::shared_ptr<GameHost> const& gameHost)
 	{
 		using Position = CustomVertex<Vector2>;
 		
-		size_t const gridCount = 32;
+		size_t const gridCount = 12;
 		
 		std::vector<Position> verticesCombo;
 		verticesCombo.reserve((1 + gridCount*2) * 4);
@@ -46,7 +45,7 @@ PrimitiveGrid::PrimitiveGrid(std::shared_ptr<GameHost> const& gameHost)
 	}
 }
 //-----------------------------------------------------------------------
-void PrimitiveGrid::Draw(Matrix4x4 const& transformMatrix)
+void PrimitiveGrid::Draw(GraphicsContext & graphicsContext, Matrix4x4 const& transformMatrix)
 {
 	struct alignas(16) GridLayout
 	{
@@ -60,10 +59,10 @@ void PrimitiveGrid::Draw(Matrix4x4 const& transformMatrix)
 	auto parameter = effectPass->Parameters("GridLayout");
 	parameter->SetValue(GridLayout{ (gridScaling * transformMatrix).Transpose(), Vector4{1.0f, 1.0f, 1.0f, 1.0f}});
 
-	graphicsContext->SetInputLayout(inputLayout);
-	graphicsContext->SetVertexBuffer(vertexBuffer);
+	graphicsContext.SetInputLayout(inputLayout);
+	graphicsContext.SetVertexBuffer(vertexBuffer);
 	effectPass->Apply();
-	graphicsContext->Draw(PrimitiveTopology::LineList);
+	graphicsContext.Draw(PrimitiveTopology::LineList);
 }
 
 }// namespace TestApp

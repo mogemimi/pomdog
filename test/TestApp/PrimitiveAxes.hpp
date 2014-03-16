@@ -24,10 +24,9 @@ class PrimitiveAxes
 public:
 	explicit PrimitiveAxes(std::shared_ptr<GameHost> const& gameHost);
 	
-	void Draw(Matrix4x4 const& transformMatrix);
+	void Draw(GraphicsContext & graphicsContext, Matrix4x4 const& transformMatrix);
 	
 private:
-	std::shared_ptr<GraphicsContext> graphicsContext;
 	std::shared_ptr<VertexBuffer> vertexBuffer;
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<InputLayout> inputLayout;

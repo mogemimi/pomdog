@@ -17,6 +17,9 @@ namespace Pomdog {
 namespace Details {
 
 template <typename T>
+FloatingPointVector2<T> const FloatingPointVector2<T>::Zero(0, 0);
+//-----------------------------------------------------------------------
+template <typename T>
 FloatingPointVector2<T>::FloatingPointVector2(T x, T y)
 	: X(x), Y(y)
 {}
@@ -138,6 +141,12 @@ template <typename T>
 T FloatingPointVector2<T>::Dot(FloatingPointVector2 const& a, FloatingPointVector2 const& b)
 {
 	return a.X * b.X + a.Y * b.Y;
+}
+//-----------------------------------------------------------------------
+template <typename T>
+T FloatingPointVector2<T>::Cross(FloatingPointVector2 const& a, FloatingPointVector2 const& b)
+{
+	return a.X * b.Y - a.Y * b.X;
 }
 //-----------------------------------------------------------------------
 template <typename T>
