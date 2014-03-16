@@ -19,6 +19,8 @@ namespace TestApp {
 
 using namespace Pomdog;
 
+class PrimitiveAxes;
+class PrimitiveGrid;
 class SpriteRenderer;
 
 class TestAppGame: public Game {
@@ -38,6 +40,8 @@ private:
 	std::shared_ptr<GraphicsContext> graphicsContext;
 	
 	std::shared_ptr<Texture2D> texture;
+	std::unique_ptr<PrimitiveAxes> primitiveAxes;
+	std::unique_ptr<PrimitiveGrid> primitiveGrid;
 	std::unique_ptr<SpriteRenderer> spriteRenderer;
 	
 	GameWorld gameWorld;

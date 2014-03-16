@@ -13,13 +13,26 @@
 #	pragma once
 #endif
 
-namespace Pomdog {
+#include <Pomdog/Pomdog.hpp>
+
+namespace TestApp {
+
+using namespace Pomdog;
 
 class PrimitiveAxes
 {
 public:
+	explicit PrimitiveAxes(std::shared_ptr<GameHost> const& gameHost);
+	
+	void Draw(Matrix4x4 const& transformMatrix);
+	
+private:
+	std::shared_ptr<GraphicsContext> graphicsContext;
+	std::shared_ptr<VertexBuffer> vertexBuffer;
+	std::shared_ptr<EffectPass> effectPass;
+	std::shared_ptr<InputLayout> inputLayout;
 };
 
-}// namespace Pomdog
+}// namespace TestApp
 
 #endif // !defined(POMDOG_PRIMITIVEAXES_B7717D29_25D2_44E7_8F48_2642088D2B41_HPP)

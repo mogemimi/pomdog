@@ -8,6 +8,8 @@
 
 #include "TestAppGame.hpp"
 #include <utility>
+#include "PrimitiveAxes.hpp"
+#include "PrimitiveGrid.hpp"
 #include "SpriteRenderer.hpp"
 
 namespace TestApp {
@@ -18,6 +20,13 @@ static Matrix3x3 CreateViewMatrix2D(Transform2D const& transform, Camera2D const
 	return Matrix3x3::CreateTranslation({-transform.Position.X, -transform.Position.Y})*
 		Matrix3x3::CreateRotationZ(-transform.Rotation) *
 		Matrix3x3::CreateScale({camera.Zoom(), camera.Zoom(), 1});
+}
+//-----------------------------------------------------------------------
+static Matrix4x4 CreateViewMatrix3D(Transform2D const& transform, Camera2D const& camera)
+{
+	return Matrix4x4::CreateTranslation({-transform.Position.X, -transform.Position.Y, 1.0f})*
+		Matrix4x4::CreateRotationZ(-transform.Rotation) *
+		Matrix4x4::CreateScale({camera.Zoom(), camera.Zoom(), 1});
 }
 
 }// unnamed namespace
@@ -47,6 +56,8 @@ void TestAppGame::Initialize()
 		texture = assets->Load<Texture2D>("pomdog.png");
 	}
 	
+	primitiveAxes = std::unique_ptr<PrimitiveAxes>(new PrimitiveAxes(gameHost));
+	primitiveGrid = std::unique_ptr<PrimitiveGrid>(new PrimitiveGrid(gameHost));
 	spriteRenderer = std::unique_ptr<SpriteRenderer>(new SpriteRenderer(gameHost));
 	
 	
@@ -126,14 +137,23 @@ void TestAppGame::Draw()
 {
 	graphicsContext->Clear(Color::CornflowerBlue);
 	
-	POMDOG_ASSERT(spriteRenderer);
-	
 	auto camera = gameWorld.Component<Camera2D>(mainCameraID);
 	auto transform = gameWorld.Component<Transform2D>(mainCameraID);
 	
-	Matrix3x3 viewMatrix = CreateViewMatrix2D(*transform, *camera);
+	auto axesScaling = Matrix4x4::CreateScale({4096.0f, 4096.0f, 4096.0f});
+	auto vierMatrix3D = CreateViewMatrix3D(*transform, *camera);;
+	auto projectionMatrix3D = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
 	
-	spriteRenderer->Begin(viewMatrix);
+	POMDOG_ASSERT(primitiveGrid);
+	primitiveGrid->Draw(vierMatrix3D * projectionMatrix3D);
+	
+	POMDOG_ASSERT(primitiveAxes);
+	primitiveAxes->Draw((axesScaling * vierMatrix3D * projectionMatrix3D));
+	
+	auto viewMatrix2D = CreateViewMatrix2D(*transform, *camera);
+	
+	POMDOG_ASSERT(spriteRenderer);
+	spriteRenderer->Begin(viewMatrix2D);
 	
 	for (auto gameObject: gameWorld.QueryComponents<CanvasItem, Transform2D, Sprite>())
 	{

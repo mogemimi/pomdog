@@ -46,6 +46,10 @@
         '../include',
       ],
       'sources': [
+        '../test/TestApp/PrimitiveAxes.cpp',
+        '../test/TestApp/PrimitiveAxes.hpp',
+        '../test/TestApp/PrimitiveGrid.cpp',
+        '../test/TestApp/PrimitiveGrid.hpp',
         '../test/TestApp/SpriteRenderer.cpp',
         '../test/TestApp/SpriteRenderer.hpp',
         '../test/TestApp/TestAppGame.cpp',
