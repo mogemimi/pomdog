@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,7 +13,10 @@
 #	pragma once
 #endif
 
-#include "detail/FloatingPointColor.hpp"
+#include <cstdint>
+#include <cfloat>
+#include "../Config/Export.hpp"
+#include "detail/ForwardDeclarations.hpp"
 
 namespace Pomdog {
 
@@ -22,11 +25,91 @@ namespace Pomdog {
 /// @addtogroup Math
 /// @{
 
-/////@~English
-///// @brief RGBA color.
-/////@~Japanese
-///// @brief 赤、緑、青、およびアルファ（不透明度）の 4 成分を持つ色を定義します。
-using Color = Details::FloatingPointColor<float>;
+///@~English
+/// @brief RGBA color.
+///@~Japanese
+/// @brief 赤、緑、青、およびアルファ（不透明度）の 4 成分を持つ色を定義します。
+class POMDOG_EXPORT Color {
+public:
+	std::uint32_t PackedValue;
+
+public:
+	// Constructors:
+	Color() = default;
+	
+	///@brief Copy constructor.
+	Color(Color const&) = default;
+	
+	///@brief Move constructor.
+	Color(Color &&) = default;
+	
+	///@brief Construct from unsigned integer values.
+	Color(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha);
+
+	explicit Color(Vector3 const& vector);
+	explicit Color(Vector4 const& vector);
+	
+	~Color() = default;
+
+	// Assignment operators:
+	Color & operator=(Color const&) = default;
+	Color & operator=(Color &&) = default;
+	Color & operator*=(float scale);
+
+	// Binary operators:
+	Color operator*(float scale) const;
+
+	bool operator==(Color const&) const;
+	bool operator!=(Color const&) const;
+
+	std::uint8_t R() const;
+	std::uint8_t G() const;
+	std::uint8_t B() const;
+	std::uint8_t A() const;
+	
+	void R(std::uint8_t value);
+	void G(std::uint8_t value);
+	void B(std::uint8_t value);
+	void A(std::uint8_t value);
+
+	Vector3 ToVector3() const;
+	Vector4 ToVector4() const;
+
+	///@~Japanese
+	/// @brief 指定された2色間を線形補間します。
+	/// @param source0 ソースとなる色0
+	/// @param source1 ソースとなる色1
+	/// @param amount 線形補間する際に使用されるパラメータで、値の範囲に制限はありません。
+	static Color Lerp(Color const& source0, Color const& source1, float amount);
+
+	// static public attributes
+	
+	///@note (R, G, B, A) = (255, 255, 255, 255)
+	static const Color White;
+	
+	///@note (R, G, B, A) = (0, 0, 0, 255)
+	static const Color Black;
+	
+	///@note (R, G, B, A) = (255, 0, 0, 255)
+	static const Color Red;
+	
+	///@note (R, G, B, A) = (0, 255, 0, 255)
+	static const Color Green;
+	
+	///@note (R, G, B, A) = (0, 0, 255, 255)
+	static const Color Blue;
+	
+	///@note (R, G, B, A) = (255, 255, 0, 255)
+	static const Color Yellow;
+	
+	///@note (R, G, B, A) = (100, 149 ,237, 255)
+	static const Color CornflowerBlue;
+	
+	///@note (R, G, B, A) = (0, 0, 0, 0)
+	static const Color TransparentBlack;
+};
+
+Color POMDOG_EXPORT operator*(float scale, Color const& color);
 
 /// @}
 /// @}

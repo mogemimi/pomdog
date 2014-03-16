@@ -13,6 +13,7 @@
 #include <Pomdog/Utility/Exception.hpp>
 #include <Pomdog/Math/Color.hpp>
 #include <Pomdog/Math/Rectangle.hpp>
+#include <Pomdog/Math/Vector4.hpp>
 #include <Pomdog/Graphics/ClearOptions.hpp>
 #include <Pomdog/Graphics/IndexBuffer.hpp>
 #include <Pomdog/Graphics/InputLayout.hpp>
@@ -173,14 +174,13 @@ GraphicsContextGL4::~GraphicsContextGL4()
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Clear(Color const& color)
 {
-	glClearColor(color.r, color.g, color.b, color.a);
+	auto colorVector = color.ToVector4();
+	glClearColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float depth, std::int32_t stencil)
 {
-	glClearColor(color.r, color.g, color.b, color.a);
-	
 	GLbitfield mask = 0;
 	
 	if ((options | ClearOptions::DepthBuffer) == options) {
@@ -193,7 +193,8 @@ void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float d
 	}
 	if ((options | ClearOptions::RenderTarget) == options) {
 		mask |= GL_COLOR_BUFFER_BIT;
-		glClearColor(color.r, color.g, color.b, color.a);
+		auto colorVector = color.ToVector4();
+		glClearColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
 	}
 	
 	glClear(mask);

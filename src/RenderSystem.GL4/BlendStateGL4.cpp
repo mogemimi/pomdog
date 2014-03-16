@@ -10,6 +10,7 @@
 #include <utility>
 #include <Pomdog/Graphics/BlendDescription.hpp>
 #include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Math/Vector4.hpp>
 #include "ErrorChecker.hpp"
 
 namespace Pomdog {
@@ -103,12 +104,8 @@ void BlendStateGL4::Apply()
 	ErrorChecker::CheckError("glBlendFuncSeparate", __FILE__, __LINE__);
 	#endif
 
-	glBlendColor(
-		blendColor.r,
-		blendColor.g,
-		blendColor.b,
-		blendColor.a
-	);
+	auto colorVector = blendColor.ToVector4();
+	glBlendColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
 	
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBlendColor", __FILE__, __LINE__);

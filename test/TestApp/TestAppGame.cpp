@@ -69,7 +69,7 @@ void TestAppGame::Initialize()
 		auto transform = gameObject->AddComponent<Transform2D>();
 		gameObject->AddComponent<CanvasItem>();
 		auto sprite = gameObject->AddComponent<Sprite>();
-		auto camera = gameObject->AddComponent<Camera2D>();
+		gameObject->AddComponent<Camera2D>();
 		sprite->Origin = Vector2{0.5f, 0.5f};
 		sprite->Subrect = Rectangle(0, 0, 16, 28);
 		transform->Scale = Vector2{2.5f, 2.5f};

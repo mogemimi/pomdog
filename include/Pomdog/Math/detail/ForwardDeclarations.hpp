@@ -28,9 +28,6 @@ template <typename T>
 class Coordinate3D;
 
 template <typename RealType>
-class POMDOG_EXPORT FloatingPointColor;
-
-template <typename RealType>
 class POMDOG_EXPORT FloatingPointMatrix2x2;
 
 template <typename RealType>
@@ -62,7 +59,6 @@ struct RadianTag;
 
 }// namespace Details
 
-using Color = Details::FloatingPointColor<float>;
 using Matrix2x2 = Details::FloatingPointMatrix2x2<float>;
 using Matrix3x3 = Details::FloatingPointMatrix3x3<float>;
 using Matrix4x4 = Details::FloatingPointMatrix4x4<float>;
@@ -77,6 +73,7 @@ template <typename T>
 using Radian = Details::TaggedArithmetic<T, Details::Tags::RadianTag>;
 
 // Structures:
+class Color;
 class Rectangle;
 
 // Enumerations:

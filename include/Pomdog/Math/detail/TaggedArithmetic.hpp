@@ -83,16 +83,16 @@ public:
 		return *this;
 	}
 
-	TaggedArithmetic & operator*=(T scaleFactor)
+	TaggedArithmetic & operator*=(T scale)
 	{
-		value *= scaleFactor;
+		value *= scale;
 		return *this;
 	}
 
-	TaggedArithmetic & operator/=(T scaleFactor)
+	TaggedArithmetic & operator/=(T scale)
 	{
-		POMDOG_ASSERT(scaleFactor != 0);
-		value /= scaleFactor;
+		POMDOG_ASSERT(scale != 0);
+		value /= scale;
 		return *this;
 	}
 
@@ -129,20 +129,20 @@ public:
 		return TaggedArithmetic(value / v.value);
 	}
 
-	TaggedArithmetic operator*(T scaleFactor) const
+	TaggedArithmetic operator*(T scale) const
 	{
-		return TaggedArithmetic(value * scaleFactor);
+		return TaggedArithmetic(value * scale);
 	}
 
-	TaggedArithmetic operator/(T scaleFactor) const
+	TaggedArithmetic operator/(T scale) const
 	{
-		POMDOG_ASSERT(scaleFactor != static_cast<T>(0));
-		return TaggedArithmetic(value / scaleFactor);
+		POMDOG_ASSERT(scale != static_cast<T>(0));
+		return TaggedArithmetic(value / scale);
 	}
 
-	friend TaggedArithmetic operator*(T scaleFactor, TaggedArithmetic const& v)
+	friend TaggedArithmetic operator*(T scale, TaggedArithmetic const& v)
 	{
-		return TaggedArithmetic(scaleFactor * v.value);
+		return TaggedArithmetic(scale * v.value);
 	}
 
 	bool operator==(TaggedArithmetic const& v) const

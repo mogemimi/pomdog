@@ -8,74 +8,99 @@
 
 #include <gtest/iutest_switch.hpp>
 #include <Pomdog/Math/Color.hpp>
+#include <Pomdog/Math/Vector3.hpp>
+#include <Pomdog/Math/Vector4.hpp>
 
 using Pomdog::Color;
+using Pomdog::Vector3;
+using Pomdog::Vector4;
 
 TEST(Color, FirstTestCase)
 {
-	Color color{1, 1, 1, 1};
-	EXPECT_EQ(color.r, 1.0f);
-	EXPECT_EQ(color.g, 1.0f);
-	EXPECT_EQ(color.b, 1.0f);
-	EXPECT_EQ(color.a, 1.0f);
+	Color color{255, 255, 255, 255};
+	EXPECT_EQ(color.R(), 255);
+	EXPECT_EQ(color.G(), 255);
+	EXPECT_EQ(color.B(), 255);
+	EXPECT_EQ(color.A(), 255);
 	
 	color = Pomdog::Color{0, 0, 0, 0};
-	EXPECT_EQ(color.r, 0.0f);
-	EXPECT_EQ(color.g, 0.0f);
-	EXPECT_EQ(color.b, 0.0f);
-	EXPECT_EQ(color.a, 0.0f);
+	EXPECT_EQ(color.R(), 0);
+	EXPECT_EQ(color.G(), 0);
+	EXPECT_EQ(color.B(), 0);
+	EXPECT_EQ(color.A(), 0);
 	
 	color = Pomdog::Color{1, 2, 3, 4};
-	EXPECT_EQ(color.r, 1.0f);
-	EXPECT_EQ(color.g, 2.0f);
-	EXPECT_EQ(color.b, 3.0f);
-	EXPECT_EQ(color.a, 4.0f);
+	EXPECT_EQ(color.R(), 1);
+	EXPECT_EQ(color.G(), 2);
+	EXPECT_EQ(color.B(), 3);
+	EXPECT_EQ(color.A(), 4);
 }
 
-TEST(Color, SecondTestCase)
+TEST(Color, Constants)
 {
-	EXPECT_EQ(Color::Black,  Color(0.0f, 0.0f, 0.0f, 1.0f));
-	EXPECT_EQ(Color::White,  Color(1.0f, 1.0f, 1.0f, 1.0f));
-	EXPECT_EQ(Color::Red,    Color(1.0f, 0.0f, 0.0f, 1.0f));
-	EXPECT_EQ(Color::Green,  Color(0.0f, 1.0f, 0.0f, 1.0f));
-	EXPECT_EQ(Color::Blue,   Color(0.0f, 0.0f, 1.0f, 1.0f));
-	EXPECT_EQ(Color::Yellow, Color(1.0f, 1.0f, 0.0f, 1.0f));
-	EXPECT_EQ(Color::TransparentBlack, Color(0.0f, 0.0f, 0.0f, 0.0f));
-	EXPECT_EQ(Color::CornflowerBlue,   Color(100.0f/255, 149.0f/255, 237.0f/255, 1.0f));
-}
-
-TEST(Color, DoubleColor)
-{
-	typedef Pomdog::Details::FloatingPointColor<double> Color;
-	EXPECT_EQ(Color::Black,  Color(0, 0, 0, 1));
-	EXPECT_EQ(Color::White,  Color(1, 1, 1, 1));
-	EXPECT_EQ(Color::Red,    Color(1, 0, 0, 1));
-	EXPECT_EQ(Color::Green,  Color(0, 1, 0, 1));
-	EXPECT_EQ(Color::Blue,   Color(0, 0, 1, 1));
-	EXPECT_EQ(Color::Yellow, Color(1, 1, 0, 1));
+	EXPECT_EQ(Color::Black,  Color(0, 0, 0, 255));
+	EXPECT_EQ(Color::White,  Color(255, 255, 255, 255));
+	EXPECT_EQ(Color::Red,    Color(255, 0, 0, 255));
+	EXPECT_EQ(Color::Green,  Color(0, 255, 0, 255));
+	EXPECT_EQ(Color::Blue,   Color(0, 0, 255, 255));
+	EXPECT_EQ(Color::Yellow, Color(255, 255, 0, 255));
 	EXPECT_EQ(Color::TransparentBlack, Color(0, 0, 0, 0));
-	EXPECT_EQ(Color::CornflowerBlue,   Color(100.0/255, 149.0/255, 237.0/255, 1));
-}
-
-TEST(Color, Addition)
-{
-	EXPECT_EQ(Color(1.f + 5.f, 2.f + 6.f, 3.f + 7.f, 4.f + 8.f), Color(1, 2, 3, 4) + Color(5, 6, 7, 8));
-	EXPECT_EQ(Color(1.f - 5.f, 2.f - 6.f, 3.f - 7.f, 4.f - 8.f), Color(1, 2, 3, 4) + Color(-5, -6, -7, -8));
-}
-
-TEST(Color, Subtraction)
-{
-	EXPECT_EQ(Color(1.f - 5.f, 2.f - 6.f, 3.f - 7.f, 4.f - 8.f), Color(1, 2, 3, 4) - Color(5, 6, 7, 8));
-	EXPECT_EQ(Color(1.f + 5.f, 2.f + 6.f, 3.f + 7.f, 4.f + 8.f), Color(1, 2, 3, 4) - Color(-5, -6, -7, -8));
+	EXPECT_EQ(Color::CornflowerBlue,   Color(100, 149, 237, 255));
 }
 
 TEST(Color, Multiply)
 {
-	EXPECT_EQ(Color(4.f * 3.f, 5.f * 3.f, 6.f * 3.f, 7.f * 3.f), Color(4, 5, 6, 7) * 3);
-	EXPECT_EQ(Color(4.f * 3.f, 5.f * 3.f, 6.f * 3.f, 7.f * 3.f), 3.0f * Color(4, 5, 6, 7));
+	Color color(4, 5, 6, 7);
+	color *= 3;
+	EXPECT_EQ(Color(4*3, 5*3, 6*3, 7*3), color);
+
+	EXPECT_EQ(Color(4*3, 5*3, 6*3, 7*3), Color(4, 5, 6, 7)*3);
+	EXPECT_EQ(Color(4*3, 5*3, 6*3, 7*3), 3*Color(4, 5, 6, 7));
 }
 
-TEST(Division, ColorTest)
+TEST(Color, ToVector)
 {
-	EXPECT_EQ(Color(4.f / 3.f, 5.f / 3.f, 6.f / 3.f, 7.f / 3.f), Color(4, 5, 6, 7) / 3.0f);
+	Color color(255, 255, 255, 255);
+	EXPECT_EQ(Vector3(1.0f, 1.0f, 1.0f), color.ToVector3());
+	EXPECT_EQ(Vector4(1.0f, 1.0f, 1.0f, 1.0f), color.ToVector4());
+	
+	color = Color(0, 0, 0, 0);
+	EXPECT_EQ(Vector3(0.0f, 0.0f, 0.0f), color.ToVector3());
+	EXPECT_EQ(Vector4(0.0f, 0.0f, 0.0f, 0.0f), color.ToVector4());
+	
+	color = Color(12, 34, 56, 78);
+	EXPECT_NEAR(12.0f/255.0f, color.ToVector3().X, std::numeric_limits<float>::epsilon());
+	EXPECT_NEAR(34.0f/255.0f, color.ToVector3().Y, std::numeric_limits<float>::epsilon());
+	EXPECT_NEAR(56.0f/255.0f, color.ToVector3().Z, std::numeric_limits<float>::epsilon());
+	EXPECT_NEAR(12.0f/255.0f, color.ToVector4().X, std::numeric_limits<float>::epsilon());
+	EXPECT_NEAR(34.0f/255.0f, color.ToVector4().Y, std::numeric_limits<float>::epsilon());
+	EXPECT_NEAR(56.0f/255.0f, color.ToVector4().Z, std::numeric_limits<float>::epsilon());
+	EXPECT_NEAR(78.0f/255.0f, color.ToVector4().W, std::numeric_limits<float>::epsilon());
+}
+
+TEST(Color, FromVector)
+{
+	EXPECT_EQ(Color(0, 0, 0, 255), Color(Vector3{0.0f, 0.0f, 0.0f}));
+	EXPECT_EQ(Color(255, 255, 255, 255), Color(Vector3{1.0f, 1.0f, 1.0f}));
+	
+	EXPECT_EQ(Color(0, 0, 0, 0), Color(Vector4{0.0f, 0.0f, 0.0f, 0.0f}));
+	EXPECT_EQ(Color(255, 255, 255, 255), Color(Vector4{1.0f, 1.0f, 1.0f, 1.0f}));
+	
+	EXPECT_EQ(Color(255, 0, 0, 255), Color(Vector3{1.0f, 0.0f, 0.0f}));
+	EXPECT_EQ(Color(0, 255, 0, 255), Color(Vector3{0.0f, 1.0f, 0.0f}));
+	EXPECT_EQ(Color(0, 0, 255, 255), Color(Vector3{0.0f, 0.0f, 1.0f}));
+	
+	EXPECT_EQ(Color(255, 0, 0, 0), Color(Vector4{1.0f, 0.0f, 0.0f, 0.0f}));
+	EXPECT_EQ(Color(0, 255, 0, 0), Color(Vector4{0.0f, 1.0f, 0.0f, 0.0f}));
+	EXPECT_EQ(Color(0, 0, 255, 0), Color(Vector4{0.0f, 0.0f, 1.0f, 0.0f}));
+	EXPECT_EQ(Color(0, 0, 0, 255), Color(Vector4{0.0f, 0.0f, 0.0f, 1.0f}));
+
+	EXPECT_NEAR(0.3f*255, Color(Vector3{0.3f, 0.4f, 0.5f}).R(), 0.5f);
+	EXPECT_NEAR(0.4f*255, Color(Vector3{0.3f, 0.4f, 0.5f}).G(), 0.5f);
+	EXPECT_NEAR(0.5f*255, Color(Vector3{0.3f, 0.4f, 0.5f}).B(), 0.5f);
+	
+	EXPECT_NEAR(0.3f*255, Color(Vector4{0.3f, 0.4f, 0.5f, 0.6f}).R(), 0.5f);
+	EXPECT_NEAR(0.4f*255, Color(Vector4{0.3f, 0.4f, 0.5f, 0.6f}).G(), 0.5f);
+	EXPECT_NEAR(0.5f*255, Color(Vector4{0.3f, 0.4f, 0.5f, 0.6f}).B(), 0.5f);
+	EXPECT_NEAR(0.6f*255, Color(Vector4{0.3f, 0.4f, 0.5f, 0.6f}).A(), 0.5f);
 }

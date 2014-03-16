@@ -185,13 +185,6 @@ Set(EffectParameter & effectParameter, FloatingPointMatrix4x4<T> const& value)
 }
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(EffectParameter & effectParameter, FloatingPointColor<T> const& value)
-{
-	static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-	effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
-}
-//-----------------------------------------------------------------------
-template <typename T> void
 Set(EffectParameter & effectParameter, FloatingPointQuaternion<T> const& value)
 {
 	static_assert(std::is_floating_point<T>::value, "T is floating point number.");
@@ -208,7 +201,6 @@ template void Set<float>(EffectParameter & effectParameter, FloatingPointVector4
 template void Set<float>(EffectParameter & effectParameter, FloatingPointMatrix2x2<float> const& value);
 template void Set<float>(EffectParameter & effectParameter, FloatingPointMatrix3x3<float> const& value);
 template void Set<float>(EffectParameter & effectParameter, FloatingPointMatrix4x4<float> const& value);
-template void Set<float>(EffectParameter & effectParameter, FloatingPointColor<float> const& value);
 template void Set<float>(EffectParameter & effectParameter, FloatingPointQuaternion<float> const& value);
 
 #if defined(DBL_MANT_DIG)
@@ -218,7 +210,6 @@ template void Set<double>(EffectParameter & effectParameter, FloatingPointVector
 template void Set<double>(EffectParameter & effectParameter, FloatingPointMatrix2x2<double> const& value);
 template void Set<double>(EffectParameter & effectParameter, FloatingPointMatrix3x3<double> const& value);
 template void Set<double>(EffectParameter & effectParameter, FloatingPointMatrix4x4<double> const& value);
-template void Set<double>(EffectParameter & effectParameter, FloatingPointColor<double> const& value);
 template void Set<double>(EffectParameter & effectParameter, FloatingPointQuaternion<double> const& value);
 #endif
 
@@ -230,7 +221,6 @@ template void Set<double>(EffectParameter & effectParameter, FloatingPointQuater
 //template void Set<long double>(EffectParameter & effectParameter, FloatingPointMatrix2x2<long double> const& value);
 //template void Set<long double>(EffectParameter & effectParameter, FloatingPointMatrix3x3<long double> const& value);
 //template void Set<long double>(EffectParameter & effectParameter, FloatingPointMatrix4x4<long double> const& value);
-//template void Set<long double>(EffectParameter & effectParameter, FloatingPointColor<long double> const& value);
 //template void Set<long double>(EffectParameter & effectParameter, FloatingPointQuaternion<long double> const& value);
 #endif
 //-----------------------------------------------------------------------

@@ -55,7 +55,6 @@ template <typename T> void POMDOG_EXPORT Set(EffectParameter & effectParameter, 
 template <typename T> void POMDOG_EXPORT Set(EffectParameter & effectParameter, FloatingPointMatrix2x2<T> const& value);
 template <typename T> void POMDOG_EXPORT Set(EffectParameter & effectParameter, FloatingPointMatrix3x3<T> const& value);
 template <typename T> void POMDOG_EXPORT Set(EffectParameter & effectParameter, FloatingPointMatrix4x4<T> const& value);
-template <typename T> void POMDOG_EXPORT Set(EffectParameter & effectParameter, FloatingPointColor<T> const& value);
 template <typename T> void POMDOG_EXPORT Set(EffectParameter & effectParameter, FloatingPointQuaternion<T> const& value);
 
 template <class T, class EffectParameter>
