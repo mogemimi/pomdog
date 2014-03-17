@@ -362,6 +362,9 @@
         '<@(pomdog_library_application_sources)',
         '../include/Pomdog/Pomdog.hpp',
       ],
+      'xcode_settings': {
+	    'SKIP_INSTALL': 'YES',
+      },
       'conditions': [
         ['renderer == "d3d11"', {
           'sources': [

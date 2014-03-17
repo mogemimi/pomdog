@@ -61,6 +61,9 @@
           'EnableFunctionLevelLinking': 'true', # /Gy
         },
       },
+      'xcode_settings': {
+	    'SKIP_INSTALL': 'YES',
+      },
     },
   ],# "targets"
 }
