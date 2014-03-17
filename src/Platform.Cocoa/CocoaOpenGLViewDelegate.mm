@@ -205,8 +205,17 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 //-----------------------------------------------------------------------
 -(void)scrollWheel:(NSEvent *)theEvent
 {
-	CGFloat scrollWheel = [theEvent scrollingDeltaY];
-	mouse_->ScrollWheel(scrollWheel);
+	double scrollingDeltaY = static_cast<double>([theEvent scrollingDeltaY]);
+	if ([theEvent hasPreciseScrollingDeltas])
+	{
+		//NSLog(@"hasPreciseScrollingDeltas=YES,scrollingDeltaY=%f", scrollingDeltaY);
+		mouse_->WheelDelta(scrollingDeltaY * 0.1);
+	}
+	else
+	{
+		//NSLog(@"hasPreciseScrollingDeltas=NO, scrollingDeltaY=%f", scrollingDeltaY);
+		mouse_->WheelDelta(scrollingDeltaY);
+	}
 }
 //-----------------------------------------------------------------------
 @end

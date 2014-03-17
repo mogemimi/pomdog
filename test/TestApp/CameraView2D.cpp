@@ -106,18 +106,20 @@ static Radian<float> SampleTumbleGesture(MouseState const& mouseState, Rectangle
 }// unnamed namespace
 //-----------------------------------------------------------------------
 CameraView2D::CameraView2D()
-	: scrollWheel(0.0f)
+	: prevScrollWheel(0)
+	, scrollWheel(0.0f)
 {
 }
 //-----------------------------------------------------------------------
 void CameraView2D::Input(MouseState const& mouseState, Rectangle const& viewportSize, Transform2D & transform, Camera2D & camera)
 {
 	{
-		scrollWheel += (float(mouseState.ScrollWheel) * 0.05f);
+		scrollWheel += ((mouseState.ScrollWheel - prevScrollWheel) * 0.02f);
 	
 		camera.Zoom(MathHelper::Clamp(camera.Zoom() + (camera.Zoom() * scrollWheel), 0.05f, 100.0f));
 		
-		scrollWheel = scrollWheel * 0.7f;// TODO: Replace with deltaTime
+		scrollWheel = scrollWheel * 0.8f;// TODO: Replace with deltaTime
+		prevScrollWheel = mouseState.ScrollWheel;
 	}
 	{
 		// Tumble Gesture

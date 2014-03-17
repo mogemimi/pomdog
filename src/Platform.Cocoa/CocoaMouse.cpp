@@ -14,14 +14,13 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 //-----------------------------------------------------------------------
+CocoaMouse::CocoaMouse()
+: scrollWheel(0.0)
+{}
+//-----------------------------------------------------------------------
 MouseState const& CocoaMouse::State() const
 {
 	return mouseState;
-}
-//-----------------------------------------------------------------------
-void CocoaMouse::Update()
-{
-	mouseState.ScrollWheel = (float(mouseState.ScrollWheel) * 0.2f);///@todo badcode
 }
 //-----------------------------------------------------------------------
 void CocoaMouse::Position(Point2D const& position)
@@ -29,10 +28,12 @@ void CocoaMouse::Position(Point2D const& position)
 	mouseState.Position = position;
 }
 //-----------------------------------------------------------------------
-void CocoaMouse::ScrollWheel(std::int32_t scrollWheel)
+void CocoaMouse::WheelDelta(double wheelDelta)
 {
-	//Log::Stream() << "ScrollWheel: " << scrollWheel;
-	mouseState.ScrollWheel = scrollWheel;
+	scrollWheel += wheelDelta;
+	static_assert(std::is_same<double, decltype(scrollWheel)>::value, "");
+	static_assert(std::is_same<std::int32_t, decltype(mouseState.ScrollWheel)>::value, "");
+	mouseState.ScrollWheel = this->scrollWheel;
 }
 //-----------------------------------------------------------------------
 void CocoaMouse::LeftButton(ButtonState buttonState)

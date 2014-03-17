@@ -22,20 +22,23 @@ namespace Cocoa {
 
 class CocoaMouse final: public Mouse {
 public:
+	CocoaMouse();
+
 	///@copydoc Pomdog::Mouse
 	MouseState const& State() const override;
 	
-	void Update();
 	void Position(Point2D const& position);
-	void ScrollWheel(std::int32_t scrollWheel);
 	void LeftButton(ButtonState buttonState);
 	void RightButton(ButtonState buttonState);
 	void MiddleButton(ButtonState buttonState);
 	void XButton1(ButtonState buttonState);
 	void XButton2(ButtonState buttonState);
 	
+	void WheelDelta(double wheelDelta);
+	
 private:
 	MouseState mouseState;
+	double scrollWheel;
 };
 
 }// namespace Mouse

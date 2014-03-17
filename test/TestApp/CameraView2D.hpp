@@ -31,6 +31,7 @@ private:
 	//std::optional<Vector2> tumbleStartPosition;
 	std::unique_ptr<Vector2> trackStartPosition;
 	std::unique_ptr<Vector2> tumbleStartPosition;
+	std::int32_t prevScrollWheel;
 	float scrollWheel;
 };
 
