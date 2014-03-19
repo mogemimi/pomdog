@@ -34,15 +34,15 @@ public:
 
 	LogChannel() = delete;
 	LogChannel(LogChannel const&) = delete;
-	LogChannel & operator=(LogChannel const&) = delete;
 	LogChannel(LogChannel &&) = delete;
+	LogChannel & operator=(LogChannel const&) = delete;
 	LogChannel & operator=(LogChannel &&) = delete;
 	
 	~LogChannel() = default;
 
 	///@~Japanese
 	/// @brief メッセージを送ります。
-	void LogMessage(std::string const& message, LoggingLevel verbosity);
+	void LogMessage(std::string const& message, LogLevel verbosity);
 
 	///@~Japanese
 	/// @brief 指定されたスロットを接続します。
@@ -54,16 +54,16 @@ public:
 
 	///@~Japanese
 	/// @brief ロギングの冗長レベルを取得します。
-	LoggingLevel Level() const;
+	LogLevel Level() const;
 
 	///@~Japanese
 	/// @brief ロギングの冗長レベルを設定します。
-	void Level(LoggingLevel threshold);
+	void Level(LogLevel threshold);
 
 private:
 	EventHandler eventHandler;
 	std::string name;
-	LoggingLevel threshold;
+	LogLevel threshold;
 };
 
 /// @}

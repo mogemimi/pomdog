@@ -42,17 +42,17 @@ namespace {
 ////-----------------------------------------------------------------------
 //void Logger::Info(std::string const& message)
 //{
-//	Log::LogMessage(message, LoggingLevel::Brief);
+//	Log::LogMessage(message, LogLevel::Brief);
 //}
 ////-----------------------------------------------------------------------
 //void Logger::Warning(std::string const& message)
 //{
-//	Log::LogMessage(message, LoggingLevel::Brief);
+//	Log::LogMessage(message, LogLevel::Brief);
 //}
 ////-----------------------------------------------------------------------
 //void Logger::FatalError(std::string const& message)
 //{
-//	Log::LogMessage(message, LoggingLevel::Critical);
+//	Log::LogMessage(message, LogLevel::Critical);
 //}
 //
 //}// namespace Drafts
@@ -93,7 +93,7 @@ public:
 		return (std::end(channels) != iter);
 	}
 	
-	void AddChannel(std::string const& name, LoggingLevel verbosity)
+	void AddChannel(std::string const& name, LogLevel verbosity)
 	{
 		if (HasChannel(name)) {
 			return;
@@ -138,33 +138,33 @@ public:
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-void Log::LogMessage(std::string const& message, LoggingLevel verbosity)
+void Log::LogMessage(std::string const& message, LogLevel verbosity)
 {
 	auto& manager = LogManager::GetInstance();
 	auto& channel = manager.GetDefault();
 	channel.LogMessage(message, verbosity);
 }
 //-----------------------------------------------------------------------
-void Log::LogMessage(std::string const& message, std::string const& channelName, LoggingLevel verbosity)
+void Log::LogMessage(std::string const& message, std::string const& channelName, LogLevel verbosity)
 {
 	auto& manager = LogManager::GetInstance();
 	auto& channel = manager.FindChannel(channelName);
 	channel.LogMessage(message, verbosity);
 }
 //-----------------------------------------------------------------------
-LogStream Log::Stream(LoggingLevel verbosity)
+LogStream Log::Stream(LogLevel verbosity)
 {
 	auto& manager = LogManager::GetInstance();
 	return LogStream(manager.GetDefault(), verbosity);
 }
 //-----------------------------------------------------------------------
-LogStream Log::Stream(std::string const& channelName, LoggingLevel verbosity)
+LogStream Log::Stream(std::string const& channelName, LogLevel verbosity)
 {
 	auto& manager = LogManager::GetInstance();
 	return LogStream(manager.FindChannel(channelName), verbosity);
 }
 //-----------------------------------------------------------------------
-void Log::AddChannel(std::string const& channelName, LoggingLevel verbosity)
+void Log::AddChannel(std::string const& channelName, LogLevel verbosity)
 {
 	auto& manager = LogManager::GetInstance();
 	manager.AddChannel(channelName, verbosity);
@@ -182,28 +182,28 @@ bool Log::ExistChannel(std::string const& channelName)
 	return manager.HasChannel(channelName);
 }
 //-----------------------------------------------------------------------
-LoggingLevel Log::GetVerbosity()
+LogLevel Log::GetVerbosity()
 {
 	auto& manager = LogManager::GetInstance();
 	auto& channel = manager.GetDefault();
 	return channel.Level();
 }
 //-----------------------------------------------------------------------
-void Log::SetVerbosity(LoggingLevel verbosity)
+void Log::SetVerbosity(LogLevel verbosity)
 {
 	auto& manager = LogManager::GetInstance();
 	auto& channel = manager.GetDefault();
 	channel.Level(verbosity);
 }
 //-----------------------------------------------------------------------
-LoggingLevel Log::GetVerbosity(std::string const& channelName)
+LogLevel Log::GetVerbosity(std::string const& channelName)
 {
 	auto& manager = LogManager::GetInstance();
 	auto& channel = manager.FindChannel(channelName);
 	return channel.Level();
 }
 //-----------------------------------------------------------------------
-void Log::SetVerbosity(std::string const& channelName, LoggingLevel verbosity)
+void Log::SetVerbosity(std::string const& channelName, LogLevel verbosity)
 {
 	auto& manager = LogManager::GetInstance();
 	if (manager.HasChannel(channelName)) {
@@ -223,7 +223,7 @@ EventConnection Log::Connect(std::function<void(LogEntry const&)> callback, std:
 {
 	auto& manager = LogManager::GetInstance();
 	if (!manager.HasChannel(channelName)) {
-		manager.AddChannel(channelName, LoggingLevel::Verbose);
+		manager.AddChannel(channelName, LogLevel::Verbose);
 	}
 	auto& channel = manager.FindChannel(channelName);
 	return channel.Connect(callback);

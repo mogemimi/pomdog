@@ -16,18 +16,18 @@
 
 using Pomdog::LogChannel;
 using Pomdog::LogEntry;
-using Pomdog::LoggingLevel;
+using Pomdog::LogLevel;
 using Pomdog::LogStream;
 using Pomdog::ScopedConnection;
 
 TEST(LogStream, LogStreamFlush)
 {
 	LogChannel channel("test");
-	LogStream stream(channel, LoggingLevel::Critical);
+	LogStream stream(channel, LogLevel::Critical);
 	
 	std::string message;
 	auto connection = channel.Connect([&message](LogEntry const& entry){
-		message = entry.message;
+		message = entry.Message;
 	});
 	
 	message.clear();
@@ -48,11 +48,11 @@ TEST(LogStream, LogStreamFlush)
 TEST(LogStream, EnumerationToString)
 {
 	LogChannel channel("test");
-	LogStream stream(channel, LoggingLevel::Critical);
+	LogStream stream(channel, LogLevel::Critical);
 	
 	std::string message;
 	auto connection = channel.Connect([&message](LogEntry const& entry){
-		message = entry.message;
+		message = entry.Message;
 	});
 	
 	enum class Numbers: int
@@ -91,10 +91,10 @@ TEST(LogStream, CopyConstrunctor)
 	std::string message;
 	
 	auto connection = channel.Connect([&message](LogEntry const& entry){
-		message = entry.message;
+		message = entry.Message;
 	});
 
-	LogStream stream(channel, LoggingLevel::Critical);
+	LogStream stream(channel, LogLevel::Critical);
 	stream << "Chuck ";
 	EXPECT_TRUE(message.empty());
 	
@@ -109,11 +109,11 @@ TEST(LogStream, MoveConstrunctor)
 	std::string message;
 	
 	auto connection = channel.Connect([&message](LogEntry const& entry){
-		message = entry.message;
+		message = entry.Message;
 	});
 
 	Pomdog::LogStream stream2 = ([&](){
-		LogStream stream(channel, LoggingLevel::Critical);
+		LogStream stream(channel, LogLevel::Critical);
 		stream << "Chuck ";
 		EXPECT_TRUE(message.empty());
 		return std::move(stream);

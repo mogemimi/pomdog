@@ -12,7 +12,7 @@
 #include <string>
 #include <algorithm>
 #include <Pomdog/Logging/Log.hpp>
-#include <Pomdog/Logging/LoggingLevel.hpp>
+#include <Pomdog/Logging/LogLevel.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
 #include <Pomdog/Utility/Exception.hpp>
 #include <Pomdog/Graphics/GraphicsContext.hpp>
@@ -79,7 +79,7 @@ CompileShader(ShaderBytecode const& source)
 		glGetShaderInfoLog(result.value, messageBuffer.size(), 0, messageBuffer.data());
 		std::string const message = messageBuffer.data();
 
-		Log::Stream(LoggingLevel::Critical)
+		Log::Stream(LogLevel::Critical)
 			<< "Failed to compile shader.\nerror: " << message;
 #endif // defined(DEBUG)
 
@@ -118,7 +118,7 @@ LinkShaders(VertexShaderGL4 const& vertexShader, PixelShaderGL4 const& pixelShad
 		glGetProgramInfoLog(program.value, messageBuffer.size(), 0, messageBuffer.data());
 		std::string const message = messageBuffer.data();
 
-		Log::Stream(LoggingLevel::Critical)
+		Log::Stream(LogLevel::Critical)
 			<< "Failed to link shaders.\nerror: " << message.c_str();
 #endif // defined(DEBUG)
 

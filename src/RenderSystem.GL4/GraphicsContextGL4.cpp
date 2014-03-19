@@ -150,7 +150,7 @@ GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> openGLCont
 	, gameWindow(std::move(window))
 {
 	auto version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
-	Log::Stream(LoggingLevel::Internal) << "OpenGL Version: " << version << "\n";
+	Log::Stream(LogLevel::Internal) << "OpenGL Version: " << version << "\n";
 	
 	auto capabilities = GetCapabilities();
 	if (capabilities.SamplerSlotCount > 0)

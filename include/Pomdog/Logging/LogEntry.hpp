@@ -14,7 +14,7 @@
 #endif
 
 #include <string>
-#include "LoggingLevel.hpp"
+#include "LogLevel.hpp"
 
 namespace Pomdog {
 
@@ -29,15 +29,15 @@ class LogEntry {
 public:
 	///@~Japanese
 	/// @brief ログメッセージまたはトレースメッセージです。
-	std::string message;
+	std::string Message;
 	
 	///@~Japanese
 	/// @brief ソースとなるチャンネルです。
-	std::string source;
+	std::string Source;
 
 	///@~Japanese
 	/// @brief ログの冗長レベルです。
-	LoggingLevel verbosity;
+	LogLevel Verbosity;
 	
 public:
 	LogEntry() = delete;
@@ -49,16 +49,11 @@ public:
 	/// @param message ログメッセージを指定します。
 	/// @param source ソースとなるチャンネル名を指定します。
 	/// @param verbosity ログ出力レベル（冗長レベル）を指定します。
-	LogEntry(std::string const& messageIn, std::string const& sourceIn, LoggingLevel verbosityIn)
-		: message(messageIn)
-		, source(sourceIn)
-		, verbosity(verbosityIn)
+	LogEntry(std::string const& messageIn, std::string const& sourceIn, LogLevel verbosityIn)
+		: Message(messageIn)
+		, Source(sourceIn)
+		, Verbosity(verbosityIn)
 	{}
-	
-	~LogEntry() = default;
-	
-	LogEntry & operator=(LogEntry const&) = default;
-	LogEntry & operator=(LogEntry &&) = default;
 };
 
 /// @}

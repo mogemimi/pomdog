@@ -13,7 +13,7 @@
 
 using Pomdog::Log;
 using Pomdog::LogEntry;
-using Pomdog::LoggingLevel;
+using Pomdog::LogLevel;
 using Pomdog::ScopedConnection;
 using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 
@@ -29,12 +29,12 @@ using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 {
 #ifdef DEBUG
 	connection = Log::Connect([](Pomdog::LogEntry const& entry) {
-		NSString* log = [NSString stringWithUTF8String:entry.message.c_str()];
+		NSString* log = [NSString stringWithUTF8String:entry.Message.c_str()];
 		NSLog(@"\n%@", log);
 	});
 #endif
 
-	Log::SetVerbosity(LoggingLevel::Internal);
+	Log::SetVerbosity(LogLevel::Internal);
 	Log::LogMessage("applicationDidFinishLaunching");
 
 	[[self window] makeKeyAndOrderFront:self];

@@ -16,7 +16,7 @@
 #include <type_traits>
 #include <sstream>
 #include "../Config/Export.hpp"
-#include "LoggingLevel.hpp"
+#include "LogLevel.hpp"
 
 namespace Pomdog {
 
@@ -33,10 +33,10 @@ class POMDOG_EXPORT LogStream {
 private:
 	std::stringstream cache;
 	LogChannel & channel;
-	LoggingLevel verbosity;
+	LogLevel verbosity;
 
 public:
-	LogStream(LogChannel & channel, LoggingLevel verbosity);
+	LogStream(LogChannel & channel, LogLevel verbosity);
 	LogStream(LogStream const&);
 	LogStream(LogStream &&) = default;
 

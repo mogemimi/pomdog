@@ -58,13 +58,13 @@ void ErrorChecker::CheckError(char const* command, char const* filename, int lin
 	static std::size_t lines = 0;
 	if (lines < maxLine)
 	{
-		Log::Stream(LoggingLevel::Critical)
+		Log::Stream(LogLevel::Critical)
 			<< ">>> File " << filename << ", line " << line << ", in " << command << "\n"
 			<< "OpenGL Error: " << ToString(errorCode);
 
 		if (lines == (maxLine - 1U))
 		{
-			Log::LogMessage("OpenGL Error: More...", LoggingLevel::Critical);
+			Log::LogMessage("OpenGL Error: More...", LogLevel::Critical);
 		}
 		++lines;
 	}

@@ -274,11 +274,11 @@ void CocoaGameHost::Impl::DoEvents()
 void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
 {
 	if (event.Is<WindowShouldCloseEvent>()) {
-		Log::LogMessage("WindowShouldCloseEvent", LoggingLevel::Internal);
+		Log::LogMessage("WindowShouldCloseEvent", LogLevel::Internal);
 		this->Exit();
 	}
 	else if (event.Is<WindowWillCloseEvent>()) {
-		Log::LogMessage("WindowWillCloseEvent", LoggingLevel::Internal);
+		Log::LogMessage("WindowWillCloseEvent", LogLevel::Internal);
 		///@todo Not implemented
 	}
 }

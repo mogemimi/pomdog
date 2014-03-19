@@ -59,8 +59,8 @@
 #include "Logging/Log.hpp"
 #include "Logging/LogChannel.hpp"
 #include "Logging/LogEntry.hpp"
+#include "Logging/LogLevel.hpp"
 #include "Logging/LogStream.hpp"
-#include "Logging/LoggingLevel.hpp"
 
 // Gameplay
 #include "Gameplay/GameObject.hpp"

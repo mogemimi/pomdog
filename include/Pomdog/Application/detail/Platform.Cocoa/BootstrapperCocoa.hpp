@@ -24,7 +24,7 @@
 #include <Pomdog/Config/Export.hpp>
 #include <Pomdog/Application/GameHost.hpp>
 #include <Pomdog/Logging/Log.hpp>
-#include <Pomdog/Logging/LoggingLevel.hpp>
+#include <Pomdog/Logging/LogLevel.hpp>
 
 @class NSWindow;
 
@@ -61,7 +61,7 @@ public:
 			gameHost->Run(game);
 		}
 		catch (std::exception const& e) {
-			Log::LogMessage(e.what(), LoggingLevel::Critical);
+			Log::LogMessage(e.what(), LogLevel::Critical);
 		}
 		
 		EndRun();

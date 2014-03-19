@@ -17,7 +17,7 @@
 using Pomdog::Log;
 using Pomdog::LogChannel;
 using Pomdog::LogEntry;
-using Pomdog::LoggingLevel;
+using Pomdog::LogLevel;
 using Pomdog::LogStream;
 using Pomdog::ScopedConnection;
 
@@ -26,8 +26,8 @@ TEST(Log, LogMessageWithDefaultChannel)
 	std::string message;
 	std::string source;
 	ScopedConnection connection(Log::Connect([&](LogEntry const& entry) {
-		message = entry.message;
-		source = entry.source;
+		message = entry.Message;
+		source = entry.Source;
 	}));
 	
 	Log::LogMessage("Hello");
@@ -44,8 +44,8 @@ TEST(Log, StreamWithDefaultChannel)
 	std::string message;
 	std::string source;
 	ScopedConnection connection(Log::Connect([&](LogEntry const& entry){
-		message = entry.message;
-		source = entry.source;
+		message = entry.Message;
+		source = entry.Source;
 	}));
 
 	Log::Stream() << "Hello, " << "World.";
@@ -58,11 +58,11 @@ TEST(Log, AddAndRemoveChannel)
 	ASSERT_EQ(false, Log::ExistChannel("Test"));
 	ASSERT_EQ(false, Log::ExistChannel("Test2"));
 	
-	Log::AddChannel("Test", LoggingLevel::Internal);
+	Log::AddChannel("Test", LogLevel::Internal);
 	EXPECT_EQ(true, Log::ExistChannel("Test"));
 	EXPECT_EQ(false, Log::ExistChannel("Test2"));
 	
-	Log::AddChannel("Test2", LoggingLevel::Internal);
+	Log::AddChannel("Test2", LogLevel::Internal);
 	EXPECT_EQ(true, Log::ExistChannel("Test"));
 	EXPECT_EQ(true, Log::ExistChannel("Test2"));
 	
@@ -82,7 +82,7 @@ TEST(Log, AddAndRemoveChannel)
 	EXPECT_EQ(false, Log::ExistChannel("Test"));
 	EXPECT_EQ(false, Log::ExistChannel("Test2"));
 	
-	Log::AddChannel("Test", LoggingLevel::Internal);
+	Log::AddChannel("Test", LogLevel::Internal);
 	EXPECT_EQ(true, Log::ExistChannel("Test"));
 	EXPECT_EQ(false, Log::ExistChannel("Test2"));
 	
@@ -99,20 +99,20 @@ TEST(Log, SetDefaultVerbosityLevels)
 {
 	auto verbosity = Log::GetVerbosity();
 
-	Log::SetVerbosity(LoggingLevel::Internal);
-	EXPECT_EQ(LoggingLevel::Internal, Log::GetVerbosity());
+	Log::SetVerbosity(LogLevel::Internal);
+	EXPECT_EQ(LogLevel::Internal, Log::GetVerbosity());
 	
-	Log::SetVerbosity(LoggingLevel::Verbose);
-	EXPECT_EQ(LoggingLevel::Verbose, Log::GetVerbosity());
+	Log::SetVerbosity(LogLevel::Verbose);
+	EXPECT_EQ(LogLevel::Verbose, Log::GetVerbosity());
 	
-	Log::SetVerbosity(LoggingLevel::Info);
-	EXPECT_EQ(LoggingLevel::Info, Log::GetVerbosity());
+	Log::SetVerbosity(LogLevel::Info);
+	EXPECT_EQ(LogLevel::Info, Log::GetVerbosity());
 	
-	Log::SetVerbosity(LoggingLevel::Warning);
-	EXPECT_EQ(LoggingLevel::Warning, Log::GetVerbosity());
+	Log::SetVerbosity(LogLevel::Warning);
+	EXPECT_EQ(LogLevel::Warning, Log::GetVerbosity());
 	
-	Log::SetVerbosity(LoggingLevel::Critical);
-	EXPECT_EQ(LoggingLevel::Critical, Log::GetVerbosity());
+	Log::SetVerbosity(LogLevel::Critical);
+	EXPECT_EQ(LogLevel::Critical, Log::GetVerbosity());
 	
 	Log::SetVerbosity(verbosity);
 }
@@ -121,39 +121,39 @@ TEST(Log, SetVerbosityLevels)
 {
 	ASSERT_EQ(false, Log::ExistChannel("Test"));
 
-	Log::AddChannel("Test", LoggingLevel::Internal);
-	EXPECT_EQ(LoggingLevel::Internal, Log::GetVerbosity("Test"));
+	Log::AddChannel("Test", LogLevel::Internal);
+	EXPECT_EQ(LogLevel::Internal, Log::GetVerbosity("Test"));
 	
 	Log::RemoveChannel("Test");
-	Log::AddChannel("Test", LoggingLevel::Verbose);
-	EXPECT_EQ(LoggingLevel::Verbose, Log::GetVerbosity("Test"));
+	Log::AddChannel("Test", LogLevel::Verbose);
+	EXPECT_EQ(LogLevel::Verbose, Log::GetVerbosity("Test"));
 	
 	Log::RemoveChannel("Test");
-	Log::AddChannel("Test", LoggingLevel::Info);
-	EXPECT_EQ(LoggingLevel::Info, Log::GetVerbosity("Test"));
+	Log::AddChannel("Test", LogLevel::Info);
+	EXPECT_EQ(LogLevel::Info, Log::GetVerbosity("Test"));
 	
 	Log::RemoveChannel("Test");
-	Log::AddChannel("Test", LoggingLevel::Warning);
-	EXPECT_EQ(LoggingLevel::Warning, Log::GetVerbosity("Test"));
+	Log::AddChannel("Test", LogLevel::Warning);
+	EXPECT_EQ(LogLevel::Warning, Log::GetVerbosity("Test"));
 	
 	Log::RemoveChannel("Test");
-	Log::AddChannel("Test", LoggingLevel::Critical);
-	EXPECT_EQ(LoggingLevel::Critical, Log::GetVerbosity("Test"));
+	Log::AddChannel("Test", LogLevel::Critical);
+	EXPECT_EQ(LogLevel::Critical, Log::GetVerbosity("Test"));
 	
-	Log::SetVerbosity("Test", LoggingLevel::Internal);
-	EXPECT_EQ(LoggingLevel::Internal, Log::GetVerbosity("Test"));
+	Log::SetVerbosity("Test", LogLevel::Internal);
+	EXPECT_EQ(LogLevel::Internal, Log::GetVerbosity("Test"));
 	
-	Log::SetVerbosity("Test", LoggingLevel::Verbose);
-	EXPECT_EQ(LoggingLevel::Verbose, Log::GetVerbosity("Test"));
+	Log::SetVerbosity("Test", LogLevel::Verbose);
+	EXPECT_EQ(LogLevel::Verbose, Log::GetVerbosity("Test"));
 	
-	Log::SetVerbosity("Test", LoggingLevel::Info);
-	EXPECT_EQ(LoggingLevel::Info, Log::GetVerbosity("Test"));
+	Log::SetVerbosity("Test", LogLevel::Info);
+	EXPECT_EQ(LogLevel::Info, Log::GetVerbosity("Test"));
 	
-	Log::SetVerbosity("Test", LoggingLevel::Warning);
-	EXPECT_EQ(LoggingLevel::Warning, Log::GetVerbosity("Test"));
+	Log::SetVerbosity("Test", LogLevel::Warning);
+	EXPECT_EQ(LogLevel::Warning, Log::GetVerbosity("Test"));
 	
-	Log::SetVerbosity("Test", LoggingLevel::Critical);
-	EXPECT_EQ(LoggingLevel::Critical, Log::GetVerbosity("Test"));
+	Log::SetVerbosity("Test", LogLevel::Critical);
+	EXPECT_EQ(LogLevel::Critical, Log::GetVerbosity("Test"));
 	
 	Log::RemoveChannel("Test");
 }
@@ -162,14 +162,14 @@ TEST(Log, SendToUserChannel)
 {
 	std::vector<std::string> messages, sources;
 	auto handler = [&](LogEntry const& entry) {
-		messages.push_back(entry.message);
-		sources.push_back(entry.source);
+		messages.push_back(entry.Message);
+		sources.push_back(entry.Source);
 	};
 	
 	ASSERT_TRUE(!Log::ExistChannel("Test"));
 	ASSERT_TRUE(!Log::ExistChannel("NyanCat"));
 	
-	Log::AddChannel("Test", LoggingLevel::Internal);
+	Log::AddChannel("Test", LogLevel::Internal);
 	EXPECT_TRUE(Log::ExistChannel("Test"));
 	
 	ScopedConnection connection(Log::Connect(handler, "Test"));
@@ -202,13 +202,13 @@ TEST(Log, SendToUserChannel)
 
 TEST(Log, SendToUserChannels)
 {
-	Log::AddChannel("Test1", LoggingLevel::Internal);
-	Log::AddChannel("Test2", LoggingLevel::Internal);
+	Log::AddChannel("Test1", LogLevel::Internal);
+	Log::AddChannel("Test2", LogLevel::Internal);
 	
 	std::vector<std::string> messages, sources;
 	auto handler = [&](LogEntry const& entry){
-		messages.push_back(entry.message);
-		sources.push_back(entry.source);
+		messages.push_back(entry.Message);
+		sources.push_back(entry.Source);
 	};
 	
 	ASSERT_TRUE(Log::ExistChannel("Test1"));
@@ -225,7 +225,7 @@ TEST(Log, SendToUserChannels)
 	Log::LogMessage("(D) Send to nonexistent channel", "Nyan Nyan Cat");
 	
 	// Connect
-	Log::AddChannel("Nyan Nyan Cat", LoggingLevel::Internal);
+	Log::AddChannel("Nyan Nyan Cat", LogLevel::Internal);
 	ASSERT_TRUE(Log::ExistChannel("Nyan Nyan Cat"));
 	
 	ScopedConnection connection3(Log::Connect(handler, "Nyan Nyan Cat"));
@@ -264,15 +264,15 @@ TEST(Log, CallToDisconnectInCallback)
 	ScopedConnection connectionA, connectionB;
 	
 	connectionA = Log::Connect([&](LogEntry const& entry){
-		messages.push_back(entry.message + " at A");
+		messages.push_back(entry.Message + " at A");
 
-		if (entry.message == "Disconnect B") {
+		if (entry.Message == "Disconnect B") {
 			connectionB.Disconnect();
 		}
 	});
 	
 	connectionB = Log::Connect([&](LogEntry const& entry){
-		messages.push_back(entry.message + " at B");
+		messages.push_back(entry.Message + " at B");
 	});
 	
 	Log::LogMessage("Hello");
@@ -295,9 +295,9 @@ TEST(Log, CallToDisconnectSelfInCallback)
 	ScopedConnection connectionA;
 	
 	connectionA = Log::Connect([&](LogEntry const& entry){
-		messages.push_back(entry.message + " at A");
+		messages.push_back(entry.Message + " at A");
 
-		if (entry.message == "Disconnect") {
+		if (entry.Message == "Disconnect") {
 			connectionA.Disconnect();
 		}
 	});

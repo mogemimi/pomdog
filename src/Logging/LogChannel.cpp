@@ -15,10 +15,10 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 LogChannel::LogChannel(std::string const& channnelName)
 	: name(channnelName)
-	, threshold(LoggingLevel::Verbose)
+	, threshold(LogLevel::Verbose)
 {}
 //-----------------------------------------------------------------------
-void LogChannel::LogMessage(std::string const& message, LoggingLevel verbosity)
+void LogChannel::LogMessage(std::string const& message, LogLevel verbosity)
 {
 	if (verbosity <= this->threshold)
 	{
@@ -43,12 +43,12 @@ std::string const& LogChannel::Name() const
 	return name;
 }
 //-----------------------------------------------------------------------
-LoggingLevel LogChannel::Level() const
+LogLevel LogChannel::Level() const
 {
 	return this->threshold;
 }
 //-----------------------------------------------------------------------
-void LogChannel::Level(LoggingLevel thresholdIn)
+void LogChannel::Level(LogLevel thresholdIn)
 {
 	this->threshold = thresholdIn;
 }

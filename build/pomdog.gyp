@@ -126,7 +126,7 @@
       '../include/Pomdog/Logging/Log.hpp',
       '../include/Pomdog/Logging/LogChannel.hpp',
       '../include/Pomdog/Logging/LogEntry.hpp',
-      '../include/Pomdog/Logging/LoggingLevel.hpp',
+      '../include/Pomdog/Logging/LogLevel.hpp',
       '../include/Pomdog/Logging/LogStream.hpp',
       '../include/Pomdog/Math/Color.hpp',
       '../include/Pomdog/Math/ContainmentType.hpp',

@@ -17,7 +17,7 @@
 #include <functional>
 #include "../Config/Export.hpp"
 #include "../Event/EventConnection.hpp"
-#include "LoggingLevel.hpp"
+#include "LogLevel.hpp"
 
 namespace Pomdog {
 
@@ -58,25 +58,25 @@ public:
 	///@~Japanese
 	/// @brief 既定のチャンネルにログを出力します。
 	static void LogMessage(std::string const& message,
-		LoggingLevel verbosity = LoggingLevel::Verbose);
+		LogLevel verbosity = LogLevel::Verbose);
 	
 	///@~Japanese
 	/// @brief 指定されたチャンネルにログを出力します。
 	static void LogMessage(std::string const& message, std::string const& channelName,
-		LoggingLevel verbosity = LoggingLevel::Verbose);
+		LogLevel verbosity = LogLevel::Verbose);
 
 	///@~Japanese
 	/// @brief 既定のチャンネルのストリームを取得します。
-	static LogStream Stream(LoggingLevel verbosity = LoggingLevel::Verbose);
+	static LogStream Stream(LogLevel verbosity = LogLevel::Verbose);
 	
 	///@~Japanese
 	/// @brief 指定されたチャンネルのストリームを取得します。
-	static LogStream Stream(std::string const& channelName, LoggingLevel verbosity = LoggingLevel::Verbose);
+	static LogStream Stream(std::string const& channelName, LogLevel verbosity = LogLevel::Verbose);
 	
 	///@~Japanese
 	/// @brief 新しくチャンネルを追加します。
 	/// @remarks すでに同名のチャンネルが存在する場合、この呼び出しは無効となります。
-	static void AddChannel(std::string const& channelName, LoggingLevel verbosity = LoggingLevel::Verbose);
+	static void AddChannel(std::string const& channelName, LogLevel verbosity = LogLevel::Verbose);
 	
 	///@~Japanese
 	/// @brief 指定されたチャンネルを削除します。
@@ -88,19 +88,19 @@ public:
 	
 	///@~Japanese
 	/// @brief 既定のチャンネルの冗長レベルを取得します。
-	static LoggingLevel GetVerbosity();
+	static LogLevel GetVerbosity();
 	
 	///@~Japanese
 	/// @brief 既定のチャンネルの冗長レベルを設定します。
-	static void SetVerbosity(LoggingLevel verbosity);
+	static void SetVerbosity(LogLevel verbosity);
 	
 	///@~Japanese
 	/// @brief 指定されたチャンネルの冗長レベルを取得します。
-	static LoggingLevel GetVerbosity(std::string const& channelName);
+	static LogLevel GetVerbosity(std::string const& channelName);
 	
 	///@~Japanese
 	/// @brief 指定されたチャンネルの冗長レベルを設定します。
-	static void SetVerbosity(std::string const& channelName, LoggingLevel verbosity);
+	static void SetVerbosity(std::string const& channelName, LogLevel verbosity);
 	
 	///@~Japanese
 	/// @brief 既定のチャンネルに接続します。

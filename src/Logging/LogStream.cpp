@@ -12,7 +12,7 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-LogStream::LogStream(LogChannel & channelIn, LoggingLevel verbosityIn)
+LogStream::LogStream(LogChannel & channelIn, LogLevel verbosityIn)
 	: channel(channelIn)
 	, verbosity(verbosityIn)
 {}
@@ -36,7 +36,7 @@ LogStream::~LogStream()
 LogStream & LogStream::operator<<(Flush const&)
 {
 	channel.LogMessage(cache.str(), verbosity);
-	cache.str(std::string());
+	cache.str(std::string{});
 	cache.clear();
 	return *this;
 }

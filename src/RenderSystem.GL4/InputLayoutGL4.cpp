@@ -12,7 +12,7 @@
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
-#include <Pomdog/Logging/LoggingLevel.hpp>
+#include <Pomdog/Logging/LogLevel.hpp>
 #include <Pomdog/Graphics/VertexBuffer.hpp>
 #include <Pomdog/Graphics/VertexBufferBinding.hpp>
 #include "../Utility/ScopeGuard.hpp"
@@ -90,7 +90,7 @@ static ScalarTypeGL4 ToScalarType(GLenum attributeClass)
 	POMDOG_ASSERT(attributeClass != GL_FIXED);
 	
 #ifdef DEBUG
-	Log::Stream(LoggingLevel::Internal)
+	Log::Stream(LogLevel::Internal)
 		<< "Failed to find scalar type '"  << attributeClass << "'.";
 #endif
 	return ScalarTypeGL4(GL_FLOAT);
@@ -194,7 +194,7 @@ static InputElementSize ToInputElementSize(GLenum attributeClass)
 	POMDOG_ASSERT(attributeClass != GL_FIXED);
 
 #ifdef DEBUG
-	Log::Stream(LoggingLevel::Critical)
+	Log::Stream(LogLevel::Critical)
 		<< "Failed to find class '" << attributeClass << "'.";
 #endif // defined(DEBUG)
 	return { 1, 1 };
@@ -219,7 +219,7 @@ std::uint8_t ToByteWithFromScalarTypeGL4(ScalarTypeGL4 scalarType)
 	POMDOG_ASSERT(scalarType.value != GL_FIXED);
 
 	#ifdef DEBUG
-	Log::Stream(LoggingLevel::Internal)
+	Log::Stream(LogLevel::Internal)
 		<< "Failed to find scalar type '" << scalarType.value << "'.";
 	#endif
 	return sizeof(float);
@@ -272,7 +272,7 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
 			attributeLocation += 1;///@todo badcode
 			
 			#ifdef DEBUG
-			Log::Stream(LoggingLevel::Internal)
+			Log::Stream(LogLevel::Internal)
 				<< "[GLSL] Attribute: StartSlot = " << static_cast<std::uint32_t>(attribute.StartSlot)
 				<< ", Name = '" << name.data() << "'.";
 			#endif // defined(DEBUG)
@@ -286,7 +286,7 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
 	#ifdef DEBUG
 	for (auto& attribute: attributes)
 	{
-		Log::Stream(LoggingLevel::Internal)
+		Log::Stream(LogLevel::Internal)
 			<< "[GLSL] Attribute: ScalarType: '"
 			<< ([](ScalarTypeGL4 const& scalarType)->std::string{
 				switch (scalarType.value)

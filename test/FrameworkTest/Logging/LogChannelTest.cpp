@@ -14,21 +14,30 @@
 
 using Pomdog::LogChannel;
 using Pomdog::LogEntry;
-using Pomdog::LoggingLevel;
+using Pomdog::LogLevel;
 using Pomdog::ScopedConnection;
 
-TEST(LogChannel, LoggingLevel)
+TEST(LogChannel, LogLevel)
 {
-	static_assert(LoggingLevel::Critical < LoggingLevel::Warning, "TEST(LogChannel, LoggingLevel)");
-	static_assert(LoggingLevel::Critical < LoggingLevel::Info, "TEST(LogChannel, LoggingLevel)");
-	static_assert(LoggingLevel::Critical < LoggingLevel::Verbose, "TEST(LogChannel, LoggingLevel)");
-	static_assert(LoggingLevel::Critical < LoggingLevel::Internal, "TEST(LogChannel, LoggingLevel)");
-	static_assert(LoggingLevel::Warning < LoggingLevel::Info, "TEST(LogChannel, LoggingLevel)");
-	static_assert(LoggingLevel::Warning < LoggingLevel::Verbose, "TEST(LogChannel, LoggingLevel)");
-	static_assert(LoggingLevel::Warning < LoggingLevel::Internal, "TEST(LogChannel, LoggingLevel)");
-	static_assert(LoggingLevel::Info < LoggingLevel::Verbose, "TEST(LogChannel, LoggingLevel)");
-	static_assert(LoggingLevel::Info < LoggingLevel::Internal, "TEST(LogChannel, LoggingLevel)");
-	static_assert(LoggingLevel::Verbose < LoggingLevel::Internal, "TEST(LogChannel, LoggingLevel)");
+	static_assert(LogLevel::Critical < LogLevel::Error, "TEST(LogChannel, LogLevel)");
+	static_assert(LogLevel::Critical < LogLevel::Warning, "TEST(LogChannel, LogLevel)");
+	static_assert(LogLevel::Critical < LogLevel::Info, "TEST(LogChannel, LogLevel)");
+	static_assert(LogLevel::Critical < LogLevel::Verbose, "TEST(LogChannel, LogLevel)");
+	static_assert(LogLevel::Critical < LogLevel::Internal, "TEST(LogChannel, LogLevel)");
+
+	static_assert(LogLevel::Error < LogLevel::Warning, "TEST(LogChannel, LogLevel)");
+	static_assert(LogLevel::Error < LogLevel::Info, "TEST(LogChannel, LogLevel)");
+	static_assert(LogLevel::Error < LogLevel::Verbose, "TEST(LogChannel, LogLevel)");
+	static_assert(LogLevel::Error < LogLevel::Internal, "TEST(LogChannel, LogLevel)");
+	
+	static_assert(LogLevel::Warning < LogLevel::Info, "TEST(LogChannel, LogLevel)");
+	static_assert(LogLevel::Warning < LogLevel::Verbose, "TEST(LogChannel, LogLevel)");
+	static_assert(LogLevel::Warning < LogLevel::Internal, "TEST(LogChannel, LogLevel)");
+	
+	static_assert(LogLevel::Info < LogLevel::Verbose, "TEST(LogChannel, LogLevel)");
+	static_assert(LogLevel::Info < LogLevel::Internal, "TEST(LogChannel, LogLevel)");
+	
+	static_assert(LogLevel::Verbose < LogLevel::Internal, "TEST(LogChannel, LogLevel)");
 }
 
 TEST(LogChannel, LogMessage)
@@ -37,13 +46,13 @@ TEST(LogChannel, LogMessage)
 	std::string message;
 	
 	channel.Connect([&message](Pomdog::LogEntry const& entry){
-		message = entry.message;
+		message = entry.Message;
 	});
 	
-	channel.LogMessage("Chuck Norris can split the atom.", LoggingLevel::Critical);
+	channel.LogMessage("Chuck Norris can split the atom.", LogLevel::Critical);
 	EXPECT_EQ(message, "Chuck Norris can split the atom.");
 	
-	channel.LogMessage("With his bare hands.", LoggingLevel::Critical);
+	channel.LogMessage("With his bare hands.", LogLevel::Critical);
 	EXPECT_EQ(message, "With his bare hands.");
 }
 
@@ -53,16 +62,16 @@ TEST(LogChannel, Disconnect)
 	std::string message;
 	
 	auto connection = channel.Connect([&message](Pomdog::LogEntry const& entry){
-		message = entry.message;
+		message = entry.Message;
 	});
 	
-	channel.LogMessage("Chuck Norris can split the atom.", LoggingLevel::Critical);
+	channel.LogMessage("Chuck Norris can split the atom.", LogLevel::Critical);
 	EXPECT_EQ(message, "Chuck Norris can split the atom.");
 	
 	message.clear();
 	connection.Disconnect();
 	
-	channel.LogMessage("With his bare hands.", LoggingLevel::Critical);
+	channel.LogMessage("With his bare hands.", LogLevel::Critical);
 	EXPECT_TRUE(message.empty());
 }
 
@@ -73,22 +82,22 @@ TEST(LogChannel, Connection)
 	
 	auto connectionA = channel.Connect([&message](Pomdog::LogEntry const& entry){
 		message += "connection(A): ";
-		message += entry.message;
+		message += entry.Message;
 		message += ", ";
 	});
 	
 	channel.Connect([&message](Pomdog::LogEntry const& entry){
 		message += "connection(B): ";
-		message += entry.message;
+		message += entry.Message;
 	});
 	
-	channel.LogMessage("Hi", LoggingLevel::Critical);
+	channel.LogMessage("Hi", LogLevel::Critical);
 	EXPECT_EQ(message, "connection(A): Hi, connection(B): Hi");
 	
 	message.clear();
 	connectionA.Disconnect();
 	
-	channel.LogMessage("A disconnect", LoggingLevel::Critical);
+	channel.LogMessage("A disconnect", LogLevel::Critical);
 	EXPECT_EQ(message, "connection(B): A disconnect");
 }
 
@@ -104,24 +113,24 @@ TEST(LogChannel, GetName)
 	}
 }
 
-TEST(LogChannel, SetLoggingLevel)
+TEST(LogChannel, SetLogLevel)
 {
 	LogChannel channel("test");
 	
-	channel.Level(LoggingLevel::Critical);
-	EXPECT_EQ(LoggingLevel::Critical, channel.Level());
+	channel.Level(LogLevel::Critical);
+	EXPECT_EQ(LogLevel::Critical, channel.Level());
 	
-	channel.Level(LoggingLevel::Warning);
-	EXPECT_EQ(LoggingLevel::Warning, channel.Level());
+	channel.Level(LogLevel::Warning);
+	EXPECT_EQ(LogLevel::Warning, channel.Level());
 	
-	channel.Level(LoggingLevel::Info);
-	EXPECT_EQ(LoggingLevel::Info, channel.Level());
+	channel.Level(LogLevel::Info);
+	EXPECT_EQ(LogLevel::Info, channel.Level());
 	
-	channel.Level(LoggingLevel::Verbose);
-	EXPECT_EQ(LoggingLevel::Verbose, channel.Level());
+	channel.Level(LogLevel::Verbose);
+	EXPECT_EQ(LogLevel::Verbose, channel.Level());
 	
-	channel.Level(LoggingLevel::Internal);
-	EXPECT_EQ(LoggingLevel::Internal, channel.Level());
+	channel.Level(LogLevel::Internal);
+	EXPECT_EQ(LogLevel::Internal, channel.Level());
 }
 
 TEST(LogChannel, VerbosityLevelThreshold)
@@ -130,73 +139,73 @@ TEST(LogChannel, VerbosityLevelThreshold)
 	std::string message;
 		
 	channel.Connect([&message](Pomdog::LogEntry const& entry){
-		message = entry.message;
+		message = entry.Message;
 	});
 	
 	constexpr auto facts = "Chuck Norris's keyboard has an F13 key";
 	
-	auto ResetMessageAndSendLog = [&](Pomdog::LoggingLevel verbosity){
+	auto ResetMessageAndSendLog = [&](Pomdog::LogLevel verbosity){
 		message.clear();
 		channel.LogMessage(facts, verbosity);
 	};
 
-	channel.Level(LoggingLevel::Critical);
-	ResetMessageAndSendLog(LoggingLevel::Critical);
+	channel.Level(LogLevel::Critical);
+	ResetMessageAndSendLog(LogLevel::Critical);
 	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Warning);
+	ResetMessageAndSendLog(LogLevel::Warning);
 	EXPECT_TRUE(message.empty());
-	ResetMessageAndSendLog(LoggingLevel::Info);
+	ResetMessageAndSendLog(LogLevel::Info);
 	EXPECT_TRUE(message.empty());
-	ResetMessageAndSendLog(LoggingLevel::Verbose);
+	ResetMessageAndSendLog(LogLevel::Verbose);
 	EXPECT_TRUE(message.empty());
-	ResetMessageAndSendLog(LoggingLevel::Internal);
-	EXPECT_TRUE(message.empty());
-	
-	channel.Level(LoggingLevel::Warning);
-	ResetMessageAndSendLog(LoggingLevel::Critical);
-	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Warning);
-	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Info);
-	EXPECT_TRUE(message.empty());
-	ResetMessageAndSendLog(LoggingLevel::Verbose);
-	EXPECT_TRUE(message.empty());
-	ResetMessageAndSendLog(LoggingLevel::Internal);
+	ResetMessageAndSendLog(LogLevel::Internal);
 	EXPECT_TRUE(message.empty());
 	
-	channel.Level(LoggingLevel::Info);
-	ResetMessageAndSendLog(LoggingLevel::Critical);
+	channel.Level(LogLevel::Warning);
+	ResetMessageAndSendLog(LogLevel::Critical);
 	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Warning);
+	ResetMessageAndSendLog(LogLevel::Warning);
 	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Info);
-	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Verbose);
+	ResetMessageAndSendLog(LogLevel::Info);
 	EXPECT_TRUE(message.empty());
-	ResetMessageAndSendLog(LoggingLevel::Internal);
+	ResetMessageAndSendLog(LogLevel::Verbose);
 	EXPECT_TRUE(message.empty());
-	
-	channel.Level(LoggingLevel::Verbose);
-	ResetMessageAndSendLog(LoggingLevel::Critical);
-	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Warning);
-	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Info);
-	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Verbose);
-	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Internal);
+	ResetMessageAndSendLog(LogLevel::Internal);
 	EXPECT_TRUE(message.empty());
 	
-	channel.Level(LoggingLevel::Internal);
-	ResetMessageAndSendLog(LoggingLevel::Critical);
+	channel.Level(LogLevel::Info);
+	ResetMessageAndSendLog(LogLevel::Critical);
 	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Warning);
+	ResetMessageAndSendLog(LogLevel::Warning);
 	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Info);
+	ResetMessageAndSendLog(LogLevel::Info);
 	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Verbose);
+	ResetMessageAndSendLog(LogLevel::Verbose);
+	EXPECT_TRUE(message.empty());
+	ResetMessageAndSendLog(LogLevel::Internal);
+	EXPECT_TRUE(message.empty());
+	
+	channel.Level(LogLevel::Verbose);
+	ResetMessageAndSendLog(LogLevel::Critical);
 	EXPECT_EQ(message, facts);
-	ResetMessageAndSendLog(LoggingLevel::Internal);
+	ResetMessageAndSendLog(LogLevel::Warning);
+	EXPECT_EQ(message, facts);
+	ResetMessageAndSendLog(LogLevel::Info);
+	EXPECT_EQ(message, facts);
+	ResetMessageAndSendLog(LogLevel::Verbose);
+	EXPECT_EQ(message, facts);
+	ResetMessageAndSendLog(LogLevel::Internal);
+	EXPECT_TRUE(message.empty());
+	
+	channel.Level(LogLevel::Internal);
+	ResetMessageAndSendLog(LogLevel::Critical);
+	EXPECT_EQ(message, facts);
+	ResetMessageAndSendLog(LogLevel::Warning);
+	EXPECT_EQ(message, facts);
+	ResetMessageAndSendLog(LogLevel::Info);
+	EXPECT_EQ(message, facts);
+	ResetMessageAndSendLog(LogLevel::Verbose);
+	EXPECT_EQ(message, facts);
+	ResetMessageAndSendLog(LogLevel::Internal);
 	EXPECT_EQ(message, facts);
 }
