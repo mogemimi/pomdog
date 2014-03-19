@@ -11,6 +11,7 @@
 #include <limits>
 #include <utility>
 #include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Math/Radian.hpp>
 #include <Pomdog/Math/detail/FloatingPointMatrix3x3.hpp>
 #include <Pomdog/Math/detail/FloatingPointQuaternion.hpp>
 #include <Pomdog/Math/detail/FloatingPointVector3.hpp>
@@ -55,30 +56,30 @@ FloatingPointMatrix4x4<T>::FloatingPointMatrix4x4(
 template <typename T>
 T const& FloatingPointMatrix4x4<T>::operator()(std::size_t row, std::size_t column) const
 {
-	POMDOG_ASSERT_MESSAGE(row < RowSize(), "row: out of range");
-	POMDOG_ASSERT_MESSAGE(column < ColumnSize(), "column: out of range");
+	POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
+	POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
 	return m[row][column];
 }
 //-----------------------------------------------------------------------
 template <typename T>
 T & FloatingPointMatrix4x4<T>::operator()(std::size_t row, std::size_t column)
 {
-	POMDOG_ASSERT_MESSAGE(row < RowSize(), "row: out of range");
-	POMDOG_ASSERT_MESSAGE(column < ColumnSize(), "column: out of range");
+	POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
+	POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
 	return m[row][column];
 }
 //-----------------------------------------------------------------------
 template <typename T>
 std::array<T, 4> const& FloatingPointMatrix4x4<T>::operator[](std::size_t row) const
 {
-	POMDOG_ASSERT_MESSAGE(row < RowSize(), "FloatingPointMatrix4x4, subscript out of range");
+	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix4x4, subscript out of range");
 	return m[row];
 }
 //-----------------------------------------------------------------------
 template <typename T>
 std::array<T, 4> & FloatingPointMatrix4x4<T>::operator[](std::size_t row)
 {
-	POMDOG_ASSERT_MESSAGE(row < RowSize(), "FloatingPointMatrix4x4, subscript out of range");
+	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix4x4, subscript out of range");
 	return m[row];
 }
 //-----------------------------------------------------------------------
@@ -394,8 +395,8 @@ T FloatingPointMatrix4x4<T>::Determinant() const
 template <typename T>
 FloatingPointMatrix3x3<T> FloatingPointMatrix4x4<T>::Minor3x3(std::size_t row, std::size_t column) const
 {
-	POMDOG_ASSERT_MESSAGE(row < RowSize(), "row: out of range");
-	POMDOG_ASSERT_MESSAGE(column < ColumnSize(), "column: out of range");
+	POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
+	POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
 
 	//      4x4 matrix                              3x3 minor
 	//     c0  c1  c2  c3

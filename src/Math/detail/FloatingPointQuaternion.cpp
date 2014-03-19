@@ -12,6 +12,7 @@
 #include <array>
 #include <utility>
 #include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Math/Radian.hpp>
 #include <Pomdog/Math/detail/FloatingPointMatrix3x3.hpp>
 #include <Pomdog/Math/detail/FloatingPointMatrix4x4.hpp>
 #include <Pomdog/Math/detail/FloatingPointVector3.hpp>

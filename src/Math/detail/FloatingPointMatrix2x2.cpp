@@ -166,30 +166,30 @@ bool FloatingPointMatrix2x2<T>::operator!=(FloatingPointMatrix2x2 const& other) 
 template <typename T>
 T & FloatingPointMatrix2x2<T>::operator()(std::size_t row, std::size_t column)
 {
-	POMDOG_ASSERT_MESSAGE(row < RowSize(), "row: out of range");
-	POMDOG_ASSERT_MESSAGE(column < ColumnSize(), "column: out of range");
+	POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
+	POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
 	return m[row][column];
 }
 //-----------------------------------------------------------------------
 template <typename T>
 T const& FloatingPointMatrix2x2<T>::operator()(std::size_t row, std::size_t column) const
 {
-	POMDOG_ASSERT_MESSAGE(row < RowSize(), "row: out of range");
-	POMDOG_ASSERT_MESSAGE(column < ColumnSize(), "column: out of range");
+	POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
+	POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
 	return m[row][column];
 }
 //-----------------------------------------------------------------------
 template <typename T>
 std::array<T, 2> const& FloatingPointMatrix2x2<T>::operator[](std::size_t row) const
 {
-	POMDOG_ASSERT_MESSAGE(row < RowSize(), "FloatingPointMatrix2x2, subscript out of range");
+	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix2x2, subscript out of range");
 	return m[row];
 }
 //-----------------------------------------------------------------------
 template <typename T>
 std::array<T, 2> & FloatingPointMatrix2x2<T>::operator[](std::size_t row)
 {
-	POMDOG_ASSERT_MESSAGE(row < RowSize(), "FloatingPointMatrix2x2, subscript out of range");
+	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix2x2, subscript out of range");
 	return m[row];
 }
 //-----------------------------------------------------------------------

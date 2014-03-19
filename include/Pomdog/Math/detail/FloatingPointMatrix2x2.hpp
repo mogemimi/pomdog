@@ -13,11 +13,11 @@
 #	pragma once
 #endif
 
+#include <type_traits>
+#include <array>
 #include "../../Config/Export.hpp"
 #include "../../Config/FundamentalTypes.hpp"
 #include "ForwardDeclarations.hpp"
-#include <type_traits>
-#include <array>
 
 namespace Pomdog {
 namespace Details {
@@ -38,8 +38,8 @@ public:
 	std::array<std::array<T, 2>, 2> m;
 
 private:
-	static constexpr std::size_t RowSize() { return 2; }
-	static constexpr std::size_t ColumnSize() { return 2; }
+	static constexpr std::size_t RowSize = 2;
+	static constexpr std::size_t ColumnSize = 2;
 
 public:
 	// Constructors:

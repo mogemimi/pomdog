@@ -13,11 +13,10 @@
 #	pragma once
 #endif
 
+#include <type_traits>
 #include "../../Config/Export.hpp"
 #include "../../Config/FundamentalTypes.hpp"
 #include "ForwardDeclarations.hpp"
-#include "../Radian.hpp"
-#include <type_traits>
 
 namespace Pomdog {
 namespace Details {

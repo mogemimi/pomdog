@@ -13,12 +13,11 @@
 #	pragma once
 #endif
 
+#include <type_traits>
+#include <array>
 #include "../../Config/Export.hpp"
 #include "../../Config/FundamentalTypes.hpp"
 #include "ForwardDeclarations.hpp"
-#include "../Radian.hpp"
-#include <type_traits>
-#include <array>
 
 namespace Pomdog {
 namespace Details {
@@ -39,8 +38,8 @@ public:
 	std::array<std::array<T, 4>, 4> m;
 
 private:
-	static constexpr std::size_t RowSize() { return 4; }
-	static constexpr std::size_t ColumnSize() { return 4; }
+	static constexpr std::size_t RowSize = 4;
+	static constexpr std::size_t ColumnSize = 4;
 
 public:
 	// Constructors:
@@ -57,8 +56,7 @@ public:
 		T m00, T m01, T m02, T m03,
 		T m10, T m11, T m12, T m13,
 		T m20, T m21, T m22, T m23,
-		T m30, T m31, T m32, T m33
-	);
+		T m30, T m31, T m32, T m33);
 	
 	~FloatingPointMatrix4x4() = default;
 	

@@ -11,6 +11,7 @@
 #include <limits>
 #include <utility>
 #include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Math/Radian.hpp>
 #include <Pomdog/Math/detail/FloatingPointMatrix2x2.hpp>
 #include <Pomdog/Math/detail/FloatingPointQuaternion.hpp>
 #include <Pomdog/Math/detail/FloatingPointVector2.hpp>
@@ -207,30 +208,30 @@ bool FloatingPointMatrix3x3<T>::operator!=(FloatingPointMatrix3x3 const& other) 
 template <typename T>
 T & FloatingPointMatrix3x3<T>::operator()(std::size_t row, std::size_t column)
 {
-	POMDOG_ASSERT_MESSAGE(row < RowSize(), "row: out of range");
-	POMDOG_ASSERT_MESSAGE(column < ColumnSize(), "column: out of range");
+	POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
+	POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
 	return m[row][column];
 }
 //-----------------------------------------------------------------------
 template <typename T>
 T const& FloatingPointMatrix3x3<T>::operator()(std::size_t row, std::size_t column) const
 {
-	POMDOG_ASSERT_MESSAGE(row < RowSize(), "row: out of range");
-	POMDOG_ASSERT_MESSAGE(column < ColumnSize(), "column: out of range");
+	POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
+	POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
 	return m[row][column];
 }
 //-----------------------------------------------------------------------
 template <typename T>
 std::array<T, 3> const& FloatingPointMatrix3x3<T>::operator[](std::size_t row) const
 {
-	POMDOG_ASSERT_MESSAGE(row < RowSize(), "FloatingPointMatrix3x3, subscript out of range");
+	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix3x3, subscript out of range");
 	return m[row];
 }
 //-----------------------------------------------------------------------
 template <typename T>
 std::array<T, 3> & FloatingPointMatrix3x3<T>::operator[](std::size_t row)
 {
-	POMDOG_ASSERT_MESSAGE(row < RowSize(), "FloatingPointMatrix3x3, subscript out of range");
+	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix3x3, subscript out of range");
 	return m[row];
 }
 //-----------------------------------------------------------------------
@@ -334,12 +335,12 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
 	// r2 |31, 32, 33| --------------------> | x,  x, x|
 
 	FloatingPointMatrix2x2<T> minor;
-	for (std::size_t i = 0, s = 0; i < RowSize(); ++i)
+	for (std::size_t i = 0, s = 0; i < RowSize; ++i)
 	{
 		if (row == i)
 			continue;
 
-		for (std::size_t j = 0, t = 0; j < ColumnSize(); ++j)
+		for (std::size_t j = 0, t = 0; j < ColumnSize; ++j)
 		{
 			if (column == j)
 				continue;

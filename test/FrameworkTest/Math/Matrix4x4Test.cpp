@@ -9,6 +9,7 @@
 #include <gtest/iutest_switch.hpp>
 #include <Pomdog/Math/Matrix4x4.hpp>
 #include <Pomdog/Math/Vector3.hpp>
+#include <Pomdog/Math/Radian.hpp>
 
 using Pomdog::Matrix4x4;
 using Pomdog::Vector3;

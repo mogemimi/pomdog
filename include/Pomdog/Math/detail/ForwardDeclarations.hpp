@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include <Pomdog/Config/Export.hpp>
-#include <Pomdog/Config/FundamentalTypes.hpp>
 
 // Forward declarations of Math
 
