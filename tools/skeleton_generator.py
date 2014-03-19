@@ -71,7 +71,7 @@ def GenerateCplusplusImplementation(identifier, directory):
     result = CreateFilePath(directory, identifier, ".cpp")
     if not result[0]:
         return
-    SaveSourceFileUTF8(result[1], CreateImplement())
+    SaveSourceFileUTF8(result[1], CreateImplement(identifier))
 
 
 def GenerateObjectiveCppImplementation(identifier, directory):
@@ -79,7 +79,7 @@ def GenerateObjectiveCppImplementation(identifier, directory):
     result = CreateFilePath(directory, identifier, ".mm")
     if not result[0]:
         return
-    SaveSourceFileUTF8(result[1], CreateImplement())
+    SaveSourceFileUTF8(result[1], CreateImplement(identifier))
 
 
 def ParsingCommandLineAraguments():
@@ -185,6 +185,8 @@ $content
         msvc_style_pragma_once=CreateIncludeGuardMSVCStyle(),
         content=content)
 
+def CreateIncludeHeader(identifier):
+    return Template("#include \"$header_file\"\n").substitute(header_file=(identifier+".hpp"));
 
 def CreateClassHeader(identifier_without_directory):
     return_code = '\n'
@@ -196,10 +198,12 @@ def CreateClassHeader(identifier_without_directory):
            return_code
 
 
-def CreateImplement():
+def CreateImplement(identifier_without_directory):
     return_code = '\n'
     return CreateHeader(GetGitUserName()) +\
            return_code +\
+		   CreateIncludeHeader(identifier_without_directory) +\
+		   return_code +\
            CreateNamespace("Pomdog", CreateNamespace("Details")) +\
            return_code
 
