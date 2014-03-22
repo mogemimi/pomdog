@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#include <iostream>
 #include <Pomdog/Pomdog.hpp>
 #include <Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp>
 #include "../TestAppGame.hpp"
@@ -29,20 +30,21 @@ using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 {
 #ifdef DEBUG
 	connection = Log::Connect([](Pomdog::LogEntry const& entry) {
-		NSString* log = [NSString stringWithUTF8String:entry.Message.c_str()];
-		NSLog(@"\n%@", log);
+		//NSString* log = [NSString stringWithUTF8String:entry.Message.c_str()];
+		//NSLog(@"\n%@", log);
+		std::cout << entry.Message << "\n";
 	});
 #endif
 
-	Log::SetVerbosity(LogLevel::Internal);
-	Log::LogMessage("applicationDidFinishLaunching");
+	Log::SetLevel(LogLevel::Internal);
+	Log::Verbose("applicationDidFinishLaunching");
 
 	[[self window] makeKeyAndOrderFront:self];
 
 	gameRunThread = [[NSThread alloc] initWithTarget:self selector:@selector(runGame) object:nil];
 	[gameRunThread start];
 	
-	Log::LogMessage("game mainloop thread run");
+	Log::Verbose("game mainloop thread run");
 }
 
 - (void)runGame

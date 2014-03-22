@@ -27,8 +27,8 @@ public:
 	EventHandler();
 	EventHandler(EventHandler const&) = delete;
 	EventHandler(EventHandler &&) = default;
-	EventHandler& operator=(EventHandler const&) = delete;
-	EventHandler& operator=(EventHandler &&) = default;
+	EventHandler & operator=(EventHandler const&) = delete;
+	EventHandler & operator=(EventHandler &&) = default;
 	
 	~EventHandler() = default;
 	
@@ -45,7 +45,7 @@ public:
 	}
 
 private:
-	std::shared_ptr<Details::SignalsAndSlots::Signal<void(Event const&)>> signal;
+	std::shared_ptr<Details::SignalsAndSlots::SignalBody<void(Event const&)>> signalBody;
 };
 
 }// namespace Pomdog

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -32,7 +32,7 @@ template <typename Function>
 using Slot = std::function<Function>;
 
 template <typename Function>
-class Signal;
+class SignalBody;
 
 class ConnectionBody {
 public:
@@ -44,7 +44,7 @@ template <typename Function>
 class ConnectionBodyOverride final: public ConnectionBody {
 private:
 	typedef std::weak_ptr<Slot<Function>> WeakSlot;
-	typedef std::weak_ptr<Signal<Function>> WeakSignal;
+	typedef std::weak_ptr<SignalBody<Function>> WeakSignal;
 	
 	WeakSignal weakSignal;
 	WeakSlot weakSlot;
@@ -73,29 +73,31 @@ public:
 };
 
 template <typename...Arguments>
-class Signal<void(Arguments...)>
-	: public std::enable_shared_from_this<Signal<void(Arguments...)>> {
+class SignalBody<void(Arguments...)>
+	: public std::enable_shared_from_this<SignalBody<void(Arguments...)>> {
 private:
 	typedef Slot<void(Arguments...)> SlotType;
 	typedef ConnectionBodyOverride<void(Arguments...)> ConnectionBodyType;
 
 public:
-	Signal();
+	SignalBody();
 	
-	Signal(Signal const&) = delete;
-	Signal & operator=(Signal const&) = delete;
+	SignalBody(SignalBody const&) = delete;
+	SignalBody & operator=(SignalBody const&) = delete;
 
-	Signal(Signal &&) = delete;///@todo
-	Signal & operator=(Signal &&) = delete;///@todo
+	SignalBody(SignalBody &&) = delete;///@todo
+	SignalBody & operator=(SignalBody &&) = delete;///@todo
 
-	~Signal() = default;
+	~SignalBody() = default;
 
 	template <typename Function>
 	std::weak_ptr<ConnectionBodyType> Connect(Function && slot);
 	
 	void Disconnect(SlotType const* observer);
 
-	void operator()(Arguments&&... arguments);
+	void operator()(Arguments &&... arguments);
+	
+	std::size_t InvocationCount() const;
 	
 private:
 	void PushBackAddedListeners();
@@ -114,18 +116,18 @@ private:
 
 //-----------------------------------------------------------------------
 template <typename...Arguments>
-Signal<void(Arguments...)>::Signal()
+SignalBody<void(Arguments...)>::SignalBody()
 	: nestedMethodCallCount(0)
 {}
 //-----------------------------------------------------------------------
 template <typename...Arguments>
 template <typename Function>
-auto Signal<void(Arguments...)>::Connect(Function && slot)->std::weak_ptr<ConnectionBodyType>
+auto SignalBody<void(Arguments...)>::Connect(Function && slot)->std::weak_ptr<ConnectionBodyType>
 {
-	std::weak_ptr<Signal> weak_signal = this->shared_from_this();
+	std::weak_ptr<SignalBody> weakSignal = this->shared_from_this();
 
 	POMDOG_ASSERT(slot);
-	POMDOG_ASSERT(!weak_signal.expired());
+	POMDOG_ASSERT(!weakSignal.expired());
 
 	auto observer = std::make_shared<SlotType>(std::forward<Function>(slot));
 	{
@@ -135,15 +137,15 @@ auto Signal<void(Arguments...)>::Connect(Function && slot)->std::weak_ptr<Connec
 		addedObservers.push_back(observer);
 	}
 
-	std::shared_ptr<ConnectionBodyType> connectionBody(observer,
-		new ConnectionBodyType(std::move(weak_signal), observer));
+	auto connectionBody = std::shared_ptr<ConnectionBodyType>(observer,
+		new ConnectionBodyType(std::move(weakSignal), observer));
 
 	POMDOG_ASSERT(connectionBody);
-	return connectionBody;
+	return std::move(connectionBody);
 }
 //-----------------------------------------------------------------------
 template <typename...Arguments>
-void Signal<void(Arguments...)>::Disconnect(SlotType const* observer)
+void SignalBody<void(Arguments...)>::Disconnect(SlotType const* observer)
 {
 	POMDOG_ASSERT(observer);
 	{
@@ -170,7 +172,7 @@ void Signal<void(Arguments...)>::Disconnect(SlotType const* observer)
 }
 //-----------------------------------------------------------------------
 template <typename...Arguments>
-void Signal<void(Arguments...)>::PushBackAddedListeners()
+void SignalBody<void(Arguments...)>::PushBackAddedListeners()
 {
 	std::vector<std::shared_ptr<SlotType>> temporarySlots;
 	{
@@ -189,7 +191,7 @@ void Signal<void(Arguments...)>::PushBackAddedListeners()
 }
 //-----------------------------------------------------------------------
 template <typename...Arguments>
-void Signal<void(Arguments...)>::EraseRemovedListeners()
+void SignalBody<void(Arguments...)>::EraseRemovedListeners()
 {
 	std::lock_guard<std::recursive_mutex> lock(slotsProtection);
 
@@ -199,7 +201,7 @@ void Signal<void(Arguments...)>::EraseRemovedListeners()
 }
 //-----------------------------------------------------------------------
 template <typename...Arguments>
-void Signal<void(Arguments...)>::operator()(Arguments&&... arguments)
+void SignalBody<void(Arguments...)>::operator()(Arguments &&... arguments)
 {
 	if (nestedMethodCallCount <= 0) {
 		PushBackAddedListeners();
@@ -229,6 +231,12 @@ void Signal<void(Arguments...)>::operator()(Arguments&&... arguments)
 	if (nestedMethodCallCount <= 0) {
 		EraseRemovedListeners();
 	}
+}
+//-----------------------------------------------------------------------
+template <typename...Arguments>
+std::size_t SignalBody<void(Arguments...)>::InvocationCount() const
+{
+	return observers.size();
 }
 
 }// namespace SignalsAndSlots

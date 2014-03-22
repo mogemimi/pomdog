@@ -61,7 +61,7 @@ public:
 			gameHost->Run(game);
 		}
 		catch (std::exception const& e) {
-			Log::LogMessage(e.what(), LogLevel::Critical);
+			Log::Critical("Pomdog", e.what());
 		}
 		
 		EndRun();

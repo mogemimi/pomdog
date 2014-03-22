@@ -10,32 +10,39 @@
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/EventConnection.hpp>
+#include <Pomdog/Logging/LogEntry.hpp>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
 LogChannel::LogChannel(std::string const& channnelName)
 	: name(channnelName)
-	, threshold(LogLevel::Verbose)
+	, level(LogLevel::Verbose)
 {}
 //-----------------------------------------------------------------------
-void LogChannel::LogMessage(std::string const& message, LogLevel verbosity)
+void LogChannel::Log(std::string const& message, LogLevel verbosity)
 {
-	if (verbosity <= this->threshold)
-	{
-		eventHandler.Invoke<LogEntry>(message, name, verbosity);
+	if (verbosity <= this->level) {
+		signal(LogEntry{message, name, verbosity});
 	}
 }
 //-----------------------------------------------------------------------
-EventConnection LogChannel::Connect(std::function<void(LogEntry const& log)> const& slot)
+void LogChannel::Log(LogEntry const& logEntry)
+{
+	if (logEntry.Verbosity <= this->level) {
+		signal(logEntry);
+	}
+}
+//-----------------------------------------------------------------------
+EventConnection LogChannel::Connect(std::function<void(LogEntry const&)> const& slot)
 {
 	POMDOG_ASSERT(slot);
-
-	return eventHandler.Connect([slot](Event const& event)
-	{
-		if (auto log = event.As<LogEntry>()) {
-			slot(*log);
-		}
-	});
+	return signal.Connect(slot);
+}
+//-----------------------------------------------------------------------
+EventConnection LogChannel::Connect(std::function<void(LogEntry const&)> && slot)
+{
+	POMDOG_ASSERT(slot);
+	return signal.Connect(std::move(slot));
 }
 //-----------------------------------------------------------------------
 std::string const& LogChannel::Name() const
@@ -45,12 +52,17 @@ std::string const& LogChannel::Name() const
 //-----------------------------------------------------------------------
 LogLevel LogChannel::Level() const
 {
-	return this->threshold;
+	return this->level;
 }
 //-----------------------------------------------------------------------
-void LogChannel::Level(LogLevel thresholdIn)
+void LogChannel::Level(LogLevel levelIn)
 {
-	this->threshold = thresholdIn;
+	this->level = levelIn;
+}
+//-----------------------------------------------------------------------
+std::size_t LogChannel::ConnectionCount() const
+{
+	return signal.InvocationCount();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

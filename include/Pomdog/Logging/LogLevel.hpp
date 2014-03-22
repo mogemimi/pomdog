@@ -28,28 +28,24 @@ namespace Pomdog {
 /// @brief ログの出力における冗長レベルです。
 enum class LogLevel: std::uint8_t {
 	///@~Japanese
-	/// @brief 致命的なエラーです。回復することが不可能な状態を示します。
+	/// @brief 回復することが不可能な致命的なエラーです。
 	Critical = 0,
 
 	///@~Japanese
-	/// @brief エラーメッセージを示します。このエラーの発生によりシステムが停止することはありません。
-	Error = 1,
-
-	///@~Japanese
-	/// @brief 警告メッセージを示します。
-	Warning = 2,
+	/// @brief 深刻なエラーや未定義の動作を引き起こしかねない場合に通知する警告です。
+	Warning = 1,
 
 	///@~Japanese
 	/// @brief 日常的なログを示します。
-	Info = 3,
+	Info = 2,
 	
 	///@~Japanese
 	/// @brief エンジンの内部処理に関するログを除くすべてのメッセージを示します。
-	Verbose = 4,
+	Verbose = 3,
 
 	///@~Japanese
 	/// @brief エンジンの内部処理に関わるログなどを含めたすべてのログを示します。
-	Internal = 5,
+	Internal = 4,
 };
 
 /// @}

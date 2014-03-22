@@ -58,13 +58,13 @@ void ErrorChecker::CheckError(char const* command, char const* filename, int lin
 	static std::size_t lines = 0;
 	if (lines < maxLine)
 	{
-		Log::Stream(LogLevel::Critical)
+		Log::Stream("Pomdog.RenderSystem", LogLevel::Warning)
 			<< ">>> File " << filename << ", line " << line << ", in " << command << "\n"
 			<< "OpenGL Error: " << ToString(errorCode);
 
 		if (lines == (maxLine - 1U))
 		{
-			Log::LogMessage("OpenGL Error: More...", LogLevel::Critical);
+			Log::Warning("Pomdog.RenderSystem", "OpenGL Error: More...");
 		}
 		++lines;
 	}

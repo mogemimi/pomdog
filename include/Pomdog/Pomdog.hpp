@@ -20,6 +20,7 @@
 #include "Utility/Assert.hpp"
 #include "Utility/Exception.hpp"
 #include "Utility/Noncopyable.hpp"
+#include "Utility/StringFormat.hpp"
 
 // Application
 #include "Application/Game.hpp"
@@ -37,6 +38,7 @@
 #include "Event/EventHandler.hpp"
 #include "Event/EventQueue.hpp"
 #include "Event/ScopedConnection.hpp"
+#include "Event/Signal.hpp"
 
 // Math
 #include "Math/Color.hpp"

@@ -19,17 +19,11 @@ using Pomdog::ScopedConnection;
 
 TEST(LogChannel, LogLevel)
 {
-	static_assert(LogLevel::Critical < LogLevel::Error, "TEST(LogChannel, LogLevel)");
 	static_assert(LogLevel::Critical < LogLevel::Warning, "TEST(LogChannel, LogLevel)");
 	static_assert(LogLevel::Critical < LogLevel::Info, "TEST(LogChannel, LogLevel)");
 	static_assert(LogLevel::Critical < LogLevel::Verbose, "TEST(LogChannel, LogLevel)");
 	static_assert(LogLevel::Critical < LogLevel::Internal, "TEST(LogChannel, LogLevel)");
 
-	static_assert(LogLevel::Error < LogLevel::Warning, "TEST(LogChannel, LogLevel)");
-	static_assert(LogLevel::Error < LogLevel::Info, "TEST(LogChannel, LogLevel)");
-	static_assert(LogLevel::Error < LogLevel::Verbose, "TEST(LogChannel, LogLevel)");
-	static_assert(LogLevel::Error < LogLevel::Internal, "TEST(LogChannel, LogLevel)");
-	
 	static_assert(LogLevel::Warning < LogLevel::Info, "TEST(LogChannel, LogLevel)");
 	static_assert(LogLevel::Warning < LogLevel::Verbose, "TEST(LogChannel, LogLevel)");
 	static_assert(LogLevel::Warning < LogLevel::Internal, "TEST(LogChannel, LogLevel)");
@@ -40,7 +34,7 @@ TEST(LogChannel, LogLevel)
 	static_assert(LogLevel::Verbose < LogLevel::Internal, "TEST(LogChannel, LogLevel)");
 }
 
-TEST(LogChannel, LogMessage)
+TEST(LogChannel, Log)
 {
 	LogChannel channel("test");
 	std::string message;
@@ -49,10 +43,10 @@ TEST(LogChannel, LogMessage)
 		message = entry.Message;
 	});
 	
-	channel.LogMessage("Chuck Norris can split the atom.", LogLevel::Critical);
+	channel.Log("Chuck Norris can split the atom.", LogLevel::Critical);
 	EXPECT_EQ(message, "Chuck Norris can split the atom.");
 	
-	channel.LogMessage("With his bare hands.", LogLevel::Critical);
+	channel.Log("With his bare hands.", LogLevel::Critical);
 	EXPECT_EQ(message, "With his bare hands.");
 }
 
@@ -65,13 +59,13 @@ TEST(LogChannel, Disconnect)
 		message = entry.Message;
 	});
 	
-	channel.LogMessage("Chuck Norris can split the atom.", LogLevel::Critical);
+	channel.Log("Chuck Norris can split the atom.", LogLevel::Critical);
 	EXPECT_EQ(message, "Chuck Norris can split the atom.");
 	
 	message.clear();
 	connection.Disconnect();
 	
-	channel.LogMessage("With his bare hands.", LogLevel::Critical);
+	channel.Log("With his bare hands.", LogLevel::Critical);
 	EXPECT_TRUE(message.empty());
 }
 
@@ -91,13 +85,13 @@ TEST(LogChannel, Connection)
 		message += entry.Message;
 	});
 	
-	channel.LogMessage("Hi", LogLevel::Critical);
+	channel.Log("Hi", LogLevel::Critical);
 	EXPECT_EQ(message, "connection(A): Hi, connection(B): Hi");
 	
 	message.clear();
 	connectionA.Disconnect();
 	
-	channel.LogMessage("A disconnect", LogLevel::Critical);
+	channel.Log("A disconnect", LogLevel::Critical);
 	EXPECT_EQ(message, "connection(B): A disconnect");
 }
 
@@ -146,7 +140,7 @@ TEST(LogChannel, VerbosityLevelThreshold)
 	
 	auto ResetMessageAndSendLog = [&](Pomdog::LogLevel verbosity){
 		message.clear();
-		channel.LogMessage(facts, verbosity);
+		channel.Log(facts, verbosity);
 	};
 
 	channel.Level(LogLevel::Critical);

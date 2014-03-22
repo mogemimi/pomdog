@@ -9,36 +9,55 @@
 #include <Pomdog/Logging/LogStream.hpp>
 #include <utility>
 #include <Pomdog/Logging/LogChannel.hpp>
+#include <Pomdog/Logging/LogEntry.hpp>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-LogStream::LogStream(LogChannel & channelIn, LogLevel verbosityIn)
-	: channel(channelIn)
-	, verbosity(verbosityIn)
+LogStream::LogStream(LogChannel & channelIn, LogLevel levelIn)
+	: sourceChannel(channelIn.Name())
+	, channel(channelIn)
+	, level(levelIn)
+{}
+//-----------------------------------------------------------------------
+LogStream::LogStream(LogChannel & channelIn, std::string const& sourceChannelIn, LogLevel levelIn)
+	: sourceChannel(sourceChannelIn)
+	, channel(channelIn)
+	, level(levelIn)
 {}
 //-----------------------------------------------------------------------
 LogStream::LogStream(LogStream const& other)
-	: channel(other.channel)
-	, verbosity(other.verbosity)
+	: sourceChannel(other.sourceChannel)
+	, channel(other.channel)
+	, level(other.level)
 {
 	cache << other.cache.str();
 }
 //-----------------------------------------------------------------------
 LogStream::~LogStream()
 {
-	auto const messages = cache.str();
-	if (!messages.empty())
+	auto message = cache.str();
+	if (!message.empty())
 	{
-		channel.LogMessage(messages, verbosity);
+		channel.Log(LogEntry{std::move(message), sourceChannel, level});
 	}
 }
 //-----------------------------------------------------------------------
-LogStream & LogStream::operator<<(Flush const&)
+void LogStream::Flush()
 {
-	channel.LogMessage(cache.str(), verbosity);
+	channel.Log(LogEntry{cache.str(), sourceChannel, level});
 	cache.str(std::string{});
 	cache.clear();
-	return *this;
+}
+//-----------------------------------------------------------------------
+void LogStream::Clear()
+{
+	cache.str(std::string{});
+	cache.clear();
+}
+//-----------------------------------------------------------------------
+std::string LogStream::String() const
+{
+	return cache.str();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

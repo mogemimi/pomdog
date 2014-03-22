@@ -38,22 +38,6 @@ public:
 	///@~Japanese
 	/// @brief ログの冗長レベルです。
 	LogLevel Verbosity;
-	
-public:
-	LogEntry() = delete;
-	LogEntry(LogEntry const&) = default;
-	LogEntry(LogEntry &&) = default;
-	
-	///@~Japanese
-	/// @brief コンストラクタです。
-	/// @param message ログメッセージを指定します。
-	/// @param source ソースとなるチャンネル名を指定します。
-	/// @param verbosity ログ出力レベル（冗長レベル）を指定します。
-	LogEntry(std::string const& messageIn, std::string const& sourceIn, LogLevel verbosityIn)
-		: Message(messageIn)
-		, Source(sourceIn)
-		, Verbosity(verbosityIn)
-	{}
 };
 
 /// @}

@@ -13,27 +13,27 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 EventHandler::EventHandler()
-	: signal(std::make_shared<Details::SignalsAndSlots::Signal<void(Event const&)>>())
+	: signalBody(std::make_shared<Details::SignalsAndSlots::SignalBody<void(Event const&)>>())
 {}
 //-----------------------------------------------------------------------
 EventConnection EventHandler::Connect(std::function<void(Event const&)> const& slot)
 {
 	POMDOG_ASSERT(slot);
 	POMDOG_ASSERT(signal);
-	return EventConnection{signal->Connect(slot)};
+	return EventConnection{signalBody->Connect(slot)};
 }
 //-----------------------------------------------------------------------
 EventConnection EventHandler::Connect(std::function<void(Event const&)> && slot)
 {
 	POMDOG_ASSERT(slot);
 	POMDOG_ASSERT(signal);
-	return EventConnection{signal->Connect(slot)};
+	return EventConnection{signalBody->Connect(slot)};
 }
 //-----------------------------------------------------------------------
 void EventHandler::Invoke(Event && event)
 {
 	POMDOG_ASSERT(signal);
-	signal->operator()(std::move(event));
+	signalBody->operator()(std::move(event));
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

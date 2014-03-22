@@ -14,7 +14,9 @@
 #endif
 
 #include <type_traits>
+#include <string>
 #include <sstream>
+#include <functional>
 #include "../Config/Export.hpp"
 #include "LogLevel.hpp"
 
@@ -32,15 +34,19 @@ class LogChannel;
 class POMDOG_EXPORT LogStream {
 private:
 	std::stringstream cache;
+	std::string sourceChannel;
 	LogChannel & channel;
-	LogLevel verbosity;
+	LogLevel level;
 
 public:
-	LogStream(LogChannel & channel, LogLevel verbosity);
+	LogStream() = delete;
+	
+	explicit LogStream(LogChannel & channel, LogLevel level = LogLevel::Verbose);
+
+	LogStream(LogChannel & channel, std::string const& sourceChannel, LogLevel level = LogLevel::Verbose);
+
 	LogStream(LogStream const&);
 	LogStream(LogStream &&) = default;
-
-	LogStream() = delete;
 	LogStream & operator=(LogStream const&) = delete;
 	LogStream & operator=(LogStream &&) = delete;
 	
@@ -48,15 +54,19 @@ public:
 
 	template <typename T>
 	LogStream & operator<<(T const& message);
-
-	struct Flush {};
-	LogStream & operator<<(Flush const&);
+	
+	void Flush();
+	
+	void Clear();
+	
+	std::string String() const;
 };
 
 /// @}
 /// @}
 
 namespace Details {
+namespace Logging {
 
 template<typename E>
 auto ToIntegral(E e)->typename std::underlying_type<E>::type
@@ -65,7 +75,7 @@ auto ToIntegral(E e)->typename std::underlying_type<E>::type
 }
 
 template <typename T>
-auto LogStreamInvork(T const& message, typename std::enable_if<std::is_enum<T>::value>::type* = nullptr)->decltype(Details::ToIntegral(message))
+auto LogStreamInvork(T const& message, typename std::enable_if<std::is_enum<T>::value>::type* = nullptr)->decltype(ToIntegral(message))
 {
 	return ToIntegral(message);
 }
@@ -76,12 +86,13 @@ T const& LogStreamInvork(T const& message, typename std::enable_if<!std::is_enum
 	return message;
 }
 
+}// namespace Logging
 }// namespace Details
 
 template <typename T>
 LogStream & LogStream::operator<<(T const& message)
 {
-	cache << Details::LogStreamInvork(message);
+	cache << Details::Logging::LogStreamInvork(message);
 	return *this;
 }
 

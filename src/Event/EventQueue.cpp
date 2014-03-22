@@ -9,27 +9,27 @@
 #include <Pomdog/Event/EventQueue.hpp>
 #include <algorithm>
 #include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Event/detail/Signal.hpp>
+#include <Pomdog/Event/detail/SignalBody.hpp>
 #include <Pomdog/Event/EventConnection.hpp>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
 EventQueue::EventQueue()
-	: signal(std::move(std::make_shared<SignalType>()))
+	: signalBody(std::move(std::make_shared<SignalType>()))
 {}
 //-----------------------------------------------------------------------
 EventConnection EventQueue::Connect(std::function<void(Event const&)> const& slot)
 {
 	POMDOG_ASSERT(slot);
 	POMDOG_ASSERT(signal);
-	return EventConnection{signal->Connect(slot)};
+	return EventConnection{signalBody->Connect(slot)};
 }
 //-----------------------------------------------------------------------
 EventConnection EventQueue::Connect(std::function<void(Event const&)> && slot)
 {
 	POMDOG_ASSERT(slot);
 	POMDOG_ASSERT(signal);
-	return EventConnection{signal->Connect(slot)};
+	return EventConnection{signalBody->Connect(slot)};
 }
 //-----------------------------------------------------------------------
 void EventQueue::Enqueue(Event && event)
@@ -50,7 +50,7 @@ void EventQueue::Tick()
 	}
 
 	for (auto & event: notifications) {
-		signal->operator()(event);
+		signalBody->operator()(event);
 	}
 }
 //-----------------------------------------------------------------------

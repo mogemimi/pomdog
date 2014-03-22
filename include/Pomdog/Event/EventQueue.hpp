@@ -29,8 +29,8 @@ public:
 	EventQueue();
 	EventQueue(EventQueue const&) = delete;
 	EventQueue(EventQueue &&) = delete;
-	EventQueue& operator=(EventQueue const&) = delete;
-	EventQueue& operator=(EventQueue &&) = delete;
+	EventQueue & operator=(EventQueue const&) = delete;
+	EventQueue & operator=(EventQueue &&) = delete;
 	~EventQueue() = default;
 
 	EventConnection Connect(std::function<void(Event const&)> const& slot);
@@ -48,10 +48,10 @@ public:
 	void Tick();
 
 private:
-	typedef Details::SignalsAndSlots::Signal<void(Event const&)> SignalType;
+	typedef Details::SignalsAndSlots::SignalBody<void(Event const&)> SignalType;
 
 	std::vector<Event> events;
-	std::shared_ptr<SignalType> signal;
+	std::shared_ptr<SignalType> signalBody;
 	std::recursive_mutex notificationProtection;
 };
 

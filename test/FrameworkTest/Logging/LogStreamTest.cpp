@@ -31,7 +31,8 @@ TEST(LogStream, LogStreamFlush)
 	});
 	
 	message.clear();
-	stream << "Chuck " << "Norris " << "Approval." << LogStream::Flush();
+	stream << "Chuck " << "Norris " << "Approval.";
+	stream.Flush();
 	EXPECT_EQ(message, "Chuck Norris Approval.");
 	
 	message.clear();
@@ -41,7 +42,7 @@ TEST(LogStream, LogStreamFlush)
 	stream << "onions ";
 	stream << "cry!";
 	EXPECT_TRUE(message.empty());
-	stream << LogStream::Flush();
+	stream.Flush();
 	EXPECT_EQ(message, "Chuck Norris makes onions cry!");
 }
 
@@ -65,23 +66,28 @@ TEST(LogStream, EnumerationToString)
 	};
 	
 	message.clear();
-	stream << Numbers::Zero << LogStream::Flush();
+	stream << Numbers::Zero;
+	stream.Flush();
 	EXPECT_EQ(message, "0");
 	
 	message.clear();
-	stream << Numbers::One << LogStream::Flush();
+	stream << Numbers::One;
+	stream.Flush();
 	EXPECT_EQ(message, "1");
 	
 	message.clear();
-	stream << Numbers::Two << LogStream::Flush();
+	stream << Numbers::Two;
+	stream.Flush();
 	EXPECT_EQ(message, "2");
 	
 	message.clear();
-	stream << Numbers::Three << LogStream::Flush();
+	stream << Numbers::Three;
+	stream.Flush();
 	EXPECT_EQ(message, "3");
 	
 	message.clear();
-	stream << Numbers::TheAnswerToLifeTheUniverseAndEverything << LogStream::Flush();
+	stream << Numbers::TheAnswerToLifeTheUniverseAndEverything;
+	stream.Flush();
 	EXPECT_EQ(message, "42");
 }
 
@@ -99,7 +105,8 @@ TEST(LogStream, CopyConstrunctor)
 	EXPECT_TRUE(message.empty());
 	
 	Pomdog::LogStream stream2 = stream;
-	stream2 << "Norris" << LogStream::Flush();
+	stream2 << "Norris";
+	stream2.Flush();
 	EXPECT_EQ(message, "Chuck Norris");
 }
 
@@ -118,6 +125,7 @@ TEST(LogStream, MoveConstrunctor)
 		EXPECT_TRUE(message.empty());
 		return std::move(stream);
 	})();
-	stream2 << "Norris" << LogStream::Flush();
+	stream2 << "Norris";
+	stream2.Flush();
 	EXPECT_EQ(message, "Chuck Norris");
 }

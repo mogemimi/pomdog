@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -16,10 +16,12 @@
 #include <functional>
 #include <string>
 #include "../Config/Export.hpp"
-#include "../Event/EventHandler.hpp"
-#include "LogEntry.hpp"
+#include "../Event/Signal.hpp"
+#include "LogLevel.hpp"
 
 namespace Pomdog {
+
+class LogEntry;
 
 /// @addtogroup Framework
 /// @{
@@ -32,21 +34,27 @@ class POMDOG_EXPORT LogChannel {
 public:
 	explicit LogChannel(std::string const& name);
 
-	LogChannel() = delete;
+	LogChannel() = default;
 	LogChannel(LogChannel const&) = delete;
-	LogChannel(LogChannel &&) = delete;
+	LogChannel(LogChannel &&) = default;
 	LogChannel & operator=(LogChannel const&) = delete;
-	LogChannel & operator=(LogChannel &&) = delete;
-	
-	~LogChannel() = default;
+	LogChannel & operator=(LogChannel &&) = default;
 
 	///@~Japanese
 	/// @brief メッセージを送ります。
-	void LogMessage(std::string const& message, LogLevel verbosity);
+	void Log(std::string const& message, LogLevel verbosity);
 
+	///@~Japanese
+	/// @brief メッセージを送ります。
+	void Log(LogEntry const& logEntry);
+	
 	///@~Japanese
 	/// @brief 指定されたスロットを接続します。
 	EventConnection Connect(std::function<void(LogEntry const&)> const& slot);
+
+	///@~Japanese
+	/// @brief 指定されたスロットを接続します。
+	EventConnection Connect(std::function<void(LogEntry const&)> && slot);
 
 	///@~Japanese
 	/// @brief チャンネルを識別する名前を取得します。
@@ -58,12 +66,16 @@ public:
 
 	///@~Japanese
 	/// @brief ロギングの冗長レベルを設定します。
-	void Level(LogLevel threshold);
+	void Level(LogLevel level);
+
+	///@~Japanese
+	/// @brief 接続数を取得します。
+	std::size_t ConnectionCount() const;
 
 private:
-	EventHandler eventHandler;
+	Signal<void(LogEntry const&)> signal;
 	std::string name;
-	LogLevel threshold;
+	LogLevel level;
 };
 
 /// @}

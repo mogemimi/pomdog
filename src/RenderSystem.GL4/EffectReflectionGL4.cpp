@@ -337,7 +337,7 @@ static EffectVariableType ToEffectVariableType(GLenum uniformType)
 	}
 
 #ifdef DEBUG
-	Log::Stream(LogLevel::Internal)
+	Log::Stream("Pomdog.RenderSystem", LogLevel::Internal)
 		<< "Failed to find effect parameter type '"  << uniformType << "'.";
 #endif
 	return EffectVariableType::Float;
@@ -431,7 +431,7 @@ static EffectVariableClass ToEffectVariableClass(GLenum uniformType)
 	}
 
 #ifdef DEBUG
-	Log::Stream(LogLevel::Internal)
+	Log::Stream("Pomdog.RenderSystem", LogLevel::Internal)
 		<< "Failed to find effect parameter class '"  << uniformType << "'.";
 #endif
 	return EffectVariableClass::Struct;
@@ -547,7 +547,7 @@ static void ToComponents(GLenum uniformType, std::uint8_t & RowCount, std::uint8
 	}
 
 #ifdef DEBUG
-	Log::Stream(LogLevel::Internal)
+	Log::Stream("Pomdog.RenderSystem", LogLevel::Internal)
 		<< "Failed to find uniform type '"  << uniformType << "'.";
 #endif
 }
@@ -586,7 +586,7 @@ std::vector<EffectVariable> GetEffectVariables(std::vector<UniformVariableGL4> c
 static
 void DebugLogUniformBlocks(std::vector<UniformBlockGL4> const& uniformBlocks)
 {
-	auto stream = Log::Stream(LogLevel::Internal);
+	auto stream = Log::Stream("Pomdog.RenderSystem", LogLevel::Internal);
 	
 	for (auto const& uniformBlock: uniformBlocks)
 	{
@@ -616,7 +616,7 @@ void DebugLogUniformBlocks(std::vector<UniformBlockGL4> const& uniformBlocks)
 static
 void DebugLogUniforms(std::vector<UniformGL4> const& uniforms)
 {
-	auto stream = Log::Stream(LogLevel::Internal);
+	auto stream = Log::Stream("Pomdog.RenderSystem", LogLevel::Internal);
 	
 	for (auto const& uniform: uniforms)
 	{

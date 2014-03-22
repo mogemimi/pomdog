@@ -23,7 +23,7 @@ template <typename Function>
 using Slot = std::function<Function>;
 
 template <typename Function>
-class Signal;
+class SignalBody;
 
 }// namespace SignalsAndSlots
 }// namespace Details
@@ -33,6 +33,9 @@ class EventConnection;
 class EventHandler;
 class EventQueue;
 class ScopedConnection;
+
+template <typename Function>
+class Signal;
 
 }// namespace Pomdog
 
