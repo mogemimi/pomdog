@@ -469,11 +469,6 @@ void GraphicsContextGL4::SetTexture(std::uint32_t textureUnit, RenderTarget2D & 
 void GraphicsContextGL4::SetRenderTarget()
 {
 	POMDOG_ASSERT(frameBuffer);
-
-	auto const prevFrameBuffer = TypesafeHelperGL4::Get<FrameBufferGL4>();
-	ScopeGuard scope([&prevFrameBuffer] {
-		glBindFramebuffer(GL_FRAMEBUFFER, prevFrameBuffer.value);
-	});
 	
 	// Bind framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->value);
@@ -500,17 +495,19 @@ void GraphicsContextGL4::SetRenderTarget()
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glFramebufferRenderbuffer", __FILE__, __LINE__);
 	#endif
+	
+	// Bind default framebuffer
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glBindFramebuffer", __FILE__, __LINE__);
+	#endif
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargetsIn)
 {
 	POMDOG_ASSERT(!renderTargetsIn.empty());
 	POMDOG_ASSERT(frameBuffer);
-	
-	auto const prevFrameBuffer = TypesafeHelperGL4::Get<FrameBufferGL4>();
-	ScopeGuard scope([&prevFrameBuffer] {
-		glBindFramebuffer(GL_FRAMEBUFFER, prevFrameBuffer.value);
-	});
 	
 	// Bind framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->value);

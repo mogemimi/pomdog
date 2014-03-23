@@ -55,6 +55,51 @@ void TestAppGame::Initialize()
 
 		texture = assets->Load<Texture2D>("pomdog.png");
 	}
+	{
+		renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
+			window->ClientBounds().Width, window->ClientBounds().Height,
+			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
+	}
+	{
+		using VertexCombined = CustomVertex<Vector3, Vector2>;
+		
+		std::array<VertexCombined, 4> const verticesCombo = {
+			Vector3(-1.0f, -1.0f, 0.0f), Vector2(0.0f, 0.0f),
+			Vector3(-1.0f,  1.0f, 0.0f), Vector2(0.0f, 1.0f),
+			Vector3( 1.0f,  1.0f, 0.0f), Vector2(1.0f, 1.0f),
+			Vector3( 1.0f, -1.0f, 0.0f), Vector2(1.0f, 0.0f),
+		};
+		vertexBuffer = std::make_shared<ImmutableVertexBuffer>(graphicsDevice,
+			VertexCombined::Declaration(), verticesCombo.data(), verticesCombo.size());
+
+		effectPass = assets->Load<EffectPass>("SimpleEffect");
+		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
+	}
+	{
+		std::array<std::uint16_t, 6> const indices = {
+			0, 1, 2,
+			2, 3, 0
+		};
+
+		// Create index buffer
+		indexBuffer = std::make_shared<ImmutableIndexBuffer>(graphicsDevice,
+			IndexElementSize::SixteenBits, indices.data(), indices.size());
+	}
+	{
+		for (auto & parameter: effectPass->Parameters()) {
+			Log::Stream() << "EffectParameter: " << parameter.first;
+		}
+		
+		auto effectReflection = std::make_shared<EffectReflection>(graphicsDevice, effectPass);
+	
+		auto stream = Log::Stream();
+		for (auto & description: effectReflection->GetConstantBuffers()) {
+			stream << "-----------------------" << "\n";
+			stream << "     Name: " << description.Name << "\n";
+			stream << " ByteSize: " << description.ByteSize << "\n";
+			stream << "Variables: " << description.Variables.size() << "\n";
+		}
+	}
 	
 	primitiveAxes = std::unique_ptr<PrimitiveAxes>(new PrimitiveAxes(gameHost));
 	primitiveGrid = std::unique_ptr<PrimitiveGrid>(new PrimitiveGrid(gameHost));
@@ -124,10 +169,8 @@ void TestAppGame::Update()
 	}
 }
 //-----------------------------------------------------------------------
-void TestAppGame::Draw()
+void TestAppGame::DrawSprites()
 {
-	graphicsContext->Clear(Color::CornflowerBlue);
-	
 	auto camera = gameWorld.Component<Camera2D>(mainCameraID);
 	auto transform = gameWorld.Component<Transform2D>(mainCameraID);
 	
@@ -161,6 +204,23 @@ void TestAppGame::Draw()
 	}
 	
 	spriteRenderer->End();
+}
+//-----------------------------------------------------------------------
+void TestAppGame::Draw()
+{
+	graphicsContext->SetRenderTarget(renderTarget);
+	graphicsContext->Clear(Color::CornflowerBlue);
+	
+	DrawSprites();
+	
+	graphicsContext->SetRenderTarget();
+	graphicsContext->Clear(Color::CornflowerBlue);
+	
+	graphicsContext->SetTexture(0, renderTarget);
+	graphicsContext->SetInputLayout(inputLayout);
+	graphicsContext->SetVertexBuffer(vertexBuffer);
+	effectPass->Apply();
+	graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList, indexBuffer, indexBuffer->IndexCount());
 	
 	graphicsContext->Present();
 }

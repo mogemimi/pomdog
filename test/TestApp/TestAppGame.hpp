@@ -37,6 +37,9 @@ public:
 	void Draw();
 	
 private:
+	void DrawSprites();
+	
+private:
 	std::shared_ptr<GameHost> gameHost;
 	std::shared_ptr<GraphicsContext> graphicsContext;
 	
@@ -44,6 +47,12 @@ private:
 	std::unique_ptr<PrimitiveAxes> primitiveAxes;
 	std::unique_ptr<PrimitiveGrid> primitiveGrid;
 	std::unique_ptr<SpriteRenderer> spriteRenderer;
+	
+	std::shared_ptr<VertexBuffer> vertexBuffer;
+	std::shared_ptr<IndexBuffer> indexBuffer;
+	std::shared_ptr<EffectPass> effectPass;
+	std::shared_ptr<InputLayout> inputLayout;
+	std::shared_ptr<RenderTarget2D> renderTarget;
 	
 	CameraView2D cameraView;
 	
