@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include <memory>
 #include "../Config/Export.hpp"
-#include "../Config/FundamentalTypes.hpp"
 #include "detail/ForwardDeclarations.hpp"
 #include "Texture.hpp"
 #include "SurfaceFormat.hpp"
@@ -72,7 +72,7 @@ public:
 	
 	///@~Japanese
 	/// @brief ピクセルデータを格納します。
-	void SetData(std::uint8_t const* pixelData);
+	void SetData(void const* pixelData);
 
 public:
 	Details::RenderSystem::NativeTexture2D* NativeTexture2D();

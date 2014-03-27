@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include <memory>
 #include "../Config/Export.hpp"
-#include "../Config/FundamentalTypes.hpp"
 #include "VertexDeclaration.hpp"
 
 namespace Pomdog {

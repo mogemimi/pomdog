@@ -13,8 +13,9 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include <string>
-#include "../Config/FundamentalTypes.hpp"
+#include <vector>
 #include "EffectVariable.hpp"
 
 namespace Pomdog {

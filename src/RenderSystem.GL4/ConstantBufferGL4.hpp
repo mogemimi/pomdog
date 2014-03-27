@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include "OpenGLPrerequisites.hpp"
-#include <Pomdog/Config/FundamentalTypes.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>
 #include "../RenderSystem/NativeConstantBuffer.hpp"
 #include "../Utility/Optional.hpp"
@@ -41,10 +41,10 @@ public:
 	~ConstantBufferGL4();
 	
 	///@copydoc NativeConstantBuffer
-	void GetData(std::uint32_t byteWidth, std::uint8_t* result) const override;
+	void GetData(std::uint32_t byteWidth, void* result) const override;
 
 	///@copydoc NativeConstantBuffer
-	void SetData(std::uint8_t const* data, std::uint32_t byteWidth) override;
+	void SetData(void const* data, std::uint32_t byteWidth) override;
 	
 	///@~Japanese
 	/// @brief シェーダプログラムに定数バッファを適用します。

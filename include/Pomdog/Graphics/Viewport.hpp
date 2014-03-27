@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include "../Config/Export.hpp"
-#include "../Config/FundamentalTypes.hpp"
 #include "../Math/Rectangle.hpp"
 
 namespace Pomdog {

@@ -20,7 +20,6 @@
 #include <array>
 #include <functional>
 #include <exception>
-#include <Pomdog/Config/FundamentalTypes.hpp>
 #include <Pomdog/Config/Export.hpp>
 #include <Pomdog/Application/GameHost.hpp>
 #include <Pomdog/Logging/Log.hpp>

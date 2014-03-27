@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include "../Config/Export.hpp"
 #include "detail/ForwardDeclarations.hpp"
 

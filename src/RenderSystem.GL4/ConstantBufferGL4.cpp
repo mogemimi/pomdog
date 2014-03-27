@@ -27,7 +27,7 @@ struct TypesafeHelperGL4::OpenGLGetTraits<ConstantBufferObjectGL4> {
 ConstantBufferGL4::ConstantBufferGL4(std::uint32_t byteWidth)
 {
 	// Generate constant buffer
-	bufferObject = ([]{
+	bufferObject = ([] {
 		ConstantBufferObjectGL4 constantBuffer;
 		glGenBuffers(1, constantBuffer.Data());
 		return std::move(constantBuffer);
@@ -59,13 +59,13 @@ ConstantBufferGL4::~ConstantBufferGL4()
 	}
 }
 //-----------------------------------------------------------------------
-void ConstantBufferGL4::GetData(std::uint32_t byteWidth, std::uint8_t * result) const
+void ConstantBufferGL4::GetData(std::uint32_t byteWidth, void* result) const
 {
 	POMDOG_ASSERT(result != nullptr);
 	POMDOG_ASSERT(byteWidth > 0);
 	
 	auto const oldBufferObject = TypesafeHelperGL4::Get<ConstantBufferObjectGL4>();
-	ScopeGuard scope([&oldBufferObject]{
+	ScopeGuard scope([&oldBufferObject] {
 		TypesafeHelperGL4::BindBuffer(oldBufferObject);
 	});
 
@@ -91,13 +91,13 @@ void ConstantBufferGL4::GetData(std::uint32_t byteWidth, std::uint8_t * result) 
 	#endif
 }
 //-----------------------------------------------------------------------
-void ConstantBufferGL4::SetData(std::uint8_t const* source, std::uint32_t byteWidth)
+void ConstantBufferGL4::SetData(void const* source, std::uint32_t byteWidth)
 {
 	POMDOG_ASSERT(source != nullptr);
 	POMDOG_ASSERT(byteWidth > 0);
 
 	auto const oldBufferObject = TypesafeHelperGL4::Get<ConstantBufferObjectGL4>();
-	ScopeGuard scope([&oldBufferObject]{
+	ScopeGuard scope([&oldBufferObject] {
 		TypesafeHelperGL4::BindBuffer(oldBufferObject);
 	});
 
@@ -129,7 +129,7 @@ void ConstantBufferGL4::Apply(std::uint32_t slotIndex)
 	
 	#if defined(DEBUG) && !defined(NDEBUG)
 	{
-		static auto const maxUniformBufferBindings = ([]{
+		static auto const maxUniformBufferBindings = ([] {
 			GLint value = 0;
 			glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &value);
 			return value;

@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include <vector>
 #include "../Config/Export.hpp"
 #include "VertexElement.hpp"

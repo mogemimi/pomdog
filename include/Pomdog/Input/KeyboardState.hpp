@@ -13,10 +13,10 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include <bitset>
 #include <limits>
 #include "../Config/Export.hpp"
-#include "../Config/FundamentalTypes.hpp"
 
 namespace Pomdog {
 

@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Config/FundamentalTypes.hpp>
+#include <cstdint>
 
 namespace Pomdog {
 namespace Details {
@@ -28,10 +28,10 @@ public:
 	virtual ~NativeConstantBuffer() = default;
 
 	///@copydoc ConstantBuffer
-	virtual void GetData(std::uint32_t byteWidth, std::uint8_t* result) const = 0;
+	virtual void GetData(std::uint32_t byteWidth, void* result) const = 0;
 	
 	///@copydoc ConstantBuffer
-	virtual void SetData(std::uint8_t const* data, std::uint32_t byteWidth) = 0;
+	virtual void SetData(void const* data, std::uint32_t byteWidth) = 0;
 };
 
 }// namespace RenderSystem

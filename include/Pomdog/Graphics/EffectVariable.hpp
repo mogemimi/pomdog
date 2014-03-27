@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include <string>
 #include "EffectAnnotation.hpp"
 

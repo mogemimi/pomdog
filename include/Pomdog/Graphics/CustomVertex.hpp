@@ -13,10 +13,11 @@
 #	pragma once
 #endif
 
+#include <cstdint>
+#include <cstddef>
 #include <utility>
 #include <vector>
 #include "../Config/Export.hpp"
-#include "../Config/FundamentalTypes.hpp"
 #include "../Math/detail/ForwardDeclarations.hpp"
 #include "VertexDeclaration.hpp"
 

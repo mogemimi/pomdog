@@ -7,6 +7,7 @@
 //
 
 #include <Pomdog/Graphics/detail/EffectBinaryParameter.hpp>
+#include <cfloat>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Math/Vector2.hpp>
 #include <Pomdog/Math/Vector3.hpp>
@@ -17,7 +18,6 @@
 #include <Pomdog/Math/Quaternion.hpp>
 #include <Pomdog/Math/Color.hpp>
 #include <Pomdog/Graphics/EffectParameter.hpp>
-#include <cfloat>
 
 namespace Pomdog {
 namespace Details {
@@ -26,17 +26,17 @@ namespace EffectBinaryParameter {
 namespace {
 
 template <typename T> static
-std::uint8_t const* BinaryCast(T const* data)
+void const* BinaryCast(T const* data)
 {
 	static_assert(!std::is_pointer<T>::value, "T is not pointer.");
-	return reinterpret_cast<std::uint8_t const*>(data);
+	return static_cast<void const*>(data);
 }
 
 template <typename T> static
-std::uint8_t * BinaryCast(T * data)
+void* BinaryCast(T * data)
 {
 	static_assert(!std::is_pointer<T>::value, "T is not pointer.");
-	return reinterpret_cast<std::uint8_t *>(data);
+	return static_cast<void*>(data);
 }
 
 }// unnamed namespace

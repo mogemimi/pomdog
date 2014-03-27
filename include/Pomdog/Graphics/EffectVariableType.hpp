@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include "../Config/FundamentalTypes.hpp"
+#include <cstdint>
 
 namespace Pomdog {
 

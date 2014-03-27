@@ -13,9 +13,11 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include <memory>
 #include <vector>
 #include <utility>
+#include <type_traits>
 #include "../Config/Export.hpp"
 #include "detail/ForwardDeclarations.hpp"
 #include "detail/EffectBinaryParameter.hpp"
@@ -63,7 +65,7 @@ public:
 	/// @brief エフェクトパラメータに設定されている値を取得します。
 	/// @param byteWidth バイト単位のバッファサイズ。
 	/// @param result バッファの先頭を示すポインタ。
-	void GetValue(std::uint32_t byteWidth, std::uint8_t * result) const;
+	void GetValue(std::uint32_t byteWidth, void* result) const;
 	
 	///@~Japanese
 	/// @brief エフェクトパラメータに値を設定します。
@@ -87,7 +89,7 @@ public:
 	/// @brief エフェクトパラメータに値を設定します。
 	/// @param data バイナリデータの先頭を示すポインタ。
 	/// @param byteWidth バイト単位のデータサイズ。
-	void SetValue(std::uint8_t const* data, std::uint32_t byteWidth);
+	void SetValue(void const* data, std::uint32_t byteWidth);
 
 public:
 	Details::RenderSystem::NativeConstantBuffer* NativeConstantBuffer();

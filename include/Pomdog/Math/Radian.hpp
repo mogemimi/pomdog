@@ -13,7 +13,6 @@
 #	pragma once
 #endif
 
-#include "../Config/FundamentalTypes.hpp"
 #include "detail/TaggedArithmetic.hpp"
 
 namespace Pomdog {

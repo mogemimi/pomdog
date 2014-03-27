@@ -15,7 +15,6 @@
 
 #include <memory>
 #include <string>
-#include <Pomdog/Config/FundamentalTypes.hpp>
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 
 namespace Pomdog {

@@ -20,9 +20,9 @@ namespace {
 class DummyConstantBuffer final: public Details::RenderSystem::NativeConstantBuffer
 {
 public:
-	void GetData(std::uint32_t, std::uint8_t*) const override {}
+	void GetData(std::uint32_t, void*) const override {}
 	
-	void SetData(std::uint8_t const*, std::uint32_t) override {}
+	void SetData(void const*, std::uint32_t) override {}
 };
 
 }// unnamed namespace
@@ -41,7 +41,7 @@ EffectParameter::EffectParameter(std::shared_ptr<GraphicsDevice> const& graphics
 //-----------------------------------------------------------------------
 EffectParameter::~EffectParameter() = default;
 //-----------------------------------------------------------------------
-void EffectParameter::GetValue(std::uint32_t byteWidth, std::uint8_t * result) const
+void EffectParameter::GetValue(std::uint32_t byteWidth, void* result) const
 {
 	POMDOG_ASSERT(byteWidth > 0);
 	POMDOG_ASSERT(result != nullptr);
@@ -49,7 +49,7 @@ void EffectParameter::GetValue(std::uint32_t byteWidth, std::uint8_t * result) c
 	nativeConstantBuffer->GetData(byteWidth, result);
 }
 //-----------------------------------------------------------------------
-void EffectParameter::SetValue(std::uint8_t const* data, std::uint32_t byteWidth)
+void EffectParameter::SetValue(void const* data, std::uint32_t byteWidth)
 {
 	POMDOG_ASSERT(data != nullptr);
 	POMDOG_ASSERT(byteWidth > 0);

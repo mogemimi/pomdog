@@ -16,7 +16,6 @@
 #include <memory>
 #include <vector>
 #include "../Config/Export.hpp"
-#include "../Config/FundamentalTypes.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include "detail/ForwardDeclarations.hpp"
 

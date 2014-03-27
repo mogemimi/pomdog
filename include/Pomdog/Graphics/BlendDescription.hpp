@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include "../Config/Export.hpp"
-#include "../Config/FundamentalTypes.hpp"
 #include "../Math/Color.hpp"
 #include "Blend.hpp"
 #include "BlendFunction.hpp"

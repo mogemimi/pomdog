@@ -13,9 +13,10 @@
 #	pragma once
 #endif
 
+#include <cstdint>
+#include <cstddef>
 #include <memory>
 #include <vector>
-#include "../Config/FundamentalTypes.hpp"
 #include "../Config/Export.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include "../Math/detail/ForwardDeclarations.hpp"

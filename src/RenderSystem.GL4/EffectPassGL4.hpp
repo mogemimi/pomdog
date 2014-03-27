@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include <vector>
 #include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>

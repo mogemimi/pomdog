@@ -59,7 +59,7 @@ SurfaceFormat Texture2D::Format() const
 	return format;
 }
 //-----------------------------------------------------------------------
-void Texture2D::SetData(std::uint8_t const* pixelData)
+void Texture2D::SetData(void const* pixelData)
 {
 	POMDOG_ASSERT(nativeTexture2D);
 	POMDOG_ASSERT(pixelData);

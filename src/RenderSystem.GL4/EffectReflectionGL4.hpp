@@ -13,10 +13,10 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include <string>
 #include <vector>
 #include "OpenGLPrerequisites.hpp"
-#include <Pomdog/Config/FundamentalTypes.hpp>
 #include "../RenderSystem/NativeEffectReflection.hpp"
 #include "TypesafeGL4.hpp"
 
