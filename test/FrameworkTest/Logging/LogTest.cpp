@@ -25,13 +25,13 @@ using Pomdog::ScopedConnection;
 struct LogTest: public ::testing::Test
 {
 	std::vector<std::string> messages;
-	std::vector<std::string> sources;
+	std::vector<std::string> tags;
 	std::vector<LogLevel> levels;
 
 	void SetUp() override
 	{
 		messages.clear();
-		sources.clear();
+		tags.clear();
 		levels.clear();
 		Log::SetLevel(Pomdog::LogLevel::Verbose);
 	}
@@ -41,7 +41,7 @@ TEST_F(LogTest, FirstCase)
 {
 	ScopedConnection connection = Log::Connect([&](LogEntry const& entry) {
 		messages.push_back(entry.Message);
-		sources.push_back(entry.Source);
+		tags.push_back(entry.Tag);
 		levels.push_back(entry.Verbosity);
 	});
 	
@@ -51,16 +51,16 @@ TEST_F(LogTest, FirstCase)
 	ASSERT_EQ(2, messages.size());
 	EXPECT_EQ("Hello", messages[0]);
 	EXPECT_EQ("Hi", messages[1]);
-	ASSERT_EQ(2, sources.size());
-	EXPECT_TRUE(sources[0].empty());
-	EXPECT_TRUE(sources[1].empty());
+	ASSERT_EQ(2, tags.size());
+	EXPECT_TRUE(tags[0].empty());
+	EXPECT_TRUE(tags[1].empty());
 }
 
 TEST_F(LogTest, StreamWithDefaultChannel)
 {
 	ScopedConnection connection = Log::Connect([&](LogEntry const& entry) {
 		messages.push_back(entry.Message);
-		sources.push_back(entry.Source);
+		tags.push_back(entry.Tag);
 		levels.push_back(entry.Verbosity);
 	});
 	
@@ -73,16 +73,16 @@ TEST_F(LogTest, StreamWithDefaultChannel)
 	ASSERT_EQ(2, messages.size());
 	EXPECT_EQ("Why is the answer to everything 42?", messages[0]);
 	EXPECT_EQ("NyanNyanNyan", messages[1]);
-	ASSERT_EQ(2, sources.size());
-	EXPECT_TRUE(sources[0].empty());
-	EXPECT_TRUE(sources[1].empty());
+	ASSERT_EQ(2, tags.size());
+	EXPECT_TRUE(tags[0].empty());
+	EXPECT_TRUE(tags[1].empty());
 }
 
 TEST_F(LogTest, ConnectToChannel)
 {
 	ScopedConnection connection = Log::Connect("#TestChannel", [&](LogEntry const& entry) {
 		messages.push_back(entry.Message);
-		sources.push_back(entry.Source);
+		tags.push_back(entry.Tag);
 		levels.push_back(entry.Verbosity);
 	});
 	
@@ -94,22 +94,22 @@ TEST_F(LogTest, ConnectToChannel)
 	ASSERT_EQ(2, messages.size());
 	EXPECT_EQ("Nyan2", messages[0]);
 	EXPECT_EQ("Nyan3", messages[1]);
-	ASSERT_EQ(2, sources.size());
-	EXPECT_EQ("#TestChannel", sources[0]);
-	EXPECT_EQ("#TestChannel", sources[1]);
+	ASSERT_EQ(2, tags.size());
+	EXPECT_EQ("#TestChannel", tags[0]);
+	EXPECT_EQ("#TestChannel", tags[1]);
 }
 
 TEST_F(LogTest, ConnectToChannel2)
 {
 	ScopedConnection connectionDog = Log::Connect("#Dog", [&](LogEntry const& entry) {
 		messages.push_back(entry.Message + "(in Dog)");
-		sources.push_back(entry.Source + "(in Dog)");
+		tags.push_back(entry.Tag + "(in Dog)");
 		levels.push_back(entry.Verbosity);
 	});
 	
 	ScopedConnection connectionCat = Log::Connect("#Cat", [&](LogEntry const& entry) {
 		messages.push_back(entry.Message + "(in Cat)");
-		sources.push_back(entry.Source + "(in Cat)");
+		tags.push_back(entry.Tag + "(in Cat)");
 		levels.push_back(entry.Verbosity);
 	});
 	
@@ -121,22 +121,22 @@ TEST_F(LogTest, ConnectToChannel2)
 	ASSERT_EQ(2, messages.size());
 	EXPECT_EQ("Nyan2(in Dog)", messages[0]);
 	EXPECT_EQ("Nyan3(in Cat)", messages[1]);
-	ASSERT_EQ(2, sources.size());
-	EXPECT_EQ("#Dog(in Dog)", sources[0]);
-	EXPECT_EQ("#Cat(in Cat)", sources[1]);
+	ASSERT_EQ(2, tags.size());
+	EXPECT_EQ("#Dog(in Dog)", tags[0]);
+	EXPECT_EQ("#Cat(in Cat)", tags[1]);
 }
 
 TEST_F(LogTest, ConnectToDefaultChannel)
 {
 	ScopedConnection connection = Log::Connect([&](LogEntry const& entry) {
 		messages.push_back(entry.Message);
-		sources.push_back(entry.Source);
+		tags.push_back(entry.Tag);
 		levels.push_back(entry.Verbosity);
 	});
 	
 	ScopedConnection connectionCat = Log::Connect("#Cat", [&](LogEntry const& entry) {
 		messages.push_back(entry.Message + "(in Cat)");
-		sources.push_back(entry.Source + "(in Cat)");
+		tags.push_back(entry.Tag + "(in Cat)");
 		levels.push_back(entry.Verbosity);
 	});
 	
@@ -149,24 +149,24 @@ TEST_F(LogTest, ConnectToDefaultChannel)
 	EXPECT_EQ("Nyan2", messages[1]);
 	EXPECT_EQ("Nyan3", messages[2]);
 	EXPECT_EQ("Nyan3(in Cat)", messages[3]);
-	ASSERT_EQ(4, sources.size());
-	EXPECT_TRUE(sources[0].empty());
-	EXPECT_EQ("#Dog", sources[1]);
-	EXPECT_EQ("#Cat", sources[2]);
-	EXPECT_EQ("#Cat(in Cat)", sources[3]);
+	ASSERT_EQ(4, tags.size());
+	EXPECT_TRUE(tags[0].empty());
+	EXPECT_EQ("#Dog", tags[1]);
+	EXPECT_EQ("#Cat", tags[2]);
+	EXPECT_EQ("#Cat(in Cat)", tags[3]);
 }
 
 TEST_F(LogTest, ConnectToDefaultChannelAndStream)
 {
 	ScopedConnection connection = Log::Connect([&](LogEntry const& entry) {
 		messages.push_back(entry.Message);
-		sources.push_back(entry.Source);
+		tags.push_back(entry.Tag);
 		levels.push_back(entry.Verbosity);
 	});
 	
 	ScopedConnection connectionCat = Log::Connect("#Cat", [&](LogEntry const& entry) {
 		messages.push_back(entry.Message + "(in Cat)");
-		sources.push_back(entry.Source + "(in Cat)");
+		tags.push_back(entry.Tag + "(in Cat)");
 		levels.push_back(entry.Verbosity);
 	});
 	
@@ -179,11 +179,11 @@ TEST_F(LogTest, ConnectToDefaultChannelAndStream)
 	EXPECT_EQ("Nyan2", messages[1]);
 	EXPECT_EQ("Nyan3", messages[2]);
 	EXPECT_EQ("Nyan3(in Cat)", messages[3]);
-	ASSERT_EQ(4, sources.size());
-	EXPECT_TRUE(sources[0].empty());
-	EXPECT_EQ("#Dog", sources[1]);
-	EXPECT_EQ("#Cat", sources[2]);
-	EXPECT_EQ("#Cat(in Cat)", sources[3]);
+	ASSERT_EQ(4, tags.size());
+	EXPECT_TRUE(tags[0].empty());
+	EXPECT_EQ("#Dog", tags[1]);
+	EXPECT_EQ("#Cat", tags[2]);
+	EXPECT_EQ("#Cat(in Cat)", tags[3]);
 }
 
 TEST(Log, SetDefaultLevels)
@@ -212,7 +212,7 @@ TEST_F(LogTest, SetVerbosityLevels)
 {
 	ScopedConnection connection = Log::Connect("TestChannel", [&](LogEntry const& entry) {
 		messages.push_back(entry.Message);
-		sources.push_back(entry.Source);
+		tags.push_back(entry.Tag);
 		levels.push_back(entry.Verbosity);
 	});
 	
@@ -295,7 +295,7 @@ TEST_F(LogTest, SendToUserChannels)
 {
 	auto handler = [&](LogEntry const& entry){
 		messages.push_back(entry.Message);
-		sources.push_back(entry.Source);
+		tags.push_back(entry.Tag);
 	};
 	
 	ScopedConnection connection1(Log::Connect("#Test1", handler));
@@ -326,11 +326,11 @@ TEST_F(LogTest, SendToUserChannels)
 	EXPECT_EQ(messages[2], "(E) Send to new channel");
 	EXPECT_EQ(messages[3], "(G) Send to channel Test2");
 	
-	ASSERT_EQ(4, sources.size());
-	EXPECT_EQ(sources[0], "#Test1");
-	EXPECT_EQ(sources[1], "#Test2");
-	EXPECT_EQ(sources[2], "#NyanNyanCat");
-	EXPECT_EQ(sources[3], "#Test2");
+	ASSERT_EQ(4, tags.size());
+	EXPECT_EQ(tags[0], "#Test1");
+	EXPECT_EQ(tags[1], "#Test2");
+	EXPECT_EQ(tags[2], "#NyanNyanCat");
+	EXPECT_EQ(tags[3], "#Test2");
 }
 
 TEST_F(LogTest, CallToDisconnectInCallback)

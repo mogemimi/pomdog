@@ -193,7 +193,7 @@ void Logger::Log(std::string const& message, LogLevel verbosity)
 //-----------------------------------------------------------------------
 void Logger::Log(LogEntry const& entry)
 {
-	auto iter = FindChannnel(entry.Source, channels);
+	auto iter = FindChannnel(entry.Tag, channels);
 	if (std::end(channels) != iter) {
 		std::get<0>(*iter).Log(entry);
 	}
