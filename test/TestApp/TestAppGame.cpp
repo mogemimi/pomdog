@@ -79,7 +79,7 @@ void TestAppGame::Initialize()
 		//auto sprite = gameObject->AddComponent<Sprite>();
 		//sprite->Origin = Vector2{0.5f, 0.5f};
 		//sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
-		//transform->Scale = Vector2{2.5f, 2.5f};
+		transform->Scale = Vector2{2.5f, 2.5f};
 	}
 	
 	for (int i = 0; i < 10; ++i)

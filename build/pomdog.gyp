@@ -196,7 +196,6 @@
       '../src/Math/detail/FloatingPointVector4.cpp',
       '../src/Utility/CRC32.cpp',
       '../src/Utility/CRC32.hpp',
-      '../src/Utility/HashingHelper.hpp',
       '../src/Utility/MakeUnique.hpp',
       '../src/Utility/Optional.hpp',
       '../src/Utility/ScopeGuard.hpp',
@@ -206,7 +205,6 @@
       '../include/Pomdog/Application/Game.hpp',
       '../include/Pomdog/Application/GameHost.hpp',
       '../include/Pomdog/Application/GameWindow.hpp',
-      '../include/Pomdog/Application/detail/PlatformSystem.hpp',
       '../include/Pomdog/Content/AssetManager.hpp',
       '../include/Pomdog/Content/detail/AssetLoader.hpp',
       '../include/Pomdog/Content/detail/EffectLoader.hpp',
@@ -332,7 +330,6 @@
       '../src/Platform.Cocoa/CocoaOpenGLViewDelegate.mm',
       '../src/Platform.Cocoa/CocoaWindowDelegate.hpp',
       '../src/Platform.Cocoa/CocoaWindowDelegate.mm',
-      '../src/Platform.Cocoa/PlatformSystemCocoa.cpp',
     ],
   },
   'targets': [

@@ -16,7 +16,6 @@
 #include <type_traits>
 #include <utility>
 #include "../../Config/Export.hpp"
-#include "../../Config/FundamentalTypes.hpp"
 #include "../../Utility/Assert.hpp"
 
 namespace Pomdog {
@@ -52,8 +51,6 @@ public:
 	TaggedArithmetic(T v)
 		: value(v){};
 
-	~TaggedArithmetic() = default;
-
 	// Assignment operators:
 	TaggedArithmetic & operator=(TaggedArithmetic const&) = default;
 	TaggedArithmetic & operator=(TaggedArithmetic &&) = default;
@@ -64,9 +61,21 @@ public:
 		return *this;
 	}
 
+	TaggedArithmetic & operator+=(TaggedArithmetic && v)
+	{
+		value += std::move(v.value);
+		return *this;
+	}
+
 	TaggedArithmetic & operator-=(TaggedArithmetic const& v)
 	{
 		value -= v.value;
+		return *this;
+	}
+	
+	TaggedArithmetic & operator-=(TaggedArithmetic && v)
+	{
+		value -= std::move(v.value);
 		return *this;
 	}
 
@@ -75,11 +84,24 @@ public:
 		value *= v.value;
 		return *this;
 	}
+	
+	TaggedArithmetic & operator*=(TaggedArithmetic && v)
+	{
+		value *= std::move(v.value);
+		return *this;
+	}
 
 	TaggedArithmetic & operator/=(TaggedArithmetic const& v)
 	{
 		POMDOG_ASSERT(v.value != 0);
 		value /= v.value;
+		return *this;
+	}
+	
+	TaggedArithmetic & operator/=(TaggedArithmetic && v)
+	{
+		POMDOG_ASSERT(v.value != 0);
+		value /= std::move(v.value);
 		return *this;
 	}
 

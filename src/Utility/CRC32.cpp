@@ -145,10 +145,10 @@ static void FinishChecksum(std::uint32_t & crcvalue)
 
 }// unnamed namespace
 
-std::uint32_t BlockChecksum(std::uint8_t const* data, std::size_t length)
+std::uint32_t BlockChecksum(void const* data, std::size_t length)
 {
 	std::uint32_t crc = InitValueCRC32;
-	UpdateChecksum(crc, data, length);
+	UpdateChecksum(crc, reinterpret_cast<std::uint8_t const*>(data), length);
 	FinishChecksum(crc);
 	return crc;
 }

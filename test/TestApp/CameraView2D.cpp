@@ -66,7 +66,7 @@ static Radian<float> SampleTumbleGesture(MouseState const& mouseState, Rectangle
 
 		constexpr float threshold = 1.0f;
 
-		Radian<float> delta;
+		Radian<float> delta = 0.0f;
 		
 		auto const distance = Vector2::Distance(*gesture, position);
 
