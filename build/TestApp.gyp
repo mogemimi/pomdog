@@ -49,6 +49,8 @@
       'sources': [
         '../test/TestApp/CameraView2D.cpp',
         '../test/TestApp/CameraView2D.hpp',
+        '../test/TestApp/FXAA.cpp',
+        '../test/TestApp/FXAA.hpp',
         '../test/TestApp/PrimitiveAxes.cpp',
         '../test/TestApp/PrimitiveAxes.hpp',
         '../test/TestApp/PrimitiveGrid.cpp',

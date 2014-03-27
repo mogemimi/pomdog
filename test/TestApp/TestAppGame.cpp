@@ -11,6 +11,7 @@
 #include "PrimitiveAxes.hpp"
 #include "PrimitiveGrid.hpp"
 #include "SpriteRenderer.hpp"
+#include "FXAA.hpp"
 
 namespace TestApp {
 namespace {
@@ -50,9 +51,10 @@ void TestAppGame::Initialize()
 	auto assets = gameHost->AssetManager();
 
 	{
-		auto sampler = SamplerState::CreatePointWrap(graphicsDevice);
-		graphicsContext->SetSamplerState(0, sampler);
-
+		samplerPoint = SamplerState::CreatePointWrap(graphicsDevice);
+		
+		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
+		graphicsContext->SetBlendState(blendState);
 		texture = assets->Load<Texture2D>("pomdog.png");
 	}
 	{
@@ -60,51 +62,11 @@ void TestAppGame::Initialize()
 			window->ClientBounds().Width, window->ClientBounds().Height,
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
-	{
-		using VertexCombined = CustomVertex<Vector3, Vector2>;
-		
-		std::array<VertexCombined, 4> const verticesCombo = {
-			Vector3(-1.0f, -1.0f, 0.0f), Vector2(0.0f, 0.0f),
-			Vector3(-1.0f,  1.0f, 0.0f), Vector2(0.0f, 1.0f),
-			Vector3( 1.0f,  1.0f, 0.0f), Vector2(1.0f, 1.0f),
-			Vector3( 1.0f, -1.0f, 0.0f), Vector2(1.0f, 0.0f),
-		};
-		vertexBuffer = std::make_shared<ImmutableVertexBuffer>(graphicsDevice,
-			VertexCombined::Declaration(), verticesCombo.data(), verticesCombo.size());
-
-		effectPass = assets->Load<EffectPass>("SimpleEffect");
-		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
-	}
-	{
-		std::array<std::uint16_t, 6> const indices = {
-			0, 1, 2,
-			2, 3, 0
-		};
-
-		// Create index buffer
-		indexBuffer = std::make_shared<ImmutableIndexBuffer>(graphicsDevice,
-			IndexElementSize::SixteenBits, indices.data(), indices.size());
-	}
-	{
-		for (auto & parameter: effectPass->Parameters()) {
-			Log::Stream() << "EffectParameter: " << parameter.first;
-		}
-		
-		auto effectReflection = std::make_shared<EffectReflection>(graphicsDevice, effectPass);
-	
-		auto stream = Log::Stream();
-		for (auto & description: effectReflection->GetConstantBuffers()) {
-			stream << "-----------------------" << "\n";
-			stream << "     Name: " << description.Name << "\n";
-			stream << " ByteSize: " << description.ByteSize << "\n";
-			stream << "Variables: " << description.Variables.size() << "\n";
-		}
-	}
 	
 	primitiveAxes = std::unique_ptr<PrimitiveAxes>(new PrimitiveAxes(gameHost));
 	primitiveGrid = std::unique_ptr<PrimitiveGrid>(new PrimitiveGrid(gameHost));
 	spriteRenderer = std::unique_ptr<SpriteRenderer>(new SpriteRenderer(gameHost));
-	
+	fxaa = std::unique_ptr<FXAA>(new FXAA(gameHost));
 	
 	{
 		// NOTE: Create main camera:
@@ -113,11 +75,11 @@ void TestAppGame::Initialize()
 		
 		auto transform = gameObject->AddComponent<Transform2D>();
 		gameObject->AddComponent<CanvasItem>();
-		auto sprite = gameObject->AddComponent<Sprite>();
 		gameObject->AddComponent<Camera2D>();
-		sprite->Origin = Vector2{0.5f, 0.5f};
-		sprite->Subrect = Rectangle(0, 0, 16, 28);
-		transform->Scale = Vector2{2.5f, 2.5f};
+		//auto sprite = gameObject->AddComponent<Sprite>();
+		//sprite->Origin = Vector2{0.5f, 0.5f};
+		//sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
+		//transform->Scale = Vector2{2.5f, 2.5f};
 	}
 	
 	for (int i = 0; i < 10; ++i)
@@ -127,11 +89,26 @@ void TestAppGame::Initialize()
 		auto transform = gameObject->AddComponent<Transform2D>();
 		auto sprite = gameObject->AddComponent<Sprite>();
 		
-		transform->Position.X = i * 28 - 200;
-		transform->Position.Y = (i % 5) * 40;
+		transform->Position.X = i * 64 * 2.0f;
+		transform->Position.Y = 0;
+		transform->Scale.X = transform->Scale.Y = 2.0f;
+		transform->Rotation = (0.5f * i) * MathConstants<float>::PiOver4();
 		sprite->Origin = Vector2{0.5f, 0.5f};
-		sprite->Subrect = Rectangle(0, 0, 16, 28);
+		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
 	}
+	
+//	for (int i = 0; i < 10; ++i)
+//	{
+//		auto gameObject = gameWorld.CreateObject();
+//		gameObject->AddComponent<CanvasItem>();
+//		auto transform = gameObject->AddComponent<Transform2D>();
+//		auto sprite = gameObject->AddComponent<Sprite>();
+//		
+//		transform->Position.X = i * 28 - 200;
+//		transform->Position.Y = (i % 5) * 40;
+//		sprite->Origin = Vector2{0.5f, 0.5f};
+//		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
+//	}
 }
 //-----------------------------------------------------------------------
 void TestAppGame::Update()
@@ -142,20 +119,20 @@ void TestAppGame::Update()
 			value = -1.0f;
 		}
 
-	for (auto gameObject: gameWorld.QueryComponents<CanvasItem, Transform2D>())
-	{
-		if (gameObject->ID() == mainCameraID) {
-			continue;
-		}
-	
-		auto transform = gameObject->Component<Transform2D>();
-		transform->Position.X += 1.0f;
-		if (transform->Position.X > 350.0f) {
-			transform->Position.X = -140.0f;
-		}
-		transform->Scale.X = transform->Scale.Y = 2.0f;//(0.5f + (value * 0.5f));
-		transform->Rotation = MathConstants<float>::Pi() * value;
-	}
+//	for (auto gameObject: gameWorld.QueryComponents<CanvasItem, Transform2D>())
+//	{
+//		if (gameObject->ID() == mainCameraID) {
+//			continue;
+//		}
+//	
+//		auto transform = gameObject->Component<Transform2D>();
+//		transform->Position.X += 1.0f;
+//		if (transform->Position.X > 350.0f) {
+//			transform->Position.X = -140.0f;
+//		}
+//		transform->Scale.X = transform->Scale.Y = 2.0f;//(0.5f + (value * 0.5f));
+//		transform->Rotation = MathConstants<float>::Pi() * value;
+//	}
 	
 	{
 		auto mouse = gameHost->Mouse();
@@ -208,19 +185,20 @@ void TestAppGame::DrawSprites()
 //-----------------------------------------------------------------------
 void TestAppGame::Draw()
 {
-	graphicsContext->SetRenderTarget(renderTarget);
+	constexpr bool enableFxaa = true;
+
+	if (enableFxaa) {
+		graphicsContext->SetRenderTarget(renderTarget);
+	}
+	
 	graphicsContext->Clear(Color::CornflowerBlue);
 	
+	graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();
 	
-	graphicsContext->SetRenderTarget();
-	graphicsContext->Clear(Color::CornflowerBlue);
-	
-	graphicsContext->SetTexture(0, renderTarget);
-	graphicsContext->SetInputLayout(inputLayout);
-	graphicsContext->SetVertexBuffer(vertexBuffer);
-	effectPass->Apply();
-	graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList, indexBuffer, indexBuffer->IndexCount());
+	if (enableFxaa) {
+		fxaa->Draw(*graphicsContext, renderTarget);
+	}
 	
 	graphicsContext->Present();
 }
