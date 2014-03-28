@@ -237,7 +237,11 @@
       '../include/Pomdog/Graphics/detail/EffectBinaryParameter.hpp',
       '../include/Pomdog/Graphics/detail/ShaderBytecode.hpp',
       '../include/Pomdog/Input/Mouse.hpp',
+      '../src/Application/Clock.cpp',
+      '../src/Application/Clock.hpp',
+      '../src/Application/DurationSeconds.hpp',
       '../src/Application/SystemEventDispatcher.hpp',
+      '../src/Application/TimeSource.hpp',
       '../src/Content/AssetManager.cpp',
       '../src/Content/EffectLoader.cpp',
       '../src/Content/TextureLoader.cpp',
@@ -335,6 +339,13 @@
       '../src/Platform.Cocoa/CocoaOpenGLViewDelegate.mm',
       '../src/Platform.Cocoa/CocoaWindowDelegate.hpp',
       '../src/Platform.Cocoa/CocoaWindowDelegate.mm',
+      '../src/Platform.Cocoa/TimeSourceCocoa.cpp',
+      '../src/Platform.Cocoa/TimeSourceCocoa.hpp',
+    ],
+    'pomdog_library_win32_sources': [
+      '../src/Platform.Win32/TimeSourceWin32.cpp',
+      '../src/Platform.Win32/TimeSourceWin32.hpp',
+      '../src/Platform.Win32/Win32Prerequisites.hpp',
     ],
   },
   'targets': [
@@ -381,12 +392,12 @@
               '-ld3dcompiler.lib',
             ],
           },
-        }],
+        }], # OS == "d3d11"
         ['renderer == "opengl"', {
           'sources': [
             '<@(pomdog_library_opengl4_sources)',
           ],
-        }],
+        }], # OS == "opengl"
         ['OS == "mac" and renderer == "opengl"', {
           'sources': [
             '<@(pomdog_library_cocoa_sources)',
@@ -398,6 +409,29 @@
             ],
           },
         }], # OS == "mac"
+        ['OS == "win"', {
+          'sources': [
+            '<@(pomdog_library_win32_sources)',
+          ],
+          'link_settings': {
+            'libraries': [
+              #'-lwinmm.lib',
+              #'-lws2_32.lib',
+              #'-lkernel32.lib',
+              #'-luser32.lib',
+              #'-lgdi32.lib',
+              #'-lwinspool.lib',
+              #'-lcomdlg32.lib',
+              #'-ladvapi32.lib',
+              #'-lshell32.lib',
+              #'-lole32.lib',
+              #'-loleaut32.lib',
+              #'-luuid.lib',
+              #'-lodbc32.lib',
+              #'-lodbccp32.lib',
+            ],
+          },
+        }], # OS == "win"
       ],
     },
     {
@@ -420,7 +454,7 @@
         '../include/Pomdog/Pomdog.hpp',
       ],
       'conditions': [
-        ['renderer == "direct3d11"', {
+        ['renderer == "d3d11"', {
           'sources': [
           ],
           'link_settings': {
@@ -430,12 +464,12 @@
               '-ld3dcompiler.lib',
             ],
           },
-        }],
+        }], # OS == "d3d11"
         ['renderer == "opengl"', {
           'sources': [
             '<@(pomdog_library_opengl4_sources)',
           ],
-        }],
+        }], # OS == "opengl"
         ['OS == "mac" and renderer == "opengl"', {
           'sources': [
             '<@(pomdog_library_cocoa_sources)',
@@ -447,6 +481,29 @@
             ],
           },
         }], # OS == "mac"
+        ['OS == "win"', {
+          'sources': [
+            '<@(pomdog_library_win32_sources)',
+          ],
+          'link_settings': {
+            'libraries': [
+              #'-lwinmm.lib',
+              #'-lws2_32.lib',
+              #'-lkernel32.lib',
+              #'-luser32.lib',
+              #'-lgdi32.lib',
+              #'-lwinspool.lib',
+              #'-lcomdlg32.lib',
+              #'-ladvapi32.lib',
+              #'-lshell32.lib',
+              #'-lole32.lib',
+              #'-loleaut32.lib',
+              #'-luuid.lib',
+              #'-lodbc32.lib',
+              #'-lodbccp32.lib',
+            ],
+          },
+        }], # OS == "win"
       ],
       'xcode_settings': {
         'INFOPLIST_FILE': '../src/Platform.Cocoa/Xcode/Pomdog-Info.plist',

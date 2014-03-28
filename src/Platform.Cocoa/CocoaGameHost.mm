@@ -24,6 +24,7 @@
 #include "../RenderSystem/PresentationParameters.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
+#include "../Application/Clock.hpp"
 #include "../Utility/MakeUnique.hpp"
 #include "CocoaMouse.hpp"
 
@@ -131,6 +132,8 @@ public:
 	void ProcessSystemEvents(Event const& event);
 
 private:
+	Clock clock;
+
 	//std::weak_ptr<Game> game;
 	std::shared_ptr<CocoaGameWindow> gameWindow;
 
@@ -203,9 +206,12 @@ void CocoaGameHost::Impl::Run(std::weak_ptr<Game> weakGame)
 	if (!game->CompleteInitialize()) {
 		return;
 	}
+	
+	clock.Restart();
 
 	while (!exitRequest)
 	{
+		clock.Tick();
 		DoEvents();
 		game->Update();
 		RenderFrame(*game);

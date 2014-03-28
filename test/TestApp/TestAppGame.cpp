@@ -149,9 +149,9 @@ void TestAppGame::Update()
 void TestAppGame::DrawSprites()
 {
 	auto camera = gameWorld.Component<Camera2D>(mainCameraID);
-	auto transform = gameWorld.Component<Transform2D>(mainCameraID);
+	auto transformCamera = gameWorld.Component<Transform2D>(mainCameraID);
 	
-	auto vierMatrix3D = CreateViewMatrix3D(*transform, *camera);;
+	auto vierMatrix3D = CreateViewMatrix3D(*transformCamera, *camera);;
 	auto projectionMatrix3D = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
 	
 	POMDOG_ASSERT(primitiveGrid);
@@ -160,7 +160,7 @@ void TestAppGame::DrawSprites()
 	POMDOG_ASSERT(primitiveAxes);
 	primitiveAxes->Draw(*graphicsContext, vierMatrix3D * projectionMatrix3D);
 	
-	auto viewMatrix2D = CreateViewMatrix2D(*transform, *camera);
+	auto viewMatrix2D = CreateViewMatrix2D(*transformCamera, *camera);
 	
 	POMDOG_ASSERT(spriteRenderer);
 	spriteRenderer->Begin(viewMatrix2D);
