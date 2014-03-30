@@ -16,6 +16,7 @@
 #include <memory>
 #include <vector>
 #include <Pomdog/Config/Export.hpp>
+#include "Transform2D.hpp"
 
 namespace Pomdog {
 
@@ -50,10 +51,15 @@ public:
 	
 	std::vector<std::shared_ptr<GameObject>> Children() const;
 	
+	Transform2D & Transform();
+	
+	Transform2D const& Transform() const;
+	
 private:
 	std::vector<std::shared_ptr<GameObject>> children;
 	std::weak_ptr<GameObject> weakParent;
 	std::weak_ptr<GameObject> weakSelf;
+	Transform2D transform;
 };
 
 /// @}

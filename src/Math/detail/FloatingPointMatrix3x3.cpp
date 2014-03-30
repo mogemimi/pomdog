@@ -221,19 +221,19 @@ T const& FloatingPointMatrix3x3<T>::operator()(std::size_t row, std::size_t colu
 	return m[row][column];
 }
 //-----------------------------------------------------------------------
-template <typename T>
-std::array<T, 3> const& FloatingPointMatrix3x3<T>::operator[](std::size_t row) const
-{
-	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix3x3, subscript out of range");
-	return m[row];
-}
+//template <typename T>
+//std::array<T, 3> const& FloatingPointMatrix3x3<T>::operator[](std::size_t row) const
+//{
+//	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix3x3, subscript out of range");
+//	return m[row];
+//}
 //-----------------------------------------------------------------------
-template <typename T>
-std::array<T, 3> & FloatingPointMatrix3x3<T>::operator[](std::size_t row)
-{
-	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix3x3, subscript out of range");
-	return m[row];
-}
+//template <typename T>
+//std::array<T, 3> & FloatingPointMatrix3x3<T>::operator[](std::size_t row)
+//{
+//	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix3x3, subscript out of range");
+//	return m[row];
+//}
 //-----------------------------------------------------------------------
 template <typename T>
 void FloatingPointMatrix3x3<T>::SetScale(FloatingPointVector3<T> const& scale)
@@ -347,7 +347,7 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
 
 			POMDOG_ASSERT(s < 2);
 			POMDOG_ASSERT(t < 2);
-			minor[s][t] = m[i][j];
+			minor(s, t) = m[i][j];
 			++t;
 		}
 		++s;
@@ -378,8 +378,8 @@ void
 FloatingPointMatrix3x3<T>::CreateTranslation(FloatingPointVector2<T> const& position, FloatingPointMatrix3x3 & result)
 {
 	result = Identity;
-	result[2][0] = position.X;
-	result[2][1] = position.Y;
+	result(2, 0) = position.X;
+	result(2, 1) = position.Y;
 }
 //-----------------------------------------------------------------------
 template <typename T>

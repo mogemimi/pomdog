@@ -98,15 +98,15 @@ void TestAppGame::Initialize()
 		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
 	}
 	
-//	for (int i = 0; i < 10; ++i)
+//	for (int i = 0; i < 5000; ++i)
 //	{
 //		auto gameObject = gameWorld.CreateObject();
 //		gameObject->AddComponent<CanvasItem>();
 //		auto transform = gameObject->AddComponent<Transform2D>();
 //		auto sprite = gameObject->AddComponent<Sprite>();
 //		
-//		transform->Position.X = i * 28 - 200;
-//		transform->Position.Y = (i % 5) * 40;
+//		transform->Position.X = i * 28 - 200 + (std::rand()%40);
+//		transform->Position.Y = (i % 5) * 40 + (std::rand()%30);
 //		sprite->Origin = Vector2{0.5f, 0.5f};
 //		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
 //	}
@@ -128,8 +128,8 @@ void TestAppGame::Update()
 //	
 //		auto transform = gameObject->Component<Transform2D>();
 //		transform->Position.X += 1.0f;
-//		if (transform->Position.X > 350.0f) {
-//			transform->Position.X = -140.0f;
+//		if (transform->Position.X > 480.0f) {
+//			transform->Position.X = -450.0f;
 //		}
 //		transform->Scale.X = transform->Scale.Y = 2.0f;//(0.5f + (value * 0.5f));
 //		transform->Rotation = MathConstants<float>::Pi() * value;
@@ -176,9 +176,10 @@ void TestAppGame::DrawSprites()
 		auto transform = gameObject->Component<Transform2D>();
 		auto sprite = gameObject->Component<Sprite>();
 		
-		float layerDepth = 0.0f;
+		constexpr float layerDepth = 0.0f;
 
-		spriteRenderer->Draw(texture, transform->Position, transform->Scale, transform->Rotation, sprite->Subrect, sprite->Origin, layerDepth);
+		spriteRenderer->Draw(texture, transform->Position, sprite->Subrect,
+			Color::White, transform->Rotation, sprite->Origin, transform->Scale, layerDepth);
 	}
 	
 	spriteRenderer->End();

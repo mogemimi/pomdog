@@ -179,19 +179,19 @@ T const& FloatingPointMatrix2x2<T>::operator()(std::size_t row, std::size_t colu
 	return m[row][column];
 }
 //-----------------------------------------------------------------------
-template <typename T>
-std::array<T, 2> const& FloatingPointMatrix2x2<T>::operator[](std::size_t row) const
-{
-	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix2x2, subscript out of range");
-	return m[row];
-}
+//template <typename T>
+//std::array<T, 2> const& FloatingPointMatrix2x2<T>::operator[](std::size_t row) const
+//{
+//	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix2x2, subscript out of range");
+//	return m[row];
+//}
 //-----------------------------------------------------------------------
-template <typename T>
-std::array<T, 2> & FloatingPointMatrix2x2<T>::operator[](std::size_t row)
-{
-	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix2x2, subscript out of range");
-	return m[row];
-}
+//template <typename T>
+//std::array<T, 2> & FloatingPointMatrix2x2<T>::operator[](std::size_t row)
+//{
+//	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix2x2, subscript out of range");
+//	return m[row];
+//}
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::Concatenate(FloatingPointMatrix2x2 const& other) const

@@ -69,19 +69,19 @@ T & FloatingPointMatrix4x4<T>::operator()(std::size_t row, std::size_t column)
 	return m[row][column];
 }
 //-----------------------------------------------------------------------
-template <typename T>
-std::array<T, 4> const& FloatingPointMatrix4x4<T>::operator[](std::size_t row) const
-{
-	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix4x4, subscript out of range");
-	return m[row];
-}
+//template <typename T>
+//std::array<T, 4> const& FloatingPointMatrix4x4<T>::operator[](std::size_t row) const
+//{
+//	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix4x4, subscript out of range");
+//	return m[row];
+//}
 //-----------------------------------------------------------------------
-template <typename T>
-std::array<T, 4> & FloatingPointMatrix4x4<T>::operator[](std::size_t row)
-{
-	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix4x4, subscript out of range");
-	return m[row];
-}
+//template <typename T>
+//std::array<T, 4> & FloatingPointMatrix4x4<T>::operator[](std::size_t row)
+//{
+//	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix4x4, subscript out of range");
+//	return m[row];
+//}
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator*=(FloatingPointMatrix4x4 const& other)
@@ -416,7 +416,7 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix4x4<T>::Minor3x3(std::size_t row, s
 			if (column == j)
 				continue;
 
-			minor[s][t] = this->m[i][j];
+			minor(s, t) = this->m[i][j];
 			++t;
 		}
 		++s;

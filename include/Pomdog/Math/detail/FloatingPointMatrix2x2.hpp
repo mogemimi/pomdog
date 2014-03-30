@@ -85,13 +85,6 @@ public:
 	// Function-call operators:
 	T const& operator()(std::size_t row, std::size_t column) const;
 	T & operator()(std::size_t row, std::size_t column);
-	
-	// Subscript operators:
-	///@brief Array-indexing support.
-	std::array<T, 2> const& operator[](std::size_t row) const;
-
-	///@brief Array-indexing support.
-	std::array<T, 2> & operator[](std::size_t row);
 
 	///@~Japanese
 	/// @brief 指定された行列を結合します。2x2 の正方行列の積を計算します。

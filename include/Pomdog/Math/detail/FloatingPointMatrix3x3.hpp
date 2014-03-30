@@ -89,13 +89,6 @@ public:
 	T const& operator()(std::size_t row, std::size_t column) const;
 	T & operator()(std::size_t row, std::size_t column);
 
-	// Subscript operators:
-	///@brief Array-indexing support.
-	std::array<T, 3> const& operator[](std::size_t row) const;
-	
-	///@brief Array-indexing support.
-	std::array<T, 3> & operator[](std::size_t row);
-
 	///@~Japanese
 	/// @brief スケールベクトルを設定します。
 	void SetScale(FloatingPointVector3<T> const& scale);

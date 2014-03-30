@@ -29,8 +29,21 @@ public:
 	void Begin(Matrix3x3 const& transformMatrix);
 	
 	void Draw(std::shared_ptr<Texture2D> const& texture,
-		Vector2 const& position, Vector2 const& scale, Radian<float> const& rotation,
-		Rectangle const& sourceRect, Vector2 const& originPivot, float layerDepth);
+		Rectangle const& sourceRect, Color const& color);
+		
+	void Draw(std::shared_ptr<Texture2D> const& texture,
+		Vector2 const& position, Color const& color);
+	
+	void Draw(std::shared_ptr<Texture2D> const& texture,
+		Vector2 const& position, Rectangle const& sourceRect, Color const& color);
+	
+	void Draw(std::shared_ptr<Texture2D> const& texture,
+		Vector2 const& position, Rectangle const& sourceRect, Color const& color,
+		Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth);
+	
+	void Draw(std::shared_ptr<Texture2D> const& texture,
+		Vector2 const& position, Rectangle const& sourceRect, Color const& color,
+		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
 		
 	void End();
 	

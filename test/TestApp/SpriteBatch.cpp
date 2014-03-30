@@ -7,6 +7,7 @@
 //
 
 #include "SpriteBatch.hpp"
+#include <algorithm>
 #include <vector>
 
 namespace TestApp {
@@ -62,8 +63,12 @@ public:
 	void Begin(Matrix3x3 const& transformMatrix);
 	
 	void Draw(std::shared_ptr<Texture2D> const& texture,
-		Vector2 const& position, Vector2 const& scale, Radian<float> const& rotation,
-		Rectangle const& sourceRect, Vector2 const& originPivot, float layerDepth);
+		Vector2 const& position, Color const& color,
+		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
+	
+	void Draw(std::shared_ptr<Texture2D> const& texture,
+		Vector2 const& position, Rectangle const& sourceRect, Color const& color,
+		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
 	
 	void End();
 	
@@ -170,6 +175,10 @@ void SpriteBatch::Impl::Flush()
 		
 		auto & sprites = spriteQueues[queuePos];
 		
+		std::sort(std::begin(sprites), std::end(sprites), [](SpriteInfo const& a, SpriteInfo const& b) {
+			return a.OriginRotationLayerDepth.W > b.OriginRotationLayerDepth.W;
+		});
+		
 		DrawInstance(textures[queuePos], sprites);
 		sprites.clear();
 	}
@@ -181,9 +190,11 @@ void SpriteBatch::Impl::Flush()
 void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, std::vector<SpriteInfo> const& sprites)
 {
 	POMDOG_ASSERT(texture);
+	POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
 	
 	{
-		using SpriteBatchConstants = std::array<Vector4, 4>;// (mat4x3(mat3x3(Projection2D)), vec4(InverseTexturePixelWidth.xy, 0, 0))
+		// (mat4x3(mat3x3(Projection2D)), vec4(InverseTexturePixelWidth.xy, 0, 0))
+		using SpriteBatchConstants = std::array<Vector4, 4>;
 		
 		POMDOG_ASSERT(texture->Width() > 0);
 		POMDOG_ASSERT(texture->Height() > 0);
@@ -234,7 +245,8 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
 }
 //-----------------------------------------------------------------------
 void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
-	Vector2 const& position, Vector2 const& scale, Radian<float> const& rotation, Rectangle const& sourceRect, Vector2 const& originPivot, float layerDepth)
+	Vector2 const& position, Color const& color,
+	Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
 {
 	if (scale.X == 0.0f || scale.Y == 0.0f) {
 		return;
@@ -245,6 +257,42 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 	if (spriteQueues.empty() || (textures.back() != texture)) {
 		textures.push_back(texture);
 		spriteQueues.push_back({});
+		spriteQueues.back().reserve(MinBatchSize);
+	}
+	
+	POMDOG_ASSERT(layerDepth >= 0.0f);
+	POMDOG_ASSERT(layerDepth <= 1.0f);
+	
+	POMDOG_ASSERT(texture->Width() > 0);
+	POMDOG_ASSERT(texture->Height() > 0);
+	
+	SpriteInfo info;
+	info.Translation = Vector4(position.X, position.Y, scale.X, scale.Y);
+	info.SourceRect = Vector4(0, 0, texture->Width(), texture->Height());
+	info.OriginRotationLayerDepth = Vector4(originPivot.X, originPivot.Y, rotation.value, layerDepth);
+	info.Color = color.ToVector4();
+	
+	spriteQueues.back().push_back(std::move(info));
+	POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
+}
+//-----------------------------------------------------------------------
+void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
+	Vector2 const& position, Rectangle const& sourceRect, Color const& color,
+	Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
+{
+	if (scale.X == 0.0f || scale.Y == 0.0f) {
+		return;
+	}
+	
+	POMDOG_ASSERT(texture);
+
+	if (spriteQueues.empty()
+		|| (textures.back() != texture)
+		|| (spriteQueues.back().size() >= MaxBatchSize))
+	{
+		textures.push_back(texture);
+		spriteQueues.push_back({});
+		spriteQueues.back().reserve(MinBatchSize);
 	}
 	
 	POMDOG_ASSERT(layerDepth >= 0.0f);
@@ -257,9 +305,10 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 	info.Translation = Vector4(position.X, position.Y, scale.X, scale.Y);
 	info.SourceRect = Vector4(sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
 	info.OriginRotationLayerDepth = Vector4(originPivot.X, originPivot.Y, rotation.value, layerDepth);
-	info.Color = Vector4(1, 1, 1, 1);
+	info.Color = color.ToVector4();
 	
 	spriteQueues.back().push_back(std::move(info));
+	POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -285,10 +334,40 @@ void SpriteBatch::End()
 }
 //-----------------------------------------------------------------------
 void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
-	Vector2 const& position, Vector2 const& scale, Radian<float> const& rotation, Rectangle const& sourceRect, Vector2 const& originPivot, float layerDepth)
+	Rectangle const& sourceRect, Color const& color)
 {
 	POMDOG_ASSERT(impl);
-	impl->Draw(texture, position, scale, rotation, sourceRect, originPivot, layerDepth);
+	impl->Draw(texture, {0, 0}, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
+}
+//-----------------------------------------------------------------------
+void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
+	Vector2 const& position, Color const& color)
+{
+	POMDOG_ASSERT(impl);
+	impl->Draw(texture, {0, 0}, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
+}
+//-----------------------------------------------------------------------
+void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
+	Vector2 const& position, Rectangle const& sourceRect, Color const& color)
+{
+	POMDOG_ASSERT(impl);
+	impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
+}
+//-----------------------------------------------------------------------
+void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
+	Vector2 const& position, Rectangle const& sourceRect, Color const& color,
+	Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth)
+{
+	POMDOG_ASSERT(impl);
+	impl->Draw(texture, position, sourceRect, color, rotation, originPivot, {scale, scale}, layerDepth);
+}
+//-----------------------------------------------------------------------
+void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
+	Vector2 const& position, Rectangle const& sourceRect, Color const& color,
+	Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
+{
+	POMDOG_ASSERT(impl);
+	impl->Draw(texture, position, sourceRect, color, rotation, originPivot, scale, layerDepth);
 }
 //-----------------------------------------------------------------------
 }// namespace TestApp

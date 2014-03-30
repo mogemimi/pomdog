@@ -35,8 +35,14 @@ public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");
 	typedef T value_type;
 	
+	//union {
+	//	std::array<std::array<T, 4>, 4> m;
+	//#if defined __i386__ || defined __x86_64__
+	//	std::array<__m128, 4>
+	//#endif
+	//};
 	std::array<std::array<T, 4>, 4> m;
-
+	
 private:
 	static constexpr std::size_t RowSize = 4;
 	static constexpr std::size_t ColumnSize = 4;
@@ -87,13 +93,6 @@ public:
 	T const& operator()(std::size_t row, std::size_t column) const;
 	T & operator()(std::size_t row, std::size_t column);
 	
-	// Subscript operators:
-	///@brief Array-indexing support.
-	std::array<T, 4> const& operator[](std::size_t row) const;
-	
-	///@brief Array-indexing support.
-	std::array<T, 4> & operator[](std::size_t row);
-
 	///@~Japanese
 	/// @brief 平行移動ベクトルを設定します。
 	void SetTranslation(FloatingPointVector3<T> const&);

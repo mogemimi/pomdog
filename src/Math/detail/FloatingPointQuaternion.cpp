@@ -295,10 +295,10 @@ void CreateFromRotationMatrixImplementation(MatrixClass const& rotation, Floatin
 	// Algorithm from the article "Quaternion Calculus and Fast Animation"
 	// by Ken Shoemake, SIGGRAPH 1987 Course Notes.
 
-	static_assert(std::is_same<decltype(rotation[0][0]), T const&>::value ||
-		std::is_same<decltype(rotation[0][0]), T>::value, "");
+	static_assert(std::is_same<decltype(rotation(0, 0)), T const&>::value ||
+		std::is_same<decltype(rotation(0, 0)), T>::value, "");
 
-	auto const trace = rotation[0][0] + rotation[1][1] + rotation[2][2];
+	auto const trace = rotation(0, 0) + rotation(1, 1) + rotation(2, 2);
 	constexpr T half = static_cast<T>(0.5);
 
 	if (trace > 0)
@@ -306,16 +306,16 @@ void CreateFromRotationMatrixImplementation(MatrixClass const& rotation, Floatin
 		auto root = std::sqrt(trace + 1);
 		result.W = half * root;
 		root = half / root;
-		result.X = (rotation[2][1] - rotation[1][2]) * root;
-		result.Y = (rotation[0][2] - rotation[2][0]) * root;
-		result.Z = (rotation[1][0] - rotation[0][1]) * root;
+		result.X = (rotation(2, 1) - rotation(1, 2)) * root;
+		result.Y = (rotation(0, 2) - rotation(2, 0)) * root;
+		result.Z = (rotation(1, 0) - rotation(0, 1)) * root;
 	}
 	else
 	{
 		std::size_t i = 0;
-		if (rotation[1][1] > rotation[0][0])
+		if (rotation(1, 1) > rotation(0, 0))
 			i = 1;
-		if (rotation[2][2] > rotation[i][i])
+		if (rotation(2, 2) > rotation(i, i))
 			i = 2;
 
 		// (i, j, k) = (0, 1, 2), (1, 2, 0) or (2, 0, 1).
@@ -326,13 +326,13 @@ void CreateFromRotationMatrixImplementation(MatrixClass const& rotation, Floatin
 		std::size_t const j = indices[i];
 		std::size_t const k = indices[j];
 		
-		auto root = std::sqrt(rotation[i][i] - rotation[j][j] - rotation[k][k] + static_cast<T>(1));
+		auto root = std::sqrt(rotation(i, i) - rotation(j, j) - rotation(k, k) + static_cast<T>(1));
 		std::array<T*, 3> const quat = {{ &result.X, &result.Y, &result.Z }};
 		*quat[i] = half * root;
 		root = half / root;
-		result.W = (rotation[k][j] - rotation[j][k]) * root;
-		*quat[j] = (rotation[j][i] + rotation[i][j]) * root;
-		*quat[k] = (rotation[k][i] + rotation[i][k]) * root;
+		result.W = (rotation(k, j) - rotation(j, k)) * root;
+		*quat[j] = (rotation(j, i) + rotation(i, j)) * root;
+		*quat[k] = (rotation(k, i) + rotation(i, k)) * root;
 	}
 }
 //-----------------------------------------------------------------------
