@@ -14,6 +14,7 @@
 #endif
 
 #include "OpenGLPrerequisites.hpp"
+#include <initializer_list>
 #include <vector>
 #include <limits>
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
@@ -62,6 +63,8 @@ public:
 	InputLayoutGL4() = delete;
 	
 	explicit InputLayoutGL4(ShaderProgramGL4 const& shaderProgram);
+	
+	InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::initializer_list<VertexBufferBinding> && vertexBufferBinding);
 	
 	InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::vector<VertexBufferBinding> const& vertexBufferBinding);
 	

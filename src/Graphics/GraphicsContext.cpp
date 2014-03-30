@@ -394,11 +394,21 @@ void GraphicsContext::SetVertexBuffer(std::shared_ptr<VertexBuffer> const& verte
 //-----------------------------------------------------------------------
 void GraphicsContext::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers)
 {
-	POMDOG_ASSERT(vertexBuffers.empty());
+	POMDOG_ASSERT(!vertexBuffers.empty());
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);
 	
 	impl->vertexBuffers = vertexBuffers;
+	impl->nativeContext->SetVertexBuffers(impl->vertexBuffers);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> && vertexBuffers)
+{
+	POMDOG_ASSERT(!vertexBuffers.empty());
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
+	
+	impl->vertexBuffers = std::move(vertexBuffers);
 	impl->nativeContext->SetVertexBuffers(impl->vertexBuffers);
 }
 //-----------------------------------------------------------------------

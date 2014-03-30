@@ -23,6 +23,7 @@ using namespace Pomdog;
 class PrimitiveAxes;
 class PrimitiveGrid;
 class SpriteRenderer;
+class SpriteBatch;
 class FXAA;
 
 class TestAppGame: public Game {
@@ -47,7 +48,7 @@ private:
 	std::shared_ptr<Texture2D> texture;
 	std::unique_ptr<PrimitiveAxes> primitiveAxes;
 	std::unique_ptr<PrimitiveGrid> primitiveGrid;
-	std::unique_ptr<SpriteRenderer> spriteRenderer;
+	std::unique_ptr<SpriteBatch> spriteRenderer;
 	
 	std::shared_ptr<SamplerState> samplerPoint;
 	std::shared_ptr<RenderTarget2D> renderTarget;

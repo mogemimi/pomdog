@@ -10,4 +10,18 @@
 
 namespace Pomdog {
 
+Camera2D::Camera2D()
+	: zoom(1.0f)
+{}
+//-----------------------------------------------------------------------
+void Camera2D::Zoom(float value)
+{
+	this->zoom = std::max(value, std::numeric_limits<float>::epsilon());
+}
+//-----------------------------------------------------------------------
+float Camera2D::Zoom() const
+{
+	return this->zoom;
+}
+
 }// namespace Pomdog

@@ -453,13 +453,48 @@ struct TypesafeHelperGL4::OpenGLGetTraits<VertexArrayGL4> {
 //-----------------------------------------------------------------------
 InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram)
 	: InputLayoutGL4(shaderProgram, {})
-{
-}
+{}
 //-----------------------------------------------------------------------
-InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::vector<VertexBufferBinding> const& vertexBinding)
+InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram,
+	std::initializer_list<VertexBufferBinding> && vertexBinding)
 {
 	// Build vertex array object
-	inputLayout = ([]{
+	inputLayout = ([] {
+		VertexArrayGL4 vertexArray;
+		glGenVertexArrays(1, vertexArray.Data());
+		return std::move(vertexArray);
+	})();
+	
+	auto const oldInputLayout = TypesafeHelperGL4::Get<VertexArrayGL4>();
+	ScopeGuard scope([&oldInputLayout]{
+		glBindVertexArray(oldInputLayout.value);
+	});
+	
+	glBindVertexArray(inputLayout->value);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glBindVertexArray", __FILE__, __LINE__);
+	#endif
+	
+	auto const attributes = BuildAttributes(shaderProgram);
+	
+	if (vertexBinding.size() == 0) {
+		inputBindings = BuildInputBindings(attributes);
+	}
+	else {
+		inputBindings = BuildInputBindings(vertexBinding, attributes);
+	}
+
+	for (auto& bindings: inputBindings) {
+		EnableAttributes(bindings.InputElements);
+	}
+}
+//-----------------------------------------------------------------------
+InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram,
+	std::vector<VertexBufferBinding> const& vertexBinding)
+{
+	// Build vertex array object
+	inputLayout = ([] {
 		VertexArrayGL4 vertexArray;
 		glGenVertexArrays(1, vertexArray.Data());
 		return std::move(vertexArray);
@@ -479,10 +514,10 @@ InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::vecto
 	auto const attributes = BuildAttributes(shaderProgram);
 	
 	if (vertexBinding.empty()) {
-		this->inputBindings = BuildInputBindings(attributes);
+		inputBindings = BuildInputBindings(attributes);
 	}
 	else {
-		this->inputBindings = BuildInputBindings(vertexBinding, attributes);
+		inputBindings = BuildInputBindings(vertexBinding, attributes);
 	}
 
 	for (auto& bindings: inputBindings) {

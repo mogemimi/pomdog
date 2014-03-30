@@ -28,7 +28,7 @@ class POMDOG_EXPORT Sprite {
 public:
 	Rectangle Subrect;
 	Vector2 Origin;
-	//float LayerDepth; //ZOrder
+	//float LayerDepth; // Draw Order
 	
 	Sprite()
 		: Subrect(0, 0, 1.0f, 1.0f)

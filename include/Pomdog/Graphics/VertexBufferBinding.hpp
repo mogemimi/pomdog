@@ -36,10 +36,10 @@ public:
 	VertexBufferBinding(VertexDeclaration && vertexDeclaration);
 	
 	VertexBufferBinding(VertexDeclaration const& vertexDeclaration,
-		std::uint32_t vertexOffset);
+		std::uint32_t vertexOffset, std::uint32_t instanceFrequency = 0);
 
-	VertexBufferBinding(VertexDeclaration const& vertexDeclaration,
-		std::uint32_t vertexOffset, std::uint32_t instanceFrequency);
+	VertexBufferBinding(VertexDeclaration && vertexDeclaration,
+		std::uint32_t vertexOffset, std::uint32_t instanceFrequency = 0);
 };
 
 /// @}

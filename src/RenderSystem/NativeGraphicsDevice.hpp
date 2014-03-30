@@ -14,6 +14,7 @@
 #endif
 
 #include <memory>
+#include <initializer_list>
 #include <vector>
 #include <Pomdog/Utility/Noncopyable.hpp>
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
@@ -96,6 +97,12 @@ public:
 	/// @brief 入力レイアウトを作成します。
 	virtual std::unique_ptr<NativeInputLayout>
 	CreateInputLayout(NativeEffectPass & nativeEffectPass) = 0;
+	
+	///@~Japanese
+	/// @brief 入力レイアウトを作成します。
+	virtual std::unique_ptr<NativeInputLayout>
+	CreateInputLayout(NativeEffectPass & nativeEffectPass,
+		std::initializer_list<VertexBufferBinding> && vertexBufferBindings) = 0;
 	
 	///@~Japanese
 	/// @brief 入力レイアウトを作成します。

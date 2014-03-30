@@ -24,15 +24,15 @@ VertexBufferBinding::VertexBufferBinding(VertexDeclaration && vertexDeclarationI
 {}
 //-----------------------------------------------------------------------
 VertexBufferBinding::VertexBufferBinding(VertexDeclaration const& vertexDeclarationIn,
-	std::uint32_t vertexOffsetIn)
-: Declaration(vertexDeclarationIn)
-, VertexOffset(vertexOffsetIn)
-, InstanceFrequency(0)
-{}
-//-----------------------------------------------------------------------
-VertexBufferBinding::VertexBufferBinding(VertexDeclaration const& vertexDeclarationIn,
 	std::uint32_t vertexOffsetIn, std::uint32_t instanceFrequencyIn)
 : Declaration(vertexDeclarationIn)
+, VertexOffset(vertexOffsetIn)
+, InstanceFrequency(instanceFrequencyIn)
+{}
+//-----------------------------------------------------------------------
+VertexBufferBinding::VertexBufferBinding(VertexDeclaration && vertexDeclarationIn,
+	std::uint32_t vertexOffsetIn, std::uint32_t instanceFrequencyIn)
+: Declaration(std::move(vertexDeclarationIn))
 , VertexOffset(vertexOffsetIn)
 , InstanceFrequency(instanceFrequencyIn)
 {}

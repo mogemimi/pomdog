@@ -77,6 +77,8 @@
         '../test/TestApp/PrimitiveAxes.hpp',
         '../test/TestApp/PrimitiveGrid.cpp',
         '../test/TestApp/PrimitiveGrid.hpp',
+        '../test/TestApp/SpriteBatch.cpp',
+        '../test/TestApp/SpriteBatch.hpp',
         '../test/TestApp/SpriteRenderer.cpp',
         '../test/TestApp/SpriteRenderer.hpp',
         '../test/TestApp/TestAppGame.cpp',

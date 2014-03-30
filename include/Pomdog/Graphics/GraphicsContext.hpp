@@ -136,6 +136,10 @@ public:
 	void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers);
 
 	///@~Japanese
+	/// @brief 頂点バッファの配列を設定します。
+	void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> && vertexBuffers);
+
+	///@~Japanese
 	/// @brief グラフィックスコンテキストに設定されているテクスチャをテクスチャユニットから外します。
 	/// @param index 0 から始まるテクスチャスロットのインデックスを指定します。
 	void SetTexture(std::uint32_t index);

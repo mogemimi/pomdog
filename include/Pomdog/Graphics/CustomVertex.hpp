@@ -62,7 +62,7 @@ std::vector<VertexElement> VertexCombined()
 	return std::move(vertexElements);
 }
 
-template <typename... Elements>
+template <typename... ElementTypes>
 struct VertexElementTuple;
 
 template <typename Element>
@@ -70,10 +70,10 @@ struct VertexElementTuple<Element> {
 	Element end;
 };
 
-template <typename Head, typename... Elements>
-struct VertexElementTuple<Head, Elements...> {
+template <typename Head, typename... ElementTypes>
+struct VertexElementTuple<Head, ElementTypes...> {
 	Head first;
-	VertexElementTuple<Elements...> elements;
+	VertexElementTuple<ElementTypes...> elements;
 };
 
 }// namespace Graphics
@@ -88,7 +88,7 @@ template <typename T, typename... Arguments>
 class CustomVertex
 {
 public:
-	Details::Graphics::VertexElementTuple<T, Arguments...> vertex;
+	Details::Graphics::VertexElementTuple<T, Arguments...> Vertex;
 
 	static VertexDeclaration Declaration()
 	{

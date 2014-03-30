@@ -26,19 +26,11 @@ namespace Pomdog {
 
 class POMDOG_EXPORT Camera2D {
 public:
-	Camera2D()
-		: zoom(1.0f)
-	{}
+	Camera2D();
 	
-	void Zoom(float value)
-	{
-		this->zoom = std::max(value, std::numeric_limits<float>::epsilon());
-	}
+	void Zoom(float value);
 	
-	float Zoom() const
-	{
-		return this->zoom;
-	}
+	float Zoom() const;
 	
 private:
 	float zoom;

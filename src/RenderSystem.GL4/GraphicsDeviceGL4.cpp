@@ -103,6 +103,19 @@ GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass & nativeEffectPass)
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeInputLayout>
 GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass & nativeEffectPass,
+	std::initializer_list<VertexBufferBinding> && vertexBufferBindings)
+{
+	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(&nativeEffectPass);
+	POMDOG_ASSERT(effectPassGL4 != nullptr);
+	
+	if (!effectPassGL4) {
+		return std::unique_ptr<InputLayoutGL4>();
+	}
+	return MakeUnique<InputLayoutGL4>(effectPassGL4->GetShaderProgram(), std::move(vertexBufferBindings));
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeInputLayout>
+GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass & nativeEffectPass,
 	std::vector<VertexBufferBinding> const& vertexBufferBindings)
 {
 	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(&nativeEffectPass);

@@ -10,6 +10,7 @@
 #include <utility>
 #include "PrimitiveAxes.hpp"
 #include "PrimitiveGrid.hpp"
+#include "SpriteBatch.hpp"
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
 
@@ -65,7 +66,7 @@ void TestAppGame::Initialize()
 	
 	primitiveAxes = std::unique_ptr<PrimitiveAxes>(new PrimitiveAxes(gameHost));
 	primitiveGrid = std::unique_ptr<PrimitiveGrid>(new PrimitiveGrid(gameHost));
-	spriteRenderer = std::unique_ptr<SpriteRenderer>(new SpriteRenderer(gameHost));
+	spriteRenderer = std::unique_ptr<SpriteBatch>(new SpriteBatch(gameHost));
 	fxaa = std::unique_ptr<FXAA>(new FXAA(gameHost));
 	
 	{

@@ -14,6 +14,7 @@
 #endif
 
 #include <memory>
+#include <initializer_list>
 #include <vector>
 #include "../Config/Export.hpp"
 #include "../Utility/Noncopyable.hpp"
@@ -43,11 +44,11 @@ public:
 	
 	InputLayout(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		std::shared_ptr<EffectPass> const& effectPass);
-	
+
 	InputLayout(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		std::shared_ptr<EffectPass> const& effectPass,
 		std::vector<VertexBufferBinding> const& vertexBindings);
-	
+
 	~InputLayout();
 
 public:
