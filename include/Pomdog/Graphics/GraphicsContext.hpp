@@ -93,19 +93,19 @@ public:
 	
 	///@~Japanese
 	/// @brief ビューポートを取得します。
-	Viewport const& GetViewport() const;
+	Pomdog::Viewport const& Viewport() const;
 
 	///@~Japanese
 	/// @brief ビューポートを設定します。
-	void SetViewport(Viewport const& viewport);
+	void Viewport(Pomdog::Viewport const& viewport);
 	
 	///@~Japanese
 	/// @brief シザーテストで用いるシザー矩形を取得します。
-	Rectangle GetScissorRectangle() const;
+	Pomdog::Rectangle ScissorRectangle() const;
 	
 	///@~Japanese
 	/// @brief シザーテストで用いるシザー矩形を設定します。
-	void SetScissorRectangle(Rectangle const& rectangle);
+	void ScissorRectangle(Pomdog::Rectangle const& rectangle);
 	
 	///@~Japanese
 	/// @brief ブレンディングステートを設定します。

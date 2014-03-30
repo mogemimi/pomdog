@@ -204,7 +204,7 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
 			(texture->Height() > 0) ? (1.0f / static_cast<float>(texture->Height())): 0.0f,
 		};
 
-		auto viewport = graphicsContext->GetViewport();
+		auto viewport = graphicsContext->Viewport();
 		
 		POMDOG_ASSERT(viewport.Width() > 0.0f);
 		POMDOG_ASSERT(viewport.Height() > 0.0f);

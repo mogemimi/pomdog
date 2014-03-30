@@ -28,6 +28,8 @@
 #include "../Utility/MakeUnique.hpp"
 #include "CocoaMouse.hpp"
 
+#include "StringFormat.hpp"
+
 namespace Pomdog {
 namespace Details {
 namespace Cocoa {
@@ -207,8 +209,6 @@ void CocoaGameHost::Impl::Run(std::weak_ptr<Game> weakGame)
 		return;
 	}
 	
-	clock.Restart();
-
 	while (!exitRequest)
 	{
 		clock.Tick();

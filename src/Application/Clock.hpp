@@ -37,16 +37,8 @@ public:
 	void Tick();
 	
 	///@~Japanese
-	/// @brief クロックを再起動します。
-	void Restart();
-	
-	///@~Japanese
-	/// @brief アプリケーションが起動してから現在のフレームまでの時間（秒）を取得します。
-	TimePointSeconds Now() const;
-	
-	///@~Japanese
 	/// @brief アプリケーションが起動してから現在のフレームまでの経過時間（秒）を取得します。
-	DurationSeconds TimeSinceEpoch() const;
+	DurationSeconds TotalGameTime() const;
 	
 	///@~Japanese
 	/// @brief 現在のフレーム番号を取得します。
@@ -58,7 +50,7 @@ public:
 
 	///@~Japanese
 	/// @brief 現在のフレームレートを取得します。
-	double FrameRate() const;
+	float FrameRate() const;
 
 	///@~Japanese
 	/// @brief フレームの開始時から現在までの経過時間（秒）を取得します。

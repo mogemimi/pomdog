@@ -29,16 +29,14 @@ public:
 	void Tick();
 	
 	void Restart();
-	
-	TimePointSeconds Now() const;
-	
-	DurationSeconds TimeSinceEpoch() const;
+
+	DurationSeconds TotalGameTime() const;
 	
 	std::uint32_t FrameNumber() const;
 
 	DurationSeconds FrameDuration() const;
 
-	double FrameRate() const;
+	float FrameRate() const;
 
 	DurationSeconds ElapsedTime() const;
 
@@ -120,12 +118,7 @@ void Clock::Impl::Tick()
 	++frameNumber;
 }
 //-----------------------------------------------------------------------
-TimePointSeconds Clock::Impl::Now() const
-{
-	return TimePointSeconds{} + accumulatedCurrentTime;
-}
-//-----------------------------------------------------------------------
-DurationSeconds Clock::Impl::TimeSinceEpoch() const
+DurationSeconds Clock::Impl::TotalGameTime() const
 {
 	return accumulatedCurrentTime;
 }
@@ -140,10 +133,10 @@ DurationSeconds Clock::Impl::FrameDuration() const
 	return predictedFrameTime;
 }
 //-----------------------------------------------------------------------
-double Clock::Impl::FrameRate() const
+float Clock::Impl::FrameRate() const
 {
 	POMDOG_ASSERT(predictedFrameTime.count() != 0);
-	return 1.0 / predictedFrameTime.count();
+	return 1 / predictedFrameTime.count();
 }
 //-----------------------------------------------------------------------
 DurationSeconds Clock::Impl::ElapsedTime() const
@@ -167,22 +160,10 @@ void Clock::Tick()
 	impl->Tick();
 }
 //-----------------------------------------------------------------------
-void Clock::Restart()
+DurationSeconds Clock::TotalGameTime() const
 {
 	POMDOG_ASSERT(impl);
-	impl->Restart();
-}
-//-----------------------------------------------------------------------
-TimePointSeconds Clock::Now() const
-{
-	POMDOG_ASSERT(impl);
-	return impl->Now();
-}
-//-----------------------------------------------------------------------
-DurationSeconds Clock::TimeSinceEpoch() const
-{
-	POMDOG_ASSERT(impl);
-	return impl->TimeSinceEpoch();
+	return impl->TotalGameTime();
 }
 //-----------------------------------------------------------------------
 std::uint32_t Clock::FrameNumber() const
@@ -197,7 +178,7 @@ DurationSeconds Clock::FrameDuration() const
 	return impl->FrameDuration();
 }
 //-----------------------------------------------------------------------
-double Clock::FrameRate() const
+float Clock::FrameRate() const
 {
 	POMDOG_ASSERT(impl);
 	return impl->FrameRate();

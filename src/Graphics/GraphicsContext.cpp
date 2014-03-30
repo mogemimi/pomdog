@@ -48,7 +48,7 @@ public:
 	void BuildResources(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 	///@copydoc GraphicsContext
-	void SetViewport(Viewport const& viewport);
+	void SetViewport(Pomdog::Viewport const& viewport);
 	
 	///@copydoc GraphicsContext
 	void SetSamplerState(std::uint32_t samplerSlot, std::shared_ptr<SamplerState> const& samplerState);
@@ -75,7 +75,7 @@ public:
 	void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets);
 	
 public:
-	Viewport viewport;
+	Pomdog::Viewport viewport;
 	std::vector<std::shared_ptr<VertexBuffer>> vertexBuffers;
 	std::vector<std::shared_ptr<SamplerState>> samplerStates;
 	std::vector<std::shared_ptr<Texture>> textures;
@@ -138,7 +138,7 @@ void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const
 	}
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetViewport(Viewport const& newViewport)
+void GraphicsContext::Impl::SetViewport(Pomdog::Viewport const& newViewport)
 {
 	POMDOG_ASSERT(nativeContext);
 	POMDOG_ASSERT(newViewport.Width() > 0);
@@ -311,7 +311,7 @@ void GraphicsContext::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
 	impl->nativeContext->DrawIndexedInstanced(primitiveTopology, indexBuffer, indexCount, instanceCount);
 }
 //-----------------------------------------------------------------------
-Viewport const& GraphicsContext::GetViewport() const
+Viewport const& GraphicsContext::Viewport() const
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);
@@ -319,20 +319,20 @@ Viewport const& GraphicsContext::GetViewport() const
 	return impl->viewport;
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::SetViewport(Viewport const& viewport)
+void GraphicsContext::Viewport(Pomdog::Viewport const& viewport)
 {
 	POMDOG_ASSERT(impl);
 	impl->SetViewport(viewport);
 }
 //-----------------------------------------------------------------------
-Rectangle GraphicsContext::GetScissorRectangle() const
+Rectangle GraphicsContext::ScissorRectangle() const
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);
 	return impl->nativeContext->GetScissorRectangle();
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::SetScissorRectangle(Pomdog::Rectangle const& rectangle)
+void GraphicsContext::ScissorRectangle(Pomdog::Rectangle const& rectangle)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);

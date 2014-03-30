@@ -97,52 +97,18 @@ void TestAppGame::Initialize()
 		sprite->Origin = Vector2{0.5f, 0.5f};
 		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
 	}
-	
-//	for (int i = 0; i < 5000; ++i)
-//	{
-//		auto gameObject = gameWorld.CreateObject();
-//		gameObject->AddComponent<CanvasItem>();
-//		auto transform = gameObject->AddComponent<Transform2D>();
-//		auto sprite = gameObject->AddComponent<Sprite>();
-//		
-//		transform->Position.X = i * 28 - 200 + (std::rand()%40);
-//		transform->Position.Y = (i % 5) * 40 + (std::rand()%30);
-//		sprite->Origin = Vector2{0.5f, 0.5f};
-//		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
-//	}
 }
 //-----------------------------------------------------------------------
 void TestAppGame::Update()
 {
-	static float value = 0.0f;
-		value += 0.008f;
-		if (value > 1.0f) {
-			value = -1.0f;
-		}
-
-//	for (auto gameObject: gameWorld.QueryComponents<CanvasItem, Transform2D>())
-//	{
-//		if (gameObject->ID() == mainCameraID) {
-//			continue;
-//		}
-//	
-//		auto transform = gameObject->Component<Transform2D>();
-//		transform->Position.X += 1.0f;
-//		if (transform->Position.X > 480.0f) {
-//			transform->Position.X = -450.0f;
-//		}
-//		transform->Scale.X = transform->Scale.Y = 2.0f;//(0.5f + (value * 0.5f));
-//		transform->Rotation = MathConstants<float>::Pi() * value;
-//	}
-	
+	auto mouse = gameHost->Mouse();
 	{
-		auto mouse = gameHost->Mouse();
 		auto transform = gameWorld.Component<Transform2D>(mainCameraID);
 		auto camera = gameWorld.Component<Camera2D>(mainCameraID);
 		
 		if (transform && camera)
 		{
-			cameraView.Input(mouse->State(), graphicsContext->GetViewport().Bounds, *transform, *camera);
+			cameraView.Input(mouse->State(), graphicsContext->Viewport().Bounds, *transform, *camera);
 		}
 	}
 }

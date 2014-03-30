@@ -60,7 +60,8 @@ FXAA::FXAA(std::shared_ptr<GameHost> const& gameHost)
 	}
 	{
 		auto graphicsContext = gameHost->GraphicsContext();
-		Vector2 renderTargetSize(graphicsContext->GetViewport().Width(), graphicsContext->GetViewport().Height());
+		auto viewport = graphicsContext->Viewport();
+		Vector2 renderTargetSize(viewport.Width(), viewport.Height());
 		effectPass->Parameters("Constants")->SetValue(renderTargetSize);
 	}
 }
