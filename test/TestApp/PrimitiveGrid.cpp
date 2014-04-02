@@ -57,7 +57,7 @@ void PrimitiveGrid::Draw(GraphicsContext & graphicsContext, Matrix4x4 const& tra
 	auto gridScaling = Matrix4x4::CreateScale({gridPixelSize, gridPixelSize, gridPixelSize});
 
 	auto parameter = effectPass->Parameters("GridLayout");
-	parameter->SetValue(GridLayout{ (gridScaling * transformMatrix).Transpose(), Vector4{1.0f, 1.0f, 1.0f, 1.0f}});
+	parameter->SetValue(GridLayout{ Matrix4x4::Transpose(gridScaling * transformMatrix), Vector4{1.0f, 1.0f, 1.0f, 1.0f}});
 
 	graphicsContext.SetInputLayout(inputLayout);
 	graphicsContext.SetVertexBuffer(vertexBuffer);

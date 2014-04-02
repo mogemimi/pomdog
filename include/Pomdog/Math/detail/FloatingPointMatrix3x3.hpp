@@ -96,16 +96,8 @@ public:
 	FloatingPointVector3<T> GetScale() const;
 
 	///@~Japanese
-	/// @brief 転置行列を計算します。
-	FloatingPointMatrix3x3 Transpose() const;
-
-	///@~Japanese
 	/// @brief 行列式を計算します。
 	T Determinant() const;
-
-	///@~Japanese
-	/// @brief 余因子行列を計算します。
-	FloatingPointMatrix3x3 Adjoint() const;
 
 	///@~Japanese
 	/// @brief 指定された行列を結合します。3x3 の正方行列の積を計算します。
@@ -118,6 +110,21 @@ public:
 	///@~Japanese
 	/// @brief 2x2 の部分行列（小行列式）を取得します。
 	FloatingPointMatrix2x2<T> Minor2x2(std::size_t row, std::size_t column) const;
+
+	///@~Japanese
+	/// @brief 余因子行列を計算します。
+	static FloatingPointMatrix3x3
+	Adjoint(FloatingPointMatrix3x3 const& matrix);
+
+	///@~Japanese
+	/// @brief 転置行列を計算します。
+	static void
+	Transpose(FloatingPointMatrix3x3 const& matrix, FloatingPointMatrix3x3 & result);
+
+	///@~Japanese
+	/// @brief 転置行列を計算します。
+	static FloatingPointMatrix3x3
+	Transpose(FloatingPointMatrix3x3 const& matrix);
 
 	///@~Japanese
 	/// @brief 指定された行列の逆行列を作成します。

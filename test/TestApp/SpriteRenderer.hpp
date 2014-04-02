@@ -25,22 +25,22 @@ public:
 	
 	~SpriteRenderer();
 	
-	void Begin(Matrix3x3 const& transformMatrix);
+	void Begin(Matrix4x4 const& transformMatrix);
 	
-	void Draw(std::shared_ptr<Texture2D> const& texture,
+	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
 		Rectangle const& sourceRect, Color const& color);
 		
-	void Draw(std::shared_ptr<Texture2D> const& texture,
+	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
 		Vector2 const& position, Color const& color);
 	
-	void Draw(std::shared_ptr<Texture2D> const& texture,
+	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
 		Vector2 const& position, Rectangle const& sourceRect, Color const& color);
 	
-	void Draw(std::shared_ptr<Texture2D> const& texture,
+	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
 		Vector2 const& position, Rectangle const& sourceRect, Color const& color,
 		Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth);
 	
-	void Draw(std::shared_ptr<Texture2D> const& texture,
+	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
 		Vector2 const& position, Rectangle const& sourceRect, Color const& color,
 		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
 		

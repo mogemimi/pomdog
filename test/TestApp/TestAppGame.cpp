@@ -17,12 +17,12 @@
 namespace TestApp {
 namespace {
 
-static Matrix3x3 CreateViewMatrix2D(Transform2D const& transform, Camera2D const& camera)
-{
-	return Matrix3x3::CreateTranslation({-transform.Position.X, -transform.Position.Y})*
-		Matrix3x3::CreateRotationZ(-transform.Rotation) *
-		Matrix3x3::CreateScale({camera.Zoom(), camera.Zoom(), 1});
-}
+//static Matrix3x3 CreateViewMatrix2D(Transform2D const& transform, Camera2D const& camera)
+//{
+//	return Matrix3x3::CreateTranslation({-transform.Position.X, -transform.Position.Y})*
+//		Matrix3x3::CreateRotationZ(-transform.Rotation) *
+//		Matrix3x3::CreateScale({camera.Zoom(), camera.Zoom(), 1});
+//}
 //-----------------------------------------------------------------------
 static Matrix4x4 CreateViewMatrix3D(Transform2D const& transform, Camera2D const& camera)
 {
@@ -131,13 +131,13 @@ void TestAppGame::Update()
 		}
 	}
 	
-//	auto rootNode = gameWorld.Component<Node2D>(rootObjectID);
-//	{
-//		for (auto child: rootNode->Children()) {
-//			auto node = child->Component<Node2D>();
-//			node->Transform();
-//		}
-//	}
+	if (auto rootNode = gameWorld.Component<Node2D>(rootObjectID))
+	{
+		auto & transform = rootNode->Transform();
+		if (mouse->State().RightButton == ButtonState::Pressed) {
+			transform.Position.Y += 0.5f;
+		}
+	}
 }
 //-----------------------------------------------------------------------
 void TestAppGame::DrawSprites()
@@ -154,26 +154,31 @@ void TestAppGame::DrawSprites()
 	POMDOG_ASSERT(primitiveAxes);
 	primitiveAxes->Draw(*graphicsContext, vierMatrix3D * projectionMatrix3D);
 	
-	auto viewMatrix2D = CreateViewMatrix2D(nodeCamera->Transform(), *camera);
+	//auto viewMatrix2D = CreateViewMatrix2D(nodeCamera->Transform(), *camera);
 	
 	POMDOG_ASSERT(spriteRenderer);
-	spriteRenderer->Begin(viewMatrix2D);
-	
-	for (auto gameObject: gameWorld.QueryComponents<CanvasItem, Node2D, Sprite>())
+	spriteRenderer->Begin(vierMatrix3D);
+		
+	auto rootNode = gameWorld.Component<Node2D>(rootObjectID);
+	auto worldMatrix = Matrix4x4::CreateTranslation(Vector3(rootNode->Transform().Position, 0.0f));
 	{
-		auto canvasItem = gameObject->Component<CanvasItem>();
-		if (!canvasItem->Visibile) {
-			continue;
-		}
+		for (auto child: rootNode->Children())
+		{
+			auto canvasItem = child->Component<CanvasItem>();
+			if (!child || !canvasItem->Visibile) {
+				continue;
+			}
 		
-		auto node = gameObject->Component<Node2D>();
-		auto sprite = gameObject->Component<Sprite>();
-		auto & transform = node->Transform();
-		
-		constexpr float layerDepth = 0.0f;
+			auto node = child->Component<Node2D>();
 
-		spriteRenderer->Draw(texture, transform.Position, sprite->Subrect,
-			Color::White, transform.Rotation, sprite->Origin, transform.Scale, layerDepth);
+			auto sprite = child->Component<Sprite>();
+			auto & transform = node->Transform();
+			
+			constexpr float layerDepth = 0.0f;
+
+			spriteRenderer->Draw(texture, worldMatrix, transform.Position, sprite->Subrect,
+				Color::White, transform.Rotation, sprite->Origin, transform.Scale, layerDepth);
+		}
 	}
 	
 	spriteRenderer->End();

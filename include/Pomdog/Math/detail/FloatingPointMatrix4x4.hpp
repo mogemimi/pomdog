@@ -106,18 +106,10 @@ public:
 	///@~Japanese
 	/// @brief スケールベクトルを取得します。
 	FloatingPointVector3<T> GetScale() const;
-
-	///@~Japanese
-	/// @brief 転置行列を計算します。
-	FloatingPointMatrix4x4 Transpose() const;
 		
 	///@~Japanese
 	/// @brief 行列式を計算します。
 	T Determinant() const;
-
-	///@~Japanese
-	/// @brief 余因子行列を計算します。
-	FloatingPointMatrix4x4 Adjoint() const;
 		
 	///@~Japanese
 	/// @brief 指定された行列を結合します。4x4 の正方行列の積を計算します。
@@ -130,6 +122,21 @@ public:
 	///@~Japanese
 	/// @brief 3x3 の部分行列（小行列式）を取得します。
 	FloatingPointMatrix3x3<T> Minor3x3(std::size_t row, std::size_t column) const;
+
+	///@~Japanese
+	/// @brief 余因子行列を計算します。
+	static FloatingPointMatrix4x4
+	Adjoint(FloatingPointMatrix4x4 const& matrix);
+
+	///@~Japanese
+	/// @brief 転置行列を計算します。
+	static void
+	Transpose(FloatingPointMatrix4x4 const& matrix, FloatingPointMatrix4x4 & result);
+
+	///@~Japanese
+	/// @brief 転置行列を計算します。
+	static FloatingPointMatrix4x4
+	Transpose(FloatingPointMatrix4x4 const& matrix);
 
 	///@~Japanese
 	/// @brief 指定された行列の逆行列を作成します。

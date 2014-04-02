@@ -25,8 +25,8 @@ private:
 	{
 		Matrix4x4 WorldMatrix;
 	
-		// {xy__} = position.xy
-		// {__zw} = scale.xy
+		// {xyz_} = position.xyz
+		// {___w} = rotation
 		Vector4 Translation;
 		
 		// {xy__} = xy
@@ -34,9 +34,8 @@ private:
 		Vector4 SourceRect;
 		
 		// {xy__} = originPivot.xy
-		// {__z_} = rotation
-		// {___w} = layerDepth
-		Vector4 OriginRotationLayerDepth;
+		// {__zw} = scale.xy
+		Vector4 OriginScale;
 		
 		// {rgb_} = color.rgb
 		// {___a} = color.a
@@ -55,18 +54,17 @@ private:
 	
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<InputLayout> inputLayout;
-	Matrix3x3 transformMatrix;
 
 public:
 	explicit Impl(std::shared_ptr<GameHost> const& gameHost);
 	
-	void Begin(Matrix3x3 const& transformMatrix);
+	void Begin(Matrix4x4 const& transformMatrix);
 	
-	void Draw(std::shared_ptr<Texture2D> const& texture,
+	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
 		Vector2 const& position, Color const& color,
 		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
 	
-	void Draw(std::shared_ptr<Texture2D> const& texture,
+	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
 		Vector2 const& position, Rectangle const& sourceRect, Color const& color,
 		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
 	
@@ -79,7 +77,6 @@ private:
 //-----------------------------------------------------------------------
 SpriteRenderer::Impl::Impl(std::shared_ptr<GameHost> const& gameHost)
 	: graphicsContext(gameHost->GraphicsContext())
-	, transformMatrix(Matrix3x3::Identity)
 {
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
@@ -111,10 +108,10 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GameHost> const& gameHost)
 		std::array<SpriteInfo, MaxBatchSize> verticesCombo;
 		for (auto & spriteInfo: verticesCombo) {
 			spriteInfo = {
-				Matrix4x4::CreateScale(3.0f),
+				Matrix4x4::Identity,
+				Vector4(0.0f, 0.0f, 0.0f, 0.0f),
 				Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-				Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-				Vector4(0.5f, 0.5f, 1.0f, 0.0f),
+				Vector4(0.5f, 0.5f, 1.0f, 1.0f),
 				Vector4(1.0f, 1.0f, 1.0f, 1.0f),
 			};
 		}
@@ -152,9 +149,15 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GameHost> const& gameHost)
 #endif
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Impl::Begin(Matrix3x3 const& transformMatrixIn)
+void SpriteRenderer::Impl::Begin(Matrix4x4 const& transformMatrix)
 {
-	this->transformMatrix = transformMatrixIn;
+	auto viewport = graphicsContext->Viewport();
+	
+	alignas(16) Matrix4x4 projection = Matrix4x4::Transpose(transformMatrix *
+		Matrix4x4::CreateOrthographicLH(viewport.Width(), viewport.Height(), 0.1f, 100.0f));
+
+	auto parameter = effectPass->Parameters("Matrices");
+	parameter->SetValue(projection);
 }
 //-----------------------------------------------------------------------
 void SpriteRenderer::Impl::End()
@@ -177,7 +180,7 @@ void SpriteRenderer::Impl::Flush()
 		auto & sprites = spriteQueues[queuePos];
 		
 		std::sort(std::begin(sprites), std::end(sprites), [](SpriteInfo const& a, SpriteInfo const& b) {
-			return a.OriginRotationLayerDepth.W > b.OriginRotationLayerDepth.W;
+			return a.Translation.Z > b.Translation.Z;
 		});
 		
 		DrawInstance(textures[queuePos], sprites);
@@ -194,44 +197,16 @@ void SpriteRenderer::Impl::DrawInstance(std::shared_ptr<Texture2D> const& textur
 	POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
 	
 	{
-		// (mat4x3(mat3x3(Projection2D)), vec4(InverseTexturePixelWidth.xy, 0, 0))
-		using SpriteRendererConstants = std::array<Vector4, 4>;
-		
 		POMDOG_ASSERT(texture->Width() > 0);
 		POMDOG_ASSERT(texture->Height() > 0);
 		
-		Vector2 inverseTexturePixelWidth {
+		alignas(16) Vector2 inverseTexturePixelWidth {
 			(texture->Width() > 0) ? (1.0f / static_cast<float>(texture->Width())): 0.0f,
 			(texture->Height() > 0) ? (1.0f / static_cast<float>(texture->Height())): 0.0f,
 		};
 
-		auto viewport = graphicsContext->Viewport();
-		
-		POMDOG_ASSERT(viewport.Width() > 0.0f);
-		POMDOG_ASSERT(viewport.Height() > 0.0f);
-		
-		auto scaleX = (viewport.Width() > 0.0f) ? (2.0f/viewport.Width()): 0.0f;
-		auto scaleY = (viewport.Height() > 0.0f) ? (2.0f/viewport.Height()): 0.0f;
-		
-		Matrix3x3 projection2D {
-			scaleX, 0.0f, 0.0f,
-			0.0f, scaleY, 0.0f,
-			0.0f, 0.0f, 1.0f,
-		};
-		
-		projection2D = transformMatrix * projection2D;
-		
-		constexpr float None = 0.0f;
-		
-		alignas(16) SpriteRendererConstants info = {
-			Vector4(projection2D(0, 0), projection2D(1, 0), projection2D(2, 0), None),
-			Vector4(projection2D(0, 1), projection2D(1, 1), projection2D(2, 1), None),
-			Vector4(projection2D(0, 2), projection2D(1, 2), projection2D(2, 2), None),
-			Vector4(inverseTexturePixelWidth.X, inverseTexturePixelWidth.Y, None, None),
-		};
-		
-		auto parameter = effectPass->Parameters("SpriteBatchConstants");
-		parameter->SetValue(info);
+		auto parameter = effectPass->Parameters("TextureConstants");
+		parameter->SetValue(inverseTexturePixelWidth);
 	}
 
 	POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
@@ -245,7 +220,7 @@ void SpriteRenderer::Impl::DrawInstance(std::shared_ptr<Texture2D> const& textur
 		planeIndices, planeIndices->IndexCount(), static_cast<std::uint32_t>(sprites.size()));
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
+void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
 	Vector2 const& position, Color const& color,
 	Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
 {
@@ -268,17 +243,17 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 	POMDOG_ASSERT(texture->Height() > 0);
 	
 	SpriteInfo info;
-	info.WorldMatrix = Matrix4x4::CreateRotationZ(3.0f);
-	info.Translation = Vector4(position.X, position.Y, scale.X, scale.Y);
+	info.WorldMatrix = Matrix4x4::Transpose(worldMatrix);
+	info.Translation = Vector4(position.X, position.Y, layerDepth, rotation.value);
 	info.SourceRect = Vector4(0, 0, texture->Width(), texture->Height());
-	info.OriginRotationLayerDepth = Vector4(originPivot.X, originPivot.Y, rotation.value, layerDepth);
+	info.OriginScale = Vector4(originPivot.X, originPivot.Y, scale.X, scale.Y);
 	info.Color = color.ToVector4();
 	
 	spriteQueues.back().push_back(std::move(info));
 	POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
+void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
 	Vector2 const& position, Rectangle const& sourceRect, Color const& color,
 	Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
 {
@@ -304,10 +279,10 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 	POMDOG_ASSERT(sourceRect.Height > 0);
 	
 	SpriteInfo info;
-	info.WorldMatrix = Matrix4x4::CreateTranslation(Vector3(100, 0, 1));
-	info.Translation = Vector4(position.X, position.Y, scale.X, scale.Y);
+	info.WorldMatrix = Matrix4x4::Transpose(worldMatrix);
+	info.Translation = Vector4(position.X, position.Y, layerDepth, rotation.value);
 	info.SourceRect = Vector4(sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
-	info.OriginRotationLayerDepth = Vector4(originPivot.X, originPivot.Y, rotation.value, layerDepth);
+	info.OriginScale = Vector4(originPivot.X, originPivot.Y, scale.X, scale.Y);
 	info.Color = color.ToVector4();
 	
 	spriteQueues.back().push_back(std::move(info));
@@ -324,7 +299,7 @@ SpriteRenderer::SpriteRenderer(std::shared_ptr<GameHost> const& gameHost)
 //-----------------------------------------------------------------------
 SpriteRenderer::~SpriteRenderer() = default;
 //-----------------------------------------------------------------------
-void SpriteRenderer::Begin(Matrix3x3 const& transformMatrixIn)
+void SpriteRenderer::Begin(Matrix4x4 const& transformMatrixIn)
 {
 	POMDOG_ASSERT(impl);
 	impl->Begin(transformMatrixIn);
@@ -336,41 +311,41 @@ void SpriteRenderer::End()
 	impl->End();
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture,
+void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
 	Rectangle const& sourceRect, Color const& color)
 {
 	POMDOG_ASSERT(impl);
-	impl->Draw(texture, {0, 0}, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
+	impl->Draw(texture, worldMatrix, {0, 0}, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture,
+void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
 	Vector2 const& position, Color const& color)
 {
 	POMDOG_ASSERT(impl);
-	impl->Draw(texture, {0, 0}, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
+	impl->Draw(texture, worldMatrix, {0, 0}, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture,
+void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
 	Vector2 const& position, Rectangle const& sourceRect, Color const& color)
 {
 	POMDOG_ASSERT(impl);
-	impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
+	impl->Draw(texture, worldMatrix, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture,
+void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
 	Vector2 const& position, Rectangle const& sourceRect, Color const& color,
 	Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth)
 {
 	POMDOG_ASSERT(impl);
-	impl->Draw(texture, position, sourceRect, color, rotation, originPivot, {scale, scale}, layerDepth);
+	impl->Draw(texture, worldMatrix, position, sourceRect, color, rotation, originPivot, {scale, scale}, layerDepth);
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture,
+void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
 	Vector2 const& position, Rectangle const& sourceRect, Color const& color,
 	Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
 {
 	POMDOG_ASSERT(impl);
-	impl->Draw(texture, position, sourceRect, color, rotation, originPivot, scale, layerDepth);
+	impl->Draw(texture, worldMatrix, position, sourceRect, color, rotation, originPivot, scale, layerDepth);
 }
 //-----------------------------------------------------------------------
 }// namespace TestApp

@@ -367,17 +367,6 @@ FloatingPointVector3<T> FloatingPointMatrix4x4<T>::GetScale() const
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Transpose() const
-{
-	return FloatingPointMatrix4x4(
-		m[0][0], m[1][0], m[2][0], m[3][0],
-		m[0][1], m[1][1], m[2][1], m[3][1],
-		m[0][2], m[1][2], m[2][2], m[3][2],
-		m[0][3], m[1][3], m[2][3], m[3][3]
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
 T FloatingPointMatrix4x4<T>::Determinant() const
 {
 	///@todo 余因子(cofactor)を出したほうがたぶん速い。
@@ -426,46 +415,69 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix4x4<T>::Minor3x3(std::size_t row, s
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Adjoint() const
+FloatingPointMatrix4x4<T>
+FloatingPointMatrix4x4<T>::Adjoint(FloatingPointMatrix4x4 const& matrix)
 {
 	return FloatingPointMatrix4x4
-		(  Minor3x3(0, 0).Determinant()
-		, -Minor3x3(1, 0).Determinant()
-		,  Minor3x3(2, 0).Determinant()
-		, -Minor3x3(3, 0).Determinant()
+		(  matrix.Minor3x3(0, 0).Determinant()
+		, -matrix.Minor3x3(1, 0).Determinant()
+		,  matrix.Minor3x3(2, 0).Determinant()
+		, -matrix.Minor3x3(3, 0).Determinant()
 		
-		, -Minor3x3(0, 1).Determinant()
-		,  Minor3x3(1, 1).Determinant()
-		, -Minor3x3(2, 1).Determinant()
-		,  Minor3x3(3, 1).Determinant()
+		, -matrix.Minor3x3(0, 1).Determinant()
+		,  matrix.Minor3x3(1, 1).Determinant()
+		, -matrix.Minor3x3(2, 1).Determinant()
+		,  matrix.Minor3x3(3, 1).Determinant()
 		 
-		,  Minor3x3(0, 2).Determinant()
-		, -Minor3x3(1, 2).Determinant()
-		,  Minor3x3(2, 2).Determinant()
-		, -Minor3x3(3, 2).Determinant()
+		,  matrix.Minor3x3(0, 2).Determinant()
+		, -matrix.Minor3x3(1, 2).Determinant()
+		,  matrix.Minor3x3(2, 2).Determinant()
+		, -matrix.Minor3x3(3, 2).Determinant()
 		  
-		, -Minor3x3(0, 3).Determinant()
-		,  Minor3x3(1, 3).Determinant()
-		, -Minor3x3(2, 3).Determinant()
-		,  Minor3x3(3, 3).Determinant()
+		, -matrix.Minor3x3(0, 3).Determinant()
+		,  matrix.Minor3x3(1, 3).Determinant()
+		, -matrix.Minor3x3(2, 3).Determinant()
+		,  matrix.Minor3x3(3, 3).Determinant()
 		);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::Invert(FloatingPointMatrix4x4 const& source, FloatingPointMatrix4x4 & result)
+FloatingPointMatrix4x4<T>::Transpose(FloatingPointMatrix4x4 const& matrix, FloatingPointMatrix4x4 & result)
 {
-	auto const determinant = source.Determinant();
-	POMDOG_ASSERT_MESSAGE(0 != determinant, "This is singular matrix");
-	result = source.Adjoint() / determinant;
+	result = FloatingPointMatrix4x4(
+		matrix.m[0][0], matrix.m[1][0], matrix.m[2][0], matrix.m[3][0],
+		matrix.m[0][1], matrix.m[1][1], matrix.m[2][1], matrix.m[3][1],
+		matrix.m[0][2], matrix.m[1][2], matrix.m[2][2], matrix.m[3][2],
+		matrix.m[0][3], matrix.m[1][3], matrix.m[2][3], matrix.m[3][3]);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::Invert(FloatingPointMatrix4x4 const& source)
+FloatingPointMatrix4x4<T>::Transpose(FloatingPointMatrix4x4 const& matrix)
+{
+	return FloatingPointMatrix4x4(
+		matrix.m[0][0], matrix.m[1][0], matrix.m[2][0], matrix.m[3][0],
+		matrix.m[0][1], matrix.m[1][1], matrix.m[2][1], matrix.m[3][1],
+		matrix.m[0][2], matrix.m[1][2], matrix.m[2][2], matrix.m[3][2],
+		matrix.m[0][3], matrix.m[1][3], matrix.m[2][3], matrix.m[3][3]);
+}
+//-----------------------------------------------------------------------
+template <typename T>
+void
+FloatingPointMatrix4x4<T>::Invert(FloatingPointMatrix4x4 const& matrix, FloatingPointMatrix4x4 & result)
+{
+	auto const determinant = matrix.Determinant();
+	POMDOG_ASSERT_MESSAGE(0 != determinant, "This is singular matrix");
+	result = Adjoint(matrix) / determinant;
+}
+//-----------------------------------------------------------------------
+template <typename T>
+FloatingPointMatrix4x4<T>
+FloatingPointMatrix4x4<T>::Invert(FloatingPointMatrix4x4 const& matrix)
 {
 	FloatingPointMatrix4x4 result;
-	Invert(source, result);
+	Invert(matrix, result);
 	return std::move(result);
 }
 //-----------------------------------------------------------------------

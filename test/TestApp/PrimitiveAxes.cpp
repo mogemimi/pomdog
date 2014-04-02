@@ -44,7 +44,7 @@ void PrimitiveAxes::Draw(GraphicsContext & graphicsContext, Matrix4x4 const& tra
 	auto axesScaling = Matrix4x4::CreateScale({axesPixelSize, axesPixelSize, axesPixelSize});
 
 	auto parameter = effectPass->Parameters("Matrices");
-	parameter->SetValue((axesScaling * transformMatrix).Transpose());
+	parameter->SetValue(Matrix4x4::Transpose(axesScaling * transformMatrix));
 
 	graphicsContext.SetInputLayout(inputLayout);
 	graphicsContext.SetVertexBuffer(vertexBuffer);

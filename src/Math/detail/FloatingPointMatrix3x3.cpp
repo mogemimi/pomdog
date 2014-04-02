@@ -250,16 +250,6 @@ FloatingPointVector3<T> FloatingPointMatrix3x3<T>::GetScale() const
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::Transpose() const
-{
-	return FloatingPointMatrix3x3(
-		m[0][0], m[1][0], m[2][0],
-		m[0][1], m[1][1], m[2][1],
-		m[0][2], m[1][2], m[2][2]
-	);
-}
-//-----------------------------------------------------------------------
-template <typename T>
 T FloatingPointMatrix3x3<T>::Determinant() const
 {
 	// | m00 m01 m02 | determinant = 
@@ -278,18 +268,19 @@ T FloatingPointMatrix3x3<T>::Determinant() const
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::Adjoint() const
+FloatingPointMatrix3x3<T>
+FloatingPointMatrix3x3<T>::Adjoint(FloatingPointMatrix3x3 const& matrix)
 {
 	return FloatingPointMatrix3x3
-		(  this->Minor2x2(0, 0).Determinant()
-		, -this->Minor2x2(1, 0).Determinant()
-		,  this->Minor2x2(2, 0).Determinant()
-		, -this->Minor2x2(0, 1).Determinant()
-		,  this->Minor2x2(1, 1).Determinant()
-		, -this->Minor2x2(2, 1).Determinant()
-		,  this->Minor2x2(0, 2).Determinant()
-		, -this->Minor2x2(1, 2).Determinant()
-		,  this->Minor2x2(2, 2).Determinant()
+		(  matrix.Minor2x2(0, 0).Determinant()
+		, -matrix.Minor2x2(1, 0).Determinant()
+		,  matrix.Minor2x2(2, 0).Determinant()
+		, -matrix.Minor2x2(0, 1).Determinant()
+		,  matrix.Minor2x2(1, 1).Determinant()
+		, -matrix.Minor2x2(2, 1).Determinant()
+		,  matrix.Minor2x2(0, 2).Determinant()
+		, -matrix.Minor2x2(1, 2).Determinant()
+		,  matrix.Minor2x2(2, 2).Determinant()
 		);
 }
 //-----------------------------------------------------------------------
@@ -357,6 +348,26 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
 //-----------------------------------------------------------------------
 template <typename T>
 void
+FloatingPointMatrix3x3<T>::Transpose(FloatingPointMatrix3x3 const& matrix, FloatingPointMatrix3x3 & result)
+{
+	result = FloatingPointMatrix3x3(
+		matrix.m[0][0], matrix.m[1][0], matrix.m[2][0],
+		matrix.m[0][1], matrix.m[1][1], matrix.m[2][1],
+		matrix.m[0][2], matrix.m[1][2], matrix.m[2][2]);
+}
+//-----------------------------------------------------------------------
+template <typename T>
+FloatingPointMatrix3x3<T>
+FloatingPointMatrix3x3<T>::Transpose(FloatingPointMatrix3x3 const& matrix)
+{
+	return FloatingPointMatrix3x3(
+		matrix.m[0][0], matrix.m[1][0], matrix.m[2][0],
+		matrix.m[0][1], matrix.m[1][1], matrix.m[2][1],
+		matrix.m[0][2], matrix.m[1][2], matrix.m[2][2]);
+}
+//-----------------------------------------------------------------------
+template <typename T>
+void
 FloatingPointMatrix3x3<T>::Invert(FloatingPointMatrix3x3 const& matrix, FloatingPointMatrix3x3 & result)
 {
 	result = Invert(matrix);
@@ -370,7 +381,7 @@ FloatingPointMatrix3x3<T>::Invert(FloatingPointMatrix3x3 const& matrix)
 	static_assert(std::is_same<decltype(matrix.Determinant()), T>::value, "determinant is T");
 	POMDOG_ASSERT_MESSAGE(static_cast<T>(0) != determinant, "This is singular matrix");
 
-	return matrix.Adjoint() / determinant;
+	return Adjoint(matrix) / determinant;
 }
 //-----------------------------------------------------------------------
 template <typename T>
