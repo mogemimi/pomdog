@@ -45,8 +45,6 @@ public:
 	///@brief Construct from T values.
 	Coordinate2D(T x, T y);
 	
-	~Coordinate2D() = default;
-
 	// Assignment operators:
 	Coordinate2D & operator=(Coordinate2D const&) = default;
 	Coordinate2D & operator=(Coordinate2D &&) = default;

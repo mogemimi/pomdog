@@ -57,8 +57,6 @@ public:
 		T m10, T m11, T m12, 
 		T m20, T m21, T m22);
 	
-	~FloatingPointMatrix3x3() = default;
-	
 	// Assignment operators:
 	///@brief Assignment.
 	FloatingPointMatrix3x3 & operator=(FloatingPointMatrix3x3 const&) = default;

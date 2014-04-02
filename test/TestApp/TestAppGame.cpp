@@ -66,7 +66,7 @@ void TestAppGame::Initialize()
 	
 	primitiveAxes = std::unique_ptr<PrimitiveAxes>(new PrimitiveAxes(gameHost));
 	primitiveGrid = std::unique_ptr<PrimitiveGrid>(new PrimitiveGrid(gameHost));
-	spriteRenderer = std::unique_ptr<SpriteBatch>(new SpriteBatch(gameHost));
+	spriteRenderer = std::unique_ptr<SpriteRenderer>(new SpriteRenderer(gameHost));
 	fxaa = std::unique_ptr<FXAA>(new FXAA(gameHost));
 	
 	{
@@ -74,28 +74,47 @@ void TestAppGame::Initialize()
 		auto gameObject = gameWorld.CreateObject();;
 		mainCameraID = gameObject->ID();
 		
-		auto transform = gameObject->AddComponent<Transform2D>();
+		auto node = gameObject->AddComponent<Node2D>(gameObject);
 		gameObject->AddComponent<CanvasItem>();
 		gameObject->AddComponent<Camera2D>();
 		//auto sprite = gameObject->AddComponent<Sprite>();
 		//sprite->Origin = Vector2{0.5f, 0.5f};
 		//sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
-		transform->Scale = Vector2{2.5f, 2.5f};
+		node->Transform().Scale = Vector2{2.5f, 2.5f};
 	}
+	
+	{
+		auto gameObject = gameWorld.CreateObject();
+		rootObjectID = gameObject->ID();
+		
+		auto node = gameObject->AddComponent<Node2D>(gameObject);
+		auto sprite = gameObject->AddComponent<Sprite>();
+		sprite->Origin = Vector2{0.5f, 0.5f};
+		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());
+	
+		auto & transform = node->Transform();
+		transform.Position = {0, 0};
+		transform.Scale = {2, 2};
+	}
+	
+	auto rootNode = gameWorld.Component<Node2D>(rootObjectID);
 	
 	for (int i = 0; i < 10; ++i)
 	{
 		auto gameObject = gameWorld.CreateObject();
 		gameObject->AddComponent<CanvasItem>();
-		auto transform = gameObject->AddComponent<Transform2D>();
+		auto node = gameObject->AddComponent<Node2D>(gameObject);
 		auto sprite = gameObject->AddComponent<Sprite>();
+		auto & transform = node->Transform();
 		
-		transform->Position.X = i * 64 * 2.0f;
-		transform->Position.Y = 0;
-		transform->Scale.X = transform->Scale.Y = 2.0f;
-		transform->Rotation = (0.5f * i) * MathConstants<float>::PiOver4();
+		transform.Position.X = i * 64 * 2.0f;
+		transform.Position.Y = 0;
+		transform.Scale.X = transform.Scale.Y = 2.0f;
+		transform.Rotation = (0.5f * i) * MathConstants<float>::PiOver4();
 		sprite->Origin = Vector2{0.5f, 0.5f};
 		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
+		
+		rootNode->AddChild(gameObject);
 	}
 }
 //-----------------------------------------------------------------------
@@ -103,22 +122,30 @@ void TestAppGame::Update()
 {
 	auto mouse = gameHost->Mouse();
 	{
-		auto transform = gameWorld.Component<Transform2D>(mainCameraID);
+		auto node = gameWorld.Component<Node2D>(mainCameraID);
 		auto camera = gameWorld.Component<Camera2D>(mainCameraID);
 		
-		if (transform && camera)
+		if (node && camera)
 		{
-			cameraView.Input(mouse->State(), graphicsContext->Viewport().Bounds, *transform, *camera);
+			cameraView.Input(mouse->State(), graphicsContext->Viewport().Bounds, node->Transform(), *camera);
 		}
 	}
+	
+//	auto rootNode = gameWorld.Component<Node2D>(rootObjectID);
+//	{
+//		for (auto child: rootNode->Children()) {
+//			auto node = child->Component<Node2D>();
+//			node->Transform();
+//		}
+//	}
 }
 //-----------------------------------------------------------------------
 void TestAppGame::DrawSprites()
 {
 	auto camera = gameWorld.Component<Camera2D>(mainCameraID);
-	auto transformCamera = gameWorld.Component<Transform2D>(mainCameraID);
+	auto nodeCamera = gameWorld.Component<Node2D>(mainCameraID);
 	
-	auto vierMatrix3D = CreateViewMatrix3D(*transformCamera, *camera);;
+	auto vierMatrix3D = CreateViewMatrix3D(nodeCamera->Transform(), *camera);;
 	auto projectionMatrix3D = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
 	
 	POMDOG_ASSERT(primitiveGrid);
@@ -127,25 +154,26 @@ void TestAppGame::DrawSprites()
 	POMDOG_ASSERT(primitiveAxes);
 	primitiveAxes->Draw(*graphicsContext, vierMatrix3D * projectionMatrix3D);
 	
-	auto viewMatrix2D = CreateViewMatrix2D(*transformCamera, *camera);
+	auto viewMatrix2D = CreateViewMatrix2D(nodeCamera->Transform(), *camera);
 	
 	POMDOG_ASSERT(spriteRenderer);
 	spriteRenderer->Begin(viewMatrix2D);
 	
-	for (auto gameObject: gameWorld.QueryComponents<CanvasItem, Transform2D, Sprite>())
+	for (auto gameObject: gameWorld.QueryComponents<CanvasItem, Node2D, Sprite>())
 	{
 		auto canvasItem = gameObject->Component<CanvasItem>();
 		if (!canvasItem->Visibile) {
 			continue;
 		}
 		
-		auto transform = gameObject->Component<Transform2D>();
+		auto node = gameObject->Component<Node2D>();
 		auto sprite = gameObject->Component<Sprite>();
+		auto & transform = node->Transform();
 		
 		constexpr float layerDepth = 0.0f;
 
-		spriteRenderer->Draw(texture, transform->Position, sprite->Subrect,
-			Color::White, transform->Rotation, sprite->Origin, transform->Scale, layerDepth);
+		spriteRenderer->Draw(texture, transform.Position, sprite->Subrect,
+			Color::White, transform.Rotation, sprite->Origin, transform.Scale, layerDepth);
 	}
 	
 	spriteRenderer->End();

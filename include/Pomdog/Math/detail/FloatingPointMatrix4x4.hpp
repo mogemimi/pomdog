@@ -64,8 +64,6 @@ public:
 		T m20, T m21, T m22, T m23,
 		T m30, T m31, T m32, T m33);
 	
-	~FloatingPointMatrix4x4() = default;
-	
 	// Assignment operators:
 	FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 const&) = default;
 	FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 &&) = default;

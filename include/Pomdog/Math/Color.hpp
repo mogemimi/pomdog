@@ -49,8 +49,6 @@ public:
 	explicit Color(Vector3 const& vector);
 	explicit Color(Vector4 const& vector);
 	
-	~Color() = default;
-
 	// Assignment operators:
 	Color & operator=(Color const&) = default;
 	Color & operator=(Color &&) = default;

@@ -125,4 +125,14 @@ std::vector<std::shared_ptr<GameObject>> Node2D::Children() const
 	return children;
 }
 //-----------------------------------------------------------------------
+Transform2D & Node2D::Transform()
+{
+	return transform;
+}
+//-----------------------------------------------------------------------
+Transform2D const& Node2D::Transform() const
+{
+	return transform;
+}
+//-----------------------------------------------------------------------
 }// namespace Pomdog

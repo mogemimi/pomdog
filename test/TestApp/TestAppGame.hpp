@@ -48,7 +48,7 @@ private:
 	std::shared_ptr<Texture2D> texture;
 	std::unique_ptr<PrimitiveAxes> primitiveAxes;
 	std::unique_ptr<PrimitiveGrid> primitiveGrid;
-	std::unique_ptr<SpriteBatch> spriteRenderer;
+	std::unique_ptr<SpriteRenderer> spriteRenderer;
 	
 	std::shared_ptr<SamplerState> samplerPoint;
 	std::shared_ptr<RenderTarget2D> renderTarget;
@@ -58,6 +58,7 @@ private:
 	
 	GameWorld gameWorld;
 	GameObjectID mainCameraID;
+	GameObjectID rootObjectID;
 	//std::shared_ptr<Scene> hierarchy;
 };
 

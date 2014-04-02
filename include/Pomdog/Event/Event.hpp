@@ -29,8 +29,6 @@ public:
 	Event() = delete;
 	Event(Event const&) = delete;
 	Event(Event &&) = default;
-	
-	~Event() = default;
 
 	Event& operator=(Event const&) = delete;
 	Event& operator=(Event &&) = default;

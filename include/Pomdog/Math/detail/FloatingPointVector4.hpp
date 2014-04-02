@@ -52,8 +52,6 @@ public:
 	FloatingPointVector4(T x, T y, T z, T w);
 	FloatingPointVector4(FloatingPointVector3<T> const& xyz, T w);
 	
-	~FloatingPointVector4() = default;
-
 	// Assignment operators:
 	FloatingPointVector4 & operator=(FloatingPointVector4 const& other) = default;
 	FloatingPointVector4 & operator=(FloatingPointVector4 && other) = default;

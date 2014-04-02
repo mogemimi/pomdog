@@ -23,21 +23,32 @@ class SpriteRenderer {
 public:
 	explicit SpriteRenderer(std::shared_ptr<GameHost> const& gameHost);
 	
+	~SpriteRenderer();
+	
 	void Begin(Matrix3x3 const& transformMatrix);
 	
 	void Draw(std::shared_ptr<Texture2D> const& texture,
-		Vector2 const& position, Vector2 const& scale, Radian<float> const& rotation,
-		Rectangle const& sourceRect, Vector2 const& originPivot, float layerDepth);
+		Rectangle const& sourceRect, Color const& color);
+		
+	void Draw(std::shared_ptr<Texture2D> const& texture,
+		Vector2 const& position, Color const& color);
+	
+	void Draw(std::shared_ptr<Texture2D> const& texture,
+		Vector2 const& position, Rectangle const& sourceRect, Color const& color);
+	
+	void Draw(std::shared_ptr<Texture2D> const& texture,
+		Vector2 const& position, Rectangle const& sourceRect, Color const& color,
+		Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth);
+	
+	void Draw(std::shared_ptr<Texture2D> const& texture,
+		Vector2 const& position, Rectangle const& sourceRect, Color const& color,
+		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
 		
 	void End();
 	
 private:
-	std::shared_ptr<GraphicsContext> graphicsContext;
-	std::shared_ptr<VertexBuffer> vertexBuffer;
-	std::shared_ptr<IndexBuffer> indexBuffer;
-	std::shared_ptr<EffectPass> effectPass;
-	std::shared_ptr<InputLayout> inputLayout;
-	Matrix3x3 transformMatrix;
+	class Impl;
+	std::unique_ptr<Impl> impl;
 };
 
 }// namespace TestApp

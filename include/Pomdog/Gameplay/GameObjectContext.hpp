@@ -162,7 +162,8 @@ public:
 		auto result = entities[objectID.Index()].get();
 		
 		POMDOG_ASSERT(result != nullptr);
-		return &(dynamic_cast<IntrusiveComponentType<T>*>(result)->Value());
+		POMDOG_ASSERT(dynamic_cast<IntrusiveComponentType<T>*>(result) == static_cast<IntrusiveComponentType<T>*>(result));
+		return &(static_cast<IntrusiveComponentType<T>*>(result)->Value());
 	}
 	
 	template <typename T>

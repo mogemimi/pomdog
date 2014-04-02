@@ -2,18 +2,30 @@
 
 layout(location = 0) in vec4 PositionTextureCoord;
 
+// per Instance
+layout(location = 1) in mat4x4 WorldMatrix;
+// (position.xy, scale.xy)
+layout(location = 5) in vec4 Translation;
+// (x, y, width, height)
+layout(location = 6) in vec4 SourceRect;
+// (originPivot.xy, rotation, layerDepth)
+layout(location = 7) in vec4 OriginRotationDepth;
+// (color.rgba)
+layout(location = 8) in vec4 Color;
+
 out VertexData {
 	vec2 TextureCoord;
+	vec4 Color;
 } Out;
 
-uniform SpriteInfo {
-	// per Instance
-	vec4 Translation;         // (position.xy, scale.xy)
-	vec4 SourceRect;          // (x, y, width, height)
-	vec4 OriginRotationDepth; // (originPivot.xy, rotation, layerDepth)
-};
+//uniform SpriteInfo {
+//	// per Instance
+//	vec4 Translation;         // (position.xy, scale.xy)
+//	vec4 SourceRect;          // (x, y, width, height)
+//	vec4 OriginRotationDepth; // (originPivot.xy, rotation, layerDepth)
+//};
 
-uniform SpriteBatchInfo {
+uniform SpriteBatchConstants {
 	mat4x4 Projection2D;
 	// mat4x4(
 	//  vec4(Projection2D[0].xyz, 0),
@@ -47,12 +59,15 @@ void main()
 //		vec3(0.0, (2.0/Viewport.y), 0.0),
 //		vec3(0.0, 0.0, 1.0));
 
-	mat3x3 transform = (((scaling * rotate) * translate) * mat3x3(Projection2D));
+	mat3x3 localTransform = ((scaling * rotate) * translate);
+	mat3x3 transform = localTransform * mat3x3(WorldMatrix) * mat3x3(Projection2D);
 	
 	vec3 position = (vec3(PositionTextureCoord.xy - OriginRotationDepth.xy, 1.0) * transform);
 
 	gl_Position = vec4(position.xy, OriginRotationDepth.w, 1.0);
-	
+
 	Out.TextureCoord = (PositionTextureCoord.zw * SourceRect.zw + SourceRect.xy) * Projection2D[3].xy;
+	Out.Color = Color;
+
 	//Out.TextureCoord = PositionTextureCoord.zw;
 }

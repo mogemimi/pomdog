@@ -72,14 +72,13 @@ class IntrusiveComponent final: public GameComponent<HashCodeType> {
 public:
 	static_assert(std::is_fundamental<T>::value ||
 		std::is_class<T>::value || std::is_enum<T>::value, "T is class or enum");
-	
-	IntrusiveComponent() = default;
-	~IntrusiveComponent() = default;
-	
+
 	template <typename...Arguments>
 	explicit IntrusiveComponent(Arguments && ...arguments)
 		: value(std::forward<Arguments>(arguments)...)
 	{}
+
+	~IntrusiveComponent() = default;
 
 	HashCodeType GetHashCode() const override
 	{

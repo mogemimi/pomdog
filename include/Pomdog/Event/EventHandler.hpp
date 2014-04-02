@@ -30,8 +30,6 @@ public:
 	EventHandler & operator=(EventHandler const&) = delete;
 	EventHandler & operator=(EventHandler &&) = default;
 	
-	~EventHandler() = default;
-	
 	EventConnection Connect(std::function<void(Event const&)> const& slot);
 
 	EventConnection Connect(std::function<void(Event const&)> && slot);

@@ -51,8 +51,6 @@ public:
 	///@brief Construct from floating-point values.
 	FloatingPointVector2(T x, T y);
 	
-	~FloatingPointVector2() = default;
-	
 	// Assignment operators:
 	FloatingPointVector2 & operator=(FloatingPointVector2 const&) = default;
 	FloatingPointVector2 & operator=(FloatingPointVector2 &&) = default;

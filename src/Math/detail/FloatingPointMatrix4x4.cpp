@@ -142,6 +142,7 @@ FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator*=(T scaleFactor)
 template <typename T>
 FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator/=(T scaleFactor)
 {
+	POMDOG_ASSERT(scaleFactor != 0);
 	auto const inverseDivider = 1 / scaleFactor;
 	m[0][0] *= inverseDivider;
 	m[0][1] *= inverseDivider;
@@ -428,25 +429,25 @@ template <typename T>
 FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Adjoint() const
 {
 	return FloatingPointMatrix4x4
-		(  this->Minor3x3(0, 0).Determinant()
-		, -this->Minor3x3(1, 0).Determinant()
-		,  this->Minor3x3(2, 0).Determinant()
-		, -this->Minor3x3(3, 0).Determinant()
+		(  Minor3x3(0, 0).Determinant()
+		, -Minor3x3(1, 0).Determinant()
+		,  Minor3x3(2, 0).Determinant()
+		, -Minor3x3(3, 0).Determinant()
 		
-		, -this->Minor3x3(0, 1).Determinant()
-		,  this->Minor3x3(1, 1).Determinant()
-		, -this->Minor3x3(2, 1).Determinant()
-		,  this->Minor3x3(3, 1).Determinant()
+		, -Minor3x3(0, 1).Determinant()
+		,  Minor3x3(1, 1).Determinant()
+		, -Minor3x3(2, 1).Determinant()
+		,  Minor3x3(3, 1).Determinant()
 		 
-		,  this->Minor3x3(0, 2).Determinant()
-		, -this->Minor3x3(1, 2).Determinant()
-		,  this->Minor3x3(2, 2).Determinant()
-		, -this->Minor3x3(3, 2).Determinant()
+		,  Minor3x3(0, 2).Determinant()
+		, -Minor3x3(1, 2).Determinant()
+		,  Minor3x3(2, 2).Determinant()
+		, -Minor3x3(3, 2).Determinant()
 		  
-		, -this->Minor3x3(0, 3).Determinant()
-		,  this->Minor3x3(1, 3).Determinant()
-		, -this->Minor3x3(2, 3).Determinant()
-		,  this->Minor3x3(3, 3).Determinant()
+		, -Minor3x3(0, 3).Determinant()
+		,  Minor3x3(1, 3).Determinant()
+		, -Minor3x3(2, 3).Determinant()
+		,  Minor3x3(3, 3).Determinant()
 		);
 }
 //-----------------------------------------------------------------------
@@ -737,7 +738,7 @@ FloatingPointMatrix4x4<T>::CreateLookAtRH(FloatingPointVector3<T> const& eye, Fl
 
 	typedef FloatingPointVector3<T> Vector3;
 	auto const zaxis = Vector3::Normalize(eye - at);// LH: at - eye
-	auto const xaxis = Vector3::Normalize(FloatingPointVector3<T>::Cross(up, zaxis));
+	auto const xaxis = Vector3::Normalize(Vector3::Cross(up, zaxis));
 	auto const yaxis = Vector3::Cross(zaxis, xaxis);
 
 	result.m[0][0] = xaxis.X;
@@ -1070,6 +1071,10 @@ void
 FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterLH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane,
 	FloatingPointMatrix4x4 & result)
 {
+	POMDOG_ASSERT((right - left) != 0);
+	POMDOG_ASSERT((top - bottom) != 0);
+	POMDOG_ASSERT(zNearPlane < zFarPlane);
+
 	// 2/(r-l)      0            0           0
 	// 0            2/(t-b)      0           0
 	// 0            0            1/(zf-zn)   0
@@ -1121,6 +1126,10 @@ void
 FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterRH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane,
 	FloatingPointMatrix4x4 & result)
 {
+	POMDOG_ASSERT((right - left) != 0);
+	POMDOG_ASSERT((top - bottom) != 0);
+	POMDOG_ASSERT(zNearPlane < zFarPlane);
+
 	// 2/(r-l)      0            0           0
 	// 0            2/(t-b)      0           0
 	// 0            0            1/(zn-zf)   0

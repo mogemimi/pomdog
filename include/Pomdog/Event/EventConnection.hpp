@@ -27,7 +27,6 @@ private:
 
 public:
 	EventConnection() = default;
-	~EventConnection() = default;
 
 	EventConnection(EventConnection const& connection) = default;
 	EventConnection(EventConnection && connection) = default;

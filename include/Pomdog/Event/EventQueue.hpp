@@ -31,7 +31,6 @@ public:
 	EventQueue(EventQueue &&) = delete;
 	EventQueue & operator=(EventQueue const&) = delete;
 	EventQueue & operator=(EventQueue &&) = delete;
-	~EventQueue() = default;
 
 	EventConnection Connect(std::function<void(Event const&)> const& slot);
 

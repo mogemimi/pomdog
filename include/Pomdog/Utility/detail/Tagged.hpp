@@ -36,8 +36,6 @@ public:
 	Tagged(Tagged const&) = default;
 	Tagged(Tagged &&) = default;
 	
-	~Tagged() = default;
-	
 	Tagged & operator=(Tagged const&) = default;
 	Tagged & operator=(Tagged &&) = default;
 

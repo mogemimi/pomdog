@@ -45,8 +45,6 @@ public:
 	///@brief Construct from T values.
 	Coordinate3D(T x, T y, T z);
 	
-	~Coordinate3D() = default;
-
 	// Assignment operators:
 	Coordinate3D & operator=(Coordinate3D const&) = default;
 	Coordinate3D & operator=(Coordinate3D &&) = default;

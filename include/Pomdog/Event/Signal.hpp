@@ -31,8 +31,6 @@ public:
 	Signal & operator=(Signal const&) = delete;
 	Signal & operator=(Signal &&) = default;
 	
-	~Signal() = default;
-	
 	EventConnection Connect(std::function<void(Arguments...)> const& slot);
 
 	EventConnection Connect(std::function<void(Arguments...)> && slot);

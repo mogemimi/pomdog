@@ -49,7 +49,8 @@ public:
 	TaggedArithmetic(TaggedArithmetic &&) = default;
 
 	TaggedArithmetic(T v)
-		: value(v){};
+		: value(v)
+	{}
 
 	// Assignment operators:
 	TaggedArithmetic & operator=(TaggedArithmetic const&) = default;
