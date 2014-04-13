@@ -24,7 +24,7 @@ class CameraView2D
 public:
 	explicit CameraView2D();
 	
-	void Input(MouseState const& mouseState, Rectangle const& viewportSize, Transform2D & transform, Camera2D & camera);
+	void Input(MouseState const& mouseState, GameClock const& clock, Rectangle const& viewportSize, Transform2D & transform, Camera2D & camera);
 	
 private:
 	//std::optional<Vector2> trackStartPosition;

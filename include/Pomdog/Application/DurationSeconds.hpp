@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_DURATIONSECONDS_36BC4E10_F87D_4CF9_98BC_41FB26901666_HPP
-#define POMDOG_DURATIONSECONDS_36BC4E10_F87D_4CF9_98BC_41FB26901666_HPP
+#ifndef POMDOG_DURATIONSECONDS_7361380F_B525_46D6_A6B7_51EB8AD523C0_HPP
+#define POMDOG_DURATIONSECONDS_7361380F_B525_46D6_A6B7_51EB8AD523C0_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -17,11 +17,11 @@
 
 namespace Pomdog {
 
-class Clock;
+class GameClock;
 
 using DurationSeconds = std::chrono::duration<double, std::ratio<1>>;
-using TimePointSeconds = std::chrono::time_point<Clock, DurationSeconds>;
+using TimePointSeconds = std::chrono::time_point<GameClock, DurationSeconds>;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DURATIONSECONDS_36BC4E10_F87D_4CF9_98BC_41FB26901666_HPP)
+#endif // !defined(POMDOG_DURATIONSECONDS_7361380F_B525_46D6_A6B7_51EB8AD523C0_HPP)

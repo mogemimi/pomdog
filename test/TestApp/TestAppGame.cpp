@@ -120,6 +120,7 @@ void TestAppGame::Initialize()
 //-----------------------------------------------------------------------
 void TestAppGame::Update()
 {
+	auto clock = gameHost->Clock();
 	auto mouse = gameHost->Mouse();
 	{
 		auto node = gameWorld.Component<Node2D>(mainCameraID);
@@ -127,7 +128,7 @@ void TestAppGame::Update()
 		
 		if (node && camera)
 		{
-			cameraView.Input(mouse->State(), graphicsContext->Viewport().Bounds, node->Transform(), *camera);
+			cameraView.Input(mouse->State(), *clock, graphicsContext->Viewport().Bounds, node->Transform(), *camera);
 		}
 	}
 	
@@ -136,6 +137,15 @@ void TestAppGame::Update()
 		auto & transform = rootNode->Transform();
 		if (mouse->State().RightButton == ButtonState::Pressed) {
 			transform.Position.Y += 0.5f;
+		}
+	}
+	
+	{
+		static auto duration = DurationSeconds(0);
+		
+		if (clock->TotalGameTime() - duration > DurationSeconds(0.2)) {
+			gameHost->Window()->Title(StringFormat("%f fps", clock->FrameRate()));
+			duration = clock->TotalGameTime();
 		}
 	}
 }

@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_CLOCK_099669CB_7F51_4B27_8468_A5FC0CBAED9B_HPP
-#define POMDOG_CLOCK_099669CB_7F51_4B27_8468_A5FC0CBAED9B_HPP
+#ifndef POMDOG_GAMECLOCK_06D5BC45_786E_4B42_BE61_413BE23C6AF1_HPP
+#define POMDOG_GAMECLOCK_06D5BC45_786E_4B42_BE61_413BE23C6AF1_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -18,19 +18,17 @@
 #include "DurationSeconds.hpp"
 
 namespace Pomdog {
-namespace Details {
 
-class Clock
-{
+class GameClock {
 public:
-	Clock();
-	Clock(Clock const&) = delete;
-	Clock(Clock &&) = default;
+	GameClock();
+	GameClock(GameClock const&) = delete;
+	GameClock(GameClock &&) = default;
 	
-	Clock & operator=(Clock const&) = delete;
-	Clock & operator=(Clock &&) = default;
+	GameClock & operator=(GameClock const&) = delete;
+	GameClock & operator=(GameClock &&) = default;
 
-	~Clock();
+	~GameClock();
 	
 	///@~Japanese
 	/// @brief フレーム毎に 1 度だけ呼び出し、フレーム時間の更新やデルタ時間の予測を行います。
@@ -61,7 +59,6 @@ private:
 	std::unique_ptr<Impl> impl;
 };
 
-}// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_CLOCK_099669CB_7F51_4B27_8468_A5FC0CBAED9B_HPP)
+#endif // !defined(POMDOG_GAMECLOCK_06D5BC45_786E_4B42_BE61_413BE23C6AF1_HPP)

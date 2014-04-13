@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include "../Application/DurationSeconds.hpp"
+#include <Pomdog/Application/DurationSeconds.hpp>
 
 namespace Pomdog {
 namespace Details {

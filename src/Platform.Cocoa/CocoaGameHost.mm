@@ -17,6 +17,7 @@
 #include <Pomdog/Graphics/GraphicsContext.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include <Pomdog/Application/Game.hpp>
+#include <Pomdog/Application/GameClock.hpp>
 #include <Pomdog/Content/AssetManager.hpp>
 
 #include "CocoaGameWindow.hpp"
@@ -24,7 +25,6 @@
 #include "../RenderSystem/PresentationParameters.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
-#include "../Application/Clock.hpp"
 #include "../Utility/MakeUnique.hpp"
 #include "CocoaMouse.hpp"
 
@@ -115,6 +115,9 @@ public:
 	std::shared_ptr<Pomdog::GameWindow> Window();
 	
 	///@copydoc GameHost
+	std::shared_ptr<Pomdog::GameClock> Clock(std::shared_ptr<GameHost> && gameHost);
+	
+	///@copydoc GameHost
 	std::shared_ptr<Pomdog::GraphicsContext> GraphicsContext();
 	
 	///@copydoc GameHost
@@ -134,7 +137,7 @@ public:
 	void ProcessSystemEvents(Event const& event);
 
 private:
-	Clock clock;
+	GameClock clock;
 
 	//std::weak_ptr<Game> game;
 	std::shared_ptr<CocoaGameWindow> gameWindow;
@@ -231,6 +234,12 @@ std::shared_ptr<Pomdog::GameWindow> CocoaGameHost::Impl::Window()
 	return gameWindow;
 }
 //-----------------------------------------------------------------------
+std::shared_ptr<Pomdog::GameClock> CocoaGameHost::Impl::Clock(std::shared_ptr<GameHost> && gameHost)
+{
+	std::shared_ptr<Pomdog::GameClock> sharedClock(gameHost, &clock);
+	return std::move(sharedClock);
+}
+//-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GraphicsContext> CocoaGameHost::Impl::GraphicsContext()
 {
 	return graphicsContext;
@@ -315,6 +324,12 @@ std::shared_ptr<Pomdog::GameWindow> CocoaGameHost::Window()
 {
 	POMDOG_ASSERT(impl);
 	return impl->Window();
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<Pomdog::GameClock> CocoaGameHost::Clock()
+{
+	POMDOG_ASSERT(impl);
+	return impl->Clock(shared_from_this());
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GraphicsContext> CocoaGameHost::GraphicsContext()

@@ -23,7 +23,9 @@
 #include "Utility/StringFormat.hpp"
 
 // Application
+#include "Application/DurationSeconds.hpp"
 #include "Application/Game.hpp"
+#include "Application/GameClock.hpp"
 #include "Application/GameHost.hpp"
 #include "Application/GameWindow.hpp"
 

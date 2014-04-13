@@ -21,7 +21,7 @@
 #	include "../Platform.Win32/TimeSourceWin32.hpp"
 #else
 #	include <chrono>
-#	include "DurationSeconds.hpp"
+#	include <Pomdog/Application/DurationSeconds.hpp>
 #	error "Platform undefined or not supported."
 #endif
 

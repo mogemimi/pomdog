@@ -44,6 +44,9 @@ public:
 	std::shared_ptr<Pomdog::GameWindow> Window() override;
 	
 	///@copydoc GameHost
+	std::shared_ptr<Pomdog::GameClock> Clock() override;
+	
+	///@copydoc GameHost
 	std::shared_ptr<Pomdog::GraphicsContext> GraphicsContext() override;
 	
 	///@copydoc GameHost

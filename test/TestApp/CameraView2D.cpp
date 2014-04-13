@@ -111,14 +111,15 @@ CameraView2D::CameraView2D()
 {
 }
 //-----------------------------------------------------------------------
-void CameraView2D::Input(MouseState const& mouseState, Rectangle const& viewportSize, Transform2D & transform, Camera2D & camera)
+void CameraView2D::Input(MouseState const& mouseState, GameClock const& clock, Rectangle const& viewportSize, Transform2D & transform, Camera2D & camera)
 {
+	auto frameDuration = clock.FrameDuration();
 	{
-		scrollWheel += ((mouseState.ScrollWheel - prevScrollWheel) * 0.02f);
+		scrollWheel += ((mouseState.ScrollWheel - prevScrollWheel) * frameDuration.count());
 	
 		camera.Zoom(MathHelper::Clamp(camera.Zoom() + (camera.Zoom() * scrollWheel), 0.05f, 100.0f));
 		
-		scrollWheel = scrollWheel * 0.8f;// TODO: Replace with deltaTime
+		scrollWheel = scrollWheel * 0.78f;
 		prevScrollWheel = mouseState.ScrollWheel;
 	}
 	{
@@ -142,7 +143,6 @@ void CameraView2D::Input(MouseState const& mouseState, Rectangle const& viewport
 		
 		transform.Position -= {matrix(2, 0), matrix(2, 1)};
 	}
-	
 }
 
 }// namespace TestApp
