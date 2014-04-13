@@ -27,9 +27,9 @@ namespace iutest
 /**
  * @brief	実行
 */
-IUTEST_IPP_INLINE bool	TestInfo::Run(void)
+IUTEST_IPP_INLINE bool TestInfo::Run(void)
 {
-	if( !m_should_run )
+	if( !should_run() )
 	{
 		return true;
 	}
@@ -44,7 +44,7 @@ IUTEST_IPP_INLINE bool	TestInfo::Run(void)
 	return !HasFailure();
 }
 
-IUTEST_IPP_INLINE void	TestInfo::RunImpl(void)
+IUTEST_IPP_INLINE void TestInfo::RunImpl(void)
 {
 	detail::iuStopWatch sw;
 	TimeInMillisec elapsedmsec = 0;
@@ -59,7 +59,7 @@ IUTEST_IPP_INLINE void	TestInfo::RunImpl(void)
 		{
 			sw.start();
 #if IUTEST_HAS_SEH
-			RunOnMSC(p);
+			RunOnMSC(p.get());
 #else
 			p->Run(&m_mediator);
 #endif
@@ -116,7 +116,7 @@ IUTEST_IPP_INLINE void	TestInfo::RunImpl(void)
 #if IUTEST_HAS_EXCEPTIONS && IUTEST_HAS_SEH
 #if IUTEST_HAS_MINIDUMP
 
-IUTEST_IPP_INLINE void	TestInfo::MiniDump(_EXCEPTION_POINTERS* ep)
+IUTEST_IPP_INLINE void TestInfo::MiniDump(_EXCEPTION_POINTERS* ep)
 {
 #if defined(_MSC_VER)
 
@@ -134,7 +134,7 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 
 #endif
 
-IUTEST_IPP_INLINE void	TestInfo::RunOnMSC(detail::auto_ptr<Test>& test)
+IUTEST_IPP_INLINE void TestInfo::RunOnMSC(Test* test)
 {
 	_EXCEPTION_POINTERS* ep = NULL;
 	__try
@@ -152,14 +152,14 @@ IUTEST_IPP_INLINE void	TestInfo::RunOnMSC(detail::auto_ptr<Test>& test)
 }
 #endif
 
-IUTEST_IPP_INLINE void	TestInfo::clear(void)
+IUTEST_IPP_INLINE void TestInfo::clear(void)
 {
 	m_ran = false;
 	m_skip = false;
 	m_test_result.Clear();
 }
 
-IUTEST_IPP_INLINE bool	TestInfo::filter(void)
+IUTEST_IPP_INLINE bool TestInfo::filter(void)
 {
 	bool run = true;
 	// 無効テストなら実行しない
@@ -171,7 +171,7 @@ IUTEST_IPP_INLINE bool	TestInfo::filter(void)
 	bool match = true;
 	if( TestFlag::IsEnableFlag(TestFlag::FILTERING_TESTS) )
 	{
-		if( !detail::iuRegex::match(TestEnv::test_filter(), test_full_name().c_str()) ) 
+		if( !detail::iuRegex::match(TestEnv::test_filter(), test_full_name().c_str()) )
 		{
 			match = false;
 			run = false;
@@ -184,4 +184,4 @@ IUTEST_IPP_INLINE bool	TestInfo::filter(void)
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_INFO_IPP_764A79A8_E822_4C0F_8CB7_82C635BA28BA_
+#endif // INCG_IRIS_IUTEST_INFO_IPP_764A79A8_E822_4C0F_8CB7_82C635BA28BA_

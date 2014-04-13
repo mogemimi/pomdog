@@ -25,7 +25,7 @@
 #define IUTEST_FRIEND_TEST(test_case_name, test_name)	\
 	friend class IUTEST_TEST_CLASS_NAME_(test_case_name, test_name)
 
-#if IUTEST_HAS_TYPED_TEST 
+#if IUTEST_HAS_TYPED_TEST
 
 #if !defined(_MSC_VER) || _MSC_VER > 1200
 
@@ -80,7 +80,7 @@
 	template<>struct IUTEST_PEEP_TAG_NAME_(class_name, member_name)<class_name> { typedef member_type type; };				\
 	template<typename T, typename Tag, typename Tag::type X>struct IUTEST_PEEP_SETTER_NAME_(class_name, member_name) {		\
 	IUTEST_PEEP_SETTER_NAME_(class_name, member_name)(void) { ::iutest::detail::peep_tag<Tag>::value = X; }					\
-	static IUTEST_PEEP_SETTER_NAME_(class_name, member_name)	instance;													\
+	static IUTEST_PEEP_SETTER_NAME_(class_name, member_name) instance;														\
 	};																														\
 	template<typename T, typename Tag, typename Tag::type X>IUTEST_PEEP_SETTER_NAME_(class_name, member_name)<T, Tag, X>	\
 	IUTEST_PEEP_SETTER_NAME_(class_name, member_name)<T, Tag, X>::instance;													\
@@ -106,7 +106,7 @@ namespace detail
 template<typename Tag>
 struct peep_tag
 {
-	static typename Tag::type	value;
+	static typename Tag::type value;
 };
 template<typename Tag>
 typename Tag::type peep_tag<Tag>::value;
@@ -122,8 +122,8 @@ template<typename T, typename Tag>
 class Peep
 {
 private:
-	typedef Tag	peep_tag;
-	typedef typename Tag::type	peep_type;
+	typedef Tag peep_tag;
+	typedef typename Tag::type peep_type;
 
 private:
 	template<typename U, typename Type>
@@ -133,14 +133,14 @@ private:
 		typedef typename type_traits::function_return_type<Type>::type return_type;
 
 	private:
-		U*	m_ptr;
+		U* m_ptr;
 	public:
 		explicit peep_member_function_impl(U* ptr) : m_ptr(ptr) {}
 
 #if IUTEST_HAS_VARIADIC_TEMPLATES
 	public:
 		template<typename ...Args>
-		return_type operator () (Args... args) { return ((*m_ptr).*detail::peep_tag<peep_tag>::value)( std::forward<Args>(args)...); }
+		return_type operator () (Args... args) { return ((*m_ptr).*detail::peep_tag<peep_tag>::value)( ::std::forward<Args>(args)...); }
 #else
 
 #define PEEP_DECL_MEMBER_FUNC_(n)	\
@@ -177,28 +177,32 @@ private:
 	template<typename U, typename Type, bool is_const>
 	class peep_member_object_impl
 	{
-		typedef peep_member_object_impl<U, Type, false>	_Myt;
+		typedef peep_member_object_impl<U, Type, false> _Myt;
 		typedef Type value_type;
 	private:
-		U*	m_ptr;
+		U* m_ptr;
 	public:
 		explicit peep_member_object_impl(U* ptr) : m_ptr(ptr) {}
+	private:
+		peep_member_object_impl(const _Myt&);
 	public:
 		operator value_type (void) const { return (*m_ptr).*detail::peep_tag<peep_tag>::value; }
 	};
 	template<typename U, typename Type>
 	class peep_member_object_impl<U, Type, false>
 	{
-		typedef peep_member_object_impl<U, Type, false>	_Myt;
+		typedef peep_member_object_impl<U, Type, false> _Myt;
 		typedef Type value_type;
 	private:
-		U*	m_ptr;
+		U* m_ptr;
 	public:
 		explicit peep_member_object_impl(U* ptr) : m_ptr(ptr) {}
+	private:
+		peep_member_object_impl(const _Myt&);
 	public:
 		operator value_type (void) const { return (*m_ptr).*detail::peep_tag<peep_tag>::value; }
 		operator value_type& (void) { return (*m_ptr).*detail::peep_tag<peep_tag>::value; }
-		_Myt&	operator = (const value_type& value) { (*m_ptr).*detail::peep_tag<peep_tag>::value = value; return *this; }
+		_Myt& operator = (const value_type& value) { (*m_ptr).*detail::peep_tag<peep_tag>::value = value; return *this; }
 	};
 
 
@@ -217,7 +221,7 @@ private:
 	template<typename U, typename Type, bool Func>
 	class peep_static_impl
 	{
-		typedef peep_static_impl<U, Type, Func>	_Myt;
+		typedef peep_static_impl<U, Type, Func> _Myt;
 		typedef typename type_traits::remove_pointer<Type>::type value_type;
 	public:
 		peep_static_impl(void) {}
@@ -226,14 +230,14 @@ private:
 	public:
 		operator value_type (void) const { return *detail::peep_tag<peep_tag>::value; }
 		operator value_type& (void) { return *detail::peep_tag<peep_tag>::value; }
-		_Myt&	operator = (const value_type& value) { *detail::peep_tag<peep_tag>::value = value; return *this; }
+		_Myt& operator = (const value_type& value) { *detail::peep_tag<peep_tag>::value = value; return *this; }
 	};
 
 	template<typename U, typename Type>
 	class peep_static_impl<U, Type, true>
 	{
 	public:
-		operator Type (void)	{ return *detail::peep_tag<peep_tag>::value; }
+		operator Type (void) { return *detail::peep_tag<peep_tag>::value; }
 	};
 private:
 	template<typename U, typename Type, bool is_member_ptr>
@@ -247,11 +251,11 @@ private:
 		typedef typename peep_member_impl<U, Type, type_traits::is_member_function_pointer<Type>::value >::type type;
 	};
 public:
-	typedef typename peep_impl<T, peep_type, type_traits::is_member_pointer<peep_type>::value >::type	type;	//!< private メンバーアクセスオブジェクト型
+	typedef typename peep_impl<T, peep_type, type_traits::is_member_pointer<peep_type>::value >::type type;	//!< private メンバーアクセスオブジェクト型
 };
 
 #endif
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_PROD_HPP_7A316C18_042D_4E48_BC31_E6AE8B6C2E28_
+#endif // INCG_IRIS_IUTEST_PROD_HPP_7A316C18_042D_4E48_BC31_E6AE8B6C2E28_

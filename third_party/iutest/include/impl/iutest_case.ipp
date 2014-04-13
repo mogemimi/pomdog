@@ -24,7 +24,7 @@
 namespace iutest
 {
 
-IUTEST_IPP_INLINE bool	TestCase::Run(void)
+IUTEST_IPP_INLINE bool TestCase::Run(void)
 {
 	if( !should_run() )
 	{
@@ -50,11 +50,43 @@ IUTEST_IPP_INLINE bool TestCase::RunImpl(void)
 	bool result=true;
 	m_elapsedmsec = 0;
 
-	m_setup();
+#if IUTEST_HAS_EXCEPTIONS
+	if( TestFlag::IsEnableFlag(TestFlag::CATCH_EXCEPTION_EACH) )
+	{
+		try
+		{
+			m_setup();
+		}
+		catch( TestPartResult::Type& eType )
+		{
+			if( TestPartResult::type_is_failed(eType) && TestFlag::IsEnableFlag(TestFlag::THROW_ON_FAILURE) )
+			{
+				throw;
+			}
+		}
+		catch( ... )
+		{
+			throw;
+		}
+	}
+	else
+#endif
+	{
+		m_setup();
+	}
 
 	if( m_ad_hoc_testresult.HasFatalFailure() )
 	{
 		return false;
+	}
+
+	if( m_ad_hoc_testresult.Skipped() )
+	{
+		for( iuTestInfos::iterator it = m_testinfos.begin(), end=m_testinfos.end(); it != end; ++it )
+		{
+			(it)->skip();
+		}
+		return true;
 	}
 
 	{
@@ -63,8 +95,7 @@ IUTEST_IPP_INLINE bool TestCase::RunImpl(void)
 		for( iuTestInfos::iterator it = m_testinfos.begin(), end=m_testinfos.end(); it != end; ++it )
 		{
 			// 実行
-			if( (it)->should_run()
-				&& !(it)->Run() )
+			if( !(it)->Run() )
 			{
 				result = false;
 			}
@@ -75,7 +106,7 @@ IUTEST_IPP_INLINE bool TestCase::RunImpl(void)
 	return result;
 }
 
-IUTEST_IPP_INLINE void	TestCase::clear(void)
+IUTEST_IPP_INLINE void TestCase::clear(void)
 {
 	m_ad_hoc_testresult.Clear();
 	for( iuTestInfos::iterator it = m_testinfos.begin(), end=m_testinfos.end(); it != end; ++it )
@@ -84,7 +115,7 @@ IUTEST_IPP_INLINE void	TestCase::clear(void)
 	}
 }
 
-IUTEST_IPP_INLINE bool	TestCase::filter(void)
+IUTEST_IPP_INLINE bool TestCase::filter(void)
 {
 	m_should_run_num = 0;
 	m_disable_num = 0;
@@ -175,4 +206,4 @@ IUTEST_IPP_INLINE int TestCase::reportable_disabled_test_count(void) const
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_CASE_IPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
+#endif // INCG_IRIS_IUTEST_CASE_IPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_

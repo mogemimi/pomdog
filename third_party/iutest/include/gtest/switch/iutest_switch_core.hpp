@@ -78,7 +78,7 @@
 #define GTEST_TEST_				IUTEST_TEST_
 
 
-#else	// !defined(IUTEST_USE_GTEST)
+#else // !defined(IUTEST_USE_GTEST)
 
 //======================================================================
 // undef
@@ -184,6 +184,6 @@
 
 #endif
 
-#endif	// !defined(IUTEST_USE_GTEST)
+#endif // !defined(IUTEST_USE_GTEST)
 
-#endif	// INCG_IRIS_IUTEST_SWITCH_CORE_HPP_0385C393_90D3_4B06_A027_4B07A17A33CB_
+#endif // INCG_IRIS_IUTEST_SWITCH_CORE_HPP_0385C393_90D3_4B06_A027_4B07A17A33CB_

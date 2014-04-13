@@ -298,4 +298,4 @@ inline const ::iutest::TestInfo* FindParamTestInfo(const ::iutest::TestCase* tes
 
 }	// end of namespace iuutil
 
-#endif	// INCG_IRIS_IUTEST_UTIL_TESTS_HPP_4095FF9B_D6B8_4CD3_BF86_43DFED1760EA_
+#endif // INCG_IRIS_IUTEST_UTIL_TESTS_HPP_4095FF9B_D6B8_4CD3_BF86_43DFED1760EA_

@@ -43,9 +43,9 @@ const char* const kStringsT<DMY>::DefaultXmlReportFileName =  "test_detail.xml";
 template<typename DMY>
 const char* const kStringsT<DMY>::UnkownFile =  "unkown file";
 template<typename DMY>
-const char* const kStringsT<DMY>::Null =  "NULL";
+const char* const kStringsT<DMY>::Null =  "(null)";
 
-#if IUTEST_HAS_LIB 
+#if IUTEST_HAS_LIB
 
 #if IUTEST_HAS_EXTERN_TEMPLATE
 
@@ -65,7 +65,7 @@ template struct kStringsT<void>;
 }	// end of namespace helper
 
 /** @internal */
-typedef helper::kStringsT<void>	kStrings;
+typedef helper::kStringsT<void> kStrings;
 
 /**
  * @brief	定数群
@@ -80,13 +80,13 @@ struct kValues
 		, PrintArrayChunksize = PrintArrayThreshold/2
 	};
 #else
-	static const size_t	MaxPrintContainerCount = 32;
-	static const size_t	PrintArrayThreshold = 18;
-	static const size_t	PrintArrayChunksize = PrintArrayThreshold/2;
+	static const size_t MaxPrintContainerCount = 32;
+	static const size_t PrintArrayThreshold = 18;
+	static const size_t PrintArrayChunksize = PrintArrayThreshold/2;
 #endif
 };
 
 }	// end of namespace detail
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_CONSTANT_HPP_37DDDC13_3259_42E0_A648_47B064DED4BA_
+#endif // INCG_IRIS_IUTEST_CONSTANT_HPP_37DDDC13_3259_42E0_A648_47B064DED4BA_

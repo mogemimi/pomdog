@@ -24,7 +24,7 @@
 namespace iutest
 {
 
-IUTEST_IPP_INLINE TestEventListener*	TestEventRepeater::Release(TestEventListener* listener)
+IUTEST_IPP_INLINE TestEventListener* TestEventRepeater::Release(TestEventListener* listener)
 {
 	ListenerContainer::iterator it = ::std::find(m_listeners.begin(), m_listeners.end(), listener);
 	if( it == m_listeners.end() ) return NULL;
@@ -133,7 +133,7 @@ IUTEST_IPP_INLINE void TestEventRepeater::OnTestProgramEnd(const UnitTest& test)
 	}
 }
 
-IUTEST_IPP_INLINE void	TestEventListeners::set_default_result_printer(TestEventListener* listener)
+IUTEST_IPP_INLINE void TestEventListeners::set_default_result_printer(TestEventListener* listener)
 {
 	Release(m_default_result_printer);
 	if( listener != NULL )
@@ -142,7 +142,7 @@ IUTEST_IPP_INLINE void	TestEventListeners::set_default_result_printer(TestEventL
 	}
 	m_default_result_printer = listener;
 }
-IUTEST_IPP_INLINE void	TestEventListeners::set_default_xml_generator(TestEventListener* listener)
+IUTEST_IPP_INLINE void TestEventListeners::set_default_xml_generator(TestEventListener* listener)
 {
 	Release(m_default_xml_generator);
 	if( listener != NULL )
@@ -154,4 +154,4 @@ IUTEST_IPP_INLINE void	TestEventListeners::set_default_xml_generator(TestEventLi
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_LISTENER_IPP_C94B8142_F8B3_413F_B479_8AA2B78604CE_
+#endif // INCG_IRIS_IUTEST_LISTENER_IPP_C94B8142_F8B3_413F_B479_8AA2B78604CE_

@@ -33,20 +33,20 @@ public:
 	/**
 	 * @brief	ヘルプの出力
 	*/
-	static void	ShowHelp(void);
+	static void ShowHelp(void);
 	/**
 	 * @brief	バージョン出力
 	*/
-	static void	ShowVersion(void);
+	static void ShowVersion(void);
 	/**
 	 * @brief	機能出力
 	*/
 	static void ShowFeature(void);
 };
 
-inline void	iuOptionMessage::ShowHelp(void)
+inline void iuOptionMessage::ShowHelp(void)
 {
-	const char* readme = 
+	const char* readme =
 		"--------------------------------------------------\n"
 		"Name\n"
 		"    iutest - iris unit test framework\n"
@@ -80,7 +80,7 @@ inline void	iuOptionMessage::ShowHelp(void)
 		"--------------------------------------------------\n"
 		"License\n"
 		"\n"
-		"    Copyright (c) 2011-2013, Takazumi-Shirayanagi\n"
+		"    Copyright (c) 2011-2014, Takazumi-Shirayanagi\n"
 		"\n"
 		"    The new(3-clause) BSD License is applied to this software, see LICENSE\n"
 		"\n"
@@ -88,7 +88,7 @@ inline void	iuOptionMessage::ShowHelp(void)
 	detail::iuConsole::color_output(detail::iuConsole::cyan, readme);
 }
 
-inline void	iuOptionMessage::ShowVersion(void)
+inline void iuOptionMessage::ShowVersion(void)
 {
 	detail::iuConsole::output("iutest version %x.%x.%x.%x\n"
 		, IUTEST_MAJORVER, IUTEST_MINORVER, IUTEST_BUILD, IUTEST_REVISION);
@@ -163,4 +163,4 @@ inline void iuOptionMessage::ShowFeature(void)
 }	// end of namespace detail
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_OPTION_MESSAGE_HPP_00EB9B17_0615_4678_9AD0_1F5B295B404F_
+#endif // INCG_IRIS_IUTEST_OPTION_MESSAGE_HPP_00EB9B17_0615_4678_9AD0_1F5B295B404F_

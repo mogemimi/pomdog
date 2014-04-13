@@ -29,7 +29,7 @@ IUTEST_IPP_INLINE void iuStreamMessage::append(const char* str)
 {
 	if( str == NULL )
 	{
-		m_stream << "(null)";
+		m_stream << kStrings::Null;
 	}
 	else
 	{
@@ -37,7 +37,7 @@ IUTEST_IPP_INLINE void iuStreamMessage::append(const char* str)
 	}
 }
 
-IUTEST_IPP_INLINE ::std::string	iuCodeMessage::make_message(void) const
+IUTEST_IPP_INLINE ::std::string iuCodeMessage::make_message(void) const
 {
 	::std::string str = FormatFileLocation(m_file, m_line);
 	str += ": ";
@@ -50,7 +50,7 @@ IUTEST_IPP_INLINE ::std::string FormatFileLocation(const char* file, int line)
 	const char* const file_name = file == NULL ? kStrings::UnkownFile : file;
 	if( line < 0 )
 	{
-		return file;
+		return file_name;
 	}
 	iuStringStream::type strm;
 	if( TestFlag::IsEnableFlag(TestFlag::FILELOCATION_STYLE_MSVC) )
@@ -69,7 +69,7 @@ IUTEST_IPP_INLINE ::std::string FormatCompilerIndependentFileLocation(const char
 	const char* const file_name = file == NULL ? kStrings::UnkownFile : file;
 	if( line < 0 )
 	{
-		return file;
+		return file_name;
 	}
 	iuStringStream::type strm;
 	strm << file_name << ":" << line;
@@ -84,4 +84,4 @@ IUTEST_IPP_INLINE void iuCodeMessage::add_message(const ::std::string& str)
 }	// end of namespace detail
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_MESSAGE_IPP_0A05C876_F204_41F5_895F_F8454AB283B1_
+#endif // INCG_IRIS_IUTEST_MESSAGE_IPP_0A05C876_F204_41F5_895F_F8454AB283B1_

@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/srz-zumix/iutest.png?branch=master)](https://travis-ci.org/srz-zumix/iutest)
+[![Coverage Status](https://coveralls.io/repos/srz-zumix/iutest/badge.png?branch=master)](https://coveralls.io/r/srz-zumix/iutest?branch=master)
+
 iutest
 ==========
 iutest - iris unit test framework
@@ -12,19 +15,16 @@ XML test report, inform- and assume- flavor, and japanese test name, etc...
 Documentation
 --------------------------------------------------
 
-doc/index.html
-
-[online document](http://iutest.sourceforge.jp/doc/index.html)
+doc/index.html  
+[online document](http://iutest.sourceforge.jp/doc/index.html)  
 
 
 Project page
 --------------------------------------------------
 
-[Project page](http://iutest.sourceforge.jp/)
-
-[Github](https://github.com/srz-zumix/iutest)
-
-[Google Group](https://groups.google.com/forum/?fromgroups#!forum/g-iutest)
+[Project page](http://iutest.sourceforge.jp/)  
+[Github](https://github.com/srz-zumix/iutest)  
+[Google Group](https://groups.google.com/forum/?fromgroups#!forum/g-iutest)  
 
     
 License

@@ -36,8 +36,8 @@ namespace iuutil
 {
 
 //! コンソール出力クラスの再利用
-typedef ::iutest::detail::iuConsole	Console;
+typedef ::iutest::detail::iuConsole Console;
 
 }	// end of namespace iuutil
 
-#endif	// INCG_IRIS_IUTEST_UTIL_OUTPUT_HPP_44C683CF_3452_4F68_B34E_10606EB9E190_
+#endif // INCG_IRIS_IUTEST_UTIL_OUTPUT_HPP_44C683CF_3452_4F68_B34E_10606EB9E190_

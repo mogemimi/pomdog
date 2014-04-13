@@ -30,7 +30,7 @@ IUTEST_IPP_INLINE void Test::RecordProperty(const ::std::string& key, const ::st
 	TestRecordPropertyHelper::RecordProperty(prop);
 }
 
-IUTEST_IPP_INLINE 	void Test::Run(detail::iuITestInfoMediator* test_info)
+IUTEST_IPP_INLINE void Test::Run(detail::iuITestInfoMediator* test_info)
 {
 	m_test_info = test_info;
 	test_info_ = test_info->ptr();
@@ -44,7 +44,7 @@ IUTEST_IPP_INLINE 	void Test::Run(detail::iuITestInfoMediator* test_info)
 
 	SetUp();
 
-	if( !HasFailure() )
+	if( !HasFailure() && !IsSkipped() )
 	{
 		Body();
 	}
@@ -57,4 +57,4 @@ IUTEST_IPP_INLINE 	void Test::Run(detail::iuITestInfoMediator* test_info)
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_BODY_IPP_3EEA6706_9954_4330_B292_129667FA6B96_
+#endif // INCG_IRIS_IUTEST_BODY_IPP_3EEA6706_9954_4330_B292_129667FA6B96_

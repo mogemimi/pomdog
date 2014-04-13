@@ -28,7 +28,12 @@
 //======================================================================
 // define
 /**
- * @ingroup	TESTDEF
+ * @defgroup	VALUE_PARAMETERIZED_TEST	値のパラメータ化テスト
+ * @brief		値のパラメータ化テスト
+*/
+
+/**
+ * @ingroup	VALUE_PARAMETERIZED_TEST
  * @def		IUTEST_INSTANTIATE_TEST_CASE_P
  * @brief	パラメータテストインスタンス化マクロ
  * @param	prefix_			= インスタンス名
@@ -39,7 +44,7 @@
 	IIUT_INSTANTIATE_TEST_CASE_P_(prefix_, testfixture_, generator_)
 
 /**
- * @ingroup	TESTDEF
+ * @ingroup	VALUE_PARAMETERIZED_TEST
  * @def		IUTEST_P(testfixture_, testname_)
  * @brief	パラメータユーザー指定テスト関数定義マクロ
  * @param	testfixture_	= テストフィクスチャ
@@ -55,7 +60,7 @@
 #if IUTEST_HAS_ANY_PARAM_TEST
 
 /**
- * @ingroup	TESTDEF
+ * @ingroup	VALUE_PARAMETERIZED_TEST
  * @def		IUTEST_INSTANTIATE_TEST_CASE_AP
  * @brief	パラメータテストインスタンス化マクロ
  * @param	prefix_		= インスタンス名
@@ -66,7 +71,7 @@
 	IIUT_INSTANTIATE_TEST_CASE_P_(prefix_, IUTEST_ALIAS_TESTNAME_F(iuTestWithAny, testcase_), generator_)
 
 /**
- * @ingroup	TESTDEF
+ * @ingroup	VALUE_PARAMETERIZED_TEST
  * @def		IUTEST_AP(testcase_, testname_)
  * @brief	パラメータユーザー指定テスト関数定義マクロ
  * @param	testcase_	= テストケース名
@@ -95,7 +100,7 @@
 #endif
 
 #if IUTEST_HAS_IF_EXISTS
-#define IIUT_TEST_P_FIXTURE_DECL_(testcase_)	IIUT_TEST_P_FIXTURE_DECL_I(IUTEST_TO_VARNAME_(testcase_))
+#define IIUT_TEST_P_FIXTURE_DECL_(testcase_)	IIUT_TEST_P_FIXTURE_DECL_I(IIUT_TO_VARNAME_(testcase_))
 #define IIUT_TEST_P_FIXTURE_DECL_I(testcase_)	IUTEST_IF_NOT_EXISTS(testcase_, typedef ::iutest::TestWithAny testcase_;)
 #else
 #define IIUT_TEST_P_FIXTURE_DECL_(testcase_)
@@ -107,12 +112,12 @@
 */
 #define IIUT_INSTANTIATE_TEST_CASE_P_(prefix_, testcase_, generator_)						\
 	IIUT_TEST_P_FIXTURE_DECL_(testcase_)													\
-	static ::iutest::detail::iuIParamGenerator< IUTEST_TO_VARNAME_(testcase_)::ParamType >*	\
+	static ::iutest::detail::iuIParamGenerator< IIUT_TO_VARNAME_(testcase_)::ParamType >*	\
 		IUTEST_TEST_P_EVALGENERATOR_NAME_(prefix_, testcase_)(void) { return generator_; }	\
 		int IUTEST_TEST_P_INSTANTIATIONREGISTER_NAME_(prefix_, testcase_)(void) {			\
-			::iutest::ParamTestCaseInfo< IUTEST_TO_VARNAME_(testcase_) >* p =				\
-				IIUT_GETTESTCASEPATTERNHOLDER( IUTEST_TO_VARNAME_(testcase_)				\
-					, IUTEST_TO_NAME_STR_(testcase_), IUTEST_GET_PACKAGENAME_());			\
+			::iutest::detail::ParamTestCaseInfo< IIUT_TO_VARNAME_(testcase_) >* p =			\
+				IIUT_GETTESTCASEPATTERNHOLDER( IIUT_TO_VARNAME_(testcase_)					\
+					, IIUT_TO_NAME_STR_(testcase_), IUTEST_GET_PACKAGENAME_());				\
 			return p->AddTestCaseInstantiation(#prefix_, IUTEST_TEST_P_EVALGENERATOR_NAME_(prefix_, testcase_));	\
 		} IUTEST_TEST_P_INSTANTIATIONREGISTER_(prefix_, testcase_)
 
@@ -121,13 +126,13 @@
 */
 #define IIUT_TEST_P_(testcase_, testname_)															\
 	IIUT_TEST_P_FIXTURE_DECL_(testcase_)															\
-	class IUTEST_TEST_CLASS_NAME_(testcase_, testname_) : public IUTEST_TO_VARNAME_(testcase_) {	\
+	class IUTEST_TEST_CLASS_NAME_(testcase_, testname_) : public IIUT_TO_VARNAME_(testcase_) {		\
 		public: IUTEST_TEST_CLASS_NAME_(testcase_, testname_)(void) {}								\
 		protected: virtual void Body(void);															\
-		private: static int	AddRegister(void) {														\
+		private: static int AddRegister(void) {														\
 			static ::iutest::detail::ParamTestInstance< IUTEST_TEST_CLASS_NAME_(testcase_			\
-				, testname_) > testinfo(IUTEST_TO_NAME_STR_(testname_));							\
-			IIUT_GETTESTCASEPATTERNHOLDER(IUTEST_TO_VARNAME_(testcase_), IUTEST_TO_NAME_STR_(testcase_)	\
+				, testname_) > testinfo(IIUT_TO_NAME_STR_(testname_));								\
+			IIUT_GETTESTCASEPATTERNHOLDER(IIUT_TO_VARNAME_(testcase_), IIUT_TO_NAME_STR_(testcase_)	\
 					, IUTEST_GET_PACKAGENAME_())->AddTestPattern(&testinfo); return 0;				\
 		}																							\
 		static int dummy_;																			\
@@ -138,14 +143,14 @@
 	void IUTEST_TEST_CLASS_NAME_(testcase_, testname_)::Body(void)
 
 #define IIUT_TEST_P_IGNORE_(testcase_, testname_)													\
-	class IUTEST_TEST_CLASS_NAME_(testcase_, testname_) : public IUTEST_TO_VARNAME_(testcase_) {	\
+	class IUTEST_TEST_CLASS_NAME_(testcase_, testname_) : public IIUT_TO_VARNAME_(testcase_) {		\
 		public: IUTEST_TEST_CLASS_NAME_(testcase_, testname_)(void) {}								\
 		protected: virtual void Body(void) { IUTEST_SKIP() << "ignored test..."; }					\
 		template<typename T>void Body(void);														\
-		private: static int	AddRegister(void) {														\
+		private: static int AddRegister(void) {														\
 			static ::iutest::detail::ParamTestInstance< IUTEST_TEST_CLASS_NAME_(testcase_			\
-				, testname_) > testinfo(IUTEST_TO_NAME_STR_(testname_));							\
-			IIUT_GETTESTCASEPATTERNHOLDER(IUTEST_TO_VARNAME_(testcase_), IUTEST_TO_NAME_STR_(testcase_)	\
+				, testname_) > testinfo(IIUT_TO_NAME_STR_(testname_));								\
+			IIUT_GETTESTCASEPATTERNHOLDER(IIUT_TO_VARNAME_(testcase_), IIUT_TO_NAME_STR_(testcase_)	\
 				, IUTEST_GET_PACKAGENAME_())->AddTestPattern(&testinfo); return 0;					\
 		}																							\
 		static int dummy_;																			\
@@ -155,15 +160,15 @@
 		= IUTEST_TEST_CLASS_NAME_(testcase_, testname_)::AddRegister();								\
 	template<typename T>void IUTEST_TEST_CLASS_NAME_(testcase_, testname_)::Body(void)
 
-#define IUTEST_TEST_P_EVALGENERATOR_NAME_(prefix_, testcase_)	IIUT_TEST_P_EVALGENERATOR_NAME_I(prefix_, IUTEST_TO_VARNAME_(testcase_))
+#define IUTEST_TEST_P_EVALGENERATOR_NAME_(prefix_, testcase_)	IIUT_TEST_P_EVALGENERATOR_NAME_I(prefix_, IIUT_TO_VARNAME_(testcase_))
 #define IIUT_TEST_P_EVALGENERATOR_NAME_I(prefix_, testcase_)	IIUT_TEST_P_EVALGENERATOR_NAME_I_(prefix_, testcase_)
 #define IIUT_TEST_P_EVALGENERATOR_NAME_I_(prefix_, testcase_)	s_##prefix_##_##testcase_##_EvalGenerator_
 
-#define IUTEST_TEST_P_INSTANTIATIONREGISTER_NAME_(prefix_, testcase_)	IIUT_TEST_P_INSTANTIATIONREGISTER_NAME_I(prefix_, IUTEST_TO_VARNAME_(testcase_))
+#define IUTEST_TEST_P_INSTANTIATIONREGISTER_NAME_(prefix_, testcase_)	IIUT_TEST_P_INSTANTIATIONREGISTER_NAME_I(prefix_, IIUT_TO_VARNAME_(testcase_))
 #define IIUT_TEST_P_INSTANTIATIONREGISTER_NAME_I(prefix_, testcase_)	IIUT_TEST_P_INSTANTIATIONREGISTER_NAME_I_(prefix_, testcase_)
 #define IIUT_TEST_P_INSTANTIATIONREGISTER_NAME_I_(prefix_, testcase_)	prefix_##_##testcase_##_TestCaseInstantiationRegister
 
-#define IUTEST_TEST_P_INSTANTIATIONREGISTER_(prefix_, testcase_)			IIUT_TEST_P_INSTANTIATIONREGISTER_I(prefix_, IUTEST_TO_VARNAME_(testcase_), IUTEST_TEST_P_INSTANTIATIONREGISTER_NAME_(prefix_, testcase_))
+#define IUTEST_TEST_P_INSTANTIATIONREGISTER_(prefix_, testcase_)			IIUT_TEST_P_INSTANTIATIONREGISTER_I(prefix_, IIUT_TO_VARNAME_(testcase_), IUTEST_TEST_P_INSTANTIATIONREGISTER_NAME_(prefix_, testcase_))
 #define IIUT_TEST_P_INSTANTIATIONREGISTER_I(prefix_, testcase_, register_)	IIUT_TEST_P_INSTANTIATIONREGISTER_I_(prefix_, testcase_, register_)
 #define IIUT_TEST_P_INSTANTIATIONREGISTER_I_(prefix_, testcase_, register_)	int s_##prefix_##_##testcase_##_dummy = register_()
 
@@ -178,6 +183,7 @@ namespace detail
 //======================================================================
 // class
 /**
+ * @private
  * @brief	パラメータ単体テスト TestInfo 情報インスタンス
 */
 template<typename T>
@@ -210,7 +216,7 @@ public:
 
 private:
 	// テストケースの作成
-	virtual TestCase*	MakeTestCase(const char* testcase_name, TestTypeId id, SetUpMethod setup, TearDownMethod teardown) const IUTEST_CXX_OVERRIDE
+	virtual TestCase* MakeTestCase(const char* testcase_name, TestTypeId id, SetUpMethod setup, TearDownMethod teardown) const IUTEST_CXX_OVERRIDE
 	{
 #if !defined(IUTEST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
 		return UnitTest::instance().AddTestCase<TestCase>(testcase_name, id, setup, teardown);
@@ -220,7 +226,7 @@ private:
 	}
 
 	// テストの作成登録
-	virtual	void	RegisterTest(TestCase* testcase, ParamType param, int index) const IUTEST_CXX_OVERRIDE
+	virtual void RegisterTest(TestCase* testcase, ParamType param, int index) const IUTEST_CXX_OVERRIDE
 	{
 		EachTest* test = new EachTest(testcase, detail::MakeIndexTestName(this->m_name.c_str(), index).c_str(), param);
 		// new オブジェクトを管理してもらう
@@ -231,6 +237,7 @@ private:
 }	// end of namespace detail
 
 /**
+ * @ingroup	PARAMETERIZED_TEST
  * @brief	any パラメータテストフィクスチャ
 */
 class TestWithAny : public Test, public WithParamInterface<any>
@@ -239,7 +246,7 @@ public:
 	/**
 	 * @brief	パラメータの取得
 	*/
-	static const ParamType&	GetParam(void) { return WithParamInterface<any>::GetParam(); }
+	static const ParamType& GetParam(void) { return WithParamInterface<any>::GetParam(); }
 
 	/**
 	 * @brief	パラメータの取得
@@ -250,6 +257,13 @@ public:
 
 //======================================================================
 // function
+/**
+ * @ingroup		VALUE_PARAMETERIZED_TEST
+ * @defgroup	PARAM_GENERATOR	Parameter Generator
+ * @brief		パラメータ生成器
+ * @detail		IUTEST_INSTANTIATE_TEST_CASE_P に使用可能なパラメータ生成器
+ * @{
+*/
 
 /**
  * @brief	範囲パラメータ
@@ -271,7 +285,7 @@ inline detail::iuParamGenerator<bool> IUTEST_ATTRIBUTE_UNUSED_ Bool(void)
 #if IUTEST_HAS_VALUESGEN
 
 /**
- * @brief	値配列パラメータ
+ * @brief	ユーザー定義ジェネレータ利用パラメータ
 */
 template<typename Generator>
 inline detail::iuValuesParamsGeneratorHolder<Generator> IUTEST_ATTRIBUTE_UNUSED_ ValuesGen(size_t num, const Generator& gen)
@@ -506,13 +520,20 @@ IIUT_DECL_PAIRWISE_(9)
 
 #endif
 
+/**
+ * @}
+*/
+
 }	// end of namespace iutest
 
 #if IUTEST_HAS_ANY_PARAM_TEST
-/** any param test fixture */
-typedef ::iutest::TestWithAny	iuTestWithAny;
+/**
+ * @ingroup	VALUE_PARAMETERIZED_TEST
+ * @brief	any param test fixture
+*/
+typedef ::iutest::TestWithAny iuTestWithAny;
 #endif
 
-#endif	// IUTEST_HAS_PARAM_TEST
+#endif // IUTEST_HAS_PARAM_TEST
 
-#endif	// INCG_IRIS_IUTEST_PARAM_TESTS_HPP_3DBBF55E_A076_4207_B49E_34734EE333EE_
+#endif // INCG_IRIS_IUTEST_PARAM_TESTS_HPP_3DBBF55E_A076_4207_B49E_34734EE333EE_

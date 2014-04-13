@@ -27,7 +27,7 @@ namespace detail
 
 //======================================================================
 // function
-IUTEST_IPP_INLINE ::std::string	FormatTimeInMillisecAsSecond(TimeInMillisec msec)
+IUTEST_IPP_INLINE ::std::string FormatTimeInMillisecAsSecond(TimeInMillisec msec)
 {
 	detail::iuStringStream::type ss;
 #if defined(_MSC_VER) && _MSC_VER < 1300
@@ -38,7 +38,7 @@ IUTEST_IPP_INLINE ::std::string	FormatTimeInMillisecAsSecond(TimeInMillisec msec
 	return ss.str();
 }
 
-IUTEST_IPP_INLINE ::std::string	FormatTimeInMillisecAsIso8601(TimeInMillisec msec)
+IUTEST_IPP_INLINE ::std::string FormatTimeInMillisecAsIso8601(TimeInMillisec msec)
 {
 	time_t sec = static_cast<time_t>(msec / 1000);
 IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_BEGIN()
@@ -70,20 +70,20 @@ IUTEST_IPP_INLINE time_t GetTime(void)
 
 IUTEST_IPP_INLINE TimeInMillisec GetTimeInMillis(void)
 {
-#if		defined(IUTEST_GetMillisec)
+#if   defined(IUTEST_GetMillisec)
 	return IUTEST_GetMillisec();
 
-#elif	IUTEST_HAS_CXX11_HDR_CHRONO
+#elif IUTEST_HAS_CXX11_HDR_CHRONO
 	return ::std::chrono::duration_cast< ::std::chrono::milliseconds>(::std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 
-#elif	IUTEST_HAS_GETTIMEOFDAY
+#elif IUTEST_HAS_GETTIMEOFDAY
 	timeval tv;
 	gettimeofday(&tv, NULL);
 	return static_cast<TimeInMillisec>(tv.tv_sec) * 1000 + static_cast<TimeInMillisec>(tv.tv_usec) / 1000;
 
-#elif	defined(IUTEST_OS_WINDOWS)
+#elif defined(IUTEST_OS_WINDOWS)
 
-#if		defined(IUTEST_OS_WINDOWS_MOBILE)
+#if defined(IUTEST_OS_WINDOWS_MOBILE)
 	return static_cast<TimeInMillisec>(GetTickCount());
 #else
 
@@ -97,7 +97,7 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 
 #endif
 
-#elif	IUTEST_HAS_CLOCK
+#elif IUTEST_HAS_CLOCK
 	return clock() * 1000 / CLOCKS_PER_SEC;
 
 #else
@@ -122,4 +122,4 @@ IUTEST_IPP_INLINE unsigned int GetIndefiniteValue(void)
 }	// end of namespace detail
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_TIME_IPP_C6B9E65B_4059_4175_A6DB_397DBF338AA8_
+#endif // INCG_IRIS_IUTEST_TIME_IPP_C6B9E65B_4059_4175_A6DB_397DBF338AA8_

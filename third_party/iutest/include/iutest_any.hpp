@@ -132,7 +132,7 @@ private:
 
 #if IUTEST_HAS_EXCEPTIONS
 /**
- * @brief	any_cast の失敗の例外
+ * @brief	any_cast の失敗例外
 */
 class bad_any_cast : public ::std::bad_cast {};
 #endif
@@ -207,4 +207,4 @@ inline T unsafe_any_cast(const any& value)
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_ANY_HPP_8DB2417F_568A_4E01_95AD_21164565B975_
+#endif // INCG_IRIS_IUTEST_ANY_HPP_8DB2417F_568A_4E01_95AD_21164565B975_

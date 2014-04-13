@@ -114,20 +114,20 @@ class iuTest_TestCaseParentPackage;		//!< 親パッケージ名参照用定義
  * @brief	グローバルパッケージ名の取得
  * @return	パッケージ名
 */
-inline ::std::string IUTEST_ATTRIBUTE_UNUSED_	iuTest_GetTestCasePackageName(const iuTest_TestCasePackage*) { return ""; }
+inline ::std::string IUTEST_ATTRIBUTE_UNUSED_ iuTest_GetTestCasePackageName(const iuTest_TestCasePackage*) { return ""; }
 
 /**
  * @brief	親空間のパッケージ名の取得
  * @return	パッケージ名
 */
-inline ::std::string IUTEST_ATTRIBUTE_UNUSED_	iuTest_GetTestCaseParentPackageName(const iuTest_TestCaseParentPackage*) { return ""; }
+inline ::std::string IUTEST_ATTRIBUTE_UNUSED_ iuTest_GetTestCaseParentPackageName(const iuTest_TestCaseParentPackage*) { return ""; }
 
 /**
  * @brief	テストケース名との結合
  * @return	テストケース名
 */
-inline ::std::string IUTEST_ATTRIBUTE_UNUSED_	iuTest_ConcatTestCaseName(const ::std::string& package, const char* testcase_name) { return package + testcase_name; }
+inline ::std::string IUTEST_ATTRIBUTE_UNUSED_ iuTest_ConcatTestCaseName(const ::std::string& package, const char* testcase_name) { return package + testcase_name; }
 
 #endif
 
-#endif	// INCG_IRIS_IUTEST_PACKAGE_HPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
+#endif // INCG_IRIS_IUTEST_PACKAGE_HPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_

@@ -68,10 +68,10 @@ class iuConsole
 	template<typename T>
 	struct Variable
 	{
-		static iuLogger*	m_pLogger;
+		static iuLogger* m_pLogger;
 	};
 
-	typedef Variable<void>	var;
+	typedef Variable<void> var;
 
 public:
 	//! コンソール文字色
@@ -94,7 +94,6 @@ public:
 
 	/**
 	 * @brief	標準出力
-	 * @note	logger を通さない
 	*/
 	static inline void voutput(const char* fmt, va_list va);
 
@@ -102,11 +101,24 @@ public:
 	 * @brief	色指定で標準出力
 	 * @param [in]	color	= 文字色
 	*/
-	static inline void	color_output(Color color, const char *fmt, ...);
+	static inline void color_output(Color color, const char *fmt, ...);
+
+public:
+	/**
+	 * @brief	標準出力
+	 * @note	no logger
+	*/
+	static inline void nl_output(const char *fmt, ...);
+
+	/**
+	 * @brief	標準出力
+	 * @note	no logger
+	*/
+	static inline void nl_voutput(const char* fmt, va_list va);
 
 public:
 	//! Logger のセット
-	static iuLogger*	SetLogger(iuLogger* logger)
+	static iuLogger* SetLogger(iuLogger* logger)
 	{
 		iuLogger* pre = var::m_pLogger;
 		var::m_pLogger = logger;
@@ -114,23 +126,22 @@ public:
 	}
 private:
 	static inline void color_output_impl(Color color, const char* fmt, va_list va);
-	static inline void voutput_impl(const char* fmt, va_list va);
 	static inline bool IsShouldUseColor(bool use_color);
 
 private:
 	static inline bool IsStringEqual(const char* str1, const char* str2) { return strcmp(str1, str2) == 0; }
 
-	static bool	IsColorModeOff(void)
+	static bool IsColorModeOff(void)
 	{
-#if	defined(INCG_IRIS_IUTEST_HPP_) && !defined(IUTEST_USE_GTEST)
+#if defined(INCG_IRIS_IUTEST_HPP_) && !defined(IUTEST_USE_GTEST)
 		return TestFlag::IsEnableFlag(TestFlag::CONSOLE_COLOR_OFF);
 #else
 		return IUTEST_FLAG(color) == "no";
 #endif
 	}
-	static bool	IsColorModeOn(void)
+	static bool IsColorModeOn(void)
 	{
-#if	defined(INCG_IRIS_IUTEST_HPP_) && !defined(IUTEST_USE_GTEST)
+#if defined(INCG_IRIS_IUTEST_HPP_) && !defined(IUTEST_USE_GTEST)
 		return TestFlag::IsEnableFlag(TestFlag::CONSOLE_COLOR_ON);
 #else
 		return IUTEST_FLAG(color) == "yes";
@@ -138,7 +149,7 @@ private:
 	}
 	static bool IsColorModeAnsi(void)
 	{
-#if	defined(INCG_IRIS_IUTEST_HPP_) && !defined(IUTEST_USE_GTEST)
+#if defined(INCG_IRIS_IUTEST_HPP_) && !defined(IUTEST_USE_GTEST)
 		return TestFlag::IsEnableFlag(TestFlag::CONSOLE_COLOR_ANSI);
 #else
 		return false;
@@ -146,14 +157,25 @@ private:
 	}
 };
 
-inline void	iuConsole::output(const char *fmt, ...)
+inline void iuConsole::output(const char *fmt, ...)
 {
 	va_list va;
 	va_start(va, fmt);
-	voutput_impl(fmt, va);
+	voutput(fmt, va);
 	va_end(va);
 }
-inline void	iuConsole::color_output(Color color, const char *fmt, ...)
+inline void iuConsole::voutput(const char* fmt, va_list va)
+{
+	if( var::m_pLogger != NULL )
+	{
+		var::m_pLogger->voutput(fmt, va);
+	}
+	else
+	{
+		nl_voutput(fmt, va);
+	}
+}
+inline void iuConsole::color_output(Color color, const char *fmt, ...)
 {
 	va_list va;
 	va_start(va, fmt);
@@ -164,13 +186,19 @@ inline void	iuConsole::color_output(Color color, const char *fmt, ...)
 	}
 	else
 	{
-		voutput_impl(fmt, va);
+		voutput(fmt, va);
 	}
 
 	va_end(va);
 }
-
-inline void iuConsole::voutput(const char* fmt, va_list va)
+inline void iuConsole::nl_output(const char *fmt, ...)
+{
+	va_list va;
+	va_start(va, fmt);
+	nl_voutput(fmt, va);
+	va_end(va);
+}
+inline void iuConsole::nl_voutput(const char* fmt, va_list va)
 {
 	IUTEST_VPRINTF(fmt, va);
 }
@@ -200,7 +228,7 @@ inline void iuConsole::color_output_impl(Color color, const char* fmt, va_list v
 		fflush(stdout);
 		::SetConsoleTextAttribute(stdout_handle, attr[color] | FOREGROUND_INTENSITY);
 
-		voutput_impl(fmt, va);
+		voutput(fmt, va);
 
 		fflush(stdout);
 		::SetConsoleTextAttribute(stdout_handle, wAttributes);
@@ -209,24 +237,12 @@ inline void iuConsole::color_output_impl(Color color, const char* fmt, va_list v
 #endif
 	{
 		output("\033[1;3%cm", '0' + color);
-		voutput_impl(fmt, va);
+		voutput(fmt, va);
 		output("\033[m");
 	}
 }
 
-inline void iuConsole::voutput_impl(const char* fmt, va_list va)
-{
-	if( var::m_pLogger != NULL )
-	{
-		var::m_pLogger->voutput(fmt, va);
-	}
-	else
-	{
-		voutput(fmt, va);
-	}
-}
-
-inline bool	iuConsole::IsShouldUseColor(bool use_color)
+inline bool iuConsole::IsShouldUseColor(bool use_color)
 {
 	if( IsColorModeOn() )
 	{
@@ -264,6 +280,6 @@ inline bool	iuConsole::IsShouldUseColor(bool use_color)
 }	// end of namespace iutest
 
 template<typename T>
-::iutest::detail::iuLogger*	::iutest::detail::iuConsole::Variable<T>::m_pLogger = NULL;
+::iutest::detail::iuLogger* ::iutest::detail::iuConsole::Variable<T>::m_pLogger = NULL;
 
-#endif	// INCG_IRIS_IUTEST_CONSOLE_HPP_DCAC5025_B7BB_424E_A849_9E6FE0A3B460_
+#endif // INCG_IRIS_IUTEST_CONSOLE_HPP_DCAC5025_B7BB_424E_A849_9E6FE0A3B460_

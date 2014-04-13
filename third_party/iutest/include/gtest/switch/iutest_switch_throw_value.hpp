@@ -22,7 +22,7 @@
 //======================================================================
 // define
 
-#else	// !defined(IUTEST_USE_GTEST)
+#else // !defined(IUTEST_USE_GTEST)
 
 //======================================================================
 // undef
@@ -136,7 +136,7 @@
 #define IUTEST_TEST_THROW_VALUE_STRCASEEQ_(statement, expected_exception, expected_exception_value, on_failure)	\
 	IUTEST_TEST_THROW_VALUE_(statement, expected_exception, expected_exception_value, on_failure, ::testing::internal::CmpHelperSTRCASEEQ)
 
-#endif	// !defined(IUTEST_USE_GTEST)
+#endif // !defined(IUTEST_USE_GTEST)
 
 // ASSERT
 #define ASSERT_THROW_PRED_FORMAT2		IUTEST_ASSERT_THROW_PRED_FORMAT2
@@ -166,4 +166,4 @@
 #define ASSUME_THROW_VALUE_STREQ		IUTEST_ASSUME_THROW_VALUE_STREQ
 #define ASSUME_THROW_VALUE_STRCASEEQ	IUTEST_ASSUME_THROW_VALUE_STRCASEEQ
 
-#endif	// INCG_IRIS_IUTEST_SWITCH_THROW_VALUE_HPP_5D6B75EE_F445_4730_8FEA_FB6249BCBD9C_
+#endif // INCG_IRIS_IUTEST_SWITCH_THROW_VALUE_HPP_5D6B75EE_F445_4730_8FEA_FB6249BCBD9C_

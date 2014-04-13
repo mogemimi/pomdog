@@ -83,4 +83,4 @@ IUTEST_IPP_INLINE bool MiniDump::Create(const char* filepath, EXCEPTION_POINTERS
 }	// end of namespace detail
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_DEBUG_IPP_1575CB44_189A_4248_B305_DB4882E3BFC2_
+#endif // INCG_IRIS_IUTEST_DEBUG_IPP_1575CB44_189A_4248_B305_DB4882E3BFC2_

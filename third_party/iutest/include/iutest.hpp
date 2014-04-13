@@ -11,7 +11,7 @@
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
  * see LICENSE
- * 
+ *
  * @see			iutest_ver.h
  * @example		main.cpp
  * @example		sub.cpp
@@ -74,7 +74,7 @@ namespace iutest
 
 #if IUTEST_HAS_PARAM_METHOD_TEST
 /**
- * @ingroup	TESTDEF
+ * @ingroup	VALUE_PARAMETERIZED_TEST
  * @def		IUTEST_PMZ(testcase_, testname_, method_, ...)
  * @brief	パラメタライズ関数コールテスト定義マクロ
  * @param	testcase_	= テストケース名
@@ -85,7 +85,7 @@ namespace iutest
 														, ::iutest::internal::GetTestTypeId(), __VA_ARGS__)
 
 /**
- * @ingroup	TESTDEF
+ * @ingroup	VALUE_PARAMETERIZED_TEST
  * @def		IUTEST_PMZ_F(testfixture_, testname_, method_, ...)
  * @brief	パラメタライズ関数コールテスト定義マクロ
  * @param	testfixture_	= テストフィクスチャ名
@@ -209,11 +209,19 @@ namespace iutest
 #  define IUTEST_SKIP()								IUTEST_TEST_SKIP()
 #endif
 
+/**
+ * @addtogroup	IUTEST_ASSERTION	アサーション
+ * @{
+*/
 
 /**
- * @defgroup	IUTEST_ASSERT_	アサーション(ASSERT)
- * @brief		テスト記述マクロ
+ * @defgroup	IUTEST_ASSERT_	ASSERT
+ * @brief		致命的エラーフレーバー
  * @details		失敗した場合、その時点でテストから抜けます。
+*/
+
+/**
+ * @}
 */
 
 /**
@@ -518,11 +526,19 @@ namespace iutest
 #endif
 
 
+/**
+ * @addtogroup	IUTEST_ASSERTION	アサーション
+ * @{
+*/
 
 /**
- * @defgroup	IUTEST_EXPECT_		アサーション(EXPECT)
- * @brief		テスト記述マクロ
+ * @defgroup	IUTEST_EXPECT_	EXPECT
+ * @brief		致命的ではないエラーフレーバー
  * @details		失敗した場合でも、テストを続行します。
+*/
+
+/**
+* @}
 */
 
 /**
@@ -836,11 +852,19 @@ namespace iutest
 #endif
 
 
+/**
+ * @addtogroup	IUTEST_ASSERTION	アサーション
+ * @{
+*/
 
 /**
- * @defgroup	IUTEST_INFORM_		アサーション(INFORM)
- * @brief		テスト記述マクロ
+ * @defgroup	IUTEST_INFORM_	INFORM
+ * @brief		警告フレーバー
  * @details		失敗した場合でも、テスト失敗として記録しません。また、テストは続行します。
+*/
+
+/**
+ * @}
 */
 
 /**
@@ -1136,11 +1160,19 @@ namespace iutest
 #endif
 
 /**
- * @defgroup	IUTEST_ASSUME_		アサーション(ASSUME)
- * @brief		前提テスト記述マクロ
+ * @addtogroup	IUTEST_ASSERTION	アサーション
+ * @{
+*/
+
+/**
+ * @defgroup	IUTEST_ASSUME_	ASSUME
+ * @brief		前提条件フレーバー
  * @details		テストの前提検証用マクロです。失敗した場合、以降の処理を行わずテストはスキップされます。
 */
 
+/**
+ * @}
+*/
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	== テスト
@@ -1448,7 +1480,7 @@ class UnitTestSource
 {
 public:
 	/** @private */
-	static UnitTestSource&	GetInstance(void)	{ static UnitTestSource inst; return inst; }
+	static UnitTestSource& GetInstance(void) { static UnitTestSource inst; return inst; }
 
 private:
 	UnitTestSource(void)
@@ -1478,7 +1510,7 @@ public:
 	/**
 	 * @brief	初期化
 	*/
-	void	Initialize(void)
+	void Initialize(void)
 	{
 		UnitTest::instance().Initialize();
 	}
@@ -1505,14 +1537,14 @@ public:
  * @details	コマンドラインオプションの解析をします。
  *			使用した引数は削除され pargc, argv を書き換えます
 */
-inline void	IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(int* pargc, char** argv)		{ TestEnv::ParseCommandLine(pargc, argv); UnitTestSource::GetInstance().Initialize(); }
-inline void	IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(int* pargc, wchar_t** argv)	{ TestEnv::ParseCommandLine(pargc, argv); UnitTestSource::GetInstance().Initialize(); }		//!< @overload
-inline void	IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(int* pargc, const char** argv)	{ TestEnv::ParseCommandLine(pargc, argv); UnitTestSource::GetInstance().Initialize(); }	//!< @overload
-inline void	IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(int* pargc, const wchar_t** argv)	{ TestEnv::ParseCommandLine(pargc, argv); UnitTestSource::GetInstance().Initialize(); }	//!< @overload
+inline void IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(int* pargc, char** argv)		{ TestEnv::ParseCommandLine(pargc, argv); UnitTestSource::GetInstance().Initialize(); }
+inline void IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(int* pargc, wchar_t** argv)	{ TestEnv::ParseCommandLine(pargc, argv); UnitTestSource::GetInstance().Initialize(); }		//!< @overload
+inline void IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(int* pargc, const char** argv)	{ TestEnv::ParseCommandLine(pargc, argv); UnitTestSource::GetInstance().Initialize(); }	//!< @overload
+inline void IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(int* pargc, const wchar_t** argv)	{ TestEnv::ParseCommandLine(pargc, argv); UnitTestSource::GetInstance().Initialize(); }	//!< @overload
 
 /** @overload */
 template<typename CharType>
-inline void	IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(::std::vector< ::std::basic_string<CharType> >& argv)
+inline void IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(::std::vector< ::std::basic_string<CharType> >& argv)
 {
 	TestEnv::ParseCommandLine(argv);
 	UnitTestSource::GetInstance().Initialize();
@@ -1537,4 +1569,4 @@ inline Environment* IUTEST_ATTRIBUTE_UNUSED_ AddGlobalTestEnvironment(Environmen
 
 #include "iutest_util.hpp"
 
-#endif	// INCG_IRIS_IUTEST_HPP_
+#endif // INCG_IRIS_IUTEST_HPP_

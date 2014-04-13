@@ -61,9 +61,9 @@
 		Body(); TearDown(); OnTestEnd(#testcase_, #testname_); }			\
 	TEST_CLASS_INITIALIZE(iuSetUp) { IUTEST_TEST_CLASS_NAME_(testcase_, testname_)::SetUpTestCase(); }		\
 	TEST_CLASS_CLEANUP(iuTearDown) { IUTEST_TEST_CLASS_NAME_(testcase_, testname_)::TearDownTestCase(); }	\
-	virtual void	Body(void);				\
+	virtual void Body(void);				\
 	};										\
-	void className::Body() 
+	void className::Body()
 
 #ifndef IUTEST_USE_GTEST
 
@@ -111,7 +111,7 @@ IUTEST_MAKE_PEEP(::iutest::detail::iuFactoryBase* ::iutest::TestInfo::*, ::iutes
 	}																						\
 	TEST_CLASS_INITIALIZE(iuSetUp) { IUTEST_TEST_CLASS_NAME_(testcase_, testname_)::SetUpTestCase(); }		\
 	TEST_CLASS_CLEANUP(iuTearDown) { IUTEST_TEST_CLASS_NAME_(testcase_, testname_)::TearDownTestCase(); }	\
-	virtual void	Body(void);																\
+	virtual void Body(void);																\
 	private: static int	AddRegister(void) {													\
 			static ::iutest::detail::ParamTestInstance< className > testinfo(#testname_);	\
 			::iutest::UnitTest::GetInstance()->parameterized_test_registry().				\
@@ -121,7 +121,7 @@ IUTEST_MAKE_PEEP(::iutest::detail::iuFactoryBase* ::iutest::TestInfo::*, ::iutes
 		static int dummy_;																	\
 	};																						\
 	int className::dummy_ IUTEST_ATTRIBUTE_UNUSED_ = className::AddRegister();				\
-	void className::Body() 
+	void className::Body()
 
 
 #if 1
@@ -147,7 +147,7 @@ IUTEST_MAKE_PEEP(::iutest::detail::iuFactoryBase* ::iutest::TestInfo::*, ::iutes
 				IUTEST_PEEP_GET(*testinfo, ::iutest::TestInfo, m_factory);				\
 			::Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsNotNull(factory);	\
 			::iutest::detail::auto_ptr< ::iutest::Test > p = factory->Create();			\
-			::iuutil::VisualStudio::Test* tester = static_cast< ::iuutil::VisualStudio::Test*>(p.ptr());	\
+			::iuutil::VisualStudio::Test* tester = static_cast< ::iuutil::VisualStudio::Test*>(p.get());	\
 			OnTestStart(testcase_name, #testname_);										\
 			tester->SetUp(); tester->Body(); tester->TearDown();						\
 			OnTestEnd(testcase_name, #testname_);										\
@@ -181,7 +181,7 @@ IUTEST_MAKE_PEEP(::iutest::detail::iuFactoryBase* ::iutest::TestInfo::*, ::iutes
 				IUTEST_PEEP_GET(*testinfo, ::iutest::TestInfo, m_factory);					\
 			::Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsNotNull(factory);	\
 			::iutest::detail::auto_ptr< ::iutest::Test > p = factory->Create();				\
-			::iuutil::VisualStudio::Test* tester = static_cast< ::iuutil::VisualStudio::Test*>(p.ptr());	\
+			::iuutil::VisualStudio::Test* tester = static_cast< ::iuutil::VisualStudio::Test*>(p.get());	\
 			OnTestStart(testcase_name, #testname_);										\
 			tester->SetUp(); tester->Body(); tester->TearDown();						\
 			OnTestEnd(testcase_name, #testname_);										\
@@ -234,7 +234,7 @@ public:
 			return;
 		}
 		::iutest::TestEventListeners& listeners = ::iutest::UnitTest::GetInstance()->listeners();
-		::iutest::TestEventListener* repeator = 
+		::iutest::TestEventListener* repeator =
 #define testing	iutest
 			IUTEST_PEEP_GET(listeners, ::testing::TestEventListeners, repeater)();
 #undef testing
@@ -248,7 +248,7 @@ public:
 			return;
 		}
 		::iutest::TestEventListeners& listeners = ::iutest::UnitTest::GetInstance()->listeners();
-		::iutest::TestEventListener* repeator = 
+		::iutest::TestEventListener* repeator =
 #define testing	iutest
 			IUTEST_PEEP_GET(listeners, ::testing::TestEventListeners, repeater)();
 #undef testing
@@ -261,7 +261,7 @@ public:
 */
 class VCCppUnitTestLogger : public ::iutest::detail::iuLogger
 {
-	typedef ::Microsoft::VisualStudio::CppUnitTestFramework::Logger	Logger;
+	typedef ::Microsoft::VisualStudio::CppUnitTestFramework::Logger Logger;
 public:
 	virtual void voutput(const char* fmt, va_list va)
 	{
@@ -298,7 +298,7 @@ public:
 		::iutest::TestEventListeners& listeners = ::iutest::UnitTest::GetInstance()->listeners();
 		listeners.Append(this);
 	}
-	virtual ~VCCppUnitTestPartResultReporter(void) 
+	virtual ~VCCppUnitTestPartResultReporter(void)
 	{
 		::iutest::TestEventListeners& listeners = ::iutest::UnitTest::GetInstance()->listeners();
 		listeners.Release(this);

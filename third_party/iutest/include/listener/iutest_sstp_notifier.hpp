@@ -236,7 +236,7 @@ public:
 	SakuraScript(const char* script) : m_script(script) {}
 	SakuraScript(const ::std::string& script) : m_script(script) {}
 public:
-	SakuraScript& Append(const std::string& str)
+	SakuraScript& Append(const ::std::string& str)
 	{
 		m_script.append(str);
 		return *this;
@@ -261,7 +261,7 @@ public:
 	SakuraScript& Open(const ::std::string& file) { Append("\\![open,file," + file + "]"); return *this; }
 
 public:
-	const ::std::string& ToString(void) 
+	const ::std::string& ToString(void)
 	{
 		// 改行は改行タグに変更する
 		detail::StringReplace(m_script, '\n', "\\n");
@@ -291,7 +291,7 @@ namespace ghost
 */
 struct Emily4
 {
-	enum 
+	enum
 	{
 		  Normal = 0		//!< 通常
 		, Shy				//!< 照れ
@@ -385,10 +385,12 @@ public:
 	/**
 	 * @brief	SSTPNotifier を追加
 	*/
-	static void SetUp(const char* host, int port=detail::SSTP::DEFAULT_PORT)
+	static TestEventListener* SetUp(const char* host, int port=detail::SSTP::DEFAULT_PORT)
 	{
 		TestEventListeners& listeners = UnitTest::GetInstance()->listeners();
-		listeners.Append(new SSTPNotifier(host, port));
+		TestEventListener* p = new SSTPNotifier(host, port);
+		listeners.Append(p);
+		return p;
 	}
 };
 
@@ -417,7 +419,7 @@ IUTEST_IPP_INLINE void SSTPNotifier::OnTestProgramStart(const UnitTest& test)
 		.End();
 }
 IUTEST_IPP_INLINE void SSTPNotifier::OnTestIterationStart(const UnitTest& test
-								  , int iteration)
+								, int iteration)
 {
 	IUTEST_UNUSED_VAR(test);
 	m_sstp.Notify()
@@ -494,9 +496,9 @@ IUTEST_IPP_INLINE void SSTPNotifier::OnTestCaseEnd(const TestCase& test_case)
 	m_sstp.Notify()
 		.Script(Script( detail::StreamableToString(test_case.name())
 #if IUTEST_SSTPNOTIFIER_JAPANESE
-			+ " テストケースは"	+ FormatBool(test_case.Passed()) + "したよ"
+			+ " テストケースは" + FormatBool(test_case.Passed()) + "したよ"
 #else
-			+ " TestCase is"	+ FormatBool(test_case.Passed()) + "."
+			+ " TestCase is"    + FormatBool(test_case.Passed()) + "."
 #endif
 			+ "(" + detail::StreamableToString(test_case.elapsed_time()) + "ms)").Concat().Ln().ToString())
 		.End();
@@ -549,4 +551,4 @@ IUTEST_IPP_INLINE ::std::string SSTPNotifier::FormatBool(bool b)
 
 #endif
 
-#endif	// INCG_IRIS_IUTEST_SSTP_NOTIFIER_HPP_1187A63F_E99B_4289_A562_3C87B9739B7D_
+#endif // INCG_IRIS_IUTEST_SSTP_NOTIFIER_HPP_1187A63F_E99B_4289_A562_3C87B9739B7D_

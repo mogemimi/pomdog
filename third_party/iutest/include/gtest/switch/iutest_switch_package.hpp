@@ -22,7 +22,7 @@
 //======================================================================
 // define
 
-#else	// !defined(IUTEST_USE_GTEST)
+#else // !defined(IUTEST_USE_GTEST)
 
 //======================================================================
 // undef
@@ -38,6 +38,6 @@
 #define IUTEST_PACKAGE(name)		namespace name
 #define IUTEST_HAS_PACKAGE			0
 
-#endif	// !defined(IUTEST_USE_GTEST)
+#endif // !defined(IUTEST_USE_GTEST)
 
-#endif	// INCG_IRIS_IUTEST_SWITCH_PACKAGE_HPP_5D6B75EE_F445_4730_8FEA_FB6249BCBD9C_
+#endif // INCG_IRIS_IUTEST_SWITCH_PACKAGE_HPP_5D6B75EE_F445_4730_8FEA_FB6249BCBD9C_

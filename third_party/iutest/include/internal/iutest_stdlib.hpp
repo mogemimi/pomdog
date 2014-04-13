@@ -32,7 +32,7 @@
 // define
 
 // tuple
-#if	defined(IUTEST_USE_EXTERNAL_TR1_TUPLE) && IUTEST_USE_EXTERNAL_TR1_TUPLE
+#if defined(IUTEST_USE_EXTERNAL_TR1_TUPLE) && IUTEST_USE_EXTERNAL_TR1_TUPLE
 # define IUTEST_HAS_STD_TUPLE	0
 #endif
 
@@ -42,7 +42,7 @@
 
 // ::std::tuple
 #ifndef IUTEST_HAS_STD_TUPLE
-#  if defined(IUTEST_USE_EXTERNAL_STD_TUPLE) && IUTEST_USE_EXTERNAL_STD_TUPLE
+#  if   defined(IUTEST_USE_EXTERNAL_STD_TUPLE) && IUTEST_USE_EXTERNAL_STD_TUPLE
 #    define IUTEST_HAS_STD_TUPLE	1
 #  elif defined(_STLPORT_VERSION)
 #    define IUTEST_HAS_STD_TUPLE	0
@@ -54,7 +54,7 @@
 #    if __has_include( <tuple> ) && IUTEST_HAS_VARIADIC_TEMPLATES
 #      define IUTEST_HAS_STD_TUPLE	1
 #    endif
-#  elif	defined(__GNUC__)
+#  elif defined(__GNUC__)
 #    if IUTEST_HAS_VARIADIC_TEMPLATES
 #      define IUTEST_HAS_STD_TUPLE	1
 #    endif
@@ -164,20 +164,20 @@ namespace iutest {
 // chrono
 #ifndef IUTEST_HAS_CXX11_HDR_CHRONO
 
-#if		defined(__has_include)
+#if   defined(__has_include)
 #  if __has_include( <chrono> )
 #    if IUTEST_HAS_CXX11
 #      define IUTEST_HAS_CXX11_HDR_CHRONO	1
 #    endif
 #  endif
-#elif	defined(__GLIBCXX__)
+#elif defined(__GLIBCXX__)
 #  if defined(__GNUC__)
 #    if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
 #      define IUTEST_HAS_CXX11_HDR_CHRONO	1
 #    endif
 #  else
 #  endif
-#elif	defined(_MSC_VER)
+#elif defined(_MSC_VER)
 #  if _MSC_VER > 1600
 #    define IUTEST_HAS_CXX11_HDR_CHRONO		1
 #  endif
@@ -192,24 +192,24 @@ namespace iutest {
 // random
 #ifndef IUTEST_HAS_CXX_HDR_RANDOM
 
-#if		defined(__has_include)
+#if   defined(__has_include)
 #  if __has_include( <random> )
 #    if IUTEST_HAS_CXX11
 #      define IUTEST_HAS_CXX_HDR_RANDOM		1
 #    endif
 #  endif
-#elif	defined(__GLIBCXX__)
+#elif defined(__GLIBCXX__)
 #  if defined(__GNUC__)
 #    if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
 #      define IUTEST_HAS_CXX_HDR_RANDOM		1
 #    endif
 #  else
 #  endif
-#elif	defined(_LIBCPP_VERSION)
+#elif defined(_LIBCPP_VERSION)
 #  if IUTEST_HAS_CXX11
 #    define IUTEST_HAS_CXX_HDR_RANDOM		1
 #  endif
-#elif	defined(_MSC_VER)
+#elif defined(_MSC_VER)
 #  if _MSC_VER > 1600
 #    define IUTEST_HAS_CXX_HDR_RANDOM		1
 #  endif
@@ -225,14 +225,14 @@ namespace iutest {
 /*
 #ifndef IUTEST_HAS_CXX_HDR_CODECVT
 
-#if		defined(__has_include)
+#if   defined(__has_include)
 #  if __has_include( <codecvt> )
 #    if IUTEST_HAS_CXX11
 #      define IUTEST_HAS_CXX_HDR_CODECVT	1
 #    endif
 #  endif
-#elif	defined(__GLIBCXX__)
-#elif	defined(_MSC_VER)
+#elif defined(__GLIBCXX__)
+#elif defined(_MSC_VER)
 #  if _MSC_VER > 1600
 #    define IUTEST_HAS_CXX_HDR_CODECVT		1
 #  endif
@@ -249,11 +249,11 @@ namespace iutest {
 // abi
 #ifndef IUTEST_HAS_HDR_CXXABI
 
-#if		defined(__has_include)
+#if   defined(__has_include)
 #  if __has_include( <cxxabi.h> )
 #    define IUTEST_HAS_HDR_CXXABI		1
 #  endif
-#elif	defined(__GLIBCXX__) || defined(_LIBCPP_VERSION)
+#elif defined(__GLIBCXX__) || defined(_LIBCPP_VERSION)
 #  define IUTEST_HAS_HDR_CXXABI			1
 #else
 #  define IUTEST_HAS_HDR_CXXABI			0
@@ -303,4 +303,4 @@ inline int iu_mbtowc(wchar_t* dst, const char* src, size_t size)
 }	// end of namespace detail
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_STDLIB_HPP_54D4BEEE_7B6B_4AF4_B1F6_138560480D55_
+#endif // INCG_IRIS_IUTEST_STDLIB_HPP_54D4BEEE_7B6B_4AF4_B1F6_138560480D55_

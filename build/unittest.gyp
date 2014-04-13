@@ -81,11 +81,6 @@
       ],
       'xcode_settings': {
       },
-      'conditions': [
-        ['OS == "mac"', {
-          'defines': ['IUTEST_OS_LINUX'] # badcode
-        }], # OS == "mac"
-      ],
     },
   ],# "targets"
 }

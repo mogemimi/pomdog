@@ -31,12 +31,12 @@ namespace detail
 template<typename T>
 class iuPool
 {
-	typedef iuPool<T>		_Myt;
-	typedef ::std::vector<T*>	pool;
-	pool	m_pool;
+	typedef iuPool<T> _Myt;
+	typedef ::std::vector<T*> pool;
+	pool m_pool;
 public:
-	typedef T				value_type;
-	typedef T				*value_ptr;
+	typedef T value_type;
+	typedef T *value_ptr;
 
 public:
 	~iuPool(void)
@@ -50,12 +50,12 @@ public:
 		}
 	}
 public:
-	void	push(value_ptr ptr)			{ m_pool.push_back(ptr); }
+	void push(value_ptr ptr) { m_pool.push_back(ptr); }
 public:
-	static _Myt&	GetInstance(void)	{ static _Myt inst; return inst; }
+	static _Myt& GetInstance(void) { static _Myt inst; return inst; }
 };
 
 }	// end of namespace detail
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_POOL_HPP_60F7CC27_EA15_4AC7_BCA6_80FFDCBC890E_
+#endif // INCG_IRIS_IUTEST_POOL_HPP_60F7CC27_EA15_4AC7_BCA6_80FFDCBC890E_

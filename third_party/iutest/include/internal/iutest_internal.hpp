@@ -24,29 +24,29 @@
 
 //======================================================================
 // define
-#define IUTEST_TEST_CLASS_NAME_(testcase_, testname_)	IIUT_TEST_CLASS_NAME_I(IUTEST_TO_VARNAME_(testcase_), IUTEST_TO_VARNAME_(testname_))
+#define IUTEST_TEST_CLASS_NAME_(testcase_, testname_)	IIUT_TEST_CLASS_NAME_I(IIUT_TO_VARNAME_(testcase_), IIUT_TO_VARNAME_(testname_))
 #define IIUT_TEST_CLASS_NAME_I(testcase_, testname_)	IIUT_TEST_CLASS_NAME_I_(testcase_, testname_)
 #define IIUT_TEST_CLASS_NAME_I_(testcase_, testname_)	iu_##testcase_##_x_##testname_##_Test
 
-#define IUTEST_TEST_INSTANCE_NAME_(testcase_, testname_)	IIUT_TEST_INSTANCE_NAME_I(IUTEST_TO_VARNAME_(testcase_), IUTEST_TO_VARNAME_(testname_))
+#define IUTEST_TEST_INSTANCE_NAME_(testcase_, testname_)	IIUT_TEST_INSTANCE_NAME_I(IIUT_TO_VARNAME_(testcase_), IIUT_TO_VARNAME_(testname_))
 #define IIUT_TEST_INSTANCE_NAME_I(testcase_, testname_)		IIUT_TEST_INSTANCE_NAME_I_(testcase_, testname_)
 #define IIUT_TEST_INSTANCE_NAME_I_(testcase_, testname_)	s_##testcase_##_##testname_##_Instance
 
 #if IUTEST_HAS_TESTNAME_ALIAS
 
-#define IUTEST_TO_VARNAME_(name_)				IIUT_TO_VARNAME_I( (IIUT_ALIAS_TESTNAME_PP_##name_, name_, dummy_) )
+#define IIUT_TO_VARNAME_(name_)					IIUT_TO_VARNAME_I( (IIUT_ALIAS_TESTNAME_PP_##name_, name_, dummy_) )
 #define IIUT_TO_VARNAME_I(tuple_)				IUTEST_PP_EXPAND( IIUT_TO_VARNAME_I_ tuple_ )
 #define IIUT_TO_VARNAME_I_(dummy, name_, ...)	name_
 
-#define IUTEST_TO_NAME_(name_)					IIUT_TO_NAME_I( (IIUT_ALIAS_TESTNAME_PP_##name_, name_, name_, dummy_) )
+#define IIUT_TO_NAME_(name_)					IIUT_TO_NAME_I( (IIUT_ALIAS_TESTNAME_PP_##name_, name_, name_, dummy_) )
 #define IIUT_TO_NAME_I(tuple_)					IUTEST_PP_EXPAND( IIUT_TO_NAME_I_ tuple_ )
 #define IIUT_TO_NAME_I_(dummy, dummy_2, name_, ...)	name_
 
-#define IUTEST_TO_NAME_STR_(name_)				IUTEST_PP_TOSTRING( IUTEST_TO_NAME_(name_) )
+#define IIUT_TO_NAME_STR_(name_)				IUTEST_PP_TOSTRING( IIUT_TO_NAME_(name_) )
 
 #define IIUT_ALIAS_TESTNAME_PP_UNPAREN_(...)	__VA_ARGS__
 
-#if	defined(_MSC_VER)
+#if defined(_MSC_VER)
 #  define IUTEST_ALIAS_TESTNAME_(name_)			name_
 #  define IUTEST_ALIAS_TESTNAME_F_(var_, name_)	UNPAREN_(dummy, var_, name_)
 #else
@@ -56,9 +56,9 @@
 
 #else
 
-#define IUTEST_TO_VARNAME_(name_)				name_
-#define IUTEST_TO_NAME_(name_)					name_
-#define IUTEST_TO_NAME_STR_(name_)				#name_
+#define IIUT_TO_VARNAME_(name_)		name_
+#define IIUT_TO_NAME_(name_)		name_
+#define IIUT_TO_NAME_STR_(name_)	#name_
 
 #endif
 
@@ -77,11 +77,11 @@
 	IIUT_CHECK_TESTFIXTURE(testcase_)										\
 	IUTEST_TEST_(testcase_, testname_, parent_class_, type_id_)
 
-#define IUTEST_TEST_F_(testfixture_, testname_)		IUTEST_TEST_(testfixture_, testname_, IUTEST_TO_VARNAME_(testfixture_)	\
-														, ::iutest::internal::GetTypeId< IUTEST_TO_VARNAME_(testfixture_) >())
+#define IUTEST_TEST_F_(testfixture_, testname_)		IUTEST_TEST_(testfixture_, testname_, IIUT_TO_VARNAME_(testfixture_)	\
+														, ::iutest::internal::GetTypeId< IIUT_TO_VARNAME_(testfixture_) >())
 
-#define IUTEST_TEST_F_IGNORE_(testfixture_, testname_)	IUTEST_TEST_IGNORE_(testfixture_, testname_, IUTEST_TO_VARNAME_(testfixture_)	\
-															, ::iutest::internal::GetTypeId< IUTEST_TO_VARNAME_(testfixture_) >())
+#define IUTEST_TEST_F_IGNORE_(testfixture_, testname_)	IUTEST_TEST_IGNORE_(testfixture_, testname_, IIUT_TO_VARNAME_(testfixture_)	\
+															, ::iutest::internal::GetTypeId< IIUT_TO_VARNAME_(testfixture_) >())
 /**
  * @internal
  * @brief	テストクラス定義マクロ
@@ -94,7 +94,7 @@
 	};																						\
 	::iutest::detail::TestInstance<IUTEST_TEST_CLASS_NAME_(testcase_, testname_)>			\
 	IUTEST_TEST_INSTANCE_NAME_(testcase_, testname_)(										\
-		IUTEST_CONCAT_PACKAGE_(IUTEST_TO_NAME_(testcase_)), IUTEST_TO_NAME_STR_(testname_)	\
+		IUTEST_CONCAT_PACKAGE_(IIUT_TO_NAME_(testcase_)), IIUT_TO_NAME_STR_(testname_)		\
 		, type_id_, parent_class_::SetUpTestCase, parent_class_::TearDownTestCase);			\
 	void IUTEST_TEST_CLASS_NAME_(testcase_, testname_)::Body(void)
 
@@ -105,20 +105,20 @@
 */
 #define IUTEST_TEST_IGNORE_(testcase_, testname_, parent_class_, type_id_)					\
 	class IUTEST_TEST_CLASS_NAME_(testcase_, testname_) : public parent_class_ {			\
-	IUTEST_PP_DISALLOW_COPY_AND_ASSIGN(	IUTEST_TEST_CLASS_NAME_(testcase_, testname_));		\
-		public:	IUTEST_TEST_CLASS_NAME_(testcase_, testname_)(void) {}						\
+	IUTEST_PP_DISALLOW_COPY_AND_ASSIGN( IUTEST_TEST_CLASS_NAME_(testcase_, testname_) );	\
+		public: IUTEST_TEST_CLASS_NAME_(testcase_, testname_)(void) {}						\
 		protected: virtual void Body(void) { IUTEST_SKIP() << "ignored test..."; }			\
 		template<typename T>void Body(void);												\
 	};																						\
 	::iutest::detail::TestInstance<IUTEST_TEST_CLASS_NAME_(testcase_, testname_)>			\
 	IUTEST_TEST_INSTANCE_NAME_(testcase_, testname_)(										\
-		IUTEST_CONCAT_PACKAGE_(IUTEST_TO_NAME_(testcase_)), IUTEST_TO_NAME_STR_(testname_)	\
+		IUTEST_CONCAT_PACKAGE_(IIUT_TO_NAME_(testcase_)), IIUT_TO_NAME_STR_(testname_)		\
 		, type_id_, parent_class_::SetUpTestCase, parent_class_::TearDownTestCase);			\
 	template<typename T>void IUTEST_TEST_CLASS_NAME_(testcase_, testname_ )::Body(void)
 
 #ifndef IUTEST_NO_VARIADIC_MACROS
 
-#define IUTEST_PMZ_TEST_CLASS_NAME_(testcase_, testname_)	IIUT_PMZ_TEST_CLASS_NAME_I(IUTEST_TO_VARNAME_(testcase_), IUTEST_TO_VARNAME_(testname_))
+#define IUTEST_PMZ_TEST_CLASS_NAME_(testcase_, testname_)	IIUT_PMZ_TEST_CLASS_NAME_I(IIUT_TO_VARNAME_(testcase_), IIUT_TO_VARNAME_(testname_))
 #define IIUT_PMZ_TEST_CLASS_NAME_I(testcase_, testname_)	IIUT_PMZ_TEST_CLASS_NAME_I_(testcase_, testname_)
 #define IIUT_PMZ_TEST_CLASS_NAME_I_(testcase_, testname_)	IUTEST_PP_CAT( IUTEST_PP_CAT(iu_##testcase_##_x_Test_, testname_), __LINE__)
 /**
@@ -127,17 +127,17 @@
 */
 #define IIUT_TEST_PMZ_(testcase_, testname_, method_, parent_class_, type_id_, ...)				\
 	class IUTEST_TEST_CLASS_NAME_(testcase_, testname_);										\
-	class IUTEST_PMZ_TEST_CLASS_NAME_(testcase_, testname_)	: public parent_class_ {			\
+	class IUTEST_PMZ_TEST_CLASS_NAME_(testcase_, testname_) : public parent_class_ {			\
 	IUTEST_PP_DISALLOW_COPY_AND_ASSIGN(IUTEST_PMZ_TEST_CLASS_NAME_(testcase_, testname_));		\
-		public:	IUTEST_PMZ_TEST_CLASS_NAME_(testcase_, testname_)(void) {}						\
+		public: IUTEST_PMZ_TEST_CLASS_NAME_(testcase_, testname_)(void) {}						\
 		static ::std::string MakeTestName(void) { return ::iutest::detail::MakeIndexTestName(	\
-			IUTEST_TO_NAME_STR_(testname_), ::iutest::detail::GetTypeUniqueCounter<				\
+			IIUT_TO_NAME_STR_(testname_), ::iutest::detail::GetTypeUniqueCounter<				\
 				IUTEST_TEST_CLASS_NAME_(testcase_, testname_)>()); }							\
 		protected: virtual void Body(void) { method_(__VA_ARGS__); }							\
 	};																							\
 	::iutest::detail::TestInstance<IUTEST_PMZ_TEST_CLASS_NAME_(testcase_, testname_)>			\
 	IUTEST_PP_CAT( IUTEST_TEST_INSTANCE_NAME_(testcase_, testname_), __LINE__)(					\
-		IUTEST_CONCAT_PACKAGE_(IUTEST_TO_NAME_(testcase_))										\
+		IUTEST_CONCAT_PACKAGE_(IIUT_TO_NAME_(testcase_))										\
 		, IUTEST_PMZ_TEST_CLASS_NAME_(testcase_, testname_)::MakeTestName().c_str()				\
 		, #__VA_ARGS__, type_id_, parent_class_::SetUpTestCase, parent_class_::TearDownTestCase)
 
@@ -410,7 +410,7 @@
 	if( ::iutest::detail::AlwaysTrue() ) {									\
 		::iutest::detail::NewTestPartResultCheckHelper::Counter<			\
 			::iutest::detail::NewTestPartResultCheckHelper::CondGt<			\
-			::iutest::TestPartResult::kSuccess> >	iutest_failure_checker;	\
+			::iutest::TestPartResult::kSuccess> > iutest_failure_checker;	\
 		IUTEST_SUPPRESS_UNREACHABLE_CODE_WARNING( { (void)0; statement; } )	\
 		if( iutest_failure_checker.count() > 0 ) {							\
 			goto IUTEST_PP_CAT(iutest_label_test_no_failure_, __LINE__);	\
@@ -424,7 +424,7 @@
 	if( ::iutest::detail::AlwaysTrue() ) {									\
 		::iutest::detail::NewTestPartResultCheckHelper::Counter<			\
 			::iutest::detail::NewTestPartResultCheckHelper::CondEq<			\
-			::iutest::TestPartResult::kFatalFailure> >	iutest_failure_checker;	\
+			::iutest::TestPartResult::kFatalFailure> > iutest_failure_checker;	\
 		IUTEST_SUPPRESS_UNREACHABLE_CODE_WARNING( { (void)0; statement; } )	\
 		if( iutest_failure_checker.count() > 0 ) {							\
 			goto IUTEST_PP_CAT(iutest_label_test_no_fatalfailure_, __LINE__);	\
@@ -435,13 +435,12 @@
 
 #define IUTEST_TEST_SKIP()					\
 	IUTEST_AMBIGUOUS_ELSE_BLOCKER_			\
-	if( !::iutest::Test::HasFailure() )		\
-		::iutest::UnitTest::SkipTest();		\
-	if( ::iutest::detail::AlwaysTrue() )	\
-		IUTEST_SKIP_MESSAGE(::iutest::Test::HasFailure() ? "Skipped. but already failed. " : "Skipped. ")
+	if( (::iutest::UnitTest::current_test_result()->Failed())					\
+		|| (::iutest::UnitTest::SkipTest(), ::iutest::detail::AlwaysTrue()) )	\
+		IUTEST_SKIP_MESSAGE(::iutest::UnitTest::current_test_result()->Failed() ? "Skipped. but already failed. " : "Skipped. ")
 
 /**
  * @}
 */
 
-#endif	// INCG_IRIS_IUTEST_INTERNAL_HPP_A5BD9FBB_B57A_4C1D_B205_0ADB7798DBF9_
+#endif // INCG_IRIS_IUTEST_INTERNAL_HPP_A5BD9FBB_B57A_4C1D_B205_0ADB7798DBF9_

@@ -22,7 +22,7 @@
 //======================================================================
 // define
 
-#else	// !defined(IUTEST_USE_GTEST)
+#else // !defined(IUTEST_USE_GTEST)
 
 //======================================================================
 // define
@@ -36,6 +36,6 @@
 #  define IUTEST_HAS_PEEP_STATIC_FUNC	0
 #endif
 
-#endif	// !defined(IUTEST_USE_GTEST)
+#endif // !defined(IUTEST_USE_GTEST)
 
-#endif	// INCG_IRIS_IUTEST_SWITCH_PEEP_HPP_316C2127_8DF8_4B99_9C07_9170B403D6AD_
+#endif // INCG_IRIS_IUTEST_SWITCH_PEEP_HPP_316C2127_8DF8_4B99_9C07_9170B403D6AD_

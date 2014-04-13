@@ -35,41 +35,41 @@ class UnitTest : public UnitTestImpl
 {
 public:
 	/** @private */
-	static	UnitTest&	instance(void)		{ static UnitTest inst; return inst; }
-	/** 
+	static UnitTest& instance(void)		{ static UnitTest inst; return inst; }
+	/**
 	 * @brief	UnitTest インスタンスの取得
 	*/
-	static	UnitTest*	GetInstance(void)	{ return &instance(); }
+	static UnitTest* GetInstance(void)	{ return &instance(); }
 
 public:
 	/**
 	 * @brief	テスト中の TestCase の取得
 	*/
-	const TestCase*		current_test_case(void)	const	{ return m_current_testcase; }
+	const TestCase*		current_test_case(void)	const { return m_current_testcase; }
 
 	/**
 	 * @brief	テスト中の TestInfo の取得
 	 * @note	互換性のため メンバ関数 にしています。
 	*/
-	const TestInfo*		current_test_info(void)	const	{ return Test::GetCurrentTestInfo(); }
+	const TestInfo*		current_test_info(void)	const { return Test::GetCurrentTestInfo(); }
 
 	/** 乱数シードの取得 */
-	unsigned int		random_seed(void)		const	{ return TestEnv::current_random_seed(); }
+	unsigned int		random_seed(void)		const { return TestEnv::current_random_seed(); }
 
 	/** 現在何回目のくり返しか取得 */
-	int					repeat_counter(void)	const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_repeat_counter; }
+	int					repeat_counter(void)	const IUTEST_CXX_NOEXCEPT_SPEC { return m_repeat_counter; }
 
 public:
 	/** テスト総数 */
-	int				total_test_count(void)		const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_total_test_num; }
+	int				total_test_count(void)		const IUTEST_CXX_NOEXCEPT_SPEC { return m_total_test_num; }
 	/** レポート対象のテスト総数 */
 	int				reportable_test_count(void)	const;
 	/** 実行した/するテスト総数 */
-	int				test_to_run_count(void)		const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_should_run_num; }
+	int				test_to_run_count(void)		const IUTEST_CXX_NOEXCEPT_SPEC { return m_should_run_num; }
 	/** 失敗テスト総数 */
 	int				failed_test_count(void)		const;
 	/** 無効テスト総数 */
-	int				disabled_test_count(void)	const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_disable_num; }
+	int				disabled_test_count(void)	const IUTEST_CXX_NOEXCEPT_SPEC { return m_disable_num; }
 	/** レポート対象の無効テスト総数 */
 	int				reportable_disabled_test_count(void) const;
 	/** 成功テスト総数 */
@@ -78,13 +78,13 @@ public:
 	int				skip_test_count(void)		const;
 	/** レポート対象のスキップテスト総数 */
 	int				reportable_skip_test_count(void) const;
-	/** 明示的にスキップされたテスト総数 */
+	/** 明示的にスキップされたテスト総数 (SKIP, ASSUME) */
 	int				test_run_skipped_count(void) const;
-	/** レポート対象の明示的にスキップされたテスト総数 */
+	/** レポート対象の明示的にスキップされたテスト総数 (SKIP, ASSUME) */
 	int				reportable_test_run_skipped_count(void) const;
 
 	/** テストケース数の総数 */
-	int				total_test_case_count(void)	const	{ return m_testcases.size(); }
+	int				total_test_case_count(void)	const { return m_testcases.size(); }
 	/** 実行したテストケース総数 */
 	int				test_case_to_run_count(void) const;
 	/** 成功したテストケース総数 */
@@ -96,21 +96,21 @@ public:
 	const TestResult* ad_hoc_testresult(void) const IUTEST_CXX_NOEXCEPT_SPEC { return &m_ad_hoc_testresult; }
 
 	/** テストの実行ミリ秒 */
-	TimeInMillisec	elapsed_time(void)		const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_elapsedmsec; }
+	TimeInMillisec	elapsed_time(void)		const IUTEST_CXX_NOEXCEPT_SPEC { return m_elapsedmsec; }
 
 	/** テスト開始時のタイムスタンプを取得 */
-	TimeInMillisec	start_timestamp(void)	const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_start_timestamp; }
+	TimeInMillisec	start_timestamp(void)	const IUTEST_CXX_NOEXCEPT_SPEC { return m_start_timestamp; }
 
 	/** テストケースの取得 */
-	const TestCase*	GetTestCase(int index)	const	{ return m_testcases[index]; }
+	const TestCase*	GetTestCase(int index)	const { return m_testcases[index]; }
 
 	/** テストが成功したかどうか */
 	bool			Passed(void)			const;
 	/** テストが失敗したかどうか */
-	bool			Failed(void)			const	{ return !Passed(); }
+	bool			Failed(void)			const { return !Passed(); }
 
 	/** イベントリスナーの取得 */
-	TestEventListeners&	listeners(void)		const	{ return TestEnv::event_listeners(); }
+	TestEventListeners&	listeners(void)		const { return TestEnv::event_listeners(); }
 
 protected:
 	/**
@@ -120,44 +120,44 @@ protected:
 
 private:
 #if IUTEST_HAS_EXCEPTIONS && IUTEST_HAS_SEH
-	int	RunOnMSC(void);
+	int RunOnMSC(void);
 #endif
 	int RunImpl(void);
 
 	/**
 	 * @brief	テストの実行（１ループ）
 	*/
-	bool	RunOnce(void);
+	bool RunOnce(void);
 
 private:
 	/**
 	 * @brief	プログラムの開始
 	*/
-	void	TestProgramStart(void);
+	void TestProgramStart(void);
 
 	/**
 	 * @brief	イテレーション毎のセットアップ
 	*/
-	void	SetUpTestIteration(void);
+	void SetUpTestIteration(void);
 
 	/**
 	 * @brief	環境セットアップ
 	*/
-	void	EnvironmentSetUp(void);
+	void EnvironmentSetUp(void);
 
 	/**
 	 * @brief	環境解除
 	*/
-	void	EnvironmentTearDown(void);
+	void EnvironmentTearDown(void);
 
 	/**
 	 * @brief	プログラムの終了
 	*/
-	void	TestProgramEnd(void);
+	void TestProgramEnd(void);
 
 private:
 	// C言語の終了コールバック関数
-	static void	OnExit(void)
+	static void OnExit(void)
 	{
 		instance().TestProgramEnd();
 	}
@@ -185,15 +185,15 @@ public:	// VC++6.0 bug
 
 private:
 	// 初期化処理
-	void	Initialize(void);
+	void Initialize(void);
 
 #if IUTEST_HAS_PARAM_TEST
 public:
 	/** @private */
-	ParamTestCaseHolder&	parameterized_test_registry(void) IUTEST_CXX_NOEXCEPT_SPEC { return m_param_testcase_holder; }
+	detail::ParamTestCaseHolder& parameterized_test_registry(void) IUTEST_CXX_NOEXCEPT_SPEC{ return m_param_testcase_holder; }
 
 private:
-	ParamTestCaseHolder	m_param_testcase_holder;
+	detail::ParamTestCaseHolder	m_param_testcase_holder;
 #endif
 
 private:
@@ -203,7 +203,7 @@ private:
 	int m_init_iutest_count;
 	bool m_test_started;
 	TimeInMillisec m_start_timestamp;
-	detail::DefaultGlobalTestPartResultReporter	m_default_test_part_result_reporter;
+	detail::DefaultGlobalTestPartResultReporter m_default_test_part_result_reporter;
 
 	IUTEST_PP_DISALLOW_COPY_AND_ASSIGN(UnitTest);
 };
@@ -258,4 +258,4 @@ private:
 #  include "impl/iutest_core.ipp"
 #endif
 
-#endif	// INCG_IRIS_IUTEST_CORE_HPP_33560431_783B_4AE7_8FC8_6E78355CAF87_
+#endif // INCG_IRIS_IUTEST_CORE_HPP_33560431_783B_4AE7_8FC8_6E78355CAF87_

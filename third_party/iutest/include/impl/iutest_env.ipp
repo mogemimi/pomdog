@@ -20,7 +20,6 @@
 //======================================================================
 // include
 #include "../iutest_env.hpp"
-#include "../internal/iutest_constant.hpp"
 
 namespace iutest
 {
@@ -54,7 +53,7 @@ IUTEST_IPP_INLINE bool TestEnv::ParseCommandLineElemA(const char* str)
 			bool iuoption = false;
 			{
 				const char* const base_str = str;
-				if( *str == 'g' ) 
+				if( *str == 'g' )
 				{
 					++str;
 					iuoption = true;
@@ -148,11 +147,7 @@ IUTEST_IPP_INLINE bool TestEnv::ParseCommandLineElemA(const char* str)
 				}
 				else if( detail::IsStringForwardMatching(str, "filter") )
 				{
-					const char* opt = ParseOptionSettingStr(str);
-					if( opt != NULL )
-					{
-						set_test_filter(opt);
-					}
+					set_test_filter(ParseOptionSettingStr(str));
 				}
 #if IUTEST_HAS_STREAM_RESULT
 				else if( detail::IsStringForwardMatching(str, "stream_result_to") )
@@ -162,12 +157,15 @@ IUTEST_IPP_INLINE bool TestEnv::ParseCommandLineElemA(const char* str)
 					{
 						set_stream_result_to(opt);
 					}
+					else
+					{
+						find = false;
+					}
 				}
 #endif
 				else if( detail::IsStringForwardMatching(str, "file_location") )
 				{
-					const char* opt = ParseOptionSettingStr(str);
-					find = ParseFileLocationOption(opt);
+					find = ParseFileLocationOption(ParseOptionSettingStr(str));
 				}
 				else
 				{
@@ -301,10 +299,11 @@ IUTEST_IPP_INLINE void TestEnv::LoadEnviromentVariable(void)
 	}
 }
 
-IUTEST_IPP_INLINE void	TestEnv::SetUp(void)
+IUTEST_IPP_INLINE void TestEnv::SetUp(void)
 {
 	unsigned int seed = get_random_seed();
-	if( seed == 0 )
+	if( (seed == 0)
+		|| (get_vars().m_current_random_seed != 0 && TestFlag::IsEnableFlag(TestFlag::SHUFFLE_TESTS)) )
 	{
 		const unsigned int gen_seeed = detail::GetIndefiniteValue();
 		if( get_vars().m_current_random_seed == gen_seeed
@@ -319,7 +318,7 @@ IUTEST_IPP_INLINE void	TestEnv::SetUp(void)
 	genrand().init(seed);
 }
 
-IUTEST_IPP_INLINE 	bool TestEnv::ParseColorOption(const char* option)
+IUTEST_IPP_INLINE bool TestEnv::ParseColorOption(const char* option)
 {
 	if( option == NULL )
 	{
@@ -328,30 +327,30 @@ IUTEST_IPP_INLINE 	bool TestEnv::ParseColorOption(const char* option)
 
 	if( IsYes(option) )
 	{
-		TestFlag::SetFlag(TestFlag::CONSOLE_COLOR_ON, ~TestFlag::CONSOLE_COLOR_OFF);
+		TestFlag::SetFlag(TestFlag::CONSOLE_COLOR_ON, ~(TestFlag::CONSOLE_COLOR_OFF|TestFlag::CONSOLE_COLOR_ANSI));
 	}
 	else if( IsNo(option) )
 	{
-		TestFlag::SetFlag(TestFlag::CONSOLE_COLOR_OFF, ~TestFlag::CONSOLE_COLOR_ON);
+		TestFlag::SetFlag(TestFlag::CONSOLE_COLOR_OFF, ~(TestFlag::CONSOLE_COLOR_ON|TestFlag::CONSOLE_COLOR_ANSI));
 	}
 	else if( detail::IsStringCaseEqual(option, "auto") )
 	{
 		// auto
-		TestFlag::SetFlag(0, ~(TestFlag::CONSOLE_COLOR_ON|TestFlag::CONSOLE_COLOR_OFF));
+		TestFlag::SetFlag(0, ~(TestFlag::CONSOLE_COLOR_ON|TestFlag::CONSOLE_COLOR_OFF|TestFlag::CONSOLE_COLOR_ANSI));
 	}
 	else if( detail::IsStringCaseEqual(option, "ansi") )
 	{
 		// ansi
 		TestFlag::SetFlag(TestFlag::CONSOLE_COLOR_ON|TestFlag::CONSOLE_COLOR_ANSI, ~TestFlag::CONSOLE_COLOR_OFF);
 	}
-	else 
+	else
 	{
 		return false;
 	}
 	return true;
 }
 
-IUTEST_IPP_INLINE bool	TestEnv::ParseOutputOption(const char* option)
+IUTEST_IPP_INLINE bool TestEnv::ParseOutputOption(const char* option)
 {
 	if(option == NULL)
 	{
@@ -362,7 +361,7 @@ IUTEST_IPP_INLINE bool	TestEnv::ParseOutputOption(const char* option)
 	return true;
 }
 
-IUTEST_IPP_INLINE bool	TestEnv::ParseFileLocationOption(const char* option)
+IUTEST_IPP_INLINE bool TestEnv::ParseFileLocationOption(const char* option)
 {
 	if( option == NULL )
 	{
@@ -428,7 +427,7 @@ IUTEST_IPP_INLINE bool TestEnv::IsYes(const char* option)
 		|| detail::IsStringCaseEqual(option, "on")
 		|| detail::IsStringCaseEqual(option, "true")
 		|| detail::IsStringCaseEqual(option, "t")
-		|| detail::IsStringEqual(option, "1") ) 
+		|| detail::IsStringEqual(option, "1") )
 	{
 		return true;
 	}
@@ -442,7 +441,7 @@ IUTEST_IPP_INLINE bool TestEnv::IsNo(const char* option)
 		|| detail::IsStringCaseEqual(option, "off")
 		|| detail::IsStringCaseEqual(option, "false")
 		|| detail::IsStringCaseEqual(option, "f")
-		|| detail::IsStringEqual(option, "0") ) 
+		|| detail::IsStringEqual(option, "0") )
 	{
 		return true;
 	}
@@ -451,4 +450,4 @@ IUTEST_IPP_INLINE bool TestEnv::IsNo(const char* option)
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_ENV_IPP_F4017EAB_6CA3_4E6E_8983_059393DADD04_
+#endif // INCG_IRIS_IUTEST_ENV_IPP_F4017EAB_6CA3_4E6E_8983_059393DADD04_

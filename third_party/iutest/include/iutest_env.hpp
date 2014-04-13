@@ -102,17 +102,17 @@ public:
 
 		int m_test_flags;
 	public:
-		ScopedGuard(void) 
+		ScopedGuard(void)
 		{
 			m_test_flags = TestFlag::GetInstance().m_test_flags;
 		}
-		~ScopedGuard(void) 
+		~ScopedGuard(void)
 		{
 			TestFlag::GetInstance().m_test_flags = m_test_flags;
 		}
 	};
 public:
-	/** 
+	/**
 	 * @brief	フラグ
 	*/
 	enum Kind
@@ -145,6 +145,7 @@ public:
 		SHOW_HELP				= 0x10000000,	//!< ヘルプ表示
 		SHOW_VERSION			= 0x20000000,	//!< バージョン表示
 		SHOW_FEATURE			= 0x40000000,	//!< 機能の出力
+		SHOW_MASK				= 0xFF000000,	//!< 機能表示系マスク
 		MASK					= 0xFFFFFFFF,	//!< マスク
 
 		//! デフォルト
@@ -161,7 +162,7 @@ private:
 
 public:
 	/** @private */
-	static TestFlag&	GetInstance(void)	{ static TestFlag flag; return flag; }
+	static TestFlag& GetInstance(void) { static TestFlag flag; return flag; }
 public:
 	/**
 	 * @brief	フラグのビット操作
@@ -169,23 +170,23 @@ public:
 	 * @param [in]	enable	= 論理和
 	 * @param [in]	mask	= マスク値
 	*/
-	static void		SetFlag(int enable, int mask=-1)	{ GetInstance().m_test_flags |= enable; GetInstance().m_test_flags &= mask; }
+	static void SetFlag(int enable, int mask=-1) { GetInstance().m_test_flags |= enable; GetInstance().m_test_flags &= mask; }
 	/**
 	 * @brief	フラグが立っているかどうか
 	 * @param [in]	flag	= 検査対象フラグ
 	 * @return	真偽値
 	*/
-	static bool		IsEnableFlag(int flag)				{ return GetInstance().m_test_flags & flag ? true : false; }
+	static bool IsEnableFlag(int flag) { return GetInstance().m_test_flags & flag ? true : false; }
 
 private:
 	template<int KIND>
 	class Fragment
 	{
-		typedef Fragment<KIND>	_Myt;
+		typedef Fragment<KIND> _Myt;
 	public:
 		Fragment(void) IUTEST_CXX_NOEXCEPT_SPEC {}
-		Fragment(bool f)	{ SetFlag(KIND, f ? -1 : ~KIND); }
-		_Myt&	operator = (bool f)	{ SetFlag(KIND, f ? -1 : ~KIND); return *this; }
+		Fragment(bool f) { SetFlag(KIND, f ? -1 : ~KIND); }
+		_Myt& operator = (bool f) { SetFlag(KIND, f ? -1 : ~KIND); return *this; }
 		IUTEST_CXX_EXPLICIT_CONVERSION operator bool (void) const { return IsEnableFlag(KIND); }
 	};
 
@@ -206,7 +207,7 @@ class TestPartResultReporterInterface;
 */
 class TestEnv
 {
-	typedef ::std::vector<Environment*>	iuEnvironmentList;
+	typedef ::std::vector<Environment*> iuEnvironmentList;
 
 public:
 	/**
@@ -239,8 +240,8 @@ public:
 	{
 	public:
 		RandomSeedSet(void) IUTEST_CXX_NOEXCEPT_SPEC {}
-		RandomSeedSet(unsigned int seed) { init_random(seed); } 
-		RandomSeedSet&	operator = (unsigned int seed)	{ init_random(seed); return *this; }
+		RandomSeedSet(unsigned int seed) { init_random(seed); }
+		RandomSeedSet& operator = (unsigned int seed) { init_random(seed); return *this; }
 		operator unsigned int (void) const { return get_random_seed(); }
 	} random_seed;
 
@@ -252,8 +253,8 @@ public:
 	{
 	public:
 		RepeatCountSet(void) IUTEST_CXX_NOEXCEPT_SPEC {}
-		RepeatCountSet(int count) { set_repeat_count(count); } 
-		RepeatCountSet&	operator = (int count)	{ set_repeat_count(count); return *this; }
+		RepeatCountSet(int count) { set_repeat_count(count); }
+		RepeatCountSet& operator = (int count) { set_repeat_count(count); return *this; }
 		operator int (void) const { return get_repeat_count(); }
 	} repeat;
 
@@ -307,17 +308,17 @@ public:
 	static ::std::string get_report_xml_filepath(void);
 
 	/** @private */
-	static TestEventListeners&	event_listeners(void)	{ return get_vars().m_event_listeners; }
+	static TestEventListeners& event_listeners(void) { return get_vars().m_event_listeners; }
 	/** @private */
-	static TestPartResultReporterInterface* GetGlobalTestPartResultReporter(void)		{ return get_vars().m_testpartresult_reporter; }
+	static TestPartResultReporterInterface* GetGlobalTestPartResultReporter(void) { return get_vars().m_testpartresult_reporter; }
 	/** @private */
-	static void SetGlobalTestPartResultReporter(TestPartResultReporterInterface* ptr)	{ get_vars().m_testpartresult_reporter = ptr; }
+	static void SetGlobalTestPartResultReporter(TestPartResultReporterInterface* ptr) { get_vars().m_testpartresult_reporter = ptr; }
 
 private:
 	/**
 	 * @brief	乱数シードの設定
 	*/
-	static void	init_random(unsigned int seed)
+	static void init_random(unsigned int seed)
 	{
 		get_vars().m_random_seed = seed;
 	}
@@ -325,7 +326,7 @@ private:
 	/**
 	 * @brief	繰り返し回数の設定
 	*/
-	static void	set_repeat_count(int count)
+	static void set_repeat_count(int count)
 	{
 		get_vars().m_repeat_count = count;
 	}
@@ -333,7 +334,7 @@ private:
 	/**
 	 * @brief	フィルター文字列の設定
 	*/
-	static void	set_test_filter(const char* str)
+	static void set_test_filter(const char* str)
 	{
 		get_vars().m_test_filter = str == NULL ? "*" : str;
 		TestFlag::SetFlag(TestFlag::FILTERING_TESTS);
@@ -342,7 +343,7 @@ private:
 	/**
 	 * @brief	stream result の設定
 	*/
-	static void	set_stream_result_to(const char* str)
+	static void set_stream_result_to(const char* str)
 	{
 		get_vars().m_stream_result_to = str == NULL ? "" : str;
 	}
@@ -353,17 +354,17 @@ private:
 	*/
 	static const char* get_color_option(void)
 	{
-		if( TestFlag::IsEnableFlag(TestFlag::CONSOLE_COLOR_OFF) )
+		if( TestFlag::IsEnableFlag(TestFlag::CONSOLE_COLOR_ANSI) )
 		{
-			return "no";
+			return "ansi";
 		}
 		else if( TestFlag::IsEnableFlag(TestFlag::CONSOLE_COLOR_ON) )
 		{
 			return "yes";
 		}
-		else if( TestFlag::IsEnableFlag(TestFlag::CONSOLE_COLOR_ANSI) )
+		else if( TestFlag::IsEnableFlag(TestFlag::CONSOLE_COLOR_OFF) )
 		{
-			return "ansi";
+			return "no";
 		}
 		return "auto";
 	}
@@ -391,18 +392,18 @@ private:
 	{
 		typedef OptionString<G, S> _Myt;
 	protected:
-		::std::string	m_option;
+		::std::string m_option;
 	public:
 		bool operator == (const char* c_str_)		{ return m_option == c_str_; }
 		bool operator == (const ::std::string& str)	{ return m_option == str; }
 		bool operator != (const char* c_str_)		{ return m_option != c_str_; }
 		bool operator != (const ::std::string& str)	{ return m_option != str; }
 
-		operator ::std::string (void) const	{ return m_option; }
+		operator ::std::string (void) const { return m_option; }
 	public:
 		bool empty(void) const			{ return m_option.empty(); }
 		const char* c_str(void) const	{ return m_option.c_str(); }
-		size_t	length(void) const		{ return m_option.length(); }
+		size_t length(void) const		{ return m_option.length(); }
 	public:
 		OptionString(void)
 			: m_option(G())
@@ -449,7 +450,7 @@ public:
 #endif
 
 private:
-	static iuEnvironmentList&	environments(void)		{ return get_vars().m_environment_list; }
+	static iuEnvironmentList& environments(void) { return get_vars().m_environment_list; }
 
 public:
 	/**
@@ -488,7 +489,7 @@ public:
 	 * @brief	コマンドライン引数の解析
 	*/
 	template<typename CharType>
-	static void	ParseCommandLine(int* pargc, CharType** argv)
+	static void ParseCommandLine(int* pargc, CharType** argv)
 	{
 		int argc = *pargc;
 
@@ -518,7 +519,7 @@ public:
 	 * @brief	コマンドライン引数の解析(vector)
 	*/
 	template<typename CharType>
-	static void	ParseCommandLine(::std::vector< ::std::basic_string<CharType> >& argv)
+	static void ParseCommandLine(::std::vector< ::std::basic_string<CharType> >& argv)
 	{
 		for( typename ::std::vector< ::std::basic_string<CharType> >::iterator it = argv.begin(); it != argv.end(); )
 		{
@@ -534,7 +535,7 @@ public:
 	}
 private:
 	template<typename CharType>
-	static bool	ParseCommandLineElem(CharType* argv)
+	static bool ParseCommandLineElem(CharType* argv)
 	{
 		typedef typename detail::mbs_ptr<CharType> formatter;
 
@@ -553,7 +554,7 @@ private:
 	/**
 	 * @brief	セットアップ
 	*/
-	static void	SetUp(void);
+	static void SetUp(void);
 
 private:
 	/**
@@ -571,17 +572,17 @@ private:
 	/**
 	 * @brief	IUTEST_COLOR オプションの判定
 	*/
-	static bool	ParseColorOption(const char* option);
+	static bool ParseColorOption(const char* option);
 
 	/**
 	 * @brief	IUTEST_OUTPUT オプションの判定
 	*/
-	static bool	ParseOutputOption(const char* option);
+	static bool ParseOutputOption(const char* option);
 
 	/**
 	 * @brief	IUTEST_FILE_LOCATION オプションの判定
 	*/
-	static bool	ParseFileLocationOption(const char* option);
+	static bool ParseFileLocationOption(const char* option);
 
 	/**
 	 * @brief	yes オプションか no オプションかの判定
@@ -620,4 +621,4 @@ private:
 #  include "impl/iutest_env.ipp"
 #endif
 
-#endif	// INCG_IRIS_IUTEST_ENV_HPP_F4017EAB_6CA3_4E6E_8983_059393DADD04_
+#endif // INCG_IRIS_IUTEST_ENV_HPP_F4017EAB_6CA3_4E6E_8983_059393DADD04_

@@ -68,7 +68,7 @@ public:
 	seh_exception(const char *const& _What) : ::std::exception(_What) {}
 	seh_exception(void) : ::std::exception() {}
 public:
-	static void	translator(DWORD code, _EXCEPTION_POINTERS* ep)
+	static void translator(DWORD code, _EXCEPTION_POINTERS* ep)
 	{
 		IUTEST_UNUSED_VAR(ep);
 		iuStringStream::type strm;
@@ -100,4 +100,4 @@ public:
 
 #endif
 
-#endif	// INCG_IRIS_IUTEST_EXCEPTION_HPP_B73B2E25_97C8_4DFC_BC32_5E53039A1A64_
+#endif // INCG_IRIS_IUTEST_EXCEPTION_HPP_B73B2E25_97C8_4DFC_BC32_5E53039A1A64_

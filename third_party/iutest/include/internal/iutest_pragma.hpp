@@ -21,24 +21,24 @@
 // define
 
 // pragma
-#if		defined(_MSC_VER) && _MSC_VER >= 1310
+#if   defined(_MSC_VER) && _MSC_VER >= 1310
 #  define IUTEST_PRAGMA(x)	__pragma(x)
-#elif	defined(__GNUC__)
+#elif defined(__GNUC__)
 #  define IUTEST_PRAGMA(x)	_Pragma(#x)
-#elif	defined(__clang__)
+#elif defined(__clang__)
 #  define IUTEST_PRAGMA(x)	_Pragma(#x)
 #else
 #  define IUTEST_PRAGMA(x)
 #endif
 
 // pragma warning
-#if		defined(_MSC_VER)
+#if defined(_MSC_VER)
 #  define IUTEST_PRAGMA_MSC_WARN_PUSH()			IUTEST_PRAGMA(warning (push))
 #  define IUTEST_PRAGMA_MSC_WARN_DISABLE(x)		IUTEST_PRAGMA(warning (disable: x))
 #  define IUTEST_PRAGMA_MSC_WARN_POP()			IUTEST_PRAGMA(warning (pop))
 #endif
 
-#if		defined(__GNUC__)
+#if defined(__GNUC__)
 #  if ((__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
 #    define IUTEST_PRAGMA_GCC_WARN_PUSH()		IUTEST_PRAGMA(GCC diagnostic push)
 #    define IUTEST_PRAGMA_GCC_WARN_DISABLE(x)	IUTEST_PRAGMA(GCC diagnostic ignored x)
@@ -50,11 +50,11 @@
 #  endif
 #endif
 
-#if		defined(__clang__)
+#if defined(__clang__)
 #  define IUTEST_PRAGMA_CLANG_WARN_PUSH()		IUTEST_PRAGMA(clang diagnostic push)
 #  define IUTEST_PRAGMA_CLANG_WARN_DISABLE(x)	IUTEST_PRAGMA(clang diagnostic ignored x)
 #  define IUTEST_PRAGMA_CLANG_WARN_POP()		IUTEST_PRAGMA(clang diagnostic pop)
-#  if	defined(__GNUC__)
+#  if defined(__GNUC__)
 #    undef IUTEST_PRAGMA_GCC_WARN_PUSH		
 #    undef IUTEST_PRAGMA_GCC_WARN_DISABLE
 #    undef IUTEST_PRAGMA_GCC_WARN_POP	
@@ -94,13 +94,13 @@
 #  define IUTEST_PRAGMA_CLANG_WARN_POP()
 #endif
 
-#if		defined(_MSC_VER)
+#if   defined(_MSC_VER)
 #  define IUTEST_PARGMA_WARN_PUSH()		IUTEST_PRAGMA_MSC_WARN_PUSH()
 #  define IUTEST_PARGMA_WARN_POP()		IUTEST_PRAGMA_MSC_WARN_POP()
-#elif	defined(__GNUC__)
+#elif defined(__GNUC__)
 #  define IUTEST_PARGMA_WARN_PUSH()		IUTEST_PRAGMA_GCC_WARN_PUSH()
 #  define IUTEST_PARGMA_WARN_POP()		IUTEST_PRAGMA_GCC_WARN_POP()
-#elif	defined(__clang__)
+#elif defined(__clang__)
 #  define IUTEST_PARGMA_WARN_PUSH()		IUTEST_PRAGMA_CLANG_WARN_PUSH()
 #  define IUTEST_PARGMA_WARN_POP()		IUTEST_PRAGMA_CLANG_WARN_PUSH()
 #else
@@ -138,24 +138,24 @@
 #endif
 
 
-#if		defined(_MSC_VER)
+#if   defined(_MSC_VER)
 #  define IUTEST_PRAGMA_WARN_DISABLE_SIGN_COMPARE()	IUTEST_PRAGMA(warning (disable:4389))
-#elif	defined(__clang__)
+#elif defined(__clang__)
 #  define IUTEST_PRAGMA_WARN_DISABLE_SIGN_COMPARE()	IUTEST_PRAGMA_CLANG_WARN_DISABLE("-Wsign-compare")
-#elif	defined(__GNUC__)
+#elif defined(__GNUC__)
 #  define IUTEST_PRAGMA_WARN_DISABLE_SIGN_COMPARE()	IUTEST_PRAGMA_GCC_WARN_DISABLE("-Wsign-compare")
 #else
 #  define IUTEST_PRAGMA_WARN_DISABLE_SIGN_COMPARE()
 #endif
 
-#if		defined(_MSC_VER)
+#if   defined(_MSC_VER)
 #  define IUTEST_PRAGMA_WARN_DISABLE_EMPTY_BODY()	IUTEST_PRAGMA(warning (disable:4390))
-#elif	defined(__clang__)
+#elif defined(__clang__)
 #  define IUTEST_PRAGMA_WARN_DISABLE_EMPTY_BODY()	IUTEST_PRAGMA_CLANG_WARN_DISABLE("-Wempty-body")
-#elif	defined(__GNUC__)
+#elif defined(__GNUC__)
 #  define IUTEST_PRAGMA_WARN_DISABLE_EMPTY_BODY()	IUTEST_PRAGMA_GCC_WARN_DISABLE("-Wempty-body")
 #else
 #  define IUTEST_PRAGMA_WARN_DISABLE_EMPTY_BODY()
 #endif
 
-#endif	// INCG_IRIS_IUTEST_PRAGMA_HPP_FBC5A1DE_3D0C_443E_84B1_5F0618DF9A6B_
+#endif // INCG_IRIS_IUTEST_PRAGMA_HPP_FBC5A1DE_3D0C_443E_84B1_5F0618DF9A6B_

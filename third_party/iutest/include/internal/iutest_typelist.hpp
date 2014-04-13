@@ -58,8 +58,8 @@ struct TypeList0 {};
 template<typename T1>
 struct TypeList1
 {
-	typedef T1	Head;
-	typedef TypeList0	Tail;
+	typedef T1 Head;
+	typedef TypeList0 Tail;
 };
 
 #if IUTEST_HAS_VARIADIC_TEMPLATES
@@ -67,14 +67,14 @@ struct TypeList1
 template<typename T, typename ...Args>
 struct VariadicTypeList
 {
-	typedef T	Head;
-	typedef VariadicTypeList<Args...>	Tail;
+	typedef T Head;
+	typedef VariadicTypeList<Args...> Tail;
 };
 template<typename T>
 struct VariadicTypeList<T>
 {
-	typedef T	Head;
-	typedef TypeList0	Tail;
+	typedef T Head;
+	typedef TypeList0 Tail;
 };
 
 #else
@@ -82,7 +82,7 @@ struct VariadicTypeList<T>
 #define IIUT_DECL_TYPELIST_(n)	IIUT_DECL_TYPELIST_I(n, IUTEST_PP_DEC(n))
 #define IIUT_DECL_TYPELIST_I(n, m)													\
 	template<typename T0, IUTEST_PP_ENUM_SHIFTED_PARAMS(m, typename T)>				\
-	struct IUTEST_PP_CAT(TypeList, n) {	typedef T0 Head;							\
+	struct IUTEST_PP_CAT(TypeList, n) { typedef T0 Head;							\
 	typedef IUTEST_PP_CAT(TypeList, m)< IUTEST_PP_ENUM_SHIFTED_PARAMS(m, T) > Tail;	\
 }
 
@@ -156,7 +156,7 @@ struct TemplateTypeSel
 	template<typename T>
 	struct bind
 	{
-		typedef U<T>	type;
+		typedef U<T> type;
 	};
 };
 
@@ -173,14 +173,14 @@ struct TemplateTypeList0 {};
 template<IUTEST_TEMPLATE_TPARAM1 T1, IUTEST_TEMPLATE_TPARAM1 ...Types>
 struct VariadicTemplateTypeList
 {
-	typedef TemplateTypeSel<T1>	Head;
-	typedef VariadicTemplateTypeList<Types...>	Tail;
+	typedef TemplateTypeSel<T1> Head;
+	typedef VariadicTemplateTypeList<Types...> Tail;
 };
 template<IUTEST_TEMPLATE_TPARAM1 T1>
 struct VariadicTemplateTypeList<T1>
 {
-	typedef TemplateTypeSel<T1>	Head;
-	typedef TemplateTypeList0	Tail;
+	typedef TemplateTypeSel<T1> Head;
+	typedef TemplateTypeList0 Tail;
 };
 
 #else
@@ -189,7 +189,7 @@ template<IUTEST_TEMPLATE_TPARAM1 T1>
 struct TemplateTypeList1
 {
 	typedef TemplateTypeSel<T1> Head;
-	typedef TemplateTypeList0	Tail;
+	typedef TemplateTypeList0 Tail;
 };
 
 #define IIUT_DECL_TEMPLATETYPELIST_(n)	IIUT_DECL_TEMPLATETYPELIST_I(n, IUTEST_PP_DEC(n))
@@ -263,4 +263,4 @@ IIUT_DECL_TEMPLATETYPELIST_(50);
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_TYPELIST_HPP_0AC27A0F_3EFF_48AD_9075_E439B4190DA5_
+#endif // INCG_IRIS_IUTEST_TYPELIST_HPP_0AC27A0F_3EFF_48AD_9075_E439B4190DA5_

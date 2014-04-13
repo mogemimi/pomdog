@@ -135,7 +135,7 @@ void DefaultPrintNonContainerTo(const T& value, iu_ostream* os)
 //======================================================================
 // declare
 template<typename T>
-inline void UniversalPrintTo(T value, iu_ostream* os);
+inline void UniversalPrintTo(const T& value, iu_ostream* os);
 
 //======================================================================
 // class
@@ -154,7 +154,7 @@ public:
 // function
 /** @private */
 template<typename T>
-inline void	UniversalPrint(const T& value, iu_ostream* os)
+inline void UniversalPrint(const T& value, iu_ostream* os)
 {
 	iuUniversalPrinter<T>::Print(value, os);
 }
@@ -177,7 +177,7 @@ inline void DefaultPrintTo(IsContainerHelper::yes_t
 			*os << ",";
 			if( count == kMaxCount )
 			{
-				*os << "...";
+				*os << " ...";
 				break;
 			}
 		}
@@ -192,8 +192,8 @@ inline void DefaultPrintTo(IsContainerHelper::yes_t
 }
 template<typename T>
 inline void DefaultPrintTo(IsContainerHelper::no_t
-						   , iutest_type_traits::false_type
-						   , const T& value, iu_ostream* os)
+						, iutest_type_traits::false_type
+						, const T& value, iu_ostream* os)
 {
 	printer_internal2::DefaultPrintNonContainerTo(value, os);
 }
@@ -223,8 +223,8 @@ inline void DefaultPtrPrintTo(T* ptr, iu_ostream* os)
 
 template<typename T>
 inline void DefaultPrintTo(IsContainerHelper::no_t
-						   , iutest_type_traits::true_type
-						   , T* ptr, iu_ostream* os)
+						, iutest_type_traits::true_type
+						, T* ptr, iu_ostream* os)
 {
 	if( ptr == NULL )
 	{
@@ -364,7 +364,7 @@ inline void PrintTo(const tuples::tuple<A1, A2, A3, A4, A5, A6, A7, A8, A9>& t, 
 
 /** @private */
 template<typename T>
-inline void	IUTEST_ATTRIBUTE_UNUSED_ UniversalTersePrint(const T& value, iu_ostream* os)
+inline void IUTEST_ATTRIBUTE_UNUSED_ UniversalTersePrint(const T& value, iu_ostream* os)
 {
 	UniversalPrint(value, os);
 }
@@ -478,7 +478,7 @@ inline void IUTEST_ATTRIBUTE_UNUSED_ UniversalPrintArray(const wchar_t* begin, s
 
 /** @private */
 template<typename T>
-inline void IUTEST_ATTRIBUTE_UNUSED_ UniversalPrintTo(T value, iu_ostream* os) { PrintTo(value, os); }
+inline void IUTEST_ATTRIBUTE_UNUSED_ UniversalPrintTo(const T& value, iu_ostream* os) { PrintTo(value, os); }
 
 #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
@@ -544,4 +544,4 @@ inline ::std::string PrintToStrings(const char* separate, const T& v, Args... ar
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_PRINTERS_HPP_A6A321C9_9279_4336_8167_058C59EC0FD0_
+#endif // INCG_IRIS_IUTEST_PRINTERS_HPP_A6A321C9_9279_4336_8167_058C59EC0FD0_

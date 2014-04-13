@@ -308,7 +308,7 @@ template<typename T1, typename T2>
 */
 template<typename T1, typename T2>
 ::iutest::AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperEqCollections(const char* expr1b, const char* expr1e, const char* expr2b, const char* expr2e
-							   , T1 b1, T1 e1, T2 b2, T2 e2)
+							, T1 b1, T1 e1, T2 b2, T2 e2)
 {
 	if( ::iutest::AssertionResult ar = CmpHelperEqIterator(b1, e1, b2, e2) )
 		;
@@ -342,8 +342,6 @@ template<typename T1, typename T2>
 ::iutest::AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperEqRange(const char* expected_expr, const char* actual_expr
 	, T1 expected, T2 actual)
 {
-//	return detail::CmpHelperEqRange(expected_expr, actual_expr, ::std::begin(expected), ::std::end(expected)
-//		, ::std::begin(actual), ::std::end(actual));
 	return detail::CmpHelperEqRange(expected_expr, actual_expr, expected.begin(), expected.end()
 		, actual.begin(), actual.end());
 }
@@ -380,7 +378,7 @@ template<typename T1, size_t SIZE1, typename T2>
  * @brief	文字列長アサーションフォーマッター
 */
 inline ::iutest::AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRLNEQ(const char* expr1, const char* expr2
-										 , size_t len1, const char* val2)
+										, size_t len1, const char* val2)
 {
 	const size_t len2 = strlen(val2);
 	if( len2 == len1 )
@@ -394,7 +392,7 @@ inline ::iutest::AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRLNEQ(const
  * @brief	文字列長アサーションフォーマッター
 */
 inline ::iutest::AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRLNEQ(const char* expr1, const char* expr2
-										 , size_t len1, const wchar_t* val2)
+										, size_t len1, const wchar_t* val2)
 {
 	const size_t len2 = wcslen(val2);
 	if( len2 == len1 )
@@ -495,7 +493,7 @@ inline ::iutest::AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNOTIN(cons
 */
 #define IIUT_COMPARE_HELPER_DEC_(name)	struct name {										\
 	template<typename T1, typename T2>														\
-	static ::iutest::AssertionResult Comp(const char* expr1, const char* expr2, const T1& val1, const T2& val2)	{	\
+	static ::iutest::AssertionResult Comp(const char* expr1, const char* expr2, const T1& val1, const T2& val2) {	\
 		return ::iutest::internal::CmpHelper##name(expr1, expr2, val1, val2);				\
 	}																						\
 	}
@@ -588,4 +586,4 @@ public:
 
 }	// end of namespace iuutil
 
-#endif	// INCG_IRIS_IUTEST_UTIL_ASSERTION_HPP_A45F8265_40E0_44F2_91C6_090B1778657C_
+#endif // INCG_IRIS_IUTEST_UTIL_ASSERTION_HPP_A45F8265_40E0_44F2_91C6_090B1778657C_

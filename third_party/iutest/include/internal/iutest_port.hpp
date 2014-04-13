@@ -25,7 +25,7 @@
 
 #include "iutest_internal_defs.hpp"
 
-#if defined(IUTEST_OS_LINUX) || defined(IUTEST_OS_CYGWIN)
+#if defined(IUTEST_OS_LINUX) || defined(IUTEST_OS_CYGWIN) || defined(IUTEST_OS_MAC)
 #  include <unistd.h>
 #  include <locale.h>
 #endif
@@ -39,8 +39,8 @@ namespace nacl
 /**
  * @brief	printf
 */
-void	vprint_message(const char *fmt, va_list va);
-void	print_message(const char *fmt, ...);
+void vprint_message(const char *fmt, va_list va);
+void print_message(const char *fmt, ...);
 
 }
 #endif
@@ -65,7 +65,7 @@ inline void Abort(void) { abort(); }
 
 }	// end of namespace posix
 
-inline void SleepMilliseconds(int n)	{ posix::SleepMillisec(static_cast<unsigned int>(n)); }
+inline void SleepMilliseconds(int n) { posix::SleepMillisec(static_cast<unsigned int>(n)); }
 
 }	// end of namespace internal
 
@@ -141,7 +141,7 @@ class IUTestLog
 public:
 	enum Level
 	{
-		LOG_INFO
+		  LOG_INFO
 		, LOG_WARNING
 		, LOG_ERROR
 		, LOG_FATAL
@@ -176,4 +176,4 @@ private:
 #  include "../impl/iutest_port.ipp"
 #endif
 
-#endif	// INCG_IRIS_IUTEST_PORT_HPP_7893F685_A1A9_477A_82E8_BF06237697FF_
+#endif // INCG_IRIS_IUTEST_PORT_HPP_7893F685_A1A9_477A_82E8_BF06237697FF_

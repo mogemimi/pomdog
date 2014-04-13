@@ -28,6 +28,12 @@
 #include <algorithm>
 #include "internal/iutest_debug.hpp"
 
+#if IUTEST_HAS_TYPED_TEST_P
+#  if IUTEST_TYPED_TEST_P_STRICT
+#    include <set>
+#  endif
+#endif
+
 namespace iutest
 {
 
@@ -84,7 +90,7 @@ struct type_least_t<8>
 namespace internal
 {
 
-typedef void*	TypeId;		//!< テスト識別型
+typedef void* TypeId;		//!< テスト識別型
 
 namespace helper
 {
@@ -104,20 +110,20 @@ template<typename T>bool TestTypeIdHelper<T>::_dummy = false;
 //======================================================================
 // function
 /**
-  * @internal
-  * @brief	TypeId Generator
+ * @internal
+ * @brief	TypeId Generator
 */
 template<typename T>
-inline TypeId	GetTypeId(void)
+inline TypeId GetTypeId(void)
 {
 	return &(helper::TestTypeIdHelper<T>::_dummy);
 }
 
 /**
-  * @internal
-  * @brief	TypeId Generator
+ * @internal
+ * @brief	TypeId Generator
 */
-inline IUTEST_CXX_CONSTEXPR TypeId	GetTestTypeId(void)
+inline IUTEST_CXX_CONSTEXPR TypeId GetTestTypeId(void)
 {
 	return 0;
 }
@@ -130,8 +136,8 @@ namespace detail
 {
 
 /**
-  * @internal
-  * @brief	IEEE754 floating point bits
+ * @internal
+ * @brief	IEEE754 floating point bits
 */
 template<typename T>
 struct ieee754_bits {};
@@ -163,9 +169,9 @@ template<typename RawType>
 class floating_point
 {
 private:
-	typedef floating_point<RawType>	_Myt;
+	typedef floating_point<RawType> _Myt;
 
-	typedef typename detail::type_least_t<sizeof(RawType)>	type;
+	typedef typename detail::type_least_t<sizeof(RawType)> type;
 	typedef typename type::Int	Int;
 	typedef typename type::UInt	UInt;
 	union FInt
@@ -222,16 +228,16 @@ public:
 	/**
 	 * @brief	ビット列の取得
 	*/
-	UInt	bit(void) const	{ return m_v.uv; }
+	UInt	bit(void) const { return m_v.uv; }
 
 	/**
 	 * @brief	raw データの取得
 	*/
-	RawType	raw(void) const	{ return m_v.fv; }
+	RawType	raw(void) const { return m_v.fv; }
 
 public:
 	//! plus inf
-	static _Myt	PINF(void)
+	static _Myt PINF(void)
 	{
 		_Myt f;
 		f.m_v.uv = ((1 << kEXP) - 1);
@@ -239,28 +245,28 @@ public:
 		return f;
 	}
 	//! minus inf
-	static _Myt	NINF(void)
+	static _Myt NINF(void)
 	{
 		_Myt f = PINF();
 		f.m_v.uv |= static_cast<UInt>(1u) << (kEXP + kFRAC);
 		return f;
 	}
 	//! plus nan
-	static _Myt	PNAN(void)
+	static _Myt PNAN(void)
 	{
 		_Myt f = PINF();
 		f.m_v.uv |= 1;
 		return f;
 	}
 	//! minus nan
-	static _Myt	NNAN(void)
+	static _Myt NNAN(void)
 	{
 		_Myt f = NINF();
 		f.m_v.uv |= 1;
 		return f;
 	}
 	//! plus qnan
-	static _Myt	PQNAN(void)
+	static _Myt PQNAN(void)
 	{
 		_Myt f;
 		f.m_v.uv = ((1 << (kEXP + 1)) - 1);
@@ -268,7 +274,7 @@ public:
 		return f;
 	}
 	//! minus qnan
-	static _Myt	NQNAN(void)
+	static _Myt NQNAN(void)
 	{
 		_Myt f = PQNAN();
 		f.m_v.uv |= static_cast<UInt>(1u) << (kEXP + kFRAC);
@@ -289,7 +295,7 @@ private:
 		, kMaxUlps = 4
 	};
 private:
-	FInt	m_v;
+	FInt m_v;
 };
 
 //======================================================================
@@ -309,4 +315,4 @@ typedef detail::type_least_t<8>::Int	BiggestInt;		//!< Biggest Int
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_DEFS_HPP_839F06DB_E0B6_4E6A_84F2_D99C0A44E06C_
+#endif // INCG_IRIS_IUTEST_DEFS_HPP_839F06DB_E0B6_4E6A_84F2_D99C0A44E06C_

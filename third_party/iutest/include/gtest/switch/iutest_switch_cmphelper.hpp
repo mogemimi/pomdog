@@ -22,7 +22,7 @@
 //======================================================================
 // define
 
-#else	// !defined(IUTEST_USE_GTEST)
+#else // !defined(IUTEST_USE_GTEST)
 
 namespace testing
 {
@@ -90,7 +90,7 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASEEQ(const char* expr1, const char* expr2
 	, const wchar_t* val1, const wchar_t* val2)
 {
-	if( val1 == NULL || val2 == NULL ) 
+	if( val1 == NULL || val2 == NULL )
 	{
 		if( val1 == val2 ) return AssertionSuccess();
 	}
@@ -128,7 +128,7 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASEEQ(const char* e
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASENE(const char* expr1, const char* expr2
 	, const wchar_t* val1, const wchar_t* val2)
 {
-	if( val1 == NULL || val2 == NULL ) 
+	if( val1 == NULL || val2 == NULL )
 	{
 		if( val1 != val2 ) return AssertionSuccess();
 	}
@@ -211,6 +211,6 @@ public:
 }	// end of namespace internal
 }	// end of namespace testing
 
-#endif	// !defined(IUTEST_USE_GTEST)
+#endif // !defined(IUTEST_USE_GTEST)
 
-#endif	// INCG_IRIS_IUTEST_SWITCH_CMPHELPER_HPP_0378DF29_2DE7_4C60_8E12_32FEA8BEAA7C_
+#endif // INCG_IRIS_IUTEST_SWITCH_CMPHELPER_HPP_0378DF29_2DE7_4C60_8E12_32FEA8BEAA7C_

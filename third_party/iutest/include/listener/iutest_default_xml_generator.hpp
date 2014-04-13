@@ -31,8 +31,8 @@ namespace iutest
 */
 class DefaultXmlGeneratorListener : public EmptyTestEventListener
 {
-	::std::string	m_output_path;
-	IFile*	m_fp;
+	::std::string m_output_path;
+	IFile* m_fp;
 public:
 	/**
 	 * @brief	コンストラクタ
@@ -52,7 +52,7 @@ public:
 	/**
 	 * @brief	出力ファイルの設定
 	*/
-	void	SetFilePath(const ::std::string& path)
+	void SetFilePath(const ::std::string& path)
 	{
 		if( path.empty() )
 		{
@@ -89,7 +89,7 @@ private:
 	void FileClose(void);
 
 private:
-	static void	OutputXmlCDataSection(IFile* file, const char* data);
+	static void OutputXmlCDataSection(IFile* file, const char* data);
 	static void OutputXmlAttribute(IFile* file, const char* name, const char* value);
 
 private:
@@ -149,4 +149,4 @@ public:
 #  include "../impl/iutest_default_xml_generator.ipp"
 #endif
 
-#endif	// INCG_IRIS_IUTEST_DEFAULT_XML_GENERATOR_HPP_791DCB98_05CC_49BA_8518_0EC9CA2B5450_
+#endif // INCG_IRIS_IUTEST_DEFAULT_XML_GENERATOR_HPP_791DCB98_05CC_49BA_8518_0EC9CA2B5450_

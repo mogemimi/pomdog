@@ -34,7 +34,7 @@ IUTEST_IPP_INLINE void DefalutResultPrintListener::OnTestProgramStart(const Unit
 	}
 }
 IUTEST_IPP_INLINE void DefalutResultPrintListener::OnTestIterationStart(const UnitTest& test
-								  , int iteration)
+								, int iteration)
 {
 	if( IUTEST_FLAG(repeat) != 1 )
 	{
@@ -219,4 +219,4 @@ IUTEST_IPP_INLINE void DefalutResultPrintListener::OnTestProgramEnd(const UnitTe
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_DEFAULT_PRINTER_IPP_77055C2B_AAE1_4944_A61C_26C58B04B37B_
+#endif // INCG_IRIS_IUTEST_DEFAULT_PRINTER_IPP_77055C2B_AAE1_4944_A61C_26C58B04B37B_

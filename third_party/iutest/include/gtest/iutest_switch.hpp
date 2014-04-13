@@ -132,7 +132,7 @@ namespace testing = iutest;
 #  define GTEST_INCLUDE_GTEST_GTEST_H_	// 以降で、gtest が include されないようにする
 #endif
 
-#else	// !defined(IUTEST_USE_GTEST)
+#else // !defined(IUTEST_USE_GTEST)
 
 #ifdef INCG_IRIS_IUTEST_HPP_
 #  if IUTEST_HAS_TUPLE
@@ -143,7 +143,7 @@ namespace testing = iutest;
 #  endif
 #endif
 
-#if	defined(_MSC_VER) && _MSC_VER == 1700
+#if defined(_MSC_VER) && _MSC_VER == 1700
 #  ifndef _VARIADIC_MAX
 #    define _VARIADIC_MAX	10
 #  endif
@@ -241,7 +241,7 @@ namespace tr1
 #define IUTEST_HAS_PRINT_TO				1
 #define IUTEST_HAS_TESTNAME_ALIAS		0
 #define IUTEST_HAS_TESTNAME_ALIAS_JP	0
-#define IUTEST_HAS_STREAM_RESULT		0
+#define IUTEST_HAS_STREAM_RESULT		1
 
 #define IUTEST_HAS_EXCEPTIONS		GTEST_HAS_EXCEPTIONS
 #define IUTEST_HAS_RTTI				GTEST_HAS_RTTI
@@ -339,7 +339,7 @@ namespace iusupport
 {
 	inline AssertionResult iuMakeAssertionResult(const AssertionResult& ar) { return ar; }
 	inline AssertionResult iuMakeAssertionResult(const ::iutest::AssertionResult& ar)
-	{ 
+	{
 		return AssertionResult(static_cast<bool>(ar)) << ar.message();
 	}
 }
@@ -383,4 +383,4 @@ namespace iutest = testing;
 
 #endif
 
-#endif	// INCG_IRIS_IUTEST_SWITCH_HPP_
+#endif // INCG_IRIS_IUTEST_SWITCH_HPP_

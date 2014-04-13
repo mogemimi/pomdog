@@ -42,9 +42,9 @@
 #endif
 
 #ifndef IUTEST_HAS_RVALUE_REFS
-#  if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 2)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
+#  if   (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 2)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
 #    define IUTEST_HAS_RVALUE_REFS	1
-#  elif	defined(_MSC_VER) && (_MSC_VER >= 1700)
+#  elif defined(_MSC_VER) && (_MSC_VER >= 1700)
 #    define IUTEST_HAS_RVALUE_REFS	1
 #  endif
 #endif
@@ -57,6 +57,7 @@
 #  include <type_traits>
 #endif
 
+/** iutest type traits */
 namespace iutest_type_traits
 {
 
@@ -105,15 +106,15 @@ struct bool_constant
 #if defined(IUTEST_NO_INCLASS_MEMBER_INITIALIZATION)
 	enum { value = B };
 #else
-	static const bool	value = B;
+	static const bool value = B;
 #endif
 };
 #if !defined(IUTEST_NO_INCLASS_MEMBER_INITIALIZATION)
 template<bool B>const bool bool_constant<B>::value;
 #endif
 
-typedef bool_constant<true>		true_type;
-typedef bool_constant<false>	false_type;
+typedef bool_constant<true>  true_type;
+typedef bool_constant<false> false_type;
 
 #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
@@ -128,7 +129,7 @@ class remove_const
 	template<typename U>
 	struct impl<const U> { typedef U type; };
 public:
-	typedef typename impl<T>::type	type;
+	typedef typename impl<T>::type type;
 };
 
 /**
@@ -142,7 +143,7 @@ class remove_volatile
 	template<typename U>
 	struct impl<volatile U> { typedef U type; };
 public:
-	typedef typename impl<T>::type	type;
+	typedef typename impl<T>::type type;
 };
 
 /**
@@ -160,7 +161,7 @@ class remove_reference
 	struct impl<U&&> { typedef U type; };
 #endif
 public:
-	typedef typename impl<T>::type	type;
+	typedef typename impl<T>::type type;
 };
 
 /**
@@ -169,7 +170,7 @@ public:
 template<typename T>
 struct remove_cv
 {
-	typedef typename remove_const< typename remove_volatile<T>::type >::type	type;
+	typedef typename remove_const< typename remove_volatile<T>::type >::type type;
 };
 
 /**
@@ -185,22 +186,23 @@ struct remove_pointer<T*>	{ typedef T type; };
 namespace is_pointer_helper
 {
 
+/** @private */
 template<typename T>
 class is_pointer
 {
 #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 	template<typename U, typename TMP> struct impl { typedef false_type type; };
 	template<typename U, typename TMP> struct impl<U*, TMP> { typedef true_type type; };
-	typedef typename remove_cv<T>::type	rmcv_type;
+	typedef typename remove_cv<T>::type rmcv_type;
 public:
 	typedef typename impl<rmcv_type, void>::type type;
 #else
-	typedef T	rmcv_type;
+	typedef T rmcv_type;
 	static T& make_t();
-	static char	IsPointerHelper(const volatile void*);
+	static char IsPointerHelper(const volatile void*);
 	static char (&IsPointerHelper(...))[2];
 
-	enum { IsPointer = sizeof(IsPointerHelper(make_t())) == 1 ? true : false }; 
+	enum { IsPointer = sizeof(IsPointerHelper(make_t())) == 1 ? true : false };
 public:
 	typedef bool_constant<IsPointer> type;
 #endif
@@ -219,12 +221,13 @@ struct is_pointer : public is_pointer_helper::is_pointer<T>::type {};
 namespace is_reference_helper
 {
 
+/** @private */
 template<typename T>
 class is_reference
 {
 	template<typename U, typename TMP> struct impl { typedef false_type type; };
 	template<typename U, typename TMP> struct impl<U&, TMP> { typedef true_type type; };
-	typedef typename remove_cv<T>::type	rmcv_type;
+	typedef typename remove_cv<T>::type rmcv_type;
 public:
 	typedef typename impl<rmcv_type, void>::type type;
 };
@@ -240,12 +243,13 @@ struct is_reference : public is_reference_helper::is_reference<T>::type {};
 namespace is_void_helper
 {
 
+/** @private */
 template<typename T>
 class is_void
 {
 	template<typename U, typename TMP> struct impl { typedef false_type type; };
 	template<typename TMP> struct impl<void, TMP> { typedef true_type type; };
-	typedef typename remove_cv<T>::type	rmcv_type;
+	typedef typename remove_cv<T>::type rmcv_type;
 public:
 	typedef typename impl<rmcv_type, void>::type type;
 };
@@ -273,13 +277,16 @@ namespace is_same_helper
 
 #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
+/** @private */
 template<typename T1, typename T2>
 struct is_same { typedef false_type type; };
+/** @private */
 template<typename T>
 struct is_same<T, T> { typedef true_type type; };
 
 #elif IUTEST_HAS_CLASS_MEMBER_TEMPLATE_SPECIALIZATION
 
+/** @private */
 template<typename T1, typename T2>
 class is_same
 {
@@ -308,18 +315,19 @@ struct is_same : public is_same_helper::is_same<T1, T2>::type {};
 namespace is_class_helper
 {
 
-	template<typename T>
-	class is_class
-	{
-		template<typename U>
-		static char	IsClassHelper(int U::*);
-		template<typename U>
-		static char(&IsClassHelper(...))[2];
+/** @private */
+template<typename T>
+class is_class
+{
+	template<typename U>
+	static char IsClassHelper(int U::*);
+	template<typename U>
+	static char(&IsClassHelper(...))[2];
 
-		enum { IsClass = sizeof(IsClassHelper<T>(0)) == 1 ? true : false };
-	public:
-		typedef bool_constant<IsClass> type;
-	};
+	enum { IsClass = sizeof(IsClassHelper<T>(0)) == 1 ? true : false };
+public:
+	typedef bool_constant<IsClass> type;
+};
 
 }
 
@@ -334,15 +342,16 @@ struct is_class : public is_class_helper::is_class<T>::type
 namespace is_convertible_helper
 {
 
+/** @private */
 template<typename From, typename To>
 class is_convertible_type
 {
-	static From	MakeFrom(void);
+	static From MakeFrom(void);
 
-	static char	IsConvertibleHelper(To);
+	static char IsConvertibleHelper(To);
 	static char (&IsConvertibleHelper(...))[2];
 
-	enum { IsConvertible = sizeof(IsConvertibleHelper(is_convertible_type::MakeFrom())) == 1 ? true : false }; 
+	enum { IsConvertible = sizeof(IsConvertibleHelper(is_convertible_type::MakeFrom())) == 1 ? true : false };
 public:
 	typedef bool_constant<IsConvertible> type;
 };
@@ -359,61 +368,67 @@ struct is_convertible : public is_convertible_helper::is_convertible_type<From, 
 
 namespace is_base_of_helper
 {
-	template<typename Base, typename Derived>
-	class is_base_of_check
-	{
-		struct no_t { char a[2]; };
-		template<typename T>
-		static char CheckSig(Derived const volatile *, T);
-		static no_t CheckSig(Base const volatile *, int);
-		struct host
-		{
-			operator Base const volatile * () const;
-			operator Derived const volatile * ();
-		};
-		enum { IsBaseAndDerived = sizeof(CheckSig(host(), 0)) == 1 ? true : false };
-	public:
-		typedef bool_constant<IsBaseAndDerived> type;
-	};
 
-	template<bool is_class_b, bool is_class_d, bool is_same>
-	struct is_base_of_select
+/** @private */
+template<typename Base, typename Derived>
+class is_base_of_check
+{
+	struct no_t { char a[2]; };
+	template<typename T>
+	static char CheckSig(Derived const volatile *, T);
+	static no_t CheckSig(Base const volatile *, int);
+	struct host
 	{
-		template<typename T, typename U>struct rebind { typedef false_type type;  };
+		operator Base const volatile * () const;
+		operator Derived const volatile * ();
 	};
-	template<>
-	struct is_base_of_select<true, true, true>
-	{
-		template<typename T, typename U>struct rebind { typedef true_type type;  };
-	};
-	template<>
-	struct is_base_of_select<true, true, false>
-	{
-		template<typename T, typename U>struct rebind
-		{
-			typedef typename is_base_of_check<T, U>::type type;
-		};
-	};
+	enum { IsBaseAndDerived = sizeof(CheckSig(host(), 0)) == 1 ? true : false };
+public:
+	typedef bool_constant<IsBaseAndDerived> type;
+};
 
-	template<typename Base, typename Derived>
-	class is_base_of
+/** @private */
+template<bool is_class_b, bool is_class_d, bool is_same>
+struct is_base_of_select
+{
+	template<typename T, typename U>struct rebind { typedef false_type type;  };
+};
+/** @private */
+template<>
+struct is_base_of_select<true, true, true>
+{
+	template<typename T, typename U>struct rebind { typedef true_type type;  };
+};
+/** @private */
+template<>
+struct is_base_of_select<true, true, false>
+{
+	template<typename T, typename U>struct rebind
 	{
+		typedef typename is_base_of_check<T, U>::type type;
+	};
+};
+
+/** @private */
+template<typename Base, typename Derived>
+class is_base_of
+{
 #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-		typedef typename remove_cv<Base>::type B;
-		typedef typename remove_cv<Derived>::type D;
+	typedef typename remove_cv<Base>::type B;
+	typedef typename remove_cv<Derived>::type D;
 #else
-		typedef Base B;
-		typedef Derived D;
+	typedef Base B;
+	typedef Derived D;
 #endif
-		typedef is_base_of_select<
-		is_class<Base>::value
-		, is_class<Derived>::value
-		, is_same<Base, Derived>::value
-		> selector;
-		typedef typename selector::template rebind<B, D> binder;
-	public:
-		typedef typename binder::type type;
-	};
+	typedef is_base_of_select<
+	is_class<Base>::value
+	, is_class<Derived>::value
+	, is_same<Base, Derived>::value
+	> selector;
+	typedef typename selector::template rebind<B, D> binder;
+public:
+	typedef typename binder::type type;
+};
 
 }
 
@@ -474,57 +489,60 @@ struct add_rvalue_reference { typedef T type; };
 
 namespace is_function_pointer_helper
 {
-	template<typename T>
-	class is_function_pointer
-	{
-		template<typename U>
-		struct impl : public false_type {};
+
+/** @private */
+template<typename T>
+class is_function_pointer
+{
+	template<typename U>
+	struct impl : public false_type {};
 
 #if IUTEST_HAS_VARIADIC_TEMPLATES
-		template<typename R, typename ...Args>
-		struct impl<R (*)(Args...)> : public true_type {};
-		template<typename R, typename ...Args>
-		struct impl<R (*)(Args..., ...)> : public true_type {};
+	template<typename R, typename ...Args>
+	struct impl<R (*)(Args...)> : public true_type {};
+	template<typename R, typename ...Args>
+	struct impl<R (*)(Args..., ...)> : public true_type {};
 
 #else
-		template<typename R>
-		struct impl<R (*)()> : public true_type {};
-		template<typename R>
-		struct impl<R (*)(...)> : public true_type {};
+	template<typename R>
+	struct impl<R (*)()> : public true_type {};
+	template<typename R>
+	struct impl<R (*)(...)> : public true_type {};
 
 #define IIUT_DECL_IS_FUNCTION_PTR_(n)	\
-	template<typename R, IUTEST_PP_ENUM_PARAMS(n, typename T)>struct impl<R (*)(IUTEST_PP_ENUM_PARAMS(n, T))> : public true_type {};	\
-	template<typename R, IUTEST_PP_ENUM_PARAMS(n, typename T)>struct impl<R (*)(IUTEST_PP_ENUM_PARAMS(n, T), ...)> : public true_type {}
+template<typename R, IUTEST_PP_ENUM_PARAMS(n, typename T)>struct impl<R (*)(IUTEST_PP_ENUM_PARAMS(n, T))> : public true_type {};	\
+template<typename R, IUTEST_PP_ENUM_PARAMS(n, typename T)>struct impl<R (*)(IUTEST_PP_ENUM_PARAMS(n, T), ...)> : public true_type {}
 
-		IIUT_DECL_IS_FUNCTION_PTR_(1);
-		IIUT_DECL_IS_FUNCTION_PTR_(2);
-		IIUT_DECL_IS_FUNCTION_PTR_(3);
-		IIUT_DECL_IS_FUNCTION_PTR_(4);
-		IIUT_DECL_IS_FUNCTION_PTR_(5);
-		IIUT_DECL_IS_FUNCTION_PTR_(6);
-		IIUT_DECL_IS_FUNCTION_PTR_(7);
-		IIUT_DECL_IS_FUNCTION_PTR_(8);
-		IIUT_DECL_IS_FUNCTION_PTR_(9);
-		IIUT_DECL_IS_FUNCTION_PTR_(10);
-		IIUT_DECL_IS_FUNCTION_PTR_(11);
-		IIUT_DECL_IS_FUNCTION_PTR_(12);
-		IIUT_DECL_IS_FUNCTION_PTR_(13);
-		IIUT_DECL_IS_FUNCTION_PTR_(14);
-		IIUT_DECL_IS_FUNCTION_PTR_(15);
-		IIUT_DECL_IS_FUNCTION_PTR_(16);
-		IIUT_DECL_IS_FUNCTION_PTR_(17);
-		IIUT_DECL_IS_FUNCTION_PTR_(18);
-		IIUT_DECL_IS_FUNCTION_PTR_(19);
-		IIUT_DECL_IS_FUNCTION_PTR_(20);
+	IIUT_DECL_IS_FUNCTION_PTR_(1);
+	IIUT_DECL_IS_FUNCTION_PTR_(2);
+	IIUT_DECL_IS_FUNCTION_PTR_(3);
+	IIUT_DECL_IS_FUNCTION_PTR_(4);
+	IIUT_DECL_IS_FUNCTION_PTR_(5);
+	IIUT_DECL_IS_FUNCTION_PTR_(6);
+	IIUT_DECL_IS_FUNCTION_PTR_(7);
+	IIUT_DECL_IS_FUNCTION_PTR_(8);
+	IIUT_DECL_IS_FUNCTION_PTR_(9);
+	IIUT_DECL_IS_FUNCTION_PTR_(10);
+	IIUT_DECL_IS_FUNCTION_PTR_(11);
+	IIUT_DECL_IS_FUNCTION_PTR_(12);
+	IIUT_DECL_IS_FUNCTION_PTR_(13);
+	IIUT_DECL_IS_FUNCTION_PTR_(14);
+	IIUT_DECL_IS_FUNCTION_PTR_(15);
+	IIUT_DECL_IS_FUNCTION_PTR_(16);
+	IIUT_DECL_IS_FUNCTION_PTR_(17);
+	IIUT_DECL_IS_FUNCTION_PTR_(18);
+	IIUT_DECL_IS_FUNCTION_PTR_(19);
+	IIUT_DECL_IS_FUNCTION_PTR_(20);
 
 #undef IIUT_DECL_IS_FUNCTION_PTR_
 
 #endif
 
-		enum { value = impl< typename remove_cv<T>::type >::value };
-	public:
-		typedef bool_constant<value> type;
-	};
+	enum { value = impl< typename remove_cv<T>::type >::value };
+public:
+	typedef bool_constant<value> type;
+};
+
 }
 
 /**
@@ -538,6 +556,7 @@ struct is_function_pointer : public is_function_pointer_helper::is_function_poin
 namespace is_member_function_pointer_helper
 {
 
+/** @private */
 template<typename T>
 class is_member_function_pointer
 {
@@ -626,6 +645,7 @@ struct is_member_function_pointer : public is_member_function_pointer_helper::is
 namespace is_member_pointer_helper
 {
 
+/** @private */
 template<typename T>
 class is_member_pointer
 {
@@ -648,9 +668,9 @@ struct is_member_pointer : public is_member_pointer_helper::is_member_pointer<T>
 {
 };
 
-#endif	// #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#endif // #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
-#endif	// #if IUTEST_HAS_HDR_TYPETRAITS
+#endif // #if IUTEST_HAS_HDR_TYPETRAITS
 
 
 #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
@@ -738,9 +758,9 @@ public:
 	typedef typename impl< typename remove_cv<T>::type >::type type;
 };
 
-#endif	// #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#endif // #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 }	// end of namespace iutest_type_traits
 
 
-#endif	// INCG_IRIS_IUTEST_TYPE_TRAITS_HPP_6F091F15_784A_4F50_BD18_B8F67C5AF0CF_
+#endif // INCG_IRIS_IUTEST_TYPE_TRAITS_HPP_6F091F15_784A_4F50_BD18_B8F67C5AF0CF_

@@ -20,6 +20,7 @@
 //======================================================================
 // include
 #include "../iutest_core.hpp"
+#include "../internal/iutest_log_stream.hpp"
 
 namespace iutest
 {
@@ -45,11 +46,13 @@ public:
 	/**
 	* @brief	TAPPrintListener に切り替え
 	*/
-	static void SetUp(void)
+	static TestEventListener* SetUp(void)
 	{
 		TestEventListeners& listeners = UnitTest::GetInstance()->listeners();
 		delete listeners.Release(listeners.default_result_printer());
-		listeners.Append(new TAPPrintListener);
+		TestEventListener* p = new TAPPrintListener;
+		listeners.Append(p);
+		return p;
 	}
 };
 
@@ -58,7 +61,7 @@ public:
 */
 class TAPFileGeneratorListener : public TAPPrintListener
 {
-	::std::string	m_output_path;
+	::std::string m_output_path;
 public:
 	/**
 	 * @brief	コンストラクタ
@@ -72,7 +75,7 @@ public:
 	/**
 	 * @brief	出力ファイルの設定
 	*/
-	void	SetFilePath(const char* directory)
+	void SetFilePath(const char* directory)
 	{
 		if( directory == NULL || *directory == '\0' )
 		{
@@ -110,12 +113,14 @@ public:
 	/**
 	 * @brief	TAPFileGeneratorListener に切り替え
 	*/
-	static void SetUp(void)
+	static TestEventListener* SetUp(void)
 	{
 		TestEventListeners& listeners = UnitTest::GetInstance()->listeners();
 		delete listeners.Release(listeners.default_result_printer());
 		const ::std::string& output =  TestEnv::get_output_option();
-		listeners.Append(new TAPFileGeneratorListener(output.c_str()));
+		TestEventListener* p = new TAPFileGeneratorListener(output.c_str());
+		listeners.Append(p);
+		return p;
 	}
 };
 
@@ -130,7 +135,7 @@ inline void TAPPrintListener::OnTestProgramStart(const UnitTest& test)
 }
 inline void TAPPrintListener::OnTestProgramEnd(const UnitTest& test)
 {
-	detail::FileOutStream stream(stdout);
+	detail::LogStream stream;
 
 	int number = 1;
 	for( int k=0, count=test.total_test_case_count(); k < count; ++k )
@@ -214,4 +219,4 @@ inline void TAPFileGeneratorListener::OnTestProgramEnd(const UnitTest& test)
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_TAP_PRINTER_HPP_77055C2B_AAE1_4944_A61C_26C58B04B37B_
+#endif // INCG_IRIS_IUTEST_TAP_PRINTER_HPP_77055C2B_AAE1_4944_A61C_26C58B04B37B_

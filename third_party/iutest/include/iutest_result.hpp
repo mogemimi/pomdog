@@ -20,7 +20,6 @@
 //======================================================================
 // include
 #include "internal/iutest_message.hpp"
-#include "internal/iutest_console.hpp"
 
 namespace iutest
 {
@@ -45,7 +44,7 @@ public:
 	 * @brief	テスト結果通知受け取り関数
 	 * @param [in] result	= テスト結果
 	*/
-	virtual void ReportTestPartResult(const TestPartResult& result)	= 0;
+	virtual void ReportTestPartResult(const TestPartResult& result) = 0;
 };
 
 /**
@@ -90,37 +89,37 @@ public:
 	/**
 	 * @brief	失敗かどうか
 	*/
-	bool		failed(void)	const IUTEST_CXX_NOEXCEPT_SPEC { return m_type > kSuccess; }
+	bool		failed(void) const IUTEST_CXX_NOEXCEPT_SPEC { return m_type > kSuccess; }
 	/**
 	 * @brief	成功かどうか
 	*/
-	bool		passed(void)	const IUTEST_CXX_NOEXCEPT_SPEC { return !failed(); }
+	bool		passed(void) const IUTEST_CXX_NOEXCEPT_SPEC { return !failed(); }
 	/**
 	 * @brief	警告かどうか
 	*/
-	bool		warning(void)	const IUTEST_CXX_NOEXCEPT_SPEC { return m_type == kWarning; }
+	bool		warning(void) const IUTEST_CXX_NOEXCEPT_SPEC { return m_type == kWarning; }
 	/**
 	 * @brief	スキップかどうか
 	*/
-	bool		skipped(void)	const IUTEST_CXX_NOEXCEPT_SPEC { return m_type == kSkip; }
+	bool		skipped(void) const IUTEST_CXX_NOEXCEPT_SPEC { return m_type == kSkip; }
 	/**
 	 * @brief	前提条件エラーかどうか
 	*/
-	bool		assume_failed(void)	const IUTEST_CXX_NOEXCEPT_SPEC { return m_type == kAssumeFailure; }
+	bool		assume_failed(void) const IUTEST_CXX_NOEXCEPT_SPEC { return m_type == kAssumeFailure; }
 	/**
 	 * @brief	成功かどうか（警告を除く）
 	*/
-	bool		succeeded(void)	const IUTEST_CXX_NOEXCEPT_SPEC { return m_type == kSuccess; }
+	bool		succeeded(void) const IUTEST_CXX_NOEXCEPT_SPEC { return m_type == kSuccess; }
 
 	/**
 	 * @brief	致命的ではない失敗かどうか
 	*/
-	bool		nonfatally_failed(void)	const IUTEST_CXX_NOEXCEPT_SPEC { return m_type == kNonFatalFailure; }
+	bool		nonfatally_failed(void) const IUTEST_CXX_NOEXCEPT_SPEC { return m_type == kNonFatalFailure; }
 
 	/**
 	 * @brief	致命的な失敗かどうか
 	*/
-	bool		fatally_failed(void)	const IUTEST_CXX_NOEXCEPT_SPEC { return m_type == kFatalFailure; }
+	bool		fatally_failed(void) const IUTEST_CXX_NOEXCEPT_SPEC { return m_type == kFatalFailure; }
 
 	/**
 	 * @brief	理由
@@ -133,7 +132,7 @@ public:
 	Type		type(void) const IUTEST_CXX_NOEXCEPT_SPEC { return m_type; }
 
 private:
-	Type	m_type;
+	Type m_type;
 };
 
 //! TestPartResult print 出力
@@ -162,8 +161,8 @@ public:
 	 * @brief	値の設定
 	*/
 	void SetValue(const ::std::string& value) { m_value = value; }
-	const char*	key(void)	const	{ return m_key.c_str(); }	//!< キーの取得
-	const char*	value(void)	const	{ return m_value.c_str(); }	//!< 値の取得
+	const char*	key(void)	const { return m_key.c_str(); }		//!< キーの取得
+	const char*	value(void)	const { return m_value.c_str(); }	//!< 値の取得
 
 public:
 	/**
@@ -216,7 +215,7 @@ public:
 	 * @brief	成功したかどうか
 	 * @return	真偽値
 	*/
-	bool		Passed(void) const		{ return !Failed(); }
+	bool		Passed(void) const { return !Failed(); }
 	/**
 	 * @brief	失敗したかどうか
 	 * @return	真偽値
@@ -252,51 +251,51 @@ public:
 	 * @brief	致命的なエラーがあるかどうか
 	 * @return	真偽値
 	*/
-	bool		HasFatalFailure(void)	const	{ return HasResult(TestPartResult::kFatalFailure); }
+	bool		HasFatalFailure(void) const { return HasResult(TestPartResult::kFatalFailure); }
 
 	/**
 	 * @brief	致命的でないエラーがあるかどうか
 	 * @return	真偽値
 	*/
-	bool		HasNonfatalFailure(void)	const	{ return HasResult(TestPartResult::kNonFatalFailure); }
+	bool		HasNonfatalFailure(void) const { return HasResult(TestPartResult::kNonFatalFailure); }
 
 	/**
 	 * @brief	前提条件エラーがあるかどうか
 	 * @return	真偽値
 	*/
-	bool		HasAssumeFailure(void)	const	{ return HasResult(TestPartResult::kAssumeFailure); }
+	bool		HasAssumeFailure(void) const { return HasResult(TestPartResult::kAssumeFailure); }
 
 	/**
 	 * @brief	テストの実行時間の取得
 	 * @return	テストの実行時間
 	*/
-	TimeInMillisec	elapsed_time(void)		const IUTEST_CXX_NOEXCEPT_SPEC { return m_elapsedmsec; }
+	TimeInMillisec	elapsed_time(void) const IUTEST_CXX_NOEXCEPT_SPEC { return m_elapsedmsec; }
 
 	/**
 	 * @brief	結果の数を取得
 	 * @return	結果の数
 	*/
-	int			total_part_count(void)		const	{ return static_cast<int>(m_test_part_results.size()); }
+	int			total_part_count(void) const { return static_cast<int>(m_test_part_results.size()); }
 
 	/**
 	 * @brief	プロパティ総数の取得
 	 * @return	総数
 	*/
-	int			test_property_count(void)	const	{ return static_cast<int>(m_test_propertys.size()); }
+	int			test_property_count(void) const { return static_cast<int>(m_test_propertys.size()); }
 
 	/**
 	 * @brief	テスト結果の取得
 	 * @param [in]	index	= インデックス
 	 * @return	テスト結果
 	*/
-	const TestPartResult&	GetTestPartResult(int index) const	{ return m_test_part_results[index]; }
+	const TestPartResult&	GetTestPartResult(int index) const { return m_test_part_results[index]; }
 
 	/**
 	 * @brief	プロパティの取得
 	 * @param [in]	index	= インデックス
 	 * @return	プロパティの
 	*/
-	const TestProperty&		GetTestProperty(int index) const	{ return m_test_propertys[index]; }
+	const TestProperty&		GetTestProperty(int index) const { return m_test_propertys[index]; }
 
 public:
 	/**
@@ -317,7 +316,7 @@ public:
 	}
 
 private:
-	void AddTestPartResult(const TestPartResult& result)	{ m_test_part_results.push_back(result); }
+	void AddTestPartResult(const TestPartResult& result) { m_test_part_results.push_back(result); }
 	void set_elapsed_time(TimeInMillisec time) IUTEST_CXX_NOEXCEPT_SPEC { m_elapsedmsec = time; }
 
 private:
@@ -367,4 +366,4 @@ private:
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_RESULT_HPP_D27B1599_F42F_4E2D_B3EB_FACE24C2B921_
+#endif // INCG_IRIS_IUTEST_RESULT_HPP_D27B1599_F42F_4E2D_B3EB_FACE24C2B921_

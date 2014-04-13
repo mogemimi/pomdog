@@ -41,7 +41,7 @@ IUTEST_IPP_INLINE void StreamResultListener::OnTestProgramStart(const UnitTest& 
 	SendLn("event=TestProgramStart");
 }
 IUTEST_IPP_INLINE void StreamResultListener::OnTestIterationStart(const UnitTest& test
-								  , int iteration)
+								, int iteration)
 {
 	IUTEST_UNUSED_VAR(test);
 	SendLn("event=TestIterationStart&iteration=" + detail::StreamableToString(iteration));
@@ -72,14 +72,14 @@ IUTEST_IPP_INLINE void StreamResultListener::OnTestRecordProperty(const TestProp
 }
 IUTEST_IPP_INLINE void StreamResultListener::OnTestEnd(const TestInfo& test_info)
 {
-	SendLn("event=TestEnd&passed=" 
+	SendLn("event=TestEnd&passed="
 		+ FormatBool(test_info.Passed())
 		+ "&elapsed_time=" + detail::StreamableToString(test_info.elapsed_time()) + "ms"
 		);
 }
 IUTEST_IPP_INLINE void StreamResultListener::OnTestCaseEnd(const TestCase& test_case)
 {
-	SendLn("event=TestCaseEnd&passed=" 
+	SendLn("event=TestCaseEnd&passed="
 		+ FormatBool(test_case.Passed())
 		+ "&elapsed_time=" + detail::StreamableToString(test_case.elapsed_time()) + "ms"
 		);
@@ -88,7 +88,7 @@ IUTEST_IPP_INLINE void StreamResultListener::OnTestIterationEnd(const UnitTest& 
 								, int iteration)
 {
 	IUTEST_UNUSED_VAR(iteration);
-	SendLn("event=TestIterationEnd&passed=" 
+	SendLn("event=TestIterationEnd&passed="
 		+ FormatBool(test.Passed())
 		+ "&elapsed_time=" + detail::StreamableToString(test.elapsed_time()) + "ms"
 		);
@@ -141,6 +141,6 @@ IUTEST_IPP_INLINE void StreamResultListener::SendLn(const ::std::string& message
 
 }	// end of namespace iutest
 
-#endif	// #if IUTEST_HAS_STREAM_RESULT
+#endif // #if IUTEST_HAS_STREAM_RESULT
 
-#endif	// INCG_IRIS_IUTEST_IUTEST_STREAMING_LISTENER_IPP_1187A63F_E99B_4289_A562_3C87B9739B7D_
+#endif // INCG_IRIS_IUTEST_IUTEST_STREAMING_LISTENER_IPP_1187A63F_E99B_4289_A562_3C87B9739B7D_

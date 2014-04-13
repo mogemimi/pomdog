@@ -39,7 +39,7 @@ const UInt32 kMaxCodePoint4 = (static_cast<UInt32>(1) << (3+3*6)) - 1;
 /**
  * @brief	サロゲートペアかどうか
 */
-IUTEST_IPP_INLINE IUTEST_CXX_CONSTEXPR bool	IsUtf16SurrogatePair(wchar_t first, wchar_t second)
+IUTEST_IPP_INLINE IUTEST_CXX_CONSTEXPR bool IsUtf16SurrogatePair(wchar_t first, wchar_t second)
 {
 	return (sizeof(wchar_t) == 2)
 		&& ((first & 0xFC00) == 0xD800) && ((second & 0xFC00) == 0xDC00);
@@ -134,7 +134,7 @@ IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_BEGIN()
 	for(int i=0; i < num; ++i )
 	{
 		UInt32 code_point;
-		if( str[i] == L'\0' ) 
+		if( str[i] == L'\0' )
 		{
 			break;
 		}
@@ -155,7 +155,7 @@ IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_BEGIN()
 IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_END()
 }
 
-IUTEST_IPP_INLINE::std::string IUTEST_ATTRIBUTE_UNUSED_ WideStringToMultiByteString(const wchar_t* str, int num)
+IUTEST_IPP_INLINE ::std::string IUTEST_ATTRIBUTE_UNUSED_ WideStringToMultiByteString(const wchar_t* str, int num)
 {
 	IUTEST_UNUSED_VAR(num);
 #if defined(IUTEST_OS_WINDOWS) && IUTEST_MBS_CODE == IUTEST_MBS_CODE_WINDOWS31J
@@ -183,7 +183,7 @@ IUTEST_IPP_INLINE ::std::string IUTEST_ATTRIBUTE_UNUSED_ MultiByteStringToUTF8(c
 	{
 		num = static_cast<int>(strlen(src));
 	}
-	std::string str;
+	::std::string str;
 	const char* p = src;
 	//char* locale = setlocale(LC_CTYPE, "JPN");
 	for(const char* end = src + num; p < end; )
@@ -250,4 +250,4 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 }	// end of namespace detail
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_CHARCODE_IPP_D444FB3E_3AFA_46D0_AD69_33FAAF5615E3_
+#endif // INCG_IRIS_IUTEST_CHARCODE_IPP_D444FB3E_3AFA_46D0_AD69_33FAAF5615E3_

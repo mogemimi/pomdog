@@ -29,9 +29,12 @@
 // define
 
 #if IUTEST_HAS_TYPED_TEST
+/**
+ * @defgroup	TYPED_TEST	型付けテスト
+*/
 
 /**
- * @ingroup	TESTDEF
+ * @ingroup	TYPED_TEST
  * @def		IUTEST_TYPED_TEST_CASE(testcase_, types_)
  * @brief	型付けテストケースの登録
  * @param	testcase_	= テストケース名
@@ -44,7 +47,7 @@
 #endif
 
 /**
- * @ingroup	TESTDEF
+ * @ingroup	TYPED_TEST
  * @def		IUTEST_TYPED_TEST(testcase_, testname_)
  * @brief	型付けテスト関数定義マクロ
  * @param	testcase_	= テストケース名
@@ -53,7 +56,7 @@
 #define IUTEST_TYPED_TEST(testcase_, testname_)		IIUT_TYPED_TEST_(testcase_, testname_)
 
 /**
- * @ingroup	TESTDEF
+ * @ingroup	TYPED_TEST
  * @def		IUTEST_T(testcase_, testname_)
  * @brief	型付けテスト関数定義マクロ
  * @param	testcase_	= テストケース名
@@ -66,7 +69,7 @@
  * @private
  * @{
 */
-#define IUTEST_TYPED_TEST_PARAMS_(testcase_)		IIUT_TYPED_TEST_PARAMS_I(IUTEST_TO_VARNAME_(testcase_))
+#define IUTEST_TYPED_TEST_PARAMS_(testcase_)		IIUT_TYPED_TEST_PARAMS_I(IIUT_TO_VARNAME_(testcase_))
 #define IIUT_TYPED_TEST_PARAMS_I(testcase_)			IIUT_TYPED_TEST_PARAMS_I_(testcase_)
 #define IIUT_TYPED_TEST_PARAMS_I_(testcase_)		iutest_types_params_##testcase_
 
@@ -81,29 +84,29 @@
 #define IIUT_TYPED_TEST_(testcase_, testname_)										\
 	template<typename iutest_TypeParam>												\
 	class IUTEST_TEST_CLASS_NAME_(testcase_, testname_)								\
-	: public IUTEST_TO_VARNAME_(testcase_)<iutest_TypeParam> {						\
-		typedef IUTEST_TO_VARNAME_(testcase_)<iutest_TypeParam> TestFixture;		\
-		typedef iutest_TypeParam	TypeParam;										\
+	: public IIUT_TO_VARNAME_(testcase_)<iutest_TypeParam> {						\
+		typedef IIUT_TO_VARNAME_(testcase_)<iutest_TypeParam> TestFixture;			\
+		typedef iutest_TypeParam TypeParam;											\
 		protected: virtual void Body(void);											\
 	};																				\
 	::iutest::detail::TypeParamTestInstance< IUTEST_TEST_CLASS_NAME_(testcase_, testname_)			\
 		, IUTEST_TYPED_TEST_PARAMS_(testcase_) > IUTEST_TEST_INSTANCE_NAME_(testcase_, testname_)(	\
-		IUTEST_CONCAT_PACKAGE_(IUTEST_TO_NAME_(testcase_)), IUTEST_TO_NAME_STR_(testname_));		\
+		IUTEST_CONCAT_PACKAGE_(IIUT_TO_NAME_(testcase_)), IIUT_TO_NAME_STR_(testname_));		\
 	template<typename iutest_TypeParam>												\
 	void IUTEST_TEST_CLASS_NAME_(testcase_, testname_)<iutest_TypeParam>::Body(void)
 
 #define IIUT_TYPED_TEST_IGNORE_(testcase_, testname_)								\
 	template<typename iutest_TypeParam>												\
 	class IUTEST_TEST_CLASS_NAME_(testcase_, testname_)								\
-	: public IUTEST_TO_VARNAME_(testcase_)<iutest_TypeParam> {						\
-		typedef IUTEST_TO_VARNAME_(testcase_)<iutest_TypeParam> TestFixture;		\
-		typedef iutest_TypeParam	TypeParam;										\
+	: public IIUT_TO_VARNAME_(testcase_)<iutest_TypeParam> {						\
+		typedef IIUT_TO_VARNAME_(testcase_)<iutest_TypeParam> TestFixture;			\
+		typedef iutest_TypeParam TypeParam;											\
 		protected: virtual void Body(void) { IUTEST_SKIP() << "ignored test..."; }	\
 		template<typename T>void Body(void);										\
 	};																				\
 	::iutest::detail::TypeParamTestInstance< IUTEST_TEST_CLASS_NAME_(testcase_, testname_)			\
 		, IUTEST_TYPED_TEST_PARAMS_(testcase_) > IUTEST_TEST_INSTANCE_NAME_(testcase_, testname_)(	\
-		IUTEST_CONCAT_PACKAGE_(IUTEST_TO_NAME_(testcase_)), IUTEST_TO_NAME_STR_(testname_) );		\
+		IUTEST_CONCAT_PACKAGE_(IIUT_TO_NAME_(testcase_)), IIUT_TO_NAME_STR_(testname_));		\
 	template<typename iutest_TypeParam>												\
 	template<typename T>void IUTEST_TEST_CLASS_NAME_(testcase_, testname_)<iutest_TypeParam>::Body(void)
 
@@ -114,9 +117,12 @@
 #endif
 
 #if IUTEST_HAS_TYPED_TEST_P
+/**
+ * @defgroup	TYPE_PARAMETERIZED_TEST	型のパラメータ化テスト
+*/
 
 /**
- * @ingroup	TESTDEF
+ * @ingroup	TYPE_PARAMETERIZED_TEST
  * @def		IUTEST_TYPED_TEST_CASE_P(testcase_)
  * @brief	型パラメータテストケースの登録
  * @param	testcase_	= テストケース名
@@ -124,7 +130,7 @@
 #define IUTEST_TYPED_TEST_CASE_P(testcase_)				IIUT_TYPED_TEST_CASE_P_(testcase_)
 
 /**
- * @ingroup	TESTDEF
+ * @ingroup	TYPE_PARAMETERIZED_TEST
  * @def		IUTEST_TYPED_TEST_P(testcase_, testname_)
  * @brief	型パラメータテスト関数定義マクロ
  * @param	testcase_	= テストケース名
@@ -133,7 +139,7 @@
 #define IUTEST_TYPED_TEST_P(testcase_, testname_)		IIUT_TYPED_TEST_P_(testcase_, testname_)
 
 /**
- * @ingroup	TESTDEF
+ * @ingroup	TYPE_PARAMETERIZED_TEST
  * @def		IUTEST_TP(testcase_, testname_)
  * @brief	型パラメータテスト関数定義マクロ
  * @param	testcase_	= テストケース名
@@ -142,7 +148,7 @@
 #define IUTEST_TP(testcase_, testname_)					IIUT_TYPED_TEST_P_(testcase_, testname_)
 
 /**
- * @ingroup	TESTDEF
+ * @ingroup	TYPE_PARAMETERIZED_TEST
  * @def		IUTEST_REGISTER_TYPED_TEST_CASE_P(testcase_, ...)
  * @brief	型パラメータテスト関数登録マクロ
  * @param	testcase_	= テストケース名
@@ -150,7 +156,7 @@
 #define IUTEST_REGISTER_TYPED_TEST_CASE_P(testcase_, ...)	IIUT_REGISTER_TYPED_TEST_CASE_P_(testcase_, __VA_ARGS__)
 
 /**
- * @ingroup	TESTDEF
+ * @ingroup	TYPE_PARAMETERIZED_TEST
  * @def		IUTEST_INSTANTIATE_TYPED_TEST_CASE_P(prefix_, testcase_, types_)
  * @brief	型パラメータテスト登録マクロ
  * @param	prefix_		= インスタンス名
@@ -176,7 +182,7 @@
 	template<typename iutest_TypeParam>							\
 	class testname_ : public testcase_<iutest_TypeParam> {		\
 		typedef testcase_<iutest_TypeParam> TestFixture;		\
-		typedef iutest_TypeParam	TypeParam;					\
+		typedef iutest_TypeParam TypeParam;						\
 		protected: virtual void Body(void);						\
 	};															\
 	static const int s_iutest_##testname_##_defined_dummy_ IUTEST_ATTRIBUTE_UNUSED_ =	\
@@ -190,7 +196,7 @@
 	template<typename iutest_TypeParam>							\
 	class testname_ : public testcase_<iutest_TypeParam> {		\
 		typedef testcase_<iutest_TypeParam> TestFixture;		\
-		typedef iutest_TypeParam	TypeParam;					\
+		typedef iutest_TypeParam TypeParam;						\
 		protected: virtual void Body(void) { IUTEST_SKIP() << "ignored test..."; }		\
 		template<typename T>void Body(void);					\
 	};															\
@@ -212,7 +218,7 @@
 		::iutest::detail::TypeParameterizedTestCase< testcase_				\
 		, IUTEST_TYPED_TEST_P_NAMESPACE_(testcase_)::iutest_AllTests_		\
 		, ::iutest::detail::TypeList< __VA_ARGS__ >::type >::Register(		\
-			#prefix_, IUTEST_TO_NAME_STR_(testcase_), IUTEST_GET_PACKAGENAME_()	\
+			#prefix_, IIUT_TO_NAME_STR_(testcase_), IUTEST_GET_PACKAGENAME_()	\
 		, IUTEST_TYPED_TEST_CASE_PSTATE_NAME_(testcase_).names())
 
 /**
@@ -264,7 +270,7 @@ class TypeParamTestInstance
 		}
 	public:
 		// テストの登録
-		void	AddTest(void)
+		void AddTest(void)
 		{
 			// 順番通りになるように前から登録
 			UnitTest::instance().AddTestInfo(m_mediator.ptr(), &m_info);
@@ -275,7 +281,7 @@ class TypeParamTestInstance
 		TestInfo					m_info;
 		detail::iuFactory<TestBody>	m_factory;
 
-		EachTest<typename TT::Tail, void>	m_next;
+		EachTest<typename TT::Tail, void> m_next;
 	};
 
 	// 終端
@@ -283,8 +289,8 @@ class TypeParamTestInstance
 	class EachTest<detail::TypeList0, DMY>
 	{
 	public:
-		EachTest(const char* /*testcase*/, const char* /*name*/, int /*index*/)	{}
-		void	AddTest(void) {}
+		EachTest(const char* /*testcase*/, const char* /*name*/, int /*index*/) {}
+		void AddTest(void) {}
 	};
 
 public:
@@ -296,7 +302,7 @@ public:
 	}
 
 private:
-	EachTest<TypeParams, void>	m_tests;
+	EachTest<TypeParams, void> m_tests;
 
 	IUTEST_PP_DISALLOW_COPY_AND_ASSIGN(TypeParamTestInstance);
 };
@@ -308,17 +314,17 @@ private:
 /**
  * @private
  * @internal
- * @brief	Typed TestCase 設定保持 
+ * @brief	Typed TestCase 設定保持
 */
 class TypedTestCasePState
 {
 public:
 	TypedTestCasePState(void) : m_names(NULL) {}
 public:
-	const char*	names(void) const { return m_names; }
+	const char* names(void) const { return m_names; }
 
 public:
-	bool	AddTestName(const char* file, int line, const char* testcase_name, const char* test_name)
+	bool AddTestName(const char* file, int line, const char* testcase_name, const char* test_name)
 	{
 		if( m_names != NULL )
 		{
@@ -331,7 +337,7 @@ public:
 #endif
 		return true;
 	}
-	bool	VerifyTestNames(const char* file, int line, const char* test_names)
+	bool VerifyTestNames(const char* file, int line, const char* test_names)
 	{
 		m_names = test_names;
 		IUTEST_UNUSED_VAR(file);
@@ -340,7 +346,7 @@ public:
 	}
 
 private:
-	bool	Verify(const char* names)
+	bool Verify(const char* names)
 	{
 		IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_BEGIN()
 #if IUTEST_TYPED_TEST_P_STRICT
@@ -375,7 +381,7 @@ private:
 	const char* m_names;
 
 #if IUTEST_TYPED_TEST_P_STRICT
-	::std::set<const char*>	m_list;
+	::std::set<const char*> m_list;
 #endif
 
 	IUTEST_PP_DISALLOW_COPY_AND_ASSIGN(TypedTestCasePState);
@@ -397,9 +403,9 @@ class TypeParameterizedTestCase
 	template<typename TypeParam, typename TestsList>
 	class EachTest : public IEachTest
 	{
-		typedef typename TestsList::Head	TypeSel;
+		typedef typename TestsList::Head 		TypeSel;
 		typedef typename TypeSel::template bind<TypeParam>::type	TestBody;
-		typedef detail::iuFactory<TestBody>	Factory;
+		typedef detail::iuFactory<TestBody>		Factory;
 		typedef EachTest<TypeParam, TestsList>	_Myt;
 
 		EachTest(TestCase* testcase, const char* name)
@@ -416,7 +422,7 @@ IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_BEGIN()
 			const char* str = detail::SkipSpace(test_names);
 			const char* comma = strchr(str, ',');
 			::std::string test_name;
-			if( comma == NULL ) 
+			if( comma == NULL )
 			{
 				test_name = str;
 			}
@@ -449,7 +455,7 @@ public:
 	/**
 	 * @brief	テストの登録
 	*/
-	static bool Register(const char* prefix, const char* testcase_name, const::std::string& package_name, const char* names, int index=0)
+	static bool Register(const char* prefix, const char* testcase_name, const ::std::string& package_name, const char* names, int index=0)
 	{
 		typedef typename Types::Head	TypeParam;
 		typedef typename Tests::Head	Head;
@@ -488,4 +494,4 @@ public:
 }	// end of namespace detail
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_TYPED_TESTS_HPP_DA9562C6_8CAB_4242_9E9E_22FFB490DE30_
+#endif // INCG_IRIS_IUTEST_TYPED_TESTS_HPP_DA9562C6_8CAB_4242_9E9E_22FFB490DE30_

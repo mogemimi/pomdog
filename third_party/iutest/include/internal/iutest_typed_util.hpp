@@ -30,7 +30,9 @@ namespace iutest
 #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 /**
- * @brief	Types
+ * @ingroup	TYPED_TEST TYPE_PARAMETERIZED_TEST
+ * @brief	Type List
+ * @tparam	Args	= 型リスト
  * @{
 */
 #if IUTEST_HAS_VARIADIC_TEMPLATES
@@ -68,7 +70,7 @@ struct Types
 template<>
 struct Types< IUTEST_PP_ENUM(50, IIUT_DECL_SPEC_NONE_, detail::None) >
 {
-	typedef detail::TypeList0	type;
+	typedef detail::TypeList0 type;
 };
 
 IIUT_DECL_TYPES_( 1, 49);
@@ -170,7 +172,7 @@ struct Templates
 template<>
 struct Templates< IUTEST_PP_ENUM(50, IIUT_DECL_SPEC_NONE_, detail::NoneT1) >
 {
-	typedef detail::TemplateTypeList0	type;
+	typedef detail::TemplateTypeList0 type;
 };
 
 IIUT_DECL_TEMPLATES_( 1, 49);
@@ -232,12 +234,12 @@ IIUT_DECL_TEMPLATES_(49,  1);
  * @}
 */
 
-#endif	// #if !defined(IUTEST_NO_TEMPLATE_TEMPLATES)
+#endif // #if !defined(IUTEST_NO_TEMPLATE_TEMPLATES)
 
 template<typename T>
 struct TypeList
 {
-	typedef detail::TypeList1<T>	type;
+	typedef detail::TypeList1<T> type;
 };
 
 #if IUTEST_HAS_VARIADIC_TEMPLATES
@@ -260,8 +262,8 @@ struct TypeList< Types< IUTEST_PP_ENUM_PARAMS(50, T) > >
 
 }	// end of namespace detail
 
-#endif	// #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#endif // #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_TYPED_UTIL_HPP_32A6F7CF_36C6_4EDE_AD19_04965FBFBB37_
+#endif // INCG_IRIS_IUTEST_TYPED_UTIL_HPP_32A6F7CF_36C6_4EDE_AD19_04965FBFBB37_

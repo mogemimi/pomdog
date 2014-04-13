@@ -65,7 +65,7 @@ public:
 	/**
 	* @brief	stream reuslt listener のセットアップ
 	*/
-	static void SetUp(void)
+	static TestEventListener* SetUp(void)
 	{
 		::std::string addr = TestEnv::get_stream_result_to();
 		if( !addr.empty() )
@@ -73,10 +73,12 @@ public:
 			const size_t pos = addr.find(':');
 			if( pos != ::std::string::npos )
 			{
-				UnitTest::GetInstance()->listeners().Append(
-					new StreamResultListener(addr.substr(0, pos).c_str(), addr.substr(pos+1).c_str()));
+				TestEventListener* p = new StreamResultListener(addr.substr(0, pos).c_str(), addr.substr(pos+1).c_str());
+				UnitTest::GetInstance()->listeners().Append(p);
+				return p;
 			}
 		}
+		return NULL;
 	}
 };
 
@@ -88,4 +90,4 @@ public:
 
 #endif
 
-#endif	// INCG_IRIS_IUTEST_IUTEST_STREAMING_LISTENER_HPP_1187A63F_E99B_4289_A562_3C87B9739B7D_
+#endif // INCG_IRIS_IUTEST_IUTEST_STREAMING_LISTENER_HPP_1187A63F_E99B_4289_A562_3C87B9739B7D_

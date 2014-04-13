@@ -34,7 +34,7 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnTestProgramStart(const Uni
 
 IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnTestProgramEnd(const UnitTest& test)
 {
-	if( m_fp == NULL ) 
+	if( m_fp == NULL )
 	{
 		FileOpen(m_output_path.c_str());
 		if( m_fp == NULL )
@@ -242,7 +242,7 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnReportTestSkipped(IFile* f
 }
 
 IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnReportTestProperty(IFile* file, const TestResult& test_result
-																		 , bool (*pfnValidate)(const ::std::string&))
+																		, bool (*pfnValidate)(const ::std::string&))
 {
 	for( int i=0, count=test_result.test_property_count(); i < count; ++i )
 	{
@@ -285,7 +285,7 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::FileClose(void)
 	m_fp = NULL;
 }
 
-IUTEST_IPP_INLINE void	DefaultXmlGeneratorListener::OutputXmlCDataSection(IFile* file, const char* data)
+IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OutputXmlCDataSection(IFile* file, const char* data)
 {
 	file->Printf("<![CDATA[");
 	file->Write(data, strlen(data), 1);
@@ -363,4 +363,4 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_DEFAULT_XML_GENERATOR_IPP_791DCB98_05CC_49BA_8518_0EC9CA2B5450_
+#endif // INCG_IRIS_IUTEST_DEFAULT_XML_GENERATOR_IPP_791DCB98_05CC_49BA_8518_0EC9CA2B5450_

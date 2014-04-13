@@ -25,7 +25,7 @@ namespace iutest {
 namespace detail
 {
 
-IUTEST_IPP_INLINE bool	iuRegex::match_impl(const char* begin, const char* end, const char* src)
+IUTEST_IPP_INLINE bool iuRegex::match_impl(const char* begin, const char* end, const char* src)
 {
 	const char* tp = begin;
 	if( *tp == '\0' ) return false;
@@ -68,40 +68,70 @@ IUTEST_IPP_INLINE bool	iuRegex::match_impl(const char* begin, const char* end, c
 	return true;
 }
 
-IUTEST_IPP_INLINE bool	iuRegex::match(const char* regex, const char* src)
+IUTEST_IPP_INLINE bool iuRegex::match_impl_group(const char* begin, const char* end, const char* src)
+{
+	bool match = true;
+	const char* tp = begin;
+	const char* end2 = tp;
+	while( end2 != end )
+	{
+		++end2;
+		while( *end2 != '-' && end2 != end ) ++end2;
+		if( *tp == '-' )
+		{
+			if( match_impl(tp + 1, end2, src) ) match = false;
+		}
+		else
+		{
+			if( !match_impl(tp, end2, src) ) match = false;
+		}
+		tp = end2;
+	}
+	return match;
+}
+
+IUTEST_IPP_INLINE bool iuRegex::match(const char* regex, const char* src)
 {
 	const char* tp = regex;
+	bool positive = false;
+	bool positive_checked = false;
+	bool negative = true;
 
 	while( *tp != '\0' )
 	{
 		const char* end = tp;
 		while( *end != '\0' && *end != ':' ) ++end;
 
+		if( tp != end )
 		{
-			bool match = true;
-			const char* end2 = tp;
-			while( end2 != end )
+			if( *tp == '-' )
 			{
-				++end2;
-				while( *end2 != '-' && end2 != end ) ++end2;
-				if( *tp == '-' )
+				if( match_impl(tp + 1, end, src) )
 				{
-					if( match_impl(tp+1, end2, src) ) match = false;
+					return false;
 				}
-				else
-				{
-					if( !match_impl(tp, end2, src) ) match = false;
-				}
-				tp = end2;
+				negative = false;
 			}
-			if( match ) return true;
+			else
+			{
+				positive_checked = true;
+				if( match_impl_group(tp, end, src) )
+				{
+					positive = true;
+				}
+			}
+			tp = end;
 		}
-		tp = end;
+		if( *tp == ':' ) ++tp;
 	}
-	return false;
+	if( !negative && !positive_checked )
+	{
+		positive = true;
+	}
+	return positive;
 }
 
 }	// end of namespace detail
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_REGEX_IPP_1575CB44_189A_4248_B305_DB4882E3BFC2_
+#endif // INCG_IRIS_IUTEST_REGEX_IPP_1575CB44_189A_4248_B305_DB4882E3BFC2_

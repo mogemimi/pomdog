@@ -60,28 +60,28 @@ public:
 
 public:
 	/** test case 名の取得 */
-	const	char*	test_case_name(void)	const	{ return m_testcase->test_case_name(); }
+	const	char*	test_case_name(void)	const { return m_testcase->test_case_name(); }
 	/** test 名の取得 */
-	const	char*	name(void)				const	{ return m_testname.c_str(); }
+	const	char*	name(void)				const { return m_testname.c_str(); }
 	/** should_run */
-	bool			should_run(void)		const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_should_run; }
+	bool			should_run(void)		const IUTEST_CXX_NOEXCEPT_SPEC { return m_should_run; }
 	/** is ran */
-	bool			is_ran(void)			const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_ran; }
+	bool			is_ran(void)			const IUTEST_CXX_NOEXCEPT_SPEC { return m_ran; }
 	/** disable */
-	bool			is_disabled_test(void)	const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_disable; }
+	bool			is_disabled_test(void)	const IUTEST_CXX_NOEXCEPT_SPEC { return m_disable; }
 	/** is skipped */
-	bool			is_skipped(void)		const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_skip || m_test_result.Skipped(); }
+	bool			is_skipped(void)		const IUTEST_CXX_NOEXCEPT_SPEC { return m_skip || m_test_result.Skipped(); }
 	/** is reportable */
-	bool			is_reportable(void)		const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_matches_filter; }
+	bool			is_reportable(void)		const IUTEST_CXX_NOEXCEPT_SPEC { return m_matches_filter; }
 	/** テストの実行ミリ秒 */
-	TimeInMillisec	elapsed_time(void)		const	{ return m_test_result.elapsed_time(); }
+	TimeInMillisec	elapsed_time(void)		const { return m_test_result.elapsed_time(); }
 	/** テスト結果の取得 */
-	const TestResult*	result(void)		const IUTEST_CXX_NOEXCEPT_SPEC	{ return &m_test_result; }
+	const TestResult*	result(void)		const IUTEST_CXX_NOEXCEPT_SPEC { return &m_test_result; }
 
 	/** value param 文字列の取得 */
-	const	char*	value_param(void)		const	{ return m_value_param.empty() ? NULL : m_value_param.c_str(); }
+	const	char*	value_param(void)		const { return m_value_param.empty() ? NULL : m_value_param.c_str(); }
 	/** type param 文字列の取得 */
-	const	char*	type_param(void)		const	{ return m_testcase->type_param(); }
+	const	char*	type_param(void)		const { return m_testcase->type_param(); }
 
 public:
 	/**
@@ -126,7 +126,7 @@ public:
 
 public:
 	/** テストのフル名を取得 */
-	::std::string	test_full_name(void)		const
+	::std::string test_full_name(void) const
 	{
 		::std::string fullname = test_case_name();
 		fullname += ".";
@@ -135,7 +135,7 @@ public:
 	}
 
 	/** テスト名 + where の取得 */
-	::std::string test_name_with_where(void)	const
+	::std::string test_name_with_where(void) const
 	{
 		::std::string str = m_testname;
 		if( value_param() != NULL )
@@ -164,36 +164,41 @@ public:
 	}
 public:
 	/** @private */
-	void	set_value_param(const char* str)	{ m_value_param = str; }
+	void set_value_param(const char* str) { m_value_param = str; }
 
 private:
 	/**
 	 * @brief	実行
 	*/
-	bool	Run(void);
+	bool Run(void);
 
 private:
 
-	void	RunImpl(void);
+	void RunImpl(void);
 
 #if IUTEST_HAS_EXCEPTIONS && IUTEST_HAS_SEH
 #if IUTEST_HAS_MINIDUMP
-	void	MiniDump(_EXCEPTION_POINTERS* ep);
+	void MiniDump(_EXCEPTION_POINTERS* ep);
 #endif
-	void	RunOnMSC(detail::auto_ptr<Test>& test);
+	void RunOnMSC(Test* test);
 #endif
 
 private:
 	/**
 	 * @brief	テストのクリア
 	*/
-	void	clear(void);
+	void clear(void);
 
 	/*
 	 * @brief	テストのフィルタリング
 	 * @return	実行する場合は真
 	*/
-	bool	filter(void);
+	bool filter(void);
+
+	/**
+	* @brief	テストのスキップ
+	*/
+	void skip(void) { m_skip = true; }
 
 private:
 	class Mediator IUTEST_CXX_FINAL : public detail::iuITestInfoMediator
@@ -201,17 +206,21 @@ private:
 	public:
 		Mediator(TestInfo* p=NULL) IUTEST_CXX_NOEXCEPT_SPEC : iuITestInfoMediator(p) {}
 	public:
-		virtual	bool	HasFatalFailure(void) const IUTEST_CXX_OVERRIDE
+		virtual	bool HasFatalFailure(void) const IUTEST_CXX_OVERRIDE
 		{
 			return ptr()->HasFatalFailure();
 		}
-		virtual	bool	HasNonfatalFailure(void) const IUTEST_CXX_OVERRIDE
+		virtual	bool HasNonfatalFailure(void) const IUTEST_CXX_OVERRIDE
 		{
 			return ptr()->HasNonfatalFailure();
 		}
-		virtual bool	HasFailure(void) const IUTEST_CXX_OVERRIDE
+		virtual bool HasFailure(void) const IUTEST_CXX_OVERRIDE
 		{
 			return ptr()->HasFailure();
+		}
+		virtual bool IsSkipped(void) const IUTEST_CXX_OVERRIDE
+		{
+			return ptr()->is_skipped();
 		}
 	public:
 		void SetPointer(TestInfo* p) { m_test_info = p; }
@@ -242,4 +251,4 @@ private:
 #  include "impl/iutest_info.ipp"
 #endif
 
-#endif	// INCG_IRIS_IUTEST_INFO_HPP_764A79A8_E822_4C0F_8CB7_82C635BA28BA_
+#endif // INCG_IRIS_IUTEST_INFO_HPP_764A79A8_E822_4C0F_8CB7_82C635BA28BA_

@@ -61,22 +61,22 @@ public:
 	/**
 	 * @brief	デストラクタ
 	*/
-	virtual	~TestCase(void) {}
+	virtual ~TestCase(void) {}
 
 public:
 	/** test case 名の取得 */
-	const	char*	name(void)					const	{ return m_testcase_name.c_str(); }
+	const char*		name(void)					const { return m_testcase_name.c_str(); }
 
 	/** テスト総数 */
-	int				total_test_count(void)		const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_testinfos.size(); }
+	int				total_test_count(void)		const IUTEST_CXX_NOEXCEPT_SPEC { return m_testinfos.size(); }
 	/** レポート対象のテスト総数 */
 	int				reportable_test_count(void)	const;
 	/** 実行したテスト総数 */
-	int				test_to_run_count(void)		const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_should_run_num; }
+	int				test_to_run_count(void)		const IUTEST_CXX_NOEXCEPT_SPEC { return m_should_run_num; }
 	/** 失敗テスト総数 */
 	int				failed_test_count(void)		const;
 	/** 無効テスト総数 */
-	int				disabled_test_count(void)	const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_disable_num; }
+	int				disabled_test_count(void)	const IUTEST_CXX_NOEXCEPT_SPEC { return m_disable_num; }
 	/** レポート対象の無効テスト総数 */
 	int				reportable_disabled_test_count(void) const;
 	/** 成功テスト総数 */
@@ -90,20 +90,20 @@ public:
 	/** レポート対象の明示的にスキップされたテスト総数 */
 	int				reportable_test_run_skipped_count(void) const;
 	/** テストの実行ミリ秒 */
-	TimeInMillisec	elapsed_time(void)			const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_elapsedmsec; }
+	TimeInMillisec	elapsed_time(void)			const IUTEST_CXX_NOEXCEPT_SPEC { return m_elapsedmsec; }
 
 	/** TestInfo の取得 */
-	const TestInfo*	GetTestInfo(int index)		const	{ return m_testinfos[index]; }
+	const TestInfo*	GetTestInfo(int index)		const { return m_testinfos[index]; }
 	/** should_run */
-	bool			should_run(void)			const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_should_run_num != 0; }
+	bool			should_run(void)			const IUTEST_CXX_NOEXCEPT_SPEC { return m_should_run_num != 0; }
 
 	/** テストが成功したかどうか */
-	bool			Passed(void)				const	{ return failed_test_count() == 0 && m_ad_hoc_testresult.Passed(); }
+	bool			Passed(void)				const { return failed_test_count() == 0 && m_ad_hoc_testresult.Passed(); }
 	/** テストが失敗したかどうか */
-	bool			Failed(void)				const	{ return !Passed(); }
+	bool			Failed(void)				const { return !Passed(); }
 
 	/** type param 文字列の取得 */
-	virtual const char*	type_param(void)		const	{ return NULL; }
+	virtual const char*	type_param(void)		const { return NULL; }
 
 	/** TestCase 出力情報の取得 */
 	::std::string testcase_name_with_where(void) const
@@ -142,13 +142,13 @@ private:
 	 * @brief	テストの実行
 	 * @return	成否
 	*/
-	bool	Run(void);
+	bool Run(void);
 
 	/**
 	 * @brief	実行
 	 * @return	成否
 	*/
-	bool	RunImpl(void);
+	bool RunImpl(void);
 
 public:
 	/**
@@ -173,20 +173,20 @@ private:
 	/**
 	 * @brief	テストのクリア
 	*/
-	void	clear(void);
+	void clear(void);
 	/*
 	 * @brief	テストのフィルタリング
 	 * @return	実行する場合は真
 	*/
-	bool	filter(void);
+	bool filter(void);
 
 private:
-	friend bool	operator == (const TestCase& lhs, const TestCase& rhs)
+	friend bool operator == (const TestCase& lhs, const TestCase& rhs)
 	{
 		return (lhs.m_id == rhs.m_id) && (strcmp(lhs.name(), rhs.name()) == 0);
 	}
 
-	void	push_back(TestInfo* p)	{ m_testinfos.push_back(p); }
+	void push_back(TestInfo* p) { m_testinfos.push_back(p); }
 
 private:
 	iuTestInfos::const_iterator	begin(void)	const		{ return m_testinfos.begin(); }
@@ -248,12 +248,12 @@ protected:
 
 public:
 	/** type param 文字列の取得 */
-	virtual const char*	type_param(void) const IUTEST_CXX_OVERRIDE	{ return m_type_param.empty() ? NULL : m_type_param.c_str(); }
+	virtual const char* type_param(void) const IUTEST_CXX_OVERRIDE { return m_type_param.empty() ? NULL : m_type_param.c_str(); }
 
 private:
 	friend class UnitTestImpl;
 
-	::std::string	m_type_param;		//!< type param string
+	::std::string m_type_param;		//!< type param string
 };
 
 namespace detail
@@ -267,8 +267,8 @@ class TestCaseMediator IUTEST_CXX_FINAL : public detail::iuITestCaseMediator
 public:
 	TestCaseMediator(TestCase* p) IUTEST_CXX_NOEXCEPT_SPEC : iuITestCaseMediator(p) {}
 public:
-	virtual const char*	test_case_name(void) const IUTEST_CXX_OVERRIDE { return m_test_case->name(); }
-	virtual const char*	type_param(void)	 const IUTEST_CXX_OVERRIDE { return m_test_case->type_param(); }
+	virtual const char* test_case_name(void) const IUTEST_CXX_OVERRIDE { return m_test_case->name(); }
+	virtual const char* type_param(void)	 const IUTEST_CXX_OVERRIDE { return m_test_case->type_param(); }
 };
 
 }	// end of namespace detail
@@ -278,4 +278,4 @@ public:
 #  include "impl/iutest_case.ipp"
 #endif
 
-#endif	// INCG_IRIS_IUTEST_CASE_HPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_
+#endif // INCG_IRIS_IUTEST_CASE_HPP_F57C9B7E_7CAA_4429_BE75_FCAAEED1B220_

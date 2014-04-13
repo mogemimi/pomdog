@@ -29,9 +29,9 @@
 
 //! Library を使うかどうか
 #ifndef IUTEST_HAS_LIB
-#  if	defined(IUTEST_NO_LIB)
+#  if   defined(IUTEST_NO_LIB)
 #    define IUTEST_HAS_LIB			0
-#  elif	defined(IUTEST_USE_LIB) || defined(IUTEST_AUTO_LINK)
+#  elif defined(IUTEST_USE_LIB) || defined(IUTEST_AUTO_LINK)
 #    define IUTEST_HAS_LIB			1
 #  endif
 #endif
@@ -101,17 +101,11 @@
 #  define IUTEST_TYPED_TEST_P_STRICT	1
 #endif
 
-#if IUTEST_HAS_TYPED_TEST_P
-#  if IUTEST_TYPED_TEST_P_STRICT
-#    include <set>
-#  endif
-#endif
-
 #ifndef IUTEST_HAS_IGNORE_TEST
 /**
  * @brief	コンパイルが通らなくてもよいテスト生成マクロが使用可能かどうか
 */
-#  if	defined(IUTEST_NO_TWO_PHASE_NAME_LOOKUP)
+#  if defined(IUTEST_NO_TWO_PHASE_NAME_LOOKUP)
 #    define IUTEST_HAS_IGNORE_TEST	1
 #  else
 #    define IUTEST_HAS_IGNORE_TEST	0
@@ -356,7 +350,7 @@
 
 //! time 関数が使用可能かどうか
 #ifndef IUTEST_HAS_CTIME
-#  if	defined(IUTEST_OS_WINDOWS_MOBILE)
+#  if defined(IUTEST_OS_WINDOWS_MOBILE)
 #    define IUTEST_HAS_CTIME		0
 #  else
 #    define IUTEST_HAS_CTIME		1
@@ -535,7 +529,7 @@
 #if defined(_MSC_VER)
 
 #if defined(_MT) || defined(__MT__)
-#  if	defined(_DLL)
+#  if defined(_DLL)
 #    define IUTEST_LIB_THREAD_OPT	"md"
 #  else
 #    define IUTEST_LIB_THREAD_OPT	"mt"
@@ -544,21 +538,21 @@
 #  define IUTEST_LIB_THREAD_OPT	""
 #endif
 
-#if		_MSC_VER == 1400
+#if   _MSC_VER == 1400
 #  define IUTEST_LIB_TOOLSET	"vc80"
-#elif	_MSC_VER == 1500
+#elif _MSC_VER == 1500
 #  define IUTEST_LIB_TOOLSET	"vc90"
-#elif	_MSC_VER == 1600
+#elif _MSC_VER == 1600
 #  define IUTEST_LIB_TOOLSET	"vc100"
-#elif	_MSC_VER == 1700
+#elif _MSC_VER == 1700
 #  define IUTEST_LIB_TOOLSET	"vc110"
-#elif	_MSC_VER == 1800
+#elif _MSC_VER == 1800
 #  define IUTEST_LIB_TOOLSET	"vc120"
 #else
 #  error unkown _MSC_VER.
 #endif
 
-#if		defined(_DEBUG)
+#if defined(_DEBUG)
 #  define IUTEST_LIB_RT_OPT		"d"
 #else
 #  define IUTEST_LIB_RT_OPT		""
@@ -576,4 +570,4 @@
  * @}
 */
 
-#endif	// INCG_IRIS_IUTEST_CONFIG_HPP_F0151607_0D9D_4055_B94D_ED4A0FFA748B_
+#endif // INCG_IRIS_IUTEST_CONFIG_HPP_F0151607_0D9D_4055_B94D_ED4A0FFA748B_

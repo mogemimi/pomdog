@@ -22,7 +22,7 @@
 //======================================================================
 // define
 
-#else	// !defined(IUTEST_USE_GTEST)
+#else // !defined(IUTEST_USE_GTEST)
 
 //======================================================================
 // undef
@@ -38,6 +38,6 @@
 #  define IUTEST_HAS_PARAM_METHOD_TEST	0
 #endif
 
-#endif	// !defined(IUTEST_USE_GTEST)
+#endif // !defined(IUTEST_USE_GTEST)
 
-#endif	// INCG_IRIS_IUTEST_SWITCH_PMZ_HPP_3913D1E7_E6FD_49B9_BB4C_795939FEB5C5_
+#endif // INCG_IRIS_IUTEST_SWITCH_PMZ_HPP_3913D1E7_E6FD_49B9_BB4C_795939FEB5C5_

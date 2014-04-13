@@ -30,17 +30,17 @@ namespace detail
 //======================================================================
 // class
 /**
-  * @internal
-  * @brief	リストノード
+ * @internal
+ * @brief	リストノード
 */
 template<typename TN>
 class iu_list_node
 {
-	typedef TN	*value_ptr;
-	typedef iu_list_node<TN>	_Myt;
+	typedef TN *value_ptr;
+	typedef iu_list_node<TN> _Myt;
 public:
-	value_ptr	next;
-	value_ptr	prev;
+	value_ptr next;
+	value_ptr prev;
 
 protected:
 	iu_list_node(void) IUTEST_CXX_NOEXCEPT_SPEC : next(NULL)
@@ -49,8 +49,8 @@ protected:
 };
 
 /**
-  * @internal
-  * @brief	リストイテレータ
+ * @internal
+ * @brief	リストイテレータ
 */
 template<typename NODE, typename NODE_PTR, typename NODE_REF>
 class iu_list_iterator
@@ -65,24 +65,24 @@ public:
 	typedef int			distance_type;
 	typedef int			difference_type;
 public:
-	value_ptr	m_node;
+	value_ptr m_node;
 public:
 	iu_list_iterator(value_ptr p=NULL) IUTEST_CXX_NOEXCEPT_SPEC : m_node(p) {}
 	iu_list_iterator(const _Myt& rhs) IUTEST_CXX_NOEXCEPT_SPEC : m_node(rhs.m_node) {}
 
 public:
-	int			operator == (const _Myt& it) const { return this->m_node == it.m_node; }
-	int			operator != (const _Myt& it) const { return this->m_node != it.m_node; }
+	bool operator == (const _Myt& it) const { return this->m_node == it.m_node; }
+	bool operator != (const _Myt& it) const { return this->m_node != it.m_node; }
 
-	_Myt&		operator ++ (void)	{ m_node = m_node->next; return *this; }
-	_Myt&		operator -- (void)	{ m_node = m_node->prev; return *this; }
-	value_ptr	operator -> (void) IUTEST_CXX_NOEXCEPT_SPEC	{ return m_node; }
-	value_ref	operator *  (void) IUTEST_CXX_NOEXCEPT_SPEC	{ return *m_node; }
-	value_ptr	ptr(void) const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_node; }
+	_Myt&		operator ++ (void) { m_node = m_node->next; return *this; }
+	_Myt&		operator -- (void) { m_node = m_node->prev; return *this; }
+	value_ptr	operator -> (void) IUTEST_CXX_NOEXCEPT_SPEC { return ptr(); }
+	value_ref	operator *  (void) IUTEST_CXX_NOEXCEPT_SPEC { return *m_node; }
+	value_ptr	ptr(void) const IUTEST_CXX_NOEXCEPT_SPEC { return m_node; }
 
-	operator	value_ptr (void)	{ return m_node; }
+	operator	value_ptr (void)	{ return ptr(); }
 
-	_Myt		operator + (int n)
+	_Myt operator + (int n)
 	{
 		if( n == 0 )
 		{
@@ -101,7 +101,7 @@ public:
 		return ret;
 	}
 
-	_Myt		operator + (unsigned int n)
+	_Myt operator + (unsigned int n)
 	{
 		_Myt ret(*this);
 		for( unsigned int i=0; i < n && ret.m_node != NULL; ++i )
@@ -120,14 +120,14 @@ public:
 template<typename NODE>
 class iu_list
 {
-	typedef NODE	*node_ptr;
-	typedef iu_list<NODE>	_Myt;
+	typedef NODE *node_ptr;
+	typedef iu_list<NODE> _Myt;
 protected:
-	node_ptr	m_node;
+	node_ptr m_node;
 
 public:
-	typedef iu_list_iterator<NODE, NODE*, NODE&>	iterator;
-	typedef iu_list_iterator<NODE, const NODE*, const NODE&>	const_iterator;
+	typedef iu_list_iterator<NODE, NODE*, NODE&> iterator;
+	typedef iu_list_iterator<NODE, const NODE*, const NODE&> const_iterator;
 public:
 	iu_list(node_ptr p=NULL) IUTEST_CXX_NOEXCEPT_SPEC : m_node(p) {}
 
@@ -415,13 +415,13 @@ public:
 		return cur;
 	}
 
-	bool		operator == (node_ptr p)	const	{ return m_node == p; }
-	bool		operator != (node_ptr p)	const	{ return m_node != p; }
+	bool operator == (node_ptr p) const { return m_node == p; }
+	bool operator != (node_ptr p) const { return m_node != p; }
 
 private:
 #ifdef _IUTEST_DEBUG
 	// ノードの状態チェック
-	bool		check_node(void)
+	bool check_node(void)
 	{
 		if( m_node == NULL ) return true;
 		node_ptr prev = m_node;
@@ -441,14 +441,10 @@ private:
 /**
  * @brief	vector シャッフル
 */
-template<typename It, typename Fn>
-void RandomShuffle(It begin, It last, Fn& r)
+template<typename It>
+void RandomShuffle(It begin, It last, iuRandom& r)
 {
-	It next = begin;
-	for( unsigned int i=2; ++next != last; ++i )
-	{
-		std::iter_swap(next, begin + r(i) % i );
-	}
+	r.shuffle(begin, last);
 }
 
 template<typename Node, typename Fn>
@@ -532,4 +528,4 @@ int CountIfOverList(const iu_list<Node>& list, Fn f)
 }	// end of namespace iutest
 
 
-#endif	// INCG_IRIS_IUTEST_LIST_HPP_CB5AECEA_6147_4A89_BB97_236338CA177E_
+#endif // INCG_IRIS_IUTEST_LIST_HPP_CB5AECEA_6147_4A89_BB97_236338CA177E_

@@ -100,13 +100,20 @@ public:
 	/**
 	 * @brief	QuietResultPrinter に切り替え
 	*/
-	static void SetUp(void)
+	static ::iutest::TestEventListener* SetUp(void)
 	{
 		::iutest::TestEventListeners& listeners = ::iutest::UnitTest::GetInstance()->listeners();
-		listeners.Append(new QuietResultPrinter(listeners.Release(listeners.default_result_printer())));
+		::iutest::TestEventListener* default_printer = listeners.Release(listeners.default_result_printer());
+		if( default_printer == NULL )
+		{
+			return NULL;
+		}
+		::iutest::TestEventListener* p = new QuietResultPrinter(default_printer);
+		listeners.Append(p);
+		return p;
 	}
 };
 
 }	// end of namespace iuutil
 
-#endif	// INCG_IRIS_IUTEST_UTIL_QUIET_RESULT_PRINTER_HPP_0DF65DD7_C97C_44BA_940D_D22ED6AF9494_
+#endif // INCG_IRIS_IUTEST_UTIL_QUIET_RESULT_PRINTER_HPP_0DF65DD7_C97C_44BA_940D_D22ED6AF9494_

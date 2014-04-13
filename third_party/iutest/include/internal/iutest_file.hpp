@@ -42,10 +42,10 @@ class IFileSystem
 	template<typename T>
 	struct Variable
 	{
-		static IFileSystem*	m_pInstance;
+		static IFileSystem* m_pInstance;
 	};
 
-	typedef Variable<void>	var;
+	typedef Variable<void> var;
 public:
 	IFileSystem(void)
 	{
@@ -57,13 +57,13 @@ public:
 	}
 
 public:
-	virtual void	Initialize(void) {}
+	virtual void Initialize(void) {}
 
 public:
-	static IFileSystem*	GetInstance(void)	{ return var::m_pInstance; }
+	static IFileSystem* GetInstance(void) { return var::m_pInstance; }
 
 public:
-	static IFile*	New(void)
+	static IFile* New(void)
 	{
 		IFileSystem* fs = GetInstance();
 		if( fs == NULL )
@@ -73,7 +73,7 @@ public:
 		IFile* p = fs->Create();
 		return p;
 	}
-	static void		Free(IFile* ptr)
+	static void Free(IFile* ptr)
 	{
 		IFileSystem* fs = GetInstance();
 		if( fs == NULL )
@@ -113,9 +113,9 @@ public:
 	virtual ~IFile(void) {}
 public:
 	//! 開く
-	virtual	bool	Open(const char* filename, int mode) = 0;
+	virtual bool Open(const char* filename, int mode) = 0;
 	//! 閉じる
-	virtual	void	Close(void)	= 0;
+	virtual void Close(void) = 0;
 };
 
 /**
@@ -148,7 +148,7 @@ public:
 	 * @param [in]	mode		= モード
 	 * @return	成否
 	*/
-	virtual	bool Open(const char* filename, int mode) IUTEST_CXX_OVERRIDE
+	virtual bool Open(const char* filename, int mode) IUTEST_CXX_OVERRIDE
 	{
 		Close();
 IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_BEGIN()
@@ -172,7 +172,7 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 	/**
 	 * @brief	閉じる
 	*/
-	virtual	void Close(void) IUTEST_CXX_OVERRIDE
+	virtual void Close(void) IUTEST_CXX_OVERRIDE
 	{
 		if( m_fp != NULL )
 		{
@@ -209,7 +209,7 @@ public:
 	 * @param [in]	mode		= unused
 	 * @return	成否
 	*/
-	virtual	bool Open(const char* , int ) IUTEST_CXX_OVERRIDE
+	virtual bool Open(const char* , int ) IUTEST_CXX_OVERRIDE
 	{
 		ss.clear();
 		return true;
@@ -218,7 +218,7 @@ public:
 	/**
 	 * @brief	閉じる
 	*/
-	virtual	void Close(void) IUTEST_CXX_OVERRIDE
+	virtual void Close(void) IUTEST_CXX_OVERRIDE
 	{
 	}
 
@@ -245,4 +245,4 @@ protected:
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_FILE_HPP_77D2C2B9_F504_4BB5_BA56_D97A2EB37DC6_
+#endif // INCG_IRIS_IUTEST_FILE_HPP_77D2C2B9_F504_4BB5_BA56_D97A2EB37DC6_

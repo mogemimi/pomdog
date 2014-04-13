@@ -35,9 +35,9 @@ namespace iuutil
 */
 class TestMenu
 {
-	typedef ::std::map<WORD, const ::iutest::TestInfo*>	TestInfoMap;
-	typedef ::std::map<WORD, const ::iutest::TestCase*>	TestCaseMap;
-	WORD	m_nID;
+	typedef ::std::map<WORD, const ::iutest::TestInfo*> TestInfoMap;
+	typedef ::std::map<WORD, const ::iutest::TestCase*> TestCaseMap;
+	WORD m_nID;
 	const WORD m_nIDTop;
 	TestInfoMap m_TestInfoList;
 	TestCaseMap m_TestCaseList;
@@ -153,4 +153,4 @@ private:
 
 #endif
 
-#endif	// INCG_IRIS_IUTEST_MENU_TESTS_HPP_52925DE1_A4AE_4CCB_B524_8E97AA73E03D_
+#endif // INCG_IRIS_IUTEST_MENU_TESTS_HPP_52925DE1_A4AE_4CCB_B524_8E97AA73E03D_

@@ -19,10 +19,10 @@
 
 //======================================================================
 // define
-#define	IUTEST_VER			0x01080000u	//!< iutest version 1.8.0.0
+#define	IUTEST_VER			0x01080100u	//!< iutest version 1.8.1.0
 #define IUTEST_MAJORVER		0x01u		//!< Major Version
 #define IUTEST_MINORVER		0x08u		//!< Minor Version
-#define IUTEST_BUILD		0x00u		//!< Build
+#define IUTEST_BUILD		0x01u		//!< Build
 #define IUTEST_REVISION		0x00u		//!< Revision
 
 /**
@@ -30,6 +30,7 @@
  * @sa	@b	ProjectHome \n
  *			sourceforge : http://sourceforge.jp/projects/iutest/ \n
  *			github      : https://github.com/srz-zumix/iutest \n
+ *          google group: https://groups.google.com/forum/?fromgroups#!forum/g-iutest \n
  *
  * @par		copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
@@ -66,24 +67,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @page	CMDLINE		コマンドラインオプション
  * @par		Command Line Options
  <table>
-   <tr><td>--help, -h                        </td><td></td><td>generate help message.</td></tr>
-   <tr><td>--iutest_output                   </td><td>xml[:path]</td><td>path of xml report.</td></tr>
-   <tr><td>--iutest_list_tests               </td><td></td><td>list up tests.</td></tr>
-   <tr><td>--iutest_list_tests_with_where    </td><td></td><td>list up tests with where.</td></tr>
-   <tr><td>--iutest_color                    </td><td>&lt;yes|no|auto|ansi&gt;</td><td>console color enable.</td></tr>
+   <tr><td>--help, -h                        </td><td></td><td>Generate help message.</td></tr>
+   <tr><td>--iutest_output                   </td><td>xml[:path]</td><td>Path of xml report.</td></tr>
+   <tr><td>--iutest_list_tests               </td><td></td><td>List up tests.</td></tr>
+   <tr><td>--iutest_list_tests_with_where    </td><td></td><td>List up tests with where.</td></tr>
+   <tr><td>--iutest_color                    </td><td>&lt;yes|no|auto|ansi&gt;</td><td>Console color enable.</td></tr>
    <tr><td>--iutest_filter                   </td><td>&lt;filter&gt;</td><td>Select the test run.</td></tr>
-   <tr><td>--iutest_shuffle                  </td><td></td><td>do shuffle test.</td></tr>
-   <tr><td>--iutest_random_seed              </td><td>&lt;seed&gt;</td><td>set random seed.</td></tr>
-   <tr><td>--iutest_also_run_disabled_tests  </td><td></td><td>run disabled tests.</td></tr>
-   <tr><td>--iutest_break_on_failure         </td><td>[0|1]</td><td>When that failed to break.</td></tr>
-   <tr><td>--iutest_throw_on_failure         </td><td>[0|1]</td><td>When that failed to throw.</td></tr>
-   <tr><td>--iutest_catch_exceptions         </td><td>&lt;0|1&gt;</td><td>catch exceptions enable.</td></tr>
-   <tr><td>--iutest_print_time               </td><td>&lt;0|1&gt;</td><td>Setting the display of elapsed time.</td></tr>
+   <tr><td>--iutest_shuffle                  </td><td></td><td>Do shuffle test.</td></tr>
+   <tr><td>--iutest_random_seed              </td><td>&lt;seed&gt;</td><td>Set random seed.</td></tr>
+   <tr><td>--iutest_also_run_disabled_tests  </td><td></td><td>Run disabled tests.</td></tr>
+   <tr><td>--iutest_break_on_failure         </td><td>[yes|no]</td><td>When that failed to break.</td></tr>
+   <tr><td>--iutest_throw_on_failure         </td><td>[yes|no]</td><td>When that failed to throw.</td></tr>
+   <tr><td>--iutest_catch_exceptions         </td><td>&lt;yes|no&gt;</td><td>Catch exceptions enable.</td></tr>
+   <tr><td>--iutest_print_time               </td><td>&lt;yes|no&gt;</td><td>Setting the display of elapsed time.</td></tr>
    <tr><td>--iutest_repeat                   </td><td>&lt;count&gt;</td><td>Set the number of repetitions of the test.</td></tr>
    <tr><td>--iutest_stream_result_to         </td><td>&lt;host:port&gt;</td><td>Set stream test results server.</td></tr>
    <tr><td>--iutest_file_location            </td><td>&lt;auto|vs|gcc&gt;</td><td>Format file location messages.</td></tr>
-   <tr><td>--feature                         </td><td></td><td>show iutest feature.</td></tr>
-   <tr><td>--version, -v                     </td><td></td><td>show iutest version.</td></tr>
+   <tr><td>--feature                         </td><td></td><td>Show iutest feature.</td></tr>
+   <tr><td>--version, -v                     </td><td></td><td>Show iutest version.</td></tr>
  </table>
   * yes or no option can use "yes|y|on|true|t|1|no|n|off|false|f|0"
 */
@@ -111,6 +112,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @page	CHANGELOG		変更履歴
  * @par		Changes
  <ul>
+  <li>v1.8.1.0
+    <ul>
+      <li>SetUp/SetUpTestCase での SKIP/ASSUME に対応</li>
+      <li>MAC OS 判定、ビルドエラー修正 (thanks to mogemimi for the pull request)</li>
+      <li>--iutest_filter で : 区切りの複数条件指定が正しく動作しない不具合を修正</li>
+      <li>--iutest_list_tests_with_where で値のパラメータも出力するように修正</li>
+      <li>バグ修正</li>
+    </ul>
+  </li>
   <li>v1.8.0.0
     <ul>
       <li>IUTEST_USE_THROW_ON_ASSERT_FAILURE を IUTEST_USE_THROW_ON_ASSERTION_FAILURE に変更</li>
@@ -519,4 +529,4 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </ul>
 */
 
-#endif	// INCG_IRIS_IUTEST_VER_HPP_D65CB7A7_D2AD_40FE_8F5F_8FBF376A0010_
+#endif // INCG_IRIS_IUTEST_VER_HPP_D65CB7A7_D2AD_40FE_8F5F_8FBF376A0010_

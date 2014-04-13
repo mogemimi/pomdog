@@ -20,6 +20,7 @@
 //======================================================================
 // include
 #include "iutest_port.hpp"
+#include "iutest_constant.hpp"
 
 #if IUTEST_HAS_CXX_HDR_CODECVT
 #  include <codecvt>
@@ -86,7 +87,7 @@ inline ::std::string ShowWideCString(const wchar_t* wide_c_str)
 {
 	if( wide_c_str == NULL )
 	{
-		return "(null)";
+		return kStrings::Null;
 	}
 #if IUTEST_MBS_CODE == IUTEST_MBS_CODE_UTF8
 	return WideStringToUTF8(wide_c_str);
@@ -102,7 +103,7 @@ inline ::std::string ShowWideCString(const char16_t* wide_c_str)
 {
 	if(wide_c_str == NULL)
 	{
-		return "(null)";
+		return kStrings::Null;
 	}
 #if IUTEST_HAS_CXX_HDR_CODECVT
 #if IUTEST_MBS_CODE == IUTEST_MBS_CODE_UTF8
@@ -129,7 +130,7 @@ namespace mbs_ptr_impl
 	struct wcs_to_mbs_ptr
 	{
 		::std::string m_arg;
-		const char* ptr(const wchar_t* arg) 
+		const char* ptr(const wchar_t* arg)
 		{
 			m_arg = ShowWideCString(arg);
 			return m_arg.c_str();
@@ -158,4 +159,4 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 #  include "../impl/iutest_charcode.ipp"
 #endif
 
-#endif	// INCG_IRIS_IUTEST_CHARCODE_HPP_D444FB3E_3AFA_46D0_AD69_33FAAF5615E3_
+#endif // INCG_IRIS_IUTEST_CHARCODE_HPP_D444FB3E_3AFA_46D0_AD69_33FAAF5615E3_

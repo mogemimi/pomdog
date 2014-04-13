@@ -26,9 +26,9 @@
 #  include <chrono>
 #endif
 
-#if		IUTEST_HAS_HDR_SYSTIME
+#if   IUTEST_HAS_HDR_SYSTIME
 #  include <sys/time.h>
-#elif	defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE)
+#elif defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE)
 #  include <sys/timeb.h>
 #endif
 
@@ -39,35 +39,35 @@ namespace detail
 //======================================================================
 // declare
 /**
-  * @internal
-  * @brief	TimeInMillisec to string
-  * @param	[in]	msec	= ミリ秒
-  * @return	秒数の文字列
+ * @internal
+ * @brief	TimeInMillisec to string
+ * @param	[in]	msec	= ミリ秒
+ * @return	秒数の文字列
 */
-::std::string	FormatTimeInMillisecAsSecond(TimeInMillisec msec);
+::std::string FormatTimeInMillisecAsSecond(TimeInMillisec msec);
 
 /**
-  * @internal
-  * @brief	TimeInMillisec to string
-  * @param	[in]	msec	= ミリ秒
-  * @return	時刻の文字列
+ * @internal
+ * @brief	TimeInMillisec to string
+ * @param	[in]	msec	= ミリ秒
+ * @return	時刻の文字列
 */
-::std::string	FormatTimeInMillisecAsIso8601(TimeInMillisec msec);
+::std::string FormatTimeInMillisecAsIso8601(TimeInMillisec msec);
 
 /**
  * @brief	現在時刻の取得
 */
-time_t			GetTime(void);
+time_t GetTime(void);
 
 /**
  * @brief	現在時刻のミリ秒取得
 */
-TimeInMillisec	GetTimeInMillis(void);
+TimeInMillisec GetTimeInMillis(void);
 
 /**
  * @brief	不定な値の取得
 */
-unsigned int	GetIndefiniteValue(void);
+unsigned int GetIndefiniteValue(void);
 
 //======================================================================
 // class
@@ -78,26 +78,26 @@ unsigned int	GetIndefiniteValue(void);
 class iuStopWatch
 {
 private:
-	TimeInMillisec	m_begin;
+	TimeInMillisec m_begin;
 public:
-	iuStopWatch(void) : m_begin(0)	{}
+	iuStopWatch(void) : m_begin(0) {}
 
 public:
 	// 現在の時間をミリ秒単位で取得
-	static TimeInMillisec	get_millisec(void)
+	static TimeInMillisec get_millisec(void)
 	{
-#if		defined(IUTEST_NOT_SUPPORT_STOPWATCH)
+#if defined(IUTEST_NOT_SUPPORT_STOPWATCH)
 		return 0;
 #else
 		return GetTimeInMillis();
 #endif
 	}
 public:
-	void			start(void)
+	void start(void)
 	{
 		m_begin = get_millisec();
 	}
-	TimeInMillisec	stop(void) const
+	TimeInMillisec stop(void) const
 	{
 		return get_millisec() - m_begin;
 	}
@@ -110,4 +110,4 @@ public:
 #  include "../impl/iutest_time.ipp"
 #endif
 
-#endif	// INCG_IRIS_IUTEST_TIME_HPP_C6B9E65B_4059_4175_A6DB_397DBF338AA8_
+#endif // INCG_IRIS_IUTEST_TIME_HPP_C6B9E65B_4059_4175_A6DB_397DBF338AA8_

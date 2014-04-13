@@ -44,7 +44,7 @@ public:
 	iuFactoryBase(void) IUTEST_CXX_NOEXCEPT_SPEC {}
 	virtual ~iuFactoryBase(void) {}
 public:
-	virtual auto_ptr<Test>	Create(void) = 0;
+	virtual auto_ptr<Test> Create(void) = 0;
 };
 
 /**
@@ -56,7 +56,7 @@ template<class Tester>
 class iuFactory : public iuFactoryBase
 {
 public:
-	virtual auto_ptr<Test>	Create(void) IUTEST_CXX_OVERRIDE
+	virtual auto_ptr<Test> Create(void) IUTEST_CXX_OVERRIDE
 	{
 		auto_ptr<Test> p = new Tester();
 		return p;
@@ -78,7 +78,7 @@ public:
 	void				SetParam(ParamType param)	{ m_param = param; }
 	const ParamType&	GetParam(void)		const	{ return m_param; }
 protected:
-	ParamType	m_param;
+	ParamType m_param;
 };
 
 
@@ -97,7 +97,7 @@ public:
 	iuParamTestFactory(ParamType param) : _Mybase(param) {}
 
 public:
-	virtual auto_ptr<Test>	Create(void) IUTEST_CXX_OVERRIDE
+	virtual auto_ptr<Test> Create(void) IUTEST_CXX_OVERRIDE
 	{
 		Tester::SetParam(&this->m_param);
 		auto_ptr<Test> p = new Tester();
@@ -108,4 +108,4 @@ public:
 }	// end of namespace detail
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_FACTORY_HPP_9C2B4B94_95A0_479A_9C9D_43FB31845A73_
+#endif // INCG_IRIS_IUTEST_FACTORY_HPP_9C2B4B94_95A0_479A_9C9D_43FB31845A73_

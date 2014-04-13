@@ -19,7 +19,7 @@
 
 #if !defined(IUTEST_USE_GTEST)
 
-#else	// !defined(IUTEST_USE_GTEST)
+#else // !defined(IUTEST_USE_GTEST)
 
 //======================================================================
 // undef
@@ -76,7 +76,7 @@ struct AssertionFixed
 
 class AssertionMessage : public Message
 {
-	typedef std::ostream& (*BasicNarrowIoManip)(std::ostream&);
+	typedef ::std::ostream& (*BasicNarrowIoManip)(::std::ostream&);
 public:
 	template<typename T>
 	AssertionMessage& operator << (T val)
@@ -128,6 +128,6 @@ private:
 }	// end of namespace internal
 }	// end of namespace testing
 
-#endif	// !defined(IUTEST_USE_GTEST)
+#endif // !defined(IUTEST_USE_GTEST)
 
-#endif	// INCG_IRIS_IUTEST_SWITCH_ASSERTION_RETURN_HPP_3913D1E7_E6FD_49B9_BB4C_795939FEB5C5_
+#endif // INCG_IRIS_IUTEST_SWITCH_ASSERTION_RETURN_HPP_3913D1E7_E6FD_49B9_BB4C_795939FEB5C5_

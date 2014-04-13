@@ -36,7 +36,7 @@ namespace nacl
 namespace detail
 {
 
-IUTEST_IPP_INLINE void	PostMessage(const pp::Var& var)
+IUTEST_IPP_INLINE void PostMessage(const pp::Var& var)
 {
 	::pp::Module* module = ::pp::Module::Get();
 	if( module != NULL )
@@ -50,7 +50,7 @@ IUTEST_IPP_INLINE void	PostMessage(const pp::Var& var)
 
 }	// end of namespace detail
 
-IUTEST_IPP_INLINE void	vprint_message(const char *fmt, va_list va)
+IUTEST_IPP_INLINE void vprint_message(const char *fmt, va_list va)
 {
 	char msg[1024];
 	vsnprintf(msg, sizeof(msg), fmt, va);
@@ -61,7 +61,7 @@ IUTEST_IPP_INLINE void	vprint_message(const char *fmt, va_list va)
 		tp = strtok(NULL, "\n");
 	}
 }
-IUTEST_IPP_INLINE void	print_message(const char *fmt, ...)
+IUTEST_IPP_INLINE void print_message(const char *fmt, ...)
 {
 	va_list va;
 	va_start(va, fmt);
@@ -103,7 +103,7 @@ IUTEST_IPP_INLINE int PutEnv(const char* expr)
 
 IUTEST_IPP_INLINE const char* GetCWD(char* buf, size_t length)
 {
-#if	defined(IUTEST_OS_WINDOWS_MOBILE) || defined(IUTEST_OS_AVR32) || defined(IUTEST_NO_GETCWD)
+#if   defined(IUTEST_OS_WINDOWS_MOBILE) || defined(IUTEST_OS_AVR32) || defined(IUTEST_NO_GETCWD)
 	if( buf == NULL || length < 3 )
 	{
 		return NULL;
@@ -127,14 +127,14 @@ IUTEST_IPP_INLINE ::std::string GetCWD(void)
 
 IUTEST_IPP_INLINE void SleepMillisec(unsigned int millisec)
 {
-#if		defined(IUTEST_OS_WINDOWS)
+#if   defined(IUTEST_OS_WINDOWS)
 	Sleep(millisec);
-#elif	defined(IUTEST_OS_LINUX) || defined(IUTEST_OS_CYGWIN)
+#elif defined(IUTEST_OS_LINUX) || defined(IUTEST_OS_CYGWIN)
 
-#if	defined(_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 199309L
+#if   defined(_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 199309L
 	const timespec time = { 0, static_cast<long>(millisec) * 1000 * 1000 };
 	nanosleep(&time, NULL);
-#elif (defined(_BSD_SOURCE) && _BSD_SOURCE) 
+#elif (defined(_BSD_SOURCE) && _BSD_SOURCE)
 	|| (defined(_XOPEN_SOURCE)
 		&& (_XOPEN_SOURCE >= 500 || _XOPEN_SOURCE && _XOPEN_SOURCE_EXTENDED)
 		&& (!defined(_POSIX_C_SOURCE) || !(_POSIX_C_SOURCE >= 200809L || _XOPEN_SOURCE >= 700)) )
@@ -253,7 +253,7 @@ namespace win
 
 IUTEST_IPP_INLINE ::std::string WideStringToMultiByteString(const wchar_t* wide_c_str)
 {
-	if( wide_c_str == NULL ) return "(null)";
+	if( wide_c_str == NULL ) return "";
 	::std::string str;
 	const int length = static_cast<int>(wcslen(wide_c_str)) * 2 + 1;
 	char* mbs = new char [length];
@@ -309,7 +309,7 @@ IUTEST_IPP_INLINE ::std::string GetHResultString(HRESULT hr)
 IUTEST_IPP_INLINE IUTestLog::IUTestLog(Level level, const char* file, int line)
 	: kLevel(level)
 {
-	const char* const tag = 
+	const char* const tag =
 		(level == LOG_INFO   ) ? "[  INFO ] ":
 		(level == LOG_WARNING) ? "[WARNING] ":
 		(level == LOG_ERROR  ) ? "[ ERROR ] ":
@@ -331,4 +331,4 @@ IUTEST_IPP_INLINE IUTestLog::~IUTestLog(void)
 }	// end of namespace detail
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_PORT_IPP_7893F685_A1A9_477A_82E8_BF06237697FF_
+#endif // INCG_IRIS_IUTEST_PORT_IPP_7893F685_A1A9_477A_82E8_BF06237697FF_

@@ -17,9 +17,6 @@
 #ifndef INCG_IRIS_IUTEST_STREAM_HPP_3A4AF139_9F24_4730_81D0_DADFCE6DCF99_
 #define INCG_IRIS_IUTEST_STREAM_HPP_3A4AF139_9F24_4730_81D0_DADFCE6DCF99_
 
-//======================================================================
-// include
-
 namespace iutest {
 namespace detail
 {
@@ -35,9 +32,9 @@ public:
 	virtual ~IOutStream(void) {}
 public:
 	//! 書き込み
-	virtual bool	Write(const void* buf, size_t size, size_t cnt) = 0;
+	virtual bool Write(const void* buf, size_t size, size_t cnt) = 0;
 public:
-	virtual void	Printf(const char* fmt, ...)
+	virtual void Printf(const char* fmt, ...)
 	{
 IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_BEGIN()
 
@@ -61,7 +58,9 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_BEGIN()
 		va_end(va);
 
 		if( len > 0 )
+		{
 			Write(buf, static_cast<size_t>(len), 1);
+		}
 
 IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 	}
@@ -73,7 +72,7 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 class FileOutStream : public IOutStream
 {
 protected:
-	FILE*	m_fp;
+	FILE* m_fp;
 public:
 	FileOutStream(FILE* fp) IUTEST_CXX_NOEXCEPT_SPEC
 		: m_fp(fp)
@@ -95,4 +94,4 @@ public:
 }	// end of namespace detail
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_STREAM_HPP_3A4AF139_9F24_4730_81D0_DADFCE6DCF99_
+#endif // INCG_IRIS_IUTEST_STREAM_HPP_3A4AF139_9F24_4730_81D0_DADFCE6DCF99_

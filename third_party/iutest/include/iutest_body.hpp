@@ -59,7 +59,7 @@ public:
 	/**
 	 * @brief	実行中の TestInfo の取得
 	*/
-	static const TestInfo*	GetCurrentTestInfo(void)
+	static const TestInfo* GetCurrentTestInfo(void)
 	{
 		const Test* curr = GetCurrentTest();
 		if( curr == NULL || curr->m_test_info == NULL )
@@ -79,7 +79,7 @@ public:
 	 * @brief	致命的なエラーが出たかどうか
 	 * @return	真偽値
 	*/
-	static bool	HasFatalFailure(void)
+	static bool HasFatalFailure(void)
 	{
 		return GetCurrentTest()->m_test_info->HasFatalFailure();
 	}
@@ -88,7 +88,7 @@ public:
 	 * @brief	致命的ではないエラーが出たかどうか
 	 * @return	真偽値
 	*/
-	static bool	HasNonfatalFailure(void)
+	static bool HasNonfatalFailure(void)
 	{
 		return GetCurrentTest()->m_test_info->HasNonfatalFailure();
 	}
@@ -97,9 +97,18 @@ public:
 	 * @brief	エラーが出たかどうか
 	 * @return	真偽値
 	*/
-	static bool	HasFailure(void)
+	static bool HasFailure(void)
 	{
 		return GetCurrentTest()->m_test_info->HasFailure();
+	}
+
+	/**
+	 * @brief	スキップされたかどうか
+	 * @return	真偽値
+	*/
+	static bool IsSkipped(void)
+	{
+		return GetCurrentTest()->m_test_info->IsSkipped();
 	}
 
 	/**
@@ -148,13 +157,13 @@ public:
 #endif
 
 protected:
-	virtual	void	SetUp(void)		{}	//!< 実行前処理
-	virtual void	Body(void)	= 0;	//!< テスト実装部
-	virtual void	TearDown(void)	{}	//!< 実行後処理
+	virtual void SetUp(void)	{}	//!< 実行前処理
+	virtual void Body(void) = 0;	//!< テスト実装部
+	virtual void TearDown(void)	{}	//!< 実行後処理
 
 public:
-	static	void	SetUpTestCase(void)		{}	//!< test case setup
-	static	void	TearDownTestCase(void)	{}	//!< test case tear down
+	static void SetUpTestCase(void)		{}	//!< test case setup
+	static void TearDownTestCase(void)	{}	//!< test case tear down
 
 private:
 	/**
@@ -172,7 +181,7 @@ private:
 		static Test* GetCurrentTest(void) IUTEST_CXX_NOEXCEPT_SPEC { return s_current; }
 	};
 
-	typedef Observer<void>	CurrentTestObserver;
+	typedef Observer<void> CurrentTestObserver;
 
 private:
 	class TestRecordPropertyHelper
@@ -203,15 +212,15 @@ template<typename T>
 class WithParamInterface
 {
 public:
-	typedef T	ParamType;	//!< パラメータ型
+	typedef T ParamType;	//!< パラメータ型
 protected:
-	virtual ~WithParamInterface(void)	{}
+	virtual ~WithParamInterface(void) {}
 
 public:
 	/**
 	 * @brief	パラメータの取得
 	*/
-	static const ParamType&	GetParam(void)
+	static const ParamType& GetParam(void)
 	{
 		IUTEST_CHECK_(s_params != NULL) << "GetParam() can only use the value-parameterized test";
 #if defined(_MSC_VER) && _MSC_VER >= 1500
@@ -224,7 +233,7 @@ public:
 	static void SetParam(const ParamType* params) IUTEST_CXX_NOEXCEPT_SPEC { s_params = params; }
 
 private:
-	static const ParamType*	s_params;
+	static const ParamType* s_params;
 };
 
 template<typename T>
@@ -242,10 +251,10 @@ class TestWithParam : public Test, public WithParamInterface<T>
 }	// end of namespace iutest
 
 template<typename DMY>
-::iutest::Test*	::iutest::Test::Observer<DMY>::s_current = NULL;
+::iutest::Test* ::iutest::Test::Observer<DMY>::s_current = NULL;
 
 #if !IUTEST_HAS_LIB
 #  include "impl/iutest_body.ipp"
 #endif
 
-#endif	// INCG_IRIS_IUTEST_BODY_HPP_3EEA6706_9954_4330_B292_129667FA6B96_
+#endif // INCG_IRIS_IUTEST_BODY_HPP_3EEA6706_9954_4330_B292_129667FA6B96_

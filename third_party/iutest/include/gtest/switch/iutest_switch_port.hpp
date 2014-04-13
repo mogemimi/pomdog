@@ -95,7 +95,7 @@
 #  define GTEST_OS_NACL	IUTEST_OS_NACL
 #endif
 
-#else	// !defined(IUTEST_USE_GTEST)
+#else // !defined(IUTEST_USE_GTEST)
 
 //======================================================================
 // undef
@@ -198,9 +198,9 @@ inline int PutEnv(const char* expr)
 
 inline int iu_wcsicmp(const wchar_t * str1, const wchar_t * str2)
 {
-#if		defined(_MSC_VER)
+#if   defined(_MSC_VER)
 	return _wcsicmp(str1, str2);
-#elif	defined(IUTEST_OS_LINUX) && !defined(IUTEST_OS_LINUX_ANDROID)
+#elif defined(IUTEST_OS_LINUX) && !defined(IUTEST_OS_LINUX_ANDROID)
 	return wcscasecmp(str1, str2);
 #else
 	const wchar_t* l = str1;
@@ -224,6 +224,6 @@ inline int iu_wcsicmp(const wchar_t * str1, const wchar_t * str2)
 
 IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 
-#endif	// !defined(IUTEST_USE_GTEST)
+#endif // !defined(IUTEST_USE_GTEST)
 
-#endif	// INCG_IRIS_IUTEST_SWITCH_PORT_HPP_2B432CD6_18CE_4D0C_B0CD_4E4D5B8E34F4_
+#endif // INCG_IRIS_IUTEST_SWITCH_PORT_HPP_2B432CD6_18CE_4D0C_B0CD_4E4D5B8E34F4_

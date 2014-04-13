@@ -29,9 +29,10 @@ namespace detail
 */
 class iuRegex
 {
-	static bool	match_impl(const char* begin, const char* end, const char* src);
+	static bool match_impl(const char* begin, const char* end, const char* src);
+	static bool match_impl_group(const char* begin, const char* end, const char* src);
 public:
-	static bool	match(const char* regex, const char* src);
+	static bool match(const char* regex, const char* src);
 };
 
 }	// end of namespace detail
@@ -41,4 +42,4 @@ public:
 #  include "../impl/iutest_regex.ipp"
 #endif
 
-#endif	// INCG_IRIS_IUTEST_REGEX_HPP_1575CB44_189A_4248_B305_DB4882E3BFC2_
+#endif // INCG_IRIS_IUTEST_REGEX_HPP_1575CB44_189A_4248_B305_DB4882E3BFC2_

@@ -19,7 +19,7 @@
 
 #if !defined(IUTEST_USE_GTEST)
 
-#else	// !defined(IUTEST_USE_GTEST)
+#else // !defined(IUTEST_USE_GTEST)
 
 namespace testing {
 namespace internal
@@ -51,6 +51,6 @@ inline ::std::ostream& operator << (::std::ostream& os, const FilePath& path)
 }	// end of namespace internal
 }	// end of namespace testing
 
-#endif	// !defined(IUTEST_USE_GTEST)
+#endif // !defined(IUTEST_USE_GTEST)
 
-#endif	// INCG_IRIS_IUTEST_SWITCH_FILEPATH_HPP_D92E9CDC_9C63_4008_BE35_6E32177B28D2_
+#endif // INCG_IRIS_IUTEST_SWITCH_FILEPATH_HPP_D92E9CDC_9C63_4008_BE35_6E32177B28D2_

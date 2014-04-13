@@ -34,19 +34,19 @@
 
 //!< Minor Version
 #ifndef GTEST_MINORVER
-#  if	!defined(RUN_ALL_TESTS) && !defined(GTEST_CREF_WORKAROUND_)
+#  if   !defined(RUN_ALL_TESTS) && !defined(GTEST_CREF_WORKAROUND_)
 #    define GTEST_MINORVER	0x07
-#  elif	defined(ADD_FAILURE_AT)
+#  elif defined(ADD_FAILURE_AT)
 #    define GTEST_MINORVER	0x06
-#  elif	defined(GTEST_API_)
+#  elif defined(GTEST_API_)
 #    define GTEST_MINORVER	0x05
-#  elif	defined(EXPECT_DEATH_IF_SUPPORTED)
+#  elif defined(EXPECT_DEATH_IF_SUPPORTED)
 #    define GTEST_MINORVER	0x04
-#  elf	defined(GTEST_HIDE_UNREACHABLE_CODE_)
+#  elif defined(GTEST_HIDE_UNREACHABLE_CODE_)
 #    define GTEST_MINORVER	0x03
-#  elif	defined(GTEST_INCLUDE_GTEST_GTEST_PARAM_TEST_H_)
+#  elif defined(GTEST_INCLUDE_GTEST_GTEST_PARAM_TEST_H_)
 #    define GTEST_MINORVER	0x02
-#  elif	defined(GTEST_INCLUDE_GTEST_GTEST_TYPED_TEST_H_)
+#  elif defined(GTEST_INCLUDE_GTEST_GTEST_TYPED_TEST_H_)
 #    define GTEST_MINORVER	0x01
 #  else
 #    define GTEST_MINORVER	0x00
@@ -78,4 +78,4 @@
 
 #endif
 
-#endif	// INCG_IRIS_IUTEST_GTEST_VER_HPP_7396AEF4_D1AB_44B5_9FE3_23CEC1240158_
+#endif // INCG_IRIS_IUTEST_GTEST_VER_HPP_7396AEF4_D1AB_44B5_9FE3_23CEC1240158_

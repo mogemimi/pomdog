@@ -142,7 +142,7 @@ IUTEST_IPP_INLINE int UnitTest::Run(void)
 }
 
 #if IUTEST_HAS_EXCEPTIONS && IUTEST_HAS_SEH
-IUTEST_IPP_INLINE int	UnitTest::RunOnMSC(void)
+IUTEST_IPP_INLINE int UnitTest::RunOnMSC(void)
 {
 	_EXCEPTION_POINTERS* ep = NULL;
 	int ret = 1;
@@ -198,7 +198,7 @@ IUTEST_IPP_INLINE int UnitTest::RunImpl(void)
 	return result ? 0 : 1;
 }
 
-IUTEST_IPP_INLINE bool	UnitTest::RunOnce(void)
+IUTEST_IPP_INLINE bool UnitTest::RunOnce(void)
 {
 	m_elapsedmsec = 0;
 
@@ -230,11 +230,6 @@ IUTEST_IPP_INLINE bool	UnitTest::RunOnce(void)
 		sw.start();
 		for( iuTestCases::iterator it=m_testcases.begin(), end=m_testcases.end(); it != end; ++it )
 		{
-			if( !(it)->should_run() )
-			{
-				continue;
-			}
-
 			m_current_testcase = it;
 			(it)->Run();
 			m_current_testcase = NULL;
@@ -248,7 +243,7 @@ IUTEST_IPP_INLINE bool	UnitTest::RunOnce(void)
 	return Passed();
 }
 
-IUTEST_IPP_INLINE void	UnitTest::TestProgramStart(void)
+IUTEST_IPP_INLINE void UnitTest::TestProgramStart(void)
 {
 #if 0
 #if IUTEST_HAS_EXCEPTIONS && defined(_MSC_VER) && IUTEST_HAS_SEH
@@ -278,12 +273,12 @@ IUTEST_IPP_INLINE void	UnitTest::TestProgramStart(void)
 	listeners().OnTestProgramStart(*this);
 }
 
-IUTEST_IPP_INLINE void	UnitTest::SetUpTestIteration(void)
+IUTEST_IPP_INLINE void UnitTest::SetUpTestIteration(void)
 {
 	TestEnv::SetUp();
 }
 
-IUTEST_IPP_INLINE void	UnitTest::EnvironmentSetUp(void)
+IUTEST_IPP_INLINE void UnitTest::EnvironmentSetUp(void)
 {
 	listeners().OnEnvironmentsSetUpStart(*this);
 	for( iuEnvironmentList::iterator it = TestEnv::environments().begin(), end=TestEnv::environments().end(); it != end; ++it )
@@ -293,7 +288,7 @@ IUTEST_IPP_INLINE void	UnitTest::EnvironmentSetUp(void)
 	listeners().OnEnvironmentsSetUpEnd(*this);
 }
 
-IUTEST_IPP_INLINE void	UnitTest::EnvironmentTearDown(void)
+IUTEST_IPP_INLINE void UnitTest::EnvironmentTearDown(void)
 {
 	listeners().OnEnvironmentsTearDownStart(*this);
 	for( iuEnvironmentList::reverse_iterator it = TestEnv::environments().rbegin(), end=TestEnv::environments().rend(); it != end; ++it )
@@ -303,7 +298,7 @@ IUTEST_IPP_INLINE void	UnitTest::EnvironmentTearDown(void)
 	listeners().OnEnvironmentsTearDownEnd(*this);
 }
 
-IUTEST_IPP_INLINE void	UnitTest::TestProgramEnd(void)
+IUTEST_IPP_INLINE void UnitTest::TestProgramEnd(void)
 {
 	if( !m_test_started )
 	{
@@ -313,7 +308,7 @@ IUTEST_IPP_INLINE void	UnitTest::TestProgramEnd(void)
 	m_test_started = false;
 }
 
-IUTEST_IPP_INLINE void	UnitTest::Initialize(void)
+IUTEST_IPP_INLINE void UnitTest::Initialize(void)
 {
 	m_init_iutest_count++;
 
@@ -344,4 +339,4 @@ IUTEST_IPP_INLINE void	UnitTest::Initialize(void)
 
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_CORE_IPP_33560431_783B_4AE7_8FC8_6E78355CAF87_
+#endif // INCG_IRIS_IUTEST_CORE_IPP_33560431_783B_4AE7_8FC8_6E78355CAF87_

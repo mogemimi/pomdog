@@ -18,10 +18,7 @@
 #define INCG_IRIS_IUTEST_STATIC_ASSERTION_HPP_53842FD6_9E5D_40A6_905D_EC6DEBE5ED6A_
 
 //======================================================================
-// include
-
-//======================================================================
-// 
+// define
 #if IUTEST_HAS_STATIC_ASSERT_TYPEEQ
 
 #if 0
@@ -135,4 +132,4 @@ template<int x>struct StaticAssertionTest {};
 }	// end of namespace detail
 }	// end of namespace iutest
 
-#endif	// INCG_IRIS_IUTEST_STATIC_ASSERTION_HPP_53842FD6_9E5D_40A6_905D_EC6DEBE5ED6A_
+#endif // INCG_IRIS_IUTEST_STATIC_ASSERTION_HPP_53842FD6_9E5D_40A6_905D_EC6DEBE5ED6A_

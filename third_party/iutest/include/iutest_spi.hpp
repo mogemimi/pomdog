@@ -230,4 +230,4 @@ public:
 
 #endif
 
-#endif	// INCG_IRIS_IUTEST_SPI_HPP_
+#endif // INCG_IRIS_IUTEST_SPI_HPP_

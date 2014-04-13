@@ -23,7 +23,7 @@
 #ifdef _IUTEST_DEBUG
 // iutest 自体のデバッグ用定義
 
-#if	defined(_MSC_VER) && !defined(IUTEST_OS_WINDOWS_MOBILE)
+#if defined(_MSC_VER) && !defined(IUTEST_OS_WINDOWS_MOBILE)
 #  include <streambuf>
 #  include <xlocnum>
 #  include <xtree>
@@ -43,10 +43,10 @@ namespace detail
 
 //======================================================================
 // function
-static void	IUTEST_ATTRIBUTE_UNUSED_ iuDebugInitialize(void)
+static void IUTEST_ATTRIBUTE_UNUSED_ iuDebugInitialize(void)
 {
 #ifdef _IUTEST_DEBUG
-#  if	defined(_MSC_VER) && !defined(IUTEST_OS_WINDOWS_MOBILE)
+#  if defined(_MSC_VER) && !defined(IUTEST_OS_WINDOWS_MOBILE)
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #  endif
 #endif
@@ -55,7 +55,7 @@ static void	IUTEST_ATTRIBUTE_UNUSED_ iuDebugInitialize(void)
 static void IUTEST_ATTRIBUTE_UNUSED_ iuDebugBreakAlloc(long n)
 {
 #ifdef _IUTEST_DEBUG
-#  if	defined(_MSC_VER) && !defined(IUTEST_OS_WINDOWS_MOBILE)
+#  if defined(_MSC_VER) && !defined(IUTEST_OS_WINDOWS_MOBILE)
 	_CrtSetBreakAlloc(n);
 #  endif
 #endif
@@ -94,4 +94,4 @@ private:
 #  include "../impl/iutest_debug.ipp"
 #endif
 
-#endif	// INCG_IRIS_IUTEST_DEBUG_HPP_A63366D4_2112_4269_9BAF_BD30A5F2C7F2_
+#endif // INCG_IRIS_IUTEST_DEBUG_HPP_A63366D4_2112_4269_9BAF_BD30A5F2C7F2_

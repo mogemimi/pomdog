@@ -95,12 +95,12 @@ public:
 */
 class TestEventRepeater : public TestEventListener
 {
-	typedef ::std::vector<TestEventListener*>	ListenerContainer;
+	typedef ::std::vector<TestEventListener*> ListenerContainer;
 public:
 	/**
 	 * @brief	リスナーの追加
 	*/
-	void	Append(TestEventListener* listener)
+	void Append(TestEventListener* listener)
 	{
 		m_listeners.push_back(listener);
 	};
@@ -108,7 +108,7 @@ public:
 	/**
 	 * @brief	リスナーの解放
 	*/
-	TestEventListener*	Release(TestEventListener* listener);
+	TestEventListener* Release(TestEventListener* listener);
 
 public:
 	// On*End は後ろから実行
@@ -130,7 +130,7 @@ public:
 	virtual void OnTestProgramEnd(const UnitTest& test) IUTEST_CXX_OVERRIDE;
 
 private:
-	ListenerContainer	m_listeners;
+	ListenerContainer m_listeners;
 };
 
 /**
@@ -138,7 +138,7 @@ private:
 */
 class TestEventListeners
 {
-	typedef ::std::vector<TestEventListener*>	ListenerContainer;
+	typedef ::std::vector<TestEventListener*> ListenerContainer;
 
 public:
 	TestEventListeners(void) : m_default_result_printer(NULL), m_default_xml_generator(NULL) {}
@@ -147,25 +147,25 @@ public:
 	/**
 	 * @brief	リスナーの追加
 	*/
-	void	Append(TestEventListener* listener)	{ m_repeater.Append(listener); };
+	void Append(TestEventListener* listener) { m_repeater.Append(listener); };
 
 	/**
 	 * @brief	リスナーの解放
 	*/
-	TestEventListener*	Release(TestEventListener* listener) { return m_repeater.Release(listener); }
+	TestEventListener* Release(TestEventListener* listener) { return m_repeater.Release(listener); }
 
 public:
 	/**
 	 * @brief	デフォルト出力リスナーの取得
 	*/
-	TestEventListener*	default_result_printer(void) const IUTEST_CXX_NOEXCEPT_SPEC { return m_default_result_printer; }
+	TestEventListener* default_result_printer(void) const IUTEST_CXX_NOEXCEPT_SPEC { return m_default_result_printer; }
 	/**
 	 * @brief	デフォルトxml出力リスナー取得
 	*/
-	TestEventListener*	default_xml_generator(void)  const IUTEST_CXX_NOEXCEPT_SPEC	{ return m_default_xml_generator; }
+	TestEventListener* default_xml_generator(void)  const IUTEST_CXX_NOEXCEPT_SPEC { return m_default_xml_generator; }
 
 private:
-	TestEventListener*	repeater(void) { return &m_repeater; }
+	TestEventListener* repeater(void) { return &m_repeater; }
 
 	void OnTestProgramStart(const UnitTest& test)					{ m_repeater.OnTestProgramStart(test); }
 	void OnTestIterationStart(const UnitTest& test, int iteration)	{ m_repeater.OnTestIterationStart(test, iteration); }
@@ -185,8 +185,8 @@ private:
 	void OnTestProgramEnd(const UnitTest& test)						{ m_repeater.OnTestProgramEnd(test); }
 
 private:
-	void	set_default_result_printer(TestEventListener* listener);
-	void	set_default_xml_generator(TestEventListener* listener);
+	void set_default_result_printer(TestEventListener* listener);
+	void set_default_xml_generator(TestEventListener* listener);
 
 private:
 	friend class UnitTestSource;
@@ -211,4 +211,4 @@ private:
 #  include "impl/iutest_listener.ipp"
 #endif
 
-#endif	// INCG_IRIS_IUTEST_LISTENER_HPP_C94B8142_F8B3_413F_B479_8AA2B78604CE_
+#endif // INCG_IRIS_IUTEST_LISTENER_HPP_C94B8142_F8B3_413F_B479_8AA2B78604CE_
