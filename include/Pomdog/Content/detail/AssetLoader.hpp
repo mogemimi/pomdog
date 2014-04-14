@@ -26,10 +26,7 @@ namespace Details {
 class AssetLoaderContext;
 
 template <typename T>
-struct AssetLoader {
-	std::shared_ptr<T> operator()(AssetLoaderContext const& loaderContext,
-		std::string const& assetPath);
-};
+struct AssetLoader;
 
 class AssetLoaderContext {
 public:

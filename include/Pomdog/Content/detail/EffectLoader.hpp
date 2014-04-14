@@ -23,11 +23,14 @@ class EffectPass;
 
 namespace Details {
 
-// explicit instantiations
 template <>
-std::shared_ptr<EffectPass> POMDOG_EXPORT
-AssetLoader<EffectPass>::operator()(AssetLoaderContext const& loaderContext,
-	std::string const& assetPath);
+struct POMDOG_EXPORT AssetLoader<EffectPass> {
+	std::shared_ptr<EffectPass>
+	operator()(AssetLoaderContext const& loaderContext,
+		std::string const& assetPath);
+};
+
+extern template struct AssetLoader<EffectPass>;
 
 }// namespace Details
 }// namespace Pomdog

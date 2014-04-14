@@ -15,11 +15,17 @@
 
 #include <cstdint>
 #include <memory>
+#include "../Config/Export.hpp"
 #include "DurationSeconds.hpp"
 
 namespace Pomdog {
 
-class GameClock {
+/// @addtogroup Framework
+/// @{
+/// @addtogroup Application
+/// @{
+
+class POMDOG_EXPORT GameClock {
 public:
 	GameClock();
 	GameClock(GameClock const&) = delete;
@@ -58,6 +64,9 @@ private:
 	class Impl;
 	std::unique_ptr<Impl> impl;
 };
+
+/// @}
+/// @}
 
 }// namespace Pomdog
 

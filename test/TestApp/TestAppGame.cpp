@@ -13,6 +13,7 @@
 #include "SpriteBatch.hpp"
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
+#include "TextureAtlasLoader.hpp"
 
 namespace TestApp {
 namespace {
@@ -115,6 +116,30 @@ void TestAppGame::Initialize()
 		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
 		
 		rootNode->AddChild(gameObject);
+	}
+	
+	{
+		auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidChan/parts.atlas");
+		
+		Log::Info(StringFormat("TextureAtlas.Pages = %ld", textureAtlas.pages.size()));
+		Log::Info(StringFormat("TextureAtlas.Regions = %ld", textureAtlas.regions.size()));
+		
+		for (auto page: textureAtlas.pages)
+		{
+			Log::Info(StringFormat("Page.Name = %s", page.Name.c_str()));
+		}
+		
+		for (auto region: textureAtlas.regions)
+		{
+			Log::Info(StringFormat("Region.Name = %s", region.Name.c_str()));
+			Log::Info(StringFormat("  Region.Page = %d", region.TexturePage));
+			Log::Info(StringFormat("  Region.Rotate = %d", region.Rotate?1:0));
+			Log::Info(StringFormat("  Region.Flip = %d", region.Flip?1:0));
+			Log::Info(StringFormat("  Region.XY = %d, %d", (int)region.Subrect.X, (int)region.Subrect.Y));
+			Log::Info(StringFormat("  Region.Size = %d, %d", (int)region.Subrect.Width, (int)region.Subrect.Height));
+			Log::Info(StringFormat("  Region.Offset = %d %d", (int)region.XOffset, (int)region.YOffset));
+			Log::Info(StringFormat("  Region.Advance = %d %d", (int)region.OriginalWidth, (int)region.OriginalHeight));
+		}
 	}
 }
 //-----------------------------------------------------------------------

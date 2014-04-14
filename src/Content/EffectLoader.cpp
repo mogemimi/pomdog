@@ -34,7 +34,6 @@ static std::vector<std::uint8_t> ReadBinaryFile(std::string const& filename)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-template <>
 std::shared_ptr<EffectPass> AssetLoader<EffectPass>::operator()(AssetLoaderContext const& loaderContext,
 	std::string const& assetPath)
 {

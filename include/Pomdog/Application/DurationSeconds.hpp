@@ -19,8 +19,16 @@ namespace Pomdog {
 
 class GameClock;
 
+/// @addtogroup Framework
+/// @{
+/// @addtogroup Application
+/// @{
+
 using DurationSeconds = std::chrono::duration<double, std::ratio<1>>;
 using TimePointSeconds = std::chrono::time_point<GameClock, DurationSeconds>;
+
+/// @}
+/// @}
 
 }// namespace Pomdog
 

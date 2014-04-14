@@ -32,7 +32,7 @@ public:
 	///@~Japanese
 	/// @brief アセットを読み込みます。
 	template <typename T>
-	std::shared_ptr<T> Load(std::string const& assetPath)
+	auto Load(std::string const& assetPath)-> decltype(Details::AssetLoader<T>()(Details::AssetLoaderContext(), std::string()))
 	{
 		Details::AssetLoader<T> loader;
 		return loader(loaderContext, assetPath);

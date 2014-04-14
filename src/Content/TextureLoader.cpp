@@ -47,7 +47,6 @@ static bool IsDDSFormat(std::array<std::uint8_t, 8> const& signature)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-template <>
 std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(AssetLoaderContext const& loaderContext,
 	std::string const& assetPath)
 {

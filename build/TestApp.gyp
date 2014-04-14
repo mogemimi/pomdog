@@ -83,6 +83,9 @@
         '../test/TestApp/SpriteRenderer.hpp',
         '../test/TestApp/TestAppGame.cpp',
         '../test/TestApp/TestAppGame.hpp',
+        '../test/TestApp/TextureAtlas.hpp',
+        '../test/TestApp/TextureAtlasLoader.cpp',
+        '../test/TestApp/TextureAtlasLoader.hpp',
       ],
       'conditions': [
         ['component == "shared_library"', {

@@ -22,11 +22,14 @@ class Texture2D;
 
 namespace Details {
 
-// explicit instantiations
 template <>
-std::shared_ptr<Texture2D> POMDOG_EXPORT
-AssetLoader<Texture2D>::operator()(AssetLoaderContext const& loaderContext,
-	std::string const& assetPath);
+struct POMDOG_EXPORT AssetLoader<Texture2D> {
+	std::shared_ptr<Texture2D>
+	operator()(AssetLoaderContext const& loaderContext,
+		std::string const& assetPath);
+};
+
+extern template struct AssetLoader<Texture2D>;
 
 }// namespace Details
 }// namespace Pomdog
