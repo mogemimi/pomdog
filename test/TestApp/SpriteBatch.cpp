@@ -51,7 +51,7 @@ private:
 
 	std::shared_ptr<VertexBuffer> planeVertices;
 	std::shared_ptr<IndexBuffer> planeIndices;
-	std::shared_ptr<DynamicVertexBuffer> instanceVertices;
+	std::shared_ptr<VertexBuffer> instanceVertices;
 	
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<InputLayout> inputLayout;
@@ -94,8 +94,8 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GameHost> const& gameHost)
 			Vector4(1.0f, 1.0f, 1.0f, 0.0f),
 			Vector4(1.0f, 0.0f, 1.0f, 1.0f),
 		};
-		planeVertices = std::make_shared<ImmutableVertexBuffer>(graphicsDevice,
-			PositionTextureCoord::Declaration(), verticesCombo.data(), verticesCombo.size());
+		planeVertices = std::make_shared<VertexBuffer>(graphicsDevice,
+			PositionTextureCoord::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Immutable);
 	}
 	{
 		std::array<std::uint16_t, 6> const indices = {
@@ -104,8 +104,8 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GameHost> const& gameHost)
 		};
 
 		// Create index buffer
-		planeIndices = std::make_shared<ImmutableIndexBuffer>(graphicsDevice,
-			IndexElementSize::SixteenBits, indices.data(), indices.size());
+		planeIndices = std::make_shared<IndexBuffer>(graphicsDevice,
+			IndexElementSize::SixteenBits, indices.data(), indices.size(), BufferUsage::Immutable);
 	}
 	{
 		std::array<SpriteInfo, MaxBatchSize> verticesCombo;
@@ -118,8 +118,8 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GameHost> const& gameHost)
 			};
 		}
 		
-		instanceVertices = std::make_shared<DynamicVertexBuffer>(graphicsDevice,
-			SpriteInfoVertex::Declaration(), verticesCombo.data(), verticesCombo.size());
+		instanceVertices = std::make_shared<VertexBuffer>(graphicsDevice,
+			SpriteInfoVertex::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Dynamic);
 	}
 	{
 		effectPass = assets->Load<EffectPass>("SpriteBatchEffect");

@@ -1,4 +1,4 @@
-//
+﻿//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,43 +6,53 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <Pomdog/Graphics/ImmutableIndexBuffer.hpp>
+#include <Pomdog/Graphics/IndexBuffer.hpp>
 #include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Graphics/BufferUsage.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeIndexBuffer.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-ImmutableIndexBuffer::ImmutableIndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	IndexElementSize newElementSize, void const* indices, std::uint32_t newIndexCount)
+IndexBuffer::IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	IndexElementSize elementSizeIn, void const* indices, std::uint32_t indexCountIn,
+	Pomdog::BufferUsage bufferUsageIn)
 	: nativeIndexBuffer(graphicsDevice->NativeGraphicsDevice()->CreateIndexBuffer(
-		indices, newIndexCount, newElementSize, BufferUsage::Immutable))
-	, indexCount(newIndexCount)
-	, elementSize(newElementSize)
+		indices, indexCountIn, elementSizeIn, bufferUsageIn))
+	, indexCount(indexCountIn)
+	, elementSize(elementSizeIn)
+	, bufferUsage(bufferUsageIn)
 {
 	POMDOG_ASSERT(nativeIndexBuffer);
 }
 //-----------------------------------------------------------------------
-ImmutableIndexBuffer::~ImmutableIndexBuffer() = default;
+IndexBuffer::~IndexBuffer() = default;
 //-----------------------------------------------------------------------
-std::uint32_t ImmutableIndexBuffer::IndexCount() const
+std::uint32_t IndexBuffer::IndexCount() const
 {
 	return indexCount;
 }
 //-----------------------------------------------------------------------
-IndexElementSize ImmutableIndexBuffer::ElementSize() const
+IndexElementSize IndexBuffer::ElementSize() const
 {
 	return elementSize;
 }
 //-----------------------------------------------------------------------
-BufferUsage ImmutableIndexBuffer::BufferUsage() const
+BufferUsage IndexBuffer::BufferUsage() const
 {
-	return BufferUsage::Immutable;
+	return bufferUsage;
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeIndexBuffer* ImmutableIndexBuffer::NativeIndexBuffer()
+void IndexBuffer::SetData(void const* source, std::uint32_t elementCountIn)
+{
+	POMDOG_ASSERT(source != nullptr);
+	POMDOG_ASSERT(elementCountIn > 0);
+	POMDOG_ASSERT(elementCountIn <= indexCount);
+	POMDOG_ASSERT(nativeIndexBuffer);
+	nativeIndexBuffer->SetData(source, elementCountIn, elementSize);
+}
+//-----------------------------------------------------------------------
+Details::RenderSystem::NativeIndexBuffer* IndexBuffer::NativeIndexBuffer()
 {
 	POMDOG_ASSERT(nativeIndexBuffer);
 	return nativeIndexBuffer.get();

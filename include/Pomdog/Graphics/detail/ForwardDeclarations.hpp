@@ -22,8 +22,6 @@ class BlendState;
 template <typename T, typename... Arguments>
 class CustomVertex;
 class DepthStencilState;
-class DynamicIndexBuffer;
-class DynamicVertexBuffer;
 class EffectConstantDescription;
 class EffectParameter;
 class EffectPass;

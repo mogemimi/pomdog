@@ -16,6 +16,8 @@
 #include <cstdint>
 #include "../Config/Export.hpp"
 #include "detail/ForwardDeclarations.hpp"
+#include "VertexDeclaration.hpp"
+#include "BufferUsage.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -35,22 +37,49 @@ class NativeVertexBuffer;
 /// @brief 頂点バッファです。
 class POMDOG_EXPORT VertexBuffer {
 public:
-	virtual	~VertexBuffer() = default;
+	VertexBuffer() = delete;
+	VertexBuffer(VertexBuffer const&) = delete;
+	VertexBuffer(VertexBuffer &&) = default;
+
+	VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		Pomdog::VertexDeclaration const& vertexDeclaration,
+		void const* vertices, std::uint32_t vertexCount, Pomdog::BufferUsage bufferUsage);
+
+	VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		Pomdog::VertexDeclaration && vertexDeclaration,
+		void const* vertices, std::uint32_t vertexCount, Pomdog::BufferUsage bufferUsage);
+
+	~VertexBuffer();
+
+	VertexBuffer & operator=(VertexBuffer const&) = delete;
+	VertexBuffer & operator=(VertexBuffer &&) = default;
 
 	///@~Japanese
 	/// @brief 頂点データの定義を取得します。
-	virtual VertexDeclaration const& VertexDeclaration() const = 0;
+	VertexDeclaration const& VertexDeclaration() const;
 
 	///@~Japanese
 	/// @brief 頂点の数を取得します。
-	virtual std::uint32_t VertexCount() const = 0;
+	std::uint32_t VertexCount() const;
 
 	///@~Japanese
 	/// @brief バッファの使用方法を取得します。
-	virtual BufferUsage BufferUsage() const = 0;
+	Pomdog::BufferUsage BufferUsage() const;
+	
+	///@~Japanese
+	/// @brief 頂点データを格納します。
+	/// @param source ソースバッファを指定します。
+	/// @param elementCount 頂点の数を指定します。
+	void SetData(void const* source, std::uint32_t elementCount);
 	
 public:
-	virtual Details::RenderSystem::NativeVertexBuffer* NativeVertexBuffer() = 0;
+	Details::RenderSystem::NativeVertexBuffer* NativeVertexBuffer();
+	
+private:
+	Pomdog::VertexDeclaration vertexDeclaration;
+	std::unique_ptr<Details::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
+	std::uint32_t vertexCount;
+	Pomdog::BufferUsage bufferUsage;
 };
 
 /// @}

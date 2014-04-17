@@ -29,8 +29,8 @@ PrimitiveAxes::PrimitiveAxes(std::shared_ptr<GameHost> const& gameHost)
 			Vector3(0.0f, 0.0f, -1.0f), Vector3(56.0f/255.0f, 190.0f/255.0f, 255.0f/255.0f),
 			Vector3(0.0f, 0.0f, +1.0f), Vector3(56.0f/255.0f, 190.0f/255.0f, 255.0f/255.0f),
 		};
-		vertexBuffer = std::make_shared<ImmutableVertexBuffer>(graphicsDevice,
-			PositionColor::Declaration(), verticesCombo.data(), verticesCombo.size());
+		vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
+			PositionColor::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Immutable);
 	}
 	{
 		effectPass = assets->Load<EffectPass>("PrimitiveAxesEffect");

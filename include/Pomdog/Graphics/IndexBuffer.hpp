@@ -38,22 +38,45 @@ class NativeIndexBuffer;
 /// @brief インデックスバッファです。
 class POMDOG_EXPORT IndexBuffer {
 public:
-	virtual	~IndexBuffer() = default;
+	IndexBuffer() = delete;
+	IndexBuffer(IndexBuffer const&) = delete;
+	IndexBuffer(IndexBuffer &&) = default;
+
+	IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		IndexElementSize elementSize, void const* indices, std::uint32_t indexCount,
+		Pomdog::BufferUsage bufferUsage);
+
+	~IndexBuffer();
+
+	IndexBuffer & operator=(IndexBuffer const&) = delete;
+	IndexBuffer & operator=(IndexBuffer &&) = default;
 
 	///@~Japanese
 	/// @brief インデックスの個数を取得します。
-	virtual std::uint32_t IndexCount() const = 0;
+	std::uint32_t IndexCount() const;
 
 	///@~Japanese
 	/// @brief インデックスの要素 1 つ分のサイズを取得します。
-	virtual IndexElementSize ElementSize() const = 0;
+	IndexElementSize ElementSize() const;
 
 	///@~Japanese
 	/// @brief バッファの使用方法を取得します。
-	virtual BufferUsage BufferUsage() const = 0;
+	Pomdog::BufferUsage BufferUsage() const;
+
+	///@~Japanese
+	/// @brief インデックスデータを格納します。
+	/// @param source ソースバッファを指定します。
+	/// @param elementCount インデックスの要素数を指定します。
+	void SetData(void const* source, std::uint32_t elementCount);
 
 public:
-	virtual Details::RenderSystem::NativeIndexBuffer* NativeIndexBuffer() = 0;
+	Details::RenderSystem::NativeIndexBuffer* NativeIndexBuffer();
+	
+private:
+	std::unique_ptr<Details::RenderSystem::NativeIndexBuffer> nativeIndexBuffer;
+	std::uint32_t indexCount;
+	IndexElementSize elementSize;
+	Pomdog::BufferUsage bufferUsage;
 };
 
 /// @}

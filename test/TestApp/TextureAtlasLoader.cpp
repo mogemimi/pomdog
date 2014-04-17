@@ -91,7 +91,7 @@ AssetLoader<TexturePacker::TextureAtlas>::operator()(AssetLoaderContext const& l
 			}
 			else {
 				POMDOG_ASSERT(!ss);
-				state = ParserState::RegionName;
+				//state = ParserState::RegionName;
 				result.regions.push_back(CreateAtlasRegion(line, pageIndex));
 				state = ParserState::RegionProperties;
 			}
@@ -109,7 +109,7 @@ AssetLoader<TexturePacker::TextureAtlas>::operator()(AssetLoaderContext const& l
 				break;
 			}
 			else if (line.front() != ' ') {
-				state = ParserState::RegionName;
+				//state = ParserState::RegionName;
 				result.regions.push_back(CreateAtlasRegion(line, pageIndex));
 				state = ParserState::RegionProperties;
 				break;

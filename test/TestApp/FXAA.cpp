@@ -27,8 +27,8 @@ FXAA::FXAA(std::shared_ptr<GameHost> const& gameHost)
 			Vector3( 1.0f,  1.0f, 0.0f), Vector2(1.0f, 1.0f),
 			Vector3( 1.0f, -1.0f, 0.0f), Vector2(1.0f, 0.0f),
 		};
-		vertexBuffer = std::make_shared<ImmutableVertexBuffer>(graphicsDevice,
-			VertexCombined::Declaration(), verticesCombo.data(), verticesCombo.size());
+		vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
+			VertexCombined::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Immutable);
 
 		effectPass = assets->Load<EffectPass>("FXAA");
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
@@ -40,8 +40,8 @@ FXAA::FXAA(std::shared_ptr<GameHost> const& gameHost)
 		};
 
 		// Create index buffer
-		indexBuffer = std::make_shared<ImmutableIndexBuffer>(graphicsDevice,
-			IndexElementSize::SixteenBits, indices.data(), indices.size());
+		indexBuffer = std::make_shared<IndexBuffer>(graphicsDevice,
+			IndexElementSize::SixteenBits, indices.data(), indices.size(), BufferUsage::Immutable);
 	}
 	{
 		for (auto & parameter: effectPass->Parameters()) {

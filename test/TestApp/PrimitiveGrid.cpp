@@ -36,8 +36,8 @@ PrimitiveGrid::PrimitiveGrid(std::shared_ptr<GameHost> const& gameHost)
 			verticesCombo.push_back({Vector2(offset, +lineLength)});
 		}
 
-		vertexBuffer = std::make_shared<ImmutableVertexBuffer>(graphicsDevice,
-			Position::Declaration(), verticesCombo.data(), verticesCombo.size());
+		vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
+			Position::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Immutable);
 	}
 	{
 		effectPass = assets->Load<EffectPass>("PrimitiveGridEffect");

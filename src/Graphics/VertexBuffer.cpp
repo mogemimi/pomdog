@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <Pomdog/Graphics/DynamicVertexBuffer.hpp>
+#include <Pomdog/Graphics/VertexBuffer.hpp>
 #include <utility>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/BufferUsage.hpp>
@@ -16,53 +16,57 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-DynamicVertexBuffer::DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	Pomdog::VertexDeclaration const& newVertexDeclaration, void const* vertices, std::uint32_t newVertexCount)
-	: vertexDeclaration(newVertexDeclaration)
+VertexBuffer::VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	Pomdog::VertexDeclaration const& vertexDeclarationIn,
+	void const* vertices, std::uint32_t vertexCountIn, Pomdog::BufferUsage bufferUsageIn)
+	: vertexDeclaration(vertexDeclarationIn)
 	, nativeVertexBuffer(graphicsDevice->NativeGraphicsDevice()->CreateVertexBuffer(
-		vertices, newVertexCount, vertexDeclaration, BufferUsage::Dynamic))
-	, vertexCount(newVertexCount)
+		vertices, vertexCountIn, vertexDeclaration, bufferUsageIn))
+	, vertexCount(vertexCountIn)
+	, bufferUsage(bufferUsageIn)
 {
 	POMDOG_ASSERT(nativeVertexBuffer);
 }
 //-----------------------------------------------------------------------
-DynamicVertexBuffer::DynamicVertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	Pomdog::VertexDeclaration && newVertexDeclaration, void const* vertices, std::uint32_t newVertexCount)
-	: vertexDeclaration(std::move(newVertexDeclaration))
+VertexBuffer::VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	Pomdog::VertexDeclaration && vertexDeclarationIn,
+	void const* vertices, std::uint32_t vertexCountIn, Pomdog::BufferUsage bufferUsageIn)
+	: vertexDeclaration(std::move(vertexDeclarationIn))
 	, nativeVertexBuffer(graphicsDevice->NativeGraphicsDevice()->CreateVertexBuffer(
-		vertices, newVertexCount, vertexDeclaration, BufferUsage::Dynamic))
-	, vertexCount(newVertexCount)
+		vertices, vertexCountIn, vertexDeclaration, bufferUsageIn))
+	, vertexCount(vertexCountIn)
+	, bufferUsage(bufferUsageIn)
 {
 	POMDOG_ASSERT(nativeVertexBuffer);
 }
 //-----------------------------------------------------------------------
-DynamicVertexBuffer::~DynamicVertexBuffer() = default;
+VertexBuffer::~VertexBuffer() = default;
 //-----------------------------------------------------------------------
-VertexDeclaration const& DynamicVertexBuffer::VertexDeclaration() const
+VertexDeclaration const& VertexBuffer::VertexDeclaration() const
 {
 	return vertexDeclaration;
 }
 //-----------------------------------------------------------------------
-BufferUsage DynamicVertexBuffer::BufferUsage() const
+BufferUsage VertexBuffer::BufferUsage() const
 {
-	return BufferUsage::Dynamic;
+	return bufferUsage;
 }
 //-----------------------------------------------------------------------
-std::uint32_t DynamicVertexBuffer::VertexCount() const
+std::uint32_t VertexBuffer::VertexCount() const
 {
 	return vertexCount;
 }
 //-----------------------------------------------------------------------
-void DynamicVertexBuffer::SetData(void const* source, std::uint32_t elementCount)
+void VertexBuffer::SetData(void const* source, std::uint32_t elementCountIn)
 {
 	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(elementCount > 0);
-
+	POMDOG_ASSERT(elementCountIn > 0);
+	POMDOG_ASSERT(elementCountIn <= vertexCount);
 	POMDOG_ASSERT(nativeVertexBuffer);
-	nativeVertexBuffer->SetData(source, elementCount, vertexDeclaration);
+	nativeVertexBuffer->SetData(source, elementCountIn, vertexDeclaration);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeVertexBuffer* DynamicVertexBuffer::NativeVertexBuffer()
+Details::RenderSystem::NativeVertexBuffer* VertexBuffer::NativeVertexBuffer()
 {
 	POMDOG_ASSERT(nativeVertexBuffer);
 	return nativeVertexBuffer.get();
