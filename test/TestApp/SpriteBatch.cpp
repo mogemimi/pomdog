@@ -58,7 +58,8 @@ private:
 	Matrix3x3 transformMatrix;
 
 public:
-	explicit Impl(std::shared_ptr<GameHost> const& gameHost);
+	explicit Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
 	
 	void Begin(Matrix3x3 const& transformMatrix);
 	
@@ -77,13 +78,11 @@ private:
 	void DrawInstance(std::shared_ptr<Texture2D> const& texture, std::vector<SpriteInfo> const& sprites);
 };
 //-----------------------------------------------------------------------
-SpriteBatch::Impl::Impl(std::shared_ptr<GameHost> const& gameHost)
-	: graphicsContext(gameHost->GraphicsContext())
+SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
+	: graphicsContext(graphicsContextIn)
 	, transformMatrix(Matrix3x3::Identity)
 {
-	auto graphicsDevice = gameHost->GraphicsDevice();
-	auto assets = gameHost->AssetManager();
-
 	using PositionTextureCoord = CustomVertex<Vector4>;
 	using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4>;
 	
@@ -122,7 +121,7 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GameHost> const& gameHost)
 			SpriteInfoVertex::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Dynamic);
 	}
 	{
-		effectPass = assets->Load<EffectPass>("SpriteBatchEffect");
+		effectPass = assets.Load<EffectPass>("SpriteBatchEffect");
 		
 		auto declartation = PositionTextureCoord::Declaration();
 		
@@ -315,8 +314,9 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 #pragma mark - SpriteBatch
 #endif
 //-----------------------------------------------------------------------
-SpriteBatch::SpriteBatch(std::shared_ptr<GameHost> const& gameHost)
-	: impl(std::unique_ptr<Impl>(new Impl(gameHost)))
+SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
+	: impl(std::unique_ptr<Impl>(new Impl(graphicsContext, graphicsDevice, assets)))
 {}
 //-----------------------------------------------------------------------
 SpriteBatch::~SpriteBatch() = default;

@@ -21,7 +21,8 @@ using namespace Pomdog;
 
 class SpriteRenderer {
 public:
-	explicit SpriteRenderer(std::shared_ptr<GameHost> const& gameHost);
+	SpriteRenderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
 	
 	~SpriteRenderer();
 	

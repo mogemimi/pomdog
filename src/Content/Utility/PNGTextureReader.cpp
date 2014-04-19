@@ -88,7 +88,11 @@ static Texture2DParsingData ReadPNG(std::uint8_t const* data, std::size_t byteLe
 	auto const originalBitDepth = ::png_get_bit_depth(pngPtr, infoPtr);
 	
 	// Settings
-	if ((PNG_COLOR_TYPE_GRAY == originalColorType) && (originalBitDepth < 8)) {
+	if (originalColorType == PNG_COLOR_TYPE_PALETTE) {
+		::png_set_palette_to_rgb(pngPtr);
+	}
+	
+	if (originalColorType == PNG_COLOR_TYPE_GRAY && originalBitDepth < 8) {
 		::png_set_expand_gray_1_2_4_to_8(pngPtr);
 	}
 	else if (originalBitDepth < 8) {
@@ -96,10 +100,6 @@ static Texture2DParsingData ReadPNG(std::uint8_t const* data, std::size_t byteLe
 	}
 	else if (originalBitDepth == 16) {
 		::png_set_strip_16(pngPtr);
-	}
-	
-	if (PNG_COLOR_TYPE_PALETTE == originalColorType) {
-		::png_set_palette_to_rgb(pngPtr);
 	}
 	
 	if (::png_get_valid(pngPtr, infoPtr, PNG_INFO_tRNS)) {
@@ -135,7 +135,7 @@ static Texture2DParsingData ReadPNG(std::uint8_t const* data, std::size_t byteLe
 	parsingData.Width = pixelWidth;
 	parsingData.Height = pixelHeight;
 	parsingData.MipmapLevelCount = 1;
-	parsingData.Format = ([](::png_byte colorTypeIn)->SurfaceFormat{
+	parsingData.Format = ([](::png_byte colorTypeIn)->SurfaceFormat {
 		switch (colorTypeIn) {
 		case PNG_COLOR_TYPE_GRAY:
 			return SurfaceFormat::R8_UNorm;

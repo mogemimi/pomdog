@@ -14,6 +14,11 @@
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
 #include "TextureAtlasLoader.hpp"
+#include "Skeletal2D/SkeletonDescLoader.hpp"
+#include "Skeletal2D/AnimationTimeline.hpp"
+#include "Skeletal2D/AnimationLoader.hpp"
+#include "Skeletal2D/SkeletonLoader.hpp"
+#include "Skeletal2D/SkinLoader.hpp"
 
 namespace TestApp {
 namespace {
@@ -30,6 +35,89 @@ static Matrix4x4 CreateViewMatrix3D(Transform2D const& transform, Camera2D const
 	return Matrix4x4::CreateTranslation({-transform.Position.X, -transform.Position.Y, 1.0f})*
 		Matrix4x4::CreateRotationZ(-transform.Rotation) *
 		Matrix4x4::CreateScale({camera.Zoom(), camera.Zoom(), 1});
+}
+//-----------------------------------------------------------------------
+static void Traverse(Matrix4x4 const& worldMatrix, std::vector<Joint> const& bones,
+	JointIndex const& boneIndex,
+	std::function<void(Matrix4x4 const& worldMatrix, Matrix4x4 const& boneMatrix, Joint const&)> const& traverser)
+{
+	POMDOG_ASSERT(boneIndex);
+	POMDOG_ASSERT(*boneIndex < bones.size());
+	auto & bone = bones[*boneIndex];
+
+	Matrix4x4 matrix = Matrix4x4::CreateScale(bone.Scale);
+	matrix *= Matrix4x4::CreateRotationZ(bone.Rotation);
+	matrix *= Matrix4x4::CreateTranslation({bone.Translate, 0.0f});
+	matrix *= worldMatrix;
+
+	if (bone.FirstChild) {
+		Traverse(matrix, bones, bone.FirstChild, traverser);
+	}
+	if (bone.Sibling) {
+		Traverse(worldMatrix, bones, bone.Sibling, traverser);
+	}
+	traverser(worldMatrix, matrix, bone);
+}
+//-----------------------------------------------------------------------
+static void Traverse(std::vector<Joint> const& bones,
+	std::function<void(Matrix4x4 const& worldMatrix, Matrix4x4 const& boneMatrix, Joint const&)> const& traverser)
+{
+	Traverse(Matrix4x4::Identity, bones, bones.front().Index, traverser);
+}
+//-----------------------------------------------------------------------
+static void LogSkeletalInfo(Details::TexturePacker::TextureAtlas const& textureAtlas,
+	Details::Skeletal2D::SkeletonDesc const& skeletonDesc)
+{
+	Log::Info(StringFormat("TextureAtlas.Pages = %ld", textureAtlas.pages.size()));
+	Log::Info(StringFormat("TextureAtlas.Regions = %ld", textureAtlas.regions.size()));
+	
+	for (auto page: textureAtlas.pages)
+	{
+		Log::Info(StringFormat("Page.Name = %s", page.Name.c_str()));
+	}
+	
+	for (auto region: textureAtlas.regions)
+	{
+		Log::Info(StringFormat("Region.Name = %s", region.Name.c_str()));
+		Log::Info(StringFormat("  Region.Page = %d", region.TexturePage));
+		Log::Info(StringFormat("  Region.Rotate = %d", region.Rotate?1:0));
+		Log::Info(StringFormat("  Region.Flip = %d", region.Flip?1:0));
+		Log::Info(StringFormat("  Region.XY = %d, %d", (int)region.Subrect.X, (int)region.Subrect.Y));
+		Log::Info(StringFormat("  Region.Size = %d, %d", (int)region.Subrect.Width, (int)region.Subrect.Height));
+		Log::Info(StringFormat("  Region.Offset = %d %d", (int)region.XOffset, (int)region.YOffset));
+		Log::Info(StringFormat("  Region.OriginalSize = %d %d", (int)region.OriginalWidth, (int)region.OriginalHeight));
+	}
+
+	Log::Info("-------------------------");
+	for (auto & bone: skeletonDesc.Bones)
+	{
+		Log::Info(StringFormat("MaidChan/%s", bone.Name.c_str()));
+		Log::Info(StringFormat("  Bone.Translate = %f, %f", bone.Pose.Translate.X, bone.Pose.Translate.Y));
+		Log::Info(StringFormat("  Bone.Rotation = %f", bone.Pose.Rotation.value));
+		Log::Info(StringFormat("  Bone.Scale = %f", bone.Pose.Scale));
+	}
+	
+	Log::Info("-------------------------");
+	for (auto & animationClip: skeletonDesc.AnimationClips)
+	{
+		for (auto & sample: animationClip.Samples)
+		{
+			Log::Info(StringFormat("AnimationClip/%s/%s", animationClip.Name.c_str(), sample.BoneName.c_str()));
+			for (auto & translateSample: sample.TranslateSamples)
+			{
+				Log::Info(StringFormat("  {time: %f, x: %f, y: %f},",
+					translateSample.TimeSeconds,
+					translateSample.TranslateX.ToFloat(),
+					translateSample.TranslateY.ToFloat()));
+			}
+			for (auto & rotateSample: sample.RotateSamples)
+			{
+				Log::Info(StringFormat("  {time: %f, rotate: %f},",
+					rotateSample.TimeSeconds,
+					rotateSample.Rotation.ToFloat()));
+			}
+		}
+	}
 }
 
 }// unnamed namespace
@@ -53,7 +141,7 @@ void TestAppGame::Initialize()
 	auto assets = gameHost->AssetManager();
 
 	{
-		samplerPoint = SamplerState::CreatePointWrap(graphicsDevice);
+		samplerPoint = SamplerState::CreateLinearWrap(graphicsDevice);
 		
 		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 		graphicsContext->SetBlendState(blendState);
@@ -67,7 +155,7 @@ void TestAppGame::Initialize()
 	
 	primitiveAxes = std::unique_ptr<PrimitiveAxes>(new PrimitiveAxes(gameHost));
 	primitiveGrid = std::unique_ptr<PrimitiveGrid>(new PrimitiveGrid(gameHost));
-	spriteRenderer = std::unique_ptr<SpriteRenderer>(new SpriteRenderer(gameHost));
+	spriteRenderer = std::unique_ptr<SpriteRenderer>(new SpriteRenderer(graphicsContext, graphicsDevice, *assets));
 	fxaa = std::unique_ptr<FXAA>(new FXAA(gameHost));
 	
 	{
@@ -120,26 +208,20 @@ void TestAppGame::Initialize()
 	
 	{
 		auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidChan/parts.atlas");
+		auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("MaidChan/skeleton.json");
 		
-		Log::Info(StringFormat("TextureAtlas.Pages = %ld", textureAtlas.pages.size()));
-		Log::Info(StringFormat("TextureAtlas.Regions = %ld", textureAtlas.regions.size()));
-		
-		for (auto page: textureAtlas.pages)
-		{
-			Log::Info(StringFormat("Page.Name = %s", page.Name.c_str()));
-		}
-		
-		for (auto region: textureAtlas.regions)
-		{
-			Log::Info(StringFormat("Region.Name = %s", region.Name.c_str()));
-			Log::Info(StringFormat("  Region.Page = %d", region.TexturePage));
-			Log::Info(StringFormat("  Region.Rotate = %d", region.Rotate?1:0));
-			Log::Info(StringFormat("  Region.Flip = %d", region.Flip?1:0));
-			Log::Info(StringFormat("  Region.XY = %d, %d", (int)region.Subrect.X, (int)region.Subrect.Y));
-			Log::Info(StringFormat("  Region.Size = %d, %d", (int)region.Subrect.Width, (int)region.Subrect.Height));
-			Log::Info(StringFormat("  Region.Offset = %d %d", (int)region.XOffset, (int)region.YOffset));
-			Log::Info(StringFormat("  Region.Advance = %d %d", (int)region.OriginalWidth, (int)region.OriginalHeight));
-		}
+		maidSkeleton = Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones);
+		auto skinName = "default";
+		maidSkin = Details::Skeletal2D::CreateSkin(skeletonDesc, textureAtlas, skinName);
+		maidAnimation = Details::Skeletal2D::CreateAnimationClip(skeletonDesc);
+		maidTexture = assets->Load<Texture2D>("MaidChan/parts.png");
+
+		Traverse(maidSkeleton.Joints(), [&](Matrix4x4 const& matrix, Matrix4x4 const& boneMatrix, Joint const& bone) {
+			POMDOG_ASSERT(*bone.Index < maidSkeleton.GlobalPoses().size());
+			maidSkeleton.GlobalPoses()[*bone.Index] = boneMatrix;
+		});
+
+		LogSkeletalInfo(textureAtlas, skeletonDesc);
 	}
 }
 //-----------------------------------------------------------------------
@@ -173,6 +255,21 @@ void TestAppGame::Update()
 			duration = clock->TotalGameTime();
 		}
 	}
+	{
+		static auto totalTime = DurationSeconds(0);
+		totalTime += clock->FrameDuration();
+		
+		maidAnimation.Apply(maidSkeleton, totalTime);
+		
+		if (totalTime > DurationSeconds(1.3)) {
+			totalTime = DurationSeconds(0);
+		}
+
+		Traverse(maidSkeleton.Joints(), [&](Matrix4x4 const& matrix, Matrix4x4 const& boneMatrix, Joint const& bone) {
+			POMDOG_ASSERT(*bone.Index < maidSkeleton.GlobalPoses().size());
+			maidSkeleton.GlobalPoses()[*bone.Index] = boneMatrix;
+		});
+	}
 }
 //-----------------------------------------------------------------------
 void TestAppGame::DrawSprites()
@@ -193,30 +290,86 @@ void TestAppGame::DrawSprites()
 	
 	POMDOG_ASSERT(spriteRenderer);
 	spriteRenderer->Begin(vierMatrix3D);
-		
-	auto rootNode = gameWorld.Component<Node2D>(rootObjectID);
-	auto worldMatrix = Matrix4x4::CreateTranslation(Vector3(rootNode->Transform().Position, 0.0f));
+	
+//	auto rootNode = gameWorld.Component<Node2D>(rootObjectID);
+//	auto worldMatrix = Matrix4x4::CreateTranslation(Vector3(rootNode->Transform().Position, 0.0f));
+//	{
+//		for (auto child: rootNode->Children())
+//		{
+//			auto canvasItem = child->Component<CanvasItem>();
+//			if (!child || !canvasItem->Visibile) {
+//				continue;
+//			}
+//		
+//			auto node = child->Component<Node2D>();
+//
+//			auto sprite = child->Component<Sprite>();
+//			auto & transform = node->Transform();
+//			
+//			constexpr float layerDepth = 0.0f;
+//
+//			spriteRenderer->Draw(texture, worldMatrix, transform.Position, sprite->Subrect,
+//				Color::White, transform.Rotation, sprite->Origin, transform.Scale, layerDepth);
+//		}
+//	}
+
+	auto const& globalPoses = maidSkeleton.GlobalPoses();
+
+	for (auto & joint: maidSkeleton.Joints())
 	{
-		for (auto child: rootNode->Children())
-		{
-			auto canvasItem = child->Component<CanvasItem>();
-			if (!child || !canvasItem->Visibile) {
-				continue;
-			}
+		auto & matrix = globalPoses[*joint.Index];
+		spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 5, 5},
+			Color::Black, MathConstants<float>::PiOver4(), {0.5f, 0.5f}, 1.0f, 2/100.0f);
+		spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 2, 2},
+			Color::White, MathConstants<float>::PiOver4(), {0.5f, 0.5f}, 1.0f, 1/100.0f);
+		spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 32, 2},
+			Color::Black, 0.0f, {0.0f, 0.5f}, 1.0f, 4/100.0f);
+	}
+	
+	static int state = 3;
+	static auto time = gameHost->Clock()->TotalGameTime();
+	
+	if (gameHost->Mouse()->State().RightButton == ButtonState::Pressed
+		&& (gameHost->Clock()->TotalGameTime() - time > DurationSeconds(0.5))) {
+		state += 1;
+		state = state % 4;
+		time = gameHost->Clock()->TotalGameTime();
+	}
+
+	if (state == 1 || state == 3) {
 		
-			auto node = child->Component<Node2D>();
-
-			auto sprite = child->Component<Sprite>();
-			auto & transform = node->Transform();
-			
-			constexpr float layerDepth = 0.0f;
-
-			spriteRenderer->Draw(texture, worldMatrix, transform.Position, sprite->Subrect,
-				Color::White, transform.Rotation, sprite->Origin, transform.Scale, layerDepth);
+		for (auto & slot: maidSkin.Slots())
+		{
+			spriteRenderer->Draw(maidTexture, globalPoses[slot.BoneIndex], slot.Translate, slot.Subrect,
+				slot.Color, (slot.TextureRotate ? slot.Rotation - MathConstants<float>::PiOver2(): slot.Rotation),
+				slot.Origin, slot.Scale, (maidSkin.Slots().size() - slot.DrawOrder) / maidSkin.Slots().size());
 		}
 	}
 	
 	spriteRenderer->End();
+	
+	if (state == 2 || state == 3) {
+		
+		//
+		RasterizerDescription rasterizerDesc;
+		rasterizerDesc.FillMode = FillMode::WireFrame;
+		auto rasterizerState = std::make_shared<RasterizerState>(gameHost->GraphicsDevice(), rasterizerDesc);
+		
+		graphicsContext->SetRasterizerState(rasterizerState);
+		spriteRenderer->Begin(vierMatrix3D);
+		
+		for (auto & slot: maidSkin.Slots())
+		{
+			spriteRenderer->Draw(texture, globalPoses[slot.BoneIndex], slot.Translate, slot.Subrect,
+				{0,0,0,40},
+				(slot.TextureRotate ? slot.Rotation - MathConstants<float>::PiOver2(): slot.Rotation),
+				slot.Origin, slot.Scale, (maidSkin.Slots().size() - slot.DrawOrder) / maidSkin.Slots().size());
+		}
+		
+		spriteRenderer->End();
+
+		graphicsContext->SetRasterizerState(RasterizerState::CreateCullCounterClockwise(gameHost->GraphicsDevice()));
+	}
 }
 //-----------------------------------------------------------------------
 void TestAppGame::Draw()

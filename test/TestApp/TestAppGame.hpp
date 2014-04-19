@@ -15,6 +15,9 @@
 
 #include <Pomdog/Pomdog.hpp>
 #include "CameraView2D.hpp"
+#include "Skeletal2D/Skeleton.hpp"
+#include "Skeletal2D/Skin.hpp"
+#include "Skeletal2D/AnimationClip.hpp"
 
 namespace TestApp {
 
@@ -60,6 +63,11 @@ private:
 	GameObjectID mainCameraID;
 	GameObjectID rootObjectID;
 	//std::shared_ptr<Scene> hierarchy;
+	
+	std::shared_ptr<Texture2D> maidTexture;
+	Skeleton maidSkeleton;
+	Skin maidSkin;
+	AnimationClip maidAnimation;
 };
 
 }// namespace TestApp

@@ -11,5 +11,5 @@ out vec4 FragColor;
 
 void main()
 {
-	FragColor = vec4(texture(DiffuseTexture, In.TextureCoord.xy).xyz * In.Color.xyz, In.Color.w);
+	FragColor = texture(DiffuseTexture, In.TextureCoord.xy).xyzw * In.Color.xyzw;
 }

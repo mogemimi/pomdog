@@ -16,6 +16,8 @@
 #include <cstdint>
 #include <cfloat>
 #include <type_traits>
+#include "Degree.hpp"
+#include "Radian.hpp"
 
 namespace Pomdog {
 
@@ -31,6 +33,17 @@ struct MathConstants<float>
 	static constexpr float OneOver2Pi() { return 0.1591549430f; }
 	static constexpr float PiOver2()    { return 1.5707963267f; }
 	static constexpr float PiOver4()    { return 0.7853981633f; }
+};
+
+template <>
+struct MathConstants<double>
+{
+	static constexpr float Pi()         { return 3.14159265358979323846; }
+	static constexpr float TwoPi()      { return 6.28318530717958647692; }
+	static constexpr float OneOverPi()  { return 0.31830988618379067154; }
+	static constexpr float OneOver2Pi() { return 0.15915494309189533576; }
+	static constexpr float PiOver2()    { return 1.57079632679489661923; }
+	static constexpr float PiOver4()    { return 0.78539816339744830962; }
 };
 
 namespace MathHelper {
@@ -78,6 +91,22 @@ T SmoothStep(T min, T max, T amount)
 	auto const x = Saturate((amount - min)/(max- min));
 	// Evaluate polynomial
 	return x*x*(3-2*x);
+}
+//-------------------------------------------------------------------
+template <typename T>
+Radian<T> ToRadians(Degree<T> const& degrees)
+{
+	static_assert(std::is_floating_point<T>::value, "");
+	constexpr auto scaleFactor = MathConstants<T>::Pi() * (static_cast<T>(1) / static_cast<T>(180));
+	return Radian<T>(degrees.value * scaleFactor);
+}
+//-------------------------------------------------------------------
+template <typename T>
+Degree<T> ToDegrees(Radian<T> const& radians)
+{
+	static_assert(std::is_floating_point<T>::value, "");
+	constexpr auto scaleFactor = static_cast<T>(180) * (static_cast<T>(1) / MathConstants<T>::Pi());
+	return Degree<T>(radians.value * scaleFactor);
 }
 
 }// namespace MathHelper

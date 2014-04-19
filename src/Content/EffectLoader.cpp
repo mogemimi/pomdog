@@ -27,7 +27,7 @@ static std::vector<std::uint8_t> ReadBinaryFile(std::string const& filename)
 	auto const length = stream.tellg();
 	stream.seekg(0, stream.beg);
 	
-	std::vector<std::uint8_t> result(length, 0);
+	std::vector<std::uint8_t> result(length);
 	stream.read(reinterpret_cast<char*>(result.data()), result.size());
 	return std::move(result);
 }

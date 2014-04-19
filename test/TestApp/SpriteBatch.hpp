@@ -22,7 +22,8 @@ using namespace Pomdog;
 
 class SpriteBatch {
 public:
-	explicit SpriteBatch(std::shared_ptr<GameHost> const& gameHost);
+	SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
 	
 	~SpriteBatch();
 	
