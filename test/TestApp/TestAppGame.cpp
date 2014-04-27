@@ -15,7 +15,7 @@
 #include "FXAA.hpp"
 #include "TextureAtlasLoader.hpp"
 #include "Skeletal2D/SkeletonDescLoader.hpp"
-#include "Skeletal2D/AnimationTimeline.hpp"
+#include "Skeletal2D/AnimationTrack.hpp"
 #include "Skeletal2D/AnimationLoader.hpp"
 #include "Skeletal2D/SkeletonLoader.hpp"
 #include "Skeletal2D/SkinLoader.hpp"
@@ -39,7 +39,7 @@ static Matrix4x4 CreateViewMatrix3D(Transform2D const& transform, Camera2D const
 //-----------------------------------------------------------------------
 static void Traverse(Matrix4x4 const& worldMatrix, std::vector<Joint> const& bones,
 	JointIndex const& boneIndex,
-	std::function<void(Matrix4x4 const& worldMatrix, Matrix4x4 const& boneMatrix, Joint const&)> const& traverser)
+	std::function<void(Matrix4x4 const& boneMatrix, Joint const&)> const& traverser)
 {
 	POMDOG_ASSERT(boneIndex);
 	POMDOG_ASSERT(*boneIndex < bones.size());
@@ -56,11 +56,11 @@ static void Traverse(Matrix4x4 const& worldMatrix, std::vector<Joint> const& bon
 	if (bone.Sibling) {
 		Traverse(worldMatrix, bones, bone.Sibling, traverser);
 	}
-	traverser(worldMatrix, matrix, bone);
+	traverser(matrix, bone);
 }
 //-----------------------------------------------------------------------
 static void Traverse(std::vector<Joint> const& bones,
-	std::function<void(Matrix4x4 const& worldMatrix, Matrix4x4 const& boneMatrix, Joint const&)> const& traverser)
+	std::function<void(Matrix4x4 const& boneMatrix, Joint const&)> const& traverser)
 {
 	Traverse(Matrix4x4::Identity, bones, bones.front().Index, traverser);
 }
@@ -207,16 +207,16 @@ void TestAppGame::Initialize()
 	}
 	
 	{
-		auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidChan/parts.atlas");
+		auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidChan/skeleton.atlas");
 		auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("MaidChan/skeleton.json");
 		
 		maidSkeleton = Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones);
 		auto skinName = "default";
 		maidSkin = Details::Skeletal2D::CreateSkin(skeletonDesc, textureAtlas, skinName);
 		maidAnimation = Details::Skeletal2D::CreateAnimationClip(skeletonDesc);
-		maidTexture = assets->Load<Texture2D>("MaidChan/parts.png");
+		maidTexture = assets->Load<Texture2D>("MaidChan/skeleton.png");
 
-		Traverse(maidSkeleton.Joints(), [&](Matrix4x4 const& matrix, Matrix4x4 const& boneMatrix, Joint const& bone) {
+		Traverse(maidSkeleton.Joints(), [&](Matrix4x4 const& boneMatrix, Joint const& bone) {
 			POMDOG_ASSERT(*bone.Index < maidSkeleton.GlobalPoses().size());
 			maidSkeleton.GlobalPoses()[*bone.Index] = boneMatrix;
 		});
@@ -258,14 +258,14 @@ void TestAppGame::Update()
 	{
 		static auto totalTime = DurationSeconds(0);
 		totalTime += clock->FrameDuration();
-		
+
 		maidAnimation.Apply(maidSkeleton, totalTime);
 		
-		if (totalTime > DurationSeconds(1.3)) {
+		if (totalTime > maidAnimation.Length()) {
 			totalTime = DurationSeconds(0);
 		}
 
-		Traverse(maidSkeleton.Joints(), [&](Matrix4x4 const& matrix, Matrix4x4 const& boneMatrix, Joint const& bone) {
+		Traverse(maidSkeleton.Joints(), [&](Matrix4x4 const& boneMatrix, Joint const& bone) {
 			POMDOG_ASSERT(*bone.Index < maidSkeleton.GlobalPoses().size());
 			maidSkeleton.GlobalPoses()[*bone.Index] = boneMatrix;
 		});
@@ -336,8 +336,8 @@ void TestAppGame::DrawSprites()
 		time = gameHost->Clock()->TotalGameTime();
 	}
 
-	if (state == 1 || state == 3) {
-		
+	if (state == 1 || state == 3)
+	{
 		for (auto & slot: maidSkin.Slots())
 		{
 			spriteRenderer->Draw(maidTexture, globalPoses[slot.BoneIndex], slot.Translate, slot.Subrect,
@@ -348,9 +348,8 @@ void TestAppGame::DrawSprites()
 	
 	spriteRenderer->End();
 	
-	if (state == 2 || state == 3) {
-		
-		//
+	if (state == 2 || state == 3)
+	{
 		RasterizerDescription rasterizerDesc;
 		rasterizerDesc.FillMode = FillMode::WireFrame;
 		auto rasterizerState = std::make_shared<RasterizerState>(gameHost->GraphicsDevice(), rasterizerDesc);

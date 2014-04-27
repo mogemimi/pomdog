@@ -96,11 +96,22 @@ public:
 	static_assert(decltype(Rotation)::Min() < -3.1416f*2.0f, "");
 };
 
+class AnimationSamplePointScale {
+public:
+	float TimeSeconds;
+	CompressedFloat<std::int16_t, 1500> Scale;
+	KeyframeCurve Curve;
+	
+	static_assert(decltype(Scale)::Max() > 20.0f, "");
+	static_assert(decltype(Scale)::Min() < -20.0f, "");
+};
+
 class BoneAnimationSample {
 public:
 	std::string BoneName;
 	std::vector<AnimationSamplePointTranslate> TranslateSamples;
 	std::vector<AnimationSamplePointRotate> RotateSamples;
+	std::vector<AnimationSamplePointScale> ScaleSamples;
 };
 
 class BoneAnimationClip {

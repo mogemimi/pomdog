@@ -20,6 +20,8 @@
 
 namespace Pomdog {
 
+///@~Japanese
+/// @brief 2次元のスケルタルアニメーションにおけるジョイント（間接）またはボーンです。
 class Joint {
 public:
 	Vector2 Translate;

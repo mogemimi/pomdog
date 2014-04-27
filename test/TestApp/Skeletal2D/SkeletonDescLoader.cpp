@@ -24,6 +24,7 @@ using Skeletal2D::SkinDesc;
 using Skeletal2D::SkinSlotDesc;
 using Skeletal2D::AnimationSamplePointTranslate;
 using Skeletal2D::AnimationSamplePointRotate;
+using Skeletal2D::AnimationSamplePointScale;
 using Skeletal2D::BoneAnimationSample;
 using Skeletal2D::BoneAnimationClip;
 using Skeletal2D::KeyframeCurve;
@@ -420,6 +421,40 @@ static std::vector<AnimationSamplePointRotate> ReadAnimationRotateSamples(rapidj
 	return std::move(samplePoints);
 }
 //-----------------------------------------------------------------------
+static std::vector<AnimationSamplePointScale> ReadAnimationScaleSamples(rapidjson::Value const& sampleDOM)
+{
+	if (!sampleDOM.IsArray()) {
+		///@todo Not implemented
+		// Error
+		return {};
+	}
+	
+	std::vector<AnimationSamplePointScale> samplePoints;
+	samplePoints.reserve(sampleDOM.Size());
+	
+	for (auto iter = sampleDOM.Begin(); iter != sampleDOM.End(); ++iter)
+	{
+		if (!iter->IsObject() || !iter->HasMember("time")) {
+			// Error
+			continue;
+		}
+		
+		AnimationSamplePointScale samplePoint;
+		samplePoint.TimeSeconds = 0.0f;
+		samplePoint.Curve = KeyframeCurve::Liener;
+		samplePoint.Scale = 1.0f;
+		
+		ReadJsonMember(*iter, "time", samplePoint.TimeSeconds);
+		ReadJsonMember(*iter, "curve", samplePoint.Curve);
+		ReadJsonMember(*iter, "x", samplePoint.Scale);
+		ReadJsonMember(*iter, "y", samplePoint.Scale);
+		
+		samplePoints.push_back(std::move(samplePoint));
+	}
+	
+	return std::move(samplePoints);
+}
+//-----------------------------------------------------------------------
 static std::vector<BoneAnimationSample> ReadBoneAnimationSamples(rapidjson::Value const& bonesDOM)
 {
 	if (!bonesDOM.IsObject()) {
@@ -445,6 +480,9 @@ static std::vector<BoneAnimationSample> ReadBoneAnimationSamples(rapidjson::Valu
 		}
 		if (iter->value.HasMember("rotate")) {
 			sample.RotateSamples = ReadAnimationRotateSamples(iter->value["rotate"]);
+		}
+		if (iter->value.HasMember("scale")) {
+			sample.ScaleSamples = ReadAnimationScaleSamples(iter->value["scale"]);
 		}
 		animationSamples.push_back(std::move(sample));
 	}

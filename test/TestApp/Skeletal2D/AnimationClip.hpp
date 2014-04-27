@@ -19,19 +19,21 @@
 
 namespace Pomdog {
 
-class AnimationTimeline;
+class AnimationTrack;
 class Skeleton;
 
 class AnimationClip {
 public:
 	AnimationClip() = default;
 
-	explicit AnimationClip(std::vector<std::unique_ptr<AnimationTimeline>> && timelinesIn);
+	explicit AnimationClip(std::vector<std::unique_ptr<AnimationTrack>> && tracks);
 
 	void Apply(Skeleton & skeleton, DurationSeconds const& time);
 
+	DurationSeconds Length() const;
+
 private:
-	std::vector<std::unique_ptr<AnimationTimeline>> timelines;
+	std::vector<std::unique_ptr<AnimationTrack>> tracks;
 };
 
 }// namespace Pomdog

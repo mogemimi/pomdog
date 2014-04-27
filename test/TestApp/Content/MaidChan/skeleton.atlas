@@ -1,165 +1,186 @@
 
-parts.png
+skeleton.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 parts/Part_0000s_0000_LeftHand
   rotate: false
-  xy: 361, 2
+  xy: 34, 2
   size: 28, 22
   orig: 28, 22
   offset: 0, 0
   index: -1
 parts/Part_0000s_0001_LeftArm
   rotate: false
-  xy: 421, 26
+  xy: 450, 445
   size: 39, 35
   orig: 39, 35
   offset: 0, 0
   index: -1
 parts/Part_0000s_0002_LeftShoulderApron
   rotate: true
-  xy: 134, 2
+  xy: 282, 289
   size: 20, 34
   orig: 20, 34
   offset: 0, 0
   index: -1
 parts/Part_0000s_0003_LeftShoulder
-  rotate: true
-  xy: 285, 3
+  rotate: false
+  xy: 310, 399
   size: 35, 42
   orig: 35, 42
   offset: 0, 0
   index: -1
 parts/Part_0001_Torso
   rotate: false
-  xy: 347, 47
+  xy: 2, 26
   size: 72, 64
   orig: 72, 64
   offset: 0, 0
   index: -1
 parts/Part_0001s_0000_HairFront
   rotate: false
-  xy: 2, 126
+  xy: 2, 382
   size: 195, 128
   orig: 195, 128
   offset: 0, 0
   index: -1
 parts/Part_0001s_0001_HairSideRight
-  rotate: true
-  xy: 358, 113
+  rotate: false
+  xy: 132, 202
   size: 40, 73
   orig: 40, 73
   offset: 0, 0
   index: -1
 parts/Part_0001s_0002_HairSideLeft
   rotate: true
-  xy: 132, 66
+  xy: 199, 383
   size: 58, 109
   orig: 58, 109
   offset: 0, 0
   index: -1
 parts/Part_0002_Skirt
   rotate: false
-  xy: 2, 42
+  xy: 2, 193
   size: 128, 82
   orig: 128, 82
   offset: 0, 0
   index: -1
 parts/Part_0002s_0000_LeftFoot
-  rotate: false
-  xy: 347, 26
+  rotate: true
+  xy: 491, 450
   size: 30, 19
   orig: 30, 19
   offset: 0, 0
   index: -1
 parts/Part_0002s_0001_LeftLowerLeg
-  rotate: true
-  xy: 2, 6
-  size: 34, 64
-  orig: 34, 64
+  rotate: false
+  xy: 135, 132
+  size: 34, 68
+  orig: 34, 68
   offset: 0, 0
   index: -1
 parts/Part_0002s_0002_LeftUpperLeg
   rotate: false
-  xy: 243, 2
-  size: 40, 66
-  orig: 40, 66
+  xy: 76, 22
+  size: 40, 65
+  orig: 40, 65
   offset: 0, 0
   index: -1
 parts/Part_0003s_0000_RightHand
   rotate: false
-  xy: 329, 2
+  xy: 2, 2
   size: 30, 22
   orig: 30, 22
   offset: 0, 0
   index: -1
 parts/Part_0003s_0001_RightArm
   rotate: true
-  xy: 204, 24
+  xy: 135, 90
   size: 40, 37
   orig: 40, 37
   offset: 0, 0
   index: -1
 parts/Part_0003s_0002_RightShoulder
-  rotate: true
-  xy: 421, 63
+  rotate: false
+  xy: 216, 244
   size: 48, 41
   orig: 48, 41
   offset: 0, 0
   index: -1
 parts/Part_0004s_0000_RightFoot
   rotate: true
-  xy: 285, 40
+  xy: 450, 482
   size: 28, 60
   orig: 28, 60
   offset: 0, 0
   index: -1
 parts/Part_0004s_0001_RightLowerLeg
-  rotate: true
-  xy: 68, 7
-  size: 33, 64
-  orig: 33, 64
+  rotate: false
+  xy: 282, 311
+  size: 34, 70
+  orig: 34, 70
   offset: 0, 0
   index: -1
 parts/Part_0004s_0002_RightUpperLeg
+  rotate: false
+  xy: 174, 221
+  size: 40, 63
+  orig: 40, 63
+  offset: 0, 0
+  index: -1
+parts/Part_0005s_0000_Eyes_Close
   rotate: true
-  xy: 134, 24
-  size: 40, 68
-  orig: 40, 68
+  xy: 161, 286
+  size: 94, 51
+  orig: 94, 51
   offset: 0, 0
   index: -1
 parts/Part_0005s_0000_Eyes_Open
-  rotate: false
-  xy: 243, 70
+  rotate: true
+  xy: 79, 89
   size: 102, 54
   orig: 102, 54
   offset: 0, 0
   index: -1
-parts/Part_0005s_0001_Head
+parts/Part_0005s_0001_Eyes_OpenMiddle
   rotate: false
-  xy: 199, 126
-  size: 157, 128
-  orig: 157, 128
+  xy: 346, 452
+  size: 102, 58
+  orig: 102, 58
   offset: 0, 0
   index: -1
 parts/Part_0005s_0002_Neck
-  rotate: false
-  xy: 391, 18
+  rotate: true
+  xy: 216, 217
   size: 25, 27
   orig: 25, 27
   offset: 0, 0
   index: -1
+parts/Part_0005s_0003_HeadShadow
+  rotate: false
+  xy: 199, 443
+  size: 145, 67
+  orig: 145, 67
+  offset: 0, 0
+  index: -1
+parts/Part_0005s_0004_Head
+  rotate: false
+  xy: 2, 277
+  size: 157, 103
+  orig: 157, 103
+  offset: 0, 0
+  index: -1
 parts/Part_0006s_0000_HairBackRight
   rotate: false
-  xy: 358, 155
+  xy: 2, 92
   size: 75, 99
   orig: 75, 99
   offset: 0, 0
   index: -1
 parts/Part_0006s_0001_HairBackLeft
   rotate: false
-  xy: 435, 160
+  xy: 214, 287
   size: 66, 94
   orig: 66, 94
   offset: 0, 0

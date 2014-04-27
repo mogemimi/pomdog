@@ -9,7 +9,10 @@
 #include "AnimationLoader.hpp"
 #include <utility>
 #include "AnimationClip.hpp"
-#include "AnimationTimeline.hpp"
+#include "AnimationTrack.hpp"
+#include "RotationTrack.hpp"
+#include "ScaleTrack.hpp"
+#include "TranslationTrack.hpp"
 #include "JointIndex.hpp"
 #include "SkeletonDesc.hpp"
 
@@ -41,7 +44,7 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc)
 	
 	auto & animationClip = desc.AnimationClips.front();
 	
-	std::vector<std::unique_ptr<AnimationTimeline>> timelines;
+	std::vector<std::unique_ptr<AnimationTrack>> tracks;
 	
 	for (auto sample: animationClip.Samples)
 	{
@@ -50,49 +53,61 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc)
 		
 		if (!sample.RotateSamples.empty())
 		{
-			std::vector<RotateControlPoint> points;
+			std::vector<RotationKeyframe> points;
 			points.reserve(sample.RotateSamples.size());
 			
 			for (auto & rotateSample: sample.RotateSamples)
 			{
-				RotateControlPoint point;
+				RotationKeyframe point;
 				point.Rotation = rotateSample.Rotation;
 				point.TimeSeconds = rotateSample.TimeSeconds;
 				points.push_back(std::move(point));
 			}
 			
-			std::sort(std::begin(points), std::end(points),
-				[](RotateControlPoint const& a, RotateControlPoint const& b) {
-					return a.TimeSeconds < b.TimeSeconds;
-				});
-			std::unique_ptr<RotateTimeline> timeline(new RotateTimeline(std::move(points), std::move(jointIndex)));
-			timelines.push_back(std::move(timeline));
+			std::sort(std::begin(points), std::end(points));
+			std::unique_ptr<RotationTrack> timeline(new RotationTrack(std::move(points), std::move(jointIndex)));
+			tracks.push_back(std::move(timeline));
+		}
+		
+		if (!sample.ScaleSamples.empty())
+		{
+			std::vector<ScaleKeyframe> points;
+			points.reserve(sample.ScaleSamples.size());
+			
+			for (auto & scaleSample: sample.ScaleSamples)
+			{
+				ScaleKeyframe point;
+				point.Scale = scaleSample.Scale;
+				point.TimeSeconds = scaleSample.TimeSeconds;
+				points.push_back(std::move(point));
+			}
+			
+			std::sort(std::begin(points), std::end(points));
+			std::unique_ptr<ScaleTrack> timeline(new ScaleTrack(std::move(points), std::move(jointIndex)));
+			tracks.push_back(std::move(timeline));
 		}
 		
 		if (!sample.TranslateSamples.empty())
 		{
-			std::vector<TranslateControlPoint> points;
+			std::vector<TranslationKeyframe> points;
 			points.reserve(sample.TranslateSamples.size());
 			
 			for (auto & translateSample: sample.TranslateSamples)
 			{
-				TranslateControlPoint point;
+				TranslationKeyframe point;
 				point.TranslateX = translateSample.TranslateX;
 				point.TranslateY = translateSample.TranslateY;
 				point.TimeSeconds = translateSample.TimeSeconds;
 				points.push_back(std::move(point));
 			}
-			
-			std::sort(std::begin(points), std::end(points),
-				[](TranslateControlPoint const& a, TranslateControlPoint const& b) {
-					return a.TimeSeconds < b.TimeSeconds;
-				});
-			std::unique_ptr<TranslateTimeline> timeline(new TranslateTimeline(std::move(points), std::move(jointIndex)));
-			timelines.push_back(std::move(timeline));
+
+			std::sort(std::begin(points), std::end(points));
+			std::unique_ptr<TranslationTrack> timeline(new TranslationTrack(std::move(points), std::move(jointIndex)));
+			tracks.push_back(std::move(timeline));
 		}
 	}
 	
-	return AnimationClip(std::move(timelines));
+	return AnimationClip(std::move(tracks));
 }
 
 }// namespace Skeletal2D

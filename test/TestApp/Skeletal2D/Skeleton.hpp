@@ -16,10 +16,12 @@
 #include <vector>
 #include <Pomdog/Pomdog.hpp>
 #include "Joint.hpp"
-#include "SkeletonDesc.hpp"
 
 namespace Pomdog {
 
+///@~Japanese
+/// @note スケーリングが一様で Vector2 ではなく float が 1 つのみになっていることに注意してください。
+/// スケーリングが一様なのは、パフォーマンス上の制約が理由になります。
 class JointPose {
 public:
 	Vector2 Translate;
@@ -27,6 +29,16 @@ public:
 	float Scale;
 };
 
+//class SkeletonPose {
+//public:
+//	Skeleton const Skeleton;
+//	std::vector<JointPose> LocalPose;
+//	std::vector<Matrix4x4> GlobalPose;
+//	std::vector<JointPose> BindPose;
+//};
+
+///@~Japanese
+/// @brief ジョイント（間接）またはボーンから構成されるスケルトンです。
 class Skeleton {
 public:
 	Skeleton() = default;

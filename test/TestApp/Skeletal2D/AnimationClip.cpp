@@ -9,21 +9,38 @@
 #include "AnimationClip.hpp"
 #include <utility>
 #include "Skeleton.hpp"
-#include "AnimationTimeline.hpp"
+#include "AnimationTrack.hpp"
 
 namespace Pomdog {
 
-AnimationClip::AnimationClip(std::vector<std::unique_ptr<AnimationTimeline>> && timelinesIn)
-	: timelines(std::move(timelinesIn))
+AnimationClip::AnimationClip(std::vector<std::unique_ptr<AnimationTrack>> && tracksIn)
+	: tracks(std::move(tracksIn))
 {}
-
+//-----------------------------------------------------------------------
 void AnimationClip::Apply(Skeleton & skeleton, DurationSeconds const& time)
 {
-	for (auto & timeline: timelines)
+	for (auto & track: tracks)
 	{
-		POMDOG_ASSERT(timeline);
-		timeline->Apply(skeleton, time);
+		POMDOG_ASSERT(track);
+		track->Apply(skeleton, time);
 	}
+}
+//-----------------------------------------------------------------------
+DurationSeconds AnimationClip::Length() const
+{
+	DurationSeconds maxLength(0);
+	
+	for (auto & track: tracks)
+	{
+		POMDOG_ASSERT(track);
+		auto length = track->Length();
+		
+		if (length > maxLength)
+		{
+			maxLength = length;
+		}
+	}
+	return maxLength;
 }
 
 }// namespace Pomdog
