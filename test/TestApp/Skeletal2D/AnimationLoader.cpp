@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -8,6 +8,7 @@
 
 #include "AnimationLoader.hpp"
 #include <utility>
+#include <algorithm>
 #include "AnimationClip.hpp"
 #include "AnimationTrack.hpp"
 #include "RotationTrack.hpp"
@@ -23,86 +24,89 @@ namespace {
 
 static JointIndex FindJoint(std::vector<BoneDesc> const& bones, std::string const& name)
 {
-	JointIndex index;
-
 	auto iter = std::find_if(std::begin(bones), std::end(bones),
-		[&](Skeletal2D::BoneDesc const& boneDesc){ return boneDesc.Name == name; });
+		[&name](BoneDesc const& desc){ return desc.Name == name; });
 	
 	if (iter != std::end(bones)) {
-		index = std::distance(std::begin(bones), iter);
+		return JointIndex(std::distance(std::begin(bones), iter));
 	}
-	return index;
+	return {};
 }
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-AnimationClip CreateAnimationClip(SkeletonDesc const& desc)
+AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 {
-	if (desc.AnimationClips.empty()) {
+	auto iter = std::find_if(std::begin(desc.AnimationClips), std::end(desc.AnimationClips),
+		[name](AnimationClipDesc const& clip){ return clip.Name == name; });
+
+	if (std::end(desc.AnimationClips) == iter) {
+		///@todo Not implemented
+		// Error: Cannot find animation clip
 		return {};
 	}
 	
-	auto & animationClip = desc.AnimationClips.front();
+	auto & animationClip = *iter;
 	
 	std::vector<std::unique_ptr<AnimationTrack>> tracks;
 	
-	for (auto sample: animationClip.Samples)
+	for (auto & track: animationClip.BoneTracks)
 	{
-		auto jointIndex = FindJoint(desc.Bones, sample.BoneName);
+		auto jointIndex = FindJoint(desc.Bones, track.BoneName);
 		POMDOG_ASSERT(jointIndex);
 		
-		if (!sample.RotateSamples.empty())
+		if (!track.RotateSamples.empty())
 		{
-			std::vector<RotationKeyframe> points;
-			points.reserve(sample.RotateSamples.size());
+			std::vector<RotationKeyframe> keys;
+			keys.reserve(track.RotateSamples.size());
 			
-			for (auto & rotateSample: sample.RotateSamples)
+			for (auto & sample: track.RotateSamples)
 			{
-				RotationKeyframe point;
-				point.Rotation = rotateSample.Rotation;
-				point.TimeSeconds = rotateSample.TimeSeconds;
-				points.push_back(std::move(point));
+				RotationKeyframe key;
+				key.Rotation = sample.Rotation;
+				key.TimeSeconds = sample.TimeSeconds;
+				keys.push_back(std::move(key));
 			}
 			
-			std::sort(std::begin(points), std::end(points));
-			std::unique_ptr<RotationTrack> timeline(new RotationTrack(std::move(points), std::move(jointIndex)));
+			std::sort(std::begin(keys), std::end(keys));
+			std::unique_ptr<RotationTrack> timeline(new RotationTrack(std::move(keys), std::move(jointIndex)));
 			tracks.push_back(std::move(timeline));
 		}
 		
-		if (!sample.ScaleSamples.empty())
+		if (!track.ScaleSamples.empty())
 		{
-			std::vector<ScaleKeyframe> points;
-			points.reserve(sample.ScaleSamples.size());
+			std::vector<ScaleKeyframe> keys;
+			keys.reserve(track.ScaleSamples.size());
 			
-			for (auto & scaleSample: sample.ScaleSamples)
+			for (auto & sample: track.ScaleSamples)
 			{
-				ScaleKeyframe point;
-				point.Scale = scaleSample.Scale;
-				point.TimeSeconds = scaleSample.TimeSeconds;
-				points.push_back(std::move(point));
+				ScaleKeyframe key;
+				key.Scale = sample.Scale;
+				key.TimeSeconds = sample.TimeSeconds;
+				keys.push_back(std::move(key));
 			}
 			
-			std::sort(std::begin(points), std::end(points));
-			std::unique_ptr<ScaleTrack> timeline(new ScaleTrack(std::move(points), std::move(jointIndex)));
+			std::sort(std::begin(keys), std::end(keys));
+			std::unique_ptr<ScaleTrack> timeline(new ScaleTrack(std::move(keys), std::move(jointIndex)));
 			tracks.push_back(std::move(timeline));
 		}
 		
-		if (!sample.TranslateSamples.empty())
+		if (!track.TranslateSamples.empty())
 		{
-			std::vector<TranslationKeyframe> points;
-			points.reserve(sample.TranslateSamples.size());
+			std::vector<TranslationKeyframe> keys;
+			keys.reserve(track.TranslateSamples.size());
 			
-			for (auto & translateSample: sample.TranslateSamples)
+			for (auto & sample: track.TranslateSamples)
 			{
-				TranslationKeyframe point;
-				point.TranslateX = translateSample.TranslateX;
-				point.TranslateY = translateSample.TranslateY;
-				point.TimeSeconds = translateSample.TimeSeconds;
-				points.push_back(std::move(point));
+				TranslationKeyframe key;
+				key.TranslateX = sample.TranslateX;
+				key.TranslateY = sample.TranslateY;
+				key.TimeSeconds = sample.TimeSeconds;
+				keys.push_back(std::move(key));
 			}
 
-			std::sort(std::begin(points), std::end(points));
-			std::unique_ptr<TranslationTrack> timeline(new TranslationTrack(std::move(points), std::move(jointIndex)));
+			std::sort(std::begin(keys), std::end(keys));
+			std::unique_ptr<TranslationTrack> timeline(new TranslationTrack(std::move(keys), std::move(jointIndex)));
 			tracks.push_back(std::move(timeline));
 		}
 	}

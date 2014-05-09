@@ -106,7 +106,7 @@ public:
 	static_assert(decltype(Scale)::Min() < -20.0f, "");
 };
 
-class BoneAnimationSample {
+class BoneAnimationTrackDesc {
 public:
 	std::string BoneName;
 	std::vector<AnimationSamplePointTranslate> TranslateSamples;
@@ -114,10 +114,23 @@ public:
 	std::vector<AnimationSamplePointScale> ScaleSamples;
 };
 
-class BoneAnimationClip {
+class AnimationSamplePointAttachment {
+public:
+	std::string AttachmentName;
+	float TimeSeconds;
+};
+
+class SlotAnimationTrackDesc {
+public:
+	std::string SlotName;
+	std::vector<AnimationSamplePointAttachment> AttachmentSamples;
+};
+
+class AnimationClipDesc {
 public:
 	std::string Name;
-	std::vector<BoneAnimationSample> Samples;
+	std::vector<BoneAnimationTrackDesc> BoneTracks;
+	std::vector<SlotAnimationTrackDesc> SlotTracks;
 };
 
 class SkeletonDesc {
@@ -125,7 +138,7 @@ public:
 	std::vector<BoneDesc> Bones;
 	std::vector<SlotDesc> Slots;
 	std::vector<SkinDesc> Skins;
-	std::vector<BoneAnimationClip> AnimationClips;
+	std::vector<AnimationClipDesc> AnimationClips;
 };
 
 }// namespace Skeletal2D

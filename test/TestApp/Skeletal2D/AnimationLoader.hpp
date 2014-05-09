@@ -13,8 +13,6 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Pomdog.hpp>
-
 namespace Pomdog {
 
 class AnimationClip;
@@ -24,7 +22,7 @@ namespace Skeletal2D {
 
 class SkeletonDesc;
 
-AnimationClip CreateAnimationClip(SkeletonDesc const& desc);
+AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name);
 
 }// namespace Skeletal2D
 }// namespace Details

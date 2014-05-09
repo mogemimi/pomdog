@@ -18,6 +18,7 @@
 #include "Skeletal2D/Skeleton.hpp"
 #include "Skeletal2D/Skin.hpp"
 #include "Skeletal2D/AnimationClip.hpp"
+#include "SpriteAnimationTrack.hpp"
 
 namespace TestApp {
 
@@ -68,6 +69,7 @@ private:
 	Skeleton maidSkeleton;
 	Skin maidSkin;
 	AnimationClip maidAnimation;
+	std::vector<Details::Skeletal2D::SpriteAnimationTrack> maidSpriteAnimationTracks;
 };
 
 }// namespace TestApp

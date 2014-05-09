@@ -15,12 +15,12 @@
 
 #include <cstdint>
 #include <Pomdog/Pomdog.hpp>
+#include "JointIndex.hpp"
 #include "SkeletonDesc.hpp"
-#include "TextureAtlas.hpp"
 
 namespace Pomdog {
 
-class ModelSlot2D {
+class RigidSlot {
 public:
 	Rectangle Subrect;
 	Vector2 Translate;
@@ -28,8 +28,8 @@ public:
 	Radian<float> Rotation;
 	Color Color;
 	Vector2 Origin;
+	JointIndex JointIndex;
 	std::uint16_t DrawOrder;
-	std::uint16_t BoneIndex;
 	std::uint16_t TexturePage;
 	bool TextureRotate;
 };
@@ -37,12 +37,15 @@ public:
 class Skin {
 public:
 	Skin() = default;
-	explicit Skin(std::vector<ModelSlot2D> && slots);
+	explicit Skin(std::vector<RigidSlot> && slots);
 
-	std::vector<ModelSlot2D> const& Slots() const;
+	std::vector<RigidSlot> const& Slots() const;
+	
+	RigidSlot const& Slots(std::uint16_t slotIndex) const;
+	RigidSlot & Slots(std::uint16_t slotIndex);
 
 private:
-	std::vector<ModelSlot2D> slots;
+	std::vector<RigidSlot> slots;
 };
 
 }// namespace Pomdog

@@ -14,7 +14,7 @@ namespace Details {
 namespace Skeletal2D {
 namespace {
 //-----------------------------------------------------------------------
-static std::vector<ModelSlot2D> CreateSlots(std::vector<Skeletal2D::SlotDesc> const& slotDescs,
+static std::vector<RigidSlot> CreateSlots(std::vector<Skeletal2D::SlotDesc> const& slotDescs,
 	std::vector<Skeletal2D::SkinSlotDesc> const& skinSlotDescs,
 	std::vector<Skeletal2D::BoneDesc> const& bones,
 	Details::TexturePacker::TextureAtlas const& textureAtlas)
@@ -25,7 +25,7 @@ static std::vector<ModelSlot2D> CreateSlots(std::vector<Skeletal2D::SlotDesc> co
 	using Details::TexturePacker::TextureAtlas;
 	using Details::TexturePacker::TextureAtlasRegion;
 
-	std::vector<ModelSlot2D> slots;
+	std::vector<RigidSlot> slots;
 	slots.reserve(slotDescs.size());
 	
 	std::uint16_t drawOrder = 0;
@@ -88,7 +88,7 @@ static std::vector<ModelSlot2D> CreateSlots(std::vector<Skeletal2D::SlotDesc> co
 			continue;
 		}
 
-		ModelSlot2D slot;
+		RigidSlot slot;
 		slot.Color = Color::White;
 		slot.DrawOrder = drawOrder;
 		slot.Scale = attachment->Scale;
@@ -108,7 +108,7 @@ static std::vector<ModelSlot2D> CreateSlots(std::vector<Skeletal2D::SlotDesc> co
 			std::swap(slot.Origin.X, slot.Origin.Y);
 		}
 		
-		slot.BoneIndex = std::distance(std::begin(bones), boneDesc);
+		slot.JointIndex = std::distance(std::begin(bones), boneDesc);
 
 		slots.push_back(std::move(slot));
 		++drawOrder;

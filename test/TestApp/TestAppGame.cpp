@@ -19,6 +19,7 @@
 #include "Skeletal2D/AnimationLoader.hpp"
 #include "Skeletal2D/SkeletonLoader.hpp"
 #include "Skeletal2D/SkinLoader.hpp"
+#include "Skeletal2D/SpriteAnimationLoader.hpp"
 
 namespace TestApp {
 namespace {
@@ -100,21 +101,37 @@ static void LogSkeletalInfo(Details::TexturePacker::TextureAtlas const& textureA
 	Log::Info("-------------------------");
 	for (auto & animationClip: skeletonDesc.AnimationClips)
 	{
-		for (auto & sample: animationClip.Samples)
+		for (auto & track: animationClip.BoneTracks)
 		{
-			Log::Info(StringFormat("AnimationClip/%s/%s", animationClip.Name.c_str(), sample.BoneName.c_str()));
-			for (auto & translateSample: sample.TranslateSamples)
+			Log::Info(StringFormat("AnimationClip/%s/Bones/%s", animationClip.Name.c_str(), track.BoneName.c_str()));
+			for (auto & sample: track.TranslateSamples)
 			{
 				Log::Info(StringFormat("  {time: %f, x: %f, y: %f},",
-					translateSample.TimeSeconds,
-					translateSample.TranslateX.ToFloat(),
-					translateSample.TranslateY.ToFloat()));
+					sample.TimeSeconds,
+					sample.TranslateX.ToFloat(),
+					sample.TranslateY.ToFloat()));
 			}
-			for (auto & rotateSample: sample.RotateSamples)
+			for (auto & sample: track.RotateSamples)
 			{
 				Log::Info(StringFormat("  {time: %f, rotate: %f},",
-					rotateSample.TimeSeconds,
-					rotateSample.Rotation.ToFloat()));
+					sample.TimeSeconds,
+					sample.Rotation.ToFloat()));
+			}
+			for (auto & sample: track.ScaleSamples)
+			{
+				Log::Info(StringFormat("  {time: %f, rotate: %f},",
+					sample.TimeSeconds,
+					sample.Scale.ToFloat()));
+			}
+		}
+		for (auto & track: animationClip.SlotTracks)
+		{
+			Log::Info(StringFormat("AnimationClip/%s/Slots/%s", animationClip.Name.c_str(), track.SlotName.c_str()));
+			for (auto & sample: track.AttachmentSamples)
+			{
+				Log::Info(StringFormat("  {time: %f, name: %s},",
+					sample.TimeSeconds,
+					sample.AttachmentName.c_str()));
 			}
 		}
 	}
@@ -211,9 +228,9 @@ void TestAppGame::Initialize()
 		auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("MaidChan/skeleton.json");
 		
 		maidSkeleton = Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones);
-		auto skinName = "default";
-		maidSkin = Details::Skeletal2D::CreateSkin(skeletonDesc, textureAtlas, skinName);
-		maidAnimation = Details::Skeletal2D::CreateAnimationClip(skeletonDesc);
+		maidSkin = Details::Skeletal2D::CreateSkin(skeletonDesc, textureAtlas, "default");
+		maidAnimation = Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Walk");
+		maidSpriteAnimationTracks = Details::Skeletal2D::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
 		maidTexture = assets->Load<Texture2D>("MaidChan/skeleton.png");
 
 		Traverse(maidSkeleton.Joints(), [&](Matrix4x4 const& boneMatrix, Joint const& bone) {
@@ -269,6 +286,11 @@ void TestAppGame::Update()
 			POMDOG_ASSERT(*bone.Index < maidSkeleton.GlobalPoses().size());
 			maidSkeleton.GlobalPoses()[*bone.Index] = boneMatrix;
 		});
+		
+		for (auto & track: maidSpriteAnimationTracks)
+		{
+			track.Apply(maidSkin, totalTime);
+		}
 	}
 }
 //-----------------------------------------------------------------------
@@ -315,16 +337,6 @@ void TestAppGame::DrawSprites()
 
 	auto const& globalPoses = maidSkeleton.GlobalPoses();
 
-	for (auto & joint: maidSkeleton.Joints())
-	{
-		auto & matrix = globalPoses[*joint.Index];
-		spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 5, 5},
-			Color::Black, MathConstants<float>::PiOver4(), {0.5f, 0.5f}, 1.0f, 2/100.0f);
-		spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 2, 2},
-			Color::White, MathConstants<float>::PiOver4(), {0.5f, 0.5f}, 1.0f, 1/100.0f);
-		spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 32, 2},
-			Color::Black, 0.0f, {0.0f, 0.5f}, 1.0f, 4/100.0f);
-	}
 	
 	static int state = 3;
 	static auto time = gameHost->Clock()->TotalGameTime();
@@ -335,12 +347,26 @@ void TestAppGame::DrawSprites()
 		state = state % 4;
 		time = gameHost->Clock()->TotalGameTime();
 	}
+	
+	if (state != 1)
+	{
+		for (auto & joint: maidSkeleton.Joints())
+		{
+			auto & matrix = globalPoses[*joint.Index];
+			spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 5, 5},
+				Color::Black, MathConstants<float>::PiOver4(), {0.5f, 0.5f}, 1.0f, 2/100.0f);
+			spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 2, 2},
+				Color::White, MathConstants<float>::PiOver4(), {0.5f, 0.5f}, 1.0f, 1/100.0f);
+			spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 32, 2},
+				Color::Black, 0.0f, {0.0f, 0.5f}, 1.0f, 4/100.0f);
+		}
+	}
 
 	if (state == 1 || state == 3)
 	{
 		for (auto & slot: maidSkin.Slots())
 		{
-			spriteRenderer->Draw(maidTexture, globalPoses[slot.BoneIndex], slot.Translate, slot.Subrect,
+			spriteRenderer->Draw(maidTexture, globalPoses[*slot.JointIndex], slot.Translate, slot.Subrect,
 				slot.Color, (slot.TextureRotate ? slot.Rotation - MathConstants<float>::PiOver2(): slot.Rotation),
 				slot.Origin, slot.Scale, (maidSkin.Slots().size() - slot.DrawOrder) / maidSkin.Slots().size());
 		}
@@ -359,8 +385,8 @@ void TestAppGame::DrawSprites()
 		
 		for (auto & slot: maidSkin.Slots())
 		{
-			spriteRenderer->Draw(texture, globalPoses[slot.BoneIndex], slot.Translate, slot.Subrect,
-				{0,0,0,40},
+			spriteRenderer->Draw(texture, globalPoses[*slot.JointIndex], slot.Translate, slot.Subrect,
+				{0, 0, 0, 40},
 				(slot.TextureRotate ? slot.Rotation - MathConstants<float>::PiOver2(): slot.Rotation),
 				slot.Origin, slot.Scale, (maidSkin.Slots().size() - slot.DrawOrder) / maidSkin.Slots().size());
 		}

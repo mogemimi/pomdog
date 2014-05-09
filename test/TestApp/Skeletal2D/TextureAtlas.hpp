@@ -29,7 +29,7 @@ struct TextureAtlasPage {
 struct TextureAtlasRegion {
 	std::string Name;
 	Rectangle Subrect;
-	std::uint32_t TexturePage;
+	std::uint16_t TexturePage;
 	std::uint16_t XOffset;
 	std::uint16_t YOffset;
 	std::uint16_t OriginalWidth;

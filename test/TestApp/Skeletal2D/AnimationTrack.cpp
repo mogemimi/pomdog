@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -87,9 +87,10 @@ void RotationTrack::Apply(Skeleton & skeleton, DurationSeconds const& time)
 		return;
 	}
 	
+	POMDOG_ASSERT(pointPair.first != pointPair.second);
 	POMDOG_ASSERT(pointPair.first->TimeSeconds < pointPair.second->TimeSeconds);
-	POMDOG_ASSERT(pointPair.first->TimeSeconds <= time.count());
-	POMDOG_ASSERT(pointPair.second->TimeSeconds >= time.count());
+	POMDOG_ASSERT(pointPair.first->TimeSeconds <= static_cast<float>(time.count()));
+	POMDOG_ASSERT(pointPair.second->TimeSeconds >= static_cast<float>(time.count()));
 	
 	auto diffTime = (time.count() - pointPair.first->TimeSeconds);
 	auto frameTime = pointPair.second->TimeSeconds - pointPair.first->TimeSeconds;

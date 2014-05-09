@@ -11,13 +11,25 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-Skin::Skin(std::vector<ModelSlot2D> && slotsIn)
+Skin::Skin(std::vector<RigidSlot> && slotsIn)
 	: slots(std::move(slotsIn))
 {}
 //-----------------------------------------------------------------------
-std::vector<ModelSlot2D> const& Skin::Slots() const
+std::vector<RigidSlot> const& Skin::Slots() const
 {
 	return slots;
+}
+//-----------------------------------------------------------------------
+RigidSlot const& Skin::Slots(std::uint16_t slotIndex) const
+{
+	POMDOG_ASSERT(slotIndex < slots.size());
+	return slots[slotIndex];
+}
+//-----------------------------------------------------------------------
+RigidSlot & Skin::Slots(std::uint16_t slotIndex)
+{
+	POMDOG_ASSERT(slotIndex < slots.size());
+	return slots[slotIndex];
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

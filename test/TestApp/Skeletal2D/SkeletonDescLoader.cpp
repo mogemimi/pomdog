@@ -25,8 +25,10 @@ using Skeletal2D::SkinSlotDesc;
 using Skeletal2D::AnimationSamplePointTranslate;
 using Skeletal2D::AnimationSamplePointRotate;
 using Skeletal2D::AnimationSamplePointScale;
-using Skeletal2D::BoneAnimationSample;
-using Skeletal2D::BoneAnimationClip;
+using Skeletal2D::AnimationSamplePointAttachment;
+using Skeletal2D::BoneAnimationTrackDesc;
+using Skeletal2D::SlotAnimationTrackDesc;
+using Skeletal2D::AnimationClipDesc;
 using Skeletal2D::KeyframeCurve;
 
 static std::vector<char> ReadBinaryFile(std::string const& filename)
@@ -455,17 +457,52 @@ static std::vector<AnimationSamplePointScale> ReadAnimationScaleSamples(rapidjso
 	return std::move(samplePoints);
 }
 //-----------------------------------------------------------------------
-static std::vector<BoneAnimationSample> ReadBoneAnimationSamples(rapidjson::Value const& bonesDOM)
+static std::vector<AnimationSamplePointAttachment> ReadAnimationAttachmentSamples(rapidjson::Value const& sampleDOM)
 {
-	if (!bonesDOM.IsObject()) {
+	if (!sampleDOM.IsArray()) {
 		///@todo Not implemented
 		// Error
 		return {};
 	}
 	
-	std::vector<BoneAnimationSample> animationSamples;
+	std::vector<AnimationSamplePointAttachment> samplePoints;
+	samplePoints.reserve(sampleDOM.Size());
 	
-	for (auto iter = bonesDOM.MemberBegin(); iter != bonesDOM.MemberEnd(); ++iter)
+	for (auto iter = sampleDOM.Begin(); iter != sampleDOM.End(); ++iter)
+	{
+		if (!iter->IsObject() || !iter->HasMember("time")) {
+			// Error: Invalid file format
+			continue;
+		}
+		
+		if (!iter->HasMember("name")) {
+			// Error: Invalid file format
+			continue;
+		}
+		
+		AnimationSamplePointAttachment samplePoint;
+		samplePoint.TimeSeconds = 0.0f;
+		
+		ReadJsonMember(*iter, "time", samplePoint.TimeSeconds);
+		ReadJsonMember(*iter, "name", samplePoint.AttachmentName);
+		
+		samplePoints.push_back(std::move(samplePoint));
+	}
+	
+	return std::move(samplePoints);
+}
+//-----------------------------------------------------------------------
+static std::vector<BoneAnimationTrackDesc> ReadBoneAnimationSamples(rapidjson::Value const& document)
+{
+	if (!document.IsObject()) {
+		///@todo Not implemented
+		// Error
+		return {};
+	}
+	
+	std::vector<BoneAnimationTrackDesc> animationSamples;
+	
+	for (auto iter = document.MemberBegin(); iter != document.MemberEnd(); ++iter)
 	{
 		if (!iter->name.IsString() || !iter->value.IsObject()) {
 			///@todo Not implemented
@@ -473,7 +510,7 @@ static std::vector<BoneAnimationSample> ReadBoneAnimationSamples(rapidjson::Valu
 			continue;
 		}
 		
-		BoneAnimationSample sample;
+		BoneAnimationTrackDesc sample;
 		sample.BoneName = iter->name.GetString();
 		if (iter->value.HasMember("translate")) {
 			sample.TranslateSamples = ReadAnimationTranslateSamples(iter->value["translate"]);
@@ -490,17 +527,46 @@ static std::vector<BoneAnimationSample> ReadBoneAnimationSamples(rapidjson::Valu
 	return std::move(animationSamples);
 }
 //-----------------------------------------------------------------------
-static std::vector<BoneAnimationClip> ReadAnimationClips(rapidjson::Value const& animationsDOM)
+static std::vector<SlotAnimationTrackDesc> ReadSlotAnimationSamples(rapidjson::Value const& document)
 {
-	if (!animationsDOM.IsObject()) {
+	if (!document.IsObject()) {
+		///@todo Not implemented
+		// Error: Invalid file format
+		return {};
+	}
+	
+	std::vector<SlotAnimationTrackDesc> animationSamples;
+	
+	for (auto iter = document.MemberBegin(); iter != document.MemberEnd(); ++iter)
+	{
+		if (!iter->name.IsString() || !iter->value.IsObject()) {
+			///@todo Not implemented
+			// Error: Invalid file format
+			continue;
+		}
+		
+		SlotAnimationTrackDesc sample;
+		sample.SlotName = iter->name.GetString();
+		if (iter->value.HasMember("attachment")) {
+			sample.AttachmentSamples = ReadAnimationAttachmentSamples(iter->value["attachment"]);
+		}
+		animationSamples.push_back(std::move(sample));
+	}
+	
+	return std::move(animationSamples);
+}
+//-----------------------------------------------------------------------
+static std::vector<AnimationClipDesc> ReadAnimationClips(rapidjson::Value const& document)
+{
+	if (!document.IsObject()) {
 		///@todo Not implemented
 		// Error
 		return {};
 	}
 	
-	std::vector<BoneAnimationClip> animations;
+	std::vector<AnimationClipDesc> animations;
 	
-	for (auto iter = animationsDOM.MemberBegin(); iter != animationsDOM.MemberEnd(); ++iter)
+	for (auto iter = document.MemberBegin(); iter != document.MemberEnd(); ++iter)
 	{
 		if (!iter->name.IsString() || !iter->value.IsObject()) {
 			///@todo Not implemented
@@ -508,10 +574,13 @@ static std::vector<BoneAnimationClip> ReadAnimationClips(rapidjson::Value const&
 			continue;
 		}
 		
-		BoneAnimationClip animationClip;
+		AnimationClipDesc animationClip;
 		animationClip.Name = iter->name.GetString();
 		if (iter->value.HasMember("bones")) {
-			animationClip.Samples = ReadBoneAnimationSamples(iter->value["bones"]);
+			animationClip.BoneTracks = ReadBoneAnimationSamples(iter->value["bones"]);
+		}
+		if (iter->value.HasMember("slots")) {
+			animationClip.SlotTracks = ReadSlotAnimationSamples(iter->value["slots"]);
 		}
 		animations.push_back(std::move(animationClip));
 	}
