@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -38,7 +38,7 @@ class ScaleTrack final: public AnimationTrack {
 public:
 	ScaleTrack(std::vector<ScaleKeyframe> && keys, JointIndex && jointIndex);
 
-	void Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, DurationSeconds const& time) override;
+	void Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose) override;
 	
 	DurationSeconds Length() const override;
 	

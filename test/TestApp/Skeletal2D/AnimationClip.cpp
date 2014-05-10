@@ -17,12 +17,12 @@ AnimationClip::AnimationClip(std::vector<std::unique_ptr<AnimationTrack>> && tra
 	: tracks(std::move(tracksIn))
 {}
 //-----------------------------------------------------------------------
-void AnimationClip::Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, DurationSeconds const& time)
+void AnimationClip::Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
 	for (auto & track: tracks)
 	{
 		POMDOG_ASSERT(track);
-		track->Apply(skeleton, skeletonPose, time);
+		track->Apply(time, skeleton, skeletonPose);
 	}
 }
 //-----------------------------------------------------------------------

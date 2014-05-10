@@ -247,12 +247,12 @@ void TestAppGame::Initialize()
 		auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("MaidChan/skeleton.json");
 		
 		maidSkeleton = Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones);
+		maidSkeletonPose = CreateSkeletonPoseBySkeleton(maidSkeleton);
 		maidSkin = Details::Skeletal2D::CreateSkin(skeletonDesc, textureAtlas, "default");
-		maidAnimation = Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Walk");
+		maidAnimationClip = Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Walk");
 		maidSpriteAnimationTracks = Details::Skeletal2D::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
 		maidTexture = assets->Load<Texture2D>("MaidChan/skeleton.png");
-		maidSkeletonPose = CreateSkeletonPoseBySkeleton(maidSkeleton);
-
+		
 		LogSkeletalInfo(textureAtlas, skeletonDesc);
 	}
 }
@@ -288,14 +288,13 @@ void TestAppGame::Update()
 		}
 	}
 	{
-		static auto totalTime = DurationSeconds(0);
-		totalTime += clock->FrameDuration();
-
-		maidAnimation.Apply(maidSkeleton, maidSkeletonPose, totalTime);
-		
-		if (totalTime > maidAnimation.Length()) {
-			totalTime = DurationSeconds(0);
+		maidAnimationTimer.Update(clock->FrameDuration());
+		if (maidAnimationTimer.Time() > maidAnimationClip.Length()) {
+			maidAnimationTimer.Reset();
 		}
+	}
+	{
+		maidAnimationClip.Apply(maidAnimationTimer.Time(), maidSkeleton, maidSkeletonPose);
 
 		Traverse(maidSkeleton, maidSkeletonPose, [&](Matrix4x4 const& boneMatrix, Joint const& bone) {
 			POMDOG_ASSERT(*bone.Index < maidSkeletonPose.GlobalPose.size());
@@ -304,7 +303,7 @@ void TestAppGame::Update()
 		
 		for (auto & track: maidSpriteAnimationTracks)
 		{
-			track.Apply(maidSkin, totalTime);
+			track.Apply(maidSkin, maidAnimationTimer.Time());
 		}
 	}
 }

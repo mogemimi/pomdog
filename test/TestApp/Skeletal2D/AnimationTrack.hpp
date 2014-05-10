@@ -24,7 +24,7 @@ class AnimationTrack {
 public:
 	virtual ~AnimationTrack() = default;
 	
-	virtual void Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, DurationSeconds const& time) = 0;
+	virtual void Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose) = 0;
 	
 	virtual DurationSeconds Length() const = 0;
 };

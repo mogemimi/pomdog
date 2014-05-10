@@ -65,7 +65,7 @@ RotationTrack::RotationTrack(std::vector<RotationKeyframe> && keysIn, JointIndex
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys)));
 }
 //-----------------------------------------------------------------------
-void RotationTrack::Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, DurationSeconds const& time)
+void RotationTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
 	RotationKeyframe point;
 	point.TimeSeconds = time.count();
@@ -132,7 +132,7 @@ ScaleTrack::ScaleTrack(std::vector<ScaleKeyframe> && keysIn, JointIndex && joint
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys)));
 }
 //-----------------------------------------------------------------------
-void ScaleTrack::Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, DurationSeconds const& time)
+void ScaleTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
 	ScaleKeyframe point;
 	point.TimeSeconds = time.count();
@@ -155,9 +155,10 @@ void ScaleTrack::Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, Du
 		return;
 	}
 	
+	POMDOG_ASSERT(pointPair.first != pointPair.second);
 	POMDOG_ASSERT(pointPair.first->TimeSeconds < pointPair.second->TimeSeconds);
-	POMDOG_ASSERT(pointPair.first->TimeSeconds <= time.count());
-	POMDOG_ASSERT(pointPair.second->TimeSeconds >= time.count());
+	POMDOG_ASSERT(pointPair.first->TimeSeconds <= static_cast<float>(time.count()));
+	POMDOG_ASSERT(pointPair.second->TimeSeconds >= static_cast<float>(time.count()));
 	
 	auto diffTime = (time.count() - pointPair.first->TimeSeconds);
 	auto frameTime = pointPair.second->TimeSeconds - pointPair.first->TimeSeconds;
@@ -189,7 +190,7 @@ TranslationTrack::TranslationTrack(std::vector<TranslationKeyframe> && keysIn, J
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys)));
 }
 //-----------------------------------------------------------------------
-void TranslationTrack::Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, DurationSeconds const& time)
+void TranslationTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
 	TranslationKeyframe point;
 	point.TimeSeconds = time.count();
@@ -213,9 +214,10 @@ void TranslationTrack::Apply(Skeleton const& skeleton, SkeletonPose & skeletonPo
 		return;
 	}
 	
+	POMDOG_ASSERT(pointPair.first != pointPair.second);
 	POMDOG_ASSERT(pointPair.first->TimeSeconds < pointPair.second->TimeSeconds);
-	POMDOG_ASSERT(pointPair.first->TimeSeconds <= time.count());
-	POMDOG_ASSERT(pointPair.second->TimeSeconds >= time.count());
+	POMDOG_ASSERT(pointPair.first->TimeSeconds <= static_cast<float>(time.count()));
+	POMDOG_ASSERT(pointPair.second->TimeSeconds >= static_cast<float>(time.count()));
 	
 	auto diffTime = (time.count() - pointPair.first->TimeSeconds);
 	auto frameTime = pointPair.second->TimeSeconds - pointPair.first->TimeSeconds;

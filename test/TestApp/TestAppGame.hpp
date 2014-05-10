@@ -19,7 +19,8 @@
 #include "Skeletal2D/SkeletonPose.hpp"
 #include "Skeletal2D/Skin.hpp"
 #include "Skeletal2D/AnimationClip.hpp"
-#include "SpriteAnimationTrack.hpp"
+#include "Skeletal2D/SpriteAnimationTrack.hpp"
+#include "Skeletal2D/AnimationTimer.hpp"
 
 namespace TestApp {
 
@@ -70,7 +71,8 @@ private:
 	Skeleton maidSkeleton;
 	SkeletonPose maidSkeletonPose;
 	Skin maidSkin;
-	AnimationClip maidAnimation;
+	AnimationClip maidAnimationClip;
+	AnimationTimer maidAnimationTimer;
 	std::vector<Details::Skeletal2D::SpriteAnimationTrack> maidSpriteAnimationTracks;
 };
 

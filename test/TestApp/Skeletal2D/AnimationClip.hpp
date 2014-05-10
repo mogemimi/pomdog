@@ -29,7 +29,7 @@ public:
 
 	explicit AnimationClip(std::vector<std::unique_ptr<AnimationTrack>> && tracks);
 
-	void Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, DurationSeconds const& time);
+	void Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose);
 
 	DurationSeconds Length() const;
 
