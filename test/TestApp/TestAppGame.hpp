@@ -16,6 +16,7 @@
 #include <Pomdog/Pomdog.hpp>
 #include "CameraView2D.hpp"
 #include "Skeletal2D/Skeleton.hpp"
+#include "Skeletal2D/SkeletonPose.hpp"
 #include "Skeletal2D/Skin.hpp"
 #include "Skeletal2D/AnimationClip.hpp"
 #include "SpriteAnimationTrack.hpp"
@@ -67,6 +68,7 @@ private:
 	
 	std::shared_ptr<Texture2D> maidTexture;
 	Skeleton maidSkeleton;
+	SkeletonPose maidSkeletonPose;
 	Skin maidSkin;
 	AnimationClip maidAnimation;
 	std::vector<Details::Skeletal2D::SpriteAnimationTrack> maidSpriteAnimationTracks;

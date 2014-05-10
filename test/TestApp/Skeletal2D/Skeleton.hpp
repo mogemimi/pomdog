@@ -16,26 +16,9 @@
 #include <vector>
 #include <Pomdog/Pomdog.hpp>
 #include "Joint.hpp"
+#include "JointPose.hpp"
 
 namespace Pomdog {
-
-///@~Japanese
-/// @note スケーリングが一様で Vector2 ではなく float が 1 つのみになっていることに注意してください。
-/// スケーリングが一様なのは、パフォーマンス上の制約が理由になります。
-class JointPose {
-public:
-	Vector2 Translate;
-	Radian<float> Rotation;
-	float Scale;
-};
-
-//class SkeletonPose {
-//public:
-//	Skeleton const Skeleton;
-//	std::vector<JointPose> LocalPose;
-//	std::vector<Matrix4x4> GlobalPose;
-//	std::vector<JointPose> BindPose;
-//};
 
 ///@~Japanese
 /// @brief ジョイント（間接）またはボーンから構成されるスケルトンです。
@@ -52,17 +35,10 @@ public:
 	Joint const& Root() const;
 	std::vector<Joint> const& Joints() const;
 	Joint const& Joints(JointIndex const& jointIndex) const;
-	Joint & Joints(JointIndex const& jointIndex);
-	
-	std::vector<JointPose> const& BindPoses() const;
-	std::vector<Matrix4x4> const& GlobalPoses() const;
-	std::vector<Matrix4x4> & GlobalPoses();
+	std::uint16_t JointCount() const;
 
 private:
 	std::vector<Joint> joints;
-	//std::vector<JointPose> localPoses;
-	std::vector<Matrix4x4> globalPoses;
-	std::vector<JointPose> bindPoses;
 };
 
 }// namespace Pomdog

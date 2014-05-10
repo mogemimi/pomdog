@@ -38,32 +38,51 @@ static Matrix4x4 CreateViewMatrix3D(Transform2D const& transform, Camera2D const
 		Matrix4x4::CreateScale({camera.Zoom(), camera.Zoom(), 1});
 }
 //-----------------------------------------------------------------------
-static void Traverse(Matrix4x4 const& worldMatrix, std::vector<Joint> const& bones,
+static void Traverse(Matrix4x4 const& worldMatrix,
+	Skeleton const& skeleton,
+	SkeletonPose const& skeletonPose,
 	JointIndex const& boneIndex,
 	std::function<void(Matrix4x4 const& boneMatrix, Joint const&)> const& traverser)
 {
 	POMDOG_ASSERT(boneIndex);
-	POMDOG_ASSERT(*boneIndex < bones.size());
-	auto & bone = bones[*boneIndex];
+	auto & bone = skeleton.Joints(boneIndex);
+	auto & pose = skeletonPose.LocalPose[*boneIndex];
 
-	Matrix4x4 matrix = Matrix4x4::CreateScale(bone.Scale);
-	matrix *= Matrix4x4::CreateRotationZ(bone.Rotation);
-	matrix *= Matrix4x4::CreateTranslation({bone.Translate, 0.0f});
+	Matrix4x4 matrix = Matrix4x4::CreateScale(pose.Scale);
+	matrix *= Matrix4x4::CreateRotationZ(pose.Rotation);
+	matrix *= Matrix4x4::CreateTranslation({pose.Translate, 0.0f});
 	matrix *= worldMatrix;
 
 	if (bone.FirstChild) {
-		Traverse(matrix, bones, bone.FirstChild, traverser);
+		Traverse(matrix, skeleton, skeletonPose, bone.FirstChild, traverser);
 	}
 	if (bone.Sibling) {
-		Traverse(worldMatrix, bones, bone.Sibling, traverser);
+		Traverse(worldMatrix, skeleton, skeletonPose, bone.Sibling, traverser);
 	}
 	traverser(matrix, bone);
 }
 //-----------------------------------------------------------------------
-static void Traverse(std::vector<Joint> const& bones,
+static void Traverse(Skeleton const& skeleton, SkeletonPose const& skeletonPose,
 	std::function<void(Matrix4x4 const& boneMatrix, Joint const&)> const& traverser)
 {
-	Traverse(Matrix4x4::Identity, bones, bones.front().Index, traverser);
+	Traverse(Matrix4x4::Identity, skeleton, skeletonPose, skeleton.Root().Index, traverser);
+}
+//-----------------------------------------------------------------------
+static SkeletonPose CreateSkeletonPoseBySkeleton(Skeleton const& skeleton)
+{
+	SkeletonPose skeletonPose;
+	skeletonPose.LocalPose.reserve(skeleton.JointCount());
+	for (auto & joint: skeleton.Joints()) {
+		skeletonPose.LocalPose.push_back(joint.BindPose);
+	}
+
+	skeletonPose.GlobalPose.resize(skeleton.JointCount());
+	Traverse(skeleton, skeletonPose, [&](Matrix4x4 const& boneMatrix, Joint const& bone) {
+		POMDOG_ASSERT(*bone.Index < skeletonPose.GlobalPose.size());
+		skeletonPose.GlobalPose[*bone.Index] = boneMatrix;
+	});
+	
+	return std::move(skeletonPose);
 }
 //-----------------------------------------------------------------------
 static void LogSkeletalInfo(Details::TexturePacker::TextureAtlas const& textureAtlas,
@@ -232,11 +251,7 @@ void TestAppGame::Initialize()
 		maidAnimation = Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Walk");
 		maidSpriteAnimationTracks = Details::Skeletal2D::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
 		maidTexture = assets->Load<Texture2D>("MaidChan/skeleton.png");
-
-		Traverse(maidSkeleton.Joints(), [&](Matrix4x4 const& boneMatrix, Joint const& bone) {
-			POMDOG_ASSERT(*bone.Index < maidSkeleton.GlobalPoses().size());
-			maidSkeleton.GlobalPoses()[*bone.Index] = boneMatrix;
-		});
+		maidSkeletonPose = CreateSkeletonPoseBySkeleton(maidSkeleton);
 
 		LogSkeletalInfo(textureAtlas, skeletonDesc);
 	}
@@ -276,15 +291,15 @@ void TestAppGame::Update()
 		static auto totalTime = DurationSeconds(0);
 		totalTime += clock->FrameDuration();
 
-		maidAnimation.Apply(maidSkeleton, totalTime);
+		maidAnimation.Apply(maidSkeleton, maidSkeletonPose, totalTime);
 		
 		if (totalTime > maidAnimation.Length()) {
 			totalTime = DurationSeconds(0);
 		}
 
-		Traverse(maidSkeleton.Joints(), [&](Matrix4x4 const& boneMatrix, Joint const& bone) {
-			POMDOG_ASSERT(*bone.Index < maidSkeleton.GlobalPoses().size());
-			maidSkeleton.GlobalPoses()[*bone.Index] = boneMatrix;
+		Traverse(maidSkeleton, maidSkeletonPose, [&](Matrix4x4 const& boneMatrix, Joint const& bone) {
+			POMDOG_ASSERT(*bone.Index < maidSkeletonPose.GlobalPose.size());
+			maidSkeletonPose.GlobalPose[*bone.Index] = boneMatrix;
 		});
 		
 		for (auto & track: maidSpriteAnimationTracks)
@@ -335,9 +350,8 @@ void TestAppGame::DrawSprites()
 //		}
 //	}
 
-	auto const& globalPoses = maidSkeleton.GlobalPoses();
+	auto const& globalPoses = maidSkeletonPose.GlobalPose;
 
-	
 	static int state = 3;
 	static auto time = gameHost->Clock()->TotalGameTime();
 	

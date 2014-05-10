@@ -16,19 +16,15 @@
 #include <cstdint>
 #include <vector>
 #include <string>
-#include <Pomdog/Pomdog.hpp>
+#include <Pomdog/Math/Vector2.hpp>
+#include <Pomdog/Math/Radian.hpp>
+#include <Pomdog/Math/Color.hpp>
 #include "CompressedFloat.hpp"
+#include "JointPose.hpp"
 
 namespace Pomdog {
 namespace Details {
 namespace Skeletal2D {
-
-class JointPose {
-public:
-	Vector2 Translate;
-	Radian<float> Rotation;
-	float Scale;
-};
 
 class BoneDesc {
 public:

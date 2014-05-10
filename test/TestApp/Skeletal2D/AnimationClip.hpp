@@ -21,6 +21,7 @@ namespace Pomdog {
 
 class AnimationTrack;
 class Skeleton;
+class SkeletonPose;
 
 class AnimationClip {
 public:
@@ -28,7 +29,7 @@ public:
 
 	explicit AnimationClip(std::vector<std::unique_ptr<AnimationTrack>> && tracks);
 
-	void Apply(Skeleton & skeleton, DurationSeconds const& time);
+	void Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, DurationSeconds const& time);
 
 	DurationSeconds Length() const;
 

@@ -15,18 +15,6 @@ Skeleton::Skeleton(std::vector<Joint> && jointsIn)
 {
 	POMDOG_ASSERT(!joints.empty());
 	POMDOG_ASSERT(!joints.front().Parent);
-	
-	bindPoses.reserve(joints.size());
-	for (auto & localPose: joints)
-	{
-		bindPoses.push_back({
-			localPose.Translate,
-			localPose.Rotation,
-			localPose.Scale
-		});
-	}
-	
-	globalPoses.resize(joints.size(), Matrix4x4::Identity);
 }
 //-----------------------------------------------------------------------
 Joint const& Skeleton::Root() const
@@ -47,26 +35,10 @@ Joint const& Skeleton::Joints(JointIndex const& jointIndex) const
 	return joints[*jointIndex];
 }
 //-----------------------------------------------------------------------
-Joint & Skeleton::Joints(JointIndex const& jointIndex)
+std::uint16_t Skeleton::JointCount() const
 {
-	POMDOG_ASSERT(jointIndex);
-	POMDOG_ASSERT(*jointIndex < joints.size());
-	return joints[*jointIndex];
-}
-//-----------------------------------------------------------------------
-std::vector<JointPose> const& Skeleton::BindPoses() const
-{
-	return bindPoses;
-}
-//-----------------------------------------------------------------------
-std::vector<Matrix4x4> const& Skeleton::GlobalPoses() const
-{
-	return globalPoses;
-}
-//-----------------------------------------------------------------------
-std::vector<Matrix4x4> & Skeleton::GlobalPoses()
-{
-	return globalPoses;
+	POMDOG_ASSERT(joints.size() < std::numeric_limits<std::uint16_t>::max());
+	return static_cast<std::uint16_t>(joints.size());
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

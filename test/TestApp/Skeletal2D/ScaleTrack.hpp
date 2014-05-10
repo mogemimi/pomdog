@@ -38,7 +38,7 @@ class ScaleTrack final: public AnimationTrack {
 public:
 	ScaleTrack(std::vector<ScaleKeyframe> && keys, JointIndex && jointIndex);
 
-	void Apply(Skeleton & skeleton, DurationSeconds const& time) override;
+	void Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, DurationSeconds const& time) override;
 	
 	DurationSeconds Length() const override;
 	

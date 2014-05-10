@@ -12,6 +12,7 @@
 #include "TranslationTrack.hpp"
 #include <algorithm>
 #include "Skeleton.hpp"
+#include "SkeletonPose.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -64,7 +65,7 @@ RotationTrack::RotationTrack(std::vector<RotationKeyframe> && keysIn, JointIndex
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys)));
 }
 //-----------------------------------------------------------------------
-void RotationTrack::Apply(Skeleton & skeleton, DurationSeconds const& time)
+void RotationTrack::Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, DurationSeconds const& time)
 {
 	RotationKeyframe point;
 	point.TimeSeconds = time.count();
@@ -73,7 +74,10 @@ void RotationTrack::Apply(Skeleton & skeleton, DurationSeconds const& time)
 	auto pointPair = BinarySearchNearestPoints(std::begin(keys), std::end(keys), point);
 	
 	auto & joint = skeleton.Joints(jointIndex);
-	auto & bindPose = skeleton.BindPoses()[*jointIndex];
+	auto & bindPose = joint.BindPose;
+	
+	POMDOG_ASSERT(*jointIndex < skeletonPose.LocalPose.size());
+	auto & localPose = skeletonPose.LocalPose[*jointIndex];
 	
 	if (pointPair.first == pointPair.second)
 	{
@@ -83,7 +87,7 @@ void RotationTrack::Apply(Skeleton & skeleton, DurationSeconds const& time)
 		auto diff = pointPair.first->Rotation.ToFloat();
 		POMDOG_ASSERT(diff <= MathConstants<float>::Pi());
 		POMDOG_ASSERT(diff >= -MathConstants<float>::Pi());
-		joint.Rotation = bindPose.Rotation + diff;
+		localPose.Rotation = bindPose.Rotation + diff;
 		return;
 	}
 	
@@ -106,7 +110,7 @@ void RotationTrack::Apply(Skeleton & skeleton, DurationSeconds const& time)
 	POMDOG_ASSERT(b <= MathConstants<float>::Pi());
 	POMDOG_ASSERT(b >= -MathConstants<float>::Pi());
 		
-	joint.Rotation = ((bindPose.Rotation + a) * (1.0f - amount)) + ((bindPose.Rotation + b) * amount);
+	localPose.Rotation = ((bindPose.Rotation + a) * (1.0f - amount)) + ((bindPose.Rotation + b) * amount);
 }
 //-----------------------------------------------------------------------
 DurationSeconds RotationTrack::Length() const
@@ -128,7 +132,7 @@ ScaleTrack::ScaleTrack(std::vector<ScaleKeyframe> && keysIn, JointIndex && joint
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys)));
 }
 //-----------------------------------------------------------------------
-void ScaleTrack::Apply(Skeleton & skeleton, DurationSeconds const& time)
+void ScaleTrack::Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, DurationSeconds const& time)
 {
 	ScaleKeyframe point;
 	point.TimeSeconds = time.count();
@@ -137,14 +141,17 @@ void ScaleTrack::Apply(Skeleton & skeleton, DurationSeconds const& time)
 	auto pointPair = BinarySearchNearestPoints(std::begin(keys), std::end(keys), point);
 	
 	auto & joint = skeleton.Joints(jointIndex);
-	auto & bindPose = skeleton.BindPoses()[*jointIndex];
+	auto & bindPose = joint.BindPose;
+	
+	POMDOG_ASSERT(*jointIndex < skeletonPose.LocalPose.size());
+	auto & localPose = skeletonPose.LocalPose[*jointIndex];
 	
 	if (pointPair.first == pointPair.second)
 	{
 		POMDOG_ASSERT((time.count() <= keys.front().TimeSeconds)
 			|| (time.count() >= keys.back().TimeSeconds));
 		
-		joint.Scale = bindPose.Scale * pointPair.first->Scale.ToFloat();
+		localPose.Scale = bindPose.Scale * pointPair.first->Scale.ToFloat();
 		return;
 	}
 	
@@ -160,7 +167,7 @@ void ScaleTrack::Apply(Skeleton & skeleton, DurationSeconds const& time)
 		
 	auto a = pointPair.first->Scale.ToFloat();
 	auto b = pointPair.second->Scale.ToFloat();
-	joint.Scale = ((bindPose.Scale * a) * (1.0f - amount)) + ((bindPose.Scale * b) * amount);
+	localPose.Scale = ((bindPose.Scale * a) * (1.0f - amount)) + ((bindPose.Scale * b) * amount);
 }
 //-----------------------------------------------------------------------
 DurationSeconds ScaleTrack::Length() const
@@ -182,7 +189,7 @@ TranslationTrack::TranslationTrack(std::vector<TranslationKeyframe> && keysIn, J
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys)));
 }
 //-----------------------------------------------------------------------
-void TranslationTrack::Apply(Skeleton & skeleton, DurationSeconds const& time)
+void TranslationTrack::Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, DurationSeconds const& time)
 {
 	TranslationKeyframe point;
 	point.TimeSeconds = time.count();
@@ -191,7 +198,10 @@ void TranslationTrack::Apply(Skeleton & skeleton, DurationSeconds const& time)
 	auto pointPair = BinarySearchNearestPoints(std::begin(keys), std::end(keys), point);
 		
 	auto & joint = skeleton.Joints(jointIndex);
-	auto & bindPose = skeleton.BindPoses()[*jointIndex];
+	auto & bindPose = joint.BindPose;
+	
+	POMDOG_ASSERT(*jointIndex < skeletonPose.LocalPose.size());
+	auto & localPose = skeletonPose.LocalPose[*jointIndex];
 	
 	if (pointPair.first == pointPair.second)
 	{
@@ -199,7 +209,7 @@ void TranslationTrack::Apply(Skeleton & skeleton, DurationSeconds const& time)
 			|| (time.count() >= keys.back().TimeSeconds));
 		
 		auto diff = Vector2{pointPair.first->TranslateX.ToFloat(), pointPair.first->TranslateY.ToFloat()};
-		joint.Translate = bindPose.Translate + diff;
+		localPose.Translate = bindPose.Translate + diff;
 		return;
 	}
 	
@@ -216,7 +226,7 @@ void TranslationTrack::Apply(Skeleton & skeleton, DurationSeconds const& time)
 	auto a = Vector2{pointPair.first->TranslateX.ToFloat(), pointPair.first->TranslateY.ToFloat()};
 	auto b = Vector2{pointPair.second->TranslateX.ToFloat(), pointPair.second->TranslateY.ToFloat()};
 	
-	joint.Translate = ((bindPose.Translate + a) * (1.0f - amount)) + ((bindPose.Translate + b) * amount);
+	localPose.Translate = ((bindPose.Translate + a) * (1.0f - amount)) + ((bindPose.Translate + b) * amount);
 }
 //-----------------------------------------------------------------------
 DurationSeconds TranslationTrack::Length() const

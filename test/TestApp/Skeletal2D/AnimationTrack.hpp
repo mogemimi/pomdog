@@ -18,12 +18,13 @@
 namespace Pomdog {
 
 class Skeleton;
+class SkeletonPose;
 
 class AnimationTrack {
 public:
 	virtual ~AnimationTrack() = default;
 	
-	virtual void Apply(Skeleton & skeleton, DurationSeconds const& time) = 0;
+	virtual void Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, DurationSeconds const& time) = 0;
 	
 	virtual DurationSeconds Length() const = 0;
 };

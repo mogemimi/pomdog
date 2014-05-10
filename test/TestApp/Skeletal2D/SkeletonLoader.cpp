@@ -45,9 +45,9 @@ static std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescripti
 	for (auto & boneDesc: boneDescriptions)
 	{
 		Joint joint;
-		joint.Translate = boneDesc.Pose.Translate;
-		joint.Rotation = boneDesc.Pose.Rotation;
-		joint.Scale = boneDesc.Pose.Scale;
+		joint.BindPose.Translate = boneDesc.Pose.Translate;
+		joint.BindPose.Rotation = boneDesc.Pose.Rotation;
+		joint.BindPose.Scale = boneDesc.Pose.Scale;
 		
 		joints.push_back(std::move(joint));
 	}

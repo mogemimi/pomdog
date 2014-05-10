@@ -38,7 +38,7 @@ class RotationTrack final: public AnimationTrack {
 public:
 	RotationTrack(std::vector<RotationKeyframe> && keys, JointIndex && jointIndex);
 
-	void Apply(Skeleton & skeleton, DurationSeconds const& time) override;
+	void Apply(Skeleton const& skeleton, SkeletonPose & skeletonPose, DurationSeconds const& time) override;
 	
 	DurationSeconds Length() const override;
 	

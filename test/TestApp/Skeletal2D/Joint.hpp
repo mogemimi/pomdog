@@ -13,22 +13,16 @@
 #	pragma once
 #endif
 
-#include <vector>
-#include <string>
-#include <Pomdog/Math/Vector2.hpp>
-#include <Pomdog/Math/Radian.hpp>
 #include "JointIndex.hpp"
+#include "JointPose.hpp"
 
 namespace Pomdog {
 
 ///@~Japanese
-/// @brief 2次元のスケルタルアニメーションにおけるジョイント（間接）またはボーンです。
+/// @brief スケルタルアニメーションにおけるジョイント（間接）またはボーンです。
 class Joint {
 public:
-	Vector2 Translate;
-	Radian<float> Rotation;
-	float Scale;
-
+	JointPose BindPose;
 	JointIndex Index;
 	JointIndex Parent;
 	JointIndex FirstChild;
