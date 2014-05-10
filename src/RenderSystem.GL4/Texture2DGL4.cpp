@@ -23,8 +23,7 @@ namespace {
 
 static GLenum ToInternalFormatGL4(SurfaceFormat format)
 {
-	switch (format)
-	{
+	switch (format) {
 	case SurfaceFormat::BlockComp1_UNorm:
 		return GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
 	case SurfaceFormat::BlockComp2_UNorm:
@@ -59,8 +58,7 @@ static GLenum ToInternalFormatGL4(SurfaceFormat format)
 //-----------------------------------------------------------------------
 static GLenum ToFormatComponents(SurfaceFormat format)
 {
-	switch (format)
-	{
+	switch (format) {
 	case SurfaceFormat::R8G8B8A8_UNorm:
 	case SurfaceFormat::R32G32B32A32_Float:
 	case SurfaceFormat::R10G10B10A2_UNorm:
@@ -89,8 +87,7 @@ static GLenum ToFormatComponents(SurfaceFormat format)
 //-----------------------------------------------------------------------
 static GLenum ToPixelFundamentalType(SurfaceFormat format)
 {
-	switch (format)
-	{
+	switch (format) {
 	case SurfaceFormat::A8_UNorm:
 	case SurfaceFormat::R8_UNorm:
 	case SurfaceFormat::R8G8_UNorm:
@@ -119,8 +116,7 @@ static GLenum ToPixelFundamentalType(SurfaceFormat format)
 //-----------------------------------------------------------------------
 static std::uint16_t ToBytesPerBlock(SurfaceFormat format)
 {
-	switch (format)
-	{
+	switch (format) {
 	case SurfaceFormat::A8_UNorm:
 	case SurfaceFormat::R8_UNorm:
 	case SurfaceFormat::BlockComp1_UNorm:

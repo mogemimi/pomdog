@@ -248,8 +248,8 @@ std::shared_ptr<Texture2D> DDSTextureReader::Read(std::shared_ptr<GraphicsDevice
 	
 	std::uint32_t pixelWidth = ddsHeader.PixelWidth;
 	std::uint32_t pixelHeight = ddsHeader.PixelHeight;
-	std::uint32_t levelCount = (ddsHeader.MipMapCount > 0) ? ddsHeader.MipMapCount: 1;
 	SurfaceFormat surfaceFormat = ToSurfaceFormatFromDDSPixelFormat(ddsHeader.PixelFormat);
+	bool const generateMipmap = (ddsHeader.MipMapCount > 0);
 
 	if ((byteLength - offsetBytes) < ComputePixelDataByteLength(ddsHeader))
 	{
@@ -257,7 +257,7 @@ std::shared_ptr<Texture2D> DDSTextureReader::Read(std::shared_ptr<GraphicsDevice
 	}
 
 	auto texture = std::make_shared<Texture2D>(graphicsDevice,
-		pixelWidth, pixelHeight, levelCount, surfaceFormat);
+		pixelWidth, pixelHeight, generateMipmap, surfaceFormat);
 	
 	if (texture)
 	{

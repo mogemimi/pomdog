@@ -42,11 +42,21 @@ public:
 	Texture2D(Texture2D const&) = delete;
 	Texture2D(Texture2D &&) = default;
 
+	///@~Japanese
+	/// @param graphicsDevice グラフィックスデバイス
+	/// @param width テクスチャの水平方向のピクセル単位の長さ
+	/// @param height テクスチャの垂直方向のピクセル単位の長さ
 	Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		std::uint32_t width, std::uint32_t height);
 
+	///@~Japanese
+	/// @param graphicsDevice グラフィックスデバイス
+	/// @param width テクスチャの水平方向のピクセル単位の長さ
+	/// @param height テクスチャの垂直方向のピクセル単位の長さ
+	/// @param mipMap ミップマップを生成する場合は true を指定します。
+	/// @param format テクスチャのピクセルフォーマット
 	Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		std::uint32_t width, std::uint32_t height, std::uint32_t levelCount, SurfaceFormat format);
+		std::uint32_t width, std::uint32_t height, bool mipMap, SurfaceFormat format);
 
 	~Texture2D();
 	

@@ -15,7 +15,7 @@
 
 #include <vector>
 #include <memory>
-#include <Pomdog/Pomdog.hpp>
+#include <Pomdog/Application/DurationSeconds.hpp>
 
 namespace Pomdog {
 

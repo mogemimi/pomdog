@@ -14,20 +14,17 @@
 
 namespace Pomdog {
 namespace {
-
-static std::uint32_t ComputeMipmapLevelCount(std::uint32_t pixelWidth, std::uint32_t pixelHeight)
+//-----------------------------------------------------------------------
+static std::uint16_t ComputeMipmapLevelCount(std::uint32_t width, std::uint32_t height)
 {
-	auto mipMapPixelWidth = pixelWidth;
-	auto mipMapPixelHeight = pixelHeight;
+	auto size = std::max(width, height);
+	std::uint16_t levelCount = 1;
 	
-	std::uint32_t levelCount = 0;
-
-	do {
+	while (size > 1)
+	{
+		size = size / 2;
 		++levelCount;
-		mipMapPixelWidth = (mipMapPixelWidth >> 1);
-		mipMapPixelHeight = (mipMapPixelHeight >> 1);
-	} while (mipMapPixelWidth > 1 && mipMapPixelHeight > 1);
-	
+	}
 	return levelCount;
 }
 
@@ -37,8 +34,7 @@ RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDe
 	std::uint32_t pixelWidthIn, std::uint32_t pixelHeightIn)
 	: RenderTarget2D(graphicsDevice, pixelWidthIn, pixelHeightIn,
 		false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None)
-{
-}
+{}
 //-----------------------------------------------------------------------
 RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::uint32_t pixelWidthIn, std::uint32_t pixelHeightIn,

@@ -14,27 +14,39 @@
 #include "../RenderSystem/NativeTexture2D.hpp"
 
 namespace Pomdog {
+namespace {
+//-----------------------------------------------------------------------
+static std::uint16_t ComputeMipmapLevelCount(std::uint32_t width, std::uint32_t height)
+{
+	auto size = std::max(width, height);
+	std::uint16_t levelCount = 1;
+	
+	while (size > 1)
+	{
+		size = size / 2;
+		++levelCount;
+	}
+	return levelCount;
+}
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 Texture2D::Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::uint32_t pixelWidthIn, std::uint32_t pixelHeightIn)
-	: nativeTexture2D(graphicsDevice->NativeGraphicsDevice()->CreateTexture2D(
-		pixelWidthIn, pixelHeightIn, 1, SurfaceFormat::R8G8B8A8_UNorm))
-	, pixelWidth(pixelWidthIn)
-	, pixelHeight(pixelHeightIn)
-	, levelCount(1)
-	, format(SurfaceFormat::R8G8B8A8_UNorm)
-{
-}
+	: Texture2D(graphicsDevice, pixelWidthIn, pixelHeightIn, false, SurfaceFormat::R8G8B8A8_UNorm)
+{}
 //-----------------------------------------------------------------------
 Texture2D::Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	std::uint32_t pixelWidthIn, std::uint32_t pixelHeightIn, std::uint32_t levelCountIn, SurfaceFormat formatIn)
-	: nativeTexture2D(graphicsDevice->NativeGraphicsDevice()->CreateTexture2D(
-		pixelWidthIn, pixelHeightIn, levelCountIn, formatIn))
-	, pixelWidth(pixelWidthIn)
+	std::uint32_t pixelWidthIn, std::uint32_t pixelHeightIn,
+	bool mipMap, SurfaceFormat formatIn)
+	: pixelWidth(pixelWidthIn)
 	, pixelHeight(pixelHeightIn)
-	, levelCount(levelCountIn)
+	, levelCount(ComputeMipmapLevelCount(pixelWidth, pixelHeight))
 	, format(formatIn)
 {
+	POMDOG_ASSERT(levelCount >= 1);
+	nativeTexture2D = graphicsDevice->NativeGraphicsDevice()->CreateTexture2D(
+		pixelWidthIn, pixelHeightIn, levelCount, formatIn);
 }
 //-----------------------------------------------------------------------
 Texture2D::~Texture2D() = default;

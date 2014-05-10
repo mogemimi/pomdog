@@ -15,7 +15,8 @@
 
 #include <vector>
 #include <string>
-#include <Pomdog/Pomdog.hpp>
+#include <Pomdog/Math/Vector2.hpp>
+#include <Pomdog/Math/Radian.hpp>
 #include "JointIndex.hpp"
 
 namespace Pomdog {

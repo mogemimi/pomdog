@@ -31,7 +31,6 @@ struct Texture2DParsingData {
 	std::vector<std::uint8_t> Binary;
 	std::uint32_t Height;
 	std::uint32_t Width;
-	std::uint32_t MipmapLevelCount;
 	SurfaceFormat Format;
 };
 //-----------------------------------------------------------------------
@@ -134,7 +133,6 @@ static Texture2DParsingData ReadPNG(std::uint8_t const* data, std::size_t byteLe
 	Texture2DParsingData parsingData;
 	parsingData.Width = pixelWidth;
 	parsingData.Height = pixelHeight;
-	parsingData.MipmapLevelCount = 1;
 	parsingData.Format = ([](::png_byte colorTypeIn)->SurfaceFormat {
 		switch (colorTypeIn) {
 		case PNG_COLOR_TYPE_GRAY:
@@ -168,9 +166,11 @@ std::shared_ptr<Texture2D> PNGTextureReader::Read(std::shared_ptr<GraphicsDevice
 	
 	auto parsingData = ReadPNG(data, byteLength);
 
+	constexpr bool generateMipmap = false;
+
 	auto texture = std::make_shared<Texture2D>(graphicsDevice,
 		parsingData.Width, parsingData.Height,
-		parsingData.MipmapLevelCount, parsingData.Format);
+		generateMipmap, parsingData.Format);
 
 	POMDOG_ASSERT(!parsingData.Binary.empty());
 	texture->SetData(parsingData.Binary.data());
