@@ -20,6 +20,8 @@
 #include "Skeletal2D/Skin.hpp"
 #include "Skeletal2D/AnimationClip.hpp"
 #include "Skeletal2D/SpriteAnimationTrack.hpp"
+#include "Skeletal2D/AnimationState.hpp"
+#include "Skeletal2D/AnimationSystem.hpp"
 #include "Skeletal2D/AnimationTimer.hpp"
 
 namespace TestApp {
@@ -46,7 +48,7 @@ public:
 	
 private:
 	void DrawSprites();
-	
+
 private:
 	std::shared_ptr<GameHost> gameHost;
 	std::shared_ptr<GraphicsContext> graphicsContext;
@@ -67,12 +69,13 @@ private:
 	GameObjectID rootObjectID;
 	//std::shared_ptr<Scene> hierarchy;
 	
+	AnimationSystem animationSystem;
+	std::shared_ptr<Skeleton> maidSkeleton;
+	std::shared_ptr<SkeletonPose> maidSkeletonPose;
+	std::shared_ptr<AnimationState> maidAnimationState;
 	std::shared_ptr<Texture2D> maidTexture;
-	Skeleton maidSkeleton;
-	SkeletonPose maidSkeletonPose;
-	Skin maidSkin;
-	AnimationClip maidAnimationClip;
 	AnimationTimer maidAnimationTimer;
+	Skin maidSkin;
 	std::vector<Details::Skeletal2D::SpriteAnimationTrack> maidSpriteAnimationTracks;
 };
 

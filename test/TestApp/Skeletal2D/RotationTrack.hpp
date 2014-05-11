@@ -14,7 +14,7 @@
 #endif
 
 #include <vector>
-#include <Pomdog/Pomdog.hpp>
+#include <Pomdog/Application/DurationSeconds.hpp>
 #include "AnimationTrack.hpp"
 #include "CompressedFloat.hpp"
 #include "JointIndex.hpp"
@@ -31,8 +31,6 @@ public:
 	static_assert(decltype(Rotation)::Max() > 3.1416f*2.0f, "");
 	static_assert(decltype(Rotation)::Min() < -3.1416f*2.0f, "");
 };
-
-bool operator<(RotationKeyframe const& a, RotationKeyframe const& b);
 
 class RotationTrack final: public AnimationTrack {
 public:

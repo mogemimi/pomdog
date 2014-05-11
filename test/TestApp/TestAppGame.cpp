@@ -72,7 +72,7 @@ static SkeletonPose CreateSkeletonPoseBySkeleton(Skeleton const& skeleton)
 {
 	SkeletonPose skeletonPose;
 	skeletonPose.LocalPose.reserve(skeleton.JointCount());
-	for (auto & joint: skeleton.Joints()) {
+	for (auto & joint: skeleton) {
 		skeletonPose.LocalPose.push_back(joint.BindPose);
 	}
 
@@ -246,14 +246,18 @@ void TestAppGame::Initialize()
 		auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidChan/skeleton.atlas");
 		auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("MaidChan/skeleton.json");
 		
-		maidSkeleton = Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones);
-		maidSkeletonPose = CreateSkeletonPoseBySkeleton(maidSkeleton);
+		LogSkeletalInfo(textureAtlas, skeletonDesc);
+		
+		maidSkeleton = std::make_shared<Skeleton>(Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones));
+		maidSkeletonPose = std::make_shared<SkeletonPose>(CreateSkeletonPoseBySkeleton(*maidSkeleton));
+		auto animationClip = std::make_shared<AnimationClip>(Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Walk"));
+		maidAnimationState = std::make_shared<AnimationState>(animationClip, 1.0f, true);
+		
 		maidSkin = Details::Skeletal2D::CreateSkin(skeletonDesc, textureAtlas, "default");
-		maidAnimationClip = Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Walk");
 		maidSpriteAnimationTracks = Details::Skeletal2D::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
 		maidTexture = assets->Load<Texture2D>("MaidChan/skeleton.png");
 		
-		LogSkeletalInfo(textureAtlas, skeletonDesc);
+		animationSystem.Add(maidAnimationState, maidSkeleton, maidSkeletonPose);
 	}
 }
 //-----------------------------------------------------------------------
@@ -270,15 +274,6 @@ void TestAppGame::Update()
 			cameraView.Input(mouse->State(), *clock, graphicsContext->Viewport().Bounds, node->Transform(), *camera);
 		}
 	}
-	
-	if (auto rootNode = gameWorld.Component<Node2D>(rootObjectID))
-	{
-		auto & transform = rootNode->Transform();
-		if (mouse->State().RightButton == ButtonState::Pressed) {
-			transform.Position.Y += 0.5f;
-		}
-	}
-	
 	{
 		static auto duration = DurationSeconds(0);
 		
@@ -287,20 +282,31 @@ void TestAppGame::Update()
 			duration = clock->TotalGameTime();
 		}
 	}
+	
+	{
+		static bool isPaused = false;
+		static DurationSeconds time = DurationSeconds(0);
+		
+		if (clock->TotalGameTime() - time > DurationSeconds(0.2)) {
+			if (mouse->State().LeftButton == ButtonState::Pressed) {
+				time = clock->TotalGameTime();
+				isPaused = !isPaused;
+			}
+		}
+		
+		if (isPaused) {
+			return;
+		}
+	}
+	
+	animationSystem.Update(*clock);
 	{
 		maidAnimationTimer.Update(clock->FrameDuration());
-		if (maidAnimationTimer.Time() > maidAnimationClip.Length()) {
+		if (maidAnimationTimer.Time() > maidAnimationState->Length()) {
 			maidAnimationTimer.Reset();
 		}
 	}
 	{
-		maidAnimationClip.Apply(maidAnimationTimer.Time(), maidSkeleton, maidSkeletonPose);
-
-		Traverse(maidSkeleton, maidSkeletonPose, [&](Matrix4x4 const& boneMatrix, Joint const& bone) {
-			POMDOG_ASSERT(*bone.Index < maidSkeletonPose.GlobalPose.size());
-			maidSkeletonPose.GlobalPose[*bone.Index] = boneMatrix;
-		});
-		
 		for (auto & track: maidSpriteAnimationTracks)
 		{
 			track.Apply(maidSkin, maidAnimationTimer.Time());
@@ -349,7 +355,7 @@ void TestAppGame::DrawSprites()
 //		}
 //	}
 
-	auto const& globalPoses = maidSkeletonPose.GlobalPose;
+	auto const& globalPoses = maidSkeletonPose->GlobalPose;
 
 	static int state = 3;
 	static auto time = gameHost->Clock()->TotalGameTime();
@@ -363,7 +369,7 @@ void TestAppGame::DrawSprites()
 	
 	if (state != 1)
 	{
-		for (auto & joint: maidSkeleton.Joints())
+		for (auto & joint: *maidSkeleton)
 		{
 			auto & matrix = globalPoses[*joint.Index];
 			spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 5, 5},

@@ -14,7 +14,7 @@
 #endif
 
 #include <vector>
-#include <Pomdog/Pomdog.hpp>
+#include <Pomdog/Application/DurationSeconds.hpp>
 #include "AnimationTrack.hpp"
 #include "CompressedFloat.hpp"
 #include "JointIndex.hpp"
@@ -31,8 +31,6 @@ public:
 	static_assert(decltype(Scale)::Max() > 20.0f, "");
 	static_assert(decltype(Scale)::Min() < -20.0f, "");
 };
-
-bool operator<(ScaleKeyframe const& a, ScaleKeyframe const& b);
 
 class ScaleTrack final: public AnimationTrack {
 public:

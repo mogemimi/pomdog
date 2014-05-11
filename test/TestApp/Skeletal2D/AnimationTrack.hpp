@@ -29,13 +29,6 @@ public:
 	virtual DurationSeconds Length() const = 0;
 };
 
-
-//template <typename T>
-//class AnimationKey {
-//public:
-//	float TimeSeconds;
-//};
-
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ANIMATIONTRACK_70C41AD9_88F5_4283_B0A7_08CDE74CCDDC_HPP)

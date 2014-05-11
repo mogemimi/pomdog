@@ -13,6 +13,7 @@
 #include <algorithm>
 #include "Skeleton.hpp"
 #include "SkeletonPose.hpp"
+#include "AnimationKeyHelper.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -26,7 +27,7 @@ std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIte
 	static_assert(std::is_same<typename std::remove_reference<decltype(*first)>::type, T>::value, "");
 	POMDOG_ASSERT(first != last);
 
-	auto it = std::lower_bound(first, last, value);
+	auto it = std::lower_bound(first, last, value, AnimationKeyHelper::Less<T>);
 
 	if (it == last) {
 		return std::make_pair(std::prev(last), std::prev(last));
@@ -39,21 +40,6 @@ std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIte
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-bool operator<(RotationKeyframe const& a, RotationKeyframe const& b)
-{
-	return a.TimeSeconds < b.TimeSeconds;
-}
-//-----------------------------------------------------------------------
-bool operator<(ScaleKeyframe const& a, ScaleKeyframe const& b)
-{
-	return a.TimeSeconds < b.TimeSeconds;
-}
-//-----------------------------------------------------------------------
-bool operator<(TranslationKeyframe const& a, TranslationKeyframe const& b)
-{
-	return a.TimeSeconds < b.TimeSeconds;
-}
-//-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - RotationTrack
 #endif
@@ -62,7 +48,7 @@ RotationTrack::RotationTrack(std::vector<RotationKeyframe> && keysIn, JointIndex
 	: keys(std::move(keysIn))
 	, jointIndex(std::move(jointIndexIn))
 {
-	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys)));
+	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<RotationKeyframe>));
 }
 //-----------------------------------------------------------------------
 void RotationTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
@@ -116,7 +102,7 @@ void RotationTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton,
 DurationSeconds RotationTrack::Length() const
 {
 	POMDOG_ASSERT(!keys.empty());
-	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys)));
+	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<RotationKeyframe>));
 	POMDOG_ASSERT(keys.front().TimeSeconds <= keys.back().TimeSeconds);
 	return DurationSeconds(keys.back().TimeSeconds);
 }
@@ -129,7 +115,7 @@ ScaleTrack::ScaleTrack(std::vector<ScaleKeyframe> && keysIn, JointIndex && joint
 	: keys(std::move(keysIn))
 	, jointIndex(std::move(jointIndexIn))
 {
-	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys)));
+	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<ScaleKeyframe>));
 }
 //-----------------------------------------------------------------------
 void ScaleTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
@@ -174,7 +160,7 @@ void ScaleTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton, Sk
 DurationSeconds ScaleTrack::Length() const
 {
 	POMDOG_ASSERT(!keys.empty());
-	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys)));
+	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<ScaleKeyframe>));
 	POMDOG_ASSERT(keys.front().TimeSeconds <= keys.back().TimeSeconds);
 	return DurationSeconds(keys.back().TimeSeconds);
 }
@@ -187,7 +173,7 @@ TranslationTrack::TranslationTrack(std::vector<TranslationKeyframe> && keysIn, J
 	: keys(std::move(keysIn))
 	, jointIndex(std::move(jointIndexIn))
 {
-	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys)));
+	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<TranslationKeyframe>));
 }
 //-----------------------------------------------------------------------
 void TranslationTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
@@ -234,7 +220,7 @@ void TranslationTrack::Apply(DurationSeconds const& time, Skeleton const& skelet
 DurationSeconds TranslationTrack::Length() const
 {
 	POMDOG_ASSERT(!keys.empty());
-	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys)));
+	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<TranslationKeyframe>));
 	POMDOG_ASSERT(keys.front().TimeSeconds <= keys.back().TimeSeconds);
 	return DurationSeconds(keys.back().TimeSeconds);
 }

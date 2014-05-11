@@ -35,6 +35,7 @@ public:
 
 private:
 	std::vector<std::unique_ptr<AnimationTrack>> tracks;
+	DurationSeconds length;
 };
 
 }// namespace Pomdog

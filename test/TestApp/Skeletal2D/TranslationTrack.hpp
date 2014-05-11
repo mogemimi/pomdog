@@ -14,7 +14,7 @@
 #endif
 
 #include <vector>
-#include <Pomdog/Pomdog.hpp>
+#include <Pomdog/Application/DurationSeconds.hpp>
 #include "AnimationTrack.hpp"
 #include "CompressedFloat.hpp"
 #include "JointIndex.hpp"
@@ -34,8 +34,6 @@ public:
 	static_assert(decltype(TranslateY)::Max() > 1024.0f, "");
 	static_assert(decltype(TranslateY)::Min() < -1024.0f, "");
 };
-
-bool operator<(TranslationKeyframe const& a, TranslationKeyframe const& b);
 
 class TranslationTrack final: public AnimationTrack {
 public:

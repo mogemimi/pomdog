@@ -33,9 +33,16 @@ public:
 	Skeleton & operator=(Skeleton &&) = default;
 
 	Joint const& Root() const;
-	std::vector<Joint> const& Joints() const;
 	Joint const& Joints(JointIndex const& jointIndex) const;
 	std::uint16_t JointCount() const;
+	
+	typedef std::vector<Joint>::const_iterator const_iterator;
+	typedef std::vector<Joint>::iterator iterator;
+	
+	const_iterator begin() const;
+	const_iterator end() const;
+	iterator begin();
+	iterator end();
 
 private:
 	std::vector<Joint> joints;

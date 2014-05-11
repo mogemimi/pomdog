@@ -10,6 +10,7 @@
 #include <utility>
 #include <algorithm>
 #include "AnimationClip.hpp"
+#include "AnimationKeyHelper.hpp"
 #include "AnimationTrack.hpp"
 #include "RotationTrack.hpp"
 #include "ScaleTrack.hpp"
@@ -68,7 +69,7 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 				keys.push_back(std::move(key));
 			}
 			
-			std::sort(std::begin(keys), std::end(keys));
+			std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<RotationKeyframe>);
 			std::unique_ptr<RotationTrack> timeline(new RotationTrack(std::move(keys), std::move(jointIndex)));
 			tracks.push_back(std::move(timeline));
 		}
@@ -86,7 +87,7 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 				keys.push_back(std::move(key));
 			}
 			
-			std::sort(std::begin(keys), std::end(keys));
+			std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<ScaleKeyframe>);
 			std::unique_ptr<ScaleTrack> timeline(new ScaleTrack(std::move(keys), std::move(jointIndex)));
 			tracks.push_back(std::move(timeline));
 		}
@@ -105,7 +106,7 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 				keys.push_back(std::move(key));
 			}
 
-			std::sort(std::begin(keys), std::end(keys));
+			std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<TranslationKeyframe>);
 			std::unique_ptr<TranslationTrack> timeline(new TranslationTrack(std::move(keys), std::move(jointIndex)));
 			tracks.push_back(std::move(timeline));
 		}

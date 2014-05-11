@@ -11,6 +11,7 @@
 #include <algorithm>
 #include "SkeletonDesc.hpp"
 #include "SpriteAnimationTrack.hpp"
+#include "AnimationKeyHelper.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -90,7 +91,7 @@ std::vector<SpriteAnimationTrack> CreateSpriteAnimationTrack(
 				keys.push_back(std::move(key));
 			}
 			
-			std::sort(std::begin(keys), std::end(keys));
+			std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<SpriteKeyframe>);
 			tracks.emplace_back(std::move(keys), slotIndex);
 		}
 	}

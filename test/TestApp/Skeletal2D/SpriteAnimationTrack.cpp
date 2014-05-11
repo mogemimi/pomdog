@@ -9,6 +9,7 @@
 #include "SpriteAnimationTrack.hpp"
 #include <algorithm>
 #include <utility>
+#include "AnimationKeyHelper.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -22,7 +23,7 @@ std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIte
 	static_assert(std::is_same<typename std::remove_reference<decltype(*first)>::type, T>::value, "");
 	POMDOG_ASSERT(first != last);
 
-	auto it = std::lower_bound(first, last, value);
+	auto it = std::lower_bound(first, last, value, AnimationKeyHelper::Less<T>);
 
 	if (it == last) {
 		return std::make_pair(std::prev(last), std::prev(last));
@@ -35,16 +36,11 @@ std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIte
 
 }// unnamed namespace
 
-bool operator<(SpriteKeyframe const& a, SpriteKeyframe const& b)
-{
-	return a.TimeSeconds < b.TimeSeconds;
-}
-
 SpriteAnimationTrack::SpriteAnimationTrack(std::vector<SpriteKeyframe> && keysIn, std::uint16_t slotIndexIn)
 	: keys(std::move(keysIn))
 	, slotIndex(slotIndexIn)
 {
-	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys)));
+	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<SpriteKeyframe>));
 }
 
 void SpriteAnimationTrack::Apply(Skin & skin, DurationSeconds const& time)
@@ -66,7 +62,7 @@ void SpriteAnimationTrack::Apply(Skin & skin, DurationSeconds const& time)
 DurationSeconds SpriteAnimationTrack::Length() const
 {
 	POMDOG_ASSERT(!keys.empty());
-	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys)));
+	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<SpriteKeyframe>));
 	POMDOG_ASSERT(keys.front().TimeSeconds <= keys.back().TimeSeconds);
 	return DurationSeconds(keys.back().TimeSeconds);
 }

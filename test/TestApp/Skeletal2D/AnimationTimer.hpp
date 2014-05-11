@@ -23,7 +23,7 @@ public:
 
 	void Update(DurationSeconds const& time);
 	void Pause();
-	void Continue();
+	void Resume();
 	void Reset();
 
 	DurationSeconds Time() const;

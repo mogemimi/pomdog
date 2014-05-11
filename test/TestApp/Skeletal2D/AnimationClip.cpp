@@ -12,10 +12,32 @@
 #include "AnimationTrack.hpp"
 
 namespace Pomdog {
+namespace {
 
+static DurationSeconds ComputeLength(std::vector<std::unique_ptr<AnimationTrack>> const& tracks)
+{
+	DurationSeconds maxLength(0);
+
+	for (auto & track: tracks)
+	{
+		POMDOG_ASSERT(track);
+		auto length = track->Length();
+		
+		if (length > maxLength)
+		{
+			maxLength = length;
+		}
+	}
+	return maxLength;
+}
+
+}// unnamed namespace
+//-----------------------------------------------------------------------
 AnimationClip::AnimationClip(std::vector<std::unique_ptr<AnimationTrack>> && tracksIn)
 	: tracks(std::move(tracksIn))
-{}
+{
+	length = ComputeLength(tracks);
+}
 //-----------------------------------------------------------------------
 void AnimationClip::Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
@@ -28,19 +50,7 @@ void AnimationClip::Apply(DurationSeconds const& time, Skeleton const& skeleton,
 //-----------------------------------------------------------------------
 DurationSeconds AnimationClip::Length() const
 {
-	DurationSeconds maxLength(0);
-	
-	for (auto & track: tracks)
-	{
-		POMDOG_ASSERT(track);
-		auto length = track->Length();
-		
-		if (length > maxLength)
-		{
-			maxLength = length;
-		}
-	}
-	return maxLength;
+	return length;
 }
 
 }// namespace Pomdog

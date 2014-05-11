@@ -22,6 +22,8 @@ namespace Pomdog {
 class SkeletonPose {
 public:
 	std::vector<JointPose> LocalPose;
+	
+	///@note Matrix palette
 	std::vector<Matrix4x4> GlobalPose;
 };
 

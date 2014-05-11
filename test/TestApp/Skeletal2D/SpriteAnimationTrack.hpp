@@ -30,8 +30,6 @@ public:
 	bool TextureRotate;
 };
 
-bool operator<(SpriteKeyframe const& a, SpriteKeyframe const& b);
-
 class SpriteAnimationTrack final {
 public:
 	SpriteAnimationTrack() = default;

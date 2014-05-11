@@ -33,7 +33,7 @@ void AnimationTimer::Pause()
 	isPause = true;
 }
 //-----------------------------------------------------------------------
-void AnimationTimer::Continue()
+void AnimationTimer::Resume()
 {
 	isPause = false;
 }
