@@ -66,9 +66,7 @@ private:
 	
 	GameWorld gameWorld;
 	GameObjectID mainCameraID;
-	GameObjectID rootObjectID;
-	//std::shared_ptr<Scene> hierarchy;
-	
+
 	AnimationSystem animationSystem;
 	std::shared_ptr<Skeleton> maidSkeleton;
 	std::shared_ptr<SkeletonPose> maidSkeletonPose;

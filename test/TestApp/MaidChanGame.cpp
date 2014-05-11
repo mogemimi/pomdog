@@ -164,7 +164,7 @@ void MaidChanGame::Initialize()
 	
 	{
 		// NOTE: Create main camera:
-		auto gameObject = gameWorld.CreateObject();;
+		auto gameObject = gameWorld.CreateObject();
 		mainCameraID = gameObject->ID();
 		
 		auto node = gameObject->AddComponent<Node2D>(gameObject);

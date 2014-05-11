@@ -164,7 +164,7 @@ void GrassBlendingGame::Initialize()
 	
 	{
 		// NOTE: Create main camera:
-		auto gameObject = gameWorld.CreateObject();;
+		auto gameObject = gameWorld.CreateObject();
 		mainCameraID = gameObject->ID();
 		
 		auto node = gameObject->AddComponent<Node2D>(gameObject);
@@ -174,40 +174,6 @@ void GrassBlendingGame::Initialize()
 		//sprite->Origin = Vector2{0.5f, 0.5f};
 		//sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
 		node->Transform().Scale = Vector2{2.5f, 2.5f};
-	}
-	
-	{
-		auto gameObject = gameWorld.CreateObject();
-		rootObjectID = gameObject->ID();
-		
-		auto node = gameObject->AddComponent<Node2D>(gameObject);
-		auto sprite = gameObject->AddComponent<Sprite>();
-		sprite->Origin = Vector2{0.5f, 0.5f};
-		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());
-	
-		auto & transform = node->Transform();
-		transform.Position = {0, 0};
-		transform.Scale = {2, 2};
-	}
-	
-	auto rootNode = gameWorld.Component<Node2D>(rootObjectID);
-	
-	for (int i = 0; i < 10; ++i)
-	{
-		auto gameObject = gameWorld.CreateObject();
-		gameObject->AddComponent<CanvasItem>();
-		auto node = gameObject->AddComponent<Node2D>(gameObject);
-		auto sprite = gameObject->AddComponent<Sprite>();
-		auto & transform = node->Transform();
-		
-		transform.Position.X = i * 64 * 2.0f;
-		transform.Position.Y = 0;
-		transform.Scale.X = transform.Scale.Y = 2.0f;
-		transform.Rotation = (0.5f * i) * MathConstants<float>::PiOver4();
-		sprite->Origin = Vector2{0.5f, 0.5f};
-		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
-		
-		rootNode->AddChild(gameObject);
 	}
 	
 	{
@@ -300,28 +266,6 @@ void GrassBlendingGame::DrawSprites()
 	
 	POMDOG_ASSERT(spriteRenderer);
 	spriteRenderer->Begin(vierMatrix3D);
-	
-//	auto rootNode = gameWorld.Component<Node2D>(rootObjectID);
-//	auto worldMatrix = Matrix4x4::CreateTranslation(Vector3(rootNode->Transform().Position, 0.0f));
-//	{
-//		for (auto child: rootNode->Children())
-//		{
-//			auto canvasItem = child->Component<CanvasItem>();
-//			if (!child || !canvasItem->Visibile) {
-//				continue;
-//			}
-//		
-//			auto node = child->Component<Node2D>();
-//
-//			auto sprite = child->Component<Sprite>();
-//			auto & transform = node->Transform();
-//			
-//			constexpr float layerDepth = 0.0f;
-//
-//			spriteRenderer->Draw(texture, worldMatrix, transform.Position, sprite->Subrect,
-//				Color::White, transform.Rotation, sprite->Origin, transform.Scale, layerDepth);
-//		}
-//	}
 
 	auto const& globalPoses = maidSkeletonPose->GlobalPose;
 
