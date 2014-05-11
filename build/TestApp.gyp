@@ -98,6 +98,8 @@
         '../test/TestApp/Skeletal2D/SkeletonDesc.hpp',
         '../test/TestApp/Skeletal2D/SkeletonDescLoader.cpp',
         '../test/TestApp/Skeletal2D/SkeletonDescLoader.hpp',
+        '../test/TestApp/Skeletal2D/SkeletonHelper.cpp',
+        '../test/TestApp/Skeletal2D/SkeletonHelper.hpp',
         '../test/TestApp/Skeletal2D/SkeletonLoader.cpp',
         '../test/TestApp/Skeletal2D/SkeletonLoader.hpp',
         '../test/TestApp/Skeletal2D/SkeletonPose.hpp',

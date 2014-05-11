@@ -20,6 +20,7 @@
 #include "Skeletal2D/SkeletonLoader.hpp"
 #include "Skeletal2D/SkinLoader.hpp"
 #include "Skeletal2D/SpriteAnimationLoader.hpp"
+#include "Skeletal2D/SkeletonHelper.hpp"
 
 namespace TestApp {
 namespace {
@@ -38,36 +39,6 @@ static Matrix4x4 CreateViewMatrix3D(Transform2D const& transform, Camera2D const
 		Matrix4x4::CreateScale({camera.Zoom(), camera.Zoom(), 1});
 }
 //-----------------------------------------------------------------------
-static void Traverse(Matrix4x4 const& worldMatrix,
-	Skeleton const& skeleton,
-	SkeletonPose const& skeletonPose,
-	JointIndex const& boneIndex,
-	std::function<void(Matrix4x4 const& boneMatrix, Joint const&)> const& traverser)
-{
-	POMDOG_ASSERT(boneIndex);
-	auto & bone = skeleton.Joints(boneIndex);
-	auto & pose = skeletonPose.LocalPose[*boneIndex];
-
-	Matrix4x4 matrix = Matrix4x4::CreateScale(pose.Scale);
-	matrix *= Matrix4x4::CreateRotationZ(pose.Rotation);
-	matrix *= Matrix4x4::CreateTranslation({pose.Translate, 0.0f});
-	matrix *= worldMatrix;
-
-	if (bone.FirstChild) {
-		Traverse(matrix, skeleton, skeletonPose, bone.FirstChild, traverser);
-	}
-	if (bone.Sibling) {
-		Traverse(worldMatrix, skeleton, skeletonPose, bone.Sibling, traverser);
-	}
-	traverser(matrix, bone);
-}
-//-----------------------------------------------------------------------
-static void Traverse(Skeleton const& skeleton, SkeletonPose const& skeletonPose,
-	std::function<void(Matrix4x4 const& boneMatrix, Joint const&)> const& traverser)
-{
-	Traverse(Matrix4x4::Identity, skeleton, skeletonPose, skeleton.Root().Index, traverser);
-}
-//-----------------------------------------------------------------------
 static SkeletonPose CreateSkeletonPoseBySkeleton(Skeleton const& skeleton)
 {
 	SkeletonPose skeletonPose;
@@ -77,10 +48,7 @@ static SkeletonPose CreateSkeletonPoseBySkeleton(Skeleton const& skeleton)
 	}
 
 	skeletonPose.GlobalPose.resize(skeleton.JointCount());
-	Traverse(skeleton, skeletonPose, [&](Matrix4x4 const& boneMatrix, Joint const& bone) {
-		POMDOG_ASSERT(*bone.Index < skeletonPose.GlobalPose.size());
-		skeletonPose.GlobalPose[*bone.Index] = boneMatrix;
-	});
+	SkeletonHelper::ComputeGlobalPoseFromLocalPose(skeleton, skeletonPose);
 	
 	return std::move(skeletonPose);
 }

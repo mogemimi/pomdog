@@ -9,7 +9,6 @@
 #include "AnimationSystem.hpp"
 #include <vector>
 #include <algorithm>
-#include <functional>
 #include <Pomdog/Math/Matrix4x4.hpp>
 #include <Pomdog/Utility/Assert.hpp>
 #include "AnimationClip.hpp"
@@ -17,6 +16,7 @@
 #include "JointIndex.hpp"
 #include "Skeleton.hpp"
 #include "SkeletonPose.hpp"
+#include "SkeletonHelper.hpp"
 
 namespace Pomdog {
 namespace {
@@ -27,35 +27,6 @@ public:
 	std::shared_ptr<Skeleton const> Skeleton;
 	std::shared_ptr<SkeletonPose> SkeletonPose;
 };
-//-----------------------------------------------------------------------
-static void Traverse(
-	Skeleton const& skeleton, JointIndex const& boneIndex,
-	std::function<void(Joint const& target)> const& traverser)
-{
-	POMDOG_ASSERT(boneIndex);
-	auto & bone = skeleton.Joints(boneIndex);
-
-	POMDOG_ASSERT(bone.Parent);
-	traverser(bone);
-	
-	if (bone.FirstChild) {
-		Traverse(skeleton, bone.FirstChild, traverser);
-	}
-	if (bone.Sibling) {
-		Traverse(skeleton, bone.Sibling, traverser);
-	}
-}
-//-----------------------------------------------------------------------
-static void Traverse(Skeleton const& skeleton,
-	std::function<void(Joint const& target)> const& traverser)
-{
-	POMDOG_ASSERT(skeleton.JointCount() > 0);
-	POMDOG_ASSERT(skeleton.Root().Index);
-	if (skeleton.Root().FirstChild)
-	{
-		Traverse(skeleton, skeleton.Root().FirstChild, traverser);
-	}
-}
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
@@ -119,36 +90,7 @@ void AnimationSystem::Impl::Update(GameClock const& clock)
 		///@todo Not implemented
 		
 		// (4) Global pose generation:
-		{
-			auto bone = skeleton.Root();
-			POMDOG_ASSERT(*bone.Index < skeletonPose.LocalPose.size());
-			auto & pose = skeletonPose.LocalPose[*bone.Index];
-		
-			Matrix4x4 matrix = Matrix4x4::CreateScale(pose.Scale);
-			matrix *= Matrix4x4::CreateRotationZ(pose.Rotation);
-			matrix *= Matrix4x4::CreateTranslation({pose.Translate, 0.0f});
-		
-			POMDOG_ASSERT(*bone.Index < skeletonPose.GlobalPose.size());
-			skeletonPose.GlobalPose[*bone.Index] = Matrix4x4::Identity;
-		}
-
-		Traverse(skeleton, [&](Joint const& bone)
-		{
-			POMDOG_ASSERT(*bone.Index < skeletonPose.LocalPose.size());
-			auto & pose = skeletonPose.LocalPose[*bone.Index];
-			
-			POMDOG_ASSERT(bone.Parent);
-			POMDOG_ASSERT(*bone.Index < skeletonPose.GlobalPose.size());
-			auto & parentMatrix = skeletonPose.GlobalPose[*bone.Parent];
-
-			Matrix4x4 matrix = Matrix4x4::CreateScale(pose.Scale);
-			matrix *= Matrix4x4::CreateRotationZ(pose.Rotation);
-			matrix *= Matrix4x4::CreateTranslation({pose.Translate, 0.0f});
-			matrix *= parentMatrix;
-
-			POMDOG_ASSERT(*bone.Index < skeletonPose.GlobalPose.size());
-			skeletonPose.GlobalPose[*bone.Index] = matrix;
-		});
+		SkeletonHelper::ComputeGlobalPoseFromLocalPose(skeleton, skeletonPose);
 	}
 }
 //-----------------------------------------------------------------------
