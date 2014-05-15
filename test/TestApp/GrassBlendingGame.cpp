@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -177,8 +177,9 @@ void GrassBlendingGame::Initialize()
 	}
 	
 	{
-		auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidChan/skeleton.atlas");
-		auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("MaidChan/skeleton.json");
+		auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidChan2/skeleton.atlas");
+		auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("MaidChan2/skeleton.json");
+		maidTexture = assets->Load<Texture2D>("MaidChan2/skeleton.png");
 		
 		LogSkeletalInfo(textureAtlas, skeletonDesc);
 		
@@ -189,7 +190,6 @@ void GrassBlendingGame::Initialize()
 		
 		maidSkin = Details::Skeletal2D::CreateSkin(skeletonDesc, textureAtlas, "default");
 		maidSpriteAnimationTracks = Details::Skeletal2D::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
-		maidTexture = assets->Load<Texture2D>("MaidChan/skeleton.png");
 		
 		animationSystem.Add(maidAnimationState, maidSkeleton, maidSkeletonPose);
 	}

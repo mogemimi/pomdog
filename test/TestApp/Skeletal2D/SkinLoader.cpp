@@ -44,6 +44,31 @@ static std::vector<RigidSlot> CreateSlots(std::vector<Skeletal2D::SlotDesc> cons
 			continue;
 		}
 
+		if (iter->Attachments.empty() && !iter->SkinnedMeshAttachments.empty())
+		{
+			///@todo Not implement
+			
+			///@note push dummy attachment data
+			RigidSlot slot;
+			slot.JointIndex = JointIndex(0);
+			
+			slot.Color = Color::White;
+			slot.DrawOrder = drawOrder;
+			slot.Scale = {1, 1};
+			slot.Translate = {0, 0};
+			slot.Rotation = 0;
+			
+			slot.TexturePage = 0;
+			slot.TextureRotate = false;
+			slot.Subrect = {0, 0, 1, 1};
+			slot.Origin.X = 0;
+			slot.Origin.Y = 0;
+
+			slots.push_back(std::move(slot));
+			++drawOrder;
+			continue;
+		}
+		
 		POMDOG_ASSERT(!iter->Attachments.empty());
 
 		if (iter->Attachments.empty()) {
@@ -51,7 +76,7 @@ static std::vector<RigidSlot> CreateSlots(std::vector<Skeletal2D::SlotDesc> cons
 			// Error
 			continue;
 		}
-
+		
 		auto attachment = std::find_if(std::begin(iter->Attachments), std::end(iter->Attachments), [&slotDesc](AttachmentDesc const& desc) {
 			return desc.Name == slotDesc.Attachement;
 		});
@@ -76,8 +101,8 @@ static std::vector<RigidSlot> CreateSlots(std::vector<Skeletal2D::SlotDesc> cons
 			continue;
 		}
 		
-		auto boneDesc = std::find_if(std::begin(bones), std::end(bones), [&slotDesc](BoneDesc const& desc) {
-			return desc.Name == slotDesc.Bone;
+		auto boneDesc = std::find_if(std::begin(bones), std::end(bones), [&slotDesc](BoneDesc const& bone) {
+			return bone.Name == slotDesc.Bone;
 		});
 		
 		POMDOG_ASSERT(boneDesc != std::end(bones));
@@ -89,6 +114,8 @@ static std::vector<RigidSlot> CreateSlots(std::vector<Skeletal2D::SlotDesc> cons
 		}
 
 		RigidSlot slot;
+		slot.JointIndex = std::distance(std::begin(bones), boneDesc);
+		
 		slot.Color = Color::White;
 		slot.DrawOrder = drawOrder;
 		slot.Scale = attachment->Scale;
@@ -107,9 +134,7 @@ static std::vector<RigidSlot> CreateSlots(std::vector<Skeletal2D::SlotDesc> cons
 			std::swap(slot.Subrect.Width, slot.Subrect.Height);
 			std::swap(slot.Origin.X, slot.Origin.Y);
 		}
-		
-		slot.JointIndex = std::distance(std::begin(bones), boneDesc);
-
+	
 		slots.push_back(std::move(slot));
 		++drawOrder;
 	}

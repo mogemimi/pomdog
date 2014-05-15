@@ -10,6 +10,7 @@
 #include <utility>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 #include <rapidjson/document.h>
 
 namespace Pomdog {
@@ -22,6 +23,8 @@ using Skeletal2D::SlotDesc;
 using Skeletal2D::SkeletonDesc;
 using Skeletal2D::SkinDesc;
 using Skeletal2D::SkinSlotDesc;
+using Skeletal2D::SkinnedMeshVertexDesc;
+using Skeletal2D::SkinnedMeshAttachmentDesc;
 using Skeletal2D::AnimationSamplePointTranslate;
 using Skeletal2D::AnimationSamplePointRotate;
 using Skeletal2D::AnimationSamplePointScale;
@@ -259,42 +262,198 @@ static std::vector<SlotDesc> ReadSlots(rapidjson::Value const& slotsDOM)
 	return std::move(slots);
 }
 //-----------------------------------------------------------------------
-static std::vector<AttachmentDesc> ReadAttachments(rapidjson::Value const& attachmentsDOM)
+static std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
+	rapidjson::Value const& verticesArray, rapidjson::Value const& uvsArray)
 {
-	POMDOG_ASSERT(attachmentsDOM.IsObject());
+	POMDOG_ASSERT(verticesArray.IsArray());
+	POMDOG_ASSERT(uvsArray.IsArray());
 
-	std::vector<AttachmentDesc> attachments;
+	auto const verticesCount = uvsArray.Size()/2;
+
+	std::vector<SkinnedMeshVertexDesc> vertices;
+	vertices.reserve(verticesCount);
 	
-	for (auto iter = attachmentsDOM.MemberBegin(); iter != attachmentsDOM.MemberEnd(); ++iter)
+	std::uint32_t verticesIter = 0;
+	auto uvsIter = uvsArray.Begin();
+	
+	while (uvsIter != uvsArray.End())
 	{
-		if (!iter->name.IsString() || !iter->value.IsObject()) {
-			///@todo Not implemented
-			// Error
-			continue;
+		POMDOG_ASSERT(verticesIter < verticesArray.Size());
+
+		struct LocalVertex {
+			Vector2 Position;
+			float Weight;
+			JointIndex JointIndex;
+		};
+		
+		POMDOG_ASSERT(verticesArray[verticesIter].IsUint());
+		std::uint8_t const sourceBoneCount = verticesArray[verticesIter].GetUint();
+		++verticesIter;
+		POMDOG_ASSERT(sourceBoneCount > 0);
+		
+		std::vector<LocalVertex> localVertices;
+		localVertices.reserve(sourceBoneCount);
+	
+		for (std::uint8_t index = 0; index < sourceBoneCount; ++index)
+		{
+			POMDOG_ASSERT(verticesIter < verticesArray.Size());
+			
+			LocalVertex vertex;
+			
+			POMDOG_ASSERT(verticesArray[verticesIter].IsUint());
+			vertex.JointIndex = verticesArray[verticesIter].GetUint();
+			++verticesIter;
+			
+			POMDOG_ASSERT(verticesArray[verticesIter].IsNumber());
+			vertex.Position.X = verticesArray[verticesIter].GetDouble();
+			++verticesIter;
+			
+			POMDOG_ASSERT(verticesArray[verticesIter].IsNumber());
+			vertex.Position.Y = verticesArray[verticesIter].GetDouble();
+			++verticesIter;
+			
+			POMDOG_ASSERT(verticesArray[verticesIter].IsNumber());
+			vertex.Weight = verticesArray[verticesIter].GetDouble();
+			++verticesIter;
+		}
+	
+		SkinnedMeshVertexDesc vertex;
+		
+		if (localVertices.size() >= vertex.BoundJoints.size())
+		{
+			std::sort(std::begin(localVertices), std::end(localVertices),
+				[](LocalVertex const& a, LocalVertex const& b){ return a.Weight > b.Weight; });
+
+			float accumulatedWeight = 0;
+			for (std::uint8_t index = 0; index < vertex.BoundJoints.size(); ++index)
+			{
+				POMDOG_ASSERT(index < vertex.BoundJoints.size());
+				accumulatedWeight += localVertices[index].Weight;
+			}
+			
+			if (accumulatedWeight < 1)
+			{
+				auto weightDiff = (1 - accumulatedWeight)/vertex.BoundJoints.size();
+				for (auto & localVertex: localVertices)
+				{
+					localVertex.Weight += weightDiff;
+				}
+			}
 		}
 		
-		AttachmentDesc attachmentDesc;
-		attachmentDesc.Name = iter->name.GetString();
-		attachmentDesc.Scale = {1, 1};
-		attachmentDesc.Translate = {1, 1};
-		attachmentDesc.Rotation = 0;
-		attachmentDesc.Height = 1;
-		attachmentDesc.Width = 1;
+		vertex.Position = localVertices.front().Position;
 		
-		auto & attachmentObject = iter->value;
+		auto boneCount = std::min(vertex.BoundJoints.size(), localVertices.size());
+		for (std::uint8_t index = 0; index < boneCount; ++index)
+		{
+			POMDOG_ASSERT(boneCount < vertex.BoundJoints.size());
+			vertex.BoundJoints[boneCount] = localVertices[boneCount].JointIndex;
+			
+			POMDOG_ASSERT(boneCount < vertex.Weight.size());
+			vertex.Weight[boneCount] = localVertices[boneCount].Weight;
+		}
 		
-		ReadJsonMember(attachmentObject, "x", attachmentDesc.Translate.X);
-		ReadJsonMember(attachmentObject, "y", attachmentDesc.Translate.Y);
-		ReadJsonMember(attachmentObject, "scaleX", attachmentDesc.Scale.X);
-		ReadJsonMember(attachmentObject, "scaleY", attachmentDesc.Scale.Y);
-		ReadJsonMember(attachmentObject, "rotation", attachmentDesc.Rotation);
-		ReadJsonMember(attachmentObject, "width", attachmentDesc.Width);
-		ReadJsonMember(attachmentObject, "height", attachmentDesc.Height);
+		POMDOG_ASSERT(uvsIter->IsNumber());
+		vertex.TextureCoordinate.X = uvsIter->GetDouble();
+		++uvsIter;
+		POMDOG_ASSERT(uvsIter != uvsArray.End());
+		POMDOG_ASSERT(uvsIter->IsNumber());
+		vertex.TextureCoordinate.Y = uvsIter->GetDouble();
+		++uvsIter;
 		
-		attachments.push_back(std::move(attachmentDesc));
+		vertices.push_back(std::move(vertex));
 	}
 	
-	return std::move(attachments);
+	return std::move(vertices);
+}
+//-----------------------------------------------------------------------
+static std::vector<std::uint32_t> ReadSkinnedMeshIndices(rapidjson::Value const& indicesArray)
+{
+	POMDOG_ASSERT(indicesArray.IsArray());
+
+	std::vector<std::uint32_t> indices;
+	indices.reserve(indicesArray.Size());
+	
+	for (auto iter = indicesArray.Begin(); iter != indicesArray.End(); ++iter)
+	{
+		POMDOG_ASSERT(iter->IsUint());
+		indices.push_back(iter->GetUint());
+	}
+	
+	return std::move(indices);
+}
+//-----------------------------------------------------------------------
+static AttachmentDesc ReadAttachment(rapidjson::Value::ConstMemberIterator const& iter)
+{
+	POMDOG_ASSERT(iter->name.IsString());
+	POMDOG_ASSERT(iter->value.IsObject());
+
+	AttachmentDesc attachmentDesc;
+	attachmentDesc.Name = iter->name.GetString();
+	attachmentDesc.Scale = {1, 1};
+	attachmentDesc.Translate = {1, 1};
+	attachmentDesc.Rotation = 0;
+	attachmentDesc.Height = 1;
+	attachmentDesc.Width = 1;
+	
+	auto & attachmentObject = iter->value;
+	
+	ReadJsonMember(attachmentObject, "x", attachmentDesc.Translate.X);
+	ReadJsonMember(attachmentObject, "y", attachmentDesc.Translate.Y);
+	ReadJsonMember(attachmentObject, "scaleX", attachmentDesc.Scale.X);
+	ReadJsonMember(attachmentObject, "scaleY", attachmentDesc.Scale.Y);
+	ReadJsonMember(attachmentObject, "rotation", attachmentDesc.Rotation);
+	ReadJsonMember(attachmentObject, "width", attachmentDesc.Width);
+	ReadJsonMember(attachmentObject, "height", attachmentDesc.Height);
+	
+	return std::move(attachmentDesc);
+}
+//-----------------------------------------------------------------------
+static SkinnedMeshAttachmentDesc ReadSkinnedMeshAttachment(rapidjson::Value::ConstMemberIterator const& iter)
+{
+	POMDOG_ASSERT(iter->name.IsString());
+	POMDOG_ASSERT(iter->value.IsObject());
+
+	auto & attachmentObject = iter->value;
+	
+	POMDOG_ASSERT(!(!attachmentObject.HasMember("type")
+		|| !attachmentObject["type"].IsString()
+		|| std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") != 0));
+	if (!attachmentObject.HasMember("type")
+		|| !attachmentObject["type"].IsString()
+		|| std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") != 0) {
+		///@todo Not implemented
+		// Error
+		return {};
+	}
+	
+	POMDOG_ASSERT(!(!attachmentObject.HasMember("triangles") || !attachmentObject["triangles"].IsArray()));
+	if (!attachmentObject.HasMember("triangles") || !attachmentObject["triangles"].IsArray()) {
+		///@todo Not implemented
+		// Error
+		return {};
+	}
+	
+	POMDOG_ASSERT(!(!attachmentObject.HasMember("vertices") || !attachmentObject["vertices"].IsArray()));
+	if (!attachmentObject.HasMember("vertices") || !attachmentObject["vertices"].IsArray()) {
+		///@todo Not implemented
+		// Error
+		return {};
+	}
+	
+	POMDOG_ASSERT(!(!attachmentObject.HasMember("uvs") || !attachmentObject["uvs"].IsArray()));
+	if (!attachmentObject.HasMember("uvs") || !attachmentObject["uvs"].IsArray()) {
+		///@todo Not implemented
+		// Error
+		return {};
+	}
+	
+	SkinnedMeshAttachmentDesc desc;
+	desc.Name = iter->name.GetString();
+	desc.Vertices = ReadSkinnedMeshVertices(attachmentObject["vertices"], attachmentObject["uvs"]);
+	desc.Indices = ReadSkinnedMeshIndices(attachmentObject["triangles"]);
+
+	return std::move(desc);
 }
 //-----------------------------------------------------------------------
 static std::vector<SkinSlotDesc> ReadSkinSlots(rapidjson::Value const& slotsDOM)
@@ -302,18 +461,42 @@ static std::vector<SkinSlotDesc> ReadSkinSlots(rapidjson::Value const& slotsDOM)
 	POMDOG_ASSERT(slotsDOM.IsObject());
 
 	std::vector<SkinSlotDesc> slots;
-	
-	for (auto iter = slotsDOM.MemberBegin(); iter != slotsDOM.MemberEnd(); ++iter)
+
+	for (auto slotIter = slotsDOM.MemberBegin(); slotIter != slotsDOM.MemberEnd(); ++slotIter)
 	{
-		if (!iter->name.IsString() || !iter->value.IsObject()) {
+		if (!slotIter->name.IsString() || !slotIter->value.IsObject()) {
 			///@todo Not implemented
 			// Error
 			continue;
 		}
 		
 		SkinSlotDesc slotDesc;
-		slotDesc.Name = iter->name.GetString();
-		slotDesc.Attachments = ReadAttachments(iter->value);
+		slotDesc.Name = slotIter->name.GetString();
+		
+		auto & attachmentsDOM = slotIter->value;
+		
+		for (auto iter = attachmentsDOM.MemberBegin(); iter != attachmentsDOM.MemberEnd(); ++iter)
+		{
+			if (!iter->name.IsString() || !iter->value.IsObject()) {
+				///@todo Not implemented
+				// Error
+				continue;
+			}
+			
+			auto & attachmentObject = iter->value;
+			
+			if (attachmentObject.HasMember("type")
+				&& attachmentObject["type"].IsString()
+				&& std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") == 0)
+			{
+				slotDesc.SkinnedMeshAttachments.push_back(ReadSkinnedMeshAttachment(iter));
+			}
+			else
+			{
+				slotDesc.Attachments.push_back(ReadAttachment(iter));
+			}
+		}
+		
 		slots.push_back(std::move(slotDesc));
 	}
 	

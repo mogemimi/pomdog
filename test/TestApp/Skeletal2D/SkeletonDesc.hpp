@@ -15,12 +15,14 @@
 
 #include <cstdint>
 #include <vector>
+#include <array>
 #include <string>
 #include <Pomdog/Math/Vector2.hpp>
 #include <Pomdog/Math/Radian.hpp>
 #include <Pomdog/Math/Color.hpp>
 #include "CompressedFloat.hpp"
 #include "JointPose.hpp"
+#include "JointIndex.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -51,9 +53,25 @@ public:
 	std::uint16_t Height;
 };
 
+class SkinnedMeshVertexDesc {
+public:
+	Vector2 Position;
+	Vector2 TextureCoordinate;
+	std::array<float, 4> Weight;
+	std::array<JointIndex, 4> BoundJoints;
+};
+
+class SkinnedMeshAttachmentDesc {
+public:
+	std::string Name;
+	std::vector<SkinnedMeshVertexDesc> Vertices;
+	std::vector<std::uint32_t> Indices;
+};
+
 class SkinSlotDesc {
 public:
 	std::vector<AttachmentDesc> Attachments;
+	std::vector<SkinnedMeshAttachmentDesc> SkinnedMeshAttachments;
 	std::string Name;
 };
 
