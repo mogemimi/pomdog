@@ -37,44 +37,41 @@ public:
 	/// ゲームウィンドウの左上隅を基準とした位置を示します。
 	/// マウスカーソルがクライアント領域外である左端、上端を越えた場合、
 	/// 負の値をとることがあります。
-	Point2D Position;
+	Point2D Position {0, 0};
 
 	///@~Japanese
 	/// @brief マウススクロールホイールの移動量
-	std::int32_t ScrollWheel;
+	std::int32_t ScrollWheel = 0;
 
 	///@~English
 	/// @brief Left mouse button
 	///@~Japanese
 	/// @brief マウス左ボタン
-	ButtonState LeftButton;
+	ButtonState LeftButton = ButtonState::Released;
 
 	///@~English
 	/// @brief Middle mouse button
 	///@~Japanese
 	/// @brief マウス中央ボタン
-	ButtonState MiddleButton;
+	ButtonState MiddleButton = ButtonState::Released;
 
 	///@~English
 	/// @brief Right mouse button
 	///@~Japanese
 	/// @brief マウス右ボタン
-	ButtonState RightButton;
+	ButtonState RightButton = ButtonState::Released;
 
 	///@~English
 	/// @brief First extended mouse button
 	///@~Japanese
 	/// @brief マウス拡張ボタン1
-	ButtonState XButton1;
+	ButtonState XButton1 = ButtonState::Released;
 
 	///@~English
 	/// @brief Second extended mouse button
 	///@~Japanese
 	/// @brief マウス拡張ボタン2
-	ButtonState XButton2;
-	
-public:
-	MouseState();
+	ButtonState XButton2 = ButtonState::Released;
 };
 
 /// @}

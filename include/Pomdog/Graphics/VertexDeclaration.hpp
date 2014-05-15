@@ -30,9 +30,7 @@ namespace Pomdog {
 class POMDOG_EXPORT VertexDeclaration {
 public:
 	VertexDeclaration() = delete;
-	VertexDeclaration(VertexDeclaration const&) = default;
-	VertexDeclaration(VertexDeclaration &&) = default;
-
+	
 	VertexDeclaration(std::initializer_list<VertexElement> vertexElements);
 
 	explicit VertexDeclaration(std::vector<VertexElement> const& vertexElements);
@@ -41,11 +39,6 @@ public:
 	
 	VertexDeclaration(VertexElement const* vertexElements, std::size_t elementCount);
 
-	~VertexDeclaration() = default;
-
-	VertexDeclaration & operator=(VertexDeclaration const&) = default;
-	VertexDeclaration & operator=(VertexDeclaration &&) = default;
-	
 	///@~Japanese
 	/// @brief 頂点データ 1 つ分のサイズをバイト単位で取得します。
 	/// @remarks 1 つの頂点の先頭から次の頂点までのバイト数です。

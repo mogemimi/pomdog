@@ -14,6 +14,7 @@
 #endif
 
 #include <cstdint>
+#include <limits>
 #include "../Config/Export.hpp"
 #include "ComparisonFunction.hpp"
 #include "DepthStencilOperation.hpp"
@@ -39,41 +40,38 @@ public:
 
 	///@~Japanese
 	/// @brief ステンシルテストの比較に使用する基準値を指定します。デフォルト値は 0 です。
-	std::int32_t ReferenceStencil;
+	std::int32_t ReferenceStencil = 0;
 
 	///@~Japanese
 	/// @brief ステンシルバッファの中で、ステンシルデータの読み取り部分を識別するために適用されるマスクです。
 	/// デフォルト値は std::numeric_limits<std::uint32_t>::max() です。
 	/// @remarks デフォルト値は、全てのビットが 1 になっている符号なし整数の最大値です。
-	std::uint32_t StencilMask;
+	std::uint32_t StencilMask = std::numeric_limits<std::uint32_t>::max();
 
 	///@~Japanese
 	/// @brief ステンシルバッファの中で、ステンシルデータの書き込み部分を識別するために適用されるマスクです。
 	/// デフォルト値は std::numeric_limits<std::uint32_t>::max() です。
 	/// @remarks デフォルト値は、全てのビットが 1 になっている符号なし整数の最大値です。
-	std::uint32_t StencilWriteMask;
+	std::uint32_t StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
 
 	///@~Japanese
 	/// @brief 深度テストで使用する比較関数を指定します。デフォルト値は ComparisonFunction::LessEqual です。
-	ComparisonFunction DepthBufferFunction;
+	ComparisonFunction DepthBufferFunction = ComparisonFunction::LessEqual;
 
 	///@~Japanese
 	/// @brief 深度テストを有効または無効にします。デフォルト値は有効 (true) です。
 	/// @remarks 深度テストを有効にする場合は true を、無効にする場合は false を指定します。
-	bool DepthBufferEnable;
+	bool DepthBufferEnable = true;
 
 	///@~Japanese
 	/// @brief 深度バッファへの書き込みを有効または無効にします。デフォルト値は有効 (true) です。
 	/// @remarks 深度バッファへの書き込みを有効にする場合は true を、
 	/// 無効にする場合は false を指定します。
-	bool DepthBufferWriteEnable;
+	bool DepthBufferWriteEnable = true;
 
 	///@~Japanese
 	/// @brief ステンシルテストを有効または無効にします。デフォルト値は無効 (false) です。
-	bool StencilEnable;
-
-public:
-	DepthStencilDescription();
+	bool StencilEnable = false;
 };
 
 /// @}
