@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,30 +6,34 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_SPRITEANIMATIONLOADER_C360BEBA_795B_404D_932B_CFD7ACF40805_HPP
-#define POMDOG_SPRITEANIMATIONLOADER_C360BEBA_795B_404D_932B_CFD7ACF40805_HPP
+#ifndef POMDOG_SKINNEDMESHLOADER_0D066D10_C749_4235_9B20_0F05627523E5_HPP
+#define POMDOG_SKINNEDMESHLOADER_0D066D10_C749_4235_9B20_0F05627523E5_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
 #endif
 
-#include <vector>
+#include <memory>
+#include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include "TextureAtlas.hpp"
 
 namespace Pomdog {
+
+class SkinnedMesh;
+
 namespace Details {
 namespace Skeletal2D {
 
 class SkeletonDesc;
-class SpriteAnimationTrack;
 
-std::vector<SpriteAnimationTrack> CreateSpriteAnimationTrack(
-	SkeletonDesc const& desc,
+SkinnedMesh CreateSkinnedMesh(
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	SkeletonDesc const& skeletonDesc,
 	Details::TexturePacker::TextureAtlas const& textureAtlas,
-	char const* name);
+	std::string const& skinName);
 
 }// namespace Skeletal2D
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SPRITEANIMATIONLOADER_C360BEBA_795B_404D_932B_CFD7ACF40805_HPP)
+#endif // !defined(POMDOG_SKINNEDMESHLOADER_0D066D10_C749_4235_9B20_0F05627523E5_HPP)

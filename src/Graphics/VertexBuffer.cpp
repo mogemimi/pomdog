@@ -63,6 +63,7 @@ void VertexBuffer::SetData(void const* source, std::uint32_t elementCountIn)
 	POMDOG_ASSERT(elementCountIn > 0);
 	POMDOG_ASSERT(elementCountIn <= vertexCount);
 	POMDOG_ASSERT(nativeVertexBuffer);
+	POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
 	nativeVertexBuffer->SetData(source, elementCountIn, vertexDeclaration);
 }
 //-----------------------------------------------------------------------

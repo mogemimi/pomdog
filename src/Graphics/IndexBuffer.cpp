@@ -49,6 +49,7 @@ void IndexBuffer::SetData(void const* source, std::uint32_t elementCountIn)
 	POMDOG_ASSERT(elementCountIn > 0);
 	POMDOG_ASSERT(elementCountIn <= indexCount);
 	POMDOG_ASSERT(nativeIndexBuffer);
+	POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
 	nativeIndexBuffer->SetData(source, elementCountIn, elementSize);
 }
 //-----------------------------------------------------------------------

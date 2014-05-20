@@ -14,7 +14,10 @@
 #endif
 
 #include <cstdint>
-#include <Pomdog/Pomdog.hpp>
+#include <Pomdog/Math/Rectangle.hpp>
+#include <Pomdog/Math/Vector2.hpp>
+#include <Pomdog/Math/Color.hpp>
+#include <Pomdog/Math/Radian.hpp>
 #include "JointIndex.hpp"
 #include "SkeletonDesc.hpp"
 

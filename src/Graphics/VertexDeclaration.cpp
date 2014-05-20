@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -9,40 +9,18 @@
 #include <Pomdog/Graphics/VertexDeclaration.hpp>
 #include <algorithm>
 #include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Graphics/detail/VertexElementHelper.hpp>
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
 namespace {
 
-static std::uint16_t ToByteSize(VertexElementFormat format)
-{
-	static_assert(sizeof(float) == 4, "FUS RO DAH");
-	switch (format)
-	{
-	case VertexElementFormat::Float:
-	case VertexElementFormat::HalfFloat2:
-	case VertexElementFormat::Byte4:
-		return 4;
-	case VertexElementFormat::Float2:
-	case VertexElementFormat::HalfFloat4:			
-		return 8;
-	case VertexElementFormat::Float3:
-		return 12;
-	case VertexElementFormat::Float4:
-		return 16;
-	}
-#ifdef _MSC_VER
-	POMDOG_ASSERT("cannot find format.");
-	return 0; // error
-#endif
-}
-//-----------------------------------------------------------------------
 static std::uint32_t AccumulateStrideBytes(std::vector<VertexElement> const& elements)
 {
 	std::uint32_t strideBytes = 0;
 	for (auto & vertexElement: elements)
 	{
-		std::uint32_t currentStride = vertexElement.Offset + ToByteSize(vertexElement.VertexElementFormat);
+		std::uint32_t currentStride = vertexElement.Offset
+			+ Details::VertexElementHelper::ToByteSize(vertexElement.VertexElementFormat);
 		if (strideBytes < currentStride) {
 			strideBytes = currentStride;
 		}

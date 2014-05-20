@@ -39,8 +39,8 @@ class SlotDesc {
 public:
 	std::string Name;
 	std::string Attachement;
-	std::string Bone;
 	Color Color;
+	JointIndex Joint;
 };
 
 class AttachmentDesc {
@@ -57,8 +57,10 @@ class SkinnedMeshVertexDesc {
 public:
 	Vector2 Position;
 	Vector2 TextureCoordinate;
-	std::array<float, 4> Weight;
-	std::array<JointIndex, 4> BoundJoints;
+	///@note 最後のウェイト係数は省略している
+	/// Weight3 = 1 - (Weights[0] + Weights[1] + Weights[2]);
+	std::array<float, 3> Weights;
+	std::array<JointIndex, 4> Joints;
 };
 
 class SkinnedMeshAttachmentDesc {
@@ -72,7 +74,7 @@ class SkinSlotDesc {
 public:
 	std::vector<AttachmentDesc> Attachments;
 	std::vector<SkinnedMeshAttachmentDesc> SkinnedMeshAttachments;
-	std::string Name;
+	std::string SlotName;
 };
 
 class SkinDesc {

@@ -15,11 +15,13 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <array>
 #include <utility>
 #include <vector>
-#include "../Config/Export.hpp"
+#include <initializer_list>
 #include "../Math/detail/ForwardDeclarations.hpp"
 #include "VertexDeclaration.hpp"
+#include "detail/VertexElementHelper.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -44,8 +46,12 @@ template <> struct ToVertexElementFormat<Color> {
 template <> struct ToVertexElementFormat<Quaternion> {
 	static constexpr VertexElementFormat value = VertexElementFormat::Float4;
 };
-
-std::uint8_t POMDOG_EXPORT ToByteWidth(VertexElementFormat format);
+template <> struct ToVertexElementFormat<std::array<std::uint8_t, 4>> {
+	static constexpr VertexElementFormat value = VertexElementFormat::Byte4;
+};
+template <> struct ToVertexElementFormat<std::uint8_t[4]> {
+	static constexpr VertexElementFormat value = VertexElementFormat::Byte4;
+};
 
 template <VertexElementFormat... Formats>
 std::vector<VertexElement> VertexCombined()
@@ -57,7 +63,7 @@ std::vector<VertexElement> VertexCombined()
 	std::uint16_t offsetBytes = 0;
 	for (auto format: formats) {
 		vertexElements.push_back({offsetBytes, format});
-		offsetBytes += ToByteWidth(format);
+		offsetBytes += VertexElementHelper::ToByteSize(format);
 	}
 	return std::move(vertexElements);
 }
@@ -88,7 +94,7 @@ template <typename T, typename... Arguments>
 class CustomVertex
 {
 public:
-	Details::Graphics::VertexElementTuple<T, Arguments...> Vertex;
+	Details::Graphics::VertexElementTuple<T, Arguments...> Tuple;
 
 	static VertexDeclaration Declaration()
 	{

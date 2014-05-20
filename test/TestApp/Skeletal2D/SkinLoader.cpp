@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -14,14 +14,10 @@ namespace Details {
 namespace Skeletal2D {
 namespace {
 //-----------------------------------------------------------------------
-static std::vector<RigidSlot> CreateSlots(std::vector<Skeletal2D::SlotDesc> const& slotDescs,
-	std::vector<Skeletal2D::SkinSlotDesc> const& skinSlotDescs,
-	std::vector<Skeletal2D::BoneDesc> const& bones,
+static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs,
+	std::vector<SkinSlotDesc> const& skinSlotDescs,
 	Details::TexturePacker::TextureAtlas const& textureAtlas)
 {
-	using Skeletal2D::SkinSlotDesc;
-	using Skeletal2D::AttachmentDesc;
-	using Skeletal2D::BoneDesc;
 	using Details::TexturePacker::TextureAtlas;
 	using Details::TexturePacker::TextureAtlasRegion;
 
@@ -33,31 +29,28 @@ static std::vector<RigidSlot> CreateSlots(std::vector<Skeletal2D::SlotDesc> cons
 	for (auto & slotDesc: slotDescs)
 	{
 		auto iter = std::find_if(std::begin(skinSlotDescs), std::end(skinSlotDescs), [&slotDesc](SkinSlotDesc const& desc) {
-			return desc.Name == slotDesc.Name;
+			return desc.SlotName == slotDesc.Name;
 		});
 		
 		POMDOG_ASSERT(iter != std::end(skinSlotDescs));
 		
 		if (iter == std::end(skinSlotDescs)) {
-			///@todo Not implement
+			///@todo Not implemented
 			// Error
 			continue;
 		}
 
 		if (iter->Attachments.empty() && !iter->SkinnedMeshAttachments.empty())
 		{
-			///@todo Not implement
+			///@todo Not implemented
 			
 			///@note push dummy attachment data
 			RigidSlot slot;
 			slot.JointIndex = JointIndex(0);
-			
-			slot.Color = Color::White;
 			slot.DrawOrder = drawOrder;
 			slot.Scale = {1, 1};
 			slot.Translate = {0, 0};
 			slot.Rotation = 0;
-			
 			slot.TexturePage = 0;
 			slot.TextureRotate = false;
 			slot.Subrect = {0, 0, 1, 1};
@@ -72,7 +65,7 @@ static std::vector<RigidSlot> CreateSlots(std::vector<Skeletal2D::SlotDesc> cons
 		POMDOG_ASSERT(!iter->Attachments.empty());
 
 		if (iter->Attachments.empty()) {
-			///@todo Not implement
+			///@todo Not implemented
 			// Error
 			continue;
 		}
@@ -84,7 +77,7 @@ static std::vector<RigidSlot> CreateSlots(std::vector<Skeletal2D::SlotDesc> cons
 		POMDOG_ASSERT(attachment != std::end(iter->Attachments));
 
 		if (attachment == std::end(iter->Attachments)) {
-			///@todo Not implement
+			///@todo Not implemented
 			// Error
 			continue;
 		}
@@ -96,25 +89,15 @@ static std::vector<RigidSlot> CreateSlots(std::vector<Skeletal2D::SlotDesc> cons
 		POMDOG_ASSERT(textureAtlasRegion != std::end(textureAtlas.regions));
 
 		if (textureAtlasRegion == std::end(textureAtlas.regions)) {
-			///@todo Not implement
+			///@todo Not implemented
 			// Error
 			continue;
 		}
 		
-		auto boneDesc = std::find_if(std::begin(bones), std::end(bones), [&slotDesc](BoneDesc const& bone) {
-			return bone.Name == slotDesc.Bone;
-		});
-		
-		POMDOG_ASSERT(boneDesc != std::end(bones));
-
-		if (boneDesc == std::end(bones)) {
-			///@todo Not implement
-			// Error
-			continue;
-		}
-
 		RigidSlot slot;
-		slot.JointIndex = std::distance(std::begin(bones), boneDesc);
+		
+		POMDOG_ASSERT(slotDesc.Joint);
+		slot.JointIndex = slotDesc.Joint;
 		
 		slot.Color = Color::White;
 		slot.DrawOrder = drawOrder;
@@ -144,7 +127,7 @@ static std::vector<RigidSlot> CreateSlots(std::vector<Skeletal2D::SlotDesc> cons
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-Skin CreateSkin(Skeletal2D::SkeletonDesc const& skeletonDesc,
+Skin CreateSkin(SkeletonDesc const& skeletonDesc,
 	Details::TexturePacker::TextureAtlas const& textureAtlas,
 	std::string const& skinName)
 {
@@ -152,7 +135,7 @@ Skin CreateSkin(Skeletal2D::SkeletonDesc const& skeletonDesc,
 	POMDOG_ASSERT(!skeletonDesc.Skins.empty());
 
 	auto iter = std::find_if(std::begin(skeletonDesc.Skins), std::end(skeletonDesc.Skins),
-		[&skinName](Skeletal2D::SkinDesc const& desc){ return desc.Name == skinName; });
+		[&skinName](SkinDesc const& desc){ return desc.Name == skinName; });
 
 	POMDOG_ASSERT(iter != std::end(skeletonDesc.Skins));
 
@@ -162,7 +145,12 @@ Skin CreateSkin(Skeletal2D::SkeletonDesc const& skeletonDesc,
 
 	POMDOG_ASSERT(iter != std::end(skeletonDesc.Skins));
 	
-	Skin skin(CreateSlots(skeletonDesc.Slots, iter->Slots, skeletonDesc.Bones, textureAtlas));
+	///@todo Notimplemented
+//	if (iter == std::end(skeletonDesc.Skins)) {
+//		throw NotFound;
+//	}
+	
+	Skin skin(CreateSlots(skeletonDesc.Slots, iter->Slots, textureAtlas));
 	return std::move(skin);
 }
 

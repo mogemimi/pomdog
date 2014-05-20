@@ -214,7 +214,22 @@ static std::vector<BoneDesc> ReadBones(rapidjson::Value const& bonesDOM)
 	return std::move(bones);
 }
 //-----------------------------------------------------------------------
-static std::vector<SlotDesc> ReadSlots(rapidjson::Value const& slotsDOM)
+static JointIndex FindJointIndex(char const* boneName, std::vector<BoneDesc> const& bones)
+{
+	auto iter = std::find_if(std::begin(bones), std::end(bones), [&boneName](BoneDesc const& boneDesc) {
+		return boneDesc.Name == boneName;
+	});
+	POMDOG_ASSERT(iter != std::end(bones));
+	if (iter == std::end(bones))
+	{
+		///@todo Not implemented
+		// Error: Cannot find bone
+		return {};
+	}
+	return std::distance(std::begin(bones), iter);
+}
+//-----------------------------------------------------------------------
+static std::vector<SlotDesc> ReadSlots(rapidjson::Value const& slotsDOM, std::vector<BoneDesc> const& bones)
 {
 	if (!slotsDOM.IsArray()) {
 		///@todo Not implemented
@@ -250,9 +265,9 @@ static std::vector<SlotDesc> ReadSlots(rapidjson::Value const& slotsDOM)
 		
 		SlotDesc slotDesc;
 		slotDesc.Name = name.GetString();
-		slotDesc.Bone = bone.GetString();
 		slotDesc.Attachement = attachment.GetString();
 		slotDesc.Color = Color::White;
+		slotDesc.Joint = FindJointIndex(bone.GetString(), bones);
 
 		ReadJsonMember(slot, "color", slotDesc.Color);
 	
@@ -319,21 +334,21 @@ static std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
 	
 		SkinnedMeshVertexDesc vertex;
 		
-		if (localVertices.size() >= vertex.BoundJoints.size())
+		if (localVertices.size() >= vertex.Joints.size())
 		{
 			std::sort(std::begin(localVertices), std::end(localVertices),
 				[](LocalVertex const& a, LocalVertex const& b){ return a.Weight > b.Weight; });
 
 			float accumulatedWeight = 0;
-			for (std::uint8_t index = 0; index < vertex.BoundJoints.size(); ++index)
+			for (std::uint8_t index = 0; index < vertex.Joints.size(); ++index)
 			{
-				POMDOG_ASSERT(index < vertex.BoundJoints.size());
+				POMDOG_ASSERT(index < vertex.Joints.size());
 				accumulatedWeight += localVertices[index].Weight;
 			}
 			
 			if (accumulatedWeight < 1)
 			{
-				auto weightDiff = (1 - accumulatedWeight)/vertex.BoundJoints.size();
+				auto weightDiff = (1 - accumulatedWeight)/vertex.Joints.size();
 				for (auto & localVertex: localVertices)
 				{
 					localVertex.Weight += weightDiff;
@@ -343,14 +358,18 @@ static std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
 		
 		vertex.Position = localVertices.front().Position;
 		
-		auto boneCount = std::min(vertex.BoundJoints.size(), localVertices.size());
+		auto boneCount = std::min(vertex.Joints.size(), localVertices.size());
 		for (std::uint8_t index = 0; index < boneCount; ++index)
 		{
-			POMDOG_ASSERT(boneCount < vertex.BoundJoints.size());
-			vertex.BoundJoints[boneCount] = localVertices[boneCount].JointIndex;
+			static_assert(vertex.Joints.size() == 4, "");
+			POMDOG_ASSERT(boneCount < vertex.Joints.size());
+			vertex.Joints[boneCount] = localVertices[boneCount].JointIndex;
 			
-			POMDOG_ASSERT(boneCount < vertex.Weight.size());
-			vertex.Weight[boneCount] = localVertices[boneCount].Weight;
+			static_assert(vertex.Weights.size() == 3, "");
+			POMDOG_ASSERT(boneCount < vertex.Weights.size());
+			if (boneCount < vertex.Weights.size() - 1) {
+				vertex.Weights[boneCount] = localVertices[boneCount].Weight;
+			}
 		}
 		
 		POMDOG_ASSERT(uvsIter->IsNumber());
@@ -471,7 +490,7 @@ static std::vector<SkinSlotDesc> ReadSkinSlots(rapidjson::Value const& slotsDOM)
 		}
 		
 		SkinSlotDesc slotDesc;
-		slotDesc.Name = slotIter->name.GetString();
+		slotDesc.SlotName = slotIter->name.GetString();
 		
 		auto & attachmentsDOM = slotIter->value;
 		
@@ -800,7 +819,7 @@ Skeletal2D::SkeletonDesc AssetLoader<Skeletal2D::SkeletonDesc>::operator()(Asset
 		skeleton.Bones = ReadBones(doc["bones"]);
 	}
 	if (doc.HasMember("slots")) {
-		skeleton.Slots = ReadSlots(doc["slots"]);
+		skeleton.Slots = ReadSlots(doc["slots"], skeleton.Bones);
 	}
 	if (doc.HasMember("skins")) {
 		skeleton.Skins = ReadSkins(doc["skins"]);
