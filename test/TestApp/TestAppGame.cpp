@@ -10,6 +10,7 @@
 #include <utility>
 #include "MaidChanGame.hpp"
 #include "GrassBlendingGame.hpp"
+#include "ParticleTestGame.hpp"
 
 namespace TestApp {
 //-----------------------------------------------------------------------
@@ -21,7 +22,7 @@ TestAppGame::~TestAppGame() = default;
 //-----------------------------------------------------------------------
 void TestAppGame::Initialize()
 {
-	this->game.reset(new GrassBlendingGame(gameHost));
+	this->game.reset(new ParticleTestGame(gameHost));
 	game->Initialize();
 }
 //-----------------------------------------------------------------------

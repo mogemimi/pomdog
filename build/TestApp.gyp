@@ -120,6 +120,8 @@
         '../test/TestApp/Skeletal2D/TextureAtlasLoader.cpp',
         '../test/TestApp/Skeletal2D/TextureAtlasLoader.hpp',
         '../test/TestApp/Skeletal2D/TranslationTrack.hpp',
+        '../test/TestApp/ParticleTestGame.cpp',
+        '../test/TestApp/ParticleTestGame.hpp',
         '../test/TestApp/PrimitiveAxes.cpp',
         '../test/TestApp/PrimitiveAxes.hpp',
         '../test/TestApp/PrimitiveGrid.cpp',
