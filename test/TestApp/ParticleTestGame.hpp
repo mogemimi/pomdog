@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -15,6 +15,7 @@
 
 #include <Pomdog/Pomdog.hpp>
 #include "CameraView2D.hpp"
+#include "ParticleSystem.hpp"
 
 namespace TestApp {
 
@@ -58,6 +59,8 @@ private:
 	GameWorld gameWorld;
 	GameObjectID mainCameraID;
 	GameObjectID rootObjectID;
+	
+	ParticleSystem particleSystem;
 };
 
 }// namespace TestApp

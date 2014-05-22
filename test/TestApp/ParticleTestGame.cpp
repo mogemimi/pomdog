@@ -14,55 +14,8 @@
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
 
-
-#include <random> // for particles
-
 namespace TestApp {
 namespace {
-
-class Particle {
-public:
-	Vector2 Position {0, 0};
-	Vector2 Velocity {1, 1};
-	Color Color = Color::White;
-	Radian<float> Rotation = 0;
-	float Size = 1;
-	float TimeToLive = 2;
-};
-
-class ParticleSystem {
-public:
-	
-};
-
-enum ParticleSimulationSpace : std::uint8_t {
-	Local,
-	World
-};
-
-class ParticleEmitter {
-public:
-	float Duration = 5.0f;
-	bool Looping = true;
-	float StartDelay = 0; // bool Prewarm;
-	
-	float StartLifetime = 0; // StartLifetime1 + StartLifetime2
-	float StartSize = 1; // StartSize1 + StartSize2
-	Radian<float> StartRotation = 0;
-	Color StartColor = Color::White;
-	std::uint16_t MaxParticles = 100;
-	
-	///@todo もっと細かくカスタマイズしたいパラメータ
-	std::uint16_t Rate = 4; // 4 particles/sec
-	
-	//float GravityModifier;
-	//float InheritVelocity;
-	//ParticleSimulationSpace SimulationSpace;
-};
-
-static ParticleEmitter particleEmitter;
-static std::vector<Particle> particles;
-
 //-----------------------------------------------------------------------
 static Matrix3x3 CreateViewMatrix2D(Transform2D const& transform, Camera2D const& camera)
 {
@@ -103,7 +56,7 @@ void ParticleTestGame::Initialize()
 		
 		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 		graphicsContext->SetBlendState(blendState);
-		texture = assets->Load<Texture2D>("pomdog.png");
+		texture = assets->Load<Texture2D>("Particles/smoke.png");
 	}
 	{
 		renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
@@ -163,25 +116,21 @@ void ParticleTestGame::Initialize()
 		
 		rootNode->AddChild(gameObject);
 	}
-	
-	{
-		particles.reserve(particleEmitter.MaxParticles);
-	}
 }
 //-----------------------------------------------------------------------
 void ParticleTestGame::Update()
 {
 	auto clock = gameHost->Clock();
 	auto mouse = gameHost->Mouse();
-	{
-		auto node = gameWorld.Component<Node2D>(mainCameraID);
-		auto camera = gameWorld.Component<Camera2D>(mainCameraID);
-		
-		if (node && camera)
-		{
-			cameraView.Input(mouse->State(), *clock, graphicsContext->Viewport().Bounds, node->Transform(), *camera);
-		}
-	}
+//	{
+//		auto node = gameWorld.Component<Node2D>(mainCameraID);
+//		auto camera = gameWorld.Component<Camera2D>(mainCameraID);
+//		
+//		if (node && camera)
+//		{
+//			cameraView.Input(mouse->State(), *clock, graphicsContext->Viewport().Bounds, node->Transform(), *camera);
+//		}
+//	}
 	{
 		static auto duration = DurationSeconds(0);
 		
@@ -189,6 +138,16 @@ void ParticleTestGame::Update()
 			gameHost->Window()->Title(StringFormat("%f fps", clock->FrameRate()));
 			duration = clock->TotalGameTime();
 		}
+	}
+	{
+		if (mouse->State().LeftButton == ButtonState::Pressed)
+		{
+			auto position = Vector2(mouse->State().Position.X - graphicsContext->Viewport().Width()/2,
+				mouse->State().Position.Y - graphicsContext->Viewport().Height()/2);
+			particleSystem.EmitterPosition = position;
+		}
+		
+		particleSystem.Update(clock->FrameDuration());
 	}
 	{
 		static bool isPaused = false;
@@ -204,46 +163,6 @@ void ParticleTestGame::Update()
 		if (isPaused) {
 			return;
 		}
-	}
-	{
-		static DurationSeconds timer(0);
-		
-		timer += clock->FrameDuration();
-		
-		POMDOG_ASSERT(particleEmitter.Rate > 0);
-		if (timer >= DurationSeconds(1/particleEmitter.Rate))
-		{
-			timer = DurationSeconds(0);
-		}
-	
-		float frameDuration = clock->FrameDuration().count();
-		
-		static std::mt19937 random(10000);
-		
-		if (timer <= DurationSeconds(0))
-		{
-			if (particles.size() < particleEmitter.MaxParticles)
-			{
-				Particle particle;
-				std::uniform_real_distribution<float> distribution(-1, 1);
-				particle.Velocity.X = distribution(random);
-				particle.Velocity.Y = distribution(random);
-				particles.push_back(std::move(particle));
-			}
-		}
-	
-		for (auto & particle: particles)
-		{
-			particle.Position += particle.Velocity;
-		}
-		
-		for (auto & particle: particles)
-		{
-			particle.TimeToLive -= frameDuration;
-		}
-		
-		particles.erase(std::remove_if(std::begin(particles), std::end(particles),
-			[](Particle const& p){ return p.TimeToLive <= 0; }), std::end(particles));
 	}
 }
 //-----------------------------------------------------------------------
@@ -266,9 +185,9 @@ void ParticleTestGame::DrawSprites()
 	POMDOG_ASSERT(spriteBatch);
 	spriteBatch->Begin(viewMatrix2D);
 	{
-		for (auto & particle: particles)
+		for (auto & particle: particleSystem.particles)
 		{
-			spriteBatch->Draw(texture, particle.Position, Rectangle{0, 0, 2, 2},
+			spriteBatch->Draw(texture, particle.Position, Rectangle{0, 0, 64, 64},
 				particle.Color, particle.Rotation, {0.5f, 0.5f}, particle.Size, 0);
 		}
 	}
