@@ -54,6 +54,9 @@ private:
 	std::shared_ptr<RenderTarget2D> renderTarget;
 	std::unique_ptr<FXAA> fxaa;
 	
+	std::shared_ptr<BlendState> blendStateAdditive;
+	std::shared_ptr<BlendState> blendStateNonPremultiplied;
+	
 	CameraView2D cameraView;
 	
 	GameWorld gameWorld;

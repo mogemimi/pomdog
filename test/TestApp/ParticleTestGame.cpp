@@ -57,6 +57,9 @@ void ParticleTestGame::Initialize()
 		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 		graphicsContext->SetBlendState(blendState);
 		texture = assets->Load<Texture2D>("Particles/smoke.png");
+		
+		blendStateAdditive = BlendState::CreateAdditive(graphicsDevice);
+		blendStateNonPremultiplied = BlendState::CreateNonPremultiplied(graphicsDevice);
 	}
 	{
 		renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
@@ -122,15 +125,15 @@ void ParticleTestGame::Update()
 {
 	auto clock = gameHost->Clock();
 	auto mouse = gameHost->Mouse();
-//	{
-//		auto node = gameWorld.Component<Node2D>(mainCameraID);
-//		auto camera = gameWorld.Component<Camera2D>(mainCameraID);
-//		
-//		if (node && camera)
-//		{
-//			cameraView.Input(mouse->State(), *clock, graphicsContext->Viewport().Bounds, node->Transform(), *camera);
-//		}
-//	}
+	{
+		auto node = gameWorld.Component<Node2D>(mainCameraID);
+		auto camera = gameWorld.Component<Camera2D>(mainCameraID);
+		
+		if (node && camera)
+		{
+			cameraView.Input(mouse->State(), *clock, graphicsContext->Viewport().Bounds, node->Transform(), *camera);
+		}
+	}
 	{
 		static auto duration = DurationSeconds(0);
 		
@@ -140,11 +143,21 @@ void ParticleTestGame::Update()
 		}
 	}
 	{
-		if (mouse->State().LeftButton == ButtonState::Pressed)
+		if (mouse->State().RightButton == ButtonState::Pressed)
 		{
-			auto position = Vector2(mouse->State().Position.X - graphicsContext->Viewport().Width()/2,
-				mouse->State().Position.Y - graphicsContext->Viewport().Height()/2);
-			particleSystem.EmitterPosition = position;
+			auto node = gameWorld.Component<Node2D>(mainCameraID);
+			auto camera = gameWorld.Component<Camera2D>(mainCameraID);
+		
+			POMDOG_ASSERT(node && camera);
+		
+			auto inverseViewMatrix3D = Matrix4x4::Invert(CreateViewMatrix3D(node->Transform(), *camera));
+			
+			auto position = Vector3::Transform(Vector3(
+					mouse->State().Position.X - graphicsContext->Viewport().Width()/2,
+					mouse->State().Position.Y - graphicsContext->Viewport().Height()/2,
+					0), inverseViewMatrix3D);
+
+			particleSystem.EmitterPosition = {position.X, position.Y};
 		}
 		
 		particleSystem.Update(clock->FrameDuration());
@@ -171,16 +184,19 @@ void ParticleTestGame::DrawSprites()
 	auto camera = gameWorld.Component<Camera2D>(mainCameraID);
 	auto nodeCamera = gameWorld.Component<Node2D>(mainCameraID);
 	
-	auto vierMatrix3D = CreateViewMatrix3D(nodeCamera->Transform(), *camera);;
+	auto viewMatrix3D = CreateViewMatrix3D(nodeCamera->Transform(), *camera);
 	auto projectionMatrix3D = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
 	
 	POMDOG_ASSERT(primitiveGrid);
-	primitiveGrid->Draw(*graphicsContext, vierMatrix3D * projectionMatrix3D);
+	primitiveGrid->Draw(*graphicsContext, viewMatrix3D * projectionMatrix3D);
 	
 	POMDOG_ASSERT(primitiveAxes);
-	primitiveAxes->Draw(*graphicsContext, vierMatrix3D * projectionMatrix3D);
+	primitiveAxes->Draw(*graphicsContext, viewMatrix3D * projectionMatrix3D);
 	
 	auto viewMatrix2D = CreateViewMatrix2D(nodeCamera->Transform(), *camera);
+	
+	// NOTE: Changing blend state
+	//graphicsContext->SetBlendState(blendStateAdditive);
 	
 	POMDOG_ASSERT(spriteBatch);
 	spriteBatch->Begin(viewMatrix2D);
@@ -192,6 +208,7 @@ void ParticleTestGame::DrawSprites()
 		}
 	}
 	spriteBatch->End();
+	graphicsContext->SetBlendState(blendStateNonPremultiplied);
 }
 //-----------------------------------------------------------------------
 void ParticleTestGame::Draw()

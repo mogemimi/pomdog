@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -76,7 +76,7 @@ void ParticleSystem::Update(DurationSeconds const& frameDuration)
 			{0.02f, Color{255, 255, 255, 10}},
 			{0.09f, Color{255, 250, 180, 100}},
 			{0.15f, Color{255, 200, 180, 130}},
-			{0.22f, Color{200, 140, 60, 255}},
+			{0.19f, Color{200, 140, 60, 255}},
 			{0.28f, Color{170, 120, 10, 80}},
 			{0.32f, Color{80, 40, 10, 20}},
 			{1.00f, Color{0, 0, 0, 0}},
@@ -85,9 +85,9 @@ void ParticleSystem::Update(DurationSeconds const& frameDuration)
 		//ParticleCurve<Color> colorCurve(Color::White);
 		
 		ParticleCurve<float> scaleCurve({
-			{0.00f, 0.8f},
-			{0.10f, 1.0f},
-			{0.15f, 1.1f},
+			{0.00f, 0.7f},
+			{0.10f, 0.9f},
+			{0.15f, 1.0f},
 			{0.60f, 0.8f},
 			{1.00f, 0.0f},
 		});
