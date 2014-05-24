@@ -54,7 +54,6 @@ public:
 	EffectReflectionGL4() = delete;
 	
 	explicit EffectReflectionGL4(ShaderProgramGL4 const& shaderProgram);
-	~EffectReflectionGL4() = default;
 
 	std::vector<EffectConstantDescription> GetConstantBuffers() const override;
 

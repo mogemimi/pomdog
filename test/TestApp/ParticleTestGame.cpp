@@ -52,7 +52,8 @@ void ParticleTestGame::Initialize()
 	auto assets = gameHost->AssetManager();
 
 	{
-		samplerPoint = SamplerState::CreateLinearWrap(graphicsDevice);
+		//samplerPoint = SamplerState::CreatePointWrap(graphicsDevice);
+		//graphicsContext->SetSamplerState(0, samplerPoint);
 		
 		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 		graphicsContext->SetBlendState(blendState);
@@ -221,7 +222,7 @@ void ParticleTestGame::Draw()
 	
 	graphicsContext->Clear(Color::CornflowerBlue);
 	
-	graphicsContext->SetSamplerState(0, samplerPoint);
+	//graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();
 	
 	if (enableFxaa) {

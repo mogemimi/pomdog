@@ -189,8 +189,7 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 		std::uint32_t slotIndex = 0;
 		for (auto & uniform: uniforms)
 		{
-			switch (uniform.Type)
-			{
+			switch (uniform.Type) {
 			case GL_SAMPLER_1D:
 			case GL_SAMPLER_2D:
 			case GL_SAMPLER_3D:

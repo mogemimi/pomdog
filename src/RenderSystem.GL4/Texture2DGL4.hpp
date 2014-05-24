@@ -31,7 +31,7 @@ public:
 	Texture2DGL4(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
 		std::uint32_t levelCount, SurfaceFormat format);
 	
-	~Texture2DGL4();
+	~Texture2DGL4() override;
 	
 	void SetData(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
 		std::uint32_t levelCount, SurfaceFormat format, void const* pixelData) override;

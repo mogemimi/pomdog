@@ -22,7 +22,7 @@ TestAppGame::~TestAppGame() = default;
 //-----------------------------------------------------------------------
 void TestAppGame::Initialize()
 {
-	this->game.reset(new ParticleTestGame(gameHost));
+	this->game.reset(new MaidChanGame(gameHost));
 	game->Initialize();
 }
 //-----------------------------------------------------------------------

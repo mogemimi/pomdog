@@ -12,6 +12,7 @@
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Math/detail/FloatingPointMatrix4x4.hpp>
 #include <Pomdog/Math/detail/FloatingPointQuaternion.hpp>
+#include <Pomdog/Math/MathHelper.hpp>
 
 namespace Pomdog {
 namespace Details {
@@ -147,6 +148,24 @@ template <typename T>
 T FloatingPointVector2<T>::Cross(FloatingPointVector2 const& a, FloatingPointVector2 const& b)
 {
 	return a.X * b.Y - a.Y * b.X;
+}
+//-----------------------------------------------------------------------
+template <typename T>
+FloatingPointVector2<T>
+FloatingPointVector2<T>::Lerp(FloatingPointVector2 const& source0, FloatingPointVector2 const& source1, T amount)
+{
+	return FloatingPointVector2(
+		MathHelper::Lerp(source0.X, source1.X, amount),
+		MathHelper::Lerp(source0.Y, source1.Y, amount));
+}
+//-----------------------------------------------------------------------
+template <typename T>
+FloatingPointVector2<T>
+FloatingPointVector2<T>::SmoothStep(FloatingPointVector2 const& source0, FloatingPointVector2 const& source1, T amount)
+{
+	return FloatingPointVector2(
+		MathHelper::SmoothStep(source0.X, source1.X, amount),
+		MathHelper::SmoothStep(source0.Y, source1.Y, amount));
 }
 //-----------------------------------------------------------------------
 template <typename T>

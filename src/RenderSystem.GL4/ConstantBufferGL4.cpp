@@ -34,7 +34,7 @@ ConstantBufferGL4::ConstantBufferGL4(std::uint32_t byteWidth)
 	})();
 	
 	auto const oldBufferObject = TypesafeHelperGL4::Get<ConstantBufferObjectGL4>();
-	ScopeGuard scope([&oldBufferObject]{
+	ScopeGuard scope([&oldBufferObject] {
 		TypesafeHelperGL4::BindBuffer(oldBufferObject);
 	});
 

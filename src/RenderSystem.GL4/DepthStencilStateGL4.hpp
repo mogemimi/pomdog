@@ -46,8 +46,6 @@ public:
 	
 	explicit DepthStencilStateGL4(DepthStencilDescription const& description);
 	
-	~DepthStencilStateGL4() = default;
-	
 	///@copydoc NativeDepthStencilState
 	void Apply() override;
 	

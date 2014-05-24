@@ -22,8 +22,7 @@ namespace {
 
 static GLenum ToBlendGL4NonTypesafe(Blend blend)
 {
-	switch (blend)
-	{
+	switch (blend) {
 	case Blend::Zero: return GL_ZERO;
 	case Blend::One: return GL_ONE;
 	case Blend::SourceColor: return GL_SRC_COLOR;
@@ -45,8 +44,7 @@ static GLenum ToBlendGL4NonTypesafe(Blend blend)
 //-----------------------------------------------------------------------
 static GLenum ToBlendFunctionGL4NonTypesafe(BlendFunction func)
 {
-	switch (func)
-	{
+	switch (func) {
 	case BlendFunction::Add: return GL_FUNC_ADD;
 	case BlendFunction::Subtract: return GL_FUNC_SUBTRACT;
 	case BlendFunction::ReverseSubtract: return GL_FUNC_REVERSE_SUBTRACT;
@@ -60,16 +58,16 @@ static GLenum ToBlendFunctionGL4NonTypesafe(BlendFunction func)
 //-----------------------------------------------------------------------
 static BlendGL4 ToBlendGL4(Blend blend)
 {
-	return std::move(BlendGL4{
+	return BlendGL4{
 		ToBlendGL4NonTypesafe(blend)
-	});
+	};
 }
 //-----------------------------------------------------------------------
 static BlendFunctionGL4 ToBlendFunctionGL4(BlendFunction func)
 {
-	return std::move(BlendFunctionGL4{
+	return BlendFunctionGL4{
 		ToBlendFunctionGL4NonTypesafe(func)
-	});
+	};
 }
 
 }// unnamed namespace

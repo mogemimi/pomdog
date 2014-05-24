@@ -28,8 +28,7 @@ namespace {
 
 static ScalarTypeGL4 ToScalarType(GLenum attributeClass)
 {
-	switch (attributeClass)
-	{
+	switch (attributeClass) {
 	case GL_FLOAT:
 	case GL_FLOAT_VEC2:
 	case GL_FLOAT_VEC3:
@@ -120,8 +119,7 @@ struct InputElementSize {
 //-----------------------------------------------------------------------
 static InputElementSize ToInputElementSize(GLenum attributeClass)
 {
-	switch (attributeClass)
-	{
+	switch (attributeClass) {
 	case GL_FLOAT:
 	case GL_INT: 
 	case GL_UNSIGNED_INT: 
@@ -202,8 +200,7 @@ static InputElementSize ToInputElementSize(GLenum attributeClass)
 //-----------------------------------------------------------------------
 std::uint8_t ToByteWithFromScalarTypeGL4(ScalarTypeGL4 scalarType)
 {
-	switch (scalarType.value)
-	{
+	switch (scalarType.value) {
 	case GL_FLOAT: return sizeof(GLfloat);
 	case GL_INT: return sizeof(GLint);
 	case GL_UNSIGNED_INT: return sizeof(GLuint);

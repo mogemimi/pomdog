@@ -20,8 +20,7 @@ static Optional<GLenum> ToGLDepthStencilFormat(DepthFormat depthFormat)
 {
 	POMDOG_ASSERT(depthFormat != DepthFormat::None);
 
-	switch (depthFormat)
-	{
+	switch (depthFormat) {
 	case DepthFormat::Depth16: return GL_DEPTH_COMPONENT16;
 	case DepthFormat::Depth24: return GL_DEPTH_COMPONENT24;
 	case DepthFormat::Depth24Stencil8: return GL_DEPTH24_STENCIL8;

@@ -31,8 +31,6 @@ public:
 	
 	explicit RasterizerStateGL4(RasterizerDescription const& description);
 	
-	~RasterizerStateGL4() = default;
-	
 	///@copydoc NativeRasterizerState
 	void Apply() override;
 	

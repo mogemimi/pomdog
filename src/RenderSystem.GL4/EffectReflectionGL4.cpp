@@ -235,8 +235,7 @@ EnumerateUniforms(ShaderProgramGL4 const& shaderProgram)
 //-----------------------------------------------------------------------
 static EffectVariableType ToEffectVariableType(GLenum uniformType)
 {
-	switch (uniformType)
-	{
+	switch (uniformType) {
 	case GL_FLOAT:
 	case GL_FLOAT_VEC2:
 	case GL_FLOAT_VEC3:
@@ -345,8 +344,7 @@ static EffectVariableType ToEffectVariableType(GLenum uniformType)
 //-----------------------------------------------------------------------
 static EffectVariableClass ToEffectVariableClass(GLenum uniformType)
 {
-	switch (uniformType)
-	{
+	switch (uniformType) {
 	case GL_FLOAT:
 	case GL_DOUBLE:
 	case GL_INT:
@@ -439,8 +437,7 @@ static EffectVariableClass ToEffectVariableClass(GLenum uniformType)
 //-----------------------------------------------------------------------
 static void ToComponents(GLenum uniformType, std::uint8_t & RowCount, std::uint8_t & ColumnCount)
 {
-	switch (uniformType)
-	{
+	switch (uniformType) {
 	case GL_FLOAT:
 	case GL_DOUBLE:
 	case GL_INT:

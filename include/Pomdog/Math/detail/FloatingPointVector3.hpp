@@ -131,13 +131,20 @@ public:
 		FloatingPointVector3 const& min, FloatingPointVector3 const& max);
 
 	///@~Japanese
-	/// @brief 2 つのベクトル間のスムーズな補間を計算します。
+	/// @brief 2 つのベクトル間を線形補間します。
+	/// @param source0 ソースとなるベクトル0
+	/// @param source1 ソースとなるベクトル1
+	/// @param amount 線形補間する際に使用されるパラメータで、値の範囲に制限はありません。
+	static FloatingPointVector3 Lerp(FloatingPointVector3 const& source0, FloatingPointVector3 const& source1, T amount);
+
+	///@~Japanese
+	/// @brief 2 つのベクトル間をスムーズに補間します。
 	/// @details 返却値は次のベクトルと同じです。
 	/// FloatingPointVector3 result;
-	/// result.x = MathHelper::SmoothStep(a.x, b.x, amount);
-	/// result.y = MathHelper::SmoothStep(a.y, b.y, amount);
-	/// result.z = MathHelper::SmoothStep(a.z, b.z, amount);
-	static FloatingPointVector3 SmoothStep(FloatingPointVector3 const& a, FloatingPointVector3 const& b, T amount);
+	/// result.x = MathHelper::SmoothStep(source0.x, source1.x, amount);
+	/// result.y = MathHelper::SmoothStep(source0.y, source1.y, amount);
+	/// result.z = MathHelper::SmoothStep(source0.z, source1.z, amount);
+	static FloatingPointVector3 SmoothStep(FloatingPointVector3 const& source0, FloatingPointVector3 const& source1, T amount);
 
 	///@~Japanese
 	/// @brief 現在のベクトルを単位ベクトルに変換します。

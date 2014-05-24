@@ -86,17 +86,16 @@ void RotationTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton,
 	auto frameTime = pointPair.second->TimeSeconds - pointPair.first->TimeSeconds;
 	
 	POMDOG_ASSERT(frameTime != 0.0f);
-	auto amount =  diffTime / frameTime;
-
-	auto a = pointPair.first->Rotation.ToFloat();
-	auto b = pointPair.second->Rotation.ToFloat();
+	float amount =  diffTime / frameTime;
+	auto rotation1 = pointPair.first->Rotation.ToFloat();
+	auto rotation2 = pointPair.second->Rotation.ToFloat();
 	
-	POMDOG_ASSERT(a <= MathConstants<float>::Pi());
-	POMDOG_ASSERT(a >= -MathConstants<float>::Pi());
-	POMDOG_ASSERT(b <= MathConstants<float>::Pi());
-	POMDOG_ASSERT(b >= -MathConstants<float>::Pi());
-		
-	localPose.Rotation = ((bindPose.Rotation + a) * (1.0f - amount)) + ((bindPose.Rotation + b) * amount);
+	POMDOG_ASSERT(rotation1 <= MathConstants<float>::Pi());
+	POMDOG_ASSERT(rotation1 >= -MathConstants<float>::Pi());
+	POMDOG_ASSERT(rotation2 <= MathConstants<float>::Pi());
+	POMDOG_ASSERT(rotation2 >= -MathConstants<float>::Pi());
+
+	localPose.Rotation = bindPose.Rotation + MathHelper::Lerp(rotation1, rotation2, amount);
 }
 //-----------------------------------------------------------------------
 DurationSeconds RotationTrack::Length() const
@@ -150,11 +149,10 @@ void ScaleTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton, Sk
 	auto frameTime = pointPair.second->TimeSeconds - pointPair.first->TimeSeconds;
 	
 	POMDOG_ASSERT(frameTime != 0.0f);
-	auto amount =  diffTime / frameTime;
-		
-	auto a = pointPair.first->Scale.ToFloat();
-	auto b = pointPair.second->Scale.ToFloat();
-	localPose.Scale = ((bindPose.Scale * a) * (1.0f - amount)) + ((bindPose.Scale * b) * amount);
+	float amount = diffTime / frameTime;
+	float scale1 = pointPair.first->Scale.ToFloat();
+	float scale2 = pointPair.second->Scale.ToFloat();
+	localPose.Scale = bindPose.Scale * MathHelper::Lerp(scale1, scale2, amount);
 }
 //-----------------------------------------------------------------------
 DurationSeconds ScaleTrack::Length() const
@@ -209,12 +207,11 @@ void TranslationTrack::Apply(DurationSeconds const& time, Skeleton const& skelet
 	auto frameTime = pointPair.second->TimeSeconds - pointPair.first->TimeSeconds;
 	
 	POMDOG_ASSERT(frameTime != 0.0f);
-	auto amount =  diffTime / frameTime;
+	float amount =  diffTime / frameTime;
+	auto translate1 = Vector2{pointPair.first->TranslateX.ToFloat(), pointPair.first->TranslateY.ToFloat()};
+	auto translate2 = Vector2{pointPair.second->TranslateX.ToFloat(), pointPair.second->TranslateY.ToFloat()};
 	
-	auto a = Vector2{pointPair.first->TranslateX.ToFloat(), pointPair.first->TranslateY.ToFloat()};
-	auto b = Vector2{pointPair.second->TranslateX.ToFloat(), pointPair.second->TranslateY.ToFloat()};
-	
-	localPose.Translate = ((bindPose.Translate + a) * (1.0f - amount)) + ((bindPose.Translate + b) * amount);
+	localPose.Translate = bindPose.Translate + Vector2::Lerp(translate1, translate2, amount);
 }
 //-----------------------------------------------------------------------
 DurationSeconds TranslationTrack::Length() const

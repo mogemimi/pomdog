@@ -48,8 +48,7 @@ namespace {
 
 static GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology)
 {
-	switch (primitiveTopology)
-	{
+	switch (primitiveTopology) {
 	case PrimitiveTopology::TriangleList: return GL_TRIANGLES;
 	case PrimitiveTopology::TriangleStrip: return GL_TRIANGLE_STRIP;
 	case PrimitiveTopology::LineList: return GL_LINES;
@@ -65,8 +64,7 @@ static GLenum ToIndexElementType(IndexElementSize indexElementSize)
 	static_assert(sizeof(GLushort) == 2, "GLushort is not SixteenBits.");
 	static_assert(sizeof(GLuint) == 4, "GLuint is not ThirtyTwoBits.");
 
-	switch (indexElementSize)
-	{
+	switch (indexElementSize) {
 	case IndexElementSize::SixteenBits: return GL_UNSIGNED_SHORT;
 	case IndexElementSize::ThirtyTwoBits: return GL_UNSIGNED_INT;
 	}

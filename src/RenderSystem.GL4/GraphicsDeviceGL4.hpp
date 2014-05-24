@@ -24,8 +24,6 @@ namespace GL4 {
 class GraphicsDeviceGL4 final: public NativeGraphicsDevice {
 public:
 	GraphicsDeviceGL4() = default;
-
-	~GraphicsDeviceGL4() = default;
 	
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeIndexBuffer>

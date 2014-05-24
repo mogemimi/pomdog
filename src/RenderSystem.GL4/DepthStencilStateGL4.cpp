@@ -20,8 +20,7 @@ namespace {
 
 static GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction const& comparison)
 {
-	switch (comparison)
-	{
+	switch (comparison) {
 	case ComparisonFunction::Always: return GL_ALWAYS;
 	case ComparisonFunction::Equal: return GL_EQUAL;
 	case ComparisonFunction::Greater: return GL_GREATER;
@@ -38,8 +37,7 @@ static GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction const& compa
 //-----------------------------------------------------------------------
 static GLenum ToStencilOperationGL4NonTypesafe(StencilOperation const& operation)
 {
-	switch (operation)
-	{
+	switch (operation) {
 	case StencilOperation::Decrement: return GL_DECR_WRAP;
 	case StencilOperation::DecrementSaturation: return GL_DECR; // Clamps to 0.
 	case StencilOperation::Increment: return GL_INCR_WRAP;

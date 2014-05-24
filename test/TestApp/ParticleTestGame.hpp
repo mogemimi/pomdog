@@ -50,7 +50,7 @@ private:
 	std::unique_ptr<PrimitiveGrid> primitiveGrid;
 	std::unique_ptr<SpriteBatch> spriteBatch;
 	
-	std::shared_ptr<SamplerState> samplerPoint;
+	//std::shared_ptr<SamplerState> samplerPoint;
 	std::shared_ptr<RenderTarget2D> renderTarget;
 	std::unique_ptr<FXAA> fxaa;
 	

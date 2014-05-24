@@ -121,6 +121,21 @@ public:
 	/// @brief 指定された行列を使用して法線ベクトルをトランスフォームします。
 	static FloatingPointVector2 TransformNormal(FloatingPointVector2 const& normal, FloatingPointMatrix4x4<T> const& matrix);
 
+	///@~Japanese
+	/// @brief 2 つのベクトル間を線形補間します。
+	/// @param source0 ソースとなるベクトル0
+	/// @param source1 ソースとなるベクトル1
+	/// @param amount 線形補間する際に使用されるパラメータで、値の範囲に制限はありません。
+	static FloatingPointVector2 Lerp(FloatingPointVector2 const& source0, FloatingPointVector2 const& source1, T amount);
+
+	///@~Japanese
+	/// @brief 2 つのベクトル間をスムーズに補間します。
+	/// @details 返却値は次のベクトルと同じです。
+	/// FloatingPointVector2 result;
+	/// result.x = MathHelper::SmoothStep(source0.x, source1.x, amount);
+	/// result.y = MathHelper::SmoothStep(source0.y, source1.y, amount);
+	static FloatingPointVector2 SmoothStep(FloatingPointVector2 const& source0, FloatingPointVector2 const& source1, T amount);
+
 	///@~English
 	/// @brief Returns pointer to the first element.
 	///@~Japanese

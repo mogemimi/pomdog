@@ -20,8 +20,7 @@ namespace {
 
 static FillModeGL4 ToFillModeGL4(FillMode const& fillMode)
 {
-	switch (fillMode)
-	{
+	switch (fillMode) {
 	case FillMode::Solid: return FillModeGL4{ GL_FILL };
 	case FillMode::WireFrame: return FillModeGL4{ GL_LINE };
 	}

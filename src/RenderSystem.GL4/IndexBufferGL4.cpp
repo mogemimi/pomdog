@@ -36,8 +36,7 @@ static GLenum ToIndexBufferUsage(BufferUsage bufferUsage)
 //-----------------------------------------------------------------------
 static GLsizeiptr ToIndexElementOffsetBytes(IndexElementSize elementSize)
 {
-	switch (elementSize)
-	{
+	switch (elementSize) {
 	case IndexElementSize::ThirtyTwoBits: return 4;
 	case IndexElementSize::SixteenBits: return 2;
 	};

@@ -32,9 +32,7 @@ public:
 	BlendStateGL4() = delete;
 	
 	explicit BlendStateGL4(BlendDescription const& description);
-	
-	~BlendStateGL4() = default;
-	
+
 	///@copydoc NativeBlendState
 	void Apply() override;
 	

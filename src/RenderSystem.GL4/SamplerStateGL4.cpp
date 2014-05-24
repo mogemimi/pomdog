@@ -24,8 +24,7 @@ using TextureAddressModeGL4 = Tagged<GLenum, TextureAddressMode>;
 
 static TextureAddressModeGL4 ToTextureAddressModeGL4(TextureAddressMode const& address)
 {
-	switch (address)
-	{
+	switch (address) {
 	case TextureAddressMode::Clamp: return TextureAddressModeGL4{ GL_CLAMP_TO_EDGE };
 	case TextureAddressMode::Mirror: return TextureAddressModeGL4{ GL_MIRRORED_REPEAT };
 	case TextureAddressMode::Wrap: return TextureAddressModeGL4{ GL_REPEAT };
@@ -39,7 +38,7 @@ static TextureAddressModeGL4 ToTextureAddressModeGL4(TextureAddressMode const& a
 //-----------------------------------------------------------------------
 SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 {
-	samplerObject = ([]{
+	samplerObject = ([] {
 		SamplerObjectGL4 sampler;
 		glGenSamplers(1, sampler.Data());
 		return std::move(sampler);
@@ -57,8 +56,7 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 	ErrorChecker::CheckError("glSamplerParameteri", __FILE__, __LINE__);
 	#endif
 
-	switch (description.Filter)
-	{
+	switch (description.Filter) {
 	case TextureFilter::Linear:
 		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
