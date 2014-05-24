@@ -11,6 +11,7 @@
 #include <vector>
 #include <OpenGL/OpenGL.h>
 #include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Utility/MakeUnique.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
 #include <Pomdog/Logging/Log.hpp>
@@ -25,7 +26,7 @@
 #include "../RenderSystem/PresentationParameters.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
-#include "../Utility/MakeUnique.hpp"
+
 #include "CocoaMouse.hpp"
 
 #include "StringFormat.hpp"

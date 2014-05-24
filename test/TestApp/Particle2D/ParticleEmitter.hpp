@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -14,7 +14,9 @@
 #endif
 
 #include <cstdint>
+#include <memory>
 #include <Pomdog/Pomdog.hpp>
+#include "ParticleParameter.hpp"
 
 namespace Pomdog {
 
@@ -25,7 +27,7 @@ enum ParticleSimulationSpace : std::uint8_t {
 
 class ParticleEmitter {
 public:
-	float Duration = 5.0f;
+	DurationSeconds Duration {5.0};
 	bool Looping = true;
 	float StartDelay = 0; // bool Prewarm;
 	
@@ -33,11 +35,16 @@ public:
 	float StartSize = 1; // StartSize1 + StartSize2
 	Radian<float> StartRotation = 0;
 	Color StartColor = Color::White;
+	
+	std::unique_ptr<ParticleParameter<float>> StartSpeed; // StartSpeed (pixel/second)
 
 	std::uint16_t MaxParticles = 128;
 	
 	///@todo もっと細かくカスタマイズしたいパラメータ
-	std::uint16_t EmissionRate = 16; // 16 particles/sec
+	std::uint16_t EmissionRate = 16; // 16 particles/second
+	
+	std::unique_ptr<ParticleParameter<Color>> ColorOverLifetime;
+	std::unique_ptr<ParticleParameter<float>> SizeOverLifetime;
 	
 	//float GravityModifier;
 	//float InheritVelocity;

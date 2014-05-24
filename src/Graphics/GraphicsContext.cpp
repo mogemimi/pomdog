@@ -10,6 +10,7 @@
 #include <utility>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Utility/Exception.hpp>
+#include <Pomdog/Utility/MakeUnique.hpp>
 #include <Pomdog/Graphics/BlendState.hpp>
 #include <Pomdog/Graphics/DepthStencilState.hpp>
 #include <Pomdog/Graphics/RasterizerState.hpp>
@@ -25,7 +26,7 @@
 #include "../RenderSystem/NativeRasterizerState.hpp"
 #include "../RenderSystem/NativeSamplerState.hpp"
 #include "../RenderSystem/PresentationParameters.hpp"
-#include "../Utility/MakeUnique.hpp"
+
 
 namespace Pomdog {
 

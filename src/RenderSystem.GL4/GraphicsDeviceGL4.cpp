@@ -8,6 +8,7 @@
 
 #include "GraphicsDeviceGL4.hpp"
 #include <Pomdog/Utility/Exception.hpp>
+#include <Pomdog/Utility/MakeUnique.hpp>
 #include "BlendStateGL4.hpp"
 #include "ConstantBufferGL4.hpp"
 #include "DepthStencilStateGL4.hpp"
@@ -20,7 +21,6 @@
 #include "Texture2DGL4.hpp"
 #include "RenderTarget2DGL4.hpp"
 #include "VertexBufferGL4.hpp"
-#include "../Utility/MakeUnique.hpp"
 
 namespace Pomdog {
 namespace Details {

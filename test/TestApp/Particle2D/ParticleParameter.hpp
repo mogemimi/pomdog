@@ -1,0 +1,30 @@
+//
+//  Copyright (C) 2013-2014 mogemimi.
+//
+//  Distributed under the MIT License.
+//  See accompanying file LICENSE.md or copy at
+//  http://enginetrouble.net/pomdog/LICENSE.md for details.
+//
+
+#ifndef POMDOG_PARTICLEPARAMETER_FCCEE8BC_68A3_4A5B_8075_ED0E0170C937_HPP
+#define POMDOG_PARTICLEPARAMETER_FCCEE8BC_68A3_4A5B_8075_ED0E0170C937_HPP
+
+#if (_MSC_VER > 1000)
+#	pragma once
+#endif
+
+#include <random>
+
+namespace Pomdog {
+
+template <typename T>
+class ParticleParameter {
+public:
+	virtual ~ParticleParameter() = default;
+	
+	virtual T Compute(float normalizedScale, std::mt19937 & random) const = 0;
+};
+
+}// namespace Pomdog
+
+#endif // !defined(POMDOG_PARTICLEPARAMETER_FCCEE8BC_68A3_4A5B_8075_ED0E0170C937_HPP)

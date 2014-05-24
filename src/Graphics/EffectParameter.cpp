@@ -9,10 +9,10 @@
 #include <Pomdog/Graphics/EffectParameter.hpp>
 #include <utility>
 #include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Utility/MakeUnique.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include "../RenderSystem/NativeConstantBuffer.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
-#include "../Utility/MakeUnique.hpp"
 
 namespace Pomdog {
 namespace {
