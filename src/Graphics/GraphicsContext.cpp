@@ -246,7 +246,7 @@ GraphicsContext::GraphicsContext(
 	std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
 	Details::PresentationParameters const& presentationParameters,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
-	: impl(Details::MakeUnique<Impl>(std::move(nativeContext), presentationParameters))
+	: impl(MakeUnique<Impl>(std::move(nativeContext), presentationParameters))
 {
 	POMDOG_ASSERT(graphicsDevice);
 	impl->BuildResources(graphicsDevice);

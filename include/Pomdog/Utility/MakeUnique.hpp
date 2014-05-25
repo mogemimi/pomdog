@@ -36,17 +36,17 @@ std::unique_ptr<T> MakeUniqueImplement(std::true_type, Arguments&&... arguments)
 }
 
 }// namespace InternalMakeUnique
+}// namespace Details
 
 template <typename T, typename... Arguments>
 std::unique_ptr<T> MakeUnique(Arguments&&... arguments)
 {
 	static_assert(__cplusplus < 201401L, "In C++14, you can use std::make_unique ;)");
 	
-	return InternalMakeUnique::MakeUniqueImplement<T>(
+	return Details::InternalMakeUnique::MakeUniqueImplement<T>(
 		std::is_array<T>(), std::forward<Arguments>(arguments)...);
 }
 
-}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SRC_UTILITY_MAKEUNIQUE_962A10F4_ACBD_42F2_B462_0351035F0176_HPP)

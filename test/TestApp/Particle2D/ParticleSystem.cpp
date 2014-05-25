@@ -11,6 +11,8 @@
 #include <Pomdog/Utility/MakeUnique.hpp>
 
 ///@note for test
+#include "ParticleEmitterShapeBox.hpp"
+#include "ParticleEmitterShapeSector.hpp"
 #include "ParticleParameterConstant.hpp"
 #include "ParticleParameterCurve.hpp"
 #include "ParticleParameterRandom.hpp"
@@ -19,28 +21,41 @@ namespace Pomdog {
 namespace {
 //-----------------------------------------------------------------------
 template <typename RandomGenerator>
-static Particle CreateParticle(RandomGenerator & random, ParticleEmitter const& emitter, float normalizedTime, Vector2 const& emitterPosition)
+static Particle CreateParticle(RandomGenerator & random, ParticleEmitter const& emitter, float normalizedTime, Transform2D const& transform)
 {
 	Particle particle;
-	
-	particle.TimeToLive = emitter.StartLifetime;
-	
-	// Position
-	particle.Position = emitterPosition;
-	
-	// Velocity
-	POMDOG_ASSERT(emitter.StartSpeed);
-	particle.Velocity.X = emitter.StartSpeed->Compute(normalizedTime, random);
-	particle.Velocity.Y = emitter.StartSpeed->Compute(normalizedTime, random);
-	
-	std::uniform_real_distribution<float> distribution(-1.0, 1.0);
-	
-	// Rotation
-	particle.Rotation = distribution(random) * MathConstants<float>::PiOver2();
-	
-	// Color
-	particle.Color = emitter.StartColor;
-	
+	{
+		particle.TimeToLive = emitter.StartLifetime;
+	}
+	{
+		// emitter shape
+		Vector2 emitPosition = Vector2::Zero;
+		Radian<float> emitAngle = 0.0f;
+
+		POMDOG_ASSERT(emitter.Shape);
+		emitter.Shape->Compute(random, emitPosition, emitAngle);
+		
+		// Position
+		auto worldMatrix = Matrix4x4::CreateRotationZ(transform.Rotation) * Matrix4x4::CreateTranslation({transform.Position, 0});
+		particle.Position = Vector2::Transform(emitPosition, worldMatrix);
+		
+		// Velocity
+		POMDOG_ASSERT(emitter.StartSpeed);
+		auto radius = emitter.StartSpeed->Compute(normalizedTime, random);
+		auto angle = (emitAngle + transform.Rotation).value;
+		
+		particle.Velocity.X = std::cos(angle) * radius;
+		particle.Velocity.Y = std::sin(angle) * radius;
+	}
+	{
+		// Rotation
+		POMDOG_ASSERT(emitter.StartRotation);
+		particle.Rotation = emitter.StartRotation->Compute(normalizedTime, random);
+	}
+	{
+		// Color
+		particle.Color = emitter.StartColor;
+	}
 	return std::move(particle);
 }
 //-----------------------------------------------------------------------
@@ -58,9 +73,15 @@ ParticleSystem::ParticleSystem()
 	//emitter.Looping = false;
 	//emitter.EmissionRate = 2;
 	
-	emitter.StartSpeed = Details::MakeUnique<ParticleParameterRandom<float>>(0.5f, 6.0f);
+	emitter.StartRotation = MakeUnique<ParticleParameterRandom<Radian<float>>>(
+		0, MathConstants<float>::TwoPi());
 	
-//	emitter.StartSpeed = Details::MakeUnique<ParticleParameterCurve<float>>(
+	//emitter.Shape = MakeUnique<ParticleEmitterShapeSector>(MathConstants<float>::PiOver4());
+	emitter.Shape = MakeUnique<ParticleEmitterShapeBox>(0, 100);
+	
+	emitter.StartSpeed = MakeUnique<ParticleParameterRandom<float>>(0.5f, 6.0f);
+	
+//	emitter.StartSpeed = MakeUnique<ParticleParameterCurve<float>>(
 //		std::initializer_list<ParticleCurveKey<float>>{
 //			{0.00f, 0.0f},
 //			{0.10f, -0.5f},
@@ -73,7 +94,7 @@ ParticleSystem::ParticleSystem()
 //			{1.00f, 0.0f},
 //		});
 	
-	emitter.ColorOverLifetime = Details::MakeUnique<ParticleParameterCurve<Color>>(
+	emitter.ColorOverLifetime = MakeUnique<ParticleParameterCurve<Color>>(
 		std::initializer_list<ParticleCurveKey<Color>>{
 			{0.00f, Color{255, 255, 255, 0}},
 			{0.02f, Color{255, 255, 255, 10}},
@@ -85,7 +106,7 @@ ParticleSystem::ParticleSystem()
 			{1.00f, Color{0, 0, 0, 0}},
 		});
 	
-	emitter.SizeOverLifetime = Details::MakeUnique<ParticleParameterCurve<float>>(
+	emitter.SizeOverLifetime = MakeUnique<ParticleParameterCurve<float>>(
 		std::initializer_list<ParticleCurveKey<float>>{
 			{0.00f, 0.7f},
 			{0.10f, 0.9f},
@@ -95,7 +116,7 @@ ParticleSystem::ParticleSystem()
 		});
 }
 //-----------------------------------------------------------------------
-void ParticleSystem::Update(DurationSeconds const& frameDuration)
+void ParticleSystem::Update(DurationSeconds const& frameDuration, Transform2D const& emitterTransform)
 {
 	erapsedTime += frameDuration;
 	
@@ -124,7 +145,7 @@ void ParticleSystem::Update(DurationSeconds const& frameDuration)
 		{
 			emissionTimer -= emissionInterval;
 
-			auto particle = CreateParticle(random, emitter, normalizedTime, EmitterPosition);
+			auto particle = CreateParticle(random, emitter, normalizedTime, emitterTransform);
 			particles.push_back(std::move(particle));
 		}
 	}

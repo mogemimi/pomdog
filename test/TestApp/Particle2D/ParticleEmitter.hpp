@@ -17,13 +17,9 @@
 #include <memory>
 #include <Pomdog/Pomdog.hpp>
 #include "ParticleParameter.hpp"
+#include "ParticleEmitterShape.hpp"
 
 namespace Pomdog {
-
-enum ParticleSimulationSpace : std::uint8_t {
-	Local,
-	World
-};
 
 class ParticleEmitter {
 public:
@@ -33,8 +29,9 @@ public:
 	
 	float StartLifetime = 2; // StartLifetime1 + StartLifetime2
 	float StartSize = 1; // StartSize1 + StartSize2
-	Radian<float> StartRotation = 0;
 	Color StartColor = Color::White;
+	
+	std::unique_ptr<ParticleParameter<Radian<float>>>  StartRotation;
 	
 	std::unique_ptr<ParticleParameter<float>> StartSpeed; // StartSpeed (pixel/second)
 
@@ -43,10 +40,13 @@ public:
 	///@todo もっと細かくカスタマイズしたいパラメータ
 	std::uint16_t EmissionRate = 16; // 16 particles/second
 	
+	std::unique_ptr<ParticleEmitterShape> Shape;
+	
+	///@note on time
 	std::unique_ptr<ParticleParameter<Color>> ColorOverLifetime;
 	std::unique_ptr<ParticleParameter<float>> SizeOverLifetime;
 	
-	//float GravityModifier;
+	//float GravityModifier = 0;
 	//float InheritVelocity;
 	//ParticleSimulationSpace SimulationSpace;
 };

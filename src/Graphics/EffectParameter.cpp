@@ -28,7 +28,7 @@ public:
 }// unnamed namespace
 //-----------------------------------------------------------------------
 EffectParameter::EffectParameter()
-	: nativeConstantBuffer(Details::MakeUnique<DummyConstantBuffer>())
+	: nativeConstantBuffer(MakeUnique<DummyConstantBuffer>())
 {
 }
 //-----------------------------------------------------------------------

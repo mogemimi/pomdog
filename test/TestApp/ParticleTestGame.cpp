@@ -8,6 +8,7 @@
 
 #include "ParticleTestGame.hpp"
 #include <utility>
+#include <Pomdog/Utility/MakeUnique.hpp>
 #include "PrimitiveAxes.hpp"
 #include "PrimitiveGrid.hpp"
 #include "SpriteBatch.hpp"
@@ -68,10 +69,10 @@ void ParticleTestGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 	
-	primitiveAxes = std::unique_ptr<PrimitiveAxes>(new PrimitiveAxes(gameHost));
-	primitiveGrid = std::unique_ptr<PrimitiveGrid>(new PrimitiveGrid(gameHost));
-	spriteBatch = std::unique_ptr<SpriteBatch>(new SpriteBatch(graphicsContext, graphicsDevice, *assets));
-	fxaa = std::unique_ptr<FXAA>(new FXAA(gameHost));
+	primitiveAxes = MakeUnique<PrimitiveAxes>(gameHost);
+	primitiveGrid = MakeUnique<PrimitiveGrid>(gameHost);
+	spriteBatch = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
+	fxaa = MakeUnique<FXAA>(gameHost);
 	
 	{
 		// NOTE: Create main camera:
@@ -144,6 +145,8 @@ void ParticleTestGame::Update()
 		}
 	}
 	{
+		static Transform2D emitterTranform;
+	
 		if (mouse->State().RightButton == ButtonState::Pressed)
 		{
 			auto node = gameWorld.Component<Node2D>(mainCameraID);
@@ -158,10 +161,11 @@ void ParticleTestGame::Update()
 					mouse->State().Position.Y - graphicsContext->Viewport().Height()/2,
 					0), inverseViewMatrix3D);
 
-			particleSystem.EmitterPosition = {position.X, position.Y};
+			emitterTranform.Position = Vector2{position.X, position.Y};
+			emitterTranform.Rotation = MathConstants<float>::PiOver2();
 		}
 		
-		particleSystem.Update(clock->FrameDuration());
+		particleSystem.Update(clock->FrameDuration(), emitterTranform);
 	}
 	{
 		static bool isPaused = false;

@@ -25,11 +25,10 @@ class ParticleSystem {
 public:
 	ParticleSystem();
 
-	void Update(DurationSeconds const& frameDuration);
+	void Update(DurationSeconds const& frameDuration, Transform2D const& emitterTransform);
 	
 	ParticleEmitter emitter;
 	std::vector<Particle> particles;
-	Vector2 EmitterPosition;
 	
 private:
 	DurationSeconds erapsedTime;
