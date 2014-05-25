@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <utility>
 #include "ParticleParameter.hpp"
 
 namespace Pomdog {
@@ -23,6 +24,10 @@ private:
 	T value;
 
 public:
+	explicit ParticleParameterConstant(T && valueIn)
+		: value(std::move(valueIn))
+	{}
+
 	T Compute(float, std::mt19937 &) const override
 	{
 		return value;

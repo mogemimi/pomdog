@@ -29,6 +29,12 @@ public:
 	
 	ParticleEmitter emitter;
 	std::vector<Particle> particles;
+	bool enableEmission;
+	
+	void ResetEmission()
+	{
+		erapsedTime = DurationSeconds{0};
+	}
 	
 private:
 	DurationSeconds erapsedTime;

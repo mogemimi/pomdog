@@ -68,10 +68,11 @@ ParticleSystem::ParticleSystem()
 	particles.reserve(emitter.MaxParticles);
 	emitter.MaxParticles = 1024;
 	emitter.EmissionRate = 128*2;
-	emitter.StartLifetime = 1.8;
-	//emitter.Duration = 1;
+	emitter.Duration = DurationSeconds{0.1};
 	//emitter.Looping = false;
+	emitter.StartLifetime = 1.8f;
 	//emitter.EmissionRate = 2;
+	//emitter.GravityModifier = 100.0f;
 	
 	emitter.StartRotation = MakeUnique<ParticleParameterRandom<Radian<float>>>(
 		0, MathConstants<float>::TwoPi());
@@ -79,7 +80,10 @@ ParticleSystem::ParticleSystem()
 	//emitter.Shape = MakeUnique<ParticleEmitterShapeSector>(MathConstants<float>::PiOver4());
 	emitter.Shape = MakeUnique<ParticleEmitterShapeBox>(0, 100);
 	
-	emitter.StartSpeed = MakeUnique<ParticleParameterRandom<float>>(0.5f, 6.0f);
+	
+	
+	emitter.StartSpeed = MakeUnique<ParticleParameterRandom<float>>(40.0f, 128.0f);
+	//emitter.StartSpeed = MakeUnique<ParticleParameterConstant<float>>(-128.0f);
 	
 //	emitter.StartSpeed = MakeUnique<ParticleParameterCurve<float>>(
 //		std::initializer_list<ParticleCurveKey<float>>{
@@ -108,8 +112,8 @@ ParticleSystem::ParticleSystem()
 	
 	emitter.SizeOverLifetime = MakeUnique<ParticleParameterCurve<float>>(
 		std::initializer_list<ParticleCurveKey<float>>{
-			{0.00f, 0.7f},
-			{0.10f, 0.9f},
+			{0.00f, 0.5f},
+			{0.10f, 0.8f},
 			{0.15f, 1.0f},
 			{0.60f, 0.8f},
 			{1.00f, 0.0f},
@@ -152,12 +156,18 @@ void ParticleSystem::Update(DurationSeconds const& frameDuration, Transform2D co
 	{
 		for (auto & particle: particles)
 		{
+			auto oldTimeToLive = particle.TimeToLive;
 			particle.TimeToLive -= frameDuration.count();
-		
-			particle.Position += particle.Velocity;
+			
+			auto deltaTime = oldTimeToLive - particle.TimeToLive;
+			
+			Vector2 particleAcceleration {1, 1};
+			Vector2 gravityAcceleration {0, -emitter.GravityModifier};
+			particle.Velocity += (particleAcceleration * gravityAcceleration * deltaTime);
+			particle.Position += (particle.Velocity * deltaTime);
 			
 			float normalizedTime = 1.0f - particle.TimeToLive/emitter.StartLifetime;
-			
+					
 			POMDOG_ASSERT(emitter.ColorOverLifetime);
 			POMDOG_ASSERT(emitter.SizeOverLifetime);
 			

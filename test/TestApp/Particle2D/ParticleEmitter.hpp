@@ -27,18 +27,10 @@ public:
 	bool Looping = true;
 	float StartDelay = 0; // bool Prewarm;
 	
-	float StartLifetime = 2; // StartLifetime1 + StartLifetime2
-	float StartSize = 1; // StartSize1 + StartSize2
-	Color StartColor = Color::White;
+	std::unique_ptr<ParticleParameter<Radian<float>>> StartRotation;
 	
-	std::unique_ptr<ParticleParameter<Radian<float>>>  StartRotation;
-	
-	std::unique_ptr<ParticleParameter<float>> StartSpeed; // StartSpeed (pixel/second)
-
-	std::uint16_t MaxParticles = 128;
-	
-	///@todo もっと細かくカスタマイズしたいパラメータ
-	std::uint16_t EmissionRate = 16; // 16 particles/second
+	///@note StartSpeed (pixel/second)
+	std::unique_ptr<ParticleParameter<float>> StartSpeed;
 	
 	std::unique_ptr<ParticleEmitterShape> Shape;
 	
@@ -46,7 +38,18 @@ public:
 	std::unique_ptr<ParticleParameter<Color>> ColorOverLifetime;
 	std::unique_ptr<ParticleParameter<float>> SizeOverLifetime;
 	
-	//float GravityModifier = 0;
+	float StartLifetime = 1;
+	float StartSize = 1;
+	Color StartColor = Color::White;
+	
+	float GravityModifier = 0;
+	
+	///@brief 発生させるパーティクルの最大数
+	std::uint16_t MaxParticles = 128;
+	
+	///@todo もっと細かくカスタマイズしたいパラメータ
+	std::uint16_t EmissionRate = 16; // 16 particles/second
+	
 	//float InheritVelocity;
 	//ParticleSimulationSpace SimulationSpace;
 };

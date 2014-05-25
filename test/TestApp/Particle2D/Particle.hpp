@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -22,6 +22,7 @@ class Particle {
 public:
 	Vector2 Position {0, 0};
 	Vector2 Velocity {1, 1};
+	
 	Color Color = Color::White;
 	Radian<float> Rotation = 0;
 	float Size = 1;

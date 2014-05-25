@@ -163,6 +163,7 @@ void ParticleTestGame::Update()
 
 			emitterTranform.Position = Vector2{position.X, position.Y};
 			emitterTranform.Rotation = MathConstants<float>::PiOver2();
+			particleSystem.ResetEmission();
 		}
 		
 		particleSystem.Update(clock->FrameDuration(), emitterTranform);
@@ -202,7 +203,7 @@ void ParticleTestGame::DrawSprites()
 	
 	// NOTE: Changing blend state
 	//graphicsContext->SetBlendState(blendStateAdditive);
-	
+
 	POMDOG_ASSERT(spriteBatch);
 	spriteBatch->Begin(viewMatrix2D);
 	{
