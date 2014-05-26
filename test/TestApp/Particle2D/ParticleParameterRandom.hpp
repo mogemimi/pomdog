@@ -63,10 +63,14 @@ private:
 	T max;
 
 public:
-	explicit ParticleParameterRandom(T && minIn, T && maxIn)
+	template <typename Type1, typename Type2>
+	explicit ParticleParameterRandom(Type1 && minIn, Type2 && maxIn)
 		: min(std::move(minIn))
 		, max(std::move(maxIn))
-	{}
+	{
+		static_assert(std::is_convertible<Type1, T>::value, "");
+		static_assert(std::is_convertible<Type2, T>::value, "");
+	}
 
 	T Compute(float, std::mt19937 & random) const override
 	{

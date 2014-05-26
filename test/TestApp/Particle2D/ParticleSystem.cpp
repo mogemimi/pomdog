@@ -10,13 +10,6 @@
 #include <random>
 #include <Pomdog/Utility/MakeUnique.hpp>
 
-///@note for test
-#include "ParticleEmitterShapeBox.hpp"
-#include "ParticleEmitterShapeSector.hpp"
-#include "ParticleParameterConstant.hpp"
-#include "ParticleParameterCurve.hpp"
-#include "ParticleParameterRandom.hpp"
-
 namespace Pomdog {
 namespace {
 //-----------------------------------------------------------------------
@@ -54,7 +47,9 @@ static Particle CreateParticle(RandomGenerator & random, ParticleEmitter const& 
 	}
 	{
 		// Color
-		particle.Color = emitter.StartColor;
+		POMDOG_ASSERT(emitter.StartColor);
+		particle.StartColor = emitter.StartColor->Compute(normalizedTime, random);
+		particle.Color = particle.StartColor;
 	}
 	return std::move(particle);
 }
@@ -66,58 +61,6 @@ ParticleSystem::ParticleSystem()
 	, emissionTimer(0)
 {
 	particles.reserve(emitter.MaxParticles);
-	emitter.MaxParticles = 1024;
-	emitter.EmissionRate = 128*2;
-	emitter.Duration = DurationSeconds{0.1};
-	//emitter.Looping = false;
-	emitter.StartLifetime = 1.8f;
-	//emitter.EmissionRate = 2;
-	//emitter.GravityModifier = 100.0f;
-	
-	emitter.StartRotation = MakeUnique<ParticleParameterRandom<Radian<float>>>(
-		0, MathConstants<float>::TwoPi());
-	
-	//emitter.Shape = MakeUnique<ParticleEmitterShapeSector>(MathConstants<float>::PiOver4());
-	emitter.Shape = MakeUnique<ParticleEmitterShapeBox>(0, 100);
-	
-	
-	
-	emitter.StartSpeed = MakeUnique<ParticleParameterRandom<float>>(40.0f, 128.0f);
-	//emitter.StartSpeed = MakeUnique<ParticleParameterConstant<float>>(-128.0f);
-	
-//	emitter.StartSpeed = MakeUnique<ParticleParameterCurve<float>>(
-//		std::initializer_list<ParticleCurveKey<float>>{
-//			{0.00f, 0.0f},
-//			{0.10f, -0.5f},
-//			{0.15f, -1.0f},
-//			{0.20f, -0.5f},
-//			{0.40f, 0.0f},
-//			{0.50f, 0.5f},
-//			{0.70f, 1.0f},
-//			{0.80f, 0.5f},
-//			{1.00f, 0.0f},
-//		});
-	
-	emitter.ColorOverLifetime = MakeUnique<ParticleParameterCurve<Color>>(
-		std::initializer_list<ParticleCurveKey<Color>>{
-			{0.00f, Color{255, 255, 255, 0}},
-			{0.02f, Color{255, 255, 255, 10}},
-			{0.09f, Color{255, 250, 180, 100}},
-			{0.15f, Color{255, 200, 180, 130}},
-			{0.19f, Color{200, 130, 60, 255}},
-			{0.24f, Color{190, 50, 10, 80}},
-			{0.32f, Color{80, 24, 2, 20}},
-			{1.00f, Color{0, 0, 0, 0}},
-		});
-	
-	emitter.SizeOverLifetime = MakeUnique<ParticleParameterCurve<float>>(
-		std::initializer_list<ParticleCurveKey<float>>{
-			{0.00f, 0.5f},
-			{0.10f, 0.8f},
-			{0.15f, 1.0f},
-			{0.60f, 0.8f},
-			{1.00f, 0.0f},
-		});
 }
 //-----------------------------------------------------------------------
 void ParticleSystem::Update(DurationSeconds const& frameDuration, Transform2D const& emitterTransform)
@@ -171,7 +114,18 @@ void ParticleSystem::Update(DurationSeconds const& frameDuration, Transform2D co
 			POMDOG_ASSERT(emitter.ColorOverLifetime);
 			POMDOG_ASSERT(emitter.SizeOverLifetime);
 			
-			particle.Color = emitter.ColorOverLifetime->Compute(normalizedTime, random);
+			auto ColorMultiply = [](Color const& a, Color const& b)->Color {
+				return {
+					static_cast<uint8_t>(MathHelper::Clamp((a.R()/255.0f) * b.R(), 0.0f, 255.0f)),
+					static_cast<uint8_t>(MathHelper::Clamp((a.G()/255.0f) * b.G(), 0.0f, 255.0f)),
+					static_cast<uint8_t>(MathHelper::Clamp((a.B()/255.0f) * b.B(), 0.0f, 255.0f)),
+					static_cast<uint8_t>(MathHelper::Clamp((a.A()/255.0f) * b.A(), 0.0f, 255.0f))};
+			};
+			//particle.Color = ColorMultiply(particle.StartColor, emitter.ColorOverLifetime->ComputeOnTime(normalizedTime, particle.ColorAmount));
+			particle.Color = ColorMultiply(particle.StartColor, emitter.ColorOverLifetime->Compute(normalizedTime, random));
+			
+			//particle.Color = emitter.ColorOverLifetime->Compute(normalizedTime, random);
+			
 			particle.Size = emitter.SizeOverLifetime->Compute(normalizedTime, random);
 		}
 		

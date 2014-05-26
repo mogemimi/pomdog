@@ -24,9 +24,12 @@ private:
 	T value;
 
 public:
-	explicit ParticleParameterConstant(T && valueIn)
+	template <typename InType>
+	explicit ParticleParameterConstant(InType && valueIn)
 		: value(std::move(valueIn))
-	{}
+	{
+		static_assert(std::is_convertible<InType, T>::value, "");
+	}
 
 	T Compute(float, std::mt19937 &) const override
 	{

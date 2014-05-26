@@ -15,6 +15,13 @@
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
 
+///@note for test
+#include "ParticleEmitterShapeBox.hpp"
+#include "ParticleEmitterShapeSector.hpp"
+#include "ParticleParameterConstant.hpp"
+#include "ParticleParameterCurve.hpp"
+#include "ParticleParameterRandom.hpp"
+
 namespace TestApp {
 namespace {
 //-----------------------------------------------------------------------
@@ -30,6 +37,68 @@ static Matrix4x4 CreateViewMatrix3D(Transform2D const& transform, Camera2D const
 	return Matrix4x4::CreateTranslation({-transform.Position.X, -transform.Position.Y, 1.0f})*
 		Matrix4x4::CreateRotationZ(-transform.Rotation) *
 		Matrix4x4::CreateScale({camera.Zoom(), camera.Zoom(), 1});
+}
+
+static ParticleEmitter CreateEmitterFireBlock()
+{
+	ParticleEmitter emitter;
+
+	emitter.MaxParticles = 1024;
+	emitter.EmissionRate = 128*2;
+	emitter.Duration = DurationSeconds{0.1};
+	//emitter.Looping = false;
+	emitter.StartLifetime = 1.8f;
+	//emitter.EmissionRate = 2;
+	//emitter.GravityModifier = 100.0f;
+	
+	emitter.StartRotation = MakeUnique<ParticleParameterRandom<Radian<float>>>(
+		0, MathConstants<float>::TwoPi());
+	
+	//emitter.Shape = MakeUnique<ParticleEmitterShapeSector>(MathConstants<float>::PiOver4());
+	emitter.Shape = MakeUnique<ParticleEmitterShapeBox>(0, 100);
+	
+	emitter.StartSpeed = MakeUnique<ParticleParameterRandom<float>>(40.0f, 128.0f);
+	//emitter.StartSpeed = MakeUnique<ParticleParameterConstant<float>>(-128.0f);
+	
+//	emitter.StartSpeed = MakeUnique<ParticleParameterCurve<float>>(
+//		std::initializer_list<ParticleCurveKey<float>>{
+//			{0.00f, 0.0f},
+//			{0.10f, -0.5f},
+//			{0.15f, -1.0f},
+//			{0.20f, -0.5f},
+//			{0.40f, 0.0f},
+//			{0.50f, 0.5f},
+//			{0.70f, 1.0f},
+//			{0.80f, 0.5f},
+//			{1.00f, 0.0f},
+//		});
+	
+	//emitter.StartColor = MakeUnique<ParticleParameterConstant<Color>>(Color::Black);
+	emitter.StartColor = MakeUnique<ParticleParameterConstant<Color>>(Color::White);
+	//emitter.StartColor = MakeUnique<ParticleParameterRandom<Color>>(Color{255,200,170,255}, Color::White);
+	
+	emitter.ColorOverLifetime = MakeUnique<ParticleParameterCurve<Color>>(
+		std::initializer_list<ParticleCurveKey<Color>>{
+			{0.00f, Color{255, 255, 255, 0}},
+			{0.02f, Color{255, 255, 255, 10}},
+			{0.09f, Color{255, 250, 180, 100}},
+			{0.15f, Color{255, 200, 180, 130}},
+			{0.19f, Color{200, 130, 60, 255}},
+			{0.24f, Color{190, 50, 10, 80}},
+			{0.32f, Color{80, 24, 2, 20}},
+			{1.00f, Color{0, 0, 0, 0}},
+		});
+	
+	emitter.SizeOverLifetime = MakeUnique<ParticleParameterCurve<float>>(
+		std::initializer_list<ParticleCurveKey<float>>{
+			{0.00f, 0.5f},
+			{0.10f, 0.8f},
+			{0.15f, 1.0f},
+			{0.60f, 0.8f},
+			{1.00f, 0.0f},
+		});
+	
+	return std::move(emitter);
 }
 
 }// unnamed namespace
@@ -120,6 +189,10 @@ void ParticleTestGame::Initialize()
 		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
 		
 		rootNode->AddChild(gameObject);
+	}
+
+	{
+		particleSystem.emitter = CreateEmitterFireBlock();
 	}
 }
 //-----------------------------------------------------------------------
