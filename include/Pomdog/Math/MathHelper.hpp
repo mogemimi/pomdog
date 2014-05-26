@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -49,7 +49,7 @@ struct MathConstants<double>
 namespace MathHelper {
 //-------------------------------------------------------------------
 template <typename T>
-T Clamp(T x, T min, T max)
+T Clamp(T const& x, T const& min, T const& max)
 {
 	static_assert(std::is_arithmetic<T>::value, "");
 	POMDOG_ASSERT_MESSAGE(min < max, "In Clamp, maxval is out of range");
@@ -61,7 +61,7 @@ T Clamp(T x, T min, T max)
 }
 //-------------------------------------------------------------------
 template <typename T>
-T Saturate(T x)
+T Saturate(T const& x)
 {
 	static_assert(std::is_floating_point<T>::value, "T is floaing point number");
 	return Clamp(x, T(0), T(1));

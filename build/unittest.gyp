@@ -68,6 +68,7 @@
         '../test/FrameworkTest/Logging/LogStreamTest.cpp',
         '../test/FrameworkTest/Logging/LogTest.cpp',
         '../test/FrameworkTest/Math/ColorTest.cpp',
+        '../test/FrameworkTest/Math/MathHelperTest.cpp',
         '../test/FrameworkTest/Math/Matrix2x2Test.cpp',
         '../test/FrameworkTest/Math/Matrix3x3Test.cpp',
         '../test/FrameworkTest/Math/Matrix4x4Test.cpp',
