@@ -152,20 +152,20 @@ T FloatingPointVector2<T>::Cross(FloatingPointVector2 const& a, FloatingPointVec
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>
-FloatingPointVector2<T>::Lerp(FloatingPointVector2 const& source0, FloatingPointVector2 const& source1, T amount)
+FloatingPointVector2<T>::Lerp(FloatingPointVector2 const& source1, FloatingPointVector2 const& source2, T amount)
 {
 	return FloatingPointVector2(
-		MathHelper::Lerp(source0.X, source1.X, amount),
-		MathHelper::Lerp(source0.Y, source1.Y, amount));
+		MathHelper::Lerp(source1.X, source2.X, amount),
+		MathHelper::Lerp(source1.Y, source2.Y, amount));
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>
-FloatingPointVector2<T>::SmoothStep(FloatingPointVector2 const& source0, FloatingPointVector2 const& source1, T amount)
+FloatingPointVector2<T>::SmoothStep(FloatingPointVector2 const& source1, FloatingPointVector2 const& source2, T amount)
 {
 	return FloatingPointVector2(
-		MathHelper::SmoothStep(source0.X, source1.X, amount),
-		MathHelper::SmoothStep(source0.Y, source1.Y, amount));
+		MathHelper::SmoothStep(source1.X, source2.X, amount),
+		MathHelper::SmoothStep(source1.Y, source2.Y, amount));
 }
 //-----------------------------------------------------------------------
 template <typename T>

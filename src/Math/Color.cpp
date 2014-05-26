@@ -129,13 +129,13 @@ Vector4 Color::ToVector4() const
 	return {R()/255.0f, G()/255.0f, B()/255.0f, A()/255.0f};
 }
 //-----------------------------------------------------------------------
-Color Color::Lerp(Color const& source0, Color const& source1, float amount)
+Color Color::Lerp(Color const& source1, Color const& source2, float amount)
 {
 	return Color(
-		source0.R() + amount * (source1.R() - source0.R()),
-		source0.G() + amount * (source1.G() - source0.G()),
-		source0.B() + amount * (source1.B() - source0.B()),
-		source0.A() + amount * (source1.A() - source0.A()));
+		source1.R() + amount * (source2.R() - source1.R()),
+		source1.G() + amount * (source2.G() - source1.G()),
+		source1.B() + amount * (source2.B() - source1.B()),
+		source1.A() + amount * (source2.A() - source1.A()));
 }
 //-----------------------------------------------------------------------
 Color operator*(float scale, Color const& color)

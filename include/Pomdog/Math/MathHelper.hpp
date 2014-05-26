@@ -49,14 +49,14 @@ struct MathConstants<double>
 namespace MathHelper {
 //-------------------------------------------------------------------
 template <typename T>
-T Clamp(T x, T minval, T maxval)
+T Clamp(T x, T min, T max)
 {
 	static_assert(std::is_arithmetic<T>::value, "");
-	POMDOG_ASSERT_MESSAGE(minval < maxval, "In Clamp, maxval is out of range");
-	if (x < minval)
-		return minval;
-	else if (x > maxval)
-		return maxval;
+	POMDOG_ASSERT_MESSAGE(min < max, "In Clamp, maxval is out of range");
+	if (x < min)
+		return min;
+	else if (x > max)
+		return max;
 	return x;
 }
 //-------------------------------------------------------------------
@@ -64,9 +64,7 @@ template <typename T>
 T Saturate(T x)
 {
 	static_assert(std::is_floating_point<T>::value, "T is floaing point number");
-	constexpr T Zero = 0;
-	constexpr T One = 1;
-	return Clamp(x, Zero, One);
+	return Clamp(x, T(0), T(1));
 }
 //-------------------------------------------------------------------
 ///@~Japanese
@@ -81,16 +79,16 @@ T Lerp(T source0, T source1, T amount)
 }
 //-------------------------------------------------------------------
 ///@~Japanese
-/// @brief スムーズなエルミート補間を行います
-/// @remarks amount が [min, max] の範囲内であれば、[0, 1] の間のスムーズなエルミート補間を行います。
+/// @brief スムーズなエルミート補間を行います。
 template <typename T>
 T SmoothStep(T min, T max, T amount)
 {
 	static_assert(std::is_floating_point<T>::value, "T is floaing point number");
-	// Scale, bias and saturate amount to 0...1 range
-	auto const x = Saturate((amount - min)/(max- min));
-	// Evaluate polynomial
-	return x*x*(3-2*x);
+	//POMDOG_ASSERT(amount >= 0);
+	//POMDOG_ASSERT(amount <= 1);
+	auto x = Saturate(amount);
+	auto scale = x * x * (T(3) - T(2) * x);
+	return min + scale * (max - min);
 }
 //-------------------------------------------------------------------
 template <typename T>

@@ -75,10 +75,10 @@ public:
 
 	///@~Japanese
 	/// @brief 指定された2色間を線形補間します。
-	/// @param source0 ソースとなる色0
 	/// @param source1 ソースとなる色1
+	/// @param source2 ソースとなる色2
 	/// @param amount 線形補間する際に使用されるパラメータで、値の範囲に制限はありません。
-	static Color Lerp(Color const& source0, Color const& source1, float amount);
+	static Color Lerp(Color const& source1, Color const& source2, float amount);
 
 	// static public attributes
 	

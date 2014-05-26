@@ -8,6 +8,7 @@
 
 #include "TestAppGame.hpp"
 #include <utility>
+#include <Pomdog/Utility/MakeUnique.hpp>
 #include "MaidChanGame.hpp"
 #include "GrassBlendingGame.hpp"
 #include "ParticleTestGame.hpp"
@@ -22,7 +23,9 @@ TestAppGame::~TestAppGame() = default;
 //-----------------------------------------------------------------------
 void TestAppGame::Initialize()
 {
-	this->game.reset(new ParticleTestGame(gameHost));
+	this->game = MakeUnique<ParticleTestGame>(gameHost);
+	//this->game = MakeUnique<MaidChanGame>(gameHost);
+	
 	game->Initialize();
 }
 //-----------------------------------------------------------------------
