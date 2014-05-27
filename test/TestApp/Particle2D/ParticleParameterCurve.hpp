@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -17,30 +17,13 @@
 #include <algorithm>
 #include <utility>
 #include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Math/Color.hpp>
-#include <Pomdog/Math/MathHelper.hpp>
 #include "ParticleParameter.hpp"
 #include "ParticleCurveKey.hpp"
+#include "ParticleCurveLerp.hpp"
 
 namespace Pomdog {
 namespace Details {
 namespace Particles {
-
-template <typename T>
-struct ParticleCurveLerp {
-	T operator()(T const& a, T const& b, float amount)
-	{
-		return MathHelper::Lerp(a, b, amount);
-	}
-};
-
-template <>
-struct ParticleCurveLerp<Color> {
-	Color operator()(Color const& a, Color const& b, float amount)
-	{
-		return Color::Lerp(a, b, amount);
-	}
-};
 
 template <typename ForwardIterator, typename KeyType>
 std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIterator first, ForwardIterator last, KeyType const& value)
@@ -71,19 +54,11 @@ private:
 public:
 	ParticleParameterCurve() = delete;
 	
-	explicit ParticleParameterCurve(T const& color)
-	{
-		keys.emplace_back(0, color);
-	}
-	
-	explicit ParticleParameterCurve(T && color)
-	{
-		keys.emplace_back(0, std::move(color));
-	}
-	
-	explicit ParticleParameterCurve(std::vector<ParticleCurveKey<T>> && keysIn)
+	template <typename InType>
+	explicit ParticleParameterCurve(InType && keysIn)
 		: keys(std::move(keysIn))
 	{
+		static_assert(std::is_convertible<InType, decltype(keys)>::value, "");
 		POMDOG_ASSERT(!keys.empty());
 		
 		typedef ParticleCurveKey<T> CurveKeyType;
@@ -94,7 +69,7 @@ public:
 			[](CurveKeyType const& p){ return p.TimeSeconds < 0 || p.TimeSeconds > 1; }) == std::end(keys));
 	}
 	
-	T Compute(float normalizedScale, std::mt19937 & random) const override
+	T Compute(float normalizedScale) const
 	{
 		POMDOG_ASSERT(!keys.empty());
 	
@@ -118,6 +93,21 @@ public:
 
 		using Details::Particles::ParticleCurveLerp;
 		return ParticleCurveLerp<T>()(pair.first->Value, pair.second->Value, amount);
+	}
+	
+	T Compute(float normalizedScale, std::mt19937 &) const override
+	{
+		return Compute(normalizedScale);
+	}
+	
+	T Compute(float normalizedScale, float) const override
+	{
+		return Compute(normalizedScale);
+	}
+	
+	float GenerateVariance(std::mt19937 & random) const override
+	{
+		return 1.0f;
 	}
 };
 

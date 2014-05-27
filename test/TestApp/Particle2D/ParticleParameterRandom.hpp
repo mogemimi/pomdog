@@ -14,47 +14,11 @@
 #endif
 
 #include <random>
-#include <Pomdog/Math/Radian.hpp>
-#include <Pomdog/Math/Color.hpp>
+#include <limits>
 #include "ParticleParameter.hpp"
+#include "ParticleCurveLerp.hpp"
 
 namespace Pomdog {
-namespace Details {
-namespace Particles {
-
-template <typename T>
-struct ParticleRandomDistribution {
-	template <typename Random>
-	T operator()(T const& min, T const& max, Random & random)
-	{
-		static_assert(std::is_floating_point<T>::value, "");
-		std::uniform_real_distribution<T> distribution(min, max);
-		return distribution(random);
-	}
-};
-
-template <typename T>
-struct ParticleRandomDistribution<Radian<T>> {
-	template <typename Random>
-	Radian<T> operator()(Radian<T> const& min, Radian<T> const& max, Random & random)
-	{
-		std::uniform_real_distribution<T> distribution(min.value, max.value);
-		return distribution(random);
-	}
-};
-
-template <>
-struct ParticleRandomDistribution<Color> {
-	template <typename Random>
-	Color operator()(Color const& min, Color const& max, Random & random)
-	{
-		std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
-		return Color::Lerp(min, max, distribution(random));
-	}
-};
-
-}// namespace Particles
-}// namespace Details
 
 template <typename T>
 class ParticleParameterRandom final: public ParticleParameter<T> {
@@ -72,11 +36,25 @@ public:
 		static_assert(std::is_convertible<Type2, T>::value, "");
 	}
 
+	T Compute(std::mt19937 & random) const
+	{
+		return Details::Particles::ParticleCurveLerp<T>()(min, max,
+			std::generate_canonical<float, std::numeric_limits<float>::digits>(random));
+	}
+
 	T Compute(float, std::mt19937 & random) const override
 	{
-		using Details::Particles::ParticleRandomDistribution;
-		ParticleRandomDistribution<T> distribution;
-		return distribution(min, max, random);
+		return Compute(random);
+	}
+
+	T Compute(float normalizedTime, float amount) const override
+	{
+		return Details::Particles::ParticleCurveLerp<T>()(min, max, amount);
+	}
+	
+	float GenerateVariance(std::mt19937 & random) const override
+	{
+		return std::generate_canonical<float, std::numeric_limits<float>::digits>(random);
 	}
 };
 

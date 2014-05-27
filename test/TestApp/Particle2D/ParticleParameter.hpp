@@ -23,6 +23,10 @@ public:
 	virtual ~ParticleParameter() = default;
 	
 	virtual T Compute(float normalizedScale, std::mt19937 & random) const = 0;
+	
+	virtual T Compute(float normalizedScale, float amount) const = 0;
+	
+	virtual float GenerateVariance(std::mt19937 & random) const = 0;
 };
 
 }// namespace Pomdog

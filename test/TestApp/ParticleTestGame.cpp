@@ -21,6 +21,7 @@
 #include "ParticleParameterConstant.hpp"
 #include "ParticleParameterCurve.hpp"
 #include "ParticleParameterRandom.hpp"
+#include "ParticleParameterRandomCurves.hpp"
 
 namespace TestApp {
 namespace {
@@ -51,9 +52,6 @@ static ParticleEmitter CreateEmitterFireBlock()
 	//emitter.EmissionRate = 2;
 	//emitter.GravityModifier = 100.0f;
 	
-	emitter.StartRotation = MakeUnique<ParticleParameterRandom<Radian<float>>>(
-		0, MathConstants<float>::TwoPi());
-	
 	//emitter.Shape = MakeUnique<ParticleEmitterShapeSector>(MathConstants<float>::PiOver4());
 	emitter.Shape = MakeUnique<ParticleEmitterShapeBox>(0, 100);
 	
@@ -73,31 +71,55 @@ static ParticleEmitter CreateEmitterFireBlock()
 //			{1.00f, 0.0f},
 //		});
 	
-	//emitter.StartColor = MakeUnique<ParticleParameterConstant<Color>>(Color::Black);
 	emitter.StartColor = MakeUnique<ParticleParameterConstant<Color>>(Color::White);
-	//emitter.StartColor = MakeUnique<ParticleParameterRandom<Color>>(Color{255,200,170,255}, Color::White);
+	//emitter.StartColor = MakeUnique<ParticleParameterConstant<Color>>(Color::White);
+	//emitter.StartColor = MakeUnique<ParticleParameterRandom<Color>>(Color::Black, Color::White);
 	
-	emitter.ColorOverLifetime = MakeUnique<ParticleParameterCurve<Color>>(
+	//emitter.ColorOverLifetime = MakeUnique<ParticleParameterConstant<Color>>(Color::White);
+	//emitter.ColorOverLifetime = MakeUnique<ParticleParameterRandom<Color>>(Color::Yellow, Color::Black);
+//	emitter.ColorOverLifetime = MakeUnique<ParticleParameterCurve<Color>>(
+//		std::initializer_list<ParticleCurveKey<Color>>{
+//			{0.00f, Color{255, 255, 255, 0}},
+//			{0.02f, Color{255, 255, 255, 10}},
+//			{0.09f, Color{255, 250, 180, 100}},
+//			{0.15f, Color{255, 200, 180, 130}},
+//			{0.19f, Color{200, 130, 60, 255}},
+//			{0.24f, Color{190, 50, 10, 80}},
+//			{0.32f, Color{80, 24, 2, 20}},
+//			{1.00f, Color{0, 0, 0, 0}},
+//		});
+	emitter.ColorOverLifetime = MakeUnique<ParticleParameterRandomCurves<Color>>(
 		std::initializer_list<ParticleCurveKey<Color>>{
-			{0.00f, Color{255, 255, 255, 0}},
-			{0.02f, Color{255, 255, 255, 10}},
-			{0.09f, Color{255, 250, 180, 100}},
-			{0.15f, Color{255, 200, 180, 130}},
-			{0.19f, Color{200, 130, 60, 255}},
-			{0.24f, Color{190, 50, 10, 80}},
-			{0.32f, Color{80, 24, 2, 20}},
-			{1.00f, Color{0, 0, 0, 0}},
+			{0.00f, Color{255, 255, 255, 255}},
+			{1.00f, Color{0, 255, 0, 0}},
+		},
+		std::initializer_list<ParticleCurveKey<Color>>{
+			{0.00f, Color{255, 255, 255, 255}},
+			{1.00f, Color{255, 0, 0, 0}},
 		});
 	
+	//emitter.StartRotation = MakeUnique<ParticleParameterConstant<Radian<float>>>(0);
+	emitter.StartRotation = MakeUnique<ParticleParameterRandom<Radian<float>>>(
+		0, MathConstants<float>::TwoPi());
+	
+	//emitter.RotationOverLifetime = MakeUnique<ParticleParameterConstant<Radian<float>>>(0);
+	emitter.RotationOverLifetime = MakeUnique<ParticleParameterRandom<Radian<float>>>(
+		-MathConstants<float>::PiOver4(), MathConstants<float>::PiOver4());
+	
+	//emitter.StartSize = MakeUnique<ParticleParameterConstant<float>>(1.0f);
+	emitter.StartSize = MakeUnique<ParticleParameterRandom<float>>(0.8f, 1.2f);
+	
+	//emitter.SizeOverLifetime = MakeUnique<ParticleParameterConstant<float>>(1.0f);
 	emitter.SizeOverLifetime = MakeUnique<ParticleParameterCurve<float>>(
 		std::initializer_list<ParticleCurveKey<float>>{
-			{0.00f, 0.5f},
+			{0.00f, 0.0f},
+			{0.03f, 0.5f},
 			{0.10f, 0.8f},
 			{0.15f, 1.0f},
 			{0.60f, 0.8f},
 			{1.00f, 0.0f},
 		});
-	
+
 	return std::move(emitter);
 }
 
@@ -282,7 +304,7 @@ void ParticleTestGame::DrawSprites()
 	{
 		for (auto & particle: particleSystem.particles)
 		{
-			spriteBatch->Draw(texture, particle.Position, Rectangle{0, 0, 64, 64},
+			spriteBatch->Draw(texture, particle.Position, Rectangle(0, 0, texture->Width(), texture->Height()),
 				particle.Color, particle.Rotation, {0.5f, 0.5f}, particle.Size, 0);
 		}
 	}

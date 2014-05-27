@@ -70,18 +70,16 @@ T Saturate(T const& x)
 ///@~Japanese
 /// @brief 線形補間を行います。
 template <typename T>
-T Lerp(T source0, T source1, T amount)
+T Lerp(T const& source1, T const& source2, T const& amount)
 {
 	static_assert(std::is_floating_point<T>::value, "T is floaing point number");
-	//return ((1 - amount) * source0) + (amount * source1);
-	//return source0 + (amount * (-source0)) + (amount * source1);
-	return source0 + amount * (source1 - source0);
+	return source1 + amount * (source2 - source1);
 }
 //-------------------------------------------------------------------
 ///@~Japanese
 /// @brief スムーズなエルミート補間を行います。
 template <typename T>
-T SmoothStep(T min, T max, T amount)
+T SmoothStep(T const& min, T const& max, T const& amount)
 {
 	static_assert(std::is_floating_point<T>::value, "T is floaing point number");
 	//POMDOG_ASSERT(amount >= 0);

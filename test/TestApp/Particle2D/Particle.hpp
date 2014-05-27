@@ -25,9 +25,14 @@ public:
 	
 	Color StartColor = Color::White;
 	Color Color = Color::White;
+	float ColorVariance = 0;
 	
 	Radian<float> Rotation = 0;
+	float RotationVariance = 0;
+	
+	float StartSize = 1;
 	float Size = 1;
+	float SizeVariance = 0;
 	
 	float TimeToLive = 2;
 };

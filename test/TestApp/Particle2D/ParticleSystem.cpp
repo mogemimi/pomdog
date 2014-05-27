@@ -44,12 +44,27 @@ static Particle CreateParticle(RandomGenerator & random, ParticleEmitter const& 
 		// Rotation
 		POMDOG_ASSERT(emitter.StartRotation);
 		particle.Rotation = emitter.StartRotation->Compute(normalizedTime, random);
+
+		POMDOG_ASSERT(emitter.RotationOverLifetime);
+		particle.RotationVariance = emitter.RotationOverLifetime->GenerateVariance(random);
 	}
 	{
 		// Color
 		POMDOG_ASSERT(emitter.StartColor);
 		particle.StartColor = emitter.StartColor->Compute(normalizedTime, random);
 		particle.Color = particle.StartColor;
+		
+		POMDOG_ASSERT(emitter.ColorOverLifetime);
+		particle.ColorVariance = emitter.ColorOverLifetime->GenerateVariance(random);
+	}
+	{
+		// Size
+		POMDOG_ASSERT(emitter.StartSize);
+		particle.StartSize = emitter.StartSize->Compute(normalizedTime, random);
+		particle.Size = particle.StartSize;
+		
+		POMDOG_ASSERT(emitter.SizeOverLifetime);
+		particle.SizeVariance = emitter.SizeOverLifetime->GenerateVariance(random);
 	}
 	return std::move(particle);
 }
@@ -110,23 +125,28 @@ void ParticleSystem::Update(DurationSeconds const& frameDuration, Transform2D co
 			particle.Position += (particle.Velocity * deltaTime);
 			
 			float normalizedTime = 1.0f - particle.TimeToLive/emitter.StartLifetime;
-					
-			POMDOG_ASSERT(emitter.ColorOverLifetime);
-			POMDOG_ASSERT(emitter.SizeOverLifetime);
 			
-			auto ColorMultiply = [](Color const& a, Color const& b)->Color {
+			// Color
+			auto MultiplyColors = [](Color const& a, Color const& b)->Color {
 				return {
 					static_cast<uint8_t>(MathHelper::Clamp((a.R()/255.0f) * b.R(), 0.0f, 255.0f)),
 					static_cast<uint8_t>(MathHelper::Clamp((a.G()/255.0f) * b.G(), 0.0f, 255.0f)),
 					static_cast<uint8_t>(MathHelper::Clamp((a.B()/255.0f) * b.B(), 0.0f, 255.0f)),
 					static_cast<uint8_t>(MathHelper::Clamp((a.A()/255.0f) * b.A(), 0.0f, 255.0f))};
 			};
-			//particle.Color = ColorMultiply(particle.StartColor, emitter.ColorOverLifetime->ComputeOnTime(normalizedTime, particle.ColorAmount));
-			particle.Color = ColorMultiply(particle.StartColor, emitter.ColorOverLifetime->Compute(normalizedTime, random));
 			
-			//particle.Color = emitter.ColorOverLifetime->Compute(normalizedTime, random);
+			POMDOG_ASSERT(emitter.ColorOverLifetime);
+			particle.Color = MultiplyColors(particle.StartColor,
+				emitter.ColorOverLifetime->Compute(normalizedTime, particle.ColorVariance));
 			
-			particle.Size = emitter.SizeOverLifetime->Compute(normalizedTime, random);
+			// Rotation
+			POMDOG_ASSERT(emitter.RotationOverLifetime);
+			particle.Rotation = particle.Rotation
+				+ deltaTime * emitter.RotationOverLifetime->Compute(normalizedTime, particle.RotationVariance);
+			
+			// Size
+			POMDOG_ASSERT(emitter.SizeOverLifetime);
+			particle.Size = particle.StartSize * emitter.SizeOverLifetime->Compute(normalizedTime, particle.SizeVariance);
 		}
 		
 		particles.erase(std::remove_if(std::begin(particles), std::end(particles),

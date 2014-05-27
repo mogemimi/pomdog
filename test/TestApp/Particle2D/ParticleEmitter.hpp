@@ -35,19 +35,24 @@ public:
 	///@brief パーティクルの初期色を指定します。
 	std::unique_ptr<ParticleParameter<Color>> StartColor;
 	
-	///@brief パーティクルの生存期間に応じて変化する色を指定します。
+	///@brief パーティクルの生存期間に応じた色を指定します。
 	///@note このパラメータで指定された色と各パーティクルの初期色を乗算した結果が最終的な色となります。
 	std::unique_ptr<ParticleParameter<Color>> ColorOverLifetime;
 	
-	///@note on time
-	std::unique_ptr<ParticleParameter<float>> SizeOverLifetime;
-	
+	///@brief パーティクルの初期回転角を指定します。
 	std::unique_ptr<ParticleParameter<Radian<float>>> StartRotation;
 	
+	///@brief パーティクルの生存期間に応じた 1 秒あたりの回転速度を指定します。
+	std::unique_ptr<ParticleParameter<Radian<float>>> RotationOverLifetime;
+	
+	///@brief パーティクルの初期サイズを指定します。
+	std::unique_ptr<ParticleParameter<float>> StartSize;
+	
+	///@brief パーティクルの生存期間に応じたサイズを指定します。
+	std::unique_ptr<ParticleParameter<float>> SizeOverLifetime;
+	
 	float StartLifetime = 1;
-	float StartSize = 1;
-	
-	
+
 	float GravityModifier = 0;
 	
 	///@brief 発生させるパーティクルの最大数

@@ -19,7 +19,7 @@
 namespace Pomdog {
 
 template <typename T>
-class ParticleParameterConstant : public ParticleParameter<T> {
+class ParticleParameterConstant final: public ParticleParameter<T> {
 private:
 	T value;
 
@@ -34,6 +34,16 @@ public:
 	T Compute(float, std::mt19937 &) const override
 	{
 		return value;
+	}
+
+	T Compute(float, float) const override
+	{
+		return value;
+	}
+	
+	float GenerateVariance(std::mt19937 & random) const override
+	{
+		return 1.0f;
 	}
 };
 
