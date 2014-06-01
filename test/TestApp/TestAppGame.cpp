@@ -12,6 +12,7 @@
 #include "MaidChanGame.hpp"
 #include "GrassBlendingGame.hpp"
 #include "ParticleTestGame.hpp"
+#include "LightningTestGame.hpp"
 
 namespace TestApp {
 //-----------------------------------------------------------------------
@@ -23,7 +24,7 @@ TestAppGame::~TestAppGame() = default;
 //-----------------------------------------------------------------------
 void TestAppGame::Initialize()
 {
-	this->game = MakeUnique<ParticleTestGame>(gameHost);
+	this->game = MakeUnique<LightningTestGame>(gameHost);
 	//this->game = MakeUnique<MaidChanGame>(gameHost);
 	
 	game->Initialize();

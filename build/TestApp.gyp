@@ -120,6 +120,8 @@
         '../test/TestApp/Skeletal2D/TextureAtlasLoader.cpp',
         '../test/TestApp/Skeletal2D/TextureAtlasLoader.hpp',
         '../test/TestApp/Skeletal2D/TranslationTrack.hpp',
+        '../test/TestApp/LightningTestGame.cpp',
+        '../test/TestApp/LightningTestGame.hpp',
         '../test/TestApp/ParticleTestGame.cpp',
         '../test/TestApp/ParticleTestGame.hpp',
         '../test/TestApp/Particle2D/Particle.hpp',

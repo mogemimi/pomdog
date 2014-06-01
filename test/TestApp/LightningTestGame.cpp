@@ -1,4 +1,4 @@
-//
+﻿//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "ParticleTestGame.hpp"
+#include "LightningTestGame.hpp"
 #include <utility>
 #include <Pomdog/Utility/MakeUnique.hpp>
 #include "PrimitiveAxes.hpp"
@@ -40,91 +40,18 @@ static Matrix4x4 CreateViewMatrix3D(Transform2D const& transform, Camera2D const
 		Matrix4x4::CreateScale({camera.Zoom(), camera.Zoom(), 1});
 }
 
-static ParticleEmitter CreateEmitterFireBlock()
-{
-	ParticleEmitter emitter;
-
-	emitter.MaxParticles = 1024;
-	emitter.EmissionRate = 128*2;
-	emitter.Duration = DurationSeconds{0.1};
-	//emitter.Looping = false;
-	emitter.StartLifetime = 1.8f;
-	//emitter.GravityModifier = 100.0f;
-	
-	//emitter.Shape = MakeUnique<ParticleEmitterShapeSector>(MathConstants<float>::PiOver4());
-	emitter.Shape = MakeUnique<ParticleEmitterShapeBox>(0, 100);
-	
-	emitter.StartSpeed = MakeUnique<ParticleParameterRandom<float>>(40.0f, 128.0f);
-	//emitter.StartSpeed = MakeUnique<ParticleParameterConstant<float>>(-128.0f);
-	
-//	emitter.StartSpeed = MakeUnique<ParticleParameterCurve<float>>(
-//		std::initializer_list<ParticleCurveKey<float>>{
-//			{0.00f, 0.0f},
-//			{0.10f, -0.5f},
-//			{0.15f, -1.0f},
-//			{0.20f, -0.5f},
-//			{0.40f, 0.0f},
-//			{0.50f, 0.5f},
-//			{0.70f, 1.0f},
-//			{0.80f, 0.5f},
-//			{1.00f, 0.0f},
-//		});
-	
-	emitter.StartColor = MakeUnique<ParticleParameterConstant<Color>>(Color::White);
-	//emitter.StartColor = MakeUnique<ParticleParameterConstant<Color>>(Color::White);
-	//emitter.StartColor = MakeUnique<ParticleParameterRandom<Color>>(Color::Black, Color::White);
-	
-	//emitter.ColorOverLifetime = MakeUnique<ParticleParameterConstant<Color>>(Color::White);
-	//emitter.ColorOverLifetime = MakeUnique<ParticleParameterRandom<Color>>(Color::Yellow, Color::Black);
-	emitter.ColorOverLifetime = MakeUnique<ParticleParameterCurve<Color>>(
-		std::initializer_list<ParticleCurveKey<Color>>{
-			{0.00f, Color{255, 255, 255, 0}},
-			{0.02f, Color{255, 255, 255, 10}},
-			{0.09f, Color{255, 250, 180, 100}},
-			{0.15f, Color{255, 200, 180, 130}},
-			{0.19f, Color{200, 130, 60, 255}},
-			{0.24f, Color{190, 50, 10, 80}},
-			{0.32f, Color{80, 24, 2, 20}},
-			{1.00f, Color{0, 0, 0, 0}},
-		});
-	
-	//emitter.StartRotation = MakeUnique<ParticleParameterConstant<Radian<float>>>(0);
-	emitter.StartRotation = MakeUnique<ParticleParameterRandom<Radian<float>>>(
-		0, MathConstants<float>::TwoPi());
-	
-	//emitter.RotationOverLifetime = MakeUnique<ParticleParameterConstant<Radian<float>>>(0);
-	emitter.RotationOverLifetime = MakeUnique<ParticleParameterRandom<Radian<float>>>(
-		-MathConstants<float>::PiOver4(), MathConstants<float>::PiOver4());
-	
-	//emitter.StartSize = MakeUnique<ParticleParameterConstant<float>>(1.0f);
-	emitter.StartSize = MakeUnique<ParticleParameterRandom<float>>(0.8f, 1.2f);
-	
-	//emitter.SizeOverLifetime = MakeUnique<ParticleParameterConstant<float>>(1.0f);
-	emitter.SizeOverLifetime = MakeUnique<ParticleParameterCurve<float>>(
-		std::initializer_list<ParticleCurveKey<float>>{
-			{0.00f, 0.0f},
-			{0.03f, 0.5f},
-			{0.10f, 0.8f},
-			{0.15f, 1.0f},
-			{0.60f, 0.8f},
-			{1.00f, 0.0f},
-		});
-
-	return std::move(emitter);
-}
-
 }// unnamed namespace
 //-----------------------------------------------------------------------
-ParticleTestGame::ParticleTestGame(std::shared_ptr<GameHost> const& gameHostIn)
+LightningTestGame::LightningTestGame(std::shared_ptr<GameHost> const& gameHostIn)
 	: gameHost(gameHostIn)
 {
 	POMDOG_ASSERT(gameHostIn);
 	graphicsContext = gameHost->GraphicsContext();
 }
 //-----------------------------------------------------------------------
-ParticleTestGame::~ParticleTestGame() = default;
+LightningTestGame::~LightningTestGame() = default;
 //-----------------------------------------------------------------------
-void ParticleTestGame::Initialize()
+void LightningTestGame::Initialize()
 {
 	auto window = gameHost->Window();
 	window->Title("TestApp - Enjoy Game Dev, Have Fun.");
@@ -139,7 +66,8 @@ void ParticleTestGame::Initialize()
 		
 		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 		graphicsContext->SetBlendState(blendState);
-		texture = assets->Load<Texture2D>("Particles/smoke.png");
+		texture = assets->Load<Texture2D>("Particles/lightning.png");
+		texture = assets->Load<Texture2D>("pomdog.png");
 		
 		blendStateAdditive = BlendState::CreateAdditive(graphicsDevice);
 		blendStateNonPremultiplied = BlendState::CreateNonPremultiplied(graphicsDevice);
@@ -168,13 +96,49 @@ void ParticleTestGame::Initialize()
 		//sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
 		node->Transform().Scale = Vector2{2.5f, 2.5f};
 	}
-
+	
 	{
-		particleSystem.emitter = CreateEmitterFireBlock();
+		auto gameObject = gameWorld.CreateObject();
+		rootObjectID = gameObject->ID();
+		
+		auto node = gameObject->AddComponent<Node2D>(gameObject);
+		auto sprite = gameObject->AddComponent<Sprite>();
+		sprite->Origin = Vector2{0.5f, 0.5f};
+		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());
+	
+		auto & transform = node->Transform();
+		transform.Position = {0, 0};
+		transform.Scale = {2, 2};
+	}
+	
+	auto rootNode = gameWorld.Component<Node2D>(rootObjectID);
+	
+	for (int i = 0; i < 10; ++i)
+	{
+		auto gameObject = gameWorld.CreateObject();
+		gameObject->AddComponent<CanvasItem>();
+		auto node = gameObject->AddComponent<Node2D>(gameObject);
+		auto sprite = gameObject->AddComponent<Sprite>();
+		auto & transform = node->Transform();
+		
+		transform.Position.X = i * 64 * 2.0f;
+		transform.Position.Y = 0;
+		transform.Scale.X = transform.Scale.Y = 2.0f;
+		transform.Rotation = (0.5f * i) * MathConstants<float>::PiOver4();
+		sprite->Origin = Vector2{0.5f, 0.5f};
+		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
+		
+		rootNode->AddChild(gameObject);
+	}
+	
+	{
+		line.Point1 = Vector2{0, 0};
+		line.Point2 = Vector2{100, 0};
+		line.Thickness = 1.0f;
 	}
 }
 //-----------------------------------------------------------------------
-void ParticleTestGame::Update()
+void LightningTestGame::Update()
 {
 	auto clock = gameHost->Clock();
 	auto mouse = gameHost->Mouse();
@@ -196,8 +160,6 @@ void ParticleTestGame::Update()
 		}
 	}
 	{
-		static Transform2D emitterTranform;
-	
 		if (mouse->State().RightButton == ButtonState::Pressed)
 		{
 			auto node = gameWorld.Component<Node2D>(mainCameraID);
@@ -212,12 +174,8 @@ void ParticleTestGame::Update()
 					mouse->State().Position.Y - graphicsContext->Viewport().Height()/2,
 					0), inverseViewMatrix3D);
 
-			emitterTranform.Position = Vector2{position.X, position.Y};
-			emitterTranform.Rotation = MathConstants<float>::PiOver2();
-			particleSystem.ResetEmission();
+			line.Point2 = Vector2{position.X, position.Y};
 		}
-		
-		particleSystem.Update(clock->FrameDuration(), emitterTranform);
 	}
 	{
 		static bool isPaused = false;
@@ -236,7 +194,7 @@ void ParticleTestGame::Update()
 	}
 }
 //-----------------------------------------------------------------------
-void ParticleTestGame::DrawSprites()
+void LightningTestGame::DrawSprites()
 {
 	auto camera = gameWorld.Component<Camera2D>(mainCameraID);
 	auto nodeCamera = gameWorld.Component<Node2D>(mainCameraID);
@@ -258,17 +216,28 @@ void ParticleTestGame::DrawSprites()
 	POMDOG_ASSERT(spriteBatch);
 	spriteBatch->Begin(viewMatrix2D);
 	{
-		for (auto & particle: particleSystem.particles)
-		{
-			spriteBatch->Draw(texture, particle.Position, Rectangle(0, 0, texture->Width(), texture->Height()),
-				particle.Color, particle.Rotation, {0.5f, 0.5f}, particle.Size, 0);
-		}
+		float layerDepth = 0;
+		
+		//auto lineLength = Vector2::Distance(line.Point2, line.Point1);
+		
+		Vector2 const HalfCircleSize = {8, 32};
+		
+		auto tangent = line.Point2 - line.Point1;
+		auto rotation = std::atan2(tangent.Y, tangent.X);
+		
+		//spriteBatch->Draw(texture, line.Point1 + Vector2{0.5f, 0}, Rectangle{16, 0, 1, 32}, Color::White,
+		//	rotation, {0.0f, 0.5f}, Vector2{lineLength, 1}, layerDepth);
+		
+		spriteBatch->Draw(texture, line.Point1, Rectangle{0, 0, 15, 32}, Color::Black,
+			rotation, {1.0f, 1.0f}, Vector2{1, 1}, layerDepth);
+		spriteBatch->Draw(texture, line.Point2, Rectangle{17, 0, 15, 32}, Color::Black,
+			rotation, {0.0f, 0.5f}, Vector2{1, 1}, layerDepth);
 	}
 	spriteBatch->End();
 	graphicsContext->SetBlendState(blendStateNonPremultiplied);
 }
 //-----------------------------------------------------------------------
-void ParticleTestGame::Draw()
+void LightningTestGame::Draw()
 {
 	constexpr bool enableFxaa = true;
 
