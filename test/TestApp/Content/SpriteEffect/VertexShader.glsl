@@ -44,8 +44,8 @@ void main()
 		vec3(0.0f, 0.0f, 1.0f));
 
 	mat3x3 translate = mat3x3(
-		vec3(1.0, 0.0, Translation.x + (OriginScale.x * OriginScale.z)),
-		vec3(0.0, 1.0, Translation.y + (OriginScale.y * OriginScale.w)),
+		vec3(1.0, 0.0, Translation.x),
+		vec3(0.0, 1.0, Translation.y),
 		vec3(0.0, 0.0, 1.0));
 
 	mat3x3 localTransform = ((scaling * rotate) * translate);

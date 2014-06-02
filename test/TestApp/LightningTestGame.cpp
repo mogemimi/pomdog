@@ -67,7 +67,6 @@ void LightningTestGame::Initialize()
 		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 		graphicsContext->SetBlendState(blendState);
 		texture = assets->Load<Texture2D>("Particles/lightning.png");
-		texture = assets->Load<Texture2D>("pomdog.png");
 		
 		blendStateAdditive = BlendState::CreateAdditive(graphicsDevice);
 		blendStateNonPremultiplied = BlendState::CreateNonPremultiplied(graphicsDevice);
@@ -216,22 +215,27 @@ void LightningTestGame::DrawSprites()
 	POMDOG_ASSERT(spriteBatch);
 	spriteBatch->Begin(viewMatrix2D);
 	{
+		Vector2 const HalfCircleSize = {8, 32};
+		float const LineThickness = 20.0f;
+		float const InverseThickness = 22.0f;
+		
 		float layerDepth = 0;
 		
-		//auto lineLength = Vector2::Distance(line.Point2, line.Point1);
 		
-		Vector2 const HalfCircleSize = {8, 32};
+		auto lineLength = Vector2::Distance(line.Point2, line.Point1);
+		
+		auto thicknessScale = LineThickness / InverseThickness;
 		
 		auto tangent = line.Point2 - line.Point1;
 		auto rotation = std::atan2(tangent.Y, tangent.X);
 		
-		//spriteBatch->Draw(texture, line.Point1 + Vector2{0.5f, 0}, Rectangle{16, 0, 1, 32}, Color::White,
-		//	rotation, {0.0f, 0.5f}, Vector2{lineLength, 1}, layerDepth);
+		spriteBatch->Draw(texture, line.Point1, Rectangle{16, 0, 1, 32}, Color::White,
+			rotation, {0.0f, 0.5f}, Vector2{lineLength, thicknessScale}, layerDepth);
 		
-		spriteBatch->Draw(texture, line.Point1, Rectangle{0, 0, 15, 32}, Color::Black,
-			rotation, {1.0f, 1.0f}, Vector2{1, 1}, layerDepth);
-		spriteBatch->Draw(texture, line.Point2, Rectangle{17, 0, 15, 32}, Color::Black,
-			rotation, {0.0f, 0.5f}, Vector2{1, 1}, layerDepth);
+		spriteBatch->Draw(texture, line.Point1+Vector2{0,0}, Rectangle{0, 0, 15, 32}, Color::Yellow,
+			rotation, {1.0f, 0.5f}, thicknessScale, layerDepth);
+		spriteBatch->Draw(texture, line.Point2, Rectangle{17, 0, 15, 32}, Color::Blue,
+			rotation, {0.0f, 0.5f}, thicknessScale, layerDepth);
 	}
 	spriteBatch->End();
 	graphicsContext->SetBlendState(blendStateNonPremultiplied);

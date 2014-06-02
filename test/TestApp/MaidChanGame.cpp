@@ -341,7 +341,7 @@ void MaidChanGame::DrawSprites()
 		{
 			auto & matrix = globalPoses[*joint.Index];
 			spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 5, 5},
-				Color::Black, MathConstants<float>::PiOver4(), {0.5f, 0.5f}, 1.0f, 2/100.0f);
+				Color::Red, MathConstants<float>::PiOver4(), {0.5f, 0.5f}, 1.0f, 2/100.0f);
 			spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 2, 2},
 				Color::White, MathConstants<float>::PiOver4(), {0.5f, 0.5f}, 1.0f, 1/100.0f);
 			spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 32, 2},
