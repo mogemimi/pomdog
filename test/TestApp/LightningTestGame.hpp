@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -16,6 +16,7 @@
 #include <Pomdog/Pomdog.hpp>
 #include "CameraView2D.hpp"
 #include "ParticleSystem.hpp"
+#include "BeamSystem.hpp"
 
 namespace TestApp {
 
@@ -25,13 +26,6 @@ class PrimitiveAxes;
 class PrimitiveGrid;
 class SpriteBatch;
 class FXAA;
-
-class Line {
-public:
-	Vector2 Point1;
-	Vector2 Point2;
-	float Thickness;
-};
 
 class LightningTestGame: public Game {
 public:
@@ -70,7 +64,8 @@ private:
 	GameObjectID mainCameraID;
 	GameObjectID rootObjectID;
 	
-	Line line;
+	BeamSystem beamSystem;
+	Vector2 touchPoint;
 };
 
 }// namespace TestApp

@@ -10,6 +10,7 @@
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Math/Vector3.hpp>
 #include <Pomdog/Math/Vector4.hpp>
+#include <Pomdog/Math/MathHelper.hpp>
 
 namespace Pomdog {
 
@@ -136,6 +137,15 @@ Color Color::Lerp(Color const& source1, Color const& source2, float amount)
 		source1.G() + amount * (source2.G() - source1.G()),
 		source1.B() + amount * (source2.B() - source1.B()),
 		source1.A() + amount * (source2.A() - source1.A()));
+}
+//-----------------------------------------------------------------------
+Color Color::SmoothStep(Color const& source1, Color const& source2, float amount)
+{
+	return Color(
+		MathHelper::SmoothStep<float>(source1.R(), source2.R(), amount),
+		MathHelper::SmoothStep<float>(source1.G(), source2.G(), amount),
+		MathHelper::SmoothStep<float>(source1.B(), source2.B(), amount),
+		MathHelper::SmoothStep<float>(source1.A(), source2.A(), amount));
 }
 //-----------------------------------------------------------------------
 Color operator*(float scale, Color const& color)

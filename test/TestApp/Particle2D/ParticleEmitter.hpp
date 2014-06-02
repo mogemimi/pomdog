@@ -58,8 +58,8 @@ public:
 	///@brief 発生させるパーティクルの最大数
 	std::uint16_t MaxParticles = 128;
 	
-	///@todo もっと細かくカスタマイズしたいパラメータ
-	std::uint16_t EmissionRate = 16; // 16 particles/second
+	///@brief 1 秒間に発生させるパーティクルの数
+	std::uint16_t EmissionRate = 16;
 	
 	//float InheritVelocity;
 	//ParticleSimulationSpace SimulationSpace;

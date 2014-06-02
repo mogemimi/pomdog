@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -38,6 +38,41 @@ static Matrix4x4 CreateViewMatrix3D(Transform2D const& transform, Camera2D const
 	return Matrix4x4::CreateTranslation({-transform.Position.X, -transform.Position.Y, 1.0f})*
 		Matrix4x4::CreateRotationZ(-transform.Rotation) *
 		Matrix4x4::CreateScale({camera.Zoom(), camera.Zoom(), 1});
+}
+//-----------------------------------------------------------------------
+
+class SpriteLine {
+public:
+	std::shared_ptr<Texture2D> Texture;
+	Vector2 HalfCircleSize;
+	float InverseThickness;
+};
+
+//-----------------------------------------------------------------------
+static void DrawLine(SpriteBatch & spriteBatch, SpriteLine const& spriteLine,
+	Vector2 const& point1, Vector2 const& point2, float lineThickness,
+	Color const& color, float layerDepth)
+{
+	auto lineLength = Vector2::Distance(point2, point1);
+	
+	POMDOG_ASSERT(spriteLine.InverseThickness > 0);
+	auto thicknessScale = lineThickness / spriteLine.InverseThickness;
+	
+	auto tangent = point2 - point1;
+	auto rotation = std::atan2(tangent.Y, tangent.X);
+	
+	POMDOG_ASSERT(spriteLine.Texture);
+	std::int32_t textureHeight = spriteLine.Texture->Height();
+	Rectangle middleRectangle {32, 0, 1, textureHeight};
+	Rectangle startRectangle {0, 0, 32, textureHeight};
+	Rectangle endRectangle {33, 0, 31, textureHeight};
+	
+	spriteBatch.Draw(spriteLine.Texture, point1, middleRectangle,
+		color, rotation, {0.0f, 0.5f}, Vector2{lineLength, thicknessScale}, layerDepth);
+	spriteBatch.Draw(spriteLine.Texture, point1, startRectangle,
+		color, rotation, {1.0f, 0.5f}, thicknessScale, layerDepth);
+	spriteBatch.Draw(spriteLine.Texture, point2, endRectangle,
+		color, rotation, {0.0f, 0.5f}, thicknessScale, layerDepth);
 }
 
 }// unnamed namespace
@@ -130,11 +165,7 @@ void LightningTestGame::Initialize()
 		rootNode->AddChild(gameObject);
 	}
 	
-	{
-		line.Point1 = Vector2{0, 0};
-		line.Point2 = Vector2{100, 0};
-		line.Thickness = 1.0f;
-	}
+	touchPoint = {100, 0};
 }
 //-----------------------------------------------------------------------
 void LightningTestGame::Update()
@@ -173,8 +204,15 @@ void LightningTestGame::Update()
 					mouse->State().Position.Y - graphicsContext->Viewport().Height()/2,
 					0), inverseViewMatrix3D);
 
-			line.Point2 = Vector2{position.X, position.Y};
+			touchPoint = Vector2{position.X, position.Y};
 		}
+	}
+	{
+		Transform2D transform;
+		transform.Scale = {1.0f, 1.0f};
+		transform.Rotation = 0.0f;
+		transform.Position = touchPoint;
+		beamSystem.Update(clock->FrameDuration(), transform);
 	}
 	{
 		static bool isPaused = false;
@@ -215,27 +253,26 @@ void LightningTestGame::DrawSprites()
 	POMDOG_ASSERT(spriteBatch);
 	spriteBatch->Begin(viewMatrix2D);
 	{
-		Vector2 const HalfCircleSize = {8, 32};
-		float const LineThickness = 20.0f;
-		float const InverseThickness = 22.0f;
+		SpriteLine spriteLine;
+		spriteLine.Texture = texture;
+		spriteLine.HalfCircleSize = {8, 32};
+		spriteLine.InverseThickness = 5.0f;
+
+		auto DrawLightningBolt = [&](std::vector<Vector2> const& jaggedPoints, Color const& color)
+		{
+			for (size_t i = 1; i < jaggedPoints.size(); ++i)
+			{
+				POMDOG_ASSERT(i > 0);
+				auto & start = jaggedPoints[i - 1];
+				auto & end = jaggedPoints[i];
+				DrawLine(*spriteBatch, spriteLine, start, end, 1.0f, color, 0);
+			}
+		};
 		
-		float layerDepth = 0;
-		
-		
-		auto lineLength = Vector2::Distance(line.Point2, line.Point1);
-		
-		auto thicknessScale = LineThickness / InverseThickness;
-		
-		auto tangent = line.Point2 - line.Point1;
-		auto rotation = std::atan2(tangent.Y, tangent.X);
-		
-		spriteBatch->Draw(texture, line.Point1, Rectangle{16, 0, 1, 32}, Color::White,
-			rotation, {0.0f, 0.5f}, Vector2{lineLength, thicknessScale}, layerDepth);
-		
-		spriteBatch->Draw(texture, line.Point1+Vector2{0,0}, Rectangle{0, 0, 15, 32}, Color::Yellow,
-			rotation, {1.0f, 0.5f}, thicknessScale, layerDepth);
-		spriteBatch->Draw(texture, line.Point2, Rectangle{17, 0, 15, 32}, Color::Blue,
-			rotation, {0.0f, 0.5f}, thicknessScale, layerDepth);
+		for (auto & beam: beamSystem.beams)
+		{
+			DrawLightningBolt(beam.JaggedLine, beam.Color);
+		}
 	}
 	spriteBatch->End();
 	graphicsContext->SetBlendState(blendStateNonPremultiplied);

@@ -7,8 +7,6 @@
 //
 
 #include "ParticleSystem.hpp"
-#include <random>
-#include <Pomdog/Utility/MakeUnique.hpp>
 
 namespace Pomdog {
 namespace {
@@ -74,6 +72,7 @@ static Particle CreateParticle(RandomGenerator & random, ParticleEmitter const& 
 ParticleSystem::ParticleSystem()
 	: erapsedTime(0)
 	, emissionTimer(0)
+	, random(std::random_device{}())
 {
 	particles.reserve(emitter.MaxParticles);
 }
@@ -87,9 +86,6 @@ void ParticleSystem::Update(DurationSeconds const& frameDuration, Transform2D co
 		erapsedTime = DurationSeconds{0};
 	}
 
-	///@todo need to refactor code
-	static std::mt19937 random(10000);
-
 	if (emitter.Looping || erapsedTime <= emitter.Duration)
 	{
 		emissionTimer += frameDuration;
@@ -101,7 +97,7 @@ void ParticleSystem::Update(DurationSeconds const& frameDuration, Transform2D co
 		POMDOG_ASSERT(emissionInterval.count() > 0);
 
 		POMDOG_ASSERT(emitter.Duration.count() > 0);
-		float normalizedTime = erapsedTime/emitter.Duration;
+		float normalizedTime = erapsedTime / emitter.Duration;
 		
 		while ((particles.size() < emitter.MaxParticles) && (emissionTimer >= emissionInterval))
 		{
@@ -116,6 +112,9 @@ void ParticleSystem::Update(DurationSeconds const& frameDuration, Transform2D co
 		{
 			auto oldTimeToLive = particle.TimeToLive;
 			particle.TimeToLive -= frameDuration.count();
+			if (particle.TimeToLive <= 0.0f) {
+				continue;
+			}
 			
 			auto deltaTime = oldTimeToLive - particle.TimeToLive;
 			
@@ -124,7 +123,7 @@ void ParticleSystem::Update(DurationSeconds const& frameDuration, Transform2D co
 			particle.Velocity += (particleAcceleration * gravityAcceleration * deltaTime);
 			particle.Position += (particle.Velocity * deltaTime);
 			
-			float normalizedTime = 1.0f - particle.TimeToLive/emitter.StartLifetime;
+			float normalizedTime = 1.0f - particle.TimeToLive / emitter.StartLifetime;
 			
 			// Color
 			auto MultiplyColors = [](Color const& a, Color const& b)->Color {

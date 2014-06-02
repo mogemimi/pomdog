@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_PARTICLESYSTEM_2AEA7BC5_5CCE_4688_8FAC_D26A97A8F8B7_HPP
-#define POMDOG_PARTICLESYSTEM_2AEA7BC5_5CCE_4688_8FAC_D26A97A8F8B7_HPP
+#ifndef POMDOG_BEAMSYSTEM_616FE7EE_4C71_411A_A44D_C50248FB7B7E_HPP
+#define POMDOG_BEAMSYSTEM_616FE7EE_4C71_411A_A44D_C50248FB7B7E_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -17,26 +17,20 @@
 #include <vector>
 #include <random>
 #include <Pomdog/Pomdog.hpp>
-#include "Particle.hpp"
-#include "ParticleEmitter.hpp"
+#include "Beam.hpp"
+#include "BeamEmitter.hpp"
 
 namespace Pomdog {
 
-class ParticleSystem {
+class BeamSystem {
 public:
-	ParticleSystem();
+	BeamSystem();
 
 	void Update(DurationSeconds const& frameDuration, Transform2D const& emitterTransform);
 	
 public:
-	ParticleEmitter emitter;
-	std::vector<Particle> particles;
-	bool enableEmission;
-	
-	void ResetEmission()
-	{
-		erapsedTime = DurationSeconds{0};
-	}
+	BeamEmitter emitter;
+	std::vector<Beam> beams;
 	
 private:
 	DurationSeconds erapsedTime;
@@ -46,4 +40,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_PARTICLESYSTEM_2AEA7BC5_5CCE_4688_8FAC_D26A97A8F8B7_HPP)
+#endif // !defined(POMDOG_BEAMSYSTEM_616FE7EE_4C71_411A_A44D_C50248FB7B7E_HPP)
