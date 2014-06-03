@@ -23,6 +23,7 @@ class Beam {
 public:
 	std::vector<Vector2> JaggedLine;
 	Color Color;
+	float Thickness;
 	float TimeToLive;
 };
 

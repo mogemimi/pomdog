@@ -76,6 +76,7 @@ static std::vector<Vector2> CreateJaggedLine(
 }
 //-----------------------------------------------------------------------
 static std::vector<Vector2> CreateBranch(BeamEmitter const& emitter,
+	BeamBranching const& branching,
 	Beam const& parentBeam, std::mt19937 & random)
 {
 	POMDOG_ASSERT(parentBeam.JaggedLine.size() >= 2);
@@ -93,8 +94,8 @@ static std::vector<Vector2> CreateBranch(BeamEmitter const& emitter,
 	Vector2 tangent = sourceEnd - start;
 	Vector2 normal {-tangent.Y, tangent.X};
 
-	std::uniform_real_distribution<float> distribution(-0.3f, 0.3f);
-	Vector2 end = sourceEnd + (normal * distribution(random));
+	auto distribution = branching.SpreadRange;
+	Vector2 end = sourceEnd + (Vector2::Normalize(normal) * distribution(random));
 
 	auto scale = Vector2::Distance(end, start) / Vector2::Distance(sourceEnd, sourceStart);
 
@@ -111,7 +112,7 @@ BeamSystem::BeamSystem()
 	//particles.reserve(emitter.MaxParticles);
 
 	emitter.Looping = true;
-	emitter.StartLifetime = 0.58f;
+	emitter.StartLifetime = 0.64f;
 	emitter.Distance = 300.0f;
 	emitter.SwayRange = std::uniform_real_distribution<float>{-9.0f, 9.0f};
 	emitter.InterpolationPoints = 40;
@@ -120,8 +121,11 @@ BeamSystem::BeamSystem()
 	emitter.EmissionRate = 10;
 	emitter.StartColor = Color::White;
 	emitter.EndColor = {255, 220, 130, 0};
+	emitter.StartThickness = 1.2f;
 	
-	
+	branching.InheritThickness = 0.4f;
+	branching.MaxBranches = 4;
+	branching.SpreadRange = std::uniform_real_distribution<float>{-40.0f, 40.0f};
 	
 	//emitter.StartLifetime = 1.0f;
 	//emitter.MaxBeams = 1;
@@ -149,6 +153,21 @@ void BeamSystem::Update(DurationSeconds const& frameDuration, Transform2D const&
 		POMDOG_ASSERT(emitter.Duration.count() > 0);
 		//float normalizedTime = erapsedTime / emitter.Duration;
 		
+		auto CreateBranchBeam = [this](Beam const& beam) {
+			for (std::size_t i = 0; i < branching.MaxBranches; ++i) {
+				if (beams.size() + 1 >= emitter.MaxBeams) {
+					break;
+				}
+				
+				Beam branchBeam;
+				branchBeam.JaggedLine = CreateBranch(emitter, branching, beam, random);
+				branchBeam.TimeToLive = beam.TimeToLive;
+				branchBeam.Color = beam.Color;
+				branchBeam.Thickness = beam.Thickness * branching.InheritThickness;
+				beams.push_back(std::move(branchBeam));
+			}
+		};
+		
 		while ((beams.size() < emitter.MaxBeams) && (emissionTimer >= emissionInterval))
 		{
 			emissionTimer -= emissionInterval;
@@ -166,14 +185,9 @@ void BeamSystem::Update(DurationSeconds const& frameDuration, Transform2D const&
 			beam.JaggedLine = CreateJaggedLine(emitter, emitter.InterpolationPoints,
 				emitterTransform.Position, targetPosition, random);
 			beam.Color = emitter.StartColor;
+			beam.Thickness = emitter.StartThickness;
 			
-			for (int i = 0; i < 4; ++i) {
-				Beam branchBeam;
-				branchBeam.JaggedLine = CreateBranch(emitter, beam, random);
-				branchBeam.TimeToLive = beam.TimeToLive;
-				branchBeam.Color = beam.Color;
-				beams.push_back(std::move(branchBeam));
-			}
+			CreateBranchBeam(beam);
 			beams.push_back(std::move(beam));
 		}
 	}

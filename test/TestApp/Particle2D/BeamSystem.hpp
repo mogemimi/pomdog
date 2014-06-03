@@ -30,6 +30,8 @@ public:
 	
 public:
 	BeamEmitter emitter;
+	BeamBranching branching;
+	
 	std::vector<Beam> beams;
 	
 private:

@@ -258,20 +258,20 @@ void LightningTestGame::DrawSprites()
 		spriteLine.HalfCircleSize = {8, 32};
 		spriteLine.InverseThickness = 5.0f;
 
-		auto DrawLightningBolt = [&](std::vector<Vector2> const& jaggedPoints, Color const& color)
+		auto DrawLightningBolt = [&](std::vector<Vector2> const& jaggedPoints, float lineThickness, Color const& color)
 		{
 			for (size_t i = 1; i < jaggedPoints.size(); ++i)
 			{
 				POMDOG_ASSERT(i > 0);
 				auto & start = jaggedPoints[i - 1];
 				auto & end = jaggedPoints[i];
-				DrawLine(*spriteBatch, spriteLine, start, end, 1.0f, color, 0);
+				DrawLine(*spriteBatch, spriteLine, start, end, lineThickness, color, 0);
 			}
 		};
 		
 		for (auto & beam: beamSystem.beams)
 		{
-			DrawLightningBolt(beam.JaggedLine, beam.Color);
+			DrawLightningBolt(beam.JaggedLine, beam.Thickness, beam.Color);
 		}
 	}
 	spriteBatch->End();
