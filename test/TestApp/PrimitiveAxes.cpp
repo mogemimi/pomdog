@@ -18,16 +18,20 @@ PrimitiveAxes::PrimitiveAxes(std::shared_ptr<GameHost> const& gameHost)
 	{
 		using PositionColor = CustomVertex<Vector3, Vector3>;
 		
+		Color color1 {255, 149, 140, 255};
+		Color color2 {170, 220, 170, 255};
+		Color color3 {56, 190, 255, 255};
+		
 		std::array<PositionColor, 6> const verticesCombo = {
 			// x axis
-			Vector3(-1.0f, 0.0f, 0.0f), Vector3(255.0f/255.0f, 49.0f/255.0f, 60.0f/255.0f),
-			Vector3(+1.0f, 0.0f, 0.0f), Vector3(255.0f/255.0f, 49.0f/255.0f, 60.0f/255.0f),
+			Vector3(-1.0f, 0.0f, 0.0f), color1.ToVector3(),
+			Vector3(+1.0f, 0.0f, 0.0f), color1.ToVector3(),
 			// y axis
-			Vector3(0.0f, -1.0f, 0.0f), Vector3(170.0f/255.0f, 220.0f/255.0f, 170.0f/255.0f),
-			Vector3(0.0f, +1.0f, 0.0f), Vector3(170.0f/255.0f, 220.0f/255.0f, 170.0f/255.0f),
+			Vector3(0.0f, -1.0f, 0.0f), color2.ToVector3(),
+			Vector3(0.0f, +1.0f, 0.0f), color2.ToVector3(),
 			// z axis
-			Vector3(0.0f, 0.0f, -1.0f), Vector3(56.0f/255.0f, 190.0f/255.0f, 255.0f/255.0f),
-			Vector3(0.0f, 0.0f, +1.0f), Vector3(56.0f/255.0f, 190.0f/255.0f, 255.0f/255.0f),
+			Vector3(0.0f, 0.0f, -1.0f), color3.ToVector3(),
+			Vector3(0.0f, 0.0f, +1.0f), color3.ToVector3(),
 		};
 		vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
 			PositionColor::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Immutable);

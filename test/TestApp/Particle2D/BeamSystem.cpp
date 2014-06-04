@@ -29,11 +29,11 @@ static std::vector<Vector2> CreateJaggedLine(
 	std::sort(std::begin(positions), std::end(positions), std::less<float>());
 	
 
-	std::vector<Vector2> line;
-	line.reserve(interpolationPoints + 2);
-	line.push_back(start);
+	std::vector<Vector2> points;
+	points.reserve(interpolationPoints + 2);
+	points.push_back(start);
 	
-	Vector2 prevPoint = line.front();
+	Vector2 prevPoint = points.front();
 	float prevDisplacement = 0;
 	float prevPosition = 0;
 	
@@ -65,31 +65,31 @@ static std::vector<Vector2> CreateJaggedLine(
 		prevDisplacement = displacement;
 		prevPosition = position;
 		
-		line.push_back(std::move(point));
+		points.push_back(std::move(point));
 	}
 
-	line.push_back(end);
+	points.push_back(end);
 
-	POMDOG_ASSERT(!line.empty());
-	POMDOG_ASSERT(line.size() >= 2);
-	return std::move(line);
+	POMDOG_ASSERT(!points.empty());
+	POMDOG_ASSERT(points.size() >= 2);
+	return std::move(points);
 }
 //-----------------------------------------------------------------------
 static std::vector<Vector2> CreateBranch(BeamEmitter const& emitter,
 	BeamBranching const& branching,
 	Beam const& parentBeam, std::mt19937 & random)
 {
-	POMDOG_ASSERT(parentBeam.JaggedLine.size() >= 2);
+	POMDOG_ASSERT(parentBeam.Points.size() >= 2);
 	
 	std::uniform_int_distribution<std::uint32_t> indexDistribution(
-		0, static_cast<std::uint32_t>(parentBeam.JaggedLine.size() - 1));
+		0, static_cast<std::uint32_t>(parentBeam.Points.size() - 1));
 	
 	auto index = indexDistribution(random);
-	POMDOG_ASSERT(index < parentBeam.JaggedLine.size());
+	POMDOG_ASSERT(index < parentBeam.Points.size());
 	
-	Vector2 const& sourceStart = parentBeam.JaggedLine.front();
-	Vector2 const& sourceEnd = parentBeam.JaggedLine.back();
-	Vector2 start = parentBeam.JaggedLine[index];
+	Vector2 const& sourceStart = parentBeam.Points.front();
+	Vector2 const& sourceEnd = parentBeam.Points.back();
+	Vector2 start = parentBeam.Points[index];
 	
 	Vector2 tangent = sourceEnd - start;
 	Vector2 normal {-tangent.Y, tangent.X};
@@ -160,7 +160,7 @@ void BeamSystem::Update(DurationSeconds const& frameDuration, Transform2D const&
 				}
 				
 				Beam branchBeam;
-				branchBeam.JaggedLine = CreateBranch(emitter, branching, beam, random);
+				branchBeam.Points = CreateBranch(emitter, branching, beam, random);
 				branchBeam.TimeToLive = beam.TimeToLive;
 				branchBeam.Color = beam.Color;
 				branchBeam.Thickness = beam.Thickness * branching.InheritThickness;
@@ -182,7 +182,7 @@ void BeamSystem::Update(DurationSeconds const& frameDuration, Transform2D const&
 				emitter.Distance * std::sin(emitterTransform.Rotation.value)};
 			auto targetPosition = emitterTransform.Position + tangent;
 			
-			beam.JaggedLine = CreateJaggedLine(emitter, emitter.InterpolationPoints,
+			beam.Points = CreateJaggedLine(emitter, emitter.InterpolationPoints,
 				emitterTransform.Position, targetPosition, random);
 			beam.Color = emitter.StartColor;
 			beam.Thickness = emitter.StartThickness;

@@ -8,6 +8,7 @@
 
 #include "MaidChanGame.hpp"
 #include <utility>
+#include <Pomdog/Utility/MakeUnique.hpp>
 #include "PrimitiveAxes.hpp"
 #include "PrimitiveGrid.hpp"
 #include "SpriteBatch.hpp"
@@ -157,10 +158,13 @@ void MaidChanGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 	
-	primitiveAxes = std::unique_ptr<PrimitiveAxes>(new PrimitiveAxes(gameHost));
-	primitiveGrid = std::unique_ptr<PrimitiveGrid>(new PrimitiveGrid(gameHost));
-	spriteRenderer = std::unique_ptr<SpriteRenderer>(new SpriteRenderer(graphicsContext, graphicsDevice, *assets));
-	fxaa = std::unique_ptr<FXAA>(new FXAA(gameHost));
+	auto primaryColor = Color{152, 152, 151, 255};
+	auto secondaryColor = Color{112, 112, 112, 255};
+	
+	primitiveAxes = MakeUnique<PrimitiveAxes>(gameHost);
+	primitiveGrid = MakeUnique<PrimitiveGrid>(gameHost, primaryColor, secondaryColor);
+	spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
+	fxaa = MakeUnique<FXAA>(gameHost);
 	
 	{
 		// NOTE: Create main camera:

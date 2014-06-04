@@ -1,12 +1,12 @@
 #version 330
 
 in VertexData {
-	vec3 DestinationColor;
+	vec4 DestinationColor;
 } In;
 
 out vec4 FragColor;
 
 void main()
 {
-	FragColor = vec4(In.DestinationColor.xyz, 1.0);
+	FragColor = In.DestinationColor;
 }

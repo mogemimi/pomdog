@@ -10,34 +10,41 @@
 
 namespace TestApp {
 //-----------------------------------------------------------------------
-PrimitiveGrid::PrimitiveGrid(std::shared_ptr<GameHost> const& gameHost)
+PrimitiveGrid::PrimitiveGrid(std::shared_ptr<GameHost> const& gameHost,
+	Color const& primaryColor, Color const& secondaryColor)
 {
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
 
 	{
-		using Position = CustomVertex<Vector2>;
+		using PositionColor = CustomVertex<Vector2, Vector4>;
 		
-		size_t const gridCount = 12;
+		std::uint32_t const gridCount = 30;
 		
-		std::vector<Position> verticesCombo;
+		std::vector<PositionColor> verticesCombo;
 		verticesCombo.reserve((1 + gridCount*2) * 4);
 		
 		POMDOG_ASSERT(gridCount > 0);
 		auto const lineLength = 1.0f * (gridCount);
 		
-		for (size_t i = 0; i < (1 + gridCount*2); ++i)
+		auto const primaryColorVector = primaryColor.ToVector4();
+		auto const secondaryColorVector = secondaryColor.ToVector4();
+		
+		for (size_t i = 0; i < (1 + 2 * gridCount); ++i)
 		{
-			auto offset = (1.0f * ((i + 1) / 2)) * ((i % 2 == 0) ? 1.0f: -1.0f);
+			auto lineNumber = ((i + 1) / 2);
+			auto offset = (1.0f * lineNumber) * ((i % 2 == 0) ? 1.0f: -1.0f);
 
-			verticesCombo.push_back({Vector2(-lineLength, offset)});
-			verticesCombo.push_back({Vector2(+lineLength, offset)});
-			verticesCombo.push_back({Vector2(offset, -lineLength)});
-			verticesCombo.push_back({Vector2(offset, +lineLength)});
+			Vector4 color = (lineNumber % 10 == 0) ? primaryColorVector: secondaryColorVector;
+
+			verticesCombo.push_back({Vector2{-lineLength, offset}, color});
+			verticesCombo.push_back({Vector2{+lineLength, offset}, color});
+			verticesCombo.push_back({Vector2{offset, -lineLength}, color});
+			verticesCombo.push_back({Vector2{offset, +lineLength}, color});
 		}
 
 		vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
-			Position::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Immutable);
+			PositionColor::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Immutable);
 	}
 	{
 		effectPass = assets->Load<EffectPass>("PrimitiveGridEffect");
@@ -50,14 +57,13 @@ void PrimitiveGrid::Draw(GraphicsContext & graphicsContext, Matrix4x4 const& tra
 	struct alignas(16) GridLayout
 	{
 		Matrix4x4 ViewMatrix;
-		Vector4 LineColor;
 	};
 	
-	constexpr float gridPixelSize = 64.0f;
+	constexpr float gridPixelSize = 96.0f;
 	auto gridScaling = Matrix4x4::CreateScale({gridPixelSize, gridPixelSize, gridPixelSize});
 
 	auto parameter = effectPass->Parameters("GridLayout");
-	parameter->SetValue(GridLayout{ Matrix4x4::Transpose(gridScaling * transformMatrix), Vector4{1.0f, 1.0f, 1.0f, 1.0f}});
+	parameter->SetValue(GridLayout{Matrix4x4::Transpose(gridScaling * transformMatrix)});
 
 	graphicsContext.SetInputLayout(inputLayout);
 	graphicsContext.SetVertexBuffer(vertexBuffer);

@@ -21,7 +21,7 @@ namespace Pomdog {
 
 class Beam {
 public:
-	std::vector<Vector2> JaggedLine;
+	std::vector<Vector2> Points;
 	Color Color;
 	float Thickness;
 	float TimeToLive;

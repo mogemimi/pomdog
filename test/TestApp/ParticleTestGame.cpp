@@ -150,8 +150,11 @@ void ParticleTestGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 	
+	auto primaryColor = Color{152, 152, 151, 255};
+	auto secondaryColor = Color{112, 112, 112, 255};
+	
 	primitiveAxes = MakeUnique<PrimitiveAxes>(gameHost);
-	primitiveGrid = MakeUnique<PrimitiveGrid>(gameHost);
+	primitiveGrid = MakeUnique<PrimitiveGrid>(gameHost, primaryColor, secondaryColor);
 	spriteBatch = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
 	fxaa = MakeUnique<FXAA>(gameHost);
 	

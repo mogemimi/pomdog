@@ -19,10 +19,10 @@ namespace TestApp {
 
 using namespace Pomdog;
 
-class PrimitiveGrid
-{
+class PrimitiveGrid {
 public:
-	explicit PrimitiveGrid(std::shared_ptr<GameHost> const& gameHost);
+	PrimitiveGrid(std::shared_ptr<GameHost> const& gameHost,
+		Color const& primaryColor, Color const& secondaryColor);
 	
 	void Draw(GraphicsContext & graphicsContext, Matrix4x4 const& transformMatrix);
 	

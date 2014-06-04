@@ -75,6 +75,18 @@ static void DrawLine(SpriteBatch & spriteBatch, SpriteLine const& spriteLine,
 		color, rotation, {0.0f, 0.5f}, thicknessScale, layerDepth);
 }
 
+class SceneEditorColorScheme {
+public:
+	//Color CenterAxisX = Color::White;
+	//Color CenterAxisY = Color::White;
+	//Color CenterAxisZ = Color::White;
+	Color Background {81, 81, 81, 255};
+	Color Grid {97, 96, 95, 255};
+	Color GuideLine {142, 142, 141, 255};
+};
+
+static SceneEditorColorScheme editorSceneColor;
+
 }// unnamed namespace
 //-----------------------------------------------------------------------
 LightningTestGame::LightningTestGame(std::shared_ptr<GameHost> const& gameHostIn)
@@ -113,7 +125,7 @@ void LightningTestGame::Initialize()
 	}
 	
 	primitiveAxes = MakeUnique<PrimitiveAxes>(gameHost);
-	primitiveGrid = MakeUnique<PrimitiveGrid>(gameHost);
+	primitiveGrid = MakeUnique<PrimitiveGrid>(gameHost, editorSceneColor.GuideLine, editorSceneColor.Grid);
 	spriteBatch = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
 	fxaa = MakeUnique<FXAA>(gameHost);
 	
@@ -258,20 +270,20 @@ void LightningTestGame::DrawSprites()
 		spriteLine.HalfCircleSize = {8, 32};
 		spriteLine.InverseThickness = 5.0f;
 
-		auto DrawLightningBolt = [&](std::vector<Vector2> const& jaggedPoints, float lineThickness, Color const& color)
+		auto DrawBeam = [&](std::vector<Vector2> const& points, float lineThickness, Color const& color)
 		{
-			for (size_t i = 1; i < jaggedPoints.size(); ++i)
+			for (size_t i = 1; i < points.size(); ++i)
 			{
 				POMDOG_ASSERT(i > 0);
-				auto & start = jaggedPoints[i - 1];
-				auto & end = jaggedPoints[i];
+				auto & start = points[i - 1];
+				auto & end = points[i];
 				DrawLine(*spriteBatch, spriteLine, start, end, lineThickness, color, 0);
 			}
 		};
 		
 		for (auto & beam: beamSystem.beams)
 		{
-			DrawLightningBolt(beam.JaggedLine, beam.Thickness, beam.Color);
+			DrawBeam(beam.Points, beam.Thickness, beam.Color);
 		}
 	}
 	spriteBatch->End();
@@ -286,8 +298,8 @@ void LightningTestGame::Draw()
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
 	
-	graphicsContext->Clear(Color::CornflowerBlue);
-	
+	graphicsContext->Clear(editorSceneColor.Background);
+
 	//graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();
 	

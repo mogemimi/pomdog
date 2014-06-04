@@ -19,8 +19,7 @@ namespace TestApp {
 
 using namespace Pomdog;
 
-class PrimitiveAxes
-{
+class PrimitiveAxes {
 public:
 	explicit PrimitiveAxes(std::shared_ptr<GameHost> const& gameHost);
 	
