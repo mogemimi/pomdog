@@ -65,29 +65,30 @@ public:
 	
 	///@~Japanese
 	/// @brief インデックスを持たず、インスタンス化されていないプリミティブを描画します。
-	/// @param primitiveTopology プリミティブの位相を指定します。
-	void Draw(PrimitiveTopology primitiveTopology);
+	/// @param primitiveTopology プリミティブの位相。
+	/// @param vertexCount レンダリングする頂点の数。
+	void Draw(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount);
 
 	///@~Japanese
 	/// @brief インデックス付けされた頂点データに基づき、インスタンス化されていないプリミティブを描画します。
-	/// @param primitiveTopology プリミティブの位相を指定します。
-	/// @param indexBuffer インデックスバッファを指定します。
-	/// @param indexCount インデックスの要素数を指定します。
+	/// @param primitiveTopology プリミティブの位相。
+	/// @param indexBuffer インデックスバッファ。
+	/// @param indexCount インデックスの要素数。
 	void DrawIndexed(PrimitiveTopology primitiveTopology,
 		std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount);
 
 	///@~Japanese
 	/// @brief インデックスを持たない、インスタンス化されたプリミティブを描画します。
-	/// @param primitiveTopology プリミティブの位相を指定します。
-	/// @param instanceCount レンダリングするプリミティブのインスタンスの数を指定します。
+	/// @param primitiveTopology プリミティブの位相。
+	/// @param instanceCount レンダリングするインスタンスの数。
 	void DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t instanceCount);
 
 	///@~Japanese
 	/// @brief インデックス付けされた頂点データに基づき、インスタンス化されたプリミティブを描画します。
-	/// @param primitiveTopology プリミティブの位相を指定します。
-	/// @param indexBuffer インデックスバッファを指定します。
-	/// @param indexCount インデックスの要素数を指定します。
-	/// @param instanceCount レンダリングするプリミティブのインスタンスの数を指定します。
+	/// @param primitiveTopology プリミティブの位相。
+	/// @param indexBuffer インデックスバッファ。
+	/// @param indexCount インデックスの要素数。
+	/// @param instanceCount レンダリングするインスタンスの数。
 	void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
 		std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount);
 	

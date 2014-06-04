@@ -14,7 +14,10 @@
 #endif
 
 #include <Pomdog/Pomdog.hpp>
-#include "CameraView2D.hpp"
+#include "SceneEditor/CameraView2D.hpp"
+#include "SceneEditor/EditorColorScheme.hpp"
+#include "SceneEditor/GradientPlane.hpp"
+#include "LineRenderer.hpp"
 #include "ParticleSystem.hpp"
 #include "BeamSystem.hpp"
 
@@ -58,12 +61,14 @@ private:
 	std::shared_ptr<BlendState> blendStateAdditive;
 	std::shared_ptr<BlendState> blendStateNonPremultiplied;
 	
-	CameraView2D cameraView;
+	SceneEditor::CameraView2D cameraView;
+	SceneEditor::EditorColorScheme editorColorScheme;
+	std::unique_ptr<SceneEditor::GradientPlane> backgroundPlane;
 	
 	GameWorld gameWorld;
-	GameObjectID mainCameraID;
-	GameObjectID rootObjectID;
-	
+	std::shared_ptr<HierarchyNode> rootNode;
+	std::shared_ptr<GameObject> mainCamera;
+
 	BeamSystem beamSystem;
 	Vector2 touchPoint;
 };

@@ -19,8 +19,7 @@ namespace TestApp {
 
 using namespace Pomdog;
 
-class FXAA
-{
+class FXAA {
 public:
 	explicit FXAA(std::shared_ptr<GameHost> const& gameHost);
 	

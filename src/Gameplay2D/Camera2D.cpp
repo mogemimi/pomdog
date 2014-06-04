@@ -9,10 +9,6 @@
 #include <Pomdog/Gameplay2D/Camera2D.hpp>
 
 namespace Pomdog {
-
-Camera2D::Camera2D()
-	: zoom(1.0f)
-{}
 //-----------------------------------------------------------------------
 void Camera2D::Zoom(float value)
 {

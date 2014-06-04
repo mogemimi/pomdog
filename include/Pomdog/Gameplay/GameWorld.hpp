@@ -86,50 +86,64 @@ public:
 	std::vector<std::shared_ptr<GameObject>> QueryComponents();
 	
 	template <typename T>
-	T const* Component(GameObjectID objectID) const;
+	T const* Component(GameObjectID const& objectID) const;
 	
 	template <typename T>
-	T* Component(GameObjectID objectID);
+	T* Component(GameObjectID const& objectID);
+	
+	template <typename T>
+	bool HasComponent(GameObjectID const& objectID) const;
+	
+	bool Valid(GameObjectID const& objectID) const;
 	
 private:
-	std::vector<std::shared_ptr<GameObject>> gameObjects;
-	std::shared_ptr<GameObjectContext> objectContext;
+	std::shared_ptr<GameObjectContext> context;
 };
 
 /// @}
 /// @}
 
 
-template <typename T, typename...Components>
-std::vector<std::shared_ptr<GameObject>> GameWorld::QueryComponents()
+//template <typename T, typename...Components>
+//std::vector<std::shared_ptr<GameObject>> GameWorld::QueryComponents()
+//{
+//	static_assert(std::is_object<T>::value, "");
+//	
+//	std::vector<std::shared_ptr<GameObject>> result;
+//
+//	for (auto & weakGameObject: gameObjects)
+//	{
+//		if (auto gameObject = weakGameObject.lock()) {
+//			if (Details::Gameplay::HasComponents<T, Components...>()(*gameObject)) {
+//				result.push_back(gameObject);
+//			}
+//		}
+//	}
+//	return std::move(result);
+//}
+
+template <typename T>
+T const* GameWorld::Component(GameObjectID const& objectID) const
 {
 	static_assert(std::is_object<T>::value, "");
-	
-	std::vector<std::shared_ptr<GameObject>> result;
-
-	for (auto & gameObject: gameObjects)
-	{
-		if (Details::Gameplay::HasComponents<T, Components...>()(*gameObject)) {
-			result.push_back(gameObject);
-		}
-	}
-	return std::move(result);
+	POMDOG_ASSERT(context);
+	return context->Component<T>(objectID);
 }
 
 template <typename T>
-T const* GameWorld::Component(GameObjectID objectID) const
+T* GameWorld::Component(GameObjectID const& objectID)
 {
 	static_assert(std::is_object<T>::value, "");
-	POMDOG_ASSERT(objectContext);
-	return objectContext->Component<T>(objectID);
+	POMDOG_ASSERT(context);
+	return context->Component<T>(objectID);
 }
 
 template <typename T>
-T* GameWorld::Component(GameObjectID objectID)
+bool GameWorld::HasComponent(GameObjectID const& objectID) const
 {
 	static_assert(std::is_object<T>::value, "");
-	POMDOG_ASSERT(objectContext);
-	return objectContext->Component<T>(objectID);
+	POMDOG_ASSERT(context);
+	return context->HasComponent<T>(objectID);
 }
 
 }// namespace Pomdog

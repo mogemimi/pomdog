@@ -58,7 +58,7 @@ public:
 	void Present() override;
 	
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
-	void Draw(PrimitiveTopology primitiveTopology) override;
+	void Draw(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount) override;
 
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
 	void DrawIndexed(PrimitiveTopology primitiveTopology,

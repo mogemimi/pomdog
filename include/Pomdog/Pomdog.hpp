@@ -71,11 +71,11 @@
 #include "Gameplay/GameObjectContext.hpp"
 #include "Gameplay/GameObjectID.hpp"
 #include "Gameplay/GameWorld.hpp"
+#include "Gameplay/HierarchyNode.hpp"
 
 // Gameplay2D
 #include "Gameplay2D/Camera2D.hpp"
 #include "Gameplay2D/CanvasItem.hpp"
-#include "Gameplay2D/Node2D.hpp"
 #include "Gameplay2D/Sprite.hpp"
 #include "Gameplay2D/Transform2D.hpp"
 

@@ -26,14 +26,12 @@ namespace Pomdog {
 
 class POMDOG_EXPORT Camera2D {
 public:
-	Camera2D();
-	
 	void Zoom(float value);
 	
 	float Zoom() const;
 	
 private:
-	float zoom;
+	float zoom = 1;
 };
 
 /// @}

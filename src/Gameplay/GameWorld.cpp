@@ -12,15 +12,20 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 GameWorld::GameWorld()
-	: objectContext(std::make_shared<GameObjectContext>())
+	: context(std::make_shared<GameObjectContext>())
 {}
 //-----------------------------------------------------------------------
 std::shared_ptr<GameObject> GameWorld::CreateObject()
 {
-	POMDOG_ASSERT(objectContext);
-	auto gameObject = std::make_shared<GameObject>(objectContext);
-	gameObjects.push_back(gameObject);
+	POMDOG_ASSERT(context);
+	auto gameObject = std::make_shared<GameObject>(context);
+	//gameObjects.push_back(gameObject);
 	return std::move(gameObject);
+}
+//-----------------------------------------------------------------------
+bool GameWorld::Valid(GameObjectID const& objectID) const
+{
+	return context->Valid(objectID);
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

@@ -14,6 +14,8 @@
 #include "SpriteBatch.hpp"
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
+#include "SandboxHelper.hpp"
+
 #include "TextureAtlasLoader.hpp"
 #include "Skeletal2D/SkeletonDescLoader.hpp"
 #include "Skeletal2D/AnimationTrack.hpp"
@@ -25,20 +27,6 @@
 
 namespace TestApp {
 namespace {
-
-//static Matrix3x3 CreateViewMatrix2D(Transform2D const& transform, Camera2D const& camera)
-//{
-//	return Matrix3x3::CreateTranslation({-transform.Position.X, -transform.Position.Y})*
-//		Matrix3x3::CreateRotationZ(-transform.Rotation) *
-//		Matrix3x3::CreateScale({camera.Zoom(), camera.Zoom(), 1});
-//}
-//-----------------------------------------------------------------------
-static Matrix4x4 CreateViewMatrix3D(Transform2D const& transform, Camera2D const& camera)
-{
-	return Matrix4x4::CreateTranslation({-transform.Position.X, -transform.Position.Y, 1.0f})*
-		Matrix4x4::CreateRotationZ(-transform.Rotation) *
-		Matrix4x4::CreateScale({camera.Zoom(), camera.Zoom(), 1});
-}
 //-----------------------------------------------------------------------
 static SkeletonPose CreateSkeletonPoseBySkeleton(Skeleton const& skeleton)
 {
@@ -158,62 +146,23 @@ void MaidChanGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 	
-	auto primaryColor = Color{152, 152, 151, 255};
-	auto secondaryColor = Color{112, 112, 112, 255};
-	
-	primitiveAxes = MakeUnique<PrimitiveAxes>(gameHost);
-	primitiveGrid = MakeUnique<PrimitiveGrid>(gameHost, primaryColor, secondaryColor);
+	primitiveAxes = MakeUnique<PrimitiveAxes>(gameHost, editorColorScheme.CenterAxisX, editorColorScheme.CenterAxisY, editorColorScheme.CenterAxisZ);
+	primitiveGrid = MakeUnique<PrimitiveGrid>(gameHost, editorColorScheme.GuideLine, editorColorScheme.Grid);
 	spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
 	fxaa = MakeUnique<FXAA>(gameHost);
 	
+	rootNode = std::make_shared<HierarchyNode>();
 	{
-		// NOTE: Create main camera:
 		auto gameObject = gameWorld.CreateObject();
-		mainCameraID = gameObject->ID();
-		
-		auto node = gameObject->AddComponent<Node2D>(gameObject);
+		mainCamera = gameObject;
+
+		gameObject->AddComponent<Transform2D>();
 		gameObject->AddComponent<CanvasItem>();
 		gameObject->AddComponent<Camera2D>();
-		//auto sprite = gameObject->AddComponent<Sprite>();
-		//sprite->Origin = Vector2{0.5f, 0.5f};
-		//sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
-		node->Transform().Scale = Vector2{2.5f, 2.5f};
+
+		auto node = std::make_shared<HierarchyNode>(gameObject);
+		rootNode->AddChild(node);
 	}
-	
-	{
-		auto gameObject = gameWorld.CreateObject();
-		rootObjectID = gameObject->ID();
-		
-		auto node = gameObject->AddComponent<Node2D>(gameObject);
-		auto sprite = gameObject->AddComponent<Sprite>();
-		sprite->Origin = Vector2{0.5f, 0.5f};
-		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());
-	
-		auto & transform = node->Transform();
-		transform.Position = {0, 0};
-		transform.Scale = {2, 2};
-	}
-	
-	auto rootNode = gameWorld.Component<Node2D>(rootObjectID);
-	
-	for (int i = 0; i < 10; ++i)
-	{
-		auto gameObject = gameWorld.CreateObject();
-		gameObject->AddComponent<CanvasItem>();
-		auto node = gameObject->AddComponent<Node2D>(gameObject);
-		auto sprite = gameObject->AddComponent<Sprite>();
-		auto & transform = node->Transform();
-		
-		transform.Position.X = i * 64 * 2.0f;
-		transform.Position.Y = 0;
-		transform.Scale.X = transform.Scale.Y = 2.0f;
-		transform.Rotation = (0.5f * i) * MathConstants<float>::PiOver4();
-		sprite->Origin = Vector2{0.5f, 0.5f};
-		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
-		
-		rootNode->AddChild(gameObject);
-	}
-	
 	{
 		auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidChan/skeleton.atlas");
 		auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("MaidChan/skeleton.json");
@@ -238,12 +187,12 @@ void MaidChanGame::Update()
 	auto clock = gameHost->Clock();
 	auto mouse = gameHost->Mouse();
 	{
-		auto node = gameWorld.Component<Node2D>(mainCameraID);
-		auto camera = gameWorld.Component<Camera2D>(mainCameraID);
+		auto transform = mainCamera->Component<Transform2D>();
+		auto camera = mainCamera->Component<Camera2D>();
 		
-		if (node && camera)
+		if (transform && camera)
 		{
-			cameraView.Input(mouse->State(), *clock, graphicsContext->Viewport().Bounds, node->Transform(), *camera);
+			cameraView.Input(mouse->State(), *clock, graphicsContext->Viewport().Bounds, *transform, *camera);
 		}
 	}
 	{
@@ -288,10 +237,11 @@ void MaidChanGame::Update()
 //-----------------------------------------------------------------------
 void MaidChanGame::DrawSprites()
 {
-	auto camera = gameWorld.Component<Camera2D>(mainCameraID);
-	auto nodeCamera = gameWorld.Component<Node2D>(mainCameraID);
-	
-	auto vierMatrix3D = CreateViewMatrix3D(nodeCamera->Transform(), *camera);;
+	auto transform = mainCamera->Component<Transform2D>();
+	auto camera = mainCamera->Component<Camera2D>();
+		
+	POMDOG_ASSERT(transform && camera);
+	auto vierMatrix3D = SandboxHelper::CreateViewMatrix3D(*transform, *camera);;
 	auto projectionMatrix3D = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
 	
 	POMDOG_ASSERT(primitiveGrid);
@@ -305,28 +255,6 @@ void MaidChanGame::DrawSprites()
 	POMDOG_ASSERT(spriteRenderer);
 	spriteRenderer->Begin(vierMatrix3D);
 	
-//	auto rootNode = gameWorld.Component<Node2D>(rootObjectID);
-//	auto worldMatrix = Matrix4x4::CreateTranslation(Vector3(rootNode->Transform().Position, 0.0f));
-//	{
-//		for (auto child: rootNode->Children())
-//		{
-//			auto canvasItem = child->Component<CanvasItem>();
-//			if (!child || !canvasItem->Visibile) {
-//				continue;
-//			}
-//		
-//			auto node = child->Component<Node2D>();
-//
-//			auto sprite = child->Component<Sprite>();
-//			auto & transform = node->Transform();
-//			
-//			constexpr float layerDepth = 0.0f;
-//
-//			spriteRenderer->Draw(texture, worldMatrix, transform.Position, sprite->Subrect,
-//				Color::White, transform.Rotation, sprite->Origin, transform.Scale, layerDepth);
-//		}
-//	}
-
 	auto const& globalPoses = maidSkeletonPose->GlobalPose;
 
 	static int state = 3;
@@ -396,7 +324,7 @@ void MaidChanGame::Draw()
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
 	
-	graphicsContext->Clear(Color::CornflowerBlue);
+	graphicsContext->Clear(editorColorScheme.Background);
 	
 	graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();

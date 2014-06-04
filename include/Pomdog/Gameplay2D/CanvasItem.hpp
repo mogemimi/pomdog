@@ -24,11 +24,8 @@ namespace Pomdog {
 
 class POMDOG_EXPORT CanvasItem {
 public:
-	bool Visibile;
-	
-	CanvasItem()
-		: Visibile(true)
-	{}
+	//float DrawOrder = 0;
+	bool Visibile = true;
 };
 
 /// @}

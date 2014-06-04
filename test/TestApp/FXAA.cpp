@@ -9,7 +9,7 @@
 #include "FXAA.hpp"
 
 namespace TestApp {
-
+//-----------------------------------------------------------------------
 FXAA::FXAA(std::shared_ptr<GameHost> const& gameHost)
 {
 	auto graphicsDevice = gameHost->GraphicsDevice();
@@ -65,7 +65,7 @@ FXAA::FXAA(std::shared_ptr<GameHost> const& gameHost)
 		effectPass->Parameters("Constants")->SetValue(renderTargetSize);
 	}
 }
-
+//-----------------------------------------------------------------------
 void FXAA::Draw(GraphicsContext & graphicsContext, std::shared_ptr<RenderTarget2D> const& texture)
 {
 	graphicsContext.SetSamplerState(0, samplerLinear);
@@ -79,5 +79,5 @@ void FXAA::Draw(GraphicsContext & graphicsContext, std::shared_ptr<RenderTarget2
 	effectPass->Apply();
 	graphicsContext.DrawIndexed(PrimitiveTopology::TriangleList, indexBuffer, indexBuffer->IndexCount());
 }
-
+//-----------------------------------------------------------------------
 }// namespace TestApp

@@ -14,7 +14,8 @@
 #endif
 
 #include <Pomdog/Pomdog.hpp>
-#include "CameraView2D.hpp"
+#include "SceneEditor/CameraView2D.hpp"
+#include "SceneEditor/EditorColorScheme.hpp"
 #include "ParticleSystem.hpp"
 
 namespace TestApp {
@@ -57,11 +58,12 @@ private:
 	std::shared_ptr<BlendState> blendStateAdditive;
 	std::shared_ptr<BlendState> blendStateNonPremultiplied;
 	
-	CameraView2D cameraView;
+	SceneEditor::CameraView2D cameraView;
+	SceneEditor::EditorColorScheme editorColorScheme;
 	
 	GameWorld gameWorld;
-	GameObjectID mainCameraID;
-	GameObjectID rootObjectID;
+	std::shared_ptr<HierarchyNode> rootNode;
+	std::shared_ptr<GameObject> mainCamera;
 	
 	ParticleSystem particleSystem;
 };

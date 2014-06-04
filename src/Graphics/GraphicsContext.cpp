@@ -278,12 +278,12 @@ void GraphicsContext::Present()
 	impl->nativeContext->Present();
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Draw(PrimitiveTopology primitiveTopology)
+void GraphicsContext::Draw(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);
 	
-	impl->nativeContext->Draw(primitiveTopology);
+	impl->nativeContext->Draw(primitiveTopology, vertexCount);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::DrawIndexed(PrimitiveTopology primitiveTopology,

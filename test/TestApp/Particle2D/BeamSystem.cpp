@@ -113,7 +113,6 @@ BeamSystem::BeamSystem()
 
 	emitter.Looping = true;
 	emitter.StartLifetime = 0.64f;
-	emitter.Distance = 300.0f;
 	emitter.SwayRange = std::uniform_real_distribution<float>{-9.0f, 9.0f};
 	emitter.InterpolationPoints = 40;
 	emitter.Jaggedness = 0.7f;
@@ -131,7 +130,7 @@ BeamSystem::BeamSystem()
 	//emitter.MaxBeams = 1;
 }
 //-----------------------------------------------------------------------
-void BeamSystem::Update(DurationSeconds const& frameDuration, Transform2D const& emitterTransform)
+void BeamSystem::Update(DurationSeconds const& frameDuration, Transform2D const& emitterTransform, Vector2 const& target)
 {
 	erapsedTime += frameDuration;
 	
@@ -176,14 +175,8 @@ void BeamSystem::Update(DurationSeconds const& frameDuration, Transform2D const&
 			
 			POMDOG_ASSERT(emitter.StartLifetime > 0.0f);
 			beam.TimeToLive = emitter.StartLifetime;
-			
-			Vector2 tangent {
-				emitter.Distance * std::cos(emitterTransform.Rotation.value),
-				emitter.Distance * std::sin(emitterTransform.Rotation.value)};
-			auto targetPosition = emitterTransform.Position + tangent;
-			
 			beam.Points = CreateJaggedLine(emitter, emitter.InterpolationPoints,
-				emitterTransform.Position, targetPosition, random);
+				emitterTransform.Position, target, random);
 			beam.Color = emitter.StartColor;
 			beam.Thickness = emitter.StartThickness;
 			
@@ -206,6 +199,15 @@ void BeamSystem::Update(DurationSeconds const& frameDuration, Transform2D const&
 		beams.erase(std::remove_if(std::begin(beams), std::end(beams),
 			[](Beam const& beam){ return beam.TimeToLive <= 0; }), std::end(beams));
 	}
+}
+//-----------------------------------------------------------------------
+Vector2 BeamSystem::CreateTarget(Transform2D const& emitterTransform, float distance)
+{
+	Vector2 tangent {
+		distance * std::cos(emitterTransform.Rotation.value),
+		distance * std::sin(emitterTransform.Rotation.value)};
+	auto targetPosition = emitterTransform.Position + tangent;
+	return targetPosition;
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

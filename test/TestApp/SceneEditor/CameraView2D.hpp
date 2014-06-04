@@ -15,16 +15,15 @@
 
 #include <Pomdog/Pomdog.hpp>
 
-namespace TestApp {
+namespace Pomdog {
+namespace SceneEditor {
 
-using namespace Pomdog;
-
-class CameraView2D
-{
+class CameraView2D {
 public:
 	explicit CameraView2D();
 	
-	void Input(MouseState const& mouseState, GameClock const& clock, Rectangle const& viewportSize, Transform2D & transform, Camera2D & camera);
+	void Input(MouseState const& mouseState, GameClock const& clock,
+		Rectangle const& viewportSize, Transform2D & transform, Camera2D & camera);
 	
 private:
 	//std::optional<Vector2> trackStartPosition;
@@ -35,6 +34,7 @@ private:
 	float scrollWheel;
 };
 
-}// namespace TestApp
+}// namespace SceneEditor
+}// namespace Pomdog
 
 #endif // !defined(POMDOG_CAMERAVIEW2D_2AAAB66E_D14C_44F3_9B38_B2B9053963CC_HPP)

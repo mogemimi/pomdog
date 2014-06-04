@@ -13,7 +13,9 @@
 #	pragma once
 #endif
 
+#include <vector>
 #include <Pomdog/Pomdog.hpp>
+#include "LineRenderer.hpp"
 
 namespace TestApp {
 
@@ -27,9 +29,14 @@ public:
 	void Draw(GraphicsContext & graphicsContext, Matrix4x4 const& transformMatrix);
 	
 private:
-	std::shared_ptr<VertexBuffer> vertexBuffer;
-	std::shared_ptr<EffectPass> effectPass;
-	std::shared_ptr<InputLayout> inputLayout;
+	struct Line {
+		Vector2 Point1;
+		Vector2 Point2;
+		Color Color;
+	};
+
+	std::vector<Line> lines;
+	LineRenderer renderer;
 };
 
 }// namespace TestApp

@@ -41,8 +41,6 @@ public:
 	Color StartColor = Color::White;
 	Color EndColor = Color::White;
 
-	float Distance = 300.0f;
-	
 	///@note [0, std::numelic_limits<T>::max()]
 	std::uint32_t InterpolationPoints = 90;
 	

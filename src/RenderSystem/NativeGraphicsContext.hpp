@@ -38,34 +38,20 @@ public:
 	///@copydoc Pomdog::GraphicsContext
 	virtual void Present() = 0;
 	
-	///@~Japanese
-	/// @brief インデックスを持たず、インスタンス化されていないプリミティブを描画します。
-	/// @param primitiveTopology プリミティブの位相を指定します。
-	virtual void Draw(PrimitiveTopology primitiveTopology) = 0;
+	///@copydoc Pomdog::GraphicsContext
+	virtual void Draw(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount) = 0;
 
-	///@~Japanese
-	/// @brief インデックス付けされた頂点データに基づき、インスタンス化されていないプリミティブを描画します。
-	/// @param primitiveTopology プリミティブの位相を指定します。
-	/// @param indexBuffer インデックスバッファを指定します。
-	/// @param indexCount インデックスの要素数を指定します。
+	///@copydoc Pomdog::GraphicsContext
 	virtual void DrawIndexed(PrimitiveTopology primitiveTopology,
 		std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount) = 0;
 
-	///@~Japanese
-	/// @brief インデックスを持たない、インスタンス化されたプリミティブを描画します。
-	/// @param primitiveTopology プリミティブの位相を指定します。
-	/// @param instanceCount レンダリングするプリミティブのインスタンスの数を指定します。
+	///@copydoc Pomdog::GraphicsContext
 	virtual void DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t instanceCount) = 0;
 
-	///@~Japanese
-	/// @brief インデックス付けされた頂点データに基づき、インスタンス化されたプリミティブを描画します。
-	/// @param primitiveTopology プリミティブの位相を指定します。
-	/// @param indexBuffer インデックスバッファを指定します。
-	/// @param indexCount インデックスの要素数を指定します。
-	/// @param instanceCount レンダリングするプリミティブのインスタンスの数を指定します。
+	///@copydoc Pomdog::GraphicsContext
 	virtual void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
 		std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount) = 0;
-		
+	
 	///@brief Retrieves the capabilities of a GraphicsContext
 	virtual GraphicsCapabilities GetCapabilities() const = 0;
 

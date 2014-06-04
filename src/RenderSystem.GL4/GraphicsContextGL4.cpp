@@ -209,7 +209,7 @@ void GraphicsContextGL4::Present()
 	nativeContext->SwapBuffers();
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology)
+void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount)
 {
 	// Bind input-layout to the input-assembler stage:
 	POMDOG_ASSERT(inputLayout);
@@ -223,12 +223,12 @@ void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology)
 	// Draw:
 	POMDOG_ASSERT(!vertexBuffers.empty());
 	POMDOG_ASSERT(vertexBuffers.front());
+	POMDOG_ASSERT(vertexCount <= vertexBuffers.front()->VertexCount());
 	
 	glDrawArrays(
 		ToPrimitiveTopology(primitiveTopology),
 		0,
-		vertexBuffers.front()->VertexCount()
-	);
+		vertexCount);
 	
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDrawArrays", __FILE__, __LINE__);
@@ -261,8 +261,7 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 		ToPrimitiveTopology(primitiveTopology),
 		indexCount,
 		ToIndexElementType(indexBuffer->ElementSize()),
-		nullptr
-	);
+		nullptr);
 	
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDrawElements", __FILE__, __LINE__);
@@ -289,8 +288,7 @@ void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std:
 		ToPrimitiveTopology(primitiveTopology),
 		0,
 		vertexBuffers.front()->VertexCount(),
-		instanceCount
-	);
+		instanceCount);
 	
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDrawArraysInstanced", __FILE__, __LINE__);
@@ -327,8 +325,7 @@ void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopolog
 		indexCount,
 		ToIndexElementType(indexBuffer->ElementSize()),
 		nullptr,
-		instanceCount
-	);
+		instanceCount);
 	
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDrawElementsInstanced", __FILE__, __LINE__);

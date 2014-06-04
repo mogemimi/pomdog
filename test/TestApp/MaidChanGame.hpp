@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -14,7 +14,8 @@
 #endif
 
 #include <Pomdog/Pomdog.hpp>
-#include "CameraView2D.hpp"
+#include "SceneEditor/CameraView2D.hpp"
+#include "SceneEditor/EditorColorScheme.hpp"
 #include "Skeletal2D/Skeleton.hpp"
 #include "Skeletal2D/SkeletonPose.hpp"
 #include "Skeletal2D/Skin.hpp"
@@ -62,12 +63,12 @@ private:
 	std::shared_ptr<RenderTarget2D> renderTarget;
 	std::unique_ptr<FXAA> fxaa;
 	
-	CameraView2D cameraView;
+	SceneEditor::CameraView2D cameraView;
+	SceneEditor::EditorColorScheme editorColorScheme;
 	
 	GameWorld gameWorld;
-	GameObjectID mainCameraID;
-	GameObjectID rootObjectID;
-	//std::shared_ptr<Scene> hierarchy;
+	std::shared_ptr<HierarchyNode> rootNode;
+	std::shared_ptr<GameObject> mainCamera;
 	
 	AnimationSystem animationSystem;
 	std::shared_ptr<Skeleton> maidSkeleton;

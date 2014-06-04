@@ -1,4 +1,4 @@
-//
+﻿//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_LINERENDERER_F1900C08_2DB6_40A0_B166_3873798DF8D8_HPP
-#define POMDOG_LINERENDERER_F1900C08_2DB6_40A0_B166_3873798DF8D8_HPP
+#ifndef POMDOG_GRADIENTPLANE_A123BDFD_A1B3_4203_BADC_F8622DBBD641_HPP
+#define POMDOG_GRADIENTPLANE_A123BDFD_A1B3_4203_BADC_F8622DBBD641_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -22,27 +22,19 @@
 #include <Pomdog/Pomdog.hpp>
 
 namespace Pomdog {
+namespace SceneEditor {
 
-class LineRenderer {
+class GradientPlane {
 public:
-	explicit LineRenderer(std::shared_ptr<GameHost> const& gameHost);
+	explicit GradientPlane(std::shared_ptr<GameHost> const& gameHost);
 
-	void Begin(Matrix4x4 const& transformMatrix);
-	
-	void Draw(Vector2 const& point1, Vector2 const& point2, Color const& color);
-	void Draw(Vector3 const& point1, Vector3 const& point2, Color const& color);
-	
-	void End();
+	void Draw();
 	
 private:
-	static constexpr std::uint16_t MaxLines = 512;
-
-	struct LinePoint {
+	struct Point {
 		Vector3 Position;
 		Vector4 Color;
 	};
-
-	std::vector<LinePoint> points;
 	
 	std::shared_ptr<GraphicsContext> graphicsContext;
 	std::shared_ptr<VertexBuffer> vertexBuffer;
@@ -50,6 +42,7 @@ private:
 	std::shared_ptr<InputLayout> inputLayout;
 };
 
+}// namespace SceneEditor
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_LINERENDERER_F1900C08_2DB6_40A0_B166_3873798DF8D8_HPP)
+#endif // !defined(POMDOG_GRADIENTPLANE_A123BDFD_A1B3_4203_BADC_F8622DBBD641_HPP)

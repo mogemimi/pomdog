@@ -14,6 +14,7 @@
 #include "SpriteBatch.hpp"
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
+#include "SandboxHelper.hpp"
 
 ///@note for test
 #include "ParticleEmitterShapeBox.hpp"
@@ -26,20 +27,6 @@
 namespace TestApp {
 namespace {
 //-----------------------------------------------------------------------
-static Matrix3x3 CreateViewMatrix2D(Transform2D const& transform, Camera2D const& camera)
-{
-	return Matrix3x3::CreateTranslation({-transform.Position.X, -transform.Position.Y})*
-		Matrix3x3::CreateRotationZ(-transform.Rotation) *
-		Matrix3x3::CreateScale({camera.Zoom(), camera.Zoom(), 1});
-}
-//-----------------------------------------------------------------------
-static Matrix4x4 CreateViewMatrix3D(Transform2D const& transform, Camera2D const& camera)
-{
-	return Matrix4x4::CreateTranslation({-transform.Position.X, -transform.Position.Y, 1.0f})*
-		Matrix4x4::CreateRotationZ(-transform.Rotation) *
-		Matrix4x4::CreateScale({camera.Zoom(), camera.Zoom(), 1});
-}
-
 static ParticleEmitter CreateEmitterFireBlock()
 {
 	ParticleEmitter emitter;
@@ -150,28 +137,23 @@ void ParticleTestGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 	
-	auto primaryColor = Color{152, 152, 151, 255};
-	auto secondaryColor = Color{112, 112, 112, 255};
-	
-	primitiveAxes = MakeUnique<PrimitiveAxes>(gameHost);
-	primitiveGrid = MakeUnique<PrimitiveGrid>(gameHost, primaryColor, secondaryColor);
+	primitiveAxes = MakeUnique<PrimitiveAxes>(gameHost, editorColorScheme.CenterAxisX, editorColorScheme.CenterAxisY, editorColorScheme.CenterAxisZ);
+	primitiveGrid = MakeUnique<PrimitiveGrid>(gameHost, editorColorScheme.GuideLine, editorColorScheme.Grid);
 	spriteBatch = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
 	fxaa = MakeUnique<FXAA>(gameHost);
 	
+	rootNode = std::make_shared<HierarchyNode>();
 	{
-		// NOTE: Create main camera:
 		auto gameObject = gameWorld.CreateObject();
-		mainCameraID = gameObject->ID();
-		
-		auto node = gameObject->AddComponent<Node2D>(gameObject);
+		mainCamera = gameObject;
+
+		gameObject->AddComponent<Transform2D>();
 		gameObject->AddComponent<CanvasItem>();
 		gameObject->AddComponent<Camera2D>();
-		//auto sprite = gameObject->AddComponent<Sprite>();
-		//sprite->Origin = Vector2{0.5f, 0.5f};
-		//sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
-		node->Transform().Scale = Vector2{2.5f, 2.5f};
-	}
 
+		auto node = std::make_shared<HierarchyNode>(gameObject);
+		rootNode->AddChild(node);
+	}
 	{
 		particleSystem.emitter = CreateEmitterFireBlock();
 	}
@@ -182,12 +164,12 @@ void ParticleTestGame::Update()
 	auto clock = gameHost->Clock();
 	auto mouse = gameHost->Mouse();
 	{
-		auto node = gameWorld.Component<Node2D>(mainCameraID);
-		auto camera = gameWorld.Component<Camera2D>(mainCameraID);
+		auto transform = mainCamera->Component<Transform2D>();
+		auto camera = mainCamera->Component<Camera2D>();
 		
-		if (node && camera)
+		if (transform && camera)
 		{
-			cameraView.Input(mouse->State(), *clock, graphicsContext->Viewport().Bounds, node->Transform(), *camera);
+			cameraView.Input(mouse->State(), *clock, graphicsContext->Viewport().Bounds, *transform, *camera);
 		}
 	}
 	{
@@ -198,30 +180,30 @@ void ParticleTestGame::Update()
 			duration = clock->TotalGameTime();
 		}
 	}
-	{
-		static Transform2D emitterTranform;
-	
-		if (mouse->State().RightButton == ButtonState::Pressed)
-		{
-			auto node = gameWorld.Component<Node2D>(mainCameraID);
-			auto camera = gameWorld.Component<Camera2D>(mainCameraID);
-		
-			POMDOG_ASSERT(node && camera);
-		
-			auto inverseViewMatrix3D = Matrix4x4::Invert(CreateViewMatrix3D(node->Transform(), *camera));
-			
-			auto position = Vector3::Transform(Vector3(
-					mouse->State().Position.X - graphicsContext->Viewport().Width()/2,
-					mouse->State().Position.Y - graphicsContext->Viewport().Height()/2,
-					0), inverseViewMatrix3D);
-
-			emitterTranform.Position = Vector2{position.X, position.Y};
-			emitterTranform.Rotation = MathConstants<float>::PiOver2();
-			particleSystem.ResetEmission();
-		}
-		
-		particleSystem.Update(clock->FrameDuration(), emitterTranform);
-	}
+//	{
+//		static Transform2D emitterTranform;
+//	
+//		if (mouse->State().RightButton == ButtonState::Pressed)
+//		{
+//			auto node = gameWorld.Component<Node2D>(mainCameraID);
+//			auto camera = gameWorld.Component<Camera2D>(mainCameraID);
+//		
+//			POMDOG_ASSERT(node && camera);
+//		
+//			auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix3D(node->Transform(), *camera));
+//			
+//			auto position = Vector3::Transform(Vector3(
+//					mouse->State().Position.X - graphicsContext->Viewport().Width()/2,
+//					mouse->State().Position.Y - graphicsContext->Viewport().Height()/2,
+//					0), inverseViewMatrix3D);
+//
+//			emitterTranform.Position = Vector2{position.X, position.Y};
+//			emitterTranform.Rotation = MathConstants<float>::PiOver2();
+//			particleSystem.ResetEmission();
+//		}
+//		
+//		particleSystem.Update(clock->FrameDuration(), emitterTranform);
+//	}
 	{
 		static bool isPaused = false;
 		static DurationSeconds time = DurationSeconds(0);
@@ -241,10 +223,11 @@ void ParticleTestGame::Update()
 //-----------------------------------------------------------------------
 void ParticleTestGame::DrawSprites()
 {
-	auto camera = gameWorld.Component<Camera2D>(mainCameraID);
-	auto nodeCamera = gameWorld.Component<Node2D>(mainCameraID);
-	
-	auto viewMatrix3D = CreateViewMatrix3D(nodeCamera->Transform(), *camera);
+	auto transform = mainCamera->Component<Transform2D>();
+	auto camera = mainCamera->Component<Camera2D>();
+		
+	POMDOG_ASSERT(transform && camera);
+	auto viewMatrix3D = SandboxHelper::CreateViewMatrix3D(*transform, *camera);
 	auto projectionMatrix3D = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
 	
 	POMDOG_ASSERT(primitiveGrid);
@@ -253,7 +236,7 @@ void ParticleTestGame::DrawSprites()
 	POMDOG_ASSERT(primitiveAxes);
 	primitiveAxes->Draw(*graphicsContext, viewMatrix3D * projectionMatrix3D);
 	
-	auto viewMatrix2D = CreateViewMatrix2D(nodeCamera->Transform(), *camera);
+	auto viewMatrix2D = SandboxHelper::CreateViewMatrix2D(*transform, *camera);
 	
 	// NOTE: Changing blend state
 	//graphicsContext->SetBlendState(blendStateAdditive);
@@ -279,7 +262,7 @@ void ParticleTestGame::Draw()
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
 	
-	graphicsContext->Clear(Color::CornflowerBlue);
+	graphicsContext->Clear(editorColorScheme.Background);
 	
 	//graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();

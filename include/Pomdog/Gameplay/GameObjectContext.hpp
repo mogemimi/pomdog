@@ -34,11 +34,7 @@ template <std::uint8_t MaxComponentCapacity>
 class POMDOG_EXPORT EntityDescription {
 public:
 	std::bitset<MaxComponentCapacity> ComponentBitMask;
-	std::uint32_t IncremantalCounter;
-
-	EntityDescription()
-		: IncremantalCounter(0)
-	{}
+	std::uint32_t IncremantalCounter = 0;
 };
 
 template <std::uint8_t MaxComponentCapacity>
@@ -113,6 +109,12 @@ public:
 		descriptions[objectID.Index()].ComponentBitMask.reset();
 		
 		deletedIndices.push_back(objectID.Index());
+	}
+	
+	bool Valid(GameObjectID const& objectID) const
+	{
+		return (objectID.Index() < descriptions.size())
+			&& (descriptions[objectID.Index()].IncremantalCounter == objectID.SequenceNumber());
 	}
 	
 	template <typename T, typename...Arguments>

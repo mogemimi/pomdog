@@ -26,14 +26,8 @@ namespace Pomdog {
 
 class POMDOG_EXPORT Sprite {
 public:
-	Rectangle Subrect;
-	Vector2 Origin;
-	//float LayerDepth; // Draw Order
-	
-	Sprite()
-		: Subrect(0, 0, 1.0f, 1.0f)
-		, Origin(0.5f, 0.5f)
-	{}
+	Rectangle Subrect {0, 0, 1, 1};
+	Vector2 Origin {0.5f, 0.5f};
 };
 
 /// @}

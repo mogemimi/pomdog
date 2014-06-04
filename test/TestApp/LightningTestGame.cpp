@@ -14,6 +14,7 @@
 #include "SpriteBatch.hpp"
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
+#include "SandboxHelper.hpp"
 
 ///@note for test
 #include "ParticleEmitterShapeBox.hpp"
@@ -26,30 +27,17 @@
 namespace TestApp {
 namespace {
 //-----------------------------------------------------------------------
-static Matrix3x3 CreateViewMatrix2D(Transform2D const& transform, Camera2D const& camera)
-{
-	return Matrix3x3::CreateTranslation({-transform.Position.X, -transform.Position.Y})*
-		Matrix3x3::CreateRotationZ(-transform.Rotation) *
-		Matrix3x3::CreateScale({camera.Zoom(), camera.Zoom(), 1});
-}
-//-----------------------------------------------------------------------
-static Matrix4x4 CreateViewMatrix3D(Transform2D const& transform, Camera2D const& camera)
-{
-	return Matrix4x4::CreateTranslation({-transform.Position.X, -transform.Position.Y, 1.0f})*
-		Matrix4x4::CreateRotationZ(-transform.Rotation) *
-		Matrix4x4::CreateScale({camera.Zoom(), camera.Zoom(), 1});
-}
-//-----------------------------------------------------------------------
-
 class SpriteLine {
 public:
 	std::shared_ptr<Texture2D> Texture;
+	Rectangle StartRectangle;
+	Rectangle MiddleRectangle;
+	Rectangle EndRectangle;
 	Vector2 HalfCircleSize;
 	float InverseThickness;
 };
-
 //-----------------------------------------------------------------------
-static void DrawLine(SpriteBatch & spriteBatch, SpriteLine const& spriteLine,
+static void DrawSpriteLine(SpriteBatch & spriteBatch, SpriteLine const& spriteLine,
 	Vector2 const& point1, Vector2 const& point2, float lineThickness,
 	Color const& color, float layerDepth)
 {
@@ -62,30 +50,14 @@ static void DrawLine(SpriteBatch & spriteBatch, SpriteLine const& spriteLine,
 	auto rotation = std::atan2(tangent.Y, tangent.X);
 	
 	POMDOG_ASSERT(spriteLine.Texture);
-	std::int32_t textureHeight = spriteLine.Texture->Height();
-	Rectangle middleRectangle {32, 0, 1, textureHeight};
-	Rectangle startRectangle {0, 0, 32, textureHeight};
-	Rectangle endRectangle {33, 0, 31, textureHeight};
-	
-	spriteBatch.Draw(spriteLine.Texture, point1, middleRectangle,
+
+	spriteBatch.Draw(spriteLine.Texture, point1, spriteLine.MiddleRectangle,
 		color, rotation, {0.0f, 0.5f}, Vector2{lineLength, thicknessScale}, layerDepth);
-	spriteBatch.Draw(spriteLine.Texture, point1, startRectangle,
+	spriteBatch.Draw(spriteLine.Texture, point1, spriteLine.StartRectangle,
 		color, rotation, {1.0f, 0.5f}, thicknessScale, layerDepth);
-	spriteBatch.Draw(spriteLine.Texture, point2, endRectangle,
+	spriteBatch.Draw(spriteLine.Texture, point2, spriteLine.EndRectangle,
 		color, rotation, {0.0f, 0.5f}, thicknessScale, layerDepth);
 }
-
-class SceneEditorColorScheme {
-public:
-	//Color CenterAxisX = Color::White;
-	//Color CenterAxisY = Color::White;
-	//Color CenterAxisZ = Color::White;
-	Color Background {81, 81, 81, 255};
-	Color Grid {97, 96, 95, 255};
-	Color GuideLine {142, 142, 141, 255};
-};
-
-static SceneEditorColorScheme editorSceneColor;
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
@@ -124,60 +96,61 @@ void LightningTestGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 	
-	primitiveAxes = MakeUnique<PrimitiveAxes>(gameHost);
-	primitiveGrid = MakeUnique<PrimitiveGrid>(gameHost, editorSceneColor.GuideLine, editorSceneColor.Grid);
+	primitiveAxes = MakeUnique<PrimitiveAxes>(gameHost, editorColorScheme.CenterAxisX, editorColorScheme.CenterAxisY, editorColorScheme.CenterAxisZ);
+	primitiveGrid = MakeUnique<PrimitiveGrid>(gameHost, editorColorScheme.GuideLine, editorColorScheme.Grid);
 	spriteBatch = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
 	fxaa = MakeUnique<FXAA>(gameHost);
+	backgroundPlane = MakeUnique<SceneEditor::GradientPlane>(gameHost);
 	
+	rootNode = std::make_shared<HierarchyNode>();
 	{
-		// NOTE: Create main camera:
 		auto gameObject = gameWorld.CreateObject();
-		mainCameraID = gameObject->ID();
-		
-		auto node = gameObject->AddComponent<Node2D>(gameObject);
+		mainCamera = gameObject;
+
+		gameObject->AddComponent<Transform2D>();
 		gameObject->AddComponent<CanvasItem>();
 		gameObject->AddComponent<Camera2D>();
-		//auto sprite = gameObject->AddComponent<Sprite>();
-		//sprite->Origin = Vector2{0.5f, 0.5f};
-		//sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
-		node->Transform().Scale = Vector2{2.5f, 2.5f};
+
+		auto node = std::make_shared<HierarchyNode>(gameObject);
+		rootNode->AddChild(node);
 	}
-	
 	{
 		auto gameObject = gameWorld.CreateObject();
-		rootObjectID = gameObject->ID();
-		
-		auto node = gameObject->AddComponent<Node2D>(gameObject);
+
 		auto sprite = gameObject->AddComponent<Sprite>();
 		sprite->Origin = Vector2{0.5f, 0.5f};
 		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());
 	
-		auto & transform = node->Transform();
-		transform.Position = {0, 0};
-		transform.Scale = {2, 2};
+		gameObject->AddComponent<Transform2D>();
+		gameObject->AddComponent<CanvasItem>();
+		
+		auto transform = gameObject->Component<Transform2D>();
+		transform->Position = {0, 0};
+		transform->Scale = {2, 2};
+		
+		auto node = std::make_shared<HierarchyNode>(gameObject);
+		rootNode->AddChild(node);
 	}
-	
-	auto rootNode = gameWorld.Component<Node2D>(rootObjectID);
 	
 	for (int i = 0; i < 10; ++i)
 	{
 		auto gameObject = gameWorld.CreateObject();
 		gameObject->AddComponent<CanvasItem>();
-		auto node = gameObject->AddComponent<Node2D>(gameObject);
+
 		auto sprite = gameObject->AddComponent<Sprite>();
-		auto & transform = node->Transform();
+		auto transform = gameObject->AddComponent<Transform2D>();
 		
-		transform.Position.X = i * 64 * 2.0f;
-		transform.Position.Y = 0;
-		transform.Scale.X = transform.Scale.Y = 2.0f;
-		transform.Rotation = (0.5f * i) * MathConstants<float>::PiOver4();
+		transform->Position = {i * 64 * 2.0f, 0};
+		transform->Scale = {2.0f, 2.0f};
+		transform->Rotation = (0.5f * i) * MathConstants<float>::PiOver4();
 		sprite->Origin = Vector2{0.5f, 0.5f};
 		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
 		
-		rootNode->AddChild(gameObject);
+		auto node = std::make_shared<HierarchyNode>(gameObject);
+		rootNode->AddChild(node);
 	}
 	
-	touchPoint = {100, 0};
+	touchPoint = {300, 0};
 }
 //-----------------------------------------------------------------------
 void LightningTestGame::Update()
@@ -185,12 +158,12 @@ void LightningTestGame::Update()
 	auto clock = gameHost->Clock();
 	auto mouse = gameHost->Mouse();
 	{
-		auto node = gameWorld.Component<Node2D>(mainCameraID);
-		auto camera = gameWorld.Component<Camera2D>(mainCameraID);
+		auto transform = mainCamera->Component<Transform2D>();
+		auto camera = mainCamera->Component<Camera2D>();
 		
-		if (node && camera)
+		if (transform && camera)
 		{
-			cameraView.Input(mouse->State(), *clock, graphicsContext->Viewport().Bounds, node->Transform(), *camera);
+			cameraView.Input(mouse->State(), *clock, graphicsContext->Viewport().Bounds, *transform, *camera);
 		}
 	}
 	{
@@ -204,12 +177,11 @@ void LightningTestGame::Update()
 	{
 		if (mouse->State().RightButton == ButtonState::Pressed)
 		{
-			auto node = gameWorld.Component<Node2D>(mainCameraID);
-			auto camera = gameWorld.Component<Camera2D>(mainCameraID);
+			auto transform = mainCamera->Component<Transform2D>();
+			auto camera = mainCamera->Component<Camera2D>();
 		
-			POMDOG_ASSERT(node && camera);
-		
-			auto inverseViewMatrix3D = Matrix4x4::Invert(CreateViewMatrix3D(node->Transform(), *camera));
+			POMDOG_ASSERT(transform && camera);
+			auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix3D(*transform, *camera));
 			
 			auto position = Vector3::Transform(Vector3(
 					mouse->State().Position.X - graphicsContext->Viewport().Width()/2,
@@ -223,32 +195,18 @@ void LightningTestGame::Update()
 		Transform2D transform;
 		transform.Scale = {1.0f, 1.0f};
 		transform.Rotation = 0.0f;
-		transform.Position = touchPoint;
-		beamSystem.Update(clock->FrameDuration(), transform);
-	}
-	{
-		static bool isPaused = false;
-		static DurationSeconds time = DurationSeconds(0);
-		
-		if (clock->TotalGameTime() - time > DurationSeconds(0.2)) {
-			if (mouse->State().LeftButton == ButtonState::Pressed) {
-				time = clock->TotalGameTime();
-				isPaused = !isPaused;
-			}
-		}
-		
-		if (isPaused) {
-			return;
-		}
+		transform.Position = Vector2::Zero;
+		beamSystem.Update(clock->FrameDuration(), transform, touchPoint);
 	}
 }
 //-----------------------------------------------------------------------
 void LightningTestGame::DrawSprites()
 {
-	auto camera = gameWorld.Component<Camera2D>(mainCameraID);
-	auto nodeCamera = gameWorld.Component<Node2D>(mainCameraID);
-	
-	auto viewMatrix3D = CreateViewMatrix3D(nodeCamera->Transform(), *camera);
+	auto transform = mainCamera->Component<Transform2D>();
+	auto camera = mainCamera->Component<Camera2D>();
+		
+	POMDOG_ASSERT(transform && camera);
+	auto viewMatrix3D = SandboxHelper::CreateViewMatrix3D(*transform, *camera);
 	auto projectionMatrix3D = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
 	
 	POMDOG_ASSERT(primitiveGrid);
@@ -257,7 +215,7 @@ void LightningTestGame::DrawSprites()
 	POMDOG_ASSERT(primitiveAxes);
 	primitiveAxes->Draw(*graphicsContext, viewMatrix3D * projectionMatrix3D);
 	
-	auto viewMatrix2D = CreateViewMatrix2D(nodeCamera->Transform(), *camera);
+	auto viewMatrix2D = SandboxHelper::CreateViewMatrix2D(*transform, *camera);
 	
 	// NOTE: Changing blend state
 	//graphicsContext->SetBlendState(blendStateAdditive);
@@ -269,15 +227,18 @@ void LightningTestGame::DrawSprites()
 		spriteLine.Texture = texture;
 		spriteLine.HalfCircleSize = {8, 32};
 		spriteLine.InverseThickness = 5.0f;
+		spriteLine.StartRectangle = {0, 0, 32, 64};
+		spriteLine.MiddleRectangle = {32, 0, 1, 64};
+		spriteLine.EndRectangle = {33, 0, 31, 64};
 
 		auto DrawBeam = [&](std::vector<Vector2> const& points, float lineThickness, Color const& color)
 		{
-			for (size_t i = 1; i < points.size(); ++i)
+			for (std::size_t i = 1; i < points.size(); ++i)
 			{
 				POMDOG_ASSERT(i > 0);
 				auto & start = points[i - 1];
 				auto & end = points[i];
-				DrawLine(*spriteBatch, spriteLine, start, end, lineThickness, color, 0);
+				DrawSpriteLine(*spriteBatch, spriteLine, start, end, lineThickness, color, 0);
 			}
 		};
 		
@@ -298,7 +259,8 @@ void LightningTestGame::Draw()
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
 	
-	graphicsContext->Clear(editorSceneColor.Background);
+	//graphicsContext->Clear(editorColorScheme.Background);
+	backgroundPlane->Draw();
 
 	//graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();

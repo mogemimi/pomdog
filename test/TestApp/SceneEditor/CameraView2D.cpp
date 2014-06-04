@@ -7,8 +7,10 @@
 //
 
 #include "CameraView2D.hpp"
+#include <Pomdog/Utility/MakeUnique.hpp>
 
-namespace TestApp {
+namespace Pomdog {
+namespace SceneEditor {
 namespace {
 
 static Vector2 SampleTrackGesture(MouseState const& mouseState, std::unique_ptr<Vector2> & gesture)
@@ -16,8 +18,7 @@ static Vector2 SampleTrackGesture(MouseState const& mouseState, std::unique_ptr<
 	if (gesture) {
 		Vector2 position {
 			static_cast<float>(mouseState.Position.X),
-			static_cast<float>(mouseState.Position.Y)
-		};
+			static_cast<float>(mouseState.Position.Y)};
 
 		constexpr float threshold = 2.0f;
 
@@ -37,9 +38,7 @@ static Vector2 SampleTrackGesture(MouseState const& mouseState, std::unique_ptr<
 	else {
 		if (mouseState.MiddleButton == ButtonState::Pressed)
 		{
-			gesture = std::unique_ptr<Vector2>(new Vector2);
-			gesture->X = mouseState.Position.X;
-			gesture->Y = mouseState.Position.Y;
+			gesture = MakeUnique<Vector2>(mouseState.Position.X, mouseState.Position.Y);
 		}
 	}
 	
@@ -52,17 +51,14 @@ static Radian<float> SampleTumbleGesture(MouseState const& mouseState, Rectangle
 	{
 		if (mouseState.LeftButton == ButtonState::Pressed)
 		{
-			gesture = std::unique_ptr<Vector2>(new Vector2);
-			gesture->X = mouseState.Position.X;
-			gesture->Y = mouseState.Position.Y;
+			gesture = MakeUnique<Vector2>(mouseState.Position.X, mouseState.Position.Y);
 		}
 	}
 	else
 	{
 		Vector2 position {
 			static_cast<float>(mouseState.Position.X),
-			static_cast<float>(mouseState.Position.Y)
-		};
+			static_cast<float>(mouseState.Position.Y)};
 
 		constexpr float threshold = 1.0f;
 
@@ -145,4 +141,5 @@ void CameraView2D::Input(MouseState const& mouseState, GameClock const& clock, R
 	}
 }
 
-}// namespace TestApp
+}// namespace SceneEditor
+}// namespace Pomdog

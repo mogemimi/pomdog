@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,7 +13,9 @@
 #	pragma once
 #endif
 
+#include <array>
 #include <Pomdog/Pomdog.hpp>
+#include "LineRenderer.hpp"
 
 namespace TestApp {
 
@@ -21,14 +23,20 @@ using namespace Pomdog;
 
 class PrimitiveAxes {
 public:
-	explicit PrimitiveAxes(std::shared_ptr<GameHost> const& gameHost);
+	PrimitiveAxes(std::shared_ptr<GameHost> const& gameHost,
+		Color const& xAxisColor, Color const& yAxisColor, Color const& zAxisColor);
 	
 	void Draw(GraphicsContext & graphicsContext, Matrix4x4 const& transformMatrix);
 	
 private:
-	std::shared_ptr<VertexBuffer> vertexBuffer;
-	std::shared_ptr<EffectPass> effectPass;
-	std::shared_ptr<InputLayout> inputLayout;
+	struct Line {
+		Vector3 Point1;
+		Vector3 Point2;
+		Color Color;
+	};
+
+	std::array<Line, 3> lines;
+	LineRenderer renderer;
 };
 
 }// namespace TestApp
