@@ -75,6 +75,12 @@ void LightningTestGame::Initialize()
 	auto window = gameHost->Window();
 	window->Title("TestApp - Enjoy Game Dev, Have Fun.");
 	window->AllowPlayerResizing(true);
+	{
+		auto bounds = window->ClientBounds();
+		bounds.Width = 1280;
+		bounds.Height = 720;
+		window->ClientBounds(bounds);
+	}
 	
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();

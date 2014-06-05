@@ -102,9 +102,14 @@ Rectangle CocoaGameWindow::ClientBounds() const
 {
 	POMDOG_ASSERT([nativeWindow contentView] != nil);
 	NSRect bounds = [[nativeWindow contentView] bounds];
+	NSPoint origin = [nativeWindow frame].origin;
+	
+	NSSize windowSize = [nativeWindow frame].size;
+	NSSize screenSize = [[nativeWindow screen] visibleFrame].size;
+	
 	Rectangle rect {
-		static_cast<std::int32_t>(bounds.origin.x),
-		static_cast<std::int32_t>(bounds.origin.y),
+		static_cast<std::int32_t>(origin.x),
+		static_cast<std::int32_t>(screenSize.height - windowSize.height - origin.y),
 		static_cast<std::int32_t>(bounds.size.width),
 		static_cast<std::int32_t>(bounds.size.height)
 	};
@@ -113,13 +118,25 @@ Rectangle CocoaGameWindow::ClientBounds() const
 //-----------------------------------------------------------------------
 void CocoaGameWindow::ClientBounds(Rectangle const& clientBounds)
 {
-	NSRect bounds;
-	bounds.origin.x = clientBounds.X;
-	bounds.origin.y = clientBounds.Y;
-	bounds.size.width = clientBounds.Width;
-	bounds.size.height = clientBounds.Height;
+	NSSize bounds;
+	bounds.width = clientBounds.Width;
+	bounds.height = clientBounds.Height;
+	[nativeWindow setContentSize:bounds];
 
-	[nativeWindow setFrame:bounds display:YES animate:YES];
+	NSSize windowSize = [nativeWindow frame].size;
+	NSSize screenSize = [[nativeWindow screen] visibleFrame].size;
+	
+	NSPoint origin;
+	origin.x = clientBounds.X;
+	origin.y = (screenSize.height - (clientBounds.Y + windowSize.height));
+	[nativeWindow setFrameOrigin:origin];
+
+	//NSRect bounds;
+	//bounds.origin.x = clientBounds.X;
+	//bounds.origin.y = clientBounds.Y;
+	//bounds.size.width = clientBounds.Width;
+	//bounds.size.height = clientBounds.Height;
+	//[nativeWindow setFrame:bounds display:YES animate:YES];
 }
 //-----------------------------------------------------------------------
 #pragma mark - Low-Level API for CocoaGameHost

@@ -273,9 +273,10 @@ void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
 	}
 	else if (event.Is<ViewNeedsUpdateSurfaceEvent>())
 	{
-		auto rect = gameWindow->ClientBounds();
-		Log::Internal(StringFormat("ViewNeedsUpdateSurfaceEvent: {w: %d, h: %d}",
-			rect.Width, rect.Height));
+		//auto rect = gameWindow->ClientBounds();
+		//Log::Internal(StringFormat("ViewNeedsUpdateSurfaceEvent: {w: %d, h: %d}",
+		//	rect.Width, rect.Height));
+		
 		surfaceResizeRequest = true;
 	}
 	else if (event.Is<ViewWillStartLiveResizeEvent>())
@@ -302,7 +303,11 @@ void CocoaGameHost::Impl::ClientSizeChanged()
 	
 		auto viewport = graphicsContext->Viewport();
 		viewport.Bounds = gameWindow->ClientBounds();
+		viewport.Bounds.X = 0;
+		viewport.Bounds.Y = 0;
 		graphicsContext->Viewport(viewport);
+		
+		graphicsContext->ScissorRectangle(viewport.Bounds);
 		
 		gameWindow->ClientSizeChanged();
 	}
