@@ -81,16 +81,15 @@ static std::shared_ptr<CocoaOpenGLContext> CreateOpenGLContext(DepthFormat depth
 }
 //-----------------------------------------------------------------------
 static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
-	std::shared_ptr<CocoaOpenGLContext> openGLContext, std::weak_ptr<GameWindow> gameWindow,
+	std::shared_ptr<CocoaOpenGLContext> const& openGLContext,
+	std::weak_ptr<GameWindow> gameWindow,
 	PresentationParameters const& presentationParameters,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
 	POMDOG_ASSERT(openGLContext);
 	using RenderSystem::GL4::GraphicsContextGL4;
 
-	auto nativeContext = std::unique_ptr<GraphicsContextGL4>(new GraphicsContextGL4(
-		std::move(openGLContext), std::move(gameWindow)));
-			
+	auto nativeContext = MakeUnique<GraphicsContextGL4>(openGLContext, std::move(gameWindow));
 	return std::make_shared<GraphicsContext>(std::move(nativeContext), presentationParameters, graphicsDevice);
 }
 
@@ -163,14 +162,9 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	, systemEventDispatcher(eventDispatcher)
 	, exitRequest(false)
 {
-	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
-
 	openGLContext = CreateOpenGLContext(presentationParameters.DepthFormat);
-	{
-		GLint const swapInterval = 1;
-		[openGLContext->GetNSOpenGLContext() setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
-	}
 	
+	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
 	graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(MakeUnique<GraphicsDeviceGL4>());
 
 	graphicsContext = CreateGraphicsContext(openGLContext, gameWindow, presentationParameters, graphicsDevice);

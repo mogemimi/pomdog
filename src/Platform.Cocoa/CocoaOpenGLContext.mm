@@ -32,6 +32,10 @@ CocoaOpenGLContext::CocoaOpenGLContext(NSOpenGLPixelFormat* pixelFormatIn)
 		constexpr GLint swapInterval = 1;
 		CGLSetParameter(coreOpenGLContext, kCGLCPSwapInterval, &swapInterval);
 	}
+	{
+		constexpr GLint swapInterval = 1;
+		[openGLContext setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
+	}
 }
 //-----------------------------------------------------------------------
 CocoaOpenGLContext::~CocoaOpenGLContext()
