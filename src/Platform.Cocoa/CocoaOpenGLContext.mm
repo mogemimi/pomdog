@@ -79,7 +79,7 @@ void CocoaOpenGLContext::UnlockContext()
 	CGLUnlockContext(coreOpenGLContext);
 }
 //-----------------------------------------------------------------------
-NSOpenGLContext* CocoaOpenGLContext::GetNSOpenGLContext()
+NSOpenGLContext* CocoaOpenGLContext::NativeOpenGLContext()
 {
 	return openGLContext;
 }

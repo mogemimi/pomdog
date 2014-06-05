@@ -268,6 +268,7 @@ void ParticleTestGame::Draw()
 	DrawSprites();
 	
 	if (enableFxaa) {
+		graphicsContext->SetRenderTarget();
 		fxaa->Draw(*graphicsContext, renderTarget);
 	}
 	

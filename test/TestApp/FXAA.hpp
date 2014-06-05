@@ -23,6 +23,8 @@ class FXAA {
 public:
 	explicit FXAA(std::shared_ptr<GameHost> const& gameHost);
 	
+	void ResetViewportSize(Rectangle const& bounds);
+	
 	void Draw(GraphicsContext & graphicsContext, std::shared_ptr<RenderTarget2D> const& texture);
 	
 private:

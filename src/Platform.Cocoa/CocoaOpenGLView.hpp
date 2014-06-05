@@ -12,20 +12,20 @@
 #import <Cocoa/Cocoa.h>
 
 @class NSOpenGLContext, NSOpenGLPixelFormat;
+@class CocoaGameViewDelegate;
 
 @interface CocoaOpenGLView : NSView {
 @private
 	NSOpenGLContext* openGLContext_;
-	NSResponder* delegate_;
+	CocoaGameViewDelegate* delegate_;
 }
 
 @property (nonatomic, retain) NSOpenGLContext* openGLContext;
-@property (nonatomic, retain) NSResponder* delegate;
+@property (nonatomic, retain) CocoaGameViewDelegate* delegate;
 
 - (id)initWithFrame:(NSRect)frameRect;
 
 - (void)clearGLContext;
-- (void)update;
 - (void)reshape;
 
 @end

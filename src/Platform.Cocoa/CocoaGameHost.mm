@@ -20,6 +20,7 @@
 #include <Pomdog/Application/Game.hpp>
 #include <Pomdog/Application/GameClock.hpp>
 #include <Pomdog/Content/AssetManager.hpp>
+#include <Pomdog/Graphics/Viewport.hpp>
 
 #include "CocoaGameWindow.hpp"
 #include "CocoaOpenGLContext.hpp"
@@ -129,12 +130,14 @@ public:
 	///@copydoc GameHost
 	std::shared_ptr<Pomdog::Mouse> Mouse();
 
-public:
+private:
 	void RenderFrame(Game & game);
 	
 	void DoEvents();
 	
 	void ProcessSystemEvents(Event const& event);
+
+	void ClientSizeChanged();
 
 private:
 	GameClock clock;
@@ -153,6 +156,7 @@ private:
 	std::shared_ptr<CocoaMouse> mouse;
 	
 	bool exitRequest;
+	bool surfaceResizeRequest;
 };
 //-----------------------------------------------------------------------
 CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
@@ -161,6 +165,7 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	: gameWindow(window)
 	, systemEventDispatcher(eventDispatcher)
 	, exitRequest(false)
+	, surfaceResizeRequest(false)
 {
 	openGLContext = CreateOpenGLContext(presentationParameters.DepthFormat);
 	
@@ -224,6 +229,87 @@ void CocoaGameHost::Impl::Exit()
 	exitRequest = true;
 }
 //-----------------------------------------------------------------------
+void CocoaGameHost::Impl::RenderFrame(Game & game)
+{
+	POMDOG_ASSERT(gameWindow);
+
+	if (!gameWindow || gameWindow->IsMinimized()) {
+		// skip rendering
+		return;
+	}
+	
+	// RenderBegin:
+	openGLContext->LockContext();
+	openGLContext->BindCurrentContext();
+
+	// Render:
+	game.Draw();
+	
+	// RenderEnd:
+	openGLContext->UnlockContext();
+}
+//-----------------------------------------------------------------------
+void CocoaGameHost::Impl::DoEvents()
+{
+	systemEventDispatcher->Tick();
+	
+	if (surfaceResizeRequest) {
+		ClientSizeChanged();
+		surfaceResizeRequest = false;
+	}
+}
+//-----------------------------------------------------------------------
+void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
+{
+	if (event.Is<WindowShouldCloseEvent>())
+	{
+		Log::Internal("WindowShouldCloseEvent");
+		this->Exit();
+	}
+	else if (event.Is<WindowWillCloseEvent>())
+	{
+		Log::Internal("WindowWillCloseEvent");
+		///@todo Not implemented
+	}
+	else if (event.Is<ViewNeedsUpdateSurfaceEvent>())
+	{
+		auto rect = gameWindow->ClientBounds();
+		Log::Internal(StringFormat("ViewNeedsUpdateSurfaceEvent: {w: %d, h: %d}",
+			rect.Width, rect.Height));
+		surfaceResizeRequest = true;
+	}
+	else if (event.Is<ViewWillStartLiveResizeEvent>())
+	{
+		auto rect = gameWindow->ClientBounds();
+		Log::Internal(StringFormat("ViewWillStartLiveResizeEvent: {w: %d, h: %d}",
+			rect.Width, rect.Height));
+	}
+	else if (event.Is<ViewDidEndLiveResizeEvent>())
+	{
+		auto rect = gameWindow->ClientBounds();
+		Log::Internal(StringFormat("ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
+			rect.Width, rect.Height));
+	}
+}
+//-----------------------------------------------------------------------
+void CocoaGameHost::Impl::ClientSizeChanged()
+{
+	openGLContext->LockContext();
+	openGLContext->BindCurrentContext();
+	{
+		POMDOG_ASSERT(openGLContext->NativeOpenGLContext() != nil);
+		[openGLContext->NativeOpenGLContext() update];
+	
+		auto viewport = graphicsContext->Viewport();
+		viewport.Bounds = gameWindow->ClientBounds();
+		graphicsContext->Viewport(viewport);
+		
+		gameWindow->ClientSizeChanged();
+	}
+	openGLContext->UnbindCurrentContext();
+	openGLContext->UnlockContext();
+}
+//-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GameWindow> CocoaGameHost::Impl::Window()
 {
 	return gameWindow;
@@ -254,43 +340,6 @@ std::shared_ptr<Pomdog::AssetManager> CocoaGameHost::Impl::AssetManager(std::sha
 std::shared_ptr<Pomdog::Mouse> CocoaGameHost::Impl::Mouse()
 {
 	return mouse;
-}
-//-----------------------------------------------------------------------
-void CocoaGameHost::Impl::RenderFrame(Game & game)
-{
-	POMDOG_ASSERT(gameWindow);
-
-	if (!gameWindow || gameWindow->IsMinimized()) {
-		// skip rendering
-		return;
-	}
-	
-	// RenderBegin:
-	openGLContext->LockContext();
-	openGLContext->BindCurrentContext();
-
-	// Render:
-	game.Draw();
-	
-	// RenderEnd:
-	openGLContext->UnlockContext();
-}
-//-----------------------------------------------------------------------
-void CocoaGameHost::Impl::DoEvents()
-{
-	systemEventDispatcher->Tick();
-}
-//-----------------------------------------------------------------------
-void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
-{
-	if (event.Is<WindowShouldCloseEvent>()) {
-		Log::Internal("WindowShouldCloseEvent");
-		this->Exit();
-	}
-	else if (event.Is<WindowWillCloseEvent>()) {
-		Log::Internal("WindowWillCloseEvent");
-		///@todo Not implemented
-	}
 }
 //-----------------------------------------------------------------------
 #pragma mark - CocoaGameHost

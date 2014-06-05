@@ -20,7 +20,7 @@
 
 @class NSWindow, CocoaOpenGLView;
 @class CocoaWindowDelegate;
-@class CocoaOpenGLViewDelegate;
+@class CocoaGameViewDelegate;
 
 namespace Pomdog {
 namespace Details {
@@ -75,7 +75,7 @@ private:
 	NSWindow* nativeWindow;
 	CocoaOpenGLView* openGLView;
 	CocoaWindowDelegate* windowDelegate;
-	CocoaOpenGLViewDelegate* viewDelegate;
+	CocoaGameViewDelegate* viewDelegate;
 };
 
 }// namespace Cocoa

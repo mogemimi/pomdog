@@ -16,6 +16,7 @@
 #include <string>
 #include "../Config/Export.hpp"
 #include "../Utility/Noncopyable.hpp"
+#include "../Event/Signal.hpp"
 
 namespace Pomdog {
 
@@ -59,6 +60,10 @@ public:
 	/// @brief ゲームウィンドウのクライアント領域のサイズを設定します。
 	/// @param clientBounds ゲームウィンドウのクライアント領域のサイズを指定します。
 	virtual void ClientBounds(Rectangle const& clientBounds) = 0;
+	
+	///@~Japanese
+	/// @brief ゲームウィンドウのクライアント領域のサイズが変更されたときに呼ばれるイベントです。
+	Signal<void()> ClientSizeChanged;
 };
 
 /// @}

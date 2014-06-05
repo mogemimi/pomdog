@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -61,16 +61,20 @@ FXAA::FXAA(std::shared_ptr<GameHost> const& gameHost)
 	{
 		auto graphicsContext = gameHost->GraphicsContext();
 		auto viewport = graphicsContext->Viewport();
-		Vector2 renderTargetSize(viewport.Width(), viewport.Height());
-		effectPass->Parameters("Constants")->SetValue(renderTargetSize);
+		ResetViewportSize(viewport.Bounds);
 	}
+}
+//-----------------------------------------------------------------------
+void FXAA::ResetViewportSize(Rectangle const& bounds)
+{
+	Vector2 renderTargetSize(bounds.Width, bounds.Height);
+	effectPass->Parameters("Constants")->SetValue(renderTargetSize);
 }
 //-----------------------------------------------------------------------
 void FXAA::Draw(GraphicsContext & graphicsContext, std::shared_ptr<RenderTarget2D> const& texture)
 {
 	graphicsContext.SetSamplerState(0, samplerLinear);
-	
-	graphicsContext.SetRenderTarget();
+
 	graphicsContext.Clear(Color::CornflowerBlue);
 	
 	graphicsContext.SetTexture(0, texture);

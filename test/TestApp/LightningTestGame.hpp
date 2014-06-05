@@ -71,6 +71,8 @@ private:
 
 	BeamSystem beamSystem;
 	Vector2 touchPoint;
+	
+	ScopedConnection clientSizeChangedConnection;
 };
 
 }// namespace TestApp

@@ -13,7 +13,7 @@
 #include "CocoaOpenGLContext.hpp"
 #include "CocoaOpenGLView.hpp"
 #include "CocoaWindowDelegate.hpp"
-#include "CocoaOpenGLViewDelegate.hpp"
+#include "CocoaGameViewDelegate.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -43,8 +43,12 @@ CocoaGameWindow::CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDi
 	windowDelegate = [[CocoaWindowDelegate alloc] initWithEventDispatcher:eventDispatcher];
 	[nativeWindow setDelegate:windowDelegate];
 	
+	// OpenGLView autoresize to fit nativeWindow's contentView
+	[[nativeWindow contentView] setAutoresizesSubviews:YES];
+	[openGLView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+	
 	// Create WindowDelegate
-	viewDelegate = [[CocoaOpenGLViewDelegate alloc] initWithEventDispatcher:eventDispatcher];
+	viewDelegate = [[CocoaGameViewDelegate alloc] initWithEventDispatcher:eventDispatcher];
 	[openGLView setDelegate:viewDelegate];
 }
 //-----------------------------------------------------------------------
@@ -96,8 +100,8 @@ void CocoaGameWindow::Title(std::string const& title)
 //-----------------------------------------------------------------------
 Rectangle CocoaGameWindow::ClientBounds() const
 {
-	POMDOG_ASSERT(openGLView != nil);
-	NSRect bounds = [openGLView frame];
+	POMDOG_ASSERT([nativeWindow contentView] != nil);
+	NSRect bounds = [[nativeWindow contentView] bounds];
 	Rectangle rect {
 		static_cast<std::int32_t>(bounds.origin.x),
 		static_cast<std::int32_t>(bounds.origin.y),
@@ -142,7 +146,7 @@ void CocoaGameWindow::ResetGLContext(std::shared_ptr<CocoaOpenGLContext> context
 	openGLContext = std::move(context);
 	
 	POMDOG_ASSERT(openGLContext);
-	[openGLView setOpenGLContext:openGLContext->GetNSOpenGLContext()];
+	[openGLView setOpenGLContext:openGLContext->NativeOpenGLContext()];
 }
 //-----------------------------------------------------------------------
 void CocoaGameWindow::ResetGLContext()

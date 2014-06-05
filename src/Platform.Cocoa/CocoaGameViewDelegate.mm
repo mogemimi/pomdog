@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#import "CocoaOpenGLViewDelegate.hpp"
+#import "CocoaGameViewDelegate.hpp"
 
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Event/Event.hpp>
@@ -24,7 +24,7 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 
 }// unnamed namespace
 
-@implementation CocoaOpenGLViewDelegate
+@implementation CocoaGameViewDelegate
 {
 	std::shared_ptr<Pomdog::Details::SystemEventDispatcher> eventDispatcher;
 	std::shared_ptr<Pomdog::Details::Cocoa::CocoaMouse> mouse_;
@@ -216,6 +216,26 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 		//NSLog(@"hasPreciseScrollingDeltas=NO, scrollingDeltaY=%f", scrollingDeltaY);
 		mouse_->WheelDelta(scrollingDeltaY);
 	}
+}
+//-----------------------------------------------------------------------
+#pragma mark - View Event Handling
+//-----------------------------------------------------------------------
+- (void)viewNeedsUpdateSurface
+{
+	using Pomdog::Details::ViewNeedsUpdateSurfaceEvent;
+	eventDispatcher->Enqueue<ViewNeedsUpdateSurfaceEvent>();
+}
+//-----------------------------------------------------------------------
+- (void)viewWillStartLiveResize
+{
+	using Pomdog::Details::ViewWillStartLiveResizeEvent;
+	eventDispatcher->Enqueue<ViewWillStartLiveResizeEvent>();
+}
+//-----------------------------------------------------------------------
+- (void)viewDidEndLiveResize
+{
+	using Pomdog::Details::ViewDidEndLiveResizeEvent;
+	eventDispatcher->Enqueue<ViewDidEndLiveResizeEvent>();
 }
 //-----------------------------------------------------------------------
 @end

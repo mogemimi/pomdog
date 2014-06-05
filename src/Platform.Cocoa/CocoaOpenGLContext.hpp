@@ -40,7 +40,7 @@ public:
 	
 	void UnlockContext();
 	
-	NSOpenGLContext* GetNSOpenGLContext();
+	NSOpenGLContext* NativeOpenGLContext();
 	
 private:
 	NSOpenGLContext* openGLContext;

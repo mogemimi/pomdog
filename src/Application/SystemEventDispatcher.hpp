@@ -23,6 +23,10 @@ using SystemEventDispatcher = EventQueue;
 struct WindowWillCloseEvent {};
 struct WindowShouldCloseEvent {};
 
+struct ViewNeedsUpdateSurfaceEvent {};
+struct ViewWillStartLiveResizeEvent {};
+struct ViewDidEndLiveResizeEvent {};
+
 }// namespace Details
 }// namespace Pomdog
 

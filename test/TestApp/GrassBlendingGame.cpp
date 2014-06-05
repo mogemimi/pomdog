@@ -330,6 +330,7 @@ void GrassBlendingGame::Draw()
 	DrawSprites();
 	
 	if (enableFxaa) {
+		graphicsContext->SetRenderTarget();
 		fxaa->Draw(*graphicsContext, renderTarget);
 	}
 	

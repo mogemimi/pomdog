@@ -74,7 +74,7 @@ void LightningTestGame::Initialize()
 {
 	auto window = gameHost->Window();
 	window->Title("TestApp - Enjoy Game Dev, Have Fun.");
-	window->AllowPlayerResizing(false);
+	window->AllowPlayerResizing(true);
 	
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
@@ -151,6 +151,18 @@ void LightningTestGame::Initialize()
 	}
 	
 	touchPoint = {300, 0};
+	
+	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this] {
+		auto gameWindow = gameHost->Window();
+		
+		renderTarget = std::make_shared<RenderTarget2D>(
+			gameHost->GraphicsDevice(),
+			gameWindow->ClientBounds().Width, gameWindow->ClientBounds().Height,
+			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
+		
+		auto viewport = graphicsContext->Viewport();
+		fxaa->ResetViewportSize(viewport.Bounds);
+	});
 }
 //-----------------------------------------------------------------------
 void LightningTestGame::Update()
@@ -207,7 +219,8 @@ void LightningTestGame::DrawSprites()
 		
 	POMDOG_ASSERT(transform && camera);
 	auto viewMatrix3D = SandboxHelper::CreateViewMatrix3D(*transform, *camera);
-	auto projectionMatrix3D = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
+	auto projectionMatrix3D = Matrix4x4::CreateOrthographicLH(
+		graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
 	
 	POMDOG_ASSERT(primitiveGrid);
 	primitiveGrid->Draw(*graphicsContext, viewMatrix3D * projectionMatrix3D);
@@ -259,13 +272,14 @@ void LightningTestGame::Draw()
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
 	
-	//graphicsContext->Clear(editorColorScheme.Background);
+	graphicsContext->Clear(editorColorScheme.Background);
 	backgroundPlane->Draw();
 
 	//graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();
 	
 	if (enableFxaa) {
+		graphicsContext->SetRenderTarget();
 		fxaa->Draw(*graphicsContext, renderTarget);
 	}
 	
