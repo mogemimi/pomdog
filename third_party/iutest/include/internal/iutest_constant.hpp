@@ -4,9 +4,7 @@
  * @file		iutest_constant.hpp
  * @brief		iris unit test 定数 定義 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,

@@ -82,8 +82,8 @@ public:
 
 	std::shared_ptr<GameObject> CreateObject();
 	
-	template <typename T, typename...Components>
-	std::vector<std::shared_ptr<GameObject>> QueryComponents();
+	//template <typename T, typename...Components>
+	//std::vector<std::shared_ptr<GameObject>> QueryComponents();
 	
 	template <typename T>
 	T const* Component(GameObjectID const& objectID) const;

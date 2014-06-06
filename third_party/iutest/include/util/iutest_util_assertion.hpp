@@ -4,9 +4,7 @@
  * @file		iutest_util_assertion.hpp
  * @brief		iris unit test assertion 拡張 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2012-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -518,6 +516,7 @@ struct CmpHelper
 
 /**
  * @brief	OR テスト用比較ヘルパー
+ * @deprecated please use IUTEST_ASSERT( expr1 || expr2 )
 */
 template<typename COMP>
 struct CmpHelperOR

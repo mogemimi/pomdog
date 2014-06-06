@@ -4,9 +4,7 @@
  * @file		iutest_internal_defs.hpp
  * @brief		iris unit test internal definition
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -63,10 +61,25 @@
 #endif
 
 #ifndef IUTEST_BREAK
-#  if   defined(_MSC_VER)
+#  if   defined(__MINGW32__)
 #    define IUTEST_BREAK()	DebugBreak()
+#  elif defined(_MSC_VER)
+#    if _MSC_VER >= 1310
+#      define IUTEST_BREAK()	__debugbreak()
+#    else
+#      define IUTEST_BREAK()	DebugBreak()
+#    endif
+#  elif defined(IUTEST_OS_MAC)
+// http://www.cocoawithlove.com/2008/03/break-into-debugger.html
+#    if defined(__ppc64__) || defined(__ppc__)
+#    define IUTEST_BREAK()	__asm__("li r0, 20\nsc\nnop\nli r0, 37\nli r4, 2\nsc\nnop\n" : : : "memory","r0","r3","r4" )
+#    else
+#    define IUTEST_BREAK()	__asm__("int $3\n" : : )
+#    endif
 #  elif defined(__GUNC__) && (defined (__i386__) || defined (__x86_64__))
 #    define IUTEST_BREAK()	do { __asm{ int 3 } } while(::iutest::detail::AlwaysFalse())
+#  elif defined(__clang__) || defined(__GNUC__)
+#    define IUTEST_BREAK()	__builtin_trap()
 #  elif defined(__ARMCC_VERSION)
 #    define IUTEST_BREAK()	do { __breakpoint(0xF02C); } while(::iutest::detail::AlwaysFalse())
 #  else
@@ -116,6 +129,9 @@ using namespace iutest_type_traits;
 
 #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
+/**
+ * @brief	iterator traits
+*/
 template<typename Ite>
 struct IteratorTraits
 {

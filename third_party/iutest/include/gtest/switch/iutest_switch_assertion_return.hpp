@@ -4,9 +4,7 @@
  * @file		iutest_switch_assertion_return.hpp
  * @brief		AssertionReturn 切り替え対応 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2013-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,

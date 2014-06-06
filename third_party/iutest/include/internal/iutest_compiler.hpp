@@ -4,9 +4,7 @@
  * @file		iutest_compiler.hpp
  * @brief		iris unit test compiler 依存の吸収 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -32,19 +30,31 @@
 #if   defined(__CYGWIN__)
 #  define IUTEST_OS_CYGWIN				1
 #  define IUTEST_PLATFORM				"CYGWIN"
-#elif defined(_WIN32) || defined(WIN32) || defined(__WIN32__)
+#elif defined(_WIN32) || defined(WIN32) || defined(__WIN32__) || defined(WINAPI_FAMILY)
 #  define IUTEST_OS_WINDOWS				1
-#  define IUTEST_PLATFORM				"Windows"
-#  define WIN32_LEAN_AND_MEAN
+#  if !defined(WIN32_LEAN_AND_MEAN)
+#    define WIN32_LEAN_AND_MEAN
+#  endif
 #  include <windows.h>
-#  if   defined(_WIN32_WCE)
+#  if defined(_WIN32_WCE)
 #    define IUTEST_OS_WINDOWS_MOBILE	1
+#    define IUTEST_PLATFORM				"Windows CE"
 #  elif defined(__MINGW__) || defined(__MINGW32__)
 #    define IUTEST_OS_WINDOWS_MINGW		1
 #  elif defined(__CUDACC__)
 #    define IUTEST_OS_WINDOWS_CUDA		1
+#  elif defined(WINAPI_FAMILY)
+#    if defined(WINAPI_FAMILY_PHONE_APP) && (WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
+#      define IUTEST_OS_WINDOWS_PHONE	1
+#      define IUTEST_PLATFORM			"Windows Phone"
+#    else
+#      define IUTEST_OS_WINDOWS_DESKTOP	1
+#    endif
 #  else
 #    define IUTEST_OS_WINDOWS_DESKTOP	1
+#  endif
+#  if !defined(IUTEST_PLATFORM)
+#    define IUTEST_PLATFORM				"Windows"
 #  endif
 #elif defined(__APPLE__)
 #  include "TargetConditionals.h"
@@ -84,15 +94,19 @@
 #endif
 
 // c++11
-#if (defined(__cplusplus) && __cplusplus >= 201103L) || defined(__GXX_EXPERIMENTAL_CXX0X__)
-#  define IUTEST_HAS_CXX11		1
+
+//! is c++11 compiler
+#if !defined(IUTEST_HAS_CXX11)
+#  if (defined(__cplusplus) && __cplusplus >= 201103L) || defined(__GXX_EXPERIMENTAL_CXX0X__)
+#    define IUTEST_HAS_CXX11		1
+#  endif
 #endif
 
-#ifndef IUTEST_HAS_CXX11
-#  define IUTEST_HAS_CXX11		0
+#if !defined(IUTEST_HAS_CXX11)
+#  define IUTEST_HAS_CXX11			0
 #endif
 
-// nullptr
+//! has nullptr
 #if !defined(IUTEST_HAS_NULLPTR)
 #  if   defined(__clang__)
 #    if __has_feature(cxx_nullptr)
@@ -113,7 +127,7 @@
 #  define IUTEST_HAS_NULLPTR		0
 #endif
 
-// decltype
+//! has decltype
 #if !defined(IUTEST_HAS_DECLTYPE)
 #  if   defined(__clang__)
 #    if __has_feature(cxx_decltype)
@@ -134,7 +148,7 @@
 #  define IUTEST_HAS_DECLTYPE		0
 #endif
 
-// static_assert
+//! has static_assert
 #if !defined(IUTEST_HAS_STATIC_ASSERT)
 #  if   defined(__clang__)
 #    if __has_feature(cxx_static_assert)
@@ -151,12 +165,12 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_STATIC_ASSERT
+#if !defined(IUTEST_HAS_STATIC_ASSERT)
 #  define IUTEST_HAS_STATIC_ASSERT	0
 #endif
 
 
-// constexpr
+//! has constexpr
 #if !defined(IUTEST_HAS_CONSTEXPR)
 #  if   defined(__clang__)
 #    if !__has_feature(cxx_constexpr)
@@ -179,7 +193,7 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_CONSTEXPR
+#if !defined(IUTEST_HAS_CONSTEXPR)
 #  define IUTEST_HAS_CONSTEXPR		1
 #endif
 
@@ -192,7 +206,7 @@
 #  define IUTEST_CXX_CONSTEXPR_OR_CONST	const
 #endif
 
-// rvalue reference
+//! has rvalue reference
 #if !defined(IUTEST_HAS_RVALUE_REFS)
 #  if   defined(__clang__)
 #    if __has_feature(cxx_rvalue_references)
@@ -207,11 +221,11 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_RVALUE_REFS
+#if !defined(IUTEST_HAS_RVALUE_REFS)
 #  define IUTEST_HAS_RVALUE_REFS	0
 #endif
 
-// delete function
+//! has delete function
 #ifndef IUTEST_HAS_DELETED_FUNCTIONS
 #  if   defined(__clang__)
 #    if __has_feature(cxx_deleted_functions)
@@ -228,18 +242,19 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_DELETED_FUNCTIONS
+#if !defined(IUTEST_HAS_DELETED_FUNCTIONS)
 #  define IUTEST_HAS_DELETED_FUNCTIONS		0
 #endif
 
+//! delete function
 #if IUTEST_HAS_DELETED_FUNCTIONS
 #  define IUTEST_CXX_DELETED_FUNCTION	= delete
 #else
 #  define IUTEST_CXX_DELETED_FUNCTION
 #endif
 
-// default function
-#ifndef IUTEST_HAS_DEFAULT_FUNCTIONS
+//! has default function
+#if !defined(IUTEST_HAS_DEFAULT_FUNCTIONS)
 #  if   defined(__clang__)
 #    if __has_feature(cxx_defaulted_functions)
 #      define IUTEST_HAS_DEFAULT_FUNCTIONS	1
@@ -255,18 +270,19 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_DEFAULT_FUNCTIONS
+#if !defined(IUTEST_HAS_DEFAULT_FUNCTIONS)
 #  define IUTEST_HAS_DEFAULT_FUNCTIONS		0
 #endif
 
+//! default function
 #if IUTEST_HAS_DEFAULT_FUNCTIONS
 #  define IUTEST_CXX_DEFAULT_FUNCTION	= default;
 #else
 #  define IUTEST_CXX_DEFAULT_FUNCTION	{}
 #endif
 
-// initializer_list
-#ifndef IUTEST_HAS_INITIALIZER_LIST
+//! has initializer_list
+#if !defined(IUTEST_HAS_INITIALIZER_LIST)
 #  if   defined(__clang__)
 #    if __has_feature(cxx_generalized_initializers)
 #      define IUTEST_HAS_INITIALIZER_LIST	1
@@ -289,12 +305,12 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_INITIALIZER_LIST
+#if !defined(IUTEST_HAS_INITIALIZER_LIST)
 #  define IUTEST_HAS_INITIALIZER_LIST		0
 #endif
 
-// variadic template
-#ifndef IUTEST_HAS_VARIADIC_TEMPLATES
+//! has variadic template
+#if !defined(IUTEST_HAS_VARIADIC_TEMPLATES)
 #  if   defined(__clang__)
 #    if __has_feature(cxx_variadic_templates)
 #      define IUTEST_HAS_VARIADIC_TEMPLATES	1
@@ -314,11 +330,12 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_VARIADIC_TEMPLATES
+#if !defined(IUTEST_HAS_VARIADIC_TEMPLATES)
 #  define IUTEST_HAS_VARIADIC_TEMPLATES		0
 #endif
 
-#ifndef IUTEST_HAS_VARIADIC_TEMPLATE_TEMPLATES
+//! has variadic template templates
+#if !defined(IUTEST_HAS_VARIADIC_TEMPLATE_TEMPLATES)
 #  if   defined(__clang__)
 #    if __has_feature(cxx_variadic_templates)
 #      define IUTEST_HAS_VARIADIC_TEMPLATE_TEMPLATES	1
@@ -336,8 +353,8 @@
 #  define IUTEST_HAS_VARIADIC_TEMPLATE_TEMPLATES	0
 #endif
 
-// char16_t char32_t
-#ifndef IUTEST_HAS_CHAR16_T
+//! has char16_t
+#if !defined(IUTEST_HAS_CHAR16_T)
 #  if defined(__clang__)
 #    if __has_feature(cxx_unicode_literals)
 #      define IUTEST_HAS_CHAR16_T	1
@@ -350,28 +367,30 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_CHAR32_T
-#  if defined(__clang__)
-#    if __has_feature(cxx_unicode_literals)
-#      define IUTEST_HAS_CHAR32_T	1
-#    endif
-#  elif defined(__GNUC__)
-#    if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
-#      define IUTEST_HAS_CHAR32_T	1
-#    endif
-#  elif defined(_MSC_VER)
-#  endif
-#endif
-
-#ifndef IUTEST_HAS_CHAR16_T
+#if !defined(IUTEST_HAS_CHAR16_T)
 #  define IUTEST_HAS_CHAR16_T	0
 #endif
+
+//! has char32_t
 #ifndef IUTEST_HAS_CHAR32_T
+#  if defined(__clang__)
+#    if __has_feature(cxx_unicode_literals)
+#      define IUTEST_HAS_CHAR32_T	1
+#    endif
+#  elif defined(__GNUC__)
+#    if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
+#      define IUTEST_HAS_CHAR32_T	1
+#    endif
+#  elif defined(_MSC_VER)
+#  endif
+#endif
+
+#if !defined(IUTEST_HAS_CHAR32_T)
 #  define IUTEST_HAS_CHAR32_T	0
 #endif
 
-// lambda
-#ifndef IUTEST_HAS_LAMBDA
+//! has lambda
+#if !defined(IUTEST_HAS_LAMBDA)
 #  if   defined(__GNUC__)
 #    if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
 #      define IUTEST_HAS_LAMBDA		1
@@ -386,7 +405,7 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_LAMBDA
+#if !defined(IUTEST_HAS_LAMBDA)
 #  define IUTEST_HAS_LAMBDA		0
 #endif
 
@@ -400,8 +419,8 @@
 #  endif
 #endif
 
-// explicit conversion operator
-#ifndef IUTEST_HAS_EXPLICIT_CONVERSION
+//! explicit conversion operator
+#if !defined(IUTEST_HAS_EXPLICIT_CONVERSION)
 #  if   defined(__clang__)
 #    if __has_feature(cxx_explicit_conversions)
 #      define IUTEST_HAS_EXPLICIT_CONVERSION	1
@@ -417,20 +436,21 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_EXPLICIT_CONVERSION
+#if !defined(IUTEST_HAS_EXPLICIT_CONVERSION)
 #  define IUTEST_HAS_EXPLICIT_CONVERSION		0
 #endif
 
-#ifndef IUTEST_CXX_EXPLICIT_CONVERSION
+//! explicit conversion definition
+#if !defined(IUTEST_CXX_EXPLICIT_CONVERSION)
 #  if IUTEST_HAS_EXPLICIT_CONVERSION
 #    define IUTEST_CXX_EXPLICIT_CONVERSION		explicit
 #  else
-#    define IUTEST_CXX_EXPLICIT_CONVERSION			
+#    define IUTEST_CXX_EXPLICIT_CONVERSION
 #  endif
 #endif
 
-// override and final
-#ifndef IUTEST_HAS_OVERRIDE_AND_FINAL
+//! has override and final
+#if !defined(IUTEST_HAS_OVERRIDE_AND_FINAL)
 #  if   defined(__clang__)
 #    if __has_feature(cxx_override_control)
 #      define IUTEST_HAS_OVERRIDE_AND_FINAL	1
@@ -446,11 +466,12 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_OVERRIDE_AND_FINAL
+#if !defined(IUTEST_HAS_OVERRIDE_AND_FINAL)
 #  define IUTEST_HAS_OVERRIDE_AND_FINAL		0
 #endif
 
-#ifndef IUTEST_CXX_OVERRIDE
+//! override definition
+#if !defined(IUTEST_CXX_OVERRIDE)
 #  if IUTEST_HAS_OVERRIDE_AND_FINAL
 #    define IUTEST_CXX_OVERRIDE		override
 #  else
@@ -458,7 +479,8 @@
 #  endif
 #endif
 
-#ifndef IUTEST_CXX_FINAL
+//! final definition
+#if !defined(IUTEST_CXX_FINAL)
 #  if IUTEST_HAS_OVERRIDE_AND_FINAL
 #    define IUTEST_CXX_FINAL		final
 #  else
@@ -466,7 +488,7 @@
 #  endif
 #endif
 
-// noexcept
+//! has noexcept
 #ifndef IUTEST_HAS_NOEXCEPT
 #  if   defined(__clang__)
 #    if __has_feature(cxx_noexcept)
@@ -483,11 +505,12 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_NOEXCEPT
+#if !defined(IUTEST_HAS_NOEXCEPT)
 #  define IUTEST_HAS_NOEXCEPT	0
 #endif
 
-#ifndef IUTEST_CXX_NOEXCEPT
+//! noexcept definition
+#if !defined(IUTEST_CXX_NOEXCEPT)
 #  if IUTEST_HAS_NOEXCEPT
 #    define IUTEST_CXX_NOEXCEPT(expr_)		noexcept(expr_)
 #  else
@@ -495,7 +518,8 @@
 #  endif
 #endif
 
-#ifndef IUTEST_CXX_NOEXCEPT_SPEC
+//! noexcept specification definition
+#if !defined(IUTEST_CXX_NOEXCEPT_SPEC)
 #  if IUTEST_HAS_NOEXCEPT
 #    define IUTEST_CXX_NOEXCEPT_SPEC		noexcept
 #  else
@@ -503,7 +527,7 @@
 #  endif
 #endif
 
-#ifndef IUTEST_CXX_NOEXCEPT_AS
+#if !defined(IUTEST_CXX_NOEXCEPT_AS)
 #  if IUTEST_HAS_NOEXCEPT
 #    define IUTEST_CXX_NOEXCEPT_AS(expr_)	noexcept( noexcept(expr_) )
 #  else
@@ -511,7 +535,8 @@
 #  endif
 #endif
 
-#ifndef IUTEST_CXX_NOTHROW
+//! nothrow definition
+#if !defined(IUTEST_CXX_NOTHROW)
 #  if IUTEST_HAS_NOEXCEPT
 #    define IUTEST_CXX_NOTHROW	noexcept
 #  else
@@ -519,8 +544,8 @@
 #  endif
 #endif
 
-// extern template
-#ifndef IUTEST_HAS_EXTERN_TEMPLATE
+//! has extern template
+#if !defined(IUTEST_HAS_EXTERN_TEMPLATE)
 #  if defined(_MSC_VER) && _MSC_VER >= 1400
 #    define IUTEST_HAS_EXTERN_TEMPLATE	1
 #  elif defined(__GNUC__) || defined(__clang__)
@@ -528,12 +553,12 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_EXTERN_TEMPLATE
+#if !defined(IUTEST_HAS_EXTERN_TEMPLATE)
 #  define IUTEST_HAS_EXTERN_TEMPLATE	0
 #endif
 
-// enum class
-#ifndef IUTEST_HAS_STRONG_ENUMS
+//! has enum class
+#if !defined(IUTEST_HAS_STRONG_ENUMS)
 #  if   defined(__clang__)
 #    if __has_feature(cxx_strong_enums)
 #      define IUTEST_HAS_STRONG_ENUMS	1
@@ -546,13 +571,15 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_STRONG_ENUMS
+#if !defined(IUTEST_HAS_STRONG_ENUMS)
 #  define IUTEST_HAS_STRONG_ENUMS		0
 #endif
 
 // c++
 // attribute
-#ifndef IUTEST_ATTRIBUTE_UNUSED_
+
+//! unused attribute
+#if !defined(IUTEST_ATTRIBUTE_UNUSED_)
 #  if (defined(__GNUC__) && !defined(COMPILER_ICC)) || defined(__clang__)
 #    define IUTEST_ATTRIBUTE_UNUSED_	__attribute__ ((unused))
 #  else
@@ -560,7 +587,8 @@
 #  endif
 #endif
 
-#ifndef IUTEST_ATTRIBUTE_PURE_
+//! pure attribute
+#if !defined(IUTEST_ATTRIBUTE_PURE_)
 #  if defined(__GNUC__) && !defined(COMPILER_ICC)
 #    define IUTEST_ATTRIBUTE_PURE_		__attribute__ ((pure))
 #  else
@@ -568,7 +596,7 @@
 #  endif
 #endif
 
-// exceptions
+//! has exceptions
 #if !defined(IUTEST_HAS_EXCEPTIONS)
 #  if   defined(_MSC_VER) || defined(__BORLANDC__)
 #    ifndef _HAS_EXCEPTIONS
@@ -590,10 +618,11 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_EXCEPTIONS
+#if !defined(IUTEST_HAS_EXCEPTIONS)
 #  define IUTEST_HAS_EXCEPTIONS	0
 #endif
 
+//! has Structured Exception Handling
 #if !defined(IUTEST_HAS_SEH)
 #  if   defined(_WIN32)
 #    if	defined(_MSC_VER) && _MSC_VER > 1400
@@ -604,11 +633,11 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_SEH
+#if !defined(IUTEST_HAS_SEH)
 #  define IUTEST_HAS_SEH		0
 #endif
 
-// rtti
+//! has RTTI
 #if !defined(IUTEST_HAS_RTTI)
 #  if   defined(__clang__)
 #    if __has_feature(cxx_rtti)
@@ -640,7 +669,7 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_RTTI
+#if !defined(IUTEST_HAS_RTTI)
 #  define IUTEST_HAS_RTTI		0
 #endif
 
@@ -649,7 +678,7 @@
 #endif
 
 // explicit instantiation access checking
-#ifndef IUTEST_EXPLICIT_INSTANTIATION_ACCESS_PRIVATE_MEMBER_FUNCTION
+#if !defined(IUTEST_EXPLICIT_INSTANTIATION_ACCESS_PRIVATE_MEMBER_FUNCTION)
 #  if defined(_MSC_VER) && (_MSC_VER < 1600)
      // VS2008 以前では、private なメンバー関数に explicit instantiation でもアクセスできない
 #    define IUTEST_EXPLICIT_INSTANTIATION_ACCESS_PRIVATE_MEMBER_FUNCTION	0
@@ -658,7 +687,7 @@
 #  endif
 #endif
 
-#ifndef IUTEST_EXPLICIT_INSTANTIATION_ACCESS_PRIVATE_STATIC_MEMBER_FUNCTION
+#if !defined(IUTEST_EXPLICIT_INSTANTIATION_ACCESS_PRIVATE_STATIC_MEMBER_FUNCTION)
 #  if defined(_MSC_VER)
 // Visual Studio では、private な static メンバー関数に explicit instantiation でもアクセスできない
 #    define IUTEST_EXPLICIT_INSTANTIATION_ACCESS_PRIVATE_STATIC_MEMBER_FUNCTION	0
@@ -668,14 +697,14 @@
 #endif
 
 // 可変長引数マクロ
-#ifndef IUTEST_NO_VARIADIC_MACROS
+#if !defined(IUTEST_NO_VARIADIC_MACROS)
 #  if defined(_MSC_VER) && (_MSC_VER < 1500)
 #    define IUTEST_NO_VARIADIC_MACROS		1
 #  endif
 #endif
 
-// __COUNTER__ マクロ
-#ifndef IUTEST_HAS_COUNTER_MACRO
+// has __COUNTER__
+#if !defined(IUTEST_HAS_COUNTER_MACRO)
 #  if   defined(_MSC_VER) && (_MSC_VER >= 1300)
 #    define IUTEST_HAS_COUNTER_MACRO		1
 #  elif defined(__clang__)
@@ -687,26 +716,26 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_COUNTER_MACRO
+#if !defined(IUTEST_HAS_COUNTER_MACRO)
 #  define IUTEST_HAS_COUNTER_MACRO			0
 #endif
 
-// file stat
-#ifndef IUTEST_HAS_FILE_STAT
+//! has file stat
+#if !defined(IUTEST_HAS_FILE_STAT)
 #  if !defined(IUTEST_OS_WINDOWS_MOBILE)
 #    define	IUTEST_HAS_FILE_STAT			1
 #  endif
 #endif
 
 // partial template specialization
-#ifndef IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+#if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 #  if defined(_MSC_VER) && (_MSC_VER < 1310)
 #    define IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION	1
 #  endif
 #endif
 
 // explicit class member template specialization
-#ifndef IUTEST_HAS_CLASS_MEMBER_TEMPLATE_SPECIALIZATION
+#if !defined(IUTEST_HAS_CLASS_MEMBER_TEMPLATE_SPECIALIZATION)
 #  if defined(_MSC_VER)
 #    define IUTEST_HAS_CLASS_MEMBER_TEMPLATE_SPECIALIZATION	1
 #  else
@@ -714,81 +743,83 @@
 #  endif
 #endif
 
-// Two pahse name lookup
-#ifndef IUTEST_NO_TWO_PHASE_NAME_LOOKUP
+//! has Two pahse name lookup
+#if !defined(IUTEST_NO_TWO_PHASE_NAME_LOOKUP)
 #  if defined(_MSC_VER)
 #    define IUTEST_NO_TWO_PHASE_NAME_LOOKUP				1
 #  endif
 #endif
 
 // function template ordering
-#ifndef IUTEST_NO_FUNCTION_TEMPLATE_ORDERING
+#if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
 #  if defined(_MSC_VER) && (_MSC_VER < 1310)
 #    define IUTEST_NO_FUNCTION_TEMPLATE_ORDERING		1
 #  endif
 #endif
 
 // in class member initialization
-#ifndef IUTEST_NO_INCLASS_MEMBER_INITIALIZATION
+#if !defined(IUTEST_NO_INCLASS_MEMBER_INITIALIZATION)
 #  if defined(_MSC_VER) && _MSC_VER < 1310
 #    define IUTEST_NO_INCLASS_MEMBER_INITIALIZATION		1
 #  endif
 #endif
 
 // explicit function template instantiation
-#ifndef IUTEST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS
+#if !defined(IUTEST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
 #  if defined(_MSC_VER) && _MSC_VER < 1310
 #    define IUTEST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS	1
 #  endif
 #endif
 
-// sfinae
-#ifndef IUTEST_NO_SFINAE
+// SFINAE
+#if !defined(IUTEST_NO_SFINAE)
 #  if defined(_MSC_VER) && _MSC_VER < 1310
 #    define IUTEST_NO_SFINAE	1
 #  endif
 #endif
 
 // template template
-#ifndef IUTEST_NO_TEMPLATE_TEMPLATES
+#if !defined(IUTEST_NO_TEMPLATE_TEMPLATES)
 #  if defined(_MSC_VER) && _MSC_VER < 1310
 #    define IUTEST_NO_TEMPLATE_TEMPLATES	1
 #  endif
 #endif
 
 // void return
-#ifndef IUTEST_NO_VOID_RETURNS
+#if !defined(IUTEST_NO_VOID_RETURNS)
 #  if defined(_MSC_VER) && _MSC_VER < 1300
 #    define IUTEST_NO_VOID_RETURNS			1
 #  endif
 #endif
 
 // ADL
-#ifndef IUTEST_NO_ARGUMENT_DEPENDENT_LOOKUP
+#if !defined(IUTEST_NO_ARGUMENT_DEPENDENT_LOOKUP)
 #  if defined(_MSC_VER) && _MSC_VER < 1310
 #    define IUTEST_NO_ARGUMENT_DEPENDENT_LOOKUP	1
 #  endif
 #endif
 
-#ifndef IUTEST_NO_PRIVATE_IN_AGGREGATE
+#if !defined(IUTEST_NO_PRIVATE_IN_AGGREGATE)
 #  if defined(_MSC_VER) && _MSC_VER < 1310
 #    define IUTEST_NO_PRIVATE_IN_AGGREGATE	1
 #  endif
 #endif
 
 // secure lib
-#if defined(_MSC_VER)
-#  if defined(__STDC_WANT_SECURE_LIB__) && __STDC_WANT_SECURE_LIB__
-#    define IUTEST_HAS_WANT_SECURE_LIB		1
+#if !defined(IUTEST_HAS_WANT_SECURE_LIB)
+#  if defined(_MSC_VER)
+#    if defined(__STDC_WANT_SECURE_LIB__) && __STDC_WANT_SECURE_LIB__
+#      define IUTEST_HAS_WANT_SECURE_LIB		1
+#    endif
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_WANT_SECURE_LIB
+#if !defined(IUTEST_HAS_WANT_SECURE_LIB)
 #  define IUTEST_HAS_WANT_SECURE_LIB		0
 #endif
 
-// extension
-#ifndef IUTEST_HAS_MS_EXTENSIONS
+//! has Microsoft compiler extension
+#if !defined(IUTEST_HAS_MS_EXTENSIONS)
 #  if defined(__clang__)
 //#    if defined(_MSC_VER)
 //#      define IUTEST_HAS_MS_EXTENSIONS		1
@@ -798,12 +829,12 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_MS_EXTENSIONS
+#if !defined(IUTEST_HAS_MS_EXTENSIONS)
 #  define IUTEST_HAS_MS_EXTENSIONS			0
 #endif
 
-// __if_exists
-#ifndef IUTEST_HAS_IF_EXISTS
+//! has __if_exists
+#if !defined(IUTEST_HAS_IF_EXISTS)
 #  if defined(__clang__)
 #    if (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 5) ) && IUTEST_HAS_MS_EXTENSIONS
 #      define IUTEST_HAS_IF_EXISTS			1
@@ -813,8 +844,19 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_IF_EXISTS
+#if !defined(IUTEST_HAS_IF_EXISTS)
 #  define IUTEST_HAS_IF_EXISTS		0
+#endif
+
+//! has __analysis_assume
+#if !defined(IUTEST_HAS_ANALYSIS_ASSUME)
+#  if defined(_MSC_VER) && (_MSC_VER >= 1500) && !defined(__CUDACC__)
+#    define IUTEST_HAS_ANALYSIS_ASSUME		1
+#  endif
+#endif
+
+#if !defined(IUTEST_HAS_ANALYSIS_ASSUME)
+#  define IUTEST_HAS_ANALYSIS_ASSUME		0
 #endif
 
 // pragma

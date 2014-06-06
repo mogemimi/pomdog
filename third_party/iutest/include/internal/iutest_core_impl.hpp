@@ -4,9 +4,7 @@
  * @file		iutest_core_impl.hpp
  * @brief		iris unit test UnitTest 実装 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -131,7 +129,7 @@ private:
 	{
 #if IUTEST_HAS_SEH
 
-#if !defined(IUTEST_OS_WINDOWS_MOBILE)
+#if !defined(IUTEST_OS_WINDOWS_MOBILE) && !defined(IUTEST_OS_WINDOWS_PHONE)
 		SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOALIGNMENTFAULTEXCEPT | SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);
 #endif
 

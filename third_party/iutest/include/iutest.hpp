@@ -4,17 +4,13 @@
  * @file		iutest.hpp
  * @brief		iris unit test
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
  * see LICENSE
  *
- * @see			iutest_ver.h
- * @example		main.cpp
- * @example		sub.cpp
+ * @see			iutest_ver.hpp
 */
 //-----------------------------------------------------------------------
 //======================================================================
@@ -27,15 +23,13 @@
 #include "iutest_param_tests.hpp"
 #include "iutest_typed_tests.hpp"
 #include "iutest_prod.hpp"
+#include "iutest_expression_assertion.hpp"
+#include "iutest_matcher.hpp"
 #include "iutest_static_assertion.hpp"
 #include "iutest_ignore.hpp"
 #include "listener/iutest_default_printer.hpp"
 #include "listener/iutest_default_xml_generator.hpp"
 #include "listener/iutest_streaming_listener.hpp"
-
-namespace iutest
-{
-}	// end of namespace iutest
 
 //======================================================================
 // define
@@ -210,7 +204,11 @@ namespace iutest
 #endif
 
 /**
- * @addtogroup	IUTEST_ASSERTION	アサーション
+ * @defgroup	IUTEST_ASSERTION_	アサーション
+*/
+
+/**
+ * @ingroup		IUTEST_ASSERTION_
  * @{
 */
 
@@ -224,6 +222,31 @@ namespace iutest
  * @}
 */
 
+/**
+ * @ingroup	IUTEST_ASSERT_
+ * @brief	式アサーション
+ * @param	expression	= 式
+*/
+#ifndef IUTEST_ASSERT
+#  define	IUTEST_ASSERT(expression)				IUTEST_TEST_EXPRESSION_(expression, true, IUTEST_ASSERT_FAILURE)
+#endif
+/**
+ * @ingroup	IUTEST_ASSERT_
+ * @brief	式アサーション
+ * @param	expression	= 式
+*/
+#ifndef IUTEST_ASSERT_NOT
+#  define	IUTEST_ASSERT_NOT(expression)			IUTEST_TEST_EXPRESSION_(expression, false, IUTEST_ASSERT_FAILURE)
+#endif
+/**
+ * @ingroup	IUTEST_ASSERT_
+ * @brief	matcher テスト
+ * @param	actual	= 検査対象
+ * @param	matcher	= matcher
+*/
+#ifndef IUTEST_ASSERT_THAT
+#  define IUTEST_ASSERT_THAT(actual, matcher)		IUTEST_TEST_THAT(actual, matcher, IUTEST_ASSERT_FAILURE)
+#endif
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	== テスト
@@ -525,9 +548,8 @@ namespace iutest
 #  define IUTEST_ASSERT_FAIL()						IIUT_FAIL()
 #endif
 
-
 /**
- * @addtogroup	IUTEST_ASSERTION	アサーション
+ * @ingroup		IUTEST_ASSERTION_
  * @{
 */
 
@@ -541,6 +563,31 @@ namespace iutest
 * @}
 */
 
+/**
+ * @ingroup	IUTEST_EXPECT_
+ * @brief	式アサーション
+ * @param	expression	= 式
+*/
+#ifndef IUTEST_EXPECT
+#  define	IUTEST_EXPECT(expression)				IUTEST_TEST_EXPRESSION_(expression, true, IUTEST_EXPECT_FAILURE)
+#endif
+/**
+ * @ingroup	IUTEST_EXPECT_
+ * @brief	式アサーション
+ * @param	expression	= 式
+*/
+#ifndef IUTEST_EXPECT_NOT
+#  define	IUTEST_EXPECT_NOT(expression)			IUTEST_TEST_EXPRESSION_(expression, false, IUTEST_EXPECT_FAILURE)
+#endif
+/**
+ * @ingroup	IUTEST_EXPECT_
+ * @brief	matcher テスト
+ * @param	actual	= 検査対象
+ * @param	matcher	= matcher
+*/
+#ifndef IUTEST_EXPECT_THAT
+#  define IUTEST_EXPECT_THAT(actual, matcher)		IUTEST_TEST_THAT(actual, matcher, IUTEST_EXPECT_FAILURE)
+#endif
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	== テスト
@@ -853,7 +900,7 @@ namespace iutest
 
 
 /**
- * @addtogroup	IUTEST_ASSERTION	アサーション
+ * @ingroup		IUTEST_ASSERTION_
  * @{
 */
 
@@ -867,6 +914,31 @@ namespace iutest
  * @}
 */
 
+/**
+ * @ingroup	IUTEST_INFORM_
+ * @brief	式アサーション
+ * @param	expression	= 式
+*/
+#ifndef IUTEST_INFORM
+#  define	IUTEST_INFORM(expression)				IUTEST_TEST_EXPRESSION_(expression, true, IUTEST_INFORM_FAILURE)
+#endif
+/**
+ * @ingroup	IUTEST_INFORM_
+ * @brief	式アサーション
+ * @param	expression	= 式
+*/
+#ifndef IUTEST_INFORM_NOT
+#  define	IUTEST_INFORM_NOT(expression)			IUTEST_TEST_EXPRESSION_(expression, false, IUTEST_INFORM_FAILURE)
+#endif
+/**
+ * @ingroup	IUTEST_INFORM_
+ * @brief	matcher テスト
+ * @param	actual	= 検査対象
+ * @param	matcher	= matcher
+*/
+#ifndef IUTEST_INFORM_THAT
+#  define IUTEST_INFORM_THAT(actual, matcher)		IUTEST_TEST_THAT(actual, matcher, IUTEST_INFORM_FAILURE)
+#endif
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	== テスト
@@ -1160,7 +1232,7 @@ namespace iutest
 #endif
 
 /**
- * @addtogroup	IUTEST_ASSERTION	アサーション
+ * @ingroup		IUTEST_ASSERTION_
  * @{
 */
 
@@ -1173,6 +1245,32 @@ namespace iutest
 /**
  * @}
 */
+
+/**
+ * @ingroup	IUTEST_ASSUME_
+ * @brief	式アサーション
+ * @param	expression	= 式
+*/
+#ifndef IUTEST_ASSUME
+#  define	IUTEST_ASSUME(expression)				IUTEST_TEST_EXPRESSION_(expression, true, IUTEST_ASSUME_FAILURE)
+#endif
+/**
+ * @ingroup	IUTEST_ASSUME_
+ * @brief	式アサーション
+ * @param	expression	= 式
+*/
+#ifndef IUTEST_ASSUME_NOT
+#  define	IUTEST_ASSUME_NOT(expression)			IUTEST_TEST_EXPRESSION_(expression, false, IUTEST_ASSUME_FAILURE)
+#endif
+/**
+ * @ingroup	IUTEST_ASSUME_
+ * @brief	matcher テスト
+ * @param	actual	= 検査対象
+ * @param	matcher	= matcher
+*/
+#ifndef IUTEST_ASSUME_THAT
+#  define IUTEST_ASSUME_THAT(actual, matcher)		IUTEST_TEST_THAT(actual, matcher, IUTEST_ASSUME_FAILURE)
+#endif
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	== テスト
@@ -1568,5 +1666,9 @@ inline Environment* IUTEST_ATTRIBUTE_UNUSED_ AddGlobalTestEnvironment(Environmen
 #endif
 
 #include "iutest_util.hpp"
+
+#ifdef IUTEST_USE_MAIN
+#  include "internal/iutest_default_main.hpp"
+#endif
 
 #endif // INCG_IRIS_IUTEST_HPP_

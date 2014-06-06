@@ -4,9 +4,7 @@
  * @file		iutest_env.hpp
  * @brief		iris unit test 環境 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -491,6 +489,7 @@ public:
 	template<typename CharType>
 	static void ParseCommandLine(int* pargc, CharType** argv)
 	{
+		if( argv == NULL ) return;
 		int argc = *pargc;
 
 		for( int i=0; i < argc; )

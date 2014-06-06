@@ -4,9 +4,7 @@
  * @file		iutest_switch.hpp
  * @brief		switching to iutest from gtest / gtest from iutest
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -191,6 +189,10 @@ namespace tr1
 #undef IUTEST_HAS_TYPED_TEST
 #undef IUTEST_HAS_TYPED_TEST_P
 
+#undef IUTEST_HAS_MATCHERS
+#undef IUTEST_HAS_ARITHMETIC_EXPRESSION_DECOMPOSE
+#undef IUTEST_HAS_BITWISE_EXPRESSION_DECOMPOSE
+
 #undef IUTEST_HAS_VALUESGEN
 #undef IUTEST_HAS_RANDOMVALUES
 #undef IUTEST_HAS_STATIC_ASSERT_TYPEEQ
@@ -215,6 +217,9 @@ namespace tr1
 #undef IUTEST_HAS_RTTI
 #undef IUTEST_HAS_SEH
 
+#undef IUTEST_OPERAND
+#undef IUTEST_EXPRESSION
+
 #endif
 
 #define IUTEST_SUCCEED			GTEST_SUCCEED
@@ -231,6 +236,10 @@ namespace tr1
 #define IUTEST_HAS_CONCAT				0
 #define IUTEST_HAS_TYPED_TEST		GTEST_HAS_TYPED_TEST
 #define IUTEST_HAS_TYPED_TEST_P		GTEST_HAS_TYPED_TEST_P
+
+#define IUTEST_HAS_MATCHERS				0
+#define IUTEST_HAS_ARITHMETIC_EXPRESSION_DECOMPOSE	0
+#define IUTEST_HAS_BITWISE_EXPRESSION_DECOMPOSE		1
 
 #define IUTEST_HAS_VALUESGEN			0
 #define IUTEST_HAS_RANDOMVALUES			0
@@ -277,13 +286,16 @@ namespace tr1
 #  define IUTEST_STATIC_ASSERT(...)	IUTEST_STATIC_ASSERT_MSG((__VA_ARGS__), "")
 #endif
 
-#ifdef IUTEST_ASSERT
-#  undef IUTEST_ASSERT
+#ifdef IUTEST_ASSERT_EXIT
+#  undef IUTEST_ASSERT_EXIT
 #endif
-#define IUTEST_ASSERT(cond)		do { if( !(cond) ) {													\
-									GTEST_MESSAGE_(#cond, ::testing::TestPartResult::kFatalFailure);	\
-									exit(1);															\
-								} } while(::testing::internal::AlwaysFalse())
+#define IUTEST_ASSERT_EXIT(cond)	do { if( !(cond) ) {													\
+										GTEST_MESSAGE_(#cond, ::testing::TestPartResult::kFatalFailure);	\
+										exit(1);															\
+									} } while(::testing::internal::AlwaysFalse())
+
+#define IUTEST_OPERAND(op)			op
+#define IUTEST_EXPRESSION(expr)		expr
 
 namespace testing
 {

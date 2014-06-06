@@ -4,9 +4,7 @@
  * @file		iutest_switch_pred.hpp
  * @brief		述語フォーマット 切り替え定義 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2013-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,

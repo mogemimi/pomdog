@@ -4,9 +4,7 @@
  * @file		iutest_type_traits.hpp
  * @brief		iris unit test type traits
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2012-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -177,9 +175,15 @@ struct remove_cv
  * @brief	remove_pointer
 */
 template<typename T>
-struct remove_pointer		{ typedef T type; };
-template<typename T>
-struct remove_pointer<T*>	{ typedef T type; };
+class remove_pointer
+{
+	template<typename U>
+	struct impl { typedef U type; };
+	template<typename U>
+	struct impl<U*> { typedef U type; };
+public:
+	typedef typename impl<T>::type type;
+};
 
 #endif
 
@@ -213,8 +217,16 @@ public:
 /**
  * @brief	is_pointer
 */
+#if !defined(_MSC_VER) || _MSC_VER >= 1310
 template<typename T>
 struct is_pointer : public is_pointer_helper::is_pointer<T>::type {};
+#else
+template<typename T>
+struct is_pointer_impl : public is_pointer_helper::is_pointer<T> {};
+
+template<typename T>
+struct is_pointer : public is_pointer_impl<T>::type {};
+#endif
 
 #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
@@ -262,13 +274,26 @@ public:
 template<typename T>
 struct is_void : public is_void_helper::is_void<T>::type {};
 
+namespace is_const_helper
+{
+
+/** @private */
+template<typename T>
+class is_const
+{
+	template<typename U> struct impl { typedef false_type type; };
+	template<typename U> struct impl<U const> { typedef true_type type; };
+public:
+	typedef typename impl<T>::type type;
+};
+
+}
+
 /**
  * @brief	is_const
 */
 template<typename T>
-struct is_const : public false_type {};
-template<typename T>
-struct is_const<T const> : public true_type {};
+struct is_const : public is_const_helper::is_const<T>::type {};
 
 #endif // #if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 

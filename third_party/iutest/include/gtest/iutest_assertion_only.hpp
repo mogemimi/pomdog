@@ -4,9 +4,7 @@
  * @file		iutest_assertion_only.hpp
  * @brief		assertion のみ利用するためのファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2012-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,

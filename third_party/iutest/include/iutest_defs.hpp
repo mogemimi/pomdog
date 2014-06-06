@@ -4,9 +4,7 @@
  * @file		iutest_defs.hpp
  * @brief		iris unit test definition
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -282,7 +280,12 @@ public:
 	}
 
 public:
+#if !defined(_MSC_VER) || _MSC_VER >= 1310
 	operator RawType (void) const	{ return m_v.fv; }	//!< cast to RawType
+#else
+	operator float  (void) const	{ return m_v.fv; }
+	operator double (void) const	{ return m_v.fv; }
+#endif
 	_Myt&	operator = (RawType f)	{ m_v.fv = f; return *this; }	//!< 代入
 
 	bool	operator == (const _Myt& rhs) const	{ return m_v.uv == rhs.m_v.uv; }	//!< 比較

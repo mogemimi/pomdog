@@ -4,9 +4,7 @@
  * @file		iutest_param_direct_tests.hpp
  * @brief		iris unit test initializer_list を使用したパラメータ設定 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2013-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,

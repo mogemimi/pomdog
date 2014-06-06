@@ -4,9 +4,7 @@
  * @file		iutest_ver.hpp
  * @brief		iris unit test version 定義 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -19,10 +17,10 @@
 
 //======================================================================
 // define
-#define	IUTEST_VER			0x01080100u	//!< iutest version 1.8.1.0
+#define	IUTEST_VER			0x01090000u	//!< iutest version 1.9.0.0
 #define IUTEST_MAJORVER		0x01u		//!< Major Version
-#define IUTEST_MINORVER		0x08u		//!< Minor Version
-#define IUTEST_BUILD		0x01u		//!< Build
+#define IUTEST_MINORVER		0x09u		//!< Minor Version
+#define IUTEST_BUILD		0x00u		//!< Build
 #define IUTEST_REVISION		0x00u		//!< Revision
 
 /**
@@ -112,6 +110,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @page	CHANGELOG		変更履歴
  * @par		Changes
  <ul>
+  <li>v1.9.0.0
+    <ul>
+      <li>IUTEST_*_THAT 追加</li>
+      <li>式アサーション追加（IUTEST_ASSERT, IUTEST_EXPECT, IUTEST_INFORM, IUTEST_ASSUME）</li>
+      <li>式アサーション追加（IUTEST_*_NOT）</li>
+      <li>IUTEST_USE_MAIN 追加(main 関数定義 config)</li>
+      <li>IUTEST_ASSERT を IUTEST_ASSERT_EXIT に変更</li>
+    </ul>
+  </li>
   <li>v1.8.1.0
     <ul>
       <li>SetUp/SetUpTestCase での SKIP/ASSUME に対応</li>
@@ -527,6 +534,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </ul>
   </li>
 </ul>
+*/
+
+/**
+ * @example		main.cpp
+ * @example		assertion.cpp
+ * @example		disabledtest.cpp
+ * @example		exception.cpp
+ * @example		fixture.cpp
+ * @example		parameterized.cpp
+ * @example		printto.cpp
+ * @example		simple.cpp
+ * @example		typed.cpp
 */
 
 #endif // INCG_IRIS_IUTEST_VER_HPP_D65CB7A7_D2AD_40FE_8F5F_8FBF376A0010_

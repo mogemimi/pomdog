@@ -4,9 +4,7 @@
  * @file		iutest_string.hpp
  * @brief		iris unit test 文字列操作 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -42,27 +40,6 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_BEGIN()
 namespace iutest {
 namespace detail
 {
-
-//======================================================================
-// function
-/*
- * 今のところ使っていない
-
-static char*			xcsstr(char* src, const char* substr)				{ return strstr(src, substr); }
-static const char*		xcsstr(const char* src, const char* substr)			{ return strstr(src, substr); }
-static char*			xcschr(char* src, char ch)							{ return strchr(src, ch); }
-static const char*		xcschr(const char* src, char ch)					{ return strchr(src, ch); }
-static int				xcscmp(const char* str1, const char* str2)			{ return strcmp(str1, str2); }
-static long				xcstol(const char* src, char** end, int radix)		{ return strtol(src, end, radix); }
-
-static wchar_t*			xcsstr(wchar_t* src, const wchar_t* substr)			{ return wcsstr(src, substr); }
-static const wchar_t*	xcsstr(const wchar_t* src, const wchar_t* substr)	{ return wcsstr(src, substr); }
-static wchar_t*			xcschr(wchar_t* src, wchar_t ch)					{ return wcschr(src, ch); }
-static const wchar_t*	xcschr(const wchar_t* src, wchar_t ch)				{ return wcschr(src, ch); }
-static int				xcscmp(const wchar_t* str1, const wchar_t* str2)	{ return wcscmp(str1, str2); }
-static long				xcstol(const wchar_t* src, wchar_t** end, int radix){ return wcstol(src, end, radix); }
-
-*/
 
 /**
  * @internal
@@ -461,8 +438,21 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 #if IUTEST_HAS_STRINGSTREAM || IUTEST_HAS_STRSTREAM
 typedef ::std::ostream iu_ostream;
 typedef ::std::ostream& (*iu_basic_iomanip)(::std::ostream&);
+
 #else
 typedef detail::iuStringStream::type iu_ostream;
+#endif
+
+#if !defined(IUTEST_HAS_BIGGESTINT_OSTREAM)
+#  if IUTEST_HAS_STRINGSTREAM || IUTEST_HAS_STRSTREAM
+#    if (defined(_STLPORT_VERSION) && !defined(_STLP_LONG_LONG)) || (defined(_MSC_VER) && _MSC_VER < 1310)
+#      define IUTEST_HAS_BIGGESTINT_OSTREAM		0
+#    endif
+#  endif
+#endif
+
+#if !defined(IUTEST_HAS_BIGGESTINT_OSTREAM)
+#  define IUTEST_HAS_BIGGESTINT_OSTREAM			1
 #endif
 
 }	// end of namespace iutest

@@ -4,9 +4,7 @@
  * @file		iutest_debug.ipp
  * @brief		iris unit test debug help ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2013-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -21,9 +19,11 @@
 // include
 #include "../internal/iutest_debug.hpp"
 
-#if defined(_MSC_VER) && _MSC_VER >= 1310 && !defined(IUTEST_OS_WINDOWS_MOBILE)
-#  include <DbgHelp.h>
+#if defined(_MSC_VER) && _MSC_VER >= 1310
+#  if !defined(IUTEST_OS_WINDOWS_MOBILE) && !defined(IUTEST_OS_WINDOWS_PHONE)
+#    include <DbgHelp.h>
 //#  pragma comment (lib, "dbghelp.lib")
+#  endif
 #endif
 
 namespace iutest {

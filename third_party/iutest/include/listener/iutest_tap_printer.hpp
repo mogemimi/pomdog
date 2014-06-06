@@ -4,9 +4,7 @@
  * @file		iutest_tap_printer.hpp
  * @brief		iris unit test Test Anything Protocol 出力イベントリスナー ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2012-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,

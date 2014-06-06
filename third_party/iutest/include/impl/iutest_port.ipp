@@ -4,9 +4,7 @@
  * @file		iutest_port.ipp
  * @brief		iris unit test 依存関数 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -80,7 +78,7 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_BEGIN()
 
 IUTEST_IPP_INLINE const char* GetEnv(const char* name)
 {
-#if defined(IUTEST_OS_WINDOWS_MOBILE) || defined(IUTEST_NO_GETENV)
+#if defined(IUTEST_OS_WINDOWS_PHONE) || defined(IUTEST_OS_WINDOWS_MOBILE) || defined(IUTEST_NO_GETENV)
 	IUTEST_UNUSED_VAR(name);
 	return NULL;
 #elif defined(__BORLANDC__) || defined(__SunOS_5_8) || defined(__SunOS_5_9)
@@ -93,7 +91,7 @@ IUTEST_IPP_INLINE const char* GetEnv(const char* name)
 
 IUTEST_IPP_INLINE int PutEnv(const char* expr)
 {
-#if defined(IUTEST_OS_WINDOWS_MOBILE) || defined(IUTEST_NO_PUTENV) || defined(__STRICT_ANSI__)
+#if defined(IUTEST_OS_WINDOWS_PHONE) || defined(IUTEST_OS_WINDOWS_MOBILE) || defined(IUTEST_NO_PUTENV) || defined(__STRICT_ANSI__)
 	IUTEST_UNUSED_VAR(expr);
 	return -1;
 #else
@@ -103,7 +101,8 @@ IUTEST_IPP_INLINE int PutEnv(const char* expr)
 
 IUTEST_IPP_INLINE const char* GetCWD(char* buf, size_t length)
 {
-#if   defined(IUTEST_OS_WINDOWS_MOBILE) || defined(IUTEST_OS_AVR32) || defined(IUTEST_NO_GETCWD)
+#if   defined(IUTEST_OS_WINDOWS_PHONE) || defined(IUTEST_OS_WINDOWS_MOBILE) || defined(IUTEST_OS_AVR32) \
+		|| defined(IUTEST_NO_GETCWD)
 	if( buf == NULL || length < 3 )
 	{
 		return NULL;
@@ -127,7 +126,7 @@ IUTEST_IPP_INLINE ::std::string GetCWD(void)
 
 IUTEST_IPP_INLINE void SleepMillisec(unsigned int millisec)
 {
-#if   defined(IUTEST_OS_WINDOWS)
+#if   defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_PHONE)
 	Sleep(millisec);
 #elif defined(IUTEST_OS_LINUX) || defined(IUTEST_OS_CYGWIN)
 
@@ -168,7 +167,7 @@ namespace detail
 
 IUTEST_IPP_INLINE bool SetEnvironmentVariable(const char* name, const char* value)
 {
-#if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE)
+#if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE) && !defined(IUTEST_OS_WINDOWS_PHONE)
 	return ::SetEnvironmentVariableA(name, value) ? true : false;
 #else
 	::std::string var = name;
@@ -180,7 +179,7 @@ IUTEST_IPP_INLINE bool SetEnvironmentVariable(const char* name, const char* valu
 
 IUTEST_IPP_INLINE bool GetEnvironmentVariable(const char* name, char* buf, size_t size)
 {
-#if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE)
+#if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE) && !defined(IUTEST_OS_WINDOWS_PHONE)
 	const DWORD ret = ::GetEnvironmentVariableA(name, buf, static_cast<DWORD>(size));
 	if( ret == 0 )
 	{
@@ -198,7 +197,9 @@ IUTEST_IPP_INLINE bool GetEnvironmentVariable(const char* name, char* buf, size_
 	{
 		return false;
 	}
+IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_BEGIN()
 	strcpy(buf, env);
+IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 	return true;
 #endif
 }
@@ -265,38 +266,54 @@ IUTEST_IPP_INLINE ::std::string WideStringToMultiByteString(const wchar_t* wide_
 
 IUTEST_IPP_INLINE ::std::string GetHResultString(HRESULT hr)
 {
-#if defined(IUTEST_OS_WINDOWS_MOBILE)
-	LPWSTR buf = NULL;
-	if( FormatMessageW(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-		NULL,
-		hr,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // デフォルト ユーザー言語
-		(LPWSTR)&buf,
-		0,
-		NULL ) == 0 )
-	{
-		return "";
-	}
+#if !defined(IUTEST_OS_WINDOWS_MOBILE)
 
-	::std::string str = (buf == NULL) ? "" : WideStringToMultiByteString(buf);
-#else
+#if defined(FORMAT_MESSAGE_ALLOCATE_BUFFER)
 	LPSTR buf = NULL;
+#else
+	CHAR buf[4096];
+#endif
 	if( FormatMessageA(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-		NULL,
-		hr,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // デフォルト ユーザー言語
-		(LPSTR)&buf,
-		0,
-		NULL ) == 0 )
+#if defined(FORMAT_MESSAGE_ALLOCATE_BUFFER)
+		FORMAT_MESSAGE_ALLOCATE_BUFFER |
+#endif
+		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS
+		, NULL
+		, hr
+		, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT) // デフォルト ユーザー言語
+#if defined(FORMAT_MESSAGE_ALLOCATE_BUFFER)
+		, (LPSTR)&buf
+		, 0
+#else
+		, buf
+		, IUTEST_PP_COUNTOF(buf)
+#endif
+		, NULL ) == 0 )
 	{
 		return "";
 	}
 
 	::std::string str = (buf == NULL) ? "" : buf;
-#endif
+#if defined(FORMAT_MESSAGE_ALLOCATE_BUFFER)
 	LocalFree(buf);
+#endif
+#else
+	LPWSTR buf = NULL;
+	if( FormatMessageW(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS
+		, NULL
+		, hr
+		, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT) // デフォルト ユーザー言語
+		, (LPWSTR)&buf
+		, 0
+		, NULL ) == 0 )
+	{
+		return "";
+	}
+
+	::std::string str = (buf == NULL) ? "" : WideStringToMultiByteString(buf);
+	LocalFree(buf);
+#endif
 	return str;
 }
 

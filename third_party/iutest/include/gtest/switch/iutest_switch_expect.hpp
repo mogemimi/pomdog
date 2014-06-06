@@ -4,9 +4,7 @@
  * @file		iutest_switch_expect.hpp
  * @brief		EXPECT フレーバー切り替え ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2012-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -106,6 +104,8 @@
 // undef
 #ifdef INCG_IRIS_IUTEST_HPP_
 
+#undef IUTEST_EXPECT
+#undef IUTEST_EXPECT_NOT
 #undef IUTEST_EXPECT_TRUE
 #undef IUTEST_EXPECT_FALSE
 #undef IUTEST_EXPECT_EQ
@@ -153,6 +153,8 @@
 
 //======================================================================
 // define
+#define IUTEST_EXPECT(...)					EXPECT_TRUE(__VA_ARGS__)
+#define IUTEST_EXPECT_NOT(...)				EXPECT_FALSE(__VA_ARGS__)
 #define IUTEST_EXPECT_TRUE(...)				EXPECT_TRUE(!!(__VA_ARGS__))
 #define IUTEST_EXPECT_FALSE(...)			EXPECT_FALSE((__VA_ARGS__))
 #define IUTEST_EXPECT_EQ					EXPECT_EQ

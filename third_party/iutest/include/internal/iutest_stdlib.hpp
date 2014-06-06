@@ -4,9 +4,7 @@
  * @file		iutest_stdlib.hpp
  * @brief		iris unit test stdlib
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2012-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -36,12 +34,12 @@
 # define IUTEST_HAS_STD_TUPLE	0
 #endif
 
-#ifndef IUTEST_USE_EXTERNAL_TR1_TUPLE
+#if !defined(IUTEST_USE_EXTERNAL_TR1_TUPLE)
 #  define IUTEST_USE_EXTERNAL_TR1_TUPLE	0
 #endif
 
-// ::std::tuple
-#ifndef IUTEST_HAS_STD_TUPLE
+//! has ::std::tuple
+#if !defined(IUTEST_HAS_STD_TUPLE)
 #  if   defined(IUTEST_USE_EXTERNAL_STD_TUPLE) && IUTEST_USE_EXTERNAL_STD_TUPLE
 #    define IUTEST_HAS_STD_TUPLE	1
 #  elif defined(_STLPORT_VERSION)
@@ -61,7 +59,7 @@
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_STD_TUPLE
+#if !defined(IUTEST_HAS_STD_TUPLE)
 #  define IUTEST_HAS_STD_TUPLE		0
 #endif
 
@@ -72,8 +70,8 @@
 #if !IUTEST_HAS_STD_TUPLE
 
 // ::std::tr1::tuple
-#ifndef IUTEST_HAS_TR1_TUPLE
-#  if defined(IUTEST_USE_EXTERNAL_TR1_TUPLE) && IUTEST_USE_EXTERNAL_TR1_TUPLE
+#if !defined(IUTEST_HAS_TR1_TUPLE)
+#  if   defined(IUTEST_USE_EXTERNAL_TR1_TUPLE) && IUTEST_USE_EXTERNAL_TR1_TUPLE
 #    define IUTEST_HAS_TR1_TUPLE	1
 #  elif defined(_STLPORT_VERSION)
 #    define IUTEST_HAS_TR1_TUPLE	0
@@ -87,7 +85,7 @@
 #    if __has_include( <tr1/tuple> )
 #      define IUTEST_HAS_TR1_TUPLE	1
 #    endif
-#  elif	defined(__GNUC__)
+#  elif defined(__GNUC__)
 #    if (!defined(__CUDACC__) && !defined(__ARMCC_VERSION) && (__GNUC__ >= 4))
 #      define IUTEST_HAS_TR1_TUPLE	1
 #    endif
@@ -96,20 +94,20 @@
 
 #endif
 
-#ifndef IUTEST_HAS_TR1_TUPLE
+#if !defined(IUTEST_HAS_TR1_TUPLE)
 #  define IUTEST_HAS_TR1_TUPLE		0
 #endif
 
-#ifndef IUTEST_USE_OWN_TR1_TUPLE
+#if !defined(IUTEST_USE_OWN_TR1_TUPLE)
 #  define IUTEST_USE_OWN_TR1_TUPLE	0
 #endif
 
 #if IUTEST_HAS_STD_TUPLE || IUTEST_HAS_TR1_TUPLE
-#  ifndef IUTEST_HAS_TUPLE
+#  if !defined(IUTEST_HAS_TUPLE)
 #    define IUTEST_HAS_TUPLE	1
 #  endif
 #else
-#  ifdef IUTEST_HAS_TUPLE
+#  if defined(IUTEST_HAS_TUPLE)
 #    undef IUTEST_HAS_TUPLE
 #  endif
 #  define IUTEST_HAS_TUPLE		0
@@ -162,7 +160,7 @@ namespace iutest {
 #endif
 
 // chrono
-#ifndef IUTEST_HAS_CXX11_HDR_CHRONO
+#if !defined(IUTEST_HAS_CXX11_HDR_CHRONO)
 
 #if   defined(__has_include)
 #  if __has_include( <chrono> )
@@ -185,12 +183,12 @@ namespace iutest {
 
 #endif
 
-#ifndef IUTEST_HAS_CXX11_HDR_CHRONO
+#if !defined(IUTEST_HAS_CXX11_HDR_CHRONO)
 #  define IUTEST_HAS_CXX11_HDR_CHRONO	0
 #endif
 
 // random
-#ifndef IUTEST_HAS_CXX_HDR_RANDOM
+#if !defined(IUTEST_HAS_CXX_HDR_RANDOM)
 
 #if   defined(__has_include)
 #  if __has_include( <random> )
@@ -217,13 +215,13 @@ namespace iutest {
 
 #endif
 
-#ifndef IUTEST_HAS_CXX_HDR_RANDOM
+#if !defined(IUTEST_HAS_CXX_HDR_RANDOM)
 #  define IUTEST_HAS_CXX_HDR_RANDOM		0
 #endif
 
 // codecvt
 /*
-#ifndef IUTEST_HAS_CXX_HDR_CODECVT
+#if !defined(IUTEST_HAS_CXX_HDR_CODECVT)
 
 #if   defined(__has_include)
 #  if __has_include( <codecvt> )
@@ -241,13 +239,13 @@ namespace iutest {
 #endif
 */
 
-#ifndef IUTEST_HAS_CXX_HDR_CODECVT
+#if !defined(IUTEST_HAS_CXX_HDR_CODECVT)
 #  define IUTEST_HAS_CXX_HDR_CODECVT		0
 #endif
 
 
 // abi
-#ifndef IUTEST_HAS_HDR_CXXABI
+#if !defined(IUTEST_HAS_HDR_CXXABI)
 
 #if   defined(__has_include)
 #  if __has_include( <cxxabi.h> )
@@ -261,18 +259,18 @@ namespace iutest {
 
 #endif
 
-#ifndef IUTEST_HAS_HDR_CXXABI
+#if !defined(IUTEST_HAS_HDR_CXXABI)
 #  define IUTEST_HAS_HDR_CXXABI			0
 #endif
 
 // sys/time.h
-#ifndef IUTEST_HAS_HDR_SYSTIME
+#if !defined(IUTEST_HAS_HDR_SYSTIME)
 #  if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MINGW)
 #    define IUTEST_HAS_HDR_SYSTIME		0
 #  endif
 #endif
 
-#ifndef IUTEST_HAS_HDR_SYSTIME
+#if !defined(IUTEST_HAS_HDR_SYSTIME)
 #  define IUTEST_HAS_HDR_SYSTIME		1
 #endif
 

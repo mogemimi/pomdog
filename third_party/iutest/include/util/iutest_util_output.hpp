@@ -4,9 +4,7 @@
  * @file		iutest_util_output.hpp
  * @brief		iris unit test print 出力 utility ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2012-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,

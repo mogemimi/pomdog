@@ -4,9 +4,7 @@
  * @file		iutest_ignore.hpp
  * @brief		iris unit test ignore test ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2013-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -64,7 +62,7 @@
  * @param	testname_	= テスト名
  * @note	ignore 版ではテストコードのコンパイルが通らなくても問題ない
 */
-#define IUTEST_P_IGNORE(testcase_, testname_)				IIUT_TEST_P_IGNORE_(testcase_, testname_)
+#define IUTEST_P_IGNORE(testcase_, testname_)		IIUT_TEST_P_IGNORE_(testcase_, testname_)
 
 #endif
 

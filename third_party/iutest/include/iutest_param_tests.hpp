@@ -4,9 +4,7 @@
  * @file		iutest_param_tests.hpp
  * @brief		iris unit test parameter 定義 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -261,7 +259,7 @@ public:
  * @ingroup		VALUE_PARAMETERIZED_TEST
  * @defgroup	PARAM_GENERATOR	Parameter Generator
  * @brief		パラメータ生成器
- * @detail		IUTEST_INSTANTIATE_TEST_CASE_P に使用可能なパラメータ生成器
+ * @details		IUTEST_INSTANTIATE_TEST_CASE_P に使用可能なパラメータ生成器
  * @{
 */
 

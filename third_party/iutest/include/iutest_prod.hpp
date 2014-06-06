@@ -4,9 +4,7 @@
  * @file		iutest_prod.hpp
  * @brief		iris unit test production code 対応用 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2012-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -187,6 +185,7 @@ private:
 		peep_member_object_impl(const _Myt&);
 	public:
 		operator value_type (void) const { return (*m_ptr).*detail::peep_tag<peep_tag>::value; }
+		_Myt& operator = (const value_type& value);
 	};
 	template<typename U, typename Type>
 	class peep_member_object_impl<U, Type, false>

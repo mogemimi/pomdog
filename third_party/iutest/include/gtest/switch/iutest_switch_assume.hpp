@@ -4,9 +4,7 @@
  * @file		iutest_switch_assume.hpp
  * @brief		ASSUME フレーバー切り替え ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2013-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -65,6 +63,8 @@
 // undef
 #ifdef INCG_IRIS_IUTEST_HPP_
 
+#undef IUTEST_ASSUME
+#undef IUTEST_ASSUME_NOT
 #undef IUTEST_ASSUME_TRUE
 #undef IUTEST_ASSUME_FALSE
 #undef IUTEST_ASSUME_EQ
@@ -185,6 +185,8 @@
 #define ASSUME_NO_FATAL_FAILURE(statement) \
 	GTEST_TEST_NO_FATAL_FAILURE_(statement, GTEST_ASSUME_FAILURE_)
 
+#define IUTEST_ASSUME(...)					ASSUME_TRUE(__VA_ARGS__)
+#define IUTEST_ASSUME_NOT(...)				ASSUME_FALSE(__VA_ARGS__)
 #define IUTEST_ASSUME_TRUE(...)				ASSUME_TRUE(!!(__VA_ARGS__))
 #define IUTEST_ASSUME_FALSE(...)			ASSUME_FALSE((__VA_ARGS__))
 #define IUTEST_ASSUME_EQ					ASSUME_EQ

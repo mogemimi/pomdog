@@ -4,9 +4,7 @@
  * @file		iutest_console.hpp
  * @brief		iris unit test console
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -207,7 +205,7 @@ inline void iuConsole::color_output_impl(Color color, const char* fmt, va_list v
 {
 	(void)(fmt);
 	(void)(va);
-#if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE)
+#if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE) && !defined(IUTEST_OS_WINDOWS_PHONE)
 	if( !IsColorModeAnsi() )
 	{
 		const WORD attr[] = {

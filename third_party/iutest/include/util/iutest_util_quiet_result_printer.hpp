@@ -4,9 +4,7 @@
  * @file		iutest_util_quiet_result_printer.hpp
  * @brief		iris unit test quiet result printer ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2012-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,

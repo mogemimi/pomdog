@@ -4,9 +4,7 @@
  * @file		iutest_option_message.hpp
  * @brief		iris unit test コマンドラインメッセージ ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,

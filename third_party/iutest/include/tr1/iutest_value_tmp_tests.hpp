@@ -4,9 +4,7 @@
  * @file		iutest_value_tmp_tests.hpp
  * @brief		iris unit test template 値引き数クラステスト ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2012-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,

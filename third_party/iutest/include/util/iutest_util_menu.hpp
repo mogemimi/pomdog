@@ -4,9 +4,7 @@
  * @file		iutest_util_menu.hpp
  * @brief		iris unit test テスト メニュー生成 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2013-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -82,7 +80,7 @@ public:
 		return true;
 	}
 
-	bool OnCommand(int wID)
+	bool OnCommand(WORD wID)
 	{
 		if( wID == m_nIDTop )
 		{

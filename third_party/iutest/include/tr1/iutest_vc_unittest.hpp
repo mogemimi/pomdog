@@ -4,9 +4,7 @@
  * @file		iutest_vc_unittest.hpp
  * @brief		iris unit test, visual studio 11 C++ Unit Test Framework 対応 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2012-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,

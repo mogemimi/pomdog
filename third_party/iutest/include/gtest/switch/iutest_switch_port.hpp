@@ -4,9 +4,7 @@
  * @file		iutest_switch_port.hpp
  * @brief		portable 定義切り替え ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2012-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -106,6 +104,9 @@
 #endif
 #ifdef IUTEST_OS_WINDOWS
 #  undef IUTEST_OS_WINDOWS
+#  ifdef IUTEST_OS_WINDOWS_PHONE
+#	 undef IUTEST_OS_WINDOWS_PHONE
+#  endif
 #  ifdef IUTEST_OS_WINDOWS_MOBILE
 #	 undef IUTEST_OS_WINDOWS_MOBILE
 #  endif

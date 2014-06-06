@@ -4,9 +4,7 @@
  * @file		iutest_internal.hpp
  * @brief		iris unit test 内部定義 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -322,7 +320,7 @@
 
 #define IUTEST_TEST_BOOLEAN_(expression, text, actual, expected, on_failure)	\
 	IUTEST_AMBIGUOUS_ELSE_BLOCKER_												\
-	if( const ::iutest::AssertionResult iutest_ar = ::iutest::AssertionResult((expression) ? true : false) )	\
+	if( const ::iutest::AssertionResult iutest_ar = ::iutest::AssertionResult::Is(expression) )	\
 		;																		\
 	else																		\
 		on_failure(::iutest::internal::GetBooleanAssertionFailureMessage(		\
@@ -330,14 +328,22 @@
 
 /**
  * @internal
- * @brief	明示的な失敗
+ * @brief	assert
 */
-#define IUTEST_ASSERT(cond)					do { if( !(cond) ) {												\
+#define IUTEST_ASSERT_EXIT(cond)			do { if( !(cond) ) {												\
 												IUTEST_MESSAGE(#cond, ::iutest::TestPartResult::kFatalFailure);	\
 												exit(1);														\
 											} } while(::iutest::detail::AlwaysFalse())
 
+/**
+ * @internal
+ * @brief	明示的な成功
+*/
 #define IIUT_SUCCEED()						IUTEST_MESSAGE("Succeeded.\n", ::iutest::TestPartResult::kSuccess)
+/**
+ * @internal
+ * @brief	明示的な失敗
+*/
 #define IIUT_FAIL()							IUTEST_ASSERT_FAILURE("Failed.\n")
 #define IIUT_ADD_FAILURE()					IUTEST_EXPECT_FAILURE("Failed.\n")
 #define IIUT_ADD_FAILURE_AT(file_, line_)	IUTEST_EXPECT_FAILURE_AT("Failed.\n", file_, line_)
@@ -353,7 +359,7 @@
  * @internal
  * @brief	IUTEST_ANALYSIS_ASSUME_ を通す
 */
-#if defined(_MSC_VER) && _MSC_VER >= 1500
+#if IUTEST_HAS_ANALYSIS_ASSUME
 
 #define IUTEST_THROUGH_ANALYSIS_ASSUME_(expr, todo)					\
 	IUTEST_AMBIGUOUS_ELSE_BLOCKER_									\

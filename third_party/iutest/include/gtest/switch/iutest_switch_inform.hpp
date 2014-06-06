@@ -4,9 +4,7 @@
  * @file		iutest_switch_inform.hpp
  * @brief		INFORM フレーバー切り替え ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2012-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -65,6 +63,8 @@
 // undef
 #ifdef INCG_IRIS_IUTEST_HPP_
 
+#undef IUTEST_INFORM
+#undef IUTEST_INFORM_NOT
 #undef IUTEST_INFORM_TRUE
 #undef IUTEST_INFORM_FALSE
 #undef IUTEST_INFORM_EQ
@@ -192,6 +192,8 @@
 #define INFORM_NO_FATAL_FAILURE(statement) \
 	GTEST_TEST_NO_FATAL_FAILURE_(statement, GTEST_INFORM_FAILURE_)
 
+#define IUTEST_INFORM(...)					INFORM_TRUE(__VA_ARGS__)
+#define IUTEST_INFORM_NOT(...)				INFORM_FALSE(__VA_ARGS__)
 #define IUTEST_INFORM_TRUE(...)				INFORM_TRUE(!!(__VA_ARGS__))
 #define IUTEST_INFORM_FALSE(...)			INFORM_FALSE((__VA_ARGS__))
 #define IUTEST_INFORM_EQ					INFORM_EQ

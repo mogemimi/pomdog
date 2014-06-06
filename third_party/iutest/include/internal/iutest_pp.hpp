@@ -4,9 +4,7 @@
  * @file		iutest_pp.hpp
  * @brief		iris unit test プリプロセッサ 定義 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -46,12 +44,17 @@
 	IUTEST_PP_DISALLOW_COPY_AND_ASSIGN(TypeName)
 #endif
 
-#ifndef IUTEST_PP_TOSTRING
+/**
+ * @private
+ * @{
+*/
+
+#if !defined(IUTEST_PP_TOSTRING)
 #  define IUTEST_PP_TOSTRING(z_)	IUTEST_PP_TOSTRING_(z_)
 #endif
 #define IUTEST_PP_TOSTRING_(z_)		#z_
 
-#ifndef IUTEST_PP_CAT
+#if !defined(IUTEST_PP_CAT)
 #  define IUTEST_PP_CAT(a_, b_)		IUTEST_PP_CAT_(a_, b_)
 #endif
 #define IUTEST_PP_CAT_(a_, b_)		a_##b_
@@ -60,7 +63,7 @@
 
 #define IUTEST_PP_COUNTOF(x)		(sizeof(x)/sizeof(x[0]))
 
-#ifdef IUTEST_HAS_COUNTER_MACRO
+#if !defined(IUTEST_HAS_COUNTER_MACRO)
 #  define IUTEST_PP_COUNTER			__COUNTER__
 #else
 #  define IUTEST_PP_COUNTER			__LINE__
@@ -694,5 +697,9 @@
 #define IUTEST_PP_EMPTY()		
 #define IUTEST_PP_EMPTY_TAG()	, 0
 #define IUTEST_PP_EMPTY_TAG_IUTEST_PP_EMPTY_TAG	1, 1 IUTEST_PP_EMPTY
+
+/**
+ * @}
+*/
 
 #endif // INCG_IRIS_IUTEST_PP_HPP_E8F72184_9C72_4E74_B581_A1F51F291F3A_

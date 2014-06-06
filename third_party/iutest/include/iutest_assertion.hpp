@@ -4,9 +4,7 @@
  * @file		iutest_assertion.hpp
  * @brief		iris unit test assertion 定義 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -61,6 +59,11 @@ public:
 	bool failed(void) const IUTEST_CXX_NOEXCEPT_SPEC { return !m_result; }
 
 	/**
+	 * @brief	成否
+	*/
+	bool passed(void) const IUTEST_CXX_NOEXCEPT_SPEC { return m_result; }
+
+	/**
 	 * @brief	メッセージの取得
 	*/
 	const char* message(void) const { return m_message.c_str(); }
@@ -86,6 +89,19 @@ public:
 		m_message += msg.GetString();
 		return *this;
 	}
+public:
+	AssertionResult operator ! (void) const
+	{
+		return AssertionResult(failed()) << message();
+	}
+	AssertionResult operator && (const AssertionResult& rhs) const
+	{
+		return AssertionResult(m_result && rhs.passed()) << message() << " && " << rhs.message();
+	}
+	AssertionResult operator || (const AssertionResult& rhs) const
+	{
+		return AssertionResult(m_result || rhs.passed()) << message() << " || " << rhs.message();
+	}
 
 public:
 	/**
@@ -96,6 +112,13 @@ public:
 	 * @brief	失敗結果の作成
 	*/
 	static AssertionResult Failure(void) { return AssertionResult(false); }
+	/**
+	 * @brief	成否の取得
+	*/
+	template<typename T>
+	static AssertionResult Is(const T& b) { return AssertionResult(b ? true : false); }
+	/** @override */
+	static AssertionResult Is(const AssertionResult& ar) { return AssertionResult(ar); }
 
 private:
 	IUTEST_PP_DISALLOW_ASSIGN(AssertionResult);

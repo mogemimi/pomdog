@@ -4,9 +4,7 @@
  * @file		iutest_spi.hpp
  * @brief		iris unit test spi 対応用 ファイル
  *
- * @author		t.sirayanagi
- * @version		1.0
- *
+ * @author		t.shirayanagi
  * @par			copyright
  * Copyright (C) 2012-2014, Takazumi Shirayanagi\n
  * This software is released under the new BSD License,
@@ -201,7 +199,7 @@ public:
 		if( strstr(tr.message(), substr.c_str()) == NULL )
 		{
 			return AssertionFailure() << "error: Expected: " << expected
-				<< "containing \"" << substr
+				<< " containing \"" << substr
 				<< "\"\n  Actual:\n" << tr;
 		}
 		return AssertionSuccess();
