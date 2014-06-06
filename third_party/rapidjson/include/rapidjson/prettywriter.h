@@ -7,23 +7,31 @@ namespace rapidjson {
 
 //! Writer with indentation and spacing.
 /*!
-	\tparam Stream Type of ouptut stream.
+	\tparam OutputStream Type of ouptut os.
 	\tparam Encoding Encoding of both source strings and output.
 	\tparam Allocator Type of allocator for allocating memory of stack.
 */
-template<typename Stream, typename Encoding = UTF8<>, typename Allocator = MemoryPoolAllocator<> >
-class PrettyWriter : public Writer<Stream, Encoding, Allocator> {
+template<typename OutputStream, typename SourceEncoding = UTF8<>, typename TargetEncoding = UTF8<>, typename Allocator = MemoryPoolAllocator<> >
+class PrettyWriter : public Writer<OutputStream, SourceEncoding, TargetEncoding, Allocator> {
 public:
-	typedef Writer<Stream, Encoding, Allocator> Base;
+	typedef Writer<OutputStream, SourceEncoding, TargetEncoding, Allocator> Base;
 	typedef typename Base::Ch Ch;
 
 	//! Constructor
-	/*! \param stream Output stream.
+	/*! \param os Output os.
 		\param allocator User supplied allocator. If it is null, it will create a private one.
 		\param levelDepth Initial capacity of 
 	*/
-	PrettyWriter(Stream& stream, Allocator* allocator = 0, size_t levelDepth = Base::kDefaultLevelDepth) : 
-		Base(stream, allocator, levelDepth), indentChar_(' '), indentCharCount_(4) {}
+	PrettyWriter(OutputStream& os, Allocator* allocator = 0, size_t levelDepth = Base::kDefaultLevelDepth) : 
+		Base(os, allocator, levelDepth), indentChar_(' '), indentCharCount_(4) {}
+
+#ifdef RAPIDJSON_ACCEPT_ANY_ROOT
+	//! Accept arbitrary root elements (not only arrays and objects)
+	PrettyWriter& AcceptAnyRoot(bool yesno = true) { Base::AcceptAnyRoot(yesno); return *this; }
+#endif
+
+	//! Overridden for fluent API, see \ref Writer::SetDoublePrecision()
+	PrettyWriter& SetDoublePrecision(int p) { Base::SetDoublePrecision(p); return *this; }
 
 	//! Set custom indentation.
 	/*! \param indentChar		Character for indentation. Must be whitespace character (' ', '\t', '\n', '\r').
@@ -47,6 +55,11 @@ public:
 	PrettyWriter& Int64(int64_t i64)	{ PrettyPrefix(kNumberType); Base::WriteInt64(i64);		return *this; }
 	PrettyWriter& Uint64(uint64_t u64)	{ PrettyPrefix(kNumberType); Base::WriteUint64(u64);	return *this; }
 	PrettyWriter& Double(double d)		{ PrettyPrefix(kNumberType); Base::WriteDouble(d);		return *this; }
+	//! Overridden for fluent API, see \ref Writer::Double()
+	PrettyWriter& Double(double d, int precision) {
+		int oldPrecision = Base::GetDoublePrecision();
+		return SetDoublePrecision(precision).Double(d).SetDoublePrecision(oldPrecision);
+	}
 
 	PrettyWriter& String(const Ch* str, SizeType length, bool copy = false) {
 		(void)copy;
@@ -69,10 +82,12 @@ public:
 		bool empty = Base::level_stack_.template Pop<typename Base::Level>(1)->valueCount == 0;
 
 		if (!empty) {
-			Base::stream_.Put('\n');
+			Base::os_.Put('\n');
 			WriteIndent();
 		}
 		Base::WriteEndObject();
+		if (Base::level_stack_.Empty())	// end of json text
+			Base::os_.Flush();
 		return *this;
 	}
 
@@ -90,10 +105,12 @@ public:
 		bool empty = Base::level_stack_.template Pop<typename Base::Level>(1)->valueCount == 0;
 
 		if (!empty) {
-			Base::stream_.Put('\n');
+			Base::os_.Put('\n');
 			WriteIndent();
 		}
 		Base::WriteEndArray();
+		if (Base::level_stack_.Empty())	// end of json text
+			Base::os_.Flush();
 		return *this;
 	}
 
@@ -110,26 +127,26 @@ protected:
 
 			if (level->inArray) {
 				if (level->valueCount > 0) {
-					Base::stream_.Put(','); // add comma if it is not the first element in array
-					Base::stream_.Put('\n');
+					Base::os_.Put(','); // add comma if it is not the first element in array
+					Base::os_.Put('\n');
 				}
 				else
-					Base::stream_.Put('\n');
+					Base::os_.Put('\n');
 				WriteIndent();
 			}
 			else {	// in object
 				if (level->valueCount > 0) {
 					if (level->valueCount % 2 == 0) {
-						Base::stream_.Put(',');
-						Base::stream_.Put('\n');
+						Base::os_.Put(',');
+						Base::os_.Put('\n');
 					}
 					else {
-						Base::stream_.Put(':');
-						Base::stream_.Put(' ');
+						Base::os_.Put(':');
+						Base::os_.Put(' ');
 					}
 				}
 				else
-					Base::stream_.Put('\n');
+					Base::os_.Put('\n');
 
 				if (level->valueCount % 2 == 0)
 					WriteIndent();
@@ -139,12 +156,15 @@ protected:
 			level->valueCount++;
 		}
 		else
+#ifdef RAPIDJSON_ACCEPT_ANY_ROOT
+			if (!Base::acceptAnyRoot_)
+#endif
 			RAPIDJSON_ASSERT(type == kObjectType || type == kArrayType);
 	}
 
 	void WriteIndent()  {
 		size_t count = (Base::level_stack_.GetSize() / sizeof(typename Base::Level)) * indentCharCount_;
-		PutN(Base::stream_, indentChar_, count);
+		PutN(Base::os_, indentChar_, count);
 	}
 
 	Ch indentChar_;

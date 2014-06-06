@@ -60,35 +60,44 @@ public:
 		\param type	Type of the value.
 		\note Default content for number is zero.
 	*/
-	GenericValue(Type type) {
+	GenericValue(Type type) : data_() {
 		static const unsigned defaultFlags[7] = {
 			kNullFlag, kFalseFlag, kTrueFlag, kObjectFlag, kArrayFlag, kConstStringFlag,
-			kNumberFlag | kIntFlag | kUintFlag | kInt64Flag | kUint64Flag | kDoubleFlag
+			kNumberAnyFlag
 		};
 		RAPIDJSON_ASSERT(type <= kNumberType);
 		flags_ = defaultFlags[type];
-		memset(&data_, 0, sizeof(data_));
 	}
 
+	//! Explicit copy constructor (with allocator)
+	/*! Creates a copy of a Value by using the given Allocator
+		\tparam SourceAllocator allocator of \c rhs
+		\param rhs Value to copy from (read-only)
+		\param allocator Allocator to use for copying
+		\see CopyFrom()
+	*/
+	template< typename SourceAllocator >
+	GenericValue(const GenericValue<Encoding,SourceAllocator>& rhs, Allocator & allocator);
+
 	//! Constructor for boolean value.
-	GenericValue(bool b) : flags_(b ? kTrueFlag : kFalseFlag) {}
+	explicit GenericValue(bool b) : flags_(b ? kTrueFlag : kFalseFlag) {}
 
 	//! Constructor for int value.
-	GenericValue(int i) : flags_(kNumberIntFlag) { 
+	explicit GenericValue(int i) : flags_(kNumberIntFlag) {
 		data_.n.i64 = i;
 		if (i >= 0)
 			flags_ |= kUintFlag | kUint64Flag;
 	}
 
 	//! Constructor for unsigned value.
-	GenericValue(unsigned u) : flags_(kNumberUintFlag) {
+	explicit GenericValue(unsigned u) : flags_(kNumberUintFlag) {
 		data_.n.u64 = u; 
 		if (!(u & 0x80000000))
 			flags_ |= kIntFlag | kInt64Flag;
 	}
 
 	//! Constructor for int64_t value.
-	GenericValue(int64_t i64) : flags_(kNumberInt64Flag) {
+	explicit GenericValue(int64_t i64) : flags_(kNumberInt64Flag) {
 		data_.n.i64 = i64;
 		if (i64 >= 0) {
 			flags_ |= kNumberUint64Flag;
@@ -102,7 +111,7 @@ public:
 	}
 
 	//! Constructor for uint64_t value.
-	GenericValue(uint64_t u64) : flags_(kNumberUint64Flag) {
+	explicit GenericValue(uint64_t u64) : flags_(kNumberUint64Flag) {
 		data_.n.u64 = u64;
 		if (!(u64 & 0x8000000000000000ULL))
 			flags_ |= kInt64Flag;
@@ -113,7 +122,7 @@ public:
 	}
 
 	//! Constructor for double value.
-	GenericValue(double d) : flags_(kNumberDoubleFlag) { data_.n.d = d; }
+	explicit GenericValue(double d) : flags_(kNumberDoubleFlag) { data_.n.d = d; }
 
 	//! Constructor for constant string (i.e. do not make a copy of string)
 	GenericValue(const Ch* s, SizeType length) { 
@@ -124,7 +133,7 @@ public:
 	}
 
 	//! Constructor for constant string (i.e. do not make a copy of string)
-	GenericValue(const Ch* s) { SetStringRaw(s, internal::StrLen(s)); }
+	explicit GenericValue(const Ch* s) { SetStringRaw(s, internal::StrLen(s)); }
 
 	//! Constructor for copy-string (i.e. do make a copy of string)
 	GenericValue(const Ch* s, SizeType length, Allocator& allocator) { SetStringRaw(s, length, allocator); }
@@ -170,8 +179,7 @@ public:
 	GenericValue& operator=(GenericValue& rhs) {
 		RAPIDJSON_ASSERT(this != &rhs);
 		this->~GenericValue();
-		memcpy(this, &rhs, sizeof(GenericValue));
-		rhs.flags_ = kNullFlag;
+		RawAssign(rhs);
 		return *this;
 	}
 
@@ -185,6 +193,21 @@ public:
 		new (this) GenericValue(value);
 		return *this;
 	}
+
+	//! Deep-copy assignment from Value
+	/*! Assigns a \b copy of the Value to the current Value object
+		\tparam SourceAllocator Allocator type of \c rhs
+		\param rhs Value to copy from (read-only)
+		\param allocator Allocator to use for copying
+	 */
+	template <typename SourceAllocator>
+	GenericValue& CopyFrom(const GenericValue<Encoding,SourceAllocator>& rhs, Allocator& allocator) {
+		RAPIDJSON_ASSERT((void*)this != (void*)&rhs);
+		this->~GenericValue();
+		new (this) GenericValue(rhs,allocator);
+		return *this;
+	}
+
 	//@}
 
 	//!@name Type
@@ -228,11 +251,18 @@ public:
 	//! Set this value as an empty object.
 	GenericValue& SetObject() { this->~GenericValue(); new (this) GenericValue(kObjectType); return *this; }
 
-	//! Get the value associated with the object's name.
+	//! Get the value associated with the name.
+	/*!
+		\note In version 0.1x, if the member is not found, this function returns a null value. This makes issue 7.
+		Since 0.2, if the name is not correct, it will assert.
+		If user is unsure whether a member exists, user should use HasMember() first.
+		A better approach is to use the now public FindMember().
+	*/
 	GenericValue& operator[](const Ch* name) {
 		if (Member* member = FindMember(name))
 			return member->value;
 		else {
+			RAPIDJSON_ASSERT(false);	// see above note
 			static GenericValue NullValue;
 			return NullValue;
 		}
@@ -246,7 +276,28 @@ public:
 	MemberIterator MemberEnd()				{ RAPIDJSON_ASSERT(IsObject()); return data_.o.members + data_.o.size; }
 
 	//! Check whether a member exists in the object.
+	/*!
+		\note It is better to use FindMember() directly if you need the obtain the value as well.
+	*/
 	bool HasMember(const Ch* name) const { return FindMember(name) != 0; }
+
+	//! Find member by name.
+	/*!
+		\return Return the member if exists. Otherwise returns null pointer.
+	*/
+	Member* FindMember(const Ch* name) {
+		RAPIDJSON_ASSERT(name);
+		RAPIDJSON_ASSERT(IsObject());
+
+		SizeType len = internal::StrLen(name);
+		Object& o = data_.o;
+		for (Member* member = o.members; member != data_.o.members + data_.o.size; ++member)
+			if (member->name.data_.s.length == len && memcmp(member->name.data_.s.str, name, len * sizeof(Ch)) == 0)
+				return member;
+
+		return 0;
+	}
+	const Member* FindMember(const Ch* name) const { return const_cast<GenericValue&>(*this).FindMember(name); }
 
 	//! Add a member (name-value pair) to the object.
 	/*! \param name A string value as name of member.
@@ -500,7 +551,7 @@ int z = a[0u].GetInt();				// This works too.
 		case kObjectType:
 			handler.StartObject();
 			for (Member* m = data_.o.members; m != data_.o.members + data_.o.size; ++m) {
-				handler.String(m->name.data_.s.str, m->name.data_.s.length, false);
+				handler.String(m->name.data_.s.str, m->name.data_.s.length, (m->name.flags_ & kCopyFlag) != 0);
 				m->value.Accept(handler);
 			}
 			handler.EndObject(data_.o.size);
@@ -514,7 +565,7 @@ int z = a[0u].GetInt();				// This works too.
 			break;
 
 		case kStringType:
-			handler.String(data_.s.str, data_.s.length, false);
+			handler.String(data_.s.str, data_.s.length, (flags_ & kCopyFlag) != 0);
 			break;
 
 		case kNumberType:
@@ -552,6 +603,7 @@ private:
 		kNumberInt64Flag = kNumberType | kNumberFlag | kInt64Flag,
 		kNumberUint64Flag = kNumberType | kNumberFlag | kUint64Flag,
 		kNumberDoubleFlag = kNumberType | kNumberFlag | kDoubleFlag,
+		kNumberAnyFlag = kNumberType | kNumberFlag | kIntFlag | kInt64Flag | kUintFlag | kUint64Flag | kDoubleFlag,
 		kConstStringFlag = kStringType | kStringFlag,
 		kCopyStringFlag = kStringType | kStringFlag | kCopyFlag,
 		kObjectFlag = kObjectType,
@@ -614,34 +666,18 @@ private:
 		Array a;
 	};	// 12 bytes in 32-bit mode, 16 bytes in 64-bit mode
 
-	//! Find member by name.
-	Member* FindMember(const Ch* name) {
-		RAPIDJSON_ASSERT(name);
-		RAPIDJSON_ASSERT(IsObject());
-
-		SizeType length = internal::StrLen(name);
-
-		Object& o = data_.o;
-		for (Member* member = o.members; member != data_.o.members + data_.o.size; ++member)
-			if (length == member->name.data_.s.length && memcmp(member->name.data_.s.str, name, length * sizeof(Ch)) == 0)
-				return member;
-
-		return 0;
-	}
-	const Member* FindMember(const Ch* name) const { return const_cast<GenericValue&>(*this).FindMember(name); }
-
 	// Initialize this value as array with initial data, without calling destructor.
-	void SetArrayRaw(GenericValue* values, SizeType count, Allocator& alloctaor) {
+	void SetArrayRaw(GenericValue* values, SizeType count, Allocator& allocator) {
 		flags_ = kArrayFlag;
-		data_.a.elements = (GenericValue*)alloctaor.Malloc(count * sizeof(GenericValue));
+		data_.a.elements = (GenericValue*)allocator.Malloc(count * sizeof(GenericValue));
 		memcpy(data_.a.elements, values, count * sizeof(GenericValue));
 		data_.a.size = data_.a.capacity = count;
 	}
 
 	//! Initialize this value as object with initial data, without calling destructor.
-	void SetObjectRaw(Member* members, SizeType count, Allocator& alloctaor) {
+	void SetObjectRaw(Member* members, SizeType count, Allocator& allocator) {
 		flags_ = kObjectFlag;
-		data_.o.members = (Member*)alloctaor.Malloc(count * sizeof(Member));
+		data_.o.members = (Member*)allocator.Malloc(count * sizeof(Member));
 		memcpy(data_.o.members, members, count * sizeof(Member));
 		data_.o.size = data_.o.capacity = count;
 	}
@@ -666,7 +702,8 @@ private:
 
 	//! Assignment without calling destructor
 	void RawAssign(GenericValue& rhs) {
-		memcpy(this, &rhs, sizeof(GenericValue));
+		data_ = rhs.data_;
+		flags_ = rhs.flags_;
 		rhs.flags_ = kNullFlag;
 	}
 
@@ -685,7 +722,7 @@ typedef GenericValue<UTF8<> > Value;
 /*!
 	\implements Handler
 	\tparam Encoding encoding for both parsing and string storage.
-	\tparam Alloactor allocator for allocating memory for the DOM, and the stack during parsing.
+	\tparam Allocator allocator for allocating memory for the DOM, and the stack during parsing.
 */
 template <typename Encoding, typename Allocator = MemoryPoolAllocator<> >
 class GenericDocument : public GenericValue<Encoding, Allocator> {
@@ -698,18 +735,30 @@ public:
 	/*! \param allocator		Optional allocator for allocating stack memory.
 		\param stackCapacity	Initial capacity of stack in bytes.
 	*/
-	GenericDocument(Allocator* allocator = 0, size_t stackCapacity = kDefaultStackCapacity) : stack_(allocator, stackCapacity), parseError_(0), errorOffset_(0) {}
+	GenericDocument(Allocator* allocator = 0, size_t stackCapacity = kDefaultStackCapacity) : stack_(allocator, stackCapacity), parseError_(0), errorOffset_(0)
+#ifdef RAPIDJSON_ACCEPT_ANY_ROOT
+		, acceptAnyRoot_(false)
+#endif
+		{}
+
+#ifdef RAPIDJSON_ACCEPT_ANY_ROOT
+	//! Accept arbitrary root elements (not only arrays and objects)
+	GenericDocument& AcceptAnyRoot(bool yesno = true) { acceptAnyRoot_ = yesno; return *this; }
+#endif
 
 	//! Parse JSON text from an input stream.
 	/*! \tparam parseFlags Combination of ParseFlag.
 		\param stream Input stream to be parsed.
 		\return The document itself for fluent API.
 	*/
-	template <unsigned parseFlags, typename Stream>
-	GenericDocument& ParseStream(Stream& stream) {
+	template <unsigned parseFlags, typename SourceEncoding, typename InputStream>
+	GenericDocument& ParseStream(InputStream& is) {
 		ValueType::SetNull(); // Remove existing root if exist
-		GenericReader<Encoding, Allocator> reader;
-		if (reader.template Parse<parseFlags>(stream, *this)) {
+		GenericReader<SourceEncoding, Encoding, Allocator> reader(&GetAllocator());
+#ifdef RAPIDJSON_ACCEPT_ANY_ROOT
+		reader.AcceptAnyRoot(acceptAnyRoot_);
+#endif
+		if (reader.template Parse<parseFlags>(is, *this)) {
 			RAPIDJSON_ASSERT(stack_.GetSize() == sizeof(ValueType)); // Got one and only one root object
 			this->RawAssign(*stack_.template Pop<ValueType>(1));	// Add this-> to prevent issue 13.
 			parseError_ = 0;
@@ -723,26 +772,41 @@ public:
 		return *this;
 	}
 
+	template <unsigned parseFlags, typename InputStream>
+	GenericDocument& ParseStream(InputStream& is) {
+		return ParseStream<parseFlags,Encoding,InputStream>(is);
+	}
+
 	//! Parse JSON text from a mutable string.
 	/*! \tparam parseFlags Combination of ParseFlag.
 		\param str Mutable zero-terminated string to be parsed.
 		\return The document itself for fluent API.
 	*/
-	template <unsigned parseFlags>
+	template <unsigned parseFlags, typename SourceEncoding>
 	GenericDocument& ParseInsitu(Ch* str) {
 		GenericInsituStringStream<Encoding> s(str);
-		return ParseStream<parseFlags | kParseInsituFlag>(s);
+		return ParseStream<parseFlags | kParseInsituFlag, SourceEncoding>(s);
+	}
+
+	template <unsigned parseFlags>
+	GenericDocument& ParseInsitu(Ch* str) {
+		return ParseInsitu<parseFlags, Encoding>(str);
 	}
 
 	//! Parse JSON text from a read-only string.
 	/*! \tparam parseFlags Combination of ParseFlag (must not contain kParseInsituFlag).
 		\param str Read-only zero-terminated string to be parsed.
 	*/
-	template <unsigned parseFlags>
+	template <unsigned parseFlags, typename SourceEncoding>
 	GenericDocument& Parse(const Ch* str) {
 		RAPIDJSON_ASSERT(!(parseFlags & kParseInsituFlag));
-		GenericStringStream<Encoding> s(str);
-		return ParseStream<parseFlags>(s);
+		GenericStringStream<SourceEncoding> s(str);
+		return ParseStream<parseFlags, SourceEncoding>(s);
+	}
+
+	template <unsigned parseFlags>
+	GenericDocument& Parse(const Ch* str) {
+		return Parse<parseFlags, Encoding>(str);
 	}
 
 	//! Whether a parse error was occured in the last parsing.
@@ -761,10 +825,9 @@ public:
 	size_t GetStackCapacity() const { return stack_.GetCapacity(); }
 
 private:
-	// Prohibit assignment
-	GenericDocument& operator=(const GenericDocument&);
-
-	friend class GenericReader<Encoding, Allocator>;	// for Reader to call the following private handler functions
+	// callers of the following private Handler functions
+	template <typename,typename,typename> friend class GenericReader; // for parsing
+	friend class GenericValue<Encoding,Allocator>; // for deep copying
 
 	// Implementation of Handler
 	void Null()	{ new (stack_.template Push<ValueType>()) ValueType(); }
@@ -796,6 +859,10 @@ private:
 		stack_.template Top<ValueType>()->SetArrayRaw(elements, elementCount, GetAllocator());
 	}
 
+private:
+	// Prohibit assignment
+	GenericDocument& operator=(const GenericDocument&);
+
 	void ClearStack() {
 		if (Allocator::kNeedFree)
 			while (stack_.GetSize() > 0)	// Here assumes all elements in stack array are GenericValue (Member is actually 2 GenericValue objects)
@@ -808,9 +875,23 @@ private:
 	internal::Stack<Allocator> stack_;
 	const char* parseError_;
 	size_t errorOffset_;
+#ifdef RAPIDJSON_ACCEPT_ANY_ROOT
+	bool acceptAnyRoot_;
+#endif
 };
 
 typedef GenericDocument<UTF8<> > Document;
+
+// defined here due to the dependency on GenericDocument
+template <typename Encoding, typename Allocator>
+template <typename SourceAllocator>
+inline
+GenericValue<Encoding,Allocator>::GenericValue(const GenericValue<Encoding,SourceAllocator>& rhs, Allocator& allocator)
+{
+	GenericDocument<Encoding,Allocator> d(&allocator);
+	rhs.Accept(d);
+	RawAssign(*d.stack_.template Pop<GenericValue>(1));
+}
 
 } // namespace rapidjson
 

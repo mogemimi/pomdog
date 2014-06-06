@@ -20,7 +20,8 @@ See accompanying file [third_party/libpng/LICENSE][license-libpng].
 
 ### rapidjson
 
-* [rapidjson - Google Project Hosting](https://code.google.com/p/rapidjson/)
+* [rapidjson - Google Project Hosting](https://code.google.com/p/rapidjson/) (original repository)
+* [Yet another Rapidjson GitHub mirror](https://github.com/pah/rapidjson)
 
 **License:**  
 See accompanying file [third_party/rapidjson/license.txt][license-rapidjson].

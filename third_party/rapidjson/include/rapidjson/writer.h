@@ -16,7 +16,7 @@ namespace rapidjson {
 
 //! JSON writer
 /*! Writer implements the concept Handler.
-	It generates JSON text by events to an output stream.
+	It generates JSON text by events to an output os.
 
 	User may programmatically calls the functions of a writer to generate JSON text.
 
@@ -24,17 +24,43 @@ namespace rapidjson {
 
 	for example Reader::Parse() and Document::Accept().
 
-	\tparam Stream Type of ouptut stream.
-	\tparam Encoding Encoding of both source strings and output.
+	\tparam OutputStream Type of output stream.
+	\tparam SourceEncoding Encoding of both source strings.
+	\tparam TargetEncoding Encoding of and output stream.
 	\implements Handler
 */
-template<typename Stream, typename Encoding = UTF8<>, typename Allocator = MemoryPoolAllocator<> >
+template<typename OutputStream, typename SourceEncoding = UTF8<>, typename TargetEncoding = UTF8<>, typename Allocator = MemoryPoolAllocator<> >
 class Writer {
 public:
-	typedef typename Encoding::Ch Ch;
+	typedef typename SourceEncoding::Ch Ch;
 
-	Writer(Stream& stream, Allocator* allocator = 0, size_t levelDepth = kDefaultLevelDepth) : 
-		stream_(stream), level_stack_(allocator, levelDepth * sizeof(Level)) {}
+	Writer(OutputStream& os, Allocator* allocator = 0, size_t levelDepth = kDefaultLevelDepth) : 
+		os_(os), level_stack_(allocator, levelDepth * sizeof(Level)),
+		doublePrecision_(kDefaultDoublePrecision)
+#ifdef RAPIDJSON_ACCEPT_ANY_ROOT
+		, acceptAnyRoot_(false)
+#endif
+	{}
+
+#ifdef RAPIDJSON_ACCEPT_ANY_ROOT
+	//! Accept arbitrary root elements (not only arrays and objects)
+	Writer& AcceptAnyRoot(bool yesno = true) { acceptAnyRoot_ = yesno; return *this; }
+#endif
+
+	//! Set the number of significant digits for \c double values
+	/*! When writing a \c double value to the \c OutputStream, the number
+		of significant digits is limited to 6 by default.
+		\param p maximum number of significant digits (default: 6)
+		\return The Writer itself for fluent API.
+	*/
+	Writer& SetDoublePrecision(int p = kDefaultDoublePrecision) {
+		if (p < 0) p = kDefaultDoublePrecision; // negative precision is ignored
+		doublePrecision_ = p;
+		return *this;
+	}
+
+	//! \see SetDoublePrecision()
+	int GetDoublePrecision() const { return doublePrecision_; }
 
 	//@name Implementation of Handler
 	//@{
@@ -44,7 +70,33 @@ public:
 	Writer& Uint(unsigned u)		{ Prefix(kNumberType); WriteUint(u);		return *this; }
 	Writer& Int64(int64_t i64)		{ Prefix(kNumberType); WriteInt64(i64);		return *this; }
 	Writer& Uint64(uint64_t u64)	{ Prefix(kNumberType); WriteUint64(u64);	return *this; }
+
+	//! Writes the given \c double value to the stream
+	/*!
+		The number of significant digits (the precision) to be written
+		can be set by \ref SetDoublePrecision() for the Writer:
+		\code
+		Writer<...> writer(...);
+		writer.SetDoublePrecision(12).Double(M_PI);
+		\endcode
+		\param d The value to be written.
+		\return The Writer itself for fluent API.
+	*/
 	Writer& Double(double d)		{ Prefix(kNumberType); WriteDouble(d);		return *this; }
+
+	//! Writes the given \c double value to the stream (explicit precision)
+	/*!
+		The currently set double precision is ignored in favor of the explicitly
+		given precision for this value.
+		\see Double(), SetDoublePrecision(), GetDoublePrecision()
+		\param d The value to be written
+		\param precision The number of significant digits for this value
+		\return The Writer itself for fluent API.
+	*/
+	Writer& Double(double d, int precision) {
+		int oldPrecision = GetDoublePrecision();
+		return SetDoublePrecision(precision).Double(d).SetDoublePrecision(oldPrecision);
+	}
 
 	Writer& String(const Ch* str, SizeType length, bool copy = false) {
 		(void)copy;
@@ -66,6 +118,8 @@ public:
 		RAPIDJSON_ASSERT(!level_stack_.template Top<Level>()->inArray);
 		level_stack_.template Pop<Level>(1);
 		WriteEndObject();
+		if (level_stack_.Empty())	// end of json text
+			os_.Flush();
 		return *this;
 	}
 
@@ -82,6 +136,8 @@ public:
 		RAPIDJSON_ASSERT(level_stack_.template Top<Level>()->inArray);
 		level_stack_.template Pop<Level>(1);
 		WriteEndArray();
+		if (level_stack_.Empty())	// end of json text
+			os_.Flush();
 		return *this;
 	}
 	//@}
@@ -100,21 +156,21 @@ protected:
 	static const size_t kDefaultLevelDepth = 32;
 
 	void WriteNull()  {
-		stream_.Put('n'); stream_.Put('u'); stream_.Put('l'); stream_.Put('l');
+		os_.Put('n'); os_.Put('u'); os_.Put('l'); os_.Put('l');
 	}
 
 	void WriteBool(bool b)  {
 		if (b) {
-			stream_.Put('t'); stream_.Put('r'); stream_.Put('u'); stream_.Put('e');
+			os_.Put('t'); os_.Put('r'); os_.Put('u'); os_.Put('e');
 		}
 		else {
-			stream_.Put('f'); stream_.Put('a'); stream_.Put('l'); stream_.Put('s'); stream_.Put('e');
+			os_.Put('f'); os_.Put('a'); os_.Put('l'); os_.Put('s'); os_.Put('e');
 		}
 	}
 
 	void WriteInt(int i) {
 		if (i < 0) {
-			stream_.Put('-');
+			os_.Put('-');
 			i = -i;
 		}
 		WriteUint((unsigned)i);
@@ -130,13 +186,13 @@ protected:
 
 		do {
 			--p;
-			stream_.Put(*p);
+			os_.Put(*p);
 		} while (p != buffer);
 	}
 
 	void WriteInt64(int64_t i64) {
 		if (i64 < 0) {
-			stream_.Put('-');
+			os_.Put('-');
 			i64 = -i64;
 		}
 		WriteUint64((uint64_t)i64);
@@ -152,25 +208,28 @@ protected:
 
 		do {
 			--p;
-			stream_.Put(*p);
+			os_.Put(*p);
 		} while (p != buffer);
 	}
+
+#ifdef _MSC_VER
+#define RAPIDJSON_SNPRINTF sprintf_s
+#else
+#define RAPIDJSON_SNPRINTF snprintf
+#endif
 
 	//! \todo Optimization with custom double-to-string converter.
 	void WriteDouble(double d) {
 		char buffer[100];
-#if _MSC_VER
-		int ret = sprintf_s(buffer, sizeof(buffer), "%g", d);
-#else
-		int ret = snprintf(buffer, sizeof(buffer), "%g", d);
-#endif
+		int ret = RAPIDJSON_SNPRINTF(buffer, sizeof(buffer), "%.*g", doublePrecision_, d);
 		RAPIDJSON_ASSERT(ret >= 1);
 		for (int i = 0; i < ret; i++)
-			stream_.Put(buffer[i]);
+			os_.Put(buffer[i]);
 	}
+#undef RAPIDJSON_SNPRINTF
 
 	void WriteString(const Ch* str, SizeType length)  {
-		static const char hexDigits[] = "0123456789ABCDEF";
+		static const char hexDigits[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 		static const char escape[256] = {
 #define Z16 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 			//0    1    2    3    4    5    6    7    8    9    A    B    C    D    E    F
@@ -183,28 +242,31 @@ protected:
 #undef Z16
 		};
 
-		stream_.Put('\"');
-		for (const Ch* p = str; p != str + length; ++p) {
-			if ((sizeof(Ch) == 1 || *p < 256) && escape[(unsigned char)*p])  {
-				stream_.Put('\\');
-				stream_.Put(escape[(unsigned char)*p]);
-				if (escape[(unsigned char)*p] == 'u') {
-					stream_.Put('0');
-					stream_.Put('0');
-					stream_.Put(hexDigits[(*p) >> 4]);
-					stream_.Put(hexDigits[(*p) & 0xF]);
+		os_.Put('\"');
+		GenericStringStream<SourceEncoding> is(str);
+		while (is.Tell() < length) {
+			const Ch c = is.Peek();
+			if ((sizeof(Ch) == 1 || (unsigned)c < 256) && escape[(unsigned char)c])  {
+				is.Take();
+				os_.Put('\\');
+				os_.Put(escape[(unsigned char)c]);
+				if (escape[(unsigned char)c] == 'u') {
+					os_.Put('0');
+					os_.Put('0');
+					os_.Put(hexDigits[(unsigned char)c >> 4]);
+					os_.Put(hexDigits[(unsigned char)c & 0xF]);
 				}
 			}
 			else
-				stream_.Put(*p);
+				Transcoder<SourceEncoding, TargetEncoding>::Transcode(is, os_);
 		}
-		stream_.Put('\"');
+		os_.Put('\"');
 	}
 
-	void WriteStartObject()	{ stream_.Put('{'); }
-	void WriteEndObject()	{ stream_.Put('}'); }
-	void WriteStartArray()	{ stream_.Put('['); }
-	void WriteEndArray()	{ stream_.Put(']'); }
+	void WriteStartObject()	{ os_.Put('{'); }
+	void WriteEndObject()	{ os_.Put('}'); }
+	void WriteStartArray()	{ os_.Put('['); }
+	void WriteEndArray()	{ os_.Put(']'); }
 
 	void Prefix(Type type) {
 		(void)type;
@@ -212,20 +274,29 @@ protected:
 			Level* level = level_stack_.template Top<Level>();
 			if (level->valueCount > 0) {
 				if (level->inArray) 
-					stream_.Put(','); // add comma if it is not the first element in array
+					os_.Put(','); // add comma if it is not the first element in array
 				else  // in object
-					stream_.Put((level->valueCount % 2 == 0) ? ',' : ':');
+					os_.Put((level->valueCount % 2 == 0) ? ',' : ':');
 			}
 			if (!level->inArray && level->valueCount % 2 == 0)
 				RAPIDJSON_ASSERT(type == kStringType);  // if it's in object, then even number should be a name
 			level->valueCount++;
 		}
 		else
+#ifdef RAPIDJSON_ACCEPT_ANY_ROOT
+			if (!acceptAnyRoot_)
+#endif
 			RAPIDJSON_ASSERT(type == kObjectType || type == kArrayType);
 	}
 
-	Stream& stream_;
+	OutputStream& os_;
 	internal::Stack<Allocator> level_stack_;
+	int doublePrecision_;
+#ifdef RAPIDJSON_ACCEPT_ANY_ROOT
+	bool acceptAnyRoot_;
+#endif
+
+	static const int kDefaultDoublePrecision = 6;
 
 private:
 	// Prohibit assignment for VC C4512 warning
