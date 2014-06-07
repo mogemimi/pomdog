@@ -30,7 +30,7 @@
 
 namespace Pomdog {
 
-using Details::PresentationParameters;
+using Details::RenderSystem::PresentationParameters;
 
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -244,7 +244,7 @@ void GraphicsContext::Impl::SetRenderTargets(std::vector<std::shared_ptr<RenderT
 //-----------------------------------------------------------------------
 GraphicsContext::GraphicsContext(
 	std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
-	Details::PresentationParameters const& presentationParameters,
+	PresentationParameters const& presentationParameters,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	: impl(MakeUnique<Impl>(std::move(nativeContext), presentationParameters))
 {

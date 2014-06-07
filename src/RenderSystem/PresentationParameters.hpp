@@ -18,16 +18,18 @@
 
 namespace Pomdog {
 namespace Details {
+namespace RenderSystem {
 
 class PresentationParameters {
 public:
-	DepthFormat DepthFormat;
-	std::uint32_t BackBufferWidth;
-	std::uint32_t BackBufferHeight;
-	bool IsFullScreen;
+	DepthFormat DepthFormat = DepthFormat::Depth24Stencil8;
+	std::uint32_t BackBufferWidth = 800;
+	std::uint32_t BackBufferHeight = 480;
+	bool IsFullScreen = false;
 };
 
-}// namespace Details
+}// namespace RenderSystem
+}// namespace Detauks
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SRC_RENDERSYSTEM_PRESENTATIONPARAMETERS_2A860062_8271_4B7E_A8D7_1279CEF49E8F_HPP)

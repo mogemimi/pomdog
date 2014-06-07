@@ -84,7 +84,7 @@ static std::shared_ptr<CocoaOpenGLContext> CreateOpenGLContext(DepthFormat depth
 static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 	std::shared_ptr<CocoaOpenGLContext> const& openGLContext,
 	std::weak_ptr<GameWindow> gameWindow,
-	PresentationParameters const& presentationParameters,
+	RenderSystem::PresentationParameters const& presentationParameters,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
 	POMDOG_ASSERT(openGLContext);
@@ -102,7 +102,7 @@ class CocoaGameHost::Impl final {
 public:
 	Impl(std::shared_ptr<CocoaGameWindow> const& window,
 		std::shared_ptr<SystemEventDispatcher> const& dipatcher,
-		PresentationParameters const& presentationParameters);
+		RenderSystem::PresentationParameters const& presentationParameters);
 
 	~Impl() = default;
 
@@ -161,7 +161,7 @@ private:
 //-----------------------------------------------------------------------
 CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
-	PresentationParameters const& presentationParameters)
+	RenderSystem::PresentationParameters const& presentationParameters)
 	: gameWindow(window)
 	, systemEventDispatcher(eventDispatcher)
 	, exitRequest(false)
@@ -351,7 +351,7 @@ std::shared_ptr<Pomdog::Mouse> CocoaGameHost::Impl::Mouse()
 //-----------------------------------------------------------------------
 CocoaGameHost::CocoaGameHost(std::shared_ptr<CocoaGameWindow> const& window,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
-	PresentationParameters const& presentationParameters)
+	RenderSystem::PresentationParameters const& presentationParameters)
 	: impl(MakeUnique<Impl>(window, eventDispatcher, presentationParameters))
 {}
 //-----------------------------------------------------------------------

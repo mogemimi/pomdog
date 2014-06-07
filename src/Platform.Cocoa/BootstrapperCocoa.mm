@@ -21,18 +21,18 @@ void BootstrapperCocoa::BeginRun(NSWindow* nativeWindow)
 	auto eventDispatcher = std::make_shared<SystemEventDispatcher>();
 
 	POMDOG_ASSERT(nativeWindow != nil);
-	auto window = std::make_shared<CocoaGameWindow>(nativeWindow, eventDispatcher);
-	gameWindow = window;
+	gameWindow = std::make_shared<CocoaGameWindow>(nativeWindow, eventDispatcher);
+
+	using Details::RenderSystem::PresentationParameters;
 	
 	PresentationParameters presentationParameters;
 	presentationParameters.DepthFormat = DepthFormat::Depth24Stencil8;
 	auto clientBounds = gameWindow->ClientBounds();
 	presentationParameters.BackBufferWidth = clientBounds.Width;
 	presentationParameters.BackBufferHeight = clientBounds.Height;
-	presentationParameters.IsFullScreen = false; ///@todo Not implemented.
+	presentationParameters.IsFullScreen = false;
 	
-	auto host = std::make_shared<CocoaGameHost>(window, eventDispatcher, presentationParameters);
-	gameHost = host;
+	gameHost = std::make_shared<CocoaGameHost>(gameWindow, eventDispatcher, presentationParameters);
 }
 //-----------------------------------------------------------------------
 void BootstrapperCocoa::EndRun()

@@ -31,10 +31,11 @@ namespace Pomdog {
 
 class Game;
 class GameHost;
-class GameWindow;
 
 namespace Details {
 namespace Cocoa {
+
+class CocoaGameWindow;
 
 /// @addtogroup Framework
 /// @{
@@ -67,8 +68,8 @@ public:
 	}
 	
 private:
+	std::shared_ptr<CocoaGameWindow> gameWindow;
 	std::shared_ptr<GameHost> gameHost;
-	std::shared_ptr<GameWindow> gameWindow;
 	
 private:
 	void BeginRun(NSWindow* nativeWindow);
