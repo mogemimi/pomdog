@@ -156,7 +156,7 @@ void LightningTestGame::Initialize()
 		rootNode->AddChild(node);
 	}
 	
-	touchPoint = {300, 0};
+	touchPoint = {0, -300};
 	
 	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this] {
 		auto gameWindow = gameHost->Window();

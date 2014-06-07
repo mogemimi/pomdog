@@ -253,11 +253,15 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 	
 	POMDOG_ASSERT(texture);
 
-	if (spriteQueues.empty() || (textures.back() != texture)) {
+	if (spriteQueues.empty()
+		|| (textures.back() != texture)
+		|| (spriteQueues.back().size() >= MaxBatchSize)) {
 		textures.push_back(texture);
 		spriteQueues.push_back({});
 		spriteQueues.back().reserve(MinBatchSize);
 	}
+	
+	POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
 	
 	POMDOG_ASSERT(layerDepth >= 0.0f);
 	POMDOG_ASSERT(layerDepth <= 1.0f);
@@ -272,7 +276,7 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 	info.Color = color.ToVector4();
 	
 	spriteQueues.back().push_back(std::move(info));
-	POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
+	POMDOG_ASSERT(spriteQueues.back().size() <= MaxBatchSize);
 }
 //-----------------------------------------------------------------------
 void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
@@ -294,6 +298,8 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 		spriteQueues.back().reserve(MinBatchSize);
 	}
 	
+	POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
+	
 	POMDOG_ASSERT(layerDepth >= 0.0f);
 	POMDOG_ASSERT(layerDepth <= 1.0f);
 	
@@ -307,7 +313,7 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 	info.Color = color.ToVector4();
 	
 	spriteQueues.back().push_back(std::move(info));
-	POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
+	POMDOG_ASSERT(spriteQueues.back().size() <= MaxBatchSize);
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
