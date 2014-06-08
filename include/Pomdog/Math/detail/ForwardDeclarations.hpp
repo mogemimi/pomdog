@@ -77,7 +77,7 @@ class Color;
 class Rectangle;
 
 // Enumerations:
-enum class ContainmentType: std::uint16_t;
+enum class ContainmentType: std::uint8_t;
 
 }// namespace Pomdog
 

@@ -17,7 +17,7 @@
 
 namespace Pomdog {
 
-enum class ContainmentType: std::uint16_t {
+enum class ContainmentType: std::uint8_t {
 	///@~Japanese
 	/// @brief 境界ボリュームが別の境界ボリュームを完全に内包していることを示します。
 	Contains,

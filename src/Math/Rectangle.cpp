@@ -8,6 +8,7 @@
 
 #include <Pomdog/Math/Rectangle.hpp>
 #include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Math/ContainmentType.hpp>
 
 namespace Pomdog {
 
@@ -83,6 +84,66 @@ void Rectangle::Offset(Point2D const& offset)
 {
 	X += offset.X;
 	Y += offset.Y;
+}
+//-----------------------------------------------------------------------
+ContainmentType Rectangle::Contains(Point2D const& point) const
+{
+	if (point.X < Left()
+		|| point.Y < Top()
+		|| point.X > Right()
+		|| point.Y < Bottom())
+	{
+		return ContainmentType::Disjoint;
+	}
+	
+	if (point.X == Left()
+		|| point.Y == Top()
+		|| point.X == Right()
+		|| point.Y == Bottom())
+	{
+		return ContainmentType::Intersects;
+	}
+	
+	return ContainmentType::Contains;
+}
+//-----------------------------------------------------------------------
+ContainmentType Rectangle::Contains(Rectangle const& rect) const
+{
+	if (rect.Right() < Left()
+		|| rect.Left() > Right()
+		|| rect.Bottom() < Top()
+		|| rect.Top() > Bottom())
+	{
+		return ContainmentType::Disjoint;
+	}
+	
+	if (rect.Left() >= Left()
+		&& rect.Right() <= Right()
+		&& rect.Top() >= Top()
+		&& rect.Bottom() <= Bottom())
+	{
+		return ContainmentType::Contains;
+	}
+
+	return ContainmentType::Intersects;
+}
+//-----------------------------------------------------------------------
+bool Rectangle::Intersects(Point2D const& point) const
+{
+	return point.X >= X && point.X <= (X + Width)
+		&& point.Y >= Y && point.Y <= (Y + Height);
+}
+//-----------------------------------------------------------------------
+bool Rectangle::Intersects(Rectangle const& rect) const
+{
+	POMDOG_ASSERT(Left() <= Right());
+	POMDOG_ASSERT(Top() <= Bottom());
+	POMDOG_ASSERT(rect.Left() <= rect.Right());
+
+	return Left() > rect.Right()
+		|| Right() < rect.Left()
+		|| Top() > rect.Bottom()
+		|| Bottom() < rect.Top();
 }
 
 }// namespace Pomdog
