@@ -18,7 +18,6 @@
 #include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
-namespace Details {
 
 enum class OptionalType {
 	NullOptional,
@@ -123,7 +122,6 @@ inline constexpr Optional<T> MakeOptional(T v)
 	return Optional<T>(v);
 }
 
-}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SRC_UTILITY_OPTIONAL_D43800AB_794D_41B0_8820_203F5CA7D6CB_HPP)

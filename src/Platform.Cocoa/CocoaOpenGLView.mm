@@ -34,6 +34,10 @@
 	}
 	return self;
 }
+- (BOOL)isFlipped
+{
+	return TRUE;
+}
 //-----------------------------------------------------------------------
 - (void)_surfaceNeedsUpdate:(NSNotification*)notification
 {

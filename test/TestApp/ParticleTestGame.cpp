@@ -141,6 +141,7 @@ void ParticleTestGame::Initialize()
 	primitiveGrid = MakeUnique<PrimitiveGrid>(gameHost, editorColorScheme.GuideLine, editorColorScheme.Grid);
 	spriteBatch = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
 	fxaa = MakeUnique<FXAA>(gameHost);
+	backgroundPlane = MakeUnique<SceneEditor::GradientPlane>(gameHost);
 	
 	rootNode = std::make_shared<HierarchyNode>();
 	{
@@ -157,6 +158,34 @@ void ParticleTestGame::Initialize()
 	{
 		particleSystem.emitter = CreateEmitterFireBlock();
 	}
+	
+	{
+		auto node = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
+		node->bounds = {0, 0, window->ClientBounds().Width, window->ClientBounds().Height};
+		node->drawOrder = 1.0f;
+		node->cameraObject = mainCamera;
+	
+		scenePanel = node;
+		hierarchy.AddChild(std::move(node));
+	}
+	{
+		auto slider = std::make_shared<UI::Slider>(1, 500);
+		slider->drawOrder = 0.0f;
+		slider->RenderTransform.Position = Vector2{35, 40};
+		slider->Value(34);
+	
+		slider1 = slider;
+		hierarchy.AddChild(std::move(slider));
+	}
+	{
+		auto slider = std::make_shared<UI::Slider>(-4, 4);
+		slider->drawOrder = 0.0f;
+		slider->RenderTransform.Position = Vector2{35, 65};
+		slider->Value(1.2);
+	
+		slider2 = slider;
+		hierarchy.AddChild(std::move(slider));
+	}
 }
 //-----------------------------------------------------------------------
 void ParticleTestGame::Update()
@@ -164,13 +193,11 @@ void ParticleTestGame::Update()
 	auto clock = gameHost->Clock();
 	auto mouse = gameHost->Mouse();
 	{
-		auto transform = mainCamera->Component<Transform2D>();
-		auto camera = mainCamera->Component<Camera2D>();
-		
-		if (transform && camera)
-		{
-			cameraView.Input(mouse->State(), *clock, graphicsContext->Viewport().Bounds, *transform, *camera);
-		}
+		hierarchy.Touch(mouse->State());
+	}
+	{
+		//particleSystem.emitter.EmissionRate = static_cast<std::uint16_t>(slider1->Value());
+		//particleSystem.emitter.GravityModifier = slider2->Value();
 	}
 	{
 		static auto duration = DurationSeconds(0);
@@ -254,6 +281,22 @@ void ParticleTestGame::DrawSprites()
 	graphicsContext->SetBlendState(blendStateNonPremultiplied);
 }
 //-----------------------------------------------------------------------
+void ParticleTestGame::DrawGUI()
+{
+//	POMDOG_ASSERT(spriteBatch);
+//	auto viewportWidth = graphicsContext->Viewport().Bounds.Width;
+//	auto viewportHeight = graphicsContext->Viewport().Bounds.Height;
+//
+//	auto translation = Matrix3x3::CreateTranslation(Vector2(-viewportWidth/2, viewportHeight/2));
+//	
+//	spriteBatch->Begin(translation);
+//	{
+//		SpriteBatchDrawingContext drawingContext(*spriteBatch, pomdogTexture);
+//		hierarchy.Draw(drawingContext);
+//	}
+//	spriteBatch->End();
+}
+//-----------------------------------------------------------------------
 void ParticleTestGame::Draw()
 {
 	constexpr bool enableFxaa = true;
@@ -263,14 +306,17 @@ void ParticleTestGame::Draw()
 	}
 	
 	graphicsContext->Clear(editorColorScheme.Background);
+	backgroundPlane->Draw();
 	
 	//graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();
-	
+
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget();
 		fxaa->Draw(*graphicsContext, renderTarget);
 	}
+	
+	DrawGUI();
 	
 	graphicsContext->Present();
 }

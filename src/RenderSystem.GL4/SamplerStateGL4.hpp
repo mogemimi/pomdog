@@ -17,7 +17,7 @@
 #include "../RenderSystem/NativeSamplerState.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>
-#include "../Utility/Optional.hpp"
+#include <Pomdog/Utility/Optional.hpp>
 
 namespace Pomdog {
 namespace Details {

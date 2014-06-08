@@ -132,5 +132,7 @@
 #include "Input/KeyState.hpp"
 #include "Input/Mouse.hpp"
 #include "Input/MouseState.hpp"
+#include "Input/TouchLocation.hpp"
+#include "Input/TouchLocationState.hpp"
 
 #endif // !defined(POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP)

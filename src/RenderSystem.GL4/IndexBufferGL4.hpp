@@ -16,8 +16,8 @@
 #include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>
+#include <Pomdog/Utility/Optional.hpp>
 #include "../RenderSystem/NativeIndexBuffer.hpp"
-#include "../Utility/Optional.hpp"
 
 namespace Pomdog {
 namespace Details {

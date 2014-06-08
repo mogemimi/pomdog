@@ -14,8 +14,12 @@
 #endif
 
 #include <Pomdog/Pomdog.hpp>
-#include "SceneEditor/CameraView2D.hpp"
 #include "SceneEditor/EditorColorScheme.hpp"
+#include "SceneEditor/GradientPlane.hpp"
+#include "UI/DrawingContext.hpp"
+#include "UI/UIElementHierarchy.hpp"
+#include "UI/ScenePanel.hpp"
+#include "UI/Slider.hpp"
 #include "ParticleSystem.hpp"
 
 namespace TestApp {
@@ -41,6 +45,7 @@ public:
 	
 private:
 	void DrawSprites();
+	void DrawGUI();
 
 private:
 	std::shared_ptr<GameHost> gameHost;
@@ -58,8 +63,12 @@ private:
 	std::shared_ptr<BlendState> blendStateAdditive;
 	std::shared_ptr<BlendState> blendStateNonPremultiplied;
 	
-	SceneEditor::CameraView2D cameraView;
 	SceneEditor::EditorColorScheme editorColorScheme;
+	std::unique_ptr<SceneEditor::GradientPlane> backgroundPlane;
+	UI::UIElementHierarchy hierarchy;
+	std::shared_ptr<UI::ScenePanel> scenePanel;
+	std::shared_ptr<UI::Slider> slider1;
+	std::shared_ptr<UI::Slider> slider2;
 	
 	GameWorld gameWorld;
 	std::shared_ptr<HierarchyNode> rootNode;

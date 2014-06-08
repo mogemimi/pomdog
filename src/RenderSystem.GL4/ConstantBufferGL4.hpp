@@ -16,8 +16,8 @@
 #include <cstdint>
 #include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Utility/detail/Tagged.hpp>
+#include <Pomdog/Utility/Optional.hpp>
 #include "../RenderSystem/NativeConstantBuffer.hpp"
-#include "../Utility/Optional.hpp"
 
 namespace Pomdog {
 namespace Details {

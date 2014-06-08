@@ -49,6 +49,7 @@ CocoaGameWindow::CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDi
 	
 	// Create WindowDelegate
 	viewDelegate = [[CocoaGameViewDelegate alloc] initWithEventDispatcher:eventDispatcher];
+	[viewDelegate setView:openGLView];
 	[openGLView setDelegate:viewDelegate];
 }
 //-----------------------------------------------------------------------
@@ -58,6 +59,8 @@ CocoaGameWindow::~CocoaGameWindow()
 	[nativeWindow setDelegate:nil];
 	
 	// Remove OpenGLView from window:
+	[viewDelegate setView:nil];
+	[openGLView setDelegate:nil];
 	[openGLView removeFromSuperview];
 	
 #if !__has_feature(objc_arc)
@@ -125,7 +128,7 @@ void CocoaGameWindow::ClientBounds(Rectangle const& clientBounds)
 
 	NSSize windowSize = [nativeWindow frame].size;
 	NSSize screenSize = [[nativeWindow screen] visibleFrame].size;
-	
+
 	NSPoint origin;
 	origin.x = clientBounds.X;
 	origin.y = (screenSize.height - (clientBounds.Y + windowSize.height));

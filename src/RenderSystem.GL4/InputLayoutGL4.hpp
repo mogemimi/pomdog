@@ -19,8 +19,8 @@
 #include <limits>
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>
+#include <Pomdog/Utility/Optional.hpp>
 #include "../RenderSystem/NativeInputLayout.hpp"
-#include "../Utility/Optional.hpp"
 #include "TypesafeGL4.hpp"
 
 namespace Pomdog {

@@ -17,8 +17,8 @@
 #include <vector>
 #include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include <Pomdog/Utility/Optional.hpp>
 #include "../RenderSystem/NativeEffectPass.hpp"
-#include "../Utility/Optional.hpp"
 #include "TypesafeGL4.hpp"
 
 namespace Pomdog {

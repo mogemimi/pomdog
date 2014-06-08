@@ -25,6 +25,8 @@
 - (void)resetMouse:(std::shared_ptr<Pomdog::Details::Cocoa::CocoaMouse>)mouse;
 - (void)resetMouse;
 
+@property (nonatomic, retain) NSView* view;
+
 - (void)viewNeedsUpdateSurface;
 - (void)viewWillStartLiveResize;
 - (void)viewDidEndLiveResize;

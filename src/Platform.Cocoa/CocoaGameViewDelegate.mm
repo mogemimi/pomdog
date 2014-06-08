@@ -19,7 +19,10 @@ namespace {
 
 static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 {
-	return {static_cast<std::int32_t>(point.x), static_cast<std::int32_t>(point.y)};
+	//return Pomdog::Point2D(point.x, point.y);
+	
+	///@todo badcode
+	return Pomdog::Point2D(point.x - 2, point.y - 2);
 }
 
 }// unnamed namespace
@@ -28,7 +31,11 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 {
 	std::shared_ptr<Pomdog::Details::SystemEventDispatcher> eventDispatcher;
 	std::shared_ptr<Pomdog::Details::Cocoa::CocoaMouse> mouse_;
+	NSView* view_;
 }
+
+@synthesize view = view_;
+
 //-----------------------------------------------------------------------
 - (id)initWithEventDispatcher:(std::shared_ptr<Pomdog::Details::SystemEventDispatcher>)dispatcher
 {
@@ -56,24 +63,27 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 - (void)mouseEntered:(NSEvent *)theEvent
 {
 	if (mouse_) {
-		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position(ToPoint2D(locationInWindow));
+		POMDOG_ASSERT(view_ != nil);
+		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
+		mouse_->Position(ToPoint2D(locationInView));
 	}
 }
 //-----------------------------------------------------------------------
 -(void)mouseMoved:(NSEvent *)theEvent
 {
 	if (mouse_) {
-		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position(ToPoint2D(locationInWindow));
+		POMDOG_ASSERT(view_ != nil);
+		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
+		mouse_->Position(ToPoint2D(locationInView));
 	}
 }
 //-----------------------------------------------------------------------
 - (void)mouseExited:(NSEvent *)theEvent
 {
 	if (mouse_) {
-		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position(ToPoint2D(locationInWindow));
+		POMDOG_ASSERT(view_ != nil);
+		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
+		mouse_->Position(ToPoint2D(locationInView));
 	}
 }
 //-----------------------------------------------------------------------
@@ -81,9 +91,10 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 {
 	if (mouse_) {
 		mouse_->LeftButton(ButtonState::Pressed);
-		
-		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position(ToPoint2D(locationInWindow));
+	
+		POMDOG_ASSERT(view_ != nil);
+		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
+		mouse_->Position(ToPoint2D(locationInView));
 	}
 }
 //-----------------------------------------------------------------------
@@ -92,8 +103,9 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 	if (mouse_) {
 		mouse_->LeftButton(ButtonState::Pressed);
 		
-		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position(ToPoint2D(locationInWindow));
+		POMDOG_ASSERT(view_ != nil);
+		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
+		mouse_->Position(ToPoint2D(locationInView));
 	}
 }
 //-----------------------------------------------------------------------
@@ -102,8 +114,9 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 	if (mouse_) {
 		mouse_->LeftButton(ButtonState::Released);
 		
-		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position(ToPoint2D(locationInWindow));
+		POMDOG_ASSERT(view_ != nil);
+		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
+		mouse_->Position(ToPoint2D(locationInView));
 	}
 }
 //-----------------------------------------------------------------------
@@ -112,8 +125,9 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 	if (mouse_) {
 		mouse_->RightButton(ButtonState::Pressed);
 		
-		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position(ToPoint2D(locationInWindow));
+		POMDOG_ASSERT(view_ != nil);
+		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
+		mouse_->Position(ToPoint2D(locationInView));
 	}
 }
 //-----------------------------------------------------------------------
@@ -122,8 +136,9 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 	if (mouse_) {
 		mouse_->RightButton(ButtonState::Pressed);
 		
-		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position(ToPoint2D(locationInWindow));
+		POMDOG_ASSERT(view_ != nil);
+		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
+		mouse_->Position(ToPoint2D(locationInView));
 	}
 }
 //-----------------------------------------------------------------------
@@ -132,8 +147,9 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 	if (mouse_) {
 		mouse_->RightButton(ButtonState::Released);
 		
-		NSPoint locationInWindow = [theEvent locationInWindow];
-		mouse_->Position(ToPoint2D(locationInWindow));
+		POMDOG_ASSERT(view_ != nil);
+		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
+		mouse_->Position(ToPoint2D(locationInView));
 	}
 }
 //-----------------------------------------------------------------------
@@ -155,8 +171,9 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 		mouse_->XButton2(ButtonState::Pressed);
 	}
 	
-	NSPoint locationInWindow = [theEvent locationInWindow];
-	mouse_->Position(ToPoint2D(locationInWindow));
+	POMDOG_ASSERT(view_ != nil);
+	NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
+	mouse_->Position(ToPoint2D(locationInView));
 }
 //-----------------------------------------------------------------------
 -(void)otherMouseDragged:(NSEvent *)theEvent
@@ -177,8 +194,9 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 		mouse_->XButton2(ButtonState::Pressed);
 	}
 	
-	NSPoint locationInWindow = [theEvent locationInWindow];
-	mouse_->Position(ToPoint2D(locationInWindow));
+	POMDOG_ASSERT(view_ != nil);
+	NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
+	mouse_->Position(ToPoint2D(locationInView));
 }
 //-----------------------------------------------------------------------
 -(void)otherMouseUp:(NSEvent *)theEvent
@@ -199,8 +217,9 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 		mouse_->XButton2(ButtonState::Released);
 	}
 	
-	NSPoint locationInWindow = [theEvent locationInWindow];
-	mouse_->Position(ToPoint2D(locationInWindow));
+	POMDOG_ASSERT(view_ != nil);
+	NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
+	mouse_->Position(ToPoint2D(locationInView));
 }
 //-----------------------------------------------------------------------
 -(void)scrollWheel:(NSEvent *)theEvent

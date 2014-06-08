@@ -58,6 +58,29 @@ static void DrawSpriteLine(SpriteBatch & spriteBatch, SpriteLine const& spriteLi
 	spriteBatch.Draw(spriteLine.Texture, point2, spriteLine.EndRectangle,
 		color, rotation, {0.0f, 0.5f}, thicknessScale, layerDepth);
 }
+//-----------------------------------------------------------------------
+class SpriteBatchDrawingContext final: public UI::DrawingContext {
+private:
+	SpriteBatch & spriteBatch;
+	std::shared_ptr<Texture2D> texture;
+	
+public:
+	explicit SpriteBatchDrawingContext(SpriteBatch & spriteBatchIn, std::shared_ptr<Texture2D> const& textureIn)
+		: spriteBatch(spriteBatchIn)
+		, texture(textureIn)
+	{
+	}
+	
+	void DrawRectangle(Color const& color, Rectangle const& rectangle)
+	{
+		spriteBatch.Draw(texture, Vector2(rectangle.X, -rectangle.Y),
+			Rectangle{0, 0, 1, 1}, color, 0, {0.0f, 1.0f}, Vector2(rectangle.Width, rectangle.Height), 0.0f);
+	}
+	
+	void DrawLine(Color const& color, float penSize, Point2D const& point1, Point2D const& point2)
+	{
+	}
+};
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
@@ -75,12 +98,12 @@ void LightningTestGame::Initialize()
 	auto window = gameHost->Window();
 	window->Title("TestApp - Enjoy Game Dev, Have Fun.");
 	window->AllowPlayerResizing(true);
-	{
-		auto bounds = window->ClientBounds();
-		bounds.Width = 1280;
-		bounds.Height = 720;
-		window->ClientBounds(bounds);
-	}
+//	{
+//		auto bounds = window->ClientBounds();
+//		bounds.Width = 1280;
+//		bounds.Height = 720;
+//		window->ClientBounds(bounds);
+//	}
 	
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
@@ -92,6 +115,7 @@ void LightningTestGame::Initialize()
 		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 		graphicsContext->SetBlendState(blendState);
 		texture = assets->Load<Texture2D>("Particles/lightning.png");
+		pomdogTexture = assets->Load<Texture2D>("pomdog.png");
 		
 		blendStateAdditive = BlendState::CreateAdditive(graphicsDevice);
 		blendStateNonPremultiplied = BlendState::CreateNonPremultiplied(graphicsDevice);
@@ -169,32 +193,36 @@ void LightningTestGame::Initialize()
 		auto viewport = graphicsContext->Viewport();
 		fxaa->ResetViewportSize(viewport.Bounds);
 	});
-}
-//-----------------------------------------------------------------------
-void LightningTestGame::Update()
-{
-	auto clock = gameHost->Clock();
-	auto mouse = gameHost->Mouse();
+	
 	{
-		auto transform = mainCamera->Component<Transform2D>();
-		auto camera = mainCamera->Component<Camera2D>();
-		
-		if (transform && camera)
-		{
-			cameraView.Input(mouse->State(), *clock, graphicsContext->Viewport().Bounds, *transform, *camera);
-		}
+		auto node = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
+		node->bounds = {0, 0, window->ClientBounds().Width, window->ClientBounds().Height};
+		node->drawOrder = 1.0f;
+		node->cameraObject = mainCamera;
+	
+		scenePanel = node;
+		hierarchy.AddChild(std::move(node));
 	}
 	{
-		static auto duration = DurationSeconds(0);
-		
-		if (clock->TotalGameTime() - duration > DurationSeconds(0.2)) {
-			gameHost->Window()->Title(StringFormat("%f fps", clock->FrameRate()));
-			duration = clock->TotalGameTime();
-		}
+		auto slider = std::make_shared<UI::Slider>(0, 100);
+		slider->drawOrder = 0.0f;
+		slider->RenderTransform.Position = Vector2{35, 40};
+		slider->Value(34);
+	
+		slider1 = slider;
+		hierarchy.AddChild(std::move(slider));
 	}
 	{
-		if (mouse->State().RightButton == ButtonState::Pressed)
-		{
+		auto slider = std::make_shared<UI::Slider>(0.1, 4.0);
+		slider->drawOrder = 0.0f;
+		slider->RenderTransform.Position = Vector2{35, 65};
+		slider->Value(1.2);
+	
+		slider2 = slider;
+		hierarchy.AddChild(std::move(slider));
+	}
+	{
+		scenePanel->SceneTouch.Connect([this](Vector2 const& positionInView) {
 			auto transform = mainCamera->Component<Transform2D>();
 			auto camera = mainCamera->Component<Camera2D>();
 		
@@ -202,11 +230,34 @@ void LightningTestGame::Update()
 			auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix3D(*transform, *camera));
 			
 			auto position = Vector3::Transform(Vector3(
-					mouse->State().Position.X - graphicsContext->Viewport().Width()/2,
-					mouse->State().Position.Y - graphicsContext->Viewport().Height()/2,
-					0), inverseViewMatrix3D);
+				positionInView.X - graphicsContext->Viewport().Width() / 2,
+				positionInView.Y - graphicsContext->Viewport().Height() / 2,
+				0), inverseViewMatrix3D);
 
 			touchPoint = Vector2{position.X, position.Y};
+		});
+	}
+}
+//-----------------------------------------------------------------------
+void LightningTestGame::Update()
+{
+	auto clock = gameHost->Clock();
+	auto mouse = gameHost->Mouse();
+	{
+		hierarchy.Touch(mouse->State());
+		hierarchy.UpdateAnimation(clock->FrameDuration());
+	}
+	{
+		beamSystem.emitter.InterpolationPoints = static_cast<std::uint16_t>(slider1->Value());
+		beamSystem.emitter.StartThickness = slider2->Value();
+	}
+	{
+		static auto duration = DurationSeconds(0);
+		
+		if (clock->TotalGameTime() - duration > DurationSeconds(0.2)) {
+			gameHost->Window()->Title(StringFormat("%f fps", clock->FrameRate()));
+			duration = clock->TotalGameTime();
+			//Log::Info(StringFormat("Mouse: %d, %d", mouse->State().Position.X, mouse->State().Position.Y));
 		}
 	}
 	{
@@ -270,6 +321,22 @@ void LightningTestGame::DrawSprites()
 	graphicsContext->SetBlendState(blendStateNonPremultiplied);
 }
 //-----------------------------------------------------------------------
+void LightningTestGame::DrawGUI()
+{
+	POMDOG_ASSERT(spriteBatch);
+	auto viewportWidth = graphicsContext->Viewport().Bounds.Width;
+	auto viewportHeight = graphicsContext->Viewport().Bounds.Height;
+
+	auto translation = Matrix3x3::CreateTranslation(Vector2(-viewportWidth/2, viewportHeight/2));
+	
+	spriteBatch->Begin(translation);
+	{
+		SpriteBatchDrawingContext drawingContext(*spriteBatch, pomdogTexture);
+		hierarchy.Draw(drawingContext);
+	}
+	spriteBatch->End();
+}
+//-----------------------------------------------------------------------
 void LightningTestGame::Draw()
 {
 	constexpr bool enableFxaa = true;
@@ -288,6 +355,8 @@ void LightningTestGame::Draw()
 		graphicsContext->SetRenderTarget();
 		fxaa->Draw(*graphicsContext, renderTarget);
 	}
+	
+	DrawGUI();
 	
 	graphicsContext->Present();
 }

@@ -80,8 +80,8 @@ public:
 	FloatingPointMatrix3x3 operator*(T scaleFactor) const;
 	FloatingPointMatrix3x3 operator/(T scaleFactor) const;
 
-	bool operator == (FloatingPointMatrix3x3 const& other) const;
-	bool operator != (FloatingPointMatrix3x3 const& other) const;
+	bool operator==(FloatingPointMatrix3x3 const& other) const;
+	bool operator!=(FloatingPointMatrix3x3 const& other) const;
 	
 	// Function-call operators:
 	T const& operator()(std::size_t row, std::size_t column) const;

@@ -16,7 +16,7 @@
 #include <memory>
 #include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Utility/detail/Tagged.hpp>
-#include "../Utility/Optional.hpp"
+#include <Pomdog/Utility/Optional.hpp>
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 
 namespace Pomdog {
