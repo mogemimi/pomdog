@@ -172,6 +172,12 @@ T FloatingPointVector4<T>::Distance(FloatingPointVector4 const& a, FloatingPoint
 }
 //-----------------------------------------------------------------------
 template <typename T>
+T FloatingPointVector4<T>::DistanceSquared(FloatingPointVector4 const& a, FloatingPointVector4 const& b)
+{
+	return (a - b).LengthSquared();
+}
+//-----------------------------------------------------------------------
+template <typename T>
 T FloatingPointVector4<T>::Dot(FloatingPointVector4 const& a, FloatingPointVector4 const& b)
 {
 	return a.X * b.X + a.Y * b.Y + a.Z * b.Z + a.W * b.W;

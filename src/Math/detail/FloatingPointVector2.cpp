@@ -139,6 +139,12 @@ T FloatingPointVector2<T>::Distance(FloatingPointVector2 const& a, FloatingPoint
 }
 //-----------------------------------------------------------------------
 template <typename T>
+T FloatingPointVector2<T>::DistanceSquared(FloatingPointVector2 const& a, FloatingPointVector2 const& b)
+{
+	return (a - b).LengthSquared();
+}
+//-----------------------------------------------------------------------
+template <typename T>
 T FloatingPointVector2<T>::Dot(FloatingPointVector2 const& a, FloatingPointVector2 const& b)
 {
 	return a.X * b.X + a.Y * b.Y;

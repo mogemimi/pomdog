@@ -91,6 +91,10 @@ public:
 	static T Distance(FloatingPointVector4 const& a, FloatingPointVector4 const& b);
 
 	///@~Japanese
+	/// @brief 2 つのベクトル間の距離の 2 乗を計算します。
+	static T DistanceSquared(FloatingPointVector4 const& a, FloatingPointVector4 const& b);
+
+	///@~Japanese
 	/// @brief 2 つのベクトルの内積を計算します。
 	static T Dot(FloatingPointVector4 const& a, FloatingPointVector4 const& b);
 
