@@ -169,6 +169,8 @@
       '<@(pomdog_expr_dir)/TexturePacker/TextureAtlasLoader.cpp',
       '<@(pomdog_expr_dir)/TexturePacker/TextureAtlasLoader.hpp',
 
+      '<@(pomdog_expr_dir)/Tween/EasingHelper.hpp',
+
       '<@(pomdog_expr_dir)/Rendering/ParticleBatchCommand.cpp',
       '<@(pomdog_expr_dir)/Rendering/ParticleBatchCommand.hpp',
       '<@(pomdog_expr_dir)/Rendering/PrimitiveCommand.cpp',

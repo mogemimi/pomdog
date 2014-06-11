@@ -99,6 +99,8 @@
 #include "TexturePacker/TextureAtlas.hpp"
 #include "TexturePacker/TextureAtlasLoader.hpp"
 
+#include "Tween/EasingHelper.hpp"
+
 #include "Rendering/ParticleBatchCommand.hpp"
 #include "Rendering/RenderCommand.hpp"
 #include "Rendering/Renderer.hpp"
