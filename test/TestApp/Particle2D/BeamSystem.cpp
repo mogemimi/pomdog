@@ -15,10 +15,17 @@ static std::vector<Vector2> CreateJaggedLine(
 	BeamEmitter const& emitter,
 	std::uint32_t interpolationPoints,
 	Vector2 const& start, Vector2 const& end, std::mt19937 & random)
-{	
+{
+	///@todo Not implemented
+	POMDOG_ASSERT_MESSAGE(Vector2::DistanceSquared(start, end) > std::numeric_limits<float>::epsilon(),
+		"TODO: Not implemented");
+
 	auto tangent = end - start;
 	auto normal = Vector2{-tangent.Y, tangent.X};
 
+	POMDOG_ASSERT(tangent.LengthSquared() > std::numeric_limits<float>::epsilon());
+	POMDOG_ASSERT(normal.LengthSquared() > std::numeric_limits<float>::epsilon());
+	
 	std::vector<float> positions;
 
 	for (size_t i = 0; i < interpolationPoints; ++i) {
@@ -106,8 +113,9 @@ static std::vector<Vector2> CreateBranch(BeamEmitter const& emitter,
 	auto distribution = branching.SpreadRange;
 	auto lengthSq1 = (sourceEnd - start).LengthSquared();
 	auto lengthSq2 = (sourceEnd - sourceStart).LengthSquared();
-	POMDOG_ASSERT(lengthSq2 > 0);
-	POMDOG_ASSERT(lengthSq1 > 0);
+	POMDOG_ASSERT(lengthSq2 > std::numeric_limits<float>::epsilon());
+	POMDOG_ASSERT(lengthSq1 > std::numeric_limits<float>::epsilon());
+	
 	auto amount = (lengthSq1 / (lengthSq2 * (middlePointDistribution.max() - middlePointDistribution.min())));
 	
 	Vector2 end = sourceEnd + (Vector2::Normalize(normal) * distribution(random) * amount);
