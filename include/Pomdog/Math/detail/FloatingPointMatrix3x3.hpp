@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,10 +13,12 @@
 #	pragma once
 #endif
 
+#include <cstddef>
+#include <cstdint>
+#include <cfloat>
 #include <type_traits>
 #include <array>
 #include "../../Config/Export.hpp"
-#include "../../Config/FundamentalTypes.hpp"
 #include "ForwardDeclarations.hpp"
 
 namespace Pomdog {
@@ -28,7 +30,7 @@ namespace Details {
 /// @{
 
 ///@~Japanese
-/// @brief 4x4 の浮動小数点数の行列を定義します。
+/// @brief 3x3 の浮動小数点数の行列を定義します。
 template <typename T>
 class POMDOG_EXPORT FloatingPointMatrix3x3 {
 public:
@@ -155,7 +157,7 @@ public:
 	/// @brief スケーリング行列を作成します。
 	static FloatingPointMatrix3x3
 	CreateScale(T scale);
-	
+
 	///@~Japanese
 	/// @brief スケーリング行列を作成します。
 	static void

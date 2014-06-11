@@ -144,21 +144,19 @@ FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator/(T scaleFactor) 
 template <typename T>
 bool FloatingPointQuaternion<T>::operator==(FloatingPointQuaternion const& other) const
 {
-	return (
-		X == other.X &&
-		Y == other.Y &&
-		Z == other.Z &&
-		W == other.W);
+	return X == other.X
+		&& Y == other.Y
+		&& Z == other.Z
+		&& W == other.W;
 }
 //-----------------------------------------------------------------------
 template <typename T>
 bool FloatingPointQuaternion<T>::operator!=(FloatingPointQuaternion const& other) const
 {
-	return (
-		X != other.X ||
-		Y != other.Y ||
-		Z != other.Z ||
-		W != other.W);
+	return X != other.X
+		|| Y != other.Y
+		|| Z != other.Z
+		|| W != other.W;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -170,7 +168,7 @@ T FloatingPointQuaternion<T>::Length() const
 template <typename T>
 T FloatingPointQuaternion<T>::LengthSquared() const
 {
-	return (X * X + Y * Y + Z * Z + W * W);
+	return X * X + Y * Y + Z * Z + W * W;
 }
 //-----------------------------------------------------------------------
 template <typename T>

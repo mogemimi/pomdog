@@ -31,6 +31,9 @@ template <typename RealType>
 class POMDOG_EXPORT FloatingPointMatrix2x2;
 
 template <typename RealType>
+class POMDOG_EXPORT FloatingPointMatrix3x2;
+
+template <typename RealType>
 class POMDOG_EXPORT FloatingPointMatrix3x3;
 
 template <typename RealType>
@@ -60,6 +63,7 @@ struct RadianTag;
 }// namespace Details
 
 using Matrix2x2 = Details::FloatingPointMatrix2x2<float>;
+using Matrix3x2 = Details::FloatingPointMatrix3x2<float>;
 using Matrix3x3 = Details::FloatingPointMatrix3x3<float>;
 using Matrix4x4 = Details::FloatingPointMatrix4x4<float>;
 using Point2D = Details::Coordinate2D<std::int32_t>;

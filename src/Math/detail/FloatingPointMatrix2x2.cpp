@@ -17,8 +17,7 @@ namespace Details {
 template <typename T>
 FloatingPointMatrix2x2<T> const FloatingPointMatrix2x2<T>::Identity(
 	1, 0,
-	0, 1
-);
+	0, 1);
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix2x2<T>::FloatingPointMatrix2x2(T m00, T m01, T m10, T m11)
@@ -148,19 +147,15 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator/(T scaleFactor) co
 template <typename T>
 bool FloatingPointMatrix2x2<T>::operator==(FloatingPointMatrix2x2 const& other) const
 {
-	return (
-		m[0][0] == other.m[0][0] && m[0][1] == other.m[0][1] &&
-		m[1][0] == other.m[1][0] && m[1][1] == other.m[1][1]
-	);
+	return m[0][0] == other.m[0][0] && m[0][1] == other.m[0][1]
+		&& m[1][0] == other.m[1][0] && m[1][1] == other.m[1][1];
 }
 //-----------------------------------------------------------------------
 template <typename T>
 bool FloatingPointMatrix2x2<T>::operator!=(FloatingPointMatrix2x2 const& other) const
 {
-	return (
-		m[0][0] != other.m[0][0] || m[0][1] != other.m[0][1] ||
-		m[1][0] != other.m[1][0] || m[1][1] != other.m[1][1]
-	);
+	return m[0][0] != other.m[0][0] || m[0][1] != other.m[0][1]
+		|| m[1][0] != other.m[1][0] || m[1][1] != other.m[1][1];
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -178,20 +173,6 @@ T const& FloatingPointMatrix2x2<T>::operator()(std::size_t row, std::size_t colu
 	POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
 	return m[row][column];
 }
-//-----------------------------------------------------------------------
-//template <typename T>
-//std::array<T, 2> const& FloatingPointMatrix2x2<T>::operator[](std::size_t row) const
-//{
-//	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix2x2, subscript out of range");
-//	return m[row];
-//}
-//-----------------------------------------------------------------------
-//template <typename T>
-//std::array<T, 2> & FloatingPointMatrix2x2<T>::operator[](std::size_t row)
-//{
-//	POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix2x2, subscript out of range");
-//	return m[row];
-//}
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::Concatenate(FloatingPointMatrix2x2 const& other) const

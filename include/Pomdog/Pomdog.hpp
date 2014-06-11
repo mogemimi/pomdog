@@ -15,7 +15,6 @@
 
 #include "Config/Platform.hpp"
 #include "Config/Export.hpp"
-#include "Config/FundamentalTypes.hpp"
 
 #include "Utility/Assert.hpp"
 #include "Utility/Exception.hpp"

@@ -73,7 +73,6 @@
   'variables': {
     'pomdog_library_testable_sources': [
       '../include/Pomdog/Config/Export.hpp',
-      '../include/Pomdog/Config/FundamentalTypes.hpp',
       '../include/Pomdog/Config/Platform.hpp',
       '../include/Pomdog/Event/Event.hpp',
       '../include/Pomdog/Event/EventConnection.hpp',
@@ -143,6 +142,7 @@
       '../include/Pomdog/Math/Degree.hpp',
       '../include/Pomdog/Math/MathHelper.hpp',
       '../include/Pomdog/Math/Matrix2x2.hpp',
+      '../include/Pomdog/Math/Matrix3x2.hpp',
       '../include/Pomdog/Math/Matrix3x3.hpp',
       '../include/Pomdog/Math/Matrix4x4.hpp',
       '../include/Pomdog/Math/Point2D.hpp',
@@ -158,6 +158,7 @@
       '../include/Pomdog/Math/detail/Coordinate3D.hpp',
       '../include/Pomdog/Math/detail/Coordinate3DImplementation.hpp',
       '../include/Pomdog/Math/detail/FloatingPointMatrix2x2.hpp',
+      '../include/Pomdog/Math/detail/FloatingPointMatrix3x2.hpp',
       '../include/Pomdog/Math/detail/FloatingPointMatrix3x3.hpp',
       '../include/Pomdog/Math/detail/FloatingPointMatrix4x4.hpp',
       '../include/Pomdog/Math/detail/FloatingPointQuaternion.hpp',
@@ -194,6 +195,7 @@
       '../src/Math/MathHelper.cpp',
       '../src/Math/Rectangle.cpp',
       '../src/Math/detail/FloatingPointMatrix2x2.cpp',
+      '../src/Math/detail/FloatingPointMatrix3x2.cpp',
       '../src/Math/detail/FloatingPointMatrix3x3.cpp',
       '../src/Math/detail/FloatingPointMatrix4x4.cpp',
       '../src/Math/detail/FloatingPointQuaternion.cpp',

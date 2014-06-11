@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -81,7 +81,7 @@ TEST(Matrix3x3, Identity)
 
 TEST(Matrix3x3, CreateTranslation)
 {
-	auto matrix = Matrix3x3::CreateTranslation({3.0f, 4.0});
+	auto matrix = Matrix3x3::CreateTranslation({3.0f, 4.0f});
 	EXPECT_EQ(1.0f, matrix(0, 0));
 	EXPECT_EQ(0.0f, matrix(0, 1));
 	EXPECT_EQ(0.0f, matrix(0, 2));
@@ -95,7 +95,7 @@ TEST(Matrix3x3, CreateTranslation)
 
 TEST(Matrix3x3, CreateScale)
 {
-	auto matrix = Matrix3x3::CreateScale({3.0f, 4.0, 5.0f});
+	auto matrix = Matrix3x3::CreateScale({3.0f, 4.0f, 5.0f});
 	EXPECT_EQ(3.0f, matrix(0, 0));
 	EXPECT_EQ(0.0f, matrix(0, 1));
 	EXPECT_EQ(0.0f, matrix(0, 2));
@@ -105,6 +105,17 @@ TEST(Matrix3x3, CreateScale)
 	EXPECT_EQ(0.0f, matrix(2, 0));
 	EXPECT_EQ(0.0f, matrix(2, 1));
 	EXPECT_EQ(5.0f, matrix(2, 2));
+	
+	matrix = Matrix3x3::CreateScale(7.0f);
+	EXPECT_EQ(7.0f, matrix(0, 0));
+	EXPECT_EQ(0.0f, matrix(0, 1));
+	EXPECT_EQ(0.0f, matrix(0, 2));
+	EXPECT_EQ(0.0f, matrix(1, 0));
+	EXPECT_EQ(7.0f, matrix(1, 1));
+	EXPECT_EQ(0.0f, matrix(1, 2));
+	EXPECT_EQ(0.0f, matrix(2, 0));
+	EXPECT_EQ(0.0f, matrix(2, 1));
+	EXPECT_EQ(7.0f, matrix(2, 2));
 }
 
 TEST(Matrix3x3, CreateRotationX)

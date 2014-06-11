@@ -144,13 +144,13 @@ FloatingPointVector4<T> FloatingPointVector4<T>::operator/(T scaleFactor) const
 template <typename T>
 bool FloatingPointVector4<T>::operator==(FloatingPointVector4 const& other) const
 {
-	return (X == other.X && Y == other.Y && Z == other.Z && W == other.W);
+	return X == other.X && Y == other.Y && Z == other.Z && W == other.W;
 }
 //-----------------------------------------------------------------------
 template <typename T>
 bool FloatingPointVector4<T>::operator!=(FloatingPointVector4 const& other) const
 {
-	return (X != other.X || Y != other.Y || Z != other.Z || W != other.W);
+	return X != other.X || Y != other.Y || Z != other.Z || W != other.W;
 }
 //-----------------------------------------------------------------------
 template <typename T>

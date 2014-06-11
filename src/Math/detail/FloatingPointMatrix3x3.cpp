@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -24,8 +24,7 @@ template <typename T>
 FloatingPointMatrix3x3<T> const FloatingPointMatrix3x3<T>::Identity(
 	1, 0, 0,
 	0, 1, 0,
-	0, 0, 1
-);
+	0, 0, 1);
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T>::FloatingPointMatrix3x3(
@@ -188,21 +187,17 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator/(T scaleFactor) co
 template <typename T>
 bool FloatingPointMatrix3x3<T>::operator==(FloatingPointMatrix3x3 const& other) const
 {
-	return (
-		m[0][0] == other.m[0][0] && m[0][1] == other.m[0][1] && m[0][2] == other.m[0][2] &&
-		m[1][0] == other.m[1][0] && m[1][1] == other.m[1][1] && m[1][2] == other.m[1][2] &&
-		m[2][0] == other.m[2][0] && m[2][1] == other.m[2][1] && m[2][2] == other.m[2][2]
-	);
+	return m[0][0] == other.m[0][0] && m[0][1] == other.m[0][1] && m[0][2] == other.m[0][2]
+		&& m[1][0] == other.m[1][0] && m[1][1] == other.m[1][1] && m[1][2] == other.m[1][2]
+		&& m[2][0] == other.m[2][0] && m[2][1] == other.m[2][1] && m[2][2] == other.m[2][2];
 }
 //-----------------------------------------------------------------------
 template <typename T>
 bool FloatingPointMatrix3x3<T>::operator!=(FloatingPointMatrix3x3 const& other) const
 {
-	return (
-		m[0][0] != other.m[0][0] || m[0][1] != other.m[0][1] || m[0][2] != other.m[0][2] ||
-		m[1][0] != other.m[1][0] || m[1][1] != other.m[1][1] || m[1][2] != other.m[1][2] ||
-		m[2][0] != other.m[2][0] || m[2][1] != other.m[2][1] || m[2][2] != other.m[2][2]
-	);
+	return m[0][0] != other.m[0][0] || m[0][1] != other.m[0][1] || m[0][2] != other.m[0][2]
+		|| m[1][0] != other.m[1][0] || m[1][1] != other.m[1][1] || m[1][2] != other.m[1][2]
+		|| m[2][0] != other.m[2][0] || m[2][1] != other.m[2][1] || m[2][2] != other.m[2][2];
 }
 //-----------------------------------------------------------------------
 template <typename T>

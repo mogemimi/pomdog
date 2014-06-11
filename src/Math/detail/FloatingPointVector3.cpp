@@ -152,13 +152,13 @@ FloatingPointVector3<T> FloatingPointVector3<T>::operator/(T scaleFactor) const
 template <typename T>
 bool FloatingPointVector3<T>::operator==(FloatingPointVector3 const& other) const
 {
-	return (X == other.X && Y == other.Y && Z == other.Z);
+	return X == other.X && Y == other.Y && Z == other.Z;
 }
 //-----------------------------------------------------------------------
 template <typename T>
 bool FloatingPointVector3<T>::operator!=(FloatingPointVector3 const& other) const
 {
-	return (X != other.X || Y != other.Y || Z != other.Z);
+	return X != other.X || Y != other.Y || Z != other.Z;
 }
 //-----------------------------------------------------------------------
 template <typename T>

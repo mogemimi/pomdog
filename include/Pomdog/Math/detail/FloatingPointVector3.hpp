@@ -13,9 +13,11 @@
 #	pragma once
 #endif
 
+#include <cstddef>
+#include <cstdint>
+#include <cfloat>
 #include <type_traits>
 #include "../../Config/Export.hpp"
-#include "../../Config/FundamentalTypes.hpp"
 #include "ForwardDeclarations.hpp"
 
 namespace Pomdog {
