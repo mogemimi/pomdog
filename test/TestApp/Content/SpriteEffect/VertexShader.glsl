@@ -3,18 +3,26 @@
 layout(location = 0) in vec4 PositionTextureCoord;
 
 // per Instance
-layout(location = 1) in mat4x4 WorldMatrix;
+// {x___} = worldMatrix.M00
+// {_y__} = worldMatrix.M01
+// {__z_} = worldMatrix.M10
+// {___w} = worldMatrix.M11
+layout(location = 1) in vec4 WorldMatrix1;
+// {x___} = worldMatrix.M20
+// {_y__} = worldMatrix.M21
+// {__zw} = unused
+layout(location = 2) in vec4 WorldMatrix2;
 // {xyz_} = position.xyz
 // {___w} = rotation
-layout(location = 5) in vec4 Translation;
+layout(location = 3) in vec4 Translation;
 // {xy__} = xy
 // {__zw} = {width, height}
-layout(location = 6) in vec4 SourceRect;
+layout(location = 4) in vec4 SourceRect;
 // {xy__} = originPivot.xy
 // {__zw} = scale.xy
-layout(location = 7) in vec4 OriginScale;
+layout(location = 5) in vec4 OriginScale;
 // {xyzw} = color.rgba
-layout(location = 8) in vec4 Color;
+layout(location = 6) in vec4 Color;
 
 out VertexData {
 	vec2 TextureCoord;
@@ -50,9 +58,14 @@ void main()
 
 	mat3x3 localTransform = ((scaling * rotate) * translate);
 	vec3 position = (vec3(PositionTextureCoord.xy - OriginScale.xy, 1.0) * localTransform);
+	
+	mat3x3 worldMatrix = transpose(mat3x3(
+		vec3(WorldMatrix1.xy, 0),
+		vec3(WorldMatrix1.zw, 0),
+		vec3(WorldMatrix2.xy, 1)));
+	position = position * worldMatrix;
 
-	mat4x4 transform = WorldMatrix * ViewProjection;
-	gl_Position = vec4(position.xy, 0.0, 1.0) * transform;
+	gl_Position = vec4(position.xy, 0.0, 1.0) * ViewProjection;
 
 	Out.TextureCoord = (PositionTextureCoord.zw * SourceRect.zw + SourceRect.xy) * InverseTextureWidth.xy;
 	Out.Color = Color;

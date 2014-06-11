@@ -47,6 +47,7 @@
 #include "Math/Degree.hpp"
 #include "Math/MathHelper.hpp"
 #include "Math/Matrix2x2.hpp"
+#include "Math/Matrix3x2.hpp"
 #include "Math/Matrix3x3.hpp"
 #include "Math/Matrix4x4.hpp"
 #include "Math/Point2D.hpp"

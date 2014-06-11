@@ -14,7 +14,7 @@
 #endif
 
 #include <vector>
-#include <Pomdog/Math/Matrix4x4.hpp>
+#include <Pomdog/Math/Matrix3x2.hpp>
 #include "JointPose.hpp"
 
 namespace Pomdog {
@@ -24,7 +24,7 @@ public:
 	std::vector<JointPose> LocalPose;
 	
 	///@note Matrix palette
-	std::vector<Matrix4x4> GlobalPose;
+	std::vector<Matrix3x2> GlobalPose;
 };
 
 }// namespace Pomdog

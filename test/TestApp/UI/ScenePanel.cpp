@@ -65,16 +65,16 @@ static Vector2 SampleTrackGesture(Vector2 const& position, Vector2 & startPositi
 }// unnamed namespace
 //-----------------------------------------------------------------------
 ScenePanel::ScenePanel(double widthIn, double heightIn)
-	: Width(widthIn)
-	, Height(heightIn)
-	, isFocused(false)
+	//: width(widthIn)
+	//, height(heightIn)
+	: isFocused(false)
 	, prevScrollWheel(0)
 	, scrollWheel(0)
 {}
 //-----------------------------------------------------------------------
 Vector2 ScenePanel::ConvertToPanelSpace(Point2D const& point) const
 {
-	return Vector2(point.X, Height - point.Y);
+	return Vector2(point.X, bounds.Height - point.Y);
 }
 //-----------------------------------------------------------------------
 void ScenePanel::OnPointerCanceled(PointerPoint const& pointerPoint)

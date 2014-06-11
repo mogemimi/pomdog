@@ -23,8 +23,17 @@ private:
 
 	struct alignas(16) SpriteInfo
 	{
-		Matrix4x4 WorldMatrix;
-	
+		// {x___} = worldMatrix.M00
+		// {_y__} = worldMatrix.M01
+		// {__z_} = worldMatrix.M10
+		// {___w} = worldMatrix.M11
+		Vector4 WorldMatrix1;
+		
+		// {x___} = worldMatrix.M20
+		// {_y__} = worldMatrix.M21
+		// {__zw} = unused
+		Vector4 WorldMatrix2;
+
 		// {xyz_} = position.xyz
 		// {___w} = rotation
 		Vector4 Translation;
@@ -61,11 +70,11 @@ public:
 	
 	void Begin(Matrix4x4 const& transformMatrix);
 	
-	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
+	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 		Vector2 const& position, Color const& color,
 		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
 	
-	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
+	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 		Vector2 const& position, Rectangle const& sourceRect, Color const& color,
 		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
 	
@@ -81,7 +90,7 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 	: graphicsContext(graphicsContextIn)
 {
 	using PositionTextureCoord = CustomVertex<Vector4>;
-	using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4, Vector4, Vector4, Vector4, Vector4>;
+	using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4, Vector4, Vector4>;
 	
 	{
 		std::array<PositionTextureCoord, 4> const verticesCombo = {
@@ -107,7 +116,8 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 		std::array<SpriteInfo, MaxBatchSize> verticesCombo;
 		for (auto & spriteInfo: verticesCombo) {
 			spriteInfo = {
-				Matrix4x4::Identity,
+				Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+				Vector4(0.0f, 0.0f, 0.0f, 0.0f),
 				Vector4(0.0f, 0.0f, 0.0f, 0.0f),
 				Vector4(0.0f, 0.0f, 1.0f, 1.0f),
 				Vector4(0.5f, 0.5f, 1.0f, 1.0f),
@@ -219,7 +229,7 @@ void SpriteRenderer::Impl::DrawInstance(std::shared_ptr<Texture2D> const& textur
 		planeIndices, planeIndices->IndexCount(), static_cast<std::uint32_t>(sprites.size()));
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
+void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 	Vector2 const& position, Color const& color,
 	Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
 {
@@ -242,7 +252,8 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
 	POMDOG_ASSERT(texture->Height() > 0);
 	
 	SpriteInfo info;
-	info.WorldMatrix = Matrix4x4::Transpose(worldMatrix);
+	info.WorldMatrix1 = {worldMatrix(0, 0), worldMatrix(0, 1), worldMatrix(1, 0), worldMatrix(1, 1)};
+	info.WorldMatrix2 = {worldMatrix(2, 0), worldMatrix(2, 1), 0, 0};
 	info.Translation = Vector4(position.X, position.Y, layerDepth, rotation.value);
 	info.SourceRect = Vector4(0, 0, texture->Width(), texture->Height());
 	info.OriginScale = Vector4(originPivot.X, originPivot.Y, scale.X, scale.Y);
@@ -252,7 +263,7 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
 	POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
+void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 	Vector2 const& position, Rectangle const& sourceRect, Color const& color,
 	Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
 {
@@ -278,7 +289,8 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
 	POMDOG_ASSERT(sourceRect.Height > 0);
 	
 	SpriteInfo info;
-	info.WorldMatrix = Matrix4x4::Transpose(worldMatrix);
+	info.WorldMatrix1 = {worldMatrix(0, 0), worldMatrix(0, 1), worldMatrix(1, 0), worldMatrix(1, 1)};
+	info.WorldMatrix2 = {worldMatrix(2, 0), worldMatrix(2, 1), 0, 0};
 	info.Translation = Vector4(position.X, position.Y, layerDepth, rotation.value);
 	info.SourceRect = Vector4(sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
 	info.OriginScale = Vector4(originPivot.X, originPivot.Y, scale.X, scale.Y);
@@ -311,28 +323,28 @@ void SpriteRenderer::End()
 	impl->End();
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
+void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 	Rectangle const& sourceRect, Color const& color)
 {
 	POMDOG_ASSERT(impl);
 	impl->Draw(texture, worldMatrix, {0, 0}, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
+void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 	Vector2 const& position, Color const& color)
 {
 	POMDOG_ASSERT(impl);
 	impl->Draw(texture, worldMatrix, {0, 0}, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
+void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 	Vector2 const& position, Rectangle const& sourceRect, Color const& color)
 {
 	POMDOG_ASSERT(impl);
 	impl->Draw(texture, worldMatrix, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
+void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 	Vector2 const& position, Rectangle const& sourceRect, Color const& color,
 	Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth)
 {
@@ -340,7 +352,7 @@ void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 c
 	impl->Draw(texture, worldMatrix, position, sourceRect, color, rotation, originPivot, {scale, scale}, layerDepth);
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix4x4 const& worldMatrix,
+void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 	Vector2 const& position, Rectangle const& sourceRect, Color const& color,
 	Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
 {

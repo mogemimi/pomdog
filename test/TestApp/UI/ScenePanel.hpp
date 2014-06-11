@@ -26,10 +26,7 @@ public:
 
 	Transform2D RenderTransform;
 	Vector2 RenderTransformOrigin;
-	
-	double Width;
-	double Height;
-		
+
 public:
 	ScenePanel(double widthIn, double heightIn);
 	
@@ -49,6 +46,8 @@ public:
 	
 	void OnPointerReleased(PointerPoint const& pointerPoint) override;
 	
+	void OnRenderSizeChanged();
+	
 	void Draw(DrawingContext & drawingContext) override;
 	
 	void UpdateAnimation(DurationSeconds const& frameDuration) override;
@@ -66,6 +65,9 @@ private:
 	Vector2 ConvertToPanelSpace(Point2D const& point) const;
 	
 private:
+	//double width;
+	//double height;
+
 	Optional<Vector2> tumbleStartPosition;
 	Optional<Vector2> trackStartPosition;
 	

@@ -182,18 +182,6 @@ void LightningTestGame::Initialize()
 	
 	touchPoint = {0, -300};
 	
-	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this] {
-		auto gameWindow = gameHost->Window();
-		
-		renderTarget = std::make_shared<RenderTarget2D>(
-			gameHost->GraphicsDevice(),
-			gameWindow->ClientBounds().Width, gameWindow->ClientBounds().Height,
-			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
-		
-		auto viewport = graphicsContext->Viewport();
-		fxaa->ResetViewportSize(viewport.Bounds);
-	});
-	
 	{
 		auto node = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
 		node->bounds = {0, 0, window->ClientBounds().Width, window->ClientBounds().Height};
@@ -237,6 +225,21 @@ void LightningTestGame::Initialize()
 			touchPoint = Vector2{position.X, position.Y};
 		});
 	}
+	
+	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this] {
+		auto gameWindow = gameHost->Window();
+		
+		renderTarget = std::make_shared<RenderTarget2D>(
+			gameHost->GraphicsDevice(),
+			gameWindow->ClientBounds().Width, gameWindow->ClientBounds().Height,
+			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
+		
+		auto viewport = graphicsContext->Viewport();
+		fxaa->ResetViewportSize(viewport.Bounds);
+		
+		scenePanel->bounds.Width = viewport.Bounds.Width;
+		scenePanel->bounds.Height = viewport.Bounds.Height;
+	});
 }
 //-----------------------------------------------------------------------
 void LightningTestGame::Update()

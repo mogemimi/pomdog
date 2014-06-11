@@ -51,7 +51,7 @@ void SkeletonHelper::ComputeGlobalPoseFromLocalPose(
 		matrix *= Matrix4x4::CreateTranslation({pose.Translate, 0.0f});
 	
 		POMDOG_ASSERT(*bone.Index < skeletonPose.GlobalPose.size());
-		skeletonPose.GlobalPose[*bone.Index] = Matrix4x4::Identity;
+		skeletonPose.GlobalPose[*bone.Index] = Matrix3x2::Identity;
 	}
 
 	POMDOG_ASSERT(skeleton.JointCount() > 1);
@@ -67,9 +67,9 @@ void SkeletonHelper::ComputeGlobalPoseFromLocalPose(
 		POMDOG_ASSERT(*bone.Index < skeletonPose.GlobalPose.size());
 		auto & parentMatrix = skeletonPose.GlobalPose[*bone.Parent];
 
-		Matrix4x4 matrix = Matrix4x4::CreateScale(pose.Scale);
-		matrix *= Matrix4x4::CreateRotationZ(pose.Rotation);
-		matrix *= Matrix4x4::CreateTranslation({pose.Translate, 0.0f});
+		Matrix3x2 matrix = Matrix3x2::CreateScale(pose.Scale);
+		matrix *= Matrix3x2::CreateRotation(pose.Rotation);
+		matrix *= Matrix3x2::CreateTranslation(pose.Translate);
 		matrix *= parentMatrix;
 
 		POMDOG_ASSERT(*bone.Index < skeletonPose.GlobalPose.size());

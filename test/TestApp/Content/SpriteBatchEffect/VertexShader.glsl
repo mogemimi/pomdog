@@ -3,14 +3,19 @@
 layout(location = 0) in vec4 PositionTextureCoord;
 
 // per Instance
-// (position.xy, scale.xy)
+// {xy__} = position.xy
+// {__zw} = scale.xy
 layout(location = 1) in vec4 Translation;
-// (x, y, width, height)
+// {xy__} = xy
+// {__zw} = {width, height}
 layout(location = 2) in vec4 SourceRect;
-// (originPivot.xy, rotation, layerDepth)
+// {xy__} = originPivot.xy
+// {__z_} = rotation
+// {___w} = layerDepth
 layout(location = 3) in vec4 OriginRotationDepth;
-// (color.rgba)
+// {xyzw} = color.rgba
 layout(location = 4) in vec4 Color;
+
 
 out VertexData {
 	vec2 TextureCoord;
