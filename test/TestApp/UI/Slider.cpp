@@ -16,8 +16,8 @@ namespace {
 namespace SliderColorScheme {
 
 static Color BorderColor {0, 140, 198, 255};
-static Color FillColor1 {0, 140, 198, 255};
-static Color FillColor2 {0, 157, 210, 255};
+static Color FillColor1 {27, 161, 226, 255};
+static Color FillColor2 {56, 190, 255, 255};
 static Color TrackColor {198, 198, 198, 255};
 static Color ThumbColor = Color::Black;
 static Color FocusedThumbColor {229, 20, 0, 255};
@@ -58,12 +58,22 @@ void Slider::OnPointerWheelChanged(PointerPoint const& pointerPoint)
 //-----------------------------------------------------------------------
 void Slider::OnPointerEntered(PointerPoint const& pointerPoint)
 {
-	fillColor = SliderColorScheme::FillColor2;
+	ColorAnimation animation;
+	animation.duration = 0.19f;
+	animation.startColor = fillColor;
+	animation.targetColor = SliderColorScheme::FillColor2;
+
+	colorAnimation = animation;
 }
 //-----------------------------------------------------------------------
 void Slider::OnPointerExited(PointerPoint const& pointerPoint)
 {
-	fillColor = SliderColorScheme::FillColor1;
+	ColorAnimation animation;
+	animation.duration = 0.15f;
+	animation.startColor = fillColor;
+	animation.targetColor = SliderColorScheme::FillColor1;
+
+	colorAnimation = animation;
 }
 //-----------------------------------------------------------------------
 void Slider::OnPointerPressed(PointerPoint const& pointerPoint)
@@ -73,7 +83,11 @@ void Slider::OnPointerPressed(PointerPoint const& pointerPoint)
 	}
 
 	POMDOG_ASSERT(width > 0);
-	auto amount = (pointerPoint.Position.X - RenderTransform.Position.X) / width;
+	
+	// NOTE: float thumbOffset = thumbWidth / 2
+	constexpr float thumbOffset = 5;
+	
+	auto amount = (pointerPoint.Position.X - RenderTransform.Position.X - thumbOffset/2) / (width - 2*thumbOffset);
 	value = MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum);
 	isDragging = true;
 }
@@ -85,7 +99,11 @@ void Slider::OnPointerMoved(PointerPoint const& pointerPoint)
 	}
 
 	POMDOG_ASSERT(width > 0);
-	auto amount = (pointerPoint.Position.X - RenderTransform.Position.X) / width;
+
+	// NOTE: float thumbOffset = thumbWidth / 2
+	constexpr float thumbOffset = 5;
+	
+	auto amount = (pointerPoint.Position.X - RenderTransform.Position.X - thumbOffset/2) / (width - 2*thumbOffset);
 	value = MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum);
 }
 //-----------------------------------------------------------------------
@@ -96,6 +114,19 @@ void Slider::OnPointerReleased(PointerPoint const& pointerPoint)
 //-----------------------------------------------------------------------
 void Slider::UpdateAnimation(DurationSeconds const& frameDuration)
 {
+	if (!colorAnimation) {
+		return;
+	}
+	
+	colorAnimation->time += frameDuration.count();
+	colorAnimation->time = std::min(colorAnimation->time, colorAnimation->duration);
+	
+	fillColor = Color::SmoothStep(colorAnimation->startColor, colorAnimation->targetColor,
+		colorAnimation->time / colorAnimation->duration);
+	
+	if (colorAnimation->time >= colorAnimation->duration) {
+		colorAnimation = OptionalType::NullOptional;
+	}
 }
 //-----------------------------------------------------------------------
 void Slider::Draw(DrawingContext & drawingContext)

@@ -33,6 +33,15 @@ private:
 	std::uint16_t height;
 	std::uint16_t width;
 
+	struct ColorAnimation {
+		Color startColor;
+		Color targetColor;
+		float duration = 1;
+		float time = 0;
+	};
+
+	Optional<ColorAnimation> colorAnimation;
+
 	Color borderColor;
 	Color fillColor;
 	Color trackColor;
