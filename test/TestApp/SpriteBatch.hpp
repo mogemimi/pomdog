@@ -27,7 +27,7 @@ public:
 	
 	~SpriteBatch();
 	
-	void Begin(Matrix3x3 const& transformMatrix);
+	void Begin(Matrix4x4 const& transformMatrix);
 	
 	void Draw(std::shared_ptr<Texture2D> const& texture,
 		Rectangle const& sourceRect, Color const& color);

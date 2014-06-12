@@ -254,22 +254,20 @@ void ParticleTestGame::DrawSprites()
 	auto camera = mainCamera->Component<Camera2D>();
 		
 	POMDOG_ASSERT(transform && camera);
-	auto viewMatrix3D = SandboxHelper::CreateViewMatrix3D(*transform, *camera);
-	auto projectionMatrix3D = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
+	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
+	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
 	
 	POMDOG_ASSERT(primitiveGrid);
-	primitiveGrid->Draw(*graphicsContext, viewMatrix3D * projectionMatrix3D);
+	primitiveGrid->Draw(*graphicsContext, viewMatrix * projectionMatrix);
 	
 	POMDOG_ASSERT(primitiveAxes);
-	primitiveAxes->Draw(*graphicsContext, viewMatrix3D * projectionMatrix3D);
-	
-	auto viewMatrix2D = SandboxHelper::CreateViewMatrix2D(*transform, *camera);
-	
+	primitiveAxes->Draw(*graphicsContext, viewMatrix * projectionMatrix);
+
 	// NOTE: Changing blend state
 	//graphicsContext->SetBlendState(blendStateAdditive);
 
 	POMDOG_ASSERT(spriteBatch);
-	spriteBatch->Begin(viewMatrix2D);
+	spriteBatch->Begin(viewMatrix);
 	{
 		for (auto & particle: particleSystem.particles)
 		{

@@ -264,19 +264,17 @@ void MaidChanGame::DrawSprites()
 	auto camera = mainCamera->Component<Camera2D>();
 		
 	POMDOG_ASSERT(transform && camera);
-	auto vierMatrix3D = SandboxHelper::CreateViewMatrix3D(*transform, *camera);;
-	auto projectionMatrix3D = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
+	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);;
+	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
 	
 	POMDOG_ASSERT(primitiveGrid);
-	primitiveGrid->Draw(*graphicsContext, vierMatrix3D * projectionMatrix3D);
+	primitiveGrid->Draw(*graphicsContext, viewMatrix * projectionMatrix);
 	
 	POMDOG_ASSERT(primitiveAxes);
-	primitiveAxes->Draw(*graphicsContext, vierMatrix3D * projectionMatrix3D);
-	
-	//auto viewMatrix2D = CreateViewMatrix2D(nodeCamera->Transform(), *camera);
-	
+	primitiveAxes->Draw(*graphicsContext, viewMatrix * projectionMatrix);
+
 	POMDOG_ASSERT(spriteRenderer);
-	spriteRenderer->Begin(vierMatrix3D);
+	spriteRenderer->Begin(viewMatrix);
 	
 	auto const& globalPoses = maidSkeletonPose->GlobalPose;
 
@@ -323,7 +321,7 @@ void MaidChanGame::DrawSprites()
 		auto rasterizerState = std::make_shared<RasterizerState>(gameHost->GraphicsDevice(), rasterizerDesc);
 		
 		graphicsContext->SetRasterizerState(rasterizerState);
-		spriteRenderer->Begin(vierMatrix3D);
+		spriteRenderer->Begin(viewMatrix);
 		
 		for (auto & slot: maidSkin.Slots())
 		{

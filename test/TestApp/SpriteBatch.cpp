@@ -55,13 +55,13 @@ private:
 	
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<InputLayout> inputLayout;
-	Matrix3x3 transformMatrix;
+	Matrix4x4 transformMatrix;
 
 public:
 	explicit Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
 	
-	void Begin(Matrix3x3 const& transformMatrix);
+	void Begin(Matrix4x4 const& transformMatrix);
 	
 	void Draw(std::shared_ptr<Texture2D> const& texture,
 		Vector2 const& position, Color const& color,
@@ -81,7 +81,7 @@ private:
 SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
 	: graphicsContext(graphicsContextIn)
-	, transformMatrix(Matrix3x3::Identity)
+	, transformMatrix(Matrix4x4::Identity)
 {
 	using PositionTextureCoord = CustomVertex<Vector4>;
 	using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4>;
@@ -150,7 +150,7 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextI
 #endif
 }
 //-----------------------------------------------------------------------
-void SpriteBatch::Impl::Begin(Matrix3x3 const& transformMatrixIn)
+void SpriteBatch::Impl::Begin(Matrix4x4 const& transformMatrixIn)
 {
 	this->transformMatrix = transformMatrixIn;
 }
@@ -192,13 +192,10 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
 	POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
 	
 	{
-		// (mat4x3(mat3x3(Projection2D)), vec4(InverseTexturePixelWidth.xy, 0, 0))
-		using SpriteBatchConstants = std::array<Vector4, 4>;
-		
 		POMDOG_ASSERT(texture->Width() > 0);
 		POMDOG_ASSERT(texture->Height() > 0);
 		
-		Vector2 inverseTexturePixelWidth {
+		Vector2 inverseTextureSize {
 			(texture->Width() > 0) ? (1.0f / static_cast<float>(texture->Width())): 0.0f,
 			(texture->Height() > 0) ? (1.0f / static_cast<float>(texture->Height())): 0.0f,
 		};
@@ -211,21 +208,23 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
 		auto scaleX = (viewport.Width() > 0.0f) ? (2.0f/viewport.Width()): 0.0f;
 		auto scaleY = (viewport.Height() > 0.0f) ? (2.0f/viewport.Height()): 0.0f;
 		
-		Matrix3x3 projection2D {
-			scaleX, 0.0f, 0.0f,
-			0.0f, scaleY, 0.0f,
-			0.0f, 0.0f, 1.0f,
+		Matrix4x4 projection2D {
+			scaleX, 0.0f, 0.0f, 0.0f,
+			0.0f, scaleY, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
 		};
 		
 		projection2D = transformMatrix * projection2D;
 		
-		constexpr float None = 0.0f;
+		struct alignas(16) SpriteBatchConstants {
+			Matrix4x4 Transform;
+			Vector2 InverseTextureSize;
+		};
 		
-		alignas(16) SpriteBatchConstants info = {
-			Vector4(projection2D(0, 0), projection2D(1, 0), projection2D(2, 0), None),
-			Vector4(projection2D(0, 1), projection2D(1, 1), projection2D(2, 1), None),
-			Vector4(projection2D(0, 2), projection2D(1, 2), projection2D(2, 2), None),
-			Vector4(inverseTexturePixelWidth.X, inverseTexturePixelWidth.Y, None, None),
+		alignas(16) SpriteBatchConstants info {
+			Matrix4x4::Transpose(projection2D),
+			inverseTextureSize,
 		};
 		
 		auto parameter = effectPass->Parameters("SpriteBatchConstants");
@@ -327,7 +326,7 @@ SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext
 //-----------------------------------------------------------------------
 SpriteBatch::~SpriteBatch() = default;
 //-----------------------------------------------------------------------
-void SpriteBatch::Begin(Matrix3x3 const& transformMatrixIn)
+void SpriteBatch::Begin(Matrix4x4 const& transformMatrixIn)
 {
 	POMDOG_ASSERT(impl);
 	impl->Begin(transformMatrixIn);

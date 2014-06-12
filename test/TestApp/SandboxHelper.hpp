@@ -13,19 +13,20 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Pomdog.hpp>
+#include <Pomdog/Math/Matrix3x2.hpp>
+#include <Pomdog/Math/Matrix4x4.hpp>
 
 namespace TestApp {
 
 struct SandboxHelper {
-	static Matrix3x3 CreateViewMatrix2D(Transform2D const& transform, Camera2D const& camera)
+	static Matrix3x2 CreateViewMatrix2D(Transform2D const& transform, Camera2D const& camera)
 	{
-		return Matrix3x3::CreateTranslation({-transform.Position.X, -transform.Position.Y})*
-			Matrix3x3::CreateRotationZ(-transform.Rotation) *
-			Matrix3x3::CreateScale({camera.Zoom(), camera.Zoom(), 1});
+		return Matrix3x2::CreateTranslation({-transform.Position.X, -transform.Position.Y})*
+			Matrix3x2::CreateRotation(-transform.Rotation) *
+			Matrix3x2::CreateScale(camera.Zoom());
 	}
 
-	static Matrix4x4 CreateViewMatrix3D(Transform2D const& transform, Camera2D const& camera)
+	static Matrix4x4 CreateViewMatrix(Transform2D const& transform, Camera2D const& camera)
 	{
 		return Matrix4x4::CreateTranslation({-transform.Position.X, -transform.Position.Y, 1.0f})*
 			Matrix4x4::CreateRotationZ(-transform.Rotation) *

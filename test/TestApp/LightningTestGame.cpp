@@ -215,7 +215,7 @@ void LightningTestGame::Initialize()
 			auto camera = mainCamera->Component<Camera2D>();
 		
 			POMDOG_ASSERT(transform && camera);
-			auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix3D(*transform, *camera));
+			auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix(*transform, *camera));
 			
 			auto position = Vector3::Transform(Vector3(
 				positionInView.X - graphicsContext->Viewport().Width() / 2,
@@ -278,23 +278,21 @@ void LightningTestGame::DrawSprites()
 	auto camera = mainCamera->Component<Camera2D>();
 		
 	POMDOG_ASSERT(transform && camera);
-	auto viewMatrix3D = SandboxHelper::CreateViewMatrix3D(*transform, *camera);
-	auto projectionMatrix3D = Matrix4x4::CreateOrthographicLH(
+	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
+	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 		graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
 	
 	POMDOG_ASSERT(primitiveGrid);
-	primitiveGrid->Draw(*graphicsContext, viewMatrix3D * projectionMatrix3D);
+	primitiveGrid->Draw(*graphicsContext, viewMatrix * projectionMatrix);
 	
 	POMDOG_ASSERT(primitiveAxes);
-	primitiveAxes->Draw(*graphicsContext, viewMatrix3D * projectionMatrix3D);
-	
-	auto viewMatrix2D = SandboxHelper::CreateViewMatrix2D(*transform, *camera);
+	primitiveAxes->Draw(*graphicsContext, viewMatrix * projectionMatrix);
 	
 	// NOTE: Changing blend state
 	//graphicsContext->SetBlendState(blendStateAdditive);
 
 	POMDOG_ASSERT(spriteBatch);
-	spriteBatch->Begin(viewMatrix2D);
+	spriteBatch->Begin(viewMatrix);
 	{
 		SpriteLine spriteLine;
 		spriteLine.Texture = texture;
@@ -330,7 +328,7 @@ void LightningTestGame::DrawGUI()
 	auto viewportWidth = graphicsContext->Viewport().Bounds.Width;
 	auto viewportHeight = graphicsContext->Viewport().Bounds.Height;
 
-	auto translation = Matrix3x3::CreateTranslation(Vector2(-viewportWidth/2, viewportHeight/2));
+	auto translation = Matrix4x4::CreateTranslation(Vector3(-viewportWidth/2, viewportHeight/2, 0));
 	
 	spriteBatch->Begin(translation);
 	{

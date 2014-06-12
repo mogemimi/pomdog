@@ -27,16 +27,13 @@ private:
 		// {_y__} = worldMatrix.M01
 		// {__z_} = worldMatrix.M10
 		// {___w} = worldMatrix.M11
-		Vector4 WorldMatrix1;
+		Vector4 TransformMatrix1;
 		
 		// {x___} = worldMatrix.M20
 		// {_y__} = worldMatrix.M21
-		// {__zw} = unused
-		Vector4 WorldMatrix2;
-
-		// {xyz_} = position.xyz
+		// {__z_} = layerDepth
 		// {___w} = rotation
-		Vector4 Translation;
+		Vector4 TransformMatrix2;
 		
 		// {xy__} = xy
 		// {__zw} = {width, height}
@@ -90,7 +87,7 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 	: graphicsContext(graphicsContextIn)
 {
 	using PositionTextureCoord = CustomVertex<Vector4>;
-	using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4, Vector4, Vector4>;
+	using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4, Vector4>;
 	
 	{
 		std::array<PositionTextureCoord, 4> const verticesCombo = {
@@ -117,7 +114,6 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 		for (auto & spriteInfo: verticesCombo) {
 			spriteInfo = {
 				Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-				Vector4(0.0f, 0.0f, 0.0f, 0.0f),
 				Vector4(0.0f, 0.0f, 0.0f, 0.0f),
 				Vector4(0.0f, 0.0f, 1.0f, 1.0f),
 				Vector4(0.5f, 0.5f, 1.0f, 1.0f),
@@ -189,7 +185,7 @@ void SpriteRenderer::Impl::Flush()
 		auto & sprites = spriteQueues[queuePos];
 		
 		std::sort(std::begin(sprites), std::end(sprites), [](SpriteInfo const& a, SpriteInfo const& b) {
-			return a.Translation.Z > b.Translation.Z;
+			return a.TransformMatrix2.Z > b.TransformMatrix2.Z;
 		});
 		
 		DrawInstance(textures[queuePos], sprites);
@@ -251,10 +247,11 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
 	POMDOG_ASSERT(texture->Width() > 0);
 	POMDOG_ASSERT(texture->Height() > 0);
 	
+	auto transform = Matrix3x2::CreateTranslation(position) * worldMatrix;
+	
 	SpriteInfo info;
-	info.WorldMatrix1 = {worldMatrix(0, 0), worldMatrix(0, 1), worldMatrix(1, 0), worldMatrix(1, 1)};
-	info.WorldMatrix2 = {worldMatrix(2, 0), worldMatrix(2, 1), 0, 0};
-	info.Translation = Vector4(position.X, position.Y, layerDepth, rotation.value);
+	info.TransformMatrix1 = {transform(0, 0), transform(0, 1), transform(1, 0), transform(1, 1)};
+	info.TransformMatrix2 = {transform(2, 0), transform(2, 1), layerDepth, rotation.value};
 	info.SourceRect = Vector4(0, 0, texture->Width(), texture->Height());
 	info.OriginScale = Vector4(originPivot.X, originPivot.Y, scale.X, scale.Y);
 	info.Color = color.ToVector4();
@@ -288,10 +285,11 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
 	POMDOG_ASSERT(sourceRect.Width > 0);
 	POMDOG_ASSERT(sourceRect.Height > 0);
 	
+	auto transform = Matrix3x2::CreateTranslation(position) * worldMatrix;
+	
 	SpriteInfo info;
-	info.WorldMatrix1 = {worldMatrix(0, 0), worldMatrix(0, 1), worldMatrix(1, 0), worldMatrix(1, 1)};
-	info.WorldMatrix2 = {worldMatrix(2, 0), worldMatrix(2, 1), 0, 0};
-	info.Translation = Vector4(position.X, position.Y, layerDepth, rotation.value);
+	info.TransformMatrix1 = {transform(0, 0), transform(0, 1), transform(1, 0), transform(1, 1)};
+	info.TransformMatrix2 = {transform(2, 0), transform(2, 1), layerDepth, rotation.value};
 	info.SourceRect = Vector4(sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
 	info.OriginScale = Vector4(originPivot.X, originPivot.Y, scale.X, scale.Y);
 	info.Color = color.ToVector4();
