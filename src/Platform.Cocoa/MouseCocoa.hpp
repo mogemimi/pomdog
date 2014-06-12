@@ -20,9 +20,9 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
-class CocoaMouse final: public Mouse {
+class MouseCocoa final: public Mouse {
 public:
-	CocoaMouse();
+	MouseCocoa();
 
 	///@copydoc Pomdog::Mouse
 	MouseState const& State() const override;
@@ -37,11 +37,11 @@ public:
 	void WheelDelta(double wheelDelta);
 	
 private:
-	MouseState mouseState;
+	MouseState state;
 	double scrollWheel;
 };
 
-}// namespace Mouse
+}// namespace Cocoa
 }// namespace Details
 }// namespace Pomdog
 

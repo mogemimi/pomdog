@@ -27,11 +27,11 @@ namespace Pomdog {
 enum class KeyState: bool {
 	///@~Japanese
 	/// @brief キーが離されている状態です。
-	Released = false,
+	Up = false,
 
 	///@~Japanese
 	/// @brief キーが押されている状態です。
-	Pressed = true,
+	Down = true,
 };
 
 /// @}

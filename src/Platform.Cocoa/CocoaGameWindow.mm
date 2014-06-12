@@ -177,7 +177,7 @@ void CocoaGameWindow::ResetGLContext()
 //-----------------------------------------------------------------------
 #pragma mark - Input Device
 //-----------------------------------------------------------------------
-void CocoaGameWindow::BindToDelegate(std::shared_ptr<CocoaMouse> mouse)
+void CocoaGameWindow::BindToDelegate(std::shared_ptr<MouseCocoa> mouse)
 {
 	POMDOG_ASSERT(mouse);
 	[viewDelegate resetMouse:mouse];

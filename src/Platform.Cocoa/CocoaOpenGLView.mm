@@ -190,6 +190,18 @@
 	[[self delegate] scrollWheel:theEvent];
 }
 //-----------------------------------------------------------------------
+#pragma mark - Keyboard Event Delegated
+//-----------------------------------------------------------------------
+- (void)keyDown:(NSEvent *)theEvent
+{
+	[[self delegate] keyDown:theEvent];
+}
+//-----------------------------------------------------------------------
+- (void)keyUp:(NSEvent *)theEvent
+{
+	[[self delegate] keyUp:theEvent];
+}
+//-----------------------------------------------------------------------
 #pragma mark - View Event Delegated
 //-----------------------------------------------------------------------
 - (void)viewWillStartLiveResize

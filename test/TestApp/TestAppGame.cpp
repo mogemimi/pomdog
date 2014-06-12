@@ -24,8 +24,8 @@ TestAppGame::~TestAppGame() = default;
 //-----------------------------------------------------------------------
 void TestAppGame::Initialize()
 {
-	this->game = MakeUnique<LightningTestGame>(gameHost);
-	//this->game = MakeUnique<MaidChanGame>(gameHost);
+	//this->game = MakeUnique<LightningTestGame>(gameHost);
+	this->game = MakeUnique<MaidChanGame>(gameHost);
 	
 	game->Initialize();
 }

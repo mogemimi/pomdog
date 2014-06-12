@@ -58,6 +58,9 @@ public:
 	std::shared_ptr<Pomdog::AssetManager> AssetManager() override;
 
 	///@copydoc GameHost
+	std::shared_ptr<Pomdog::Keyboard> Keyboard() override;
+
+	///@copydoc GameHost
 	std::shared_ptr<Pomdog::Mouse> Mouse() override;
 
 private:

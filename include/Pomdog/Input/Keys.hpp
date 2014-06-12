@@ -375,46 +375,49 @@ enum class Keys: std::uint8_t {
 	//
 
 	///@brief OEM ',' key
-	Comma = 230,
+	Comma = 220,
 	
 	///@brief OEM '=' key
-	Equals = 231,
+	Equals = 221,
 	
 	///@brief OEM ';' key
-	Semicolon = 232,
+	Semicolon = 222,
 	
 	///@brief OEM '+' key
-	Plus = 233,
+	Plus = 223,
 	
 	///@brief OEM '.' key
-	Period = 234,
+	Period = 224,
+	
+	///@brief OEM '/' key
+	Slash = 225,
 	
 	///@brief OEM '-' key
-	Minus = 235,
+	Minus = 226,
 	
 	///@brief OEM '?' key
-	Question = 236,
+	Question = 227,
 	
 	///@brief OEM ''' key
-	Quote = 237,
+	Quote = 228,
 	
 	///@brief OEM '"' key
-	DoubleQuote = 238,
+	DoubleQuote = 229,
 	
 	///@brief OEM '`' key
-	AccentGrave = 239,
+	AccentGrave = 230,
 
 	///@brief OEM '\' key
-	Backslash = 240,
+	Backslash = 231,
 
 	///@brief OEM '~' key
-	Tilde = 241,
+	Tilde = 232,
 	
 	///@brief OEM '[' key
-	OpenBracket = 242,
+	OpenBracket = 233,
 	
 	///@brief OEM ']' key
-	CloseBracket = 243,
+	CloseBracket = 234,
 };
 
 /// @}

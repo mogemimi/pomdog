@@ -26,7 +26,7 @@ KeyState KeyboardState::operator[](Keys key) const
 	POMDOG_ASSERT(keyset.size() > static_cast<size_type>(key));
 	
 	return keyset[static_cast<size_type>(key)] ?
-		KeyState::Pressed: KeyState::Released;
+		KeyState::Down: KeyState::Up;
 }
 //-----------------------------------------------------------------------
 bool KeyboardState::IsKeyDown(Keys key) const
@@ -50,9 +50,9 @@ void KeyboardState::SetKey(Keys key, KeyState keyState)
 	using size_type = typename std::underlying_type<decltype(key)>::type;
 	POMDOG_ASSERT(keyset.size() > static_cast<size_type>(key));
 
-	static_assert(static_cast<bool>(KeyState::Pressed) == true, "");
+	static_assert(static_cast<bool>(KeyState::Down) == true, "");
 	
-	keyset[static_cast<size_type>(key)] = (keyState == KeyState::Pressed);
+	keyset[static_cast<size_type>(key)] = (keyState == KeyState::Down);
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

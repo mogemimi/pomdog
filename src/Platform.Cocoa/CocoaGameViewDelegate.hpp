@@ -17,12 +17,12 @@
 
 #include <memory>
 #include "../Application/SystemEventDispatcher.hpp"
-#include "CocoaMouse.hpp"
+#include "MouseCocoa.hpp"
 
 @interface CocoaGameViewDelegate : NSResponder
 
 - (id)initWithEventDispatcher:(std::shared_ptr<Pomdog::Details::SystemEventDispatcher>)dispatcher;
-- (void)resetMouse:(std::shared_ptr<Pomdog::Details::Cocoa::CocoaMouse>)mouse;
+- (void)resetMouse:(std::shared_ptr<Pomdog::Details::Cocoa::MouseCocoa>)mouse;
 - (void)resetMouse;
 
 @property (nonatomic, retain) NSView* view;

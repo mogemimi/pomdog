@@ -25,6 +25,7 @@ class GameClock;
 class GameWindow;
 class GraphicsContext;
 class GraphicsDevice;
+class Keyboard;
 class Mouse;
 
 /// @addtogroup Framework
@@ -63,6 +64,10 @@ public:
 	///@~Japanese
 	/// @brief アセットマネージャを取得します。
 	virtual std::shared_ptr<AssetManager> AssetManager() = 0;
+	
+	///@~Japanese
+	/// @brief キーボードを取得します。
+	virtual std::shared_ptr<Keyboard> Keyboard() = 0;
 	
 	///@~Japanese
 	/// @brief マウスを取得します。

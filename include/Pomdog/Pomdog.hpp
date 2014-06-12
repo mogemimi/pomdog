@@ -127,6 +127,7 @@
 
 // Input
 #include "Input/ButtonState.hpp"
+#include "Input/Keyboard.hpp"
 #include "Input/KeyboardState.hpp"
 #include "Input/Keys.hpp"
 #include "Input/KeyState.hpp"

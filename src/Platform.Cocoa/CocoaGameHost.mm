@@ -28,8 +28,9 @@
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 
-#include "CocoaMouse.hpp"
-
+#include <Pomdog/Input/KeyState.hpp>
+#include "KeyboardCocoa.hpp"
+#include "MouseCocoa.hpp"
 #include "StringFormat.hpp"
 
 namespace Pomdog {
@@ -128,6 +129,9 @@ public:
 	std::shared_ptr<Pomdog::AssetManager> AssetManager(std::shared_ptr<GameHost> && gameHost);
 	
 	///@copydoc GameHost
+	std::shared_ptr<Pomdog::Keyboard> Keyboard();
+	
+	///@copydoc GameHost
 	std::shared_ptr<Pomdog::Mouse> Mouse();
 
 private:
@@ -153,7 +157,8 @@ private:
 	std::shared_ptr<Pomdog::GraphicsDevice> graphicsDevice;
 	std::unique_ptr<Pomdog::AssetManager> assetManager;
 	
-	std::shared_ptr<CocoaMouse> mouse;
+	std::shared_ptr<KeyboardCocoa> keyboard;
+	std::shared_ptr<MouseCocoa> mouse;
 	
 	bool exitRequest;
 	bool surfaceResizeRequest;
@@ -182,7 +187,8 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 		ProcessSystemEvents(event);
 	});
 	
-	mouse = std::make_shared<CocoaMouse>();
+	keyboard = std::make_shared<KeyboardCocoa>();
+	mouse = std::make_shared<MouseCocoa>();
 	gameWindow->BindToDelegate(mouse);
 	
 	{
@@ -291,6 +297,16 @@ void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
 		Log::Internal(StringFormat("ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
 			rect.Width, rect.Height));
 	}
+	else if (auto keyDownEvent = event.As<InputKeyDownEvent>())
+	{
+		//Log::Internal(StringFormat("KeyDown: %d", (int)keyDownEvent->Key));
+		keyboard->SetKey(keyDownEvent->Key, KeyState::Down);
+	}
+	else if (auto keyUpEvent = event.As<InputKeyUpEvent>())
+	{
+		//Log::Internal(StringFormat("KeyUp: %d", (int)keyUpEvent->Key));
+		keyboard->SetKey(keyUpEvent->Key, KeyState::Up);
+	}
 }
 //-----------------------------------------------------------------------
 void CocoaGameHost::Impl::ClientSizeChanged()
@@ -340,6 +356,11 @@ std::shared_ptr<Pomdog::AssetManager> CocoaGameHost::Impl::AssetManager(std::sha
 {
 	std::shared_ptr<Pomdog::AssetManager> sharedAssetManager(gameHost, assetManager.get());
 	return std::move(sharedAssetManager);
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<Pomdog::Keyboard> CocoaGameHost::Impl::Keyboard()
+{
+	return keyboard;
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::Mouse> CocoaGameHost::Impl::Mouse()
@@ -397,6 +418,12 @@ std::shared_ptr<Pomdog::AssetManager> CocoaGameHost::AssetManager()
 {
 	POMDOG_ASSERT(impl);
 	return impl->AssetManager(shared_from_this());
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<Pomdog::Keyboard> CocoaGameHost::Keyboard()
+{
+	POMDOG_ASSERT(impl);
+	return impl->Keyboard();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::Mouse> CocoaGameHost::Mouse()

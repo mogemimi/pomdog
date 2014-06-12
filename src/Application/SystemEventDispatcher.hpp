@@ -14,6 +14,7 @@
 #endif
 
 #include <Pomdog/Event/EventQueue.hpp>
+#include <Pomdog/Input/Keys.hpp>
 
 namespace Pomdog {
 namespace Details {
@@ -26,6 +27,18 @@ struct WindowShouldCloseEvent {};
 struct ViewNeedsUpdateSurfaceEvent {};
 struct ViewWillStartLiveResizeEvent {};
 struct ViewDidEndLiveResizeEvent {};
+
+//struct InputCharacterEvent {
+//	std::uint16_t Character;
+//};
+
+struct InputKeyDownEvent {
+	Keys Key;
+};
+
+struct InputKeyUpEvent {
+	Keys Key;
+};
 
 }// namespace Details
 }// namespace Pomdog

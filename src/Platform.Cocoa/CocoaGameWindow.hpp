@@ -27,7 +27,7 @@ namespace Details {
 namespace Cocoa {
 
 class CocoaOpenGLContext;
-class CocoaMouse;
+class MouseCocoa;
 
 class CocoaGameWindow final: public GameWindow {
 public:
@@ -68,7 +68,7 @@ public:
 	
 	///@~Japanese
 	/// @brief マウスをビューデリゲートに接続します。
-	void BindToDelegate(std::shared_ptr<CocoaMouse> mouse);
+	void BindToDelegate(std::shared_ptr<MouseCocoa> mouse);
 
 private:
 	std::shared_ptr<CocoaOpenGLContext> openGLContext;
