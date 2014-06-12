@@ -16,6 +16,8 @@
 #include <Pomdog/Pomdog.hpp>
 #include "SceneEditor/EditorColorScheme.hpp"
 #include "SceneEditor/GradientPlane.hpp"
+#include "SceneEditor/PrimitiveAxes.hpp"
+#include "SceneEditor/PrimitiveGrid.hpp"
 #include "UI/DrawingContext.hpp"
 #include "UI/UIElementHierarchy.hpp"
 #include "UI/ScenePanel.hpp"
@@ -28,8 +30,6 @@ namespace TestApp {
 
 using namespace Pomdog;
 
-class PrimitiveAxes;
-class PrimitiveGrid;
 class SpriteBatch;
 class FXAA;
 
@@ -54,8 +54,6 @@ private:
 	std::shared_ptr<GraphicsContext> graphicsContext;
 	
 	std::shared_ptr<Texture2D> texture;
-	std::unique_ptr<PrimitiveAxes> primitiveAxes;
-	std::unique_ptr<PrimitiveGrid> primitiveGrid;
 	std::unique_ptr<SpriteBatch> spriteBatch;
 	
 	//std::shared_ptr<SamplerState> samplerPoint;
@@ -67,6 +65,8 @@ private:
 	
 	SceneEditor::EditorColorScheme editorColorScheme;
 	std::unique_ptr<SceneEditor::GradientPlane> backgroundPlane;
+	std::unique_ptr<SceneEditor::PrimitiveAxes> primitiveAxes;
+	std::unique_ptr<SceneEditor::PrimitiveGrid> primitiveGrid;
 	UI::UIElementHierarchy hierarchy;
 	std::shared_ptr<UI::ScenePanel> scenePanel;
 	std::shared_ptr<UI::Slider> slider1;

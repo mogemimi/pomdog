@@ -8,7 +8,8 @@
 
 #include "PrimitiveAxes.hpp"
 
-namespace TestApp {
+namespace Pomdog {
+namespace SceneEditor {
 //-----------------------------------------------------------------------
 PrimitiveAxes::PrimitiveAxes(std::shared_ptr<GameHost> const& gameHost,
 	Color const& xAxisColor, Color const& yAxisColor, Color const& zAxisColor)
@@ -42,4 +43,5 @@ void PrimitiveAxes::Draw(GraphicsContext & graphicsContext, Matrix4x4 const& tra
 	renderer.End();
 }
 
-}// namespace TestApp
+}// namespace SceneEditor
+}// namespace Pomdog

@@ -14,12 +14,14 @@
 #endif
 
 #include <vector>
+#include <Pomdog/Math/Vector2.hpp>
+#include <Pomdog/Math/Matrix4x4.hpp>
+#include <Pomdog/Math/Color.hpp>
 #include <Pomdog/Pomdog.hpp>
 #include "LineRenderer.hpp"
 
-namespace TestApp {
-
-using namespace Pomdog;
+namespace Pomdog {
+namespace SceneEditor {
 
 class PrimitiveGrid {
 public:
@@ -39,6 +41,7 @@ private:
 	LineRenderer renderer;
 };
 
-}// namespace TestApp
+}// namespace SceneEditor
+}// namespace Pomdog
 
 #endif // !defined(POMDOG_PRIMITIVEGRID_8E899444_553D_4CCC_87EB_11D70DFEC99C_HPP)

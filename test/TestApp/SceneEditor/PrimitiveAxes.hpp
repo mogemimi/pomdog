@@ -14,12 +14,15 @@
 #endif
 
 #include <array>
+#include <Pomdog/Math/Vector2.hpp>
+#include <Pomdog/Math/Vector3.hpp>
+#include <Pomdog/Math/Matrix4x4.hpp>
+#include <Pomdog/Math/Color.hpp>
 #include <Pomdog/Pomdog.hpp>
 #include "LineRenderer.hpp"
 
-namespace TestApp {
-
-using namespace Pomdog;
+namespace Pomdog {
+namespace SceneEditor {
 
 class PrimitiveAxes {
 public:
@@ -39,6 +42,7 @@ private:
 	LineRenderer renderer;
 };
 
-}// namespace TestApp
+}// namespace SceneEditor
+}// namespace Pomdog
 
 #endif // !defined(POMDOG_PRIMITIVEAXES_B7717D29_25D2_44E7_8F48_2642088D2B41_HPP)

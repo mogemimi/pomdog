@@ -8,7 +8,8 @@
 
 #include "PrimitiveGrid.hpp"
 
-namespace TestApp {
+namespace Pomdog {
+namespace SceneEditor {
 //-----------------------------------------------------------------------
 PrimitiveGrid::PrimitiveGrid(std::shared_ptr<GameHost> const& gameHost,
 	Color const& primaryColor, Color const& secondaryColor)
@@ -44,4 +45,5 @@ void PrimitiveGrid::Draw(GraphicsContext & graphicsContext, Matrix4x4 const& tra
 	renderer.End();
 }
 
-}// namespace TestApp
+}// namespace SceneEditor
+}// namespace Pomdog
