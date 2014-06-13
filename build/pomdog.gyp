@@ -126,6 +126,7 @@
       '../include/Pomdog/Graphics/detail/ForwardDeclarations.hpp',
       '../include/Pomdog/Graphics/detail/VertexElementHelper.hpp',
       '../include/Pomdog/Input/ButtonState.hpp',
+      '../include/Pomdog/Input/Keyboard.hpp',
       '../include/Pomdog/Input/KeyboardState.hpp',
       '../include/Pomdog/Input/KeyState.hpp',
       '../include/Pomdog/Input/Keys.hpp',

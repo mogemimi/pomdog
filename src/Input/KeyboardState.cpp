@@ -22,18 +22,37 @@ static_assert(std::is_unsigned<typename std::underlying_type<Keys>::type>::value
 //-----------------------------------------------------------------------
 KeyState KeyboardState::operator[](Keys key) const
 {
-	POMDOG_ASSERT(keyset.size() > static_cast<std::size_t>(key));
+	using size_type = typename std::underlying_type<decltype(key)>::type;
+	POMDOG_ASSERT(keyset.size() > static_cast<size_type>(key));
 	
-	return keyset[static_cast<std::size_t>(key)] ?
+	return keyset[static_cast<size_type>(key)] ?
 		KeyState::Pressed: KeyState::Released;
 }
 //-----------------------------------------------------------------------
-void KeyboardState::AddPressedKey(Keys key)
+bool KeyboardState::IsKeyDown(Keys key) const
 {
-	POMDOG_ASSERT(keyset.size() > static_cast<std::size_t>(key));
+	using size_type = typename std::underlying_type<decltype(key)>::type;
+	POMDOG_ASSERT(keyset.size() > static_cast<size_type>(key));
+	
+	return !keyset[static_cast<size_type>(key)];
+}
+//-----------------------------------------------------------------------
+bool KeyboardState::IsKeyUp(Keys key) const
+{
+	using size_type = typename std::underlying_type<decltype(key)>::type;
+	POMDOG_ASSERT(keyset.size() > static_cast<size_type>(key));
+	
+	return keyset[static_cast<size_type>(key)];
+}
+//-----------------------------------------------------------------------
+void KeyboardState::SetKey(Keys key, KeyState keyState)
+{
+	using size_type = typename std::underlying_type<decltype(key)>::type;
+	POMDOG_ASSERT(keyset.size() > static_cast<size_type>(key));
 
 	static_assert(static_cast<bool>(KeyState::Pressed) == true, "");
-	keyset[static_cast<std::size_t>(key)] = true;
+	
+	keyset[static_cast<size_type>(key)] = (keyState == KeyState::Pressed);
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

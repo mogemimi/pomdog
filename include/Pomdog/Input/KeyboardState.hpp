@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -31,22 +31,25 @@ enum class Keys: std::uint8_t;
 /// @brief キーボードの状態です。
 class POMDOG_EXPORT KeyboardState {
 public:
-	KeyboardState() = default;
-	~KeyboardState() = default;
-
 	///@~Japanese
 	/// @brief 指定されたキーの現在の状態を取得します。
 	KeyState operator[](Keys key) const;
 
-public:
 	///@~Japanese
-	/// @brief 指定されたキーの状態を KeyState::Pressed に設定します。
-	void AddPressedKey(Keys key);
+	/// @brief 指定されたキーが押されているかどうかを取得します。
+	bool IsKeyDown(Keys key) const;
 	
+	///@~Japanese
+	/// @brief 指定されたキーが離されているかどうかを取得します。
+	bool IsKeyUp(Keys key) const;
+
+	///@~Japanese
+	/// @brief キーの状態を設定します。
+	void SetKey(Keys key, KeyState state);
+
 private:
 	std::bitset<std::numeric_limits<std::uint8_t>::max()> keyset;
 };
-
 
 /// @}
 /// @}
