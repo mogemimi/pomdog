@@ -24,11 +24,16 @@
 #include "UI/Slider.hpp"
 #include "ParticleSystem.hpp"
 
+namespace Pomdog {
+
+class SpriteBatch;
+
+}
+
 namespace TestApp {
 
 using namespace Pomdog;
 
-class SpriteBatch;
 class FXAA;
 
 class ParticleTestGame: public Game {

@@ -13,6 +13,7 @@
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
 #include "SandboxHelper.hpp"
+#include "SpriteFontLoader.hpp"
 
 ///@note for test
 #include "ParticleEmitterShapeBox.hpp"
@@ -21,6 +22,7 @@
 #include "ParticleParameterCurve.hpp"
 #include "ParticleParameterRandom.hpp"
 #include "ParticleParameterRandomCurves.hpp"
+
 
 namespace TestApp {
 namespace {
@@ -130,6 +132,11 @@ void LightningTestGame::Initialize()
 	fxaa = MakeUnique<FXAA>(gameHost);
 	backgroundPlane = MakeUnique<SceneEditor::GradientPlane>(gameHost);
 	
+	spriteFont = assets->Load<SpriteFont>("BitmapFonts/UbuntuMono-Regular.fnt");
+	distanceFieldEffect = assets->Load<EffectPass>("Effects/SpriteBatchDistanceField");
+	spriteBatchDistanceField = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets,
+		distanceFieldEffect);
+	
 	rootNode = std::make_shared<HierarchyNode>();
 	{
 		auto gameObject = gameWorld.CreateObject();
@@ -208,6 +215,24 @@ void LightningTestGame::Initialize()
 		hierarchy.AddChild(std::move(slider));
 	}
 	{
+		auto slider = std::make_shared<UI::Slider>(1.0f/16.0f, 1.0f/3.0f);
+		slider->drawOrder = 0.0f;
+		slider->RenderTransform.Position = Vector2{35, 90};
+		slider->Value(1.0f/5.0f);
+	
+		slider3 = slider;
+		hierarchy.AddChild(std::move(slider));
+	}
+	{
+		auto slider = std::make_shared<UI::Slider>(0.4f, 0.9f);
+		slider->drawOrder = 0.0f;
+		slider->RenderTransform.Position = Vector2{35, 115};
+		slider->Value(0.5f);
+	
+		slider4 = slider;
+		hierarchy.AddChild(std::move(slider));
+	}
+	{
 		scenePanel->SceneTouch.Connect([this](Vector2 const& positionInView) {
 			auto transform = mainCamera->Component<Transform2D>();
 			auto camera = mainCamera->Component<Camera2D>();
@@ -256,9 +281,8 @@ void LightningTestGame::Update()
 		static auto duration = DurationSeconds(0);
 		
 		if (clock->TotalGameTime() - duration > DurationSeconds(0.2)) {
-			gameHost->Window()->Title(StringFormat("%f fps", clock->FrameRate()));
+			frameRateString = StringFormat("%f fps", clock->FrameRate());
 			duration = clock->TotalGameTime();
-			//Log::Info(StringFormat("Mouse: %d, %d", mouse->State().Position.X, mouse->State().Position.Y));
 		}
 	}
 	{
@@ -334,6 +358,13 @@ void LightningTestGame::DrawGUI()
 		hierarchy.Draw(drawingContext);
 	}
 	spriteBatch->End();
+	
+	distanceFieldEffect->Parameters("DistanceFieldConstants")->SetValue(Vector2(slider3->Value(), slider4->Value()));
+	spriteFont->Begin(translation);
+	//spriteFont->Draw(*spriteBatchDistanceField, u8"std::string s = \"Hello!?@@\";\nint a = 0;", Vector2::Zero, Color::White);
+	spriteFont->Draw(*spriteBatchDistanceField, frameRateString, Vector2{40, 15}, Color::White,
+		0.0f, {0.0f, 0.0f}, 0.5f, 0.0f);
+	spriteFont->End();
 }
 //-----------------------------------------------------------------------
 void LightningTestGame::Draw()

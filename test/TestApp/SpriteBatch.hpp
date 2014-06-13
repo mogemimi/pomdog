@@ -16,14 +16,16 @@
 #include <memory>
 #include <Pomdog/Pomdog.hpp>
 
-namespace TestApp {
-
-using namespace Pomdog;
+namespace Pomdog {
 
 class SpriteBatch {
 public:
 	SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
+	
+	SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets,
+		std::shared_ptr<EffectPass> const& effectPass);
 	
 	~SpriteBatch();
 	
@@ -53,6 +55,6 @@ private:
 	std::unique_ptr<Impl> impl;
 };
 
-}// namespace TestApp
+}// namespace Pomdog
 
 #endif // !defined(POMDOG_SPRITEBATCH_B4DEBA3B_98DD_4767_A79A_4CAFC8A81AF4_HPP)

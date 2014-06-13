@@ -44,6 +44,11 @@ Slider::Slider(double minimumIn, double maximumIn)
 	RenderTransform.Position = {50, 100};
 }
 //-----------------------------------------------------------------------
+void Slider::Value(double valueIn)
+{
+	this->value = valueIn;
+}
+//-----------------------------------------------------------------------
 void Slider::OnPointerCanceled(PointerPoint const& pointerPoint)
 {
 }
@@ -131,6 +136,11 @@ void Slider::UpdateAnimation(DurationSeconds const& frameDuration)
 //-----------------------------------------------------------------------
 void Slider::Draw(DrawingContext & drawingContext)
 {
+	//MathHelper::Clamp(value, minimum, maximum);
+
+	POMDOG_ASSERT(value >= minimum);
+	POMDOG_ASSERT(value <= maximum);
+
 	///@todo badcode
 	bounds.X = RenderTransform.Position.X;
 	bounds.Y = RenderTransform.Position.Y;

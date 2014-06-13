@@ -31,12 +31,18 @@
 #include "Skeletal2D/AnimationSystem.hpp"
 #include "Skeletal2D/AnimationTimer.hpp"
 
+
+namespace Pomdog {
+
+class SpriteBatch;
+
+}
+
 namespace TestApp {
 
 using namespace Pomdog;
 
 class SpriteRenderer;
-class SpriteBatch;
 class FXAA;
 
 class GrassBlendingGame: public Game {

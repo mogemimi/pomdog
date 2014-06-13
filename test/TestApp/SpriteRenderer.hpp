@@ -30,7 +30,7 @@ public:
 	
 	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 		Rectangle const& sourceRect, Color const& color);
-		
+
 	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 		Vector2 const& position, Color const& color);
 	

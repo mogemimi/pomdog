@@ -50,7 +50,7 @@ private:
 public:
 	Slider(double minimum, double maximum);
 	
-	void Value(double valueIn) { this->value = valueIn; }
+	void Value(double valueIn);
 	double Value() const { return value; }
 	double Minimum() const { return minimum; }
 	double Maximum() const { return maximum; }

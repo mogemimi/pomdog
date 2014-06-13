@@ -9,8 +9,9 @@
 #include "SpriteBatch.hpp"
 #include <algorithm>
 #include <vector>
+#include <Pomdog/Utility/MakeUnique.hpp>
 
-namespace TestApp {
+namespace Pomdog {
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - SpriteBatch::Impl
@@ -58,8 +59,12 @@ private:
 	Matrix4x4 transformMatrix;
 
 public:
-	explicit Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
+	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
+	
+	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets,
+		std::shared_ptr<EffectPass> const& effectPass);
 	
 	void Begin(Matrix4x4 const& transformMatrix);
 	
@@ -80,8 +85,15 @@ private:
 //-----------------------------------------------------------------------
 SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
+	: Impl(graphicsContextIn, graphicsDevice, assets, assets.Load<EffectPass>("Effects/SpriteBatch"))
+{}
+//-----------------------------------------------------------------------
+SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets,
+	std::shared_ptr<EffectPass> const& effectPassIn)
 	: graphicsContext(graphicsContextIn)
 	, transformMatrix(Matrix4x4::Identity)
+	, effectPass(effectPassIn)
 {
 	using PositionTextureCoord = CustomVertex<Vector4>;
 	using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4>;
@@ -121,8 +133,7 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextI
 			SpriteInfoVertex::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Dynamic);
 	}
 	{
-		effectPass = assets.Load<EffectPass>("SpriteBatchEffect");
-		
+		POMDOG_ASSERT(effectPass);
 		auto declartation = PositionTextureCoord::Declaration();
 		
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
@@ -321,7 +332,13 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 //-----------------------------------------------------------------------
 SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
-	: impl(std::unique_ptr<Impl>(new Impl(graphicsContext, graphicsDevice, assets)))
+	: impl(MakeUnique<Impl>(graphicsContext, graphicsDevice, assets))
+{}
+//-----------------------------------------------------------------------
+SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets,
+	std::shared_ptr<EffectPass> const& effectPass)
+	: impl(MakeUnique<Impl>(graphicsContext, graphicsDevice, assets, effectPass))
 {}
 //-----------------------------------------------------------------------
 SpriteBatch::~SpriteBatch() = default;
@@ -375,4 +392,4 @@ void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
 	impl->Draw(texture, position, sourceRect, color, rotation, originPivot, scale, layerDepth);
 }
 //-----------------------------------------------------------------------
-}// namespace TestApp
+}// namespace Pomdog
