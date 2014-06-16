@@ -46,14 +46,19 @@ private:
 	Color fillColor;
 	Color trackColor;
 	bool isDragging;
+	bool isEnabled;
 	
 public:
 	Slider(double minimum, double maximum);
 	
 	void Value(double valueIn);
-	double Value() const { return value; }
-	double Minimum() const { return minimum; }
-	double Maximum() const { return maximum; }
+	double Value() const;
+	
+	double Minimum() const;
+	double Maximum() const;
+	
+	bool IsEnabled() const;
+	void IsEnabled(bool isEnabled);
 	
 	void OnPointerCanceled(PointerPoint const& pointerPoint) override;
 	
@@ -70,7 +75,7 @@ public:
 	void OnPointerMoved(PointerPoint const& pointerPoint) override;
 	
 	void OnPointerReleased(PointerPoint const& pointerPoint) override;
-
+	
 	void Draw(DrawingContext & drawingContext) override;
 	
 	void UpdateAnimation(DurationSeconds const& frameDuration) override;

@@ -18,6 +18,7 @@ namespace SliderColorScheme {
 static Color BorderColor {0, 140, 198, 255};
 static Color FillColor1 {27, 161, 226, 255};
 static Color FillColor2 {56, 190, 255, 255};
+static Color DisabledFillColor {150, 161, 167, 255};
 static Color TrackColor {198, 198, 198, 255};
 static Color ThumbColor = Color::Black;
 static Color FocusedThumbColor {229, 20, 0, 255};
@@ -36,6 +37,7 @@ Slider::Slider(double minimumIn, double maximumIn)
 	, fillColor(SliderColorScheme::FillColor1)
 	, trackColor(SliderColorScheme::TrackColor)
 	, isDragging(false)
+	, isEnabled(true)
 {
 	POMDOG_ASSERT(minimum < maximum);
 	POMDOG_ASSERT(value >= minimum);
@@ -44,10 +46,39 @@ Slider::Slider(double minimumIn, double maximumIn)
 	RenderTransform.Position = {50, 100};
 }
 //-----------------------------------------------------------------------
+#if defined(POMDOG_COMPILER_CLANG)
+#pragma mark - Properties
+#endif
+//-----------------------------------------------------------------------
 void Slider::Value(double valueIn)
+{ this->value = valueIn; }
+//-----------------------------------------------------------------------
+double Slider::Value() const
+{ return value; }
+//-----------------------------------------------------------------------
+double Slider::Minimum() const
+{ return minimum; }
+//-----------------------------------------------------------------------
+double Slider::Maximum() const
+{ return maximum; }
+//-----------------------------------------------------------------------
+bool Slider::IsEnabled() const
+{ return isEnabled; }
+//-----------------------------------------------------------------------
+void Slider::IsEnabled(bool isEnabledIn)
 {
-	this->value = valueIn;
+	this->isEnabled = isEnabledIn;
+	if (isEnabled) {
+		fillColor = SliderColorScheme::FillColor1;
+	}
+	else {
+		fillColor = SliderColorScheme::DisabledFillColor;
+	}
 }
+//-----------------------------------------------------------------------
+#if defined(POMDOG_COMPILER_CLANG)
+#pragma mark - Events
+#endif
 //-----------------------------------------------------------------------
 void Slider::OnPointerCanceled(PointerPoint const& pointerPoint)
 {
@@ -63,6 +94,10 @@ void Slider::OnPointerWheelChanged(PointerPoint const& pointerPoint)
 //-----------------------------------------------------------------------
 void Slider::OnPointerEntered(PointerPoint const& pointerPoint)
 {
+	if (!isEnabled) {
+		return;
+	}
+
 	ColorAnimation animation;
 	animation.duration = 0.19f;
 	animation.startColor = fillColor;
@@ -76,7 +111,8 @@ void Slider::OnPointerExited(PointerPoint const& pointerPoint)
 	ColorAnimation animation;
 	animation.duration = 0.15f;
 	animation.startColor = fillColor;
-	animation.targetColor = SliderColorScheme::FillColor1;
+	animation.targetColor = (isEnabled) ? SliderColorScheme::FillColor1:
+		SliderColorScheme::DisabledFillColor;
 
 	colorAnimation = animation;
 }
@@ -84,6 +120,10 @@ void Slider::OnPointerExited(PointerPoint const& pointerPoint)
 void Slider::OnPointerPressed(PointerPoint const& pointerPoint)
 {
 	if (pointerPoint.MouseEvent && *pointerPoint.MouseEvent != UI::PointerMouseEvent::LeftButtonPressed) {
+		return;
+	}
+	
+	if (!isEnabled) {
 		return;
 	}
 
@@ -100,6 +140,10 @@ void Slider::OnPointerPressed(PointerPoint const& pointerPoint)
 void Slider::OnPointerMoved(PointerPoint const& pointerPoint)
 {
 	if (pointerPoint.MouseEvent && *pointerPoint.MouseEvent != UI::PointerMouseEvent::LeftButtonPressed) {
+		return;
+	}
+	
+	if (!isEnabled) {
 		return;
 	}
 
@@ -156,7 +200,7 @@ void Slider::Draw(DrawingContext & drawingContext)
 	drawingContext.DrawRectangle(trackColor, Rectangle(x, y, width, height));
 	drawingContext.DrawRectangle(fillColor, Rectangle(x, y, sliderWidth2, height));
 	
-	if (isDragging)
+	if (isEnabled && isDragging)
 	{
 		constexpr float pixel = 2.0f;
 		
@@ -167,6 +211,7 @@ void Slider::Draw(DrawingContext & drawingContext)
 			Rectangle(pos.X, pos.Y, size.X, size.Y));
 	}
 	
+	if (isEnabled)
 	{
 		auto pos = RenderTransform.Position + Vector2(controlPosition2, 0);
 		drawingContext.DrawRectangle(SliderColorScheme::ThumbColor,
