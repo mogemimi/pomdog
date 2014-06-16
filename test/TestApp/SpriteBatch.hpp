@@ -15,6 +15,7 @@
 
 #include <memory>
 #include <Pomdog/Pomdog.hpp>
+#include "SpriteSortMode.hpp"
 
 namespace Pomdog {
 
@@ -29,7 +30,9 @@ public:
 	
 	~SpriteBatch();
 	
-	void Begin(Matrix4x4 const& transformMatrix);
+	void Begin(SpriteSortMode sortMode);
+
+	void Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrix);
 	
 	void Draw(std::shared_ptr<Texture2D> const& texture,
 		Rectangle const& sourceRect, Color const& color);
@@ -47,7 +50,7 @@ public:
 	void Draw(std::shared_ptr<Texture2D> const& texture,
 		Vector2 const& position, Rectangle const& sourceRect, Color const& color,
 		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
-		
+
 	void End();
 	
 private:

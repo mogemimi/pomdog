@@ -12,6 +12,9 @@
 #include <Pomdog/Utility/MakeUnique.hpp>
 
 namespace Pomdog {
+
+#define POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
+
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - SpriteBatch::Impl
@@ -56,7 +59,9 @@ private:
 	
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<InputLayout> inputLayout;
-	Matrix4x4 transformMatrix;
+	alignas(16) Matrix4x4 transposedTransformProjectionMatrix;
+	
+	SpriteSortMode sortMode;
 
 public:
 	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
@@ -66,7 +71,9 @@ public:
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets,
 		std::shared_ptr<EffectPass> const& effectPass);
 	
-	void Begin(Matrix4x4 const& transformMatrix);
+	void Begin(SpriteSortMode sortMode);
+	
+	void Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrix);
 	
 	void Draw(std::shared_ptr<Texture2D> const& texture,
 		Vector2 const& position, Color const& color,
@@ -92,26 +99,40 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextI
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets,
 	std::shared_ptr<EffectPass> const& effectPassIn)
 	: graphicsContext(graphicsContextIn)
-	, transformMatrix(Matrix4x4::Identity)
+	, transposedTransformProjectionMatrix(Matrix4x4::Identity)
 	, effectPass(effectPassIn)
+	, sortMode(SpriteSortMode::BackToFront)
 {
 	using PositionTextureCoord = CustomVertex<Vector4>;
 	using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4>;
 	
 	{
+	
 		std::array<PositionTextureCoord, 4> const verticesCombo = {
+		#ifdef POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
+			Vector4(0.0f, 0.0f, 0.0f, 0.0f), // left-top
+			Vector4(0.0f, 1.0f, 0.0f, 1.0f), // left-bottom
+			Vector4(1.0f, 1.0f, 1.0f, 1.0f), // right-bottom
+			Vector4(1.0f, 0.0f, 1.0f, 0.0f), // right-top
+		#else
 			Vector4(0.0f, 0.0f, 0.0f, 1.0f),
 			Vector4(0.0f, 1.0f, 0.0f, 0.0f),
 			Vector4(1.0f, 1.0f, 1.0f, 0.0f),
 			Vector4(1.0f, 0.0f, 1.0f, 1.0f),
+		#endif
 		};
 		planeVertices = std::make_shared<VertexBuffer>(graphicsDevice,
 			PositionTextureCoord::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Immutable);
 	}
 	{
 		std::array<std::uint16_t, 6> const indices = {
+		#ifdef POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
+			0, 2, 1,
+			0, 3, 2
+		#else
 			0, 1, 2,
 			2, 3, 0
+		#endif
 		};
 
 		// Create index buffer
@@ -161,9 +182,48 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextI
 #endif
 }
 //-----------------------------------------------------------------------
-void SpriteBatch::Impl::Begin(Matrix4x4 const& transformMatrixIn)
+void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn)
 {
-	this->transformMatrix = transformMatrixIn;
+	this->sortMode = sortModeIn;
+
+	auto viewport = graphicsContext->Viewport();
+
+	POMDOG_ASSERT(viewport.Width() > 0);
+	POMDOG_ASSERT(viewport.Height() > 0);
+	
+#ifdef POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
+	transposedTransformProjectionMatrix = Matrix4x4::Transpose(
+		Matrix4x4::CreateTranslation(Vector3(-viewport.Width() / 2, -viewport.Height() / 2, 1)) *
+		Matrix4x4::CreateOrthographicLH(viewport.Width(), -viewport.Height(), 0.1f, 100.0f));
+#else
+	transposedTransformProjectionMatrix = Matrix4x4::Transpose(
+		Matrix4x4::CreateOrthographicLH(viewport.Width(), viewport.Height(), 0.1f, 100.0f));
+#endif
+
+//	auto parameter = effectPass->Parameters("Matrices");
+//	parameter->SetValue(transposedTransformProjectionMatrix);
+}
+//-----------------------------------------------------------------------
+void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn, Matrix4x4 const& transformMatrix)
+{
+	this->sortMode = sortModeIn;
+
+	auto viewport = graphicsContext->Viewport();
+
+	POMDOG_ASSERT(viewport.Width() > 0);
+	POMDOG_ASSERT(viewport.Height() > 0);
+	
+#ifdef POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
+	transposedTransformProjectionMatrix = Matrix4x4::Transpose(transformMatrix
+		* Matrix4x4::CreateTranslation(Vector3(-viewport.Width() / 2, -viewport.Height() / 2, 1))
+		* Matrix4x4::CreateOrthographicLH(viewport.Width(), -viewport.Height(), 0.1f, 100.0f));
+#else
+	transposedTransformProjectionMatrix = Matrix4x4::Transpose(transformMatrix
+		* Matrix4x4::CreateOrthographicLH(viewport.Width(), viewport.Height(), 0.1f, 100.0f));
+#endif
+
+//	auto parameter = effectPass->Parameters("Matrices");
+//	parameter->SetValue(transposedTransformProjectionMatrix);
 }
 //-----------------------------------------------------------------------
 void SpriteBatch::Impl::End()
@@ -185,10 +245,21 @@ void SpriteBatch::Impl::Flush()
 		
 		auto & sprites = spriteQueues[queuePos];
 		
-		std::sort(std::begin(sprites), std::end(sprites), [](SpriteInfo const& a, SpriteInfo const& b) {
-			return a.OriginRotationLayerDepth.W > b.OriginRotationLayerDepth.W;
-		});
-		
+		switch (sortMode) {
+		case SpriteSortMode::BackToFront:
+			std::sort(std::begin(sprites), std::end(sprites), [](SpriteInfo const& a, SpriteInfo const& b) {
+				return a.OriginRotationLayerDepth.W > b.OriginRotationLayerDepth.W;
+			});
+			break;
+		case SpriteSortMode::FrontToBack:
+			std::sort(std::begin(sprites), std::end(sprites), [](SpriteInfo const& a, SpriteInfo const& b) {
+				return a.OriginRotationLayerDepth.W < b.OriginRotationLayerDepth.W;
+			});
+			break;
+		case SpriteSortMode::Deferred:
+			break;
+		}
+
 		DrawInstance(textures[queuePos], sprites);
 		sprites.clear();
 	}
@@ -210,23 +281,6 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
 			(texture->Width() > 0) ? (1.0f / static_cast<float>(texture->Width())): 0.0f,
 			(texture->Height() > 0) ? (1.0f / static_cast<float>(texture->Height())): 0.0f,
 		};
-
-		auto viewport = graphicsContext->Viewport();
-		
-		POMDOG_ASSERT(viewport.Width() > 0.0f);
-		POMDOG_ASSERT(viewport.Height() > 0.0f);
-		
-		auto scaleX = (viewport.Width() > 0.0f) ? (2.0f/viewport.Width()): 0.0f;
-		auto scaleY = (viewport.Height() > 0.0f) ? (2.0f/viewport.Height()): 0.0f;
-		
-		Matrix4x4 projection2D {
-			scaleX, 0.0f, 0.0f, 0.0f,
-			0.0f, scaleY, 0.0f, 0.0f,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f, 1.0f
-		};
-		
-		projection2D = transformMatrix * projection2D;
 		
 		struct alignas(16) SpriteBatchConstants {
 			Matrix4x4 Transform;
@@ -234,7 +288,7 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
 		};
 		
 		alignas(16) SpriteBatchConstants info {
-			Matrix4x4::Transpose(projection2D),
+			transposedTransformProjectionMatrix,
 			inverseTextureSize,
 		};
 		
@@ -282,7 +336,11 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 	SpriteInfo info;
 	info.Translation = Vector4(position.X, position.Y, scale.X, scale.Y);
 	info.SourceRect = Vector4(0, 0, texture->Width(), texture->Height());
+#ifdef POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
+	info.OriginRotationLayerDepth = Vector4(originPivot.X, originPivot.Y, -rotation.value, layerDepth);
+#else
 	info.OriginRotationLayerDepth = Vector4(originPivot.X, originPivot.Y, rotation.value, layerDepth);
+#endif
 	info.Color = color.ToVector4();
 	
 	spriteQueues.back().push_back(std::move(info));
@@ -319,7 +377,11 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 	SpriteInfo info;
 	info.Translation = Vector4(position.X, position.Y, scale.X, scale.Y);
 	info.SourceRect = Vector4(sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
+#ifdef POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
+	info.OriginRotationLayerDepth = Vector4(originPivot.X, originPivot.Y, -rotation.value, layerDepth);
+#else
 	info.OriginRotationLayerDepth = Vector4(originPivot.X, originPivot.Y, rotation.value, layerDepth);
+#endif
 	info.Color = color.ToVector4();
 	
 	spriteQueues.back().push_back(std::move(info));
@@ -343,10 +405,16 @@ SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext
 //-----------------------------------------------------------------------
 SpriteBatch::~SpriteBatch() = default;
 //-----------------------------------------------------------------------
-void SpriteBatch::Begin(Matrix4x4 const& transformMatrixIn)
+void SpriteBatch::Begin(SpriteSortMode sortMode)
 {
 	POMDOG_ASSERT(impl);
-	impl->Begin(transformMatrixIn);
+	impl->Begin(sortMode);
+}
+//-----------------------------------------------------------------------
+void SpriteBatch::Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrixIn)
+{
+	POMDOG_ASSERT(impl);
+	impl->Begin(sortMode, transformMatrixIn);
 }
 //-----------------------------------------------------------------------
 void SpriteBatch::End()

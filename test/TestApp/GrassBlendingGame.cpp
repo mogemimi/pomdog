@@ -272,7 +272,7 @@ void GrassBlendingGame::DrawSprites()
 	primitiveAxes->Draw(*graphicsContext, viewMatrix * projectionMatrix);
 
 	POMDOG_ASSERT(spriteRenderer);
-	spriteRenderer->Begin(viewMatrix);
+	spriteRenderer->Begin(SpriteSortMode::BackToFront, viewMatrix);
 
 	auto const& globalPoses = maidSkeletonPose->GlobalPose;
 
@@ -319,7 +319,7 @@ void GrassBlendingGame::DrawSprites()
 		auto rasterizerState = std::make_shared<RasterizerState>(gameHost->GraphicsDevice(), rasterizerDesc);
 		
 		graphicsContext->SetRasterizerState(rasterizerState);
-		spriteRenderer->Begin(viewMatrix);
+		spriteRenderer->Begin(SpriteSortMode::BackToFront, viewMatrix);
 		
 		for (auto & slot: maidSkin.Slots())
 		{

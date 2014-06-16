@@ -13,7 +13,9 @@
 #	pragma once
 #endif
 
+#include <memory>
 #include <Pomdog/Pomdog.hpp>
+#include "SpriteSortMode.hpp"
 
 namespace TestApp {
 
@@ -25,8 +27,12 @@ public:
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
 	
 	~SpriteRenderer();
-	
-	void Begin(Matrix4x4 const& transformMatrix);
+
+	void SetProjectionMatrix(Matrix4x4 const& projectionMatrix);
+
+	void Begin(SpriteSortMode sortMode);
+
+	void Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrix);
 	
 	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 		Rectangle const& sourceRect, Color const& color);

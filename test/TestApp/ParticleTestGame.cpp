@@ -138,6 +138,7 @@ void ParticleTestGame::Initialize()
 	primitiveAxes = MakeUnique<SceneEditor::PrimitiveAxes>(gameHost, editorColorScheme.CenterAxisX, editorColorScheme.CenterAxisY, editorColorScheme.CenterAxisZ);
 	primitiveGrid = MakeUnique<SceneEditor::PrimitiveGrid>(gameHost, editorColorScheme.GuideLine, editorColorScheme.Grid);
 	spriteBatch = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
+	spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
 	fxaa = MakeUnique<FXAA>(gameHost);
 	backgroundPlane = MakeUnique<SceneEditor::GradientPlane>(gameHost);
 	
@@ -165,6 +166,21 @@ void ParticleTestGame::Initialize()
 	
 		scenePanel = node;
 		hierarchy.AddChild(std::move(node));
+		
+		sceneTouchConnection = scenePanel->SceneTouch.Connect([this](Vector2 const& positionInView) {
+			auto transform = mainCamera->Component<Transform2D>();
+			auto camera = mainCamera->Component<Camera2D>();
+		
+			POMDOG_ASSERT(transform && camera);
+			auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix(*transform, *camera));
+			
+			auto position = Vector3::Transform(Vector3(
+				positionInView.X - graphicsContext->Viewport().Width() / 2,
+				positionInView.Y - graphicsContext->Viewport().Height() / 2,
+				0), inverseViewMatrix3D);
+
+			touchPoint = Vector2{position.X, position.Y};
+		});
 	}
 	{
 		auto slider = std::make_shared<UI::Slider>(1, 500);
@@ -196,6 +212,11 @@ void ParticleTestGame::Update()
 	{
 		//particleSystem.emitter.EmissionRate = static_cast<std::uint16_t>(slider1->Value());
 		//particleSystem.emitter.GravityModifier = slider2->Value();
+		Transform2D transform;
+		transform.Position = touchPoint;
+		transform.Rotation = MathConstants<float>::PiOver2();
+		transform.Scale = {1, 1};
+		particleSystem.Update(clock->FrameDuration(), transform);
 	}
 	{
 		static auto duration = DurationSeconds(0);
@@ -264,16 +285,16 @@ void ParticleTestGame::DrawSprites()
 	// NOTE: Changing blend state
 	//graphicsContext->SetBlendState(blendStateAdditive);
 
-	POMDOG_ASSERT(spriteBatch);
-	spriteBatch->Begin(viewMatrix);
+	POMDOG_ASSERT(spriteRenderer);
+	spriteRenderer->Begin(SpriteSortMode::Deferred, viewMatrix);
 	{
 		for (auto & particle: particleSystem.particles)
 		{
-			spriteBatch->Draw(texture, particle.Position, Rectangle(0, 0, texture->Width(), texture->Height()),
+			spriteRenderer->Draw(texture, Matrix3x2::Identity, particle.Position, Rectangle(0, 0, texture->Width(), texture->Height()),
 				particle.Color, particle.Rotation, {0.5f, 0.5f}, particle.Size, 0);
 		}
 	}
-	spriteBatch->End();
+	spriteRenderer->End();
 	graphicsContext->SetBlendState(blendStateNonPremultiplied);
 }
 //-----------------------------------------------------------------------

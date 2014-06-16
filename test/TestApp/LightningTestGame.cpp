@@ -22,67 +22,11 @@
 #include "ParticleParameterCurve.hpp"
 #include "ParticleParameterRandom.hpp"
 #include "ParticleParameterRandomCurves.hpp"
+#include "SpriteLine.hpp"
+#include "SpriteDrawingContext.hpp"
 
 
 namespace TestApp {
-namespace {
-//-----------------------------------------------------------------------
-class SpriteLine {
-public:
-	std::shared_ptr<Texture2D> Texture;
-	Rectangle StartRectangle;
-	Rectangle MiddleRectangle;
-	Rectangle EndRectangle;
-	Vector2 HalfCircleSize;
-	float InverseThickness;
-};
-//-----------------------------------------------------------------------
-static void DrawSpriteLine(SpriteBatch & spriteBatch, SpriteLine const& spriteLine,
-	Vector2 const& point1, Vector2 const& point2, float lineThickness,
-	Color const& color, float layerDepth)
-{
-	auto lineLength = Vector2::Distance(point2, point1);
-	
-	POMDOG_ASSERT(spriteLine.InverseThickness > 0);
-	auto thicknessScale = lineThickness / spriteLine.InverseThickness;
-	
-	auto tangent = point2 - point1;
-	auto rotation = std::atan2(tangent.Y, tangent.X);
-	
-	POMDOG_ASSERT(spriteLine.Texture);
-
-	spriteBatch.Draw(spriteLine.Texture, point1, spriteLine.MiddleRectangle,
-		color, rotation, {0.0f, 0.5f}, Vector2{lineLength, thicknessScale}, layerDepth);
-	spriteBatch.Draw(spriteLine.Texture, point1, spriteLine.StartRectangle,
-		color, rotation, {1.0f, 0.5f}, thicknessScale, layerDepth);
-	spriteBatch.Draw(spriteLine.Texture, point2, spriteLine.EndRectangle,
-		color, rotation, {0.0f, 0.5f}, thicknessScale, layerDepth);
-}
-//-----------------------------------------------------------------------
-class SpriteBatchDrawingContext final: public UI::DrawingContext {
-private:
-	SpriteBatch & spriteBatch;
-	std::shared_ptr<Texture2D> texture;
-	
-public:
-	explicit SpriteBatchDrawingContext(SpriteBatch & spriteBatchIn, std::shared_ptr<Texture2D> const& textureIn)
-		: spriteBatch(spriteBatchIn)
-		, texture(textureIn)
-	{
-	}
-	
-	void DrawRectangle(Color const& color, Rectangle const& rectangle)
-	{
-		spriteBatch.Draw(texture, Vector2(rectangle.X, -rectangle.Y),
-			Rectangle{0, 0, 1, 1}, color, 0, {0.0f, 1.0f}, Vector2(rectangle.Width, rectangle.Height), 0.0f);
-	}
-	
-	void DrawLine(Color const& color, float penSize, Point2D const& point1, Point2D const& point2)
-	{
-	}
-};
-
-}// unnamed namespace
 //-----------------------------------------------------------------------
 LightningTestGame::LightningTestGame(std::shared_ptr<GameHost> const& gameHostIn)
 	: gameHost(gameHostIn)
@@ -129,6 +73,7 @@ void LightningTestGame::Initialize()
 	primitiveAxes = MakeUnique<SceneEditor::PrimitiveAxes>(gameHost, editorColorScheme.CenterAxisX, editorColorScheme.CenterAxisY, editorColorScheme.CenterAxisZ);
 	primitiveGrid = MakeUnique<SceneEditor::PrimitiveGrid>(gameHost, editorColorScheme.GuideLine, editorColorScheme.Grid);
 	spriteBatch = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
+	spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
 	fxaa = MakeUnique<FXAA>(gameHost);
 	backgroundPlane = MakeUnique<SceneEditor::GradientPlane>(gameHost);
 	
@@ -260,8 +205,11 @@ void LightningTestGame::Initialize()
 		auto viewport = graphicsContext->Viewport();
 		fxaa->ResetViewportSize(viewport.Bounds);
 		
-		scenePanel->bounds.Width = viewport.Bounds.Width;
-		scenePanel->bounds.Height = viewport.Bounds.Height;
+		scenePanel->bounds.Width = viewport.Width();
+		scenePanel->bounds.Height = viewport.Height();
+		
+		spriteRenderer->SetProjectionMatrix(
+			Matrix4x4::CreateOrthographicLH(viewport.Width(), viewport.Height(), 1.0f, 100.0f));
 	});
 }
 //-----------------------------------------------------------------------
@@ -313,8 +261,8 @@ void LightningTestGame::DrawSprites()
 	// NOTE: Changing blend state
 	//graphicsContext->SetBlendState(blendStateAdditive);
 
-	POMDOG_ASSERT(spriteBatch);
-	spriteBatch->Begin(viewMatrix);
+	POMDOG_ASSERT(spriteRenderer);
+	spriteRenderer->Begin(SpriteSortMode::Deferred, viewMatrix);
 	{
 		SpriteLine spriteLine;
 		spriteLine.Texture = texture;
@@ -331,7 +279,7 @@ void LightningTestGame::DrawSprites()
 				POMDOG_ASSERT(i > 0);
 				auto & start = points[i - 1];
 				auto & end = points[i];
-				DrawSpriteLine(*spriteBatch, spriteLine, start, end, lineThickness, color, 0);
+				spriteLine.Draw(*spriteRenderer, start, end, lineThickness, color, 0);
 			}
 		};
 		
@@ -340,31 +288,27 @@ void LightningTestGame::DrawSprites()
 			DrawBeam(beam.Points, beam.Thickness, beam.Color);
 		}
 	}
-	spriteBatch->End();
+	spriteRenderer->End();
 	graphicsContext->SetBlendState(blendStateNonPremultiplied);
 }
 //-----------------------------------------------------------------------
 void LightningTestGame::DrawGUI()
 {
 	POMDOG_ASSERT(spriteBatch);
-	auto viewportWidth = graphicsContext->Viewport().Bounds.Width;
-	auto viewportHeight = graphicsContext->Viewport().Bounds.Height;
-
-	auto translation = Matrix4x4::CreateTranslation(Vector3(-viewportWidth/2, viewportHeight/2, 0));
-	
-	spriteBatch->Begin(translation);
 	{
-		SpriteBatchDrawingContext drawingContext(*spriteBatch, pomdogTexture);
+		spriteBatch->Begin(SpriteSortMode::BackToFront);
+		UI::SpriteDrawingContext drawingContext(*spriteBatch, pomdogTexture);
 		hierarchy.Draw(drawingContext);
+		spriteBatch->End();
 	}
-	spriteBatch->End();
-	
-	distanceFieldEffect->Parameters("DistanceFieldConstants")->SetValue(Vector2(slider3->Value(), slider4->Value()));
-	spriteFont->Begin(translation);
-	//spriteFont->Draw(*spriteBatchDistanceField, u8"std::string s = \"Hello!?@@\";\nint a = 0;", Vector2::Zero, Color::White);
-	spriteFont->Draw(*spriteBatchDistanceField, frameRateString, Vector2{40, 15}, Color::White,
-		0.0f, {0.0f, 0.0f}, 0.5f, 0.0f);
-	spriteFont->End();
+	{
+		distanceFieldEffect->Parameters("DistanceFieldConstants")->SetValue(Vector2(slider3->Value(), slider4->Value()));
+		spriteFont->Begin(Matrix4x4::Identity);
+		//spriteFont->Draw(*spriteBatchDistanceField, u8"std::string s = \"Hello!?@@\";\nint a = 0;", Vector2::Zero, Color::White);
+		spriteFont->Draw(*spriteBatchDistanceField, frameRateString, Vector2{40, 15}, Color::White,
+			0.0f, {0.0f, 0.0f}, 0.6f, 0.0f);
+		spriteFont->End();
+	}
 }
 //-----------------------------------------------------------------------
 void LightningTestGame::Draw()

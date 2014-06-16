@@ -39,6 +39,7 @@ namespace TestApp {
 using namespace Pomdog;
 
 class FXAA;
+class SpriteRenderer;
 
 class LightningTestGame: public Game {
 public:
@@ -62,6 +63,7 @@ private:
 	
 	std::shared_ptr<Texture2D> texture;
 	std::unique_ptr<SpriteBatch> spriteBatch;
+	std::unique_ptr<SpriteRenderer> spriteRenderer;
 	
 	//std::shared_ptr<SamplerState> samplerPoint;
 	std::shared_ptr<RenderTarget2D> renderTarget;

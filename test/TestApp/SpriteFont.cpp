@@ -106,7 +106,7 @@ void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
 
 	POMDOG_ASSERT(!textures.empty());
 
-	spriteBatch.Begin(transformMatrix);
+	spriteBatch.Begin(SpriteSortMode::Deferred, transformMatrix);
 
 	Vector2 currentPosition = position;
 
@@ -134,8 +134,8 @@ void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
 			POMDOG_ASSERT(glyph.TexturePage < textures.size());
 
 			spriteBatch.Draw(textures[glyph.TexturePage],
-				Vector2(1, -1) * (currentPosition + Vector2(glyph.XOffset, glyph.YOffset)),
-				glyph.Subrect, color, 0.0f, {0.0f, 1.0f}, 1.0f, 0.0f);
+				currentPosition + Vector2(glyph.XOffset, glyph.YOffset),
+				glyph.Subrect, color, 0.0f, {0.0f, 0.0f}, 1.0f, 0.0f);
 		}
 		
 		currentPosition.X += (glyph.XAdvance - spacing);
@@ -153,18 +153,12 @@ void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
 	}
 
 	POMDOG_ASSERT(!textures.empty());
-
-	auto size = MeasureString(text);
-	Vector2 inverseCoordinateSystem = Vector2(1, -1);
-
-
-	spriteBatch.Begin(
-		Matrix4x4::CreateTranslation({inverseCoordinateSystem * Vector2(-1, -1) * originPivot * size, 1.0f})
-		* Matrix4x4::CreateRotationZ(rotation)
-		* Matrix4x4::CreateScale({scale, 1.0f})
-		* Matrix4x4::CreateTranslation({inverseCoordinateSystem * position, 0.0f})
-		* transformMatrix);
 	
+	spriteBatch.Begin(SpriteSortMode::Deferred, Matrix4x4::CreateRotationZ(rotation)
+		* Matrix4x4::CreateScale({scale, 1.0f})
+		* Matrix4x4::CreateTranslation({position, 0.0f})
+		* transformMatrix);
+
 	Vector2 currentPosition = Vector2::Zero;
 
 	for (auto & character: text)
@@ -191,8 +185,8 @@ void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
 			POMDOG_ASSERT(glyph.TexturePage < textures.size());
 
 			spriteBatch.Draw(textures[glyph.TexturePage],
-				inverseCoordinateSystem * (currentPosition + Vector2(glyph.XOffset, glyph.YOffset)),
-				glyph.Subrect, color, 0.0f, {0.0f, 1.0f}, 1.0f, layerDepth);
+				currentPosition + Vector2(glyph.XOffset, glyph.YOffset),
+				glyph.Subrect, color, 0.0f, {0.0f, 0.0f}, 1.0f, layerDepth);
 		}
 		
 		currentPosition.X += (glyph.XAdvance - spacing);

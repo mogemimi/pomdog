@@ -60,12 +60,19 @@ private:
 	
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<InputLayout> inputLayout;
+	
+	Matrix4x4 projectionMatrix;
+	SpriteSortMode sortMode;
 
 public:
 	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
 	
-	void Begin(Matrix4x4 const& transformMatrix);
+	void ResetProjectionMatrix(Matrix4x4 const& projectionMatrix);
+	
+	void Begin(SpriteSortMode sortMode);
+	
+	void Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrix);
 	
 	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 		Vector2 const& position, Color const& color,
@@ -85,10 +92,17 @@ private:
 SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
 	: graphicsContext(graphicsContextIn)
+	, sortMode(SpriteSortMode::BackToFront)
 {
 	using PositionTextureCoord = CustomVertex<Vector4>;
 	using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4, Vector4>;
-	
+
+	{
+		auto viewport = graphicsContext->Viewport();
+		POMDOG_ASSERT(viewport.Width() > 0);
+		POMDOG_ASSERT(viewport.Height() > 0);
+		projectionMatrix = Matrix4x4::CreateOrthographicLH(viewport.Width(), viewport.Height(), 0.1f, 100.0f);
+	}
 	{
 		std::array<PositionTextureCoord, 4> const verticesCombo = {
 			Vector4(0.0f, 0.0f, 0.0f, 1.0f),
@@ -154,12 +168,32 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 #endif
 }
 //-----------------------------------------------------------------------
-void SpriteRenderer::Impl::Begin(Matrix4x4 const& transformMatrix)
+void SpriteRenderer::Impl::ResetProjectionMatrix(Matrix4x4 const& projectionMatrixIn)
 {
+	this->projectionMatrix = projectionMatrixIn;
+}
+//-----------------------------------------------------------------------
+void SpriteRenderer::Impl::Begin(SpriteSortMode sortModeIn)
+{
+	this->sortMode = sortModeIn;
+
 	auto viewport = graphicsContext->Viewport();
 	
-	alignas(16) Matrix4x4 projection = Matrix4x4::Transpose(transformMatrix *
-		Matrix4x4::CreateOrthographicLH(viewport.Width(), viewport.Height(), 0.1f, 100.0f));
+	POMDOG_ASSERT(viewport.Width() > 0);
+	POMDOG_ASSERT(viewport.Height() > 0);
+
+	alignas(16) Matrix4x4 projection = Matrix4x4::Transpose(projectionMatrix);
+
+	auto parameter = effectPass->Parameters("Matrices");
+	parameter->SetValue(projection);
+}
+//-----------------------------------------------------------------------
+void SpriteRenderer::Impl::Begin(SpriteSortMode sortModeIn, Matrix4x4 const& transformMatrix)
+{
+	this->sortMode = sortModeIn;
+
+	alignas(16) Matrix4x4 projection = Matrix4x4::Transpose(
+		transformMatrix * projectionMatrix);
 
 	auto parameter = effectPass->Parameters("Matrices");
 	parameter->SetValue(projection);
@@ -183,10 +217,21 @@ void SpriteRenderer::Impl::Flush()
 		POMDOG_ASSERT(!spriteQueues[queuePos].empty());
 		
 		auto & sprites = spriteQueues[queuePos];
-		
-		std::sort(std::begin(sprites), std::end(sprites), [](SpriteInfo const& a, SpriteInfo const& b) {
-			return a.TransformMatrix2.Z > b.TransformMatrix2.Z;
-		});
+
+		switch (sortMode) {
+		case SpriteSortMode::BackToFront:
+			std::sort(std::begin(sprites), std::end(sprites), [](SpriteInfo const& a, SpriteInfo const& b) {
+				return a.TransformMatrix2.Z > b.TransformMatrix2.Z;
+			});
+			break;
+		case SpriteSortMode::FrontToBack:
+			std::sort(std::begin(sprites), std::end(sprites), [](SpriteInfo const& a, SpriteInfo const& b) {
+				return a.TransformMatrix2.Z < b.TransformMatrix2.Z;
+			});
+			break;
+		case SpriteSortMode::Deferred:
+			break;
+		}
 		
 		DrawInstance(textures[queuePos], sprites);
 		sprites.clear();
@@ -309,10 +354,26 @@ SpriteRenderer::SpriteRenderer(std::shared_ptr<GraphicsContext> const& graphicsC
 //-----------------------------------------------------------------------
 SpriteRenderer::~SpriteRenderer() = default;
 //-----------------------------------------------------------------------
-void SpriteRenderer::Begin(Matrix4x4 const& transformMatrixIn)
+void ResetProjectionMatrix(Matrix4x4 const& projectionMatrix)
+{
+}
+//-----------------------------------------------------------------------
+void SpriteRenderer::SetProjectionMatrix(Matrix4x4 const& projectionMatrix)
 {
 	POMDOG_ASSERT(impl);
-	impl->Begin(transformMatrixIn);
+	impl->ResetProjectionMatrix(projectionMatrix);
+}
+//-----------------------------------------------------------------------
+void SpriteRenderer::Begin(SpriteSortMode sortMode)
+{
+	POMDOG_ASSERT(impl);
+	impl->Begin(sortMode);
+}
+//-----------------------------------------------------------------------
+void SpriteRenderer::Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrixIn)
+{
+	POMDOG_ASSERT(impl);
+	impl->Begin(sortMode, transformMatrixIn);
 }
 //-----------------------------------------------------------------------
 void SpriteRenderer::End()
