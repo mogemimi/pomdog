@@ -117,6 +117,10 @@ public:
 
 	///@~Japanese
 	/// @brief 指定された行列を使用してベクトルをトランスフォームします。
+	static FloatingPointVector2 Transform(FloatingPointVector2 const& position, FloatingPointMatrix3x2<T> const& matrix);
+
+	///@~Japanese
+	/// @brief 指定された行列を使用してベクトルをトランスフォームします。
 	static FloatingPointVector2 Transform(FloatingPointVector2 const& position, FloatingPointMatrix4x4<T> const& matrix);
 
 	///@~Japanese

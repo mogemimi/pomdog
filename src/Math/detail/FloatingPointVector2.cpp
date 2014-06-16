@@ -10,6 +10,7 @@
 #include <cmath>
 #include <limits>
 #include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Math/detail/FloatingPointMatrix3x2.hpp>
 #include <Pomdog/Math/detail/FloatingPointMatrix4x4.hpp>
 #include <Pomdog/Math/detail/FloatingPointQuaternion.hpp>
 #include <Pomdog/Math/MathHelper.hpp>
@@ -207,12 +208,20 @@ FloatingPointVector2<T>::Normalize(FloatingPointVector2 const& source, FloatingP
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>
+FloatingPointVector2<T>::Transform(FloatingPointVector2 const& position, FloatingPointMatrix3x2<T> const& matrix)
+{
+	return FloatingPointVector2(
+		(position.X * matrix(0, 0)) + (position.Y * matrix(1, 0)) + matrix(2, 0),
+		(position.X * matrix(0, 1)) + (position.Y * matrix(1, 1)) + matrix(2, 1));
+}
+//-----------------------------------------------------------------------
+template <typename T>
+FloatingPointVector2<T>
 FloatingPointVector2<T>::Transform(FloatingPointVector2 const& position, FloatingPointMatrix4x4<T> const& matrix)
 {
 	return FloatingPointVector2(
 		(position.X * matrix.m[0][0]) + (position.Y * matrix.m[1][0]) + matrix.m[3][0],
-		(position.X * matrix.m[0][1]) + (position.Y * matrix.m[1][1]) + matrix.m[3][1]
-	);
+		(position.X * matrix.m[0][1]) + (position.Y * matrix.m[1][1]) + matrix.m[3][1]);
 }
 //-----------------------------------------------------------------------
 template <typename T>
