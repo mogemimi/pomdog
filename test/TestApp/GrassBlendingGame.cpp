@@ -182,7 +182,6 @@ void GrassBlendingGame::Initialize()
 	
 	{
 		auto node = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
-		node->bounds = {0, 0, window->ClientBounds().Width, window->ClientBounds().Height};
 		node->drawOrder = 1.0f;
 		node->cameraObject = mainCamera;
 	
@@ -192,7 +191,7 @@ void GrassBlendingGame::Initialize()
 	{
 		auto slider = std::make_shared<UI::Slider>(0, 100);
 		slider->drawOrder = 0.0f;
-		slider->RenderTransform.Position = Vector2{35, 40};
+		slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 40}));
 		slider->Value(34);
 	
 		slider1 = slider;
@@ -201,7 +200,7 @@ void GrassBlendingGame::Initialize()
 	{
 		auto slider = std::make_shared<UI::Slider>(0.1, 4.0);
 		slider->drawOrder = 0.0f;
-		slider->RenderTransform.Position = Vector2{35, 65};
+		slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 65}));
 		slider->Value(1.2);
 	
 		slider2 = slider;

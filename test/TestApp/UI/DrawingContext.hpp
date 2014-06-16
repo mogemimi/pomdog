@@ -20,8 +20,12 @@ class DrawingContext {
 public:
 	virtual ~DrawingContext() = default;
 
-	virtual void DrawRectangle(Color const& color, Rectangle const& rectangle) = 0;
-	virtual void DrawLine(Color const& color, float penSize, Point2D const& point1, Point2D const& point2) = 0;
+	virtual Matrix3x2 Top() const = 0;
+	virtual void Push(Matrix3x2 const& matrix) = 0;
+	virtual void Pop() = 0;
+
+	virtual void DrawRectangle(Matrix3x2 const& transform, Color const& color, Rectangle const& rectangle) = 0;
+	virtual void DrawLine(Matrix3x2 const& transform, Color const& color, float penSize, Point2D const& point1, Point2D const& point2) = 0;
 	//void DrawEllipse();
 	//void DrawText();
 	//void DrawSprite();

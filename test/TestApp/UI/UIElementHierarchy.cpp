@@ -8,15 +8,26 @@
 
 #include "UIElementHierarchy.hpp"
 #include "DrawingContext.hpp"
+#include "UIHelper.hpp"
 
 namespace Pomdog {
 namespace UI {
+namespace {
+
+bool Intersects(Point2D const& position, UIElement & element)
+{
+	Rectangle bounds(0, 0, element.Width(), element.Height());
+	auto positionInChild = UIHelper::ConvertToChildSpace(position, element.GlobalTransform());
+	return bounds.Intersects(positionInChild);
+}
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 std::shared_ptr<UIElement> UIElementHierarchy::Find(Point2D const& position)
 {
-	for (auto & node: nodes)
+	for (auto & node: children)
 	{
-		if (node->Intersects(position)) {
+		if (Intersects(position, *node)) {
 			return node;
 		}
 	}
@@ -57,7 +68,7 @@ void UIElementHierarchy::Touch(MouseState const& mouseState)
 			POMDOG_ASSERT(CheckMouseButton(mouseState, *pointerMouseEvent) == ButtonState::Pressed);
 		
 			POMDOG_ASSERT(node == pointerState->focusedElement);
-			POMDOG_ASSERT(pointerState->focusedElement->Intersects(position));
+			POMDOG_ASSERT(Intersects(position, *pointerState->focusedElement));
 			PointerPressed(position);
 		}
 		break;
@@ -129,7 +140,7 @@ void UIElementHierarchy::PointerPressed(Point2D const& position)
 
 	pointerState->focusedElement->OnPointerPressed(pointerState->pointerPoint);
 }
-
+//-----------------------------------------------------------------------
 void UIElementHierarchy::PointerMoved(Point2D const& position)
 {
 	POMDOG_ASSERT(pointerState);
@@ -154,19 +165,19 @@ void UIElementHierarchy::PointerReleased(Point2D const& position)
 //-----------------------------------------------------------------------
 void UIElementHierarchy::AddChild(std::shared_ptr<UI::UIElement> const& node)
 {
-	nodes.push_back(node);
+	children.push_back(node);
 	Sort();
 }
 //-----------------------------------------------------------------------
 void UIElementHierarchy::AddChild(std::shared_ptr<UI::UIElement> && node)
 {
-	nodes.push_back(std::move(node));
+	children.push_back(std::move(node));
 	Sort();
 }
 //-----------------------------------------------------------------------
 void UIElementHierarchy::UpdateAnimation(DurationSeconds const& frameDuration)
 {
-	for (auto & node: nodes)
+	for (auto & node: children)
 	{
 		POMDOG_ASSERT(node);
 		node->UpdateAnimation(frameDuration);
@@ -175,10 +186,28 @@ void UIElementHierarchy::UpdateAnimation(DurationSeconds const& frameDuration)
 //-----------------------------------------------------------------------
 void UIElementHierarchy::Draw(DrawingContext & drawingContext)
 {
-	std::for_each(nodes.rbegin(), nodes.rend(), [&drawingContext](std::shared_ptr<UI::UIElement> const& node)
+	drawingContext.Push(Matrix3x2::Identity);
+	std::for_each(children.rbegin(), children.rend(), [&drawingContext](std::shared_ptr<UI::UIElement> const& node)
 	{
+		if (!node->Parent().expired()) {
+			///@todo badcode
+			return;
+		}
+	
 		node->Draw(drawingContext);
 	});
+	drawingContext.Pop();
+}
+//-----------------------------------------------------------------------
+void UIElementHierarchy::RenderSizeChanged(std::uint32_t width, std::uint32_t height)
+{
+	for (auto & node: children)
+	{
+		if (node->SizeToFitContent())
+		{
+			node->OnRenderSizeChanged(width, height);
+		}
+	}
 }
 //-----------------------------------------------------------------------
 Optional<UI::PointerMouseEvent> UIElementHierarchy::FindPointerMouseEvent(MouseState const& mouseState) const
@@ -225,7 +254,7 @@ ButtonState UIElementHierarchy::CheckMouseButton(MouseState const& mouseState, U
 //-----------------------------------------------------------------------
 void UIElementHierarchy::Sort()
 {
-	std::sort(std::begin(nodes), std::end(nodes),
+	std::sort(std::begin(children), std::end(children),
 		[](std::shared_ptr<UI::UIElement> const& a, std::shared_ptr<UI::UIElement> const& b){
 			return a->drawOrder < b->drawOrder; });
 }

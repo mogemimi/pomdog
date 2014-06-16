@@ -8,6 +8,8 @@
 
 #include "Slider.hpp"
 #include "DrawingContext.hpp"
+#include "PointerPoint.hpp"
+#include "UIHelper.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -28,8 +30,7 @@ static Color FocusedThumbColor {229, 20, 0, 255};
 }// unnamed namespace
 //-----------------------------------------------------------------------
 Slider::Slider(double minimumIn, double maximumIn)
-	: height(12)
-	, width(120)
+	: Control(Matrix3x2::Identity, 120, 12)
 	, minimum(minimumIn)
 	, maximum(maximumIn)
 	, value(minimumIn)
@@ -42,8 +43,6 @@ Slider::Slider(double minimumIn, double maximumIn)
 	POMDOG_ASSERT(minimum < maximum);
 	POMDOG_ASSERT(value >= minimum);
 	POMDOG_ASSERT(value <= maximum);
-	
-	RenderTransform.Position = {50, 100};
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -127,12 +126,13 @@ void Slider::OnPointerPressed(PointerPoint const& pointerPoint)
 		return;
 	}
 
-	POMDOG_ASSERT(width > 0);
+	POMDOG_ASSERT(Width() > 0);
 	
 	// NOTE: float thumbOffset = thumbWidth / 2
 	constexpr float thumbOffset = 5;
 	
-	auto amount = (pointerPoint.Position.X - RenderTransform.Position.X - thumbOffset/2) / (width - 2*thumbOffset);
+	auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
+	auto amount = (pointInView.X - thumbOffset / 2) / (Width() - 2 * thumbOffset);
 	value = MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum);
 	isDragging = true;
 }
@@ -147,12 +147,13 @@ void Slider::OnPointerMoved(PointerPoint const& pointerPoint)
 		return;
 	}
 
-	POMDOG_ASSERT(width > 0);
+	POMDOG_ASSERT(Width() > 0);
 
 	// NOTE: float thumbOffset = thumbWidth / 2
 	constexpr float thumbOffset = 5;
 	
-	auto amount = (pointerPoint.Position.X - RenderTransform.Position.X - thumbOffset/2) / (width - 2*thumbOffset);
+	auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
+	auto amount = (pointInView.X - thumbOffset / 2) / (Width() - 2 * thumbOffset);
 	value = MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum);
 }
 //-----------------------------------------------------------------------
@@ -178,44 +179,43 @@ void Slider::UpdateAnimation(DurationSeconds const& frameDuration)
 	}
 }
 //-----------------------------------------------------------------------
+void Slider::OnRenderSizeChanged(std::uint32_t widthIn, std::uint32_t heightIn)
+{
+	Width(widthIn);
+	Height(heightIn);
+}
+//-----------------------------------------------------------------------
 void Slider::Draw(DrawingContext & drawingContext)
 {
 	//MathHelper::Clamp(value, minimum, maximum);
 
 	POMDOG_ASSERT(value >= minimum);
 	POMDOG_ASSERT(value <= maximum);
-
-	///@todo badcode
-	bounds.X = RenderTransform.Position.X;
-	bounds.Y = RenderTransform.Position.Y;
-	bounds.Width = width;
-	bounds.Height = height;
 	
-	auto sliderWidth2 = width * ((value - minimum) / (maximum - minimum));
-	auto controlPosition2 = (width - height) * ((value - minimum) / (maximum - minimum));
+	auto sliderWidth2 = Width() * ((value - minimum) / (maximum - minimum));
+	auto controlPosition2 = (Width() - Height()) * ((value - minimum) / (maximum - minimum));
 	
-	std::int32_t x = RenderTransform.Position.X;
-	std::int32_t y = RenderTransform.Position.Y;
+	auto transform = Transform() * drawingContext.Top();
 	
-	drawingContext.DrawRectangle(trackColor, Rectangle(x, y, width, height));
-	drawingContext.DrawRectangle(fillColor, Rectangle(x, y, sliderWidth2, height));
+	drawingContext.DrawRectangle(transform, trackColor, Rectangle(0, 0, Width(), Height()));
+	drawingContext.DrawRectangle(transform, fillColor, Rectangle(0, 0, sliderWidth2, Height()));
 	
 	if (isEnabled && isDragging)
 	{
 		constexpr float pixel = 2.0f;
 		
-		auto pos = RenderTransform.Position + Vector2(controlPosition2 - pixel, -pixel);
-		auto size = Vector2(height + 2 * pixel, height + 2 * pixel);
+		auto pos = Vector2(controlPosition2 - pixel, -pixel);
+		auto size = Vector2(Height() + 2 * pixel, Height() + 2 * pixel);
 		
-		drawingContext.DrawRectangle(SliderColorScheme::FocusedThumbColor,
+		drawingContext.DrawRectangle(transform, SliderColorScheme::FocusedThumbColor,
 			Rectangle(pos.X, pos.Y, size.X, size.Y));
 	}
 	
 	if (isEnabled)
 	{
-		auto pos = RenderTransform.Position + Vector2(controlPosition2, 0);
-		drawingContext.DrawRectangle(SliderColorScheme::ThumbColor,
-			Rectangle(pos.X, pos.Y, height, height));
+		auto pos = Vector2(controlPosition2, 0);
+		drawingContext.DrawRectangle(transform, SliderColorScheme::ThumbColor,
+			Rectangle(pos.X, pos.Y, Height(), Height()));
 	}
 }
 //-----------------------------------------------------------------------

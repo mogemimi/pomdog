@@ -39,6 +39,8 @@ public:
 
 	void Draw(DrawingContext & drawingContext);
 	
+	void RenderSizeChanged(std::uint32_t width, std::uint32_t height);
+	
 private:
 	std::shared_ptr<UIElement> Find(Point2D const& position);
 	
@@ -51,7 +53,7 @@ private:
 	void PointerMoved(Point2D const& position);
 	
 	void PointerReleased(Point2D const& position);
-
+	
 	Optional<UI::PointerMouseEvent> FindPointerMouseEvent(MouseState const& mouseState) const;
 
 	ButtonState CheckMouseButton(MouseState const& mouseState, UI::PointerMouseEvent const& pointerMouseEvent) const;
@@ -66,7 +68,7 @@ private:
 	};
 
 	std::unique_ptr<PointerState> pointerState;
-	std::vector<std::shared_ptr<UI::UIElement>> nodes;
+	std::vector<std::shared_ptr<UI::UIElement>> children;
 };
 
 }// namespace UI

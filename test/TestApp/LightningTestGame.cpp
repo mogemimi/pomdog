@@ -24,6 +24,7 @@
 #include "ParticleParameterRandomCurves.hpp"
 #include "SpriteLine.hpp"
 #include "SpriteDrawingContext.hpp"
+#include "UI/StackPanel.hpp"
 
 
 namespace TestApp {
@@ -134,7 +135,6 @@ void LightningTestGame::Initialize()
 	
 	{
 		auto node = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
-		node->bounds = {0, 0, window->ClientBounds().Width, window->ClientBounds().Height};
 		node->drawOrder = 1.0f;
 		node->cameraObject = mainCamera;
 	
@@ -142,40 +142,55 @@ void LightningTestGame::Initialize()
 		hierarchy.AddChild(std::move(node));
 	}
 	{
-		auto slider = std::make_shared<UI::Slider>(0, 100);
-		slider->drawOrder = 0.0f;
-		slider->RenderTransform.Position = Vector2{35, 40};
-		slider->Value(34);
+		auto stackPanel = std::make_shared<UI::StackPanel>(190, 170);
+		stackPanel->drawOrder = 0.2f;
+		stackPanel->Transform(Matrix3x2::CreateTranslation(Vector2{35, 40}));
+		hierarchy.AddChild(stackPanel);
 	
-		slider1 = slider;
-		hierarchy.AddChild(std::move(slider));
-	}
-	{
-		auto slider = std::make_shared<UI::Slider>(0.1, 4.0);
-		slider->drawOrder = 0.0f;
-		slider->RenderTransform.Position = Vector2{35, 65};
-		slider->Value(1.2);
-	
-		slider2 = slider;
-		hierarchy.AddChild(std::move(slider));
-	}
-	{
-		auto slider = std::make_shared<UI::Slider>(1.0f/16.0f, 1.0f/3.0f);
-		slider->drawOrder = 0.0f;
-		slider->RenderTransform.Position = Vector2{35, 90};
-		slider->Value(1.0f/5.0f);
-	
-		slider3 = slider;
-		hierarchy.AddChild(std::move(slider));
-	}
-	{
-		auto slider = std::make_shared<UI::Slider>(0.4f, 0.9f);
-		slider->drawOrder = 0.0f;
-		slider->RenderTransform.Position = Vector2{35, 115};
-		slider->Value(0.5f);
-	
-		slider4 = slider;
-		hierarchy.AddChild(std::move(slider));
+		{
+			auto slider = std::make_shared<UI::Slider>(0, 100);
+			slider->drawOrder = 0.0f;
+			slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 40}));
+			slider->Value(34);
+		
+			slider1 = slider;
+			stackPanel->Children.push_back(slider);
+			slider->Parent(stackPanel);
+			hierarchy.AddChild(slider);
+		}
+		{
+			auto slider = std::make_shared<UI::Slider>(0.1, 4.0);
+			slider->drawOrder = 0.0f;
+			slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 65}));
+			slider->Value(1.2);
+		
+			slider2 = slider;
+			stackPanel->Children.push_back(slider);
+			slider->Parent(stackPanel);
+			hierarchy.AddChild(slider);
+		}
+		{
+			auto slider = std::make_shared<UI::Slider>(1.0f/16.0f, 1.0f/3.0f);
+			slider->drawOrder = 0.0f;
+			slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 90}));
+			slider->Value(1.0f/5.0f);
+		
+			slider3 = slider;
+			stackPanel->Children.push_back(slider);
+			slider->Parent(stackPanel);
+			hierarchy.AddChild(slider);
+		}
+		{
+			auto slider = std::make_shared<UI::Slider>(0.4f, 0.9f);
+			slider->drawOrder = 0.0f;
+			slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 115}));
+			slider->Value(0.5f);
+		
+			slider4 = slider;
+			stackPanel->Children.push_back(slider);
+			slider->Parent(stackPanel);
+			hierarchy.AddChild(slider);
+		}
 	}
 	{
 		scenePanel->SceneTouch.Connect([this](Vector2 const& positionInView) {
@@ -205,8 +220,7 @@ void LightningTestGame::Initialize()
 		auto viewport = graphicsContext->Viewport();
 		fxaa->ResetViewportSize(viewport.Bounds);
 		
-		scenePanel->bounds.Width = viewport.Width();
-		scenePanel->bounds.Height = viewport.Height();
+		hierarchy.RenderSizeChanged(viewport.Width(), viewport.Height());
 		
 		spriteRenderer->SetProjectionMatrix(
 			Matrix4x4::CreateOrthographicLH(viewport.Width(), viewport.Height(), 1.0f, 100.0f));

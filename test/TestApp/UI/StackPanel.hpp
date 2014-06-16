@@ -6,13 +6,14 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_SCENEPANEL_F59B1210_FA6C_4446_9752_7754A8017116_HPP
-#define POMDOG_SCENEPANEL_F59B1210_FA6C_4446_9752_7754A8017116_HPP
+#ifndef POMDOG_STACKPANEL_1285AAF5_DFD5_44B2_974C_040829A6EB6C_HPP
+#define POMDOG_STACKPANEL_1285AAF5_DFD5_44B2_974C_040829A6EB6C_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
 #endif
 
+#include <list>
 #include <Pomdog/Pomdog.hpp>
 #include <Pomdog/Utility/Optional.hpp>
 #include "Panel.hpp"
@@ -20,14 +21,13 @@
 namespace Pomdog {
 namespace UI {
 
-class ScenePanel: public Panel {
-public:
-	std::shared_ptr<GameObject> cameraObject;
-	
-public:
-	ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn);
+using UIElementCollection = std::list<std::shared_ptr<UIElement>>;
 
-	bool SizeToFitContent() const override { return true; }
+class StackPanel: public Panel {
+public:
+	StackPanel(std::uint32_t widthIn, std::uint32_t heightIn);
+	
+	bool SizeToFitContent() const override { return false; }
 	
 	void OnPointerCanceled(PointerPoint const& pointerPoint) override;
 	
@@ -50,30 +50,14 @@ public:
 	void Draw(DrawingContext & drawingContext) override;
 	
 	void UpdateAnimation(DurationSeconds const& frameDuration) override;
-	
-	Signal<void(Vector2 const& point)> SceneTouch;
-	
-private:
-	void OnMouseLeftButtonPressed(PointerPoint const& pointerPoint);
-	void OnMouseLeftButtonMoved(PointerPoint const& pointerPoint);
-	void OnMouseMiddleButtonPressed(PointerPoint const& pointerPoint);
-	void OnMouseMiddleButtonMoved(PointerPoint const& pointerPoint);
-	void OnMouseRightButtonPressed(PointerPoint const& pointerPoint);
-	void OnMouseRightButtonMoved(PointerPoint const& pointerPoint);
 
-	Vector2 ConvertToPanelSpace(Point2D const& point) const;
-	
-private:
-	Optional<Vector2> tumbleStartPosition;
-	Optional<Vector2> trackStartPosition;
-	
-	Optional<std::int32_t> prevScrollWheel;
-	float scrollWheel;
+	UIElementCollection Children;
 
-	bool isFocused;
+private:	
+	Optional<Vector2> startTouchPoint;
 };
 
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SCENEPANEL_F59B1210_FA6C_4446_9752_7754A8017116_HPP)
+#endif // !defined(POMDOG_STACKPANEL_1285AAF5_DFD5_44B2_974C_040829A6EB6C_HPP)

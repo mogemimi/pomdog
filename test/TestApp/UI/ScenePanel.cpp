@@ -64,17 +64,16 @@ static Vector2 SampleTrackGesture(Vector2 const& position, Vector2 & startPositi
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-ScenePanel::ScenePanel(double widthIn, double heightIn)
-	//: width(widthIn)
-	//, height(heightIn)
-	: isFocused(false)
+ScenePanel::ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn)
+	: Panel(Matrix3x2::Identity, widthIn, heightIn)
+	, isFocused(false)
 	, prevScrollWheel(0)
 	, scrollWheel(0)
 {}
 //-----------------------------------------------------------------------
 Vector2 ScenePanel::ConvertToPanelSpace(Point2D const& point) const
 {
-	return Vector2(point.X, bounds.Height - point.Y);
+	return Vector2(point.X, Height() - point.Y);
 }
 //-----------------------------------------------------------------------
 void ScenePanel::OnPointerCanceled(PointerPoint const& pointerPoint)
@@ -172,11 +171,8 @@ void ScenePanel::OnMouseLeftButtonMoved(PointerPoint const& pointerPoint)
 
 	{
 		// Tumble Gesture
-		auto panelBounds = bounds;
-		panelBounds.X = 0;
-		panelBounds.Y = 0;
-		
-		transform->Rotation += SampleTumbleGesture(ConvertToPanelSpace(pointerPoint.Position), *tumbleStartPosition, panelBounds);
+		transform->Rotation += SampleTumbleGesture(ConvertToPanelSpace(pointerPoint.Position), *tumbleStartPosition,
+			Rectangle{0, 0, Width(), Height()});
 		if (transform->Rotation > MathConstants<float>::TwoPi()) {
 			transform->Rotation -= MathConstants<float>::TwoPi();
 		}
@@ -248,30 +244,15 @@ void ScenePanel::UpdateAnimation(DurationSeconds const& frameDuration)
 	scrollWheel = scrollWheel * 0.8f;
 }
 //-----------------------------------------------------------------------
+void ScenePanel::OnRenderSizeChanged(std::uint32_t widthIn, std::uint32_t heightIn)
+{
+	Width(widthIn);
+	Height(heightIn);
+}
+//-----------------------------------------------------------------------
 void ScenePanel::Draw(DrawingContext &)
 {
 }
-//-----------------------------------------------------------------------
-//void ScenePanel::ControlCamera()
-//{
-//	POMDOG_ASSERT(cameraObject);
-//	POMDOG_ASSERT(clock);
-//	POMDOG_ASSERT(mouse);
-//	
-//	bounds.X = RenderTransform.Position.X;
-//	bounds.Y = RenderTransform.Position.Y;
-//	bounds.Width = Width;
-//	bounds.Height = Height;
-//	
-//	auto transform = cameraObject->Component<Transform2D>();
-//	auto camera = cameraObject->Component<Camera2D>();
-//	
-//	if (transform && camera)
-//	{
-//		Rectangle bounds(RenderTransform.Position.X, RenderTransform.Position.Y, Width, Height);
-//		cameraView.Input(mouse->State(), *clock, bounds, *transform, *camera);
-//	}
-//}
 //-----------------------------------------------------------------------
 }// namespace UI
 }// namespace Pomdog

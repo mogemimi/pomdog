@@ -14,24 +14,18 @@
 #endif
 
 #include <Pomdog/Pomdog.hpp>
+#include <Pomdog/Utility/Optional.hpp>
 #include "Control.hpp"
-#include "PointerPoint.hpp"
+#include "UIView.hpp"
 
 namespace Pomdog {
 namespace UI {
 
 class Slider: public Control {
-public:
-	Transform2D RenderTransform;
-	Vector2 RenderTransformOrigin;
-
 private:
 	double minimum;
 	double maximum;
 	double value;
-	
-	std::uint16_t height;
-	std::uint16_t width;
 
 	struct ColorAnimation {
 		Color startColor;
@@ -47,7 +41,7 @@ private:
 	Color trackColor;
 	bool isDragging;
 	bool isEnabled;
-	
+
 public:
 	Slider(double minimum, double maximum);
 	
@@ -59,7 +53,9 @@ public:
 	
 	bool IsEnabled() const;
 	void IsEnabled(bool isEnabled);
-	
+
+	bool SizeToFitContent() const override { return false; }
+
 	void OnPointerCanceled(PointerPoint const& pointerPoint) override;
 	
 	void OnPointerCaptureLost(PointerPoint const& pointerPoint) override;
@@ -75,6 +71,8 @@ public:
 	void OnPointerMoved(PointerPoint const& pointerPoint) override;
 	
 	void OnPointerReleased(PointerPoint const& pointerPoint) override;
+	
+	void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
 	
 	void Draw(DrawingContext & drawingContext) override;
 	

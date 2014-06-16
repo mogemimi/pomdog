@@ -21,19 +21,45 @@ namespace UI {
 class DrawingContext;
 class PointerPoint;
 
+enum class HorizontalAlignment: std::uint8_t {
+	Left,
+	Center,
+	Stretch,
+	Right,
+};
+
+enum class VerticalAlignment: std::uint8_t {
+	Bottom,
+	Center,
+	Stretch,
+	Top,
+};
 
 class UIElement {
 public:
-	Rectangle bounds;
+	///@todo badcode
 	float drawOrder;
 	
 	virtual ~UIElement() = default;
+
+	virtual bool SizeToFitContent() const = 0;
+	virtual Matrix3x2 Transform() const = 0;
+	virtual void Transform(Matrix3x2 const& matrix) = 0;
+	virtual void Transform(Matrix3x2 && matrix) = 0;
+	virtual std::uint16_t Width() const = 0;
+	virtual std::uint16_t Height() const = 0;
 	
-	bool Intersects(Point2D const& position)
-	{
-		return bounds.Intersects(position);
-	}
-	
+	virtual std::weak_ptr<UIElement const> Parent() const = 0;
+	virtual std::weak_ptr<UIElement> Parent() = 0;
+	virtual void MarkParentTransformDirty() = 0;
+	virtual Matrix3x2 GlobalTransform() = 0;
+
+//	virtual Vector2 Origin() const = 0;
+//	virtual UI::HorizontalAlignment HorizontalAlignment() const = 0;
+//	virtual UI::VerticalAlignment VerticalAlignment() const = 0;
+//	virtual Thickness Margin() const = 0;
+//	virtual Thickness Padding() const = 0;
+
 	virtual void OnPointerCanceled(PointerPoint const& pointerPoint) = 0;
 	
 	virtual void OnPointerCaptureLost(PointerPoint const& pointerPoint) = 0;
@@ -49,6 +75,8 @@ public:
 	virtual void OnPointerReleased(PointerPoint const& pointerPoint) = 0;
 	
 	virtual void OnPointerWheelChanged(PointerPoint const& pointerPoint) = 0;
+	
+	virtual void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) = 0;
 	
 	virtual void Draw(DrawingContext & drawingContext) = 0;
 	
