@@ -21,8 +21,8 @@ DebugNavigator::DebugNavigator(std::shared_ptr<GameClock> const& clockIn)
 //-----------------------------------------------------------------------
 void DebugNavigator::Draw(DrawingContext & drawingContext)
 {
-	constexpr float minFramerate = 15.0f;
-	constexpr float maxFramerate = 61.0f;
+	constexpr float minFramerate = 10.0f;
+	constexpr float maxFramerate = 60.0f;
 	constexpr std::uint16_t maxHistories = 20;
 	
 	{
@@ -44,7 +44,7 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
 	{
 		auto graphTransform = Matrix3x2::CreateTranslation(Vector2{0, 16}) * transform;
 	
-		constexpr float maxGraphHeight = 26.0f;
+		constexpr std::uint16_t maxGraphHeight = 26;
 		constexpr float graphMarginLeft = 1.0f;
 
 		auto graghWidth = (static_cast<float>(Width()) / maxHistories);
@@ -53,7 +53,7 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
 		for (auto & frameRate: frameRates)
 		{
 			auto amount = ((frameRate - minFramerate) / (maxFramerate - minFramerate));
-			auto graphHeight = std::max(1.0f, maxGraphHeight * amount);
+			auto graphHeight = MathHelper::Clamp<std::uint16_t>(maxGraphHeight * amount, 1, maxGraphHeight);
 
 			drawingContext.DrawRectangle(graphTransform, Color::CornflowerBlue,
 				Rectangle(graphX, maxGraphHeight - graphHeight, graghWidth - graphMarginLeft, graphHeight));
