@@ -127,12 +127,19 @@
 
 // Input
 #include "Input/ButtonState.hpp"
+#include "Input/GamepadButtons.hpp"
+#include "Input/GamepadCapabilities.hpp"
+#include "Input/GamepadDPad.hpp"
+#include "Input/GamepadState.hpp"
+#include "Input/GamepadThumbSticks.hpp"
+#include "Input/GamepadType.hpp"
 #include "Input/Keyboard.hpp"
 #include "Input/KeyboardState.hpp"
 #include "Input/Keys.hpp"
 #include "Input/KeyState.hpp"
 #include "Input/Mouse.hpp"
 #include "Input/MouseState.hpp"
+#include "Input/PlayerIndex.hpp"
 #include "Input/TouchLocation.hpp"
 #include "Input/TouchLocationState.hpp"
 
