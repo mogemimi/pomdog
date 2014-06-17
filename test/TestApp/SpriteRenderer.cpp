@@ -139,7 +139,7 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 			SpriteInfoVertex::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Dynamic);
 	}
 	{
-		effectPass = assets.Load<EffectPass>("SpriteEffect");
+		effectPass = assets.Load<EffectPass>("Effects/SpriteRendererEffect");
 		
 		auto declartation = PositionTextureCoord::Declaration();
 		

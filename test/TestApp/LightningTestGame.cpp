@@ -144,13 +144,13 @@ void LightningTestGame::Initialize()
 	{
 		auto stackPanel = std::make_shared<UI::StackPanel>(190, 170);
 		stackPanel->drawOrder = 0.2f;
-		stackPanel->Transform(Matrix3x2::CreateTranslation(Vector2{35, 40}));
+		stackPanel->Transform(Matrix3x2::CreateTranslation(Vector2{5, 10}));
 		hierarchy.AddChild(stackPanel);
 	
 		{
 			auto slider = std::make_shared<UI::Slider>(0, 100);
 			slider->drawOrder = 0.0f;
-			slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 40}));
+			slider->Transform(Matrix3x2::CreateTranslation(Vector2{9, 40}));
 			slider->Value(34);
 		
 			slider1 = slider;
@@ -161,7 +161,7 @@ void LightningTestGame::Initialize()
 		{
 			auto slider = std::make_shared<UI::Slider>(0.1, 4.0);
 			slider->drawOrder = 0.0f;
-			slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 65}));
+			slider->Transform(Matrix3x2::CreateTranslation(Vector2{9, 65}));
 			slider->Value(1.2);
 		
 			slider2 = slider;
@@ -172,7 +172,7 @@ void LightningTestGame::Initialize()
 		{
 			auto slider = std::make_shared<UI::Slider>(1.0f/16.0f, 1.0f/3.0f);
 			slider->drawOrder = 0.0f;
-			slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 90}));
+			slider->Transform(Matrix3x2::CreateTranslation(Vector2{9, 90}));
 			slider->Value(1.0f/5.0f);
 		
 			slider3 = slider;
@@ -183,7 +183,7 @@ void LightningTestGame::Initialize()
 		{
 			auto slider = std::make_shared<UI::Slider>(0.4f, 0.9f);
 			slider->drawOrder = 0.0f;
-			slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 115}));
+			slider->Transform(Matrix3x2::CreateTranslation(Vector2{9, 115}));
 			slider->Value(0.5f);
 		
 			slider4 = slider;
@@ -311,7 +311,7 @@ void LightningTestGame::DrawGUI()
 	POMDOG_ASSERT(spriteBatch);
 	{
 		spriteBatch->Begin(SpriteSortMode::BackToFront);
-		UI::SpriteDrawingContext drawingContext(*spriteBatch, pomdogTexture);
+		UI::SpriteDrawingContext drawingContext(*spriteBatch, *spriteBatchDistanceField, distanceFieldEffect, *spriteFont, pomdogTexture);
 		hierarchy.Draw(drawingContext);
 		spriteBatch->End();
 	}

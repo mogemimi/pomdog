@@ -26,7 +26,7 @@ LineRenderer::LineRenderer(std::shared_ptr<GameHost> const& gameHost)
 			PositionColor::Declaration(), points.data(), points.size(), BufferUsage::Dynamic);
 	}
 	{
-		effectPass = assets->Load<EffectPass>("PrimitiveLineEffect");
+		effectPass = assets->Load<EffectPass>("Effects/PrimitiveLineEffect");
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}
 }

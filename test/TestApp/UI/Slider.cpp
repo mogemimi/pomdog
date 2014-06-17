@@ -197,6 +197,8 @@ void Slider::Draw(DrawingContext & drawingContext)
 	
 	auto transform = Transform() * drawingContext.Top();
 	
+	drawingContext.DrawString(transform * Matrix3x2::CreateTranslation(Vector2(Width() + 5, -2.5f)),
+		Color::White, FontWeight::Normal, FontSize::Medium, StringFormat("%5.3lf", value));
 	drawingContext.DrawRectangle(transform, trackColor, Rectangle(0, 0, Width(), Height()));
 	drawingContext.DrawRectangle(transform, fillColor, Rectangle(0, 0, sliderWidth2, Height()));
 	
