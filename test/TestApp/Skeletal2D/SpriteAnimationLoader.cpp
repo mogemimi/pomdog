@@ -76,14 +76,16 @@ std::vector<SpriteAnimationTrack> CreateSpriteAnimationTrack(
 				SpriteKeyframe key;
 				key.TimeSeconds = sample.TimeSeconds;
 				key.TexturePage = textureAtlasRegion->TexturePage;
-				key.TextureRotate = textureAtlasRegion->Rotate;
-				key.Subrect = textureAtlasRegion->Subrect;
-				auto textureXOffset = textureAtlasRegion->XOffset;
-				auto textureYOffset = textureAtlasRegion->YOffset;
-				key.Origin.X = static_cast<float>(textureAtlasRegion->OriginalWidth/2 - textureXOffset)/textureAtlasRegion->Subrect.Width;
-				key.Origin.Y = static_cast<float>(textureAtlasRegion->OriginalHeight/2 - textureYOffset)/textureAtlasRegion->Subrect.Height;
+				key.TextureRotate = textureAtlasRegion->Region.Rotate;
+				key.Subrect = textureAtlasRegion->Region.Subrect;
+				auto textureXOffset = textureAtlasRegion->Region.XOffset;
+				auto textureYOffset = textureAtlasRegion->Region.YOffset;
+				key.Origin.X = static_cast<float>(textureAtlasRegion->Region.Width / 2 - textureXOffset)
+					/ textureAtlasRegion->Region.Subrect.Width;
+				key.Origin.Y = static_cast<float>(textureAtlasRegion->Region.Height / 2 - textureYOffset)
+					/ textureAtlasRegion->Region.Subrect.Height;
 				
-				if (textureAtlasRegion->Rotate) {
+				if (textureAtlasRegion->Region.Rotate) {
 					std::swap(key.Subrect.Width, key.Subrect.Height);
 					std::swap(key.Origin.X, key.Origin.Y);
 				}

@@ -106,14 +106,16 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
 		slot.Rotation = attachment->Rotation;
 		
 		slot.TexturePage = textureAtlasRegion->TexturePage;
-		slot.TextureRotate = textureAtlasRegion->Rotate;
-		slot.Subrect = textureAtlasRegion->Subrect;
-		auto textureXOffset = textureAtlasRegion->XOffset;
-		auto textureYOffset = textureAtlasRegion->YOffset;
-		slot.Origin.X = static_cast<float>(textureAtlasRegion->OriginalWidth/2 - textureXOffset)/textureAtlasRegion->Subrect.Width;
-		slot.Origin.Y = static_cast<float>(textureAtlasRegion->OriginalHeight/2 - textureYOffset)/textureAtlasRegion->Subrect.Height;
-		
-		if (textureAtlasRegion->Rotate) {
+		slot.TextureRotate = textureAtlasRegion->Region.Rotate;
+		slot.Subrect = textureAtlasRegion->Region.Subrect;
+		auto textureXOffset = textureAtlasRegion->Region.XOffset;
+		auto textureYOffset = textureAtlasRegion->Region.YOffset;
+		slot.Origin.X = static_cast<float>(textureAtlasRegion->Region.Width / 2 - textureXOffset)
+			/ textureAtlasRegion->Region.Subrect.Width;
+		slot.Origin.Y = static_cast<float>(textureAtlasRegion->Region.Height / 2 - textureYOffset)
+			/ textureAtlasRegion->Region.Subrect.Height;
+
+		if (textureAtlasRegion->Region.Rotate) {
 			std::swap(slot.Subrect.Width, slot.Subrect.Height);
 			std::swap(slot.Origin.X, slot.Origin.Y);
 		}

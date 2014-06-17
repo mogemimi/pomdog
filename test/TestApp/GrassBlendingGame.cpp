@@ -55,12 +55,12 @@ static void LogSkeletalInfo(Details::TexturePacker::TextureAtlas const& textureA
 	{
 		Log::Info(StringFormat("Region.Name = %s", region.Name.c_str()));
 		Log::Info(StringFormat("  Region.Page = %d", region.TexturePage));
-		Log::Info(StringFormat("  Region.Rotate = %d", region.Rotate?1:0));
-		Log::Info(StringFormat("  Region.Flip = %d", region.Flip?1:0));
-		Log::Info(StringFormat("  Region.XY = %d, %d", (int)region.Subrect.X, (int)region.Subrect.Y));
-		Log::Info(StringFormat("  Region.Size = %d, %d", (int)region.Subrect.Width, (int)region.Subrect.Height));
-		Log::Info(StringFormat("  Region.Offset = %d %d", (int)region.XOffset, (int)region.YOffset));
-		Log::Info(StringFormat("  Region.OriginalSize = %d %d", (int)region.OriginalWidth, (int)region.OriginalHeight));
+		Log::Info(StringFormat("  Region.Rotate = %d", region.Region.Rotate?1:0));
+		Log::Info(StringFormat("  Region.Flip = %d", region.Region.Flip?1:0));
+		Log::Info(StringFormat("  Region.XY = %d, %d", (int)region.Region.Subrect.X, (int)region.Region.Subrect.Y));
+		Log::Info(StringFormat("  Region.Size = %d, %d", (int)region.Region.Subrect.Width, (int)region.Region.Subrect.Height));
+		Log::Info(StringFormat("  Region.Offset = %d %d", (int)region.Region.XOffset, (int)region.Region.YOffset));
+		Log::Info(StringFormat("  Region.OriginalSize = %d %d", (int)region.Region.Width, (int)region.Region.Height));
 	}
 
 	Log::Info("-------------------------");

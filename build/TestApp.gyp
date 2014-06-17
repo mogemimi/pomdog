@@ -174,6 +174,7 @@
         '../test/TestApp/Graphics/SpriteSortMode.hpp',
         '../test/TestApp/Graphics/SpriteRenderer.cpp',
         '../test/TestApp/Graphics/SpriteRenderer.hpp',
+        '../test/TestApp/Graphics/TextureRegion.hpp',
         '../test/TestApp/SandboxHelper.hpp',
         '../test/TestApp/SpriteDrawingContext.cpp',
         '../test/TestApp/SpriteDrawingContext.hpp',

@@ -16,7 +16,8 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-#include <Pomdog/Math/Rectangle.hpp>
+#include <utility>
+#include "TextureRegion.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -28,14 +29,8 @@ struct TextureAtlasPage {
 
 struct TextureAtlasRegion {
 	std::string Name;
-	Rectangle Subrect;
+	TextureRegion Region;
 	std::uint16_t TexturePage;
-	std::uint16_t XOffset;
-	std::uint16_t YOffset;
-	std::uint16_t OriginalWidth;
-	std::uint16_t OriginalHeight;
-	bool Rotate;
-	bool Flip;
 };
 
 class TextureAtlas {
