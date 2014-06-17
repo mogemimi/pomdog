@@ -95,8 +95,7 @@ private:
 	std::shared_ptr<SpriteFont> spriteFont;
 	std::unique_ptr<SpriteBatch> spriteBatchDistanceField;
 	std::shared_ptr<EffectPass> distanceFieldEffect;
-	std::string frameRateString;
-	
+
 	ScopedConnection clientSizeChangedConnection;
 };
 

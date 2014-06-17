@@ -17,18 +17,17 @@
 #include <Pomdog/Pomdog.hpp>
 #include <Pomdog/Utility/Optional.hpp>
 #include "Panel.hpp"
+#include "Thickness.hpp"
 
 namespace Pomdog {
 namespace UI {
 
-using UIElementCollection = std::list<std::shared_ptr<UIElement>>;
-
-class StackPanel: public Panel {
+class StackPanel: public Panel, public std::enable_shared_from_this<StackPanel> {
 public:
 	StackPanel(std::uint32_t widthIn, std::uint32_t heightIn);
 	
 	bool SizeToFitContent() const override { return false; }
-	
+
 	void OnPointerCanceled(PointerPoint const& pointerPoint) override;
 	
 	void OnPointerCaptureLost(PointerPoint const& pointerPoint) override;
@@ -51,9 +50,15 @@ public:
 	
 	void UpdateAnimation(DurationSeconds const& frameDuration) override;
 
-	UIElementCollection Children;
+	void AddChild(std::shared_ptr<UIView> const& element);
 
-private:	
+private:
+	using UIElementCollection = std::list<std::shared_ptr<UIElement>>;
+	UIElementCollection children;
+	
+	Thickness padding;
+	std::uint16_t barHeight;
+	
 	Optional<Vector2> startTouchPoint;
 };
 

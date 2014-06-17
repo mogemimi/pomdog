@@ -25,6 +25,7 @@
 #include "SpriteLine.hpp"
 #include "SpriteDrawingContext.hpp"
 #include "UI/StackPanel.hpp"
+#include "UI/DebugNavigator.hpp"
 
 
 namespace TestApp {
@@ -142,54 +143,43 @@ void LightningTestGame::Initialize()
 		hierarchy.AddChild(std::move(node));
 	}
 	{
-		auto stackPanel = std::make_shared<UI::StackPanel>(190, 170);
+		auto stackPanel = std::make_shared<UI::StackPanel>(120, 170);
 		stackPanel->drawOrder = 0.2f;
 		stackPanel->Transform(Matrix3x2::CreateTranslation(Vector2{5, 10}));
 		hierarchy.AddChild(stackPanel);
 	
 		{
-			auto slider = std::make_shared<UI::Slider>(0, 100);
-			slider->drawOrder = 0.0f;
-			slider->Transform(Matrix3x2::CreateTranslation(Vector2{9, 40}));
-			slider->Value(34);
-		
-			slider1 = slider;
-			stackPanel->Children.push_back(slider);
-			slider->Parent(stackPanel);
-			hierarchy.AddChild(slider);
+			auto navigator = std::make_shared<UI::DebugNavigator>(gameHost->Clock());
+			navigator->drawOrder = 0.0f;
+			stackPanel->AddChild(navigator);
 		}
 		{
-			auto slider = std::make_shared<UI::Slider>(0.1, 4.0);
-			slider->drawOrder = 0.0f;
-			slider->Transform(Matrix3x2::CreateTranslation(Vector2{9, 65}));
-			slider->Value(1.2);
-		
-			slider2 = slider;
-			stackPanel->Children.push_back(slider);
-			slider->Parent(stackPanel);
-			hierarchy.AddChild(slider);
+			slider1 = std::make_shared<UI::Slider>(0, 100);
+			slider1->drawOrder = 0.0f;
+			slider1->Value(34);
+			stackPanel->AddChild(slider1);
+			hierarchy.AddChild(slider1);
 		}
 		{
-			auto slider = std::make_shared<UI::Slider>(1.0f/16.0f, 1.0f/3.0f);
-			slider->drawOrder = 0.0f;
-			slider->Transform(Matrix3x2::CreateTranslation(Vector2{9, 90}));
-			slider->Value(1.0f/5.0f);
-		
-			slider3 = slider;
-			stackPanel->Children.push_back(slider);
-			slider->Parent(stackPanel);
-			hierarchy.AddChild(slider);
+			slider2 = std::make_shared<UI::Slider>(0.1, 4.0);
+			slider2->drawOrder = 0.0f;
+			slider2->Value(1.2);
+			stackPanel->AddChild(slider2);
+			hierarchy.AddChild(slider2);
 		}
 		{
-			auto slider = std::make_shared<UI::Slider>(0.4f, 0.9f);
-			slider->drawOrder = 0.0f;
-			slider->Transform(Matrix3x2::CreateTranslation(Vector2{9, 115}));
-			slider->Value(0.5f);
-		
-			slider4 = slider;
-			stackPanel->Children.push_back(slider);
-			slider->Parent(stackPanel);
-			hierarchy.AddChild(slider);
+			slider3 = std::make_shared<UI::Slider>(1.0f/16.0f, 1.0f/3.0f);
+			slider3->drawOrder = 0.0f;
+			slider3->Value(1.0f/5.0f);
+			stackPanel->AddChild(slider3);
+			hierarchy.AddChild(slider3);
+		}
+		{
+			slider4 = std::make_shared<UI::Slider>(0.4f, 0.9f);
+			slider4->drawOrder = 0.0f;
+			slider4->Value(0.5f);
+			stackPanel->AddChild(slider4);
+			hierarchy.AddChild(slider4);
 		}
 	}
 	{
@@ -238,14 +228,6 @@ void LightningTestGame::Update()
 	{
 		beamSystem.emitter.InterpolationPoints = static_cast<std::uint16_t>(slider1->Value());
 		beamSystem.emitter.StartThickness = slider2->Value();
-	}
-	{
-		static auto duration = DurationSeconds(0);
-		
-		if (clock->TotalGameTime() - duration > DurationSeconds(0.2)) {
-			frameRateString = StringFormat("%f fps", clock->FrameRate());
-			duration = clock->TotalGameTime();
-		}
 	}
 	{
 		Transform2D transform;
@@ -314,14 +296,6 @@ void LightningTestGame::DrawGUI()
 		UI::SpriteDrawingContext drawingContext(*spriteBatch, *spriteBatchDistanceField, distanceFieldEffect, *spriteFont, pomdogTexture);
 		hierarchy.Draw(drawingContext);
 		spriteBatch->End();
-	}
-	{
-		distanceFieldEffect->Parameters("DistanceFieldConstants")->SetValue(Vector2(slider3->Value(), slider4->Value()));
-		spriteFont->Begin(Matrix4x4::Identity);
-		//spriteFont->Draw(*spriteBatchDistanceField, u8"std::string s = \"Hello!?@@\";\nint a = 0;", Vector2::Zero, Color::White);
-		spriteFont->Draw(*spriteBatchDistanceField, frameRateString, Vector2{40, 15}, Color::White,
-			0.0f, {0.0f, 0.0f}, 0.6f, 0.0f);
-		spriteFont->End();
 	}
 }
 //-----------------------------------------------------------------------

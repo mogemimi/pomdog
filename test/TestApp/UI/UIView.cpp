@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -28,6 +28,11 @@ std::weak_ptr<UIElement const> UIView::Parent() const
 std::weak_ptr<UIElement> UIView::Parent()
 {
 	return parent;
+}
+//-----------------------------------------------------------------------
+void UIView::Parent(std::weak_ptr<UIElement> const& parentIn)
+{
+	this->parent = parentIn;
 }
 //-----------------------------------------------------------------------
 void UIView::MarkParentTransformDirty()

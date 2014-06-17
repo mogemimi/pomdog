@@ -16,6 +16,8 @@ namespace UI {
 //-----------------------------------------------------------------------
 StackPanel::StackPanel(std::uint32_t widthIn, std::uint32_t heightIn)
 	: Panel(Matrix3x2::Identity, widthIn, heightIn)
+	, padding{12, 6, 10, 6}
+	, barHeight(16)
 {
 }
 //-----------------------------------------------------------------------
@@ -41,7 +43,7 @@ void StackPanel::OnPointerExited(PointerPoint const& pointerPoint)
 //-----------------------------------------------------------------------
 void StackPanel::OnPointerPressed(PointerPoint const& pointerPoint)
 {
-	Rectangle captionBar{0, 0, Width(), 32};
+	Rectangle captionBar{0, 0, Width(), barHeight};
 	
 	auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
 	if (!captionBar.Intersects(pointInView)) {
@@ -72,7 +74,7 @@ void StackPanel::OnPointerMoved(PointerPoint const& pointerPoint)
 		position = Vector2(pointInView.X, pointInView.Y);
 		startTouchPoint = position;
 		
-		for (auto & child: Children)
+		for (auto & child: children)
 		{
 			POMDOG_ASSERT(child);
 			child->MarkParentTransformDirty();
@@ -95,19 +97,53 @@ void StackPanel::OnRenderSizeChanged(std::uint32_t widthIn, std::uint32_t height
 	Height(heightIn);
 }
 //-----------------------------------------------------------------------
+void StackPanel::AddChild(std::shared_ptr<UIView> const& element)
+{
+	Vector2 position(padding.Left, padding.Top + barHeight);
+
+	constexpr float innerMarginBottom = 14.0f;
+	for (auto & child: children)
+	{
+		position.Y += child->Height();
+		position.Y += innerMarginBottom;
+	}
+	
+	children.push_back(element);
+
+	POMDOG_ASSERT(shared_from_this());
+	element->Parent(shared_from_this());
+
+	auto childWidth = Width() - (padding.Left + padding.Right);
+
+	element->Transform(Matrix3x2::CreateTranslation(position));
+	element->Width(childWidth);
+	
+	position.Y += element->Height();
+	position.Y += padding.Bottom;
+	
+	if (position.Y > Height())
+	{
+		Height(position.Y);
+	}
+}
+//-----------------------------------------------------------------------
 void StackPanel::Draw(DrawingContext & drawingContext)
 {
 	auto transform = Transform() * drawingContext.Top();
 
-	drawingContext.DrawRectangle(transform, Color{51, 51, 51, 224},
+	drawingContext.DrawRectangle(transform, Color{51, 51, 51, 205},
 		Rectangle(0, 0, Width(), Height()));
 	
 	drawingContext.Push(transform);
-	for (auto & child: Children)
+	for (auto & child: children)
 	{
 		POMDOG_ASSERT(child);
 		child->Draw(drawingContext);
 	}
+	
+	drawingContext.DrawRectangle(transform, Color{21, 21, 21, 255},
+		Rectangle(0, 0, Width(), barHeight));
+	
 	drawingContext.Pop();
 }
 //-----------------------------------------------------------------------

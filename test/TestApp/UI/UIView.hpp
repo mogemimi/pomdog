@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -33,14 +33,11 @@ public:
 	std::weak_ptr<UIElement const> Parent() const override final;
 	std::weak_ptr<UIElement> Parent() override final;
 	
-	void Parent(std::shared_ptr<UIElement> const& parentIn)
-	{
-		this->parent = parentIn;
-	}
+	void Parent(std::weak_ptr<UIElement> const& parentIn);
 
 	void MarkParentTransformDirty() override final;
 	Matrix3x2 GlobalTransform() override final;
-	
+
 	std::uint16_t Width() const override final { return width; }
 	std::uint16_t Height() const override final { return height; }
 
