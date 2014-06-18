@@ -13,30 +13,20 @@
 
 namespace Pomdog {
 namespace UI {
-namespace {
-
-namespace SliderColorScheme {
-
-static Color BorderColor {0, 140, 198, 255};
-static Color FillColor1 {27, 161, 226, 255};
-static Color FillColor2 {56, 190, 255, 255};
-static Color DisabledFillColor {150, 161, 167, 255};
-static Color TrackColor {198, 198, 198, 255};
-static Color ThumbColor = Color::Black;
-static Color FocusedThumbColor {229, 20, 0, 255};
-
-}
-
-}// unnamed namespace
 //-----------------------------------------------------------------------
 Slider::Slider(double minimumIn, double maximumIn)
+	: Slider(SliderColorScheme{}, minimumIn, maximumIn)
+{}
+//-----------------------------------------------------------------------
+Slider::Slider(SliderColorScheme const& colorSchemeIn, double minimumIn, double maximumIn)
 	: Control(Matrix3x2::Identity, 120, 12)
 	, minimum(minimumIn)
 	, maximum(maximumIn)
 	, value(minimumIn)
-	, borderColor(SliderColorScheme::BorderColor)
-	, fillColor(SliderColorScheme::FillColor1)
-	, trackColor(SliderColorScheme::TrackColor)
+	, colorScheme(colorSchemeIn)
+	, borderColor(colorSchemeIn.BorderColor)
+	, fillColor(colorSchemeIn.FillColor1)
+	, trackColor(colorSchemeIn.TrackColor)
 	, isDragging(false)
 	, isEnabled(true)
 {
@@ -68,10 +58,10 @@ void Slider::IsEnabled(bool isEnabledIn)
 {
 	this->isEnabled = isEnabledIn;
 	if (isEnabled) {
-		fillColor = SliderColorScheme::FillColor1;
+		fillColor = colorScheme.FillColor1;
 	}
 	else {
-		fillColor = SliderColorScheme::DisabledFillColor;
+		fillColor = colorScheme.DisabledFillColor;
 	}
 }
 //-----------------------------------------------------------------------
@@ -100,7 +90,7 @@ void Slider::OnPointerEntered(PointerPoint const& pointerPoint)
 	ColorAnimation animation;
 	animation.duration = 0.19f;
 	animation.startColor = fillColor;
-	animation.targetColor = SliderColorScheme::FillColor2;
+	animation.targetColor = colorScheme.FillColor2;
 
 	colorAnimation = animation;
 }
@@ -110,8 +100,8 @@ void Slider::OnPointerExited(PointerPoint const& pointerPoint)
 	ColorAnimation animation;
 	animation.duration = 0.15f;
 	animation.startColor = fillColor;
-	animation.targetColor = (isEnabled) ? SliderColorScheme::FillColor1:
-		SliderColorScheme::DisabledFillColor;
+	animation.targetColor = (isEnabled) ?
+		colorScheme.FillColor1: colorScheme.DisabledFillColor;
 
 	colorAnimation = animation;
 }
@@ -209,14 +199,14 @@ void Slider::Draw(DrawingContext & drawingContext)
 		auto pos = Vector2(controlPosition2 - pixel, -pixel);
 		auto size = Vector2(Height() + 2 * pixel, Height() + 2 * pixel);
 		
-		drawingContext.DrawRectangle(transform, SliderColorScheme::FocusedThumbColor,
+		drawingContext.DrawRectangle(transform, colorScheme.FocusedThumbColor,
 			Rectangle(pos.X, pos.Y, size.X, size.Y));
 	}
 	
 	if (isEnabled)
 	{
 		auto pos = Vector2(controlPosition2, 0);
-		drawingContext.DrawRectangle(transform, SliderColorScheme::ThumbColor,
+		drawingContext.DrawRectangle(transform, colorScheme.ThumbColor,
 			Rectangle(pos.X, pos.Y, Height(), Height()));
 	}
 }

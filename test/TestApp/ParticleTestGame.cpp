@@ -13,6 +13,8 @@
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
 #include "SandboxHelper.hpp"
+#include "UI/StackPanel.hpp"
+#include "UI/DebugNavigator.hpp"
 
 ///@note for test
 #include "ParticleEmitterShapeBox.hpp"
@@ -134,13 +136,14 @@ void ParticleTestGame::Initialize()
 			window->ClientBounds().Width, window->ClientBounds().Height,
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
-	
-	primitiveAxes = MakeUnique<SceneEditor::PrimitiveAxes>(gameHost, editorColorScheme.CenterAxisX, editorColorScheme.CenterAxisY, editorColorScheme.CenterAxisZ);
-	primitiveGrid = MakeUnique<SceneEditor::PrimitiveGrid>(gameHost, editorColorScheme.GuideLine, editorColorScheme.Grid);
-	spriteBatch = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
-	spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
-	fxaa = MakeUnique<FXAA>(gameHost);
-	backgroundPlane = MakeUnique<SceneEditor::GradientPlane>(gameHost);
+	{
+		spriteBatch = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
+		spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
+		fxaa = MakeUnique<FXAA>(gameHost);
+	}
+	{
+		gameEditor = MakeUnique<SceneEditor::InGameEditor>(gameHost);
+	}
 	
 	rootNode = std::make_shared<HierarchyNode>();
 	{
@@ -159,14 +162,39 @@ void ParticleTestGame::Initialize()
 	}
 	
 	{
-		auto node = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
-		node->drawOrder = 1.0f;
-		node->cameraObject = mainCamera;
-	
-		scenePanel = node;
-		hierarchy.AddChild(std::move(node));
-		
-		sceneTouchConnection = scenePanel->SceneTouch.Connect([this](Vector2 const& positionInView) {
+		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
+		scenePanel->drawOrder = 1.0f;
+		scenePanel->cameraObject = mainCamera;
+		gameEditor->AddUIElement(scenePanel);
+	}
+	{
+		auto stackPanel = std::make_shared<UI::StackPanel>(120, 170);
+		stackPanel->drawOrder = 0.2f;
+		stackPanel->Transform(Matrix3x2::CreateTranslation(Vector2{5, 10}));
+		gameEditor->AddUIElement(stackPanel);
+
+		{
+			auto navigator = std::make_shared<UI::DebugNavigator>(gameHost->Clock());
+			navigator->drawOrder = 0.0f;
+			stackPanel->AddChild(navigator);
+		}
+		{
+			slider1 = std::make_shared<UI::Slider>(1, 512);
+			slider1->drawOrder = 0.0f;
+			slider1->Value(170.0);
+			stackPanel->AddChild(slider1);
+			gameEditor->AddUIElement(slider1);
+		}
+		{
+			slider2 = std::make_shared<UI::Slider>(-200.0, 200.0);
+			slider2->drawOrder = 0.0f;
+			slider2->Value(0.0);
+			stackPanel->AddChild(slider2);
+			gameEditor->AddUIElement(slider2);
+		}
+	}
+	{
+		scenePanel->SceneTouch.Connect([this](Vector2 const& positionInView) {
 			auto transform = mainCamera->Component<Transform2D>();
 			auto camera = mainCamera->Component<Camera2D>();
 		
@@ -181,24 +209,6 @@ void ParticleTestGame::Initialize()
 			touchPoint = Vector2{position.X, position.Y};
 		});
 	}
-	{
-		auto slider = std::make_shared<UI::Slider>(1, 500);
-		slider->drawOrder = 0.0f;
-		slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 40}));
-		slider->Value(34);
-	
-		slider1 = slider;
-		hierarchy.AddChild(std::move(slider));
-	}
-	{
-		auto slider = std::make_shared<UI::Slider>(-4, 4);
-		slider->drawOrder = 0.0f;
-		slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 65}));
-		slider->Value(1.2);
-	
-		slider2 = slider;
-		hierarchy.AddChild(std::move(slider));
-	}
 }
 //-----------------------------------------------------------------------
 void ParticleTestGame::Update()
@@ -206,49 +216,19 @@ void ParticleTestGame::Update()
 	auto clock = gameHost->Clock();
 	auto mouse = gameHost->Mouse();
 	{
-		hierarchy.Touch(mouse->State());
+		gameEditor->Update();
 	}
 	{
-		//particleSystem.emitter.EmissionRate = static_cast<std::uint16_t>(slider1->Value());
-		//particleSystem.emitter.GravityModifier = slider2->Value();
+		particleSystem.emitter.EmissionRate = static_cast<std::uint16_t>(slider1->Value());
+		particleSystem.emitter.GravityModifier = slider2->Value();
+	}
+	{
 		Transform2D transform;
 		transform.Position = touchPoint;
 		transform.Rotation = MathConstants<float>::PiOver2();
 		transform.Scale = {1, 1};
 		particleSystem.Update(clock->FrameDuration(), transform);
 	}
-	{
-		static auto duration = DurationSeconds(0);
-		
-		if (clock->TotalGameTime() - duration > DurationSeconds(0.2)) {
-			gameHost->Window()->Title(StringFormat("%f fps", clock->FrameRate()));
-			duration = clock->TotalGameTime();
-		}
-	}
-//	{
-//		static Transform2D emitterTranform;
-//	
-//		if (mouse->State().RightButton == ButtonState::Pressed)
-//		{
-//			auto node = gameWorld.Component<Node2D>(mainCameraID);
-//			auto camera = gameWorld.Component<Camera2D>(mainCameraID);
-//		
-//			POMDOG_ASSERT(node && camera);
-//		
-//			auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix3D(node->Transform(), *camera));
-//			
-//			auto position = Vector3::Transform(Vector3(
-//					mouse->State().Position.X - graphicsContext->Viewport().Width()/2,
-//					mouse->State().Position.Y - graphicsContext->Viewport().Height()/2,
-//					0), inverseViewMatrix3D);
-//
-//			emitterTranform.Position = Vector2{position.X, position.Y};
-//			emitterTranform.Rotation = MathConstants<float>::PiOver2();
-//			particleSystem.ResetEmission();
-//		}
-//		
-//		particleSystem.Update(clock->FrameDuration(), emitterTranform);
-//	}
 	{
 		static bool isPaused = false;
 		static DurationSeconds time = DurationSeconds(0);
@@ -273,13 +253,10 @@ void ParticleTestGame::DrawSprites()
 		
 	POMDOG_ASSERT(transform && camera);
 	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
-	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
+	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+		graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
 	
-	POMDOG_ASSERT(primitiveGrid);
-	primitiveGrid->Draw(*graphicsContext, viewMatrix * projectionMatrix);
-	
-	POMDOG_ASSERT(primitiveAxes);
-	primitiveAxes->Draw(*graphicsContext, viewMatrix * projectionMatrix);
+	gameEditor->SetViewProjection(viewMatrix * projectionMatrix);
 
 	// NOTE: Changing blend state
 	//graphicsContext->SetBlendState(blendStateAdditive);
@@ -297,22 +274,6 @@ void ParticleTestGame::DrawSprites()
 	graphicsContext->SetBlendState(blendStateNonPremultiplied);
 }
 //-----------------------------------------------------------------------
-void ParticleTestGame::DrawGUI()
-{
-//	POMDOG_ASSERT(spriteBatch);
-//	auto viewportWidth = graphicsContext->Viewport().Bounds.Width;
-//	auto viewportHeight = graphicsContext->Viewport().Bounds.Height;
-//
-//	auto translation = Matrix3x3::CreateTranslation(Vector2(-viewportWidth/2, viewportHeight/2));
-//	
-//	spriteBatch->Begin(translation);
-//	{
-//		SpriteBatchDrawingContext drawingContext(*spriteBatch, pomdogTexture);
-//		hierarchy.Draw(drawingContext);
-//	}
-//	spriteBatch->End();
-}
-//-----------------------------------------------------------------------
 void ParticleTestGame::Draw()
 {
 	constexpr bool enableFxaa = true;
@@ -321,8 +282,8 @@ void ParticleTestGame::Draw()
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
 	
-	graphicsContext->Clear(editorColorScheme.Background);
-	backgroundPlane->Draw();
+	graphicsContext->Clear(Color::CornflowerBlue);
+	gameEditor->BeginDraw(*graphicsContext);
 	
 	//graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();
@@ -332,8 +293,7 @@ void ParticleTestGame::Draw()
 		fxaa->Draw(*graphicsContext, renderTarget);
 	}
 	
-	DrawGUI();
-	
+	gameEditor->EndDraw();
 	graphicsContext->Present();
 }
 //-----------------------------------------------------------------------

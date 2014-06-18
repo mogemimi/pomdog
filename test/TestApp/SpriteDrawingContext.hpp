@@ -92,7 +92,7 @@ public:
 				fontWeights = {0.298f, 0.661f};
 				break;
 			case FontWeight::Bold:
-				fontWeights = {0.204f, 0.475f};
+				fontWeights = {0.220f, 0.472f};
 				break;
 			}
 		

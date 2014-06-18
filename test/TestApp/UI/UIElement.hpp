@@ -23,14 +23,14 @@ class PointerPoint;
 
 enum class HorizontalAlignment: std::uint8_t {
 	Left,
-	Center,
+	//Center,
 	Stretch,
-	Right,
+	//Right,
 };
 
 enum class VerticalAlignment: std::uint8_t {
-	Bottom,
-	Center,
+	//Bottom,
+	//Center,
 	Stretch,
 	Top,
 };
@@ -55,11 +55,12 @@ public:
 	virtual void MarkParentTransformDirty() = 0;
 	virtual Matrix3x2 GlobalTransform() = 0;
 
+	virtual UI::HorizontalAlignment HorizontalAlignment() const = 0;
+	virtual UI::VerticalAlignment VerticalAlignment() const = 0;
+
 //	virtual void Parent(std::weak_ptr<UIElement> const& parent) = 0;
 //	virtual Thickness Padding() const = 0;
 //	virtual Vector2 Origin() const = 0;
-//	virtual UI::HorizontalAlignment HorizontalAlignment() const = 0;
-//	virtual UI::VerticalAlignment VerticalAlignment() const = 0;
 //	virtual Thickness Margin() const = 0;
 
 	virtual void OnPointerCanceled(PointerPoint const& pointerPoint) = 0;

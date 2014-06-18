@@ -177,11 +177,6 @@ void SpriteRenderer::Impl::Begin(SpriteSortMode sortModeIn)
 {
 	this->sortMode = sortModeIn;
 
-	auto viewport = graphicsContext->Viewport();
-	
-	POMDOG_ASSERT(viewport.Width() > 0);
-	POMDOG_ASSERT(viewport.Height() > 0);
-
 	alignas(16) Matrix4x4 projection = Matrix4x4::Transpose(projectionMatrix);
 
 	auto parameter = effectPass->Parameters("Matrices");

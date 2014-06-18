@@ -21,6 +21,16 @@
 namespace Pomdog {
 namespace UI {
 
+struct SliderColorScheme {
+	Color BorderColor {0, 140, 198, 255};
+	Color FillColor1 {27, 161, 226, 255};
+	Color FillColor2 {56, 190, 255, 255};
+	Color DisabledFillColor {150, 161, 167, 255};
+	Color TrackColor {198, 198, 198, 255};
+	Color ThumbColor = Color::Black;
+	Color FocusedThumbColor {229, 20, 0, 255};
+};
+
 class Slider: public Control {
 private:
 	double minimum;
@@ -36,6 +46,8 @@ private:
 
 	Optional<ColorAnimation> colorAnimation;
 
+	SliderColorScheme colorScheme;
+
 	Color borderColor;
 	Color fillColor;
 	Color trackColor;
@@ -45,6 +57,8 @@ private:
 public:
 	Slider(double minimum, double maximum);
 	
+	Slider(SliderColorScheme const& colorScheme, double minimum, double maximum);
+	
 	void Value(double valueIn);
 	double Value() const;
 	
@@ -53,6 +67,8 @@ public:
 	
 	bool IsEnabled() const;
 	void IsEnabled(bool isEnabled);
+
+	UI::VerticalAlignment VerticalAlignment() const override { return UI::VerticalAlignment::Top; }
 
 	bool SizeToFitContent() const override { return false; }
 

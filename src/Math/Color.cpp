@@ -14,14 +14,14 @@
 
 namespace Pomdog {
 
-const Color Color::White(255, 255, 255, 255);
-const Color Color::Black(0, 0, 0, 255);
-const Color Color::Red(255, 0, 0, 255);
-const Color Color::Green(0, 255, 0, 255);
-const Color Color::Blue(0, 0, 255, 255);
-const Color Color::Yellow(255, 255, 0, 255);
-const Color Color::CornflowerBlue(100, 149 ,237, 255);
-const Color Color::TransparentBlack(0, 0, 0, 0);
+const Color Color::White{255, 255, 255, 255};
+const Color Color::Black{0, 0, 0, 255};
+const Color Color::Red{255, 0, 0, 255};
+const Color Color::Green{0, 255, 0, 255};
+const Color Color::Blue{0, 0, 255, 255};
+const Color Color::Yellow{255, 255, 0, 255};
+const Color Color::CornflowerBlue{100, 149 ,237, 255};
+const Color Color::TransparentBlack{0, 0, 0, 0};
 //-----------------------------------------------------------------------
 Color::Color(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha)
 : PackedValue(std::uint32_t(red) | (std::uint32_t(green) << 8) | (std::uint32_t(blue) << 16) | (std::uint32_t(alpha) << 24))

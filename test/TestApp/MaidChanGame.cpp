@@ -13,6 +13,8 @@
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
 #include "SandboxHelper.hpp"
+#include "UI/StackPanel.hpp"
+#include "UI/DebugNavigator.hpp"
 
 #include "TextureAtlasLoader.hpp"
 #include "Skeletal2D/SkeletonDescLoader.hpp"
@@ -126,7 +128,7 @@ void MaidChanGame::Initialize()
 {
 	auto window = gameHost->Window();
 	window->Title("TestApp - Enjoy Game Dev, Have Fun.");
-	window->AllowPlayerResizing(false);
+	window->AllowPlayerResizing(true);
 	
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
@@ -143,12 +145,14 @@ void MaidChanGame::Initialize()
 			window->ClientBounds().Width, window->ClientBounds().Height,
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
+	{
+		spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
+		fxaa = MakeUnique<FXAA>(gameHost);
+	}
+	{
+		gameEditor = MakeUnique<SceneEditor::InGameEditor>(gameHost);
+	}
 	
-	primitiveAxes = MakeUnique<SceneEditor::PrimitiveAxes>(gameHost, editorColorScheme.CenterAxisX, editorColorScheme.CenterAxisY, editorColorScheme.CenterAxisZ);
-	primitiveGrid = MakeUnique<SceneEditor::PrimitiveGrid>(gameHost, editorColorScheme.GuideLine, editorColorScheme.Grid);
-	spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
-	fxaa = MakeUnique<FXAA>(gameHost);
-	backgroundPlane = MakeUnique<SceneEditor::GradientPlane>(gameHost);
 	
 	rootNode = std::make_shared<HierarchyNode>();
 	{
@@ -181,31 +185,77 @@ void MaidChanGame::Initialize()
 	}
 	
 	{
-		auto node = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
-		node->drawOrder = 1.0f;
-		node->cameraObject = mainCamera;
-	
-		scenePanel = node;
-		hierarchy.AddChild(std::move(node));
+		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
+		scenePanel->drawOrder = 1.0f;
+		scenePanel->cameraObject = mainCamera;
+		gameEditor->AddUIElement(scenePanel);
 	}
 	{
-		auto slider = std::make_shared<UI::Slider>(0, 100);
-		slider->drawOrder = 0.0f;
-		slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 40}));
-		slider->Value(34);
-	
-		slider1 = slider;
-		hierarchy.AddChild(std::move(slider));
+		auto stackPanel = std::make_shared<UI::StackPanel>(120, 170);
+		stackPanel->drawOrder = 0.2f;
+		stackPanel->Transform(Matrix3x2::CreateTranslation(Vector2{5, 10}));
+		gameEditor->AddUIElement(stackPanel);
+
+		{
+			auto navigator = std::make_shared<UI::DebugNavigator>(gameHost->Clock());
+			navigator->drawOrder = 0.0f;
+			stackPanel->AddChild(navigator);
+		}
+		{
+			slider1 = std::make_shared<UI::Slider>(0.5, 2.0);
+			slider1->drawOrder = 0.0f;
+			slider1->Value(1.0);
+			stackPanel->AddChild(slider1);
+			gameEditor->AddUIElement(slider1);
+		}
+		{
+			slider2 = std::make_shared<UI::Slider>(0.1, 1.0);
+			slider2->drawOrder = 0.0f;
+			slider2->Value(1.0);
+			stackPanel->AddChild(slider2);
+			gameEditor->AddUIElement(slider2);
+		}
+		{
+			toggleSwitch1 = std::make_shared<UI::ToggleSwitch>();
+			toggleSwitch1->drawOrder = 0.0f;
+			toggleSwitch1->IsOn(true);
+			stackPanel->AddChild(toggleSwitch1);
+			gameEditor->AddUIElement(toggleSwitch1);
+		}
+		{
+			toggleSwitch2 = std::make_shared<UI::ToggleSwitch>();
+			toggleSwitch2->drawOrder = 0.0f;
+			toggleSwitch2->IsOn(true);
+			stackPanel->AddChild(toggleSwitch2);
+			gameEditor->AddUIElement(toggleSwitch2);
+		}
+		{
+			toggleSwitch3 = std::make_shared<UI::ToggleSwitch>();
+			toggleSwitch3->drawOrder = 0.0f;
+			toggleSwitch3->IsOn(false);
+			stackPanel->AddChild(toggleSwitch3);
+			gameEditor->AddUIElement(toggleSwitch3);
+		}
+		{
+			toggleSwitch4 = std::make_shared<UI::ToggleSwitch>();
+			toggleSwitch4->drawOrder = 0.0f;
+			toggleSwitch4->IsOn(false);
+			stackPanel->AddChild(toggleSwitch4);
+			gameEditor->AddUIElement(toggleSwitch4);
+		}
 	}
-	{
-		auto slider = std::make_shared<UI::Slider>(0.1, 4.0);
-		slider->drawOrder = 0.0f;
-		slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 65}));
-		slider->Value(1.2);
 	
-		slider2 = slider;
-		hierarchy.AddChild(std::move(slider));
-	}
+	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this] {
+		auto gameWindow = gameHost->Window();
+		auto bounds = gameWindow->ClientBounds();
+		
+		renderTarget = std::make_shared<RenderTarget2D>(
+			gameHost->GraphicsDevice(), bounds.Width, bounds.Height,
+			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
+
+		fxaa->ResetViewportSize(bounds);
+		spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(bounds.Width, bounds.Height, 1.0f, 100.0f));
+	});
 }
 //-----------------------------------------------------------------------
 void MaidChanGame::Update()
@@ -213,36 +263,14 @@ void MaidChanGame::Update()
 	auto clock = gameHost->Clock();
 	auto mouse = gameHost->Mouse();
 	{
-		hierarchy.Touch(mouse->State());
-	}
-	{
-		static auto duration = DurationSeconds(0);
-		
-		if (clock->TotalGameTime() - duration > DurationSeconds(0.2)) {
-			gameHost->Window()->Title(StringFormat("%f fps", clock->FrameRate()));
-			duration = clock->TotalGameTime();
-		}
+		gameEditor->Update();
 	}
 	
-	{
-		static bool isPaused = false;
-		static DurationSeconds time = DurationSeconds(0);
-		
-		if (clock->TotalGameTime() - time > DurationSeconds(0.2)) {
-			if (mouse->State().LeftButton == ButtonState::Pressed) {
-				time = clock->TotalGameTime();
-				isPaused = !isPaused;
-			}
-		}
-		
-		if (isPaused) {
-			return;
-		}
+	if (toggleSwitch1->IsOn()) {
+		animationSystem.Update(*clock);
 	}
-		
-	animationSystem.Update(*clock);
 	{
-		maidAnimationTimer.Update(clock->FrameDuration());
+		maidAnimationTimer.Update(clock->FrameDuration() * slider1->Value());
 		if (maidAnimationTimer.Time() > maidAnimationState->Length()) {
 			maidAnimationTimer.Reset();
 		}
@@ -261,31 +289,18 @@ void MaidChanGame::DrawSprites()
 	auto camera = mainCamera->Component<Camera2D>();
 		
 	POMDOG_ASSERT(transform && camera);
-	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);;
-	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
+	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
+	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+		graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
 	
-	POMDOG_ASSERT(primitiveGrid);
-	primitiveGrid->Draw(*graphicsContext, viewMatrix * projectionMatrix);
-	
-	POMDOG_ASSERT(primitiveAxes);
-	primitiveAxes->Draw(*graphicsContext, viewMatrix * projectionMatrix);
+	gameEditor->SetViewProjection(viewMatrix * projectionMatrix);
 
 	POMDOG_ASSERT(spriteRenderer);
 	spriteRenderer->Begin(SpriteSortMode::BackToFront, viewMatrix);
 	
 	auto const& globalPoses = maidSkeletonPose->GlobalPose;
-
-	static int state = 3;
-	static auto time = gameHost->Clock()->TotalGameTime();
 	
-	if (gameHost->Mouse()->State().RightButton == ButtonState::Pressed
-		&& (gameHost->Clock()->TotalGameTime() - time > DurationSeconds(0.5))) {
-		state += 1;
-		state = state % 4;
-		time = gameHost->Clock()->TotalGameTime();
-	}
-	
-	if (state != 1)
+	if (toggleSwitch3->IsOn())
 	{
 		for (auto & joint: *maidSkeleton)
 		{
@@ -299,7 +314,7 @@ void MaidChanGame::DrawSprites()
 		}
 	}
 
-	if (state == 1 || state == 3)
+	if (toggleSwitch2->IsOn())
 	{
 		for (auto & slot: maidSkin.Slots())
 		{
@@ -311,7 +326,7 @@ void MaidChanGame::DrawSprites()
 	
 	spriteRenderer->End();
 	
-	if (state == 2 || state == 3)
+	if (toggleSwitch4->IsOn())
 	{
 		RasterizerDescription rasterizerDesc;
 		rasterizerDesc.FillMode = FillMode::WireFrame;
@@ -334,22 +349,6 @@ void MaidChanGame::DrawSprites()
 	}
 }
 //-----------------------------------------------------------------------
-void MaidChanGame::DrawGUI()
-{
-//	POMDOG_ASSERT(spriteBatch);
-//	auto viewportWidth = graphicsContext->Viewport().Bounds.Width;
-//	auto viewportHeight = graphicsContext->Viewport().Bounds.Height;
-//
-//	auto translation = Matrix3x3::CreateTranslation(Vector2(-viewportWidth/2, viewportHeight/2));
-//	
-//	spriteBatch->Begin(translation);
-//	{
-//		SpriteBatchDrawingContext drawingContext(*spriteBatch, pomdogTexture);
-//		hierarchy.Draw(drawingContext);
-//	}
-//	spriteBatch->End();
-}
-//-----------------------------------------------------------------------
 void MaidChanGame::Draw()
 {
 	constexpr bool enableFxaa = true;
@@ -358,8 +357,8 @@ void MaidChanGame::Draw()
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
 	
-	graphicsContext->Clear(editorColorScheme.Background);
-	backgroundPlane->Draw();
+	graphicsContext->Clear(Color::CornflowerBlue);
+	gameEditor->BeginDraw(*graphicsContext);
 	
 	graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();
@@ -369,8 +368,7 @@ void MaidChanGame::Draw()
 		fxaa->Draw(*graphicsContext, renderTarget);
 	}
 	
-	DrawGUI();
-	
+	gameEditor->EndDraw();
 	graphicsContext->Present();
 }
 //-----------------------------------------------------------------------

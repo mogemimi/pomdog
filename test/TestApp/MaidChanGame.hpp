@@ -14,14 +14,12 @@
 #endif
 
 #include <Pomdog/Pomdog.hpp>
-#include "SceneEditor/EditorColorScheme.hpp"
-#include "SceneEditor/GradientPlane.hpp"
-#include "SceneEditor/PrimitiveAxes.hpp"
-#include "SceneEditor/PrimitiveGrid.hpp"
+#include "SceneEditor/InGameEditor.hpp"
 #include "UI/DrawingContext.hpp"
 #include "UI/UIElementHierarchy.hpp"
 #include "UI/ScenePanel.hpp"
 #include "UI/Slider.hpp"
+#include "UI/ToggleSwitch.hpp"
 #include "Skeletal2D/Skeleton.hpp"
 #include "Skeletal2D/SkeletonPose.hpp"
 #include "Skeletal2D/Skin.hpp"
@@ -35,7 +33,7 @@ namespace Pomdog {
 
 class SpriteBatch;
 
-}
+}// namespace Pomdog
 
 namespace TestApp {
 
@@ -58,7 +56,6 @@ public:
 	
 private:
 	void DrawSprites();
-	void DrawGUI();
 
 private:
 	std::shared_ptr<GameHost> gameHost;
@@ -66,20 +63,20 @@ private:
 		
 	std::shared_ptr<Texture2D> texture;
 	std::unique_ptr<SpriteRenderer> spriteRenderer;
-	
+
 	std::shared_ptr<SamplerState> samplerPoint;
 	std::shared_ptr<RenderTarget2D> renderTarget;
 	std::unique_ptr<FXAA> fxaa;
-	
-	SceneEditor::EditorColorScheme editorColorScheme;
-	std::unique_ptr<SceneEditor::GradientPlane> backgroundPlane;
-	std::unique_ptr<SceneEditor::PrimitiveAxes> primitiveAxes;
-	std::unique_ptr<SceneEditor::PrimitiveGrid> primitiveGrid;
-	UI::UIElementHierarchy hierarchy;
+
+	std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
 	std::shared_ptr<UI::ScenePanel> scenePanel;
 	std::shared_ptr<UI::Slider> slider1;
 	std::shared_ptr<UI::Slider> slider2;
-	
+	std::shared_ptr<UI::ToggleSwitch> toggleSwitch1;
+	std::shared_ptr<UI::ToggleSwitch> toggleSwitch2;
+	std::shared_ptr<UI::ToggleSwitch> toggleSwitch3;
+	std::shared_ptr<UI::ToggleSwitch> toggleSwitch4;
+
 	GameWorld gameWorld;
 	std::shared_ptr<HierarchyNode> rootNode;
 	std::shared_ptr<GameObject> mainCamera;
@@ -92,6 +89,8 @@ private:
 	AnimationTimer maidAnimationTimer;
 	Skin maidSkin;
 	std::vector<Details::Skeletal2D::SpriteAnimationTrack> maidSpriteAnimationTracks;
+	
+	ScopedConnection clientSizeChangedConnection;
 };
 
 }// namespace TestApp

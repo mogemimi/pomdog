@@ -43,7 +43,10 @@ public:
 
 	void Width(std::uint16_t widthIn) { this->width = widthIn; }
 	void Height(std::uint16_t heightIn) { this->height = heightIn; }
-	
+
+	UI::HorizontalAlignment HorizontalAlignment() const override { return UI::HorizontalAlignment::Stretch; }
+	UI::VerticalAlignment VerticalAlignment() const override { return UI::VerticalAlignment::Stretch; }
+
 	bool SizeToFitContent() const override { return false; }
 	
 	void OnPointerCanceled(PointerPoint const& pointerPoint) override {}

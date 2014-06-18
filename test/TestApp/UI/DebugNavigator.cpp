@@ -49,7 +49,8 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
 
 		auto graghWidth = (static_cast<float>(Width()) / maxHistories);
 
-		std::int32_t graphX = 0;
+		std::int32_t startPosition = graghWidth * (maxHistories - frameRates.size());
+		std::int32_t graphX = startPosition;
 		for (auto & frameRate: frameRates)
 		{
 			auto amount = ((frameRate - minFramerate) / (maxFramerate - minFramerate));

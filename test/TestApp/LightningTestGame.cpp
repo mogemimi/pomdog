@@ -14,6 +14,8 @@
 #include "FXAA.hpp"
 #include "SandboxHelper.hpp"
 #include "SpriteFontLoader.hpp"
+#include "UI/StackPanel.hpp"
+#include "UI/DebugNavigator.hpp"
 
 ///@note for test
 #include "ParticleEmitterShapeBox.hpp"
@@ -23,9 +25,6 @@
 #include "ParticleParameterRandom.hpp"
 #include "ParticleParameterRandomCurves.hpp"
 #include "SpriteLine.hpp"
-#include "SpriteDrawingContext.hpp"
-#include "UI/StackPanel.hpp"
-#include "UI/DebugNavigator.hpp"
 
 
 namespace TestApp {
@@ -44,16 +43,13 @@ void LightningTestGame::Initialize()
 	auto window = gameHost->Window();
 	window->Title("TestApp - Enjoy Game Dev, Have Fun.");
 	window->AllowPlayerResizing(true);
-//	{
-//		auto bounds = window->ClientBounds();
-//		bounds.Width = 1280;
-//		bounds.Height = 720;
-//		window->ClientBounds(bounds);
-//	}
 	
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
 
+	{
+		gameEditor = MakeUnique<SceneEditor::InGameEditor>(gameHost);
+	}
 	{
 		//samplerPoint = SamplerState::CreatePointWrap(graphicsDevice);
 		//graphicsContext->SetSamplerState(0, samplerPoint);
@@ -61,8 +57,7 @@ void LightningTestGame::Initialize()
 		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 		graphicsContext->SetBlendState(blendState);
 		texture = assets->Load<Texture2D>("Particles/lightning.png");
-		pomdogTexture = assets->Load<Texture2D>("pomdog.png");
-		
+
 		blendStateAdditive = BlendState::CreateAdditive(graphicsDevice);
 		blendStateNonPremultiplied = BlendState::CreateNonPremultiplied(graphicsDevice);
 	}
@@ -71,19 +66,11 @@ void LightningTestGame::Initialize()
 			window->ClientBounds().Width, window->ClientBounds().Height,
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
-	
-	primitiveAxes = MakeUnique<SceneEditor::PrimitiveAxes>(gameHost, editorColorScheme.CenterAxisX, editorColorScheme.CenterAxisY, editorColorScheme.CenterAxisZ);
-	primitiveGrid = MakeUnique<SceneEditor::PrimitiveGrid>(gameHost, editorColorScheme.GuideLine, editorColorScheme.Grid);
+
 	spriteBatch = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
 	spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
 	fxaa = MakeUnique<FXAA>(gameHost);
-	backgroundPlane = MakeUnique<SceneEditor::GradientPlane>(gameHost);
-	
-	spriteFont = assets->Load<SpriteFont>("BitmapFonts/UbuntuMono-Regular.fnt");
-	distanceFieldEffect = assets->Load<EffectPass>("Effects/SpriteBatchDistanceField");
-	spriteBatchDistanceField = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets,
-		distanceFieldEffect);
-	
+
 	rootNode = std::make_shared<HierarchyNode>();
 	{
 		auto gameObject = gameWorld.CreateObject();
@@ -135,19 +122,17 @@ void LightningTestGame::Initialize()
 	touchPoint = {0, -300};
 	
 	{
-		auto node = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
-		node->drawOrder = 1.0f;
-		node->cameraObject = mainCamera;
-	
-		scenePanel = node;
-		hierarchy.AddChild(std::move(node));
+		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
+		scenePanel->drawOrder = 1.0f;
+		scenePanel->cameraObject = mainCamera;
+		gameEditor->AddUIElement(scenePanel);
 	}
 	{
 		auto stackPanel = std::make_shared<UI::StackPanel>(120, 170);
 		stackPanel->drawOrder = 0.2f;
 		stackPanel->Transform(Matrix3x2::CreateTranslation(Vector2{5, 10}));
-		hierarchy.AddChild(stackPanel);
-	
+		gameEditor->AddUIElement(stackPanel);
+
 		{
 			auto navigator = std::make_shared<UI::DebugNavigator>(gameHost->Clock());
 			navigator->drawOrder = 0.0f;
@@ -158,28 +143,28 @@ void LightningTestGame::Initialize()
 			slider1->drawOrder = 0.0f;
 			slider1->Value(34);
 			stackPanel->AddChild(slider1);
-			hierarchy.AddChild(slider1);
+			gameEditor->AddUIElement(slider1);
 		}
 		{
 			slider2 = std::make_shared<UI::Slider>(0.1, 4.0);
 			slider2->drawOrder = 0.0f;
 			slider2->Value(1.2);
 			stackPanel->AddChild(slider2);
-			hierarchy.AddChild(slider2);
+			gameEditor->AddUIElement(slider2);
 		}
 		{
-			slider3 = std::make_shared<UI::Slider>(1.0f/16.0f, 1.0f/3.0f);
+			slider3 = std::make_shared<UI::Slider>(0.0f, 1.0f);
 			slider3->drawOrder = 0.0f;
-			slider3->Value(1.0f/5.0f);
+			slider3->Value(0.2f);
 			stackPanel->AddChild(slider3);
-			hierarchy.AddChild(slider3);
+			gameEditor->AddUIElement(slider3);
 		}
 		{
-			slider4 = std::make_shared<UI::Slider>(0.4f, 0.9f);
+			slider4 = std::make_shared<UI::Slider>(0.0f, 70.0f);
 			slider4->drawOrder = 0.0f;
-			slider4->Value(0.5f);
+			slider4->Value(8.0f);
 			stackPanel->AddChild(slider4);
-			hierarchy.AddChild(slider4);
+			gameEditor->AddUIElement(slider4);
 		}
 	}
 	{
@@ -201,33 +186,28 @@ void LightningTestGame::Initialize()
 	
 	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this] {
 		auto gameWindow = gameHost->Window();
+		auto bounds = gameWindow->ClientBounds();
 		
 		renderTarget = std::make_shared<RenderTarget2D>(
-			gameHost->GraphicsDevice(),
-			gameWindow->ClientBounds().Width, gameWindow->ClientBounds().Height,
+			gameHost->GraphicsDevice(), bounds.Width, bounds.Height,
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
-		
-		auto viewport = graphicsContext->Viewport();
-		fxaa->ResetViewportSize(viewport.Bounds);
-		
-		hierarchy.RenderSizeChanged(viewport.Width(), viewport.Height());
-		
-		spriteRenderer->SetProjectionMatrix(
-			Matrix4x4::CreateOrthographicLH(viewport.Width(), viewport.Height(), 1.0f, 100.0f));
+
+		fxaa->ResetViewportSize(bounds);
+		spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(bounds.Width, bounds.Height, 1.0f, 100.0f));
 	});
 }
 //-----------------------------------------------------------------------
 void LightningTestGame::Update()
 {
 	auto clock = gameHost->Clock();
-	auto mouse = gameHost->Mouse();
 	{
-		hierarchy.Touch(mouse->State());
-		hierarchy.UpdateAnimation(clock->FrameDuration());
+		gameEditor->Update();
 	}
 	{
 		beamSystem.emitter.InterpolationPoints = static_cast<std::uint16_t>(slider1->Value());
 		beamSystem.emitter.StartThickness = slider2->Value();
+		beamSystem.branching.BranchingRate = slider3->Value();
+		beamSystem.emitter.SwayRange = std::uniform_real_distribution<float>(-slider4->Value(), slider4->Value());
 	}
 	{
 		Transform2D transform;
@@ -247,13 +227,9 @@ void LightningTestGame::DrawSprites()
 	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
 	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 		graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
-	
-	POMDOG_ASSERT(primitiveGrid);
-	primitiveGrid->Draw(*graphicsContext, viewMatrix * projectionMatrix);
-	
-	POMDOG_ASSERT(primitiveAxes);
-	primitiveAxes->Draw(*graphicsContext, viewMatrix * projectionMatrix);
-	
+
+	gameEditor->SetViewProjection(viewMatrix * projectionMatrix);
+
 	// NOTE: Changing blend state
 	//graphicsContext->SetBlendState(blendStateAdditive);
 
@@ -288,17 +264,6 @@ void LightningTestGame::DrawSprites()
 	graphicsContext->SetBlendState(blendStateNonPremultiplied);
 }
 //-----------------------------------------------------------------------
-void LightningTestGame::DrawGUI()
-{
-	POMDOG_ASSERT(spriteBatch);
-	{
-		spriteBatch->Begin(SpriteSortMode::BackToFront);
-		UI::SpriteDrawingContext drawingContext(*spriteBatch, *spriteBatchDistanceField, distanceFieldEffect, *spriteFont, pomdogTexture);
-		hierarchy.Draw(drawingContext);
-		spriteBatch->End();
-	}
-}
-//-----------------------------------------------------------------------
 void LightningTestGame::Draw()
 {
 	constexpr bool enableFxaa = true;
@@ -307,8 +272,8 @@ void LightningTestGame::Draw()
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
 	
-	graphicsContext->Clear(editorColorScheme.Background);
-	backgroundPlane->Draw();
+	graphicsContext->Clear(Color::Black);
+	gameEditor->BeginDraw(*graphicsContext);
 
 	//graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();
@@ -317,9 +282,8 @@ void LightningTestGame::Draw()
 		graphicsContext->SetRenderTarget();
 		fxaa->Draw(*graphicsContext, renderTarget);
 	}
-	
-	DrawGUI();
-	
+
+	gameEditor->EndDraw();
 	graphicsContext->Present();
 }
 //-----------------------------------------------------------------------

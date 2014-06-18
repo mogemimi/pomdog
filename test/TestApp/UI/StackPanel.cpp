@@ -113,10 +113,16 @@ void StackPanel::AddChild(std::shared_ptr<UIView> const& element)
 	POMDOG_ASSERT(shared_from_this());
 	element->Parent(shared_from_this());
 
-	auto childWidth = Width() - (padding.Left + padding.Right);
-
 	element->Transform(Matrix3x2::CreateTranslation(position));
-	element->Width(childWidth);
+	switch (element->HorizontalAlignment()) {
+	case HorizontalAlignment::Stretch: {
+		auto childWidth = Width() - (padding.Left + padding.Right);
+		element->Width(childWidth);
+		break;
+	}
+	case HorizontalAlignment::Left:
+		break;
+	}
 	
 	position.Y += element->Height();
 	position.Y += padding.Bottom;

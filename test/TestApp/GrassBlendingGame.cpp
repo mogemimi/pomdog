@@ -13,6 +13,8 @@
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
 #include "SandboxHelper.hpp"
+#include "UI/StackPanel.hpp"
+#include "UI/DebugNavigator.hpp"
 
 #include "TextureAtlasLoader.hpp"
 #include "Skeletal2D/SkeletonDescLoader.hpp"
@@ -143,12 +145,13 @@ void GrassBlendingGame::Initialize()
 			window->ClientBounds().Width, window->ClientBounds().Height,
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
-	
-	primitiveAxes = MakeUnique<SceneEditor::PrimitiveAxes>(gameHost, editorColorScheme.CenterAxisX, editorColorScheme.CenterAxisY, editorColorScheme.CenterAxisZ);
-	primitiveGrid = MakeUnique<SceneEditor::PrimitiveGrid>(gameHost, editorColorScheme.GuideLine, editorColorScheme.Grid);
-	spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
-	fxaa = MakeUnique<FXAA>(gameHost);
-	backgroundPlane = MakeUnique<SceneEditor::GradientPlane>(gameHost);
+	{
+		spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
+		fxaa = MakeUnique<FXAA>(gameHost);
+	}
+	{
+		gameEditor = MakeUnique<SceneEditor::InGameEditor>(gameHost);
+	}
 	
 	rootNode = std::make_shared<HierarchyNode>();
 	{
@@ -181,30 +184,22 @@ void GrassBlendingGame::Initialize()
 	}
 	
 	{
-		auto node = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
-		node->drawOrder = 1.0f;
-		node->cameraObject = mainCamera;
-	
-		scenePanel = node;
-		hierarchy.AddChild(std::move(node));
+		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
+		scenePanel->drawOrder = 1.0f;
+		scenePanel->cameraObject = mainCamera;
+		gameEditor->AddUIElement(scenePanel);
 	}
 	{
-		auto slider = std::make_shared<UI::Slider>(0, 100);
-		slider->drawOrder = 0.0f;
-		slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 40}));
-		slider->Value(34);
-	
-		slider1 = slider;
-		hierarchy.AddChild(std::move(slider));
-	}
-	{
-		auto slider = std::make_shared<UI::Slider>(0.1, 4.0);
-		slider->drawOrder = 0.0f;
-		slider->Transform(Matrix3x2::CreateTranslation(Vector2{35, 65}));
-		slider->Value(1.2);
-	
-		slider2 = slider;
-		hierarchy.AddChild(std::move(slider));
+		auto stackPanel = std::make_shared<UI::StackPanel>(120, 170);
+		stackPanel->drawOrder = 0.2f;
+		stackPanel->Transform(Matrix3x2::CreateTranslation(Vector2{5, 10}));
+		gameEditor->AddUIElement(stackPanel);
+
+		{
+			auto navigator = std::make_shared<UI::DebugNavigator>(gameHost->Clock());
+			navigator->drawOrder = 0.0f;
+			stackPanel->AddChild(navigator);
+		}
 	}
 }
 //-----------------------------------------------------------------------
@@ -213,17 +208,8 @@ void GrassBlendingGame::Update()
 	auto clock = gameHost->Clock();
 	auto mouse = gameHost->Mouse();
 	{
-		hierarchy.Touch(mouse->State());
-	}
-	{
-		static auto duration = DurationSeconds(0);
-		
-		if (clock->TotalGameTime() - duration > DurationSeconds(0.2)) {
-			gameHost->Window()->Title(StringFormat("%f fps", clock->FrameRate()));
-			duration = clock->TotalGameTime();
-		}
-	}
-	
+		gameEditor->Update();
+	}	
 	{
 		static bool isPaused = false;
 		static DurationSeconds time = DurationSeconds(0);
@@ -262,13 +248,10 @@ void GrassBlendingGame::DrawSprites()
 		
 	POMDOG_ASSERT(transform && camera);
 	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);;
-	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(800.0f, 480.0f, 0.1f, 1000.0f);
+	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+		graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
 	
-	POMDOG_ASSERT(primitiveGrid);
-	primitiveGrid->Draw(*graphicsContext, viewMatrix * projectionMatrix);
-	
-	POMDOG_ASSERT(primitiveAxes);
-	primitiveAxes->Draw(*graphicsContext, viewMatrix * projectionMatrix);
+	gameEditor->SetViewProjection(viewMatrix * projectionMatrix);
 
 	POMDOG_ASSERT(spriteRenderer);
 	spriteRenderer->Begin(SpriteSortMode::BackToFront, viewMatrix);
@@ -334,22 +317,6 @@ void GrassBlendingGame::DrawSprites()
 	}
 }
 //-----------------------------------------------------------------------
-void GrassBlendingGame::DrawGUI()
-{
-//	POMDOG_ASSERT(spriteBatch);
-//	auto viewportWidth = graphicsContext->Viewport().Bounds.Width;
-//	auto viewportHeight = graphicsContext->Viewport().Bounds.Height;
-//
-//	auto translation = Matrix3x3::CreateTranslation(Vector2(-viewportWidth/2, viewportHeight/2));
-//	
-//	spriteBatch->Begin(translation);
-//	{
-//		SpriteBatchDrawingContext drawingContext(*spriteBatch, pomdogTexture);
-//		hierarchy.Draw(drawingContext);
-//	}
-//	spriteBatch->End();
-}
-//-----------------------------------------------------------------------
 void GrassBlendingGame::Draw()
 {
 	constexpr bool enableFxaa = true;
@@ -358,9 +325,9 @@ void GrassBlendingGame::Draw()
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
 	
-	graphicsContext->Clear(editorColorScheme.Background);
-	backgroundPlane->Draw();
-	
+	graphicsContext->Clear(Color::CornflowerBlue);
+	gameEditor->BeginDraw(*graphicsContext);
+
 	graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();
 	
@@ -368,9 +335,8 @@ void GrassBlendingGame::Draw()
 		graphicsContext->SetRenderTarget();
 		fxaa->Draw(*graphicsContext, renderTarget);
 	}
-	
-	DrawGUI();
-	
+
+	gameEditor->EndDraw();
 	graphicsContext->Present();
 }
 //-----------------------------------------------------------------------
