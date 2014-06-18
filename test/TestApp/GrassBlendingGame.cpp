@@ -200,6 +200,34 @@ void GrassBlendingGame::Initialize()
 			navigator->drawOrder = 0.0f;
 			stackPanel->AddChild(navigator);
 		}
+		{
+			toggleSwitch1 = std::make_shared<UI::ToggleSwitch>();
+			toggleSwitch1->drawOrder = 0.0f;
+			toggleSwitch1->IsOn(true);
+			stackPanel->AddChild(toggleSwitch1);
+			gameEditor->AddUIElement(toggleSwitch1);
+		}
+		{
+			toggleSwitch2 = std::make_shared<UI::ToggleSwitch>();
+			toggleSwitch2->drawOrder = 0.0f;
+			toggleSwitch2->IsOn(true);
+			stackPanel->AddChild(toggleSwitch2);
+			gameEditor->AddUIElement(toggleSwitch2);
+		}
+		{
+			toggleSwitch3 = std::make_shared<UI::ToggleSwitch>();
+			toggleSwitch3->drawOrder = 0.0f;
+			toggleSwitch3->IsOn(false);
+			stackPanel->AddChild(toggleSwitch3);
+			gameEditor->AddUIElement(toggleSwitch3);
+		}
+		{
+			toggleSwitch4 = std::make_shared<UI::ToggleSwitch>();
+			toggleSwitch4->drawOrder = 0.0f;
+			toggleSwitch4->IsOn(false);
+			stackPanel->AddChild(toggleSwitch4);
+			gameEditor->AddUIElement(toggleSwitch4);
+		}
 	}
 }
 //-----------------------------------------------------------------------
@@ -211,7 +239,9 @@ void GrassBlendingGame::Update()
 		gameEditor->Update();
 	}	
 	
-	animationSystem.Update(*clock);
+	if (toggleSwitch1->IsOn()) {
+		animationSystem.Update(*clock);
+	}
 	{
 		maidAnimationTimer.Update(clock->FrameDuration());
 		if (maidAnimationTimer.Time() > maidAnimationState->Length()) {
@@ -242,18 +272,8 @@ void GrassBlendingGame::DrawSprites()
 	spriteRenderer->Begin(SpriteSortMode::BackToFront, viewMatrix);
 
 	auto const& globalPoses = maidSkeletonPose->GlobalPose;
-
-	static int state = 3;
-	static auto time = gameHost->Clock()->TotalGameTime();
 	
-	if (gameHost->Mouse()->State().RightButton == ButtonState::Pressed
-		&& (gameHost->Clock()->TotalGameTime() - time > DurationSeconds(0.5))) {
-		state += 1;
-		state = state % 4;
-		time = gameHost->Clock()->TotalGameTime();
-	}
-	
-	if (state != 1)
+	if (toggleSwitch3->IsOn())
 	{
 		for (auto & joint: *maidSkeleton)
 		{
@@ -267,7 +287,7 @@ void GrassBlendingGame::DrawSprites()
 		}
 	}
 
-	if (state == 1 || state == 3)
+	if (toggleSwitch2->IsOn())
 	{
 		for (auto & slot: maidSkin.Slots())
 		{
@@ -279,7 +299,7 @@ void GrassBlendingGame::DrawSprites()
 	
 	spriteRenderer->End();
 	
-	if (state == 2 || state == 3)
+	if (toggleSwitch4->IsOn())
 	{
 		RasterizerDescription rasterizerDesc;
 		rasterizerDesc.FillMode = FillMode::WireFrame;

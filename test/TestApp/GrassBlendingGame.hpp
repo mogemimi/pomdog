@@ -19,6 +19,7 @@
 #include "UI/UIElementHierarchy.hpp"
 #include "UI/ScenePanel.hpp"
 #include "UI/Slider.hpp"
+#include "UI/ToggleSwitch.hpp"
 #include "Skeletal2D/Skeleton.hpp"
 #include "Skeletal2D/SkeletonPose.hpp"
 #include "Skeletal2D/Skin.hpp"
@@ -70,6 +71,10 @@ private:
 
 	std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
 	std::shared_ptr<UI::ScenePanel> scenePanel;
+	std::shared_ptr<UI::ToggleSwitch> toggleSwitch1;
+	std::shared_ptr<UI::ToggleSwitch> toggleSwitch2;
+	std::shared_ptr<UI::ToggleSwitch> toggleSwitch3;
+	std::shared_ptr<UI::ToggleSwitch> toggleSwitch4;
 
 	GameWorld gameWorld;
 	std::shared_ptr<HierarchyNode> rootNode;
