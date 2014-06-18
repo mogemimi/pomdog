@@ -7,7 +7,10 @@
 //
 
 #include "SkinLoader.hpp"
+#include <Pomdog/Utility/detail/CRC32.hpp>
 #include "Skin.hpp"
+#include "SkeletonDesc.hpp"
+
 
 namespace Pomdog {
 namespace Details {
@@ -44,21 +47,21 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
 		{
 			///@todo Not implemented
 			
-			///@note push dummy attachment data
-			RigidSlot slot;
-			slot.JointIndex = JointIndex(0);
-			slot.DrawOrder = drawOrder;
-			slot.Scale = {1, 1};
-			slot.Translate = {0, 0};
-			slot.Rotation = 0;
-			slot.TexturePage = 0;
-			slot.TextureRotate = false;
-			slot.Subrect = {0, 0, 1, 1};
-			slot.Origin.X = 0;
-			slot.Origin.Y = 0;
-
-			slots.push_back(std::move(slot));
-			++drawOrder;
+//			///@note push dummy attachment data
+//			RigidSlot slot;
+//			slot.JointIndex = JointIndex(0);
+//			slot.DrawOrder = drawOrder;
+//			slot.Scale = {1, 1};
+//			slot.Translate = {0, 0};
+//			slot.Rotation = 0;
+//			slot.TexturePage = 0;
+//			slot.TextureRotate = false;
+//			slot.Subrect = {0, 0, 1, 1};
+//			slot.Origin.X = 0;
+//			slot.Origin.Y = 0;
+//
+//			slots.push_back(std::move(slot));
+//			++drawOrder;
 			continue;
 		}
 		
@@ -98,7 +101,8 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
 		
 		POMDOG_ASSERT(slotDesc.Joint);
 		slot.JointIndex = slotDesc.Joint;
-		
+		slot.HashId = Hashing::CRC32::BlockChecksum(slotDesc.Name.data(), slotDesc.Name.size());
+
 		slot.Color = Color::White;
 		slot.DrawOrder = drawOrder;
 		slot.Scale = attachment->Scale;

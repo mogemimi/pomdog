@@ -27,6 +27,7 @@ void TestAppGame::Initialize()
 	//this->game = MakeUnique<LightningTestGame>(gameHost);
 	//this->game = MakeUnique<ParticleTestGame>(gameHost);
 	this->game = MakeUnique<MaidChanGame>(gameHost);
+	//this->game = MakeUnique<GrassBlendingGame>(gameHost);
 	
 	game->Initialize();
 }

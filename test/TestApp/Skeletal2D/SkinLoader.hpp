@@ -18,6 +18,7 @@
 namespace Pomdog {
 
 class Skin;
+class SkeletonDesc;
 
 namespace Details {
 namespace Skeletal2D {

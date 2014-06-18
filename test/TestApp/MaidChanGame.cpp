@@ -209,7 +209,7 @@ void MaidChanGame::Initialize()
 			gameEditor->AddUIElement(slider1);
 		}
 		{
-			slider2 = std::make_shared<UI::Slider>(0.1, 1.0);
+			slider2 = std::make_shared<UI::Slider>(-2.0, 2.0);
 			slider2->drawOrder = 0.0f;
 			slider2->Value(1.0);
 			stackPanel->AddChild(slider2);
@@ -264,6 +264,9 @@ void MaidChanGame::Update()
 	auto mouse = gameHost->Mouse();
 	{
 		gameEditor->Update();
+	}
+	{
+		maidAnimationState->PlaybackRate(slider2->Value());
 	}
 	
 	if (toggleSwitch1->IsOn()) {

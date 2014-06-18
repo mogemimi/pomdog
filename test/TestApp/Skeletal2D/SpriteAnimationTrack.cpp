@@ -35,14 +35,14 @@ std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIte
 }
 
 }// unnamed namespace
-
-SpriteAnimationTrack::SpriteAnimationTrack(std::vector<SpriteKeyframe> && keysIn, std::uint16_t slotIndexIn)
+//-----------------------------------------------------------------------
+SpriteAnimationTrack::SpriteAnimationTrack(std::vector<SpriteKeyframe> && keysIn, std::uint32_t slotHashIdIn)
 	: keys(std::move(keysIn))
-	, slotIndex(slotIndexIn)
+	, slotHashId(slotHashIdIn)
 {
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<SpriteKeyframe>));
 }
-
+//-----------------------------------------------------------------------
 void SpriteAnimationTrack::Apply(Skin & skin, DurationSeconds const& time)
 {
 	SpriteKeyframe point;
@@ -50,15 +50,21 @@ void SpriteAnimationTrack::Apply(Skin & skin, DurationSeconds const& time)
 	
 	POMDOG_ASSERT(!keys.empty());
 	auto pointPair = BinarySearchNearestPoints(std::begin(keys), std::end(keys), point);
-	
-	auto & slot = skin.Slots(slotIndex);
+
+	if (!slotIndex) {
+		///@note lazy initialization:
+		slotIndex = skin.FindSlotIndexById(slotHashId);
+	}
+
+	POMDOG_ASSERT(slotIndex);
+	auto & slot = skin.SlotByIndex(*slotIndex);
 
 	slot.Subrect = pointPair.first->Subrect;
 	slot.Origin = pointPair.first->Origin;
 	slot.TexturePage = pointPair.first->TexturePage;
 	slot.TextureRotate = pointPair.first->TextureRotate;
 }
-
+//-----------------------------------------------------------------------
 DurationSeconds SpriteAnimationTrack::Length() const
 {
 	POMDOG_ASSERT(!keys.empty());
@@ -66,7 +72,7 @@ DurationSeconds SpriteAnimationTrack::Length() const
 	POMDOG_ASSERT(keys.front().TimeSeconds <= keys.back().TimeSeconds);
 	return DurationSeconds(keys.back().TimeSeconds);
 }
-
+//-----------------------------------------------------------------------
 }// namespace Skeletal2D
 }// namespace Details
 }// namespace Pomdog

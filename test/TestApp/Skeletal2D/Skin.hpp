@@ -14,28 +14,10 @@
 #endif
 
 #include <cstdint>
-#include <Pomdog/Math/Rectangle.hpp>
-#include <Pomdog/Math/Vector2.hpp>
-#include <Pomdog/Math/Color.hpp>
-#include <Pomdog/Math/Radian.hpp>
-#include "JointIndex.hpp"
-#include "SkeletonDesc.hpp"
+#include <vector>
+#include "RigidSlot.hpp"
 
 namespace Pomdog {
-
-class RigidSlot {
-public:
-	Rectangle Subrect;
-	Vector2 Translate;
-	Vector2 Scale;
-	Radian<float> Rotation;
-	Color Color;
-	Vector2 Origin;
-	JointIndex JointIndex;
-	std::uint16_t DrawOrder;
-	std::uint16_t TexturePage;
-	bool TextureRotate;
-};
 
 class Skin {
 public:
@@ -44,8 +26,11 @@ public:
 
 	std::vector<RigidSlot> const& Slots() const;
 	
-	RigidSlot const& Slots(std::uint16_t slotIndex) const;
-	RigidSlot & Slots(std::uint16_t slotIndex);
+	std::uint16_t FindSlotIndexById(std::uint32_t hashId) const;
+	std::uint16_t FindSlotIndexById(std::uint32_t hashId);
+	
+	RigidSlot const& SlotByIndex(std::uint16_t slotIndex) const;
+	RigidSlot & SlotByIndex(std::uint16_t slotIndex);
 
 private:
 	std::vector<RigidSlot> slots;

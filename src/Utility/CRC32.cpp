@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "CRC32.hpp"
+#include <Pomdog/Utility/detail/CRC32.hpp>
 #include <array>
 #include <utility>
 

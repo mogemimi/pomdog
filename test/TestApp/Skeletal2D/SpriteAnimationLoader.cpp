@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -9,29 +9,31 @@
 #include "SpriteAnimationLoader.hpp"
 #include <utility>
 #include <algorithm>
+#include <Pomdog/Utility/detail/CRC32.hpp>
 #include "SkeletonDesc.hpp"
 #include "SpriteAnimationTrack.hpp"
 #include "AnimationKeyHelper.hpp"
 
+
 namespace Pomdog {
 namespace Details {
 namespace Skeletal2D {
-namespace {
-
-static std::uint16_t FindSlot(std::vector<SlotDesc> const& slots, std::string const& name)
-{
-	std::uint16_t index = 0;
-
-	auto iter = std::find_if(std::begin(slots), std::end(slots),
-		[&name](SlotDesc const& desc){ return desc.Name == name; });
-	
-	if (iter != std::end(slots)) {
-		index = std::distance(std::begin(slots), iter);
-	}
-	return index;
-}
-
-}// unnamed namespace
+//namespace {
+//
+//static std::uint16_t FindSlot(std::vector<SlotDesc> const& slots, std::string const& name)
+//{
+//	std::uint16_t index = 0;
+//
+//	auto iter = std::find_if(std::begin(slots), std::end(slots),
+//		[&name](SlotDesc const& desc){ return desc.Name == name; });
+//	
+//	if (iter != std::end(slots)) {
+//		index = std::distance(std::begin(slots), iter);
+//	}
+//	return index;
+//}
+//
+//}// unnamed namespace
 //-----------------------------------------------------------------------
 std::vector<SpriteAnimationTrack> CreateSpriteAnimationTrack(
 	SkeletonDesc const& desc,
@@ -40,6 +42,8 @@ std::vector<SpriteAnimationTrack> CreateSpriteAnimationTrack(
 {
 	auto iter = std::find_if(std::begin(desc.AnimationClips), std::end(desc.AnimationClips),
 		[name](AnimationClipDesc const& clip){ return clip.Name == name; });
+
+	POMDOG_ASSERT(std::end(desc.AnimationClips) != iter);
 
 	if (std::end(desc.AnimationClips) == iter) {
 		///@todo Not implemented
@@ -53,8 +57,8 @@ std::vector<SpriteAnimationTrack> CreateSpriteAnimationTrack(
 	
 	for (auto & animationTrack: animationClip.SlotTracks)
 	{
-		auto slotIndex = FindSlot(desc.Slots, animationTrack.SlotName);
-		
+		auto slotIndex = Hashing::CRC32::BlockChecksum(animationTrack.SlotName.data(), animationTrack.SlotName.size());
+
 		if (!animationTrack.AttachmentSamples.empty())
 		{
 			std::vector<SpriteKeyframe> keys;

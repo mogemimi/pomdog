@@ -105,6 +105,7 @@
         '../test/TestApp/Skeletal2D/Joint.hpp',
         '../test/TestApp/Skeletal2D/JointIndex.hpp',
         '../test/TestApp/Skeletal2D/JointPose.hpp',
+        '../test/TestApp/Skeletal2D/RigidSlot.hpp',
         '../test/TestApp/Skeletal2D/RotationTrack.hpp',
         '../test/TestApp/Skeletal2D/ScaleTrack.hpp',
         '../test/TestApp/Skeletal2D/Skeleton.cpp',

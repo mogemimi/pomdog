@@ -6,11 +6,12 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_SRC_UTILITY_CRC32_776BA67C_EA5D_4D65_AA24_4A40C3C2BEDD_HPP
-#define POMDOG_SRC_UTILITY_CRC32_776BA67C_EA5D_4D65_AA24_4A40C3C2BEDD_HPP
+#ifndef POMDOG_UTILITY_CRC32_7EBEE5EE_0A7A_4875_BBF4_48CAF21443FF_HPP
+#define POMDOG_UTILITY_CRC32_7EBEE5EE_0A7A_4875_BBF4_48CAF21443FF_HPP
 
 #include <cstdint>
 #include <cstddef>
+#include "../../Config/Export.hpp"
 
 namespace Pomdog {
 namespace Hashing {
@@ -18,10 +19,10 @@ namespace Hashing {
 // CRC-32 (Cyclic Redundancy Check for 32bit)
 namespace CRC32
 {
-	std::uint32_t BlockChecksum(void const* data, std::size_t length);
+	std::uint32_t POMDOG_EXPORT BlockChecksum(void const* data, std::size_t length);
 }
 
 }// namespace Hashing
 }// namespace Pomdof
 
-#endif // !defined(POMDOG_SRC_UTILITY_CRC32_776BA67C_EA5D_4D65_AA24_4A40C3C2BEDD_HPP)
+#endif // !defined(POMDOG_UTILITY_CRC32_7EBEE5EE_0A7A_4875_BBF4_48CAF21443FF_HPP)

@@ -15,6 +15,7 @@
 
 #include <vector>
 #include <Pomdog/Pomdog.hpp>
+#include <Pomdog/Utility/Optional.hpp>
 #include "Skin.hpp"
 
 namespace Pomdog {
@@ -33,7 +34,7 @@ public:
 class SpriteAnimationTrack final {
 public:
 	SpriteAnimationTrack() = default;
-	SpriteAnimationTrack(std::vector<SpriteKeyframe> && keys, std::uint16_t slotIndex);
+	SpriteAnimationTrack(std::vector<SpriteKeyframe> && keys, std::uint32_t slotHashId);
 
 	void Apply(Skin & skin, DurationSeconds const& time);
 	
@@ -41,7 +42,8 @@ public:
 	
 private:
 	std::vector<SpriteKeyframe> keys;
-	std::uint16_t slotIndex;
+	std::uint32_t slotHashId;
+	Optional<std::uint16_t> slotIndex;
 };
 
 }// namespace Skeletal2D
