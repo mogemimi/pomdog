@@ -51,6 +51,8 @@ struct InputElementGL4 {
 
 	// Must be 1, 2, 3, and 4.
 	std::int8_t Components;
+	
+	bool IsInteger = false;
 };
 
 struct InputBindingGL4 {

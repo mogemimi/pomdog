@@ -95,6 +95,32 @@ static ScalarTypeGL4 ToScalarType(GLenum attributeClass)
 	return ScalarTypeGL4(GL_FLOAT);
 }
 //-----------------------------------------------------------------------
+static bool IsIntegerType(ScalarTypeGL4 const& scalarType)
+{
+	switch (scalarType.value) {
+	case GL_FLOAT:
+	case GL_DOUBLE:
+		return false;
+	case GL_INT:
+	case GL_UNSIGNED_INT:
+	case GL_BYTE:
+	case GL_UNSIGNED_BYTE:
+	case GL_SHORT:
+	case GL_UNSIGNED_SHORT:
+		return true;
+	}
+	
+	// Not supported:
+	POMDOG_ASSERT(scalarType.value != GL_HALF_FLOAT);
+	POMDOG_ASSERT(scalarType.value != GL_FIXED);
+	
+#ifdef DEBUG
+	Log::Stream(LogLevel::Internal)
+		<< "Failed to find scalar type '"  << scalarType.value << "'.";
+#endif
+	return false;
+}
+//-----------------------------------------------------------------------
 struct InputElementSize {
 	///@note
 	/// float: 1
@@ -261,6 +287,7 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
 			attribute.ScalarType = attributeScalarType;
 			attribute.Components = static_cast<GLint>(attributeSize.ComponentCount);
 			attribute.ByteOffset = 0; // Note: See CalculateByteOffset function.
+			attribute.IsInteger = IsIntegerType(attribute.ScalarType);
 
 			POMDOG_ASSERT(attribute.Components >= 1 && attribute.Components <= 4);
 			attributes.push_back(attribute);
@@ -418,18 +445,34 @@ static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings
 		
 		for (auto & attribute: binding.InputElements)
 		{
-			glVertexAttribPointer(
-				attribute.StartSlot,
-				attribute.Components,
-				attribute.ScalarType.value,
-				GL_FALSE,
-				strideBytes,
-				ComputeBufferOffset(attribute.ByteOffset)
-			);
-			#ifdef DEBUG
-			ErrorChecker::CheckError("glVertexAttribPointer", __FILE__, __LINE__);
-			#endif
-			
+			if (attribute.IsInteger)
+			{
+				glVertexAttribIPointer(
+					attribute.StartSlot,
+					attribute.Components,
+					attribute.ScalarType.value,
+					strideBytes,
+					ComputeBufferOffset(attribute.ByteOffset));
+					
+				#ifdef DEBUG
+				ErrorChecker::CheckError("glVertexAttribIPointer", __FILE__, __LINE__);
+				#endif
+			}
+			else
+			{
+				glVertexAttribPointer(
+					attribute.StartSlot,
+					attribute.Components,
+					attribute.ScalarType.value,
+					GL_FALSE,
+					strideBytes,
+					ComputeBufferOffset(attribute.ByteOffset));
+					
+				#ifdef DEBUG
+				ErrorChecker::CheckError("glVertexAttribPointer", __FILE__, __LINE__);
+				#endif
+			}
+
 			glVertexAttribDivisor(attribute.StartSlot, binding.InstanceFrequency);
 			#ifdef DEBUG
 			ErrorChecker::CheckError("glVertexAttribDivisor", __FILE__, __LINE__);
