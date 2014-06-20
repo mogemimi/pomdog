@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <Pomdog/Math/Matrix3x2.hpp>
 #include "JointIndex.hpp"
 #include "JointPose.hpp"
 
@@ -22,6 +23,7 @@ namespace Pomdog {
 /// @brief スケルタルアニメーションにおけるジョイント（間接）またはボーンです。
 class Joint {
 public:
+	Matrix3x2 InverseBindPose;
 	JointPose BindPose;
 	JointIndex Index;
 	JointIndex Parent;

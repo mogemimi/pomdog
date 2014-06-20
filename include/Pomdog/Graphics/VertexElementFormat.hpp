@@ -37,6 +37,12 @@ enum class VertexElementFormat: std::uint8_t {
 	///@brief A four-component, 128-bit floating-point format
 	Float4,
 	
+	///@brief A four-component, 128-bit integer format
+	Int4,
+	
+	///@brief A four-component, 128-bit unsigned integer format
+	//UInt4,
+	
 	///@brief A four-component, 32-bit unsigned integer format.
 	Byte4,
 	

@@ -330,6 +330,8 @@ static std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
 			POMDOG_ASSERT(verticesArray[verticesIter].IsNumber());
 			vertex.Weight = verticesArray[verticesIter].GetDouble();
 			++verticesIter;
+			
+			localVertices.push_back(std::move(vertex));
 		}
 	
 		SkinnedMeshVertexDesc vertex;
@@ -337,7 +339,11 @@ static std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
 		if (localVertices.size() >= vertex.Joints.size())
 		{
 			std::sort(std::begin(localVertices), std::end(localVertices),
-				[](LocalVertex const& a, LocalVertex const& b){ return a.Weight > b.Weight; });
+				[](LocalVertex const& a, LocalVertex const& b){
+					POMDOG_ASSERT(a.JointIndex);
+					POMDOG_ASSERT(b.JointIndex);
+					return a.Weight > b.Weight;
+				});
 
 			float accumulatedWeight = 0;
 			for (std::uint8_t index = 0; index < vertex.Joints.size(); ++index)
@@ -362,13 +368,13 @@ static std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
 		for (std::uint8_t index = 0; index < boneCount; ++index)
 		{
 			static_assert(vertex.Joints.size() == 4, "");
-			POMDOG_ASSERT(boneCount < vertex.Joints.size());
-			vertex.Joints[boneCount] = localVertices[boneCount].JointIndex;
+			POMDOG_ASSERT(index < vertex.Joints.size());
+			vertex.Joints[index] = localVertices[index].JointIndex;
 			
 			static_assert(vertex.Weights.size() == 3, "");
-			POMDOG_ASSERT(boneCount < vertex.Weights.size());
-			if (boneCount < vertex.Weights.size() - 1) {
-				vertex.Weights[boneCount] = localVertices[boneCount].Weight;
+			POMDOG_ASSERT(index < vertex.Weights.size());
+			if (index < vertex.Weights.size() - 1) {
+				vertex.Weights[index] = localVertices[index].Weight;
 			}
 		}
 		
@@ -386,11 +392,11 @@ static std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
 	return std::move(vertices);
 }
 //-----------------------------------------------------------------------
-static std::vector<std::uint32_t> ReadSkinnedMeshIndices(rapidjson::Value const& indicesArray)
+static std::vector<std::uint16_t> ReadSkinnedMeshIndices(rapidjson::Value const& indicesArray)
 {
 	POMDOG_ASSERT(indicesArray.IsArray());
 
-	std::vector<std::uint32_t> indices;
+	std::vector<std::uint16_t> indices;
 	indices.reserve(indicesArray.Size());
 	
 	for (auto iter = indicesArray.Begin(); iter != indicesArray.End(); ++iter)

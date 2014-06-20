@@ -28,9 +28,11 @@ namespace SkeletonHelper {
 
 	void Traverse(Skeleton const& skeleton,
 		std::function<void(Joint const&)> const& traverser);
-		
+	
 	void ComputeGlobalPoseFromLocalPose(Skeleton const& skeleton,
 		SkeletonPose & skeletonPose);
+	
+	SkeletonPose CreateSkeletonPoseBySkeleton(Skeleton const& skeleton);
 }
 
 }// namespace Pomdog

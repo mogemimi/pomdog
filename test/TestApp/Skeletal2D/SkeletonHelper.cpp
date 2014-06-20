@@ -41,40 +41,42 @@ void SkeletonHelper::Traverse(Skeleton const& skeleton,
 void SkeletonHelper::ComputeGlobalPoseFromLocalPose(
 	Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
-	{
-		auto bone = skeleton.Root();
-		POMDOG_ASSERT(*bone.Index < skeletonPose.LocalPose.size());
-		auto & pose = skeletonPose.LocalPose[*bone.Index];
-	
-		Matrix4x4 matrix = Matrix4x4::CreateScale(pose.Scale);
-		matrix *= Matrix4x4::CreateRotationZ(pose.Rotation);
-		matrix *= Matrix4x4::CreateTranslation({pose.Translate, 0.0f});
-	
-		POMDOG_ASSERT(*bone.Index < skeletonPose.GlobalPose.size());
-		skeletonPose.GlobalPose[*bone.Index] = Matrix3x2::Identity;
-	}
-
 	POMDOG_ASSERT(skeleton.JointCount() > 1);
 	POMDOG_ASSERT(skeleton.Root().Index);
-	POMDOG_ASSERT(skeleton.Root().FirstChild);
 
-	SkeletonHelper::Traverse(skeleton, skeleton.Root().FirstChild, [&](Joint const& bone)
+	SkeletonHelper::Traverse(skeleton, skeleton.Root().Index, [&](Joint const& bone)
 	{
 		POMDOG_ASSERT(*bone.Index < skeletonPose.LocalPose.size());
 		auto & pose = skeletonPose.LocalPose[*bone.Index];
-		
-		POMDOG_ASSERT(bone.Parent);
-		POMDOG_ASSERT(*bone.Index < skeletonPose.GlobalPose.size());
-		auto & parentMatrix = skeletonPose.GlobalPose[*bone.Parent];
 
 		Matrix3x2 matrix = Matrix3x2::CreateScale(pose.Scale);
 		matrix *= Matrix3x2::CreateRotation(pose.Rotation);
 		matrix *= Matrix3x2::CreateTranslation(pose.Translate);
-		matrix *= parentMatrix;
+		
+		if (bone.Parent)
+		{
+			POMDOG_ASSERT(*bone.Parent < skeletonPose.GlobalPose.size());
+			auto & parentMatrix = skeletonPose.GlobalPose[*bone.Parent];
+			matrix *= parentMatrix;
+		}
 
 		POMDOG_ASSERT(*bone.Index < skeletonPose.GlobalPose.size());
 		skeletonPose.GlobalPose[*bone.Index] = matrix;
 	});
+}
+//-----------------------------------------------------------------------
+SkeletonPose SkeletonHelper::CreateSkeletonPoseBySkeleton(Skeleton const& skeleton)
+{
+	SkeletonPose skeletonPose;
+	skeletonPose.LocalPose.reserve(skeleton.JointCount());
+	for (auto & joint: skeleton) {
+		skeletonPose.LocalPose.push_back(joint.BindPose);
+	}
+
+	skeletonPose.GlobalPose.resize(skeleton.JointCount());
+	SkeletonHelper::ComputeGlobalPoseFromLocalPose(skeleton, skeletonPose);
+	
+	return std::move(skeletonPose);
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

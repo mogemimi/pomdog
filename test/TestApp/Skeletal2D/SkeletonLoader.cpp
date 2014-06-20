@@ -13,6 +13,8 @@
 #include "JointIndex.hpp"
 #include "Joint.hpp"
 #include "Skeleton.hpp"
+#include "SkeletonPose.hpp"
+#include "SkeletonHelper.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -35,6 +37,38 @@ static auto FindBoneParent(std::string const& parentName,
 	POMDOG_ASSERT(jointIndex < bones.size());
 	POMDOG_ASSERT(jointIndex < std::numeric_limits<typename std::remove_reference<decltype(*decltype(Joint::Index)())>::type>::max());
 	return jointIndex;
+}
+//-----------------------------------------------------------------------
+static std::vector<Matrix3x2> CreateInverseBindPoseByJoints(Skeleton const& skeleton)
+{
+	POMDOG_ASSERT(skeleton.JointCount() > 0);
+	POMDOG_ASSERT(skeleton.Root().Index);
+
+	std::vector<Matrix3x2> bindPose;
+	bindPose.resize(skeleton.JointCount());
+
+	SkeletonHelper::Traverse(skeleton, skeleton.Root().Index, [&bindPose](Joint const& bone)
+	{
+		Matrix3x2 matrix = Matrix3x2::CreateScale(bone.BindPose.Scale);
+		matrix *= Matrix3x2::CreateRotation(bone.BindPose.Rotation);
+		matrix *= Matrix3x2::CreateTranslation(bone.BindPose.Translate);
+		
+		if (bone.Parent)
+		{
+			POMDOG_ASSERT(*bone.Parent < bindPose.size());
+			auto & parentMatrix = bindPose[*bone.Parent];
+			matrix *= parentMatrix;
+		}
+
+		POMDOG_ASSERT(*bone.Index < bindPose.size());
+		bindPose[*bone.Index] = matrix;
+	});
+	
+	for (auto & matrix: bindPose)
+	{
+		matrix = Matrix3x2::Invert(matrix);
+	}
+	return std::move(bindPose);
 }
 //-----------------------------------------------------------------------
 static std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescriptions)
@@ -96,7 +130,7 @@ static std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescripti
 			} while (sibling);
 		}
 	}
-	
+
 	return std::move(joints);
 }
 
@@ -107,6 +141,14 @@ Skeleton CreateSkeleton(std::vector<Skeletal2D::BoneDesc> const& bones)
 	POMDOG_ASSERT(!bones.empty());
 	
 	Skeleton skeleton(CreateBones(bones));
+
+	auto inverseBindPose = CreateInverseBindPoseByJoints(skeleton);
+	for (auto & joint: skeleton)
+	{
+		POMDOG_ASSERT(joint.Index);
+		joint.InverseBindPose = inverseBindPose[*joint.Index];
+	}
+	
 	return std::move(skeleton);
 }
 

@@ -28,6 +28,7 @@
 #include "Skeletal2D/AnimationState.hpp"
 #include "Skeletal2D/AnimationSystem.hpp"
 #include "Skeletal2D/AnimationTimer.hpp"
+#include "Skeletal2D/SkinnedMesh.hpp"
 
 
 namespace Pomdog {
@@ -57,6 +58,7 @@ public:
 	
 private:
 	void DrawSprites();
+	void DrawSkinnedMesh();
 
 private:
 	std::shared_ptr<GameHost> gameHost;
@@ -71,6 +73,7 @@ private:
 
 	std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
 	std::shared_ptr<UI::ScenePanel> scenePanel;
+	std::shared_ptr<UI::Slider> slider1;
 	std::shared_ptr<UI::ToggleSwitch> toggleSwitch1;
 	std::shared_ptr<UI::ToggleSwitch> toggleSwitch2;
 	std::shared_ptr<UI::ToggleSwitch> toggleSwitch3;
@@ -88,6 +91,10 @@ private:
 	AnimationTimer maidAnimationTimer;
 	Skin maidSkin;
 	std::vector<Details::Skeletal2D::SpriteAnimationTrack> maidSpriteAnimationTracks;
+	
+	SkinnedMesh maidSkinnedMesh;
+	std::shared_ptr<EffectPass> maidSkinningEffect;
+	std::shared_ptr<InputLayout> maidInputLayout;
 };
 
 }// namespace TestApp

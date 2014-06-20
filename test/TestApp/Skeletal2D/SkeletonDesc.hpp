@@ -67,7 +67,7 @@ class SkinnedMeshAttachmentDesc {
 public:
 	std::string Name;
 	std::vector<SkinnedMeshVertexDesc> Vertices;
-	std::vector<std::uint32_t> Indices;
+	std::vector<std::uint16_t> Indices;
 };
 
 class SkinSlotDesc {

@@ -20,6 +20,7 @@
 namespace Pomdog {
 
 class SkinnedMesh;
+class SkeletonPose;
 
 namespace Details {
 namespace Skeletal2D {
@@ -28,6 +29,7 @@ class SkeletonDesc;
 
 SkinnedMesh CreateSkinnedMesh(
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	SkeletonPose const& bindPose,
 	SkeletonDesc const& skeletonDesc,
 	Details::TexturePacker::TextureAtlas const& textureAtlas,
 	std::string const& skinName);

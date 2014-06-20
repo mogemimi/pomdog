@@ -52,6 +52,9 @@ template <> struct ToVertexElementFormat<std::array<std::uint8_t, 4>> {
 template <> struct ToVertexElementFormat<std::uint8_t[4]> {
 	static constexpr VertexElementFormat value = VertexElementFormat::Byte4;
 };
+template <> struct ToVertexElementFormat<std::int32_t[4]> {
+	static constexpr VertexElementFormat value = VertexElementFormat::Int4;
+};
 
 template <VertexElementFormat... Formats>
 std::vector<VertexElement> VertexCombined()

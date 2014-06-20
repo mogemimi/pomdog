@@ -26,6 +26,7 @@ std::uint8_t VertexElementHelper::ToByteSize(VertexElementFormat format)
 		return 8;
 	case VertexElementFormat::Float3:
 		return 12;
+	case VertexElementFormat::Int4:
 	case VertexElementFormat::Float4:
 		return 16;
 	}

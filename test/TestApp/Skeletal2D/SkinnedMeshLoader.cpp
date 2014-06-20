@@ -11,6 +11,7 @@
 #include <utility>
 #include <tuple>
 #include "SkeletonDesc.hpp"
+#include "SkeletonPose.hpp"
 #include "SkinnedVertex.hpp"
 #include "SkinnedMesh.hpp"
 #include "TextureAtlas.hpp"
@@ -30,20 +31,23 @@ using Details::TexturePacker::TextureAtlas;
 using Details::TexturePacker::TextureAtlasRegion;
 //-----------------------------------------------------------------------
 static SkinnedMeshSlot CreateSkinnedMeshSlot(SlotDesc const& slotDesc,
-	SkinSlotDesc const& skinSlot, TextureAtlasRegion const& textureAtlasRegion)
+	AttachmentDesc const& attachment, TextureRegion const& textureRegion,
+	SkeletonPose const& bindPose)
 {
+	POMDOG_ASSERT(slotDesc.Joint);
+
 	SkinnedMeshSlot slot;
 
 	///@todo Not implemented
 
-	std::array<float, 3> weights = {1, 0, 0};
-	std::array<std::uint8_t, 4> joints = {*slotDesc.Joint, 0, 0, 0};
+	std::array<float, 4> weights = {1, 0, 0, 0};
+	std::array<std::int32_t, 4> joints = {*slotDesc.Joint, -1, -1, -1};
 
 	slot.vertices = {
-		{Vector2{0.0f, 0.0f}, Vector2{0.0f, 1.0f}, weights, joints},
-		{Vector2{0.0f, 1.0f}, Vector2{0.0f, 0.0f}, weights, joints},
-		{Vector2{1.0f, 1.0f}, Vector2{1.0f, 0.0f}, weights, joints},
-		{Vector2{1.0f, 0.0f}, Vector2{1.0f, 1.0f}, weights, joints},
+		{Vector4{0.0f, 0.0f, 0.0f, 1.0f}, weights, joints},
+		{Vector4{0.0f, 1.0f, 0.0f, 0.0f}, weights, joints},
+		{Vector4{1.0f, 1.0f, 1.0f, 0.0f}, weights, joints},
+		{Vector4{1.0f, 0.0f, 1.0f, 1.0f}, weights, joints},
 	};
 
 	slot.indices = {
@@ -51,27 +55,54 @@ static SkinnedMeshSlot CreateSkinnedMeshSlot(SlotDesc const& slotDesc,
 		2, 3, 0
 	};
 
-//	slot.Scale = attachment->Scale;
-//	slot.Translate = attachment->Translate;
-//	slot.Rotation = attachment->Rotation;
-//	
-//	slot.TexturePage = textureAtlasRegion.TexturePage;
-//	slot.TextureRotate = textureAtlasRegion.Rotate;
-//	slot.Subrect = textureAtlasRegion.Subrect;
-//
-//	slot.Origin.X = static_cast<float>(textureAtlasRegion.OriginalWidth/2 - textureAtlasRegion.XOffset)/textureAtlasRegion.Subrect.Width;
-//	slot.Origin.Y = static_cast<float>(textureAtlasRegion.OriginalHeight/2 - textureAtlasRegion.YOffset)/textureAtlasRegion.Subrect.Height;
-//
-//	if (textureAtlasRegion.Rotate) {
-//		std::swap(slot.Subrect.Width, slot.Subrect.Height);
-//		std::swap(slot.Origin.X, slot.Origin.Y);
-//	}
+
+	Vector2 origin;
+	origin.X = static_cast<float>(textureRegion.Width/2 - textureRegion.XOffset)/textureRegion.Subrect.Width;
+	origin.Y = static_cast<float>(textureRegion.Height/2 - textureRegion.YOffset)/textureRegion.Subrect.Height;
+
+	Vector2 size(textureRegion.Subrect.Width, textureRegion.Subrect.Height);
+
+	if (textureRegion.Rotate) {
+		std::swap(size.X, size.Y);
+		std::swap(origin.X, origin.Y);
+	}
+
+	Matrix3x2 scaling = Matrix3x2::CreateScale(attachment.Scale * size);
+	Matrix3x2 rotate = Matrix3x2::CreateRotation(attachment.Rotation);
+	if (textureRegion.Rotate) {
+		rotate = Matrix3x2::CreateRotation(-MathConstants<float>::PiOver2()) * rotate;
+	}
+	Matrix3x2 translate = Matrix3x2::CreateTranslation(attachment.Translate);
+	
+	POMDOG_ASSERT(*slotDesc.Joint < bindPose.GlobalPose.size());
+	Matrix3x2 transform = scaling * rotate * translate * bindPose.GlobalPose[*slotDesc.Joint];
+
+	for (auto & vertex: slot.vertices)
+	{
+		auto position = Vector2::Transform(Vector2(vertex.PositionTextureCoord.X, vertex.PositionTextureCoord.Y) - origin, transform);
+		
+		vertex.PositionTextureCoord.X = position.X;
+		vertex.PositionTextureCoord.Y = position.Y;
+	}
+
+	for (auto & vertex: slot.vertices)
+	{
+		auto position = Vector2(vertex.PositionTextureCoord.Z, vertex.PositionTextureCoord.W)
+			* size
+			+ Vector2(textureRegion.Subrect.X, textureRegion.Subrect.Y);
+		Vector2 textureSize(512.0f, 512.0f);
+		position = position / textureSize;
+		
+		vertex.PositionTextureCoord.Z = position.X;
+		vertex.PositionTextureCoord.W = position.Y;
+	}
 
 	return std::move(slot);
 }
 //-----------------------------------------------------------------------
 static std::tuple<std::vector<SkinnedVertex>, std::vector<std::uint16_t>>
-	CreateVertices(std::vector<SlotDesc> const& slots, SkinDesc const& skin, TextureAtlas const& textureAtlas)
+CreateVertices(std::vector<SlotDesc> const& slots, SkinDesc const& skin,
+		TextureAtlas const& textureAtlas, SkeletonPose const& bindPose)
 {
 	std::vector<SkinnedMeshSlot> meshSlots;
 	meshSlots.reserve(slots.size());
@@ -95,21 +126,60 @@ static std::tuple<std::vector<SkinnedVertex>, std::vector<std::uint16_t>>
 		if (skinSlot->Attachments.empty() && !skinSlot->SkinnedMeshAttachments.empty())
 		{
 			///@todo Not implemented
-			
-			///@note push dummy attachment data
-//			RigidSlot slot;
-//			slot.JointIndex = JointIndex(0);
-//			slot.DrawOrder = drawOrder;
-//			slot.Scale = {1, 1};
-//			slot.Translate = {0, 0};
-//			slot.Rotation = 0;
-//			slot.TexturePage = 0;
-//			slot.TextureRotate = false;
-//			slot.Subrect = {0, 0, 1, 1};
-//			slot.Origin.X = 0;
-//			slot.Origin.Y = 0;
-//
-//			slots.push_back(std::move(slot));
+
+			auto attachment = std::find_if(std::begin(skinSlot->SkinnedMeshAttachments), std::end(skinSlot->SkinnedMeshAttachments),
+				[&slotDesc](SkinnedMeshAttachmentDesc const& desc) {
+					return desc.Name == slotDesc.Attachement;
+				});
+		
+			POMDOG_ASSERT(attachment != std::end(skinSlot->SkinnedMeshAttachments));
+		
+			auto textureAtlasRegion = std::find_if(std::begin(textureAtlas.regions), std::end(textureAtlas.regions),
+				[&attachment](TextureAtlasRegion const& region) {
+					return region.Name == attachment->Name;
+				});
+		
+			POMDOG_ASSERT(textureAtlasRegion != std::end(textureAtlas.regions));
+		
+			auto & textureRegion = textureAtlasRegion->Region;
+		
+			SkinnedMeshSlot meshSlot;
+			for (auto & source: attachment->Vertices)
+			{
+				SkinnedVertex vertex;
+				Vector2 textureSize = {512, 512};
+				
+				POMDOG_ASSERT(!source.Joints.empty());
+				POMDOG_ASSERT(source.Joints.front());
+				POMDOG_ASSERT(*source.Joints.front() < bindPose.GlobalPose.size());
+				auto position = Vector2::Transform(source.Position, bindPose.GlobalPose[*source.Joints.front()]);
+				
+				vertex.PositionTextureCoord = {
+					position.X, position.Y,
+					(textureRegion.Subrect.X / textureSize.X) + source.TextureCoordinate.X * (textureRegion.Subrect.Width / textureSize.X),
+					(textureRegion.Subrect.Y / textureSize.Y) + source.TextureCoordinate.Y * (textureRegion.Subrect.Height / textureSize.Y)
+				};
+
+				for (size_t i = 0; i < source.Joints.size(); ++i)
+				{
+					if (source.Joints[i]) {
+						vertex.Joints[i] = *source.Joints[i];
+					}
+					else {
+						vertex.Joints[i] = -1;
+					}
+				}
+				
+				vertex.Weights[0] = source.Weights[0];
+				vertex.Weights[1] = source.Weights[1];
+				vertex.Weights[2] = source.Weights[2];
+				vertex.Weights[3] = 1.0f - (source.Weights[0] + source.Weights[1] + source.Weights[2]);
+				
+				meshSlot.vertices.push_back(std::move(vertex));
+			}
+			meshSlot.indices = attachment->Indices;
+			meshSlot.DrawOrder = drawOrder;
+			meshSlots.push_back(std::move(meshSlot));
 			++drawOrder;
 			continue;
 		}
@@ -150,7 +220,7 @@ static std::tuple<std::vector<SkinnedVertex>, std::vector<std::uint16_t>>
 		
 		POMDOG_ASSERT(slotDesc.Joint);
 
-		auto meshSlot = CreateSkinnedMeshSlot(slotDesc, *skinSlot, *textureAtlasRegion);
+		auto meshSlot = CreateSkinnedMeshSlot(slotDesc, *attachment, textureAtlasRegion->Region, bindPose);
 		meshSlot.DrawOrder = drawOrder;
 		meshSlots.push_back(std::move(meshSlot));
 		++drawOrder;
@@ -158,14 +228,20 @@ static std::tuple<std::vector<SkinnedVertex>, std::vector<std::uint16_t>>
 	
 	std::sort(std::begin(meshSlots), std::end(meshSlots),
 		[](SkinnedMeshSlot const& a, SkinnedMeshSlot const& b) {
-			return a.DrawOrder > b.DrawOrder;
+			return a.DrawOrder < b.DrawOrder;
 		});
 
 	std::vector<SkinnedVertex> vertices;
 	std::vector<std::uint16_t> indices;
 	
+	std::uint16_t startIndex = 0;
 	for (auto & slot: meshSlots)
 	{
+		for (auto & index: slot.indices) {
+			index += startIndex;
+		}
+		startIndex += slot.vertices.size();
+
 		// Note: concatenate two vectors
 		vertices.insert(std::end(vertices), std::begin(slot.vertices), std::end(slot.vertices));
 		indices.insert(std::end(indices), std::begin(slot.indices), std::end(slot.indices));
@@ -177,6 +253,7 @@ static std::tuple<std::vector<SkinnedVertex>, std::vector<std::uint16_t>>
 //-----------------------------------------------------------------------
 SkinnedMesh CreateSkinnedMesh(
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	SkeletonPose const& bindPose,
 	SkeletonDesc const& skeletonDesc,
 	Details::TexturePacker::TextureAtlas const& textureAtlas,
 	std::string const& skinName)
@@ -202,12 +279,15 @@ SkinnedMesh CreateSkinnedMesh(
 	
 	POMDOG_ASSERT(graphicsDevice);
 	
-	auto primitives = CreateVertices(skeletonDesc.Slots, *iter, textureAtlas);
+	auto primitives = CreateVertices(skeletonDesc.Slots, *iter, textureAtlas, bindPose);
 	auto vertices = std::move(std::get<0>(primitives));
 	auto indices = std::move(std::get<1>(primitives));
 	
-	using SkinnedMeshVertex = CustomVertex<Vector2, Vector2, Vector3, std::uint8_t[4]>;
-	
+	using SkinnedMeshVertex = CustomVertex<Vector4, Vector4, std::int32_t[4]>;
+	static_assert(std::is_same<decltype(SkinnedVertex::PositionTextureCoord), Vector4>::value, "");
+	static_assert(std::is_same<decltype(SkinnedVertex::Weights), std::array<float, 4>>::value, "");
+	static_assert(std::is_same<decltype(SkinnedVertex::Joints), std::array<std::int32_t, 4>>::value, "");
+
 	SkinnedMesh skinnedMesh;
 	skinnedMesh.VertexBuffer = std::make_shared<VertexBuffer>(
 		graphicsDevice, SkinnedMeshVertex::Declaration(),
