@@ -10,8 +10,8 @@ out VertexData {
 } Out;
 
 uniform SkinningConstants {
-	vec4 SkinMatrices1[32];
-	vec4 SkinMatrices2[32];
+	vec4 SkinMatrices1[64];
+	vec4 SkinMatrices2[64];
 };
 
 uniform Constants {

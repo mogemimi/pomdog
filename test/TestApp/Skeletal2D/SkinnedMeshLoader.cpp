@@ -32,7 +32,7 @@ using Details::TexturePacker::TextureAtlasRegion;
 //-----------------------------------------------------------------------
 static SkinnedMeshSlot CreateSkinnedMeshSlot(SlotDesc const& slotDesc,
 	AttachmentDesc const& attachment, TextureRegion const& textureRegion,
-	SkeletonPose const& bindPose)
+	Vector2 const& textureSize, SkeletonPose const& bindPose)
 {
 	POMDOG_ASSERT(slotDesc.Joint);
 
@@ -90,7 +90,9 @@ static SkinnedMeshSlot CreateSkinnedMeshSlot(SlotDesc const& slotDesc,
 		auto position = Vector2(vertex.PositionTextureCoord.Z, vertex.PositionTextureCoord.W)
 			* size
 			+ Vector2(textureRegion.Subrect.X, textureRegion.Subrect.Y);
-		Vector2 textureSize(512.0f, 512.0f);
+
+		POMDOG_ASSERT(textureSize.X > 0);
+		POMDOG_ASSERT(textureSize.Y > 0);
 		position = position / textureSize;
 		
 		vertex.PositionTextureCoord.Z = position.X;
@@ -102,7 +104,7 @@ static SkinnedMeshSlot CreateSkinnedMeshSlot(SlotDesc const& slotDesc,
 //-----------------------------------------------------------------------
 static std::tuple<std::vector<SkinnedVertex>, std::vector<std::uint16_t>>
 CreateVertices(std::vector<SlotDesc> const& slots, SkinDesc const& skin,
-		TextureAtlas const& textureAtlas, SkeletonPose const& bindPose)
+		TextureAtlas const& textureAtlas, Vector2 const& textureSize, SkeletonPose const& bindPose)
 {
 	std::vector<SkinnedMeshSlot> meshSlots;
 	meshSlots.reserve(slots.size());
@@ -111,6 +113,8 @@ CreateVertices(std::vector<SlotDesc> const& slots, SkinDesc const& skin,
 
 	for (auto & slotDesc: slots)
 	{
+		POMDOG_ASSERT(drawOrder < std::numeric_limits<decltype(drawOrder)>::max());
+	
 		auto skinSlot = std::find_if(std::begin(skin.Slots), std::end(skin.Slots), [&slotDesc](SkinSlotDesc const& desc) {
 			return desc.SlotName == slotDesc.Name;
 		});
@@ -147,17 +151,23 @@ CreateVertices(std::vector<SlotDesc> const& slots, SkinDesc const& skin,
 			for (auto & source: attachment->Vertices)
 			{
 				SkinnedVertex vertex;
-				Vector2 textureSize = {512, 512};
 				
 				POMDOG_ASSERT(!source.Joints.empty());
 				POMDOG_ASSERT(source.Joints.front());
 				POMDOG_ASSERT(*source.Joints.front() < bindPose.GlobalPose.size());
 				auto position = Vector2::Transform(source.Position, bindPose.GlobalPose[*source.Joints.front()]);
 				
+				Vector2 originInUV(textureRegion.Subrect.X, textureRegion.Subrect.Y);
+				Vector2 sizeInUV(textureRegion.Subrect.Width, textureRegion.Subrect.Height);
+		
+				Vector2 textureCoordInUV = (textureRegion.Rotate
+					? Vector2{source.TextureCoordinate.Y * sizeInUV.Y, (1 - source.TextureCoordinate.X) * sizeInUV.X}
+					: source.TextureCoordinate * sizeInUV);
+
+				auto textureCoord = (originInUV + textureCoordInUV) / textureSize;
+								
 				vertex.PositionTextureCoord = {
-					position.X, position.Y,
-					(textureRegion.Subrect.X / textureSize.X) + source.TextureCoordinate.X * (textureRegion.Subrect.Width / textureSize.X),
-					(textureRegion.Subrect.Y / textureSize.Y) + source.TextureCoordinate.Y * (textureRegion.Subrect.Height / textureSize.Y)
+					position.X, position.Y, textureCoord.X, textureCoord.Y
 				};
 
 				for (size_t i = 0; i < source.Joints.size(); ++i)
@@ -220,7 +230,7 @@ CreateVertices(std::vector<SlotDesc> const& slots, SkinDesc const& skin,
 		
 		POMDOG_ASSERT(slotDesc.Joint);
 
-		auto meshSlot = CreateSkinnedMeshSlot(slotDesc, *attachment, textureAtlasRegion->Region, bindPose);
+		auto meshSlot = CreateSkinnedMeshSlot(slotDesc, *attachment, textureAtlasRegion->Region, textureSize, bindPose);
 		meshSlot.DrawOrder = drawOrder;
 		meshSlots.push_back(std::move(meshSlot));
 		++drawOrder;
@@ -240,6 +250,8 @@ CreateVertices(std::vector<SlotDesc> const& slots, SkinDesc const& skin,
 		for (auto & index: slot.indices) {
 			index += startIndex;
 		}
+		
+		POMDOG_ASSERT(startIndex + slot.vertices.size() <= std::numeric_limits<decltype(startIndex)>::max());
 		startIndex += slot.vertices.size();
 
 		// Note: concatenate two vectors
@@ -256,6 +268,7 @@ SkinnedMesh CreateSkinnedMesh(
 	SkeletonPose const& bindPose,
 	SkeletonDesc const& skeletonDesc,
 	Details::TexturePacker::TextureAtlas const& textureAtlas,
+	Vector2 const& textureSize,
 	std::string const& skinName)
 {
 	POMDOG_ASSERT(!skeletonDesc.Bones.empty());
@@ -279,7 +292,7 @@ SkinnedMesh CreateSkinnedMesh(
 	
 	POMDOG_ASSERT(graphicsDevice);
 	
-	auto primitives = CreateVertices(skeletonDesc.Slots, *iter, textureAtlas, bindPose);
+	auto primitives = CreateVertices(skeletonDesc.Slots, *iter, textureAtlas, textureSize, bindPose);
 	auto vertices = std::move(std::get<0>(primitives));
 	auto indices = std::move(std::get<1>(primitives));
 	

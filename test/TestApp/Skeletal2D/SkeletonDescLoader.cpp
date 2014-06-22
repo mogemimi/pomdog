@@ -336,15 +336,15 @@ static std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
 	
 		SkinnedMeshVertexDesc vertex;
 		
+		std::sort(std::begin(localVertices), std::end(localVertices),
+			[](LocalVertex const& a, LocalVertex const& b){
+				POMDOG_ASSERT(a.JointIndex);
+				POMDOG_ASSERT(b.JointIndex);
+				return a.Weight > b.Weight;
+			});
+		
 		if (localVertices.size() >= vertex.Joints.size())
 		{
-			std::sort(std::begin(localVertices), std::end(localVertices),
-				[](LocalVertex const& a, LocalVertex const& b){
-					POMDOG_ASSERT(a.JointIndex);
-					POMDOG_ASSERT(b.JointIndex);
-					return a.Weight > b.Weight;
-				});
-
 			float accumulatedWeight = 0;
 			for (std::uint8_t index = 0; index < vertex.Joints.size(); ++index)
 			{
@@ -372,8 +372,7 @@ static std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
 			vertex.Joints[index] = localVertices[index].JointIndex;
 			
 			static_assert(vertex.Weights.size() == 3, "");
-			POMDOG_ASSERT(index < vertex.Weights.size());
-			if (index < vertex.Weights.size() - 1) {
+			if (index < vertex.Weights.size()) {
 				vertex.Weights[index] = localVertices[index].Weight;
 			}
 		}

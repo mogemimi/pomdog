@@ -116,7 +116,7 @@ void GrassBlendingGame::Initialize()
 {
 	auto window = gameHost->Window();
 	window->Title("TestApp - Enjoy Game Dev, Have Fun.");
-	window->AllowPlayerResizing(false);
+	window->AllowPlayerResizing(true);
 	
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
@@ -172,7 +172,8 @@ void GrassBlendingGame::Initialize()
 
 		// NOTE: for Skinning
 		auto bindPose = SkeletonHelper::CreateSkeletonPoseBySkeleton(*maidSkeleton);
-		maidSkinnedMesh = Details::Skeletal2D::CreateSkinnedMesh(graphicsDevice, bindPose, skeletonDesc, textureAtlas, "default");
+		maidSkinnedMesh = Details::Skeletal2D::CreateSkinnedMesh(graphicsDevice, bindPose, skeletonDesc, textureAtlas,
+			Vector2(maidTexture->Width(), maidTexture->Height()), "default");
 		maidSkinningEffect = assets->Load<EffectPass>("Effects/SkinningSpriteEffect");
 		maidInputLayout = std::make_shared<InputLayout>(graphicsDevice, maidSkinningEffect);
 	}
@@ -230,6 +231,18 @@ void GrassBlendingGame::Initialize()
 			gameEditor->AddUIElement(toggleSwitch4);
 		}
 	}
+	
+	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this] {
+		auto gameWindow = gameHost->Window();
+		auto bounds = gameWindow->ClientBounds();
+		
+		renderTarget = std::make_shared<RenderTarget2D>(
+			gameHost->GraphicsDevice(), bounds.Width, bounds.Height,
+			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
+
+		fxaa->ResetViewportSize(bounds);
+		spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(bounds.Width, bounds.Height, 1.0f, 100.0f));
+	});
 }
 //-----------------------------------------------------------------------
 void GrassBlendingGame::Update()
@@ -302,14 +315,14 @@ void GrassBlendingGame::DrawSkinnedMesh()
 			graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
 		
 		maidSkinningEffect->Parameters("Constants")->SetValue(Matrix4x4::Transpose(viewMatrix * projectionMatrix));
-		
+
 		struct MatrixPalette {
-			std::array<Vector4, 32> matrixPalette1;
-			std::array<Vector4, 32> matrixPalette2;
+			std::array<Vector4, 64> matrixPalette1;
+			std::array<Vector4, 64> matrixPalette2;
 		};
 		MatrixPalette matrixPalette;
 		
-		std::array<Matrix3x2, 32> matrices;
+		std::array<Matrix3x2, 64> matrices;
 
 		for (auto & joint: *maidSkeleton)
 		{

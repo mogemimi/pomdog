@@ -95,6 +95,8 @@ private:
 	SkinnedMesh maidSkinnedMesh;
 	std::shared_ptr<EffectPass> maidSkinningEffect;
 	std::shared_ptr<InputLayout> maidInputLayout;
+	
+	ScopedConnection clientSizeChangedConnection;
 };
 
 }// namespace TestApp

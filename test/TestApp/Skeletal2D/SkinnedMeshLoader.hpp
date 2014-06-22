@@ -15,6 +15,7 @@
 
 #include <memory>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include <Pomdog/Math/Vector2.hpp>
 #include "TextureAtlas.hpp"
 
 namespace Pomdog {
@@ -32,6 +33,7 @@ SkinnedMesh CreateSkinnedMesh(
 	SkeletonPose const& bindPose,
 	SkeletonDesc const& skeletonDesc,
 	Details::TexturePacker::TextureAtlas const& textureAtlas,
+	Vector2 const& textureSize,
 	std::string const& skinName);
 
 }// namespace Skeletal2D
