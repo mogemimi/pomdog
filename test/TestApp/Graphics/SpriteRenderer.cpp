@@ -95,7 +95,6 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 	, sortMode(SpriteSortMode::BackToFront)
 {
 	using PositionTextureCoord = CustomVertex<Vector4>;
-	using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4, Vector4>;
 
 	{
 		auto viewport = graphicsContext->Viewport();
@@ -111,7 +110,8 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 			Vector4(1.0f, 0.0f, 1.0f, 1.0f),
 		};
 		planeVertices = std::make_shared<VertexBuffer>(graphicsDevice,
-			PositionTextureCoord::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Immutable);
+			verticesCombo.data(), verticesCombo.size(),
+			PositionTextureCoord::Declaration().StrideBytes(), BufferUsage::Immutable);
 	}
 	{
 		std::array<std::uint16_t, 6> const indices = {
@@ -136,12 +136,13 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 		}
 		
 		instanceVertices = std::make_shared<VertexBuffer>(graphicsDevice,
-			SpriteInfoVertex::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Dynamic);
+			verticesCombo.data(), verticesCombo.size(), sizeof(SpriteInfo), BufferUsage::Dynamic);
 	}
 	{
 		effectPass = assets.Load<EffectPass>("Effects/SpriteRendererEffect");
-		
+
 		auto declartation = PositionTextureCoord::Declaration();
+		using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4, Vector4>;
 		
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
 			std::initializer_list<VertexBufferBinding>{

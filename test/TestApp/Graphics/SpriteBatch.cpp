@@ -122,7 +122,8 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextI
 		#endif
 		};
 		planeVertices = std::make_shared<VertexBuffer>(graphicsDevice,
-			PositionTextureCoord::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Immutable);
+			verticesCombo.data(), verticesCombo.size(),
+			PositionTextureCoord::Declaration().StrideBytes(), BufferUsage::Immutable);
 	}
 	{
 		std::array<std::uint16_t, 6> const indices = {
@@ -151,7 +152,8 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextI
 		}
 		
 		instanceVertices = std::make_shared<VertexBuffer>(graphicsDevice,
-			SpriteInfoVertex::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Dynamic);
+			verticesCombo.data(), verticesCombo.size(),
+			SpriteInfoVertex::Declaration().StrideBytes(), BufferUsage::Dynamic);
 	}
 	{
 		POMDOG_ASSERT(effectPass);

@@ -32,11 +32,11 @@ public:
 	~VertexBufferGL4() override;
 	
 	VertexBufferGL4(void const* vertices, std::uint32_t vertexCount,
-		VertexDeclaration const& vertexDeclaration, BufferUsage bufferUsage);
+		std::uint16_t strideBytes, BufferUsage bufferUsage);
 
 	///@copydoc NativeVertexBuffer
-	void SetData(void const* source, std::uint32_t vertexCount,
-		VertexDeclaration const& vertexDeclaration) override;
+	void SetData(std::uint32_t offsetInBytes, void const* source,
+		std::uint32_t sizeInBytes) override;
 	
 	void BindBuffer();
 	

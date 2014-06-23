@@ -10,7 +10,6 @@
 #include <utility>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/BufferUsage.hpp>
-#include <Pomdog/Graphics/VertexDeclaration.hpp>
 #include "../Utility/ScopeGuard.hpp"
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
@@ -43,7 +42,7 @@ struct TypesafeHelperGL4::OpenGLGetTraits<VertexBufferObjectGL4> {
 };
 //-----------------------------------------------------------------------
 VertexBufferGL4::VertexBufferGL4(void const* vertices, std::uint32_t vertexCount,
-	VertexDeclaration const& vertexDeclaration, BufferUsage bufferUsage)
+	std::uint16_t strideBytes, BufferUsage bufferUsage)
 {
 	POMDOG_ASSERT(vertices != nullptr);
 	POMDOG_ASSERT(vertexCount > 0);
@@ -67,7 +66,7 @@ VertexBufferGL4::VertexBufferGL4(void const* vertices, std::uint32_t vertexCount
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif
 	
-	glBufferData(GL_ARRAY_BUFFER, vertexDeclaration.StrideBytes() * vertexCount,
+	glBufferData(GL_ARRAY_BUFFER, strideBytes * vertexCount,
 		static_cast<GLvoid const*>(vertices),
 		ToVertexBufferUsage(bufferUsage));
 
@@ -83,11 +82,10 @@ VertexBufferGL4::~VertexBufferGL4()
 	}
 }
 //-----------------------------------------------------------------------
-void VertexBufferGL4::SetData(void const* source, std::uint32_t vertexCount,
-	VertexDeclaration const& vertexDeclaration)
+void VertexBufferGL4::SetData(std::uint32_t offsetInBytes,
+	void const* source, std::uint32_t sizeInBytes)
 {
 	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(vertexCount > 0);
 
 	auto const oldBufferObject = TypesafeHelperGL4::Get<VertexBufferObjectGL4>();
 	ScopeGuard scope([&oldBufferObject]{
@@ -101,8 +99,8 @@ void VertexBufferGL4::SetData(void const* source, std::uint32_t vertexCount,
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif
 
-	POMDOG_ASSERT(vertexDeclaration.StrideBytes() > 0);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, vertexDeclaration.StrideBytes() * vertexCount, source);
+	POMDOG_ASSERT(sizeInBytes > 0);
+	glBufferSubData(GL_ARRAY_BUFFER, offsetInBytes, sizeInBytes, source);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBufferSubData", __FILE__, __LINE__);

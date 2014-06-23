@@ -29,8 +29,6 @@ namespace Pomdog {
 /// @brief 頂点を定義します。
 class POMDOG_EXPORT VertexDeclaration {
 public:
-	VertexDeclaration() = delete;
-	
 	VertexDeclaration(std::initializer_list<VertexElement> vertexElements);
 
 	explicit VertexDeclaration(std::vector<VertexElement> const& vertexElements);

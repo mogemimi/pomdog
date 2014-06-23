@@ -65,9 +65,16 @@ public:
 
 	///@~Japanese
 	/// @brief インデックスデータを格納します。
-	/// @param source ソースバッファを指定します。
-	/// @param elementCount インデックスの要素数を指定します。
+	/// @param source ソースバッファ
+	/// @param elementCount インデックスの要素数
 	void SetData(void const* source, std::uint32_t elementCount);
+
+	///@~Japanese
+	/// @brief インデックスデータを格納します。
+	/// @param offsetInBytes バッファの先頭から出力先までのバイト単位のオフセット
+	/// @param source ソースバッファ
+	/// @param elementCount インデックスの要素数
+	void SetData(std::uint32_t offsetInBytes, void const* source, std::uint32_t elementCount);
 
 public:
 	Details::RenderSystem::NativeIndexBuffer* NativeIndexBuffer();

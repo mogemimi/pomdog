@@ -28,7 +28,8 @@ FXAA::FXAA(std::shared_ptr<GameHost> const& gameHost)
 			Vector3( 1.0f, -1.0f, 0.0f), Vector2(1.0f, 0.0f),
 		};
 		vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
-			VertexCombined::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Immutable);
+			verticesCombo.data(), verticesCombo.size(),
+			VertexCombined::Declaration().StrideBytes(), BufferUsage::Immutable);
 
 		effectPass = assets->Load<EffectPass>("Effects/FXAA");
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);

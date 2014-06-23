@@ -31,10 +31,11 @@ public:
 	///@~Japanese
 	/// @brief 頂点データを格納します。
 	/// @remarks イミュータブルな頂点バッファでは使用しないでください。
-	/// @param source ソースバッファを指定します。
-	/// @param vertexCount 頂点の数を指定します。
-	virtual void SetData(void const* source, std::uint32_t vertexCount,
-		VertexDeclaration const& vertexDeclaration) = 0;
+	/// @param offsetInBytes バッファの先頭から出力先までのバイト単位のオフセット
+	/// @param source ソースバッファ
+	/// @param sizeInBytes 頂点データのバイト単位のサイズ
+	virtual void SetData(std::uint32_t offsetInBytes,
+		void const* source, std::uint32_t sizeInBytes) = 0;
 };
 
 }// namespace RenderSystem

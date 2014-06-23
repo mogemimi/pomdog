@@ -295,16 +295,10 @@ SkinnedMesh CreateSkinnedMesh(
 	auto primitives = CreateVertices(skeletonDesc.Slots, *iter, textureAtlas, textureSize, bindPose);
 	auto vertices = std::move(std::get<0>(primitives));
 	auto indices = std::move(std::get<1>(primitives));
-	
-	using SkinnedMeshVertex = CustomVertex<Vector4, Vector4, std::int32_t[4]>;
-	static_assert(std::is_same<decltype(SkinnedVertex::PositionTextureCoord), Vector4>::value, "");
-	static_assert(std::is_same<decltype(SkinnedVertex::Weights), std::array<float, 4>>::value, "");
-	static_assert(std::is_same<decltype(SkinnedVertex::Joints), std::array<std::int32_t, 4>>::value, "");
 
 	SkinnedMesh skinnedMesh;
-	skinnedMesh.VertexBuffer = std::make_shared<VertexBuffer>(
-		graphicsDevice, SkinnedMeshVertex::Declaration(),
-		vertices.data(), vertices.size(), BufferUsage::Immutable);
+	skinnedMesh.VertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
+		vertices.data(), vertices.size(), sizeof(SkinnedVertex), BufferUsage::Immutable);
 	skinnedMesh.IndexBuffer = std::make_shared<IndexBuffer>(
 		graphicsDevice, IndexElementSize::SixteenBits,
 		indices.data(), indices.size(), BufferUsage::Immutable);

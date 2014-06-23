@@ -48,14 +48,14 @@ public:
 	///@~Japanese
 	/// @brief インデックスバッファを作成します。
 	virtual std::unique_ptr<NativeIndexBuffer>
-	CreateIndexBuffer(void const* indices, std::uint32_t indexCount,
-		IndexElementSize elementSize, BufferUsage bufferUsage) = 0;
+	CreateIndexBuffer(void const* indices, std::uint32_t sizeInBytes,
+		BufferUsage bufferUsage) = 0;
 	
 	///@~Japanese
 	/// @brief 頂点バッファを作成します。
 	virtual std::unique_ptr<NativeVertexBuffer>
 	CreateVertexBuffer(void const* vertices, std::uint32_t vertexCount,
-		VertexDeclaration const& vertexDeclaration, BufferUsage bufferUsage) = 0;
+		std::uint16_t strideBytes, BufferUsage bufferUsage) = 0;
 	
 	///@~Japanese
 	/// @brief ブレンディングステートを作成します。

@@ -33,17 +33,6 @@ static GLenum ToIndexBufferUsage(BufferUsage bufferUsage)
 	return GL_STATIC_DRAW;
 #endif
 }
-//-----------------------------------------------------------------------
-static GLsizeiptr ToIndexElementOffsetBytes(IndexElementSize elementSize)
-{
-	switch (elementSize) {
-	case IndexElementSize::ThirtyTwoBits: return 4;
-	case IndexElementSize::SixteenBits: return 2;
-	};
-#ifdef _MSC_VER
-	return 4;// FUS RO DAH!!!
-#endif
-}
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
@@ -53,8 +42,8 @@ struct TypesafeHelperGL4::OpenGLGetTraits<IndexBufferObjectGL4> {
 	constexpr static GLenum bufferObjectTarget = GL_ELEMENT_ARRAY_BUFFER;
 };
 //-----------------------------------------------------------------------
-IndexBufferGL4::IndexBufferGL4(void const* indices, std::uint32_t indexCount,
-	IndexElementSize elementSize, BufferUsage bufferUsage)
+IndexBufferGL4::IndexBufferGL4(void const* indices,
+	std::uint32_t sizeInBytes, BufferUsage bufferUsage)
 {
 	// Generate index buffer
 	bufferObject = ([]{
@@ -75,7 +64,8 @@ IndexBufferGL4::IndexBufferGL4(void const* indices, std::uint32_t indexCount,
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif
 
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, ToIndexElementOffsetBytes(elementSize) * indexCount,
+	POMDOG_ASSERT(sizeInBytes > 0);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeInBytes,
 		static_cast<GLvoid const*>(indices),
 		ToIndexBufferUsage(bufferUsage));
 
@@ -91,10 +81,9 @@ IndexBufferGL4::~IndexBufferGL4()
 	}
 }
 //-----------------------------------------------------------------------
-void IndexBufferGL4::SetData(void const* source, std::uint32_t indexCount, IndexElementSize elementSize)
+void IndexBufferGL4::SetData(std::uint32_t offsetInBytes, void const* source, std::uint32_t sizeInBytes)
 {
 	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(indexCount > 0);
 
 	auto const oldBufferObject = TypesafeHelperGL4::Get<IndexBufferObjectGL4>();
 	ScopeGuard scope([&oldBufferObject]{
@@ -108,9 +97,9 @@ void IndexBufferGL4::SetData(void const* source, std::uint32_t indexCount, Index
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif
 
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
-		ToIndexElementOffsetBytes(elementSize) * indexCount,
-		source);
+	POMDOG_ASSERT(sizeInBytes > 0);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offsetInBytes,
+		sizeInBytes, source);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBufferSubData", __FILE__, __LINE__);

@@ -14,9 +14,9 @@
 #endif
 
 #include <cstdint>
+#include <memory>
 #include "../Config/Export.hpp"
 #include "detail/ForwardDeclarations.hpp"
-#include "VertexDeclaration.hpp"
 #include "BufferUsage.hpp"
 
 namespace Pomdog {
@@ -42,12 +42,8 @@ public:
 	VertexBuffer(VertexBuffer &&) = default;
 
 	VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		Pomdog::VertexDeclaration const& vertexDeclaration,
-		void const* vertices, std::uint32_t vertexCount, Pomdog::BufferUsage bufferUsage);
-
-	VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		Pomdog::VertexDeclaration && vertexDeclaration,
-		void const* vertices, std::uint32_t vertexCount, Pomdog::BufferUsage bufferUsage);
+		void const* vertices, std::uint32_t vertexCount,
+		std::uint16_t strideBytes, Pomdog::BufferUsage bufferUsage);
 
 	~VertexBuffer();
 
@@ -55,12 +51,13 @@ public:
 	VertexBuffer & operator=(VertexBuffer &&) = default;
 
 	///@~Japanese
-	/// @brief 頂点データの定義を取得します。
-	VertexDeclaration const& VertexDeclaration() const;
-
-	///@~Japanese
 	/// @brief 頂点の数を取得します。
 	std::uint32_t VertexCount() const;
+
+	///@~Japanese
+	/// @brief 頂点データ 1 つ分のサイズをバイト単位で取得します。
+	/// @remarks 1 つの頂点の先頭から次の頂点までのバイト数です。
+	std::uint16_t StrideBytes() const;
 
 	///@~Japanese
 	/// @brief バッファの使用方法を取得します。
@@ -68,17 +65,25 @@ public:
 	
 	///@~Japanese
 	/// @brief 頂点データを格納します。
-	/// @param source ソースバッファを指定します。
-	/// @param elementCount 頂点の数を指定します。
+	/// @param source ソースバッファ
+	/// @param elementCount 頂点の数
 	void SetData(void const* source, std::uint32_t elementCount);
-	
+
+	///@~Japanese
+	/// @brief 頂点データを格納します。
+	/// @param offsetInBytes バッファの先頭から出力先までのバイト単位のオフセット
+	/// @param source ソースバッファ
+	/// @param elementCount 頂点の数
+	/// @param strideBytes 頂点 1 つ分のバイト単位のサイズ
+	void SetData(std::uint32_t offsetInBytes, void const* source, std::uint32_t elementCount, std::uint16_t strideBytes);
+
 public:
 	Details::RenderSystem::NativeVertexBuffer* NativeVertexBuffer();
 	
 private:
-	Pomdog::VertexDeclaration vertexDeclaration;
 	std::unique_ptr<Details::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
 	std::uint32_t vertexCount;
+	std::uint16_t strideBytes;
 	Pomdog::BufferUsage bufferUsage;
 };
 

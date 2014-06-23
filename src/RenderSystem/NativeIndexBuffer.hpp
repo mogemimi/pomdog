@@ -31,9 +31,11 @@ public:
 	///@~Japanese
 	/// @brief インデックスデータを格納します。
 	/// @remarks イミュータブルなインデックスバッファでは使用しないでください。
-	/// @param source ソースバッファを指定します。
-	/// @param indexCount インデックスの要素数を指定します。
-	virtual void SetData(void const* source, std::uint32_t indexCount, IndexElementSize elementSize) = 0;
+	/// @param offsetInBytes バッファの先頭から出力先までのバイト単位のオフセット
+	/// @param source ソースバッファ
+	/// @param sizeInBytes インデックスデータのバイト単位のサイズ
+	virtual void SetData(std::uint32_t offsetInBytes,
+		void const* source, std::uint32_t sizeInBytes) = 0;
 };
 
 }// namespace RenderSystem

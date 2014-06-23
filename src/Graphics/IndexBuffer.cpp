@@ -13,12 +13,26 @@
 #include "../RenderSystem/NativeIndexBuffer.hpp"
 
 namespace Pomdog {
+namespace {
+
+static std::uint32_t ToIndexElementOffsetBytes(IndexElementSize elementSize)
+{
+	switch (elementSize) {
+	case IndexElementSize::ThirtyTwoBits: return 4;
+	case IndexElementSize::SixteenBits: return 2;
+	};
+#ifdef _MSC_VER
+	return 4;// FUS RO DAH!!!
+#endif
+}
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 IndexBuffer::IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	IndexElementSize elementSizeIn, void const* indices, std::uint32_t indexCountIn,
 	Pomdog::BufferUsage bufferUsageIn)
 	: nativeIndexBuffer(graphicsDevice->NativeGraphicsDevice()->CreateIndexBuffer(
-		indices, indexCountIn, elementSizeIn, bufferUsageIn))
+		indices, ToIndexElementOffsetBytes(elementSizeIn) * indexCountIn, bufferUsageIn))
 	, indexCount(indexCountIn)
 	, elementSize(elementSizeIn)
 	, bufferUsage(bufferUsageIn)
@@ -50,7 +64,17 @@ void IndexBuffer::SetData(void const* source, std::uint32_t elementCountIn)
 	POMDOG_ASSERT(elementCountIn <= indexCount);
 	POMDOG_ASSERT(nativeIndexBuffer);
 	POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
-	nativeIndexBuffer->SetData(source, elementCountIn, elementSize);
+	nativeIndexBuffer->SetData(0, source, ToIndexElementOffsetBytes(elementSize) * elementCountIn);
+}
+//-----------------------------------------------------------------------
+void IndexBuffer::SetData(std::uint32_t offsetInBytes, void const* source, std::uint32_t elementCountIn)
+{
+	POMDOG_ASSERT(source != nullptr);
+	POMDOG_ASSERT(elementCountIn > 0);
+	POMDOG_ASSERT(elementCountIn <= indexCount);
+	POMDOG_ASSERT(nativeIndexBuffer);
+	POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
+	nativeIndexBuffer->SetData(offsetInBytes, source, ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
 //-----------------------------------------------------------------------
 Details::RenderSystem::NativeIndexBuffer* IndexBuffer::NativeIndexBuffer()

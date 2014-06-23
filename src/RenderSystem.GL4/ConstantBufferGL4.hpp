@@ -44,7 +44,8 @@ public:
 	void GetData(std::uint32_t byteWidth, void* result) const override;
 
 	///@copydoc NativeConstantBuffer
-	void SetData(void const* data, std::uint32_t byteWidth) override;
+	void SetData(std::uint32_t offsetInBytes,
+		void const* source, std::uint32_t sizeInBytes) override;
 	
 	///@~Japanese
 	/// @brief シェーダプログラムに定数バッファを適用します。

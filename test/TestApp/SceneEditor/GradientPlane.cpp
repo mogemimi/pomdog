@@ -32,7 +32,8 @@ GradientPlane::GradientPlane(std::shared_ptr<GameHost> const& gameHost)
 			Vector3(-1.0f, -1.0f, 0.0f), colorLower.ToVector4(),// [0]
 		};
 		vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
-			PositionColor::Declaration(), verticesCombo.data(), verticesCombo.size(), BufferUsage::Immutable);
+			verticesCombo.data(), verticesCombo.size(),
+			PositionColor::Declaration().StrideBytes(), BufferUsage::Immutable);
 	}
 	{
 		effectPass = assets->Load<EffectPass>("Effects/PrimitiveLineEffect");

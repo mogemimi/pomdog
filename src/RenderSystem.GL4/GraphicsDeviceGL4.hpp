@@ -27,13 +27,13 @@ public:
 	
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeIndexBuffer>
-	CreateIndexBuffer(void const* indices, std::uint32_t indexCount,
-		IndexElementSize elementSize, BufferUsage bufferUsage) override;
+	CreateIndexBuffer(void const* indices, std::uint32_t sizeInBytes,
+		BufferUsage bufferUsage) override;
 	
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeVertexBuffer>
 	CreateVertexBuffer(void const* vertices, std::uint32_t vertexCount,
-		VertexDeclaration const& vertexDeclaration, BufferUsage bufferUsage) override;
+		std::uint16_t strideBytes, BufferUsage bufferUsage) override;
 
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeBlendState>

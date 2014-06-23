@@ -91,10 +91,10 @@ void ConstantBufferGL4::GetData(std::uint32_t byteWidth, void* result) const
 	#endif
 }
 //-----------------------------------------------------------------------
-void ConstantBufferGL4::SetData(void const* source, std::uint32_t byteWidth)
+void ConstantBufferGL4::SetData(std::uint32_t offsetInBytes,
+	void const* source, std::uint32_t sizeInBytes)
 {
 	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(byteWidth > 0);
 
 	auto const oldBufferObject = TypesafeHelperGL4::Get<ConstantBufferObjectGL4>();
 	ScopeGuard scope([&oldBufferObject] {
@@ -112,11 +112,12 @@ void ConstantBufferGL4::SetData(void const* source, std::uint32_t byteWidth)
 	{
 		GLint bufferSize = 0;
 		glGetBufferParameteriv(GL_UNIFORM_BUFFER, GL_BUFFER_SIZE, &bufferSize);
-		POMDOG_ASSERT(byteWidth <= static_cast<std::size_t>(bufferSize));
+		POMDOG_ASSERT(sizeInBytes <= static_cast<std::size_t>(bufferSize));
 	}
 	#endif
 
-	glBufferSubData(GL_UNIFORM_BUFFER, 0, byteWidth, source);
+	POMDOG_ASSERT(sizeInBytes > 0);
+	glBufferSubData(GL_UNIFORM_BUFFER, offsetInBytes, sizeInBytes, source);
 	
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBufferSubData", __FILE__, __LINE__);

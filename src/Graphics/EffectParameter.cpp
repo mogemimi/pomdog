@@ -22,7 +22,7 @@ class DummyConstantBuffer final: public Details::RenderSystem::NativeConstantBuf
 public:
 	void GetData(std::uint32_t, void*) const override {}
 	
-	void SetData(void const*, std::uint32_t) override {}
+	void SetData(std::uint32_t, void const*, std::uint32_t) override {}
 };
 
 }// unnamed namespace
@@ -54,7 +54,7 @@ void EffectParameter::SetValue(void const* data, std::uint32_t byteWidth)
 	POMDOG_ASSERT(data != nullptr);
 	POMDOG_ASSERT(byteWidth > 0);
 	POMDOG_ASSERT(nativeConstantBuffer);
-	return nativeConstantBuffer->SetData(data, byteWidth);
+	return nativeConstantBuffer->SetData(0, data, byteWidth);
 }
 //-----------------------------------------------------------------------
 Details::RenderSystem::NativeConstantBuffer* EffectParameter::NativeConstantBuffer()
