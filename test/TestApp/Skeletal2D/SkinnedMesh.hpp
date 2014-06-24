@@ -14,7 +14,8 @@
 #endif
 
 #include <memory>
-#include <Pomdog/Pomdog.hpp>
+#include <Pomdog/Graphics/VertexBuffer.hpp>
+#include <Pomdog/Graphics/IndexBuffer.hpp>
 
 namespace Pomdog {
 

@@ -65,7 +65,7 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 			{
 				RotationKeyframe key;
 				key.Rotation = sample.Rotation;
-				key.TimeSeconds = sample.TimeSeconds;
+				key.Time = sample.Time;
 				keys.push_back(std::move(key));
 			}
 			
@@ -83,7 +83,7 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 			{
 				ScaleKeyframe key;
 				key.Scale = sample.Scale;
-				key.TimeSeconds = sample.TimeSeconds;
+				key.Time = sample.Time;
 				keys.push_back(std::move(key));
 			}
 			
@@ -102,7 +102,7 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 				TranslationKeyframe key;
 				key.TranslateX = sample.TranslateX;
 				key.TranslateY = sample.TranslateY;
-				key.TimeSeconds = sample.TimeSeconds;
+				key.Time = sample.Time;
 				keys.push_back(std::move(key));
 			}
 

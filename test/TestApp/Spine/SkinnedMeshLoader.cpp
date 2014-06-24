@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <utility>
 #include <tuple>
+#include <Pomdog/Math/MathHelper.hpp>
 #include "SkeletonDesc.hpp"
 #include "SkeletonPose.hpp"
 #include "SkinnedVertex.hpp"

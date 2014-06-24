@@ -16,6 +16,7 @@
 #include <vector>
 #include <Pomdog/Application/DurationSeconds.hpp>
 #include "AnimationTrack.hpp"
+#include "AnimationTimeInterval.hpp"
 #include "CompressedFloat.hpp"
 #include "JointIndex.hpp"
 
@@ -25,7 +26,7 @@ namespace Skeletal2D {
 
 class RotationKeyframe {
 public:
-	float TimeSeconds;
+	AnimationTimeInterval Time;
 	CompressedFloat<std::int16_t, 4500> Rotation;
 		
 	static_assert(decltype(Rotation)::Max() > 3.1416f*2.0f, "");

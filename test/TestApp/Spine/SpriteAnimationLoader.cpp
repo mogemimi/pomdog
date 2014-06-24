@@ -78,7 +78,7 @@ std::vector<SpriteAnimationTrack> CreateSpriteAnimationTrack(
 				}
 			
 				SpriteKeyframe key;
-				key.TimeSeconds = sample.TimeSeconds;
+				key.Time = sample.Time;
 				key.TexturePage = textureAtlasRegion->TexturePage;
 				key.TextureRotate = textureAtlasRegion->Region.Rotate;
 				key.Subrect = textureAtlasRegion->Region.Subrect;

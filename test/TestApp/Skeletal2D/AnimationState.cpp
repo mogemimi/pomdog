@@ -70,9 +70,9 @@ bool AnimationState::Loop() const
 	return loop;
 }
 //-----------------------------------------------------------------------
-void AnimationState::Loop(bool LoopIn)
+void AnimationState::Loop(bool loopIn)
 {
-	this->loop = LoopIn;
+	this->loop = loopIn;
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

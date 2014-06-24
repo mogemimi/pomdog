@@ -13,9 +13,13 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include <vector>
-#include <Pomdog/Pomdog.hpp>
+#include <Pomdog/Math/Rectangle.hpp>
+#include <Pomdog/Math/Vector2.hpp>
+#include <Pomdog/Application/DurationSeconds.hpp>
 #include <Pomdog/Utility/Optional.hpp>
+#include "AnimationTimeInterval.hpp"
 #include "Skin.hpp"
 
 namespace Pomdog {
@@ -26,7 +30,7 @@ class SpriteKeyframe {
 public:
 	Rectangle Subrect;
 	Vector2 Origin;
-	float TimeSeconds;
+	AnimationTimeInterval Time;
 	std::uint16_t TexturePage;
 	bool TextureRotate;
 };

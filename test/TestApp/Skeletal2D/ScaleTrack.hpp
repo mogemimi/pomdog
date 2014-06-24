@@ -16,6 +16,7 @@
 #include <vector>
 #include <Pomdog/Application/DurationSeconds.hpp>
 #include "AnimationTrack.hpp"
+#include "AnimationTimeInterval.hpp"
 #include "CompressedFloat.hpp"
 #include "JointIndex.hpp"
 
@@ -25,7 +26,7 @@ namespace Skeletal2D {
 
 class ScaleKeyframe {
 public:
-	float TimeSeconds;
+	AnimationTimeInterval Time;
 	CompressedFloat<std::int16_t, 1500> Scale;
 
 	static_assert(decltype(Scale)::Max() > 20.0f, "");

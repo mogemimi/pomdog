@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include <vector>
-#include <Pomdog/Pomdog.hpp>
 #include "Joint.hpp"
 #include "JointPose.hpp"
 

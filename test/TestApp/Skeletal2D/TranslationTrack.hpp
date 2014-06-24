@@ -16,6 +16,7 @@
 #include <vector>
 #include <Pomdog/Application/DurationSeconds.hpp>
 #include "AnimationTrack.hpp"
+#include "AnimationTimeInterval.hpp"
 #include "CompressedFloat.hpp"
 #include "JointIndex.hpp"
 
@@ -25,7 +26,7 @@ namespace Skeletal2D {
 
 class TranslationKeyframe {
 public:
-	float TimeSeconds;
+	AnimationTimeInterval Time;
 	CompressedFloat<std::int16_t, 7> TranslateX;
 	CompressedFloat<std::int16_t, 7> TranslateY;
 

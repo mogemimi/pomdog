@@ -21,7 +21,7 @@ namespace AnimationKeyHelper {
 	template <class Keyframe>
 	bool Less(Keyframe const& a, Keyframe const& b)
 	{
-		return a.TimeSeconds < b.TimeSeconds;
+		return a.Time < b.Time;
 	}
 }
 

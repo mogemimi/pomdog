@@ -9,6 +9,7 @@
 #include "SpriteAnimationTrack.hpp"
 #include <algorithm>
 #include <utility>
+#include <Pomdog/Utility/Assert.hpp>
 #include "AnimationKeyHelper.hpp"
 
 namespace Pomdog {
@@ -46,7 +47,7 @@ SpriteAnimationTrack::SpriteAnimationTrack(std::vector<SpriteKeyframe> && keysIn
 void SpriteAnimationTrack::Apply(Skin & skin, DurationSeconds const& time)
 {
 	SpriteKeyframe point;
-	point.TimeSeconds = time.count();
+	point.Time = time;
 	
 	POMDOG_ASSERT(!keys.empty());
 	auto pointPair = BinarySearchNearestPoints(std::begin(keys), std::end(keys), point);
@@ -69,8 +70,8 @@ DurationSeconds SpriteAnimationTrack::Length() const
 {
 	POMDOG_ASSERT(!keys.empty());
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<SpriteKeyframe>));
-	POMDOG_ASSERT(keys.front().TimeSeconds <= keys.back().TimeSeconds);
-	return DurationSeconds(keys.back().TimeSeconds);
+	POMDOG_ASSERT(keys.front().Time <= keys.back().Time);
+	return DurationSeconds(keys.back().Time);
 }
 //-----------------------------------------------------------------------
 }// namespace Skeletal2D

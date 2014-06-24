@@ -71,6 +71,18 @@ static void ReadJsonMember(rapidjson::Value const& object, char const* memberNam
 	}
 }
 //-----------------------------------------------------------------------
+static void ReadJsonMember(rapidjson::Value const& object, char const* memberName, AnimationTimeInterval & output)
+{
+	if (!object.HasMember(memberName)) {
+		return;
+	}
+	
+	auto & memberObject = object[memberName];
+	if (memberObject.IsNumber()) {
+		output = AnimationTimeInterval(memberObject.GetDouble());
+	}
+}
+//-----------------------------------------------------------------------
 static void ReadJsonMember(rapidjson::Value const& object, char const* memberName, Radian<float> & output)
 {
 	if (!object.HasMember(memberName)) {
@@ -573,12 +585,12 @@ static std::vector<AnimationSamplePointTranslate> ReadAnimationTranslateSamples(
 		}
 		
 		AnimationSamplePointTranslate samplePoint;
-		samplePoint.TimeSeconds = 0.0f;
+		samplePoint.Time = AnimationTimeInterval::zero();
 		samplePoint.TranslateX = 0.0f;
 		samplePoint.TranslateY = 0.0f;
 		samplePoint.Curve = KeyframeCurve::Liener;
 		
-		ReadJsonMember(*iter, "time", samplePoint.TimeSeconds);
+		ReadJsonMember(*iter, "time", samplePoint.Time);
 		ReadJsonMember(*iter, "x", samplePoint.TranslateX);
 		ReadJsonMember(*iter, "y", samplePoint.TranslateY);
 		ReadJsonMember(*iter, "curve", samplePoint.Curve);
@@ -608,10 +620,10 @@ static std::vector<AnimationSamplePointRotate> ReadAnimationRotateSamples(rapidj
 		}
 		
 		AnimationSamplePointRotate samplePoint;
-		samplePoint.TimeSeconds = 0.0f;
+		samplePoint.Time = AnimationTimeInterval::zero();
 		samplePoint.Curve = KeyframeCurve::Liener;
 		
-		ReadJsonMember(*iter, "time", samplePoint.TimeSeconds);
+		ReadJsonMember(*iter, "time", samplePoint.Time);
 		ReadJsonMember(*iter, "curve", samplePoint.Curve);
 		
 		Degree<double> degreeAngle = 0;
@@ -649,11 +661,11 @@ static std::vector<AnimationSamplePointScale> ReadAnimationScaleSamples(rapidjso
 		}
 		
 		AnimationSamplePointScale samplePoint;
-		samplePoint.TimeSeconds = 0.0f;
+		samplePoint.Time = AnimationTimeInterval::zero();
 		samplePoint.Curve = KeyframeCurve::Liener;
 		samplePoint.Scale = 1.0f;
 		
-		ReadJsonMember(*iter, "time", samplePoint.TimeSeconds);
+		ReadJsonMember(*iter, "time", samplePoint.Time);
 		ReadJsonMember(*iter, "curve", samplePoint.Curve);
 		ReadJsonMember(*iter, "x", samplePoint.Scale);
 		ReadJsonMember(*iter, "y", samplePoint.Scale);
@@ -688,9 +700,9 @@ static std::vector<AnimationSamplePointAttachment> ReadAnimationAttachmentSample
 		}
 		
 		AnimationSamplePointAttachment samplePoint;
-		samplePoint.TimeSeconds = 0.0f;
+		samplePoint.Time = AnimationTimeInterval::zero();
 		
-		ReadJsonMember(*iter, "time", samplePoint.TimeSeconds);
+		ReadJsonMember(*iter, "time", samplePoint.Time);
 		ReadJsonMember(*iter, "name", samplePoint.AttachmentName);
 		
 		samplePoints.push_back(std::move(samplePoint));

@@ -7,6 +7,7 @@
 //
 
 #include "Skeleton.hpp"
+#include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
@@ -15,6 +16,8 @@ Skeleton::Skeleton(std::vector<Joint> && jointsIn)
 {
 	POMDOG_ASSERT(!joints.empty());
 	POMDOG_ASSERT(!joints.front().Parent);
+	POMDOG_ASSERT(joints.front().Index);
+	POMDOG_ASSERT(*joints.front().Index == 0);
 }
 //-----------------------------------------------------------------------
 Joint const& Skeleton::Root() const

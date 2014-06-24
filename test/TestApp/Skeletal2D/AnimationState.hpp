@@ -20,34 +20,6 @@ namespace Pomdog {
 
 class AnimationClip;
 
-//enum class AnimationWrapMode: std::uint8_t {
-//	///@~Japanese
-//	/// @brief アニメーションを 1 回だけ再生します。
-//	/// @note アニメーションを再生した後、時間は 0 に戻り、アニメーションを終了します。
-//	Once,
-//	
-//	///@~Japanese
-//	/// @brief アニメーションを繰り返し再生します。
-//	Loop,
-//	
-//	///@~Japanese
-//	/// @brief アニメーションを再生した後、次に逆再生を行い、これを繰り返します。
-//	PingPong
-//};
-
-//class AnimationBlendTree {
-//
-//};
-//
-//class AnimationBlendTreeNode {
-//
-//};
-//
-//class AnimationBlendLerp : public AnimationBlendTreeNode {
-//public:
-//	
-//};
-
 class AnimationState {
 public:
 	explicit AnimationState(std::shared_ptr<AnimationClip> const& animationClip);
@@ -67,7 +39,7 @@ public:
 	void Enabled(bool enabled);
 	
 	bool Loop() const;
-	void Loop(bool Loop);
+	void Loop(bool loop);
 	
 private:
 	std::shared_ptr<AnimationClip> clip;

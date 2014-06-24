@@ -20,9 +20,11 @@
 #include <Pomdog/Math/Vector2.hpp>
 #include <Pomdog/Math/Radian.hpp>
 #include <Pomdog/Math/Color.hpp>
-#include "CompressedFloat.hpp"
-#include "JointPose.hpp"
-#include "JointIndex.hpp"
+#include "../Skeletal2D/AnimationTimeInterval.hpp"
+#include "../Skeletal2D/CompressedFloat.hpp"
+#include "../Skeletal2D/JointPose.hpp"
+#include "../Skeletal2D/JointIndex.hpp"
+
 
 namespace Pomdog {
 namespace Details {
@@ -91,7 +93,7 @@ enum class KeyframeCurve: std::uint8_t {
 
 class AnimationSamplePointTranslate {
 public:
-	float TimeSeconds;
+	AnimationTimeInterval Time;
 	CompressedFloat<std::int16_t, 7> TranslateX;
 	CompressedFloat<std::int16_t, 7> TranslateY;
 	KeyframeCurve Curve;
@@ -104,7 +106,7 @@ public:
 
 class AnimationSamplePointRotate {
 public:
-	float TimeSeconds;
+	AnimationTimeInterval Time;
 	CompressedFloat<std::int16_t, 4500> Rotation;
 	KeyframeCurve Curve;
 	
@@ -114,7 +116,7 @@ public:
 
 class AnimationSamplePointScale {
 public:
-	float TimeSeconds;
+	AnimationTimeInterval Time;
 	CompressedFloat<std::int16_t, 1500> Scale;
 	KeyframeCurve Curve;
 	
@@ -133,7 +135,7 @@ public:
 class AnimationSamplePointAttachment {
 public:
 	std::string AttachmentName;
-	float TimeSeconds;
+	AnimationTimeInterval Time;
 };
 
 class SlotAnimationTrackDesc {
