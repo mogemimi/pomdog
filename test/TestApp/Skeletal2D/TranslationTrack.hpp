@@ -14,7 +14,6 @@
 #endif
 
 #include <vector>
-#include <Pomdog/Application/DurationSeconds.hpp>
 #include "AnimationTrack.hpp"
 #include "AnimationTimeInterval.hpp"
 #include "CompressedFloat.hpp"
@@ -40,9 +39,10 @@ class TranslationTrack final: public AnimationTrack {
 public:
 	TranslationTrack(std::vector<TranslationKeyframe> && keys, JointIndex && jointIndex);
 
-	void Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose) override;
+	void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton,
+		SkeletonPose & skeletonPose) override;
 	
-	DurationSeconds Length() const override;
+	AnimationTimeInterval Length() const override;
 	
 private:
 	std::vector<TranslationKeyframe> keys;

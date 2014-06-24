@@ -44,7 +44,7 @@ SpriteAnimationTrack::SpriteAnimationTrack(std::vector<SpriteKeyframe> && keysIn
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<SpriteKeyframe>));
 }
 //-----------------------------------------------------------------------
-void SpriteAnimationTrack::Apply(Skin & skin, DurationSeconds const& time)
+void SpriteAnimationTrack::Apply(Skin & skin, AnimationTimeInterval const& time)
 {
 	SpriteKeyframe point;
 	point.Time = time;
@@ -66,12 +66,12 @@ void SpriteAnimationTrack::Apply(Skin & skin, DurationSeconds const& time)
 	slot.TextureRotate = pointPair.first->TextureRotate;
 }
 //-----------------------------------------------------------------------
-DurationSeconds SpriteAnimationTrack::Length() const
+AnimationTimeInterval SpriteAnimationTrack::Length() const
 {
 	POMDOG_ASSERT(!keys.empty());
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<SpriteKeyframe>));
 	POMDOG_ASSERT(keys.front().Time <= keys.back().Time);
-	return DurationSeconds(keys.back().Time);
+	return keys.back().Time;
 }
 //-----------------------------------------------------------------------
 }// namespace Skeletal2D

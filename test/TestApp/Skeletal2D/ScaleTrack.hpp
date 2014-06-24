@@ -14,7 +14,6 @@
 #endif
 
 #include <vector>
-#include <Pomdog/Application/DurationSeconds.hpp>
 #include "AnimationTrack.hpp"
 #include "AnimationTimeInterval.hpp"
 #include "CompressedFloat.hpp"
@@ -37,9 +36,10 @@ class ScaleTrack final: public AnimationTrack {
 public:
 	ScaleTrack(std::vector<ScaleKeyframe> && keys, JointIndex && jointIndex);
 
-	void Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose) override;
+	void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton,
+		SkeletonPose & skeletonPose) override;
 	
-	DurationSeconds Length() const override;
+	AnimationTimeInterval Length() const override;
 	
 private:
 	std::vector<ScaleKeyframe> keys;

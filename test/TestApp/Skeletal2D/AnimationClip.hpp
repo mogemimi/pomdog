@@ -15,7 +15,7 @@
 
 #include <vector>
 #include <memory>
-#include <Pomdog/Application/DurationSeconds.hpp>
+#include "AnimationTimeInterval.hpp"
 
 namespace Pomdog {
 
@@ -29,13 +29,13 @@ public:
 
 	explicit AnimationClip(std::vector<std::unique_ptr<AnimationTrack>> && tracks);
 
-	void Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose);
+	void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose);
 
-	DurationSeconds Length() const;
+	AnimationTimeInterval Length() const;
 
 private:
 	std::vector<std::unique_ptr<AnimationTrack>> tracks;
-	DurationSeconds length;
+	AnimationTimeInterval length;
 };
 
 }// namespace Pomdog

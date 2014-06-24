@@ -14,7 +14,7 @@
 #endif
 
 #include <memory>
-#include <Pomdog/Application/DurationSeconds.hpp>
+#include "AnimationTimeInterval.hpp"
 
 namespace Pomdog {
 
@@ -25,12 +25,14 @@ public:
 	explicit AnimationState(std::shared_ptr<AnimationClip> const& animationClip);
 	AnimationState(std::shared_ptr<AnimationClip> const& animationClip, float playbackRate, bool loop);
 
+	void Update(AnimationTimeInterval const& frameDuration);
+
 	std::shared_ptr<AnimationClip> const& Clip() const;
 
-	DurationSeconds Time() const;
-	void Time(DurationSeconds const& time);
+	AnimationTimeInterval Time() const;
+	void Time(AnimationTimeInterval const& time);
 
-	DurationSeconds Length() const;
+	AnimationTimeInterval Length() const;
 
 	float PlaybackRate() const;
 	void PlaybackRate(float playbackRate);
@@ -43,7 +45,7 @@ public:
 	
 private:
 	std::shared_ptr<AnimationClip> clip;
-	DurationSeconds time;
+	AnimationTimeInterval time;
 	float playbackRate;
 	//float weight;
 	bool enabled;

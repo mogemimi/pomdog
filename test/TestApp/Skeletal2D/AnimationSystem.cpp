@@ -68,16 +68,7 @@ void AnimationSystem::Impl::Update(GameClock const& clock)
 	{
 		// (1) Update time:
 		auto & state = *animationContext.AnimationState;
-	
-		auto time = state.Time() + clock.FrameDuration() * state.PlaybackRate();
-		if (time < DurationSeconds(0)) {
-			time = state.Length();
-		}
-		else if (time > state.Length()) {
-			POMDOG_ASSERT(state.Loop());
-			time = DurationSeconds(0);
-		}
-		state.Time(time);
+		state.Update(clock.FrameDuration());
 
 		// (2) Pose extraction:
 		auto & clip = state.Clip();
@@ -88,9 +79,6 @@ void AnimationSystem::Impl::Update(GameClock const& clock)
 		
 		// (3) Pose blending:
 		///@todo Not implemented
-		
-		// (4) Global pose generation:
-		SkeletonHelper::ComputeGlobalPoseFromLocalPose(skeleton, skeletonPose);
 	}
 }
 //-----------------------------------------------------------------------

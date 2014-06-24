@@ -24,23 +24,35 @@ AnimationState::AnimationState(std::shared_ptr<AnimationClip> const& animationCl
 {
 }
 //-----------------------------------------------------------------------
+void AnimationState::Update(AnimationTimeInterval const& frameDuration)
+{
+	time = time + frameDuration * playbackRate;
+	if (time < AnimationTimeInterval::zero()) {
+		time = Length();
+	}
+	else if (time > Length()) {
+		POMDOG_ASSERT(loop);
+		time = AnimationTimeInterval::zero();
+	}
+}
+//-----------------------------------------------------------------------
 std::shared_ptr<AnimationClip> const& AnimationState::Clip() const
 {
 	return clip;
 }
 //-----------------------------------------------------------------------
-DurationSeconds AnimationState::Time() const
+AnimationTimeInterval AnimationState::Time() const
 {
 	return time;
 }
 //-----------------------------------------------------------------------
-void AnimationState::Time(DurationSeconds const& timeIn)
+void AnimationState::Time(AnimationTimeInterval const& timeIn)
 {
 	POMDOG_ASSERT(timeIn.count() >= 0);
 	this->time = timeIn;
 }
 //-----------------------------------------------------------------------
-DurationSeconds AnimationState::Length() const
+AnimationTimeInterval AnimationState::Length() const
 {
 	return clip->Length();
 }

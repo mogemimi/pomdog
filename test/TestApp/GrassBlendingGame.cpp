@@ -27,6 +27,10 @@
 #include "Spine/SkinnedMeshLoader.hpp"
 #include "TexturePacker/TextureAtlasLoader.hpp"
 #include "LogSkeletalInfo.hpp"
+#include "Skeletal2D/AnimationNode.hpp"
+#include "Skeletal2D/AnimationAdditiveNode.hpp"
+#include "Skeletal2D/AnimationLerpNode.hpp"
+#include "Skeletal2D/AnimationClipNode.hpp"
 
 
 namespace TestApp {
@@ -89,18 +93,23 @@ void GrassBlendingGame::Initialize()
 		LogSkeletalInfo(textureAtlas, skeletonDesc);
 		
 		maidSkeleton = std::make_shared<Skeleton>(Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones));
-		maidSkeletonPose = std::make_shared<SkeletonPose>(SkeletonHelper::CreateSkeletonPoseBySkeleton(*maidSkeleton));
+		maidSkeletonPose = std::make_shared<SkeletonPose>(SkeletonPose::CreateBindPose(*maidSkeleton));
 		auto animationClip = std::make_shared<AnimationClip>(Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Walk"));
 		maidAnimationState = std::make_shared<AnimationState>(animationClip, 1.0f, true);
+		maidAnimationClipIdle = std::make_shared<AnimationClip>(Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Idle"));
 		
 		maidSkin = Details::Skeletal2D::CreateSkin(skeletonDesc, textureAtlas, "default");
 		maidSpriteAnimationTracks = Details::Skeletal2D::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
 		
 		animationSystem.Add(maidAnimationState, maidSkeleton, maidSkeletonPose);
 
+		maidGlobalPose = SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose);
+
 		// NOTE: for Skinning
-		auto bindPose = SkeletonHelper::CreateSkeletonPoseBySkeleton(*maidSkeleton);
-		maidSkinnedMesh = Details::Skeletal2D::CreateSkinnedMesh(graphicsDevice, bindPose, skeletonDesc, textureAtlas,
+		auto bindPose = SkeletonPose::CreateBindPose(*maidSkeleton);
+		maidSkinnedMesh = Details::Skeletal2D::CreateSkinnedMesh(graphicsDevice,
+			SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose),
+			skeletonDesc, textureAtlas,
 			Vector2(maidTexture->Width(), maidTexture->Height()), "default");
 		maidSkinningEffect = assets->Load<EffectPass>("Effects/SkinningSpriteEffect");
 		maidInputLayout = std::make_shared<InputLayout>(graphicsDevice, maidSkinningEffect);
@@ -129,6 +138,13 @@ void GrassBlendingGame::Initialize()
 			slider1->Value(1.0);
 			stackPanel->AddChild(slider1);
 			gameEditor->AddUIElement(slider1);
+		}
+		{
+			slider2 = std::make_shared<UI::Slider>(0.0, 1.0);
+			slider2->drawOrder = 0.0f;
+			slider2->Value(1.0);
+			stackPanel->AddChild(slider2);
+			gameEditor->AddUIElement(slider2);
 		}
 		{
 			toggleSwitch1 = std::make_shared<UI::ToggleSwitch>();
@@ -184,8 +200,24 @@ void GrassBlendingGame::Update()
 		maidAnimationState->PlaybackRate(slider1->Value());
 	}
 	
-	if (toggleSwitch1->IsOn()) {
+	if (toggleSwitch1->IsOn())
+	{
 		animationSystem.Update(*clock);
+		
+		SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose, maidGlobalPose);
+	
+		{
+			///@note Test code for animation blending
+			auto clipNode1 = MakeUnique<AnimationClipNode>(maidAnimationState->Clip());
+			auto clipNode2 = MakeUnique<AnimationClipNode>(maidAnimationClipIdle);
+		
+			auto lerpNode = MakeUnique<AnimationLerpNode>(std::move(clipNode1), std::move(clipNode2));
+			lerpNode->Weight(slider2->Value());
+			
+			lerpNode->Calculate(maidAnimationState->Time(), *maidSkeleton, *maidSkeletonPose);
+			
+			SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose, maidGlobalPose);
+		}
 	}
 	{
 		maidAnimationTimer.Update(clock->FrameDuration());
@@ -212,7 +244,7 @@ void GrassBlendingGame::DrawSprites()
 	POMDOG_ASSERT(spriteRenderer);
 	spriteRenderer->Begin(SpriteSortMode::BackToFront, viewMatrix);
 
-	auto const& globalPoses = maidSkeletonPose->GlobalPose;
+	auto const& globalPoses = maidGlobalPose;
 	
 	if (toggleSwitch3->IsOn())
 	{
@@ -256,8 +288,8 @@ void GrassBlendingGame::DrawSkinnedMesh()
 		{
 			POMDOG_ASSERT(joint.Index);
 			POMDOG_ASSERT(*joint.Index < matrices.size());
-			POMDOG_ASSERT(*joint.Index < maidSkeletonPose->GlobalPose.size());
-			matrices[*joint.Index] = joint.InverseBindPose * maidSkeletonPose->GlobalPose[*joint.Index];
+			POMDOG_ASSERT(*joint.Index < maidGlobalPose.size());
+			matrices[*joint.Index] = joint.InverseBindPose * maidGlobalPose[*joint.Index];
 		}
 
 		for (std::size_t i = 0; i < matrices.size(); ++i) {

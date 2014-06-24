@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,7 +13,9 @@
 #	pragma once
 #endif
 
+#include <vector>
 #include <functional>
+#include <Pomdog/Math/Matrix3x2.hpp>
 #include "JointIndex.hpp"
 
 namespace Pomdog {
@@ -29,10 +31,10 @@ namespace SkeletonHelper {
 	void Traverse(Skeleton const& skeleton,
 		std::function<void(Joint const&)> const& traverser);
 	
-	void ComputeGlobalPoseFromLocalPose(Skeleton const& skeleton,
-		SkeletonPose & skeletonPose);
+	void ToGlobalPose(Skeleton const& skeleton, SkeletonPose const& skeletonPose,
+		std::vector<Matrix3x2> & globalPose);
 	
-	SkeletonPose CreateSkeletonPoseBySkeleton(Skeleton const& skeleton);
+	std::vector<Matrix3x2> ToGlobalPose(Skeleton const& skeleton, SkeletonPose const& skeletonPose);
 }
 
 }// namespace Pomdog

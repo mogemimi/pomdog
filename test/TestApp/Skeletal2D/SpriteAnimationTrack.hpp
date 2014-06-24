@@ -17,7 +17,6 @@
 #include <vector>
 #include <Pomdog/Math/Rectangle.hpp>
 #include <Pomdog/Math/Vector2.hpp>
-#include <Pomdog/Application/DurationSeconds.hpp>
 #include <Pomdog/Utility/Optional.hpp>
 #include "AnimationTimeInterval.hpp"
 #include "Skin.hpp"
@@ -40,9 +39,9 @@ public:
 	SpriteAnimationTrack() = default;
 	SpriteAnimationTrack(std::vector<SpriteKeyframe> && keys, std::uint32_t slotHashId);
 
-	void Apply(Skin & skin, DurationSeconds const& time);
+	void Apply(Skin & skin, AnimationTimeInterval const& time);
 	
-	DurationSeconds Length() const;
+	AnimationTimeInterval Length() const;
 	
 private:
 	std::vector<SpriteKeyframe> keys;

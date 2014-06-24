@@ -30,7 +30,7 @@ class SkeletonDesc;
 
 SkinnedMesh CreateSkinnedMesh(
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	SkeletonPose const& bindPose,
+	std::vector<Matrix3x2> const& bindPosesInGlobal,
 	SkeletonDesc const& skeletonDesc,
 	Details::TexturePacker::TextureAtlas const& textureAtlas,
 	Vector2 const& textureSize,

@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Application/DurationSeconds.hpp>
+#include "AnimationTimeInterval.hpp"
 
 namespace Pomdog {
 
@@ -24,9 +24,10 @@ class AnimationTrack {
 public:
 	virtual ~AnimationTrack() = default;
 	
-	virtual void Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose) = 0;
+	virtual void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton,
+		SkeletonPose & skeletonPose) = 0;
 	
-	virtual DurationSeconds Length() const = 0;
+	virtual AnimationTimeInterval Length() const = 0;
 };
 
 }// namespace Pomdog

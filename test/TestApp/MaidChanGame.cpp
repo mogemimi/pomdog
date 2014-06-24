@@ -86,9 +86,11 @@ void MaidChanGame::Initialize()
 		LogSkeletalInfo(textureAtlas, skeletonDesc);
 		
 		maidSkeleton = std::make_shared<Skeleton>(Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones));
-		maidSkeletonPose = std::make_shared<SkeletonPose>(SkeletonHelper::CreateSkeletonPoseBySkeleton(*maidSkeleton));
+		maidSkeletonPose = std::make_shared<SkeletonPose>(SkeletonPose::CreateBindPose(*maidSkeleton));
 		auto animationClip = std::make_shared<AnimationClip>(Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Walk"));
 		maidAnimationState = std::make_shared<AnimationState>(animationClip, 1.0f, true);
+		
+		maidGlobalPose = SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose);
 		
 		maidSkin = Details::Skeletal2D::CreateSkin(skeletonDesc, textureAtlas, "default");
 		maidSpriteAnimationTracks = Details::Skeletal2D::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
@@ -190,6 +192,8 @@ void MaidChanGame::Update()
 		if (maidAnimationTimer.Time() > maidAnimationState->Length()) {
 			maidAnimationTimer.Reset();
 		}
+
+		SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose, maidGlobalPose);
 	}
 	{
 		for (auto & track: maidSpriteAnimationTracks)
@@ -214,7 +218,7 @@ void MaidChanGame::DrawSprites()
 	POMDOG_ASSERT(spriteRenderer);
 	spriteRenderer->Begin(SpriteSortMode::BackToFront, viewMatrix);
 	
-	auto const& globalPoses = maidSkeletonPose->GlobalPose;
+	auto const& globalPoses = maidGlobalPose;
 	
 	if (toggleSwitch3->IsOn())
 	{

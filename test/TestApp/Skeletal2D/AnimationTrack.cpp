@@ -52,7 +52,7 @@ RotationTrack::RotationTrack(std::vector<RotationKeyframe> && keysIn, JointIndex
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<RotationKeyframe>));
 }
 //-----------------------------------------------------------------------
-void RotationTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
+void RotationTrack::Apply(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
 	RotationKeyframe point;
 	point.Time = time;
@@ -63,8 +63,8 @@ void RotationTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton,
 	auto & joint = skeleton.Joints(jointIndex);
 	auto & bindPose = joint.BindPose;
 	
-	POMDOG_ASSERT(*jointIndex < skeletonPose.LocalPose.size());
-	auto & localPose = skeletonPose.LocalPose[*jointIndex];
+	POMDOG_ASSERT(*jointIndex < skeletonPose.JointPoses.size());
+	auto & pose = skeletonPose.JointPoses[*jointIndex];
 	
 	if (pointPair.first == pointPair.second)
 	{
@@ -73,7 +73,7 @@ void RotationTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton,
 		auto diff = pointPair.first->Rotation.ToFloat();
 		POMDOG_ASSERT(diff <= MathConstants<float>::Pi());
 		POMDOG_ASSERT(diff >= -MathConstants<float>::Pi());
-		localPose.Rotation = bindPose.Rotation + diff;
+		pose.Rotation = bindPose.Rotation + diff;
 		return;
 	}
 	
@@ -95,15 +95,15 @@ void RotationTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton,
 	POMDOG_ASSERT(rotation2 <= MathConstants<float>::Pi());
 	POMDOG_ASSERT(rotation2 >= -MathConstants<float>::Pi());
 
-	localPose.Rotation = bindPose.Rotation + MathHelper::Lerp(rotation1, rotation2, amount);
+	pose.Rotation = bindPose.Rotation + MathHelper::Lerp(rotation1, rotation2, amount);
 }
 //-----------------------------------------------------------------------
-DurationSeconds RotationTrack::Length() const
+AnimationTimeInterval RotationTrack::Length() const
 {
 	POMDOG_ASSERT(!keys.empty());
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<RotationKeyframe>));
 	POMDOG_ASSERT(keys.front().Time <= keys.back().Time);
-	return DurationSeconds(keys.back().Time);
+	return keys.back().Time;
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -117,7 +117,7 @@ ScaleTrack::ScaleTrack(std::vector<ScaleKeyframe> && keysIn, JointIndex && joint
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<ScaleKeyframe>));
 }
 //-----------------------------------------------------------------------
-void ScaleTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
+void ScaleTrack::Apply(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
 	ScaleKeyframe point;
 	point.Time = time;
@@ -128,14 +128,14 @@ void ScaleTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton, Sk
 	auto & joint = skeleton.Joints(jointIndex);
 	auto & bindPose = joint.BindPose;
 	
-	POMDOG_ASSERT(*jointIndex < skeletonPose.LocalPose.size());
-	auto & localPose = skeletonPose.LocalPose[*jointIndex];
+	POMDOG_ASSERT(*jointIndex < skeletonPose.JointPoses.size());
+	auto & pose = skeletonPose.JointPoses[*jointIndex];
 	
 	if (pointPair.first == pointPair.second)
 	{
 		POMDOG_ASSERT((time <= keys.front().Time) || (time >= keys.back().Time));
 		
-		localPose.Scale = bindPose.Scale * pointPair.first->Scale.ToFloat();
+		pose.Scale = bindPose.Scale * pointPair.first->Scale.ToFloat();
 		return;
 	}
 	
@@ -151,15 +151,15 @@ void ScaleTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton, Sk
 	float amount = diffTime / frameTime;
 	float scale1 = pointPair.first->Scale.ToFloat();
 	float scale2 = pointPair.second->Scale.ToFloat();
-	localPose.Scale = bindPose.Scale * MathHelper::Lerp(scale1, scale2, amount);
+	pose.Scale = bindPose.Scale * MathHelper::Lerp(scale1, scale2, amount);
 }
 //-----------------------------------------------------------------------
-DurationSeconds ScaleTrack::Length() const
+AnimationTimeInterval ScaleTrack::Length() const
 {
 	POMDOG_ASSERT(!keys.empty());
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<ScaleKeyframe>));
 	POMDOG_ASSERT(keys.front().Time <= keys.back().Time);
-	return DurationSeconds(keys.back().Time);
+	return keys.back().Time;
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -173,7 +173,7 @@ TranslationTrack::TranslationTrack(std::vector<TranslationKeyframe> && keysIn, J
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<TranslationKeyframe>));
 }
 //-----------------------------------------------------------------------
-void TranslationTrack::Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
+void TranslationTrack::Apply(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
 	TranslationKeyframe point;
 	point.Time = time;
@@ -184,15 +184,15 @@ void TranslationTrack::Apply(DurationSeconds const& time, Skeleton const& skelet
 	auto & joint = skeleton.Joints(jointIndex);
 	auto & bindPose = joint.BindPose;
 	
-	POMDOG_ASSERT(*jointIndex < skeletonPose.LocalPose.size());
-	auto & localPose = skeletonPose.LocalPose[*jointIndex];
+	POMDOG_ASSERT(*jointIndex < skeletonPose.JointPoses.size());
+	auto & pose = skeletonPose.JointPoses[*jointIndex];
 	
 	if (pointPair.first == pointPair.second)
 	{
 		POMDOG_ASSERT((time <= keys.front().Time) || (time >= keys.back().Time));
 		
 		auto diff = Vector2{pointPair.first->TranslateX.ToFloat(), pointPair.first->TranslateY.ToFloat()};
-		localPose.Translate = bindPose.Translate + diff;
+		pose.Translate = bindPose.Translate + diff;
 		return;
 	}
 	
@@ -209,15 +209,15 @@ void TranslationTrack::Apply(DurationSeconds const& time, Skeleton const& skelet
 	auto translate1 = Vector2{pointPair.first->TranslateX.ToFloat(), pointPair.first->TranslateY.ToFloat()};
 	auto translate2 = Vector2{pointPair.second->TranslateX.ToFloat(), pointPair.second->TranslateY.ToFloat()};
 	
-	localPose.Translate = bindPose.Translate + Vector2::Lerp(translate1, translate2, amount);
+	pose.Translate = bindPose.Translate + Vector2::Lerp(translate1, translate2, amount);
 }
 //-----------------------------------------------------------------------
-DurationSeconds TranslationTrack::Length() const
+AnimationTimeInterval TranslationTrack::Length() const
 {
 	POMDOG_ASSERT(!keys.empty());
 	POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<TranslationKeyframe>));
 	POMDOG_ASSERT(keys.front().Time <= keys.back().Time);
-	return DurationSeconds(keys.back().Time);
+	return keys.back().Time;
 }
 
 }// namespace Skeletal2D

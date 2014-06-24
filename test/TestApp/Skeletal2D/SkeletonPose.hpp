@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -19,13 +19,19 @@
 
 namespace Pomdog {
 
+class Skeleton;
+
 class SkeletonPose {
 public:
-	std::vector<JointPose> LocalPose;
+	std::vector<JointPose> JointPoses;
 	
-	///@note Matrix palette
-	std::vector<Matrix3x2> GlobalPose;
+	static SkeletonPose CreateBindPose(Skeleton const& skeleton);
 };
+
+//class SkeletonGlobalPose {
+//	///@note Matrix palette
+//	std::vector<Matrix3x2> GlobalPose;
+//};
 
 }// namespace Pomdog
 

@@ -8,15 +8,15 @@
 
 #include "AnimationClip.hpp"
 #include <utility>
-#include "Skeleton.hpp"
 #include "AnimationTrack.hpp"
+#include "Skeleton.hpp"
 
 namespace Pomdog {
 namespace {
 
-static DurationSeconds ComputeLength(std::vector<std::unique_ptr<AnimationTrack>> const& tracks)
+static AnimationTimeInterval ComputeLength(std::vector<std::unique_ptr<AnimationTrack>> const& tracks)
 {
-	DurationSeconds maxLength(0);
+	AnimationTimeInterval maxLength = AnimationTimeInterval::zero();
 
 	for (auto & track: tracks)
 	{
@@ -39,7 +39,7 @@ AnimationClip::AnimationClip(std::vector<std::unique_ptr<AnimationTrack>> && tra
 	length = ComputeLength(tracks);
 }
 //-----------------------------------------------------------------------
-void AnimationClip::Apply(DurationSeconds const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
+void AnimationClip::Apply(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
 	for (auto & track: tracks)
 	{
@@ -48,7 +48,7 @@ void AnimationClip::Apply(DurationSeconds const& time, Skeleton const& skeleton,
 	}
 }
 //-----------------------------------------------------------------------
-DurationSeconds AnimationClip::Length() const
+AnimationTimeInterval AnimationClip::Length() const
 {
 	return length;
 }
