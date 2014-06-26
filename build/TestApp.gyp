@@ -124,6 +124,7 @@
         '../test/TestApp/Skeletal2D/Skin.hpp',
         '../test/TestApp/Skeletal2D/SkinnedMesh.cpp',
         '../test/TestApp/Skeletal2D/SkinnedMesh.hpp',
+        '../test/TestApp/Skeletal2D/SkinnedMeshPart.hpp',
         '../test/TestApp/Skeletal2D/SkinnedVertex.hpp',
         '../test/TestApp/Skeletal2D/SpriteAnimationTrack.cpp',
         '../test/TestApp/Skeletal2D/SpriteAnimationTrack.hpp',

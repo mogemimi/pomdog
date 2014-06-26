@@ -125,15 +125,14 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 	}
 	{
 		std::array<SpriteInfo, MaxBatchSize> verticesCombo;
-		for (auto & spriteInfo: verticesCombo) {
-			spriteInfo = {
+		std::fill(std::begin(verticesCombo), std::end(verticesCombo),
+			SpriteInfo {
 				Vector4(1.0f, 0.0f, 0.0f, 1.0f),
 				Vector4(0.0f, 0.0f, 0.0f, 0.0f),
 				Vector4(0.0f, 0.0f, 1.0f, 1.0f),
 				Vector4(0.5f, 0.5f, 1.0f, 1.0f),
 				Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-			};
-		}
+			});
 		
 		instanceVertices = std::make_shared<VertexBuffer>(graphicsDevice,
 			verticesCombo.data(), verticesCombo.size(), sizeof(SpriteInfo), BufferUsage::Dynamic);

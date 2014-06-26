@@ -108,7 +108,7 @@ void GrassBlendingGame::Initialize()
 		// NOTE: for Skinning
 		auto bindPose = SkeletonPose::CreateBindPose(*maidSkeleton);
 		maidSkinnedMesh = Details::Skeletal2D::CreateSkinnedMesh(graphicsDevice,
-			SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose),
+			SkeletonHelper::ToGlobalPose(*maidSkeleton, bindPose),
 			skeletonDesc, textureAtlas,
 			Vector2(maidTexture->Width(), maidTexture->Height()), "default");
 		maidSkinningEffect = assets->Load<EffectPass>("Effects/SkinningSpriteEffect");
