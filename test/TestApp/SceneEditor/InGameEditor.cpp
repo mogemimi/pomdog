@@ -42,6 +42,7 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 	}
 	{
 		pomdogTexture = assets->Load<Texture2D>("pomdog.png");
+		depthStencilState = DepthStencilState::CreateNone(graphicsDevice);
 	}
 
 	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this] {
@@ -93,13 +94,23 @@ void InGameEditor::DrawGUI()
 //-----------------------------------------------------------------------
 void InGameEditor::BeginDraw(GraphicsContext & graphicsContext)
 {
+	auto oldDepthStencilState = graphicsContext.GetDepthStencilState();
+	graphicsContext.SetDepthStencilState(depthStencilState);
+	
 	backgroundPlane->Draw();
 	DrawGrids(graphicsContext);
+	
+	graphicsContext.SetDepthStencilState(oldDepthStencilState);
 }
 //-----------------------------------------------------------------------
-void InGameEditor::EndDraw()
+void InGameEditor::EndDraw(GraphicsContext & graphicsContext)
 {
+	auto oldDepthStencilState = graphicsContext.GetDepthStencilState();
+	graphicsContext.SetDepthStencilState(depthStencilState);
+	
 	DrawGUI();
+	
+	graphicsContext.SetDepthStencilState(oldDepthStencilState);
 }
 //-----------------------------------------------------------------------
 }// namespace SceneEditor

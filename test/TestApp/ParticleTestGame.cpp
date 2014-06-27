@@ -293,7 +293,7 @@ void ParticleTestGame::Draw()
 		fxaa->Draw(*graphicsContext, renderTarget);
 	}
 	
-	gameEditor->EndDraw();
+	gameEditor->EndDraw(*graphicsContext);
 	graphicsContext->Present();
 }
 //-----------------------------------------------------------------------

@@ -340,6 +340,13 @@ void GraphicsContext::ScissorRectangle(Pomdog::Rectangle const& rectangle)
 	impl->nativeContext->SetScissorRectangle(rectangle);
 }
 //-----------------------------------------------------------------------
+std::shared_ptr<BlendState> GraphicsContext::GetBlendState() const
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->blendState);
+	return impl->blendState;
+}
+//-----------------------------------------------------------------------
 void GraphicsContext::SetBlendState(std::shared_ptr<BlendState> const& blendState)
 {
 	POMDOG_ASSERT(impl);
@@ -348,12 +355,26 @@ void GraphicsContext::SetBlendState(std::shared_ptr<BlendState> const& blendStat
 	impl->blendState->NativeBlendState()->Apply();
 }
 //-----------------------------------------------------------------------
+std::shared_ptr<DepthStencilState> GraphicsContext::GetDepthStencilState() const
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->depthStencilState);
+	return impl->depthStencilState;
+}
+//-----------------------------------------------------------------------
 void GraphicsContext::SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilState)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(depthStencilState);
 	impl->depthStencilState = depthStencilState;
 	impl->depthStencilState->NativeDepthStencilState()->Apply();
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<RasterizerState> GraphicsContext::GetRasterizerState() const
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->rasterizerState);
+	return impl->rasterizerState;
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState)
@@ -413,6 +434,16 @@ void GraphicsContext::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>
 	impl->nativeContext->SetVertexBuffers(impl->vertexBuffers);
 }
 //-----------------------------------------------------------------------
+std::shared_ptr<Texture> GraphicsContext::GetTexture(std::uint32_t index) const
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
+	
+	POMDOG_ASSERT(!impl->textures.empty());
+	POMDOG_ASSERT(impl->textures.size() > index);
+	return impl->textures[index];
+}
+//-----------------------------------------------------------------------
 void GraphicsContext::SetTexture(std::uint32_t index)
 {
 	POMDOG_ASSERT(impl);
@@ -437,6 +468,14 @@ void GraphicsContext::SetTexture(std::uint32_t index, std::shared_ptr<RenderTarg
 	POMDOG_ASSERT(impl->nativeContext);
 	
 	impl->SetTexture(index, texture);
+}
+//-----------------------------------------------------------------------
+std::vector<std::shared_ptr<RenderTarget2D>> GraphicsContext::GetRenderTargets() const
+{
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
+	
+	return impl->renderTargets;
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetRenderTarget()

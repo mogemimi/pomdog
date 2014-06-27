@@ -41,7 +41,7 @@ public:
 
 	void BeginDraw(GraphicsContext & graphicsContext);
 
-	void EndDraw();
+	void EndDraw(GraphicsContext & graphicsContext);
 	
 	void AddUIElement(std::shared_ptr<UI::UIElement> const& element);
 
@@ -59,6 +59,7 @@ private:
 	std::unique_ptr<SceneEditor::PrimitiveAxes> primitiveAxes;
 	std::unique_ptr<SceneEditor::PrimitiveGrid> primitiveGrid;
 	
+	std::shared_ptr<DepthStencilState> depthStencilState;
 	std::unique_ptr<SpriteBatch> spriteBatch;
 	std::shared_ptr<SpriteFont> spriteFont;
 	std::unique_ptr<SpriteBatch> spriteBatchDistanceField;

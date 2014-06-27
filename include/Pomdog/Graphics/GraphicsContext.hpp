@@ -107,13 +107,25 @@ public:
 	void ScissorRectangle(Pomdog::Rectangle const& rectangle);
 	
 	///@~Japanese
+	/// @brief ブレンディングステートを取得します。
+	std::shared_ptr<BlendState> GetBlendState() const;
+	
+	///@~Japanese
 	/// @brief ブレンディングステートを設定します。
 	void SetBlendState(std::shared_ptr<BlendState> const& blendState);
+
+	///@~Japanese
+	/// @brief 深度ステンシルステートを取得します。
+	std::shared_ptr<DepthStencilState> GetDepthStencilState() const;
 
 	///@~Japanese
 	/// @brief 深度ステンシルステートを設定します。
 	void SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilState);
 
+	///@~Japanese
+	/// @brief ラスタライザーステートを取得します。
+	std::shared_ptr<RasterizerState> GetRasterizerState() const;
+	
 	///@~Japanese
 	/// @brief ラスタライザーステートを設定します。
 	void SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState);
@@ -139,6 +151,11 @@ public:
 	void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> && vertexBuffers);
 
 	///@~Japanese
+	/// @brief 指定されたテクスチャスロットにテクスチャを取得します。
+	/// @param index 0 から始まるテクスチャスロットのインデックスを指定します。
+	std::shared_ptr<Texture> GetTexture(std::uint32_t index) const;
+
+	///@~Japanese
 	/// @brief グラフィックスコンテキストに設定されているテクスチャをテクスチャユニットから外します。
 	/// @param index 0 から始まるテクスチャスロットのインデックスを指定します。
 	void SetTexture(std::uint32_t index);
@@ -154,6 +171,10 @@ public:
 	/// @param index 0 から始まるテクスチャスロットのインデックスを指定します。
 	/// @param texture テクスチャスロットにバインドするテクスチャ
 	void SetTexture(std::uint32_t index, std::shared_ptr<RenderTarget2D> const& texture);
+
+	///@~Japanese
+	/// @brief レンダーターゲットを取得します。
+	std::vector<std::shared_ptr<RenderTarget2D>> GetRenderTargets() const;
 
 	///@~Japanese
 	/// @brief レンダーターゲットを設定します。
