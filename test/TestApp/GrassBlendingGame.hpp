@@ -29,6 +29,8 @@
 #include "Skeletal2D/AnimationSystem.hpp"
 #include "Skeletal2D/AnimationTimer.hpp"
 #include "Skeletal2D/SkinnedMesh.hpp"
+#include "Graphics/PolygonBatch.hpp"
+#include "Graphics/SolidShapeBatch.hpp"
 
 
 namespace Pomdog {
@@ -100,6 +102,8 @@ private:
 	std::shared_ptr<InputLayout> maidInputLayout;
 	
 	ScopedConnection clientSizeChangedConnection;
+	
+	std::unique_ptr<PolygonBatch> polygonBatch;
 };
 
 }// namespace TestApp

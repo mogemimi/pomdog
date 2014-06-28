@@ -1,7 +1,7 @@
 #version 330
 
 layout(location = 0) in vec3 Position;
-layout(location = 1) in vec4 LineColor;
+layout(location = 1) in vec4 Color;
 
 
 out VertexData {
@@ -15,5 +15,5 @@ uniform TransformMatrix {
 void main()
 {
 	gl_Position = vec4(Position.xyz, 1.0) * ViewProjection;
-	Out.DestinationColor = LineColor;
+	Out.DestinationColor = Color;
 }

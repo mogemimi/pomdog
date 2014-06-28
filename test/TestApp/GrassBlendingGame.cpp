@@ -68,6 +68,7 @@ void GrassBlendingGame::Initialize()
 	{
 		spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
 		fxaa = MakeUnique<FXAA>(gameHost);
+		polygonBatch = MakeUnique<PolygonBatch>(graphicsContext, graphicsDevice, *assets);
 	}
 	{
 		gameEditor = MakeUnique<SceneEditor::InGameEditor>(gameHost);
@@ -240,27 +241,37 @@ void GrassBlendingGame::DrawSprites()
 		
 	POMDOG_ASSERT(transform && camera);
 	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);;
+	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+		gameHost->Window()->ClientBounds().Width, gameHost->Window()->ClientBounds().Height, 0.1f, 1000.0f);
 
-	POMDOG_ASSERT(spriteRenderer);
-	spriteRenderer->Begin(SpriteSortMode::BackToFront, viewMatrix);
+	POMDOG_ASSERT(polygonBatch);
+	polygonBatch->Begin(viewMatrix * projectionMatrix);
 
 	auto const& globalPoses = maidGlobalPose;
 	
 	if (toggleSwitch3->IsOn())
 	{
+		Color boneColor {160, 160, 160, 255};
+	
 		for (auto & joint: *maidSkeleton)
 		{
 			auto & matrix = globalPoses[*joint.Index];
-			spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 5, 5},
-				Color::Black, MathConstants<float>::PiOver4(), {0.5f, 0.5f}, 1.0f, 2/100.0f);
-			spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 2, 2},
-				Color::White, MathConstants<float>::PiOver4(), {0.5f, 0.5f}, 1.0f, 1/100.0f);
-			spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 32, 2},
-				Color::Black, 0.0f, {0.0f, 0.5f}, 1.0f, 4/100.0f);
+
+			if (maidSkeleton->Root().Index != joint.Index)
+			{
+				polygonBatch->DrawTriangle(
+					Vector2::Transform({1.7f, -4.7f}, matrix),
+					Vector2::Transform({1.7f, 4.7f}, matrix),
+					Vector2::Transform({25, 0}, matrix), boneColor);
+			}
+			
+			auto center = Vector2::Transform(Vector2::Zero, matrix);
+			polygonBatch->DrawCircle(center, 5.0f, boneColor, 18);
+			polygonBatch->DrawCircle(center, 3.0f, Color::White, 13);
 		}
 	}
 	
-	spriteRenderer->End();
+	polygonBatch->End();
 }
 //-----------------------------------------------------------------------
 void GrassBlendingGame::DrawSkinnedMesh()

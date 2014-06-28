@@ -19,9 +19,9 @@ LineRenderer::LineRenderer(std::shared_ptr<GameHost> const& gameHost)
 	auto assets = gameHost->AssetManager();
 
 	{
-		points.resize(MaxLines * 2);
+		std::vector<LinePoint> dummy(MaxLines * 2);
 		vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
-			points.data(), points.size(), sizeof(LinePoint), BufferUsage::Dynamic);
+			dummy.data(), dummy.size(), sizeof(LinePoint), BufferUsage::Dynamic);
 	}
 	{
 		effectPass = assets->Load<EffectPass>("Effects/PrimitiveLineEffect");

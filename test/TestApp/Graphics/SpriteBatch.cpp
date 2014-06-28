@@ -27,8 +27,7 @@ private:
 	
 	static_assert(MaxBatchSize >= MinBatchSize, "");
 
-	struct alignas(16) SpriteInfo
-	{
+	struct alignas(16) SpriteInfo {
 		// {xy__} = position.xy
 		// {__zw} = scale.xy
 		Vector4 Translation;
