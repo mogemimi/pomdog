@@ -126,7 +126,8 @@ public:
 };
 
 template <typename T>
-FloatingPointVector4<T> operator*(T scaleFactor, FloatingPointVector4<T> const& vector);
+FloatingPointVector4<T> POMDOG_EXPORT
+operator*(T scaleFactor, FloatingPointVector4<T> const& vector);
 
 /// @}
 /// @}

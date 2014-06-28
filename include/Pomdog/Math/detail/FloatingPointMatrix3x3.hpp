@@ -248,7 +248,8 @@ public:
 };
 
 template <typename T>
-FloatingPointMatrix3x3<T> operator*(T scaleFactor, FloatingPointMatrix3x3<T> const& matrix);
+FloatingPointMatrix3x3<T> POMDOG_EXPORT
+operator*(T scaleFactor, FloatingPointMatrix3x3<T> const& matrix);
 
 /// @}
 /// @}

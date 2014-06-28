@@ -397,7 +397,8 @@ public:
 };
 
 template <typename T>
-FloatingPointMatrix4x4<T> operator*(T scaleFactor, FloatingPointMatrix4x4<T> const& matrix);
+FloatingPointMatrix4x4<T> POMDOG_EXPORT
+operator*(T scaleFactor, FloatingPointMatrix4x4<T> const& matrix);
 
 /// @}
 /// @}

@@ -72,7 +72,8 @@ public:
 };
 
 template <typename T>
-Coordinate3D<T> operator*(T scaleFactor, Coordinate3D<T> const& coordinate);
+Coordinate3D<T> POMDOG_EXPORT
+operator*(T scaleFactor, Coordinate3D<T> const& coordinate);
 
 /// @}
 /// @}

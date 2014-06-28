@@ -181,7 +181,8 @@ public:
 };
 
 template <typename T>
-FloatingPointQuaternion<T> operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion);
+FloatingPointQuaternion<T> POMDOG_EXPORT
+operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion);
 
 /// @}
 /// @}
