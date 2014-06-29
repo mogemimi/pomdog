@@ -7,13 +7,12 @@
 //
 
 #include "PrimitiveGrid.hpp"
+#include "../Graphics/LineBatch.hpp"
 
 namespace Pomdog {
 namespace SceneEditor {
 //-----------------------------------------------------------------------
-PrimitiveGrid::PrimitiveGrid(std::shared_ptr<GameHost> const& gameHost,
-	Color const& primaryColor, Color const& secondaryColor)
-	: renderer(gameHost)
+PrimitiveGrid::PrimitiveGrid(Color const& primaryColor, Color const& secondaryColor)
 {
 	constexpr std::uint32_t gridCount = 30;
 	constexpr float gridPixelSize = 96.0f;
@@ -35,14 +34,12 @@ PrimitiveGrid::PrimitiveGrid(std::shared_ptr<GameHost> const& gameHost,
 	}
 }
 //-----------------------------------------------------------------------
-void PrimitiveGrid::Draw(GraphicsContext & graphicsContext, Matrix4x4 const& transformMatrix)
+void PrimitiveGrid::Draw(LineBatch & lineBatch)
 {
-	renderer.Begin(transformMatrix);
 	for (auto & line: lines)
 	{
-		renderer.Draw(line.Point1, line.Point2, line.Color);
+		lineBatch.DrawLine(line.Point1, line.Point2, line.Color);
 	}
-	renderer.End();
 }
 
 }// namespace SceneEditor

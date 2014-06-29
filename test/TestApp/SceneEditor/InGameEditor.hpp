@@ -19,6 +19,7 @@
 #include "GradientPlane.hpp"
 #include "PrimitiveAxes.hpp"
 #include "PrimitiveGrid.hpp"
+#include "../Graphics/LineBatch.hpp"
 #include "../UI/UIElementHierarchy.hpp"
 
 namespace Pomdog {
@@ -46,7 +47,7 @@ public:
 	void AddUIElement(std::shared_ptr<UI::UIElement> const& element);
 
 private:
-	void DrawGrids(GraphicsContext & graphicsContext);
+	void DrawGrids();
 	void DrawGUI();
 	
 private:
@@ -64,6 +65,8 @@ private:
 	std::shared_ptr<SpriteFont> spriteFont;
 	std::unique_ptr<SpriteBatch> spriteBatchDistanceField;
 	std::shared_ptr<EffectPass> distanceFieldEffect;
+	
+	LineBatch lineBatch;
 	
 	std::shared_ptr<Texture2D> pomdogTexture;
 	

@@ -18,6 +18,7 @@ namespace SceneEditor {
 //-----------------------------------------------------------------------
 InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 	: gameHost(gameHostIn)
+	, lineBatch(gameHost->GraphicsContext(), gameHost->GraphicsDevice(), *gameHost->AssetManager())
 {
 	auto graphicsContext = gameHost->GraphicsContext();
 	auto graphicsDevice = gameHost->GraphicsDevice();
@@ -35,9 +36,9 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 			distanceFieldEffect);
 	}
 	{
-		primitiveAxes = MakeUnique<SceneEditor::PrimitiveAxes>(gameHost,
+		primitiveAxes = MakeUnique<SceneEditor::PrimitiveAxes>(
 			editorColorScheme.CenterAxisX, editorColorScheme.CenterAxisY, editorColorScheme.CenterAxisZ);
-		primitiveGrid = MakeUnique<SceneEditor::PrimitiveGrid>(gameHost,
+		primitiveGrid = MakeUnique<SceneEditor::PrimitiveGrid>(
 			editorColorScheme.GuideLine, editorColorScheme.Grid);
 	}
 	{
@@ -72,13 +73,17 @@ void InGameEditor::SetViewProjection(Matrix4x4 const& viewProjectionIn)
 	viewProjectionMatrix = viewProjectionIn;
 }
 //-----------------------------------------------------------------------
-void InGameEditor::DrawGrids(GraphicsContext & graphicsContext)
+void InGameEditor::DrawGrids()
 {
-	POMDOG_ASSERT(primitiveGrid);
-	primitiveGrid->Draw(graphicsContext, viewProjectionMatrix);
-	
-	POMDOG_ASSERT(primitiveAxes);
-	primitiveAxes->Draw(graphicsContext, viewProjectionMatrix);
+	lineBatch.Begin(viewProjectionMatrix);
+	{
+		POMDOG_ASSERT(primitiveGrid);
+		primitiveGrid->Draw(lineBatch);
+
+		POMDOG_ASSERT(primitiveAxes);
+		primitiveAxes->Draw(lineBatch);
+	}
+	lineBatch.End();
 }
 //-----------------------------------------------------------------------
 void InGameEditor::DrawGUI()
@@ -98,7 +103,7 @@ void InGameEditor::BeginDraw(GraphicsContext & graphicsContext)
 	graphicsContext.SetDepthStencilState(depthStencilState);
 	
 	backgroundPlane->Draw();
-	DrawGrids(graphicsContext);
+	DrawGrids();
 	
 	graphicsContext.SetDepthStencilState(oldDepthStencilState);
 }

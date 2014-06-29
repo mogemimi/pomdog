@@ -7,13 +7,12 @@
 //
 
 #include "PrimitiveAxes.hpp"
+#include "../Graphics/LineBatch.hpp"
 
 namespace Pomdog {
 namespace SceneEditor {
 //-----------------------------------------------------------------------
-PrimitiveAxes::PrimitiveAxes(std::shared_ptr<GameHost> const& gameHost,
-	Color const& xAxisColor, Color const& yAxisColor, Color const& zAxisColor)
-	: renderer(gameHost)
+PrimitiveAxes::PrimitiveAxes(Color const& xAxisColor, Color const& yAxisColor, Color const& zAxisColor)
 {
 	constexpr float axesPixelLength = 4096.0f;
 	
@@ -33,14 +32,12 @@ PrimitiveAxes::PrimitiveAxes(std::shared_ptr<GameHost> const& gameHost,
 	}
 }
 //-----------------------------------------------------------------------
-void PrimitiveAxes::Draw(GraphicsContext & graphicsContext, Matrix4x4 const& transformMatrix)
+void PrimitiveAxes::Draw(LineBatch & lineBatch)
 {
-	renderer.Begin(transformMatrix);
 	for (auto & line: lines)
 	{
-		renderer.Draw(line.Point1, line.Point2, line.Color);
+		lineBatch.DrawLine(line.Point1, line.Point2, line.Color);
 	}
-	renderer.End();
 }
 
 }// namespace SceneEditor

@@ -19,17 +19,18 @@
 #include <Pomdog/Math/Matrix4x4.hpp>
 #include <Pomdog/Math/Color.hpp>
 #include <Pomdog/Pomdog.hpp>
-#include "LineRenderer.hpp"
 
 namespace Pomdog {
+
+class LineBatch;
+
 namespace SceneEditor {
 
 class PrimitiveAxes {
 public:
-	PrimitiveAxes(std::shared_ptr<GameHost> const& gameHost,
-		Color const& xAxisColor, Color const& yAxisColor, Color const& zAxisColor);
+	PrimitiveAxes(Color const& xAxisColor, Color const& yAxisColor, Color const& zAxisColor);
 	
-	void Draw(GraphicsContext & graphicsContext, Matrix4x4 const& transformMatrix);
+	void Draw(LineBatch & lineBatch);
 	
 private:
 	struct Line {
@@ -39,7 +40,6 @@ private:
 	};
 
 	std::array<Line, 3> lines;
-	LineRenderer renderer;
 };
 
 }// namespace SceneEditor

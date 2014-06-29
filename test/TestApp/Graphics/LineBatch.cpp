@@ -6,16 +6,16 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "SolidShapeBatch.hpp"
+#include "LineBatch.hpp"
 #include <Pomdog/Utility/MakeUnique.hpp>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - SolidShapeBatch::Impl
+#pragma mark - LineBatch::Impl
 #endif
 //-----------------------------------------------------------------------
-class SolidShapeBatch::Impl {
+class LineBatch::Impl {
 public:
 	static constexpr std::size_t MaxVertexCount = 4096;
 	static constexpr std::size_t MinVertexCount = 256;
@@ -44,6 +44,9 @@ public:
 
 	void DrawLine(Vector2 const& point1, Vector2 const& point2,
 		Vector4 const& color1, Vector4 const& color2);
+		
+	void DrawLine(Vector3 const& point1, Vector3 const& point2,
+		Vector4 const& color1, Vector4 const& color2);
 
 	void DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
 		Vector4 const& color1, Vector4 const& color2, Vector4 const& color3);
@@ -53,7 +56,7 @@ public:
 	void Flush();
 };
 //-----------------------------------------------------------------------
-SolidShapeBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
+LineBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
 	: graphicsContext(graphicsContextIn)
 {
@@ -69,7 +72,7 @@ SolidShapeBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsCont
 	}
 }
 //-----------------------------------------------------------------------
-void SolidShapeBatch::Impl::Begin(Matrix4x4 const& transformMatrix)
+void LineBatch::Impl::Begin(Matrix4x4 const& transformMatrix)
 {
 	alignas(16) Matrix4x4 transposedMatrix = Matrix4x4::Transpose(transformMatrix);
 
@@ -77,7 +80,7 @@ void SolidShapeBatch::Impl::Begin(Matrix4x4 const& transformMatrix)
 	parameter->SetValue(transposedMatrix);
 }
 //-----------------------------------------------------------------------
-void SolidShapeBatch::Impl::End()
+void LineBatch::Impl::End()
 {
 	if (vertices.empty()) {
 		return;
@@ -86,7 +89,7 @@ void SolidShapeBatch::Impl::End()
 	Flush();
 }
 //-----------------------------------------------------------------------
-void SolidShapeBatch::Impl::Flush()
+void LineBatch::Impl::Flush()
 {
 	POMDOG_ASSERT(!vertices.empty());
 	POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
@@ -101,7 +104,7 @@ void SolidShapeBatch::Impl::Flush()
 	vertices.clear();
 }
 //-----------------------------------------------------------------------
-void SolidShapeBatch::Impl::DrawLine(Vector2 const& point1, Vector2 const& point2,
+void LineBatch::Impl::DrawLine(Vector2 const& point1, Vector2 const& point2,
 	Vector4 const& color1, Vector4 const& color2)
 {
 	if (vertices.size() + 2 > MaxVertexCount) {
@@ -113,7 +116,19 @@ void SolidShapeBatch::Impl::DrawLine(Vector2 const& point1, Vector2 const& point
 	vertices.push_back(Vertex{Vector3(point2, 0.0f), color2});
 }
 //-----------------------------------------------------------------------
-void SolidShapeBatch::Impl::DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
+void LineBatch::Impl::DrawLine(Vector3 const& point1, Vector3 const& point2,
+	Vector4 const& color1, Vector4 const& color2)
+{
+	if (vertices.size() + 2 > MaxVertexCount) {
+		Flush();
+	}
+
+	POMDOG_ASSERT(vertices.size() + 2 <= Impl::MaxVertexCount);
+	vertices.push_back(Vertex{point1, color1});
+	vertices.push_back(Vertex{point2, color2});
+}
+//-----------------------------------------------------------------------
+void LineBatch::Impl::DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
 	Vector4 const& color1, Vector4 const& color2, Vector4 const& color3)
 {
 	if (vertices.size() + 6 > MaxVertexCount) {
@@ -130,29 +145,29 @@ void SolidShapeBatch::Impl::DrawTriangle(Vector2 const& point1, Vector2 const& p
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - SolidShapeBatch
+#pragma mark - LineBatch
 #endif
 //-----------------------------------------------------------------------
-SolidShapeBatch::SolidShapeBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
+LineBatch::LineBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
 	: impl(MakeUnique<Impl>(graphicsContext, graphicsDevice, assets))
 {}
 //-----------------------------------------------------------------------
-SolidShapeBatch::~SolidShapeBatch() = default;
+LineBatch::~LineBatch() = default;
 //-----------------------------------------------------------------------
-void SolidShapeBatch::Begin(Matrix4x4 const& transformMatrixIn)
+void LineBatch::Begin(Matrix4x4 const& transformMatrixIn)
 {
 	POMDOG_ASSERT(impl);
 	impl->Begin(transformMatrixIn);
 }
 //-----------------------------------------------------------------------
-void SolidShapeBatch::End()
+void LineBatch::End()
 {
 	POMDOG_ASSERT(impl);
 	impl->End();
 }
 //-----------------------------------------------------------------------
-void SolidShapeBatch::DrawCircle(Vector2 const& position, float radius, Color const& color, std::size_t segments)
+void LineBatch::DrawCircle(Vector2 const& position, float radius, Color const& color, std::size_t segments)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(segments >= 3);
@@ -181,14 +196,14 @@ void SolidShapeBatch::DrawCircle(Vector2 const& position, float radius, Color co
 	}
 }
 //-----------------------------------------------------------------------
-void SolidShapeBatch::DrawLine(Vector2 const& start, Vector2 const& end, Color const& color)
+void LineBatch::DrawLine(Vector2 const& start, Vector2 const& end, Color const& color)
 {
 	POMDOG_ASSERT(impl);
 	auto colorVector = color.ToVector4();
 	impl->DrawLine(start, end, colorVector, colorVector);
 }
 //-----------------------------------------------------------------------
-void SolidShapeBatch::DrawLine(Vector2 const& start, Vector2 const& end, Color const& startColor, Color const& endColor)
+void LineBatch::DrawLine(Vector2 const& start, Vector2 const& end, Color const& startColor, Color const& endColor)
 {
 	POMDOG_ASSERT(impl);
 	auto colorVector1 = startColor.ToVector4();
@@ -196,13 +211,28 @@ void SolidShapeBatch::DrawLine(Vector2 const& start, Vector2 const& end, Color c
 	impl->DrawLine(start, end, colorVector1, colorVector2);
 }
 //-----------------------------------------------------------------------
-void SolidShapeBatch::DrawRectangle(Rectangle const& sourceRect, Color const& color)
+void LineBatch::DrawLine(Vector3 const& start, Vector3 const& end, Color const& color)
+{
+	POMDOG_ASSERT(impl);
+	auto colorVector = color.ToVector4();
+	impl->DrawLine(start, end, colorVector, colorVector);
+}
+//-----------------------------------------------------------------------
+void LineBatch::DrawLine(Vector3 const& start, Vector3 const& end, Color const& startColor, Color const& endColor)
+{
+	POMDOG_ASSERT(impl);
+	auto colorVector1 = startColor.ToVector4();
+	auto colorVector2 = endColor.ToVector4();
+	impl->DrawLine(start, end, colorVector1, colorVector2);
+}
+//-----------------------------------------------------------------------
+void LineBatch::DrawRectangle(Rectangle const& sourceRect, Color const& color)
 {
 	POMDOG_ASSERT(impl);
 	DrawRectangle(sourceRect, color, color, color, color);
 }
 //-----------------------------------------------------------------------
-void SolidShapeBatch::DrawRectangle(Rectangle const& sourceRect,
+void LineBatch::DrawRectangle(Rectangle const& sourceRect,
 	Color const& color1, Color const& color2, Color const& color3, Color const& color4)
 {
 	POMDOG_ASSERT(impl);
@@ -229,7 +259,7 @@ void SolidShapeBatch::DrawRectangle(Rectangle const& sourceRect,
 	impl->DrawLine(rectVertices[3], rectVertices[0], colorVector4, colorVector1);
 }
 //-----------------------------------------------------------------------
-void SolidShapeBatch::DrawRectangle(Matrix3x2 const& matrix,
+void LineBatch::DrawRectangle(Matrix3x2 const& matrix,
 	Rectangle const& sourceRect, Color const& color)
 {
 	POMDOG_ASSERT(impl);
@@ -257,14 +287,14 @@ void SolidShapeBatch::DrawRectangle(Matrix3x2 const& matrix,
 	impl->DrawLine(rectVertices[3], rectVertices[0], colorVector, colorVector);
 }
 //-----------------------------------------------------------------------
-void SolidShapeBatch::DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3, Color const& color)
+void LineBatch::DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3, Color const& color)
 {
 	POMDOG_ASSERT(impl);
 	auto colorVector = color.ToVector4();
 	impl->DrawTriangle(point1, point2, point3, colorVector, colorVector, colorVector);
 }
 //-----------------------------------------------------------------------
-void SolidShapeBatch::DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
+void LineBatch::DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
 	Color const& color1, Color const& color2, Color const& color3)
 {
 	POMDOG_ASSERT(impl);

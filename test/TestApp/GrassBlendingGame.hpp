@@ -30,7 +30,7 @@
 #include "Skeletal2D/AnimationTimer.hpp"
 #include "Skeletal2D/SkinnedMesh.hpp"
 #include "Graphics/PolygonBatch.hpp"
-#include "Graphics/SolidShapeBatch.hpp"
+#include "Graphics/LineBatch.hpp"
 
 
 namespace Pomdog {

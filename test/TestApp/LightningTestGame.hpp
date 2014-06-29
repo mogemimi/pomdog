@@ -18,7 +18,6 @@
 #include "UI/DrawingContext.hpp"
 #include "UI/ScenePanel.hpp"
 #include "UI/Slider.hpp"
-#include "LineRenderer.hpp"
 #include "ParticleSystem.hpp"
 #include "BeamSystem.hpp"
 

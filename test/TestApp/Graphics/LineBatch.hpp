@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_SOLIDSHAPEBATCH_2BE4C7E9_4534_43E3_AE4F_F5B320E619C8_HPP
-#define POMDOG_SOLIDSHAPEBATCH_2BE4C7E9_4534_43E3_AE4F_F5B320E619C8_HPP
+#ifndef POMDOG_LINEBATCH_EA425637_9D8E_4225_B209_B01F2A592475_HPP
+#define POMDOG_LINEBATCH_EA425637_9D8E_4225_B209_B01F2A592475_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -18,12 +18,12 @@
 
 namespace Pomdog {
 
-class SolidShapeBatch {
+class LineBatch {
 public:
-	SolidShapeBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
+	LineBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
 	
-	~SolidShapeBatch();
+	~LineBatch();
 
 	void Begin(Matrix4x4 const& transformMatrix);
 
@@ -36,6 +36,10 @@ public:
 	void DrawLine(Vector2 const& start, Vector2 const& end, Color const& color);
 
 	void DrawLine(Vector2 const& start, Vector2 const& end, Color const& startColor, Color const& endColor);
+
+	void DrawLine(Vector3 const& start, Vector3 const& end, Color const& color);
+
+	void DrawLine(Vector3 const& start, Vector3 const& end, Color const& startColor, Color const& endColor);
 
 	//void DrawPolyline(std::vector<Vector2> const& points, float thickness, Color const& color);
 
@@ -62,4 +66,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SOLIDSHAPEBATCH_2BE4C7E9_4534_43E3_AE4F_F5B320E619C8_HPP)
+#endif // !defined(POMDOG_LINEBATCH_EA425637_9D8E_4225_B209_B01F2A592475_HPP)
