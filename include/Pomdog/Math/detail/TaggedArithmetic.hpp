@@ -21,11 +21,6 @@
 namespace Pomdog {
 namespace Details {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Math
-/// @{
-
 ///@code
 /// struct pixel_tag {};
 ///
@@ -228,9 +223,6 @@ public:
 		return value >= scalar;
 	}
 };
-
-/// @}
-/// @}
 
 }// namespace Details
 }// namespace Pomdog

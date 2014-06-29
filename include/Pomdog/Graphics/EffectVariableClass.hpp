@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief エフェクトパラメータの要素のクラスを定義します。
 enum class EffectVariableClass: std::uint8_t {
@@ -40,9 +35,6 @@ enum class EffectVariableClass: std::uint8_t {
 	///@~Japanese ユーザ定義の構造体です。
 	Struct,
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

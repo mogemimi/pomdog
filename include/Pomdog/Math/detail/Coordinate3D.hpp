@@ -19,11 +19,6 @@
 namespace Pomdog {
 namespace Details {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Math
-/// @{
-
 template <typename T>
 class POMDOG_EXPORT Coordinate3D final {
 public:
@@ -74,9 +69,6 @@ public:
 template <typename T>
 Coordinate3D<T> POMDOG_EXPORT
 operator*(T scaleFactor, Coordinate3D<T> const& coordinate);
-
-/// @}
-/// @}
 
 }// namespace Details
 }// namespace Pomdog

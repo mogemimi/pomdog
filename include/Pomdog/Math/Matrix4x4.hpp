@@ -17,17 +17,9 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Math
-/// @{
-
 ///@~Japanese
 /// @brief 4x4 の float 型の行列を定義します。
 using Matrix4x4 = Details::FloatingPointMatrix4x4<float>;
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

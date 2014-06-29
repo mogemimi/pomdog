@@ -23,11 +23,6 @@
 namespace Pomdog {
 namespace Details {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Math
-/// @{
-
 ///@~Japanese
 /// @brief 四元数（クォータニオン）を表す 4 次元ベクトルを定義します。
 template <typename T>
@@ -183,9 +178,6 @@ public:
 template <typename T>
 FloatingPointQuaternion<T> POMDOG_EXPORT
 operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion);
-
-/// @}
-/// @}
 
 }// namespace Details
 }// namespace Pomdog

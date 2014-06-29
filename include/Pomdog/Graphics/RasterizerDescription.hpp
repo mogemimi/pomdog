@@ -20,11 +20,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief ラスタライズ処理を記述します。
 class POMDOG_EXPORT RasterizerDescription {
@@ -56,9 +51,6 @@ public:
 	/// @note シザー矩形は GraphicsContext::SetScissorRectangle で指定します。
 	bool ScissorTestEnable = false;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

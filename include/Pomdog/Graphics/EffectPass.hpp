@@ -31,11 +31,6 @@ class NativeEffectPass;
 }// namespace RenderSystem
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 using EffectParameterCollection = std::unordered_map<std::string, std::shared_ptr<EffectParameter>>;
 
 class POMDOG_EXPORT EffectPass: public std::enable_shared_from_this<EffectPass> {
@@ -76,9 +71,6 @@ private:
 	std::weak_ptr<GraphicsContext> graphicsContext;
 	std::unique_ptr<Details::RenderSystem::NativeEffectPass> nativeEffectPass;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

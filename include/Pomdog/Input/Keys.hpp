@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Input
-/// @{
-
 ///@~English
 /// @brief Specifies keyboard keys and key codes.
 ///@~Japanese
@@ -419,9 +414,6 @@ enum class Keys: std::uint8_t {
 	///@brief OEM ']' key
 	CloseBracket = 234,
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

@@ -19,11 +19,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Gameplay
-/// @{
-
 class POMDOG_EXPORT GameObjectID {
 public:
 	GameObjectID(): id(0x0) {}
@@ -59,9 +54,6 @@ public:
 private:
 	std::uint64_t id;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

@@ -20,11 +20,6 @@ namespace Pomdog {
 
 class MouseState;
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Input
-/// @{
-
 ///@~Japanese
 /// @brief マウスによる入力を取得するのに使います。
 class POMDOG_EXPORT Mouse: Noncopyable {
@@ -35,9 +30,6 @@ public:
 	/// @brief マウスの現在の状態を取得します。
 	virtual MouseState const& State() const = 0;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

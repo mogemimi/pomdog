@@ -29,11 +29,6 @@ class NativeIndexBuffer;
 }// namespace RenderSystem
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief インデックスバッファです。
 class POMDOG_EXPORT IndexBuffer {
@@ -85,9 +80,6 @@ private:
 	IndexElementSize elementSize;
 	Pomdog::BufferUsage bufferUsage;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

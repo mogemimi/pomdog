@@ -20,11 +20,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief エフェクト定数バッファを定義します。
 class EffectConstantDescription {
@@ -33,9 +28,6 @@ public:
 	std::string Name;
 	std::uint32_t ByteSize;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

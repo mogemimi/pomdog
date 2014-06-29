@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief テクスチャサンプリング時のフィルタリングオプションを定義します。
 enum class TextureFilter: std::uint8_t {
@@ -61,9 +56,6 @@ enum class TextureFilter: std::uint8_t {
 	/// @brief 縮小およびミップレベルにポイントフィルタリングを使用し、拡大サンプリングに線形フィルタリングを使用します。
 	MinPointMagLinearMipPoint,
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

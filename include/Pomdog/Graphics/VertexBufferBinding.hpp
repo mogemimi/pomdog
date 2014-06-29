@@ -20,11 +20,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 class POMDOG_EXPORT VertexBufferBinding {
 public:
 	VertexDeclaration Declaration;
@@ -41,9 +36,6 @@ public:
 	VertexBufferBinding(VertexDeclaration && vertexDeclaration,
 		std::uint32_t vertexOffset, std::uint32_t instanceFrequency = 0);
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

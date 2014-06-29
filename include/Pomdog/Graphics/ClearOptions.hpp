@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 enum class ClearOptions: std::uint8_t {
 	///@~English
 	/// @brief Clear the depth buffer.
@@ -62,9 +57,6 @@ constexpr ClearOptions operator|(ClearOptions a, ClearOptions b)
 }
 
 ClearOptions & operator|=(ClearOptions & a, ClearOptions b);
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief ステンシルテスト時のステンシルバッファの処理を定義します。
 enum class StencilOperation: std::uint8_t {
@@ -60,9 +55,6 @@ enum class StencilOperation: std::uint8_t {
 	/// @remarks デクリメントによってその結果が 0 より小さくなると、ステンシルの値はラップされ最大値に戻ります。
 	Decrement,
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

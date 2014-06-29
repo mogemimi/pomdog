@@ -32,11 +32,6 @@ class PresentationParameters;
 }// namespace RenderSystem
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief 下位レベルの API を提供するグラフィックスコンテキストです。レンダリングコマンドを生成するために使用します。
 class POMDOG_EXPORT GraphicsContext: Noncopyable {
@@ -200,9 +195,6 @@ private:
 	class Impl;
 	std::unique_ptr<Impl> impl;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

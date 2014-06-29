@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -18,11 +18,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Logging
-/// @{
-
 ///@~Japanese
 /// @brief メッセージ情報を含むログエントリです。
 class LogEntry {
@@ -39,9 +34,6 @@ public:
 	/// @brief ログの冗長レベルです。
 	LogLevel Verbosity;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

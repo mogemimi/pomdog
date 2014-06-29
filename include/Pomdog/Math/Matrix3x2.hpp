@@ -17,17 +17,9 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Math
-/// @{
-
 ///@~Japanese
 /// @brief 3x2 の float 型の行列を定義します。
 using Matrix3x2 = Details::FloatingPointMatrix3x2<float>;
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

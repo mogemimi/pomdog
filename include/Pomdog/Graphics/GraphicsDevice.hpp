@@ -27,11 +27,6 @@ class NativeGraphicsDevice;
 }// namespace RenderSystem
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 class POMDOG_EXPORT GraphicsDevice: Noncopyable {
 public:
 	GraphicsDevice() = delete;
@@ -47,9 +42,6 @@ public:
 private:
 	std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> nativeGraphicsDevice;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

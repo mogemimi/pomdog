@@ -19,11 +19,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Gameplay2D
-/// @{
-
 class POMDOG_EXPORT Camera2D {
 public:
 	void Zoom(float value);
@@ -33,9 +28,6 @@ public:
 private:
 	float zoom = 1;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

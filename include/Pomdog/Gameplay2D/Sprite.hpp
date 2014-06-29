@@ -19,19 +19,11 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Gameplay2D
-/// @{
-
 class POMDOG_EXPORT Sprite {
 public:
 	Rectangle Subrect {0, 0, 1, 1};
 	Vector2 Origin {0.5f, 0.5f};
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

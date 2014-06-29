@@ -88,11 +88,6 @@ struct VertexElementTuple<Head, ElementTypes...> {
 }// namespace Graphics
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 template <typename T, typename... Arguments>
 class CustomVertex
 {
@@ -109,9 +104,6 @@ public:
 		>());
 	}
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

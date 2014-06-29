@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief エフェクトパラメータの要素の型を定義します。
 enum class EffectVariableType: std::uint8_t {
@@ -77,9 +72,6 @@ enum class EffectVariableType: std::uint8_t {
 	/// @brief 型情報を持たない void ポインタです。
 	Void,
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

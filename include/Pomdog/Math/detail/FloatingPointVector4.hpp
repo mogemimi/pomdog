@@ -23,11 +23,6 @@
 namespace Pomdog {
 namespace Details {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Math
-/// @{
-
 ///@~English
 /// @brief vector in four-dimensional space.
 ///@~Japanese
@@ -128,9 +123,6 @@ public:
 template <typename T>
 FloatingPointVector4<T> POMDOG_EXPORT
 operator*(T scaleFactor, FloatingPointVector4<T> const& vector);
-
-/// @}
-/// @}
 
 }// namespace Details
 }// namespace Pomdog

@@ -21,11 +21,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief 深度ステンシルテストを記述します。
 class POMDOG_EXPORT DepthStencilDescription {
@@ -73,9 +68,6 @@ public:
 	/// @brief ステンシルテストを有効または無効にします。デフォルト値は無効 (false) です。
 	bool StencilEnable = false;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

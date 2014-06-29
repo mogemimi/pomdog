@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief テクスチャです。
 class POMDOG_EXPORT Texture {
@@ -35,9 +30,6 @@ public:
 
 	virtual ~Texture() = default;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

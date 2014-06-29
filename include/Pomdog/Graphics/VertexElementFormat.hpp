@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese 
 /// @brief 頂点を構成する要素のフォーマットを定義します。
 enum class VertexElementFormat: std::uint8_t {
@@ -54,9 +49,6 @@ enum class VertexElementFormat: std::uint8_t {
 	///@brief A four-component, 64-bit floating-point format.
 	HalfFloat4,
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

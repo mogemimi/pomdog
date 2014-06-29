@@ -22,11 +22,6 @@ namespace Pomdog {
 
 class Rectangle;
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Application
-/// @{
-
 ///@~Japanese
 /// @brief ゲームウィンドウです。
 class POMDOG_EXPORT GameWindow: Noncopyable {
@@ -65,9 +60,6 @@ public:
 	/// @brief ゲームウィンドウのクライアント領域のサイズが変更されたときに呼ばれるイベントです。
 	Signal<void()> ClientSizeChanged;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

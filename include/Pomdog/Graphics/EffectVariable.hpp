@@ -19,11 +19,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief 定数バッファの要素です。
 class EffectVariable {
@@ -32,9 +27,6 @@ public:
 	EffectAnnotation Annotation;
 	std::uint32_t StartOffset;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

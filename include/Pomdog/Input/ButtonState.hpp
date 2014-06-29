@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Input
-/// @{
-
 ///@~Japanese
 /// @brief ボタンが押されているかどうかの状態を表します。
 enum class ButtonState: bool {
@@ -33,9 +28,6 @@ enum class ButtonState: bool {
 	/// @brief ボタンが押されている状態を表します。
 	Pressed = true
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

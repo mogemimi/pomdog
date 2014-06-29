@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Input
-/// @{
-
 ///@~Japanese
 /// @brief キーが押されているかどうかの状態を表します。
 enum class KeyState: bool {
@@ -33,9 +28,6 @@ enum class KeyState: bool {
 	/// @brief キーが押されている状態です。
 	Down = true,
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

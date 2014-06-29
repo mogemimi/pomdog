@@ -20,11 +20,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese 
 /// @brief 頂点を定義します。
 class POMDOG_EXPORT VertexDeclaration {
@@ -56,9 +51,6 @@ private:
 	/// @brief 1 つの頂点の先頭から次の頂点までのバイト数です。
 	std::uint32_t strideBytes;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

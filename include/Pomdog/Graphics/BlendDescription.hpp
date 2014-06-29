@@ -22,11 +22,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief ブレンディング処理を記述します。
 class POMDOG_EXPORT BlendDescription {
@@ -87,9 +82,6 @@ public:
 	/// @remarks アルファトゥカバレッジを有効にする場合は、true を、無効にする場合は false を指定します。
 	bool AlphaToCoverageEnable = false;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

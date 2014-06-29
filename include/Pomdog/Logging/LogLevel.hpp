@@ -17,13 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Logging
-/// @{
-
-///@~English
-/// @brief verbosity level of logging.
 ///@~Japanese
 /// @brief ログの出力における冗長レベルです。
 enum class LogLevel: std::uint8_t {
@@ -47,9 +40,6 @@ enum class LogLevel: std::uint8_t {
 	/// @brief エンジンの内部処理に関わるログなどを含めたすべてのログを示します。
 	Internal = 4,
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

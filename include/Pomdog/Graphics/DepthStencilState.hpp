@@ -28,11 +28,6 @@ class NativeDepthStencilState;
 }// namespace RenderSystem
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief 深度ステンシルステートを定義します。
 class POMDOG_EXPORT DepthStencilState: Noncopyable {
@@ -71,9 +66,6 @@ private:
 	std::unique_ptr<Details::RenderSystem::NativeDepthStencilState> nativeDepthStencilState;
 	DepthStencilDescription description;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

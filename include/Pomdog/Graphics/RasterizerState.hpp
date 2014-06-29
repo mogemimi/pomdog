@@ -28,11 +28,6 @@ class NativeRasterizerState;
 }// namespace RenderSystem
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief ラスタライザステートです。
 class POMDOG_EXPORT RasterizerState: Noncopyable {
@@ -82,9 +77,6 @@ private:
 	std::unique_ptr<Details::RenderSystem::NativeRasterizerState> nativeRasterizerState;
 	RasterizerDescription description;
 };
-
-///	@}
-/// @}
 
 }// namespace Pomdog
 

@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief 深度ステンシルフォーマットです。
 enum class DepthFormat: std::uint8_t {
@@ -41,9 +36,6 @@ enum class DepthFormat: std::uint8_t {
 	/// @brief Do not use depeh stencil buffer.
 	None,
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

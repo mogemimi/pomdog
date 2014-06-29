@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief ブレンディングオプション（ブレンディング係数）を定義します。
 enum class Blend: std::uint8_t {
@@ -93,9 +88,6 @@ enum class Blend: std::uint8_t {
 	//Source1Alpha,
 	//InverseSource1Alpha,
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

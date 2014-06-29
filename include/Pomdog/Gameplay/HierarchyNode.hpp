@@ -22,11 +22,6 @@ namespace Pomdog {
 class GameObject;
 class GameWorld;
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Gameplay2D
-/// @{
-
 class POMDOG_EXPORT HierarchyNode: public std::enable_shared_from_this<HierarchyNode> {
 public:
 	HierarchyNode() = default;

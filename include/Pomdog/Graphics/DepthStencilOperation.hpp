@@ -18,11 +18,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief ステンシルテストの結果に応じたステンシル処理を記述します。
 class DepthStencilOperation {
@@ -50,9 +45,6 @@ public:
 	/// デフォルト値は ComparisonFunction::Always です。
 	ComparisonFunction StencilFunction = ComparisonFunction::Always;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

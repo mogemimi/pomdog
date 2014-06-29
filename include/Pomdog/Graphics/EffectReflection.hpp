@@ -28,11 +28,6 @@ class NativeEffectReflection;
 }// namespace RenderSystem
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief エフェクトリフレクションです。
 class POMDOG_EXPORT EffectReflection {
@@ -54,9 +49,6 @@ public:
 private:
 	std::unique_ptr<Details::RenderSystem::NativeEffectReflection> nativeEffectReflection;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

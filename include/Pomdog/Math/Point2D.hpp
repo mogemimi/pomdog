@@ -18,15 +18,7 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Math
-/// @{
-
 using Point2D = Details::Coordinate2D<std::int32_t>;
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

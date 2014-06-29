@@ -23,11 +23,6 @@ namespace Pomdog {
 enum class KeyState: bool;
 enum class Keys: std::uint8_t;
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Input
-/// @{
-
 /// @brief キーボードの状態です。
 class POMDOG_EXPORT KeyboardState {
 public:
@@ -50,9 +45,6 @@ public:
 private:
 	std::bitset<std::numeric_limits<std::uint8_t>::max()> keyset;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

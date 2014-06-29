@@ -20,11 +20,6 @@ namespace Pomdog {
 
 class KeyboardState;
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Input
-/// @{
-
 ///@~Japanese
 /// @brief キーボードの入力を取得するために使います。
 class Keyboard: Noncopyable {
@@ -35,9 +30,6 @@ public:
 	/// @brief キーボードの現在の状態を取得します。
 	virtual KeyboardState const& State() const = 0;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

@@ -31,11 +31,6 @@ class NativeConstantBuffer;
 }// namespace RenderSystem
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief エフェクトパラメータです。
 class POMDOG_EXPORT EffectParameter {
@@ -97,9 +92,6 @@ public:
 private:
 	std::unique_ptr<Details::RenderSystem::NativeConstantBuffer> nativeConstantBuffer;
 };
-	
-/// @}
-/// @}
 
 }// namespace Pomdog
 

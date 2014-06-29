@@ -18,11 +18,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Content
-/// @{
-
 ///@~Japanese
 /// @brief アセットを読み込みます。
 class AssetManager {
@@ -46,9 +41,6 @@ public:
 private:
 	Details::AssetLoaderContext loaderContext;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

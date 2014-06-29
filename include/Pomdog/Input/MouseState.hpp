@@ -20,11 +20,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Input
-/// @{
-
 ///@~Japanese
 /// @brief マウスの状態を表します。
 class POMDOG_EXPORT MouseState {
@@ -73,9 +68,6 @@ public:
 	/// @brief マウス拡張ボタン2
 	ButtonState XButton2 = ButtonState::Released;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

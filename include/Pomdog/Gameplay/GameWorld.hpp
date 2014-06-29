@@ -65,11 +65,6 @@ struct HasComponents<T, Arguments...>
 
 class GameObject;
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Gameplay
-/// @{
-
 class POMDOG_EXPORT GameWorld {
 public:
 	GameWorld();
@@ -99,9 +94,6 @@ public:
 private:
 	std::shared_ptr<GameObjectContext> context;
 };
-
-/// @}
-/// @}
 
 
 //template <typename T, typename...Components>

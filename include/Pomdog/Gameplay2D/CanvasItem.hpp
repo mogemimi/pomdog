@@ -17,19 +17,11 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Gameplay2D
-/// @{
-
 class POMDOG_EXPORT CanvasItem {
 public:
 	//float DrawOrder = 0;
 	bool Visibile = true;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

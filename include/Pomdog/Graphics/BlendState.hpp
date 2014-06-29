@@ -28,11 +28,6 @@ class NativeBlendState;
 }// namespace RenderSystem
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-///	@{
-
 ///@~Japanese
 /// @brief ブレンディングステートです。
 class POMDOG_EXPORT BlendState: Noncopyable {
@@ -77,9 +72,6 @@ private:
 	std::unique_ptr<Details::RenderSystem::NativeBlendState> nativeBlendState;
 	BlendDescription description;
 };
-
-///	@}
-/// @}
 
 }// namespace Pomdog
 

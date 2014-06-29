@@ -19,11 +19,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese 
 /// @brief 頂点を構成する要素を定義します。
 class POMDOG_EXPORT VertexElement {
@@ -36,9 +31,6 @@ public:
 	/// @brief 頂点を構成する要素のフォーマットを指定します。
 	VertexElementFormat VertexElementFormat;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

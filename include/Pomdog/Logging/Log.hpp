@@ -24,11 +24,6 @@ class EventConnection;
 class LogEntry;
 class LogStream;
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Logging
-/// @{
-
 class POMDOG_EXPORT Log {
 public:
 	///@~Japanese
@@ -107,9 +102,6 @@ public:
 	/// @brief 指定されたチャンネルにログを出力します。
 	static void Internal(std::string const& channel, std::string const& message);
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

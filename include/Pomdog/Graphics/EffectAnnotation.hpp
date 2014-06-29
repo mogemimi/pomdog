@@ -18,11 +18,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief エフェクト変数の型を示すメタデータです。
 class EffectAnnotation {
@@ -48,9 +43,6 @@ public:
 	std::uint8_t Elements;
 	//std::optional<std::uint8_t> Elements;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

@@ -25,13 +25,7 @@
 #include "GameObjectID.hpp"
 #include "GameObjectContext.hpp"
 
-
 namespace Pomdog {
-
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Gameplay
-/// @{
 
 ///@~Japanese
 /// @brief コンポーネントを保持するゲームオブジェクトです。複数のコンポーネントを格納するコンテナの役割を担います。
@@ -80,8 +74,6 @@ private:
 	GameObjectID id;
 };
 
-/// @}
-/// @}
 
 
 template <typename T>

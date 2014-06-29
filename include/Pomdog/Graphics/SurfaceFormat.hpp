@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief サーフェスフォーマットです。
 enum class SurfaceFormat: std::uint8_t {
@@ -95,9 +90,6 @@ enum class SurfaceFormat: std::uint8_t {
 	/// @brief ブロック圧縮フォーマット(DXT4, DXT5)です。
 	BlockComp3_UNorm,
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

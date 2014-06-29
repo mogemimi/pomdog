@@ -257,15 +257,7 @@ private:
 }// namespace Gameplay
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Gameplay
-/// @{
-
 using GameObjectContext = Details::Gameplay::EntityContext<96U>;
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

@@ -23,11 +23,6 @@ namespace Pomdog {
 
 class LogEntry;
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Logging
-/// @{
-
 ///@~Japanese
 /// @brief 登録されたリスナーに向けてログを送り出すロガーです。
 class POMDOG_EXPORT LogChannel {
@@ -77,9 +72,6 @@ private:
 	std::string name;
 	LogLevel level;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

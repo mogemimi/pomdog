@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief 深度バッファテストまたはアルファステンシルテストで用いる比較関数を定義します。
 enum class ComparisonFunction: std::uint8_t {
@@ -57,9 +52,6 @@ enum class ComparisonFunction: std::uint8_t {
 	/// @brief テストは常に合格します。
 	Always,
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

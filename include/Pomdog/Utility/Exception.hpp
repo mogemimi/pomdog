@@ -59,11 +59,6 @@ T CreateException(std::string const& description, std::string const& source, cha
 
 #if !defined(POMDOG_THROW_EXCEPTION)
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Utility
-/// @{
-
 ///@~Japanese
 /// @brief 例外を投げます。
 /// @param exceptionCode ExceptionCode を指定します。
@@ -71,9 +66,6 @@ T CreateException(std::string const& description, std::string const& source, cha
 #define POMDOG_THROW_EXCEPTION(exceptionClass, description) \
 	throw Pomdog::Details::ExceptionInternal::CreateException< \
 		exceptionClass>(description, __func__, __FILE__, __LINE__)
-
-/// @}
-/// @}
 
 #endif // !defined(POMDOG_THROW_EXCEPTION)
 

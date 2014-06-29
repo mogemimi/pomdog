@@ -30,11 +30,6 @@ class NativeSamplerState;
 
 class GraphicsDevice;
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief テクスチャのサンプリング方法を指定するサンプラーステートです。
 class POMDOG_EXPORT SamplerState: Noncopyable {
@@ -92,9 +87,6 @@ private:
 	std::unique_ptr<Details::RenderSystem::NativeSamplerState> nativeSamplerState;
 	SamplerDescription description;
 };
-
-///	@}
-/// @}
 
 }// namespace Pomdog
 

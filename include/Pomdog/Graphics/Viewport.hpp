@@ -21,11 +21,6 @@ namespace Pomdog {
 
 class Rectangle;
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief ビューポートです。
 class POMDOG_EXPORT Viewport {
@@ -68,9 +63,6 @@ public:
 	/// @brief アスペクト比を計算します。
 	float AspectRatio() const;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

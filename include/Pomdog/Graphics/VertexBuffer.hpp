@@ -28,11 +28,6 @@ class NativeVertexBuffer;
 }// namespace RenderSystem
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief 頂点バッファです。
 class POMDOG_EXPORT VertexBuffer {
@@ -86,9 +81,6 @@ private:
 	std::uint16_t strideBytes;
 	Pomdog::BufferUsage bufferUsage;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

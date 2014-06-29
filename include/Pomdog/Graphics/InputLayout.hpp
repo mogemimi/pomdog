@@ -29,11 +29,6 @@ class NativeInputLayout;
 }// namespace RenderSystem
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief 入力レイアウトを記述します。
 class POMDOG_EXPORT InputLayout: Noncopyable {
@@ -57,9 +52,6 @@ public:
 private:
 	std::unique_ptr<Details::RenderSystem::NativeInputLayout> nativeInputLayout;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief テクスチャの境界である 0.0 から 1.0 の範囲外にあるテクスチャ座標のアドレッシング方法を定義します。
 enum class TextureAddressMode: std::uint8_t {
@@ -43,9 +38,6 @@ enum class TextureAddressMode: std::uint8_t {
 	/// http://msdn.microsoft.com/ja-jp/library/bb204826(v=vs.85).aspx
 	Clamp,
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

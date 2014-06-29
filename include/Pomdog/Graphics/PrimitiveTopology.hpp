@@ -17,11 +17,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief プリミティブの位相を定義します。
 enum class PrimitiveTopology: std::uint8_t {
@@ -37,9 +32,6 @@ enum class PrimitiveTopology: std::uint8_t {
 	///@brief A line strip.
 	LineStrip,
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

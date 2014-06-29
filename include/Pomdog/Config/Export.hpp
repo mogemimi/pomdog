@@ -13,8 +13,6 @@
 #	pragma once
 #endif
 
-//#include "Platform.hpp"
-
 namespace Pomdog {
 
 #if defined(POMDOG_BUILDING_LIBRARY_EXPORTS) && defined(POMDOG_USING_LIBRARY_EXPORTS)

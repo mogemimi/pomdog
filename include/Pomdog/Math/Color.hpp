@@ -20,13 +20,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Math
-/// @{
-
-///@~English
-/// @brief RGBA color.
 ///@~Japanese
 /// @brief 赤、緑、青、およびアルファ（不透明度）の 4 成分を持つ色を定義します。
 class POMDOG_EXPORT Color {
@@ -115,9 +108,6 @@ public:
 };
 
 Color POMDOG_EXPORT operator*(float scale, Color const& color);
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

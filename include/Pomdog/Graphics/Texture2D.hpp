@@ -29,11 +29,6 @@ class NativeTexture2D;
 }// namespace RenderSystem
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief 2 次元テクスチャです。
 class POMDOG_EXPORT Texture2D : public Texture {
@@ -94,9 +89,6 @@ private:
 	std::uint32_t levelCount;
 	SurfaceFormat format;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

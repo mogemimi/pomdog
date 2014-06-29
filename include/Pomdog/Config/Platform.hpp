@@ -16,11 +16,6 @@
 namespace Pomdog {
 namespace Details {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Config
-/// @{
-
 //----------------------------
 // Choose compiler
 //----------------------------
@@ -239,9 +234,6 @@ namespace Details {
 #if defined(DEBUG) && defined(NDEBUG)
 #	error "Both DEBUG and NDEBUG are defined."
 #endif
-
-/// @}
-/// @}
 
 }// namespace Details
 }// namespace Pomdog

@@ -31,11 +31,6 @@ class NativeRenderTarget2D;
 }// namespace RenderSystem
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief 深度バッファを含む、2 次元のレンダーターゲットです。
 class POMDOG_EXPORT RenderTarget2D : public Texture {
@@ -92,9 +87,6 @@ private:
 	SurfaceFormat format;
 	DepthFormat depthStencilFormat;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

@@ -24,16 +24,8 @@ struct DegreeTag {};
 }// namespace Tags
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Math
-/// @{
-
 template <typename T>
 using Degree = Details::TaggedArithmetic<T, Details::Tags::DegreeTag>;
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

@@ -20,11 +20,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Application
-/// @{
-
 class POMDOG_EXPORT GameClock {
 public:
 	GameClock();
@@ -64,9 +59,6 @@ private:
 	class Impl;
 	std::unique_ptr<Impl> impl;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

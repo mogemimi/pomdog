@@ -28,11 +28,6 @@ class GraphicsDevice;
 class Keyboard;
 class Mouse;
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Application
-/// @{
-
 class POMDOG_EXPORT GameHost: Noncopyable, public std::enable_shared_from_this<GameHost> {
 public:
 	virtual ~GameHost() = default;
@@ -73,9 +68,6 @@ public:
 	/// @brief マウスを取得します。
 	virtual std::shared_ptr<Mouse> Mouse() = 0;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

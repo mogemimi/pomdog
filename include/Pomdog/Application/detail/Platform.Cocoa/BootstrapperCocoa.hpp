@@ -37,11 +37,6 @@ namespace Cocoa {
 
 class CocoaGameWindow;
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Application
-/// @{
-
 ///@~Japanese
 /// @brief すべてのサブシステムの起動、およびアプリケーションの実行を行います。
 class POMDOG_EXPORT BootstrapperCocoa final {
@@ -75,9 +70,6 @@ private:
 	void BeginRun(NSWindow* nativeWindow);
 	void EndRun();
 };
-
-/// @}
-/// @}
 
 }// namespace Cocoa
 }// namespace Details

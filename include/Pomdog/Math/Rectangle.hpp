@@ -21,27 +21,19 @@ namespace Pomdog {
 
 enum class ContainmentType: std::uint8_t;
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Math
-/// @{
-
 ///@~Japanese
 /// @brief 長方形を表す幾何学クラスです。
 /// @code
-/// // Image:
-/// //           width			
-/// //  _______________________					  
-/// // |* <--(x, y)            |	
-/// // |                       |	
-/// // |                       |				
-/// // |           *           | height			
-/// // |         Center        |	
+/// //           width
+/// //  _______________________
+/// // |* <--(x, y)            |
+/// // |                       |
+/// // |           *           | height
+/// // |         Center        |
 /// // |                       | Right = x + width
-/// // |                       |	
-/// // |_______________________|	
-/// // 								
-/// //    Bottom = y + height		
+/// // |_______________________|
+/// //
+/// //    Bottom = y + height
 /// //
 /// @endcode
 class POMDOG_EXPORT Rectangle {
@@ -118,9 +110,6 @@ public:
 	/// @brief 指定された境界ボリュームと交差するかどうかを確認します。
 	bool Intersects(Rectangle const& rectangle) const;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

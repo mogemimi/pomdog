@@ -18,11 +18,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Application
-/// @{
-
 ///@~Japanese
 /// @brief ゲームの内容を記述します。
 /// @remarks プラットフォームを意識することなくゲームのコンテンツ開発に集中できる
@@ -48,9 +43,6 @@ public:
 	/// @brief シーンがレンダリングされる際に毎フレーム呼び出されます。
 	virtual void Draw() = 0;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

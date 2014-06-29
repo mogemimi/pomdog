@@ -44,14 +44,6 @@ inline constexpr bool ConstexprAssert(bool condition,
 
 }// namespace Assertion
 
-
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Utility
-/// @{
-/// @addtogroup Preprocessor
-/// @{
-
 // @code
 // //how to use:
 // POMDOG_ASSERT(expr);
@@ -106,10 +98,6 @@ inline constexpr bool ConstexprAssert(bool condition,
 #	define POMDOG_ASSERT_MESSAGE(expression, message)
 #	define POMDOG_CONSTEXPR_ASSERT(expression) static_cast<void const>(0)
 #endif
-
-/// @}
-/// @}
-/// @}
 
 }// namespace Details
 }// namespace Pomdog

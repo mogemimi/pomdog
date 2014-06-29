@@ -24,11 +24,6 @@
 namespace Pomdog {
 namespace Details {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Math
-/// @{
-
 ///@~Japanese
 /// @brief 2x2 の浮動小数点数の行列を定義します。
 template <typename T>
@@ -118,9 +113,6 @@ public:
 template <typename T>
 FloatingPointMatrix2x2<T> POMDOG_EXPORT
 operator*(T scaleFactor, FloatingPointMatrix2x2<T> const& matrix);
-
-/// @}
-/// @}
 
 }// namespace Details
 }// namespace Pomdog

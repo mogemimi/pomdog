@@ -21,11 +21,6 @@
 
 namespace Pomdog {
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Graphics
-/// @{
-
 ///@~Japanese
 /// @brief サンプラーステートの設定を記述します。
 class POMDOG_EXPORT SamplerDescription {
@@ -80,9 +75,6 @@ public:
 	//Color BorderColor = Color::TransparentBlack;
 	//float MipMapLevelOfDetailBias = 0;
 };
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

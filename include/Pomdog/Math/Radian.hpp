@@ -24,16 +24,8 @@ struct RadianTag {};
 }// namespace Tags
 }// namespace Details
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Math
-/// @{
-
 template <typename T>
 using Radian = Details::TaggedArithmetic<T, Details::Tags::RadianTag>;
-
-/// @}
-/// @}
 
 }// namespace Pomdog
 

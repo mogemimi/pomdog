@@ -24,11 +24,6 @@ namespace Pomdog {
 
 class LogChannel;
 
-/// @addtogroup Framework
-/// @{
-/// @addtogroup Logging
-/// @{
-
 ///@~Japanese
 /// @brief ログストリームです。
 class POMDOG_EXPORT LogStream {
@@ -62,8 +57,6 @@ public:
 	std::string String() const;
 };
 
-/// @}
-/// @}
 
 namespace Details {
 namespace Logging {
