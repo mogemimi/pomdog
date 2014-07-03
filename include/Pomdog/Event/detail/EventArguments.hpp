@@ -42,7 +42,7 @@ public:
 
 	virtual ~EventArguments() = default;
 	
-	virtual std::size_t GetHashCode() const = 0;
+	virtual std::size_t HashCode() const = 0;
 };
 
 
@@ -54,15 +54,13 @@ public:
 	static_assert(!std::is_reference<T>::value, "reference type is not supported.");
 	static_assert(!std::is_pointer<T>::value, "pointer type is not supported.");
 	static_assert(std::is_object<T>::value, "T is object type.");
-
-	~EventArgumentsContainer() override = default;
 	
 	template <typename...Arguments>
 	explicit EventArgumentsContainer(Arguments &&...argument)
 		: data(std::forward<Arguments>(argument)...)
 	{}
 	
-	std::size_t GetHashCode() const override
+	std::size_t HashCode() const override
 	{
 		return EventComponentHashCode<T>::value;
 	}

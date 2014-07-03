@@ -60,7 +60,7 @@ public:
 		static_assert(std::is_object<T>::value, "T is object type.");
 
 		POMDOG_ASSERT(data);
-		return data && (data->GetHashCode() == Details::EventComponentHashCode<T>::value);
+		return data && (data->HashCode() == Details::EventComponentHashCode<T>::value);
 	}
 
 	template <class T>

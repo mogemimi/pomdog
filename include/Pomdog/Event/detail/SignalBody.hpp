@@ -23,6 +23,7 @@
 #include <vector>
 #include <mutex>
 #include "../../Utility/Assert.hpp"
+#include "../../Utility/MakeUnique.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -38,6 +39,7 @@ class ConnectionBody {
 public:
 	virtual ~ConnectionBody() = default;
 	virtual void Disconnect() = 0;
+	virtual std::unique_ptr<ConnectionBody> DeepCopy() const = 0;
 };
 
 template <typename Function>
@@ -54,6 +56,11 @@ public:
 		: weakSignal(std::forward<WeakSignal>(weakSignalIn))
 		, weakSlot(std::forward<WeakSlot>(weakSlotIn))
 	{}
+	
+	ConnectionBodyOverride(WeakSignal const& weakSignalIn, WeakSlot const& weakSlotIn)
+		: weakSignal(weakSignalIn)
+		, weakSlot(weakSlotIn)
+	{}
 
 	void Disconnect() override
 	{
@@ -69,6 +76,11 @@ public:
 		}
 
 		weakSlot.reset();
+	}
+	
+	std::unique_ptr<ConnectionBody> DeepCopy() const
+	{
+		return MakeUnique<ConnectionBodyOverride>(weakSignal, weakSlot);
 	}
 };
 
@@ -88,10 +100,8 @@ public:
 	SignalBody(SignalBody &&) = delete;///@todo
 	SignalBody & operator=(SignalBody &&) = delete;///@todo
 
-	~SignalBody() = default;
-
 	template <typename Function>
-	std::weak_ptr<ConnectionBodyType> Connect(Function && slot);
+	std::unique_ptr<ConnectionBodyType> Connect(Function && slot);
 	
 	void Disconnect(SlotType const* observer);
 
@@ -122,13 +132,9 @@ SignalBody<void(Arguments...)>::SignalBody()
 //-----------------------------------------------------------------------
 template <typename...Arguments>
 template <typename Function>
-auto SignalBody<void(Arguments...)>::Connect(Function && slot)->std::weak_ptr<ConnectionBodyType>
+auto SignalBody<void(Arguments...)>::Connect(Function && slot)->std::unique_ptr<ConnectionBodyType>
 {
-	std::weak_ptr<SignalBody> weakSignal = this->shared_from_this();
-
 	POMDOG_ASSERT(slot);
-	POMDOG_ASSERT(!weakSignal.expired());
-
 	auto observer = std::make_shared<SlotType>(std::forward<Function>(slot));
 	{
 		std::lock_guard<std::recursive_mutex> lock(addingProtection);
@@ -136,12 +142,10 @@ auto SignalBody<void(Arguments...)>::Connect(Function && slot)->std::weak_ptr<Co
 		POMDOG_ASSERT(std::end(addedObservers) == std::find(std::begin(addedObservers), std::end(addedObservers), observer));
 		addedObservers.push_back(observer);
 	}
-
-	auto connectionBody = std::shared_ptr<ConnectionBodyType>(observer,
-		new ConnectionBodyType(std::move(weakSignal), observer));
-
-	POMDOG_ASSERT(connectionBody);
-	return std::move(connectionBody);
+	
+	std::weak_ptr<SignalBody> weakSignal = this->shared_from_this();
+	POMDOG_ASSERT(!weakSignal.expired());
+	return MakeUnique<ConnectionBodyType>(std::move(weakSignal), observer);
 }
 //-----------------------------------------------------------------------
 template <typename...Arguments>

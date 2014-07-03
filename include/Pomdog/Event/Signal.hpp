@@ -40,42 +40,42 @@ public:
 	std::size_t InvocationCount() const;
 
 private:
-	std::shared_ptr<Details::SignalsAndSlots::SignalBody<void(Arguments...)>> signalBody;
+	std::shared_ptr<Details::SignalsAndSlots::SignalBody<void(Arguments...)>> body;
 };
 
 //-----------------------------------------------------------------------
 template <typename...Arguments>
 Signal<void(Arguments...)>::Signal()
-	: signalBody(std::make_shared<Details::SignalsAndSlots::SignalBody<void(Arguments...)>>())
+	: body(std::make_shared<Details::SignalsAndSlots::SignalBody<void(Arguments...)>>())
 {}
 //-----------------------------------------------------------------------
 template <typename...Arguments>
 EventConnection Signal<void(Arguments...)>::Connect(std::function<void(Arguments...)> const& slot)
 {
 	POMDOG_ASSERT(slot);
-	POMDOG_ASSERT(signalBody);
-	return EventConnection{signalBody->Connect(slot)};
+	POMDOG_ASSERT(body);
+	return EventConnection{body->Connect(slot)};
 }
 //-----------------------------------------------------------------------
 template <typename...Arguments>
 EventConnection Signal<void(Arguments...)>::Connect(std::function<void(Arguments...)> && slot)
 {
 	POMDOG_ASSERT(slot);
-	POMDOG_ASSERT(signalBody);
-	return EventConnection{signalBody->Connect(std::move(slot))};
+	POMDOG_ASSERT(body);
+	return EventConnection{body->Connect(std::move(slot))};
 }
 //-----------------------------------------------------------------------
 template <typename...Arguments>
 void Signal<void(Arguments...)>::operator()(Arguments &&... arguments)
 {
-	POMDOG_ASSERT(signalBody);
-	signalBody->operator()(std::forward<Arguments>(arguments)...);
+	POMDOG_ASSERT(body);
+	body->operator()(std::forward<Arguments>(arguments)...);
 }
 //-----------------------------------------------------------------------
 template <typename...Arguments>
 std::size_t Signal<void(Arguments...)>::InvocationCount() const
 {
-	return signalBody->InvocationCount();
+	return body->InvocationCount();
 }
 
 }// namespace Pomdog

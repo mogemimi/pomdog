@@ -10,10 +10,25 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
+EventConnection::EventConnection(EventConnection const& connection)
+{
+	if (connection.body) {
+		body = connection.body->DeepCopy();
+	}
+}
+//-----------------------------------------------------------------------
+EventConnection & EventConnection::operator=(EventConnection const& connection)
+{
+	if (connection.body) {
+		body = connection.body->DeepCopy();
+	}
+	return *this;
+}
+//-----------------------------------------------------------------------
 void EventConnection::Disconnect()
 {
-	if (auto locked_body = weakConnectionBody.lock()) {
-		locked_body->Disconnect();
+	if (body) {
+		body->Disconnect();
 	}
 }
 //-----------------------------------------------------------------------

@@ -23,22 +23,20 @@ namespace Pomdog {
 
 class POMDOG_EXPORT EventConnection {
 private:
-	std::weak_ptr<Details::SignalsAndSlots::ConnectionBody> weakConnectionBody;
+	std::unique_ptr<Details::SignalsAndSlots::ConnectionBody> body;
 
 public:
 	EventConnection() = default;
 
-	EventConnection(EventConnection const& connection) = default;
+	EventConnection(EventConnection const& connection);
 	EventConnection(EventConnection && connection) = default;
 	
-	EventConnection & operator=(EventConnection const& connection) = default;
+	EventConnection & operator=(EventConnection const& connection);
 	EventConnection & operator=(EventConnection && connection) = default;
 	
 	template <typename Function>
-	explicit EventConnection(std::weak_ptr<Details::SignalsAndSlots::ConnectionBodyOverride<Function>> && connectionBodyIn)
-		: weakConnectionBody(std::forward<
-			std::weak_ptr<Details::SignalsAndSlots::ConnectionBodyOverride<Function>>
-		>(connectionBodyIn))
+	explicit EventConnection(std::unique_ptr<Details::SignalsAndSlots::ConnectionBodyOverride<Function>> && bodyIn)
+		: body(std::forward<std::unique_ptr<Details::SignalsAndSlots::ConnectionBodyOverride<Function>>>(bodyIn))
 	{}
 
 	void Disconnect();
