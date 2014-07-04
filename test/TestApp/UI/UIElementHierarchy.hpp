@@ -14,61 +14,41 @@
 #endif
 
 #include <algorithm>
+#include <vector>
+#include <memory>
 #include <Pomdog/Pomdog.hpp>
 #include <Pomdog/Utility/MakeUnique.hpp>
 #include "UIElement.hpp"
-#include "PointerPoint.hpp"
-#include "PointerEventType.hpp"
-
+#include "UIEventDispatcher.hpp"
 
 namespace Pomdog {
 namespace UI {
 
 class DrawingContext;
-
+class GameEditorView;
+class UIView;
 
 class UIElementHierarchy {
 public:
+	UIElementHierarchy();
+
 	void Touch(MouseState const& mouseState);
 	
 	void UpdateAnimation(DurationSeconds const& frameDuration);
 	
-	void AddChild(std::shared_ptr<UI::UIElement> const& node);
+	void AddChild(std::shared_ptr<UIView> const& node);
 	
-	void AddChild(std::shared_ptr<UI::UIElement> && node);
-
+	void AddChild(std::shared_ptr<UIView> && node);
+	
 	void Draw(DrawingContext & drawingContext);
 	
 	void RenderSizeChanged(std::uint32_t width, std::uint32_t height);
-	
-private:
-	std::shared_ptr<UIElement> Find(Point2D const& position);
-	
-	void PointerEntered(Point2D const& position, MouseState const& mouseState, std::shared_ptr<UI::UIElement> const& node);
-	
-	void PointerExited(Point2D const& position);
-		
-	void PointerPressed(Point2D const& position);
-	
-	void PointerMoved(Point2D const& position);
-	
-	void PointerReleased(Point2D const& position);
-	
-	Optional<UI::PointerMouseEvent> FindPointerMouseEvent(MouseState const& mouseState) const;
 
-	ButtonState CheckMouseButton(MouseState const& mouseState, UI::PointerMouseEvent const& pointerMouseEvent) const;
-
-	void Sort();
+	std::shared_ptr<UIEventDispatcher> Dispatcher() const;
 
 private:
-	struct PointerState {
-		std::shared_ptr<UI::UIElement> focusedElement;
-		UI::PointerPoint pointerPoint;
-		std::int32_t PrevScrollWheel;
-	};
-
-	std::unique_ptr<PointerState> pointerState;
-	std::vector<std::shared_ptr<UI::UIElement>> children;
+	std::shared_ptr<UIEventDispatcher> dispatcher;
+	std::shared_ptr<GameEditorView> root;
 };
 
 }// namespace UI

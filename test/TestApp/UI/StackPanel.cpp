@@ -10,15 +10,29 @@
 #include "DrawingContext.hpp"
 #include "PointerPoint.hpp"
 #include "UIHelper.hpp"
+#include "UIEventDispatcher.hpp"
 
 namespace Pomdog {
 namespace UI {
 //-----------------------------------------------------------------------
 StackPanel::StackPanel(std::uint32_t widthIn, std::uint32_t heightIn)
 	: Panel(Matrix3x2::Identity, widthIn, heightIn)
-	, padding{12, 6, 10, 6}
-	, barHeight(16)
+	, padding{12, 8, 10, 8}
+	, barHeight(18)
 {
+}
+//-----------------------------------------------------------------------
+void StackPanel::OnParentChanged()
+{
+	auto parent = Parent().lock();
+	POMDOG_ASSERT(parent);
+
+	this->weakDispatcher = parent->Dispatcher();
+	
+	if (auto dispatcher = weakDispatcher.lock())
+	{
+		connection = dispatcher->Connect(shared_from_this());
+	}
 }
 //-----------------------------------------------------------------------
 void StackPanel::OnPointerCanceled(PointerPoint const& pointerPoint)
@@ -43,7 +57,7 @@ void StackPanel::OnPointerExited(PointerPoint const& pointerPoint)
 //-----------------------------------------------------------------------
 void StackPanel::OnPointerPressed(PointerPoint const& pointerPoint)
 {
-	Rectangle captionBar{0, 0, Width(), barHeight};
+	Rectangle captionBar{0, 0, Width(), barHeight + padding.Top};
 	
 	auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
 	if (!captionBar.Intersects(pointInView)) {
@@ -99,6 +113,8 @@ void StackPanel::OnRenderSizeChanged(std::uint32_t widthIn, std::uint32_t height
 //-----------------------------------------------------------------------
 void StackPanel::AddChild(std::shared_ptr<UIView> const& element)
 {
+	POMDOG_ASSERT(element->Parent().expired());
+
 	Vector2 position(padding.Left, padding.Top + barHeight);
 
 	constexpr float innerMarginBottom = 14.0f;
@@ -112,6 +128,7 @@ void StackPanel::AddChild(std::shared_ptr<UIView> const& element)
 
 	POMDOG_ASSERT(shared_from_this());
 	element->Parent(shared_from_this());
+	element->OnParentChanged();
 
 	element->Transform(Matrix3x2::CreateTranslation(position));
 	switch (element->HorizontalAlignment()) {
@@ -137,18 +154,23 @@ void StackPanel::Draw(DrawingContext & drawingContext)
 {
 	auto transform = Transform() * drawingContext.Top();
 
-	drawingContext.DrawRectangle(transform, Color{51, 51, 51, 205},
+	drawingContext.DrawRectangle(transform, Color{45, 45, 48, 225},
 		Rectangle(0, 0, Width(), Height()));
 	
+	Color const borderColor{21, 21, 21, 255};
+	
+	drawingContext.DrawLine(transform, borderColor, 1.0f, {0.0f, 0.0f}, {static_cast<float>(Width()), 0.0f});
+	drawingContext.DrawLine(transform, borderColor, 1.0f, {0.0f, 0.0f}, {0.0f, static_cast<float>(Height())});
+	drawingContext.DrawLine(transform, borderColor, 1.0f, Vector2(0.0f, Height()), Vector2(Width(), Height()));
+	drawingContext.DrawLine(transform, borderColor, 1.0f, Vector2(Width(), 0.0f), Vector2(Width(), Height()));
+	
 	drawingContext.Push(transform);
+	
 	for (auto & child: children)
 	{
 		POMDOG_ASSERT(child);
 		child->Draw(drawingContext);
 	}
-	
-	drawingContext.DrawRectangle(transform, Color{21, 21, 21, 255},
-		Rectangle(0, 0, Width(), barHeight));
 	
 	drawingContext.Pop();
 }

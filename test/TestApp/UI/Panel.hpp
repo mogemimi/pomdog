@@ -26,7 +26,7 @@ public:
 	Panel(Matrix3x2 const& transformIn, std::uint32_t widthIn, std::uint32_t heightIn)
 		: UIView(transformIn, widthIn, heightIn)
 	{}
-	
+
 //	UI::HorizontalAlignment HorizontalAlignment() const final override { return horizontalAlignment; }
 //	UI::VerticalAlignment VerticalAlignment() const final override { return verticalAlignment; }
 //	

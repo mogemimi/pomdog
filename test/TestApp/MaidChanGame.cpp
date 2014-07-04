@@ -103,13 +103,13 @@ void MaidChanGame::Initialize()
 		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
 		scenePanel->drawOrder = 1.0f;
 		scenePanel->cameraObject = mainCamera;
-		gameEditor->AddUIElement(scenePanel);
+		gameEditor->AddView(scenePanel);
 	}
 	{
-		auto stackPanel = std::make_shared<UI::StackPanel>(120, 170);
+		auto stackPanel = std::make_shared<UI::StackPanel>(124, 170);
 		stackPanel->drawOrder = 0.2f;
 		stackPanel->Transform(Matrix3x2::CreateTranslation(Vector2{5, 10}));
-		gameEditor->AddUIElement(stackPanel);
+		gameEditor->AddView(stackPanel);
 
 		{
 			auto navigator = std::make_shared<UI::DebugNavigator>(gameHost->Clock());
@@ -121,42 +121,36 @@ void MaidChanGame::Initialize()
 			slider1->drawOrder = 0.0f;
 			slider1->Value(1.0);
 			stackPanel->AddChild(slider1);
-			gameEditor->AddUIElement(slider1);
 		}
 		{
 			slider2 = std::make_shared<UI::Slider>(-2.0, 2.0);
 			slider2->drawOrder = 0.0f;
 			slider2->Value(1.0);
 			stackPanel->AddChild(slider2);
-			gameEditor->AddUIElement(slider2);
 		}
 		{
 			toggleSwitch1 = std::make_shared<UI::ToggleSwitch>();
 			toggleSwitch1->drawOrder = 0.0f;
 			toggleSwitch1->IsOn(true);
 			stackPanel->AddChild(toggleSwitch1);
-			gameEditor->AddUIElement(toggleSwitch1);
 		}
 		{
 			toggleSwitch2 = std::make_shared<UI::ToggleSwitch>();
 			toggleSwitch2->drawOrder = 0.0f;
 			toggleSwitch2->IsOn(true);
 			stackPanel->AddChild(toggleSwitch2);
-			gameEditor->AddUIElement(toggleSwitch2);
 		}
 		{
 			toggleSwitch3 = std::make_shared<UI::ToggleSwitch>();
 			toggleSwitch3->drawOrder = 0.0f;
 			toggleSwitch3->IsOn(false);
 			stackPanel->AddChild(toggleSwitch3);
-			gameEditor->AddUIElement(toggleSwitch3);
 		}
 		{
 			toggleSwitch4 = std::make_shared<UI::ToggleSwitch>();
 			toggleSwitch4->drawOrder = 0.0f;
 			toggleSwitch4->IsOn(false);
 			stackPanel->AddChild(toggleSwitch4);
-			gameEditor->AddUIElement(toggleSwitch4);
 		}
 	}
 	

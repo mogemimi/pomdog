@@ -20,6 +20,7 @@ namespace UI {
 
 class DrawingContext;
 class PointerPoint;
+class UIEventDispatcher;
 
 enum class HorizontalAlignment: std::uint8_t {
 	Left,
@@ -58,10 +59,14 @@ public:
 	virtual UI::HorizontalAlignment HorizontalAlignment() const = 0;
 	virtual UI::VerticalAlignment VerticalAlignment() const = 0;
 
+	virtual std::weak_ptr<UIEventDispatcher> Dispatcher() const = 0;
+
 //	virtual void Parent(std::weak_ptr<UIElement> const& parent) = 0;
 //	virtual Thickness Padding() const = 0;
 //	virtual Vector2 Origin() const = 0;
 //	virtual Thickness Margin() const = 0;
+
+	virtual void OnParentChanged() = 0;
 
 	virtual void OnPointerCanceled(PointerPoint const& pointerPoint) = 0;
 	

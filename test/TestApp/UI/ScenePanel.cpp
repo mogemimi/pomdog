@@ -9,6 +9,7 @@
 #include "ScenePanel.hpp"
 #include <Pomdog/Utility/MakeUnique.hpp>
 #include "PointerPoint.hpp"
+#include "UIEventDispatcher.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -74,6 +75,19 @@ ScenePanel::ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn)
 Vector2 ScenePanel::ConvertToPanelSpace(Point2D const& point) const
 {
 	return Vector2(point.X, Height() - point.Y);
+}
+//-----------------------------------------------------------------------
+void ScenePanel::OnParentChanged()
+{
+	auto parent = Parent().lock();
+	POMDOG_ASSERT(parent);
+
+	POMDOG_ASSERT(!parent->Dispatcher().expired());
+
+	if (auto dispatcher = parent->Dispatcher().lock())
+	{
+		connection = dispatcher->Connect(shared_from_this());
+	}
 }
 //-----------------------------------------------------------------------
 void ScenePanel::OnPointerCanceled(PointerPoint const& pointerPoint)

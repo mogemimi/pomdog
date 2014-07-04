@@ -40,7 +40,7 @@ public:
 	virtual void Pop() = 0;
 
 	virtual void DrawRectangle(Matrix3x2 const& transform, Color const& color, Rectangle const& rectangle) = 0;
-	virtual void DrawLine(Matrix3x2 const& transform, Color const& color, float penSize, Point2D const& point1, Point2D const& point2) = 0;
+	virtual void DrawLine(Matrix3x2 const& transform, Color const& color, float penSize, Vector2 const& point1, Vector2 const& point2) = 0;
 	virtual void DrawString(Matrix3x2 const& transform, Color const& color,
 		FontWeight fontWeight, FontSize fontSize, std::string const& text) = 0;
 	//void DrawEllipse();

@@ -48,7 +48,15 @@ public:
 	UI::VerticalAlignment VerticalAlignment() const override { return UI::VerticalAlignment::Stretch; }
 
 	bool SizeToFitContent() const override { return false; }
+
+	std::weak_ptr<UIEventDispatcher> Dispatcher() const override
+	{
+		POMDOG_ASSERT(false);
+		return {};
+	}
 	
+	void OnParentChanged() override {}
+
 	void OnPointerCanceled(PointerPoint const& pointerPoint) override {}
 	
 	void OnPointerCaptureLost(PointerPoint const& pointerPoint) override {}

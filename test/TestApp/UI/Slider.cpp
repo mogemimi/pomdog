@@ -10,6 +10,7 @@
 #include "DrawingContext.hpp"
 #include "PointerPoint.hpp"
 #include "UIHelper.hpp"
+#include "UIEventDispatcher.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -68,6 +69,19 @@ void Slider::IsEnabled(bool isEnabledIn)
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - Events
 #endif
+//-----------------------------------------------------------------------
+void Slider::OnParentChanged()
+{
+	auto parent = Parent().lock();
+	POMDOG_ASSERT(parent);
+
+	POMDOG_ASSERT(!parent->Dispatcher().expired());
+
+	if (auto dispatcher = parent->Dispatcher().lock())
+	{
+		connection = dispatcher->Connect(shared_from_this());
+	}
+}
 //-----------------------------------------------------------------------
 void Slider::OnPointerCanceled(PointerPoint const& pointerPoint)
 {

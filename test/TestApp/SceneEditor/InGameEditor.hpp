@@ -44,7 +44,7 @@ public:
 
 	void EndDraw(GraphicsContext & graphicsContext);
 	
-	void AddUIElement(std::shared_ptr<UI::UIElement> const& element);
+	void AddView(std::shared_ptr<UI::UIView> const& element);
 
 private:
 	void DrawGrids();

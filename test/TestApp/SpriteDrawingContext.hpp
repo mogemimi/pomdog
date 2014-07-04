@@ -16,8 +16,8 @@
 #include <memory>
 #include <Pomdog/Pomdog.hpp>
 #include "UI/DrawingContext.hpp"
-#include "SpriteBatch.hpp"
-#include "SpriteFont.hpp"
+#include "Graphics/SpriteBatch.hpp"
+#include "Graphics/SpriteFont.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -68,9 +68,18 @@ public:
 			color, 0, {0.0f, 0.0f}, Vector2(rectangle.Width, rectangle.Height), 0.0f);
 	}
 	
-	void DrawLine(Matrix3x2 const& transform, Color const& color, float penSize, Point2D const& point1, Point2D const& point2)
+	void DrawLine(Matrix3x2 const& transform, Color const& color, float penSize, Vector2 const& point1, Vector2 const& point2)
 	{
-		///@todo Not implemented
+		auto transformedPoint1 = Vector2::Transform(point1, transform);
+		auto transformedPoint2 = Vector2::Transform(point2, transform);
+		
+		auto lineLength = Vector2::Distance(transformedPoint2, transformedPoint1);
+		auto thicknessScale = penSize;
+		auto tangent = transformedPoint2 - transformedPoint1;
+		auto rotation = std::atan2(-tangent.Y, tangent.X);
+
+		spriteBatch.Draw(texture, transformedPoint1 + Vector2{0.5f, 0.5f}, Rectangle{0, 0, 1, 1},
+			color, rotation, {0.0f, 0.5f}, Vector2{lineLength + 0.5f, thicknessScale}, 0.0f);
 	}
 	
 	void DrawString(Matrix3x2 const& transform, Color const& color,

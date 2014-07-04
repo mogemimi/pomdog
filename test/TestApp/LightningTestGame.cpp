@@ -125,13 +125,13 @@ void LightningTestGame::Initialize()
 		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
 		scenePanel->drawOrder = 1.0f;
 		scenePanel->cameraObject = mainCamera;
-		gameEditor->AddUIElement(scenePanel);
+		gameEditor->AddView(scenePanel);
 	}
 	{
-		auto stackPanel = std::make_shared<UI::StackPanel>(120, 170);
+		auto stackPanel = std::make_shared<UI::StackPanel>(124, 170);
 		stackPanel->drawOrder = 0.2f;
 		stackPanel->Transform(Matrix3x2::CreateTranslation(Vector2{5, 10}));
-		gameEditor->AddUIElement(stackPanel);
+		gameEditor->AddView(stackPanel);
 
 		{
 			auto navigator = std::make_shared<UI::DebugNavigator>(gameHost->Clock());
@@ -143,28 +143,24 @@ void LightningTestGame::Initialize()
 			slider1->drawOrder = 0.0f;
 			slider1->Value(34);
 			stackPanel->AddChild(slider1);
-			gameEditor->AddUIElement(slider1);
 		}
 		{
 			slider2 = std::make_shared<UI::Slider>(0.1, 4.0);
 			slider2->drawOrder = 0.0f;
 			slider2->Value(1.2);
 			stackPanel->AddChild(slider2);
-			gameEditor->AddUIElement(slider2);
 		}
 		{
 			slider3 = std::make_shared<UI::Slider>(0.0f, 1.0f);
 			slider3->drawOrder = 0.0f;
 			slider3->Value(0.2f);
 			stackPanel->AddChild(slider3);
-			gameEditor->AddUIElement(slider3);
 		}
 		{
 			slider4 = std::make_shared<UI::Slider>(0.0f, 70.0f);
 			slider4->drawOrder = 0.0f;
 			slider4->Value(8.0f);
 			stackPanel->AddChild(slider4);
-			gameEditor->AddUIElement(slider4);
 		}
 	}
 	{

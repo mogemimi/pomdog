@@ -16,11 +16,12 @@
 #include <Pomdog/Pomdog.hpp>
 #include <Pomdog/Utility/Optional.hpp>
 #include "Panel.hpp"
+#include "detail/UIEventConnection.hpp"
 
 namespace Pomdog {
 namespace UI {
 
-class ScenePanel: public Panel {
+class ScenePanel: public Panel, public std::enable_shared_from_this<ScenePanel> {
 public:
 	std::shared_ptr<GameObject> cameraObject;
 	
@@ -28,6 +29,8 @@ public:
 	ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn);
 
 	bool SizeToFitContent() const override { return true; }
+	
+	void OnParentChanged() override;
 	
 	void OnPointerCanceled(PointerPoint const& pointerPoint) override;
 	
@@ -64,6 +67,8 @@ private:
 	Vector2 ConvertToPanelSpace(Point2D const& point) const;
 	
 private:
+	Details::UIEventConnection connection;
+
 	Optional<Vector2> tumbleStartPosition;
 	Optional<Vector2> trackStartPosition;
 	

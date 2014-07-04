@@ -165,13 +165,13 @@ void ParticleTestGame::Initialize()
 		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
 		scenePanel->drawOrder = 1.0f;
 		scenePanel->cameraObject = mainCamera;
-		gameEditor->AddUIElement(scenePanel);
+		gameEditor->AddView(scenePanel);
 	}
 	{
-		auto stackPanel = std::make_shared<UI::StackPanel>(120, 170);
+		auto stackPanel = std::make_shared<UI::StackPanel>(124, 170);
 		stackPanel->drawOrder = 0.2f;
 		stackPanel->Transform(Matrix3x2::CreateTranslation(Vector2{5, 10}));
-		gameEditor->AddUIElement(stackPanel);
+		gameEditor->AddView(stackPanel);
 
 		{
 			auto navigator = std::make_shared<UI::DebugNavigator>(gameHost->Clock());
@@ -183,14 +183,12 @@ void ParticleTestGame::Initialize()
 			slider1->drawOrder = 0.0f;
 			slider1->Value(170.0);
 			stackPanel->AddChild(slider1);
-			gameEditor->AddUIElement(slider1);
 		}
 		{
 			slider2 = std::make_shared<UI::Slider>(-200.0, 200.0);
 			slider2->drawOrder = 0.0f;
 			slider2->Value(0.0);
 			stackPanel->AddChild(slider2);
-			gameEditor->AddUIElement(slider2);
 		}
 	}
 	{

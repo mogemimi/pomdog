@@ -18,6 +18,7 @@
 #include <Pomdog/Utility/Optional.hpp>
 #include "Panel.hpp"
 #include "Thickness.hpp"
+#include "detail/UIEventConnection.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -27,6 +28,10 @@ public:
 	StackPanel(std::uint32_t widthIn, std::uint32_t heightIn);
 	
 	bool SizeToFitContent() const override { return false; }
+
+	std::weak_ptr<UIEventDispatcher> Dispatcher() const override { return weakDispatcher; }
+	
+	void OnParentChanged() override;
 
 	void OnPointerCanceled(PointerPoint const& pointerPoint) override;
 	
@@ -55,6 +60,9 @@ public:
 private:
 	using UIElementCollection = std::list<std::shared_ptr<UIElement>>;
 	UIElementCollection children;
+	
+	std::weak_ptr<UIEventDispatcher> weakDispatcher;
+	Details::UIEventConnection connection;
 	
 	Thickness padding;
 	std::uint16_t barHeight;

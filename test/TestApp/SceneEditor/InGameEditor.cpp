@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -12,6 +12,7 @@
 #include "../Graphics/SpriteFont.hpp"
 #include "../Graphics/SpriteFontLoader.hpp"
 #include "../SpriteDrawingContext.hpp"
+#include "../UI/UIView.hpp"
 
 namespace Pomdog {
 namespace SceneEditor {
@@ -53,9 +54,10 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 	});
 }
 //-----------------------------------------------------------------------
-void InGameEditor::AddUIElement(std::shared_ptr<UI::UIElement> const& element)
+void InGameEditor::AddView(std::shared_ptr<UI::UIView> const& view)
 {
-	hierarchy.AddChild(element);
+	POMDOG_ASSERT(view->Parent().expired());
+	hierarchy.AddChild(view);
 }
 //-----------------------------------------------------------------------
 void InGameEditor::Update()

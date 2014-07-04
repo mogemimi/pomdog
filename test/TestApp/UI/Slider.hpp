@@ -17,6 +17,7 @@
 #include <Pomdog/Utility/Optional.hpp>
 #include "Control.hpp"
 #include "UIView.hpp"
+#include "detail/UIEventConnection.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -31,7 +32,7 @@ struct SliderColorScheme {
 	Color FocusedThumbColor {229, 20, 0, 255};
 };
 
-class Slider: public Control {
+class Slider: public Control, public std::enable_shared_from_this<Slider> {
 private:
 	double minimum;
 	double maximum;
@@ -45,6 +46,8 @@ private:
 	};
 
 	Optional<ColorAnimation> colorAnimation;
+
+	Details::UIEventConnection connection;
 
 	SliderColorScheme colorScheme;
 
@@ -71,6 +74,8 @@ public:
 	UI::VerticalAlignment VerticalAlignment() const override { return UI::VerticalAlignment::Top; }
 
 	bool SizeToFitContent() const override { return false; }
+	
+	void OnParentChanged() override;
 
 	void OnPointerCanceled(PointerPoint const& pointerPoint) override;
 	
