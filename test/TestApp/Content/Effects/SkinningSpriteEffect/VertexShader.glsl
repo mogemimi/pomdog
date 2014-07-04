@@ -20,8 +20,7 @@ uniform Constants {
 
 void main()
 {
-	vec2 position = vec2(0.0, 0.0);
-	
+	mat3x2 skinning = mat3x2(0.0);
 	for (int i = 0; i < 4; ++i)
 	{
 		int jointIndex = JointIndices[i];
@@ -29,16 +28,16 @@ void main()
 			break;
 		}
 
-		mat3x3 skinningMatrix = transpose(mat3x3(
-			vec3(SkinMatrices1[jointIndex].xy, 0),
-			vec3(SkinMatrices1[jointIndex].zw, 0),
-			vec3(SkinMatrices2[jointIndex].xy, 1)));
+		mat3x2 boneMatrix = mat3x2(
+			vec2(SkinMatrices1[jointIndex].xy),
+			vec2(SkinMatrices1[jointIndex].zw),
+			vec2(SkinMatrices2[jointIndex].xy));
 
-		position = position + (vec3(PositionTextureCoord.xy, 1.0) * skinningMatrix).xy * Weights[i];
+		skinning += boneMatrix * Weights[i];
 	}
 
-	//position = PositionTextureCoord.xy;
-	
+	vec2 position = (skinning * vec3(PositionTextureCoord.xy, 1.0)).xy;
+
 	gl_Position = vec4(position.xy, 0.0, 1.0) * ViewProjection;
 	Out.TextureCoord = PositionTextureCoord.zw;
 	Out.Color = vec4(1.0, 1.0, 1.0, 1.0);

@@ -37,26 +37,24 @@ uniform TextureConstants {
 
 void main()
 {
-	mat3x3 scaling = mat3x3(
-		vec3(OriginScale.z * SourceRect.z, 0.0, 0.0),
-		vec3(0.0, OriginScale.w * SourceRect.w, 0.0),
-		vec3(0.0, 0.0, 1.0));
+	mat2x2 scaling = mat2x2(
+		vec2(OriginScale.z * SourceRect.z, 0.0),
+		vec2(0.0, OriginScale.w * SourceRect.w));
 
 	float cosRotation = cos(TransformMatrix2.w);
 	float sinRotation = sin(TransformMatrix2.w);
-	mat3x3 rotate = mat3x3(
-		vec3(cosRotation, -sinRotation, 0.0f),
-		vec3(sinRotation, cosRotation, 0.0f),
-		vec3(0.0f, 0.0f, 1.0f));
+	mat2x2 rotate = mat2x2(
+		vec2(cosRotation, -sinRotation),
+		vec2(sinRotation, cosRotation));
 
-	mat3x3 localTransform = (scaling * rotate);
-	vec3 position = (vec3(PositionTextureCoord.xy - OriginScale.xy, 1.0) * localTransform);
+	mat2x2 localTransform = (scaling * rotate);
+	vec2 position = (PositionTextureCoord.xy - OriginScale.xy).xy * localTransform;
 	
-	mat3x3 worldMatrix = transpose(mat3x3(
-		vec3(TransformMatrix1.xy, 0),
-		vec3(TransformMatrix1.zw, 0),
-		vec3(TransformMatrix2.xy, 1)));
-	position = position * worldMatrix;
+	mat3x2 worldMatrix = mat3x2(
+		vec2(TransformMatrix1.xy),
+		vec2(TransformMatrix1.zw),
+		vec2(TransformMatrix2.xy));
+	position = (worldMatrix * vec3(position, 1.0)).xy;
 
 	gl_Position = vec4(position.xy, 0.0, 1.0) * ViewProjection;
 
