@@ -25,8 +25,10 @@ StackPanel::StackPanel(std::uint32_t widthIn, std::uint32_t heightIn)
 void StackPanel::OnParentChanged()
 {
 	auto parent = Parent().lock();
+	
 	POMDOG_ASSERT(parent);
-
+	POMDOG_ASSERT(!parent->Dispatcher().expired());
+	
 	this->weakDispatcher = parent->Dispatcher();
 	
 	if (auto dispatcher = weakDispatcher.lock())
@@ -125,6 +127,9 @@ void StackPanel::AddChild(std::shared_ptr<UIView> const& element)
 	}
 	
 	children.push_back(element);
+
+	element->MarkParentDrawOrderDirty();
+	element->MarkParentTransformDirty();
 
 	POMDOG_ASSERT(shared_from_this());
 	element->Parent(shared_from_this());

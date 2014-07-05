@@ -62,7 +62,7 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
 		}
 	}
 
-	drawingContext.DrawString(transform * Matrix3x2::CreateTranslation(Vector2(5, -2.5f)),
+	drawingContext.DrawString(transform * Matrix3x2::CreateTranslation({0.5f, -2.5f}),
 		Color::White, FontWeight::Bold, FontSize::Medium, frameRateString);
 }
 //-----------------------------------------------------------------------

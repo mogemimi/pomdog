@@ -33,89 +33,20 @@ private:
 
 public:
 	explicit SpriteDrawingContext(SpriteBatch & spriteBatchIn, SpriteBatch & spriteFontBatchIn,
-		std::shared_ptr<EffectPass> const& distanceFieldEffectIn, SpriteFont & spriteFontIn, std::shared_ptr<Texture2D> const& textureIn)
-		: spriteBatch(spriteBatchIn)
-		, spriteFontBatch(spriteFontBatchIn)
-		, spriteFont(spriteFontIn)
-		, distanceFieldEffect(distanceFieldEffectIn)
-		, texture(textureIn)
-	{
-	}
+		std::shared_ptr<EffectPass> const& distanceFieldEffectIn, SpriteFont & spriteFontIn, std::shared_ptr<Texture2D> const& textureIn);
 	
-	Matrix3x2 Top() const override
-	{
-		POMDOG_ASSERT(!matrixStack.empty());
-		return matrixStack.back();
-	}
+	Matrix3x2 Top() const override;
 	
-	void Push(Matrix3x2 const& matrix) override
-	{
-		matrixStack.push_back(matrix);
-	}
+	void Push(Matrix3x2 const& matrix) override;
 	
-	void Pop() override
-	{
-		POMDOG_ASSERT(!matrixStack.empty());
-		matrixStack.pop_back();
-	}
+	void Pop() override;
 	
-	void DrawRectangle(Matrix3x2 const& transform, Color const& color, Rectangle const& rectangle)
-	{
-		///@todo Not implemented
-		auto position = Vector2::Transform(Vector2(rectangle.X, rectangle.Y), transform);// badcode
-		
-		spriteBatch.Draw(texture, position, Rectangle{0, 0, 1, 1},
-			color, 0, {0.0f, 0.0f}, Vector2(rectangle.Width, rectangle.Height), 0.0f);
-	}
+	void DrawRectangle(Matrix3x2 const& transform, Color const& color, Rectangle const& rectangle) override;
 	
-	void DrawLine(Matrix3x2 const& transform, Color const& color, float penSize, Vector2 const& point1, Vector2 const& point2)
-	{
-		auto transformedPoint1 = Vector2::Transform(point1, transform);
-		auto transformedPoint2 = Vector2::Transform(point2, transform);
-		
-		auto lineLength = Vector2::Distance(transformedPoint2, transformedPoint1);
-		auto thicknessScale = penSize;
-		auto tangent = transformedPoint2 - transformedPoint1;
-		auto rotation = std::atan2(-tangent.Y, tangent.X);
-
-		spriteBatch.Draw(texture, transformedPoint1 + Vector2{0.5f, 0.5f}, Rectangle{0, 0, 1, 1},
-			color, rotation, {0.0f, 0.5f}, Vector2{lineLength + 0.5f, thicknessScale}, 0.0f);
-	}
+	void DrawLine(Matrix3x2 const& transform, Color const& color, float penSize, Vector2 const& point1, Vector2 const& point2) override;
 	
 	void DrawString(Matrix3x2 const& transform, Color const& color,
-		FontWeight fontWeight, FontSize fontSize, std::string const& text)
-	{
-		{
-			///@todo badcode
-			spriteBatch.End();
-			spriteBatch.Begin(SpriteSortMode::BackToFront);
-		}
-		{
-			Vector2 fontWeights {0.309943197f, 0.688636345f};
-		
-			switch (fontWeight) {
-			case FontWeight::Light:
-				fontWeights = {0.320f, 0.770f};
-				break;
-			case FontWeight::Normal:
-				fontWeights = {0.298f, 0.661f};
-				break;
-			case FontWeight::Bold:
-				fontWeights = {0.220f, 0.472f};
-				break;
-			}
-		
-			distanceFieldEffect->Parameters("DistanceFieldConstants")->SetValue(fontWeights);
-		
-			///@todo Not implemented
-			auto position = Vector2::Transform(Vector2::Zero, transform);// badcode
-		
-			spriteFont.Begin(Matrix4x4::Identity);
-			spriteFont.Draw(spriteFontBatch, text, position, color,
-				0.0f, {0.0f, 0.0f}, 0.5f, 0.0f);
-			spriteFont.End();
-		}
-	}
+		FontWeight fontWeight, FontSize fontSize, std::string const& text) override;
 };
 
 }// namespace UI

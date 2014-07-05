@@ -73,8 +73,8 @@ void Slider::IsEnabled(bool isEnabledIn)
 void Slider::OnParentChanged()
 {
 	auto parent = Parent().lock();
+	
 	POMDOG_ASSERT(parent);
-
 	POMDOG_ASSERT(!parent->Dispatcher().expired());
 
 	if (auto dispatcher = parent->Dispatcher().lock())

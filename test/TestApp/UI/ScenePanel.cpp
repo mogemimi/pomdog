@@ -70,7 +70,9 @@ ScenePanel::ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn)
 	, isFocused(false)
 	, prevScrollWheel(0)
 	, scrollWheel(0)
-{}
+{
+	DrawOrder(10000);
+}
 //-----------------------------------------------------------------------
 Vector2 ScenePanel::ConvertToPanelSpace(Point2D const& point) const
 {
@@ -80,8 +82,8 @@ Vector2 ScenePanel::ConvertToPanelSpace(Point2D const& point) const
 void ScenePanel::OnParentChanged()
 {
 	auto parent = Parent().lock();
+	
 	POMDOG_ASSERT(parent);
-
 	POMDOG_ASSERT(!parent->Dispatcher().expired());
 
 	if (auto dispatcher = parent->Dispatcher().lock())

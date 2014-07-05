@@ -59,8 +59,8 @@ void ToggleSwitch::OffContent(std::string const& offContentIn)
 void ToggleSwitch::OnParentChanged()
 {
 	auto parent = Parent().lock();
+	
 	POMDOG_ASSERT(parent);
-
 	POMDOG_ASSERT(!parent->Dispatcher().expired());
 
 	if (auto dispatcher = parent->Dispatcher().lock())

@@ -259,8 +259,8 @@ ButtonState UIEventDispatcher::CheckMouseButton(MouseState const& mouseState, UI
 void UIEventDispatcher::Sort()
 {
 	std::sort(std::begin(children), std::end(children),
-		[](std::shared_ptr<UI::UIElement> const& a, std::shared_ptr<UI::UIElement> const& b){
-			return a->drawOrder < b->drawOrder; });
+		[](std::shared_ptr<UIElement> & a, std::shared_ptr<UIElement> & b){
+			return a->GlobalDrawOrder() < b->GlobalDrawOrder(); });
 }
 //-----------------------------------------------------------------------
 }// namespace UI

@@ -118,36 +118,30 @@ void GrassBlendingGame::Initialize()
 	
 	{
 		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
-		scenePanel->drawOrder = 1.0f;
 		scenePanel->cameraObject = mainCamera;
 		gameEditor->AddView(scenePanel);
 	}
 	{
 		auto stackPanel = std::make_shared<UI::StackPanel>(124, 170);
-		stackPanel->drawOrder = 0.2f;
 		stackPanel->Transform(Matrix3x2::CreateTranslation(Vector2{5, 10}));
 		gameEditor->AddView(stackPanel);
 
 		{
 			auto navigator = std::make_shared<UI::DebugNavigator>(gameHost->Clock());
-			navigator->drawOrder = 0.0f;
 			stackPanel->AddChild(navigator);
 		}
 		{
 			slider1 = std::make_shared<UI::Slider>(-2.0, 2.0);
-			slider1->drawOrder = 0.0f;
 			slider1->Value(1.0);
 			stackPanel->AddChild(slider1);
 		}
 		{
 			slider2 = std::make_shared<UI::Slider>(0.0, 1.0);
-			slider2->drawOrder = 0.0f;
 			slider2->Value(1.0);
 			stackPanel->AddChild(slider2);
 		}
 		{
 			toggleSwitch1 = std::make_shared<UI::ToggleSwitch>();
-			toggleSwitch1->drawOrder = 0.0f;
 			toggleSwitch1->IsOn(true);
 			toggleSwitch1->OnContent("Play");
 			toggleSwitch1->OffContent("Stop");
@@ -155,19 +149,16 @@ void GrassBlendingGame::Initialize()
 		}
 		{
 			toggleSwitch2 = std::make_shared<UI::ToggleSwitch>();
-			toggleSwitch2->drawOrder = 0.0f;
 			toggleSwitch2->IsOn(true);
 			stackPanel->AddChild(toggleSwitch2);
 		}
 		{
 			toggleSwitch3 = std::make_shared<UI::ToggleSwitch>();
-			toggleSwitch3->drawOrder = 0.0f;
 			toggleSwitch3->IsOn(false);
 			stackPanel->AddChild(toggleSwitch3);
 		}
 		{
 			toggleSwitch4 = std::make_shared<UI::ToggleSwitch>();
-			toggleSwitch4->drawOrder = 0.0f;
 			toggleSwitch4->IsOn(false);
 			stackPanel->AddChild(toggleSwitch4);
 		}
