@@ -12,6 +12,7 @@
 #include "GrassBlendingGame.hpp"
 #include "ParticleTestGame.hpp"
 #include "LightningTestGame.hpp"
+#include "MaidBeamGame.hpp"
 
 namespace TestApp {
 //-----------------------------------------------------------------------
@@ -26,7 +27,8 @@ void TestAppGame::Initialize()
 	//this->game = std::make_unique<LightningTestGame>(gameHost);
 	//this->game = std::make_unique<ParticleTestGame>(gameHost);
 	//this->game = std::make_unique<MaidChanGame>(gameHost);
-	this->game = std::make_unique<GrassBlendingGame>(gameHost);
+	//this->game = std::make_unique<GrassBlendingGame>(gameHost);
+	this->game = std::make_unique<MaidBeamGame>(gameHost);
 	
 	game->Initialize();
 }

@@ -61,6 +61,16 @@ public:
 		}
 	}
 
+	void UpdateTransform() override
+	{
+		UIView::UpdateTransform();
+		for (auto & child: children)
+		{
+			POMDOG_ASSERT(child);
+			child->UpdateTransform();
+		}
+	}
+
 private:
 	using UIElementCollection = std::list<std::shared_ptr<UIElement>>;
 	UIElementCollection children;
@@ -110,6 +120,7 @@ void UIElementHierarchy::UpdateAnimation(DurationSeconds const& frameDuration)
 void UIElementHierarchy::Draw(DrawingContext & drawingContext)
 {
 	POMDOG_ASSERT(root);
+	root->UpdateTransform();
 	root->Draw(drawingContext);
 }
 //-----------------------------------------------------------------------

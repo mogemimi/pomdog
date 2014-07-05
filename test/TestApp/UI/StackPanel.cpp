@@ -184,5 +184,15 @@ void StackPanel::UpdateAnimation(DurationSeconds const& frameDuration)
 {
 }
 //-----------------------------------------------------------------------
+void StackPanel::UpdateTransform()
+{
+	UIView::UpdateTransform();
+	for (auto & child: children)
+	{
+		POMDOG_ASSERT(child);
+		child->UpdateTransform();
+	}
+}
+//-----------------------------------------------------------------------
 }// namespace UI
 }// namespace Pomdog

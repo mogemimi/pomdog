@@ -17,13 +17,13 @@
 #include "UI/DebugNavigator.hpp"
 
 ///@note for test
-#include "ParticleEmitterShapeBox.hpp"
-#include "ParticleEmitterShapeSector.hpp"
-#include "ParticleParameterConstant.hpp"
-#include "ParticleParameterCurve.hpp"
-#include "ParticleParameterRandom.hpp"
-#include "ParticleParameterRandomCurves.hpp"
-#include "SpriteLine.hpp"
+#include "Particle2D/ParticleEmitterShapeBox.hpp"
+#include "Particle2D/ParticleEmitterShapeSector.hpp"
+#include "Particle2D/ParticleParameterConstant.hpp"
+#include "Particle2D/ParticleParameterCurve.hpp"
+#include "Particle2D/ParticleParameterRandom.hpp"
+#include "Particle2D/ParticleParameterRandomCurves.hpp"
+#include "Graphics/SpriteLine.hpp"
 
 
 namespace TestApp {
@@ -154,6 +154,11 @@ void LightningTestGame::Initialize()
 			slider4->Value(8.0f);
 			stackPanel->AddChild(slider4);
 		}
+		{
+			slider5 = std::make_shared<UI::Slider>(0.0f, 70.0f);
+			slider5->Value(8.0f);
+			stackPanel->AddChild(slider5);
+		}
 	}
 	{
 		scenePanel->SceneTouch.Connect([this](Vector2 const& positionInView) {
@@ -196,6 +201,7 @@ void LightningTestGame::Update()
 		beamSystem.emitter.StartThickness = slider2->Value();
 		beamSystem.branching.BranchingRate = slider3->Value();
 		beamSystem.emitter.SwayRange = std::uniform_real_distribution<float>(-slider4->Value(), slider4->Value());
+		beamSystem.branching.SpreadRange = std::uniform_real_distribution<float>(-slider5->Value(), slider5->Value());
 	}
 	{
 		Transform2D transform;

@@ -14,8 +14,8 @@
 #endif
 
 #include <Pomdog/Pomdog.hpp>
-#include "Spine/SkeletonDesc.hpp"
-#include "TexturePacker/TextureAtlas.hpp"
+#include "../Spine/SkeletonDesc.hpp"
+#include "../TexturePacker/TextureAtlas.hpp"
 
 namespace TestApp {
 

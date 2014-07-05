@@ -21,13 +21,16 @@
 namespace Pomdog {
 namespace UI {
 
-class UIElement;
+class UIView;
 
 namespace Details {
 
 class UIEventConnection final {
 public:
-	UIEventConnection(std::weak_ptr<SubscribeRequestDispatcher> const& weakDispatcherIn, std::weak_ptr<UIElement> const& elementIn)
+	typedef UIView ListenerType;
+	typedef SubscribeRequestDispatcher<UIView> DispatcherType;
+
+	UIEventConnection(std::weak_ptr<DispatcherType> const& weakDispatcherIn, std::weak_ptr<ListenerType> const& elementIn)
 		: weakDispatcher(weakDispatcherIn)
 		, element(elementIn)
 	{
@@ -82,8 +85,8 @@ private:
 	}
 	
 private:
-	std::weak_ptr<SubscribeRequestDispatcher> weakDispatcher;
-	std::weak_ptr<UIElement> element;
+	std::weak_ptr<DispatcherType> weakDispatcher;
+	std::weak_ptr<ListenerType> element;
 };
 
 }// namespace Details

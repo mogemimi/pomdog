@@ -12,7 +12,7 @@ namespace Pomdog {
 namespace UI {
 
 UIView::UIView(Matrix3x2 const& transformIn, std::uint32_t widthIn, std::uint32_t heightIn)
-	: renderTransform(transformIn)
+	: transform(transformIn)
 	, parentTransform(Matrix3x2::Identity)
 	, drawOrder(0)
 	, parentDrawOrder(0)
@@ -24,15 +24,15 @@ UIView::UIView(Matrix3x2 const& transformIn, std::uint32_t widthIn, std::uint32_
 }
 //-----------------------------------------------------------------------
 Matrix3x2 UIView::Transform() const {
-	return renderTransform;
+	return transform;
 }
 //-----------------------------------------------------------------------
-void UIView::Transform(Matrix3x2 const& matrix) {
-	this->renderTransform = matrix;
+void UIView::Transform(Matrix3x2 const& transformMatrixIn) {
+	this->transform = transformMatrixIn;
 }
 //-----------------------------------------------------------------------
-void UIView::Transform(Matrix3x2 && matrix) {
-	this->renderTransform = std::move(matrix);
+void UIView::Transform(Matrix3x2 && transformMatrixIn) {
+	this->transform = std::move(transformMatrixIn);
 }
 //-----------------------------------------------------------------------
 std::weak_ptr<UIElement const> UIView::Parent() const
@@ -50,12 +50,7 @@ void UIView::Parent(std::weak_ptr<UIElement> const& parentIn)
 	this->parent = parentIn;
 }
 //-----------------------------------------------------------------------
-void UIView::MarkParentTransformDirty()
-{
-	this->isParentTransformDirty = true;
-}
-//-----------------------------------------------------------------------
-Matrix3x2 UIView::GlobalTransform()
+void UIView::UpdateTransform()
 {
 	if (isParentTransformDirty)
 	{
@@ -64,8 +59,17 @@ Matrix3x2 UIView::GlobalTransform()
 		}
 		isParentTransformDirty = false;
 	}
-	
-	return renderTransform * parentTransform;
+}
+//-----------------------------------------------------------------------
+void UIView::MarkParentTransformDirty()
+{
+	this->isParentTransformDirty = true;
+}
+//-----------------------------------------------------------------------
+Matrix3x2 UIView::GlobalTransform() const
+{
+	POMDOG_ASSERT(!isParentTransformDirty);
+	return transform * parentTransform;
 }
 //-----------------------------------------------------------------------
 void UIView::MarkParentDrawOrderDirty()

@@ -16,6 +16,8 @@ HierarchyNode::HierarchyNode(std::shared_ptr<GameObject> const& objectIn)
 //-----------------------------------------------------------------------
 HierarchyNode::~HierarchyNode()
 {
+	RemoveChildren();
+
 	if (auto parent = weakParent.lock())
 	{
 		if (parent->firstChild.get() == this)
@@ -95,6 +97,42 @@ void HierarchyNode::RemoveChild(std::shared_ptr<HierarchyNode> const& child)
 	
 		prevSibling = prevSibling->sibling;
 	}
+}
+//-----------------------------------------------------------------------
+void HierarchyNode::RemoveChildren()
+{
+	auto child = firstChild;
+	while (child)
+	{
+		child->weakParent.reset();
+		child = child->sibling;
+	}
+	
+	firstChild.reset();
+}
+//-----------------------------------------------------------------------
+void HierarchyNode::EnumerateChildren(std::function<void(std::shared_ptr<HierarchyNode> const& child)> const& callback)
+{
+	auto child = firstChild;
+	while (child)
+	{
+		POMDOG_ASSERT(!child->weakParent.expired());
+		POMDOG_ASSERT(child->weakParent.lock() == shared_from_this());
+
+		POMDOG_ASSERT(callback);
+		callback(child);
+		child = child->sibling;
+	}
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<HierarchyNode> HierarchyNode::Parent() const
+{
+	return weakParent.lock();
+}
+//-----------------------------------------------------------------------
+std::weak_ptr<HierarchyNode> HierarchyNode::WeakParent() const
+{
+	return weakParent;
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

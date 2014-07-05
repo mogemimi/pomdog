@@ -15,15 +15,18 @@
 
 #include <Pomdog/Pomdog.hpp>
 #include "UIElement.hpp"
+#include "UIEventListener.hpp"
 
 namespace Pomdog {
 namespace UI {
 
 //using UIElementCollection = std::list<std::shared_ptr<UIElement>>;
 
-class UIView: public UIElement {
+class UIView: public UIElement, public UIEventListener {
 public:
 	UIView(Matrix3x2 const& transform, std::uint32_t width, std::uint32_t height);
+	
+	virtual ~UIView() = default;
 	
 	Matrix3x2 Transform() const override final;
 	void Transform(Matrix3x2 const& matrix) override final;
@@ -35,8 +38,9 @@ public:
 	
 	void Parent(std::weak_ptr<UIElement> const& parentIn);
 
+	virtual void UpdateTransform() override;
 	void MarkParentTransformDirty() override final;
-	Matrix3x2 GlobalTransform() override final;
+	Matrix3x2 GlobalTransform() const override final;
 	
 	void MarkParentDrawOrderDirty() override final;
 	std::int32_t GlobalDrawOrder() override final;
@@ -85,7 +89,7 @@ public:
 	void UpdateAnimation(DurationSeconds const& frameDuration) override {}
 
 private:
-	Matrix3x2 renderTransform;
+	Matrix3x2 transform;
 	//Vector2 origin;
 	Matrix3x2 parentTransform;
 	std::weak_ptr<UIElement> parent;

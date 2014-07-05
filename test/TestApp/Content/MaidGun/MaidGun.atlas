@@ -1,0 +1,132 @@
+
+MaidGun.png
+size: 510,510
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+MaidGun_0000_Eyebrow
+  rotate: false
+  xy: 397, 390
+  size: 19, 6
+  orig: 19, 6
+  offset: 0, 0
+  index: -1
+MaidGun_0000s_0000_Eyelash
+  rotate: true
+  xy: 46, 9
+  size: 21, 11
+  orig: 21, 11
+  offset: 0, 0
+  index: -1
+MaidGun_0000s_0001_Eyelid
+  rotate: false
+  xy: 471, 496
+  size: 21, 14
+  orig: 21, 14
+  offset: 0, 0
+  index: -1
+MaidGun_0000s_0002_Eyeball
+  rotate: false
+  xy: 90, 188
+  size: 20, 19
+  orig: 20, 19
+  offset: 0, 0
+  index: -1
+MaidGun_0001_RightArm
+  rotate: false
+  xy: 131, 364
+  size: 80, 30
+  orig: 80, 30
+  offset: 0, 0
+  index: -1
+MaidGun_0002_RightShoulder
+  rotate: true
+  xy: 253, 396
+  size: 55, 73
+  orig: 55, 73
+  offset: 0, 0
+  index: -1
+MaidGun_0003_FrontHair
+  rotate: false
+  xy: 387, 454
+  size: 82, 56
+  orig: 82, 56
+  offset: 0, 0
+  index: -1
+MaidGun_0004_Headband_Ribbon
+  rotate: false
+  xy: 397, 398
+  size: 63, 54
+  orig: 63, 54
+  offset: 0, 0
+  index: -1
+MaidGun_0005_Headband
+  rotate: true
+  xy: 213, 361
+  size: 33, 72
+  orig: 33, 72
+  offset: 0, 0
+  index: -1
+MaidGun_0006_LeftHand
+  rotate: true
+  xy: 65, 141
+  size: 24, 21
+  orig: 24, 21
+  offset: 0, 0
+  index: -1
+MaidGun_0007_BeamRifle
+  rotate: true
+  xy: 90, 209
+  size: 149, 38
+  orig: 149, 38
+  offset: 0, 0
+  index: -1
+MaidGun_0008_Torso
+  rotate: false
+  xy: 2, 360
+  size: 127, 150
+  orig: 127, 150
+  offset: 0, 0
+  index: -1
+MaidGun_0009_Head
+  rotate: false
+  xy: 131, 396
+  size: 120, 114
+  orig: 120, 114
+  offset: 0, 0
+  index: -1
+MaidGun_0010_PonyTail
+  rotate: false
+  xy: 2, 167
+  size: 86, 191
+  orig: 86, 191
+  offset: 0, 0
+  index: -1
+MaidGun_0011_LeftArm
+  rotate: false
+  xy: 2, 2
+  size: 42, 28
+  orig: 42, 28
+  offset: 0, 0
+  index: -1
+MaidGun_0012_LeftShoulder
+  rotate: false
+  xy: 328, 384
+  size: 67, 67
+  orig: 67, 67
+  offset: 0, 0
+  index: -1
+MaidGun_0013_RightLeg
+  rotate: false
+  xy: 2, 32
+  size: 61, 133
+  orig: 61, 133
+  offset: 0, 0
+  index: -1
+MaidGun_0014_LeftLeg
+  rotate: true
+  xy: 253, 453
+  size: 57, 132
+  orig: 57, 132
+  offset: 0, 0
+  index: -1

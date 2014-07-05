@@ -36,12 +36,15 @@ void LogSkeletalInfo(Details::TexturePacker::TextureAtlas const& textureAtlas,
 	}
 
 	Log::Info("-------------------------");
+	int boneIndex = 0;
 	for (auto & bone: skeletonDesc.Bones)
 	{
 		Log::Info(StringFormat("MaidChan/%s", bone.Name.c_str()));
+		Log::Info(StringFormat("  Bone.Index = %d", boneIndex));
 		Log::Info(StringFormat("  Bone.Translate = %f, %f", bone.Pose.Translate.X, bone.Pose.Translate.Y));
 		Log::Info(StringFormat("  Bone.Rotation = %f", bone.Pose.Rotation.value));
 		Log::Info(StringFormat("  Bone.Scale = %f", bone.Pose.Scale));
+		++boneIndex;
 	}
 	
 	Log::Info("-------------------------");

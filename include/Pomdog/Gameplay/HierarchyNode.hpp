@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -14,6 +14,7 @@
 #endif
 
 #include <memory>
+#include <functional>
 #include <Pomdog/Config/Export.hpp>
 #include "GameObject.hpp"
 
@@ -26,14 +27,22 @@ class POMDOG_EXPORT HierarchyNode: public std::enable_shared_from_this<Hierarchy
 public:
 	HierarchyNode() = default;
 	
-	HierarchyNode(std::shared_ptr<GameObject> const& objectIn);
+	explicit HierarchyNode(std::shared_ptr<GameObject> const& object);
 
-	~HierarchyNode();
+	virtual ~HierarchyNode();
 
 	void AddChild(std::shared_ptr<HierarchyNode> const& child);
 
 	void RemoveChild(std::shared_ptr<HierarchyNode> const& child);
 	
+	void RemoveChildren();
+	
+	void EnumerateChildren(std::function<void(std::shared_ptr<HierarchyNode> const& child)> const& callback);
+	
+	std::shared_ptr<HierarchyNode> Parent() const;
+
+	std::weak_ptr<HierarchyNode> WeakParent() const;
+
 	std::shared_ptr<GameObject> Object;
 	
 private:

@@ -72,6 +72,7 @@ private:
 	std::shared_ptr<UI::Slider> slider2;
 	std::shared_ptr<UI::Slider> slider3;
 	std::shared_ptr<UI::Slider> slider4;
+	std::shared_ptr<UI::Slider> slider5;
 
 	GameWorld gameWorld;
 	std::shared_ptr<HierarchyNode> rootNode;

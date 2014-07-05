@@ -17,7 +17,7 @@
 #include <memory>
 #include <vector>
 #include <Pomdog/Pomdog.hpp>
-#include "UIElement.hpp"
+#include "UIView.hpp"
 #include "PointerPoint.hpp"
 #include "PointerEventType.hpp"
 #include "detail/SubscribeRequestDispatcher.hpp"
@@ -39,13 +39,13 @@ public:
 	
 	void UpdateAnimation(DurationSeconds const& frameDuration);
 	
-	Details::UIEventConnection Connect(std::shared_ptr<UIElement> const& child);
-	Details::UIEventConnection Connect(std::shared_ptr<UIElement> && child);
+	Details::UIEventConnection Connect(std::shared_ptr<UIView> const& child);
+	Details::UIEventConnection Connect(std::shared_ptr<UIView> && child);
 
 private:
-	std::shared_ptr<UIElement> Find(Point2D const& position);
+	std::shared_ptr<UIView> Find(Point2D const& position);
 	
-	void PointerEntered(Point2D const& position, MouseState const& mouseState, std::shared_ptr<UI::UIElement> const& node);
+	void PointerEntered(Point2D const& position, MouseState const& mouseState, std::shared_ptr<UIView> const& node);
 	
 	void PointerExited(Point2D const& position);
 		
@@ -55,21 +55,22 @@ private:
 	
 	void PointerReleased(Point2D const& position);
 	
-	Optional<UI::PointerMouseEvent> FindPointerMouseEvent(MouseState const& mouseState) const;
+	Optional<PointerMouseEvent> FindPointerMouseEvent(MouseState const& mouseState) const;
 
-	ButtonState CheckMouseButton(MouseState const& mouseState, UI::PointerMouseEvent const& pointerMouseEvent) const;
+	ButtonState CheckMouseButton(MouseState const& mouseState, PointerMouseEvent const& pointerMouseEvent) const;
 
 	void Sort();
 
 private:
 	struct PointerState {
-		std::shared_ptr<UI::UIElement> focusedElement;
-		UI::PointerPoint pointerPoint;
+		std::shared_ptr<UIView> focusedElement;
+		PointerPoint pointerPoint;
 		std::int32_t PrevScrollWheel;
 	};
 
-	Details::SubscribeRequestDispatcher subscribeRequests;
-	std::vector<std::shared_ptr<UIElement>> children;
+	typedef Details::SubscribeRequestDispatcher<UIView> SubscribeRequestDispatcherType;
+	SubscribeRequestDispatcherType subscribeRequests;
+	std::vector<std::shared_ptr<UIView>> children;
 	std::unique_ptr<PointerState> pointerState;
 };
 

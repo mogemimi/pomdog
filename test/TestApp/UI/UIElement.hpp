@@ -14,52 +14,52 @@
 #endif
 
 #include <Pomdog/Pomdog.hpp>
+#include "HorizontalAlignment.hpp"
+#include "VerticalAlignment.hpp"
 
 namespace Pomdog {
 namespace UI {
 
 class DrawingContext;
-class PointerPoint;
 class UIEventDispatcher;
-
-enum class HorizontalAlignment: std::uint8_t {
-	Left,
-	//Center,
-	Stretch,
-	//Right,
-};
-
-enum class VerticalAlignment: std::uint8_t {
-	//Bottom,
-	//Center,
-	Stretch,
-	Top,
-};
 
 class UIElement {
 public:
 	virtual ~UIElement() = default;
-
-	virtual bool SizeToFitContent() const = 0;
-	virtual Matrix3x2 Transform() const = 0;
-	virtual void Transform(Matrix3x2 const& matrix) = 0;
-	virtual void Transform(Matrix3x2 && matrix) = 0;
-	virtual std::uint16_t Width() const = 0;
-	virtual std::uint16_t Height() const = 0;
-
-	virtual void MarkParentDrawOrderDirty() = 0;
-	virtual std::int32_t GlobalDrawOrder() = 0;
-	virtual void DrawOrder(std::int32_t drawOrder) = 0;
-	virtual std::int32_t DrawOrder() const = 0;
 	
 	virtual std::weak_ptr<UIElement const> Parent() const = 0;
+	
 	virtual std::weak_ptr<UIElement> Parent() = 0;
 	
+	virtual Matrix3x2 Transform() const = 0;
+	
+	virtual void Transform(Matrix3x2 const& matrix) = 0;
+	
+	virtual void Transform(Matrix3x2 && matrix) = 0;
+	
+	virtual void UpdateTransform() = 0;
+	
 	virtual void MarkParentTransformDirty() = 0;
-	virtual Matrix3x2 GlobalTransform() = 0;
+	
+	virtual void DrawOrder(std::int32_t drawOrder) = 0;
+	
+	virtual std::int32_t DrawOrder() const = 0;
+	
+	virtual Matrix3x2 GlobalTransform() const = 0;
 
-	virtual UI::HorizontalAlignment HorizontalAlignment() const = 0;
-	virtual UI::VerticalAlignment VerticalAlignment() const = 0;
+	virtual void MarkParentDrawOrderDirty() = 0;
+	
+	virtual std::int32_t GlobalDrawOrder() = 0;
+
+	virtual std::uint16_t Width() const = 0;
+	
+	virtual std::uint16_t Height() const = 0;
+	
+	virtual bool SizeToFitContent() const = 0;
+
+	virtual HorizontalAlignment HorizontalAlignment() const = 0;
+	
+	virtual VerticalAlignment VerticalAlignment() const = 0;
 
 	virtual std::weak_ptr<UIEventDispatcher> Dispatcher() const = 0;
 
@@ -69,25 +69,9 @@ public:
 //	virtual Thickness Margin() const = 0;
 
 	virtual void OnParentChanged() = 0;
-
-	virtual void OnPointerCanceled(PointerPoint const& pointerPoint) = 0;
-	
-	virtual void OnPointerCaptureLost(PointerPoint const& pointerPoint) = 0;
-	
-	virtual void OnPointerEntered(PointerPoint const& pointerPoint) = 0;
-	
-	virtual void OnPointerExited(PointerPoint const& pointerPoint) = 0;
-	
-	virtual void OnPointerMoved(PointerPoint const& pointerPoint) = 0;
-	
-	virtual void OnPointerPressed(PointerPoint const& pointerPoint) = 0;
-	
-	virtual void OnPointerReleased(PointerPoint const& pointerPoint) = 0;
-	
-	virtual void OnPointerWheelChanged(PointerPoint const& pointerPoint) = 0;
 	
 	virtual void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) = 0;
-	
+
 	virtual void Draw(DrawingContext & drawingContext) = 0;
 	
 	virtual void UpdateAnimation(DurationSeconds const& frameDuration) = 0;

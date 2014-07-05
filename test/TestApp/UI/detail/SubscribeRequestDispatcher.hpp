@@ -19,31 +19,29 @@
 
 namespace Pomdog {
 namespace UI {
-
-class UIElement;
-
 namespace Details {
 
+template <class ListenerType>
 class SubscribeRequestDispatcher {
 public:
-	void AddChild(std::shared_ptr<UIElement> const& child)
+	void AddChild(std::shared_ptr<ListenerType> const& child)
 	{
 		Added.push_back(child);
 	}
 	
-	void AddChild(std::shared_ptr<UIElement> && child)
+	void AddChild(std::shared_ptr<ListenerType> && child)
 	{
 		Added.push_back(std::move(child));
 	}
 
-	void RemoveChild(std::weak_ptr<UIElement> const& child)
+	void RemoveChild(std::weak_ptr<ListenerType> const& child)
 	{
 		POMDOG_ASSERT(!child.expired());
 		Removed.push_back(child);
 	}
 
-	std::vector<std::shared_ptr<UIElement>> Added;
-	std::vector<std::weak_ptr<UIElement>> Removed;
+	std::vector<std::shared_ptr<ListenerType>> Added;
+	std::vector<std::weak_ptr<ListenerType>> Removed;
 };
 
 }// namespace Details

@@ -45,7 +45,7 @@ void UIEventDispatcher::UpdateChildren()
 	POMDOG_ASSERT(std::end(children) == std::unique(std::begin(children), std::end(children)));
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<UIElement> UIEventDispatcher::Find(Point2D const& position)
+std::shared_ptr<UIView> UIEventDispatcher::Find(Point2D const& position)
 {
 	for (auto & child: children)
 	{
@@ -125,7 +125,7 @@ void UIEventDispatcher::Touch(MouseState const& mouseState)
 	}
 }
 //-----------------------------------------------------------------------
-void UIEventDispatcher::PointerEntered(Point2D const& position, MouseState const& mouseState, std::shared_ptr<UI::UIElement> const& node)
+void UIEventDispatcher::PointerEntered(Point2D const& position, MouseState const& mouseState, std::shared_ptr<UIView> const& node)
 {
 	POMDOG_ASSERT(!pointerState);
 	pointerState = std::make_unique<PointerState>();
@@ -185,9 +185,9 @@ void UIEventDispatcher::PointerReleased(Point2D const& position)
 	pointerState->focusedElement->OnPointerReleased(pointerState->pointerPoint);
 }
 //-----------------------------------------------------------------------
-Details::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIElement> const& child)
+Details::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIView> const& child)
 {
-	std::shared_ptr<Details::SubscribeRequestDispatcher> sharedDispatcher(
+	std::shared_ptr<SubscribeRequestDispatcherType> sharedDispatcher(
 		shared_from_this(), &subscribeRequests);
 	Details::UIEventConnection connection {std::move(sharedDispatcher), child};
 
@@ -195,9 +195,9 @@ Details::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIElement>
 	return std::move(connection);
 }
 //-----------------------------------------------------------------------
-Details::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIElement> && child)
+Details::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIView> && child)
 {
-	std::shared_ptr<Details::SubscribeRequestDispatcher> sharedDispatcher(
+	std::shared_ptr<SubscribeRequestDispatcherType> sharedDispatcher(
 		shared_from_this(), &subscribeRequests);
 	Details::UIEventConnection connection {std::move(sharedDispatcher), child};
 	
@@ -259,8 +259,9 @@ ButtonState UIEventDispatcher::CheckMouseButton(MouseState const& mouseState, UI
 void UIEventDispatcher::Sort()
 {
 	std::sort(std::begin(children), std::end(children),
-		[](std::shared_ptr<UIElement> & a, std::shared_ptr<UIElement> & b){
-			return a->GlobalDrawOrder() < b->GlobalDrawOrder(); });
+		[](std::shared_ptr<UIView> & a, std::shared_ptr<UIView> & b) {
+			return a->GlobalDrawOrder() < b->GlobalDrawOrder();
+		});
 }
 //-----------------------------------------------------------------------
 }// namespace UI

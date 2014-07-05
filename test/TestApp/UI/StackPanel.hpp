@@ -57,6 +57,8 @@ public:
 
 	void AddChild(std::shared_ptr<UIView> const& element);
 
+	void UpdateTransform() override final;
+
 private:
 	using UIElementCollection = std::list<std::shared_ptr<UIElement>>;
 	UIElementCollection children;
