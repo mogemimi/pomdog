@@ -20,48 +20,6 @@
 #include "GameObject.hpp"
 
 namespace Pomdog {
-namespace ComponentQuery {
-
-template <typename T>
-struct Not {};
-
-}// namespace ComponentQuery
-
-namespace Details {
-namespace Gameplay {
-
-template <typename...T>
-struct HasComponents;
-
-template <typename T>
-struct HasComponents<T>
-{
-	bool operator()(GameObject const& gameObject)
-	{
-		return gameObject.HasComponent<T>();
-	}
-};
-
-template <typename T>
-struct HasComponents<ComponentQuery::Not<T>>
-{
-	bool operator()(GameObject const& gameObject)
-	{
-		return !gameObject.HasComponent<T>();
-	}
-};
-
-template <typename T, typename...Arguments>
-struct HasComponents<T, Arguments...>
-{
-	bool operator()(GameObject const& gameObject)
-	{
-		return gameObject.HasComponent<T>() && HasComponents<Arguments...>()(gameObject);
-	}
-};
-
-}// namespace Gameplay
-}// namespace Details
 
 class GameObject;
 
@@ -78,7 +36,10 @@ public:
 	std::shared_ptr<GameObject> CreateObject();
 	
 	//template <typename T, typename...Components>
-	//std::vector<std::shared_ptr<GameObject>> QueryComponents();
+	//std::vector<T> QueryComponent();
+	
+	template <typename T, typename...Components>
+	std::vector<std::shared_ptr<GameObject>> QueryComponents();
 	
 	template <typename T>
 	T const* Component(GameObjectID const& objectID) const;
@@ -91,28 +52,58 @@ public:
 	
 	bool Valid(GameObjectID const& objectID) const;
 	
+	void RemoveUnusedObjects();
+	
 private:
 	std::shared_ptr<GameObjectContext> context;
+	std::vector<std::weak_ptr<GameObject>> gameObjects;
 };
 
 
-//template <typename T, typename...Components>
-//std::vector<std::shared_ptr<GameObject>> GameWorld::QueryComponents()
-//{
-//	static_assert(std::is_object<T>::value, "");
-//	
-//	std::vector<std::shared_ptr<GameObject>> result;
-//
-//	for (auto & weakGameObject: gameObjects)
-//	{
-//		if (auto gameObject = weakGameObject.lock()) {
-//			if (Details::Gameplay::HasComponents<T, Components...>()(*gameObject)) {
-//				result.push_back(gameObject);
-//			}
-//		}
-//	}
-//	return std::move(result);
-//}
+namespace Details {
+namespace Gameplay {
+
+template <typename...T>
+struct HasComponents;
+
+template <typename T>
+struct HasComponents<T>
+{
+	bool operator()(GameObject const& gameObject)
+	{
+		return gameObject.HasComponent<T>();
+	}
+};
+
+template <typename T, typename...Arguments>
+struct HasComponents<T, Arguments...>
+{
+	bool operator()(GameObject const& gameObject)
+	{
+		return gameObject.HasComponent<T>() && HasComponents<Arguments...>()(gameObject);
+	}
+};
+
+}// namespace Gameplay
+}// namespace Details
+
+template <typename T, typename...Components>
+std::vector<std::shared_ptr<GameObject>> GameWorld::QueryComponents()
+{
+	static_assert(std::is_object<T>::value, "");
+
+	std::vector<std::shared_ptr<GameObject>> result;
+
+	for (auto & weakGameObject: gameObjects)
+	{
+		if (auto gameObject = weakGameObject.lock()) {
+			if (Details::Gameplay::HasComponents<T, Components...>()(*gameObject)) {
+				result.push_back(gameObject);
+			}
+		}
+	}
+	return std::move(result);
+}
 
 template <typename T>
 T const* GameWorld::Component(GameObjectID const& objectID) const

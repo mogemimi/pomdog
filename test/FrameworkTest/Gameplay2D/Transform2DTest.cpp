@@ -17,7 +17,7 @@ using namespace Pomdog;
 TEST(Transform2D, TrivialCase)
 {
 	auto objectContext = std::make_shared<GameObjectContext>();
-	GameObject gameObject{ objectContext };
+	GameObject gameObject{objectContext};
 	gameObject.AddComponent<Transform2D>();
 	EXPECT_TRUE(gameObject.HasComponent<Transform2D>());
 	EXPECT_NE(nullptr, gameObject.Component<Transform2D>());

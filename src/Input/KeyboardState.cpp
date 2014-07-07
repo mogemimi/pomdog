@@ -34,7 +34,7 @@ bool KeyboardState::IsKeyDown(Keys key) const
 	using size_type = typename std::underlying_type<decltype(key)>::type;
 	POMDOG_ASSERT(keyset.size() > static_cast<size_type>(key));
 	
-	return !keyset[static_cast<size_type>(key)];
+	return keyset[static_cast<size_type>(key)];
 }
 //-----------------------------------------------------------------------
 bool KeyboardState::IsKeyUp(Keys key) const
@@ -42,7 +42,7 @@ bool KeyboardState::IsKeyUp(Keys key) const
 	using size_type = typename std::underlying_type<decltype(key)>::type;
 	POMDOG_ASSERT(keyset.size() > static_cast<size_type>(key));
 	
-	return keyset[static_cast<size_type>(key)];
+	return !keyset[static_cast<size_type>(key)];
 }
 //-----------------------------------------------------------------------
 void KeyboardState::SetKey(Keys key, KeyState keyState)

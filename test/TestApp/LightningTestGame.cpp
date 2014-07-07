@@ -76,47 +76,47 @@ void LightningTestGame::Initialize()
 		mainCamera = gameObject;
 
 		gameObject->AddComponent<Transform2D>();
-		gameObject->AddComponent<CanvasItem>();
+		//gameObject->AddComponent<CanvasItem>();
 		gameObject->AddComponent<Camera2D>();
 
 		auto node = std::make_shared<HierarchyNode>(gameObject);
 		rootNode->AddChild(node);
 	}
-	{
-		auto gameObject = gameWorld.CreateObject();
-
-		auto sprite = gameObject->AddComponent<Sprite>();
-		sprite->Origin = Vector2{0.5f, 0.5f};
-		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());
-	
-		gameObject->AddComponent<Transform2D>();
-		gameObject->AddComponent<CanvasItem>();
-		
-		auto transform = gameObject->Component<Transform2D>();
-		transform->Position = {0, 0};
-		transform->Scale = {2, 2};
-		
-		auto node = std::make_shared<HierarchyNode>(gameObject);
-		rootNode->AddChild(node);
-	}
-	
-	for (int i = 0; i < 10; ++i)
-	{
-		auto gameObject = gameWorld.CreateObject();
-		gameObject->AddComponent<CanvasItem>();
-
-		auto sprite = gameObject->AddComponent<Sprite>();
-		auto transform = gameObject->AddComponent<Transform2D>();
-		
-		transform->Position = {i * 64 * 2.0f, 0};
-		transform->Scale = {2.0f, 2.0f};
-		transform->Rotation = (0.5f * i) * MathConstants<float>::PiOver4();
-		sprite->Origin = Vector2{0.5f, 0.5f};
-		sprite->Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
-		
-		auto node = std::make_shared<HierarchyNode>(gameObject);
-		rootNode->AddChild(node);
-	}
+//	{
+//		auto gameObject = gameWorld.CreateObject();
+//
+//		auto & sprite = gameObject->AddComponent<Sprite>();
+//		sprite.Origin = Vector2{0.5f, 0.5f};
+//		sprite.Subrect = Rectangle(0, 0, texture->Width(), texture->Height());
+//	
+//		gameObject->AddComponent<Transform2D>();
+//		gameObject->AddComponent<CanvasItem>();
+//		
+//		auto transform = gameObject->Component<Transform2D>();
+//		transform->Position = {0, 0};
+//		transform->Scale = {2, 2};
+//		
+//		auto node = std::make_shared<HierarchyNode>(gameObject);
+//		rootNode->AddChild(node);
+//	}
+//
+//	for (int i = 0; i < 10; ++i)
+//	{
+//		auto gameObject = gameWorld.CreateObject();
+//		gameObject->AddComponent<CanvasItem>();
+//
+//		auto & sprite = gameObject->AddComponent<Sprite>();
+//		auto & transform = gameObject->AddComponent<Transform2D>();
+//		
+//		transform.Position = {i * 64 * 2.0f, 0};
+//		transform.Scale = {2.0f, 2.0f};
+//		transform.Rotation = (0.5f * i) * MathConstants<float>::PiOver4();
+//		sprite.Origin = Vector2{0.5f, 0.5f};
+//		sprite.Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
+//		
+//		auto node = std::make_shared<HierarchyNode>(gameObject);
+//		rootNode->AddChild(node);
+//	}
 	
 	touchPoint = {0, -300};
 	

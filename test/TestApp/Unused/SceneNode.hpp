@@ -50,7 +50,7 @@ public:
 	
 	//virtual bool IsVisible() const = 0;
 
-	virtual std::int32_t ZOrder() const = 0;
+	std::int32_t ZOrder() const;
 	
 private:
 	Transform2D transform;

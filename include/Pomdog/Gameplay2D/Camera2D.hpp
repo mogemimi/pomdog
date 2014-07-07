@@ -14,19 +14,18 @@
 #endif
 
 #include <Pomdog/Config/Export.hpp>
-#include <algorithm>
-#include <limits>
+#include <Pomdog/Gameplay/Component.hpp>
 
 namespace Pomdog {
 
-class POMDOG_EXPORT Camera2D {
+class POMDOG_EXPORT Camera2D: public Component<Camera2D> {
 public:
-	void Zoom(float value);
+	// range: [std::numeric_limits<float>::epsilon(), max()] or (0, max()]
+	float Zoom = 1;
 	
-	float Zoom() const;
-	
-private:
-	float zoom = 1;
+	// Clipping Planes
+	float Near = 0.1f;
+	float Far = 1000.0f;
 };
 
 }// namespace Pomdog

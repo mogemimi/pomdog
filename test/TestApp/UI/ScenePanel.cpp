@@ -219,8 +219,10 @@ void ScenePanel::OnMouseMiddleButtonMoved(PointerPoint const& pointerPoint)
 
 	// Track Gesture
 	auto delta = SampleTrackGesture(ConvertToPanelSpace(pointerPoint.Position), *trackStartPosition);
+	
+	POMDOG_ASSERT(camera->Zoom > 0);
 	auto matrix = (Matrix3x3::CreateTranslation(delta)
-		* Matrix3x3::CreateScale(1.0f / camera->Zoom())
+		* Matrix3x3::CreateScale(1.0f / camera->Zoom)
 		* Matrix3x3::CreateRotationZ(transform->Rotation));
 	
 	transform->Position -= {matrix(2, 0), matrix(2, 1)};
@@ -255,7 +257,8 @@ void ScenePanel::UpdateAnimation(DurationSeconds const& frameDuration)
 		prevScrollWheel = OptionalType::NullOptional;
 	}
 	
-	camera->Zoom(MathHelper::Clamp(camera->Zoom() + (camera->Zoom() * scrollWheel), minZoom, maxZoom));
+	POMDOG_ASSERT(camera->Zoom > 0);
+	camera->Zoom = MathHelper::Clamp(camera->Zoom + (camera->Zoom * scrollWheel), minZoom, maxZoom);
 	scrollWheel = scrollWheel * 0.8f;
 }
 //-----------------------------------------------------------------------

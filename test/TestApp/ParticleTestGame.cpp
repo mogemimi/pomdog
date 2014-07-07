@@ -150,7 +150,7 @@ void ParticleTestGame::Initialize()
 		mainCamera = gameObject;
 
 		gameObject->AddComponent<Transform2D>();
-		gameObject->AddComponent<CanvasItem>();
+		//gameObject->AddComponent<CanvasItem>();
 		gameObject->AddComponent<Camera2D>();
 
 		auto node = std::make_shared<HierarchyNode>(gameObject);

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -20,23 +20,13 @@
 #include "UI/ScenePanel.hpp"
 #include "UI/Slider.hpp"
 #include "UI/ToggleSwitch.hpp"
-#include "Skeletal2D/Skeleton.hpp"
-#include "Skeletal2D/SkeletonPose.hpp"
-#include "Skeletal2D/Skin.hpp"
-#include "Skeletal2D/AnimationClip.hpp"
-#include "Skeletal2D/SpriteAnimationTrack.hpp"
-#include "Skeletal2D/AnimationState.hpp"
-#include "Skeletal2D/AnimationSystem.hpp"
-#include "Skeletal2D/AnimationTimer.hpp"
-#include "Skeletal2D/SkinnedMesh.hpp"
 #include "Graphics/PolygonBatch.hpp"
 #include "Graphics/LineBatch.hpp"
-#include "Particle2D/BeamSystem.hpp"
-
 
 namespace Pomdog {
 
 class SpriteBatch;
+class SceneNode;
 
 }// namespace Pomdog
 
@@ -58,16 +48,11 @@ public:
 	void Update();
 	
 	void Draw();
-	
-private:
-	void DrawSprites();
-	void DrawSkinnedMesh();
-	void DrawBeam();
 
 private:
 	std::shared_ptr<GameHost> gameHost;
 	std::shared_ptr<GraphicsContext> graphicsContext;
-		
+	
 	std::shared_ptr<Texture2D> texture;
 	std::unique_ptr<SpriteRenderer> spriteRenderer;
 	
@@ -85,26 +70,9 @@ private:
 	std::shared_ptr<UI::ToggleSwitch> toggleSwitch4;
 
 	GameWorld gameWorld;
-	std::shared_ptr<HierarchyNode> rootNode;
 	std::shared_ptr<GameObject> mainCamera;
-
-	AnimationSystem animationSystem;
-	std::shared_ptr<Skeleton> maidSkeleton;
-	std::shared_ptr<SkeletonPose> maidSkeletonPose;
-	std::shared_ptr<AnimationState> maidAnimationState;
-	std::shared_ptr<Texture2D> maidTexture;
-	std::vector<Matrix3x2> maidGlobalPose;
-	std::shared_ptr<AnimationClip> maidAnimationClipIdle;
-	AnimationTimer maidAnimationTimer;
-	Skin maidSkin;
-	std::vector<Details::Skeletal2D::SpriteAnimationTrack> maidSpriteAnimationTracks;
-	
-	SkinnedMesh maidSkinnedMesh;
-	std::shared_ptr<EffectPass> maidSkinningEffect;
-	std::shared_ptr<InputLayout> maidInputLayout;
-	
-	BeamSystem beamSystem;
-	std::shared_ptr<Texture2D> beamTexture;
+	std::shared_ptr<GameObject> maid;
+	std::shared_ptr<GameObject> lightningBeam;
 	
 	ScopedConnection clientSizeChangedConnection;
 	

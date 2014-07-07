@@ -6,30 +6,19 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <Pomdog/Gameplay/GameObject.hpp>
+#include "Scene.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-GameObject::GameObject(std::shared_ptr<GameObjectContext> const& contextIn)
-	: context(contextIn)
-	, id(context->Create())
+Scene::Scene()
+{}
+//-----------------------------------------------------------------------
+void Scene::Update(DurationSeconds const& frameDuration)
 {
 }
 //-----------------------------------------------------------------------
-GameObject::GameObject(std::shared_ptr<GameObjectContext> && contextIn)
-	: context(std::move(contextIn))
-	, id(context->Create())
+void Scene::Draw()
 {
-}
-//-----------------------------------------------------------------------
-GameObject::~GameObject()
-{
-	context->Destroy(id);
-}
-//-----------------------------------------------------------------------
-GameObjectID GameObject::ID() const
-{
-	return id;
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

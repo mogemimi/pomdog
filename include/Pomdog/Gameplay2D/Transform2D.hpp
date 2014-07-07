@@ -16,10 +16,11 @@
 #include <Pomdog/Config/Export.hpp>
 #include <Pomdog/Math/Vector2.hpp>
 #include <Pomdog/Math/Radian.hpp>
+#include <Pomdog/Gameplay/Component.hpp>
 
 namespace Pomdog {
 
-class POMDOG_EXPORT Transform2D {
+class POMDOG_EXPORT Transform2D: public Component<Transform2D> {
 public:
 	Vector2 Position {0, 0};
 	Vector2 Scale {1, 1};

@@ -13,7 +13,6 @@
 #	pragma once
 #endif
 
-#include <cstddef>
 #include <cstdint>
 #include <type_traits>
 #include <memory>
@@ -23,7 +22,8 @@
 #include <list>
 #include "../Config/Export.hpp"
 #include "../Utility/Assert.hpp"
-#include "detail/GameComponent.hpp"
+#include "../Utility/MakeUnique.hpp"
+#include "Component.hpp"
 #include "GameObjectID.hpp"
 
 namespace Pomdog {
@@ -39,16 +39,6 @@ public:
 
 template <std::uint8_t MaxComponentCapacity>
 class POMDOG_EXPORT EntityContext {
-private:
-	typedef std::uint8_t HashCodeType;
-	typedef GameComponent<HashCodeType> ComponentType;
-	
-	template <typename T>
-	using ComponentHash = GameComponentHashCode<T, HashCodeType>;
-	
-	template <typename T>
-	using IntrusiveComponentType = IntrusiveComponent<T, HashCodeType>;
-
 public:
 	EntityContext()
 	{
@@ -117,21 +107,29 @@ public:
 			&& (descriptions[objectID.Index()].IncremantalCounter == objectID.SequenceNumber());
 	}
 	
-	template <typename T, typename...Arguments>
-	T* AddComponent(GameObjectID const& objectID, Arguments &&...arguments)
+	template <typename Type, typename...Arguments>
+	Type & AddComponent(GameObjectID const& objectID, Arguments &&...arguments)
 	{
-		//auto component = std::make_unique<IntrusiveComponentType<T>>(
-		auto component = std::unique_ptr<IntrusiveComponentType<T>>(new IntrusiveComponentType<T>(
-			std::forward<Arguments>(arguments)...));
+		static_assert(std::is_base_of<GameComponent, Type>::value, "");
+	
+		auto const typeIndex = Type::TypeIndex();
+		POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
 		
-		POMDOG_ASSERT(component);
-		POMDOG_ASSERT(component->HashCode() < MaxComponentCapacity);
+		//auto component = std::make_unique<Type>(std::forward<Arguments>(arguments)...);
+		auto component = MakeUnique<Type>(std::forward<Arguments>(arguments)...);
+		return AddComponent<Type>(objectID, std::move(component));
+	}
+	
+	template <typename Type>
+	Type & AddComponent(GameObjectID const& id, std::unique_ptr<Type> && component)
+	{
+		static_assert(std::is_base_of<GameComponent, Type>::value, "");
 
-		auto const hashCode = component->HashCode();
-		
-		if (hashCode >= components.size())
+		auto const typeIndex = Type::TypeIndex();
+		POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
+		if (typeIndex >= components.size())
 		{
-			components.resize(hashCode + 1U);
+			components.resize(typeIndex + 1U);
 		
 			POMDOG_ASSERT(components.size() <= MaxComponentCapacity);
 			if (components.capacity() > MaxComponentCapacity)
@@ -141,44 +139,47 @@ public:
 			}
 		}
 		
-		POMDOG_ASSERT(hashCode < components.size());
-		auto & entities = components[hashCode];
+		POMDOG_ASSERT(typeIndex < components.size());
+		auto & entities = components[typeIndex];
 		
-		if (objectID.Index() >= entities.size())
+		if (id.Index() >= entities.size())
 		{
-			static_assert(std::is_unsigned<decltype(objectID.Index())>::value, "" );
-			entities.resize(objectID.Index() + 1U);
+			static_assert(std::is_unsigned<decltype(id.Index())>::value, "" );
+			entities.resize(id.Index() + 1U);
 		}
-		
-		POMDOG_ASSERT(objectID.Index() < entities.size());
-		entities[objectID.Index()] = std::move(component);
-		
-		POMDOG_ASSERT(objectID.Index() < descriptions.size());
-		auto & desc = descriptions[objectID.Index()];
+	
+		POMDOG_ASSERT(component);
+		POMDOG_ASSERT(id.Index() < entities.size());
+		entities[id.Index()] = std::move(component);
+
+		POMDOG_ASSERT(id.Index() < descriptions.size());
+		auto & desc = descriptions[id.Index()];
 		
 		POMDOG_ASSERT(desc.IncremantalCounter > 0);
-		POMDOG_ASSERT(hashCode < desc.ComponentBitMask.size());
-		POMDOG_ASSERT(hashCode < MaxComponentCapacity);
-		desc.ComponentBitMask[hashCode] = 1;
+		POMDOG_ASSERT(typeIndex < desc.ComponentBitMask.size());
+		POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
+		desc.ComponentBitMask[typeIndex] = 1;
 		
-		auto result = entities[objectID.Index()].get();
-		
-		POMDOG_ASSERT(result != nullptr);
-		POMDOG_ASSERT(dynamic_cast<IntrusiveComponentType<T>*>(result) == static_cast<IntrusiveComponentType<T>*>(result));
-		return &(static_cast<IntrusiveComponentType<T>*>(result)->Value());
+		POMDOG_ASSERT(entities[id.Index()]);
+		POMDOG_ASSERT(entities[id.Index()].get() != nullptr);
+		POMDOG_ASSERT(dynamic_cast<Type*>(entities[id.Index()].get()) == static_cast<Type*>(entities[id.Index()].get()));
+		return *static_cast<Type*>(entities[id.Index()].get());
 	}
 	
-	template <typename T>
+	template <typename Type>
 	void RemoveComponent(GameObjectID const& id)
 	{
-		POMDOG_ASSERT(ComponentHash<T>::value < MaxComponentCapacity);
+		static_assert(std::is_base_of<GameComponent, Type>::value, "");
+		
+		auto const typeIndex = Type::TypeIndex();
+		POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
 		POMDOG_ASSERT(id.Index() < descriptions.size());
 	
-		if (ComponentHash<T>::value >= components.size()) {
+		if (typeIndex >= components.size()) {
 			return;
 		}
 		
-		auto & entities = components[ComponentHash<T>::value];
+		auto & entities = components[typeIndex];
 		
 		POMDOG_ASSERT(!entities.empty());
 		POMDOG_ASSERT(id.Index() < entities.size());
@@ -187,69 +188,83 @@ public:
 		POMDOG_ASSERT(id.Index() < descriptions.size());
 		auto & desc = descriptions[id.Index()];
 		
-		POMDOG_ASSERT(ComponentHash<T>::value < desc.ComponentBitMask.size());
-		desc.ComponentBitMask[ComponentHash<T>::value] = 0;
+		POMDOG_ASSERT(typeIndex < desc.ComponentBitMask.size());
+		desc.ComponentBitMask[typeIndex] = 0;
 	}
 	
-	template <typename T>
+	template <typename Type>
 	bool HasComponent(GameObjectID const& id) const
 	{
-		POMDOG_ASSERT(ComponentHash<T>::value < MaxComponentCapacity);
+		static_assert(std::is_base_of<GameComponent, Type>::value, "");
+		
+		POMDOG_ASSERT(Type::TypeIndex() < MaxComponentCapacity);
 		POMDOG_ASSERT(id.Index() < descriptions.size());
-		return descriptions[id.Index()].ComponentBitMask[ComponentHash<T>::value];
+		return descriptions[id.Index()].ComponentBitMask[Type::TypeIndex()];
 	}
-	
-	template <typename T>
-	T const* Component(GameObjectID const& id) const
+		
+	template <typename Type>
+	auto Component(GameObjectID const& id)-> typename std::enable_if<std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>::type
 	{
-		POMDOG_ASSERT(ComponentHash<T>::value < MaxComponentCapacity);
+		static_assert(std::is_base_of<GameComponent, Type>::value, "");
+		static_assert(std::is_base_of<Pomdog::Component<Type>, Type>::value, "");
 	
-		if (ComponentHash<T>::value >= components.size()) {
+		auto const typeIndex = Type::TypeIndex();
+		POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
+	
+		if (typeIndex >= components.size()) {
 			return nullptr;
 		}
 		
-		auto & entities = components[ComponentHash<T>::value];
-		
-		POMDOG_ASSERT(id.Index() < entities.size());
-		if (auto component = static_cast<IntrusiveComponentType<T> const*>(entities[id.Index()].get()))
-		{
-			POMDOG_ASSERT(id.Index() < descriptions.size());
-			POMDOG_ASSERT(descriptions[id.Index()].ComponentBitMask[ComponentHash<T>::value]);
-			POMDOG_ASSERT(nullptr != component);
-			return &(component->Value());
-		}
-		return nullptr;
-	}
-	
-	template <typename T>
-	T* Component(GameObjectID const& id)
-	{
-		POMDOG_ASSERT(ComponentHash<T>::value < MaxComponentCapacity);
-	
-		if (ComponentHash<T>::value >= components.size()) {
-			return nullptr;
-		}
-		
-		auto & entities = components[ComponentHash<T>::value];
+		auto & entities = components[typeIndex];
 		
 		if (id.Index() >= entities.size()) {
 			return nullptr;
 		}
 		
 		POMDOG_ASSERT(id.Index() < entities.size());
-		
-		if (auto component = static_cast<IntrusiveComponentType<T>*>(entities[id.Index()].get()))
+
+		if (entities[id.Index()])
 		{
-			POMDOG_ASSERT(nullptr != component);
 			POMDOG_ASSERT(id.Index() < descriptions.size());
-			POMDOG_ASSERT(descriptions[id.Index()].ComponentBitMask[ComponentHash<T>::value]);
-			return &(component->Value());
+			POMDOG_ASSERT(descriptions[id.Index()].ComponentBitMask[typeIndex]);
+			POMDOG_ASSERT(dynamic_cast<Type*>(entities[id.Index()].get()) == static_cast<Type*>(entities[id.Index()].get()));
+			return static_cast<Type*>(entities[id.Index()].get());
+		}
+		return nullptr;
+	}
+	
+	template <typename Type>
+	auto Component(GameObjectID const& id)-> typename std::enable_if<!std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>::type
+	{
+		static_assert(std::is_base_of<GameComponent, Type>::value, "");
+		static_assert(!std::is_base_of<Pomdog::Component<Type>, Type>::value, "");
+	
+		auto const typeIndex = Type::TypeIndex();
+		POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
+	
+		if (typeIndex >= components.size()) {
+			return nullptr;
+		}
+		
+		auto & entities = components[typeIndex];
+		
+		if (id.Index() >= entities.size()) {
+			return nullptr;
+		}
+		
+		POMDOG_ASSERT(id.Index() < entities.size());
+
+		if (entities[id.Index()])
+		{
+			POMDOG_ASSERT(id.Index() < descriptions.size());
+			POMDOG_ASSERT(descriptions[id.Index()].ComponentBitMask[typeIndex]);
+			return dynamic_cast<Type*>(entities[id.Index()].get());
 		}
 		return nullptr;
 	}
 
 private:
-	std::vector<std::vector<std::unique_ptr<ComponentType>>> components;
+	std::vector<std::vector<std::unique_ptr<GameComponent>>> components;
 	std::vector<EntityDescription<MaxComponentCapacity>> descriptions;
 	std::list<std::uint32_t> deletedIndices;
 };
@@ -257,7 +272,7 @@ private:
 }// namespace Gameplay
 }// namespace Details
 
-using GameObjectContext = Details::Gameplay::EntityContext<96U>;
+using GameObjectContext = Details::Gameplay::EntityContext<128U>;
 
 }// namespace Pomdog
 

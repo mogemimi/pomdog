@@ -9,102 +9,179 @@
 #include <gtest/iutest_switch.hpp>
 #include <cstdint>
 #include <Pomdog/Gameplay/GameObject.hpp>
+#include <Pomdog/Utility/MakeUnique.hpp>
 
+using Pomdog::Component;
 using Pomdog::GameObject;
 using Pomdog::GameObjectID;
 using Pomdog::GameObjectContext;
 
-struct TransformInteger
+namespace {
+
+struct TransformComponent: public Component<TransformComponent>
 {
-	TransformInteger() = default;
-	TransformInteger(int xIn, int yIn, int zIn)
+	TransformComponent() = default;
+	TransformComponent(int xIn, int yIn, int zIn)
 		: x(xIn), y(yIn), z(zIn)
 	{}
 
 	int x, y, z;
 };
 
+struct PhysicsComponent: public Component<PhysicsComponent>
+{
+	PhysicsComponent() = default;
+	explicit PhysicsComponent(int vIn)
+		: v(vIn)
+	{}
+
+	int v;
+};
+
+struct RendererComponent: public Component<RendererComponent>
+{
+	virtual ~RendererComponent() = default;
+	
+	virtual void SetZOrder(int z) = 0;
+	virtual int GetZOrder() const = 0;
+};
+
+struct MeshRendererComponent final: public RendererComponent
+{
+	void SetZOrder(int zIn) override {
+		this->z = zIn;
+	}
+	int GetZOrder() const override {
+		return z;
+	}
+
+private:
+	int z;
+};
+
+}// unnamed namespace
+
 TEST(GameObject, AddComponentWithoutArguments)
 {
 	auto objectContext = std::make_shared<GameObjectContext>();
-	GameObject gameObject{ objectContext };
-	gameObject.AddComponent<int>();
-	gameObject.AddComponent<std::uint16_t>();
-	gameObject.AddComponent<std::uint32_t>();
-	gameObject.AddComponent<std::uint64_t>();
-	gameObject.AddComponent<std::string>();
-	gameObject.AddComponent<TransformInteger>();
+	GameObject gameObject{objectContext};
+	gameObject.AddComponent<TransformComponent>();
+	gameObject.AddComponent<PhysicsComponent>();
 	
-	EXPECT_TRUE(gameObject.HasComponent<int>());
-	EXPECT_TRUE(gameObject.HasComponent<std::uint16_t>());
-	EXPECT_TRUE(gameObject.HasComponent<std::uint32_t>());
-	EXPECT_TRUE(gameObject.HasComponent<std::uint64_t>());
-	EXPECT_TRUE(gameObject.HasComponent<std::string>());
-	EXPECT_TRUE(gameObject.HasComponent<TransformInteger>());
+	EXPECT_TRUE(gameObject.HasComponent<TransformComponent>());
+	EXPECT_TRUE(gameObject.HasComponent<PhysicsComponent>());
 	
-	EXPECT_NE(nullptr, gameObject.Component<int>());
-	EXPECT_NE(nullptr, gameObject.Component<std::uint16_t>());
-	EXPECT_NE(nullptr, gameObject.Component<std::uint32_t>());
-	EXPECT_NE(nullptr, gameObject.Component<std::uint64_t>());
-	EXPECT_NE(nullptr, gameObject.Component<std::string>());
-	EXPECT_NE(nullptr, gameObject.Component<TransformInteger>());
+	EXPECT_NE(nullptr, gameObject.Component<TransformComponent>());
+	EXPECT_NE(nullptr, gameObject.Component<PhysicsComponent>());
 }
 
 TEST(GameObject, AddComponentWithArguments)
 {
 	auto objectContext = std::make_shared<GameObjectContext>();
-	GameObject gameObject{ objectContext };
-	gameObject.AddComponent<int>(42);
-	gameObject.AddComponent<std::uint16_t>(42);
-	gameObject.AddComponent<std::uint32_t>(42);
-	gameObject.AddComponent<std::uint64_t>(42);
-	gameObject.AddComponent<std::string>("Test");
-	gameObject.AddComponent<TransformInteger>(3, 4, 5);
+	GameObject gameObject{objectContext};
+	gameObject.AddComponent<TransformComponent>(3, 4, 5);
+	gameObject.AddComponent<PhysicsComponent>(42);
 	
-	ASSERT_NE(nullptr, gameObject.Component<int>());
-	ASSERT_NE(nullptr, gameObject.Component<std::uint16_t>());
-	ASSERT_NE(nullptr, gameObject.Component<std::uint32_t>());
-	ASSERT_NE(nullptr, gameObject.Component<std::uint64_t>());
-	ASSERT_NE(nullptr, gameObject.Component<std::string>());
-	ASSERT_NE(nullptr, gameObject.Component<TransformInteger>());
+	EXPECT_TRUE(gameObject.HasComponent<TransformComponent>());
+	EXPECT_TRUE(gameObject.HasComponent<PhysicsComponent>());
 	
-	EXPECT_EQ(42, *gameObject.Component<int>());
-	EXPECT_EQ(42, *gameObject.Component<std::uint16_t>());
-	EXPECT_EQ(42, *gameObject.Component<std::uint32_t>());
-	EXPECT_EQ(42, *gameObject.Component<std::uint64_t>());
-	EXPECT_EQ("Test", *gameObject.Component<std::string>());
-	EXPECT_EQ(3, gameObject.Component<TransformInteger>()->x);
-	EXPECT_EQ(4, gameObject.Component<TransformInteger>()->y);
-	EXPECT_EQ(5, gameObject.Component<TransformInteger>()->z);
+	ASSERT_NE(nullptr, gameObject.Component<TransformComponent>());
+	ASSERT_NE(nullptr, gameObject.Component<PhysicsComponent>());
+	
+	EXPECT_EQ(3, gameObject.Component<TransformComponent>()->x);
+	EXPECT_EQ(4, gameObject.Component<TransformComponent>()->y);
+	EXPECT_EQ(5, gameObject.Component<TransformComponent>()->z);
+	EXPECT_EQ(42, gameObject.Component<PhysicsComponent>()->v);
+}
+
+TEST(GameObject, AddComponentWithInheritance)
+{
+	auto objectContext = std::make_shared<GameObjectContext>();
+	GameObject gameObject{objectContext};
+	MeshRendererComponent & meshRenderer = gameObject.AddComponent<MeshRendererComponent>(Pomdog::MakeUnique<MeshRendererComponent>());
+	meshRenderer.SetZOrder(42);
+	
+	EXPECT_TRUE(gameObject.HasComponent<MeshRendererComponent>());
+	ASSERT_NE(nullptr, gameObject.Component<MeshRendererComponent>());
+	EXPECT_EQ(42, gameObject.Component<MeshRendererComponent>()->GetZOrder());
+	
+	EXPECT_TRUE(gameObject.HasComponent<RendererComponent>());
+	ASSERT_NE(nullptr, gameObject.Component<RendererComponent>());
+	auto renderer = gameObject.Component<RendererComponent>();
+	renderer->SetZOrder(72);
+	
+	EXPECT_EQ(72, gameObject.Component<RendererComponent>()->GetZOrder());
+	EXPECT_EQ(72, gameObject.Component<MeshRendererComponent>()->GetZOrder());
 }
 
 TEST(GameObject, RemoveComponent)
 {
 	auto objectContext = std::make_shared<GameObjectContext>();
-	GameObject gameObject{ objectContext };
-	gameObject.AddComponent<TransformInteger>();
-	ASSERT_TRUE(gameObject.HasComponent<TransformInteger>());
 	
-	gameObject.RemoveComponent<TransformInteger>();
-	EXPECT_FALSE(gameObject.HasComponent<TransformInteger>());
-	EXPECT_EQ(nullptr, gameObject.Component<TransformInteger>());
+	{
+		GameObject gameObject{objectContext};
+		gameObject.AddComponent<TransformComponent>();
+		ASSERT_TRUE(gameObject.HasComponent<TransformComponent>());
+		
+		gameObject.RemoveComponent<TransformComponent>();
+		EXPECT_FALSE(gameObject.HasComponent<TransformComponent>());
+		EXPECT_EQ(nullptr, gameObject.Component<TransformComponent>());
+	}
+	{
+		auto objectContext = std::make_shared<GameObjectContext>();
+		GameObject gameObject{objectContext};
+		gameObject.AddComponent<TransformComponent>(3, 4, 5);
+		gameObject.AddComponent<PhysicsComponent>(42);
+		
+		EXPECT_TRUE(gameObject.HasComponent<TransformComponent>());
+		EXPECT_TRUE(gameObject.HasComponent<PhysicsComponent>());
+		
+		ASSERT_NE(nullptr, gameObject.Component<TransformComponent>());
+		ASSERT_NE(nullptr, gameObject.Component<PhysicsComponent>());
+		
+		gameObject.RemoveComponent<TransformComponent>();
+		EXPECT_FALSE(gameObject.HasComponent<TransformComponent>());
+		EXPECT_EQ(nullptr, gameObject.Component<TransformComponent>());
+		
+		gameObject.RemoveComponent<PhysicsComponent>();
+		EXPECT_FALSE(gameObject.HasComponent<PhysicsComponent>());
+		EXPECT_EQ(nullptr, gameObject.Component<PhysicsComponent>());
+	}
 }
 
-TEST(GameObject, GameObjectID)
+TEST(GameObject, RemoveComponentWithInheritance)
 {
 	auto objectContext = std::make_shared<GameObjectContext>();
-	GameObject gameObject { objectContext };
-	
-	auto id = gameObject.ID();
-	EXPECT_EQ(id, gameObject.ID());
-	
-	GameObject gameObject2 { objectContext };
-	
-	EXPECT_NE(gameObject.ID(), gameObject2.ID());
-	EXPECT_EQ(0, gameObject.ID().Index());
-	EXPECT_EQ(1, gameObject2.ID().Index());
-	EXPECT_EQ(1, gameObject.ID().SequenceNumber());
-	EXPECT_EQ(1, gameObject2.ID().SequenceNumber());
+	{
+		GameObject gameObject{objectContext};
+		gameObject.AddComponent<MeshRendererComponent>(Pomdog::MakeUnique<MeshRendererComponent>());
+
+		EXPECT_TRUE(gameObject.HasComponent<MeshRendererComponent>());
+		EXPECT_NE(nullptr, gameObject.Component<MeshRendererComponent>());
+		EXPECT_TRUE(gameObject.HasComponent<RendererComponent>());
+		EXPECT_NE(nullptr, gameObject.Component<RendererComponent>());
+		
+		gameObject.RemoveComponent<MeshRendererComponent>();
+		EXPECT_FALSE(gameObject.HasComponent<MeshRendererComponent>());
+		EXPECT_EQ(nullptr, gameObject.Component<MeshRendererComponent>());
+		EXPECT_FALSE(gameObject.HasComponent<RendererComponent>());
+		EXPECT_EQ(nullptr, gameObject.Component<RendererComponent>());
+	}
+	{
+		GameObject gameObject{objectContext};
+		gameObject.AddComponent<MeshRendererComponent>(Pomdog::MakeUnique<MeshRendererComponent>());
+
+		EXPECT_TRUE(gameObject.HasComponent<MeshRendererComponent>());
+		EXPECT_NE(nullptr, gameObject.Component<MeshRendererComponent>());
+		EXPECT_TRUE(gameObject.HasComponent<RendererComponent>());
+		EXPECT_NE(nullptr, gameObject.Component<RendererComponent>());
+		
+		gameObject.RemoveComponent<RendererComponent>();
+		EXPECT_FALSE(gameObject.HasComponent<MeshRendererComponent>());
+		EXPECT_EQ(nullptr, gameObject.Component<MeshRendererComponent>());
+		EXPECT_FALSE(gameObject.HasComponent<RendererComponent>());
+		EXPECT_EQ(nullptr, gameObject.Component<RendererComponent>());
+	}
 }
 
 TEST(GameObject, Component_Const)
@@ -112,21 +189,38 @@ TEST(GameObject, Component_Const)
 	auto objectContext = std::make_shared<GameObjectContext>();
 	auto gameObject = std::make_shared<GameObject>(objectContext);
 	
-	EXPECT_FALSE(gameObject->HasComponent<int>());
-	EXPECT_EQ(nullptr, gameObject->Component<int>());
+	EXPECT_FALSE(gameObject->HasComponent<PhysicsComponent>());
+	EXPECT_EQ(nullptr, gameObject->Component<PhysicsComponent>());
 	
-	gameObject->AddComponent<int>(42);
+	gameObject->AddComponent<PhysicsComponent>(42);
 
-	EXPECT_TRUE(gameObject->HasComponent<int>());
-	ASSERT_NE(nullptr, gameObject->Component<int>());
-	EXPECT_EQ(42, *gameObject->Component<int>());
+	EXPECT_TRUE(gameObject->HasComponent<PhysicsComponent>());
+	ASSERT_NE(nullptr, gameObject->Component<PhysicsComponent>());
+	EXPECT_EQ(42, gameObject->Component<PhysicsComponent>()->v);
 	
 	{
 		std::shared_ptr<GameObject const> gameObjectConstRef = gameObject;
-		EXPECT_TRUE(gameObjectConstRef->HasComponent<int>());
-		ASSERT_NE(nullptr, gameObjectConstRef->Component<int>());
-		EXPECT_EQ(42, *gameObjectConstRef->Component<int>());
+		EXPECT_TRUE(gameObjectConstRef->HasComponent<PhysicsComponent>());
+		ASSERT_NE(nullptr, gameObjectConstRef->Component<PhysicsComponent>());
+		EXPECT_EQ(42, gameObjectConstRef->Component<PhysicsComponent>()->v);
 	}
+}
+
+TEST(GameObject, GameObjectID)
+{
+	auto objectContext = std::make_shared<GameObjectContext>();
+	GameObject gameObject {objectContext};
+	
+	auto id = gameObject.ID();
+	EXPECT_EQ(id, gameObject.ID());
+	
+	GameObject gameObject2 {objectContext};
+	
+	EXPECT_NE(gameObject.ID(), gameObject2.ID());
+	EXPECT_EQ(0, gameObject.ID().Index());
+	EXPECT_EQ(1, gameObject2.ID().Index());
+	EXPECT_EQ(1, gameObject.ID().SequenceNumber());
+	EXPECT_EQ(1, gameObject2.ID().SequenceNumber());
 }
 
 TEST(GameObject, GameObjectID_Sequence)

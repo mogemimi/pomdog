@@ -15,7 +15,7 @@ uniform SkinningConstants {
 };
 
 uniform Constants {
-	mat4x4 ViewProjection;
+	mat4x4 ModelViewProjection;
 };
 
 void main()
@@ -38,7 +38,7 @@ void main()
 
 	vec2 position = (skinning * vec3(PositionTextureCoord.xy, 1.0)).xy;
 
-	gl_Position = vec4(position.xy, 0.0, 1.0) * ViewProjection;
+	gl_Position = vec4(position.xy, 0.0, 1.0) * ModelViewProjection;
 	Out.TextureCoord = PositionTextureCoord.zw;
 	Out.Color = vec4(1.0, 1.0, 1.0, 1.0);
 }
