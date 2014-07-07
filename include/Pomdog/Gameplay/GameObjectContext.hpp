@@ -125,9 +125,9 @@ public:
 			std::forward<Arguments>(arguments)...));
 		
 		POMDOG_ASSERT(component);
-		POMDOG_ASSERT(component->GetHashCode() < MaxComponentCapacity);
+		POMDOG_ASSERT(component->HashCode() < MaxComponentCapacity);
 
-		auto const hashCode = component->GetHashCode();
+		auto const hashCode = component->HashCode();
 		
 		if (hashCode >= components.size())
 		{

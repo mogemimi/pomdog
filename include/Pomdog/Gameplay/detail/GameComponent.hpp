@@ -63,24 +63,22 @@ public:
 
 	static_assert(std::is_unsigned<HashCodeType>::value, "HashCodeType is unsigned integer.");
 
-	virtual HashCodeType GetHashCode() const = 0;
+	virtual HashCodeType HashCode() const = 0;
 };
 
 
 template <class T, typename HashCodeType>
 class IntrusiveComponent final: public GameComponent<HashCodeType> {
 public:
-	static_assert(std::is_fundamental<T>::value ||
-		std::is_class<T>::value || std::is_enum<T>::value, "T is class or enum");
+	static_assert(std::is_fundamental<T>::value || std::is_class<T>::value
+		|| std::is_enum<T>::value, "T is class or enum");
 
 	template <typename...Arguments>
 	explicit IntrusiveComponent(Arguments && ...arguments)
 		: value(std::forward<Arguments>(arguments)...)
 	{}
 
-	~IntrusiveComponent() = default;
-
-	HashCodeType GetHashCode() const override
+	HashCodeType HashCode() const override
 	{
 		return GameComponentHashCode<T, HashCodeType>::value;
 	}
