@@ -9,21 +9,8 @@
 #include "SkinnedMeshRenderer.hpp"
 #include "RenderCommand.hpp"
 #include "RenderQueue.hpp"
-#include "../Skeletal2D/AnimationTrack.hpp"
 #include "../Skeletal2D/SkeletonHelper.hpp"
 #include "../Skeletal2D/SkinnedMesh.hpp"
-#include "../Spine/SkeletonDescLoader.hpp"
-#include "../Spine/AnimationLoader.hpp"
-#include "../Spine/SkeletonLoader.hpp"
-#include "../Spine/SkinLoader.hpp"
-#include "../Spine/SpriteAnimationLoader.hpp"
-#include "../Spine/SkinnedMeshLoader.hpp"
-#include "../TexturePacker/TextureAtlasLoader.hpp"
-#include "../Utilities/LogSkeletalInfo.hpp"
-#include "../Skeletal2D/AnimationNode.hpp"
-#include "../Skeletal2D/AnimationAdditiveNode.hpp"
-#include "../Skeletal2D/AnimationLerpNode.hpp"
-#include "../Skeletal2D/AnimationClipNode.hpp"
 
 namespace Pomdog {
 namespace {
@@ -45,7 +32,7 @@ static Matrix4x4 CreateTransformMatrix4x4(Transform2D const& transform)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-struct SkinnedMeshCommand: public RenderCommand
+struct SkinnedMeshRenderCommand: public RenderCommand
 {
 	float ZOrder() const override
 	{
@@ -64,88 +51,35 @@ struct SkinnedMeshCommand: public RenderCommand
 	float zOrder;
 };
 //-----------------------------------------------------------------------
-SkinnedMeshRenderer::SkinnedMeshRenderer()
-	: zOrder(0)
+SkinnedMeshRenderer::SkinnedMeshRenderer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	std::shared_ptr<AssetManager> const& assets,
+	std::shared_ptr<Skeleton> const& skeletonIn,
+	std::shared_ptr<SkeletonTransform> const& skeletonTransformIn,
+	std::shared_ptr<SkinnedMesh> const& meshIn, std::shared_ptr<Texture2D> const& textureIn)
+	: mesh(meshIn)
+	, texture(textureIn)
+	, skeleton(skeletonIn)
+	, skeletonTransform(skeletonTransformIn)
+	, zOrder(0)
 	, isVisible(true)
 {
-}
-//-----------------------------------------------------------------------
-void SkinnedMeshRenderer::Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice, std::shared_ptr<AssetManager> const& assets)
-{
-	auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidGun/MaidGun.atlas");
-	auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("MaidGun/MaidGun.json");
-	maidTexture = assets->Load<Texture2D>("MaidGun/MaidGun.png");
-	
-	TestApp::LogSkeletalInfo(textureAtlas, skeletonDesc);
-	
-	maidSkeleton = std::make_shared<Skeleton>(Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones));
-	maidSkeletonPose = std::make_shared<SkeletonPose>(SkeletonPose::CreateBindPose(*maidSkeleton));
-	auto animationClip = std::make_shared<AnimationClip>(Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Run"));
-	maidAnimationState = std::make_shared<AnimationState>(animationClip, 1.0f, true);
-	maidAnimationClipIdle = std::make_shared<AnimationClip>(Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "RunNoShot"));
-	
-	maidSkin = Details::Skeletal2D::CreateSkin(skeletonDesc, textureAtlas, "default");
-	maidSpriteAnimationTracks = Details::Skeletal2D::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Run");
-	
-	animationSystem.Add(maidAnimationState, maidSkeleton, maidSkeletonPose);
+	POMDOG_ASSERT(mesh);
+	POMDOG_ASSERT(texture);
+	POMDOG_ASSERT(skeleton);
+	POMDOG_ASSERT(skeletonTransform);
 
-	maidGlobalPose = SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose);
-
-	// NOTE: for Skinning
-	auto bindPose = SkeletonPose::CreateBindPose(*maidSkeleton);
-	maidSkinnedMesh = Details::Skeletal2D::CreateSkinnedMesh(graphicsDevice,
-		SkeletonHelper::ToGlobalPose(*maidSkeleton, bindPose),
-		skeletonDesc, textureAtlas,
-		Vector2(maidTexture->Width(), maidTexture->Height()), "default");
-	maidSkinningEffect = assets->Load<EffectPass>("Effects/SkinningSpriteEffect");
-	maidInputLayout = std::make_shared<InputLayout>(graphicsDevice, maidSkinningEffect);
-}
-//-----------------------------------------------------------------------
-void SkinnedMeshRenderer::Update(GameClock const& clock)
-{
-	{
-		animationSystem.Update(clock);
-		
-		SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose, maidGlobalPose);
-	
-		{
-			///@note Test code for animation blending
-			auto clipNode1 = MakeUnique<AnimationClipNode>(maidAnimationState->Clip());
-			auto clipNode2 = MakeUnique<AnimationClipNode>(maidAnimationClipIdle);
-		
-			auto lerpNode = MakeUnique<AnimationLerpNode>(std::move(clipNode1), std::move(clipNode2));
-			//lerpNode->Weight(slider2->Value());
-			lerpNode->Weight(0.2f);
-			
-			lerpNode->Calculate(maidAnimationState->Time(), *maidSkeleton, *maidSkeletonPose);
-			
-			SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose, maidGlobalPose);
-		}
-	}
-	{
-		maidAnimationTimer.Update(clock.FrameDuration());
-		if (maidAnimationTimer.Time() > maidAnimationState->Length()) {
-			maidAnimationTimer.Reset();
-		}
-	}
-	{
-		for (auto & track: maidSpriteAnimationTracks)
-		{
-			track.Apply(maidSkin, maidAnimationTimer.Time());
-		}
-	}
+	skinningEffect = assets->Load<EffectPass>("Effects/SkinningSpriteEffect");
+	inputLayout = std::make_shared<InputLayout>(graphicsDevice, skinningEffect);
 }
 //-----------------------------------------------------------------------
 void SkinnedMeshRenderer::Visit(GameObject & gameObject, RenderQueue & renderQueue,
 	Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix)
 {
-	///@todo Not implemented
-	
 	if (!isVisible) {
 		return;
 	}
 
-	auto command = MakeUnique<SkinnedMeshCommand>();
+	auto command = MakeUnique<SkinnedMeshRenderCommand>();
 	command->zOrder = zOrder;
 	command->renderer = this;
 	command->modelViewProjection = viewMatrix * projectionMatrix;
@@ -162,22 +96,19 @@ void SkinnedMeshRenderer::Visit(GameObject & gameObject, RenderQueue & renderQue
 void SkinnedMeshRenderer::DrawSkeleton(std::unique_ptr<PolygonBatch> const& polygonBatch,
 	Matrix4x4 const& modelViewProjection)
 {
-//		if (!toggleSwitch3->IsOn()) {
-//			return;
-//		}
-
 	POMDOG_ASSERT(polygonBatch);
 	polygonBatch->Begin(modelViewProjection);
 
-	auto const& globalPoses = maidGlobalPose;
-	
 	Color boneColor {160, 160, 160, 255};
 
-	for (auto & joint: *maidSkeleton)
-	{
-		auto & matrix = globalPoses[*joint.Index];
+	POMDOG_ASSERT(skeletonTransform);
+	auto & globalPose = skeletonTransform->GlobalPose;
 
-		if (maidSkeleton->Root().Index != joint.Index)
+	for (auto & joint: *skeleton)
+	{
+		auto & matrix = globalPose[*joint.Index];
+
+		if (skeleton->Root().Index != joint.Index)
 		{
 			polygonBatch->DrawTriangle(
 				Vector2::Transform({1.7f, -4.7f}, matrix),
@@ -197,7 +128,7 @@ void SkinnedMeshRenderer::DrawSkinnedMesh(std::shared_ptr<GraphicsContext> const
 	Matrix4x4 const& modelViewProjection)
 {
 	{
-		maidSkinningEffect->Parameters("Constants")->SetValue(Matrix4x4::Transpose(modelViewProjection));
+		skinningEffect->Parameters("Constants")->SetValue(Matrix4x4::Transpose(modelViewProjection));
 
 		struct MatrixPalette {
 			std::array<Vector4, 64> matrixPalette1;
@@ -206,16 +137,21 @@ void SkinnedMeshRenderer::DrawSkinnedMesh(std::shared_ptr<GraphicsContext> const
 		MatrixPalette matrixPalette;
 		
 		std::array<Matrix3x2, 64> matrices;
+		
+		POMDOG_ASSERT(skeletonTransform);
+		auto & globalPose = skeletonTransform->GlobalPose;
 
-		for (auto & joint: *maidSkeleton)
+		for (auto & joint: *skeleton)
 		{
 			POMDOG_ASSERT(joint.Index);
 			POMDOG_ASSERT(*joint.Index < matrices.size());
-			POMDOG_ASSERT(*joint.Index < maidGlobalPose.size());
-			matrices[*joint.Index] = joint.InverseBindPose * maidGlobalPose[*joint.Index];
+			POMDOG_ASSERT(*joint.Index < globalPose.size());
+			matrices[*joint.Index] = joint.InverseBindPose * globalPose[*joint.Index];
 		}
+		
+		auto const minMatrixCount = std::min(matrices.size(), globalPose.size());
 
-		for (std::size_t i = 0; i < matrices.size(); ++i) {
+		for (std::size_t i = 0; i < minMatrixCount; ++i) {
 			matrixPalette.matrixPalette1[i].X = matrices[i](0, 0);
 			matrixPalette.matrixPalette1[i].Y = matrices[i](0, 1);
 			matrixPalette.matrixPalette1[i].Z = matrices[i](1, 0);
@@ -224,20 +160,18 @@ void SkinnedMeshRenderer::DrawSkinnedMesh(std::shared_ptr<GraphicsContext> const
 			matrixPalette.matrixPalette2[i].Y = matrices[i](2, 1);
 		}
 
-		maidSkinningEffect->Parameters("SkinningConstants")->SetValue(matrixPalette);
+		skinningEffect->Parameters("SkinningConstants")->SetValue(matrixPalette);
 	}
 	
-	//if (toggleSwitch2->IsOn())
 	{
-		graphicsContext->SetTexture(0, maidTexture);
-		graphicsContext->SetInputLayout(maidInputLayout);
-		graphicsContext->SetVertexBuffer(maidSkinnedMesh.VertexBuffer);
-		maidSkinningEffect->Apply();
+		graphicsContext->SetTexture(0, texture);
+		graphicsContext->SetInputLayout(inputLayout);
+		graphicsContext->SetVertexBuffer(mesh->VertexBuffer);
+		skinningEffect->Apply();
 		graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList,
-			maidSkinnedMesh.IndexBuffer, maidSkinnedMesh.IndexBuffer->IndexCount());
+			mesh->IndexBuffer, mesh->IndexBuffer->IndexCount());
 	}
 	
-//	if (toggleSwitch4->IsOn())
 //	{
 //		RasterizerDescription rasterizerDesc;
 //		rasterizerDesc.FillMode = FillMode::WireFrame;
@@ -245,12 +179,12 @@ void SkinnedMeshRenderer::DrawSkinnedMesh(std::shared_ptr<GraphicsContext> const
 //		
 //		graphicsContext->SetRasterizerState(rasterizerState);
 //		
-//		graphicsContext->SetTexture(0, texture);
-//		graphicsContext->SetInputLayout(maidInputLayout);
-//		graphicsContext->SetVertexBuffer(maidSkinnedMesh.VertexBuffer);
+//		graphicsContext->SetTexture(0, dummyTexture);
+//		graphicsContext->SetInputLayout(inputLayout);
+//		graphicsContext->SetVertexBuffer(mesh.VertexBuffer);
 //		maidSkinningEffect->Apply();
 //		graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList,
-//									 maidSkinnedMesh.IndexBuffer, maidSkinnedMesh.IndexBuffer->IndexCount());
+//									 mesh.IndexBuffer, mesh.IndexBuffer->IndexCount());
 //		
 //		
 //		graphicsContext->SetRasterizerState(RasterizerState::CreateCullCounterClockwise(gameHost->GraphicsDevice()));

@@ -17,13 +17,7 @@
 #include <Pomdog/Pomdog.hpp>
 #include "Renderer.hpp"
 #include "../Skeletal2D/Skeleton.hpp"
-#include "../Skeletal2D/SkeletonPose.hpp"
-#include "../Skeletal2D/Skin.hpp"
-#include "../Skeletal2D/AnimationClip.hpp"
-#include "../Skeletal2D/SpriteAnimationTrack.hpp"
-#include "../Skeletal2D/AnimationState.hpp"
-#include "../Skeletal2D/AnimationSystem.hpp"
-#include "../Skeletal2D/AnimationTimer.hpp"
+#include "../Skeletal2D/SkeletonTransform.hpp"
 #include "../Skeletal2D/SkinnedMesh.hpp"
 #include "../Graphics/PolygonBatch.hpp"
 
@@ -31,7 +25,13 @@ namespace Pomdog {
 
 class SkinnedMeshRenderer: public Renderer {
 public:
-	SkinnedMeshRenderer();
+	SkinnedMeshRenderer(
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		std::shared_ptr<AssetManager> const& assets,
+		std::shared_ptr<Skeleton> const& skeleton,
+		std::shared_ptr<SkeletonTransform> const& skeletonTransform,
+		std::shared_ptr<SkinnedMesh> const& mesh,
+		std::shared_ptr<Texture2D> const& texture);
 
 	void Visit(GameObject & gameObject, RenderQueue & renderQueue, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
 	
@@ -40,29 +40,19 @@ public:
 	void SetVisible(bool isVisible) override;
 	bool IsVisible() const override;
 	
-	void Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice, std::shared_ptr<AssetManager> const& assets);
-	void Update(GameClock const& clock);
-	
 	void DrawSkeleton(std::unique_ptr<PolygonBatch> const& polygonBatch,
 		Matrix4x4 const& modelViewProjection);
 	void DrawSkinnedMesh(std::shared_ptr<GraphicsContext> const& graphicsContext,
 		Matrix4x4 const& modelViewProjection);
 	
 public:
-	AnimationSystem animationSystem;
-	std::shared_ptr<Skeleton> maidSkeleton;
-	std::shared_ptr<SkeletonPose> maidSkeletonPose;
-	std::shared_ptr<AnimationState> maidAnimationState;
-	std::shared_ptr<Texture2D> maidTexture;
-	std::vector<Matrix3x2> maidGlobalPose;
-	std::shared_ptr<AnimationClip> maidAnimationClipIdle;
-	AnimationTimer maidAnimationTimer;
-	Skin maidSkin;
-	std::vector<Details::Skeletal2D::SpriteAnimationTrack> maidSpriteAnimationTracks;
+	std::shared_ptr<SkinnedMesh> mesh;
+	std::shared_ptr<Texture2D> texture;
+	std::shared_ptr<EffectPass> skinningEffect;
+	std::shared_ptr<InputLayout> inputLayout;
 	
-	SkinnedMesh maidSkinnedMesh;
-	std::shared_ptr<EffectPass> maidSkinningEffect;
-	std::shared_ptr<InputLayout> maidInputLayout;
+	std::shared_ptr<Skeleton> skeleton;
+	std::shared_ptr<SkeletonTransform> skeletonTransform;
 	
 	float zOrder;
 	bool isVisible;

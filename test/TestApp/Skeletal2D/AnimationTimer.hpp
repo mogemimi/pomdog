@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Application/DurationSeconds.hpp>
+#include "AnimationTimeInterval.hpp"
 
 namespace Pomdog {
 
@@ -21,16 +21,16 @@ class AnimationTimer {
 public:
 	AnimationTimer();
 
-	void Update(DurationSeconds const& time);
+	void Update(AnimationTimeInterval const& time);
 	void Pause();
 	void Resume();
 	void Reset();
 
-	DurationSeconds Time() const;
+	AnimationTimeInterval Time() const;
 	bool IsPause() const;
 	
 private:
-	DurationSeconds time;
+	AnimationTimeInterval time;
 	bool isPause;
 };
 

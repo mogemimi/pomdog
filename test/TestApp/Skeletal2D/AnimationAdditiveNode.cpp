@@ -36,7 +36,11 @@ AnimationAdditiveNode::AnimationAdditiveNode(std::unique_ptr<AnimationNode> && b
 	: base(std::move(blendNode1In))
 	, additive(std::move(blendNode2In))
 	, weight(1.0f)
-{}
+{
+	POMDOG_ASSERT(base);
+	POMDOG_ASSERT(additive);
+	length = std::max(base->Length(), additive->Length());
+}
 //-----------------------------------------------------------------------
 float AnimationAdditiveNode::Weight() const
 {
@@ -48,7 +52,13 @@ void AnimationAdditiveNode::Weight(float weightIn)
 	this->weight = weightIn;
 }
 //-----------------------------------------------------------------------
-void AnimationAdditiveNode::Calculate(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
+AnimationTimeInterval AnimationAdditiveNode::Length() const
+{
+	return length;
+}
+//-----------------------------------------------------------------------
+void AnimationAdditiveNode::Calculate(AnimationTimeInterval const& time,
+	AnimationGraphWeightCollection const& weights, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
 	auto sourcePose1 = SkeletonPose::CreateBindPose(skeleton);
 //	auto sourcePose2 = SkeletonPose::CreateBindPose(skeleton);
@@ -57,8 +67,8 @@ void AnimationAdditiveNode::Calculate(AnimationTimeInterval const& time, Skeleto
 	POMDOG_ASSERT(base);
 	POMDOG_ASSERT(additive);
 	
-	base->Calculate(time, skeleton, sourcePose1);
-	additive->Calculate(time, skeleton, sourcePose2);
+	base->Calculate(time, weights, skeleton, sourcePose1);
+	additive->Calculate(time, weights, skeleton, sourcePose2);
 	
 //	SkeletonPose bindPose = SkeletonHelper::CreateBindPose(skeleton);
 //	

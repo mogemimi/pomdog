@@ -21,8 +21,9 @@ namespace TestApp {
 
 using namespace Pomdog;
 
-void LogSkeletalInfo(Details::TexturePacker::TextureAtlas const& textureAtlas,
-	Details::Skeletal2D::SkeletonDesc const& skeletonDesc);
+void LogTexturePackerInfo(Details::TexturePacker::TextureAtlas const& textureAtlas);
+
+void LogSkeletalInfo(Details::Skeletal2D::SkeletonDesc const& skeletonDesc);
 
 }// namespace TestApp
 

@@ -223,7 +223,7 @@ void ParticleTestGame::Update()
 	}
 	{
 		static bool isPaused = false;
-		static DurationSeconds time = DurationSeconds(0);
+		static DurationSeconds time = DurationSeconds::zero();
 		
 		if (clock->TotalGameTime() - time > DurationSeconds(0.2)) {
 			if (mouse->State().LeftButton == ButtonState::Pressed) {

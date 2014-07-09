@@ -16,10 +16,10 @@
 #include <vector>
 #include <memory>
 #include "AnimationTimeInterval.hpp"
+#include "AnimationTrack.hpp"
 
 namespace Pomdog {
 
-class AnimationTrack;
 class Skeleton;
 class SkeletonPose;
 

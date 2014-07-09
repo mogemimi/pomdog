@@ -15,7 +15,7 @@ namespace UI {
 DebugNavigator::DebugNavigator(std::shared_ptr<GameClock> const& clockIn)
 	: Control(Matrix3x2::Identity, 150, 40)
 	, clock(clockIn)
-	, duration(DurationSeconds(0))
+	, duration(DurationSeconds::zero())
 	, frameRateString("-- fps")
 {}
 //-----------------------------------------------------------------------

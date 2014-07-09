@@ -27,7 +27,8 @@ public:
 	virtual void Visit(GameObject & gameObject, RenderQueue & renderQueue, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) = 0;
 	
 	virtual void SetZOrder(float zOrder) = 0;
-	virtual float GetZOrder() const = 0;
+	virtual float GetZOrder() const = 0; // SortingOrder
+	
 	virtual void SetVisible(bool isVisible) = 0;
 	virtual bool IsVisible() const = 0;
 };

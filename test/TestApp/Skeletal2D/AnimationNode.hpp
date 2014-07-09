@@ -17,6 +17,7 @@
 
 namespace Pomdog {
 
+class AnimationGraphWeightCollection;
 class Skeleton;
 class SkeletonPose;
 
@@ -24,7 +25,10 @@ class AnimationNode {
 public:
 	virtual ~AnimationNode() = default;
 	
-	virtual void Calculate(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose) = 0;
+	virtual void Calculate(AnimationTimeInterval const& time,
+		AnimationGraphWeightCollection const& weights, Skeleton const& skeleton, SkeletonPose & skeletonPose) = 0;
+	
+	virtual AnimationTimeInterval Length() const = 0;
 };
 
 }// namespace Pomdog

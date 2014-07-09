@@ -82,7 +82,8 @@ void MaidChanGame::Initialize()
 		auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidChan/skeleton.atlas");
 		auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("MaidChan/skeleton.json");
 		
-		LogSkeletalInfo(textureAtlas, skeletonDesc);
+		LogTexturePackerInfo(textureAtlas);
+		LogSkeletalInfo(skeletonDesc);
 		
 		maidSkeleton = std::make_shared<Skeleton>(Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones));
 		maidSkeletonPose = std::make_shared<SkeletonPose>(SkeletonPose::CreateBindPose(*maidSkeleton));

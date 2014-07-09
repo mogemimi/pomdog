@@ -18,7 +18,14 @@ AnimationClipNode::AnimationClipNode(std::shared_ptr<AnimationClip> const& anima
 {
 }
 //-----------------------------------------------------------------------
-void AnimationClipNode::Calculate(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
+AnimationTimeInterval AnimationClipNode::Length() const
+{
+	POMDOG_ASSERT(clip);
+	return clip->Length();
+}
+//-----------------------------------------------------------------------
+void AnimationClipNode::Calculate(AnimationTimeInterval const& time,
+	AnimationGraphWeightCollection const&, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
 	POMDOG_ASSERT(clip);
 	clip->Apply(time, skeleton, skeletonPose);

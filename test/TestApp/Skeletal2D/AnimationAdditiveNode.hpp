@@ -23,10 +23,13 @@ public:
 	AnimationAdditiveNode(std::unique_ptr<AnimationNode> && blendNode1In,
 		std::unique_ptr<AnimationNode> && blendNode2In);
 
-	void Calculate(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose) override;
+	void Calculate(AnimationTimeInterval const& time,
+		AnimationGraphWeightCollection const& weights, Skeleton const& skeleton, SkeletonPose & skeletonPose) override;
 
 	float Weight() const;
 	void Weight(float amount);
+
+	AnimationTimeInterval Length() const override;
 
 	std::unique_ptr<AnimationNode> const& Base() const { return base; }
 	std::unique_ptr<AnimationNode> const& Additive() const { return additive; }
@@ -34,6 +37,7 @@ public:
 private:
 	std::unique_ptr<AnimationNode> base;
 	std::unique_ptr<AnimationNode> additive;
+	AnimationTimeInterval length;
 	float weight;
 };
 

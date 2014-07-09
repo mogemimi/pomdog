@@ -20,21 +20,22 @@ namespace Pomdog {
 
 class AnimationLerpNode final: public AnimationNode {
 public:
-	AnimationLerpNode(std::unique_ptr<AnimationNode> && blendNode1In,
-		std::unique_ptr<AnimationNode> && blendNode2In);
+	AnimationLerpNode(std::unique_ptr<AnimationNode> && blendNode1,
+		std::unique_ptr<AnimationNode> && blendNode2, std::uint16_t weightIndex);
 
-	void Calculate(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose) override;
+	void Calculate(AnimationTimeInterval const& time,
+		AnimationGraphWeightCollection const& weights, Skeleton const& skeleton, SkeletonPose & skeletonPose) override;
 
-	float Weight() const;
-	void Weight(float amount);
+	AnimationTimeInterval Length() const override;
 
-	std::unique_ptr<AnimationNode> const& A() const { return nodeA; }
-	std::unique_ptr<AnimationNode> const& B() const { return nodeB; }
+	std::unique_ptr<AnimationNode> const& A() const;
+	std::unique_ptr<AnimationNode> const& B() const;
 
 private:
 	std::unique_ptr<AnimationNode> nodeA;
 	std::unique_ptr<AnimationNode> nodeB;
-	float weight;
+	AnimationTimeInterval length;
+	std::uint16_t weightIndex;
 };
 
 }// namespace Pomdog

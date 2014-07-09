@@ -28,11 +28,6 @@ public:
 	static SkeletonPose CreateBindPose(Skeleton const& skeleton);
 };
 
-//class SkeletonGlobalPose {
-//	///@note Matrix palette
-//	std::vector<Matrix3x2> GlobalPose;
-//};
-
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SKELETONPOSE_A5B94631_577E_4148_A8F7_DEBCE99A0218_HPP)

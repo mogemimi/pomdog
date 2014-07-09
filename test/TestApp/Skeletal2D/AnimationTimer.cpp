@@ -15,7 +15,7 @@ AnimationTimer::AnimationTimer()
 {
 }
 //-----------------------------------------------------------------------
-void AnimationTimer::Update(DurationSeconds const& timeIn)
+void AnimationTimer::Update(AnimationTimeInterval const& timeIn)
 {
 	if (!isPause)
 	{
@@ -25,7 +25,7 @@ void AnimationTimer::Update(DurationSeconds const& timeIn)
 //-----------------------------------------------------------------------
 void AnimationTimer::Reset()
 {
-	time = DurationSeconds(0);
+	time = AnimationTimeInterval::zero();
 }
 //-----------------------------------------------------------------------
 void AnimationTimer::Pause()
@@ -38,7 +38,7 @@ void AnimationTimer::Resume()
 	isPause = false;
 }
 //-----------------------------------------------------------------------
-DurationSeconds AnimationTimer::Time() const
+AnimationTimeInterval AnimationTimer::Time() const
 {
 	return time;
 }

@@ -90,7 +90,8 @@ void GrassBlendingGame::Initialize()
 		auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("MaidChan2/skeleton.json");
 		maidTexture = assets->Load<Texture2D>("MaidChan2/skeleton.png");
 		
-		LogSkeletalInfo(textureAtlas, skeletonDesc);
+		LogTexturePackerInfo(textureAtlas);
+		LogSkeletalInfo(skeletonDesc);
 		
 		maidSkeleton = std::make_shared<Skeleton>(Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones));
 		maidSkeletonPose = std::make_shared<SkeletonPose>(SkeletonPose::CreateBindPose(*maidSkeleton));
@@ -194,14 +195,14 @@ void GrassBlendingGame::Update()
 		SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose, maidGlobalPose);
 	
 		{
-			///@note Test code for animation blending
-			auto clipNode1 = std::make_unique<AnimationClipNode>(maidAnimationState->Clip());
-			auto clipNode2 = std::make_unique<AnimationClipNode>(maidAnimationClipIdle);
-		
-			auto lerpNode = std::make_unique<AnimationLerpNode>(std::move(clipNode1), std::move(clipNode2));
-			lerpNode->Weight(slider2->Value());
-			
-			lerpNode->Calculate(maidAnimationState->Time(), *maidSkeleton, *maidSkeletonPose);
+//			///@note Test code for animation blending
+//			auto clipNode1 = std::make_unique<AnimationClipNode>(maidAnimationState->Clip());
+//			auto clipNode2 = std::make_unique<AnimationClipNode>(maidAnimationClipIdle);
+//		
+//			auto lerpNode = std::make_unique<AnimationLerpNode>(std::move(clipNode1), std::move(clipNode2));
+//			lerpNode->Weight(slider2->Value());
+//			
+//			lerpNode->Calculate(maidAnimationState->Time(), *maidSkeleton, *maidSkeletonPose);
 			
 			SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose, maidGlobalPose);
 		}

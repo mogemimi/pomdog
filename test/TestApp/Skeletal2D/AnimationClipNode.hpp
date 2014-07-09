@@ -24,7 +24,10 @@ class AnimationClipNode final: public AnimationNode {
 public:
 	AnimationClipNode(std::shared_ptr<AnimationClip> const& animationClip);
 
-	void Calculate(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose) override;
+	void Calculate(AnimationTimeInterval const& time,
+		AnimationGraphWeightCollection const& weights, Skeleton const& skeleton, SkeletonPose & skeletonPose) override;
+
+	AnimationTimeInterval Length() const override;
 
 private:
 	std::shared_ptr<AnimationClip> clip;

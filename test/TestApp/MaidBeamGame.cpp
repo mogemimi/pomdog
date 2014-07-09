@@ -20,7 +20,18 @@
 #include "2D/RenderCommand.hpp"
 #include "2D/RenderQueue.hpp"
 #include "2D/SkinnedMeshRenderer.hpp"
+#include "2D/Animator.hpp"
 #include "2D/BeamRenderer.hpp"
+#include "Spine/SkeletonDescLoader.hpp"
+#include "Spine/SkeletonLoader.hpp"
+#include "Spine/AnimationLoader.hpp"
+#include "Spine/SkinnedMeshLoader.hpp"
+#include "TexturePacker/TextureAtlasLoader.hpp"
+#include "Skeletal2D/SkeletonHelper.hpp"
+#include "Skeletal2D/AnimationClip.hpp"
+#include "Skeletal2D/AnimationClipNode.hpp"
+#include "Skeletal2D/AnimationLerpNode.hpp"
+#include "Utilities/LogSkeletalInfo.hpp"
 
 
 namespace TestApp {
@@ -35,6 +46,7 @@ public:
 	
 	Transform2D & Transform;
 };
+
 //-----------------------------------------------------------------------
 MaidBeamGame::MaidBeamGame(std::shared_ptr<GameHost> const& gameHostIn)
 	: gameHost(gameHostIn)
@@ -83,8 +95,48 @@ void MaidBeamGame::Initialize()
 	{
 		maid = gameWorld.CreateObject();
 		maid->AddComponent<Transform2D>();
-		auto & renderer = maid->AddComponent(MakeUnique<SkinnedMeshRenderer>());
-		renderer.Load(graphicsDevice, assets);
+		
+		auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("MaidGun/MaidGun.json");
+		TestApp::LogSkeletalInfo(skeletonDesc);
+		
+		auto skeleton = std::make_shared<Skeleton>(Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones));
+
+		auto skeletonTransform = std::make_shared<SkeletonTransform>();
+		skeletonTransform->Pose = SkeletonPose::CreateBindPose(*skeleton);
+		skeletonTransform->GlobalPose = SkeletonHelper::ToGlobalPose(*skeleton, skeletonTransform->Pose);
+
+		{
+			auto animationClipRun = std::make_shared<AnimationClip>(Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Run"));
+			auto animationClipRunNoShot = std::make_shared<AnimationClip>(Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "RunNoShot"));
+
+			auto clipNode1 = MakeUnique<AnimationClipNode>(animationClipRun);
+			auto clipNode2 = MakeUnique<AnimationClipNode>(animationClipRunNoShot);
+			
+			std::uint16_t weightIndex = 0;
+			auto lerpNode = MakeUnique<AnimationLerpNode>(std::move(clipNode1), std::move(clipNode2), weightIndex);
+			
+			auto animationGraph = std::make_shared<AnimationGraph>();
+			animationGraph->Tree = std::move(lerpNode);
+			animationGraph->Inputs = {
+				{"lerpNode.Weight", AnimationBlendInputType::Float} // NOTE: weightIndex = 0
+			};
+			
+			maid->AddComponent(MakeUnique<MaidAnimator>(skeleton, skeletonTransform, animationGraph));
+		}
+		{
+			auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidGun/MaidGun.atlas");
+			auto maidTexture = assets->Load<Texture2D>("MaidGun/MaidGun.png");
+		
+			TestApp::LogTexturePackerInfo(textureAtlas);
+
+			auto bindPose = SkeletonPose::CreateBindPose(*skeleton);
+			auto mesh = std::make_shared<SkinnedMesh>(Details::Skeletal2D::CreateSkinnedMesh(graphicsDevice,
+				SkeletonHelper::ToGlobalPose(*skeleton, bindPose),
+				skeletonDesc, textureAtlas,
+				Vector2(maidTexture->Width(), maidTexture->Height()), "default"));
+
+			maid->AddComponent(MakeUnique<SkinnedMeshRenderer>(graphicsDevice, assets, skeleton, skeletonTransform, mesh, maidTexture));
+		}
 	}
 	{
 		lightningBeam = gameWorld.CreateObject();
@@ -108,7 +160,7 @@ void MaidBeamGame::Initialize()
 			stackPanel->AddChild(navigator);
 		}
 		{
-			slider1 = std::make_shared<UI::Slider>(0.3, 1.48);
+			slider1 = std::make_shared<UI::Slider>(0.3, 1.6);
 			slider1->Value(1.48);
 			stackPanel->AddChild(slider1);
 		}
@@ -156,24 +208,20 @@ void MaidBeamGame::Initialize()
 //-----------------------------------------------------------------------
 void MaidBeamGame::Update()
 {
-	auto clock = gameHost->Clock();
-	auto mouse = gameHost->Mouse();
 	{
 		gameEditor->Update();
 	}
-	{
-//		maidAnimationState->PlaybackRate(slider1->Value());
-//		
-//		if (toggleSwitch1->IsOn()) {
-//			maidAnimationState->Stop();
-//		}
+	
+	auto clock = gameHost->Clock();
 
-		if (auto maidRenderer = maid->Component<SkinnedMeshRenderer>())
-		{
-			POMDOG_ASSERT(maidRenderer);
-			maidRenderer->Update(*clock);
-		}
+	for (auto & gameObject: gameWorld.QueryComponents<Animator>())
+	{
+		auto animator = gameObject->Component<Animator>();
+		
+		POMDOG_ASSERT(animator);
+		animator->Update(*clock);
 	}
+
 //	{
 //		auto keyboard = gameHost->Keyboard();
 //		
@@ -197,6 +245,37 @@ void MaidBeamGame::Update()
 //			transform->Position = transform->Position + (velocity * clock->FrameDuration().count());
 //		}
 //	}
+
+	if (auto animator = maid->Component<Animator>())
+	{
+		animator->PlaybackRate(slider1->Value());
+		animator->SetFloat("lerpNode.Weight", slider2->Value());
+		
+//		if (toggleSwitch1->IsOn()) {
+//			maidAnimationState->Stop();
+//		}
+	}
+
+	if (auto renderer = maid->Component<Renderer>())
+	{
+		renderer->SetVisible(toggleSwitch2->IsOn());
+		
+//		if (toggleSwitch3->IsOn()) {
+//			renderer->SkeletonDebugDrawEnable = true;
+//		}
+//		else {
+//			renderer->SkeletonDebugDrawEnable = false;
+//		}
+//		
+//		if (toggleSwitch4->IsOn()) {
+//			renderer->MeshWireframeEnable = true;
+//		}
+//		else {
+//			renderer->MeshWireframeEnable = false;
+//		}
+	}
+
+
 
 	gameWorld.RemoveUnusedObjects();
 }

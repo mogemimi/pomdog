@@ -9,11 +9,10 @@
 #include "LogSkeletalInfo.hpp"
 
 namespace TestApp {
-
+//-----------------------------------------------------------------------
 using namespace Pomdog;
-
-void LogSkeletalInfo(Details::TexturePacker::TextureAtlas const& textureAtlas,
-	Details::Skeletal2D::SkeletonDesc const& skeletonDesc)
+//-----------------------------------------------------------------------
+void LogTexturePackerInfo(Details::TexturePacker::TextureAtlas const& textureAtlas)
 {
 	Log::Info(StringFormat("TextureAtlas.Pages = %ld", textureAtlas.pages.size()));
 	Log::Info(StringFormat("TextureAtlas.Regions = %ld", textureAtlas.regions.size()));
@@ -34,8 +33,12 @@ void LogSkeletalInfo(Details::TexturePacker::TextureAtlas const& textureAtlas,
 		Log::Info(StringFormat("  Region.Offset = %d %d", (int)region.Region.XOffset, (int)region.Region.YOffset));
 		Log::Info(StringFormat("  Region.OriginalSize = %d %d", (int)region.Region.Width, (int)region.Region.Height));
 	}
-
+	
 	Log::Info("-------------------------");
+}
+//-----------------------------------------------------------------------
+void LogSkeletalInfo(Details::Skeletal2D::SkeletonDesc const& skeletonDesc)
+{
 	int boneIndex = 0;
 	for (auto & bone: skeletonDesc.Bones)
 	{
@@ -85,5 +88,5 @@ void LogSkeletalInfo(Details::TexturePacker::TextureAtlas const& textureAtlas,
 		}
 	}
 }
-
+//-----------------------------------------------------------------------
 }// namespace TestApp
