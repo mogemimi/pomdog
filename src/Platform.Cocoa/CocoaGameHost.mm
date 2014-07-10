@@ -11,7 +11,6 @@
 #include <vector>
 #include <OpenGL/OpenGL.h>
 #include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/MakeUnique.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
 #include <Pomdog/Logging/Log.hpp>
@@ -91,7 +90,7 @@ static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 	POMDOG_ASSERT(openGLContext);
 	using RenderSystem::GL4::GraphicsContextGL4;
 
-	auto nativeContext = MakeUnique<GraphicsContextGL4>(openGLContext, std::move(gameWindow));
+	auto nativeContext = std::make_unique<GraphicsContextGL4>(openGLContext, std::move(gameWindow));
 	return std::make_shared<GraphicsContext>(std::move(nativeContext), presentationParameters, graphicsDevice);
 }
 
@@ -175,7 +174,7 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	openGLContext = CreateOpenGLContext(presentationParameters.DepthFormat);
 	
 	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
-	graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(MakeUnique<GraphicsDeviceGL4>());
+	graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::make_unique<GraphicsDeviceGL4>());
 
 	graphicsContext = CreateGraphicsContext(openGLContext, gameWindow, presentationParameters, graphicsDevice);
 	
@@ -198,7 +197,7 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 			graphicsContext,
 			graphicsDevice
 		};
-		assetManager = MakeUnique<Pomdog::AssetManager>(std::move(loaderContext));
+		assetManager = std::make_unique<Pomdog::AssetManager>(std::move(loaderContext));
 	}
 }
 //-----------------------------------------------------------------------
@@ -373,7 +372,7 @@ std::shared_ptr<Pomdog::Mouse> CocoaGameHost::Impl::Mouse()
 CocoaGameHost::CocoaGameHost(std::shared_ptr<CocoaGameWindow> const& window,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
 	RenderSystem::PresentationParameters const& presentationParameters)
-	: impl(MakeUnique<Impl>(window, eventDispatcher, presentationParameters))
+	: impl(std::make_unique<Impl>(window, eventDispatcher, presentationParameters))
 {}
 //-----------------------------------------------------------------------
 CocoaGameHost::~CocoaGameHost() = default;

@@ -7,7 +7,6 @@
 //
 
 #include "PolygonBatch.hpp"
-#include <Pomdog/Utility/MakeUnique.hpp>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
@@ -117,7 +116,7 @@ void PolygonBatch::Impl::DrawTriangle(Vector2 const& point1, Vector2 const& poin
 //-----------------------------------------------------------------------
 PolygonBatch::PolygonBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
-	: impl(MakeUnique<Impl>(graphicsContext, graphicsDevice, assets))
+	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))
 {}
 //-----------------------------------------------------------------------
 PolygonBatch::~PolygonBatch() = default;

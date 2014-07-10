@@ -9,7 +9,6 @@
 #include "SpriteBatch.hpp"
 #include <algorithm>
 #include <vector>
-#include <Pomdog/Utility/MakeUnique.hpp>
 
 namespace Pomdog {
 
@@ -394,13 +393,13 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 //-----------------------------------------------------------------------
 SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
-	: impl(MakeUnique<Impl>(graphicsContext, graphicsDevice, assets))
+	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))
 {}
 //-----------------------------------------------------------------------
 SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets,
 	std::shared_ptr<EffectPass> const& effectPass)
-	: impl(MakeUnique<Impl>(graphicsContext, graphicsDevice, assets, effectPass))
+	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets, effectPass))
 {}
 //-----------------------------------------------------------------------
 SpriteBatch::~SpriteBatch() = default;

@@ -128,7 +128,7 @@ void UIEventDispatcher::Touch(MouseState const& mouseState)
 void UIEventDispatcher::PointerEntered(Point2D const& position, MouseState const& mouseState, std::shared_ptr<UI::UIElement> const& node)
 {
 	POMDOG_ASSERT(!pointerState);
-	pointerState = MakeUnique<PointerState>();
+	pointerState = std::make_unique<PointerState>();
 
 	pointerState->pointerPoint.Event = PointerEventType::Entered;
 	pointerState->pointerPoint.Position = position;

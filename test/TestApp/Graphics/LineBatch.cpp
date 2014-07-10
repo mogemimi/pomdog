@@ -7,7 +7,6 @@
 //
 
 #include "LineBatch.hpp"
-#include <Pomdog/Utility/MakeUnique.hpp>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
@@ -150,7 +149,7 @@ void LineBatch::Impl::DrawTriangle(Vector2 const& point1, Vector2 const& point2,
 //-----------------------------------------------------------------------
 LineBatch::LineBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
-	: impl(MakeUnique<Impl>(graphicsContext, graphicsDevice, assets))
+	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))
 {}
 //-----------------------------------------------------------------------
 LineBatch::~LineBatch() = default;

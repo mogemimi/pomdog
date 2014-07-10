@@ -11,7 +11,6 @@
 #include <codecvt>
 #include <locale>
 #include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/MakeUnique.hpp>
 #include "SpriteBatch.hpp"
 
 
@@ -202,7 +201,7 @@ void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
 SpriteFont::SpriteFont(std::vector<std::shared_ptr<Texture2D>> && textures,
 	std::vector<Details::SpriteFonts::Glyph> const& glyphs,
 	std::uint32_t defaultCharacter, std::int16_t spacing, std::int16_t lineSpacing)
-	: impl(MakeUnique<Impl>(std::move(textures), glyphs, defaultCharacter, spacing, lineSpacing))
+	: impl(std::make_unique<Impl>(std::move(textures), glyphs, defaultCharacter, spacing, lineSpacing))
 {
 }
 //-----------------------------------------------------------------------

@@ -8,7 +8,6 @@
 
 #include "ParticleTestGame.hpp"
 #include <utility>
-#include <Pomdog/Utility/MakeUnique.hpp>
 #include "SpriteBatch.hpp"
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
@@ -38,13 +37,13 @@ static ParticleEmitter CreateEmitterFireBlock()
 	emitter.StartLifetime = 1.8f;
 	//emitter.GravityModifier = 100.0f;
 	
-	//emitter.Shape = MakeUnique<ParticleEmitterShapeSector>(MathConstants<float>::PiOver4());
-	emitter.Shape = MakeUnique<ParticleEmitterShapeBox>(0, 100);
+	//emitter.Shape = std::make_unique<ParticleEmitterShapeSector>(MathConstants<float>::PiOver4());
+	emitter.Shape = std::make_unique<ParticleEmitterShapeBox>(0, 100);
 	
-	emitter.StartSpeed = MakeUnique<ParticleParameterRandom<float>>(40.0f, 128.0f);
-	//emitter.StartSpeed = MakeUnique<ParticleParameterConstant<float>>(-128.0f);
+	emitter.StartSpeed = std::make_unique<ParticleParameterRandom<float>>(40.0f, 128.0f);
+	//emitter.StartSpeed = std::make_unique<ParticleParameterConstant<float>>(-128.0f);
 	
-//	emitter.StartSpeed = MakeUnique<ParticleParameterCurve<float>>(
+//	emitter.StartSpeed = std::make_unique<ParticleParameterCurve<float>>(
 //		std::initializer_list<ParticleCurveKey<float>>{
 //			{0.00f, 0.0f},
 //			{0.10f, -0.5f},
@@ -57,13 +56,13 @@ static ParticleEmitter CreateEmitterFireBlock()
 //			{1.00f, 0.0f},
 //		});
 	
-	emitter.StartColor = MakeUnique<ParticleParameterConstant<Color>>(Color::White);
-	//emitter.StartColor = MakeUnique<ParticleParameterConstant<Color>>(Color::White);
-	//emitter.StartColor = MakeUnique<ParticleParameterRandom<Color>>(Color::Black, Color::White);
+	emitter.StartColor = std::make_unique<ParticleParameterConstant<Color>>(Color::White);
+	//emitter.StartColor = std::make_unique<ParticleParameterConstant<Color>>(Color::White);
+	//emitter.StartColor = std::make_unique<ParticleParameterRandom<Color>>(Color::Black, Color::White);
 	
-	//emitter.ColorOverLifetime = MakeUnique<ParticleParameterConstant<Color>>(Color::White);
-	//emitter.ColorOverLifetime = MakeUnique<ParticleParameterRandom<Color>>(Color::Yellow, Color::Black);
-	emitter.ColorOverLifetime = MakeUnique<ParticleParameterCurve<Color>>(
+	//emitter.ColorOverLifetime = std::make_unique<ParticleParameterConstant<Color>>(Color::White);
+	//emitter.ColorOverLifetime = std::make_unique<ParticleParameterRandom<Color>>(Color::Yellow, Color::Black);
+	emitter.ColorOverLifetime = std::make_unique<ParticleParameterCurve<Color>>(
 		std::initializer_list<ParticleCurveKey<Color>>{
 			{0.00f, Color{255, 255, 255, 0}},
 			{0.02f, Color{255, 255, 255, 10}},
@@ -75,19 +74,19 @@ static ParticleEmitter CreateEmitterFireBlock()
 			{1.00f, Color{0, 0, 0, 0}},
 		});
 	
-	//emitter.StartRotation = MakeUnique<ParticleParameterConstant<Radian<float>>>(0);
-	emitter.StartRotation = MakeUnique<ParticleParameterRandom<Radian<float>>>(
+	//emitter.StartRotation = std::make_unique<ParticleParameterConstant<Radian<float>>>(0);
+	emitter.StartRotation = std::make_unique<ParticleParameterRandom<Radian<float>>>(
 		0, MathConstants<float>::TwoPi());
 	
-	//emitter.RotationOverLifetime = MakeUnique<ParticleParameterConstant<Radian<float>>>(0);
-	emitter.RotationOverLifetime = MakeUnique<ParticleParameterRandom<Radian<float>>>(
+	//emitter.RotationOverLifetime = std::make_unique<ParticleParameterConstant<Radian<float>>>(0);
+	emitter.RotationOverLifetime = std::make_unique<ParticleParameterRandom<Radian<float>>>(
 		-MathConstants<float>::PiOver4(), MathConstants<float>::PiOver4());
 	
-	//emitter.StartSize = MakeUnique<ParticleParameterConstant<float>>(1.0f);
-	emitter.StartSize = MakeUnique<ParticleParameterRandom<float>>(0.8f, 1.2f);
+	//emitter.StartSize = std::make_unique<ParticleParameterConstant<float>>(1.0f);
+	emitter.StartSize = std::make_unique<ParticleParameterRandom<float>>(0.8f, 1.2f);
 	
-	//emitter.SizeOverLifetime = MakeUnique<ParticleParameterConstant<float>>(1.0f);
-	emitter.SizeOverLifetime = MakeUnique<ParticleParameterCurve<float>>(
+	//emitter.SizeOverLifetime = std::make_unique<ParticleParameterConstant<float>>(1.0f);
+	emitter.SizeOverLifetime = std::make_unique<ParticleParameterCurve<float>>(
 		std::initializer_list<ParticleCurveKey<float>>{
 			{0.00f, 0.0f},
 			{0.03f, 0.5f},
@@ -137,12 +136,12 @@ void ParticleTestGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 	{
-		spriteBatch = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
-		spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
-		fxaa = MakeUnique<FXAA>(gameHost);
+		spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
+		spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
+		fxaa = std::make_unique<FXAA>(gameHost);
 	}
 	{
-		gameEditor = MakeUnique<SceneEditor::InGameEditor>(gameHost);
+		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
 	}
 	
 	rootNode = std::make_shared<HierarchyNode>();

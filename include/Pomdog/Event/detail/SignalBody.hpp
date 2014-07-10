@@ -23,7 +23,6 @@
 #include <vector>
 #include <mutex>
 #include "../../Utility/Assert.hpp"
-#include "../../Utility/MakeUnique.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -80,7 +79,7 @@ public:
 	
 	std::unique_ptr<ConnectionBody> DeepCopy() const
 	{
-		return MakeUnique<ConnectionBodyOverride>(weakSignal, weakSlot);
+		return std::make_unique<ConnectionBodyOverride>(weakSignal, weakSlot);
 	}
 };
 
@@ -145,7 +144,7 @@ auto SignalBody<void(Arguments...)>::Connect(Function && slot)->std::unique_ptr<
 	
 	std::weak_ptr<SignalBody> weakSignal = this->shared_from_this();
 	POMDOG_ASSERT(!weakSignal.expired());
-	return MakeUnique<ConnectionBodyType>(std::move(weakSignal), observer);
+	return std::make_unique<ConnectionBodyType>(std::move(weakSignal), observer);
 }
 //-----------------------------------------------------------------------
 template <typename...Arguments>

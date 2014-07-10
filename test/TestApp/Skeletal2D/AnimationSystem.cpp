@@ -87,7 +87,7 @@ void AnimationSystem::Impl::Update(GameClock const& clock)
 #endif
 //-----------------------------------------------------------------------
 AnimationSystem::AnimationSystem()
-	: impl(new Impl())
+	: impl(std::make_unique<Impl>())
 {
 }
 //-----------------------------------------------------------------------

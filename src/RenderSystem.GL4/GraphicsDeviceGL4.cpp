@@ -8,7 +8,6 @@
 
 #include "GraphicsDeviceGL4.hpp"
 #include <Pomdog/Utility/Exception.hpp>
-#include <Pomdog/Utility/MakeUnique.hpp>
 #include "BlendStateGL4.hpp"
 #include "ConstantBufferGL4.hpp"
 #include "DepthStencilStateGL4.hpp"
@@ -31,50 +30,50 @@ std::unique_ptr<NativeIndexBuffer>
 GraphicsDeviceGL4::CreateIndexBuffer(void const* indices,
 	std::uint32_t sizeInBytes, BufferUsage bufferUsage)
 {
-	return MakeUnique<IndexBufferGL4>(indices, sizeInBytes, bufferUsage);
+	return std::make_unique<IndexBufferGL4>(indices, sizeInBytes, bufferUsage);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeVertexBuffer>
 GraphicsDeviceGL4::CreateVertexBuffer(void const* vertices, std::uint32_t vertexCount,
 	std::uint16_t strideBytes, BufferUsage bufferUsage)
 {
-	return MakeUnique<VertexBufferGL4>(vertices, vertexCount, strideBytes, bufferUsage);
+	return std::make_unique<VertexBufferGL4>(vertices, vertexCount, strideBytes, bufferUsage);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBlendState>
 GraphicsDeviceGL4::CreateBlendState(BlendDescription const& description)
 {
-	return MakeUnique<BlendStateGL4>(description);
+	return std::make_unique<BlendStateGL4>(description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeDepthStencilState>
 GraphicsDeviceGL4::CreateDepthStencilState(DepthStencilDescription const& description)
 {
-	return MakeUnique<DepthStencilStateGL4>(description);
+	return std::make_unique<DepthStencilStateGL4>(description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeSamplerState>
 GraphicsDeviceGL4::CreateSamplerState(SamplerDescription const& description)
 {
-	return MakeUnique<SamplerStateGL4>(description);
+	return std::make_unique<SamplerStateGL4>(description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeRasterizerState>
 GraphicsDeviceGL4::CreateRasterizerState(RasterizerDescription const& description)
 {
-	return MakeUnique<RasterizerStateGL4>(description);
+	return std::make_unique<RasterizerStateGL4>(description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectPass>
 GraphicsDeviceGL4::CreateEffectPass(ShaderBytecode const& vertexShaderBytecode, ShaderBytecode const& pixelShaderBytecode)
 {
-	return MakeUnique<EffectPassGL4>(vertexShaderBytecode, pixelShaderBytecode);
+	return std::make_unique<EffectPassGL4>(vertexShaderBytecode, pixelShaderBytecode);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeConstantBuffer>
 GraphicsDeviceGL4::CreateConstantBuffer(std::uint32_t byteConstants)
 {
-	return MakeUnique<ConstantBufferGL4>(byteConstants);
+	return std::make_unique<ConstantBufferGL4>(byteConstants);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectReflection>
@@ -86,7 +85,7 @@ GraphicsDeviceGL4::CreateEffectReflection(NativeEffectPass & nativeEffectPass)
 	if (!effectPassGL4) {
 		return std::unique_ptr<EffectReflectionGL4>();
 	}
-	return MakeUnique<EffectReflectionGL4>(effectPassGL4->GetShaderProgram());
+	return std::make_unique<EffectReflectionGL4>(effectPassGL4->GetShaderProgram());
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeInputLayout>
@@ -98,7 +97,7 @@ GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass & nativeEffectPass)
 	if (!effectPassGL4) {
 		return std::unique_ptr<InputLayoutGL4>();
 	}
-	return MakeUnique<InputLayoutGL4>(effectPassGL4->GetShaderProgram());
+	return std::make_unique<InputLayoutGL4>(effectPassGL4->GetShaderProgram());
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeInputLayout>
@@ -111,7 +110,7 @@ GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass & nativeEffectPass,
 	if (!effectPassGL4) {
 		return std::unique_ptr<InputLayoutGL4>();
 	}
-	return MakeUnique<InputLayoutGL4>(effectPassGL4->GetShaderProgram(), std::move(vertexBufferBindings));
+	return std::make_unique<InputLayoutGL4>(effectPassGL4->GetShaderProgram(), std::move(vertexBufferBindings));
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeInputLayout>
@@ -124,21 +123,21 @@ GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass & nativeEffectPass,
 	if (!effectPassGL4) {
 		return std::unique_ptr<InputLayoutGL4>();
 	}
-	return MakeUnique<InputLayoutGL4>(effectPassGL4->GetShaderProgram(), vertexBufferBindings);
+	return std::make_unique<InputLayoutGL4>(effectPassGL4->GetShaderProgram(), vertexBufferBindings);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeTexture2D>
 GraphicsDeviceGL4::CreateTexture2D(std::uint32_t width, std::uint32_t height, std::uint32_t mipmapLevels,
 	SurfaceFormat format)
 {
-	return MakeUnique<Texture2DGL4>(width, height, mipmapLevels, format);
+	return std::make_unique<Texture2DGL4>(width, height, mipmapLevels, format);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeRenderTarget2D>
 GraphicsDeviceGL4::CreateRenderTarget2D(std::uint32_t width, std::uint32_t height,
 	std::uint32_t mipmapLevels, SurfaceFormat format, DepthFormat depthStencilFormat)
 {
-	return MakeUnique<RenderTarget2DGL4>(width, height, mipmapLevels, format, depthStencilFormat);
+	return std::make_unique<RenderTarget2DGL4>(width, height, mipmapLevels, format, depthStencilFormat);
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

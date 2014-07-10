@@ -10,7 +10,6 @@
 #include <utility>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Utility/Exception.hpp>
-#include <Pomdog/Utility/MakeUnique.hpp>
 #include <Pomdog/Graphics/BlendState.hpp>
 #include <Pomdog/Graphics/DepthStencilState.hpp>
 #include <Pomdog/Graphics/RasterizerState.hpp>
@@ -246,7 +245,7 @@ GraphicsContext::GraphicsContext(
 	std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
 	PresentationParameters const& presentationParameters,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
-	: impl(MakeUnique<Impl>(std::move(nativeContext), presentationParameters))
+	: impl(std::make_unique<Impl>(std::move(nativeContext), presentationParameters))
 {
 	POMDOG_ASSERT(graphicsDevice);
 	impl->BuildResources(graphicsDevice);

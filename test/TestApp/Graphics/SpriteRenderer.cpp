@@ -344,7 +344,7 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
 //-----------------------------------------------------------------------
 SpriteRenderer::SpriteRenderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
-	: impl(std::unique_ptr<Impl>(new Impl(graphicsContext, graphicsDevice, assets)))
+	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))
 {}
 //-----------------------------------------------------------------------
 SpriteRenderer::~SpriteRenderer() = default;

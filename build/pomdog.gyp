@@ -176,7 +176,6 @@
       '../include/Pomdog/Math/detail/TaggedArithmetic.hpp',
       '../include/Pomdog/Utility/Assert.hpp',
       '../include/Pomdog/Utility/Exception.hpp',
-      '../include/Pomdog/Utility/MakeUnique.hpp',
       '../include/Pomdog/Utility/Noncopyable.hpp',
       '../include/Pomdog/Utility/Optional.hpp',
       '../include/Pomdog/Utility/StringFormat.hpp',

@@ -7,7 +7,6 @@
 //
 
 #include "ScenePanel.hpp"
-#include <Pomdog/Utility/MakeUnique.hpp>
 #include "PointerPoint.hpp"
 #include "UIEventDispatcher.hpp"
 

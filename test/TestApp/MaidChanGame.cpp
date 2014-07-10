@@ -8,7 +8,6 @@
 
 #include "MaidChanGame.hpp"
 #include <utility>
-#include <Pomdog/Utility/MakeUnique.hpp>
 #include "SpriteBatch.hpp"
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
@@ -59,11 +58,11 @@ void MaidChanGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 	{
-		spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
-		fxaa = MakeUnique<FXAA>(gameHost);
+		spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
+		fxaa = std::make_unique<FXAA>(gameHost);
 	}
 	{
-		gameEditor = MakeUnique<SceneEditor::InGameEditor>(gameHost);
+		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
 	}
 	
 	

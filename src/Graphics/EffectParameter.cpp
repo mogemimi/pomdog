@@ -9,7 +9,6 @@
 #include <Pomdog/Graphics/EffectParameter.hpp>
 #include <utility>
 #include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/MakeUnique.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include "../RenderSystem/NativeConstantBuffer.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
@@ -28,7 +27,7 @@ public:
 }// unnamed namespace
 //-----------------------------------------------------------------------
 EffectParameter::EffectParameter()
-	: nativeConstantBuffer(MakeUnique<DummyConstantBuffer>())
+	: nativeConstantBuffer(std::make_unique<DummyConstantBuffer>())
 {
 }
 //-----------------------------------------------------------------------

@@ -8,7 +8,6 @@
 
 #include "GrassBlendingGame.hpp"
 #include <utility>
-#include <Pomdog/Utility/MakeUnique.hpp>
 #include "SpriteBatch.hpp"
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
@@ -66,12 +65,12 @@ void GrassBlendingGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 	{
-		spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
-		fxaa = MakeUnique<FXAA>(gameHost);
-		polygonBatch = MakeUnique<PolygonBatch>(graphicsContext, graphicsDevice, *assets);
+		spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
+		fxaa = std::make_unique<FXAA>(gameHost);
+		polygonBatch = std::make_unique<PolygonBatch>(graphicsContext, graphicsDevice, *assets);
 	}
 	{
-		gameEditor = MakeUnique<SceneEditor::InGameEditor>(gameHost);
+		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
 	}
 	
 	rootNode = std::make_shared<HierarchyNode>();
@@ -196,10 +195,10 @@ void GrassBlendingGame::Update()
 	
 		{
 			///@note Test code for animation blending
-			auto clipNode1 = MakeUnique<AnimationClipNode>(maidAnimationState->Clip());
-			auto clipNode2 = MakeUnique<AnimationClipNode>(maidAnimationClipIdle);
+			auto clipNode1 = std::make_unique<AnimationClipNode>(maidAnimationState->Clip());
+			auto clipNode2 = std::make_unique<AnimationClipNode>(maidAnimationClipIdle);
 		
-			auto lerpNode = MakeUnique<AnimationLerpNode>(std::move(clipNode1), std::move(clipNode2));
+			auto lerpNode = std::make_unique<AnimationLerpNode>(std::move(clipNode1), std::move(clipNode2));
 			lerpNode->Weight(slider2->Value());
 			
 			lerpNode->Calculate(maidAnimationState->Time(), *maidSkeleton, *maidSkeletonPose);

@@ -7,7 +7,6 @@
 //
 
 #include "InGameEditor.hpp"
-#include <Pomdog/Utility/MakeUnique.hpp>
 #include "../Graphics/SpriteBatch.hpp"
 #include "../Graphics/SpriteFont.hpp"
 #include "../Graphics/SpriteFontLoader.hpp"
@@ -27,19 +26,19 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 	auto window = gameHost->Window();
 	
 	{
-		backgroundPlane = MakeUnique<SceneEditor::GradientPlane>(gameHost);
+		backgroundPlane = std::make_unique<SceneEditor::GradientPlane>(gameHost);
 	}
 	{
-		spriteBatch = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
+		spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
 		spriteFont = assets->Load<SpriteFont>("BitmapFonts/UbuntuMono-Regular.fnt");
 		distanceFieldEffect = assets->Load<EffectPass>("Effects/SpriteBatchDistanceField");
-		spriteBatchDistanceField = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets,
+		spriteBatchDistanceField = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets,
 			distanceFieldEffect);
 	}
 	{
-		primitiveAxes = MakeUnique<SceneEditor::PrimitiveAxes>(
+		primitiveAxes = std::make_unique<SceneEditor::PrimitiveAxes>(
 			editorColorScheme.CenterAxisX, editorColorScheme.CenterAxisY, editorColorScheme.CenterAxisZ);
-		primitiveGrid = MakeUnique<SceneEditor::PrimitiveGrid>(
+		primitiveGrid = std::make_unique<SceneEditor::PrimitiveGrid>(
 			editorColorScheme.GuideLine, editorColorScheme.Grid);
 	}
 	{

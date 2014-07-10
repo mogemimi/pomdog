@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include <memory>
+#include "../RenderSystem/NativeGraphicsDevice.hpp"
 
 namespace Pomdog {
 namespace Details {

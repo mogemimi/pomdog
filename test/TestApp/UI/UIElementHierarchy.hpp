@@ -17,7 +17,6 @@
 #include <vector>
 #include <memory>
 #include <Pomdog/Pomdog.hpp>
-#include <Pomdog/Utility/MakeUnique.hpp>
 #include "UIElement.hpp"
 #include "UIEventDispatcher.hpp"
 

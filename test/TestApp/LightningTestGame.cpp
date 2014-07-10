@@ -8,7 +8,6 @@
 
 #include "LightningTestGame.hpp"
 #include <utility>
-#include <Pomdog/Utility/MakeUnique.hpp>
 #include "SpriteBatch.hpp"
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
@@ -48,7 +47,7 @@ void LightningTestGame::Initialize()
 	auto assets = gameHost->AssetManager();
 
 	{
-		gameEditor = MakeUnique<SceneEditor::InGameEditor>(gameHost);
+		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
 	}
 	{
 		//samplerPoint = SamplerState::CreatePointWrap(graphicsDevice);
@@ -67,9 +66,9 @@ void LightningTestGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 
-	spriteBatch = MakeUnique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
-	spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
-	fxaa = MakeUnique<FXAA>(gameHost);
+	spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
+	spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
+	fxaa = std::make_unique<FXAA>(gameHost);
 
 	rootNode = std::make_shared<HierarchyNode>();
 	{

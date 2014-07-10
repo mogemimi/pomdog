@@ -148,7 +148,7 @@ DurationSeconds GameClock::Impl::ElapsedTime() const
 #endif
 //-----------------------------------------------------------------------
 GameClock::GameClock()
-	: impl(new Impl)
+	: impl(std::make_unique<Impl>())
 {}
 //-----------------------------------------------------------------------
 GameClock::~GameClock() = default;
