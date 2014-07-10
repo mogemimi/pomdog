@@ -3,7 +3,7 @@ Pomdog
 
 Pomdog is
 
-* game engine for C++11 or later
+* game engine for C++1y or later
 * completely open source (distributed under the [MIT License](http://opensource.org/licenses/mit-license.php))
 
 For more information, see
