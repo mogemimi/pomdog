@@ -23,7 +23,7 @@ class RenderCommand;
 
 class RenderQueue {
 public:
-	void PushBack(std::unique_ptr<RenderCommand> && command);
+	void PushBack(std::reference_wrapper<RenderCommand> && command);
 	
 	void Sort();
 	
@@ -34,9 +34,9 @@ public:
 	void Enumerate(std::function<void(RenderCommand &)> const& callback) const;
 
 private:
-	std::vector<std::unique_ptr<RenderCommand>> negativeCommands;
-	std::vector<std::unique_ptr<RenderCommand>> positiveCommands;
-	std::vector<std::unique_ptr<RenderCommand>> zeroCommands;
+	std::vector<std::reference_wrapper<RenderCommand>> negativeCommands;
+	std::vector<std::reference_wrapper<RenderCommand>> positiveCommands;
+	std::vector<std::reference_wrapper<RenderCommand>> zeroCommands;
 };
 
 }// namespace Pomdog

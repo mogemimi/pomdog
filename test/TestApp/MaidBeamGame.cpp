@@ -8,7 +8,6 @@
 
 #include "MaidBeamGame.hpp"
 #include <utility>
-#include <Pomdog/Utility/MakeUnique.hpp>
 #include "SpriteBatch.hpp"
 #include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
@@ -16,12 +15,10 @@
 #include "UI/StackPanel.hpp"
 #include "UI/DebugNavigator.hpp"
 #include "Graphics/SpriteLine.hpp"
-#include "2D/Renderer.hpp"
-#include "2D/RenderCommand.hpp"
-#include "2D/RenderQueue.hpp"
-#include "2D/SkinnedMeshRenderer.hpp"
+#include "Rendering/Renderer.hpp"
 #include "2D/Animator.hpp"
-#include "2D/BeamRenderer.hpp"
+#include "2D/BeamRenderable.hpp"
+#include "2D/SkinnedMeshRenderable.hpp"
 #include "Spine/SkeletonDescLoader.hpp"
 #include "Spine/SkeletonLoader.hpp"
 #include "Spine/AnimationLoader.hpp"
@@ -60,15 +57,13 @@ MaidBeamGame::~MaidBeamGame() = default;
 void MaidBeamGame::Initialize()
 {
 	auto window = gameHost->Window();
-	window->Title("TestApp - Enjoy Game Dev, Have Fun.");
+	window->Title("MaidBeamGame - Enjoy Game Dev, Have Fun.");
 	window->AllowPlayerResizing(true);
 	
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
 
 	{
-		samplerPoint = SamplerState::CreateLinearWrap(graphicsDevice);
-		
 		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 		graphicsContext->SetBlendState(blendState);
 		texture = assets->Load<Texture2D>("pomdog.png");
@@ -79,12 +74,12 @@ void MaidBeamGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 	{
-		spriteRenderer = MakeUnique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);		
-		fxaa = MakeUnique<FXAA>(gameHost);
-		polygonBatch = MakeUnique<PolygonBatch>(graphicsContext, graphicsDevice, *assets);
+		spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
+		fxaa = std::make_unique<FXAA>(gameHost);
+		polygonBatch = std::make_unique<PolygonBatch>(graphicsContext, graphicsDevice, *assets);
 	}
 	{
-		gameEditor = MakeUnique<SceneEditor::InGameEditor>(gameHost);
+		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
 	}
 
 	{
@@ -109,11 +104,11 @@ void MaidBeamGame::Initialize()
 			auto animationClipRun = std::make_shared<AnimationClip>(Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Run"));
 			auto animationClipRunNoShot = std::make_shared<AnimationClip>(Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "RunNoShot"));
 
-			auto clipNode1 = MakeUnique<AnimationClipNode>(animationClipRun);
-			auto clipNode2 = MakeUnique<AnimationClipNode>(animationClipRunNoShot);
+			auto clipNode1 = std::make_unique<AnimationClipNode>(animationClipRun);
+			auto clipNode2 = std::make_unique<AnimationClipNode>(animationClipRunNoShot);
 			
 			std::uint16_t weightIndex = 0;
-			auto lerpNode = MakeUnique<AnimationLerpNode>(std::move(clipNode1), std::move(clipNode2), weightIndex);
+			auto lerpNode = std::make_unique<AnimationLerpNode>(std::move(clipNode1), std::move(clipNode2), weightIndex);
 			
 			auto animationGraph = std::make_shared<AnimationGraph>();
 			animationGraph->Tree = std::move(lerpNode);
@@ -121,7 +116,7 @@ void MaidBeamGame::Initialize()
 				{"lerpNode.Weight", AnimationBlendInputType::Float} // NOTE: weightIndex = 0
 			};
 			
-			maid->AddComponent(MakeUnique<MaidAnimator>(skeleton, skeletonTransform, animationGraph));
+			maid->AddComponent(std::make_unique<MaidAnimator>(skeleton, skeletonTransform, animationGraph));
 		}
 		{
 			auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidGun/MaidGun.atlas");
@@ -135,13 +130,13 @@ void MaidBeamGame::Initialize()
 				skeletonDesc, textureAtlas,
 				Vector2(maidTexture->Width(), maidTexture->Height()), "default"));
 
-			maid->AddComponent(MakeUnique<SkinnedMeshRenderer>(graphicsDevice, assets, skeleton, skeletonTransform, mesh, maidTexture));
+			maid->AddComponent(std::make_unique<SkinnedMeshRenderable>(graphicsDevice, assets, skeleton, skeletonTransform, mesh, maidTexture));
 		}
 	}
 	{
 		lightningBeam = gameWorld.CreateObject();
 		lightningBeam->AddComponent<Transform2D>();
-		auto & renderer = lightningBeam->AddComponent(MakeUnique<BeamRenderer>());
+		auto & renderer = lightningBeam->AddComponent(std::make_unique<BeamRenderable>());
 		renderer.Load(graphicsDevice, assets);
 	}
 		
@@ -256,9 +251,9 @@ void MaidBeamGame::Update()
 //		}
 	}
 
-	if (auto renderer = maid->Component<Renderer>())
+	if (auto renderable = maid->Component<Renderable>())
 	{
-		renderer->SetVisible(toggleSwitch2->IsOn());
+		renderable->SetVisible(toggleSwitch2->IsOn());
 		
 //		if (toggleSwitch3->IsOn()) {
 //			renderer->SkeletonDebugDrawEnable = true;
@@ -275,20 +270,12 @@ void MaidBeamGame::Update()
 //		}
 	}
 
-
-
 	gameWorld.RemoveUnusedObjects();
 }
 //-----------------------------------------------------------------------
 void MaidBeamGame::Draw()
 {
-	constexpr bool enableFxaa = true;
-
-	if (enableFxaa) {
-		graphicsContext->SetRenderTarget(renderTarget);
-	}
-	
-	graphicsContext->Clear(Color::CornflowerBlue);
+	Renderer renderer;
 	{
 		auto transform = mainCamera->Component<Transform2D>();
 		auto camera = mainCamera->Component<Camera2D>();
@@ -299,34 +286,23 @@ void MaidBeamGame::Draw()
 			gameHost->Window()->ClientBounds().Width, gameHost->Window()->ClientBounds().Height, camera->Near, camera->Far);
 		
 		gameEditor->SetViewProjection(viewMatrix * projectionMatrix);
-	}
-	gameEditor->BeginDraw(*graphicsContext);
 
-	graphicsContext->SetSamplerState(0, samplerPoint);
-	{
-		auto transform = mainCamera->Component<Transform2D>();
-		auto camera = mainCamera->Component<Camera2D>();
-		
-		POMDOG_ASSERT(transform && camera);
-		auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
-		auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-			gameHost->Window()->ClientBounds().Width, gameHost->Window()->ClientBounds().Height, camera->Near, camera->Far);
-
-		RenderQueue renderQueue;
-
-		for (auto & gameObject: gameWorld.QueryComponents<Renderer, Transform2D>())
+		for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
 		{
-			auto renderer = gameObject->Component<Renderer>();
-			renderer->Visit(*gameObject, renderQueue, viewMatrix, projectionMatrix);
+			auto renderable = gameObject->Component<Renderable>();
+			renderable->Visit(*gameObject, renderer.renderQueue, viewMatrix, projectionMatrix);
 		}
-		
-		renderQueue.Sort();
-		renderQueue.Enumerate([this](RenderCommand & command)
-		{
-			command.Execute(graphicsContext);
-		});
-		renderQueue.Clear();
 	}
+	
+	constexpr bool enableFxaa = true;
+
+	if (enableFxaa) {
+		graphicsContext->SetRenderTarget(renderTarget);
+	}
+	
+	graphicsContext->Clear(Color::CornflowerBlue);
+	gameEditor->BeginDraw(*graphicsContext);
+	renderer.Render(graphicsContext);
 
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget();

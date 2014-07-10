@@ -1,4 +1,4 @@
-//
+﻿//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_RENDERER_DD215500_4859_4CB5_886B_2343369AF8BB_HPP
-#define POMDOG_RENDERER_DD215500_4859_4CB5_886B_2343369AF8BB_HPP
+#ifndef POMDOG_RENDERABLE_45A0A118_A075_4172_929C_05DF1A2E47FF_HPP
+#define POMDOG_RENDERABLE_45A0A118_A075_4172_929C_05DF1A2E47FF_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -20,9 +20,9 @@ namespace Pomdog {
 
 class RenderQueue;
 
-class Renderer: public Component<Renderer> {
+class Renderable: public Component<Renderable> {
 public:
-	virtual ~Renderer() = default;
+	virtual ~Renderable() = default;
 
 	virtual void Visit(GameObject & gameObject, RenderQueue & renderQueue, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) = 0;
 	
@@ -35,4 +35,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_RENDERER_DD215500_4859_4CB5_886B_2343369AF8BB_HPP)
+#endif // !defined(POMDOG_RENDERABLE_45A0A118_A075_4172_929C_05DF1A2E47FF_HPP)

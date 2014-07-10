@@ -16,21 +16,19 @@
 namespace Pomdog {
 namespace {
 
-bool CompareRenderCommands(std::unique_ptr<RenderCommand> const& a, std::unique_ptr<RenderCommand> const& b)
+bool CompareRenderCommands(RenderCommand const& a, RenderCommand const& b)
 {
-	return a->ZOrder() < b->ZOrder();
+	return a.ZOrder() < b.ZOrder();
 }
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-void RenderQueue::PushBack(std::unique_ptr<RenderCommand> && command)
+void RenderQueue::PushBack(std::reference_wrapper<RenderCommand> && command)
 {
-	POMDOG_ASSERT(command);
-	
-	if (command->ZOrder() > 0.0f) {
+	if (command.get().ZOrder() > 0.0f) {
 		positiveCommands.push_back(std::move(command));
 	}
-	else if (command->ZOrder() == 0.0f) {
+	else if (command.get().ZOrder() == 0.0f) {
 		zeroCommands.push_back(std::move(command));
 	}
 	else {
@@ -61,13 +59,13 @@ void RenderQueue::Enumerate(std::function<void(RenderCommand&)> const& callback)
 	POMDOG_ASSERT(callback);
 
 	for (auto & command: negativeCommands) {
-		callback(*command);
+		callback(command);
 	}
 	for (auto & command: zeroCommands) {
-		callback(*command);
+		callback(command);
 	}
 	for (auto & command: positiveCommands) {
-		callback(*command);
+		callback(command);
 	}
 }
 //-----------------------------------------------------------------------

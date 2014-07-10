@@ -22,7 +22,6 @@
 #include <list>
 #include "../Config/Export.hpp"
 #include "../Utility/Assert.hpp"
-#include "../Utility/MakeUnique.hpp"
 #include "Component.hpp"
 #include "GameObjectID.hpp"
 
@@ -115,8 +114,7 @@ public:
 		auto const typeIndex = Type::TypeIndex();
 		POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
 		
-		//auto component = std::make_unique<Type>(std::forward<Arguments>(arguments)...);
-		auto component = MakeUnique<Type>(std::forward<Arguments>(arguments)...);
+		auto component = std::make_unique<Type>(std::forward<Arguments>(arguments)...);
 		return AddComponent<Type>(objectID, std::move(component));
 	}
 	

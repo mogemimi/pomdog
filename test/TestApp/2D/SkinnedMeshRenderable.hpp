@@ -1,4 +1,4 @@
-//
+﻿//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_SKINNEDMESHRENDERER_5A9AD268_5CE3_48D1_AEAD_31767902AC6B_HPP
-#define POMDOG_SKINNEDMESHRENDERER_5A9AD268_5CE3_48D1_AEAD_31767902AC6B_HPP
+#ifndef POMDOG_SKINNEDMESHRENDERABLE_6584A6D1_C7C5_4782_90D2_DA79EDC75518_HPP
+#define POMDOG_SKINNEDMESHRENDERABLE_6584A6D1_C7C5_4782_90D2_DA79EDC75518_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -15,17 +15,15 @@
 
 #include <memory>
 #include <Pomdog/Pomdog.hpp>
-#include "Renderer.hpp"
-#include "../Skeletal2D/Skeleton.hpp"
-#include "../Skeletal2D/SkeletonTransform.hpp"
-#include "../Skeletal2D/SkinnedMesh.hpp"
+#include "Renderable.hpp"
 #include "../Graphics/PolygonBatch.hpp"
+#include "../Rendering/SkinnedMeshCommand.hpp"
 
 namespace Pomdog {
 
-class SkinnedMeshRenderer: public Renderer {
+class SkinnedMeshRenderable: public Renderable {
 public:
-	SkinnedMeshRenderer(
+	SkinnedMeshRenderable(
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		std::shared_ptr<AssetManager> const& assets,
 		std::shared_ptr<Skeleton> const& skeleton,
@@ -42,14 +40,9 @@ public:
 	
 	void DrawSkeleton(std::unique_ptr<PolygonBatch> const& polygonBatch,
 		Matrix4x4 const& modelViewProjection);
-	void DrawSkinnedMesh(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		Matrix4x4 const& modelViewProjection);
-	
+
 public:
-	std::shared_ptr<SkinnedMesh> mesh;
-	std::shared_ptr<Texture2D> texture;
-	std::shared_ptr<EffectPass> skinningEffect;
-	std::shared_ptr<InputLayout> inputLayout;
+	Details::Rendering::SkinnedMeshCommand command;
 	
 	std::shared_ptr<Skeleton> skeleton;
 	std::shared_ptr<SkeletonTransform> skeletonTransform;
@@ -60,4 +53,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SKINNEDMESHRENDERER_5A9AD268_5CE3_48D1_AEAD_31767902AC6B_HPP)
+#endif // !defined(POMDOG_SKINNEDMESHRENDERABLE_6584A6D1_C7C5_4782_90D2_DA79EDC75518_HPP)

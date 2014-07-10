@@ -55,8 +55,7 @@ private:
 	
 	std::shared_ptr<Texture2D> texture;
 	std::unique_ptr<SpriteRenderer> spriteRenderer;
-	
-	std::shared_ptr<SamplerState> samplerPoint;
+
 	std::shared_ptr<RenderTarget2D> renderTarget;
 	std::unique_ptr<FXAA> fxaa;
 

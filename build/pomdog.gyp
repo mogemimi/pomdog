@@ -190,7 +190,6 @@
       '../src/Gameplay/GameObject.cpp',
       '../src/Gameplay/GameWorld.cpp',
       '../src/Gameplay/HierarchyNode.cpp',
-      '../src/Gameplay2D/Camera2D.cpp',
       '../src/Graphics/ClearOptions.cpp',
       '../src/Graphics/VertexBufferBinding.cpp',
       '../src/Graphics/VertexDeclaration.cpp',

@@ -6,16 +6,16 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "BeamRenderer.hpp"
+#include "BeamRenderable.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-BeamRenderer::BeamRenderer()
+BeamRenderable::BeamRenderable()
 	: zOrder(0)
 	, isVisible(true)
 {}
 //-----------------------------------------------------------------------
-void BeamRenderer::Visit(GameObject & gameObject, RenderQueue & renderQueue,
+void BeamRenderable::Visit(GameObject & gameObject, RenderQueue & renderQueue,
 	Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix)
 {
 	///@todo Not implemented
@@ -29,13 +29,13 @@ void BeamRenderer::Visit(GameObject & gameObject, RenderQueue & renderQueue,
 //	graphicsContext->SetBlendState(blendState);
 }
 //-----------------------------------------------------------------------
-void BeamRenderer::Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+void BeamRenderable::Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::shared_ptr<AssetManager> const& assets)
 {
 	beamTexture = assets->Load<Texture2D>("Particles/lightning.png");
 }
 //-----------------------------------------------------------------------
-void BeamRenderer::Update(GameClock const& clock)
+void BeamRenderable::Update(GameClock const& clock)
 {
 	{
 		beamSystem.emitter.InterpolationPoints = static_cast<std::uint16_t>(95);
@@ -66,7 +66,7 @@ void BeamRenderer::Update(GameClock const& clock)
 	}
 }
 //-----------------------------------------------------------------------
-void BeamRenderer::DrawBeam()
+void BeamRenderable::DrawBeam()
 {
 //	auto transform = mainCamera->Component<Transform2D>();
 //	auto camera = mainCamera->Component<Camera2D>();
@@ -131,22 +131,22 @@ void BeamRenderer::DrawBeam()
 //	spriteRenderer->End();
 }
 //-----------------------------------------------------------------------
-void BeamRenderer::SetZOrder(float zOrderIn)
+void BeamRenderable::SetZOrder(float zOrderIn)
 {
 	this->zOrder = zOrderIn;
 }
 //-----------------------------------------------------------------------
-float BeamRenderer::GetZOrder() const
+float BeamRenderable::GetZOrder() const
 {
 	return zOrder;
 }
 //-----------------------------------------------------------------------
-void BeamRenderer::SetVisible(bool isVisibleIn)
+void BeamRenderable::SetVisible(bool isVisibleIn)
 {
 	this->isVisible = isVisibleIn;
 }
 //-----------------------------------------------------------------------
-bool BeamRenderer::IsVisible() const
+bool BeamRenderable::IsVisible() const
 {
 	return isVisible;
 }

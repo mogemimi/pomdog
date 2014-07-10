@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_BEAMRENDERER_C48BC873_9ED7_4C3C_B244_4A839E4E2407_HPP
-#define POMDOG_BEAMRENDERER_C48BC873_9ED7_4C3C_B244_4A839E4E2407_HPP
+#ifndef POMDOG_BEAMRENDERABLE_5F289224_7B9B_4C29_9890_16140FFB6DFB_HPP
+#define POMDOG_BEAMRENDERABLE_5F289224_7B9B_4C29_9890_16140FFB6DFB_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -15,14 +15,14 @@
 
 #include <memory>
 #include <Pomdog/Pomdog.hpp>
-#include "Renderer.hpp"
+#include "Renderable.hpp"
 #include "../Particle2D/BeamSystem.hpp"
 
 namespace Pomdog {
 
-class BeamRenderer: public Renderer {
+class BeamRenderable: public Renderable {
 public:
-	BeamRenderer();
+	BeamRenderable();
 
 	void Visit(GameObject & gameObject, RenderQueue & renderQueue, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
 	
@@ -46,4 +46,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_BEAMRENDERER_C48BC873_9ED7_4C3C_B244_4A839E4E2407_HPP)
+#endif // !defined(POMDOG_BEAMRENDERABLE_5F289224_7B9B_4C29_9890_16140FFB6DFB_HPP)
