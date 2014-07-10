@@ -36,7 +36,7 @@
     },
     'xcode_settings': {
       'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
-      'CLANG_CXX_LANGUAGE_STANDARD': 'c++0x',
+      'CLANG_CXX_LANGUAGE_STANDARD': 'c++1y',
       'MACOSX_DEPLOYMENT_TARGET': '10.9', # OS X Deployment Target: 10.9
       'CLANG_CXX_LIBRARY': 'libc++', # libc++ requires OS X 10.7 or later
       # Warnings:

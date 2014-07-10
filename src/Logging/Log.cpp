@@ -10,7 +10,6 @@
 #include <algorithm>
 #include <memory>
 #include <mutex>
-#include <tuple>
 #include <vector>
 #include <Pomdog/Logging/LogEntry.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
@@ -18,12 +17,10 @@
 #include <Pomdog/Event/EventConnection.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
 
-
 namespace Pomdog {
 namespace {
 
-class Logger
-{
+class Logger {
 public:
 	///@~Japanese
 	/// @brief デフォルトのチャンネルに接続します。
@@ -81,7 +78,11 @@ public:
 	
 private:
 	LogChannel defaultChannel;
-	std::vector<std::tuple<LogChannel, ScopedConnection>> channels;
+	struct ChannelTuple {
+		LogChannel channel;
+		ScopedConnection connection;
+	};
+	std::vector<ChannelTuple> channels;
 	std::recursive_mutex channelsProtection;
 };
 //-----------------------------------------------------------------------
@@ -99,8 +100,8 @@ template <typename T>
 static auto FindChannnel(std::string const& channelName, T & channels) ->decltype(channels.begin())
 {
 	return std::find_if(std::begin(channels), std::end(channels),
-		[&channelName](std::tuple<LogChannel, ScopedConnection> const& tuple) {
-			return channelName == std::get<0>(tuple).Name();
+		[&channelName](decltype(channels.front()) const& tuple) {
+			return channelName == tuple.channel.Name();
 		});
 }
 //-----------------------------------------------------------------------
@@ -111,15 +112,17 @@ EventConnection Logger::Connect(std::string const& channelName, std::function<vo
 	{
 		std::lock_guard<std::recursive_mutex> lock(channelsProtection);
 		
-		channels.emplace_back(channelName);
+		ChannelTuple tuple;
+		tuple.channel = LogChannel{channelName};
+		channels.push_back(std::move(tuple));
 		iter = std::prev(channels.end());
 	}
 	
 	POMDOG_ASSERT(iter != std::end(channels));
-	POMDOG_ASSERT(channelName == std::get<0>(*iter).Name());
+	POMDOG_ASSERT(channelName == iter->channel.Name());
 	
-	auto & channel = std::get<0>(*iter);
-	auto & connection = std::get<1>(*iter);
+	auto & channel = iter->channel;
+	auto & connection = iter->connection;
 	
 	connection = channel.Connect([this](LogEntry const& entry) {
 		defaultChannel.Log(entry);
@@ -134,15 +137,17 @@ EventConnection Logger::Connect(std::string const& channelName, std::function<vo
 	{
 		std::lock_guard<std::recursive_mutex> lock(channelsProtection);
 		
-		channels.emplace_back(channelName);
+		ChannelTuple tuple;
+		tuple.channel = LogChannel{channelName};
+		channels.push_back(std::move(tuple));
 		iter = std::prev(channels.end());
 	}
-	
+
 	POMDOG_ASSERT(iter != std::end(channels));
-	POMDOG_ASSERT(channelName == std::get<0>(*iter).Name());
+	POMDOG_ASSERT(channelName == iter->channel.Name());
 	
-	auto & channel = std::get<0>(*iter);
-	auto & connection = std::get<1>(*iter);
+	auto & channel = iter->channel;
+	auto & connection = iter->connection;
 	
 	connection = channel.Connect([this](LogEntry const& entry) {
 		defaultChannel.Log(entry);
@@ -154,9 +159,10 @@ void Logger::RemoveUnusedChannel()
 {
 	std::lock_guard<std::recursive_mutex> lock(channelsProtection);
 
-	channels.erase(std::remove_if(std::begin(channels), std::end(channels), [](std::tuple<LogChannel, ScopedConnection> const& tuple) {
-		return std::get<0>(tuple).ConnectionCount() <= 0;
-	}), std::end(channels));
+	channels.erase(std::remove_if(std::begin(channels), std::end(channels),
+		[](ChannelTuple const& tuple) {
+			return tuple.channel.ConnectionCount() <= 0;
+		}), std::end(channels));
 }
 //-----------------------------------------------------------------------
 LogLevel Logger::GetLevel() const
@@ -173,7 +179,7 @@ LogLevel Logger::GetLevel(std::string const& channelName) const
 {
 	auto iter = FindChannnel(channelName, channels);
 	if (iter != std::end(channels)) {
-		return std::get<0>(*iter).Level();
+		return iter->channel.Level();
 	}
 	return defaultChannel.Level();
 }
@@ -182,7 +188,7 @@ void Logger::SetLevel(std::string const& channelName, LogLevel level)
 {
 	auto iter = FindChannnel(channelName, channels);
 	if (iter != std::end(channels)) {
-		std::get<0>(*iter).Level(level);
+		iter->channel.Level(level);
 	}
 }
 //-----------------------------------------------------------------------
@@ -195,7 +201,7 @@ void Logger::Log(LogEntry const& entry)
 {
 	auto iter = FindChannnel(entry.Tag, channels);
 	if (std::end(channels) != iter) {
-		std::get<0>(*iter).Log(entry);
+		iter->channel.Log(entry);
 	}
 	else {
 		defaultChannel.Log(entry);
@@ -212,7 +218,7 @@ LogStream Logger::Stream(std::string const& channelName, LogLevel verbosity)
 	auto iter = FindChannnel(channelName, channels);
 	
 	if (std::end(channels) != iter) {
-		return LogStream(std::get<0>(*iter), verbosity);
+		return LogStream(iter->channel, verbosity);
 	}
 	
 	return LogStream(defaultChannel, channelName, verbosity);
