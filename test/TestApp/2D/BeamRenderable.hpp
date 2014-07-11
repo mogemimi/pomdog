@@ -38,7 +38,7 @@ public:
 	
 private:
 	BeamSystem beamSystem;
-	std::shared_ptr<Texture2D> beamTexture;
+	std::shared_ptr<Texture2D> texture;
 	
 	float zOrder;
 	bool isVisible;

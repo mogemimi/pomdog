@@ -35,6 +35,11 @@ public:
 
 	void SetMatrixPalette(Skeleton const& skeleton, SkeletonTransform const& skeletonTransform);
 
+	RenderCommandType CommandType() const override
+	{
+		return RenderCommandType::Batch;
+	}
+
 public:
 	Matrix4x4 modelViewProjection;
 	std::shared_ptr<SkinnedMesh> mesh;

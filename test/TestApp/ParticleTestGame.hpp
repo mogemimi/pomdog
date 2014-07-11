@@ -20,19 +20,13 @@
 #include "UI/ScenePanel.hpp"
 #include "UI/Slider.hpp"
 #include "ParticleSystem.hpp"
-
-namespace Pomdog {
-
-class SpriteBatch;
-
-}// namespace Pomdog
+#include "Rendering/Renderer.hpp"
 
 namespace TestApp {
 
 using namespace Pomdog;
 
 class FXAA;
-class SpriteRenderer;
 
 class ParticleTestGame: public Game {
 public:
@@ -45,24 +39,10 @@ public:
 	void Update();
 	
 	void Draw();
-	
-private:
-	void DrawSprites();
 
 private:
 	std::shared_ptr<GameHost> gameHost;
 	std::shared_ptr<GraphicsContext> graphicsContext;
-		
-	std::shared_ptr<Texture2D> texture;
-	std::unique_ptr<SpriteBatch> spriteBatch;
-	std::unique_ptr<SpriteRenderer> spriteRenderer;
-	
-	//std::shared_ptr<SamplerState> samplerPoint;
-	std::shared_ptr<RenderTarget2D> renderTarget;
-	std::unique_ptr<FXAA> fxaa;
-	
-	std::shared_ptr<BlendState> blendStateAdditive;
-	std::shared_ptr<BlendState> blendStateNonPremultiplied;
 
 	std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
 	std::shared_ptr<UI::ScenePanel> scenePanel;
@@ -70,10 +50,12 @@ private:
 	std::shared_ptr<UI::Slider> slider2;
 	
 	GameWorld gameWorld;
-	std::shared_ptr<HierarchyNode> rootNode;
 	std::shared_ptr<GameObject> mainCamera;
+	std::shared_ptr<GameObject> particleObject;
 	
-	ParticleSystem particleSystem;
+	std::unique_ptr<Renderer> renderer;
+	std::shared_ptr<RenderTarget2D> renderTarget;
+	std::unique_ptr<FXAA> fxaa;
 	
 	ScopedConnection sceneTouchConnection;
 	Vector2 touchPoint;

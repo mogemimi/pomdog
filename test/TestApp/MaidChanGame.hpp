@@ -32,6 +32,7 @@
 namespace Pomdog {
 
 class SpriteBatch;
+class SpriteRenderer;
 
 }// namespace Pomdog
 
@@ -39,7 +40,6 @@ namespace TestApp {
 
 using namespace Pomdog;
 
-class SpriteRenderer;
 class FXAA;
 
 class MaidChanGame: public Game {

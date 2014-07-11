@@ -19,13 +19,20 @@ namespace Pomdog {
 
 class GraphicsContext;
 
+enum class RenderCommandType {
+	Custom,
+	Batch,
+};
+
 class RenderCommand {
 public:
 	virtual ~RenderCommand() = default;
 	
-	virtual float ZOrder() const = 0;
-	
 	virtual void Execute(std::shared_ptr<GraphicsContext> const& graphicsContext) = 0;
+	
+	virtual RenderCommandType CommandType() const = 0;
+	
+	virtual float ZOrder() const = 0;
 };
 
 }// namespace Pomdog

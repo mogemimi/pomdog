@@ -32,7 +32,7 @@ void BeamRenderable::Visit(GameObject & gameObject, RenderQueue & renderQueue,
 void BeamRenderable::Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::shared_ptr<AssetManager> const& assets)
 {
-	beamTexture = assets->Load<Texture2D>("Particles/lightning.png");
+	texture = assets->Load<Texture2D>("Particles/lightning.png");
 }
 //-----------------------------------------------------------------------
 void BeamRenderable::Update(GameClock const& clock)
@@ -150,4 +150,5 @@ bool BeamRenderable::IsVisible() const
 {
 	return isVisible;
 }
+//-----------------------------------------------------------------------
 }// namespace Pomdog

@@ -17,9 +17,7 @@
 #include <Pomdog/Pomdog.hpp>
 #include "SpriteSortMode.hpp"
 
-namespace TestApp {
-
-using namespace Pomdog;
+namespace Pomdog {
 
 class SpriteRenderer {
 public:
@@ -58,6 +56,6 @@ private:
 	std::unique_ptr<Impl> impl;
 };
 
-}// namespace TestApp
+}// namespace Pomdog
 
 #endif // !defined(POMDOG_SPRITERENDERER_8ACAC405_03FF_42D3_87CA_D25B183EF883_HPP)

@@ -26,6 +26,7 @@ namespace Pomdog {
 
 class SpriteBatch;
 class SpriteFont;
+class SpriteRenderer;
 
 }// namespace Pomdog
 
@@ -34,7 +35,6 @@ namespace TestApp {
 using namespace Pomdog;
 
 class FXAA;
-class SpriteRenderer;
 
 class LightningTestGame: public Game {
 public:

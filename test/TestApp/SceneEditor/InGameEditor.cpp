@@ -53,6 +53,8 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 	});
 }
 //-----------------------------------------------------------------------
+InGameEditor::~InGameEditor() = default;
+//-----------------------------------------------------------------------
 void InGameEditor::AddView(std::shared_ptr<UI::UIView> const& view)
 {
 	POMDOG_ASSERT(view->Parent().expired());

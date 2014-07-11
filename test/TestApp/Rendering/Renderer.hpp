@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -18,12 +18,23 @@
 
 namespace Pomdog {
 
+class SpriteRenderer;
+class PolygonBatch;
+
 class Renderer {
 public:
+	Renderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
+
+	~Renderer();
+
 	void Render(std::shared_ptr<GraphicsContext> const& graphicsContext);
-		
+	
 public:
 	RenderQueue renderQueue;
+	std::unique_ptr<SpriteRenderer> spriteRenderer;
+	//std::unique_ptr<PolygonBatch> polygonBatch;
+	//std::unique_ptr<SpriteBatch> spriteBatch;
 };
 
 }// namespace Pomdog

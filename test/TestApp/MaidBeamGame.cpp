@@ -8,14 +8,11 @@
 
 #include "MaidBeamGame.hpp"
 #include <utility>
-#include "SpriteBatch.hpp"
-#include "SpriteRenderer.hpp"
 #include "FXAA.hpp"
 #include "SandboxHelper.hpp"
 #include "UI/StackPanel.hpp"
 #include "UI/DebugNavigator.hpp"
 #include "Graphics/SpriteLine.hpp"
-#include "Rendering/Renderer.hpp"
 #include "2D/Animator.hpp"
 #include "2D/BeamRenderable.hpp"
 #include "2D/SkinnedMeshRenderable.hpp"
@@ -66,7 +63,6 @@ void MaidBeamGame::Initialize()
 	{
 		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 		graphicsContext->SetBlendState(blendState);
-		texture = assets->Load<Texture2D>("pomdog.png");
 	}
 	{
 		renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
@@ -74,9 +70,8 @@ void MaidBeamGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 	{
-		spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
 		fxaa = std::make_unique<FXAA>(gameHost);
-		polygonBatch = std::make_unique<PolygonBatch>(graphicsContext, graphicsDevice, *assets);
+		renderer = std::make_unique<Renderer>(graphicsContext, graphicsDevice, *assets);
 	}
 	{
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
@@ -136,8 +131,8 @@ void MaidBeamGame::Initialize()
 	{
 		lightningBeam = gameWorld.CreateObject();
 		lightningBeam->AddComponent<Transform2D>();
-		auto & renderer = lightningBeam->AddComponent(std::make_unique<BeamRenderable>());
-		renderer.Load(graphicsDevice, assets);
+		auto & rendererable = lightningBeam->AddComponent(std::make_unique<BeamRenderable>());
+		rendererable.Load(graphicsDevice, assets);
 	}
 		
 	{
@@ -197,7 +192,6 @@ void MaidBeamGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 
 		fxaa->ResetViewportSize(bounds);
-		spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(bounds.Width, bounds.Height, 1.0f, 100.0f));
 	});
 }
 //-----------------------------------------------------------------------
@@ -275,7 +269,6 @@ void MaidBeamGame::Update()
 //-----------------------------------------------------------------------
 void MaidBeamGame::Draw()
 {
-	Renderer renderer;
 	{
 		auto transform = mainCamera->Component<Transform2D>();
 		auto camera = mainCamera->Component<Camera2D>();
@@ -290,7 +283,7 @@ void MaidBeamGame::Draw()
 		for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
 		{
 			auto renderable = gameObject->Component<Renderable>();
-			renderable->Visit(*gameObject, renderer.renderQueue, viewMatrix, projectionMatrix);
+			renderable->Visit(*gameObject, renderer->renderQueue, viewMatrix, projectionMatrix);
 		}
 	}
 	
@@ -302,7 +295,7 @@ void MaidBeamGame::Draw()
 	
 	graphicsContext->Clear(Color::CornflowerBlue);
 	gameEditor->BeginDraw(*graphicsContext);
-	renderer.Render(graphicsContext);
+	renderer->Render(graphicsContext);
 
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget();

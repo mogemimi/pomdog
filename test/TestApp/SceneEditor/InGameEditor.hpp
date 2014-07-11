@@ -36,6 +36,8 @@ class InGameEditor {
 public:
 	explicit InGameEditor(std::shared_ptr<GameHost> const& gameHost);
 
+	~InGameEditor();
+
 	void Update();
 
 	void SetViewProjection(Matrix4x4 const& viewProjection);

@@ -20,21 +20,13 @@
 #include "UI/ScenePanel.hpp"
 #include "UI/Slider.hpp"
 #include "UI/ToggleSwitch.hpp"
-#include "Graphics/PolygonBatch.hpp"
 #include "Graphics/LineBatch.hpp"
-
-namespace Pomdog {
-
-class SpriteBatch;
-class SceneNode;
-
-}// namespace Pomdog
+#include "Rendering/Renderer.hpp"
 
 namespace TestApp {
 
 using namespace Pomdog;
 
-class SpriteRenderer;
 class FXAA;
 
 class MaidBeamGame: public Game {
@@ -52,12 +44,6 @@ public:
 private:
 	std::shared_ptr<GameHost> gameHost;
 	std::shared_ptr<GraphicsContext> graphicsContext;
-	
-	std::shared_ptr<Texture2D> texture;
-	std::unique_ptr<SpriteRenderer> spriteRenderer;
-
-	std::shared_ptr<RenderTarget2D> renderTarget;
-	std::unique_ptr<FXAA> fxaa;
 
 	std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
 	std::shared_ptr<UI::ScenePanel> scenePanel;
@@ -75,7 +61,9 @@ private:
 	
 	ScopedConnection clientSizeChangedConnection;
 	
-	std::unique_ptr<PolygonBatch> polygonBatch;
+	std::unique_ptr<Renderer> renderer;
+	std::shared_ptr<RenderTarget2D> renderTarget;
+	std::unique_ptr<FXAA> fxaa;
 };
 
 }// namespace TestApp

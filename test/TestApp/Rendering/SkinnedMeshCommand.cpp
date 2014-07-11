@@ -14,9 +14,6 @@ namespace Rendering {
 //-----------------------------------------------------------------------
 void SkinnedMeshCommand::Execute(std::shared_ptr<GraphicsContext> const& graphicsContext)
 {
-	//auto transform = gameObject->Component<Transform2D>();
-	//renderer->DrawSkeleton(polygonBatch, modelViewProjection);
-
 	skinningEffect->Parameters("Constants")->SetValue(Matrix4x4::Transpose(modelViewProjection));
 	{
 		graphicsContext->SetTexture(0, texture);
@@ -27,21 +24,22 @@ void SkinnedMeshCommand::Execute(std::shared_ptr<GraphicsContext> const& graphic
 			mesh->IndexBuffer, mesh->IndexBuffer->IndexCount());
 	}
 //	{
+//		auto rasterizerStateOld = graphicsContext->GetRasterizerState();
+//	
 //		RasterizerDescription rasterizerDesc;
 //		rasterizerDesc.FillMode = FillMode::WireFrame;
-//		auto rasterizerState = std::make_shared<RasterizerState>(gameHost->GraphicsDevice(), rasterizerDesc);
+//		auto rasterizerState = std::make_shared<RasterizerState>(graphicsDevice, rasterizerDesc);
 //		
 //		graphicsContext->SetRasterizerState(rasterizerState);
 //		
-//		graphicsContext->SetTexture(0, dummyTexture);
+//		graphicsContext->SetTexture(0, texture);
 //		graphicsContext->SetInputLayout(inputLayout);
-//		graphicsContext->SetVertexBuffer(mesh.VertexBuffer);
-//		maidSkinningEffect->Apply();
+//		graphicsContext->SetVertexBuffer(mesh->VertexBuffer);
+//		skinningEffect->Apply();
 //		graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList,
-//									 mesh.IndexBuffer, mesh.IndexBuffer->IndexCount());
-//		
-//		
-//		graphicsContext->SetRasterizerState(RasterizerState::CreateCullCounterClockwise(gameHost->GraphicsDevice()));
+//									 mesh->IndexBuffer, mesh->IndexBuffer->IndexCount());
+//
+//		graphicsContext->SetRasterizerState(rasterizerStateOld);
 //	}
 }
 //-----------------------------------------------------------------------
