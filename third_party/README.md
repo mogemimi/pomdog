@@ -18,6 +18,14 @@ See accompanying file [third_party/iutest/LICENSE][license-iutest].
 See accompanying file [third_party/libpng/LICENSE][license-libpng].
 [license-libpng]: libpng/LICENSE
 
+### Lua
+
+* [The Programming Language Lua](http://www.lua.org/)
+
+**License:**  
+See accompanying file [third_party/lua/LICENSE.md][license-lua].
+[license-lua]: lua/LICENSE.md
+
 ### rapidjson
 
 * [rapidjson - Google Project Hosting](https://code.google.com/p/rapidjson/) (original repository)
