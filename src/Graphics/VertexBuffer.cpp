@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -20,7 +20,18 @@ VertexBuffer::VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice
 	void const* vertices, std::uint32_t vertexCountIn,
 	std::uint16_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
 	: nativeVertexBuffer(graphicsDevice->NativeGraphicsDevice()->CreateVertexBuffer(
-		vertices, vertexCountIn, strideBytesIn, bufferUsageIn))
+		vertices, vertexCountIn * strideBytesIn, bufferUsageIn))
+	, vertexCount(vertexCountIn)
+	, strideBytes(strideBytesIn)
+	, bufferUsage(bufferUsageIn)
+{
+	POMDOG_ASSERT(nativeVertexBuffer);
+}
+//-----------------------------------------------------------------------
+VertexBuffer::VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	std::uint32_t vertexCountIn, std::uint16_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
+	: nativeVertexBuffer(graphicsDevice->NativeGraphicsDevice()->CreateVertexBuffer(
+		vertexCountIn * strideBytesIn, bufferUsageIn))
 	, vertexCount(vertexCountIn)
 	, strideBytes(strideBytesIn)
 	, bufferUsage(bufferUsageIn)

@@ -42,9 +42,17 @@ struct TypesafeHelperGL4::OpenGLGetTraits<IndexBufferObjectGL4> {
 	constexpr static GLenum bufferObjectTarget = GL_ELEMENT_ARRAY_BUFFER;
 };
 //-----------------------------------------------------------------------
+IndexBufferGL4::IndexBufferGL4(std::uint32_t sizeInBytes, BufferUsage bufferUsage)
+	: IndexBufferGL4(static_cast<void const*>(nullptr), sizeInBytes, bufferUsage)
+{
+	POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
+}
+//-----------------------------------------------------------------------
 IndexBufferGL4::IndexBufferGL4(void const* indices,
 	std::uint32_t sizeInBytes, BufferUsage bufferUsage)
 {
+	POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable ? indices != nullptr: true);
+
 	// Generate index buffer
 	bufferObject = ([]{
 		IndexBufferObjectGL4 indexBuffer;

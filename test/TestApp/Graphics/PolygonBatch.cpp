@@ -55,9 +55,9 @@ PolygonBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContext
 {
 	vertices.reserve(MinVertexCount);
 	{
-		std::vector<Vertex> dummy(MaxVertexCount);
+		auto maxVertexCount = MaxVertexCount;
 		vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
-			dummy.data(), dummy.size(), sizeof(Vertex), BufferUsage::Dynamic);
+			maxVertexCount, sizeof(Vertex), BufferUsage::Dynamic);
 	}
 	{
 		effectPass = assets.Load<EffectPass>("Effects/PrimitiveLineEffect");

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -39,6 +39,10 @@ public:
 	VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		void const* vertices, std::uint32_t vertexCount,
 		std::uint16_t strideBytes, Pomdog::BufferUsage bufferUsage);
+
+	VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		std::uint32_t vertexCount, std::uint16_t strideBytes,
+		Pomdog::BufferUsage bufferUsage);
 
 	~VertexBuffer();
 

@@ -139,23 +139,14 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextI
 			IndexElementSize::SixteenBits, indices.data(), indices.size(), BufferUsage::Immutable);
 	}
 	{
-		std::array<SpriteInfo, MaxBatchSize> verticesCombo;
-		std::fill(std::begin(verticesCombo), std::end(verticesCombo),
-			SpriteInfo {
-				Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-				Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-				Vector4(0.5f, 0.5f, 1.0f, 0.0f),
-				Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-			});
-		
+		auto maxBatchSize = MaxBatchSize;
 		instanceVertices = std::make_shared<VertexBuffer>(graphicsDevice,
-			verticesCombo.data(), verticesCombo.size(),
-			SpriteInfoVertex::Declaration().StrideBytes(), BufferUsage::Dynamic);
+			maxBatchSize, sizeof(SpriteInfo), BufferUsage::Dynamic);
 	}
 	{
-		POMDOG_ASSERT(effectPass);
 		auto declartation = PositionTextureCoord::Declaration();
-		
+
+		POMDOG_ASSERT(effectPass);
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
 			std::initializer_list<VertexBufferBinding>{
 				{declartation, 0, 0},

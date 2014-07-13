@@ -124,18 +124,9 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 			IndexElementSize::SixteenBits, indices.data(), indices.size(), BufferUsage::Immutable);
 	}
 	{
-		std::array<SpriteInfo, MaxBatchSize> verticesCombo;
-		std::fill(std::begin(verticesCombo), std::end(verticesCombo),
-			SpriteInfo {
-				Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-				Vector4(0.0f, 0.0f, 0.0f, 0.0f),
-				Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-				Vector4(0.5f, 0.5f, 1.0f, 1.0f),
-				Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-			});
-		
+		auto maxBatchSize = MaxBatchSize;
 		instanceVertices = std::make_shared<VertexBuffer>(graphicsDevice,
-			verticesCombo.data(), verticesCombo.size(), sizeof(SpriteInfo), BufferUsage::Dynamic);
+			maxBatchSize, sizeof(SpriteInfo), BufferUsage::Dynamic);
 	}
 	{
 		effectPass = assets.Load<EffectPass>("Effects/SpriteRendererEffect");

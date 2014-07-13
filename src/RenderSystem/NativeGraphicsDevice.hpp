@@ -46,6 +46,16 @@ public:
 	virtual ~NativeGraphicsDevice() = default;
 
 	///@~Japanese
+	/// @brief 定数バッファを作成します。
+	virtual std::unique_ptr<NativeConstantBuffer>
+	CreateConstantBuffer(std::uint32_t sizeInBytes) = 0;
+
+	///@~Japanese
+	/// @brief インデックスバッファを作成します。
+	virtual std::unique_ptr<NativeIndexBuffer>
+	CreateIndexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage) = 0;
+
+	///@~Japanese
 	/// @brief インデックスバッファを作成します。
 	virtual std::unique_ptr<NativeIndexBuffer>
 	CreateIndexBuffer(void const* indices, std::uint32_t sizeInBytes,
@@ -54,8 +64,13 @@ public:
 	///@~Japanese
 	/// @brief 頂点バッファを作成します。
 	virtual std::unique_ptr<NativeVertexBuffer>
-	CreateVertexBuffer(void const* vertices, std::uint32_t vertexCount,
-		std::uint16_t strideBytes, BufferUsage bufferUsage) = 0;
+	CreateVertexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage) = 0;
+	
+	///@~Japanese
+	/// @brief 頂点バッファを作成します。
+	virtual std::unique_ptr<NativeVertexBuffer>
+	CreateVertexBuffer(void const* vertices, std::uint32_t sizeInBytes,
+		BufferUsage bufferUsage) = 0;
 	
 	///@~Japanese
 	/// @brief ブレンディングステートを作成します。
@@ -82,11 +97,6 @@ public:
 	virtual std::unique_ptr<NativeEffectPass>
 	CreateEffectPass(ShaderBytecode const& vertexShaderBytecode,
 		ShaderBytecode const& pixelShaderBytecode) = 0;
-	
-	///@~Japanese
-	/// @brief 定数バッファを作成します。
-	virtual std::unique_ptr<NativeConstantBuffer>
-	CreateConstantBuffer(std::uint32_t byteWidth) = 0;
 	
 	///@~Japanese
 	/// @brief 指定されたエフェクトパスからエフェクトリフレクションを作成します。

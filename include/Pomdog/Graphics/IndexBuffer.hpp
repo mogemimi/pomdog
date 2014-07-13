@@ -40,6 +40,10 @@ public:
 	IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		IndexElementSize elementSize, void const* indices, std::uint32_t indexCount,
 		Pomdog::BufferUsage bufferUsage);
+		
+	IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		IndexElementSize elementSize, std::uint32_t indexCount,
+		Pomdog::BufferUsage bufferUsage);
 
 	~IndexBuffer();
 

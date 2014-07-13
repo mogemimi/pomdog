@@ -27,6 +27,12 @@ namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeIndexBuffer>
+GraphicsDeviceGL4::CreateIndexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage)
+{
+	return std::make_unique<IndexBufferGL4>(sizeInBytes, bufferUsage);
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeIndexBuffer>
 GraphicsDeviceGL4::CreateIndexBuffer(void const* indices,
 	std::uint32_t sizeInBytes, BufferUsage bufferUsage)
 {
@@ -34,10 +40,16 @@ GraphicsDeviceGL4::CreateIndexBuffer(void const* indices,
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeVertexBuffer>
-GraphicsDeviceGL4::CreateVertexBuffer(void const* vertices, std::uint32_t vertexCount,
-	std::uint16_t strideBytes, BufferUsage bufferUsage)
+GraphicsDeviceGL4::CreateVertexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage)
 {
-	return std::make_unique<VertexBufferGL4>(vertices, vertexCount, strideBytes, bufferUsage);
+	return std::make_unique<VertexBufferGL4>(sizeInBytes, bufferUsage);
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeVertexBuffer>
+GraphicsDeviceGL4::CreateVertexBuffer(void const* vertices,
+	std::uint32_t sizeInBytes, BufferUsage bufferUsage)
+{
+	return std::make_unique<VertexBufferGL4>(vertices, sizeInBytes, bufferUsage);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBlendState>

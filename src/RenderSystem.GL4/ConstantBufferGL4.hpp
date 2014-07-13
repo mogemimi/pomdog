@@ -36,7 +36,7 @@ class ConstantBufferGL4 final: public NativeConstantBuffer {
 public:
 	ConstantBufferGL4() = delete;
 	
-	explicit ConstantBufferGL4(std::uint32_t byteWidth);
+	explicit ConstantBufferGL4(std::uint32_t sizeInBytes);
 	
 	~ConstantBufferGL4();
 	

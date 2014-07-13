@@ -41,12 +41,17 @@ struct TypesafeHelperGL4::OpenGLGetTraits<VertexBufferObjectGL4> {
 	constexpr static GLenum bufferObjectTarget = GL_ARRAY_BUFFER;
 };
 //-----------------------------------------------------------------------
-VertexBufferGL4::VertexBufferGL4(void const* vertices, std::uint32_t vertexCount,
-	std::uint16_t strideBytes, BufferUsage bufferUsage)
+VertexBufferGL4::VertexBufferGL4(std::uint32_t sizeInBytes, BufferUsage bufferUsage)
+	: VertexBufferGL4(static_cast<void const*>(nullptr), sizeInBytes, bufferUsage)
 {
-	POMDOG_ASSERT(vertices != nullptr);
-	POMDOG_ASSERT(vertexCount > 0);
-
+	POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
+}
+//-----------------------------------------------------------------------
+VertexBufferGL4::VertexBufferGL4(void const* vertices, std::uint32_t sizeInBytes,
+	BufferUsage bufferUsage)
+{
+	POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable ? vertices != nullptr: true);
+	
 	// Generate vertex buffer
 	bufferObject = ([] {
 		VertexBufferObjectGL4 vertexBuffer;
@@ -66,8 +71,8 @@ VertexBufferGL4::VertexBufferGL4(void const* vertices, std::uint32_t vertexCount
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif
 	
-	glBufferData(GL_ARRAY_BUFFER, strideBytes * vertexCount,
-		static_cast<GLvoid const*>(vertices),
+	POMDOG_ASSERT(sizeInBytes > 0);
+	glBufferData(GL_ARRAY_BUFFER, sizeInBytes, vertices,
 		ToVertexBufferUsage(bufferUsage));
 
 	#ifdef DEBUG
