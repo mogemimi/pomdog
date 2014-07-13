@@ -65,9 +65,17 @@
       'product_name': 'TestApp',
       'type': 'executable',
       'mac_bundle': 1,
+      'dependencies': [
+        '../third_party/lua/lua.gyp:lua_static',
+      ],
+      'defines': [
+        'LUA_INT_INT',
+      ],
       'include_dirs': [
         '../include',
         '../third_party/rapidjson/include',
+        '../third_party/lua/src',
+        '../third_party/Selene/include',
       ],
       'sources': [
         '../test/TestApp/Particle2D/Beam.hpp',
@@ -220,9 +228,12 @@
         '../test/TestApp/2D/Animator.hpp',
         '../test/TestApp/2D/BeamRenderable.cpp',
         '../test/TestApp/2D/BeamRenderable.hpp',
+        '../test/TestApp/2D/Behavior.hpp',
         '../test/TestApp/2D/ParticleRenderable.cpp',
         '../test/TestApp/2D/ParticleRenderable.hpp',
         '../test/TestApp/2D/Renderable.hpp',
+        '../test/TestApp/2D/ScriptBehavior.cpp',
+        '../test/TestApp/2D/ScriptBehavior.hpp',
         '../test/TestApp/2D/SkinnedMeshRenderable.cpp',
         '../test/TestApp/2D/SkinnedMeshRenderable.hpp',
         '../test/TestApp/2D/SpriteRenderable.cpp',

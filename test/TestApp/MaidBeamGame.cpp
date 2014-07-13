@@ -16,6 +16,8 @@
 #include "Graphics/SpriteLine.hpp"
 #include "2D/Animator.hpp"
 #include "2D/BeamRenderable.hpp"
+#include "2D/Behavior.hpp"
+#include "2D/ScriptBehavior.hpp"
 #include "2D/SkinnedMeshRenderable.hpp"
 #include "2D/SpriteRenderable.hpp"
 #include "Spine/SkeletonDescLoader.hpp"
@@ -40,7 +42,6 @@ void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const
 	auto skeletonTransform = std::make_shared<SkeletonTransform>();
 	skeletonTransform->Pose = SkeletonPose::CreateBindPose(*skeleton);
 	skeletonTransform->GlobalPose = SkeletonHelper::ToGlobalPose(*skeleton, skeletonTransform->Pose);
-
 	{
 		auto animationGraph = Details::Skeletal2D::LoadAnimationGraph(skeletonDesc, assets, "MaidGun/AnimationGraph.json");
 		gameObject.AddComponent(std::make_unique<MaidAnimator>(skeleton, skeletonTransform, animationGraph));
@@ -119,6 +120,7 @@ void MaidBeamGame::Initialize()
 		maid = gameWorld.CreateObject();
 		maid.AddComponent<Transform2D>();
 		LoadAnimator(maid, graphicsDevice, *assets);
+		maid.AddComponent<ScriptBehavior>(*assets, "Scripts/Maid.lua");
 	}
 	{
 		lightningBeam = gameWorld.CreateObject();
@@ -236,6 +238,14 @@ void MaidBeamGame::Update()
 		
 		POMDOG_ASSERT(animator);
 		animator->Update(*clock);
+	}
+
+	for (auto & gameObject: gameWorld.QueryComponents<Behavior>())
+	{
+		auto behavior = gameObject.Component<Behavior>();
+		
+		POMDOG_ASSERT(behavior);
+		behavior->Update(gameObject, clock->FrameDuration());
 	}
 
 //	{

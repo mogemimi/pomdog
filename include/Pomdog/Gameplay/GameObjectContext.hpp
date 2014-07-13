@@ -113,10 +113,8 @@ public:
 	Type & AddComponent(GameObjectID const& id, Arguments &&...arguments)
 	{
 		static_assert(std::is_base_of<GameComponent, Type>::value, "");
-	
-		auto const typeIndex = Type::TypeIndex();
-		POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
-		
+		POMDOG_ASSERT(Type::TypeIndex() < MaxComponentCapacity);
+
 		auto component = std::make_unique<Type>(std::forward<Arguments>(arguments)...);
 		return AddComponent<Type>(id, std::move(component));
 	}
