@@ -101,6 +101,7 @@ T const* GameObject::Component() const
 	static_assert(std::is_base_of<Details::Gameplay::GameComponent, T>::value, "");
 	static_assert(std::is_base_of<Pomdog::Component<T>, T>::value, "TOOD: Not implemented");
 	POMDOG_ASSERT(context);
+	POMDOG_ASSERT(context->Valid(id));
 	return context->Component<T>(id);
 }
 
@@ -109,6 +110,7 @@ T* GameObject::Component()
 {
 	static_assert(std::is_base_of<Details::Gameplay::GameComponent, T>::value, "");
 	POMDOG_ASSERT(context);
+	POMDOG_ASSERT(context->Valid(id));
 	return context->Component<T>(id);
 }
 
@@ -118,6 +120,7 @@ bool GameObject::HasComponent() const
 	static_assert(std::is_base_of<Details::Gameplay::GameComponent, T>::value, "");
 	static_assert(std::is_base_of<Pomdog::Component<T>, T>::value, "TOOD: Not implemented");
 	POMDOG_ASSERT(context);
+	POMDOG_ASSERT(context->Valid(id));
 	return context->HasComponent<T>(id);
 }
 
@@ -126,6 +129,7 @@ T & GameObject::AddComponent(std::unique_ptr<T> && component)
 {
 	static_assert(std::is_base_of<Details::Gameplay::GameComponent, T>::value, "");
 	POMDOG_ASSERT(context);
+	POMDOG_ASSERT(context->Valid(id));
 	return context->AddComponent<T>(id, std::move(component));
 }
 
@@ -134,6 +138,7 @@ T & GameObject::AddComponent(Arguments && ...arguments)
 {
 	static_assert(std::is_base_of<Details::Gameplay::GameComponent, T>::value, "");
 	POMDOG_ASSERT(context);
+	POMDOG_ASSERT(context->Valid(id));
 	return context->AddComponent<T>(id, std::forward<Arguments>(arguments)...);
 }
 
@@ -142,6 +147,7 @@ void GameObject::RemoveComponent()
 {
 	static_assert(std::is_base_of<Details::Gameplay::GameComponent, T>::value, "");
 	POMDOG_ASSERT(context);
+	POMDOG_ASSERT(context->Valid(id));
 	context->RemoveComponent<T>(id);
 }
 

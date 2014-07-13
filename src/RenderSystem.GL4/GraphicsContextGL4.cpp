@@ -360,8 +360,7 @@ void GraphicsContextGL4::SetViewport(Viewport const& viewport)
 		static_cast<GLint>(viewport.TopLeftX()),
 		static_cast<GLint>(viewportY),
 		static_cast<GLsizei>(viewport.Width()),
-		static_cast<GLsizei>(viewport.Height())
-	);
+		static_cast<GLsizei>(viewport.Height()));
 }
 //-----------------------------------------------------------------------
 Rectangle GraphicsContextGL4::GetScissorRectangle() const
