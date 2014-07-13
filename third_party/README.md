@@ -27,6 +27,14 @@ See accompanying file [third_party/libpng/LICENSE][license-libpng].
 See accompanying file [third_party/rapidjson/license.txt][license-rapidjson].
 [license-rapidjson]: rapidjson/license.txt
 
+### Selene
+
+* [GitHub](https://github.com/jeremyong/Selene)
+
+**License:**  
+See accompanying file [third_party/Selene/LICENSE][license-Selene].
+[license-Selene]: Selene/LICENSE
+
 ### zlib
 
 * [zlib Home Site](http://www.zlib.net/)
