@@ -816,18 +816,13 @@ Skeletal2D::SkeletonDesc AssetLoader<Skeletal2D::SkeletonDesc>::operator()(Asset
 	auto json = ReadBinaryFile(filename);
 	
 	rapidjson::Document doc;
-	doc.Parse<0>(json.data());
+	doc.Parse<0, rapidjson::UTF8<>>(json.data());
 	
 	if (doc.HasParseError())
 	{
-		doc.Clear();
-		doc.Parse<0>(json.data());
-		if (doc.HasParseError())
-		{	
-			///@todo Not implemented
-			// Error
-			POMDOG_ASSERT(false);
-		}
+		///@todo Not implemented
+		// Error
+		POMDOG_ASSERT(false);
 	}
 	
 	if (!doc.IsObject()) {

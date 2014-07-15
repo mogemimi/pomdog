@@ -32,7 +32,7 @@ static Matrix4x4 CreateTransformMatrix4x4(Transform2D const& transform)
 }// unnamed namespace
 //-----------------------------------------------------------------------
 SkinnedMeshRenderable::SkinnedMeshRenderable(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	std::shared_ptr<AssetManager> const& assets,
+	AssetManager & assets,
 	std::shared_ptr<Skeleton> const& skeletonIn,
 	std::shared_ptr<SkeletonTransform> const& skeletonTransformIn,
 	std::shared_ptr<SkinnedMesh> const& meshIn, std::shared_ptr<Texture2D> const& textureIn)
@@ -46,7 +46,7 @@ SkinnedMeshRenderable::SkinnedMeshRenderable(std::shared_ptr<GraphicsDevice> con
 
 	command.mesh = meshIn;
 	command.texture = textureIn;
-	command.skinningEffect = assets->Load<EffectPass>("Effects/SkinningSpriteEffect");
+	command.skinningEffect = assets.Load<EffectPass>("Effects/SkinningSpriteEffect");
 	command.inputLayout = std::make_shared<InputLayout>(graphicsDevice, command.skinningEffect);
 
 	POMDOG_ASSERT(command.mesh);

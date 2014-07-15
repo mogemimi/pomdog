@@ -97,6 +97,8 @@
         '../test/TestApp/Skeletal2D/AnimationClipNode.cpp',
         '../test/TestApp/Skeletal2D/AnimationClipNode.hpp',
         '../test/TestApp/Skeletal2D/AnimationGraph.hpp',
+        '../test/TestApp/Skeletal2D/AnimationGraphBuilder.cpp',
+        '../test/TestApp/Skeletal2D/AnimationGraphBuilder.hpp',
         '../test/TestApp/Skeletal2D/AnimationGraphWeight.cpp',
         '../test/TestApp/Skeletal2D/AnimationGraphWeight.hpp',
         '../test/TestApp/Skeletal2D/AnimationGraphWeightCollection.cpp',

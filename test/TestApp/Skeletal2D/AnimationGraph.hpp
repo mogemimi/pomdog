@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <Pomdog/Utility/Optional.hpp>
 #include "AnimationBlendInput.hpp"
+#include "AnimationNode.hpp"
 
 namespace Pomdog {
 

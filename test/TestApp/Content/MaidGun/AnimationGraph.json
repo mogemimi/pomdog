@@ -1,0 +1,29 @@
+{
+  "root": 420,
+  "nodes": [
+    {
+      "type": "lerp",
+      "id": 420,
+      "param_name": "Run.Weight",
+      "in": [421, 422]
+    },
+    {
+      "type": "clip",
+      "clip": "Run",
+      "id": 421
+    },
+    {
+      "type": "clip",
+      "clip": "RunNoShot",
+      "id": 422
+    }
+  ],
+  "states": {
+    "Run": {
+      "tree": 420
+    },
+    "Idle": {
+      "tree": 422
+    }
+  }
+}

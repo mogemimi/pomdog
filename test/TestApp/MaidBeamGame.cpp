@@ -18,28 +18,46 @@
 #include "2D/SkinnedMeshRenderable.hpp"
 #include "Spine/SkeletonDescLoader.hpp"
 #include "Spine/SkeletonLoader.hpp"
-#include "Spine/AnimationLoader.hpp"
 #include "Spine/SkinnedMeshLoader.hpp"
 #include "TexturePacker/TextureAtlasLoader.hpp"
 #include "Skeletal2D/SkeletonHelper.hpp"
-#include "Skeletal2D/AnimationClip.hpp"
-#include "Skeletal2D/AnimationClipNode.hpp"
-#include "Skeletal2D/AnimationLerpNode.hpp"
+#include "Skeletal2D/AnimationGraphBuilder.hpp"
 #include "Utilities/LogSkeletalInfo.hpp"
 
 
 namespace TestApp {
 
-class EntityInterface {
-public:
-	EntityInterface(GameObject & gameObjectIn)
-		: Transform(*gameObjectIn.Component<Transform2D>())
-	{
-		POMDOG_ASSERT(gameObjectIn.HasComponent<Transform2D>());
-	}
+void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	AssetManager & assets)
+{
+	auto skeletonDesc = assets.Load<Details::Skeletal2D::SkeletonDesc>("MaidGun/MaidGun.json");
+	TestApp::LogSkeletalInfo(skeletonDesc);
 	
-	Transform2D & Transform;
-};
+	auto skeleton = std::make_shared<Skeleton>(Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones));
+
+	auto skeletonTransform = std::make_shared<SkeletonTransform>();
+	skeletonTransform->Pose = SkeletonPose::CreateBindPose(*skeleton);
+	skeletonTransform->GlobalPose = SkeletonHelper::ToGlobalPose(*skeleton, skeletonTransform->Pose);
+
+	{
+		auto animationGraph = Details::Skeletal2D::LoadAnimationGraph(skeletonDesc, assets, "MaidGun/AnimationGraph.json");
+		gameObject.AddComponent(std::make_unique<MaidAnimator>(skeleton, skeletonTransform, animationGraph));
+	}
+	{
+		auto textureAtlas = assets.Load<Details::TexturePacker::TextureAtlas>("MaidGun/MaidGun.atlas");
+		auto maidTexture = assets.Load<Texture2D>("MaidGun/MaidGun.png");
+	
+		TestApp::LogTexturePackerInfo(textureAtlas);
+
+		auto bindPose = SkeletonPose::CreateBindPose(*skeleton);
+		auto mesh = std::make_shared<SkinnedMesh>(Details::Skeletal2D::CreateSkinnedMesh(graphicsDevice,
+			SkeletonHelper::ToGlobalPose(*skeleton, bindPose),
+			skeletonDesc, textureAtlas,
+			Vector2(maidTexture->Width(), maidTexture->Height()), "default"));
+
+		gameObject.AddComponent(std::make_unique<SkinnedMeshRenderable>(graphicsDevice, assets, skeleton, skeletonTransform, mesh, maidTexture));
+	}
+}
 
 //-----------------------------------------------------------------------
 MaidBeamGame::MaidBeamGame(std::shared_ptr<GameHost> const& gameHostIn)
@@ -85,48 +103,7 @@ void MaidBeamGame::Initialize()
 	{
 		maid = gameWorld.CreateObject();
 		maid->AddComponent<Transform2D>();
-		
-		auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("MaidGun/MaidGun.json");
-		TestApp::LogSkeletalInfo(skeletonDesc);
-		
-		auto skeleton = std::make_shared<Skeleton>(Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones));
-
-		auto skeletonTransform = std::make_shared<SkeletonTransform>();
-		skeletonTransform->Pose = SkeletonPose::CreateBindPose(*skeleton);
-		skeletonTransform->GlobalPose = SkeletonHelper::ToGlobalPose(*skeleton, skeletonTransform->Pose);
-
-		{
-			auto animationClipRun = std::make_shared<AnimationClip>(Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Run"));
-			auto animationClipRunNoShot = std::make_shared<AnimationClip>(Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "RunNoShot"));
-
-			auto clipNode1 = std::make_unique<AnimationClipNode>(animationClipRun);
-			auto clipNode2 = std::make_unique<AnimationClipNode>(animationClipRunNoShot);
-			
-			std::uint16_t weightIndex = 0;
-			auto lerpNode = std::make_unique<AnimationLerpNode>(std::move(clipNode1), std::move(clipNode2), weightIndex);
-			
-			auto animationGraph = std::make_shared<AnimationGraph>();
-			animationGraph->Tree = std::move(lerpNode);
-			animationGraph->Inputs = {
-				{"lerpNode.Weight", AnimationBlendInputType::Float} // NOTE: weightIndex = 0
-			};
-			
-			maid->AddComponent(std::make_unique<MaidAnimator>(skeleton, skeletonTransform, animationGraph));
-		}
-		{
-			auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidGun/MaidGun.atlas");
-			auto maidTexture = assets->Load<Texture2D>("MaidGun/MaidGun.png");
-		
-			TestApp::LogTexturePackerInfo(textureAtlas);
-
-			auto bindPose = SkeletonPose::CreateBindPose(*skeleton);
-			auto mesh = std::make_shared<SkinnedMesh>(Details::Skeletal2D::CreateSkinnedMesh(graphicsDevice,
-				SkeletonHelper::ToGlobalPose(*skeleton, bindPose),
-				skeletonDesc, textureAtlas,
-				Vector2(maidTexture->Width(), maidTexture->Height()), "default"));
-
-			maid->AddComponent(std::make_unique<SkinnedMeshRenderable>(graphicsDevice, assets, skeleton, skeletonTransform, mesh, maidTexture));
-		}
+		LoadAnimator(*maid, graphicsDevice, *assets);
 	}
 	{
 		lightningBeam = gameWorld.CreateObject();
@@ -134,7 +111,7 @@ void MaidBeamGame::Initialize()
 		auto & rendererable = lightningBeam->AddComponent(std::make_unique<BeamRenderable>());
 		rendererable.Load(graphicsDevice, assets);
 	}
-		
+	
 	{
 		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
 		scenePanel->cameraObject = mainCamera;
@@ -238,11 +215,11 @@ void MaidBeamGame::Update()
 	if (auto animator = maid->Component<Animator>())
 	{
 		animator->PlaybackRate(slider1->Value());
-		animator->SetFloat("lerpNode.Weight", slider2->Value());
+		animator->SetFloat("Run.Weight", slider2->Value());
 		
-//		if (toggleSwitch1->IsOn()) {
-//			maidAnimationState->Stop();
-//		}
+		if (!toggleSwitch1->IsOn()) {
+			animator->PlaybackRate(0.0f);
+		}
 	}
 
 	if (auto renderable = maid->Component<Renderable>())
