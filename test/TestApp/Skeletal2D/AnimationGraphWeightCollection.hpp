@@ -29,7 +29,9 @@ public:
 	std::uint16_t AddFloat();
 	std::uint16_t AddBool();
 
-	std::size_t Count() const;
+	std::uint16_t Count() const;
+
+	void Reserve(std::uint16_t size);
 	
 private:
 	std::vector<AnimationGraphWeight> parameters;

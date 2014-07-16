@@ -41,7 +41,12 @@ AnimationGraphWeight const& AnimationGraphWeightCollection::At(std::uint16_t ind
 	return parameters[index];
 }
 //-----------------------------------------------------------------------
-std::size_t AnimationGraphWeightCollection::Count() const
+void AnimationGraphWeightCollection::Reserve(std::uint16_t size)
+{
+	parameters.reserve(size);
+}
+//-----------------------------------------------------------------------
+std::uint16_t AnimationGraphWeightCollection::Count() const
 {
 	return parameters.size();
 }

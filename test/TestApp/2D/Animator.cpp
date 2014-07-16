@@ -29,6 +29,7 @@ MaidAnimator::MaidAnimator(std::shared_ptr<Skeleton> const& skeletonIn,
 	POMDOG_ASSERT(skeletonTransform);
 	POMDOG_ASSERT(animationGraph);
 	
+	graphWeights.Reserve(animationGraph->Inputs.size());
 	for (auto & parameter: animationGraph->Inputs)
 	{
 		switch (parameter.Type) {
@@ -40,6 +41,13 @@ MaidAnimator::MaidAnimator(std::shared_ptr<Skeleton> const& skeletonIn,
 			break;
 		}
 	}
+	
+	POMDOG_ASSERT(animationGraph);
+	POMDOG_ASSERT(!animationGraph->States.empty());
+	POMDOG_ASSERT(animationGraph->States.front().Tree);
+	
+	animationTree = std::shared_ptr<AnimationNode>(animationGraph,
+		animationGraph->States.front().Tree.get());
 }
 //-----------------------------------------------------------------------
 void MaidAnimator::Update(GameClock const& clock)
@@ -48,25 +56,41 @@ void MaidAnimator::Update(GameClock const& clock)
 	{
 		AnimationTimeInterval frameDuration = clock.FrameDuration();
 		time = time + frameDuration * playbackRate;
-		
-		POMDOG_ASSERT(animationGraph);
-		POMDOG_ASSERT(animationGraph->Tree);
+
+		POMDOG_ASSERT(animationTree);
 		if (time < AnimationTimeInterval::zero()) {
-			time = animationGraph->Tree->Length();
+			time = animationTree->Length();
 		}
-		else if (time > animationGraph->Tree->Length()) {
+		else if (time > animationTree->Length()) {
 			//POMDOG_ASSERT(loop);
 			time = AnimationTimeInterval::zero();
 		}
 	}
 
 	// (2) Pose extraction, and (3) Pose blending:
-	POMDOG_ASSERT(animationGraph);
-	POMDOG_ASSERT(animationGraph->Tree);
-	animationGraph->Tree->Calculate(time, graphWeights, *skeleton, skeletonTransform->Pose);
+	POMDOG_ASSERT(animationTree);
+	animationTree->Calculate(time, graphWeights, *skeleton, skeletonTransform->Pose);
 
 	// (4) Global pose generation:
 	SkeletonHelper::ToGlobalPose(*skeleton, skeletonTransform->Pose, skeletonTransform->GlobalPose);
+}
+//-----------------------------------------------------------------------
+void MaidAnimator::Play(std::string const& stateName)
+{
+	POMDOG_ASSERT(animationGraph);
+	POMDOG_ASSERT(!animationGraph->States.empty());
+
+	auto iter = std::find_if(std::begin(animationGraph->States), std::end(animationGraph->States), [&stateName](AnimationGraphState const& state){
+		return state.Name == stateName;
+	});
+	
+	if (iter == std::end(animationGraph->States)) {
+		return;
+	}
+	
+	POMDOG_ASSERT(iter->Tree);
+	animationTree = std::shared_ptr<AnimationNode>(animationGraph, iter->Tree.get());
+	time = AnimationTimeInterval::zero();
 }
 //-----------------------------------------------------------------------
 float MaidAnimator::PlaybackRate() const

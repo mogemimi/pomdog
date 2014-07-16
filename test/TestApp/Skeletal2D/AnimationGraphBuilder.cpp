@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -110,10 +110,6 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(Details::Skeletal2D::Skeleton
 		// Error
 		POMDOG_ASSERT(false);
 	}
-
-	POMDOG_ASSERT(doc.HasMember("root"));
-	POMDOG_ASSERT(doc["root"].IsUint());
-	std::uint16_t rootNodeIndex = doc["root"].GetUint();
 	
 	std::vector<AnimationNodeDesc> nodes;
 	if (doc.HasMember("nodes") && doc["nodes"].IsArray())
@@ -164,12 +160,30 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(Details::Skeletal2D::Skeleton
 		}
 	}
 	
-	auto rootNodeDesc = std::find_if(std::begin(nodes),std::end(nodes), [&rootNodeIndex](AnimationNodeDesc const& desc){ return desc.Id == rootNodeIndex; });
-	POMDOG_ASSERT(rootNodeDesc != std::end(nodes));
-	
-	auto animationGraph = std::make_shared<AnimationGraph>();
 	std::vector<AnimationBlendInput> inputs;
-	animationGraph->Tree = CreateAnimationNode(*rootNodeDesc, inputs, nodes, skeletonDesc);
+	auto animationGraph = std::make_shared<AnimationGraph>();
+	
+	if (doc.HasMember("states") && doc["states"].IsObject())
+	{
+		auto & stateArray = doc["states"];
+		for (auto iter = stateArray.MemberBegin(); iter != stateArray.MemberEnd(); ++iter)
+		{
+			AnimationGraphState state;
+			
+			POMDOG_ASSERT(iter->name.IsString());
+			state.Name = iter->name.GetString();
+			
+			std::uint16_t rootNodeIndex = iter->value["tree"].GetUint();
+			
+			auto rootNodeDesc = std::find_if(std::begin(nodes),std::end(nodes),
+				[&rootNodeIndex](AnimationNodeDesc const& desc){ return desc.Id == rootNodeIndex; });
+			POMDOG_ASSERT(rootNodeDesc != std::end(nodes));
+
+			state.Tree = CreateAnimationNode(*rootNodeDesc, inputs, nodes, skeletonDesc);
+			animationGraph->States.push_back(std::move(state));
+		}
+	}
+	
 	animationGraph->Inputs = std::move(inputs);
 
 	return std::move(animationGraph);

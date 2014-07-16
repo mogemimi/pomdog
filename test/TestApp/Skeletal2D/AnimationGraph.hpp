@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -23,9 +23,15 @@
 
 namespace Pomdog {
 
+class AnimationGraphState {
+public:
+	std::string Name;
+	std::unique_ptr<AnimationNode> Tree;
+};
+
 class AnimationGraph {
 public:
-	std::unique_ptr<AnimationNode> Tree;
+	std::vector<AnimationGraphState> States;
 	std::vector<AnimationBlendInput> Inputs;
 	
 	Optional<std::uint16_t> FindParameter(std::string const& name) const

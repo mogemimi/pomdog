@@ -24,9 +24,11 @@ public:
 	
 	virtual void Update(GameClock const& clock) = 0;
 	
+	virtual void Play(std::string const& state) = 0;
+	
 	virtual float PlaybackRate() const = 0;
 	virtual void PlaybackRate(float playbackRate) = 0;
-	
+
 	virtual void SetFloat(std::string const& name, float value) = 0;
 	virtual void SetBool(std::string const& name, bool value) = 0;
 };
@@ -52,10 +54,12 @@ public:
 	
 	void Update(GameClock const& clock) override;
 	
+	void Play(std::string const& state) override;
+	
 	float PlaybackRate() const override;
 	
 	void PlaybackRate(float playbackRate) override;
-	
+
 	void SetFloat(std::string const& name, float value) override;
 
 	void SetBool(std::string const& name, bool value) override;
@@ -64,10 +68,10 @@ private:
 	AnimationGraphWeightCollection graphWeights;
 	std::shared_ptr<Skeleton> skeleton;
 	std::shared_ptr<SkeletonTransform> skeletonTransform;
+	std::shared_ptr<AnimationNode> animationTree;
 	std::shared_ptr<AnimationGraph> animationGraph;
 	AnimationTimeInterval time;
 	float playbackRate;
-	
 };
 
 }// namespace Pomdog
