@@ -236,6 +236,8 @@
         '../test/TestApp/Rendering/RenderQueue.hpp',
         '../test/TestApp/Rendering/SkinnedMeshCommand.cpp',
         '../test/TestApp/Rendering/SkinnedMeshCommand.hpp',
+        '../test/TestApp/Rendering/SpriteBatchRenderer.cpp',
+        '../test/TestApp/Rendering/SpriteBatchRenderer.hpp',
         '../test/TestApp/Rendering/SpriteCommand.cpp',
         '../test/TestApp/Rendering/SpriteCommand.hpp',
         '../test/TestApp/SpriteDrawingContext.cpp',

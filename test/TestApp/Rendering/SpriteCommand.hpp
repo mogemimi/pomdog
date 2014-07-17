@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -38,7 +38,7 @@ public:
 	Matrix3x2 transform;
 	TextureRegion textureRegion;
 	std::shared_ptr<Texture2D> texture;
-	Vector2 origin;
+	Vector2 originPivot;
 	Color color;
 	float zOrder;
 };

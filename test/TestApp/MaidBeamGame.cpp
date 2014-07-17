@@ -8,6 +8,7 @@
 
 #include "MaidBeamGame.hpp"
 #include <utility>
+#include <random>
 #include "FXAA.hpp"
 #include "SandboxHelper.hpp"
 #include "UI/StackPanel.hpp"
@@ -102,7 +103,17 @@ void MaidBeamGame::Initialize()
 		mainCamera->AddComponent<Camera2D>();
 		
 		auto texture = assets->Load<Texture2D>("pomdog.png");
-		mainCamera->AddComponent<SpriteRenderable>(texture);
+		TextureRegion region;
+		region.Rotate = false;
+		region.Width = 64;
+		region.Height = 64;
+		region.XOffset = 32;
+		region.YOffset = 48;
+		region.Subrect.X = 0;
+		region.Subrect.Y = 0;
+		region.Subrect.Width = 16;
+		region.Subrect.Height = 16;
+		mainCamera->AddComponent<SpriteRenderable>(texture, region);
 	}
 	{
 		maid = gameWorld.CreateObject();
@@ -114,6 +125,38 @@ void MaidBeamGame::Initialize()
 		lightningBeam->AddComponent<Transform2D>();
 		auto & rendererable = lightningBeam->AddComponent(std::make_unique<BeamRenderable>());
 		rendererable.Load(graphicsDevice, assets);
+	}
+	{
+		auto pomdogTexture = assets->Load<Texture2D>("pomdog.png");
+		auto stoneTexture = assets->Load<Texture2D>("stone.png");
+		auto smokeTexture = assets->Load<Texture2D>("Particles/smoke.png");
+		std::mt19937 rand;
+		std::uniform_real_distribution<float> dist(-1600.0f, 1600.0f);
+		
+		constexpr auto enemyCount = 4096;
+		enemies.reserve(enemyCount);
+		for (int i = 0; i < enemyCount; ++i)
+		{
+			auto gameObject = gameWorld.CreateObject();
+			
+			auto texture = pomdogTexture;
+			if (dist(rand) > 400) {
+				texture = stoneTexture;
+			}
+			if (dist(rand) > 1000) {
+				texture = smokeTexture;
+			}
+			auto & sprite = gameObject->AddComponent<SpriteRenderable>(texture);
+			sprite.ZOrder(dist(rand));
+			
+			auto & transform = gameObject->AddComponent<Transform2D>();
+			
+			transform.Position.X = dist(rand);
+			transform.Position.Y = dist(rand);
+			transform.Rotation = dist(rand);
+			
+			enemies.push_back(std::move(gameObject));
+		}
 	}
 	
 	{
@@ -132,7 +175,7 @@ void MaidBeamGame::Initialize()
 		}
 		{
 			textBlock1 = std::make_shared<UI::TextBlock>();
-			textBlock1->Text("DrawCall: --");
+			textBlock1->Text("Draw Calls: --");
 			stackPanel->AddChild(textBlock1);
 		}
 		{
@@ -185,6 +228,7 @@ void MaidBeamGame::Update()
 {
 	{
 		gameEditor->Update();
+		textBlock1->Text(StringFormat("Draw Calls: %d", renderer->DrawCallCount()));
 	}
 	
 	auto clock = gameHost->Clock();

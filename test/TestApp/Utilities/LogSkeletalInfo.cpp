@@ -27,7 +27,6 @@ void LogTexturePackerInfo(Details::TexturePacker::TextureAtlas const& textureAtl
 		Log::Info(StringFormat("Region.Name = %s", region.Name.c_str()));
 		Log::Info(StringFormat("  Region.Page = %d", region.TexturePage));
 		Log::Info(StringFormat("  Region.Rotate = %d", region.Region.Rotate?1:0));
-		Log::Info(StringFormat("  Region.Flip = %d", region.Region.Flip?1:0));
 		Log::Info(StringFormat("  Region.XY = %d, %d", (int)region.Region.Subrect.X, (int)region.Region.Subrect.Y));
 		Log::Info(StringFormat("  Region.Size = %d, %d", (int)region.Region.Subrect.Width, (int)region.Region.Subrect.Height));
 		Log::Info(StringFormat("  Region.Offset = %d %d", (int)region.Region.XOffset, (int)region.Region.YOffset));

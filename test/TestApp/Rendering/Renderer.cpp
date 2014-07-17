@@ -11,9 +11,14 @@
 #include "RenderCommand.hpp"
 #include "../Graphics/SpriteRenderer.hpp"
 //#include "../Graphics/PolygonBatch.hpp"
+#include "SpriteBatchRenderer.hpp"
 #include "SpriteCommand.hpp"
 
 namespace Pomdog {
+
+using Details::Rendering::SpriteBatchRenderer;
+using Details::Rendering::SpriteCommand;
+
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - Renderer::Impl
@@ -32,26 +37,38 @@ public:
 	RenderQueue renderQueue;
 	Matrix4x4 viewMatrix;
 	Matrix4x4 projectionMatrix;
-	std::unique_ptr<SpriteRenderer> spriteRenderer;
+	std::unique_ptr<SpriteBatchRenderer> spriteBatch;
 	//std::unique_ptr<PolygonBatch> polygonBatch;
 	//std::unique_ptr<SpriteBatch> spriteBatch;
+	
+	std::uint32_t drawCallCount;
+	
+	enum BatchState: std::uint8_t {
+		None,
+		Sprite,
+	};
+	
+	BatchState batchState;
 };
 //-----------------------------------------------------------------------
 Renderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
+	: viewMatrix{Matrix4x4::Identity}
+	, projectionMatrix{Matrix4x4::Identity}
+	, drawCallCount{0}
+	, batchState{BatchState::None}
 {
-	viewMatrix = Matrix4x4::Identity;
-	projectionMatrix = Matrix4x4::Identity;
-	spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, assets);
-	//spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
+	spriteBatch = std::make_unique<SpriteBatchRenderer>(graphicsContext, graphicsDevice, assets);
 	//polygonBatch = std::make_unique<PolygonBatch>(graphicsContext, graphicsDevice, *assets);
 	//spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(bounds.Width, bounds.Height, 1.0f, 100.0f));
 }
 //-----------------------------------------------------------------------
 void Renderer::Impl::Render(std::shared_ptr<GraphicsContext> const& graphicsContext)
 {
+	drawCallCount = 0;
+	
 	auto viewProjection = viewMatrix * projectionMatrix;
-	spriteRenderer->SetProjectionMatrix(viewProjection);
+	spriteBatch->SetProjectionMatrix(viewProjection);
 
 	renderQueue.Sort();
 	renderQueue.Enumerate([&](RenderCommand & command)
@@ -60,20 +77,22 @@ void Renderer::Impl::Render(std::shared_ptr<GraphicsContext> const& graphicsCont
 		case RenderCommandType::Custom:
 		case RenderCommandType::Batch: {
 			Flush();
+			POMDOG_ASSERT(batchState == BatchState::None);
 			command.Execute(graphicsContext);
+			++drawCallCount;
 			break;
 		}
 		case RenderCommandType::Sprite: {
-			Flush();
-			spriteRenderer->Begin(SpriteSortMode::BackToFront);
-
-			using Details::Rendering::SpriteCommand;
+			if (batchState != BatchState::Sprite) {
+				Flush();
+				spriteBatch->Begin(Matrix4x4::Identity);
+				batchState = BatchState::Sprite;
+			}
+			
 			auto spriteCommand = static_cast<SpriteCommand*>(&command);
-			spriteRenderer->Draw(spriteCommand->texture, spriteCommand->transform,
-				Vector2::Zero, spriteCommand->textureRegion.Subrect, spriteCommand->color,
-				0.0f, spriteCommand->origin, {1.0f, 1.0f}, 0.0f);
-				
-			spriteRenderer->End();
+			spriteBatch->Draw(spriteCommand->texture, spriteCommand->transform,
+				spriteCommand->textureRegion.Subrect, spriteCommand->color, spriteCommand->originPivot);
+
 			break;
 		}
 		}
@@ -81,10 +100,23 @@ void Renderer::Impl::Render(std::shared_ptr<GraphicsContext> const& graphicsCont
 	
 	Flush();
 	renderQueue.Clear();
+	POMDOG_ASSERT(batchState == BatchState::None);
 }
 //-----------------------------------------------------------------------
 void Renderer::Impl::Flush()
 {
+	switch (batchState) {
+	case BatchState::Sprite: {
+		POMDOG_ASSERT(spriteBatch);
+		spriteBatch->End();
+		drawCallCount += spriteBatch->DrawCallCount();
+		break;
+	}
+	case BatchState::None:
+		break;
+	}
+
+	batchState = BatchState::None;
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -120,6 +152,12 @@ void Renderer::ProjectionMatrix(Matrix4x4 const& projectionMatrixIn)
 {
 	POMDOG_ASSERT(impl);
 	impl->projectionMatrix = projectionMatrixIn;
+}
+//-----------------------------------------------------------------------
+std::uint32_t Renderer::DrawCallCount() const
+{
+	POMDOG_ASSERT(impl);
+	return impl->drawCallCount;
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

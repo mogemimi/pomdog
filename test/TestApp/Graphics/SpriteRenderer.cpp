@@ -340,10 +340,6 @@ SpriteRenderer::SpriteRenderer(std::shared_ptr<GraphicsContext> const& graphicsC
 //-----------------------------------------------------------------------
 SpriteRenderer::~SpriteRenderer() = default;
 //-----------------------------------------------------------------------
-void ResetProjectionMatrix(Matrix4x4 const& projectionMatrix)
-{
-}
-//-----------------------------------------------------------------------
 void SpriteRenderer::SetProjectionMatrix(Matrix4x4 const& projectionMatrix)
 {
 	POMDOG_ASSERT(impl);

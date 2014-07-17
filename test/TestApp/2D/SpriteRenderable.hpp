@@ -38,9 +38,20 @@ public:
 
 	void Color(Pomdog::Color const& color);
 	Pomdog::Color Color() const;
+	
+	void OriginPivot(Vector2 const& originPivot);
+	Vector2 OriginPivot() const;
+
+	void Region(TextureRegion const& region);
+	TextureRegion const& Region() const;
+	
+	Rectangle BoundingBox() const;
 
 private:
 	Details::Rendering::SpriteCommand command;
+	Matrix3x2 offsetMatrix;
+	Vector2 originPivot;
+	std::uint32_t dirtyFlags;
 	float zOrder;
 	bool isVisible;
 };

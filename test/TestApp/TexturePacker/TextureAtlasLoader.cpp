@@ -35,7 +35,6 @@ static TexturePacker::TextureAtlasRegion CreateAtlasRegion(std::string const& li
 	region.Region.Height = 1;
 	region.Region.XOffset = 0;
 	region.Region.YOffset = 0;
-	region.Region.Flip = false;
 	region.Region.Rotate = false;
 
 	return std::move(region);

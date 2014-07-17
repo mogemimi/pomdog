@@ -7,6 +7,7 @@
 //
 
 #include "SpriteRenderable.hpp"
+#include <limits>
 #include "../Rendering/Renderer.hpp"
 
 namespace Pomdog {
@@ -32,9 +33,15 @@ static TextureRegion CreateTextureRegionFromTexture(std::shared_ptr<Texture2D> c
 	textureRegion.Width = texture->Width();
 	textureRegion.Height = texture->Height();
 	textureRegion.Rotate = false;
-	textureRegion.Flip = false;
 	return std::move(textureRegion);
 }
+
+namespace SpriteRenderableDirtyFlags {
+
+static constexpr std::uint32_t OriginPivot = 0x1;
+static constexpr std::uint32_t Region = 0x2;
+
+}// namespace SpriteRenderableDirtyFlags
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
@@ -43,7 +50,9 @@ SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& texture)
 {}
 //-----------------------------------------------------------------------
 SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& textureIn, TextureRegion const& textureRegionIn)
-	: zOrder(0)
+	: originPivot(0.5f, 0.5f)
+	, zOrder(0)
+	, dirtyFlags(std::numeric_limits<std::uint32_t>::max())
 	, isVisible(true)
 {
 	POMDOG_ASSERT(textureIn);
@@ -51,7 +60,7 @@ SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& textureIn, 
 	command.textureRegion = textureRegionIn;
 	command.transform = Matrix3x2::Identity;
 	command.color = Color::White;
-	command.origin = {0.5f, 0.5f};
+	command.originPivot = {0.5f, 0.5f};
 	command.zOrder = 0;
 }
 //-----------------------------------------------------------------------
@@ -62,6 +71,19 @@ void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 		return;
 	}
 	
+	if (dirtyFlags & SpriteRenderableDirtyFlags::Region)
+	{
+		auto & region = command.textureRegion;
+		offsetMatrix = Matrix3x2::CreateTranslation(Vector2(region.XOffset, region.Height - (region.YOffset + region.Subrect.Height)));
+		command.originPivot = originPivot * Vector2(region.Width, region.Height) / Vector2(region.Subrect.Width, region.Subrect.Height);
+	}
+	else if (dirtyFlags & SpriteRenderableDirtyFlags::OriginPivot)
+	{
+		auto & region = command.textureRegion;
+		command.originPivot = originPivot * Vector2(region.Width, region.Height) / Vector2(region.Subrect.Width, region.Subrect.Height);
+	}
+	dirtyFlags = 0;
+	
 	command.zOrder = zOrder;
 
 	if (auto transform = gameObject.Component<Transform2D>())
@@ -69,7 +91,10 @@ void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 		if (transform->Scale.X == 0.0f || transform->Scale.Y == 0.0f) {
 			return;
 		}
-		command.transform = CreateTransformMatrix3x2(*transform);
+		command.transform = offsetMatrix * CreateTransformMatrix3x2(*transform);
+	}
+	else {
+		command.transform = offsetMatrix;
 	}
 	
 	POMDOG_ASSERT(command.texture);
@@ -109,6 +134,33 @@ void SpriteRenderable::Color(Pomdog::Color const& colorIn)
 Pomdog::Color SpriteRenderable::Color() const
 {
 	return command.color;
+}
+//-----------------------------------------------------------------------
+void SpriteRenderable::OriginPivot(Vector2 const& originPivotIn)
+{
+	originPivot = originPivotIn;
+	dirtyFlags |= SpriteRenderableDirtyFlags::OriginPivot;
+}
+//-----------------------------------------------------------------------
+Vector2 SpriteRenderable::OriginPivot() const
+{
+	return originPivot;
+}
+//-----------------------------------------------------------------------
+void SpriteRenderable::Region(TextureRegion const& regionIn)
+{
+	command.textureRegion = regionIn;
+	dirtyFlags |= SpriteRenderableDirtyFlags::Region;
+}
+//-----------------------------------------------------------------------
+TextureRegion const& SpriteRenderable::Region() const
+{
+	return command.textureRegion;
+}
+//-----------------------------------------------------------------------
+Rectangle SpriteRenderable::BoundingBox() const
+{
+	return {0, 0, command.textureRegion.Width, command.textureRegion.Height};
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -26,7 +26,6 @@ public:
 	std::uint16_t Width;
 	std::uint16_t Height;
 	bool Rotate;
-	bool Flip;
 };
 
 }// namespace Pomdog

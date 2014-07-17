@@ -34,6 +34,8 @@ public:
 	
 	void PushCommand(std::reference_wrapper<RenderCommand> && command);
 	
+	std::uint32_t DrawCallCount() const;
+	
 public:
 	class Impl;
 	std::unique_ptr<Impl> impl;
