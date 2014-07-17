@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -7,7 +7,7 @@
 //
 
 #include "SkinnedMeshRenderable.hpp"
-#include "RenderQueue.hpp"
+#include "../Rendering/Renderer.hpp"
 #include "../Skeletal2D/SkeletonHelper.hpp"
 #include "../Skeletal2D/SkinnedMesh.hpp"
 
@@ -55,7 +55,7 @@ SkinnedMeshRenderable::SkinnedMeshRenderable(std::shared_ptr<GraphicsDevice> con
 	POMDOG_ASSERT(command.inputLayout);
 }
 //-----------------------------------------------------------------------
-void SkinnedMeshRenderable::Visit(GameObject & gameObject, RenderQueue & renderQueue,
+void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 	Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix)
 {
 	if (!isVisible) {
@@ -76,7 +76,7 @@ void SkinnedMeshRenderable::Visit(GameObject & gameObject, RenderQueue & renderQ
 			* command.modelViewProjection;
 	}
 	
-	renderQueue.PushBack(command);
+	renderer.PushCommand(command);
 }
 //-----------------------------------------------------------------------
 void SkinnedMeshRenderable::DrawSkeleton(std::unique_ptr<PolygonBatch> const& polygonBatch,
@@ -110,17 +110,17 @@ void SkinnedMeshRenderable::DrawSkeleton(std::unique_ptr<PolygonBatch> const& po
 	polygonBatch->End();
 }
 //-----------------------------------------------------------------------
-void SkinnedMeshRenderable::SetZOrder(float zOrderIn)
+void SkinnedMeshRenderable::ZOrder(float zOrderIn)
 {
 	this->zOrder = zOrderIn;
 }
 //-----------------------------------------------------------------------
-float SkinnedMeshRenderable::GetZOrder() const
+float SkinnedMeshRenderable::ZOrder() const
 {
 	return zOrder;
 }
 //-----------------------------------------------------------------------
-void SkinnedMeshRenderable::SetVisible(bool isVisibleIn)
+void SkinnedMeshRenderable::IsVisible(bool isVisibleIn)
 {
 	this->isVisible = isVisibleIn;
 }

@@ -13,13 +13,12 @@
 #	pragma once
 #endif
 
+#include <memory>
 #include <Pomdog/Pomdog.hpp>
-#include "RenderQueue.hpp"
 
 namespace Pomdog {
 
-class SpriteRenderer;
-class PolygonBatch;
+class RenderCommand;
 
 class Renderer {
 public:
@@ -28,13 +27,16 @@ public:
 
 	~Renderer();
 
+	void ViewMatrix(Matrix4x4 const& viewMatrix);
+	void ProjectionMatrix(Matrix4x4 const& projectionMatrix);
+
 	void Render(std::shared_ptr<GraphicsContext> const& graphicsContext);
 	
+	void PushCommand(std::reference_wrapper<RenderCommand> && command);
+	
 public:
-	RenderQueue renderQueue;
-	std::unique_ptr<SpriteRenderer> spriteRenderer;
-	//std::unique_ptr<PolygonBatch> polygonBatch;
-	//std::unique_ptr<SpriteBatch> spriteBatch;
+	class Impl;
+	std::unique_ptr<Impl> impl;
 };
 
 }// namespace Pomdog

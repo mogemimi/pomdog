@@ -16,6 +16,7 @@
 #include "2D/Animator.hpp"
 #include "2D/BeamRenderable.hpp"
 #include "2D/SkinnedMeshRenderable.hpp"
+#include "2D/SpriteRenderable.hpp"
 #include "Spine/SkeletonDescLoader.hpp"
 #include "Spine/SkeletonLoader.hpp"
 #include "Spine/SkinnedMeshLoader.hpp"
@@ -99,6 +100,9 @@ void MaidBeamGame::Initialize()
 		mainCamera = gameWorld.CreateObject();
 		mainCamera->AddComponent<Transform2D>();
 		mainCamera->AddComponent<Camera2D>();
+		
+		auto texture = assets->Load<Texture2D>("pomdog.png");
+		mainCamera->AddComponent<SpriteRenderable>(texture);
 	}
 	{
 		maid = gameWorld.CreateObject();
@@ -229,7 +233,7 @@ void MaidBeamGame::Update()
 
 	if (auto renderable = maid->Component<Renderable>())
 	{
-		renderable->SetVisible(toggleSwitch2->IsOn());
+		renderable->IsVisible(toggleSwitch2->IsOn());
 		
 //		if (toggleSwitch3->IsOn()) {
 //			renderer->SkeletonDebugDrawEnable = true;
@@ -256,16 +260,19 @@ void MaidBeamGame::Draw()
 		auto camera = mainCamera->Component<Camera2D>();
 			
 		POMDOG_ASSERT(transform && camera);
+		auto clientBounds = gameHost->Window()->ClientBounds();
 		auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
 		auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-			gameHost->Window()->ClientBounds().Width, gameHost->Window()->ClientBounds().Height, camera->Near, camera->Far);
+			clientBounds.Width, clientBounds.Height, camera->Near, camera->Far);
 		
 		gameEditor->SetViewProjection(viewMatrix * projectionMatrix);
+		renderer->ViewMatrix(viewMatrix);
+		renderer->ProjectionMatrix(projectionMatrix);
 
 		for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
 		{
 			auto renderable = gameObject->Component<Renderable>();
-			renderable->Visit(*gameObject, renderer->renderQueue, viewMatrix, projectionMatrix);
+			renderable->Visit(*gameObject, *renderer, viewMatrix, projectionMatrix);
 		}
 	}
 	

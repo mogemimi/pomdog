@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -18,18 +18,18 @@
 
 namespace Pomdog {
 
-class RenderQueue;
+class Renderer;
 
 class Renderable: public Component<Renderable> {
 public:
 	virtual ~Renderable() = default;
 
-	virtual void Visit(GameObject & gameObject, RenderQueue & renderQueue, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) = 0;
+	virtual void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) = 0;
 	
-	virtual void SetZOrder(float zOrder) = 0;
-	virtual float GetZOrder() const = 0; // SortingOrder
+	virtual void ZOrder(float zOrder) = 0;
+	virtual float ZOrder() const = 0; // SortingOrder
 	
-	virtual void SetVisible(bool isVisible) = 0;
+	virtual void IsVisible(bool isVisible) = 0;
 	virtual bool IsVisible() const = 0;
 };
 

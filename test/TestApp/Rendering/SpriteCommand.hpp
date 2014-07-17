@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_PARTICLEBATCHCOMMAND_BBF33260_CA29_4B07_BBEB_8C19916FF5CC_HPP
-#define POMDOG_PARTICLEBATCHCOMMAND_BBF33260_CA29_4B07_BBEB_8C19916FF5CC_HPP
+#ifndef POMDOG_SPRITECOMMAND_8EB48EFB_54D7_4AF1_AB24_B8607C44B642_HPP
+#define POMDOG_SPRITECOMMAND_8EB48EFB_54D7_4AF1_AB24_B8607C44B642_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -16,34 +16,30 @@
 #include <memory>
 #include <Pomdog/Pomdog.hpp>
 #include "RenderCommand.hpp"
-#include "../Particle2D/Particle.hpp"
+#include "../Graphics/TextureRegion.hpp"
+#include "../Graphics/SpriteRenderer.hpp"
 
 namespace Pomdog {
-
-class SpriteRenderer;
-
 namespace Details {
 namespace Rendering {
 
-class ParticleBatchCommand final: public RenderCommand {
+class SpriteCommand final: public RenderCommand {
 public:
-	~ParticleBatchCommand();
-
 	float ZOrder() const override
 	{
 		return zOrder;
 	}
 
-	RenderCommandType CommandType() const override;
-	
 	void Execute(std::shared_ptr<GraphicsContext> const& graphicsContext) override;
 
+	RenderCommandType CommandType() const override;
+
 public:
-	std::unique_ptr<SpriteRenderer> spriteRenderer;
-	std::shared_ptr<BlendState> blendState;
-	Matrix4x4 modelViewProjection;
+	Matrix3x2 transform;
+	TextureRegion textureRegion;
 	std::shared_ptr<Texture2D> texture;
-	std::vector<Particle> const* particles = nullptr;
+	Vector2 origin;
+	Color color;
 	float zOrder;
 };
 
@@ -51,4 +47,4 @@ public:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_PARTICLEBATCHCOMMAND_BBF33260_CA29_4B07_BBEB_8C19916FF5CC_HPP)
+#endif // !defined(POMDOG_SPRITECOMMAND_8EB48EFB_54D7_4AF1_AB24_B8607C44B642_HPP)

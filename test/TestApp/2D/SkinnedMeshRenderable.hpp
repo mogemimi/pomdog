@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -31,11 +31,12 @@ public:
 		std::shared_ptr<SkinnedMesh> const& mesh,
 		std::shared_ptr<Texture2D> const& texture);
 
-	void Visit(GameObject & gameObject, RenderQueue & renderQueue, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
+	void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
 	
-	void SetZOrder(float zOrder) override;
-	float GetZOrder() const override;
-	void SetVisible(bool isVisible) override;
+	void ZOrder(float zOrder) override;
+	float ZOrder() const override;
+	
+	void IsVisible(bool isVisible) override;
 	bool IsVisible() const override;
 	
 	void DrawSkeleton(std::unique_ptr<PolygonBatch> const& polygonBatch,

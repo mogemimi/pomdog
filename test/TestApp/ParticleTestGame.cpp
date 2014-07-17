@@ -156,7 +156,7 @@ void ParticleTestGame::Draw()
 		for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
 		{
 			auto renderable = gameObject->Component<Renderable>();
-			renderable->Visit(*gameObject, renderer->renderQueue, viewMatrix, projectionMatrix);
+			renderable->Visit(*gameObject, *renderer, viewMatrix, projectionMatrix);
 		}
 	}
 

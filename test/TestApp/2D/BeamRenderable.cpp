@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -15,7 +15,7 @@ BeamRenderable::BeamRenderable()
 	, isVisible(true)
 {}
 //-----------------------------------------------------------------------
-void BeamRenderable::Visit(GameObject & gameObject, RenderQueue & renderQueue,
+void BeamRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 	Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix)
 {
 	///@todo Not implemented
@@ -131,17 +131,17 @@ void BeamRenderable::DrawBeam()
 //	spriteRenderer->End();
 }
 //-----------------------------------------------------------------------
-void BeamRenderable::SetZOrder(float zOrderIn)
+void BeamRenderable::ZOrder(float zOrderIn)
 {
 	this->zOrder = zOrderIn;
 }
 //-----------------------------------------------------------------------
-float BeamRenderable::GetZOrder() const
+float BeamRenderable::ZOrder() const
 {
 	return zOrder;
 }
 //-----------------------------------------------------------------------
-void BeamRenderable::SetVisible(bool isVisibleIn)
+void BeamRenderable::IsVisible(bool isVisibleIn)
 {
 	this->isVisible = isVisibleIn;
 }

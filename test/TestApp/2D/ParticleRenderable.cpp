@@ -7,7 +7,7 @@
 //
 
 #include "ParticleRenderable.hpp"
-#include "../Rendering/RenderQueue.hpp"
+#include "../Rendering/Renderer.hpp"
 #include "../Graphics/SpriteRenderer.hpp"
 
 // for test
@@ -102,7 +102,7 @@ ParticleRenderable::ParticleRenderable()
 {
 }
 //-----------------------------------------------------------------------
-void ParticleRenderable::Visit(GameObject & gameObject, RenderQueue & renderQueue,
+void ParticleRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 	Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix)
 {
 	if (!isVisible) {
@@ -123,7 +123,7 @@ void ParticleRenderable::Visit(GameObject & gameObject, RenderQueue & renderQueu
 //			* command.modelViewProjection;
 //	}
 	
-	renderQueue.PushBack(command);
+	renderer.PushCommand(command);
 }
 //-----------------------------------------------------------------------
 void ParticleRenderable::Load(std::shared_ptr<GraphicsContext> const& graphicsContext,
@@ -147,17 +147,17 @@ void ParticleRenderable::Update(GameObject & object, GameClock const& clock)
 	}
 }
 //-----------------------------------------------------------------------
-void ParticleRenderable::SetZOrder(float zOrderIn)
+void ParticleRenderable::ZOrder(float zOrderIn)
 {
 	this->zOrder = zOrderIn;
 }
 //-----------------------------------------------------------------------
-float ParticleRenderable::GetZOrder() const
+float ParticleRenderable::ZOrder() const
 {
 	return zOrder;
 }
 //-----------------------------------------------------------------------
-void ParticleRenderable::SetVisible(bool isVisibleIn)
+void ParticleRenderable::IsVisible(bool isVisibleIn)
 {
 	this->isVisible = isVisibleIn;
 }

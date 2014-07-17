@@ -76,6 +76,11 @@ void SkinnedMeshCommand::SetMatrixPalette(Skeleton const& skeleton, SkeletonTran
 	skinningEffect->Parameters("SkinningConstants")->SetValue(matrixPalette);
 }
 //-----------------------------------------------------------------------
+RenderCommandType SkinnedMeshCommand::CommandType() const
+{
+	return RenderCommandType::Batch;
+}
+//-----------------------------------------------------------------------
 }// namespace Rendering
 }// namespace Details
 }// namespace Pomdog

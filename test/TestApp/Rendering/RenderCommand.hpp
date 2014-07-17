@@ -22,6 +22,7 @@ class GraphicsContext;
 enum class RenderCommandType {
 	Custom,
 	Batch,
+	Sprite,
 };
 
 class RenderCommand {

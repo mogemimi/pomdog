@@ -92,8 +92,6 @@
       '../include/Pomdog/Gameplay/detail/ComponentTypeIndex.hpp',
       '../include/Pomdog/Gameplay/detail/GameComponent.hpp',
       '../include/Pomdog/Gameplay2D/Camera2D.hpp',
-      '../include/Pomdog/Gameplay2D/CanvasItem.hpp',
-      '../include/Pomdog/Gameplay2D/Sprite.hpp',
       '../include/Pomdog/Gameplay2D/Transform2D.hpp',
       '../include/Pomdog/Graphics/Blend.hpp',
       '../include/Pomdog/Graphics/BlendDescription.hpp',

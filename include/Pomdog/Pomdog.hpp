@@ -76,8 +76,6 @@
 
 // Gameplay2D
 #include "Gameplay2D/Camera2D.hpp"
-#include "Gameplay2D/CanvasItem.hpp" // deprecated
-#include "Gameplay2D/Sprite.hpp" // deprecated
 #include "Gameplay2D/Transform2D.hpp"
 
 // Graphics

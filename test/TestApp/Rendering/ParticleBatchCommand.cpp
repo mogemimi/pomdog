@@ -12,9 +12,9 @@
 namespace Pomdog {
 namespace Details {
 namespace Rendering {
-
+//-----------------------------------------------------------------------
 ParticleBatchCommand::~ParticleBatchCommand() = default;
-
+//-----------------------------------------------------------------------
 void ParticleBatchCommand::Execute(std::shared_ptr<GraphicsContext> const& graphicsContext)
 {
 	auto blendStateOld = graphicsContext->GetBlendState();
@@ -33,7 +33,12 @@ void ParticleBatchCommand::Execute(std::shared_ptr<GraphicsContext> const& graph
 	spriteRenderer->End();
 	graphicsContext->SetBlendState(blendStateOld);
 }
-
+//-----------------------------------------------------------------------
+RenderCommandType ParticleBatchCommand::CommandType() const
+{
+	return RenderCommandType::Batch;
+}
+//-----------------------------------------------------------------------
 }// namespace Rendering
 }// namespace Details
 }// namespace Pomdog

@@ -25,11 +25,12 @@ class ParticleRenderable: public Renderable {
 public:
 	ParticleRenderable();
 
-	void Visit(GameObject & gameObject, RenderQueue & renderQueue, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
+	void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
 	
-	void SetZOrder(float zOrder) override;
-	float GetZOrder() const override;
-	void SetVisible(bool isVisible) override;
+	void ZOrder(float zOrder) override;
+	float ZOrder() const override;
+	
+	void IsVisible(bool isVisible) override;
 	bool IsVisible() const override;
 	
 	void Load(std::shared_ptr<GraphicsContext> const& graphicsContext,

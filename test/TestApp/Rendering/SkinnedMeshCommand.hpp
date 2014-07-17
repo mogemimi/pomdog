@@ -24,7 +24,7 @@ namespace Pomdog {
 namespace Details {
 namespace Rendering {
 
-class SkinnedMeshCommand: public RenderCommand {
+class SkinnedMeshCommand final: public RenderCommand {
 public:
 	float ZOrder() const override
 	{
@@ -35,10 +35,7 @@ public:
 
 	void SetMatrixPalette(Skeleton const& skeleton, SkeletonTransform const& skeletonTransform);
 
-	RenderCommandType CommandType() const override
-	{
-		return RenderCommandType::Batch;
-	}
+	RenderCommandType CommandType() const override;
 
 public:
 	Matrix4x4 modelViewProjection;

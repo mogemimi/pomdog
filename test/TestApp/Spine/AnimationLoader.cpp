@@ -70,7 +70,7 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 			}
 			
 			std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<RotationKeyframe>);
-			std::unique_ptr<RotationTrack> timeline(new RotationTrack(std::move(keys), std::move(jointIndex)));
+			auto timeline = std::make_unique<RotationTrack>(std::move(keys), std::move(jointIndex));
 			tracks.push_back(std::move(timeline));
 		}
 		
@@ -88,7 +88,7 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 			}
 			
 			std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<ScaleKeyframe>);
-			std::unique_ptr<ScaleTrack> timeline(new ScaleTrack(std::move(keys), std::move(jointIndex)));
+			auto timeline = std::make_unique<ScaleTrack>(std::move(keys), std::move(jointIndex));
 			tracks.push_back(std::move(timeline));
 		}
 		
@@ -107,7 +107,7 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 			}
 
 			std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<TranslationKeyframe>);
-			std::unique_ptr<TranslationTrack> timeline(new TranslationTrack(std::move(keys), std::move(jointIndex)));
+			auto timeline = std::make_unique<TranslationTrack>(std::move(keys), std::move(jointIndex));
 			tracks.push_back(std::move(timeline));
 		}
 	}
