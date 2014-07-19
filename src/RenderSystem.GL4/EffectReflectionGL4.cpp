@@ -8,6 +8,7 @@
 
 #include "EffectReflectionGL4.hpp"
 #include <utility>
+#include <algorithm>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LogLevel.hpp>
@@ -225,10 +226,51 @@ EnumerateUniforms(ShaderProgramGL4 const& shaderProgram)
 			uniform.Type = uniformType;
 			uniform.ArrayCount = arrayCount;
 			uniform.Location = location;
-		
+
+			POMDOG_ASSERT(uniform.Type == GL_SAMPLER_1D
+				|| uniform.Type == GL_SAMPLER_2D
+				|| uniform.Type == GL_SAMPLER_3D
+				|| uniform.Type == GL_SAMPLER_CUBE
+				|| uniform.Type == GL_SAMPLER_1D_SHADOW
+				|| uniform.Type == GL_SAMPLER_2D_SHADOW
+				|| uniform.Type == GL_SAMPLER_1D_ARRAY
+				|| uniform.Type == GL_SAMPLER_2D_ARRAY
+				|| uniform.Type == GL_SAMPLER_1D_ARRAY_SHADOW
+				|| uniform.Type == GL_SAMPLER_2D_ARRAY_SHADOW
+				|| uniform.Type == GL_SAMPLER_2D_MULTISAMPLE
+				|| uniform.Type == GL_SAMPLER_2D_MULTISAMPLE_ARRAY
+				|| uniform.Type == GL_SAMPLER_CUBE_SHADOW
+				|| uniform.Type == GL_SAMPLER_BUFFER
+				|| uniform.Type == GL_SAMPLER_2D_RECT
+				|| uniform.Type == GL_SAMPLER_2D_RECT_SHADOW
+				|| uniform.Type == GL_INT_SAMPLER_1D
+				|| uniform.Type == GL_INT_SAMPLER_2D
+				|| uniform.Type == GL_INT_SAMPLER_3D
+				|| uniform.Type == GL_INT_SAMPLER_CUBE
+				|| uniform.Type == GL_INT_SAMPLER_1D_ARRAY
+				|| uniform.Type == GL_INT_SAMPLER_2D_ARRAY
+				|| uniform.Type == GL_INT_SAMPLER_2D_MULTISAMPLE
+				|| uniform.Type == GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY
+				|| uniform.Type == GL_INT_SAMPLER_BUFFER
+				|| uniform.Type == GL_INT_SAMPLER_2D_RECT
+				|| uniform.Type == GL_UNSIGNED_INT_SAMPLER_1D
+				|| uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D
+				|| uniform.Type == GL_UNSIGNED_INT_SAMPLER_3D
+				|| uniform.Type == GL_UNSIGNED_INT_SAMPLER_CUBE
+				|| uniform.Type == GL_UNSIGNED_INT_SAMPLER_1D_ARRAY
+				|| uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_ARRAY
+				|| uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE
+				|| uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY
+				|| uniform.Type == GL_UNSIGNED_INT_SAMPLER_BUFFER
+				|| uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_RECT);
+
 			uniformVariables.push_back(std::move(uniform));
 		}
 	}
+
+	///@todo Replace the following code by GL_ARB_shading_language_420pack on OpenGL 4.2+:
+	std::sort(std::begin(uniformVariables), std::end(uniformVariables),
+		[](UniformGL4 const& a, UniformGL4 const& b){ return a.Name < b.Name; });
 
 	return std::move(uniformVariables);
 }
