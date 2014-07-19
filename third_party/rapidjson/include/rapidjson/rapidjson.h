@@ -4,24 +4,47 @@
 // Copyright (c) 2011 Milo Yip (miloyip@gmail.com)
 // Version 0.1
 
+/*!\file rapidjson.h
+	\brief common definitions and configuration
+
+	\todo Complete Doxygen documentation for configure macros.
+ */
+
 #include <cstdlib>	// malloc(), realloc(), free()
 #include <cstring>	// memcpy()
 
 ///////////////////////////////////////////////////////////////////////////////
 // RAPIDJSON_NO_INT64DEFINE
 
-// Here defines int64_t and uint64_t types in global namespace.
+// Here defines int64_t and uint64_t types in global namespace as well as the
+// (U)INT64_C constant macros.
 // If user have their own definition, can define RAPIDJSON_NO_INT64DEFINE to disable this.
 #ifndef RAPIDJSON_NO_INT64DEFINE
+//!@cond RAPIDJSON_HIDDEN_FROM_DOXYGEN
+#ifndef __STDC_CONSTANT_MACROS
+#  define __STDC_CONSTANT_MACROS 1 // required by C++ standard
+#endif
 #ifdef _MSC_VER
-typedef __int64 int64_t;
-typedef unsigned __int64 uint64_t;
+#include "msinttypes/stdint.h"
+#include "msinttypes/inttypes.h"
+#else
+// Other compilers should have this.
+#include <stdint.h>
+#include <inttypes.h>
+#endif
+//!@endcond
+#endif // RAPIDJSON_NO_INT64TYPEDEF
+
+///////////////////////////////////////////////////////////////////////////////
+// RAPIDJSON_FORCEINLINE
+
+#ifndef RAPIDJSON_FORCEINLINE
+#ifdef _MSC_VER
 #define RAPIDJSON_FORCEINLINE __forceinline
 #else
-#include <inttypes.h>
 #define RAPIDJSON_FORCEINLINE
 #endif
-#endif // RAPIDJSON_NO_INT64TYPEDEF
+#endif // RAPIDJSON_FORCEINLINE
 
 ///////////////////////////////////////////////////////////////////////////////
 // RAPIDJSON_ENDIAN
@@ -29,22 +52,48 @@ typedef unsigned __int64 uint64_t;
 #define RAPIDJSON_BIGENDIAN		1	//!< Big endian machine
 
 //! Endianness of the machine.
-/*!	GCC provided macro for detecting endianness of the target machine. But other
+/*!	GCC 4.6 provided macro for detecting endianness of the target machine. But other
 	compilers may not have this. User can define RAPIDJSON_ENDIAN to either
-	RAPIDJSON_LITTLEENDIAN or RAPIDJSON_BIGENDIAN.
+	\ref RAPIDJSON_LITTLEENDIAN or \ref RAPIDJSON_BIGENDIAN.
+
+	Implemented with reference to 
+	https://gcc.gnu.org/onlinedocs/gcc-4.6.0/cpp/Common-Predefined-Macros.html
+	http://www.boost.org/doc/libs/1_42_0/boost/detail/endian.hpp
 */
 #ifndef RAPIDJSON_ENDIAN
-#ifdef __BYTE_ORDER__
-#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-#define RAPIDJSON_ENDIAN RAPIDJSON_LITTLEENDIAN
-#else
-#define RAPIDJSON_ENDIAN RAPIDJSON_BIGENDIAN
-#endif // __BYTE_ORDER__
-#else
-#define RAPIDJSON_ENDIAN RAPIDJSON_LITTLEENDIAN	// Assumes little endian otherwise.
-#endif
+// Detect with GCC 4.6's macro
+#  ifdef __BYTE_ORDER__
+#    if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#      define RAPIDJSON_ENDIAN RAPIDJSON_LITTLEENDIAN
+#    elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#      define RAPIDJSON_ENDIAN RAPIDJSON_BIGENDIAN
+#    else
+#      error Unknown machine endianess detected. User needs to define RAPIDJSON_ENDIAN.
+#	 endif // __BYTE_ORDER__
+// Detect with GLIBC's endian.h
+#  elif defined(__GLIBC__)
+#    include <endian.h>
+#    if (__BYTE_ORDER == __LITTLE_ENDIAN)
+#      define RAPIDJSON_ENDIAN RAPIDJSON_LITTLEENDIAN
+#	 elif (__BYTE_ORDER == __BIG_ENDIAN)
+#      define RAPIDJSON_ENDIAN RAPIDJSON_BIGENDIAN
+#	 else
+#      error Unknown machine endianess detected. User needs to define RAPIDJSON_ENDIAN.
+#   endif // __GLIBC__
+// Detect with _LITTLE_ENDIAN and _BIG_ENDIAN macro
+#  elif defined(_LITTLE_ENDIAN) && !defined(_BIG_ENDIAN)
+#	 define RAPIDJSON_ENDIAN RAPIDJSON_LITTLEENDIAN
+#  elif defined(_BIG_ENDIAN) && !defined(_LITTLE_ENDIAN)
+#	 define RAPIDJSON_ENDIAN RAPIDJSON_BIGENDIAN
+// Detect with architecture macros
+#  elif defined(__sparc) || defined(__sparc__) || defined(_POWER) || defined(__powerpc__) || defined(__ppc__) || defined(__hpux) || defined(__hppa) || defined(_MIPSEB) || defined(_POWER) || defined(__s390__)
+#	 define RAPIDJSON_ENDIAN RAPIDJSON_BIGENDIAN
+#  elif defined(__i386__) || defined(__alpha__) || defined(__ia64) || defined(__ia64__) || defined(_M_IX86) || defined(_M_IA64) || defined(_M_ALPHA) || defined(__amd64) || defined(__amd64__) || defined(_M_AMD64) || defined(__x86_64) || defined(__x86_64__) || defined(_M_X64) || defined(__bfin__)
+#	 define RAPIDJSON_ENDIAN RAPIDJSON_LITTLEENDIAN
+#  else
+#    error Unknown machine endianess detected. User needs to define RAPIDJSON_ENDIAN.	
+#  endif
 #endif // RAPIDJSON_ENDIAN
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // RAPIDJSON_ALIGNSIZE
@@ -55,7 +104,7 @@ typedef unsigned __int64 uint64_t;
 	Currently the default uses 4 bytes alignment. User can customize this.
 */
 #ifndef RAPIDJSON_ALIGN
-#define RAPIDJSON_ALIGN(x) ((x + 3) & ~3)
+#define RAPIDJSON_ALIGN(x) ((x + 3u) & ~3u)
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -100,7 +149,9 @@ typedef unsigned SizeType;
 
 // Adopt from boost
 #ifndef RAPIDJSON_STATIC_ASSERT
+//!@cond RAPIDJSON_HIDDEN_FROM_DOXYGEN
 namespace rapidjson {
+
 template <bool x> struct STATIC_ASSERTION_FAILURE;
 template <> struct STATIC_ASSERTION_FAILURE<true> { enum { value = 1 }; };
 template<int x> struct StaticAssertTest {};
@@ -110,17 +161,78 @@ template<int x> struct StaticAssertTest {};
 #define RAPIDJSON_DO_JOIN(X, Y) RAPIDJSON_DO_JOIN2(X, Y)
 #define RAPIDJSON_DO_JOIN2(X, Y) X##Y
 
+#if defined(__GNUC__)
+#define RAPIDJSON_STATIC_ASSERT_UNUSED_ATTRIBUTE __attribute__((unused))
+#else
+#define RAPIDJSON_STATIC_ASSERT_UNUSED_ATTRIBUTE 
+#endif
+//!@endcond
+
+/*! \def RAPIDJSON_STATIC_ASSERT
+	\brief (internal) macro to check for conditions at compile-time
+	\param x compile-time condition
+	\hideinitializer
+ */
 #define RAPIDJSON_STATIC_ASSERT(x) typedef ::rapidjson::StaticAssertTest<\
 	sizeof(::rapidjson::STATIC_ASSERTION_FAILURE<bool(x) >)>\
-	RAPIDJSON_JOIN(StaticAssertTypedef, __LINE__)
+	RAPIDJSON_JOIN(StaticAssertTypedef, __LINE__) RAPIDJSON_STATIC_ASSERT_UNUSED_ATTRIBUTE
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
 // Helpers
 
+//!@cond RAPIDJSON_HIDDEN_FROM_DOXYGEN
+
 #define RAPIDJSON_MULTILINEMACRO_BEGIN do {  
 #define RAPIDJSON_MULTILINEMACRO_END \
 } while((void)0, 0)
+
+// adopted from Boost
+#define RAPIDJSON_VERSION_CODE(x,y,z) \
+  (((x)*100000) + ((y)*100) + (z))
+
+// token stringification
+#define RAPIDJSON_STRINGIFY(x) RAPIDJSON_DO_STRINGIFY(x)
+#define RAPIDJSON_DO_STRINGIFY(x) #x
+
+///////////////////////////////////////////////////////////////////////////////
+// RAPIDJSON_DIAG_PUSH/POP, RAPIDJSON_DIAG_OFF
+
+#if defined(__clang__) || (defined(__GNUC__) && RAPIDJSON_VERSION_CODE(__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__) >= RAPIDJSON_VERSION_CODE(4,2,0))
+
+#define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+#define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+#define RAPIDJSON_DIAG_OFF(x) \
+	RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W,x)))
+
+// push/pop support in Clang and GCC>=4.6
+#if defined(__clang__) || (defined(__GNUC__) && RAPIDJSON_VERSION_CODE(__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__) >= RAPIDJSON_VERSION_CODE(4,6,0))
+#define RAPIDJSON_DIAG_PUSH RAPIDJSON_DIAG_PRAGMA(push)
+#define RAPIDJSON_DIAG_POP  RAPIDJSON_DIAG_PRAGMA(pop)
+#else // GCC >= 4.2, < 4.6
+#define RAPIDJSON_DIAG_PUSH /* ignored */
+#define RAPIDJSON_DIAG_POP /* ignored */
+#endif
+
+#elif defined(_MSC_VER)
+
+// pragma (MSVC specific)
+#define RAPIDJSON_PRAGMA(x) __pragma(x)
+#define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(warning(x))
+
+#define RAPIDJSON_DIAG_OFF(x) RAPIDJSON_DIAG_PRAGMA(disable: x)
+#define RAPIDJSON_DIAG_PUSH RAPIDJSON_DIAG_PRAGMA(push)
+#define RAPIDJSON_DIAG_POP  RAPIDJSON_DIAG_PRAGMA(pop)
+
+#else
+
+#define RAPIDJSON_DIAG_OFF(x) /* ignored */
+#define RAPIDJSON_DIAG_PUSH   /* ignored */
+#define RAPIDJSON_DIAG_POP    /* ignored */
+
+#endif // RAPIDJSON_DIAG_*
+
+//!@endcond
 
 ///////////////////////////////////////////////////////////////////////////////
 // Allocators and Encodings
@@ -128,6 +240,7 @@ template<int x> struct StaticAssertTest {};
 #include "allocators.h"
 #include "encodings.h"
 
+//! main RapidJSON namespace
 namespace rapidjson {
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -172,6 +285,22 @@ concept Stream {
 \endcode
 */
 
+//! Provides additional information for stream.
+/*!
+	By using traits pattern, this type provides a default configuration for stream.
+	For custom stream, this type can be specialized for other configuration.
+	See TEST(Reader, CustomStringStream) in readertest.cpp for example.
+*/
+template<typename Stream>
+struct StreamTraits {
+	//! Whether to make local copy of stream for optimization during parsing.
+	/*!
+		By default, for safety, streams do not use local copy optimization.
+		Stream that can be copied fast should specialize this, like StreamTraits<StringStream>.
+	*/
+	enum { copyOptimization = 0 };
+};
+
 //! Put N copies of a character to a stream.
 template<typename Stream, typename Ch>
 inline void PutN(Stream& stream, Ch c, size_t n) {
@@ -183,7 +312,7 @@ inline void PutN(Stream& stream, Ch c, size_t n) {
 // StringStream
 
 //! Read-only string stream.
-/*! \implements Stream
+/*! \note implements Stream concept
 */
 template <typename Encoding>
 struct GenericStringStream {
@@ -193,7 +322,7 @@ struct GenericStringStream {
 
 	Ch Peek() const { return *src_; }
 	Ch Take() { return *src_++; }
-	size_t Tell() const { return src_ - head_; }
+	size_t Tell() const { return static_cast<size_t>(src_ - head_); }
 
 	Ch* PutBegin() { RAPIDJSON_ASSERT(false); return 0; }
 	void Put(Ch) { RAPIDJSON_ASSERT(false); }
@@ -204,6 +333,12 @@ struct GenericStringStream {
 	const Ch* head_;	//!< Original head of the string.
 };
 
+template <typename Encoding>
+struct StreamTraits<GenericStringStream<Encoding> > {
+	enum { copyOptimization = 1 };
+};
+
+//! String stream with UTF8 encoding.
 typedef GenericStringStream<UTF8<> > StringStream;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -211,7 +346,7 @@ typedef GenericStringStream<UTF8<> > StringStream;
 
 //! A read-write string stream.
 /*! This string stream is particularly designed for in-situ parsing.
-	\implements Stream
+	\note implements Stream concept
 */
 template <typename Encoding>
 struct GenericInsituStringStream {
@@ -222,19 +357,25 @@ struct GenericInsituStringStream {
 	// Read
 	Ch Peek() { return *src_; }
 	Ch Take() { return *src_++; }
-	size_t Tell() { return src_ - head_; }
+	size_t Tell() { return static_cast<size_t>(src_ - head_); }
 
 	// Write
 	Ch* PutBegin() { return dst_ = src_; }
 	void Put(Ch c) { RAPIDJSON_ASSERT(dst_ != 0); *dst_++ = c; }
 	void Flush() {}
-	size_t PutEnd(Ch* begin) { return dst_ - begin; }
+	size_t PutEnd(Ch* begin) { return static_cast<size_t>(dst_ - begin); }
 
 	Ch* src_;
 	Ch* dst_;
 	Ch* head_;
 };
 
+template <typename Encoding>
+struct StreamTraits<GenericInsituStringStream<Encoding> > {
+	enum { copyOptimization = 1 };
+};
+
+//! Insitu string stream with UTF8 encoding.
 typedef GenericInsituStringStream<UTF8<> > InsituStringStream;
 
 ///////////////////////////////////////////////////////////////////////////////

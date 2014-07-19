@@ -3,6 +3,11 @@
 
 #include "rapidjson.h"
 
+#ifdef __GNUC__
+RAPIDJSON_DIAG_PUSH
+RAPIDJSON_DIAG_OFF(effc++)
+#endif
+
 namespace rapidjson {
 
 //! Input byte stream wrapper with a statically bound encoding.
@@ -25,13 +30,13 @@ public:
 	size_t Tell() const { return is_.Tell(); }
 
 	// Not implemented
-	void Put(Ch c) { RAPIDJSON_ASSERT(false); }
+	void Put(Ch) { RAPIDJSON_ASSERT(false); }
 	void Flush() { RAPIDJSON_ASSERT(false); } 
 	Ch* PutBegin() { RAPIDJSON_ASSERT(false); return 0; }
 	size_t PutEnd(Ch*) { RAPIDJSON_ASSERT(false); return 0; }
 
 private:
-	// Prohibit assignment for VC C4512 warning
+	EncodedInputStream(const EncodedInputStream&);
 	EncodedInputStream& operator=(const EncodedInputStream&);
 
 	InputByteStream& is_;
@@ -65,7 +70,7 @@ public:
 	size_t PutEnd(Ch*) { RAPIDJSON_ASSERT(false); return 0; }
 
 private:
-	// Prohibit assignment for VC C4512 warning
+	EncodedOutputStream(const EncodedOutputStream&);
 	EncodedOutputStream& operator=(const EncodedOutputStream&);
 
 	OutputByteStream& os_;
@@ -110,6 +115,9 @@ public:
 	size_t PutEnd(Ch*) { RAPIDJSON_ASSERT(false); return 0; }
 
 private:
+	AutoUTFInputStream(const AutoUTFInputStream&);
+	AutoUTFInputStream& operator=(const AutoUTFInputStream&);
+
 	// Detect encoding type with BOM or RFC 4627
 	void DetectType() {
 		// BOM (Byte Order Mark):
@@ -150,10 +158,11 @@ private:
 			case 0x01: type_ = kUTF32LE; break;
 			case 0x05: type_ = kUTF16LE; break;
 			case 0x0F: type_ = kUTF8;    break;
+			default: break; // Use type defined by user.
 			}
 		}
 
-		// RUntime check whether the size of character type is sufficient. It only perform checks with assertion.
+		// Runtime check whether the size of character type is sufficient. It only perform checks with assertion.
 		switch (type_) {
 		case kUTF8:
 			// Do nothing
@@ -166,6 +175,8 @@ private:
 		case kUTF32BE:
 			RAPIDJSON_ASSERT(sizeof(Ch) >= 4);
 			break;
+		default:
+			RAPIDJSON_ASSERT(false);	// Invalid type
 		}
 	}
 
@@ -208,6 +219,8 @@ public:
 		case kUTF8:
 			// Do nothing
 			break;
+		default:
+			RAPIDJSON_ASSERT(false);	// Invalid UTFType
 		}
 
 		static const PutFunc f[] = { RAPIDJSON_ENCODINGS_FUNC(Put) };
@@ -230,6 +243,9 @@ public:
 	size_t PutEnd(Ch*) { RAPIDJSON_ASSERT(false); return 0; }
 
 private:
+	AutoUTFOutputStream(const AutoUTFOutputStream&);
+	AutoUTFOutputStream& operator=(const AutoUTFOutputStream&);
+
 	void PutBOM() { 
 		typedef void (*PutBOMFunc)(OutputByteStream&);
 		static const PutBOMFunc f[] = { RAPIDJSON_ENCODINGS_FUNC(PutBOM) };
@@ -246,5 +262,9 @@ private:
 #undef RAPIDJSON_ENCODINGS_FUNC
 
 } // namespace rapidjson
+
+#ifdef __GNUC__
+RAPIDJSON_DIAG_POP
+#endif
 
 #endif // RAPIDJSON_FILESTREAM_H_

@@ -96,7 +96,7 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(Details::Skeletal2D::Skeleton
 	auto json = ReadBinaryFile(filename);
 	
 	rapidjson::Document doc;
-	doc.Parse<0, rapidjson::UTF8<>>(json.data());
+	doc.Parse(json.data());
 	
 	if (doc.HasParseError())
 	{

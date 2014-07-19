@@ -816,7 +816,7 @@ Skeletal2D::SkeletonDesc AssetLoader<Skeletal2D::SkeletonDesc>::operator()(Asset
 	auto json = ReadBinaryFile(filename);
 	
 	rapidjson::Document doc;
-	doc.Parse<0, rapidjson::UTF8<>>(json.data());
+	doc.Parse(json.data());
 	
 	if (doc.HasParseError())
 	{

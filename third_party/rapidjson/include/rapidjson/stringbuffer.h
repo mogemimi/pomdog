@@ -10,7 +10,7 @@ namespace rapidjson {
 /*!
 	\tparam Encoding Encoding of the stream.
 	\tparam Allocator type for allocating memory buffer.
-	\implements Stream
+	\note implements Stream concept
 */
 template <typename Encoding, typename Allocator = CrtAllocator>
 struct GenericStringBuffer {
@@ -37,6 +37,7 @@ struct GenericStringBuffer {
 	mutable internal::Stack<Allocator> stack_;
 };
 
+//! String buffer with UTF8 encoding
 typedef GenericStringBuffer<UTF8<> > StringBuffer;
 
 //! Implement specialized version of PutN() with memset() for better performance.

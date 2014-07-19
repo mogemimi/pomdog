@@ -9,8 +9,8 @@ namespace rapidjson {
 //! (Depreciated) Wrapper of C file stream for input or output.
 /*!
 	This simple wrapper does not check the validity of the stream.
-	\implements Stream
-	\deprecated { This was only for basic testing in version 0.1, it is found that the performance is very low by using fgetc(). Use FileReadStream instead. }
+	\note implements Stream concept
+	\note deprecated: This was only for basic testing in version 0.1, it is found that the performance is very low by using fgetc(). Use FileReadStream instead.
 */
 class FileStream {
 public:
@@ -28,6 +28,10 @@ public:
 	size_t PutEnd(char*) { return 0; }
 
 private:
+	// Prohibit copy constructor & assignment operator.
+	FileStream(const FileStream&);
+	FileStream& operator=(const FileStream&);
+
 	void Read() {
 		RAPIDJSON_ASSERT(fp_ != 0);
 		int c = fgetc(fp_);

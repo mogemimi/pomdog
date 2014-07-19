@@ -8,8 +8,8 @@
 #include <new>		// placement new
 
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4127) // conditional expression is constant
+RAPIDJSON_DIAG_PUSH
+RAPIDJSON_DIAG_OFF(4127) // conditional expression is constant
 #endif
 
 namespace rapidjson {
@@ -25,27 +25,57 @@ namespace rapidjson {
 	for example Reader::Parse() and Document::Accept().
 
 	\tparam OutputStream Type of output stream.
-	\tparam SourceEncoding Encoding of both source strings.
-	\tparam TargetEncoding Encoding of and output stream.
-	\implements Handler
+	\tparam SourceEncoding Encoding of source string.
+	\tparam TargetEncoding Encoding of output stream.
+	\tparam Allocator Type of allocator for allocating memory of stack.
+	\note implements Handler concept
 */
 template<typename OutputStream, typename SourceEncoding = UTF8<>, typename TargetEncoding = UTF8<>, typename Allocator = MemoryPoolAllocator<> >
 class Writer {
 public:
 	typedef typename SourceEncoding::Ch Ch;
 
+	//! Constructor
+	/*! \param os Output stream.
+		\param allocator User supplied allocator. If it is null, it will create a private one.
+		\param levelDepth Initial capacity of stack.
+	*/
 	Writer(OutputStream& os, Allocator* allocator = 0, size_t levelDepth = kDefaultLevelDepth) : 
-		os_(os), level_stack_(allocator, levelDepth * sizeof(Level)),
-		doublePrecision_(kDefaultDoublePrecision)
-#ifdef RAPIDJSON_ACCEPT_ANY_ROOT
-		, acceptAnyRoot_(false)
-#endif
-	{}
+		os_(&os), level_stack_(allocator, levelDepth * sizeof(Level)),
+		doublePrecision_(kDefaultDoublePrecision), hasRoot_(false) {}
 
-#ifdef RAPIDJSON_ACCEPT_ANY_ROOT
-	//! Accept arbitrary root elements (not only arrays and objects)
-	Writer& AcceptAnyRoot(bool yesno = true) { acceptAnyRoot_ = yesno; return *this; }
-#endif
+	//! Reset the writer with a new stream.
+	/*!
+		This function reset the writer with a new stream and default settings,
+		in order to make a Writer object reusable for output multiple JSONs.
+
+		\param os New output stream.
+		\code
+		Writer<OutputStream> writer(os1);
+		writer.StartObject();
+		// ...
+		writer.EndObject();
+
+		writer.Reset(os2);
+		writer.StartObject();
+		// ...
+		writer.EndObject();
+		\endcode
+	*/
+	void Reset(OutputStream& os) {
+		os_ = &os;
+		doublePrecision_ = kDefaultDoublePrecision;
+		hasRoot_ = false;
+		level_stack_.Clear();
+	}
+
+	//! Checks whether the output is a complete JSON.
+	/*!
+		A complete JSON has a complete root object or array.
+	*/
+	bool IsComplete() const {
+		return hasRoot_ && level_stack_.Empty();
+	}
 
 	//! Set the number of significant digits for \c double values
 	/*! When writing a \c double value to the \c OutputStream, the number
@@ -62,14 +92,17 @@ public:
 	//! \see SetDoublePrecision()
 	int GetDoublePrecision() const { return doublePrecision_; }
 
-	//@name Implementation of Handler
+	/*!@name Implementation of Handler
+		\see Handler
+	*/
 	//@{
-	Writer& Null()					{ Prefix(kNullType);   WriteNull();			return *this; }
-	Writer& Bool(bool b)			{ Prefix(b ? kTrueType : kFalseType); WriteBool(b); return *this; }
-	Writer& Int(int i)				{ Prefix(kNumberType); WriteInt(i);			return *this; }
-	Writer& Uint(unsigned u)		{ Prefix(kNumberType); WriteUint(u);		return *this; }
-	Writer& Int64(int64_t i64)		{ Prefix(kNumberType); WriteInt64(i64);		return *this; }
-	Writer& Uint64(uint64_t u64)	{ Prefix(kNumberType); WriteUint64(u64);	return *this; }
+
+	bool Null()					{ Prefix(kNullType);   return WriteNull(); }
+	bool Bool(bool b)			{ Prefix(b ? kTrueType : kFalseType); return WriteBool(b); }
+	bool Int(int i)				{ Prefix(kNumberType); return WriteInt(i); }
+	bool Uint(unsigned u)		{ Prefix(kNumberType); return WriteUint(u); }
+	bool Int64(int64_t i64)		{ Prefix(kNumberType); return WriteInt64(i64); }
+	bool Uint64(uint64_t u64)	{ Prefix(kNumberType); return WriteUint64(u64); }
 
 	//! Writes the given \c double value to the stream
 	/*!
@@ -80,9 +113,53 @@ public:
 		writer.SetDoublePrecision(12).Double(M_PI);
 		\endcode
 		\param d The value to be written.
-		\return The Writer itself for fluent API.
+		\return Whether it is succeed.
 	*/
-	Writer& Double(double d)		{ Prefix(kNumberType); WriteDouble(d);		return *this; }
+	bool Double(double d)		{ Prefix(kNumberType); return WriteDouble(d); }
+
+	bool String(const Ch* str, SizeType length, bool copy = false) {
+		(void)copy;
+		Prefix(kStringType);
+		return WriteString(str, length);
+	}
+
+	bool StartObject() {
+		Prefix(kObjectType);
+		new (level_stack_.template Push<Level>()) Level(false);
+		return WriteStartObject();
+	}
+
+	bool EndObject(SizeType memberCount = 0) {
+		(void)memberCount;
+		RAPIDJSON_ASSERT(level_stack_.GetSize() >= sizeof(Level));
+		RAPIDJSON_ASSERT(!level_stack_.template Top<Level>()->inArray);
+		level_stack_.template Pop<Level>(1);
+		bool ret = WriteEndObject();
+		if (level_stack_.Empty())	// end of json text
+			os_->Flush();
+		return ret;
+	}
+
+	bool StartArray() {
+		Prefix(kArrayType);
+		new (level_stack_.template Push<Level>()) Level(true);
+		return WriteStartArray();
+	}
+
+	bool EndArray(SizeType elementCount = 0) {
+		(void)elementCount;
+		RAPIDJSON_ASSERT(level_stack_.GetSize() >= sizeof(Level));
+		RAPIDJSON_ASSERT(level_stack_.template Top<Level>()->inArray);
+		level_stack_.template Pop<Level>(1);
+		bool ret = WriteEndArray();
+		if (level_stack_.Empty())	// end of json text
+			os_->Flush();
+		return ret;
+	}
+	//@}
+
+	/*! @name Convenience extensions */
+	//@{
 
 	//! Writes the given \c double value to the stream (explicit precision)
 	/*!
@@ -91,114 +168,78 @@ public:
 		\see Double(), SetDoublePrecision(), GetDoublePrecision()
 		\param d The value to be written
 		\param precision The number of significant digits for this value
-		\return The Writer itself for fluent API.
+		\return Whether it is succeeded.
 	*/
-	Writer& Double(double d, int precision) {
+	bool Double(double d, int precision) {
 		int oldPrecision = GetDoublePrecision();
-		return SetDoublePrecision(precision).Double(d).SetDoublePrecision(oldPrecision);
+		SetDoublePrecision(precision);
+		bool ret = Double(d);
+		SetDoublePrecision(oldPrecision);
+		return ret;
 	}
-
-	Writer& String(const Ch* str, SizeType length, bool copy = false) {
-		(void)copy;
-		Prefix(kStringType);
-		WriteString(str, length);
-		return *this;
-	}
-
-	Writer& StartObject() {
-		Prefix(kObjectType);
-		new (level_stack_.template Push<Level>()) Level(false);
-		WriteStartObject();
-		return *this;
-	}
-
-	Writer& EndObject(SizeType memberCount = 0) {
-		(void)memberCount;
-		RAPIDJSON_ASSERT(level_stack_.GetSize() >= sizeof(Level));
-		RAPIDJSON_ASSERT(!level_stack_.template Top<Level>()->inArray);
-		level_stack_.template Pop<Level>(1);
-		WriteEndObject();
-		if (level_stack_.Empty())	// end of json text
-			os_.Flush();
-		return *this;
-	}
-
-	Writer& StartArray() {
-		Prefix(kArrayType);
-		new (level_stack_.template Push<Level>()) Level(true);
-		WriteStartArray();
-		return *this;
-	}
-
-	Writer& EndArray(SizeType elementCount = 0) {
-		(void)elementCount;
-		RAPIDJSON_ASSERT(level_stack_.GetSize() >= sizeof(Level));
-		RAPIDJSON_ASSERT(level_stack_.template Top<Level>()->inArray);
-		level_stack_.template Pop<Level>(1);
-		WriteEndArray();
-		if (level_stack_.Empty())	// end of json text
-			os_.Flush();
-		return *this;
-	}
-	//@}
 
 	//! Simpler but slower overload.
-	Writer& String(const Ch* str) { return String(str, internal::StrLen(str)); }
+	bool String(const Ch* str) { return String(str, internal::StrLen(str)); }
+
+	//@}
 
 protected:
 	//! Information for each nested level
 	struct Level {
-		Level(bool inArray_) : inArray(inArray_), valueCount(0) {}
-		bool inArray;		//!< true if in array, otherwise in object
+		Level(bool inArray_) : valueCount(0), inArray(inArray_) {}
 		size_t valueCount;	//!< number of values in this level
+		bool inArray;		//!< true if in array, otherwise in object
 	};
 
 	static const size_t kDefaultLevelDepth = 32;
 
-	void WriteNull()  {
-		os_.Put('n'); os_.Put('u'); os_.Put('l'); os_.Put('l');
+	bool WriteNull()  {
+		os_->Put('n'); os_->Put('u'); os_->Put('l'); os_->Put('l'); return true;
 	}
 
-	void WriteBool(bool b)  {
+	bool WriteBool(bool b)  {
 		if (b) {
-			os_.Put('t'); os_.Put('r'); os_.Put('u'); os_.Put('e');
+			os_->Put('t'); os_->Put('r'); os_->Put('u'); os_->Put('e');
 		}
 		else {
-			os_.Put('f'); os_.Put('a'); os_.Put('l'); os_.Put('s'); os_.Put('e');
+			os_->Put('f'); os_->Put('a'); os_->Put('l'); os_->Put('s'); os_->Put('e');
 		}
+		return true;
 	}
 
-	void WriteInt(int i) {
+	bool WriteInt(int i) {
 		if (i < 0) {
-			os_.Put('-');
+			os_->Put('-');
 			i = -i;
 		}
-		WriteUint((unsigned)i);
+		return WriteUint((unsigned)i);
 	}
 
-	void WriteUint(unsigned u) {
+	bool WriteUint(unsigned u) {
 		char buffer[10];
 		char *p = buffer;
 		do {
-			*p++ = (u % 10) + '0';
+			*p++ = char(u % 10) + '0';
 			u /= 10;
 		} while (u > 0);
 
 		do {
 			--p;
-			os_.Put(*p);
+			os_->Put(*p);
 		} while (p != buffer);
+		return true;
 	}
 
-	void WriteInt64(int64_t i64) {
+	bool WriteInt64(int64_t i64) {
 		if (i64 < 0) {
-			os_.Put('-');
+			os_->Put('-');
 			i64 = -i64;
 		}
 		WriteUint64((uint64_t)i64);
+		return true;
 	}
 
-	void WriteUint64(uint64_t u64) {
+	bool WriteUint64(uint64_t u64) {
 		char buffer[20];
 		char *p = buffer;
 		do {
@@ -208,8 +249,9 @@ protected:
 
 		do {
 			--p;
-			os_.Put(*p);
+			os_->Put(*p);
 		} while (p != buffer);
+		return true;
 	}
 
 #ifdef _MSC_VER
@@ -219,16 +261,17 @@ protected:
 #endif
 
 	//! \todo Optimization with custom double-to-string converter.
-	void WriteDouble(double d) {
+	bool WriteDouble(double d) {
 		char buffer[100];
 		int ret = RAPIDJSON_SNPRINTF(buffer, sizeof(buffer), "%.*g", doublePrecision_, d);
 		RAPIDJSON_ASSERT(ret >= 1);
 		for (int i = 0; i < ret; i++)
-			os_.Put(buffer[i]);
+			os_->Put(buffer[i]);
+		return true;
 	}
 #undef RAPIDJSON_SNPRINTF
 
-	void WriteString(const Ch* str, SizeType length)  {
+	bool WriteString(const Ch* str, SizeType length)  {
 		static const char hexDigits[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 		static const char escape[256] = {
 #define Z16 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -242,31 +285,64 @@ protected:
 #undef Z16
 		};
 
-		os_.Put('\"');
+		os_->Put('\"');
 		GenericStringStream<SourceEncoding> is(str);
 		while (is.Tell() < length) {
 			const Ch c = is.Peek();
-			if ((sizeof(Ch) == 1 || (unsigned)c < 256) && escape[(unsigned char)c])  {
+			if (!TargetEncoding::supportUnicode && (unsigned)c >= 0x80) {
+				// Unicode escaping
+				unsigned codepoint;
+				if (!SourceEncoding::Decode(is, &codepoint))
+					return false;
+				os_->Put('\\');
+				os_->Put('u');
+				if (codepoint <= 0xD7FF || (codepoint >= 0xE000 && codepoint <= 0xFFFF)) {
+					os_->Put(hexDigits[(codepoint >> 12) & 15]);
+					os_->Put(hexDigits[(codepoint >>  8) & 15]);
+					os_->Put(hexDigits[(codepoint >>  4) & 15]);
+					os_->Put(hexDigits[(codepoint      ) & 15]);
+				}
+				else if (codepoint >= 0x010000 && codepoint <= 0x10FFFF)	{
+					// Surrogate pair
+					unsigned s = codepoint - 0x010000;
+					unsigned lead = (s >> 10) + 0xD800;
+					unsigned trail = (s & 0x3FF) + 0xDC00;
+					os_->Put(hexDigits[(lead >> 12) & 15]);
+					os_->Put(hexDigits[(lead >>  8) & 15]);
+					os_->Put(hexDigits[(lead >>  4) & 15]);
+					os_->Put(hexDigits[(lead      ) & 15]);
+					os_->Put('\\');
+					os_->Put('u');
+					os_->Put(hexDigits[(trail >> 12) & 15]);
+					os_->Put(hexDigits[(trail >>  8) & 15]);
+					os_->Put(hexDigits[(trail >>  4) & 15]);
+					os_->Put(hexDigits[(trail      ) & 15]);					
+				}
+				else
+					return false;	// invalid code point
+			}
+			else if ((sizeof(Ch) == 1 || (unsigned)c < 256) && escape[(unsigned char)c])  {
 				is.Take();
-				os_.Put('\\');
-				os_.Put(escape[(unsigned char)c]);
+				os_->Put('\\');
+				os_->Put(escape[(unsigned char)c]);
 				if (escape[(unsigned char)c] == 'u') {
-					os_.Put('0');
-					os_.Put('0');
-					os_.Put(hexDigits[(unsigned char)c >> 4]);
-					os_.Put(hexDigits[(unsigned char)c & 0xF]);
+					os_->Put('0');
+					os_->Put('0');
+					os_->Put(hexDigits[(unsigned char)c >> 4]);
+					os_->Put(hexDigits[(unsigned char)c & 0xF]);
 				}
 			}
 			else
-				Transcoder<SourceEncoding, TargetEncoding>::Transcode(is, os_);
+				Transcoder<SourceEncoding, TargetEncoding>::Transcode(is, *os_);
 		}
-		os_.Put('\"');
+		os_->Put('\"');
+		return true;
 	}
 
-	void WriteStartObject()	{ os_.Put('{'); }
-	void WriteEndObject()	{ os_.Put('}'); }
-	void WriteStartArray()	{ os_.Put('['); }
-	void WriteEndArray()	{ os_.Put(']'); }
+	bool WriteStartObject()	{ os_->Put('{'); return true; }
+	bool WriteEndObject()	{ os_->Put('}'); return true; }
+	bool WriteStartArray()	{ os_->Put('['); return true; }
+	bool WriteEndArray()	{ os_->Put(']'); return true; }
 
 	void Prefix(Type type) {
 		(void)type;
@@ -274,39 +350,38 @@ protected:
 			Level* level = level_stack_.template Top<Level>();
 			if (level->valueCount > 0) {
 				if (level->inArray) 
-					os_.Put(','); // add comma if it is not the first element in array
+					os_->Put(','); // add comma if it is not the first element in array
 				else  // in object
-					os_.Put((level->valueCount % 2 == 0) ? ',' : ':');
+					os_->Put((level->valueCount % 2 == 0) ? ',' : ':');
 			}
 			if (!level->inArray && level->valueCount % 2 == 0)
 				RAPIDJSON_ASSERT(type == kStringType);  // if it's in object, then even number should be a name
 			level->valueCount++;
 		}
-		else
-#ifdef RAPIDJSON_ACCEPT_ANY_ROOT
-			if (!acceptAnyRoot_)
-#endif
+		else {
 			RAPIDJSON_ASSERT(type == kObjectType || type == kArrayType);
+			RAPIDJSON_ASSERT(!hasRoot_);	// Should only has one and only one root.
+			hasRoot_ = true;
+		}
 	}
 
-	OutputStream& os_;
+	OutputStream* os_;
 	internal::Stack<Allocator> level_stack_;
 	int doublePrecision_;
-#ifdef RAPIDJSON_ACCEPT_ANY_ROOT
-	bool acceptAnyRoot_;
-#endif
+	bool hasRoot_;
 
 	static const int kDefaultDoublePrecision = 6;
 
 private:
-	// Prohibit assignment for VC C4512 warning
-	Writer& operator=(const Writer& w);
+	// Prohibit copy constructor & assignment operator.
+	Writer(const Writer&);
+	Writer& operator=(const Writer&);
 };
 
 } // namespace rapidjson
 
 #ifdef _MSC_VER
-#pragma warning(pop)
+RAPIDJSON_DIAG_POP
 #endif
 
 #endif // RAPIDJSON_RAPIDJSON_H_

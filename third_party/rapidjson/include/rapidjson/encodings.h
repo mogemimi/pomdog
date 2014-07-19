@@ -3,6 +3,15 @@
 
 #include "rapidjson.h"
 
+#ifdef _MSC_VER
+RAPIDJSON_DIAG_PUSH
+RAPIDJSON_DIAG_OFF(4244) // conversion from 'type1' to 'type2', possible loss of data
+RAPIDJSON_DIAG_OFF(4702)  // unreachable code
+#elif defined(__GNUC__)
+RAPIDJSON_DIAG_PUSH
+RAPIDJSON_DIAG_OFF(effc++)
+#endif
+
 namespace rapidjson {
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,6 +23,8 @@ namespace rapidjson {
 \code
 concept Encoding {
 	typename Ch;	//! Type of character. A "character" is actually a code unit in unicode's definition.
+
+	enum { supportUnicode = 1 }; // or 0 if not supporting unicode
 
 	//! \brief Encode a Unicode codepoint to an output stream.
 	//! \param os Output stream.
@@ -64,31 +75,33 @@ concept Encoding {
 /*! http://en.wikipedia.org/wiki/UTF-8
 	http://tools.ietf.org/html/rfc3629
 	\tparam CharType Code unit for storing 8-bit UTF-8 data. Default is char.
-	\implements Encoding
+	\note implements Encoding concept
 */
 template<typename CharType = char>
 struct UTF8 {
 	typedef CharType Ch;
 
+	enum { supportUnicode = 1 };
+
 	template<typename OutputStream>
 	static void Encode(OutputStream& os, unsigned codepoint) {
 		if (codepoint <= 0x7F) 
-			os.Put(codepoint & 0xFF);
+			os.Put(static_cast<Ch>(codepoint & 0xFF));
 		else if (codepoint <= 0x7FF) {
-			os.Put(0xC0 | ((codepoint >> 6) & 0xFF));
-			os.Put(0x80 | ((codepoint & 0x3F)));
+			os.Put(static_cast<Ch>(0xC0 | ((codepoint >> 6) & 0xFF)));
+			os.Put(static_cast<Ch>(0x80 | ((codepoint & 0x3F))));
 		}
 		else if (codepoint <= 0xFFFF) {
-			os.Put(0xE0 | ((codepoint >> 12) & 0xFF));
-			os.Put(0x80 | ((codepoint >> 6) & 0x3F));
-			os.Put(0x80 | (codepoint & 0x3F));
+			os.Put(static_cast<Ch>(0xE0 | ((codepoint >> 12) & 0xFF)));
+			os.Put(static_cast<Ch>(0x80 | ((codepoint >> 6) & 0x3F)));
+			os.Put(static_cast<Ch>(0x80 | (codepoint & 0x3F)));
 		}
 		else {
 			RAPIDJSON_ASSERT(codepoint <= 0x10FFFF);
-			os.Put(0xF0 | ((codepoint >> 18) & 0xFF));
-			os.Put(0x80 | ((codepoint >> 12) & 0x3F));
-			os.Put(0x80 | ((codepoint >> 6) & 0x3F));
-			os.Put(0x80 | (codepoint & 0x3F));
+			os.Put(static_cast<Ch>(0xF0 | ((codepoint >> 18) & 0xFF)));
+			os.Put(static_cast<Ch>(0x80 | ((codepoint >> 12) & 0x3F)));
+			os.Put(static_cast<Ch>(0x80 | ((codepoint >> 6) & 0x3F)));
+			os.Put(static_cast<Ch>(0x80 | (codepoint & 0x3F)));
 		}
 	}
 
@@ -204,7 +217,7 @@ struct UTF8 {
 /*! http://en.wikipedia.org/wiki/UTF-16
 	http://tools.ietf.org/html/rfc2781
 	\tparam CharType Type for storing 16-bit UTF-16 data. Default is wchar_t. C++11 may use char16_t instead.
-	\implements Encoding
+	\note implements Encoding concept
 
 	\note For in-memory access, no need to concern endianness. The code units and code points are represented by CPU's endianness.
 	For streaming, use UTF16LE and UTF16BE, which handle endianness.
@@ -213,6 +226,8 @@ template<typename CharType = wchar_t>
 struct UTF16 {
 	typedef CharType Ch;
 	RAPIDJSON_STATIC_ASSERT(sizeof(Ch) >= 2);
+
+	enum { supportUnicode = 1 };
 
 	template<typename OutputStream>
 	static void Encode(OutputStream& os, unsigned codepoint) {
@@ -332,8 +347,8 @@ struct UTF16BE : UTF16<CharType> {
 
 //! UTF-32 encoding. 
 /*! http://en.wikipedia.org/wiki/UTF-32
-	\tparam Ch Type for storing 32-bit UTF-32 data. Default is unsigned. C++11 may use char32_t instead.
-	\implements Encoding
+	\tparam CharType Type for storing 32-bit UTF-32 data. Default is unsigned. C++11 may use char32_t instead.
+	\note implements Encoding concept
 
 	\note For in-memory access, no need to concern endianness. The code units and code points are represented by CPU's endianness.
 	For streaming, use UTF32LE and UTF32BE, which handle endianness.
@@ -342,6 +357,8 @@ template<typename CharType = unsigned>
 struct UTF32 {
 	typedef CharType Ch;
 	RAPIDJSON_STATIC_ASSERT(sizeof(Ch) >= 4);
+
+	enum { supportUnicode = 1 };
 
 	template<typename OutputStream>
 	static void Encode(OutputStream& os, unsigned codepoint) {
@@ -440,6 +457,66 @@ struct UTF32BE : UTF32<CharType> {
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+// ASCII
+
+//! ASCII encoding.
+/*! http://en.wikipedia.org/wiki/ASCII
+	\tparam CharType Code unit for storing 7-bit ASCII data. Default is char.
+	\note implements Encoding concept
+*/
+template<typename CharType = char>
+struct ASCII {
+	typedef CharType Ch;
+
+	enum { supportUnicode = 0 };
+
+	template<typename OutputStream>
+	static void Encode(OutputStream& os, unsigned codepoint) {
+		RAPIDJSON_ASSERT(codepoint <= 0x7F);
+		os.Put(static_cast<Ch>(codepoint & 0xFF));
+	}
+
+	template <typename InputStream>
+	static bool Decode(InputStream& is, unsigned* codepoint) {
+		unsigned char c = static_cast<unsigned char>(is.Take());
+		*codepoint = c;
+		return c <= 0X7F;
+	}
+
+	template <typename InputStream, typename OutputStream>
+	static bool Validate(InputStream& is, OutputStream& os) {
+		unsigned char c = is.Take();
+		os.Put(c);
+		return c <= 0x7F;
+	}
+
+	template <typename InputByteStream>
+	static CharType TakeBOM(InputByteStream& is) {
+		RAPIDJSON_STATIC_ASSERT(sizeof(typename InputByteStream::Ch) == 1);
+		Ch c = Take(is);
+		return c;
+	}
+
+	template <typename InputByteStream>
+	static Ch Take(InputByteStream& is) {
+		RAPIDJSON_STATIC_ASSERT(sizeof(typename InputByteStream::Ch) == 1);
+		return is.Take();
+	}
+
+	template <typename OutputByteStream>
+	static void PutBOM(OutputByteStream& os) {
+		RAPIDJSON_STATIC_ASSERT(sizeof(typename OutputByteStream::Ch) == 1);
+		(void)os;
+	}
+
+	template <typename OutputByteStream>
+	static void Put(OutputByteStream& os, Ch c) {
+		RAPIDJSON_STATIC_ASSERT(sizeof(typename OutputByteStream::Ch) == 1);
+		os.Put(static_cast<typename OutputByteStream::Ch>(c));
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
 // AutoUTF
 
 //! Runtime-specified UTF encoding type of a stream.
@@ -457,6 +534,8 @@ enum UTFType {
 template<typename CharType>
 struct AutoUTF {
 	typedef CharType Ch;
+
+	enum { supportUnicode = 1 };
 
 #define RAPIDJSON_ENCODINGS_FUNC(x) UTF8<Ch>::x, UTF16LE<Ch>::x, UTF16BE<Ch>::x, UTF32LE<Ch>::x, UTF32BE<Ch>::x
 
@@ -523,5 +602,9 @@ struct Transcoder<Encoding, Encoding> {
 };
 
 } // namespace rapidjson
+
+#if defined(__GNUC__) || defined(_MSV_VER)
+RAPIDJSON_DIAG_POP
+#endif
 
 #endif // RAPIDJSON_ENCODINGS_H_

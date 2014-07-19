@@ -26,10 +26,10 @@ See accompanying file [third_party/libpng/LICENSE][license-libpng].
 See accompanying file [third_party/lua/LICENSE.md][license-lua].
 [license-lua]: lua/LICENSE.md
 
-### rapidjson
+### RapidJSON
 
-* [rapidjson - Google Project Hosting](https://code.google.com/p/rapidjson/) (original repository)
-* [Yet another Rapidjson GitHub mirror](https://github.com/pah/rapidjson)
+* [RapidJSON - GitHub](https://github.com/miloyip/rapidjson) (original repository)
+* [RapidJSON Documentation](http://miloyip.github.io/rapidjson/)
 
 **License:**  
 See accompanying file [third_party/rapidjson/license.txt][license-rapidjson].
