@@ -15,27 +15,113 @@ using namespace Pomdog;
 
 namespace {
 	
-struct Transform
+struct TransformComponent: public Component<TransformComponent>
 {
-	int x, y;
+	TransformComponent() = default;
+	TransformComponent(int xIn, int yIn, int zIn)
+		: x(xIn), y(yIn), z(zIn)
+	{}
+
+	int x, y, z;
 };
 
-struct Collider
+struct PhysicsComponent: public Component<PhysicsComponent>
 {
-	int radius;
+	PhysicsComponent() = default;
+	explicit PhysicsComponent(int vIn)
+		: v(vIn)
+	{}
+
+	int v;
 };
 
-struct Texture3D;
+struct RendererComponent: public Component<RendererComponent>
+{
+	virtual ~RendererComponent() = default;
+	
+	virtual void SetZOrder(int z) = 0;
+	virtual int GetZOrder() const = 0;
+};
+
+struct MeshRendererComponent final: public RendererComponent
+{
+	void SetZOrder(int zIn) override {
+		this->z = zIn;
+	}
+	int GetZOrder() const override {
+		return z;
+	}
+
+private:
+	int z;
+};
 	
 }// unnamed namespace
+
+TEST(GameWorld, CreateObject)
+{
+	GameWorld world;
+	{
+		auto gameObject = world.CreateObject();
+		gameObject.AddComponent<TransformComponent>();
+		gameObject.AddComponent<PhysicsComponent>();
+	}
+	{
+		auto gameObject = world.CreateObject();
+		gameObject.AddComponent<TransformComponent>();
+		gameObject.AddComponent<PhysicsComponent>();
+	}
+	{
+		auto gameObject = world.CreateObject();
+		gameObject.AddComponent<PhysicsComponent>();
+	}
+	{
+		auto gameObject = world.CreateObject();
+	}
+	{
+		auto gameObjects = world.QueryComponents<TransformComponent, PhysicsComponent>();
+		EXPECT_EQ(2, gameObjects.size());
+	}
+	{
+		auto gameObjects = world.QueryComponents<PhysicsComponent, TransformComponent>();
+		EXPECT_EQ(2, gameObjects.size());
+	}
+	{
+		auto gameObjects = world.QueryComponents<PhysicsComponent>();
+		EXPECT_EQ(3, gameObjects.size());
+	}
+	{
+		auto gameObjects = world.QueryComponents<TransformComponent>();
+		EXPECT_EQ(2, gameObjects.size());
+		
+		for (auto & objects: gameObjects) {
+			objects.Destroy();
+		}
+		
+		gameObjects = world.QueryComponents<TransformComponent>();
+		EXPECT_TRUE(gameObjects.empty());
+	}
+	{
+		auto gameObjects = world.QueryComponents<TransformComponent, PhysicsComponent>();
+		EXPECT_TRUE(gameObjects.empty());
+	}
+	{
+		auto gameObjects = world.QueryComponents<PhysicsComponent, TransformComponent>();
+		EXPECT_TRUE(gameObjects.empty());
+	}
+	{
+		auto gameObjects = world.QueryComponents<PhysicsComponent>();
+		EXPECT_EQ(1, gameObjects.size());
+	}
+}
 
 //TEST(GameWorld, AddChild)
 //{
 //	GameWorld world;
 //
 //	auto gameObject = world.CreateObject();
-//	gameObject->AddComponent<Transform>(Transform{0, 0});
-//	gameObject->AddComponent<Collider>();
+//	gameObject.AddComponent<TransformComponent>();
+//	gameObject.AddComponent<PhysicsComponent>();
 //	
 //	EXPECT_FALSE(gameObject->HasComponent<Texture3D>());
 //	
@@ -74,8 +160,8 @@ struct Texture3D;
 //	ASSERT_NE(nullptr, gameObject->Component<Collider>());
 //	EXPECT_EQ(50, gameObject->Component<Collider>()->radius);
 //}
-
-
+//
+//
 //TEST(GameWorld, QueryComponents_Not)
 //{
 //	GameWorld world;

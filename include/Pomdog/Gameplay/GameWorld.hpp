@@ -33,13 +33,13 @@ public:
 	GameWorld & operator=(GameWorld const&) = delete;
 	GameWorld & operator=(GameWorld &&) = default;
 
-	std::shared_ptr<GameObject> CreateObject();
+	GameObject CreateObject();
 	
 	//template <typename T, typename...Components>
 	//std::vector<T> QueryComponent();
 	
 	template <typename T, typename...Components>
-	std::vector<std::shared_ptr<GameObject>> QueryComponents();
+	std::vector<GameObject> QueryComponents();
 	
 	template <typename T>
 	T const* Component(GameObjectID const& objectID) const;
@@ -56,7 +56,7 @@ public:
 	
 private:
 	std::shared_ptr<GameObjectContext> context;
-	std::vector<std::weak_ptr<GameObject>> gameObjects;
+	std::vector<GameObjectID> objects;
 };
 
 
@@ -69,18 +69,18 @@ struct HasComponents;
 template <typename T>
 struct HasComponents<T>
 {
-	bool operator()(GameObject const& gameObject)
+	bool operator()(GameObjectContext const& context, GameObjectID const& id)
 	{
-		return gameObject.HasComponent<T>();
+		return context.HasComponent<T>(id);
 	}
 };
 
 template <typename T, typename...Arguments>
 struct HasComponents<T, Arguments...>
 {
-	bool operator()(GameObject const& gameObject)
+	bool operator()(GameObjectContext const& context, GameObjectID const& id)
 	{
-		return gameObject.HasComponent<T>() && HasComponents<Arguments...>()(gameObject);
+		return context.HasComponent<T>(id) && HasComponents<Arguments...>()(context, id);
 	}
 };
 
@@ -88,17 +88,17 @@ struct HasComponents<T, Arguments...>
 }// namespace Details
 
 template <typename T, typename...Components>
-std::vector<std::shared_ptr<GameObject>> GameWorld::QueryComponents()
+std::vector<GameObject> GameWorld::QueryComponents()
 {
 	static_assert(std::is_object<T>::value, "");
 
-	std::vector<std::shared_ptr<GameObject>> result;
+	std::vector<GameObject> result;
 
-	for (auto & weakGameObject: gameObjects)
+	for (auto & id: objects)
 	{
-		if (auto gameObject = weakGameObject.lock()) {
-			if (Details::Gameplay::HasComponents<T, Components...>()(*gameObject)) {
-				result.push_back(gameObject);
+		if (context->Valid(id)) {
+			if (Details::Gameplay::HasComponents<T, Components...>()(*context, id)) {
+				result.emplace_back(context, id);
 			}
 		}
 	}
@@ -106,27 +106,27 @@ std::vector<std::shared_ptr<GameObject>> GameWorld::QueryComponents()
 }
 
 template <typename T>
-T const* GameWorld::Component(GameObjectID const& objectID) const
+T const* GameWorld::Component(GameObjectID const& id) const
 {
 	static_assert(std::is_object<T>::value, "");
 	POMDOG_ASSERT(context);
-	return context->Component<T>(objectID);
+	return context->Component<T>(id);
 }
 
 template <typename T>
-T* GameWorld::Component(GameObjectID const& objectID)
+T* GameWorld::Component(GameObjectID const& id)
 {
 	static_assert(std::is_object<T>::value, "");
 	POMDOG_ASSERT(context);
-	return context->Component<T>(objectID);
+	return context->Component<T>(id);
 }
 
 template <typename T>
-bool GameWorld::HasComponent(GameObjectID const& objectID) const
+bool GameWorld::HasComponent(GameObjectID const& id) const
 {
 	static_assert(std::is_object<T>::value, "");
 	POMDOG_ASSERT(context);
-	return context->HasComponent<T>(objectID);
+	return context->HasComponent<T>(id);
 }
 
 }// namespace Pomdog

@@ -31,13 +31,17 @@ namespace Pomdog {
 class POMDOG_EXPORT GameObject {
 public:
 	GameObject() = default;
-	GameObject(GameObject const&) = delete;
-	GameObject & operator=(GameObject const&) = delete;
-	
+
 	explicit GameObject(std::shared_ptr<GameObjectContext> const& context);
 	explicit GameObject(std::shared_ptr<GameObjectContext> && context);
 	
-	~GameObject();
+	GameObject(std::shared_ptr<GameObjectContext> const& context, GameObjectID const& id);
+	GameObject(std::shared_ptr<GameObjectContext> && context, GameObjectID const& id);
+	
+	explicit operator bool() const;
+	
+	bool operator==(GameObject const& gameObject) const;
+	bool operator!=(GameObject const& gameObject) const;
 	
 	///@~Japanese
 	/// @brief インスタンス固有の値である 32 ビットの ID を取得します。
@@ -72,6 +76,10 @@ public:
 	/// @brief 指定されたコンポーネントを削除します。
 	template <typename T>
 	void RemoveComponent();
+	
+	///@~Japanese
+	/// @brief オブジェクトのコンポーネントをすべて削除し、オブジェクトをゲームワールドから取り除きます。
+	void Destroy();
 	
 private:
 	std::shared_ptr<GameObjectContext> context;

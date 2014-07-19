@@ -8,8 +8,8 @@
 
 #include <gtest/iutest_switch.hpp>
 #include <cstdint>
+#include <memory>
 #include <Pomdog/Gameplay/GameObject.hpp>
-#include <Pomdog/Utility/MakeUnique.hpp>
 
 using Pomdog::Component;
 using Pomdog::GameObject;
@@ -98,10 +98,10 @@ TEST(GameObject, AddComponentWithInheritance)
 {
 	auto objectContext = std::make_shared<GameObjectContext>();
 	GameObject gameObject{objectContext};
-	MeshRendererComponent & meshRenderer = gameObject.AddComponent<MeshRendererComponent>(Pomdog::MakeUnique<MeshRendererComponent>());
+	MeshRendererComponent & meshRenderer = gameObject.AddComponent<MeshRendererComponent>(std::make_unique<MeshRendererComponent>());
 	meshRenderer.SetZOrder(42);
 	
-	EXPECT_TRUE(gameObject.HasComponent<MeshRendererComponent>());
+	//EXPECT_TRUE(gameObject.HasComponent<MeshRendererComponent>());
 	ASSERT_NE(nullptr, gameObject.Component<MeshRendererComponent>());
 	EXPECT_EQ(42, gameObject.Component<MeshRendererComponent>()->GetZOrder());
 	
@@ -154,30 +154,30 @@ TEST(GameObject, RemoveComponentWithInheritance)
 	auto objectContext = std::make_shared<GameObjectContext>();
 	{
 		GameObject gameObject{objectContext};
-		gameObject.AddComponent<MeshRendererComponent>(Pomdog::MakeUnique<MeshRendererComponent>());
+		gameObject.AddComponent<MeshRendererComponent>(std::make_unique<MeshRendererComponent>());
 
-		EXPECT_TRUE(gameObject.HasComponent<MeshRendererComponent>());
+		//EXPECT_TRUE(gameObject.HasComponent<MeshRendererComponent>());
 		EXPECT_NE(nullptr, gameObject.Component<MeshRendererComponent>());
 		EXPECT_TRUE(gameObject.HasComponent<RendererComponent>());
 		EXPECT_NE(nullptr, gameObject.Component<RendererComponent>());
 		
 		gameObject.RemoveComponent<MeshRendererComponent>();
-		EXPECT_FALSE(gameObject.HasComponent<MeshRendererComponent>());
+		//EXPECT_FALSE(gameObject.HasComponent<MeshRendererComponent>());
 		EXPECT_EQ(nullptr, gameObject.Component<MeshRendererComponent>());
 		EXPECT_FALSE(gameObject.HasComponent<RendererComponent>());
 		EXPECT_EQ(nullptr, gameObject.Component<RendererComponent>());
 	}
 	{
 		GameObject gameObject{objectContext};
-		gameObject.AddComponent<MeshRendererComponent>(Pomdog::MakeUnique<MeshRendererComponent>());
+		gameObject.AddComponent<MeshRendererComponent>(std::make_unique<MeshRendererComponent>());
 
-		EXPECT_TRUE(gameObject.HasComponent<MeshRendererComponent>());
+		//EXPECT_TRUE(gameObject.HasComponent<MeshRendererComponent>());
 		EXPECT_NE(nullptr, gameObject.Component<MeshRendererComponent>());
 		EXPECT_TRUE(gameObject.HasComponent<RendererComponent>());
 		EXPECT_NE(nullptr, gameObject.Component<RendererComponent>());
 		
 		gameObject.RemoveComponent<RendererComponent>();
-		EXPECT_FALSE(gameObject.HasComponent<MeshRendererComponent>());
+		//EXPECT_FALSE(gameObject.HasComponent<MeshRendererComponent>());
 		EXPECT_EQ(nullptr, gameObject.Component<MeshRendererComponent>());
 		EXPECT_FALSE(gameObject.HasComponent<RendererComponent>());
 		EXPECT_EQ(nullptr, gameObject.Component<RendererComponent>());
@@ -226,50 +226,99 @@ TEST(GameObject, GameObjectID)
 TEST(GameObject, GameObjectID_Sequence)
 {
 	auto objectContext = std::make_shared<GameObjectContext>();
-	auto gameObject = std::make_shared<GameObject>(objectContext);
+	{
+		GameObject gameObject {objectContext};
+		EXPECT_EQ(0, gameObject.ID().Index());
+		EXPECT_NE(0, gameObject.ID().SequenceNumber());
+		EXPECT_EQ(1, gameObject.ID().SequenceNumber());
+	}
+	{
+		GameObject gameObject {objectContext};
+		EXPECT_EQ(1, gameObject.ID().Index());
+		EXPECT_NE(0, gameObject.ID().SequenceNumber());
+		EXPECT_EQ(1, gameObject.ID().SequenceNumber());
+		gameObject.Destroy();
+	}
+	{
+		GameObject gameObject {objectContext};
+		EXPECT_EQ(1, gameObject.ID().Index());
+		EXPECT_NE(0, gameObject.ID().SequenceNumber());
+		EXPECT_EQ(2, gameObject.ID().SequenceNumber());
+		gameObject.Destroy();
+	}
+	{
+		GameObject gameObject {objectContext};
+		EXPECT_EQ(1, gameObject.ID().Index());
+		EXPECT_NE(0, gameObject.ID().SequenceNumber());
+		EXPECT_EQ(3, gameObject.ID().SequenceNumber());
+		gameObject.Destroy();
+	}
+	{
+		GameObject gameObject1 {objectContext};
+		EXPECT_EQ(1, gameObject1.ID().Index());
+		EXPECT_NE(0, gameObject1.ID().SequenceNumber());
+		EXPECT_EQ(4, gameObject1.ID().SequenceNumber());
+		
+		GameObject gameObject2 {objectContext};
+		EXPECT_EQ(2, gameObject2.ID().Index());
+		EXPECT_NE(0, gameObject2.ID().SequenceNumber());
+		EXPECT_EQ(1, gameObject2.ID().SequenceNumber());
+		
+		GameObject gameObject3 {objectContext};
+		EXPECT_EQ(3, gameObject3.ID().Index());
+		EXPECT_NE(0, gameObject3.ID().SequenceNumber());
+		EXPECT_EQ(1, gameObject3.ID().SequenceNumber());
+		
+		gameObject1.Destroy();
+		gameObject2.Destroy();
+		gameObject3.Destroy();
+	}
+}
 
-	EXPECT_EQ(0, gameObject->ID().Index());
-	EXPECT_NE(0, gameObject->ID().SequenceNumber());
-	EXPECT_EQ(1, gameObject->ID().SequenceNumber());
+TEST(GameObject, Cast_Bool)
+{
+	auto objectContext = std::make_shared<GameObjectContext>();
 	{
-		auto gameObject = std::make_shared<GameObject>(objectContext);
-		EXPECT_EQ(1, gameObject->ID().Index());
-		EXPECT_NE(0, gameObject->ID().SequenceNumber());
-		EXPECT_EQ(1, gameObject->ID().SequenceNumber());
+		GameObject gameObject {objectContext};
+		EXPECT_TRUE(gameObject);
+		gameObject.Destroy();
+		EXPECT_FALSE(gameObject);
 	}
 	{
-		auto gameObject = std::make_shared<GameObject>(objectContext);
-		EXPECT_EQ(1, gameObject->ID().Index());
-		EXPECT_NE(0, gameObject->ID().SequenceNumber());
-		EXPECT_EQ(2, gameObject->ID().SequenceNumber());
+		GameObject gameObject1 {objectContext};
+		GameObject gameObject2 {objectContext};
+		EXPECT_TRUE(gameObject1);
+		EXPECT_TRUE(gameObject2);
+		gameObject1.Destroy();
+		EXPECT_FALSE(gameObject1);
+		EXPECT_TRUE(gameObject2);
+		gameObject2.Destroy();
+		EXPECT_FALSE(gameObject1);
+		EXPECT_FALSE(gameObject2);
 	}
 	{
-		auto gameObject = std::make_shared<GameObject>(objectContext);
-		EXPECT_EQ(1, gameObject->ID().Index());
-		EXPECT_NE(0, gameObject->ID().SequenceNumber());
-		EXPECT_EQ(3, gameObject->ID().SequenceNumber());
+		GameObject gameObject {objectContext};
+		auto copiedObject = gameObject;
+		EXPECT_TRUE(gameObject);
+		EXPECT_TRUE(copiedObject);
+		gameObject.Destroy();
+		EXPECT_FALSE(gameObject);
+		EXPECT_FALSE(copiedObject);
 	}
 	{
-		auto gameObject1 = std::make_shared<GameObject>(objectContext);
-		EXPECT_EQ(1, gameObject1->ID().Index());
-		EXPECT_NE(0, gameObject1->ID().SequenceNumber());
-		EXPECT_EQ(4, gameObject1->ID().SequenceNumber());
-		
-		auto gameObject2 = std::make_shared<GameObject>(objectContext);
-		EXPECT_EQ(2, gameObject2->ID().Index());
-		EXPECT_NE(0, gameObject2->ID().SequenceNumber());
-		EXPECT_EQ(1, gameObject2->ID().SequenceNumber());
-		
-		auto gameObject3 = std::make_shared<GameObject>(objectContext);
-		EXPECT_EQ(3, gameObject3->ID().Index());
-		EXPECT_NE(0, gameObject3->ID().SequenceNumber());
-		EXPECT_EQ(1, gameObject3->ID().SequenceNumber());
+		GameObject gameObject {objectContext};
+		auto copiedObject = gameObject;
+		EXPECT_TRUE(gameObject);
+		EXPECT_TRUE(copiedObject);
+		copiedObject.Destroy();
+		EXPECT_FALSE(gameObject);
+		EXPECT_FALSE(copiedObject);
 	}
 }
 
 TEST(GameObject, GameObjectID_Unique)
 {
-	std::vector<std::shared_ptr<GameObject>> objects;
+	std::vector<GameObject> objects;
 	std::vector<std::uint64_t> uniqueIdents;
 
 	auto objectContext = std::make_shared<GameObjectContext>();
@@ -283,22 +332,24 @@ TEST(GameObject, GameObjectID_Unique)
 	{
 		if (count % 3 != 0)
 		{
-			auto gameObject = std::make_shared<GameObject>(objectContext);
+			GameObject gameObject{objectContext};
 			objects.push_back(gameObject);
-			uniqueIdents.push_back(gameObject->ID().Value());
+			uniqueIdents.push_back(gameObject.ID().Value());
 			
 			//printf("### Create Object: %llu(%u, %u) \n",
 			//	gameObject->ID().Value(),
 			//	gameObject->ID().SequenceNumber(),
 			//	gameObject->ID().Index());
 			
-			maxSequenceNumber = std::max(maxSequenceNumber, gameObject->ID().SequenceNumber());
-			maxIndex = std::max(maxIndex, gameObject->ID().Index());
+			maxSequenceNumber = std::max(maxSequenceNumber, gameObject.ID().SequenceNumber());
+			maxIndex = std::max(maxIndex, gameObject.ID().Index());
 		}
 		if (count % 11 == 8)
 		{
 			if (!objects.empty())
 			{
+				ASSERT_TRUE(objects.front());
+				objects.front().Destroy();
 				objects.erase(objects.begin());
 				//printf("### Remove Object \n");
 			}
@@ -310,10 +361,15 @@ TEST(GameObject, GameObjectID_Unique)
 				std::uniform_int_distribution<std::uint32_t> distribution(1, 13);
 				auto const randomNumber = distribution(random);
 			
+				for (auto & object: objects)
+				{
+					ASSERT_TRUE(object);
+					if (object.ID().Value() % randomNumber == 0) {
+						object.Destroy();
+					}
+				}
 				objects.erase(std::remove_if(std::begin(objects), std::end(objects),
-					[&](std::shared_ptr<Pomdog::GameObject> const& a) {
-						return (a->ID().Value() % randomNumber == 0);
-					}), std::end(objects));
+					[&](GameObject const& object) { return !object; }), std::end(objects));
 				
 				//printf("### Remove Objects \n");
 			}

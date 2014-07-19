@@ -33,7 +33,7 @@ template <std::uint8_t MaxComponentCapacity>
 class POMDOG_EXPORT EntityDescription {
 public:
 	std::bitset<MaxComponentCapacity> ComponentBitMask;
-	std::uint32_t IncremantalCounter = 0;
+	std::uint32_t IncremantalCounter = 1;
 };
 
 template <std::uint8_t MaxComponentCapacity>
@@ -61,10 +61,7 @@ public:
 		}
 		
 		auto & desc = descriptions[index];
-		
-		desc.ComponentBitMask.reset();
-		++desc.IncremantalCounter;
-
+		POMDOG_ASSERT(desc.ComponentBitMask.none());
 		POMDOG_ASSERT(desc.IncremantalCounter > 0);
 		
 		#ifdef DEBUG
@@ -81,33 +78,39 @@ public:
 		return {desc.IncremantalCounter, index};
 	}
 	
-	void Destroy(GameObjectID const& objectID)
+	void Destroy(GameObjectID const& id)
 	{
+		POMDOG_ASSERT(Valid(id));
+
+		auto const index = id.Index();
+
 		///@todo remove components
 		for (auto & entities: components)
 		{
-			if (objectID.Index() < entities.size())
+			if (index < entities.size())
 			{
-				entities[objectID.Index()].reset();
+				entities[index].reset();
 			}
 		}
 		
-		POMDOG_ASSERT(objectID.Index() < descriptions.size());
-		POMDOG_ASSERT(descriptions[objectID.Index()].IncremantalCounter == objectID.SequenceNumber());
+		POMDOG_ASSERT(index < descriptions.size());
+		POMDOG_ASSERT(descriptions[index].IncremantalCounter == id.SequenceNumber());
 		
-		descriptions[objectID.Index()].ComponentBitMask.reset();
+		auto & desc = descriptions[index];
+		desc.ComponentBitMask.reset();
+		++desc.IncremantalCounter;
 		
-		deletedIndices.push_back(objectID.Index());
+		deletedIndices.push_back(index);
 	}
 	
-	bool Valid(GameObjectID const& objectID) const
+	bool Valid(GameObjectID const& id) const
 	{
-		return (objectID.Index() < descriptions.size())
-			&& (descriptions[objectID.Index()].IncremantalCounter == objectID.SequenceNumber());
+		return (id.Index() < descriptions.size())
+			&& (descriptions[id.Index()].IncremantalCounter == id.SequenceNumber());
 	}
 	
 	template <typename Type, typename...Arguments>
-	Type & AddComponent(GameObjectID const& objectID, Arguments &&...arguments)
+	Type & AddComponent(GameObjectID const& id, Arguments &&...arguments)
 	{
 		static_assert(std::is_base_of<GameComponent, Type>::value, "");
 	
@@ -115,7 +118,7 @@ public:
 		POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
 		
 		auto component = std::make_unique<Type>(std::forward<Arguments>(arguments)...);
-		return AddComponent<Type>(objectID, std::move(component));
+		return AddComponent<Type>(id, std::move(component));
 	}
 	
 	template <typename Type>

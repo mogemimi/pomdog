@@ -15,11 +15,11 @@ GameWorld::GameWorld()
 	: context(std::make_shared<GameObjectContext>())
 {}
 //-----------------------------------------------------------------------
-std::shared_ptr<GameObject> GameWorld::CreateObject()
+GameObject GameWorld::CreateObject()
 {
 	POMDOG_ASSERT(context);
-	auto gameObject = std::make_shared<GameObject>(context);
-	gameObjects.push_back(gameObject);
+	GameObject gameObject {context};
+	objects.push_back(gameObject.ID());
 	return std::move(gameObject);
 }
 //-----------------------------------------------------------------------
@@ -30,8 +30,10 @@ bool GameWorld::Valid(GameObjectID const& objectID) const
 //-----------------------------------------------------------------------
 void GameWorld::RemoveUnusedObjects()
 {
-	gameObjects.erase(std::remove_if(std::begin(gameObjects), std::end(gameObjects),
-		[](std::weak_ptr<GameObject> const& gameObject){ return gameObject.expired(); }), std::end(gameObjects));
+	POMDOG_ASSERT_MESSAGE(false, "TODO: Not implemented");
+
+	objects.erase(std::remove_if(std::begin(objects), std::end(objects),
+		[this](GameObjectID const& id){ return context->Valid(id); }), std::end(objects));
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog
