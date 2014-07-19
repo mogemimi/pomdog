@@ -55,13 +55,13 @@ void ParticleTestGame::Initialize()
 	
 	{
 		mainCamera = gameWorld.CreateObject();
-		mainCamera->AddComponent<Transform2D>();
-		mainCamera->AddComponent<Camera2D>();
+		mainCamera.AddComponent<Transform2D>();
+		mainCamera.AddComponent<Camera2D>();
 	}
 	{
 		particleObject = gameWorld.CreateObject();
-		particleObject->AddComponent<Transform2D>();
-		auto & renderable = particleObject->AddComponent(std::make_unique<ParticleRenderable>());
+		particleObject.AddComponent<Transform2D>();
+		auto & renderable = particleObject.AddComponent(std::make_unique<ParticleRenderable>());
 		renderable.Load(graphicsContext, graphicsDevice, *assets);
 	}
 	
@@ -92,8 +92,8 @@ void ParticleTestGame::Initialize()
 	}
 	{
 		scenePanel->SceneTouch.Connect([this](Vector2 const& positionInView) {
-			auto transform = mainCamera->Component<Transform2D>();
-			auto camera = mainCamera->Component<Camera2D>();
+			auto transform = mainCamera.Component<Transform2D>();
+			auto camera = mainCamera.Component<Camera2D>();
 		
 			POMDOG_ASSERT(transform && camera);
 			auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix(*transform, *camera));
@@ -115,14 +115,14 @@ void ParticleTestGame::Update()
 		gameEditor->Update();
 	}
 	
-	if (auto transform = particleObject->Component<Transform2D>())
+	if (auto transform = particleObject.Component<Transform2D>())
 	{
 		transform->Position = touchPoint;
 		transform->Rotation = MathConstants<float>::PiOver2();
 		transform->Scale = {1, 1};
 	}
 
-	if (auto particleRenderable = particleObject->Component<ParticleRenderable>())
+	if (auto particleRenderable = particleObject.Component<ParticleRenderable>())
 	{
 		auto & particleSystem = particleRenderable->particleSystem;
 		particleSystem.emitter.EmissionRate = static_cast<std::uint16_t>(slider1->Value());
@@ -134,17 +134,17 @@ void ParticleTestGame::Update()
 //		auto particleRenderable = gameObject->Component<ParticleRenderable>();
 //		particleRenderable->Update(*particleObject, *clock);
 //	}
-	if (auto particleRenderable = particleObject->Component<ParticleRenderable>())
+	if (auto particleRenderable = particleObject.Component<ParticleRenderable>())
 	{
-		particleRenderable->Update(*particleObject, *clock);
+		particleRenderable->Update(particleObject, *clock);
 	}
 }
 //-----------------------------------------------------------------------
 void ParticleTestGame::Draw()
 {
 	{
-		auto transform = mainCamera->Component<Transform2D>();
-		auto camera = mainCamera->Component<Camera2D>();
+		auto transform = mainCamera.Component<Transform2D>();
+		auto camera = mainCamera.Component<Camera2D>();
 			
 		POMDOG_ASSERT(transform && camera);
 		auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
@@ -155,8 +155,8 @@ void ParticleTestGame::Draw()
 
 		for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
 		{
-			auto renderable = gameObject->Component<Renderable>();
-			renderable->Visit(*gameObject, *renderer, viewMatrix, projectionMatrix);
+			auto renderable = gameObject.Component<Renderable>();
+			renderable->Visit(gameObject, *renderer, viewMatrix, projectionMatrix);
 		}
 	}
 

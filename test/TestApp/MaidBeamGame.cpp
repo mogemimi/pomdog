@@ -99,8 +99,8 @@ void MaidBeamGame::Initialize()
 
 	{
 		mainCamera = gameWorld.CreateObject();
-		mainCamera->AddComponent<Transform2D>();
-		mainCamera->AddComponent<Camera2D>();
+		mainCamera.AddComponent<Transform2D>();
+		mainCamera.AddComponent<Camera2D>();
 		
 		auto texture = assets->Load<Texture2D>("pomdog.png");
 		TextureRegion region;
@@ -113,17 +113,17 @@ void MaidBeamGame::Initialize()
 		region.Subrect.Y = 0;
 		region.Subrect.Width = 16;
 		region.Subrect.Height = 16;
-		mainCamera->AddComponent<SpriteRenderable>(texture, region);
+		mainCamera.AddComponent<SpriteRenderable>(texture, region);
 	}
 	{
 		maid = gameWorld.CreateObject();
-		maid->AddComponent<Transform2D>();
-		LoadAnimator(*maid, graphicsDevice, *assets);
+		maid.AddComponent<Transform2D>();
+		LoadAnimator(maid, graphicsDevice, *assets);
 	}
 	{
 		lightningBeam = gameWorld.CreateObject();
-		lightningBeam->AddComponent<Transform2D>();
-		auto & rendererable = lightningBeam->AddComponent(std::make_unique<BeamRenderable>());
+		lightningBeam.AddComponent<Transform2D>();
+		auto & rendererable = lightningBeam.AddComponent(std::make_unique<BeamRenderable>());
 		rendererable.Load(graphicsDevice, assets);
 	}
 	{
@@ -134,7 +134,6 @@ void MaidBeamGame::Initialize()
 		std::uniform_real_distribution<float> dist(-1600.0f, 1600.0f);
 		
 		constexpr auto enemyCount = 4096;
-		enemies.reserve(enemyCount);
 		for (int i = 0; i < enemyCount; ++i)
 		{
 			auto gameObject = gameWorld.CreateObject();
@@ -146,16 +145,14 @@ void MaidBeamGame::Initialize()
 			if (dist(rand) > 1000) {
 				texture = smokeTexture;
 			}
-			auto & sprite = gameObject->AddComponent<SpriteRenderable>(texture);
+			auto & sprite = gameObject.AddComponent<SpriteRenderable>(texture);
 			sprite.ZOrder(dist(rand));
 			
-			auto & transform = gameObject->AddComponent<Transform2D>();
+			auto & transform = gameObject.AddComponent<Transform2D>();
 			
 			transform.Position.X = dist(rand);
 			transform.Position.Y = dist(rand);
 			transform.Rotation = dist(rand);
-			
-			enemies.push_back(std::move(gameObject));
 		}
 	}
 	
@@ -235,7 +232,7 @@ void MaidBeamGame::Update()
 
 	for (auto & gameObject: gameWorld.QueryComponents<Animator>())
 	{
-		auto animator = gameObject->Component<Animator>();
+		auto animator = gameObject.Component<Animator>();
 		
 		POMDOG_ASSERT(animator);
 		animator->Update(*clock);
@@ -265,7 +262,7 @@ void MaidBeamGame::Update()
 //		}
 //	}
 
-	if (auto animator = maid->Component<Animator>())
+	if (auto animator = maid.Component<Animator>())
 	{
 		animator->PlaybackRate(slider1->Value());
 		animator->SetFloat("Run.Weight", slider2->Value());
@@ -275,7 +272,7 @@ void MaidBeamGame::Update()
 		}
 	}
 
-	if (auto renderable = maid->Component<Renderable>())
+	if (auto renderable = maid.Component<Renderable>())
 	{
 		renderable->IsVisible(toggleSwitch2->IsOn());
 		
@@ -300,8 +297,8 @@ void MaidBeamGame::Update()
 void MaidBeamGame::Draw()
 {
 	{
-		auto transform = mainCamera->Component<Transform2D>();
-		auto camera = mainCamera->Component<Camera2D>();
+		auto transform = mainCamera.Component<Transform2D>();
+		auto camera = mainCamera.Component<Camera2D>();
 			
 		POMDOG_ASSERT(transform && camera);
 		auto clientBounds = gameHost->Window()->ClientBounds();
@@ -315,8 +312,8 @@ void MaidBeamGame::Draw()
 
 		for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
 		{
-			auto renderable = gameObject->Component<Renderable>();
-			renderable->Visit(*gameObject, *renderer, viewMatrix, projectionMatrix);
+			auto renderable = gameObject.Component<Renderable>();
+			renderable->Visit(gameObject, *renderer, viewMatrix, projectionMatrix);
 		}
 	}
 	

@@ -70,17 +70,10 @@ void LightningTestGame::Initialize()
 	spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
 	fxaa = std::make_unique<FXAA>(gameHost);
 
-	rootNode = std::make_shared<HierarchyNode>();
 	{
-		auto gameObject = gameWorld.CreateObject();
-		mainCamera = gameObject;
-
-		gameObject->AddComponent<Transform2D>();
-		//gameObject->AddComponent<CanvasItem>();
-		gameObject->AddComponent<Camera2D>();
-
-		auto node = std::make_shared<HierarchyNode>(gameObject);
-		rootNode->AddChild(node);
+		mainCamera = gameWorld.CreateObject();
+		mainCamera.AddComponent<Transform2D>();
+		mainCamera.AddComponent<Camera2D>();
 	}
 //	{
 //		auto gameObject = gameWorld.CreateObject();
@@ -162,8 +155,8 @@ void LightningTestGame::Initialize()
 	}
 	{
 		scenePanel->SceneTouch.Connect([this](Vector2 const& positionInView) {
-			auto transform = mainCamera->Component<Transform2D>();
-			auto camera = mainCamera->Component<Camera2D>();
+			auto transform = mainCamera.Component<Transform2D>();
+			auto camera = mainCamera.Component<Camera2D>();
 		
 			POMDOG_ASSERT(transform && camera);
 			auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix(*transform, *camera));
@@ -214,8 +207,8 @@ void LightningTestGame::Update()
 //-----------------------------------------------------------------------
 void LightningTestGame::DrawSprites()
 {
-	auto transform = mainCamera->Component<Transform2D>();
-	auto camera = mainCamera->Component<Camera2D>();
+	auto transform = mainCamera.Component<Transform2D>();
+	auto camera = mainCamera.Component<Camera2D>();
 		
 	POMDOG_ASSERT(transform && camera);
 	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);

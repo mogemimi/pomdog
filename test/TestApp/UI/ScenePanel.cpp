@@ -177,8 +177,8 @@ void ScenePanel::OnMouseLeftButtonMoved(PointerPoint const& pointerPoint)
 		return;
 	}
 
-	auto transform = cameraObject->Component<Transform2D>();
-	auto camera = cameraObject->Component<Camera2D>();
+	auto transform = cameraObject.Component<Transform2D>();
+	auto camera = cameraObject.Component<Camera2D>();
 	
 	if (!transform || !camera) {
 		return;
@@ -210,8 +210,8 @@ void ScenePanel::OnMouseMiddleButtonMoved(PointerPoint const& pointerPoint)
 		return;
 	}
 	
-	auto transform = cameraObject->Component<Transform2D>();
-	auto camera = cameraObject->Component<Camera2D>();
+	auto transform = cameraObject.Component<Transform2D>();
+	auto camera = cameraObject.Component<Camera2D>();
 	
 	if (!transform || !camera) {
 		return;
@@ -240,8 +240,8 @@ void ScenePanel::OnMouseRightButtonMoved(PointerPoint const& pointerPoint)
 //-----------------------------------------------------------------------
 void ScenePanel::UpdateAnimation(DurationSeconds const& frameDuration)
 {
-	auto transform = cameraObject->Component<Transform2D>();
-	auto camera = cameraObject->Component<Camera2D>();
+	auto transform = cameraObject.Component<Transform2D>();
+	auto camera = cameraObject.Component<Camera2D>();
 	
 	if (!transform || !camera) {
 		return;

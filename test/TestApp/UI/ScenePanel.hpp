@@ -23,7 +23,7 @@ namespace UI {
 
 class ScenePanel: public Panel, public std::enable_shared_from_this<ScenePanel> {
 public:
-	std::shared_ptr<GameObject> cameraObject;
+	GameObject cameraObject;
 	
 public:
 	ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn);

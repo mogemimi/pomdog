@@ -50,8 +50,8 @@ private:
 	std::shared_ptr<UI::Slider> slider2;
 	
 	GameWorld gameWorld;
-	std::shared_ptr<GameObject> mainCamera;
-	std::shared_ptr<GameObject> particleObject;
+	GameObject mainCamera;
+	GameObject particleObject;
 	
 	std::unique_ptr<Renderer> renderer;
 	std::shared_ptr<RenderTarget2D> renderTarget;

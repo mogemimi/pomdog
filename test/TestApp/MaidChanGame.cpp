@@ -65,18 +65,11 @@ void MaidChanGame::Initialize()
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
 	}
 	
-	
-	rootNode = std::make_shared<HierarchyNode>();
+
 	{
-		auto gameObject = gameWorld.CreateObject();
-		mainCamera = gameObject;
-
-		gameObject->AddComponent<Transform2D>();
-		//gameObject->AddComponent<CanvasItem>();
-		gameObject->AddComponent<Camera2D>();
-
-		auto node = std::make_shared<HierarchyNode>(gameObject);
-		rootNode->AddChild(node);
+		mainCamera = gameWorld.CreateObject();
+		mainCamera.AddComponent<Transform2D>();
+		mainCamera.AddComponent<Camera2D>();
 	}
 	{
 		auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidChan/skeleton.atlas");
@@ -190,8 +183,8 @@ void MaidChanGame::Update()
 //-----------------------------------------------------------------------
 void MaidChanGame::DrawSprites()
 {
-	auto transform = mainCamera->Component<Transform2D>();
-	auto camera = mainCamera->Component<Camera2D>();
+	auto transform = mainCamera.Component<Transform2D>();
+	auto camera = mainCamera.Component<Camera2D>();
 		
 	POMDOG_ASSERT(transform && camera);
 	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);

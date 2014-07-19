@@ -30,10 +30,8 @@ bool GameWorld::Valid(GameObjectID const& objectID) const
 //-----------------------------------------------------------------------
 void GameWorld::RemoveUnusedObjects()
 {
-	POMDOG_ASSERT_MESSAGE(false, "TODO: Not implemented");
-
 	objects.erase(std::remove_if(std::begin(objects), std::end(objects),
-		[this](GameObjectID const& id){ return context->Valid(id); }), std::end(objects));
+		[this](GameObjectID const& id){ return !context->Valid(id); }), std::end(objects));
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

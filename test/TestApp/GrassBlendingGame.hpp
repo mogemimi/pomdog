@@ -83,8 +83,7 @@ private:
 	std::shared_ptr<UI::ToggleSwitch> toggleSwitch4;
 
 	GameWorld gameWorld;
-	std::shared_ptr<HierarchyNode> rootNode;
-	std::shared_ptr<GameObject> mainCamera;
+	GameObject mainCamera;
 
 	AnimationSystem animationSystem;
 	std::shared_ptr<Skeleton> maidSkeleton;

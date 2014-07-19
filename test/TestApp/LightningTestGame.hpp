@@ -75,8 +75,7 @@ private:
 	std::shared_ptr<UI::Slider> slider5;
 
 	GameWorld gameWorld;
-	std::shared_ptr<HierarchyNode> rootNode;
-	std::shared_ptr<GameObject> mainCamera;
+	GameObject mainCamera;
 
 	BeamSystem beamSystem;
 	Vector2 touchPoint;

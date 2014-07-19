@@ -57,10 +57,9 @@ private:
 	std::shared_ptr<UI::TextBlock> textBlock1;
 
 	GameWorld gameWorld;
-	std::shared_ptr<GameObject> mainCamera;
-	std::shared_ptr<GameObject> maid;
-	std::shared_ptr<GameObject> lightningBeam;
-	std::vector<std::shared_ptr<GameObject>> enemies;
+	GameObject mainCamera;
+	GameObject maid;
+	GameObject lightningBeam;
 	
 	ScopedConnection clientSizeChangedConnection;
 	
