@@ -72,7 +72,7 @@ Vector2 SpriteFont::Impl::MeasureString(std::u32string const& text) const
 	{
 		if (character == U'\n')
 		{
-			currentPosition.X = Vector2::Zero.X;
+			currentPosition.X = 0.0f;
 			currentPosition.Y += lineSpacing;
 			continue;
 		}
@@ -164,7 +164,7 @@ void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
 	{
 		if (character == U'\n')
 		{
-			currentPosition.X = position.X;
+			currentPosition.X = 0.0f;
 			currentPosition.Y += lineSpacing;
 			continue;
 		}

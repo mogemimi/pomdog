@@ -178,6 +178,8 @@
         '../test/TestApp/UI/Slider.hpp',
         '../test/TestApp/UI/StackPanel.cpp',
         '../test/TestApp/UI/StackPanel.hpp',
+        '../test/TestApp/UI/TextBlock.cpp',
+        '../test/TestApp/UI/TextBlock.hpp',
         '../test/TestApp/UI/Thickness.hpp',
         '../test/TestApp/UI/ToggleSwitch.cpp',
         '../test/TestApp/UI/ToggleSwitch.hpp',

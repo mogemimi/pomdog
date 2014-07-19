@@ -19,6 +19,7 @@
 #include "UI/UIElementHierarchy.hpp"
 #include "UI/ScenePanel.hpp"
 #include "UI/Slider.hpp"
+#include "UI/TextBlock.hpp"
 #include "UI/ToggleSwitch.hpp"
 #include "Graphics/LineBatch.hpp"
 #include "Rendering/Renderer.hpp"
@@ -53,6 +54,7 @@ private:
 	std::shared_ptr<UI::ToggleSwitch> toggleSwitch2;
 	std::shared_ptr<UI::ToggleSwitch> toggleSwitch3;
 	std::shared_ptr<UI::ToggleSwitch> toggleSwitch4;
+	std::shared_ptr<UI::TextBlock> textBlock1;
 
 	GameWorld gameWorld;
 	std::shared_ptr<GameObject> mainCamera;

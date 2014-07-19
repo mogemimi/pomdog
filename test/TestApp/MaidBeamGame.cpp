@@ -127,6 +127,11 @@ void MaidBeamGame::Initialize()
 			stackPanel->AddChild(navigator);
 		}
 		{
+			textBlock1 = std::make_shared<UI::TextBlock>();
+			textBlock1->Text("DrawCall: --");
+			stackPanel->AddChild(textBlock1);
+		}
+		{
 			slider1 = std::make_shared<UI::Slider>(0.3, 1.6);
 			slider1->Value(1.48);
 			stackPanel->AddChild(slider1);
