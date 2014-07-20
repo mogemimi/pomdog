@@ -26,9 +26,9 @@ namespace Rendering {
 
 class SkinnedMeshCommand final: public RenderCommand {
 public:
-	float ZOrder() const override
+	float DrawOrder() const override
 	{
-		return zOrder;
+		return drawOrder;
 	}
 
 	void Execute(std::shared_ptr<GraphicsContext> const& graphicsContext) override;
@@ -43,7 +43,7 @@ public:
 	std::shared_ptr<Texture2D> texture;
 	std::shared_ptr<EffectPass> skinningEffect;
 	std::shared_ptr<InputLayout> inputLayout;
-	float zOrder;
+	float drawOrder;
 };
 
 }// namespace Rendering

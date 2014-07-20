@@ -11,8 +11,6 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 BeamRenderable::BeamRenderable()
-	: zOrder(0)
-	, isVisible(true)
 {}
 //-----------------------------------------------------------------------
 void BeamRenderable::Visit(GameObject & gameObject, Renderer & renderer,
@@ -129,26 +127,6 @@ void BeamRenderable::DrawBeam()
 //		}
 //	}
 //	spriteRenderer->End();
-}
-//-----------------------------------------------------------------------
-void BeamRenderable::ZOrder(float zOrderIn)
-{
-	this->zOrder = zOrderIn;
-}
-//-----------------------------------------------------------------------
-float BeamRenderable::ZOrder() const
-{
-	return zOrder;
-}
-//-----------------------------------------------------------------------
-void BeamRenderable::IsVisible(bool isVisibleIn)
-{
-	this->isVisible = isVisibleIn;
-}
-//-----------------------------------------------------------------------
-bool BeamRenderable::IsVisible() const
-{
-	return isVisible;
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

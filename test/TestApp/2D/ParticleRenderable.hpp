@@ -26,13 +26,7 @@ public:
 	ParticleRenderable();
 
 	void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
-	
-	void ZOrder(float zOrder) override;
-	float ZOrder() const override;
-	
-	void IsVisible(bool isVisible) override;
-	bool IsVisible() const override;
-	
+
 	void Load(std::shared_ptr<GraphicsContext> const& graphicsContext,
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
 	void Update(GameObject & gameObject, GameClock const& clock);
@@ -42,8 +36,6 @@ public:
 	
 private:
 	Details::Rendering::ParticleBatchCommand command;
-	float zOrder;
-	bool isVisible;
 };
 
 }// namespace Pomdog

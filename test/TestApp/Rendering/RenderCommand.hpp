@@ -33,7 +33,7 @@ public:
 	
 	virtual RenderCommandType CommandType() const = 0;
 	
-	virtual float ZOrder() const = 0;
+	virtual float DrawOrder() const = 0;
 };
 
 }// namespace Pomdog

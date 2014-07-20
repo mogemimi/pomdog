@@ -220,7 +220,7 @@ void GrassBlendingGame::DrawSprites()
 	auto camera = mainCamera.Component<Camera2D>();
 		
 	POMDOG_ASSERT(transform && camera);
-	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);;
+	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
 	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 		gameHost->Window()->ClientBounds().Width, gameHost->Window()->ClientBounds().Height, 0.1f, 1000.0f);
 
@@ -261,7 +261,7 @@ void GrassBlendingGame::DrawSkinnedMesh()
 		auto camera = mainCamera.Component<Camera2D>();
 		
 		POMDOG_ASSERT(transform && camera);
-		auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);;
+		auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
 		auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 			graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
 		
@@ -339,7 +339,7 @@ void GrassBlendingGame::Draw()
 		auto camera = mainCamera.Component<Camera2D>();
 			
 		POMDOG_ASSERT(transform && camera);
-		auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);;
+		auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
 		auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 			graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
 		

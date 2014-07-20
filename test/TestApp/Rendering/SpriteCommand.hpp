@@ -25,9 +25,9 @@ namespace Rendering {
 
 class SpriteCommand final: public RenderCommand {
 public:
-	float ZOrder() const override
+	float DrawOrder() const override
 	{
-		return zOrder;
+		return drawOrder;
 	}
 
 	void Execute(std::shared_ptr<GraphicsContext> const& graphicsContext) override;
@@ -40,7 +40,7 @@ public:
 	std::shared_ptr<Texture2D> texture;
 	Vector2 originPivot;
 	Color color;
-	float zOrder;
+	float drawOrder;
 };
 
 }// namespace Rendering

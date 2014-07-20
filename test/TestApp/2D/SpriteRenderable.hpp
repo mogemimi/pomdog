@@ -30,12 +30,6 @@ public:
 
 	void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
 
-	void ZOrder(float zOrder) override;
-	float ZOrder() const override;
-	
-	void IsVisible(bool isVisible) override;
-	bool IsVisible() const override;
-
 	void Color(Pomdog::Color const& color);
 	Pomdog::Color Color() const;
 	
@@ -52,8 +46,6 @@ private:
 	Matrix3x2 offsetMatrix;
 	Vector2 originPivot;
 	std::uint32_t dirtyFlags;
-	float zOrder;
-	bool isVisible;
 };
 
 }// namespace Pomdog

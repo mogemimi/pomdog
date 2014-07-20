@@ -21,32 +21,11 @@ namespace Pomdog {
 
 class ScriptBehavior: public Behavior {
 public:
-	ScriptBehavior(AssetManager const& assets, std::string const& filePath)
-		: state{true}
-	{
-		state.Load(assets.RootDirectory() + "/" + filePath);
-	}
+	ScriptBehavior(AssetManager const& assets, std::string const& filePath);
 
-	void Start(GameObject & gameObject) override
-	{
-	}
+	void Start(GameObject & gameObject) override;
 
-	void Update(GameObject & gameObject, DurationSeconds const& frameDuration) override
-	{
-		auto transform = gameObject.Component<Transform2D>();
-	
-		//state["Transform"]["Position"]["X"].SetObj(transform->Position, "X", &Vector2::X);
-		state["Transform"]["Position"]["X"] = static_cast<double>(transform->Position.X);
-		state["Transform"]["Position"]["Y"] = static_cast<double>(transform->Position.Y);
-		state["Transform"]["Rotation"] = static_cast<double>(transform->Rotation.value);
-	
-		POMDOG_ASSERT(state["Update"]);
-		state["Update"](static_cast<float>(frameDuration.count()));
-
-		transform->Position.X = static_cast<double>(state["Transform"]["Position"]["X"]);
-		transform->Position.Y = static_cast<double>(state["Transform"]["Position"]["Y"]);
-		transform->Rotation = static_cast<double>(state["Transform"]["Rotation"]);
-	}
+	void Update(GameObject & gameObject, DurationSeconds const& frameDuration) override;
 	
 private:
 	sel::State state;

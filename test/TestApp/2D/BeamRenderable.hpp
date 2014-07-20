@@ -26,12 +26,6 @@ public:
 
 	void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
 	
-	void ZOrder(float zOrder) override;
-	float ZOrder() const override;
-	
-	void IsVisible(bool isVisible) override;
-	bool IsVisible() const override;
-	
 	void Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice, std::shared_ptr<AssetManager> const& assets);
 	void Update(GameClock const& clock);
 	
@@ -40,9 +34,6 @@ public:
 private:
 	BeamSystem beamSystem;
 	std::shared_ptr<Texture2D> texture;
-	
-	float zOrder;
-	bool isVisible;
 };
 
 }// namespace Pomdog

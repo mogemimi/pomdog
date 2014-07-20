@@ -18,17 +18,17 @@ namespace {
 
 bool CompareRenderCommands(RenderCommand const& a, RenderCommand const& b)
 {
-	return a.ZOrder() < b.ZOrder();
+	return a.DrawOrder() < b.DrawOrder();
 }
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
 void RenderQueue::PushBack(std::reference_wrapper<RenderCommand> && command)
 {
-	if (command.get().ZOrder() > 0.0f) {
+	if (command.get().DrawOrder() > 0.0f) {
 		positiveCommands.push_back(std::move(command));
 	}
-	else if (command.get().ZOrder() == 0.0f) {
+	else if (command.get().DrawOrder() == 0.0f) {
 		zeroCommands.push_back(std::move(command));
 	}
 	else {

@@ -38,8 +38,6 @@ SkinnedMeshRenderable::SkinnedMeshRenderable(std::shared_ptr<GraphicsDevice> con
 	std::shared_ptr<SkinnedMesh> const& meshIn, std::shared_ptr<Texture2D> const& textureIn)
 	: skeleton(skeletonIn)
 	, skeletonTransform(skeletonTransformIn)
-	, zOrder(0)
-	, isVisible(true)
 {
 	POMDOG_ASSERT(skeleton);
 	POMDOG_ASSERT(skeletonTransform);
@@ -58,11 +56,11 @@ SkinnedMeshRenderable::SkinnedMeshRenderable(std::shared_ptr<GraphicsDevice> con
 void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 	Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix)
 {
-	if (!isVisible) {
+	if (!IsVisible) {
 		return;
 	}
 	
-	command.zOrder = zOrder;
+	command.drawOrder = DrawOrder;
 	command.modelViewProjection = viewMatrix * projectionMatrix;
 	
 	POMDOG_ASSERT(skeleton);
@@ -108,26 +106,6 @@ void SkinnedMeshRenderable::DrawSkeleton(std::unique_ptr<PolygonBatch> const& po
 	}
 	
 	polygonBatch->End();
-}
-//-----------------------------------------------------------------------
-void SkinnedMeshRenderable::ZOrder(float zOrderIn)
-{
-	this->zOrder = zOrderIn;
-}
-//-----------------------------------------------------------------------
-float SkinnedMeshRenderable::ZOrder() const
-{
-	return zOrder;
-}
-//-----------------------------------------------------------------------
-void SkinnedMeshRenderable::IsVisible(bool isVisibleIn)
-{
-	this->isVisible = isVisibleIn;
-}
-//-----------------------------------------------------------------------
-bool SkinnedMeshRenderable::IsVisible() const
-{
-	return isVisible;
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

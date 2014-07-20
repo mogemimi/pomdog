@@ -32,13 +32,7 @@ public:
 		std::shared_ptr<Texture2D> const& texture);
 
 	void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
-	
-	void ZOrder(float zOrder) override;
-	float ZOrder() const override;
-	
-	void IsVisible(bool isVisible) override;
-	bool IsVisible() const override;
-	
+
 	void DrawSkeleton(std::unique_ptr<PolygonBatch> const& polygonBatch,
 		Matrix4x4 const& modelViewProjection);
 
@@ -47,9 +41,6 @@ public:
 	
 	std::shared_ptr<Skeleton> skeleton;
 	std::shared_ptr<SkeletonTransform> skeletonTransform;
-	
-	float zOrder;
-	bool isVisible;
 };
 
 }// namespace Pomdog

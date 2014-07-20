@@ -51,9 +51,7 @@ SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& texture)
 //-----------------------------------------------------------------------
 SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& textureIn, TextureRegion const& textureRegionIn)
 	: originPivot(0.5f, 0.5f)
-	, zOrder(0)
 	, dirtyFlags(std::numeric_limits<std::uint32_t>::max())
-	, isVisible(true)
 {
 	POMDOG_ASSERT(textureIn);
 	command.texture = textureIn;
@@ -61,13 +59,13 @@ SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& textureIn, 
 	command.transform = Matrix3x2::Identity;
 	command.color = Color::White;
 	command.originPivot = {0.5f, 0.5f};
-	command.zOrder = 0;
+	command.drawOrder = 0;
 }
 //-----------------------------------------------------------------------
 void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 	Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix)
 {
-	if (!isVisible) {
+	if (!IsVisible) {
 		return;
 	}
 	
@@ -84,7 +82,7 @@ void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 	}
 	dirtyFlags = 0;
 	
-	command.zOrder = zOrder;
+	command.drawOrder = DrawOrder;
 
 	if (auto transform = gameObject.Component<Transform2D>())
 	{
@@ -104,26 +102,6 @@ void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 	POMDOG_ASSERT(command.textureRegion.Subrect.Height > 0);
 	
 	renderer.PushCommand(command);
-}
-//-----------------------------------------------------------------------
-void SpriteRenderable::ZOrder(float zOrderIn)
-{
-	this->zOrder = zOrderIn;
-}
-//-----------------------------------------------------------------------
-float SpriteRenderable::ZOrder() const
-{
-	return zOrder;
-}
-//-----------------------------------------------------------------------
-void SpriteRenderable::IsVisible(bool isVisibleIn)
-{
-	this->isVisible = isVisibleIn;
-}
-//-----------------------------------------------------------------------
-bool SpriteRenderable::IsVisible() const
-{
-	return isVisible;
 }
 //-----------------------------------------------------------------------
 void SpriteRenderable::Color(Pomdog::Color const& colorIn)

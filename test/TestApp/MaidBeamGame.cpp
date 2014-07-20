@@ -114,7 +114,8 @@ void MaidBeamGame::Initialize()
 		region.Subrect.Y = 0;
 		region.Subrect.Width = 16;
 		region.Subrect.Height = 16;
-		mainCamera.AddComponent<SpriteRenderable>(texture, region);
+		auto & sprite = mainCamera.AddComponent<SpriteRenderable>(texture, region);
+		sprite.DrawOrder = -100;
 	}
 	{
 		maid = gameWorld.CreateObject();
@@ -127,37 +128,7 @@ void MaidBeamGame::Initialize()
 		lightningBeam.AddComponent<Transform2D>();
 		auto & rendererable = lightningBeam.AddComponent(std::make_unique<BeamRenderable>());
 		rendererable.Load(graphicsDevice, assets);
-	}
-	{
-		auto pomdogTexture = assets->Load<Texture2D>("pomdog.png");
-		auto stoneTexture = assets->Load<Texture2D>("stone.png");
-		auto smokeTexture = assets->Load<Texture2D>("Particles/smoke.png");
-		std::mt19937 rand;
-		std::uniform_real_distribution<float> dist(-1600.0f, 1600.0f);
-		
-		constexpr auto enemyCount = 4096;
-		for (int i = 0; i < enemyCount; ++i)
-		{
-			auto gameObject = gameWorld.CreateObject();
-			
-			auto texture = pomdogTexture;
-			if (dist(rand) > 400) {
-				texture = stoneTexture;
-			}
-			if (dist(rand) > 1000) {
-				texture = smokeTexture;
-			}
-			auto & sprite = gameObject.AddComponent<SpriteRenderable>(texture);
-			sprite.ZOrder(dist(rand));
-			
-			auto & transform = gameObject.AddComponent<Transform2D>();
-			
-			transform.Position.X = dist(rand);
-			transform.Position.Y = dist(rand);
-			transform.Rotation = dist(rand);
-		}
-	}
-	
+	}	
 	{
 		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
 		scenePanel->cameraObject = mainCamera;
@@ -284,7 +255,7 @@ void MaidBeamGame::Update()
 
 	if (auto renderable = maid.Component<Renderable>())
 	{
-		renderable->IsVisible(toggleSwitch2->IsOn());
+		renderable->IsVisible = toggleSwitch2->IsOn();
 		
 //		if (toggleSwitch3->IsOn()) {
 //			renderer->SkeletonDebugDrawEnable = true;

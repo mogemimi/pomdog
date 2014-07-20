@@ -25,12 +25,9 @@ public:
 	virtual ~Renderable() = default;
 
 	virtual void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) = 0;
-	
-	virtual void ZOrder(float zOrder) = 0;
-	virtual float ZOrder() const = 0; // SortingOrder
-	
-	virtual void IsVisible(bool isVisible) = 0;
-	virtual bool IsVisible() const = 0;
+
+	float DrawOrder = 0.0f;
+	bool IsVisible = true;
 };
 
 }// namespace Pomdog

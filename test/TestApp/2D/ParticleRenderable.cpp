@@ -97,15 +97,12 @@ static ParticleEmitter CreateEmitterFireBlock()
 }// unnamed namespace
 //-----------------------------------------------------------------------
 ParticleRenderable::ParticleRenderable()
-	: zOrder(0)
-	, isVisible(true)
-{
-}
+{}
 //-----------------------------------------------------------------------
 void ParticleRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 	Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix)
 {
-	if (!isVisible) {
+	if (!IsVisible) {
 		return;
 	}
 	
@@ -113,7 +110,7 @@ void ParticleRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 		return;
 	}
 	
-	command.zOrder = zOrder;
+	command.drawOrder = DrawOrder;
 	command.spriteRenderer->SetProjectionMatrix(projectionMatrix);
 	command.modelViewProjection = viewMatrix;
 	
@@ -145,26 +142,6 @@ void ParticleRenderable::Update(GameObject & object, GameClock const& clock)
 	{
 		particleSystem.Update(clock.FrameDuration(), *transform);
 	}
-}
-//-----------------------------------------------------------------------
-void ParticleRenderable::ZOrder(float zOrderIn)
-{
-	this->zOrder = zOrderIn;
-}
-//-----------------------------------------------------------------------
-float ParticleRenderable::ZOrder() const
-{
-	return zOrder;
-}
-//-----------------------------------------------------------------------
-void ParticleRenderable::IsVisible(bool isVisibleIn)
-{
-	this->isVisible = isVisibleIn;
-}
-//-----------------------------------------------------------------------
-bool ParticleRenderable::IsVisible() const
-{
-	return isVisible;
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

@@ -29,9 +29,9 @@ class ParticleBatchCommand final: public RenderCommand {
 public:
 	~ParticleBatchCommand();
 
-	float ZOrder() const override
+	float DrawOrder() const override
 	{
-		return zOrder;
+		return drawOrder;
 	}
 
 	RenderCommandType CommandType() const override;
@@ -44,7 +44,7 @@ public:
 	Matrix4x4 modelViewProjection;
 	std::shared_ptr<Texture2D> texture;
 	std::vector<Particle> const* particles = nullptr;
-	float zOrder;
+	float drawOrder;
 };
 
 }// namespace Rendering
