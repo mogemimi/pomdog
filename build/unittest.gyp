@@ -51,6 +51,7 @@
         '../test/FrameworkTest/Event/EventQueueTest.cpp',
         '../test/FrameworkTest/Event/EventTest.cpp',
         '../test/FrameworkTest/Event/ScopedConnectionTest.cpp',
+        '../test/FrameworkTest/Event/SignalTest.cpp',
         '../test/FrameworkTest/Gameplay/GameObjectIDTest.cpp',
         '../test/FrameworkTest/Gameplay/GameObjectTest.cpp',
         '../test/FrameworkTest/Gameplay/GameWorldTest.cpp',

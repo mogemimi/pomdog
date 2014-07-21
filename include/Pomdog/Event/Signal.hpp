@@ -35,7 +35,7 @@ public:
 
 	EventConnection Connect(std::function<void(Arguments...)> && slot);
 
-	void operator()(Arguments &&... arguments);
+	void operator()(Arguments... arguments);
 	
 	std::size_t InvocationCount() const;
 
@@ -66,7 +66,7 @@ EventConnection Signal<void(Arguments...)>::Connect(std::function<void(Arguments
 }
 //-----------------------------------------------------------------------
 template <typename...Arguments>
-void Signal<void(Arguments...)>::operator()(Arguments &&... arguments)
+void Signal<void(Arguments...)>::operator()(Arguments... arguments)
 {
 	POMDOG_ASSERT(body);
 	body->operator()(std::forward<Arguments>(arguments)...);
