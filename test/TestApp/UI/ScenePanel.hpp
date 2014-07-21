@@ -28,6 +28,9 @@ public:
 public:
 	ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn);
 
+	bool IsEnabled() const;
+	void IsEnabled(bool isEnabled);
+
 	bool SizeToFitContent() const override { return true; }
 	
 	void OnParentChanged() override;
@@ -77,6 +80,7 @@ private:
 	float scrollWheel;
 
 	bool isFocused;
+	bool isEnabled;
 };
 
 }// namespace UI

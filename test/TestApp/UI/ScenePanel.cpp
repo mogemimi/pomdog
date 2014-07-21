@@ -66,12 +66,27 @@ static Vector2 SampleTrackGesture(Vector2 const& position, Vector2 & startPositi
 //-----------------------------------------------------------------------
 ScenePanel::ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn)
 	: Panel(Matrix3x2::Identity, widthIn, heightIn)
-	, isFocused(false)
 	, prevScrollWheel(0)
 	, scrollWheel(0)
+	, isFocused(false)
+	, isEnabled(true)
 {
 	DrawOrder(10000);
 }
+//-----------------------------------------------------------------------
+#if defined(POMDOG_COMPILER_CLANG)
+#pragma mark - Properties
+#endif
+//-----------------------------------------------------------------------
+bool ScenePanel::IsEnabled() const
+{ return isEnabled; }
+//-----------------------------------------------------------------------
+void ScenePanel::IsEnabled(bool isEnabledIn)
+{ this->isEnabled = isEnabledIn; }
+//-----------------------------------------------------------------------
+#if defined(POMDOG_COMPILER_CLANG)
+#pragma mark - Member Functions
+#endif
 //-----------------------------------------------------------------------
 Vector2 ScenePanel::ConvertToPanelSpace(Point2D const& point) const
 {
@@ -173,6 +188,10 @@ void ScenePanel::OnMouseLeftButtonPressed(PointerPoint const& pointerPoint)
 //-----------------------------------------------------------------------
 void ScenePanel::OnMouseLeftButtonMoved(PointerPoint const& pointerPoint)
 {
+	if (!isEnabled) {
+		return;
+	}
+
 	if (!tumbleStartPosition) {
 		return;
 	}
@@ -181,7 +200,7 @@ void ScenePanel::OnMouseLeftButtonMoved(PointerPoint const& pointerPoint)
 	auto transform = cameraObject.Component<Transform2D>();
 	auto camera = cameraObject.Component<Camera2D>();
 	
-	if (!transform || !camera || !camera->Enabled) {
+	if (!transform || !camera) {
 		return;
 	}
 
@@ -207,6 +226,10 @@ void ScenePanel::OnMouseMiddleButtonPressed(PointerPoint const& pointerPoint)
 //-----------------------------------------------------------------------
 void ScenePanel::OnMouseMiddleButtonMoved(PointerPoint const& pointerPoint)
 {
+	if (!isEnabled) {
+		return;
+	}
+
 	if (!trackStartPosition) {
 		return;
 	}
@@ -215,7 +238,7 @@ void ScenePanel::OnMouseMiddleButtonMoved(PointerPoint const& pointerPoint)
 	auto transform = cameraObject.Component<Transform2D>();
 	auto camera = cameraObject.Component<Camera2D>();
 	
-	if (!transform || !camera || !camera->Enabled) {
+	if (!transform || !camera) {
 		return;
 	}
 
@@ -247,7 +270,7 @@ void ScenePanel::UpdateAnimation(DurationSeconds const& frameDuration)
 	auto transform = cameraObject.Component<Transform2D>();
 	auto camera = cameraObject.Component<Camera2D>();
 	
-	if (!transform || !camera || !camera->Enabled) {
+	if (!transform || !camera) {
 		return;
 	}
 	

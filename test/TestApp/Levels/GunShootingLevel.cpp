@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -71,8 +71,18 @@ GunShootingLevel::GunShootingLevel(GameHost & gameHost, GameWorld & world)
 	{
 		mainCamera = world.CreateObject();
 		mainCamera.AddComponent<Transform2D>();
-		mainCamera.AddComponent<Camera2D>();
+		auto & camera = mainCamera.AddComponent<Camera2D>();
+		camera.Zoom = 0.5f;
+		camera.ViewportWidth = 0.5f;
 		mainCamera.AddComponent<ScriptBehavior>(*assets, "Scripts/Maid.lua");
+	}
+	{
+		auto subCamera = world.CreateObject();
+		subCamera.AddComponent<Transform2D>();
+		auto & camera = subCamera.AddComponent<Camera2D>();
+		camera.Zoom = 0.6f;
+		camera.ViewportWidth = 0.5f;
+		camera.ViewportX = 0.5f;
 	}
 	{
 		maid = world.CreateObject();

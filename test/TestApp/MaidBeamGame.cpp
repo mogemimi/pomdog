@@ -26,6 +26,7 @@ namespace TestApp {
 //-----------------------------------------------------------------------
 MaidBeamGame::MaidBeamGame(std::shared_ptr<GameHost> const& gameHostIn)
 	: gameHost(gameHostIn)
+	, sandboxMode(false)
 {
 	POMDOG_ASSERT(gameHostIn);
 	graphicsContext = gameHost->GraphicsContext();
@@ -59,8 +60,15 @@ void MaidBeamGame::Initialize()
 		editorCamera = gameWorld.CreateObject();
 		editorCamera.AddComponent<Transform2D>();
 		editorCamera.AddComponent<Camera2D>();
-
+		
 		level = std::make_unique<GunShootingLevel>(*gameHost, gameWorld);
+	}
+	{
+		auto texture = assets->Load<Texture2D>("EditorResources/CameraIcon.png");
+		for (size_t i = 0; i < 10; ++i) {
+			cameraSprites.emplace_back(texture);
+			cameraSprites.back().DrawOrder = 10000.0f;
+		}
 	}
 	{
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
@@ -71,7 +79,7 @@ void MaidBeamGame::Initialize()
 		gameEditor->AddView(scenePanel);
 	}
 	{
-		auto stackPanel = std::make_shared<UI::StackPanel>(124, 170);
+		auto stackPanel = std::make_shared<UI::StackPanel>(140, 170);
 		stackPanel->Transform(Matrix3x2::CreateTranslation(Vector2{5, 10}));
 		gameEditor->AddView(stackPanel);
 
@@ -103,24 +111,12 @@ void MaidBeamGame::Initialize()
 		}
 		{
 			toggleSwitch2 = std::make_shared<UI::ToggleSwitch>();
-			toggleSwitch2->IsOn(false);
-			toggleSwitch2->OnContent("Editor Mode");
-			toggleSwitch2->OffContent("Game Mode");
+			toggleSwitch2->IsOn(sandboxMode);
+			toggleSwitch2->OnContent("Sandbox On");
+			toggleSwitch2->OffContent("Sandbox Off");
 			cameraChangedConnection = toggleSwitch2->Toggled.Connect([this](bool isOn) {
-				if (isOn) {
-					for (auto & gameObject: gameWorld.QueryComponents<Camera2D>())
-					{
-						auto camera = gameObject.Component<Camera2D>();
-						camera->Enabled = (editorCamera == gameObject);
-					}
-				}
-				else {
-					for (auto & gameObject: gameWorld.QueryComponents<Camera2D>())
-					{
-						auto camera = gameObject.Component<Camera2D>();
-						camera->Enabled = (editorCamera != gameObject);
-					}
-				}
+				sandboxMode = isOn;
+				scenePanel->IsEnabled(sandboxMode);
 			});
 			
 			stackPanel->AddChild(toggleSwitch2);
@@ -169,47 +165,100 @@ void MaidBeamGame::Update()
 	}
 }
 //-----------------------------------------------------------------------
+void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camera)
+{
+	auto clientBounds = gameHost->Window()->ClientBounds();
+	
+	Viewport viewport(
+		clientBounds.Width * camera.ViewportX,
+		clientBounds.Height * camera.ViewportY,
+		clientBounds.Width * camera.ViewportWidth,
+		clientBounds.Height * camera.ViewportHeight);
+	
+	auto viewMatrix = SandboxHelper::CreateViewMatrix(transform, camera);
+	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+		viewport.Width(), viewport.Height(), camera.Near, camera.Far);
+	
+	gameEditor->SetViewProjection(viewMatrix * projectionMatrix);
+	renderer->ViewMatrix(viewMatrix);
+	renderer->ProjectionMatrix(projectionMatrix);
+
+	for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
+	{
+		auto renderable = gameObject.Component<Renderable>();
+		renderable->Visit(gameObject, *renderer, viewMatrix, projectionMatrix);
+	}
+
+	graphicsContext->Viewport(viewport);
+	
+	if (sandboxMode)
+	{
+		size_t cameraIndex = 0;
+		for (auto & gameObject: gameWorld.QueryComponents<Camera2D, Transform2D>())
+		{
+			if (cameraIndex >= cameraSprites.size()) {
+				break;
+			}
+			if (editorCamera == gameObject) {
+				continue;
+			}
+			cameraSprites[cameraIndex].Visit(gameObject, *renderer, viewMatrix, projectionMatrix);
+			++cameraIndex;
+		}
+
+		gameEditor->BeginDraw(*graphicsContext);
+	}
+
+	renderer->Render(graphicsContext);
+}
+//-----------------------------------------------------------------------
 void MaidBeamGame::Draw()
 {
-	auto cameras = gameWorld.QueryComponents<Transform2D, Camera2D>();
-	for (auto & mainCamera: cameras)
-	{
-		auto transform = mainCamera.Component<Transform2D>();
-		auto camera = mainCamera.Component<Camera2D>();
-		
-		if (!camera->Enabled) {
-			continue;
-		}
-		
-		POMDOG_ASSERT(transform && camera);
-		auto clientBounds = gameHost->Window()->ClientBounds();
-		auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
-		auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-			clientBounds.Width, clientBounds.Height, camera->Near, camera->Far);
-		
-		gameEditor->SetViewProjection(viewMatrix * projectionMatrix);
-		renderer->ViewMatrix(viewMatrix);
-		renderer->ProjectionMatrix(projectionMatrix);
-
-		for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
-		{
-			auto renderable = gameObject.Component<Renderable>();
-			renderable->Visit(gameObject, *renderer, viewMatrix, projectionMatrix);
-		}
-		
-		break;
-	}
-	
 	constexpr bool enableFxaa = true;
 
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
 	
-	graphicsContext->Clear(Color::CornflowerBlue);
-	gameEditor->BeginDraw(*graphicsContext);
-	renderer->Render(graphicsContext);
-
+	{
+		auto viewport = graphicsContext->Viewport();
+		
+		if (!sandboxMode)
+		{
+			bool cleared = false;
+			
+			for (auto & cameraObject: gameWorld.QueryComponents<Camera2D, Transform2D>())
+			{
+				auto camera = cameraObject.Component<Camera2D>();
+				
+				if (!camera->Enabled) {
+					continue;
+				}
+				
+				if (!cleared)
+				{
+					graphicsContext->Clear(camera->BackgroundColor);
+					cleared = true;
+				}
+										
+				auto transform = cameraObject.Component<Transform2D>();
+				
+				POMDOG_ASSERT(transform && camera);
+				DrawScene(*transform, *camera);
+			}
+		}
+		else
+		{
+			auto camera = editorCamera.Component<Camera2D>();
+			auto transform = editorCamera.Component<Transform2D>();
+			
+			graphicsContext->Clear(camera->BackgroundColor);
+			DrawScene(*transform, *camera);
+		}
+		
+		graphicsContext->Viewport(viewport);
+	}
+	
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget();
 		fxaa->Draw(*graphicsContext, renderTarget);
