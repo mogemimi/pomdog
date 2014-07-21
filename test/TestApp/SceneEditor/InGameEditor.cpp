@@ -30,7 +30,8 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 	}
 	{
 		spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
-		spriteFont = assets->Load<SpriteFont>("BitmapFonts/UbuntuMono-Regular.fnt");
+		//spriteFont = assets->Load<SpriteFont>("BitmapFonts/UbuntuMono-Regular.fnt");
+		spriteFont = assets->Load<SpriteFont>("BitmapFonts/Ubuntu-Regular.fnt");
 		distanceFieldEffect = assets->Load<EffectPass>("Effects/SpriteBatchDistanceField");
 		spriteBatchDistanceField = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets,
 			distanceFieldEffect);

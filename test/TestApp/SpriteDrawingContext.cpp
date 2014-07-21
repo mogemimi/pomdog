@@ -70,35 +70,35 @@ void SpriteDrawingContext::DrawString(Matrix3x2 const& transform, Color const& c
 		spriteBatch.Begin(SpriteSortMode::BackToFront);
 	}
 	{
-		Vector2 fontWeights {0.309943197f, 0.688636345f};
+		Vector2 fontWeights {0.457f, 0.620f};
 	
 		switch (fontWeight) {
 		case FontWeight::Light:
-			fontWeights = {0.320f, 0.770f};
+			fontWeights = {0.440f, 0.800f};
 			break;
 		case FontWeight::Normal:
-			fontWeights = {0.298f, 0.661f};
+			fontWeights = {0.457f, 0.620f};
 			break;
 		case FontWeight::Bold:
-			fontWeights = {0.220f, 0.472f};
+			fontWeights = {0.339f, 0.457f};
 			break;
 		}
 		
-		float fontScale = 0.5f;
+		float fontScale = 0.48f;
 		
 		switch (fontSize) {
 		case FontSize::Small:
 			fontScale = 0.43f;
 			break;
 		case FontSize::Medium:
-			fontScale = 0.5f;
+			fontScale = 0.48f;
 			break;
 		case FontSize::Large:
 			fontScale = 0.73f;
 			fontWeights *= 1.09f;
 			break;
 		}
-	
+
 		distanceFieldEffect->Parameters("DistanceFieldConstants")->SetValue(fontWeights);
 	
 		///@todo Not implemented
