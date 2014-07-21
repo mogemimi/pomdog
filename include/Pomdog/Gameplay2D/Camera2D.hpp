@@ -13,19 +13,25 @@
 #	pragma once
 #endif
 
+#include <cstdint>
 #include <Pomdog/Config/Export.hpp>
 #include <Pomdog/Gameplay/Component.hpp>
+//#include <Pomdog/Math/Color.hpp>
 
 namespace Pomdog {
 
 class POMDOG_EXPORT Camera2D: public Component<Camera2D> {
 public:
+	//Color BackgroundColor = Color::CornflowerBlue;
+	
 	// range: [std::numeric_limits<float>::epsilon(), max()] or (0, max()]
 	float Zoom = 1;
 	
 	// Clipping Planes
 	float Near = 0.1f;
 	float Far = 1000.0f;
+	
+	bool Enabled = true;
 };
 
 }// namespace Pomdog

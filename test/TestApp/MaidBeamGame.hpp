@@ -21,8 +21,8 @@
 #include "UI/Slider.hpp"
 #include "UI/TextBlock.hpp"
 #include "UI/ToggleSwitch.hpp"
-#include "Graphics/LineBatch.hpp"
 #include "Rendering/Renderer.hpp"
+#include "2D/GameLevel.hpp"
 
 namespace TestApp {
 
@@ -52,20 +52,18 @@ private:
 	std::shared_ptr<UI::Slider> slider2;
 	std::shared_ptr<UI::ToggleSwitch> toggleSwitch1;
 	std::shared_ptr<UI::ToggleSwitch> toggleSwitch2;
-	std::shared_ptr<UI::ToggleSwitch> toggleSwitch3;
-	std::shared_ptr<UI::ToggleSwitch> toggleSwitch4;
 	std::shared_ptr<UI::TextBlock> textBlock1;
-
-	GameWorld gameWorld;
-	GameObject mainCamera;
-	GameObject maid;
-	GameObject lightningBeam;
 	
-	ScopedConnection clientSizeChangedConnection;
+	GameWorld gameWorld;
+	std::unique_ptr<GameLevel> level;
+	GameObject editorCamera;
 	
 	std::unique_ptr<Renderer> renderer;
 	std::shared_ptr<RenderTarget2D> renderTarget;
 	std::unique_ptr<FXAA> fxaa;
+	
+	ScopedConnection clientSizeChangedConnection;
+	ScopedConnection cameraChangedConnection;
 };
 
 }// namespace TestApp

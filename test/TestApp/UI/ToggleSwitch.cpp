@@ -79,6 +79,7 @@ void ToggleSwitch::OnPointerReleased(PointerPoint const& pointerPoint)
 		return;
 	}
 	isOn = !isOn;
+	Toggled(isOn);
 }
 //-----------------------------------------------------------------------
 void ToggleSwitch::OnRenderSizeChanged(std::uint32_t widthIn, std::uint32_t heightIn)

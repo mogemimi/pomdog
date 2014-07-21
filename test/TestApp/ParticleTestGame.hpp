@@ -19,7 +19,6 @@
 #include "UI/UIElementHierarchy.hpp"
 #include "UI/ScenePanel.hpp"
 #include "UI/Slider.hpp"
-#include "ParticleSystem.hpp"
 #include "Rendering/Renderer.hpp"
 
 namespace TestApp {

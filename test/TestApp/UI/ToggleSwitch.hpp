@@ -48,6 +48,9 @@ public:
 	
 	void Draw(DrawingContext & drawingContext) override;
 	
+	// Events:
+	Signal<void(bool isOn)> Toggled;
+	
 private:
 	class ToggleSwitchButton {
 	public:

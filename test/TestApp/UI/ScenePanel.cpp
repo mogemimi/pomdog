@@ -177,10 +177,11 @@ void ScenePanel::OnMouseLeftButtonMoved(PointerPoint const& pointerPoint)
 		return;
 	}
 
+	POMDOG_ASSERT(cameraObject);
 	auto transform = cameraObject.Component<Transform2D>();
 	auto camera = cameraObject.Component<Camera2D>();
 	
-	if (!transform || !camera) {
+	if (!transform || !camera || !camera->Enabled) {
 		return;
 	}
 
@@ -210,10 +211,11 @@ void ScenePanel::OnMouseMiddleButtonMoved(PointerPoint const& pointerPoint)
 		return;
 	}
 	
+	POMDOG_ASSERT(cameraObject);
 	auto transform = cameraObject.Component<Transform2D>();
 	auto camera = cameraObject.Component<Camera2D>();
 	
-	if (!transform || !camera) {
+	if (!transform || !camera || !camera->Enabled) {
 		return;
 	}
 
@@ -240,10 +242,12 @@ void ScenePanel::OnMouseRightButtonMoved(PointerPoint const& pointerPoint)
 //-----------------------------------------------------------------------
 void ScenePanel::UpdateAnimation(DurationSeconds const& frameDuration)
 {
+	POMDOG_ASSERT(cameraObject);
+
 	auto transform = cameraObject.Component<Transform2D>();
 	auto camera = cameraObject.Component<Camera2D>();
 	
-	if (!transform || !camera) {
+	if (!transform || !camera || !camera->Enabled) {
 		return;
 	}
 	

@@ -9,59 +9,20 @@
 #include "MaidBeamGame.hpp"
 #include <utility>
 #include <random>
-#include "FXAA.hpp"
-#include "SandboxHelper.hpp"
+#include "Graphics/FXAA.hpp"
+#include "Utilities/SandboxHelper.hpp"
 #include "UI/StackPanel.hpp"
 #include "UI/DebugNavigator.hpp"
-#include "Graphics/SpriteLine.hpp"
 #include "2D/Animator.hpp"
 #include "2D/BeamRenderable.hpp"
 #include "2D/Behavior.hpp"
 #include "2D/ScriptBehavior.hpp"
 #include "2D/SkinnedMeshRenderable.hpp"
 #include "2D/SpriteRenderable.hpp"
-#include "Spine/SkeletonDescLoader.hpp"
-#include "Spine/SkeletonLoader.hpp"
-#include "Spine/SkinnedMeshLoader.hpp"
-#include "TexturePacker/TextureAtlasLoader.hpp"
-#include "Skeletal2D/SkeletonHelper.hpp"
-#include "Skeletal2D/AnimationGraphBuilder.hpp"
-#include "Utilities/LogSkeletalInfo.hpp"
+#include "Levels/GunShootingLevel.hpp"
 
 
 namespace TestApp {
-
-void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	AssetManager & assets)
-{
-	auto skeletonDesc = assets.Load<Details::Skeletal2D::SkeletonDesc>("MaidGun/MaidGun.json");
-	TestApp::LogSkeletalInfo(skeletonDesc);
-	
-	auto skeleton = std::make_shared<Skeleton>(Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones));
-
-	auto skeletonTransform = std::make_shared<SkeletonTransform>();
-	skeletonTransform->Pose = SkeletonPose::CreateBindPose(*skeleton);
-	skeletonTransform->GlobalPose = SkeletonHelper::ToGlobalPose(*skeleton, skeletonTransform->Pose);
-	{
-		auto animationGraph = Details::Skeletal2D::LoadAnimationGraph(skeletonDesc, assets, "MaidGun/AnimationGraph.json");
-		gameObject.AddComponent(std::make_unique<MaidAnimator>(skeleton, skeletonTransform, animationGraph));
-	}
-	{
-		auto textureAtlas = assets.Load<Details::TexturePacker::TextureAtlas>("MaidGun/MaidGun.atlas");
-		auto maidTexture = assets.Load<Texture2D>("MaidGun/MaidGun.png");
-	
-		TestApp::LogTexturePackerInfo(textureAtlas);
-
-		auto bindPose = SkeletonPose::CreateBindPose(*skeleton);
-		auto mesh = std::make_shared<SkinnedMesh>(Details::Skeletal2D::CreateSkinnedMesh(graphicsDevice,
-			SkeletonHelper::ToGlobalPose(*skeleton, bindPose),
-			skeletonDesc, textureAtlas,
-			Vector2(maidTexture->Width(), maidTexture->Height()), "default"));
-
-		gameObject.AddComponent(std::make_unique<SkinnedMeshRenderable>(graphicsDevice, assets, skeleton, skeletonTransform, mesh, maidTexture));
-	}
-}
-
 //-----------------------------------------------------------------------
 MaidBeamGame::MaidBeamGame(std::shared_ptr<GameHost> const& gameHostIn)
 	: gameHost(gameHostIn)
@@ -95,43 +56,18 @@ void MaidBeamGame::Initialize()
 		renderer = std::make_unique<Renderer>(graphicsContext, graphicsDevice, *assets);
 	}
 	{
+		editorCamera = gameWorld.CreateObject();
+		editorCamera.AddComponent<Transform2D>();
+		editorCamera.AddComponent<Camera2D>();
+
+		level = std::make_unique<GunShootingLevel>(*gameHost, gameWorld);
+	}
+	{
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
 	}
-
-	{
-		mainCamera = gameWorld.CreateObject();
-		mainCamera.AddComponent<Transform2D>();
-		mainCamera.AddComponent<Camera2D>();
-		
-		auto texture = assets->Load<Texture2D>("pomdog.png");
-		TextureRegion region;
-		region.Rotate = false;
-		region.Width = 64;
-		region.Height = 64;
-		region.XOffset = 32;
-		region.YOffset = 48;
-		region.Subrect.X = 0;
-		region.Subrect.Y = 0;
-		region.Subrect.Width = 16;
-		region.Subrect.Height = 16;
-		auto & sprite = mainCamera.AddComponent<SpriteRenderable>(texture, region);
-		sprite.DrawOrder = -100;
-	}
-	{
-		maid = gameWorld.CreateObject();
-		maid.AddComponent<Transform2D>();
-		LoadAnimator(maid, graphicsDevice, *assets);
-		maid.AddComponent<ScriptBehavior>(*assets, "Scripts/Maid.lua");
-	}
-	{
-		lightningBeam = gameWorld.CreateObject();
-		lightningBeam.AddComponent<Transform2D>();
-		auto & rendererable = lightningBeam.AddComponent(std::make_unique<BeamRenderable>());
-		rendererable.Load(graphicsDevice, assets);
-	}	
 	{
 		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
-		scenePanel->cameraObject = mainCamera;
+		scenePanel->cameraObject = editorCamera;
 		gameEditor->AddView(scenePanel);
 	}
 	{
@@ -167,18 +103,27 @@ void MaidBeamGame::Initialize()
 		}
 		{
 			toggleSwitch2 = std::make_shared<UI::ToggleSwitch>();
-			toggleSwitch2->IsOn(true);
+			toggleSwitch2->IsOn(false);
+			toggleSwitch2->OnContent("Editor Mode");
+			toggleSwitch2->OffContent("Game Mode");
+			cameraChangedConnection = toggleSwitch2->Toggled.Connect([this](bool isOn) {
+				if (isOn) {
+					for (auto & gameObject: gameWorld.QueryComponents<Camera2D>())
+					{
+						auto camera = gameObject.Component<Camera2D>();
+						camera->Enabled = (editorCamera == gameObject);
+					}
+				}
+				else {
+					for (auto & gameObject: gameWorld.QueryComponents<Camera2D>())
+					{
+						auto camera = gameObject.Component<Camera2D>();
+						camera->Enabled = (editorCamera != gameObject);
+					}
+				}
+			});
+			
 			stackPanel->AddChild(toggleSwitch2);
-		}
-		{
-			toggleSwitch3 = std::make_shared<UI::ToggleSwitch>();
-			toggleSwitch3->IsOn(false);
-			stackPanel->AddChild(toggleSwitch3);
-		}
-		{
-			toggleSwitch4 = std::make_shared<UI::ToggleSwitch>();
-			toggleSwitch4->IsOn(false);
-			stackPanel->AddChild(toggleSwitch4);
 		}
 	}
 	
@@ -196,12 +141,9 @@ void MaidBeamGame::Initialize()
 //-----------------------------------------------------------------------
 void MaidBeamGame::Update()
 {
-	{
-		gameEditor->Update();
-		textBlock1->Text(StringFormat("Draw Calls: %d", renderer->DrawCallCount()));
-	}
-	
 	auto clock = gameHost->Clock();
+
+	level->Update(*gameHost);
 
 	for (auto & gameObject: gameWorld.QueryComponents<Animator>())
 	{
@@ -219,68 +161,26 @@ void MaidBeamGame::Update()
 		behavior->Update(gameObject, clock->FrameDuration());
 	}
 
-//	{
-//		auto keyboard = gameHost->Keyboard();
-//		
-//		if (auto transform = maid->Component<Transform2D>())
-//		{
-//			Vector2 velocity = Vector2::Zero;
-//
-//			if (keyboard->State().IsKeyDown(Keys::A)) {
-//				velocity.X -= 300.0f;
-//			}
-//			if (keyboard->State().IsKeyDown(Keys::D)) {
-//				velocity.X += 300.0f;
-//			}
-//			if (keyboard->State().IsKeyDown(Keys::W)) {
-//				velocity.Y += 50.0f;
-//			}
-//			if (keyboard->State().IsKeyDown(Keys::S)) {
-//				velocity.Y -= 50.0f;
-//			}
-//			
-//			transform->Position = transform->Position + (velocity * clock->FrameDuration().count());
-//		}
-//	}
-
-	if (auto animator = maid.Component<Animator>())
-	{
-		animator->PlaybackRate(slider1->Value());
-		animator->SetFloat("Run.Weight", slider2->Value());
-		
-		if (!toggleSwitch1->IsOn()) {
-			animator->PlaybackRate(0.0f);
-		}
-	}
-
-	if (auto renderable = maid.Component<Renderable>())
-	{
-		renderable->IsVisible = toggleSwitch2->IsOn();
-		
-//		if (toggleSwitch3->IsOn()) {
-//			renderer->SkeletonDebugDrawEnable = true;
-//		}
-//		else {
-//			renderer->SkeletonDebugDrawEnable = false;
-//		}
-//		
-//		if (toggleSwitch4->IsOn()) {
-//			renderer->MeshWireframeEnable = true;
-//		}
-//		else {
-//			renderer->MeshWireframeEnable = false;
-//		}
-	}
-
 	gameWorld.RemoveUnusedObjects();
+	
+	{
+		gameEditor->Update();
+		textBlock1->Text(StringFormat("Draw Calls: %d", renderer->DrawCallCount()));
+	}
 }
 //-----------------------------------------------------------------------
 void MaidBeamGame::Draw()
 {
+	auto cameras = gameWorld.QueryComponents<Transform2D, Camera2D>();
+	for (auto & mainCamera: cameras)
 	{
 		auto transform = mainCamera.Component<Transform2D>();
 		auto camera = mainCamera.Component<Camera2D>();
-			
+		
+		if (!camera->Enabled) {
+			continue;
+		}
+		
 		POMDOG_ASSERT(transform && camera);
 		auto clientBounds = gameHost->Window()->ClientBounds();
 		auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
@@ -296,6 +196,8 @@ void MaidBeamGame::Draw()
 			auto renderable = gameObject.Component<Renderable>();
 			renderable->Visit(gameObject, *renderer, viewMatrix, projectionMatrix);
 		}
+		
+		break;
 	}
 	
 	constexpr bool enableFxaa = true;

@@ -54,6 +54,7 @@ public:
 	
 	void UpdateAnimation(DurationSeconds const& frameDuration) override;
 	
+	// Events:
 	Signal<void(Vector2 const& point)> SceneTouch;
 	
 private:
