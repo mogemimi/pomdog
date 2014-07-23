@@ -1,0 +1,27 @@
+
+Ghost.png
+size: 174,174
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Ghost_0000_LeftArm
+  rotate: false
+  xy: 155, 156
+  size: 19, 18
+  orig: 19, 18
+  offset: 0, 0
+  index: -1
+Ghost_0001_Torso
+  rotate: false
+  xy: 2, 32
+  size: 151, 142
+  orig: 151, 142
+  offset: 0, 0
+  index: -1
+Ghost_0002_RightArm
+  rotate: false
+  xy: 2, 3
+  size: 22, 27
+  orig: 22, 27
+  offset: 0, 0
+  index: -1

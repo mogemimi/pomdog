@@ -30,6 +30,7 @@ private:
 	GameObject mainCamera;
 	GameObject maid;
 	GameObject lightningBeam;
+	std::vector<GameObject> ghosts;
 };
 
 }// namespace TestApp

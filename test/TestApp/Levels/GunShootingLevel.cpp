@@ -54,6 +54,37 @@ void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const
 		gameObject.AddComponent(std::make_unique<SkinnedMeshRenderable>(graphicsDevice, assets, skeleton, skeletonTransform, mesh, maidTexture));
 	}
 }
+//-----------------------------------------------------------------------
+void LoadGhostAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	AssetManager & assets)
+{
+	auto skeletonDesc = assets.Load<Details::Skeletal2D::SkeletonDesc>("Ghost/Ghost.json");
+	TestApp::LogSkeletalInfo(skeletonDesc);
+	
+	auto skeleton = std::make_shared<Skeleton>(Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones));
+
+	auto skeletonTransform = std::make_shared<SkeletonTransform>();
+	skeletonTransform->Pose = SkeletonPose::CreateBindPose(*skeleton);
+	skeletonTransform->GlobalPose = SkeletonHelper::ToGlobalPose(*skeleton, skeletonTransform->Pose);
+	{
+		auto animationGraph = Details::Skeletal2D::LoadAnimationGraph(skeletonDesc, assets, "Ghost/AnimationGraph.json");
+		gameObject.AddComponent(std::make_unique<MaidAnimator>(skeleton, skeletonTransform, animationGraph));
+	}
+	{
+		auto textureAtlas = assets.Load<Details::TexturePacker::TextureAtlas>("Ghost/Ghost.atlas");
+		auto maidTexture = assets.Load<Texture2D>("Ghost/Ghost.png");
+	
+		TestApp::LogTexturePackerInfo(textureAtlas);
+
+		auto bindPose = SkeletonPose::CreateBindPose(*skeleton);
+		auto mesh = std::make_shared<SkinnedMesh>(Details::Skeletal2D::CreateSkinnedMesh(graphicsDevice,
+			SkeletonHelper::ToGlobalPose(*skeleton, bindPose),
+			skeletonDesc, textureAtlas,
+			Vector2(maidTexture->Width(), maidTexture->Height()), "default"));
+
+		gameObject.AddComponent(std::make_unique<SkinnedMeshRenderable>(graphicsDevice, assets, skeleton, skeletonTransform, mesh, maidTexture));
+	}
+}
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
@@ -70,32 +101,34 @@ GunShootingLevel::GunShootingLevel(GameHost & gameHost, GameWorld & world)
 	}
 	{
 		mainCamera = world.CreateObject();
-		mainCamera.AddComponent<Transform2D>();
+		auto & transform = mainCamera.AddComponent<Transform2D>();
+		transform.Position = {0.0f, 400.0f};
 		auto & camera = mainCamera.AddComponent<Camera2D>();
-		camera.Zoom = 0.5f;
-		camera.ViewportWidth = 0.5f;
+		camera.Zoom = 0.60f;
 		mainCamera.AddComponent<ScriptBehavior>(*assets, "Scripts/Maid.lua");
-	}
-	{
-		auto subCamera = world.CreateObject();
-		subCamera.AddComponent<Transform2D>();
-		auto & camera = subCamera.AddComponent<Camera2D>();
-		camera.Zoom = 0.6f;
-		camera.ViewportWidth = 0.5f;
-		camera.ViewportX = 0.5f;
 	}
 	{
 		maid = world.CreateObject();
 		maid.AddComponent<Transform2D>();
 		LoadAnimator(maid, graphicsDevice, *assets);
+		auto animator = maid.Component<Animator>();
+		animator->PlaybackRate(1.5f);
 		maid.AddComponent<ScriptBehavior>(*assets, "Scripts/Maid.lua");
+	}
+	for (int i = 0; i < 5; ++i)
+	{
+		auto gameObject = world.CreateObject();
+		auto & transform = gameObject.AddComponent<Transform2D>();
+		transform.Position = {400.0f, 150.0f * i + 70.0f};
+		LoadGhostAnimator(gameObject, graphicsDevice, *assets);
+		ghosts.push_back(gameObject);
 	}
 	{
 		lightningBeam = world.CreateObject();
 		lightningBeam.AddComponent<Transform2D>();
 		auto & rendererable = lightningBeam.AddComponent(std::make_unique<BeamRenderable>());
 		rendererable.Load(graphicsDevice, assets);
-	}	
+	}
 }
 //-----------------------------------------------------------------------
 void GunShootingLevel::Update(GameHost & gameHost)
