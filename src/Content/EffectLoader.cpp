@@ -24,10 +24,10 @@ static std::vector<std::uint8_t> ReadBinaryFile(std::string const& filename)
 	std::ifstream stream(filename, std::ios::binary);
 	
 	stream.seekg(0, stream.end);
-	auto const length = stream.tellg();
+	auto const length = static_cast<std::size_t>(stream.tellg());
 	stream.seekg(0, stream.beg);
 	
-	std::vector<std::uint8_t> result(length);
+	std::vector<std::uint8_t> result(length + 1, 0);
 	stream.read(reinterpret_cast<char*>(result.data()), result.size());
 	return std::move(result);
 }

@@ -39,11 +39,11 @@ static std::vector<char> ReadBinaryFile(std::string const& filename)
 	std::ifstream stream(filename, std::ios::in | std::ios::binary);
 	
 	stream.seekg(0, stream.end);
-	auto const length = stream.tellg();
+	auto const length = static_cast<std::size_t>(stream.tellg());
 	stream.seekg(0, stream.beg);
-	
-	std::vector<char> result(length, 0);
-	stream.read(result.data(), result.size());
+
+	std::vector<char> result(length + 1, '\0');
+	stream.read(result.data(), length);
 	return std::move(result);
 }
 //-----------------------------------------------------------------------
@@ -816,8 +816,8 @@ Skeletal2D::SkeletonDesc AssetLoader<Skeletal2D::SkeletonDesc>::operator()(Asset
 	auto json = ReadBinaryFile(filename);
 	
 	rapidjson::Document doc;
-	doc.Parse(json.data());
-	
+	doc.Parse(json.data(), json.size());
+
 	if (doc.HasParseError())
 	{
 		///@todo Not implemented
