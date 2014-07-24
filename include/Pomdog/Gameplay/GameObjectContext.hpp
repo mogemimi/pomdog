@@ -78,13 +78,9 @@ public:
 		return {desc.IncremantalCounter, index};
 	}
 	
-	void Destroy(GameObjectID const& id)
+private:
+	void DestroyComponents(std::uint32_t index)
 	{
-		POMDOG_ASSERT(Valid(id));
-
-		auto const index = id.Index();
-
-		///@todo remove components
 		for (auto & entities: components)
 		{
 			if (index < entities.size())
@@ -92,6 +88,26 @@ public:
 				entities[index].reset();
 			}
 		}
+		deletedIndices.push_back(index);
+	}
+public:
+	
+	void Refresh()
+	{
+		for (auto & id: destroyedObjects)
+		{
+			POMDOG_ASSERT(!Valid(id));
+			DestroyComponents(id.Index());
+		}
+		
+		destroyedObjects.clear();
+	}
+	
+	void Destroy(GameObjectID const& id)
+	{
+		POMDOG_ASSERT(Valid(id));
+		
+		auto const index = id.Index();
 		
 		POMDOG_ASSERT(index < descriptions.size());
 		POMDOG_ASSERT(descriptions[index].IncremantalCounter == id.SequenceNumber());
@@ -100,7 +116,23 @@ public:
 		desc.ComponentBitMask.reset();
 		++desc.IncremantalCounter;
 		
-		deletedIndices.push_back(index);
+		destroyedObjects.push_back(id);
+	}
+	
+	void DestroyImmediate(GameObjectID const& id)
+	{
+		POMDOG_ASSERT(Valid(id));
+
+		auto const index = id.Index();
+
+		POMDOG_ASSERT(index < descriptions.size());
+		POMDOG_ASSERT(descriptions[index].IncremantalCounter == id.SequenceNumber());
+		
+		auto & desc = descriptions[index];
+		desc.ComponentBitMask.reset();
+		++desc.IncremantalCounter;
+		
+		DestroyComponents(index);
 	}
 	
 	bool Valid(GameObjectID const& id) const
@@ -266,6 +298,7 @@ private:
 	std::vector<std::vector<std::unique_ptr<GameComponent>>> components;
 	std::vector<EntityDescription<MaxComponentCapacity>> descriptions;
 	std::list<std::uint32_t> deletedIndices;
+	std::list<GameObjectID> destroyedObjects;
 };
 
 }// namespace Gameplay

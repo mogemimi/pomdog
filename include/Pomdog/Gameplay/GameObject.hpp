@@ -81,6 +81,10 @@ public:
 	/// @brief オブジェクトのコンポーネントをすべて削除し、オブジェクトをゲームワールドから取り除きます。
 	void Destroy();
 	
+	///@~Japanese
+	/// @brief 即座にオブジェクトのコンポーネントをすべて削除し、オブジェクトをゲームワールドから取り除きます。
+	void DestroyImmediate();
+	
 private:
 	std::shared_ptr<GameObjectContext> context;
 	GameObjectID id;

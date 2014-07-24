@@ -95,7 +95,7 @@ TEST(GameWorld, CreateObject)
 		EXPECT_EQ(2, gameObjects.size());
 		
 		for (auto & objects: gameObjects) {
-			objects.Destroy();
+			objects.DestroyImmediate();
 		}
 		
 		gameObjects = world.QueryComponents<TransformComponent>();

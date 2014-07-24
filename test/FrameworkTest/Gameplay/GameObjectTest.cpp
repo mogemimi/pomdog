@@ -206,6 +206,163 @@ TEST(GameObject, Component_Const)
 	}
 }
 
+TEST(GameObject, DestroyImmediate)
+{
+	{
+		auto objectContext = std::make_shared<GameObjectContext>();
+		GameObject gameObject {objectContext};
+		
+		EXPECT_TRUE(gameObject);
+		gameObject.DestroyImmediate();
+		EXPECT_FALSE(gameObject);
+	}
+	{
+		auto objectContext = std::make_shared<GameObjectContext>();
+		GameObject gameObject {objectContext};
+		
+		EXPECT_TRUE(gameObject);
+		objectContext->DestroyImmediate(gameObject.ID());
+		EXPECT_FALSE(gameObject);
+	}
+	{
+		auto objectContext = std::make_shared<GameObjectContext>();
+		GameObject gameObject1 {objectContext};
+		GameObject gameObject2 {objectContext};
+		GameObject gameObject3 {objectContext};
+			
+		EXPECT_TRUE(gameObject1);
+		EXPECT_TRUE(gameObject2);
+		EXPECT_TRUE(gameObject3);
+		gameObject1.DestroyImmediate();
+		EXPECT_FALSE(gameObject1);
+		EXPECT_TRUE(gameObject2);
+		EXPECT_TRUE(gameObject3);
+		gameObject3.DestroyImmediate();
+		EXPECT_FALSE(gameObject1);
+		EXPECT_TRUE(gameObject2);
+		EXPECT_FALSE(gameObject3);
+		gameObject2.DestroyImmediate();
+		EXPECT_FALSE(gameObject1);
+		EXPECT_FALSE(gameObject2);
+		EXPECT_FALSE(gameObject3);
+	}
+	
+	struct Behavior: public Pomdog::Component<Behavior> {
+		void Do(Pomdog::GameObject & self)
+		{
+			EXPECT_TRUE(self);
+			EXPECT_TRUE(self.HasComponent<Behavior>());
+			self.DestroyImmediate();
+			EXPECT_FALSE(self);
+			EXPECT_FALSE(self.HasComponent<Behavior>());
+		}
+		
+		std::shared_ptr<int> ptr = std::make_shared<int>(42);
+	};
+	
+	{
+		auto objectContext = std::make_shared<GameObjectContext>();
+		GameObject gameObject {objectContext};
+		auto & behavior = gameObject.AddComponent<Behavior>();
+		std::weak_ptr<int> weak = behavior.ptr;
+		
+		EXPECT_TRUE(gameObject);
+		EXPECT_TRUE(gameObject.HasComponent<Behavior>());
+		EXPECT_EQ(&behavior, gameObject.Component<Behavior>());
+		EXPECT_FALSE(weak.expired());
+		behavior.Do(gameObject);
+		EXPECT_FALSE(gameObject);
+		//EXPECT_FALSE(gameObject.HasComponent<Behavior>());
+		//EXPECT_EQ(nullptr, gameObject.Component<Behavior>());
+		EXPECT_TRUE(weak.expired());
+	}
+}
+
+TEST(GameObject, Destroy)
+{
+	{
+		auto objectContext = std::make_shared<GameObjectContext>();
+		GameObject gameObject {objectContext};
+		
+		EXPECT_TRUE(gameObject);
+		gameObject.Destroy();
+		EXPECT_FALSE(gameObject);
+		objectContext->Refresh();
+		EXPECT_FALSE(gameObject);
+	}
+	{
+		auto objectContext = std::make_shared<GameObjectContext>();
+		GameObject gameObject {objectContext};
+		
+		EXPECT_TRUE(gameObject);
+		objectContext->Destroy(gameObject.ID());
+		EXPECT_FALSE(gameObject);
+		objectContext->Refresh();
+		EXPECT_FALSE(gameObject);
+	}
+	{
+		auto objectContext = std::make_shared<GameObjectContext>();
+		GameObject gameObject1 {objectContext};
+		GameObject gameObject2 {objectContext};
+		GameObject gameObject3 {objectContext};
+			
+		EXPECT_TRUE(gameObject1);
+		EXPECT_TRUE(gameObject2);
+		EXPECT_TRUE(gameObject3);
+		gameObject1.Destroy();
+		EXPECT_FALSE(gameObject1);
+		EXPECT_TRUE(gameObject2);
+		EXPECT_TRUE(gameObject3);
+		gameObject3.Destroy();
+		EXPECT_FALSE(gameObject1);
+		EXPECT_TRUE(gameObject2);
+		EXPECT_FALSE(gameObject3);
+		gameObject2.Destroy();
+		EXPECT_FALSE(gameObject1);
+		EXPECT_FALSE(gameObject2);
+		EXPECT_FALSE(gameObject3);
+		objectContext->Refresh();
+		EXPECT_FALSE(gameObject1);
+		EXPECT_FALSE(gameObject2);
+		EXPECT_FALSE(gameObject3);
+	}
+	
+	struct Behavior: public Pomdog::Component<Behavior> {
+		void Do(Pomdog::GameObject & self)
+		{
+			EXPECT_TRUE(self);
+			EXPECT_TRUE(self.HasComponent<Behavior>());
+			self.Destroy();
+			EXPECT_FALSE(self);
+			EXPECT_FALSE(self.HasComponent<Behavior>());
+		}
+		
+		std::shared_ptr<int> ptr = std::make_shared<int>(42);
+	};
+	
+	{
+		auto objectContext = std::make_shared<GameObjectContext>();
+		GameObject gameObject {objectContext};
+		auto & behavior = gameObject.AddComponent<Behavior>();
+		std::weak_ptr<int> weak = behavior.ptr;
+		
+		EXPECT_TRUE(gameObject);
+		EXPECT_TRUE(gameObject.HasComponent<Behavior>());
+		EXPECT_EQ(&behavior, gameObject.Component<Behavior>());
+		EXPECT_FALSE(weak.expired());
+		behavior.Do(gameObject);
+		EXPECT_FALSE(gameObject);
+		//EXPECT_FALSE(gameObject.HasComponent<Behavior>());
+		//EXPECT_EQ(nullptr, gameObject.Component<Behavior>());
+		EXPECT_FALSE(weak.expired());
+		objectContext->Refresh();
+		EXPECT_FALSE(gameObject);
+		//EXPECT_FALSE(gameObject.HasComponent<Behavior>());
+		//EXPECT_EQ(nullptr, gameObject.Component<Behavior>());
+		EXPECT_TRUE(weak.expired());
+	}
+}
+
 TEST(GameObject, GameObjectID)
 {
 	auto objectContext = std::make_shared<GameObjectContext>();
@@ -237,21 +394,21 @@ TEST(GameObject, GameObjectID_Sequence)
 		EXPECT_EQ(1, gameObject.ID().Index());
 		EXPECT_NE(0, gameObject.ID().SequenceNumber());
 		EXPECT_EQ(1, gameObject.ID().SequenceNumber());
-		gameObject.Destroy();
+		gameObject.DestroyImmediate();
 	}
 	{
 		GameObject gameObject {objectContext};
 		EXPECT_EQ(1, gameObject.ID().Index());
 		EXPECT_NE(0, gameObject.ID().SequenceNumber());
 		EXPECT_EQ(2, gameObject.ID().SequenceNumber());
-		gameObject.Destroy();
+		gameObject.DestroyImmediate();
 	}
 	{
 		GameObject gameObject {objectContext};
 		EXPECT_EQ(1, gameObject.ID().Index());
 		EXPECT_NE(0, gameObject.ID().SequenceNumber());
 		EXPECT_EQ(3, gameObject.ID().SequenceNumber());
-		gameObject.Destroy();
+		gameObject.DestroyImmediate();
 	}
 	{
 		GameObject gameObject1 {objectContext};
@@ -269,9 +426,9 @@ TEST(GameObject, GameObjectID_Sequence)
 		EXPECT_NE(0, gameObject3.ID().SequenceNumber());
 		EXPECT_EQ(1, gameObject3.ID().SequenceNumber());
 		
-		gameObject1.Destroy();
-		gameObject2.Destroy();
-		gameObject3.Destroy();
+		gameObject1.DestroyImmediate();
+		gameObject2.DestroyImmediate();
+		gameObject3.DestroyImmediate();
 	}
 }
 
@@ -281,7 +438,7 @@ TEST(GameObject, Cast_Bool)
 	{
 		GameObject gameObject {objectContext};
 		EXPECT_TRUE(gameObject);
-		gameObject.Destroy();
+		gameObject.DestroyImmediate();
 		EXPECT_FALSE(gameObject);
 	}
 	{
@@ -289,10 +446,10 @@ TEST(GameObject, Cast_Bool)
 		GameObject gameObject2 {objectContext};
 		EXPECT_TRUE(gameObject1);
 		EXPECT_TRUE(gameObject2);
-		gameObject1.Destroy();
+		gameObject1.DestroyImmediate();
 		EXPECT_FALSE(gameObject1);
 		EXPECT_TRUE(gameObject2);
-		gameObject2.Destroy();
+		gameObject2.DestroyImmediate();
 		EXPECT_FALSE(gameObject1);
 		EXPECT_FALSE(gameObject2);
 	}
@@ -301,7 +458,7 @@ TEST(GameObject, Cast_Bool)
 		auto copiedObject = gameObject;
 		EXPECT_TRUE(gameObject);
 		EXPECT_TRUE(copiedObject);
-		gameObject.Destroy();
+		gameObject.DestroyImmediate();
 		EXPECT_FALSE(gameObject);
 		EXPECT_FALSE(copiedObject);
 	}
@@ -310,7 +467,7 @@ TEST(GameObject, Cast_Bool)
 		auto copiedObject = gameObject;
 		EXPECT_TRUE(gameObject);
 		EXPECT_TRUE(copiedObject);
-		copiedObject.Destroy();
+		copiedObject.DestroyImmediate();
 		EXPECT_FALSE(gameObject);
 		EXPECT_FALSE(copiedObject);
 	}
@@ -349,7 +506,7 @@ TEST(GameObject, GameObjectID_Unique)
 			if (!objects.empty())
 			{
 				ASSERT_TRUE(objects.front());
-				objects.front().Destroy();
+				objects.front().DestroyImmediate();
 				objects.erase(objects.begin());
 				//printf("### Remove Object \n");
 			}
@@ -365,7 +522,7 @@ TEST(GameObject, GameObjectID_Unique)
 				{
 					ASSERT_TRUE(object);
 					if (object.ID().Value() % randomNumber == 0) {
-						object.Destroy();
+						object.DestroyImmediate();
 					}
 				}
 				objects.erase(std::remove_if(std::begin(objects), std::end(objects),

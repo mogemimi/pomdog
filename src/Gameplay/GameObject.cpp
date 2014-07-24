@@ -61,6 +61,17 @@ void GameObject::Destroy()
 	}
 }
 //-----------------------------------------------------------------------
+void GameObject::DestroyImmediate()
+{
+	POMDOG_ASSERT(context);
+	POMDOG_ASSERT(context->Valid(id));
+	
+	if (context->Valid(id))
+	{
+		context->DestroyImmediate(id);
+	}
+}
+//-----------------------------------------------------------------------
 GameObjectID GameObject::ID() const
 {
 	POMDOG_ASSERT(context && context->Valid(id));
