@@ -42,50 +42,29 @@ public:
 	std::vector<GameObject> QueryComponents();
 	
 	template <typename T>
-	T const* Component(GameObjectID const& objectID) const;
+	T const* Component(GameObjectID const& id) const;
 	
 	template <typename T>
-	T* Component(GameObjectID const& objectID);
+	T* Component(GameObjectID const& id);
 	
 	template <typename T>
-	bool HasComponent(GameObjectID const& objectID) const;
+	bool HasComponent(GameObjectID const& id) const;
 	
-	bool Valid(GameObjectID const& objectID) const;
+	bool Valid(GameObjectID const& id) const;
 	
-	void RemoveUnusedObjects();
+	void Refresh();
 	
+	void Clear();
+	
+	std::size_t Count() const;
+	
+	std::size_t Capacity() const;
+
 private:
 	std::shared_ptr<GameObjectContext> context;
 	std::vector<GameObjectID> objects;
 };
 
-
-namespace Details {
-namespace Gameplay {
-
-template <typename...T>
-struct HasComponents;
-
-template <typename T>
-struct HasComponents<T>
-{
-	bool operator()(GameObjectContext const& context, GameObjectID const& id)
-	{
-		return context.HasComponent<T>(id);
-	}
-};
-
-template <typename T, typename...Arguments>
-struct HasComponents<T, Arguments...>
-{
-	bool operator()(GameObjectContext const& context, GameObjectID const& id)
-	{
-		return context.HasComponent<T>(id) && HasComponents<Arguments...>()(context, id);
-	}
-};
-
-}// namespace Gameplay
-}// namespace Details
 
 template <typename T, typename...Components>
 std::vector<GameObject> GameWorld::QueryComponents()
@@ -97,7 +76,7 @@ std::vector<GameObject> GameWorld::QueryComponents()
 	for (auto & id: objects)
 	{
 		if (context->Valid(id)) {
-			if (Details::Gameplay::HasComponents<T, Components...>()(*context, id)) {
+			if (context->HasComponents<T, Components...>(id)) {
 				result.emplace_back(context, id);
 			}
 		}

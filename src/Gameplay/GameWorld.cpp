@@ -25,13 +25,35 @@ GameObject GameWorld::CreateObject()
 //-----------------------------------------------------------------------
 bool GameWorld::Valid(GameObjectID const& objectID) const
 {
+	POMDOG_ASSERT(context);
 	return context->Valid(objectID);
 }
 //-----------------------------------------------------------------------
-void GameWorld::RemoveUnusedObjects()
+void GameWorld::Refresh()
 {
+	POMDOG_ASSERT(context);
+	context->Refresh();
+
 	objects.erase(std::remove_if(std::begin(objects), std::end(objects),
 		[this](GameObjectID const& id){ return !context->Valid(id); }), std::end(objects));
+}
+//-----------------------------------------------------------------------
+std::size_t GameWorld::Count() const
+{
+	POMDOG_ASSERT(context);
+	return context->Count();
+}
+//-----------------------------------------------------------------------
+std::size_t GameWorld::Capacity() const
+{
+	POMDOG_ASSERT(context);
+	return context->Capacity();
+}
+//-----------------------------------------------------------------------
+void GameWorld::Clear()
+{
+	POMDOG_ASSERT(context);
+	context->Clear();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog
