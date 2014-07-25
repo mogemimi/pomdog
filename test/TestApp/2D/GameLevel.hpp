@@ -21,7 +21,7 @@ class GameLevel {
 public:
 	virtual ~GameLevel() = default;
 	
-	virtual void Update(GameHost & gameHost) = 0;
+	virtual void Update(GameHost & gameHost, GameWorld & world) = 0;
 };
 
 }// namespace Pomdog

@@ -28,7 +28,6 @@ static Matrix4x4 CreateTransformMatrix4x4(Transform2D const& transform)
 		* Matrix4x4::CreateTranslation({transform.Position.X, transform.Position.Y, 1.0f});
 }
 
-
 }// unnamed namespace
 //-----------------------------------------------------------------------
 SkinnedMeshRenderable::SkinnedMeshRenderable(std::shared_ptr<GraphicsDevice> const& graphicsDevice,

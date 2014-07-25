@@ -46,9 +46,9 @@ public:
 
 namespace Pomdog {
 
-class MaidAnimator: public Animator {
+class SkeletonAnimator: public Animator {
 public:
-	MaidAnimator(std::shared_ptr<Skeleton> const& skeleton,
+	SkeletonAnimator(std::shared_ptr<Skeleton> const& skeleton,
 		std::shared_ptr<SkeletonTransform> const& skeletonTransform,
 		std::shared_ptr<AnimationGraph> const& animationGraph);
 	

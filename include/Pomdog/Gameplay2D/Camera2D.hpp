@@ -16,7 +16,7 @@
 #include <cstdint>
 #include <Pomdog/Config/Export.hpp>
 #include <Pomdog/Gameplay/Component.hpp>
-//#include <Pomdog/Math/Color.hpp>
+#include <Pomdog/Math/Color.hpp>
 
 namespace Pomdog {
 

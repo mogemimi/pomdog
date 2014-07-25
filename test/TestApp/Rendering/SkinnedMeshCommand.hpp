@@ -26,16 +26,16 @@ namespace Rendering {
 
 class SkinnedMeshCommand final: public RenderCommand {
 public:
-	float DrawOrder() const override
-	{
-		return drawOrder;
-	}
-
 	void Execute(std::shared_ptr<GraphicsContext> const& graphicsContext) override;
 
 	void SetMatrixPalette(Skeleton const& skeleton, SkeletonTransform const& skeletonTransform);
 
 	RenderCommandType CommandType() const override;
+
+	float DrawOrder() const override
+	{
+		return drawOrder;
+	}
 
 public:
 	Matrix4x4 modelViewProjection;

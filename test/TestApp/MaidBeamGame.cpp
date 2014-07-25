@@ -139,7 +139,7 @@ void MaidBeamGame::Update()
 {
 	auto clock = gameHost->Clock();
 
-	level->Update(*gameHost);
+	level->Update(*gameHost, gameWorld);
 
 	for (auto & gameObject: gameWorld.QueryComponents<Animator>())
 	{
@@ -157,7 +157,7 @@ void MaidBeamGame::Update()
 		behavior->Update(gameObject, clock->FrameDuration());
 	}
 
-	gameWorld.RemoveUnusedObjects();
+	gameWorld.Refresh();
 	
 	{
 		gameEditor->Update();

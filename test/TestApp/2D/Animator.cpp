@@ -16,7 +16,7 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-MaidAnimator::MaidAnimator(std::shared_ptr<Skeleton> const& skeletonIn,
+SkeletonAnimator::SkeletonAnimator(std::shared_ptr<Skeleton> const& skeletonIn,
 	std::shared_ptr<SkeletonTransform> const& skeletonTransformIn,
 	std::shared_ptr<AnimationGraph> const& animationGraphIn)
 	: skeleton(skeletonIn)
@@ -50,7 +50,7 @@ MaidAnimator::MaidAnimator(std::shared_ptr<Skeleton> const& skeletonIn,
 		animationGraph->States.front().Tree.get());
 }
 //-----------------------------------------------------------------------
-void MaidAnimator::Update(GameClock const& clock)
+void SkeletonAnimator::Update(GameClock const& clock)
 {
 	// (1) Update time:
 	{
@@ -75,7 +75,7 @@ void MaidAnimator::Update(GameClock const& clock)
 	SkeletonHelper::ToGlobalPose(*skeleton, skeletonTransform->Pose, skeletonTransform->GlobalPose);
 }
 //-----------------------------------------------------------------------
-void MaidAnimator::Play(std::string const& stateName)
+void SkeletonAnimator::Play(std::string const& stateName)
 {
 	POMDOG_ASSERT(animationGraph);
 	POMDOG_ASSERT(!animationGraph->States.empty());
@@ -93,17 +93,17 @@ void MaidAnimator::Play(std::string const& stateName)
 	time = AnimationTimeInterval::zero();
 }
 //-----------------------------------------------------------------------
-float MaidAnimator::PlaybackRate() const
+float SkeletonAnimator::PlaybackRate() const
 {
 	return playbackRate;
 }
 //-----------------------------------------------------------------------
-void MaidAnimator::PlaybackRate(float playbackRateIn)
+void SkeletonAnimator::PlaybackRate(float playbackRateIn)
 {
 	this->playbackRate = playbackRateIn;
 }
 //-----------------------------------------------------------------------
-void MaidAnimator::SetFloat(std::string const& name, float value)
+void SkeletonAnimator::SetFloat(std::string const& name, float value)
 {
 	POMDOG_ASSERT(animationGraph);
 	if (auto index = animationGraph->FindParameter(name)) {
@@ -111,7 +111,7 @@ void MaidAnimator::SetFloat(std::string const& name, float value)
 	}
 }
 //-----------------------------------------------------------------------
-void MaidAnimator::SetBool(std::string const& name, bool value)
+void SkeletonAnimator::SetBool(std::string const& name, bool value)
 {
 	POMDOG_ASSERT(animationGraph);
 	if (auto index = animationGraph->FindParameter(name)) {
