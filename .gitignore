@@ -20,6 +20,7 @@
 /build.xcodefiles
 /build.msvs
 /third_party/libpng/build
+/third_party/lua/build
 /third_party/zlib/build
 /tools/gyp
 /tools/python
