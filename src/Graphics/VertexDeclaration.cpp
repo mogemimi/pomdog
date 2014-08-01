@@ -7,9 +7,9 @@
 //
 
 #include <Pomdog/Graphics/VertexDeclaration.hpp>
-#include <algorithm>
-#include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Graphics/detail/VertexElementHelper.hpp>
+#include <Pomdog/Utility/Assert.hpp>
+#include <algorithm>
 
 namespace Pomdog {
 namespace {

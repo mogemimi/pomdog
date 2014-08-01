@@ -7,17 +7,15 @@
 //
 
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
-#include <utility>
-#include <Pomdog/Utility/Assert.hpp>
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
+#include <Pomdog/Utility/Assert.hpp>
+#include <utility>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-GraphicsDevice::GraphicsDevice(std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> device)
+GraphicsDevice::GraphicsDevice(std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> && device)
 	: nativeGraphicsDevice(std::move(device))
-{
-	POMDOG_ASSERT(nativeGraphicsDevice);
-}
+{}
 //-----------------------------------------------------------------------
 GraphicsDevice::~GraphicsDevice() = default;
 //-----------------------------------------------------------------------

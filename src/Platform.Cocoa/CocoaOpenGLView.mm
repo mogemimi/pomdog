@@ -8,9 +8,8 @@
 
 #import "CocoaOpenGLView.hpp"
 #import "CocoaGameViewDelegate.hpp"
-
-#include <Pomdog/Utility/Assert.hpp>
 #include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
+#include <Pomdog/Utility/Assert.hpp>
 
 @implementation CocoaOpenGLView
 {

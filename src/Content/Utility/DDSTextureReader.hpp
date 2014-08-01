@@ -13,10 +13,10 @@
 #	pragma once
 #endif
 
+#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 #include <cstdint>
 #include <cstddef>
 #include <memory>
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 
 namespace Pomdog {
 namespace Details {

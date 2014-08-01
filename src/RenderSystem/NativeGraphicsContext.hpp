@@ -13,10 +13,10 @@
 #	pragma once
 #endif
 
-#include <vector>
-#include <Pomdog/Utility/Noncopyable.hpp>
-#include <Pomdog/Math/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include <Pomdog/Math/detail/ForwardDeclarations.hpp>
+#include <Pomdog/Utility/Noncopyable.hpp>
+#include <vector>
 
 namespace Pomdog {
 namespace Details {

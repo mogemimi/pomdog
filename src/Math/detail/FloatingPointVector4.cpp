@@ -7,11 +7,11 @@
 //
 
 #include <Pomdog/Math/detail/FloatingPointVector4.hpp>
+#include <Pomdog/Math/detail/FloatingPointVector3.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 #include <cmath>
 #include <limits>
 #include <utility>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Math/detail/FloatingPointVector3.hpp>
 
 namespace Pomdog {
 namespace Details {

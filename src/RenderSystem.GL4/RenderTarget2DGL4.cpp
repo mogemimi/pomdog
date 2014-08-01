@@ -7,8 +7,8 @@
 //
 
 #include "RenderTarget2DGL4.hpp"
-#include <Pomdog/Graphics/DepthFormat.hpp>
 #include "ErrorChecker.hpp"
+#include <Pomdog/Graphics/DepthFormat.hpp>
 
 namespace Pomdog {
 namespace Details {

@@ -20,8 +20,8 @@
 #elif defined(POMDOG_PLATFORM_WIN32)
 #	include "../Platform.Win32/TimeSourceWin32.hpp"
 #else
-#	include <chrono>
 #	include <Pomdog/Application/DurationSeconds.hpp>
+#	include <chrono>
 #	error "Platform undefined or not supported."
 #endif
 

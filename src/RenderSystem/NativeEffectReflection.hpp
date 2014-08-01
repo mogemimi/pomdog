@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include <vector>
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include <vector>
 
 namespace Pomdog {
 namespace Details {

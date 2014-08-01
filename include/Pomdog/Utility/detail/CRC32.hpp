@@ -9,9 +9,9 @@
 #ifndef POMDOG_UTILITY_CRC32_7EBEE5EE_0A7A_4875_BBF4_48CAF21443FF_HPP
 #define POMDOG_UTILITY_CRC32_7EBEE5EE_0A7A_4875_BBF4_48CAF21443FF_HPP
 
+#include "Pomdog/Config/Export.hpp"
 #include <cstdint>
 #include <cstddef>
-#include "../../Config/Export.hpp"
 
 namespace Pomdog {
 namespace Hashing {

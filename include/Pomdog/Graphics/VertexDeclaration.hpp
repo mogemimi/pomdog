@@ -13,10 +13,10 @@
 #	pragma once
 #endif
 
+#include "VertexElement.hpp"
+#include "Pomdog/Config/Export.hpp"
 #include <cstdint>
 #include <vector>
-#include "../Config/Export.hpp"
-#include "VertexElement.hpp"
 
 namespace Pomdog {
 

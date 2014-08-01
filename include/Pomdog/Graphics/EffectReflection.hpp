@@ -13,11 +13,11 @@
 #	pragma once
 #endif
 
-#include <memory>
-#include <vector>
-#include "../Config/Export.hpp"
 #include "detail/ForwardDeclarations.hpp"
 #include "EffectConstantDescription.hpp"
+#include "Pomdog/Config/Export.hpp"
+#include <memory>
+#include <vector>
 
 namespace Pomdog {
 namespace Details {

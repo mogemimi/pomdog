@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Config/Export.hpp"
 #include <cstdint>
-#include "../Config/Export.hpp"
-#include "../Math/Rectangle.hpp"
 
 namespace Pomdog {
 

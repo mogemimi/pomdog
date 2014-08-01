@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include "../Math/Vector2.hpp"
+#include "Pomdog/Math/Vector2.hpp"
 
 namespace Pomdog {
 

@@ -7,14 +7,14 @@
 //
 
 #include "EffectReflectionGL4.hpp"
-#include <utility>
-#include <algorithm>
-#include <Pomdog/Utility/Assert.hpp>
+#include "ErrorChecker.hpp"
+#include <Pomdog/Graphics/EffectConstantDescription.hpp>
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LogLevel.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
-#include <Pomdog/Graphics/EffectConstantDescription.hpp>
-#include "ErrorChecker.hpp"
+#include <Pomdog/Utility/Assert.hpp>
+#include <utility>
+#include <algorithm>
 
 namespace Pomdog {
 namespace Details {

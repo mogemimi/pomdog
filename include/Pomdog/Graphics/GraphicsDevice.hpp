@@ -13,10 +13,10 @@
 #	pragma once
 #endif
 
-#include <memory>
-#include "../Config/Export.hpp"
-#include "../Utility/Noncopyable.hpp"
 #include "detail/ForwardDeclarations.hpp"
+#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Utility/Noncopyable.hpp"
+#include <memory>
 
 namespace Pomdog {
 namespace Details {
@@ -31,7 +31,7 @@ class POMDOG_EXPORT GraphicsDevice: Noncopyable {
 public:
 	GraphicsDevice() = delete;
 	
-	explicit GraphicsDevice(std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> nativeDevice);
+	explicit GraphicsDevice(std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> && nativeDevice);
 	
 	~GraphicsDevice();
 	

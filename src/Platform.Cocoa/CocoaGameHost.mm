@@ -7,30 +7,28 @@
 //
 
 #include "CocoaGameHost.hpp"
-#include <utility>
-#include <vector>
-#include <OpenGL/OpenGL.h>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Event/Event.hpp>
-#include <Pomdog/Event/ScopedConnection.hpp>
-#include <Pomdog/Logging/Log.hpp>
-#include <Pomdog/Graphics/GraphicsContext.hpp>
-#include <Pomdog/Graphics/GraphicsDevice.hpp>
-#include <Pomdog/Application/Game.hpp>
-#include <Pomdog/Application/GameClock.hpp>
-#include <Pomdog/Content/AssetManager.hpp>
-#include <Pomdog/Graphics/Viewport.hpp>
-
 #include "CocoaGameWindow.hpp"
 #include "CocoaOpenGLContext.hpp"
+#include "KeyboardCocoa.hpp"
+#include "MouseCocoa.hpp"
 #include "../RenderSystem/PresentationParameters.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
-
+#include <Pomdog/Application/Game.hpp>
+#include <Pomdog/Application/GameClock.hpp>
+#include <Pomdog/Content/AssetManager.hpp>
+#include <Pomdog/Event/Event.hpp>
+#include <Pomdog/Event/ScopedConnection.hpp>
+#include <Pomdog/Graphics/GraphicsContext.hpp>
+#include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include <Pomdog/Graphics/Viewport.hpp>
 #include <Pomdog/Input/KeyState.hpp>
-#include "KeyboardCocoa.hpp"
-#include "MouseCocoa.hpp"
-#include "StringFormat.hpp"
+#include <Pomdog/Logging/Log.hpp>
+#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Utility/StringFormat.hpp>
+#include <OpenGL/OpenGL.h>
+#include <utility>
+#include <vector>
 
 namespace Pomdog {
 namespace Details {

@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 #include <memory>
 #include <string>
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 
 namespace Pomdog {
 namespace Details {

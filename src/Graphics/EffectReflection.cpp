@@ -7,11 +7,11 @@
 //
 
 #include <Pomdog/Graphics/EffectReflection.hpp>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Graphics/GraphicsDevice.hpp>
-#include <Pomdog/Graphics/EffectPass.hpp>
 #include "../RenderSystem/NativeEffectReflection.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
+#include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include <Pomdog/Graphics/EffectPass.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

@@ -7,11 +7,11 @@
 //
 
 #include <Pomdog/Graphics/Texture2D.hpp>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/Exception.hpp>
-#include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeTexture2D.hpp"
+#include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Utility/Exception.hpp>
 
 namespace Pomdog {
 namespace {

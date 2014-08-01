@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include "../Config/Export.hpp"
-#include "../Utility/Noncopyable.hpp"
+#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Utility/Noncopyable.hpp"
 
 namespace Pomdog {
 

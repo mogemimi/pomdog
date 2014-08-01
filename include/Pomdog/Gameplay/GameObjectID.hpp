@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include "Pomdog/Config/Export.hpp"
 #include <cstdint>
 #include <functional>
-#include "../Config/Export.hpp"
 
 namespace Pomdog {
 

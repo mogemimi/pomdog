@@ -13,11 +13,11 @@
 #	pragma once
 #endif
 
-#include <memory>
 #include "OpenGLPrerequisites.hpp"
+#include "../RenderSystem/NativeGraphicsContext.hpp"
 #include <Pomdog/Utility/detail/Tagged.hpp>
 #include <Pomdog/Utility/Optional.hpp>
-#include "../RenderSystem/NativeGraphicsContext.hpp"
+#include <memory>
 
 namespace Pomdog {
 

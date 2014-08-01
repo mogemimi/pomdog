@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include <utility>
 #include "detail/AssetLoader.hpp"
+#include <utility>
 
 namespace Pomdog {
 

@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
+#include "Pomdog/Config/Export.hpp"
 #include <string>
-#include "../Config/Export.hpp"
 
 namespace Pomdog {
 

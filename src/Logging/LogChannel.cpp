@@ -7,10 +7,10 @@
 //
 
 #include <Pomdog/Logging/LogChannel.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Logging/LogEntry.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/EventConnection.hpp>
-#include <Pomdog/Logging/LogEntry.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

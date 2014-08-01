@@ -13,10 +13,10 @@
 #	pragma once
 #endif
 
+#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Gameplay/Component.hpp"
+#include "Pomdog/Math/Color.hpp"
 #include <cstdint>
-#include <Pomdog/Config/Export.hpp>
-#include <Pomdog/Gameplay/Component.hpp>
-#include <Pomdog/Math/Color.hpp>
 
 namespace Pomdog {
 

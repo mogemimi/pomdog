@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include <cstdint>
 #include "detail/Coordinate3D.hpp"
+#include <cstdint>
 
 namespace Pomdog {
 

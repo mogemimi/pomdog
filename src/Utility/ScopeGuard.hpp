@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include <Pomdog/Utility/Assert.hpp>
 #include <functional>
 #include <utility>
-#include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
 namespace Details {

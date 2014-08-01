@@ -7,8 +7,8 @@
 //
 
 #include <Pomdog/Utility/StringFormat.hpp>
-#include <cstdarg>
 #include <Pomdog/Utility/Assert.hpp>
+#include <cstdarg>
 
 namespace Pomdog {
 namespace {

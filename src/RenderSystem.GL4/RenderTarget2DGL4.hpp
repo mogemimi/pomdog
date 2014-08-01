@@ -14,11 +14,11 @@
 #endif
 
 #include "OpenGLPrerequisites.hpp"
+#include "Texture2DGL4.hpp"
+#include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>
 #include <Pomdog/Utility/Optional.hpp>
-#include "../RenderSystem/NativeRenderTarget2D.hpp"
-#include "Texture2DGL4.hpp"
 
 namespace Pomdog {
 namespace Details {

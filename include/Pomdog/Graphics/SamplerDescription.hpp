@@ -13,11 +13,11 @@
 #	pragma once
 #endif
 
-#include <cstdint>
-#include <limits>
-#include "../Config/Export.hpp"
 #include "TextureAddressMode.hpp"
 #include "TextureFilter.hpp"
+#include "Pomdog/Config/Export.hpp"
+#include <cstdint>
+#include <limits>
 
 namespace Pomdog {
 

@@ -7,10 +7,10 @@
 //
 
 #include <Pomdog/Input/KeyboardState.hpp>
-#include <type_traits>
-#include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Input/Keys.hpp>
 #include <Pomdog/Input/KeyState.hpp>
+#include <Pomdog/Utility/Assert.hpp>
+#include <type_traits>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

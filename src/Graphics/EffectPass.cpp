@@ -7,14 +7,14 @@
 //
 
 #include <Pomdog/Graphics/EffectPass.hpp>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Graphics/EffectParameter.hpp>
-#include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include "../RenderSystem/NativeConstantBuffer.hpp"
 #include "../RenderSystem/NativeEffectPass.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeEffectReflection.hpp"
-#include "EffectConstantDescription.hpp"
+#include <Pomdog/Graphics/EffectConstantDescription.hpp>
+#include <Pomdog/Graphics/EffectParameter.hpp>
+#include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

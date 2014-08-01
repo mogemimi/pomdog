@@ -13,11 +13,11 @@
 #	pragma once
 #endif
 
+#include "Degree.hpp"
+#include "Radian.hpp"
 #include <cstdint>
 #include <cfloat>
 #include <type_traits>
-#include "Degree.hpp"
-#include "Radian.hpp"
 
 namespace Pomdog {
 

@@ -14,10 +14,10 @@
 #endif
 
 #include "OpenGLPrerequisites.hpp"
+#include "../RenderSystem/NativeTexture2D.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>
 #include <Pomdog/Utility/Optional.hpp>
-#include "../RenderSystem/NativeTexture2D.hpp"
 
 namespace Pomdog {
 namespace Details {

@@ -7,8 +7,8 @@
 //
 
 #include <Pomdog/Math/Rectangle.hpp>
-#include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Math/ContainmentType.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
 

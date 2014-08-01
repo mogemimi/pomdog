@@ -13,10 +13,10 @@
 #	pragma once
 #endif
 
-#include <cstdint>
-#include "../Config/Export.hpp"
-#include "../Math/Point2D.hpp"
 #include "TouchLocationState.hpp"
+#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Math/Point2D.hpp"
+#include <cstdint>
 
 namespace Pomdog {
 

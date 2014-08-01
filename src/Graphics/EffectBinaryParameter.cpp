@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -7,8 +7,7 @@
 //
 
 #include <Pomdog/Graphics/detail/EffectBinaryParameter.hpp>
-#include <cfloat>
-#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Graphics/EffectParameter.hpp>
 #include <Pomdog/Math/Vector2.hpp>
 #include <Pomdog/Math/Vector3.hpp>
 #include <Pomdog/Math/Vector4.hpp>
@@ -17,7 +16,8 @@
 #include <Pomdog/Math/Matrix4x4.hpp>
 #include <Pomdog/Math/Quaternion.hpp>
 #include <Pomdog/Math/Color.hpp>
-#include <Pomdog/Graphics/EffectParameter.hpp>
+#include <Pomdog/Utility/Assert.hpp>
+#include <cfloat>
 
 namespace Pomdog {
 namespace Details {

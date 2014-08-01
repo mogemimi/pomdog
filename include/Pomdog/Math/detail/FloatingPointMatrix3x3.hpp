@@ -13,13 +13,13 @@
 #	pragma once
 #endif
 
+#include "ForwardDeclarations.hpp"
+#include "Pomdog/Config/Export.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <cfloat>
 #include <type_traits>
 #include <array>
-#include "../../Config/Export.hpp"
-#include "ForwardDeclarations.hpp"
 
 namespace Pomdog {
 namespace Details {

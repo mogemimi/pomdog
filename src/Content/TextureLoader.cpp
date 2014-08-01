@@ -7,17 +7,17 @@
 //
 
 #include <Pomdog/Content/detail/TextureLoader.hpp>
+#include "Utility/MakeFourCC.hpp"
+#include "Utility/BinaryReader.hpp"
+#include "Utility/DDSTextureReader.hpp"
+#include "Utility/PNGTextureReader.hpp"
+#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Utility/Exception.hpp>
 #include <fstream>
 #include <array>
 #include <vector>
 #include <algorithm>
 #include <utility>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/Exception.hpp>
-#include "Utility/MakeFourCC.hpp"
-#include "Utility/BinaryReader.hpp"
-#include "Utility/DDSTextureReader.hpp"
-#include "Utility/PNGTextureReader.hpp"
 
 namespace Pomdog {
 namespace Details {

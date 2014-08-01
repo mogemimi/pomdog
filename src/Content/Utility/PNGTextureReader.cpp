@@ -7,15 +7,15 @@
 //
 
 #include "PNGTextureReader.hpp"
-#include <vector>
-extern "C" {
-	#include <png.h>
-}
+#include "../../Utility/ScopeGuard.hpp"
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Utility/Exception.hpp>
 #include <Pomdog/Graphics/Texture2D.hpp>
 #include <Pomdog/Graphics/SurfaceFormat.hpp>
-#include "../../Utility/ScopeGuard.hpp"
+extern "C" {
+	#include <png.h>
+}
+#include <vector>
 
 namespace Pomdog {
 namespace Details {

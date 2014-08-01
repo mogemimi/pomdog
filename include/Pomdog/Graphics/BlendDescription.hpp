@@ -13,12 +13,12 @@
 #	pragma once
 #endif
 
-#include <cstdint>
-#include <limits>
-#include "../Config/Export.hpp"
-#include "../Math/Color.hpp"
 #include "Blend.hpp"
 #include "BlendFunction.hpp"
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Config/Export.hpp"
+#include <cstdint>
+#include <limits>
 
 namespace Pomdog {
 

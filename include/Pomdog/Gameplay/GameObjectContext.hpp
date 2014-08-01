@@ -13,6 +13,10 @@
 #	pragma once
 #endif
 
+#include "Component.hpp"
+#include "GameObjectID.hpp"
+#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <cstdint>
 #include <type_traits>
 #include <memory>
@@ -20,10 +24,6 @@
 #include <vector>
 #include <bitset>
 #include <list>
-#include "../Config/Export.hpp"
-#include "../Utility/Assert.hpp"
-#include "Component.hpp"
-#include "GameObjectID.hpp"
 
 namespace Pomdog {
 namespace Details {

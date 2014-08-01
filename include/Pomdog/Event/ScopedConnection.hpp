@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
-#include "../Config/Export.hpp"
 #include "detail/ForwardDeclarations.hpp"
 #include "EventConnection.hpp"
+#include "Pomdog/Config/Export.hpp"
 
 namespace Pomdog {
 

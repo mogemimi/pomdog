@@ -12,9 +12,7 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
-KeyboardCocoa::KeyboardCocoa()
-{
-}
+KeyboardCocoa::KeyboardCocoa() = default;
 //-----------------------------------------------------------------------
 KeyboardState const& KeyboardCocoa::State() const
 {

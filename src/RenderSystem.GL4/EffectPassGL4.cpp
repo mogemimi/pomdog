@@ -7,21 +7,21 @@
 //
 
 #include "EffectPassGL4.hpp"
-#include <type_traits>
-#include <array>
-#include <string>
-#include <algorithm>
+#include "ConstantBufferGL4.hpp"
+#include "GraphicsContextGL4.hpp"
+#include "EffectReflectionGL4.hpp"
+#include "ErrorChecker.hpp"
+#include "../Utility/ScopeGuard.hpp"
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LogLevel.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
 #include <Pomdog/Utility/Exception.hpp>
 #include <Pomdog/Graphics/GraphicsContext.hpp>
 #include <Pomdog/Graphics/detail/ShaderBytecode.hpp>
-#include "../Utility/ScopeGuard.hpp"
-#include "ConstantBufferGL4.hpp"
-#include "GraphicsContextGL4.hpp"
-#include "ErrorChecker.hpp"
-#include "EffectReflectionGL4.hpp"
+#include <type_traits>
+#include <array>
+#include <string>
+#include <algorithm>
 
 namespace Pomdog {
 namespace Details {

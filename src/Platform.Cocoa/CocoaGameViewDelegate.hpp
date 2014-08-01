@@ -15,9 +15,9 @@
 
 #import <Cocoa/Cocoa.h>
 
-#include <memory>
-#include "../Application/SystemEventDispatcher.hpp"
 #include "MouseCocoa.hpp"
+#include "../Application/SystemEventDispatcher.hpp"
+#include <memory>
 
 @interface CocoaGameViewDelegate : NSResponder
 

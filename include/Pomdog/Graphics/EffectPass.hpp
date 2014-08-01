@@ -13,11 +13,11 @@
 #	pragma once
 #endif
 
-#include <memory>
+#include "detail/ForwardDeclarations.hpp"
+#include "Pomdog/Config/Export.hpp"
 #include <unordered_map>
 #include <string>
-#include "../Config/Export.hpp"
-#include "detail/ForwardDeclarations.hpp"
+#include <memory>
 
 namespace Pomdog {
 namespace Details {

@@ -13,14 +13,14 @@
 #	pragma once
 #endif
 
+#include "detail/ForwardDeclarations.hpp"
+#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/Noncopyable.hpp"
+#include "Pomdog/Config/Export.hpp"
 #include <cstdint>
 #include <cstddef>
 #include <memory>
 #include <vector>
-#include "../Config/Export.hpp"
-#include "../Utility/Noncopyable.hpp"
-#include "../Math/detail/ForwardDeclarations.hpp"
-#include "detail/ForwardDeclarations.hpp"
 
 namespace Pomdog {
 namespace Details {

@@ -7,13 +7,12 @@
 //
 
 #include "CocoaGameWindow.hpp"
-#include <utility>
-#include <Pomdog/Utility/Assert.hpp>
-
 #include "CocoaOpenGLContext.hpp"
 #include "CocoaOpenGLView.hpp"
 #include "CocoaWindowDelegate.hpp"
 #include "CocoaGameViewDelegate.hpp"
+#include <Pomdog/Utility/Assert.hpp>
+#include <utility>
 
 namespace Pomdog {
 namespace Details {

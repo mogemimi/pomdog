@@ -14,14 +14,14 @@
 #endif
 
 #include "OpenGLPrerequisites.hpp"
-#include <initializer_list>
-#include <vector>
-#include <limits>
+#include "TypesafeGL4.hpp"
+#include "../RenderSystem/NativeInputLayout.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>
 #include <Pomdog/Utility/Optional.hpp>
-#include "../RenderSystem/NativeInputLayout.hpp"
-#include "TypesafeGL4.hpp"
+#include <initializer_list>
+#include <vector>
+#include <limits>
 
 namespace Pomdog {
 namespace Details {

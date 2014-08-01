@@ -7,10 +7,10 @@
 //
 
 #include <Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp>
-#include <Pomdog/Utility/Assert.hpp>
-#include "../RenderSystem/PresentationParameters.hpp"
 #include "CocoaGameWindow.hpp"
 #include "CocoaGameHost.hpp"
+#include "../RenderSystem/PresentationParameters.hpp"
+#include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
 namespace Details {

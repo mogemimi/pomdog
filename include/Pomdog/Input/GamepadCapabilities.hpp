@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include <cstdint>
 #include "GamepadType.hpp"
+#include <cstdint>
 
 namespace Pomdog {
 

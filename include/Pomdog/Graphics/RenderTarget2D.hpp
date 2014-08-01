@@ -13,14 +13,14 @@
 #	pragma once
 #endif
 
-#include <cstdint>
-#include <memory>
-#include "../Config/Export.hpp"
-#include "../Math/detail/ForwardDeclarations.hpp"
 #include "detail/ForwardDeclarations.hpp"
 #include "Texture.hpp"
 #include "DepthFormat.hpp"
 #include "SurfaceFormat.hpp"
+#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Config/Export.hpp"
+#include <cstdint>
+#include <memory>
 
 namespace Pomdog {
 namespace Details {

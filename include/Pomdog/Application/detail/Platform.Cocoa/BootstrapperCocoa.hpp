@@ -15,15 +15,16 @@
 
 #import <Cocoa/Cocoa.h>
 
+#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Application/GameHost.hpp"
+#include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Logging/LogLevel.hpp"
 #include <type_traits>
 #include <memory>
 #include <array>
 #include <functional>
 #include <exception>
-#include <Pomdog/Config/Export.hpp>
-#include <Pomdog/Application/GameHost.hpp>
-#include <Pomdog/Logging/Log.hpp>
-#include <Pomdog/Logging/LogLevel.hpp>
+
 
 @class NSWindow;
 

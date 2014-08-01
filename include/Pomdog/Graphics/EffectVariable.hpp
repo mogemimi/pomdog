@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include "EffectAnnotation.hpp"
 #include <cstdint>
 #include <string>
-#include "EffectAnnotation.hpp"
 
 namespace Pomdog {
 

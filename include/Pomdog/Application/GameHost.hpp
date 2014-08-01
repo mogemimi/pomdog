@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Utility/Noncopyable.hpp"
 #include <memory>
-#include "../Config/Export.hpp"
-#include "../Utility/Noncopyable.hpp"
 
 namespace Pomdog {
 

@@ -13,11 +13,11 @@
 #	pragma once
 #endif
 
+#include "detail/ComponentTypeIndex.hpp"
+#include "detail/GameComponent.hpp"
 #include <cstdint>
 #include <type_traits>
 #include <utility>
-#include "detail/ComponentTypeIndex.hpp"
-#include "detail/GameComponent.hpp"
 
 namespace Pomdog {
 

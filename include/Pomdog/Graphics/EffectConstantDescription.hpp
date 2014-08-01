@@ -13,10 +13,10 @@
 #	pragma once
 #endif
 
+#include "EffectVariable.hpp"
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "EffectVariable.hpp"
 
 namespace Pomdog {
 

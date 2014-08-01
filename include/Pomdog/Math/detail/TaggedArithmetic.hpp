@@ -13,10 +13,10 @@
 #	pragma once
 #endif
 
+#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <type_traits>
 #include <utility>
-#include "../../Config/Export.hpp"
-#include "../../Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Details {

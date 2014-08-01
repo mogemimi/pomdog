@@ -13,10 +13,10 @@
 #	pragma once
 #endif
 
+#include "LogLevel.hpp"
+#include "Pomdog/Config/Export.hpp"
 #include <string>
 #include <functional>
-#include "../Config/Export.hpp"
-#include "LogLevel.hpp"
 
 namespace Pomdog {
 

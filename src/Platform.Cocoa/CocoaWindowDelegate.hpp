@@ -11,8 +11,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-#include <memory>
 #include "../Application/SystemEventDispatcher.hpp"
+#include <memory>
 
 @interface CocoaWindowDelegate : NSObject <NSWindowDelegate>
 

@@ -7,11 +7,11 @@
 //
 
 #include "ConstantBufferGL4.hpp"
-#include <utility>
-#include <Pomdog/Utility/Assert.hpp>
-#include "../Utility/ScopeGuard.hpp"
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
+#include "../Utility/ScopeGuard.hpp"
+#include <Pomdog/Utility/Assert.hpp>
+#include <utility>
 
 namespace Pomdog {
 namespace Details {

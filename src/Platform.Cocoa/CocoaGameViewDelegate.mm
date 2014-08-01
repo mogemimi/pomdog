@@ -7,11 +7,10 @@
 //
 
 #import "CocoaGameViewDelegate.hpp"
-
-#include <array>
+#include "MouseCocoa.hpp"
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Event/Event.hpp>
-#include "MouseCocoa.hpp"
+#include <array>
 
 using Pomdog::Event;
 using Pomdog::ButtonState;

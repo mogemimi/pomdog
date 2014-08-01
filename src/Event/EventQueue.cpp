@@ -7,10 +7,10 @@
 //
 
 #include <Pomdog/Event/EventQueue.hpp>
-#include <algorithm>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Event/detail/SignalBody.hpp>
 #include <Pomdog/Event/EventConnection.hpp>
+#include <algorithm>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "HierarchyNode.hpp"
+#include <Pomdog/Gameplay/HierarchyNode.hpp>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

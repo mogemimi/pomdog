@@ -14,9 +14,9 @@
 #endif
 
 #import <Cocoa/Cocoa.h>
+#include "../Application/SystemEventDispatcher.hpp"
 #include <Pomdog/Application/GameWindow.hpp>
 #include <Pomdog/Math/Rectangle.hpp>
-#include "../Application/SystemEventDispatcher.hpp"
 
 @class NSWindow, CocoaOpenGLView;
 @class CocoaWindowDelegate;

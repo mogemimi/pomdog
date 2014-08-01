@@ -7,12 +7,12 @@
 //
 
 #include "Texture2DGL4.hpp"
-#include <algorithm>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Graphics/SurfaceFormat.hpp>
-#include "../Utility/ScopeGuard.hpp"
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
+#include "../Utility/ScopeGuard.hpp"
+#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Graphics/SurfaceFormat.hpp>
+#include <algorithm>
 
 namespace Pomdog {
 namespace Details {

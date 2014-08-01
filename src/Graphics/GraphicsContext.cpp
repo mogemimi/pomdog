@@ -7,9 +7,13 @@
 //
 
 #include <Pomdog/Graphics/GraphicsContext.hpp>
-#include <utility>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/Exception.hpp>
+#include "../RenderSystem/GraphicsCapabilities.hpp"
+#include "../RenderSystem/NativeGraphicsContext.hpp"
+#include "../RenderSystem/NativeBlendState.hpp"
+#include "../RenderSystem/NativeDepthStencilState.hpp"
+#include "../RenderSystem/NativeRasterizerState.hpp"
+#include "../RenderSystem/NativeSamplerState.hpp"
+#include "../RenderSystem/PresentationParameters.hpp"
 #include <Pomdog/Graphics/BlendState.hpp>
 #include <Pomdog/Graphics/DepthStencilState.hpp>
 #include <Pomdog/Graphics/RasterizerState.hpp>
@@ -18,14 +22,9 @@
 #include <Pomdog/Graphics/Texture2D.hpp>
 #include <Pomdog/Graphics/VertexBufferBinding.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
-#include "../RenderSystem/GraphicsCapabilities.hpp"
-#include "../RenderSystem/NativeGraphicsContext.hpp"
-#include "../RenderSystem/NativeBlendState.hpp"
-#include "../RenderSystem/NativeDepthStencilState.hpp"
-#include "../RenderSystem/NativeRasterizerState.hpp"
-#include "../RenderSystem/NativeSamplerState.hpp"
-#include "../RenderSystem/PresentationParameters.hpp"
-
+#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Utility/Exception.hpp>
+#include <utility>
 
 namespace Pomdog {
 

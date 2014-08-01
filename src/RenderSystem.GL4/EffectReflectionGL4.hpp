@@ -13,12 +13,12 @@
 #	pragma once
 #endif
 
+#include "OpenGLPrerequisites.hpp"
+#include "TypesafeGL4.hpp"
+#include "../RenderSystem/NativeEffectReflection.hpp"
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "OpenGLPrerequisites.hpp"
-#include "../RenderSystem/NativeEffectReflection.hpp"
-#include "TypesafeGL4.hpp"
 
 namespace Pomdog {
 namespace Details {

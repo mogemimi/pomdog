@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Config/Export.hpp"
 #include <type_traits>
-#include <Pomdog/Config/Export.hpp>
-#include <Pomdog/Math/detail/ForwardDeclarations.hpp>
 
 namespace Pomdog {
 

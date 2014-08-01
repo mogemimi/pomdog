@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <Pomdog/Utility/Assert.hpp>
 #include <cstddef>
 #include <type_traits>
 #include <array>

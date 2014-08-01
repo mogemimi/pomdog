@@ -13,12 +13,12 @@
 #	pragma once
 #endif
 
+#include "detail/SignalBody.hpp"
+#include "EventConnection.hpp"
+#include "Pomdog/Config/Export.hpp"
 #include <memory>
 #include <functional>
 #include <utility>
-#include "../Config/Export.hpp"
-#include "detail/SignalBody.hpp"
-#include "EventConnection.hpp"
 
 namespace Pomdog {
 

@@ -13,15 +13,15 @@
 #	pragma once
 #endif
 
+#include "detail/VertexElementHelper.hpp"
+#include "VertexDeclaration.hpp"
+#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <cstdint>
 #include <cstddef>
 #include <array>
 #include <utility>
 #include <vector>
 #include <initializer_list>
-#include "../Math/detail/ForwardDeclarations.hpp"
-#include "VertexDeclaration.hpp"
-#include "detail/VertexElementHelper.hpp"
 
 namespace Pomdog {
 namespace Details {

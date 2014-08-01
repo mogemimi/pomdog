@@ -7,10 +7,10 @@
 //
 
 #include <Pomdog/Graphics/IndexBuffer.hpp>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeIndexBuffer.hpp"
+#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Graphics/GraphicsDevice.hpp>
 
 namespace Pomdog {
 namespace {

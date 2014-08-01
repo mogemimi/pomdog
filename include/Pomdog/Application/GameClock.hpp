@@ -13,10 +13,10 @@
 #	pragma once
 #endif
 
+#include "Pomdog/Application/DurationSeconds.hpp"
+#include "Pomdog/Config/Export.hpp"
 #include <cstdint>
 #include <memory>
-#include "../Config/Export.hpp"
-#include "DurationSeconds.hpp"
 
 namespace Pomdog {
 

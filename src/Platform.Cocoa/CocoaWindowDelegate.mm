@@ -8,9 +8,9 @@
 
 #import "CocoaWindowDelegate.hpp"
 
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Event/Event.hpp>
 #include "../Application/SystemEventDispatcher.hpp"
+#include <Pomdog/Event/Event.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 
 @implementation CocoaWindowDelegate
 {

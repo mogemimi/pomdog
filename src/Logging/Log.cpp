@@ -7,15 +7,15 @@
 //
 
 #include <Pomdog/Logging/Log.hpp>
-#include <algorithm>
-#include <memory>
-#include <mutex>
-#include <vector>
 #include <Pomdog/Logging/LogEntry.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
 #include <Pomdog/Logging/LogChannel.hpp>
 #include <Pomdog/Event/EventConnection.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
+#include <algorithm>
+#include <memory>
+#include <mutex>
+#include <vector>
 
 namespace Pomdog {
 namespace {

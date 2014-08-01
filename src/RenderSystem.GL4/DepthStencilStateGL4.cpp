@@ -7,9 +7,9 @@
 //
 
 #include "DepthStencilStateGL4.hpp"
+#include "ErrorChecker.hpp"
 #include <Pomdog/Graphics/DepthStencilDescription.hpp>
 #include <Pomdog/Utility/Assert.hpp>
-#include "ErrorChecker.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -134,25 +134,23 @@ void DepthStencilStateGL4::ApplyStencilTest()
 	glStencilFuncSeparate(GL_FRONT,
 		counterClockwiseFace.stencilFunction.value,
 		referenceStencil,
-		stencilMask
-	);
+		stencilMask);
+
 	glStencilOpSeparate(GL_FRONT,
 		counterClockwiseFace.stencilFail.value,
 		counterClockwiseFace.stencilDepthBufferFail.value,
-		counterClockwiseFace.stencilPass.value
-	);
+		counterClockwiseFace.stencilPass.value);
 
 	// ClockwiseFace:
 	glStencilFuncSeparate(GL_BACK,
 		clockwiseFace.stencilFunction.value,
 		referenceStencil,
-		stencilMask
-	);
+		stencilMask);
+	
 	glStencilOpSeparate(GL_BACK,
 		clockwiseFace.stencilFail.value,
 		clockwiseFace.stencilDepthBufferFail.value,
-		clockwiseFace.stencilPass.value
-	);
+		clockwiseFace.stencilPass.value);
 	
 	glStencilMask(stencilWriteMask);
 	

@@ -7,13 +7,17 @@
 //
 
 #include "GraphicsContextGL4.hpp"
-#include <array>
-#include <utility>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/Exception.hpp>
-#include <Pomdog/Math/Color.hpp>
-#include <Pomdog/Math/Rectangle.hpp>
-#include <Pomdog/Math/Vector4.hpp>
+#include "OpenGLContext.hpp"
+#include "EffectPassGL4.hpp"
+#include "ErrorChecker.hpp"
+#include "IndexBufferGL4.hpp"
+#include "InputLayoutGL4.hpp"
+#include "RenderTarget2DGL4.hpp"
+#include "TypesafeHelperGL4.hpp"
+#include "../RenderSystem/GraphicsCapabilities.hpp"
+#include "../RenderSystem/NativeRenderTarget2D.hpp"
+#include "../RenderSystem/NativeTexture2D.hpp"
+#include "../Utility/ScopeGuard.hpp"
 #include <Pomdog/Graphics/ClearOptions.hpp>
 #include <Pomdog/Graphics/IndexBuffer.hpp>
 #include <Pomdog/Graphics/InputLayout.hpp>
@@ -23,21 +27,18 @@
 #include <Pomdog/Graphics/VertexBuffer.hpp>
 #include <Pomdog/Graphics/Viewport.hpp>
 #include <Pomdog/Application/GameWindow.hpp>
-#include "../RenderSystem/GraphicsCapabilities.hpp"
-#include "../RenderSystem/NativeRenderTarget2D.hpp"
-#include "../RenderSystem/NativeTexture2D.hpp"
-#include "../Utility/ScopeGuard.hpp"
-#include "OpenGLContext.hpp"
-#include "EffectPassGL4.hpp"
-#include "ErrorChecker.hpp"
-#include "IndexBufferGL4.hpp"
-#include "InputLayoutGL4.hpp"
-#include "RenderTarget2DGL4.hpp"
-#include "TypesafeHelperGL4.hpp"
+#include <Pomdog/Math/Color.hpp>
+#include <Pomdog/Math/Rectangle.hpp>
+#include <Pomdog/Math/Vector4.hpp>
+#include <Pomdog/Utility/Assert.hpp>
+#include <Pomdog/Utility/Exception.hpp>
 
 // logging
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
+
+#include <array>
+#include <utility>
 
 namespace Pomdog {
 namespace Details {

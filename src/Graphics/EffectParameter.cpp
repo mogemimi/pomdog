@@ -7,17 +7,16 @@
 //
 
 #include <Pomdog/Graphics/EffectParameter.hpp>
-#include <utility>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include "../RenderSystem/NativeConstantBuffer.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
+#include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include <Pomdog/Utility/Assert.hpp>
+#include <utility>
 
 namespace Pomdog {
 namespace {
 
-class DummyConstantBuffer final: public Details::RenderSystem::NativeConstantBuffer
-{
+class DummyConstantBuffer final: public Details::RenderSystem::NativeConstantBuffer {
 public:
 	void GetData(std::uint32_t, void*) const override {}
 	

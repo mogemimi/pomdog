@@ -13,16 +13,16 @@
 #	pragma once
 #endif
 
+#include "detail/GameComponent.hpp"
+#include "GameObjectID.hpp"
+#include "GameObjectContext.hpp"
+#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <cstdint>
 #include <type_traits>
 #include <algorithm>
 #include <memory>
 #include <utility>
-#include "../Config/Export.hpp"
-#include "../Utility/Assert.hpp"
-#include "detail/GameComponent.hpp"
-#include "GameObjectID.hpp"
-#include "GameObjectContext.hpp"
 
 namespace Pomdog {
 

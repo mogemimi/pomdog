@@ -7,10 +7,10 @@
 //
 
 #include <Pomdog/Graphics/BlendState.hpp>
-#include <Pomdog/Graphics/GraphicsDevice.hpp>
-#include <Pomdog/Utility/Assert.hpp>
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeBlendState.hpp"
+#include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

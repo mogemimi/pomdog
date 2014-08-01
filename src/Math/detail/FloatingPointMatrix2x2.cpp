@@ -7,9 +7,9 @@
 //
 
 #include <Pomdog/Math/detail/FloatingPointMatrix2x2.hpp>
+#include <Pomdog/Utility/Assert.hpp>
 #include <cmath>
 #include <limits>
-#include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
 namespace Details {

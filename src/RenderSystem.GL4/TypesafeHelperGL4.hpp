@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
-#include <type_traits>
 #include "OpenGLPrerequisites.hpp"
 #include <Pomdog/Utility/detail/Tagged.hpp>
+#include <type_traits>
 
 namespace Pomdog {
 namespace Details {

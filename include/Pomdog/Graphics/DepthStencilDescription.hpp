@@ -13,11 +13,11 @@
 #	pragma once
 #endif
 
-#include <cstdint>
-#include <limits>
-#include "../Config/Export.hpp"
 #include "ComparisonFunction.hpp"
 #include "DepthStencilOperation.hpp"
+#include "Pomdog/Config/Export.hpp"
+#include <cstdint>
+#include <limits>
 
 namespace Pomdog {
 

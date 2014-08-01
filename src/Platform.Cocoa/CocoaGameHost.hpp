@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include "../Application/SystemEventDispatcher.hpp"
 #include <Pomdog/Application/GameHost.hpp>
 #include <memory>
-#include "../Application/SystemEventDispatcher.hpp"
 
 namespace Pomdog {
 namespace Details {
