@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -14,12 +14,13 @@ namespace Rendering {
 //-----------------------------------------------------------------------
 void SkinnedMeshCommand::Execute(std::shared_ptr<GraphicsContext> const& graphicsContext)
 {
-	skinningEffect->Parameters("Constants")->SetValue(Matrix4x4::Transpose(modelViewProjection));
+	constantBuffers->Find("Constants")->SetValue(Matrix4x4::Transpose(modelViewProjection));
 	{
 		graphicsContext->SetTexture(0, texture);
 		graphicsContext->SetInputLayout(inputLayout);
 		graphicsContext->SetVertexBuffer(mesh->VertexBuffer);
-		skinningEffect->Apply();
+		graphicsContext->SetEffectPass(effectPass);
+		graphicsContext->SetConstantBuffers(constantBuffers);
 		graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList,
 			mesh->IndexBuffer, mesh->IndexBuffer->IndexCount());
 	}
@@ -73,7 +74,7 @@ void SkinnedMeshCommand::SetMatrixPalette(Skeleton const& skeleton, SkeletonTran
 		matrixPalette.matrixPalette2[i].Y = matrices[i](2, 1);
 	}
 
-	skinningEffect->Parameters("SkinningConstants")->SetValue(matrixPalette);
+	constantBuffers->Find("SkinningConstants")->SetValue(matrixPalette);
 }
 //-----------------------------------------------------------------------
 RenderCommandType SkinnedMeshCommand::CommandType() const

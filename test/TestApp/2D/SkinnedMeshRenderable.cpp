@@ -43,12 +43,14 @@ SkinnedMeshRenderable::SkinnedMeshRenderable(std::shared_ptr<GraphicsDevice> con
 
 	command.mesh = meshIn;
 	command.texture = textureIn;
-	command.skinningEffect = assets.Load<EffectPass>("Effects/SkinningSpriteEffect");
-	command.inputLayout = std::make_shared<InputLayout>(graphicsDevice, command.skinningEffect);
+	command.effectPass = assets.Load<EffectPass>("Effects/SkinningSpriteEffect");
+	command.constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *command.effectPass);
+	command.inputLayout = std::make_shared<InputLayout>(graphicsDevice, command.effectPass);
 
 	POMDOG_ASSERT(command.mesh);
 	POMDOG_ASSERT(command.texture);
-	POMDOG_ASSERT(command.skinningEffect);
+	POMDOG_ASSERT(command.effectPass);
+	POMDOG_ASSERT(command.constantBuffers);
 	POMDOG_ASSERT(command.inputLayout);
 }
 //-----------------------------------------------------------------------

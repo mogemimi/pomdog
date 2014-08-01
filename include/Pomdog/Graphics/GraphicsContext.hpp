@@ -188,6 +188,14 @@ public:
 	/// @brief 複数のレンダーターゲットを設定します。
 	void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets);
 
+	///@~Japanese
+	/// @brief エフェクトパスを設定します。
+	void SetEffectPass(std::shared_ptr<EffectPass> const& effectPass);
+
+	///@~Japanese
+	/// @brief 定数バッファを設定します。
+	void SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
+
 public:
 	Details::RenderSystem::NativeGraphicsContext* NativeGraphicsContext();
 	

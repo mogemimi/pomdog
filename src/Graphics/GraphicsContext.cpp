@@ -15,7 +15,9 @@
 #include "../RenderSystem/NativeSamplerState.hpp"
 #include "../RenderSystem/PresentationParameters.hpp"
 #include <Pomdog/Graphics/BlendState.hpp>
+#include <Pomdog/Graphics/ConstantBufferBinding.hpp>
 #include <Pomdog/Graphics/DepthStencilState.hpp>
+#include <Pomdog/Graphics/EffectPass.hpp>
 #include <Pomdog/Graphics/RasterizerState.hpp>
 #include <Pomdog/Graphics/RenderTarget2D.hpp>
 #include <Pomdog/Graphics/SamplerState.hpp>
@@ -73,6 +75,12 @@ public:
 	///@copydoc GraphicsContext
 	void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets);
 	
+	///@copydoc GraphicsContext
+	void SetEffectPass(std::shared_ptr<EffectPass> const& effectPass);
+	
+	///@copydoc GraphicsContext
+	void SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
+	
 public:
 	Pomdog::Viewport viewport;
 	std::vector<std::shared_ptr<VertexBuffer>> vertexBuffers;
@@ -83,6 +91,8 @@ public:
 	std::shared_ptr<DepthStencilState> depthStencilState;
 	std::shared_ptr<RasterizerState> rasterizerState;
 	std::shared_ptr<InputLayout> inputLayout;
+	std::shared_ptr<EffectPass> effectPass;
+	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 	
 	std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext;
 };
@@ -234,6 +244,28 @@ void GraphicsContext::Impl::SetRenderTargets(std::vector<std::shared_ptr<RenderT
 	POMDOG_ASSERT(nativeContext);
 	renderTargets = std::move(renderTargetsIn);
 	nativeContext->SetRenderTargets(renderTargets);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::Impl::SetEffectPass(std::shared_ptr<EffectPass> const& effectPassIn)
+{
+	POMDOG_ASSERT(effectPassIn);
+	POMDOG_ASSERT(nativeContext);
+	effectPass = effectPassIn;
+	
+	using Details::RenderSystem::NativeEffectPass;
+	std::shared_ptr<NativeEffectPass> nativeEffectPass(effectPass, effectPass->NativeEffectPass());
+	nativeContext->SetEffectPass(nativeEffectPass);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::Impl::SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> const& constantBuffersIn)
+{
+	POMDOG_ASSERT(constantBuffersIn);
+	POMDOG_ASSERT(nativeContext);
+	constantBuffers = constantBuffersIn;
+	
+	using Details::RenderSystem::NativeConstantLayout;
+	std::shared_ptr<NativeConstantLayout> nativeConstantLayout(constantBuffers, constantBuffers->NativeConstantLayout());
+	nativeContext->SetConstantBuffers(nativeConstantLayout);
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -521,6 +553,22 @@ void GraphicsContext::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2
 	}
 	
 	impl->SetRenderTargets(std::move(renderTargets));
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetEffectPass(std::shared_ptr<EffectPass> const& effectPass)
+{
+	POMDOG_ASSERT(effectPass);
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
+	impl->SetEffectPass(effectPass);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> const& constantBuffers)
+{
+	POMDOG_ASSERT(constantBuffers);
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeContext);
+	impl->SetConstantBuffers(constantBuffers);
 }
 //-----------------------------------------------------------------------
 Details::RenderSystem::NativeGraphicsContext* GraphicsContext::NativeGraphicsContext()

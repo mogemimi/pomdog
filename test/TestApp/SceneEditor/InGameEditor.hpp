@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -67,6 +67,7 @@ private:
 	std::shared_ptr<SpriteFont> spriteFont;
 	std::unique_ptr<SpriteBatch> spriteBatchDistanceField;
 	std::shared_ptr<EffectPass> distanceFieldEffect;
+	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 	
 	LineBatch lineBatch;
 	

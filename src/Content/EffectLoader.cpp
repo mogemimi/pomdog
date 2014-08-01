@@ -40,14 +40,13 @@ std::shared_ptr<EffectPass> AssetLoader<EffectPass>::operator()(AssetLoaderConte
 	auto const vertexShader = ReadBinaryFile(loaderContext.RootDirectory + "/" + assetPath + "/VertexShader.glsl");
 	auto const pixelShader = ReadBinaryFile(loaderContext.RootDirectory + "/" + assetPath + "/PixelShader.glsl");
 
-	auto graphicsContext = loaderContext.GraphicsContext.lock();
 	auto graphicsDevice = loaderContext.GraphicsDevice.lock();
 	
-	if (!graphicsContext || !graphicsDevice) {
-		POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid graphics context or device.");
+	if (!graphicsDevice) {
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid graphics device.");
 	}
 
-	auto effectPass = std::make_shared<EffectPass>(graphicsDevice, graphicsContext,
+	auto effectPass = std::make_shared<EffectPass>(graphicsDevice,
 		Details::ShaderBytecode { vertexShader.data(), vertexShader.size() },
 		Details::ShaderBytecode { pixelShader.data(), pixelShader.size() });
 

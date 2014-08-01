@@ -56,6 +56,7 @@ private:
 	std::shared_ptr<VertexBuffer> instanceVertices;
 	
 	std::shared_ptr<EffectPass> effectPass;
+	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 	std::shared_ptr<InputLayout> inputLayout;
 	alignas(16) Matrix4x4 transposedTransformProjectionMatrix;
 	
@@ -63,11 +64,9 @@ private:
 
 public:
 	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
-	
-	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets,
-		std::shared_ptr<EffectPass> const& effectPass);
+		std::shared_ptr<EffectPass> const& effectPass,
+		std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
 	
 	void Begin(SpriteSortMode sortMode);
 	
@@ -89,16 +88,13 @@ private:
 };
 //-----------------------------------------------------------------------
 SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
-	: Impl(graphicsContextIn, graphicsDevice, assets, assets.Load<EffectPass>("Effects/SpriteBatch"))
-{}
-//-----------------------------------------------------------------------
-SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets,
-	std::shared_ptr<EffectPass> const& effectPassIn)
+	std::shared_ptr<EffectPass> const& effectPassIn,
+	std::shared_ptr<ConstantBufferBinding> const& constantBuffersIn)
 	: graphicsContext(graphicsContextIn)
 	, transposedTransformProjectionMatrix(Matrix4x4::Identity)
 	, effectPass(effectPassIn)
+	, constantBuffers(constantBuffersIn)
 	, sortMode(SpriteSortMode::BackToFront)
 {
 	using PositionTextureCoord = CustomVertex<Vector4>;
@@ -144,9 +140,9 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextI
 			maxBatchSize, sizeof(SpriteInfo), BufferUsage::Dynamic);
 	}
 	{
-		auto declartation = PositionTextureCoord::Declaration();
-
 		POMDOG_ASSERT(effectPass);
+
+		auto declartation = PositionTextureCoord::Declaration();
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
 			std::initializer_list<VertexBufferBinding>{
 				{declartation, 0, 0},
@@ -155,10 +151,6 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextI
 	}
 #ifdef DEBUG
 	{
-		for (auto & parameter: effectPass->Parameters()) {
-			Log::Stream() << "EffectParameter: " << parameter.first;
-		}
-		
 		auto effectReflection = std::make_shared<EffectReflection>(graphicsDevice, effectPass);
 	
 		auto stream = Log::Stream();
@@ -282,7 +274,7 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
 			inverseTextureSize,
 		};
 		
-		auto parameter = effectPass->Parameters("SpriteBatchConstants");
+		auto parameter = constantBuffers->Find("SpriteBatchConstants");
 		parameter->SetValue(info);
 	}
 
@@ -292,7 +284,8 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
 	graphicsContext->SetTexture(0, texture);
 	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffers({planeVertices, instanceVertices});
-	effectPass->Apply();
+	graphicsContext->SetEffectPass(effectPass);
+	graphicsContext->SetConstantBuffers(constantBuffers);
 	graphicsContext->DrawIndexedInstanced(PrimitiveTopology::TriangleList,
 		planeIndices, planeIndices->IndexCount(), static_cast<std::uint32_t>(sprites.size()));
 }
@@ -384,13 +377,18 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 //-----------------------------------------------------------------------
 SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
-	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))
-{}
+{
+	auto effectPass = assets.Load<EffectPass>("Effects/SpriteBatch");
+	auto constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
+
+	impl = std::make_unique<Impl>(graphicsContext, graphicsDevice, assets, effectPass, constantBuffers);
+}
 //-----------------------------------------------------------------------
 SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets,
-	std::shared_ptr<EffectPass> const& effectPass)
-	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets, effectPass))
+	std::shared_ptr<EffectPass> const& effectPass,
+	std::shared_ptr<ConstantBufferBinding> const& constantBuffers)
+	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets, effectPass, constantBuffers))
 {}
 //-----------------------------------------------------------------------
 SpriteBatch::~SpriteBatch() = default;

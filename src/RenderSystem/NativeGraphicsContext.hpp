@@ -24,6 +24,7 @@ namespace RenderSystem {
 
 class GraphicsCapabilities;
 class NativeEffectPass;
+class NativeConstantLayout;
 
 class NativeGraphicsContext: Noncopyable {
 public:
@@ -84,6 +85,12 @@ public:
 
 	///@copydoc Pomdog::GraphicsContext
 	virtual void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets) = 0;
+	
+	///@details low-level API
+	virtual void SetEffectPass(std::shared_ptr<NativeEffectPass> const& nativeEffectPass) = 0;
+	
+	///@details low-level API
+	virtual void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& nativeConstantLayout) = 0;
 };
 
 }// namespace RenderSystem

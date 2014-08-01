@@ -59,6 +59,7 @@ private:
 	std::shared_ptr<VertexBuffer> instanceVertices;
 	
 	std::shared_ptr<EffectPass> effectPass;
+	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 	std::shared_ptr<InputLayout> inputLayout;
 	
 	Matrix4x4 projectionMatrix;
@@ -130,6 +131,7 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 	}
 	{
 		effectPass = assets.Load<EffectPass>("Effects/SpriteRendererEffect");
+		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 
 		auto declartation = PositionTextureCoord::Declaration();
 		using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4, Vector4>;
@@ -142,10 +144,6 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 	}
 #ifdef DEBUG
 	{
-		for (auto & parameter: effectPass->Parameters()) {
-			Log::Stream() << "EffectParameter: " << parameter.first;
-		}
-		
 		auto effectReflection = std::make_shared<EffectReflection>(graphicsDevice, effectPass);
 	
 		auto stream = Log::Stream();
@@ -170,7 +168,7 @@ void SpriteRenderer::Impl::Begin(SpriteSortMode sortModeIn)
 
 	alignas(16) Matrix4x4 projection = Matrix4x4::Transpose(projectionMatrix);
 
-	auto parameter = effectPass->Parameters("Matrices");
+	auto parameter = constantBuffers->Find("Matrices");
 	parameter->SetValue(projection);
 }
 //-----------------------------------------------------------------------
@@ -181,7 +179,7 @@ void SpriteRenderer::Impl::Begin(SpriteSortMode sortModeIn, Matrix4x4 const& tra
 	alignas(16) Matrix4x4 projection = Matrix4x4::Transpose(
 		transformMatrix * projectionMatrix);
 
-	auto parameter = effectPass->Parameters("Matrices");
+	auto parameter = constantBuffers->Find("Matrices");
 	parameter->SetValue(projection);
 }
 //-----------------------------------------------------------------------
@@ -241,7 +239,7 @@ void SpriteRenderer::Impl::DrawInstance(std::shared_ptr<Texture2D> const& textur
 			(texture->Height() > 0) ? (1.0f / static_cast<float>(texture->Height())): 0.0f,
 		};
 
-		auto parameter = effectPass->Parameters("TextureConstants");
+		auto parameter = constantBuffers->Find("TextureConstants");
 		parameter->SetValue(inverseTexturePixelWidth);
 	}
 
@@ -251,7 +249,8 @@ void SpriteRenderer::Impl::DrawInstance(std::shared_ptr<Texture2D> const& textur
 	graphicsContext->SetTexture(0, texture);
 	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffers({planeVertices, instanceVertices});
-	effectPass->Apply();
+	graphicsContext->SetEffectPass(effectPass);
+	graphicsContext->SetConstantBuffers(constantBuffers);
 	graphicsContext->DrawIndexedInstanced(PrimitiveTopology::TriangleList,
 		planeIndices, planeIndices->IndexCount(), static_cast<std::uint32_t>(sprites.size()));
 }

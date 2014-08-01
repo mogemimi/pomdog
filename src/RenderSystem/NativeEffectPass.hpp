@@ -21,7 +21,7 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
-class NativeConstantBuffer;
+class NativeConstantLayout;
 
 class NativeEffectPass {
 public:
@@ -30,15 +30,8 @@ public:
 	NativeEffectPass & operator=(NativeEffectPass const&) = delete;
 
 	virtual ~NativeEffectPass() = default;
-	
-	virtual void SetConstant(std::string const& constantName,
-		std::shared_ptr<NativeConstantBuffer> const& constantBuffer) = 0;
-	
-	virtual void SetConstant(std::string const& constantName) = 0;
-	
-	///@copybrief EffectPass
-	virtual void Apply(GraphicsContext & graphicsContext,
-		std::shared_ptr<EffectPass> const& sharedThisEffectPass) = 0;
+
+	virtual std::unique_ptr<NativeConstantLayout> CreateConstantLayout() = 0;
 };
 
 }// namespace RenderSystem

@@ -36,6 +36,7 @@ struct FrameBufferTag;
 using FrameBufferGL4 = Tagged<GLuint, Tags::FrameBufferTag>;
 
 class OpenGLContext;
+class ConstantLayoutGL4;
 class EffectPassGL4;
 class InputLayoutGL4;
 class RenderTarget2DGL4;
@@ -104,14 +105,18 @@ public:
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
 	void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets) override;
 	
-	///@details EffectPass::Apply から呼ばれます。
-	void SetEffectPass(std::shared_ptr<EffectPassGL4> const& nativeEffectPass);
-	
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	void SetEffectPass(std::shared_ptr<NativeEffectPass> const& nativeEffectPass) override;
+
+	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& nativeConstantLayout) override;
+
 private:
 	std::vector<std::shared_ptr<VertexBuffer>> vertexBuffers;
 	std::shared_ptr<OpenGLContext> nativeContext;
 	std::shared_ptr<InputLayoutGL4> inputLayout;
 	std::shared_ptr<EffectPassGL4> effectPass;
+	std::shared_ptr<ConstantLayoutGL4> constantLayout;
 	std::weak_ptr<GameWindow> gameWindow;
 	std::vector<Optional<GLenum>> textures;
 	Optional<FrameBufferGL4> frameBuffer;

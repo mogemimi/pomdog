@@ -41,7 +41,8 @@ public:
 	Matrix4x4 modelViewProjection;
 	std::shared_ptr<SkinnedMesh> mesh;
 	std::shared_ptr<Texture2D> texture;
-	std::shared_ptr<EffectPass> skinningEffect;
+	std::shared_ptr<EffectPass> effectPass;
+	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 	std::shared_ptr<InputLayout> inputLayout;
 	float drawOrder;
 };

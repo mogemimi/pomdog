@@ -7,21 +7,18 @@
 //
 
 #include "EffectPassGL4.hpp"
-#include "ConstantBufferGL4.hpp"
-#include "GraphicsContextGL4.hpp"
 #include "EffectReflectionGL4.hpp"
 #include "ErrorChecker.hpp"
+#include "ConstantLayoutGL4.hpp"
 #include "../Utility/ScopeGuard.hpp"
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LogLevel.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
 #include <Pomdog/Utility/Exception.hpp>
-#include <Pomdog/Graphics/GraphicsContext.hpp>
 #include <Pomdog/Graphics/detail/ShaderBytecode.hpp>
 #include <type_traits>
 #include <array>
 #include <string>
-#include <algorithm>
 
 namespace Pomdog {
 namespace Details {
@@ -165,28 +162,23 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 		POMDOG_THROW_EXCEPTION(std::domain_error,
 			"Failed to link shader program.");
 	}
-	
-	// Create default constant buffers:
+
 	EffectReflectionGL4 shaderReflection(*shaderProgram);
 	{
 		auto uniformBlocks = shaderReflection.GetNativeUniformBlocks();
-	
-		std::uint32_t slotIndex = 0;
-		for (auto & uniformBlock: uniformBlocks) {
-			ConstantBufferBindingGL4 binding;
-			//binding.ConstantBuffer = std::make_shared<ConstantBufferGL4>(uniformBlock.ByteConstants);
-			binding.Name = uniformBlock.Name;
-			binding.SlotIndex = slotIndex;
-			
-			glUniformBlockBinding(shaderProgram->value, uniformBlock.BlockIndex, binding.SlotIndex);
-			constantBufferBindings.push_back(std::move(binding));
+
+		std::uint16_t slotIndex = 0;
+		for (auto & uniformBlock: uniformBlocks)
+		{
+			glUniformBlockBinding(shaderProgram->value, uniformBlock.BlockIndex, slotIndex);
+			uniformBlockBindings.push_back({uniformBlock.Name, slotIndex});
 			++slotIndex;
 		}
 	}
 	{
 		auto uniforms = shaderReflection.GetNativeUniforms();
 
-		std::uint32_t slotIndex = 0;
+		std::uint16_t slotIndex = 0;
 		for (auto & uniform: uniforms)
 		{
 			switch (uniform.Type) {
@@ -223,53 +215,26 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 //-----------------------------------------------------------------------
 EffectPassGL4::~EffectPassGL4()
 {
-	constantBufferBindings.clear();
-
 	if (shaderProgram) {
 		glDeleteProgram(shaderProgram->value);
 	}
 }
 //-----------------------------------------------------------------------
-void EffectPassGL4::SetConstant(std::string const& constantName, std::shared_ptr<NativeConstantBuffer> const& constantBuffer)
+std::unique_ptr<NativeConstantLayout> EffectPassGL4::CreateConstantLayout()
 {
-	auto iter = std::find_if(std::begin(constantBufferBindings), std::end(constantBufferBindings),
-		[&constantName](ConstantBufferBindingGL4 const& binding) { return binding.Name == constantName; });
+	EffectReflectionGL4 shaderReflection(*shaderProgram);
 
-	POMDOG_ASSERT(std::end(constantBufferBindings) != iter);
-
-	auto nativeConstantBuffer = std::dynamic_pointer_cast<ConstantBufferGL4>(constantBuffer);
-	POMDOG_ASSERT(nativeConstantBuffer);
-
-	if (std::end(constantBufferBindings) != iter) {
-		iter->ConstantBuffer = nativeConstantBuffer;
-	}
-}
-//-----------------------------------------------------------------------
-void EffectPassGL4::SetConstant(std::string const& constantName)
-{
-	auto iter = std::find_if(std::begin(constantBufferBindings), std::end(constantBufferBindings),
-		[&constantName](ConstantBufferBindingGL4 const& binding) { return binding.Name == constantName; });
-
-	POMDOG_ASSERT(std::end(constantBufferBindings) != iter);
-
-	if (std::end(constantBufferBindings) != iter) {
-		iter->ConstantBuffer.reset();
-	}
-}
-//-----------------------------------------------------------------------
-void EffectPassGL4::Apply(GraphicsContext & graphicsContext,
-	std::shared_ptr<EffectPass> const& sharedThisEffectPass)
-{
-	POMDOG_ASSERT(shaderProgram);
-	POMDOG_ASSERT(sharedThisEffectPass);
+	std::vector<ConstantBufferBindingGL4> bindings;
 	
-	auto sharedThis = std::shared_ptr<EffectPassGL4>(sharedThisEffectPass, this);
-	auto nativeContext = dynamic_cast<GraphicsContextGL4*>(graphicsContext.NativeGraphicsContext());
-	POMDOG_ASSERT(nativeContext);
-	
-	if (nativeContext != nullptr) {
-		nativeContext->SetEffectPass(sharedThis);
+	for (auto & uniformBlock: uniformBlockBindings)
+	{
+		ConstantBufferBindingGL4 binding;
+		binding.Name = uniformBlock.Name;
+		binding.SlotIndex = uniformBlock.SlotIndex;
+		bindings.push_back(std::move(binding));
 	}
+	
+	return std::make_unique<ConstantLayoutGL4>(std::move(bindings));
 }
 //-----------------------------------------------------------------------
 void EffectPassGL4::ApplyShaders()
@@ -280,15 +245,7 @@ void EffectPassGL4::ApplyShaders()
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glUseProgram", __FILE__, __LINE__);
 	#endif
-	
-	// Apply constant buffers:
-	for (auto & binding: constantBufferBindings)
-	{
-		if (binding.ConstantBuffer) {
-			binding.ConstantBuffer->Apply(binding.SlotIndex);
-		}
-	}
-	
+
 	for (auto & binding: textureBindings)
 	{
 		glUniform1i(binding.UniformLocation, binding.SlotIndex);

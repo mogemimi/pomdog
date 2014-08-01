@@ -33,8 +33,9 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 		//spriteFont = assets->Load<SpriteFont>("BitmapFonts/UbuntuMono-Regular.fnt");
 		spriteFont = assets->Load<SpriteFont>("BitmapFonts/Ubuntu-Regular.fnt");
 		distanceFieldEffect = assets->Load<EffectPass>("Effects/SpriteBatchDistanceField");
+		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *distanceFieldEffect);
 		spriteBatchDistanceField = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets,
-			distanceFieldEffect);
+			distanceFieldEffect, constantBuffers);
 	}
 	{
 		primitiveAxes = std::make_unique<SceneEditor::PrimitiveAxes>(
@@ -95,7 +96,7 @@ void InGameEditor::DrawGUI()
 	POMDOG_ASSERT(spriteBatch);
 	{
 		spriteBatch->Begin(SpriteSortMode::BackToFront);
-		UI::SpriteDrawingContext drawingContext(*spriteBatch, *spriteBatchDistanceField, distanceFieldEffect, *spriteFont, pomdogTexture);
+		UI::SpriteDrawingContext drawingContext(*spriteBatch, *spriteBatchDistanceField, distanceFieldEffect, constantBuffers, *spriteFont, pomdogTexture);
 		hierarchy.Draw(drawingContext);
 		spriteBatch->End();
 	}

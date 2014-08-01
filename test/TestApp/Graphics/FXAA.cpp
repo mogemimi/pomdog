@@ -32,6 +32,7 @@ FXAA::FXAA(std::shared_ptr<GameHost> const& gameHost)
 			VertexCombined::Declaration().StrideBytes(), BufferUsage::Immutable);
 
 		effectPass = assets->Load<EffectPass>("Effects/FXAA");
+		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}
 	{
@@ -44,11 +45,8 @@ FXAA::FXAA(std::shared_ptr<GameHost> const& gameHost)
 		indexBuffer = std::make_shared<IndexBuffer>(graphicsDevice,
 			IndexElementSize::SixteenBits, indices.data(), indices.size(), BufferUsage::Immutable);
 	}
+#ifdef DEBUG
 	{
-		for (auto & parameter: effectPass->Parameters()) {
-			Log::Stream() << "EffectParameter: " << parameter.first;
-		}
-		
 		auto effectReflection = std::make_shared<EffectReflection>(graphicsDevice, effectPass);
 	
 		auto stream = Log::Stream();
@@ -59,6 +57,7 @@ FXAA::FXAA(std::shared_ptr<GameHost> const& gameHost)
 			stream << "Variables: " << description.Variables.size() << "\n";
 		}
 	}
+#endif
 	{
 		auto graphicsContext = gameHost->GraphicsContext();
 		auto viewport = graphicsContext->Viewport();
@@ -69,7 +68,7 @@ FXAA::FXAA(std::shared_ptr<GameHost> const& gameHost)
 void FXAA::ResetViewportSize(Rectangle const& bounds)
 {
 	Vector2 renderTargetSize(bounds.Width, bounds.Height);
-	effectPass->Parameters("Constants")->SetValue(renderTargetSize);
+	constantBuffers->Find("Constants")->SetValue(renderTargetSize);
 }
 //-----------------------------------------------------------------------
 void FXAA::Draw(GraphicsContext & graphicsContext, std::shared_ptr<RenderTarget2D> const& texture)
@@ -81,7 +80,8 @@ void FXAA::Draw(GraphicsContext & graphicsContext, std::shared_ptr<RenderTarget2
 	graphicsContext.SetTexture(0, texture);
 	graphicsContext.SetInputLayout(inputLayout);
 	graphicsContext.SetVertexBuffer(vertexBuffer);
-	effectPass->Apply();
+	graphicsContext.SetEffectPass(effectPass);
+	graphicsContext.SetConstantBuffers(constantBuffers);
 	graphicsContext.DrawIndexed(PrimitiveTopology::TriangleList, indexBuffer, indexBuffer->IndexCount());
 }
 //-----------------------------------------------------------------------

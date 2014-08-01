@@ -12,14 +12,16 @@ namespace Pomdog {
 namespace UI {
 //-----------------------------------------------------------------------
 SpriteDrawingContext::SpriteDrawingContext(SpriteBatch & spriteBatchIn, SpriteBatch & spriteFontBatchIn,
-	std::shared_ptr<EffectPass> const& distanceFieldEffectIn, SpriteFont & spriteFontIn, std::shared_ptr<Texture2D> const& textureIn)
+	std::shared_ptr<EffectPass> const& distanceFieldEffectIn,
+	std::shared_ptr<ConstantBufferBinding> const& constantBuffersIn,
+	SpriteFont & spriteFontIn, std::shared_ptr<Texture2D> const& textureIn)
 	: spriteBatch(spriteBatchIn)
 	, spriteFontBatch(spriteFontBatchIn)
 	, spriteFont(spriteFontIn)
 	, distanceFieldEffect(distanceFieldEffectIn)
+	, constantBuffers(constantBuffersIn)
 	, texture(textureIn)
-{
-}
+{}
 //-----------------------------------------------------------------------
 Matrix3x2 SpriteDrawingContext::Top() const
 {
@@ -99,7 +101,7 @@ void SpriteDrawingContext::DrawString(Matrix3x2 const& transform, Color const& c
 			break;
 		}
 
-		distanceFieldEffect->Parameters("DistanceFieldConstants")->SetValue(fontWeights);
+		constantBuffers->Find("DistanceFieldConstants")->SetValue(fontWeights);
 	
 		///@todo Not implemented
 		auto position = Vector2::Transform(Vector2::Zero, transform);// badcode

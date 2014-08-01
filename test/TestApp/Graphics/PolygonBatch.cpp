@@ -33,6 +33,7 @@ private:
 	std::shared_ptr<GraphicsContext> graphicsContext;
 	std::shared_ptr<VertexBuffer> vertexBuffer;
 	std::shared_ptr<EffectPass> effectPass;
+	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 	std::shared_ptr<InputLayout> inputLayout;
 
 public:
@@ -61,6 +62,7 @@ PolygonBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContext
 	}
 	{
 		effectPass = assets.Load<EffectPass>("Effects/PrimitiveLineEffect");
+		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}
 }
@@ -69,7 +71,7 @@ void PolygonBatch::Impl::Begin(Matrix4x4 const& transformMatrix)
 {
 	alignas(16) Matrix4x4 transposedMatrix = Matrix4x4::Transpose(transformMatrix);
 
-	auto parameter = effectPass->Parameters("TransformMatrix");
+	auto parameter = constantBuffers->Find("TransformMatrix");
 	parameter->SetValue(transposedMatrix);
 }
 //-----------------------------------------------------------------------
@@ -90,8 +92,8 @@ void PolygonBatch::Impl::Flush()
 	
 	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffer(vertexBuffer);
-	effectPass->Apply();
-	
+	graphicsContext->SetEffectPass(effectPass);
+	graphicsContext->SetConstantBuffers(constantBuffers);
 	graphicsContext->Draw(PrimitiveTopology::TriangleList, static_cast<std::uint32_t>(vertices.size()));
 	
 	vertices.clear();

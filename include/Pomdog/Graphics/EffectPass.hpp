@@ -31,16 +31,13 @@ class NativeEffectPass;
 }// namespace RenderSystem
 }// namespace Details
 
-using EffectParameterCollection = std::unordered_map<std::string, std::shared_ptr<EffectParameter>>;
-
-class POMDOG_EXPORT EffectPass: public std::enable_shared_from_this<EffectPass> {
+class POMDOG_EXPORT EffectPass {
 public:
 	EffectPass() = delete;
 	EffectPass(EffectPass const&) = delete;
 	EffectPass(EffectPass &&) = default;
 	
 	EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		std::shared_ptr<GraphicsContext> const& graphicsContext,
 		Details::ShaderBytecode const& vertexShader,
 		Details::ShaderBytecode const& pixelShader);
 
@@ -49,26 +46,10 @@ public:
 	EffectPass & operator=(EffectPass const&) = delete;
 	EffectPass & operator=(EffectPass &&) = default;
 
-	///@~Japanese
-	/// @brief エフェクトを適用します。
-	/// @remarks EffectParameter の値を変更した場合、
-	/// 変更を適用するために変更後にこのメソッドを呼び出す必要があります。
-	void Apply();
-
-	///@~Japanese
-	/// @brief エフェクトパラメータを取得します。
-	std::shared_ptr<EffectParameter> const& Parameters(std::string const& parameterName) const;
-	
-	///@~Japanese
-	/// @brief エフェクトパラメータのコンテナを取得します。
-	EffectParameterCollection const& Parameters() const;
-	
 public:
 	Details::RenderSystem::NativeEffectPass* NativeEffectPass();
-	
+
 private:
-	EffectParameterCollection effectParameters;
-	std::weak_ptr<GraphicsContext> graphicsContext;
 	std::unique_ptr<Details::RenderSystem::NativeEffectPass> nativeEffectPass;
 };
 

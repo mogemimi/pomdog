@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -37,18 +37,20 @@ GradientPlane::GradientPlane(std::shared_ptr<GameHost> const& gameHost)
 	}
 	{
 		effectPass = assets->Load<EffectPass>("Effects/PrimitiveLineEffect");
+		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}
 }
 //-----------------------------------------------------------------------
 void GradientPlane::Draw()
 {
-	auto parameter = effectPass->Parameters("TransformMatrix");
+	auto parameter = constantBuffers->Find("TransformMatrix");
 	parameter->SetValue(Matrix4x4::Identity);
 
 	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffer(vertexBuffer);
-	effectPass->Apply();
+	graphicsContext->SetEffectPass(effectPass);
+	graphicsContext->SetConstantBuffers(constantBuffers);
 	graphicsContext->Draw(PrimitiveTopology::TriangleList, vertexBuffer->VertexCount());
 }
 //-----------------------------------------------------------------------

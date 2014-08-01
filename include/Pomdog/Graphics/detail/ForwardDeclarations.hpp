@@ -19,6 +19,7 @@ namespace Pomdog {
 
 // Classes
 class BlendState;
+class ConstantBufferBinding;
 template <typename T, typename... Arguments>
 class CustomVertex;
 class DepthStencilState;

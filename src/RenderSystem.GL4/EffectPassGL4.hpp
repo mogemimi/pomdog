@@ -29,17 +29,14 @@ class ShaderBytecode;
 namespace RenderSystem {
 namespace GL4 {
 
-class ConstantBufferGL4;
-
-struct ConstantBufferBindingGL4 {
-	std::shared_ptr<ConstantBufferGL4> ConstantBuffer;
-	std::string Name;
-	std::uint32_t SlotIndex;
-};
-
 struct TextureBindingGL4 {
 	GLint UniformLocation;
-	std::uint32_t SlotIndex;
+	std::uint16_t SlotIndex;
+};
+
+struct UniformBlockBindingGL4 {
+	std::string Name;
+	std::uint16_t SlotIndex;
 };
 
 class EffectPassGL4 final: public NativeEffectPass {
@@ -49,21 +46,16 @@ public:
 	EffectPassGL4(ShaderBytecode const& vertexShaderBytecode, ShaderBytecode const& pixelShaderBytecode);
 	
 	~EffectPassGL4();
-	
-	void SetConstant(std::string const& constantName, std::shared_ptr<NativeConstantBuffer> const& constantBuffer) override;
-	
-	void SetConstant(std::string const& constantName) override;
 
-	void Apply(GraphicsContext & graphicsContext,
-		std::shared_ptr<EffectPass> const& sharedThisEffectPass) override;
-	
+	std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
+
 	void ApplyShaders();
 	
 	ShaderProgramGL4 GetShaderProgram() const;
-	
+
 private:
-	std::vector<ConstantBufferBindingGL4> constantBufferBindings;
 	std::vector<TextureBindingGL4> textureBindings;
+	std::vector<UniformBlockBindingGL4> uniformBlockBindings;
 	Optional<ShaderProgramGL4> shaderProgram;
 };
 

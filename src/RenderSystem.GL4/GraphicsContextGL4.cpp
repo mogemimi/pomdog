@@ -8,6 +8,7 @@
 
 #include "GraphicsContextGL4.hpp"
 #include "OpenGLContext.hpp"
+#include "ConstantLayoutGL4.hpp"
 #include "EffectPassGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "IndexBufferGL4.hpp"
@@ -221,6 +222,10 @@ void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::uint32_t
 	POMDOG_ASSERT(effectPass);
 	effectPass->ApplyShaders();
 	
+	// Apply constant layout:
+	POMDOG_ASSERT(constantLayout);
+	constantLayout->Apply();
+	
 	// Draw:
 	POMDOG_ASSERT(!vertexBuffers.empty());
 	POMDOG_ASSERT(vertexBuffers.front());
@@ -247,6 +252,10 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 	// Use shader program:
 	POMDOG_ASSERT(effectPass);
 	effectPass->ApplyShaders();
+	
+	// Apply constant layout:
+	POMDOG_ASSERT(constantLayout);
+	constantLayout->Apply();
 
 	// Bind index-buffer:
 	POMDOG_ASSERT(indexCount > 0);
@@ -279,6 +288,10 @@ void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std:
 	// Use shader program:
 	POMDOG_ASSERT(effectPass);
 	effectPass->ApplyShaders();
+	
+	// Apply constant layout:
+	POMDOG_ASSERT(constantLayout);
+	constantLayout->Apply();
 
 	// Draw
 	POMDOG_ASSERT(!vertexBuffers.empty());
@@ -307,6 +320,10 @@ void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopolog
 	// Use shader program:
 	POMDOG_ASSERT(effectPass);
 	effectPass->ApplyShaders();
+	
+	// Apply constant layout:
+	POMDOG_ASSERT(constantLayout);
+	constantLayout->Apply();
 
 	// Bind index-buffer:
 	POMDOG_ASSERT(indexCount > 0);
@@ -394,10 +411,22 @@ void GraphicsContextGL4::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuff
 	this->vertexBuffers = vertexBuffersIn;
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetEffectPass(std::shared_ptr<EffectPassGL4> const& nativeEffectPassIn)
+void GraphicsContextGL4::SetEffectPass(std::shared_ptr<NativeEffectPass> const& effectPassIn)
 {
-	POMDOG_ASSERT(nativeEffectPassIn);
-	this->effectPass = nativeEffectPassIn;
+	POMDOG_ASSERT(effectPassIn);
+	auto nativeEffectPass = std::dynamic_pointer_cast<EffectPassGL4>(effectPassIn);
+	
+	POMDOG_ASSERT(nativeEffectPass);
+	this->effectPass = nativeEffectPass;
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayoutIn)
+{
+	POMDOG_ASSERT(constantLayoutIn);
+	auto nativeConstantLayout = std::dynamic_pointer_cast<ConstantLayoutGL4>(constantLayoutIn);
+	
+	POMDOG_ASSERT(nativeConstantLayout);
+	this->constantLayout = nativeConstantLayout;
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetTexture(std::uint32_t textureUnit)
