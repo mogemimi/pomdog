@@ -6,6 +6,10 @@
 #  http://enginetrouble.net/pomdog/LICENSE.md for details.
 #
 
+# Create new project:
+# >>> cd .
+# >>> python pomdog/tools/quickstart.py YourProjectName
+# >>> cd YourProjectName
 
 import sys
 import os
@@ -40,6 +44,7 @@ def CopyTemplates(template_directory, project_root):
         "Source",
         "Platform.Cocoa",
         "Build",
+        "README.md",
         ".gitignore",
     ]
 
@@ -89,7 +94,8 @@ def Run():
     CreateProjectDirectory(project_root)
 
     framework_root = os.path.join(os.path.dirname(__file__), "..")
-    templates_directory = os.path.join(framework_root, "templates/QuickStartApp")
+    templates_directory = os.path.join(framework_root,
+      "templates/QuickStartApp")
 
     CopyTemplates(templates_directory, project_root)
     CopyFrameworkFiles(framework_root, project_root)

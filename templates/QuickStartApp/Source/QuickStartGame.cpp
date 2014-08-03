@@ -36,10 +36,12 @@ void CocoaTestGame::Initialize()
 			Vector3( 0.8f,  0.8f, 0.0f), Vector2(1.0f, 1.0f),
 			Vector3( 0.8f, -0.8f, 0.0f), Vector2(1.0f, 0.0f),
 		};
-		vertexBuffer = std::make_shared<ImmutableVertexBuffer>(graphicsDevice,
-			VertexCombined::Declaration(), verticesCombo.data(), verticesCombo.size());
+		vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
+			verticesCombo.data(), verticesCombo.size(),
+			VertexCombined::Declaration().StrideBytes(), BufferUsage::Immutable);
 
 		effectPass = assets->Load<EffectPass>("SimpleEffect");
+		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}
 	{
@@ -49,14 +51,11 @@ void CocoaTestGame::Initialize()
 		};
 
 		// Create index buffer
-		indexBuffer = std::make_shared<ImmutableIndexBuffer>(graphicsDevice,
-			IndexElementSize::SixteenBits, indices.data(), indices.size());
+		indexBuffer = std::make_shared<IndexBuffer>(graphicsDevice,
+			IndexElementSize::SixteenBits, indices.data(), indices.size(), BufferUsage::Immutable);
 	}
+#ifdef DEBUG
 	{
-		for (auto & parameter: effectPass->Parameters()) {
-			Log::Stream() << "EffectParameter: " << parameter.first;
-		}
-		
 		auto effectReflection = std::make_shared<EffectReflection>(graphicsDevice, effectPass);
 	
 		auto stream = Log::Stream();
@@ -67,6 +66,7 @@ void CocoaTestGame::Initialize()
 			stream << "Variables: " << description.Variables.size() << "\n";
 		}
 	}
+#endif
 	{
 		auto sampler = SamplerState::CreatePointClamp(graphicsDevice);
 		graphicsContext->SetSamplerState(0, sampler);
@@ -84,7 +84,7 @@ void CocoaTestGame::Initialize()
 	}
 	{
 		renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
-			window->ClientBounds().width, window->ClientBounds().height);
+			window->ClientBounds().Width, window->ClientBounds().Height);
 	}
 }
 //-----------------------------------------------------------------------
@@ -101,7 +101,7 @@ void CocoaTestGame::Update()
 		(1.0f + value) * 0.5f
 	};
 	
-	auto parameter = effectPass->Parameters("TestStructure");
+	auto parameter = constantBuffers->Find("TestStructure");
 	parameter->SetValue(vec);
 	
 	auto vector2 = parameter->GetValue<Vector2>();
@@ -116,7 +116,8 @@ void CocoaTestGame::Draw()
 	graphicsContext->SetTexture(0, texture);
 	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffer(vertexBuffer);
-	effectPass->Apply();
+	graphicsContext->SetEffectPass(effectPass);
+	graphicsContext->SetConstantBuffers(constantBuffers);
 	graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList, indexBuffer, indexBuffer->IndexCount());
 	
 	graphicsContext->Present();

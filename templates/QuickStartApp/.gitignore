@@ -14,9 +14,8 @@
 *.xcodeproj
 .DS_Store
 /out/
-/build/build
-/build.xcodefiles
-/build.msvc*/
-/build/Debug
-/build/Release
-/build/lib/
+/Build/build
+/Build/Debug
+/Build/Release
+/Build.xcodefiles
+/Build.msvs
