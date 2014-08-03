@@ -9,9 +9,15 @@
 #include <Pomdog/Content/AssetManager.hpp>
 
 namespace Pomdog {
-
+//-----------------------------------------------------------------------
 AssetManager::AssetManager(Details::AssetLoaderContext && loaderContextIn)
 	: loaderContext(std::move(loaderContextIn))
 {}
-
+//-----------------------------------------------------------------------
+void AssetManager::Unload()
+{
+	effectPassAssets.Unload();
+	texture2dAssets.Unload();
+}
+//-----------------------------------------------------------------------
 }// namespace Pomdog
