@@ -6,7 +6,8 @@ Open Source Software used in Pomdog
 * [SourceForge](http://iutest.sourceforge.jp/)
 * [iutest - GitHub](https://github.com/srz-zumix/iutest)
 
-|:----|:----|
+|iutest||
+|---|---|
 |URL|https://github.com/srz-zumix/iutest.git|
 |Version|1.9.1|
 |License|New (3-clause) BSD License|
@@ -18,7 +19,8 @@ Open Source Software used in Pomdog
 
 * [libpng Home Page](http://www.libpng.org/pub/png/libpng.html)
 
-|:----|:----|
+|libpng||
+|---|---|
 |URL|http://libpng.org/|
 |Version|1.6.12|
 |License|libpng License|
@@ -30,7 +32,8 @@ Open Source Software used in Pomdog
 
 * [The Programming Language Lua](http://www.lua.org/)
 
-|:----|:----|
+|Lua||
+|---|---|
 |URL|http://www.lua.org/|
 |Version|5.3.0 (alpha)|
 |License|MIT License|
@@ -43,7 +46,8 @@ Open Source Software used in Pomdog
 * [RapidJSON - GitHub](https://github.com/miloyip/rapidjson)
 * [RapidJSON Documentation](http://miloyip.github.io/rapidjson/)
 
-|:----|:----|
+|RapidJSON||
+|---|---|
 |URL|https://github.com/miloyip/rapidjson.git|
 |Version|0.1+|
 |License|MIT License|
@@ -55,7 +59,8 @@ Open Source Software used in Pomdog
 
 * [Selene - GitHub](https://github.com/jeremyong/Selene)
 
-|:----|:----|
+|Selene||
+|---|---|
 |URL|https://github.com/jeremyong/Selene.git|
 |Version|0.4|
 |License|zlib License|
@@ -68,7 +73,8 @@ Open Source Software used in Pomdog
 * [zlib Home Site](http://www.zlib.net/)
 * [zlib - GitHub](https://github.com/madler/zlib)
 
-|:----|:----|
+|zlib||
+|---|---|
 |URL|https://github.com/madler/zlib.git|
 |Version|1.2.8|
 |License|zlib License|
