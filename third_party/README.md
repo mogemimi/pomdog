@@ -55,19 +55,6 @@ Open Source Software used in Pomdog
 
 [license-rapidjson]: rapidjson/license.txt
 
-### Selene
-
-* [Selene - GitHub](https://github.com/jeremyong/Selene)
-
-|Selene||
-|---|---|
-|URL|https://github.com/jeremyong/Selene.git|
-|Version|0.4|
-|License|zlib License|
-|License File|[third_party/Selene/LICENSE][license-Selene]|
-
-[license-Selene]: Selene/LICENSE
-
 ### zlib
 
 * [zlib Home Site](http://www.zlib.net/)

@@ -12,9 +12,6 @@
       'target_name': 'lua_static',
       'product_name': 'lua',
       'type': 'static_library',
-      'defines': [
-        #'LUA_INT_INT',
-      ],
       'include_dirs': [
         '.',
       ],

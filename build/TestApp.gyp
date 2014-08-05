@@ -68,14 +68,10 @@
       'dependencies': [
         '../third_party/lua/lua.gyp:lua_static',
       ],
-      'defines': [
-        #'LUA_INT_INT',
-      ],
       'include_dirs': [
         '../include',
         '../third_party/rapidjson/include',
         '../third_party/lua/src',
-        #'../third_party/Selene/include',
       ],
       'sources': [
         '../test/TestApp/Particle2D/Beam.hpp',
