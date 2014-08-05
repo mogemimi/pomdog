@@ -20,7 +20,7 @@ Open Source Software used in Pomdog
 
 |:----|:----|
 |URL|http://libpng.org/|
-|Version|1.6.9|
+|Version|1.6.12|
 |License|libpng License|
 |License File|[third_party/libpng/LICENSE][license-libpng]|
 

@@ -1,4 +1,4 @@
-# libpng.gyp - for libpng 1.6.9
+# libpng.gyp - for libpng 1.6.12
 {
   'target_defaults': {
     'default_configuration': 'Release',
