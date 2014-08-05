@@ -13,7 +13,7 @@
       'product_name': 'lua',
       'type': 'static_library',
       'defines': [
-        'LUA_INT_INT',
+        #'LUA_INT_INT',
       ],
       'include_dirs': [
         '.',
