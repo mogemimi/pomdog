@@ -1,4 +1,4 @@
-# lua.gyp - for Lua 5.2.3
+# lua.gyp - for Lua 5.3.0 (alpha)
 {
   'target_defaults': {
     'default_configuration': 'Release',
