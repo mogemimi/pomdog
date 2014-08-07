@@ -7,24 +7,8 @@
 //
 
 #include "LightningTestGame.hpp"
+#include "Utilities/SandboxHelper.hpp"
 #include <utility>
-#include "SpriteBatch.hpp"
-#include "SpriteRenderer.hpp"
-#include "FXAA.hpp"
-#include "SandboxHelper.hpp"
-#include "SpriteFontLoader.hpp"
-#include "UI/StackPanel.hpp"
-#include "UI/DebugNavigator.hpp"
-
-///@note for test
-#include "Particle2D/ParticleEmitterShapeBox.hpp"
-#include "Particle2D/ParticleEmitterShapeSector.hpp"
-#include "Particle2D/ParticleParameterConstant.hpp"
-#include "Particle2D/ParticleParameterCurve.hpp"
-#include "Particle2D/ParticleParameterRandom.hpp"
-#include "Particle2D/ParticleParameterRandomCurves.hpp"
-#include "Graphics/SpriteLine.hpp"
-
 
 namespace TestApp {
 //-----------------------------------------------------------------------

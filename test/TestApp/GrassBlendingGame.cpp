@@ -7,30 +7,9 @@
 //
 
 #include "GrassBlendingGame.hpp"
+#include "Utilities/SandboxHelper.hpp"
+#include "Utilities/LogSkeletalInfo.hpp"
 #include <utility>
-#include "SpriteBatch.hpp"
-#include "SpriteRenderer.hpp"
-#include "FXAA.hpp"
-#include "SandboxHelper.hpp"
-#include "UI/StackPanel.hpp"
-#include "UI/DebugNavigator.hpp"
-
-#include "Skeletal2D/AnimationTrack.hpp"
-#include "Skeletal2D/SkeletonHelper.hpp"
-#include "Skeletal2D/SkinnedMesh.hpp"
-#include "Spine/SkeletonDescLoader.hpp"
-#include "Spine/AnimationLoader.hpp"
-#include "Spine/SkeletonLoader.hpp"
-#include "Spine/SkinLoader.hpp"
-#include "Spine/SpriteAnimationLoader.hpp"
-#include "Spine/SkinnedMeshLoader.hpp"
-#include "TexturePacker/TextureAtlasLoader.hpp"
-#include "LogSkeletalInfo.hpp"
-#include "Skeletal2D/AnimationNode.hpp"
-#include "Skeletal2D/AnimationAdditiveNode.hpp"
-#include "Skeletal2D/AnimationLerpNode.hpp"
-#include "Skeletal2D/AnimationClipNode.hpp"
-
 
 namespace TestApp {
 //-----------------------------------------------------------------------
@@ -80,20 +59,20 @@ void GrassBlendingGame::Initialize()
 	}
 	{
 		auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidChan2/skeleton.atlas");
-		auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("MaidChan2/skeleton.json");
+		auto skeletonDesc = assets->Load<Details::Spine::SkeletonDesc>("MaidChan2/skeleton.json");
 		maidTexture = assets->Load<Texture2D>("MaidChan2/skeleton.png");
 		
 		LogTexturePackerInfo(textureAtlas);
 		LogSkeletalInfo(skeletonDesc);
 		
-		maidSkeleton = std::make_shared<Skeleton>(Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones));
+		maidSkeleton = std::make_shared<Skeleton>(Details::Spine::CreateSkeleton(skeletonDesc.Bones));
 		maidSkeletonPose = std::make_shared<SkeletonPose>(SkeletonPose::CreateBindPose(*maidSkeleton));
-		auto animationClip = std::make_shared<AnimationClip>(Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Walk"));
+		auto animationClip = std::make_shared<AnimationClip>(Details::Spine::CreateAnimationClip(skeletonDesc, "Walk"));
 		maidAnimationState = std::make_shared<AnimationState>(animationClip, 1.0f, true);
-		maidAnimationClipIdle = std::make_shared<AnimationClip>(Details::Skeletal2D::CreateAnimationClip(skeletonDesc, "Idle"));
+		maidAnimationClipIdle = std::make_shared<AnimationClip>(Details::Spine::CreateAnimationClip(skeletonDesc, "Idle"));
 		
-		maidSkin = Details::Skeletal2D::CreateSkin(skeletonDesc, textureAtlas, "default");
-		maidSpriteAnimationTracks = Details::Skeletal2D::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
+		maidSkin = Details::Spine::CreateSkin(skeletonDesc, textureAtlas, "default");
+		maidSpriteAnimationTracks = Details::Spine::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
 		
 		animationSystem.Add(maidAnimationState, maidSkeleton, maidSkeletonPose);
 
@@ -101,7 +80,7 @@ void GrassBlendingGame::Initialize()
 
 		// NOTE: for Skinning
 		auto bindPose = SkeletonPose::CreateBindPose(*maidSkeleton);
-		maidSkinnedMesh = Details::Skeletal2D::CreateSkinnedMesh(graphicsDevice,
+		maidSkinnedMesh = Details::Spine::CreateSkinnedMesh(graphicsDevice,
 			SkeletonHelper::ToGlobalPose(*maidSkeleton, bindPose),
 			skeletonDesc, textureAtlas,
 			Vector2(maidTexture->Width(), maidTexture->Height()), "default");

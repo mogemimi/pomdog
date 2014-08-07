@@ -13,14 +13,8 @@
 #	pragma once
 #endif
 
+#include <Pomdog.Experimental/Pomdog2D.hpp>
 #include <Pomdog/Pomdog.hpp>
-#include "SceneEditor/InGameEditor.hpp"
-#include "UI/DrawingContext.hpp"
-#include "UI/ScenePanel.hpp"
-#include "UI/Slider.hpp"
-#include "ParticleSystem.hpp"
-#include "BeamSystem.hpp"
-
 
 namespace Pomdog {
 
@@ -33,8 +27,6 @@ class SpriteRenderer;
 namespace TestApp {
 
 using namespace Pomdog;
-
-class FXAA;
 
 class LightningTestGame: public Game {
 public:

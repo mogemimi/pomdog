@@ -13,26 +13,18 @@
 #	pragma once
 #endif
 
+#include <Pomdog.Experimental/Pomdog2D.hpp>
 #include <Pomdog/Pomdog.hpp>
-#include "SceneEditor/InGameEditor.hpp"
-#include "UI/DrawingContext.hpp"
-#include "UI/UIElementHierarchy.hpp"
-#include "UI/ScenePanel.hpp"
-#include "UI/Slider.hpp"
-#include "UI/TextBlock.hpp"
-#include "UI/ToggleSwitch.hpp"
-#include "Rendering/Renderer.hpp"
-#include "2D/GameLevel.hpp"
 
 namespace Pomdog {
-	class SpriteRenderable;
-}
+
+class SpriteRenderable;
+
+}// namespace Pomdog
 
 namespace TestApp {
 
 using namespace Pomdog;
-
-class FXAA;
 
 class MaidBeamGame: public Game {
 public:

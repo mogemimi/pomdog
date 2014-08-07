@@ -13,19 +13,12 @@
 #	pragma once
 #endif
 
+#include <Pomdog.Experimental/Pomdog2D.hpp>
 #include <Pomdog/Pomdog.hpp>
-#include "SceneEditor/InGameEditor.hpp"
-#include "UI/DrawingContext.hpp"
-#include "UI/UIElementHierarchy.hpp"
-#include "UI/ScenePanel.hpp"
-#include "UI/Slider.hpp"
-#include "Rendering/Renderer.hpp"
 
 namespace TestApp {
 
 using namespace Pomdog;
-
-class FXAA;
 
 class ParticleTestGame: public Game {
 public:

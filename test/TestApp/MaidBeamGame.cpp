@@ -7,20 +7,10 @@
 //
 
 #include "MaidBeamGame.hpp"
+#include "Utilities/SandboxHelper.hpp"
+#include "Levels/GunShootingLevel.hpp"
 #include <utility>
 #include <random>
-#include "Graphics/FXAA.hpp"
-#include "Utilities/SandboxHelper.hpp"
-#include "UI/StackPanel.hpp"
-#include "UI/DebugNavigator.hpp"
-#include "2D/Animator.hpp"
-#include "2D/BeamRenderable.hpp"
-#include "2D/Behavior.hpp"
-#include "2D/ScriptBehavior.hpp"
-#include "2D/SkinnedMeshRenderable.hpp"
-#include "2D/SpriteRenderable.hpp"
-#include "Levels/GunShootingLevel.hpp"
-
 
 namespace TestApp {
 //-----------------------------------------------------------------------

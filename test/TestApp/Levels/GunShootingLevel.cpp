@@ -7,18 +7,6 @@
 //
 
 #include "GunShootingLevel.hpp"
-#include "../2D/Animator.hpp"
-#include "../2D/BeamRenderable.hpp"
-#include "../2D/Behavior.hpp"
-#include "../2D/ScriptBehavior.hpp"
-#include "../2D/SkinnedMeshRenderable.hpp"
-#include "../2D/SpriteRenderable.hpp"
-#include "../Spine/SkeletonDescLoader.hpp"
-#include "../Spine/SkeletonLoader.hpp"
-#include "../Spine/SkinnedMeshLoader.hpp"
-#include "../TexturePacker/TextureAtlasLoader.hpp"
-#include "../Skeletal2D/SkeletonHelper.hpp"
-#include "../Skeletal2D/AnimationGraphBuilder.hpp"
 #include "../Utilities/LogSkeletalInfo.hpp"
 
 namespace TestApp {
@@ -32,16 +20,16 @@ public:
 void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	AssetManager & assets)
 {
-	auto skeletonDesc = assets.Load<Details::Skeletal2D::SkeletonDesc>("MaidGun/MaidGun.json");
+	auto skeletonDesc = assets.Load<Details::Spine::SkeletonDesc>("MaidGun/MaidGun.json");
 	TestApp::LogSkeletalInfo(skeletonDesc);
 	
-	auto skeleton = std::make_shared<Skeleton>(Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones));
+	auto skeleton = std::make_shared<Skeleton>(Details::Spine::CreateSkeleton(skeletonDesc.Bones));
 
 	auto skeletonTransform = std::make_shared<SkeletonTransform>();
 	skeletonTransform->Pose = SkeletonPose::CreateBindPose(*skeleton);
 	skeletonTransform->GlobalPose = SkeletonHelper::ToGlobalPose(*skeleton, skeletonTransform->Pose);
 	{
-		auto animationGraph = Details::Skeletal2D::LoadAnimationGraph(skeletonDesc, assets, "MaidGun/AnimationGraph.json");
+		auto animationGraph = Details::Spine::LoadAnimationGraph(skeletonDesc, assets, "MaidGun/AnimationGraph.json");
 		gameObject.AddComponent(std::make_unique<SkeletonAnimator>(skeleton, skeletonTransform, animationGraph));
 	}
 	{
@@ -51,7 +39,7 @@ void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const
 		TestApp::LogTexturePackerInfo(textureAtlas);
 
 		auto bindPose = SkeletonPose::CreateBindPose(*skeleton);
-		auto mesh = std::make_shared<SkinnedMesh>(Details::Skeletal2D::CreateSkinnedMesh(graphicsDevice,
+		auto mesh = std::make_shared<SkinnedMesh>(Details::Spine::CreateSkinnedMesh(graphicsDevice,
 			SkeletonHelper::ToGlobalPose(*skeleton, bindPose),
 			skeletonDesc, textureAtlas,
 			Vector2(texture->Width(), texture->Height()), "default"));
@@ -97,11 +85,11 @@ GunShootingLevel::GunShootingLevel(GameHost & gameHost, GameWorld & world)
 		rendererable.Load(graphicsDevice, assets);
 	}
 	{
-		auto skeletonDesc = assets->Load<Details::Skeletal2D::SkeletonDesc>("Ghost/Ghost.json");
+		auto skeletonDesc = assets->Load<Details::Spine::SkeletonDesc>("Ghost/Ghost.json");
 		TestApp::LogSkeletalInfo(skeletonDesc);
 		
-		ghostSkeleton = std::make_shared<Skeleton>(Details::Skeletal2D::CreateSkeleton(skeletonDesc.Bones));
-		ghostAnimGraph = Details::Skeletal2D::LoadAnimationGraph(skeletonDesc, *assets, "Ghost/AnimationGraph.json");
+		ghostSkeleton = std::make_shared<Skeleton>(Details::Spine::CreateSkeleton(skeletonDesc.Bones));
+		ghostAnimGraph = Details::Spine::LoadAnimationGraph(skeletonDesc, *assets, "Ghost/AnimationGraph.json");
 		{
 			auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("Ghost/Ghost.atlas");
 			TestApp::LogTexturePackerInfo(textureAtlas);
@@ -109,7 +97,7 @@ GunShootingLevel::GunShootingLevel(GameHost & gameHost, GameWorld & world)
 			ghostTexture = assets->Load<Texture2D>("Ghost/Ghost.png");
 
 			auto bindPose = SkeletonPose::CreateBindPose(*ghostSkeleton);
-			ghostMesh = std::make_shared<SkinnedMesh>(Details::Skeletal2D::CreateSkinnedMesh(graphicsDevice,
+			ghostMesh = std::make_shared<SkinnedMesh>(Details::Spine::CreateSkinnedMesh(graphicsDevice,
 				SkeletonHelper::ToGlobalPose(*ghostSkeleton, bindPose),
 				skeletonDesc, textureAtlas,
 				Vector2(ghostTexture->Width(), ghostTexture->Height()), "default"));

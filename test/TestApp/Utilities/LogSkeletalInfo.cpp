@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -7,6 +7,7 @@
 //
 
 #include "LogSkeletalInfo.hpp"
+#include <Pomdog/Pomdog.hpp>
 
 namespace TestApp {
 //-----------------------------------------------------------------------
@@ -36,7 +37,7 @@ void LogTexturePackerInfo(Details::TexturePacker::TextureAtlas const& textureAtl
 	Log::Info("-------------------------");
 }
 //-----------------------------------------------------------------------
-void LogSkeletalInfo(Details::Skeletal2D::SkeletonDesc const& skeletonDesc)
+void LogSkeletalInfo(Details::Spine::SkeletonDesc const& skeletonDesc)
 {
 	int boneIndex = 0;
 	for (auto & bone: skeletonDesc.Bones)

@@ -7,14 +7,8 @@
 //
 
 #include "ParticleTestGame.hpp"
+#include "Utilities/SandboxHelper.hpp"
 #include <utility>
-#include "FXAA.hpp"
-#include "SandboxHelper.hpp"
-#include "UI/StackPanel.hpp"
-#include "UI/DebugNavigator.hpp"
-#include "Rendering/Renderer.hpp"
-#include "2D/Renderable.hpp"
-#include "2D/ParticleRenderable.hpp"
 
 namespace TestApp {
 //-----------------------------------------------------------------------

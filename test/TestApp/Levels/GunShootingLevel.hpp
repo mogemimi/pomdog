@@ -13,11 +13,8 @@
 #	pragma once
 #endif
 
+#include <Pomdog.Experimental/Pomdog2D.hpp>
 #include <Pomdog/Pomdog.hpp>
-#include "../2D/GameLevel.hpp"
-#include "../Skeletal2D/Skeleton.hpp"
-#include "../Skeletal2D/AnimationGraph.hpp"
-#include "../Skeletal2D/SkinnedMesh.hpp"
 
 namespace TestApp {
 

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,9 +13,8 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Pomdog.hpp>
-#include "../Spine/SkeletonDesc.hpp"
-#include "../TexturePacker/TextureAtlas.hpp"
+#include "Pomdog.Experimental/Spine/SkeletonDesc.hpp"
+#include "Pomdog.Experimental/TexturePacker/TextureAtlasLoader.hpp"
 
 namespace TestApp {
 
@@ -23,7 +22,7 @@ using namespace Pomdog;
 
 void LogTexturePackerInfo(Details::TexturePacker::TextureAtlas const& textureAtlas);
 
-void LogSkeletalInfo(Details::Skeletal2D::SkeletonDesc const& skeletonDesc);
+void LogSkeletalInfo(Details::Spine::SkeletonDesc const& skeletonDesc);
 
 }// namespace TestApp
 

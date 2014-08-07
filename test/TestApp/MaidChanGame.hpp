@@ -13,21 +13,8 @@
 #	pragma once
 #endif
 
+#include <Pomdog.Experimental/Pomdog2D.hpp>
 #include <Pomdog/Pomdog.hpp>
-#include "SceneEditor/InGameEditor.hpp"
-#include "UI/DrawingContext.hpp"
-#include "UI/UIElementHierarchy.hpp"
-#include "UI/ScenePanel.hpp"
-#include "UI/Slider.hpp"
-#include "UI/ToggleSwitch.hpp"
-#include "Skeletal2D/Skeleton.hpp"
-#include "Skeletal2D/SkeletonPose.hpp"
-#include "Skeletal2D/Skin.hpp"
-#include "Skeletal2D/AnimationClip.hpp"
-#include "Skeletal2D/SpriteAnimationTrack.hpp"
-#include "Skeletal2D/AnimationState.hpp"
-#include "Skeletal2D/AnimationSystem.hpp"
-#include "Skeletal2D/AnimationTimer.hpp"
 
 namespace Pomdog {
 
@@ -39,8 +26,6 @@ class SpriteRenderer;
 namespace TestApp {
 
 using namespace Pomdog;
-
-class FXAA;
 
 class MaidChanGame: public Game {
 public:
