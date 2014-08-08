@@ -18,7 +18,7 @@ namespace SceneEditor {
 //-----------------------------------------------------------------------
 InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 	: gameHost(gameHostIn)
-	, lineBatch(gameHost->GraphicsContext(), gameHost->GraphicsDevice(), *gameHost->AssetManager())
+	, lineBatch(gameHost->GraphicsContext(), gameHost->GraphicsDevice())
 {
 	auto graphicsContext = gameHost->GraphicsContext();
 	auto graphicsDevice = gameHost->GraphicsDevice();
@@ -29,12 +29,12 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 		backgroundPlane = std::make_unique<SceneEditor::GradientPlane>(gameHost);
 	}
 	{
-		spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
+		spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice);
 		//spriteFont = assets->Load<SpriteFont>("BitmapFonts/UbuntuMono-Regular.fnt");
 		spriteFont = assets->Load<SpriteFont>("BitmapFonts/Ubuntu-Regular.fnt");
 		distanceFieldEffect = assets->Load<EffectPass>("Effects/SpriteBatchDistanceField");
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *distanceFieldEffect);
-		spriteBatchDistanceField = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets,
+		spriteBatchDistanceField = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice,
 			distanceFieldEffect, constantBuffers);
 	}
 	{

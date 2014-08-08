@@ -7,10 +7,11 @@
 //
 
 #include <Pomdog/Content/detail/EffectLoader.hpp>
-#include <Pomdog/Graphics/GraphicsDevice.hpp>
-#include <Pomdog/Graphics/EffectPass.hpp>
-#include <Pomdog/Graphics/detail/ShaderBytecode.hpp>
-#include <Pomdog/Utility/Exception.hpp>
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/EffectPass.hpp"
+#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include <fstream>
 #include <vector>
 #include <utility>
@@ -22,6 +23,10 @@ namespace {
 static std::vector<std::uint8_t> ReadBinaryFile(std::string const& filename)
 {
 	std::ifstream stream(filename, std::ios::binary);
+	
+	if (!stream) {
+		return {};
+	}
 	
 	stream.seekg(0, stream.end);
 	auto const length = static_cast<std::size_t>(stream.tellg());
@@ -39,6 +44,13 @@ std::shared_ptr<EffectPass> AssetLoader<EffectPass>::operator()(AssetLoaderConte
 {
 	auto const vertexShader = ReadBinaryFile(loaderContext.RootDirectory + "/" + assetPath + "/VertexShader.glsl");
 	auto const pixelShader = ReadBinaryFile(loaderContext.RootDirectory + "/" + assetPath + "/PixelShader.glsl");
+
+	POMDOG_ASSERT(!vertexShader.empty());
+	POMDOG_ASSERT(!pixelShader.empty());
+
+	if (vertexShader.empty() || pixelShader.empty()) {
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
+	}
 
 	auto graphicsDevice = loaderContext.GraphicsDevice.lock();
 	

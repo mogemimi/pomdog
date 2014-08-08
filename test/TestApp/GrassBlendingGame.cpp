@@ -44,9 +44,11 @@ void GrassBlendingGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 	{
-		spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
-		fxaa = std::make_unique<FXAA>(gameHost);
-		polygonBatch = std::make_unique<PolygonBatch>(graphicsContext, graphicsDevice, *assets);
+		spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice);
+		fxaa = std::make_unique<FXAA>(graphicsDevice);
+		auto bounds = window->ClientBounds();
+		fxaa->SetViewport(bounds.Width, bounds.Height);
+		polygonBatch = std::make_unique<PolygonBatch>(graphicsContext, graphicsDevice);
 	}
 	{
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
@@ -84,9 +86,7 @@ void GrassBlendingGame::Initialize()
 			SkeletonHelper::ToGlobalPose(*maidSkeleton, bindPose),
 			skeletonDesc, textureAtlas,
 			Vector2(maidTexture->Width(), maidTexture->Height()), "default");
-		maidSkinningEffect = assets->Load<EffectPass>("Effects/SkinningSpriteEffect");
-		maidSkinningConstantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *maidSkinningEffect);
-		maidInputLayout = std::make_shared<InputLayout>(graphicsDevice, maidSkinningEffect);
+		maidSkinningEffect = std::make_unique<SkinnedEffect>(graphicsDevice);
 	}
 	
 	{
@@ -145,7 +145,7 @@ void GrassBlendingGame::Initialize()
 			gameHost->GraphicsDevice(), bounds.Width, bounds.Height,
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 
-		fxaa->ResetViewportSize(bounds);
+		fxaa->SetViewport(bounds.Width, bounds.Height);
 		spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(bounds.Width, bounds.Height, 1.0f, 100.0f));
 	});
 }
@@ -245,14 +245,8 @@ void GrassBlendingGame::DrawSkinnedMesh()
 		auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 			graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
 		
-		maidSkinningConstantBuffers->Find("Constants")->SetValue(Matrix4x4::Transpose(viewMatrix * projectionMatrix));
+		maidSkinningEffect->SetWorldViewProjection(viewMatrix * projectionMatrix);
 
-		struct MatrixPalette {
-			std::array<Vector4, 64> matrixPalette1;
-			std::array<Vector4, 64> matrixPalette2;
-		};
-		MatrixPalette matrixPalette;
-		
 		std::array<Matrix3x2, 64> matrices;
 
 		for (auto & joint: *maidSkeleton)
@@ -263,25 +257,14 @@ void GrassBlendingGame::DrawSkinnedMesh()
 			matrices[*joint.Index] = joint.InverseBindPose * maidGlobalPose[*joint.Index];
 		}
 
-		for (std::size_t i = 0; i < matrices.size(); ++i) {
-			matrixPalette.matrixPalette1[i].X = matrices[i](0, 0);
-			matrixPalette.matrixPalette1[i].Y = matrices[i](0, 1);
-			matrixPalette.matrixPalette1[i].Z = matrices[i](1, 0);
-			matrixPalette.matrixPalette1[i].W = matrices[i](1, 1);
-			matrixPalette.matrixPalette2[i].X = matrices[i](2, 0);
-			matrixPalette.matrixPalette2[i].Y = matrices[i](2, 1);
-		}
-
-		maidSkinningConstantBuffers->Find("SkinningConstants")->SetValue(matrixPalette);
+		maidSkinningEffect->SetBoneTransforms(matrices.data(), matrices.size());
+		maidSkinningEffect->SetTexture(maidTexture);
 	}
 	
 	if (toggleSwitch2->IsOn())
 	{
-		graphicsContext->SetTexture(0, maidTexture);
-		graphicsContext->SetInputLayout(maidInputLayout);
 		graphicsContext->SetVertexBuffer(maidSkinnedMesh.VertexBuffer);
-		graphicsContext->SetEffectPass(maidSkinningEffect);
-		graphicsContext->SetConstantBuffers(maidSkinningConstantBuffers);
+		maidSkinningEffect->Apply(*graphicsContext);
 		graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList,
 			maidSkinnedMesh.IndexBuffer, maidSkinnedMesh.IndexBuffer->IndexCount());
 	}
@@ -294,11 +277,9 @@ void GrassBlendingGame::DrawSkinnedMesh()
 		
 		graphicsContext->SetRasterizerState(rasterizerState);
 		
-		graphicsContext->SetTexture(0, texture);
-		graphicsContext->SetInputLayout(maidInputLayout);
+		maidSkinningEffect->SetTexture(texture);
 		graphicsContext->SetVertexBuffer(maidSkinnedMesh.VertexBuffer);
-		graphicsContext->SetEffectPass(maidSkinningEffect);
-		graphicsContext->SetConstantBuffers(maidSkinningConstantBuffers);
+		maidSkinningEffect->Apply(*graphicsContext);
 		graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList,
 									 maidSkinnedMesh.IndexBuffer, maidSkinnedMesh.IndexBuffer->IndexCount());
 		
@@ -334,7 +315,9 @@ void GrassBlendingGame::Draw()
 	
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget();
-		fxaa->Draw(*graphicsContext, renderTarget);
+		graphicsContext->Clear(Color::CornflowerBlue);
+		fxaa->SetTexture(renderTarget);
+		fxaa->Apply(*graphicsContext);
 	}
 
 	gameEditor->EndDraw(*graphicsContext);

@@ -44,8 +44,10 @@ void MaidChanGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 	{
-		spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
-		fxaa = std::make_unique<FXAA>(gameHost);
+		spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice);
+		fxaa = std::make_unique<FXAA>(graphicsDevice);
+		auto bounds = window->ClientBounds();
+		fxaa->SetViewport(bounds.Width, bounds.Height);
 	}
 	{
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
@@ -132,7 +134,7 @@ void MaidChanGame::Initialize()
 			gameHost->GraphicsDevice(), bounds.Width, bounds.Height,
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 
-		fxaa->ResetViewportSize(bounds);
+		fxaa->SetViewport(bounds.Width, bounds.Height);
 		spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(bounds.Width, bounds.Height, 1.0f, 100.0f));
 	});
 }
@@ -249,7 +251,9 @@ void MaidChanGame::Draw()
 	
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget();
-		fxaa->Draw(*graphicsContext, renderTarget);
+		graphicsContext->Clear(Color::CornflowerBlue);
+		fxaa->SetTexture(renderTarget);
+		fxaa->Apply(*graphicsContext);
 	}
 	
 	gameEditor->EndDraw(*graphicsContext);

@@ -21,7 +21,7 @@ namespace Pomdog {
 class PolygonBatch {
 public:
 	PolygonBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 	~PolygonBatch();
 

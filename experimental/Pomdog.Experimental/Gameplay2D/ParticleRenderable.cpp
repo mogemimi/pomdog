@@ -128,7 +128,7 @@ void ParticleRenderable::Load(std::shared_ptr<GraphicsContext> const& graphicsCo
 {
 	command.texture = assets.Load<Texture2D>("Particles/smoke.png");
 	command.particles = &particleSystem.particles;
-	command.spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, assets);
+	command.spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice);
 	//command.blendState = BlendState::CreateAdditive(graphicsDevice);
 	command.blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 

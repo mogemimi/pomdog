@@ -40,7 +40,9 @@ void ParticleTestGame::Initialize()
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 	}
 	{
-		fxaa = std::make_unique<FXAA>(gameHost);
+		fxaa = std::make_unique<FXAA>(graphicsDevice);
+		auto bounds = window->ClientBounds();
+		fxaa->SetViewport(bounds.Width, bounds.Height);
 		renderer = std::make_unique<Renderer>(graphicsContext, graphicsDevice, *assets);
 	}
 	{
@@ -166,7 +168,9 @@ void ParticleTestGame::Draw()
 
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget();
-		fxaa->Draw(*graphicsContext, renderTarget);
+		graphicsContext->Clear(Color::CornflowerBlue);
+		fxaa->SetTexture(renderTarget);
+		fxaa->Apply(*graphicsContext);
 	}
 
 	gameEditor->EndDraw(*graphicsContext);

@@ -7,13 +7,20 @@
 //
 
 #include "SpriteBatch.hpp"
+#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 #include <algorithm>
 #include <vector>
 
 namespace Pomdog {
+namespace {
+
+// Built-in shaders
+#include "Shaders/GLSL.Embedded/SpriteBatch_VS.inc.h"
+#include "Shaders/GLSL.Embedded/SpriteBatch_PS.inc.h"
 
 #define POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
 
+}// unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - SpriteBatch::Impl
@@ -64,7 +71,7 @@ private:
 
 public:
 	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets,
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		std::shared_ptr<EffectPass> const& effectPass,
 		std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
 	
@@ -88,7 +95,7 @@ private:
 };
 //-----------------------------------------------------------------------
 SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets,
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::shared_ptr<EffectPass> const& effectPassIn,
 	std::shared_ptr<ConstantBufferBinding> const& constantBuffersIn)
 	: graphicsContext(graphicsContextIn)
@@ -376,19 +383,28 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 #endif
 //-----------------------------------------------------------------------
 SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
-	auto effectPass = assets.Load<EffectPass>("Effects/SpriteBatch");
+	using Details::ShaderBytecode;
+	ShaderBytecode vertexShader;
+	vertexShader.Code = Builtin_GLSL_SpriteBatch_VS;
+	vertexShader.ByteLength = std::strlen(Builtin_GLSL_SpriteBatch_VS);
+
+	ShaderBytecode pixelShader;
+	pixelShader.Code = Builtin_GLSL_SpriteBatch_PS;
+	pixelShader.ByteLength = std::strlen(Builtin_GLSL_SpriteBatch_PS);
+
+	auto effectPass = std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
 	auto constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 
-	impl = std::make_unique<Impl>(graphicsContext, graphicsDevice, assets, effectPass, constantBuffers);
+	impl = std::make_unique<Impl>(graphicsContext, graphicsDevice, effectPass, constantBuffers);
 }
 //-----------------------------------------------------------------------
 SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets,
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::shared_ptr<EffectPass> const& effectPass,
 	std::shared_ptr<ConstantBufferBinding> const& constantBuffers)
-	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets, effectPass, constantBuffers))
+	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, effectPass, constantBuffers))
 {}
 //-----------------------------------------------------------------------
 SpriteBatch::~SpriteBatch() = default;

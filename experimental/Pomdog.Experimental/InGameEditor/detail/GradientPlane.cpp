@@ -7,9 +7,17 @@
 //
 
 #include "GradientPlane.hpp"
+#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 
 namespace Pomdog {
 namespace SceneEditor {
+namespace {
+
+// Built-in shaders
+#include "Pomdog.Experimental/Graphics/Shaders/GLSL.Embedded/LineBatch_VS.inc.h"
+#include "Pomdog.Experimental/Graphics/Shaders/GLSL.Embedded/LineBatch_PS.inc.h"
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 GradientPlane::GradientPlane(std::shared_ptr<GameHost> const& gameHost)
 	: graphicsContext(gameHost->GraphicsContext())
@@ -36,7 +44,16 @@ GradientPlane::GradientPlane(std::shared_ptr<GameHost> const& gameHost)
 			PositionColor::Declaration().StrideBytes(), BufferUsage::Immutable);
 	}
 	{
-		effectPass = assets->Load<EffectPass>("Effects/PrimitiveLineEffect");
+		using Details::ShaderBytecode;
+		ShaderBytecode vertexShader;
+		vertexShader.Code = Builtin_GLSL_LineBatch_VS;
+		vertexShader.ByteLength = std::strlen(Builtin_GLSL_LineBatch_VS);
+
+		ShaderBytecode pixelShader;
+		pixelShader.Code = Builtin_GLSL_LineBatch_PS;
+		pixelShader.ByteLength = std::strlen(Builtin_GLSL_LineBatch_PS);
+
+		effectPass = std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}

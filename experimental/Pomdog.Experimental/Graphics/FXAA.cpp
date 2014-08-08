@@ -7,31 +7,45 @@
 //
 
 #include "FXAA.hpp"
+#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
-FXAA::FXAA(std::shared_ptr<GameHost> const& gameHost)
-{
-	auto graphicsDevice = gameHost->GraphicsDevice();
-	auto assets = gameHost->AssetManager();
+namespace {
 
-	
+// Built-in shaders
+#include "Shaders/GLSL.Embedded/FXAA_VS.inc.h"
+#include "Shaders/GLSL.Embedded/FXAA_PS.inc.h"
+
+}// unnamed namespace
+//-----------------------------------------------------------------------
+FXAA::FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+{
 	samplerLinear = SamplerState::CreateLinearWrap(graphicsDevice);
 	
 	{
 		using VertexCombined = CustomVertex<Vector3, Vector2>;
 		
 		std::array<VertexCombined, 4> const verticesCombo = {
-			Vector3(-1.0f, -1.0f, 0.0f), Vector2(0.0f, 0.0f),
-			Vector3(-1.0f,  1.0f, 0.0f), Vector2(0.0f, 1.0f),
-			Vector3( 1.0f,  1.0f, 0.0f), Vector2(1.0f, 1.0f),
-			Vector3( 1.0f, -1.0f, 0.0f), Vector2(1.0f, 0.0f),
+			Vector3{-1.0f, -1.0f, 0.0f}, Vector2{0.0f, 0.0f},
+			Vector3{-1.0f,  1.0f, 0.0f}, Vector2{0.0f, 1.0f},
+			Vector3{ 1.0f,  1.0f, 0.0f}, Vector2{1.0f, 1.0f},
+			Vector3{ 1.0f, -1.0f, 0.0f}, Vector2{1.0f, 0.0f},
 		};
 		vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
 			verticesCombo.data(), verticesCombo.size(),
 			VertexCombined::Declaration().StrideBytes(), BufferUsage::Immutable);
+	}
+	{
+		using Details::ShaderBytecode;
+		ShaderBytecode vertexShader;
+		vertexShader.Code = Builtin_GLSL_FXAA_VS;
+		vertexShader.ByteLength = std::strlen(Builtin_GLSL_FXAA_VS);
 
-		effectPass = assets->Load<EffectPass>("Effects/FXAA");
+		ShaderBytecode pixelShader;
+		pixelShader.Code = Builtin_GLSL_FXAA_PS;
+		pixelShader.ByteLength = std::strlen(Builtin_GLSL_FXAA_PS);
+
+		effectPass = std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}
@@ -58,25 +72,25 @@ FXAA::FXAA(std::shared_ptr<GameHost> const& gameHost)
 		}
 	}
 #endif
-	{
-		auto graphicsContext = gameHost->GraphicsContext();
-		auto viewport = graphicsContext->Viewport();
-		ResetViewportSize(viewport.Bounds);
-	}
 }
 //-----------------------------------------------------------------------
-void FXAA::ResetViewportSize(Rectangle const& bounds)
+void FXAA::SetViewport(float width, float height)
 {
-	Vector2 renderTargetSize(bounds.Width, bounds.Height);
+	Vector2 renderTargetSize(width, height);
 	constantBuffers->Find("Constants")->SetValue(renderTargetSize);
 }
 //-----------------------------------------------------------------------
-void FXAA::Draw(GraphicsContext & graphicsContext, std::shared_ptr<RenderTarget2D> const& texture)
+void FXAA::SetTexture(std::shared_ptr<RenderTarget2D> const& textureIn)
 {
-	graphicsContext.SetSamplerState(0, samplerLinear);
+	POMDOG_ASSERT(textureIn);
+	texture = textureIn;
+}
+//-----------------------------------------------------------------------
+void FXAA::Apply(GraphicsContext & graphicsContext)
+{
+	POMDOG_ASSERT(texture);
 
-	graphicsContext.Clear(Color::CornflowerBlue);
-	
+	graphicsContext.SetSamplerState(0, samplerLinear);
 	graphicsContext.SetTexture(0, texture);
 	graphicsContext.SetInputLayout(inputLayout);
 	graphicsContext.SetVertexBuffer(vertexBuffer);

@@ -7,8 +7,16 @@
 //
 
 #include "SpriteRenderer.hpp"
+#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 
 namespace Pomdog {
+namespace {
+
+// Built-in shaders
+#include "Shaders/GLSL.Embedded/SpriteRenderer_VS.inc.h"
+#include "Shaders/GLSL.Embedded/SpriteRenderer_PS.inc.h"
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - SpriteRenderer::Impl
@@ -67,7 +75,7 @@ private:
 
 public:
 	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 	void ResetProjectionMatrix(Matrix4x4 const& projectionMatrix);
 	
@@ -91,7 +99,7 @@ private:
 };
 //-----------------------------------------------------------------------
 SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	: graphicsContext(graphicsContextIn)
 	, sortMode(SpriteSortMode::BackToFront)
 {
@@ -130,7 +138,16 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 			maxBatchSize, sizeof(SpriteInfo), BufferUsage::Dynamic);
 	}
 	{
-		effectPass = assets.Load<EffectPass>("Effects/SpriteRendererEffect");
+		using Details::ShaderBytecode;
+		ShaderBytecode vertexShader;
+		vertexShader.Code = Builtin_GLSL_SpriteRenderer_VS;
+		vertexShader.ByteLength = std::strlen(Builtin_GLSL_SpriteRenderer_VS);
+
+		ShaderBytecode pixelShader;
+		pixelShader.Code = Builtin_GLSL_SpriteRenderer_PS;
+		pixelShader.ByteLength = std::strlen(Builtin_GLSL_SpriteRenderer_PS);
+
+		effectPass = std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 
 		auto declartation = PositionTextureCoord::Declaration();
@@ -333,8 +350,8 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
 #endif
 //-----------------------------------------------------------------------
 SpriteRenderer::SpriteRenderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
-	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice))
 {}
 //-----------------------------------------------------------------------
 SpriteRenderer::~SpriteRenderer() = default;

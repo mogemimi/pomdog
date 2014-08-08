@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -19,13 +19,15 @@ namespace Pomdog {
 
 class FXAA {
 public:
-	explicit FXAA(std::shared_ptr<GameHost> const& gameHost);
+	explicit FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
-	void ResetViewportSize(Rectangle const& bounds);
+	void SetViewport(float width, float height);
+	void SetTexture(std::shared_ptr<RenderTarget2D> const& texture);
 	
-	void Draw(GraphicsContext & graphicsContext, std::shared_ptr<RenderTarget2D> const& texture);
+	void Apply(GraphicsContext & graphicsContext);
 	
 private:
+	std::shared_ptr<RenderTarget2D> texture;
 	std::shared_ptr<SamplerState> samplerLinear;
 	std::shared_ptr<VertexBuffer> vertexBuffer;
 	std::shared_ptr<IndexBuffer> indexBuffer;

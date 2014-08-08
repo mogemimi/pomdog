@@ -10,8 +10,8 @@ out VertexData {
 } Out;
 
 uniform SkinningConstants {
-	vec4 SkinMatrices1[64];
-	vec4 SkinMatrices2[64];
+	// 96 bones * vec4[2] = vec4[96 * 2]
+	vec4 Bones[192];
 };
 
 uniform Constants {
@@ -29,9 +29,9 @@ void main()
 		}
 
 		mat3x2 boneMatrix = mat3x2(
-			vec2(SkinMatrices1[jointIndex].xy),
-			vec2(SkinMatrices1[jointIndex].zw),
-			vec2(SkinMatrices2[jointIndex].xy));
+			vec2(Bones[jointIndex * 2].xy),
+			vec2(Bones[jointIndex * 2].zw),
+			vec2(Bones[jointIndex * 2 + 1].xy));
 
 		skinning += boneMatrix * Weights[i];
 	}

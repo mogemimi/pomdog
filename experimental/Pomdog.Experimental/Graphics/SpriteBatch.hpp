@@ -22,11 +22,12 @@ namespace Pomdog {
 class SpriteBatch {
 public:
 	SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 	SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets,
-		std::shared_ptr<EffectPass> const& effectPass, std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		std::shared_ptr<EffectPass> const& effectPass,
+		std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
 	
 	~SpriteBatch();
 	

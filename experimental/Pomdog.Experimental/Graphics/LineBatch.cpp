@@ -7,8 +7,16 @@
 //
 
 #include "LineBatch.hpp"
+#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 
 namespace Pomdog {
+namespace {
+
+// Built-in shaders
+#include "Shaders/GLSL.Embedded/LineBatch_VS.inc.h"
+#include "Shaders/GLSL.Embedded/LineBatch_PS.inc.h"
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - LineBatch::Impl
@@ -38,7 +46,7 @@ private:
 
 public:
 	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 	void Begin(Matrix4x4 const& transformMatrix);
 
@@ -57,7 +65,7 @@ public:
 };
 //-----------------------------------------------------------------------
 LineBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	: graphicsContext(graphicsContextIn)
 {
 	vertices.reserve(MinVertexCount);
@@ -67,7 +75,16 @@ LineBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
 			maxVertexCount, sizeof(Vertex), BufferUsage::Dynamic);
 	}
 	{
-		effectPass = assets.Load<EffectPass>("Effects/PrimitiveLineEffect");
+		using Details::ShaderBytecode;
+		ShaderBytecode vertexShader;
+		vertexShader.Code = Builtin_GLSL_LineBatch_VS;
+		vertexShader.ByteLength = std::strlen(Builtin_GLSL_LineBatch_VS);
+
+		ShaderBytecode pixelShader;
+		pixelShader.Code = Builtin_GLSL_LineBatch_PS;
+		pixelShader.ByteLength = std::strlen(Builtin_GLSL_LineBatch_PS);
+
+		effectPass = std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}
@@ -150,8 +167,8 @@ void LineBatch::Impl::DrawTriangle(Vector2 const& point1, Vector2 const& point2,
 #endif
 //-----------------------------------------------------------------------
 LineBatch::LineBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
-	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice))
 {}
 //-----------------------------------------------------------------------
 LineBatch::~LineBatch() = default;

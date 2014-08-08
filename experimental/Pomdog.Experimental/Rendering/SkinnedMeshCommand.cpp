@@ -14,13 +14,9 @@ namespace Rendering {
 //-----------------------------------------------------------------------
 void SkinnedMeshCommand::Execute(std::shared_ptr<GraphicsContext> const& graphicsContext)
 {
-	constantBuffers->Find("Constants")->SetValue(Matrix4x4::Transpose(modelViewProjection));
 	{
-		graphicsContext->SetTexture(0, texture);
-		graphicsContext->SetInputLayout(inputLayout);
 		graphicsContext->SetVertexBuffer(mesh->VertexBuffer);
-		graphicsContext->SetEffectPass(effectPass);
-		graphicsContext->SetConstantBuffers(constantBuffers);
+		skinnedEffect.Apply(*graphicsContext);
 		graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList,
 			mesh->IndexBuffer, mesh->IndexBuffer->IndexCount());
 	}
@@ -57,24 +53,7 @@ void SkinnedMeshCommand::SetMatrixPalette(Skeleton const& skeleton, SkeletonTran
 	}
 
 	auto const minMatrixCount = std::min(matrices.size(), skeletonTransform.GlobalPose.size());
-
-	struct MatrixPalette {
-		std::array<Vector4, 64> matrixPalette1;
-		std::array<Vector4, 64> matrixPalette2;
-	};
-	
-	MatrixPalette matrixPalette;
-	
-	for (std::size_t i = 0; i < minMatrixCount; ++i) {
-		matrixPalette.matrixPalette1[i].X = matrices[i](0, 0);
-		matrixPalette.matrixPalette1[i].Y = matrices[i](0, 1);
-		matrixPalette.matrixPalette1[i].Z = matrices[i](1, 0);
-		matrixPalette.matrixPalette1[i].W = matrices[i](1, 1);
-		matrixPalette.matrixPalette2[i].X = matrices[i](2, 0);
-		matrixPalette.matrixPalette2[i].Y = matrices[i](2, 1);
-	}
-
-	constantBuffers->Find("SkinningConstants")->SetValue(matrixPalette);
+	skinnedEffect.SetBoneTransforms(matrices.data(), minMatrixCount);
 }
 //-----------------------------------------------------------------------
 RenderCommandType SkinnedMeshCommand::CommandType() const

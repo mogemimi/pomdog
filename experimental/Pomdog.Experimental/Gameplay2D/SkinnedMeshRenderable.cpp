@@ -36,23 +36,15 @@ SkinnedMeshRenderable::SkinnedMeshRenderable(std::shared_ptr<GraphicsDevice> con
 	std::shared_ptr<Skeleton> const& skeletonIn,
 	std::shared_ptr<SkeletonTransform> const& skeletonTransformIn,
 	std::shared_ptr<SkinnedMesh> const& meshIn, std::shared_ptr<Texture2D> const& textureIn)
-	: skeleton(skeletonIn)
+	: command(graphicsDevice)
+	, skeleton(skeletonIn)
 	, skeletonTransform(skeletonTransformIn)
 {
 	POMDOG_ASSERT(skeleton);
 	POMDOG_ASSERT(skeletonTransform);
 
 	command.mesh = meshIn;
-	command.texture = textureIn;
-	command.effectPass = assets.Load<EffectPass>("Effects/SkinningSpriteEffect");
-	command.constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *command.effectPass);
-	command.inputLayout = std::make_shared<InputLayout>(graphicsDevice, command.effectPass);
-
-	POMDOG_ASSERT(command.mesh);
-	POMDOG_ASSERT(command.texture);
-	POMDOG_ASSERT(command.effectPass);
-	POMDOG_ASSERT(command.constantBuffers);
-	POMDOG_ASSERT(command.inputLayout);
+	command.skinnedEffect.SetTexture(textureIn);
 }
 //-----------------------------------------------------------------------
 void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer,
@@ -63,18 +55,20 @@ void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 	}
 	
 	command.drawOrder = DrawOrder;
-	command.modelViewProjection = viewMatrix * projectionMatrix;
-	
+
 	POMDOG_ASSERT(skeleton);
 	POMDOG_ASSERT(skeletonTransform);
 	
 	command.SetMatrixPalette(*skeleton, *skeletonTransform);
 	
+	auto worldViewProjection = viewMatrix * projectionMatrix;
+	
 	if (auto transform = gameObject.Component<Transform2D>())
 	{
-		command.modelViewProjection = CreateTransformMatrix4x4(*transform)
-			* command.modelViewProjection;
+		worldViewProjection = CreateTransformMatrix4x4(*transform) * worldViewProjection;
 	}
+	
+	command.skinnedEffect.SetWorldViewProjection(worldViewProjection);
 	
 	renderer.PushCommand(command);
 }

@@ -78,9 +78,7 @@ private:
 	std::vector<Details::Skeletal2D::SpriteAnimationTrack> maidSpriteAnimationTracks;
 	
 	SkinnedMesh maidSkinnedMesh;
-	std::shared_ptr<EffectPass> maidSkinningEffect;
-	std::shared_ptr<ConstantBufferBinding> maidSkinningConstantBuffers;
-	std::shared_ptr<InputLayout> maidInputLayout;
+	std::shared_ptr<SkinnedEffect> maidSkinningEffect;
 	
 	ScopedConnection clientSizeChangedConnection;
 	

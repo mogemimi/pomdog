@@ -71,7 +71,7 @@ def CompressGLSLCode(source):
 
 def ConvertGLSL2EmbeddedCode(source):
     formatted = CompressGLSLCode(source)
-    result = "char const* shaderCode = "
+    result = ""
     for line in formatted.split('\n'):
         if not line or line == '\n':
             continue
@@ -79,6 +79,26 @@ def ConvertGLSL2EmbeddedCode(source):
         result += '"'
         result += line
         result += '\\n"\n'
+    return result
+
+def GetSourceHeader():
+    return """//
+//  Copyright (C) 2013-2014 mogemimi.
+//
+//  Distributed under the MIT License.
+//  See accompanying file LICENSE.md or copy at
+//  http://enginetrouble.net/pomdog/LICENSE.md for details.
+//
+
+"""
+
+def CreateEmbeddedCode(identifier, content):
+    name = "Builtin_GLSL_"
+    name += identifier.replace('.', '_').replace('\\', '_').replace('/', '_')
+    result = GetSourceHeader()
+    result += "char const* {0} =\n".format(name)
+    result += content.rstrip()
+    result += ';\n'
     return result
 
 def ParsingCommandLineAraguments():
@@ -93,11 +113,17 @@ def Run():
     args = ParsingCommandLineAraguments()
 
     path = args.identifier
-    identifier, ext = os.path.splitext(args.identifier)
+    splittedPath, ext = os.path.splitext(args.identifier)
+    identifier = os.path.basename(splittedPath)
     directory = os.path.dirname(args.identifier)
 
+    if not os.path.exists(path):
+        print "File does not exist: " + path
+        return
+
     source = ReadGLSLSource(path)
-    embedded = ConvertGLSL2EmbeddedCode(source)
-    SaveEmbeddedCode(identifier + '.embedded' + ext, embedded)
+    embedded = CreateEmbeddedCode(identifier, ConvertGLSL2EmbeddedCode(source))
+    dest = directory + ".Embedded/" + identifier + '.inc.h'
+    SaveEmbeddedCode(dest, embedded)
 
 Run()
