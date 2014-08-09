@@ -7,6 +7,7 @@
 //
 
 #include "SpriteBatch.hpp"
+#include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 #include <algorithm>
 #include <vector>
@@ -17,6 +18,22 @@ namespace {
 // Built-in shaders
 #include "Shaders/GLSL.Embedded/SpriteBatch_VS.inc.h"
 #include "Shaders/GLSL.Embedded/SpriteBatch_PS.inc.h"
+
+struct BuiltinEffectSpriteBatchTrait {
+	static std::shared_ptr<EffectPass> Create(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	{
+		using Details::ShaderBytecode;
+		ShaderBytecode vertexShader;
+		vertexShader.Code = Builtin_GLSL_SpriteBatch_VS;
+		vertexShader.ByteLength = std::strlen(Builtin_GLSL_SpriteBatch_VS);
+
+		ShaderBytecode pixelShader;
+		pixelShader.Code = Builtin_GLSL_SpriteBatch_PS;
+		pixelShader.ByteLength = std::strlen(Builtin_GLSL_SpriteBatch_PS);
+
+		return std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
+	}
+};
 
 #define POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
 
@@ -385,16 +402,7 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
-	using Details::ShaderBytecode;
-	ShaderBytecode vertexShader;
-	vertexShader.Code = Builtin_GLSL_SpriteBatch_VS;
-	vertexShader.ByteLength = std::strlen(Builtin_GLSL_SpriteBatch_VS);
-
-	ShaderBytecode pixelShader;
-	pixelShader.Code = Builtin_GLSL_SpriteBatch_PS;
-	pixelShader.ByteLength = std::strlen(Builtin_GLSL_SpriteBatch_PS);
-
-	auto effectPass = std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
+	auto effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectSpriteBatchTrait>(graphicsDevice);
 	auto constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 
 	impl = std::make_unique<Impl>(graphicsContext, graphicsDevice, effectPass, constantBuffers);

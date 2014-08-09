@@ -7,6 +7,7 @@
 //
 
 #include "SpriteRenderer.hpp"
+#include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 
 namespace Pomdog {
@@ -15,6 +16,22 @@ namespace {
 // Built-in shaders
 #include "Shaders/GLSL.Embedded/SpriteRenderer_VS.inc.h"
 #include "Shaders/GLSL.Embedded/SpriteRenderer_PS.inc.h"
+
+struct BuiltinEffectSpriteRendererTrait {
+	static std::shared_ptr<EffectPass> Create(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	{
+		using Details::ShaderBytecode;
+		ShaderBytecode vertexShader;
+		vertexShader.Code = Builtin_GLSL_SpriteRenderer_VS;
+		vertexShader.ByteLength = std::strlen(Builtin_GLSL_SpriteRenderer_VS);
+
+		ShaderBytecode pixelShader;
+		pixelShader.Code = Builtin_GLSL_SpriteRenderer_PS;
+		pixelShader.ByteLength = std::strlen(Builtin_GLSL_SpriteRenderer_PS);
+
+		return std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
+	}
+};
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
@@ -138,16 +155,7 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 			maxBatchSize, sizeof(SpriteInfo), BufferUsage::Dynamic);
 	}
 	{
-		using Details::ShaderBytecode;
-		ShaderBytecode vertexShader;
-		vertexShader.Code = Builtin_GLSL_SpriteRenderer_VS;
-		vertexShader.ByteLength = std::strlen(Builtin_GLSL_SpriteRenderer_VS);
-
-		ShaderBytecode pixelShader;
-		pixelShader.Code = Builtin_GLSL_SpriteRenderer_PS;
-		pixelShader.ByteLength = std::strlen(Builtin_GLSL_SpriteRenderer_PS);
-
-		effectPass = std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
+		effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectSpriteRendererTrait>(graphicsDevice);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 
 		auto declartation = PositionTextureCoord::Declaration();

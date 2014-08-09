@@ -20,6 +20,9 @@
 
 namespace Pomdog {
 namespace Details {
+
+class BuiltinShaderPool;
+
 namespace RenderSystem {
 
 class NativeGraphicsDevice;
@@ -35,12 +38,15 @@ public:
 	
 	~GraphicsDevice();
 	
+	Details::BuiltinShaderPool & ShaderPool();
+	
 public:
 	///@brief internal method
 	Details::RenderSystem::NativeGraphicsDevice* NativeGraphicsDevice();
 	
 private:
-	std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> nativeGraphicsDevice;
+	class Impl;
+	std::unique_ptr<Impl> impl;
 };
 
 }// namespace Pomdog

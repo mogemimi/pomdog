@@ -7,6 +7,7 @@
 //
 
 #include "FXAA.hpp"
+#include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 
 namespace Pomdog {
@@ -15,6 +16,22 @@ namespace {
 // Built-in shaders
 #include "Shaders/GLSL.Embedded/FXAA_VS.inc.h"
 #include "Shaders/GLSL.Embedded/FXAA_PS.inc.h"
+
+struct BuiltinEffectFxaaTrait {
+	static std::shared_ptr<EffectPass> Create(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	{
+		using Details::ShaderBytecode;
+		ShaderBytecode vertexShader;
+		vertexShader.Code = Builtin_GLSL_FXAA_VS;
+		vertexShader.ByteLength = std::strlen(Builtin_GLSL_FXAA_VS);
+
+		ShaderBytecode pixelShader;
+		pixelShader.Code = Builtin_GLSL_FXAA_PS;
+		pixelShader.ByteLength = std::strlen(Builtin_GLSL_FXAA_PS);
+
+		return std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
+	}
+};
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
@@ -36,16 +53,7 @@ FXAA::FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 			VertexCombined::Declaration().StrideBytes(), BufferUsage::Immutable);
 	}
 	{
-		using Details::ShaderBytecode;
-		ShaderBytecode vertexShader;
-		vertexShader.Code = Builtin_GLSL_FXAA_VS;
-		vertexShader.ByteLength = std::strlen(Builtin_GLSL_FXAA_VS);
-
-		ShaderBytecode pixelShader;
-		pixelShader.Code = Builtin_GLSL_FXAA_PS;
-		pixelShader.ByteLength = std::strlen(Builtin_GLSL_FXAA_PS);
-
-		effectPass = std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
+		effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectFxaaTrait>(graphicsDevice);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}

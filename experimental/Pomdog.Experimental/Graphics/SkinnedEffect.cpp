@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -7,6 +7,7 @@
 //
 
 #include "SkinnedEffect.hpp"
+#include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 
 namespace Pomdog {
@@ -14,6 +15,22 @@ namespace {
 
 #include "Shaders/GLSL.Embedded/SkinnedEffect_VS.inc.h"
 #include "Shaders/GLSL.Embedded/SkinnedEffect_PS.inc.h"
+
+struct BuiltinEffectSkinningTrait {
+	static std::shared_ptr<EffectPass> Create(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	{
+		using Details::ShaderBytecode;
+		ShaderBytecode vertexShader;
+		vertexShader.Code = Builtin_GLSL_SkinnedEffect_VS;
+		vertexShader.ByteLength = std::strlen(Builtin_GLSL_SkinnedEffect_VS);
+
+		ShaderBytecode pixelShader;
+		pixelShader.Code = Builtin_GLSL_SkinnedEffect_PS;
+		pixelShader.ByteLength = std::strlen(Builtin_GLSL_SkinnedEffect_PS);
+
+		return std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
+	}
+};
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
@@ -39,16 +56,7 @@ public:
 //-----------------------------------------------------------------------
 SkinnedEffect::Impl::Impl(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
-	using Details::ShaderBytecode;
-	ShaderBytecode vertexShader;
-	vertexShader.Code = Builtin_GLSL_SkinnedEffect_VS;
-	vertexShader.ByteLength = std::strlen(Builtin_GLSL_SkinnedEffect_VS);
-
-	ShaderBytecode pixelShader;
-	pixelShader.Code = Builtin_GLSL_SkinnedEffect_PS;
-	pixelShader.ByteLength = std::strlen(Builtin_GLSL_SkinnedEffect_PS);
-
-	effectPass = std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
+	effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectSkinningTrait>(graphicsDevice);
 	constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 	inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 }
