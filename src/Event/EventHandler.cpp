@@ -19,20 +19,20 @@ EventHandler::EventHandler()
 EventConnection EventHandler::Connect(std::function<void(Event const&)> const& slot)
 {
 	POMDOG_ASSERT(slot);
-	POMDOG_ASSERT(signal);
+	POMDOG_ASSERT(this->signalBody);
 	return EventConnection{signalBody->Connect(slot)};
 }
 //-----------------------------------------------------------------------
 EventConnection EventHandler::Connect(std::function<void(Event const&)> && slot)
 {
 	POMDOG_ASSERT(slot);
-	POMDOG_ASSERT(signal);
+	POMDOG_ASSERT(this->signalBody);
 	return EventConnection{signalBody->Connect(slot)};
 }
 //-----------------------------------------------------------------------
 void EventHandler::Invoke(Event && event)
 {
-	POMDOG_ASSERT(signal);
+	POMDOG_ASSERT(this->signalBody);
 	signalBody->operator()(std::move(event));
 }
 //-----------------------------------------------------------------------

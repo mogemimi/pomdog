@@ -19,7 +19,7 @@
         },
       }, # Debug
     },
-    'msvs_settings':{
+    'msvs_settings': {
       'VCCLCompilerTool': {
         'WarningLevel': '4',   # /W4
         'WarnAsError': 'true', # /WX

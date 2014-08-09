@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <gtest/iutest_switch.hpp>
 #include <Pomdog/Math/Point3D.hpp>
+#include <gtest/iutest_switch.hpp>
 
 using Pomdog::Point3D;
 

@@ -21,14 +21,14 @@ EventQueue::EventQueue()
 EventConnection EventQueue::Connect(std::function<void(Event const&)> const& slot)
 {
 	POMDOG_ASSERT(slot);
-	POMDOG_ASSERT(signal);
+	POMDOG_ASSERT(this->signalBody);
 	return EventConnection{signalBody->Connect(slot)};
 }
 //-----------------------------------------------------------------------
 EventConnection EventQueue::Connect(std::function<void(Event const&)> && slot)
 {
 	POMDOG_ASSERT(slot);
-	POMDOG_ASSERT(signal);
+	POMDOG_ASSERT(this->signalBody);
 	return EventConnection{signalBody->Connect(slot)};
 }
 //-----------------------------------------------------------------------
@@ -40,7 +40,7 @@ void EventQueue::Enqueue(Event && event)
 //-----------------------------------------------------------------------
 void EventQueue::Tick()
 {
-	POMDOG_ASSERT(signal);
+	POMDOG_ASSERT(this->signalBody);
 
 	std::vector<Event> notifications;
 	{

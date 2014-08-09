@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <gtest/iutest_switch.hpp>
 #include <Pomdog/Math/MathHelper.hpp>
+#include <gtest/iutest_switch.hpp>
 
 namespace MathHelper = Pomdog::MathHelper;
 
@@ -57,7 +57,7 @@ TEST(MathHelper, Saturate)
 
 TEST(MathHelper, Lerp)
 {
-	auto constexpr epsilon = std::numeric_limits<float>::epsilon();
+	constexpr auto epsilon = std::numeric_limits<float>::epsilon();
 	
 	EXPECT_NEAR(0.0f, MathHelper::Lerp(0.0f, 1.0f, 0.0f), epsilon);
 	EXPECT_NEAR(0.2f, MathHelper::Lerp(0.0f, 1.0f, 0.2f), epsilon);
@@ -91,7 +91,7 @@ TEST(MathHelper, Lerp)
 
 TEST(MathHelper, SmoothStep)
 {
-	auto constexpr epsilon = std::numeric_limits<float>::epsilon();
+	constexpr auto epsilon = std::numeric_limits<float>::epsilon();
 	
 	EXPECT_NEAR(0.0f, MathHelper::SmoothStep(0.0f, 1.0f, 0.0f), epsilon);
 	EXPECT_NEAR(0.5f, MathHelper::SmoothStep(0.0f, 1.0f, 0.5f), epsilon);

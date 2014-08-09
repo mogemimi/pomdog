@@ -18,7 +18,7 @@ static_assert(static_cast<typename std::underlying_type<Keys>::type>(Keys::None)
 static_assert(std::is_same<typename std::underlying_type<Keys>::type, std::uint8_t>::value, "");
 
 static_assert(std::is_unsigned<typename std::underlying_type<Keys>::type>::value,
-		"Keys is unsinged integer type.");
+	"Keys is unsinged integer type.");
 //-----------------------------------------------------------------------
 KeyState KeyboardState::operator[](Keys key) const
 {

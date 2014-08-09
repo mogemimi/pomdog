@@ -6,9 +6,10 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
+#include <Pomdog/Event/Event.hpp>
 #include <gtest/iutest_switch.hpp>
 #include <utility>
-#include <Pomdog/Event/Event.hpp>
+#include <cstdint>
 
 using Pomdog::Event;
 

@@ -6,10 +6,10 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <gtest/iutest_switch.hpp>
 #include <Pomdog/Math/Matrix4x4.hpp>
 #include <Pomdog/Math/Vector3.hpp>
 #include <Pomdog/Math/Radian.hpp>
+#include <gtest/iutest_switch.hpp>
 
 using Pomdog::Matrix4x4;
 using Pomdog::Vector3;

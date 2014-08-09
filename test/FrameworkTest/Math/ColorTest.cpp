@@ -6,10 +6,10 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <gtest/iutest_switch.hpp>
 #include <Pomdog/Math/Color.hpp>
 #include <Pomdog/Math/Vector3.hpp>
 #include <Pomdog/Math/Vector4.hpp>
+#include <gtest/iutest_switch.hpp>
 
 using Pomdog::Color;
 using Pomdog::Vector3;
