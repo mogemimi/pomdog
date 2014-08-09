@@ -62,6 +62,7 @@ def CompressGLSLCode(source):
     preformatted = preformatted.replace(' > ', '>')
     preformatted = preformatted.replace(' <= ', '<=')
     preformatted = preformatted.replace(' >= ', '>=')
+    preformatted = preformatted.replace(' == ', '==')
     preformatted = preformatted.replace(', ', ',')
     preformatted = preformatted.replace(' (', '(')
     preformatted = preformatted.replace(') ', ')')

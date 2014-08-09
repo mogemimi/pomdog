@@ -5,7 +5,7 @@ in VertexData {
 	vec4 Color;
 } In;
 
-uniform sampler2D DiffuseTexture;
+uniform sampler2D AlbedoTexture;
 
 out vec4 FragColor;
 
@@ -24,7 +24,7 @@ uniform DistanceFieldConstants {
 
 void main()
 {
-	float distance = texture(DiffuseTexture, In.TextureCoord.xy).a;
+	float distance = texture(AlbedoTexture, In.TextureCoord.xy).a;
 	float alpha = smoothstep(Weight - Smoothing, Weight + Smoothing, distance);
 	FragColor = vec4(In.Color.xyz, In.Color.w * alpha);
 }

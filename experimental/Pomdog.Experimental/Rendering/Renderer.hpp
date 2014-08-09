@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include <memory>
 #include <Pomdog/Pomdog.hpp>
+#include <memory>
 
 namespace Pomdog {
 

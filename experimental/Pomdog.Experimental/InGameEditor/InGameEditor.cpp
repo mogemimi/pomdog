@@ -12,9 +12,28 @@
 #include "Pomdog.Experimental/Graphics/SpriteFont.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteFontLoader.hpp"
 #include "Pomdog.Experimental/UI/UIView.hpp"
+#include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
+#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 
 namespace Pomdog {
 namespace SceneEditor {
+namespace {
+
+// Built-in shaders
+#include "Pomdog.Experimental/Graphics/Shaders/GLSL.Embedded/SpriteBatch_VS.inc.h"
+#include "Pomdog.Experimental/Graphics/Shaders/GLSL.Embedded/Sprite_DistanceField_PS.inc.h"
+
+struct BuiltinEffectSpriteBatchDistanceFieldTrait {
+	static std::shared_ptr<EffectPass> Create(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	{
+		using Details::ShaderBytecode;
+		ShaderBytecode vertexShaderCode = {Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS)};
+		ShaderBytecode pixelShaderCode = {Builtin_GLSL_Sprite_DistanceField_PS, std::strlen(Builtin_GLSL_Sprite_DistanceField_PS)};
+		return std::make_shared<EffectPass>(graphicsDevice, vertexShaderCode, pixelShaderCode);
+	}
+};
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 	: gameHost(gameHostIn)
@@ -32,7 +51,7 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 		spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice);
 		//spriteFont = assets->Load<SpriteFont>("BitmapFonts/UbuntuMono-Regular.fnt");
 		spriteFont = assets->Load<SpriteFont>("BitmapFonts/Ubuntu-Regular.fnt");
-		distanceFieldEffect = assets->Load<EffectPass>("Effects/SpriteBatchDistanceField");
+		distanceFieldEffect = graphicsDevice->ShaderPool().Create<BuiltinEffectSpriteBatchDistanceFieldTrait>(graphicsDevice);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *distanceFieldEffect);
 		spriteBatchDistanceField = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice,
 			distanceFieldEffect, constantBuffers);

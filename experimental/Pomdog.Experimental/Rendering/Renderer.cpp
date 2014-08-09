@@ -57,8 +57,8 @@ Renderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	, drawCallCount{0}
 	, batchState{BatchState::None}
 {
-	spriteBatch = std::make_unique<SpriteBatchRenderer>(graphicsContext, graphicsDevice, assets);
-	//polygonBatch = std::make_unique<PolygonBatch>(graphicsContext, graphicsDevice, *assets);
+	spriteBatch = std::make_unique<SpriteBatchRenderer>(graphicsContext, graphicsDevice);
+	//polygonBatch = std::make_unique<PolygonBatch>(graphicsContext, graphicsDevice);
 	//spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(bounds.Width, bounds.Height, 1.0f, 100.0f));
 }
 //-----------------------------------------------------------------------

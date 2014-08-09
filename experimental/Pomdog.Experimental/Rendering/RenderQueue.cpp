@@ -7,11 +7,10 @@
 //
 
 #include "RenderQueue.hpp"
+#include "RenderCommand.hpp"
+#include <Pomdog/Utility/Assert.hpp>
 #include <utility>
 #include <algorithm>
-#include <Pomdog/Utility/Assert.hpp>
-#include "RenderCommand.hpp"
-
 
 namespace Pomdog {
 namespace {

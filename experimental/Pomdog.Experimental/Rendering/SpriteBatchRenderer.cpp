@@ -7,10 +7,29 @@
 //
 
 #include "SpriteBatchRenderer.hpp"
+#include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
+#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 
 namespace Pomdog {
 namespace Details {
 namespace Rendering {
+namespace {
+
+// Built-in shaders
+#include "Shaders/GLSL.Embedded/SpriteBatchRenderer_VS.inc.h"
+#include "Shaders/GLSL.Embedded/SpriteBatchRenderer_PS.inc.h"
+
+struct BuiltinEffectSpriteBatchRendererTrait {
+	static std::shared_ptr<EffectPass> Create(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	{
+		using Details::ShaderBytecode;
+		ShaderBytecode vertexShaderCode = {Builtin_GLSL_SpriteBatchRenderer_VS, std::strlen(Builtin_GLSL_SpriteBatchRenderer_VS)};
+		ShaderBytecode pixelShaderCode = {Builtin_GLSL_SpriteBatchRenderer_PS, std::strlen(Builtin_GLSL_SpriteBatchRenderer_PS)};
+		return std::make_shared<EffectPass>(graphicsDevice, vertexShaderCode, pixelShaderCode);
+	}
+};
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - SpriteBatchRenderer::Impl
@@ -79,7 +98,7 @@ public:
 
 public:
 	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 	void ResetProjectionMatrix(Matrix4x4 const& projectionMatrix);
 	
@@ -100,7 +119,7 @@ private:
 };
 //-----------------------------------------------------------------------
 SpriteBatchRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	: graphicsContext(graphicsContextIn)
 	, drawCallCount(0)
 {
@@ -139,7 +158,7 @@ SpriteBatchRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphics
 			maxBatchSize, sizeof(SpriteInfo), BufferUsage::Dynamic);
 	}
 	{
-		effectPass = assets.Load<EffectPass>("Effects/SpriteBatchRendererEffect");
+		effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectSpriteBatchRendererTrait>(graphicsDevice);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 
 		auto declartation = PositionTextureCoord::Declaration();
@@ -356,8 +375,8 @@ void SpriteBatchRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, 
 #endif
 //-----------------------------------------------------------------------
 SpriteBatchRenderer::SpriteBatchRenderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
-	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice))
 {}
 //-----------------------------------------------------------------------
 SpriteBatchRenderer::~SpriteBatchRenderer() = default;

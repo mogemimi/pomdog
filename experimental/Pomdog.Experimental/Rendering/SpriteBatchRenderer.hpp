@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
+#include <Pomdog/Pomdog.hpp>
 #include <cstdint>
 #include <memory>
-#include <Pomdog/Pomdog.hpp>
 
 namespace Pomdog {
 namespace Details {
@@ -24,7 +24,7 @@ namespace Rendering {
 class SpriteBatchRenderer {
 public:
 	SpriteBatchRenderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 	~SpriteBatchRenderer();
 
