@@ -9,6 +9,22 @@
 #include "FXAA.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
+#include "Pomdog/Graphics/ConstantBufferBinding.hpp"
+#include "Pomdog/Graphics/CustomVertex.hpp"
+#include "Pomdog/Graphics/EffectPass.hpp"
+#include "Pomdog/Graphics/EffectParameter.hpp"
+#include "Pomdog/Graphics/GraphicsContext.hpp"
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/IndexBuffer.hpp"
+#include "Pomdog/Graphics/InputLayout.hpp"
+#include "Pomdog/Graphics/PrimitiveTopology.hpp"
+#include "Pomdog/Graphics/RenderTarget2D.hpp"
+#include "Pomdog/Graphics/SamplerState.hpp"
+#include "Pomdog/Graphics/VertexBuffer.hpp"
+#include "Pomdog/Math/Vector3.hpp"
+#include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include <array>
 
 namespace Pomdog {
 namespace {
@@ -21,15 +37,9 @@ struct BuiltinEffectFxaaTrait {
 	static std::shared_ptr<EffectPass> Create(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	{
 		using Details::ShaderBytecode;
-		ShaderBytecode vertexShader;
-		vertexShader.Code = Builtin_GLSL_FXAA_VS;
-		vertexShader.ByteLength = std::strlen(Builtin_GLSL_FXAA_VS);
-
-		ShaderBytecode pixelShader;
-		pixelShader.Code = Builtin_GLSL_FXAA_PS;
-		pixelShader.ByteLength = std::strlen(Builtin_GLSL_FXAA_PS);
-
-		return std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
+		ShaderBytecode vertexShaderCode = {Builtin_GLSL_FXAA_VS, std::strlen(Builtin_GLSL_FXAA_VS)};
+		ShaderBytecode pixelShaderCode = {Builtin_GLSL_FXAA_PS, std::strlen(Builtin_GLSL_FXAA_PS)};
+		return std::make_shared<EffectPass>(graphicsDevice, vertexShaderCode, pixelShaderCode);
 	}
 };
 
@@ -67,19 +77,19 @@ FXAA::FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 		indexBuffer = std::make_shared<IndexBuffer>(graphicsDevice,
 			IndexElementSize::SixteenBits, indices.data(), indices.size(), BufferUsage::Immutable);
 	}
-#ifdef DEBUG
-	{
-		auto effectReflection = std::make_shared<EffectReflection>(graphicsDevice, effectPass);
-	
-		auto stream = Log::Stream();
-		for (auto & description: effectReflection->GetConstantBuffers()) {
-			stream << "-----------------------" << "\n";
-			stream << "     Name: " << description.Name << "\n";
-			stream << " ByteSize: " << description.ByteSize << "\n";
-			stream << "Variables: " << description.Variables.size() << "\n";
-		}
-	}
-#endif
+//#ifdef DEBUG
+//	{
+//		auto effectReflection = std::make_shared<EffectReflection>(graphicsDevice, effectPass);
+//	
+//		auto stream = Log::Stream();
+//		for (auto & description: effectReflection->GetConstantBuffers()) {
+//			stream << "-----------------------" << "\n";
+//			stream << "     Name: " << description.Name << "\n";
+//			stream << " ByteSize: " << description.ByteSize << "\n";
+//			stream << "Variables: " << description.Variables.size() << "\n";
+//		}
+//	}
+//#endif
 }
 //-----------------------------------------------------------------------
 void FXAA::SetViewport(float width, float height)
@@ -94,7 +104,7 @@ void FXAA::SetTexture(std::shared_ptr<RenderTarget2D> const& textureIn)
 	texture = textureIn;
 }
 //-----------------------------------------------------------------------
-void FXAA::Apply(GraphicsContext & graphicsContext)
+void FXAA::Draw(GraphicsContext & graphicsContext)
 {
 	POMDOG_ASSERT(texture);
 

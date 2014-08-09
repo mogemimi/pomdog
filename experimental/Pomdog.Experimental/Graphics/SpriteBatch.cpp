@@ -23,15 +23,9 @@ struct BuiltinEffectSpriteBatchTrait {
 	static std::shared_ptr<EffectPass> Create(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	{
 		using Details::ShaderBytecode;
-		ShaderBytecode vertexShader;
-		vertexShader.Code = Builtin_GLSL_SpriteBatch_VS;
-		vertexShader.ByteLength = std::strlen(Builtin_GLSL_SpriteBatch_VS);
-
-		ShaderBytecode pixelShader;
-		pixelShader.Code = Builtin_GLSL_SpriteBatch_PS;
-		pixelShader.ByteLength = std::strlen(Builtin_GLSL_SpriteBatch_PS);
-
-		return std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
+		ShaderBytecode vertexShaderCode = {Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS)};
+		ShaderBytecode pixelShaderCode = {Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS)};
+		return std::make_shared<EffectPass>(graphicsDevice, vertexShaderCode, pixelShaderCode);
 	}
 };
 

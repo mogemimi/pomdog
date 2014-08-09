@@ -255,7 +255,7 @@ void LightningTestGame::Draw()
 		graphicsContext->SetRenderTarget();
 		graphicsContext->Clear(Color::CornflowerBlue);
 		fxaa->SetTexture(renderTarget);
-		fxaa->Apply(*graphicsContext);
+		fxaa->Draw(*graphicsContext);
 	}
 
 	gameEditor->EndDraw(*graphicsContext);

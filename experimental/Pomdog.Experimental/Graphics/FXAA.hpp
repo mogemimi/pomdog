@@ -13,7 +13,8 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include <memory>
 
 namespace Pomdog {
 
@@ -24,7 +25,7 @@ public:
 	void SetViewport(float width, float height);
 	void SetTexture(std::shared_ptr<RenderTarget2D> const& texture);
 	
-	void Apply(GraphicsContext & graphicsContext);
+	void Draw(GraphicsContext & graphicsContext);
 	
 private:
 	std::shared_ptr<RenderTarget2D> texture;
