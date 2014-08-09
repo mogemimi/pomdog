@@ -89,10 +89,10 @@ static std::vector<Vector2> CreateBranch(BeamEmitter const& emitter,
 	POMDOG_ASSERT(!parentBeam.Points.empty());
 	POMDOG_ASSERT(parentBeam.Points.size() >= 2);
 	
-	const std::size_t indexBegin = 0;
-	const std::size_t indexEnd = parentBeam.Points.size() - 1;
+	const std::uint32_t indexBegin = 0;
+	const std::uint32_t indexEnd = static_cast<std::uint32_t>(parentBeam.Points.size()) - 1;
 	
-	std::uniform_int_distribution<std::size_t> indexDistribution(indexBegin, indexEnd);
+	std::uniform_int_distribution<std::uint32_t> indexDistribution(indexBegin, indexEnd);
 	
 	auto index1 = indexDistribution(random);
 	auto index2 = index1 + 1;

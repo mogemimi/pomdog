@@ -295,11 +295,11 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
 			// For matrix class in GLSL:
 			attributeLocation += 1;///@todo badcode
 			
-			#ifdef DEBUG
-			Log::Stream(LogLevel::Internal)
-				<< "[GLSL] Attribute: StartSlot = " << static_cast<std::uint32_t>(attribute.StartSlot)
-				<< ", Name = '" << name.data() << "'.";
-			#endif // defined(DEBUG)
+			//#ifdef DEBUG
+			//Log::Stream(LogLevel::Internal)
+			//	<< "[GLSL] Attribute: StartSlot = " << static_cast<std::uint32_t>(attribute.StartSlot)
+			//	<< ", Name = '" << name.data() << "'.";
+			//#endif // defined(DEBUG)
 		}
 	}
 	
@@ -307,30 +307,30 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
 		return a.StartSlot < b.StartSlot;
 	});
 
-	#ifdef DEBUG
-	for (auto& attribute: attributes)
-	{
-		Log::Stream(LogLevel::Internal)
-			<< "[GLSL] Attribute: ScalarType: '"
-			<< ([](ScalarTypeGL4 const& scalarType)->std::string{
-				switch (scalarType.value)
-				{
-				case GL_FLOAT: return "GLfloat";
-				case GL_INT: return "GLint";
-				case GL_UNSIGNED_INT: return "GLuint";
-				case GL_DOUBLE: return "GLdouble";
-				case GL_BYTE: return "GLbyte";
-				case GL_UNSIGNED_BYTE: return "GLubyte";
-				case GL_SHORT: return "GLshort";
-				case GL_UNSIGNED_SHORT: return "GLushort";
-				}
-				return "This type not supported";
-			})(attribute.ScalarType)
-			<< "' StartSlot: '" << static_cast<std::uint32_t>(attribute.StartSlot)
-			<< "' Components: '" << static_cast<std::uint32_t>(attribute.Components)
-			<< "'";
-	};
-	#endif // defined(DEBUG)
+	//#ifdef DEBUG
+	//for (auto& attribute: attributes)
+	//{
+	//	Log::Stream(LogLevel::Internal)
+	//		<< "[GLSL] Attribute: ScalarType: '"
+	//		<< ([](ScalarTypeGL4 const& scalarType)->std::string{
+	//			switch (scalarType.value)
+	//			{
+	//			case GL_FLOAT: return "GLfloat";
+	//			case GL_INT: return "GLint";
+	//			case GL_UNSIGNED_INT: return "GLuint";
+	//			case GL_DOUBLE: return "GLdouble";
+	//			case GL_BYTE: return "GLbyte";
+	//			case GL_UNSIGNED_BYTE: return "GLubyte";
+	//			case GL_SHORT: return "GLshort";
+	//			case GL_UNSIGNED_SHORT: return "GLushort";
+	//			}
+	//			return "This type not supported";
+	//		})(attribute.ScalarType)
+	//		<< "' StartSlot: '" << static_cast<std::uint32_t>(attribute.StartSlot)
+	//		<< "' Components: '" << static_cast<std::uint32_t>(attribute.Components)
+	//		<< "'";
+	//};
+	//#endif // defined(DEBUG)
 	
 	return std::move(attributes);
 }

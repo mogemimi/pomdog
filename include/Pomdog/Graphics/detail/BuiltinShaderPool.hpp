@@ -24,7 +24,7 @@
 namespace Pomdog {
 namespace Details {
 
-class BuiltinShaderPool {
+class POMDOG_EXPORT BuiltinShaderPool {
 public:
 	BuiltinShaderPool() = default;
 	BuiltinShaderPool(BuiltinShaderPool const&) = delete;
