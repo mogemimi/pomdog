@@ -23,7 +23,7 @@ using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 {
 	Bootstrapper bootstrapper;
 	ScopedConnection connection;
-	
+
 	NSThread* gameRunThread;
 }
 
@@ -44,13 +44,13 @@ using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 
 	gameRunThread = [[NSThread alloc] initWithTarget:self selector:@selector(runGame) object:nil];
 	[gameRunThread start];
-	
+
 	Log::Verbose("game mainloop thread run");
 }
 
 - (void)runGame
 {
-	bootstrapper.Run<Pomdog::CocoaTestGame>([self window]);
+	bootstrapper.Run<QuickStart::QuickStartGame>([self window]);
 }
 
 @end

@@ -84,10 +84,38 @@ def CopyFrameworkFiles(framework_root, project_root):
             print("Error: Cannot find file {0}".format(source_path))
 
 
+def RenameSourceContent(project_root, identifier, source):
+    path = os.path.join(project_root, source)
+
+    if not os.path.exists(path):
+        print("Error: Cannot find file {0}".format(path))
+        return
+
+    f = open(path, 'r')
+    content = f.read()
+    f.close()
+
+    f = open(path, 'w')
+    content = content.replace('QuickStart', identifier)
+    content = content.replace('QUICKSTART', identifier.upper())
+    f.write(content)
+    f.close()
+
+def RenameFilename(project_root, identifier, source):
+    path = os.path.join(project_root, source)
+
+    if not os.path.exists(path):
+        print("Error: Cannot find file {0}".format(path))
+        return
+
+    dest = os.path.join(project_root, source.replace('QuickStart', identifier))
+    if source != dest:
+        os.rename(path, dest)
+
 def Run():
     args = ParsingCommandLineAraguments()
 
-    print("args = {0}".format(vars(args))) # for Debug
+    #print("args = {0}".format(vars(args))) # for Debug
 
     identifier = os.path.basename(args.name)
     project_root = os.path.join(os.path.dirname(args.name), identifier)
@@ -99,6 +127,16 @@ def Run():
 
     CopyTemplates(templates_directory, project_root)
     CopyFrameworkFiles(framework_root, project_root)
+    RenameSourceContent(project_root, identifier, 'README.md')
+    RenameSourceContent(project_root, identifier, 'Build/app.gyp')
+    RenameSourceContent(project_root, identifier, 'Source/QuickStartGame.cpp')
+    RenameSourceContent(project_root, identifier, 'Source/QuickStartGame.hpp')
+    RenameSourceContent(project_root, identifier, 'Platform.Cocoa/AppDelegate.mm')
+    RenameSourceContent(project_root, identifier, 'Platform.Cocoa/QuickStart-Info.plist')
+    RenameFilename(project_root, identifier, 'Source/QuickStartGame.cpp')
+    RenameFilename(project_root, identifier, 'Source/QuickStartGame.hpp')
+    RenameFilename(project_root, identifier, 'Platform.Cocoa/QuickStart-Info.plist')
+    RenameFilename(project_root, identifier, 'Platform.Cocoa/QuickStart-Prefix.pch')
 
 
 Run()

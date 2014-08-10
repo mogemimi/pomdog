@@ -9,27 +9,27 @@
 #include "QuickStartGame.hpp"
 #include <utility>
 
-namespace Pomdog {
+namespace QuickStart {
 //-----------------------------------------------------------------------
-CocoaTestGame::CocoaTestGame(std::shared_ptr<GameHost> host)
+QuickStartGame::QuickStartGame(std::shared_ptr<GameHost> host)
 	: gameHost(std::move(host))
 {
 	graphicsContext = gameHost->GraphicsContext();
 }
 //-----------------------------------------------------------------------
-void CocoaTestGame::Initialize()
+void QuickStartGame::Initialize()
 {
 	auto window = gameHost->Window();
 	window->Title("Cocoa Test Game");
 	window->AllowPlayerResizing(false);
-	
+
 	auto graphicsDevice = gameHost->GraphicsDevice();
-	
+
 	auto assets = gameHost->AssetManager();
 
 	{
 		using VertexCombined = CustomVertex<Vector3, Vector2>;
-		
+
 		std::array<VertexCombined, 4> const verticesCombo = {
 			Vector3(-0.8f, -0.8f, 0.0f), Vector2(0.0f, 0.0f),
 			Vector3(-0.8f,  0.8f, 0.0f), Vector2(0.0f, 1.0f),
@@ -57,7 +57,7 @@ void CocoaTestGame::Initialize()
 #ifdef DEBUG
 	{
 		auto effectReflection = std::make_shared<EffectReflection>(graphicsDevice, effectPass);
-	
+
 		auto stream = Log::Stream();
 		for (auto & description: effectReflection->GetConstantBuffers()) {
 			stream << "-----------------------" << "\n";
@@ -72,7 +72,7 @@ void CocoaTestGame::Initialize()
 		graphicsContext->SetSamplerState(0, sampler);
 
 		texture = assets->Load<Texture2D>("pomdog.png");
-		
+
 		if (texture) {
 			Log::Stream()
 				<< "PNG to Texture2D: OK" << "\n"
@@ -88,29 +88,29 @@ void CocoaTestGame::Initialize()
 	}
 }
 //-----------------------------------------------------------------------
-void CocoaTestGame::Update()
+void QuickStartGame::Update()
 {
 	static float value = 0.0f;
 	value += 0.008f;
 	if (value > 1.0f) {
 		value = -1.0f;
 	}
-	
+
 	Vector2 vec {
 		std::abs(value),
 		(1.0f + value) * 0.5f
 	};
-	
+
 	auto parameter = constantBuffers->Find("TestStructure");
 	parameter->SetValue(vec);
-	
+
 	auto vector2 = parameter->GetValue<Vector2>();
 }
 //-----------------------------------------------------------------------
-void CocoaTestGame::Draw()
+void QuickStartGame::Draw()
 {
 	graphicsContext->Clear(Color::CornflowerBlue);
-	
+
 	graphicsContext->SetTexture(0, texture);
 	graphicsContext->SetTexture(0);
 	graphicsContext->SetTexture(0, texture);
@@ -119,8 +119,8 @@ void CocoaTestGame::Draw()
 	graphicsContext->SetEffectPass(effectPass);
 	graphicsContext->SetConstantBuffers(constantBuffers);
 	graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList, indexBuffer, indexBuffer->IndexCount());
-	
+
 	graphicsContext->Present();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+}// namespace QuickStart

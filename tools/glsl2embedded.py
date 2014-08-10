@@ -17,6 +17,9 @@ import re
 # Create new file: VertexShader.embedded.glsl
 
 def ReadGLSLSource(path):
+    if not os.path.exists(path):
+        print("Error: Cannot find file {0}".format(path))
+        return ""
     f = open(path, 'r')
     str = f.read()
     f.close()

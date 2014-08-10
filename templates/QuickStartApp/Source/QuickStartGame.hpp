@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_COCOATESTGAME_HPP
-#define POMDOG_COCOATESTGAME_HPP
+#ifndef QUICKSTARTGAME_HPP
+#define QUICKSTARTGAME_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -15,19 +15,21 @@
 
 #include <Pomdog/Pomdog.hpp>
 
-namespace Pomdog {
+namespace QuickStart {
 
-class CocoaTestGame: public Game
+using namespace Pomdog;
+
+class QuickStartGame: public Game
 {
 public:
-	explicit CocoaTestGame(std::shared_ptr<GameHost> host);
+	explicit QuickStartGame(std::shared_ptr<GameHost> host);
 
 	void Initialize();
-	
+
 	void Update();
-	
+
 	void Draw();
-	
+
 private:
 	std::shared_ptr<GameHost> gameHost;
 	std::shared_ptr<GraphicsContext> graphicsContext;
@@ -40,6 +42,6 @@ private:
 	std::shared_ptr<RenderTarget2D> renderTarget;
 };
 
-}// namespace Pomdog
+}// namespace QuickStart
 
-#endif // !defined(POMDOG_COCOATESTGAME_HPP)
+#endif // !defined(QUICKSTARTGAME_HPP)
