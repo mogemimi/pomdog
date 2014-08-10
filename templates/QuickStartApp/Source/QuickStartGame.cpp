@@ -20,11 +20,10 @@ QuickStartGame::QuickStartGame(std::shared_ptr<GameHost> host)
 void QuickStartGame::Initialize()
 {
 	auto window = gameHost->Window();
-	window->Title("Cocoa Test Game");
+	window->Title("QuickStart Game");
 	window->AllowPlayerResizing(false);
 
 	auto graphicsDevice = gameHost->GraphicsDevice();
-
 	auto assets = gameHost->AssetManager();
 
 	{
@@ -36,13 +35,11 @@ void QuickStartGame::Initialize()
 			Vector3( 0.8f,  0.8f, 0.0f), Vector2(1.0f, 1.0f),
 			Vector3( 0.8f, -0.8f, 0.0f), Vector2(1.0f, 0.0f),
 		};
+		
+		// Create vertex buffer
 		vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
 			verticesCombo.data(), verticesCombo.size(),
 			VertexCombined::Declaration().StrideBytes(), BufferUsage::Immutable);
-
-		effectPass = assets->Load<EffectPass>("SimpleEffect");
-		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
-		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}
 	{
 		std::array<std::uint16_t, 6> const indices = {
@@ -54,33 +51,17 @@ void QuickStartGame::Initialize()
 		indexBuffer = std::make_shared<IndexBuffer>(graphicsDevice,
 			IndexElementSize::SixteenBits, indices.data(), indices.size(), BufferUsage::Immutable);
 	}
-#ifdef DEBUG
 	{
-		auto effectReflection = std::make_shared<EffectReflection>(graphicsDevice, effectPass);
-
-		auto stream = Log::Stream();
-		for (auto & description: effectReflection->GetConstantBuffers()) {
-			stream << "-----------------------" << "\n";
-			stream << "     Name: " << description.Name << "\n";
-			stream << " ByteSize: " << description.ByteSize << "\n";
-			stream << "Variables: " << description.Variables.size() << "\n";
-		}
+		effectPass = assets->Load<EffectPass>("SimpleEffect");
+		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
+		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}
-#endif
 	{
 		auto sampler = SamplerState::CreatePointClamp(graphicsDevice);
 		graphicsContext->SetSamplerState(0, sampler);
 
+		// Laod a PNG as texture
 		texture = assets->Load<Texture2D>("pomdog.png");
-
-		if (texture) {
-			Log::Stream()
-				<< "PNG to Texture2D: OK" << "\n"
-				<< "        Width: " << texture->Width() << "\n"
-				<< "       Height: " << texture->Height() << "\n"
-				<< "   LevelCount: " << texture->LevelCount() << "\n"
-				<< "SurfaceFormat: " << static_cast<int>(texture->Format()) << "\n";
-		}
 	}
 	{
 		renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
@@ -96,10 +77,7 @@ void QuickStartGame::Update()
 		value = -1.0f;
 	}
 
-	Vector2 vec {
-		std::abs(value),
-		(1.0f + value) * 0.5f
-	};
+	Vector2 vec {std::abs(value), (1.0f + value) * 0.5f};
 
 	auto parameter = constantBuffers->Find("TestStructure");
 	parameter->SetValue(vec);
@@ -111,8 +89,6 @@ void QuickStartGame::Draw()
 {
 	graphicsContext->Clear(Color::CornflowerBlue);
 
-	graphicsContext->SetTexture(0, texture);
-	graphicsContext->SetTexture(0);
 	graphicsContext->SetTexture(0, texture);
 	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffer(vertexBuffer);
