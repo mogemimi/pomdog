@@ -53,10 +53,12 @@ T Clamp(T const& x, T const& min, T const& max)
 {
 	static_assert(std::is_arithmetic<T>::value, "");
 	POMDOG_ASSERT_MESSAGE(min < max, "In Clamp, maxval is out of range");
-	if (x < min)
+	if (x < min) {
 		return min;
-	else if (x > max)
+	}
+	if (x > max) {
 		return max;
+	}
 	return x;
 }
 //-------------------------------------------------------------------

@@ -19,8 +19,7 @@ namespace QuickStart {
 
 using namespace Pomdog;
 
-class QuickStartGame: public Game
-{
+class QuickStartGame: public Game {
 public:
 	explicit QuickStartGame(std::shared_ptr<GameHost> host);
 

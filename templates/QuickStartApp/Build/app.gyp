@@ -64,7 +64,7 @@
   'targets': [
     {
       'target_name': 'QuickStart',
-      'product_name': 'QuickStartApp',
+      'product_name': 'QuickStart',
       'type': 'executable',
       'mac_bundle': 1,
       'sources': [
