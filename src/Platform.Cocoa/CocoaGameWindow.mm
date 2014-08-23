@@ -17,7 +17,26 @@
 namespace Pomdog {
 namespace Details {
 namespace Cocoa {
+namespace {
 
+static void SetAllowPlayerResizing(bool allowResizing, NSWindow* window)
+{
+	POMDOG_ASSERT(window);
+
+	NSUInteger styleMask = [window styleMask];
+	if (allowResizing) {
+		styleMask |= NSResizableWindowMask;
+		POMDOG_ASSERT((styleMask & NSResizableWindowMask) == NSResizableWindowMask);
+	}
+	else {
+		styleMask |= NSResizableWindowMask;
+		styleMask ^= NSResizableWindowMask;
+		POMDOG_ASSERT((styleMask & NSResizableWindowMask) != NSResizableWindowMask);
+	}
+	[window setStyleMask:styleMask];
+}
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
 CocoaGameWindow::CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDispatcher> eventDispatcher)
 	: nativeWindow(window)
@@ -25,9 +44,13 @@ CocoaGameWindow::CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDi
 	, windowDelegate(nil)
 	, viewDelegate(nil)
 {
+	POMDOG_ASSERT(nativeWindow);
+
 #if !__has_feature(objc_arc)
 	[this->nativeWindow retain];
 #endif
+
+	SetAllowPlayerResizing(false, nativeWindow);
 
 	//NSRect frameRect = [this->nativeWindow frame];
 	NSRect frameRect = [[nativeWindow contentView] bounds];
@@ -76,17 +99,8 @@ bool CocoaGameWindow::AllowPlayerResizing() const
 //-----------------------------------------------------------------------
 void CocoaGameWindow::AllowPlayerResizing(bool allowResizing)
 {
-	NSUInteger styleMask = [nativeWindow styleMask];
-	if (allowResizing) {
-		styleMask |= NSResizableWindowMask;
-		POMDOG_ASSERT((styleMask & NSResizableWindowMask) == NSResizableWindowMask);
-	}
-	else {
-		styleMask |= NSResizableWindowMask;
-		styleMask ^= NSResizableWindowMask;
-		POMDOG_ASSERT((styleMask & NSResizableWindowMask) != NSResizableWindowMask);
-	}
-	[nativeWindow setStyleMask:styleMask];
+	POMDOG_ASSERT(nativeWindow);
+	SetAllowPlayerResizing(allowResizing, nativeWindow);
 }
 //-----------------------------------------------------------------------
 std::string CocoaGameWindow::Title() const
