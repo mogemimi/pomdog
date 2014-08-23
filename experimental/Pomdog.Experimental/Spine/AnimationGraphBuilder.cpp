@@ -96,6 +96,8 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(Details::Spine::SkeletonDesc 
 	auto filename = assets.RootDirectory() + "/" + assetPath;
 	auto json = ReadBinaryFile(filename);
 	
+	POMDOG_ASSERT(!json.empty());
+	
 	rapidjson::Document doc;
 	doc.Parse(json.data(), json.size());
 

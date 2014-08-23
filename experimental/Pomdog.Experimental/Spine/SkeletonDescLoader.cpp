@@ -815,6 +815,8 @@ Spine::SkeletonDesc AssetLoader<Spine::SkeletonDesc>::operator()(AssetLoaderCont
 	auto filename = loaderContext.RootDirectory + "/" + assetPath;
 	auto json = ReadBinaryFile(filename);
 	
+	POMDOG_ASSERT(!json.empty());
+	
 	rapidjson::Document doc;
 	doc.Parse(json.data(), json.size());
 

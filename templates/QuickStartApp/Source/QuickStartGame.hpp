@@ -23,11 +23,11 @@ class QuickStartGame: public Game {
 public:
 	explicit QuickStartGame(std::shared_ptr<GameHost> const& gameHost);
 
-	void Initialize();
+	void Initialize() override;
 
-	void Update();
+	void Update() override;
 
-	void Draw();
+	void Draw() override;
 
 private:
 	std::shared_ptr<GameHost> gameHost;

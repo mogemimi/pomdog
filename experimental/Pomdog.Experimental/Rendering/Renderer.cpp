@@ -26,7 +26,7 @@ using Details::Rendering::SpriteCommand;
 class Renderer::Impl {
 public:
 	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
+		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 	void Render(std::shared_ptr<GraphicsContext> const& graphicsContext);
 
@@ -51,7 +51,7 @@ public:
 };
 //-----------------------------------------------------------------------
 Renderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	: viewMatrix{Matrix4x4::Identity}
 	, projectionMatrix{Matrix4x4::Identity}
 	, drawCallCount{0}
@@ -123,8 +123,8 @@ void Renderer::Impl::Flush()
 #endif
 //-----------------------------------------------------------------------
 Renderer::Renderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets)
-	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))
+	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice))
 {}
 //-----------------------------------------------------------------------
 Renderer::~Renderer() = default;

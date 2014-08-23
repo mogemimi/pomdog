@@ -43,7 +43,7 @@ void ParticleTestGame::Initialize()
 		fxaa = std::make_unique<FXAA>(graphicsDevice);
 		auto bounds = window->ClientBounds();
 		fxaa->SetViewport(bounds.Width, bounds.Height);
-		renderer = std::make_unique<Renderer>(graphicsContext, graphicsDevice, *assets);
+		renderer = std::make_unique<Renderer>(graphicsContext, graphicsDevice);
 	}
 	{
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
