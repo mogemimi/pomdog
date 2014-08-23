@@ -34,7 +34,7 @@ public:
 	///@~Japanese
 	/// @brief プレイヤーによるウィンドウサイズの変更を許可するかどうかを取得します。
 	/// @return プレイヤーによるウィンドウサイズの変更を許可する場合は true を返却します。
-	/// @note 既定値は false です。ただし、Windows Store アプリは、この値に関わらず
+	/// @note Windows Store アプリは、この値に関わらず
 	/// プレイヤーによるウィンドウサイズの変更が許可されています。
 	virtual bool AllowPlayerResizing() const = 0;
 

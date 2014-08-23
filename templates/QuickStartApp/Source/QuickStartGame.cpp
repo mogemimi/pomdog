@@ -21,6 +21,7 @@ void QuickStartGame::Initialize()
 {
 	auto window = gameHost->Window();
 	window->Title("QuickStart Game");
+	window->AllowPlayerResizing(false);
 
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
