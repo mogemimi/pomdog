@@ -52,13 +52,14 @@ gyp Build/app.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
 xcodebuild -project build.xcodefiles/Build/app.xcodeproj
 ```
 
-To build in release mode, use `-configuration` option:  
+To build in release mode, use `-configuration` option:
+
 ```bash
-xcodebuild -project build.xcodefiles/build/QuickStartApp.xcodeproj -configuration Release
+xcodebuild -project build.xcodefiles/Build/app.xcodeproj -configuration Release
 ```
 
 **3. Running app**
 
 ```bash
-open Build/build/Release/QuickStartApp.app
+open Build/build/Release/QuickStart.app
 ```

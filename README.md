@@ -66,7 +66,8 @@ gyp build/TestApp.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
 xcodebuild -project build.xcodefiles/build/TestApp.xcodeproj
 ```
 
-To build in release mode, use `-configuration` option:  
+To build in release mode, use `-configuration` option:
+
 ```bash
 xcodebuild -project build.xcodefiles/build/TestApp.xcodeproj -configuration Release
 ```

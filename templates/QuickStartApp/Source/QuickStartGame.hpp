@@ -21,7 +21,7 @@ using namespace Pomdog;
 
 class QuickStartGame: public Game {
 public:
-	explicit QuickStartGame(std::shared_ptr<GameHost> host);
+	explicit QuickStartGame(std::shared_ptr<GameHost> const& gameHost);
 
 	void Initialize();
 

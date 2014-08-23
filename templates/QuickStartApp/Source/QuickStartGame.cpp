@@ -11,8 +11,8 @@
 
 namespace QuickStart {
 //-----------------------------------------------------------------------
-QuickStartGame::QuickStartGame(std::shared_ptr<GameHost> host)
-	: gameHost(std::move(host))
+QuickStartGame::QuickStartGame(std::shared_ptr<GameHost> const& gameHostIn)
+	: gameHost(gameHostIn)
 {
 	graphicsContext = gameHost->GraphicsContext();
 }
