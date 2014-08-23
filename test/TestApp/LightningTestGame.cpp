@@ -156,16 +156,16 @@ void LightningTestGame::Initialize()
 		});
 	}
 	
-	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this] {
-		auto gameWindow = gameHost->Window();
-		auto bounds = gameWindow->ClientBounds();
-		
+	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
+		graphicsContext->Viewport(Viewport{0, 0, width, height});
+		graphicsContext->ScissorRectangle(Rectangle{0, 0, width, height});
+	
 		renderTarget = std::make_shared<RenderTarget2D>(
-			gameHost->GraphicsDevice(), bounds.Width, bounds.Height,
+			gameHost->GraphicsDevice(), width, height,
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 
-		fxaa->SetViewport(bounds.Width, bounds.Height);
-		spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(bounds.Width, bounds.Height, 1.0f, 100.0f));
+		fxaa->SetViewport(width, height);
+		spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(width, height, 1.0f, 100.0f));
 	});
 }
 //-----------------------------------------------------------------------

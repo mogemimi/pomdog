@@ -257,6 +257,10 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
 	glGetProgramiv(shaderProgram.value, GL_ACTIVE_ATTRIBUTES, &attributeCount);
 	glGetProgramiv(shaderProgram.value, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxAttributeLength);
 
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glGetProgramiv", __FILE__, __LINE__);
+	#endif
+
 	POMDOG_ASSERT(attributeCount >= 0);
 	POMDOG_ASSERT(maxAttributeLength > 0);
 
@@ -303,7 +307,7 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
 		}
 	}
 	
-	std::sort(std::begin(attributes), std::end(attributes), [](InputElementGL4 const& a, InputElementGL4 const& b){
+	std::sort(std::begin(attributes), std::end(attributes), [](InputElementGL4 const& a, InputElementGL4 const& b) {
 		return a.StartSlot < b.StartSlot;
 	});
 

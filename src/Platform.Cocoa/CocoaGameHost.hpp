@@ -37,7 +37,7 @@ public:
 	~CocoaGameHost();
 
 	///@copydoc GameHost
-	void Run(std::weak_ptr<Game> game) override;
+	void Run(Game & game) override;
 	
 	///@copydoc GameHost
 	void Exit() override;

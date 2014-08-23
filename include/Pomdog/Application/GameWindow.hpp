@@ -61,7 +61,7 @@ public:
 	
 	///@~Japanese
 	/// @brief ゲームウィンドウのクライアント領域のサイズが変更されたときに呼ばれるイベントです。
-	Signal<void()> ClientSizeChanged;
+	Signal<void(int width, int height)> ClientSizeChanged;
 };
 
 }// namespace Pomdog

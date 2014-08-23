@@ -67,10 +67,8 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 		depthStencilState = DepthStencilState::CreateNone(graphicsDevice);
 	}
 
-	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this] {
-		auto gameWindow = gameHost->Window();
-		auto bounds = gameWindow->ClientBounds();
-		hierarchy.RenderSizeChanged(bounds.Width, bounds.Height);
+	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
+		hierarchy.RenderSizeChanged(width, height);
 	});
 }
 //-----------------------------------------------------------------------

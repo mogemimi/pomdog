@@ -105,7 +105,7 @@ public:
 	~Impl() = default;
 
 	///@copydoc GameHost
-	void Run(std::weak_ptr<Game> game);
+	void Run(Game & game);
 	
 	///@copydoc GameHost
 	void Exit();
@@ -199,19 +199,13 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	}
 }
 //-----------------------------------------------------------------------
-void CocoaGameHost::Impl::Run(std::weak_ptr<Game> weakGame)
+void CocoaGameHost::Impl::Run(Game & game)
 {
-	auto game = weakGame.lock();
-	
-	if (!game) {
-		return;
-	}
-	
 	///@note make current context on this thread
 	//openGLContext->BindCurrentContext();// badcode
-	game->Initialize();
+	game.Initialize();
 
-	if (!game->CompleteInitialize()) {
+	if (!game.CompleteInitialize()) {
 		return;
 	}
 	
@@ -219,8 +213,8 @@ void CocoaGameHost::Impl::Run(std::weak_ptr<Game> weakGame)
 	{
 		clock.Tick();
 		DoEvents();
-		game->Update();
-		RenderFrame(*game);
+		game.Update();
+		RenderFrame(game);
 	}
 
 	gameWindow->Close();
@@ -274,19 +268,18 @@ void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
 		Log::Internal("WindowWillCloseEvent");
 		///@todo Not implemented
 	}
-	else if (event.Is<ViewNeedsUpdateSurfaceEvent>())
-	{
-		//auto rect = gameWindow->ClientBounds();
-		//Log::Internal(StringFormat("ViewNeedsUpdateSurfaceEvent: {w: %d, h: %d}",
-		//	rect.Width, rect.Height));
-		
-		surfaceResizeRequest = true;
-	}
 	else if (event.Is<ViewWillStartLiveResizeEvent>())
 	{
 		auto rect = gameWindow->ClientBounds();
 		Log::Internal(StringFormat("ViewWillStartLiveResizeEvent: {w: %d, h: %d}",
 			rect.Width, rect.Height));
+	}
+	else if (event.Is<ViewNeedsUpdateSurfaceEvent>())
+	{
+		//auto rect = gameWindow->ClientBounds();
+		//Log::Internal(StringFormat("ViewNeedsUpdateSurfaceEvent: {w: %d, h: %d}",
+		//	rect.Width, rect.Height));
+		surfaceResizeRequest = true;
 	}
 	else if (event.Is<ViewDidEndLiveResizeEvent>())
 	{
@@ -318,15 +311,8 @@ void CocoaGameHost::Impl::ClientSizeChanged()
 		POMDOG_ASSERT(openGLContext->NativeOpenGLContext() != nil);
 		[openGLContext->NativeOpenGLContext() update];
 	
-		auto viewport = graphicsContext->Viewport();
-		viewport.Bounds = gameWindow->ClientBounds();
-		viewport.Bounds.X = 0;
-		viewport.Bounds.Y = 0;
-		graphicsContext->Viewport(viewport);
-		
-		graphicsContext->ScissorRectangle(viewport.Bounds);
-		
-		gameWindow->ClientSizeChanged();
+		auto bounds = gameWindow->ClientBounds();
+		gameWindow->ClientSizeChanged(bounds.Width, bounds.Height);
 	}
 	openGLContext->UnbindCurrentContext();
 	openGLContext->UnlockContext();
@@ -379,10 +365,10 @@ CocoaGameHost::CocoaGameHost(std::shared_ptr<CocoaGameWindow> const& window,
 //-----------------------------------------------------------------------
 CocoaGameHost::~CocoaGameHost() = default;
 //-----------------------------------------------------------------------
-void CocoaGameHost::Run(std::weak_ptr<Game> weakGame)
+void CocoaGameHost::Run(Game & game)
 {
 	POMDOG_ASSERT(impl);
-	impl->Run(weakGame);
+	impl->Run(game);
 }
 //-----------------------------------------------------------------------
 void CocoaGameHost::Exit()

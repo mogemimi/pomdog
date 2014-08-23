@@ -53,13 +53,13 @@ public:
 		BeginRun(nativeWindow);
 		
 		try {
-			auto game = std::make_shared<GameClass>(gameHost);
+			GameClass game{gameHost};
 			gameHost->Run(game);
 		}
 		catch (std::exception const& e) {
 			Log::Critical("Pomdog", e.what());
 		}
-		
+
 		EndRun();
 	}
 	
