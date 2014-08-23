@@ -14,7 +14,6 @@
 #endif
 
 #include "detail/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Noncopyable.hpp"
 #include "Pomdog/Config/Export.hpp"
 #include <memory>
 #include <initializer_list>
@@ -31,11 +30,14 @@ class NativeInputLayout;
 
 ///@~Japanese
 /// @brief 入力レイアウトを記述します。
-class POMDOG_EXPORT InputLayout: Noncopyable {
+class POMDOG_EXPORT InputLayout {
 public:
 	InputLayout() = delete;
 	InputLayout(InputLayout const&) = delete;
+	InputLayout & operator=(InputLayout const&) = delete;
+	
 	InputLayout(InputLayout &&) = default;
+	InputLayout & operator=(InputLayout &&) = default;
 	
 	InputLayout(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		std::shared_ptr<EffectPass> const& effectPass);

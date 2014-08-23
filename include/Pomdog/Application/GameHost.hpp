@@ -14,7 +14,6 @@
 #endif
 
 #include "Pomdog/Config/Export.hpp"
-#include "Pomdog/Utility/Noncopyable.hpp"
 #include <memory>
 
 namespace Pomdog {
@@ -28,8 +27,12 @@ class GraphicsDevice;
 class Keyboard;
 class Mouse;
 
-class POMDOG_EXPORT GameHost: Noncopyable, public std::enable_shared_from_this<GameHost> {
+class POMDOG_EXPORT GameHost: public std::enable_shared_from_this<GameHost> {
 public:
+	GameHost() = default;
+	GameHost(GameHost const&) = delete;
+	GameHost & operator=(GameHost const&) = delete;
+
 	virtual ~GameHost() = default;
 	
 	///@~Japanese

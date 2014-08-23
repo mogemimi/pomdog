@@ -15,7 +15,6 @@
 
 #include "detail/ForwardDeclarations.hpp"
 #include "RasterizerDescription.hpp"
-#include "Pomdog/Utility/Noncopyable.hpp"
 #include "Pomdog/Config/Export.hpp"
 #include <memory>
 
@@ -30,9 +29,11 @@ class NativeRasterizerState;
 
 ///@~Japanese
 /// @brief ラスタライザステートです。
-class POMDOG_EXPORT RasterizerState: Noncopyable {
+class POMDOG_EXPORT RasterizerState {
 public:
 	RasterizerState() = delete;
+	RasterizerState(RasterizerState const&) = delete;
+	RasterizerState & operator=(RasterizerState const&) = delete;
 
 	RasterizerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, RasterizerDescription const& description);
 

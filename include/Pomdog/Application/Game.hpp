@@ -14,7 +14,6 @@
 #endif
 
 #include "Pomdog/Config/Export.hpp"
-#include "Pomdog/Utility/Noncopyable.hpp"
 
 namespace Pomdog {
 
@@ -22,8 +21,12 @@ namespace Pomdog {
 /// @brief ゲームの内容を記述します。
 /// @remarks プラットフォームを意識することなくゲームのコンテンツ開発に集中できる
 /// ようにします。
-class POMDOG_EXPORT Game: Noncopyable {
+class POMDOG_EXPORT Game {
 public:
+	Game() = default;
+	Game(Game const&) = delete;
+	Game & operator=(Game const&) = delete;
+
 	virtual ~Game() = default;
 
 	///@~Japanese

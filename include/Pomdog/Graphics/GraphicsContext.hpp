@@ -15,7 +15,6 @@
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Noncopyable.hpp"
 #include "Pomdog/Config/Export.hpp"
 #include <cstdint>
 #include <cstddef>
@@ -34,9 +33,11 @@ class PresentationParameters;
 
 ///@~Japanese
 /// @brief 下位レベルの API を提供するグラフィックスコンテキストです。レンダリングコマンドを生成するために使用します。
-class POMDOG_EXPORT GraphicsContext: Noncopyable {
+class POMDOG_EXPORT GraphicsContext {
 public:
 	GraphicsContext() = delete;
+	GraphicsContext(GraphicsContext const&) = delete;
+	GraphicsContext & operator=(GraphicsContext const&) = delete;
 
 	GraphicsContext(std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
 		Details::RenderSystem::PresentationParameters const& presentationParameters,

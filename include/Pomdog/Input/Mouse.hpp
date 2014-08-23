@@ -14,7 +14,6 @@
 #endif
 
 #include "Pomdog/Config/Export.hpp"
-#include "Pomdog/Utility/Noncopyable.hpp"
 
 namespace Pomdog {
 
@@ -22,8 +21,12 @@ class MouseState;
 
 ///@~Japanese
 /// @brief マウスによる入力を取得するのに使います。
-class POMDOG_EXPORT Mouse: Noncopyable {
+class POMDOG_EXPORT Mouse {
 public:
+	Mouse() = default;
+	Mouse(Mouse const&) = delete;
+	Mouse & operator=(Mouse const&) = delete;
+
 	virtual ~Mouse() = default;
 
 	///@~Japanese

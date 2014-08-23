@@ -13,14 +13,6 @@
 #	pragma once
 #endif
 
-#include "Config/Platform.hpp"
-#include "Config/Export.hpp"
-
-#include "Utility/Assert.hpp"
-#include "Utility/Exception.hpp"
-#include "Utility/Noncopyable.hpp"
-#include "Utility/StringFormat.hpp"
-
 // Application
 #include "Application/DurationSeconds.hpp"
 #include "Application/Game.hpp"
@@ -138,5 +130,12 @@
 #include "Input/PlayerIndex.hpp"
 #include "Input/TouchLocation.hpp"
 #include "Input/TouchLocationState.hpp"
+
+#include "Utility/Assert.hpp"
+#include "Utility/Exception.hpp"
+#include "Utility/StringFormat.hpp"
+
+#include "Config/Export.hpp"
+#include "Config/Platform.hpp"
 
 #endif // !defined(POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP)

@@ -16,7 +16,6 @@
 #include "detail/ForwardDeclarations.hpp"
 #include "BlendDescription.hpp"
 #include "Pomdog/Config/Export.hpp"
-#include "Pomdog/Utility/Noncopyable.hpp"
 #include <memory>
 
 namespace Pomdog {
@@ -30,9 +29,11 @@ class NativeBlendState;
 
 ///@~Japanese
 /// @brief ブレンディングステートです。
-class POMDOG_EXPORT BlendState: Noncopyable {
+class POMDOG_EXPORT BlendState {
 public:
 	BlendState() = delete;
+	BlendState(BlendState const&) = delete;
+	BlendState & operator=(BlendState const&) = delete;
 
 	BlendState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, BlendDescription const& description);
 

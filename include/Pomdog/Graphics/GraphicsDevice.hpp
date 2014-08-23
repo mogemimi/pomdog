@@ -15,7 +15,6 @@
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Config/Export.hpp"
-#include "Pomdog/Utility/Noncopyable.hpp"
 #include <memory>
 
 namespace Pomdog {
@@ -30,9 +29,11 @@ class NativeGraphicsDevice;
 }// namespace RenderSystem
 }// namespace Details
 
-class POMDOG_EXPORT GraphicsDevice: Noncopyable {
+class POMDOG_EXPORT GraphicsDevice {
 public:
 	GraphicsDevice() = delete;
+	GraphicsDevice(GraphicsDevice const&) = delete;
+	GraphicsDevice & operator=(GraphicsDevice const&) = delete;
 	
 	explicit GraphicsDevice(std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> && nativeDevice);
 	

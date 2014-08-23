@@ -14,7 +14,6 @@
 #endif
 
 #include "Pomdog/Config/Export.hpp"
-#include "Pomdog/Utility/Noncopyable.hpp"
 
 namespace Pomdog {
 
@@ -22,8 +21,12 @@ class KeyboardState;
 
 ///@~Japanese
 /// @brief キーボードの入力を取得するために使います。
-class Keyboard: Noncopyable {
+class Keyboard {
 public:
+	Keyboard() = default;
+	Keyboard(Keyboard const&) = delete;
+	Keyboard & operator=(Keyboard const&) = delete;
+
 	virtual ~Keyboard() = default;
 
 	///@~Japanese

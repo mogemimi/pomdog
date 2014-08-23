@@ -16,7 +16,6 @@
 #include "detail/ForwardDeclarations.hpp"
 #include "SamplerDescription.hpp"
 #include "Pomdog/Config/Export.hpp"
-#include "Pomdog/Utility/Noncopyable.hpp"
 #include <memory>
 
 namespace Pomdog {
@@ -32,9 +31,11 @@ class GraphicsDevice;
 
 ///@~Japanese
 /// @brief テクスチャのサンプリング方法を指定するサンプラーステートです。
-class POMDOG_EXPORT SamplerState: Noncopyable {
+class POMDOG_EXPORT SamplerState {
 public:
 	SamplerState() = delete;
+	SamplerState(SamplerState const&) = delete;
+	SamplerState & operator=(SamplerState const&) = delete;
 
 	SamplerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, SamplerDescription const& description);
 	

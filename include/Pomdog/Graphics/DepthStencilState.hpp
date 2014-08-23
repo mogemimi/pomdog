@@ -16,7 +16,6 @@
 #include "detail/ForwardDeclarations.hpp"
 #include "DepthStencilDescription.hpp"
 #include "Pomdog/Config/Export.hpp"
-#include "Pomdog/Utility/Noncopyable.hpp"
 #include <memory>
 
 namespace Pomdog {
@@ -30,9 +29,11 @@ class NativeDepthStencilState;
 
 ///@~Japanese
 /// @brief 深度ステンシルステートを定義します。
-class POMDOG_EXPORT DepthStencilState: Noncopyable {
+class POMDOG_EXPORT DepthStencilState {
 public:
 	DepthStencilState() = delete;
+	DepthStencilState(DepthStencilState const&) = delete;
+	DepthStencilState & operator=(DepthStencilState const&) = delete;
 
 	DepthStencilState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, DepthStencilDescription const& description);
 

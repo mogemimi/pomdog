@@ -14,7 +14,6 @@
 #endif
 
 #include "Pomdog/Event/Signal.hpp"
-#include "Pomdog/Utility/Noncopyable.hpp"
 #include "Pomdog/Config/Export.hpp"
 #include <string>
 
@@ -24,8 +23,12 @@ class Rectangle;
 
 ///@~Japanese
 /// @brief ゲームウィンドウです。
-class POMDOG_EXPORT GameWindow: Noncopyable {
-public:	
+class POMDOG_EXPORT GameWindow {
+public:
+	GameWindow() = default;
+	GameWindow(GameWindow const&) = delete;
+	GameWindow & operator=(GameWindow const&) = delete;
+
 	virtual ~GameWindow() = default;
 
 	///@~Japanese

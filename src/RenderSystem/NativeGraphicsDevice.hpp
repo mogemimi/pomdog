@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
+#include "../Utility/Noncopyable.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
-#include <Pomdog/Utility/Noncopyable.hpp>
 #include <memory>
 #include <initializer_list>
 #include <vector>
