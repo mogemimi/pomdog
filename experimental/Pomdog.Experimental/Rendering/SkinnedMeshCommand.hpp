@@ -31,7 +31,7 @@ public:
 		: skinnedEffect(graphicsDevice)
 	{}
 
-	void Execute(std::shared_ptr<GraphicsContext> const& graphicsContext) override;
+	void Execute(GraphicsContext & graphicsContext) override;
 
 	void SetMatrixPalette(Skeleton const& skeleton, SkeletonTransform const& skeletonTransform);
 

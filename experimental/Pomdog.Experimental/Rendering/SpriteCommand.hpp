@@ -30,7 +30,7 @@ public:
 		return drawOrder;
 	}
 
-	void Execute(std::shared_ptr<GraphicsContext> const& graphicsContext) override;
+	void Execute(GraphicsContext & graphicsContext) override;
 
 	RenderCommandType CommandType() const override;
 

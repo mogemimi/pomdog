@@ -28,12 +28,12 @@ using Texture2DObjectGL4 = Tagged<GLuint, Texture2D>;
 
 class Texture2DGL4 final: public NativeTexture2D {
 public:
-	Texture2DGL4(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
+	Texture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
 		std::uint32_t levelCount, SurfaceFormat format);
 	
 	~Texture2DGL4() override;
 	
-	void SetData(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
+	void SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
 		std::uint32_t levelCount, SurfaceFormat format, void const* pixelData) override;
 	
 	///@copydoc NativeTexture2D

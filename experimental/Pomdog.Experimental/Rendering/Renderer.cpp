@@ -28,7 +28,7 @@ public:
 	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	void Render(std::shared_ptr<GraphicsContext> const& graphicsContext);
+	void Render(GraphicsContext & graphicsContext);
 
 	void Flush();
 
@@ -62,7 +62,7 @@ Renderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	//spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(bounds.Width, bounds.Height, 1.0f, 100.0f));
 }
 //-----------------------------------------------------------------------
-void Renderer::Impl::Render(std::shared_ptr<GraphicsContext> const& graphicsContext)
+void Renderer::Impl::Render(GraphicsContext & graphicsContext)
 {
 	drawCallCount = 0;
 	
@@ -129,7 +129,7 @@ Renderer::Renderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
 //-----------------------------------------------------------------------
 Renderer::~Renderer() = default;
 //-----------------------------------------------------------------------
-void Renderer::Render(std::shared_ptr<GraphicsContext> const& graphicsContext)
+void Renderer::Render(GraphicsContext & graphicsContext)
 {
 	POMDOG_ASSERT(impl);
 	impl->Render(graphicsContext);

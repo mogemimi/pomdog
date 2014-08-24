@@ -32,7 +32,7 @@ static Optional<GLenum> ToGLDepthStencilFormat(DepthFormat depthFormat)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-RenderTarget2DGL4::RenderTarget2DGL4(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
+RenderTarget2DGL4::RenderTarget2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
 	std::uint32_t levelCount, SurfaceFormat format, DepthFormat depthStencilFormat)
 	: texture(pixelWidth, pixelHeight, levelCount, format)
 	, generateMipmap(levelCount > 1)
@@ -49,6 +49,9 @@ RenderTarget2DGL4::RenderTarget2DGL4(std::uint32_t pixelWidth, std::uint32_t pix
 		
 		glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer->value);
 
+		POMDOG_ASSERT(pixelWidth > 0);
+		POMDOG_ASSERT(pixelHeight > 0);
+	
 		glRenderbufferStorage(GL_RENDERBUFFER, *ToGLDepthStencilFormat(depthStencilFormat), pixelWidth, pixelHeight);
 
 		#ifdef DEBUG

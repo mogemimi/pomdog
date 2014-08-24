@@ -36,7 +36,7 @@ public:
 
 	RenderCommandType CommandType() const override;
 	
-	void Execute(std::shared_ptr<GraphicsContext> const& graphicsContext) override;
+	void Execute(GraphicsContext & graphicsContext) override;
 
 public:
 	std::unique_ptr<SpriteRenderer> spriteRenderer;

@@ -15,10 +15,10 @@ namespace Rendering {
 //-----------------------------------------------------------------------
 ParticleBatchCommand::~ParticleBatchCommand() = default;
 //-----------------------------------------------------------------------
-void ParticleBatchCommand::Execute(std::shared_ptr<GraphicsContext> const& graphicsContext)
+void ParticleBatchCommand::Execute(GraphicsContext & graphicsContext)
 {
-	auto blendStateOld = graphicsContext->GetBlendState();
-	graphicsContext->SetBlendState(blendState);
+	auto blendStateOld = graphicsContext.GetBlendState();
+	graphicsContext.SetBlendState(blendState);
 
 	POMDOG_ASSERT(spriteRenderer);
 	spriteRenderer->Begin(SpriteSortMode::Deferred, modelViewProjection);
@@ -31,7 +31,7 @@ void ParticleBatchCommand::Execute(std::shared_ptr<GraphicsContext> const& graph
 		}
 	}
 	spriteRenderer->End();
-	graphicsContext->SetBlendState(blendStateOld);
+	graphicsContext.SetBlendState(blendStateOld);
 }
 //-----------------------------------------------------------------------
 RenderCommandType ParticleBatchCommand::CommandType() const

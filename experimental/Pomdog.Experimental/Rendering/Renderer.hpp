@@ -30,7 +30,7 @@ public:
 	void ViewMatrix(Matrix4x4 const& viewMatrix);
 	void ProjectionMatrix(Matrix4x4 const& projectionMatrix);
 
-	void Render(std::shared_ptr<GraphicsContext> const& graphicsContext);
+	void Render(GraphicsContext & graphicsContext);
 	
 	void PushCommand(std::reference_wrapper<RenderCommand> && command);
 	

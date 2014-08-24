@@ -12,7 +12,7 @@ namespace Pomdog {
 namespace Details {
 namespace Rendering {
 //-----------------------------------------------------------------------
-void SpriteCommand::Execute(std::shared_ptr<GraphicsContext> const& graphicsContext)
+void SpriteCommand::Execute(GraphicsContext & graphicsContext)
 {
 	///@todo not implemented
 }

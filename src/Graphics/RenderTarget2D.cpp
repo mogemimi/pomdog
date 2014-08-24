@@ -10,6 +10,7 @@
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include <Pomdog/Math/Rectangle.hpp>
 #include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
@@ -31,13 +32,13 @@ static std::uint16_t ComputeMipmapLevelCount(std::uint32_t width, std::uint32_t 
 }// unnamed namespace
 //-----------------------------------------------------------------------
 RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	std::uint32_t pixelWidthIn, std::uint32_t pixelHeightIn)
+	std::int32_t pixelWidthIn, std::int32_t pixelHeightIn)
 	: RenderTarget2D(graphicsDevice, pixelWidthIn, pixelHeightIn,
 		false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None)
 {}
 //-----------------------------------------------------------------------
 RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	std::uint32_t pixelWidthIn, std::uint32_t pixelHeightIn,
+	std::int32_t pixelWidthIn, std::int32_t pixelHeightIn,
 	bool generateMipmap, SurfaceFormat formatIn, DepthFormat depthStencilFormatIn)
 	: pixelWidth(pixelWidthIn)
 	, pixelHeight(pixelHeightIn)
@@ -52,12 +53,12 @@ RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDe
 //-----------------------------------------------------------------------
 RenderTarget2D::~RenderTarget2D() = default;
 //-----------------------------------------------------------------------
-std::uint32_t RenderTarget2D::Width() const
+std::int32_t RenderTarget2D::Width() const
 {
 	return pixelWidth;
 }
 //-----------------------------------------------------------------------
-std::uint32_t RenderTarget2D::Height() const
+std::int32_t RenderTarget2D::Height() const
 {
 	return pixelHeight;
 }
@@ -75,6 +76,11 @@ SurfaceFormat RenderTarget2D::Format() const
 DepthFormat RenderTarget2D::DepthStencilFormat() const
 {
 	return depthStencilFormat;
+}
+//-----------------------------------------------------------------------
+Rectangle RenderTarget2D::Bounds() const
+{
+	return Rectangle{0, 0, pixelWidth, pixelHeight};
 }
 //-----------------------------------------------------------------------
 Details::RenderSystem::NativeRenderTarget2D* RenderTarget2D::NativeRenderTarget2D()

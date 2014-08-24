@@ -139,14 +139,14 @@ GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass & nativeEffectPass,
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeTexture2D>
-GraphicsDeviceGL4::CreateTexture2D(std::uint32_t width, std::uint32_t height, std::uint32_t mipmapLevels,
+GraphicsDeviceGL4::CreateTexture2D(std::int32_t width, std::int32_t height, std::uint32_t mipmapLevels,
 	SurfaceFormat format)
 {
 	return std::make_unique<Texture2DGL4>(width, height, mipmapLevels, format);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeRenderTarget2D>
-GraphicsDeviceGL4::CreateRenderTarget2D(std::uint32_t width, std::uint32_t height,
+GraphicsDeviceGL4::CreateRenderTarget2D(std::int32_t width, std::int32_t height,
 	std::uint32_t mipmapLevels, SurfaceFormat format, DepthFormat depthStencilFormat)
 {
 	return std::make_unique<RenderTarget2DGL4>(width, height, mipmapLevels, format, depthStencilFormat);

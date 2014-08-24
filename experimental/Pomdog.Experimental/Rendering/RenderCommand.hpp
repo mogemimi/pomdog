@@ -29,7 +29,7 @@ class RenderCommand {
 public:
 	virtual ~RenderCommand() = default;
 	
-	virtual void Execute(std::shared_ptr<GraphicsContext> const& graphicsContext) = 0;
+	virtual void Execute(GraphicsContext & graphicsContext) = 0;
 	
 	virtual RenderCommandType CommandType() const = 0;
 	

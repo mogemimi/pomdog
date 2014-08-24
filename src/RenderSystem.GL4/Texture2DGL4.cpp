@@ -249,7 +249,7 @@ struct TypesafeHelperGL4::OpenGLGetTraits<Texture2DObjectGL4> {
 	constexpr static GLenum textureObjectTarget = GL_TEXTURE_2D;
 };
 //-----------------------------------------------------------------------
-Texture2DGL4::Texture2DGL4(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
+Texture2DGL4::Texture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
 	std::uint32_t levelCount, SurfaceFormat format)
 {
 	// Create Texture2D
@@ -295,7 +295,7 @@ Texture2DGL4::~Texture2DGL4()
 	}
 }
 //-----------------------------------------------------------------------
-void Texture2DGL4::SetData(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
+void Texture2DGL4::SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
 	std::uint32_t levelCount, SurfaceFormat format, void const* pixelData)
 {
 	POMDOG_ASSERT(pixelWidth > 0);

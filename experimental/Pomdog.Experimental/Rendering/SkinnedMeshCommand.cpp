@@ -12,12 +12,12 @@ namespace Pomdog {
 namespace Details {
 namespace Rendering {
 //-----------------------------------------------------------------------
-void SkinnedMeshCommand::Execute(std::shared_ptr<GraphicsContext> const& graphicsContext)
+void SkinnedMeshCommand::Execute(GraphicsContext & graphicsContext)
 {
 	{
-		graphicsContext->SetVertexBuffer(mesh->VertexBuffer);
-		skinnedEffect.Apply(*graphicsContext);
-		graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList,
+		graphicsContext.SetVertexBuffer(mesh->VertexBuffer);
+		skinnedEffect.Apply(graphicsContext);
+		graphicsContext.DrawIndexed(PrimitiveTopology::TriangleList,
 			mesh->IndexBuffer, mesh->IndexBuffer->IndexCount());
 	}
 //	{

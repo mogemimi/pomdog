@@ -29,7 +29,7 @@ using RenderBuffer2DGL4 = Tagged<GLuint, RenderTarget2D>;
 
 class RenderTarget2DGL4 final: public NativeRenderTarget2D {
 public:
-	RenderTarget2DGL4(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
+	RenderTarget2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
 		std::uint32_t levelCount, SurfaceFormat format, DepthFormat depthStencilFormat);
 	
 	~RenderTarget2DGL4();

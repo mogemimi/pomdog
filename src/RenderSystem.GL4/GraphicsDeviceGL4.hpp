@@ -88,12 +88,12 @@ public:
 	
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeTexture2D>
-	CreateTexture2D(std::uint32_t width, std::uint32_t height,
+	CreateTexture2D(std::int32_t width, std::int32_t height,
 		std::uint32_t mipmapLevels, SurfaceFormat format) override;
 	
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeRenderTarget2D>
-	CreateRenderTarget2D(std::uint32_t width, std::uint32_t height,
+	CreateRenderTarget2D(std::int32_t width, std::int32_t height,
 		std::uint32_t mipmapLevels, SurfaceFormat format, DepthFormat depthStencilFormat) override;
 };
 

@@ -32,18 +32,20 @@ static std::uint16_t ComputeMipmapLevelCount(std::uint32_t width, std::uint32_t 
 }// unnamed namespace
 //-----------------------------------------------------------------------
 Texture2D::Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	std::uint32_t pixelWidthIn, std::uint32_t pixelHeightIn)
+	std::int32_t pixelWidthIn, std::int32_t pixelHeightIn)
 	: Texture2D(graphicsDevice, pixelWidthIn, pixelHeightIn, false, SurfaceFormat::R8G8B8A8_UNorm)
 {}
 //-----------------------------------------------------------------------
 Texture2D::Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	std::uint32_t pixelWidthIn, std::uint32_t pixelHeightIn,
+	std::int32_t pixelWidthIn, std::int32_t pixelHeightIn,
 	bool mipMap, SurfaceFormat formatIn)
 	: pixelWidth(pixelWidthIn)
 	, pixelHeight(pixelHeightIn)
 	, levelCount(ComputeMipmapLevelCount(pixelWidth, pixelHeight))
 	, format(formatIn)
 {
+	POMDOG_ASSERT(pixelWidth > 0);
+	POMDOG_ASSERT(pixelHeight > 0);
 	POMDOG_ASSERT(levelCount >= 1);
 	nativeTexture2D = graphicsDevice->NativeGraphicsDevice()->CreateTexture2D(
 		pixelWidthIn, pixelHeightIn, levelCount, formatIn);
@@ -51,12 +53,12 @@ Texture2D::Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 //-----------------------------------------------------------------------
 Texture2D::~Texture2D() = default;
 //-----------------------------------------------------------------------
-std::uint32_t Texture2D::Width() const
+std::int32_t Texture2D::Width() const
 {
 	return pixelWidth;
 }
 //-----------------------------------------------------------------------
-std::uint32_t Texture2D::Height() const
+std::int32_t Texture2D::Height() const
 {
 	return pixelHeight;
 }
@@ -75,6 +77,8 @@ void Texture2D::SetData(void const* pixelData)
 {
 	POMDOG_ASSERT(nativeTexture2D);
 	POMDOG_ASSERT(pixelData);
+	POMDOG_ASSERT(pixelWidth > 0);
+	POMDOG_ASSERT(pixelHeight > 0);
 	POMDOG_ASSERT((pixelWidth * pixelHeight) > 0);
 	nativeTexture2D->SetData(pixelWidth, pixelHeight, levelCount, format, pixelData);
 }

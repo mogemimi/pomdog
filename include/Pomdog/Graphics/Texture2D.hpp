@@ -42,7 +42,7 @@ public:
 	/// @param width テクスチャの水平方向のピクセル単位の長さ
 	/// @param height テクスチャの垂直方向のピクセル単位の長さ
 	Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		std::uint32_t width, std::uint32_t height);
+		std::int32_t width, std::int32_t height);
 
 	///@~Japanese
 	/// @param graphicsDevice グラフィックスデバイス
@@ -51,7 +51,7 @@ public:
 	/// @param mipMap ミップマップを生成する場合は true を指定します。
 	/// @param format テクスチャのピクセルフォーマット
 	Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		std::uint32_t width, std::uint32_t height, bool mipMap, SurfaceFormat format);
+		std::int32_t width, std::int32_t height, bool mipMap, SurfaceFormat format);
 
 	~Texture2D();
 	
@@ -60,11 +60,11 @@ public:
 
 	///@~Japanese
 	/// @brief テクスチャの水平方向の幅（ピクセル単位）を取得します。
-	std::uint32_t Width() const;
+	std::int32_t Width() const;
 
 	///@~Japanese
 	/// @brief テクスチャの垂直方向の幅（ピクセル単位）を取得します。
-	std::uint32_t Height() const;
+	std::int32_t Height() const;
 
 	///@~Japanese
 	/// @brief ミップマップレベルを取得します。
@@ -84,8 +84,8 @@ public:
 	
 private:
 	std::unique_ptr<Details::RenderSystem::NativeTexture2D> nativeTexture2D;
-	std::uint32_t pixelWidth;
-	std::uint32_t pixelHeight;
+	std::int32_t pixelWidth;
+	std::int32_t pixelHeight;
 	std::uint32_t levelCount;
 	SurfaceFormat format;
 };
