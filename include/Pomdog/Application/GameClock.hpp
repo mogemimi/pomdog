@@ -15,6 +15,7 @@
 
 #include "Pomdog/Application/DurationSeconds.hpp"
 #include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Event/Signal.hpp"
 #include <cstdint>
 #include <memory>
 
@@ -54,6 +55,8 @@ public:
 	///@~Japanese
 	/// @brief フレームの開始時から現在までの経過時間（秒）を取得します。
 	DurationSeconds ElapsedTime() const;
+
+	Signal<void(DurationSeconds const& frameDuration)> OnTick;
 
 private:
 	class Impl;

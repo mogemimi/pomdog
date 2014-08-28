@@ -156,6 +156,8 @@ void GameClock::Tick()
 {
 	POMDOG_ASSERT(impl);
 	impl->Tick();
+
+	OnTick(impl->FrameDuration());
 }
 //-----------------------------------------------------------------------
 DurationSeconds GameClock::TotalGameTime() const

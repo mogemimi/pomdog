@@ -163,10 +163,10 @@ void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camer
 	auto clientBounds = gameHost->Window()->ClientBounds();
 	
 	Viewport viewport(
-		clientBounds.Width * camera.ViewportX,
-		clientBounds.Height * camera.ViewportY,
-		clientBounds.Width * camera.ViewportWidth,
-		clientBounds.Height * camera.ViewportHeight);
+		clientBounds.Width * camera.NormalizedViewportX,
+		clientBounds.Height * camera.NormalizedViewportY,
+		clientBounds.Width * camera.NormalizedViewportWidth,
+		clientBounds.Height * camera.NormalizedViewportHeight);
 	
 	auto viewMatrix = SandboxHelper::CreateViewMatrix(transform, camera);
 	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
@@ -202,7 +202,7 @@ void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camer
 		gameEditor->BeginDraw(*graphicsContext);
 	}
 
-	renderer->Render(graphicsContext);
+	renderer->Render(*graphicsContext);
 }
 //-----------------------------------------------------------------------
 void MaidBeamGame::Draw()
@@ -218,21 +218,21 @@ void MaidBeamGame::Draw()
 		
 		if (!sandboxMode)
 		{
-			bool cleared = false;
+//			bool cleared = false;
 			
 			for (auto & cameraObject: gameWorld.QueryComponents<Camera2D, Transform2D>())
 			{
 				auto camera = cameraObject.Component<Camera2D>();
 				
-				if (!camera->Enabled) {
-					continue;
-				}
-				
-				if (!cleared)
-				{
-					graphicsContext->Clear(camera->BackgroundColor);
-					cleared = true;
-				}
+//				if (!camera->Enabled) {
+//					continue;
+//				}
+//				
+//				if (!cleared)
+//				{
+//					graphicsContext->Clear(camera->BackgroundColor);
+//					cleared = true;
+//				}
 										
 				auto transform = cameraObject.Component<Transform2D>();
 				
@@ -245,7 +245,7 @@ void MaidBeamGame::Draw()
 			auto camera = editorCamera.Component<Camera2D>();
 			auto transform = editorCamera.Component<Transform2D>();
 			
-			graphicsContext->Clear(camera->BackgroundColor);
+//			graphicsContext->Clear(camera->BackgroundColor);
 			DrawScene(*transform, *camera);
 		}
 		

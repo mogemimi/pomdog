@@ -164,7 +164,7 @@ void ParticleTestGame::Draw()
 	
 	graphicsContext->Clear(Color::CornflowerBlue);
 	gameEditor->BeginDraw(*graphicsContext);
-	renderer->Render(graphicsContext);
+	renderer->Render(*graphicsContext);
 
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget();

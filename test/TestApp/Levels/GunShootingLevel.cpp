@@ -55,13 +55,13 @@ GunShootingLevel::GunShootingLevel(GameHost & gameHost, GameWorld & world)
 {
 	auto graphicsDevice = gameHost.GraphicsDevice();
 	auto assets = gameHost.AssetManager();
-	{
-		for (auto & cameraObject: world.QueryComponents<Camera2D>())
-		{
-			auto camera = cameraObject.Component<Camera2D>();
-			camera->Enabled = false;
-		}
-	}
+//	{
+//		for (auto & cameraObject: world.QueryComponents<Camera2D>())
+//		{
+//			auto camera = cameraObject.Component<Camera2D>();
+//			camera->Enabled = false;
+//		}
+//	}
 	{
 		mainCamera = world.CreateObject();
 		auto & transform = mainCamera.AddComponent<Transform2D>();
