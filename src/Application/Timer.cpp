@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -38,6 +38,11 @@ void Timer::Start()
 void Timer::Stop()
 {
 	this->enabled = false;
+}
+//-----------------------------------------------------------------------
+void Timer::Reset()
+{
+	totalTime = DurationSeconds::zero();
 }
 //-----------------------------------------------------------------------
 bool Timer::Enabled() const

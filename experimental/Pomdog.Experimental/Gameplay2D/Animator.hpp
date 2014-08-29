@@ -22,7 +22,7 @@ class Animator: public Component<Animator> {
 public:
 	virtual ~Animator() = default;
 	
-	virtual void Update(GameClock const& clock) = 0;
+	virtual void Update(DurationSeconds const& frameDuration) = 0;
 	
 	virtual void Play(std::string const& state) = 0;
 	
@@ -53,7 +53,7 @@ public:
 		std::shared_ptr<SkeletonTransform> const& skeletonTransform,
 		std::shared_ptr<AnimationGraph> const& animationGraph);
 	
-	void Update(GameClock const& clock) override;
+	void Update(DurationSeconds const& frameDuration) override;
 	
 	void Play(std::string const& state) override;
 	

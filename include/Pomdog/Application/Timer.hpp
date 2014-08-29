@@ -35,6 +35,7 @@ public:
 
 	void Start();
 	void Stop();
+	void Reset();
 	
 	bool Enabled() const;
 

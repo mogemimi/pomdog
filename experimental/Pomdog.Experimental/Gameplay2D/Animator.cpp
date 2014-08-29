@@ -50,11 +50,10 @@ SkeletonAnimator::SkeletonAnimator(std::shared_ptr<Skeleton> const& skeletonIn,
 		animationGraph->States.front().Tree.get());
 }
 //-----------------------------------------------------------------------
-void SkeletonAnimator::Update(GameClock const& clock)
+void SkeletonAnimator::Update(DurationSeconds const& frameDuration)
 {
 	// (1) Update time:
 	{
-		AnimationTimeInterval frameDuration = clock.FrameDuration();
 		time = time + frameDuration * playbackRate;
 
 		POMDOG_ASSERT(animationTree);
