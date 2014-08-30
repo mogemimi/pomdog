@@ -20,6 +20,7 @@
 #include "Gameplay2D/GameLevel.hpp"
 #include "Gameplay2D/ParticleRenderable.hpp"
 #include "Gameplay2D/Renderable.hpp"
+#include "Gameplay2D/RectangleRenderable.hpp"
 #include "Gameplay2D/ScriptBehavior.hpp"
 #include "Gameplay2D/SkinnedMeshRenderable.hpp"
 #include "Gameplay2D/SpriteRenderable.hpp"

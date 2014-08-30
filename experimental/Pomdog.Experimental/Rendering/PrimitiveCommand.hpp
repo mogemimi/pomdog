@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_SPRITECOMMAND_8EB48EFB_54D7_4AF1_AB24_B8607C44B642_HPP
-#define POMDOG_SPRITECOMMAND_8EB48EFB_54D7_4AF1_AB24_B8607C44B642_HPP
+#ifndef POMDOG_PRIMITIVECOMMAND_4CCAFA9C_9995_45A4_8646_411676A87B19_HPP
+#define POMDOG_PRIMITIVECOMMAND_4CCAFA9C_9995_45A4_8646_411676A87B19_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -22,7 +22,7 @@ namespace Pomdog {
 namespace Details {
 namespace Rendering {
 
-class SpriteCommand final: public RenderCommand {
+class PrimitiveCommand final: public RenderCommand {
 public:
 	float DrawOrder() const override
 	{
@@ -35,10 +35,12 @@ public:
 
 public:
 	Matrix3x2 transform;
-	TextureRegion textureRegion;
-	std::shared_ptr<Texture2D> texture;
-	Vector2 originPivot;
-	Color color;
+	//Vector2 originPivot;
+	Rectangle rectangle;
+	Color leftTopColor;
+	Color rightTopColor;
+	Color leftBottomColor;
+	Color rightBottomColor;
 	float drawOrder;
 };
 
@@ -46,4 +48,4 @@ public:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SPRITECOMMAND_8EB48EFB_54D7_4AF1_AB24_B8607C44B642_HPP)
+#endif // !defined(POMDOG_PRIMITIVECOMMAND_4CCAFA9C_9995_45A4_8646_411676A87B19_HPP)

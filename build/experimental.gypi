@@ -13,6 +13,8 @@
       '<@(pomdog_expr_dir)/Gameplay2D/GameLevel.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/ParticleRenderable.cpp',
       '<@(pomdog_expr_dir)/Gameplay2D/ParticleRenderable.hpp',
+      '<@(pomdog_expr_dir)/Gameplay2D/RectangleRenderable.cpp',
+      '<@(pomdog_expr_dir)/Gameplay2D/RectangleRenderable.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/Renderable.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/ScriptBehavior.cpp',
       '<@(pomdog_expr_dir)/Gameplay2D/ScriptBehavior.hpp',
@@ -145,6 +147,8 @@
 
       '<@(pomdog_expr_dir)/Rendering/ParticleBatchCommand.cpp',
       '<@(pomdog_expr_dir)/Rendering/ParticleBatchCommand.hpp',
+      '<@(pomdog_expr_dir)/Rendering/PrimitiveCommand.cpp',
+      '<@(pomdog_expr_dir)/Rendering/PrimitiveCommand.hpp',
       '<@(pomdog_expr_dir)/Rendering/RenderCommand.hpp',
       '<@(pomdog_expr_dir)/Rendering/Renderer.cpp',
       '<@(pomdog_expr_dir)/Rendering/Renderer.hpp',

@@ -46,6 +46,19 @@ public:
 
 	void DrawRectangle(Matrix3x2 const& matrix, Rectangle const& sourceRect, Color const& color);
 
+	///@note
+	/// Y
+	/// ^   color4      color3
+	/// |    +----------+
+	/// |    |          |
+	/// |    +----------+
+	/// |   color1      color2
+	/// |
+	/// +-----------------> X
+	///
+	void DrawRectangle(Matrix3x2 const& matrix, Rectangle const& sourceRect,
+		Color const& color1, Color const& color2, Color const& color3, Color const& color4);
+
 	void DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3, Color const& color);
 
 	void DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,

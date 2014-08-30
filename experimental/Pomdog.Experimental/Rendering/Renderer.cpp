@@ -11,12 +11,15 @@
 #include "RenderCommand.hpp"
 #include "SpriteBatchRenderer.hpp"
 #include "SpriteCommand.hpp"
+#include "PrimitiveCommand.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteRenderer.hpp"
+#include "Pomdog.Experimental/Graphics/PolygonBatch.hpp"
 
 namespace Pomdog {
 
 using Details::Rendering::SpriteBatchRenderer;
 using Details::Rendering::SpriteCommand;
+using Details::Rendering::PrimitiveCommand;
 
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -34,16 +37,17 @@ public:
 
 public:
 	RenderQueue renderQueue;
+	SpriteBatchRenderer spriteBatch;
+	PolygonBatch primitiveBatch;
 	Matrix4x4 viewMatrix;
 	Matrix4x4 projectionMatrix;
-	std::unique_ptr<SpriteBatchRenderer> spriteBatch;
-	//std::unique_ptr<PolygonBatch> polygonBatch;
 	//std::unique_ptr<SpriteBatch> spriteBatch;
 	
 	std::uint32_t drawCallCount;
 	
 	enum BatchState: std::uint8_t {
 		None,
+		Primitive,
 		Sprite,
 	};
 	
@@ -52,14 +56,13 @@ public:
 //-----------------------------------------------------------------------
 Renderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
-	: viewMatrix{Matrix4x4::Identity}
+	: spriteBatch{graphicsContext, graphicsDevice}
+	, primitiveBatch{graphicsContext, graphicsDevice}
+	, viewMatrix{Matrix4x4::Identity}
 	, projectionMatrix{Matrix4x4::Identity}
 	, drawCallCount{0}
 	, batchState{BatchState::None}
 {
-	spriteBatch = std::make_unique<SpriteBatchRenderer>(graphicsContext, graphicsDevice);
-	//polygonBatch = std::make_unique<PolygonBatch>(graphicsContext, graphicsDevice);
-	//spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(bounds.Width, bounds.Height, 1.0f, 100.0f));
 }
 //-----------------------------------------------------------------------
 void Renderer::Impl::Render(GraphicsContext & graphicsContext)
@@ -67,7 +70,7 @@ void Renderer::Impl::Render(GraphicsContext & graphicsContext)
 	drawCallCount = 0;
 	
 	auto viewProjection = viewMatrix * projectionMatrix;
-	spriteBatch->SetProjectionMatrix(viewProjection);
+	spriteBatch.SetProjectionMatrix(viewProjection);
 
 	renderQueue.Sort();
 	renderQueue.Enumerate([&](RenderCommand & command)
@@ -81,16 +84,32 @@ void Renderer::Impl::Render(GraphicsContext & graphicsContext)
 			++drawCallCount;
 			break;
 		}
+		case RenderCommandType::Primitive: {
+			if (batchState != BatchState::Primitive) {
+				Flush();
+				primitiveBatch.Begin(viewProjection);
+				batchState = BatchState::Primitive;
+			}
+			
+			POMDOG_ASSERT(batchState == BatchState::Primitive);
+			auto & primitiveCommand = static_cast<PrimitiveCommand &>(command);
+			primitiveBatch.DrawRectangle(primitiveCommand.transform,
+				primitiveCommand.rectangle,
+				primitiveCommand.leftBottomColor, primitiveCommand.rightBottomColor,
+				primitiveCommand.rightTopColor, primitiveCommand.leftTopColor);
+			break;
+		}
 		case RenderCommandType::Sprite: {
 			if (batchState != BatchState::Sprite) {
 				Flush();
-				spriteBatch->Begin(Matrix4x4::Identity);
+				spriteBatch.Begin(Matrix4x4::Identity);
 				batchState = BatchState::Sprite;
 			}
 			
-			auto spriteCommand = static_cast<SpriteCommand*>(&command);
-			spriteBatch->Draw(spriteCommand->texture, spriteCommand->transform,
-				spriteCommand->textureRegion.Subrect, spriteCommand->color, spriteCommand->originPivot);
+			POMDOG_ASSERT(batchState == BatchState::Sprite);
+			auto & spriteCommand = static_cast<SpriteCommand &>(command);
+			spriteBatch.Draw(spriteCommand.texture, spriteCommand.transform,
+				spriteCommand.textureRegion.Subrect, spriteCommand.color, spriteCommand.originPivot);
 
 			break;
 		}
@@ -105,10 +124,16 @@ void Renderer::Impl::Render(GraphicsContext & graphicsContext)
 void Renderer::Impl::Flush()
 {
 	switch (batchState) {
+	case BatchState::Primitive: {
+		primitiveBatch.End();
+		
+		///@todo Not implemented
+		//drawCallCount += primitiveBatch.DrawCallCount();
+		break;
+	}
 	case BatchState::Sprite: {
-		POMDOG_ASSERT(spriteBatch);
-		spriteBatch->End();
-		drawCallCount += spriteBatch->DrawCallCount();
+		spriteBatch.End();
+		drawCallCount += spriteBatch.DrawCallCount();
 		break;
 	}
 	case BatchState::None:

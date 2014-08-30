@@ -51,8 +51,8 @@ SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& texture)
 {}
 //-----------------------------------------------------------------------
 SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& textureIn, TextureRegion const& textureRegionIn)
-	: originPivot(0.5f, 0.5f)
-	, dirtyFlags(std::numeric_limits<std::uint32_t>::max())
+	: originPivot{0.5f, 0.5f}
+	, dirtyFlags{std::numeric_limits<std::uint32_t>::max()}
 {
 	POMDOG_ASSERT(textureIn);
 	command.texture = textureIn;

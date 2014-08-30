@@ -239,10 +239,10 @@ void PolygonBatch::DrawRectangle(Rectangle const& sourceRect,
 	}
 
 	std::array<Vector2, 4> rectVertices = {
-		Vector2(sourceRect.Left(), sourceRect.Y - sourceRect.Height),
 		Vector2(sourceRect.Left(), sourceRect.Y),
+		Vector2(sourceRect.Left(), sourceRect.Y + sourceRect.Height),
+		Vector2(sourceRect.Right(), sourceRect.Y + sourceRect.Height),
 		Vector2(sourceRect.Right(), sourceRect.Y),
-		Vector2(sourceRect.Right(), sourceRect.Y - sourceRect.Height),
 	};
 	
 	auto colorVector1 = color1.ToVector4();
@@ -251,13 +251,21 @@ void PolygonBatch::DrawRectangle(Rectangle const& sourceRect,
 	auto colorVector4 = color4.ToVector4();
 
 	impl->DrawTriangle(rectVertices[0], rectVertices[1], rectVertices[2],
-		colorVector1, colorVector2, colorVector3);
+		colorVector1, colorVector4, colorVector3);
 	impl->DrawTriangle(rectVertices[2], rectVertices[3], rectVertices[0],
-		colorVector3, colorVector4, colorVector1);
+		colorVector3, colorVector2, colorVector1);
 }
 //-----------------------------------------------------------------------
 void PolygonBatch::DrawRectangle(Matrix3x2 const& matrix,
 	Rectangle const& sourceRect, Color const& color)
+{
+	POMDOG_ASSERT(impl);
+	DrawRectangle(matrix, sourceRect, color, color, color, color);
+}
+//-----------------------------------------------------------------------
+void PolygonBatch::DrawRectangle(Matrix3x2 const& matrix,
+	Rectangle const& sourceRect,
+	Color const& color1, Color const& color2, Color const& color3, Color const& color4)
 {
 	POMDOG_ASSERT(impl);
 	
@@ -266,22 +274,25 @@ void PolygonBatch::DrawRectangle(Matrix3x2 const& matrix,
 	}
 
 	std::array<Vector2, 4> rectVertices = {
-		Vector2(sourceRect.Left(), sourceRect.Y - sourceRect.Height),
 		Vector2(sourceRect.Left(), sourceRect.Y),
+		Vector2(sourceRect.Left(), sourceRect.Y + sourceRect.Height),
+		Vector2(sourceRect.Right(), sourceRect.Y + sourceRect.Height),
 		Vector2(sourceRect.Right(), sourceRect.Y),
-		Vector2(sourceRect.Right(), sourceRect.Y - sourceRect.Height),
 	};
 	
 	for (auto & vertex: rectVertices) {
 		vertex = Vector2::Transform(vertex, matrix);
 	}
 
-	auto colorVector = color.ToVector4();
+	auto colorVector1 = color1.ToVector4();
+	auto colorVector2 = color2.ToVector4();
+	auto colorVector3 = color3.ToVector4();
+	auto colorVector4 = color4.ToVector4();
 
 	impl->DrawTriangle(rectVertices[0], rectVertices[1], rectVertices[2],
-		colorVector, colorVector, colorVector);
+		colorVector1, colorVector4, colorVector3);
 	impl->DrawTriangle(rectVertices[2], rectVertices[3], rectVertices[0],
-		colorVector, colorVector, colorVector);
+		colorVector3, colorVector2, colorVector1);
 }
 //-----------------------------------------------------------------------
 void PolygonBatch::DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3, Color const& color)
