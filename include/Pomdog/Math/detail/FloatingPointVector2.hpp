@@ -99,6 +99,34 @@ public:
 	static T Cross(FloatingPointVector2 const& a, FloatingPointVector2 const& b);
 
 	///@~Japanese
+	/// @brief 2 つのベクトルが含む成分の最小値で構成されたベクトルを返します。
+	/// @details 返却値は次のベクトルと同じです。
+	/// FloatingPointVector2 result;
+	/// result.x = std::min(a.x, b.x);
+	/// result.y = std::min(a.y, b.y);
+	static FloatingPointVector2 Min(FloatingPointVector2 const& a, FloatingPointVector2 const& b);
+
+	///@~Japanese
+	/// @brief 2 つのベクトルが含む成分の最大値で構成されたベクトルを返します。
+	/// @details 返却値は次のベクトルと同じです。
+	/// FloatingPointVector2 result;
+	/// result.x = std::max(a.x, b.x);
+	/// result.y = std::max(a.y, b.y);
+	static FloatingPointVector2 Max(FloatingPointVector2 const& a, FloatingPointVector2 const& b);
+
+	///@~Japanese
+	/// @brief 指定された範囲内にベクトルをクランプします。
+	/// @param source クランプするベクトル
+	/// @param min 最小値
+	/// @param max 最大値
+	/// @details 返却値は次のベクトルと同じです。
+	/// FloatingPointVector2 result;
+	/// result.x = MathHelper::Clamp(source.x, min.x, max.x);
+	/// result.y = MathHelper::Clamp(source.y, min.y, max.y);
+	static FloatingPointVector2 Clamp(FloatingPointVector2 const& source,
+		FloatingPointVector2 const& min, FloatingPointVector2 const& max);
+
+	///@~Japanese
 	/// @brief 現在のベクトルを単位ベクトルに変換します。
 	void Normalize();
 	

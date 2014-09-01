@@ -159,6 +159,29 @@ T FloatingPointVector2<T>::Cross(FloatingPointVector2 const& a, FloatingPointVec
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>
+FloatingPointVector2<T>::Min(FloatingPointVector2 const& a, FloatingPointVector2 const& b)
+{
+	return FloatingPointVector2{std::min(a.X, b.X), std::min(a.Y, b.Y)};
+}
+//-----------------------------------------------------------------------
+template <typename T>
+FloatingPointVector2<T>
+FloatingPointVector2<T>::Max(FloatingPointVector2 const& a, FloatingPointVector2 const& b)
+{
+	return FloatingPointVector2{std::max(a.X, b.X), std::max(a.Y, b.Y)};
+}
+//-----------------------------------------------------------------------
+template <typename T>
+FloatingPointVector2<T>
+FloatingPointVector2<T>::Clamp(FloatingPointVector2 const& source, FloatingPointVector2 const& min, FloatingPointVector2 const& max)
+{
+	return FloatingPointVector2{
+		MathHelper::Clamp(source.X, min.X, max.X),
+		MathHelper::Clamp(source.Y, min.Y, max.Y)};
+}
+//-----------------------------------------------------------------------
+template <typename T>
+FloatingPointVector2<T>
 FloatingPointVector2<T>::Lerp(FloatingPointVector2 const& source1, FloatingPointVector2 const& source2, T amount)
 {
 	return FloatingPointVector2(
