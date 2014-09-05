@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -17,6 +17,8 @@
 #include <random>
 
 namespace Pomdog {
+namespace Details {
+namespace Particles {
 
 class ParticleEmitterShapeBox final: public ParticleEmitterShape {
 private:
@@ -41,6 +43,8 @@ public:
 	}
 };
 
+}// namespace Particles
+}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PARTICLEEMITTERSHAPEBOX_21E87DCC_D7C6_4395_9858_0E3B76B20A5E_HPP)

@@ -43,8 +43,6 @@ std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIte
 	return std::make_pair(std::prev(it), it);
 }
 
-}// namespace Particles
-}// namespace Details
 
 template <typename T>
 class ParticleParameterCurve final: public ParticleParameter<T> {
@@ -111,6 +109,8 @@ public:
 	}
 };
 
+}// namespace Particles
+}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PARTICLEPARAMETERCURVE_75DE11C7_EA59_43B4_B41F_BFF98F8A2906_HPP)

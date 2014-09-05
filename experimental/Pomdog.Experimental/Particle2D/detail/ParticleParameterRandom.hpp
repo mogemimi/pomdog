@@ -19,6 +19,8 @@
 #include <limits>
 
 namespace Pomdog {
+namespace Details {
+namespace Particles {
 
 template <typename T>
 class ParticleParameterRandom final: public ParticleParameter<T> {
@@ -58,6 +60,8 @@ public:
 	}
 };
 
+}// namespace Particles
+}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PARTICLEPARAMETERRANDOM_03DC4686_AC5B_4B47_9ABB_3693A67A21DE_HPP)

@@ -16,6 +16,8 @@
 #include <random>
 
 namespace Pomdog {
+namespace Details {
+namespace Particles {
 
 template <typename T>
 class ParticleParameter {
@@ -29,6 +31,8 @@ public:
 	virtual float GenerateVariance(std::mt19937 & random) const = 0;
 };
 
+}// namespace Particles
+}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PARTICLEPARAMETER_FCCEE8BC_68A3_4A5B_8075_ED0E0170C937_HPP)

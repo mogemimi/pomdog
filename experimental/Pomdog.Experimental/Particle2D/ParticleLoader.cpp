@@ -23,6 +23,12 @@ namespace {
 //-----------------------------------------------------------------------
 static ParticleClip CreateEmitterFireBlock()
 {
+	using Particles::ParticleCurveKey;
+	using Particles::ParticleEmitterShapeBox;
+	using Particles::ParticleParameterRandom;
+	using Particles::ParticleParameterConstant;
+	using Particles::ParticleParameterCurve;
+
 	ParticleClip clip;
 
 	clip.Emitter.MaxParticles = 1024;
