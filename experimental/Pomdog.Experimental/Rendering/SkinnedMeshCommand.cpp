@@ -58,7 +58,7 @@ void SkinnedMeshCommand::SetMatrixPalette(Skeleton const& skeleton, SkeletonTran
 //-----------------------------------------------------------------------
 RenderCommandType SkinnedMeshCommand::CommandType() const
 {
-	return RenderCommandType::Batch;
+	return RenderCommandType::Custom;
 }
 //-----------------------------------------------------------------------
 }// namespace Rendering

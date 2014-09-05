@@ -18,13 +18,13 @@
 
 namespace Pomdog {
 
-class ParticleEmitterShapeBox : public ParticleEmitterShape {
+class ParticleEmitterShapeBox final: public ParticleEmitterShape {
 private:
 	float width;
 	float height;
 	
 public:
-	explicit ParticleEmitterShapeBox(float widthIn, float heightIn)
+	ParticleEmitterShapeBox(float widthIn, float heightIn)
 		: width(widthIn)
 		, height(heightIn)
 	{}

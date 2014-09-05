@@ -18,7 +18,7 @@
 
 namespace Pomdog {
 
-class ParticleEmitterShapeSector : public ParticleEmitterShape {
+class ParticleEmitterShapeSector final: public ParticleEmitterShape {
 private:
 	///@note range: [0, 2*Pi]
 	Radian<float> centralAngle;

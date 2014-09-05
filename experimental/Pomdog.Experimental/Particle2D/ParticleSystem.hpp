@@ -15,7 +15,7 @@
 
 #include "Particle.hpp"
 #include "ParticleEmitter.hpp"
-#include <Pomdog.Experimental/Gameplay2D/Transform2D.hpp>
+#include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <cstdint>
 #include <vector>
@@ -23,26 +23,43 @@
 
 namespace Pomdog {
 
-class ParticleSystem {
-public:
-	ParticleSystem();
+class ParticleClip;
 
-	void Update(DurationSeconds const& frameDuration, Transform2D const& emitterTransform);
-	
+class ParticleSystem: public Component<ParticleSystem> {
 public:
+	explicit ParticleSystem(std::shared_ptr<ParticleClip const> const& clip);
+
+	void Play();
+	void Pause();
+	void Stop();
+	
+	void Simulate(GameObject & gameObject, DurationSeconds const& duration);
+	
+	std::vector<Particle> const& Particles() const { return particles; }
+	
+	std::size_t ParticleCount() const { return particles.size(); }
+	
+	bool Loop() const { return emitter.Looping; }
+	void Loop(bool loop) { emitter.Looping = loop; }
+	
+	bool EnableEmission() const { return enableEmission; }
+	void EnableEmission(bool enableEmissionIn) { this->enableEmission = enableEmissionIn; }
+
+private:
+	enum class ParticleSystemState: std::uint8_t {
+		Paused,
+		Playing,
+		Stopped
+	};
+
 	ParticleEmitter emitter;
 	std::vector<Particle> particles;
-	bool enableEmission;
-	
-	void ResetEmission()
-	{
-		erapsedTime = DurationSeconds{0};
-	}
-	
-private:
+	std::shared_ptr<ParticleClip const> clip;
 	DurationSeconds erapsedTime;
 	DurationSeconds emissionTimer;
 	std::mt19937 random;
+	ParticleSystemState state;
+	bool enableEmission;
 };
 
 }// namespace Pomdog

@@ -14,7 +14,8 @@
 #endif
 
 #include "RenderCommand.hpp"
-#include <Pomdog.Experimental/Particle2D/Particle.hpp>
+#include "Pomdog.Experimental/Graphics/TextureRegion.hpp"
+#include "Pomdog.Experimental/Particle2D/Particle.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <memory>
 
@@ -27,8 +28,6 @@ namespace Rendering {
 
 class ParticleBatchCommand final: public RenderCommand {
 public:
-	~ParticleBatchCommand();
-
 	float DrawOrder() const override
 	{
 		return drawOrder;
@@ -39,9 +38,9 @@ public:
 	void Execute(GraphicsContext & graphicsContext) override;
 
 public:
-	std::unique_ptr<SpriteRenderer> spriteRenderer;
+	TextureRegion textureRegion;
+	Matrix3x2 transform;
 	std::shared_ptr<BlendState> blendState;
-	Matrix4x4 modelViewProjection;
 	std::shared_ptr<Texture2D> texture;
 	std::vector<Particle> const* particles = nullptr;
 	float drawOrder;

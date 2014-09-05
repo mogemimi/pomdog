@@ -16,7 +16,7 @@
 #include "ParticleParameter.hpp"
 #include "ParticleCurveKey.hpp"
 #include "ParticleCurveLerp.hpp"
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Utility/Assert.hpp"
 #include <vector>
 #include <algorithm>
 #include <utility>

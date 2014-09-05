@@ -10,15 +10,27 @@
 #include "RenderQueue.hpp"
 #include "RenderCommand.hpp"
 #include "SpriteBatchRenderer.hpp"
+#include "ParticleBatchCommand.hpp"
 #include "SpriteCommand.hpp"
 #include "PrimitiveCommand.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteRenderer.hpp"
 #include "Pomdog.Experimental/Graphics/PolygonBatch.hpp"
 
 namespace Pomdog {
+namespace {
+
+static Matrix3x2 CreateTransformMatrix(Particle const& particle)
+{
+	return Matrix3x2::CreateScale(particle.Size)
+		* Matrix3x2::CreateRotation(particle.Rotation)
+		* Matrix3x2::CreateTranslation(particle.Position);
+}
+
+}// unnamed namespace
 
 using Details::Rendering::SpriteBatchRenderer;
 using Details::Rendering::SpriteCommand;
+using Details::Rendering::ParticleBatchCommand;
 using Details::Rendering::PrimitiveCommand;
 
 //-----------------------------------------------------------------------
@@ -76,12 +88,28 @@ void Renderer::Impl::Render(GraphicsContext & graphicsContext)
 	renderQueue.Enumerate([&](RenderCommand & command)
 	{
 		switch (command.CommandType()) {
-		case RenderCommandType::Custom:
-		case RenderCommandType::Batch: {
+		case RenderCommandType::Custom: {
 			Flush();
 			POMDOG_ASSERT(batchState == BatchState::None);
 			command.Execute(graphicsContext);
 			++drawCallCount;
+			break;
+		}
+		case RenderCommandType::ParticleBatch: {
+			if (batchState != BatchState::Sprite) {
+				Flush();
+				spriteBatch.Begin(Matrix4x4::Identity);
+				batchState = BatchState::Sprite;
+			}
+			
+			POMDOG_ASSERT(batchState == BatchState::Sprite);
+			auto & particleCommand = static_cast<ParticleBatchCommand &>(command);
+			for (auto & particle: *particleCommand.particles)
+			{
+				auto transform = CreateTransformMatrix(particle);
+				spriteBatch.Draw(particleCommand.texture, transform,
+					particleCommand.textureRegion.Subrect, particle.Color, {0.5f, 0.5f});
+			}
 			break;
 		}
 		case RenderCommandType::Primitive: {

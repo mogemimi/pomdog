@@ -7,12 +7,14 @@
 //
 
 #include "ParticleSystem.hpp"
+#include "ParticleClip.hpp"
 
 namespace Pomdog {
 namespace {
 //-----------------------------------------------------------------------
 template <typename RandomGenerator>
-static Particle CreateParticle(RandomGenerator & random, ParticleEmitter const& emitter, float normalizedTime, Transform2D const& transform)
+static Particle CreateParticle(RandomGenerator & random, ParticleClip const& clip,
+	ParticleEmitter const& emitter, float normalizedTime, Transform2D const& transform)
 {
 	Particle particle;
 	{
@@ -23,16 +25,16 @@ static Particle CreateParticle(RandomGenerator & random, ParticleEmitter const& 
 		Vector2 emitPosition = Vector2::Zero;
 		Radian<float> emitAngle = 0.0f;
 
-		POMDOG_ASSERT(emitter.Shape);
-		emitter.Shape->Compute(random, emitPosition, emitAngle);
+		POMDOG_ASSERT(clip.Shape);
+		clip.Shape->Compute(random, emitPosition, emitAngle);
 		
 		// Position
 		auto worldMatrix = Matrix4x4::CreateRotationZ(transform.Rotation) * Matrix4x4::CreateTranslation({transform.Position, 0});
 		particle.Position = Vector2::Transform(emitPosition, worldMatrix);
 		
 		// Velocity
-		POMDOG_ASSERT(emitter.StartSpeed);
-		auto radius = emitter.StartSpeed->Compute(normalizedTime, random);
+		POMDOG_ASSERT(clip.StartSpeed);
+		auto radius = clip.StartSpeed->Compute(normalizedTime, random);
 		auto angle = (emitAngle + transform.Rotation).value;
 		
 		particle.Velocity.X = std::cos(angle) * radius;
@@ -40,55 +42,69 @@ static Particle CreateParticle(RandomGenerator & random, ParticleEmitter const& 
 	}
 	{
 		// Rotation
-		POMDOG_ASSERT(emitter.StartRotation);
-		particle.Rotation = emitter.StartRotation->Compute(normalizedTime, random);
+		POMDOG_ASSERT(clip.StartRotation);
+		particle.Rotation = clip.StartRotation->Compute(normalizedTime, random);
 
-		POMDOG_ASSERT(emitter.RotationOverLifetime);
-		particle.RotationVariance = emitter.RotationOverLifetime->GenerateVariance(random);
+		POMDOG_ASSERT(clip.RotationOverLifetime);
+		particle.RotationVariance = clip.RotationOverLifetime->GenerateVariance(random);
 	}
 	{
 		// Color
-		POMDOG_ASSERT(emitter.StartColor);
-		particle.StartColor = emitter.StartColor->Compute(normalizedTime, random);
+		POMDOG_ASSERT(clip.StartColor);
+		particle.StartColor = clip.StartColor->Compute(normalizedTime, random);
 		particle.Color = particle.StartColor;
 		
-		POMDOG_ASSERT(emitter.ColorOverLifetime);
-		particle.ColorVariance = emitter.ColorOverLifetime->GenerateVariance(random);
+		POMDOG_ASSERT(clip.ColorOverLifetime);
+		particle.ColorVariance = clip.ColorOverLifetime->GenerateVariance(random);
 	}
 	{
 		// Size
-		POMDOG_ASSERT(emitter.StartSize);
-		particle.StartSize = emitter.StartSize->Compute(normalizedTime, random);
+		POMDOG_ASSERT(clip.StartSize);
+		particle.StartSize = clip.StartSize->Compute(normalizedTime, random);
 		particle.Size = particle.StartSize;
 		
-		POMDOG_ASSERT(emitter.SizeOverLifetime);
-		particle.SizeVariance = emitter.SizeOverLifetime->GenerateVariance(random);
+		POMDOG_ASSERT(clip.SizeOverLifetime);
+		particle.SizeVariance = clip.SizeOverLifetime->GenerateVariance(random);
 	}
 	return std::move(particle);
 }
 //-----------------------------------------------------------------------
 }// unnamed namespace
 //-----------------------------------------------------------------------
-ParticleSystem::ParticleSystem()
-	: erapsedTime(0)
+ParticleSystem::ParticleSystem(std::shared_ptr<ParticleClip const> const& clipIn)
+	: clip(clipIn)
+	, erapsedTime(0)
 	, emissionTimer(0)
 	, random(std::random_device{}())
+	, state(ParticleSystemState::Playing)
+	, enableEmission(true)
 {
+	POMDOG_ASSERT(clip);
+	emitter = clip->Emitter;
 	particles.reserve(emitter.MaxParticles);
 }
 //-----------------------------------------------------------------------
-void ParticleSystem::Update(DurationSeconds const& frameDuration, Transform2D const& emitterTransform)
+void ParticleSystem::Simulate(GameObject & gameObject, DurationSeconds const& duration)
 {
-	erapsedTime += frameDuration;
+	if (state != ParticleSystemState::Playing) {
+		return;
+	}
+
+	Transform2D emitterTransform;
+	if (auto transform = gameObject.Component<Transform2D>()) {
+		emitterTransform = *transform;
+	}
+
+	erapsedTime += duration;
 	
-	if (emitter.Looping && erapsedTime > emitter.Duration)
+	if (emitter.Looping && erapsedTime > clip->Duration)
 	{
 		erapsedTime = DurationSeconds{0};
 	}
 
-	if (emitter.Looping || erapsedTime <= emitter.Duration)
+	if (emitter.Looping || erapsedTime <= clip->Duration)
 	{
-		emissionTimer += frameDuration;
+		emissionTimer += duration;
 		
 		POMDOG_ASSERT(emitter.EmissionRate > 0);
 		auto emissionInterval = std::max(std::numeric_limits<DurationSeconds>::epsilon(),
@@ -96,14 +112,14 @@ void ParticleSystem::Update(DurationSeconds const& frameDuration, Transform2D co
 		
 		POMDOG_ASSERT(emissionInterval.count() > 0);
 
-		POMDOG_ASSERT(emitter.Duration.count() > 0);
-		float normalizedTime = erapsedTime / emitter.Duration;
+		POMDOG_ASSERT(clip->Duration.count() > 0);
+		float normalizedTime = erapsedTime / clip->Duration;
 		
 		while ((particles.size() < emitter.MaxParticles) && (emissionTimer >= emissionInterval))
 		{
 			emissionTimer -= emissionInterval;
 
-			auto particle = CreateParticle(random, emitter, normalizedTime, emitterTransform);
+			auto particle = CreateParticle(random, *clip, emitter, normalizedTime, emitterTransform);
 			particles.push_back(std::move(particle));
 		}
 	}
@@ -111,7 +127,7 @@ void ParticleSystem::Update(DurationSeconds const& frameDuration, Transform2D co
 		for (auto & particle: particles)
 		{
 			auto oldTimeToLive = particle.TimeToLive;
-			particle.TimeToLive -= frameDuration.count();
+			particle.TimeToLive -= duration.count();
 			if (particle.TimeToLive <= 0.0f) {
 				continue;
 			}
@@ -134,23 +150,40 @@ void ParticleSystem::Update(DurationSeconds const& frameDuration, Transform2D co
 					static_cast<uint8_t>(MathHelper::Clamp((a.A()/255.0f) * b.A(), 0.0f, 255.0f))};
 			};
 			
-			POMDOG_ASSERT(emitter.ColorOverLifetime);
+			POMDOG_ASSERT(clip->ColorOverLifetime);
 			particle.Color = MultiplyColors(particle.StartColor,
-				emitter.ColorOverLifetime->Compute(normalizedTime, particle.ColorVariance));
+				clip->ColorOverLifetime->Compute(normalizedTime, particle.ColorVariance));
 			
 			// Rotation
-			POMDOG_ASSERT(emitter.RotationOverLifetime);
+			POMDOG_ASSERT(clip->RotationOverLifetime);
 			particle.Rotation = particle.Rotation
-				+ deltaTime * emitter.RotationOverLifetime->Compute(normalizedTime, particle.RotationVariance);
+				+ deltaTime * clip->RotationOverLifetime->Compute(normalizedTime, particle.RotationVariance);
 			
 			// Size
-			POMDOG_ASSERT(emitter.SizeOverLifetime);
-			particle.Size = particle.StartSize * emitter.SizeOverLifetime->Compute(normalizedTime, particle.SizeVariance);
+			POMDOG_ASSERT(clip->SizeOverLifetime);
+			particle.Size = particle.StartSize * clip->SizeOverLifetime->Compute(normalizedTime, particle.SizeVariance);
 		}
 		
 		particles.erase(std::remove_if(std::begin(particles), std::end(particles),
 			[](Particle const& p){ return p.TimeToLive <= 0; }), std::end(particles));
 	}
+}
+//-----------------------------------------------------------------------
+void ParticleSystem::Play()
+{
+	state = ParticleSystemState::Playing;
+}
+//-----------------------------------------------------------------------
+void ParticleSystem::Pause()
+{
+	state = ParticleSystemState::Paused;
+}
+//-----------------------------------------------------------------------
+void ParticleSystem::Stop()
+{
+	state = ParticleSystemState::Stopped;
+	erapsedTime = DurationSeconds::zero();
+	particles.clear();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

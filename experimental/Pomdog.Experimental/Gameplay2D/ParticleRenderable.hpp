@@ -15,7 +15,6 @@
 
 #include "Renderable.hpp"
 #include "../Rendering/ParticleBatchCommand.hpp"
-#include <Pomdog.Experimental/Particle2D/ParticleSystem.hpp>
 #include <Pomdog/Pomdog.hpp>
 #include <memory>
 
@@ -23,16 +22,10 @@ namespace Pomdog {
 
 class ParticleRenderable: public Renderable {
 public:
-	ParticleRenderable();
+	ParticleRenderable(std::shared_ptr<Texture2D> const& texture, std::shared_ptr<BlendState> const& blendState);
+	//ParticleRenderable(std::shared_ptr<Texture2D> const& texture, TextureRegion const& textureRegion);
 
 	void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
-
-	void Load(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice, AssetManager & assets);
-	void Update(GameObject & gameObject, GameClock const& clock);
-
-public:
-	ParticleSystem particleSystem;
 	
 private:
 	Details::Rendering::ParticleBatchCommand command;

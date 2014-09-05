@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Math/Vector2.hpp>
-#include <Pomdog/Math/Radian.hpp>
+#include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog/Math/Radian.hpp"
 #include <random>
 
 namespace Pomdog {

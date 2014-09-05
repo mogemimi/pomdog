@@ -13,9 +13,9 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Math/MathHelper.hpp>
-#include <Pomdog/Math/Color.hpp>
-#include <Pomdog/Math/Radian.hpp>
+#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Radian.hpp"
 
 namespace Pomdog {
 namespace Details {
