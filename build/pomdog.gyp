@@ -220,6 +220,7 @@
       '../include/Pomdog/Content/AssetManager.hpp',
       '../include/Pomdog/Content/detail/AssetDictionary.hpp',
       '../include/Pomdog/Content/detail/AssetLoader.hpp',
+      '../include/Pomdog/Content/detail/AssetLoaderContext.hpp',
       '../include/Pomdog/Content/detail/EffectLoader.hpp',
       '../include/Pomdog/Content/detail/TextureLoader.hpp',
       '../include/Pomdog/Graphics/BlendState.hpp',

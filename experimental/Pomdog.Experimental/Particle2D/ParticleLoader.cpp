@@ -16,10 +16,24 @@
 #include "detail/ParticleParameterRandom.hpp"
 #include "detail/ParticleParameterRandomCurves.hpp"
 #include "ParticleClip.hpp"
+#include <fstream>
 
 namespace Pomdog {
 namespace Details {
 namespace {
+//-----------------------------------------------------------------------
+//static std::vector<char> ReadBinaryFile(std::ifstream && streamIn)
+//{
+//	std::ifstream stream = std::move(streamIn);
+//	
+//	stream.seekg(0, stream.end);
+//	auto const length = static_cast<std::size_t>(stream.tellg());
+//	stream.seekg(0, stream.beg);
+//
+//	std::vector<char> result(length + 1, '\0');
+//	stream.read(result.data(), length);
+//	return std::move(result);
+//}
 //-----------------------------------------------------------------------
 static ParticleClip CreateEmitterFireBlock()
 {
@@ -103,7 +117,7 @@ static ParticleClip CreateEmitterFireBlock()
 
 }// unnamed namespace
 
-ParticleClip ParticleLoader::Load()
+ParticleClip ParticleLoader::Load(AssetManager & assets)
 {
 	return CreateEmitterFireBlock();
 }

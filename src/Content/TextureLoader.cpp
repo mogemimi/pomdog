@@ -6,13 +6,14 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <Pomdog/Content/detail/TextureLoader.hpp>
+#include "Pomdog/Content/detail/TextureLoader.hpp"
 #include "Utility/MakeFourCC.hpp"
 #include "Utility/BinaryReader.hpp"
 #include "Utility/DDSTextureReader.hpp"
 #include "Utility/PNGTextureReader.hpp"
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/Exception.hpp>
+#include "Pomdog/Content/detail/AssetLoaderContext.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include <fstream>
 #include <array>
 #include <vector>
@@ -22,12 +23,6 @@
 namespace Pomdog {
 namespace Details {
 namespace {
-
-static std::string MakeAssetFilePath(AssetLoaderContext const& loaderContext, std::string const& assetPath)
-{
-	POMDOG_ASSERT(!assetPath.empty());
-	return loaderContext.RootDirectory + "/" + assetPath;
-}
 //-----------------------------------------------------------------------
 static bool IsPNGFormat(std::array<std::uint8_t, 8> const& signature)
 {
@@ -50,11 +45,10 @@ static bool IsDDSFormat(std::array<std::uint8_t, 8> const& signature)
 std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(AssetLoaderContext const& loaderContext,
 	std::string const& assetPath)
 {
-	auto filePath = MakeAssetFilePath(loaderContext, assetPath);
-	
-	std::ifstream stream(filePath, std::ios::binary);
+	std::ifstream stream = loaderContext.OpenStream(assetPath);
+
 	if (stream.fail()) {
-		POMDOG_THROW_EXCEPTION(std::invalid_argument, "Cannot open file: " + filePath);
+		POMDOG_THROW_EXCEPTION(std::invalid_argument, "Cannot open file: " + assetPath);
 	}
 	
 	auto const fileSize = BinaryReader::GetBinarySize(stream);

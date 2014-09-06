@@ -13,6 +13,8 @@
 #	pragma once
 #endif
 
+#include <Pomdog/Pomdog.hpp>
+
 namespace Pomdog {
 
 class ParticleClip;
@@ -20,7 +22,7 @@ class ParticleClip;
 namespace Details {
 
 struct ParticleLoader {
-	static ParticleClip Load();
+	static ParticleClip Load(AssetManager & assets);
 };
 
 }// namespace Details

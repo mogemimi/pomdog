@@ -13,27 +13,13 @@
 #	pragma once
 #endif
 
-#include <memory>
-#include <string>
-
 namespace Pomdog {
-
-class GraphicsContext;
-class GraphicsDevice;
-
 namespace Details {
 
 class AssetLoaderContext;
 
 template <typename T>
 struct AssetLoader;
-
-class AssetLoaderContext {
-public:
-	std::string RootDirectory;
-	std::weak_ptr<Pomdog::GraphicsContext> GraphicsContext;
-	std::weak_ptr<Pomdog::GraphicsDevice> GraphicsDevice;
-};
 
 }// namespace Details
 }// namespace Pomdog

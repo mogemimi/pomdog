@@ -14,6 +14,7 @@
 #endif
 
 #include "detail/AssetLoader.hpp"
+#include "detail/AssetLoaderContext.hpp"
 #include "detail/AssetDictionary.hpp"
 #include "detail/EffectLoader.hpp"
 #include "detail/TextureLoader.hpp"
@@ -65,7 +66,7 @@ public:
 	///@~Japanese
 	/// @brief アセットを読み込みます。
 	template <typename T>
-	auto Load(std::string const& assetPath)-> decltype(Details::AssetLoader<T>()(Details::AssetLoaderContext(), std::string()))
+	auto Load(std::string const& assetPath)-> decltype(Details::AssetLoader<T>()(Details::AssetLoaderContext{}, assetPath))
 	{
 		return Details::AssetManagerLoadImpl<T>::Load(loaderContext, assetPath,
 			effectPassAssets, texture2dAssets);

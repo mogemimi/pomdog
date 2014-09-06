@@ -34,9 +34,9 @@ using Spine::SlotAnimationTrackDesc;
 using Spine::AnimationClipDesc;
 using Spine::KeyframeCurve;
 
-static std::vector<char> ReadBinaryFile(std::string const& filename)
+static std::vector<char> ReadBinaryFile(std::ifstream && streamIn)
 {
-	std::ifstream stream(filename, std::ios::in | std::ios::binary);
+	std::ifstream stream = std::move(streamIn);
 	
 	stream.seekg(0, stream.end);
 	auto const length = static_cast<std::size_t>(stream.tellg());
@@ -812,8 +812,7 @@ static std::vector<AnimationClipDesc> ReadAnimationClips(rapidjson::Value const&
 Spine::SkeletonDesc AssetLoader<Spine::SkeletonDesc>::operator()(AssetLoaderContext const& loaderContext,
 	std::string const& assetPath)
 {
-	auto filename = loaderContext.RootDirectory + "/" + assetPath;
-	auto json = ReadBinaryFile(filename);
+	auto json = ReadBinaryFile(loaderContext.OpenStream(assetPath));
 	
 	POMDOG_ASSERT(!json.empty());
 	

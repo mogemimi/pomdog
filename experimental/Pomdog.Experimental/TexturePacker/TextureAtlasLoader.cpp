@@ -46,8 +46,7 @@ TexturePacker::TextureAtlas
 AssetLoader<TexturePacker::TextureAtlas>::operator()(AssetLoaderContext const& loaderContext,
 	std::string const& assetPath)
 {
-	auto filename = loaderContext.RootDirectory + "/" + assetPath;
-	std::ifstream stream(filename, std::ios::binary);
+	std::ifstream stream = loaderContext.OpenStream(assetPath);
 
 	TexturePacker::TextureAtlas result;
 	std::uint32_t pageIndex = 0;

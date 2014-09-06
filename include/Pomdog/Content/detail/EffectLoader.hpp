@@ -16,6 +16,7 @@
 #include "AssetLoader.hpp"
 #include "Pomdog/Config/Export.hpp"
 #include <string>
+#include <memory>
 
 namespace Pomdog {
 

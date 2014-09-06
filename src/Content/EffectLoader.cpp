@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -6,7 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <Pomdog/Content/detail/EffectLoader.hpp>
+#include "Pomdog/Content/detail/EffectLoader.hpp"
+#include "Pomdog/Content/detail/AssetLoaderContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
@@ -20,9 +21,9 @@ namespace Pomdog {
 namespace Details {
 namespace {
 
-static std::vector<std::uint8_t> ReadBinaryFile(std::string const& filename)
+static std::vector<std::uint8_t> ReadBinaryFile(std::ifstream && streamIn)
 {
-	std::ifstream stream(filename, std::ios::binary);
+	std::ifstream stream = std::move(streamIn);
 	
 	if (!stream) {
 		return {};
@@ -42,8 +43,8 @@ static std::vector<std::uint8_t> ReadBinaryFile(std::string const& filename)
 std::shared_ptr<EffectPass> AssetLoader<EffectPass>::operator()(AssetLoaderContext const& loaderContext,
 	std::string const& assetPath)
 {
-	auto const vertexShader = ReadBinaryFile(loaderContext.RootDirectory + "/" + assetPath + "/VertexShader.glsl");
-	auto const pixelShader = ReadBinaryFile(loaderContext.RootDirectory + "/" + assetPath + "/PixelShader.glsl");
+	auto const vertexShader = ReadBinaryFile(loaderContext.OpenStream(assetPath + "/VertexShader.glsl"));
+	auto const pixelShader = ReadBinaryFile(loaderContext.OpenStream(assetPath + "/PixelShader.glsl"));
 
 	POMDOG_ASSERT(!vertexShader.empty());
 	POMDOG_ASSERT(!pixelShader.empty());

@@ -190,11 +190,9 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	
 	{
 		NSString* path = [[NSBundle mainBundle] resourcePath];
-		Details::AssetLoaderContext loaderContext{
-			[[path stringByAppendingPathComponent: @"Content"] UTF8String],
-			graphicsContext,
-			graphicsDevice
-		};
+		std::string rootDirectory = [[path stringByAppendingPathComponent: @"Content"] UTF8String];
+		Details::AssetLoaderContext loaderContext{rootDirectory, graphicsDevice};
+		
 		assetManager = std::make_unique<Pomdog::AssetManager>(std::move(loaderContext));
 	}
 }

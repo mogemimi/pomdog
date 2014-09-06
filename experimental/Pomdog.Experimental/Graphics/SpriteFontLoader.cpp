@@ -299,8 +299,7 @@ std::shared_ptr<SpriteFont>
 AssetLoader<SpriteFont>::operator()(AssetLoaderContext const& loaderContext,
 	std::string const& assetPath)
 {
-	auto filename = loaderContext.RootDirectory + "/" + assetPath;
-	std::ifstream stream(filename, std::ios::binary);
+	std::ifstream stream = loaderContext.OpenStream(assetPath);
 
 	std::vector<BitmapFontPage> pages;
 	std::vector<Details::SpriteFonts::Glyph> glyphs;
