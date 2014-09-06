@@ -104,6 +104,7 @@ void SkeletonAnimator::PlaybackRate(float playbackRateIn)
 //-----------------------------------------------------------------------
 void SkeletonAnimator::SetFloat(std::string const& name, float value)
 {
+	POMDOG_ASSERT(!std::isnan(value));
 	POMDOG_ASSERT(animationGraph);
 	if (auto index = animationGraph->FindParameter(name)) {
 		graphWeights.SetValue(*index, value);

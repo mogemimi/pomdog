@@ -35,6 +35,8 @@ public:
 	
 	void Simulate(GameObject & gameObject, DurationSeconds const& duration);
 	
+	bool IsAlive() const;
+	
 	std::vector<Particle> const& Particles() const { return particles; }
 	
 	std::size_t ParticleCount() const { return particles.size(); }

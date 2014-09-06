@@ -186,4 +186,11 @@ void ParticleSystem::Stop()
 	particles.clear();
 }
 //-----------------------------------------------------------------------
+bool ParticleSystem::IsAlive() const
+{
+	return emitter.Looping
+		|| (erapsedTime < clip->Duration)
+		|| !particles.empty();
+}
+//-----------------------------------------------------------------------
 }// namespace Pomdog
