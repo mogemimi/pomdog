@@ -42,9 +42,9 @@ enum class AnimationNodeType: std::uint8_t {
 struct AnimationNodeDesc {
 	Optional<std::string> ClipName;
 	Optional<std::string> Parameter;
-	std::array<Optional<std::uint16_t>, 4> Inputs;
+	std::array<Optional<std::string>, 4> Inputs;
 	Optional<float> DefaultParameter;
-	std::uint16_t Id;
+	std::string Name;
 	AnimationNodeType Type;
 };
 
@@ -64,11 +64,11 @@ static std::unique_ptr<AnimationNode> CreateAnimationNode(
 		POMDOG_ASSERT(desc.Inputs[1]);
 	
 		auto iter1 = std::find_if(std::begin(nodes),std::end(nodes),
-			[&](AnimationNodeDesc const& nodeDesc){ return nodeDesc.Id == *desc.Inputs[0]; });
+			[&](AnimationNodeDesc const& nodeDesc){ return nodeDesc.Name == *desc.Inputs[0]; });
 		POMDOG_ASSERT(iter1 != std::end(nodes));
 		
 		auto iter2 = std::find_if(std::begin(nodes),std::end(nodes),
-			[&](AnimationNodeDesc const& nodeDesc){ return nodeDesc.Id == *desc.Inputs[1]; });
+			[&](AnimationNodeDesc const& nodeDesc){ return nodeDesc.Name == *desc.Inputs[1]; });
 		POMDOG_ASSERT(iter2 != std::end(nodes));
 	
 		auto node1 = CreateAnimationNode(*iter1, inputs, nodes, skeletonDesc);
@@ -121,30 +121,37 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(Details::Spine::SkeletonDesc 
 		for (auto iter = nodeArray.Begin(); iter != nodeArray.End(); ++iter)
 		{
 			POMDOG_ASSERT(iter->IsObject());
-			POMDOG_ASSERT(iter->HasMember("id"));
-			POMDOG_ASSERT(iter->HasMember("type"));
-			
+
 			auto & nodeObject = *iter;
 			AnimationNodeDesc desc;
-			
-			auto & typeObject = nodeObject["type"];
-			POMDOG_ASSERT(typeObject.IsString());
-			if (0 == std::strncmp(typeObject.GetString(), "clip", 3)) {
-				desc.Type = AnimationNodeType::Clip;
+
+			{
+				POMDOG_ASSERT(iter->HasMember("type"));
+				auto & typeObject = nodeObject["type"];
+				
+				POMDOG_ASSERT(typeObject.IsString());
+				if (0 == std::strncmp(typeObject.GetString(), "clip", 3)) {
+					desc.Type = AnimationNodeType::Clip;
+				}
+				else if (0 == std::strncmp(typeObject.GetString(), "lerp", 3)) {
+					desc.Type = AnimationNodeType::Lerp;
+				}
+				else {
+					///@todo Error: Not implemented
+					continue;
+				}
 			}
-			else if (0 == std::strncmp(typeObject.GetString(), "lerp", 3)) {
-				desc.Type = AnimationNodeType::Lerp;
-			}
-			else {
-				continue;
+			{
+				POMDOG_ASSERT(iter->HasMember("name"));
+				auto & idObject = nodeObject["name"];
+				
+				POMDOG_ASSERT(idObject.IsString());
+				desc.Name = idObject.GetString();
 			}
 			
-			auto & idObject = nodeObject["id"];
-			POMDOG_ASSERT(idObject.IsUint());
-			desc.Id = idObject.GetUint();
-			
-			if (nodeObject.HasMember("clip") && nodeObject["clip"].IsString()) {
-				desc.ClipName = nodeObject["clip"].GetString();
+			if (desc.Type == AnimationNodeType::Clip
+				&& nodeObject.HasMember("name") && nodeObject["name"].IsString()) {
+				desc.ClipName = nodeObject["name"].GetString();
 			}
 			if (nodeObject.HasMember("param_name") && nodeObject["param_name"].IsString()) {
 				desc.Parameter = nodeObject["param_name"].GetString();
@@ -155,8 +162,8 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(Details::Spine::SkeletonDesc 
 				auto count = std::min<int>(inputs.Size(), desc.Inputs.size());
 				for (int i = 0; i < count; ++i)
 				{
-					POMDOG_ASSERT(inputs[i].IsUint());
-					desc.Inputs[i] = inputs[i].GetUint();
+					POMDOG_ASSERT(inputs[i].IsString());
+					desc.Inputs[i] = inputs[i].GetString();
 				}
 			}
 			nodes.push_back(std::move(desc));
@@ -176,10 +183,11 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(Details::Spine::SkeletonDesc 
 			POMDOG_ASSERT(iter->name.IsString());
 			state.Name = iter->name.GetString();
 			
-			std::uint16_t rootNodeIndex = iter->value["tree"].GetUint();
+			POMDOG_ASSERT(iter->value["tree"].IsString());
+			const auto rootNodeName = iter->value["tree"].GetString();
 			
 			auto rootNodeDesc = std::find_if(std::begin(nodes),std::end(nodes),
-				[&rootNodeIndex](AnimationNodeDesc const& desc){ return desc.Id == rootNodeIndex; });
+				[&rootNodeName](AnimationNodeDesc const& desc){ return desc.Name == rootNodeName; });
 			POMDOG_ASSERT(rootNodeDesc != std::end(nodes));
 
 			state.Tree = CreateAnimationNode(*rootNodeDesc, inputs, nodes, skeletonDesc);

@@ -41,6 +41,8 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 	auto iter = std::find_if(std::begin(desc.AnimationClips), std::end(desc.AnimationClips),
 		[name](AnimationClipDesc const& clip){ return clip.Name == name; });
 
+	POMDOG_ASSERT(std::end(desc.AnimationClips) != iter);
+
 	if (std::end(desc.AnimationClips) == iter) {
 		///@todo Not implemented
 		// Error: Cannot find animation clip

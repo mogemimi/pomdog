@@ -139,7 +139,7 @@ void MaidBeamGame::Update()
 		auto animator = gameObject.Component<Animator>();
 		
 		POMDOG_ASSERT(animator);
-		animator->Update(*clock);
+		animator->Update(clock->FrameDuration());
 	}
 
 	for (auto & gameObject: gameWorld.QueryComponents<Behavior>())
