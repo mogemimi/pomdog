@@ -25,7 +25,9 @@ public:
 	AnimationClipNode(std::shared_ptr<AnimationClip> const& animationClip);
 
 	void Calculate(AnimationTimeInterval const& time,
-		AnimationGraphWeightCollection const& weights, Skeleton const& skeleton, SkeletonPose & skeletonPose) override;
+		AnimationGraphWeightCollection const& weights,
+		Skeleton const& skeleton,
+		SkeletonPose & skeletonPose) const override;
 
 	AnimationTimeInterval Length() const override;
 

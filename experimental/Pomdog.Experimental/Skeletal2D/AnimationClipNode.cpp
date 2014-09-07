@@ -23,7 +23,7 @@ AnimationTimeInterval AnimationClipNode::Length() const
 }
 //-----------------------------------------------------------------------
 void AnimationClipNode::Calculate(AnimationTimeInterval const& time,
-	AnimationGraphWeightCollection const&, Skeleton const& skeleton, SkeletonPose & skeletonPose)
+	AnimationGraphWeightCollection const&, Skeleton const& skeleton, SkeletonPose & skeletonPose) const
 {
 	POMDOG_ASSERT(clip);
 	clip->Apply(time, skeleton, skeletonPose);

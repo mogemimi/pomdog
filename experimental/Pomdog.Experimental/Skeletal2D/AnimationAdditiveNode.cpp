@@ -57,7 +57,7 @@ AnimationTimeInterval AnimationAdditiveNode::Length() const
 }
 //-----------------------------------------------------------------------
 void AnimationAdditiveNode::Calculate(AnimationTimeInterval const& time,
-	AnimationGraphWeightCollection const& weights, Skeleton const& skeleton, SkeletonPose & skeletonPose)
+	AnimationGraphWeightCollection const& weights, Skeleton const& skeleton, SkeletonPose & skeletonPose) const
 {
 	auto sourcePose1 = SkeletonPose::CreateBindPose(skeleton);
 //	auto sourcePose2 = SkeletonPose::CreateBindPose(skeleton);

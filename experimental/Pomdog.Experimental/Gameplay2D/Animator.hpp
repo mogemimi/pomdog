@@ -24,6 +24,8 @@ public:
 	
 	virtual void Update(DurationSeconds const& frameDuration) = 0;
 	
+	virtual void CrossFade(std::string const& state, DurationSeconds const& transitionDuration) = 0;
+
 	virtual void Play(std::string const& state) = 0;
 	
 	virtual float PlaybackRate() const = 0;
@@ -31,6 +33,8 @@ public:
 
 	virtual void SetFloat(std::string const& name, float value) = 0;
 	virtual void SetBool(std::string const& name, bool value) = 0;
+	
+	virtual std::string GetCurrentStateName() const = 0;
 };
 
 }// namespace Pomdog
@@ -47,6 +51,11 @@ public:
 
 namespace Pomdog {
 
+struct SkeletonAnimationState {
+	std::shared_ptr<AnimationNode const> Node;
+	std::string Name;
+};
+
 class SkeletonAnimator: public Animator {
 public:
 	SkeletonAnimator(std::shared_ptr<Skeleton> const& skeleton,
@@ -55,7 +64,9 @@ public:
 	
 	void Update(DurationSeconds const& frameDuration) override;
 	
-	void Play(std::string const& state) override;
+	void CrossFade(std::string const& stateName, DurationSeconds const& transitionDuration) override;
+	
+	void Play(std::string const& stateName) override;
 	
 	float PlaybackRate() const override;
 	
@@ -65,12 +76,15 @@ public:
 
 	void SetBool(std::string const& name, bool value) override;
 	
+	std::string GetCurrentStateName() const override;
+	
 private:
 	AnimationGraphWeightCollection graphWeights;
 	std::shared_ptr<Skeleton> skeleton;
 	std::shared_ptr<SkeletonTransform> skeletonTransform;
-	std::shared_ptr<AnimationNode> animationTree;
-	std::shared_ptr<AnimationGraph> animationGraph;
+	SkeletonAnimationState currentAnimation;
+	SkeletonAnimationState nextAnimation;
+	std::shared_ptr<AnimationGraph const> animationGraph;
 	AnimationTimeInterval time;
 	float playbackRate;
 };

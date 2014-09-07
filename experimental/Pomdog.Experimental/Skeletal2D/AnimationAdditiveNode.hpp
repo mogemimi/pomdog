@@ -24,7 +24,9 @@ public:
 		std::unique_ptr<AnimationNode> && blendNode2In);
 
 	void Calculate(AnimationTimeInterval const& time,
-		AnimationGraphWeightCollection const& weights, Skeleton const& skeleton, SkeletonPose & skeletonPose) override;
+		AnimationGraphWeightCollection const& weights,
+		Skeleton const& skeleton,
+		SkeletonPose & skeletonPose) const override;
 
 	float Weight() const;
 	void Weight(float amount);

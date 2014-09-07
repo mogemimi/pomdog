@@ -26,7 +26,9 @@ public:
 	virtual ~AnimationNode() = default;
 	
 	virtual void Calculate(AnimationTimeInterval const& time,
-		AnimationGraphWeightCollection const& weights, Skeleton const& skeleton, SkeletonPose & skeletonPose) = 0;
+		AnimationGraphWeightCollection const& weights,
+		Skeleton const& skeleton,
+		SkeletonPose & skeletonPose) const = 0;
 	
 	virtual AnimationTimeInterval Length() const = 0;
 };
