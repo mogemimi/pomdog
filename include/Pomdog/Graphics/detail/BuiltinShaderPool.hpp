@@ -33,7 +33,7 @@ public:
 	BuiltinShaderPool & operator=(BuiltinShaderPool &&) = delete;
 
 	template <class Trait>
-	std::shared_ptr<EffectPass> Create(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
 	{
 		std::type_index key{typeid(Trait)};
 	
@@ -48,7 +48,6 @@ public:
 		}
 		
 		POMDOG_ASSERT(effects.find(key) == std::end(effects));
-		POMDOG_ASSERT(graphicsDevice);
 
 		auto effect = Trait::Create(graphicsDevice);
 		effects.insert(std::make_pair(key, effect));

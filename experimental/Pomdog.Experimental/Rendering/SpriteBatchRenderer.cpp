@@ -20,7 +20,7 @@ namespace {
 #include "Shaders/GLSL.Embedded/SpriteBatchRenderer_PS.inc.h"
 
 struct BuiltinEffectSpriteBatchRendererTrait {
-	static std::shared_ptr<EffectPass> Create(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
 	{
 		using Details::ShaderBytecode;
 		ShaderBytecode vertexShaderCode = {Builtin_GLSL_SpriteBatchRenderer_VS, std::strlen(Builtin_GLSL_SpriteBatchRenderer_VS)};
@@ -158,7 +158,7 @@ SpriteBatchRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphics
 			maxBatchSize, sizeof(SpriteInfo), BufferUsage::Dynamic);
 	}
 	{
-		effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectSpriteBatchRendererTrait>(graphicsDevice);
+		effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectSpriteBatchRendererTrait>(*graphicsDevice);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 
 		auto declartation = PositionTextureCoord::Declaration();

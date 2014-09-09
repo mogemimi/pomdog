@@ -24,7 +24,7 @@ namespace {
 #include "Pomdog.Experimental/Graphics/Shaders/GLSL.Embedded/Sprite_DistanceField_PS.inc.h"
 
 struct BuiltinEffectSpriteBatchDistanceFieldTrait {
-	static std::shared_ptr<EffectPass> Create(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
 	{
 		using Details::ShaderBytecode;
 		ShaderBytecode vertexShaderCode = {Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS)};
@@ -51,7 +51,7 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 		spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice);
 		//spriteFont = assets->Load<SpriteFont>("BitmapFonts/UbuntuMono-Regular.fnt");
 		spriteFont = assets->Load<SpriteFont>("BitmapFonts/Ubuntu-Regular.fnt");
-		distanceFieldEffect = graphicsDevice->ShaderPool().Create<BuiltinEffectSpriteBatchDistanceFieldTrait>(graphicsDevice);
+		distanceFieldEffect = graphicsDevice->ShaderPool().Create<BuiltinEffectSpriteBatchDistanceFieldTrait>(*graphicsDevice);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *distanceFieldEffect);
 		spriteBatchDistanceField = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice,
 			distanceFieldEffect, constantBuffers);

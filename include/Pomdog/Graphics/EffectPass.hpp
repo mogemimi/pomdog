@@ -37,6 +37,10 @@ public:
 	EffectPass(EffectPass const&) = delete;
 	EffectPass(EffectPass &&) = default;
 	
+	EffectPass(GraphicsDevice & graphicsDevice,
+		Details::ShaderBytecode const& vertexShader,
+		Details::ShaderBytecode const& pixelShader);
+	
 	EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		Details::ShaderBytecode const& vertexShader,
 		Details::ShaderBytecode const& pixelShader);

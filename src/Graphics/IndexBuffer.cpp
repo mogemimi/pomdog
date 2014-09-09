@@ -28,10 +28,10 @@ static std::uint32_t ToIndexElementOffsetBytes(IndexElementSize elementSize)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-IndexBuffer::IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
 	IndexElementSize elementSizeIn, void const* indices, std::uint32_t indexCountIn,
 	Pomdog::BufferUsage bufferUsageIn)
-	: nativeIndexBuffer(graphicsDevice->NativeGraphicsDevice()->CreateIndexBuffer(
+	: nativeIndexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateIndexBuffer(
 		indices, ToIndexElementOffsetBytes(elementSizeIn) * indexCountIn, bufferUsageIn))
 	, indexCount(indexCountIn)
 	, elementSize(elementSizeIn)
@@ -40,14 +40,30 @@ IndexBuffer::IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	POMDOG_ASSERT(nativeIndexBuffer);
 }
 //-----------------------------------------------------------------------
-IndexBuffer::IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
 	IndexElementSize elementSizeIn, std::uint32_t indexCountIn,
 	Pomdog::BufferUsage bufferUsageIn)
-	: nativeIndexBuffer(graphicsDevice->NativeGraphicsDevice()->CreateIndexBuffer(
+	: nativeIndexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateIndexBuffer(
 		ToIndexElementOffsetBytes(elementSizeIn) * indexCountIn, bufferUsageIn))
 	, indexCount(indexCountIn)
 	, elementSize(elementSizeIn)
 	, bufferUsage(bufferUsageIn)
+{
+	POMDOG_ASSERT(nativeIndexBuffer);
+}
+//-----------------------------------------------------------------------
+IndexBuffer::IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	IndexElementSize elementSizeIn, void const* indices, std::uint32_t indexCountIn,
+	Pomdog::BufferUsage bufferUsageIn)
+	: IndexBuffer(*graphicsDevice, elementSizeIn, indices, indexCountIn, bufferUsageIn)
+{
+	POMDOG_ASSERT(nativeIndexBuffer);
+}
+//-----------------------------------------------------------------------
+IndexBuffer::IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	IndexElementSize elementSizeIn, std::uint32_t indexCountIn,
+	Pomdog::BufferUsage bufferUsageIn)
+	: IndexBuffer(*graphicsDevice, elementSizeIn, indexCountIn, bufferUsageIn)
 {
 	POMDOG_ASSERT(nativeIndexBuffer);
 }

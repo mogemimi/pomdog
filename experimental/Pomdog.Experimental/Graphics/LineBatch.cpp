@@ -18,7 +18,7 @@ namespace {
 #include "Shaders/GLSL.Embedded/LineBatch_PS.inc.h"
 
 struct BuiltinEffectLineBatchTrait {
-	static std::shared_ptr<EffectPass> Create(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
 	{
 		using Details::ShaderBytecode;
 		ShaderBytecode vertexShaderCode = {Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS)};
@@ -86,7 +86,7 @@ LineBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
 			maxVertexCount, sizeof(Vertex), BufferUsage::Dynamic);
 	}
 	{
-		effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectLineBatchTrait>(graphicsDevice);
+		effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectLineBatchTrait>(*graphicsDevice);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}

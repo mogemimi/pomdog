@@ -24,7 +24,7 @@ namespace Pomdog {
 class SkinnedMeshRenderable: public Renderable {
 public:
 	SkinnedMeshRenderable(
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+		GraphicsDevice & graphicsDevice,
 		AssetManager & assets,
 		std::shared_ptr<Skeleton> const& skeleton,
 		std::shared_ptr<SkeletonTransform> const& skeletonTransform,

@@ -39,6 +39,13 @@ public:
 	InputLayout(InputLayout &&) = default;
 	InputLayout & operator=(InputLayout &&) = default;
 	
+	InputLayout(GraphicsDevice & graphicsDevice,
+		std::shared_ptr<EffectPass> const& effectPass);
+
+	InputLayout(GraphicsDevice & graphicsDevice,
+		std::shared_ptr<EffectPass> const& effectPass,
+		std::vector<VertexBufferBinding> const& vertexBindings);
+	
 	InputLayout(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		std::shared_ptr<EffectPass> const& effectPass);
 

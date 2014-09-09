@@ -21,7 +21,7 @@ namespace Pomdog {
 
 class SkinnedEffect {
 public:
-	explicit SkinnedEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+	explicit SkinnedEffect(GraphicsDevice & graphicsDevice);
 
 	~SkinnedEffect();
 

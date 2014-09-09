@@ -27,15 +27,18 @@ public:
 //-----------------------------------------------------------------------
 EffectParameter::EffectParameter()
 	: nativeConstantBuffer(std::make_unique<DummyConstantBuffer>())
+{}
+//-----------------------------------------------------------------------
+EffectParameter::EffectParameter(GraphicsDevice & graphicsDevice, std::uint32_t byteConstants)
+	: nativeConstantBuffer(graphicsDevice.NativeGraphicsDevice()->CreateConstantBuffer(byteConstants))
 {
+	POMDOG_ASSERT(byteConstants > 0);
 }
 //-----------------------------------------------------------------------
 EffectParameter::EffectParameter(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::uint32_t byteConstants)
-	: nativeConstantBuffer(graphicsDevice->NativeGraphicsDevice()->CreateConstantBuffer(byteConstants))
-{
-	POMDOG_ASSERT(byteConstants > 0);
-}
+	: EffectParameter(*graphicsDevice, byteConstants)
+{}
 //-----------------------------------------------------------------------
 EffectParameter::~EffectParameter() = default;
 //-----------------------------------------------------------------------

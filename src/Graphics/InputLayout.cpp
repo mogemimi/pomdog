@@ -15,27 +15,38 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-InputLayout::InputLayout(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+InputLayout::InputLayout(GraphicsDevice & graphicsDevice,
 	std::shared_ptr<EffectPass> const& effectPass)
 	//: nativeInputLayout(graphicsDevice->)
 {
 	auto nativeEffectPass = effectPass->NativeEffectPass();
 	POMDOG_ASSERT(nativeEffectPass != nullptr);
 	
-	nativeInputLayout = graphicsDevice->NativeGraphicsDevice()->CreateInputLayout(
-		*nativeEffectPass);
+	auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+	nativeInputLayout = nativeDevice->CreateInputLayout(*nativeEffectPass);
 }
 //-----------------------------------------------------------------------
-InputLayout::InputLayout(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+InputLayout::InputLayout(GraphicsDevice & graphicsDevice,
 	std::shared_ptr<EffectPass> const& effectPass,
 	std::vector<VertexBufferBinding> const& vertexBindings)
 {
 	auto nativeEffectPass = effectPass->NativeEffectPass();
 	POMDOG_ASSERT(nativeEffectPass != nullptr);
 
-	nativeInputLayout = graphicsDevice->NativeGraphicsDevice()->CreateInputLayout(
-		*nativeEffectPass, vertexBindings);
+	auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+	nativeInputLayout = nativeDevice->CreateInputLayout(*nativeEffectPass, vertexBindings);
 }
+//-----------------------------------------------------------------------
+InputLayout::InputLayout(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	std::shared_ptr<EffectPass> const& effectPass)
+	: InputLayout(*graphicsDevice, effectPass)
+{}
+//-----------------------------------------------------------------------
+InputLayout::InputLayout(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	std::shared_ptr<EffectPass> const& effectPass,
+	std::vector<VertexBufferBinding> const& vertexBindings)
+	: InputLayout(*graphicsDevice, effectPass, vertexBindings)
+{}
 //-----------------------------------------------------------------------
 InputLayout::~InputLayout() = default;
 //-----------------------------------------------------------------------

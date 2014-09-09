@@ -27,7 +27,7 @@ namespace Rendering {
 
 class SkinnedMeshCommand final: public RenderCommand {
 public:
-	explicit SkinnedMeshCommand(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	explicit SkinnedMeshCommand(GraphicsDevice & graphicsDevice)
 		: skinnedEffect(graphicsDevice)
 	{}
 

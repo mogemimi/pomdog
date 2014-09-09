@@ -26,11 +26,10 @@ static auto dummyParameter = std::make_shared<EffectParameter>();
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-ConstantBufferBinding::ConstantBufferBinding(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
 	EffectPass & effectPass)
 {
-	POMDOG_ASSERT(graphicsDevice);
-	auto nativeDevice = graphicsDevice->NativeGraphicsDevice();
+	auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
 
 	auto nativeEffectPass = effectPass.NativeEffectPass();
 
@@ -60,6 +59,12 @@ ConstantBufferBinding::ConstantBufferBinding(std::shared_ptr<GraphicsDevice> con
 		POMDOG_ASSERT(nativeConstantLayout);
 		nativeConstantLayout->SetConstantBuffer(parameter.first, nativeConstantBuffer);
 	}
+}
+//-----------------------------------------------------------------------
+ConstantBufferBinding::ConstantBufferBinding(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	EffectPass & effectPass)
+	: ConstantBufferBinding(*graphicsDevice, effectPass)
+{
 }
 //-----------------------------------------------------------------------
 ConstantBufferBinding::~ConstantBufferBinding() = default;

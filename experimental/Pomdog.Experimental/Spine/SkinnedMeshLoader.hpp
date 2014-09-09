@@ -29,7 +29,7 @@ namespace Spine {
 class SkeletonDesc;
 
 SkinnedMesh CreateSkinnedMesh(
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	GraphicsDevice & graphicsDevice,
 	std::vector<Matrix3x2> const& bindPosesInGlobal,
 	SkeletonDesc const& skeletonDesc,
 	Details::TexturePacker::TextureAtlas const& textureAtlas,

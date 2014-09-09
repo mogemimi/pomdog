@@ -34,7 +34,7 @@ namespace {
 #include "Shaders/GLSL.Embedded/FXAA_PS.inc.h"
 
 struct BuiltinEffectFxaaTrait {
-	static std::shared_ptr<EffectPass> Create(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
 	{
 		using Details::ShaderBytecode;
 		ShaderBytecode vertexShaderCode = {Builtin_GLSL_FXAA_VS, std::strlen(Builtin_GLSL_FXAA_VS)};
@@ -63,7 +63,7 @@ FXAA::FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 			VertexCombined::Declaration().StrideBytes(), BufferUsage::Immutable);
 	}
 	{
-		effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectFxaaTrait>(graphicsDevice);
+		effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectFxaaTrait>(*graphicsDevice);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 	}

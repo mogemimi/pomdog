@@ -17,7 +17,7 @@ namespace {
 #include "Shaders/GLSL.Embedded/SkinnedEffect_PS.inc.h"
 
 struct BuiltinEffectSkinningTrait {
-	static std::shared_ptr<EffectPass> Create(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
 	{
 		using Details::ShaderBytecode;
 		ShaderBytecode vertexShaderCode = {Builtin_GLSL_SkinnedEffect_VS, std::strlen(Builtin_GLSL_SkinnedEffect_VS)};
@@ -34,7 +34,7 @@ struct BuiltinEffectSkinningTrait {
 //-----------------------------------------------------------------------
 class SkinnedEffect::Impl {
 public:
-	explicit Impl(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+	explicit Impl(GraphicsDevice & graphicsDevice);
 
 	void Apply(GraphicsContext & graphicsContext);
 
@@ -48,9 +48,9 @@ public:
 	std::array<std::array<Vector4, 2>, SkinnedEffect::MaxBones> bones;
 };
 //-----------------------------------------------------------------------
-SkinnedEffect::Impl::Impl(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice)
 {
-	effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectSkinningTrait>(graphicsDevice);
+	effectPass = graphicsDevice.ShaderPool().Create<BuiltinEffectSkinningTrait>(graphicsDevice);
 	constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 	inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
 }
@@ -70,7 +70,7 @@ void SkinnedEffect::Impl::Apply(GraphicsContext & graphicsContext)
 #pragma mark - SkinnedEffect
 #endif
 //-----------------------------------------------------------------------
-SkinnedEffect::SkinnedEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+SkinnedEffect::SkinnedEffect(GraphicsDevice & graphicsDevice)
 	: impl(std::make_unique<Impl>(graphicsDevice))
 {}
 //-----------------------------------------------------------------------

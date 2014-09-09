@@ -36,6 +36,14 @@ public:
 	VertexBuffer(VertexBuffer const&) = delete;
 	VertexBuffer(VertexBuffer &&) = default;
 
+	VertexBuffer(GraphicsDevice & graphicsDevice,
+		void const* vertices, std::uint32_t vertexCount,
+		std::uint16_t strideBytes, Pomdog::BufferUsage bufferUsage);
+
+	VertexBuffer(GraphicsDevice & graphicsDevice,
+		std::uint32_t vertexCount, std::uint16_t strideBytes,
+		Pomdog::BufferUsage bufferUsage);
+
 	VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		void const* vertices, std::uint32_t vertexCount,
 		std::uint16_t strideBytes, Pomdog::BufferUsage bufferUsage);

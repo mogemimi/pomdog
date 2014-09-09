@@ -294,7 +294,7 @@ CreateVertices(std::vector<SlotDesc> const& slots, SkinDesc const& skin,
 }// unnamed namespace
 //-----------------------------------------------------------------------
 SkinnedMesh CreateSkinnedMesh(
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	GraphicsDevice & graphicsDevice,
 	std::vector<Matrix3x2> const& bindPosesInGlobal,
 	SkeletonDesc const& skeletonDesc,
 	Details::TexturePacker::TextureAtlas const& textureAtlas,
@@ -319,8 +319,6 @@ SkinnedMesh CreateSkinnedMesh(
 //	if (iter == std::end(skeletonDesc.Skins)) {
 //		throw NotFound;
 //	}
-	
-	POMDOG_ASSERT(graphicsDevice);
 	
 	auto meshData = CreateVertices(skeletonDesc.Slots, *iter, textureAtlas, textureSize, bindPosesInGlobal);
 	
