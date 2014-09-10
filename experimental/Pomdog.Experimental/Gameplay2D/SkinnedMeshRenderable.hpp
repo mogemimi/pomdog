@@ -25,7 +25,6 @@ class SkinnedMeshRenderable: public Renderable {
 public:
 	SkinnedMeshRenderable(
 		GraphicsDevice & graphicsDevice,
-		AssetManager & assets,
 		std::shared_ptr<Skeleton> const& skeleton,
 		std::shared_ptr<SkeletonTransform> const& skeletonTransform,
 		std::shared_ptr<SkinnedMesh> const& mesh,

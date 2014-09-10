@@ -31,8 +31,7 @@ static Matrix4x4 CreateTransformMatrix4x4(Transform2D const& transform)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-SkinnedMeshRenderable::SkinnedMeshRenderable(
-	GraphicsDevice & graphicsDevice, AssetManager & assets,
+SkinnedMeshRenderable::SkinnedMeshRenderable(GraphicsDevice & graphicsDevice,
 	std::shared_ptr<Skeleton> const& skeletonIn,
 	std::shared_ptr<SkeletonTransform> const& skeletonTransformIn,
 	std::shared_ptr<SkinnedMesh> const& meshIn, std::shared_ptr<Texture2D> const& textureIn)
