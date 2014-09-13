@@ -7,39 +7,17 @@
 //
 
 #include "AnimationLerpNode.hpp"
-#include "AnimationGraphWeightCollection.hpp"
-#include "SkeletonPose.hpp"
+#include "Pomdog.Experimental/Skeletal2D/detail/AnimationGraphWeightCollection.hpp"
+#include "Pomdog.Experimental/Skeletal2D/detail/WeightBlendingHelper.hpp"
+#include "Pomdog.Experimental/Skeletal2D/SkeletonPose.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include <algorithm>
 
 namespace Pomdog {
-namespace {
-
-void Lerp(std::vector<JointPose> const& sourcePoses1, std::vector<JointPose> const& sourcePoses2,
-	float weight, std::vector<JointPose> & output)
-{
-	POMDOG_ASSERT(!sourcePoses1.empty());
-	POMDOG_ASSERT(!sourcePoses2.empty());
-	POMDOG_ASSERT(sourcePoses1.size() == sourcePoses2.size());
-
-	for (size_t i = 0; i < sourcePoses1.size(); ++i)
-	{
-		auto & pose1 = sourcePoses1[i];
-		auto & pose2 = sourcePoses2[i];
-		
-		POMDOG_ASSERT(!output.empty());
-		POMDOG_ASSERT(i < output.size());
-		auto & result = output[i];
-
-		result.Scale = MathHelper::Lerp(pose1.Scale, pose2.Scale, weight);
-		result.Rotation = MathHelper::Lerp(pose1.Rotation.value, pose2.Rotation.value, weight);
-		result.Translate = Vector2::Lerp(pose1.Translate, pose2.Translate, weight);
-	}
-}
-
-}// unnamed namespace
+namespace Details {
+namespace Skeletal2D {
 //-----------------------------------------------------------------------
 AnimationLerpNode::AnimationLerpNode(std::unique_ptr<AnimationNode> && blendNode1In,
 	std::unique_ptr<AnimationNode> && blendNode2In, std::uint16_t weightIndexIn)
@@ -68,7 +46,8 @@ std::unique_ptr<AnimationNode> const& AnimationLerpNode::B() const
 }
 //-----------------------------------------------------------------------
 void AnimationLerpNode::Calculate(AnimationTimeInterval const& time,
-	AnimationGraphWeightCollection const& weights, Skeleton const& skeleton, SkeletonPose & skeletonPose) const
+	Details::Skeletal2D::AnimationGraphWeightCollection const& weights,
+	Skeleton const& skeleton, SkeletonPose & skeletonPose) const
 {
 	auto sourcePose1 = SkeletonPose::CreateBindPose(skeleton);
 	auto sourcePose2 = SkeletonPose::CreateBindPose(skeleton);
@@ -80,7 +59,10 @@ void AnimationLerpNode::Calculate(AnimationTimeInterval const& time,
 	nodeB->Calculate(time, weights, skeleton, sourcePose2);
 	
 	auto weight = weights.At(weightIndex).GetFloat();
-	Lerp(sourcePose1.JointPoses, sourcePose2.JointPoses, weight, skeletonPose.JointPoses);
+	using Details::Skeletal2D::WeightBlendingHelper;
+	WeightBlendingHelper::Lerp(sourcePose1.JointPoses, sourcePose2.JointPoses, weight, skeletonPose.JointPoses);
 }
 
+}// namespace Skeletal2D
+}// namespace Details
 }// namespace Pomdog

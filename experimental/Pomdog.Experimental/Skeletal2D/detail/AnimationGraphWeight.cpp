@@ -10,6 +10,8 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
+namespace Details {
+namespace Skeletal2D {
 //-----------------------------------------------------------------------
 AnimationGraphWeight::AnimationGraphWeight(float value)
 	: type(AnimationBlendInputType::Float)
@@ -47,4 +49,6 @@ bool AnimationGraphWeight::GetBool() const
 	return weight != 0.0f;
 }
 //-----------------------------------------------------------------------
+}// namespace Skeletal2D
+}// namespace Details
 }// namespace Pomdog

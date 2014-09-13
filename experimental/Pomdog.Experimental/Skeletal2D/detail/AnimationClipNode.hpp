@@ -13,19 +13,22 @@
 #	pragma once
 #endif
 
-#include "AnimationNode.hpp"
+#include "Pomdog.Experimental/Skeletal2D/AnimationNode.hpp"
 #include <memory>
 
 namespace Pomdog {
 
 class AnimationClip;
 
+namespace Details {
+namespace Skeletal2D {
+
 class AnimationClipNode final: public AnimationNode {
 public:
 	AnimationClipNode(std::shared_ptr<AnimationClip> const& animationClip);
 
 	void Calculate(AnimationTimeInterval const& time,
-		AnimationGraphWeightCollection const& weights,
+		Details::Skeletal2D::AnimationGraphWeightCollection const& weights,
 		Skeleton const& skeleton,
 		SkeletonPose & skeletonPose) const override;
 
@@ -35,6 +38,8 @@ private:
 	std::shared_ptr<AnimationClip> clip;
 };
 
+}// namespace Skeletal2D
+}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ANIMATIONCLIPNODE_6B87052F_753A_4B60_B736_400EBF81491F_HPP)

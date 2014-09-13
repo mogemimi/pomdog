@@ -16,8 +16,14 @@
 #include "AnimationTimeInterval.hpp"
 
 namespace Pomdog {
+namespace Details {
+namespace Skeletal2D {
 
 class AnimationGraphWeightCollection;
+
+}// namespace Skeletal2D
+}// namespace Details
+
 class Skeleton;
 class SkeletonPose;
 
@@ -26,7 +32,7 @@ public:
 	virtual ~AnimationNode() = default;
 	
 	virtual void Calculate(AnimationTimeInterval const& time,
-		AnimationGraphWeightCollection const& weights,
+		Details::Skeletal2D::AnimationGraphWeightCollection const& weights,
 		Skeleton const& skeleton,
 		SkeletonPose & skeletonPose) const = 0;
 	

@@ -9,9 +9,9 @@
 #include "AnimationGraphBuilder.hpp"
 #include "Pomdog.Experimental/Spine/AnimationLoader.hpp"
 #include "Pomdog.Experimental/Spine/SkeletonDesc.hpp"
+#include "Pomdog.Experimental/Skeletal2D/detail/AnimationClipNode.hpp"
+#include "Pomdog.Experimental/Skeletal2D/detail/AnimationLerpNode.hpp"
 #include "Pomdog.Experimental/Skeletal2D/AnimationClip.hpp"
-#include "Pomdog.Experimental/Skeletal2D/AnimationClipNode.hpp"
-#include "Pomdog.Experimental/Skeletal2D/AnimationLerpNode.hpp"
 #include <rapidjson/document.h>
 #include <fstream>
 #include <vector>
@@ -52,6 +52,9 @@ static std::unique_ptr<AnimationNode> CreateAnimationNode(
 	AnimationNodeDesc const& desc, std::vector<AnimationBlendInput> & inputs,
 		std::vector<AnimationNodeDesc> const& nodes, Details::Spine::SkeletonDesc const& skeletonDesc)
 {
+	using Details::Skeletal2D::AnimationClipNode;
+	using Details::Skeletal2D::AnimationLerpNode;
+
 	switch (desc.Type) {
 	case AnimationNodeType::Clip: {
 		POMDOG_ASSERT(desc.ClipName);

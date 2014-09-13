@@ -13,10 +13,12 @@
 #	pragma once
 #endif
 
-#include "AnimationNode.hpp"
+#include "Pomdog.Experimental/Skeletal2D/AnimationNode.hpp"
 #include <memory>
 
 namespace Pomdog {
+namespace Details {
+namespace Skeletal2D {
 
 class AnimationLerpNode final: public AnimationNode {
 public:
@@ -24,7 +26,7 @@ public:
 		std::unique_ptr<AnimationNode> && blendNode2, std::uint16_t weightIndex);
 
 	void Calculate(AnimationTimeInterval const& time,
-		AnimationGraphWeightCollection const& weights,
+		Details::Skeletal2D::AnimationGraphWeightCollection const& weights,
 		Skeleton const& skeleton,
 		SkeletonPose & skeletonPose) const override;
 
@@ -40,6 +42,8 @@ private:
 	std::uint16_t weightIndex;
 };
 
+}// namespace Skeletal2D
+}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ANIMATIONLERPNODE_22AAFE06_B82E_49EC_8B16_EC01D32BC836_HPP)

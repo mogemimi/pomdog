@@ -13,10 +13,12 @@
 #	pragma once
 #endif
 
-#include "AnimationBlendInputType.hpp"
+#include "Pomdog.Experimental/Skeletal2D/AnimationBlendInputType.hpp"
 #include <cstdint>
 
 namespace Pomdog {
+namespace Details {
+namespace Skeletal2D {
 
 class AnimationGraphWeight {
 public:
@@ -35,6 +37,8 @@ private:
 	AnimationBlendInputType const type;
 };
 
+}// namespace Skeletal2D
+}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ANIMATIONGRAPHWEIGHT_2B7D7365_F1DB_4D21_A939_F9E06945754A_HPP)

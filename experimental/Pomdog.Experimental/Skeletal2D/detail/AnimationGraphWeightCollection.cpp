@@ -10,6 +10,8 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
+namespace Details {
+namespace Skeletal2D {
 //-----------------------------------------------------------------------
 std::uint16_t AnimationGraphWeightCollection::AddFloat()
 {
@@ -51,4 +53,6 @@ std::uint16_t AnimationGraphWeightCollection::Count() const
 	return parameters.size();
 }
 //-----------------------------------------------------------------------
+}// namespace Skeletal2D
+}// namespace Details
 }// namespace Pomdog

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,9 +13,11 @@
 #	pragma once
 #endif
 
-#include "AnimationTimeInterval.hpp"
+#include "Pomdog.Experimental/Skeletal2D/AnimationTimeInterval.hpp"
 
 namespace Pomdog {
+namespace Details {
+namespace Skeletal2D {
 
 class AnimationTimer {
 public:
@@ -27,13 +29,15 @@ public:
 	void Reset();
 
 	AnimationTimeInterval Time() const;
-	bool IsPause() const;
+	bool IsPlaying() const;
 	
 private:
 	AnimationTimeInterval time;
-	bool isPause;
+	bool isPlaying;
 };
 
+}// namespace Skeletal2D
+}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ANIMATIONTIMER_A9EAE898_56A1_4928_B031_22D9304214E6_HPP)

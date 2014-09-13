@@ -15,78 +15,39 @@
 
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Gameplay/Component.hpp"
-
-namespace Pomdog {
-
-class Animator: public Component<Animator> {
-public:
-	virtual ~Animator() = default;
-	
-	virtual void Update(DurationSeconds const& frameDuration) = 0;
-	
-	virtual void CrossFade(std::string const& state, DurationSeconds const& transitionDuration) = 0;
-
-	virtual void Play(std::string const& state) = 0;
-	
-	virtual float PlaybackRate() const = 0;
-	virtual void PlaybackRate(float playbackRate) = 0;
-
-	virtual void SetFloat(std::string const& name, float value) = 0;
-	virtual void SetBool(std::string const& name, bool value) = 0;
-	
-	virtual std::string GetCurrentStateName() const = 0;
-};
-
-}// namespace Pomdog
-
-
-#include "Pomdog.Experimental/Skeletal2D/Skeleton.hpp"
-#include "Pomdog.Experimental/Skeletal2D/SkeletonTransform.hpp"
-#include "Pomdog.Experimental/Skeletal2D/AnimationNode.hpp"
-#include "Pomdog.Experimental/Skeletal2D/AnimationState.hpp"
-#include "Pomdog.Experimental/Skeletal2D/AnimationGraphWeightCollection.hpp"
-#include "Pomdog.Experimental/Skeletal2D/AnimationGraph.hpp"
-#include <Pomdog/Pomdog.hpp>
 #include <memory>
 
 namespace Pomdog {
 
-struct SkeletonAnimationState {
-	std::shared_ptr<AnimationNode const> Node;
-	std::string Name;
-};
+class Skeleton;
+class SkeletonTransform;
+class AnimationGraph;
 
-class SkeletonAnimator: public Animator {
+class Animator: public Component<Animator> {
 public:
-	SkeletonAnimator(std::shared_ptr<Skeleton> const& skeleton,
+	Animator(std::shared_ptr<Skeleton> const& skeleton,
 		std::shared_ptr<SkeletonTransform> const& skeletonTransform,
 		std::shared_ptr<AnimationGraph> const& animationGraph);
-	
-	void Update(DurationSeconds const& frameDuration) override;
-	
-	void CrossFade(std::string const& stateName, DurationSeconds const& transitionDuration) override;
-	
-	void Play(std::string const& stateName) override;
-	
-	float PlaybackRate() const override;
-	
-	void PlaybackRate(float playbackRate) override;
 
-	void SetFloat(std::string const& name, float value) override;
-
-	void SetBool(std::string const& name, bool value) override;
+	~Animator();
 	
-	std::string GetCurrentStateName() const override;
+	void Update(DurationSeconds const& frameDuration);
+	
+	void CrossFade(std::string const& state, DurationSeconds const& transitionDuration);
+
+	void Play(std::string const& state);
+	
+	float PlaybackRate() const;
+	void PlaybackRate(float playbackRate);
+
+	void SetFloat(std::string const& name, float value);
+	void SetBool(std::string const& name, bool value);
+	
+	std::string GetCurrentStateName() const;
 	
 private:
-	AnimationGraphWeightCollection graphWeights;
-	std::shared_ptr<Skeleton> skeleton;
-	std::shared_ptr<SkeletonTransform> skeletonTransform;
-	SkeletonAnimationState currentAnimation;
-	SkeletonAnimationState nextAnimation;
-	std::shared_ptr<AnimationGraph const> animationGraph;
-	AnimationTimeInterval time;
-	float playbackRate;
+	class Impl;
+	std::unique_ptr<Impl> impl;
 };
 
 }// namespace Pomdog

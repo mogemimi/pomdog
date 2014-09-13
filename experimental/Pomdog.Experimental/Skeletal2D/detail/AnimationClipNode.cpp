@@ -7,10 +7,12 @@
 //
 
 #include "AnimationClipNode.hpp"
-#include "AnimationClip.hpp"
+#include "Pomdog.Experimental/Skeletal2D/AnimationClip.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
+namespace Details {
+namespace Skeletal2D {
 
 AnimationClipNode::AnimationClipNode(std::shared_ptr<AnimationClip> const& animationClipIn)
 	: clip(animationClipIn)
@@ -23,10 +25,13 @@ AnimationTimeInterval AnimationClipNode::Length() const
 }
 //-----------------------------------------------------------------------
 void AnimationClipNode::Calculate(AnimationTimeInterval const& time,
-	AnimationGraphWeightCollection const&, Skeleton const& skeleton, SkeletonPose & skeletonPose) const
+	Details::Skeletal2D::AnimationGraphWeightCollection const&,
+	Skeleton const& skeleton, SkeletonPose & skeletonPose) const
 {
 	POMDOG_ASSERT(clip);
 	clip->Apply(time, skeleton, skeletonPose);
 }
 
+}// namespace Skeletal2D
+}// namespace Details
 }// namespace Pomdog

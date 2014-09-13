@@ -18,6 +18,8 @@
 #include <vector>
 
 namespace Pomdog {
+namespace Details {
+namespace Skeletal2D {
 
 struct AnimationGraphWeightCollection {
 public:
@@ -37,6 +39,8 @@ private:
 	std::vector<AnimationGraphWeight> parameters;
 };
 
+}// namespace Skeletal2D
+}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ANIMATIONGRAPHWEIGHTCOLLECTION_5506C893_2829_4E01_8EE5_72B642FF79AB_HPP)

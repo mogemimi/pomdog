@@ -7,14 +7,16 @@
 //
 
 #include "AnimationAdditiveNode.hpp"
-#include "Skeleton.hpp"
-#include "SkeletonPose.hpp"
-#include "SkeletonHelper.hpp"
+#include "Pomdog.Experimental/Skeletal2D/Skeleton.hpp"
+#include "Pomdog.Experimental/Skeletal2D/SkeletonPose.hpp"
+#include "Pomdog.Experimental/Skeletal2D/SkeletonHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 
 namespace Pomdog {
+namespace Details {
+namespace Skeletal2D {
 namespace {
 
 static SkeletonPose CreateEmptyPose(Skeleton const& skeleton)
@@ -57,7 +59,8 @@ AnimationTimeInterval AnimationAdditiveNode::Length() const
 }
 //-----------------------------------------------------------------------
 void AnimationAdditiveNode::Calculate(AnimationTimeInterval const& time,
-	AnimationGraphWeightCollection const& weights, Skeleton const& skeleton, SkeletonPose & skeletonPose) const
+	Details::Skeletal2D::AnimationGraphWeightCollection const& weights,
+	Skeleton const& skeleton, SkeletonPose & skeletonPose) const
 {
 	auto sourcePose1 = SkeletonPose::CreateBindPose(skeleton);
 //	auto sourcePose2 = SkeletonPose::CreateBindPose(skeleton);
@@ -99,4 +102,6 @@ void AnimationAdditiveNode::Calculate(AnimationTimeInterval const& time,
 	}
 }
 
+}// namespace Skeletal2D
+}// namespace Details
 }// namespace Pomdog

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -9,15 +9,18 @@
 #include "AnimationTimer.hpp"
 
 namespace Pomdog {
+namespace Details {
+namespace Skeletal2D {
 //-----------------------------------------------------------------------
 AnimationTimer::AnimationTimer()
-	: isPause(false)
+	: time(AnimationTimeInterval::zero())
+	, isPlaying(true)
 {
 }
 //-----------------------------------------------------------------------
 void AnimationTimer::Update(AnimationTimeInterval const& timeIn)
 {
-	if (!isPause)
+	if (isPlaying)
 	{
 		time += timeIn;
 	}
@@ -30,12 +33,12 @@ void AnimationTimer::Reset()
 //-----------------------------------------------------------------------
 void AnimationTimer::Pause()
 {
-	isPause = true;
+	isPlaying = false;
 }
 //-----------------------------------------------------------------------
 void AnimationTimer::Resume()
 {
-	isPause = false;
+	isPlaying = true;
 }
 //-----------------------------------------------------------------------
 AnimationTimeInterval AnimationTimer::Time() const
@@ -43,9 +46,11 @@ AnimationTimeInterval AnimationTimer::Time() const
 	return time;
 }
 //-----------------------------------------------------------------------
-bool AnimationTimer::IsPause() const
+bool AnimationTimer::IsPlaying() const
 {
-	return isPause;
+	return isPlaying;
 }
 //-----------------------------------------------------------------------
+}// namespace Skeletal2D
+}// namespace Details
 }// namespace Pomdog
