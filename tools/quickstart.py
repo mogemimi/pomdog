@@ -11,6 +11,10 @@
 # >>> python pomdog/tools/quickstart.py YourProjectName
 # >>> cd YourProjectName
 
+# >>> python tools/quickstart.py ProjectName -d ~/path/gamedev -u net.example.ProjectName
+# >>> cd ~/path/gamedev/ProjectName
+
+
 import sys
 import os
 import argparse
@@ -33,7 +37,10 @@ def CreateProjectDirectory(path):
 def ParsingCommandLineAraguments():
     parser = argparse.ArgumentParser(prog='quickstart',
                                      description='Create new project.')
-    parser.add_argument('name', default='def')
+    parser.add_argument('name', default='def', help='project name')
+    parser.add_argument('-d', nargs=1, required=True, help='directory path')
+    parser.add_argument('-u', default='com.example.QuickStart',
+                        nargs=1, help='project url')
     args = parser.parse_args()
     return args
 
@@ -101,6 +108,22 @@ def RenameSourceContent(project_root, identifier, source):
     f.write(content)
     f.close()
 
+def RenameContentByUrl(project_root, url, source):
+    path = os.path.join(project_root, source)
+
+    if not os.path.exists(path):
+        print("Error: Cannot find file {0}".format(path))
+        return
+
+    f = open(path, 'r')
+    content = f.read()
+    f.close()
+
+    f = open(path, 'w')
+    content = content.replace('com.example.QuickStart', url)
+    f.write(content)
+    f.close()
+
 def RenameFilename(project_root, identifier, source):
     path = os.path.join(project_root, source)
 
@@ -117,9 +140,14 @@ def Run():
 
     #print("args = {0}".format(vars(args))) # for Debug
 
+    args.dir = args.d[0]
+    args.url = args.u[0]
+
     identifier = os.path.basename(args.name)
-    project_root = os.path.join(os.path.dirname(args.name), identifier)
+    project_root = os.path.join(args.dir, identifier)
     CreateProjectDirectory(project_root)
+
+    #print("{0}, {1}, {2}".format(args.dir, args.url, project_root))
 
     framework_root = os.path.join(os.path.dirname(__file__), "..")
     templates_directory = os.path.join(framework_root,
@@ -127,6 +155,7 @@ def Run():
 
     CopyTemplates(templates_directory, project_root)
     CopyFrameworkFiles(framework_root, project_root)
+    RenameContentByUrl(project_root, args.url, 'Platform.Cocoa/QuickStart-Info.plist')
     RenameSourceContent(project_root, identifier, 'README.md')
     RenameSourceContent(project_root, identifier, 'Build/app.gyp')
     RenameSourceContent(project_root, identifier, 'Source/QuickStartGame.cpp')
@@ -137,6 +166,8 @@ def Run():
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.hpp')
     RenameFilename(project_root, identifier, 'Platform.Cocoa/QuickStart-Info.plist')
     RenameFilename(project_root, identifier, 'Platform.Cocoa/QuickStart-Prefix.pch')
+
+    print("Done.")
 
 
 Run()
