@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <Pomdog.Experimental/Skeletal2D/detail/AnimationTimer.hpp>
 #include <Pomdog.Experimental/Pomdog2D.hpp>
 #include <Pomdog/Pomdog.hpp>
 
@@ -52,6 +53,7 @@ private:
 	std::shared_ptr<SamplerState> samplerPoint;
 	std::shared_ptr<RenderTarget2D> renderTarget;
 	std::unique_ptr<FXAA> fxaa;
+	std::unique_ptr<ScreenQuad> screenQuad;
 
 	std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
 	std::shared_ptr<UI::ScenePanel> scenePanel;
@@ -71,7 +73,7 @@ private:
 	std::shared_ptr<AnimationState> maidAnimationState;
 	std::shared_ptr<Texture2D> maidTexture;
 	std::vector<Matrix3x2> maidGlobalPose;
-	AnimationTimer maidAnimationTimer;
+	Details::Skeletal2D::AnimationTimer maidAnimationTimer;
 	Skin maidSkin;
 	std::vector<Details::Skeletal2D::SpriteAnimationTrack> maidSpriteAnimationTracks;
 	

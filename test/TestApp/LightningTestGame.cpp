@@ -55,6 +55,7 @@ void LightningTestGame::Initialize()
 		fxaa = std::make_unique<FXAA>(graphicsDevice);
 		auto bounds = window->ClientBounds();
 		fxaa->SetViewport(bounds.Width, bounds.Height);
+		screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
 	}
 	{
 		mainCamera = gameWorld.CreateObject();
@@ -255,7 +256,8 @@ void LightningTestGame::Draw()
 		graphicsContext->SetRenderTarget();
 		graphicsContext->Clear(Color::CornflowerBlue);
 		fxaa->SetTexture(renderTarget);
-		fxaa->Draw(*graphicsContext);
+		fxaa->Apply(*graphicsContext);
+		screenQuad->DrawQuad(*graphicsContext);
 	}
 
 	gameEditor->EndDraw(*graphicsContext);

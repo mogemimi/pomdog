@@ -48,6 +48,7 @@ private:
 	std::unique_ptr<Renderer> renderer;
 	std::shared_ptr<RenderTarget2D> renderTarget;
 	std::unique_ptr<FXAA> fxaa;
+	std::unique_ptr<ScreenQuad> screenQuad;
 	
 	ScopedConnection sceneTouchConnection;
 	Vector2 touchPoint;

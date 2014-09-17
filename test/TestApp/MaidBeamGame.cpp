@@ -46,6 +46,7 @@ void MaidBeamGame::Initialize()
 		fxaa = std::make_unique<FXAA>(graphicsDevice);
 		auto bounds = window->ClientBounds();
 		fxaa->SetViewport(bounds.Width, bounds.Height);
+		screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
 		renderer = std::make_unique<Renderer>(graphicsContext, graphicsDevice);
 	}
 	{
@@ -256,7 +257,8 @@ void MaidBeamGame::Draw()
 		graphicsContext->SetRenderTarget();
 		graphicsContext->Clear(Color::CornflowerBlue);
 		fxaa->SetTexture(renderTarget);
-		fxaa->Draw(*graphicsContext);
+		fxaa->Apply(*graphicsContext);
+		screenQuad->DrawQuad(*graphicsContext);
 	}
 
 	gameEditor->EndDraw(*graphicsContext);

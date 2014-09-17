@@ -1,14 +1,13 @@
 {
   "nodes": [
     {
-      "type": "clip",
-      "clip": "Hover",
-      "id": 420
+      "name": "Hover",
+      "type": "clip"
     }
   ],
   "states": {
     "Hover": {
-      "tree": 420
+      "tree": "Hover"
     }
   }
 }

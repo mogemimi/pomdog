@@ -43,6 +43,7 @@ void ParticleTestGame::Initialize()
 		fxaa = std::make_unique<FXAA>(graphicsDevice);
 		auto bounds = window->ClientBounds();
 		fxaa->SetViewport(bounds.Width, bounds.Height);
+		screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
 		renderer = std::make_unique<Renderer>(graphicsContext, graphicsDevice);
 	}
 	{
@@ -57,8 +58,9 @@ void ParticleTestGame::Initialize()
 	{
 		particleObject = gameWorld.CreateObject();
 		particleObject.AddComponent<Transform2D>();
-		auto & renderable = particleObject.AddComponent(std::make_unique<ParticleRenderable>());
-		renderable.Load(graphicsContext, graphicsDevice, *assets);
+		auto texture = assets->Load<Texture2D>("Particles/smoke.png");
+		auto blendState = BlendState::CreateAdditive(graphicsDevice);
+		particleObject.AddComponent(std::make_unique<ParticleRenderable>(texture, blendState));
 	}
 	
 	{
@@ -118,22 +120,23 @@ void ParticleTestGame::Update()
 		transform->Scale = {1, 1};
 	}
 
-	if (auto particleRenderable = particleObject.Component<ParticleRenderable>())
-	{
-		auto & particleSystem = particleRenderable->particleSystem;
-		particleSystem.emitter.EmissionRate = static_cast<std::uint16_t>(slider1->Value());
-		particleSystem.emitter.GravityModifier = slider2->Value();
-	}
+//	if (auto particleRenderable = particleObject.Component<ParticleRenderable>())
+//	{
+//		auto & particleSystem = particleRenderable->particleSystem;
+//		particleSystem.emitter.EmissionRate = static_cast<std::uint16_t>(slider1->Value());
+//		particleSystem.emitter.GravityModifier = slider2->Value();
+//	}
 		
 //	for (auto & gameObject: gameWorld.QueryComponents<ParticleRenderable, Transform2D>())
 //	{
 //		auto particleRenderable = gameObject->Component<ParticleRenderable>();
 //		particleRenderable->Update(*particleObject, *clock);
 //	}
-	if (auto particleRenderable = particleObject.Component<ParticleRenderable>())
-	{
-		particleRenderable->Update(particleObject, *clock);
-	}
+
+//	if (auto particleRenderable = particleObject.Component<ParticleRenderable>())
+//	{
+//		particleRenderable->Update(particleObject, *clock);
+//	}
 }
 //-----------------------------------------------------------------------
 void ParticleTestGame::Draw()
@@ -170,7 +173,8 @@ void ParticleTestGame::Draw()
 		graphicsContext->SetRenderTarget();
 		graphicsContext->Clear(Color::CornflowerBlue);
 		fxaa->SetTexture(renderTarget);
-		fxaa->Draw(*graphicsContext);
+		fxaa->Apply(*graphicsContext);
+		screenQuad->DrawQuad(*graphicsContext);
 	}
 
 	gameEditor->EndDraw(*graphicsContext);

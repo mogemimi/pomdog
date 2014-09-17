@@ -48,6 +48,7 @@ void GrassBlendingGame::Initialize()
 		fxaa = std::make_unique<FXAA>(graphicsDevice);
 		auto bounds = window->ClientBounds();
 		fxaa->SetViewport(bounds.Width, bounds.Height);
+		screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
 		polygonBatch = std::make_unique<PolygonBatch>(graphicsContext, graphicsDevice);
 	}
 	{
@@ -82,11 +83,11 @@ void GrassBlendingGame::Initialize()
 
 		// NOTE: for Skinning
 		auto bindPose = SkeletonPose::CreateBindPose(*maidSkeleton);
-		maidSkinnedMesh = Details::Spine::CreateSkinnedMesh(graphicsDevice,
+		maidSkinnedMesh = Details::Spine::CreateSkinnedMesh(*graphicsDevice,
 			SkeletonHelper::ToGlobalPose(*maidSkeleton, bindPose),
 			skeletonDesc, textureAtlas,
 			Vector2(maidTexture->Width(), maidTexture->Height()), "default");
-		maidSkinningEffect = std::make_unique<SkinnedEffect>(graphicsDevice);
+		maidSkinningEffect = std::make_unique<SkinnedEffect>(*graphicsDevice);
 	}
 	
 	{
@@ -317,7 +318,8 @@ void GrassBlendingGame::Draw()
 		graphicsContext->SetRenderTarget();
 		graphicsContext->Clear(Color::CornflowerBlue);
 		fxaa->SetTexture(renderTarget);
-		fxaa->Draw(*graphicsContext);
+		fxaa->Apply(*graphicsContext);
+		screenQuad->DrawQuad(*graphicsContext);
 	}
 
 	gameEditor->EndDraw(*graphicsContext);

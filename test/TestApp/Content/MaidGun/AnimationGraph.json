@@ -1,28 +1,26 @@
 {
   "nodes": [
     {
+      "name": "Run_Lerp",
       "type": "lerp",
-      "id": 420,
       "param_name": "Run.Weight",
-      "in": [421, 422]
+      "in": ["Run", "RunNoShot"]
     },
     {
-      "type": "clip",
-      "clip": "Run",
-      "id": 421
+      "name": "Run",
+      "type": "clip"
     },
     {
-      "type": "clip",
-      "clip": "RunNoShot",
-      "id": 422
+      "name": "RunNoShot",
+      "type": "clip"
     }
   ],
   "states": {
     "Run": {
-      "tree": 420
+      "tree": "Run_Lerp"
     },
     "Idle": {
-      "tree": 422
+      "tree": "RunNoShot"
     }
   }
 }
