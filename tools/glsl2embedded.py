@@ -41,18 +41,9 @@ def RemoveWhiteSpace(source):
     return result
 
 def RemoveCommentOut(source):
-    result = ""
-    pattern = re.compile("(.*)(//)(.*)")
-    for line in source.split('\n'):
-        m = pattern.match(line)
-        while m and line:
-          if m:
-            line = m.group(1)
-          m = pattern.match(line)
-        if line:
-          result += line
-          result += '\n'
-    return result
+    source = re.sub(re.compile("/\*.*?\*/", re.DOTALL), "", source)
+    source = re.sub(re.compile("//.*?\n"), "", source)
+    return source
 
 def CompressGLSLCode(source):
     preformatted = RemoveCommentOut(RemoveWhiteSpace(source))
@@ -71,6 +62,7 @@ def CompressGLSLCode(source):
     preformatted = preformatted.replace(') ', ')')
     preformatted = preformatted.replace(' {', '{')
     preformatted = preformatted.replace('} ', '}')
+    preformatted = preformatted.replace('void main()\n{', 'void main(){')
     return preformatted
 
 def ConvertGLSL2EmbeddedCode(source):
