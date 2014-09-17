@@ -24,8 +24,6 @@
       '<@(pomdog_expr_dir)/Gameplay2D/SpriteRenderable.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/Transform2D.hpp',
 
-      '<@(pomdog_expr_dir)/Graphics/FXAA.cpp',
-      '<@(pomdog_expr_dir)/Graphics/FXAA.hpp',
       '<@(pomdog_expr_dir)/Graphics/LineBatch.cpp',
       '<@(pomdog_expr_dir)/Graphics/LineBatch.hpp',
       '<@(pomdog_expr_dir)/Graphics/PolygonBatch.cpp',
@@ -46,6 +44,15 @@
       '<@(pomdog_expr_dir)/Graphics/SpriteRenderer.cpp',
       '<@(pomdog_expr_dir)/Graphics/SpriteRenderer.hpp',
       '<@(pomdog_expr_dir)/Graphics/TextureRegion.hpp',
+
+      '<@(pomdog_expr_dir)/ImageEffects/FXAA.cpp',
+      '<@(pomdog_expr_dir)/ImageEffects/FXAA.hpp',
+      '<@(pomdog_expr_dir)/ImageEffects/GrayscaleEffect.cpp',
+      '<@(pomdog_expr_dir)/ImageEffects/GrayscaleEffect.hpp',
+      '<@(pomdog_expr_dir)/ImageEffects/SepiaToneEffect.cpp',
+      '<@(pomdog_expr_dir)/ImageEffects/SepiaToneEffect.hpp',
+      '<@(pomdog_expr_dir)/ImageEffects/VignetteEffect.cpp',
+      '<@(pomdog_expr_dir)/ImageEffects/VignetteEffect.hpp',
 
       '<@(pomdog_expr_dir)/InGameEditor/InGameEditor.cpp',
       '<@(pomdog_expr_dir)/InGameEditor/InGameEditor.hpp',

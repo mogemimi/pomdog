@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_FXAA_FAC6D173_4722_460C_A0AF_29925A56EA23_HPP
-#define POMDOG_FXAA_FAC6D173_4722_460C_A0AF_29925A56EA23_HPP
+#ifndef POMDOG_VIGNETTEEFFECT_395F49A8_9033_426B_AD02_FD8563F40232_HPP
+#define POMDOG_VIGNETTEEFFECT_395F49A8_9033_426B_AD02_FD8563F40232_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -18,20 +18,18 @@
 
 namespace Pomdog {
 
-class FXAA {
+class VignetteEffect {
 public:
-	explicit FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+	explicit VignetteEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 	void SetViewport(float width, float height);
 	void SetTexture(std::shared_ptr<RenderTarget2D> const& texture);
 	
-	void Draw(GraphicsContext & graphicsContext);
+	void Apply(GraphicsContext & graphicsContext);
 	
 private:
 	std::shared_ptr<RenderTarget2D> texture;
 	std::shared_ptr<SamplerState> samplerLinear;
-	std::shared_ptr<VertexBuffer> vertexBuffer;
-	std::shared_ptr<IndexBuffer> indexBuffer;
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 	std::shared_ptr<InputLayout> inputLayout;
@@ -39,4 +37,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_FXAA_FAC6D173_4722_460C_A0AF_29925A56EA23_HPP)
+#endif // !defined(POMDOG_VIGNETTEEFFECT_395F49A8_9033_426B_AD02_FD8563F40232_HPP)

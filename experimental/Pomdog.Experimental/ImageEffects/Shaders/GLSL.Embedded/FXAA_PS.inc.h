@@ -59,8 +59,7 @@ char const* Builtin_GLSL_FXAA_PS =
 "}\n"
 "return vec4(rgbB,1.0);\n"
 "}\n"
-"void main()\n"
-"{\n"
+"void main(){\n"
 "vec2 rcpFrame=vec2(1.0,1.0)/RenderTargetPixelSize.xy;\n"
 "FragColor=FxaaPixelShader(Texture,In.TextureCoord,rcpFrame);\n"
 "}\n";

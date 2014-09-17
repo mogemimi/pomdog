@@ -26,7 +26,6 @@
 #include "Gameplay2D/SpriteRenderable.hpp"
 #include "Gameplay2D/Transform2D.hpp"
 
-#include "Graphics/FXAA.hpp"
 #include "Graphics/LineBatch.hpp"
 #include "Graphics/PolygonBatch.hpp"
 #include "Graphics/ScreenQuad.hpp"
@@ -38,6 +37,11 @@
 #include "Graphics/SpriteSortMode.hpp"
 #include "Graphics/SpriteRenderer.hpp"
 #include "Graphics/TextureRegion.hpp"
+
+#include "ImageEffects/FXAA.hpp"
+#include "ImageEffects/GrayscaleEffect.hpp"
+#include "ImageEffects/SepiaToneEffect.hpp"
+#include "ImageEffects/VignetteEffect.hpp"
 
 #include "InGameEditor/InGameEditor.hpp"
 
