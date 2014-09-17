@@ -23,6 +23,7 @@
 
 //======================================================================
 // define
+#if !defined(IUTEST_NO_VARIADIC_MACROS)
 
 #undef IUTEST_INSTANTIATE_TEST_CASE_P
 /**
@@ -53,10 +54,8 @@
 				->AddTestCaseInstantiation(#prefix_, s_##prefix_##_##testcase_##_EvalGenerator_)
 
 
-#if !defined(IUTEST_NO_VARIADIC_MACROS)
-#  define IUTEST_CAST_TO_PARAM_GENERATOR_(type, ...)	::iutest::tr1::iuCastToParamGenerator<type>(__VA_ARGS__)
-#else
-#  define IUTEST_CAST_TO_PARAM_GENERATOR_(type, gen)	gen
+#define IUTEST_CAST_TO_PARAM_GENERATOR_(type, ...)	::iutest::tr1::iuCastToParamGenerator<type>(__VA_ARGS__)
+
 #endif
 
 /**

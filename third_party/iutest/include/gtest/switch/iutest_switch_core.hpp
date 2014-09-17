@@ -58,7 +58,7 @@
 #define TEST_P		IUTEST_P
 #define INSTANTIATE_TEST_CASE_P	IUTEST_INSTANTIATE_TEST_CASE_P
 
-#define FRIEND_TEST		IUTEST_FRIEND_TEST
+#define FRIEND_TEST			IUTEST_FRIEND_TEST
 #define SCOPED_TRACE		IUTEST_SCOPED_TRACE
 #define GTEST_FLAG			IUTEST_FLAG
 
@@ -80,7 +80,7 @@
 
 //======================================================================
 // undef
-#ifdef INCG_IRIS_IUTEST_HPP_
+#if defined(INCG_IRIS_IUTEST_HPP_)
 
 #undef IUTEST_RUN_ALL_TESTS
 #undef IUTEST_INIT

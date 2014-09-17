@@ -182,7 +182,7 @@ public:
 	{
 		return ::std::find(begin, end, name) == end;
 	}
-#if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
 	/** @overload */
 	template<typename T, size_t N>
 	static bool ValidateName(const ::std::string& name, T (&ar)[N])

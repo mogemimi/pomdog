@@ -101,6 +101,7 @@ namespace iutest
 class IFile : public detail::IOutStream
 {
 public:
+	//! ファイルオープンモードフラグ
 	enum OpenFlag
 	{
 		OpenRead		= 0x00000001,	//!< 読み込み
@@ -198,13 +199,14 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 
 #if IUTEST_HAS_STRINGSTREAM
 
+/**
+ * @brief	文字列バッファ書き込み IFile インターフェースクラス
+*/
 class StringStreamFile : public IFile
 {
 public:
 	/**
 	 * @brief	開く
-	 * @param [in]	filename	= unused
-	 * @param [in]	mode		= unused
 	 * @return	成否
 	*/
 	virtual bool Open(const char* , int ) IUTEST_CXX_OVERRIDE

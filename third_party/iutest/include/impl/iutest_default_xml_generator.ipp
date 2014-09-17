@@ -40,38 +40,42 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnTestProgramEnd(const UnitT
 			return;
 		}
 	}
+	OnReportTest(m_fp, test);
 
-	m_fp->Printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-	m_fp->Printf("<testsuites tests=\"%d\" failures=\"%d\" disabled=\"%d\" "
+	FileClose();
+}
+
+IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnReportTest(IFile* file, const UnitTest& test)
+{
+	file->Printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+	file->Printf("<testsuites tests=\"%d\" failures=\"%d\" disabled=\"%d\" "
 		, test.reportable_test_count()
 		, test.failed_test_count()
 		, test.reportable_disabled_test_count()
 		);
 #if IUTEST_REPORT_SKIPPED
-	m_fp->Printf("skip=\"%d\" ", test.reportable_skip_test_count() );
+	file->Printf("skip=\"%d\" ", test.reportable_skip_test_count());
 #endif
-	m_fp->Printf("errors=\"0\" time=\"%s\" timestamp=\"%s\" "
+	file->Printf("errors=\"0\" time=\"%s\" timestamp=\"%s\" "
 		, detail::FormatTimeInMillisecAsSecond(test.elapsed_time()).c_str()
 		, detail::FormatTimeInMillisecAsIso8601(test.start_timestamp()).c_str()
 		);
 	if( TestFlag::IsEnableFlag(TestFlag::SHUFFLE_TESTS) )
 	{
-		m_fp->Printf("random_seed=\"%d\" ", test.random_seed());
+		file->Printf("random_seed=\"%d\" ", test.random_seed());
 	}
-	m_fp->Printf("name=\"AllTests\"");
+	file->Printf("name=\"AllTests\"");
 
 	// propertys
-	OnReportTestProperty(m_fp, *test.ad_hoc_testresult(), UnitTest::ValidateTestPropertyName);
+	OnReportTestProperty(file, *test.ad_hoc_testresult(), UnitTest::ValidateTestPropertyName);
 
-	m_fp->Printf(">\n");
+	file->Printf(">\n");
 
 	for( int i=0, count=test.total_test_case_count(); i < count; ++i )
 	{
-		OnReportTestCase(m_fp, *test.GetTestCase(i));
+		OnReportTestCase(file, *test.GetTestCase(i));
 	}
-	m_fp->Printf("</testsuites>\n");
-
-	FileClose();
+	file->Printf("</testsuites>\n");
 }
 
 IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnReportTestCase(IFile* file, const TestCase& test_case)
@@ -83,7 +87,7 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnReportTestCase(IFile* file
 
 	file->Printf("  <testsuite ");
 	OutputXmlAttribute(file, "name"
-		, EscapeXmlAttribute(test_case.name()).c_str() );
+		, EscapeXmlAttribute(test_case.testcase_name_with_default_package_name()).c_str());
 	file->Printf("tests=\"%d\" failures=\"%d\" disabled=\"%d\" "
 		, test_case.reportable_test_count()
 		, test_case.failed_test_count()
@@ -147,12 +151,12 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnReportTestInfo(IFile* file
 		, detail::FormatTimeInMillisecAsSecond(test_info.elapsed_time()).c_str()
 		);
 	OutputXmlAttribute(file, "classname"
-		, EscapeXmlAttribute(test_info.test_case_name()).c_str() );
+		, EscapeXmlAttribute(test_info.testcase_name_with_default_package_name()).c_str());
 
 	// propertys
 	OnReportTestProperty(file, *test_info.result(), TestInfo::ValidateTestPropertyName);
 
-	bool notrun = test_info.should_run() && !test_info.is_ran();
+	const bool notrun = test_info.should_run() && !test_info.is_ran();
 	if( test_info.HasFailure() || notrun )
 	{
 		file->Printf(">\n");
@@ -185,7 +189,7 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnReportTestInfo(IFile* file
 	else
 	{
 #if IUTEST_REPORT_SKIPPED
-		bool skipped = test_info.is_skipped() || !test_info.should_run();
+		const bool skipped = test_info.is_skipped() || !test_info.should_run();
 		if( skipped )
 		{
 			file->Printf(">\n");
@@ -230,7 +234,6 @@ IUTEST_IPP_INLINE void DefaultXmlGeneratorListener::OnReportTestSkipped(IFile* f
 			return;
 		}
 	}
-
 	if( test_info.is_disabled_test() )
 	{
 		OutputXmlAttribute(file, "message", "disabled test.");

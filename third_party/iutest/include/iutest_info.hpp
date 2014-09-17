@@ -50,7 +50,8 @@ public:
 		, m_matches_filter(true)
 	{
 		m_mediator.SetPointer(this);
-		if( detail::IsStringForwardMatching(name, "DISABLED_") )
+		if( detail::IsStringForwardMatching(name, "DISABLED_")
+			|| (strstr(name, "/DISABLED_") != NULL) )
 		{
 			m_disable = true;
 		}
@@ -81,6 +82,8 @@ public:
 	/** type param 文字列の取得 */
 	const	char*	type_param(void)		const { return m_testcase->type_param(); }
 
+	/** default package 名を含む TestCase 名の取得 */
+	::std::string testcase_name_with_default_package_name(void) const { return TestEnv::AddDefaultPackageName(test_case_name()); }
 public:
 	/**
 	 * @brief	致命的なエラーが出たかどうか
@@ -154,7 +157,7 @@ public:
 	static bool ValidateTestPropertyName(const ::std::string& name)
 	{
 		const char* ban[] = { "name", "status", "time", "classname", "type_param", "value_param" };
-#if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
 		return TestProperty::ValidateName(name, ban);
 #else
 		return TestProperty::ValidateName(name, ban, ban+IUTEST_PP_COUNTOF(ban));

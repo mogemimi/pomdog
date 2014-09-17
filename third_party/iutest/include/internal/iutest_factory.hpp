@@ -73,8 +73,8 @@ public:
 	iuParamTestFactoryBase(void) {}
 	iuParamTestFactoryBase(ParamType param) : m_param(param) {}
 public:
-	void				SetParam(ParamType param)	{ m_param = param; }
-	const ParamType&	GetParam(void)		const	{ return m_param; }
+	void				SetParam(ParamType param) { m_param = param; }
+	const ParamType&	GetParam(void)		const { return m_param; }
 protected:
 	ParamType m_param;
 };
@@ -88,8 +88,8 @@ protected:
 template<class Tester>
 class iuParamTestFactory : public iuParamTestFactoryBase<typename Tester::ParamType>
 {
-	typedef typename Tester::ParamType			ParamType;
-	typedef iuParamTestFactoryBase<ParamType>	_Mybase;
+	typedef typename Tester::ParamType ParamType;
+	typedef iuParamTestFactoryBase<ParamType> _Mybase;
 public:
 	iuParamTestFactory(void) {}
 	iuParamTestFactory(ParamType param) : _Mybase(param) {}

@@ -19,7 +19,7 @@
 
 //======================================================================
 // undef
-#ifdef GTEST_INCLUDE_GTEST_GTEST_H_
+#if defined(GTEST_INCLUDE_GTEST_GTEST_H_)
 
 #undef ASSERT_TRUE
 #undef ASSERT_FALSE
@@ -102,7 +102,7 @@
 
 //======================================================================
 // undef
-#ifdef INCG_IRIS_IUTEST_HPP_
+#if defined(INCG_IRIS_IUTEST_HPP_)
 
 #undef IUTEST_ASSERT
 #undef IUTEST_ASSERT_NOT

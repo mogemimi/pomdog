@@ -63,10 +63,10 @@ IUTEST_IPP_INLINE UInt32 ChopLowBits(UInt32* bits, int n)
 }
 
 /**
-* @brief	コードポイントからUTF8へ変換
-* @param [in]	code_point	= コードポイント
-* @param [out]	buf			= 出力バッファ(32バイト以上を要求)
-* @return	出力バッファ
+ * @brief	コードポイントからUTF8へ変換
+ * @param [in]	code_point	= コードポイント
+ * @param [out]	buf			= 出力バッファ(32バイト以上を要求)
+ * @return	出力バッファ
 */
 IUTEST_IPP_INLINE char* CodePointToUtf8(UInt32 code_point, char* buf)
 {
@@ -128,7 +128,7 @@ IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_BEGIN()
 	delete[] utf8;
 	return ret;
 #else
-	iuStringStream::type ss;
+	iu_stringstream ss;
 	for(int i=0; i < num; ++i )
 	{
 		UInt32 code_point;

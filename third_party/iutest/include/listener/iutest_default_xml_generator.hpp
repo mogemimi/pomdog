@@ -15,10 +15,6 @@
 #ifndef INCG_IRIS_IUTEST_DEFAULT_XML_GENERATOR_HPP_791DCB98_05CC_49BA_8518_0EC9CA2B5450_
 #define INCG_IRIS_IUTEST_DEFAULT_XML_GENERATOR_HPP_791DCB98_05CC_49BA_8518_0EC9CA2B5450_
 
-//======================================================================
-// include
-#include "../iutest_core.hpp"
-
 namespace iutest
 {
 
@@ -76,6 +72,9 @@ public:
 	virtual void OnTestProgramEnd(const UnitTest& test) IUTEST_CXX_OVERRIDE;
 
 private:
+	virtual void OnReportTest(IFile* file, const UnitTest& test);
+
+private:
 	static void OnReportTestCase(IFile* file, const TestCase& test_case);
 	static void OnReportTestInfo(IFile* file, const TestInfo& test_info);
 	static void OnReportTestProperty(IFile* file, const TestResult& test_result
@@ -86,14 +85,18 @@ private:
 	bool FileOpen(const char* path);
 	void FileClose(void);
 
-private:
+protected:
 	static void OutputXmlCDataSection(IFile* file, const char* data);
 	static void OutputXmlAttribute(IFile* file, const char* name, const char* value);
-
-private:
+	
+protected:
 	static ::std::string EscapeXmlAttribute(const char* str)
 	{
 		return EscapeXml(str, true);
+	}
+	static ::std::string EscapeXmlAttribute(const ::std::string str)
+	{
+		return EscapeXml(str.c_str(), true);
 	}
 	static ::std::string EscapeXmlText(const char* str)
 	{
@@ -130,13 +133,7 @@ public:
 		::std::string xmlpath = TestEnv::get_report_xml_filepath();
 		if(!xmlpath.empty())
 		{
-			DefaultXmlGeneratorListener* listener = reinterpret_cast<DefaultXmlGeneratorListener*>(TestEnv::event_listeners().default_xml_generator());
-			if(listener == NULL)
-			{
-				TestEnv::event_listeners().set_default_xml_generator(new DefaultXmlGeneratorListener(xmlpath));
-				return;
-			}
-			listener->SetFilePath(xmlpath);
+			TestEnv::event_listeners().set_default_xml_generator(new DefaultXmlGeneratorListener(xmlpath));
 		}
 	}
 };

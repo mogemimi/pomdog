@@ -24,7 +24,7 @@
 
 //======================================================================
 // undef
-#ifdef INCG_IRIS_IUTEST_HPP_
+#if defined(INCG_IRIS_IUTEST_HPP_)
 
 #undef IUTEST_PRED_FORMAT1_
 #undef IUTEST_PRED_FORMAT2_

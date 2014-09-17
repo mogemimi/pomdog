@@ -112,7 +112,7 @@ public:
 	}
 
 public:
-	virtual void	Begin(void) IUTEST_CXX_OVERRIDE{ m_cur = m_begin; }
+	virtual void	Begin(void) IUTEST_CXX_OVERRIDE { m_cur = m_begin; }
 	virtual T		GetCurrent(void) const IUTEST_CXX_OVERRIDE { return m_cur; }
 	virtual void	Next(void) IUTEST_CXX_OVERRIDE { m_cur += m_step; }
 	virtual bool	IsEnd(void) const IUTEST_CXX_OVERRIDE { return !(m_cur < m_end); }
@@ -141,7 +141,7 @@ public:
 
 /**
  * @brief	値配列パラメータ生成器
- * @tparam T	= パラメータ型
+ * @tparam T = パラメータ型
 */
 template<typename T>
 class iuValuesInParamsGenerator : public iuIParamGenerator<T>
@@ -157,7 +157,7 @@ public:
 	{
 		m_values.insert(m_values.end(), values.begin(), values.end());
 	}
-#if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
 	template<typename TT, size_t SIZE>
 	iuValuesInParamsGenerator(const TT (&values)[SIZE])
 	{
@@ -254,22 +254,14 @@ class iuValueArray
 	struct make_array
 	{
 		T val[tuples::tuple_size<_MyTuple>::value];
+
+		template<typename U>
+		void operator ()(int index, const U& value) { val[index] = value; }
+
 		make_array(const _MyTuple& t)
 		{
-			make<tuples::tuple_size<_MyTuple>::value, 0>(t);
+			tuples::tuple_foreach(t, *this);
 		};
-
-		template<int N, int I>
-		void make(const _MyTuple& t, typename detail::enable_if<(I < N), void>::type*& = detail::enabler::value )
-		{
-			val[I] = tuples::get<I>(t);
-			make<N, I+1>(t);
-		}
-		template<int N, int I>
-		void make(const _MyTuple& t, typename detail::disable_if<(I < N), void>::type*& = detail::enabler::value )
-		{
-			IUTEST_UNUSED_VAR(t);
-		}
 	};
 public:
 	iuValueArray(const Args&... args)
@@ -308,8 +300,7 @@ public:
 	template<typename T>
 	operator iuIParamGenerator<T>* (void) const
 	{
-		const T val[] = { static_cast<T>(v1), static_cast<T>(v2)
-		};
+		const T val[] = { static_cast<T>(v1), static_cast<T>(v2) };
 		return new iuValuesInParamsGenerator<T>(val);
 	}
 public:
@@ -321,6 +312,11 @@ public:
 private:
 	A1 v1;	A2 v2;
 };
+*/
+
+/**
+ * @private
+ * @{
 */
 #define IIUT_DECL_VALUEARRAY_CONSTRUCT_(i, p1, p2)		IUTEST_PP_CAT(p1, i)(IUTEST_PP_CAT(p2, i))
 #define IIUT_DECL_VALUEARRAY_STATICCAST_(i, p1, p2)		static_cast<p1>(IUTEST_PP_CAT(p2, i))
@@ -341,6 +337,9 @@ private:
 		}																			\
 	private: IUTEST_PP_REPEAT_BINARY(n, IIUT_DECL_VALUEARRAY_VARIABLE_, A, v)		\
 	}
+/**
+ * @}
+*/
 
 IIUT_DECL_VALUEARRAY_(1);
 IIUT_DECL_VALUEARRAY_(2);
@@ -410,16 +409,11 @@ class iuCartesianProductGenerator : public iuIParamGenerator< tuples::tuple<Args
 	typedef tuples::tuple< iuParamGenerator<Args>... > _MyTuple;
 	static const int count = tuples::tuple_size<_MyTuple>::value;
 
-	template<int index, int end, typename Tuple>
-	void begin_foreach(Tuple& t, typename detail::enable_if<index != end, void>::type*& = detail::enabler::value )
+	struct begin_func
 	{
-		tuples::get<index>(t).Begin();
-		begin_foreach<index+1, end>(t);
-	}
-	template<int index, int end, typename Tuple>
-	void begin_foreach(Tuple& , typename detail::enable_if<index == end, void>::type*& = detail::enabler::value )
-	{
-	}
+		template<typename T>
+		void operator ()(int, T& value) const { value.Begin(); }
+	};
 
 	template<int index, int end, typename Tuple>
 	bool is_end_foreach(Tuple& t, typename detail::enable_if<index != end, void>::type*& = detail::enabler::value ) const
@@ -440,7 +434,10 @@ class iuCartesianProductGenerator : public iuIParamGenerator< tuples::tuple<Args
 		if( is_end_foreach<index+1, end>(t) )
 		{
 			tuples::get<index>(t).Next();
-			if( !tuples::get<index>(t).IsEnd() ) begin_foreach<index+1, end>(t);
+			if( !tuples::get<index>(t).IsEnd() )
+			{
+				tuples::tuple_foreach<index + 1>(t, begin_func());
+			}
 		}
 	}
 	template<int index, int end, typename Tuple>
@@ -469,7 +466,7 @@ public:
 public:
 	virtual void Begin(void) IUTEST_CXX_OVERRIDE
 	{
-		begin_foreach<0, count>(v);
+		tuples::tuple_foreach(v, begin_func());
 	}
 	virtual void Next(void) IUTEST_CXX_OVERRIDE
 	{
@@ -494,19 +491,7 @@ template<typename... Generator>
 class iuCartesianProductHolder
 {
 	typedef iuCartesianProductHolder<Generator...> _Myt;
-
 	typedef tuples::tuple<const Generator...> _MyTuple;
-
-	template<int index, int end, typename ArgTuple, typename SrcTuple, typename DstTuple>
-	void set_foreach(SrcTuple& src, DstTuple& dst, typename detail::enable_if<index != end, void>::type*& = detail::enabler::value ) const
-	{
-		tuples::get<index>(dst) = static_cast< typename tuples::tuple_element<index, DstTuple>::type >(tuples::get<index>(src));
-		set_foreach<index+1, end, ArgTuple>(src, dst);
-	}
-	template<int index, int end, typename ArgTuple, typename SrcTuple, typename DstTuple>
-	void set_foreach(SrcTuple& , DstTuple& , typename detail::enable_if<index == end, void>::type*& = detail::enabler::value ) const
-	{
-	}
 
 public:
 	iuCartesianProductHolder(const Generator&... generators)
@@ -516,9 +501,8 @@ public:
 	template<typename... Args>
 	operator iuIParamGenerator< tuples::tuple<Args...> >* (void) const
 	{
-		typedef tuples::tuple<Args...> ArgTuple;
 		iuCartesianProductGenerator<Args...>* p = new iuCartesianProductGenerator<Args...>();
-		set_foreach<0, tuples::tuple_size<ArgTuple>::value, ArgTuple>(v, p->generators());
+		tuples::tuple_cast_copy(p->generators(), v);
 		return p;
 	}
 
@@ -618,6 +602,10 @@ public:
 };
 */
 
+/**
+ * @private
+ * @{
+*/
 #define IIUT_DECL_CARTESIAN_PRODUCT_GENERATOR_TYPEDEF_(i, p1, p2)		\
 	typedef iuParamGenerator<IUTEST_PP_CAT(p1, i)> IUTEST_PP_CAT(p2, i);
 
@@ -649,6 +637,10 @@ public:
 				, IIUT_DECL_CARTESIAN_PRODUCT_GENERATOR_TUPLEGET_, params) );			\
 		}																	\
 	}
+/**
+ * @}
+*/
+
 
 IIUT_DECL_CARTESIAN_PRODUCT_GENERATOR_(3);
 IIUT_DECL_CARTESIAN_PRODUCT_GENERATOR_(4);
@@ -699,6 +691,10 @@ private:
 };
 */
 
+/**
+ * @private
+ * @{
+*/
 #define IIUT_DECL_CARTESIAN_PRODUCT_HOLDER_CONSTRUCT_(i, p1, p2)	IUTEST_PP_CAT(p1, i)(IUTEST_PP_CAT(p2, i))
 #define IIUT_DECL_CARTESIAN_PRODUCT_HOLDER_STATICCAST_(i, p1, p2)	\
 	static_cast< iuIParamGenerator< IUTEST_PP_CAT(p1, i) >* >(IUTEST_PP_CAT(p2, i))
@@ -722,6 +718,10 @@ private:
 	private: void operator = (const _Myt&) {}					\
 		IUTEST_PP_REPEAT_BINARY(n, IIUT_DECL_CARTESIAN_PRODUCT_HOLDER_VARIABLE_, const Generator, m_g)		\
 	}
+
+/**
+ * @}
+*/
 
 IIUT_DECL_CARTESIAN_PRODUCT_HOLDER_(2);
 IIUT_DECL_CARTESIAN_PRODUCT_HOLDER_(3);
@@ -755,6 +755,8 @@ protected:
 
 private:
 	struct PairInfo {
+		PairInfo(int r1, int r2, int i1, int i2)
+			: raw1(r1), raw2(r2), idx1(i1), idx2(i2) {}
 		int raw1, raw2;	// 列のペア
 		int idx1, idx2;	// インデックスのペア
 	};
@@ -776,7 +778,11 @@ protected:
 			T1 t1 = g1.GetCurrent();
 			for( g2.Begin(); !g2.IsEnd(); g2.Next() )
 			{
+#if IUTEST_HAS_STD_EMPLACE
+				list.emplace_back(t1, g2.GetCurrent());
+#else
 				list.push_back(::std::pair<T1, T2>(t1, g2.GetCurrent()));
+#endif
 			}
 		}
 	}
@@ -799,8 +805,12 @@ protected:
 				{
 					for( int ri=0; ri < r; ++ri )
 					{
-						PairInfo info = { i, j, li, ri };
+#if IUTEST_HAS_STD_EMPLACE
+						pair_list.emplace_back(i, j, li, ri);
+#else
+						PairInfo info( i, j, li, ri );
 						pair_list.push_back(info);
+#endif
 					}
 				}
 			}
@@ -917,7 +927,7 @@ private:
 					{
 						continue;
 					}
-					PairInfo tmp = { i, free_raw, indexes.index[i], free_idx };
+					PairInfo tmp(i, free_raw, indexes.index[i], free_idx);
 					iterator it2 = Find(list, tmp, list.begin());
 					while(it2 != end)
 					{
@@ -975,21 +985,15 @@ public:
 	static iuIParamGenerator< ParamType >* Create(GeneratorTuple& generators)
 	{
 		ParamIndexesList list;
-		ParamsTuple params_list;
+		ParamVecotrs param_vectors(generators);
 
-		MakeParamVecotrs<0>(params_list, generators);
-
-		int count_list[RAW_COUNT] = { 0 };
-		GetCountList<0>(params_list, count_list);
-
-		MakeIndexList(list, count_list);
+		MakeIndexList(list, param_vectors.count_list);
 
 		::std::vector<ParamType> params;
-
 		for( typename ParamIndexesList::const_iterator it=list.begin(), end=list.end(); it != end; ++it )
 		{
 			const _MyParamIndexes& indexes = *it;
-			params.push_back( MakeParam<0, Args...>(params_list, indexes) );
+			params.push_back(MakeParam<0, Args...>(param_vectors.params_list, indexes));
 		}
 
 		return new iuValuesInParamsGenerator< ParamType >(params);
@@ -1007,29 +1011,30 @@ private:
 		return tuples::tuple<T1>( GetParam( tuples::get<N>(list), indexes, N) );
 	}
 
-	template<int N>
-	static void MakeParamVecotrs(ParamsTuple& list, GeneratorTuple& generators, typename detail::disable_if<N == RAW_COUNT-1, void>::type*& = detail::enabler::value)
+	struct ParamVecotrs
 	{
-		MakeParamVector(tuples::get<N>(list), tuples::get<N>(generators));
-		MakeParamVecotrs<N+1>(list, generators);
-	}
-	template<int N>
-	static void MakeParamVecotrs(ParamsTuple& list, GeneratorTuple& generators, typename detail::enable_if<N == RAW_COUNT-1, void>::type*& = detail::enabler::value)
-	{
-		MakeParamVector(tuples::get<N>(list), tuples::get<N>(generators));
-	}
+		ParamsTuple params_list;
+		int count_list[RAW_COUNT];
 
-	template<int N>
-	static void GetCountList(ParamsTuple& list, int* count_list, typename detail::disable_if<N == RAW_COUNT-1, void>::type*& = detail::enabler::value)
-	{
-		count_list[N] = static_cast<int>(tuples::get<N>(list).size());
-		GetCountList<N+1>(list, count_list);
-	}
-	template<int N>
-	static void GetCountList(ParamsTuple& list, int* count_list, typename detail::enable_if<N == RAW_COUNT-1, void>::type*& = detail::enabler::value)
-	{
-		count_list[N] = static_cast<int>(tuples::get<N>(list).size());
-	}
+		template<int N>
+		void MakeParamVecotrs(GeneratorTuple& generators, typename detail::disable_if<N == RAW_COUNT-1, void>::type*& = detail::enabler::value)
+		{
+			MakeParamVector(tuples::get<N>(params_list), tuples::get<N>(generators));
+			count_list[N] = static_cast<int>(tuples::get<N>(params_list).size());
+			MakeParamVecotrs<N+1>(generators);
+		}
+		template<int N>
+		void MakeParamVecotrs(GeneratorTuple& generators, typename detail::enable_if<N == RAW_COUNT-1, void>::type*& = detail::enabler::value)
+		{
+			MakeParamVector(tuples::get<N>(params_list), tuples::get<N>(generators));
+			count_list[N] = static_cast<int>(tuples::get<N>(params_list).size());
+		}
+
+		ParamVecotrs(GeneratorTuple& generators)
+		{
+			MakeParamVecotrs<0>(generators);
+		}
+	};
 };
 
 template<typename... Generator>
@@ -1037,17 +1042,6 @@ class iuPairwiseHolder
 {
 	typedef iuPairwiseHolder<Generator...> _Myt;
 	typedef tuples::tuple<const Generator...> _MyTuple;
-
-	template<int index, int end, typename ArgTuple, typename SrcTuple, typename DstTuple>
-	void set_foreach(SrcTuple& src, DstTuple& dst, typename detail::enable_if<index != end, void>::type*& = detail::enabler::value ) const
-	{
-		tuples::get<index>(dst) = static_cast< typename tuples::tuple_element<index, DstTuple>::type >(tuples::get<index>(src));
-		set_foreach<index+1, end, ArgTuple>(src, dst);
-	}
-	template<int index, int end, typename ArgTuple, typename SrcTuple, typename DstTuple>
-	void set_foreach(SrcTuple& , DstTuple& , typename detail::enable_if<index == end, void>::type*& = detail::enabler::value ) const
-	{
-	}
 
 public:
 	iuPairwiseHolder(const Generator&... generators)
@@ -1057,10 +1051,8 @@ public:
 	template<typename... Args>
 	operator iuIParamGenerator< tuples::tuple<Args...> >* (void) const
 	{
-		typedef tuples::tuple<Args...> ArgTuple;
 		tuples::tuple< iuParamGenerator<Args>... > generators;
-		set_foreach<0, tuples::tuple_size<ArgTuple>::value, ArgTuple>(v, generators);
-
+		tuples::tuple_cast_copy(generators, v);
 		return iuPairwiseGenerator<Args...>::Create(generators);
 	}
 
@@ -1181,6 +1173,10 @@ public:
 };
 */
 
+/**
+ * @private
+ * @{
+*/
 #define IIUT_DECL_PAIRWISE_GENERATOR_TEMPLATE_T_(i, p1, p2)			\
 	p1<IUTEST_PP_CAT(T, i)> IUTEST_PP_CAT(p2, i);
 #define IIUT_DECL_PAIRWISE_GENERATOR_MAKEPARAM_VECTOR_(i, p1, p2)	\
@@ -1212,6 +1208,10 @@ public:
 			return new iuValuesInParamsGenerator< ParamType >(params);		\
 		}																	\
 	}
+
+/**
+ * @}
+*/
 
 IIUT_DECL_PAIRWISE_GENERATOR_(3);
 IIUT_DECL_PAIRWISE_GENERATOR_(4);

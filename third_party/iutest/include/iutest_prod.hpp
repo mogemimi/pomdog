@@ -98,8 +98,9 @@ namespace iutest {
 // struct
 namespace detail
 {
+
 /**
-* @brief	private メンバー保持構造体
+ * @brief	private メンバー保持構造体
 */
 template<typename Tag>
 struct peep_tag

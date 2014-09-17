@@ -97,7 +97,7 @@
 
 //======================================================================
 // undef
-#ifdef INCG_IRIS_IUTEST_HPP_
+#if defined(INCG_IRIS_IUTEST_HPP_)
 
 #ifdef IUTEST_OS_CYGWIN
 #  undef IUTEST_OS_CYGWIN
@@ -106,6 +106,9 @@
 #  undef IUTEST_OS_WINDOWS
 #  ifdef IUTEST_OS_WINDOWS_PHONE
 #	 undef IUTEST_OS_WINDOWS_PHONE
+#  endif
+#  ifdef IUTEST_OS_WINDOWS_RT
+#	 undef IUTEST_OS_WINDOWS_RT
 #  endif
 #  ifdef IUTEST_OS_WINDOWS_MOBILE
 #	 undef IUTEST_OS_WINDOWS_MOBILE
@@ -146,6 +149,12 @@
 #ifdef GTEST_OS_WINDOWS
 #  include <windows.h>
 #  define IUTEST_OS_WINDOWS				GTEST_OS_WINDOWS
+#  ifdef GTEST_OS_WINDOWS_PHONE
+#	 define IUTEST_OS_WINDOWS_PHONE		GTEST_OS_WINDOWS_PHONE
+#  endif
+#  ifdef GTEST_OS_WINDOWS_RT
+#	 define IUTEST_OS_WINDOWS_RT		GTEST_OS_WINDOWS_RT
+#  endif
 #  ifdef GTEST_OS_WINDOWS_MOBILE
 #	 define IUTEST_OS_WINDOWS_MOBILE	GTEST_OS_WINDOWS_MOBILE
 #  endif

@@ -83,9 +83,21 @@
 #  elif defined(__ARMCC_VERSION)
 #    define IUTEST_BREAK()	do { __breakpoint(0xF02C); } while(::iutest::detail::AlwaysFalse())
 #  else
-#    define IUTEST_BREAK()	*static_cast<volatile int*>(NULL) = 1;
+#    define IUTEST_BREAK()	*static_cast<volatile int*>(NULL) = 1
 //#    define IUTEST_BREAK()	(void)0
 #  endif
+#endif
+
+
+#if IUTEST_HAS_LIB && IUTEST_HAS_EXTERN_TEMPLATE
+
+IUTEST_PRAGMA_EXTERN_TEMPLATE_WARN_DISABLE_BEGIN()
+
+extern template class ::std::vector< ::std::basic_string<char> >;
+extern template class ::std::vector< ::std::basic_string<wchar_t> >;
+
+IUTEST_PRAGMA_EXTERN_TEMPLATE_WARN_DISABLE_END()
+
 #endif
 
 namespace iutest
@@ -117,7 +129,7 @@ inline bool AlwaysFalse(void) { return !AlwaysTrue(); }
 inline int  AlwaysZero(void) { return 0; }
 
 /**
-* @brief	真偽値を返す(警告対策用)
+ * @brief	真偽値を返す(警告対策用)
 */
 inline bool IsTrue(bool b) { return b; }
 
@@ -172,15 +184,18 @@ class NoneT1 {};
  * @brief	MSVC 用ダミー型
 */
 template<typename T>
-struct type {};
+struct explicit_type_t {};
 
 #if defined(IUTEST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-#  define IUTEST_EXPLICIT_TEMPLATE_TYPE_(t)			::iutest::detail::type<t>*
-#  define IUTEST_APPEND_EXPLICIT_TEMPLATE_TYPE_(t)	, ::iutest::detail::type<t>*
+#  define IUTEST_EXPLICIT_TEMPLATE_TYPE_(t)			::iutest::detail::explicit_type_t<t>*
+#  define IUTEST_APPEND_EXPLICIT_TEMPLATE_TYPE_(t)	, ::iutest::detail::explicit_type_t<t>*
 #else
 #  define IUTEST_EXPLICIT_TEMPLATE_TYPE_(t)	
 #  define IUTEST_APPEND_EXPLICIT_TEMPLATE_TYPE_(t)	
 #endif
+
+template<typename T>
+inline explicit_type_t<T>* explicit_type(void) { return NULL; }
 
 /**
  * @brief	型に依存したユニークなカウンタ
@@ -218,8 +233,8 @@ public:
 };
 
 /**
-* @internal
-* @brief	scoped_ptr
+ * @internal
+ * @brief	scoped_ptr
 */
 template<typename T>
 class scoped_ptr

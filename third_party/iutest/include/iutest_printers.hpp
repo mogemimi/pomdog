@@ -231,7 +231,7 @@ inline void PrintTo(const T& value, iu_ostream* os)	{
 #if !defined(IUTEST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
 		IsContainerHelper::IsContainer<T>(0)
 #else
-		IsContainerHelper::IsContainer(0, &detail::type<T>())
+		IsContainerHelper::IsContainer(0, detail::explicit_type<T>())
 #endif
 		, iutest_type_traits::is_pointer<T>(), value, os);
 }
@@ -241,7 +241,7 @@ inline void PrintTo(char* c, iu_ostream* os)		{ *os << c; }
 inline void PrintTo(const ::std::string& str, iu_ostream* os)	{ *os << str.c_str(); }
 #if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
 template<typename T>
-inline void PrintTo(const floating_point<T>& f, iu_ostream* os)	{ *os << f.raw() << "(0x" << ToHexString(f.bit()) << ")"; }
+inline void PrintTo(const floating_point<T>& f, iu_ostream* os)	{ *os << f.raw() << "(0x" << ToHexString(f.bits()) << ")"; }
 template<typename T1, typename T2>
 inline void PrintTo(const ::std::pair<T1, T2>& value, iu_ostream* os)
 {
@@ -259,6 +259,10 @@ inline void PrintTo(const char value, iu_ostream* os)
 	{
 		*os << "\\0";
 	}
+	else if( value < 0x20 )
+	{
+		*os << static_cast<int>(value);
+	}
 	else
 	{
 		*os << "\'" << value << "\'";
@@ -269,6 +273,10 @@ inline void PrintTo(const wchar_t value, iu_ostream* os)
 	if( value == 0 )
 	{
 		*os << "\\0";
+	}
+	else if( value < 0x20 )
+	{
+		*os << static_cast<int>(value);
 	}
 	else
 	{
@@ -478,7 +486,7 @@ public:
 	}
 };
 
-#if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
 
 /** @private */
 template<typename T, size_t SIZE>
@@ -499,7 +507,7 @@ public:
 template<typename T>
 inline void UniversalPrint(const T& value, iu_ostream* os)
 {
-#if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
 	iuUniversalPrinter<T>::Print(value, os);
 #else
 	UniversalPrintTo(value, os);
@@ -517,7 +525,7 @@ inline void UniversalPrint(const T& value, iu_ostream* os)
 template<typename T>
 inline ::std::string PrintToString(const T& v)
 {
-	detail::iuStringStream::type strm;
+	iu_global_format_stringstream strm;
 	detail::UniversalTersePrint(v, &strm);
 	return strm.str();
 }

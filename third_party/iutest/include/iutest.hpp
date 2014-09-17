@@ -20,6 +20,7 @@
 //======================================================================
 // include
 #include "iutest_ver.hpp"
+#include "iutest_core.hpp"
 #include "iutest_param_tests.hpp"
 #include "iutest_typed_tests.hpp"
 #include "iutest_prod.hpp"
@@ -28,7 +29,7 @@
 #include "iutest_static_assertion.hpp"
 #include "iutest_ignore.hpp"
 #include "listener/iutest_default_printer.hpp"
-#include "listener/iutest_default_xml_generator.hpp"
+#include "listener/iutest_junit_xml_generator.hpp"
 #include "listener/iutest_streaming_listener.hpp"
 
 //======================================================================
@@ -95,14 +96,14 @@
 
 /**
  * @ingroup	TESTDEF
- * @brief	テストの別名（日本語可能）
+ * @brief	テストの別名
  * @param	testname_		= テスト名
 */
 #define IUTEST_ALIAS_TESTNAME(testname_)					IUTEST_ALIAS_TESTNAME_(testname_)
 
 /**
  * @ingroup	TESTDEF
- * @brief	テストフィクスチャ用テストの別名（日本語可能）
+ * @brief	テストフィクスチャ用テストの別名
  * @param	testfixture_	= テストフィクスチャ名
  * @param	testname_		= テスト名
 */
@@ -110,7 +111,7 @@
 
 #if IUTEST_HAS_TESTNAME_ALIAS_JP
 
- /**
+/**
  * @ingroup	TESTDEF
  * @brief	日本語テスト名
  * @param	testname_		= テスト名
@@ -238,6 +239,8 @@
 #ifndef IUTEST_ASSERT_NOT
 #  define	IUTEST_ASSERT_NOT(expression)			IUTEST_TEST_EXPRESSION_(expression, false, IUTEST_ASSERT_FAILURE)
 #endif
+
+#if IUTEST_HAS_MATCHERS
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	matcher テスト
@@ -247,6 +250,9 @@
 #ifndef IUTEST_ASSERT_THAT
 #  define IUTEST_ASSERT_THAT(actual, matcher)		IUTEST_TEST_THAT(actual, matcher, IUTEST_ASSERT_FAILURE)
 #endif
+
+#endif
+
 /**
  * @ingroup	IUTEST_ASSERT_
  * @brief	== テスト
@@ -560,7 +566,7 @@
 */
 
 /**
-* @}
+ * @}
 */
 
 /**
@@ -579,6 +585,8 @@
 #ifndef IUTEST_EXPECT_NOT
 #  define	IUTEST_EXPECT_NOT(expression)			IUTEST_TEST_EXPRESSION_(expression, false, IUTEST_EXPECT_FAILURE)
 #endif
+
+#if IUTEST_HAS_MATCHERS
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	matcher テスト
@@ -588,6 +596,9 @@
 #ifndef IUTEST_EXPECT_THAT
 #  define IUTEST_EXPECT_THAT(actual, matcher)		IUTEST_TEST_THAT(actual, matcher, IUTEST_EXPECT_FAILURE)
 #endif
+
+#endif
+
 /**
  * @ingroup	IUTEST_EXPECT_
  * @brief	== テスト
@@ -930,6 +941,8 @@
 #ifndef IUTEST_INFORM_NOT
 #  define	IUTEST_INFORM_NOT(expression)			IUTEST_TEST_EXPRESSION_(expression, false, IUTEST_INFORM_FAILURE)
 #endif
+
+#if IUTEST_HAS_MATCHERS
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	matcher テスト
@@ -939,6 +952,9 @@
 #ifndef IUTEST_INFORM_THAT
 #  define IUTEST_INFORM_THAT(actual, matcher)		IUTEST_TEST_THAT(actual, matcher, IUTEST_INFORM_FAILURE)
 #endif
+
+#endif
+
 /**
  * @ingroup	IUTEST_INFORM_
  * @brief	== テスト
@@ -1262,6 +1278,9 @@
 #ifndef IUTEST_ASSUME_NOT
 #  define	IUTEST_ASSUME_NOT(expression)			IUTEST_TEST_EXPRESSION_(expression, false, IUTEST_ASSUME_FAILURE)
 #endif
+
+#if IUTEST_HAS_MATCHERS
+
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	matcher テスト
@@ -1271,6 +1290,9 @@
 #ifndef IUTEST_ASSUME_THAT
 #  define IUTEST_ASSUME_THAT(actual, matcher)		IUTEST_TEST_THAT(actual, matcher, IUTEST_ASSUME_FAILURE)
 #endif
+
+#endif
+
 /**
  * @ingroup	IUTEST_ASSUME_
  * @brief	== テスト
@@ -1592,16 +1614,8 @@ public:
 	/** @private */
 	~UnitTestSource(void)
 	{
-		{
-			TestEventListener* listener = TestEnv::event_listeners().default_result_printer();
-			TestEnv::event_listeners().set_default_result_printer(NULL);
-			delete listener;
-		}
-		{
-			TestEventListener* listener = TestEnv::event_listeners().default_xml_generator();
-			TestEnv::event_listeners().set_default_xml_generator(NULL);
-			delete listener;
-		}
+		TestEnv::event_listeners().set_default_result_printer(NULL);
+		TestEnv::event_listeners().set_default_xml_generator(NULL);
 	}
 
 public:
@@ -1619,6 +1633,7 @@ public:
 	int	Run(void)
 	{
 		DefaultXmlGeneratorListener::SetUp();
+		JunitXmlGeneratorListener::SetUp();
 
 #if IUTEST_HAS_STREAM_RESULT
 		StreamResultListener::SetUp();
@@ -1639,6 +1654,10 @@ inline void IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(int* pargc, char** argv)		
 inline void IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(int* pargc, wchar_t** argv)	{ TestEnv::ParseCommandLine(pargc, argv); UnitTestSource::GetInstance().Initialize(); }		//!< @overload
 inline void IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(int* pargc, const char** argv)	{ TestEnv::ParseCommandLine(pargc, argv); UnitTestSource::GetInstance().Initialize(); }	//!< @overload
 inline void IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(int* pargc, const wchar_t** argv)	{ TestEnv::ParseCommandLine(pargc, argv); UnitTestSource::GetInstance().Initialize(); }	//!< @overload
+
+#if IUTEST_HAS_NULLPTR
+inline void IUTEST_ATTRIBUTE_UNUSED_ InitIrisUnitTest(int* pargc, ::std::nullptr_t)	{ TestEnv::ParseCommandLine(pargc, static_cast<char**>(NULL)); UnitTestSource::GetInstance().Initialize(); }	//!< @overload
+#endif
 
 /** @overload */
 template<typename CharType>
@@ -1661,13 +1680,13 @@ inline Environment* IUTEST_ATTRIBUTE_UNUSED_ AddGlobalTestEnvironment(Environmen
 
 }
 
-#ifdef IUTEST_USE_GTEST
+#if defined(IUTEST_USE_GTEST)
 #  include "gtest/iutest_switch.hpp"
 #endif
 
 #include "iutest_util.hpp"
 
-#ifdef IUTEST_USE_MAIN
+#if defined(IUTEST_USE_MAIN)
 #  include "internal/iutest_default_main.hpp"
 #endif
 

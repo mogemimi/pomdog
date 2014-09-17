@@ -37,6 +37,31 @@ IUTEST_IPP_INLINE ::std::string TestEnv::get_report_xml_filepath(void)
 	return "";
 }
 
+IUTEST_IPP_INLINE::std::string TestEnv::get_report_junit_xml_filepath(void)
+{
+	const ::std::string& option = get_vars().m_output_option;
+	if( option.find("junit") != ::std::string::npos )
+	{
+		const ::std::string::size_type pos = option.find("junit:");
+		if( pos != ::std::string::npos )
+		{
+			return option.substr(pos + 6);
+		}
+		return detail::kStrings::DefaultXmlReportFileName;
+	}
+	return "";
+}
+
+IUTEST_IPP_INLINE::std::string TestEnv::AddDefaultPackageName(const char* testcase_name)
+{
+	::std::string str = TestEnv::get_default_package_name();
+	if( str.empty() ) return testcase_name;
+	if( strchr(testcase_name, '.') != NULL ) return testcase_name;
+
+	str += ".";
+	str += testcase_name;
+	return str;
+}
 
 IUTEST_IPP_INLINE bool TestEnv::ParseCommandLineElemA(const char* str)
 {
@@ -165,6 +190,10 @@ IUTEST_IPP_INLINE bool TestEnv::ParseCommandLineElemA(const char* str)
 				{
 					find = ParseFileLocationOption(ParseOptionSettingStr(str));
 				}
+				else if( detail::IsStringForwardMatching(str, "default_package_name") )
+				{
+					set_default_package_name(ParseOptionSettingStr(str));
+				}
 				else
 				{
 					find = false;
@@ -186,6 +215,14 @@ IUTEST_IPP_INLINE bool TestEnv::ParseCommandLineElemA(const char* str)
 			else if( detail::IsStringEqual(str, "feature") )
 			{
 				TestFlag::SetFlag(TestFlag::SHOW_FEATURE);
+			}
+			else if( detail::IsStringEqual(str, "spec") )
+			{
+				TestFlag::SetFlag(TestFlag::SHOW_SPEC);
+			}
+			else if( detail::IsStringEqual(str, "verbose") )
+			{
+				TestFlag::SetFlag(TestFlag::VERBOSE);
 			}
 			else
 			{
@@ -287,6 +324,10 @@ IUTEST_IPP_INLINE void TestEnv::LoadEnviromentVariable(void)
 		{
 			set_test_filter(str);
 		}
+		if( detail::GetEnvironmentVariable("IUTEST_DEFAULT_PACKAGE_NAME", str, sizeof(str)) )
+		{
+			set_default_package_name(str);
+		}
 #if IUTEST_HAS_STREAM_RESULT
 		if( detail::GetEnvironmentVariable("IUTEST_STREAM_RESULT_TO", str, sizeof(str))
 		||  detail::GetEnvironmentVariable("GTEST_STREAM_RESULT_TO", str, sizeof(str)) )
@@ -368,7 +409,7 @@ IUTEST_IPP_INLINE bool TestEnv::ParseFileLocationOption(const char* option)
 
 	if( detail::IsStringCaseEqual(option, "auto") )
 	{
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 		TestFlag::SetFlag(TestFlag::FILELOCATION_STYLE_MSVC);
 #else
 		TestFlag::SetFlag(0, ~TestFlag::FILELOCATION_STYLE_MSVC);

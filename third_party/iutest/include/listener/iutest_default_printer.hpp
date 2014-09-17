@@ -15,10 +15,6 @@
 #ifndef INCG_IRIS_IUTEST_DEFAULT_PRINTER_HPP_77055C2B_AAE1_4944_A61C_26C58B04B37B_
 #define INCG_IRIS_IUTEST_DEFAULT_PRINTER_HPP_77055C2B_AAE1_4944_A61C_26C58B04B37B_
 
-//======================================================================
-// include
-#include "../iutest_core.hpp"
-
 namespace iutest
 {
 

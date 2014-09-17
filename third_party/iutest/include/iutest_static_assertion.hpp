@@ -78,7 +78,7 @@ static bool	StaticAssertTypeEq(void)
 #endif
 
 /**
-* @brief	static assert if not exists
+ * @brief	static assert if not exists
 */
 #ifndef IUTEST_STATIC_ASSERT_IF_NOT_EXISTS
 #  if IUTEST_HAS_IF_EXISTS

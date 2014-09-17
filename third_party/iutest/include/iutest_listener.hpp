@@ -30,11 +30,27 @@ class TestInfo;
 class TestCase;
 class TestPartResult;
 class TestProperty;
+class TestEventListener;
 
 namespace detail
 {
 	class DefaultGlobalTestPartResultReporter;
 }
+
+}
+
+#if IUTEST_HAS_LIB && IUTEST_HAS_EXTERN_TEMPLATE
+
+IUTEST_PRAGMA_EXTERN_TEMPLATE_WARN_DISABLE_BEGIN()
+
+extern template class ::std::vector< ::iutest::TestEventListener* >;
+
+IUTEST_PRAGMA_EXTERN_TEMPLATE_WARN_DISABLE_END()
+
+#endif
+
+namespace iutest
+{
 
 /**
  * @brief	イベントリスナー
@@ -196,6 +212,7 @@ private:
 
 	friend class detail::DefaultGlobalTestPartResultReporter;
 	friend class DefaultXmlGeneratorListener;
+	friend class JunitXmlGeneratorListener;
 	friend class DefalutResultPrintListener;
 
 	TestEventRepeater	m_repeater;

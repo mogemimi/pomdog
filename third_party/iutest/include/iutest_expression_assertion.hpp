@@ -16,10 +16,6 @@
 #define INCG_IRIS_IUTEST_EXPRESSION_ASSERTION_HPP_B9783316_33CF_4CA7_81D0_0BF44B048A4A_
 
 //======================================================================
-// include
-#include "iutest_assertion.hpp"
-
-//======================================================================
 // define
 /**
  * @brief	式展開用 operand マクロ

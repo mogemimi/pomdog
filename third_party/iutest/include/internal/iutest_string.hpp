@@ -164,59 +164,53 @@ inline ::std::string ShowStringQuoted(const ::std::string& str) { ::std::string 
 template<class _Elem, class _Traits>class iu_basic_stream;
 #endif
 
-//======================================================================
-// class
-class iuStringStream
-{
-public:
 #if   IUTEST_HAS_STRINGSTREAM
-	typedef ::std::stringstream stlstream;
+
+typedef ::std::stringstream stlstream;
+
 #elif IUTEST_HAS_STRSTREAM
+
 IUTEST_PRAGMA_MSC_WARN_PUSH()
 IUTEST_PRAGMA_MSC_WARN_DISABLE(4250)
-	class stlstream : public ::std::strstream
+class stlstream : public ::std::strstream
+{
+	char buf[512];
+public:
+	stlstream(void)
+		: ::std::strstream(buf, sizeof(buf)-2, ::std::ios::out)
+	{}
+	stlstream(const char* str)
+		: ::std::strstream(buf, sizeof(buf)-2, ::std::ios::out)
 	{
-		char buf[512];
-	public:
-		stlstream(void)
-			: ::std::strstream(buf, sizeof(buf)-2, ::std::ios::out)
-		{}
-		stlstream(const char* str)
-			: ::std::strstream(buf, sizeof(buf)-2, ::std::ios::out)
-		{
-			*this << str;
-		}
-		stlstream(const ::std::string& str)
-			: ::std::strstream(buf, sizeof(buf)-2, ::std::ios::out)
-		{
-			*this << str;
-		}
-	public:
-		::std::string str(void) const
-		{
-			return const_cast<stlstream*>(this)->str();
-		}
-		virtual ::std::string str(void)
-		{
-			*this << ::std::ends;
-			::std::string str = ::std::strstream::str();
-			return str;
-		}
-	};
+		*this << str;
+	}
+	stlstream(const ::std::string& str)
+		: ::std::strstream(buf, sizeof(buf)-2, ::std::ios::out)
+	{
+		*this << str;
+	}
+public:
+	::std::string str(void) const
+	{
+		return const_cast<stlstream*>(this)->str();
+	}
+	virtual ::std::string str(void)
+	{
+		*this << ::std::ends;
+		::std::string str = ::std::strstream::str();
+		return str;
+	}
+};
+
 IUTEST_PRAGMA_MSC_WARN_POP()
+
 #else
 	typedef iu_basic_stream<char, ::std::char_traits<char> >		iu_stream;
 	typedef iu_basic_stream<wchar_t, ::std::char_traits<wchar_t> >	iu_wstream;
 #endif
 
-public:
-
-#if IUTEST_HAS_STRINGSTREAM || IUTEST_HAS_STRSTREAM
-	typedef stlstream type;
-#else
-	typedef iu_stream type;
-#endif
-};
+//======================================================================
+// class
 
 #if !IUTEST_HAS_STRINGSTREAM && !IUTEST_HAS_STRSTREAM
 
@@ -425,6 +419,7 @@ public:
 	}
 public:
 	const string& str(void) const { return s; }
+	void copyfmt(const _Myt&) {}
 };
 
 #undef IUTEST_PP_XCS
@@ -436,11 +431,16 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 }	// end of namespace detail
 
 #if IUTEST_HAS_STRINGSTREAM || IUTEST_HAS_STRSTREAM
+
 typedef ::std::ostream iu_ostream;
 typedef ::std::ostream& (*iu_basic_iomanip)(::std::ostream&);
+typedef detail::stlstream iu_stringstream;
 
 #else
-typedef detail::iuStringStream::type iu_ostream;
+
+typedef detail::iu_stream iu_ostream;
+typedef detail::iu_stream iu_stringstream;
+
 #endif
 
 #if !defined(IUTEST_HAS_BIGGESTINT_OSTREAM)

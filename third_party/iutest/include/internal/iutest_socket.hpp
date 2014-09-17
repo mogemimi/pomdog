@@ -44,7 +44,7 @@ namespace detail
 
 //======================================================================
 // class
-/*
+/**
  * @brief	ソケットベースクラス
 */
 class BasicSocket
@@ -151,7 +151,7 @@ protected:
 	IUTEST_PP_DISALLOW_COPY_AND_ASSIGN(BasicSocket);
 };
 
-/*
+/**
  * @brief	ソケット書き込みクラス
 */
 class SocketWriter : virtual public BasicSocket

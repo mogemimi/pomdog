@@ -47,6 +47,9 @@
 #    if defined(WINAPI_FAMILY_PHONE_APP) && (WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
 #      define IUTEST_OS_WINDOWS_PHONE	1
 #      define IUTEST_PLATFORM			"Windows Phone"
+#    elif defined(WINAPI_FAMILY_APP) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
+#      define IUTEST_OS_WINDOWS_RT		1
+#      define IUTEST_PLATFORM			"Windows RT"
 #    else
 #      define IUTEST_OS_WINDOWS_DESKTOP	1
 #    endif
@@ -87,6 +90,9 @@
 #elif defined(__AVR32__) || defined(__avr32__)
 #  define IUTEST_OS_AVR32				1
 #  define IUTEST_PLATFORM				"AVR32"
+#elif defined(__arm__)
+#  define IUTEST_OS_ARM					1
+#  define IUTEST_PLATFORM				"ARM"
 #endif
 
 #if defined(IUTEST_OS_LINUX_ANDROID)
@@ -120,6 +126,10 @@
 #    if _MSC_VER > 1500
 #      define IUTEST_HAS_NULLPTR	1
 #    endif
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER > 1200
+#      define IUTEST_HAS_NULLPTR	1
+#    endif
 #  endif
 #endif
 
@@ -139,6 +149,10 @@
 #    endif
 #  elif defined(_MSC_VER)
 #    if _MSC_VER >= 1600
+#      define IUTEST_HAS_DECLTYPE	1
+#    endif
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER >= 1200
 #      define IUTEST_HAS_DECLTYPE	1
 #    endif
 #  endif
@@ -162,6 +176,10 @@
 #    if _MSC_VER >= 1600
 #      define IUTEST_HAS_STATIC_ASSERT	1
 #    endif
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER > 1100
+#      define IUTEST_HAS_STATIC_ASSERT	1
+#    endif
 #  endif
 #endif
 
@@ -173,35 +191,32 @@
 //! has constexpr
 #if !defined(IUTEST_HAS_CONSTEXPR)
 #  if   defined(__clang__)
-#    if !__has_feature(cxx_constexpr)
-#      define IUTEST_HAS_CONSTEXPR	0
+#    if __has_feature(cxx_constexpr)
+#      define IUTEST_HAS_CONSTEXPR	1
 #    endif
 #  elif defined(__GNUC__)
-#    if (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 6)) || !defined(__GXX_EXPERIMENTAL_CXX0X__)
-#      define IUTEST_HAS_CONSTEXPR	0
+#    if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 5)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
+#      define IUTEST_HAS_CONSTEXPR	1
 #    endif
 #  elif defined(_MSC_VER)
-#    if _MSC_FULL_VER == 180021114
+#    if _MSC_VER >= 1900 || _MSC_FULL_VER == 180021114
 #      define IUTEST_HAS_CONSTEXPR	1
-#    else
-#      define IUTEST_HAS_CONSTEXPR	0
 #    endif
-#  elif defined(__MWERKS__)
-#    define IUTEST_HAS_CONSTEXPR	0
-#  else
-#    define IUTEST_HAS_CONSTEXPR	0
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER >= 1400
+#      define IUTEST_HAS_CONSTEXPR	1
+#    endif
 #  endif
 #endif
 
 #if !defined(IUTEST_HAS_CONSTEXPR)
-#  define IUTEST_HAS_CONSTEXPR		1
+#  define IUTEST_HAS_CONSTEXPR		0
 #endif
 
 #if IUTEST_HAS_CONSTEXPR
 #  define IUTEST_CXX_CONSTEXPR			constexpr
 #  define IUTEST_CXX_CONSTEXPR_OR_CONST	constexpr
 #else
-#  define IUTEST_NO_CONSTEXPR
 #  define IUTEST_CXX_CONSTEXPR
 #  define IUTEST_CXX_CONSTEXPR_OR_CONST	const
 #endif
@@ -216,8 +231,14 @@
 #    if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 2)) && defined(__GXX_EXPERIMENTAL_CXX0X__)
 #      define IUTEST_HAS_RVALUE_REFS	1
 #    endif
-#  elif defined(_MSC_VER) && (_MSC_VER >= 1700)
-#    define IUTEST_HAS_RVALUE_REFS	1
+#  elif defined(_MSC_VER)
+#    if (_MSC_VER >= 1700)
+#      define IUTEST_HAS_RVALUE_REFS	1
+#    endif
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER >= 1200
+#      define IUTEST_HAS_RVALUE_REFS	1
+#    endif
 #  endif
 #endif
 
@@ -237,6 +258,10 @@
 #    endif
 #  elif defined(_MSC_VER)
 #    if defined(_MSC_FULL_VER) && (_MSC_FULL_VER >= 180020827)
+#      define IUTEST_HAS_DELETED_FUNCTIONS	1
+#    endif
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER >= 1200
 #      define IUTEST_HAS_DELETED_FUNCTIONS	1
 #    endif
 #  endif
@@ -265,6 +290,10 @@
 #    endif
 #  elif defined(_MSC_VER)
 #    if defined(_MSC_FULL_VER) && (_MSC_FULL_VER >= 180020827)
+#      define IUTEST_HAS_DEFAULT_FUNCTIONS	1
+#    endif
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER >= 1200
 #      define IUTEST_HAS_DEFAULT_FUNCTIONS	1
 #    endif
 #  endif
@@ -302,6 +331,10 @@
 #      define IUTEST_HAS_INITIALIZER_LIST	1
 #      include <initializer_list>
 #    endif
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER >= 1400
+#      define IUTEST_HAS_INITIALIZER_LIST	1
+#    endif
 #  endif
 #endif
 
@@ -327,6 +360,10 @@
 #      define IUTEST_HAS_VARIADIC_TEMPLATES	1
 #      define IUTEST_HAS_VARIADIC_COMBINE	0
 #    endif
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER > 1200
+#      define IUTEST_HAS_VARIADIC_TEMPLATES	1
+#    endif
 #  endif
 #endif
 
@@ -346,6 +383,8 @@
 #    endif
 #  elif defined(_MSC_VER)
 #    define IUTEST_HAS_VARIADIC_TEMPLATE_TEMPLATES	IUTEST_HAS_VARIADIC_TEMPLATES
+#  elif defined(__INTEL_COMPILER)
+#    define IUTEST_HAS_VARIADIC_TEMPLATE_TEMPLATES	IUTEST_HAS_VARIADIC_TEMPLATES
 #  endif
 #endif
 
@@ -364,6 +403,10 @@
 #      define IUTEST_HAS_CHAR16_T	1
 #    endif
 #  elif defined(_MSC_VER)
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER >= 1400
+#      define IUTEST_HAS_CHAR16_T	1
+#    endif
 #  endif
 #endif
 
@@ -382,6 +425,10 @@
 #      define IUTEST_HAS_CHAR32_T	1
 #    endif
 #  elif defined(_MSC_VER)
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER >= 1400
+#      define IUTEST_HAS_CHAR32_T	1
+#    endif
 #  endif
 #endif
 
@@ -401,6 +448,10 @@
 #    elif _MSC_VER == 1600
 #      define IUTEST_HAS_LAMBDA		1
 #      define IUTEST_NO_LAMBDA_SCOPE_RESOLUTION	// VC++10 lambda v1.0 is not supported.
+#    endif
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER >= 1200
+#      define IUTEST_HAS_LAMBDA		1
 #    endif
 #  endif
 #endif
@@ -433,6 +484,10 @@
 #    if (_MSC_VER >= 1800) || (_MSC_FULL_VER == 170051025)
 #      define IUTEST_HAS_EXPLICIT_CONVERSION	1
 #    endif
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER >= 1300
+#      define IUTEST_HAS_EXPLICIT_CONVERSION	1
+#    endif
 #  endif
 #endif
 
@@ -461,6 +516,10 @@
 #    endif
 #  elif defined(_MSC_VER)
 #    if _MSC_VER >= 1700
+#      define IUTEST_HAS_OVERRIDE_AND_FINAL	1
+#    endif
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER >= 1400
 #      define IUTEST_HAS_OVERRIDE_AND_FINAL	1
 #    endif
 #  endif
@@ -501,6 +560,10 @@
 #  elif defined(_MSC_VER)
 #    if _MSC_FULL_VER == 180021114
 //#      define IUTEST_HAS_NOEXCEPT	1	// build fail
+#    endif
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER >= 1400
+#      define IUTEST_HAS_NOEXCEPT	1
 #    endif
 #  endif
 #endif
@@ -547,9 +610,13 @@
 //! has extern template
 #if !defined(IUTEST_HAS_EXTERN_TEMPLATE)
 #  if defined(_MSC_VER) && _MSC_VER >= 1400
-#    define IUTEST_HAS_EXTERN_TEMPLATE	1
+#    define IUTEST_HAS_EXTERN_TEMPLATE		1
 #  elif defined(__GNUC__) || defined(__clang__)
-#    define IUTEST_HAS_EXTERN_TEMPLATE	1
+#    define IUTEST_HAS_EXTERN_TEMPLATE		1
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER > 1100
+#      define IUTEST_HAS_EXTERN_TEMPLATE	1
+#    endif
 #  endif
 #endif
 
@@ -568,6 +635,13 @@
 #      define IUTEST_HAS_STRONG_ENUMS	1
 #    endif
 #  elif defined(_MSC_VER)
+#    if _MSC_VER >= 1700
+#      define IUTEST_HAS_STRONG_ENUMS	1
+#    endif
+#  elif defined(__INTEL_COMPILER)
+#    if __INTEL_COMPILER >= 1400
+#      define IUTEST_HAS_STRONG_ENUMS	1
+#    endif
 #  endif
 #endif
 
@@ -643,6 +717,11 @@
 #    if __has_feature(cxx_rtti)
 #      define IUTEST_HAS_RTTI	1
 #    endif
+#    if defined(_MSC_VER)	// clang for windows
+#      if !defined(_CPPRTTI)
+#        include <exception>
+#      endif
+#    endif
 #  elif defined(__GNUC__)
 #    ifdef __RTTI
 #      define IUTEST_HAS_RTTI	1
@@ -677,9 +756,9 @@
 #  include <typeinfo>
 #endif
 
-// explicit instantiation access checking
+//! explicit instantiation access checking
 #if !defined(IUTEST_EXPLICIT_INSTANTIATION_ACCESS_PRIVATE_MEMBER_FUNCTION)
-#  if defined(_MSC_VER) && (_MSC_VER < 1600)
+#  if defined(_MSC_VER) && ((_MSC_VER < 1600) || (_MSC_VER == 1900))
      // VS2008 以前では、private なメンバー関数に explicit instantiation でもアクセスできない
 #    define IUTEST_EXPLICIT_INSTANTIATION_ACCESS_PRIVATE_MEMBER_FUNCTION	0
 #  else
@@ -687,6 +766,7 @@
 #  endif
 #endif
 
+//! explicit instantiation access checking (static member function)
 #if !defined(IUTEST_EXPLICIT_INSTANTIATION_ACCESS_PRIVATE_STATIC_MEMBER_FUNCTION)
 #  if defined(_MSC_VER)
 // Visual Studio では、private な static メンバー関数に explicit instantiation でもアクセスできない
@@ -703,7 +783,7 @@
 #  endif
 #endif
 
-// has __COUNTER__
+//! has __COUNTER__
 #if !defined(IUTEST_HAS_COUNTER_MACRO)
 #  if   defined(_MSC_VER) && (_MSC_VER >= 1300)
 #    define IUTEST_HAS_COUNTER_MACRO		1
@@ -727,19 +807,19 @@
 #  endif
 #endif
 
-// partial template specialization
-#if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-#  if defined(_MSC_VER) && (_MSC_VER < 1310)
-#    define IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION	1
-#  endif
-#endif
-
-// explicit class member template specialization
+//! explicit class member template specialization
 #if !defined(IUTEST_HAS_CLASS_MEMBER_TEMPLATE_SPECIALIZATION)
 #  if defined(_MSC_VER)
 #    define IUTEST_HAS_CLASS_MEMBER_TEMPLATE_SPECIALIZATION	1
 #  else
 #    define IUTEST_HAS_CLASS_MEMBER_TEMPLATE_SPECIALIZATION	0
+#  endif
+#endif
+
+//! partial template specialization
+#if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#  if defined(_MSC_VER) && (_MSC_VER < 1310)
+#    define IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION	1
 #  endif
 #endif
 
@@ -750,49 +830,49 @@
 #  endif
 #endif
 
-// function template ordering
+//! function template ordering
 #if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
 #  if defined(_MSC_VER) && (_MSC_VER < 1310)
 #    define IUTEST_NO_FUNCTION_TEMPLATE_ORDERING		1
 #  endif
 #endif
 
-// in class member initialization
+//! in class member initialization
 #if !defined(IUTEST_NO_INCLASS_MEMBER_INITIALIZATION)
 #  if defined(_MSC_VER) && _MSC_VER < 1310
 #    define IUTEST_NO_INCLASS_MEMBER_INITIALIZATION		1
 #  endif
 #endif
 
-// explicit function template instantiation
+//! explicit function template instantiation
 #if !defined(IUTEST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
 #  if defined(_MSC_VER) && _MSC_VER < 1310
 #    define IUTEST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS	1
 #  endif
 #endif
 
-// SFINAE
+//! SFINAE
 #if !defined(IUTEST_NO_SFINAE)
 #  if defined(_MSC_VER) && _MSC_VER < 1310
 #    define IUTEST_NO_SFINAE	1
 #  endif
 #endif
 
-// template template
+//! template template
 #if !defined(IUTEST_NO_TEMPLATE_TEMPLATES)
 #  if defined(_MSC_VER) && _MSC_VER < 1310
 #    define IUTEST_NO_TEMPLATE_TEMPLATES	1
 #  endif
 #endif
 
-// void return
+//! void return
 #if !defined(IUTEST_NO_VOID_RETURNS)
 #  if defined(_MSC_VER) && _MSC_VER < 1300
 #    define IUTEST_NO_VOID_RETURNS			1
 #  endif
 #endif
 
-// ADL
+//! ADL
 #if !defined(IUTEST_NO_ARGUMENT_DEPENDENT_LOOKUP)
 #  if defined(_MSC_VER) && _MSC_VER < 1310
 #    define IUTEST_NO_ARGUMENT_DEPENDENT_LOOKUP	1
@@ -805,11 +885,11 @@
 #  endif
 #endif
 
-// secure lib
+//! secure lib
 #if !defined(IUTEST_HAS_WANT_SECURE_LIB)
 #  if defined(_MSC_VER)
 #    if defined(__STDC_WANT_SECURE_LIB__) && __STDC_WANT_SECURE_LIB__
-#      define IUTEST_HAS_WANT_SECURE_LIB		1
+#      define IUTEST_HAS_WANT_SECURE_LIB	1
 #    endif
 #  endif
 #endif

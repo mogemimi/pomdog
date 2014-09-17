@@ -28,7 +28,7 @@
 //======================================================================
 // define
 
-#ifdef GTEST_INCLUDE_GTEST_GTEST_H_
+#if defined(GTEST_INCLUDE_GTEST_GTEST_H_)
 
 #undef SUCCEED
 #undef FAIL
@@ -101,7 +101,7 @@ inline void IUTEST_ATTRIBUTE_UNUSED_ InitGoogleTest(int* argc, wchar_t** argv)
 	InitIrisUnitTest(argc, argv);
 }
 
-#ifdef GMOCK_INCLUDE_GMOCK_GMOCK_H_
+#if defined(GMOCK_INCLUDE_GMOCK_GMOCK_H_)
 inline void IUTEST_ATTRIBUTE_UNUSED_ InitGoogleMock(int* argc, char** argv)
 {
 	testing::InitGoogleMock(argc, argv);
@@ -116,7 +116,7 @@ inline void IUTEST_ATTRIBUTE_UNUSED_ InitGoogleMock(int* argc, wchar_t** argv)
 
 #ifndef GMOCK_INCLUDE_GMOCK_GMOCK_H_
 
-#ifdef GTEST_INCLUDE_GTEST_GTEST_H_
+#if defined(GTEST_INCLUDE_GTEST_GTEST_H_)
 // すでに testing namespace が存在するので、define で置き換え
 #  define testing	iutest
 #else
@@ -132,7 +132,7 @@ namespace testing = iutest;
 
 #else // !defined(IUTEST_USE_GTEST)
 
-#ifdef INCG_IRIS_IUTEST_HPP_
+#if defined(INCG_IRIS_IUTEST_HPP_)
 #  if IUTEST_HAS_TUPLE
 #    define GTEST_USE_OWN_TR1_TUPLE	0
 #  endif
@@ -173,19 +173,21 @@ namespace tr1
 //======================================================================
 // define
 
-#ifdef INCG_IRIS_IUTEST_HPP_
+#if defined(INCG_IRIS_IUTEST_HPP_)
 #undef IUTEST_SUCCEED
 #undef IUTEST_FAIL
 #undef IUTEST_ADD_FAILURE
 #undef IUTEST_ADD_FAILURE_AT
 
 #undef IUTEST_HAS_PARAM_TEST
+#undef IUTEST_HAS_AUTOFIXTURE_PARAM_TEST
 #undef IUTEST_HAS_ANY_PARAM_TEST
 #undef IUTEST_HAS_COMBINE
 #undef IUTEST_HAS_VARIADIC_COMBINE
 #undef IUTEST_HAS_PAIRWISE
 #undef IUTEST_HAS_VARIADIC_PAIRWISE
 #undef IUTEST_HAS_CONCAT
+#undef IUTEST_HAS_VARIADIC_PRED
 #undef IUTEST_HAS_TYPED_TEST
 #undef IUTEST_HAS_TYPED_TEST_P
 
@@ -193,13 +195,17 @@ namespace tr1
 #undef IUTEST_HAS_ARITHMETIC_EXPRESSION_DECOMPOSE
 #undef IUTEST_HAS_BITWISE_EXPRESSION_DECOMPOSE
 
+#undef IUTEST_HAS_ASSERTION_NOEQUALTO_OBJECT
+
 #undef IUTEST_HAS_VALUESGEN
 #undef IUTEST_HAS_RANDOMVALUES
+#undef IUTEST_STATIC_ASSERT_MSG
 #undef IUTEST_HAS_STATIC_ASSERT_TYPEEQ
 #ifdef IUTEST_USE_THROW_ON_ASSERT_FAILURE
 #  undef IUTEST_USE_THROW_ON_ASSERT_FAILURE
 #endif
 #undef IUTEST_USE_THROW_ON_ASSERTION_FAILURE
+#undef IUTEST_HAS_LAMBDA_STATEMENTS
 #undef IUTEST_HAS_SPI_LAMBDA_SUPPORT
 #undef IUTEST_HAS_GENRAND
 #undef IUTEST_HAS_PRINT_TO
@@ -227,24 +233,29 @@ namespace tr1
 #define IUTEST_ADD_FAILURE		ADD_FAILURE
 #define IUTEST_ADD_FAILURE_AT	ADD_FAILURE_AT
 
-#define IUTEST_HAS_PARAM_TEST		GTEST_HAS_PARAM_TEST
-#define IUTEST_HAS_ANY_PARAM_TEST		0
-#define IUTEST_HAS_COMBINE			GTEST_HAS_COMBINE
-#define IUTEST_HAS_VARIADIC_COMBINE		0
-#define IUTEST_HAS_PAIRWISE				0
-#define IUTEST_HAS_VARIADIC_PAIRWISE	0
-#define IUTEST_HAS_CONCAT				0
-#define IUTEST_HAS_TYPED_TEST		GTEST_HAS_TYPED_TEST
-#define IUTEST_HAS_TYPED_TEST_P		GTEST_HAS_TYPED_TEST_P
+#define IUTEST_HAS_PARAM_TEST				GTEST_HAS_PARAM_TEST
+#define IUTEST_HAS_AUTOFIXTURE_PARAM_TEST	0
+#define IUTEST_HAS_ANY_PARAM_TEST			0
+#define IUTEST_HAS_COMBINE					GTEST_HAS_COMBINE
+#define IUTEST_HAS_VARIADIC_COMBINE			0
+#define IUTEST_HAS_PAIRWISE					0
+#define IUTEST_HAS_VARIADIC_PAIRWISE		0
+#define IUTEST_HAS_CONCAT					0
+#define IUTEST_HAS_VARIADIC_PRED			0
+#define IUTEST_HAS_TYPED_TEST				GTEST_HAS_TYPED_TEST
+#define IUTEST_HAS_TYPED_TEST_P				GTEST_HAS_TYPED_TEST_P
 
-#define IUTEST_HAS_MATCHERS				0
+#define IUTEST_HAS_MATCHERS							0
 #define IUTEST_HAS_ARITHMETIC_EXPRESSION_DECOMPOSE	0
 #define IUTEST_HAS_BITWISE_EXPRESSION_DECOMPOSE		1
+
+#define IUTEST_HAS_ASSERTION_NOEQUALTO_OBJECT	0
 
 #define IUTEST_HAS_VALUESGEN			0
 #define IUTEST_HAS_RANDOMVALUES			0
 #define IUTEST_HAS_STATIC_ASSERT_TYPEEQ	1
 #define IUTEST_USE_THROW_ON_ASSERTION_FAILURE	0
+#define IUTEST_HAS_LAMBDA_STATEMENTS	0
 #define IUTEST_HAS_SPI_LAMBDA_SUPPORT	0
 #define IUTEST_HAS_GENRAND				0
 #define IUTEST_HAS_PRINT_TO				1
@@ -345,7 +356,7 @@ namespace iusupport
 	template<int x>struct StaticAssertionTest {};
 }
 
-#ifdef INCG_IRIS_IUTEST_HPP_
+#if defined(INCG_IRIS_IUTEST_HPP_)
 
 namespace iusupport
 {
@@ -380,7 +391,7 @@ typedef ::std::ostream	iu_ostream;
 
 }	// end of namespace testing
 
-#ifdef INCG_IRIS_IUTEST_HPP_
+#if defined(INCG_IRIS_IUTEST_HPP_)
 // すでに iutest namespace が存在するので、define で対応
 #  define iutest testing
 #else

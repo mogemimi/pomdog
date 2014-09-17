@@ -26,7 +26,6 @@ namespace iutest
 
 //======================================================================
 // declare
-class Test;
 template<typename T>class WithParamInterface;
 template<typename T>class TestWithParam;
 
@@ -158,7 +157,11 @@ public:
 
 protected:
 	virtual void SetUp(void)	{}	//!< 実行前処理
-	virtual void Body(void) = 0;	//!< テスト実装部
+#if IUTEST_HAS_AUTOFIXTURE_PARAM_TEST
+	virtual void Body(void)		{}	//!< テスト実装部
+#else
+	virtual void Body(void)	 = 0;	//!< テスト実装部
+#endif
 	virtual void TearDown(void)	{}	//!< 実行後処理
 
 public:
@@ -177,6 +180,10 @@ private:
 	 * @param [in]	value	= 値
 	*/
 	static void RecordPropertyString(const ::std::string& key, const ::std::string& value);
+
+private:
+	struct should_be_SetUp {};
+	virtual should_be_SetUp* Setup(void) IUTEST_CXX_FINAL { return NULL; }
 
 private:
 	template<typename DMY>
@@ -235,6 +242,17 @@ public:
 #endif
 		return *s_params;
 	}
+
+#if IUTEST_HAS_TUPLE
+	/**
+	 * @brief	パラメータの取得
+	*/
+	template<int N>
+	static const typename tuples::tuple_element<N, ParamType>::type& GetParam(void)
+	{
+		return tuples::get<N>(GetParam());
+	}
+#endif
 
 	/** @private */
 	static void SetParam(const ParamType* params) IUTEST_CXX_NOEXCEPT_SPEC { s_params = params; }

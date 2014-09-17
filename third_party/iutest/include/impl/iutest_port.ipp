@@ -78,7 +78,7 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_BEGIN()
 
 IUTEST_IPP_INLINE const char* GetEnv(const char* name)
 {
-#if defined(IUTEST_OS_WINDOWS_PHONE) || defined(IUTEST_OS_WINDOWS_MOBILE) || defined(IUTEST_NO_GETENV)
+#if defined(IUTEST_OS_WINDOWS_PHONE) || defined(IUTEST_OS_WINDOWS_RT) || defined(IUTEST_OS_WINDOWS_MOBILE) || defined(IUTEST_NO_GETENV)
 	IUTEST_UNUSED_VAR(name);
 	return NULL;
 #elif defined(__BORLANDC__) || defined(__SunOS_5_8) || defined(__SunOS_5_9)
@@ -91,7 +91,8 @@ IUTEST_IPP_INLINE const char* GetEnv(const char* name)
 
 IUTEST_IPP_INLINE int PutEnv(const char* expr)
 {
-#if defined(IUTEST_OS_WINDOWS_PHONE) || defined(IUTEST_OS_WINDOWS_MOBILE) || defined(IUTEST_NO_PUTENV) || defined(__STRICT_ANSI__)
+#if defined(IUTEST_OS_WINDOWS_PHONE) || defined(IUTEST_OS_WINDOWS_RT) || defined(IUTEST_OS_WINDOWS_MOBILE) \
+	|| defined(IUTEST_NO_PUTENV) || defined(__STRICT_ANSI__)
 	IUTEST_UNUSED_VAR(expr);
 	return -1;
 #else
@@ -101,8 +102,8 @@ IUTEST_IPP_INLINE int PutEnv(const char* expr)
 
 IUTEST_IPP_INLINE const char* GetCWD(char* buf, size_t length)
 {
-#if   defined(IUTEST_OS_WINDOWS_PHONE) || defined(IUTEST_OS_WINDOWS_MOBILE) || defined(IUTEST_OS_AVR32) \
-		|| defined(IUTEST_NO_GETCWD)
+#if   defined(IUTEST_OS_WINDOWS_PHONE) || defined(IUTEST_OS_WINDOWS_RT) || defined(IUTEST_OS_WINDOWS_MOBILE) \
+		|| defined(IUTEST_OS_AVR32) || defined(IUTEST_OS_ARM) || defined(IUTEST_NO_GETCWD)
 	if( buf == NULL || length < 3 )
 	{
 		return NULL;
@@ -126,7 +127,7 @@ IUTEST_IPP_INLINE ::std::string GetCWD(void)
 
 IUTEST_IPP_INLINE void SleepMillisec(unsigned int millisec)
 {
-#if   defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_PHONE)
+#if   defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_PHONE) && !defined(IUTEST_OS_WINDOWS_RT)
 	Sleep(millisec);
 #elif defined(IUTEST_OS_LINUX) || defined(IUTEST_OS_CYGWIN)
 
@@ -167,7 +168,7 @@ namespace detail
 
 IUTEST_IPP_INLINE bool SetEnvironmentVariable(const char* name, const char* value)
 {
-#if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE) && !defined(IUTEST_OS_WINDOWS_PHONE)
+#if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE) && !defined(IUTEST_OS_WINDOWS_PHONE) && !defined(IUTEST_OS_WINDOWS_RT)
 	return ::SetEnvironmentVariableA(name, value) ? true : false;
 #else
 	::std::string var = name;
@@ -179,7 +180,7 @@ IUTEST_IPP_INLINE bool SetEnvironmentVariable(const char* name, const char* valu
 
 IUTEST_IPP_INLINE bool GetEnvironmentVariable(const char* name, char* buf, size_t size)
 {
-#if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE) && !defined(IUTEST_OS_WINDOWS_PHONE)
+#if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE) && !defined(IUTEST_OS_WINDOWS_PHONE) && !defined(IUTEST_OS_WINDOWS_RT)
 	const DWORD ret = ::GetEnvironmentVariableA(name, buf, static_cast<DWORD>(size));
 	if( ret == 0 )
 	{

@@ -240,7 +240,7 @@ private:
 #if !defined(IUTEST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
 		return UnitTest::instance().AddTestCase<TestCase>(testcase, id, setup, teardown);
 #else
-		return UnitTest::instance().AddTestCase(testcase, id, setup, teardown, &detail::type<TestCase>());
+		return UnitTest::instance().AddTestCase(testcase, id, setup, teardown, detail::explicit_type<TestCase>());
 #endif
 	}
 private:

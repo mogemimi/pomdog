@@ -49,13 +49,13 @@
 	iuTest_GetTestCasePackageName(const iuTest_TestCasePackage*) {			\
 		return iuTest_GetTestCaseParentPackageName(		\
 			static_cast<iuTest_TestCaseParentPackage*>(NULL)) + #name ".";	\
-	}													\
+	}
 
 #define IIUT_PACKAGE_DECL_PARENT_NAME_FUNC(name)		\
 	static ::std::string IUTEST_ATTRIBUTE_UNUSED_		\
 	iuTest_GetTestCaseParentPackageName(const iuTest_TestCaseParentPackage*) {				\
 		return iuTest_GetTestCasePackageName(static_cast<iuTest_TestCasePackage*>(NULL));	\
-	}													\
+	}
 
 
 #if IUTEST_HAS_IF_EXISTS

@@ -556,8 +556,8 @@
 
 
 /**
-* @private
-* @{
+ * @private
+ * @{
 */
 
 #define IUTEST_PRED1_(pred, v1, on_failure)	\
@@ -607,7 +607,7 @@
 	IUTEST_TEST_THROW_VALUE_(statement, expected_exception, expected_exception_value, on_failure, pred_formatter)
 
 /**
-* @}
+ * @}
 */
 
 namespace iutest

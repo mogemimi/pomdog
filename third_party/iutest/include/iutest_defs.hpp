@@ -208,13 +208,22 @@ public:
 public:
 	/**
 	 * @brief	浮動小数点数がほぼ一致するかどうか
-	 * @sa		http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
 	*/
 	bool	AlmostEquals(const _Myt& rhs) const
 	{
-		const Int v1 = m_v.iv < 0 ? ~m_v.iv + 1 : m_v.iv;
-		const Int v2 = rhs.m_v.iv < 0 ? ~rhs.m_v.iv + 1 : rhs.m_v.iv;
-		const Int diff = (v1 > v2) ? v1 - v2 : v2 - v1;
+		if( is_nan() || rhs.is_nan() ) return false;
+		return NanSensitiveAlmostEquals(rhs);
+	}
+
+	/**
+	 * @brief	浮動小数点数がほぼ一致するかどうか
+	 * @sa		http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
+	*/
+	bool	NanSensitiveAlmostEquals(const _Myt& rhs) const
+	{
+		const UInt v1 = norm(m_v.uv);
+		const UInt v2 = norm(rhs.m_v.uv);
+		const UInt diff = (v1 > v2) ? v1 - v2 : v2 - v1;
 		if( diff <= kMaxUlps )
 		{
 			return true;
@@ -226,41 +235,60 @@ public:
 	/**
 	 * @brief	ビット列の取得
 	*/
-	UInt	bit(void) const { return m_v.uv; }
+	UInt	bits(void) const { return m_v.uv; }
 
 	/**
 	 * @brief	raw データの取得
 	*/
 	RawType	raw(void) const { return m_v.fv; }
 
+	/**
+	 * @brief	exponent
+	*/
+	UInt	exponent_bits(void) const { return m_v.uv & kExpMask; }
+
+	/**
+	 * @brief	fraction
+	*/
+	UInt	fraction_bits(void) const { return m_v.uv & kFracMask; }
+
+	/**
+	 * @brief	sign
+	*/
+	UInt	sign_bit(void) const { return m_v.uv & kSignMask; }
+
+	/**
+	 * @brief	is nan
+	*/
+	bool	is_nan(void) const { return exponent_bits() == kExpMask && fraction_bits() != 0; }
+
 public:
 	//! plus inf
 	static _Myt PINF(void)
 	{
 		_Myt f;
-		f.m_v.uv = ((1 << kEXP) - 1);
-		f.m_v.uv <<= kFRAC;
+		f.m_v.uv = kExpMask;
 		return f;
 	}
 	//! minus inf
 	static _Myt NINF(void)
 	{
 		_Myt f = PINF();
-		f.m_v.uv |= static_cast<UInt>(1u) << (kEXP + kFRAC);
+		f.m_v.uv |= kSignMask;
 		return f;
 	}
 	//! plus nan
 	static _Myt PNAN(void)
 	{
-		_Myt f = PINF();
-		f.m_v.uv |= 1;
+		_Myt f;
+		f.m_v.uv = kExpMask | 1;
 		return f;
 	}
 	//! minus nan
 	static _Myt NNAN(void)
 	{
-		_Myt f = NINF();
-		f.m_v.uv |= 1;
+		_Myt f = PNAN();
+		f.m_v.uv |= kSignMask;
 		return f;
 	}
 	//! plus qnan
@@ -275,7 +303,7 @@ public:
 	static _Myt NQNAN(void)
 	{
 		_Myt f = PQNAN();
-		f.m_v.uv |= static_cast<UInt>(1u) << (kEXP + kFRAC);
+		f.m_v.uv |= kSignMask;
 		return f;
 	}
 
@@ -297,9 +325,38 @@ private:
 		, kFRAC = detail::ieee754_bits<RawType>::FRAC
 		, kMaxUlps = 4
 	};
+
+private:
+
+	static UInt norm(UInt v) { return v & kSignMask ? ~v + 1 : v | kSignMask; }
+
+#if !defined(IUTEST_NO_INCLASS_MEMBER_INITIALIZATION)
+	static const UInt kSignMask = static_cast<UInt>(1u) << (kEXP + kFRAC);
+	static const UInt kExpMask = ((static_cast<UInt>(1u) << kEXP) - 1) << kFRAC;
+	static const UInt kFracMask = (static_cast<UInt>(1u) << kFRAC) - 1;
+#else
+	static const UInt kSignMask;
+	static const UInt kExpMask;
+	static const UInt kFracMask;
+#endif
+
 private:
 	FInt m_v;
 };
+
+#if defined(IUTEST_NO_INCLASS_MEMBER_INITIALIZATION)
+
+template<typename T>
+const typename floating_point<T>::UInt floating_point<T>::kSignMask
+	= static_cast<typename floating_point<T>::UInt>(1u) << (kEXP + kFRAC);
+template<typename T>
+const typename floating_point<T>::UInt floating_point<T>::kExpMask
+	= ((static_cast<typename floating_point<T>::UInt>(1u) << floating_point<T>::kEXP) - 1) << floating_point<T>::kFRAC;
+template<typename T>
+const typename floating_point<T>::UInt floating_point<T>::kExpMask
+	= ((static_cast<typename floating_point<T>::UInt>(1u) << floating_point<T>::kFRAC) - 1);
+
+#endif
 
 //======================================================================
 // typedef

@@ -43,6 +43,8 @@
  *          repeat (int)\n
  *			list_tests (bool)\n
  *			file_location_style_msvc (bool)\n
+ *			default_package_name (string)\n
+ *			ostream_formatter (ostream)\n
 */
 #define IUTEST_FLAG(name)	IIUT_FLAG(name)
 
@@ -55,6 +57,18 @@
 /**
  * @}
 */
+
+#if IUTEST_HAS_LIB && IUTEST_HAS_EXTERN_TEMPLATE
+
+namespace iutest { class Environment; }
+
+IUTEST_PRAGMA_EXTERN_TEMPLATE_WARN_DISABLE_BEGIN()
+
+extern template class ::std::vector< ::iutest::Environment* >;
+
+IUTEST_PRAGMA_EXTERN_TEMPLATE_WARN_DISABLE_END()
+
+#endif
 
 namespace iutest
 {
@@ -82,6 +96,9 @@ public:
 	virtual ~Environment(void)	{}
 	virtual void SetUp(void)	{}	//!< 事前処理
 	virtual void TearDown(void)	{}	//!< 事後処理
+private:
+	struct should_be_SetUp {};
+	virtual should_be_SetUp* Setup(void) IUTEST_CXX_FINAL { return NULL; }
 };
 
 /**
@@ -131,6 +148,7 @@ public:
 
 		PRINT_TIME				= 0x00001000,	//!< 経過時間の出力
 		FILELOCATION_STYLE_MSVC	= 0x00002000,	//!< ファイル/行出力スタイルを Visual Studio スタイルにする
+		VERBOSE					= 0x00004000,	//!< verbose
 
 		CATCH_EXCEPTION_EACH	= 0x00010000,	//!< 例外を catch する(TestInfo)
 		CATCH_EXCEPTION_GLOBAL	= 0x00020000,	//!< 例外を catch する(UnitTest)
@@ -143,6 +161,7 @@ public:
 		SHOW_HELP				= 0x10000000,	//!< ヘルプ表示
 		SHOW_VERSION			= 0x20000000,	//!< バージョン表示
 		SHOW_FEATURE			= 0x40000000,	//!< 機能の出力
+		SHOW_SPEC				= 0x80000000,	//!< Specの出力
 		SHOW_MASK				= 0xFF000000,	//!< 機能表示系マスク
 		MASK					= 0xFFFFFFFF,	//!< マスク
 
@@ -280,10 +299,14 @@ private:
 #if IUTEST_HAS_STREAM_RESULT
 		::std::string		m_stream_result_to;
 #endif
+		::std::string		m_default_package_name;
 		detail::iuRandom	m_genrand;
 		iuEnvironmentList	m_environment_list;
 		TestEventListeners	m_event_listeners;
 		TestPartResultReporterInterface*	m_testpartresult_reporter;
+#if IUTEST_HAS_STRINGSTREAM || IUTEST_HAS_STRSTREAM
+		iu_stringstream		m_ostream_formatter;
+#endif
 	};
 
 	static Variable& get_vars(void) { static Variable v; return v; }
@@ -295,15 +318,23 @@ public:
 	static unsigned int			current_random_seed(void)	{ return get_vars().m_current_random_seed; }	//!< 乱数シード
 	static int					get_repeat_count(void)		{ return get_vars().m_repeat_count; }			//!< 繰り返し回数
 	static const char*			get_output_option(void)		{ return get_vars().m_output_option.c_str(); }	//!< 出力オプション
+	static const char*			get_default_package_name(void) { return get_vars().m_default_package_name.c_str(); }	//!< root package オプション
 	static const char*			test_filter(void)			{ return get_vars().m_test_filter.c_str(); }	//!< フィルター文字列
 #if IUTEST_HAS_STREAM_RESULT
 	static const char*			get_stream_result_to(void)	{ return get_vars().m_stream_result_to.c_str(); }
 #endif
+#if IUTEST_HAS_STRINGSTREAM || IUTEST_HAS_STRSTREAM
+	static void					global_ostream_copyfmt(iu_ostream& os) { os.copyfmt(get_vars().m_ostream_formatter); }
+#endif
 
 	/**
-	* @brief	xml 出力パスを取得
+	 * @brief	xml 出力パスを取得
 	*/
 	static ::std::string get_report_xml_filepath(void);
+	/**
+	 * @brief	junit xml 出力パスを取得
+	*/
+	static ::std::string get_report_junit_xml_filepath(void);
 
 	/** @private */
 	static TestEventListeners& event_listeners(void) { return get_vars().m_event_listeners; }
@@ -382,6 +413,14 @@ private:
 		get_vars().m_output_option = str == NULL ? "" : str;
 	}
 
+	/**
+	* @brief	default_package_name オプションを設定
+	*/
+	static void set_default_package_name(const char* str)
+	{
+		get_vars().m_default_package_name = str == NULL ? "" : str;
+	}
+
 private:
 	typedef const char* (*pfnOptionStringGet)();
 	typedef void(*pfnOptionStringSet)(const char*);
@@ -420,6 +459,7 @@ private:
 			return *this;
 		}
 	};
+
 public:
 	/**
 	 * @private
@@ -447,6 +487,24 @@ public:
 	typedef OptionString<get_stream_result_to, set_stream_result_to> stream_result_to;
 #endif
 
+	typedef OptionString<get_default_package_name, set_default_package_name> default_package_name;
+
+#if IUTEST_HAS_STRINGSTREAM || IUTEST_HAS_STRSTREAM
+	typedef class OStreamFormatter : public iu_stringstream
+	{
+	public:
+		OStreamFormatter(void)
+		{
+			copyfmt(get_vars().m_ostream_formatter);
+		}
+		virtual ~OStreamFormatter(void)
+		{
+			get_vars().m_ostream_formatter.copyfmt(*this);
+		}
+	} ostream_formatter;
+
+#endif
+
 private:
 	static iuEnvironmentList& environments(void) { return get_vars().m_environment_list; }
 
@@ -465,6 +523,11 @@ public:
 		environments().push_back(env);
 		return env;
 	}
+	
+	/**
+	 * @brief	default package name を追加
+	*/
+	static ::std::string AddDefaultPackageName(const char* testcase_name);
 
 private:
 	/**
@@ -564,7 +627,7 @@ private:
 		const char* eq = strchr(opt, '=');
 		if( eq == NULL )
 		{
-			return eq;
+			return NULL;
 		}
 		return eq+1;
 	}
@@ -612,6 +675,31 @@ private:
 
 private:
 	friend class UnitTest;
+};
+
+class iu_global_format_stringstream : public iu_stringstream
+{
+public:
+	iu_global_format_stringstream()
+	{
+#if IUTEST_HAS_STRINGSTREAM || IUTEST_HAS_STRSTREAM
+		TestEnv::global_ostream_copyfmt(*this);
+#endif
+	}
+	iu_global_format_stringstream(const char* str)
+		: iu_stringstream(str)
+	{
+#if IUTEST_HAS_STRINGSTREAM || IUTEST_HAS_STRSTREAM
+		TestEnv::global_ostream_copyfmt(*this);
+#endif
+	}
+	iu_global_format_stringstream(const ::std::string& str)
+		: iu_stringstream(str)
+	{
+#if IUTEST_HAS_STRINGSTREAM || IUTEST_HAS_STRSTREAM
+		TestEnv::global_ostream_copyfmt(*this);
+#endif
+	}
 };
 
 }	// end of namespace iutest

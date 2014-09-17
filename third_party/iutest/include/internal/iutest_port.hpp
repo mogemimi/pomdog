@@ -86,7 +86,7 @@ bool SetEnvironmentVariable(const char* name, const char* value);
 */
 bool GetEnvironmentVariable(const char* name, char* buf, size_t size);
 
-#if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
 
 template<size_t SIZE>
 inline bool GetEnvironmentVariable(const char* name, char (&buf)[SIZE])
@@ -150,10 +150,10 @@ public:
 	~IUTestLog(void);
 
 public:
-	iuStringStream::type& GetStream(void) { return m_stream; }
+	iu_stringstream& GetStream(void) { return m_stream; }
 private:
 	const Level kLevel;
-	iuStringStream::type m_stream;
+	iu_stringstream m_stream;
 
 	IUTEST_PP_DISALLOW_COPY_AND_ASSIGN(IUTestLog);
 };

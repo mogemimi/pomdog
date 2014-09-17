@@ -35,7 +35,7 @@ namespace detail
 */
 inline ::std::string FormatCxxException(const char* description)
 {
-	iuStringStream::type strm;
+	iu_stringstream strm;
 	if( description != NULL )
 	{
 		strm << "C++ exception with description \"" << description << "\"";
@@ -69,9 +69,9 @@ public:
 	static void translator(DWORD code, _EXCEPTION_POINTERS* ep)
 	{
 		IUTEST_UNUSED_VAR(ep);
-		iuStringStream::type strm;
+		iu_stringstream strm;
 #if IUTEST_HAS_STRINGSTREAM || IUTEST_HAS_STRSTREAM
-		strm << "SEH exception with code 0x" << ::std::setbase(16) << code << ::std::setbase(10);
+		strm << "SEH exception with code 0x" << ::std::setbase(16) << code;
 #else
 		strm << "SEH exception with code " << code;
 #endif

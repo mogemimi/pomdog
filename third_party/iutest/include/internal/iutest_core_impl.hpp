@@ -57,7 +57,7 @@ public:
 	static bool ValidateTestPropertyName(const ::std::string& name)
 	{
 		const char* ban[] = { "name", "tests", "failures", "disabled", "skip", "errors", "time", "timestamp", "random_seed" };
-#if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
 		return TestProperty::ValidateName(name, ban);
 #else
 		return TestProperty::ValidateName(name, ban, ban+IUTEST_PP_COUNTOF(ban));
@@ -71,13 +71,11 @@ public:
 		IUTEST_APPEND_EXPLICIT_TEMPLATE_TYPE_(T)
 		)
 	{
-		TestCase::FindOp func = { id, testcase_name };
-		iuTestCases& list = m_testcases;
-		TestCase* p = detail::FindList(list, func);
+		TestCase* p = FindTestCase(testcase_name, id);
 		if( p == NULL )
 		{
 			p = new T (testcase_name, id, setup, teardown);
-			list.push_back(p);
+			m_testcases.push_back(p);
 		}
 		return p;
 	}
@@ -121,35 +119,16 @@ private:
 	*/
 	static void RecordProperty(const TestProperty& prop);
 
+	/**
+	 * @brief	FindTestCase
+	*/
+	TestCase* FindTestCase(const char* testcase_name, TestTypeId id);
+
 private:
 	/**
 	 * @brief	セットアップ
 	*/
-	void InitializeImpl(void)
-	{
-#if IUTEST_HAS_SEH
-
-#if !defined(IUTEST_OS_WINDOWS_MOBILE) && !defined(IUTEST_OS_WINDOWS_PHONE)
-		SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOALIGNMENTFAULTEXCEPT | SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);
-#endif
-
-#if (defined(_MSC_VER) || IUTEST_OS_WINDOWS_MINGW) && !defined(IUTEST_OS_WINDOWS_MOBILE)
-		_set_error_mode(_OUT_TO_STDERR);
-#endif
-
-#endif
-
-#if defined(_MSC_VER) && _MSC_VER >= 1400 && !defined(IUTEST_OS_WINDOWS_MOBILE)
-		if( !TestFlag::IsEnableFlag(TestFlag::BREAK_ON_FAILURE) )
-		{
-			_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
-		}
-#endif
-
-#if IUTEST_HAS_EXCEPTIONS && (defined(_MSC_VER) && (_MSC_VER >= 1400)) && !defined(IUTEST_OS_WINDOWS_MOBILE)
-		_set_invalid_parameter_handler(OnInvalidParameter);
-#endif
-	}
+	void InitializeImpl(void);
 	/**
 	 * @brief	後片付け
 	*/
@@ -207,7 +186,7 @@ template<typename T>
 {
 #if IUTEST_HAS_RTTI
 	::std::string name = basename;
-	iuStringStream::type strm; strm << index;
+	iu_stringstream strm; strm << index;
 	name += "/";
 	name += GetTypeName<T>();
 	return name;

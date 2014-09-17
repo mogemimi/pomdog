@@ -107,6 +107,10 @@ IUTEST_IPP_INLINE bool UnitTestImpl::PreRunner(void)
 	{
 		detail::iuOptionMessage::ShowFeature();
 	}
+	else if( TestFlag::IsEnableFlag(TestFlag::SHOW_SPEC) )
+	{
+		detail::iuOptionMessage::ShowSpec();
+	}
 	else if( TestFlag::IsEnableFlag(TestFlag::SHOW_TESTS_LIST_WITH_WHERE) )
 	{
 		ListupWithWhere();
@@ -169,6 +173,38 @@ IUTEST_IPP_INLINE void UnitTestImpl::RecordProperty(const TestProperty& prop)
 	TestEnv::event_listeners().OnTestRecordProperty(prop);
 }
 
+IUTEST_IPP_INLINE TestCase* UnitTestImpl::FindTestCase(const char* testcase_name, TestTypeId id)
+{
+	TestCase::FindOp func ={ id, testcase_name };
+	return detail::FindList(m_testcases, func);
+}
+
+IUTEST_IPP_INLINE void UnitTestImpl::InitializeImpl(void)
+{
+#if IUTEST_HAS_SEH
+
+#if !defined(IUTEST_OS_WINDOWS_MOBILE) && !defined(IUTEST_OS_WINDOWS_PHONE) && !defined(IUTEST_OS_WINDOWS_RT)
+	SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOALIGNMENTFAULTEXCEPT | SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);
+#endif
+
+#if (defined(_MSC_VER) || IUTEST_OS_WINDOWS_MINGW) && !defined(IUTEST_OS_WINDOWS_MOBILE)
+	_set_error_mode(_OUT_TO_STDERR);
+#endif
+
+#endif
+
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && !defined(IUTEST_OS_WINDOWS_MOBILE)
+	if( !TestFlag::IsEnableFlag(TestFlag::BREAK_ON_FAILURE) )
+	{
+		_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
+	}
+#endif
+
+#if IUTEST_HAS_EXCEPTIONS && (defined(_MSC_VER) && (_MSC_VER >= 1400)) && !defined(IUTEST_OS_WINDOWS_MOBILE)
+	_set_invalid_parameter_handler(OnInvalidParameter);
+#endif
+}
+
 IUTEST_IPP_INLINE void UnitTestImpl::TerminateImpl(void)
 {
 	for( iuTestCases::iterator it = m_testcases.begin(); it != m_testcases.end(); it = m_testcases.begin())
@@ -209,7 +245,7 @@ namespace detail
 IUTEST_IPP_INLINE ::std::string MakeIndexTestName(const char* basename, int index)
 {
 	::std::string name = basename;
-	iuStringStream::type strm;
+	iu_stringstream strm;
 	strm << index;
 	name += "/";
 	name += strm.str();

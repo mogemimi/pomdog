@@ -238,7 +238,7 @@ public:
 		return m_rnd.genrand<result_type>();
 #endif
 #else
-		return m_rnd.genrand(&detail::type<result_type>());
+		return m_rnd.genrand(detail::explicit_type<result_type>());
 #endif
 	}
 private:

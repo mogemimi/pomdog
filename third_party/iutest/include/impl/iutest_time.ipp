@@ -27,7 +27,7 @@ namespace detail
 // function
 IUTEST_IPP_INLINE ::std::string FormatTimeInMillisecAsSecond(TimeInMillisec msec)
 {
-	detail::iuStringStream::type ss;
+	iu_stringstream ss;
 #if defined(_MSC_VER) && _MSC_VER < 1300
 	ss << static_cast<unsigned int>(msec)/1000.0;
 #else
@@ -48,7 +48,7 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 		return "";
 	}
 
-	detail::iuStringStream::type ss;
+	iu_stringstream ss;
 	ss << (t->tm_year+1900);
 	return ss.str() + "-"
 		+ FormatIntWidth2(t->tm_mon+1) + "-"
@@ -75,7 +75,7 @@ IUTEST_IPP_INLINE TimeInMillisec GetTimeInMillis(void)
 #if   defined(IUTEST_GetMillisec)
 	return IUTEST_GetMillisec();
 
-#elif IUTEST_HAS_CXX11_HDR_CHRONO
+#elif IUTEST_HAS_CXX_HDR_CHRONO
 	return ::std::chrono::duration_cast< ::std::chrono::milliseconds>(::std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 
 #elif IUTEST_HAS_GETTIMEOFDAY

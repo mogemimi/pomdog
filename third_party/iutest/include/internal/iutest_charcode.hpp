@@ -41,34 +41,34 @@ namespace detail
 ::std::string WideStringToUTF8(const wchar_t* str, int num=-1);
 
 /**
-* @brief	ワイド文字列からマルチバイトへ変換
-* @param [in]	str	= 入力
-* @param [in]	num = 入力バッファサイズ
-* @return	マルチバイト文字列
+ * @brief	ワイド文字列からマルチバイトへ変換
+ * @param [in]	str	= 入力
+ * @param [in]	num = 入力バッファサイズ
+ * @return	マルチバイト文字列
 */
 ::std::string WideStringToMultiByteString(const wchar_t* str, int num=-1);
 
 /**
-* @brief	マルチバイト文字からUTF8へ変換
-* @param [in]	str	= 入力
-* @param [in]	num = 入力バッファサイズ
-* @return	UTF8 文字列
+ * @brief	マルチバイト文字からUTF8へ変換
+ * @param [in]	str	= 入力
+ * @param [in]	num = 入力バッファサイズ
+ * @return	UTF8 文字列
 */
 ::std::string MultiByteStringToUTF8(const char* src, int num=-1);
 
 /**
-* @brief	ワイド文字列から ::std::string へ変換
-* @param [in]	wide_c_str	= 入力
-* @return	string
+ * @brief	ワイド文字列から ::std::string へ変換
+ * @param [in]	wide_c_str	= 入力
+ * @return	string
 */
 ::std::string ShowWideCString(const wchar_t* wide_c_str);
 
 #if IUTEST_HAS_CXX_HDR_CODECVT
 /**
-* @brief	UTF16文字列からUTF8へ変換
-* @param [in]	str	= 入力
-* @param [in]	num = 入力バッファサイズ
-* @return	UTF8 文字列
+ * @brief	UTF16文字列からUTF8へ変換
+ * @param [in]	str	= 入力
+ * @param [in]	num = 入力バッファサイズ
+ * @return	UTF8 文字列
 */
 #if IUTEST_HAS_CHAR16_T
 ::std::string UTF16ToUTF8(const char16_t* str, int num=-1);
@@ -147,6 +147,25 @@ template<typename CharType>
 struct mbs_ptr : public mbs_ptr_impl::to_mbs_ptr<CharType>
 {
 };
+
+#if IUTEST_HAS_LIB
+
+#if IUTEST_HAS_EXTERN_TEMPLATE
+
+IUTEST_PRAGMA_EXTERN_TEMPLATE_WARN_DISABLE_BEGIN()
+
+extern template struct mbs_ptr<char>;
+extern template struct mbs_ptr<wchar_t>;
+
+IUTEST_PRAGMA_EXTERN_TEMPLATE_WARN_DISABLE_END()
+
+#else
+
+template struct mbs_ptr<char>;
+template struct mbs_ptr<wchar_t>;
+
+#endif
+#endif
 
 IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 

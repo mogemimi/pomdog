@@ -17,11 +17,11 @@
 
 //======================================================================
 // define
-#define	IUTEST_VER			0x01090000u	//!< iutest version 1.9.0.0
+#define	IUTEST_VER			0x01109906u	//!< iutest version 1.10.99.6
 #define IUTEST_MAJORVER		0x01u		//!< Major Version
-#define IUTEST_MINORVER		0x09u		//!< Minor Version
-#define IUTEST_BUILD		0x00u		//!< Build
-#define IUTEST_REVISION		0x00u		//!< Revision
+#define IUTEST_MINORVER		0x10u		//!< Minor Version
+#define IUTEST_BUILD		0x99u		//!< Build
+#define IUTEST_REVISION		0x06u		//!< Revision
 
 /**
  * @mainpage
@@ -66,7 +66,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @par		Command Line Options
  <table>
    <tr><td>--help, -h                        </td><td></td><td>Generate help message.</td></tr>
-   <tr><td>--iutest_output                   </td><td>xml[:path]</td><td>Path of xml report.</td></tr>
+   <tr><td>--iutest_output                   </td><td>xml|junit[:path]</td><td>Path of xml report.</td></tr>
    <tr><td>--iutest_list_tests               </td><td></td><td>List up tests.</td></tr>
    <tr><td>--iutest_list_tests_with_where    </td><td></td><td>List up tests with where.</td></tr>
    <tr><td>--iutest_color                    </td><td>&lt;yes|no|auto|ansi&gt;</td><td>Console color enable.</td></tr>
@@ -81,6 +81,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    <tr><td>--iutest_repeat                   </td><td>&lt;count&gt;</td><td>Set the number of repetitions of the test.</td></tr>
    <tr><td>--iutest_stream_result_to         </td><td>&lt;host:port&gt;</td><td>Set stream test results server.</td></tr>
    <tr><td>--iutest_file_location            </td><td>&lt;auto|vs|gcc&gt;</td><td>Format file location messages.</td></tr>
+   <tr><td>--iutest_default_package_name     </td><td>[name]</td><td>Set default root package name.</td></tr>
+   <tr><td>--verbose                         </td><td></td><td>Verbose option.</td></tr>
    <tr><td>--feature                         </td><td></td><td>Show iutest feature.</td></tr>
    <tr><td>--version, -v                     </td><td></td><td>Show iutest version.</td></tr>
  </table>
@@ -91,7 +93,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @page	ENVIRONMENT_OPTIONS	環境変数オプション
  * @par		Environment variable Options
  <table>
-   <tr><td>IUTEST_OUTPUT=xml[:path]        </td><td>Path of xml report.</td></tr>
+   <tr><td>IUTEST_OUTPUT=xml|junit[:path]  </td><td>Path of xml report.</td></tr>
    <tr><td>IUTEST_COLOR=yes|no|auto        </td><td>Console color enable.</td></tr>
    <tr><td>IUTEST_FILTER=filter            </td><td>Select the test run.</td></tr>
    <tr><td>IUTEST_SHUFFLE                  </td><td>Do shuffle test.</td></tr>
@@ -103,6 +105,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    <tr><td>IUTEST_PRINT_TIME=0|1           </td><td>Setting the display of elapsed time.</td></tr>
    <tr><td>IUTEST_REPEAT=count             </td><td>Set the number of repetitions of the test.</td></tr>
    <tr><td>IUTEST_FILE_LOCATION=auto|vs|gcc</td><td>Format file location messages.</td></tr>
+   <tr><td>IUTEST_ROOT_PACKAGE_NAME=[name] </td><td>Set root package name.</td></tr>
  </table>
 */
 
@@ -110,6 +113,36 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @page	CHANGELOG		変更履歴
  * @par		Changes
  <ul>
+  <li>v1.11.0.0
+    <ul>
+      <li>Matcher に Eq,Ne,Le,Lt,Ge,Gt,IsNull,NotNull を追加</li>
+      <li>Matcher に StrEq,StrNe,StrCaseEq,StrCaseNe,HasSubstr を追加</li>
+      <li>Matcher に FloatEq,DoubleEq,NanSensitiveFloatEq,NanSensitiveDoubleEq を追加</li>
+      <li>IUTEST_*_FLOAT_EQ,DOUBLE_EQ で NAN の比較が真を返す不具合を修正</li>
+    </ul>
+  </li>
+  <li>v1.10.0.0
+    <ul>
+      <li>--verbose コマンドラインオプションを追加</li>
+      <li>--iutest_default_package_name コマンドラインオプションを追加</li>
+      <li>operatoer == のないオブジェクトの IUTEST_*_EQ 対応</li>
+      <li>operatoer != のないオブジェクトの IUTEST_*_NE 対応</li>
+      <li>junit xml 出力に対応（--iutest_output=junit）</li>
+      <li>tuple の要素を取得する GetParam template 関数を追加</li>
+      <li>IUTEST_FLAG(ostream_formatter) を追加</li>
+      <li>tuple 要素を取得する GetParam tempalate 関数を追加</li>
+      <li>ARM対応</li>
+      <li>--iutest_break_on_failure でスキップや警告でも停止していた不具合を修正</li>
+      <li>Visual Studio 14 CTP 3 対応</li>
+    </ul>
+  </li>
+  <li>v1.9.1.0
+    <ul>
+      <li>IUTEST_P,IUTEST_TYPED_TEST_P で DISABLED_ 指定が機能しない問題を修正</li>
+      <li>TestFixutre を定義しなくても IUTEST_P が使えるように対応</li>
+	  <li>Visual Studio 14 CTP 対応</li>
+    </ul>
+  </li>
   <li>v1.9.0.0
     <ul>
       <li>IUTEST_*_THAT 追加</li>

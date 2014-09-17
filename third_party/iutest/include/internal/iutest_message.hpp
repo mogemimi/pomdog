@@ -18,7 +18,6 @@
 //======================================================================
 // include
 #include "../iutest_env.hpp"
-#include "iutest_constant.hpp"
 
 namespace iutest {
 namespace detail
@@ -56,7 +55,7 @@ public:
 		m_stream << value;
 		return *this;
 	}
-#if !defined(IUTEST_NO_ARGUMENT_DEPENDENT_LOOKUP)
+#if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
 	template<typename T>
 	iuStreamMessage& operator << (T* const& value)
 	{
@@ -121,7 +120,7 @@ private:
 	iuStreamMessage& operator = (const iuStreamMessage&);
 
 private:
-	detail::iuStringStream::type m_stream;
+	iu_global_format_stringstream m_stream;
 };
 
 inline iu_ostream& operator << (iu_ostream& os, const iuStreamMessage& msg)

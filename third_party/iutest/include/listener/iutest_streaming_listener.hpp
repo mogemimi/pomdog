@@ -17,8 +17,6 @@
 
 //======================================================================
 // include
-#include "../iutest_core.hpp"
-
 #if IUTEST_HAS_STREAM_RESULT
 #include "../internal/iutest_socket.hpp"
 

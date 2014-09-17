@@ -22,6 +22,10 @@
 
 //======================================================================
 // define
+/**
+ * @private
+ * @{
+*/
 #define IUTEST_TEST_CLASS_NAME_(testcase_, testname_)	IIUT_TEST_CLASS_NAME_I(IIUT_TO_VARNAME_(testcase_), IIUT_TO_VARNAME_(testname_))
 #define IIUT_TEST_CLASS_NAME_I(testcase_, testname_)	IIUT_TEST_CLASS_NAME_I_(testcase_, testname_)
 #define IIUT_TEST_CLASS_NAME_I_(testcase_, testname_)	iu_##testcase_##_x_##testname_##_Test
@@ -80,6 +84,11 @@
 
 #define IUTEST_TEST_F_IGNORE_(testfixture_, testname_)	IUTEST_TEST_IGNORE_(testfixture_, testname_, IIUT_TO_VARNAME_(testfixture_)	\
 															, ::iutest::internal::GetTypeId< IIUT_TO_VARNAME_(testfixture_) >())
+
+/**
+ * @}
+*/
+
 /**
  * @internal
  * @brief	テストクラス定義マクロ
@@ -114,11 +123,19 @@
 		, type_id_, parent_class_::SetUpTestCase, parent_class_::TearDownTestCase);			\
 	template<typename T>void IUTEST_TEST_CLASS_NAME_(testcase_, testname_ )::Body(void)
 
-#ifndef IUTEST_NO_VARIADIC_MACROS
+#if !defined(IUTEST_NO_VARIADIC_MACROS)
 
+/**
+ * @private
+ * @{
+*/
 #define IUTEST_PMZ_TEST_CLASS_NAME_(testcase_, testname_)	IIUT_PMZ_TEST_CLASS_NAME_I(IIUT_TO_VARNAME_(testcase_), IIUT_TO_VARNAME_(testname_))
 #define IIUT_PMZ_TEST_CLASS_NAME_I(testcase_, testname_)	IIUT_PMZ_TEST_CLASS_NAME_I_(testcase_, testname_)
 #define IIUT_PMZ_TEST_CLASS_NAME_I_(testcase_, testname_)	IUTEST_PP_CAT( IUTEST_PP_CAT(iu_##testcase_##_x_Test_, testname_), __LINE__)
+/**
+ * @}
+*/
+
 /**
  * @internal
  * @brief	パラメタライズテスト定義マクロ
@@ -189,8 +206,8 @@
 #endif
 
 /**
-* @internal
-* @brief	SKIP メッセージ処理
+ * @internal
+ * @brief	SKIP メッセージ処理
 */
 #define IUTEST_SKIP_MESSAGE(msg)					IUTEST_SKIP_MESSAGE_AT(msg, __FILE__, __LINE__)
 
@@ -411,7 +428,7 @@
 
 #define IUTEST_TEST_SAME(v1, v2, on_failure)			IUTEST_PRED_FORMAT2_( ::iutest::internal::CmpHelperSame, v1, v2, on_failure )
 
-#define IUTEST_TEST_NO_FAILURE_(statement, on_failure)				\
+#define IUTEST_TEST_NO_FAILURE_(statement, on_failure)						\
 	IUTEST_AMBIGUOUS_ELSE_BLOCKER_											\
 	if( ::iutest::detail::AlwaysTrue() ) {									\
 		::iutest::detail::NewTestPartResultCheckHelper::Counter<			\
@@ -422,7 +439,7 @@
 			goto IUTEST_PP_CAT(iutest_label_test_no_failure_, __LINE__);	\
 		}																	\
 	} else																	\
-		IUTEST_PP_CAT(iutest_label_test_no_failure_, __LINE__):			\
+		IUTEST_PP_CAT(iutest_label_test_no_failure_, __LINE__):				\
 		on_failure("\nExpected: " #statement " doesn't generate new failure.\n  Actual: it does.")
 
 #define IUTEST_TEST_NO_FATAL_FAILURE_(statement, on_failure)				\

@@ -117,7 +117,7 @@ public:
 	*/
 	template<typename T>
 	static AssertionResult Is(const T& b) { return AssertionResult(b ? true : false); }
-	/** @override */
+	/** @overload */
 	static AssertionResult Is(const AssertionResult& ar) { return AssertionResult(ar); }
 
 private:
@@ -170,31 +170,74 @@ inline AssertionReturnType<void> AssertionReturn(void) { return AssertionReturnT
 class AssertionHelper
 {
 public:
+	/**
+	 * @brief	コンストラクタ
+	 * @param [in]	file	= ファイル名
+	 * @param [in]	line	= 行番号
+	 * @param [in]	message	= メッセージ
+	 * @param [in]	type	= テスト結果のタイプ
+	*/
+	AssertionHelper(const char* file, int line, const char* message, TestPartResult::Type type)
+		: m_part_result(file, line, message, type)
+	{}
+	/**
+	 * @brief	コンストラクタ
+	 * @param [in]	file	= ファイル名
+	 * @param [in]	line	= 行番号
+	 * @param [in]	message	= メッセージ
+	 * @param [in]	type	= テスト結果のタイプ
+	*/
+	AssertionHelper(const char* file, int line, const ::std::string& message, TestPartResult::Type type)
+		: m_part_result(file, line, message.c_str(), type)
+	{}
+
+private:
+	IUTEST_PP_DISALLOW_COPY_AND_ASSIGN(AssertionHelper);
+
+#if IUTEST_HAS_RVALUE_REFS
+	AssertionHelper(AssertionHelper&& rhs) IUTEST_CXX_DELETED_FUNCTION;
+	AssertionHelper& operator=(AssertionHelper&&) IUTEST_CXX_DELETED_FUNCTION;
+#endif
+
+public:
 	/** @private */
 	class ScopedMessage : public detail::iu_list_node<ScopedMessage>
-		,  public detail::iuCodeMessage
+		, public detail::iuCodeMessage
 	{
 	public:
 		ScopedMessage(const detail::iuCodeMessage& msg)
 			: detail::iuCodeMessage(msg)
 		{
-			MessageList::s_scoped_message.push_back(this);
+			ScopedTrace::GetInstance().list.push_back(this);
 		}
 		~ScopedMessage(void)
 		{
-			MessageList::s_scoped_message.erase(this);
+			ScopedTrace::GetInstance().list.erase(this);
 		}
 	};
-public:
-	/** @private */
-	typedef detail::iu_list<ScopedMessage> msg_list;
-
 private:
-	template<typename T>
-	struct List {
-		static msg_list s_scoped_message;
+	class ScopedTrace
+	{
+	public:
+		typedef detail::iu_list<ScopedMessage> msg_list;
+		msg_list list;
+		static ScopedTrace& GetInstance(void) { static ScopedTrace inst; return inst; }
+	public:
+		void append_message(TestPartResult& part_result)
+		{
+			if( list.count() )
+			{
+				part_result.add_message("\niutest trace:");
+				for( msg_list::iterator it = list.begin(), end=list.end(); it != end; ++it )
+				{
+					// TODO : 追加メッセージとして保存するべき
+					// 現状はテスト結果のメッセージに追加している。
+					part_result.add_message("\n");
+					part_result.add_message(it->make_message().c_str());
+				}
+			}
+		}
 	};
-	typedef List<void> MessageList;
 
 #if defined(IUTEST_NO_PRIVATE_IN_AGGREGATE)
 	friend class ScopedMessage;
@@ -247,36 +290,6 @@ private:
 #endif
 
 public:
-	/**
-	 * @brief	コンストラクタ
-	 * @param [in]	file	= ファイル名
-	 * @param [in]	line	= 行番号
-	 * @param [in]	message	= メッセージ
-	 * @param [in]	type	= テスト結果のタイプ
-	*/
-	AssertionHelper(const char* file, int line, const char* message, TestPartResult::Type type)
-		: m_part_result(file, line, message, type)
-	{}
-	/**
-	 * @brief	コンストラクタ
-	 * @param [in]	file	= ファイル名
-	 * @param [in]	line	= 行番号
-	 * @param [in]	message	= メッセージ
-	 * @param [in]	type	= テスト結果のタイプ
-	*/
-	AssertionHelper(const char* file, int line, const ::std::string& message, TestPartResult::Type type)
-		: m_part_result(file, line, message.c_str(), type)
-	{}
-
-private:
-	IUTEST_PP_DISALLOW_COPY_AND_ASSIGN(AssertionHelper);
-
-#if IUTEST_HAS_RVALUE_REFS
-	AssertionHelper(AssertionHelper&& rhs) IUTEST_CXX_DELETED_FUNCTION;
-	AssertionHelper& operator=(AssertionHelper&&) IUTEST_CXX_DELETED_FUNCTION;
-#endif
-
-public:
 	/** @private */
 	void operator = (const Fixed& fixed)
 	{
@@ -309,19 +322,8 @@ private:
 	void OnFixed(const Fixed& fixed)
 	{
 		// OnFixed で throw しないこと！テスト側の例外キャッチにかからなくなる
-
 		m_part_result.add_message(fixed.GetString());
-		if( MessageList::s_scoped_message.count() )
-		{
-			m_part_result.add_message("\niutest trace:");
-			for( msg_list::iterator it = MessageList::s_scoped_message.begin(), end=MessageList::s_scoped_message.end(); it != end; ++it )
-			{
-				// TODO : 追加メッセージとして保存するべき
-				// 現状はテスト結果のメッセージに追加している。
-				m_part_result.add_message("\n");
-				m_part_result.add_message(it->make_message().c_str());
-			}
-		}
+		ScopedTrace::GetInstance().append_message(m_part_result);
 
 		if( TestEnv::GetGlobalTestPartResultReporter() != NULL )
 		{
@@ -332,7 +334,7 @@ private:
 			detail::DefaultReportTestPartResult(m_part_result);
 		}
 
-		if( m_part_result.type() != TestPartResult::kSuccess
+		if( m_part_result.failed()
 			&& TestFlag::IsEnableFlag(iutest::TestFlag::BREAK_ON_FAILURE) )
 		{
 			IUTEST_BREAK();
@@ -345,9 +347,6 @@ private:
 };
 
 }	// end of namespace iutest
-
-template<typename T>
-::iutest::AssertionHelper::msg_list iutest::AssertionHelper::List<T>::s_scoped_message;
 
 namespace iutest
 {
@@ -400,7 +399,7 @@ inline ::std::string GetBooleanAssertionFailureMessage(const AssertionResult& ar
 */
 inline AssertionResult EqFailure(const char* expected_expression, const char* actual_expression, const char* expected, const char* actual, bool ignoring_case=false)
 {
-	detail::iuStringStream::type strm;
+	iu_global_format_stringstream strm;
 	strm << "error: Value of " << actual_expression
 		<< "\n  Actual: " << actual
 		<< "\nExpected: " << expected_expression;
@@ -428,7 +427,7 @@ inline AssertionResult EqFailure(const char* expected_expression, const char* ac
 		<< "\n  Actual: " << FormatForComparisonFailureMessage(val1, val2)					\
 		<< " vs " << FormatForComparisonFailureMessage(val2, val1);							\
 	}																						\
-	}																						\
+	}
 
 #if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
 
@@ -459,8 +458,8 @@ DECL_COMPARE_HELPER_(GT, > )
 */
 
 /**
-* @brief	Null Helper
-* @tparam	IsNullLiteral	= val が NULL リテラルかどうか
+ * @brief	Null Helper
+ * @tparam	IsNullLiteral	= val が NULL リテラルかどうか
 */
 template<bool IsNullLiteral>
 class NullHelper
@@ -492,7 +491,7 @@ public:
 };
 
 /**
-* @brief	NullHelper 特殊化
+ * @brief	NullHelper 特殊化
 */
 template<>
 class NullHelper<true>
@@ -545,6 +544,46 @@ IUTEST_PRAGMA_WARN_DISABLE_SIGN_COMPARE()
 IUTEST_PARGMA_WARN_POP()
 }
 
+template<typename T>
+inline AssertionResult CmpHelperMemCmpEQ(const char* expected_str, const char* actual_str
+	, const T& expected, const T& actual)
+{
+	IUTEST_UNUSED_VAR(expected_str);
+
+IUTEST_PARGMA_WARN_PUSH()
+IUTEST_PRAGMA_WARN_DISABLE_SIGN_COMPARE()
+
+	if( memcmp(&actual, &expected, sizeof(T)) == 0 )
+	{
+		return AssertionSuccess();
+	}
+
+	return EqFailure(expected_str, actual_str
+		, FormatForComparisonFailureMessage(expected, actual).c_str()
+		, FormatForComparisonFailureMessage(actual, expected).c_str()
+		);
+
+IUTEST_PARGMA_WARN_POP()
+}
+
+template<typename T>
+inline AssertionResult CmpHelperMemCmpNE(const char* expected_str, const char* actual_str
+	, const T& expected, const T& actual)
+{
+IUTEST_PARGMA_WARN_PUSH()
+IUTEST_PRAGMA_WARN_DISABLE_SIGN_COMPARE()
+
+	if( memcmp(&actual, &expected, sizeof(T)) != 0 )
+	{
+		return AssertionSuccess();
+	}
+
+	return AssertionFailure() << "error: Expected: " << expected_str << " != " << actual_str
+		<< "\n  Actual: " << FormatForComparisonFailureMessage(expected, actual);
+
+IUTEST_PARGMA_WARN_POP()
+}
+
 /**
  * @brief	Equal Helper
  * @tparam	IsNullLiteral	= val1 が NULL リテラルかどうか
@@ -552,6 +591,33 @@ IUTEST_PARGMA_WARN_POP()
 template<bool IsNullLiteral>
 class EqHelper
 {
+#if IUTEST_HAS_ASSERTION_NOEQUALTO_OBJECT
+	template<typename T, bool has_equal_to_operator>
+	struct CmpHelper
+	{
+		static AssertionResult Compare(const char* expr1, const char* expr2, const T& val1, const T& val2)
+		{
+			return CmpHelperEQ(expr1, expr2, val1, val2);
+		}
+	};
+	template<typename T>
+	struct CmpHelper<T, false>
+	{
+		static AssertionResult Compare(const char* expr1, const char* expr2, const T& val1, const T& val2)
+		{
+			return CmpHelperMemCmpEQ(expr1, expr2, val1, val2);
+		}
+	};
+
+public:
+	template<typename T>
+	static AssertionResult Compare(const char* expr1, const char* expr2, const T& val1, const T& val2)
+	{
+		return CmpHelper<T, detail::has_equal_to<T>::value>::Compare(expr1, expr2, val1, val2);
+	}
+
+#endif
+
 public:
 	template<typename T1, typename T2>
 	static AssertionResult Compare(const char* expr1, const char* expr2, const T1& val1, const T2& val2)
@@ -596,6 +662,33 @@ public:
 template<bool IsNullLiteral>
 class NeHelper
 {
+#if IUTEST_HAS_ASSERTION_NOEQUALTO_OBJECT
+	template<typename T, bool has_not_equal_to_operator>
+	struct CmpHelper
+	{
+		static AssertionResult Compare(const char* expr1, const char* expr2, const T& val1, const T& val2)
+		{
+			return CmpHelperNE(expr1, expr2, val1, val2);
+		}
+	};
+	template<typename T>
+	struct CmpHelper<T, false>
+	{
+		static AssertionResult Compare(const char* expr1, const char* expr2, const T& val1, const T& val2)
+		{
+			return CmpHelperMemCmpNE(expr1, expr2, val1, val2);
+		}
+	};
+
+public:
+	template<typename T>
+	static AssertionResult Compare(const char* expr1, const char* expr2, const T& val1, const T& val2)
+	{
+		return CmpHelper<T, detail::has_not_equal_to<T>::value>::Compare(expr1, expr2, val1, val2);
+	}
+
+#endif
+
 public:
 	template<typename T1, typename T2>
 	static AssertionResult Compare(const char* expr1, const char* expr2, const T1& val1, const T2& val2)
@@ -656,7 +749,7 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ DoubleNearPredFormat(const char*
 {
 	return CmpHelperNearFloatingPoint(expr1, expr2, absc, val1, val2, abs_v);
 }
-#if !defined(IUTEST_NO_ARGUMENT_DEPENDENT_LOOKUP)
+#if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
 template<typename T, typename A>
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperNear(const char* expr1, const char* expr2, const char* absc
 													, const T& val1, const T& val2, const A& abs_v)
@@ -683,251 +776,269 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperNear(const char* expr1,
 	return CmpHelperNearFloatingPoint<float>(expr1, expr2, absc, val1, val2, static_cast<float>(abs_v));
 }
 
+
+namespace StrEqHelper
+{
+
+inline bool IUTEST_ATTRIBUTE_UNUSED_ Compare(const char* val1, const char* val2)
+{
+	if( val1 == NULL || val2 == NULL )
+	{
+		return val1 == val2;
+	}
+	return strcmp(val1, val2) == 0;
+}
+
+inline bool IUTEST_ATTRIBUTE_UNUSED_ Compare(const wchar_t* val1, const wchar_t* val2)
+{
+	if( val1 == NULL || val2 == NULL )
+	{
+		return val1 == val2;
+	}
+	return wcscmp(val1, val2) == 0;
+}
+
+template<typename Elem, typename Traits, typename Ax>
+inline bool IUTEST_ATTRIBUTE_UNUSED_ Compare(const ::std::basic_string<Elem, Traits, Ax>& val1
+	, const ::std::basic_string<Elem, Traits, Ax>& val2)
+{
+	return val1 == val2;
+}
+template<typename Elem, typename Traits, typename Ax>
+inline bool IUTEST_ATTRIBUTE_UNUSED_ Compare(const Elem* val1
+	, const ::std::basic_string<Elem, Traits, Ax>& val2)
+{
+	return val2 == val1;
+}
+template<typename Elem, typename Traits, typename Ax>
+inline bool IUTEST_ATTRIBUTE_UNUSED_ Compare(const ::std::basic_string<Elem, Traits, Ax>& val1
+	, const Elem* val2)
+{
+	return val1 == val2;
+}
+#if IUTEST_HAS_CHAR16_T
+inline bool IUTEST_ATTRIBUTE_UNUSED_ Compare(const char16_t* val1, const char16_t* val2)
+{
+	if( val1 == NULL || val2 == NULL )
+	{
+		return val1 == val2;
+	}
+	::std::u16string v1 = val1;
+	return Compare(v1, val2);
+}
+#endif
+#if IUTEST_HAS_CHAR32_T
+inline bool IUTEST_ATTRIBUTE_UNUSED_ Compare(const char32_t* val1, const char32_t* val2)
+{
+	if( val1 == NULL || val2 == NULL )
+	{
+		return val1 == val2;
+	}
+	::std::u32string v1 = val1;
+	return Compare(v1, val2);
+}
+#endif
+
+template<typename T1, typename T2>
+inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ Assertion(const char* expr1, const char* expr2
+	, const T1& val1, const T2& val2)
+{
+	if( Compare(val1, val2) )
+	{
+		return AssertionSuccess();
+	}
+
+	return EqFailure(expr1, expr2
+		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
+		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str());
+}
+
+}
+
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1, const char* expr2
 							   , const char* val1, const char* val2)
 {
-	if( val1 == NULL || val2 == NULL )
-	{
-		if( val1 == val2 )
-		{
-			return AssertionSuccess();
-		}
-	}
-	else if( strcmp(val1, val2) == 0 )
-	{
-		return AssertionSuccess();
-	}
-
-	return EqFailure(expr1, expr2
-		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
-		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str() );
+	return StrEqHelper::Assertion(expr1, expr2, val1, val2);
 }
+
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1, const char* expr2
 							   , const wchar_t* val1, const wchar_t* val2)
 {
-	if( val1 == NULL || val2 == NULL )
-	{
-		if( val1 == val2 )
-		{
-			return AssertionSuccess();
-		}
-	}
-	else if( wcscmp(val1, val2) == 0 )
-	{
-		return AssertionSuccess();
-	}
-
-	return EqFailure(expr1, expr2
-		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
-		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str() );
+	return StrEqHelper::Assertion(expr1, expr2, val1, val2);
 }
 template<typename Elem, typename Traits, typename Ax>
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1, const char* expr2
 																, const ::std::basic_string<Elem, Traits, Ax>& val1
 																, const ::std::basic_string<Elem, Traits, Ax>& val2)
 {
-	if( val1 == val2 )
-	{
-		return AssertionSuccess();
-	}
-	return EqFailure(expr1, expr2
-		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
-		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str() );
+	return StrEqHelper::Assertion(expr1, expr2, val1, val2);
 }
 template<typename Elem, typename Traits, typename Ax>
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1, const char* expr2
 																, const Elem* val1
 																, const ::std::basic_string<Elem, Traits, Ax>& val2)
 {
-	if( val2 == val1 )
-	{
-		return AssertionSuccess();
-	}
-	return EqFailure(expr1, expr2
-		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
-		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str() );
+	return StrEqHelper::Assertion(expr1, expr2, val1, val2);
 }
 template<typename Elem, typename Traits, typename Ax>
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1, const char* expr2
 																, const ::std::basic_string<Elem, Traits, Ax>& val1
 																, const Elem* val2)
 {
-	if( val1 == val2 )
-	{
-		return AssertionSuccess();
-	}
-	return EqFailure(expr1, expr2
-		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
-		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str() );
+	return StrEqHelper::Assertion(expr1, expr2, val1, val2);
 }
 #if IUTEST_HAS_CHAR16_T
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1, const char* expr2
 															, const char16_t* val1, const char16_t* val2)
 {
-	if( val1 == NULL && val2 == NULL )
-	{
-		return AssertionSuccess();
-	}
-	::std::u16string v1 = val1;
-	return CmpHelperSTREQ(expr1, expr2, v1, val2);
+	return StrEqHelper::Assertion(expr1, expr2, val1, val2);
 }
 #endif
 #if IUTEST_HAS_CHAR32_T
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTREQ(const char* expr1, const char* expr2
 															, const char32_t* val1, const char32_t* val2)
 {
-	if( val1 == NULL && val2 == NULL )
+	return StrEqHelper::Assertion(expr1, expr2, val1, val2);
+}
+#endif
+
+namespace StrNeHelper
+{
+
+template<typename T1, typename T2>
+inline bool IUTEST_ATTRIBUTE_UNUSED_ Compare(const T1& val1, const T2& val2)
+{
+	return !StrEqHelper::Compare(val1, val2);
+}
+
+template<typename T1, typename T2>
+inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ Assertion(const char* expr1, const char* expr2
+	, const T1& val1, const T2& val2)
+{
+	if( Compare(val1, val2) )
 	{
 		return AssertionSuccess();
 	}
-	::std::u32string v1 = val1;
-	return CmpHelperSTREQ(expr1, expr2, v1, val2);
+
+	return AssertionFailure() << "error: Expected: " << expr1 << " != " << expr2
+		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
+		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
 }
-#endif
+
+}
 
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1, const char* expr2
 							, const char* val1, const char* val2)
 {
-	if( val1 == NULL || val2 == NULL )
-	{
-		if( val1 != val2 )
-		{
-			return AssertionSuccess();
-		}
-	}
-	else if( strcmp(val1, val2) != 0 )
-	{
-		return AssertionSuccess();
-	}
-
-	return AssertionFailure() << "error: Expected: " << expr1 << " != " << expr2
-		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
-		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
+	return StrNeHelper::Assertion(expr1, expr2, val1, val2);
 }
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1, const char* expr2
 							, const wchar_t* val1, const wchar_t* val2)
 {
-	if( val1 == NULL || val2 == NULL )
-	{
-		if( val1 != val2 )
-		{
-			return AssertionSuccess();
-		}
-	}
-	else if( wcscmp(val1, val2) != 0 )
-	{
-		return AssertionSuccess();
-	}
-
-	return AssertionFailure() << "error: Expected: " << expr1 << " != " << expr2
-		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
-		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
+	return StrNeHelper::Assertion(expr1, expr2, val1, val2);
 }
 template<typename Elem, typename Traits, typename Ax>
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1, const char* expr2
 															, const ::std::basic_string<Elem, Traits, Ax>& val1
 															, const ::std::basic_string<Elem, Traits, Ax>& val2)
 {
-	if( val1 != val2 )
-	{
-		return AssertionSuccess();
-	}
-	return AssertionFailure() << "error: Expected: " << expr1 << " != " << expr2
-		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
-		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
+	return StrNeHelper::Assertion(expr1, expr2, val1, val2);
 }
 template<typename Elem, typename Traits, typename Ax>
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1, const char* expr2
 															, const Elem* val1
 															, const ::std::basic_string<Elem, Traits, Ax>& val2)
 {
-	if( val2 != val1 )
-	{
-		return AssertionSuccess();
-	}
-	return AssertionFailure() << "error: Expected: " << expr1 << " != " << expr2
-		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
-		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
+	return StrNeHelper::Assertion(expr1, expr2, val1, val2);
 }
 template<typename Elem, typename Traits, typename Ax>
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1, const char* expr2
 															, const ::std::basic_string<Elem, Traits, Ax>& val1
 															, const Elem* val2)
 {
-	if( val1 != val2 )
-	{
-		return AssertionSuccess();
-	}
-	return AssertionFailure() << "error: Expected: " << expr1 << " != " << expr2
-		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
-		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
+	return StrNeHelper::Assertion(expr1, expr2, val1, val2);
 }
 #if IUTEST_HAS_CHAR16_T
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1, const char* expr2
 															, const char16_t* val1, const char16_t* val2)
 {
-	if( (val1 == NULL || val2 == NULL)
-		&& val1 != val2 )
-	{
-		return AssertionSuccess();
-	}
-	::std::u16string v1 = val1;
-	return CmpHelperSTRNE(expr1, expr2, v1, val2);
+	return StrNeHelper::Assertion(expr1, expr2, val1, val2);
 }
 #endif
 #if IUTEST_HAS_CHAR32_T
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRNE(const char* expr1, const char* expr2
 															, const char32_t* val1, const char32_t* val2)
 {
-	if( (val1 == NULL || val2 == NULL)
-		&& val1 != val2 )
+	return StrNeHelper::Assertion(expr1, expr2, val1, val2);
+}
+#endif
+
+namespace StrCaseEqHelper
+{
+
+inline bool IUTEST_ATTRIBUTE_UNUSED_ Compare(const char* val1, const char* val2)
+{
+	if( val1 == NULL || val2 == NULL )
+	{
+		return val1 == val2;
+	}
+	return detail::iu_stricmp(val1, val2) == 0;
+}
+
+inline bool IUTEST_ATTRIBUTE_UNUSED_ Compare(const wchar_t* val1, const wchar_t* val2)
+{
+	if( val1 == NULL || val2 == NULL )
+	{
+		return val1 == val2;
+	}
+	return detail::iu_wcsicmp(val1, val2) == 0;
+}
+
+template<typename Elem, typename Traits, typename Ax>
+inline bool IUTEST_ATTRIBUTE_UNUSED_ Compare(const ::std::basic_string<Elem, Traits, Ax>& val1
+	, const ::std::basic_string<Elem, Traits, Ax>& val2)
+{
+	return Compare(val1.c_str(), val2.c_str());
+}
+template<typename Elem, typename Traits, typename Ax>
+inline bool IUTEST_ATTRIBUTE_UNUSED_ Compare(const Elem* val1
+	, const ::std::basic_string<Elem, Traits, Ax>& val2)
+{
+	return Compare(val1, val2.c_str());
+}
+template<typename Elem, typename Traits, typename Ax>
+inline bool IUTEST_ATTRIBUTE_UNUSED_ Compare(const ::std::basic_string<Elem, Traits, Ax>& val1
+	, const Elem* val2)
+{
+	return Compare(val1.c_str(), val2);
+}
+
+template<typename T1, typename T2>
+inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ Assertion(const char* expr1, const char* expr2
+	, const T1& val1, const T2& val2)
+{
+	if( Compare(val1, val2) )
 	{
 		return AssertionSuccess();
 	}
-	::std::u32string v1 = val1;
-	return CmpHelperSTRNE(expr1, expr2, v1, val2);
+
+	return EqFailure(expr1, expr2
+		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
+		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str()
+		, true);
 }
-#endif
+
+}
 
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASEEQ(const char* expr1, const char* expr2
 							, const char* val1, const char* val2)
 {
-	if( val1 == NULL || val2 == NULL )
-	{
-		if( val1 == val2 )
-		{
-			return AssertionSuccess();
-		}
-	}
-	else if( detail::iu_stricmp(val1, val2) == 0 )
-	{
-		return AssertionSuccess();
-	}
-
-	return EqFailure(expr1, expr2
-		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
-		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str()
-		, true);
+	return StrCaseEqHelper::Assertion(expr1, expr2, val1, val2);
 }
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASEEQ(const char* expr1, const char* expr2
 							, const wchar_t* val1, const wchar_t* val2)
 {
-	if( val1 == NULL || val2 == NULL )
-	{
-		if( val1 == val2 )
-		{
-			return AssertionSuccess();
-		}
-	}
-	else if( detail::iu_wcsicmp(val1, val2) == 0 )
-	{
-		return AssertionSuccess();
-	}
-
-	return EqFailure(expr1, expr2
-		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2)).c_str()
-		, detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1)).c_str()
-		, true);
+	return StrCaseEqHelper::Assertion(expr1, expr2, val1, val2);
 }
 template<typename Elem, typename Traits, typename Ax>
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASEEQ(const char* expr1, const char* expr2
@@ -950,17 +1061,21 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASEEQ(const char* e
 {
 	return CmpHelperSTRCASEEQ(expr1, expr2, val1.c_str(), val2);
 }
-inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASENE(const char* expr1, const char* expr2
-							, const char* val1, const char* val2)
+
+namespace StrCaseNeHelper
 {
-	if( val1 == NULL || val2 == NULL )
-	{
-		if( val1 != val2 )
-		{
-			return AssertionSuccess();
-		}
-	}
-	else if( detail::iu_stricmp(val1, val2) != 0 )
+
+template<typename T1, typename T2>
+inline bool IUTEST_ATTRIBUTE_UNUSED_ Compare(const T1& val1, const T2& val2)
+{
+	return !StrCaseEqHelper::Compare(val1, val2);
+}
+
+template<typename T1, typename T2>
+inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ Assertion(const char* expr1, const char* expr2
+	, const T1& val1, const T2& val2)
+{
+	if( Compare(val1, val2) )
 	{
 		return AssertionSuccess();
 	}
@@ -969,24 +1084,18 @@ inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASENE(const char* e
 		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
 		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
 }
+
+}
+
+inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASENE(const char* expr1, const char* expr2
+							, const char* val1, const char* val2)
+{
+	return StrCaseNeHelper::Assertion(expr1, expr2, val1, val2);
+}
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASENE(const char* expr1, const char* expr2
 							, const wchar_t* val1, const wchar_t* val2)
 {
-	if( val1 == NULL || val2 == NULL )
-	{
-		if( val1 != val2 )
-		{
-			return AssertionSuccess();
-		}
-	}
-	else if( detail::iu_wcsicmp(val1, val2) != 0 )
-	{
-		return AssertionSuccess();
-	}
-
-	return AssertionFailure() << "error: Expected: " << expr1 << " != " << expr2 << " (ignoring case)"
-		<< "\n  Actual: " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val2, val1))
-		<< " vs " << detail::ShowStringQuoted(FormatForComparisonFailureMessage(val1, val2));
+	return StrCaseNeHelper::Assertion(expr1, expr2, val1, val2);
 }
 template<typename Elem, typename Traits, typename Ax>
 inline AssertionResult IUTEST_ATTRIBUTE_UNUSED_ CmpHelperSTRCASENE(const char* expr1, const char* expr2

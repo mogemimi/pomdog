@@ -20,6 +20,7 @@
 #include "iutest_genparams.hpp"
 
 #if IUTEST_HAS_PARAM_TEST
+#include "iutest_pool.hpp"
 
 namespace iutest {
 namespace detail
@@ -30,13 +31,21 @@ namespace detail
 /**
  * @brief	パラメータ単体テスト TestInfo データクラス
 */
-template<typename ParamType>
 class IParamTestInfoData
 {
 public:
+	class EachTestBase : public iuIObject {};
+	template<typename T>
+	class ParamEachTestBase : public EachTestBase
+	{
+	public:
+		virtual void SetParam(const T& param) = 0;
+	};
+public:
 	IParamTestInfoData(const char* name) : m_name(name) {}
-	virtual TestCase* MakeTestCase(const char* testcase_name, TestTypeId id, SetUpMethod setup, TearDownMethod teardown) const = 0;
-	virtual void RegisterTest(TestCase* , ParamType param, int index) const = 0;
+	virtual TestCase* MakeTestCase(const char* , TestTypeId , SetUpMethod , TearDownMethod ) const = 0;
+	virtual EachTestBase* RegisterTest(TestCase* , int ) const = 0;
+	const char* GetName(void) const { return m_name.c_str(); }
 protected:
 	::std::string m_name;
 };
@@ -51,17 +60,39 @@ public:
 protected:
 	IParamTestCaseInfo(const ::std::string& base_name, const ::std::string& package_name)
 		: m_testcase_base_name(base_name), m_package_name(package_name) {}
+	
 public:
-	virtual void RegisterTests(void) const = 0;
+	/**
+	 * @brief	テストパターンの登録
+	*/
+	void AddTestPattern(IParamTestInfoData* testinfo)
+	{
+		m_testinfos.push_back(testinfo);
+	};
 
-	::std::string GetTestCaseBaseName(void)	const	{ return m_testcase_base_name; }
-	::std::string GetPackageName(void)		const	{ return m_package_name; }
+public:
+	void RegisterTests(void) const
+	{
+		for( TestInfoContainer::const_iterator it=m_testinfos.begin(), end=m_testinfos.end(); it != end; ++it )
+		{
+			OnRegisterTests(*it);
+		}
+	}
+	
+	::std::string GetTestCaseBaseName(void)	const { return m_testcase_base_name; }
+	::std::string GetPackageName(void)		const { return m_package_name; }
 
 public:
 	bool is_same(const ::std::string& base_name, const ::std::string& package_name)
 	{
 		return m_testcase_base_name == base_name && m_package_name == package_name;
 	}
+	
+private:
+	virtual void OnRegisterTests(IParamTestInfoData*) const = 0;
+private:
+	typedef ::std::vector<IParamTestInfoData*> TestInfoContainer;
+	TestInfoContainer m_testinfos;
 protected:
 	::std::string m_testcase_base_name;
 	::std::string m_package_name;
@@ -78,7 +109,9 @@ class ParamTestCaseInfo : public IParamTestCaseInfo
 	typedef typename Tester::ParamType				ParamType;
 	typedef detail::iuIParamGenerator<ParamType>	ParamGenerator;
 	typedef typename ParamGenerator::Generator		Generator;
-	typedef IParamTestInfoData<ParamType>			TestInfoData;
+	typedef IParamTestInfoData::ParamEachTestBase<ParamType> EachTest;
+
+	typedef ::std::vector<IParamTestInfoData*> TestInfoContainer;
 
 	typedef ParamGenerator* (pfnCreateGeneratorFunc)();
 
@@ -91,63 +124,55 @@ public:
 	virtual ~ParamTestCaseInfo(void) {}
 
 	/**
-	 * @brief	テストパターンの登録
-	*/
-	void AddTestPattern(TestInfoData* testinfo)
-	{
-		m_testinfos.push_back(testinfo);
-	};
-	/**
 	 * @brief	インスタンスの登録
 	*/
 	int	AddTestCaseInstantiation(::std::string name, pfnCreateGeneratorFunc* func)
 	{
+#if IUTEST_HAS_STD_EMPLACE
+		m_instantiation.emplace_back(name, func);
+#else
 		m_instantiation.push_back(InstantiationPair(name, func));
+#endif
 		return 0;
 	}
 
 	/**
 	 * @brief	テストの作成
 	*/
-	virtual void RegisterTests(void) const
+	virtual void OnRegisterTests(IParamTestInfoData* infodata) const IUTEST_CXX_OVERRIDE
 	{
-		for( typename TestInfoContainer::const_iterator it=m_testinfos.begin(), end=m_testinfos.end(); it != end; ++it )
+		for( typename InstantiationContainer::const_iterator gen_it=m_instantiation.begin(), gen_end=m_instantiation.end(); gen_it != gen_end; ++gen_it )
 		{
-			for( typename InstantiationContainer::const_iterator gen_it=m_instantiation.begin(), gen_end=m_instantiation.end(); gen_it != gen_end; ++gen_it )
+			// パラメータ生成器の作成
+			detail::scoped_ptr<ParamGenerator> p((gen_it->second)());
+
+			::std::string testcase_name = m_package_name;
+			if( !gen_it->first.empty() )
 			{
-				// パラメータ生成器の作成
-				detail::scoped_ptr<ParamGenerator> p((gen_it->second)());
+				testcase_name += gen_it->first;
+				testcase_name += "/";
+			}
+			testcase_name += m_testcase_base_name;
+			TestCase* testcase = infodata->MakeTestCase(testcase_name.c_str()
+				, internal::GetTypeId<Tester>()
+				, Tester::SetUpTestCase
+				, Tester::TearDownTestCase);
 
-				::std::string testcase_name = m_package_name;
-				if( !gen_it->first.empty() )
+			if( p.get() != NULL )
+			{
+				int i=0;
+				for( p->Begin(); !p->IsEnd(); p->Next() )
 				{
-					testcase_name += gen_it->first;
-					testcase_name += "/";
-				}
-				testcase_name += m_testcase_base_name;
-				TestCase* testcase = (*it)->MakeTestCase(testcase_name.c_str()
-					, internal::GetTypeId<Tester>()
-					, Tester::SetUpTestCase
-					, Tester::TearDownTestCase);
-
-				if( p.get() != NULL )
-				{
-					int i=0;
-					for( p->Begin(); !p->IsEnd(); p->Next() )
-					{
-						// パラメータがなくなるまでテストを作る
-						(*it)->RegisterTest(testcase, p->GetCurrent(), i);
-						++i;
-					}
+					EachTest* test = static_cast<EachTest*>(infodata->RegisterTest(testcase, i));
+					test->SetParam(p->GetCurrent());
+					++i;
 				}
 			}
 		}
 	}
 private:
-	typedef ::std::vector<TestInfoData*> TestInfoContainer;
 	typedef ::std::pair< ::std::string, pfnCreateGeneratorFunc* > InstantiationPair;
 	typedef ::std::vector<InstantiationPair> InstantiationContainer;
-	TestInfoContainer m_testinfos;
 	InstantiationContainer m_instantiation;
 };
 

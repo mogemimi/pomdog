@@ -40,6 +40,10 @@ public:
 	 * @brief	機能出力
 	*/
 	static void ShowFeature(void);
+	/**
+	 * @brief	コンパイラスペック出力
+	*/
+	static void ShowSpec(void);
 };
 
 inline void iuOptionMessage::ShowHelp(void)
@@ -51,18 +55,18 @@ inline void iuOptionMessage::ShowHelp(void)
 		"--------------------------------------------------\n"
 		"Command Line Options\n"
 		"\n"
-		"    --help, -h                       : generate help message.\n"
-		"    --iutest_output=xml[:path]       : path of xml report.\n"
-		"    --iutest_list_tests              : list up tests.\n"
-		"    --iutest_list_tests_with_where   : list up tests with where.\n"
-		"    --iutest_color=<yes|no|auto|ansi>: console color enable.\n"
+		"    --help, -h                       : Generate help message.\n"
+		"    --iutest_output=xml[:path]       : Path of xml report.\n"
+		"    --iutest_list_tests              : List up tests.\n"
+		"    --iutest_list_tests_with_where   : List up tests with where.\n"
+		"    --iutest_color=<yes|no|auto|ansi>: Console color enable.\n"
 		"    --iutest_filter=<filter>         : Select the test run.\n"
-		"    --iutest_shuffle                 : do shuffle test.\n"
-		"    --iutest_random_seed=<seed>      : set random seed.\n"
-		"    --iutest_also_run_disabled_tests : run disabled tests.\n"
+		"    --iutest_shuffle                 : Do shuffle test.\n"
+		"    --iutest_random_seed=<seed>      : Set random seed.\n"
+		"    --iutest_also_run_disabled_tests : Run disabled tests.\n"
 		"    --iutest_break_on_failure[=0|1]  : When that failed to break.\n"
 		"    --iutest_throw_on_failure[=0|1]  : When that failed to throw.\n"
-		"    --iutest_catch_exceptions=<0|1>  : catch exceptions enable.\n"
+		"    --iutest_catch_exceptions=<0|1>  : Catch exceptions enable.\n"
 		"    --iutest_print_time=<0|1>        : Setting the display of elapsed time.\n"
 		"    --iutest_repeat=<count>          : Set the number of repetitions\n"
 		"                                       of the test.\n"
@@ -72,15 +76,16 @@ inline void iuOptionMessage::ShowHelp(void)
 #endif
 		"    --iutest_file_location=<auto|vs|gcc>\n"
 		"                                     : Format file location messages.\n"
-		"    --feature                        : show iutest feature.\n"
-		"    --version, -v                    : show iutest version.\n"
+		"    --verbose                        : Verbose option.\n"
+		"    --feature                        : Show iutest feature.\n"
+		"    --version, -v                    : Show iutest version.\n"
 		"\n"
 		"--------------------------------------------------\n"
 		"License\n"
 		"\n"
 		"    Copyright (c) 2011-2014, Takazumi-Shirayanagi\n"
 		"\n"
-		"    The new(3-clause) BSD License is applied to this software, see LICENSE\n"
+		"    This software is released under the new BSD License, see LICENSE\n"
 		"\n"
 		;
 	detail::iuConsole::color_output(detail::iuConsole::cyan, readme);
@@ -92,23 +97,19 @@ inline void iuOptionMessage::ShowVersion(void)
 		, IUTEST_MAJORVER, IUTEST_MINORVER, IUTEST_BUILD, IUTEST_REVISION);
 }
 
+/** @private */
+#define SHOW_MACRO(macro)	detail::iuConsole::output("#define %s  %s\n", #macro, IUTEST_PP_TOSTRING(macro))
+
 inline void iuOptionMessage::ShowFeature(void)
 {
-#define SHOW_MACRO(macro)	detail::iuConsole::output("#define %s  %s\n", #macro, IUTEST_PP_TOSTRING(macro))
 	SHOW_MACRO(IUTEST_HAS_ANY_PARAM_TEST);
 	SHOW_MACRO(IUTEST_HAS_ASSERTION_RETURN);
 	SHOW_MACRO(IUTEST_HAS_CHAR16_T);
 	SHOW_MACRO(IUTEST_HAS_CHAR32_T);
-	SHOW_MACRO(IUTEST_HAS_CLOCK);
 	SHOW_MACRO(IUTEST_HAS_COMBINE);
 	SHOW_MACRO(IUTEST_HAS_CONCAT);
-	SHOW_MACRO(IUTEST_HAS_CONSTEXPR);
-	SHOW_MACRO(IUTEST_HAS_CTIME);
-	SHOW_MACRO(IUTEST_HAS_CXX11);
-	SHOW_MACRO(IUTEST_HAS_DELETED_FUNCTIONS);
 	SHOW_MACRO(IUTEST_HAS_EXCEPTIONS);
 	SHOW_MACRO(IUTEST_HAS_GENRAND);
-	SHOW_MACRO(IUTEST_HAS_GETTIMEOFDAY);
 	SHOW_MACRO(IUTEST_HAS_IF_EXISTS);
 	SHOW_MACRO(IUTEST_HAS_IGNORE_TEST);
 	SHOW_MACRO(IUTEST_HAS_INITIALIZER_LIST);
@@ -124,8 +125,6 @@ inline void iuOptionMessage::ShowFeature(void)
 	SHOW_MACRO(IUTEST_HAS_PEEP_STATIC_FUNC);
 	SHOW_MACRO(IUTEST_HAS_PRINT_TO);
 	SHOW_MACRO(IUTEST_HAS_RANDOMVALUES);
-	SHOW_MACRO(IUTEST_HAS_RTTI);
-	SHOW_MACRO(IUTEST_HAS_RVALUE_REFS);
 	SHOW_MACRO(IUTEST_HAS_SEH);
 	SHOW_MACRO(IUTEST_HAS_SOCKET);
 	SHOW_MACRO(IUTEST_HAS_SPI_LAMBDA_SUPPORT);
@@ -140,12 +139,44 @@ inline void iuOptionMessage::ShowFeature(void)
 	SHOW_MACRO(IUTEST_HAS_VALUESGEN);
 	SHOW_MACRO(IUTEST_HAS_VARIADIC_COMBINE);
 	SHOW_MACRO(IUTEST_HAS_VARIADIC_PAIRWISE);
-	SHOW_MACRO(IUTEST_HAS_VARIADIC_TEMPLATES);
-	SHOW_MACRO(IUTEST_HAS_VARIADIC_TEMPLATE_TEMPLATES);
 	SHOW_MACRO(IUTEST_HAS_VARIADIC_VALUES);
 	SHOW_MACRO(IUTEST_PLATFORM);
 	SHOW_MACRO(IUTEST_REPORT_SKIPPED);
 	SHOW_MACRO(IUTEST_USE_THROW_ON_ASSERTION_FAILURE);
+}
+
+inline void iuOptionMessage::ShowSpec(void)
+{
+	SHOW_MACRO(IUTEST_HAS_CHAR16_T);
+	SHOW_MACRO(IUTEST_HAS_CHAR32_T);
+	SHOW_MACRO(IUTEST_HAS_CLOCK);
+	SHOW_MACRO(IUTEST_HAS_CONSTEXPR);
+	SHOW_MACRO(IUTEST_HAS_CTIME);
+	SHOW_MACRO(IUTEST_HAS_CXX_HDR_CHRONO);
+	SHOW_MACRO(IUTEST_HAS_CXX_HDR_RANDOM);
+	SHOW_MACRO(IUTEST_HAS_CXX11);
+	SHOW_MACRO(IUTEST_HAS_DELETED_FUNCTIONS);
+	SHOW_MACRO(IUTEST_HAS_EXCEPTIONS);
+	SHOW_MACRO(IUTEST_HAS_EXPLICIT_CONVERSION);
+	SHOW_MACRO(IUTEST_HAS_EXTERN_TEMPLATE);
+	SHOW_MACRO(IUTEST_HAS_GETTIMEOFDAY);
+	SHOW_MACRO(IUTEST_HAS_HDR_CXXABI);
+	SHOW_MACRO(IUTEST_HAS_HDR_SYSTIME);
+	SHOW_MACRO(IUTEST_HAS_IF_EXISTS);
+	SHOW_MACRO(IUTEST_HAS_INITIALIZER_LIST);
+	SHOW_MACRO(IUTEST_HAS_LAMBDA);
+	SHOW_MACRO(IUTEST_HAS_NOEXCEPT);
+	SHOW_MACRO(IUTEST_HAS_NULLPTR);
+	SHOW_MACRO(IUTEST_HAS_OVERRIDE_AND_FINAL);
+	SHOW_MACRO(IUTEST_HAS_RTTI);
+	SHOW_MACRO(IUTEST_HAS_RVALUE_REFS);
+	SHOW_MACRO(IUTEST_HAS_SEH);
+	SHOW_MACRO(IUTEST_HAS_STD_EMPLACE);
+	SHOW_MACRO(IUTEST_HAS_STRINGSTREAM);
+	SHOW_MACRO(IUTEST_HAS_STRONG_ENUMS);
+	SHOW_MACRO(IUTEST_HAS_STRSTREAM);
+	SHOW_MACRO(IUTEST_HAS_VARIADIC_TEMPLATES);
+	SHOW_MACRO(IUTEST_HAS_VARIADIC_TEMPLATE_TEMPLATES);
 
 #ifdef _IUTEST_DEBUG
 

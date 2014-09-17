@@ -67,13 +67,21 @@ public:
 			const int test_count = pTestCase->total_test_count();
 			HMENU hTestCase = AppendPopup(hRoot, pTestCase->name());
 			Append(hTestCase, "以下をすべて実行", m_nID);
+#if IUTEST_HAS_STD_EMPLACE
+			m_TestCaseList.emplace(m_nID, pTestCase);
+#else
 			m_TestCaseList.insert( ::std::pair<WORD, const ::iutest::TestCase*>(m_nID, pTestCase) );
+#endif
 			++m_nID;
 			for( int j=0; j < test_count; ++j )
 			{
 				const ::iutest::TestInfo* pTestInfo = pTestCase->GetTestInfo(j);
 				Append(hTestCase, pTestInfo->name(), m_nID);
-				m_TestInfoList.insert( ::std::pair<WORD, const ::iutest::TestInfo*>(m_nID, pTestInfo) );
+#if IUTEST_HAS_STD_EMPLACE
+				m_TestInfoList.emplace(m_nID, pTestInfo);
+#else
+				m_TestInfoList.insert(::std::pair<WORD, const ::iutest::TestInfo*>(m_nID, pTestInfo));
+#endif
 				++m_nID;
 			}
 		}

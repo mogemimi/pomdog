@@ -36,16 +36,7 @@ struct kStringsT
 	static const char* const Null;						//!< NULL
 };
 
-template<typename DMY>
-const char* const kStringsT<DMY>::DefaultXmlReportFileName =  "test_detail.xml";
-template<typename DMY>
-const char* const kStringsT<DMY>::UnkownFile =  "unkown file";
-template<typename DMY>
-const char* const kStringsT<DMY>::Null =  "(null)";
-
-#if IUTEST_HAS_LIB
-
-#if IUTEST_HAS_EXTERN_TEMPLATE
+#if IUTEST_HAS_LIB && IUTEST_HAS_EXTERN_TEMPLATE
 
 IUTEST_PRAGMA_EXTERN_TEMPLATE_WARN_DISABLE_BEGIN()
 
@@ -55,9 +46,15 @@ IUTEST_PRAGMA_EXTERN_TEMPLATE_WARN_DISABLE_END()
 
 #else
 
+template<typename DMY>
+const char* const kStringsT<DMY>::DefaultXmlReportFileName = "test_detail.xml";
+template<typename DMY>
+const char* const kStringsT<DMY>::UnkownFile = "unkown file";
+template<typename DMY>
+const char* const kStringsT<DMY>::Null = "(null)";
+
 template struct kStringsT<void>;
 
-#endif
 #endif
 
 }	// end of namespace helper

@@ -34,6 +34,22 @@
 #  define IUTEST_HAS_PEEP_STATIC_FUNC	0
 #endif
 
+#if IUTEST_HAS_PEEP
+
+namespace testing {
+namespace detail 
+{
+
+using ::iutest::detail::peep_tag;
+
+}	// end of namespace detail
+
+using ::iutest::Peep;
+
+}	// end of namespace testing
+
+#endif
+
 #endif // !defined(IUTEST_USE_GTEST)
 
 #endif // INCG_IRIS_IUTEST_SWITCH_PEEP_HPP_316C2127_8DF8_4B99_9C07_9170B403D6AD_

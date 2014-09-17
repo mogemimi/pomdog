@@ -133,7 +133,7 @@ IUTEST_IPP_INLINE void TestEventRepeater::OnTestProgramEnd(const UnitTest& test)
 
 IUTEST_IPP_INLINE void TestEventListeners::set_default_result_printer(TestEventListener* listener)
 {
-	Release(m_default_result_printer);
+	delete Release(m_default_result_printer);
 	if( listener != NULL )
 	{
 		Append(listener);
@@ -142,7 +142,7 @@ IUTEST_IPP_INLINE void TestEventListeners::set_default_result_printer(TestEventL
 }
 IUTEST_IPP_INLINE void TestEventListeners::set_default_xml_generator(TestEventListener* listener)
 {
-	Release(m_default_xml_generator);
+	delete Release(m_default_xml_generator);
 	if( listener != NULL )
 	{
 		Append(listener);

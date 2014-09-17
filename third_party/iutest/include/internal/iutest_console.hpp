@@ -27,7 +27,7 @@ namespace detail
 //======================================================================
 // define
 #ifndef IUTEST_VPRINTF
-#  define IUTEST_VPRINTF(f, a)	vprintf(f, a)
+#  define IUTEST_VPRINTF(f, a)	vprintf(f, a)	//!< vprintf 呼び出しマクロ
 #endif
 
 #ifndef IUTEST_HAS_COLORCONSOLE
@@ -205,7 +205,7 @@ inline void iuConsole::color_output_impl(Color color, const char* fmt, va_list v
 {
 	(void)(fmt);
 	(void)(va);
-#if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE) && !defined(IUTEST_OS_WINDOWS_PHONE)
+#if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE) && !defined(IUTEST_OS_WINDOWS_PHONE) && !defined(IUTEST_OS_WINDOWS_RT)
 	if( !IsColorModeAnsi() )
 	{
 		const WORD attr[] = {
@@ -277,7 +277,19 @@ inline bool iuConsole::IsShouldUseColor(bool use_color)
 }	// end of namespace detail
 }	// end of namespace iutest
 
+#if IUTEST_HAS_LIB && IUTEST_HAS_EXTERN_TEMPLATE
+
+IUTEST_PRAGMA_EXTERN_TEMPLATE_WARN_DISABLE_BEGIN()
+
+extern template struct ::iutest::detail::iuConsole::Variable<void>;
+
+IUTEST_PRAGMA_EXTERN_TEMPLATE_WARN_DISABLE_END()
+
+#else
+
 template<typename T>
 ::iutest::detail::iuLogger* ::iutest::detail::iuConsole::Variable<T>::m_pLogger = NULL;
+
+#endif
 
 #endif // INCG_IRIS_IUTEST_CONSOLE_HPP_DCAC5025_B7BB_424E_A849_9E6FE0A3B460_

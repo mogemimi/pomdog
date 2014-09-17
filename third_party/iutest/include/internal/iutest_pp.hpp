@@ -282,6 +282,8 @@
 #define IUTEST_PP_INC_100	nil
 
 // REPEAT
+#define IUTEST_PP_LIMIT_REPEAT	50
+
 #define IUTEST_PP_REPEAT_PARAMS_MACRO_(i, param)	param
 #define IUTEST_PP_REPEAT_PARAMS_MACRO_IN_BINARY_(i, param1, param2)	param2(i, param1)
 
@@ -349,6 +351,8 @@
 #define IUTEST_PP_REPEAT_I_50(i, m, p1, p2)		m(i, p1, p2) IUTEST_PP_REPEAT_I_49(IUTEST_PP_INC(i), m, p1, p2)
 
 // ENUM
+#define IUTEST_PP_LIMIT_ENUM	50
+
 #define IUTEST_PP_ENUM_PARAMS_MACRO_(i, param)	IUTEST_PP_CAT(param, i)
 #define IUTEST_PP_ENUM_PARAMS_MACRO_IN_BINARY_(i, param1, param2)	param2(i, param1)
 

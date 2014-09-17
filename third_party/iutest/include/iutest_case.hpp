@@ -49,7 +49,8 @@ protected:
 	, m_elapsedmsec(0)
 	, m_disable(false)
 	{
-		if( detail::IsStringForwardMatching(testcase_name, "DISABLED_") )
+		if( detail::IsStringForwardMatching(testcase_name, "DISABLED_")
+			|| (strstr(testcase_name, "/DISABLED_") != NULL) )
 		{
 			m_disable = true;
 		}
@@ -103,7 +104,7 @@ public:
 	/** type param 文字列の取得 */
 	virtual const char*	type_param(void)		const { return NULL; }
 
-	/** TestCase 出力情報の取得 */
+	/** TestCase 名の取得 */
 	::std::string testcase_name_with_where(void) const
 	{
 		::std::string str = m_testcase_name;
@@ -114,6 +115,9 @@ public:
 		}
 		return str;
 	}
+
+	/** default package 名を含む TestCase 名の取得 */
+	::std::string testcase_name_with_default_package_name(void) const { return TestEnv::AddDefaultPackageName(name()); }
 
 	/** テスト実行中じゃないときのリザルトの取得 */
 	const TestResult* ad_hoc_testresult(void) const IUTEST_CXX_NOEXCEPT_SPEC { return &m_ad_hoc_testresult; }
@@ -128,7 +132,7 @@ public:
 	static bool ValidateTestPropertyName(const ::std::string& name)
 	{
 		const char* ban[] = { "name", "tests", "failures", "disabled", "skip", "errors", "time" };
-#if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
 		return TestProperty::ValidateName(name, ban);
 #else
 		return TestProperty::ValidateName(name, ban, ban+IUTEST_PP_COUNTOF(ban));

@@ -18,6 +18,9 @@
 //======================================================================
 // function
 
+/**
+ * @brief	default main
+*/
 #ifdef UNICODE
 int wmain(int argc, wchar_t** argv)
 #else

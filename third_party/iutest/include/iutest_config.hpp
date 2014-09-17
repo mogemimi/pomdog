@@ -111,6 +111,9 @@
 #endif
 
 #if !defined(IUTEST_HAS_MATCHERS)
+/**
+ * @brief	IUTEST_*_THAT が使用可能かどうか
+*/
 #  define IUTEST_HAS_MATCHERS		1
 #endif
 
@@ -127,7 +130,7 @@
 
 #if !defined(IUTEST_HAS_BITWISE_EXPRESSION_DECOMPOSE)
 /**
-* @brief	式アサーションでビット演算子の展開をサポートするかどうか
+ * @brief	式アサーションでビット演算子の展開をサポートするかどうか
 */
 #  if IUTEST_HAS_DECLTYPE
 #    define IUTEST_HAS_BITWISE_EXPRESSION_DECOMPOSE		1
@@ -248,10 +251,18 @@
 #  endif
 #endif
 
+#if !defined(IUTEST_HAS_LAMBDA_STATEMENTS)
+//! lambda を使った statements 展開が可能かどうか
+#  if IUTEST_HAS_LAMBDA && !defined(IUTEST_NO_LAMBDA_SCOPE_RESOLUTION)
+#    define IUTEST_HAS_LAMBDA_STATEMENTS		1
+#  else
+#    define IUTEST_HAS_LAMBDA_STATEMENTS		0
+#  endif
+#endif
 
 #if !defined(IUTEST_HAS_SPI_LAMBDA_SUPPORT)
 //! spi マクロで lambda を使って変数にアクセス可能かどうか
-#  if IUTEST_HAS_LAMBDA && !defined(IUTEST_NO_LAMBDA_SCOPE_RESOLUTION)
+#  if IUTEST_HAS_LAMBDA_STATEMENTS
 #    define IUTEST_HAS_SPI_LAMBDA_SUPPORT		1
 #  else
 #    define IUTEST_HAS_SPI_LAMBDA_SUPPORT		0
@@ -306,10 +317,19 @@
 
 #if !defined(IUTEST_HAS_PRINT_TO)
 //! PrintTo が使用可能かどうか
-#  if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING)
+#  if !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING) && !defined(IUTEST_NO_ARGUMENT_DEPENDENT_LOOKUP)
 #    define IUTEST_HAS_PRINT_TO		1
 #  else
 #    define IUTEST_HAS_PRINT_TO		0
+#  endif
+#endif
+
+#if !defined(IUTEST_HAS_VARIADIC_PRED)
+//! 可変長述語アサーションが使用可能かどうか
+#  if IUTEST_HAS_VARIADIC_TEMPLATES && !defined(IUTEST_NO_VARIADIC_MACROS)
+#    define IUTEST_HAS_VARIADIC_PRED		1
+#  else
+#    define IUTEST_HAS_VARIADIC_PRED		0
 #  endif
 #endif
 
@@ -319,6 +339,15 @@
 #    define IUTEST_HAS_ASSERTION_RETURN		1
 #  else
 #    define IUTEST_HAS_ASSERTION_RETURN		0
+#  endif
+#endif
+
+#if !defined(IUTEST_HAS_ASSERTION_NOEQUALTO_OBJECT)
+//! IUTEST_*_EQ で operator == がないオブジェクトの検証が可能かどうか
+#  if !defined(IUTEST_NO_FUNCTION_TEMPLATE_ORDERING) && !defined(IUTEST_NO_ARGUMENT_DEPENDENT_LOOKUP)
+#    define IUTEST_HAS_ASSERTION_NOEQUALTO_OBJECT	1
+#  else
+#    define IUTEST_HAS_ASSERTION_NOEQUALTO_OBJECT	0
 #  endif
 #endif
 
@@ -337,6 +366,15 @@
 #    define IUTEST_HAS_TESTNAME_ALIAS_JP	1
 #  else
 #    define IUTEST_HAS_TESTNAME_ALIAS_JP	0
+#  endif
+#endif
+
+#if !defined(IUTEST_HAS_AUTOFIXTURE_PARAM_TEST)
+//! fixture の自動定義に対応したパラメータ化テストが使用可能かどうか
+#  if IUTEST_HAS_PARAM_TEST && (IUTEST_HAS_IF_EXISTS || !defined(IUTEST_NO_TEMPLATE_PARTIAL_SPECIALIZATION))
+#    define IUTEST_HAS_AUTOFIXTURE_PARAM_TEST	1
+#  else
+#    define IUTEST_HAS_AUTOFIXTURE_PARAM_TEST	0
 #  endif
 #endif
 
@@ -425,7 +463,7 @@
 #if !defined(IUTEST_HAS_MINIDUMP)
 //! MiniDump 出力が有効かどうか
 #  if defined(_MSC_VER) && _MSC_VER >= 1310
-#    if IUTEST_HAS_EXCEPTIONS && IUTEST_HAS_SEH && !defined(IUTEST_OS_WINDOWS_PHONE)
+#    if IUTEST_HAS_EXCEPTIONS && IUTEST_HAS_SEH && !defined(IUTEST_OS_WINDOWS_PHONE) && !defined(IUTEST_OS_WINDOWS_RT)
 #      define IUTEST_HAS_MINIDUMP	1
 #    endif
 #  endif
@@ -437,7 +475,7 @@
 
 #if !defined(IUTEST_HAS_SOCKET)
 //! ソケット通信可能かどうか
-#  if defined(IUTEST_OS_WINDOWS)
+#  if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_RT)
 #    if !defined(_MSC_VER) || _MSC_VER >= 1310
 #      define IUTEST_HAS_SOCKET	1
 #    endif
@@ -499,7 +537,7 @@
 #define IUTEST_GetMillisec()	//!< 現在時刻のミリ秒取得関数を独自定義
 
 /**
-* @}
+ * @}
 */
 
 
@@ -585,6 +623,8 @@
 #  define IUTEST_LIB_TOOLSET	"vc110"
 #elif _MSC_VER == 1800
 #  define IUTEST_LIB_TOOLSET	"vc120"
+#elif _MSC_VER == 1900
+#  define IUTEST_LIB_TOOLSET	"vc140"
 #else
 #  error unkown _MSC_VER.
 #endif
