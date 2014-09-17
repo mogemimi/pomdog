@@ -102,7 +102,7 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(Details::Spine::SkeletonDesc 
 	POMDOG_ASSERT(!json.empty());
 	
 	rapidjson::Document doc;
-	doc.Parse(json.data(), json.size());
+	doc.Parse(json.data());
 
 	if (doc.HasParseError())
 	{

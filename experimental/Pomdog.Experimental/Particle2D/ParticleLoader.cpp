@@ -311,7 +311,7 @@ ParticleClip ParticleLoader::LoadFromJson(AssetManager & assets, std::string con
 	}
 	
 	rapidjson::Document doc;
-	doc.Parse(json.data(), json.size());
+	doc.Parse(json.data());
 
 	if (doc.HasParseError() || !doc.IsObject() || doc.MemberBegin() == doc.MemberEnd())
 	{

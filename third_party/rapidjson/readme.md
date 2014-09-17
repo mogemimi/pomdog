@@ -1,4 +1,4 @@
-# RapidJSON
+![](doc/logo/rapidjson.png)
 
 Copyright (c) 2011-2014 Milo Yip (miloyip@gmail.com)
 
@@ -8,7 +8,7 @@ Copyright (c) 2011-2014 Milo Yip (miloyip@gmail.com)
 
 ## Introduction
 
-RapidJSON is a JSON parser and generator for C++. It was inspired by [rapidxml](http://rapidxml.sourceforge.net/).
+RapidJSON is a JSON parser and generator for C++. It was inspired by [RapidXml](http://rapidxml.sourceforge.net/).
 
 * RapidJSON is small but complete. It supports both SAX and DOM style API. The SAX parser is only a half thousand lines of code.
 
@@ -22,9 +22,9 @@ RapidJSON is a JSON parser and generator for C++. It was inspired by [rapidxml](
 
 More features can be read [here](doc/features.md).
 
-JSON(JavaScript Object Notation) is a light-weight data exchange format. RapidJSON should be in fully compliance with RFC4627/ECMA-404. More information about JSON can be obtained at
+JSON(JavaScript Object Notation) is a light-weight data exchange format. RapidJSON should be in fully compliance with RFC7159/ECMA-404. More information about JSON can be obtained at
 * [Introducing JSON](http://json.org/)
-* [RFC4627: The application/json Media Type for JavaScript Object Notation (JSON)](http://www.ietf.org/rfc/rfc4627.txt)
+* [RFC7159: The JavaScript Object Notation (JSON) Data Interchange Format](http://www.ietf.org/rfc/rfc7159.txt)
 * [Standard ECMA-404: The JSON Data Interchange Format](http://www.ecma-international.org/publications/standards/Ecma-404.htm)
 
 ## Compatibility
@@ -43,12 +43,13 @@ RapidJSON is a header-only C++ library. Just copy the `include/rapidjson` folder
 
 To build the tests and examples:
 
-1. Obtain [premake4](http://industriousone.com/premake/download).
-2. Copy premake4 executable to RapidJSON/build (or system path).
-3. Run `rapidjson/build/premake.bat` on Windows, `RapidJSON/build/premake.sh` on Linux or other platforms.
-4. On Windows, build the solution at `rapidjson/build/vs2008/` or `/vs2010/`.
-5. On other platforms, run GNU make at `rapidjson/build/gmake/` (e.g., `make -f test.make config=release32`; `make -f example.make config=debug32`).
-6. On success, the executable are generated at `rapidjson/bin`.
+1. Execute `git submodule update --init` to get the files of thirdparty submodules (google test).
+2. Obtain [premake4](http://industriousone.com/premake/download).
+3. Copy premake4 executable to `rapidjson/build` (or system path).
+4. Change directory to `rapidjson/build/`, run `premake.bat` on Windows, `premake.sh` on Linux or other platforms.
+5. On Windows, build the solution at `rapidjson/build/vs2008/` or `/vs2010/`.
+6. On other platforms, run GNU `make` at `rapidjson/build/gmake/` (e.g., `make -f test.make config=release32`; `make -f example.make config=debug32`).
+7. On success, the executables are generated at `rapidjson/bin`.
 
 To build the [Doxygen](http://doxygen.org) documentation:
 

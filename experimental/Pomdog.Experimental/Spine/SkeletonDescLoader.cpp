@@ -817,7 +817,7 @@ Spine::SkeletonDesc AssetLoader<Spine::SkeletonDesc>::operator()(AssetLoaderCont
 	POMDOG_ASSERT(!json.empty());
 	
 	rapidjson::Document doc;
-	doc.Parse(json.data(), json.size());
+	doc.Parse(json.data());
 
 	if (doc.HasParseError() || !doc.IsObject())
 	{

@@ -9,7 +9,7 @@ Open Source Software used in Pomdog
 |iutest||
 |---|---|
 |URL|https://github.com/srz-zumix/iutest.git|
-|Version|1.9.1|
+|Version|1.10.0|
 |License|New (3-clause) BSD License|
 |License File|[third_party/iutest/LICENSE][license-iutest]|
 
@@ -49,7 +49,7 @@ Open Source Software used in Pomdog
 |RapidJSON||
 |---|---|
 |URL|https://github.com/miloyip/rapidjson.git|
-|Version|0.1+|
+|Version|0.1+ (Sep 16, 2014)|
 |License|MIT License|
 |License File|[third_party/rapidjson/license.txt][license-rapidjson]|
 
