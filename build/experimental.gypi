@@ -30,6 +30,8 @@
       '<@(pomdog_expr_dir)/Graphics/LineBatch.hpp',
       '<@(pomdog_expr_dir)/Graphics/PolygonBatch.cpp',
       '<@(pomdog_expr_dir)/Graphics/PolygonBatch.hpp',
+      '<@(pomdog_expr_dir)/Graphics/ScreenQuad.cpp',
+      '<@(pomdog_expr_dir)/Graphics/ScreenQuad.hpp',
       '<@(pomdog_expr_dir)/Graphics/SkinnedEffect.cpp',
       '<@(pomdog_expr_dir)/Graphics/SkinnedEffect.hpp',
       '<@(pomdog_expr_dir)/Graphics/SpriteBatch.cpp',

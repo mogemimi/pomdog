@@ -29,6 +29,7 @@
 #include "Graphics/FXAA.hpp"
 #include "Graphics/LineBatch.hpp"
 #include "Graphics/PolygonBatch.hpp"
+#include "Graphics/ScreenQuad.hpp"
 #include "Graphics/SkinnedEffect.hpp"
 #include "Graphics/SpriteBatch.hpp"
 #include "Graphics/SpriteFont.hpp"
