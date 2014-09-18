@@ -47,6 +47,7 @@
 #include "Graphics/TextureRegion.hpp"
 
 #include "ImageEffects/ChromaticAberration.hpp"
+#include "ImageEffects/FishEyeEffect.hpp"
 #include "ImageEffects/FXAA.hpp"
 #include "ImageEffects/GrayscaleEffect.hpp"
 #include "ImageEffects/SepiaToneEffect.hpp"

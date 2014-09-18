@@ -64,6 +64,8 @@
 
       '<@(pomdog_expr_dir)/ImageEffects/ChromaticAberration.cpp',
       '<@(pomdog_expr_dir)/ImageEffects/ChromaticAberration.hpp',
+      '<@(pomdog_expr_dir)/ImageEffects/FishEyeEffect.cpp',
+      '<@(pomdog_expr_dir)/ImageEffects/FishEyeEffect.hpp',
       '<@(pomdog_expr_dir)/ImageEffects/FXAA.cpp',
       '<@(pomdog_expr_dir)/ImageEffects/FXAA.hpp',
       '<@(pomdog_expr_dir)/ImageEffects/GrayscaleEffect.cpp',
