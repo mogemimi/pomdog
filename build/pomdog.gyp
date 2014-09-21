@@ -14,62 +14,16 @@
     ['OS == "mac"', {
       'variables': {
         'renderer%': 'opengl',
-		#'input_device%': 'none',
+        #'input_device%': 'none',
       },
     }],
     ['OS == "linux" or OS == "freebsd" or OS == "openbsd"', {
       'variables': {
         'renderer%': 'opengl',
-		#'input_device%': 'none',
+        #'input_device%': 'none',
       },
     }],
   ],
-  'target_defaults': {
-    'include_dirs': [
-      '../include',
-    ],
-    'msvs_settings': {
-      'VCCLCompilerTool': {
-        'WarningLevel': '4',   # /W4
-        'WarnAsError': 'true', # /WX
-      },
-    },
-    'xcode_settings': {
-      'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
-      'CLANG_CXX_LANGUAGE_STANDARD': 'c++1y',
-      'MACOSX_DEPLOYMENT_TARGET': '10.9', # OS X Deployment Target: 10.9
-      'CLANG_CXX_LIBRARY': 'libc++', # libc++ requires OS X 10.7 or later
-      # Warnings:
-      'CLANG_WARN_EMPTY_BODY': 'YES',
-      'GCC_WARN_64_TO_32_BIT_CONVERSION': 'YES',
-      'GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS': 'YES',
-      'GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS': 'YES',
-      'GCC_WARN_ABOUT_MISSING_NEWLINE': 'YES',
-      'GCC_WARN_ABOUT_RETURN_TYPE': 'YES',
-      'GCC_WARN_CHECK_SWITCH_STATEMENTS': 'YES',
-      'GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS': 'YES',
-      #'GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED': 'YES',
-      'GCC_WARN_MISSING_PARENTHESES': 'YES',
-      'GCC_WARN_NON_VIRTUAL_DESTRUCTOR': 'YES',
-      'GCC_WARN_SHADOW': 'YES',
-      'GCC_WARN_SIGN_COMPARE': 'YES',
-      'GCC_WARN_TYPECHECK_CALLS_TO_PRINTF': 'YES',
-      'GCC_WARN_UNINITIALIZED_AUTOS': 'YES',
-      'GCC_WARN_UNKNOWN_PRAGMAS': 'YES',
-      'GCC_WARN_UNUSED_FUNCTION': 'YES',
-      'GCC_WARN_UNUSED_LABEL': 'YES',
-      'GCC_WARN_UNUSED_VALUE': 'YES',
-      'GCC_WARN_UNUSED_VARIABLE': 'YES',
-      'GCC_TREAT_WARNINGS_AS_ERRORS': 'YES',
-      'WARNING_CFLAGS': [
-        '-Wall',
-      ],
-      # Symbols:
-      'CLANG_ENABLE_OBJC_ARC': 'YES',
-      'GCC_INLINES_ARE_PRIVATE_EXTERN': 'YES', # '-fvisibility-inlines-hidden'
-      'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES', # '-fvisibility=hidden'
-    },
-  },
   'variables': {
     'pomdog_library_testable_sources': [
       '../include/Pomdog/Config/Export.hpp',
@@ -357,6 +311,113 @@
       '../src/Platform.Win32/Win32Prerequisites.hpp',
     ],
   },
+  'target_defaults': {
+    'dependencies': [
+      '../third_party/libpng/libpng.gyp:libpng_static',
+    ],
+    'include_dirs': [
+      '../include',
+      '../third_party/libpng',
+    ],
+    'sources': [
+      '<@(pomdog_library_testable_sources)',
+      '<@(pomdog_library_application_sources)',
+      '../include/Pomdog/Pomdog.hpp',
+    ],
+    'msvs_settings': {
+      'VCCLCompilerTool': {
+        'WarningLevel': '4',   # /W4
+        'WarnAsError': 'true', # /WX
+      },
+    },
+    'xcode_settings': {
+      'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
+      'CLANG_CXX_LANGUAGE_STANDARD': 'c++1y',
+      'MACOSX_DEPLOYMENT_TARGET': '10.9', # OS X Deployment Target: 10.9
+      'CLANG_CXX_LIBRARY': 'libc++', # libc++ requires OS X 10.7 or later
+      # Warnings:
+      'CLANG_WARN_EMPTY_BODY': 'YES',
+      'GCC_WARN_64_TO_32_BIT_CONVERSION': 'YES',
+      'GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS': 'YES',
+      'GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS': 'YES',
+      'GCC_WARN_ABOUT_MISSING_NEWLINE': 'YES',
+      'GCC_WARN_ABOUT_RETURN_TYPE': 'YES',
+      'GCC_WARN_CHECK_SWITCH_STATEMENTS': 'YES',
+      'GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS': 'YES',
+      #'GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED': 'YES',
+      'GCC_WARN_MISSING_PARENTHESES': 'YES',
+      'GCC_WARN_NON_VIRTUAL_DESTRUCTOR': 'YES',
+      'GCC_WARN_SHADOW': 'YES',
+      'GCC_WARN_SIGN_COMPARE': 'YES',
+      'GCC_WARN_TYPECHECK_CALLS_TO_PRINTF': 'YES',
+      'GCC_WARN_UNINITIALIZED_AUTOS': 'YES',
+      'GCC_WARN_UNKNOWN_PRAGMAS': 'YES',
+      'GCC_WARN_UNUSED_FUNCTION': 'YES',
+      'GCC_WARN_UNUSED_LABEL': 'YES',
+      'GCC_WARN_UNUSED_VALUE': 'YES',
+      'GCC_WARN_UNUSED_VARIABLE': 'YES',
+      'GCC_TREAT_WARNINGS_AS_ERRORS': 'YES',
+      'WARNING_CFLAGS': [
+        '-Wall',
+      ],
+      # Symbols:
+      'CLANG_ENABLE_OBJC_ARC': 'YES',
+      'GCC_INLINES_ARE_PRIVATE_EXTERN': 'YES', # '-fvisibility-inlines-hidden'
+      'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES', # '-fvisibility=hidden'
+    },
+    'conditions': [
+      ['renderer == "d3d11"', {
+        'sources': [
+        ],
+        'link_settings': {
+          'libraries': [
+            '-ldxgi.lib',
+            '-ld3d11.lib',
+            '-ld3dcompiler.lib',
+          ],
+        },
+      }], # OS == "d3d11"
+      ['renderer == "opengl"', {
+        'sources': [
+          '<@(pomdog_library_opengl4_sources)',
+        ],
+      }], # OS == "opengl"
+      ['OS == "mac" and renderer == "opengl"', {
+        'sources': [
+          '<@(pomdog_library_cocoa_sources)',
+        ],
+        'link_settings': {
+          'libraries': [
+            '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
+            '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
+          ],
+        },
+      }], # OS == "mac"
+      ['OS == "win"', {
+        'sources': [
+          '<@(pomdog_library_win32_sources)',
+        ],
+        'link_settings': {
+          'libraries': [
+            #'-lwinmm.lib',
+            #'-lws2_32.lib',
+            #'-lkernel32.lib',
+            #'-luser32.lib',
+            #'-lgdi32.lib',
+            #'-lwinspool.lib',
+            #'-lcomdlg32.lib',
+            #'-ladvapi32.lib',
+            #'-lshell32.lib',
+            #'-lole32.lib',
+            #'-loleaut32.lib',
+            #'-luuid.lib',
+            #'-lodbc32.lib',
+            #'-lodbccp32.lib',
+          ],
+        },
+      }], # OS == "win"
+    ],
+  },
   'targets': [
     {
       'target_name': 'pomdog-testable',
@@ -375,73 +436,9 @@
       'target_name': 'pomdog-static',
       'product_name': 'pomdog',
       'type': 'static_library',
-      'dependencies': [
-        '../third_party/libpng/libpng.gyp:libpng_static',
-      ],
-      'include_dirs': [
-        '../include',
-        '../third_party/libpng',
-      ],
-      'sources': [
-        '<@(pomdog_library_testable_sources)',
-        '<@(pomdog_library_application_sources)',
-        '../include/Pomdog/Pomdog.hpp',
-      ],
       'xcode_settings': {
-	    'SKIP_INSTALL': 'YES',
+        'SKIP_INSTALL': 'YES',
       },
-      'conditions': [
-        ['renderer == "d3d11"', {
-          'sources': [
-          ],
-          'link_settings': {
-            'libraries': [
-              '-ldxgi.lib',
-              '-ld3d11.lib',
-              '-ld3dcompiler.lib',
-            ],
-          },
-        }], # OS == "d3d11"
-        ['renderer == "opengl"', {
-          'sources': [
-            '<@(pomdog_library_opengl4_sources)',
-          ],
-        }], # OS == "opengl"
-        ['OS == "mac" and renderer == "opengl"', {
-          'sources': [
-            '<@(pomdog_library_cocoa_sources)',
-          ],
-          'link_settings': {
-            'libraries': [
-              '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
-              '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
-            ],
-          },
-        }], # OS == "mac"
-        ['OS == "win"', {
-          'sources': [
-            '<@(pomdog_library_win32_sources)',
-          ],
-          'link_settings': {
-            'libraries': [
-              #'-lwinmm.lib',
-              #'-lws2_32.lib',
-              #'-lkernel32.lib',
-              #'-luser32.lib',
-              #'-lgdi32.lib',
-              #'-lwinspool.lib',
-              #'-lcomdlg32.lib',
-              #'-ladvapi32.lib',
-              #'-lshell32.lib',
-              #'-lole32.lib',
-              #'-loleaut32.lib',
-              #'-luuid.lib',
-              #'-lodbc32.lib',
-              #'-lodbccp32.lib',
-            ],
-          },
-        }], # OS == "win"
-      ],
     },
     {
       'target_name': 'pomdog-shared',
@@ -450,70 +447,6 @@
       'msvs_guid': 'A8F27BAE-660F-42B4-BC27-D5A435EF94BF',
       'mac_bundle': 1,
       'defines': ['POMDOG_BUILDING_LIBRARY_EXPORTS=1'],
-      'dependencies': [
-        '../third_party/libpng/libpng.gyp:libpng_static',
-      ],
-      'include_dirs': [
-        '../include',
-        '../third_party/libpng',
-      ],
-      'sources': [
-        '<@(pomdog_library_testable_sources)',
-        '<@(pomdog_library_application_sources)',
-        '../include/Pomdog/Pomdog.hpp',
-      ],
-      'conditions': [
-        ['renderer == "d3d11"', {
-          'sources': [
-          ],
-          'link_settings': {
-            'libraries': [
-              '-ldxgi.lib',
-              '-ld3d11.lib',
-              '-ld3dcompiler.lib',
-            ],
-          },
-        }], # OS == "d3d11"
-        ['renderer == "opengl"', {
-          'sources': [
-            '<@(pomdog_library_opengl4_sources)',
-          ],
-        }], # OS == "opengl"
-        ['OS == "mac" and renderer == "opengl"', {
-          'sources': [
-            '<@(pomdog_library_cocoa_sources)',
-          ],
-          'link_settings': {
-            'libraries': [
-              '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
-              '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
-            ],
-          },
-        }], # OS == "mac"
-        ['OS == "win"', {
-          'sources': [
-            '<@(pomdog_library_win32_sources)',
-          ],
-          'link_settings': {
-            'libraries': [
-              #'-lwinmm.lib',
-              #'-lws2_32.lib',
-              #'-lkernel32.lib',
-              #'-luser32.lib',
-              #'-lgdi32.lib',
-              #'-lwinspool.lib',
-              #'-lcomdlg32.lib',
-              #'-ladvapi32.lib',
-              #'-lshell32.lib',
-              #'-lole32.lib',
-              #'-loleaut32.lib',
-              #'-luuid.lib',
-              #'-lodbc32.lib',
-              #'-lodbccp32.lib',
-            ],
-          },
-        }], # OS == "win"
-      ],
       'xcode_settings': {
         'INFOPLIST_FILE': '../src/Platform.Cocoa/Xcode/Pomdog-Info.plist',
         'DYLIB_INSTALL_NAME_BASE': '@executable_path/../../..',
