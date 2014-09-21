@@ -44,11 +44,13 @@ public:
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 	std::shared_ptr<InputLayout> inputLayout;
+	Color color;
 	
 	std::array<std::array<Vector4, 2>, SkinnedEffect::MaxBones> bones;
 };
 //-----------------------------------------------------------------------
 SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice)
+	: color(Color::White)
 {
 	effectPass = graphicsDevice.ShaderPool().Create<BuiltinEffectSkinningTrait>(graphicsDevice);
 	constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
@@ -57,7 +59,16 @@ SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice)
 //-----------------------------------------------------------------------
 void SkinnedEffect::Impl::Apply(GraphicsContext & graphicsContext)
 {
-	constantBuffers->Find("Constants")->SetValue(Matrix4x4::Transpose(worldViewProjection));
+	struct alignas(16) Constants {
+		Matrix4x4 WorldViewProjection;
+		Vector4 Color;
+	};
+	
+	Constants constants;
+	constants.WorldViewProjection = Matrix4x4::Transpose(worldViewProjection);
+	constants.Color = color.ToVector4();
+
+	constantBuffers->Find("Constants")->SetValue(std::move(constants));
 	constantBuffers->Find("SkinningConstants")->SetValue(bones);
 
 	graphicsContext.SetTexture(0, texture);
@@ -88,7 +99,13 @@ void SkinnedEffect::SetTexture(std::shared_ptr<Texture2D> const& textureIn)
 	impl->texture = textureIn;
 }
 //-----------------------------------------------------------------------
-void SkinnedEffect::SetBoneTransforms(Matrix3x2 const* boneTransforms, size_t count)
+void SkinnedEffect::SetColor(Color const& colorIn)
+{
+	POMDOG_ASSERT(impl);
+	impl->color = colorIn;
+}
+//-----------------------------------------------------------------------
+void SkinnedEffect::SetBoneTransforms(Matrix3x2 const* boneTransforms, std::size_t count)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(boneTransforms != nullptr);

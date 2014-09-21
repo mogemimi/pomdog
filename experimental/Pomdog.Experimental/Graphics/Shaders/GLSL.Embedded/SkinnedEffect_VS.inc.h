@@ -20,9 +20,9 @@ char const* Builtin_GLSL_SkinnedEffect_VS =
 "};\n"
 "uniform Constants{\n"
 "mat4x4 ModelViewProjection;\n"
+"vec4 MainColor;\n"
 "};\n"
-"void main()\n"
-"{\n"
+"void main(){\n"
 "mat3x2 skinning=mat3x2(0.0);\n"
 "for(int i=0; i<4; ++i)\n"
 "{\n"
@@ -39,5 +39,5 @@ char const* Builtin_GLSL_SkinnedEffect_VS =
 "vec2 position=(skinning*vec3(PositionTextureCoord.xy,1.0)).xy;\n"
 "gl_Position=vec4(position.xy,0.0,1.0)*ModelViewProjection;\n"
 "Out.TextureCoord=PositionTextureCoord.zw;\n"
-"Out.Color=vec4(1.0,1.0,1.0,1.0);\n"
+"Out.Color=MainColor;\n"
 "}\n";

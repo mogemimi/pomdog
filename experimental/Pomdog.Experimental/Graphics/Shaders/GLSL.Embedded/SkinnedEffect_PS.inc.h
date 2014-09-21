@@ -14,7 +14,6 @@ char const* Builtin_GLSL_SkinnedEffect_PS =
 "}In;\n"
 "uniform sampler2D DiffuseTexture;\n"
 "out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
+"void main(){\n"
 "FragColor=texture(DiffuseTexture,In.TextureCoord.xy).xyzw*In.Color.xyzw;\n"
 "}\n";

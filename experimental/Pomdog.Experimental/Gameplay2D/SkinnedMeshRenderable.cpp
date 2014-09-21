@@ -72,6 +72,11 @@ void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 	renderer.PushCommand(command);
 }
 //-----------------------------------------------------------------------
+void SkinnedMeshRenderable::SetColor(Color const& color)
+{
+	command.skinnedEffect.SetColor(color);
+}
+//-----------------------------------------------------------------------
 void SkinnedMeshRenderable::DrawSkeleton(std::unique_ptr<PolygonBatch> const& polygonBatch,
 	Matrix4x4 const& modelViewProjection)
 {

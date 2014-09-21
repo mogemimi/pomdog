@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -15,6 +15,7 @@
 
 #include <Pomdog/Pomdog.hpp>
 #include <cstdint>
+#include <cstddef>
 #include <memory>
 
 namespace Pomdog {
@@ -29,7 +30,9 @@ public:
 
 	void SetTexture(std::shared_ptr<Texture2D> const& texture);
 	
-	void SetBoneTransforms(Matrix3x2 const* boneTransforms, size_t count);
+	void SetColor(Color const& color);
+	
+	void SetBoneTransforms(Matrix3x2 const* boneTransforms, std::size_t count);
 	
 	void Apply(GraphicsContext & graphicsContext);
 	
