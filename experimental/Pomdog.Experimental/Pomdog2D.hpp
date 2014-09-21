@@ -15,6 +15,7 @@
 
 #include "Actions/Action.hpp"
 #include "Actions/MoveToAction.hpp"
+#include "Actions/SequenceAction.hpp"
 #include "Actions/TintToAction.hpp"
 
 #include "Gameplay2D/Animator.hpp"

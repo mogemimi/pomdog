@@ -6,6 +6,7 @@
 
       '<@(pomdog_expr_dir)/Actions/Action.hpp',
       '<@(pomdog_expr_dir)/Actions/MoveToAction.hpp',
+      '<@(pomdog_expr_dir)/Actions/SequenceAction.hpp',
       '<@(pomdog_expr_dir)/Actions/TintToAction.hpp',
       '<@(pomdog_expr_dir)/Actions/detail/TemporalAction.hpp',
 
