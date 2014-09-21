@@ -32,8 +32,6 @@ public:
 
 	void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
 
-	void SetColor(Color const& color);
-
 private:
 	void DrawSkeleton(std::unique_ptr<PolygonBatch> const& polygonBatch,
 		Matrix4x4 const& modelViewProjection);

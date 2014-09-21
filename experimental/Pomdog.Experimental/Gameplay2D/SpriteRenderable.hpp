@@ -30,9 +30,6 @@ public:
 
 	void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
 
-	void Color(Pomdog::Color const& color);
-	Pomdog::Color Color() const;
-	
 	void OriginPivot(Vector2 const& originPivot);
 	Vector2 OriginPivot() const;
 

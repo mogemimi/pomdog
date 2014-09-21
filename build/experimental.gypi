@@ -4,6 +4,11 @@
     'pomdog_experimental_2d_sources': [
       '<@(pomdog_expr_dir)/Pomdog2D.hpp',
 
+      '<@(pomdog_expr_dir)/Actions/Action.hpp',
+      '<@(pomdog_expr_dir)/Actions/MoveToAction.hpp',
+      '<@(pomdog_expr_dir)/Actions/TintToAction.hpp',
+      '<@(pomdog_expr_dir)/Actions/detail/TemporalAction.hpp',
+
       '<@(pomdog_expr_dir)/Gameplay2D/Animator.cpp',
       '<@(pomdog_expr_dir)/Gameplay2D/Animator.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/BeamRenderable.cpp',

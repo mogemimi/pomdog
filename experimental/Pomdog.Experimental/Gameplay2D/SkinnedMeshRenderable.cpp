@@ -68,13 +68,9 @@ void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 	}
 	
 	command.skinnedEffect.SetWorldViewProjection(worldViewProjection);
+	command.skinnedEffect.SetColor(this->Material.Color);
 	
 	renderer.PushCommand(command);
-}
-//-----------------------------------------------------------------------
-void SkinnedMeshRenderable::SetColor(Color const& color)
-{
-	command.skinnedEffect.SetColor(color);
 }
 //-----------------------------------------------------------------------
 void SkinnedMeshRenderable::DrawSkeleton(std::unique_ptr<PolygonBatch> const& polygonBatch,
@@ -83,7 +79,7 @@ void SkinnedMeshRenderable::DrawSkeleton(std::unique_ptr<PolygonBatch> const& po
 	POMDOG_ASSERT(polygonBatch);
 	polygonBatch->Begin(modelViewProjection);
 
-	Color boneColor {160, 160, 160, 255};
+	Pomdog::Color boneColor {160, 160, 160, 255};
 
 	POMDOG_ASSERT(skeletonTransform);
 	auto & globalPose = skeletonTransform->GlobalPose;

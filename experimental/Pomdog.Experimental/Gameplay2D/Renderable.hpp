@@ -13,13 +13,18 @@
 #	pragma once
 #endif
 
-#include <Pomdog/Math/Matrix4x4.hpp>
-#include <Pomdog/Gameplay/Component.hpp>
-#include <Pomdog/Gameplay/GameObject.hpp>
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Matrix4x4.hpp"
+#include "Pomdog/Gameplay/Component.hpp"
+#include "Pomdog/Gameplay/GameObject.hpp"
 
 namespace Pomdog {
 
 class Renderer;
+
+struct Material {
+	Color Color = Color::White;
+};
 
 class Renderable: public Component<Renderable> {
 public:
@@ -27,6 +32,7 @@ public:
 
 	virtual void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) = 0;
 
+	Material Material;
 	float DrawOrder = 0.0f;
 	bool IsVisible = true;
 };

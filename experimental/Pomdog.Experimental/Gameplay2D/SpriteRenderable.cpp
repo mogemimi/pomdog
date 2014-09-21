@@ -58,7 +58,7 @@ SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& textureIn, 
 	command.texture = textureIn;
 	command.textureRegion = textureRegionIn;
 	command.transform = Matrix3x2::Identity;
-	command.color = Color::White;
+	command.color = Material.Color;
 	command.originPivot = {0.5f, 0.5f};
 	command.drawOrder = 0;
 }
@@ -84,6 +84,7 @@ void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 	dirtyFlags = 0;
 	
 	command.drawOrder = DrawOrder;
+	command.color = Material.Color;
 
 	if (auto transform = gameObject.Component<Transform2D>())
 	{
@@ -103,16 +104,6 @@ void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 	POMDOG_ASSERT(command.textureRegion.Subrect.Height > 0);
 	
 	renderer.PushCommand(command);
-}
-//-----------------------------------------------------------------------
-void SpriteRenderable::Color(Pomdog::Color const& colorIn)
-{
-	command.color = colorIn;
-}
-//-----------------------------------------------------------------------
-Pomdog::Color SpriteRenderable::Color() const
-{
-	return command.color;
 }
 //-----------------------------------------------------------------------
 void SpriteRenderable::OriginPivot(Vector2 const& originPivotIn)
