@@ -39,6 +39,13 @@ public:
 	RenderTarget2D(RenderTarget2D const&) = delete;
 	RenderTarget2D(RenderTarget2D &&) = default;
 
+	RenderTarget2D(GraphicsDevice & graphicsDevice,
+		std::int32_t width, std::int32_t height);
+
+	RenderTarget2D(GraphicsDevice & graphicsDevice,
+		std::int32_t width, std::int32_t height, bool generateMipmap,
+		SurfaceFormat format, DepthFormat depthStencilFormat);
+
 	RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		std::int32_t width, std::int32_t height);
 

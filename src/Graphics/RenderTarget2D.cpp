@@ -31,13 +31,13 @@ static std::uint16_t ComputeMipmapLevelCount(std::uint32_t width, std::uint32_t 
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+RenderTarget2D::RenderTarget2D(GraphicsDevice & graphicsDevice,
 	std::int32_t pixelWidthIn, std::int32_t pixelHeightIn)
 	: RenderTarget2D(graphicsDevice, pixelWidthIn, pixelHeightIn,
 		false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None)
 {}
 //-----------------------------------------------------------------------
-RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+RenderTarget2D::RenderTarget2D(GraphicsDevice & graphicsDevice,
 	std::int32_t pixelWidthIn, std::int32_t pixelHeightIn,
 	bool generateMipmap, SurfaceFormat formatIn, DepthFormat depthStencilFormatIn)
 	: pixelWidth(pixelWidthIn)
@@ -47,9 +47,22 @@ RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDe
 	, depthStencilFormat(depthStencilFormatIn)
 {
 	POMDOG_ASSERT(levelCount >= 1);
-	nativeRenderTarget2D = graphicsDevice->NativeGraphicsDevice()->CreateRenderTarget2D(
+	nativeRenderTarget2D = graphicsDevice.NativeGraphicsDevice()->CreateRenderTarget2D(
 		pixelWidth, pixelHeight, levelCount, format, depthStencilFormat);
 }
+//-----------------------------------------------------------------------
+RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	std::int32_t pixelWidthIn, std::int32_t pixelHeightIn)
+	: RenderTarget2D(*graphicsDevice, pixelWidthIn, pixelHeightIn,
+		false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None)
+{}
+//-----------------------------------------------------------------------
+RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+	std::int32_t pixelWidthIn, std::int32_t pixelHeightIn,
+	bool generateMipmap, SurfaceFormat formatIn, DepthFormat depthStencilFormatIn)
+	: RenderTarget2D(*graphicsDevice, pixelWidthIn, pixelHeightIn,
+		generateMipmap, formatIn, depthStencilFormatIn)
+{}
 //-----------------------------------------------------------------------
 RenderTarget2D::~RenderTarget2D() = default;
 //-----------------------------------------------------------------------
