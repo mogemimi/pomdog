@@ -27,7 +27,7 @@ private:
 	Vector2 endScale;
 
 public:
-	ScaleTo(Vector2 const& scaleIn)
+	explicit ScaleTo(Vector2 const& scaleIn)
 		: endScale(scaleIn)
 	{}
 

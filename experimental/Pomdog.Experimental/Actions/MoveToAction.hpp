@@ -27,7 +27,7 @@ private:
 	Vector2 endPosition;
 
 public:
-	MoveTo(Vector2 const& positionIn)
+	explicit MoveTo(Vector2 const& positionIn)
 		: endPosition(positionIn)
 	{}
 

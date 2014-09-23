@@ -27,7 +27,7 @@ private:
 	Color endColor;
 
 public:
-	TintTo(Color const& colorIn)
+	explicit TintTo(Color const& colorIn)
 		: endColor(colorIn)
 	{}
 
