@@ -14,7 +14,7 @@
 #endif
 
 #include "Renderable.hpp"
-#include "../Rendering/ParticleBatchCommand.hpp"
+#include "Pomdog.Experimental/Rendering/Commands/ParticleBatchCommand.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <memory>
 

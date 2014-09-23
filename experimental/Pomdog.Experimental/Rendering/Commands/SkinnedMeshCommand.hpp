@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include "RenderCommand.hpp"
+#include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
 #include "Pomdog.Experimental/Graphics/SkinnedEffect.hpp"
 #include "Pomdog.Experimental/Skeletal2D/Skeleton.hpp"
 #include "Pomdog.Experimental/Skeletal2D/SkeletonTransform.hpp"

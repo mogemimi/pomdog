@@ -14,7 +14,7 @@
 #endif
 
 #include "Renderable.hpp"
-#include "../Rendering/SpriteCommand.hpp"
+#include "Pomdog.Experimental/Rendering/Commands/SpriteCommand.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include <Pomdog/Pomdog.hpp>

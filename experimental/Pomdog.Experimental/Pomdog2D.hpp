@@ -102,13 +102,9 @@
 
 #include "Tween/EasingHelper.hpp"
 
-#include "Rendering/ParticleBatchCommand.hpp"
 #include "Rendering/RenderCommand.hpp"
 #include "Rendering/Renderer.hpp"
 #include "Rendering/RenderQueue.hpp"
-#include "Rendering/SkinnedMeshCommand.hpp"
-#include "Rendering/SpriteBatchRenderer.hpp"
-#include "Rendering/SpriteCommand.hpp"
 
 #include "UI/Control.hpp"
 #include "UI/DrawingContext.hpp"

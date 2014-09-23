@@ -14,7 +14,7 @@
 #endif
 
 #include "Renderable.hpp"
-#include "../Rendering/SkinnedMeshCommand.hpp"
+#include "Pomdog.Experimental/Rendering/Commands/SkinnedMeshCommand.hpp"
 #include "Pomdog.Experimental/Graphics/PolygonBatch.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <memory>

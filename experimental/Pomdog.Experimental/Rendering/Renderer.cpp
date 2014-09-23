@@ -46,6 +46,8 @@ public:
 	void Render(GraphicsContext & graphicsContext);
 
 	void Flush();
+	
+	void Clear();
 
 public:
 	RenderQueue renderQueue;
@@ -59,8 +61,8 @@ public:
 	
 	enum BatchState: std::uint8_t {
 		None,
-		Primitive,
-		Sprite,
+		PrimitiveBatch,
+		SpriteBatch,
 	};
 	
 	BatchState batchState;
@@ -96,13 +98,13 @@ void Renderer::Impl::Render(GraphicsContext & graphicsContext)
 			break;
 		}
 		case RenderCommandType::ParticleBatch: {
-			if (batchState != BatchState::Sprite) {
+			if (batchState != BatchState::SpriteBatch) {
 				Flush();
 				spriteBatch.Begin(Matrix4x4::Identity);
-				batchState = BatchState::Sprite;
+				batchState = BatchState::SpriteBatch;
 			}
 			
-			POMDOG_ASSERT(batchState == BatchState::Sprite);
+			POMDOG_ASSERT(batchState == BatchState::SpriteBatch);
 			auto & particleCommand = static_cast<ParticleBatchCommand &>(command);
 			for (auto & particle: *particleCommand.particles)
 			{
@@ -113,13 +115,13 @@ void Renderer::Impl::Render(GraphicsContext & graphicsContext)
 			break;
 		}
 		case RenderCommandType::Primitive: {
-			if (batchState != BatchState::Primitive) {
+			if (batchState != BatchState::PrimitiveBatch) {
 				Flush();
 				primitiveBatch.Begin(viewProjection);
-				batchState = BatchState::Primitive;
+				batchState = BatchState::PrimitiveBatch;
 			}
 			
-			POMDOG_ASSERT(batchState == BatchState::Primitive);
+			POMDOG_ASSERT(batchState == BatchState::PrimitiveBatch);
 			auto & primitiveCommand = static_cast<PrimitiveCommand &>(command);
 			primitiveBatch.DrawRectangle(primitiveCommand.transform,
 				primitiveCommand.rectangle,
@@ -128,13 +130,13 @@ void Renderer::Impl::Render(GraphicsContext & graphicsContext)
 			break;
 		}
 		case RenderCommandType::Sprite: {
-			if (batchState != BatchState::Sprite) {
+			if (batchState != BatchState::SpriteBatch) {
 				Flush();
 				spriteBatch.Begin(Matrix4x4::Identity);
-				batchState = BatchState::Sprite;
+				batchState = BatchState::SpriteBatch;
 			}
 			
-			POMDOG_ASSERT(batchState == BatchState::Sprite);
+			POMDOG_ASSERT(batchState == BatchState::SpriteBatch);
 			auto & spriteCommand = static_cast<SpriteCommand &>(command);
 			spriteBatch.Draw(spriteCommand.texture, spriteCommand.transform,
 				spriteCommand.textureRegion.Subrect, spriteCommand.color, spriteCommand.originPivot);
@@ -145,21 +147,20 @@ void Renderer::Impl::Render(GraphicsContext & graphicsContext)
 	});
 	
 	Flush();
-	renderQueue.Clear();
 	POMDOG_ASSERT(batchState == BatchState::None);
 }
 //-----------------------------------------------------------------------
 void Renderer::Impl::Flush()
 {
 	switch (batchState) {
-	case BatchState::Primitive: {
+	case BatchState::PrimitiveBatch: {
 		primitiveBatch.End();
 		
 		///@todo Not implemented
 		//drawCallCount += primitiveBatch.DrawCallCount();
 		break;
 	}
-	case BatchState::Sprite: {
+	case BatchState::SpriteBatch: {
 		spriteBatch.End();
 		drawCallCount += spriteBatch.DrawCallCount();
 		break;
@@ -169,6 +170,11 @@ void Renderer::Impl::Flush()
 	}
 
 	batchState = BatchState::None;
+}
+//-----------------------------------------------------------------------
+void Renderer::Impl::Clear()
+{
+	renderQueue.Clear();
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -210,6 +216,12 @@ std::uint32_t Renderer::DrawCallCount() const
 {
 	POMDOG_ASSERT(impl);
 	return impl->drawCallCount;
+}
+//-----------------------------------------------------------------------
+void Renderer::Clear()
+{
+	POMDOG_ASSERT(impl);
+	impl->Clear();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

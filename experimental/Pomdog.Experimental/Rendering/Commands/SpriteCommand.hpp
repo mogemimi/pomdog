@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include "RenderCommand.hpp"
+#include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
 #include "Pomdog.Experimental/Graphics/TextureRegion.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <memory>
