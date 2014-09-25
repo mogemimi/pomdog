@@ -14,7 +14,7 @@ For more information, see
 ## Requirements
 
 * Mac OS X 10.9+
-* Xcode 5.1+ (Apple LLVM 5.1/Clang 3.4)
+* Xcode 6.0+ (Apple LLVM 6.0/Clang 3.5)
 * OpenGL 4 and Direct3D 11.2/12
 * Python 2.7+
 
