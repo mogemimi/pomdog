@@ -38,12 +38,12 @@ struct MathConstants<float>
 template <>
 struct MathConstants<double>
 {
-	static constexpr float Pi()         { return 3.14159265358979323846; }
-	static constexpr float TwoPi()      { return 6.28318530717958647692; }
-	static constexpr float OneOverPi()  { return 0.31830988618379067154; }
-	static constexpr float OneOver2Pi() { return 0.15915494309189533576; }
-	static constexpr float PiOver2()    { return 1.57079632679489661923; }
-	static constexpr float PiOver4()    { return 0.78539816339744830962; }
+	static constexpr double Pi()         { return 3.14159265358979323846; }
+	static constexpr double TwoPi()      { return 6.28318530717958647692; }
+	static constexpr double OneOverPi()  { return 0.31830988618379067154; }
+	static constexpr double OneOver2Pi() { return 0.15915494309189533576; }
+	static constexpr double PiOver2()    { return 1.57079632679489661923; }
+	static constexpr double PiOver4()    { return 0.78539816339744830962; }
 };
 
 namespace MathHelper {
