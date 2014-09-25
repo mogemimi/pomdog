@@ -1,4 +1,4 @@
-//
+﻿//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -16,7 +16,7 @@
 #include "Pomdog/Config/Platform.hpp"
 #include <cassert>
 
-#if defined(POMDOG_COMPILER_MSVC)
+#ifdef POMDOG_COMPILER_MSVC
 #	include <xutility>
 #endif
 
@@ -64,15 +64,11 @@ inline constexpr bool ConstexprAssert(bool condition,
 			static_cast<bool>(expression), #expression, __FILE__, __LINE__))
 #elif defined(DEBUG) && defined(_MSC_VER)
 #	// Debug mode under Visual Studio
-#	define POMDOG_ASSERT(expression) POMDOG_ASSERT_MESSAGE(expression, "POMDOG_ASSERT")
+#	define POMDOG_ASSERT(expression) _ASSERT(expression)
 #	define POMDOG_ASSERT_MESSAGE(expression, message) \
-		do {\
-			if (!(expression)) {\
-				_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_WNDW); \
-				_ASSERT(message && expression); \
-				__debugbreak(); \
-			}\
-		} while(false)
+		static_cast<void>((!!(expression)) \
+			|| (1 != _CrtDbgReportW(_CRT_ASSERT, _CRT_WIDE(__FILE__), __LINE__, nullptr, L"%s", message)) \
+			|| (_CrtDbgBreak(), false))
 #elif defined(DEBUG)
 #	// Debug mode
 #	if defined(_MSC_VER)
