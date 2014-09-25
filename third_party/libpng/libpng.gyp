@@ -17,6 +17,7 @@
       ],
       'include_dirs': [
         '.',
+        '../zlib',
       ],
       'sources': [
         'png.c',
