@@ -65,7 +65,6 @@
 #include "Gameplay/GameObjectContext.hpp"
 #include "Gameplay/GameObjectID.hpp"
 #include "Gameplay/GameWorld.hpp"
-#include "Gameplay/HierarchyNode.hpp"
 
 // Graphics
 #include "Graphics/Blend.hpp"

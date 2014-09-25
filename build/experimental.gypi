@@ -18,6 +18,8 @@
       '<@(pomdog_expr_dir)/Gameplay2D/Behavior.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/Camera2D.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/GameLevel.hpp',
+      '<@(pomdog_expr_dir)/Gameplay2D/HierarchyNode.cpp',
+      '<@(pomdog_expr_dir)/Gameplay2D/HierarchyNode.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/ParticleRenderable.cpp',
       '<@(pomdog_expr_dir)/Gameplay2D/ParticleRenderable.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/RectangleRenderable.cpp',

@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include "GameObject.hpp"
+#include "Pomdog/Gameplay/GameObject.hpp"
 #include "Pomdog/Config/Export.hpp"
 #include <memory>
 #include <functional>
