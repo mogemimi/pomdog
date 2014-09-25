@@ -2,7 +2,7 @@
 # gyp build/TestApp.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
 #
 # Examples(MSVS 2013):
-# gyp build/TestApp.gyp --depth=. -f msvs -G msvs_version=2013 --generator-output=./build.msvc/
+# gyp build/TestApp.gyp --depth=. -f msvs -G msvs_version=2013 --generator-output=./build.msvs/
 
 {
   'includes': ['common.gypi', 'experimental.gypi'],

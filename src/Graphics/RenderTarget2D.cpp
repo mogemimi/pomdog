@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "RenderTarget2D.hpp"
+#include <Pomdog/Graphics/RenderTarget2D.hpp>
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
