@@ -32,3 +32,9 @@ TEST(StringFormat, FirstCase)
 	EXPECT_EQ("3.141", StringFormat("%4.3lf", 3.1410));
 	//EXPECT_EQ("42", StringFormat("%*d", 3, 42));
 }
+
+TEST(StringFormat, LongString)
+{
+	std::string const source(1024, 'A');
+	EXPECT_EQ(std::string("42+") + source + "+72", StringFormat("42+%s+72", source.c_str()));
+}
