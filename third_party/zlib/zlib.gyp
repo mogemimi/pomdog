@@ -1,12 +1,5 @@
 # zlib.gyp - for zlib 1.2.8
 {
-  'target_defaults': {
-    'default_configuration': 'Release',
-    'configurations': {
-      'Debug': {},
-      'Release': {},
-    },
-  },
   'targets': [
     {
       'target_name': 'zlib_static',
@@ -43,28 +36,52 @@
         'zutil.c',
         'zutil.h',
       ],
+      'default_configuration': 'Release',
+      'configurations': {
+        'Debug': {
+          'msvs_settings':{
+            'VCCLCompilerTool': {
+              'RuntimeLibrary': '1', # /MTd
+            },
+          },
+        },
+        'Release': {
+          'defines': ['NDEBUG'],
+          'msvs_settings':{
+            'VCCLCompilerTool': {
+              'PreprocessorDefinitions': [
+                'ASMV',
+                'ASMINF',
+              ],
+              'RuntimeLibrary': '0', # /MT
+            },
+          },
+        },
+      },
       'msvs_configuration_attributes': {
-        #'CharacterSet': '2', # Multibyte Character Set
-        #'OutputDirectory': '$(SolutionDir)$(ConfigurationName)',
+        'CharacterSet': '1', # Unicode Character Set
       },
       'msvs_settings':{
         'VCCLCompilerTool': {
-          'SuppressStartupBanner': 'true', # /nologo
-          'WarningLevel': '3',             # /W3
-          'Optimization': '2',             # /O2
-          'InlineFunctionExpansion': '1',  # /Ob1
           'PreprocessorDefinitions': [
             'WIN32',
-            'NDEBUG',
+            'ZLIB_WINAPI',
+            '_CRT_NONSTDC_NO_DEPRECATE',
+            '_CRT_SECURE_NO_DEPRECATE',
+            '_CRT_NONSTDC_NO_WARNINGS',
           ],
+          'SuppressStartupBanner': 'true',      # /nologo
+          'WarningLevel': '3',                  # /W3
+          'Optimization': '2',                  # /O2
+          'InlineFunctionExpansion': '1',       # /Ob1
           'StringPooling': 'true',              # /GF
-          'RuntimeLibrary': '0',                # /MT
           'EnableFunctionLevelLinking': 'true', # /Gy
+          'BufferSecurityCheck': 'false',       # /GS-
         },
       },
       'xcode_settings': {
-	    'SKIP_INSTALL': 'YES',
+        'SKIP_INSTALL': 'YES',
       },
     },
-  ],# "targets"
+  ],
 }
