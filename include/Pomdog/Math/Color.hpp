@@ -45,10 +45,6 @@ public:
 	// Assignment operators:
 	Color & operator=(Color const&) = default;
 	Color & operator=(Color &&) = default;
-	Color & operator*=(float scale);
-
-	// Binary operators:
-	Color operator*(float scale) const;
 
 	bool operator==(Color const&) const;
 	bool operator!=(Color const&) const;
@@ -106,8 +102,6 @@ public:
 	///@note (R, G, B, A) = (0, 0, 0, 0)
 	static const Color TransparentBlack;
 };
-
-Color POMDOG_EXPORT operator*(float scale, Color const& color);
 
 }// namespace Pomdog
 

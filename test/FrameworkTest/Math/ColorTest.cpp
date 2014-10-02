@@ -48,16 +48,6 @@ TEST(Color, Constants)
 	EXPECT_EQ(Color::CornflowerBlue,   Color(100, 149, 237, 255));
 }
 
-TEST(Color, Multiply)
-{
-	Color color(4, 5, 6, 7);
-	color *= 3;
-	EXPECT_EQ(Color(4*3, 5*3, 6*3, 7*3), color);
-
-	EXPECT_EQ(Color(4*3, 5*3, 6*3, 7*3), Color(4, 5, 6, 7)*3);
-	EXPECT_EQ(Color(4*3, 5*3, 6*3, 7*3), 3*Color(4, 5, 6, 7));
-}
-
 TEST(Color, ToVector)
 {
 	Color color(255, 255, 255, 255);
