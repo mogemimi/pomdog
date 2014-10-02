@@ -1,4 +1,4 @@
-#import "AppDelegate.h"
+﻿#import "AppDelegate.h"
 
 #include "QuickStartGame.hpp"
 #include <Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp>

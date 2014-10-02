@@ -1,4 +1,4 @@
-#include "QuickStartGame.hpp"
+﻿#include "QuickStartGame.hpp"
 #include <utility>
 
 namespace QuickStart {
