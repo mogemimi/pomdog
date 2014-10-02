@@ -6,12 +6,12 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <gtest/iutest_switch.hpp>
-#include <utility>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/EventConnection.hpp>
 #include <Pomdog/Event/EventHandler.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
+#include <gtest/iutest_switch.hpp>
+#include <utility>
 
 using Pomdog::Event;
 using Pomdog::EventConnection;
@@ -25,7 +25,7 @@ TEST(ScopedConnection, ScopeGuard)
 	
 	{
 		ScopedConnection connection;
-		connection = eventHandler.Connect([&](Event const& event){
+		connection = eventHandler.Connect([&](Event const&) {
 			++count;
 		});
 		
@@ -47,7 +47,7 @@ TEST(ScopedConnection, ExplicitDisconnect)
 	ScopedConnection connection;
 	int count = 0;
 	
-	connection = eventHandler.Connect([&](Event const& event){
+	connection = eventHandler.Connect([&](Event const&) {
 		++count;
 	});
 	
@@ -73,7 +73,7 @@ TEST(ScopedConnection, MoveAssignment)
 	{
 		ScopedConnection connection2;
 		
-		connection2 = eventHandler.Connect([&](Event const& event){
+		connection2 = eventHandler.Connect([&](Event const&) {
 			++count;
 		});
 		
@@ -107,7 +107,7 @@ TEST(ScopedConnection, CopyAssignmentEventConnection)
 	{
 		EventConnection connection2;
 		
-		connection2 = eventHandler.Connect([&](Event const& event){
+		connection2 = eventHandler.Connect([&](Event const&) {
 			++count;
 		});
 		
@@ -142,7 +142,7 @@ TEST(ScopedConnection, MoveAssignmentEventConnection)
 	{
 		EventConnection connection2;
 		
-		connection2 = eventHandler.Connect([&](Event const& event){
+		connection2 = eventHandler.Connect([&](Event const&) {
 			++count;
 		});
 		

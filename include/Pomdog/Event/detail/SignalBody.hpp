@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include "ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 #include <cstdint>
@@ -27,12 +28,6 @@
 namespace Pomdog {
 namespace Details {
 namespace SignalsAndSlots {
-
-template <typename Function>
-using Slot = std::function<Function>;
-
-template <typename Function>
-class SignalBody;
 
 class ConnectionBody {
 public:

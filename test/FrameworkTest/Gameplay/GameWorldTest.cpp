@@ -6,10 +6,10 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <gtest/iutest_switch.hpp>
-#include <cstdint>
 #include <Pomdog/Gameplay/GameWorld.hpp>
 #include <Pomdog/Gameplay/GameObject.hpp>
+#include <gtest/iutest_switch.hpp>
+#include <cstdint>
 
 using namespace Pomdog;
 

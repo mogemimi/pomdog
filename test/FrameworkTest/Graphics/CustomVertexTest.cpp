@@ -6,7 +6,6 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <gtest/iutest_switch.hpp>
 #include <Pomdog/Math/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Graphics/CustomVertex.hpp>
 #include <Pomdog/Graphics/VertexDeclaration.hpp>
@@ -16,6 +15,7 @@
 #include <Pomdog/Math/Vector3.hpp>
 #include <Pomdog/Math/Vector4.hpp>
 #include <Pomdog/Math/Quaternion.hpp>
+#include <gtest/iutest_switch.hpp>
 
 using Pomdog::CustomVertex;
 using Pomdog::VertexDeclaration;

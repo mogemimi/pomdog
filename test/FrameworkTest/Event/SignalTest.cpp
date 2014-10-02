@@ -6,9 +6,9 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
+#include <Pomdog/Event/Signal.hpp>
 #include <gtest/iutest_switch.hpp>
 #include <utility>
-#include <Pomdog/Event/Signal.hpp>
 
 using Pomdog::Signal;
 

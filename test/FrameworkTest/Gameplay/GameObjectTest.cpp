@@ -6,10 +6,10 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
+#include <Pomdog/Gameplay/GameObject.hpp>
 #include <gtest/iutest_switch.hpp>
 #include <cstdint>
 #include <memory>
-#include <Pomdog/Gameplay/GameObject.hpp>
 
 using Pomdog::Component;
 using Pomdog::GameObject;
@@ -116,9 +116,8 @@ TEST(GameObject, AddComponentWithInheritance)
 
 TEST(GameObject, RemoveComponent)
 {
-	auto objectContext = std::make_shared<GameObjectContext>();
-	
 	{
+		auto objectContext = std::make_shared<GameObjectContext>();
 		GameObject gameObject{objectContext};
 		gameObject.AddComponent<TransformComponent>();
 		ASSERT_TRUE(gameObject.HasComponent<TransformComponent>());
@@ -669,6 +668,8 @@ TEST(GameObject, GameObjectID_Unique)
 	
 	//printf("## maxSequenceNumber = %u\n## maxIndex = %u\n", maxSequenceNumber, maxIndex);
 	
+	ASSERT_FALSE(uniqueIdents.empty());
+
 	std::sort(std::begin(uniqueIdents), std::end(uniqueIdents));
 	auto iter = std::adjacent_find(std::begin(uniqueIdents), std::end(uniqueIdents));
 	

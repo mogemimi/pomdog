@@ -6,9 +6,9 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
+#include <Pomdog/Input/Keys.hpp>
 #include <gtest/iutest_switch.hpp>
 #include <type_traits>
-#include <Pomdog/Input/Keys.hpp>
 
 using Pomdog::Keys;
 

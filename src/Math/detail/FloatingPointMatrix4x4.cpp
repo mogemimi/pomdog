@@ -393,13 +393,15 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix4x4<T>::Minor3x3(std::size_t row, s
 	FloatingPointMatrix3x3<T> minor;
 	for (std::size_t i = 0, s = 0; i < 4; ++i)
 	{
-		if (row == i)
+		if (row == i) {
 			continue;
+		}
 
 		for (std::size_t j = 0, t = 0; j < 4; ++j)
 		{
-			if (column == j)
+			if (column == j) {
 				continue;
+			}
 
 			minor(s, t) = this->m[i][j];
 			++t;
@@ -693,10 +695,9 @@ FloatingPointMatrix4x4<T>::CreateLookAtLH(FloatingPointVector3<T> const & eye, F
 	//  xaxis.z           yaxis.z           zaxis.z          0
 	// -dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
 
-	typedef FloatingPointVector3<T> Vector3;
-	auto const zaxis = Vector3::Normalize(at - eye);// RH: eye - at
-	auto const xaxis = Vector3::Normalize(FloatingPointVector3<T>::Cross(up, zaxis));
-	auto const yaxis = Vector3::Cross(zaxis, xaxis);
+	auto const zaxis = FloatingPointVector3<T>::Normalize(at - eye);// RH: eye - at
+	auto const xaxis = FloatingPointVector3<T>::Normalize(FloatingPointVector3<T>::Cross(up, zaxis));
+	auto const yaxis = FloatingPointVector3<T>::Cross(zaxis, xaxis);
 
 	result.m[0][0] = xaxis.X;
 	result.m[0][1] = yaxis.X;
@@ -713,9 +714,9 @@ FloatingPointMatrix4x4<T>::CreateLookAtLH(FloatingPointVector3<T> const & eye, F
 	result.m[2][2] = zaxis.Z;
 	result.m[2][3] = 0;
 
-	result.m[3][0] = -Vector3::Dot(xaxis, eye);
-	result.m[3][1] = -Vector3::Dot(yaxis, eye);
-	result.m[3][2] = -Vector3::Dot(zaxis, eye);
+	result.m[3][0] = -FloatingPointVector3<T>::Dot(xaxis, eye);
+	result.m[3][1] = -FloatingPointVector3<T>::Dot(yaxis, eye);
+	result.m[3][2] = -FloatingPointVector3<T>::Dot(zaxis, eye);
 	result.m[3][3] = 1;
 }
 //-----------------------------------------------------------------------
@@ -743,10 +744,9 @@ FloatingPointMatrix4x4<T>::CreateLookAtRH(FloatingPointVector3<T> const& eye, Fl
 	//  xaxis.z           yaxis.z           zaxis.z          0
 	// -dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
 
-	typedef FloatingPointVector3<T> Vector3;
-	auto const zaxis = Vector3::Normalize(eye - at);// LH: at - eye
-	auto const xaxis = Vector3::Normalize(Vector3::Cross(up, zaxis));
-	auto const yaxis = Vector3::Cross(zaxis, xaxis);
+	auto const zaxis = FloatingPointVector3<T>::Normalize(eye - at);// LH: at - eye
+	auto const xaxis = FloatingPointVector3<T>::Normalize(FloatingPointVector3<T>::Cross(up, zaxis));
+	auto const yaxis = FloatingPointVector3<T>::Cross(zaxis, xaxis);
 
 	result.m[0][0] = xaxis.X;
 	result.m[0][1] = yaxis.X;
@@ -763,9 +763,9 @@ FloatingPointMatrix4x4<T>::CreateLookAtRH(FloatingPointVector3<T> const& eye, Fl
 	result.m[2][2] = zaxis.Z;
 	result.m[2][3] = 0;
 
-	result.m[3][0] = -Vector3::Dot(xaxis, eye);
-	result.m[3][1] = -Vector3::Dot(yaxis, eye);
-	result.m[3][2] = -Vector3::Dot(zaxis, eye);
+	result.m[3][0] = -FloatingPointVector3<T>::Dot(xaxis, eye);
+	result.m[3][1] = -FloatingPointVector3<T>::Dot(yaxis, eye);
+	result.m[3][2] = -FloatingPointVector3<T>::Dot(zaxis, eye);
 	result.m[3][3] = 1;
 }
 //-----------------------------------------------------------------------

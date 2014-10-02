@@ -6,11 +6,11 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <gtest/iutest_switch.hpp>
-#include <utility>
 #include <Pomdog/Event/EventConnection.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/EventHandler.hpp>
+#include <gtest/iutest_switch.hpp>
+#include <utility>
 
 using Pomdog::Event;
 using Pomdog::EventHandler;
@@ -22,7 +22,7 @@ TEST(EventConnection, Disconnect)
 	EventConnection connection;
 	int count = 0;
 
-	connection = eventHandler.Connect([&](Event const& event){
+	connection = eventHandler.Connect([&](Event const&) {
 		++count;
 	});
 	
@@ -48,7 +48,7 @@ TEST(EventConnection, CopyAssignmentOperator)
 	{
 		EventConnection connection2;
 		
-		connection2 = eventHandler.Connect([&](Event const& event){
+		connection2 = eventHandler.Connect([&](Event const&){
 			++count;
 		});
 		
@@ -76,7 +76,7 @@ TEST(EventConnection, MoveAssignmentOperator)
 	{
 		EventConnection connection2;
 		
-		connection2 = eventHandler.Connect([&](Event const& event){
+		connection2 = eventHandler.Connect([&](Event const&){
 			++count;
 		});
 		

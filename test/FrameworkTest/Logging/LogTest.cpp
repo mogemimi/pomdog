@@ -6,13 +6,13 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <gtest/iutest_switch.hpp>
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LogChannel.hpp>
 #include <Pomdog/Logging/LogEntry.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
+#include <gtest/iutest_switch.hpp>
 #include <vector>
 
 using Pomdog::Log;

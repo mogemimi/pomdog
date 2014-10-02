@@ -6,11 +6,11 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <gtest/iutest_switch.hpp>
-#include <utility>
 #include <Pomdog/Event/EventConnection.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/EventQueue.hpp>
+#include <gtest/iutest_switch.hpp>
+#include <utility>
 
 using Pomdog::Event;
 using Pomdog::EventQueue;
@@ -115,7 +115,7 @@ TEST_F(EventQueueTest, Conenct)
 TEST_F(EventQueueTest, RecursiveConnection)
 {
 	EventQueue eventQueue;
-	auto connection = eventQueue.Connect([&](Event const& event){
+	auto connection = eventQueue.Connect([&](Event const&) {
 		eventQueue.Connect(slot);
 	});
 	

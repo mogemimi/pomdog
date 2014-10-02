@@ -6,9 +6,9 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
+#include <Pomdog/Gameplay/GameObjectID.hpp>
 #include <gtest/iutest_switch.hpp>
 #include <cstdint>
-#include <Pomdog/Gameplay/GameObjectID.hpp>
 
 using Pomdog::GameObjectID;
 

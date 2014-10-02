@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include <gtest/iutest_switch.hpp>
 #include <Pomdog/Graphics/VertexDeclaration.hpp>
+#include <gtest/iutest_switch.hpp>
 
 using Pomdog::VertexDeclaration;
 using Pomdog::VertexElement;

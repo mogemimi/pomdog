@@ -323,13 +323,15 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
 	FloatingPointMatrix2x2<T> minor;
 	for (std::size_t i = 0, s = 0; i < RowSize; ++i)
 	{
-		if (row == i)
+		if (row == i) {
 			continue;
+		}
 
 		for (std::size_t j = 0, t = 0; j < ColumnSize; ++j)
 		{
-			if (column == j)
+			if (column == j) {
 				continue;
+			}
 
 			POMDOG_ASSERT(s < 2);
 			POMDOG_ASSERT(t < 2);
