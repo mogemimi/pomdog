@@ -311,11 +311,11 @@
   },
   'target_defaults': {
     'dependencies': [
-      '../third_party/libpng/libpng.gyp:libpng_static',
+      '../third-party/libpng/libpng.gyp:libpng_static',
     ],
     'include_dirs': [
       '../include',
-      '../third_party/libpng',
+      '../third-party/libpng',
     ],
     'sources': [
       '<@(pomdog_library_testable_sources)',

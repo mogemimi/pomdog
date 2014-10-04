@@ -42,7 +42,7 @@
       ],
       'include_dirs': [
         '../include',
-        '../third_party/iutest/include',
+        '../third-party/iutest/include',
       ],
       'sources': [
         '../test/FrameworkTest/main.cpp',

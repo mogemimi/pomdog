@@ -66,13 +66,13 @@
       'type': 'executable',
       'mac_bundle': 1,
       'dependencies': [
-        '../third_party/lua/lua.gyp:lua_static',
+        '../third-party/lua/lua.gyp:lua_static',
       ],
       'include_dirs': [
         '../include',
         '../experimental',
-        '../third_party/rapidjson/include',
-        '../third_party/lua/src',
+        '../third-party/rapidjson/include',
+        '../third-party/lua/src',
       ],
       'sources': [
         '<@(pomdog_experimental_2d_sources)',

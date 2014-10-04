@@ -52,6 +52,13 @@ cd tools/gyp
 python setup.py install
 ```
 
+### Pulling all dependencies using Git
+
+From the root of your engine directory, run:  
+```bash
+git clone https://github.com/mogemimi/pomdog-third-party.git third-party
+```
+
 ### Building under Mac OS X and Xcode
 
 **1. Generating the Xcode project file**

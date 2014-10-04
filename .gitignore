@@ -19,10 +19,10 @@
 /build/Release
 /build.xcodefiles
 /build.msvs
-/third_party
-/third_party/libpng/build
-/third_party/lua/build
-/third_party/zlib/build
+/third-party
+/third-party/libpng/build
+/third-party/lua/build
+/third-party/zlib/build
 /tools/gyp
 /tools/python
 
