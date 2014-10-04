@@ -33,8 +33,8 @@ public:
 
 	///@~Japanese
 	/// @brief アクセス可能な最も低解像度のミップマップレベルの最小値です。
-	/// @remarks デフォルト値は std::numeric_limits<float>::min() です。
-	float MinMipLevel = std::numeric_limits<float>::min();
+	/// @remarks デフォルト値は 0.0f です。
+	float MinMipLevel = 0.0f;
 
 	///@~Japanese
 	/// @brief アクセス可能な最も低解像度のミップマップレベルの最大値です。
@@ -43,14 +43,13 @@ public:
 	/// @remarks 必ず MinMipLevel より大きな値を設定してください。
 	/// 0 を最も詳細なミップマップレベルとし、レベルの値が大きくなるほど詳細でなくなります。
 	/// MaxMipLevel を 4 に設定すると、レベル 4 以上のミップマップへのアクセスをできなくすることができます。
-	/// 0 よりも大きな値を指定する必要があります。
 	/// LOD の上限を決めない場合は、非常に大きな値を指定します。
-	/// @details
-	/// 実際に指定される値は、実装によって異なります。
-	/// 実装では LOD の上限を決めないように、大きな値が指定されています。
-	/// GL の場合、GL_TEXTURE_MAX_LOD のデフォルト値は +1000U です。
-	/// Direct3D の場合、D3D11_SAMPLER_DESC::MaxLOD のデフォルト値は D3D11_FLOAT32_MAX です。
 	float MaxMipLevel = std::numeric_limits<float>::max();
+
+	///@~Japanese
+	/// @brief 計算されたミップマップレベルから最終的にサンプリングされるミップマップレベルへのオフセットです。
+	/// @remarks デフォルト値は 0.0f です。
+	float MipMapLevelOfDetailBias = 0.0f;
 
 	///@~Japanese
 	/// @brief テクスチャサンプリング時に使用するフィルタリングオプションです。
@@ -73,7 +72,6 @@ public:
 	TextureAddressMode AddressW = TextureAddressMode::Clamp;
 	
 	//Color BorderColor = Color::TransparentBlack;
-	//float MipMapLevelOfDetailBias = 0;
 };
 
 }// namespace Pomdog

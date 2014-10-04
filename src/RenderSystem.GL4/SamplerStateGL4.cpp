@@ -121,22 +121,15 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 	}
 
 	{
-		// Note: GL_TEXTURE_MIN_LOD: The initial value is -1000.
-		POMDOG_ASSERT(description.MinMipLevel < description.MaxMipLevel);
-		GLint const minMipLevel = std::max(1, static_cast<GLint>(std::max(description.MinMipLevel, -1000.0f)));
-		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_LOD, minMipLevel);
-		
-		#ifdef DEBUG
-		ErrorChecker::CheckError("glSamplerParameteri", __FILE__, __LINE__);
-		#endif
-	}
-	{
-		POMDOG_ASSERT(description.MaxMipLevel != 0);
-		GLint const maxMipLevel = std::max(1, static_cast<GLint>(std::min(description.MaxMipLevel, 1000.0f)));
-		glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAX_LOD, maxMipLevel);
+		POMDOG_ASSERT(description.MinMipLevel <= description.MaxMipLevel);
+		POMDOG_ASSERT(description.MaxMipLevel <= std::numeric_limits<GLfloat>::max());
+
+		glSamplerParameterf(samplerObject->value, GL_TEXTURE_MIN_LOD, description.MaxMipLevel);
+		glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_LOD, description.MaxMipLevel);
+		glSamplerParameterf(samplerObject->value, GL_TEXTURE_LOD_BIAS, description.MipMapLevelOfDetailBias);
 
 		#ifdef DEBUG
-		ErrorChecker::CheckError("glSamplerParameteri", __FILE__, __LINE__);
+		ErrorChecker::CheckError("glSamplerParameterf", __FILE__, __LINE__);
 		#endif
 	}
 }
