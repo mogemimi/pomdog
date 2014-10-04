@@ -34,11 +34,11 @@ static GLenum ToInternalFormatGL4(SurfaceFormat format)
 		return GL_R8;
 	case SurfaceFormat::R8G8_UNorm:
 		return GL_RG8;
-	case SurfaceFormat::R8G8B8_UNorm:
-		return GL_RGB8;
 	case SurfaceFormat::R8G8B8A8_UNorm:
 	case SurfaceFormat::B8G8R8A8_UNorm:
 		return GL_RGBA8;
+	case SurfaceFormat::R11G11B10_Float:
+		return GL_R11F_G11F_B10F;
 	case SurfaceFormat::R32G32B32A32_Float:
 		return GL_RGBA32F;
 	case SurfaceFormat::R10G10B10A2_UNorm:
@@ -63,7 +63,7 @@ static GLenum ToFormatComponents(SurfaceFormat format)
 	case SurfaceFormat::R32G32B32A32_Float:
 	case SurfaceFormat::R10G10B10A2_UNorm:
 		return GL_RGBA;
-	case SurfaceFormat::R8G8B8_UNorm:
+	case SurfaceFormat::R11G11B10_Float:
 		return GL_RGB;
 	case SurfaceFormat::R8G8_UNorm:
 	case SurfaceFormat::R16G16_Float:
@@ -91,10 +91,10 @@ static GLenum ToPixelFundamentalType(SurfaceFormat format)
 	case SurfaceFormat::A8_UNorm:
 	case SurfaceFormat::R8_UNorm:
 	case SurfaceFormat::R8G8_UNorm:
-	case SurfaceFormat::R8G8B8_UNorm:
 	case SurfaceFormat::R8G8B8A8_UNorm:
 	case SurfaceFormat::B8G8R8A8_UNorm:
 		return GL_UNSIGNED_BYTE;
+	case SurfaceFormat::R11G11B10_Float:
 	case SurfaceFormat::R32G32B32A32_Float:
 	case SurfaceFormat::R16G16_Float:
 	case SurfaceFormat::R32_Float:
@@ -125,11 +125,10 @@ static std::uint16_t ToBytesPerBlock(SurfaceFormat format)
 	case SurfaceFormat::BlockComp2_UNorm:
 	case SurfaceFormat::BlockComp3_UNorm:
 		return 16;
-	case SurfaceFormat::R8G8B8_UNorm:
-		return 24;
 	case SurfaceFormat::R8G8B8A8_UNorm:
 	case SurfaceFormat::B8G8R8A8_UNorm:
 	case SurfaceFormat::R10G10B10A2_UNorm:
+	case SurfaceFormat::R11G11B10_Float:
 	case SurfaceFormat::R16G16_Float:
 	case SurfaceFormat::R32_Float:
 		return 32;

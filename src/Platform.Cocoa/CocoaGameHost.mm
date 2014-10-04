@@ -55,15 +55,15 @@ static NSOpenGLPixelFormat* CreatePixelFormat(DepthFormat depthFormat)
 		attributes.push_back(NSOpenGLPFADepthSize);
 		attributes.push_back(16);
 		break;
-	case DepthFormat::Depth24:
-		attributes.push_back(NSOpenGLPFADepthSize);
-		attributes.push_back(24);
-		break;
 	case DepthFormat::Depth24Stencil8:
 		attributes.push_back(NSOpenGLPFADepthSize);
 		attributes.push_back(24);
 		attributes.push_back(NSOpenGLPFAStencilSize);
 		attributes.push_back(8);
+		break;
+	case DepthFormat::Depth32:
+		attributes.push_back(NSOpenGLPFADepthSize);
+		attributes.push_back(32);
 		break;
 	case DepthFormat::None:
 		break;

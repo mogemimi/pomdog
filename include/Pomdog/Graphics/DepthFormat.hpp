@@ -25,12 +25,12 @@ enum class DepthFormat: std::uint8_t {
 	Depth16,
 	
 	///@~English
-	/// @brief 24-bit buffer format. 24 bits for depth.
-	Depth24,
-	
-	///@~English
 	/// @brief 32-bit buffer format. 24 bits for depth and 8 bits for stencil.
 	Depth24Stencil8,
+	
+	///@~English
+	/// @brief 32-bit floating-point buffer format. 32 bits for depth.
+	Depth32,
 	
 	///@~English
 	/// @brief Do not use depeh stencil buffer.

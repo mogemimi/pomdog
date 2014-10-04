@@ -41,18 +41,16 @@ enum class SurfaceFormat: std::uint8_t {
 	///@~English
 	/// @remarks UNorm means "unsigned normalized" integer.
 	///@~Japanese
-	/// @brief 3 チャンネル、24 bit の符号なし整数フォーマットです。各チャンネルにそれぞれ 8 bit 使用します。
-	R8G8B8_UNorm,
-
-	///@~English
-	/// @remarks UNorm means "unsigned normalized" integer.
-	///@~Japanese
 	/// @brief 4 チャンネル、32 bit の符号なし整数フォーマットです。各チャンネルにそれぞれ 8 bit 使用します。
 	R8G8B8A8_UNorm,
 
 	///@~Japanese
 	/// @brief 0.0 ~ 1.0 の範囲を表す符号なし正規化値の 32 bit フォーマットです。RGB 各チャンネルにそれぞれ 10 bit, Alpha に 2 bit を使用します。
 	R10G10B10A2_UNorm,
+
+	///@~Japanese
+	/// @brief 3 チャンネル、32 bit の浮動小数点フォーマットです。RG 各チャンネルにそれぞれ 11 bit, B に 10 bit を使用します。
+	R11G11B10_Float,
 
 	///@~English
 	/// @remarks UNorm means "unsigned normalized" integer.

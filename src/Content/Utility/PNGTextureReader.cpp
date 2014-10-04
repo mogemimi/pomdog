@@ -88,6 +88,7 @@ static Texture2DParsingData ReadPNG(std::uint8_t const* data, std::size_t byteLe
 	
 	// Settings
 	if (originalColorType == PNG_COLOR_TYPE_PALETTE) {
+		// NOTE: PALETTE => RGB (24 bit)
 		::png_set_palette_to_rgb(pngPtr);
 	}
 	
@@ -104,7 +105,18 @@ static Texture2DParsingData ReadPNG(std::uint8_t const* data, std::size_t byteLe
 	if (::png_get_valid(pngPtr, infoPtr, PNG_INFO_tRNS)) {
 		::png_set_tRNS_to_alpha(pngPtr);
 	}
-	
+	else {
+		switch (originalColorType) {
+		case PNG_COLOR_TYPE_PALETTE:
+		case PNG_COLOR_TYPE_RGB:
+			// NOTE: RGB (24 bit) => RGBA (32 bit)
+			::png_set_add_alpha(pngPtr, 0xFF, PNG_FILLER_AFTER);
+			break;
+		default:
+			break;
+		}
+	}
+
 	::png_read_update_info(pngPtr, infoPtr);
 	
 	// Texture2D Info
@@ -133,14 +145,13 @@ static Texture2DParsingData ReadPNG(std::uint8_t const* data, std::size_t byteLe
 	Texture2DParsingData parsingData;
 	parsingData.Width = pixelWidth;
 	parsingData.Height = pixelHeight;
-	parsingData.Format = ([](::png_byte colorTypeIn)->SurfaceFormat {
+	parsingData.Format = ([](::png_byte colorTypeIn)-> SurfaceFormat {
+		POMDOG_ASSERT(colorTypeIn != PNG_COLOR_TYPE_RGB);
 		switch (colorTypeIn) {
 		case PNG_COLOR_TYPE_GRAY:
 			return SurfaceFormat::R8_UNorm;
 		case PNG_COLOR_TYPE_GRAY_ALPHA:
 			return SurfaceFormat::R8G8_UNorm;
-		case PNG_COLOR_TYPE_RGB:
-			return SurfaceFormat::R8G8B8_UNorm;
 		case PNG_COLOR_TYPE_RGB_ALPHA:
 			return SurfaceFormat::R8G8B8A8_UNorm;
 		default:

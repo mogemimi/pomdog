@@ -22,12 +22,12 @@ static Optional<GLenum> ToGLDepthStencilFormat(DepthFormat depthFormat)
 
 	switch (depthFormat) {
 	case DepthFormat::Depth16: return GL_DEPTH_COMPONENT16;
-	case DepthFormat::Depth24: return GL_DEPTH_COMPONENT24;
 	case DepthFormat::Depth24Stencil8: return GL_DEPTH24_STENCIL8;
+	case DepthFormat::Depth32: return GL_DEPTH_COMPONENT32;
 	case DepthFormat::None:
 		break;
 	}
-	return {};
+	return OptionalType::NullOptional;
 }
 
 }// unnamed namespace
