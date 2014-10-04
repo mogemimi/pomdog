@@ -20,10 +20,10 @@ namespace Pomdog {
 #pragma mark - GameClock::Impl
 #endif
 //-----------------------------------------------------------------------
-class GameClock::Impl {
+class GameClock::Impl final {
 public:
 	Impl();
-	
+
 	void Tick();
 	
 	void Restart();
@@ -134,7 +134,7 @@ DurationSeconds GameClock::Impl::FrameDuration() const
 float GameClock::Impl::FrameRate() const
 {
 	POMDOG_ASSERT(predictedFrameTime.count() != 0);
-	return 1 / predictedFrameTime.count();
+	return 1 / static_cast<float>(predictedFrameTime.count());
 }
 //-----------------------------------------------------------------------
 DurationSeconds GameClock::Impl::ElapsedTime() const

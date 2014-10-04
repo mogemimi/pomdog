@@ -26,8 +26,8 @@ namespace Details {
 template <typename T> struct AssetManagerLoadImpl {
 	static auto Load(Details::AssetLoaderContext const& loaderContext,
 		std::string const& assetPath,
-		Details::AssetDictionary<EffectPass> & effectPassAssets,
-		Details::AssetDictionary<Texture2D> & texture2dAssets)
+		Details::AssetDictionary<EffectPass> &,
+		Details::AssetDictionary<Texture2D> &)
 		-> decltype(Details::AssetLoader<T>()(Details::AssetLoaderContext(), std::string()))
 	{
 		Details::AssetLoader<T> loader;
@@ -38,7 +38,7 @@ template <typename T> struct AssetManagerLoadImpl {
 template <> struct AssetManagerLoadImpl<Texture2D> {
 	static auto Load(Details::AssetLoaderContext const& loaderContext,
 		std::string const& assetPath,
-		Details::AssetDictionary<EffectPass> & effectPassAssets,
+		Details::AssetDictionary<EffectPass> &,
 		Details::AssetDictionary<Texture2D> & texture2dAssets)
 	{
 		return texture2dAssets.Load(loaderContext, assetPath);
@@ -49,7 +49,7 @@ template <> struct AssetManagerLoadImpl<EffectPass> {
 	static auto Load(Details::AssetLoaderContext const& loaderContext,
 		std::string const& assetPath,
 		Details::AssetDictionary<EffectPass> & effectPassAssets,
-		Details::AssetDictionary<Texture2D> & texture2dAssets)
+		Details::AssetDictionary<Texture2D> &)
 	{
 		return effectPassAssets.Load(loaderContext, assetPath);
 	}

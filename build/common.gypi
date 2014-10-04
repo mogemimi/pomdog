@@ -98,12 +98,6 @@
         'xcode_settings': {
           'GCC_OPTIMIZATION_LEVEL': '3', # -O3
         },
-        'conditions': [
-          ['OS == "linux" or OS == "android"', {
-            # Linux and Android settings
-            # todo: not implemented
-          }], # OS == "linux" or OS == "android"
-        ], # conditions
       }, # Release
     },
   }, # target_defaults

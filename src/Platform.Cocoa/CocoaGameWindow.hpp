@@ -31,7 +31,7 @@ class MouseCocoa;
 
 class CocoaGameWindow final: public GameWindow {
 public:
-	CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDispatcher> eventDispatcher);
+	CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDispatcher> const& eventDispatcher);
 	~CocoaGameWindow();
 
 	///@copydoc GameWindow

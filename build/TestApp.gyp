@@ -34,7 +34,7 @@
       'CLANG_CXX_LANGUAGE_STANDARD': 'c++14',
       'MACOSX_DEPLOYMENT_TARGET': '10.9', # OS X Deployment Target: 10.9
       'CLANG_CXX_LIBRARY': 'libc++', # libc++ requires OS X 10.7 or later
-	  #'SKIP_INSTALL': 'NO',
+      #'SKIP_INSTALL': 'NO',
       # Warnings:
       'CLANG_WARN_EMPTY_BODY': 'YES',
       'GCC_WARN_64_TO_32_BIT_CONVERSION': 'YES',

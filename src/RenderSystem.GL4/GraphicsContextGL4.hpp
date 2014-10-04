@@ -17,6 +17,7 @@
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include <Pomdog/Utility/detail/Tagged.hpp>
 #include <Pomdog/Utility/Optional.hpp>
+#include <vector>
 #include <memory>
 
 namespace Pomdog {

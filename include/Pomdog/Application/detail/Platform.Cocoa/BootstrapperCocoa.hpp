@@ -42,8 +42,6 @@ class CocoaGameWindow;
 /// @brief すべてのサブシステムの起動、およびアプリケーションの実行を行います。
 class POMDOG_EXPORT BootstrapperCocoa final {
 public:
-	BootstrapperCocoa() = default;
-	
 	template <class GameClass>
 	void Run(NSWindow* nativeWindow)
 	{

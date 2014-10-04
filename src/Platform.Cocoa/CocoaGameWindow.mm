@@ -19,7 +19,7 @@ namespace Details {
 namespace Cocoa {
 
 //-----------------------------------------------------------------------
-CocoaGameWindow::CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDispatcher> eventDispatcher)
+CocoaGameWindow::CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
 	: nativeWindow(window)
 	, openGLView(nil)
 	, windowDelegate(nil)

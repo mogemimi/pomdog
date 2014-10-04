@@ -23,8 +23,6 @@ namespace GL4 {
 
 class GraphicsDeviceGL4 final: public NativeGraphicsDevice {
 public:
-	GraphicsDeviceGL4() = default;
-	
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeIndexBuffer>
 	CreateIndexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage) override;

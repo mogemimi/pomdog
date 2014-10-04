@@ -26,6 +26,7 @@
   ],
   'variables': {
     'pomdog_library_testable_sources': [
+      '../include/Pomdog/Application/DurationSeconds.hpp',
       '../include/Pomdog/Config/Export.hpp',
       '../include/Pomdog/Config/Platform.hpp',
       '../include/Pomdog/Event/Event.hpp',
@@ -163,7 +164,6 @@
       '../src/Utility/StringFormat.cpp',
     ],
     'pomdog_library_application_sources': [
-      '../include/Pomdog/Application/DurationSeconds.hpp',
       '../include/Pomdog/Application/Game.hpp',
       '../include/Pomdog/Application/GameClock.hpp',
       '../include/Pomdog/Application/GameHost.hpp',
