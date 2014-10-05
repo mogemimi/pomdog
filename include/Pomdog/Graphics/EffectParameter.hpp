@@ -35,7 +35,8 @@ class NativeConstantBuffer;
 /// @brief エフェクトパラメータです。
 class POMDOG_EXPORT EffectParameter {
 public:
-	EffectParameter();
+	EffectParameter() = default;
+
 	EffectParameter(EffectParameter const&) = delete;
 	EffectParameter & operator=(EffectParameter const&) = delete;
 

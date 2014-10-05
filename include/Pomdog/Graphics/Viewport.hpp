@@ -19,8 +19,6 @@
 
 namespace Pomdog {
 
-class Rectangle;
-
 ///@~Japanese
 /// @brief ビューポートです。
 class POMDOG_EXPORT Viewport {

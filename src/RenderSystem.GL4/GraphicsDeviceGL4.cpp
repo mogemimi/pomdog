@@ -93,10 +93,7 @@ GraphicsDeviceGL4::CreateEffectReflection(NativeEffectPass & nativeEffectPass)
 {
 	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(&nativeEffectPass);
 	POMDOG_ASSERT(effectPassGL4 != nullptr);
-	
-	if (!effectPassGL4) {
-		return std::unique_ptr<EffectReflectionGL4>();
-	}
+
 	return std::make_unique<EffectReflectionGL4>(effectPassGL4->GetShaderProgram());
 }
 //-----------------------------------------------------------------------
@@ -106,9 +103,6 @@ GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass & nativeEffectPass)
 	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(&nativeEffectPass);
 	POMDOG_ASSERT(effectPassGL4 != nullptr);
 	
-	if (!effectPassGL4) {
-		return std::unique_ptr<InputLayoutGL4>();
-	}
 	return std::make_unique<InputLayoutGL4>(effectPassGL4->GetShaderProgram());
 }
 //-----------------------------------------------------------------------
@@ -118,10 +112,7 @@ GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass & nativeEffectPass,
 {
 	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(&nativeEffectPass);
 	POMDOG_ASSERT(effectPassGL4 != nullptr);
-	
-	if (!effectPassGL4) {
-		return std::unique_ptr<InputLayoutGL4>();
-	}
+
 	return std::make_unique<InputLayoutGL4>(effectPassGL4->GetShaderProgram(), std::move(vertexBufferBindings));
 }
 //-----------------------------------------------------------------------
@@ -132,9 +123,6 @@ GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass & nativeEffectPass,
 	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(&nativeEffectPass);
 	POMDOG_ASSERT(effectPassGL4 != nullptr);
 	
-	if (!effectPassGL4) {
-		return std::unique_ptr<InputLayoutGL4>();
-	}
 	return std::make_unique<InputLayoutGL4>(effectPassGL4->GetShaderProgram(), vertexBufferBindings);
 }
 //-----------------------------------------------------------------------

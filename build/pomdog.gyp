@@ -364,7 +364,7 @@
       'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES', # '-fvisibility=hidden'
     },
     'conditions': [
-      ['renderer == "d3d11"', {
+      ['renderer == "direct3d11"', {
         'sources': [
         ],
         'link_settings': {
@@ -374,7 +374,7 @@
             '-ld3dcompiler.lib',
           ],
         },
-      }], # OS == "d3d11"
+      }], # OS == "direct3d11"
       ['renderer == "opengl"', {
         'sources': [
           '<@(pomdog_library_opengl4_sources)',

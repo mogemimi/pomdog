@@ -14,20 +14,6 @@
 #include <utility>
 
 namespace Pomdog {
-namespace {
-
-class DummyConstantBuffer final: public Details::RenderSystem::NativeConstantBuffer {
-public:
-	void GetData(std::uint32_t, void*) const override {}
-	
-	void SetData(std::uint32_t, void const*, std::uint32_t) override {}
-};
-
-}// unnamed namespace
-//-----------------------------------------------------------------------
-EffectParameter::EffectParameter()
-	: nativeConstantBuffer(std::make_unique<DummyConstantBuffer>())
-{}
 //-----------------------------------------------------------------------
 EffectParameter::EffectParameter(GraphicsDevice & graphicsDevice, std::uint32_t byteConstants)
 	: nativeConstantBuffer(graphicsDevice.NativeGraphicsDevice()->CreateConstantBuffer(byteConstants))
@@ -60,6 +46,7 @@ void EffectParameter::SetValue(void const* data, std::uint32_t byteWidth)
 //-----------------------------------------------------------------------
 Details::RenderSystem::NativeConstantBuffer* EffectParameter::NativeConstantBuffer()
 {
+	POMDOG_ASSERT(nativeConstantBuffer);
 	return nativeConstantBuffer.get();
 }
 //-----------------------------------------------------------------------
