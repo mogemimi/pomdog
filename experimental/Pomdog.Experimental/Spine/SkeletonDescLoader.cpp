@@ -7,6 +7,8 @@
 //
 
 #include "SkeletonDescLoader.hpp"
+#include <Pomdog/Content/detail/AssetLoaderContext.hpp>
+#include <Pomdog/Pomdog.hpp>
 #include <rapidjson/document.h>
 #include <utility>
 #include <fstream>

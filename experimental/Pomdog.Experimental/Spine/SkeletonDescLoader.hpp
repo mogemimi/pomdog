@@ -14,7 +14,7 @@
 #endif
 
 #include "SkeletonDesc.hpp"
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Content/detail/AssetLoader.hpp"
 
 namespace Pomdog {
 namespace Details {

@@ -39,6 +39,8 @@ std::vector<T> ReadArray(Stream & stream, std::size_t elementCount)
 {
 	static_assert(std::is_pod<T>::value, "You can only use POD types.");
 	
+	POMDOG_ASSERT(elementCount > 0);
+	
 	std::vector<T> result(elementCount);
 	stream.read(reinterpret_cast<char*>(result.data()), sizeof(T) * result.size());
 	return std::move(result);

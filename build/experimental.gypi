@@ -76,6 +76,9 @@
       '<@(pomdog_expr_dir)/InGameEditor/detail/SpriteDrawingContext.cpp',
       '<@(pomdog_expr_dir)/InGameEditor/detail/SpriteDrawingContext.hpp',
 
+      '<@(pomdog_expr_dir)/MagicaVoxel/VoxModelLoader.cpp',
+      '<@(pomdog_expr_dir)/MagicaVoxel/VoxModelLoader.hpp',
+
       '<@(pomdog_expr_dir)/Particle2D/Beam.hpp',
       '<@(pomdog_expr_dir)/Particle2D/BeamEmitter.hpp',
       '<@(pomdog_expr_dir)/Particle2D/BeamSystem.cpp',
