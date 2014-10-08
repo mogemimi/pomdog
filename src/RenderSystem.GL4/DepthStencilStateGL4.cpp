@@ -111,6 +111,7 @@ void DepthStencilStateGL4::ApplyDepthTest()
 	glEnable(GL_DEPTH_TEST);
 
 	// depth buffer write
+	POMDOG_ASSERT(depthBufferWriteEnable == GL_TRUE || depthBufferWriteEnable == GL_FALSE);
 	glDepthMask(depthBufferWriteEnable);
 
 	// depth function
@@ -130,30 +131,38 @@ void DepthStencilStateGL4::ApplyStencilTest()
 
 	glEnable(GL_STENCIL_TEST);
 
-	// CounterClockwiseFace:
-	glStencilFuncSeparate(GL_FRONT,
-		counterClockwiseFace.stencilFunction.value,
-		referenceStencil,
-		stencilMask);
-
-	glStencilOpSeparate(GL_FRONT,
-		counterClockwiseFace.stencilFail.value,
-		counterClockwiseFace.stencilDepthBufferFail.value,
-		counterClockwiseFace.stencilPass.value);
-
+	#if defined(DEBUG) && !defined(NDEBUG)
+	{
+		GLint frontFace;
+		glGetIntegerv(GL_FRONT_FACE, &frontFace);
+		POMDOG_ASSERT(GL_CW == frontFace);
+	}
+	#endif
+	
 	// ClockwiseFace:
-	glStencilFuncSeparate(GL_BACK,
+	glStencilFuncSeparate(GL_FRONT,
 		clockwiseFace.stencilFunction.value,
 		referenceStencil,
 		stencilMask);
 	
-	glStencilOpSeparate(GL_BACK,
+	glStencilOpSeparate(GL_FRONT,
 		clockwiseFace.stencilFail.value,
 		clockwiseFace.stencilDepthBufferFail.value,
 		clockwiseFace.stencilPass.value);
 	
-	glStencilMask(stencilWriteMask);
+	// CounterClockwiseFace:
+	glStencilFuncSeparate(GL_BACK,
+		counterClockwiseFace.stencilFunction.value,
+		referenceStencil,
+		stencilMask);
+
+	glStencilOpSeparate(GL_BACK,
+		counterClockwiseFace.stencilFail.value,
+		counterClockwiseFace.stencilDepthBufferFail.value,
+		counterClockwiseFace.stencilPass.value);
 	
+	glStencilMask(stencilWriteMask);
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glStencilMask", __FILE__, __LINE__);
 	#endif

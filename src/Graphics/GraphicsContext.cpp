@@ -29,6 +29,21 @@
 #include <utility>
 
 namespace Pomdog {
+namespace {
+
+#if defined(DEBUG) && !defined(NDEBUG)
+static void CheckUnbindingRenderTargetsError(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets,
+	std::vector<std::shared_ptr<Texture>> const& textures)
+{
+	for (auto & renderTarget: renderTargets) {
+		for (auto & texture: textures) {
+			POMDOG_ASSERT(renderTarget != texture);
+		}
+	}
+}
+#endif
+
+}// unnamed namespace
 
 using Details::RenderSystem::PresentationParameters;
 
@@ -313,6 +328,10 @@ void GraphicsContext::Draw(PrimitiveTopology primitiveTopology, std::uint32_t ve
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);
 	
+#if defined(DEBUG) && !defined(NDEBUG)
+	CheckUnbindingRenderTargetsError(impl->renderTargets, impl->textures);
+#endif
+	
 	impl->nativeContext->Draw(primitiveTopology, vertexCount);
 }
 //-----------------------------------------------------------------------
@@ -322,6 +341,10 @@ void GraphicsContext::DrawIndexed(PrimitiveTopology primitiveTopology,
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);
 	
+#if defined(DEBUG) && !defined(NDEBUG)
+	CheckUnbindingRenderTargetsError(impl->renderTargets, impl->textures);
+#endif
+	
 	impl->nativeContext->DrawIndexed(primitiveTopology, indexBuffer, indexCount);
 }
 //-----------------------------------------------------------------------
@@ -329,6 +352,10 @@ void GraphicsContext::DrawInstanced(PrimitiveTopology primitiveTopology, std::ui
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);
+	
+#if defined(DEBUG) && !defined(NDEBUG)
+	CheckUnbindingRenderTargetsError(impl->renderTargets, impl->textures);
+#endif
 	
 	impl->nativeContext->DrawInstanced(primitiveTopology, instanceCount);
 }
@@ -338,6 +365,10 @@ void GraphicsContext::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);
+	
+#if defined(DEBUG) && !defined(NDEBUG)
+	CheckUnbindingRenderTargetsError(impl->renderTargets, impl->textures);
+#endif
 	
 	impl->nativeContext->DrawIndexedInstanced(primitiveTopology, indexBuffer, indexCount, instanceCount);
 }

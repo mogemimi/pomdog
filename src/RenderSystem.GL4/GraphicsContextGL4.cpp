@@ -158,6 +158,12 @@ GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> openGLCont
 		textures.resize(capabilities.SamplerSlotCount);
 	}
 	
+	glFrontFace(GL_CW);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glFrontFace", __FILE__, __LINE__);
+	#endif
+	
 	frameBuffer = CreateFrameBuffer();
 }
 //-----------------------------------------------------------------------

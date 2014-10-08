@@ -43,6 +43,14 @@ RasterizerStateGL4::RasterizerStateGL4(RasterizerDescription const& description)
 //-----------------------------------------------------------------------
 void RasterizerStateGL4::Apply()
 {
+	#if defined(DEBUG) && !defined(NDEBUG)
+	{
+		GLint frontFace;
+		glGetIntegerv(GL_FRONT_FACE, &frontFace);
+		POMDOG_ASSERT(GL_CW == frontFace);
+	}
+	#endif
+
 	// CullMode:
 	switch (cullMode) {
 	case CullMode::None:
@@ -50,11 +58,11 @@ void RasterizerStateGL4::Apply()
 		break;
 	case CullMode::ClockwiseFace:
 		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
+		glCullFace(GL_FRONT);
 		break;
 	case CullMode::CounterClockwiseFace:
 		glEnable(GL_CULL_FACE);
-		glCullFace(GL_FRONT);
+		glCullFace(GL_BACK);
 		break;
 	};
 
