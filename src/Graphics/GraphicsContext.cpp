@@ -67,6 +67,15 @@ public:
 	void SetViewport(Pomdog::Viewport const& viewport);
 	
 	///@copydoc GraphicsContext
+	void SetBlendState(std::shared_ptr<BlendState> const& blendState);
+
+	///@copydoc GraphicsContext
+	void SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilState);
+	
+	///@copydoc GraphicsContext
+	void SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState);
+
+	///@copydoc GraphicsContext
 	void SetSamplerState(std::uint32_t samplerSlot, std::shared_ptr<SamplerState> const& samplerState);
 	
 	///@copydoc GraphicsContext
@@ -147,17 +156,17 @@ void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const
 	}
 
 	if (blendState) {
-		blendState->NativeBlendState()->Apply();
+		SetBlendState(blendState);
 	}
 	if (depthStencilState) {
-		depthStencilState->NativeDepthStencilState()->Apply();
+		SetDepthStencilState(depthStencilState);
 	}
 	if (rasterizerState) {
-		rasterizerState->NativeRasterizerState()->Apply();
+		SetRasterizerState(rasterizerState);
 	}
 	for (std::uint32_t index = 0; index < samplerStates.size(); ++index) {
 		if (samplerStates[index]) {
-			samplerStates[index]->NativeSamplerState()->Apply(index);
+			SetSamplerState(index, samplerStates[index]);
 		}
 	}
 }
@@ -173,17 +182,47 @@ void GraphicsContext::Impl::SetViewport(Pomdog::Viewport const& newViewport)
 	nativeContext->SetViewport(this->viewport);
 }
 //-----------------------------------------------------------------------
+void GraphicsContext::Impl::SetBlendState(std::shared_ptr<BlendState> const& blendStateIn)
+{
+	POMDOG_ASSERT(blendStateIn);
+	blendState = blendStateIn;
+
+	POMDOG_ASSERT(nativeContext);
+	POMDOG_ASSERT(blendState->NativeBlendState());
+	blendState->NativeBlendState()->Apply();
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::Impl::SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilStateIn)
+{
+	POMDOG_ASSERT(depthStencilStateIn);
+	depthStencilState = depthStencilStateIn;
+
+	POMDOG_ASSERT(nativeContext);
+	POMDOG_ASSERT(depthStencilState->NativeDepthStencilState());
+	depthStencilState->NativeDepthStencilState()->Apply();
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::Impl::SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerStateIn)
+{
+	POMDOG_ASSERT(rasterizerStateIn);
+	rasterizerState = rasterizerStateIn;
+
+	POMDOG_ASSERT(nativeContext);
+	POMDOG_ASSERT(rasterizerState->NativeRasterizerState());
+	rasterizerState->NativeRasterizerState()->Apply();
+}
+//-----------------------------------------------------------------------
 void GraphicsContext::Impl::SetSamplerState(std::uint32_t samplerSlot, std::shared_ptr<SamplerState> const& samplerStateIn)
 {
 	POMDOG_ASSERT(samplerStateIn);
 	POMDOG_ASSERT(!samplerStates.empty());
 	POMDOG_ASSERT(samplerStates.size() > samplerSlot);
-	POMDOG_ASSERT(nativeContext);
 	
 	if (samplerStates.size() > samplerSlot)
 	{
 		samplerStates[samplerSlot] = samplerStateIn;
 	
+		POMDOG_ASSERT(nativeContext);
 		POMDOG_ASSERT(samplerStateIn->NativeSamplerState());
 		samplerStateIn->NativeSamplerState()->Apply(samplerSlot);
 	}
@@ -412,8 +451,7 @@ void GraphicsContext::SetBlendState(std::shared_ptr<BlendState> const& blendStat
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(blendState);
-	impl->blendState = blendState;
-	impl->blendState->NativeBlendState()->Apply();
+	impl->SetBlendState(blendState);
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<DepthStencilState> GraphicsContext::GetDepthStencilState() const
@@ -427,8 +465,7 @@ void GraphicsContext::SetDepthStencilState(std::shared_ptr<DepthStencilState> co
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(depthStencilState);
-	impl->depthStencilState = depthStencilState;
-	impl->depthStencilState->NativeDepthStencilState()->Apply();
+	impl->SetDepthStencilState(depthStencilState);
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<RasterizerState> GraphicsContext::GetRasterizerState() const
@@ -442,8 +479,7 @@ void GraphicsContext::SetRasterizerState(std::shared_ptr<RasterizerState> const&
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(rasterizerState);
-	impl->rasterizerState = rasterizerState;
-	impl->rasterizerState->NativeRasterizerState()->Apply();
+	impl->SetRasterizerState(rasterizerState);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetSamplerState(std::uint32_t index, std::shared_ptr<SamplerState> const& samplerState)
