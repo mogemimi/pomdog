@@ -12,12 +12,16 @@
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
 #include <Pomdog/Utility/Assert.hpp>
 #include <Pomdog/Utility/Exception.hpp>
+#include <algorithm>
 
 namespace Pomdog {
 namespace {
 //-----------------------------------------------------------------------
-static std::uint16_t ComputeMipmapLevelCount(std::uint32_t width, std::uint32_t height)
+static std::uint16_t ComputeMipmapLevelCount(std::int32_t width, std::int32_t height)
 {
+	POMDOG_ASSERT(width >= 0);
+	POMDOG_ASSERT(height >= 0);
+
 	auto size = std::max(width, height);
 	std::uint16_t levelCount = 1;
 	
@@ -41,7 +45,7 @@ Texture2D::Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	bool mipMap, SurfaceFormat formatIn)
 	: pixelWidth(pixelWidthIn)
 	, pixelHeight(pixelHeightIn)
-	, levelCount(ComputeMipmapLevelCount(pixelWidth, pixelHeight))
+	, levelCount(mipMap ? ComputeMipmapLevelCount(pixelWidth, pixelHeight): 1)
 	, format(formatIn)
 {
 	POMDOG_ASSERT(pixelWidth > 0);
