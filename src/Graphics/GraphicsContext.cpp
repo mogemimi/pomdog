@@ -191,7 +191,7 @@ void GraphicsContext::Impl::SetBlendState(std::shared_ptr<BlendState> const& ble
 
 	POMDOG_ASSERT(nativeContext);
 	POMDOG_ASSERT(blendState->NativeBlendState());
-	blendState->NativeBlendState()->Apply();
+	blendState->NativeBlendState()->Apply(*nativeContext);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::Impl::SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilStateIn)
@@ -201,7 +201,7 @@ void GraphicsContext::Impl::SetDepthStencilState(std::shared_ptr<DepthStencilSta
 
 	POMDOG_ASSERT(nativeContext);
 	POMDOG_ASSERT(depthStencilState->NativeDepthStencilState());
-	depthStencilState->NativeDepthStencilState()->Apply();
+	depthStencilState->NativeDepthStencilState()->Apply(*nativeContext);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::Impl::SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerStateIn)
@@ -211,7 +211,7 @@ void GraphicsContext::Impl::SetRasterizerState(std::shared_ptr<RasterizerState> 
 
 	POMDOG_ASSERT(nativeContext);
 	POMDOG_ASSERT(rasterizerState->NativeRasterizerState());
-	rasterizerState->NativeRasterizerState()->Apply();
+	rasterizerState->NativeRasterizerState()->Apply(*nativeContext);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::Impl::SetSamplerState(std::uint32_t samplerSlot, std::shared_ptr<SamplerState> const& samplerStateIn)
@@ -226,7 +226,7 @@ void GraphicsContext::Impl::SetSamplerState(std::uint32_t samplerSlot, std::shar
 	
 		POMDOG_ASSERT(nativeContext);
 		POMDOG_ASSERT(samplerStateIn->NativeSamplerState());
-		samplerStateIn->NativeSamplerState()->Apply(samplerSlot);
+		samplerStateIn->NativeSamplerState()->Apply(*nativeContext, samplerSlot);
 	}
 }
 //-----------------------------------------------------------------------

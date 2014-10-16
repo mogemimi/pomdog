@@ -19,6 +19,8 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
+class NativeGraphicsContext;
+
 class NativeSamplerState {
 public:
 	NativeSamplerState() = default;
@@ -29,7 +31,7 @@ public:
 	
 	///@~Japanese
 	/// @brief レンダリングの直前にサンプラーステートを適用します。
-	virtual void Apply(std::uint32_t index) = 0;
+	virtual void Apply(NativeGraphicsContext & graphicsContext, std::uint32_t index) = 0;
 };
 
 }// namespace RenderSystem

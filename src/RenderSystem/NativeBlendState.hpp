@@ -17,6 +17,8 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 
+class NativeGraphicsContext;
+
 class NativeBlendState {
 public:
 	NativeBlendState() = default;
@@ -27,7 +29,7 @@ public:
 	
 	///@~Japanese
 	/// @brief レンダリングの直前にブレンディングステートを適用します。
-	virtual void Apply() = 0;
+	virtual void Apply(NativeGraphicsContext & graphicsContext) = 0;
 };
 
 }// namespace RenderSystem
