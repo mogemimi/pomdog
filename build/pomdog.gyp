@@ -160,6 +160,8 @@
       '../src/Math/detail/FloatingPointVector4.cpp',
       '../src/Utility/CRC32.cpp',
       '../src/Utility/Noncopyable.hpp',
+      '../src/Utility/PathHelper.cpp',
+      '../src/Utility/PathHelper.hpp',
       '../src/Utility/ScopeGuard.hpp',
       '../src/Utility/StringFormat.cpp',
     ],
