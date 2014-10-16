@@ -13,6 +13,8 @@
 #	pragma once
 #endif
 
+#include <cstdint>
+
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
