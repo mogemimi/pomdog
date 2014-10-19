@@ -39,21 +39,21 @@ float ScaledCircleVignette(vec2 textureCoord, float radius, float softness, vec2
 	return vignette;
 }
 
-float OldTVVignette(vec2 textureCoord)
-{
-	const float radius = 0.516;
-	const float softness = 0.015;
-
-	float vignette = ScaledCircleVignette(In.TextureCoord.xy, radius, softness, vec2(1.0, 0.27))
-		* ScaledCircleVignette(In.TextureCoord.xy, radius, softness, vec2(0.5, 0.9));
-	return vignette;
-}
+//float OldTVVignette(vec2 textureCoord)
+//{
+//	const float radius = 0.516;
+//	const float softness = 0.015;
+//
+//	float vignette = ScaledCircleVignette(In.TextureCoord.xy, radius, softness, vec2(1.0, 0.27))
+//		* ScaledCircleVignette(In.TextureCoord.xy, radius, softness, vec2(0.5, 0.9));
+//	return vignette;
+//}
 
 // Linear Burn blending
-vec3 ApplyLinearBurn(vec3 base, float blend)
-{
-	return max(base + blend - 1.0, 0.0);
-}
+//vec3 ApplyLinearBurn(vec3 base, float blend)
+//{
+//	return max(base + blend - 1.0, 0.0);
+//}
 
 void main()
 {
@@ -63,14 +63,14 @@ void main()
 	const float softness = 0.45;
 	
 	float vignette = CircleVignette(In.TextureCoord.xy, radius, softness);
-	float vignetteTV = OldTVVignette(In.TextureCoord.xy);
+//	float vignetteTV = OldTVVignette(In.TextureCoord.xy);
 	
 	vec4 color = texture(Texture, In.TextureCoord.xy);
 	
 	// Multiply blending
 	color.rgb *= vignette;
 
-	color.rgb = ApplyLinearBurn(color.rgb, vignetteTV);
+//	color.rgb = ApplyLinearBurn(color.rgb, vignetteTV);
 
 	FragColor = dummy + vec4(color.rgb, 1.0);
 }
