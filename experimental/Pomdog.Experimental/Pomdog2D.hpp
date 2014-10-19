@@ -53,6 +53,7 @@
 
 #include "InGameEditor/InGameEditor.hpp"
 
+#include "MagicaVoxel/VoxModel.hpp"
 #include "MagicaVoxel/VoxModelLoader.hpp"
 
 #include "Particle2D/Beam.hpp"

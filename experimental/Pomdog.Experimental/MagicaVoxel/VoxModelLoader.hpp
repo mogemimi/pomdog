@@ -13,33 +13,8 @@
 #	pragma once
 #endif
 
+#include "VoxModel.hpp"
 #include "Pomdog/Content/detail/AssetLoader.hpp"
-#include "Pomdog/Math/Color.hpp"
-#include <vector>
-#include <array>
-#include <cstdint>
-
-namespace Pomdog {
-namespace Details {
-namespace MagicaVoxel {
-
-class Voxel {
-public:
-	std::uint8_t X, Y, Z, ColorIndex;
-};
-
-class VoxModel {
-public:
-	std::array<Color, 256> ColorPalette;
-	std::vector<Voxel> Voxels;
-	std::uint32_t X;
-	std::uint32_t Y;
-	std::uint32_t Z;
-};
-
-}// namespace MagicaVoxel
-}// namespace Details
-}// namespace Pomdog
 
 namespace Pomdog {
 namespace Details {

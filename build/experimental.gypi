@@ -78,6 +78,7 @@
       '<@(pomdog_expr_dir)/InGameEditor/detail/SpriteDrawingContext.cpp',
       '<@(pomdog_expr_dir)/InGameEditor/detail/SpriteDrawingContext.hpp',
 
+      '<@(pomdog_expr_dir)/MagicaVoxel/VoxModel.hpp',
       '<@(pomdog_expr_dir)/MagicaVoxel/VoxModelLoader.cpp',
       '<@(pomdog_expr_dir)/MagicaVoxel/VoxModelLoader.hpp',
 
