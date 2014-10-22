@@ -69,6 +69,10 @@ enum class SurfaceFormat: std::uint8_t {
 	///@~Japanese
 	/// @brief 2 成分の 32 bit 浮動小数点フォーマットです。1 成分にそれぞれ 16 bit 使用します。
 	R16G16_Float,
+	
+	///@~Japanese
+	/// @brief 4 成分の 64 bit 浮動小数点フォーマットです。1 成分にそれぞれ 16 bit 使用します。
+	R16G16B16A16_Float,
 
 	///@~English
 	/// @remarks UNorm means "unsigned normalized" integer.

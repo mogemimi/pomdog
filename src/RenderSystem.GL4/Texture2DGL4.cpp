@@ -45,6 +45,8 @@ static GLenum ToInternalFormatGL4(SurfaceFormat format)
 		return GL_RGB10_A2;
 	case SurfaceFormat::R16G16_Float:
 		return GL_RG16;
+	case SurfaceFormat::R16G16B16A16_Float:
+		return GL_RGBA16;
 	case SurfaceFormat::R32_Float:
 		return GL_R32F;
 	case SurfaceFormat::A8_UNorm:
@@ -60,6 +62,7 @@ static GLenum ToFormatComponents(SurfaceFormat format)
 {
 	switch (format) {
 	case SurfaceFormat::R8G8B8A8_UNorm:
+	case SurfaceFormat::R16G16B16A16_Float:
 	case SurfaceFormat::R32G32B32A32_Float:
 	case SurfaceFormat::R10G10B10A2_UNorm:
 		return GL_RGBA;
@@ -97,6 +100,7 @@ static GLenum ToPixelFundamentalType(SurfaceFormat format)
 	case SurfaceFormat::R11G11B10_Float:
 	case SurfaceFormat::R32G32B32A32_Float:
 	case SurfaceFormat::R16G16_Float:
+	case SurfaceFormat::R16G16B16A16_Float:
 	case SurfaceFormat::R32_Float:
 		return GL_FLOAT;
 		break;
@@ -132,6 +136,8 @@ static std::uint16_t ToBytesPerBlock(SurfaceFormat format)
 	case SurfaceFormat::R16G16_Float:
 	case SurfaceFormat::R32_Float:
 		return 32;
+	case SurfaceFormat::R16G16B16A16_Float:
+		return 64;
 	case SurfaceFormat::R32G32B32A32_Float:
 		return 128;
 	};

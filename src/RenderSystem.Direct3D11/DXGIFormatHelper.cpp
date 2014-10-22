@@ -41,6 +41,7 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(SurfaceFormat format)
 	case SurfaceFormat::BlockComp3_UNorm: return DXGI_FORMAT_BC3_UNORM;
 	case SurfaceFormat::R10G10B10A2_UNorm: return DXGI_FORMAT_R10G10B10A2_UNORM;
 	case SurfaceFormat::R11G11B10_Float: return DXGI_FORMAT_R11G11B10_FLOAT;
+	case SurfaceFormat::R16G16B16A16_Float: return DXGI_FORMAT_R16G16B16A16_FLOAT;
 	case SurfaceFormat::R16G16_Float: return DXGI_FORMAT_R16G16_FLOAT;
 	case SurfaceFormat::R32G32B32A32_Float: return DXGI_FORMAT_R32G32B32A32_FLOAT;
 	case SurfaceFormat::R32_Float: return DXGI_FORMAT_R32_FLOAT;
