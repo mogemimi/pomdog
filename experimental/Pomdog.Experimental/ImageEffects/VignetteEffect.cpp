@@ -60,6 +60,17 @@ void VignetteEffect::SetTexture(std::shared_ptr<RenderTarget2D> const& textureIn
 	texture = textureIn;
 }
 //-----------------------------------------------------------------------
+void VignetteEffect::SetIntensity(float intensity)
+{
+	struct VignetteBlock {
+		float Intensity;
+	};
+	
+	VignetteBlock block;
+	block.Intensity = intensity;
+	constantBuffers->Find("VignetteBlock")->SetValue(std::move(block));
+}
+//-----------------------------------------------------------------------
 void VignetteEffect::Apply(GraphicsContext & graphicsContext)
 {
 	POMDOG_ASSERT(texture);

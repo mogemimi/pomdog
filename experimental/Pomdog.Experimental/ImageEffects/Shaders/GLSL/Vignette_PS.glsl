@@ -8,48 +8,38 @@ uniform Constants {
 	vec2 RenderTargetPixelSize;
 };
 
-//uniform VignetteProps {
-//	float Intensity;
-//};
+uniform VignetteBlock {
+	float Intensity;
+};
 
 uniform sampler2D Texture;
 
 out vec4 FragColor;
 
-///@param radius [0.0, 1.0], default: 0.5
-///@param softness [0.0, 1.0], default: 0.05
-float CircleVignette(vec2 textureCoord, float radius, float softness)
-{
-	// NOTE:
-	// [0, 1] => [-0.5, +0.5]
-	vec2 position = In.TextureCoord.xy - vec2(0.5);
-	float len = length(position);
-	float vignette = smoothstep(radius, radius - softness, len);
-	return vignette;
-}
-
-///@param radius [0.0, 1.0], default: 0.5
-///@param softness [0.0, 1.0], default: 0.05
-///@param scale [0.0, 1.0] default: 1.0
-float ScaledCircleVignette(vec2 textureCoord, float radius, float softness, vec2 scale)
-{
-	vec2 position = (In.TextureCoord.xy - vec2(0.5)) * scale;
-	float len = length(position);
-	float vignette = smoothstep(radius, radius - softness, len);
-	return vignette;
-}
-
-//float OldTVVignette(vec2 textureCoord)
+/////@param radius [0.0, 1.0], default: 0.5
+/////@param softness [0.0, 1.0], default: 0.05
+//float CircleVignette(vec2 textureCoord, float radius, float softness)
 //{
-//	const float radius = 0.516;
-//	const float softness = 0.015;
-//
-//	float vignette = ScaledCircleVignette(In.TextureCoord.xy, radius, softness, vec2(1.0, 0.27))
-//		* ScaledCircleVignette(In.TextureCoord.xy, radius, softness, vec2(0.5, 0.9));
+//	// NOTE: [0, 1] => [-0.5, +0.5]
+//	vec2 position = textureCoord - vec2(0.5);
+//	float len = length(position);
+//	float vignette = smoothstep(radius, radius - softness, len);
 //	return vignette;
 //}
 
-// Linear Burn blending
+///@param radius [0.0, 1.0], default: 0.5
+///@param softness [0.0, 1.0], default: 0.05
+float SquaredVignette(vec2 textureCoord, float radius, float softness)
+{
+	// NOTE: [0, 1] => [-0.5, +0.5]
+	vec2 position = textureCoord - vec2(0.5);
+	vec2 squaredPos = position * position;
+	float len = sqrt(length(squaredPos));
+	float vignette = smoothstep(radius, radius - softness, len);
+	return vignette;
+}
+
+//// Linear Burn blending
 //vec3 ApplyLinearBurn(vec3 base, float blend)
 //{
 //	return max(base + blend - 1.0, 0.0);
@@ -59,18 +49,17 @@ void main()
 {
 	float dummy = (0.0 * (RenderTargetPixelSize.x / RenderTargetPixelSize.y));
 	
-	const float radius = 0.9;
-	const float softness = 0.45;
+	float radius = 0.68 - (0.05 * Intensity);
+	float softness = 0.01 + (0.3 * Intensity);
 	
-	float vignette = CircleVignette(In.TextureCoord.xy, radius, softness);
-//	float vignetteTV = OldTVVignette(In.TextureCoord.xy);
-	
+	float vignette = SquaredVignette(In.TextureCoord.xy, radius, softness);
+
 	vec4 color = texture(Texture, In.TextureCoord.xy);
 	
 	// Multiply blending
 	color.rgb *= vignette;
-
-//	color.rgb = ApplyLinearBurn(color.rgb, vignetteTV);
+	
+	//color.rgb = ApplyLinearBurn(color.rgb, vignette);
 
 	FragColor = dummy + vec4(color.rgb, 1.0);
 }
