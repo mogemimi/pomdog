@@ -7,6 +7,7 @@
 //
 
 #include "PrimitiveCommand.hpp"
+#include <typeinfo>
 
 namespace Pomdog {
 namespace Details {
@@ -16,9 +17,10 @@ void PrimitiveCommand::Execute(GraphicsContext & graphicsContext)
 {
 }
 //-----------------------------------------------------------------------
-RenderCommandType PrimitiveCommand::CommandType() const
+std::type_index PrimitiveCommand::TypeIndex() const
 {
-	return RenderCommandType::Primitive;
+	static const std::type_index index = typeid(PrimitiveCommand);
+	return index;
 }
 //-----------------------------------------------------------------------
 }// namespace Rendering

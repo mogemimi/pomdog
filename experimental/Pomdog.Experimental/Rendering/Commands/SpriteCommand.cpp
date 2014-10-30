@@ -7,6 +7,7 @@
 //
 
 #include "SpriteCommand.hpp"
+#include <typeinfo>
 
 namespace Pomdog {
 namespace Details {
@@ -17,9 +18,10 @@ void SpriteCommand::Execute(GraphicsContext & graphicsContext)
 	///@todo not implemented
 }
 //-----------------------------------------------------------------------
-RenderCommandType SpriteCommand::CommandType() const
+std::type_index SpriteCommand::TypeIndex() const
 {
-	return RenderCommandType::Sprite;
+	static const std::type_index index = typeid(SpriteCommand);
+	return index;
 }
 //-----------------------------------------------------------------------
 }// namespace Rendering

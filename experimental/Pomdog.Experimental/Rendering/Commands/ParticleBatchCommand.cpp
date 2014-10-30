@@ -7,6 +7,7 @@
 //
 
 #include "ParticleBatchCommand.hpp"
+#include <typeinfo>
 
 namespace Pomdog {
 namespace Details {
@@ -31,9 +32,10 @@ void ParticleBatchCommand::Execute(GraphicsContext & graphicsContext)
 //	graphicsContext.SetBlendState(blendStateOld);
 }
 //-----------------------------------------------------------------------
-RenderCommandType ParticleBatchCommand::CommandType() const
+std::type_index ParticleBatchCommand::TypeIndex() const
 {
-	return RenderCommandType::ParticleBatch;
+	static const std::type_index index = typeid(ParticleBatchCommand);
+	return index;
 }
 //-----------------------------------------------------------------------
 }// namespace Rendering

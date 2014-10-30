@@ -32,8 +32,8 @@ public:
 	{
 		return drawOrder;
 	}
-
-	RenderCommandType CommandType() const override;
+	
+	std::type_index TypeIndex() const override;
 	
 	void Execute(GraphicsContext & graphicsContext) override;
 

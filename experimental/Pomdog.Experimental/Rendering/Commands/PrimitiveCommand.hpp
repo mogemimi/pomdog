@@ -30,8 +30,8 @@ public:
 	}
 
 	void Execute(GraphicsContext & graphicsContext) override;
-
-	RenderCommandType CommandType() const override;
+	
+	std::type_index TypeIndex() const override;
 
 public:
 	Matrix3x2 transform;

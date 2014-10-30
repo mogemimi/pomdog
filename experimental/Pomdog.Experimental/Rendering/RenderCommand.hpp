@@ -14,17 +14,11 @@
 #endif
 
 #include <memory>
+#include <typeindex>
 
 namespace Pomdog {
 
 class GraphicsContext;
-
-enum class RenderCommandType {
-	Custom,
-	ParticleBatch,
-	Primitive,
-	Sprite,
-};
 
 class RenderCommand {
 public:
@@ -32,7 +26,7 @@ public:
 	
 	virtual void Execute(GraphicsContext & graphicsContext) = 0;
 	
-	virtual RenderCommandType CommandType() const = 0;
+	virtual std::type_index TypeIndex() const = 0;
 	
 	virtual float DrawOrder() const = 0;
 };

@@ -179,6 +179,7 @@
       '<@(pomdog_expr_dir)/Tween/EasingHelper.hpp',
 
       '<@(pomdog_expr_dir)/Rendering/RenderCommand.hpp',
+      '<@(pomdog_expr_dir)/Rendering/RenderCommandProcessor.hpp',
       '<@(pomdog_expr_dir)/Rendering/Renderer.cpp',
       '<@(pomdog_expr_dir)/Rendering/Renderer.hpp',
       '<@(pomdog_expr_dir)/Rendering/RenderQueue.cpp',

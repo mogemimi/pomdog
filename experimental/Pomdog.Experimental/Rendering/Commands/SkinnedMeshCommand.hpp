@@ -35,7 +35,7 @@ public:
 
 	void SetMatrixPalette(Skeleton const& skeleton, SkeletonTransform const& skeletonTransform);
 
-	RenderCommandType CommandType() const override;
+	std::type_index TypeIndex() const override;
 
 	float DrawOrder() const override
 	{

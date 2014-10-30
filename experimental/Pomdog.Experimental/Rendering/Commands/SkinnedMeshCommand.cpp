@@ -7,6 +7,7 @@
 //
 
 #include "SkinnedMeshCommand.hpp"
+#include <typeinfo>
 
 namespace Pomdog {
 namespace Details {
@@ -56,9 +57,10 @@ void SkinnedMeshCommand::SetMatrixPalette(Skeleton const& skeleton, SkeletonTran
 	skinnedEffect.SetBoneTransforms(matrices.data(), minMatrixCount);
 }
 //-----------------------------------------------------------------------
-RenderCommandType SkinnedMeshCommand::CommandType() const
+std::type_index SkinnedMeshCommand::TypeIndex() const
 {
-	return RenderCommandType::Custom;
+	static const std::type_index index = typeid(SkinnedMeshCommand);
+	return index;
 }
 //-----------------------------------------------------------------------
 }// namespace Rendering
