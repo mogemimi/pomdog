@@ -13,11 +13,6 @@ namespace Pomdog {
 namespace Details {
 namespace Rendering {
 //-----------------------------------------------------------------------
-void SpriteCommand::Execute(GraphicsContext & graphicsContext)
-{
-	///@todo not implemented
-}
-//-----------------------------------------------------------------------
 std::type_index SpriteCommand::TypeIndex() const
 {
 	static const std::type_index index = typeid(SpriteCommand);

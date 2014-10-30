@@ -29,8 +29,6 @@ public:
 		return drawOrder;
 	}
 
-	void Execute(GraphicsContext & graphicsContext) override;
-	
 	std::type_index TypeIndex() const override;
 
 public:

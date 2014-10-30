@@ -35,8 +35,6 @@ public:
 	
 	std::type_index TypeIndex() const override;
 	
-	void Execute(GraphicsContext & graphicsContext) override;
-
 public:
 	TextureRegion textureRegion;
 	Matrix3x2 transform;

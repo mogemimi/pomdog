@@ -24,7 +24,6 @@ namespace Pomdog {
 class SkinnedMeshRenderable: public Renderable {
 public:
 	SkinnedMeshRenderable(
-		GraphicsDevice & graphicsDevice,
 		std::shared_ptr<Skeleton> const& skeleton,
 		std::shared_ptr<SkeletonTransform> const& skeletonTransform,
 		std::shared_ptr<SkinnedMesh> const& mesh,
@@ -33,13 +32,7 @@ public:
 	void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
 
 private:
-	void DrawSkeleton(std::unique_ptr<PolygonBatch> const& polygonBatch,
-		Matrix4x4 const& modelViewProjection);
-
-private:
 	Details::Rendering::SkinnedMeshCommand command;
-	std::shared_ptr<Skeleton> skeleton;
-	std::shared_ptr<SkeletonTransform> skeletonTransform;
 };
 
 }// namespace Pomdog

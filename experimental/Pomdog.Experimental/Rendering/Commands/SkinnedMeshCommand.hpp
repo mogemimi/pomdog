@@ -14,7 +14,6 @@
 #endif
 
 #include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
-#include "Pomdog.Experimental/Graphics/SkinnedEffect.hpp"
 #include "Pomdog.Experimental/Skeletal2D/Skeleton.hpp"
 #include "Pomdog.Experimental/Skeletal2D/SkeletonTransform.hpp"
 #include "Pomdog.Experimental/Skeletal2D/SkinnedMesh.hpp"
@@ -27,14 +26,6 @@ namespace Rendering {
 
 class SkinnedMeshCommand final: public RenderCommand {
 public:
-	explicit SkinnedMeshCommand(GraphicsDevice & graphicsDevice)
-		: skinnedEffect(graphicsDevice)
-	{}
-
-	void Execute(GraphicsContext & graphicsContext) override;
-
-	void SetMatrixPalette(Skeleton const& skeleton, SkeletonTransform const& skeletonTransform);
-
 	std::type_index TypeIndex() const override;
 
 	float DrawOrder() const override
@@ -43,8 +34,12 @@ public:
 	}
 
 public:
-	SkinnedEffect skinnedEffect;
+	Matrix4x4 localToWorld;
+	std::shared_ptr<Texture2D> texture;
 	std::shared_ptr<SkinnedMesh> mesh;
+	std::shared_ptr<Skeleton> skeleton;
+	std::shared_ptr<SkeletonTransform> skeletonTransform;
+	Color color;
 	float drawOrder;
 };
 

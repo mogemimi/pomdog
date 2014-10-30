@@ -31,19 +31,20 @@ static Matrix4x4 CreateTransformMatrix4x4(Transform2D const& transform)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-SkinnedMeshRenderable::SkinnedMeshRenderable(GraphicsDevice & graphicsDevice,
+SkinnedMeshRenderable::SkinnedMeshRenderable(
 	std::shared_ptr<Skeleton> const& skeletonIn,
 	std::shared_ptr<SkeletonTransform> const& skeletonTransformIn,
 	std::shared_ptr<SkinnedMesh> const& meshIn, std::shared_ptr<Texture2D> const& textureIn)
-	: command(graphicsDevice)
-	, skeleton(skeletonIn)
-	, skeletonTransform(skeletonTransformIn)
 {
-	POMDOG_ASSERT(skeleton);
-	POMDOG_ASSERT(skeletonTransform);
-
+	command.skeleton = skeletonIn;
+	command.skeletonTransform = skeletonTransformIn;
 	command.mesh = meshIn;
-	command.skinnedEffect.SetTexture(textureIn);
+	command.texture = textureIn;
+	
+	POMDOG_ASSERT(command.skeleton);
+	POMDOG_ASSERT(command.skeletonTransform);
+	POMDOG_ASSERT(command.mesh);
+	POMDOG_ASSERT(command.texture);
 }
 //-----------------------------------------------------------------------
 void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer,
@@ -54,54 +55,17 @@ void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer,
 	}
 	
 	command.drawOrder = DrawOrder;
-
-	POMDOG_ASSERT(skeleton);
-	POMDOG_ASSERT(skeletonTransform);
 	
-	command.SetMatrixPalette(*skeleton, *skeletonTransform);
-	
-	auto worldViewProjection = viewMatrix * projectionMatrix;
-	
-	if (auto transform = gameObject.Component<Transform2D>())
-	{
-		worldViewProjection = CreateTransformMatrix4x4(*transform) * worldViewProjection;
+	if (auto transform = gameObject.Component<Transform2D>()) {
+		command.localToWorld = CreateTransformMatrix4x4(*transform);
 	}
-	
-	command.skinnedEffect.SetWorldViewProjection(worldViewProjection);
-	command.skinnedEffect.SetColor(this->Material.Color);
+	else {
+		command.localToWorld = Matrix4x4::Identity;
+	}
+
+	command.color = this->Material.Color;
 	
 	renderer.PushCommand(command);
-}
-//-----------------------------------------------------------------------
-void SkinnedMeshRenderable::DrawSkeleton(std::unique_ptr<PolygonBatch> const& polygonBatch,
-	Matrix4x4 const& modelViewProjection)
-{
-	POMDOG_ASSERT(polygonBatch);
-	polygonBatch->Begin(modelViewProjection);
-
-	Pomdog::Color boneColor {160, 160, 160, 255};
-
-	POMDOG_ASSERT(skeletonTransform);
-	auto & globalPose = skeletonTransform->GlobalPose;
-
-	for (auto & joint: *skeleton)
-	{
-		auto & matrix = globalPose[*joint.Index];
-
-		if (skeleton->Root().Index != joint.Index)
-		{
-			polygonBatch->DrawTriangle(
-				Vector2::Transform({1.7f, -4.7f}, matrix),
-				Vector2::Transform({1.7f, 4.7f}, matrix),
-				Vector2::Transform({25, 0}, matrix), boneColor);
-		}
-		
-		auto center = Vector2::Transform(Vector2::Zero, matrix);
-		polygonBatch->DrawCircle(center, 5.0f, boneColor, 18);
-		polygonBatch->DrawCircle(center, 3.0f, Color::White, 13);
-	}
-	
-	polygonBatch->End();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

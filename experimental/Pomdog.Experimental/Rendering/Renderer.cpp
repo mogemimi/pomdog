@@ -9,33 +9,11 @@
 #include "Renderer.hpp"
 #include "RenderQueue.hpp"
 #include "RenderCommand.hpp"
-#include "SpriteBatchRenderer.hpp"
-#include "ParticleBatchCommand.hpp"
-#include "SpriteCommand.hpp"
-#include "PrimitiveCommand.hpp"
-#include "Pomdog.Experimental/Graphics/SpriteRenderer.hpp"
-#include "Pomdog.Experimental/Graphics/PolygonBatch.hpp"
 #include "Pomdog.Experimental/Rendering/RenderCommandProcessor.hpp"
 #include <unordered_map>
 #include <typeindex>
 
 namespace Pomdog {
-namespace {
-
-static Matrix3x2 CreateTransformMatrix(Particle const& particle)
-{
-	return Matrix3x2::CreateScale(particle.Size)
-		* Matrix3x2::CreateRotation(particle.Rotation)
-		* Matrix3x2::CreateTranslation(particle.Position);
-}
-
-}// unnamed namespace
-
-using Details::Rendering::SpriteBatchRenderer;
-using Details::Rendering::SpriteCommand;
-using Details::Rendering::ParticleBatchCommand;
-using Details::Rendering::PrimitiveCommand;
-
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - Renderer::Impl
@@ -55,8 +33,6 @@ public:
 public:
 	std::unordered_map<std::type_index, std::unique_ptr<RenderCommandProcessor>> processors;
 	RenderQueue renderQueue;
-	SpriteBatchRenderer spriteBatch;
-	PolygonBatch primitiveBatch;
 	Matrix4x4 viewMatrix;
 	Matrix4x4 projectionMatrix;
 	std::uint32_t drawCallCount;
@@ -64,9 +40,7 @@ public:
 //-----------------------------------------------------------------------
 Renderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
-	: spriteBatch{graphicsContext, graphicsDevice}
-	, primitiveBatch{graphicsContext, graphicsDevice}
-	, viewMatrix{Matrix4x4::Identity}
+	: viewMatrix{Matrix4x4::Identity}
 	, projectionMatrix{Matrix4x4::Identity}
 	, drawCallCount{0}
 {
@@ -82,13 +56,9 @@ void Renderer::Impl::Render(GraphicsContext & graphicsContext)
 {
 	drawCallCount = 0;
 	
-	auto viewProjection = viewMatrix * projectionMatrix;
-	spriteBatch.SetProjectionMatrix(viewProjection);
-	
 	for (auto & iter: processors) {
 		auto & processor = iter.second;
 		POMDOG_ASSERT(processor);
-		
 		processor->SetViewProjection(viewMatrix, projectionMatrix);
 	}
 
@@ -136,64 +106,6 @@ void Renderer::Impl::Render(GraphicsContext & graphicsContext)
 		auto & processor = iter->second;
 		
 		processor->Draw(graphicsContext, command);
-		
-		/*
-		switch (command.CommandType()) {
-		case RenderCommandType::Custom: {
-			Flush();
-			POMDOG_ASSERT(batchState == BatchState::None);
-			command.Execute(graphicsContext);
-			++drawCallCount;
-			break;
-		}
-		case RenderCommandType::ParticleBatch: {
-			if (batchState != BatchState::SpriteBatch) {
-				Flush();
-				spriteBatch.Begin(Matrix4x4::Identity);
-				batchState = BatchState::SpriteBatch;
-			}
-			
-			POMDOG_ASSERT(batchState == BatchState::SpriteBatch);
-			auto & particleCommand = static_cast<ParticleBatchCommand &>(command);
-			for (auto & particle: *particleCommand.particles)
-			{
-				auto transform = CreateTransformMatrix(particle);
-				spriteBatch.Draw(particleCommand.texture, transform,
-					particleCommand.textureRegion.Subrect, particle.Color, {0.5f, 0.5f});
-			}
-			break;
-		}
-		case RenderCommandType::Primitive: {
-			if (batchState != BatchState::PrimitiveBatch) {
-				Flush();
-				primitiveBatch.Begin(viewProjection);
-				batchState = BatchState::PrimitiveBatch;
-			}
-			
-			POMDOG_ASSERT(batchState == BatchState::PrimitiveBatch);
-			auto & primitiveCommand = static_cast<PrimitiveCommand &>(command);
-			primitiveBatch.DrawRectangle(primitiveCommand.transform,
-				primitiveCommand.rectangle,
-				primitiveCommand.leftBottomColor, primitiveCommand.rightBottomColor,
-				primitiveCommand.rightTopColor, primitiveCommand.leftTopColor);
-			break;
-		}
-		case RenderCommandType::Sprite: {
-			if (batchState != BatchState::SpriteBatch) {
-				Flush();
-				spriteBatch.Begin(Matrix4x4::Identity);
-				batchState = BatchState::SpriteBatch;
-			}
-			
-			POMDOG_ASSERT(batchState == BatchState::SpriteBatch);
-			auto & spriteCommand = static_cast<SpriteCommand &>(command);
-			spriteBatch.Draw(spriteCommand.texture, spriteCommand.transform,
-				spriteCommand.textureRegion.Subrect, spriteCommand.color, spriteCommand.originPivot);
-
-			break;
-		}
-		}
-		*/
 	});
 	
 	if (std::end(processors) != prevIter)
@@ -206,30 +118,6 @@ void Renderer::Impl::Render(GraphicsContext & graphicsContext)
 		drawCallCount += processor->DrawCallCount();
 	}
 }
-//-----------------------------------------------------------------------
-/*
-void Renderer::Impl::Flush()
-{
-	switch (batchState) {
-	case BatchState::PrimitiveBatch: {
-		primitiveBatch.End();
-		
-		///@todo Not implemented
-		//drawCallCount += primitiveBatch.DrawCallCount();
-		break;
-	}
-	case BatchState::SpriteBatch: {
-		spriteBatch.End();
-		drawCallCount += spriteBatch.DrawCallCount();
-		break;
-	}
-	case BatchState::None:
-		break;
-	}
-
-	batchState = BatchState::None;
-}
-*/
 //-----------------------------------------------------------------------
 void Renderer::Impl::Clear()
 {

@@ -13,10 +13,6 @@ namespace Pomdog {
 namespace Details {
 namespace Rendering {
 //-----------------------------------------------------------------------
-void PrimitiveCommand::Execute(GraphicsContext & graphicsContext)
-{
-}
-//-----------------------------------------------------------------------
 std::type_index PrimitiveCommand::TypeIndex() const
 {
 	static const std::type_index index = typeid(PrimitiveCommand);
