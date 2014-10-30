@@ -40,13 +40,13 @@ struct Chunk {
 };
 
 //-----------------------------------------------------------------------
-static std::size_t ChunkSize(std::ifstream & stream, Chunk const& chunk)
+static std::ifstream::pos_type ChunkSize(std::ifstream & stream, Chunk const& chunk)
 {
 	POMDOG_ASSERT(chunk.ContentSize >= 0);
 	POMDOG_ASSERT(chunk.ChildrenSize >= 0);
 	POMDOG_ASSERT(stream.tellg() >= 0);
 	
-	return static_cast<std::size_t>(stream.tellg()) + chunk.ContentSize + chunk.ChildrenSize;
+	return stream.tellg() + static_cast<std::ifstream::pos_type>(chunk.ContentSize + chunk.ChildrenSize);
 }
 
 //-----------------------------------------------------------------------
