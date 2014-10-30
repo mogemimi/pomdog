@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include "Pomdog.Experimental/Rendering/SpriteBatchRenderer.hpp"
+#include "Pomdog.Experimental/Graphics/SpriteBatchRenderer.hpp"
 #include "Pomdog.Experimental/Rendering/RenderCommandProcessor.hpp"
 #include <Pomdog/Pomdog.hpp>
 

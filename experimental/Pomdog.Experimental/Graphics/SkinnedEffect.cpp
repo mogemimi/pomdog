@@ -39,14 +39,13 @@ public:
 	void Apply(GraphicsContext & graphicsContext);
 
 public:
+	std::array<std::array<Vector4, 2>, SkinnedEffect::MaxBones> bones;
 	Matrix4x4 worldViewProjection;
 	std::shared_ptr<Texture2D> texture;
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 	std::shared_ptr<InputLayout> inputLayout;
 	Color color;
-	
-	std::array<std::array<Vector4, 2>, SkinnedEffect::MaxBones> bones;
 };
 //-----------------------------------------------------------------------
 SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice)
