@@ -43,19 +43,19 @@ python setup.py install
 **1. Generating the Xcode project file**
 
 ```bash
-gyp Build/app.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
+gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
 ```
 
 **2. Building (Release/Debug)**
 
 ```
-xcodebuild -project build.xcodefiles/Build/app.xcodeproj
+xcodebuild -project build.xcodefiles/Build/QuickStart.xcodeproj
 ```
 
 To build in release mode, use `-configuration` option:
 
 ```bash
-xcodebuild -project build.xcodefiles/Build/app.xcodeproj -configuration Release
+xcodebuild -project build.xcodefiles/Build/QuickStart.xcodeproj -configuration Release
 ```
 
 **3. Running app**

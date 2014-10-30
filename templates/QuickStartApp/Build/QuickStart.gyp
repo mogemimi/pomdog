@@ -1,8 +1,8 @@
 # Examples(Xcode):
-# gyp build/app.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
+# gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
 #
 # Examples(MSVS 2013):
-# gyp build/app.gyp --depth=. -f msvs -G msvs_version=2013 --generator-output=./build.msvc/
+# gyp Build/QuickStart.gyp --depth=. -f msvs -G msvs_version=2013 --generator-output=./build.msvc/
 
 {
   'includes': ['common.gypi'],
