@@ -54,6 +54,9 @@ private:
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 	std::shared_ptr<InputLayout> inputLayout;
+	
+public:
+	std::uint32_t drawCallCount;
 
 public:
 	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
@@ -72,6 +75,7 @@ public:
 PolygonBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	: graphicsContext(graphicsContextIn)
+	, drawCallCount(0)
 {
 	vertices.reserve(MinVertexCount);
 	{
@@ -92,6 +96,8 @@ void PolygonBatch::Impl::Begin(Matrix4x4 const& transformMatrix)
 
 	auto parameter = constantBuffers->Find("TransformMatrix");
 	parameter->SetValue(transposedMatrix);
+	
+	drawCallCount = 0;
 }
 //-----------------------------------------------------------------------
 void PolygonBatch::Impl::End()
@@ -114,6 +120,8 @@ void PolygonBatch::Impl::Flush()
 	graphicsContext->SetEffectPass(effectPass);
 	graphicsContext->SetConstantBuffers(constantBuffers);
 	graphicsContext->Draw(PrimitiveTopology::TriangleList, static_cast<std::uint32_t>(vertices.size()));
+	
+	++drawCallCount;
 	
 	vertices.clear();
 }
@@ -310,6 +318,12 @@ void PolygonBatch::DrawTriangle(Vector2 const& point1, Vector2 const& point2, Ve
 	auto colorVector2 = color2.ToVector4();
 	auto colorVector3 = color3.ToVector4();
 	impl->DrawTriangle(point1, point2, point3, colorVector1, colorVector2, colorVector3);
+}
+//-----------------------------------------------------------------------
+std::uint32_t PolygonBatch::DrawCallCount() const
+{
+	POMDOG_ASSERT(impl);
+	return impl->drawCallCount;
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

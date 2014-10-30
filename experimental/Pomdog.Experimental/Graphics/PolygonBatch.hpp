@@ -68,6 +68,8 @@ public:
 
 	void End();
 	
+	std::uint32_t DrawCallCount() const;
+	
 private:
 	class Impl;
 	std::unique_ptr<Impl> impl;

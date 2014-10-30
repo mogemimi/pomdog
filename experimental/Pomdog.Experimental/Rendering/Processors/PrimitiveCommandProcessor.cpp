@@ -39,9 +39,8 @@ void PrimitiveCommandProcessor::Draw(GraphicsContext & graphicsContext, RenderCo
 void PrimitiveCommandProcessor::End(GraphicsContext & graphicsContext)
 {
 	primitiveBatch.End();
-		
-	///@todo Not implemented
-	//drawCallCount += primitiveBatch.DrawCallCount();
+
+	drawCallCount += primitiveBatch.DrawCallCount();
 }
 //-----------------------------------------------------------------------
 int PrimitiveCommandProcessor::DrawCallCount() const
