@@ -14,10 +14,6 @@
 #endif
 
 #include "detail/EditorColorScheme.hpp"
-#include "detail/GradientPlane.hpp"
-#include "detail/PrimitiveAxes.hpp"
-#include "detail/PrimitiveGrid.hpp"
-#include "Pomdog.Experimental/Graphics/LineBatch.hpp"
 #include "Pomdog.Experimental/UI/UIElementHierarchy.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <memory>
@@ -40,28 +36,17 @@ public:
 
 	void Update();
 
-	void SetViewProjection(Matrix4x4 const& viewProjection);
-
-	void BeginDraw(GraphicsContext & graphicsContext);
-
-	void EndDraw(GraphicsContext & graphicsContext);
+	void DrawGUI(GraphicsContext & graphicsContext);
 	
 	void AddView(std::shared_ptr<UI::UIView> const& element);
-
-private:
-	void DrawGrids();
-	void DrawGUI();
 	
 private:
-	std::shared_ptr<GameHost> gameHost;
-	
+	UI::UIElementHierarchy hierarchy;
+	ScopedConnection clientSizeChangedConnection;
 	SceneEditor::EditorColorScheme editorColorScheme;
-
-	std::unique_ptr<SceneEditor::GradientPlane> backgroundPlane;
-
-	std::unique_ptr<SceneEditor::PrimitiveAxes> primitiveAxes;
-	std::unique_ptr<SceneEditor::PrimitiveGrid> primitiveGrid;
 	
+	std::shared_ptr<GameHost> gameHost;
+
 	std::shared_ptr<DepthStencilState> depthStencilState;
 	std::shared_ptr<BlendState> blendState;
 	
@@ -70,16 +55,7 @@ private:
 	std::unique_ptr<SpriteBatch> spriteBatchDistanceField;
 	std::shared_ptr<EffectPass> distanceFieldEffect;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
-	
-	LineBatch lineBatch;
-	
 	std::shared_ptr<Texture2D> pomdogTexture;
-	
-	Matrix4x4 viewProjectionMatrix;
-	
-	UI::UIElementHierarchy hierarchy;
-	
-	ScopedConnection clientSizeChangedConnection;
 };
 
 }// namespace SceneEditor

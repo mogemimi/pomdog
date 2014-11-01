@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -52,6 +52,7 @@ void MaidChanGame::Initialize()
 	}
 	{
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
+		editorBackground = std::make_unique<SceneEditor::EditorBackground>(gameHost);
 	}
 	
 
@@ -180,7 +181,7 @@ void MaidChanGame::DrawSprites()
 	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 		graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
 	
-	gameEditor->SetViewProjection(viewMatrix * projectionMatrix);
+	editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 
 	POMDOG_ASSERT(spriteRenderer);
 	spriteRenderer->Begin(SpriteSortMode::BackToFront, viewMatrix);
@@ -245,7 +246,7 @@ void MaidChanGame::Draw()
 	}
 	
 	graphicsContext->Clear(Color::CornflowerBlue);
-	gameEditor->BeginDraw(*graphicsContext);
+	editorBackground->Draw(*graphicsContext);
 	
 	graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();
@@ -258,7 +259,7 @@ void MaidChanGame::Draw()
 		screenQuad->DrawQuad(*graphicsContext);
 	}
 	
-	gameEditor->EndDraw(*graphicsContext);
+	gameEditor->DrawGUI(*graphicsContext);
 	graphicsContext->Present();
 }
 //-----------------------------------------------------------------------

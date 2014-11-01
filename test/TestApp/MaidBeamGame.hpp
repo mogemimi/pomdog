@@ -13,6 +13,7 @@
 #	pragma once
 #endif
 
+#include <Pomdog.Experimental/InGameEditor/detail/EditorBackground.hpp>
 #include <Pomdog.Experimental/Pomdog2D.hpp>
 #include <Pomdog/Pomdog.hpp>
 
@@ -46,6 +47,7 @@ private:
 	std::shared_ptr<GraphicsContext> graphicsContext;
 
 	std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
+	std::unique_ptr<SceneEditor::EditorBackground> editorBackground;
 	bool sandboxMode;
 	
 	std::shared_ptr<UI::ScenePanel> scenePanel;

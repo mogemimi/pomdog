@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -32,6 +32,7 @@ void LightningTestGame::Initialize()
 
 	{
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
+		editorBackground = std::make_unique<SceneEditor::EditorBackground>(gameHost);
 	}
 	{
 		//samplerPoint = SamplerState::CreatePointWrap(graphicsDevice);
@@ -202,7 +203,7 @@ void LightningTestGame::DrawSprites()
 	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 		graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
 
-	gameEditor->SetViewProjection(viewMatrix * projectionMatrix);
+	editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 
 	// NOTE: Changing blend state
 	//graphicsContext->SetBlendState(blendStateAdditive);
@@ -247,7 +248,7 @@ void LightningTestGame::Draw()
 	}
 	
 	graphicsContext->Clear(Color::Black);
-	gameEditor->BeginDraw(*graphicsContext);
+	editorBackground->Draw(*graphicsContext);
 
 	//graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();
@@ -260,7 +261,7 @@ void LightningTestGame::Draw()
 		screenQuad->DrawQuad(*graphicsContext);
 	}
 
-	gameEditor->EndDraw(*graphicsContext);
+	gameEditor->DrawGUI(*graphicsContext);
 	graphicsContext->Present();
 }
 //-----------------------------------------------------------------------

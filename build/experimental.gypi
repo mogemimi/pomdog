@@ -70,6 +70,8 @@
 
       '<@(pomdog_expr_dir)/InGameEditor/InGameEditor.cpp',
       '<@(pomdog_expr_dir)/InGameEditor/InGameEditor.hpp',
+      '<@(pomdog_expr_dir)/InGameEditor/detail/EditorBackground.cpp',
+      '<@(pomdog_expr_dir)/InGameEditor/detail/EditorBackground.hpp',
       '<@(pomdog_expr_dir)/InGameEditor/detail/EditorColorScheme.hpp',
       '<@(pomdog_expr_dir)/InGameEditor/detail/GradientPlane.cpp',
       '<@(pomdog_expr_dir)/InGameEditor/detail/GradientPlane.hpp',

@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -65,6 +65,7 @@ void MaidBeamGame::Initialize()
 	}
 	{
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
+		editorBackground = std::make_unique<SceneEditor::EditorBackground>(gameHost);
 	}
 	{
 		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
@@ -173,7 +174,7 @@ void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camer
 	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 		viewport.Width(), viewport.Height(), camera.Near, camera.Far);
 	
-	gameEditor->SetViewProjection(viewMatrix * projectionMatrix);
+	editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 	renderer->ViewMatrix(viewMatrix);
 	renderer->ProjectionMatrix(projectionMatrix);
 
@@ -200,7 +201,7 @@ void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camer
 			++cameraIndex;
 		}
 
-		gameEditor->BeginDraw(*graphicsContext);
+		editorBackground->Draw(*graphicsContext);
 	}
 
 	renderer->Render(*graphicsContext);
@@ -261,7 +262,7 @@ void MaidBeamGame::Draw()
 		screenQuad->DrawQuad(*graphicsContext);
 	}
 
-	gameEditor->EndDraw(*graphicsContext);
+	gameEditor->DrawGUI(*graphicsContext);
 	graphicsContext->Present();
 }
 //-----------------------------------------------------------------------

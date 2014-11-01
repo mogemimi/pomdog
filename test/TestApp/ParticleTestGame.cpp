@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2014 mogemimi.
 //
 //  Distributed under the MIT License.
@@ -48,6 +48,7 @@ void ParticleTestGame::Initialize()
 	}
 	{
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
+		editorBackground = std::make_unique<SceneEditor::EditorBackground>(gameHost);
 	}
 	
 	{
@@ -150,7 +151,7 @@ void ParticleTestGame::Draw()
 		auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 			gameHost->Window()->ClientBounds().Width, gameHost->Window()->ClientBounds().Height, camera->Near, camera->Far);
 		
-		gameEditor->SetViewProjection(viewMatrix * projectionMatrix);
+		editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 
 		for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
 		{
@@ -166,7 +167,7 @@ void ParticleTestGame::Draw()
 	}
 	
 	graphicsContext->Clear(Color::CornflowerBlue);
-	gameEditor->BeginDraw(*graphicsContext);
+	editorBackground->Draw(*graphicsContext);
 	renderer->Render(*graphicsContext);
 
 	if (enableFxaa) {
@@ -177,7 +178,7 @@ void ParticleTestGame::Draw()
 		screenQuad->DrawQuad(*graphicsContext);
 	}
 
-	gameEditor->EndDraw(*graphicsContext);
+	gameEditor->DrawGUI(*graphicsContext);
 	graphicsContext->Present();
 }
 //-----------------------------------------------------------------------

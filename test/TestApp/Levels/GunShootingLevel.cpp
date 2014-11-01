@@ -45,7 +45,7 @@ void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const
 			Vector2(texture->Width(), texture->Height()), "default"));
 
 		gameObject.AddComponent(std::make_unique<SkinnedMeshRenderable>(
-			*graphicsDevice, skeleton, skeletonTransform, mesh, texture));
+			skeleton, skeletonTransform, mesh, texture));
 	}
 }
 
@@ -128,7 +128,7 @@ void GunShootingLevel::Update(GameHost & gameHost, GameWorld & world)
 			skeletonTransform->GlobalPose = SkeletonHelper::ToGlobalPose(*ghostSkeleton, skeletonTransform->Pose);
 			gameObject.AddComponent(std::make_unique<Animator>(ghostSkeleton, skeletonTransform, ghostAnimGraph));
 			gameObject.AddComponent(std::make_unique<SkinnedMeshRenderable>(
-				*graphicsDevice, ghostSkeleton, skeletonTransform, ghostMesh, ghostTexture));
+				ghostSkeleton, skeletonTransform, ghostMesh, ghostTexture));
 			
 			gameObject.AddComponent<Ghost>();
 		}
