@@ -38,6 +38,7 @@
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
 
+#include <cmath>
 #include <array>
 #include <utility>
 
@@ -374,29 +375,69 @@ void GraphicsContextGL4::SetViewport(Viewport const& viewport)
 	POMDOG_ASSERT(viewport.Height() > 0);
 
 	GLint viewportY = viewport.TopLeftY();
-	if (auto window = gameWindow.lock()) {
-		viewportY = window->ClientBounds().Height - (viewport.TopLeftY() + viewport.Height());
-	}
 
-	// Notes: glViewport(x, y, width, height)
-	// "Specify the lower left corner of the viewport rectangle, in pixels."
-	glViewport(
-		static_cast<GLint>(viewport.TopLeftX()),
-		static_cast<GLint>(viewportY),
-		static_cast<GLsizei>(viewport.Width()),
-		static_cast<GLsizei>(viewport.Height()));
+	if (renderTargets.empty()) {
+		if (auto window = gameWindow.lock()) {
+			viewportY = window->ClientBounds().Height - (viewport.TopLeftY() + viewport.Height());
+		}
+	}
+	
+	glViewport(viewport.TopLeftX(), viewportY, viewport.Width(), viewport.Height());
+
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glViewport", __FILE__, __LINE__);
+	#endif
+
+	static_assert(std::is_same<GLfloat, decltype(viewport.MinDepth)>::value
+		&& std::is_same<GLfloat, decltype(viewport.MaxDepth)>::value,
+		"NOTE: You can use glDepthRange instead of glDepthRangef");
+
+	POMDOG_ASSERT(!std::isinf(viewport.MinDepth));
+	POMDOG_ASSERT(!std::isinf(viewport.MaxDepth));
+	POMDOG_ASSERT(!std::isnan(viewport.MinDepth));
+	POMDOG_ASSERT(!std::isnan(viewport.MaxDepth));
+
+	glDepthRangef(viewport.MinDepth, viewport.MaxDepth);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glDepthRangef", __FILE__, __LINE__);
+	#endif
 }
 //-----------------------------------------------------------------------
 Rectangle GraphicsContextGL4::GetScissorRectangle() const
 {
 	std::array<GLint, 4> scissorBox;
 	glGetIntegerv(GL_SCISSOR_BOX, scissorBox.data());
-	return Rectangle{ scissorBox[0], scissorBox[1], scissorBox[2], scissorBox[3] };
+	
+	Rectangle rect {scissorBox[0], scissorBox[1], scissorBox[2], scissorBox[3]};
+
+	if (renderTargets.empty()) {
+		if (auto window = gameWindow.lock()) {
+			rect.Y = window->ClientBounds().Height - (rect.Y + rect.Height);
+		}
+	}
+	
+	return std::move(rect);
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetScissorRectangle(Rectangle const& rectangle)
 {
-	glScissor(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+	POMDOG_ASSERT(rectangle.Width > 0);
+	POMDOG_ASSERT(rectangle.Height > 0);
+
+	GLint lowerLeftCornerY = rectangle.Y;
+	
+	if (renderTargets.empty()) {
+		if (auto window = gameWindow.lock()) {
+			lowerLeftCornerY = window->ClientBounds().Height - (rectangle.Y + rectangle.Height);
+		}
+	}
+
+	glScissor(rectangle.X, lowerLeftCornerY, rectangle.Width, rectangle.Height);
+	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glScissor", __FILE__, __LINE__);
+	#endif
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetInputLayout(std::shared_ptr<InputLayout> const& inputLayoutIn)
