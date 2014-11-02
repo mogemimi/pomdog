@@ -40,9 +40,10 @@ vec4 FxaaPixelShader(sampler2D tex, vec4 posPos, vec2 rcpFrame)
 	float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));
 	float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));
 
-	vec2 dir = vec2(
-		-((lumaNW + lumaNE) - (lumaSW + lumaSE)),
-		 ((lumaNW + lumaSW) - (lumaNE + lumaSE)));
+	float dirSwMinusNe = lumaSW - lumaNE;
+	float dirSeMinusNw = lumaSE - lumaNW;
+	
+	vec2 dir = vec2(dirSwMinusNe + dirSeMinusNw, dirSwMinusNe - dirSeMinusNw);
 
 	const float FxaaReduceMin = 1.0/128.0;
 	const float FxaaReduceMul = 1.0/8.0;
@@ -52,20 +53,21 @@ vec4 FxaaPixelShader(sampler2D tex, vec4 posPos, vec2 rcpFrame)
 		(lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FxaaReduceMul),
 		FxaaReduceMin);
 
-	float rcpDirMin = 1.0/(min(abs(dir.x), abs(dir.y)) + dirReduce);
-	dir = min(vec2(FxaaSpanMax, FxaaSpanMax),
-		max(vec2(-FxaaSpanMax, -FxaaSpanMax), dir * rcpDirMin)) * rcpFrame.xy;
+	float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
+	dir = clamp(dir * rcpDirMin, vec2(-FxaaSpanMax), vec2(FxaaSpanMax)) * rcpFrame.xy;
 
-	vec3 rgbA = (1.0/2.0) * (
-		textureLod(tex, posPos.xy + dir * (1.0/3.0 - 0.5), 0.0).xyz +
-		textureLod(tex, posPos.xy + dir * (2.0/3.0 - 0.5), 0.0).xyz);
-	vec3 rgbB = rgbA * (1.0/2.0) + (1.0/4.0) * (
-		textureLod(tex, posPos.xy + dir * (0.0/3.0 - 0.5), 0.0).xyz +
-		textureLod(tex, posPos.xy + dir * (3.0/3.0 - 0.5), 0.0).xyz);
+	vec3 rgbN1 = textureLod(tex, posPos.xy + dir * (1.0/3.0 - 0.5), 0.0).xyz;
+	vec3 rgbP1 = textureLod(tex, posPos.xy + dir * (2.0/3.0 - 0.5), 0.0).xyz;
+	
+	vec3 rgbN2 = textureLod(tex, posPos.xy + dir * (0.0/3.0 - 0.5), 0.0).xyz;
+	vec3 rgbP2 = textureLod(tex, posPos.xy + dir * (3.0/3.0 - 0.5), 0.0).xyz;
+
+	vec3 rgbA = (rgbN1 + rgbP1);
+	vec3 rgbB = ((rgbN2 + rgbP2) * 0.25) + (rgbA * 0.25);
 	
 	float lumaB = FxaaLuma(rgbB);
 	if ((lumaB < lumaMin) || (lumaB > lumaMax)) {
-		return vec4(rgbA, 1.0);
+		rgbB.xyz = rgbA.xyz * 0.5;
 	}
 	
 	return vec4(rgbB, 1.0);
