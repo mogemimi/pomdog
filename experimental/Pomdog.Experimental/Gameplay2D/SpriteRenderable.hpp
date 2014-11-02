@@ -28,7 +28,7 @@ public:
 
 	SpriteRenderable(std::shared_ptr<Texture2D> const& texture, TextureRegion const& textureRegion);
 
-	void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
+	void Visit(GameObject & gameObject, Renderer & renderer) override;
 
 	void OriginPivot(Vector2 const& originPivot);
 	Vector2 OriginPivot() const;

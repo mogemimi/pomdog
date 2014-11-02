@@ -36,7 +36,7 @@ RectangleRenderable::RectangleRenderable()
 	command.drawOrder = 0;
 }
 //-----------------------------------------------------------------------
-void RectangleRenderable::Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix)
+void RectangleRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 {
 	if (!IsVisible) {
 		return;

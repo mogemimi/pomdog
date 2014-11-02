@@ -29,7 +29,7 @@ public:
 		std::shared_ptr<SkinnedMesh> const& mesh,
 		std::shared_ptr<Texture2D> const& texture);
 
-	void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
+	void Visit(GameObject & gameObject, Renderer & renderer) override;
 
 private:
 	Details::Rendering::SkinnedMeshCommand command;

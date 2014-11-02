@@ -13,8 +13,7 @@ namespace Pomdog {
 BeamRenderable::BeamRenderable()
 {}
 //-----------------------------------------------------------------------
-void BeamRenderable::Visit(GameObject & gameObject, Renderer & renderer,
-	Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix)
+void BeamRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 {
 	///@todo Not implemented
 	

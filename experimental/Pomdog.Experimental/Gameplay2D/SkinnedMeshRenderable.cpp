@@ -47,8 +47,7 @@ SkinnedMeshRenderable::SkinnedMeshRenderable(
 	POMDOG_ASSERT(command.texture);
 }
 //-----------------------------------------------------------------------
-void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer,
-	Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix)
+void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 {
 	if (!IsVisible) {
 		return;

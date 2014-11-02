@@ -26,7 +26,7 @@ class RectangleRenderable: public Renderable {
 public:
 	RectangleRenderable();
 
-	void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
+	void Visit(GameObject & gameObject, Renderer & renderer) override;
 	
 	void LeftTopColor(Pomdog::Color const& color);
 	void RightTopColor(Pomdog::Color const& color);

@@ -30,7 +30,7 @@ class Renderable: public Component<Renderable> {
 public:
 	virtual ~Renderable() = default;
 
-	virtual void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) = 0;
+	virtual void Visit(GameObject & gameObject, Renderer & renderer) = 0;
 
 	Material Material;
 	float DrawOrder = 0.0f;

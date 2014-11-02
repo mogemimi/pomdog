@@ -63,8 +63,7 @@ SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& textureIn, 
 	command.drawOrder = 0;
 }
 //-----------------------------------------------------------------------
-void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer,
-	Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix)
+void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 {
 	if (!IsVisible) {
 		return;

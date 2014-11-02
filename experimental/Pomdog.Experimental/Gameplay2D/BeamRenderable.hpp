@@ -24,7 +24,7 @@ class BeamRenderable: public Renderable {
 public:
 	BeamRenderable();
 
-	void Visit(GameObject & gameObject, Renderer & renderer, Matrix4x4 const& viewMatrix, Matrix4x4 const& projectionMatrix) override;
+	void Visit(GameObject & gameObject, Renderer & renderer) override;
 	
 	void Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice, std::shared_ptr<AssetManager> const& assets);
 	void Update(GameClock const& clock);
