@@ -1,17 +1,5 @@
 #version 330
 
-in VertexData {
-	vec4 TextureCoord;
-} In;
-
-uniform Constants {
-	vec2 RenderTargetPixelSize;
-};
-
-uniform sampler2D Texture;
-
-out vec4 FragColor;
-
 float FxaaLuma(vec3 rgb)
 {
 	const vec3 luma = vec3(0.299, 0.587, 0.114);
@@ -73,10 +61,22 @@ vec4 FxaaPixelShader(sampler2D tex, vec4 posPos, vec2 rcpFrame)
 	return vec4(rgbB, 1.0);
 }
 
+precision highp float;
+
+in VertexData {
+	vec4 TextureCoord;
+} In;
+
+uniform FxaaPassBuffer {
+	vec2 RcpFrame;
+};
+
+uniform sampler2D Texture;
+
+out vec4 FragColor;
+
 void main()
 {
-	//vec2 rcpFrame = 1.0/textureSize(Texture,0);
-	vec2 rcpFrame = vec2(1.0, 1.0)/RenderTargetPixelSize.xy;
-	FragColor = FxaaPixelShader(Texture, In.TextureCoord, rcpFrame);
-	//FragColor = texture(Texture, position.xy).xyz;
+	//vec2 RcpFrame = 1.0/textureSize(Texture,0);
+	FragColor = FxaaPixelShader(Texture, In.TextureCoord, RcpFrame);
 }

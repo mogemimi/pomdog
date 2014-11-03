@@ -50,8 +50,8 @@ FXAA::FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 //-----------------------------------------------------------------------
 void FXAA::SetViewport(float width, float height)
 {
-	Vector2 renderTargetSize(width, height);
-	constantBuffers->Find("Constants")->SetValue(renderTargetSize);
+	Vector2 rcpFrame = Vector2(1.0f, 1.0f) / Vector2(width, height);
+	constantBuffers->Find("FxaaPassBuffer")->SetValue(rcpFrame);
 }
 //-----------------------------------------------------------------------
 void FXAA::SetTexture(std::shared_ptr<RenderTarget2D> const& textureIn)

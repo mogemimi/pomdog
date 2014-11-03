@@ -8,12 +8,6 @@
 
 char const* Builtin_GLSL_FXAA_PS =
 "#version 330\n"
-"in VertexData{\n"
-"vec4 TextureCoord;}In;\n"
-"uniform Constants{\n"
-"vec2 RenderTargetPixelSize;};\n"
-"uniform sampler2D Texture;\n"
-"out vec4 FragColor;\n"
 "float FxaaLuma(vec3 rgb){\n"
 "const vec3 luma=vec3(0.299,0.587,0.114);\n"
 "return dot(rgb,luma);}\n"
@@ -50,6 +44,12 @@ char const* Builtin_GLSL_FXAA_PS =
 "if((lumaB<lumaMin)||(lumaB>lumaMax)){\n"
 "rgbB.xyz=rgbA.xyz*0.5;}\n"
 "return vec4(rgbB,1.0);}\n"
+"precision highp float;\n"
+"in VertexData{\n"
+"vec4 TextureCoord;}In;\n"
+"uniform FxaaPassBuffer{\n"
+"vec2 RcpFrame;};\n"
+"uniform sampler2D Texture;\n"
+"out vec4 FragColor;\n"
 "void main(){\n"
-"vec2 rcpFrame=vec2(1.0,1.0)/RenderTargetPixelSize.xy;\n"
-"FragColor=FxaaPixelShader(Texture,In.TextureCoord,rcpFrame);}\n";
+"FragColor=FxaaPixelShader(Texture,In.TextureCoord,RcpFrame);}\n";
