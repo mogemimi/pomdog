@@ -11,15 +11,12 @@ char const* Builtin_GLSL_FXAA_VS =
 "layout(location=0)in vec3 Position;\n"
 "layout(location=1)in vec2 TextureCoord;\n"
 "uniform Constants{\n"
-"vec2 RenderTargetPixelSize;\n"
-"};\n"
+"vec2 RenderTargetPixelSize;};\n"
 "out VertexData{\n"
-"vec4 TextureCoord;\n"
-"}Out;\n"
+"vec4 TextureCoord;}Out;\n"
 "void main(){\n"
 "gl_Position=vec4(Position.xyz,1.0);\n"
 "vec2 rcpFrame=vec2(1.0,1.0)/RenderTargetPixelSize.xy;\n"
 "const float FxaaSubpixShift=1.0/4.0;\n"
 "Out.TextureCoord=vec4(TextureCoord.xy,\n"
-"TextureCoord.xy-(rcpFrame.xy*(0.5+FxaaSubpixShift)));\n"
-"}\n";
+"TextureCoord.xy-(rcpFrame.xy*(0.5+FxaaSubpixShift)));}\n";

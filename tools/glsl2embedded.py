@@ -27,6 +27,8 @@ def ReadGLSLSource(path):
 
 def SaveEmbeddedCode(path, content):
     f = open(path, 'w')
+    bom = u'\ufeff'
+    f.write(bom.encode('utf-8'))
     f.write(content)
     f.close()
     print "Create new file: " + path
@@ -63,6 +65,11 @@ def CompressGLSLCode(source):
     preformatted = preformatted.replace(' {', '{')
     preformatted = preformatted.replace('} ', '}')
     preformatted = preformatted.replace('void main()\n{', 'void main(){')
+    preformatted = preformatted.replace('\n{', '{')
+    preformatted = preformatted.replace('\n}', '}')
+    preformatted = preformatted.replace('\n(', '(')
+    preformatted = preformatted.replace('\n)', ')')
+    preformatted = preformatted.replace('\n;', ';')
     return preformatted
 
 def ConvertGLSL2EmbeddedCode(source):
