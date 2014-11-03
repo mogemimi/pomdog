@@ -47,6 +47,17 @@ def RemoveCommentOut(source):
     source = re.sub(re.compile("//.*?\n"), "", source)
     return source
 
+def Replace(source, oldString, newString):
+    result = ""
+    for line in source.split('\n'):
+        if not line or line == '\n':
+            continue
+        if not line.startswith('#'):
+            line = line.replace(oldString, newString)
+        result += line
+        result += '\n';
+    return result
+
 def CompressGLSLCode(source):
     preformatted = RemoveCommentOut(RemoveWhiteSpace(source))
     preformatted = preformatted.replace(' + ', '+')
@@ -60,16 +71,16 @@ def CompressGLSLCode(source):
     preformatted = preformatted.replace(' >= ', '>=')
     preformatted = preformatted.replace(' == ', '==')
     preformatted = preformatted.replace(', ', ',')
-    preformatted = preformatted.replace(' (', '(')
-    preformatted = preformatted.replace(') ', ')')
-    preformatted = preformatted.replace(' {', '{')
-    preformatted = preformatted.replace('} ', '}')
-    preformatted = preformatted.replace('void main()\n{', 'void main(){')
+    preformatted = Replace(preformatted, ' (', '(')
+    preformatted = Replace(preformatted, ') ', ')')
+    preformatted = Replace(preformatted, ' {', '{')
+    preformatted = Replace(preformatted, '} ', '}')
     preformatted = preformatted.replace('\n{', '{')
     preformatted = preformatted.replace('\n}', '}')
     preformatted = preformatted.replace('\n(', '(')
     preformatted = preformatted.replace('\n)', ')')
     preformatted = preformatted.replace('\n;', ';')
+    preformatted = preformatted.replace('void main()\n{', 'void main(){')
     return preformatted
 
 def ConvertGLSL2EmbeddedCode(source):
