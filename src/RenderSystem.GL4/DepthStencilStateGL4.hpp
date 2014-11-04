@@ -47,7 +47,7 @@ public:
 	explicit DepthStencilStateGL4(DepthStencilDescription const& description);
 	
 	///@copydoc NativeDepthStencilState
-	void Apply() override;
+	void Apply(NativeGraphicsContext & graphicsContext) override;
 	
 private:
 	void ApplyDepthTest();

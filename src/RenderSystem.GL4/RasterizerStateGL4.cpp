@@ -41,7 +41,7 @@ RasterizerStateGL4::RasterizerStateGL4(RasterizerDescription const& description)
 {
 }
 //-----------------------------------------------------------------------
-void RasterizerStateGL4::Apply()
+void RasterizerStateGL4::Apply(NativeGraphicsContext &)
 {
 	#if defined(DEBUG) && !defined(NDEBUG)
 	{

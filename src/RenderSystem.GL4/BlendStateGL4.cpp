@@ -86,7 +86,7 @@ BlendStateGL4::BlendStateGL4(BlendDescription const& description)
 {
 }
 //-----------------------------------------------------------------------
-void BlendStateGL4::Apply()
+void BlendStateGL4::Apply(NativeGraphicsContext &)
 {
 	glEnable(GL_BLEND);
 

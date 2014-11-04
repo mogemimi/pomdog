@@ -32,7 +32,7 @@ public:
 	explicit RasterizerStateGL4(RasterizerDescription const& description);
 	
 	///@copydoc NativeRasterizerState
-	void Apply() override;
+	void Apply(NativeGraphicsContext & graphicsContext) override;
 	
 private:
 	FillModeGL4 fillMode;

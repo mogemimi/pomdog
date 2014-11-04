@@ -141,7 +141,7 @@ SamplerStateGL4::~SamplerStateGL4()
 	}
 }
 //-----------------------------------------------------------------------
-void SamplerStateGL4::Apply(std::uint32_t index)
+void SamplerStateGL4::Apply(NativeGraphicsContext &, std::uint32_t index)
 {
 	static_assert(GL_TEXTURE19 == (GL_TEXTURE0 + 19), "");
 	POMDOG_ASSERT(index <= 19);

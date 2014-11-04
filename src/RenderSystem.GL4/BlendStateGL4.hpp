@@ -34,7 +34,7 @@ public:
 	explicit BlendStateGL4(BlendDescription const& description);
 
 	///@copydoc NativeBlendState
-	void Apply() override;
+	void Apply(NativeGraphicsContext & graphicsContext) override;
 	
 private:
 	Color blendColor;

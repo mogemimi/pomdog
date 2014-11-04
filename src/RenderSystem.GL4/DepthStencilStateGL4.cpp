@@ -168,7 +168,7 @@ void DepthStencilStateGL4::ApplyStencilTest()
 	#endif
 }
 //-----------------------------------------------------------------------
-void DepthStencilStateGL4::Apply()
+void DepthStencilStateGL4::Apply(NativeGraphicsContext &)
 {
 	ApplyDepthTest();
 	ApplyStencilTest();
