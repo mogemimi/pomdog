@@ -7,6 +7,7 @@
 //
 
 #include "VoxModelLoader.hpp"
+#include "detail/VoxChunkHeader.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <fstream>
@@ -25,16 +26,8 @@ static std::string Error(std::string const& assetPath, char const* description)
 {
 	return description + (": " + assetPath);
 }
-
-
-struct Chunk {
-	std::int32_t ID;
-	std::int32_t ContentSize;
-	std::int32_t ChildrenSize;
-};
-
 //-----------------------------------------------------------------------
-static std::ifstream::pos_type ChunkSize(std::ifstream & stream, Chunk const& chunk)
+static std::ifstream::pos_type ChunkSize(std::ifstream & stream, MagicaVoxel::VoxChunkHeader const& chunk)
 {
 	POMDOG_ASSERT(chunk.ContentSize >= 0);
 	POMDOG_ASSERT(chunk.ChildrenSize >= 0);
@@ -48,6 +41,8 @@ static std::ifstream::pos_type ChunkSize(std::ifstream & stream, Chunk const& ch
 MagicaVoxel::VoxModel AssetLoader<MagicaVoxel::VoxModel>::operator()(
 	AssetLoaderContext const& loaderContext, std::string const& assetPath)
 {
+	using MagicaVoxel::VoxChunkHeader;
+
 	constexpr std::int32_t MagicaVoxelVersion = 150;
 	constexpr auto fourCC = MakeFourCC('V', 'O', 'X', ' ');
 	constexpr auto IdMain = MakeFourCC('M', 'A', 'I', 'N');
@@ -69,7 +64,7 @@ MagicaVoxel::VoxModel AssetLoader<MagicaVoxel::VoxModel>::operator()(
 		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetPath, "version does not much"));
 	}
 
-	const auto mainChunk = BinaryReader::Read<Chunk>(stream);
+	const auto mainChunk = BinaryReader::Read<VoxChunkHeader>(stream);
 	
 	if (mainChunk.ID != IdMain) {
 		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetPath, "cannot find main chunk"));
@@ -83,7 +78,7 @@ MagicaVoxel::VoxModel AssetLoader<MagicaVoxel::VoxModel>::operator()(
 
 	while (stream.tellg() < mainChunkEnd)
 	{
-		const auto chunk = BinaryReader::Read<Chunk>(stream);
+		const auto chunk = BinaryReader::Read<VoxChunkHeader>(stream);
 		const auto chunkEnd = ChunkSize(stream, chunk);
 
 		switch (chunk.ID) {
@@ -130,7 +125,6 @@ MagicaVoxel::VoxModel AssetLoader<MagicaVoxel::VoxModel>::operator()(
 
 	return std::move(model);
 }
-
 //-----------------------------------------------------------------------
 }// namespace Details
 }// namespace Pomdog
