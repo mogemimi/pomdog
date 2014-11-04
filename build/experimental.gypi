@@ -85,6 +85,8 @@
       '<@(pomdog_expr_dir)/MagicaVoxel/VoxModel.hpp',
       '<@(pomdog_expr_dir)/MagicaVoxel/VoxModelLoader.cpp',
       '<@(pomdog_expr_dir)/MagicaVoxel/VoxModelLoader.hpp',
+      '<@(pomdog_expr_dir)/MagicaVoxel/VoxModelExporter.cpp',
+      '<@(pomdog_expr_dir)/MagicaVoxel/VoxModelExporter.hpp',
       '<@(pomdog_expr_dir)/MagicaVoxel/detail/VoxChunkHeader.hpp',
 
       '<@(pomdog_expr_dir)/Particle2D/Beam.hpp',
