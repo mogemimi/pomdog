@@ -20,13 +20,7 @@
 namespace Pomdog {
 namespace Details {
 namespace {
-//-----------------------------------------------------------------------
-static bool IsMagicaVoxelFormat(std::uint32_t signature)
-{
-	constexpr auto fourCC = MakeFourCC('V', 'O', 'X', ' ');
-	return fourCC == signature;
-}
-//-----------------------------------------------------------------------
+
 static std::string Error(std::string const& assetPath, char const* description)
 {
 	return description + (": " + assetPath);
@@ -49,13 +43,13 @@ static std::ifstream::pos_type ChunkSize(std::ifstream & stream, Chunk const& ch
 	return stream.tellg() + static_cast<std::ifstream::pos_type>(chunk.ContentSize + chunk.ChildrenSize);
 }
 
-//-----------------------------------------------------------------------
 }// unnamed namespace
 //-----------------------------------------------------------------------
 MagicaVoxel::VoxModel AssetLoader<MagicaVoxel::VoxModel>::operator()(
 	AssetLoaderContext const& loaderContext, std::string const& assetPath)
 {
-	constexpr int MagicaVoxelVersion = 150;
+	constexpr std::int32_t MagicaVoxelVersion = 150;
+	constexpr auto fourCC = MakeFourCC('V', 'O', 'X', ' ');
 	constexpr auto IdMain = MakeFourCC('M', 'A', 'I', 'N');
 	constexpr auto IdSize = MakeFourCC('S', 'I', 'Z', 'E');
 	constexpr auto IdXYZI = MakeFourCC('X', 'Y', 'Z', 'I');
@@ -67,7 +61,7 @@ MagicaVoxel::VoxModel AssetLoader<MagicaVoxel::VoxModel>::operator()(
 		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetPath, "cannot open file"));
 	}
 	
-	if (!IsMagicaVoxelFormat(BinaryReader::Read<std::uint32_t>(stream))) {
+	if (fourCC != BinaryReader::Read<std::uint32_t>(stream)) {
 		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetPath, "invalid format"));
 	}
 
@@ -137,5 +131,6 @@ MagicaVoxel::VoxModel AssetLoader<MagicaVoxel::VoxModel>::operator()(
 	return std::move(model);
 }
 
+//-----------------------------------------------------------------------
 }// namespace Details
 }// namespace Pomdog
