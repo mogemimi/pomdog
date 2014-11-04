@@ -174,19 +174,6 @@ SpriteBatchRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphics
 		spriteQueue.reserve(MinBatchSize);
 		textures.reserve(MaxTextureCount);
 	}
-#ifdef DEBUG
-	{
-		auto effectReflection = std::make_shared<EffectReflection>(graphicsDevice, effectPass);
-	
-		auto stream = Log::Stream();
-		for (auto & description: effectReflection->GetConstantBuffers()) {
-			stream << "-----------------------" << "\n";
-			stream << "     Name: " << description.Name << "\n";
-			stream << " ByteSize: " << description.ByteSize << "\n";
-			stream << "Variables: " << description.Variables.size() << "\n";
-		}
-	}
-#endif
 }
 //-----------------------------------------------------------------------
 void SpriteBatchRenderer::Impl::ResetProjectionMatrix(Matrix4x4 const& projectionMatrixIn)
