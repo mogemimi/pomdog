@@ -36,18 +36,18 @@ public:
 	~MaidChanGame();
 
 	void Initialize();
-	
+
 	void Update();
-	
+
 	void Draw();
-	
+
 private:
 	void DrawSprites();
 
 private:
 	std::shared_ptr<GameHost> gameHost;
 	std::shared_ptr<GraphicsContext> graphicsContext;
-		
+
 	std::shared_ptr<Texture2D> texture;
 	std::unique_ptr<SpriteRenderer> spriteRenderer;
 
@@ -68,7 +68,7 @@ private:
 
 	GameWorld gameWorld;
 	GameObject mainCamera;
-	
+
 	AnimationSystem animationSystem;
 	std::shared_ptr<Skeleton> maidSkeleton;
 	std::shared_ptr<SkeletonPose> maidSkeletonPose;
@@ -78,7 +78,7 @@ private:
 	Details::Skeletal2D::AnimationTimer maidAnimationTimer;
 	Skin maidSkin;
 	std::vector<Details::Skeletal2D::SpriteAnimationTrack> maidSpriteAnimationTracks;
-	
+
 	ScopedConnection clientSizeChangedConnection;
 };
 

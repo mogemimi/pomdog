@@ -36,30 +36,30 @@ public:
 	~LightningTestGame();
 
 	void Initialize();
-	
+
 	void Update();
-	
+
 	void Draw();
-	
+
 private:
 	void DrawSprites();
 
 private:
 	std::shared_ptr<GameHost> gameHost;
 	std::shared_ptr<GraphicsContext> graphicsContext;
-	
+
 	std::shared_ptr<Texture2D> texture;
 	std::unique_ptr<SpriteBatch> spriteBatch;
 	std::unique_ptr<SpriteRenderer> spriteRenderer;
-	
+
 	//std::shared_ptr<SamplerState> samplerPoint;
 	std::shared_ptr<RenderTarget2D> renderTarget;
 	std::unique_ptr<FXAA> fxaa;
 	std::unique_ptr<ScreenQuad> screenQuad;
-	
+
 	std::shared_ptr<BlendState> blendStateAdditive;
 	std::shared_ptr<BlendState> blendStateNonPremultiplied;
-	
+
 	std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
 	std::unique_ptr<SceneEditor::EditorBackground> editorBackground;
 	std::shared_ptr<UI::ScenePanel> scenePanel;

@@ -36,11 +36,11 @@ public:
 	~GrassBlendingGame();
 
 	void Initialize();
-	
+
 	void Update();
-	
+
 	void Draw();
-	
+
 private:
 	void DrawSprites();
 	void DrawSkinnedMesh();
@@ -48,10 +48,10 @@ private:
 private:
 	std::shared_ptr<GameHost> gameHost;
 	std::shared_ptr<GraphicsContext> graphicsContext;
-		
+
 	std::shared_ptr<Texture2D> texture;
 	std::unique_ptr<SpriteRenderer> spriteRenderer;
-	
+
 	std::shared_ptr<SamplerState> samplerPoint;
 	std::shared_ptr<RenderTarget2D> renderTarget;
 	std::unique_ptr<FXAA> fxaa;
@@ -80,12 +80,12 @@ private:
 	Details::Skeletal2D::AnimationTimer maidAnimationTimer;
 	Skin maidSkin;
 	std::vector<Details::Skeletal2D::SpriteAnimationTrack> maidSpriteAnimationTracks;
-	
+
 	SkinnedMesh maidSkinnedMesh;
 	std::shared_ptr<SkinnedEffect> maidSkinningEffect;
-	
+
 	ScopedConnection clientSizeChangedConnection;
-	
+
 	std::unique_ptr<PolygonBatch> polygonBatch;
 };
 

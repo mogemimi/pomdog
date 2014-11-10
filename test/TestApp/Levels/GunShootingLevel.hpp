@@ -23,15 +23,15 @@ using namespace Pomdog;
 class GunShootingLevel final: public GameLevel {
 public:
 	GunShootingLevel(GameHost & gameHost, GameWorld & world);
-	
+
 	void Update(GameHost & gameHost, GameWorld & world) override;
-	
+
 private:
 	GameObject mainCamera;
 	GameObject maid;
 	GameObject lightningBeam;
 	DurationSeconds spawnTime;
-	
+
 	std::shared_ptr<Skeleton> ghostSkeleton;
 	std::shared_ptr<AnimationGraph> ghostAnimGraph;
 	std::shared_ptr<Texture2D> ghostTexture;
