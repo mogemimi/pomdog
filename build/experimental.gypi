@@ -12,6 +12,11 @@
       '<@(pomdog_expr_dir)/Actions/TintToAction.hpp',
       '<@(pomdog_expr_dir)/Actions/detail/TemporalAction.hpp',
 
+      '<@(pomdog_expr_dir)/Compositing/RenderLayer.cpp',
+      '<@(pomdog_expr_dir)/Compositing/RenderLayer.hpp',
+      '<@(pomdog_expr_dir)/Compositing/RenderLayerCompositor.cpp',
+      '<@(pomdog_expr_dir)/Compositing/RenderLayerCompositor.hpp',
+
       '<@(pomdog_expr_dir)/Gameplay2D/Animator.cpp',
       '<@(pomdog_expr_dir)/Gameplay2D/Animator.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/BeamRenderable.cpp',

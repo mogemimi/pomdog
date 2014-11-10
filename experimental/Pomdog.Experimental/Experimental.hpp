@@ -20,6 +20,9 @@
 #include "Actions/SequenceAction.hpp"
 #include "Actions/TintToAction.hpp"
 
+#include "Compositing/RenderLayer.hpp"
+#include "Compositing/RenderLayerCompositor.hpp"
+
 #include "Gameplay2D/Animator.hpp"
 #include "Gameplay2D/BeamRenderable.hpp"
 #include "Gameplay2D/Behavior.hpp"
