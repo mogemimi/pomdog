@@ -1,15 +1,11 @@
 Pomdog
 =======
 
-Pomdog is
+Pomdog is an experimental game engine, written in C++14 or later, developed as a hobby.
+It's open source and distributed under the [MIT License](http://opensource.org/licenses/mit-license.php).
 
-* game engine for C++1y or later
-* completely open source (distributed under the [MIT License](http://opensource.org/licenses/mit-license.php))
-
-For more information, see
-
-* [http://enginetrouble.net/pomdog](http://enginetrouble.net/pomdog)
-* [https://github.com/mogemimi/pomdog](https://github.com/mogemimi/pomdog)
+[Homepage](http://enginetrouble.net/pomdog)  
+[GitHub](https://github.com/mogemimi/pomdog)
 
 ## Requirements
 
