@@ -15,7 +15,7 @@
 
 #include <Pomdog.Experimental/InGameEditor/detail/EditorBackground.hpp>
 #include <Pomdog.Experimental/Skeletal2D/detail/AnimationTimer.hpp>
-#include <Pomdog.Experimental/Pomdog2D.hpp>
+#include <Pomdog.Experimental/Experimental.hpp>
 #include <Pomdog/Pomdog.hpp>
 
 namespace Pomdog {

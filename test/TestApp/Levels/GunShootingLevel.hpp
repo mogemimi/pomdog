@@ -13,7 +13,7 @@
 #	pragma once
 #endif
 
-#include <Pomdog.Experimental/Pomdog2D.hpp>
+#include <Pomdog.Experimental/Experimental.hpp>
 #include <Pomdog/Pomdog.hpp>
 
 namespace TestApp {
