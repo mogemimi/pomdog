@@ -19,40 +19,15 @@ It's open source and distributed under the [MIT License](http://opensource.org/l
 
 ## How to build
 
-### Prerequisite: Installing GYP
-
-First, install GYP from https://chromium.googlesource.com/external/.  
-Make sure git is installed.
-From the root of your engine directory, run:  
-```bash
-git clone https://chromium.googlesource.com/external/gyp.git tools/gyp
-```
-
-Second, run setup.py.
-
-**Linux and Mac OS X**
-
-To install globally with gyp:
-
-```bash
-cd tools/gyp
-[sudo] python setup.py install
-```
-
-**Windows**
-
-On Windows systems you can do:
-
-```bash
-cd tools/gyp
-python setup.py install
-```
-
 ### Pulling all dependencies using Git
 
-From the root of your engine directory, run:  
+Make sure git is installed.
+From the root of your engine directory, run:
+
 ```bash
+cd pomdog
 git clone https://github.com/mogemimi/pomdog-third-party.git third-party
+git clone https://chromium.googlesource.com/external/gyp.git tools/gyp
 ```
 
 ### Building under Mac OS X and Xcode
@@ -60,8 +35,16 @@ git clone https://github.com/mogemimi/pomdog-third-party.git third-party
 **1. Generating the Xcode project file**
 
 ```bash
+tools/gyp/gyp build/TestApp.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
+```
+
+You can also use `gyp` instead of `tools/gyp/gyp`:
+
+```bash
 gyp build/TestApp.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
 ```
+
+For information on how to install gyp, see [How to Install GYP](https://github.com/mogemimi/pomdog/wiki/How-to-Install-GYP) on the wiki.
 
 **2. Building (Release/Debug)**
 
