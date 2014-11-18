@@ -3,39 +3,22 @@
 ## Requirements
 
 * Mac OS X 10.9+
-* Xcode 5.1+ (Apple LLVM 5.1/Clang 3.4)
+* Xcode 6.0+ (Apple LLVM 6.0/Clang 3.5)
 * OpenGL 4 and Direct3D 11.2/12
 * Python 2.7+
 
 ## How to build
 
-### Prerequisite: Installing GYP
+### Pulling all dependencies using Git
 
-First, install GYP from https://chromium.googlesource.com/external/.  
 Make sure git is installed.
-From the root of your engine directory, run:  
-```bash
-git clone https://chromium.googlesource.com/external/gyp.git tools/gyp
-```
-
-Second, run setup.py.
-
-**Linux and Mac OS X**
-
-To install globally with gyp:
+From the root of your project directory, run:
 
 ```bash
-cd tools/gyp
-[sudo] python setup.py install
-```
-
-**Windows**
-
-On Windows systems you can do:
-
-```bash
-cd tools/gyp
-python setup.py install
+cd QuickStart
+git clone https://github.com/mogemimi/pomdog.git Pomdog
+git clone https://github.com/mogemimi/pomdog-third-party.git Pomdog/third-party
+git clone https://chromium.googlesource.com/external/gyp.git Tools/gyp
 ```
 
 ### Building under Mac OS X and Xcode
@@ -43,8 +26,16 @@ python setup.py install
 **1. Generating the Xcode project file**
 
 ```bash
+Tools/gyp/gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
+```
+
+You can also use `gyp` instead of `Tools/gyp/gyp`:
+
+```bash
 gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
 ```
+
+For information on how to install gyp, see [How to Install GYP](https://github.com/mogemimi/pomdog/wiki/How-to-Install-GYP) on the wiki.
 
 **2. Building (Release/Debug)**
 

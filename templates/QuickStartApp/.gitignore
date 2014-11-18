@@ -19,3 +19,6 @@
 /Build/Release
 /Build.xcodefiles
 /Build.msvs
+/Tools/gyp
+/Tools/python
+/Pomdog
