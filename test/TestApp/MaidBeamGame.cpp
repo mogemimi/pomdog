@@ -181,7 +181,7 @@ void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camer
 	for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
 	{
 		auto renderable = gameObject.Component<Renderable>();
-		renderable->Visit(gameObject, *renderer, viewMatrix, projectionMatrix);
+		renderable->Visit(gameObject, *renderer);
 	}
 
 	graphicsContext->Viewport(viewport);
@@ -197,7 +197,7 @@ void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camer
 			if (editorCamera == gameObject) {
 				continue;
 			}
-			cameraSprites[cameraIndex].Visit(gameObject, *renderer, viewMatrix, projectionMatrix);
+			cameraSprites[cameraIndex].Visit(gameObject, *renderer);
 			++cameraIndex;
 		}
 

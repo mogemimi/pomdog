@@ -152,12 +152,12 @@ void ParticleTestGame::Draw()
 			gameHost->Window()->ClientBounds().Width, gameHost->Window()->ClientBounds().Height, camera->Near, camera->Far);
 		
 		editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
-
-		for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
-		{
-			auto renderable = gameObject.Component<Renderable>();
-			renderable->Visit(gameObject, *renderer, viewMatrix, projectionMatrix);
-		}
+	}
+	
+	for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
+	{
+		auto renderable = gameObject.Component<Renderable>();
+		renderable->Visit(gameObject, *renderer);
 	}
 
 	constexpr bool enableFxaa = true;
