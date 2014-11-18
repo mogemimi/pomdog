@@ -14,10 +14,8 @@ namespace TestApp {
 //-----------------------------------------------------------------------
 ParticleTestGame::ParticleTestGame(std::shared_ptr<GameHost> const& gameHostIn)
 	: gameHost(gameHostIn)
-{
-	POMDOG_ASSERT(gameHostIn);
-	graphicsContext = gameHost->GraphicsContext();
-}
+	, graphicsContext(gameHostIn->GraphicsContext())
+{}
 //-----------------------------------------------------------------------
 ParticleTestGame::~ParticleTestGame() = default;
 //-----------------------------------------------------------------------

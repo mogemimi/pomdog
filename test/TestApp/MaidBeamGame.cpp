@@ -16,11 +16,9 @@ namespace TestApp {
 //-----------------------------------------------------------------------
 MaidBeamGame::MaidBeamGame(std::shared_ptr<GameHost> const& gameHostIn)
 	: gameHost(gameHostIn)
+	, graphicsContext(gameHostIn->GraphicsContext())
 	, sandboxMode(false)
-{
-	POMDOG_ASSERT(gameHostIn);
-	graphicsContext = gameHost->GraphicsContext();
-}
+{}
 //-----------------------------------------------------------------------
 MaidBeamGame::~MaidBeamGame() = default;
 //-----------------------------------------------------------------------

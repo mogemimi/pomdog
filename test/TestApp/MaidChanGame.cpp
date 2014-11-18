@@ -15,10 +15,8 @@ namespace TestApp {
 //-----------------------------------------------------------------------
 MaidChanGame::MaidChanGame(std::shared_ptr<GameHost> const& gameHostIn)
 	: gameHost(gameHostIn)
-{
-	POMDOG_ASSERT(gameHostIn);
-	graphicsContext = gameHost->GraphicsContext();
-}
+	, graphicsContext(gameHostIn->GraphicsContext())
+{}
 //-----------------------------------------------------------------------
 MaidChanGame::~MaidChanGame() = default;
 //-----------------------------------------------------------------------
