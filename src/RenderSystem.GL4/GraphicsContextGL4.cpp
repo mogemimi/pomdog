@@ -285,7 +285,7 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 	#endif
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t instanceCount)
+void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount, std::uint32_t instanceCount)
 {
 	// Bind input-layout to the input-assembler stage:
 	POMDOG_ASSERT(inputLayout);
@@ -303,12 +303,13 @@ void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std:
 	// Draw
 	POMDOG_ASSERT(!vertexBuffers.empty());
 	POMDOG_ASSERT(vertexBuffers.front());
+	POMDOG_ASSERT(vertexCount <= vertexBuffers.front()->VertexCount());
 	POMDOG_ASSERT(0 < instanceCount);
 
 	glDrawArraysInstanced(
 		ToPrimitiveTopology(primitiveTopology),
 		0,
-		vertexBuffers.front()->VertexCount(),
+		vertexCount,
 		instanceCount);
 	
 	#ifdef DEBUG

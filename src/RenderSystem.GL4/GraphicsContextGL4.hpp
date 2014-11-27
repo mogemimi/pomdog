@@ -67,7 +67,8 @@ public:
 		std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount) override;
 
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
-	void DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t instanceCount) override;
+	void DrawInstanced(PrimitiveTopology primitiveTopology,
+		std::uint32_t vertexCount, std::uint32_t instanceCount) override;
 
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
 	void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
