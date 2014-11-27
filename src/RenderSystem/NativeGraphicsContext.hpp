@@ -48,7 +48,7 @@ public:
 		std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount) = 0;
 
 	///@copydoc Pomdog::GraphicsContext
-	virtual void DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t instanceCount) = 0;
+	virtual void DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount, std::uint32_t instanceCount) = 0;
 
 	///@copydoc Pomdog::GraphicsContext
 	virtual void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,

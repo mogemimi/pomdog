@@ -74,8 +74,10 @@ public:
 	///@~Japanese
 	/// @brief インデックスを持たない、インスタンス化されたプリミティブを描画します。
 	/// @param primitiveTopology プリミティブの位相。
+	/// @param vertexCount レンダリングする頂点の数。
 	/// @param instanceCount レンダリングするインスタンスの数。
-	void DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t instanceCount);
+	void DrawInstanced(PrimitiveTopology primitiveTopology,
+		std::uint32_t vertexCount, std::uint32_t instanceCount);
 
 	///@~Japanese
 	/// @brief インデックス付けされた頂点データに基づき、インスタンス化されたプリミティブを描画します。
