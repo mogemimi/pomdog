@@ -47,7 +47,7 @@ ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
 		effectParameters[constantBuffer.Name] = std::move(parameter);
 	}
 	
-	nativeConstantLayout = nativeEffectPass->CreateConstantLayout();
+	nativeConstantLayout = nativeEffectPass->CreateConstantLayout(*nativeDevice);
 	
 	// Bind constant buffers:
 	for (auto & parameter: effectParameters)

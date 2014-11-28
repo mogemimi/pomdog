@@ -22,6 +22,7 @@ namespace Details {
 namespace RenderSystem {
 
 class NativeConstantLayout;
+class NativeGraphicsDevice;
 
 class NativeEffectPass {
 public:
@@ -31,7 +32,7 @@ public:
 
 	virtual ~NativeEffectPass() = default;
 
-	virtual std::unique_ptr<NativeConstantLayout> CreateConstantLayout() = 0;
+	virtual std::unique_ptr<NativeConstantLayout> CreateConstantLayout(NativeGraphicsDevice &) = 0;
 };
 
 }// namespace RenderSystem
