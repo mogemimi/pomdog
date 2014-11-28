@@ -238,16 +238,4 @@ namespace Details {
 }// namespace Details
 }// namespace Pomdog
 
-//----------------------------
-// Prerequisites for Win32
-//----------------------------
-#if defined(POMDOG_PLATFORM_WIN32)
-#	if !defined(STRICT)
-#		define STRICT
-#	endif
-#	if !defined(NOMINMAX) && defined(_MSC_VER)
-#		define NOMINMAX
-#	endif
-#endif // defined(POMDOG_PLATFORM_WIN32)
-
 #endif // !defined(POMDOG_PLATFORM_C59B59BE_0311_4CB7_96D7_541924F8C06A_HPP)
