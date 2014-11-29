@@ -10,6 +10,7 @@
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
+#include "Pomdog/Graphics/VertexDeclaration.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/EffectParameter.hpp"
 #include "Pomdog/Graphics/GraphicsContext.hpp"
@@ -45,7 +46,8 @@ ChromaticAberration::ChromaticAberration(std::shared_ptr<GraphicsDevice> const& 
 	
 	effectPass = effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectChromaticAberrationTrait>(*graphicsDevice);
 	constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
-	inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
+	inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
+		VertexDeclaration{{VertexElementFormat::Float3, VertexElementFormat::Float2}});
 }
 //-----------------------------------------------------------------------
 void ChromaticAberration::SetViewport(float width, float height)

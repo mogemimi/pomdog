@@ -8,6 +8,7 @@
 
 #include "GradientPlane.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
+#include "Pomdog/Graphics/VertexDeclaration.hpp"
 
 namespace Pomdog {
 namespace SceneEditor {
@@ -55,7 +56,8 @@ GradientPlane::GradientPlane(std::shared_ptr<GameHost> const& gameHost)
 
 		effectPass = std::make_shared<EffectPass>(graphicsDevice, vertexShader, pixelShader);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
-		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
+		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
+			VertexDeclaration{{VertexElementFormat::Float3, VertexElementFormat::Float4}});
 	}
 }
 //-----------------------------------------------------------------------

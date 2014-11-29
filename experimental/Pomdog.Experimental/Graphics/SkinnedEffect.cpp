@@ -9,6 +9,7 @@
 #include "SkinnedEffect.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
+#include "Pomdog/Graphics/VertexDeclaration.hpp"
 
 namespace Pomdog {
 namespace {
@@ -53,7 +54,8 @@ SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice)
 {
 	effectPass = graphicsDevice.ShaderPool().Create<BuiltinEffectSkinningTrait>(graphicsDevice);
 	constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
-	inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
+	inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
+		VertexDeclaration{{VertexElementFormat::Float4, VertexElementFormat::Int4}});
 }
 //-----------------------------------------------------------------------
 void SkinnedEffect::Impl::Apply(GraphicsContext & graphicsContext)

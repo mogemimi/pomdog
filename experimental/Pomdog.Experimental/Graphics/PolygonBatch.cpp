@@ -9,6 +9,7 @@
 #include "PolygonBatch.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
+#include "Pomdog/Graphics/VertexDeclaration.hpp"
 
 namespace Pomdog {
 namespace {
@@ -86,7 +87,8 @@ PolygonBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContext
 	{
 		effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectPolygonBatchTrait>(*graphicsDevice);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
-		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
+		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
+			VertexDeclaration{{VertexElementFormat::Float3, VertexElementFormat::Float4}});
 	}
 }
 //-----------------------------------------------------------------------
