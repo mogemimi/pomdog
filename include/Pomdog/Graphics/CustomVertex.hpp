@@ -89,8 +89,7 @@ struct VertexElementTuple<Head, ElementTypes...> {
 }// namespace Details
 
 template <typename T, typename... Arguments>
-class CustomVertex
-{
+class CustomVertex {
 public:
 	Details::Graphics::VertexElementTuple<T, Arguments...> Tuple;
 
