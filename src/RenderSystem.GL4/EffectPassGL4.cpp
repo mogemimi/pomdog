@@ -220,7 +220,7 @@ EffectPassGL4::~EffectPassGL4()
 	}
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeConstantLayout> EffectPassGL4::CreateConstantLayout()
+std::unique_ptr<NativeConstantLayout> EffectPassGL4::CreateConstantLayout(NativeGraphicsDevice &)
 {
 	EffectReflectionGL4 shaderReflection(*shaderProgram);
 
