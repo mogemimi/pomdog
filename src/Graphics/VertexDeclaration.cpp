@@ -10,6 +10,7 @@
 #include <Pomdog/Graphics/detail/VertexElementHelper.hpp>
 #include <Pomdog/Utility/Assert.hpp>
 #include <algorithm>
+#include <utility>
 
 namespace Pomdog {
 namespace {
@@ -27,6 +28,22 @@ static std::uint32_t AccumulateStrideBytes(std::vector<VertexElement> const& ele
 	}
 	return strideBytes;
 }
+//-----------------------------------------------------------------------
+static std::vector<VertexElement> BuildVertexElements(std::initializer_list<VertexElementFormat> && formats)
+{
+	std::vector<VertexElement> vertexElements;
+	vertexElements.reserve(formats.size());
+	
+	std::uint16_t offsetBytes = 0;
+	
+	for (auto & format: formats)
+	{
+		vertexElements.push_back({offsetBytes, format});
+		offsetBytes += Details::VertexElementHelper::ToByteSize(format);
+	}
+
+	return std::move(vertexElements);
+}
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
@@ -38,8 +55,12 @@ VertexDeclaration::VertexDeclaration(std::vector<VertexElement> && vertexElement
 	POMDOG_ASSERT(strideBytes > 0);
 }
 //-----------------------------------------------------------------------
-VertexDeclaration::VertexDeclaration(std::initializer_list<VertexElement> vertexElements)
-	: elements(vertexElements)
+VertexDeclaration::VertexDeclaration(std::initializer_list<VertexElementFormat> && vertexElements)
+	: VertexDeclaration(BuildVertexElements(std::move(vertexElements)))
+{}
+//-----------------------------------------------------------------------
+VertexDeclaration::VertexDeclaration(std::initializer_list<VertexElement> && vertexElements)
+	: elements(std::move(vertexElements))
 	, strideBytes(AccumulateStrideBytes(elements))
 {
 	POMDOG_ASSERT(!elements.empty());

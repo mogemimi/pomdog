@@ -17,6 +17,7 @@
 #include "Pomdog/Config/Export.hpp"
 #include <cstdint>
 #include <vector>
+#include <initializer_list>
 
 namespace Pomdog {
 
@@ -24,7 +25,9 @@ namespace Pomdog {
 /// @brief 頂点を定義します。
 class POMDOG_EXPORT VertexDeclaration {
 public:
-	VertexDeclaration(std::initializer_list<VertexElement> vertexElements);
+	VertexDeclaration(std::initializer_list<VertexElementFormat> && vertexElements);
+
+	VertexDeclaration(std::initializer_list<VertexElement> && vertexElements);
 
 	explicit VertexDeclaration(std::vector<VertexElement> const& vertexElements);
 
