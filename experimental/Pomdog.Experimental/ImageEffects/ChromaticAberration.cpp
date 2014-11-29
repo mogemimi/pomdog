@@ -10,7 +10,6 @@
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
-#include "Pomdog/Graphics/VertexDeclaration.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/EffectParameter.hpp"
 #include "Pomdog/Graphics/GraphicsContext.hpp"
@@ -18,6 +17,7 @@
 #include "Pomdog/Graphics/InputLayout.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
+#include "Pomdog/Graphics/VertexDeclaration.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
