@@ -65,7 +65,7 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(AssetLoaderContext
 	{
 		constexpr auto SignatureLength = sizeof(std::uint8_t) * 8;
 	
-		POMDOG_ASSERT(stream.tellg() == SignatureLength);
+		POMDOG_ASSERT(stream.tellg() == std::streampos(SignatureLength));
 		
 		std::vector<std::uint8_t> binaryWithoutSignature(fileSize - SignatureLength);
 		stream.read(reinterpret_cast<char*>(binaryWithoutSignature.data()), binaryWithoutSignature.size());
@@ -89,12 +89,8 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(AssetLoaderContext
 		
 		return DDSTextureReader::Read(graphicsDevice, binaryWithoutFourCC.data(), binaryWithoutFourCC.size());
 	}
-	else
-	{
-		POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid/unsupported texture format.");
-	}
-
-	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
+	
+	POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid/unsupported texture format.");
 }
 //-----------------------------------------------------------------------
 }// namespace Details

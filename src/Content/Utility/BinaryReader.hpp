@@ -28,10 +28,11 @@ namespace BinaryReader {
 template <class Stream>
 std::size_t GetBinarySize(Stream & stream)
 {
+	///@todo This code is NOT secure.
 	stream.seekg(0, stream.end);
-	auto const length = stream.tellg();
+	auto const byteLength = static_cast<std::size_t>(stream.tellg());
 	stream.seekg(0, stream.beg);
-	return length;
+	return byteLength;
 }
 
 template <typename T, class Stream>
