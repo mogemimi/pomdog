@@ -72,10 +72,6 @@ public:
 	
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeInputLayout>
-	CreateInputLayout(NativeEffectPass & nativeEffectPass) override;
-	
-	///@copydoc NativeGraphicsDevice
-	std::unique_ptr<NativeInputLayout>
 	CreateInputLayout(NativeEffectPass & nativeEffectPass,
 		std::initializer_list<VertexBufferBinding> && vertexBufferBindings) override;
 	

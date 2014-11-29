@@ -102,12 +102,7 @@ public:
 	/// @brief 指定されたエフェクトパスからエフェクトリフレクションを作成します。
 	virtual std::unique_ptr<NativeEffectReflection>
 	CreateEffectReflection(NativeEffectPass & nativeEffectPass) = 0;
-	
-	///@~Japanese
-	/// @brief 入力レイアウトを作成します。
-	virtual std::unique_ptr<NativeInputLayout>
-	CreateInputLayout(NativeEffectPass & nativeEffectPass) = 0;
-	
+
 	///@~Japanese
 	/// @brief 入力レイアウトを作成します。
 	virtual std::unique_ptr<NativeInputLayout>
