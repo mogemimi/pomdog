@@ -16,7 +16,6 @@
 #include "../Utility/Noncopyable.hpp"
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 #include <memory>
-#include <initializer_list>
 #include <vector>
 
 namespace Pomdog {
@@ -103,12 +102,6 @@ public:
 	virtual std::unique_ptr<NativeEffectReflection>
 	CreateEffectReflection(NativeEffectPass & nativeEffectPass) = 0;
 
-	///@~Japanese
-	/// @brief 入力レイアウトを作成します。
-	virtual std::unique_ptr<NativeInputLayout>
-	CreateInputLayout(NativeEffectPass & nativeEffectPass,
-		std::initializer_list<VertexBufferBinding> && vertexBufferBindings) = 0;
-	
 	///@~Japanese
 	/// @brief 入力レイアウトを作成します。
 	virtual std::unique_ptr<NativeInputLayout>

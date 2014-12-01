@@ -37,6 +37,10 @@ public:
 
 	void Apply(ID3D11DeviceContext * deviceContext);
 
+	ShaderBytecode GetVertexShaderBlob() const;
+
+	ShaderBytecode GetPixelShaderBlob() const;
+
 private:
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;

@@ -13,6 +13,7 @@
 #include <Pomdog/Utility/Exception.hpp>
 #include <Pomdog/Utility/Assert.hpp>
 #include <algorithm>
+#include <utility>
 
 namespace Pomdog {
 namespace Details {
@@ -176,6 +177,24 @@ void EffectPassDirect3D11::Apply(ID3D11DeviceContext * deviceContext)
 
 	deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
 	deviceContext->PSSetShader(pixelShader.Get(), nullptr, 0);
+}
+//-----------------------------------------------------------------------
+ShaderBytecode EffectPassDirect3D11::GetVertexShaderBlob() const
+{
+	POMDOG_ASSERT(!vertexShaderBlob.empty());
+	ShaderBytecode shaderBytecode;
+	shaderBytecode.Code = vertexShaderBlob.data();
+	shaderBytecode.ByteLength = vertexShaderBlob.size();
+	return std::move(shaderBytecode);
+}
+//-----------------------------------------------------------------------
+ShaderBytecode EffectPassDirect3D11::GetPixelShaderBlob() const
+{
+	POMDOG_ASSERT(!pixelShaderBlob.empty());
+	ShaderBytecode shaderBytecode;
+	shaderBytecode.Code = pixelShaderBlob.data();
+	shaderBytecode.ByteLength = pixelShaderBlob.size();
+	return std::move(shaderBytecode);
 }
 //-----------------------------------------------------------------------
 }// namespace Direct3D11

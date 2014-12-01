@@ -8,11 +8,18 @@
 
 #include "GraphicsDeviceDirect3D11.hpp"
 #include "BlendStateDirect3D11.hpp"
+#include "ConstantBufferDirect3D11.hpp"
 #include "DepthStencilStateDirect3D11.hpp"
-#include "RasterizerStateDirect3D11.hpp"
-#include "SamplerStateDirect3D11.hpp"
+#include "EffectPassDirect3D11.hpp"
+#include "EffectReflectionDirect3D11.hpp"
 #include "IndexBufferDirect3D11.hpp"
+#include "InputLayoutDirect3D11.hpp"
+#include "RasterizerStateDirect3D11.hpp"
+#include "RenderTarget2DDirect3D11.hpp"
+#include "SamplerStateDirect3D11.hpp"
+#include "Texture2DDirect3D11.hpp"
 #include "VertexBufferDirect3D11.hpp"
+#include <Pomdog/Graphics/detail/ShaderBytecode.hpp>
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Utility/StringFormat.hpp>
 #include <Pomdog/Utility/Assert.hpp>
@@ -339,7 +346,7 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(void const* vertices,
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBlendState>
-	GraphicsDeviceDirect3D11::CreateBlendState(BlendDescription const& description)
+GraphicsDeviceDirect3D11::CreateBlendState(BlendDescription const& description)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeDevice);
@@ -348,7 +355,7 @@ std::unique_ptr<NativeBlendState>
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeDepthStencilState>
-	GraphicsDeviceDirect3D11::CreateDepthStencilState(DepthStencilDescription const& description)
+GraphicsDeviceDirect3D11::CreateDepthStencilState(DepthStencilDescription const& description)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeDevice);
@@ -357,7 +364,7 @@ std::unique_ptr<NativeDepthStencilState>
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeSamplerState>
-	GraphicsDeviceDirect3D11::CreateSamplerState(SamplerDescription const& description)
+GraphicsDeviceDirect3D11::CreateSamplerState(SamplerDescription const& description)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeDevice);
@@ -366,7 +373,7 @@ std::unique_ptr<NativeSamplerState>
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeRasterizerState>
-	GraphicsDeviceDirect3D11::CreateRasterizerState(RasterizerDescription const& description)
+GraphicsDeviceDirect3D11::CreateRasterizerState(RasterizerDescription const& description)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeDevice);
@@ -375,105 +382,82 @@ std::unique_ptr<NativeRasterizerState>
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectPass>
-	GraphicsDeviceDirect3D11::CreateEffectPass(ShaderBytecode const& vertexShaderBytecode, ShaderBytecode const& pixelShaderBytecode)
+GraphicsDeviceDirect3D11::CreateEffectPass(ShaderBytecode const& vertexShaderBytecode, ShaderBytecode const& pixelShaderBytecode)
 {
-	(&vertexShaderBytecode);
-	(&pixelShaderBytecode);
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeDevice);
 
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-//	return std::make_unique<EffectPassDirect3D11>(vertexShaderBytecode, pixelShaderBytecode);
+	return std::make_unique<EffectPassDirect3D11>(impl->nativeDevice.Get(),
+		vertexShaderBytecode, pixelShaderBytecode);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeConstantBuffer>
-	GraphicsDeviceDirect3D11::CreateConstantBuffer(std::uint32_t byteConstants)
+GraphicsDeviceDirect3D11::CreateConstantBuffer(std::uint32_t byteConstants)
 {
-	(&byteConstants);
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeDevice);
+	POMDOG_ASSERT(impl->deviceContext);
 
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-//	return std::make_unique<ConstantBufferDirect3D11>(byteConstants);
+	return std::make_unique<ConstantBufferDirect3D11>(
+		impl->nativeDevice.Get(), impl->deviceContext.Get(), byteConstants);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectReflection>
-	GraphicsDeviceDirect3D11::CreateEffectReflection(NativeEffectPass & nativeEffectPass)
+GraphicsDeviceDirect3D11::CreateEffectReflection(NativeEffectPass & nativeEffectPass)
 {
-	(&nativeEffectPass);
+	auto const effectPass = dynamic_cast<EffectPassDirect3D11*>(&nativeEffectPass);
+	POMDOG_ASSERT(effectPass != nullptr);
 
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-	//auto const effectPassDirect3D11 = dynamic_cast<EffectPassDirect3D11*>(&nativeEffectPass);
-	//POMDOG_ASSERT(effectPassDirect3D11 != nullptr);
+	if (!effectPass) {
+		// FUS RO DAH!
+		///@todo throw exception
+		return {};
+	}
 
-	//if (!effectPassDirect3D11) {
-	//	return std::unique_ptr<EffectReflectionDirect3D11>();
-	//}
-	//return std::make_unique<EffectReflectionDirect3D11>(effectPassDirect3D11->GetShaderProgram());
+	return std::make_unique<EffectReflectionDirect3D11>(
+		effectPass->GetVertexShaderBlob(), effectPass->GetPixelShaderBlob());
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeInputLayout>
-	GraphicsDeviceDirect3D11::CreateInputLayout(NativeEffectPass & nativeEffectPass,
-	std::initializer_list<VertexBufferBinding> && vertexBufferBindings)
-{
-	(&nativeEffectPass);
-	(&vertexBufferBindings);
-
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-	//auto const effectPassDirect3D11 = dynamic_cast<EffectPassDirect3D11*>(&nativeEffectPass);
-	//POMDOG_ASSERT(effectPassDirect3D11 != nullptr);
-
-	//if (!effectPassDirect3D11) {
-	//	return std::unique_ptr<InputLayoutDirect3D11>();
-	//}
-	//return std::make_unique<InputLayoutDirect3D11>(effectPassDirect3D11->GetShaderProgram(), std::move(vertexBufferBindings));
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeInputLayout>
-	GraphicsDeviceDirect3D11::CreateInputLayout(NativeEffectPass & nativeEffectPass,
+GraphicsDeviceDirect3D11::CreateInputLayout(NativeEffectPass & nativeEffectPass,
 	std::vector<VertexBufferBinding> const& vertexBufferBindings)
 {
-	(&nativeEffectPass);
-	(&vertexBufferBindings);
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeDevice);
 
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-	//auto const effectPassDirect3D11 = dynamic_cast<EffectPassDirect3D11*>(&nativeEffectPass);
-	//POMDOG_ASSERT(effectPassDirect3D11 != nullptr);
+	auto const effectPass = dynamic_cast<EffectPassDirect3D11*>(&nativeEffectPass);
+	POMDOG_ASSERT(effectPass != nullptr);
 
-	//if (!effectPassDirect3D11) {
-	//	return std::unique_ptr<InputLayoutDirect3D11>();
-	//}
-	//return std::make_unique<InputLayoutDirect3D11>(effectPassDirect3D11->GetShaderProgram(), vertexBufferBindings);
+	if (!effectPass) {
+		// FUS RO DAH!
+		///@todo throw exception
+		return {};
+	}
+
+	return std::make_unique<InputLayoutDirect3D11>(impl->nativeDevice.Get(),
+		effectPass->GetVertexShaderBlob(), vertexBufferBindings);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeTexture2D>
-	GraphicsDeviceDirect3D11::CreateTexture2D(std::int32_t width, std::int32_t height, std::uint32_t mipmapLevels,
+GraphicsDeviceDirect3D11::CreateTexture2D(std::int32_t width, std::int32_t height, std::uint32_t mipmapLevels,
 	SurfaceFormat format)
 {
-	(&width);
-	(&height);
-	(&mipmapLevels);
-	(&format);
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeDevice);
+	POMDOG_ASSERT(impl->deviceContext);
 
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-//	return std::make_unique<Texture2DDirect3D11>(width, height, mipmapLevels, format);
+	return std::make_unique<Texture2DDirect3D11>(impl->nativeDevice.Get(),
+		impl->deviceContext, width, height, mipmapLevels, format);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeRenderTarget2D>
-	GraphicsDeviceDirect3D11::CreateRenderTarget2D(std::int32_t width, std::int32_t height,
+GraphicsDeviceDirect3D11::CreateRenderTarget2D(std::int32_t width, std::int32_t height,
 	std::uint32_t mipmapLevels, SurfaceFormat format, DepthFormat depthStencilFormat)
 {
-	(&width);
-	(&height);
-	(&mipmapLevels);
-	(&format);
-	(&depthStencilFormat);
-
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-//	return std::make_unique<RenderTarget2DDirect3D11>(width, height, mipmapLevels, format, depthStencilFormat);
+	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(impl->nativeDevice);
+	return std::make_unique<RenderTarget2DDirect3D11>(impl->nativeDevice.Get(),
+		width, height, mipmapLevels, format, depthStencilFormat);
 }
 //-----------------------------------------------------------------------
 Microsoft::WRL::ComPtr<ID3D11DeviceContext> GraphicsDeviceDirect3D11::DeviceContext() const
