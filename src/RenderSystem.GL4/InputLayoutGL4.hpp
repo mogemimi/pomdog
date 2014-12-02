@@ -19,7 +19,6 @@
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
 #include <Pomdog/Utility/detail/Tagged.hpp>
 #include <Pomdog/Utility/Optional.hpp>
-#include <initializer_list>
 #include <vector>
 #include <limits>
 
@@ -65,9 +64,7 @@ public:
 	InputLayoutGL4() = delete;
 	
 	explicit InputLayoutGL4(ShaderProgramGL4 const& shaderProgram);
-	
-	InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::initializer_list<VertexBufferBinding> && vertexBufferBinding);
-	
+
 	InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::vector<VertexBufferBinding> const& vertexBufferBinding);
 	
 	~InputLayoutGL4();
