@@ -15,17 +15,17 @@
     ],
     'configurations': {
       'Debug': {
-        'msvs_settings': {
-          'VCLinkerTool': {
+        'msbuild_settings': {
+          'Link': {
             'GenerateDebugInformation': 'true', # /DEBUG
           },
         },
       }, # Debug
     },
-    'msvs_settings': {
-      'VCCLCompilerTool': {
-        'WarningLevel': '4',   # /W4
-        'WarnAsError': 'true', # /WX
+    'msbuild_settings': {
+      'ClCompile': {
+        'WarningLevel': 'Level4', # /W4
+        'TreatWarningAsError': 'true', # /WX
       },
     },
     'xcode_settings': {

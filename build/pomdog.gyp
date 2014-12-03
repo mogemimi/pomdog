@@ -363,10 +363,10 @@
       '<@(pomdog_library_application_sources)',
       '../include/Pomdog/Pomdog.hpp',
     ],
-    'msvs_settings': {
-      'VCCLCompilerTool': {
-        'WarningLevel': '4',   # /W4
-        'WarnAsError': 'true', # /WX
+    'msbuild_settings': {
+      'ClCompile': {
+        'WarningLevel': 'Level4', # /W4
+        'TreatWarningAsError': 'true', # /WX
       },
     },
     'xcode_settings': {
