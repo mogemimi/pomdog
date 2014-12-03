@@ -35,9 +35,9 @@
       #'OutputDirectory': '$(SolutionDir)$(ConfigurationName)',
       'IntermediateDirectory': '$(SolutionDir)..\\out\\obj\\$(ConfigurationName)\\$(ProjectName)',
     },
-    'msvs_settings': {
-      'VCCLCompilerTool': {
-        'WarningLevel': '4',   # /W4
+    'msbuild_settings': {
+      'ClCompile': {
+        'WarningLevel': 'Level4', # /W4
         'PreprocessorDefinitions': [
           '_WIN32_WINNT=0x0601', # Windows 7 or later
           'WIN32_LEAN_AND_MEAN',
@@ -45,7 +45,8 @@
         ],
       },
     },
-    'default_configuration': 'Release',#'Debug',
+    'default_configuration': 'Release',
+    #'default_configuration': 'Debug',
     'configurations': {
       'Common': {
         'abstract': 1,
@@ -54,19 +55,19 @@
         'inherit_from': ['Common'],
         'defines': ['DEBUG=1'],
         'cflags': ['-g', '-O0'],
-        'msvs_settings': {
-          'VCCLCompilerTool': {
-            'Optimization': '0', # /Od
+        'msbuild_settings': {
+          'ClCompile': {
+            'Optimization': 'Disabled', # /Od
             'conditions': [
               ['OS == "win" and component == "shared_library"', {
-                'RuntimeLibrary': '3', # /MDd
+                'RuntimeLibrary': 'MultiThreadedDebugDLL', # /MDd
               }, {
-                'RuntimeLibrary': '1', # /MTd
+                'RuntimeLibrary': 'MultiThreadedDebug', # /MTd
               }],
             ],
           },
-          'VCLinkerTool': {
-            'LinkIncremental': '2',
+          'Link': {
+            #'LinkIncremental': 'true', # /INCREMENTAL
           },
         },
         'xcode_settings': {
@@ -78,21 +79,21 @@
         'inherit_from': ['Common'],
         'defines': ['NDEBUG=1'],
         'cflags': ['-O3'],
-        'msvs_settings':{
-          'VCCLCompilerTool': {
-            'Optimization': '2', # /O2
-            'InlineFunctionExpansion': '2',
+        'msbuild_settings': {
+          'ClCompile': {
+            'Optimization': 'MaxSpeed', # /O2
+            'InlineFunctionExpansion': 'AnySuitable', # /Ob2
             'conditions': [
               ['OS == "win" and component == "shared_library"', {
-                'RuntimeLibrary': '2', # /MD
+                'RuntimeLibrary': 'MultiThreadedDLL', # /MD
               }, {
-                'RuntimeLibrary': '0', # /MT
+                'RuntimeLibrary': 'MultiThreaded', # /MT
               }],
             ],
           },
-          'VCLinkerTool': {
-            'LinkIncremental': '1',
-            'OptimizeReferences': '2',
+          'Link': {
+            #'LinkIncremental': 'false', # /INCREMENTAL:NO
+            'OptimizeReferences': 'true', # /OPT:REF
           },
         },
         'xcode_settings': {
