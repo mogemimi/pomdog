@@ -10,12 +10,19 @@ It's open source and distributed under the [MIT License](http://opensource.org/l
 ## Requirements
 
 * Mac OS X 10.9+
-* Xcode 6.0+ (Apple LLVM 6.0/Clang 3.5)
-* OpenGL 4 and Direct3D 11.2/12
+* OpenGL 4
+* Windows 8+
+* Direct3D 11+ (included DirectX 12)
+
+### Build Requirements
+
 * Python 2.7+
+* Xcode 6.0+ (Apple LLVM 6.0/Clang 3.5)
+* Visual Studio 2015+
 
 >**Note: Support Windows 8 Desktop and Windows Store**  
->Pomdog will support development of Windows 8 Desktop and Windows Store apps; however, Visual C++ Compiler (Nov 2013 CTP) doesn't completely support C++11.
+>Pomdog will support development of Windows 8 Desktop and Windows Store apps;
+>however, Visual C++ Compiler (2015 Preview) doesn't completely support C++11.
 
 ## How to build
 
