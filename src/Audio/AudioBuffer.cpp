@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "AudioBuffer.hpp"
+#include "Pomdog/Audio/AudioBuffer.hpp"
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
 #include "../SoundSystem.OpenAL/AudioBufferAL.hpp"

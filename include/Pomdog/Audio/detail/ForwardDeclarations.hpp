@@ -43,9 +43,9 @@ class SoundEffectXAudio2;
 
 }// namespace XAudio2
 
-using NativeAudioBuffer = OpenAL::AudioBufferXAudio2;
-using NativeAudioEngine = OpenAL::AudioEngineXAudio2;
-using NativeSoundEffect = OpenAL::SoundEffectXAudio2;
+using NativeAudioBuffer = XAudio2::AudioBufferXAudio2;
+using NativeAudioEngine = XAudio2::AudioEngineXAudio2;
+using NativeSoundEffect = XAudio2::SoundEffectXAudio2;
 
 #endif
 

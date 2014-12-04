@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "SoundEffect.hpp"
+#include "Pomdog/Audio/SoundEffect.hpp"
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
 #include "../SoundSystem.OpenAL/SoundEffectAL.hpp"
