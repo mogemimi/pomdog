@@ -126,7 +126,7 @@ static constexpr std::array<std::uint32_t, 256U> crctable =
 #endif // !defined(POMDOG_CRC32_CREATE_CRC_TABLE)
 
 static constexpr std::uint32_t InitValueCRC32 = 0xffffffffUL;
-static constexpr std::uint32_t XorValueCRC32  = 0xffffffffUL;
+static constexpr std::uint32_t XorValueCRC32 = 0xffffffffUL;
 
 static void UpdateChecksum(std::uint32_t & crcvalue, std::uint8_t const* data, std::size_t length)
 {

@@ -340,7 +340,7 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
 		}
 		++s;
 	}
-	return minor;
+	return std::move(minor);
 }
 //-----------------------------------------------------------------------
 template <typename T>
