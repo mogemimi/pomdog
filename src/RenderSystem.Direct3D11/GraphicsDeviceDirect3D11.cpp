@@ -132,6 +132,10 @@ static ID3D11InfoQueue* BuildInfoQueue(ID3D11Device* nativeDevice)
 		///@todo throw exception
 	}
 
+	if (!infoQueue) {
+		return nullptr;
+	}
+
 	infoQueue->ClearRetrievalFilter();
 	infoQueue->ClearStorageFilter();
 
@@ -156,7 +160,13 @@ static ID3D11InfoQueue* BuildInfoQueue(ID3D11Device* nativeDevice)
 //-----------------------------------------------------------------------
 static void CheckError(ID3D11InfoQueue* infoQueue)
 {
+#if defined(DEBUG) && !defined(NDEBUG)
 	POMDOG_ASSERT(infoQueue);
+#endif
+
+	if (!infoQueue) {
+		return;
+	}
 
 	const auto storedMessageCount = infoQueue->GetNumStoredMessages();
 
