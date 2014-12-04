@@ -8,6 +8,7 @@
     ['OS == "win"', {
       'variables': {
         'renderer%': 'direct3d11',
+        #'audio%': 'XAudio2',
         #'input_device%': 'dinput8',
       },
     }],
@@ -15,18 +16,24 @@
       'variables': {
         'renderer%': 'opengl',
         #'input_device%': 'none',
+        'audio%': 'OpenAL',
       },
     }],
     ['OS == "linux" or OS == "freebsd" or OS == "openbsd"', {
       'variables': {
         'renderer%': 'opengl',
         #'input_device%': 'none',
+        #'audio%': 'OpenAL',
       },
     }],
   ],
   'variables': {
     'pomdog_library_testable_sources': [
       '../include/Pomdog/Application/DurationSeconds.hpp',
+      '../include/Pomdog/Audio/AudioChannels.hpp',
+      '../include/Pomdog/Audio/AudioEmitter.hpp',
+      '../include/Pomdog/Audio/AudioListener.hpp',
+      '../include/Pomdog/Audio/SoundState.hpp',
       '../include/Pomdog/Config/Export.hpp',
       '../include/Pomdog/Config/Platform.hpp',
       '../include/Pomdog/Event/Event.hpp',
@@ -171,6 +178,10 @@
       '../include/Pomdog/Application/GameHost.hpp',
       '../include/Pomdog/Application/GameWindow.hpp',
       '../include/Pomdog/Application/Timer.hpp',
+      '../include/Pomdog/Audio/AudioBuffer.hpp',
+      '../include/Pomdog/Audio/AudioEngine.hpp',
+      '../include/Pomdog/Audio/SoundEffect.hpp',
+      '../include/Pomdog/Audio/detail/ForwardDeclarations.hpp',
       '../include/Pomdog/Content/AssetManager.hpp',
       '../include/Pomdog/Content/detail/AssetDictionary.hpp',
       '../include/Pomdog/Content/detail/AssetLoader.hpp',
@@ -202,6 +213,9 @@
       '../src/Application/SystemEventDispatcher.hpp',
       '../src/Application/Timer.cpp',
       '../src/Application/TimeSource.hpp',
+      '../src/Audio/AudioBuffer.cpp',
+      '../src/Audio/AudioEngine.cpp',
+      '../src/Audio/SoundEffect.cpp',
       '../src/Content/AssetManager.cpp',
       '../src/Content/EffectLoader.cpp',
       '../src/Content/TextureLoader.cpp',
@@ -282,6 +296,19 @@
       '../src/RenderSystem.GL4/TypesafeHelperGL4.hpp',
       '../src/RenderSystem.GL4/VertexBufferGL4.cpp',
       '../src/RenderSystem.GL4/VertexBufferGL4.hpp',
+    ],
+    'pomdog_library_openal_sources': [
+      '../src/SoundSystem.OpenAL/AudioBufferAL.cpp',
+      '../src/SoundSystem.OpenAL/AudioBufferAL.hpp',
+      '../src/SoundSystem.OpenAL/AudioEngineAL.cpp',
+      '../src/SoundSystem.OpenAL/AudioEngineAL.hpp',
+      '../src/SoundSystem.OpenAL/ContextOpenAL.cpp',
+      '../src/SoundSystem.OpenAL/ContextOpenAL.hpp',
+      '../src/SoundSystem.OpenAL/ErrorCheckerAL.cpp',
+      '../src/SoundSystem.OpenAL/ErrorCheckerAL.hpp',
+      '../src/SoundSystem.OpenAL/PrerequisitesOpenAL.hpp',
+      '../src/SoundSystem.OpenAL/SoundEffectAL.cpp',
+      '../src/SoundSystem.OpenAL/SoundEffectAL.hpp',
     ],
     'pomdog_library_cocoa_sources': [
       '../include/Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp',
@@ -428,8 +455,13 @@
         'sources': [
           '<@(pomdog_library_opengl4_sources)',
         ],
-      }], # OS == "opengl"
-      ['OS == "mac" and renderer == "opengl"', {
+      }], # renderer == "opengl"
+      ['audio == "OpenAL"', {
+        'sources': [
+          '<@(pomdog_library_openal_sources)',
+        ],
+      }], # audio == "OpenAL"
+      ['OS == "mac"', {
         'sources': [
           '<@(pomdog_library_cocoa_sources)',
         ],
@@ -437,6 +469,8 @@
           'libraries': [
             '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
             '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
+            '$(SDKROOT)/System/Library/Frameworks/AudioToolBox.framework',
+            '$(SDKROOT)/System/Library/Frameworks/OpenAL.framework',
           ],
         },
       }], # OS == "mac"

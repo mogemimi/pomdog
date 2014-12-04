@@ -21,6 +21,15 @@
 #include "Application/GameWindow.hpp"
 #include "Application/Timer.hpp"
 
+// Audio
+#include "Audio/AudioBuffer.hpp"
+#include "Audio/AudioChannels.hpp"
+#include "Audio/AudioEmitter.hpp"
+#include "Audio/AudioEngine.hpp"
+#include "Audio/AudioListener.hpp"
+#include "Audio/SoundEffect.hpp"
+#include "Audio/SoundState.hpp"
+
 // Content
 #include "Content/AssetManager.hpp"
 #include "Content/detail/EffectLoader.hpp"
