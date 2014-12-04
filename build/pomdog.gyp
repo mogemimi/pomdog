@@ -345,6 +345,12 @@
       '../src/RenderSystem.Direct3D11/VertexBufferDirect3D11.hpp',
     ],
     'pomdog_library_win32_sources': [
+      '../include/Pomdog/Application/detail/Platform.Win32/BootstrapperWin32.hpp',
+      '../src/Platform.Win32/BootstrapperWin32.cpp',
+      '../src/Platform.Win32/GameHostWin32.cpp',
+      '../src/Platform.Win32/GameHostWin32.hpp',
+      '../src/Platform.Win32/GameWindowWin32.cpp',
+      '../src/Platform.Win32/GameWindowWin32.hpp',
       '../src/Platform.Win32/TimeSourceWin32.cpp',
       '../src/Platform.Win32/TimeSourceWin32.hpp',
       '../src/Platform.Win32/Win32Prerequisites.hpp',
