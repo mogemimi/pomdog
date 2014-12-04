@@ -104,31 +104,22 @@ public:
 
 	~Impl() = default;
 
-	///@copydoc GameHost
 	void Run(Game & game);
-	
-	///@copydoc GameHost
+
 	void Exit();
 
-	///@copydoc GameHost
 	std::shared_ptr<Pomdog::GameWindow> Window();
-	
-	///@copydoc GameHost
+
 	std::shared_ptr<Pomdog::GameClock> Clock(std::shared_ptr<GameHost> && gameHost);
-	
-	///@copydoc GameHost
+
 	std::shared_ptr<Pomdog::GraphicsContext> GraphicsContext();
-	
-	///@copydoc GameHost
+
 	std::shared_ptr<Pomdog::GraphicsDevice> GraphicsDevice();
-	
-	///@copydoc GameHost
+
 	std::shared_ptr<Pomdog::AssetManager> AssetManager(std::shared_ptr<GameHost> && gameHost);
-	
-	///@copydoc GameHost
+
 	std::shared_ptr<Pomdog::Keyboard> Keyboard();
-	
-	///@copydoc GameHost
+
 	std::shared_ptr<Pomdog::Mouse> Mouse();
 
 private:
@@ -232,15 +223,12 @@ void CocoaGameHost::Impl::RenderFrame(Game & game)
 		// skip rendering
 		return;
 	}
-	
-	// RenderBegin:
+
 	openGLContext->LockContext();
 	openGLContext->BindCurrentContext();
 
-	// Render:
 	game.Draw();
-	
-	// RenderEnd:
+
 	openGLContext->UnlockContext();
 }
 //-----------------------------------------------------------------------
