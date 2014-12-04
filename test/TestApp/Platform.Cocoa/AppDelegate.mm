@@ -7,20 +7,19 @@
 //
 
 #import "AppDelegate.h"
-#include <iostream>
-#include <Pomdog/Pomdog.hpp>
-#include <Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp>
 #include "../TestAppGame.hpp"
+#include <Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp>
+#include <Pomdog/Pomdog.hpp>
+#include <iostream>
 
+using Pomdog::GameHost;
 using Pomdog::Log;
 using Pomdog::LogEntry;
 using Pomdog::LogLevel;
 using Pomdog::ScopedConnection;
-using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 
 @implementation AppDelegate
 {
-	Bootstrapper bootstrapper;
 	ScopedConnection connection;
 	
 	NSThread* gameRunThread;
@@ -49,7 +48,22 @@ using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 
 - (void)runGame
 {
-	bootstrapper.Run<TestApp::TestAppGame>([self window]);
+	using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
+
+	Bootstrapper bootstrapper([self window]);
+	bootstrapper.Run([](std::shared_ptr<GameHost> const& gameHost)
+	{
+		try {
+			TestApp::TestAppGame game{gameHost};
+			gameHost->Run(game);
+		}
+		catch (std::exception const& e) {
+			Log::Critical("Pomdog", e.what());
+		}
+	});
+	
+	///@note Shutdown your application
+	[NSApp terminate:nil];
 }
 
 @end

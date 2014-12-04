@@ -13,61 +13,30 @@
 #	pragma once
 #endif
 
-#import <Cocoa/Cocoa.h>
-
 #include "Pomdog/Config/Export.hpp"
-#include "Pomdog/Application/GameHost.hpp"
-#include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Logging/LogLevel.hpp"
-#include <type_traits>
+#import <Cocoa/Cocoa.h>
 #include <memory>
-#include <array>
 #include <functional>
-#include <exception>
-
 
 @class NSWindow;
 
 namespace Pomdog {
 
-class Game;
 class GameHost;
 
 namespace Details {
 namespace Cocoa {
 
-class CocoaGameWindow;
-
 ///@~Japanese
 /// @brief すべてのサブシステムの起動、およびアプリケーションの実行を行います。
 class POMDOG_EXPORT BootstrapperCocoa final {
 public:
-	template <class GameClass>
-	void Run(NSWindow* nativeWindow)
-	{
-		static_assert(std::is_base_of<Game, GameClass>::value, "GameClass is base of Pomdog::Game.");
-		static_assert(!std::is_abstract<GameClass>::value, "GameClass is not abstract.");
-		
-		BeginRun(nativeWindow);
-		
-		try {
-			GameClass game{gameHost};
-			gameHost->Run(game);
-		}
-		catch (std::exception const& e) {
-			Log::Critical("Pomdog", e.what());
-		}
+	BootstrapperCocoa(NSWindow* nativeWindow);
 
-		EndRun();
-	}
+	void Run(std::function<void(std::shared_ptr<GameHost> const&)> const& runGame);
 	
 private:
-	std::shared_ptr<CocoaGameWindow> gameWindow;
-	std::shared_ptr<GameHost> gameHost;
-	
-private:
-	void BeginRun(NSWindow* nativeWindow);
-	void EndRun();
+	NSWindow* nativeWindow;
 };
 
 }// namespace Cocoa
