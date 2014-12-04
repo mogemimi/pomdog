@@ -32,7 +32,7 @@ public:
 
 	virtual ~NativeEffectPass() = default;
 
-	virtual std::unique_ptr<NativeConstantLayout> CreateConstantLayout(NativeGraphicsDevice &) = 0;
+	virtual std::unique_ptr<NativeConstantLayout> CreateConstantLayout() = 0;
 };
 
 }// namespace RenderSystem

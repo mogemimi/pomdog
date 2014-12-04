@@ -47,7 +47,7 @@ public:
 	
 	~EffectPassGL4();
 
-	std::unique_ptr<NativeConstantLayout> CreateConstantLayout(NativeGraphicsDevice &) override;
+	std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
 
 	void ApplyShaders();
 	

@@ -32,8 +32,7 @@ public:
 		ShaderBytecode const& vertexShaderBytecode,
 		ShaderBytecode const& pixelShaderBytecode);
 
-	std::unique_ptr<NativeConstantLayout> CreateConstantLayout(
-		NativeGraphicsDevice & graphicsDevice) override;
+	std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
 
 	void Apply(ID3D11DeviceContext * deviceContext);
 

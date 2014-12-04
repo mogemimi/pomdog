@@ -43,11 +43,10 @@ static void ReflectShaderBytecode(ShaderBytecode const& shaderBytecode,
 	}
 }
 //-----------------------------------------------------------------------
-static void EnumerateConstantBuffers(ID3D11Device* device,
+static void EnumerateConstantBuffers(
 	ShaderBytecode const& shaderBytecode,
 	std::vector<ConstantBufferBindingDirect3D11> & output)
 {
-	POMDOG_ASSERT(device);
 	POMDOG_ASSERT(shaderBytecode.Code);
 
 	D3D11_SHADER_DESC shaderDesc;
@@ -92,15 +91,14 @@ static void EnumerateConstantBuffers(ID3D11Device* device,
 }
 //-----------------------------------------------------------------------
 static std::vector<ConstantBufferBindingDirect3D11> CreateConstantBufferBindings(
-	ID3D11Device* device,
 	ShaderBytecode const& vertexShaderBytecode,
 	ShaderBytecode const& pixelShaderBytecode)
 {
 	using Desc = ConstantBufferBindingDirect3D11;
 
 	std::vector<Desc> bindings;
-	EnumerateConstantBuffers(device, vertexShaderBytecode, bindings);
-	EnumerateConstantBuffers(device, pixelShaderBytecode, bindings);
+	EnumerateConstantBuffers(vertexShaderBytecode, bindings);
+	EnumerateConstantBuffers(pixelShaderBytecode, bindings);
 
 	auto equal = [](Desc const& a, Desc const& b) {
 		return a.Name == b.Name;
@@ -148,8 +146,7 @@ EffectPassDirect3D11::EffectPassDirect3D11(ID3D11Device * device,
 	std::memcpy(pixelShaderBlob.data(), pixelShaderBytecode.Code, pixelShaderBlob.size());
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeConstantLayout> EffectPassDirect3D11::CreateConstantLayout(
-	NativeGraphicsDevice & graphicsDeviceIn)
+std::unique_ptr<NativeConstantLayout> EffectPassDirect3D11::CreateConstantLayout()
 {
 	ShaderBytecode vertexShaderBytecode;
 	vertexShaderBytecode.Code = vertexShaderBlob.data();
@@ -159,11 +156,7 @@ std::unique_ptr<NativeConstantLayout> EffectPassDirect3D11::CreateConstantLayout
 	pixelShaderBytecode.Code = pixelShaderBlob.data();
 	pixelShaderBytecode.ByteLength = pixelShaderBlob.size();
 
-	POMDOG_ASSERT(dynamic_cast<GraphicsDeviceDirect3D11*>(&graphicsDeviceIn));
-	auto & graphicsDevice = static_cast<GraphicsDeviceDirect3D11&>(graphicsDeviceIn);
-	auto nativeDevice = graphicsDevice.NativeDevice();
-
-	auto bindings = CreateConstantBufferBindings(nativeDevice.Get(), vertexShaderBytecode, pixelShaderBytecode);
+	auto bindings = CreateConstantBufferBindings(vertexShaderBytecode, pixelShaderBytecode);
 
 	auto constantLayout = std::make_unique<ConstantLayoutDirect3D11>(std::move(bindings));
 	return std::move(constantLayout);
