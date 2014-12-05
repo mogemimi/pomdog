@@ -8,22 +8,22 @@
     ['OS == "win"', {
       'variables': {
         'renderer%': 'direct3d11',
-        #'audio%': 'XAudio2',
+        'audio%': 'XAudio2',
         #'input_device%': 'dinput8',
       },
     }],
     ['OS == "mac"', {
       'variables': {
         'renderer%': 'opengl',
-        #'input_device%': 'none',
         'audio%': 'OpenAL',
+        #'input_device%': 'none',
       },
     }],
     ['OS == "linux" or OS == "freebsd" or OS == "openbsd"', {
       'variables': {
         'renderer%': 'opengl',
+        'audio%': 'OpenAL',
         #'input_device%': 'none',
-        #'audio%': 'OpenAL',
       },
     }],
   ],
@@ -371,6 +371,9 @@
       '../src/RenderSystem.Direct3D11/VertexBufferDirect3D11.cpp',
       '../src/RenderSystem.Direct3D11/VertexBufferDirect3D11.hpp',
     ],
+    'pomdog_library_xaudio2_sources': [
+      '../src/SoundSystem.XAudio2/PrerequisitesXAudio2.hpp',
+    ],
     'pomdog_library_win32_sources': [
       '../include/Pomdog/Application/detail/Platform.Win32/BootstrapperWin32.hpp',
       '../src/Platform.Win32/BootstrapperWin32.cpp',
@@ -461,6 +464,16 @@
           '<@(pomdog_library_openal_sources)',
         ],
       }], # audio == "OpenAL"
+      ['audio == "XAudio2"', {
+        'sources': [
+          '<@(pomdog_library_xaudio2_sources)',
+        ],
+        'link_settings': {
+          'libraries': [
+            '-lxaudio2.lib',
+          ],
+        },
+      }], # audio == "XAudio2"
       ['OS == "mac"', {
         'sources': [
           '<@(pomdog_library_cocoa_sources)',
