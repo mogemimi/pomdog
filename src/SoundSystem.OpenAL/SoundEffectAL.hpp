@@ -33,6 +33,7 @@ struct AudioSourceALTag {};
 using AudioSourceAL = Tagged<ALuint, AudioSourceALTag>;
 
 class AudioBufferAL;
+class AudioEngineAL;
 
 class SoundEffectAL final: Noncopyable {
 private:
@@ -40,7 +41,8 @@ private:
 	Optional<AudioSourceAL> source;
 
 public:
-	explicit SoundEffectAL(std::shared_ptr<AudioBufferAL> const& audioBuffer);
+	SoundEffectAL(AudioEngineAL & audioEngine,
+		std::shared_ptr<AudioBufferAL> const& audioBuffer, bool isLooped);
 	
 	~SoundEffectAL();
 
@@ -52,7 +54,7 @@ public:
 	
 	void Apply3D(AudioListener const& listener, AudioEmitter const& emitter);
 
-	void IsLooped(bool isLooped);
+	void ExitLoop();
 
 	void Pitch(float pitch);
 

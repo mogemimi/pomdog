@@ -19,7 +19,8 @@ namespace Details {
 namespace SoundSystem {
 namespace OpenAL {
 //-----------------------------------------------------------------------
-SoundEffectAL::SoundEffectAL(std::shared_ptr<AudioBufferAL> const& audioBufferIn)
+SoundEffectAL::SoundEffectAL(AudioEngineAL &,
+	std::shared_ptr<AudioBufferAL> const& audioBufferIn, bool isLooped)
 	: audioBuffer(audioBufferIn)
 {
 	source = ([] {
@@ -35,6 +36,13 @@ SoundEffectAL::SoundEffectAL(std::shared_ptr<AudioBufferAL> const& audioBufferIn
 	POMDOG_ASSERT(source);
 	alSourcei(source->value, AL_BUFFER, audioBuffer->NativeBuffer());
 	
+	#ifdef DEBUG
+	ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
+	#endif
+	
+	POMDOG_ASSERT(source);
+	alSourcei(source->value, AL_LOOPING, (isLooped ? AL_TRUE: AL_FALSE));
+
 	#ifdef DEBUG
 	ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
 	#endif
@@ -118,10 +126,10 @@ void SoundEffectAL::Apply3D(AudioListener const& listener, AudioEmitter const& e
 	}
 }
 //-----------------------------------------------------------------------
-void SoundEffectAL::IsLooped(bool isLooped)
+void SoundEffectAL::ExitLoop()
 {
 	POMDOG_ASSERT(source);
-	alSourcei(source->value, AL_LOOPING, AL_TRUE);
+	alSourcei(source->value, AL_LOOPING, AL_FALSE);
 
 	#ifdef DEBUG
 	ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
