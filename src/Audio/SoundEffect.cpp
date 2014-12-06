@@ -15,6 +15,7 @@
 #endif
 
 #include "Pomdog/Audio/AudioBuffer.hpp"
+#include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
@@ -30,36 +31,53 @@ static std::shared_ptr<Details::SoundSystem::NativeAudioBuffer> GetNativeBuffer(
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-SoundEffect::SoundEffect(std::shared_ptr<AudioBuffer> const& audioBuffer)
-	: nativeSoundEffect(std::make_unique<Details::SoundSystem::NativeSoundEffect>(GetNativeBuffer(audioBuffer)))
-	, pitch(0.0f)
+SoundEffect::SoundEffect(AudioEngine & audioEngine,
+	std::shared_ptr<AudioBuffer> const& audioBuffer, bool isLoopedIn)
+	: pitch(0.0f)
 	, volume(1.0f)
 	, state(SoundState::Stopped)
-	, isLooped(false)
+	, isLooped(isLoopedIn)
 {
+	auto nativeAudioEngine = audioEngine.NativeAudioEngine();
+	POMDOG_ASSERT(nativeAudioEngine);
+
+	nativeSoundEffect = std::make_unique<Details::SoundSystem::NativeSoundEffect>(
+		*nativeAudioEngine, GetNativeBuffer(audioBuffer), isLooped);
 }
 //-----------------------------------------------------------------------
 SoundEffect::~SoundEffect() = default;
 //-----------------------------------------------------------------------
 void SoundEffect::Pause()
 {
+	if (state == SoundState::Paused) {
+		return;
+	}
+
 	POMDOG_ASSERT(nativeSoundEffect);
-	state = SoundState::Paused;
 	nativeSoundEffect->Pause();
+	state = SoundState::Paused;
 }
 //-----------------------------------------------------------------------
 void SoundEffect::Play()
 {
+	if (state == SoundState::Playing) {
+		return;
+	}
+
 	POMDOG_ASSERT(nativeSoundEffect);
-	state = SoundState::Playing;
 	nativeSoundEffect->Play();
+	state = SoundState::Playing;
 }
 //-----------------------------------------------------------------------
 void SoundEffect::Stop()
 {
+	if (state == SoundState::Stopped) {
+		return;
+	}
+	
 	POMDOG_ASSERT(nativeSoundEffect);
-	state = SoundState::Stopped;
 	nativeSoundEffect->Stop();
+	state = SoundState::Stopped;
 }
 //-----------------------------------------------------------------------
 void SoundEffect::Apply3D(AudioListener const& listener, AudioEmitter const& emitter)
@@ -73,11 +91,15 @@ bool SoundEffect::IsLooped() const
 	return isLooped;
 }
 //-----------------------------------------------------------------------
-void SoundEffect::IsLooped(bool isLoopedIn)
+void SoundEffect::ExitLoop()
 {
+	if (!isLooped) {
+		return;
+	}
+
 	POMDOG_ASSERT(nativeSoundEffect);
-	this->isLooped = isLoopedIn;
-	nativeSoundEffect->IsLooped(isLoopedIn);
+	nativeSoundEffect->ExitLoop();
+	isLooped = false;
 }
 //-----------------------------------------------------------------------
 SoundState SoundEffect::State() const

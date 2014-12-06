@@ -24,13 +24,13 @@ namespace Pomdog {
 class AudioBuffer;
 class AudioEmitter;
 class AudioListener;
+class AudioEngine;
 enum class SoundState: std::uint8_t;
 
-///@~Japanese
-/// @brief サウンドエフェクトです。
 class POMDOG_EXPORT SoundEffect {
 public:
-	explicit SoundEffect(std::shared_ptr<AudioBuffer> const& audioBuffer);
+	SoundEffect(AudioEngine & audioEngine,
+		std::shared_ptr<AudioBuffer> const& audioBuffer, bool isLooped);
 	
 	~SoundEffect();
 
@@ -53,9 +53,9 @@ public:
 	void Apply3D(AudioListener const& listener, AudioEmitter const& emitter);
 	
 	bool IsLooped() const;
-	
-	void IsLooped(bool isLooped);
-	
+
+	void ExitLoop();
+
 	///@~Japanese
 	/// @brief 現在のサウンドの状態を取得します。
 	SoundState State() const;
