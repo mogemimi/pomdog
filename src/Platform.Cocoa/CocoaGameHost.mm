@@ -16,6 +16,7 @@
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 #include <Pomdog/Application/Game.hpp>
 #include <Pomdog/Application/GameClock.hpp>
+#include <Pomdog/Audio/AudioEngine.hpp>
 #include <Pomdog/Content/AssetManager.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
@@ -118,6 +119,8 @@ public:
 
 	std::shared_ptr<Pomdog::AssetManager> AssetManager(std::shared_ptr<GameHost> && gameHost);
 
+	std::shared_ptr<Pomdog::AudioEngine> AudioEngine();
+
 	std::shared_ptr<Pomdog::Keyboard> Keyboard();
 
 	std::shared_ptr<Pomdog::Mouse> Mouse();
@@ -143,6 +146,7 @@ private:
 	std::shared_ptr<CocoaOpenGLContext> openGLContext;
 	std::shared_ptr<Pomdog::GraphicsContext> graphicsContext;
 	std::shared_ptr<Pomdog::GraphicsDevice> graphicsDevice;
+	std::shared_ptr<Pomdog::AudioEngine> audioEngine;
 	std::unique_ptr<Pomdog::AssetManager> assetManager;
 	
 	std::shared_ptr<KeyboardCocoa> keyboard;
@@ -166,6 +170,8 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::make_unique<GraphicsDeviceGL4>());
 
 	graphicsContext = CreateGraphicsContext(openGLContext, gameWindow, presentationParameters, graphicsDevice);
+	
+	audioEngine = std::make_shared<Pomdog::AudioEngine>();
 	
 	POMDOG_ASSERT(gameWindow);
 	gameWindow->ResetGLContext(openGLContext);
@@ -325,6 +331,11 @@ std::shared_ptr<Pomdog::GraphicsDevice> CocoaGameHost::Impl::GraphicsDevice()
 	return graphicsDevice;
 }
 //-----------------------------------------------------------------------
+std::shared_ptr<Pomdog::AudioEngine> CocoaGameHost::Impl::AudioEngine()
+{
+	return audioEngine;
+}
+//-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::AssetManager> CocoaGameHost::Impl::AssetManager(std::shared_ptr<GameHost> && gameHost)
 {
 	std::shared_ptr<Pomdog::AssetManager> sharedAssetManager(gameHost, assetManager.get());
@@ -387,6 +398,12 @@ std::shared_ptr<Pomdog::GraphicsDevice> CocoaGameHost::GraphicsDevice()
 	return impl->GraphicsDevice();
 }
 //-----------------------------------------------------------------------
+std::shared_ptr<Pomdog::AudioEngine> CocoaGameHost::AudioEngine()
+{
+	POMDOG_ASSERT(impl);
+	return impl->AudioEngine();
+}
+//-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::AssetManager> CocoaGameHost::AssetManager()
 {
 	POMDOG_ASSERT(impl);
@@ -404,7 +421,7 @@ std::shared_ptr<Pomdog::Mouse> CocoaGameHost::Mouse()
 	POMDOG_ASSERT(impl);
 	return impl->Mouse();
 }
-
+//-----------------------------------------------------------------------
 }// namespace Cocoa
 }// namespace Details
 }// namespace Pomdog
