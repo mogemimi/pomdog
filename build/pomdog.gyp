@@ -216,6 +216,7 @@
       '../src/Audio/AudioBuffer.cpp',
       '../src/Audio/AudioEngine.cpp',
       '../src/Audio/SoundEffect.cpp',
+      '../src/Content/AssetLoaderContext.cpp',
       '../src/Content/AssetManager.cpp',
       '../src/Content/EffectLoader.cpp',
       '../src/Content/TextureLoader.cpp',

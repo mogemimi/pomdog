@@ -17,7 +17,6 @@
 #include <memory>
 #include <string>
 #include <fstream>
-#include <utility>
 
 namespace Pomdog {
 
@@ -30,12 +29,7 @@ public:
 	std::string RootDirectory;
 	std::weak_ptr<Pomdog::GraphicsDevice> GraphicsDevice;
 	
-	std::ifstream OpenStream(std::string const& assetName) const
-	{
-		std::string path = RootDirectory + "/" + assetName;
-		std::ifstream stream(path, std::ios::in | std::ios::binary);
-		return std::move(stream);
-	}
+	std::ifstream OpenStream(std::string const& assetName) const;
 };
 
 }// namespace Details
