@@ -81,6 +81,7 @@
         '../test/FrameworkTest/Math/Vector3Test.cpp',
         '../test/FrameworkTest/Math/Vector4Test.cpp',
         '../test/FrameworkTest/Utility/StringFormatTest.cpp',
+        '../test/FrameworkTest/Utility/AnyTest.cpp',
       ],
       'xcode_settings': {
       },

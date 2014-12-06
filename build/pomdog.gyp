@@ -137,6 +137,7 @@
       '../include/Pomdog/Utility/Exception.hpp',
       '../include/Pomdog/Utility/Optional.hpp',
       '../include/Pomdog/Utility/StringFormat.hpp',
+      '../include/Pomdog/Utility/detail/Any.hpp',
       '../include/Pomdog/Utility/detail/CRC32.hpp',
       '../include/Pomdog/Utility/detail/Tagged.hpp',
       '../src/Event/EventConnection.cpp',
