@@ -14,6 +14,8 @@
 #include "../SoundSystem.XAudio2/AudioEngineXAudio2.hpp"
 #endif
 
+#include "Pomdog/Utility/Assert.hpp"
+
 namespace Pomdog {
 //-----------------------------------------------------------------------
 AudioEngine::AudioEngine()
@@ -30,5 +32,11 @@ AudioEngine::~AudioEngine() = default;
 //void AudioEngine::MasterVolume(float volume)
 //{
 //}
+//-----------------------------------------------------------------------
+Details::SoundSystem::NativeAudioEngine* AudioEngine::NativeAudioEngine()
+{
+	POMDOG_ASSERT(nativeAudioEngine);
+	return nativeAudioEngine.get();
+}
 //-----------------------------------------------------------------------
 }// namespace Pomdog
