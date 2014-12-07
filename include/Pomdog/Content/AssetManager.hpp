@@ -20,7 +20,6 @@
 
 namespace Pomdog {
 
-
 class POMDOG_EXPORT AssetManager {
 public:
 	AssetManager(Details::AssetLoaderContext && loaderContext);

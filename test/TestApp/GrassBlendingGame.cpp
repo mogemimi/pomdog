@@ -60,8 +60,8 @@ void GrassBlendingGame::Initialize()
 		mainCamera.AddComponent<Camera2D>();
 	}
 	{
-		auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidChan2/skeleton.atlas");
-		auto skeletonDesc = assets->Load<Details::Spine::SkeletonDesc>("MaidChan2/skeleton.json");
+		auto textureAtlas = Details::TexturePacker::TextureAtlasLoader::Load(*assets, "MaidChan2/skeleton.atlas");
+		auto skeletonDesc = Details::Spine::SkeletonDescLoader::Load(*assets, "MaidChan2/skeleton.json");
 		maidTexture = assets->Load<Texture2D>("MaidChan2/skeleton.png");
 		
 		LogTexturePackerInfo(textureAtlas);

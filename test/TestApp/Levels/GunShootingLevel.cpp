@@ -20,7 +20,7 @@ public:
 void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	AssetManager & assets)
 {
-	auto skeletonDesc = assets.Load<Details::Spine::SkeletonDesc>("MaidGun/MaidGun.json");
+	auto skeletonDesc = Details::Spine::SkeletonDescLoader::Load(assets, "MaidGun/MaidGun.json");
 	TestApp::LogSkeletalInfo(skeletonDesc);
 	
 	auto skeleton = std::make_shared<Skeleton>(Details::Spine::CreateSkeleton(skeletonDesc.Bones));
@@ -33,7 +33,7 @@ void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const
 		gameObject.AddComponent(std::make_unique<Animator>(skeleton, skeletonTransform, animationGraph));
 	}
 	{
-		auto textureAtlas = assets.Load<Details::TexturePacker::TextureAtlas>("MaidGun/MaidGun.atlas");
+		auto textureAtlas = Details::TexturePacker::TextureAtlasLoader::Load(assets, "MaidGun/MaidGun.atlas");
 		auto texture = assets.Load<Texture2D>("MaidGun/MaidGun.png");
 	
 		TestApp::LogTexturePackerInfo(textureAtlas);
@@ -86,13 +86,13 @@ GunShootingLevel::GunShootingLevel(GameHost & gameHost, GameWorld & world)
 		rendererable.Load(graphicsDevice, assets);
 	}
 	{
-		auto skeletonDesc = assets->Load<Details::Spine::SkeletonDesc>("Ghost/Ghost.json");
+		auto skeletonDesc = Details::Spine::SkeletonDescLoader::Load(*assets, "Ghost/Ghost.json");
 		TestApp::LogSkeletalInfo(skeletonDesc);
 		
 		ghostSkeleton = std::make_shared<Skeleton>(Details::Spine::CreateSkeleton(skeletonDesc.Bones));
 		ghostAnimGraph = Details::Spine::LoadAnimationGraph(skeletonDesc, *assets, "Ghost/AnimationGraph.json");
 		{
-			auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("Ghost/Ghost.atlas");
+			auto textureAtlas = Details::TexturePacker::TextureAtlasLoader::Load(*assets, "Ghost/Ghost.atlas");
 			TestApp::LogTexturePackerInfo(textureAtlas);
 			
 			ghostTexture = assets->Load<Texture2D>("Ghost/Ghost.png");

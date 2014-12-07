@@ -60,8 +60,8 @@ void MaidChanGame::Initialize()
 		mainCamera.AddComponent<Camera2D>();
 	}
 	{
-		auto textureAtlas = assets->Load<Details::TexturePacker::TextureAtlas>("MaidChan/skeleton.atlas");
-		auto skeletonDesc = assets->Load<Details::Spine::SkeletonDesc>("MaidChan/skeleton.json");
+		auto textureAtlas = Details::TexturePacker::TextureAtlasLoader::Load(*assets, "MaidChan/skeleton.atlas");
+		auto skeletonDesc = Details::Spine::SkeletonDescLoader::Load(*assets, "MaidChan/skeleton.json");
 		
 		LogTexturePackerInfo(textureAtlas);
 		LogSkeletalInfo(skeletonDesc);
