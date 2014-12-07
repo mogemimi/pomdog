@@ -14,19 +14,20 @@
 #endif
 
 #include "SkeletonDesc.hpp"
-#include "Pomdog/Content/detail/AssetLoader.hpp"
 
 namespace Pomdog {
-namespace Details {
 
-template <>
-struct AssetLoader<Spine::SkeletonDesc> {
-	Spine::SkeletonDesc operator()(AssetLoaderContext const& loaderContext,
-		std::string const& assetPath);
+class AssetManager;
+
+namespace Details {
+namespace Spine {
+
+class SkeletonDescLoader final {
+public:
+	static SkeletonDesc Load(AssetManager const& assets, std::string const& assetName);
 };
 
-extern template struct AssetLoader<Spine::SkeletonDesc>;
-
+}// namespace Spine
 }// namespace Details
 }// namespace Pomdog
 

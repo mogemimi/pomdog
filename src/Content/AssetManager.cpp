@@ -20,4 +20,14 @@ void AssetManager::Unload()
 	texture2dAssets.Unload();
 }
 //-----------------------------------------------------------------------
+std::string AssetManager::RootDirectory() const
+{
+	return loaderContext.RootDirectory;
+}
+//-----------------------------------------------------------------------
+std::ifstream AssetManager::OpenStream(std::string const& assetName) const
+{
+	return loaderContext.OpenStream(assetName);
+}
+//-----------------------------------------------------------------------
 }// namespace Pomdog

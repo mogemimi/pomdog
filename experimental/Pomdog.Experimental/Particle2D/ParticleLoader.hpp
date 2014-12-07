@@ -22,9 +22,9 @@ class ParticleClip;
 namespace Details {
 
 struct ParticleLoader {
-	static ParticleClip LoadFromJson(AssetManager & assets, std::string const& assetPath);
+	static ParticleClip LoadFromJson(AssetManager & assets, std::string const& assetName);
 
-	static ParticleClip Load(AssetManager & assets, std::string const& assetPath);
+	static ParticleClip Load(AssetManager & assets, std::string const& assetName);
 };
 
 }// namespace Details

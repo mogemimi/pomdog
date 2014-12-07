@@ -18,18 +18,15 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
 
-template <>
-struct AssetLoader<SpriteFont> {
-	std::shared_ptr<SpriteFont>
-	operator()(AssetLoaderContext const& loaderContext,
-		std::string const& assetPath);
+class AssetManager;
+
+class SpriteFontLoader final {
+public:
+	static std::shared_ptr<SpriteFont> Load(
+		AssetManager & assets, std::string const& assetName);
 };
 
-extern template struct AssetLoader<SpriteFont>;
-
-}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SPRITEFONTLOADER_30D6FB29_E5E2_407C_B1C9_46B5C3CDE875_HPP)

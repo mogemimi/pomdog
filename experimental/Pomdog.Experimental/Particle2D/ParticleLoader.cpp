@@ -296,11 +296,11 @@ static ParticleClip ReadParticleClip(rapidjson::Value const& object)
 
 }// unnamed namespace
 
-ParticleClip ParticleLoader::LoadFromJson(AssetManager & assets, std::string const& assetPath)
+ParticleClip ParticleLoader::LoadFromJson(AssetManager & assets, std::string const& assetName)
 {
-	POMDOG_ASSERT(!assetPath.empty());
+	POMDOG_ASSERT(!assetName.empty());
 
-	auto path = assets.RootDirectory() + "/" + assetPath;
+	auto path = assets.RootDirectory() + "/" + assetName;
 	auto json = ReadBinaryFile(path);
 
 	POMDOG_ASSERT(!json.empty());
@@ -335,10 +335,10 @@ ParticleClip ParticleLoader::LoadFromJson(AssetManager & assets, std::string con
 	return ReadParticleClip(member->value);
 }
 //-----------------------------------------------------------------------
-ParticleClip ParticleLoader::Load(AssetManager & assets, std::string const& assetPath)
+ParticleClip ParticleLoader::Load(AssetManager & assets, std::string const& assetName)
 {
-	POMDOG_ASSERT(!assetPath.empty());
-	return LoadFromJson(assets, assetPath);
+	POMDOG_ASSERT(!assetName.empty());
+	return LoadFromJson(assets, assetName);
 }
 
 }// namespace Details

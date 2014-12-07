@@ -25,7 +25,7 @@ namespace Spine {
 class SkeletonDesc;
 
 std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonDesc,
-	AssetManager const& assets, std::string const& assetPath);
+	AssetManager const& assets, std::string const& assetName);
 
 }// namespace Spine
 }// namespace Details

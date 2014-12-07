@@ -17,17 +17,19 @@
 #include <Pomdog/Pomdog.hpp>
 
 namespace Pomdog {
-namespace Details {
 
-template <>
-struct AssetLoader<TexturePacker::TextureAtlas> {
-	TexturePacker::TextureAtlas
-	operator()(AssetLoaderContext const& loaderContext,
-		std::string const& assetPath);
+class AssetManager;
+
+namespace Details {
+namespace TexturePacker {
+
+class TextureAtlasLoader final {
+public:
+	static TextureAtlas Load(AssetManager const& assets,
+		std::string const& assetName);
 };
 
-extern template struct AssetLoader<TexturePacker::TextureAtlas>;
-
+}// namespace TexturePacker
 }// namespace Details
 }// namespace Pomdog
 

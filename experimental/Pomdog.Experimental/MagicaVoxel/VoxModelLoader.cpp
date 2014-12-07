@@ -8,7 +8,7 @@
 
 #include "VoxModelLoader.hpp"
 #include "detail/VoxChunkHeader.hpp"
-#include "Pomdog/Content/detail/AssetLoaderContext.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <fstream>
 #include <algorithm>
@@ -20,11 +20,12 @@
 
 namespace Pomdog {
 namespace Details {
+namespace MagicaVoxel {
 namespace {
 
-static std::string Error(std::string const& assetPath, char const* description)
+static std::string Error(std::string const& assetName, char const* description)
 {
-	return description + (": " + assetPath);
+	return description + (": " + assetName);
 }
 //-----------------------------------------------------------------------
 static std::ifstream::pos_type ChunkSize(std::ifstream & stream, MagicaVoxel::VoxChunkHeader const& chunk)
@@ -38,8 +39,7 @@ static std::ifstream::pos_type ChunkSize(std::ifstream & stream, MagicaVoxel::Vo
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-MagicaVoxel::VoxModel AssetLoader<MagicaVoxel::VoxModel>::operator()(
-	AssetLoaderContext const& loaderContext, std::string const& assetPath)
+VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& assetName)
 {
 	using MagicaVoxel::VoxChunkHeader;
 
@@ -50,24 +50,24 @@ MagicaVoxel::VoxModel AssetLoader<MagicaVoxel::VoxModel>::operator()(
 	constexpr auto IdXYZI = MakeFourCC('X', 'Y', 'Z', 'I');
 	constexpr auto IdRGBA = MakeFourCC('R', 'G', 'B', 'A');
 	
-	std::ifstream stream = loaderContext.OpenStream(assetPath);
+	std::ifstream stream = assets.OpenStream(assetName);
 	
 	if (stream.fail()) {
-		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetPath, "cannot open file"));
+		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "cannot open file"));
 	}
 	
 	if (fourCC != BinaryReader::Read<std::uint32_t>(stream)) {
-		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetPath, "invalid format"));
+		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "invalid format"));
 	}
 
 	if (MagicaVoxelVersion != BinaryReader::Read<std::int32_t>(stream)) {
-		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetPath, "version does not much"));
+		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "version does not much"));
 	}
 
 	const auto mainChunk = BinaryReader::Read<VoxChunkHeader>(stream);
 	
 	if (mainChunk.ID != IdMain) {
-		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetPath, "cannot find main chunk"));
+		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "cannot find main chunk"));
 	}
 	
 	const auto mainChunkEnd = ChunkSize(stream, mainChunk);
@@ -99,7 +99,7 @@ MagicaVoxel::VoxModel AssetLoader<MagicaVoxel::VoxModel>::operator()(
 		case IdXYZI: {
 			const auto voxelCount = BinaryReader::Read<std::int32_t>(stream);
 			if (voxelCount < 0) {
-				POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetPath, "negative number of voxels"));
+				POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "negative number of voxels"));
 			}
 		
 			if (voxelCount > 0) {
@@ -126,5 +126,6 @@ MagicaVoxel::VoxModel AssetLoader<MagicaVoxel::VoxModel>::operator()(
 	return std::move(model);
 }
 //-----------------------------------------------------------------------
+}// namespace MagicaVoxel
 }// namespace Details
 }// namespace Pomdog

@@ -7,7 +7,7 @@
 //
 
 #include "SkeletonDescLoader.hpp"
-#include <Pomdog/Content/detail/AssetLoaderContext.hpp>
+#include "Pomdog/Content/AssetManager.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <rapidjson/document.h>
 #include <utility>
@@ -17,24 +17,8 @@
 
 namespace Pomdog {
 namespace Details {
+namespace Spine {
 namespace {
-
-using Spine::AttachmentDesc;
-using Spine::BoneDesc;
-using Spine::SlotDesc;
-using Spine::SkeletonDesc;
-using Spine::SkinDesc;
-using Spine::SkinSlotDesc;
-using Spine::SkinnedMeshVertexDesc;
-using Spine::SkinnedMeshAttachmentDesc;
-using Spine::AnimationSamplePointTranslate;
-using Spine::AnimationSamplePointRotate;
-using Spine::AnimationSamplePointScale;
-using Spine::AnimationSamplePointAttachment;
-using Spine::BoneAnimationTrackDesc;
-using Spine::SlotAnimationTrackDesc;
-using Spine::AnimationClipDesc;
-using Spine::KeyframeCurve;
 
 static std::vector<char> ReadBinaryFile(std::ifstream && streamIn)
 {
@@ -811,10 +795,9 @@ static std::vector<AnimationClipDesc> ReadAnimationClips(rapidjson::Value const&
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-Spine::SkeletonDesc AssetLoader<Spine::SkeletonDesc>::operator()(AssetLoaderContext const& loaderContext,
-	std::string const& assetPath)
+SkeletonDesc SkeletonDescLoader::Load(AssetManager const& assets, std::string const& assetName)
 {
-	auto json = ReadBinaryFile(loaderContext.OpenStream(assetPath));
+	auto json = ReadBinaryFile(assets.OpenStream(assetName));
 	
 	POMDOG_ASSERT(!json.empty());
 	
@@ -845,6 +828,7 @@ Spine::SkeletonDesc AssetLoader<Spine::SkeletonDesc>::operator()(AssetLoaderCont
 	
 	return std::move(skeleton);
 }
-
+//-----------------------------------------------------------------------
+}// namespace Spine
 }// namespace Details
 }// namespace Pomdog

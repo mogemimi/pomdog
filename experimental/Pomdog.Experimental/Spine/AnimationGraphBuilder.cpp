@@ -94,9 +94,9 @@ static std::unique_ptr<AnimationNode> CreateAnimationNode(
 }// unnamed namespace
 
 std::shared_ptr<AnimationGraph> LoadAnimationGraph(Details::Spine::SkeletonDesc const& skeletonDesc,
-	AssetManager const& assets, std::string const& assetPath)
+	AssetManager const& assets, std::string const& assetName)
 {
-	auto filename = assets.RootDirectory() + "/" + assetPath;
+	auto filename = assets.RootDirectory() + "/" + assetName;
 	auto json = ReadBinaryFile(filename);
 	
 	POMDOG_ASSERT(!json.empty());

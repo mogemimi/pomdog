@@ -23,9 +23,9 @@ namespace Details {
 namespace MagicaVoxel {
 namespace {
 
-static std::string Error(std::string const& assetPath, char const* description)
+static std::string Error(std::string const& assetName, char const* description)
 {
-	return description + (": " + assetPath);
+	return description + (": " + assetName);
 }
 
 }// unnamed namespace

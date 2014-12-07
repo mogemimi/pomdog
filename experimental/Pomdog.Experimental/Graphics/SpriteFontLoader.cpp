@@ -7,7 +7,6 @@
 //
 
 #include "SpriteFontLoader.hpp"
-#include <Pomdog/Content/detail/TextureLoader.hpp>
 #include <utility>
 #include <fstream>
 #include <algorithm>
@@ -15,7 +14,6 @@
 #include <regex>
 
 namespace Pomdog {
-namespace Details {
 //-----------------------------------------------------------------------
 namespace {
 
@@ -283,7 +281,6 @@ Details::SpriteFonts::Glyph ParseGlyph(std::istream & stream)
 	return std::move(result);
 }
 
-
 namespace FilePathHelper {
 	std::string Directory(std::string const& path)
 	{
@@ -295,11 +292,10 @@ namespace FilePathHelper {
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-std::shared_ptr<SpriteFont>
-AssetLoader<SpriteFont>::operator()(AssetLoaderContext const& loaderContext,
-	std::string const& assetPath)
+std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
+	AssetManager & assets, std::string const& assetName)
 {
-	std::ifstream stream = loaderContext.OpenStream(assetPath);
+	std::ifstream stream = assets.OpenStream(assetName);
 
 	std::vector<BitmapFontPage> pages;
 	std::vector<Details::SpriteFonts::Glyph> glyphs;
@@ -360,12 +356,11 @@ AssetLoader<SpriteFont>::operator()(AssetLoaderContext const& loaderContext,
 
 	std::vector<std::shared_ptr<Texture2D>> textures;
 	{
-		auto directoryName = FilePathHelper::Directory(assetPath);
+		auto directoryName = FilePathHelper::Directory(assetName);
 		
 		for (auto & page: pages)
 		{
-			textures.push_back(Details::AssetLoader<Texture2D>()(
-				loaderContext, directoryName + page.Path));
+			textures.push_back(assets.Load<Texture2D>(directoryName + page.Path));
 		}
 	}
 
@@ -378,5 +373,4 @@ AssetLoader<SpriteFont>::operator()(AssetLoaderContext const& loaderContext,
 	return std::move(spriteFont);
 }
 //-----------------------------------------------------------------------
-}// namespace Details
 }// namespace Pomdog

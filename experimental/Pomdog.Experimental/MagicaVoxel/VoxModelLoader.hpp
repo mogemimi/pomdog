@@ -14,19 +14,20 @@
 #endif
 
 #include "VoxModel.hpp"
-#include "Pomdog/Content/detail/AssetLoader.hpp"
 
 namespace Pomdog {
-namespace Details {
 
-template <>
-struct AssetLoader<MagicaVoxel::VoxModel> {
-	MagicaVoxel::VoxModel operator()(AssetLoaderContext const& loaderContext,
-		std::string const& assetPath);
+class AssetManager;
+
+namespace Details {
+namespace MagicaVoxel {
+
+class VoxModelLoader final {
+public:
+	static VoxModel Load(AssetManager const& assets, std::string const& assetName);
 };
 
-extern template struct AssetLoader<MagicaVoxel::VoxModel>;
-
+}// namespace MagicaVoxel
 }// namespace Details
 }// namespace Pomdog
 

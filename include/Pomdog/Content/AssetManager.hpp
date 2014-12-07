@@ -18,6 +18,7 @@
 #include "detail/AssetDictionary.hpp"
 #include "detail/EffectLoader.hpp"
 #include "detail/TextureLoader.hpp"
+#include "Pomdog/Config/Export.hpp"
 #include <utility>
 
 namespace Pomdog {
@@ -57,9 +58,7 @@ template <> struct AssetManagerLoadImpl<EffectPass> {
 
 }// namespace Details
 
-///@~Japanese
-/// @brief アセットを読み込みます。
-class AssetManager {
+class POMDOG_EXPORT AssetManager {
 public:
 	AssetManager(Details::AssetLoaderContext && loaderContext);
 
@@ -72,14 +71,13 @@ public:
 			effectPassAssets, texture2dAssets);
 	}
 	
-	std::string RootDirectory() const
-	{
-		return loaderContext.RootDirectory;
-	}
-	
 	///@~Japanese
 	/// @brief 読み込まれたすべてのアセットを破棄します。
 	void Unload();
+
+	std::string RootDirectory() const;
+	
+	std::ifstream OpenStream(std::string const& assetName) const;
 	
 private:
 	Details::AssetLoaderContext loaderContext;
