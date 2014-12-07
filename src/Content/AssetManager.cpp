@@ -16,8 +16,7 @@ AssetManager::AssetManager(Details::AssetLoaderContext && loaderContextIn)
 //-----------------------------------------------------------------------
 void AssetManager::Unload()
 {
-	effectPassAssets.Unload();
-	texture2dAssets.Unload();
+	assets.Unload();
 }
 //-----------------------------------------------------------------------
 std::string AssetManager::RootDirectory() const

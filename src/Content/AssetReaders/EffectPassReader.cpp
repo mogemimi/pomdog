@@ -6,7 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "Pomdog/Content/detail/EffectLoader.hpp"
+#include "EffectPassReader.hpp"
+#include "../../Utility/PathHelper.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
@@ -16,6 +17,8 @@
 #include <fstream>
 #include <vector>
 #include <utility>
+#include <string>
+#include <memory>
 
 namespace Pomdog {
 namespace Details {
@@ -40,11 +43,13 @@ static std::vector<std::uint8_t> ReadBinaryFile(std::ifstream && streamIn)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-std::shared_ptr<EffectPass> AssetLoader<EffectPass>::operator()(AssetLoaderContext const& loaderContext,
-	std::string const& assetPath)
+std::shared_ptr<EffectPass> EffectPassReader::Read(
+	AssetLoaderContext const& loaderContext, std::string const& assetName)
 {
-	auto const vertexShader = ReadBinaryFile(loaderContext.OpenStream(assetPath + "/VertexShader.glsl"));
-	auto const pixelShader = ReadBinaryFile(loaderContext.OpenStream(assetPath + "/PixelShader.glsl"));
+	auto const vertexShader = ReadBinaryFile(loaderContext.OpenStream(
+		PathHelper::Join(assetName, "/VertexShader.glsl")));
+	auto const pixelShader = ReadBinaryFile(loaderContext.OpenStream(
+		PathHelper::Join(assetName, "/PixelShader.glsl")));
 
 	POMDOG_ASSERT(!vertexShader.empty());
 	POMDOG_ASSERT(!pixelShader.empty());
@@ -65,6 +70,6 @@ std::shared_ptr<EffectPass> AssetLoader<EffectPass>::operator()(AssetLoaderConte
 
 	return std::move(effectPass);
 }
-
+//-----------------------------------------------------------------------
 }// namespace Details
 }// namespace Pomdog

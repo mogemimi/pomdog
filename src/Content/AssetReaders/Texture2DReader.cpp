@@ -6,11 +6,11 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "Pomdog/Content/detail/TextureLoader.hpp"
-#include "Utility/MakeFourCC.hpp"
-#include "Utility/BinaryReader.hpp"
-#include "Utility/DDSTextureReader.hpp"
-#include "Utility/PNGTextureReader.hpp"
+#include "Texture2DReader.hpp"
+#include "../Utility/MakeFourCC.hpp"
+#include "../Utility/BinaryReader.hpp"
+#include "../Utility/DDSTextureReader.hpp"
+#include "../Utility/PNGTextureReader.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -19,6 +19,8 @@
 #include <vector>
 #include <algorithm>
 #include <utility>
+#include <string>
+#include <memory>
 
 namespace Pomdog {
 namespace Details {
@@ -42,13 +44,13 @@ static bool IsDDSFormat(std::array<std::uint8_t, 8> const& signature)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(AssetLoaderContext const& loaderContext,
-	std::string const& assetPath)
+std::shared_ptr<Texture2D> Texture2DReader::Read(
+	AssetLoaderContext const& loaderContext, std::string const& assetName)
 {
-	std::ifstream stream = loaderContext.OpenStream(assetPath);
+	std::ifstream stream = loaderContext.OpenStream(assetName);
 
 	if (stream.fail()) {
-		POMDOG_THROW_EXCEPTION(std::invalid_argument, "Cannot open file: " + assetPath);
+		POMDOG_THROW_EXCEPTION(std::invalid_argument, "Cannot open file: " + assetName);
 	}
 	
 	auto const fileSize = BinaryReader::GetBinarySize(stream);

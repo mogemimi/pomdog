@@ -13,50 +13,70 @@
 #	pragma once
 #endif
 
-#include "AssetLoader.hpp"
+#include "Pomdog/Utility/detail/Any.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <unordered_map>
+#include <typeindex>
+#include <typeinfo>
 #include <string>
 #include <memory>
 
 namespace Pomdog {
 namespace Details {
 
-template <class T>
-class AssetDictionary {
-public:
-	std::unordered_map<std::string, std::weak_ptr<T>> assets;
+class AssetLoaderContext;
+class AssetReader;
 
-	std::shared_ptr<T> Load(AssetLoaderContext const& loaderContext, std::string const& assetPath)
+class POMDOG_EXPORT AssetDictionary final {
+private:
+	std::unordered_map<std::string, Any> assets;
+	std::unordered_map<std::type_index, std::unique_ptr<AssetReader>> readers;
+
+public:
+	AssetDictionary();
+	
+	~AssetDictionary();
+
+	template <typename T>
+	std::shared_ptr<T> Load(AssetLoaderContext const& loaderContext, std::string const& assetName)
 	{
-		auto const iter = assets.find(assetPath);
+		static_assert(std::is_object<T>::value, "");
+		
+		std::type_index const typeIndex = typeid(std::shared_ptr<T>);
+		
+		auto const iter = assets.find(assetName);
 		if (iter != std::end(assets))
 		{
-			if (auto asset = iter->second.lock()) {
-				return asset;
-			}
+			auto & assetHolder = iter->second;
 			
-			POMDOG_ASSERT(iter->second.expired());
+			if (assetHolder.Type() == typeIndex) {
+				return assetHolder.As<std::shared_ptr<T>>();
+			}
+
 			assets.erase(iter);
 		}
 
-		auto asset = ReadAsset(loaderContext, assetPath);
-
-		POMDOG_ASSERT(asset);
-		assets.emplace(assetPath, asset);
-		return asset;
+		auto assetHolder = ReadAsset(loaderContext, assetName, typeIndex);
+		
+		POMDOG_ASSERT(assetHolder.Type() == typeIndex);
+		
+		if (assetHolder.Type() != typeIndex) {
+			/// FUS RO DAH!
+			///@todo Not implemented
+			//throw exception
+		}
+		
+		auto asset = assetHolder.As<std::shared_ptr<T>>();
+		assets.emplace(assetName, std::move(assetHolder));
+		
+		return std::move(asset);
 	}
 
-	void Unload()
-	{
-		assets.clear();
-	}
+	void Unload();
 
-	std::shared_ptr<T> ReadAsset(AssetLoaderContext const& loaderContext, std::string const& assetPath)
-	{
-		Details::AssetLoader<T> loader;
-		return loader(loaderContext, assetPath);
-	}
+private:
+	Any ReadAsset(AssetLoaderContext const& loaderContext,
+		std::string const& assetName, std::type_index const& typeIndex) const;
 };
 
 }// namespace Details
