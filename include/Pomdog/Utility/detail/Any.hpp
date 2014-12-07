@@ -16,6 +16,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Config/Export.hpp"
 #include <typeindex>
+#include <typeinfo>
 #include <type_traits>
 #include <memory>
 #include <utility>
