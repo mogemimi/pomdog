@@ -6,8 +6,8 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#ifndef POMDOG_AUDIOBUFFER_C1887233_F337_44F3_8AAC_784260497BCE_HPP
-#define POMDOG_AUDIOBUFFER_C1887233_F337_44F3_8AAC_784260497BCE_HPP
+#ifndef POMDOG_AUDIOCLIP_C1887233_F337_44F3_8AAC_784260497BCE_HPP
+#define POMDOG_AUDIOCLIP_C1887233_F337_44F3_8AAC_784260497BCE_HPP
 
 #if (_MSC_VER > 1000)
 #	pragma once
@@ -22,17 +22,15 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief オーディオバッファです。
-class POMDOG_EXPORT AudioBuffer {
+class POMDOG_EXPORT AudioClip {
 public:
-	AudioBuffer(void const* data, std::size_t size, DurationSeconds duration,
+	AudioClip(void const* data, std::size_t size, DurationSeconds duration,
 		std::uint32_t sampleRate, std::uint16_t bitsPerSample, AudioChannels channels);
 	
-	AudioBuffer(AudioBuffer const&) = delete;
-	AudioBuffer & operator=(AudioBuffer const&) = delete;
+	AudioClip(AudioClip const&) = delete;
+	AudioClip & operator=(AudioClip const&) = delete;
 
-	~AudioBuffer();
+	~AudioClip();
 
 	///@~Japanese
 	/// @brief ソースバッファの全長（秒単位）。
@@ -48,10 +46,10 @@ public:
 
 	AudioChannels Channels() const;
 	
-	Details::SoundSystem::NativeAudioBuffer* NativeAudioBuffer();
+	Details::SoundSystem::NativeAudioClip* NativeAudioClip();
 	
 private:
-	std::unique_ptr<Details::SoundSystem::NativeAudioBuffer> nativeAudioBuffer;
+	std::unique_ptr<Details::SoundSystem::NativeAudioClip> nativeAudioClip;
 	DurationSeconds duration;
 	std::uint32_t sampleRate;
 	std::uint16_t bitsPerSample;
@@ -60,4 +58,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_AUDIOBUFFER_C1887233_F337_44F3_8AAC_784260497BCE_HPP)
+#endif // !defined(POMDOG_AUDIOCLIP_C1887233_F337_44F3_8AAC_784260497BCE_HPP)

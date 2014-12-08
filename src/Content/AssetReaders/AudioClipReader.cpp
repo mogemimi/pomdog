@@ -6,9 +6,9 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "AudioBufferReader.hpp"
+#include "AudioClipReader.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
-#include "Pomdog/Audio/AudioBuffer.hpp"
+#include "Pomdog/Audio/AudioClip.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
@@ -29,16 +29,16 @@
 namespace Pomdog {
 namespace Details {
 //-----------------------------------------------------------------------
-std::shared_ptr<AudioBuffer> AudioBufferReader::Read(
+std::shared_ptr<AudioClip> AudioClipReader::Read(
 	AssetLoaderContext const& loaderContext, std::string const& assetName)
 {
 	auto source = Details::MSWaveAudioLoader::Load(
 		PathHelper::Join(loaderContext.RootDirectory, assetName));
 
-	auto audioBuffer = std::make_shared<AudioBuffer>(source.Data.data(), source.Data.size(),
+	auto audioClip = std::make_shared<AudioClip>(source.Data.data(), source.Data.size(),
 		source.Duration, source.SampleRate, source.BitsPerSample, source.Channels);
 
-	return std::move(audioBuffer);
+	return std::move(audioClip);
 }
 //-----------------------------------------------------------------------
 }// namespace Details

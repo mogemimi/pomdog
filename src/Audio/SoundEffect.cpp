@@ -14,7 +14,7 @@
 #include "../SoundSystem.XAudio2/SoundEffectXAudio2.hpp"
 #endif
 
-#include "Pomdog/Audio/AudioBuffer.hpp"
+#include "Pomdog/Audio/AudioClip.hpp"
 #include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
@@ -22,17 +22,17 @@
 namespace Pomdog {
 namespace {
 
-static std::shared_ptr<Details::SoundSystem::NativeAudioBuffer> GetNativeBuffer(std::shared_ptr<AudioBuffer> const& audioBuffer)
+static std::shared_ptr<Details::SoundSystem::NativeAudioClip> GetNativeBuffer(std::shared_ptr<AudioClip> const& audioClip)
 {
-	std::shared_ptr<Details::SoundSystem::NativeAudioBuffer> nativeAudioBuffer(
-		audioBuffer, audioBuffer->NativeAudioBuffer());
-	return std::move(nativeAudioBuffer);
+	std::shared_ptr<Details::SoundSystem::NativeAudioClip> nativeAudioClip(
+		audioClip, audioClip->NativeAudioClip());
+	return std::move(nativeAudioClip);
 }
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
 SoundEffect::SoundEffect(AudioEngine & audioEngine,
-	std::shared_ptr<AudioBuffer> const& audioBuffer, bool isLoopedIn)
+	std::shared_ptr<AudioClip> const& audioClip, bool isLoopedIn)
 	: pitch(0.0f)
 	, volume(1.0f)
 	, state(SoundState::Stopped)
@@ -42,7 +42,7 @@ SoundEffect::SoundEffect(AudioEngine & audioEngine,
 	POMDOG_ASSERT(nativeAudioEngine);
 
 	nativeSoundEffect = std::make_unique<Details::SoundSystem::NativeSoundEffect>(
-		*nativeAudioEngine, GetNativeBuffer(audioBuffer), isLooped);
+		*nativeAudioEngine, GetNativeBuffer(audioClip), isLooped);
 }
 //-----------------------------------------------------------------------
 SoundEffect::~SoundEffect() = default;

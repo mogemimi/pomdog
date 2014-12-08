@@ -78,15 +78,15 @@ AudioClipSource MSWaveAudioLoader::Load(std::string const& filePath)
 		return {};
 	}
 	
-	AudioClipSource audioBuffer;
-	audioBuffer.SampleRate = basicDescription.mSampleRate;
-	audioBuffer.Duration = DurationSeconds{estimatedDuration};
+	AudioClipSource audioClip;
+	audioClip.SampleRate = basicDescription.mSampleRate;
+	audioClip.Duration = DurationSeconds{estimatedDuration};
 	
 	if (basicDescription.mChannelsPerFrame == 1) {
-		audioBuffer.Channels = AudioChannels::Mono;
+		audioClip.Channels = AudioChannels::Mono;
 	}
 	else if (basicDescription.mChannelsPerFrame == 2) {
-		audioBuffer.Channels = AudioChannels::Stereo;
+		audioClip.Channels = AudioChannels::Stereo;
 	}
 	else {
 		///@todo Not implemeneted
@@ -96,10 +96,10 @@ AudioClipSource MSWaveAudioLoader::Load(std::string const& filePath)
 	}
 	
 	if (basicDescription.mBitsPerChannel == 8) {
-		audioBuffer.BitsPerSample = 8;
+		audioClip.BitsPerSample = 8;
 	}
 	else if (basicDescription.mBitsPerChannel == 16) {
-		audioBuffer.BitsPerSample = 16;
+		audioClip.BitsPerSample = 16;
 	}
 	else {
 		///@todo Not implemeneted
@@ -108,9 +108,9 @@ AudioClipSource MSWaveAudioLoader::Load(std::string const& filePath)
 		return {};
 	}
 
-	audioBuffer.Data.resize(audioDataByteCount);
-	UInt32 byteCountToRead = static_cast<UInt32>(audioBuffer.Data.size());
-	errorCode = AudioFileReadBytes(audioFile, false, 0, &byteCountToRead, audioBuffer.Data.data());
+	audioClip.Data.resize(audioDataByteCount);
+	UInt32 byteCountToRead = static_cast<UInt32>(audioClip.Data.size());
+	errorCode = AudioFileReadBytes(audioFile, false, 0, &byteCountToRead, audioClip.Data.data());
 	AudioFileClose(audioFile);
 	
 	if (errorCode != noErr)
@@ -127,7 +127,7 @@ AudioClipSource MSWaveAudioLoader::Load(std::string const& filePath)
 		return {};
 	}
 		
-	return std::move(audioBuffer);
+	return std::move(audioClip);
 }
 
 }// namespace Details

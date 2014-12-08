@@ -22,8 +22,8 @@
 #include "Application/Timer.hpp"
 
 // Audio
-#include "Audio/AudioBuffer.hpp"
 #include "Audio/AudioChannels.hpp"
+#include "Audio/AudioClip.hpp"
 #include "Audio/AudioEmitter.hpp"
 #include "Audio/AudioEngine.hpp"
 #include "Audio/AudioListener.hpp"

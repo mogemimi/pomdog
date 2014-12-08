@@ -7,7 +7,7 @@
 //
 
 #include "SoundEffectAL.hpp"
-#include "AudioBufferAL.hpp"
+#include "AudioClipAL.hpp"
 #include "ErrorCheckerAL.hpp"
 #include <Pomdog/Audio/AudioEmitter.hpp>
 #include <Pomdog/Audio/AudioListener.hpp>
@@ -20,8 +20,8 @@ namespace SoundSystem {
 namespace OpenAL {
 //-----------------------------------------------------------------------
 SoundEffectAL::SoundEffectAL(AudioEngineAL &,
-	std::shared_ptr<AudioBufferAL> const& audioBufferIn, bool isLooped)
-	: audioBuffer(audioBufferIn)
+	std::shared_ptr<AudioClipAL> const& audioClipIn, bool isLooped)
+	: audioClip(audioClipIn)
 {
 	source = ([] {
 		ALuint nativeSource;
@@ -34,7 +34,7 @@ SoundEffectAL::SoundEffectAL(AudioEngineAL &,
 	#endif
 		
 	POMDOG_ASSERT(source);
-	alSourcei(source->value, AL_BUFFER, audioBuffer->NativeBuffer());
+	alSourcei(source->value, AL_BUFFER, audioClip->NativeBuffer());
 	
 	#ifdef DEBUG
 	ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);

@@ -21,7 +21,7 @@
 
 namespace Pomdog {
 
-class AudioBuffer;
+class AudioClip;
 class AudioEmitter;
 class AudioListener;
 class AudioEngine;
@@ -30,7 +30,7 @@ enum class SoundState: std::uint8_t;
 class POMDOG_EXPORT SoundEffect {
 public:
 	SoundEffect(AudioEngine & audioEngine,
-		std::shared_ptr<AudioBuffer> const& audioBuffer, bool isLooped);
+		std::shared_ptr<AudioClip> const& audioClip, bool isLooped);
 	
 	~SoundEffect();
 

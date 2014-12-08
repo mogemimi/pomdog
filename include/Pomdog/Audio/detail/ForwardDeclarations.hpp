@@ -23,13 +23,13 @@ namespace SoundSystem {
 
 namespace OpenAL {
 
-class AudioBufferAL;
+class AudioClipAL;
 class AudioEngineAL;
 class SoundEffectAL;
 
 }// namespace OpenAL
 
-using NativeAudioBuffer = OpenAL::AudioBufferAL;
+using NativeAudioClip = OpenAL::AudioClipAL;
 using NativeAudioEngine = OpenAL::AudioEngineAL;
 using NativeSoundEffect = OpenAL::SoundEffectAL;
 
@@ -37,13 +37,13 @@ using NativeSoundEffect = OpenAL::SoundEffectAL;
 
 namespace XAudio2 {
 
-class AudioBufferXAudio2;
+class AudioClipXAudio2;
 class AudioEngineXAudio2;
 class SoundEffectXAudio2;
 
 }// namespace XAudio2
 
-using NativeAudioBuffer = XAudio2::AudioBufferXAudio2;
+using NativeAudioClip = XAudio2::AudioClipXAudio2;
 using NativeAudioEngine = XAudio2::AudioEngineXAudio2;
 using NativeSoundEffect = XAudio2::SoundEffectXAudio2;
 

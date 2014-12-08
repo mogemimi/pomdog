@@ -8,7 +8,7 @@
 
 #include "AssetDictionary.hpp"
 
-#include "AssetReaders/AudioBufferReader.hpp"
+#include "AssetReaders/AudioClipReader.hpp"
 #include "AssetReaders/EffectPassReader.hpp"
 #include "AssetReaders/Texture2DReader.hpp"
 
@@ -34,7 +34,7 @@ public:
 //-----------------------------------------------------------------------
 AssetDictionary::AssetDictionary()
 {
-	readers.emplace(typeid(std::shared_ptr<AudioBuffer>), std::make_unique<AssetReaderDerived<AudioBufferReader>>());
+	readers.emplace(typeid(std::shared_ptr<AudioClip>), std::make_unique<AssetReaderDerived<AudioClipReader>>());
 	readers.emplace(typeid(std::shared_ptr<EffectPass>), std::make_unique<AssetReaderDerived<EffectPassReader>>());
 	readers.emplace(typeid(std::shared_ptr<Texture2D>), std::make_unique<AssetReaderDerived<Texture2DReader>>());
 }

@@ -6,9 +6,9 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "AudioBufferAL.hpp"
+#include "AudioClipAL.hpp"
 #include "ErrorCheckerAL.hpp"
-#include <Pomdog/Audio/AudioBuffer.hpp>
+#include <Pomdog/Audio/AudioClip.hpp>
 #include <Pomdog/Utility/Assert.hpp>
 
 namespace Pomdog {
@@ -44,7 +44,7 @@ static ALenum ToFormat(AudioChannels channel, std::uint16_t bitPerSample)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-AudioBufferAL::AudioBufferAL(void const* data, std::size_t size, AudioChannels channel,
+AudioClipAL::AudioClipAL(void const* data, std::size_t size, AudioChannels channel,
 	std::uint16_t bitsPerSample, std::uint32_t sampleRate)
 {
 	buffer = ([] {
@@ -70,14 +70,14 @@ AudioBufferAL::AudioBufferAL(void const* data, std::size_t size, AudioChannels c
 	#endif
 }
 //-----------------------------------------------------------------------
-AudioBufferAL::~AudioBufferAL()
+AudioClipAL::~AudioClipAL()
 {
 	if (buffer) {
 		alDeleteBuffers(1, &(*buffer));
 	}
 }
 //-----------------------------------------------------------------------
-ALuint AudioBufferAL::NativeBuffer() const
+ALuint AudioClipAL::NativeBuffer() const
 {
 	POMDOG_ASSERT(buffer);
 	return *buffer;

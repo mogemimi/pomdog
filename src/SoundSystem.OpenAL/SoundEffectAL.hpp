@@ -32,17 +32,17 @@ namespace OpenAL {
 struct AudioSourceALTag {};
 using AudioSourceAL = Tagged<ALuint, AudioSourceALTag>;
 
-class AudioBufferAL;
+class AudioClipAL;
 class AudioEngineAL;
 
 class SoundEffectAL final: Noncopyable {
 private:
-	std::shared_ptr<AudioBufferAL> audioBuffer;
+	std::shared_ptr<AudioClipAL> audioClip;
 	Optional<AudioSourceAL> source;
 
 public:
 	SoundEffectAL(AudioEngineAL & audioEngine,
-		std::shared_ptr<AudioBufferAL> const& audioBuffer, bool isLooped);
+		std::shared_ptr<AudioClipAL> const& audioClip, bool isLooped);
 	
 	~SoundEffectAL();
 

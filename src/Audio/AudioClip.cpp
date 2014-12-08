@@ -6,21 +6,21 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "Pomdog/Audio/AudioBuffer.hpp"
+#include "Pomdog/Audio/AudioClip.hpp"
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
-#include "../SoundSystem.OpenAL/AudioBufferAL.hpp"
+#include "../SoundSystem.OpenAL/AudioClipAL.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-#include "../SoundSystem.XAudio2/AudioBufferXAudio2.hpp"
+#include "../SoundSystem.XAudio2/AudioClipXAudio2.hpp"
 #endif
 
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-AudioBuffer::AudioBuffer(void const* data, std::size_t size,
+AudioClip::AudioClip(void const* data, std::size_t size,
 	DurationSeconds durationIn, std::uint32_t sampleRateIn, std::uint16_t bitsPerSampleIn, AudioChannels channelsIn)
-	: nativeAudioBuffer(std::make_unique<Details::SoundSystem::NativeAudioBuffer>(data, size, channelsIn, bitsPerSampleIn, sampleRateIn))
+	: nativeAudioClip(std::make_unique<Details::SoundSystem::NativeAudioClip>(data, size, channelsIn, bitsPerSampleIn, sampleRateIn))
 	, duration(durationIn)
 	, sampleRate(sampleRateIn)
 	, bitsPerSample(bitsPerSampleIn)
@@ -28,32 +28,32 @@ AudioBuffer::AudioBuffer(void const* data, std::size_t size,
 {
 }
 //-----------------------------------------------------------------------
-AudioBuffer::~AudioBuffer() = default;
+AudioClip::~AudioClip() = default;
 //-----------------------------------------------------------------------
-DurationSeconds AudioBuffer::Duration() const
+DurationSeconds AudioClip::Duration() const
 {
 	return duration;
 }
 //-----------------------------------------------------------------------
-std::uint32_t AudioBuffer::SampleRate() const
+std::uint32_t AudioClip::SampleRate() const
 {
 	return sampleRate;
 }
 //-----------------------------------------------------------------------
-std::uint16_t AudioBuffer::BitsPerSample() const
+std::uint16_t AudioClip::BitsPerSample() const
 {
 	return bitsPerSample;
 }
 //-----------------------------------------------------------------------
-AudioChannels AudioBuffer::Channels() const
+AudioChannels AudioClip::Channels() const
 {
 	return channels;
 }
 //-----------------------------------------------------------------------
-Details::SoundSystem::NativeAudioBuffer* AudioBuffer::NativeAudioBuffer()
+Details::SoundSystem::NativeAudioClip* AudioClip::NativeAudioClip()
 {
-	POMDOG_ASSERT(nativeAudioBuffer);
-	return nativeAudioBuffer.get();
+	POMDOG_ASSERT(nativeAudioClip);
+	return nativeAudioClip.get();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

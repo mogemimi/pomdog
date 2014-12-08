@@ -21,7 +21,7 @@
 
 namespace Pomdog {
 
-class AudioBuffer;
+class AudioClip;
 
 namespace Details {
 
