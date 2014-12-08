@@ -27,6 +27,10 @@ public:
 	AudioEngineAL();
 	~AudioEngineAL();
 	
+	float MasterVolume() const;
+
+	void MasterVolume(float volume);
+	
 private:
 	ContextOpenAL context;
 };

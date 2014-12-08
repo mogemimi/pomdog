@@ -21,6 +21,19 @@ AudioEngineAL::AudioEngineAL()
 //-----------------------------------------------------------------------
 AudioEngineAL::~AudioEngineAL() = default;
 //-----------------------------------------------------------------------
+float AudioEngineAL::MasterVolume() const
+{
+	float volume = 0.0f;
+	alGetListenerf(AL_GAIN, &volume);
+	return volume;
+}
+//-----------------------------------------------------------------------
+void AudioEngineAL::MasterVolume(float volume)
+{
+	POMDOG_ASSERT(volume >= 0.0f);
+	alListenerf(AL_GAIN, volume);
+}
+//-----------------------------------------------------------------------
 }// namespace OpenAL
 }// namespace SoundSystem
 }// namespace Details
