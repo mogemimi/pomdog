@@ -6,7 +6,7 @@
 //  http://enginetrouble.net/pomdog/LICENSE.md for details.
 //
 
-#include "AssetDictionary.hpp"
+#include "Pomdog/Content/detail/AssetDictionary.hpp"
 
 #include "AssetReaders/AudioClipReader.hpp"
 #include "AssetReaders/EffectPassReader.hpp"
