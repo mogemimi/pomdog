@@ -13,8 +13,8 @@
 #	pragma once
 #endif
 
-#include "AudioChannels.hpp"
-#include "DurationSeconds.hpp"
+#include "Pomdog/Audio/AudioChannels.hpp"
+#include "Pomdog/Application/DurationSeconds.hpp"
 #include <cstdint>
 #include <vector>
 #include <string>
