@@ -518,46 +518,46 @@ TEST(GameObject, GameObjectID_Sequence)
 	auto objectContext = std::make_shared<GameObjectContext>();
 	{
 		GameObject gameObject {objectContext};
-		EXPECT_EQ(0, gameObject.ID().Index());
-		EXPECT_NE(0, gameObject.ID().SequenceNumber());
-		EXPECT_EQ(1, gameObject.ID().SequenceNumber());
+		EXPECT_EQ(0U, gameObject.ID().Index());
+		EXPECT_NE(0U, gameObject.ID().SequenceNumber());
+		EXPECT_EQ(1U, gameObject.ID().SequenceNumber());
 	}
 	{
 		GameObject gameObject {objectContext};
-		EXPECT_EQ(1, gameObject.ID().Index());
-		EXPECT_NE(0, gameObject.ID().SequenceNumber());
-		EXPECT_EQ(1, gameObject.ID().SequenceNumber());
+		EXPECT_EQ(1U, gameObject.ID().Index());
+		EXPECT_NE(0U, gameObject.ID().SequenceNumber());
+		EXPECT_EQ(1U, gameObject.ID().SequenceNumber());
 		gameObject.DestroyImmediate();
 	}
 	{
 		GameObject gameObject {objectContext};
-		EXPECT_EQ(1, gameObject.ID().Index());
-		EXPECT_NE(0, gameObject.ID().SequenceNumber());
-		EXPECT_EQ(2, gameObject.ID().SequenceNumber());
+		EXPECT_EQ(1U, gameObject.ID().Index());
+		EXPECT_NE(0U, gameObject.ID().SequenceNumber());
+		EXPECT_EQ(2U, gameObject.ID().SequenceNumber());
 		gameObject.DestroyImmediate();
 	}
 	{
 		GameObject gameObject {objectContext};
-		EXPECT_EQ(1, gameObject.ID().Index());
-		EXPECT_NE(0, gameObject.ID().SequenceNumber());
-		EXPECT_EQ(3, gameObject.ID().SequenceNumber());
+		EXPECT_EQ(1U, gameObject.ID().Index());
+		EXPECT_NE(0U, gameObject.ID().SequenceNumber());
+		EXPECT_EQ(3U, gameObject.ID().SequenceNumber());
 		gameObject.DestroyImmediate();
 	}
 	{
 		GameObject gameObject1 {objectContext};
-		EXPECT_EQ(1, gameObject1.ID().Index());
-		EXPECT_NE(0, gameObject1.ID().SequenceNumber());
-		EXPECT_EQ(4, gameObject1.ID().SequenceNumber());
+		EXPECT_EQ(1U, gameObject1.ID().Index());
+		EXPECT_NE(0U, gameObject1.ID().SequenceNumber());
+		EXPECT_EQ(4U, gameObject1.ID().SequenceNumber());
 		
 		GameObject gameObject2 {objectContext};
-		EXPECT_EQ(2, gameObject2.ID().Index());
-		EXPECT_NE(0, gameObject2.ID().SequenceNumber());
-		EXPECT_EQ(1, gameObject2.ID().SequenceNumber());
+		EXPECT_EQ(2U, gameObject2.ID().Index());
+		EXPECT_NE(0U, gameObject2.ID().SequenceNumber());
+		EXPECT_EQ(1U, gameObject2.ID().SequenceNumber());
 		
 		GameObject gameObject3 {objectContext};
-		EXPECT_EQ(3, gameObject3.ID().Index());
-		EXPECT_NE(0, gameObject3.ID().SequenceNumber());
-		EXPECT_EQ(1, gameObject3.ID().SequenceNumber());
+		EXPECT_EQ(3U, gameObject3.ID().Index());
+		EXPECT_NE(0U, gameObject3.ID().SequenceNumber());
+		EXPECT_EQ(1U, gameObject3.ID().SequenceNumber());
 		
 		gameObject1.DestroyImmediate();
 		gameObject2.DestroyImmediate();
