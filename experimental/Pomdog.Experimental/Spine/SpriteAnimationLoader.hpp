@@ -23,17 +23,17 @@ namespace Skeletal2D {
 class SpriteAnimationTrack;
 
 }// namespace Skeletal2D
+}// namespace Details
 namespace Spine {
 
 class SkeletonDesc;
 
-std::vector<Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack(
+std::vector<Details::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack(
 	SkeletonDesc const& desc,
 	TexturePacker::TextureAtlas const& textureAtlas,
 	char const* name);
 
 }// namespace Spine
-}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SPINE_SPRITEANIMATIONLOADER_C360BEBA_795B_404D_932B_CFD7ACF40805_HPP)

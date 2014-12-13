@@ -13,7 +13,7 @@ namespace TestApp {
 //-----------------------------------------------------------------------
 using namespace Pomdog;
 //-----------------------------------------------------------------------
-void LogTexturePackerInfo(Details::TexturePacker::TextureAtlas const& textureAtlas)
+void LogTexturePackerInfo(TexturePacker::TextureAtlas const& textureAtlas)
 {
 	Log::Info(StringFormat("TextureAtlas.Pages = %ld", textureAtlas.pages.size()));
 	Log::Info(StringFormat("TextureAtlas.Regions = %ld", textureAtlas.regions.size()));
@@ -37,7 +37,7 @@ void LogTexturePackerInfo(Details::TexturePacker::TextureAtlas const& textureAtl
 	Log::Info("-------------------------");
 }
 //-----------------------------------------------------------------------
-void LogSkeletalInfo(Details::Spine::SkeletonDesc const& skeletonDesc)
+void LogSkeletalInfo(Spine::SkeletonDesc const& skeletonDesc)
 {
 	int boneIndex = 0;
 	for (auto & bone: skeletonDesc.Bones)

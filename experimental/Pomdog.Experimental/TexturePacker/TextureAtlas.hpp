@@ -20,7 +20,6 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
 namespace TexturePacker {
 
 struct TextureAtlasPage {
@@ -40,7 +39,6 @@ public:
 };
 
 }// namespace TexturePacker
-}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_TEXTUREPACKER_TEXTUREATLAS_DDCCEF0C_6514_4E2B_AD31_7617D2A899B3_HPP)

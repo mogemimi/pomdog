@@ -18,7 +18,6 @@
 #include <tuple>
 
 namespace Pomdog {
-namespace Details {
 namespace Spine {
 namespace {
 
@@ -34,8 +33,8 @@ struct SkinnedMeshData {
 	std::vector<SkinnedMeshPart> MeshParts;
 };
 
-using Details::TexturePacker::TextureAtlas;
-using Details::TexturePacker::TextureAtlasRegion;
+using TexturePacker::TextureAtlas;
+using TexturePacker::TextureAtlasRegion;
 //-----------------------------------------------------------------------
 static SkinnedMeshSlot CreateSkinnedMeshSlot(SlotDesc const& slotDesc,
 	AttachmentDesc const& attachment, TextureRegion const& textureRegion,
@@ -297,7 +296,7 @@ SkinnedMesh CreateSkinnedMesh(
 	GraphicsDevice & graphicsDevice,
 	std::vector<Matrix3x2> const& bindPosesInGlobal,
 	SkeletonDesc const& skeletonDesc,
-	Details::TexturePacker::TextureAtlas const& textureAtlas,
+	TexturePacker::TextureAtlas const& textureAtlas,
 	Vector2 const& textureSize,
 	std::string const& skinName)
 {
@@ -334,5 +333,4 @@ SkinnedMesh CreateSkinnedMesh(
 }
 
 }// namespace Spine
-}// namespace Details
 }// namespace Pomdog

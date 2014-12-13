@@ -12,16 +12,15 @@
 #include "Pomdog/Utility/detail/CRC32.hpp"
 
 namespace Pomdog {
-namespace Details {
 namespace Spine {
 namespace {
 //-----------------------------------------------------------------------
 static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs,
 	std::vector<SkinSlotDesc> const& skinSlotDescs,
-	Details::TexturePacker::TextureAtlas const& textureAtlas)
+	TexturePacker::TextureAtlas const& textureAtlas)
 {
-	using Details::TexturePacker::TextureAtlas;
-	using Details::TexturePacker::TextureAtlasRegion;
+	using TexturePacker::TextureAtlas;
+	using TexturePacker::TextureAtlasRegion;
 
 	std::vector<RigidSlot> slots;
 	slots.reserve(slotDescs.size());
@@ -133,7 +132,7 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
 }// unnamed namespace
 //-----------------------------------------------------------------------
 Skin CreateSkin(SkeletonDesc const& skeletonDesc,
-	Details::TexturePacker::TextureAtlas const& textureAtlas,
+	TexturePacker::TextureAtlas const& textureAtlas,
 	std::string const& skinName)
 {
 	POMDOG_ASSERT(!skeletonDesc.Bones.empty());
@@ -160,5 +159,4 @@ Skin CreateSkin(SkeletonDesc const& skeletonDesc,
 }
 
 }// namespace Spine
-}// namespace Details
 }// namespace Pomdog

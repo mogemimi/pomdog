@@ -17,7 +17,6 @@
 #include <limits>
 
 namespace Pomdog {
-namespace Details {
 namespace Spine {
 //-----------------------------------------------------------------------
 namespace {
@@ -153,5 +152,4 @@ Skeleton CreateSkeleton(std::vector<Spine::BoneDesc> const& bones)
 }
 
 }// namespace Spine
-}// namespace Details
 }// namespace Pomdog

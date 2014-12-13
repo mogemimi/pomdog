@@ -7,13 +7,14 @@
 //
 
 #include "TextureAtlasLoader.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 #include <fstream>
 #include <algorithm>
 #include <sstream>
 
 namespace Pomdog {
-namespace Details {
 namespace TexturePacker {
 namespace {
 
@@ -177,5 +178,4 @@ TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string co
 }
 //-----------------------------------------------------------------------
 }// namespace TexturePacker
-}// namespace Details
 }// namespace Pomdog

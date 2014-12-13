@@ -60,21 +60,21 @@ void GrassBlendingGame::Initialize()
 		mainCamera.AddComponent<Camera2D>();
 	}
 	{
-		auto textureAtlas = Details::TexturePacker::TextureAtlasLoader::Load(*assets, "MaidChan2/skeleton.atlas");
-		auto skeletonDesc = Details::Spine::SkeletonDescLoader::Load(*assets, "MaidChan2/skeleton.json");
+		auto textureAtlas = TexturePacker::TextureAtlasLoader::Load(*assets, "MaidChan2/skeleton.atlas");
+		auto skeletonDesc = Spine::SkeletonDescLoader::Load(*assets, "MaidChan2/skeleton.json");
 		maidTexture = assets->Load<Texture2D>("MaidChan2/skeleton.png");
 		
 		LogTexturePackerInfo(textureAtlas);
 		LogSkeletalInfo(skeletonDesc);
 		
-		maidSkeleton = std::make_shared<Skeleton>(Details::Spine::CreateSkeleton(skeletonDesc.Bones));
+		maidSkeleton = std::make_shared<Skeleton>(Spine::CreateSkeleton(skeletonDesc.Bones));
 		maidSkeletonPose = std::make_shared<SkeletonPose>(SkeletonPose::CreateBindPose(*maidSkeleton));
-		auto animationClip = std::make_shared<AnimationClip>(Details::Spine::CreateAnimationClip(skeletonDesc, "Walk"));
+		auto animationClip = std::make_shared<AnimationClip>(Spine::CreateAnimationClip(skeletonDesc, "Walk"));
 		maidAnimationState = std::make_shared<AnimationState>(animationClip, 1.0f, true);
-		maidAnimationClipIdle = std::make_shared<AnimationClip>(Details::Spine::CreateAnimationClip(skeletonDesc, "Idle"));
+		maidAnimationClipIdle = std::make_shared<AnimationClip>(Spine::CreateAnimationClip(skeletonDesc, "Idle"));
 		
-		maidSkin = Details::Spine::CreateSkin(skeletonDesc, textureAtlas, "default");
-		maidSpriteAnimationTracks = Details::Spine::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
+		maidSkin = Spine::CreateSkin(skeletonDesc, textureAtlas, "default");
+		maidSpriteAnimationTracks = Spine::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
 		
 		animationSystem.Add(maidAnimationState, maidSkeleton, maidSkeletonPose);
 
@@ -82,7 +82,7 @@ void GrassBlendingGame::Initialize()
 
 		// NOTE: for Skinning
 		auto bindPose = SkeletonPose::CreateBindPose(*maidSkeleton);
-		maidSkinnedMesh = Details::Spine::CreateSkinnedMesh(*graphicsDevice,
+		maidSkinnedMesh = Spine::CreateSkinnedMesh(*graphicsDevice,
 			SkeletonHelper::ToGlobalPose(*maidSkeleton, bindPose),
 			skeletonDesc, textureAtlas,
 			Vector2(maidTexture->Width(), maidTexture->Height()), "default");

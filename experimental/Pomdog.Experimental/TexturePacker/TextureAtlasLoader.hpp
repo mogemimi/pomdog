@@ -14,13 +14,12 @@
 #endif
 
 #include "TextureAtlas.hpp"
-#include <Pomdog/Pomdog.hpp>
+#include <string>
 
 namespace Pomdog {
 
 class AssetManager;
 
-namespace Details {
 namespace TexturePacker {
 
 class TextureAtlasLoader final {
@@ -30,7 +29,6 @@ public:
 };
 
 }// namespace TexturePacker
-}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_TEXTUREPACKER_TEXTUREATLASLOADER_642E468B_C154_4E45_BFA9_6C1B437053B5_HPP)

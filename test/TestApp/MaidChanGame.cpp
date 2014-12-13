@@ -60,21 +60,21 @@ void MaidChanGame::Initialize()
 		mainCamera.AddComponent<Camera2D>();
 	}
 	{
-		auto textureAtlas = Details::TexturePacker::TextureAtlasLoader::Load(*assets, "MaidChan/skeleton.atlas");
-		auto skeletonDesc = Details::Spine::SkeletonDescLoader::Load(*assets, "MaidChan/skeleton.json");
+		auto textureAtlas = TexturePacker::TextureAtlasLoader::Load(*assets, "MaidChan/skeleton.atlas");
+		auto skeletonDesc = Spine::SkeletonDescLoader::Load(*assets, "MaidChan/skeleton.json");
 		
 		LogTexturePackerInfo(textureAtlas);
 		LogSkeletalInfo(skeletonDesc);
 		
-		maidSkeleton = std::make_shared<Skeleton>(Details::Spine::CreateSkeleton(skeletonDesc.Bones));
+		maidSkeleton = std::make_shared<Skeleton>(Spine::CreateSkeleton(skeletonDesc.Bones));
 		maidSkeletonPose = std::make_shared<SkeletonPose>(SkeletonPose::CreateBindPose(*maidSkeleton));
-		auto animationClip = std::make_shared<AnimationClip>(Details::Spine::CreateAnimationClip(skeletonDesc, "Walk"));
+		auto animationClip = std::make_shared<AnimationClip>(Spine::CreateAnimationClip(skeletonDesc, "Walk"));
 		maidAnimationState = std::make_shared<AnimationState>(animationClip, 1.0f, true);
 		
 		maidGlobalPose = SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose);
 		
-		maidSkin = Details::Spine::CreateSkin(skeletonDesc, textureAtlas, "default");
-		maidSpriteAnimationTracks = Details::Spine::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
+		maidSkin = Spine::CreateSkin(skeletonDesc, textureAtlas, "default");
+		maidSpriteAnimationTracks = Spine::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
 		maidTexture = assets->Load<Texture2D>("MaidChan/skeleton.png");
 		
 		animationSystem.Add(maidAnimationState, maidSkeleton, maidSkeletonPose);

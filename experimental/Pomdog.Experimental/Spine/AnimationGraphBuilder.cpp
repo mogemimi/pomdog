@@ -17,7 +17,6 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Details {
 namespace Spine {
 namespace {
 
@@ -50,7 +49,7 @@ struct AnimationNodeDesc {
 
 static std::unique_ptr<AnimationNode> CreateAnimationNode(
 	AnimationNodeDesc const& desc, std::vector<AnimationBlendInput> & inputs,
-		std::vector<AnimationNodeDesc> const& nodes, Details::Spine::SkeletonDesc const& skeletonDesc)
+		std::vector<AnimationNodeDesc> const& nodes, SkeletonDesc const& skeletonDesc)
 {
 	using Details::Skeletal2D::AnimationClipNode;
 	using Details::Skeletal2D::AnimationLerpNode;
@@ -93,7 +92,7 @@ static std::unique_ptr<AnimationNode> CreateAnimationNode(
 
 }// unnamed namespace
 
-std::shared_ptr<AnimationGraph> LoadAnimationGraph(Details::Spine::SkeletonDesc const& skeletonDesc,
+std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonDesc,
 	AssetManager const& assets, std::string const& assetName)
 {
 	auto filename = assets.RootDirectory() + "/" + assetName;
@@ -204,5 +203,4 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(Details::Spine::SkeletonDesc 
 }
 
 }// namespace Spine
-}// namespace Details
 }// namespace Pomdog

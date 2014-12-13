@@ -20,26 +20,26 @@ public:
 void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	AssetManager & assets)
 {
-	auto skeletonDesc = Details::Spine::SkeletonDescLoader::Load(assets, "MaidGun/MaidGun.json");
+	auto skeletonDesc = Spine::SkeletonDescLoader::Load(assets, "MaidGun/MaidGun.json");
 	TestApp::LogSkeletalInfo(skeletonDesc);
 	
-	auto skeleton = std::make_shared<Skeleton>(Details::Spine::CreateSkeleton(skeletonDesc.Bones));
+	auto skeleton = std::make_shared<Skeleton>(Spine::CreateSkeleton(skeletonDesc.Bones));
 
 	auto skeletonTransform = std::make_shared<SkeletonTransform>();
 	skeletonTransform->Pose = SkeletonPose::CreateBindPose(*skeleton);
 	skeletonTransform->GlobalPose = SkeletonHelper::ToGlobalPose(*skeleton, skeletonTransform->Pose);
 	{
-		auto animationGraph = Details::Spine::LoadAnimationGraph(skeletonDesc, assets, "MaidGun/AnimationGraph.json");
+		auto animationGraph = Spine::LoadAnimationGraph(skeletonDesc, assets, "MaidGun/AnimationGraph.json");
 		gameObject.AddComponent(std::make_unique<Animator>(skeleton, skeletonTransform, animationGraph));
 	}
 	{
-		auto textureAtlas = Details::TexturePacker::TextureAtlasLoader::Load(assets, "MaidGun/MaidGun.atlas");
+		auto textureAtlas = TexturePacker::TextureAtlasLoader::Load(assets, "MaidGun/MaidGun.atlas");
 		auto texture = assets.Load<Texture2D>("MaidGun/MaidGun.png");
 	
 		TestApp::LogTexturePackerInfo(textureAtlas);
 
 		auto bindPose = SkeletonPose::CreateBindPose(*skeleton);
-		auto mesh = std::make_shared<SkinnedMesh>(Details::Spine::CreateSkinnedMesh(*graphicsDevice,
+		auto mesh = std::make_shared<SkinnedMesh>(Spine::CreateSkinnedMesh(*graphicsDevice,
 			SkeletonHelper::ToGlobalPose(*skeleton, bindPose),
 			skeletonDesc, textureAtlas,
 			Vector2(texture->Width(), texture->Height()), "default"));
@@ -86,19 +86,19 @@ GunShootingLevel::GunShootingLevel(GameHost & gameHost, GameWorld & world)
 		rendererable.Load(graphicsDevice, assets);
 	}
 	{
-		auto skeletonDesc = Details::Spine::SkeletonDescLoader::Load(*assets, "Ghost/Ghost.json");
+		auto skeletonDesc = Spine::SkeletonDescLoader::Load(*assets, "Ghost/Ghost.json");
 		TestApp::LogSkeletalInfo(skeletonDesc);
 		
-		ghostSkeleton = std::make_shared<Skeleton>(Details::Spine::CreateSkeleton(skeletonDesc.Bones));
-		ghostAnimGraph = Details::Spine::LoadAnimationGraph(skeletonDesc, *assets, "Ghost/AnimationGraph.json");
+		ghostSkeleton = std::make_shared<Skeleton>(Spine::CreateSkeleton(skeletonDesc.Bones));
+		ghostAnimGraph = Spine::LoadAnimationGraph(skeletonDesc, *assets, "Ghost/AnimationGraph.json");
 		{
-			auto textureAtlas = Details::TexturePacker::TextureAtlasLoader::Load(*assets, "Ghost/Ghost.atlas");
+			auto textureAtlas = TexturePacker::TextureAtlasLoader::Load(*assets, "Ghost/Ghost.atlas");
 			TestApp::LogTexturePackerInfo(textureAtlas);
 			
 			ghostTexture = assets->Load<Texture2D>("Ghost/Ghost.png");
 
 			auto bindPose = SkeletonPose::CreateBindPose(*ghostSkeleton);
-			ghostMesh = std::make_shared<SkinnedMesh>(Details::Spine::CreateSkinnedMesh(*graphicsDevice,
+			ghostMesh = std::make_shared<SkinnedMesh>(Spine::CreateSkinnedMesh(*graphicsDevice,
 				SkeletonHelper::ToGlobalPose(*ghostSkeleton, bindPose),
 				skeletonDesc, textureAtlas,
 				Vector2(ghostTexture->Width(), ghostTexture->Height()), "default"));

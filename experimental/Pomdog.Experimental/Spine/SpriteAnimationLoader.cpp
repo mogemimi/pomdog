@@ -15,12 +15,11 @@
 #include <algorithm>
 
 namespace Pomdog {
-namespace Details {
 namespace Spine {
 //-----------------------------------------------------------------------
-std::vector<Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack(
+std::vector<Details::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack(
 	SkeletonDesc const& desc,
-	Details::TexturePacker::TextureAtlas const& textureAtlas,
+	TexturePacker::TextureAtlas const& textureAtlas,
 	char const* name)
 {
 	using namespace Details::Skeletal2D;
@@ -91,5 +90,4 @@ std::vector<Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack(
 }
 
 }// namespace Spine
-}// namespace Details
 }// namespace Pomdog

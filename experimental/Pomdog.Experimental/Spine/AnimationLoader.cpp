@@ -19,7 +19,6 @@
 #include <algorithm>
 
 namespace Pomdog {
-namespace Details {
 namespace Spine {
 namespace {
 
@@ -58,7 +57,7 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 		auto jointIndex = FindJoint(desc.Bones, track.BoneName);
 		POMDOG_ASSERT(jointIndex);
 		
-		using namespace Skeletal2D;
+		using namespace Pomdog::Details::Skeletal2D;
 
 		if (!track.RotateSamples.empty())
 		{
@@ -120,5 +119,4 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 }
 
 }// namespace Spine
-}// namespace Details
 }// namespace Pomdog

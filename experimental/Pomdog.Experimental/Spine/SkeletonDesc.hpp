@@ -26,7 +26,6 @@
 #include <string>
 
 namespace Pomdog {
-namespace Details {
 namespace Spine {
 
 class BoneDesc {
@@ -159,7 +158,6 @@ public:
 };
 
 }// namespace Spine
-}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SPINE_SKELETONDESC_BCCD55FC_EEDC_43CB_AC5F_194D7A58686D_HPP)

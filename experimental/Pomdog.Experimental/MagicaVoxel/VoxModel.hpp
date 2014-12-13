@@ -19,7 +19,6 @@
 #include <cstdint>
 
 namespace Pomdog {
-namespace Details {
 namespace MagicaVoxel {
 
 class Voxel {
@@ -37,7 +36,6 @@ public:
 };
 
 }// namespace MagicaVoxel
-}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_VOXMODEL_536F1B05_A4BD_4174_8CD3_B1112DBDD7EE_HPP)

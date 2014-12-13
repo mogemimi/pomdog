@@ -16,7 +16,6 @@
 #include <cstdint>
 
 namespace Pomdog {
-namespace Details {
 namespace MagicaVoxel {
 
 struct VoxChunkHeader {
@@ -26,7 +25,6 @@ struct VoxChunkHeader {
 };
 
 }// namespace MagicaVoxel
-}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_VOXCHUNKHEADER_6CE19808_F282_40CE_9945_216DE941C13D_HPP)

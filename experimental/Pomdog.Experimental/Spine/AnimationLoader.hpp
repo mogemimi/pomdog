@@ -17,7 +17,6 @@ namespace Pomdog {
 
 class AnimationClip;
 
-namespace Details {
 namespace Spine {
 
 class SkeletonDesc;
@@ -25,7 +24,6 @@ class SkeletonDesc;
 AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name);
 
 }// namespace Spine
-}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SPINE_ANIMATIONLOADER_F321C327_9116_4965_B08F_63A9EE4E820C_HPP)

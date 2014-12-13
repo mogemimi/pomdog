@@ -19,7 +19,6 @@
 #include <Pomdog/../../src/Content/Utility/BinaryReader.hpp>
 
 namespace Pomdog {
-namespace Details {
 namespace MagicaVoxel {
 namespace {
 
@@ -42,6 +41,8 @@ static std::ifstream::pos_type ChunkSize(std::ifstream & stream, MagicaVoxel::Vo
 VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& assetName)
 {
 	using MagicaVoxel::VoxChunkHeader;
+	using Details::BinaryReader;
+	using Details::MakeFourCC;
 
 	constexpr std::int32_t MagicaVoxelVersion = 150;
 	constexpr auto fourCC = MakeFourCC('V', 'O', 'X', ' ');
@@ -127,5 +128,4 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
 }
 //-----------------------------------------------------------------------
 }// namespace MagicaVoxel
-}// namespace Details
 }// namespace Pomdog

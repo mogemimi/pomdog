@@ -8,7 +8,9 @@
 
 #include "SkeletonDescLoader.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Math/Degree.hpp"
+#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <rapidjson/document.h>
 #include <utility>
 #include <fstream>
@@ -16,7 +18,6 @@
 #include <algorithm>
 
 namespace Pomdog {
-namespace Details {
 namespace Spine {
 namespace {
 
@@ -101,7 +102,8 @@ static void ReadJsonMember(rapidjson::Value const& object, char const* memberNam
 }
 //-----------------------------------------------------------------------
 template <typename T, T Denom>
-static void ReadJsonMember(rapidjson::Value const& object, char const* memberName, Skeletal2D::CompressedFloat<T, Denom> & output)
+static void ReadJsonMember(rapidjson::Value const& object, char const* memberName,
+	Details::Skeletal2D::CompressedFloat<T, Denom> & output)
 {
 	if (!object.HasMember(memberName)) {
 		return;
@@ -830,5 +832,4 @@ SkeletonDesc SkeletonDescLoader::Load(AssetManager const& assets, std::string co
 }
 //-----------------------------------------------------------------------
 }// namespace Spine
-}// namespace Details
 }// namespace Pomdog

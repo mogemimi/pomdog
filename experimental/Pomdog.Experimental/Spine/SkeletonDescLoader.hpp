@@ -19,7 +19,6 @@ namespace Pomdog {
 
 class AssetManager;
 
-namespace Details {
 namespace Spine {
 
 class SkeletonDescLoader final {
@@ -28,7 +27,6 @@ public:
 };
 
 }// namespace Spine
-}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SPINE_SKELETON2DLOADER_24651167_613E_4D78_A91B_BBF0AD197E19_HPP)

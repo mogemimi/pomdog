@@ -20,9 +20,9 @@ namespace TestApp {
 
 using namespace Pomdog;
 
-void LogTexturePackerInfo(Details::TexturePacker::TextureAtlas const& textureAtlas);
+void LogTexturePackerInfo(TexturePacker::TextureAtlas const& textureAtlas);
 
-void LogSkeletalInfo(Details::Spine::SkeletonDesc const& skeletonDesc);
+void LogSkeletalInfo(Spine::SkeletonDesc const& skeletonDesc);
 
 }// namespace TestApp
 

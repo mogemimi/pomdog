@@ -19,7 +19,6 @@ namespace Pomdog {
 
 class AssetManager;
 
-namespace Details {
 namespace MagicaVoxel {
 
 class VoxModelLoader final {
@@ -28,7 +27,6 @@ public:
 };
 
 }// namespace MagicaVoxel
-}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_VOXMODELLOADER_37B4E86A_7006_4BA0_A310_CF2E12FA47CA_HPP)

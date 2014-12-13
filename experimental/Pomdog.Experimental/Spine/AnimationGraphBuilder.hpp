@@ -19,7 +19,6 @@
 #include <string>
 
 namespace Pomdog {
-namespace Details {
 namespace Spine {
 
 class SkeletonDesc;
@@ -28,7 +27,6 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
 	AssetManager const& assets, std::string const& assetName);
 
 }// namespace Spine
-}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SPINE_ANIMATIONGRAPHBUILDER_F4A6BA28_8259_4FC0_AED3_95C0FA371A26_HPP)

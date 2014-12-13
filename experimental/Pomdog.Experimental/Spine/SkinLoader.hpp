@@ -20,17 +20,15 @@ namespace Pomdog {
 class Skin;
 class SkeletonDesc;
 
-namespace Details {
 namespace Spine {
 
 class SkeletonDesc;
 
 Skin CreateSkin(SkeletonDesc const& skeletonDesc,
-	Details::TexturePacker::TextureAtlas const& textureAtlas,
+	TexturePacker::TextureAtlas const& textureAtlas,
 	std::string const& skinName);
 
 }// namespace Spine
-}// namespace Details
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SPINE_SKINLOADER_E56D7A0C_6120_47CD_918E_5222C7BC98A3_HPP)

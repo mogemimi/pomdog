@@ -19,7 +19,6 @@
 #include <Pomdog/../../src/Content/Utility/MakeFourCC.hpp>
 
 namespace Pomdog {
-namespace Details {
 namespace MagicaVoxel {
 namespace {
 
@@ -32,6 +31,8 @@ static std::string Error(std::string const& assetName, char const* description)
 //-----------------------------------------------------------------------
 void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string const& filePath)
 {
+	using Details::MakeFourCC;
+
 	constexpr std::int32_t MagicaVoxelVersion = 150;
 	constexpr auto fourCC = MakeFourCC('V', 'O', 'X', ' ');
 	constexpr auto IdMain = MakeFourCC('M', 'A', 'I', 'N');
@@ -117,5 +118,4 @@ void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string co
 }
 //-----------------------------------------------------------------------
 }// namespace MagicaVoxel
-}// namespace Details
 }// namespace Pomdog
