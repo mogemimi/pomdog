@@ -22,11 +22,11 @@ namespace Pomdog {
 enum class AudioChannels: std::uint8_t {
 	///@~Japanese
 	/// @brief チャンネル数1つのモノラル音声
-	Mono,
+	Mono = 1,
 
 	///@~Japanese
 	/// @brief チャンネル数2つのステレオ音声
-	Stereo,
+	Stereo = 2,
 };
 
 }// namespace Pomdog
