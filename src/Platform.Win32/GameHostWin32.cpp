@@ -10,8 +10,10 @@
 #include "GameWindowWin32.hpp"
 #include "../RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp"
 #include "../RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.hpp"
+#include "../SoundSystem.XAudio2/AudioEngineXAudio2.hpp"
 #include <Pomdog/Application/Game.hpp>
 #include <Pomdog/Application/GameClock.hpp>
+#include <Pomdog/Audio/AudioEngine.hpp>
 #include <Pomdog/Content/AssetManager.hpp>
 #include <Pomdog/Graphics/GraphicsContext.hpp>
 #include <Pomdog/Graphics/GraphicsDevice.hpp>
@@ -57,6 +59,8 @@ public:
 
 	std::shared_ptr<Pomdog::GraphicsDevice> GraphicsDevice();
 
+	std::shared_ptr<Pomdog::AudioEngine> AudioEngine();
+
 	std::shared_ptr<Pomdog::AssetManager> AssetManager(std::shared_ptr<GameHost> && gameHost);
 
 	std::shared_ptr<Pomdog::Keyboard> Keyboard();
@@ -83,6 +87,7 @@ private:
 	std::shared_ptr<Pomdog::GraphicsContext> graphicsContext;
 	std::shared_ptr<Pomdog::GraphicsDevice> graphicsDevice;
 	std::unique_ptr<Pomdog::AssetManager> assetManager;
+	std::shared_ptr<Pomdog::AudioEngine> audioEngine;
 
 //	std::shared_ptr<KeyboardWin32> keyboard;
 //	std::shared_ptr<MouseWin32> mouse;
@@ -118,6 +123,8 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& window,
 	systemEventConnection = systemEventDispatcher->Connect([this](Event const& event) {
 		ProcessSystemEvents(event);
 	});
+
+	audioEngine = std::make_shared<Pomdog::AudioEngine>();
 
 	//keyboard = std::make_shared<KeyboardWin32>();
 	//mouse = std::make_shared<MouseWin32>();
@@ -223,6 +230,12 @@ std::shared_ptr<Pomdog::GraphicsDevice> GameHostWin32::Impl::GraphicsDevice()
 	return graphicsDevice;
 }
 //-----------------------------------------------------------------------
+std::shared_ptr<Pomdog::AudioEngine> GameHostWin32::Impl::AudioEngine()
+{
+	POMDOG_ASSERT(audioEngine);
+	return audioEngine;
+}
+//-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::AssetManager> GameHostWin32::Impl::AssetManager(std::shared_ptr<GameHost> && gameHost)
 {
 	POMDOG_ASSERT(assetManager);
@@ -284,6 +297,12 @@ std::shared_ptr<Pomdog::GraphicsDevice> GameHostWin32::GraphicsDevice()
 {
 	POMDOG_ASSERT(impl);
 	return impl->GraphicsDevice();
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<Pomdog::AudioEngine> GameHostWin32::AudioEngine()
+{
+	POMDOG_ASSERT(impl);
+	return impl->AudioEngine();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::AssetManager> GameHostWin32::AssetManager()

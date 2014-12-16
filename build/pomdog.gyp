@@ -378,7 +378,13 @@
       '../src/RenderSystem.Direct3D11/VertexBufferDirect3D11.hpp',
     ],
     'pomdog_library_xaudio2_sources': [
+      '../src/SoundSystem.XAudio2/AudioClipXAudio2.cpp',
+      '../src/SoundSystem.XAudio2/AudioClipXAudio2.hpp',
+      '../src/SoundSystem.XAudio2/AudioEngineXAudio2.cpp',
+      '../src/SoundSystem.XAudio2/AudioEngineXAudio2.hpp',
       '../src/SoundSystem.XAudio2/PrerequisitesXAudio2.hpp',
+      '../src/SoundSystem.XAudio2/SoundEffectXAudio2.cpp',
+      '../src/SoundSystem.XAudio2/SoundEffectXAudio2.hpp',
     ],
     'pomdog_library_win32_sources': [
       '../include/Pomdog/Application/detail/Platform.Win32/BootstrapperWin32.hpp',

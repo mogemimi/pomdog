@@ -55,6 +55,9 @@ public:
 	std::shared_ptr<Pomdog::GraphicsDevice> GraphicsDevice() override;
 
 	///@copydoc GameHost
+	std::shared_ptr<Pomdog::AudioEngine> AudioEngine() override;
+
+	///@copydoc GameHost
 	std::shared_ptr<Pomdog::AssetManager> AssetManager() override;
 
 	///@copydoc GameHost
