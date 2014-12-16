@@ -9,6 +9,7 @@
 #include "MSWaveAudioLoader.hpp"
 
 #include "Pomdog/Audio/AudioClip.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Config/Platform.hpp"
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
@@ -179,23 +180,19 @@ static MMCKINFO ReadRiffChunk(HMMIO ioHandle)
 	MMCKINFO riffChunk;
 
 	auto mmResult = ::mmioDescend(ioHandle, &riffChunk, nullptr, 0);
-	if (MMSYSERR_NOERROR != mmResult)
-	{
-		// error: FUS RO DAH!
-		///@todo Not implemented
-		// throw "Cannot read Multi-Media I/O wave file."
+	if (MMSYSERR_NOERROR != mmResult) {
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Cannot read Multi-Media I/O wave file, mmResult=" + std::to_string(mmResult));
 	}
 
 	if (MakeFourCC('R', 'I', 'F', 'F') != riffChunk.ckid) {
-		// error: FUS RO DAH!
-		///@todo Not implemented
-		// throw "Cannot read wave file. this file is a invalid wave file"
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Cannot read wave file. this file is a invalid wave file");
 	}
 
 	if (MakeFourCC('W', 'A', 'V', 'E') != riffChunk.fccType) {
-		// error: FUS RO DAH!
-		///@todo Not implemented
-		// throw "Cannot read wave file. this file is a invalid wave file"
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Cannot read wave file. this file is a invalid wave file");
 	}
 
 	return std::move(riffChunk);
@@ -209,27 +206,22 @@ static std::vector<std::uint8_t> ReadWaveFormat(HMMIO ioHandle, MMCKINFO const& 
 	chunkInfo.ckid = MakeFourCC('f', 'm', 't', ' ');
 
 	auto mmResult = ::mmioDescend(ioHandle, &chunkInfo, &riffChunk, MMIO_FINDCHUNK);
-	if (MMSYSERR_NOERROR != mmResult)
-	{
-		// error: FUS RO DAH!
-		///@todo Not implemented
-		// throw "Failed to search the input file for the 'fmt ' chunk"
+	if (MMSYSERR_NOERROR != mmResult) {
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Failed to search the input file for the 'fmt ' chunk, mmResult=" + std::to_string(mmResult));
 	}
 
-	if (chunkInfo.cksize < sizeof(PCMWAVEFORMAT))
-	{
-		// error: FUS RO DAH!
-		///@todo Not implemented
+	if (chunkInfo.cksize < sizeof(PCMWAVEFORMAT)) {
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"chunkInfo.cksize=" + std::to_string(chunkInfo.cksize));
 	}
 
 	PCMWAVEFORMAT pcmWaveFormat;
 
 	auto byteSize = ::mmioRead(ioHandle, reinterpret_cast<HPSTR>(&pcmWaveFormat), sizeof(pcmWaveFormat));
-	if (byteSize != sizeof(pcmWaveFormat))
-	{
-		// error: FUS RO DAH!
-		///@todo Not implemented
-		// throw "Failed to  Read the 'fmt ' chunk into <pcmWaveFormat>"
+	if (byteSize != sizeof(pcmWaveFormat)) {
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Failed to Read the 'fmt ' chunk into <pcmWaveFormat>");
 	}
 
 	std::vector<std::uint8_t> waveFormat;
@@ -248,11 +240,9 @@ static std::vector<std::uint8_t> ReadWaveFormat(HMMIO ioHandle, MMCKINFO const& 
 	{
 		WORD extraBytes = 0;
 		byteSize = ::mmioRead(ioHandle, reinterpret_cast<CHAR*>(&extraBytes), sizeof(WORD));
-		if (byteSize != sizeof(WORD))
-		{
-			// error: FUS RO DAH!
-			///@todo Not implemented
-			// throw "Failed to  Read the extraBytes"
+		if (byteSize != sizeof(WORD)) {
+			POMDOG_THROW_EXCEPTION(std::runtime_error,
+				"Failed to Read the extraBytes");
 		}
 
 		waveFormat.resize(sizeof(WAVEFORMATEX) + extraBytes);
@@ -264,20 +254,16 @@ static std::vector<std::uint8_t> ReadWaveFormat(HMMIO ioHandle, MMCKINFO const& 
 		reinterpret_cast<WAVEFORMATEX*>(waveFormat.data())->cbSize = extraBytes;
 
 		byteSize = ::mmioRead(ioHandle, reinterpret_cast<CHAR*>(waveFormat.data() + sizeof(WAVEFORMATEX)), extraBytes);
-		if (byteSize != extraBytes)
-		{
-			// error: FUS RO DAH!
-			///@todo Not implemented
-			// throw "Failed to read the extra data"
+		if (byteSize != extraBytes) {
+			POMDOG_THROW_EXCEPTION(std::runtime_error,
+				"Failed to read the extra data");
 		}
 	}
 
 	mmResult = ::mmioAscend(ioHandle, &chunkInfo, 0);
-	if (MMSYSERR_NOERROR != mmResult)
-	{
-		// error: FUS RO DAH!
-		///@todo Not implemented
-		// throw "Failed to ascend the input file out of the 'fmt ' chunk"
+	if (MMSYSERR_NOERROR != mmResult) {
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Failed to ascend the input file out of the 'fmt ' chunk, mmResult=" + std::to_string(mmResult));
 	}
 
 	return std::move(waveFormat);
@@ -289,18 +275,16 @@ static MMCKINFO SeekDataChunk(HMMIO ioHandle, MMCKINFO const& riffChunk)
 
 	constexpr LONG seekErrorCode = -1;
 	if (seekErrorCode == ::mmioSeek(ioHandle, riffChunk.dwDataOffset + sizeof(FOURCC), SEEK_SET)) {
-		// error: FUS RO DAH!
-		///@todo Not implemented
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to call mmioSeek");
 	}
 
 	MMCKINFO dataChunk;
 	dataChunk.ckid = MakeFourCC('d', 'a', 't', 'a');
 
 	auto mmResult = ::mmioDescend(ioHandle, &dataChunk, &riffChunk, MMIO_FINDCHUNK);
-	if (MMSYSERR_NOERROR != mmResult)
-	{
-		// error: FUS RO DAH!
-		///@todo Not implemented
+	if (MMSYSERR_NOERROR != mmResult) {
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Failed to call mmioDescend, mmResult=" + std::to_string(mmResult));
 	}
 	return std::move(dataChunk);
 }
@@ -310,18 +294,12 @@ static std::vector<std::uint8_t> ReadWaveAudioData(HMMIO ioHandle, MMCKINFO cons
 	POMDOG_ASSERT(ioHandle);
 
 	MMIOINFO mmioInfoIn;
-	if (0 != ::mmioGetInfo(ioHandle, &mmioInfoIn, 0))
-	{
-		///@todo Not implemeneted
-		// error: FUS RO DAH!
-		// "buffer size is 0"
-		return{};
+	if (0 != ::mmioGetInfo(ioHandle, &mmioInfoIn, 0)) {
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Buffer size is zero");
 	}
 
 	if (dataChunk.cksize <= 0) {
-		///@todo Not implemeneted
-		// error: FUS RO DAH!
-		return{};
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Data chunk is empty");
 	}
 	
 	std::vector<std::uint8_t> result;
@@ -349,10 +327,9 @@ static std::vector<std::uint8_t> ReadWaveAudioData(HMMIO ioHandle, MMCKINFO cons
 		++mmioInfoIn.pchNext;
 	}
 
-	if (0 != ::mmioSetInfo(ioHandle, &mmioInfoIn, 0))
-	{
-		///@todo Not implemeneted
-		// error: FUS RO DAH!
+	if (0 != ::mmioSetInfo(ioHandle, &mmioInfoIn, 0)) {
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Failed to call mmioSetInfo");
 	}
 
 	return std::move(result);
@@ -363,9 +340,8 @@ static std::unique_ptr<AudioClip> LoadMSWave_Win32(std::string const& filePath)
 	HMMIO ioHandle = ::mmioOpen(const_cast<LPSTR>(filePath.c_str()), nullptr, MMIO_ALLOCBUF | MMIO_READ);
 
 	if (!ioHandle) {
-		// error: FUS RO DAH!
-		///@todo Not implemented
-		// throw "Cannot open Multi-Media I/O wave file"
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Cannot open Multi-Media I/O wave file");
 	}
 
 	try {
@@ -389,17 +365,13 @@ static std::unique_ptr<AudioClip> LoadMSWave_Win32(std::string const& filePath)
 
 		return std::move(audioClip);
 	}
-	catch (std::exception const&) {
-		// error: FUS RO DAH!
-		///@todo Not implemented
-
+	catch (std::exception const& e) {
 		if (ioHandle) {
 			::mmioClose(ioHandle, 0);
 			ioHandle = nullptr;
 		}
+		throw e;
 	}
-
-	return {};
 }
 #endif
 }// unnamed namespace

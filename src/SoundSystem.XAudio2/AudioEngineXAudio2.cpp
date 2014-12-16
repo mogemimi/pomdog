@@ -29,13 +29,18 @@ namespace SoundSystem {
 namespace XAudio2 {
 namespace {
 
+static std::string GetErrorDesc(HRESULT hr, std::string const& desc)
+{
+	return "Failed to call " + desc + ", HRESULT=" + std::to_string(hr);
+}
+//-----------------------------------------------------------------------
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
 struct AudioDeviceDetails {
 	std::wstring DeviceID;
 	std::wstring DisplayName;
 };
-
-std::vector<AudioDeviceDetails> EnumerateAudioDevices()
+//-----------------------------------------------------------------------
+static std::vector<AudioDeviceDetails> EnumerateAudioDevices()
 {
 #if defined(_XBOX_ONE)
 	///@todo Not implemented
@@ -72,8 +77,7 @@ std::vector<AudioDeviceDetails> EnumerateAudioDevices()
 	HRESULT hr = initialize;
 
 	if (FAILED(hr)) {
-		// Error: FUS RO DAH!
-		///@todo Not implemented
+		POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "RoInitialize"));
 	}
 
 	ComPtr<IDeviceInformationStatics> deviceInfomationFactory;
@@ -81,23 +85,20 @@ std::vector<AudioDeviceDetails> EnumerateAudioDevices()
 		RuntimeClass_Windows_Devices_Enumeration_DeviceInformation).Get(), &deviceInfomationFactory);
 
 	if (FAILED(hr)) {
-		// Error: FUS RO DAH!
-		///@todo Not implemented
+		POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "GetActivationFactory"));
 	}
 
 	Event findCompleted(CreateEventEx(nullptr, nullptr, CREATE_EVENT_MANUAL_RESET, WRITE_OWNER | EVENT_ALL_ACCESS));
 
 	if (!findCompleted.IsValid()) {
-		// Error: FUS RO DAH!
-		///@todo Not implemented
+		POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "CreateEventEx"));
 	}
 
 	ComPtr<IAsyncOperation<DeviceInformationCollection*>> findOperation;
 	hr = deviceInfomationFactory->FindAllAsyncDeviceClass(DeviceClass_AudioRender, findOperation.GetAddressOf());
 
 	if (FAILED(hr)) {
-		// Error: FUS RO DAH!
-		///@todo Not implemented
+		POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "FindAllAsyncDeviceClass"));
 	}
 
 	auto callback = Callback<IAsyncOperationCompletedHandler<DeviceInformationCollection*>>(
@@ -117,8 +118,7 @@ std::vector<AudioDeviceDetails> EnumerateAudioDevices()
 	hr = devices->get_Size(&count);
 
 	if (FAILED(hr)) {
-		// Error: FUS RO DAH!
-		///@todo Not implemented
+		POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "get_Size"));
 	}
 
 	if (count <= 0) {
@@ -163,8 +163,7 @@ AudioEngineXAudio2::AudioEngineXAudio2()
 {
 	HRESULT hr = ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	if (FAILED(hr)) {
-		// Error: FUS RO DAH!
-		///@todo Not implemented
+		POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "CoInitializeEx"));
 	}
 
 	UINT32 flags = 0;
@@ -175,9 +174,7 @@ AudioEngineXAudio2::AudioEngineXAudio2()
 	hr = ::XAudio2Create(&xAudio2, flags, XAUDIO2_DEFAULT_PROCESSOR);
 	if (FAILED(hr)) {
 		::CoUninitialize();
-		
-		// Error: FUS RO DAH!
-		///@todo Not implemented
+		POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "XAudio2Create"));
 	}
 
 #if (_WIN32_WINNT < 0x0602 /*_WIN32_WINNT_WIN8*/) && defined(_DEBUG)
@@ -196,14 +193,21 @@ AudioEngineXAudio2::AudioEngineXAudio2()
 #endif
 
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
-	auto audioDevices = EnumerateAudioDevices();
+	std::vector<AudioDeviceDetails> audioDevices;
+	
+	try {
+		audioDevices = EnumerateAudioDevices();
+	}
+	catch (std::exception const& e) {
+		xAudio2.Reset();
+		::CoUninitialize();
+		throw e;
+	}
 
 	if (audioDevices.empty()) {
 		xAudio2.Reset();
 		::CoUninitialize();
-
-		// Error: FUS RO DAH!
-		///@todo Not implemented
+		POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "XAudio2Create"));
 	}
 	POMDOG_ASSERT(!audioDevices.empty());
 
@@ -213,9 +217,7 @@ AudioEngineXAudio2::AudioEngineXAudio2()
 	if (FAILED(hr)) {
 		xAudio2.Reset();
 		::CoUninitialize();
-
-		// Error: FUS RO DAH!
-		///@todo Not implemented
+		POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "GetDeviceCount"));
 	}
 
 	UINT32 preferredDevice = 0;
@@ -250,9 +252,7 @@ AudioEngineXAudio2::AudioEngineXAudio2()
 	if (FAILED(hr)) {
 		xAudio2.Reset();
 		::CoUninitialize();
-
-		// Error: FUS RO DAH!
-		///@todo Not implemented
+		POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "CreateMasteringVoice"));
 	}
 }
 //-----------------------------------------------------------------------
@@ -263,7 +263,10 @@ AudioEngineXAudio2::~AudioEngineXAudio2()
 		masteringVoice = nullptr;
 	}
 
-	xAudio2.Reset();
+	if (xAudio2) {
+		xAudio2.Reset();
+		::CoUninitialize();
+	}
 }
 //-----------------------------------------------------------------------
 float AudioEngineXAudio2::MasterVolume() const
