@@ -503,7 +503,7 @@
             '-luser32.lib',
             '-lgdi32.lib',
             '-lole32.lib',
-            #'-lwinmm.lib',
+            '-lwinmm.lib',
             #'-lws2_32.lib',
             #'-lwinspool.lib',
             #'-lcomdlg32.lib',
