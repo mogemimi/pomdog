@@ -24,9 +24,9 @@ namespace Pomdog {
 
 class POMDOG_EXPORT AudioClip {
 public:
-	AudioClip(void const* data, std::size_t size, DurationSeconds duration,
+	AudioClip(std::unique_ptr<Details::SoundSystem::NativeAudioClip> && nativeAudioClip,
 		std::uint32_t sampleRate, std::uint16_t bitsPerSample, AudioChannels channels);
-	
+
 	AudioClip(AudioClip const&) = delete;
 	AudioClip & operator=(AudioClip const&) = delete;
 
