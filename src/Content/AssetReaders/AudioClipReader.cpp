@@ -7,19 +7,12 @@
 //
 
 #include "AudioClipReader.hpp"
+#include "../../Utility/PathHelper.hpp"
+#include "../Utility/MSWaveAudioLoader.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
 #include "Pomdog/Audio/AudioClip.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-
-#include "Pomdog/Config/Platform.hpp"
-#if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
-#include "../../Utility/PathHelper.hpp"
-#include "../Utility/MSWaveAudioLoader.hpp"
-#elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-#error "TODO: Not implemented"
-#endif
-
 #include <fstream>
 #include <vector>
 #include <utility>
@@ -32,11 +25,8 @@ namespace Details {
 std::shared_ptr<AudioClip> AudioClipReader::Read(
 	AssetLoaderContext const& loaderContext, std::string const& assetName)
 {
-	auto source = Details::MSWaveAudioLoader::Load(
+	std::shared_ptr<AudioClip> audioClip = Details::MSWaveAudioLoader::Load(
 		PathHelper::Join(loaderContext.RootDirectory, assetName));
-
-	auto audioClip = std::make_shared<AudioClip>(source.Data.data(), source.Data.size(),
-		source.Duration, source.SampleRate, source.BitsPerSample, source.Channels);
 
 	return std::move(audioClip);
 }

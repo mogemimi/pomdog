@@ -16,7 +16,7 @@
 #include "Pomdog/Audio/AudioChannels.hpp"
 #include "Pomdog/Application/DurationSeconds.hpp"
 #include <cstdint>
-#include <vector>
+#include <memory>
 #include <string>
 
 namespace Pomdog {
@@ -25,26 +25,8 @@ class AudioClip;
 
 namespace Details {
 
-class AudioClipSource {
-public:
-	std::vector<std::uint8_t> Data;
-	///@~Japanese
-	/// @brief ソースバッファの全長（秒単位）。
-	DurationSeconds Duration;
-	
-	///@~Japanese
-	/// @brief サンプリングレート（1秒あたりのサンプル数）。
-	std::uint32_t SampleRate;
-	
-	///@~Japanese
-	/// @brief サンプルあたりのビット数。
-	std::uint16_t BitsPerSample;
-
-	AudioChannels Channels;
-};
-
 struct MSWaveAudioLoader {
-	static AudioClipSource Load(std::string const& filePath);
+	static std::unique_ptr<AudioClip> Load(std::string const& filePath);
 };
 
 }// namespace Details
