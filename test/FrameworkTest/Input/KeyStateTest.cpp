@@ -13,12 +13,6 @@ using Pomdog::KeyState;
 
 TEST(KeyState, StaticCastBoolean)
 {
-	EXPECT_TRUE(static_cast<bool>(KeyState::Down));
-	EXPECT_FALSE(static_cast<bool>(KeyState::Up));
-	
-	KeyState keyState = KeyState::Down;
-	EXPECT_TRUE(static_cast<bool>(keyState));
-	
-	keyState = KeyState::Up;
-	EXPECT_FALSE(static_cast<bool>(keyState));
+	static_assert(static_cast<bool>(KeyState::Down) == true, "");
+	static_assert(static_cast<bool>(KeyState::Up) == false, "");
 }

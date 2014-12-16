@@ -13,12 +13,6 @@ using Pomdog::ButtonState;
 
 TEST(ButtonState, StaticCastBoolean)
 {
-	EXPECT_TRUE(static_cast<bool>(ButtonState::Pressed));
-	EXPECT_FALSE(static_cast<bool>(ButtonState::Released));
-	
-	ButtonState buttonState = ButtonState::Pressed;
-	EXPECT_TRUE(static_cast<bool>(buttonState));
-	
-	buttonState = ButtonState::Released;
-	EXPECT_FALSE(static_cast<bool>(buttonState));
+	static_assert(static_cast<bool>(ButtonState::Pressed) == true, "");
+	static_assert(static_cast<bool>(ButtonState::Released) == false, "");
 }
