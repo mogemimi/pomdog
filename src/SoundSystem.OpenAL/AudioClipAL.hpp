@@ -17,6 +17,7 @@
 #include "../Utility/Noncopyable.hpp"
 #include <Pomdog/Utility/Optional.hpp>
 #include <cstdint>
+#include <cstddef>
 
 namespace Pomdog {
 
@@ -28,15 +29,19 @@ namespace OpenAL {
 
 class AudioClipAL final: Noncopyable {
 public:
-	AudioClipAL(void const* data, std::size_t size, AudioChannels channel,
-		std::uint16_t bitsPerSample, std::uint32_t sampleRate);
+	AudioClipAL(void const* data, std::size_t size,
+		std::uint32_t sampleRate, std::uint16_t bitsPerSample,
+		AudioChannels channel);
 
 	~AudioClipAL();
+
+	std::size_t SizeInBytes() const;
 
 	ALuint NativeBuffer() const;
 
 private:
 	Optional<ALuint> buffer;
+	std::size_t sizeInBytes;
 };
 
 }// namespace OpenAL

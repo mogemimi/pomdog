@@ -44,9 +44,12 @@ static ALenum ToFormat(AudioChannels channel, std::uint16_t bitPerSample)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-AudioClipAL::AudioClipAL(void const* data, std::size_t size, AudioChannels channel,
-	std::uint16_t bitsPerSample, std::uint32_t sampleRate)
+AudioClipAL::AudioClipAL(void const* data, std::size_t size,
+	std::uint32_t sampleRate, std::uint16_t bitsPerSample, AudioChannels channel)
+	: sizeInBytes(size)
 {
+	POMDOG_ASSERT(bitsPerSample == 8 || bitsPerSample == 16);
+
 	buffer = ([] {
 		ALuint nativeBuffer;
 		alGenBuffers(1, &nativeBuffer);
@@ -75,6 +78,11 @@ AudioClipAL::~AudioClipAL()
 	if (buffer) {
 		alDeleteBuffers(1, &(*buffer));
 	}
+}
+//-----------------------------------------------------------------------
+std::size_t AudioClipAL::SizeInBytes() const
+{
+	return sizeInBytes;
 }
 //-----------------------------------------------------------------------
 ALuint AudioClipAL::NativeBuffer() const

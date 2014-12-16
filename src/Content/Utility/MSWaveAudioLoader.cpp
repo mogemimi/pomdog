@@ -15,6 +15,7 @@
 #include "../../SoundSystem.OpenAL/AudioClipAL.hpp"
 #include <AudioToolbox/AudioFile.h>
 #include <AudioToolbox/AudioConverter.h>
+#include <vector>
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "MakeFourCC.hpp"
 #include "../../SoundSystem.XAudio2/AudioClipXAudio2.hpp"
@@ -27,6 +28,22 @@
 namespace Pomdog {
 namespace Details {
 namespace {
+//-----------------------------------------------------------------------
+static AudioChannels ToAudioChannels(std::uint32_t channels)
+{
+	POMDOG_ASSERT(channels > 0);
+	POMDOG_ASSERT(channels <= 2);
+
+	switch (channels) {
+	case 1:
+		return AudioChannels::Mono;
+	case 2:
+		return AudioChannels::Stereo;
+	default:
+		break;
+	}
+	return AudioChannels::Mono;
+}
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
 //-----------------------------------------------------------------------
 static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
@@ -90,39 +107,35 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 		return {};
 	}
 	
-	AudioClipSource audioClip;
-	audioClip.SampleRate = basicDescription.mSampleRate;
-	audioClip.Duration = DurationSeconds{estimatedDuration};
-	
-	if (basicDescription.mChannelsPerFrame == 1) {
-		audioClip.Channels = AudioChannels::Mono;
-	}
-	else if (basicDescription.mChannelsPerFrame == 2) {
-		audioClip.Channels = AudioChannels::Stereo;
-	}
-	else {
+	if (basicDescription.mChannelsPerFrame < 1
+		&& basicDescription.mChannelsPerFrame > 2)
+	{
 		///@todo Not implemeneted
 		// Error: Not supported
 		AudioFileClose(audioFile);
 		return {};
 	}
 	
-	if (basicDescription.mBitsPerChannel == 8) {
-		audioClip.BitsPerSample = 8;
-	}
-	else if (basicDescription.mBitsPerChannel == 16) {
-		audioClip.BitsPerSample = 16;
-	}
-	else {
+	if (basicDescription.mBitsPerChannel < 8
+		&& basicDescription.mBitsPerChannel > 32
+		&& (basicDescription.mBitsPerChannel % 8 != 0))
+	{
 		///@todo Not implemeneted
 		// Error: Not supported
 		AudioFileClose(audioFile);
 		return {};
 	}
+	
+	POMDOG_ASSERT(basicDescription.mBitsPerChannel == 8
+		|| basicDescription.mBitsPerChannel == 16
+		|| basicDescription.mBitsPerChannel == 24
+		|| basicDescription.mBitsPerChannel == 32);
 
-	audioClip.Data.resize(audioDataByteCount);
-	UInt32 byteCountToRead = static_cast<UInt32>(audioClip.Data.size());
-	errorCode = AudioFileReadBytes(audioFile, false, 0, &byteCountToRead, audioClip.Data.data());
+	std::vector<std::uint8_t> audioData;
+	audioData.resize(audioDataByteCount);
+	
+	UInt32 byteCountToRead = static_cast<UInt32>(audioData.size());
+	errorCode = AudioFileReadBytes(audioFile, false, 0, &byteCountToRead, audioData.data());
 	AudioFileClose(audioFile);
 	
 	if (errorCode != noErr)
@@ -138,7 +151,23 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 		// error: FUS RO DAH!
 		return {};
 	}
-		
+	
+	using Details::SoundSystem::OpenAL::AudioClipAL;
+	
+	auto channels = ToAudioChannels(basicDescription.mChannelsPerFrame);
+	
+	auto nativeAudioClip = std::make_unique<AudioClipAL>(
+		audioData.data(), audioData.size(),
+		basicDescription.mSampleRate,
+		basicDescription.mBitsPerChannel,
+		channels);
+	
+	auto audioClip = std::make_unique<AudioClip>(
+		std::move(nativeAudioClip),
+		basicDescription.mSampleRate,
+		basicDescription.mBitsPerChannel,
+		channels);
+
 	return std::move(audioClip);
 }
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
@@ -329,20 +358,6 @@ static std::vector<std::uint8_t> ReadWaveAudioData(HMMIO ioHandle, MMCKINFO cons
 	return std::move(result);
 }
 //-----------------------------------------------------------------------
-static AudioChannels ToAudioChannels(WAVEFORMATEX const& format)
-{
-	switch (format.nChannels) {
-	case 1:
-		return AudioChannels::Mono;
-	case 2:
-		return AudioChannels::Stereo;
-	default:
-		break;
-	}
-	POMDOG_ASSERT(false);
-	return AudioChannels::Mono;
-}
-//-----------------------------------------------------------------------
 static std::unique_ptr<AudioClip> LoadMSWave_Win32(std::string const& filePath)
 {
 	HMMIO ioHandle = ::mmioOpen(const_cast<LPSTR>(filePath.c_str()), nullptr, MMIO_ALLOCBUF | MMIO_READ);
@@ -370,7 +385,7 @@ static std::unique_ptr<AudioClip> LoadMSWave_Win32(std::string const& filePath)
 		POMDOG_ASSERT(format);
 
 		auto audioClip = std::make_unique<AudioClip>(std::move(nativeAudioClip),
-			format->nSamplesPerSec, format->wBitsPerSample, ToAudioChannels(*format));
+			format->nSamplesPerSec, format->wBitsPerSample, ToAudioChannels(format->nChannels));
 
 		return std::move(audioClip);
 	}
