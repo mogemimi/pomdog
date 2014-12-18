@@ -10,7 +10,7 @@
 #define POMDOG_AUDIOENGINEXAUDIO2_349E822E_8912_46FC_B085_7F3B02738901_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "PrerequisitesXAudio2.hpp"

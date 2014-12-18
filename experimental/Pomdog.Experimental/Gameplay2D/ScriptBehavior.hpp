@@ -10,7 +10,7 @@
 #define POMDOG_SCRIPTBEHAVIOR_BBF00E47_6D84_4C29_9BF3_C8C352F26252_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 //#include <selene.h>

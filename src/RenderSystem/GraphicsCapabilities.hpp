@@ -10,7 +10,7 @@
 #define POMDOG_SRC_RENDERSYSTEM_GRAPHICSCAPABILITIES_17FEAA5D_4BF2_4EEB_8D34_77B032B1534B_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstddef>

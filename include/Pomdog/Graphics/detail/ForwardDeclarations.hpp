@@ -10,7 +10,7 @@
 #define POMDOG_DETAIL_GRAPHICS_FORWARDDECLARATIONS_1D9B55F8_7EC3_4561_BA79_7F348F825F5A_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

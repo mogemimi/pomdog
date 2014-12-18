@@ -10,7 +10,7 @@
 #define POMDOG_SRC_GL4_INPUTLAYOUTGL4_F0AF2367_CC09_4F30_B3CD_E1B0A3BE5C22_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "OpenGLPrerequisites.hpp"

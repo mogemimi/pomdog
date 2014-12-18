@@ -10,7 +10,7 @@
 #define POMDOG_STENCILOPERATION_6EB1EB6D_6B2D_4B7B_BA58_1AEA11222D30_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

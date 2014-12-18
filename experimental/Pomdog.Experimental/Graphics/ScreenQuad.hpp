@@ -10,7 +10,7 @@
 #define POMDOG_SCREENQUAD_8AD72196_97F0_42DC_8EBC_0E89DC8D1FB9_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"

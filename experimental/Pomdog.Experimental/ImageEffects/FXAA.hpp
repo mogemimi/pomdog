@@ -10,7 +10,7 @@
 #define POMDOG_FXAA_FAC6D173_4722_460C_A0AF_29925A56EA23_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"

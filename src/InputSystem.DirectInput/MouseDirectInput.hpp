@@ -10,7 +10,7 @@
 #define POMDOG_MOUSEDIRECTINPUT_02D734AC_5354_4EBE_988D_B35AE3CCEE38_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "PrerequisitesDirectInput.hpp"

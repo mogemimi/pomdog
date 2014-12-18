@@ -10,7 +10,7 @@
 #define POMDOG_EFFECTREFLECTIONDIRECT3D11_10267AA4_F5EC_4BC4_A092_51877E2D340F_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "PrerequisitesDirect3D11.hpp"

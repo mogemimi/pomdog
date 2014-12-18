@@ -10,7 +10,7 @@
 #define POMDOG_MAIDBEAMGAME_EC7DAEEE_4167_40CD_931D_B8627B24F68E_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog.Experimental/InGameEditor/detail/EditorBackground.hpp>

@@ -10,7 +10,7 @@
 #define POMDOG_SAMPLERSTATE_87568CD5_37AB_4449_B4A1_3AB24A59A849_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/ForwardDeclarations.hpp"

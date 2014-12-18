@@ -10,7 +10,7 @@
 #define POMDOG_ANIMATIONKEYHELPER_1AC67582_2235_4181_93A6_6E414A9520F5_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 namespace Pomdog {

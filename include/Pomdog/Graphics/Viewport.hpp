@@ -10,7 +10,7 @@
 #define POMDOG_VIEWPORT_AA637108_9222_46B7_BC9D_293048246897_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Math/Rectangle.hpp"

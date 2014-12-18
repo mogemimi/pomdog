@@ -10,7 +10,7 @@
 #define POMDOG_SRC_CONTENT_BINARYREADER_80B251B8_159B_4CE5_97BC_ED14AE71F9B0_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Utility/Assert.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_TRANSFORM3D_31340FC0_165D_4776_81BB_C8245E39E098_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog/Math/Vector3.hpp>

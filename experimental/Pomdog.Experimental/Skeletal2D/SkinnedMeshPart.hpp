@@ -10,7 +10,7 @@
 #define POMDOG_SKINNEDMESHPART_DAE847CA_8830_401A_8785_0EAB6DC603D5_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

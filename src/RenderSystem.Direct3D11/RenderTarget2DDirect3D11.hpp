@@ -10,7 +10,7 @@
 #define POMDOG_RENDERTARGET2DDIRECT3D11_75264088_5BBA_4784_95F9_9717260F6FF8_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "PrerequisitesDirect3D11.hpp"

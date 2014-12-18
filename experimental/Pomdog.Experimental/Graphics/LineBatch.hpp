@@ -10,7 +10,7 @@
 #define POMDOG_LINEBATCH_EA425637_9D8E_4225_B209_B01F2A592475_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog/Pomdog.hpp>

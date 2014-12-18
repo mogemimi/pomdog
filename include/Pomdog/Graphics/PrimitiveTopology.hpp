@@ -10,7 +10,7 @@
 #define POMDOG_PRIMITIVETOPOLOGY_46F3C71C_626F_43D4_8CBD_F4FC28EE1933_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

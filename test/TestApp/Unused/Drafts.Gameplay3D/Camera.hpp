@@ -10,7 +10,7 @@
 #define POMDOG_CAMERA_6C3688A9_7B3B_4769_A599_EE6589634FB0_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog/Config/Export.hpp>

@@ -10,7 +10,7 @@
 #define POMDOG_MATH_DETAIL_COORDINATE3D_6062BA6C_8D59_4807_B118_EB89C4A3A3A3_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Config/Export.hpp"

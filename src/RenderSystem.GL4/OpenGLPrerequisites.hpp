@@ -10,7 +10,7 @@
 #define POMDOG_SRC_GL4_OPENGL_PREREQUISITES_70C95DBA_5F82_41A6_A732_5FB0470F0A3D_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog/Config/Platform.hpp>

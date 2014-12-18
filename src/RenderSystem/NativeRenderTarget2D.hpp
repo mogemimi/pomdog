@@ -10,7 +10,7 @@
 #define POMDOG_SRC_RENDERSYSTEM_NATIVERENDERTARGET2D_9D701F83_BFE4_4D67_9305_A213A1DC7E77_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

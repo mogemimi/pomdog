@@ -10,7 +10,7 @@
 #define POMDOG_SPINE_ANIMATIONGRAPHBUILDER_F4A6BA28_8259_4FC0_AED3_95C0FA371A26_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "AnimationGraph.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_GAMEPADTYPE_7A74879B_88DF_4BDC_A1BE_46231883D9F8_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

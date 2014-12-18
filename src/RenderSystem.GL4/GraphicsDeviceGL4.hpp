@@ -10,7 +10,7 @@
 #define POMDOG_SRC_GL4_GRAPHICSDEVICEGL4_74F5BC81_6BDB_4FDC_99F4_DF45CEC32B5F_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "../RenderSystem/NativeGraphicsDevice.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_SPINE_SKELETON2DLOADER_24651167_613E_4D78_A91B_BBF0AD197E19_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "SkeletonDesc.hpp"

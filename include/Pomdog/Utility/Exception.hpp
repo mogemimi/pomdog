@@ -10,7 +10,7 @@
 #define POMDOG_EXCEPTION_46DED4E6_2D2D_4D68_8B7F_6F4983D6C660_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <stdexcept>

@@ -10,7 +10,7 @@
 #define POMDOG_SPINE_ANIMATIONLOADER_F321C327_9116_4965_B08F_63A9EE4E820C_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 namespace Pomdog {

@@ -10,7 +10,7 @@
 #define POMDOG_RENDERER_1196526B_9C0E_408B_A501_2A5D941209ED_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog/Pomdog.hpp>

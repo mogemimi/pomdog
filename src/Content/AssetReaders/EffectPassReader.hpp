@@ -10,7 +10,7 @@
 #define POMDOG_EFFECTPASSREADER_52739AE6_6571_4209_BF92_B3EE344C141D_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <string>

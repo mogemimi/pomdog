@@ -10,7 +10,7 @@
 #define POMDOG_BEAM_463AA6E5_5F50_4C38_B5F1_5722855B9805_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Math/Vector2.hpp"

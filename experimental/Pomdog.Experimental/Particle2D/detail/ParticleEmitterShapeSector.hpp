@@ -10,7 +10,7 @@
 #define POMDOG_PARTICLEEMITTERSHAPESECTOR_020ABE98_8102_40BE_8EDF_0887FC0D95FD_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "ParticleEmitterShape.hpp"

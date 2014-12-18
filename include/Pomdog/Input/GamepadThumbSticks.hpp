@@ -10,7 +10,7 @@
 #define POMDOG_GAMEPADTHUMBSTICKS_444752C9_1DEB_45F4_B42E_9212410AEE8D_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Math/Vector2.hpp"

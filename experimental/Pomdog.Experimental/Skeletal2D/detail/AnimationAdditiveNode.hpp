@@ -10,7 +10,7 @@
 #define POMDOG_ANIMATIONADDITIVENODE_48896792_129A_489D_B3F3_55D3814CFD38_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog.Experimental/Skeletal2D/AnimationNode.hpp"

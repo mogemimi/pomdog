@@ -10,7 +10,7 @@
 #define POMDOG_VOXMODELEXPORTER_F3E3A4F5_F454_4E43_B1BB_BF0E9F237B54_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <string>

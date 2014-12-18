@@ -10,7 +10,7 @@
 #define POMDOG_SRC_CONTENT_DDSTEXTUREREADER_0C8072DF_9382_4D3F_9812_DDBF397296C6_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>

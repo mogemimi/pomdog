@@ -10,7 +10,7 @@
 #define POMDOG_COMPARISONFUNCTION_01201CF2_CA64_4AC9_850E_5AA2C4CDC7F6_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

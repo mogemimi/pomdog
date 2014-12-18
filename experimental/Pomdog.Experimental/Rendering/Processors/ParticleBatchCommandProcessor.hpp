@@ -10,7 +10,7 @@
 #define POMDOG_PARTICLEBATCHCOMMANDPROCESSOR_29CECBB2_4602_44F1_B146_121E3E118ABF_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog.Experimental/Graphics/SpriteBatchRenderer.hpp"

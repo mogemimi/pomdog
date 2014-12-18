@@ -10,7 +10,7 @@
 #define POMDOG_WEIGHTBLENDINGHELPER_EC5A3515_C7FB_4F93_A810_79F3F8F59CEE_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <vector>

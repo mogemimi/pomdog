@@ -10,7 +10,7 @@
 #define POMDOG_ANIMATIONBLENDINPUTTYPE_FF16CE72_A3DE_403C_9CEF_8FF49C6F1B22_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

@@ -10,7 +10,7 @@
 #define POMDOG_EVENT_DETAIL_FORWARDDECLARATIONS_7CF2D9B3_CC0C_49B1_9864_E5B7A2E4BDFF_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <functional>

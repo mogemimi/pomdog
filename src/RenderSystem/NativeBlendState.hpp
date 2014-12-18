@@ -10,7 +10,7 @@
 #define POMDOG_SRC_RENDERSYSTEM_NATIVEBLENDSTATE_95C63681_C78E_45C7_AB01_365CD02D1E06_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 namespace Pomdog {

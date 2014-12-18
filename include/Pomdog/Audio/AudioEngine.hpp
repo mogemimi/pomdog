@@ -10,7 +10,7 @@
 #define POMDOG_AUDIOENGINE_0BAB9209_2564_48EB_A65A_F3B826A56E02_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/ForwardDeclarations.hpp"

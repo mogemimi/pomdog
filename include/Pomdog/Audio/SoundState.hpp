@@ -10,7 +10,7 @@
 #define POMDOG_SOUNDSTATE_C171B07A_0FF0_4ABE_A2EB_461A2AD5C35B_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

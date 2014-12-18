@@ -10,7 +10,7 @@
 #define POMDOG_SEPIATONEEFFECT_BD1A4ABD_E2D0_4D28_94D4_74722D54C7A0_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"

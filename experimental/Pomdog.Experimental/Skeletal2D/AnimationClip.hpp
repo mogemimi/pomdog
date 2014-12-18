@@ -10,7 +10,7 @@
 #define POMDOG_ANIMATIONCLIP_5D3DFD31_D6B5_4405_B247_232C105BB927_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "AnimationTimeInterval.hpp"

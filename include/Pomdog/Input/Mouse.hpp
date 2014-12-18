@@ -10,7 +10,7 @@
 #define POMDOG_MOUSE_8BFC478A_C7F2_4D4E_A4FE_C756500D5E33_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Config/Export.hpp"

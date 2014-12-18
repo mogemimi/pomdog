@@ -10,7 +10,7 @@
 #define POMDOG_THICKNESS_291572C7_D0A0_4EED_84EE_E0E74F4D2FF8_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

@@ -10,7 +10,7 @@
 #define POMDOG_RENDERCOMMANDPROCESSOR_98635350_997C_43FC_B4CE_ABDCE7FBC94E_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog.Experimental/Rendering/RenderCommand.hpp"

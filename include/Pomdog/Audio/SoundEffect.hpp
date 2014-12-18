@@ -10,7 +10,7 @@
 #define POMDOG_SOUNDEFFECT_0793F2D9_5D45_44A0_BA2A_66B75D99D015_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/ForwardDeclarations.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_COLOR_E8ABB31A_72F7_4D75_A92F_A9E70658E957_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/ForwardDeclarations.hpp"

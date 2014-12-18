@@ -10,7 +10,7 @@
 #define POMDOG_UIEVENTDISPATCHER_83873A91_6AAF_472C_9018_E882810EF741_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "UIView.hpp"

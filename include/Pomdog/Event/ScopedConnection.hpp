@@ -10,7 +10,7 @@
 #define POMDOG_SCOPEDCONNECTION_009320AB_E09C_4157_8F9D_E7FBCE812DD8_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/ForwardDeclarations.hpp"

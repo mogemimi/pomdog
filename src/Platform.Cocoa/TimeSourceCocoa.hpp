@@ -10,7 +10,7 @@
 #define POMDOG_SRC_COCOA_TIMESOURCECOCOA_3820AACF_C0B9_4A13_A493_C1164C3C19E7_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog/Application/DurationSeconds.hpp>

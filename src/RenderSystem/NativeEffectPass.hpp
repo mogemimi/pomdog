@@ -10,7 +10,7 @@
 #define POMDOG_SRC_RENDERSYSTEM_NATIVEEFFECTPASS_F0C96CAC_A22D_4E8F_A31F_5C2E7A91C273_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>

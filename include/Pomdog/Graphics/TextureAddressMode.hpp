@@ -10,7 +10,7 @@
 #define POMDOG_TEXTUREADDRESSMODE_256FCFEC_6DE0_40B1_9326_E113017D0F57_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

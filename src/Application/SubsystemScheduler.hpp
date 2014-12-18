@@ -10,7 +10,7 @@
 #define POMDOG_SUBSYSTEMSCHEDULER_15398B34_AE1E_4AAA_BE2A_EC942196DC84_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "../Utility/Noncopyable.hpp"

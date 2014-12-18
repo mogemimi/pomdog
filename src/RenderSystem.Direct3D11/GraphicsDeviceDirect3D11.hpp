@@ -10,7 +10,7 @@
 #define POMDOG_GRAPHICSDEVICEDIRECT3D11_F96A4B97_2183_4ECE_808D_D15E6FE92833_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "PrerequisitesDirect3D11.hpp"

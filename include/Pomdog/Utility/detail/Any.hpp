@@ -10,7 +10,7 @@
 #define POMDOG_ANY_2C2DCE41_BD36_4065_BD33_D045184AE06C_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Utility/Assert.hpp"

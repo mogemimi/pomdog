@@ -10,7 +10,7 @@
 #define POMDOG_SUBSCRIBEREQUESTDISPATCHER_B5E9A001_3318_45C5_B257_51344C2E2F36_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <memory>

@@ -10,7 +10,7 @@
 #define POMDOG_DETAIL_GRAPHICS_SHADERBYTECODE_02AC7B6D_D9F3_4354_AFF4_63F439E542DC_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstddef>

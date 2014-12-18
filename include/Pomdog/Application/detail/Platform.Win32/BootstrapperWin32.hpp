@@ -10,7 +10,7 @@
 #define POMDOG_BOOTSTRAPPERWIN32_4778D685_22F5_4D2E_B7D5_5D8F47760747_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #ifndef STRICT

@@ -10,7 +10,7 @@
 #define POMDOG_DEPTHSTENCILDESCRIPTION_E14C5D77_3D8D_4124_95C0_4B8DBDBE2D63_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "ComparisonFunction.hpp"

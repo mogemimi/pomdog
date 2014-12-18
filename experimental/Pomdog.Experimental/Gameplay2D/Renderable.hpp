@@ -10,7 +10,7 @@
 #define POMDOG_RENDERABLE_45A0A118_A075_4172_929C_05DF1A2E47FF_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Math/Color.hpp"

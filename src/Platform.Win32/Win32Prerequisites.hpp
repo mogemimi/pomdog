@@ -10,7 +10,7 @@
 #define POMDOG_SRC_WIN32_WIN32PREREQUISITES_E2FCD355_BD15_456C_BB43_2E6352246099_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #ifndef STRICT

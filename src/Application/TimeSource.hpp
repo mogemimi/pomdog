@@ -10,7 +10,7 @@
 #define POMDOG_TIMESOURCE_C4211975_ADF9_4F64_950B_B891B9E5C0BD_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog/Config/Platform.hpp>

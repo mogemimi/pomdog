@@ -10,7 +10,7 @@
 #define POMDOG_MATH_DETAIL_FLOATINGPOINTVECTOR4_46E21CD7_0D28_4BFF_B38D_EAC35762288B_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "ForwardDeclarations.hpp"

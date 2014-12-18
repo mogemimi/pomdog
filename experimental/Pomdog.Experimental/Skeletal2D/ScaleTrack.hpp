@@ -10,7 +10,7 @@
 #define POMDOG_SCALETRACK_D087D656_A9AE_450F_A413_CC4BB795C36C_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "AnimationTrack.hpp"

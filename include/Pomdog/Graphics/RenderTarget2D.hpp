@@ -10,7 +10,7 @@
 #define POMDOG_RENDERTARGET2D_65AA5E90_1779_4953_8BD3_0B0833D5BF36_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/ForwardDeclarations.hpp"

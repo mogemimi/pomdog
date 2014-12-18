@@ -10,7 +10,7 @@
 #define POMDOG_SRC_RENDERSYSTEM_NATIVERASTERIZERSTATE_F1119CE4_3026_4F9A_89AE_C5B035A87704_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 namespace Pomdog {

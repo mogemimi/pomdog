@@ -10,7 +10,7 @@
 #define POMDOG_SRC_COCOA_GAMEHOST_29C3B75B_9D10_4DA7_BD1A_3AD8511B7D4F_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "../Application/SystemEventDispatcher.hpp"

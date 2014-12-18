@@ -10,7 +10,7 @@
 #define POMDOG_MATH_DETAIL_COORDINATE2DIMPLEMENTATION_3BBB93C4_83C5_4AD1_AFEE_F79A0DCF06EC_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 //#include "../Coordinate2D.hpp"

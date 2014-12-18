@@ -10,7 +10,7 @@
 #define POMDOG_GAMEPADSTATE_02293326_EB1D_4D79_A4DB_15F7F0BA8FBF_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "GamepadButtons.hpp"

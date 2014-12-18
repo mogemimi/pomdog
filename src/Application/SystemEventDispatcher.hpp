@@ -10,7 +10,7 @@
 #define POMDOG_SRC_APPLICATION_SYSTEMEVENTDISPATCHER_7D649F10_0048_43D1_97DA_92FD44BE74E4_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog/Event/EventQueue.hpp>

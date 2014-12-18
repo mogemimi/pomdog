@@ -10,7 +10,7 @@
 #define POMDOG_SEQUENCEACTION_63378BE5_A1FC_420F_987E_3334185AF829_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog.Experimental/Actions/Action.hpp"

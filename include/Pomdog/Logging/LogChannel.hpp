@@ -10,7 +10,7 @@
 #define POMDOG_LOGCHANNEL_4C388D05_4E15_4A29_8E76_D0A535C514F5_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "LogLevel.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_MOUSECREATOR_CE792896_2613_477F_A03D_327BE3F1A650_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "InputDeviceCreator.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_CAMERANODE_6C0263F9_8E18_46DA_B679_76CEF633448D_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "../2D/SceneNode.hpp"

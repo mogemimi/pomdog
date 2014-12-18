@@ -10,7 +10,7 @@
 #define POMDOG_SCALETOACTION_5EB92B4C_56E3_4D2B_AC93_999860ED5A8F_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/TemporalAction.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_SRC_COCOA_OPENGLCONTEXT_306ECA78_18CF_4A87_A039_0C823668622C_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #import <Cocoa/Cocoa.h>

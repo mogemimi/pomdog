@@ -10,7 +10,7 @@
 #define POMDOG_SURFACEFORMAT_D6D95081_3481_483B_AA66_D40D74FAC014_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

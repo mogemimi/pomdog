@@ -10,7 +10,7 @@
 #define POMDOG_PLAYERINDEX_FD3F134D_1128_4222_B1FD_0E270A62436B_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

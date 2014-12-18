@@ -10,7 +10,7 @@
 #define POMDOG_GAMEPADCAPABILITIES_869064F7_A425_45C1_A614_8B7DC755658F_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "GamepadType.hpp"

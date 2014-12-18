@@ -10,7 +10,7 @@
 #define POMDOG_STRINGFORMAT_FF9D5A44_E2AB_4484_815C_4BEC31D0796E_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Config/Export.hpp"

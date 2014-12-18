@@ -10,7 +10,7 @@
 #define POMDOG_NONCOPYABLE_C87EECF3_1CA8_4C76_B8B0_413B0CEF41B3_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 namespace Pomdog {

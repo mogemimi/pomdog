@@ -10,7 +10,7 @@
 #define POMDOG_SKINNEDMESH_4A54231B_DCA1_44D0_A7E7_427681B8F4BE_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "SkinnedMeshPart.hpp"

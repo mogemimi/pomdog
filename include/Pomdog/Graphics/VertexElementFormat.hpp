@@ -10,7 +10,7 @@
 #define POMDOG_VERTEXELEMENTFORMAT_55DBF01E_DA84_470F_A170_6E4DBEF6FDA6_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

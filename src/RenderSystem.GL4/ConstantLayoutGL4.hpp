@@ -10,7 +10,7 @@
 #define POMDOG_CONSTANTLAYOUTGL4_25949458_085E_49FD_91A9_EFF89B064B88_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "../RenderSystem/NativeConstantLayout.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_GRASSBLENDINGGAME_544D7F2A_1541_499F_84A6_3C16FBA45699_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog.Experimental/InGameEditor/detail/EditorBackground.hpp>

@@ -10,7 +10,7 @@
 #define POMDOG_RASTERIZERDESCRIPTION_AD753EE4_3D3A_44B2_85B3_A54B2C5D1B4A_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "CullMode.hpp"

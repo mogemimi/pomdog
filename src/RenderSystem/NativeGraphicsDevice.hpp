@@ -10,7 +10,7 @@
 #define POMDOG_SRC_RENDERSYSTEM_NATIVEGRAPHICSDEVICE_B06DA321_5506_4E99_8BB0_8704B3B97794_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "../Utility/Noncopyable.hpp"

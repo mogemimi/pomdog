@@ -10,7 +10,7 @@
 #define POMDOG_JOINTINDEX_F35DB555_D353_45D1_938C_AF77D680DD52_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Utility/Assert.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_BLEND_A27CB239_A90C_46B1_841D_637B0D8343D6_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

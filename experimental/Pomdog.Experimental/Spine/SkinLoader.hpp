@@ -10,7 +10,7 @@
 #define POMDOG_SPINE_SKINLOADER_E56D7A0C_6120_47CD_918E_5222C7BC98A3_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog.Experimental/TexturePacker/TextureAtlas.hpp"

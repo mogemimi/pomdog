@@ -10,7 +10,7 @@
 #define POMDOG_EFFECTPASSDIRECT3D11_0A0A09ED_D3D3_4E70_B836_D24811A8FA94_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "PrerequisitesDirect3D11.hpp"

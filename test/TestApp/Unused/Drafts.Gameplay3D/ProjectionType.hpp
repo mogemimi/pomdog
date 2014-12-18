@@ -10,7 +10,7 @@
 #define POMDOG_PROJECTIONTYPE_E6EFA410_142A_44CA_BF7B_56A4EC7BC23A_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

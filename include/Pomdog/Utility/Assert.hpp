@@ -10,7 +10,7 @@
 #define POMDOG_ASSERT_7D111D58_5951_4927_A438_EF5F9E62DDFE_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Config/Platform.hpp"

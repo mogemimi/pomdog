@@ -10,7 +10,7 @@
 #define POMDOG_MAIDNODE_70588F82_1C97_4E1C_9CCD_EB5D264CFD22_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "../2D/SceneNode.hpp"

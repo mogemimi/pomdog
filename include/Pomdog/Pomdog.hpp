@@ -10,7 +10,7 @@
 #define POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 // Application

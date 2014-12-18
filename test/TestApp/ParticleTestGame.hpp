@@ -10,7 +10,7 @@
 #define POMDOG_PARTICLETESTGAME_CB0334A7_637D_4E14_942A_86D6617BFF5D_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog.Experimental/InGameEditor/detail/EditorBackground.hpp>

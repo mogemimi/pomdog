@@ -10,7 +10,7 @@
 #define POMDOG_SPINE_SKELETONLOADER_20525A17_E478_4A36_B3F3_AF8095E19A1B_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <vector>

@@ -10,7 +10,7 @@
 #define POMDOG_RENDERNODE_9E4CE0EA_E4CE_46FB_940D_73B535E9C035_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <memory>

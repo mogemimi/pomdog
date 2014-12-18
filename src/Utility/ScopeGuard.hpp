@@ -10,7 +10,7 @@
 #define POMDOG_SRC_UTILITY_SCOPEGUARD_1F749886_7638_4384_8510_50A4E4B6CE16_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog/Utility/Assert.hpp>

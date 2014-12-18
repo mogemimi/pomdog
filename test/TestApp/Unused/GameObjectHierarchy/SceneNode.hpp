@@ -10,7 +10,7 @@
 #define POMDOG_SCENENODE_5C516A46_97D1_455B_851C_45DCAB4E5605_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog/Pomdog.hpp>

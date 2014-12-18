@@ -10,7 +10,7 @@
 #define POMDOG_RASTERIZERSTATEDIRECT3D11_35B2E2F8_2BA8_4906_A6F9_D2273F71F45C_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "PrerequisitesDirect3D11.hpp"

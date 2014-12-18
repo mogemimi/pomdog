@@ -10,7 +10,7 @@
 #define POMDOG_VECTOR2_387CFCB7_CB0A_410C_B5B2_506C746C3E2D_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/FloatingPointVector2.hpp"

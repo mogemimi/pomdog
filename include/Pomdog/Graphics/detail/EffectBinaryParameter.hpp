@@ -10,7 +10,7 @@
 #define POMDOG_DETAIL_GRAPHICS_EFFECTBINARYPARAMETER_F5EA7DB2_2233_4221_973E_189E6ECFB1F0_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"

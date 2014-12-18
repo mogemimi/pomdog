@@ -10,7 +10,7 @@
 #define POMDOG_STACKPANEL_1285AAF5_DFD5_44B2_974C_040829A6EB6C_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Panel.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_ANIMATIONSYSTEM_6CB5A5C9_EF78_443A_976D_9FA1E94B16D7_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Application/GameClock.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_CONTAINMENTTYPE_21BFFFDA_D1CD_4222_B556_0EFF89954D5D_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

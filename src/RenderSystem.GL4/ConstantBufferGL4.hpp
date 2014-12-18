@@ -10,7 +10,7 @@
 #define POMDOG_SRC_GL4_CONSTANTBUFFERGL4_98395F08_1611_4948_9C35_81FE756DE978_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "OpenGLPrerequisites.hpp"

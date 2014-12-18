@@ -10,7 +10,7 @@
 #define POMDOG_POINTERPOINT_DAEC8B7F_D25B_4146_BB15_965A4AF81FF3_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "PointerEventType.hpp"

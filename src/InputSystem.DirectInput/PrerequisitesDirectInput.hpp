@@ -10,7 +10,7 @@
 #define POMDOG_PREREQUISITESDIRECTINPUT_98459263_302E_4170_99E5_E4E0F212DAFC_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "../Platform.Win32/Win32Prerequisites.hpp"

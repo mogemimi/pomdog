@@ -10,7 +10,7 @@
 #define POMDOG_POINTEREVENTTYPE_2ABE882F_69A8_4F0D_AE08_A712EE914EA0_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

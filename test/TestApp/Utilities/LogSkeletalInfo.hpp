@@ -10,7 +10,7 @@
 #define POMDOG_LOGSKELETALINFO_7178CCE1_65C2_4CB5_96CD_AB53B07E4601_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog.Experimental/Spine/SkeletonDesc.hpp"

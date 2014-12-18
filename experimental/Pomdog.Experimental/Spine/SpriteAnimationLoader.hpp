@@ -10,7 +10,7 @@
 #define POMDOG_SPINE_SPRITEANIMATIONLOADER_C360BEBA_795B_404D_932B_CFD7ACF40805_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog.Experimental/TexturePacker/TextureAtlas.hpp"

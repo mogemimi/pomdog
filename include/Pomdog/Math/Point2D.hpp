@@ -10,7 +10,7 @@
 #define POMDOG_POINT2D_278F3036_BF52_41E0_870B_A12EBC3E43CE_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/Coordinate2D.hpp"

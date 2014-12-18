@@ -10,7 +10,7 @@
 #define POMDOG_BEAMSYSTEM_616FE7EE_4C71_411A_A44D_C50248FB7B7E_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Beam.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_ANIMATIONTIMEINTERVAL_DEA1AD60_E2E2_45F6_9B79_A2DDB30EDC4E_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <chrono>

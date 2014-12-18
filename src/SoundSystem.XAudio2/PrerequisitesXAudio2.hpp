@@ -10,7 +10,7 @@
 #define POMDOG_PREREQUISITESXAUDIO2_89DAE035_1711_4093_962F_B8CEF06B9889_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "../Platform.Win32/Win32Prerequisites.hpp"

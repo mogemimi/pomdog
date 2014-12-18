@@ -10,7 +10,7 @@
 #define POMDOG_AUDIOCHANNELS_026C7FB5_7B97_42C1_B935_4CDE40E4B4F7_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

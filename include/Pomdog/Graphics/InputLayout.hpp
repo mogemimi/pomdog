@@ -10,7 +10,7 @@
 #define POMDOG_INPUTLAYOUT_B0E2CBE1_3C0D_4D11_8260_CF62EE25D392_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/ForwardDeclarations.hpp"

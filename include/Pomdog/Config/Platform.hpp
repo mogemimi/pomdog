@@ -10,7 +10,7 @@
 #define POMDOG_PLATFORM_C59B59BE_0311_4CB7_96D7_541924F8C06A_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 namespace Pomdog {

@@ -10,7 +10,7 @@
 #define POMDOG_SPRITESORTMODE_670C0FC1_7802_46A0_BF22_C8C399025B2B_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

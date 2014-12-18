@@ -10,7 +10,7 @@
 #define POMDOG_VOXMODEL_536F1B05_A4BD_4174_8CD3_B1112DBDD7EE_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Math/Color.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_GUNSHOOTINGLEVEL_2CB60E26_E685_4FB0_9BCE_E28C699DE2AE_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog.Experimental/Experimental.hpp>

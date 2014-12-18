@@ -10,7 +10,7 @@
 #define POMDOG_TOUCHLOCATIONSTATE_C896CADD_F319_459F_A707_9504BEF69CFB_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

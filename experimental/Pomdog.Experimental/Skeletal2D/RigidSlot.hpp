@@ -10,7 +10,7 @@
 #define POMDOG_RIGIDSLOT_4C507F41_9ED4_483A_A6C3_E3133BF6398D_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "JointIndex.hpp"

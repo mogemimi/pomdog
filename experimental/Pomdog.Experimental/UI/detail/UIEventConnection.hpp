@@ -10,7 +10,7 @@
 #define POMDOG_UIEVENTCONNECTION_EBC5870C_B234_4780_8CBE_4736866F1926_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "SubscribeRequestDispatcher.hpp"

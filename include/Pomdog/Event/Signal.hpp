@@ -10,7 +10,7 @@
 #define POMDOG_SIGNAL_51888AFF_8963_45DD_8BFC_FE29E829BBFD_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/SignalBody.hpp"

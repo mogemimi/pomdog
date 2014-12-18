@@ -10,7 +10,7 @@
 #define POMDOG_SAMPLERSTATEDIRECT3D11_7E21EF86_A4C5_4EE8_8B62_33CCC306F202_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "PrerequisitesDirect3D11.hpp"

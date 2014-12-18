@@ -10,7 +10,7 @@
 #define POMDOG_RECTANGLERENDERABLE_FFA98981_CBE5_4F24_AFDB_C7ECD07CC66E_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Renderable.hpp"

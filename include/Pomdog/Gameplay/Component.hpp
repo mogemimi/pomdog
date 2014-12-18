@@ -10,7 +10,7 @@
 #define POMDOG_COMPONENT_0CB8A002_5CD7_4FA6_BD42_17CE2B72EEFA_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/ComponentTypeIndex.hpp"

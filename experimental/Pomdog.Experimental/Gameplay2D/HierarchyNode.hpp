@@ -10,7 +10,7 @@
 #define POMDOG_HIERARCHYNODE_65A32766_DE9A_40C5_9F1A_2FA6F042E424_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Gameplay/GameObject.hpp"

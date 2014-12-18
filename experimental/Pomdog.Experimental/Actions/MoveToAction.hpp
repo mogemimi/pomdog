@@ -10,7 +10,7 @@
 #define POMDOG_MOVETOACTION_69978A4F_8913_4A3E_86D4_AA5A69A58586_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/TemporalAction.hpp"

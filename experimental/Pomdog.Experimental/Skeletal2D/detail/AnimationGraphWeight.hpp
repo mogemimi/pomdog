@@ -10,7 +10,7 @@
 #define POMDOG_ANIMATIONGRAPHWEIGHT_2B7D7365_F1DB_4D21_A939_F9E06945754A_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog.Experimental/Skeletal2D/AnimationBlendInputType.hpp"

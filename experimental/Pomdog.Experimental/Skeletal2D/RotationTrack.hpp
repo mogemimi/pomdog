@@ -10,7 +10,7 @@
 #define POMDOG_ROTATIONTRACK_96A9D69A_686F_41DF_B6CB_8AB551DD12D5_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "AnimationTrack.hpp"

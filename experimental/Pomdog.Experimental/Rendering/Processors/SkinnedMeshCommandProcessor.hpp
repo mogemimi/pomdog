@@ -10,7 +10,7 @@
 #define POMDOG_SKINNEDMESHCOMMANDPROCESSOR_40F7E4BF_DF7A_41B0_8F8C_FE6FE6FA38FE_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog.Experimental/Graphics/SkinnedEffect.hpp"

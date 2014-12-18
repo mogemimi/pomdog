@@ -10,7 +10,7 @@
 #define POMDOG_MATRIX4X4_DC5BAB37_3C3F_40B9_9EF7_BE8427EBBD06_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/FloatingPointMatrix4x4.hpp"

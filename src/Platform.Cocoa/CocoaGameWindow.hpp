@@ -10,7 +10,7 @@
 #define POMDOG_SRC_COCOA_GAMEWINDOW_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #import <Cocoa/Cocoa.h>

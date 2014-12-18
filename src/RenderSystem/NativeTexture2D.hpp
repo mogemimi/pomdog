@@ -10,7 +10,7 @@
 #define POMDOG_SRC_RENDERSYSTEM_NATIVETEXTURE2D_309E0647_8B22_4554_A9E8_8269BC1035C5_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>

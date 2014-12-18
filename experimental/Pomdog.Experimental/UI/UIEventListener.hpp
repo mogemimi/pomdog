@@ -10,7 +10,7 @@
 #define POMDOG_UIEVENTLISTENER_6C74CE34_0376_4123_B183_0B11038A0D68_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 namespace Pomdog {

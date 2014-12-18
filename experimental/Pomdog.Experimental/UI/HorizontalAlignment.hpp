@@ -10,7 +10,7 @@
 #define POMDOG_HORIZONTALALIGNMENT_9170DFBF_70EB_4FB6_B18E_71ECB2A0007D_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

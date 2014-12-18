@@ -10,7 +10,7 @@
 #define POMDOG_DEBUGNAVIGATOR_9FDE3D88_77EB_4B69_8A1D_99504294B826_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Control.hpp"

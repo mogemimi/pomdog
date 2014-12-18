@@ -10,7 +10,7 @@
 #define POMDOG_EFFECTANNOTATION_5BD74CC6_417B_4D9C_B287_1006E96FB624_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "EffectVariableClass.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_SPRITEANIMATIONTRACK_FC96976A_7E94_44C6_87DA_EC4C3C372204_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "AnimationTimeInterval.hpp"

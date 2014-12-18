@@ -10,7 +10,7 @@
 #define POMDOG_SANDBOXHELPER_254CE54A_4E5C_490B_A7A7_A0DF1AE34C85_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog.Experimental/Gameplay2D/Camera2D.hpp"

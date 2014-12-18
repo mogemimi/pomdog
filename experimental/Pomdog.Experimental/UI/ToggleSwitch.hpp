@@ -10,7 +10,7 @@
 #define POMDOG_TOGGLESWITCH_62F7E7F0_48AA_45A8_9010_1426B8EBD8A2_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Control.hpp"

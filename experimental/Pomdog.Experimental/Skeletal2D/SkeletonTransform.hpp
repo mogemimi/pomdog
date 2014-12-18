@@ -10,7 +10,7 @@
 #define POMDOG_SKELETONTRANSFORM_B5648A89_636D_47D9_A280_946513E743EF_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "SkeletonPose.hpp"

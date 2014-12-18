@@ -10,7 +10,7 @@
 #define POMDOG_CULLMODE_DBEE9F5F_6FD8_4B0A_BED4_064A6635E957_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

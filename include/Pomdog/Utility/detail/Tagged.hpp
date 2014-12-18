@@ -10,7 +10,7 @@
 #define POMDOG_DETAIL_TAGGED_1B3449F5_9833_496C_A481_71FB7536CBF5_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Config/Export.hpp"

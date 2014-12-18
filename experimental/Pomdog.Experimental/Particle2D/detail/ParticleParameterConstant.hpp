@@ -10,7 +10,7 @@
 #define POMDOG_PARTICLEPARAMETERCONSTANT_0CA7D811_75D8_4AB0_9EA0_A2F9B2EDE095_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "ParticleParameter.hpp"

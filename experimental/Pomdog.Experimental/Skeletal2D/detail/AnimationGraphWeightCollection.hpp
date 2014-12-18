@@ -10,7 +10,7 @@
 #define POMDOG_ANIMATIONGRAPHWEIGHTCOLLECTION_5506C893_2829_4E01_8EE5_72B642FF79AB_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "AnimationGraphWeight.hpp"

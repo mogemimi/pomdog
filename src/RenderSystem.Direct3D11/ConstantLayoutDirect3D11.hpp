@@ -10,7 +10,7 @@
 #define POMDOG_CONSTANTLAYOUTDIRECT3D11_7DB9A007_8433_4668_8CF5_CA16E4F87F96_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "PrerequisitesDirect3D11.hpp"

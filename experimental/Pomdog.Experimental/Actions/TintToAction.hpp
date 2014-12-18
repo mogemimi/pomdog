@@ -10,7 +10,7 @@
 #define POMDOG_TINTTOACTION_EC615DAE_A054_447B_88F8_E6FAF8AD0DB9_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/TemporalAction.hpp"

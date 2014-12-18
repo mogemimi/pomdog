@@ -10,7 +10,7 @@
 #define POMDOG_MATRIX3X2_BFBB8214_F35C_4495_A58D_1FC47E75E0FF_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/FloatingPointMatrix3x2.hpp"

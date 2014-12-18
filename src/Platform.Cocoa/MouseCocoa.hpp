@@ -10,7 +10,7 @@
 #define POMDOG_SRC_COCOA_MOUSE_E737D799_3080_4B3E_A2A8_E3886D4800D1_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <Pomdog/Input/Mouse.hpp>

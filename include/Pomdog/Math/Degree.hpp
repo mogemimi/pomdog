@@ -10,7 +10,7 @@
 #define POMDOG_DEGREE_8B079286_FF3F_4EEC_BDD2_85D914A0B064_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/TaggedArithmetic.hpp"

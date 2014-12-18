@@ -10,7 +10,7 @@
 #define POMDOG_SKIN_8B9C736F_D6E4_449A_A310_1F791AA6ABC5_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "RigidSlot.hpp"

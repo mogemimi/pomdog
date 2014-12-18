@@ -10,7 +10,7 @@
 #define POMDOG_JOINT_0CE2C1D3_6959_40C5_B01B_7FA838BCB51B_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "JointIndex.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_RENDERLAYER_925B26B2_1D0D_4A78_9A84_DBE025AD0BA3_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

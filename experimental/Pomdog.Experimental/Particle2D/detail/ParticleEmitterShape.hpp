@@ -10,7 +10,7 @@
 #define POMDOG_PARTICLEEMITTERSHAPE_DCE4AD88_E068_4AF6_8F1F_EEE13290929E_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Math/Vector2.hpp"

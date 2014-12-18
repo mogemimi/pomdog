@@ -10,7 +10,7 @@
 #define POMDOG_DURATIONSECONDS_7361380F_B525_46D6_A6B7_51EB8AD523C0_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <chrono>

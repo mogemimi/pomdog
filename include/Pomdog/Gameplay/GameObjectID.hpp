@@ -10,7 +10,7 @@
 #define POMDOG_GAMEOBJECTID_F68B7FC0_7009_433E_8F5E_153D5502766A_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Config/Export.hpp"

@@ -10,7 +10,7 @@
 #define POMDOG_RADIAN_671670CD_1B1C_4719_B0A1_D666BA07A0A9_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "detail/TaggedArithmetic.hpp"

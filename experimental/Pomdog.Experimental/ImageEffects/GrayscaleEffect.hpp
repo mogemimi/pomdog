@@ -10,7 +10,7 @@
 #define POMDOG_GRAYSCALEEFFECT_C2865F07_9F22_4BB6_8222_A317EE8C764A_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"

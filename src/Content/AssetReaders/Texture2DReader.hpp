@@ -10,7 +10,7 @@
 #define POMDOG_TEXTURE2DREADER_883B68A7_B64F_4C22_A88F_D764B0CCF37A_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <string>

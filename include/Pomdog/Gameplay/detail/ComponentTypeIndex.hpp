@@ -10,7 +10,7 @@
 #define POMDOG_COMPONENTTYPEINDEX_7EECA00A_8F27_4D17_A85A_E6B122008DB3_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Utility/Assert.hpp"

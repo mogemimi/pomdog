@@ -10,7 +10,7 @@
 #define POMDOG_GRADIENTPLANE_A123BDFD_A1B3_4203_BADC_F8622DBBD641_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Math/Vector2.hpp"

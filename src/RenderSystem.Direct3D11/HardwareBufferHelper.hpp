@@ -10,7 +10,7 @@
 #define POMDOG_HARDWAREBUFFERHELPER_3C0164CA_35BF_4EFF_B716_BC9058257CFA_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "PrerequisitesDirect3D11.hpp"

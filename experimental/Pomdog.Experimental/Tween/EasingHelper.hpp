@@ -10,7 +10,7 @@
 #define POMDOG_EASINGHELPER_2D00DDAA_9595_4407_90C9_B84D6BA447D2_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "Pomdog/Math/MathHelper.hpp"

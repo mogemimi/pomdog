@@ -10,7 +10,7 @@
 #define POMDOG_BLENDFUNCTION_5A8D5F85_1D0C_4274_8115_BCEE3F6122EA_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

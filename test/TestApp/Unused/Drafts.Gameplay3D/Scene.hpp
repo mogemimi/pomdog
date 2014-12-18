@@ -10,7 +10,7 @@
 #define POMDOG_SCENE_CA9897EE_0207_4645_A138_AD92A23D1207_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <memory>

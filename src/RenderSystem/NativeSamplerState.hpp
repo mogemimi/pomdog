@@ -10,7 +10,7 @@
 #define POMDOG_NATIVESAMPLERSTATE_4A6E443C_3960_4E46_BEFA_2BE77ABC1AFD_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

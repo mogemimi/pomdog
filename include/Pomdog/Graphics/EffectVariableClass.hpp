@@ -10,7 +10,7 @@
 #define POMDOG_EFFECTVARIABLECLASS_0B44E0FB_0B71_45D3_9981_8089B38B8655_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <cstdint>

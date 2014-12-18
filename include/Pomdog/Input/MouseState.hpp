@@ -10,7 +10,7 @@
 #define POMDOG_MOUSESTATE_0CEDE70B_5845_49FD_AA5F_2572AE32B73E_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include "ButtonState.hpp"

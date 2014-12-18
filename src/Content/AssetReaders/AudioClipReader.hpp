@@ -10,7 +10,7 @@
 #define POMDOG_AUDIOCLIPREADER_AAF2CAB2_CE84_449D_BB06_1B89C71AA848_HPP
 
 #if (_MSC_VER > 1000)
-#	pragma once
+#pragma once
 #endif
 
 #include <string>
