@@ -1,21 +1,23 @@
 ﻿#import "AppDelegate.h"
-
-#include "QuickStartGame.hpp"
+#include "../Source/QuickStartGame.hpp"
 #include <Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp>
 #include <Pomdog/Pomdog.hpp>
 #include <iostream>
 
+using Pomdog::GameHost;
 using Pomdog::Log;
 using Pomdog::LogEntry;
 using Pomdog::LogLevel;
 using Pomdog::ScopedConnection;
-using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
+
+@interface AppDelegate ()
+
+@property (weak) IBOutlet NSWindow *window;
+@end
 
 @implementation AppDelegate
 {
-	Bootstrapper bootstrapper;
 	ScopedConnection connection;
-
 	NSThread* gameRunThread;
 }
 
@@ -36,13 +38,31 @@ using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
 
 	gameRunThread = [[NSThread alloc] initWithTarget:self selector:@selector(runGame) object:nil];
 	[gameRunThread start];
-
+	
 	Log::Verbose("game mainloop thread run");
+}
+
+- (void)applicationWillTerminate:(NSNotification *)aNotification {
 }
 
 - (void)runGame
 {
-	bootstrapper.Run<QuickStart::QuickStartGame>([self window]);
+	using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
+
+	Bootstrapper bootstrapper([self window]);
+	bootstrapper.Run([](std::shared_ptr<GameHost> const& gameHost)
+	{
+		try {
+			QuickStart::QuickStartGame game{gameHost};
+			gameHost->Run(game);
+		}
+		catch (std::exception const& e) {
+			Log::Critical("Pomdog", e.what());
+		}
+	});
+	
+	///@note Shutdown your application
+	[NSApp terminate:nil];
 }
 
 @end
