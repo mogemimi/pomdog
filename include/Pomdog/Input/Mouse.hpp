@@ -31,7 +31,7 @@ public:
 
 	///@~Japanese
 	/// @brief マウスの現在の状態を取得します。
-	virtual MouseState const& State() const = 0;
+	virtual MouseState GetState() const = 0;
 };
 
 }// namespace Pomdog

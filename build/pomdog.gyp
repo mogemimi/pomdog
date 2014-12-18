@@ -205,6 +205,7 @@
       '../include/Pomdog/Graphics/detail/BuiltinShaderPool.hpp',
       '../include/Pomdog/Graphics/detail/EffectBinaryParameter.hpp',
       '../include/Pomdog/Graphics/detail/ShaderBytecode.hpp',
+      '../include/Pomdog/Input/Gamepad.hpp',
       '../include/Pomdog/Input/Keyboard.hpp',
       '../include/Pomdog/Input/Mouse.hpp',
       '../src/Application/GameClock.cpp',

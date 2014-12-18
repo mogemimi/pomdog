@@ -122,6 +122,7 @@
 
 // Input
 #include "Input/ButtonState.hpp"
+#include "Input/Gamepad.hpp"
 #include "Input/GamepadButtons.hpp"
 #include "Input/GamepadCapabilities.hpp"
 #include "Input/GamepadDPad.hpp"
