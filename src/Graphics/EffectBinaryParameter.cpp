@@ -104,36 +104,36 @@ void Set(EffectParameter & effectParameter, double value)
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, std::int32_t const* data, std::uint32_t count)
 {
-	using type = typename std::remove_pointer<decltype(data)>::type;
+	using type = std::remove_pointer<decltype(data)>::type;
 	static_assert(std::is_same<type, std::int32_t const>::value, "");
-	
+
 	POMDOG_ASSERT(count > 0);
 	effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, std::uint32_t const* data, std::uint32_t count)
 {
-	using type = typename std::remove_pointer<decltype(data)>::type;
+	using type = std::remove_pointer<decltype(data)>::type;
 	static_assert(std::is_same<type, std::uint32_t const>::value, "");
-	
+
 	POMDOG_ASSERT(count > 0);
 	effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, float const* data, std::uint32_t count)
 {
-	using type = typename std::remove_pointer<decltype(data)>::type;
+	using type = std::remove_pointer<decltype(data)>::type;
 	static_assert(std::is_same<type, float const>::value, "");
-	
+
 	POMDOG_ASSERT(count > 0);
 	effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, double const* data, std::uint32_t count)
 {
-	using type = typename std::remove_pointer<decltype(data)>::type;
+	using type = std::remove_pointer<decltype(data)>::type;
 	static_assert(std::is_same<type, double const>::value, "");
-	
+
 	POMDOG_ASSERT(count > 0);
 	effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
 }
