@@ -396,6 +396,14 @@
     'pomdog_library_directinput_sources': [
       '../src/InputSystem.DirectInput/DeviceContextDirectInput.cpp',
       '../src/InputSystem.DirectInput/DeviceContextDirectInput.hpp',
+      '../src/InputSystem.DirectInput/KeyboardCreatorDirectInput.cpp',
+      '../src/InputSystem.DirectInput/KeyboardCreatorDirectInput.hpp',
+      '../src/InputSystem.DirectInput/KeyboardDirectInput.cpp',
+      '../src/InputSystem.DirectInput/KeyboardDirectInput.hpp',
+      '../src/InputSystem.DirectInput/MouseCreatorDirectInput.cpp',
+      '../src/InputSystem.DirectInput/MouseCreatorDirectInput.hpp',
+      '../src/InputSystem.DirectInput/MouseDirectInput.cpp',
+      '../src/InputSystem.DirectInput/MouseDirectInput.hpp',
       '../src/InputSystem.DirectInput/PrerequisitesDirectInput.hpp',
     ],
     'pomdog_library_win32_sources': [
