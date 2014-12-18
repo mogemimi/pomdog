@@ -15,6 +15,7 @@
 
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Config/Export.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <functional>
@@ -29,7 +30,7 @@ namespace Pomdog {
 namespace Details {
 namespace SignalsAndSlots {
 
-class ConnectionBody {
+class POMDOG_EXPORT ConnectionBody {
 public:
 	virtual ~ConnectionBody() = default;
 	virtual void Disconnect() = 0;

@@ -38,9 +38,9 @@ public:
 	/// @brief 指定されたキーが離されているかどうかを取得します。
 	bool IsKeyUp(Keys key) const;
 
-	///@~Japanese
-	/// @brief キーの状態を設定します。
-	void SetKey(Keys key, KeyState state);
+	void SetKey(Keys key, KeyState keyState);
+
+	void ClearAllKeys();
 
 private:
 	std::bitset<std::numeric_limits<std::uint8_t>::max()> keyset;
