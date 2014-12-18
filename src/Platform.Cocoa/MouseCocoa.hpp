@@ -25,7 +25,7 @@ public:
 	MouseCocoa();
 
 	///@copydoc Pomdog::Mouse
-	MouseState const& State() const override;
+	MouseState GetState() const override;
 	
 	void Position(Point2D const& position);
 	void LeftButton(ButtonState buttonState);

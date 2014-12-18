@@ -17,7 +17,7 @@ MouseCocoa::MouseCocoa()
 : scrollWheel(0)
 {}
 //-----------------------------------------------------------------------
-MouseState const& MouseCocoa::State() const
+MouseState MouseCocoa::GetState() const
 {
 	return state;
 }

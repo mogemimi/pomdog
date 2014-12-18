@@ -25,7 +25,7 @@ public:
 	KeyboardCocoa();
 
 	///@copydoc Pomdog::Mouse
-	KeyboardState const& State() const override;
+	KeyboardState GetState() const override;
 	
 	void SetKey(Keys key, KeyState keyState);
 	

@@ -76,7 +76,7 @@ void InGameEditor::Update()
 	auto clock = gameHost->Clock();
 	auto mouse = gameHost->Mouse();
 	{
-		hierarchy.Touch(mouse->State());
+		hierarchy.Touch(mouse->GetState());
 		hierarchy.UpdateAnimation(clock->FrameDuration());
 	}
 }

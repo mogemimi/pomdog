@@ -14,7 +14,7 @@ namespace Cocoa {
 
 KeyboardCocoa::KeyboardCocoa() = default;
 //-----------------------------------------------------------------------
-KeyboardState const& KeyboardCocoa::State() const
+KeyboardState KeyboardCocoa::GetState() const
 {
 	return state;
 }
