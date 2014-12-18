@@ -393,6 +393,8 @@
       '../src/SoundSystem.XAudio2/SoundEffectXAudio2.hpp',
     ],
     'pomdog_library_directinput_sources': [
+      '../src/InputSystem.DirectInput/DeviceContextDirectInput.cpp',
+      '../src/InputSystem.DirectInput/DeviceContextDirectInput.hpp',
       '../src/InputSystem.DirectInput/PrerequisitesDirectInput.hpp',
     ],
     'pomdog_library_win32_sources': [
