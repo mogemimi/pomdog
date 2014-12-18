@@ -155,18 +155,16 @@ def Run():
 
     CopyTemplates(templates_directory, project_root)
     CopyFrameworkFiles(framework_root, project_root)
-    RenameContentByUrl(project_root, args.url, 'Platform.Cocoa/QuickStart-Info.plist')
+    RenameContentByUrl(project_root, args.url, 'Platform.Cocoa/Info.plist')
     RenameSourceContent(project_root, identifier, 'README.md')
     RenameSourceContent(project_root, identifier, 'Build/QuickStart.gyp')
     RenameSourceContent(project_root, identifier, 'Source/QuickStartGame.cpp')
     RenameSourceContent(project_root, identifier, 'Source/QuickStartGame.hpp')
     RenameSourceContent(project_root, identifier, 'Platform.Cocoa/AppDelegate.mm')
-    RenameSourceContent(project_root, identifier, 'Platform.Cocoa/QuickStart-Info.plist')
+    RenameSourceContent(project_root, identifier, 'Platform.Cocoa/Info.plist')
     RenameFilename(project_root, identifier, 'Build/QuickStart.gyp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.cpp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.hpp')
-    RenameFilename(project_root, identifier, 'Platform.Cocoa/QuickStart-Info.plist')
-    RenameFilename(project_root, identifier, 'Platform.Cocoa/QuickStart-Prefix.pch')
 
     print("Done.")
 

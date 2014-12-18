@@ -46,7 +46,8 @@ void QuickStartGame::Initialize()
 	{
 		effectPass = assets->Load<EffectPass>("SimpleEffect");
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
-		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass);
+		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
+			VertexDeclaration{VertexElementFormat::Float3, VertexElementFormat::Float2});
 	}
 	{
 		auto sampler = SamplerState::CreatePointClamp(graphicsDevice);

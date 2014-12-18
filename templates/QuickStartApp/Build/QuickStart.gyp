@@ -79,7 +79,7 @@
         ['OS == "mac"', {
           'sources': [
             '../Platform.Cocoa/main.mm',
-            '../Platform.Cocoa/QuickStart-Prefix.pch',
+            '../Platform.Cocoa/Prefix.pch',
             '../Platform.Cocoa/AppDelegate.h',
             '../Platform.Cocoa/AppDelegate.mm',
           ],
@@ -88,11 +88,11 @@
       'mac_bundle_resources': [
         '../Platform.Cocoa/Base.lproj/MainMenu.xib',
         '../Platform.Cocoa/English.lproj/InfoPlist.strings',
-        #'../Platform.Cocoa/Images.xcassets/',
+        '../Platform.Cocoa/Images.xcassets/',
         '../Content/',
       ],
       'xcode_settings': {
-        'INFOPLIST_FILE': '../Platform.Cocoa/QuickStart-Info.plist',
+        'INFOPLIST_FILE': '../Platform.Cocoa/Info.plist',
         'CLANG_ENABLE_OBJC_ARC': 'YES',
       },
     },
