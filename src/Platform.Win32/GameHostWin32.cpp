@@ -8,9 +8,11 @@
 
 #include "GameHostWin32.hpp"
 #include "GameWindowWin32.hpp"
+#include "../InputSystem/InputDeviceFactory.hpp"
 #include "../RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp"
 #include "../RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.hpp"
 #include "../SoundSystem.XAudio2/AudioEngineXAudio2.hpp"
+#include "../Application/SubsystemScheduler.hpp"
 #include <Pomdog/Application/Game.hpp>
 #include <Pomdog/Application/GameClock.hpp>
 #include <Pomdog/Audio/AudioEngine.hpp>
@@ -45,7 +47,8 @@ class GameHostWin32::Impl final {
 public:
 	Impl(std::shared_ptr<GameWindowWin32> const& window,
 		std::shared_ptr<SystemEventDispatcher> const& dipatcher,
-		RenderSystem::PresentationParameters const& presentationParameters);
+		RenderSystem::PresentationParameters const& presentationParameters,
+		std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory);
 
 	void Run(Game & game);
 
@@ -78,6 +81,7 @@ private:
 
 private:
 	GameClock clock;
+	Details::SubsystemScheduler subsystemScheduler;
 
 	std::shared_ptr<GameWindowWin32> gameWindow;
 
@@ -89,8 +93,7 @@ private:
 	std::unique_ptr<Pomdog::AssetManager> assetManager;
 	std::shared_ptr<Pomdog::AudioEngine> audioEngine;
 
-//	std::shared_ptr<KeyboardWin32> keyboard;
-//	std::shared_ptr<MouseWin32> mouse;
+	std::unique_ptr<InputSystem::InputDeviceFactory> inputDeviceFactory;
 	std::shared_ptr<Pomdog::Keyboard> keyboard;
 	std::shared_ptr<Pomdog::Mouse> mouse;
 
@@ -100,9 +103,11 @@ private:
 //-----------------------------------------------------------------------
 GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& window,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
-	RenderSystem::PresentationParameters const& presentationParameters)
+	RenderSystem::PresentationParameters const& presentationParameters,
+	std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactoryIn)
 	: gameWindow(window)
 	, systemEventDispatcher(eventDispatcher)
+	, inputDeviceFactory(std::move(inputDeviceFactoryIn))
 	, exitRequest(false)
 	, surfaceResizeRequest(false)
 {
@@ -126,9 +131,9 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& window,
 
 	audioEngine = std::make_shared<Pomdog::AudioEngine>();
 
-	//keyboard = std::make_shared<KeyboardWin32>();
-	//mouse = std::make_shared<MouseWin32>();
-	//gameWindow->BindToDelegate(mouse);
+	POMDOG_ASSERT(inputDeviceFactory);
+	keyboard = inputDeviceFactory->CreateKeyboard(subsystemScheduler);
+	mouse = inputDeviceFactory->CreateMouse(subsystemScheduler);
 
 	{
 		std::string rootDirectory = "Content";
@@ -151,6 +156,7 @@ void GameHostWin32::Impl::Run(Game & game)
 		MessagePump();
 		clock.Tick();
 		DoEvents();
+		subsystemScheduler.OnUpdate();
 		game.Update();
 		RenderFrame(game);
 
@@ -257,8 +263,9 @@ std::shared_ptr<Pomdog::Mouse> GameHostWin32::Impl::Mouse()
 //-----------------------------------------------------------------------
 GameHostWin32::GameHostWin32(std::shared_ptr<GameWindowWin32> const& window,
 	std::shared_ptr<SystemEventDispatcher> const& dispatcher,
-	Details::RenderSystem::PresentationParameters const& presentationParameters)
-	: impl(std::make_unique<Impl>(window, dispatcher, presentationParameters))
+	Details::RenderSystem::PresentationParameters const& presentationParameters,
+	std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory)
+	: impl(std::make_unique<Impl>(window, dispatcher, presentationParameters, std::move(inputDeviceFactory)))
 {}
 //-----------------------------------------------------------------------
 GameHostWin32::~GameHostWin32() = default;

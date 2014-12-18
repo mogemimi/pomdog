@@ -24,6 +24,11 @@ namespace RenderSystem {
 class PresentationParameters;
 
 }// namespace RenderSystem
+namespace InputSystem {
+
+class InputDeviceFactory;
+
+}// namespace InputSystem
 namespace Win32 {
 
 class GameWindowWin32;
@@ -32,7 +37,8 @@ class GameHostWin32 final: public GameHost {
 public:
 	GameHostWin32(std::shared_ptr<GameWindowWin32> const& window,
 		std::shared_ptr<SystemEventDispatcher> const& dispatcher,
-		Details::RenderSystem::PresentationParameters const& presentationParameters);
+		Details::RenderSystem::PresentationParameters const& presentationParameters,
+		std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory);
 
 	~GameHostWin32();
 
