@@ -30,11 +30,11 @@ class InputDeviceFactory final: Noncopyable {
 public:
 	~InputDeviceFactory();
 
-	//std::shared_ptr<Gamepad> CreateGamepad();
+	//std::shared_ptr<Gamepad> CreateGamepad(SubsystemScheduler & scheduler);
 
-	std::shared_ptr<Keyboard> CreateKeyboard();
+	std::shared_ptr<Keyboard> CreateKeyboard(SubsystemScheduler & scheduler);
 
-	std::shared_ptr<Mouse> CreateMouse();
+	std::shared_ptr<Mouse> CreateMouse(SubsystemScheduler & scheduler);
 
 	void AddCreator(std::unique_ptr<KeyboardCreator> && creator);
 

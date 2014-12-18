@@ -17,6 +17,9 @@
 
 namespace Pomdog {
 namespace Details {
+
+class SubsystemScheduler;
+
 namespace InputSystem {
 
 template <class T>
@@ -24,7 +27,7 @@ class InputDeviceCreator {
 public:
 	virtual ~InputDeviceCreator() = default;
 
-	virtual std::shared_ptr<T> Create() = 0;
+	virtual std::shared_ptr<T> Create(SubsystemScheduler & scheduler) = 0;
 };
 
 }// namespace InputSystem

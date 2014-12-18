@@ -17,7 +17,7 @@ namespace InputSystem {
 //-----------------------------------------------------------------------
 InputDeviceFactory::~InputDeviceFactory() = default;
 //-----------------------------------------------------------------------
-std::shared_ptr<Keyboard> InputDeviceFactory::CreateKeyboard()
+std::shared_ptr<Keyboard> InputDeviceFactory::CreateKeyboard(SubsystemScheduler & scheduler)
 {
 	if (!keyboardCreator) {
 		// FUS RO DAH!
@@ -26,13 +26,13 @@ std::shared_ptr<Keyboard> InputDeviceFactory::CreateKeyboard()
 	}
 
 	POMDOG_ASSERT(keyboardCreator);
-	auto keyboard = keyboardCreator->Create();
+	auto keyboard = keyboardCreator->Create(scheduler);
 
 	POMDOG_ASSERT(keyboard);
 	return std::move(keyboard);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Mouse> InputDeviceFactory::CreateMouse()
+std::shared_ptr<Mouse> InputDeviceFactory::CreateMouse(SubsystemScheduler & scheduler)
 {
 	if (!mouseCreator) {
 		// FUS RO DAH!
@@ -41,7 +41,7 @@ std::shared_ptr<Mouse> InputDeviceFactory::CreateMouse()
 	}
 
 	POMDOG_ASSERT(mouseCreator);
-	auto mouse = mouseCreator->Create();
+	auto mouse = mouseCreator->Create(scheduler);
 
 	POMDOG_ASSERT(mouse);
 	return std::move(mouse);

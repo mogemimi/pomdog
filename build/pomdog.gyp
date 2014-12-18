@@ -209,6 +209,7 @@
       '../include/Pomdog/Input/Keyboard.hpp',
       '../include/Pomdog/Input/Mouse.hpp',
       '../src/Application/GameClock.cpp',
+      '../src/Application/SubsystemScheduler.hpp',
       '../src/Application/SystemEventDispatcher.hpp',
       '../src/Application/Timer.cpp',
       '../src/Application/TimeSource.hpp',
