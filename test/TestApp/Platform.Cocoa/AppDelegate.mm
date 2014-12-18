@@ -18,10 +18,14 @@ using Pomdog::LogEntry;
 using Pomdog::LogLevel;
 using Pomdog::ScopedConnection;
 
+@interface AppDelegate ()
+
+@property (weak) IBOutlet NSWindow *window;
+@end
+
 @implementation AppDelegate
 {
 	ScopedConnection connection;
-	
 	NSThread* gameRunThread;
 }
 
@@ -44,6 +48,9 @@ using Pomdog::ScopedConnection;
 	[gameRunThread start];
 	
 	Log::Verbose("game mainloop thread run");
+}
+
+- (void)applicationWillTerminate:(NSNotification *)aNotification {
 }
 
 - (void)runGame

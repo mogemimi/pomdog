@@ -114,7 +114,7 @@
         ['OS == "mac"', {
           'sources': [
             '../test/TestApp/Platform.Cocoa/main.mm',
-            '../test/TestApp/Platform.Cocoa/TestApp-Prefix.pch',
+            '../test/TestApp/Platform.Cocoa/Prefix.pch',
             '../test/TestApp/Platform.Cocoa/AppDelegate.h',
             '../test/TestApp/Platform.Cocoa/AppDelegate.mm',
           ],
@@ -139,10 +139,10 @@
         '../test/TestApp/Content/',
         '../test/TestApp/Platform.Cocoa/Base.lproj/MainMenu.xib',
         '../test/TestApp/Platform.Cocoa/English.lproj/InfoPlist.strings',
-        #'../test/TestApp/Platform.Cocoa/Images.xcassets/',
+        '../test/TestApp/Platform.Cocoa/Images.xcassets/',
       ],
       'xcode_settings': {
-        'INFOPLIST_FILE': '../test/TestApp/Platform.Cocoa/TestApp-Info.plist',
+        'INFOPLIST_FILE': '../test/TestApp/Platform.Cocoa/Info.plist',
         'CLANG_ENABLE_OBJC_ARC': 'YES',
       },
     },
