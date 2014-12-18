@@ -196,9 +196,10 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 //-----------------------------------------------------------------------
 void CocoaGameHost::Impl::Run(Game & game)
 {
-	///@note make current context on this thread
-	//openGLContext->BindCurrentContext();// badcode
+	openGLContext->LockContext();
+	openGLContext->MakeCurrentContext();
 	game.Initialize();
+	openGLContext->UnlockContext();
 
 	if (!game.CompleteInitialize()) {
 		return;
@@ -231,7 +232,7 @@ void CocoaGameHost::Impl::RenderFrame(Game & game)
 	}
 
 	openGLContext->LockContext();
-	openGLContext->BindCurrentContext();
+	openGLContext->MakeCurrentContext();
 
 	game.Draw();
 
@@ -298,7 +299,7 @@ void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
 void CocoaGameHost::Impl::ClientSizeChanged()
 {
 	openGLContext->LockContext();
-	openGLContext->BindCurrentContext();
+	openGLContext->MakeCurrentContext();
 	{
 		POMDOG_ASSERT(openGLContext->NativeOpenGLContext() != nil);
 		[openGLContext->NativeOpenGLContext() update];
@@ -306,7 +307,6 @@ void CocoaGameHost::Impl::ClientSizeChanged()
 		auto bounds = gameWindow->ClientBounds();
 		gameWindow->ClientSizeChanged(bounds.Width, bounds.Height);
 	}
-	openGLContext->UnbindCurrentContext();
 	openGLContext->UnlockContext();
 }
 //-----------------------------------------------------------------------

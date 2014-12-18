@@ -24,9 +24,9 @@ class OpenGLContext: Noncopyable {
 public:
 	virtual ~OpenGLContext() = default;
 
-	virtual void BindCurrentContext() = 0;
+	virtual void MakeCurrentContext() = 0;
 
-	virtual void UnbindCurrentContext() = 0;
+	virtual void ClearCurrentContext() = 0;
 
 	virtual void SwapBuffers() = 0;
 };

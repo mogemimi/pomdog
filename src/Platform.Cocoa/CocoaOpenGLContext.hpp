@@ -30,9 +30,9 @@ public:
 	
 	~CocoaOpenGLContext();
 
-	void BindCurrentContext() override;
+	void MakeCurrentContext() override;
 
-	void UnbindCurrentContext() override;
+	void ClearCurrentContext() override;
 
 	void SwapBuffers() override;
 	

@@ -28,9 +28,9 @@ CocoaOpenGLContext::CocoaOpenGLContext(NSOpenGLPixelFormat* pixelFormatIn)
 	[openGLContext makeCurrentContext];
 
 	{
-		CGLContextObj coreOpenGLContext = static_cast<CGLContextObj>([openGLContext CGLContextObj]);
+		CGLContextObj cglContext = [openGLContext CGLContextObj];
 		constexpr GLint swapInterval = 1;
-		CGLSetParameter(coreOpenGLContext, kCGLCPSwapInterval, &swapInterval);
+		CGLSetParameter(cglContext, kCGLCPSwapInterval, &swapInterval);
 	}
 	{
 		constexpr GLint swapInterval = 1;
@@ -47,13 +47,13 @@ CocoaOpenGLContext::~CocoaOpenGLContext()
 	this->pixelFormat = nil;
 }
 //-----------------------------------------------------------------------
-void CocoaOpenGLContext::BindCurrentContext()
+void CocoaOpenGLContext::MakeCurrentContext()
 {
 	POMDOG_ASSERT(openGLContext != nil);
 	[openGLContext makeCurrentContext];
 }
 //-----------------------------------------------------------------------
-void CocoaOpenGLContext::UnbindCurrentContext()
+void CocoaOpenGLContext::ClearCurrentContext()
 {
 	POMDOG_ASSERT(openGLContext != nil);
 	[NSOpenGLContext clearCurrentContext];
@@ -68,15 +68,13 @@ void CocoaOpenGLContext::SwapBuffers()
 void CocoaOpenGLContext::LockContext()
 {
 	POMDOG_ASSERT(openGLContext != nil);
-	CGLContextObj coreOpenGLContext = static_cast<CGLContextObj>([openGLContext CGLContextObj]);
-	CGLLockContext(coreOpenGLContext);
+	CGLLockContext([openGLContext CGLContextObj]);
 }
 //-----------------------------------------------------------------------
 void CocoaOpenGLContext::UnlockContext()
 {
 	POMDOG_ASSERT(openGLContext != nil);
-	CGLContextObj coreOpenGLContext = static_cast<CGLContextObj>([openGLContext CGLContextObj]);
-	CGLUnlockContext(coreOpenGLContext);
+	CGLUnlockContext([openGLContext CGLContextObj]);
 }
 //-----------------------------------------------------------------------
 NSOpenGLContext* CocoaOpenGLContext::NativeOpenGLContext()
