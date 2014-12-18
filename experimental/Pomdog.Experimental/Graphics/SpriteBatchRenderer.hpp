@@ -1,9 +1,7 @@
 ﻿//
 //  Copyright (C) 2013-2014 mogemimi.
-//
-//  Distributed under the MIT License.
-//  See accompanying file LICENSE.md or copy at
-//  http://enginetrouble.net/pomdog/LICENSE.md for details.
+//  Distributed under the MIT License. See LICENSE.md or
+//  http://enginetrouble.net/pomdog/license for details.
 //
 
 #ifndef POMDOG_SPRITEBATCHRENDERER_FAFB0E53_90D1_47DF_B4EA_C9D551D0721E_HPP

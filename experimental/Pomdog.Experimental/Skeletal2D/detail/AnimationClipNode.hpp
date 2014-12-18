@@ -1,9 +1,7 @@
 ﻿//
 //  Copyright (C) 2013-2014 mogemimi.
-//
-//  Distributed under the MIT License.
-//  See accompanying file LICENSE.md or copy at
-//  http://enginetrouble.net/pomdog/LICENSE.md for details.
+//  Distributed under the MIT License. See LICENSE.md or
+//  http://enginetrouble.net/pomdog/license for details.
 //
 
 #ifndef POMDOG_ANIMATIONCLIPNODE_6B87052F_753A_4B60_B736_400EBF81491F_HPP

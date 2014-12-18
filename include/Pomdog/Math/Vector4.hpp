@@ -1,9 +1,7 @@
 ﻿//
 //  Copyright (C) 2013-2014 mogemimi.
-//
-//  Distributed under the MIT License.
-//  See accompanying file LICENSE.md or copy at
-//  http://enginetrouble.net/pomdog/LICENSE.md for details.
+//  Distributed under the MIT License. See LICENSE.md or
+//  http://enginetrouble.net/pomdog/license for details.
 //
 
 #ifndef POMDOG_VECTOR4_142CAE48_C528_4EAE_B8D1_9D04F174FDF1_HPP

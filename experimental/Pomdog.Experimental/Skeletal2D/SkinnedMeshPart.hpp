@@ -1,9 +1,7 @@
 ﻿//
 //  Copyright (C) 2013-2014 mogemimi.
-//
-//  Distributed under the MIT License.
-//  See accompanying file LICENSE.md or copy at
-//  http://enginetrouble.net/pomdog/LICENSE.md for details.
+//  Distributed under the MIT License. See LICENSE.md or
+//  http://enginetrouble.net/pomdog/license for details.
 //
 
 #ifndef POMDOG_SKINNEDMESHPART_DAE847CA_8830_401A_8785_0EAB6DC603D5_HPP

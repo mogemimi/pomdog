@@ -1,9 +1,7 @@
 ﻿//
 //  Copyright (C) 2013-2014 mogemimi.
-//
-//  Distributed under the MIT License.
-//  See accompanying file LICENSE.md or copy at
-//  http://enginetrouble.net/pomdog/LICENSE.md for details.
+//  Distributed under the MIT License. See LICENSE.md or
+//  http://enginetrouble.net/pomdog/license for details.
 //
 
 #ifndef POMDOG_RASTERIZERSTATEDIRECT3D11_35B2E2F8_2BA8_4906_A6F9_D2273F71F45C_HPP

@@ -1,9 +1,7 @@
 #
 #  Copyright (C) 2013-2014 mogemimi.
-#
-#  Distributed under the MIT License.
-#  See accompanying file LICENSE.md or copy at
-#  http://enginetrouble.net/pomdog/LICENSE.md for details.
+#  Distributed under the MIT License. See LICENSE.md or
+#  http://enginetrouble.net/pomdog/license for details.
 #
 
 
@@ -16,7 +14,7 @@ from string import Template
 
 
 def ParsingCommandLineAraguments():
-    parser = argparse.ArgumentParser(prog='skeleton_generator',
+    parser = argparse.ArgumentParser(prog='source2utf8',
                                      description='Convert source files to UTF-8 with signature.')
     parser.add_argument('directory', default='def')
     parser.add_argument('-v', '--version', action='version', version='%(prog)s version 0.1.0')
@@ -29,6 +27,7 @@ def IsSourceFile(path):
       or ext == '.hpp'
       or ext == '.mm'
       or ext == '.hh'
+      or ext == '.m'
       or ext == '.h'
       or ext == '.c'
       or ext == '.inc')

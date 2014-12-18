@@ -1,9 +1,7 @@
 #
 #  Copyright (C) 2013-2014 mogemimi.
-#
-#  Distributed under the MIT License.
-#  See accompanying file LICENSE.md or copy at
-#  http://enginetrouble.net/pomdog/LICENSE.md for details.
+#  Distributed under the MIT License. See LICENSE.md or
+#  http://enginetrouble.net/pomdog/license for details.
 #
 
 # Help:
@@ -145,10 +143,8 @@ def GetGitUserName():
 def CreateHeader(copyright_holder):
     return Template("""//
 //  Copyright (C) $year $copyright_holder.
-//
-//  Distributed under the MIT License.
-//  See accompanying file LICENSE.md or copy at
-//  http://enginetrouble.net/pomdog/LICENSE.md for details.
+//  Distributed under the MIT License. See LICENSE.md or
+//  http://enginetrouble.net/pomdog/license for details.
 //
 """).substitute(year="2013-2014", copyright_holder=copyright_holder)
 
