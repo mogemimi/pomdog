@@ -12,7 +12,7 @@
 #endif
 
 #include "LogLevel.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Event/Signal.hpp"
 #include <functional>
 #include <string>

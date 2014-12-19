@@ -12,7 +12,7 @@
 #endif
 
 #include "Pomdog/Event/Signal.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <string>
 
 namespace Pomdog {

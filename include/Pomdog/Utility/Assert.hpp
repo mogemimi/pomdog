@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "Pomdog/Config/Platform.hpp"
+#include "Pomdog/Basic/Platform.hpp"
 #include <cassert>
 
 #ifdef POMDOG_COMPILER_MSVC

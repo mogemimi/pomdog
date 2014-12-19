@@ -12,7 +12,7 @@
 #endif
 
 #include "detail/ForwardDeclarations.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <memory>
 
 namespace Pomdog {

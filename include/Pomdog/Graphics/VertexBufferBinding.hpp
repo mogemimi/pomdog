@@ -12,7 +12,7 @@
 #endif
 
 #include "VertexDeclaration.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <memory>
 

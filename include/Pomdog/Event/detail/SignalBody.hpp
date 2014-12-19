@@ -13,7 +13,7 @@
 
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <functional>

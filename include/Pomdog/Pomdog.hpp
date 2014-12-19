@@ -141,7 +141,8 @@
 #include "Utility/Exception.hpp"
 #include "Utility/StringFormat.hpp"
 
-#include "Config/Export.hpp"
-#include "Config/Platform.hpp"
+#include "Basic/Export.hpp"
+#include "Basic/Platform.hpp"
+#include "Basic/Version.hpp"
 
 #endif // !defined(POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP)

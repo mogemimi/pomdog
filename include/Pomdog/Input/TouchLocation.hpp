@@ -12,7 +12,7 @@
 #endif
 
 #include "TouchLocationState.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include <cstdint>
 

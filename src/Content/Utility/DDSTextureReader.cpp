@@ -7,11 +7,11 @@
 #include "DDSTextureReader.hpp"
 #include "MakeFourCC.hpp"
 #include "BinaryReader.hpp"
-#include <Pomdog/Config/Platform.hpp>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/Exception.hpp>
-#include <Pomdog/Graphics/Texture2D.hpp>
-#include <Pomdog/Graphics/SurfaceFormat.hpp>
+#include "Pomdog/Basic/Platform.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Graphics/Texture2D.hpp"
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
 
 namespace Pomdog {
 namespace Details {

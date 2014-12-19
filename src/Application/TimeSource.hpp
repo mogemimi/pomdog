@@ -11,14 +11,14 @@
 #pragma once
 #endif
 
-#include <Pomdog/Config/Platform.hpp>
+#include "Pomdog/Basic/Platform.hpp"
 
 #if defined(POMDOG_PLATFORM_MACOSX)
 #	include "../Platform.Cocoa/TimeSourceCocoa.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32)
 #	include "../Platform.Win32/TimeSourceWin32.hpp"
 #else
-#	include <Pomdog/Application/DurationSeconds.hpp>
+#	include "Pomdog/Application/DurationSeconds.hpp"
 #	include <chrono>
 #	error "Platform undefined or not supported."
 #endif

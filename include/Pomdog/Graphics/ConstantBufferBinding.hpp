@@ -12,7 +12,7 @@
 #endif
 
 #include "detail/ForwardDeclarations.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <unordered_map>
 #include <string>
 #include <memory>

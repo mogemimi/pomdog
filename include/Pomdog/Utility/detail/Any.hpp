@@ -12,7 +12,7 @@
 #endif
 
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <typeindex>
 #include <typeinfo>
 #include <type_traits>

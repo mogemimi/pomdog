@@ -13,7 +13,7 @@
 
 #include "detail/ForwardDeclarations.hpp"
 #include "EventConnection.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 
 namespace Pomdog {
 

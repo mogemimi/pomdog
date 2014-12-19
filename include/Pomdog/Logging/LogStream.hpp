@@ -12,7 +12,7 @@
 #endif
 
 #include "LogLevel.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <type_traits>
 #include <string>
 #include <sstream>

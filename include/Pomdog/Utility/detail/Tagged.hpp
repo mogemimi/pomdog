@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <type_traits>
 #include <functional>
 #include <utility>

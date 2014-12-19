@@ -14,7 +14,7 @@
 #include "detail/GameComponent.hpp"
 #include "GameObjectID.hpp"
 #include "GameObjectContext.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstdint>
 #include <type_traits>

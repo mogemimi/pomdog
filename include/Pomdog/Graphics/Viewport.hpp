@@ -12,7 +12,7 @@
 #endif
 
 #include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 
 namespace Pomdog {

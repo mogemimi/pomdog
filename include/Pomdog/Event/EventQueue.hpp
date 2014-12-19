@@ -13,7 +13,7 @@
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Event.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <functional>
 #include <utility>

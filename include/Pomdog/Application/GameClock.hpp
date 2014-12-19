@@ -12,7 +12,7 @@
 #endif
 
 #include "Pomdog/Application/DurationSeconds.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Event/Signal.hpp"
 #include <cstdint>
 #include <memory>

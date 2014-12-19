@@ -13,7 +13,7 @@
 
 #include "TextureAddressMode.hpp"
 #include "TextureFilter.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <limits>
 

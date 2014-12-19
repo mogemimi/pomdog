@@ -13,7 +13,7 @@
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <typeindex>
 #include <type_traits>
 #include <map>

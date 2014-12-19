@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "Pomdog/Config/Platform.hpp"
+#include "Pomdog/Basic/Platform.hpp"
 
 namespace Pomdog {
 namespace Details {

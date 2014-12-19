@@ -13,7 +13,7 @@
 
 #include "detail/AssetLoaderContext.hpp"
 #include "detail/AssetDictionary.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <utility>
 
 namespace Pomdog {

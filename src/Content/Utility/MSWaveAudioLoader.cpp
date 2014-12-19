@@ -9,7 +9,7 @@
 #include "Pomdog/Audio/AudioClip.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Config/Platform.hpp"
+#include "Pomdog/Basic/Platform.hpp"
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
 #include "../../SoundSystem.OpenAL/AudioClipAL.hpp"
 #include <AudioToolbox/AudioFile.h>

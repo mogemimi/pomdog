@@ -12,7 +12,7 @@
 #endif
 
 #include "detail/EventArguments.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <type_traits>
 #include <utility>

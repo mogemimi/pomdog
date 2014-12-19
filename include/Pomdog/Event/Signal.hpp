@@ -13,7 +13,7 @@
 
 #include "detail/SignalBody.hpp"
 #include "EventConnection.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <functional>
 #include <utility>

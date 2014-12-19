@@ -14,7 +14,7 @@
 #include "Blend.hpp"
 #include "BlendFunction.hpp"
 #include "Pomdog/Math/Color.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <limits>
 

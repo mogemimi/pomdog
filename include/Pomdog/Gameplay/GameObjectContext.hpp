@@ -13,7 +13,7 @@
 
 #include "Component.hpp"
 #include "GameObjectID.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstdint>
 #include <type_traits>

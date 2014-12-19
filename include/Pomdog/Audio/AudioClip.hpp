@@ -14,7 +14,7 @@
 #include "detail/ForwardDeclarations.hpp"
 #include "AudioChannels.hpp"
 #include "Pomdog/Application/DurationSeconds.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <memory>
 
