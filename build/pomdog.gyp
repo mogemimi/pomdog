@@ -34,6 +34,7 @@
       '../include/Pomdog/Audio/AudioEmitter.hpp',
       '../include/Pomdog/Audio/AudioListener.hpp',
       '../include/Pomdog/Audio/SoundState.hpp',
+      '../include/Pomdog/Basic/Version.hpp',
       '../include/Pomdog/Config/Export.hpp',
       '../include/Pomdog/Config/Platform.hpp',
       '../include/Pomdog/Event/Event.hpp',
