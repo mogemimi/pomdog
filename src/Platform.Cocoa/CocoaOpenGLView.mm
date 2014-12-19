@@ -31,6 +31,7 @@
 	}
 	return self;
 }
+//-----------------------------------------------------------------------
 - (BOOL)isFlipped
 {
 	return TRUE;
@@ -65,15 +66,14 @@
 {
 	[super lockFocus];
 
-	NSOpenGLContext* context = [self openGLContext];
-	if (!context) {
+	if (openGLContext_ == nil) {
 		return;
 	}
 	
-	if ([context view] != self) {
-		[context setView:self];
+	if ([openGLContext_ view] != self) {
+		[openGLContext_ setView:self];
 	}
-	[context makeCurrentContext];
+	[openGLContext_ makeCurrentContext];
 }
 //-----------------------------------------------------------------------
 -(void)viewDidMoveToWindow

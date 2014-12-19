@@ -47,6 +47,10 @@ RenderTarget2DGL4::RenderTarget2DGL4(std::int32_t pixelWidth, std::int32_t pixel
 		
 		glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer->value);
 
+		#ifdef DEBUG
+		ErrorChecker::CheckError("glBindRenderbuffer", __FILE__, __LINE__);
+		#endif
+
 		POMDOG_ASSERT(pixelWidth > 0);
 		POMDOG_ASSERT(pixelHeight > 0);
 	
