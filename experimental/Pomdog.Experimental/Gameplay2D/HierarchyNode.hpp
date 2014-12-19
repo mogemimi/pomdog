@@ -12,7 +12,7 @@
 #endif
 
 #include "Pomdog/Gameplay/GameObject.hpp"
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <functional>
 

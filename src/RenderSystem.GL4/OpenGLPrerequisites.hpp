@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include <Pomdog/Config/Platform.hpp>
+#include "Pomdog/Basic/Platform.hpp"
 
 #if defined(POMDOG_PLATFORM_WIN32)
 #	include <GL/glew.h>

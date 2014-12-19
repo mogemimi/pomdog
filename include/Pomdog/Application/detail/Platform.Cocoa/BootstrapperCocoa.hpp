@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "Pomdog/Config/Export.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #import <Cocoa/Cocoa.h>
 #include <memory>
 #include <functional>
