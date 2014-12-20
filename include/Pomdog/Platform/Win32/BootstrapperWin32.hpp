@@ -11,17 +11,8 @@
 #pragma once
 #endif
 
-#ifndef STRICT
-#	define STRICT
-#endif
-#ifndef	WIN32_LEAN_AND_MEAN
-#	define WIN32_LEAN_AND_MEAN
-#endif
-#if !defined(NOMINMAX) && defined(_MSC_VER)
-#	define NOMINMAX
-#endif
-
-#include <Windows.h>
+#include "BootstrapSettingsWin32.hpp"
+#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include <memory>
 #include <functional>
 
@@ -32,20 +23,14 @@ class GameHost;
 namespace Details {
 namespace Win32 {
 
-class GameWindowWin32;
-
 class BootstrapperWin32 {
 public:
-	BootstrapperWin32(HINSTANCE hInstance, int nCmdShow, int width, int height, bool isFullscreen);
+	explicit BootstrapperWin32(BootstrapSettingsWin32 const& settings);
 
 	void Run(std::function<void(std::shared_ptr<GameHost> const& gameHost)> const& run);
 
 private:
-	HINSTANCE hInstance;
-	int nCmdShow;
-	int width;
-	int height;
-	bool isFullscreen;
+	BootstrapSettingsWin32 settings;
 };
 
 }// namespace Win32

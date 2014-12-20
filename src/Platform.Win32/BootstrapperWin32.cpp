@@ -4,7 +4,7 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include "Pomdog/Application/detail/Platform.Win32/BootstrapperWin32.hpp"
+#include "Pomdog/Platform/Win32/BootstrapperWin32.hpp"
 #include "GameHostWin32.hpp"
 #include "GameWindowWin32.hpp"
 #include "../InputSystem.DirectInput/DeviceContextDirectInput.hpp"
@@ -19,25 +19,21 @@ namespace Pomdog {
 namespace Details {
 namespace Win32 {
 //-----------------------------------------------------------------------
-BootstrapperWin32::BootstrapperWin32(HINSTANCE hInstanceIn, int nCmdShowIn, int widthIn, int heightIn, bool isFullscreenIn)
-	: hInstance(hInstanceIn)
-	, nCmdShow(nCmdShowIn)
-	, width(widthIn)
-	, height(heightIn)
-	, isFullscreen(isFullscreenIn)
+BootstrapperWin32::BootstrapperWin32(BootstrapSettingsWin32 const& settingsIn)
+	: settings(settingsIn)
 {}
 //-----------------------------------------------------------------------
 void BootstrapperWin32::Run(std::function<void(std::shared_ptr<GameHost> const& gameHost)> const& runGame)
 {
 	Details::RenderSystem::PresentationParameters presentationParameters;
-	presentationParameters.BackBufferHeight = height;
-	presentationParameters.BackBufferWidth = width;
+	presentationParameters.BackBufferHeight = settings.Height;
+	presentationParameters.BackBufferWidth = settings.Width;
 	presentationParameters.DepthFormat = DepthFormat::Depth24Stencil8;
-	presentationParameters.IsFullScreen = isFullscreen;
+	presentationParameters.IsFullScreen = settings.IsFullscreen;
 
 	auto systemEventDispatcher = std::make_shared<SystemEventDispatcher>();
 
-	auto gameWindow = std::make_shared<GameWindowWin32>(hInstance, nCmdShow,
+	auto gameWindow = std::make_shared<GameWindowWin32>(settings.HInstance, settings.CmdShow, settings.Icon, settings.IconSmall,
 		systemEventDispatcher, presentationParameters);
 
 	auto inputDeviceFactory = std::make_unique<Details::InputSystem::InputDeviceFactory>();
@@ -45,7 +41,7 @@ void BootstrapperWin32::Run(std::function<void(std::shared_ptr<GameHost> const& 
 	{
 		using namespace Details::InputSystem::DirectInput;
 		auto deviceContext = std::make_shared<DeviceContextDirectInput>(
-			hInstance, gameWindow->NativeWindowHandle());
+			settings.HInstance, gameWindow->NativeWindowHandle());
 
 		auto keyboardCreator = std::make_unique<KeyboardCreatorDirectInput>(deviceContext);
 		inputDeviceFactory->AddCreator(std::move(keyboardCreator));

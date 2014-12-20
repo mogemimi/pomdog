@@ -11,9 +11,9 @@
 #pragma once
 #endif
 
-#include "Win32Prerequisites.hpp"
 #include "../Application/SystemEventDispatcher.hpp"
-#include <Pomdog/Application/GameWindow.hpp>
+#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
+#include "Pomdog/Application/GameWindow.hpp"
 #include <memory>
 
 namespace Pomdog {
@@ -27,7 +27,7 @@ namespace Win32 {
 
 class GameWindowWin32 final: public GameWindow {
 public:
-	GameWindowWin32(HINSTANCE hInstance, int nCmdShow,
+	GameWindowWin32(HINSTANCE hInstance, int nCmdShow, HICON icon, HICON iconSmall,
 		std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
 		Details::RenderSystem::PresentationParameters const& presentationParameters);
 

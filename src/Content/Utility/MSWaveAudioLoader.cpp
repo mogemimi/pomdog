@@ -18,7 +18,7 @@
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "MakeFourCC.hpp"
 #include "../../SoundSystem.XAudio2/AudioClipXAudio2.hpp"
-#include "../../Platform.Win32/Win32Prerequisites.hpp"
+#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include <mmsystem.h>
 #endif
 #include <memory>

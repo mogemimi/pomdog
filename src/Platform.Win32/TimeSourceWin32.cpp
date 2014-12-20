@@ -5,8 +5,8 @@
 //
 
 #include "TimeSourceWin32.hpp"
-#include "Win32Prerequisites.hpp"
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Details {

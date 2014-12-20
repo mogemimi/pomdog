@@ -325,7 +325,7 @@
       '../src/SoundSystem.OpenAL/SoundEffectAL.hpp',
     ],
     'pomdog_library_cocoa_sources': [
-      '../include/Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp',
+      '../include/Pomdog/Platform/Cocoa/BootstrapperCocoa.hpp',
       '../src/Platform.Cocoa/BootstrapperCocoa.mm',
       '../src/Platform.Cocoa/CocoaGameHost.hpp',
       '../src/Platform.Cocoa/CocoaGameHost.mm',
@@ -408,7 +408,9 @@
       '../src/InputSystem.DirectInput/PrerequisitesDirectInput.hpp',
     ],
     'pomdog_library_win32_sources': [
-      '../include/Pomdog/Application/detail/Platform.Win32/BootstrapperWin32.hpp',
+      '../include/Pomdog/Platform/Win32/BootstrapperWin32.hpp',
+      '../include/Pomdog/Platform/Win32/BootstrapSettingsWin32.hpp',
+      '../include/Pomdog/Platform/Win32/PrerequisitesWin32.hpp',
       '../src/Platform.Win32/BootstrapperWin32.cpp',
       '../src/Platform.Win32/GameHostWin32.cpp',
       '../src/Platform.Win32/GameHostWin32.hpp',
@@ -416,7 +418,6 @@
       '../src/Platform.Win32/GameWindowWin32.hpp',
       '../src/Platform.Win32/TimeSourceWin32.cpp',
       '../src/Platform.Win32/TimeSourceWin32.hpp',
-      '../src/Platform.Win32/Win32Prerequisites.hpp',
     ],
   },
   'target_defaults': {

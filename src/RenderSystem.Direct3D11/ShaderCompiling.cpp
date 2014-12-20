@@ -5,11 +5,11 @@
 //
 
 #include "ShaderCompiling.hpp"
-#include "../Platform.Win32/Win32Prerequisites.hpp"
 #include "../Utility/PathHelper.hpp"
-#include <Pomdog/Logging/Log.hpp>
-#include <Pomdog/Utility/StringFormat.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
+#include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Utility/StringFormat.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 #include <fstream>
 

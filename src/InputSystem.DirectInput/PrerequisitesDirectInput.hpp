@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "../Platform.Win32/Win32Prerequisites.hpp"
+#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 
 #ifndef DIRECTINPUT_VERSION
 #	ifdef DIRECTINPUT_HEADER_VERSION

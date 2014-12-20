@@ -15,15 +15,6 @@ namespace Pomdog {
 namespace Details {
 namespace Win32 {
 namespace {
-
-///@todo
-#ifndef POMDOG_WIN32_USING_RESOURCE_FILES
-#	define POMDOG_WIN32_IDI_ICON        IDI_APPLICATION
-#	define POMDOG_WIN32_IDI_ICON_SMALL  IDI_APPLICATION
-#else
-#	define POMDOG_WIN32_IDI_ICON        IDI_POMDOG_APPLICATION
-#	define POMDOG_WIN32_IDI_ICON_SMALL  IDI_POMDOG_APPLICATION_SMALL
-#endif
 //-----------------------------------------------------------------------
 template <typename T>
 static LPSTR MakeIntegerResource(T && resource)
@@ -38,7 +29,7 @@ static LPSTR MakeIntegerResource(T && resource)
 //-----------------------------------------------------------------------
 class GameWindowWin32::Impl {
 public:
-	Impl(HINSTANCE hInstance, int nCmdShow,
+	Impl(HINSTANCE hInstance, int nCmdShow, HICON icon, HICON iconSmall,
 		std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
 		Details::RenderSystem::PresentationParameters const& presentationParameters);
 
@@ -63,7 +54,7 @@ public:
 	bool isFullScreen;
 };
 //-----------------------------------------------------------------------
-GameWindowWin32::Impl::Impl(HINSTANCE hInstance, int nCmdShow,
+GameWindowWin32::Impl::Impl(HINSTANCE hInstance, int nCmdShow, HICON icon, HICON iconSmall,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcherIn,
 	Details::RenderSystem::PresentationParameters const& presentationParameters)
 	: eventDispatcher(eventDispatcherIn)
@@ -118,18 +109,26 @@ GameWindowWin32::Impl::Impl(HINSTANCE hInstance, int nCmdShow,
 	//	windowClassStyle |= CS_OWNDC;
 	//}
 
+	if (icon == nullptr) {
+		icon = LoadIcon(instanceHandle, MakeIntegerResource(IDI_APPLICATION));
+	}
+
+	if (iconSmall == nullptr) {
+		iconSmall = LoadIcon(instanceHandle, MakeIntegerResource(IDI_APPLICATION));
+	}
+
 	WNDCLASSEX wcex = {
 		sizeof(WNDCLASSEX),
 		windowClassStyle,
 		Impl::WindowProcedure,
 		0, 0,
 		instanceHandle,
-		LoadIcon(instanceHandle, MakeIntegerResource(POMDOG_WIN32_IDI_ICON)),
+		icon,
 		LoadCursor(nullptr, IDC_ARROW),
 		static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)),
 		nullptr,
 		windowName,
-		LoadIcon(instanceHandle, MakeIntegerResource(POMDOG_WIN32_IDI_ICON_SMALL))
+		iconSmall
 	};
 
 	if (0 == ::RegisterClassEx(&wcex))
@@ -345,10 +344,10 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(HWND hWnd, UINT msg, WPA
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 //-----------------------------------------------------------------------
-GameWindowWin32::GameWindowWin32(HINSTANCE hInstance, int nCmdShow,
+GameWindowWin32::GameWindowWin32(HINSTANCE hInstance, int nCmdShow, HICON icon, HICON iconSmall,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
 	Details::RenderSystem::PresentationParameters const& presentationParameters)
-	: impl(std::make_unique<Impl>(hInstance, nCmdShow, eventDispatcher, presentationParameters))
+	: impl(std::make_unique<Impl>(hInstance, nCmdShow, icon, iconSmall, eventDispatcher, presentationParameters))
 {
 }
 //-----------------------------------------------------------------------
