@@ -17,7 +17,7 @@ namespace Pomdog {
 
 class GameClock;
 
-using DurationSeconds = std::chrono::duration<double, std::ratio<1>>;
+using DurationSeconds = std::chrono::duration<double>;
 using TimePointSeconds = std::chrono::time_point<GameClock, DurationSeconds>;
 
 }// namespace Pomdog

@@ -151,16 +151,20 @@ void GameHostWin32::Impl::Run(Game & game)
 
 	while (!exitRequest)
 	{
-		MessagePump();
 		clock.Tick();
+		MessagePump();
 		DoEvents();
 		subsystemScheduler.OnUpdate();
 		game.Update();
 		RenderFrame(game);
 
-		///@todo Not implemented
-		///@todo badcode
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		DurationSeconds const interval = DurationSeconds(1.0/60.0);
+		auto elapsedTime = clock.ElapsedTime();
+
+		if (elapsedTime < interval) {
+			auto sleepTime = std::chrono::duration_cast<std::chrono::milliseconds>(interval - elapsedTime);
+			std::this_thread::sleep_for(sleepTime);
+		}
 	}
 
 	gameWindow->Close();
