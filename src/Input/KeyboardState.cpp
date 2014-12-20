@@ -4,11 +4,13 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Input/KeyboardState.hpp>
-#include <Pomdog/Input/Keys.hpp>
-#include <Pomdog/Input/KeyState.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Input/KeyboardState.hpp"
+#include "Pomdog/Input/Keys.hpp"
+#include "Pomdog/Input/KeyState.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <type_traits>
+#include <cstdint>
+#include <limits>
 #include <utility>
 
 namespace Pomdog {
@@ -21,7 +23,7 @@ static_assert(std::is_unsigned<std::underlying_type<Keys>::type>::value,
 KeyState KeyboardState::operator[](Keys key) const
 {
 	using size_type = std::underlying_type<decltype(key)>::type;
-	POMDOG_ASSERT(keyset.size() > static_cast<size_type>(key));
+	POMDOG_ASSERT(static_cast<size_type>(key) < keyset.size());
 	
 	return keyset[static_cast<size_type>(key)] ?
 		KeyState::Down: KeyState::Up;
@@ -30,7 +32,7 @@ KeyState KeyboardState::operator[](Keys key) const
 bool KeyboardState::IsKeyDown(Keys key) const
 {
 	using size_type = std::underlying_type<decltype(key)>::type;
-	POMDOG_ASSERT(keyset.size() > static_cast<size_type>(key));
+	POMDOG_ASSERT(static_cast<size_type>(key) < keyset.size());
 	
 	return keyset[static_cast<size_type>(key)];
 }
@@ -38,7 +40,7 @@ bool KeyboardState::IsKeyDown(Keys key) const
 bool KeyboardState::IsKeyUp(Keys key) const
 {
 	using size_type = std::underlying_type<decltype(key)>::type;
-	POMDOG_ASSERT(keyset.size() > static_cast<size_type>(key));
+	POMDOG_ASSERT(static_cast<size_type>(key) < keyset.size());
 	
 	return !keyset[static_cast<size_type>(key)];
 }
@@ -46,7 +48,7 @@ bool KeyboardState::IsKeyUp(Keys key) const
 void KeyboardState::SetKey(Keys key, KeyState keyState)
 {
 	using size_type = std::underlying_type<decltype(key)>::type;
-	POMDOG_ASSERT(keyset.size() > static_cast<size_type>(key));
+	POMDOG_ASSERT(static_cast<size_type>(key) < keyset.size());
 
 	static_assert(static_cast<bool>(KeyState::Down) == true, "");
 	

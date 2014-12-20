@@ -24,35 +24,65 @@ enum class Keys: std::uint8_t {
 	None = 0,
 
 	///@brief BackSpace key
-	BackSpace = 8,
+	BackSpace = 1,
 	
 	///@brief Tab key
-	Tab = 9,
+	Tab = 2,
 	
 	///@brief Enter key
-	Enter = 10,
+	Enter = 3,
 	
 	///@brief Escape key
-	Escape = 11,
+	Escape = 4,
 	
 	///@brief Space key
-	Space = 12,
+	Space = 5,
 	
 	///@brief Delete key
-	Delete = 13,
+	Delete = 6,
 	
 	///@brief Pause key
-	Pause = 14,
+	Pause = 7,
 	
 	///@brief CapsLock key
-	CapsLock = 15,
+	CapsLock = 8,
 	
 	///@brief Help key
-	Help = 16,
+	Help = 9,
 	
 	//
 	// Alphanumerical keys
 	//
+
+	///@brief Zero key
+	Alpha0 = 10,
+	
+	///@brief One key
+	Alpha1 = 11,
+	
+	///@brief Two key
+	Alpha2 = 12,
+	
+	///@brief Three key
+	Alpha3 = 13,
+	
+	///@brief Four key
+	Alpha4 = 14,
+	
+	///@brief Five key
+	Alpha5 = 15,
+	
+	///@brief Six key
+	Alpha6 = 16,
+	
+	///@brief Seven key
+	Alpha7 = 17,
+	
+	///@brief Eight key
+	Alpha8 = 18,
+	
+	///@brief Nine key
+	Alpha9 = 19,
 
 	///@brief Letter A key
 	A = 20,
@@ -132,285 +162,255 @@ enum class Keys: std::uint8_t {
 	///@brief Letter Z key
 	Z = 45,
 	
-	///@brief Zero key
-	Alpha0 = 50,
-	
-	///@brief One key
-	Alpha1 = 51,
-	
-	///@brief Two key
-	Alpha2 = 52,
-	
-	///@brief Three key
-	Alpha3 = 53,
-	
-	///@brief Four key
-	Alpha4 = 54,
-	
-	///@brief Five key
-	Alpha5 = 55,
-	
-	///@brief Six key
-	Alpha6 = 56,
-	
-	///@brief Seven key
-	Alpha7 = 57,
-	
-	///@brief Eight key
-	Alpha8 = 58,
-	
-	///@brief Nine key
-	Alpha9 = 59,
-
 	//
 	// Numeric keypad keys
 	//
 
 	///@brief Numeric keypad 0
-	Keypad0 = 60,
+	Keypad0 = 46,
 	
 	///@brief Numeric keypad 1
-	Keypad1 = 61,
+	Keypad1 = 47,
 	
 	///@brief Numeric keypad 2
-	Keypad2 = 62,
+	Keypad2 = 48,
 	
 	///@brief Numeric keypad 3
-	Keypad3 = 63,
+	Keypad3 = 49,
 	
 	///@brief Numeric keypad 4
-	Keypad4 = 64,
+	Keypad4 = 50,
 	
 	///@brief Numeric keypad 5
-	Keypad5 = 65,
+	Keypad5 = 51,
 	
 	///@brief Numeric keypad 6
-	Keypad6 = 66,
+	Keypad6 = 52,
 	
 	///@brief Numeric keypad 7
-	Keypad7 = 67,
+	Keypad7 = 53,
 	
 	///@brief Numeric keypad 8
-	Keypad8 = 68,
+	Keypad8 = 54,
 	
 	///@brief Numeric keypad 9
-	Keypad9 = 69,
+	Keypad9 = 55,
 	
 	///@brief Numeric keypad '.'
-	KeypadDecimal = 70,
+	KeypadDecimal = 56,
 	
 	///@brief Numeric keypad '+'
-	KeypadAdd = 71,
+	KeypadAdd = 57,
 	
 	///@brief Numeric keypad '/'
-	KeypadDivide = 72,
+	KeypadDivide = 58,
 	
 	///@brief Numeric keypad '*'
-	KeypadMultiply = 73,
+	KeypadMultiply = 59,
 	
 	///@brief Numeric keypad '-'
-	KeypadSubtract = 74,
+	KeypadSubtract = 60,
 
 	//
 	// keys on Arrow keypad
 	//
 	
 	///@brief Up arrow key
-	UpArrow = 80,
+	UpArrow = 61,
 		
 	///@brief Down arrow key
-	DownArrow = 81,
+	DownArrow = 62,
 	
 	///@brief Left arrow key
-	LeftArrow = 82,
+	LeftArrow = 63,
 	
 	///@brief Right arrow key
-	RightArrow = 83,
+	RightArrow = 64,
 	
 	///@brief Insert key
-	Insert = 84,
+	Insert = 65,
 	
 	///@brief Home key
-	Home = 85,
+	Home = 66,
 	
 	///@brief End key
-	End = 86,
+	End = 67,
 	
 	///@brief Page down key
-	PageDown = 87,
+	PageDown = 68,
 	
 	///@brief Page up key
-	PageUp = 88,
+	PageUp = 69,
 
 	//
 	// Function keys
 	//
 	
 	///@brief F1 function key
-	F1 = 101,
+	F1 = 71,
 	
 	///@brief F2 function key
-	F2 = 102,
+	F2 = 72,
 	
 	///@brief F3 function key
-	F3 = 103,
+	F3 = 73,
 	
 	///@brief F4 function key
-	F4 = 104,
+	F4 = 74,
 	
 	///@brief F5 function key
-	F5 = 105,
+	F5 = 75,
 	
 	///@brief F6 function key
-	F6 = 106,
+	F6 = 76,
 	
 	///@brief F7 function key
-	F7 = 107,
+	F7 = 77,
 	
 	///@brief F8 function key
-	F8 = 108,
+	F8 = 78,
 	
 	///@brief F9 function key
-	F9 = 109,
+	F9 = 79,
 	
 	///@brief F10 function key
-	F10 = 110,
+	F10 = 80,
 	
 	///@brief F11 function key
-	F11 = 111,
+	F11 = 81,
 	
 	///@brief F12 function key
-	F12 = 112,
+	F12 = 82,
 	
 	///@brief F13 function key
-	F13 = 113,
+	F13 = 83,
 	
 	///@brief F14 function key
-	F14 = 114,
+	F14 = 84,
 	
 	///@brief F15 function key
-	F15 = 115,
+	F15 = 85,
 
 	//
 	// Special keys
 	//
 	
 	///@brief Clear key
-	Clear = 130,
+	Clear = 90,
 	
 	///@brief Print key
-	Print = 131,
+	Print = 91,
 	
 	///@brief PrintScreen key
-	PrintScreen = 132,
+	PrintScreen = 92,
 
 	///@brief NumLock key
-	NumLock = 133,
+	NumLock = 93,
 	
 	///@brief ScrollLock key
-	ScrollLock = 134,
+	ScrollLock = 94,
 	
 	///@brief Left Shift key
-	LeftShift = 140,
+	LeftShift = 95,
 	
 	///@brief Right Shift key
-	RightShift = 141,
+	RightShift = 96,
 	
 	///@brief Left Control key
-	LeftControl = 142,
+	LeftControl = 97,
 	
 	///@brief Right Control key
-	RightControl = 143,
+	RightControl = 98,
 	
 	///@brief Left Alt key
-	LeftAlt = 144,
+	LeftAlt = 99,
 	
 	///@brief Right Alt key
-	RightAlt = 145,
+	RightAlt = 100,
 
 	//
 	// Windows and Apple keys
 	//
 	
 	///@brief Left Apple key
-	LeftApple = 150,
+	LeftApple = 101,
 	
 	///@brief Right Apple key
-	RightApple = 151,
+	RightApple = 102,
 	
 	///@brief Left Windows key
-	LeftWindows = 152,
+	LeftWindows = 103,
 	
 	///@brief Right Windows key
-	RightWindows = 153,
+	RightWindows = 104,
 
 	//
 	// IME keys
 	//
 	
 	///@brief IME Convert key
-	IMEConvert = 160,
+	IMEConvert = 105,
 	
 	///@brief IME NoConvert key
-	IMENoConvert = 161,
+	IMENoConvert = 106,
 	
 	///@brief IME Kana mode key
-	KanaMode = 162,
+	KanaMode = 107,
 	
 	///@brief IME Kanji mode key
-	KanjiMode = 163,
+	KanjiMode = 108,
 	
 	///@brief IME Hangul mode key
-	HangulMode = 164,
+	HangulMode = 109,
 	
 	//
 	// OEM keys
 	//
 
 	///@brief OEM ',' key
-	Comma = 220,
+	Comma = 110,
 	
 	///@brief OEM '=' key
-	Equals = 221,
+	Equals = 111,
 	
 	///@brief OEM ';' key
-	Semicolon = 222,
+	Semicolon = 112,
 	
 	///@brief OEM '+' key
-	Plus = 223,
+	Plus = 113,
 	
 	///@brief OEM '.' key
-	Period = 224,
+	Period = 114,
 	
 	///@brief OEM '/' key
-	Slash = 225,
+	Slash = 115,
 	
 	///@brief OEM '-' key
-	Minus = 226,
+	Minus = 116,
 	
 	///@brief OEM '?' key
-	Question = 227,
+	Question = 117,
 	
 	///@brief OEM ''' key
-	Quote = 228,
+	Quote = 118,
 	
 	///@brief OEM '"' key
-	DoubleQuote = 229,
+	DoubleQuote = 119,
 	
 	///@brief OEM '`' key
-	AccentGrave = 230,
+	AccentGrave = 120,
 
 	///@brief OEM '\' key
-	Backslash = 231,
+	Backslash = 121,
 
 	///@brief OEM '~' key
-	Tilde = 232,
+	Tilde = 122,
 	
 	///@brief OEM '[' key
-	OpenBracket = 233,
+	OpenBracket = 123,
 	
 	///@brief OEM ']' key
-	CloseBracket = 234,
+	CloseBracket = 124,
 };
 
 }// namespace Pomdog

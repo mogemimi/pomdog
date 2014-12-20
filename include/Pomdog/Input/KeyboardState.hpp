@@ -12,9 +12,7 @@
 #endif
 
 #include "Pomdog/Basic/Export.hpp"
-#include <cstdint>
 #include <bitset>
-#include <limits>
 
 namespace Pomdog {
 
@@ -41,7 +39,7 @@ public:
 	void ClearAllKeys();
 
 private:
-	std::bitset<std::numeric_limits<std::uint8_t>::max()> keyset;
+	std::bitset<128> keyset;
 };
 
 }// namespace Pomdog
