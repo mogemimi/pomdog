@@ -6,8 +6,8 @@
 
 #import "AppDelegate.h"
 #include "../TestAppGame.hpp"
-#include <Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp>
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Platform/Cocoa/BootstrapperCocoa.hpp"
+#include "Pomdog/Pomdog.hpp"
 #include <iostream>
 
 using Pomdog::GameHost;

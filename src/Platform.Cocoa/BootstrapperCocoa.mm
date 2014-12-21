@@ -4,7 +4,7 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include "Pomdog/Application/detail/Platform.Cocoa/BootstrapperCocoa.hpp"
+#include "Pomdog/Platform/Cocoa/BootstrapperCocoa.hpp"
 #include "CocoaGameWindow.hpp"
 #include "CocoaGameHost.hpp"
 #include "../RenderSystem/PresentationParameters.hpp"
