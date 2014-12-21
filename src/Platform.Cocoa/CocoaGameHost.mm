@@ -199,10 +199,10 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 //-----------------------------------------------------------------------
 void CocoaGameHost::Impl::Run(Game & game)
 {
-	openGLContext->LockContext();
+	//openGLContext->LockContext();
 	openGLContext->MakeCurrentContext();
 	game.Initialize();
-	openGLContext->UnlockContext();
+	//openGLContext->UnlockContext();
 
 	if (!game.CompleteInitialize()) {
 		return;
