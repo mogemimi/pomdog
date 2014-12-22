@@ -13,7 +13,6 @@
 
 #include <Pomdog/Pomdog.hpp>
 
-
 namespace TestApp {
 
 using namespace Pomdog;

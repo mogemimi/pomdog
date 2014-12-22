@@ -9,13 +9,12 @@
 #include "CocoaOpenGLView.hpp"
 #include "CocoaWindowDelegate.hpp"
 #include "CocoaGameViewDelegate.hpp"
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
 namespace Pomdog {
 namespace Details {
 namespace Cocoa {
-
 //-----------------------------------------------------------------------
 CocoaGameWindow::CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
 	: nativeWindow(window)
@@ -183,7 +182,7 @@ void CocoaGameWindow::BindToDelegate(std::shared_ptr<MouseCocoa> mouse)
 	POMDOG_ASSERT(mouse);
 	[viewDelegate resetMouse:mouse];
 }
-
+//-----------------------------------------------------------------------
 }// namespace Cocoa
 }// namespace Details
 }// namespace Pomdog

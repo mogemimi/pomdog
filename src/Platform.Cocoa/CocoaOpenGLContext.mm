@@ -6,7 +6,7 @@
 
 #include "CocoaOpenGLContext.hpp"
 #include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -19,30 +19,24 @@ CocoaOpenGLContext::CocoaOpenGLContext(NSOpenGLPixelFormat* pixelFormatIn)
 	POMDOG_ASSERT(pixelFormat != nil);
 	
 #if !__has_feature(objc_arc)
-	[this->pixelFormat retain];
+	[pixelFormat retain];
 #endif
 
 	openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext: nil];
 	[openGLContext makeCurrentContext];
 
-	{
-		CGLContextObj cglContext = [openGLContext CGLContextObj];
-		constexpr GLint swapInterval = 1;
-		CGLSetParameter(cglContext, kCGLCPSwapInterval, &swapInterval);
-	}
-	{
-		constexpr GLint swapInterval = 1;
-		[openGLContext setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
-	}
+	constexpr GLint swapInterval = 1;
+	[openGLContext setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
 }
 //-----------------------------------------------------------------------
 CocoaOpenGLContext::~CocoaOpenGLContext()
 {
 #if !__has_feature(objc_arc)
 	[openGLContext release];
-	[this->pixelFormat release];
+	[pixelFormat release];
 #endif
-	this->pixelFormat = nil;
+	pixelFormat = nil;
+	openGLContext = nil;
 }
 //-----------------------------------------------------------------------
 void CocoaOpenGLContext::MakeCurrentContext()
