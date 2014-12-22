@@ -40,6 +40,7 @@ void LightningTestGame::Initialize()
 
 		blendStateAdditive = BlendState::CreateAdditive(graphicsDevice);
 		blendStateNonPremultiplied = BlendState::CreateNonPremultiplied(graphicsDevice);
+		depthStencilState = DepthStencilState::CreateNone(graphicsDevice);
 	}
 	{
 		renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
@@ -243,10 +244,11 @@ void LightningTestGame::Draw()
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
 	
-	graphicsContext->Clear(Color::Black);
+	graphicsContext->Clear(Color{51, 51, 51, 255});
 	editorBackground->Draw(*graphicsContext);
 
 	//graphicsContext->SetSamplerState(0, samplerPoint);
+	graphicsContext->SetDepthStencilState(depthStencilState);
 	DrawSprites();
 	
 	if (enableFxaa) {

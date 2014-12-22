@@ -57,6 +57,7 @@ private:
 
 	std::shared_ptr<BlendState> blendStateAdditive;
 	std::shared_ptr<BlendState> blendStateNonPremultiplied;
+	std::shared_ptr<DepthStencilState> depthStencilState;
 
 	std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
 	std::unique_ptr<SceneEditor::EditorBackground> editorBackground;

@@ -41,12 +41,13 @@ static NSOpenGLPixelFormat* CreatePixelFormat(DepthFormat depthFormat)
 {
 	std::vector<NSOpenGLPixelFormatAttribute> attributes =
 	{
+		NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
 		NSOpenGLPFADoubleBuffer,
 		NSOpenGLPFAAccelerated,
 		NSOpenGLPFANoRecovery,
-		NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
 		NSOpenGLPFAColorSize, 24,
 		NSOpenGLPFAAlphaSize, 8,
+		NSOpenGLPFAAllowOfflineRenderers,
 	};
 	
 	switch (depthFormat) {
