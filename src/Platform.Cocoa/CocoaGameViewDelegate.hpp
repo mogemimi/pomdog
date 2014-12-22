@@ -25,7 +25,6 @@
 
 @property (nonatomic, retain) NSView* view;
 
-- (void)viewNeedsUpdateSurface;
 - (void)viewWillStartLiveResize;
 - (void)viewDidEndLiveResize;
 

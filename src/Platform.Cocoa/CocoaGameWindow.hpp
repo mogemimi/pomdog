@@ -58,15 +58,18 @@ public:
 	/// @return ウィンドウが最小化のときは true を、それ以外は false を返します。
 	bool IsMinimized() const;
 	
-	void ResetGLContext(std::shared_ptr<CocoaOpenGLContext> const& context);
-	void ResetGLContext();
-
 	///@~Japanese
 	/// @brief ウィンドウを閉じます。
 	void Close();
+
+	void ResetGLContext(std::shared_ptr<CocoaOpenGLContext> const& context);
+
+	void ResetGLContext();
 	
-	///@~Japanese
-	/// @brief マウスをビューデリゲートに接続します。
+	void SetRenderCallbackOnLiveResizing(std::function<void()> const& callback);
+	
+	void SetRenderCallbackOnLiveResizing();
+	
 	void BindToDelegate(std::shared_ptr<MouseCocoa> mouse);
 
 private:

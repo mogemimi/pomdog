@@ -11,10 +11,12 @@
 
 @implementation CocoaOpenGLView {
 @private
+	std::function<void()> renderCallback_;
 	NSOpenGLContext* openGLContext_;
 	CocoaGameViewDelegate* delegate_;
 	NSTrackingRectTag trackingRect;
 	BOOL wasAcceptingMouseEvents;
+	bool viewLiveResizing;
 }
 
 @synthesize openGLContext = openGLContext_;
@@ -55,7 +57,6 @@
 {
 	if ([openGLContext_ view] == self) {
 		//[openGLContext_ update];
-		[[self delegate] viewNeedsUpdateSurface];
 	}
 }
 //-----------------------------------------------------------------------
@@ -76,6 +77,20 @@
 		[openGLContext_ setView:self];
 	}
 	[openGLContext_ makeCurrentContext];
+}
+//-----------------------------------------------------------------------
+- (void)drawRect:(NSRect)dirtyRect
+{
+	[super drawRect:dirtyRect];
+
+	if (viewLiveResizing && renderCallback_) {
+		renderCallback_();
+	}
+}
+//-----------------------------------------------------------------------
+- (void)setRenderCallback:(std::function<void()>)callback
+{
+	renderCallback_ = callback;
 }
 //-----------------------------------------------------------------------
 -(void)viewDidMoveToWindow
@@ -205,11 +220,13 @@
 //-----------------------------------------------------------------------
 - (void)viewWillStartLiveResize
 {
+	viewLiveResizing = true;
 	[[self delegate] viewWillStartLiveResize];
 }
 //-----------------------------------------------------------------------
 - (void)viewDidEndLiveResize
 {
+	viewLiveResizing = false;
 	[[self delegate] viewDidEndLiveResize];
 }
 //-----------------------------------------------------------------------

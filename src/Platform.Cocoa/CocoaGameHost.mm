@@ -28,6 +28,8 @@
 #include <OpenGL/OpenGL.h>
 #include <utility>
 #include <vector>
+#include <mutex>
+#include <thread>
 
 namespace Pomdog {
 namespace Details {
@@ -136,6 +138,8 @@ private:
 
 private:
 	GameClock clock;
+	std::mutex renderMutex;
+	std::atomic_bool viewLiveResizing;
 
 	//std::weak_ptr<Game> game;
 	std::shared_ptr<CocoaGameWindow> gameWindow;
@@ -153,16 +157,16 @@ private:
 	std::shared_ptr<MouseCocoa> mouse;
 	
 	bool exitRequest;
-	bool surfaceResizeRequest;
 };
 //-----------------------------------------------------------------------
 CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
 	RenderSystem::PresentationParameters const& presentationParameters)
-	: gameWindow(window)
+	: viewLiveResizing(false)
+	, gameWindow(window)
 	, systemEventDispatcher(eventDispatcher)
 	, exitRequest(false)
-	, surfaceResizeRequest(false)
+//	, surfaceResizeRequest(false)
 {
 	openGLContext = CreateOpenGLContext(presentationParameters.DepthFormat);
 	
@@ -205,13 +209,35 @@ void CocoaGameHost::Impl::Run(Game & game)
 		return;
 	}
 	
+	gameWindow->SetRenderCallbackOnLiveResizing([&] {
+		std::lock_guard<std::mutex> lock(renderMutex);
+		ClientSizeChanged();
+		RenderFrame(game);
+	});
+	
 	while (!exitRequest)
 	{
+		std::lock_guard<std::mutex> lock(renderMutex);
+
 		clock.Tick();
 		DoEvents();
 		game.Update();
-		RenderFrame(game);
+		
+		if (!viewLiveResizing.load()) {
+			RenderFrame(game);
+		}
+
+		auto const interval = DurationSeconds(1.0/60.0);
+		auto elapsedTime = clock.ElapsedTime();
+		
+		if (elapsedTime < interval) {
+			lock.~lock_guard();
+			auto sleepTime = (interval - elapsedTime);
+			std::this_thread::sleep_for(sleepTime);
+		}
 	}
+	
+	gameWindow->SetRenderCallbackOnLiveResizing();
 
 	gameWindow->Close();
 	//DoEvents();
@@ -245,11 +271,6 @@ void CocoaGameHost::Impl::RenderFrame(Game & game)
 void CocoaGameHost::Impl::DoEvents()
 {
 	systemEventDispatcher->Tick();
-	
-	if (surfaceResizeRequest) {
-		ClientSizeChanged();
-		surfaceResizeRequest = false;
-	}
 }
 //-----------------------------------------------------------------------
 void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
@@ -266,16 +287,16 @@ void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
 	}
 	else if (event.Is<ViewWillStartLiveResizeEvent>())
 	{
+		viewLiveResizing = true;
+
 		auto rect = gameWindow->ClientBounds();
 		Log::Internal(StringFormat("ViewWillStartLiveResizeEvent: {w: %d, h: %d}",
 			rect.Width, rect.Height));
 	}
-	else if (event.Is<ViewNeedsUpdateSurfaceEvent>())
-	{
-		surfaceResizeRequest = true;
-	}
 	else if (event.Is<ViewDidEndLiveResizeEvent>())
 	{
+		viewLiveResizing = false;
+		
 		auto rect = gameWindow->ClientBounds();
 		Log::Internal(StringFormat("ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
 			rect.Width, rect.Height));

@@ -8,6 +8,7 @@
 #define POMDOG_SRC_COCOA_OPENGLVIEW_A756AF9C_916F_4DDB_AEDA_04BE15416A3E_HPP
 
 #import <Cocoa/Cocoa.h>
+#include <functional>
 
 @class NSOpenGLContext;
 @class CocoaGameViewDelegate;
@@ -21,6 +22,8 @@
 
 - (void)clearGLContext;
 - (void)reshape;
+
+- (void)setRenderCallback:(std::function<void()>)callback;
 
 @end
 

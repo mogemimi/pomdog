@@ -422,12 +422,6 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 //-----------------------------------------------------------------------
 #pragma mark - View Event Handling
 //-----------------------------------------------------------------------
-- (void)viewNeedsUpdateSurface
-{
-	using Pomdog::Details::ViewNeedsUpdateSurfaceEvent;
-	eventDispatcher->Enqueue<ViewNeedsUpdateSurfaceEvent>();
-}
-//-----------------------------------------------------------------------
 - (void)viewWillStartLiveResize
 {
 	using Pomdog::Details::ViewWillStartLiveResizeEvent;

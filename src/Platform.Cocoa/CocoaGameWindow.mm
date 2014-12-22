@@ -165,6 +165,7 @@ void CocoaGameWindow::ResetGLContext(std::shared_ptr<CocoaOpenGLContext> const& 
 	POMDOG_ASSERT(contextIn);
 	openGLContext = contextIn;
 	
+	POMDOG_ASSERT(openGLView);
 	POMDOG_ASSERT(openGLContext);
 	[openGLView setOpenGLContext:openGLContext->NativeOpenGLContext()];
 }
@@ -172,10 +173,22 @@ void CocoaGameWindow::ResetGLContext(std::shared_ptr<CocoaOpenGLContext> const& 
 void CocoaGameWindow::ResetGLContext()
 {
 	openGLContext.reset();
+	
+	POMDOG_ASSERT(openGLView);
 	[openGLView clearGLContext];
 }
 //-----------------------------------------------------------------------
-#pragma mark - Input Device
+void CocoaGameWindow::SetRenderCallbackOnLiveResizing(std::function<void()> const& callback)
+{
+	POMDOG_ASSERT(callback);
+	POMDOG_ASSERT(openGLView);
+	[openGLView setRenderCallback: callback];
+}
+//-----------------------------------------------------------------------
+void CocoaGameWindow::SetRenderCallbackOnLiveResizing()
+{
+	[openGLView setRenderCallback: {}];
+}
 //-----------------------------------------------------------------------
 void CocoaGameWindow::BindToDelegate(std::shared_ptr<MouseCocoa> mouse)
 {
