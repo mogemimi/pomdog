@@ -9,6 +9,7 @@
 #include "Pomdog/Platform/Cocoa/BootstrapperCocoa.hpp"
 #include "Pomdog/Pomdog.hpp"
 #include <iostream>
+#include <thread>
 
 using Pomdog::GameHost;
 using Pomdog::Log;
@@ -24,7 +25,7 @@ using Pomdog::ScopedConnection;
 @implementation AppDelegate
 {
 	ScopedConnection connection;
-	NSThread* gameRunThread;
+	std::thread gameRunThread;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
@@ -42,33 +43,28 @@ using Pomdog::ScopedConnection;
 
 	[[self window] makeKeyAndOrderFront:self];
 
-	gameRunThread = [[NSThread alloc] initWithTarget:self selector:@selector(runGame) object:nil];
-	[gameRunThread start];
+	gameRunThread = std::thread([self] {
+		using Pomdog::Details::Cocoa::BootstrapperCocoa;
+
+		BootstrapperCocoa bootstrapper;
+		bootstrapper.Run([self window], [](std::shared_ptr<GameHost> const& gameHost) {
+			try {
+				TestApp::TestAppGame game{gameHost};
+				gameHost->Run(game);
+			}
+			catch (std::exception const& e) {
+				Log::Critical("Pomdog", e.what());
+			}
+		});
+		
+		// Shutdown your application
+		[NSApp terminate:nil];
+	});
 	
 	Log::Verbose("game mainloop thread run");
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
-}
-
-- (void)runGame
-{
-	using Bootstrapper = Pomdog::Details::Cocoa::BootstrapperCocoa;
-
-	Bootstrapper bootstrapper([self window]);
-	bootstrapper.Run([](std::shared_ptr<GameHost> const& gameHost)
-	{
-		try {
-			TestApp::TestAppGame game{gameHost};
-			gameHost->Run(game);
-		}
-		catch (std::exception const& e) {
-			Log::Critical("Pomdog", e.what());
-		}
-	});
-	
-	///@note Shutdown your application
-	[NSApp terminate:nil];
 }
 
 @end

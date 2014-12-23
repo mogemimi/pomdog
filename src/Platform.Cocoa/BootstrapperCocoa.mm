@@ -15,11 +15,8 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 //-----------------------------------------------------------------------
-BootstrapperCocoa::BootstrapperCocoa(NSWindow* nativeWindowIn)
-	: nativeWindow(nativeWindowIn)
-{}
-//-----------------------------------------------------------------------
-void BootstrapperCocoa::Run(std::function<void(std::shared_ptr<GameHost> const&)> const& runGame)
+void BootstrapperCocoa::Run(NSWindow* nativeWindow,
+	std::function<void(std::shared_ptr<GameHost> const&)> const& runGame)
 {
 	auto eventDispatcher = std::make_shared<SystemEventDispatcher>();
 

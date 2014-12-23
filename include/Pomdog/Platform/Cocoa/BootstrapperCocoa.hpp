@@ -29,12 +29,7 @@ namespace Cocoa {
 /// @brief すべてのサブシステムの起動、およびアプリケーションの実行を行います。
 class POMDOG_EXPORT BootstrapperCocoa final {
 public:
-	BootstrapperCocoa(NSWindow* nativeWindow);
-
-	void Run(std::function<void(std::shared_ptr<GameHost> const&)> const& runGame);
-	
-private:
-	NSWindow* nativeWindow;
+	void Run(NSWindow* nativeWindow, std::function<void(std::shared_ptr<GameHost> const&)> const& runGame);
 };
 
 }// namespace Cocoa
