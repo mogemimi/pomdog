@@ -160,11 +160,10 @@ void CocoaGameWindow::Close()
 //-----------------------------------------------------------------------
 #pragma mark - OpenGLView
 //-----------------------------------------------------------------------
-void CocoaGameWindow::ResetGLContext(std::shared_ptr<CocoaOpenGLContext> context)
+void CocoaGameWindow::ResetGLContext(std::shared_ptr<CocoaOpenGLContext> const& contextIn)
 {
-	POMDOG_ASSERT(context);
-	
-	openGLContext = std::move(context);
+	POMDOG_ASSERT(contextIn);
+	openGLContext = contextIn;
 	
 	POMDOG_ASSERT(openGLContext);
 	[openGLView setOpenGLContext:openGLContext->NativeOpenGLContext()];

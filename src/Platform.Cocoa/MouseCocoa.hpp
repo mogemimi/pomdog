@@ -11,8 +11,8 @@
 #pragma once
 #endif
 
-#include <Pomdog/Input/Mouse.hpp>
-#include <Pomdog/Input/MouseState.hpp>
+#include "Pomdog/Input/Mouse.hpp"
+#include "Pomdog/Input/MouseState.hpp"
 
 namespace Pomdog {
 namespace Details {

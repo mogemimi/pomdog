@@ -7,9 +7,8 @@
 #ifndef POMDOG_SRC_COCOA_WINDOWDELEGATE_56FEB6D8_A0C6_4621_9A92_A8ADFFC725B3_HPP
 #define POMDOG_SRC_COCOA_WINDOWDELEGATE_56FEB6D8_A0C6_4621_9A92_A8ADFFC725B3_HPP
 
-#import <Cocoa/Cocoa.h>
-
 #include "../Application/SystemEventDispatcher.hpp"
+#import <Cocoa/Cocoa.h>
 #include <memory>
 
 @interface CocoaWindowDelegate : NSObject <NSWindowDelegate>

@@ -9,14 +9,10 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class NSOpenGLContext, NSOpenGLPixelFormat;
+@class NSOpenGLContext;
 @class CocoaGameViewDelegate;
 
-@interface CocoaOpenGLView : NSView {
-@private
-	NSOpenGLContext* openGLContext_;
-	CocoaGameViewDelegate* delegate_;
-}
+@interface CocoaOpenGLView : NSView
 
 @property (nonatomic, retain) NSOpenGLContext* openGLContext;
 @property (nonatomic, retain) CocoaGameViewDelegate* delegate;

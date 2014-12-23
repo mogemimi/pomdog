@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include <Pomdog/Application/DurationSeconds.hpp>
+#include "Pomdog/Application/DurationSeconds.hpp"
 
 namespace Pomdog {
 namespace Details {

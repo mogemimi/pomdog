@@ -5,7 +5,7 @@
 //
 
 #include "TimeSourceCocoa.hpp"
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Utility/Assert.hpp"
 #include <mach/mach_time.h>
 
 namespace Pomdog {

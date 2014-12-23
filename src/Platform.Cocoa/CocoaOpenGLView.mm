@@ -7,10 +7,12 @@
 #import "CocoaOpenGLView.hpp"
 #import "CocoaGameViewDelegate.hpp"
 #include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Utility/Assert.hpp"
 
-@implementation CocoaOpenGLView
-{
+@implementation CocoaOpenGLView {
+@private
+	NSOpenGLContext* openGLContext_;
+	CocoaGameViewDelegate* delegate_;
 	NSTrackingRectTag trackingRect;
 	BOOL wasAcceptingMouseEvents;
 }

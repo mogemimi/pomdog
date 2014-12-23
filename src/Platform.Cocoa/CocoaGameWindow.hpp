@@ -11,12 +11,13 @@
 #pragma once
 #endif
 
-#import <Cocoa/Cocoa.h>
 #include "../Application/SystemEventDispatcher.hpp"
-#include <Pomdog/Application/GameWindow.hpp>
-#include <Pomdog/Math/Rectangle.hpp>
+#include "Pomdog/Application/GameWindow.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
+#import <Cocoa/Cocoa.h>
 
-@class NSWindow, CocoaOpenGLView;
+@class NSWindow;
+@class CocoaOpenGLView;
 @class CocoaWindowDelegate;
 @class CocoaGameViewDelegate;
 
@@ -57,7 +58,7 @@ public:
 	/// @return ウィンドウが最小化のときは true を、それ以外は false を返します。
 	bool IsMinimized() const;
 	
-	void ResetGLContext(std::shared_ptr<CocoaOpenGLContext> context);
+	void ResetGLContext(std::shared_ptr<CocoaOpenGLContext> const& context);
 	void ResetGLContext();
 
 	///@~Japanese

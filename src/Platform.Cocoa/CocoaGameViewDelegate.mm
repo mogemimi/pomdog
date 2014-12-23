@@ -6,8 +6,8 @@
 
 #import "CocoaGameViewDelegate.hpp"
 #include "MouseCocoa.hpp"
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Event/Event.hpp>
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Event/Event.hpp"
 #include <array>
 
 using Pomdog::Event;

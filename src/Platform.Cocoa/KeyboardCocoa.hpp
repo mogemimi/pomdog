@@ -11,8 +11,8 @@
 #pragma once
 #endif
 
-#include <Pomdog/Input/Keyboard.hpp>
-#include <Pomdog/Input/KeyboardState.hpp>
+#include "Pomdog/Input/Keyboard.hpp"
+#include "Pomdog/Input/KeyboardState.hpp"
 
 namespace Pomdog {
 namespace Details {
