@@ -75,17 +75,18 @@ static NSOpenGLPixelFormat* CreatePixelFormat(DepthFormat depthFormat)
 //-----------------------------------------------------------------------
 static std::shared_ptr<CocoaOpenGLContext> CreateOpenGLContext(DepthFormat depthFormat)
 {
-	NSOpenGLPixelFormat* pixelFormat = CreatePixelFormat(depthFormat);
+	auto pixelFormat = CreatePixelFormat(depthFormat);
 	return std::make_shared<CocoaOpenGLContext>(pixelFormat);
 }
 //-----------------------------------------------------------------------
 static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 	std::shared_ptr<CocoaOpenGLContext> const& openGLContext,
-	std::weak_ptr<GameWindow> gameWindow,
+	std::weak_ptr<GameWindow> && gameWindow,
 	RenderSystem::PresentationParameters const& presentationParameters,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
 	POMDOG_ASSERT(openGLContext);
+	POMDOG_ASSERT(!gameWindow.expired());
 	using RenderSystem::GL4::GraphicsContextGL4;
 
 	auto nativeContext = std::make_unique<GraphicsContextGL4>(openGLContext, std::move(gameWindow));
@@ -225,8 +226,11 @@ void CocoaGameHost::Impl::RenderFrame(Game & game)
 {
 	POMDOG_ASSERT(gameWindow);
 
-	if (!gameWindow || gameWindow->IsMinimized()) {
-		// skip rendering
+	bool skipRender = (!gameWindow
+		|| gameWindow->IsMinimized()
+		|| [NSApp isHidden] == YES);
+
+	if (skipRender) {
 		return;
 	}
 
@@ -268,9 +272,6 @@ void CocoaGameHost::Impl::ProcessSystemEvents(Event const& event)
 	}
 	else if (event.Is<ViewNeedsUpdateSurfaceEvent>())
 	{
-		//auto rect = gameWindow->ClientBounds();
-		//Log::Internal(StringFormat("ViewNeedsUpdateSurfaceEvent: {w: %d, h: %d}",
-		//	rect.Width, rect.Height));
 		surfaceResizeRequest = true;
 	}
 	else if (event.Is<ViewDidEndLiveResizeEvent>())

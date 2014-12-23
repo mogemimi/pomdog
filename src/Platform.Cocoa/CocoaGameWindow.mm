@@ -16,8 +16,8 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 //-----------------------------------------------------------------------
-CocoaGameWindow::CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
-	: nativeWindow(window)
+CocoaGameWindow::CocoaGameWindow(NSWindow* nativeWindowIn, std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
+	: nativeWindow(nativeWindowIn)
 	, openGLView(nil)
 	, windowDelegate(nil)
 	, viewDelegate(nil)
@@ -25,10 +25,9 @@ CocoaGameWindow::CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDi
 	POMDOG_ASSERT(nativeWindow);
 
 #if !__has_feature(objc_arc)
-	[this->nativeWindow retain];
+	[nativeWindow retain];
 #endif
 
-	//NSRect frameRect = [this->nativeWindow frame];
 	NSRect frameRect = [[nativeWindow contentView] bounds];
 	
 	// Create OpenGLView
@@ -45,7 +44,7 @@ CocoaGameWindow::CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDi
 	[[nativeWindow contentView] setAutoresizesSubviews:YES];
 	[openGLView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 	
-	// Create WindowDelegate
+	// Create ViewDelegate
 	viewDelegate = [[CocoaGameViewDelegate alloc] initWithEventDispatcher:eventDispatcher];
 	[viewDelegate setView:openGLView];
 	[openGLView setDelegate:viewDelegate];
@@ -62,6 +61,8 @@ CocoaGameWindow::~CocoaGameWindow()
 	[openGLView removeFromSuperview];
 	
 #if !__has_feature(objc_arc)
+	[viewDelegate release];
+	[windowDelegate release];
 	[openGLView release];
 	[nativeWindow release];
 #endif
