@@ -166,7 +166,6 @@ CocoaGameHost::Impl::Impl(std::shared_ptr<CocoaGameWindow> const& window,
 	, gameWindow(window)
 	, systemEventDispatcher(eventDispatcher)
 	, exitRequest(false)
-//	, surfaceResizeRequest(false)
 {
 	openGLContext = CreateOpenGLContext(presentationParameters.DepthFormat);
 	
