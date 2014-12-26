@@ -57,9 +57,8 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 	
 	if (errorCode != noErr)
 	{
-		///@todo Not implemeneted
-		// Error
-		return {};
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Cannot open audio file");
 	}
 	
 	AudioStreamBasicDescription basicDescription;
@@ -68,18 +67,16 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 	
 	if (errorCode != noErr)
 	{
-		///@todo Not implemeneted
-		// Error
 		AudioFileClose(audioFile);
-		return {};
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Failed to get audio file propety");
 	}
 	
 	if (basicDescription.mFormatID != kAudioFormatLinearPCM)
 	{
-		///@todo Not implemeneted
-		// Error
 		AudioFileClose(audioFile);
-		return {};
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"This audio file is not linear PCM format");
 	}
 
 	UInt64 audioDataByteCount = 0;
@@ -88,10 +85,9 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 	
 	if (errorCode != noErr)
 	{
-		///@todo Not implemeneted
-		// Error
 		AudioFileClose(audioFile);
-		return {};
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Cannot get the byte count of the audio data");
 	}
 	
 	Float64 estimatedDuration = 0;
@@ -100,29 +96,26 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 
 	if (errorCode != noErr)
 	{
-		///@todo Not implemeneted
-		// Error
 		AudioFileClose(audioFile);
-		return {};
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Cannot get the estimated duration of the audio data");
 	}
 	
 	if (basicDescription.mChannelsPerFrame < 1
 		&& basicDescription.mChannelsPerFrame > 2)
 	{
-		///@todo Not implemeneted
-		// Error: Not supported
 		AudioFileClose(audioFile);
-		return {};
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"4, 5.1, 6.1 and 7.1 channel audio are not supported. You can use mono and stereo.");
 	}
 	
 	if (basicDescription.mBitsPerChannel < 8
 		&& basicDescription.mBitsPerChannel > 32
 		&& (basicDescription.mBitsPerChannel % 8 != 0))
 	{
-		///@todo Not implemeneted
-		// Error: Not supported
 		AudioFileClose(audioFile);
-		return {};
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"4, 5.1, 6.1 and 7.1 channel audio are not supported. You can use mono and stereo.");
 	}
 	
 	POMDOG_ASSERT(basicDescription.mBitsPerChannel == 8
@@ -139,16 +132,14 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 	
 	if (errorCode != noErr)
 	{
-		///@todo Not implemeneted
-		// error: FUS RO DAH!
-		return {};
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Failed to read audio data");
 	}
 	
 	if (byteCountToRead != audioDataByteCount)
 	{
-		///@todo Not implemeneted
-		// error: FUS RO DAH!
-		return {};
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Failed to read audio data");
 	}
 	
 	using Details::SoundSystem::OpenAL::AudioClipAL;
