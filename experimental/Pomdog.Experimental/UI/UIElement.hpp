@@ -14,6 +14,7 @@
 #include "HorizontalAlignment.hpp"
 #include "VerticalAlignment.hpp"
 #include <Pomdog/Pomdog.hpp>
+#include <cstdint>
 
 namespace Pomdog {
 namespace UI {

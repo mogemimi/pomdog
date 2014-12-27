@@ -12,15 +12,18 @@
 #endif
 
 #include "Pomdog.Experimental/Actions/Action.hpp"
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Gameplay/GameObject.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include <array>
+#include <cstdint>
 
 namespace Pomdog {
 
 class SequenceAction: public Action {
 private:
 	std::array<std::unique_ptr<Action>, 4> actions;
-	std::size_t const actionCount;
-	std::size_t index;
+	std::uint32_t const actionCount;
+	std::uint32_t index;
 	bool isCompleted;
 
 public:

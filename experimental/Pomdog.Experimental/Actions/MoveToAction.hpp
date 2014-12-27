@@ -13,7 +13,9 @@
 
 #include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog/Gameplay/GameObject.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Details {

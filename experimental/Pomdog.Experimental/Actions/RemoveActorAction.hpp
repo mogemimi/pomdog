@@ -12,7 +12,8 @@
 #endif
 
 #include "Pomdog.Experimental/Actions/Action.hpp"
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Gameplay/GameObject.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 

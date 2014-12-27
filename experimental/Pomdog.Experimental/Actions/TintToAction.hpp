@@ -13,7 +13,9 @@
 
 #include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Renderable.hpp"
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Gameplay/GameObject.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Details {
