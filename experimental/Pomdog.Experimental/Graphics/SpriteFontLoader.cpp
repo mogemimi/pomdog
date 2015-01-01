@@ -1,5 +1,5 @@
 ﻿//
-//  Copyright (C) 2013-2014 mogemimi.
+//  Copyright (C) 2013-2015 mogemimi.
 //  Distributed under the MIT License. See LICENSE.md or
 //  http://enginetrouble.net/pomdog/license for details.
 //
@@ -49,9 +49,9 @@ struct BitmapFontPage {
 //TEST(Regex, TrivialCase1)
 //{
 //	std::string source = "name=\"value\"";
-//	
+//
 //	auto r = std::regex("([a-zA-Z_][a-zA-Z0-9_]*)(=)(\\\"([a-zA-Z0-9_\\-/.]*)\\\")");
-//	
+//
 //	EXPECT_TRUE(std::regex_match(source, r));
 //	EXPECT_TRUE(std::regex_match("path=\"image.png\"", r));
 //	EXPECT_TRUE(std::regex_match("key=\"file2014.png\"", r));
@@ -65,16 +65,16 @@ struct BitmapFontPage {
 //TEST(Regex, TrivialCase2)
 //{
 //	std::string source = "name=42";
-//	
+//
 //	auto r = std::regex("([a-zA-Z_][a-zA-Z0-9_]*)(=)((\\-?[0-9]*)(,(\\-?[0-9]*)){0,3})");
-//	
+//
 //	EXPECT_TRUE(std::regex_match(source, r));
 //	EXPECT_TRUE(std::regex_match("width=23", r));
 //	EXPECT_TRUE(std::regex_match("width=-23", r));
 //	EXPECT_TRUE(std::regex_match("padding=2,45", r));
 //	EXPECT_TRUE(std::regex_match("padding=2,45,-4", r));
 //	EXPECT_TRUE(std::regex_match("padding=-2,-45,-3,-2", r));
-//	
+//
 //	EXPECT_FALSE(std::regex_match("width=--23", r));
 //	EXPECT_FALSE(std::regex_match("width=2-3", r));
 //	EXPECT_FALSE(std::regex_match("width=+23", r));
@@ -93,16 +93,16 @@ BitmapFontInfo ParseInfo(std::istream & stream)
 		//auto exprNumber = std::regex("\\-?[0-9]*");
 		auto exprVector2 = std::regex("(\\-?[0-9]*),(\\-?[0-9]*)");
 		auto exprVector4 = std::regex("(\\-?[0-9]*),(\\-?[0-9]*),(\\-?[0-9]*),(\\-?[0-9]*)");
-		
+
 		std::smatch match;
 		if (std::regex_match(source, match, expr))
 		{
 			POMDOG_ASSERT(match.size() >= 4);
 			auto name = match[1].str();
 			auto arguments = match[3].str();
-			
+
 			std::smatch match2;
-			
+
 			if (name == "face") {
 				if (std::regex_match(arguments, match2, exprString)) {
 					POMDOG_ASSERT(match2.size() >= 2);
@@ -154,7 +154,7 @@ BitmapFontInfo ParseInfo(std::istream & stream)
 			}
 		}
 	}
-	
+
 	return std::move(info);
 }
 //-----------------------------------------------------------------------
@@ -193,7 +193,7 @@ BitmapFontCommon ParseCommon(std::istream & stream)
 			}
 		}
 	}
-	
+
 	return std::move(result);
 }
 //-----------------------------------------------------------------------
@@ -212,9 +212,9 @@ BitmapFontPage ParsePage(std::istream & stream)
 			POMDOG_ASSERT(match.size() >= 4);
 			auto name = match[1].str();
 			auto arguments = match[3].str();
-			
+
 			std::smatch match2;
-			
+
 			if (name == "file") {
 				if (std::regex_match(arguments, match2, exprString)) {
 					POMDOG_ASSERT(match2.size() >= 2);
@@ -226,7 +226,7 @@ BitmapFontPage ParsePage(std::istream & stream)
 			}
 		}
 	}
-	
+
 	return std::move(result);
 }
 //-----------------------------------------------------------------------
@@ -275,7 +275,7 @@ Details::SpriteFonts::Glyph ParseGlyph(std::istream & stream)
 			}
 		}
 	}
-	
+
 	return std::move(result);
 }
 
@@ -298,7 +298,7 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
 	std::vector<BitmapFontPage> pages;
 	std::vector<Details::SpriteFonts::Glyph> glyphs;
 	glyphs.reserve(127);
-	
+
 	BitmapFontInfo info;
 	BitmapFontCommon common;
 
@@ -315,7 +315,7 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
 		if (objectName.empty()) {
 			break;
 		}
-		
+
 		if (objectName == "info") {
 			info = ParseInfo(ss);
 		}
@@ -348,14 +348,14 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
 		/// Throw exception
 	}
 	POMDOG_ASSERT(std::unique(std::begin(pages), std::end(pages), pageLess) == std::end(pages));
-	
+
 	POMDOG_ASSERT(pages.front().Id == 0);
 	POMDOG_ASSERT(pages.back().Id == (pages.size() - 1));
 
 	std::vector<std::shared_ptr<Texture2D>> textures;
 	{
 		auto directoryName = FilePathHelper::Directory(assetName);
-		
+
 		for (auto & page: pages)
 		{
 			textures.push_back(assets.Load<Texture2D>(directoryName + page.Path));

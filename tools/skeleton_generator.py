@@ -1,5 +1,5 @@
 #
-#  Copyright (C) 2013-2014 mogemimi.
+#  Copyright (C) 2013-2015 mogemimi.
 #  Distributed under the MIT License. See LICENSE.md or
 #  http://enginetrouble.net/pomdog/license for details.
 #
@@ -146,7 +146,7 @@ def CreateHeader(copyright_holder):
 //  Distributed under the MIT License. See LICENSE.md or
 //  http://enginetrouble.net/pomdog/license for details.
 //
-""").substitute(year="2013-2014", copyright_holder=copyright_holder)
+""").substitute(year="2013-2015", copyright_holder=copyright_holder)
 
 
 def CreateNamespace(name, content="    // Insert code here to run your application"):

@@ -1,5 +1,5 @@
 ﻿//
-//  Copyright (C) 2013-2014 mogemimi.
+//  Copyright (C) 2013-2015 mogemimi.
 //  Distributed under the MIT License. See LICENSE.md or
 //  http://enginetrouble.net/pomdog/license for details.
 //
@@ -14,7 +14,7 @@
 namespace Pomdog {
 
 ///@brief yyyy mm dd (year, month and day)
-#define POMDOG_VERSION 20141219L
+#define POMDOG_VERSION 20150101L
 
 }// namespace Pomdog
 
