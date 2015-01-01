@@ -4,7 +4,7 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include "EffectPassReader.hpp"
+#include "Pomdog/Content/detail/AssetLoaders/EffectPassLoader.hpp"
 #include "../../Utility/PathHelper.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -41,7 +41,7 @@ static std::vector<std::uint8_t> ReadBinaryFile(std::ifstream && streamIn)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-std::shared_ptr<EffectPass> EffectPassReader::Read(
+std::shared_ptr<EffectPass> AssetLoader<EffectPass>::operator()(
 	AssetLoaderContext const& loaderContext, std::string const& assetName)
 {
 	auto const vertexShader = ReadBinaryFile(loaderContext.OpenStream(

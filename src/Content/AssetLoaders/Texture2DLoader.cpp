@@ -4,7 +4,7 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include "Texture2DReader.hpp"
+#include "Pomdog/Content/detail/AssetLoaders/Texture2DLoader.hpp"
 #include "../Utility/MakeFourCC.hpp"
 #include "../Utility/BinaryReader.hpp"
 #include "../Utility/DDSTextureReader.hpp"
@@ -42,7 +42,7 @@ static bool IsDDSFormat(std::array<std::uint8_t, 8> const& signature)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-std::shared_ptr<Texture2D> Texture2DReader::Read(
+std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(
 	AssetLoaderContext const& loaderContext, std::string const& assetName)
 {
 	std::ifstream stream = loaderContext.OpenStream(assetName);

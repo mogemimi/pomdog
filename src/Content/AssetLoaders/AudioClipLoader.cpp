@@ -4,7 +4,7 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include "AudioClipReader.hpp"
+#include "Pomdog/Content/detail/AssetLoaders/AudioClipLoader.hpp"
 #include "../../Utility/PathHelper.hpp"
 #include "../Utility/MSWaveAudioLoader.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
@@ -20,7 +20,7 @@
 namespace Pomdog {
 namespace Details {
 //-----------------------------------------------------------------------
-std::shared_ptr<AudioClip> AudioClipReader::Read(
+std::shared_ptr<AudioClip> AssetLoader<AudioClip>::operator()(
 	AssetLoaderContext const& loaderContext, std::string const& assetName)
 {
 	std::shared_ptr<AudioClip> audioClip = Details::MSWaveAudioLoader::Load(

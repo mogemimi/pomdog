@@ -11,6 +11,9 @@
 #pragma once
 #endif
 
+#include "AssetLoaders/AudioClipLoader.hpp"
+#include "AssetLoaders/EffectPassLoader.hpp"
+#include "AssetLoaders/Texture2DLoader.hpp"
 #include "Pomdog/Utility/detail/Any.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <unordered_map>
@@ -23,12 +26,10 @@ namespace Pomdog {
 namespace Details {
 
 class AssetLoaderContext;
-class AssetReader;
 
 class POMDOG_EXPORT AssetDictionary final {
 private:
 	std::unordered_map<std::string, Any> assets;
-	std::unordered_map<std::type_index, std::unique_ptr<AssetReader>> readers;
 
 public:
 	AssetDictionary();
@@ -54,27 +55,20 @@ public:
 			assets.erase(iter);
 		}
 
-		auto assetHolder = ReadAsset(loaderContext, assetName, typeIndex);
+		AssetLoader<T> loader;
+		auto asset = loader(loaderContext, assetName);
 		
+		static_assert(std::is_same<decltype(asset), std::shared_ptr<T>>::value, "");
+
+		Any assetHolder = asset;
 		POMDOG_ASSERT(assetHolder.Type() == typeIndex);
-		
-		if (assetHolder.Type() != typeIndex) {
-			/// FUS RO DAH!
-			///@todo Not implemented
-			//throw exception
-		}
-		
-		auto asset = assetHolder.As<std::shared_ptr<T>>();
+
 		assets.emplace(assetName, std::move(assetHolder));
 		
 		return std::move(asset);
 	}
 
 	void Unload();
-
-private:
-	Any ReadAsset(AssetLoaderContext const& loaderContext,
-		std::string const& assetName, std::type_index const& typeIndex) const;
 };
 
 }// namespace Details
