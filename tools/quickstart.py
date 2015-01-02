@@ -137,7 +137,7 @@ def CreateNewProject(config):
 
     framework_root = os.path.join(os.path.dirname(__file__), "..")
     templates_directory = os.path.join(framework_root,
-      'templates/QuickStartApp')
+      'examples/QuickStart')
 
     CopyTemplates(templates_directory, project_root)
     CopyFrameworkFiles(framework_root, project_root)

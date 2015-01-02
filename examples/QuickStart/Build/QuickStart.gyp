@@ -83,6 +83,15 @@
             '../Platform.Cocoa/AppDelegate.h',
             '../Platform.Cocoa/AppDelegate.mm',
           ],
+          'actions': [
+            {
+              'action_name': 'XcodeResourcesUpdater',
+              'description': 'Always update resources on Xcode',
+              'inputs': [],
+              'outputs': [],
+              'action': ['./update-bundle-resources.sh', '${SOURCE_ROOT}/../Content/.'],
+            },
+          ],
         }], # OS == "mac"
       ],
       'mac_bundle_resources': [
