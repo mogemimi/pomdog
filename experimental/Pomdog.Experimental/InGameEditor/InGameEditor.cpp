@@ -51,7 +51,12 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 			distanceFieldEffect, constantBuffers);
 	}
 	{
-		pomdogTexture = assets->Load<Texture2D>("pomdog.png");
+		blankTexture = std::make_shared<Texture2D>(graphicsDevice,
+			1, 1, false, SurfaceFormat::R8G8B8A8_UNorm);
+		std::array<std::uint32_t, 1> pixelData = {0xffffffff};
+		blankTexture->SetData(pixelData.data());
+	}
+	{
 		depthStencilState = DepthStencilState::CreateNone(graphicsDevice);
 		blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 	}
@@ -90,7 +95,7 @@ void InGameEditor::DrawGUI(GraphicsContext & graphicsContext)
 	{
 		POMDOG_ASSERT(spriteBatch);
 		spriteBatch->Begin(SpriteSortMode::BackToFront);
-		UI::SpriteDrawingContext drawingContext(*spriteBatch, *spriteBatchDistanceField, distanceFieldEffect, constantBuffers, *spriteFont, pomdogTexture);
+		UI::SpriteDrawingContext drawingContext(*spriteBatch, *spriteBatchDistanceField, distanceFieldEffect, constantBuffers, *spriteFont, blankTexture);
 		hierarchy.Draw(drawingContext);
 		spriteBatch->End();
 	}

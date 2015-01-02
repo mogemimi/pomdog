@@ -32,7 +32,11 @@ void MaidChanGame::Initialize()
 		
 		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 		graphicsContext->SetBlendState(blendState);
-		texture = assets->Load<Texture2D>("pomdog.png");
+		
+		texture = std::make_shared<Texture2D>(graphicsDevice,
+			1, 1, false, SurfaceFormat::R8G8B8A8_UNorm);
+		std::array<std::uint32_t, 1> pixelData = {0xffffffff};
+		texture->SetData(pixelData.data());
 	}
 	{
 		renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
@@ -241,7 +245,9 @@ void MaidChanGame::Draw()
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
 	
-	graphicsContext->Clear(Color::CornflowerBlue);
+	SceneEditor::EditorColorScheme colorScheme;
+	
+	graphicsContext->Clear(colorScheme.Background);
 	editorBackground->Draw(*graphicsContext);
 	
 	graphicsContext->SetSamplerState(0, samplerPoint);

@@ -244,7 +244,9 @@ void LightningTestGame::Draw()
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
 	
-	graphicsContext->Clear(Color{51, 51, 51, 255});
+	SceneEditor::EditorColorScheme colorScheme;
+	
+	graphicsContext->Clear(colorScheme.BackgroundDark);
 	editorBackground->Draw(*graphicsContext);
 
 	//graphicsContext->SetSamplerState(0, samplerPoint);

@@ -53,7 +53,7 @@ private:
 	std::unique_ptr<SpriteBatch> spriteBatchDistanceField;
 	std::shared_ptr<EffectPass> distanceFieldEffect;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
-	std::shared_ptr<Texture2D> pomdogTexture;
+	std::shared_ptr<Texture2D> blankTexture;
 };
 
 }// namespace SceneEditor
