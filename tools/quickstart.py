@@ -4,14 +4,10 @@
 #  http://enginetrouble.net/pomdog/license for details.
 #
 
-# Create new project:
-# >>> cd .
-# >>> python pomdog/tools/quickstart.py YourProjectName
-# >>> cd YourProjectName
 
-# >>> python tools/quickstart.py ProjectName -d ~/path/gamedev -u net.example.ProjectName
-# >>> cd ~/path/gamedev/ProjectName
-
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
+import six
 
 import sys
 import os
@@ -101,8 +97,8 @@ def RenameSourceContent(project_root, identifier, source):
     f.close()
 
     f = open(path, 'w')
-    content = content.replace('QuickStart', identifier)
-    content = content.replace('QUICKSTART', identifier.upper())
+    content = content.replace('QuickStart'.encode('utf_8'), identifier)
+    content = content.replace('QUICKSTART'.encode('utf_8'), identifier.upper())
     f.write(content)
     f.close()
 
@@ -110,7 +106,7 @@ def RenameContentByUrl(project_root, url, source):
     path = os.path.join(project_root, source)
 
     if not os.path.exists(path):
-        print("Error: Cannot find file {0}".format(path))
+        print('Error: Cannot find file {0}'.format(path))
         return
 
     f = open(path, 'r')
@@ -118,7 +114,7 @@ def RenameContentByUrl(project_root, url, source):
     f.close()
 
     f = open(path, 'w')
-    content = content.replace('com.example.QuickStart', url)
+    content = content.replace('com.example.QuickStart'.encode('utf_8'), url)
     f.write(content)
     f.close()
 
@@ -133,27 +129,19 @@ def RenameFilename(project_root, identifier, source):
     if source != dest:
         os.rename(path, dest)
 
-def Run():
-    args = ParsingCommandLineAraguments()
-
-    #print("args = {0}".format(vars(args))) # for Debug
-
-    args.dir = args.d[0]
-    args.url = args.u[0]
-
-    identifier = os.path.basename(args.name)
-    project_root = os.path.join(args.dir, identifier)
+def CreateNewProject(config):
+    identifier = os.path.basename(config['name'])
+    project_root = os.path.join(config['path'], identifier)
     CreateProjectDirectory(project_root)
-
-    #print("{0}, {1}, {2}".format(args.dir, args.url, project_root))
+    project_url = config['url']
 
     framework_root = os.path.join(os.path.dirname(__file__), "..")
     templates_directory = os.path.join(framework_root,
-      "templates/QuickStartApp")
+      'templates/QuickStartApp')
 
     CopyTemplates(templates_directory, project_root)
     CopyFrameworkFiles(framework_root, project_root)
-    RenameContentByUrl(project_root, args.url, 'Platform.Cocoa/Info.plist')
+    RenameContentByUrl(project_root, project_url, 'Platform.Cocoa/Info.plist')
     RenameSourceContent(project_root, identifier, 'README.md')
     RenameSourceContent(project_root, identifier, 'Build/QuickStart.gyp')
     RenameSourceContent(project_root, identifier, 'Source/QuickStartGame.cpp')
@@ -164,7 +152,53 @@ def Run():
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.cpp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.hpp')
 
-    print("Done.")
+def ReadInput(prompt):
+    if six.PY3:
+        return input(prompt)
+    return raw_input(prompt)
 
+def Ask(question, default=None):
+    result = ''
+    while True:
+        if default:
+            result = ReadInput('> {0} [{1}] '.format(question, default))
+        else:
+            result = ReadInput('> {0} '.format(question))
+
+        result = result.strip()
+
+        if len(result) <= 0:
+            if default:
+                result = default
+                break
+            else:
+                print('You must enter something')
+        else:
+            break
+    return result
+
+
+def Run():
+    config = {
+        'path': '.',
+        'name': 'QuickStart',
+        'url': 'com.example.QuickStart',
+        'author': '',
+    }
+
+    print('Configure your new project\n')
+
+    config['path'] = Ask('Where do you want to create your new gamedev project?',
+        config['path'])
+
+    config['name'] = Ask('What is your project name? (ex. MyGame)')
+
+    config['name'] = os.path.basename(config['name'])
+    config['url'] = config['url'].replace('QuickStart', config['name'])
+
+    config['url'] = Ask('What is your project URL?', config['url'])
+
+    CreateNewProject(config)
+    print('Done.')
 
 Run()

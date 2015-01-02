@@ -70,3 +70,14 @@ xcodebuild -project build.xcodefiles/build/TestApp.xcodeproj -configuration Rele
 ```bash
 open build/build/Release/TestApp.app
 ```
+
+## Getting Started
+
+To get started with new project, run ```tools/quickstart.py```:
+
+```bash
+cd ~/your-projects
+python pomdog/tools/quickstart.py
+```
+
+**(WIP)**
