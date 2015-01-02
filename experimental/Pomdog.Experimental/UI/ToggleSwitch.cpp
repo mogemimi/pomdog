@@ -9,6 +9,7 @@
 #include "PointerPoint.hpp"
 #include "UIHelper.hpp"
 #include "UIEventDispatcher.hpp"
+#include "MouseHelper.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -65,6 +66,20 @@ void ToggleSwitch::OnParentChanged()
 	{
 		connection = dispatcher->Connect(shared_from_this());
 	}
+}
+//-----------------------------------------------------------------------
+void ToggleSwitch::OnPointerEntered(PointerPoint const&)
+{
+	if (!isEnabled) {
+		return;
+	}
+
+	MouseHelper::SetMouseCursor(MouseCursor::Link);
+}
+//-----------------------------------------------------------------------
+void ToggleSwitch::OnPointerExited(PointerPoint const&)
+{
+	MouseHelper::SetMouseCursor(MouseCursor::Arrow);
 }
 //-----------------------------------------------------------------------
 void ToggleSwitch::OnPointerPressed(PointerPoint const& pointerPoint)

@@ -9,6 +9,7 @@
 #include "PointerPoint.hpp"
 #include "UIHelper.hpp"
 #include "UIEventDispatcher.hpp"
+#include "MouseHelper.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -105,6 +106,8 @@ void Slider::OnPointerEntered(PointerPoint const& pointerPoint)
 	animation.targetColor = colorScheme.FillColor2;
 
 	colorAnimation = animation;
+	
+	MouseHelper::SetMouseCursor(MouseCursor::Link);
 }
 //-----------------------------------------------------------------------
 void Slider::OnPointerExited(PointerPoint const& pointerPoint)
@@ -116,6 +119,8 @@ void Slider::OnPointerExited(PointerPoint const& pointerPoint)
 		colorScheme.FillColor1: colorScheme.DisabledFillColor;
 
 	colorAnimation = animation;
+	
+	MouseHelper::SetMouseCursor(MouseCursor::Arrow);
 }
 //-----------------------------------------------------------------------
 void Slider::OnPointerPressed(PointerPoint const& pointerPoint)
