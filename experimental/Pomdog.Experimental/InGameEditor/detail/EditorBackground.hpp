@@ -12,7 +12,6 @@
 #endif
 
 #include "EditorColorScheme.hpp"
-#include "GradientPlane.hpp"
 #include "PrimitiveAxes.hpp"
 #include "PrimitiveGrid.hpp"
 #include "Pomdog.Experimental/Graphics/LineBatch.hpp"

@@ -11,13 +11,15 @@
 #pragma once
 #endif
 
-#include <Pomdog/Math/Color.hpp>
+#include "Pomdog/Math/Color.hpp"
 
 namespace Pomdog {
 namespace SceneEditor {
 
 struct EditorColorScheme {
 	Color Background {81, 81, 81, 255};
+	Color BackgroundGradientUpper {90, 86, 80, 255};
+	Color BackgroundGradientLower {57, 67, 86, 255};
 	Color CenterAxisX {255, 149, 140, 225};
 	Color CenterAxisY {140, 220, 140, 225};
 	Color CenterAxisZ {56, 190, 255, 225};

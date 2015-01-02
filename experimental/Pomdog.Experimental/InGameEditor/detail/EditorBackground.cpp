@@ -8,9 +8,6 @@
 
 namespace Pomdog {
 namespace SceneEditor {
-namespace {
-
-}// unnamed namespace
 //-----------------------------------------------------------------------
 EditorBackground::EditorBackground(std::shared_ptr<GameHost> const& gameHost)
 	: lineBatch(gameHost->GraphicsContext(), gameHost->GraphicsDevice())
