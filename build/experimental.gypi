@@ -249,6 +249,13 @@
     ],
   },
   'conditions': [
+    ['OS == "win"', {
+      'variables': {
+        'pomdog_experimental_2d_sources': [
+          '<@(pomdog_expr_dir)/UI/MouseHelper.Win32.cpp',
+        ],
+      },
+    }],
     ['OS == "mac"', {
       'variables': {
         'pomdog_experimental_2d_sources': [
