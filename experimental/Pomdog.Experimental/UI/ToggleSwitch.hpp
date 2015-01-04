@@ -38,10 +38,6 @@ public:
 
 	void OnParentChanged() override;
 
-	void OnPointerEntered(PointerPoint const& pointerPoint) override;
-	
-	void OnPointerExited(PointerPoint const& pointerPoint) override;
-
 	void OnPointerPressed(PointerPoint const& pointerPoint) override;
 
 	void OnPointerReleased(PointerPoint const& pointerPoint) override;

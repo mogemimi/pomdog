@@ -9,7 +9,6 @@
 #include "PointerPoint.hpp"
 #include "UIHelper.hpp"
 #include "UIEventDispatcher.hpp"
-#include "MouseHelper.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -21,7 +20,9 @@ ToggleSwitch::ToggleSwitch()
 	, offContent(u8"Off")
 	, isEnabled(true)
 	, isOn(true)
-{}
+{
+	SetCursor(MouseCursor::Link);
+}
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - Properties
@@ -34,10 +35,20 @@ void ToggleSwitch::IsOn(bool isOnIn)
 { this->isOn = isOnIn; }
 //-----------------------------------------------------------------------
 bool ToggleSwitch::IsEnabled() const
-{ return isEnabled; }
+{
+	return isEnabled;
+}
 //-----------------------------------------------------------------------
 void ToggleSwitch::IsEnabled(bool isEnabledIn)
-{ this->isEnabled = isEnabledIn; }
+{
+	this->isEnabled = isEnabledIn;
+	if (isEnabled) {
+		SetCursor(MouseCursor::Link);
+	}
+	else {
+		ResetCursor();
+	}
+}
 //-----------------------------------------------------------------------
 std::string ToggleSwitch::OnContent() const
 { return this->onContent; }
@@ -66,20 +77,6 @@ void ToggleSwitch::OnParentChanged()
 	{
 		connection = dispatcher->Connect(shared_from_this());
 	}
-}
-//-----------------------------------------------------------------------
-void ToggleSwitch::OnPointerEntered(PointerPoint const&)
-{
-	if (!isEnabled) {
-		return;
-	}
-
-	MouseHelper::SetMouseCursor(MouseCursor::Link);
-}
-//-----------------------------------------------------------------------
-void ToggleSwitch::OnPointerExited(PointerPoint const&)
-{
-	MouseHelper::SetMouseCursor(MouseCursor::Arrow);
 }
 //-----------------------------------------------------------------------
 void ToggleSwitch::OnPointerPressed(PointerPoint const& pointerPoint)

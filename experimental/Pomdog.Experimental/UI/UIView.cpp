@@ -98,5 +98,20 @@ std::int32_t UIView::DrawOrder() const
 	return drawOrder;
 }
 //-----------------------------------------------------------------------
+void UIView::SetCursor(MouseCursor cursorIn)
+{
+	cursor = cursorIn;
+}
+//-----------------------------------------------------------------------
+void UIView::ResetCursor()
+{
+	cursor = OptionalType::NullOptional;
+}
+//-----------------------------------------------------------------------
+Optional<MouseCursor> UIView::CurrentCursor() const
+{
+	return cursor;
+}
+//-----------------------------------------------------------------------
 }// namespace UI
 }// namespace Pomdog

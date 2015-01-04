@@ -30,6 +30,7 @@
   'variables': {
     'pomdog_library_testable_sources': [
       '../include/Pomdog/Application/DurationSeconds.hpp',
+      '../include/Pomdog/Application/MouseCursor.hpp',
       '../include/Pomdog/Audio/AudioChannels.hpp',
       '../include/Pomdog/Audio/AudioEmitter.hpp',
       '../include/Pomdog/Audio/AudioListener.hpp',

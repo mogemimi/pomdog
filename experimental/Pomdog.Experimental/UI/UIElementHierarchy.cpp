@@ -76,8 +76,8 @@ private:
 };
 
 //-----------------------------------------------------------------------
-UIElementHierarchy::UIElementHierarchy()
-	: dispatcher(std::make_shared<UIEventDispatcher>())
+UIElementHierarchy::UIElementHierarchy(std::shared_ptr<GameWindow> const& window)
+	: dispatcher(std::make_shared<UIEventDispatcher>(window))
 {
 	root = std::make_shared<GameEditorView>(dispatcher);
 }

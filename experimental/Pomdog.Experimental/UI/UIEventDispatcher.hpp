@@ -31,6 +31,8 @@ class UIEventConnection;
 
 class UIEventDispatcher: public std::enable_shared_from_this<UIEventDispatcher> {
 public:
+	explicit UIEventDispatcher(std::shared_ptr<GameWindow> const& window);
+
 	void UpdateChildren();
 
 	void Touch(MouseState const& mouseState);
@@ -70,6 +72,7 @@ private:
 	SubscribeRequestDispatcherType subscribeRequests;
 	std::vector<std::shared_ptr<UIView>> children;
 	std::unique_ptr<PointerState> pointerState;
+	std::shared_ptr<GameWindow> window;
 };
 
 }// namespace UI

@@ -14,7 +14,6 @@
 #include <cstdint>
 
 namespace Pomdog {
-namespace UI {
 
 enum class MouseCursor: std::uint8_t {
 	Arrow,
@@ -24,7 +23,6 @@ enum class MouseCursor: std::uint8_t {
 	ResizeHorizontal,
 };
 
-}// namespace UI
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_MOUSECURSOR_D7B37AAC_2F41_481D_9A63_BB34AAB1FDFE_HPP)

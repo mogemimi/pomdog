@@ -9,6 +9,7 @@
 #include "CocoaOpenGLView.hpp"
 #include "CocoaWindowDelegate.hpp"
 #include "CocoaGameViewDelegate.hpp"
+#include "Pomdog/Application/MouseCursor.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
@@ -21,6 +22,7 @@ CocoaGameWindow::CocoaGameWindow(NSWindow* nativeWindowIn, std::shared_ptr<Syste
 	, openGLView(nil)
 	, windowDelegate(nil)
 	, viewDelegate(nil)
+	, isMouseCursorVisible(true)
 {
 	POMDOG_ASSERT(nativeWindow);
 
@@ -141,6 +143,49 @@ void CocoaGameWindow::ClientBounds(Rectangle const& clientBounds)
 	//bounds.size.width = clientBounds.Width;
 	//bounds.size.height = clientBounds.Height;
 	//[nativeWindow setFrame:bounds display:YES animate:YES];
+}
+//-----------------------------------------------------------------------
+bool CocoaGameWindow::IsMouseCursorVisible() const
+{
+	return isMouseCursorVisible;
+}
+//-----------------------------------------------------------------------
+void CocoaGameWindow::IsMouseCursorVisible(bool visibleIn)
+{
+	isMouseCursorVisible = visibleIn;
+
+	if (isMouseCursorVisible) {
+		[NSCursor unhide];
+	}
+	else {
+		[NSCursor hide];	
+	}
+}
+//-----------------------------------------------------------------------
+void CocoaGameWindow::SetMouseCursor(MouseCursor cursor)
+{
+	switch (cursor) {
+	case MouseCursor::Arrow: {
+		[[NSCursor arrowCursor] set];
+		break;
+	}
+	case MouseCursor::Text: {
+		[[NSCursor IBeamCursor] set];
+		break;
+	}
+	case MouseCursor::Link: {
+		[[NSCursor pointingHandCursor] set];
+		break;
+	}
+	case MouseCursor::ResizeHorizontal: {
+		[[NSCursor resizeLeftRightCursor] set];
+		break;
+	}
+	case MouseCursor::ResizeVertical: {
+		[[NSCursor resizeUpDownCursor] set];
+		break;
+	}
+	}
 }
 //-----------------------------------------------------------------------
 #pragma mark - Low-Level API for CocoaGameHost

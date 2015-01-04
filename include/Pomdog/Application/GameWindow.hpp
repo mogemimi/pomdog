@@ -14,10 +14,12 @@
 #include "Pomdog/Event/Signal.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <string>
+#include <cstdint>
 
 namespace Pomdog {
 
 class Rectangle;
+enum class MouseCursor: std::uint8_t;
 
 ///@~Japanese
 /// @brief ゲームウィンドウです。
@@ -58,7 +60,14 @@ public:
 	/// @brief ゲームウィンドウのクライアント領域のサイズを設定します。
 	/// @param clientBounds ゲームウィンドウのクライアント領域のサイズを指定します。
 	virtual void ClientBounds(Rectangle const& clientBounds) = 0;
-	
+
+	///@brief Return true if the mouse cursor is visible, false otherwise.
+	virtual bool IsMouseCursorVisible() const = 0;
+
+	virtual void IsMouseCursorVisible(bool visible) = 0;
+
+	virtual void SetMouseCursor(MouseCursor cursor) = 0;
+
 	///@~Japanese
 	/// @brief ゲームウィンドウのクライアント領域のサイズが変更されたときに呼ばれるイベントです。
 	Signal<void(int width, int height)> ClientSizeChanged;

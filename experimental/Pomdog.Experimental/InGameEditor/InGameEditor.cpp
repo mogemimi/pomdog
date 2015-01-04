@@ -34,7 +34,8 @@ struct BuiltinEffectSpriteBatchDistanceFieldTrait {
 }// unnamed namespace
 //-----------------------------------------------------------------------
 InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
-	: gameHost(gameHostIn)
+	: hierarchy(gameHostIn->Window())
+	, gameHost(gameHostIn)
 {
 	auto graphicsContext = gameHost->GraphicsContext();
 	auto graphicsDevice = gameHost->GraphicsDevice();

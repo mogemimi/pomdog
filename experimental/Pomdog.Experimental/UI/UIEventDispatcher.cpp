@@ -22,6 +22,10 @@ bool Intersects(Point2D const& position, UIElement & element)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
+UIEventDispatcher::UIEventDispatcher(std::shared_ptr<GameWindow> const& windowIn)
+	: window(windowIn)
+{}
+//-----------------------------------------------------------------------
 void UIEventDispatcher::UpdateChildren()
 {
 	if (!subscribeRequests.Added.empty())
@@ -135,6 +139,13 @@ void UIEventDispatcher::PointerEntered(Point2D const& position, MouseState const
 	pointerState->PrevScrollWheel = mouseState.ScrollWheel;
 
 	node->OnPointerEntered(pointerState->pointerPoint);
+	if (node->CurrentCursor()) {
+		window->SetMouseCursor(*node->CurrentCursor());
+	}
+	else {
+		window->SetMouseCursor(MouseCursor::Arrow);
+	}
+	
 	pointerState->focusedElement = node;
 }
 //-----------------------------------------------------------------------
@@ -148,6 +159,8 @@ void UIEventDispatcher::PointerExited(Point2D const& position)
 
 	pointerState->focusedElement->OnPointerExited(pointerState->pointerPoint);
 	pointerState.reset();
+
+	window->SetMouseCursor(MouseCursor::Arrow);
 }
 //-----------------------------------------------------------------------
 void UIEventDispatcher::PointerPressed(Point2D const& position)

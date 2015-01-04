@@ -218,8 +218,6 @@
       '<@(pomdog_expr_dir)/UI/DebugNavigator.cpp',
       '<@(pomdog_expr_dir)/UI/DebugNavigator.hpp',
       '<@(pomdog_expr_dir)/UI/HorizontalAlignment.hpp',
-      '<@(pomdog_expr_dir)/UI/MouseCursor.hpp',
-      '<@(pomdog_expr_dir)/UI/MouseHelper.hpp',
       '<@(pomdog_expr_dir)/UI/Panel.hpp',
       '<@(pomdog_expr_dir)/UI/PointerEventType.hpp',
       '<@(pomdog_expr_dir)/UI/PointerPoint.hpp',
@@ -248,20 +246,4 @@
       '<@(pomdog_expr_dir)/UI/detail/UIEventConnection.hpp',
     ],
   },
-  'conditions': [
-    ['OS == "win"', {
-      'variables': {
-        'pomdog_experimental_2d_sources': [
-          '<@(pomdog_expr_dir)/UI/MouseHelper.Win32.cpp',
-        ],
-      },
-    }],
-    ['OS == "mac"', {
-      'variables': {
-        'pomdog_experimental_2d_sources': [
-          '<@(pomdog_expr_dir)/UI/MouseHelper.Cocoa.mm',
-        ],
-      },
-    }],
-  ],
 }

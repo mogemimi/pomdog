@@ -51,6 +51,15 @@ public:
 	///@copydoc GameWindow
 	void ClientBounds(Rectangle const& clientBounds) override;
 
+	///@copydoc GameWindow
+	bool IsMouseCursorVisible() const override;
+
+	///@copydoc GameWindow
+	void IsMouseCursorVisible(bool visible) override;
+
+	///@copydoc GameWindow
+	void SetMouseCursor(MouseCursor cursor) override;
+
 	///@~English
 	/// @return true if the window is minimized, false otherwise.
 	///@~Japanese

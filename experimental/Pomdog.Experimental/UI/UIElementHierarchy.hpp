@@ -27,7 +27,7 @@ class UIView;
 
 class UIElementHierarchy {
 public:
-	UIElementHierarchy();
+	explicit UIElementHierarchy(std::shared_ptr<GameWindow> const& window);
 
 	void Touch(MouseState const& mouseState);
 	

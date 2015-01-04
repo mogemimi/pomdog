@@ -74,11 +74,43 @@ private:
 	Optional<Vector2> tumbleStartPosition;
 	Optional<Vector2> trackStartPosition;
 	
-	Optional<std::int32_t> prevScrollWheel;
-	float scrollWheel;
+	DurationSeconds timer;
+	float normalizedScrollDirection;
+	float scrollAcceleration;
 
 	bool isFocused;
 	bool isEnabled;
+
+	class ScrollWheelSampler {
+	private:
+		///@todo replace with std::deque<float>
+		Optional<float> average;
+
+	public:
+		void AddWheelDelta(int wheelDelta)
+		{
+			if (wheelDelta == 0) {
+				return;
+			}
+
+			if (!average) {
+				average = std::abs(wheelDelta);
+			}
+			else {
+				average = std::max((*average + std::abs(wheelDelta)) / 2, 1.0f);
+			}
+		}
+
+		float GetScrollWheelDeltaAverage() const
+		{
+			if (average) {
+				return *average;
+			}
+			return 1.0f;
+		}
+	};
+
+	ScrollWheelSampler scrollWheelSampler;
 };
 
 }// namespace UI

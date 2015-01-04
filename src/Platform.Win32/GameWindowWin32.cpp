@@ -6,16 +6,18 @@
 
 #include "GameWindowWin32.hpp"
 #include "../RenderSystem/PresentationParameters.hpp"
-#include <Pomdog/Math/Rectangle.hpp>
-#include <Pomdog/Utility/Assert.hpp>
-#include <objbase.h>//for CoInitialize, CoUninitialize.
+#include "Pomdog/Application/MouseCursor.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Optional.hpp"
+#include <objbase.h>
 #include <string>
 
 namespace Pomdog {
 namespace Details {
 namespace Win32 {
 namespace {
-//-----------------------------------------------------------------------
+
 template <typename T>
 static LPSTR MakeIntegerResource(T && resource)
 {
@@ -23,6 +25,18 @@ static LPSTR MakeIntegerResource(T && resource)
 #pragma warning(disable:4302)
 	return MAKEINTRESOURCE(std::forward<T>(resource));
 #pragma warning(pop)
+}
+//-----------------------------------------------------------------------
+static LPCTSTR ToStandardCursorID(MouseCursor cursor)
+{
+	switch (cursor) {
+	case MouseCursor::Arrow: return IDC_ARROW;
+	case MouseCursor::Text: return IDC_IBEAM;
+	case MouseCursor::Link: return IDC_HAND;
+	case MouseCursor::ResizeHorizontal: return IDC_SIZEWE;
+	case MouseCursor::ResizeVertical: return IDC_SIZENS;
+	}
+	return IDC_ARROW;
 }
 
 }// unnamed namespace
@@ -41,6 +55,10 @@ public:
 
 	void SetClientBounds(Rectangle const& clientBounds);
 
+	void SetMouseCursorVisible(bool visible);
+
+	void SetMouseCursor(MouseCursor cursor);
+
 private:
 	static LRESULT CALLBACK WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -48,10 +66,12 @@ public:
 	std::shared_ptr<SystemEventDispatcher> eventDispatcher;
 	std::string title;
 	Rectangle clientBounds;
+	Optional<HCURSOR> gameCursor;
 	HINSTANCE instanceHandle;
 	HWND windowHandle;
 	bool allowPlayerResizing;
 	bool isFullScreen;
+	bool isMouseCursorVisible;
 };
 //-----------------------------------------------------------------------
 GameWindowWin32::Impl::Impl(HINSTANCE hInstance, int nCmdShow, HICON icon, HICON iconSmall,
@@ -64,6 +84,7 @@ GameWindowWin32::Impl::Impl(HINSTANCE hInstance, int nCmdShow, HICON icon, HICON
 	, windowHandle(nullptr)
 	, allowPlayerResizing(false)
 	, isFullScreen(presentationParameters.IsFullScreen)
+	, isMouseCursorVisible(true)
 {
 	POMDOG_ASSERT(clientBounds.Width > 0);
 	POMDOG_ASSERT(clientBounds.Height > 0);
@@ -268,6 +289,33 @@ void GameWindowWin32::Impl::SetClientBounds(Rectangle const& clientBoundsIn)
 	clientBounds.Height = clientBoundsIn.Height;
 }
 //-----------------------------------------------------------------------
+void GameWindowWin32::Impl::SetMouseCursorVisible(bool visibleIn)
+{
+	isMouseCursorVisible = visibleIn;
+
+	if (isMouseCursorVisible) {
+		if (gameCursor) {
+			::SetCursor(*gameCursor);
+		}
+		else {
+			auto nativeCursor = LoadCursor(nullptr, ToStandardCursorID(MouseCursor::Arrow));
+			::SetCursor(nativeCursor);
+		}	
+	}
+	else {
+		::SetCursor(nullptr);
+	}
+}
+//-----------------------------------------------------------------------
+void GameWindowWin32::Impl::SetMouseCursor(MouseCursor cursorIn)
+{
+	gameCursor = LoadCursor(nullptr, ToStandardCursorID(cursorIn));
+	
+	if (isMouseCursorVisible) {
+		::SetCursor(*gameCursor);
+	}
+}
+//-----------------------------------------------------------------------
 LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	auto window = reinterpret_cast<GameWindowWin32::Impl*>(::GetWindowLong(hWnd, GWL_USERDATA));
@@ -337,6 +385,14 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(HWND hWnd, UINT msg, WPA
 		}
 		return 0;
 	}
+	case WM_SETCURSOR: {
+		auto hitTest= lParam & 0xffff;
+		if (hitTest == HTCLIENT && window->gameCursor) {
+			SetCursor(*window->gameCursor);
+			return FALSE;
+		}
+		break;
+	}
 	default:
 		break;
 	}
@@ -387,6 +443,24 @@ void GameWindowWin32::ClientBounds(Rectangle const& clientBounds)
 {
 	POMDOG_ASSERT(impl);
 	impl->SetClientBounds(clientBounds);
+}
+//-----------------------------------------------------------------------
+bool GameWindowWin32::IsMouseCursorVisible() const
+{
+	POMDOG_ASSERT(impl);
+	return impl->isMouseCursorVisible;
+}
+//-----------------------------------------------------------------------
+void GameWindowWin32::IsMouseCursorVisible(bool visible)
+{
+	POMDOG_ASSERT(impl);
+	impl->SetMouseCursorVisible(visible);
+}
+//-----------------------------------------------------------------------
+void GameWindowWin32::SetMouseCursor(MouseCursor cursor)
+{
+	POMDOG_ASSERT(impl);
+	impl->SetMouseCursor(cursor);
 }
 //-----------------------------------------------------------------------
 bool GameWindowWin32::IsMinimized() const

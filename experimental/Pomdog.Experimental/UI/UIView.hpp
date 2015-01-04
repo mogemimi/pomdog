@@ -13,7 +13,13 @@
 
 #include "UIElement.hpp"
 #include "UIEventListener.hpp"
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Application/MouseCursor.hpp"
+#include "Pomdog/Math/Matrix3x2.hpp"
+#include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Optional.hpp"
+#include <cstdint>
+#include <memory>
 
 namespace Pomdog {
 namespace UI {
@@ -64,33 +70,40 @@ public:
 	
 	void OnParentChanged() override {}
 
-	void OnPointerCanceled(PointerPoint const& pointerPoint) override {}
+	void OnPointerCanceled(PointerPoint const&) override {}
 	
-	void OnPointerCaptureLost(PointerPoint const& pointerPoint) override {}
+	void OnPointerCaptureLost(PointerPoint const&) override {}
 	
-	void OnPointerWheelChanged(PointerPoint const& pointerPoint) override {}
+	void OnPointerWheelChanged(PointerPoint const&) override {}
 	
-	void OnPointerEntered(PointerPoint const& pointerPoint) override {}
+	void OnPointerEntered(PointerPoint const&) override {}
 	
-	void OnPointerExited(PointerPoint const& pointerPoint) override {}
+	void OnPointerExited(PointerPoint const&) override {}
 	
-	void OnPointerPressed(PointerPoint const& pointerPoint) override {}
+	void OnPointerPressed(PointerPoint const&) override {}
 	
-	void OnPointerMoved(PointerPoint const& pointerPoint) override {}
+	void OnPointerMoved(PointerPoint const&) override {}
 	
-	void OnPointerReleased(PointerPoint const& pointerPoint) override {}
+	void OnPointerReleased(PointerPoint const&) override {}
 	
 	void OnRenderSizeChanged(std::uint32_t, std::uint32_t) override {}
 	
-	void Draw(DrawingContext & drawingContext) override {}
+	void Draw(DrawingContext &) override {}
 	
-	void UpdateAnimation(DurationSeconds const& frameDuration) override {}
+	void UpdateAnimation(DurationSeconds const&) override {}
+
+	void SetCursor(MouseCursor cursor);
+
+	void ResetCursor();
+
+	Optional<MouseCursor> CurrentCursor() const;
 
 private:
 	Matrix3x2 transform;
 	//Vector2 origin;
 	Matrix3x2 parentTransform;
 	std::weak_ptr<UIElement> parent;
+	Optional<MouseCursor> cursor;
 	std::uint32_t parentDrawOrder;
 	std::uint32_t drawOrder;
 	std::uint16_t height;

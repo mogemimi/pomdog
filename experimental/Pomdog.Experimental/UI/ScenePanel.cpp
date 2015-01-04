@@ -62,12 +62,15 @@ static Vector2 SampleTrackGesture(Vector2 const& position, Vector2 & startPositi
 	return delta;
 }
 
+static const auto ZoomAnimationInterval = std::chrono::milliseconds(400);
+
 }// unnamed namespace
 //-----------------------------------------------------------------------
 ScenePanel::ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn)
 	: Panel(Matrix3x2::Identity, widthIn, heightIn)
-	, prevScrollWheel(0)
-	, scrollWheel(0)
+	, timer(DurationSeconds::zero())
+	, normalizedScrollDirection(0.0f)
+	, scrollAcceleration(0.0f)
 	, isFocused(false)
 	, isEnabled(true)
 {
@@ -116,11 +119,28 @@ void ScenePanel::OnPointerCaptureLost(PointerPoint const& pointerPoint)
 //-----------------------------------------------------------------------
 void ScenePanel::OnPointerWheelChanged(PointerPoint const& pointerPoint)
 {
-	if (prevScrollWheel) {
-		*prevScrollWheel += pointerPoint.MouseWheelDelta;
+	scrollWheelSampler.AddWheelDelta(pointerPoint.MouseWheelDelta);
+	auto wheelDeltaUnit = scrollWheelSampler.GetScrollWheelDeltaAverage();
+
+	constexpr float accel = 1.2f;
+
+	if (timer <= DurationSeconds::zero()) {
+		timer = ZoomAnimationInterval;
+		scrollAcceleration = accel;
 	}
 	else {
-		prevScrollWheel = pointerPoint.MouseWheelDelta;
+		scrollAcceleration += std::abs(pointerPoint.MouseWheelDelta / wheelDeltaUnit);
+	}
+
+	if (pointerPoint.MouseWheelDelta != 0)
+	{
+		auto direction = (pointerPoint.MouseWheelDelta >= 0 ? 1.0f : -1.0f);
+		
+		if (direction != normalizedScrollDirection) {
+			normalizedScrollDirection = direction;
+			timer = ZoomAnimationInterval;
+			scrollAcceleration = accel;
+		}
 	}
 }
 //-----------------------------------------------------------------------
@@ -265,6 +285,13 @@ void ScenePanel::OnMouseRightButtonMoved(PointerPoint const& pointerPoint)
 //-----------------------------------------------------------------------
 void ScenePanel::UpdateAnimation(DurationSeconds const& frameDuration)
 {
+	timer = std::max(timer - frameDuration, DurationSeconds::zero());
+
+	if (timer <= DurationSeconds::zero()) {
+		scrollAcceleration = 1.0f;
+		return;
+	}
+
 	POMDOG_ASSERT(cameraObject);
 
 	auto transform = cameraObject.Component<Transform2D>();
@@ -273,20 +300,15 @@ void ScenePanel::UpdateAnimation(DurationSeconds const& frameDuration)
 	if (!transform || !camera) {
 		return;
 	}
-	
+
 	constexpr float minZoom = 0.05f;
 	constexpr float maxZoom = 100.0f;
-	
-	auto duration = std::min(frameDuration.count(), 1.0);
-	
-	if (prevScrollWheel) {
-		scrollWheel += ((*prevScrollWheel) * duration);
-		prevScrollWheel = OptionalType::NullOptional;
-	}
-	
+	const auto duration = std::min<float>(frameDuration.count(), 1.0f);
+	const auto scroll = duration * normalizedScrollDirection * scrollAcceleration * static_cast<float>(timer / ZoomAnimationInterval);
+
 	POMDOG_ASSERT(camera->Zoom > 0);
-	camera->Zoom = MathHelper::Clamp(camera->Zoom + (camera->Zoom * scrollWheel), minZoom, maxZoom);
-	scrollWheel = scrollWheel * 0.8f;
+
+	camera->Zoom = MathHelper::Clamp(camera->Zoom + (camera->Zoom * scroll), minZoom, maxZoom);
 }
 //-----------------------------------------------------------------------
 void ScenePanel::OnRenderSizeChanged(std::uint32_t widthIn, std::uint32_t heightIn)
