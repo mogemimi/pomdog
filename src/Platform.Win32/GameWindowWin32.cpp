@@ -43,7 +43,8 @@ static LPCTSTR ToStandardCursorID(MouseCursor cursor)
 //-----------------------------------------------------------------------
 class GameWindowWin32::Impl {
 public:
-	Impl(HINSTANCE hInstance, int nCmdShow, HICON icon, HICON iconSmall,
+	Impl(HINSTANCE hInstance, int nCmdShow,
+		HICON icon, HICON iconSmall, bool useOpenGL,
 		std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
 		Details::RenderSystem::PresentationParameters const& presentationParameters);
 
@@ -74,7 +75,8 @@ public:
 	bool isMouseCursorVisible;
 };
 //-----------------------------------------------------------------------
-GameWindowWin32::Impl::Impl(HINSTANCE hInstance, int nCmdShow, HICON icon, HICON iconSmall,
+GameWindowWin32::Impl::Impl(HINSTANCE hInstance, int nCmdShow,
+	HICON icon, HICON iconSmall, bool useOpenGL,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcherIn,
 	Details::RenderSystem::PresentationParameters const& presentationParameters)
 	: eventDispatcher(eventDispatcherIn)
@@ -94,12 +96,10 @@ GameWindowWin32::Impl::Impl(HINSTANCE hInstance, int nCmdShow, HICON icon, HICON
 	LONG adjustedWidth = static_cast<LONG>(clientBounds.Width);
 	LONG adjustedHeight = static_cast<LONG>(clientBounds.Height);
 
-	///@todo Not implemented
-	//constexpr bool UseOpenGL = false;
-	//if (UseOpenGL) {
-	//	windowStyle | = WS_CLIPCHILDREN;
-	//	windowStyle | = WS_CLIPSIBLINGS;
-	//}
+	if (useOpenGL) {
+		windowStyle |= WS_CLIPCHILDREN;
+		windowStyle |= WS_CLIPSIBLINGS;
+	}
 
 	if (isFullScreen)
 	{
@@ -124,11 +124,9 @@ GameWindowWin32::Impl::Impl(HINSTANCE hInstance, int nCmdShow, HICON icon, HICON
 
 	UINT windowClassStyle = (CS_HREDRAW | CS_VREDRAW);
 
-	///@todo Not implemented
-	//constexpr bool UseOpenGL = false;
-	//if (UseOpenGL) {
-	//	windowClassStyle |= CS_OWNDC;
-	//}
+	if (useOpenGL) {
+		windowClassStyle |= CS_OWNDC;
+	}
 
 	if (icon == nullptr) {
 		icon = LoadIcon(instanceHandle, MakeIntegerResource(IDI_APPLICATION));
@@ -400,10 +398,11 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(HWND hWnd, UINT msg, WPA
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 //-----------------------------------------------------------------------
-GameWindowWin32::GameWindowWin32(HINSTANCE hInstance, int nCmdShow, HICON icon, HICON iconSmall,
+GameWindowWin32::GameWindowWin32(HINSTANCE hInstance, int nCmdShow,
+	HICON icon, HICON iconSmall, bool useOpenGL,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
 	Details::RenderSystem::PresentationParameters const& presentationParameters)
-	: impl(std::make_unique<Impl>(hInstance, nCmdShow, icon, iconSmall, eventDispatcher, presentationParameters))
+	: impl(std::make_unique<Impl>(hInstance, nCmdShow, icon, iconSmall, useOpenGL, eventDispatcher, presentationParameters))
 {
 }
 //-----------------------------------------------------------------------

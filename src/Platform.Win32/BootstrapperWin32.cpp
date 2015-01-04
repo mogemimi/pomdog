@@ -33,8 +33,14 @@ void BootstrapperWin32::Run(std::function<void(std::shared_ptr<GameHost> const& 
 
 	auto systemEventDispatcher = std::make_shared<SystemEventDispatcher>();
 
+#if defined(POMDOG_RENDERSYSTEM_GL4)
+	bool useOpenGL = true;
+#else
+	bool useOpenGL = false;
+#endif
+
 	auto gameWindow = std::make_shared<GameWindowWin32>(settings.HInstance, settings.CmdShow, settings.Icon, settings.IconSmall,
-		systemEventDispatcher, presentationParameters);
+		useOpenGL, systemEventDispatcher, presentationParameters);
 
 	auto inputDeviceFactory = std::make_unique<Details::InputSystem::InputDeviceFactory>();
 	

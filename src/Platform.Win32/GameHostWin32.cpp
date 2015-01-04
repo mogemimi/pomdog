@@ -7,19 +7,37 @@
 #include "GameHostWin32.hpp"
 #include "GameWindowWin32.hpp"
 #include "../InputSystem/InputDeviceFactory.hpp"
+
+#if defined(POMDOG_RENDERSYSTEM_GL4) \
+	&& defined(POMDOG_RENDERSYSTEM_DIRECT3D11)
+#	error "Both POMDOG_RENDERSYSTEM_GL4 and POMDOG_RENDERSYSTEM_DIRECT3D11 are defined."
+#elif defined(POMDOG_RENDERSYSTEM_GL4)
+#elif defined(POMDOG_RENDERSYSTEM_DIRECT3D11)
+#else
+#	error "Cannot find render system"
+#endif
+
+#ifdef POMDOG_RENDERSYSTEM_GL4
+#include "../Platform.Win32/OpenGLContextWin32.hpp"
+#include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
+#include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
+#else
 #include "../RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp"
 #include "../RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.hpp"
+#endif
+
 #include "../SoundSystem.XAudio2/AudioEngineXAudio2.hpp"
 #include "../Application/SubsystemScheduler.hpp"
-#include <Pomdog/Application/Game.hpp>
-#include <Pomdog/Application/GameClock.hpp>
-#include <Pomdog/Audio/AudioEngine.hpp>
-#include <Pomdog/Content/AssetManager.hpp>
-#include <Pomdog/Graphics/GraphicsContext.hpp>
-#include <Pomdog/Graphics/GraphicsDevice.hpp>
-#include <Pomdog/Event/ScopedConnection.hpp>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Logging/Log.hpp>
+#include "Pomdog/Application/Game.hpp"
+#include "Pomdog/Application/GameClock.hpp"
+#include "Pomdog/Audio/AudioEngine.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Graphics/GraphicsContext.hpp"
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Event/ScopedConnection.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Logging/Log.hpp"
 
 #include <thread>
 #include <chrono>
@@ -109,7 +127,30 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& window,
 	, exitRequest(false)
 	, surfaceResizeRequest(false)
 {
+#if defined(POMDOG_RENDERSYSTEM_GL4)
+	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
+	using Details::RenderSystem::GL4::GraphicsContextGL4;
+
+	auto openGLContext = std::make_shared<Win32::OpenGLContextWin32>(window->NativeWindowHandle());
+
+	if (glewInit() != GLEW_OK)
+	{
+		//POMDOG_THROW_EXCEPTION(std::runtime_error,
+		//	"Failed to initialize glew.");
+	}
+
+	openGLContext->MakeCurrentContext();
+
+	auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceGL4>();
+	graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::move(nativeGraphicsDevice));
+
+	graphicsContext = std::make_shared<Pomdog::GraphicsContext>(
+		std::make_unique<GraphicsContextGL4>(openGLContext, gameWindow),
+		presentationParameters, graphicsDevice);
+#elif defined(POMDOG_RENDERSYSTEM_DIRECT3D11)
 	using Details::RenderSystem::Direct3D11::GraphicsDeviceDirect3D11;
+	using Details::RenderSystem::Direct3D11::GraphicsContextDirect3D11;
+	
 	auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceDirect3D11>();
 	auto deviceContext = nativeGraphicsDevice->DeviceContext();
 	auto nativeDevice = nativeGraphicsDevice->NativeDevice();
@@ -117,10 +158,10 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& window,
 
 	graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::move(nativeGraphicsDevice));
 
-	using Details::RenderSystem::Direct3D11::GraphicsContextDirect3D11;
 	graphicsContext = std::make_shared<Pomdog::GraphicsContext>(
 		std::make_unique<GraphicsContextDirect3D11>(window->NativeWindowHandle(), dxgiFactory, nativeDevice, deviceContext),
 		presentationParameters, graphicsDevice);
+#endif
 
 	POMDOG_ASSERT(systemEventDispatcher);
 	systemEventConnection = systemEventDispatcher->Connect([this](Event const& event) {
@@ -206,13 +247,17 @@ void GameHostWin32::Impl::ProcessSystemEvents(Event const& event)
 		Log::Internal("WindowShouldCloseEvent");
 		this->Exit();
 	}
-
-	///@todo Not implemented
+	else if (event.Is<ViewDidEndLiveResizeEvent>())
+	{
+		surfaceResizeRequest = true;
+	}
 }
 //-----------------------------------------------------------------------
 void GameHostWin32::Impl::ClientSizeChanged()
 {
-	///@todo Not implemented
+	POMDOG_ASSERT(gameWindow);
+	auto bounds = gameWindow->ClientBounds();
+	gameWindow->ClientSizeChanged(bounds.Width, bounds.Height);
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GameWindow> GameHostWin32::Impl::Window()

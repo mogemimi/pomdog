@@ -27,7 +27,8 @@ namespace Win32 {
 
 class GameWindowWin32 final: public GameWindow {
 public:
-	GameWindowWin32(HINSTANCE hInstance, int nCmdShow, HICON icon, HICON iconSmall,
+	GameWindowWin32(HINSTANCE hInstance, int nCmdShow,
+		HICON icon, HICON iconSmall, bool useOpenGL,
 		std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
 		Details::RenderSystem::PresentationParameters const& presentationParameters);
 
