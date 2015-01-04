@@ -33,7 +33,7 @@ Slider::Slider(SliderColorScheme const& colorSchemeIn, double minimumIn, double 
 	POMDOG_ASSERT(value >= minimum);
 	POMDOG_ASSERT(value <= maximum);
 
-	SetCursor(MouseCursor::Link);
+	SetCursor(MouseCursor::PointingHand);
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)

@@ -164,28 +164,22 @@ void CocoaGameWindow::IsMouseCursorVisible(bool visibleIn)
 //-----------------------------------------------------------------------
 void CocoaGameWindow::SetMouseCursor(MouseCursor cursor)
 {
-	switch (cursor) {
-	case MouseCursor::Arrow: {
-		[[NSCursor arrowCursor] set];
-		break;
-	}
-	case MouseCursor::Text: {
-		[[NSCursor IBeamCursor] set];
-		break;
-	}
-	case MouseCursor::Link: {
-		[[NSCursor pointingHandCursor] set];
-		break;
-	}
-	case MouseCursor::ResizeHorizontal: {
-		[[NSCursor resizeLeftRightCursor] set];
-		break;
-	}
-	case MouseCursor::ResizeVertical: {
-		[[NSCursor resizeUpDownCursor] set];
-		break;
-	}
-	}
+	auto nativeCursor = ([cursor]()-> NSCursor* {
+		switch (cursor) {
+		case MouseCursor::Arrow:
+			return [NSCursor arrowCursor];
+		case MouseCursor::IBeam:
+			return [NSCursor IBeamCursor];
+		case MouseCursor::PointingHand:
+			return [NSCursor pointingHandCursor];
+		case MouseCursor::ResizeHorizontal:
+			return [NSCursor resizeLeftRightCursor];
+		case MouseCursor::ResizeVertical:
+			return [NSCursor resizeUpDownCursor];
+		}
+	})();
+	
+	[nativeCursor set];
 }
 //-----------------------------------------------------------------------
 #pragma mark - Low-Level API for CocoaGameHost

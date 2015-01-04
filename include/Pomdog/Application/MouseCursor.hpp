@@ -17,8 +17,8 @@ namespace Pomdog {
 
 enum class MouseCursor: std::uint8_t {
 	Arrow,
-	Text,
-	Link,
+	IBeam,
+	PointingHand,
 	ResizeVertical,
 	ResizeHorizontal,
 };

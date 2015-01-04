@@ -21,7 +21,7 @@ ToggleSwitch::ToggleSwitch()
 	, isEnabled(true)
 	, isOn(true)
 {
-	SetCursor(MouseCursor::Link);
+	SetCursor(MouseCursor::PointingHand);
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -43,7 +43,7 @@ void ToggleSwitch::IsEnabled(bool isEnabledIn)
 {
 	this->isEnabled = isEnabledIn;
 	if (isEnabled) {
-		SetCursor(MouseCursor::Link);
+		SetCursor(MouseCursor::PointingHand);
 	}
 	else {
 		ResetCursor();

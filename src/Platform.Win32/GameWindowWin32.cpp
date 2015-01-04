@@ -31,8 +31,8 @@ static LPCTSTR ToStandardCursorID(MouseCursor cursor)
 {
 	switch (cursor) {
 	case MouseCursor::Arrow: return IDC_ARROW;
-	case MouseCursor::Text: return IDC_IBEAM;
-	case MouseCursor::Link: return IDC_HAND;
+	case MouseCursor::IBeam: return IDC_IBEAM;
+	case MouseCursor::PointingHand: return IDC_HAND;
 	case MouseCursor::ResizeHorizontal: return IDC_SIZEWE;
 	case MouseCursor::ResizeVertical: return IDC_SIZENS;
 	}
