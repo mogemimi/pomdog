@@ -420,6 +420,10 @@
       '../src/Platform.Win32/TimeSourceWin32.cpp',
       '../src/Platform.Win32/TimeSourceWin32.hpp',
     ],
+    'pomdog_library_win32_opengl_sources': [
+      '../src/Platform.Win32/OpenGLContextWin32.cpp',
+      '../src/Platform.Win32/OpenGLContextWin32.hpp',
+    ],
   },
   'target_defaults': {
     'dependencies': [
@@ -477,6 +481,7 @@
     },
     'conditions': [
       ['renderer == "direct3d11"', {
+        'defines': ['POMDOG_RENDERSYSTEM_DIRECT3D11'],
         'sources': [
           '<@(pomdog_library_direct3d11_sources)',
         ],
@@ -490,10 +495,30 @@
         },
       }], # OS == "direct3d11"
       ['renderer == "opengl"', {
+        'defines': ['POMDOG_RENDERSYSTEM_GL4'],
         'sources': [
           '<@(pomdog_library_opengl4_sources)',
         ],
       }], # renderer == "opengl"
+      ['renderer == "opengl" and OS == "win"', {
+        'sources': [
+          '<@(pomdog_library_win32_opengl_sources)',
+        ],
+        'defines': [
+          'GLEW_STATIC',
+        ],
+        'dependencies': [
+          '../third-party/glew/glew.gyp:glew_static',
+        ],
+        'include_dirs': [
+          '../third-party/glew/include',
+        ],
+        'link_settings': {
+          'libraries': [
+            '-lopengl32.lib',
+          ],
+        },
+      }],
       ['audio == "OpenAL"', {
         'sources': [
           '<@(pomdog_library_openal_sources)',
