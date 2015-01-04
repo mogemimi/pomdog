@@ -30,7 +30,7 @@ static void TranslateToMouseState(DIDEVICEOBJECTDATA const& source, MouseState &
 {
 	switch (source.dwOfs) {
 	case DIMOFS_Z: {
-		mouseState.ScrollWheel += source.dwData;
+		mouseState.ScrollWheel = source.dwData;
 		break;
 	}
 	case DIMOFS_BUTTON0: {
