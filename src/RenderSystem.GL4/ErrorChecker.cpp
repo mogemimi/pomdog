@@ -21,7 +21,7 @@ namespace {
 struct ErrorCodeTag;
 using ErrorCodeGL4 = Tagged<GLenum, ErrorCodeTag>;
 
-static std::string ToString(Pomdog::Details::RenderSystem::GL4::ErrorCodeGL4 const& errorCode)
+static std::string ToString(ErrorCodeGL4 const& errorCode)
 {
 	switch (errorCode.value) {
 	case GL_NO_ERROR: return "GL_NO_ERROR";

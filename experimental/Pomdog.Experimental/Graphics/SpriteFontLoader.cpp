@@ -280,7 +280,7 @@ Details::SpriteFonts::Glyph ParseGlyph(std::istream & stream)
 }
 
 namespace FilePathHelper {
-	std::string Directory(std::string const& path)
+	static std::string Directory(std::string const& path)
 	{
 		std::string::size_type index(path.rfind("/"));
 		return (std::string::npos != index) ?
@@ -294,6 +294,8 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
 	AssetManager & assets, std::string const& assetName)
 {
 	std::ifstream stream = assets.OpenStream(assetName);
+
+	POMDOG_ASSERT(stream.is_open());
 
 	std::vector<BitmapFontPage> pages;
 	std::vector<Details::SpriteFonts::Glyph> glyphs;

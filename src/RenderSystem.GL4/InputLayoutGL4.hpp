@@ -19,6 +19,7 @@
 #include <Pomdog/Utility/Optional.hpp>
 #include <vector>
 #include <limits>
+#include <memory>
 
 namespace Pomdog {
 namespace Details {
