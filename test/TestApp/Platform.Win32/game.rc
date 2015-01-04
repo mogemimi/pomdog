@@ -1,0 +1,16 @@
+//
+//  Copyright (C) 2013-2015 mogemimi.
+//  Distributed under the MIT License. See LICENSE.md or
+//  http://enginetrouble.net/pomdog/license for details.
+//
+
+// NOTE:
+// When you encode the .rc file as UTF-8 (with BOM),
+// you get the error "RC2135". The solution is to re-encode
+// the .rc file (included Resource.hpp) as UTF-8 (without BOM).
+
+#include "Resource.hpp"
+
+// Icon
+IDI_POMDOG_ICON       ICON "Resources/icon_256px.ico"
+IDI_POMDOG_ICON_SMALL ICON "Resources/icon_16px.ico"

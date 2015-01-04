@@ -109,6 +109,9 @@
         }],
         ['OS == "win"', {
           'sources': [
+            '../test/TestApp/Platform.Win32/main.cpp',
+            '../test/TestApp/Platform.Win32/Resource.hpp',
+            '../test/TestApp/Platform.Win32/game.rc',
           ],
         }], # OS == "win"
         ['OS == "mac"', {
