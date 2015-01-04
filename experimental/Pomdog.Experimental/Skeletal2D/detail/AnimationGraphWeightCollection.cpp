@@ -46,6 +46,12 @@ void AnimationGraphWeightCollection::Reserve(std::uint16_t size)
 	parameters.reserve(size);
 }
 //-----------------------------------------------------------------------
+void AnimationGraphWeightCollection::Reserve(std::size_t size)
+{
+	POMDOG_ASSERT(size <= std::numeric_limits<std::uint16_t>::max());
+	parameters.reserve(size);
+}
+//-----------------------------------------------------------------------
 std::uint16_t AnimationGraphWeightCollection::Count() const
 {
 	return parameters.size();

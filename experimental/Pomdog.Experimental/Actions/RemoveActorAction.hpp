@@ -22,7 +22,7 @@ private:
 	bool isCompleted = false;
 
 public:
-	void Act(GameObject & gameObject, AnimationTimeInterval const& frameDuration) override
+	void Act(GameObject & gameObject, AnimationTimeInterval const&) override
 	{
 		if (isCompleted) {
 			return;

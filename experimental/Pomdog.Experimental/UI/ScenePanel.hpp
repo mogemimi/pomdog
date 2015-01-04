@@ -13,7 +13,7 @@
 
 #include "Panel.hpp"
 #include "detail/UIEventConnection.hpp"
-#include <Pomdog/Utility/Optional.hpp>
+#include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 
 namespace Pomdog {

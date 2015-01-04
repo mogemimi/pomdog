@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "AnimationGraph.hpp"
+#include "Pomdog.Experimental/Skeletal2D/AnimationGraph.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <memory>
 #include <string>

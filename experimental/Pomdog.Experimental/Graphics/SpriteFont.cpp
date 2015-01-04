@@ -6,7 +6,7 @@
 
 #include "SpriteFont.hpp"
 #include "SpriteBatch.hpp"
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Utility/Assert.hpp"
 #include <unordered_map>
 #include <codecvt>
 #include <locale>

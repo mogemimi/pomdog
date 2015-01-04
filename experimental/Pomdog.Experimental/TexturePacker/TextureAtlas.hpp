@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "TextureRegion.hpp"
+#include "Pomdog.Experimental/Graphics/TextureRegion.hpp"
 #include <cstdint>
 #include <string>
 #include <vector>

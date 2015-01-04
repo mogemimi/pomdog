@@ -19,7 +19,7 @@ namespace Pomdog {
 namespace Details {
 namespace Skeletal2D {
 
-struct AnimationGraphWeightCollection {
+class AnimationGraphWeightCollection {
 public:
 	void SetValue(std::uint16_t index, float value);
 	void SetValue(std::uint16_t index, bool value);
@@ -32,6 +32,8 @@ public:
 	std::uint16_t Count() const;
 
 	void Reserve(std::uint16_t size);
+
+	void Reserve(std::size_t size);
 	
 private:
 	std::vector<AnimationGraphWeight> parameters;
