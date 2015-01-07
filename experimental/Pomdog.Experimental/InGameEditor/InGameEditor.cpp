@@ -77,12 +77,12 @@ void InGameEditor::AddView(std::shared_ptr<UI::UIView> const& view)
 //-----------------------------------------------------------------------
 void InGameEditor::Update()
 {
-	auto clock = gameHost->Clock();
-	auto mouse = gameHost->Mouse();
-	{
+	if (auto mouse = gameHost->Mouse()) {
 		hierarchy.Touch(mouse->GetState());
-		hierarchy.UpdateAnimation(clock->FrameDuration());
 	}
+	
+	auto clock = gameHost->Clock();
+	hierarchy.UpdateAnimation(clock->FrameDuration());
 }
 //-----------------------------------------------------------------------
 void InGameEditor::DrawGUI(GraphicsContext & graphicsContext)

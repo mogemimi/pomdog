@@ -15,7 +15,7 @@ namespace {
 
 bool Intersects(Point2D const& position, UIElement & element)
 {
-	Rectangle bounds(0, 0, element.Width(), element.Height());
+	auto bounds = element.BoundingBox();
 	auto positionInChild = UIHelper::ConvertToChildSpace(position, element.GlobalTransform());
 	return bounds.Intersects(positionInChild);
 }
@@ -198,6 +198,8 @@ void UIEventDispatcher::PointerReleased(Point2D const& position)
 //-----------------------------------------------------------------------
 Details::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIView> const& child)
 {
+	POMDOG_ASSERT(child);
+
 	std::shared_ptr<SubscribeRequestDispatcherType> sharedDispatcher(
 		shared_from_this(), &subscribeRequests);
 	Details::UIEventConnection connection {std::move(sharedDispatcher), child};
@@ -208,6 +210,8 @@ Details::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIView> co
 //-----------------------------------------------------------------------
 Details::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIView> && child)
 {
+	POMDOG_ASSERT(child);
+
 	std::shared_ptr<SubscribeRequestDispatcherType> sharedDispatcher(
 		shared_from_this(), &subscribeRequests);
 	Details::UIEventConnection connection {std::move(sharedDispatcher), child};
@@ -270,7 +274,9 @@ ButtonState UIEventDispatcher::CheckMouseButton(MouseState const& mouseState, UI
 void UIEventDispatcher::Sort()
 {
 	std::sort(std::begin(children), std::end(children),
-		[](std::shared_ptr<UIView> & a, std::shared_ptr<UIView> & b) {
+		[](std::shared_ptr<UIView> const& a, std::shared_ptr<UIView> const& b) {
+			POMDOG_ASSERT(a);
+			POMDOG_ASSERT(b);
 			return a->GlobalDrawOrder() < b->GlobalDrawOrder();
 		});
 }

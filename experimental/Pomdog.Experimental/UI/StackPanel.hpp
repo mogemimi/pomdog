@@ -14,7 +14,7 @@
 #include "Panel.hpp"
 #include "Thickness.hpp"
 #include "detail/UIEventConnection.hpp"
-#include <Pomdog/Utility/Optional.hpp>
+#include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <list>
 
@@ -34,9 +34,7 @@ public:
 	void OnPointerCanceled(PointerPoint const& pointerPoint) override;
 	
 	void OnPointerCaptureLost(PointerPoint const& pointerPoint) override;
-	
-	void OnPointerWheelChanged(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerEntered(PointerPoint const& pointerPoint) override;
 	
 	void OnPointerExited(PointerPoint const& pointerPoint) override;

@@ -12,7 +12,7 @@
 #endif
 
 #include "Control.hpp"
-#include <Pomdog/Utility/Optional.hpp>
+#include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <deque>
 

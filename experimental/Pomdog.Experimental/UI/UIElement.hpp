@@ -54,6 +54,8 @@ public:
 	
 	virtual std::uint16_t Height() const = 0;
 	
+	virtual Rectangle BoundingBox() const = 0;
+	
 	virtual bool SizeToFitContent() const = 0;
 
 	virtual HorizontalAlignment HorizontalAlignment() const = 0;

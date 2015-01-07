@@ -43,10 +43,6 @@ void StackPanel::OnPointerCaptureLost(PointerPoint const& pointerPoint)
 {
 }
 //-----------------------------------------------------------------------
-void StackPanel::OnPointerWheelChanged(PointerPoint const& pointerPoint)
-{
-}
-//-----------------------------------------------------------------------
 void StackPanel::OnPointerEntered(PointerPoint const& pointerPoint)
 {
 }
@@ -160,12 +156,15 @@ void StackPanel::Draw(DrawingContext & drawingContext)
 	drawingContext.DrawRectangle(transform, Color{45, 45, 48, 225},
 		Rectangle(0, 0, Width(), Height()));
 	
-	Color const borderColor{21, 21, 21, 255};
+	Color const borderColor{40, 40, 40, 255};
 	
 	drawingContext.DrawLine(transform, borderColor, 1.0f, {0.0f, 0.0f}, {static_cast<float>(Width()), 0.0f});
 	drawingContext.DrawLine(transform, borderColor, 1.0f, {0.0f, 0.0f}, {0.0f, static_cast<float>(Height())});
 	drawingContext.DrawLine(transform, borderColor, 1.0f, Vector2(0.0f, Height()), Vector2(Width(), Height()));
 	drawingContext.DrawLine(transform, borderColor, 1.0f, Vector2(Width(), 0.0f), Vector2(Width(), Height()));
+	
+	Color const highlightColor{106, 106, 106, 255};
+	drawingContext.DrawLine(transform, highlightColor, 1.0f, {1.0f, 1.0f}, {static_cast<float>(Width()) - 1.0f, 1.0f});
 	
 	drawingContext.Push(transform);
 	

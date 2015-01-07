@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 namespace UI {
-
+//-----------------------------------------------------------------------
 UIView::UIView(Matrix3x2 const& transformIn, std::uint32_t widthIn, std::uint32_t heightIn)
 	: transform(transformIn)
 	, parentTransform(Matrix3x2::Identity)
@@ -112,6 +112,46 @@ Optional<MouseCursor> UIView::CurrentCursor() const
 {
 	return cursor;
 }
+//-----------------------------------------------------------------------
+Rectangle UIView::BoundingBox() const
+{
+	return Rectangle{0, 0, width, height};
+}
+//-----------------------------------------------------------------------
+bool UIView::SizeToFitContent() const
+{
+	return false;
+}
+//-----------------------------------------------------------------------
+std::weak_ptr<UIEventDispatcher> UIView::Dispatcher() const
+{
+	POMDOG_ASSERT(false);
+	return {};
+}
+//-----------------------------------------------------------------------
+void UIView::OnParentChanged() {}
+//-----------------------------------------------------------------------
+void UIView::OnPointerCanceled(PointerPoint const&) {}
+//-----------------------------------------------------------------------
+void UIView::OnPointerCaptureLost(PointerPoint const&) {}
+//-----------------------------------------------------------------------
+void UIView::OnPointerWheelChanged(PointerPoint const&) {}
+//-----------------------------------------------------------------------
+void UIView::OnPointerEntered(PointerPoint const&) {}
+//-----------------------------------------------------------------------
+void UIView::OnPointerExited(PointerPoint const&) {}
+//-----------------------------------------------------------------------
+void UIView::OnPointerPressed(PointerPoint const&) {}
+//-----------------------------------------------------------------------
+void UIView::OnPointerMoved(PointerPoint const&) {}
+//-----------------------------------------------------------------------
+void UIView::OnPointerReleased(PointerPoint const&) {}
+//-----------------------------------------------------------------------
+void UIView::OnRenderSizeChanged(std::uint32_t, std::uint32_t) {}
+//-----------------------------------------------------------------------
+void UIView::Draw(DrawingContext &) {}
+//-----------------------------------------------------------------------
+void UIView::UpdateAnimation(DurationSeconds const&) {}
 //-----------------------------------------------------------------------
 }// namespace UI
 }// namespace Pomdog

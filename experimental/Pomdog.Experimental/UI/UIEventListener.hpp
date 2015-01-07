@@ -37,7 +37,6 @@ public:
 	virtual void OnPointerWheelChanged(PointerPoint const& pointerPoint) = 0;
 };
 
-
 }// namespace UI
 }// namespace Pomdog
 
