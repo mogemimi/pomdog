@@ -17,24 +17,24 @@
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include "../RenderSystem/NativeTexture2D.hpp"
 #include "../Utility/ScopeGuard.hpp"
-#include <Pomdog/Graphics/ClearOptions.hpp>
-#include <Pomdog/Graphics/IndexBuffer.hpp>
-#include <Pomdog/Graphics/InputLayout.hpp>
-#include <Pomdog/Graphics/PrimitiveTopology.hpp>
-#include <Pomdog/Graphics/RenderTarget2D.hpp>
-#include <Pomdog/Graphics/Texture2D.hpp>
-#include <Pomdog/Graphics/VertexBuffer.hpp>
-#include <Pomdog/Graphics/Viewport.hpp>
-#include <Pomdog/Application/GameWindow.hpp>
-#include <Pomdog/Math/Color.hpp>
-#include <Pomdog/Math/Rectangle.hpp>
-#include <Pomdog/Math/Vector4.hpp>
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Utility/Exception.hpp>
+#include "Pomdog/Graphics/ClearOptions.hpp"
+#include "Pomdog/Graphics/IndexBuffer.hpp"
+#include "Pomdog/Graphics/InputLayout.hpp"
+#include "Pomdog/Graphics/PrimitiveTopology.hpp"
+#include "Pomdog/Graphics/RenderTarget2D.hpp"
+#include "Pomdog/Graphics/Texture2D.hpp"
+#include "Pomdog/Graphics/VertexBuffer.hpp"
+#include "Pomdog/Graphics/Viewport.hpp"
+#include "Pomdog/Application/GameWindow.hpp"
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Math/Vector4.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 
 // logging
-#include <Pomdog/Logging/Log.hpp>
-#include <Pomdog/Logging/LogStream.hpp>
+#include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Logging/LogStream.hpp"
 
 #include <cmath>
 #include <array>
@@ -120,6 +120,10 @@ static Optional<FrameBufferGL4> CreateFrameBuffer()
 	FrameBufferGL4 frameBuffer;
 	glGenFramebuffers(1, frameBuffer.Data());
 	
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glGenFramebuffers", __FILE__, __LINE__);
+	#endif
+	
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.value);
 	
 	// Check framebuffer
@@ -182,6 +186,10 @@ void GraphicsContextGL4::Clear(Color const& color)
 	auto colorVector = color.ToVector4();
 	glClearColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	#ifdef DEBUG
+	RenderSystem::GL4::ErrorChecker::CheckError("glClear", __FILE__, __LINE__);
+	#endif
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float depth, std::int32_t stencil)
@@ -211,9 +219,11 @@ void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float d
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Present()
 {
-	glFlush();
-
 	nativeContext->SwapBuffers();
+	
+	#ifdef DEBUG
+	RenderSystem::GL4::ErrorChecker::CheckError("SwapBuffers", __FILE__, __LINE__);
+	#endif
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount)

@@ -6,6 +6,7 @@
 
 #include "OpenGLContextWin32.hpp"
 #include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
+#include "../RenderSystem.GL4/ErrorChecker.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <sstream>
@@ -107,6 +108,12 @@ void OpenGLContextWin32::ClearCurrentContext()
 //-----------------------------------------------------------------------
 void OpenGLContextWin32::SwapBuffers()
 {
+	glFlush();
+
+	#ifdef DEBUG
+	RenderSystem::GL4::ErrorChecker::CheckError("glFlush", __FILE__, __LINE__);
+	#endif
+
 	POMDOG_ASSERT(hdc);
 	::SwapBuffers(hdc.get());
 }
