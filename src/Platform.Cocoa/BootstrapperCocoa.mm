@@ -23,6 +23,7 @@ void BootstrapperCocoa::Run(NSWindow* nativeWindow,
 	PresentationParameters presentationParameters;
 	presentationParameters.SurfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
 	presentationParameters.DepthFormat = DepthFormat::Depth24Stencil8;
+	presentationParameters.PresentationInterval = 60;
 	presentationParameters.BackBufferWidth = bounds.size.width;
 	presentationParameters.BackBufferHeight = bounds.size.height;
 	presentationParameters.IsFullScreen = false;

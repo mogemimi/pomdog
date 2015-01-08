@@ -191,6 +191,8 @@ private:
 	std::shared_ptr<KeyboardCocoa> keyboard;
 	std::shared_ptr<MouseCocoa> mouse;
 	
+	DurationSeconds presentationInterval;
+	
 	bool exitRequest;
 };
 //-----------------------------------------------------------------------
@@ -200,6 +202,7 @@ GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& window,
 	: viewLiveResizing(false)
 	, gameWindow(window)
 	, systemEventDispatcher(eventDispatcher)
+	, presentationInterval(DurationSeconds(1) / 60)
 	, exitRequest(false)
 {
 	openGLContext = CreateOpenGLContext(presentationParameters);
@@ -230,6 +233,9 @@ GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& window,
 		
 		assetManager = std::make_unique<Pomdog::AssetManager>(std::move(loaderContext));
 	}
+	
+	POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
+	presentationInterval = DurationSeconds(1) / presentationParameters.PresentationInterval;
 }
 //-----------------------------------------------------------------------
 void GameHostCocoa::Impl::Run(Game & game)
@@ -261,12 +267,11 @@ void GameHostCocoa::Impl::Run(Game & game)
 			RenderFrame(game);
 		}
 
-		auto const interval = DurationSeconds(1.0/60.0);
 		auto elapsedTime = clock.ElapsedTime();
 		
-		if (elapsedTime < interval) {
+		if (elapsedTime < presentationInterval) {
 			lock.~lock_guard();
-			auto sleepTime = (interval - elapsedTime);
+			auto sleepTime = (presentationInterval - elapsedTime);
 			std::this_thread::sleep_for(sleepTime);
 		}
 	}
