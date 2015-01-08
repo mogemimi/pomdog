@@ -124,17 +124,14 @@ Rectangle GameWindowCocoa::ClientBounds() const
 //-----------------------------------------------------------------------
 void GameWindowCocoa::ClientBounds(Rectangle const& clientBounds)
 {
-	NSSize bounds;
-	bounds.width = clientBounds.Width;
-	bounds.height = clientBounds.Height;
+	auto bounds = NSMakeSize(clientBounds.Width, clientBounds.Height);
 	[nativeWindow setContentSize:bounds];
 
 	NSSize windowSize = [nativeWindow frame].size;
 	NSSize screenSize = [[nativeWindow screen] visibleFrame].size;
 
-	NSPoint origin;
-	origin.x = clientBounds.X;
-	origin.y = (screenSize.height - (clientBounds.Y + windowSize.height));
+	auto origin = NSMakePoint(clientBounds.X,
+		screenSize.height - (clientBounds.Y + windowSize.height));
 	[nativeWindow setFrameOrigin:origin];
 
 	//NSRect bounds;

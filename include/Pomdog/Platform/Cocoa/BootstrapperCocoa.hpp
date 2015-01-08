@@ -21,6 +21,7 @@
 namespace Pomdog {
 
 class GameHost;
+class PresentationParameters;
 
 namespace Details {
 namespace Cocoa {
@@ -29,7 +30,11 @@ namespace Cocoa {
 /// @brief すべてのサブシステムの起動、およびアプリケーションの実行を行います。
 class POMDOG_EXPORT BootstrapperCocoa final {
 public:
-	void Run(NSWindow* nativeWindow, std::function<void(std::shared_ptr<GameHost> const&)> const& runGame);
+	void Run(NSWindow* nativeWindow,
+		std::function<void(std::shared_ptr<GameHost> const&)> const& runGame);
+	
+	void Run(NSWindow* nativeWindow, PresentationParameters const& presentationParameters,
+		std::function<void(std::shared_ptr<GameHost> const&)> const& runGame);
 };
 
 }// namespace Cocoa

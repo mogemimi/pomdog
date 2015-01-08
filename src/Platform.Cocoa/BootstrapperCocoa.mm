@@ -7,8 +7,8 @@
 #include "Pomdog/Platform/Cocoa/BootstrapperCocoa.hpp"
 #include "GameWindowCocoa.hpp"
 #include "GameHostCocoa.hpp"
-#include "../RenderSystem/PresentationParameters.hpp"
 #include "Pomdog/Application/GameHost.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
@@ -18,20 +18,26 @@ namespace Cocoa {
 void BootstrapperCocoa::Run(NSWindow* nativeWindow,
 	std::function<void(std::shared_ptr<GameHost> const&)> const& runGame)
 {
+	NSRect bounds = [[nativeWindow contentView] bounds];
+
+	PresentationParameters presentationParameters;
+	presentationParameters.SurfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
+	presentationParameters.DepthFormat = DepthFormat::Depth24Stencil8;
+	presentationParameters.BackBufferWidth = bounds.size.width;
+	presentationParameters.BackBufferHeight = bounds.size.height;
+	presentationParameters.IsFullScreen = false;
+	
+	BootstrapperCocoa::Run(nativeWindow, presentationParameters, runGame);
+}
+//-----------------------------------------------------------------------
+void BootstrapperCocoa::Run(NSWindow* nativeWindow, PresentationParameters const& presentationParameters,
+	std::function<void(std::shared_ptr<GameHost> const&)> const& runGame)
+{
 	auto eventDispatcher = std::make_shared<SystemEventDispatcher>();
 
 	POMDOG_ASSERT(nativeWindow != nil);
 	auto gameWindow = std::make_shared<GameWindowCocoa>(nativeWindow, eventDispatcher);
-	auto clientBounds = gameWindow->ClientBounds();
 
-	using Details::RenderSystem::PresentationParameters;
-	
-	PresentationParameters presentationParameters;
-	presentationParameters.DepthFormat = DepthFormat::Depth24Stencil8;
-	presentationParameters.BackBufferWidth = clientBounds.Width;
-	presentationParameters.BackBufferHeight = clientBounds.Height;
-	presentationParameters.IsFullScreen = false;
-	
 	auto gameHost = std::make_shared<GameHostCocoa>(gameWindow,
 		eventDispatcher, presentationParameters);
 	

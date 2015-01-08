@@ -16,12 +16,10 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
-namespace RenderSystem {
 
 class PresentationParameters;
 
-}// namespace RenderSystem
+namespace Details {
 namespace Cocoa {
 
 class GameWindowCocoa;
@@ -30,7 +28,7 @@ class GameHostCocoa final: public GameHost {
 public:
 	GameHostCocoa(std::shared_ptr<GameWindowCocoa> const& window,
 		std::shared_ptr<SystemEventDispatcher> const& dispatcher,
-		Details::RenderSystem::PresentationParameters const& presentationParameters);
+		PresentationParameters const& presentationParameters);
 
 	~GameHostCocoa();
 

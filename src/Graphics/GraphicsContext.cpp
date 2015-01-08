@@ -11,11 +11,11 @@
 #include "../RenderSystem/NativeDepthStencilState.hpp"
 #include "../RenderSystem/NativeRasterizerState.hpp"
 #include "../RenderSystem/NativeSamplerState.hpp"
-#include "../RenderSystem/PresentationParameters.hpp"
 #include "Pomdog/Graphics/BlendState.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/DepthStencilState.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/RasterizerState.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
@@ -42,9 +42,6 @@ static void CheckUnbindingRenderTargetsError(std::vector<std::shared_ptr<RenderT
 #endif
 
 }// unnamed namespace
-
-using Details::RenderSystem::PresentationParameters;
-
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - GraphicsContext::Impl class

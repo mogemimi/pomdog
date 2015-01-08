@@ -9,7 +9,6 @@
 #include "OpenGLContextCocoa.hpp"
 #include "KeyboardCocoa.hpp"
 #include "MouseCocoa.hpp"
-#include "../RenderSystem/PresentationParameters.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 #include "Pomdog/Application/Game.hpp"
@@ -20,6 +19,7 @@
 #include "Pomdog/Event/ScopedConnection.hpp"
 #include "Pomdog/Graphics/GraphicsContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Input/KeyState.hpp"
 #include "Pomdog/Logging/Log.hpp"
@@ -39,7 +39,7 @@ namespace {
 //-----------------------------------------------------------------------
 #pragma mark - OpenGL Helper Functions
 //-----------------------------------------------------------------------
-static NSOpenGLPixelFormat* CreatePixelFormat(DepthFormat depthFormat)
+static NSOpenGLPixelFormat* CreatePixelFormat(PresentationParameters const& presentationParameters)
 {
 	std::vector<NSOpenGLPixelFormatAttribute> attributes =
 	{
@@ -47,12 +47,46 @@ static NSOpenGLPixelFormat* CreatePixelFormat(DepthFormat depthFormat)
 		NSOpenGLPFADoubleBuffer,
 		NSOpenGLPFAAccelerated,
 		NSOpenGLPFANoRecovery,
-		NSOpenGLPFAColorSize, 24,
-		NSOpenGLPFAAlphaSize, 8,
 		NSOpenGLPFAAllowOfflineRenderers,
 	};
 	
-	switch (depthFormat) {
+	///@todo Not implemented
+//	if (presentationParameters.MultiSampleCount > 0) {
+//		attributes.push_back(NSOpenGLPFAMultisample);
+//		attributes.push_back(NSOpenGLPFASampleBuffers);
+//		attributes.push_back(1);
+//		attributes.push_back(NSOpenGLPFASamples);
+//		attributes.push_back(presentationParameters.MultiSampleCount);
+//	}
+	
+	switch (presentationParameters.SurfaceFormat) {
+	case SurfaceFormat::R8G8B8A8_UNorm:
+		attributes.push_back(NSOpenGLPFAColorSize);
+		attributes.push_back(24);
+		attributes.push_back(NSOpenGLPFAAlphaSize);
+		attributes.push_back(8);
+		break;
+	case SurfaceFormat::R16G16B16A16_Float:
+		attributes.push_back(NSOpenGLPFAColorSize);
+		attributes.push_back(48);
+		attributes.push_back(NSOpenGLPFAAlphaSize);
+		attributes.push_back(16);
+		break;
+	case SurfaceFormat::R32G32B32A32_Float:
+		attributes.push_back(NSOpenGLPFAColorSize);
+		attributes.push_back(96);
+		attributes.push_back(NSOpenGLPFAAlphaSize);
+		attributes.push_back(32);
+		break;
+	default:
+		attributes.push_back(NSOpenGLPFAColorSize);
+		attributes.push_back(24);
+		attributes.push_back(NSOpenGLPFAAlphaSize);
+		attributes.push_back(8);
+		break;
+	}
+	
+	switch (presentationParameters.DepthFormat) {
 	case DepthFormat::Depth16:
 		attributes.push_back(NSOpenGLPFADepthSize);
 		attributes.push_back(16);
@@ -75,16 +109,17 @@ static NSOpenGLPixelFormat* CreatePixelFormat(DepthFormat depthFormat)
 	return [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes.data()];
 }
 //-----------------------------------------------------------------------
-static std::shared_ptr<CocoaOpenGLContext> CreateOpenGLContext(DepthFormat depthFormat)
+static std::shared_ptr<CocoaOpenGLContext> CreateOpenGLContext(
+	PresentationParameters const& presentationParameters)
 {
-	auto pixelFormat = CreatePixelFormat(depthFormat);
+	auto pixelFormat = CreatePixelFormat(presentationParameters);
 	return std::make_shared<CocoaOpenGLContext>(pixelFormat);
 }
 //-----------------------------------------------------------------------
 static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 	std::shared_ptr<CocoaOpenGLContext> const& openGLContext,
 	std::weak_ptr<GameWindow> && gameWindow,
-	RenderSystem::PresentationParameters const& presentationParameters,
+	PresentationParameters const& presentationParameters,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
 	POMDOG_ASSERT(openGLContext);
@@ -103,7 +138,7 @@ class GameHostCocoa::Impl final {
 public:
 	Impl(std::shared_ptr<GameWindowCocoa> const& window,
 		std::shared_ptr<SystemEventDispatcher> const& dipatcher,
-		RenderSystem::PresentationParameters const& presentationParameters);
+		PresentationParameters const& presentationParameters);
 
 	~Impl() = default;
 
@@ -161,13 +196,13 @@ private:
 //-----------------------------------------------------------------------
 GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& window,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
-	RenderSystem::PresentationParameters const& presentationParameters)
+	PresentationParameters const& presentationParameters)
 	: viewLiveResizing(false)
 	, gameWindow(window)
 	, systemEventDispatcher(eventDispatcher)
 	, exitRequest(false)
 {
-	openGLContext = CreateOpenGLContext(presentationParameters.DepthFormat);
+	openGLContext = CreateOpenGLContext(presentationParameters);
 	
 	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
 	graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::make_unique<GraphicsDeviceGL4>());
@@ -376,7 +411,7 @@ std::shared_ptr<Pomdog::Mouse> GameHostCocoa::Impl::Mouse()
 //-----------------------------------------------------------------------
 GameHostCocoa::GameHostCocoa(std::shared_ptr<GameWindowCocoa> const& window,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
-	RenderSystem::PresentationParameters const& presentationParameters)
+	PresentationParameters const& presentationParameters)
 	: impl(std::make_unique<Impl>(window, eventDispatcher, presentationParameters))
 {}
 //-----------------------------------------------------------------------

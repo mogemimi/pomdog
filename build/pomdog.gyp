@@ -202,6 +202,7 @@
       '../include/Pomdog/Graphics/GraphicsDevice.hpp',
       '../include/Pomdog/Graphics/IndexBuffer.hpp',
       '../include/Pomdog/Graphics/InputLayout.hpp',
+      '../include/Pomdog/Graphics/PresentationParameters.hpp',
       '../include/Pomdog/Graphics/RasterizerState.hpp',
       '../include/Pomdog/Graphics/RenderTarget2D.hpp',
       '../include/Pomdog/Graphics/SamplerState.hpp',
@@ -273,7 +274,6 @@
       '../src/RenderSystem/NativeSamplerState.hpp',
       '../src/RenderSystem/NativeTexture2D.hpp',
       '../src/RenderSystem/NativeVertexBuffer.hpp',
-      '../src/RenderSystem/PresentationParameters.hpp',
     ],
     'pomdog_library_opengl4_sources': [
       '../src/RenderSystem.GL4/BlendStateGL4.cpp',

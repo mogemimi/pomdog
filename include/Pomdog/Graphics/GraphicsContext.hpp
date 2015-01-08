@@ -20,11 +20,13 @@
 #include <vector>
 
 namespace Pomdog {
+
+class PresentationParameters;
+
 namespace Details {
 namespace RenderSystem {
 
 class NativeGraphicsContext;
-class PresentationParameters;
 
 }// namespace RenderSystem
 }// namespace Details
@@ -38,7 +40,7 @@ public:
 	GraphicsContext & operator=(GraphicsContext const&) = delete;
 
 	GraphicsContext(std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
-		Details::RenderSystem::PresentationParameters const& presentationParameters,
+		PresentationParameters const& presentationParameters,
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 	
 	~GraphicsContext();
