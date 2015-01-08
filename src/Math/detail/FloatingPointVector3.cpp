@@ -4,11 +4,11 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Math/detail/FloatingPointVector3.hpp>
-#include <Pomdog/Math/detail/FloatingPointMatrix4x4.hpp>
-#include <Pomdog/Math/detail/FloatingPointVector2.hpp>
-#include <Pomdog/Math/MathHelper.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Math/detail/FloatingPointVector3.hpp"
+#include "Pomdog/Math/detail/FloatingPointMatrix4x4.hpp"
+#include "Pomdog/Math/detail/FloatingPointVector2.hpp"
+#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <cmath>
 #include <limits>
 #include <utility>

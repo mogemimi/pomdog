@@ -4,7 +4,7 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Event/ScopedConnection.hpp>
+#include "Pomdog/Event/ScopedConnection.hpp"
 #include <utility>
 
 namespace Pomdog {

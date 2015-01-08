@@ -4,11 +4,11 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Graphics/DepthStencilState.hpp>
+#include "Pomdog/Graphics/DepthStencilState.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeDepthStencilState.hpp"
-#include <Pomdog/Graphics/GraphicsDevice.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

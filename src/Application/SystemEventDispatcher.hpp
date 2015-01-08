@@ -11,8 +11,8 @@
 #pragma once
 #endif
 
-#include <Pomdog/Event/EventQueue.hpp>
-#include <Pomdog/Input/Keys.hpp>
+#include "Pomdog/Event/EventQueue.hpp"
+#include "Pomdog/Input/Keys.hpp"
 
 namespace Pomdog {
 namespace Details {

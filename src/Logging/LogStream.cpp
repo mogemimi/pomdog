@@ -4,9 +4,9 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Logging/LogStream.hpp>
-#include <Pomdog/Logging/LogChannel.hpp>
-#include <Pomdog/Logging/LogEntry.hpp>
+#include "Pomdog/Logging/LogStream.hpp"
+#include "Pomdog/Logging/LogChannel.hpp"
+#include "Pomdog/Logging/LogEntry.hpp"
 #include <utility>
 
 namespace Pomdog {

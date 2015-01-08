@@ -4,9 +4,9 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Application/GameClock.hpp>
+#include "Pomdog/Application/GameClock.hpp"
 #include "TimeSource.hpp"
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Utility/Assert.hpp"
 #include <deque>
 #include <algorithm>
 #include <numeric>

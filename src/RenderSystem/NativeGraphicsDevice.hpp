@@ -12,7 +12,7 @@
 #endif
 
 #include "../Utility/Noncopyable.hpp"
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 #include <vector>
 

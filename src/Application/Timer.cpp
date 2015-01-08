@@ -4,8 +4,8 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Application/Timer.hpp>
-#include <Pomdog/Application/GameClock.hpp>
+#include "Pomdog/Application/Timer.hpp"
+#include "Pomdog/Application/GameClock.hpp"
 #include <utility>
 
 namespace Pomdog {

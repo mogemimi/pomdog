@@ -4,11 +4,11 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Graphics/BlendState.hpp>
+#include "Pomdog/Graphics/BlendState.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeBlendState.hpp"
-#include <Pomdog/Graphics/GraphicsDevice.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

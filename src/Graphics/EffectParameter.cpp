@@ -4,11 +4,11 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Graphics/EffectParameter.hpp>
+#include "Pomdog/Graphics/EffectParameter.hpp"
 #include "../RenderSystem/NativeConstantBuffer.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
-#include <Pomdog/Graphics/GraphicsDevice.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
 namespace Pomdog {

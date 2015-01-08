@@ -4,7 +4,7 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Graphics/ClearOptions.hpp>
+#include "Pomdog/Graphics/ClearOptions.hpp"
 
 namespace Pomdog {
 

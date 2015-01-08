@@ -4,9 +4,9 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Graphics/detail/VertexElementHelper.hpp>
-#include <Pomdog/Graphics/VertexElementFormat.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/detail/VertexElementHelper.hpp"
+#include "Pomdog/Graphics/VertexElementFormat.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Details {

@@ -4,7 +4,7 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Event/EventConnection.hpp>
+#include "Pomdog/Event/EventConnection.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Utility/Assert.hpp"
 #include <functional>
 #include <utility>
 

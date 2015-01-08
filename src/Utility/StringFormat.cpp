@@ -4,8 +4,8 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Utility/StringFormat.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Utility/StringFormat.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <cstdarg>
 
 namespace Pomdog {

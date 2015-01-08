@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include <Pomdog/Graphics/DepthFormat.hpp>
+#include "Pomdog/Graphics/DepthFormat.hpp"
 #include <cstdint>
 
 namespace Pomdog {

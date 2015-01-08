@@ -4,7 +4,7 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Graphics/VertexBufferBinding.hpp>
+#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include <utility>
 
 namespace Pomdog {

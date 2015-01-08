@@ -4,12 +4,12 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Graphics/VertexBuffer.hpp>
+#include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeVertexBuffer.hpp"
-#include <Pomdog/Graphics/BufferUsage.hpp>
-#include <Pomdog/Graphics/GraphicsDevice.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/BufferUsage.hpp"
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
 namespace Pomdog {

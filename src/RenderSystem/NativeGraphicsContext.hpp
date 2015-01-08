@@ -12,8 +12,8 @@
 #endif
 
 #include "../Utility/Noncopyable.hpp"
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
-#include <Pomdog/Math/detail/ForwardDeclarations.hpp>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <vector>
 #include <memory>
 

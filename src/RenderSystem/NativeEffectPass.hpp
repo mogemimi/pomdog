@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 #include <string>
 

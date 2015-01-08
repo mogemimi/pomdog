@@ -4,11 +4,11 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Graphics/IndexBuffer.hpp>
+#include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeIndexBuffer.hpp"
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace {
