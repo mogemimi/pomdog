@@ -4,8 +4,8 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#ifndef POMDOG_SRC_COCOA_GAMEHOST_29C3B75B_9D10_4DA7_BD1A_3AD8511B7D4F_HPP
-#define POMDOG_SRC_COCOA_GAMEHOST_29C3B75B_9D10_4DA7_BD1A_3AD8511B7D4F_HPP
+#ifndef POMDOG_SRC_GAMEHOSTCOCOA_29C3B75B_9D10_4DA7_BD1A_3AD8511B7D4F_HPP
+#define POMDOG_SRC_GAMEHOSTCOCOA_29C3B75B_9D10_4DA7_BD1A_3AD8511B7D4F_HPP
 
 #if (_MSC_VER > 1000)
 #pragma once
@@ -24,15 +24,15 @@ class PresentationParameters;
 }// namespace RenderSystem
 namespace Cocoa {
 
-class CocoaGameWindow;
+class GameWindowCocoa;
 
-class CocoaGameHost final: public GameHost {
+class GameHostCocoa final: public GameHost {
 public:
-	CocoaGameHost(std::shared_ptr<CocoaGameWindow> const& window,
+	GameHostCocoa(std::shared_ptr<GameWindowCocoa> const& window,
 		std::shared_ptr<SystemEventDispatcher> const& dispatcher,
 		Details::RenderSystem::PresentationParameters const& presentationParameters);
 
-	~CocoaGameHost();
+	~GameHostCocoa();
 
 	///@copydoc GameHost
 	void Run(Game & game) override;
@@ -73,4 +73,4 @@ private:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SRC_COCOA_GAMEHOST_29C3B75B_9D10_4DA7_BD1A_3AD8511B7D4F_HPP)
+#endif // !defined(POMDOG_SRC_GAMEHOSTCOCOA_29C3B75B_9D10_4DA7_BD1A_3AD8511B7D4F_HPP)

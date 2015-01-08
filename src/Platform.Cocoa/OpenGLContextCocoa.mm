@@ -4,7 +4,7 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include "CocoaOpenGLContext.hpp"
+#include "OpenGLContextCocoa.hpp"
 #include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 

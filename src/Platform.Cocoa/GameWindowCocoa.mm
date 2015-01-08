@@ -4,8 +4,8 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include "CocoaGameWindow.hpp"
-#include "CocoaOpenGLContext.hpp"
+#include "GameWindowCocoa.hpp"
+#include "OpenGLContextCocoa.hpp"
 #include "CocoaOpenGLView.hpp"
 #include "CocoaWindowDelegate.hpp"
 #include "CocoaGameViewDelegate.hpp"
@@ -17,7 +17,7 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 //-----------------------------------------------------------------------
-CocoaGameWindow::CocoaGameWindow(NSWindow* nativeWindowIn, std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
+GameWindowCocoa::GameWindowCocoa(NSWindow* nativeWindowIn, std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
 	: nativeWindow(nativeWindowIn)
 	, openGLView(nil)
 	, windowDelegate(nil)
@@ -52,7 +52,7 @@ CocoaGameWindow::CocoaGameWindow(NSWindow* nativeWindowIn, std::shared_ptr<Syste
 	[openGLView setDelegate:viewDelegate];
 }
 //-----------------------------------------------------------------------
-CocoaGameWindow::~CocoaGameWindow()
+GameWindowCocoa::~GameWindowCocoa()
 {
 	// Remove delegate from window:
 	[nativeWindow setDelegate:nil];
@@ -70,13 +70,13 @@ CocoaGameWindow::~CocoaGameWindow()
 #endif
 }
 //-----------------------------------------------------------------------
-bool CocoaGameWindow::AllowPlayerResizing() const
+bool GameWindowCocoa::AllowPlayerResizing() const
 {
 	NSUInteger styleMask = [nativeWindow styleMask];
 	return (styleMask & NSResizableWindowMask) == NSResizableWindowMask;
 }
 //-----------------------------------------------------------------------
-void CocoaGameWindow::AllowPlayerResizing(bool allowResizing)
+void GameWindowCocoa::AllowPlayerResizing(bool allowResizing)
 {
 	POMDOG_ASSERT(nativeWindow);
 
@@ -93,18 +93,18 @@ void CocoaGameWindow::AllowPlayerResizing(bool allowResizing)
 	[nativeWindow setStyleMask:styleMask];
 }
 //-----------------------------------------------------------------------
-std::string CocoaGameWindow::Title() const
+std::string GameWindowCocoa::Title() const
 {
 	std::string title = [[nativeWindow title] UTF8String];
 	return std::move(title);
 }
 //-----------------------------------------------------------------------
-void CocoaGameWindow::Title(std::string const& title)
+void GameWindowCocoa::Title(std::string const& title)
 {
 	[nativeWindow setTitle:[NSString stringWithUTF8String:title.c_str()]];
 }
 //-----------------------------------------------------------------------
-Rectangle CocoaGameWindow::ClientBounds() const
+Rectangle GameWindowCocoa::ClientBounds() const
 {
 	POMDOG_ASSERT([nativeWindow contentView] != nil);
 	NSRect bounds = [[nativeWindow contentView] bounds];
@@ -122,7 +122,7 @@ Rectangle CocoaGameWindow::ClientBounds() const
 	return std::move(rect);
 }
 //-----------------------------------------------------------------------
-void CocoaGameWindow::ClientBounds(Rectangle const& clientBounds)
+void GameWindowCocoa::ClientBounds(Rectangle const& clientBounds)
 {
 	NSSize bounds;
 	bounds.width = clientBounds.Width;
@@ -145,12 +145,12 @@ void CocoaGameWindow::ClientBounds(Rectangle const& clientBounds)
 	//[nativeWindow setFrame:bounds display:YES animate:YES];
 }
 //-----------------------------------------------------------------------
-bool CocoaGameWindow::IsMouseCursorVisible() const
+bool GameWindowCocoa::IsMouseCursorVisible() const
 {
 	return isMouseCursorVisible;
 }
 //-----------------------------------------------------------------------
-void CocoaGameWindow::IsMouseCursorVisible(bool visibleIn)
+void GameWindowCocoa::IsMouseCursorVisible(bool visibleIn)
 {
 	isMouseCursorVisible = visibleIn;
 
@@ -162,7 +162,7 @@ void CocoaGameWindow::IsMouseCursorVisible(bool visibleIn)
 	}
 }
 //-----------------------------------------------------------------------
-void CocoaGameWindow::SetMouseCursor(MouseCursor cursor)
+void GameWindowCocoa::SetMouseCursor(MouseCursor cursor)
 {
 	auto nativeCursor = ([cursor]()-> NSCursor* {
 		switch (cursor) {
@@ -182,14 +182,14 @@ void CocoaGameWindow::SetMouseCursor(MouseCursor cursor)
 	[nativeCursor set];
 }
 //-----------------------------------------------------------------------
-#pragma mark - Low-Level API for CocoaGameHost
+#pragma mark - Low-Level API for GameHostCocoa
 //-----------------------------------------------------------------------
-bool CocoaGameWindow::IsMinimized() const
+bool GameWindowCocoa::IsMinimized() const
 {
 	return [nativeWindow isMiniaturized] == YES;
 }
 //-----------------------------------------------------------------------
-void CocoaGameWindow::Close()
+void GameWindowCocoa::Close()
 {
 	// Removes the window from the screen list, which hides the window:
 	//[nativeWindow orderOut:nil];
@@ -199,7 +199,7 @@ void CocoaGameWindow::Close()
 //-----------------------------------------------------------------------
 #pragma mark - OpenGLView
 //-----------------------------------------------------------------------
-void CocoaGameWindow::ResetGLContext(std::shared_ptr<CocoaOpenGLContext> const& contextIn)
+void GameWindowCocoa::ResetGLContext(std::shared_ptr<CocoaOpenGLContext> const& contextIn)
 {
 	POMDOG_ASSERT(contextIn);
 	openGLContext = contextIn;
@@ -209,7 +209,7 @@ void CocoaGameWindow::ResetGLContext(std::shared_ptr<CocoaOpenGLContext> const& 
 	[openGLView setOpenGLContext:openGLContext->NativeOpenGLContext()];
 }
 //-----------------------------------------------------------------------
-void CocoaGameWindow::ResetGLContext()
+void GameWindowCocoa::ResetGLContext()
 {
 	openGLContext.reset();
 	
@@ -217,19 +217,19 @@ void CocoaGameWindow::ResetGLContext()
 	[openGLView clearGLContext];
 }
 //-----------------------------------------------------------------------
-void CocoaGameWindow::SetRenderCallbackOnLiveResizing(std::function<void()> const& callback)
+void GameWindowCocoa::SetRenderCallbackOnLiveResizing(std::function<void()> const& callback)
 {
 	POMDOG_ASSERT(callback);
 	POMDOG_ASSERT(openGLView);
 	[openGLView setRenderCallback: callback];
 }
 //-----------------------------------------------------------------------
-void CocoaGameWindow::SetRenderCallbackOnLiveResizing()
+void GameWindowCocoa::SetRenderCallbackOnLiveResizing()
 {
 	[openGLView setRenderCallback: {}];
 }
 //-----------------------------------------------------------------------
-void CocoaGameWindow::BindToDelegate(std::shared_ptr<MouseCocoa> mouse)
+void GameWindowCocoa::BindToDelegate(std::shared_ptr<MouseCocoa> mouse)
 {
 	POMDOG_ASSERT(mouse);
 	[viewDelegate resetMouse:mouse];

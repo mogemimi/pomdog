@@ -4,8 +4,8 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#ifndef POMDOG_SRC_COCOA_GAMEWINDOW_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP
-#define POMDOG_SRC_COCOA_GAMEWINDOW_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP
+#ifndef POMDOG_SRC_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP
+#define POMDOG_SRC_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP
 
 #if (_MSC_VER > 1000)
 #pragma once
@@ -28,10 +28,10 @@ namespace Cocoa {
 class CocoaOpenGLContext;
 class MouseCocoa;
 
-class CocoaGameWindow final: public GameWindow {
+class GameWindowCocoa final: public GameWindow {
 public:
-	CocoaGameWindow(NSWindow* window, std::shared_ptr<SystemEventDispatcher> const& eventDispatcher);
-	~CocoaGameWindow();
+	GameWindowCocoa(NSWindow* window, std::shared_ptr<SystemEventDispatcher> const& eventDispatcher);
+	~GameWindowCocoa();
 
 	///@copydoc GameWindow
 	bool AllowPlayerResizing() const override;
@@ -94,4 +94,4 @@ private:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SRC_COCOAGAMEWINDOW_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP)
+#endif // !defined(POMDOG_SRC_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP)

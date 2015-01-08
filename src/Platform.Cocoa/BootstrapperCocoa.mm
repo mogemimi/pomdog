@@ -5,8 +5,8 @@
 //
 
 #include "Pomdog/Platform/Cocoa/BootstrapperCocoa.hpp"
-#include "CocoaGameWindow.hpp"
-#include "CocoaGameHost.hpp"
+#include "GameWindowCocoa.hpp"
+#include "GameHostCocoa.hpp"
 #include "../RenderSystem/PresentationParameters.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -21,7 +21,7 @@ void BootstrapperCocoa::Run(NSWindow* nativeWindow,
 	auto eventDispatcher = std::make_shared<SystemEventDispatcher>();
 
 	POMDOG_ASSERT(nativeWindow != nil);
-	auto gameWindow = std::make_shared<CocoaGameWindow>(nativeWindow, eventDispatcher);
+	auto gameWindow = std::make_shared<GameWindowCocoa>(nativeWindow, eventDispatcher);
 	auto clientBounds = gameWindow->ClientBounds();
 
 	using Details::RenderSystem::PresentationParameters;
@@ -32,7 +32,7 @@ void BootstrapperCocoa::Run(NSWindow* nativeWindow,
 	presentationParameters.BackBufferHeight = clientBounds.Height;
 	presentationParameters.IsFullScreen = false;
 	
-	auto gameHost = std::make_shared<CocoaGameHost>(gameWindow,
+	auto gameHost = std::make_shared<GameHostCocoa>(gameWindow,
 		eventDispatcher, presentationParameters);
 	
 	POMDOG_ASSERT(runGame);
