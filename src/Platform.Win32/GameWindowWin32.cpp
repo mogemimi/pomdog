@@ -5,7 +5,7 @@
 //
 
 #include "GameWindowWin32.hpp"
-#include "../RenderSystem/PresentationParameters.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Application/MouseCursor.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -46,7 +46,7 @@ public:
 	Impl(HINSTANCE hInstance, int nCmdShow,
 		HICON icon, HICON iconSmall, bool useOpenGL,
 		std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
-		Details::RenderSystem::PresentationParameters const& presentationParameters);
+		PresentationParameters const& presentationParameters);
 
 	~Impl();
 
@@ -78,7 +78,7 @@ public:
 GameWindowWin32::Impl::Impl(HINSTANCE hInstance, int nCmdShow,
 	HICON icon, HICON iconSmall, bool useOpenGL,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcherIn,
-	Details::RenderSystem::PresentationParameters const& presentationParameters)
+	PresentationParameters const& presentationParameters)
 	: eventDispatcher(eventDispatcherIn)
 	, title("Game")
 	, clientBounds(0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight)
@@ -401,7 +401,7 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(HWND hWnd, UINT msg, WPA
 GameWindowWin32::GameWindowWin32(HINSTANCE hInstance, int nCmdShow,
 	HICON icon, HICON iconSmall, bool useOpenGL,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
-	Details::RenderSystem::PresentationParameters const& presentationParameters)
+	PresentationParameters const& presentationParameters)
 	: impl(std::make_unique<Impl>(hInstance, nCmdShow, icon, iconSmall, useOpenGL, eventDispatcher, presentationParameters))
 {
 }

@@ -6,8 +6,8 @@
 
 #include "VertexBufferDirect3D11.hpp"
 #include "HardwareBufferHelper.hpp"
-#include <Pomdog/Utility/Exception.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Details {

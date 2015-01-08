@@ -5,8 +5,8 @@
 //
 
 #include "HardwareBufferHelper.hpp"
-#include <Pomdog/Graphics/BufferUsage.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/BufferUsage.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
 namespace Pomdog {

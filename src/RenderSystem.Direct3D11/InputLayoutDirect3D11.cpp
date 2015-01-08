@@ -5,11 +5,11 @@
 //
 
 #include "InputLayoutDirect3D11.hpp"
-#include <Pomdog/Graphics/detail/ShaderBytecode.hpp>
-#include <Pomdog/Graphics/VertexBufferBinding.hpp>
-#include <Pomdog/Graphics/VertexElementFormat.hpp>
-#include <Pomdog/Utility/Exception.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
+#include "Pomdog/Graphics/VertexBufferBinding.hpp"
+#include "Pomdog/Graphics/VertexElementFormat.hpp"
+#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
 namespace Pomdog {

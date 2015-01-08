@@ -16,12 +16,10 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
-namespace RenderSystem {
 
 class PresentationParameters;
 
-}// namespace RenderSystem
+namespace Details {
 namespace InputSystem {
 
 class InputDeviceFactory;
@@ -35,7 +33,7 @@ class GameHostWin32 final: public GameHost {
 public:
 	GameHostWin32(std::shared_ptr<GameWindowWin32> const& window,
 		std::shared_ptr<SystemEventDispatcher> const& dispatcher,
-		Details::RenderSystem::PresentationParameters const& presentationParameters,
+		PresentationParameters const& presentationParameters,
 		std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory);
 
 	~GameHostWin32();

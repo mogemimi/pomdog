@@ -12,7 +12,7 @@
 #endif
 
 #include "PrerequisitesDirect3D11.hpp"
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstddef>
 
 namespace Pomdog {

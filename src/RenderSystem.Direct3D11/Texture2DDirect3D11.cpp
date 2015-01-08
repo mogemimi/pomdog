@@ -6,9 +6,9 @@
 
 #include "Texture2DDirect3D11.hpp"
 #include "DXGIFormatHelper.hpp"
-#include <Pomdog/Graphics/SurfaceFormat.hpp>
-#include <Pomdog/Utility/Exception.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
 
 namespace Pomdog {

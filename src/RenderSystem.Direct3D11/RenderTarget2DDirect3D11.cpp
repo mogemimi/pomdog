@@ -6,9 +6,9 @@
 
 #include "RenderTarget2DDirect3D11.hpp"
 #include "DXGIFormatHelper.hpp"
-#include <Pomdog/Graphics/DepthFormat.hpp>
-#include <Pomdog/Utility/Exception.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/DepthFormat.hpp"
+#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Details {

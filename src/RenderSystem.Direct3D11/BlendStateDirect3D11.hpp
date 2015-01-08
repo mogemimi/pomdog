@@ -13,8 +13,8 @@
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeBlendState.hpp"
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
-#include <Pomdog/Math/Vector4.hpp>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Math/Vector4.hpp"
 
 namespace Pomdog {
 namespace Details {

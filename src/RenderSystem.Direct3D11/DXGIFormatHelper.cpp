@@ -5,9 +5,9 @@
 //
 
 #include "DXGIFormatHelper.hpp"
-#include <Pomdog/Graphics/DepthFormat.hpp>
-#include <Pomdog/Graphics/SurfaceFormat.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/DepthFormat.hpp"
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Details {

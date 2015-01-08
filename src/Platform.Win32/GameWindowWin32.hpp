@@ -17,12 +17,10 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
-namespace RenderSystem {
 
 class PresentationParameters;
 
-}// namespace RenderSystem
+namespace Details {
 namespace Win32 {
 
 class GameWindowWin32 final: public GameWindow {
@@ -30,7 +28,7 @@ public:
 	GameWindowWin32(HINSTANCE hInstance, int nCmdShow,
 		HICON icon, HICON iconSmall, bool useOpenGL,
 		std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
-		Details::RenderSystem::PresentationParameters const& presentationParameters);
+		PresentationParameters const& presentationParameters);
 
 	~GameWindowWin32();
 

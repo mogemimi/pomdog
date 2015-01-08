@@ -6,7 +6,7 @@
 
 #include "ConstantLayoutDirect3D11.hpp"
 #include "ConstantBufferDirect3D11.hpp"
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 #include <utility>
 

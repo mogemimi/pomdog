@@ -34,6 +34,7 @@
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/GraphicsContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Event/ScopedConnection.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -63,7 +64,7 @@ class GameHostWin32::Impl final {
 public:
 	Impl(std::shared_ptr<GameWindowWin32> const& window,
 		std::shared_ptr<SystemEventDispatcher> const& dipatcher,
-		RenderSystem::PresentationParameters const& presentationParameters,
+		PresentationParameters const& presentationParameters,
 		std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory);
 
 	void Run(Game & game);
@@ -113,13 +114,15 @@ private:
 	std::shared_ptr<Pomdog::Keyboard> keyboard;
 	std::shared_ptr<Pomdog::Mouse> mouse;
 
+	DurationSeconds presentationInterval;
+
 	bool exitRequest;
 	bool surfaceResizeRequest;
 };
 //-----------------------------------------------------------------------
 GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& window,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
-	RenderSystem::PresentationParameters const& presentationParameters,
+	PresentationParameters const& presentationParameters,
 	std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactoryIn)
 	: gameWindow(window)
 	, systemEventDispatcher(eventDispatcher)
@@ -127,6 +130,9 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& window,
 	, exitRequest(false)
 	, surfaceResizeRequest(false)
 {
+	POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
+	presentationInterval = DurationSeconds(1.0) / presentationParameters.PresentationInterval;
+
 #if defined(POMDOG_RENDERSYSTEM_GL4)
 	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
 	using Details::RenderSystem::GL4::GraphicsContextGL4;
@@ -199,11 +205,10 @@ void GameHostWin32::Impl::Run(Game & game)
 		game.Update();
 		RenderFrame(game);
 
-		DurationSeconds const interval = DurationSeconds(1.0/60.0);
 		auto elapsedTime = clock.ElapsedTime();
 
-		if (elapsedTime < interval) {
-			auto sleepTime = std::chrono::duration_cast<std::chrono::milliseconds>(interval - elapsedTime);
+		if (elapsedTime < presentationInterval) {
+			auto sleepTime = std::chrono::duration_cast<std::chrono::milliseconds>(presentationInterval - elapsedTime);
 			std::this_thread::sleep_for(sleepTime);
 		}
 	}
@@ -310,7 +315,7 @@ std::shared_ptr<Pomdog::Mouse> GameHostWin32::Impl::Mouse()
 //-----------------------------------------------------------------------
 GameHostWin32::GameHostWin32(std::shared_ptr<GameWindowWin32> const& window,
 	std::shared_ptr<SystemEventDispatcher> const& dispatcher,
-	Details::RenderSystem::PresentationParameters const& presentationParameters,
+	PresentationParameters const& presentationParameters,
 	std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory)
 	: impl(std::make_unique<Impl>(window, dispatcher, presentationParameters, std::move(inputDeviceFactory)))
 {}

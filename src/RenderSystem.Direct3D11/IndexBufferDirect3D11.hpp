@@ -13,7 +13,7 @@
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeIndexBuffer.hpp"
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 
 namespace Pomdog {
 namespace Details {

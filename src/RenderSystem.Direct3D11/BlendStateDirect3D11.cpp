@@ -6,8 +6,8 @@
 
 #include "BlendStateDirect3D11.hpp"
 #include "../RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp"
-#include <Pomdog/Graphics/BlendDescription.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/BlendDescription.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Details {

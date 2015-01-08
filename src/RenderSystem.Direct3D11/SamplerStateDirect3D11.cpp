@@ -6,8 +6,8 @@
 
 #include "SamplerStateDirect3D11.hpp"
 #include "../RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp"
-#include <Pomdog/Graphics/SamplerDescription.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/SamplerDescription.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <array>
 
 namespace Pomdog {

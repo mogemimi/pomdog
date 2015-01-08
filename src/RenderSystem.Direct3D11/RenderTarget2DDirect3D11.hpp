@@ -13,7 +13,7 @@
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 
 namespace Pomdog {
 namespace Details {

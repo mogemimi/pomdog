@@ -11,7 +11,7 @@
 #include "../InputSystem.DirectInput/KeyboardCreatorDirectInput.hpp"
 #include "../InputSystem.DirectInput/MouseCreatorDirectInput.hpp"
 #include "../InputSystem/InputDeviceFactory.hpp"
-#include "../RenderSystem/PresentationParameters.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Logging/Log.hpp"
 
@@ -25,9 +25,11 @@ BootstrapperWin32::BootstrapperWin32(BootstrapSettingsWin32 const& settingsIn)
 //-----------------------------------------------------------------------
 void BootstrapperWin32::Run(std::function<void(std::shared_ptr<GameHost> const& gameHost)> const& runGame)
 {
-	Details::RenderSystem::PresentationParameters presentationParameters;
+	PresentationParameters presentationParameters;
 	presentationParameters.BackBufferHeight = settings.Height;
 	presentationParameters.BackBufferWidth = settings.Width;
+	presentationParameters.PresentationInterval = 60;
+	presentationParameters.SurfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
 	presentationParameters.DepthFormat = DepthFormat::Depth24Stencil8;
 	presentationParameters.IsFullScreen = settings.IsFullscreen;
 
