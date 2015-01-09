@@ -32,7 +32,7 @@ public:
 
 private:
 	float weight;
-	AnimationBlendInputType const type;
+	AnimationBlendInputType type;
 };
 
 }// namespace Skeletal2D

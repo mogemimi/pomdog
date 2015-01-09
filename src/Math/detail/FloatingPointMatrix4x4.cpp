@@ -406,7 +406,7 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix4x4<T>::Minor3x3(std::size_t row, s
 		}
 		++s;
 	}
-	return minor;
+	return std::move(minor);
 }
 //-----------------------------------------------------------------------
 template <typename T>

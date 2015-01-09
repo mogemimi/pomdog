@@ -32,11 +32,7 @@ public:
 	bool SizeToFitContent() const override { return true; }
 	
 	void OnParentChanged() override;
-	
-	void OnPointerCanceled(PointerPoint const& pointerPoint) override;
-	
-	void OnPointerCaptureLost(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerWheelChanged(PointerPoint const& pointerPoint) override;
 	
 	void OnPointerEntered(PointerPoint const& pointerPoint) override;

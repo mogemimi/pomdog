@@ -17,6 +17,7 @@
 #include "Application/GameClock.hpp"
 #include "Application/GameHost.hpp"
 #include "Application/GameWindow.hpp"
+#include "Application/MouseCursor.hpp"
 #include "Application/Timer.hpp"
 
 // Audio

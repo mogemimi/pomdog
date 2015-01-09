@@ -425,7 +425,7 @@ void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
 	Vector2 const& position, Color const& color)
 {
 	POMDOG_ASSERT(impl);
-	impl->Draw(texture, {0, 0}, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
+	impl->Draw(texture, position, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
 //-----------------------------------------------------------------------
 void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,

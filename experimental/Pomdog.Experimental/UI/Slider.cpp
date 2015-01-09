@@ -83,18 +83,6 @@ void Slider::OnParentChanged()
 	}
 }
 //-----------------------------------------------------------------------
-void Slider::OnPointerCanceled(PointerPoint const& pointerPoint)
-{
-}
-//-----------------------------------------------------------------------
-void Slider::OnPointerCaptureLost(PointerPoint const& pointerPoint)
-{
-}
-//-----------------------------------------------------------------------
-void Slider::OnPointerWheelChanged(PointerPoint const& pointerPoint)
-{
-}
-//-----------------------------------------------------------------------
 void Slider::OnPointerEntered(PointerPoint const& pointerPoint)
 {
 	if (!isEnabled) {

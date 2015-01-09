@@ -378,7 +378,7 @@ void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 c
 	Vector2 const& position, Color const& color)
 {
 	POMDOG_ASSERT(impl);
-	impl->Draw(texture, worldMatrix, {0, 0}, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
+	impl->Draw(texture, worldMatrix, position, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
 //-----------------------------------------------------------------------
 void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,

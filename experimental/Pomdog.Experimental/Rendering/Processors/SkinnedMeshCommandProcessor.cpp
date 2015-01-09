@@ -60,7 +60,7 @@ static void SetMatrixPalette(SkinnedEffect & skinnedEffect, Skeleton const& skel
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-SkinnedMeshCommandProcessor::SkinnedMeshCommandProcessor(std::shared_ptr<GraphicsContext> const& graphicsContext,
+SkinnedMeshCommandProcessor::SkinnedMeshCommandProcessor(
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	: skinnedEffect(*graphicsDevice)
 	, drawCallCount(0)

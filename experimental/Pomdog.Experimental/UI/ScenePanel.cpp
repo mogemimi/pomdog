@@ -109,14 +109,6 @@ void ScenePanel::OnParentChanged()
 	}
 }
 //-----------------------------------------------------------------------
-void ScenePanel::OnPointerCanceled(PointerPoint const& pointerPoint)
-{
-}
-//-----------------------------------------------------------------------
-void ScenePanel::OnPointerCaptureLost(PointerPoint const& pointerPoint)
-{
-}
-//-----------------------------------------------------------------------
 void ScenePanel::OnPointerWheelChanged(PointerPoint const& pointerPoint)
 {
 	scrollWheelSampler.AddWheelDelta(pointerPoint.MouseWheelDelta);

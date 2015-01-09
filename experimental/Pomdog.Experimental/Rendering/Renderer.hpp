@@ -22,8 +22,7 @@ class RenderCommandProcessor;
 
 class Renderer {
 public:
-	Renderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+	Renderer();
 
 	~Renderer();
 

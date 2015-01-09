@@ -19,8 +19,7 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 class Renderer::Impl {
 public:
-	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+	Impl();
 
 	void AddProcessor(std::type_index const& index, std::unique_ptr<RenderCommandProcessor> && processor);
 
@@ -36,8 +35,7 @@ public:
 	std::uint32_t drawCallCount;
 };
 //-----------------------------------------------------------------------
-Renderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+Renderer::Impl::Impl()
 	: viewMatrix{Matrix4x4::Identity}
 	, projectionMatrix{Matrix4x4::Identity}
 	, drawCallCount{0}
@@ -126,9 +124,8 @@ void Renderer::Impl::Clear()
 #pragma mark - Renderer
 #endif
 //-----------------------------------------------------------------------
-Renderer::Renderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
-	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
-	: impl(std::make_unique<Impl>(graphicsContext, graphicsDevice))
+Renderer::Renderer()
+	: impl(std::make_unique<Impl>())
 {}
 //-----------------------------------------------------------------------
 Renderer::~Renderer() = default;

@@ -47,7 +47,7 @@ public:
 		return Compute(random);
 	}
 
-	T Compute(float normalizedTime, float amount) const override
+	T Compute(float, float amount) const override
 	{
 		return Details::Particles::ParticleCurveLerp<T>()(min, max, amount);
 	}
