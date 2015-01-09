@@ -6,8 +6,8 @@
 
 #include "DepthStencilStateGL4.hpp"
 #include "ErrorChecker.hpp"
-#include <Pomdog/Graphics/DepthStencilDescription.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/DepthStencilDescription.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Details {

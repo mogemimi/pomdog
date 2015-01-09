@@ -13,8 +13,8 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
-#include <Pomdog/Utility/detail/Tagged.hpp>
-#include <Pomdog/Utility/Optional.hpp>
+#include "Pomdog/Utility/detail/Tagged.hpp"
+#include "Pomdog/Utility/Optional.hpp"
 #include <vector>
 #include <memory>
 

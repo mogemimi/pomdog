@@ -13,8 +13,8 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeDepthStencilState.hpp"
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
-#include <Pomdog/Utility/detail/Tagged.hpp>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/detail/Tagged.hpp"
 
 namespace Pomdog {
 namespace Details {

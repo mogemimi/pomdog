@@ -12,7 +12,7 @@
 #endif
 
 #include "../Application/SystemEventDispatcher.hpp"
-#include <Pomdog/Application/GameHost.hpp>
+#include "Pomdog/Application/GameHost.hpp"
 #include <memory>
 
 namespace Pomdog {

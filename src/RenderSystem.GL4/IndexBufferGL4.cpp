@@ -8,9 +8,9 @@
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
 #include "../Utility/ScopeGuard.hpp"
-#include <Pomdog/Utility/Assert.hpp>
-#include <Pomdog/Graphics/BufferUsage.hpp>
-#include <Pomdog/Graphics/IndexElementSize.hpp>
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Graphics/BufferUsage.hpp"
+#include "Pomdog/Graphics/IndexElementSize.hpp"
 #include <utility>
 
 namespace Pomdog {

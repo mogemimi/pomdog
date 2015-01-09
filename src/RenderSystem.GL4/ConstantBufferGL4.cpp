@@ -8,7 +8,7 @@
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
 #include "../Utility/ScopeGuard.hpp"
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
 namespace Pomdog {

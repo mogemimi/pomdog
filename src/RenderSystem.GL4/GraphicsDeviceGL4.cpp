@@ -17,7 +17,8 @@
 #include "Texture2DGL4.hpp"
 #include "RenderTarget2DGL4.hpp"
 #include "VertexBufferGL4.hpp"
-#include <Pomdog/Utility/Exception.hpp>
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 
 namespace Pomdog {
 namespace Details {

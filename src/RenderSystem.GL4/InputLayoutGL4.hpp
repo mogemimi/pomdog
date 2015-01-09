@@ -14,9 +14,9 @@
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
 #include "../RenderSystem/NativeInputLayout.hpp"
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
-#include <Pomdog/Utility/detail/Tagged.hpp>
-#include <Pomdog/Utility/Optional.hpp>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/detail/Tagged.hpp"
+#include "Pomdog/Utility/Optional.hpp"
 #include <vector>
 #include <limits>
 #include <memory>

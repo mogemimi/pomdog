@@ -16,8 +16,7 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
-class ErrorChecker {
-public:
+struct ErrorChecker {
 	static void CheckError(char const* command, char const* filename, int line);
 };
 

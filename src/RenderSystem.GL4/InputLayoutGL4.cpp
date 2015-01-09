@@ -9,12 +9,12 @@
 #include "TypesafeHelperGL4.hpp"
 #include "VertexBufferGL4.hpp"
 #include "../Utility/ScopeGuard.hpp"
-#include <Pomdog/Graphics/VertexBuffer.hpp>
-#include <Pomdog/Graphics/VertexBufferBinding.hpp>
-#include <Pomdog/Logging/Log.hpp>
-#include <Pomdog/Logging/LogStream.hpp>
-#include <Pomdog/Logging/LogLevel.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/VertexBuffer.hpp"
+#include "Pomdog/Graphics/VertexBufferBinding.hpp"
+#include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Logging/LogStream.hpp"
+#include "Pomdog/Logging/LogLevel.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 #include <algorithm>
 

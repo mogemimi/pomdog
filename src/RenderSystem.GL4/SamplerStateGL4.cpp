@@ -6,8 +6,8 @@
 
 #include "SamplerStateGL4.hpp"
 #include "ErrorChecker.hpp"
-#include <Pomdog/Graphics/SamplerDescription.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Graphics/SamplerDescription.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 #include <utility>
 

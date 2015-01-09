@@ -13,9 +13,9 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeBlendState.hpp"
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
-#include <Pomdog/Utility/detail/Tagged.hpp>
-#include <Pomdog/Math/Color.hpp>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/detail/Tagged.hpp"
+#include "Pomdog/Math/Color.hpp"
 
 namespace Pomdog {
 namespace Details {

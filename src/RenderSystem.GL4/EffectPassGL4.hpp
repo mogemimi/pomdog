@@ -14,8 +14,8 @@
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
 #include "../RenderSystem/NativeEffectPass.hpp"
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
-#include <Pomdog/Utility/Optional.hpp>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/Optional.hpp"
 #include <cstdint>
 #include <vector>
 

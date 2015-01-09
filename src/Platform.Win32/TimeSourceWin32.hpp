@@ -11,13 +11,12 @@
 #pragma once
 #endif
 
-#include <Pomdog/Application/DurationSeconds.hpp>
+#include "Pomdog/Application/DurationSeconds.hpp"
 
 namespace Pomdog {
 namespace Details {
 namespace Win32 {
 
-///@todo Run test and LINT
 class TimeSourceWin32 {
 public:
 	TimeSourceWin32();

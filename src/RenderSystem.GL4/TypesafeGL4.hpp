@@ -12,7 +12,7 @@
 #endif
 
 #include "OpenGLPrerequisites.hpp"
-#include <Pomdog/Utility/detail/Tagged.hpp>
+#include "Pomdog/Utility/detail/Tagged.hpp"
 
 namespace Pomdog {
 namespace Details {
