@@ -7,15 +7,76 @@
 #include "OpenGLContextWin32.hpp"
 #include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
 #include "../RenderSystem.GL4/ErrorChecker.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <sstream>
+#include <utility>
 
 namespace Pomdog {
 namespace Details {
 namespace Win32 {
+namespace {
+
+PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(PresentationParameters const& presentationParameters)
+{
+	PIXELFORMATDESCRIPTOR descriptor =
+	{
+		sizeof(PIXELFORMATDESCRIPTOR), 1,
+		PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
+		PFD_TYPE_RGBA,
+		32,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0,
+		0, 0, 0, 0,
+		24,
+		8,
+		0,
+		PFD_MAIN_PLANE,
+		0,
+		0, 0, 0
+	};
+
+	switch (presentationParameters.SurfaceFormat) {
+	case SurfaceFormat::R8G8B8A8_UNorm:
+		descriptor.cColorBits = 32;
+		break;
+	case SurfaceFormat::R16G16B16A16_Float:
+		descriptor.cColorBits = 64;
+		break;
+	case SurfaceFormat::R32G32B32A32_Float:
+		descriptor.cColorBits = 128;
+		break;
+	default:
+		descriptor.cColorBits = 32;
+		break;
+	}
+
+	switch (presentationParameters.DepthFormat) {
+	case DepthFormat::Depth16:
+		descriptor.cDepthBits = 16;
+		descriptor.cStencilBits = 0;
+		break;
+	case DepthFormat::Depth24Stencil8:
+		descriptor.cDepthBits = 24;
+		descriptor.cStencilBits = 8;
+		break;
+	case DepthFormat::Depth32:
+		descriptor.cDepthBits = 32;
+		descriptor.cStencilBits = 0;
+		break;
+	case DepthFormat::None:
+		descriptor.cDepthBits = 0;
+		descriptor.cStencilBits = 0;
+		break;
+	}
+
+	return std::move(descriptor);
+}
+
+}// unnamed namespace
 //-----------------------------------------------------------------------
-OpenGLContextWin32::OpenGLContextWin32(HWND windowHandleIn)
+OpenGLContextWin32::OpenGLContextWin32(HWND windowHandleIn, PresentationParameters const& presentationParameters)
 	: windowHandle(windowHandleIn)
 	, hdc(nullptr, [this](HDC hdcIn) {
 		ReleaseDC(windowHandle, hdcIn);
@@ -26,25 +87,7 @@ OpenGLContextWin32::OpenGLContextWin32(HWND windowHandleIn)
 {
 	hdc.reset(GetDC(windowHandle));
 
-	PIXELFORMATDESCRIPTOR formatDescriptor =
-	{
-		sizeof(PIXELFORMATDESCRIPTOR),
-		1,
-		PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
-		PFD_TYPE_RGBA,
-		32, // Colordepth of the framebuffer.
-		0, 0, 0, 0, 0, 0,
-		0,
-		0,
-		0,
-		0, 0, 0, 0,
-		24, // Number of bits for the depthbuffer
-		8,  // Number of bits for the stencilbuffer
-		0,  // Number of Aux buffers in the framebuffer
-		PFD_MAIN_PLANE,
-		0,
-		0, 0, 0
-	};
+	auto formatDescriptor = ToPixelFormatDescriptor(presentationParameters);
 
 	auto const pixelFormat = ChoosePixelFormat(hdc.get(), &formatDescriptor);
 

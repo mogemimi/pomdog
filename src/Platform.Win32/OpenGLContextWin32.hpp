@@ -18,6 +18,9 @@
 #include <type_traits>
 
 namespace Pomdog {
+
+class PresentationParameters;
+
 namespace Details {
 namespace Win32 {
 
@@ -25,7 +28,7 @@ class OpenGLContextWin32 final: public RenderSystem::GL4::OpenGLContext {
 public:
 	OpenGLContextWin32() = delete;
 
-	explicit OpenGLContextWin32(HWND windowHandle);
+	OpenGLContextWin32(HWND windowHandle, PresentationParameters const& presentationParameters);
 	
 	~OpenGLContextWin32();
 

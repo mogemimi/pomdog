@@ -137,7 +137,8 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& window,
 	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
 	using Details::RenderSystem::GL4::GraphicsContextGL4;
 
-	auto openGLContext = std::make_shared<Win32::OpenGLContextWin32>(window->NativeWindowHandle());
+	auto openGLContext = std::make_shared<Win32::OpenGLContextWin32>(
+		window->NativeWindowHandle(), presentationParameters);
 
 	if (glewInit() != GLEW_OK)
 	{
