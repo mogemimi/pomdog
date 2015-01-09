@@ -59,7 +59,7 @@ private:
 	std::unique_ptr<GameLevel> level;
 	GameObject editorCamera;
 
-	std::unique_ptr<Renderer> renderer;
+	Renderer renderer;
 	std::shared_ptr<RenderTarget2D> renderTarget;
 	std::unique_ptr<FXAA> fxaa;
 	std::unique_ptr<ScreenQuad> screenQuad;

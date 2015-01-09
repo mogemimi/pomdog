@@ -43,7 +43,6 @@ void MaidBeamGame::Initialize()
 		auto bounds = window->ClientBounds();
 		fxaa->SetViewport(bounds.Width, bounds.Height);
 		screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
-		renderer = std::make_unique<Renderer>(graphicsContext, graphicsDevice);
 	}
 	{
 		editorCamera = gameWorld.CreateObject();
@@ -152,7 +151,7 @@ void MaidBeamGame::Update()
 	
 	{
 		gameEditor->Update();
-		textBlock1->Text(StringFormat("Draw Calls: %d", renderer->DrawCallCount()));
+		textBlock1->Text(StringFormat("Draw Calls: %d", renderer.DrawCallCount()));
 	}
 }
 //-----------------------------------------------------------------------
@@ -171,13 +170,13 @@ void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camer
 		viewport.Width(), viewport.Height(), camera.Near, camera.Far);
 	
 	editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
-	renderer->ViewMatrix(viewMatrix);
-	renderer->ProjectionMatrix(projectionMatrix);
+	renderer.ViewMatrix(viewMatrix);
+	renderer.ProjectionMatrix(projectionMatrix);
 
 	for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
 	{
 		auto renderable = gameObject.Component<Renderable>();
-		renderable->Visit(gameObject, *renderer);
+		renderable->Visit(gameObject, renderer);
 	}
 
 	graphicsContext->Viewport(viewport);
@@ -193,14 +192,14 @@ void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camer
 			if (editorCamera == gameObject) {
 				continue;
 			}
-			cameraSprites[cameraIndex].Visit(gameObject, *renderer);
+			cameraSprites[cameraIndex].Visit(gameObject, renderer);
 			++cameraIndex;
 		}
 
 		editorBackground->Draw(*graphicsContext);
 	}
 
-	renderer->Render(*graphicsContext);
+	renderer.Render(*graphicsContext);
 }
 //-----------------------------------------------------------------------
 void MaidBeamGame::Draw()

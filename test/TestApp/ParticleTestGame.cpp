@@ -40,7 +40,6 @@ void ParticleTestGame::Initialize()
 		auto bounds = window->ClientBounds();
 		fxaa->SetViewport(bounds.Width, bounds.Height);
 		screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
-		renderer = std::make_unique<Renderer>(graphicsContext, graphicsDevice);
 	}
 	{
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
@@ -153,7 +152,7 @@ void ParticleTestGame::Draw()
 	for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
 	{
 		auto renderable = gameObject.Component<Renderable>();
-		renderable->Visit(gameObject, *renderer);
+		renderable->Visit(gameObject, renderer);
 	}
 
 	constexpr bool enableFxaa = true;
@@ -164,7 +163,7 @@ void ParticleTestGame::Draw()
 	
 	graphicsContext->Clear(Color::CornflowerBlue);
 	editorBackground->Draw(*graphicsContext);
-	renderer->Render(*graphicsContext);
+	renderer.Render(*graphicsContext);
 
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget();
