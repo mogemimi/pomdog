@@ -414,6 +414,23 @@
       '../src/Platform.Win32/OpenGLContextWin32.cpp',
       '../src/Platform.Win32/OpenGLContextWin32.hpp',
     ],
+    'pomdog_library_x11_sources': [
+      '../include/Pomdog/Platform/X11/Bootstrap.hpp',
+      '../src/Platform.X11/Bootstrap.cpp',
+      '../src/Platform.X11/GameHostX11.cpp',
+      '../src/Platform.X11/GameHostX11.hpp',
+      '../src/Platform.X11/GameWindowX11.cpp',
+      '../src/Platform.X11/GameWindowX11.hpp',
+      '../src/Platform.X11/KeyboardX11.cpp',
+      '../src/Platform.X11/KeyboardX11.hpp',
+      '../src/Platform.X11/MouseX11.cpp',
+      '../src/Platform.X11/MouseX11.hpp',
+      '../src/Platform.X11/OpenGLContextX11.cpp',
+      '../src/Platform.X11/OpenGLContextX11.hpp',
+      '../src/Platform.X11/X11AtomCache.hpp',
+      '../src/Platform.X11/X11Context.cpp',
+      '../src/Platform.X11/X11Context.hpp',
+    ],
     'pomdog_library_linux_sources': [
       '../src/Platform.Linux/TimeSourceLinux.cpp',
       '../src/Platform.Linux/TimeSourceLinux.hpp',
@@ -526,6 +543,13 @@
           ],
         },
       }],
+      ['audio == "OpenAL" and OS == "linux"', {
+        'link_settings': {
+          'libraries': [
+            '-lopenal',
+          ],
+        },
+      }],
       ['audio == "XAudio2"', {
         'sources': [
           '<@(pomdog_library_xaudio2_sources)',
@@ -544,6 +568,32 @@
           'libraries': [
             '-ldinput8.lib',
             '-ldxguid.lib',
+          ],
+        },
+      }],
+      ['application_platform == "X11"', {
+        'sources': [
+          '<@(pomdog_library_x11_sources)',
+        ],
+      }],
+      ['application_platform == "X11" and OS == "linux"', {
+        'defines': [
+          'GLEW_STATIC',
+        ],
+        'dependencies': [
+          '<@(pomdog_third_party_dir)/glew/glew.gyp:glew_static',
+        ],
+        'include_dirs': [
+          '/usr/X11R6/include',
+          '<@(pomdog_third_party_dir)/glew/include',
+        ],
+        'library_dirs': [
+          '/usr/X11R6/lib',
+        ],
+        'link_settings': {
+          'libraries': [
+            '-lX11',
+            '-lGL',
           ],
         },
       }],
@@ -596,7 +646,7 @@
         'sources': [
           '<@(pomdog_library_linux_sources)',
         ],
-      }], # OS == "linux"
+      }],
     ],
   },
   'targets': [
