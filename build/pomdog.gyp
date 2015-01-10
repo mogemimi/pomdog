@@ -7,21 +7,24 @@
   'conditions': [
     ['OS == "win"', {
       'variables': {
-        'renderer%': 'direct3d11',
+        'application_platform%': 'Win32',
+        'renderer%': 'Direct3D11',
         'audio%': 'XAudio2',
         'input_devices%': ['DirectInput'],
       },
     }],
     ['OS == "mac"', {
       'variables': {
-        'renderer%': 'opengl',
+        'application_platform%': 'Cocoa',
+        'renderer%': 'OpenGL',
         'audio%': 'OpenAL',
         'input_devices%': [],
       },
     }],
     ['OS == "linux" or OS == "freebsd" or OS == "openbsd"', {
       'variables': {
-        'renderer%': 'opengl',
+        'application_platform%': 'X11',
+        'renderer%': 'OpenGL',
         'audio%': 'OpenAL',
         'input_devices%': [],
       },
@@ -425,6 +428,10 @@
       '../src/Platform.Win32/OpenGLContextWin32.cpp',
       '../src/Platform.Win32/OpenGLContextWin32.hpp',
     ],
+    'pomdog_library_linux_sources': [
+      '../src/Platform.Linux/TimeSourceLinux.cpp',
+      '../src/Platform.Linux/TimeSourceLinux.hpp',
+    ],
   },
   'target_defaults': {
     'dependencies': [
@@ -481,7 +488,7 @@
       'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES', # '-fvisibility=hidden'
     },
     'conditions': [
-      ['renderer == "direct3d11"', {
+      ['renderer == "Direct3D11"', {
         'defines': ['POMDOG_RENDERSYSTEM_DIRECT3D11'],
         'sources': [
           '<@(pomdog_library_direct3d11_sources)',
@@ -494,14 +501,14 @@
             '-ldxguid.lib', # using _IID_ID3D11ShaderReflection
           ],
         },
-      }], # OS == "direct3d11"
-      ['renderer == "opengl"', {
+      }], # OS == "Direct3D11"
+      ['renderer == "OpenGL"', {
         'defines': ['POMDOG_RENDERSYSTEM_GL4'],
         'sources': [
           '<@(pomdog_library_opengl4_sources)',
         ],
-      }], # renderer == "opengl"
-      ['renderer == "opengl" and OS == "win"', {
+      }], # renderer == "OpenGL"
+      ['renderer == "OpenGL" and OS == "win"', {
         'sources': [
           '<@(pomdog_library_win32_opengl_sources)',
         ],
@@ -546,7 +553,7 @@
           ],
         },
       }],
-      ['OS == "mac"', {
+      ['application_platform == "Cocoa"', {
         'sources': [
           '<@(pomdog_library_cocoa_sources)',
         ],
@@ -558,7 +565,7 @@
             '$(SDKROOT)/System/Library/Frameworks/OpenAL.framework',
           ],
         },
-      }], # OS == "mac"
+      }],
       ['OS == "win"', {
         'sources': [
           '<@(pomdog_library_win32_sources)',
@@ -582,6 +589,11 @@
           ],
         },
       }], # OS == "win"
+      ['OS == "linux"', {
+        'sources': [
+          '<@(pomdog_library_linux_sources)',
+        ],
+      }], # OS == "linux"
     ],
   },
   'targets': [

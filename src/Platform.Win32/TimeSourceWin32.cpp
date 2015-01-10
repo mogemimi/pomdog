@@ -28,7 +28,7 @@ TimePointSeconds TimeSourceWin32::Now() const
 	LARGE_INTEGER time;
 	::QueryPerformanceCounter(&time);
 	auto currentSeconds = time.QuadPart * secondsPerTick;
-	return TimePointSeconds(TimePointSeconds{} + DurationSeconds(currentSeconds));
+	return TimePointSeconds(DurationSeconds(currentSeconds));
 }
 
 }// namespace Win32

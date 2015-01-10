@@ -16,18 +16,18 @@ TimeSourceCocoa::TimeSourceCocoa()
 {
 	mach_timebase_info_data_t timeBase;
 	mach_timebase_info(&timeBase);
-	
+
 	POMDOG_ASSERT(0 != timeBase.denom);
 	double const nanoSecondsPerTick = static_cast<double>(timeBase.numer) / timeBase.denom;
-	
-	constexpr double nanoScale = (1.0 / 1000000000UL);
+
+	constexpr double nanoScale = (1.0 / 1000000000LL);
 	secondsPerTick = nanoScale * nanoSecondsPerTick;
 }
 //-----------------------------------------------------------------------
 TimePointSeconds TimeSourceCocoa::Now() const
 {
 	auto currentSeconds = mach_absolute_time() * secondsPerTick;
-	return TimePointSeconds(TimePointSeconds{} + DurationSeconds(currentSeconds));
+	return TimePointSeconds(DurationSeconds(currentSeconds));
 }
 
 }// namespace Cocoa

@@ -17,6 +17,8 @@
 #	include "../Platform.Cocoa/TimeSourceCocoa.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32)
 #	include "../Platform.Win32/TimeSourceWin32.hpp"
+#elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
+#	include "../Platform.Linux/TimeSourceLinux.hpp"
 #else
 #	include "Pomdog/Application/DurationSeconds.hpp"
 #	include <chrono>
@@ -30,6 +32,8 @@ namespace Details {
 using TimeSource = Details::Cocoa::TimeSourceCocoa;
 #elif defined(POMDOG_PLATFORM_WIN32)
 using TimeSource = Details::Win32::TimeSourceWin32;
+#elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
+using TimeSource = Details::Linux::TimeSourceLinux;
 #else
 
 class TimeSource {

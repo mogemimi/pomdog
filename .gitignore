@@ -17,6 +17,7 @@
 /build/build
 /build/Debug
 /build/Release
+/build.makefiles
 /build.xcodefiles
 /build.msvs
 /third-party
