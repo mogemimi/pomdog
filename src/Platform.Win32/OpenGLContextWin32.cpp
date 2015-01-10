@@ -18,7 +18,7 @@ namespace Details {
 namespace Win32 {
 namespace {
 
-PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(PresentationParameters const& presentationParameters)
+static PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(PresentationParameters const& presentationParameters)
 {
 	PIXELFORMATDESCRIPTOR descriptor =
 	{
@@ -82,6 +82,9 @@ OpenGLContextWin32::OpenGLContextWin32(HWND windowHandleIn, PresentationParamete
 		ReleaseDC(windowHandle, hdcIn);
 	})
 	, glrc(nullptr, [](HGLRC glrcIn) {
+		if (wglGetCurrentContext() == glrcIn) {
+			wglMakeCurrent(nullptr, nullptr);
+		}
 		wglDeleteContext(glrcIn);
 	})
 {
