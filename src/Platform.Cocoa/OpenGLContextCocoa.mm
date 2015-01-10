@@ -39,13 +39,13 @@ CocoaOpenGLContext::~CocoaOpenGLContext()
 	openGLContext = nil;
 }
 //-----------------------------------------------------------------------
-void CocoaOpenGLContext::MakeCurrentContext()
+void CocoaOpenGLContext::MakeCurrent()
 {
 	POMDOG_ASSERT(openGLContext != nil);
 	[openGLContext makeCurrentContext];
 }
 //-----------------------------------------------------------------------
-void CocoaOpenGLContext::ClearCurrentContext()
+void CocoaOpenGLContext::ClearCurrent()
 {
 	POMDOG_ASSERT(openGLContext != nil);
 	[NSOpenGLContext clearCurrentContext];
@@ -57,13 +57,13 @@ void CocoaOpenGLContext::SwapBuffers()
 	[openGLContext flushBuffer];
 }
 //-----------------------------------------------------------------------
-void CocoaOpenGLContext::LockContext()
+void CocoaOpenGLContext::Lock()
 {
 	POMDOG_ASSERT(openGLContext != nil);
 	CGLLockContext([openGLContext CGLContextObj]);
 }
 //-----------------------------------------------------------------------
-void CocoaOpenGLContext::UnlockContext()
+void CocoaOpenGLContext::Unlock()
 {
 	POMDOG_ASSERT(openGLContext != nil);
 	CGLUnlockContext([openGLContext CGLContextObj]);

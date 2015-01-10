@@ -49,7 +49,7 @@ static NSOpenGLPixelFormat* CreatePixelFormat(PresentationParameters const& pres
 		NSOpenGLPFANoRecovery,
 		NSOpenGLPFAAllowOfflineRenderers,
 	};
-	
+
 	///@todo Not implemented
 //	if (presentationParameters.MultiSampleCount > 0) {
 //		attributes.push_back(NSOpenGLPFAMultisample);
@@ -58,7 +58,7 @@ static NSOpenGLPixelFormat* CreatePixelFormat(PresentationParameters const& pres
 //		attributes.push_back(NSOpenGLPFASamples);
 //		attributes.push_back(presentationParameters.MultiSampleCount);
 //	}
-	
+
 	switch (presentationParameters.SurfaceFormat) {
 	case SurfaceFormat::R8G8B8A8_UNorm:
 		attributes.push_back(NSOpenGLPFAColorSize);
@@ -85,7 +85,7 @@ static NSOpenGLPixelFormat* CreatePixelFormat(PresentationParameters const& pres
 		attributes.push_back(8);
 		break;
 	}
-	
+
 	switch (presentationParameters.DepthFormat) {
 	case DepthFormat::Depth16:
 		attributes.push_back(NSOpenGLPFADepthSize);
@@ -104,7 +104,7 @@ static NSOpenGLPixelFormat* CreatePixelFormat(PresentationParameters const& pres
 	case DepthFormat::None:
 		break;
 	}
-	
+
 	attributes.push_back(0);
 	return [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes.data()];
 }
@@ -164,9 +164,9 @@ public:
 
 private:
 	void RenderFrame(Game & game);
-	
+
 	void DoEvents();
-	
+
 	void ProcessSystemEvents(Event const& event);
 
 	void ClientSizeChanged();
@@ -181,18 +181,18 @@ private:
 
 	std::shared_ptr<SystemEventDispatcher> systemEventDispatcher;
 	ScopedConnection systemEventConnection;
-	
+
 	std::shared_ptr<CocoaOpenGLContext> openGLContext;
 	std::shared_ptr<Pomdog::GraphicsContext> graphicsContext;
 	std::shared_ptr<Pomdog::GraphicsDevice> graphicsDevice;
 	std::shared_ptr<Pomdog::AudioEngine> audioEngine;
 	std::unique_ptr<Pomdog::AssetManager> assetManager;
-	
+
 	std::shared_ptr<KeyboardCocoa> keyboard;
 	std::shared_ptr<MouseCocoa> mouse;
-	
+
 	DurationSeconds presentationInterval;
-	
+
 	bool exitRequest;
 };
 //-----------------------------------------------------------------------
@@ -206,55 +206,55 @@ GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& window,
 	, exitRequest(false)
 {
 	openGLContext = CreateOpenGLContext(presentationParameters);
-	
+
 	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
 	graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::make_unique<GraphicsDeviceGL4>());
 
 	graphicsContext = CreateGraphicsContext(openGLContext, gameWindow, presentationParameters, graphicsDevice);
-	
+
 	audioEngine = std::make_shared<Pomdog::AudioEngine>();
-	
+
 	POMDOG_ASSERT(gameWindow);
 	gameWindow->ResetGLContext(openGLContext);
-	
+
 	POMDOG_ASSERT(systemEventDispatcher);
 	systemEventConnection = systemEventDispatcher->Connect([this](Event const& event){
 		ProcessSystemEvents(event);
 	});
-	
+
 	keyboard = std::make_shared<KeyboardCocoa>();
 	mouse = std::make_shared<MouseCocoa>();
 	gameWindow->BindToDelegate(mouse);
-	
+
 	{
 		NSString* path = [[NSBundle mainBundle] resourcePath];
 		std::string rootDirectory = [[path stringByAppendingPathComponent: @"Content"] UTF8String];
 		Details::AssetLoaderContext loaderContext{rootDirectory, graphicsDevice};
-		
+
 		assetManager = std::make_unique<Pomdog::AssetManager>(std::move(loaderContext));
 	}
-	
+
 	POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
 	presentationInterval = DurationSeconds(1) / presentationParameters.PresentationInterval;
 }
 //-----------------------------------------------------------------------
 void GameHostCocoa::Impl::Run(Game & game)
 {
-	//openGLContext->LockContext();
-	openGLContext->MakeCurrentContext();
+	//openGLContext->Lock();
+	openGLContext->MakeCurrent();
 	game.Initialize();
-	//openGLContext->UnlockContext();
+	//openGLContext->Unlock();
 
 	if (!game.CompleteInitialize()) {
 		return;
 	}
-	
+
 	gameWindow->SetRenderCallbackOnLiveResizing([&] {
 		std::lock_guard<std::mutex> lock(renderMutex);
 		ClientSizeChanged();
 		RenderFrame(game);
 	});
-	
+
 	while (!exitRequest)
 	{
 		std::lock_guard<std::mutex> lock(renderMutex);
@@ -262,20 +262,20 @@ void GameHostCocoa::Impl::Run(Game & game)
 		clock.Tick();
 		DoEvents();
 		game.Update();
-		
+
 		if (!viewLiveResizing.load()) {
 			RenderFrame(game);
 		}
 
 		auto elapsedTime = clock.ElapsedTime();
-		
+
 		if (elapsedTime < presentationInterval) {
 			lock.~lock_guard();
 			auto sleepTime = (presentationInterval - elapsedTime);
 			std::this_thread::sleep_for(sleepTime);
 		}
 	}
-	
+
 	gameWindow->SetRenderCallbackOnLiveResizing();
 
 	gameWindow->Close();
@@ -299,12 +299,12 @@ void GameHostCocoa::Impl::RenderFrame(Game & game)
 		return;
 	}
 
-	openGLContext->LockContext();
-	openGLContext->MakeCurrentContext();
+	openGLContext->Lock();
+	openGLContext->MakeCurrent();
 
 	game.Draw();
 
-	openGLContext->UnlockContext();
+	openGLContext->Unlock();
 }
 //-----------------------------------------------------------------------
 void GameHostCocoa::Impl::DoEvents()
@@ -335,7 +335,7 @@ void GameHostCocoa::Impl::ProcessSystemEvents(Event const& event)
 	else if (event.Is<ViewDidEndLiveResizeEvent>())
 	{
 		viewLiveResizing = false;
-		
+
 		auto rect = gameWindow->ClientBounds();
 		Log::Internal(StringFormat("ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
 			rect.Width, rect.Height));
@@ -350,7 +350,7 @@ void GameHostCocoa::Impl::ProcessSystemEvents(Event const& event)
 	else if (auto keyUpEvent = event.As<InputKeyUpEvent>())
 	{
 		//Log::Internal(StringFormat("KeyUp: %d", static_cast<int>(keyUpEvent->Key)));
-		
+
 		POMDOG_ASSERT(keyboard);
 		keyboard->SetKey(keyUpEvent->Key, KeyState::Up);
 	}
@@ -358,16 +358,16 @@ void GameHostCocoa::Impl::ProcessSystemEvents(Event const& event)
 //-----------------------------------------------------------------------
 void GameHostCocoa::Impl::ClientSizeChanged()
 {
-	openGLContext->LockContext();
-	openGLContext->MakeCurrentContext();
+	openGLContext->Lock();
+	openGLContext->MakeCurrent();
 	{
 		POMDOG_ASSERT(openGLContext->NativeOpenGLContext() != nil);
 		[openGLContext->NativeOpenGLContext() update];
-	
+
 		auto bounds = gameWindow->ClientBounds();
 		gameWindow->ClientSizeChanged(bounds.Width, bounds.Height);
 	}
-	openGLContext->UnlockContext();
+	openGLContext->Unlock();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GameWindow> GameHostCocoa::Impl::Window()

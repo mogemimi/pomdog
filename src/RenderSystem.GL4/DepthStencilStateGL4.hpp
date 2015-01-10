@@ -25,17 +25,10 @@ using ComparisonFunctionGL4 = Tagged<GLenum, ComparisonFunction>;
 using StencilOperationGL4 = Tagged<GLenum, StencilOperation>;
 
 struct DepthStencilFaceOperationGL4 final {
-	ComparisonFunctionGL4 stencilFunction;
-	StencilOperationGL4 stencilFail;
-	StencilOperationGL4 stencilDepthBufferFail;
-	StencilOperationGL4 stencilPass;
-
-	DepthStencilFaceOperationGL4()
-		: stencilFunction(GL_ALWAYS)
-		, stencilFail(GL_KEEP)
-		, stencilDepthBufferFail(GL_KEEP)
-		, stencilPass(GL_KEEP)
-	{}
+	ComparisonFunctionGL4 stencilFunction = GL_ALWAYS;
+	StencilOperationGL4 stencilFail = GL_KEEP;
+	StencilOperationGL4 stencilDepthBufferFail = GL_KEEP;
+	StencilOperationGL4 stencilPass = GL_KEEP;
 };
 
 class DepthStencilStateGL4 final: public NativeDepthStencilState {

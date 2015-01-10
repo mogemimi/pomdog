@@ -18,7 +18,7 @@
 #	include <GL/wglew.h>
 #elif defined(POMDOG_PLATFORM_MACOSX)
 #	include <OpenGL/gl3.h>
-#   include <OpenGL/gl3ext.h>
+#	include <OpenGL/gl3ext.h>
 #elif defined(POMDOG_PLATFORM_LINUX)
 #	include <GL/glew.h>
 #endif

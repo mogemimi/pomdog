@@ -32,9 +32,9 @@ public:
 	
 	~OpenGLContextWin32();
 
-	void MakeCurrentContext() override;
+	void MakeCurrent() override;
 
-	void ClearCurrentContext() override;
+	void ClearCurrent() override;
 
 	void SwapBuffers() override;
 

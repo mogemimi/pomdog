@@ -28,15 +28,15 @@ public:
 	
 	~CocoaOpenGLContext();
 
-	void MakeCurrentContext() override;
+	void MakeCurrent() override;
 
-	void ClearCurrentContext() override;
+	void ClearCurrent() override;
 
 	void SwapBuffers() override;
 	
-	void LockContext();
+	void Lock();
 	
-	void UnlockContext();
+	void Unlock();
 	
 	NSOpenGLContext* NativeOpenGLContext();
 	

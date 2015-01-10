@@ -137,14 +137,14 @@ OpenGLContextWin32::~OpenGLContextWin32()
 	hdc.reset();
 }
 //-----------------------------------------------------------------------
-void OpenGLContextWin32::MakeCurrentContext()
+void OpenGLContextWin32::MakeCurrent()
 {
 	POMDOG_ASSERT(hdc);
 	POMDOG_ASSERT(glrc);
 	wglMakeCurrent(hdc.get(), glrc.get());
 }
 //-----------------------------------------------------------------------
-void OpenGLContextWin32::ClearCurrentContext()
+void OpenGLContextWin32::ClearCurrent()
 {
 	wglMakeCurrent(nullptr, nullptr);
 }

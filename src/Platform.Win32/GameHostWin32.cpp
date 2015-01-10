@@ -146,7 +146,7 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& window,
 		//	"Failed to initialize glew.");
 	}
 
-	openGLContext->MakeCurrentContext();
+	openGLContext->MakeCurrent();
 
 	auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceGL4>();
 	graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::move(nativeGraphicsDevice));
