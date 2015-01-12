@@ -148,7 +148,7 @@ def CreateNewProject(config):
     RenameSourceContent(project_root, identifier, 'Source/QuickStartGame.hpp')
     RenameSourceContent(project_root, identifier, 'Platform.Cocoa/AppDelegate.mm')
     RenameSourceContent(project_root, identifier, 'Platform.Cocoa/Info.plist')
-	RenameSourceContent(project_root, identifier, 'Platform.Cocoa/Base.lproj/MainMenu.xib')
+    RenameSourceContent(project_root, identifier, 'Platform.Cocoa/Base.lproj/MainMenu.xib')
     RenameFilename(project_root, identifier, 'Build/QuickStart.gyp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.cpp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.hpp')
