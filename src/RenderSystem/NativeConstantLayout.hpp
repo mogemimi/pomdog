@@ -4,8 +4,8 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#ifndef POMDOG_SRC_RENDERSYSTEM_NATIVECONSTANTLAYOUT_9EA37BC8_0C0C_4453_B115_8EAC2D32FCB4_HPP
-#define POMDOG_SRC_RENDERSYSTEM_NATIVECONSTANTLAYOUT_9EA37BC8_0C0C_4453_B115_8EAC2D32FCB4_HPP
+#ifndef POMDOG_NATIVECONSTANTLAYOUT_9EA37BC8_0C0C_4453_B115_8EAC2D32FCB4_HPP
+#define POMDOG_NATIVECONSTANTLAYOUT_9EA37BC8_0C0C_4453_B115_8EAC2D32FCB4_HPP
 
 #if (_MSC_VER > 1000)
 #pragma once
@@ -29,7 +29,8 @@ public:
 
 	virtual ~NativeConstantLayout() = default;
 
-	virtual void SetConstantBuffer(std::string const& constantName, std::shared_ptr<NativeConstantBuffer> const& constantBuffer) = 0;
+	virtual void SetConstantBuffer(std::string const& constantName,
+		std::shared_ptr<NativeConstantBuffer> const& constantBuffer) = 0;
 	
 	virtual void SetConstantBuffer(std::string const& constantName) = 0;
 };
@@ -38,4 +39,4 @@ public:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SRC_RENDERSYSTEM_NATIVECONSTANTLAYOUT_9EA37BC8_0C0C_4453_B115_8EAC2D32FCB4_HPP)
+#endif // !defined(POMDOG_NATIVECONSTANTLAYOUT_9EA37BC8_0C0C_4453_B115_8EAC2D32FCB4_HPP)

@@ -4,8 +4,8 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#ifndef POMDOG_SRC_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP
-#define POMDOG_SRC_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP
+#ifndef POMDOG_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP
+#define POMDOG_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP
 
 #if (_MSC_VER > 1000)
 #pragma once
@@ -25,7 +25,7 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
-class CocoaOpenGLContext;
+class OpenGLContextCocoa;
 class MouseCocoa;
 
 class GameWindowCocoa final: public GameWindow {
@@ -71,7 +71,7 @@ public:
 	/// @brief ウィンドウを閉じます。
 	void Close();
 
-	void ResetGLContext(std::shared_ptr<CocoaOpenGLContext> const& context);
+	void ResetGLContext(std::shared_ptr<OpenGLContextCocoa> const& context);
 
 	void ResetGLContext();
 	
@@ -82,7 +82,7 @@ public:
 	void BindToDelegate(std::shared_ptr<MouseCocoa> mouse);
 
 private:
-	std::shared_ptr<CocoaOpenGLContext> openGLContext;
+	std::shared_ptr<OpenGLContextCocoa> openGLContext;
 	NSWindow* nativeWindow;
 	CocoaOpenGLView* openGLView;
 	CocoaWindowDelegate* windowDelegate;
@@ -94,4 +94,4 @@ private:
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SRC_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP)
+#endif // !defined(POMDOG_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP)

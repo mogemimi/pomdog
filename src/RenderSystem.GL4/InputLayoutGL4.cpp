@@ -294,8 +294,9 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
 			POMDOG_ASSERT(attribute.Components >= 1 && attribute.Components <= 4);
 			attributes.push_back(attribute);
 
+			///@todo badcode
 			// For matrix class in GLSL:
-			attributeLocation += 1;///@todo badcode
+			attributeLocation += 1;
 			
 			//#ifdef DEBUG
 			//Log::Stream(LogLevel::Internal)

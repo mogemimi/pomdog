@@ -12,12 +12,12 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 //-----------------------------------------------------------------------
-CocoaOpenGLContext::CocoaOpenGLContext(NSOpenGLPixelFormat* pixelFormatIn)
-	: openGLContext(nil)
-	, pixelFormat(pixelFormatIn)
+OpenGLContextCocoa::OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormatIn)
+	: pixelFormat(pixelFormatIn)
+	, openGLContext(nil)
 {
 	POMDOG_ASSERT(pixelFormat != nil);
-	
+
 #if !__has_feature(objc_arc)
 	[pixelFormat retain];
 #endif
@@ -29,47 +29,47 @@ CocoaOpenGLContext::CocoaOpenGLContext(NSOpenGLPixelFormat* pixelFormatIn)
 	[openGLContext setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
 }
 //-----------------------------------------------------------------------
-CocoaOpenGLContext::~CocoaOpenGLContext()
+OpenGLContextCocoa::~OpenGLContextCocoa()
 {
 #if !__has_feature(objc_arc)
 	[openGLContext release];
 	[pixelFormat release];
 #endif
-	pixelFormat = nil;
 	openGLContext = nil;
+	pixelFormat = nil;
 }
 //-----------------------------------------------------------------------
-void CocoaOpenGLContext::MakeCurrent()
+void OpenGLContextCocoa::MakeCurrent()
 {
 	POMDOG_ASSERT(openGLContext != nil);
 	[openGLContext makeCurrentContext];
 }
 //-----------------------------------------------------------------------
-void CocoaOpenGLContext::ClearCurrent()
+void OpenGLContextCocoa::ClearCurrent()
 {
 	POMDOG_ASSERT(openGLContext != nil);
 	[NSOpenGLContext clearCurrentContext];
 }
 //-----------------------------------------------------------------------
-void CocoaOpenGLContext::SwapBuffers()
+void OpenGLContextCocoa::SwapBuffers()
 {
 	POMDOG_ASSERT(openGLContext != nil);
 	[openGLContext flushBuffer];
 }
 //-----------------------------------------------------------------------
-void CocoaOpenGLContext::Lock()
+void OpenGLContextCocoa::Lock()
 {
 	POMDOG_ASSERT(openGLContext != nil);
 	CGLLockContext([openGLContext CGLContextObj]);
 }
 //-----------------------------------------------------------------------
-void CocoaOpenGLContext::Unlock()
+void OpenGLContextCocoa::Unlock()
 {
 	POMDOG_ASSERT(openGLContext != nil);
 	CGLUnlockContext([openGLContext CGLContextObj]);
 }
 //-----------------------------------------------------------------------
-NSOpenGLContext* CocoaOpenGLContext::NativeOpenGLContext()
+NSOpenGLContext* OpenGLContextCocoa::NativeOpenGLContext()
 {
 	return openGLContext;
 }

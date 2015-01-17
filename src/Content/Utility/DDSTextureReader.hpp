@@ -4,14 +4,14 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#ifndef POMDOG_SRC_CONTENT_DDSTEXTUREREADER_0C8072DF_9382_4D3F_9812_DDBF397296C6_HPP
-#define POMDOG_SRC_CONTENT_DDSTEXTUREREADER_0C8072DF_9382_4D3F_9812_DDBF397296C6_HPP
+#ifndef POMDOG_DDSTEXTUREREADER_0C8072DF_9382_4D3F_9812_DDBF397296C6_HPP
+#define POMDOG_DDSTEXTUREREADER_0C8072DF_9382_4D3F_9812_DDBF397296C6_HPP
 
 #if (_MSC_VER > 1000)
 #pragma once
 #endif
 
-#include <Pomdog/Graphics/detail/ForwardDeclarations.hpp>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstdint>
 #include <cstddef>
 #include <memory>
@@ -29,4 +29,4 @@ std::shared_ptr<Texture2D> Read(std::shared_ptr<GraphicsDevice> const& graphicsD
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SRC_CONTENT_DDSTEXTUREREADER_0C8072DF_9382_4D3F_9812_DDBF397296C6_HPP)
+#endif // !defined(POMDOG_DDSTEXTUREREADER_0C8072DF_9382_4D3F_9812_DDBF397296C6_HPP)

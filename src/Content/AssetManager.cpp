@@ -4,7 +4,7 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include <Pomdog/Content/AssetManager.hpp>
+#include "Pomdog/Content/AssetManager.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

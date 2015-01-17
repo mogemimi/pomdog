@@ -109,15 +109,15 @@ static NSOpenGLPixelFormat* CreatePixelFormat(PresentationParameters const& pres
 	return [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes.data()];
 }
 //-----------------------------------------------------------------------
-static std::shared_ptr<CocoaOpenGLContext> CreateOpenGLContext(
+static std::shared_ptr<OpenGLContextCocoa> CreateOpenGLContext(
 	PresentationParameters const& presentationParameters)
 {
 	auto pixelFormat = CreatePixelFormat(presentationParameters);
-	return std::make_shared<CocoaOpenGLContext>(pixelFormat);
+	return std::make_shared<OpenGLContextCocoa>(pixelFormat);
 }
 //-----------------------------------------------------------------------
 static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
-	std::shared_ptr<CocoaOpenGLContext> const& openGLContext,
+	std::shared_ptr<OpenGLContextCocoa> const& openGLContext,
 	std::weak_ptr<GameWindow> && gameWindow,
 	PresentationParameters const& presentationParameters,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
@@ -182,7 +182,7 @@ private:
 	std::shared_ptr<SystemEventDispatcher> systemEventDispatcher;
 	ScopedConnection systemEventConnection;
 
-	std::shared_ptr<CocoaOpenGLContext> openGLContext;
+	std::shared_ptr<OpenGLContextCocoa> openGLContext;
 	std::shared_ptr<Pomdog::GraphicsContext> graphicsContext;
 	std::shared_ptr<Pomdog::GraphicsDevice> graphicsDevice;
 	std::shared_ptr<Pomdog::AudioEngine> audioEngine;

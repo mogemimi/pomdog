@@ -6,7 +6,7 @@
 
 #include "RenderQueue.hpp"
 #include "RenderCommand.hpp"
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 #include <algorithm>
 

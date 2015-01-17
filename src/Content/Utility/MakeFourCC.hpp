@@ -4,8 +4,8 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#ifndef POMDOG_SRC_CONTENT_MAKEFOURCC_ED6FB253_174A_46D4_9EDA_D3ADDDAB06C2_HPP
-#define POMDOG_SRC_CONTENT_MAKEFOURCC_ED6FB253_174A_46D4_9EDA_D3ADDDAB06C2_HPP
+#ifndef POMDOG_MAKEFOURCC_ED6FB253_174A_46D4_9EDA_D3ADDDAB06C2_HPP
+#define POMDOG_MAKEFOURCC_ED6FB253_174A_46D4_9EDA_D3ADDDAB06C2_HPP
 
 #if (_MSC_VER > 1000)
 #pragma once
@@ -18,7 +18,8 @@ namespace Pomdog {
 namespace Details {
 
 template <typename Character>
-constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Character c3) {
+constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Character c3)
+{
 	static_assert(std::is_integral<Character>::value, "");
 	static_assert(sizeof(Character) == 1, "");
 
@@ -32,4 +33,4 @@ constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Cha
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SRC_CONTENT_MAKEFOURCC_ED6FB253_174A_46D4_9EDA_D3ADDDAB06C2_HPP)
+#endif // !defined(POMDOG_MAKEFOURCC_ED6FB253_174A_46D4_9EDA_D3ADDDAB06C2_HPP)

@@ -4,8 +4,8 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#ifndef POMDOG_SRC_OPENGLCONTEXTCOCOA_306ECA78_18CF_4A87_A039_0C823668622C_HPP
-#define POMDOG_SRC_OPENGLCONTEXTCOCOA_306ECA78_18CF_4A87_A039_0C823668622C_HPP
+#ifndef POMDOG_OPENGLCONTEXTCOCOA_306ECA78_18CF_4A87_A039_0C823668622C_HPP
+#define POMDOG_OPENGLCONTEXTCOCOA_306ECA78_18CF_4A87_A039_0C823668622C_HPP
 
 #if (_MSC_VER > 1000)
 #pragma once
@@ -20,13 +20,13 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 
-class CocoaOpenGLContext final: public RenderSystem::GL4::OpenGLContext {
+class OpenGLContextCocoa final: public RenderSystem::GL4::OpenGLContext {
 public:
-	CocoaOpenGLContext() = delete;
+	OpenGLContextCocoa() = delete;
 
-	explicit CocoaOpenGLContext(NSOpenGLPixelFormat* pixelFormat);
+	explicit OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormat);
 	
-	~CocoaOpenGLContext();
+	~OpenGLContextCocoa();
 
 	void MakeCurrent() override;
 
@@ -41,12 +41,12 @@ public:
 	NSOpenGLContext* NativeOpenGLContext();
 	
 private:
-	NSOpenGLContext* openGLContext;
 	NSOpenGLPixelFormat* pixelFormat;
+	NSOpenGLContext* openGLContext;
 };
 
 }// namespace Cocoa
 }// namespace Details
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SRC_OPENGLCONTEXTCOCOA_306ECA78_18CF_4A87_A039_0C823668622C_HPP)
+#endif // !defined(POMDOG_OPENGLCONTEXTCOCOA_306ECA78_18CF_4A87_A039_0C823668622C_HPP)

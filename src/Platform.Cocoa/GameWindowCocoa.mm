@@ -196,7 +196,7 @@ void GameWindowCocoa::Close()
 //-----------------------------------------------------------------------
 #pragma mark - OpenGLView
 //-----------------------------------------------------------------------
-void GameWindowCocoa::ResetGLContext(std::shared_ptr<CocoaOpenGLContext> const& contextIn)
+void GameWindowCocoa::ResetGLContext(std::shared_ptr<OpenGLContextCocoa> const& contextIn)
 {
 	POMDOG_ASSERT(contextIn);
 	openGLContext = contextIn;
