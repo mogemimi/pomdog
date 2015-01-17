@@ -11,10 +11,10 @@
 #pragma once
 #endif
 
+#include "Pomdog.Experimental/Gameplay/Component.hpp"
+#include "Pomdog.Experimental/Gameplay/GameObject.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
-#include "Pomdog/Gameplay/Component.hpp"
-#include "Pomdog/Gameplay/GameObject.hpp"
 
 namespace Pomdog {
 

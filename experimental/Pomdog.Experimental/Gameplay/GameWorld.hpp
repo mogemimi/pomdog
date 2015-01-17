@@ -12,7 +12,6 @@
 #endif
 
 #include "GameObject.hpp"
-#include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <memory>
 #include <vector>
@@ -21,7 +20,7 @@ namespace Pomdog {
 
 class GameObject;
 
-class POMDOG_EXPORT GameWorld {
+class GameWorld {
 public:
 	GameWorld();
 	

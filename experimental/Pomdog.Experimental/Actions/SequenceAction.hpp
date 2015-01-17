@@ -12,7 +12,7 @@
 #endif
 
 #include "Pomdog.Experimental/Actions/Action.hpp"
-#include "Pomdog/Gameplay/GameObject.hpp"
+#include "Pomdog.Experimental/Gameplay/GameObject.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <array>
 #include <cstdint>

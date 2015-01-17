@@ -8,6 +8,7 @@
 #include "DrawingContext.hpp"
 #include "UIHelper.hpp"
 #include "UIView.hpp"
+#include <list>
 
 namespace Pomdog {
 namespace UI {

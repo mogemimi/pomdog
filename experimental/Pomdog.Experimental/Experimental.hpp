@@ -21,6 +21,12 @@
 #include "Compositing/RenderLayer.hpp"
 #include "Compositing/RenderLayerCompositor.hpp"
 
+#include "Gameplay/Component.hpp"
+#include "Gameplay/GameObject.hpp"
+#include "Gameplay/GameObjectContext.hpp"
+#include "Gameplay/GameObjectID.hpp"
+#include "Gameplay/GameWorld.hpp"
+
 #include "Gameplay2D/Animator.hpp"
 #include "Gameplay2D/BeamRenderable.hpp"
 #include "Gameplay2D/Behavior.hpp"

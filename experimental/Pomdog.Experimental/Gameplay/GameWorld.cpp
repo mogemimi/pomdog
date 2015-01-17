@@ -4,8 +4,8 @@
 //  http://enginetrouble.net/pomdog/license for details.
 //
 
-#include "Pomdog/Gameplay/GameWorld.hpp"
-#include "Pomdog/Gameplay/GameObject.hpp"
+#include "Pomdog.Experimental/Gameplay/GameWorld.hpp"
+#include "Pomdog.Experimental/Gameplay/GameObject.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

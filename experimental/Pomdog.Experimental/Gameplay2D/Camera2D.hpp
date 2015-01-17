@@ -11,8 +11,8 @@
 #pragma once
 #endif
 
+#include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Gameplay/Component.hpp"
 #include <cstdint>
 
 namespace Pomdog {

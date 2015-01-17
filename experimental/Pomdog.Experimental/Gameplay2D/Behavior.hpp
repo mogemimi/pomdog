@@ -11,8 +11,8 @@
 #pragma once
 #endif
 
-#include <Pomdog/Application/DurationSeconds.hpp>
-#include <Pomdog/Gameplay/Component.hpp>
+#include "Pomdog.Experimental/Gameplay/Component.hpp"
+#include "Pomdog/Application/DurationSeconds.hpp"
 #include <memory>
 
 namespace Pomdog {

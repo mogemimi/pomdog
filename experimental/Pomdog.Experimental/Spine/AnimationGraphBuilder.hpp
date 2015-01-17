@@ -12,7 +12,7 @@
 #endif
 
 #include "Pomdog.Experimental/Skeletal2D/AnimationGraph.hpp"
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Content/AssetManager.hpp"
 #include <memory>
 #include <string>
 

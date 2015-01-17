@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "Pomdog/Gameplay/GameObject.hpp"
+#include "Pomdog.Experimental/Gameplay/GameObject.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <functional>

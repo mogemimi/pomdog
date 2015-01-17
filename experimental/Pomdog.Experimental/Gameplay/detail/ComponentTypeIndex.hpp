@@ -12,7 +12,6 @@
 #endif
 
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <type_traits>
 #include <limits>
@@ -22,7 +21,7 @@ namespace Details {
 namespace Gameplay {
 
 template <typename BaseComponentType, typename IndexType>
-class POMDOG_EXPORT ComponentTypeIndex {
+class ComponentTypeIndex {
 public:
 	static_assert(std::is_unsigned<IndexType>::value, "IdentType is unsigned integer.");
 

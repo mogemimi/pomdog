@@ -11,13 +11,12 @@
 #pragma once
 #endif
 
-#include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <functional>
 
 namespace Pomdog {
 
-class POMDOG_EXPORT GameObjectID {
+class GameObjectID {
 public:
 	GameObjectID(): id(0x0) {}
 
