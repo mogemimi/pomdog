@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "UIView.hpp"
+#include "detail/SubscribeRequestDispatcher.hpp"
+#include "UIElement.hpp"
 #include "PointerPoint.hpp"
 #include "PointerEventType.hpp"
-#include "detail/SubscribeRequestDispatcher.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <cstdint>
 #include <memory>
@@ -17,8 +17,7 @@ namespace Detail {
 
 class UIEventConnection;
 
-}// namespace Detail
-
+} // namespace Detail
 
 class UIEventDispatcher: public std::enable_shared_from_this<UIEventDispatcher> {
 public:
@@ -30,13 +29,11 @@ public:
 
     void UpdateAnimation(Duration const& frameDuration);
 
-    Detail::UIEventConnection Connect(std::shared_ptr<UIView> const& child);
-    Detail::UIEventConnection Connect(std::shared_ptr<UIView> && child);
+    Detail::UIEventConnection Connect(std::weak_ptr<UIElement> const& child);
 
 private:
-    std::shared_ptr<UIView> Find(Point2D const& position);
-
-    void PointerEntered(Point2D const& position, MouseState const& mouseState, std::shared_ptr<UIView> const& node);
+    void PointerEntered(Point2D const& position, MouseState const& mouseState,
+        std::shared_ptr<UIElement> const& node);
 
     void PointerExited(Point2D const& position);
 
@@ -54,17 +51,19 @@ private:
 
 private:
     struct PointerState {
-        std::shared_ptr<UIView> focusedElement;
+        std::weak_ptr<UIElement> focusedElement;
         PointerPoint pointerPoint;
         std::int32_t PrevScrollWheel;
     };
 
-    typedef Detail::SubscribeRequestDispatcher<UIView> SubscribeRequestDispatcherType;
+    typedef Detail::SubscribeRequestDispatcher<
+        std::weak_ptr<UIElement>> SubscribeRequestDispatcherType;
+
     SubscribeRequestDispatcherType subscribeRequests;
-    std::vector<std::shared_ptr<UIView>> children;
+    std::vector<std::weak_ptr<UIElement>> children;
     std::unique_ptr<PointerState> pointerState;
     std::shared_ptr<GameWindow> window;
 };
 
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

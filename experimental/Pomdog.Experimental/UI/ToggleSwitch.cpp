@@ -9,14 +9,15 @@
 namespace Pomdog {
 namespace UI {
 //-----------------------------------------------------------------------
-ToggleSwitch::ToggleSwitch()
-    : Control(Matrix3x2::Identity, 50, 18)
+ToggleSwitch::ToggleSwitch(std::shared_ptr<UIEventDispatcher> const& dispatcher)
+    : UIElement(dispatcher)
     , button(50, 18)
     , onContent(u8"On")
     , offContent(u8"Off")
     , isEnabled(true)
     , isOn(true)
 {
+    SetSize(50, 18);
     SetCursor(MouseCursor::PointingHand);
 }
 //-----------------------------------------------------------------------
@@ -58,17 +59,10 @@ void ToggleSwitch::OffContent(std::string const& offContentIn)
 //-----------------------------------------------------------------------
 // MARK: - Events
 //-----------------------------------------------------------------------
-void ToggleSwitch::OnParentChanged()
+void ToggleSwitch::OnEnter()
 {
-    auto parent = Parent().lock();
-
-    POMDOG_ASSERT(parent);
-    POMDOG_ASSERT(!parent->Dispatcher().expired());
-
-    if (auto dispatcher = parent->Dispatcher().lock())
-    {
-        connection = dispatcher->Connect(shared_from_this());
-    }
+    auto dispatcher = Dispatcher();
+    connection = dispatcher->Connect(shared_from_this());
 }
 //-----------------------------------------------------------------------
 void ToggleSwitch::OnPointerPressed(PointerPoint const& pointerPoint)
@@ -84,10 +78,9 @@ void ToggleSwitch::OnPointerReleased(PointerPoint const& pointerPoint)
     Toggled(isOn);
 }
 //-----------------------------------------------------------------------
-void ToggleSwitch::OnRenderSizeChanged(std::uint32_t widthIn, std::uint32_t heightIn)
+void ToggleSwitch::OnRenderSizeChanged(int widthIn, int heightIn)
 {
-    Width(widthIn);
-    Height(heightIn);
+    SetSize(widthIn, heightIn);
 }
 //-----------------------------------------------------------------------
 void ToggleSwitch::Draw(DrawingContext & drawingContext)
@@ -158,5 +151,5 @@ void ToggleSwitch::ToggleSwitchButton::Draw(DrawingContext & drawingContext, boo
     }
 }
 //-----------------------------------------------------------------------
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

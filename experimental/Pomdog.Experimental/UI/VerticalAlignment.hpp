@@ -7,12 +7,12 @@
 namespace Pomdog {
 namespace UI {
 
-enum class VerticalAlignment: std::uint8_t {
+enum class VerticalAlignment : std::uint8_t {
     //Bottom,
     //Center,
     Stretch,
     Top,
 };
 
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

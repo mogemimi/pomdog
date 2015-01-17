@@ -5,15 +5,13 @@
 namespace Pomdog {
 namespace UI {
 //-----------------------------------------------------------------------
-SpriteDrawingContext::SpriteDrawingContext(SpriteBatch & spriteBatchIn, SpriteBatch & spriteFontBatchIn,
-    std::shared_ptr<PipelineState> const& distanceFieldEffectIn,
-    std::shared_ptr<ConstantBufferBinding> const& constantBuffersIn,
-    SpriteFont & spriteFontIn, std::shared_ptr<Texture2D> const& textureIn)
-    : spriteBatch(spriteBatchIn)
-    , spriteFontBatch(spriteFontBatchIn)
+SpriteDrawingContext::SpriteDrawingContext(
+    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    AssetManager & assets,
+    std::shared_ptr<SpriteFont> const& spriteFontIn,
+    std::shared_ptr<Texture2D> const& textureIn)
+    : spriteBatch(graphicsDevice, assets)
     , spriteFont(spriteFontIn)
-    , distanceFieldEffect(distanceFieldEffectIn)
-    , constantBuffers(constantBuffersIn)
     , texture(textureIn)
 {}
 //-----------------------------------------------------------------------
@@ -34,16 +32,45 @@ void SpriteDrawingContext::Pop()
     matrixStack.pop_back();
 }
 //-----------------------------------------------------------------------
-void SpriteDrawingContext::DrawRectangle(Matrix3x2 const& transform, Color const& color, Rectangle const& rectangle)
+void SpriteDrawingContext::Begin(
+    std::shared_ptr<GraphicsCommandList> const& commandList,
+    Matrix4x4 const& matrix,
+    int viewportHeightIn)
+{
+    POMDOG_ASSERT(commandList);
+    this->viewportHeight = viewportHeightIn;
+    spriteBatch.Begin(commandList, matrix);
+}
+//-----------------------------------------------------------------------
+void SpriteDrawingContext::End()
+{
+    spriteBatch.End();
+}
+//-----------------------------------------------------------------------
+void SpriteDrawingContext::DrawRectangle(
+    Matrix3x2 const& transform,
+    Color const& color,
+    Rectangle const& rectangle)
 {
     ///@todo Not implemented
     auto position = Vector2::Transform(Vector2(rectangle.X, rectangle.Y), transform);// badcode
 
-    spriteBatch.Draw(texture, position, Rectangle{0, 0, 1, 1},
-        color, 0, {0.0f, 0.0f}, Vector2(rectangle.Width, rectangle.Height), 0.0f);
+    spriteBatch.Draw(
+        texture,
+        Vector2{position.X, viewportHeight - position.Y},
+        Rectangle{0, 0, 1, 1},
+        color,
+        0,
+        {0.0f, 1.0f},
+        Vector2(rectangle.Width, rectangle.Height));
 }
 //-----------------------------------------------------------------------
-void SpriteDrawingContext::DrawLine(Matrix3x2 const& transform, Color const& color, float penSize, Vector2 const& point1, Vector2 const& point2)
+void SpriteDrawingContext::DrawLine(
+    Matrix3x2 const& transform,
+    Color const& color,
+    float penSize,
+    Vector2 const& point1,
+    Vector2 const& point2)
 {
     auto transformedPoint1 = Vector2::Transform(point1, transform);
     auto transformedPoint2 = Vector2::Transform(point2, transform);
@@ -53,59 +80,73 @@ void SpriteDrawingContext::DrawLine(Matrix3x2 const& transform, Color const& col
     auto tangent = transformedPoint2 - transformedPoint1;
     auto rotation = std::atan2(-tangent.Y, tangent.X);
 
-    spriteBatch.Draw(texture, transformedPoint1 + Vector2{0.5f, 0.5f}, Rectangle{0, 0, 1, 1},
-        color, rotation, {0.0f, 0.5f}, Vector2{lineLength + 0.5f, thicknessScale}, 0.0f);
+    auto position = transformedPoint1 + Vector2{0.5f, 0.5f};
+
+    spriteBatch.Draw(
+        texture,
+        Vector2{position.X, viewportHeight - position.Y},
+        Rectangle{0, 0, 1, 1},
+        color,
+        rotation,
+        {0.0f, 0.5f},
+        Vector2{lineLength + 0.5f, thicknessScale});
 }
 //-----------------------------------------------------------------------
-void SpriteDrawingContext::DrawString(Matrix3x2 const& transform, Color const& color,
-    FontWeight fontWeight, FontSize fontSize, std::string const& text)
+void SpriteDrawingContext::DrawString(
+    Matrix3x2 const& transform,
+    Color const& color,
+    FontWeight fontWeight,
+    FontSize fontSize,
+    std::string const& text)
 {
-    {
-        ///@todo badcode
-        spriteBatch.End();
-        spriteBatch.Begin(SpriteSortMode::BackToFront);
-    }
-    {
-        Vector2 fontWeights {0.457f, 0.620f};
-
-        switch (fontWeight) {
-        case FontWeight::Light:
-            fontWeights = {0.440f, 0.800f};
-            break;
-        case FontWeight::Normal:
-            fontWeights = {0.457f, 0.620f};
-            break;
-        case FontWeight::Bold:
-            fontWeights = {0.339f, 0.457f};
-            break;
-        }
-
-        float fontScale = 0.48f;
-
-        switch (fontSize) {
-        case FontSize::Small:
-            fontScale = 0.43f;
-            break;
-        case FontSize::Medium:
-            fontScale = 0.48f;
-            break;
-        case FontSize::Large:
-            fontScale = 0.73f;
-            fontWeights *= 1.09f;
-            break;
-        }
-
-        constantBuffers->Find("DistanceFieldConstants")->SetValue(fontWeights);
-
-        ///@todo Not implemented
-        auto position = Vector2::Transform(Vector2::Zero, transform);// badcode
-
-        spriteFont.Begin(Matrix4x4::Identity);
-        spriteFont.Draw(spriteFontBatch, text, position, color,
-            0.0f, fontScale, 0.0f);
-        spriteFont.End();
-    }
+//    spriteFont->Begin(, , );
+//
+//    {
+//        ///@todo badcode
+//        spriteBatch.End();
+//        spriteBatch.Begin(SpriteSortMode::BackToFront);
+//    }
+//    {
+//        Vector2 fontWeights {0.457f, 0.620f};
+//
+//        switch (fontWeight) {
+//        case FontWeight::Light:
+//            fontWeights = {0.440f, 0.800f};
+//            break;
+//        case FontWeight::Normal:
+//            fontWeights = {0.457f, 0.620f};
+//            break;
+//        case FontWeight::Bold:
+//            fontWeights = {0.339f, 0.457f};
+//            break;
+//        }
+//
+//        float fontScale = 0.48f;
+//
+//        switch (fontSize) {
+//        case FontSize::Small:
+//            fontScale = 0.43f;
+//            break;
+//        case FontSize::Medium:
+//            fontScale = 0.48f;
+//            break;
+//        case FontSize::Large:
+//            fontScale = 0.73f;
+//            fontWeights *= 1.09f;
+//            break;
+//        }
+//
+//        constantBuffers->Find("DistanceFieldConstants")->SetValue(fontWeights);
+//
+//        ///@todo Not implemented
+//        auto position = Vector2::Transform(Vector2::Zero, transform);// badcode
+//
+//        spriteFont.Begin(Matrix4x4::Identity);
+//        spriteFont.Draw(spriteFontBatch, text, position, color,
+//            0.0f, fontScale, 0.0f);
+//        spriteFont.End();
+//    }
 }
 
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

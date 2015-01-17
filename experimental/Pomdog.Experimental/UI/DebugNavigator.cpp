@@ -6,12 +6,15 @@
 namespace Pomdog {
 namespace UI {
 //-----------------------------------------------------------------------
-DebugNavigator::DebugNavigator(std::shared_ptr<GameClock> const& clockIn)
-    : Control(Matrix3x2::Identity, 150, 40)
+DebugNavigator::DebugNavigator(std::shared_ptr<UIEventDispatcher> const& dispatcher,
+    std::shared_ptr<GameClock> const& clockIn)
+    : UIElement(dispatcher)
     , clock(clockIn)
     , duration(Duration::zero())
     , frameRateString("-- fps")
-{}
+{
+    SetSize(150, 40);
+}
 //-----------------------------------------------------------------------
 void DebugNavigator::Draw(DrawingContext & drawingContext)
 {
@@ -23,8 +26,8 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
         if (clock->TotalGameTime() - duration > Duration(0.2))
         {
             auto frameRate = clock->FrameRate();
-            frameRateString = StringFormat("%4.2f fps", frameRate);
-            frameRates.push_back(MathHelper::Clamp(frameRate, minFramerate, maxFramerate));
+            frameRateString = StringHelper::Format("%4.2f fps", frameRate);
+            frameRates.push_back(std::round(MathHelper::Clamp(frameRate, minFramerate, maxFramerate)));
 
             if (frameRates.size() > maxHistories)
             {
@@ -60,5 +63,5 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
         Color::White, FontWeight::Bold, FontSize::Medium, frameRateString);
 }
 //-----------------------------------------------------------------------
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

@@ -2,8 +2,7 @@
 
 #pragma once
 
-#include "Control.hpp"
-#include "UIView.hpp"
+#include "UIElement.hpp"
 #include "detail/UIEventConnection.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
@@ -21,7 +20,7 @@ struct SliderColorScheme {
     Color FocusedThumbColor {229, 20, 0, 255};
 };
 
-class Slider: public Control, public std::enable_shared_from_this<Slider> {
+class Slider: public UIElement, public std::enable_shared_from_this<Slider> {
 private:
     double minimum;
     double maximum;
@@ -47,9 +46,16 @@ private:
     bool isEnabled;
 
 public:
-    Slider(double minimum, double maximum);
+    Slider(
+        std::shared_ptr<UIEventDispatcher> const& dispatcher,
+        double minimum,
+        double maximum);
 
-    Slider(SliderColorScheme const& colorScheme, double minimum, double maximum);
+    Slider(
+        std::shared_ptr<UIEventDispatcher> const& dispatcher,
+        SliderColorScheme const& colorScheme,
+        double minimum,
+        double maximum);
 
     void Value(double valueIn);
     double Value() const;
@@ -64,7 +70,7 @@ public:
 
     bool SizeToFitContent() const override { return false; }
 
-    void OnParentChanged() override;
+    void OnEnter() override;
 
     void OnPointerEntered(PointerPoint const& pointerPoint) override;
 
@@ -76,12 +82,14 @@ public:
 
     void OnPointerReleased(PointerPoint const& pointerPoint) override;
 
-    void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
+    void OnRenderSizeChanged(int width, int height) override;
 
     void Draw(DrawingContext & drawingContext) override;
 
     void UpdateAnimation(Duration const& frameDuration) override;
+
+    Signal<void(float)> ValueChanged;
 };
 
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

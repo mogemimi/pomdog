@@ -9,14 +9,27 @@ namespace Pomdog {
 namespace UI {
 namespace {
 
-bool Intersects(Point2D const& position, UIElement & element)
+static bool Intersects(Point2D const& position, UIElement & element)
 {
-    auto bounds = element.BoundingBox();
+    auto bounds = element.Bounds();
     auto positionInChild = UIHelper::ConvertToChildSpace(position, element.GlobalTransform());
     return bounds.Contains(positionInChild);
 }
+//-----------------------------------------------------------------------
+static std::shared_ptr<UIElement> Find(Point2D const& position,
+    std::vector<std::weak_ptr<UIElement>> const& children)
+{
+    for (auto & weakChild: children)
+    {
+        auto child = weakChild.lock();
+        if (child && Intersects(position, *child)) {
+            return child;
+        }
+    }
+    return {};
+}
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 UIEventDispatcher::UIEventDispatcher(std::shared_ptr<GameWindow> const& windowIn)
     : window(windowIn)
@@ -32,35 +45,37 @@ void UIEventDispatcher::UpdateChildren()
 
     if (!subscribeRequests.Removed.empty())
     {
-        for (auto & child: subscribeRequests.Removed)
+        for (auto & weakChild: subscribeRequests.Removed)
         {
-            children.erase(std::remove_if(std::begin(children), std::end(children),
-                [&child](std::shared_ptr<UIElement> const& p){ return p == child.lock(); }), std::end(children));
+            if (weakChild.expired()) {
+                continue;
+            }
+
+            auto child = weakChild.lock();
+            auto f = [&child](std::weak_ptr<UIElement> const& p) {
+                return p.lock() == child;
+            };
+
+            children.erase(std::remove_if(std::begin(children), std::end(children), f), std::end(children));
         }
     }
 
+    children.erase(std::remove_if(std::begin(children), std::end(children),
+        [](std::weak_ptr<UIElement> const& p) { return p.expired(); }),
+        std::end(children));
+
     Sort();
-    POMDOG_ASSERT(std::end(children) == std::unique(std::begin(children), std::end(children)));
-}
-//-----------------------------------------------------------------------
-std::shared_ptr<UIView> UIEventDispatcher::Find(Point2D const& position)
-{
-    for (auto & child: children)
-    {
-        if (Intersects(position, *child)) {
-            return child;
-        }
-    }
-    return {};
+    POMDOG_ASSERT(std::end(children) == std::unique(std::begin(children), std::end(children),
+        [](std::weak_ptr<UIElement> const& a, std::weak_ptr<UIElement> const& b){ return a.lock() == b.lock(); }));
 }
 //-----------------------------------------------------------------------
 void UIEventDispatcher::Touch(MouseState const& mouseState)
 {
-    auto position = mouseState.Position;
+    auto const position = mouseState.Position;
 
     if (!pointerState)
     {
-        if (auto node = Find(position))
+        if (auto node = Find(position, children))
         {
             POMDOG_ASSERT(!pointerState);
             PointerEntered(position, mouseState, node);
@@ -78,8 +93,10 @@ void UIEventDispatcher::Touch(MouseState const& mouseState)
         break;
     case PointerEventType::Released:
     case PointerEventType::Entered: {
-        auto node = Find(position);
-        if (!node || node != pointerState->focusedElement) {
+        auto node = Find(position, children);
+        auto oldFocusedElement = pointerState->focusedElement.lock();
+
+        if (!node || node != oldFocusedElement) {
             PointerExited(position);
             POMDOG_ASSERT(!pointerState);
         }
@@ -87,8 +104,8 @@ void UIEventDispatcher::Touch(MouseState const& mouseState)
             pointerState->pointerPoint.MouseEvent = pointerMouseEvent;
             POMDOG_ASSERT(CheckMouseButton(mouseState, *pointerMouseEvent) == ButtonState::Pressed);
 
-            POMDOG_ASSERT(node == pointerState->focusedElement);
-            POMDOG_ASSERT(Intersects(position, *pointerState->focusedElement));
+            POMDOG_ASSERT(node == oldFocusedElement);
+            POMDOG_ASSERT(Intersects(position, *oldFocusedElement));
             PointerPressed(position);
         }
         break;
@@ -111,19 +128,28 @@ void UIEventDispatcher::Touch(MouseState const& mouseState)
 
     if (pointerState)
     {
-        auto oldMouseWheelDelta = pointerState->pointerPoint.MouseWheelDelta;
-        pointerState->pointerPoint.MouseWheelDelta = mouseState.ScrollWheel - pointerState->PrevScrollWheel;
-        pointerState->PrevScrollWheel = mouseState.ScrollWheel;
-
-        if (oldMouseWheelDelta != pointerState->pointerPoint.MouseWheelDelta)
+        auto focused = pointerState->focusedElement.lock();
+        if (!focused)
         {
-            POMDOG_ASSERT(pointerState->focusedElement);
-            pointerState->focusedElement->OnPointerWheelChanged(pointerState->pointerPoint);
+            pointerState.reset();
+        }
+        else
+        {
+            auto oldMouseWheelDelta = pointerState->pointerPoint.MouseWheelDelta;
+            pointerState->pointerPoint.MouseWheelDelta = mouseState.ScrollWheel - pointerState->PrevScrollWheel;
+            pointerState->PrevScrollWheel = mouseState.ScrollWheel;
+
+            if (oldMouseWheelDelta != pointerState->pointerPoint.MouseWheelDelta)
+            {
+                POMDOG_ASSERT(focused);
+                focused->OnPointerWheelChanged(pointerState->pointerPoint);
+            }
         }
     }
 }
 //-----------------------------------------------------------------------
-void UIEventDispatcher::PointerEntered(Point2D const& position, MouseState const& mouseState, std::shared_ptr<UIView> const& node)
+void UIEventDispatcher::PointerEntered(Point2D const& position,
+    MouseState const& mouseState, std::shared_ptr<UIElement> const& node)
 {
     POMDOG_ASSERT(!pointerState);
     pointerState = std::make_unique<PointerState>();
@@ -148,12 +174,17 @@ void UIEventDispatcher::PointerEntered(Point2D const& position, MouseState const
 void UIEventDispatcher::PointerExited(Point2D const& position)
 {
     POMDOG_ASSERT(pointerState);
-    POMDOG_ASSERT(pointerState->focusedElement);
+
+    if (pointerState->focusedElement.expired()) {
+        pointerState.reset();
+        return;
+    }
 
     pointerState->pointerPoint.Event = PointerEventType::Exited;
     pointerState->pointerPoint.Position = position;
 
-    pointerState->focusedElement->OnPointerExited(pointerState->pointerPoint);
+    auto focusedElement = pointerState->focusedElement.lock();
+    focusedElement->OnPointerExited(pointerState->pointerPoint);
     pointerState.reset();
 
     window->SetMouseCursor(MouseCursor::Arrow);
@@ -163,69 +194,74 @@ void UIEventDispatcher::PointerPressed(Point2D const& position)
 {
     POMDOG_ASSERT(pointerState);
 
+    if (pointerState->focusedElement.expired()) {
+        pointerState.reset();
+        return;
+    }
+
     pointerState->pointerPoint.Event = PointerEventType::Pressed;
     pointerState->pointerPoint.Position = position;
     pointerState->pointerPoint.Id = 0;
 
-    pointerState->focusedElement->OnPointerPressed(pointerState->pointerPoint);
+    auto focusedElement = pointerState->focusedElement.lock();
+    focusedElement->OnPointerPressed(pointerState->pointerPoint);
 }
 //-----------------------------------------------------------------------
 void UIEventDispatcher::PointerMoved(Point2D const& position)
 {
     POMDOG_ASSERT(pointerState);
-    POMDOG_ASSERT(pointerState->focusedElement);
+
+    if (pointerState->focusedElement.expired()) {
+        pointerState.reset();
+        return;
+    }
 
     pointerState->pointerPoint.Event = PointerEventType::Moved;
     pointerState->pointerPoint.Position = position;
 
-    pointerState->focusedElement->OnPointerMoved(pointerState->pointerPoint);
+    auto focusedElement = pointerState->focusedElement.lock();
+    focusedElement->OnPointerMoved(pointerState->pointerPoint);
 }
 //-----------------------------------------------------------------------
 void UIEventDispatcher::PointerReleased(Point2D const& position)
 {
     POMDOG_ASSERT(pointerState);
-    POMDOG_ASSERT(pointerState->focusedElement);
+
+    if (pointerState->focusedElement.expired()) {
+        pointerState.reset();
+        return;
+    }
 
     pointerState->pointerPoint.Event = PointerEventType::Released;
     pointerState->pointerPoint.Position = position;
 
-    pointerState->focusedElement->OnPointerReleased(pointerState->pointerPoint);
+    auto focusedElement = pointerState->focusedElement.lock();
+    focusedElement->OnPointerReleased(pointerState->pointerPoint);
 }
 //-----------------------------------------------------------------------
-Detail::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIView> const& child)
+Detail::UIEventConnection UIEventDispatcher::Connect(std::weak_ptr<UIElement> const& child)
 {
-    POMDOG_ASSERT(child);
-
     std::shared_ptr<SubscribeRequestDispatcherType> sharedDispatcher(
         shared_from_this(), &subscribeRequests);
-    Detail::UIEventConnection connection {std::move(sharedDispatcher), child};
 
+    Detail::UIEventConnection connection {std::move(sharedDispatcher), child};
     subscribeRequests.AddChild(child);
-    return std::move(connection);
-}
-//-----------------------------------------------------------------------
-Detail::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIView> && child)
-{
-    POMDOG_ASSERT(child);
 
-    std::shared_ptr<SubscribeRequestDispatcherType> sharedDispatcher(
-        shared_from_this(), &subscribeRequests);
-    Detail::UIEventConnection connection {std::move(sharedDispatcher), child};
-
-    subscribeRequests.AddChild(std::move(child));
     return std::move(connection);
 }
 //-----------------------------------------------------------------------
 void UIEventDispatcher::UpdateAnimation(Duration const& frameDuration)
 {
-    for (auto & node: children)
+    for (auto & weakChild: children)
     {
-        POMDOG_ASSERT(node);
-        node->UpdateAnimation(frameDuration);
+        if (auto child = weakChild.lock()) {
+            child->UpdateAnimation(frameDuration);
+        }
     }
 }
 //-----------------------------------------------------------------------
-Optional<UI::PointerMouseEvent> UIEventDispatcher::FindPointerMouseEvent(MouseState const& mouseState) const
+Optional<UI::PointerMouseEvent> UIEventDispatcher::FindPointerMouseEvent(
+    MouseState const& mouseState) const
 {
     using Pomdog::UI::PointerMouseEvent;
     if (mouseState.LeftButton == ButtonState::Pressed) {
@@ -246,7 +282,8 @@ Optional<UI::PointerMouseEvent> UIEventDispatcher::FindPointerMouseEvent(MouseSt
     return Pomdog::NullOpt;
 }
 //-----------------------------------------------------------------------
-ButtonState UIEventDispatcher::CheckMouseButton(MouseState const& mouseState, UI::PointerMouseEvent const& pointerMouseEvent) const
+ButtonState UIEventDispatcher::CheckMouseButton(MouseState const& mouseState,
+    UI::PointerMouseEvent const& pointerMouseEvent) const
 {
     using Pomdog::UI::PointerMouseEvent;
     switch (pointerMouseEvent) {
@@ -269,13 +306,23 @@ ButtonState UIEventDispatcher::CheckMouseButton(MouseState const& mouseState, UI
 //-----------------------------------------------------------------------
 void UIEventDispatcher::Sort()
 {
+    children.erase(std::remove_if(std::begin(children), std::end(children),
+        [](std::weak_ptr<UIElement> const& a){ return a.expired(); }),
+        std::end(children));
+
     std::sort(std::begin(children), std::end(children),
-        [](std::shared_ptr<UIView> const& a, std::shared_ptr<UIView> const& b) {
-            POMDOG_ASSERT(a);
-            POMDOG_ASSERT(b);
-            return a->GlobalDrawOrder() < b->GlobalDrawOrder();
+        [](std::weak_ptr<UIElement> const& a, std::weak_ptr<UIElement> const& b) {
+            auto sharedA = a.lock();
+            auto sharedB = b.lock();
+            if (!sharedA) {
+                return false;
+            }
+            if (!sharedB) {
+                return true;
+            }
+            return sharedA->GlobalDrawOrder() < sharedB->GlobalDrawOrder();
         });
 }
 //-----------------------------------------------------------------------
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

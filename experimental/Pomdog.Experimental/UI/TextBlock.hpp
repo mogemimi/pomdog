@@ -2,15 +2,15 @@
 
 #pragma once
 
-#include "UIView.hpp"
+#include "UIElement.hpp"
 #include "detail/UIEventConnection.hpp"
 
 namespace Pomdog {
 namespace UI {
 
-class TextBlock: public UIView, public std::enable_shared_from_this<TextBlock> {
+class TextBlock: public UIElement, public std::enable_shared_from_this<TextBlock> {
 public:
-    TextBlock();
+    explicit TextBlock(std::shared_ptr<UIEventDispatcher> const& dispatcher);
 
     std::string Text() const;
     void Text(std::string const& text);
@@ -18,7 +18,7 @@ public:
     UI::HorizontalAlignment HorizontalAlignment() const override { return UI::HorizontalAlignment::Stretch; }
     UI::VerticalAlignment VerticalAlignment() const override { return UI::VerticalAlignment::Top; }
 
-    void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
+    void OnRenderSizeChanged(int width, int height) override;
 
     void Draw(DrawingContext & drawingContext) override;
 
@@ -26,5 +26,5 @@ private:
     std::string text;
 };
 
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

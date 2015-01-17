@@ -7,7 +7,7 @@
 namespace Pomdog {
 namespace UI {
 
-enum class PointerEventType: std::uint8_t {
+enum class PointerEventType : std::uint8_t {
     Canceled,
     CaptureLost,
     Entered,
@@ -18,5 +18,5 @@ enum class PointerEventType: std::uint8_t {
     WheelChanged,
 };
 
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

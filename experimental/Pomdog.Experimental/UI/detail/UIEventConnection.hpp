@@ -10,24 +10,28 @@
 namespace Pomdog {
 namespace UI {
 
-class UIView;
+class UIElement;
 
 namespace Detail {
 
 class UIEventConnection final {
-public:
-    typedef UIView ListenerType;
-    typedef SubscribeRequestDispatcher<UIView> DispatcherType;
+private:
+    typedef SubscribeRequestDispatcher<std::weak_ptr<UIElement>> DispatcherType;
 
-    UIEventConnection(std::weak_ptr<DispatcherType> const& weakDispatcherIn, std::weak_ptr<ListenerType> const& elementIn)
+    std::weak_ptr<DispatcherType> weakDispatcher;
+    std::weak_ptr<UIElement> weakListener;
+
+public:
+    UIEventConnection() = default;
+
+    UIEventConnection(std::weak_ptr<DispatcherType> const& weakDispatcherIn,
+        std::weak_ptr<UIElement> const& weakListenerIn)
         : weakDispatcher(weakDispatcherIn)
-        , element(elementIn)
+        , weakListener(weakListenerIn)
     {
         POMDOG_ASSERT(!weakDispatcher.expired());
-        POMDOG_ASSERT(!element.expired());
+        POMDOG_ASSERT(!weakListener.expired());
     }
-
-    UIEventConnection() = default;
 
     ~UIEventConnection()
     {
@@ -42,42 +46,38 @@ public:
         Disconnect();
 
         POMDOG_ASSERT(weakDispatcher.expired());
-        POMDOG_ASSERT(element.expired());
+        POMDOG_ASSERT(weakListener.expired());
         std::swap(weakDispatcher, connection.weakDispatcher);
-        std::swap(element, connection.element);
+        std::swap(weakListener, connection.weakListener);
     }
 
     UIEventConnection & operator=(UIEventConnection && connection)
     {
         Disconnect();
+
         POMDOG_ASSERT(weakDispatcher.expired());
-        POMDOG_ASSERT(element.expired());
+        POMDOG_ASSERT(weakListener.expired());
         std::swap(weakDispatcher, connection.weakDispatcher);
-        std::swap(element, connection.element);
+        std::swap(weakListener, connection.weakListener);
         return *this;
     }
 
 private:
     void Disconnect()
     {
-        if (element.expired()) {
+        if (weakListener.expired()) {
             return;
         }
 
-        if (auto dispatcher = weakDispatcher.lock())
-        {
-            dispatcher->RemoveChild(element);
+        if (auto dispatcher = weakDispatcher.lock()) {
+            dispatcher->RemoveChild(weakListener);
         }
 
         weakDispatcher.reset();
-        element.reset();
+        weakListener.reset();
     }
-
-private:
-    std::weak_ptr<DispatcherType> weakDispatcher;
-    std::weak_ptr<ListenerType> element;
 };
 
-}// namespace Detail
-}// namespace UI
-}// namespace Pomdog
+} // namespace Detail
+} // namespace UI
+} // namespace Pomdog

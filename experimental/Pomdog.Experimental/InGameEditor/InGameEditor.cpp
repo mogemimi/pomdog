@@ -5,7 +5,7 @@
 #include "Pomdog.Experimental/Graphics/SpriteBatch.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteFont.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteFontLoader.hpp"
-#include "Pomdog.Experimental/UI/UIView.hpp"
+#include "Pomdog.Experimental/UI/UIElement.hpp"
 #include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
@@ -81,9 +81,9 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 //-----------------------------------------------------------------------
 InGameEditor::~InGameEditor() = default;
 //-----------------------------------------------------------------------
-void InGameEditor::AddView(std::shared_ptr<UI::UIView> const& view)
+void InGameEditor::AddView(std::shared_ptr<UI::UIElement> const& view)
 {
-    POMDOG_ASSERT(view->Parent().expired());
+    POMDOG_ASSERT(!view->Parent());
     hierarchy.AddChild(view);
 }
 //-----------------------------------------------------------------------
@@ -99,13 +99,28 @@ void InGameEditor::Update()
 //-----------------------------------------------------------------------
 void InGameEditor::DrawGUI(GraphicsContext & graphicsContext)
 {
-    POMDOG_ASSERT(spriteBatch);
-    spriteBatch->Begin(SpriteSortMode::BackToFront);
-    UI::SpriteDrawingContext drawingContext(
-        *spriteBatch, *spriteBatchDistanceField, distanceFieldEffect,
-        constantBuffers, *spriteFont, blankTexture);
-    hierarchy.Draw(drawingContext);
-    spriteBatch->End();
+    auto depthStencilStateOld = graphicsContext.GetDepthStencilState();
+    graphicsContext.SetDepthStencilState(depthStencilState);
+
+    auto blendStateOld = graphicsContext.GetBlendState();
+    graphicsContext.SetBlendState(blendState);
+
+    {
+        POMDOG_ASSERT(spriteBatch);
+        spriteBatch->Begin(SpriteSortMode::BackToFront);
+        UI::SpriteDrawingContext drawingContext(*spriteBatch, *spriteBatchDistanceField,
+            distanceFieldEffect, constantBuffers, *spriteFont, blankTexture);
+        hierarchy.Draw(drawingContext);
+        spriteBatch->End();
+    }
+
+    graphicsContext.SetDepthStencilState(depthStencilStateOld);
+    graphicsContext.SetBlendState(blendStateOld);
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<UI::UIEventDispatcher> InGameEditor::Dispatcher() const
+{
+    return hierarchy.Dispatcher();
 }
 //-----------------------------------------------------------------------
 }// namespace SceneEditor

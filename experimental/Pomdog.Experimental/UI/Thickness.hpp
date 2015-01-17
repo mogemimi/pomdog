@@ -7,13 +7,12 @@
 namespace Pomdog {
 namespace UI {
 
-class Thickness {
-public:
+struct Thickness {
     std::int16_t Top;
     std::int16_t Right;
     std::int16_t Bottom;
     std::int16_t Left;
 };
 
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

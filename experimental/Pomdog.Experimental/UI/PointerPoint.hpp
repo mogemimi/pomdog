@@ -9,7 +9,7 @@
 namespace Pomdog {
 namespace UI {
 
-enum class PointerMouseEvent {
+enum class PointerMouseEvent : std::uint8_t {
     LeftButtonPressed,
     MiddleButtonPressed,
     RightButtonPressed,
@@ -27,5 +27,5 @@ public:
     std::uint32_t Id = 0;
 };
 
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

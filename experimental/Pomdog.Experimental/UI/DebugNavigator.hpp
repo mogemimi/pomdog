@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Control.hpp"
+#include "UIElement.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <deque>
@@ -10,9 +10,10 @@
 namespace Pomdog {
 namespace UI {
 
-class DebugNavigator: public Control {
+class DebugNavigator: public UIElement {
 public:
-    DebugNavigator(std::shared_ptr<GameClock> const& clock);
+    DebugNavigator(std::shared_ptr<UIEventDispatcher> const& dispatcher,
+        std::shared_ptr<GameClock> const& clock);
 
     void Draw(DrawingContext & drawingContext) override;
 
@@ -23,5 +24,5 @@ private:
     std::string frameRateString;
 };
 
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

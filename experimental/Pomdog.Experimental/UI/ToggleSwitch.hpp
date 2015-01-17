@@ -2,15 +2,15 @@
 
 #pragma once
 
-#include "Control.hpp"
+#include "UIElement.hpp"
 #include "detail/UIEventConnection.hpp"
 
 namespace Pomdog {
 namespace UI {
 
-class ToggleSwitch: public Control, public std::enable_shared_from_this<ToggleSwitch> {
+class ToggleSwitch: public UIElement, public std::enable_shared_from_this<ToggleSwitch> {
 public:
-    ToggleSwitch();
+    explicit ToggleSwitch(std::shared_ptr<UIEventDispatcher> const& dispatcher);
 
     bool IsOn() const;
     void IsOn(bool isOn);
@@ -27,13 +27,13 @@ public:
     UI::HorizontalAlignment HorizontalAlignment() const override { return UI::HorizontalAlignment::Stretch; }
     UI::VerticalAlignment VerticalAlignment() const override { return UI::VerticalAlignment::Top; }
 
-    void OnParentChanged() override;
+    void OnEnter() override;
 
     void OnPointerPressed(PointerPoint const& pointerPoint) override;
 
     void OnPointerReleased(PointerPoint const& pointerPoint) override;
 
-    void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
+    void OnRenderSizeChanged(int width, int height) override;
 
     void Draw(DrawingContext & drawingContext) override;
 
@@ -59,5 +59,5 @@ private:
     bool isEnabled;
 };
 
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

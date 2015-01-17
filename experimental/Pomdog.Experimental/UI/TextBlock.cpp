@@ -9,25 +9,29 @@
 namespace Pomdog {
 namespace UI {
 //-----------------------------------------------------------------------
-TextBlock::TextBlock()
-    : UIView(Matrix3x2::Identity, 50, 15)
-    , text()
-{}
+TextBlock::TextBlock(std::shared_ptr<UIEventDispatcher> const& dispatcher)
+    : UIElement(dispatcher)
+{
+    SetSize(50, 15);
+}
 //-----------------------------------------------------------------------
 // MARK: - Properties
 //-----------------------------------------------------------------------
 std::string TextBlock::Text() const
-{ return this->text; }
+{
+    return this->text;
+}
 //-----------------------------------------------------------------------
 void TextBlock::Text(std::string const& textIn)
-{ this->text = textIn; }
+{
+    this->text = textIn;
+}
 //-----------------------------------------------------------------------
 // MARK: - Events
 //-----------------------------------------------------------------------
-void TextBlock::OnRenderSizeChanged(std::uint32_t widthIn, std::uint32_t heightIn)
+void TextBlock::OnRenderSizeChanged(int widthIn, int heightIn)
 {
-    Width(widthIn);
-    Height(heightIn);
+    SetSize(widthIn, heightIn);
 }
 //-----------------------------------------------------------------------
 void TextBlock::Draw(DrawingContext & drawingContext)
@@ -37,5 +41,5 @@ void TextBlock::Draw(DrawingContext & drawingContext)
     drawingContext.DrawString(transform, Color::White, FontWeight::Normal, FontSize::Medium, text);
 }
 //-----------------------------------------------------------------------
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

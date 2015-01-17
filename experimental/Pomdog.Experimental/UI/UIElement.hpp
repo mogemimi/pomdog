@@ -4,70 +4,111 @@
 
 #include "HorizontalAlignment.hpp"
 #include "VerticalAlignment.hpp"
+#include "Pomdog/Application/MouseCursor.hpp"
+#include "Pomdog/Math/Matrix3x2.hpp"
+#include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <cstdint>
+#include <memory>
 
 namespace Pomdog {
 namespace UI {
 
 class DrawingContext;
 class UIEventDispatcher;
+class PointerPoint;
 
 class UIElement {
 public:
+    explicit UIElement(std::shared_ptr<UIEventDispatcher> const& dispatcher);
+
     virtual ~UIElement() = default;
 
-    virtual std::weak_ptr<UIElement const> Parent() const = 0;
+    std::shared_ptr<UIEventDispatcher> Dispatcher() const;
 
-    virtual std::weak_ptr<UIElement> Parent() = 0;
+    void Parent(std::shared_ptr<UIElement> const& parentIn);
+    std::shared_ptr<UIElement const> Parent() const;
+    std::shared_ptr<UIElement> Parent();
 
-    virtual Matrix3x2 Transform() const = 0;
+    void SetSize(int width, int height);
 
-    virtual void Transform(Matrix3x2 const& matrix) = 0;
+    Rectangle Bounds() const;
 
-    virtual void Transform(Matrix3x2 && matrix) = 0;
+    int Width() const;
+    int Height() const;
 
-    virtual void UpdateTransform() = 0;
+    void MarkParentDrawOrderDirty();
 
-    virtual void MarkParentTransformDirty() = 0;
+    int GlobalDrawOrder();
 
-    virtual void DrawOrder(std::int32_t drawOrder) = 0;
+    void DrawOrder(int drawOrder);
+    int DrawOrder() const;
 
-    virtual std::int32_t DrawOrder() const = 0;
+    Matrix3x2 Transform() const;
+    void Transform(Matrix3x2 const& matrix);
+    void Transform(Matrix3x2 && matrix);
 
-    virtual Matrix3x2 GlobalTransform() const = 0;
+    Matrix3x2 GlobalTransform() const;
 
-    virtual void MarkParentDrawOrderDirty() = 0;
+    void MarkParentTransformDirty();
 
-    virtual std::int32_t GlobalDrawOrder() = 0;
+    virtual void UpdateTransform();
 
-    virtual std::uint16_t Width() const = 0;
+    virtual bool SizeToFitContent() const { return false; }
+    virtual HorizontalAlignment HorizontalAlignment() const { return UI::HorizontalAlignment::Stretch; }
+    virtual VerticalAlignment VerticalAlignment() const { return UI::VerticalAlignment::Stretch; }
 
-    virtual std::uint16_t Height() const = 0;
+    virtual void Draw(DrawingContext & drawingContext);
 
-    virtual Rectangle BoundingBox() const = 0;
+    virtual void UpdateAnimation(Duration const& frameDuration);
 
-    virtual bool SizeToFitContent() const = 0;
+    virtual void OnEnter();
 
-    virtual HorizontalAlignment HorizontalAlignment() const = 0;
+    virtual void OnRenderSizeChanged(int width, int height);
 
-    virtual VerticalAlignment VerticalAlignment() const = 0;
+    virtual void OnPointerCanceled(PointerPoint const& pointerPoint);
 
-    virtual std::weak_ptr<UIEventDispatcher> Dispatcher() const = 0;
+    virtual void OnPointerCaptureLost(PointerPoint const& pointerPoint);
 
-//    virtual void Parent(std::weak_ptr<UIElement> const& parent) = 0;
+    virtual void OnPointerEntered(PointerPoint const& pointerPoint);
+
+    virtual void OnPointerExited(PointerPoint const& pointerPoint);
+
+    virtual void OnPointerMoved(PointerPoint const& pointerPoint);
+
+    virtual void OnPointerPressed(PointerPoint const& pointerPoint);
+
+    virtual void OnPointerReleased(PointerPoint const& pointerPoint);
+
+    virtual void OnPointerWheelChanged(PointerPoint const& pointerPoint);
+
+    void SetCursor(MouseCursor cursor);
+
+    void ResetCursor();
+
+    Optional<MouseCursor> CurrentCursor() const;
+
+//    void Hide();
+//    void Show();
 //    virtual Thickness Padding() const = 0;
 //    virtual Vector2 Origin() const = 0;
 //    virtual Thickness Margin() const = 0;
 
-    virtual void OnParentChanged() = 0;
-
-    virtual void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) = 0;
-
-    virtual void Draw(DrawingContext & drawingContext) = 0;
-
-    virtual void UpdateAnimation(Duration const& frameDuration) = 0;
+private:
+    Matrix3x2 transform;
+    //Vector2 origin;
+    Matrix3x2 parentTransform;
+    std::weak_ptr<UIEventDispatcher> weakDispatcher;
+    std::weak_ptr<UIElement> weakParent;
+    std::int32_t parentDrawOrder;
+    std::int32_t localDrawOrder;
+    std::int16_t height;
+    std::int16_t width;
+    Optional<MouseCursor> cursor;
+    bool isParentDrawOrderDirty;
+    bool isParentTransformDirty;
 };
 
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

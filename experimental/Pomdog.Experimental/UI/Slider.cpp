@@ -9,12 +9,14 @@
 namespace Pomdog {
 namespace UI {
 //-----------------------------------------------------------------------
-Slider::Slider(double minimumIn, double maximumIn)
-    : Slider(SliderColorScheme{}, minimumIn, maximumIn)
+Slider::Slider(std::shared_ptr<UIEventDispatcher> const& dispatcher,
+    double minimumIn, double maximumIn)
+    : Slider(dispatcher, SliderColorScheme{}, minimumIn, maximumIn)
 {}
 //-----------------------------------------------------------------------
-Slider::Slider(SliderColorScheme const& colorSchemeIn, double minimumIn, double maximumIn)
-    : Control(Matrix3x2::Identity, 120, 12)
+Slider::Slider(std::shared_ptr<UIEventDispatcher> const& dispatcher,
+    SliderColorScheme const& colorSchemeIn, double minimumIn, double maximumIn)
+    : UIElement(dispatcher)
     , minimum(minimumIn)
     , maximum(maximumIn)
     , value(minimumIn)
@@ -29,13 +31,20 @@ Slider::Slider(SliderColorScheme const& colorSchemeIn, double minimumIn, double 
     POMDOG_ASSERT(value >= minimum);
     POMDOG_ASSERT(value <= maximum);
 
+    SetSize(120, 12);
     SetCursor(MouseCursor::PointingHand);
 }
 //-----------------------------------------------------------------------
 // MARK: - Properties
 //-----------------------------------------------------------------------
 void Slider::Value(double valueIn)
-{ this->value = valueIn; }
+{
+    if (value == valueIn) {
+        return;
+    }
+    this->value = valueIn;
+    ValueChanged(this->value);
+}
 //-----------------------------------------------------------------------
 double Slider::Value() const
 { return value; }
@@ -62,17 +71,10 @@ void Slider::IsEnabled(bool isEnabledIn)
 //-----------------------------------------------------------------------
 // MARK: - Events
 //-----------------------------------------------------------------------
-void Slider::OnParentChanged()
+void Slider::OnEnter()
 {
-    auto parent = Parent().lock();
-
-    POMDOG_ASSERT(parent);
-    POMDOG_ASSERT(!parent->Dispatcher().expired());
-
-    if (auto dispatcher = parent->Dispatcher().lock())
-    {
-        connection = dispatcher->Connect(shared_from_this());
-    }
+    auto dispatcher = Dispatcher();
+    connection = dispatcher->Connect(shared_from_this());
 }
 //-----------------------------------------------------------------------
 void Slider::OnPointerEntered(PointerPoint const& pointerPoint)
@@ -117,7 +119,7 @@ void Slider::OnPointerPressed(PointerPoint const& pointerPoint)
 
     auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
     auto amount = (pointInView.X - thumbOffset / 2) / (Width() - 2 * thumbOffset);
-    value = MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum);
+    Value(MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
     isDragging = true;
 }
 //-----------------------------------------------------------------------
@@ -138,7 +140,7 @@ void Slider::OnPointerMoved(PointerPoint const& pointerPoint)
 
     auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
     auto amount = (pointInView.X - thumbOffset / 2) / (Width() - 2 * thumbOffset);
-    value = MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum);
+    Value(MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
 }
 //-----------------------------------------------------------------------
 void Slider::OnPointerReleased(PointerPoint const& pointerPoint)
@@ -163,10 +165,9 @@ void Slider::UpdateAnimation(Duration const& frameDuration)
     }
 }
 //-----------------------------------------------------------------------
-void Slider::OnRenderSizeChanged(std::uint32_t widthIn, std::uint32_t heightIn)
+void Slider::OnRenderSizeChanged(int widthIn, int heightIn)
 {
-    Width(widthIn);
-    Height(heightIn);
+    SetSize(widthIn, heightIn);
 }
 //-----------------------------------------------------------------------
 void Slider::Draw(DrawingContext & drawingContext)
@@ -182,7 +183,7 @@ void Slider::Draw(DrawingContext & drawingContext)
     auto transform = Transform() * drawingContext.Top();
 
     drawingContext.DrawString(transform * Matrix3x2::CreateTranslation(Vector2(Width() + 5, -2.5f)),
-        Color::White, FontWeight::Normal, FontSize::Medium, StringFormat("%5.3lf", value));
+        Color::White, FontWeight::Normal, FontSize::Medium, StringHelper::Format("%5.3lf", value));
     drawingContext.DrawRectangle(transform, trackColor, Rectangle(0, 0, Width(), Height()));
     drawingContext.DrawRectangle(transform, fillColor, Rectangle(0, 0, sliderWidth2, Height()));
 
@@ -205,5 +206,5 @@ void Slider::Draw(DrawingContext & drawingContext)
     }
 }
 //-----------------------------------------------------------------------
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

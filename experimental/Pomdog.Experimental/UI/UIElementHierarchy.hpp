@@ -14,7 +14,7 @@ namespace UI {
 
 class DrawingContext;
 class GameEditorView;
-class UIView;
+class UIElement;
 
 class UIElementHierarchy {
 public:
@@ -22,11 +22,13 @@ public:
 
     void Touch(MouseState const& mouseState);
 
+    void UpdateLayout();
+
     void UpdateAnimation(Duration const& frameDuration);
 
-    void AddChild(std::shared_ptr<UIView> const& node);
+    void AddChild(std::shared_ptr<UIElement> const& child);
 
-    void AddChild(std::shared_ptr<UIView> && node);
+    void AddChild(std::shared_ptr<UIElement> && child);
 
     void Draw(DrawingContext & drawingContext);
 
@@ -35,9 +37,9 @@ public:
     std::shared_ptr<UIEventDispatcher> Dispatcher() const;
 
 private:
+    std::vector<std::shared_ptr<UIElement>> children;
     std::shared_ptr<UIEventDispatcher> dispatcher;
-    std::shared_ptr<GameEditorView> root;
 };
 
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

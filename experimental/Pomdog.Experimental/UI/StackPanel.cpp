@@ -9,42 +9,21 @@
 namespace Pomdog {
 namespace UI {
 //-----------------------------------------------------------------------
-StackPanel::StackPanel(std::uint32_t widthIn, std::uint32_t heightIn)
-    : Panel(Matrix3x2::Identity, widthIn, heightIn)
+StackPanel::StackPanel(
+    std::shared_ptr<UIEventDispatcher> const& dispatcher,
+    std::uint32_t widthIn,
+    std::uint32_t heightIn)
+    : UIElement(dispatcher)
     , padding{12, 8, 10, 8}
     , barHeight(18)
 {
+    SetSize(widthIn, heightIn);
 }
 //-----------------------------------------------------------------------
-void StackPanel::OnParentChanged()
+void StackPanel::OnEnter()
 {
-    auto parent = Parent().lock();
-
-    POMDOG_ASSERT(parent);
-    POMDOG_ASSERT(!parent->Dispatcher().expired());
-
-    this->weakDispatcher = parent->Dispatcher();
-
-    if (auto dispatcher = weakDispatcher.lock())
-    {
-        connection = dispatcher->Connect(shared_from_this());
-    }
-}
-//-----------------------------------------------------------------------
-void StackPanel::OnPointerCanceled(PointerPoint const& pointerPoint)
-{
-}
-//-----------------------------------------------------------------------
-void StackPanel::OnPointerCaptureLost(PointerPoint const& pointerPoint)
-{
-}
-//-----------------------------------------------------------------------
-void StackPanel::OnPointerEntered(PointerPoint const& pointerPoint)
-{
-}
-//-----------------------------------------------------------------------
-void StackPanel::OnPointerExited(PointerPoint const& pointerPoint)
-{
+    auto dispatcher = Dispatcher();
+    connection = dispatcher->Connect(shared_from_this());
 }
 //-----------------------------------------------------------------------
 void StackPanel::OnPointerPressed(PointerPoint const& pointerPoint)
@@ -97,15 +76,14 @@ void StackPanel::OnPointerReleased(PointerPoint const& pointerPoint)
     startTouchPoint = Pomdog::NullOpt;
 }
 //-----------------------------------------------------------------------
-void StackPanel::OnRenderSizeChanged(std::uint32_t widthIn, std::uint32_t heightIn)
+void StackPanel::OnRenderSizeChanged(int widthIn, int heightIn)
 {
-    Width(widthIn);
-    Height(heightIn);
+    SetSize(widthIn, heightIn);
 }
 //-----------------------------------------------------------------------
-void StackPanel::AddChild(std::shared_ptr<UIView> const& element)
+void StackPanel::AddChild(std::shared_ptr<UIElement> const& element)
 {
-    POMDOG_ASSERT(element->Parent().expired());
+    POMDOG_ASSERT(!element->Parent());
 
     Vector2 position(padding.Left, padding.Top + barHeight);
 
@@ -123,13 +101,13 @@ void StackPanel::AddChild(std::shared_ptr<UIView> const& element)
 
     POMDOG_ASSERT(shared_from_this());
     element->Parent(shared_from_this());
-    element->OnParentChanged();
+    element->OnEnter();
 
     element->Transform(Matrix3x2::CreateTranslation(position));
     switch (element->HorizontalAlignment()) {
     case HorizontalAlignment::Stretch: {
         auto childWidth = Width() - (padding.Left + padding.Right);
-        element->Width(childWidth);
+        element->SetSize(childWidth, element->Height());
         break;
     }
     case HorizontalAlignment::Left:
@@ -141,7 +119,7 @@ void StackPanel::AddChild(std::shared_ptr<UIView> const& element)
 
     if (position.Y > Height())
     {
-        Height(position.Y);
+        SetSize(Width(), position.Y);
     }
 }
 //-----------------------------------------------------------------------
@@ -179,7 +157,8 @@ void StackPanel::UpdateAnimation(Duration const& frameDuration)
 //-----------------------------------------------------------------------
 void StackPanel::UpdateTransform()
 {
-    UIView::UpdateTransform();
+    UIElement::UpdateTransform();
+
     for (auto & child: children)
     {
         POMDOG_ASSERT(child);
@@ -187,5 +166,5 @@ void StackPanel::UpdateTransform()
     }
 }
 //-----------------------------------------------------------------------
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog

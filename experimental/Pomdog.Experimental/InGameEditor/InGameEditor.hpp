@@ -27,7 +27,9 @@ public:
 
     void DrawGUI(GraphicsContext & graphicsContext);
 
-    void AddView(std::shared_ptr<UI::UIView> const& element);
+    void AddView(std::shared_ptr<UI::UIElement> const& element);
+
+    std::shared_ptr<UI::UIEventDispatcher> Dispatcher() const;
 
 private:
     UI::UIElementHierarchy hierarchy;
@@ -36,6 +38,8 @@ private:
 
     std::shared_ptr<GameHost> gameHost;
 
+    std::shared_ptr<DepthStencilState> depthStencilState;
+    std::shared_ptr<BlendState> blendState;
     std::unique_ptr<SpriteBatch> spriteBatch;
     std::shared_ptr<SpriteFont> spriteFont;
     std::unique_ptr<SpriteBatch> spriteBatchDistanceField;

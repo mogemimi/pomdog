@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Panel.hpp"
+#include "UIElement.hpp"
 #include "detail/UIEventConnection.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
 #include "Pomdog/Utility/Optional.hpp"
@@ -11,19 +11,21 @@
 namespace Pomdog {
 namespace UI {
 
-class ScenePanel: public Panel, public std::enable_shared_from_this<ScenePanel> {
+class ScenePanel: public UIElement, public std::enable_shared_from_this<ScenePanel> {
 public:
-    GameObject cameraObject;
-
-public:
-    ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn);
+    ScenePanel(std::shared_ptr<UIEventDispatcher> const& dispatcher,
+        int widthIn, int heightIn);
 
     bool IsEnabled() const;
     void IsEnabled(bool isEnabled);
 
+    bool IsFocused() const;
+
+    double GetScrollWheel() const;
+
     bool SizeToFitContent() const override { return true; }
 
-    void OnParentChanged() override;
+    void OnEnter() override;
 
     void OnPointerWheelChanged(PointerPoint const& pointerPoint) override;
 
@@ -37,7 +39,7 @@ public:
 
     void OnPointerReleased(PointerPoint const& pointerPoint) override;
 
-    void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
+    void OnRenderSizeChanged(int width, int height) override;
 
     void Draw(DrawingContext & drawingContext) override;
 
@@ -65,6 +67,7 @@ private:
     Duration timer;
     float normalizedScrollDirection;
     float scrollAcceleration;
+    double cameraZoom;
 
     bool isFocused;
     bool isEnabled;
@@ -101,5 +104,5 @@ private:
     ScrollWheelSampler scrollWheelSampler;
 };
 
-}// namespace UI
-}// namespace Pomdog
+} // namespace UI
+} // namespace Pomdog
