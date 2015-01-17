@@ -5,6 +5,7 @@
 //
 
 #include "BeamRenderable.hpp"
+#include "Pomdog/Math/Matrix3x2.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------

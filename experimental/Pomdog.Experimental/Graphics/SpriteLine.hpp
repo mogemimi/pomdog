@@ -12,7 +12,13 @@
 #endif
 
 #include "SpriteBatch.hpp"
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog/Math/Matrix3x2.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Graphics/Texture2D.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include <cmath>
 
 namespace Pomdog {
 

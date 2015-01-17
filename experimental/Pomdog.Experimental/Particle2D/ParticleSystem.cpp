@@ -6,6 +6,10 @@
 
 #include "ParticleSystem.hpp"
 #include "ParticleClip.hpp"
+#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Matrix4x4.hpp"
+#include "Pomdog/Math/Vector3.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace {

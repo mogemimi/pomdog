@@ -12,8 +12,11 @@
 #endif
 
 #include "Renderable.hpp"
-#include <Pomdog.Experimental/Particle2D/BeamSystem.hpp>
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog.Experimental/Particle2D/BeamSystem.hpp"
+#include "Pomdog/Application/GameClock.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/Texture2D.hpp"
 #include <memory>
 
 namespace Pomdog {

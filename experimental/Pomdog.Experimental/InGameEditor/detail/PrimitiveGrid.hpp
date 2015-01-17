@@ -11,11 +11,9 @@
 #pragma once
 #endif
 
+#include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog/Math/Color.hpp"
 #include <vector>
-#include <Pomdog/Math/Vector2.hpp>
-#include <Pomdog/Math/Matrix4x4.hpp>
-#include <Pomdog/Math/Color.hpp>
-#include <Pomdog/Pomdog.hpp>
 
 namespace Pomdog {
 

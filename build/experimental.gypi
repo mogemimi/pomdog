@@ -105,6 +105,7 @@
       '<@(pomdog_expr_dir)/MagicaVoxel/detail/VoxChunkHeader.hpp',
 
       '<@(pomdog_expr_dir)/Particle2D/Beam.hpp',
+      '<@(pomdog_expr_dir)/Particle2D/BeamBranching.hpp',
       '<@(pomdog_expr_dir)/Particle2D/BeamEmitter.hpp',
       '<@(pomdog_expr_dir)/Particle2D/BeamSystem.cpp',
       '<@(pomdog_expr_dir)/Particle2D/BeamSystem.hpp',

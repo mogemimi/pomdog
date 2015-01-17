@@ -12,9 +12,11 @@
 #endif
 
 #include "Beam.hpp"
+#include "BeamBranching.hpp"
 #include "BeamEmitter.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Application/DurationSeconds.hpp"
+#include "Pomdog/Math/Vector2.hpp"
 #include <cstdint>
 #include <vector>
 #include <random>

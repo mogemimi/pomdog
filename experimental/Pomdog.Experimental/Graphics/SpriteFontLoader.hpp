@@ -12,7 +12,7 @@
 #endif
 
 #include "SpriteFont.hpp"
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Content/AssetManager.hpp"
 #include <memory>
 
 namespace Pomdog {

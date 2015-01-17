@@ -7,6 +7,19 @@
 #include "SpriteBatchRenderer.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
+#include "Pomdog/Graphics/BufferUsage.hpp"
+#include "Pomdog/Graphics/ConstantBufferBinding.hpp"
+#include "Pomdog/Graphics/CustomVertex.hpp"
+#include "Pomdog/Graphics/EffectParameter.hpp"
+#include "Pomdog/Graphics/EffectPass.hpp"
+#include "Pomdog/Graphics/IndexBuffer.hpp"
+#include "Pomdog/Graphics/IndexElementSize.hpp"
+#include "Pomdog/Graphics/InputLayout.hpp"
+#include "Pomdog/Graphics/PrimitiveTopology.hpp"
+#include "Pomdog/Graphics/VertexBuffer.hpp"
+#include "Pomdog/Graphics/VertexBufferBinding.hpp"
+#include "Pomdog/Graphics/Viewport.hpp"
+#include "Pomdog/Math/Vector4.hpp"
 
 namespace Pomdog {
 namespace Details {

@@ -11,8 +11,13 @@
 #pragma once
 #endif
 
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Matrix3x2.hpp"
+#include "Pomdog/Math/Matrix4x4.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Math/Vector2.hpp"
 #include <cstdint>
+#include <string>
 
 namespace Pomdog {
 namespace UI {

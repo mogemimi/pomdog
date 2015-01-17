@@ -11,9 +11,7 @@
 #pragma once
 #endif
 
-#include <Pomdog/Pomdog.hpp>
 #include <cstdint>
-#include <memory>
 
 namespace Pomdog {
 

@@ -15,7 +15,7 @@
 #include "ParticleEmitter.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Application/DurationSeconds.hpp"
 #include <cstdint>
 #include <vector>
 #include <random>

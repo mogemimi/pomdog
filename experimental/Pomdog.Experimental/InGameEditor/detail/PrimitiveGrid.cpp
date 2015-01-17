@@ -6,6 +6,7 @@
 
 #include "PrimitiveGrid.hpp"
 #include "Pomdog.Experimental/Graphics/LineBatch.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace SceneEditor {

@@ -6,6 +6,8 @@
 
 #include "SpriteFont.hpp"
 #include "SpriteBatch.hpp"
+#include "Pomdog/Math/Matrix4x4.hpp"
+#include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <unordered_map>
 #include <codecvt>

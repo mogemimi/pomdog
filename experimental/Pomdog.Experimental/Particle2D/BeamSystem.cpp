@@ -5,6 +5,7 @@
 //
 
 #include "BeamSystem.hpp"
+#include "Pomdog/Math/MathHelper.hpp"
 
 namespace Pomdog {
 namespace {

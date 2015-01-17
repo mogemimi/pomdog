@@ -12,7 +12,7 @@
 #endif
 
 #include "PointerEventType.hpp"
-#include <Pomdog/Utility/Optional.hpp>
+#include "Pomdog/Utility/Optional.hpp"
 #include <cstdint>
 
 namespace Pomdog {

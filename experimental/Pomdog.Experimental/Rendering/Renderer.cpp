@@ -8,6 +8,7 @@
 #include "RenderQueue.hpp"
 #include "RenderCommand.hpp"
 #include "Pomdog.Experimental/Rendering/RenderCommandProcessor.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <unordered_map>
 #include <typeindex>
 

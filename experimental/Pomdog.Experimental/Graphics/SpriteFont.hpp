@@ -11,10 +11,10 @@
 #pragma once
 #endif
 
-#include <Pomdog/Math/Color.hpp>
-#include <Pomdog/Math/Rectangle.hpp>
-#include <Pomdog/Math/Vector2.hpp>
-#include <Pomdog/Graphics/Texture2D.hpp>
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog/Graphics/Texture2D.hpp"
 #include <cstdint>
 #include <memory>
 #include <vector>

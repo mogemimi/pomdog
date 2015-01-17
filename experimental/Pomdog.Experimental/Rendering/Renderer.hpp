@@ -11,7 +11,9 @@
 #pragma once
 #endif
 
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Math/Matrix4x4.hpp"
+#include "Pomdog/Graphics/GraphicsContext.hpp"
+#include <cstdint>
 #include <typeindex>
 #include <memory>
 

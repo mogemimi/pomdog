@@ -14,7 +14,9 @@
 #include "detail/ParticleEmitterShape.hpp"
 #include "detail/ParticleParameter.hpp"
 #include "ParticleEmitter.hpp"
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Application/DurationSeconds.hpp"
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Radian.hpp"
 #include <cstdint>
 #include <memory>
 

@@ -5,6 +5,7 @@
 //
 
 #include "SpriteFontLoader.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 #include <fstream>
 #include <algorithm>

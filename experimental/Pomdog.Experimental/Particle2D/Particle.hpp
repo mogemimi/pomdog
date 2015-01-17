@@ -11,7 +11,9 @@
 #pragma once
 #endif
 
-#include <Pomdog/Pomdog.hpp>
+#include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Radian.hpp"
 #include <cstdint>
 
 namespace Pomdog {
