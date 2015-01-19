@@ -23,8 +23,8 @@ namespace Pomdog {
 namespace {
 
 // Built-in shaders
-#include "Shaders/GLSL.Embedded/ScreenQuad_VS.inc.h"
-#include "Shaders/GLSL.Embedded/Vignette_PS.inc.h"
+#include "Shaders/GLSL.Embedded/ScreenQuad_VS.inc.hpp"
+#include "Shaders/GLSL.Embedded/Vignette_PS.inc.hpp"
 
 struct BuiltinEffectVignetteTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)

@@ -23,8 +23,8 @@ namespace Pomdog {
 namespace {
 
 // Built-in shaders
-#include "Shaders/GLSL.Embedded/FXAA_VS.inc.h"
-#include "Shaders/GLSL.Embedded/FXAA_PS.inc.h"
+#include "Shaders/GLSL.Embedded/FXAA_VS.inc.hpp"
+#include "Shaders/GLSL.Embedded/FXAA_PS.inc.hpp"
 
 struct BuiltinEffectFxaaTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)

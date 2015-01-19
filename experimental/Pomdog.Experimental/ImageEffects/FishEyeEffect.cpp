@@ -23,8 +23,8 @@ namespace Pomdog {
 namespace {
 
 // Built-in shaders
-#include "Shaders/GLSL.Embedded/ScreenQuad_VS.inc.h"
-#include "Shaders/GLSL.Embedded/FishEye_PS.inc.h"
+#include "Shaders/GLSL.Embedded/ScreenQuad_VS.inc.hpp"
+#include "Shaders/GLSL.Embedded/FishEye_PS.inc.hpp"
 
 struct BuiltinEffectFishEyeTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)

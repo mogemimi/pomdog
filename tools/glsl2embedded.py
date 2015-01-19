@@ -133,7 +133,7 @@ def Run():
 
     source = ReadGLSLSource(path)
     embedded = CreateEmbeddedCode(identifier, ConvertGLSL2EmbeddedCode(source))
-    dest = directory + ".Embedded/" + identifier + '.inc.h'
+    dest = directory + ".Embedded/" + identifier + '.inc.hpp'
     SaveEmbeddedCode(dest, embedded)
 
 Run()

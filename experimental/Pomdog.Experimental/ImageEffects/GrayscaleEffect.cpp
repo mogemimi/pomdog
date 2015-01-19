@@ -23,8 +23,8 @@ namespace Pomdog {
 namespace {
 
 // Built-in shaders
-#include "Shaders/GLSL.Embedded/ScreenQuad_VS.inc.h"
-#include "Shaders/GLSL.Embedded/Grayscale_PS.inc.h"
+#include "Shaders/GLSL.Embedded/ScreenQuad_VS.inc.hpp"
+#include "Shaders/GLSL.Embedded/Grayscale_PS.inc.hpp"
 
 struct BuiltinEffectGrayscaleTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
