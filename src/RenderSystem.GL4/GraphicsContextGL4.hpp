@@ -44,7 +44,7 @@ class GraphicsContextGL4 final: public NativeGraphicsContext {
 public:
 	GraphicsContextGL4() = delete;
 
-	GraphicsContextGL4(std::shared_ptr<OpenGLContext> openGLContext, std::weak_ptr<GameWindow> window);
+	GraphicsContextGL4(std::shared_ptr<OpenGLContext> const& openGLContext, std::weak_ptr<GameWindow> window);
 	
 	~GraphicsContextGL4();
 	

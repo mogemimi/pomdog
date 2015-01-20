@@ -148,25 +148,25 @@ struct TypesafeHelperGL4::OpenGLGetTraits<FrameBufferGL4> {
 #pragma mark - GraphicsContextGL4
 #endif
 //-----------------------------------------------------------------------
-GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> openGLContext, std::weak_ptr<GameWindow> window)
-	: nativeContext(std::move(openGLContext))
-	, gameWindow(std::move(window))
+GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> const& openGLContextIn, std::weak_ptr<GameWindow> windowIn)
+	: nativeContext(openGLContextIn)
+	, gameWindow(std::move(windowIn))
 {
 	auto version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
-	Log::Stream(LogLevel::Internal) << "OpenGL Version: " << version << "\n";
-	
+	Log::Stream(LogLevel::Internal) << "OpenGL Version: " << version;
+
 	auto capabilities = GetCapabilities();
 	if (capabilities.SamplerSlotCount > 0)
 	{
 		textures.resize(capabilities.SamplerSlotCount);
 	}
-	
+
 	glFrontFace(GL_CW);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glFrontFace", __FILE__, __LINE__);
 	#endif
-	
+
 	frameBuffer = CreateFrameBuffer();
 }
 //-----------------------------------------------------------------------
@@ -232,25 +232,25 @@ void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::uint32_t
 	POMDOG_ASSERT(inputLayout);
 	POMDOG_ASSERT(!vertexBuffers.empty());
 	inputLayout->Apply(vertexBuffers);
-	
+
 	// Use shader program:
 	POMDOG_ASSERT(effectPass);
 	effectPass->ApplyShaders();
-	
+
 	// Apply constant layout:
 	POMDOG_ASSERT(constantLayout);
 	constantLayout->Apply();
-	
+
 	// Draw:
 	POMDOG_ASSERT(!vertexBuffers.empty());
 	POMDOG_ASSERT(vertexBuffers.front());
 	POMDOG_ASSERT(vertexCount <= vertexBuffers.front()->VertexCount());
-	
+
 	glDrawArrays(
 		ToPrimitiveTopology(primitiveTopology),
 		0,
 		vertexCount);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDrawArrays", __FILE__, __LINE__);
 	#endif
@@ -263,11 +263,11 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 	POMDOG_ASSERT(inputLayout);
 	POMDOG_ASSERT(!vertexBuffers.empty());
 	inputLayout->Apply(vertexBuffers);
-	
+
 	// Use shader program:
 	POMDOG_ASSERT(effectPass);
 	effectPass->ApplyShaders();
-	
+
 	// Apply constant layout:
 	POMDOG_ASSERT(constantLayout);
 	constantLayout->Apply();
@@ -287,7 +287,7 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 		indexCount,
 		ToIndexElementType(indexBuffer->ElementSize()),
 		nullptr);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDrawElements", __FILE__, __LINE__);
 	#endif
@@ -299,11 +299,11 @@ void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std:
 	POMDOG_ASSERT(inputLayout);
 	POMDOG_ASSERT(!vertexBuffers.empty());
 	inputLayout->Apply(vertexBuffers);
-	
+
 	// Use shader program:
 	POMDOG_ASSERT(effectPass);
 	effectPass->ApplyShaders();
-	
+
 	// Apply constant layout:
 	POMDOG_ASSERT(constantLayout);
 	constantLayout->Apply();
@@ -319,7 +319,7 @@ void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std:
 		0,
 		vertexCount,
 		instanceCount);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDrawArraysInstanced", __FILE__, __LINE__);
 	#endif
@@ -332,11 +332,11 @@ void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopolog
 	POMDOG_ASSERT(inputLayout);
 	POMDOG_ASSERT(!vertexBuffers.empty());
 	inputLayout->Apply(vertexBuffers);
-	
+
 	// Use shader program:
 	POMDOG_ASSERT(effectPass);
 	effectPass->ApplyShaders();
-	
+
 	// Apply constant layout:
 	POMDOG_ASSERT(constantLayout);
 	constantLayout->Apply();
@@ -360,7 +360,7 @@ void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopolog
 		ToIndexElementType(indexBuffer->ElementSize()),
 		nullptr,
 		instanceCount);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDrawElementsInstanced", __FILE__, __LINE__);
 	#endif
@@ -373,7 +373,7 @@ GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const
 	GLint maxTextureUnits = 0;
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
 	POMDOG_ASSERT(maxTextureUnits > 0);
-	
+
 	capabilities.SamplerSlotCount = maxTextureUnits;
 	return capabilities;
 }
@@ -390,7 +390,7 @@ void GraphicsContextGL4::SetViewport(Viewport const& viewport)
 			viewportY = window->ClientBounds().Height - (viewport.TopLeftY() + viewport.Height());
 		}
 	}
-	
+
 	glViewport(viewport.TopLeftX(), viewportY, viewport.Width(), viewport.Height());
 
 	#ifdef DEBUG
@@ -406,8 +406,9 @@ void GraphicsContextGL4::SetViewport(Viewport const& viewport)
 	POMDOG_ASSERT(!std::isnan(viewport.MinDepth));
 	POMDOG_ASSERT(!std::isnan(viewport.MaxDepth));
 
+	POMDOG_ASSERT_MESSAGE(glDepthRangef != nullptr, "glDepthRangef() not found");
 	glDepthRangef(viewport.MinDepth, viewport.MaxDepth);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDepthRangef", __FILE__, __LINE__);
 	#endif

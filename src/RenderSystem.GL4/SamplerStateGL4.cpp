@@ -41,11 +41,11 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 		glGenSamplers(1, sampler.Data());
 		return std::move(sampler);
 	})();
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glGenSamplers", __FILE__, __LINE__);
 	#endif
-		
+
 	glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_S, ToTextureAddressModeGL4(description.AddressU).value);
 	glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_T, ToTextureAddressModeGL4(description.AddressV).value);
 	glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_R, ToTextureAddressModeGL4(description.AddressW).value);
@@ -147,7 +147,7 @@ void SamplerStateGL4::Apply(NativeGraphicsContext &, std::uint32_t index)
 	// Bind sampler
 	POMDOG_ASSERT(samplerObject);
 	glBindSampler(static_cast<GLuint>(index), samplerObject->value);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindSampler", __FILE__, __LINE__);
 	#endif

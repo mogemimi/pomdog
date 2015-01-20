@@ -93,20 +93,19 @@ void BlendStateGL4::Apply(NativeGraphicsContext &)
 		colorSource.value,
 		colorDestination.value,
 		alphaSource.value,
-		alphaDestination.value
-	);
-	
+		alphaDestination.value);
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBlendFuncSeparate", __FILE__, __LINE__);
 	#endif
 
 	auto colorVector = blendColor.ToVector4();
 	glBlendColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBlendColor", __FILE__, __LINE__);
 	#endif
-	
+
 	///@todo Not implemented alpha to coverage.
 	//{
 	//	// Alpha to coverage
