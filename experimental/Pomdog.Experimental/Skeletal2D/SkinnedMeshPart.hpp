@@ -19,13 +19,13 @@ class SkinnedMeshPart {
 public:
 	///@brief 頂点の数
 	std::uint16_t VertexCount;
-	
+
 	///@brief 頂点配列の先頭からのオフセット
 	std::uint16_t VertexOffset;
-	
+
 	///@brief 描画されるプリミティブの数
 	std::uint16_t PrimitiveCount;
-	
+
 	///@brief インデックス配列内の開始インデックス
 	std::uint16_t StartIndex;
 };

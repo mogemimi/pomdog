@@ -39,7 +39,7 @@ template <typename T>
 T CreateException(std::string const& description, std::string const& source, char const* filename, int line)
 {
 	static_assert(std::is_base_of<std::exception, T>::value, "T is base of std::exception");
-		
+
 	// examples:
 	// > File "filename", line 4 in source
 	// > Runtime error exception: description
@@ -48,10 +48,10 @@ T CreateException(std::string const& description, std::string const& source, cha
 		<< " in " << (source.empty()? "?": source) << std::endl
 		<< ExceptionInternal::ToString<T>()
 		<< ": " << description;
-	
+
 	return T(ss.str());
 }
-	
+
 }// namespace ExceptionInternal
 }// namespace Details
 

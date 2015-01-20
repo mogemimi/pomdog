@@ -24,20 +24,20 @@ public:
 	GameClock();
 	GameClock(GameClock const&) = delete;
 	GameClock(GameClock &&) = default;
-	
+
 	GameClock & operator=(GameClock const&) = delete;
 	GameClock & operator=(GameClock &&) = default;
 
 	~GameClock();
-	
+
 	///@~Japanese
 	/// @brief フレーム毎に 1 度だけ呼び出し、フレーム時間の更新やデルタ時間の予測を行います。
 	void Tick();
-	
+
 	///@~Japanese
 	/// @brief アプリケーションが起動してから現在のフレームまでの経過時間（秒）を取得します。
 	DurationSeconds TotalGameTime() const;
-	
+
 	///@~Japanese
 	/// @brief 現在のフレーム番号を取得します。
 	std::uint32_t FrameNumber() const;

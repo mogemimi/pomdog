@@ -93,7 +93,7 @@ public:
 	Details::Skeletal2D::CompressedFloat<std::int16_t, 7> TranslateX;
 	Details::Skeletal2D::CompressedFloat<std::int16_t, 7> TranslateY;
 	KeyframeCurve Curve;
-	
+
 	static_assert(decltype(TranslateX)::Max() > 1024.0f, "");
 	static_assert(decltype(TranslateX)::Min() < -1024.0f, "");
 	static_assert(decltype(TranslateY)::Max() > 1024.0f, "");
@@ -105,7 +105,7 @@ public:
 	AnimationTimeInterval Time;
 	Details::Skeletal2D::CompressedFloat<std::int16_t, 4500> Rotation;
 	KeyframeCurve Curve;
-	
+
 	static_assert(decltype(Rotation)::Max() > 3.1416f*2.0f, "");
 	static_assert(decltype(Rotation)::Min() < -3.1416f*2.0f, "");
 };
@@ -115,7 +115,7 @@ public:
 	AnimationTimeInterval Time;
 	Details::Skeletal2D::CompressedFloat<std::int16_t, 1500> Scale;
 	KeyframeCurve Curve;
-	
+
 	static_assert(decltype(Scale)::Max() > 20.0f, "");
 	static_assert(decltype(Scale)::Min() < -20.0f, "");
 };

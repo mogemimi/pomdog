@@ -23,11 +23,11 @@ public:
 	Impl();
 
 	void Tick();
-	
+
 	void Restart();
 
 	DurationSeconds TotalGameTime() const;
-	
+
 	std::uint32_t FrameNumber() const;
 
 	DurationSeconds FrameDuration() const;
@@ -46,7 +46,7 @@ public:
 	TimePointSeconds sourceStartTime;
 	TimePointSeconds sourceLastTime;
 	std::deque<DurationSeconds> frameDurationHistory;
-	
+
 	DurationSeconds predictedFrameTime;
 	DurationSeconds accumulatedCurrentTime;
 	std::uint32_t frameNumber;
@@ -107,9 +107,9 @@ void GameClock::Impl::Tick()
 {
 	auto exactLastFrameDuration = GetExactLastFrameDuration();
 	AddToFrameHistory(exactLastFrameDuration);
-	
+
 	predictedFrameTime = PredictFrameDuration();
-	
+
 	accumulatedCurrentTime += predictedFrameTime;
 	++frameNumber;
 }

@@ -18,7 +18,7 @@ EditorBackground::EditorBackground(std::shared_ptr<GameHost> const& gameHost)
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
 	auto window = gameHost->Window();
-	
+
 	{
 		depthStencilState = DepthStencilState::CreateNone(graphicsDevice);
 		blendState = BlendState::CreateNonPremultiplied(graphicsDevice);

@@ -31,33 +31,33 @@ public:
 	constexpr Optional()
 		: valid(false)
 	{}
-	
+
 	constexpr Optional(OptionalType const&)
 		: valid(false)
 	{}
 
 	Optional(Optional const&) = default;
 	Optional(Optional &&) = default;
-	
+
 	constexpr Optional(T const& v)
 		: data(v)
 		, valid(true)
 	{}
-	
+
 	constexpr Optional(T && v)
 		: data(std::move(v))
 		, valid(true)
 	{}
-	
+
 	~Optional() = default;
-	
+
 	Optional & operator=(OptionalType const&)
 	{
 		valid = false;
 		data.~T();
 		return *this;
 	}
-	
+
 	Optional & operator=(Optional const&) = default;
 	Optional & operator=(Optional &&) = default;
 
@@ -67,46 +67,46 @@ public:
 		this->data = v;
 		return *this;
 	}
-	
+
 	Optional & operator=(T && v)
 	{
 		this->valid = true;
 		this->data = std::move(v);
 		return *this;
 	}
-	
+
 	constexpr T const* operator->() const noexcept
 	{
 		return POMDOG_CONSTEXPR_ASSERT(valid), &data;
 	}
-	
+
 	T* operator->() noexcept
 	{
 		POMDOG_ASSERT(valid);
 		return &data;
 	}
-	
+
 	constexpr T const& operator*() const
 	{
 		return POMDOG_CONSTEXPR_ASSERT(valid), data;
 	}
-	
+
 	T & operator*()
 	{
 		POMDOG_ASSERT(valid);
 		return data;
 	}
-	
+
 	constexpr explicit operator bool() const noexcept
 	{
 		return valid;
 	}
-	
+
 	constexpr T const& value() const
 	{
 		return POMDOG_CONSTEXPR_ASSERT(valid), data;
 	}
-	
+
 	T & value()
 	{
 		POMDOG_ASSERT(valid);

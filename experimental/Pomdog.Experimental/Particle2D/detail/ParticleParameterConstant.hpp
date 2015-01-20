@@ -40,7 +40,7 @@ public:
 	{
 		return value;
 	}
-	
+
 	float GenerateVariance(std::mt19937 &) const override
 	{
 		return 1.0f;

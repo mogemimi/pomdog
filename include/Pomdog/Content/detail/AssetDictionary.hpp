@@ -33,21 +33,21 @@ private:
 
 public:
 	AssetDictionary();
-	
+
 	~AssetDictionary();
 
 	template <typename T>
 	std::shared_ptr<T> Load(AssetLoaderContext const& loaderContext, std::string const& assetName)
 	{
 		static_assert(std::is_object<T>::value, "");
-		
+
 		std::type_index const typeIndex = typeid(std::shared_ptr<T>);
-		
+
 		auto const iter = assets.find(assetName);
 		if (iter != std::end(assets))
 		{
 			auto & assetHolder = iter->second;
-			
+
 			if (assetHolder.Type() == typeIndex) {
 				return assetHolder.As<std::shared_ptr<T>>();
 			}
@@ -57,14 +57,14 @@ public:
 
 		AssetLoader<T> loader;
 		auto asset = loader(loaderContext, assetName);
-		
+
 		static_assert(std::is_same<decltype(asset), std::shared_ptr<T>>::value, "");
 
 		Any assetHolder = asset;
 		POMDOG_ASSERT(assetHolder.Type() == typeIndex);
 
 		assets.emplace(assetName, std::move(assetHolder));
-		
+
 		return std::move(asset);
 	}
 

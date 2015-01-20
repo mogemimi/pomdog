@@ -33,17 +33,17 @@ public:
 	EffectReflection() = delete;
 	EffectReflection(EffectReflection const&) = delete;
 	EffectReflection(EffectReflection &&) = default;
-	
+
 	EffectReflection(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		std::shared_ptr<EffectPass> const& effectPass);
 
 	~EffectReflection();
-	
+
 	std::vector<EffectConstantDescription> GetConstantBuffers() const;
-	
+
 public:
 	Details::RenderSystem::NativeEffectReflection* NativeEffectReflection();
-	
+
 private:
 	std::unique_ptr<Details::RenderSystem::NativeEffectReflection> nativeEffectReflection;
 };

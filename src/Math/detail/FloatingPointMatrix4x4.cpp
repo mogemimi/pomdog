@@ -180,17 +180,17 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator+(FloatingPointMatr
 		, m[0][1] + other.m[0][1]
 		, m[0][2] + other.m[0][2]
 		, m[0][3] + other.m[0][3]
-		
+
 		, m[1][0] + other.m[1][0]
 		, m[1][1] + other.m[1][1]
 		, m[1][2] + other.m[1][2]
 		, m[1][3] + other.m[1][3]
-		
+
 		, m[2][0] + other.m[2][0]
 		, m[2][1] + other.m[2][1]
 		, m[2][2] + other.m[2][2]
 		, m[2][3] + other.m[2][3]
-		
+
 		, m[3][0] + other.m[3][0]
 		, m[3][1] + other.m[3][1]
 		, m[3][2] + other.m[3][2]
@@ -206,17 +206,17 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-(FloatingPointMatr
 		, m[0][1] - other.m[0][1]
 		, m[0][2] - other.m[0][2]
 		, m[0][3] - other.m[0][3]
-		
+
 		, m[1][0] - other.m[1][0]
 		, m[1][1] - other.m[1][1]
-		, m[1][2] - other.m[1][2]	
+		, m[1][2] - other.m[1][2]
 		, m[1][3] - other.m[1][3]
-		
+
 		, m[2][0] - other.m[2][0]
 		, m[2][1] - other.m[2][1]
 		, m[2][2] - other.m[2][2]
 		, m[2][3] - other.m[2][3]
-		
+
 		, m[3][0] - other.m[3][0]
 		, m[3][1] - other.m[3][1]
 		, m[3][2] - other.m[3][2]
@@ -418,7 +418,7 @@ FloatingPointMatrix4x4<T>::Adjoint(FloatingPointMatrix4x4 const& matrix)
 		, -matrix.Minor3x3(1, 0).Determinant()
 		,  matrix.Minor3x3(2, 0).Determinant()
 		, -matrix.Minor3x3(3, 0).Determinant()
-		
+
 		, -matrix.Minor3x3(0, 1).Determinant()
 		,  matrix.Minor3x3(1, 1).Determinant()
 		, -matrix.Minor3x3(2, 1).Determinant()
@@ -596,7 +596,7 @@ FloatingPointMatrix4x4<T>::CreateRotationY(Radian<T> const& angle, FloatingPoint
 	result = Identity;
 	auto const sinAngle = std::sin(angle.value);
 	auto const cosAngle = std::cos(angle.value);
-	
+
 	result.m[0][0] = cosAngle;
 	result.m[0][2] = -sinAngle;
 	result.m[2][0] = sinAngle;
@@ -701,12 +701,12 @@ FloatingPointMatrix4x4<T>::CreateLookAtLH(FloatingPointVector3<T> const & eye, F
 	result.m[0][1] = yaxis.X;
 	result.m[0][2] = zaxis.X;
 	result.m[0][3] = 0;
-	
+
 	result.m[1][0] = xaxis.Y;
 	result.m[1][1] = yaxis.Y;
 	result.m[1][2] = zaxis.Y;
 	result.m[1][3] = 0;
-	
+
 	result.m[2][0] = xaxis.Z;
 	result.m[2][1] = yaxis.Z;
 	result.m[2][2] = zaxis.Z;
@@ -750,12 +750,12 @@ FloatingPointMatrix4x4<T>::CreateLookAtRH(FloatingPointVector3<T> const& eye, Fl
 	result.m[0][1] = yaxis.X;
 	result.m[0][2] = zaxis.X;
 	result.m[0][3] = 0;
-	
+
 	result.m[1][0] = xaxis.Y;
 	result.m[1][1] = yaxis.Y;
 	result.m[1][2] = zaxis.Y;
 	result.m[1][3] = 0;
-	
+
 	result.m[2][0] = xaxis.Z;
 	result.m[2][1] = yaxis.Z;
 	result.m[2][2] = zaxis.Z;
@@ -801,17 +801,17 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveLH(T width, T height, T zNear, T zFa
 	result.m[0][1] = 0;
 	result.m[0][2] = 0;
 	result.m[0][3] = 0;
-	
+
 	result.m[1][0] = 0;
 	result.m[1][1] = b;
 	result.m[1][2] = 0;
 	result.m[1][3] = 0;
-	
+
 	result.m[2][0] = 0;
 	result.m[2][1] = 0;
 	result.m[2][2] = c;
 	result.m[2][3] = 1;// RH: -1
-	
+
 	result.m[3][0] = 0;
 	result.m[3][1] = 0;
 	result.m[3][2] = d;
@@ -842,17 +842,17 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveRH(T width, T height, T zNear, T zFa
 	result.m[0][1] = 0;
 	result.m[0][2] = 0;
 	result.m[0][3] = 0;
-	
+
 	result.m[1][0] = 0;
 	result.m[1][1] = b;
 	result.m[1][2] = 0;
 	result.m[1][3] = 0;
-	
+
 	result.m[2][0] = 0;
 	result.m[2][1] = 0;
 	result.m[2][2] = c;
 	result.m[2][3] = -1;// LH: +1
-	
+
 	result.m[3][0] = 0;
 	result.m[3][1] = 0;
 	result.m[3][2] = d;
@@ -888,12 +888,12 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy,
 	result.m[0][1] = 0;
 	result.m[0][2] = 0;
 	result.m[0][3] = 0;
-	
+
 	result.m[1][0] = 0;
 	result.m[1][1] = h;
 	result.m[1][2] = 0;
 	result.m[1][3] = 0;
-	
+
 	result.m[2][0] = 0;
 	result.m[2][1] = 0;
 	result.m[2][2] = c;
@@ -943,17 +943,17 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(Radian<T> const& fovy,
 	result.m[0][1] = 0;
 	result.m[0][2] = 0;
 	result.m[0][3] = 0;
-	
+
 	result.m[1][0] = 0;
 	result.m[1][1] = h;
 	result.m[1][2] = 0;
 	result.m[1][3] = 0;
-	
+
 	result.m[2][0] = 0;
 	result.m[2][1] = 0;
 	result.m[2][2] = c;
 	result.m[2][3] = -1;// LH: +1
-	
+
 	result.m[3][0] = 0;
 	result.m[3][1] = 0;
 	result.m[3][2] = d;
@@ -994,17 +994,17 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterLH(T left, T right, T botto
 	result.m[0][1] = 0;
 	result.m[0][2] = 0;
 	result.m[0][3] = 0;
-	
+
 	result.m[1][0] = 0;
 	result.m[1][1] = y;
 	result.m[1][2] = 0;
 	result.m[1][3] = 0;
-	
+
 	result.m[2][0] = a;
 	result.m[2][1] = b;
 	result.m[2][2] = c;
 	result.m[2][3] = 1;// RH: -1
-	
+
 	result.m[3][0] = 0;
 	result.m[3][1] = 0;
 	result.m[3][2] = d;
@@ -1045,17 +1045,17 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterRH(T left, T right, T botto
 	result.m[0][1] = 0;
 	result.m[0][2] = 0;
 	result.m[0][3] = 0;
-	
+
 	result.m[1][0] = 0;
 	result.m[1][1] = y;
 	result.m[1][2] = 0;
 	result.m[1][3] = 0;
-	
+
 	result.m[2][0] = a;
 	result.m[2][1] = b;
 	result.m[2][2] = c;
 	result.m[2][3] = -1; // LH: +1
-	
+
 	result.m[3][0] = 0;
 	result.m[3][1] = 0;
 	result.m[3][2] = d;
@@ -1100,17 +1100,17 @@ FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterLH(T left, T right, T bott
 	result.m[0][1] = 0;
 	result.m[0][2] = 0;
 	result.m[0][3] = 0;
-	
+
 	result.m[1][0] = 0;
 	result.m[1][1] = y;
 	result.m[1][2] = 0;
 	result.m[1][3] = 0;
-	
+
 	result.m[2][0] = 0;
 	result.m[2][1] = 0;
 	result.m[2][2] = z;
 	result.m[2][3] = 0;
-	
+
 	result.m[3][0] = a;
 	result.m[3][1] = b;
 	result.m[3][2] = c;
@@ -1155,17 +1155,17 @@ FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterRH(T left, T right, T bott
 	result.m[0][1] = 0;
 	result.m[0][2] = 0;
 	result.m[0][3] = 0;
-	
+
 	result.m[1][0] = 0;
 	result.m[1][1] = y;
 	result.m[1][2] = 0;
 	result.m[1][3] = 0;
-	
+
 	result.m[2][0] = 0;
 	result.m[2][1] = 0;
 	result.m[2][2] = z;
 	result.m[2][3] = 0;
-	
+
 	result.m[3][0] = a;
 	result.m[3][1] = b;
 	result.m[3][2] = c;
@@ -1229,7 +1229,7 @@ FloatingPointMatrix4x4<T>::CreateFromAxisAngle(
 	auto const xy = axis.X * axis.Y;
 	auto const xz = axis.X * axis.Z;
 	auto const yz = axis.Y * axis.Z;
-	
+
 	result.m[0][0] = scaleFactor * xx + cosAngle;
 	result.m[0][1] = scaleFactor * xy + sinAngle * axis.Z;
 	result.m[0][2] = scaleFactor * xz - sinAngle * axis.Y;

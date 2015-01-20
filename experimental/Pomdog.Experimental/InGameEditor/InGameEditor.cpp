@@ -41,7 +41,7 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
 	auto window = gameHost->Window();
-	
+
 	{
 		spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice);
 		//spriteFont = SpriteFontLoader::Load(*assets, "BitmapFonts/UbuntuMono-Regular.fnt");
@@ -80,7 +80,7 @@ void InGameEditor::Update()
 	if (auto mouse = gameHost->Mouse()) {
 		hierarchy.Touch(mouse->GetState());
 	}
-	
+
 	auto clock = gameHost->Clock();
 	hierarchy.UpdateAnimation(clock->FrameDuration());
 }
@@ -89,10 +89,10 @@ void InGameEditor::DrawGUI(GraphicsContext & graphicsContext)
 {
 	auto depthStencilStateOld = graphicsContext.GetDepthStencilState();
 	graphicsContext.SetDepthStencilState(depthStencilState);
-	
+
 	auto blendStateOld = graphicsContext.GetBlendState();
 	graphicsContext.SetBlendState(blendState);
-	
+
 	{
 		POMDOG_ASSERT(spriteBatch);
 		spriteBatch->Begin(SpriteSortMode::BackToFront);
@@ -100,7 +100,7 @@ void InGameEditor::DrawGUI(GraphicsContext & graphicsContext)
 		hierarchy.Draw(drawingContext);
 		spriteBatch->End();
 	}
-	
+
 	graphicsContext.SetDepthStencilState(depthStencilStateOld);
 	graphicsContext.SetBlendState(blendStateOld);
 }

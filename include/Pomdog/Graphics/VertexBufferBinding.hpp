@@ -23,11 +23,11 @@ public:
 	VertexDeclaration Declaration;
 	std::uint32_t VertexOffset;
 	std::uint32_t InstanceFrequency;
-	
+
 	VertexBufferBinding(VertexDeclaration const& vertexDeclaration);
-	
+
 	VertexBufferBinding(VertexDeclaration && vertexDeclaration);
-	
+
 	VertexBufferBinding(VertexDeclaration const& vertexDeclaration,
 		std::uint32_t vertexOffset, std::uint32_t instanceFrequency = 0);
 

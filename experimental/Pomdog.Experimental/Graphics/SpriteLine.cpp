@@ -12,13 +12,13 @@ void SpriteLine::Draw(SpriteBatch & spriteBatch, Vector2 const& point1, Vector2 
 		float lineThickness, Color const& color, float layerDepth)
 {
 	auto lineLength = Vector2::Distance(point2, point1);
-	
+
 	POMDOG_ASSERT(InverseThickness > 0);
 	auto thicknessScale = lineThickness / InverseThickness;
-	
+
 	auto tangent = point2 - point1;
 	auto rotation = std::atan2(tangent.Y, tangent.X);
-	
+
 	POMDOG_ASSERT(Texture);
 
 	spriteBatch.Draw(Texture, point1, MiddleRectangle,

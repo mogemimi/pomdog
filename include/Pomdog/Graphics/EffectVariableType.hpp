@@ -57,7 +57,7 @@ enum class EffectVariableType: std::uint8_t {
 	///@~Japanese
 	/// @brief 2 次元テクスチャです。
 	Texture2D,
-	
+
 	///@~Japanese
 	/// @brief 3 次元テクスチャです。
 	Texture3D,

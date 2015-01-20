@@ -49,26 +49,26 @@ VertexBufferGL4::VertexBufferGL4(void const* vertices, std::uint32_t sizeInBytes
 	BufferUsage bufferUsage)
 {
 	POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable ? vertices != nullptr: true);
-	
+
 	// Generate vertex buffer
 	bufferObject = ([] {
 		VertexBufferObjectGL4 vertexBuffer;
 		glGenBuffers(1, vertexBuffer.Data());
 		return std::move(vertexBuffer);
 	})();
-	
+
 	auto const oldBufferObject = TypesafeHelperGL4::Get<VertexBufferObjectGL4>();
 	ScopeGuard scope([&oldBufferObject]{
 		TypesafeHelperGL4::BindBuffer(oldBufferObject);
 	});
-	
+
 	POMDOG_ASSERT(bufferObject);
 	TypesafeHelperGL4::BindBuffer(*bufferObject);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif
-	
+
 	POMDOG_ASSERT(sizeInBytes > 0);
 	glBufferData(GL_ARRAY_BUFFER, sizeInBytes, vertices,
 		ToVertexBufferUsage(bufferUsage));
@@ -114,6 +114,10 @@ void VertexBufferGL4::BindBuffer()
 {
 	POMDOG_ASSERT(bufferObject);
 	TypesafeHelperGL4::BindBuffer(*bufferObject);
+
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
+	#endif
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

@@ -35,17 +35,17 @@ public:
 		std::shared_ptr<EffectPass> const& distanceFieldEffectIn,
 		std::shared_ptr<ConstantBufferBinding> const& constantBuffersIn,
 		SpriteFont & spriteFontIn, std::shared_ptr<Texture2D> const& textureIn);
-	
+
 	Matrix3x2 Top() const override;
-	
+
 	void Push(Matrix3x2 const& matrix) override;
-	
+
 	void Pop() override;
-	
+
 	void DrawRectangle(Matrix3x2 const& transform, Color const& color, Rectangle const& rectangle) override;
-	
+
 	void DrawLine(Matrix3x2 const& transform, Color const& color, float penSize, Vector2 const& point1, Vector2 const& point2) override;
-	
+
 	void DrawString(Matrix3x2 const& transform, Color const& color,
 		FontWeight fontWeight, FontSize fontSize, std::string const& text) override;
 };

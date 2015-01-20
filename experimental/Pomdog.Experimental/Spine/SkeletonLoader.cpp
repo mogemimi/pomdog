@@ -49,7 +49,7 @@ static std::vector<Matrix3x2> CreateInverseBindPoseByJoints(Skeleton const& skel
 		Matrix3x2 matrix = Matrix3x2::CreateScale(bone.BindPose.Scale);
 		matrix *= Matrix3x2::CreateRotation(bone.BindPose.Rotation);
 		matrix *= Matrix3x2::CreateTranslation(bone.BindPose.Translate);
-		
+
 		if (bone.Parent)
 		{
 			POMDOG_ASSERT(*bone.Parent < bindPose.size());
@@ -60,7 +60,7 @@ static std::vector<Matrix3x2> CreateInverseBindPoseByJoints(Skeleton const& skel
 		POMDOG_ASSERT(*bone.Index < bindPose.size());
 		bindPose[*bone.Index] = matrix;
 	});
-	
+
 	for (auto & matrix: bindPose)
 	{
 		matrix = Matrix3x2::Invert(matrix);
@@ -79,19 +79,19 @@ static std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescripti
 		joint.BindPose.Translate = boneDesc.Pose.Translate;
 		joint.BindPose.Rotation = boneDesc.Pose.Rotation;
 		joint.BindPose.Scale = boneDesc.Pose.Scale;
-		
+
 		joints.push_back(std::move(joint));
 	}
-	
+
 	POMDOG_ASSERT(joints.size() == boneDescriptions.size());
 
 	for (std::uint32_t index = 0; index < joints.size(); ++index)
 	{
 		auto & joint = joints[index];
 		joint.Index = index;
-		
+
 		auto & boneDesc = boneDescriptions[index];
-		
+
 		POMDOG_ASSERT(boneDesc.Name != boneDesc.Parent);
 		if (boneDesc.Name == boneDesc.Parent) {
 			// Error
@@ -99,15 +99,15 @@ static std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescripti
 		}
 		joint.Parent = FindBoneParent(boneDesc.Parent, joints, boneDescriptions);
 	}
-	
+
 	POMDOG_ASSERT(!joints.front().Parent);
-	
+
 	for (auto & joint: joints)
 	{
 		if (!joint.Parent) {
 			continue;
 		}
-		
+
 		if (!joints[*joint.Parent].FirstChild) {
 			joints[*joint.Parent].FirstChild = joint.Index;
 		}
@@ -117,7 +117,7 @@ static std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescripti
 
 			POMDOG_ASSERT(sibling);
 			POMDOG_ASSERT(sibling != joint.Index);
-			
+
 			do {
 				if (!joints[*sibling].Sibling) {
 					joints[*sibling].Sibling = joint.Index;
@@ -136,7 +136,7 @@ static std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescripti
 Skeleton CreateSkeleton(std::vector<Spine::BoneDesc> const& bones)
 {
 	POMDOG_ASSERT(!bones.empty());
-	
+
 	Skeleton skeleton(CreateBones(bones));
 
 	auto inverseBindPose = CreateInverseBindPoseByJoints(skeleton);
@@ -145,7 +145,7 @@ Skeleton CreateSkeleton(std::vector<Spine::BoneDesc> const& bones)
 		POMDOG_ASSERT(joint.Index);
 		joint.InverseBindPose = inverseBindPose[*joint.Index];
 	}
-	
+
 	return std::move(skeleton);
 }
 

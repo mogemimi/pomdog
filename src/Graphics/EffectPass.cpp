@@ -16,7 +16,7 @@ EffectPass::EffectPass(GraphicsDevice & graphicsDevice,
 	Details::ShaderBytecode const& vertexShader, Details::ShaderBytecode const& pixelShader)
 {
 	auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
-	
+
 	// Create effect pass:
 	POMDOG_ASSERT(nativeDevice);
 	nativeEffectPass = nativeDevice->CreateEffectPass(vertexShader, pixelShader);

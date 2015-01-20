@@ -234,7 +234,7 @@ FloatingPointMatrix3x2<T>
 FloatingPointMatrix3x2<T>::Invert(FloatingPointMatrix3x2 const& matrix)
 {
 	auto const determinant = matrix.Determinant();
-	
+
 	static_assert(std::is_same<decltype(matrix.Determinant()), T>::value, "determinant is T");
 	POMDOG_ASSERT_MESSAGE(static_cast<T>(0) != determinant, "This is singular matrix");
 

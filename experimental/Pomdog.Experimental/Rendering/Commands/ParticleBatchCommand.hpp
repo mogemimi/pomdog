@@ -30,9 +30,9 @@ public:
 	{
 		return drawOrder;
 	}
-	
+
 	std::type_index TypeIndex() const override;
-	
+
 public:
 	TextureRegion textureRegion;
 	Matrix3x2 transform;

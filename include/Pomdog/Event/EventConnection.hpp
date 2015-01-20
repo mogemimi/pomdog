@@ -28,10 +28,10 @@ public:
 
 	EventConnection(EventConnection const& connection);
 	EventConnection(EventConnection && connection) = default;
-	
+
 	EventConnection & operator=(EventConnection const& connection);
 	EventConnection & operator=(EventConnection && connection) = default;
-	
+
 	template <typename Function>
 	explicit EventConnection(std::unique_ptr<Details::SignalsAndSlots::ConnectionBodyOverride<Function>> && bodyIn)
 		: body(std::forward<std::unique_ptr<Details::SignalsAndSlots::ConnectionBodyOverride<Function>>>(bodyIn))

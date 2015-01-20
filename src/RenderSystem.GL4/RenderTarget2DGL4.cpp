@@ -42,9 +42,9 @@ RenderTarget2DGL4::RenderTarget2DGL4(std::int32_t pixelWidth, std::int32_t pixel
 			glGenRenderbuffers(1, nativeBuffer.Data());
 			return std::move(nativeBuffer);
 		})();
-		
+
 		POMDOG_ASSERT(renderBuffer);
-		
+
 		glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer->value);
 
 		#ifdef DEBUG
@@ -53,7 +53,7 @@ RenderTarget2DGL4::RenderTarget2DGL4(std::int32_t pixelWidth, std::int32_t pixel
 
 		POMDOG_ASSERT(pixelWidth > 0);
 		POMDOG_ASSERT(pixelHeight > 0);
-	
+
 		glRenderbufferStorage(GL_RENDERBUFFER, *ToGLDepthStencilFormat(depthStencilFormat), pixelWidth, pixelHeight);
 
 		#ifdef DEBUG
@@ -93,7 +93,7 @@ void RenderTarget2DGL4::UnbindFromFramebuffer(GLenum attachmentPoint)
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glFramebufferTexture2D", __FILE__, __LINE__);
 	#endif
-	
+
 	if (generateMipmap)
 	{
 		texture.GenerateMipmap();

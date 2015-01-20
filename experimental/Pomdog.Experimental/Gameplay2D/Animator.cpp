@@ -41,7 +41,7 @@ static AnimationTimeInterval WrapTime(AnimationTimeInterval const& source, Anima
 
 	POMDOG_ASSERT(time >= AnimationTimeInterval::zero());
 	POMDOG_ASSERT(time <= max);
-	
+
 	return std::move(time);
 }
 
@@ -74,7 +74,7 @@ public:
 
 		{
 			auto sourceTime = WrapTime(currentAnimationStartTime + time, currentAnimation.Node->Length());
-			
+
 			POMDOG_ASSERT(sourceTime >= AnimationTimeInterval::zero());
 			POMDOG_ASSERT(sourceTime <= currentAnimation.Node->Length());
 
@@ -90,16 +90,16 @@ public:
 			POMDOG_ASSERT(nextAnimation.Node);
 			nextAnimation.Node->Calculate(sourceTime, weights, skeleton, sourcePose2);
 		}
-		
+
 		POMDOG_ASSERT(transitionDuration.count() > 0);
 		float weight = (time / transitionDuration.count()).count();
 		POMDOG_ASSERT(weight >= 0.0f);
 		POMDOG_ASSERT(weight <= 1.0f);
-		
+
 		using Details::Skeletal2D::WeightBlendingHelper;
 		WeightBlendingHelper::Lerp(sourcePose1.JointPoses, sourcePose2.JointPoses, weight, skeletonPose.JointPoses);
 	}
-	
+
 	AnimationTimeInterval Length() const
 	{
 		return transitionDuration;
@@ -117,23 +117,23 @@ public:
 	Impl(std::shared_ptr<Skeleton> const& skeleton,
 		std::shared_ptr<SkeletonTransform> const& skeletonTransform,
 		std::shared_ptr<AnimationGraph> const& animationGraph);
-	
+
 	void Update(DurationSeconds const& frameDuration);
-	
+
 	void CrossFade(std::string const& stateName, DurationSeconds const& transitionDuration);
-	
+
 	void Play(std::string const& stateName);
-	
+
 	float PlaybackRate() const;
-	
+
 	void PlaybackRate(float playbackRate);
 
 	void SetFloat(std::string const& name, float value);
 
 	void SetBool(std::string const& name, bool value);
-	
+
 	std::string GetCurrentStateName() const;
-	
+
 private:
 	Details::Skeletal2D::AnimationGraphWeightCollection graphWeights;
 	std::shared_ptr<Skeleton> skeleton;
@@ -157,7 +157,7 @@ Animator::Impl::Impl(std::shared_ptr<Skeleton> const& skeletonIn,
 	POMDOG_ASSERT(skeleton);
 	POMDOG_ASSERT(skeletonTransform);
 	POMDOG_ASSERT(animationGraph);
-	
+
 	graphWeights.Reserve(animationGraph->Inputs.size());
 	for (auto & parameter: animationGraph->Inputs)
 	{
@@ -170,11 +170,11 @@ Animator::Impl::Impl(std::shared_ptr<Skeleton> const& skeletonIn,
 			break;
 		}
 	}
-	
+
 	POMDOG_ASSERT(animationGraph);
 	POMDOG_ASSERT(!animationGraph->States.empty());
 	POMDOG_ASSERT(animationGraph->States.front().Tree);
-	
+
 	currentAnimation.Name = animationGraph->States.front().Name;
 	currentAnimation.Node = std::shared_ptr<AnimationNode>(animationGraph,
 		animationGraph->States.front().Tree.get());
@@ -199,7 +199,7 @@ void Animator::Impl::Update(DurationSeconds const& frameDuration)
 				nextAnimation->Name.clear();
 				nextAnimation = OptionalType::NullOptional;
 
-				time = WrapTime(time, currentAnimation.Node->Length());			
+				time = WrapTime(time, currentAnimation.Node->Length());
 				POMDOG_ASSERT(time >= AnimationTimeInterval::zero());
 				POMDOG_ASSERT(time <= currentAnimation.Node->Length());
 			}
@@ -223,18 +223,18 @@ void Animator::Impl::CrossFade(std::string const& stateName, DurationSeconds con
 	if (nextAnimation) {
 		return;
 	}
-	
+
 	POMDOG_ASSERT(transitionDuration > DurationSeconds::zero());
 	POMDOG_ASSERT(!std::isnan(transitionDuration.count()));
-	
+
 	auto iter = FindState(animationGraph->States, stateName);
 	POMDOG_ASSERT(iter != std::end(animationGraph->States));
-	
+
 	if (iter == std::end(animationGraph->States)) {
 		// Error: Cannot find the state
 		return;
 	}
-	
+
 	POMDOG_ASSERT(iter->Tree);
 	nextAnimation = SkeletonAnimationState{};
 	nextAnimation->Node = std::shared_ptr<AnimationNode>(animationGraph, iter->Tree.get());
@@ -253,12 +253,12 @@ void Animator::Impl::Play(std::string const& stateName)
 
 	auto iter = FindState(animationGraph->States, stateName);
 	POMDOG_ASSERT(iter != std::end(animationGraph->States));
-	
+
 	if (iter == std::end(animationGraph->States)) {
 		// Error: Cannot find the state
 		return;
 	}
-	
+
 	POMDOG_ASSERT(iter->Tree);
 	currentAnimation.Node = std::shared_ptr<AnimationNode>(animationGraph, iter->Tree.get());
 	currentAnimation.Name = stateName;

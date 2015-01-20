@@ -66,7 +66,7 @@ public:
 		value -= v.value;
 		return *this;
 	}
-	
+
 	TaggedArithmetic & operator-=(TaggedArithmetic && v)
 	{
 		value -= std::move(v.value);
@@ -78,7 +78,7 @@ public:
 		value *= v.value;
 		return *this;
 	}
-	
+
 	TaggedArithmetic & operator*=(TaggedArithmetic && v)
 	{
 		value *= std::move(v.value);
@@ -91,7 +91,7 @@ public:
 		value /= v.value;
 		return *this;
 	}
-	
+
 	TaggedArithmetic & operator/=(TaggedArithmetic && v)
 	{
 		POMDOG_ASSERT(v.value != 0);

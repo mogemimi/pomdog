@@ -42,7 +42,7 @@ void SpriteDrawingContext::DrawRectangle(Matrix3x2 const& transform, Color const
 {
 	///@todo Not implemented
 	auto position = Vector2::Transform(Vector2(rectangle.X, rectangle.Y), transform);// badcode
-	
+
 	spriteBatch.Draw(texture, position, Rectangle{0, 0, 1, 1},
 		color, 0, {0.0f, 0.0f}, Vector2(rectangle.Width, rectangle.Height), 0.0f);
 }
@@ -51,7 +51,7 @@ void SpriteDrawingContext::DrawLine(Matrix3x2 const& transform, Color const& col
 {
 	auto transformedPoint1 = Vector2::Transform(point1, transform);
 	auto transformedPoint2 = Vector2::Transform(point2, transform);
-	
+
 	auto lineLength = Vector2::Distance(transformedPoint2, transformedPoint1);
 	auto thicknessScale = penSize;
 	auto tangent = transformedPoint2 - transformedPoint1;
@@ -71,7 +71,7 @@ void SpriteDrawingContext::DrawString(Matrix3x2 const& transform, Color const& c
 	}
 	{
 		Vector2 fontWeights {0.457f, 0.620f};
-	
+
 		switch (fontWeight) {
 		case FontWeight::Light:
 			fontWeights = {0.440f, 0.800f};
@@ -83,9 +83,9 @@ void SpriteDrawingContext::DrawString(Matrix3x2 const& transform, Color const& c
 			fontWeights = {0.339f, 0.457f};
 			break;
 		}
-		
+
 		float fontScale = 0.48f;
-		
+
 		switch (fontSize) {
 		case FontSize::Small:
 			fontScale = 0.43f;
@@ -100,10 +100,10 @@ void SpriteDrawingContext::DrawString(Matrix3x2 const& transform, Color const& c
 		}
 
 		constantBuffers->Find("DistanceFieldConstants")->SetValue(fontWeights);
-	
+
 		///@todo Not implemented
 		auto position = Vector2::Transform(Vector2::Zero, transform);// badcode
-	
+
 		spriteFont.Begin(Matrix4x4::Identity);
 		spriteFont.Draw(spriteFontBatch, text, position, color,
 			0.0f, {0.0f, 0.0f}, fontScale, 0.0f);

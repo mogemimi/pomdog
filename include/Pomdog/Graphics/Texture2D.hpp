@@ -52,7 +52,7 @@ public:
 		std::int32_t width, std::int32_t height, bool mipMap, SurfaceFormat format);
 
 	~Texture2D();
-	
+
 	Texture2D & operator=(Texture2D const&) = delete;
 	Texture2D & operator=(Texture2D &&) = default;
 
@@ -72,14 +72,14 @@ public:
 	///@~Japanese
 	/// @brief テクスチャのフォーマットを取得します。
 	SurfaceFormat Format() const;
-	
+
 	///@~Japanese
 	/// @brief ピクセルデータを格納します。
 	void SetData(void const* pixelData);
 
 public:
 	Details::RenderSystem::NativeTexture2D* NativeTexture2D();
-	
+
 private:
 	std::unique_ptr<Details::RenderSystem::NativeTexture2D> nativeTexture2D;
 	std::int32_t pixelWidth;

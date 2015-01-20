@@ -25,15 +25,15 @@ public:
 	RectangleRenderable();
 
 	void Visit(GameObject & gameObject, Renderer & renderer) override;
-	
+
 	void LeftTopColor(Pomdog::Color const& color);
 	void RightTopColor(Pomdog::Color const& color);
 	void LeftBottomColor(Pomdog::Color const& color);
 	void RightBottomColor(Pomdog::Color const& color);
-	
+
 	void OriginPivot(Vector2 const& originPivot);
 	Vector2 OriginPivot() const;
-	
+
 	void BoundingBox(Rectangle const& rectangle);
 	Rectangle BoundingBox() const;
 

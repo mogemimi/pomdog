@@ -21,11 +21,11 @@ namespace {
 static std::vector<char> ReadBinaryFile(std::string const& filename)
 {
 	std::ifstream stream(filename, std::ios::in | std::ios::binary);
-	
+
 	stream.seekg(0, stream.end);
 	auto const length = static_cast<std::size_t>(stream.tellg());
 	stream.seekg(0, stream.beg);
-	
+
 	std::vector<char> result(length + 1, '\0');
 	stream.read(result.data(), length);
 	return std::move(result);
@@ -62,18 +62,18 @@ static std::unique_ptr<AnimationNode> CreateAnimationNode(
 	case AnimationNodeType::Lerp: {
 		POMDOG_ASSERT(desc.Inputs[0]);
 		POMDOG_ASSERT(desc.Inputs[1]);
-	
+
 		auto iter1 = std::find_if(std::begin(nodes),std::end(nodes),
 			[&](AnimationNodeDesc const& nodeDesc){ return nodeDesc.Name == *desc.Inputs[0]; });
 		POMDOG_ASSERT(iter1 != std::end(nodes));
-		
+
 		auto iter2 = std::find_if(std::begin(nodes),std::end(nodes),
 			[&](AnimationNodeDesc const& nodeDesc){ return nodeDesc.Name == *desc.Inputs[1]; });
 		POMDOG_ASSERT(iter2 != std::end(nodes));
-	
+
 		auto node1 = CreateAnimationNode(*iter1, inputs, nodes, skeletonDesc);
 		auto node2 = CreateAnimationNode(*iter2, inputs, nodes, skeletonDesc);
-		
+
 		if (desc.Parameter) {
 			inputs.push_back({*desc.Parameter, AnimationBlendInputType::Float});
 		}
@@ -81,7 +81,7 @@ static std::unique_ptr<AnimationNode> CreateAnimationNode(
 			inputs.push_back({"__unknown", AnimationBlendInputType::Float});
 		}
 		std::uint16_t parameterIndex = inputs.size() - 1;
-		
+
 		return std::make_unique<AnimationLerpNode>(std::move(node1), std::move(node2), parameterIndex);
 		break;
 	}
@@ -95,9 +95,9 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
 {
 	auto filename = assets.RootDirectory() + "/" + assetName;
 	auto json = ReadBinaryFile(filename);
-	
+
 	POMDOG_ASSERT(!json.empty());
-	
+
 	rapidjson::Document doc;
 	doc.Parse(json.data());
 
@@ -107,13 +107,13 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
 		// Error
 		POMDOG_ASSERT(false);
 	}
-	
+
 	if (!doc.IsObject()) {
 		///@todo Not implemented
 		// Error
 		POMDOG_ASSERT(false);
 	}
-	
+
 	std::vector<AnimationNodeDesc> nodes;
 	if (doc.HasMember("nodes") && doc["nodes"].IsArray())
 	{
@@ -128,7 +128,7 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
 			{
 				POMDOG_ASSERT(iter->HasMember("type"));
 				auto & typeObject = nodeObject["type"];
-				
+
 				POMDOG_ASSERT(typeObject.IsString());
 				if (0 == std::strncmp(typeObject.GetString(), "clip", 3)) {
 					desc.Type = AnimationNodeType::Clip;
@@ -144,11 +144,11 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
 			{
 				POMDOG_ASSERT(iter->HasMember("name"));
 				auto & idObject = nodeObject["name"];
-				
+
 				POMDOG_ASSERT(idObject.IsString());
 				desc.Name = idObject.GetString();
 			}
-			
+
 			if (desc.Type == AnimationNodeType::Clip
 				&& nodeObject.HasMember("name") && nodeObject["name"].IsString()) {
 				desc.ClipName = nodeObject["name"].GetString();
@@ -169,23 +169,23 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
 			nodes.push_back(std::move(desc));
 		}
 	}
-	
+
 	std::vector<AnimationBlendInput> inputs;
 	auto animationGraph = std::make_shared<AnimationGraph>();
-	
+
 	if (doc.HasMember("states") && doc["states"].IsObject())
 	{
 		auto & stateArray = doc["states"];
 		for (auto iter = stateArray.MemberBegin(); iter != stateArray.MemberEnd(); ++iter)
 		{
 			AnimationGraphState state;
-			
+
 			POMDOG_ASSERT(iter->name.IsString());
 			state.Name = iter->name.GetString();
-			
+
 			POMDOG_ASSERT(iter->value["tree"].IsString());
 			const auto rootNodeName = iter->value["tree"].GetString();
-			
+
 			auto rootNodeDesc = std::find_if(std::begin(nodes),std::end(nodes),
 				[&rootNodeName](AnimationNodeDesc const& desc){ return desc.Name == rootNodeName; });
 			POMDOG_ASSERT(rootNodeDesc != std::end(nodes));
@@ -194,7 +194,7 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
 			animationGraph->States.push_back(std::move(state));
 		}
 	}
-	
+
 	animationGraph->Inputs = std::move(inputs);
 
 	return std::move(animationGraph);

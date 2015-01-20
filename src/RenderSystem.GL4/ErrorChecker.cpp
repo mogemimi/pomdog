@@ -45,7 +45,7 @@ static std::string ToString(ErrorCodeGL4 const& errorCode)
 void ErrorChecker::CheckError(char const* command, char const* filename, int line)
 {
 	ErrorCodeGL4 const errorCode{ glGetError() };
-	
+
 	if (GL_NO_ERROR == errorCode.value) {
 		return;
 	}

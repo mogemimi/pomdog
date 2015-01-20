@@ -38,7 +38,7 @@ public:
 	IndexBuffer(GraphicsDevice & graphicsDevice,
 		IndexElementSize elementSize, void const* indices, std::uint32_t indexCount,
 		Pomdog::BufferUsage bufferUsage);
-	
+
 	IndexBuffer(GraphicsDevice & graphicsDevice,
 		IndexElementSize elementSize, std::uint32_t indexCount,
 		Pomdog::BufferUsage bufferUsage);
@@ -46,7 +46,7 @@ public:
 	IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		IndexElementSize elementSize, void const* indices, std::uint32_t indexCount,
 		Pomdog::BufferUsage bufferUsage);
-	
+
 	IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		IndexElementSize elementSize, std::uint32_t indexCount,
 		Pomdog::BufferUsage bufferUsage);
@@ -83,7 +83,7 @@ public:
 
 public:
 	Details::RenderSystem::NativeIndexBuffer* NativeIndexBuffer();
-	
+
 private:
 	std::unique_ptr<Details::RenderSystem::NativeIndexBuffer> nativeIndexBuffer;
 	std::uint32_t indexCount;

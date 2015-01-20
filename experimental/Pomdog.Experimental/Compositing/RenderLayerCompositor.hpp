@@ -26,11 +26,11 @@ public:
 	RenderLayerCompositor();
 
 	void AddLayer(std::shared_ptr<RenderLayer> const& layer);
-	
+
 	void RemoveLayer(std::shared_ptr<RenderLayer> const& layer);
-	
+
 	void Draw(GraphicsContext & graphicsContext, Renderer & renderer);
-	
+
 private:
 	std::vector<std::shared_ptr<RenderLayer>> layers;
 	bool needSort;

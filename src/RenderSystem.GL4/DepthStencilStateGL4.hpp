@@ -34,21 +34,21 @@ struct DepthStencilFaceOperationGL4 final {
 class DepthStencilStateGL4 final: public NativeDepthStencilState {
 public:
 	DepthStencilStateGL4() = delete;
-	
+
 	explicit DepthStencilStateGL4(DepthStencilDescription const& description);
-	
+
 	///@copydoc NativeDepthStencilState
 	void Apply(NativeGraphicsContext & graphicsContext) override;
-	
+
 private:
 	void ApplyDepthTest();
 	void ApplyStencilTest();
-	
+
 private:
 	DepthStencilFaceOperationGL4 clockwiseFace;
 	DepthStencilFaceOperationGL4 counterClockwiseFace;
 	ComparisonFunctionGL4 const depthFunction;
-	
+
 	GLint const referenceStencil;
 	GLuint const stencilMask;
 	GLuint const stencilWriteMask;

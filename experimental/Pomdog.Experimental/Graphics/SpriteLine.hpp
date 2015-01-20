@@ -30,23 +30,23 @@ public:
 	Rectangle EndRectangle;
 	Vector2 HalfCircleSize;
 	float InverseThickness;
-	
+
 public:
 	void Draw(SpriteBatch & spriteBatch, Vector2 const& point1, Vector2 const& point2,
 		float lineThickness, Color const& color, float layerDepth);
-	
+
 	template <class BatchRenderer>
 	void Draw(BatchRenderer & spriteBatch, Vector2 const& point1, Vector2 const& point2,
 		float lineThickness, Color const& color, float layerDepth)
 	{
 		auto lineLength = Vector2::Distance(point2, point1);
-		
+
 		POMDOG_ASSERT(InverseThickness > 0);
 		auto thicknessScale = lineThickness / InverseThickness;
-		
+
 		auto tangent = point2 - point1;
 		auto rotation = std::atan2(tangent.Y, tangent.X);
-		
+
 		POMDOG_ASSERT(Texture);
 
 		spriteBatch.Draw(Texture, Matrix3x2::Identity, point1, MiddleRectangle,

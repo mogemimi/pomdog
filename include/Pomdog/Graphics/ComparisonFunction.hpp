@@ -25,7 +25,7 @@ enum class ComparisonFunction: std::uint8_t {
 	///@~Japanese
 	/// @brief ソースとなるピクセルデータが対象となるピクセルデータ未満の場合、テストに合格します。
 	Less,
-	
+
 	///@~Japanese
 	/// @brief ソースとなるピクセルデータが対象となるピクセルデータと等しい場合、テストに合格します。
 	Equal,

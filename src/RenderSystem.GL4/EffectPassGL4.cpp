@@ -46,7 +46,7 @@ CompileShader(ShaderBytecode const& source)
 		std::integral_constant<GLenum, GL_VERTEX_SHADER>,
 		std::integral_constant<GLenum, GL_FRAGMENT_SHADER>
 	>::type();
-	
+
 	static_assert((std::is_same<Tag, Tags::VertexShaderTag>::value && (pipelineStage == GL_VERTEX_SHADER)) ||
 		(std::is_same<Tag, Tags::PixelShaderTag>::value && (pipelineStage == GL_FRAGMENT_SHADER)), "");
 
@@ -92,7 +92,7 @@ LinkShaders(VertexShaderGL4 const& vertexShader, PixelShaderGL4 const& pixelShad
 	ShaderProgramGL4 const program {
 		glCreateProgram()
 	};
-		
+
 	glAttachShader(program.value, vertexShader.value);
 	glAttachShader(program.value, pixelShader.value);
 
@@ -120,7 +120,7 @@ LinkShaders(VertexShaderGL4 const& vertexShader, PixelShaderGL4 const& pixelShad
 		glDeleteProgram(program.value);
 		return OptionalType::NullOptional;
 	}
-		
+
 	return program;
 }
 
@@ -134,7 +134,7 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 		POMDOG_THROW_EXCEPTION(std::domain_error,
 			"Failed to compile vertex shader.");
 	}
-	
+
 	ScopeGuard vertexScope([&]{
 		POMDOG_ASSERT(vertexShader);
 		glDeleteShader(vertexShader->value);
@@ -145,17 +145,17 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 		POMDOG_THROW_EXCEPTION(std::domain_error,
 			"Failed to compile pixel shader.");
 	}
-	
+
 	ScopeGuard pixelScope([&]{
 		POMDOG_ASSERT(pixelShader);
 		glDeleteShader(pixelShader->value);
 	});
-	
+
 	POMDOG_ASSERT(vertexShader);
 	POMDOG_ASSERT(pixelShader);
-	
+
 	shaderProgram = LinkShaders(*vertexShader, *pixelShader);
-	
+
 	if (!pixelShader) {
 		POMDOG_THROW_EXCEPTION(std::domain_error,
 			"Failed to link shader program.");
@@ -201,7 +201,7 @@ EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
 				continue;
 				break;
 			}
-			
+
 			TextureBindingGL4 binding;
 			binding.UniformLocation = uniform.Location;
 			binding.SlotIndex = slotIndex;
@@ -223,7 +223,7 @@ std::unique_ptr<NativeConstantLayout> EffectPassGL4::CreateConstantLayout()
 	EffectReflectionGL4 shaderReflection(*shaderProgram);
 
 	std::vector<ConstantBufferBindingGL4> bindings;
-	
+
 	for (auto & uniformBlock: uniformBlockBindings)
 	{
 		ConstantBufferBindingGL4 binding;
@@ -231,7 +231,7 @@ std::unique_ptr<NativeConstantLayout> EffectPassGL4::CreateConstantLayout()
 		binding.SlotIndex = uniformBlock.SlotIndex;
 		bindings.push_back(std::move(binding));
 	}
-	
+
 	return std::make_unique<ConstantLayoutGL4>(std::move(bindings));
 }
 //-----------------------------------------------------------------------
@@ -247,7 +247,7 @@ void EffectPassGL4::ApplyShaders()
 	for (auto & binding: textureBindings)
 	{
 		glUniform1i(binding.UniformLocation, binding.SlotIndex);
-		
+
 		#ifdef DEBUG
 		ErrorChecker::CheckError("glUniform1i", __FILE__, __LINE__);
 		#endif

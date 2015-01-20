@@ -38,7 +38,7 @@ public:
 	Vector2 MeasureString(std::u32string const& text) const;
 
 	void Draw(SpriteBatch & spriteBatch, std::u32string const& text, Vector2 const& position, Color const& color);
-	
+
 	void Draw(SpriteBatch & spriteBatch, std::u32string const& text, Vector2 const& position, Color const& color,
 		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
 
@@ -87,11 +87,11 @@ Vector2 SpriteFont::Impl::MeasureString(std::u32string const& text) const
 		auto const & glyph = iter->second;
 
 		currentPosition.X += (glyph.XAdvance - spacing);
-		
+
 		result.X = std::max(result.X, currentPosition.X);
 		result.Y = std::max(result.Y, currentPosition.Y);
 	}
-	
+
 	return std::move(result);
 }
 //-----------------------------------------------------------------------
@@ -135,10 +135,10 @@ void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
 				currentPosition + Vector2(glyph.XOffset, glyph.YOffset),
 				glyph.Subrect, color, 0.0f, {0.0f, 0.0f}, 1.0f, 0.0f);
 		}
-		
+
 		currentPosition.X += (glyph.XAdvance - spacing);
 	}
-	
+
 	spriteBatch.End();
 }
 //-----------------------------------------------------------------------
@@ -151,7 +151,7 @@ void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
 	}
 
 	POMDOG_ASSERT(!textures.empty());
-	
+
 	spriteBatch.Begin(SpriteSortMode::Deferred, Matrix4x4::CreateRotationZ(rotation)
 		* Matrix4x4::CreateScale({scale, 1.0f})
 		* Matrix4x4::CreateTranslation({position, 0.0f})
@@ -186,10 +186,10 @@ void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
 				currentPosition + Vector2(glyph.XOffset, glyph.YOffset),
 				glyph.Subrect, color, 0.0f, {0.0f, 0.0f}, 1.0f, layerDepth);
 		}
-		
+
 		currentPosition.X += (glyph.XAdvance - spacing);
 	}
-	
+
 	spriteBatch.End();
 }
 //-----------------------------------------------------------------------
@@ -282,7 +282,7 @@ void SpriteFont::Draw(SpriteBatch & spriteBatch, std::string const& text, Vector
 	//POMDOG_ASSERT_MESSAGE(text.empty(), "Not implemented");
 
 	///@todo Not implemented
-	
+
 	std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> utf8ToUtf32Conv;
 	try {
 		std::u32string utf32String = utf8ToUtf32Conv.from_bytes(text);

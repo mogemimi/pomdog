@@ -119,21 +119,21 @@ static Optional<FrameBufferGL4> CreateFrameBuffer()
 
 	FrameBufferGL4 frameBuffer;
 	glGenFramebuffers(1, frameBuffer.Data());
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glGenFramebuffers", __FILE__, __LINE__);
 	#endif
-	
+
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.value);
-	
+
 	// Check framebuffer
 	auto const status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	
+
 	if (GL_FRAMEBUFFER_UNSUPPORTED == status)
 	{
 		return OptionalType::NullOptional;
 	}
-	
+
 	return std::move(frameBuffer);
 }
 
@@ -186,7 +186,7 @@ void GraphicsContextGL4::Clear(Color const& color)
 	auto colorVector = color.ToVector4();
 	glClearColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 	#ifdef DEBUG
 	RenderSystem::GL4::ErrorChecker::CheckError("glClear", __FILE__, __LINE__);
 	#endif
@@ -195,7 +195,7 @@ void GraphicsContextGL4::Clear(Color const& color)
 void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float depth, std::int32_t stencil)
 {
 	GLbitfield mask = 0;
-	
+
 	if ((options | ClearOptions::DepthBuffer) == options) {
 		mask |= GL_DEPTH_BUFFER_BIT;
 		glClearDepth(static_cast<GLclampd>(depth));
@@ -209,9 +209,9 @@ void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float d
 		auto colorVector = color.ToVector4();
 		glClearColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
 	}
-	
+
 	glClear(mask);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glClear", __FILE__, __LINE__);
 	#endif
@@ -220,7 +220,7 @@ void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float d
 void GraphicsContextGL4::Present()
 {
 	nativeContext->SwapBuffers();
-	
+
 	#ifdef DEBUG
 	RenderSystem::GL4::ErrorChecker::CheckError("SwapBuffers", __FILE__, __LINE__);
 	#endif
@@ -418,7 +418,7 @@ Rectangle GraphicsContextGL4::GetScissorRectangle() const
 {
 	std::array<GLint, 4> scissorBox;
 	glGetIntegerv(GL_SCISSOR_BOX, scissorBox.data());
-	
+
 	Rectangle rect {scissorBox[0], scissorBox[1], scissorBox[2], scissorBox[3]};
 
 	if (renderTargets.empty()) {
@@ -426,7 +426,7 @@ Rectangle GraphicsContextGL4::GetScissorRectangle() const
 			rect.Y = window->ClientBounds().Height - (rect.Y + rect.Height);
 		}
 	}
-	
+
 	return std::move(rect);
 }
 //-----------------------------------------------------------------------
@@ -436,7 +436,7 @@ void GraphicsContextGL4::SetScissorRectangle(Rectangle const& rectangle)
 	POMDOG_ASSERT(rectangle.Height > 0);
 
 	GLint lowerLeftCornerY = rectangle.Y;
-	
+
 	if (renderTargets.empty()) {
 		if (auto window = gameWindow.lock()) {
 			lowerLeftCornerY = window->ClientBounds().Height - (rectangle.Y + rectangle.Height);
@@ -444,7 +444,7 @@ void GraphicsContextGL4::SetScissorRectangle(Rectangle const& rectangle)
 	}
 
 	glScissor(rectangle.X, lowerLeftCornerY, rectangle.Width, rectangle.Height);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glScissor", __FILE__, __LINE__);
 	#endif
@@ -453,7 +453,7 @@ void GraphicsContextGL4::SetScissorRectangle(Rectangle const& rectangle)
 void GraphicsContextGL4::SetInputLayout(std::shared_ptr<InputLayout> const& inputLayoutIn)
 {
 	POMDOG_ASSERT(inputLayoutIn);
-	
+
 	auto nativeInputLayout = dynamic_cast<InputLayoutGL4*>(inputLayoutIn->NativeInputLayout());
 	POMDOG_ASSERT(nativeInputLayout);
 
@@ -472,7 +472,7 @@ void GraphicsContextGL4::SetEffectPass(std::shared_ptr<NativeEffectPass> const& 
 {
 	POMDOG_ASSERT(effectPassIn);
 	auto nativeEffectPass = std::dynamic_pointer_cast<EffectPassGL4>(effectPassIn);
-	
+
 	POMDOG_ASSERT(nativeEffectPass);
 	this->effectPass = nativeEffectPass;
 }
@@ -481,7 +481,7 @@ void GraphicsContextGL4::SetConstantBuffers(std::shared_ptr<NativeConstantLayout
 {
 	POMDOG_ASSERT(constantLayoutIn);
 	auto nativeConstantLayout = std::dynamic_pointer_cast<ConstantLayoutGL4>(constantLayoutIn);
-	
+
 	POMDOG_ASSERT(nativeConstantLayout);
 	this->constantLayout = nativeConstantLayout;
 }
@@ -498,14 +498,14 @@ void GraphicsContextGL4::SetTexture(std::uint32_t textureUnit)
 		#ifdef DEBUG
 		ErrorChecker::CheckError("glActiveTexture", __FILE__, __LINE__);
 		#endif
-	
+
 		glBindTexture(*textures[textureUnit], 0);
-	
+
 		#ifdef DEBUG
 		ErrorChecker::CheckError("glBindTexture", __FILE__, __LINE__);
 		#endif
 	}
-	
+
 	textures[textureUnit] = OptionalType::NullOptional;
 }
 //-----------------------------------------------------------------------
@@ -523,7 +523,7 @@ void GraphicsContextGL4::SetTexture(std::uint32_t textureUnit, Texture2D & textu
 	}
 
 	textures[textureUnit] = textureType;
-	
+
 	POMDOG_ASSERT(textureIn.NativeTexture2D());
 	textureIn.NativeTexture2D()->Apply(textureUnit);
 }
@@ -542,7 +542,7 @@ void GraphicsContextGL4::SetTexture(std::uint32_t textureUnit, RenderTarget2D & 
 	}
 
 	textures[textureUnit] = textureType;
-	
+
 	POMDOG_ASSERT(textureIn.NativeRenderTarget2D());
 	textureIn.NativeRenderTarget2D()->Apply(textureUnit);
 }
@@ -550,7 +550,7 @@ void GraphicsContextGL4::SetTexture(std::uint32_t textureUnit, RenderTarget2D & 
 void GraphicsContextGL4::SetRenderTarget()
 {
 	POMDOG_ASSERT(frameBuffer);
-	
+
 	// Bind framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->value);
 
@@ -572,11 +572,11 @@ void GraphicsContextGL4::SetRenderTarget()
 
 	// Unbind depth stencil buffer
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glFramebufferRenderbuffer", __FILE__, __LINE__);
 	#endif
-	
+
 	// Bind default framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -589,7 +589,7 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
 {
 	POMDOG_ASSERT(!renderTargetsIn.empty());
 	POMDOG_ASSERT(frameBuffer);
-	
+
 	// Bind framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->value);
 
@@ -611,7 +611,7 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
 
 	// Unbind depth stencil buffer
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glFramebufferRenderbuffer", __FILE__, __LINE__);
 	#endif
@@ -627,7 +627,7 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
 		POMDOG_ASSERT(renderTarget);
 		POMDOG_ASSERT(renderTarget->NativeRenderTarget2D());
 		auto const nativeRenderTarget = dynamic_cast<RenderTarget2DGL4*>(renderTarget->NativeRenderTarget2D());
-		
+
 		POMDOG_ASSERT(nativeRenderTarget);
 		nativeRenderTarget->BindToFramebuffer(ToColorAttachment(index));
 
@@ -641,7 +641,7 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
 	{
 		POMDOG_ASSERT(renderTargets.front());
 		auto const& renderTarget = renderTargets.front();
-		
+
 		POMDOG_ASSERT(renderTarget);
 		renderTarget->BindDepthStencilBuffer();
 	}
@@ -652,7 +652,7 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
 		// FUS RO DAH!
 		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to make complete framebuffer.");
 	}
-	
+
 	POMDOG_ASSERT(!attachments.empty());
 	POMDOG_ASSERT(std::numeric_limits<GLsizei>::max() >= attachments.size());
 	glDrawBuffers(static_cast<GLsizei>(attachments.size()), attachments.data());

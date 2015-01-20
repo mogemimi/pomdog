@@ -27,19 +27,19 @@ public:
 public:
 	// Constructors:
 	Color() = default;
-	
+
 	///@brief Copy constructor.
 	Color(Color const&) = default;
-	
+
 	///@brief Move constructor.
 	Color(Color &&) = default;
-	
+
 	///@brief Construct from unsigned integer values.
 	Color(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha);
 
 	explicit Color(Vector3 const& vector);
 	explicit Color(Vector4 const& vector);
-	
+
 	// Assignment operators:
 	Color & operator=(Color const&) = default;
 	Color & operator=(Color &&) = default;
@@ -51,7 +51,7 @@ public:
 	std::uint8_t G() const;
 	std::uint8_t B() const;
 	std::uint8_t A() const;
-	
+
 	void R(std::uint8_t value);
 	void G(std::uint8_t value);
 	void B(std::uint8_t value);
@@ -75,28 +75,28 @@ public:
 	static Color SmoothStep(Color const& source1, Color const& source2, float amount);
 
 	// static public attributes
-	
+
 	///@note (R, G, B, A) = (255, 255, 255, 255)
 	static const Color White;
-	
+
 	///@note (R, G, B, A) = (0, 0, 0, 255)
 	static const Color Black;
-	
+
 	///@note (R, G, B, A) = (255, 0, 0, 255)
 	static const Color Red;
-	
+
 	///@note (R, G, B, A) = (0, 255, 0, 255)
 	static const Color Green;
-	
+
 	///@note (R, G, B, A) = (0, 0, 255, 255)
 	static const Color Blue;
-	
+
 	///@note (R, G, B, A) = (255, 255, 0, 255)
 	static const Color Yellow;
-	
+
 	///@note (R, G, B, A) = (100, 149 ,237, 255)
 	static const Color CornflowerBlue;
-	
+
 	///@note (R, G, B, A) = (0, 0, 0, 0)
 	static const Color TransparentBlack;
 };

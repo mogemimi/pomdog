@@ -22,19 +22,19 @@ class GameClock;
 class Timer {
 public:
 	explicit Timer(GameClock & clock);
-	
+
 	Timer() = delete;
 	Timer(Timer const&) = delete;
 	Timer(Timer &&) = default;
 	Timer & operator=(Timer const&) = delete;
 	Timer & operator=(Timer &&) = default;
-	
+
 	~Timer();
 
 	void Start();
 	void Stop();
 	void Reset();
-	
+
 	bool Enabled() const;
 
 	DurationSeconds TotalTime() const;
@@ -42,7 +42,7 @@ public:
 
 	void Scale(float scale);
 	float Scale() const;
-	
+
 private:
 	ScopedConnection connection;
 	DurationSeconds totalTime;

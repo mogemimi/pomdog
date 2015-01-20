@@ -35,7 +35,7 @@ public:
 	///@~Japanese
 	/// @brief 行の数です。
 	std::uint8_t RowCount;
-	
+
 	///@~Japanese
 	/// @brief 配列の要素数です。配列を持たない場合は 0 となります。
 	std::uint8_t Elements;

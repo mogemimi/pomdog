@@ -34,7 +34,7 @@ public:
 	std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
 	{
 		std::type_index key{typeid(Trait)};
-	
+
 		auto iter = effects.find(key);
 		if (iter != std::end(effects))
 		{
@@ -44,16 +44,16 @@ public:
 
 			effects.erase(iter);
 		}
-		
+
 		POMDOG_ASSERT(effects.find(key) == std::end(effects));
 
 		auto effect = Trait::Create(graphicsDevice);
 		effects.insert(std::make_pair(key, effect));
-		
+
 		static_assert(std::is_same<decltype(effect), std::shared_ptr<EffectPass>>::value, "");
 		return effect;
 	}
-	
+
 private:
 	std::map<std::type_index, std::weak_ptr<EffectPass>> effects;
 };

@@ -23,7 +23,7 @@ struct UIHelper {
 	{
 		return Vector2::Transform(position, Matrix3x2::Invert(transform));
 	}
-	
+
 	static Point2D ConvertToChildSpace(Point2D const& position, Matrix3x2 const& transform)
 	{
 		auto positionInChild = ConvertToChildSpace(Vector2(position.X, position.Y), transform);

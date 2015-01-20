@@ -22,13 +22,13 @@ class RenderCommand;
 class RenderQueue {
 public:
 	void PushBack(std::reference_wrapper<RenderCommand> && command);
-	
+
 	void Sort();
-	
+
 	std::size_t Count() const;
-	
+
 	void Clear();
-	
+
 	void Enumerate(std::function<void(RenderCommand &)> const& callback) const;
 
 private:

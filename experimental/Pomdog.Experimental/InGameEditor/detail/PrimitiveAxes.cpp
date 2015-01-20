@@ -13,7 +13,7 @@ namespace SceneEditor {
 PrimitiveAxes::PrimitiveAxes(Color const& xAxisColor, Color const& yAxisColor, Color const& zAxisColor)
 {
 	constexpr float axesPixelLength = 4096.0f;
-	
+
 	lines = {
 		// x axis
 		Vector3(-1.0f, 0.0f, 0.0f), Vector3(1.0f, 0.0f, 0.0f), xAxisColor,
@@ -22,7 +22,7 @@ PrimitiveAxes::PrimitiveAxes(Color const& xAxisColor, Color const& yAxisColor, C
 		// z axis
 		Vector3(0.0f, 0.0f, -1.0f), Vector3(0.0f, 0.0f, 1.0f), zAxisColor
 	};
-	
+
 	for (auto & line: lines)
 	{
 		line.Point1 *= axesPixelLength;

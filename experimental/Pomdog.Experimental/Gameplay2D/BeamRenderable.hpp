@@ -26,12 +26,12 @@ public:
 	BeamRenderable();
 
 	void Visit(GameObject & gameObject, Renderer & renderer) override;
-	
+
 	void Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice, std::shared_ptr<AssetManager> const& assets);
 	void Update(GameClock const& clock);
-	
+
 	void DrawBeam();
-	
+
 private:
 	BeamSystem beamSystem;
 	std::shared_ptr<Texture2D> texture;

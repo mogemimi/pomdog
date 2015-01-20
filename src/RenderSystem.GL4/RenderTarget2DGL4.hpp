@@ -29,17 +29,17 @@ class RenderTarget2DGL4 final: public NativeRenderTarget2D {
 public:
 	RenderTarget2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
 		std::uint32_t levelCount, SurfaceFormat format, DepthFormat depthStencilFormat);
-	
+
 	~RenderTarget2DGL4();
-	
+
 	///@copydoc NativeTexture2D
 	void Apply(std::uint32_t index) override;
-	
+
 	void BindToFramebuffer(GLenum attachmentPoint);
 	void UnbindFromFramebuffer(GLenum attachmentPoint);
-	
+
 	void BindDepthStencilBuffer();
-	
+
 private:
 	Texture2DGL4 texture;
 	Optional<RenderBuffer2DGL4> renderBuffer;

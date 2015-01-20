@@ -23,7 +23,7 @@ public:
 	NativeEffectReflection() = default;
 	NativeEffectReflection(NativeEffectReflection const&) = delete;
 	NativeEffectReflection & operator=(NativeEffectReflection const&) = delete;
-	
+
 	virtual ~NativeEffectReflection() = default;
 
 	virtual std::vector<EffectConstantDescription> GetConstantBuffers() const = 0;

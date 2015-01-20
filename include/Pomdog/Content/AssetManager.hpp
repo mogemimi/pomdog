@@ -35,9 +35,9 @@ public:
 	void Unload();
 
 	std::string RootDirectory() const;
-	
+
 	std::ifstream OpenStream(std::string const& assetName) const;
-	
+
 private:
 	Details::AssetLoaderContext loaderContext;
 	Details::AssetDictionary assets;

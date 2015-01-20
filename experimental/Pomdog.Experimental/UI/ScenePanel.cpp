@@ -19,7 +19,7 @@ static Radian<float> SampleTumbleGesture(Vector2 const& position, Vector2 & star
 	constexpr float threshold = 1.0f;
 
 	Radian<float> delta = 0.0f;
-	
+
 	auto const distance = Vector2::Distance(startPosition, position);
 
 	if (threshold < distance)
@@ -36,15 +36,15 @@ static Radian<float> SampleTumbleGesture(Vector2 const& position, Vector2 & star
 			auto const cosAngle = Vector2::Dot(vecInScreen1, vecInScreen2)/(vecInScreen1.Length() * vecInScreen2.Length());
 			delta = std::acos(MathHelper::Clamp(cosAngle, -1.0f, 1.0f)) * (cross > 0.0f ? 1.0f: -1.0f);
 			POMDOG_ASSERT(delta != std::numeric_limits<float>::signaling_NaN());
-			
+
 			if ((vecInScreen1.Length() < 24.0f || vecInScreen2.Length() < 24.0f)) {
 				delta *= std::min(std::abs(cross/vecInScreen2.Length())*0.01f, 1.0f);
 			}
-			
+
 			startPosition = std::move(position);
 		}
 	}
-	
+
 	return delta;
 }
 //-----------------------------------------------------------------------
@@ -53,12 +53,12 @@ static Vector2 SampleTrackGesture(Vector2 const& position, Vector2 & startPositi
 	constexpr float threshold = 2.0f;
 
 	Vector2 delta = Vector2::Zero;
-	
+
 	if (threshold < Vector2::Distance(startPosition, position)) {
 		delta = position - startPosition;
 		startPosition = position;
 	}
-	
+
 	return delta;
 }
 
@@ -99,7 +99,7 @@ Vector2 ScenePanel::ConvertToPanelSpace(Point2D const& point) const
 void ScenePanel::OnParentChanged()
 {
 	auto parent = Parent().lock();
-	
+
 	POMDOG_ASSERT(parent);
 	POMDOG_ASSERT(!parent->Dispatcher().expired());
 
@@ -127,7 +127,7 @@ void ScenePanel::OnPointerWheelChanged(PointerPoint const& pointerPoint)
 	if (pointerPoint.MouseWheelDelta != 0)
 	{
 		auto direction = (pointerPoint.MouseWheelDelta >= 0 ? 1.0f : -1.0f);
-		
+
 		if (direction != normalizedScrollDirection) {
 			normalizedScrollDirection = direction;
 			timer = ZoomAnimationInterval;
@@ -149,7 +149,7 @@ void ScenePanel::OnPointerExited(PointerPoint const& pointerPoint)
 void ScenePanel::OnPointerPressed(PointerPoint const& pointerPoint)
 {
 	POMDOG_ASSERT(pointerPoint.MouseEvent);
-	
+
 	switch (*pointerPoint.MouseEvent) {
 	case PointerMouseEvent::LeftButtonPressed:
 		OnMouseLeftButtonPressed(pointerPoint);
@@ -168,7 +168,7 @@ void ScenePanel::OnPointerPressed(PointerPoint const& pointerPoint)
 void ScenePanel::OnPointerMoved(PointerPoint const& pointerPoint)
 {
 	POMDOG_ASSERT(pointerPoint.MouseEvent);
-	
+
 	switch (*pointerPoint.MouseEvent) {
 	case PointerMouseEvent::LeftButtonPressed:
 		OnMouseLeftButtonMoved(pointerPoint);
@@ -211,7 +211,7 @@ void ScenePanel::OnMouseLeftButtonMoved(PointerPoint const& pointerPoint)
 	POMDOG_ASSERT(cameraObject);
 	auto transform = cameraObject.Component<Transform2D>();
 	auto camera = cameraObject.Component<Camera2D>();
-	
+
 	if (!transform || !camera) {
 		return;
 	}
@@ -245,23 +245,23 @@ void ScenePanel::OnMouseMiddleButtonMoved(PointerPoint const& pointerPoint)
 	if (!trackStartPosition) {
 		return;
 	}
-	
+
 	POMDOG_ASSERT(cameraObject);
 	auto transform = cameraObject.Component<Transform2D>();
 	auto camera = cameraObject.Component<Camera2D>();
-	
+
 	if (!transform || !camera) {
 		return;
 	}
 
 	// Track Gesture
 	auto delta = SampleTrackGesture(ConvertToPanelSpace(pointerPoint.Position), *trackStartPosition);
-	
+
 	POMDOG_ASSERT(camera->Zoom > 0);
 	auto matrix = (Matrix3x3::CreateTranslation(delta)
 		* Matrix3x3::CreateScale(1.0f / camera->Zoom)
 		* Matrix3x3::CreateRotationZ(transform->Rotation));
-	
+
 	transform->Position -= {matrix(2, 0), matrix(2, 1)};
 }
 //-----------------------------------------------------------------------
@@ -288,7 +288,7 @@ void ScenePanel::UpdateAnimation(DurationSeconds const& frameDuration)
 
 	auto transform = cameraObject.Component<Transform2D>();
 	auto camera = cameraObject.Component<Camera2D>();
-	
+
 	if (!transform || !camera) {
 		return;
 	}

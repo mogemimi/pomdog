@@ -20,7 +20,7 @@ class GameObject;
 class Action {
 public:
 	virtual ~Action() = default;
-	
+
 	virtual void Act(GameObject & gameObject, AnimationTimeInterval const& duration) = 0;
 
 	virtual bool IsCompleted() const = 0;

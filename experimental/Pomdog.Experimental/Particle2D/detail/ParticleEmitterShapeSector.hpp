@@ -22,7 +22,7 @@ class ParticleEmitterShapeSector final: public ParticleEmitterShape {
 private:
 	///@note range: [0, 2*Pi]
 	Radian<float> centralAngle;
-	
+
 public:
 	explicit ParticleEmitterShapeSector(Radian<float> && centralAngleIn)
 		: centralAngle(std::move(centralAngleIn))
@@ -31,7 +31,7 @@ public:
 	void Compute(std::mt19937 & random, Vector2 & emitPosition, Radian<float> & emitAngle) const override
 	{
 		emitPosition = {0, 0};
-		
+
 		std::uniform_real_distribution<float> distribution(-0.5f, 0.5f);
 		emitAngle = centralAngle * distribution(random);
 	}

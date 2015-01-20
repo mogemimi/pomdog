@@ -52,10 +52,10 @@ void AnimationLerpNode::Calculate(AnimationTimeInterval const& time,
 
 	POMDOG_ASSERT(nodeA);
 	POMDOG_ASSERT(nodeB);
-	
+
 	nodeA->Calculate(time, weights, skeleton, sourcePose1);
 	nodeB->Calculate(time, weights, skeleton, sourcePose2);
-	
+
 	auto weight = weights.At(weightIndex).GetFloat();
 	using Details::Skeletal2D::WeightBlendingHelper;
 	WeightBlendingHelper::Lerp(sourcePose1.JointPoses, sourcePose2.JointPoses, weight, skeletonPose.JointPoses);

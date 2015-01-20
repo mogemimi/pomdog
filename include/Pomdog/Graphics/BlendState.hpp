@@ -63,10 +63,10 @@ public:
 	/// @details このステートはデフォルトで設定されています。
 	static std::shared_ptr<BlendState>
 	CreateOpaque(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-	
+
 public:
 	Details::RenderSystem::NativeBlendState* NativeBlendState();
-	
+
 private:
 	std::unique_ptr<Details::RenderSystem::NativeBlendState> nativeBlendState;
 	BlendDescription description;

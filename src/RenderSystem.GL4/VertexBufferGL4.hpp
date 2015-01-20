@@ -28,17 +28,17 @@ class VertexBufferGL4 final: public NativeVertexBuffer {
 public:
 	VertexBufferGL4() = delete;
 	~VertexBufferGL4() override;
-	
+
 	VertexBufferGL4(std::uint32_t sizeInBytes, BufferUsage bufferUsage);
-		
+
 	VertexBufferGL4(void const* vertices, std::uint32_t sizeInBytes, BufferUsage bufferUsage);
 
 	///@copydoc NativeVertexBuffer
 	void SetData(std::uint32_t offsetInBytes, void const* source,
 		std::uint32_t sizeInBytes) override;
-	
+
 	void BindBuffer();
-	
+
 private:
 	Optional<VertexBufferObjectGL4> bufferObject;
 };

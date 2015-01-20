@@ -57,7 +57,7 @@ IndexBufferGL4::IndexBufferGL4(void const* indices,
 		glGenBuffers(1, indexBuffer.Data());
 		return std::move(indexBuffer);
 	})();
-	
+
 	auto const oldBufferObject = TypesafeHelperGL4::Get<IndexBufferObjectGL4>();
 	ScopeGuard scope([&oldBufferObject]{
 		TypesafeHelperGL4::BindBuffer(oldBufferObject);
@@ -116,7 +116,7 @@ void IndexBufferGL4::BindBuffer()
 {
 	POMDOG_ASSERT(bufferObject);
 	TypesafeHelperGL4::BindBuffer(*bufferObject);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif

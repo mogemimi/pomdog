@@ -17,7 +17,7 @@ PrimitiveGrid::PrimitiveGrid(Color const& primaryColor, Color const& secondaryCo
 	constexpr float gridPixelSize = 96.0f;
 
 	lines.reserve((1 + gridCount*2) * 2);
-	
+
 	POMDOG_ASSERT(gridCount > 0);
 	auto const lineLength = gridPixelSize * (gridCount);
 
@@ -27,7 +27,7 @@ PrimitiveGrid::PrimitiveGrid(Color const& primaryColor, Color const& secondaryCo
 		auto offset = (gridPixelSize * lineNumber) * ((i % 2 == 0) ? 1.0f: -1.0f);
 
 		Color color = (lineNumber % 10 == 0) ? primaryColor: secondaryColor;
-		
+
 		lines.push_back({Vector2{-lineLength, offset}, Vector2{+lineLength, offset}, color});
 		lines.push_back({Vector2{offset, -lineLength}, Vector2{offset, +lineLength}, color});
 	}

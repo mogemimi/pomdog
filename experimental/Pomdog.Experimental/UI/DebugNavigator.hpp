@@ -22,9 +22,9 @@ namespace UI {
 class DebugNavigator: public Control {
 public:
 	DebugNavigator(std::shared_ptr<GameClock> const& clock);
-	
+
 	void Draw(DrawingContext & drawingContext) override;
-	
+
 private:
 	std::shared_ptr<GameClock> clock;
 	std::deque<float> frameRates;

@@ -25,10 +25,10 @@ public:
 	NativeTexture2D & operator=(NativeTexture2D const&) = delete;
 
 	virtual ~NativeTexture2D() = default;
-	
+
 	virtual void SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
 		std::uint32_t levelCount, SurfaceFormat format, void const* pixelData) = 0;
-	
+
 	virtual void Apply(std::uint32_t index) = 0;
 };
 

@@ -44,7 +44,7 @@ public:
 	float Jaggedness = 0.7f;
 
 	float StartLifetime = 1;
-		
+
 	///@brief 発生させるビームの最大数
 	std::uint16_t MaxBeams = 16;
 

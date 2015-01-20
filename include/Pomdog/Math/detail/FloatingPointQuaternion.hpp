@@ -34,16 +34,16 @@ public:
 public:
 	// Constructors:
 	FloatingPointQuaternion() = default;
-	
+
 	///@brief Copy constructor.
 	FloatingPointQuaternion(FloatingPointQuaternion const&) = default;
-	
+
 	///@brief Move constructor.
 	FloatingPointQuaternion(FloatingPointQuaternion &&) = default;
-	
+
 	///@brief Construct from floating-point values.
 	FloatingPointQuaternion(T x, T y, T z, T w);
-	
+
 	// Assignment operators:
 	FloatingPointQuaternion & operator=(FloatingPointQuaternion const&) = default;
 	FloatingPointQuaternion & operator=(FloatingPointQuaternion &&) = default;
@@ -70,7 +70,7 @@ public:
 	///@~Japanese
 	/// @brief クォータニオンの長さを取得します。
 	T Length() const;
-	
+
 	///@~Japanese
 	/// @brief クォータニオンの長さの 2 乗を計算します。
 	T LengthSquared() const;
@@ -86,21 +86,21 @@ public:
 	///@~Japanese
 	/// @brief 単位長に正規化されたクォータニオンを新しく作成します。
 	static FloatingPointQuaternion Normalize(FloatingPointQuaternion const& quaternion);
-	
+
 	///@~Japanese
 	/// @brief 単位長に正規化されたクォータニオンを新しく作成します。
 	static void Normalize(FloatingPointQuaternion const& quaternion, FloatingPointQuaternion & result);
-	
+
 	///@~Japanese
 	/// @brief 2つのクォータニオン間を球面線形補間を使って補間します。
 	static void
 	Slerp(FloatingPointQuaternion const& begin, FloatingPointQuaternion const& end, T amount, FloatingPointQuaternion & result);
-	
+
 	///@~Japanese
 	/// @brief 2つのクォータニオン間を球面線形補間を使って補間します。
 	static FloatingPointQuaternion
 	Slerp(FloatingPointQuaternion const& begin, FloatingPointQuaternion const& end, T amount);
-	
+
 	///@~Japanese
 	/// @brief 逆クォータニオンを返します。共役クォータニオンを正規化したものを返します。
 	static void
@@ -132,7 +132,7 @@ public:
 	/// @brief 指定された回転行列からクォータニオンを作成します。
 	static FloatingPointQuaternion
 	CreateFromRotationMatrix(FloatingPointMatrix4x4<T> const& rotation);
-	
+
 	///@~English
 	/// @brief Convert rotation matrix to quaternion.
 	///@~Japanese
@@ -166,7 +166,7 @@ public:
 	///@~Japanese
 	/// @brief 最初の要素へのポインタを返します。
 	T* Data();
-	
+
 	///@~Japanese
 	/// @brief 回転しないことを表す単位クォータニオンです。
 	/// @remarks それぞれ (x, y, z, w) に対応して、(0, 0, 0, 1) となるクォータニオンです。

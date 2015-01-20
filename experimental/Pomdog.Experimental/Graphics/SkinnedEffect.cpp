@@ -62,7 +62,7 @@ void SkinnedEffect::Impl::Apply(GraphicsContext & graphicsContext)
 		Matrix4x4 WorldViewProjection;
 		Vector4 Color;
 	};
-	
+
 	Constants constants;
 	constants.WorldViewProjection = Matrix4x4::Transpose(worldViewProjection);
 	constants.Color = color.ToVector4();
@@ -110,9 +110,9 @@ void SkinnedEffect::SetBoneTransforms(Matrix3x2 const* boneTransforms, std::size
 	POMDOG_ASSERT(boneTransforms != nullptr);
 	POMDOG_ASSERT(count > 0);
 	POMDOG_ASSERT(count <= MaxBones);
-	
+
 	auto & bones = impl->bones;
-	
+
 	for (std::size_t i = 0; i < count; ++i)
 	{
 		POMDOG_ASSERT(i < bones.size());

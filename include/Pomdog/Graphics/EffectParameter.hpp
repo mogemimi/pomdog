@@ -56,13 +56,13 @@ public:
 		Details::EffectBinaryParameter::Get<T>(*this, result);
 		return std::move(result);
 	}
-	
+
 	///@~Japanese
 	/// @brief エフェクトパラメータに設定されている値を取得します。
 	/// @param byteWidth バイト単位のバッファサイズ。
 	/// @param result バッファの先頭を示すポインタ。
 	void GetValue(std::uint32_t byteWidth, void* result) const;
-	
+
 	///@~Japanese
 	/// @brief エフェクトパラメータに値を設定します。
 	template <typename T>
@@ -71,7 +71,7 @@ public:
 		static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
 		Details::EffectBinaryParameter::Set(*this, value);
 	}
-	
+
 	///@~Japanese
 	/// @brief エフェクトパラメータに値を設定します。
 	template <typename T>

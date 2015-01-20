@@ -28,13 +28,13 @@ public:
 	Signal(Signal &&) = default;
 	Signal & operator=(Signal const&) = delete;
 	Signal & operator=(Signal &&) = default;
-	
+
 	EventConnection Connect(std::function<void(Arguments...)> const& slot);
 
 	EventConnection Connect(std::function<void(Arguments...)> && slot);
 
 	void operator()(Arguments... arguments);
-	
+
 	std::size_t InvocationCount() const;
 
 private:

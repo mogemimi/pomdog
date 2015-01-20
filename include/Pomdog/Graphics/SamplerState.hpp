@@ -36,7 +36,7 @@ public:
 	SamplerState & operator=(SamplerState const&) = delete;
 
 	SamplerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, SamplerDescription const& description);
-	
+
 	~SamplerState();
 
 	///@~Japanese
@@ -78,10 +78,10 @@ public:
 	/// 範囲外テクスチャ座標のアドレッシング方法は TextureAddressMode::Wrap を使用します。
 	static std::shared_ptr<SamplerState>
 	CreatePointWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-	
+
 public:
 	Details::RenderSystem::NativeSamplerState* NativeSamplerState();
-	
+
 private:
 	std::unique_ptr<Details::RenderSystem::NativeSamplerState> nativeSamplerState;
 	SamplerDescription description;

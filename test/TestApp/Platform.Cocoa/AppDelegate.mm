@@ -56,11 +56,11 @@ using Pomdog::ScopedConnection;
 				Log::Critical("Pomdog", e.what());
 			}
 		});
-		
+
 		// Shutdown your application
 		[NSApp terminate:nil];
 	});
-	
+
 	Log::Verbose("game mainloop thread run");
 }
 

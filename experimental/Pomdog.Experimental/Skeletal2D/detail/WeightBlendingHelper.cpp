@@ -25,7 +25,7 @@ void WeightBlendingHelper::Lerp(std::vector<JointPose> const& sourcePoses1,
 	{
 		auto & pose1 = sourcePoses1[i];
 		auto & pose2 = sourcePoses2[i];
-		
+
 		POMDOG_ASSERT(!output.empty());
 		POMDOG_ASSERT(i < output.size());
 		auto & result = output[i];

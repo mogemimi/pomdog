@@ -19,7 +19,7 @@ namespace Pomdog {
 class ScreenQuad {
 public:
 	explicit ScreenQuad(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-	
+
 	void DrawQuad(GraphicsContext & graphicsContext);
 
 private:

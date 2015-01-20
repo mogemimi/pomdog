@@ -20,13 +20,13 @@ namespace Pomdog {
 enum class PrimitiveTopology: std::uint8_t {
 	///@brief A triangle list.
 	TriangleList,
-	
+
 	///@brief A triangle strip.
 	TriangleStrip,
-	
+
 	///@brief A line list.
 	LineList,
-	
+
 	///@brief A line strip.
 	LineStrip,
 };

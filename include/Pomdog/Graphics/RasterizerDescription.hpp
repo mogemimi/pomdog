@@ -25,7 +25,7 @@ public:
 	///@~Japanese
 	/// @brief 深度テストの時にピクセルに加算される深度バイアスです。デフォルト値は 0 です。
 	std::int32_t DepthBias = 0;
-	
+
 	///@~Japanese
 	/// @note 深度バイアスに掛ける係数です。デフォルト値は 0 です。
 	float SlopeScaledDepthBias = 0;
@@ -37,12 +37,12 @@ public:
 	///@~Japanese
 	/// @brief 三角形の塗りつぶし方法を指定します。デフォルト値は FillMode::Solid です。
 	FillMode FillMode = FillMode::Solid;
-	
+
 	///@~Japanese
 	/// @brief マルチサンプリングのアンチエイリアシングが有効かどうか指定します。デフォルト値は無効 (false) です。
 	/// @remarks アンチエイリアシングが有効な場合は true を、無効な場合は false を指定します。
 	bool MultisampleEnable = false;
-	
+
 	///@~Japanese
 	/// @brief シザーテストが有効かどうかを指定します。デフォルト値は無効 (false) です。
 	/// @remarks シザーテストが有効な場合は true を、無効な場合は false を指定します。

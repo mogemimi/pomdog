@@ -28,21 +28,21 @@ public:
 		std::shared_ptr<AnimationGraph> const& animationGraph);
 
 	~Animator();
-	
+
 	void Update(DurationSeconds const& frameDuration);
-	
+
 	void CrossFade(std::string const& state, DurationSeconds const& transitionDuration);
 
 	void Play(std::string const& state);
-	
+
 	float PlaybackRate() const;
 	void PlaybackRate(float playbackRate);
 
 	void SetFloat(std::string const& name, float value);
 	void SetBool(std::string const& name, bool value);
-	
+
 	std::string GetCurrentStateName() const;
-	
+
 private:
 	class Impl;
 	std::unique_ptr<Impl> impl;

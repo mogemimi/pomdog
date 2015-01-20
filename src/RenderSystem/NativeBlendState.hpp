@@ -24,7 +24,7 @@ public:
 	NativeBlendState & operator=(NativeBlendState const&) = delete;
 
 	virtual ~NativeBlendState() = default;
-	
+
 	///@~Japanese
 	/// @brief レンダリングの直前にブレンディングステートを適用します。
 	virtual void Apply(NativeGraphicsContext & graphicsContext) = 0;

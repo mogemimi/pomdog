@@ -36,25 +36,25 @@ public:
 	void UpdateChildren();
 
 	void Touch(MouseState const& mouseState);
-	
+
 	void UpdateAnimation(DurationSeconds const& frameDuration);
-	
+
 	Details::UIEventConnection Connect(std::shared_ptr<UIView> const& child);
 	Details::UIEventConnection Connect(std::shared_ptr<UIView> && child);
 
 private:
 	std::shared_ptr<UIView> Find(Point2D const& position);
-	
+
 	void PointerEntered(Point2D const& position, MouseState const& mouseState, std::shared_ptr<UIView> const& node);
-	
+
 	void PointerExited(Point2D const& position);
-		
+
 	void PointerPressed(Point2D const& position);
-	
+
 	void PointerMoved(Point2D const& position);
-	
+
 	void PointerReleased(Point2D const& position);
-	
+
 	Optional<PointerMouseEvent> FindPointerMouseEvent(MouseState const& mouseState) const;
 
 	ButtonState CheckMouseButton(MouseState const& mouseState, PointerMouseEvent const& pointerMouseEvent) const;

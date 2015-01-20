@@ -26,12 +26,12 @@ HierarchyNode::~HierarchyNode()
 		{
 			auto prevSibling = parent->firstChild;
 			POMDOG_ASSERT(prevSibling);
-			
+
 			while (prevSibling->sibling.get() != this)
 			{
 				prevSibling = prevSibling->sibling;
 			}
-			
+
 			if (prevSibling->sibling.get() == this)
 			{
 				prevSibling->sibling = sibling;
@@ -44,20 +44,20 @@ void HierarchyNode::AddChild(std::shared_ptr<HierarchyNode> const& child)
 {
 	POMDOG_ASSERT(child);
 	child->weakParent = shared_from_this();
-	
+
 	if (!firstChild) {
 		firstChild = child;
 		return;
 	}
-	
+
 	auto prevSibling = firstChild;
 	POMDOG_ASSERT(prevSibling);
-	
+
 	while (prevSibling->sibling)
 	{
 		prevSibling = prevSibling->sibling;
 	}
-	
+
 	POMDOG_ASSERT(prevSibling);
 	POMDOG_ASSERT(!prevSibling->sibling);
 	prevSibling->sibling = child;
@@ -67,11 +67,11 @@ void HierarchyNode::RemoveChild(std::shared_ptr<HierarchyNode> const& child)
 {
 	POMDOG_ASSERT(child);
 	POMDOG_ASSERT(!child->weakParent.expired());
-	
+
 	if (child->weakParent.lock() != shared_from_this()) {
 		return;
 	}
-	
+
 	if (firstChild == child)
 	{
 		child->weakParent.reset();
@@ -80,7 +80,7 @@ void HierarchyNode::RemoveChild(std::shared_ptr<HierarchyNode> const& child)
 		POMDOG_ASSERT(child->sibling == this->firstChild);
 		return;
 	}
-	
+
 	auto prevSibling = firstChild;
 	while (prevSibling->sibling)
 	{
@@ -92,7 +92,7 @@ void HierarchyNode::RemoveChild(std::shared_ptr<HierarchyNode> const& child)
 			POMDOG_ASSERT(child->sibling == this->firstChild);
 			return;
 		}
-	
+
 		prevSibling = prevSibling->sibling;
 	}
 }
@@ -105,7 +105,7 @@ void HierarchyNode::RemoveChildren()
 		child->weakParent.reset();
 		child = child->sibling;
 	}
-	
+
 	firstChild.reset();
 }
 //-----------------------------------------------------------------------

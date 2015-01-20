@@ -42,13 +42,13 @@ public:
 	GraphicsContext(std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
 		PresentationParameters const& presentationParameters,
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-	
+
 	~GraphicsContext();
-	
+
 	///@~Japanese
 	/// @brief 現在バインドされているレンダーターゲットを指定された色でクリアーします。
 	void Clear(Color const& color);
-	
+
 	///@~Japanese
 	/// @brief 指定されたレンダーターゲットまたは深度ステンシルバッファをクリアーします。
 	void Clear(ClearOptions options, Color const& color, float depth, std::int32_t stencil);
@@ -56,7 +56,7 @@ public:
 	///@~Japanese
 	/// @brief バックバッファの内容をディスプレイに表示します。
 	void Present();
-	
+
 	///@~Japanese
 	/// @brief インデックスを持たず、インスタンス化されていないプリミティブを描画します。
 	/// @param primitiveTopology プリミティブの位相。
@@ -87,7 +87,7 @@ public:
 	/// @param instanceCount レンダリングするインスタンスの数。
 	void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
 		std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount);
-	
+
 	///@~Japanese
 	/// @brief ビューポートを取得します。
 	Pomdog::Viewport const& Viewport() const;
@@ -95,19 +95,19 @@ public:
 	///@~Japanese
 	/// @brief ビューポートを設定します。
 	void Viewport(Pomdog::Viewport const& viewport);
-	
+
 	///@~Japanese
 	/// @brief シザーテストで用いるシザー矩形を取得します。
 	Pomdog::Rectangle ScissorRectangle() const;
-	
+
 	///@~Japanese
 	/// @brief シザーテストで用いるシザー矩形を設定します。
 	void ScissorRectangle(Pomdog::Rectangle const& rectangle);
-	
+
 	///@~Japanese
 	/// @brief ブレンディングステートを取得します。
 	std::shared_ptr<BlendState> GetBlendState() const;
-	
+
 	///@~Japanese
 	/// @brief ブレンディングステートを設定します。
 	void SetBlendState(std::shared_ptr<BlendState> const& blendState);
@@ -123,7 +123,7 @@ public:
 	///@~Japanese
 	/// @brief ラスタライザーステートを取得します。
 	std::shared_ptr<RasterizerState> GetRasterizerState() const;
-	
+
 	///@~Japanese
 	/// @brief ラスタライザーステートを設定します。
 	void SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState);
@@ -139,7 +139,7 @@ public:
 	///@~Japanese
 	/// @brief 頂点バッファを設定します。
 	void SetVertexBuffer(std::shared_ptr<VertexBuffer> const& vertexBuffer);
-	
+
 	///@~Japanese
 	/// @brief 頂点バッファの配列を設定します。
 	void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers);
@@ -163,7 +163,7 @@ public:
 	/// @param index 0 から始まるテクスチャスロットのインデックスを指定します。
 	/// @param texture テクスチャスロットにバインドするテクスチャ
 	void SetTexture(std::uint32_t index, std::shared_ptr<Texture2D> const& texture);
-	
+
 	///@~Japanese
 	/// @brief 指定されたテクスチャスロットにテクスチャを設定します。
 	/// @param index 0 から始まるテクスチャスロットのインデックスを指定します。
@@ -201,7 +201,7 @@ public:
 
 public:
 	Details::RenderSystem::NativeGraphicsContext* NativeGraphicsContext();
-	
+
 private:
 	class Impl;
 	std::unique_ptr<Impl> impl;

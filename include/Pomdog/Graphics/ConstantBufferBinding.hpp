@@ -33,27 +33,27 @@ public:
 	ConstantBufferBinding() = delete;
 	ConstantBufferBinding(ConstantBufferBinding const&) = delete;
 	ConstantBufferBinding(ConstantBufferBinding &&) = default;
-	
+
 	ConstantBufferBinding(GraphicsDevice & graphicsDevice, EffectPass & effectPass);
-	
+
 	ConstantBufferBinding(std::shared_ptr<GraphicsDevice> const& graphicsDevice, EffectPass & effectPass);
 
 	~ConstantBufferBinding();
-	
+
 	ConstantBufferBinding & operator=(ConstantBufferBinding const&) = delete;
 	ConstantBufferBinding & operator=(ConstantBufferBinding &&) = default;
 
 	///@~Japanese
 	/// @brief エフェクトパラメータを取得します。
 	std::shared_ptr<EffectParameter> const& Find(std::string const& parameterName) const;
-	
+
 	///@~Japanese
 	/// @brief エフェクトパラメータのコンテナを取得します。
 	EffectParameterCollection const& Find() const;
-	
+
 public:
 	Details::RenderSystem::NativeConstantLayout* NativeConstantLayout();
-	
+
 private:
 	EffectParameterCollection effectParameters;
 	std::unique_ptr<Details::RenderSystem::NativeConstantLayout> nativeConstantLayout;

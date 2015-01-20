@@ -216,10 +216,10 @@ FloatingPointQuaternion<T>::Slerp(FloatingPointQuaternion const& begin, Floating
 
 	auto const angle(std::acos(cosAngle));
 	auto const inverseSinAngle = 1 / std::sin(angle);
-	
+
 	auto const coefficient1 = std::sin((1 - amount) * angle) * inverseSinAngle;
 	auto const coefficient2 = std::sin(amount * angle) * inverseSinAngle;
-	
+
 	result.X = coefficient1 * begin.X + coefficient2 * end.X;
 	result.Y = coefficient1 * begin.Y + coefficient2 * end.Y;
 	result.Z = coefficient1 * begin.Z + coefficient2 * end.Z;
@@ -321,7 +321,7 @@ void CreateFromRotationMatrixImplementation(MatrixClass const& rotation, Floatin
 		static std::size_t const indices[3] = { 1, 2, 0 };
 		std::size_t const j = indices[i];
 		std::size_t const k = indices[j];
-		
+
 		auto root = std::sqrt(rotation(i, i) - rotation(j, j) - rotation(k, k) + static_cast<T>(1));
 		std::array<T*, 3> const quat = {{ &result.X, &result.Y, &result.Z }};
 		*quat[i] = half * root;
@@ -372,11 +372,11 @@ FloatingPointQuaternion<T>::CreateFromYawPitchRoll(
 	auto const halfYaw = yaw.value / 2;
 	auto const cosYaw = std::cos(halfYaw);
 	auto const sinYaw = std::sin(halfYaw);
-	
+
 	auto const halfPitch = pitch.value / 2;
 	auto const cosPitch = std::cos(halfPitch);
 	auto const sinPitch = std::sin(halfPitch);
-	
+
 	auto const halfRoll = roll.value / 2;
 	auto const cosRoll = std::cos(halfRoll);
 	auto const sinRoll = std::sin(halfRoll);

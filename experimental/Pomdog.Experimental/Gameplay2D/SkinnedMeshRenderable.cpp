@@ -38,7 +38,7 @@ SkinnedMeshRenderable::SkinnedMeshRenderable(
 	command.skeletonTransform = skeletonTransformIn;
 	command.mesh = meshIn;
 	command.texture = textureIn;
-	
+
 	POMDOG_ASSERT(command.skeleton);
 	POMDOG_ASSERT(command.skeletonTransform);
 	POMDOG_ASSERT(command.mesh);
@@ -50,9 +50,9 @@ void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 	if (!IsVisible) {
 		return;
 	}
-	
+
 	command.drawOrder = DrawOrder;
-	
+
 	if (auto transform = gameObject.Component<Transform2D>()) {
 		command.localToWorld = CreateTransformMatrix4x4(*transform);
 	}
@@ -61,7 +61,7 @@ void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 	}
 
 	command.color = this->Material.Color;
-	
+
 	renderer.PushCommand(command);
 }
 //-----------------------------------------------------------------------

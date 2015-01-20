@@ -23,7 +23,7 @@ namespace UI {
 class ScenePanel: public Panel, public std::enable_shared_from_this<ScenePanel> {
 public:
 	GameObject cameraObject;
-	
+
 public:
 	ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn);
 
@@ -31,30 +31,30 @@ public:
 	void IsEnabled(bool isEnabled);
 
 	bool SizeToFitContent() const override { return true; }
-	
+
 	void OnParentChanged() override;
 
 	void OnPointerWheelChanged(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerEntered(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerExited(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerPressed(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerMoved(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerReleased(PointerPoint const& pointerPoint) override;
-	
+
 	void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
-	
+
 	void Draw(DrawingContext & drawingContext) override;
-	
+
 	void UpdateAnimation(DurationSeconds const& frameDuration) override;
-	
+
 	// Events:
 	Signal<void(Vector2 const& point)> SceneTouch;
-	
+
 private:
 	void OnMouseLeftButtonPressed(PointerPoint const& pointerPoint);
 	void OnMouseLeftButtonMoved(PointerPoint const& pointerPoint);
@@ -64,13 +64,13 @@ private:
 	void OnMouseRightButtonMoved(PointerPoint const& pointerPoint);
 
 	Vector2 ConvertToPanelSpace(Point2D const& point) const;
-	
+
 private:
 	Details::UIEventConnection connection;
 
 	Optional<Vector2> tumbleStartPosition;
 	Optional<Vector2> trackStartPosition;
-	
+
 	DurationSeconds timer;
 	float normalizedScrollDirection;
 	float scrollAcceleration;

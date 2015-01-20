@@ -36,16 +36,16 @@ public:
 public:
 	// Constructors:
 	FloatingPointVector2() = default;
-	
+
 	///@brief Copy constructor.
 	FloatingPointVector2(FloatingPointVector2 const&) = default;
-	
+
 	///@brief Move constructor.
 	FloatingPointVector2(FloatingPointVector2 &&) = default;
-	
+
 	///@brief Construct from floating-point values.
 	FloatingPointVector2(T x, T y);
-	
+
 	// Assignment operators:
 	FloatingPointVector2 & operator=(FloatingPointVector2 const&) = default;
 	FloatingPointVector2 & operator=(FloatingPointVector2 &&) = default;
@@ -63,7 +63,7 @@ public:
 	FloatingPointVector2 operator-(FloatingPointVector2 const&) const;
 	FloatingPointVector2 operator*(FloatingPointVector2 const&) const;
 	FloatingPointVector2 operator/(FloatingPointVector2 const&) const;
-	
+
 	FloatingPointVector2 operator*(T scaleFactor) const;
 	FloatingPointVector2 operator/(T scaleFactor) const;
 
@@ -71,23 +71,23 @@ public:
 	bool operator!=(FloatingPointVector2 const& other) const;
 
 	// Products, length, and normalize:
-	
+
 	///@~Japanese
 	/// @brief ベクトルの長さを計算します。
 	T Length() const;
-	
+
 	///@~Japanese
 	/// @brief ベクトルの長さの 2 乗を計算します。
 	T LengthSquared() const;
-	
+
 	///@~Japanese
 	/// @brief 2 つのベクトル間の距離を計算します。
 	static T Distance(FloatingPointVector2 const& a, FloatingPointVector2 const& b);
-	
+
 	///@~Japanese
 	/// @brief 2 つのベクトル間の距離の 2 乗を計算します。
 	static T DistanceSquared(FloatingPointVector2 const& a, FloatingPointVector2 const& b);
-	
+
 	///@~Japanese
 	/// @brief 2 つのベクトルの内積を計算します。
 	static T Dot(FloatingPointVector2 const& a, FloatingPointVector2 const& b);
@@ -127,11 +127,11 @@ public:
 	///@~Japanese
 	/// @brief 現在のベクトルを単位ベクトルに変換します。
 	void Normalize();
-	
+
 	///@~Japanese
 	/// @brief 指定されたベクトルの単位ベクトルを計算します。
 	static FloatingPointVector2 Normalize(FloatingPointVector2 const& source);
-	
+
 	///@~Japanese
 	/// @brief 指定されたベクトルの単位ベクトルを計算します。
 	static void Normalize(FloatingPointVector2 const& source, FloatingPointVector2 & result);
@@ -178,7 +178,7 @@ public:
 	///@~Japanese
 	/// @brief 最初の要素へのポインタを返します。
 	T* Data();
-	
+
 	///@note (0, 0, 0)
 	static FloatingPointVector2 const Zero;
 };

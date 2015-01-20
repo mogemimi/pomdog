@@ -49,12 +49,12 @@ static void SetMatrixPalette(SkinnedEffect & skinnedEffect, Skeleton const& skel
 //				Vector2::Transform({1.7f, 4.7f}, matrix),
 //				Vector2::Transform({25, 0}, matrix), boneColor);
 //		}
-//		
+//
 //		auto center = Vector2::Transform(Vector2::Zero, matrix);
 //		polygonBatch->DrawCircle(center, 5.0f, boneColor, 18);
 //		polygonBatch->DrawCircle(center, 3.0f, Color::White, 13);
 //	}
-//	
+//
 //	polygonBatch->End();
 //}
 
@@ -77,36 +77,36 @@ void SkinnedMeshCommandProcessor::Draw(GraphicsContext & graphicsContext, Render
 	using Details::Rendering::SkinnedMeshCommand;
 
 	auto & skinnedMeshCommand = static_cast<SkinnedMeshCommand &>(command);
-	
+
 	POMDOG_ASSERT(skinnedMeshCommand.skeleton);
 	POMDOG_ASSERT(skinnedMeshCommand.skeletonTransform);
 	POMDOG_ASSERT(skinnedMeshCommand.texture);
 	POMDOG_ASSERT(skinnedMeshCommand.mesh);
-	
+
 	{
 		skinnedEffect.SetTexture(skinnedMeshCommand.texture);
 		skinnedEffect.SetColor(skinnedMeshCommand.color);
 		skinnedEffect.SetWorldViewProjection(skinnedMeshCommand.localToWorld * viewProjection);
 		SetMatrixPalette(skinnedEffect, *skinnedMeshCommand.skeleton, *skinnedMeshCommand.skeletonTransform);
-		
+
 		graphicsContext.SetVertexBuffer(skinnedMeshCommand.mesh->VertexBuffer);
 		skinnedEffect.Apply(graphicsContext);
-		
+
 		graphicsContext.DrawIndexed(PrimitiveTopology::TriangleList,
 			skinnedMeshCommand.mesh->IndexBuffer,
 			skinnedMeshCommand.mesh->IndexBuffer->IndexCount());
-	
+
 		++drawCallCount;
 	}
 //	{
 //		auto rasterizerStateOld = graphicsContext->GetRasterizerState();
-//	
+//
 //		RasterizerDescription rasterizerDesc;
 //		rasterizerDesc.FillMode = FillMode::WireFrame;
 //		auto rasterizerState = std::make_shared<RasterizerState>(graphicsDevice, rasterizerDesc);
-//		
+//
 //		graphicsContext->SetRasterizerState(rasterizerState);
-//		
+//
 //		graphicsContext->SetTexture(0, texture);
 //		graphicsContext->SetInputLayout(inputLayout);
 //		graphicsContext->SetVertexBuffer(mesh->VertexBuffer);

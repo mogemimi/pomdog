@@ -19,7 +19,7 @@ PrimitiveCommandProcessor::PrimitiveCommandProcessor(std::shared_ptr<GraphicsCon
 void PrimitiveCommandProcessor::Begin(GraphicsContext & graphicsContext)
 {
 	drawCallCount = 0;
-	
+
 	primitiveBatch.Begin(viewProjection);
 }
 //-----------------------------------------------------------------------

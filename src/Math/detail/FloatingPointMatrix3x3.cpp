@@ -493,7 +493,7 @@ FloatingPointMatrix3x3<T>::CreateRotationY(Radian<T> const& angle, FloatingPoint
 	result.m[1][2] = 0;
 	result.m[2][0] = sinAngle;
 	result.m[2][1] = 0;
-	result.m[2][2] = cosAngle;		
+	result.m[2][2] = cosAngle;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -600,7 +600,7 @@ FloatingPointMatrix3x3<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& ax
 {
 	auto const sinAngle = std::sin(angle.value);
 	auto const cosAngle = std::cos(angle.value);
-	
+
 	auto const t  = static_cast<T>(1) - cosAngle;
 	auto const xx = axis.X * axis.X;
 	auto const yy = axis.Y * axis.Y;

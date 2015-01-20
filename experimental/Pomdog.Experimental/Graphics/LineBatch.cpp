@@ -50,7 +50,7 @@ public:
 	struct Vertex {
 		// {xyz} = position.xyz
 		Vector3 Position;
-		
+
 		// {xyzw} = color.rgba
 		Vector4 Color;
 	};
@@ -72,15 +72,15 @@ public:
 
 	void DrawLine(Vector2 const& point1, Vector2 const& point2,
 		Vector4 const& color1, Vector4 const& color2);
-		
+
 	void DrawLine(Vector3 const& point1, Vector3 const& point2,
 		Vector4 const& color1, Vector4 const& color2);
 
 	void DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
 		Vector4 const& color1, Vector4 const& color2, Vector4 const& color3);
-	
+
 	void End();
-	
+
 	void Flush();
 };
 //-----------------------------------------------------------------------
@@ -124,13 +124,13 @@ void LineBatch::Impl::Flush()
 	POMDOG_ASSERT(!vertices.empty());
 	POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
 	vertexBuffer->SetData(vertices.data(), static_cast<std::uint32_t>(vertices.size()));
-	
+
 	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffer(vertexBuffer);
 	graphicsContext->SetEffectPass(effectPass);
 	graphicsContext->SetConstantBuffers(constantBuffers);
 	graphicsContext->Draw(PrimitiveTopology::LineList, static_cast<std::uint32_t>(vertices.size()));
-	
+
 	vertices.clear();
 }
 //-----------------------------------------------------------------------
@@ -208,13 +208,13 @@ void LineBatch::DrawCircle(Vector2 const& position, float radius, Color const& c
 	}
 
 	POMDOG_ASSERT(radius > 0);
-	
+
 	POMDOG_ASSERT(segments >= 3);
 	Radian<float> centralAngle = MathConstants<float>::TwoPi() / segments;
 	Vector2 prevPoint = position + Vector2{radius, 0};
-	
+
 	auto colorVector = color.ToVector4();
-	
+
 	for (std::size_t i = 0; i < segments; ++i)
 	{
 		auto rad = centralAngle * (i + 1);
@@ -266,7 +266,7 @@ void LineBatch::DrawRectangle(Rectangle const& sourceRect,
 	Color const& color1, Color const& color2, Color const& color3, Color const& color4)
 {
 	POMDOG_ASSERT(impl);
-	
+
 	if (sourceRect.Width <= 0 || sourceRect.Height <= 0) {
 		return;
 	}
@@ -277,7 +277,7 @@ void LineBatch::DrawRectangle(Rectangle const& sourceRect,
 		Vector2(sourceRect.Right(), sourceRect.Y),
 		Vector2(sourceRect.Right(), sourceRect.Y - sourceRect.Height),
 	};
-	
+
 	auto colorVector1 = color1.ToVector4();
 	auto colorVector2 = color2.ToVector4();
 	auto colorVector3 = color3.ToVector4();
@@ -293,7 +293,7 @@ void LineBatch::DrawRectangle(Matrix3x2 const& matrix,
 	Rectangle const& sourceRect, Color const& color)
 {
 	POMDOG_ASSERT(impl);
-	
+
 	if (sourceRect.Width <= 0 || sourceRect.Height <= 0) {
 		return;
 	}
@@ -304,7 +304,7 @@ void LineBatch::DrawRectangle(Matrix3x2 const& matrix,
 		Vector2(sourceRect.Right(), sourceRect.Y),
 		Vector2(sourceRect.Right(), sourceRect.Y - sourceRect.Height),
 	};
-	
+
 	for (auto & vertex: rectVertices) {
 		vertex = Vector2::Transform(vertex, matrix);
 	}

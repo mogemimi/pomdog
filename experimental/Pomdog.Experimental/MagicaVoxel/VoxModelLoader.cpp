@@ -30,7 +30,7 @@ static std::ifstream::pos_type ChunkSize(std::ifstream & stream, MagicaVoxel::Vo
 	POMDOG_ASSERT(chunk.ContentSize >= 0);
 	POMDOG_ASSERT(chunk.ChildrenSize >= 0);
 	POMDOG_ASSERT(stream.tellg() >= 0);
-	
+
 	return stream.tellg() + static_cast<std::ifstream::pos_type>(chunk.ContentSize + chunk.ChildrenSize);
 }
 
@@ -48,13 +48,13 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
 	constexpr auto IdSize = MakeFourCC('S', 'I', 'Z', 'E');
 	constexpr auto IdXYZI = MakeFourCC('X', 'Y', 'Z', 'I');
 	constexpr auto IdRGBA = MakeFourCC('R', 'G', 'B', 'A');
-	
+
 	std::ifstream stream = assets.OpenStream(assetName);
-	
+
 	if (stream.fail()) {
 		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "cannot open file"));
 	}
-	
+
 	if (fourCC != BinaryReader::Read<std::uint32_t>(stream)) {
 		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "invalid format"));
 	}
@@ -64,15 +64,15 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
 	}
 
 	const auto mainChunk = BinaryReader::Read<VoxChunkHeader>(stream);
-	
+
 	if (mainChunk.ID != IdMain) {
 		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "cannot find main chunk"));
 	}
-	
+
 	const auto mainChunkEnd = ChunkSize(stream, mainChunk);
 
 	stream.seekg(mainChunk.ContentSize, std::ios::cur);
-	
+
 	MagicaVoxel::VoxModel model;
 
 	while (stream.tellg() < mainChunkEnd)
@@ -85,11 +85,11 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
 			const auto x = BinaryReader::Read<std::int32_t>(stream);
 			const auto y = BinaryReader::Read<std::int32_t>(stream);
 			const auto z = BinaryReader::Read<std::int32_t>(stream);
-			
+
 			POMDOG_ASSERT(x >= 0);
 			POMDOG_ASSERT(y >= 0);
 			POMDOG_ASSERT(z >= 0);
-			
+
 			model.X = static_cast<std::uint32_t>(x);
 			model.Y = static_cast<std::uint32_t>(y);
 			model.Z = static_cast<std::uint32_t>(z);
@@ -100,7 +100,7 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
 			if (voxelCount < 0) {
 				POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "negative number of voxels"));
 			}
-		
+
 			if (voxelCount > 0) {
 				model.Voxels = BinaryReader::ReadArray<MagicaVoxel::Voxel>(stream, voxelCount);
 			}
@@ -110,7 +110,7 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
 			model.ColorPalette = BinaryReader::Read<decltype(model.ColorPalette)>(stream);
 
 			model.ColorPalette.back() = Color::Black;
-			
+
 			POMDOG_ASSERT(model.ColorPalette.size() == 256);
 			std::rotate(std::begin(model.ColorPalette), std::next(std::begin(model.ColorPalette), 255), std::end(model.ColorPalette));
 			break;
@@ -118,7 +118,7 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
 		default:
 			break;
 		}
-		
+
 		stream.seekg(chunkEnd, std::ios::beg);
 	}
 

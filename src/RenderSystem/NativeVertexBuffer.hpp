@@ -25,7 +25,7 @@ public:
 	NativeVertexBuffer & operator=(NativeVertexBuffer const&) = delete;
 
 	virtual ~NativeVertexBuffer() = default;
-	
+
 	///@~Japanese
 	/// @brief 頂点データを格納します。
 	/// @remarks イミュータブルな頂点バッファでは使用しないでください。

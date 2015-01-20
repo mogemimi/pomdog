@@ -32,10 +32,10 @@ private:
 	AnimationTimeInterval time;
 	bool isCompleted;
 	bool began;
-	
+
 	ActionClass internalAction;
 	InterpolationLinear interpolation;
-	
+
 public:
 	template <typename...Args>
 	TemporalAction(AnimationTimeInterval const& durationIn, Args &&...args)
@@ -51,22 +51,22 @@ public:
 		if (isCompleted) {
 			return;
 		}
-		
+
 		if (!began) {
 			internalAction.Begin(gameObject);
 			began = true;
 		}
-	
+
 		time += frameDuration;
 		float normalizedTime = time.count() / duration.count();
-		
+
 		if (time >= duration) {
 			isCompleted = true;
 			normalizedTime = 1.f;
 		} else {
 			normalizedTime = interpolation.Apply(normalizedTime);
 		}
-	
+
 		internalAction.Update(gameObject, normalizedTime);
 	}
 
@@ -74,12 +74,12 @@ public:
 	{
 		return isCompleted;
 	}
-	
+
 	AnimationTimeInterval Time() const
 	{
 		return time;
 	}
-	
+
 	AnimationTimeInterval Duration() const
 	{
 		return duration;

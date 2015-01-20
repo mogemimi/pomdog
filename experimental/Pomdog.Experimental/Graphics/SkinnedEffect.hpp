@@ -27,15 +27,15 @@ public:
 	void SetWorldViewProjection(Matrix4x4 const& worldViewProjection);
 
 	void SetTexture(std::shared_ptr<Texture2D> const& texture);
-	
+
 	void SetColor(Color const& color);
-	
+
 	void SetBoneTransforms(Matrix3x2 const* boneTransforms, std::size_t count);
-	
+
 	void Apply(GraphicsContext & graphicsContext);
-	
+
 	static constexpr size_t MaxBones = 96;
-	
+
 private:
 	class Impl;
 	std::unique_ptr<Impl> impl;

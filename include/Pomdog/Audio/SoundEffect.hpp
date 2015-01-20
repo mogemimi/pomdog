@@ -29,7 +29,7 @@ class POMDOG_EXPORT SoundEffect {
 public:
 	SoundEffect(AudioEngine & audioEngine,
 		std::shared_ptr<AudioClip> const& audioClip, bool isLooped);
-	
+
 	~SoundEffect();
 
 	SoundEffect(SoundEffect const&) = delete;
@@ -47,9 +47,9 @@ public:
 
 	/// サウンドを停止します。
 	void Stop();
-	
+
 	void Apply3D(AudioListener const& listener, AudioEmitter const& emitter);
-	
+
 	bool IsLooped() const;
 
 	void ExitLoop();
@@ -87,7 +87,7 @@ public:
 	/// @brief サウンドの音量を設定します。
 	/// @param volume 0（無音） ~ 1（最大音量）の範囲で指定します。
 	void Volume(float volume);
-	
+
 private:
 	std::unique_ptr<Details::SoundSystem::NativeSoundEffect> nativeSoundEffect;
 	float pitch;

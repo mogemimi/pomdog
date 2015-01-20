@@ -58,7 +58,7 @@ public:
 	/// @brief ソースカラーのブレンディング係数を指定します。
 	/// デフォルト値は Blend::One です。
 	Blend ColorSourceBlend = Blend::One;
-	
+
 	///@~Japanese
 	/// @brief ソースアルファのブレンディング係数を指定します。
 	/// デフォルト値は Blend::One です。

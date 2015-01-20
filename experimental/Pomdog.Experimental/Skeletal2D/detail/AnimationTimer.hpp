@@ -28,7 +28,7 @@ public:
 
 	AnimationTimeInterval Time() const;
 	bool IsPlaying() const;
-	
+
 private:
 	AnimationTimeInterval time;
 	bool isPlaying;

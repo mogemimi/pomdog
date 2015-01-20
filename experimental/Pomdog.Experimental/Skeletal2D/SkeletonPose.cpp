@@ -16,7 +16,7 @@ SkeletonPose SkeletonPose::CreateBindPose(Skeleton const& skeleton)
 	for (auto & joint: skeleton) {
 		skeletonPose.JointPoses.push_back(joint.BindPose);
 	}
-	
+
 	return std::move(skeletonPose);
 }
 //-----------------------------------------------------------------------

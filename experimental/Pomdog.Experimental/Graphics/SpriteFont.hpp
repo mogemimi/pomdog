@@ -26,7 +26,7 @@ namespace SpriteFonts {
 
 struct Glyph {
 	Rectangle Subrect;
-	
+
 	///@note UTF-32
 	std::uint32_t Character;
 	std::int16_t XOffset;
@@ -56,7 +56,7 @@ public:
 	/// @brief テキストの描画時の水平方向の長さと垂直方向の長さ（ピクセル単位）を取得します。
 	/// @details 指定する文字列のエンコーディング形式は UTF-8 エンコーディングです。
 	Vector2 MeasureString(char const* text) const;
-	
+
 	//Vector2 MeasureString(std::string const& text) const;
 
 	///@~Japanese

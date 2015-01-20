@@ -50,7 +50,7 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(
 	if (stream.fail()) {
 		POMDOG_THROW_EXCEPTION(std::invalid_argument, "Cannot open file: " + assetName);
 	}
-	
+
 	auto const fileSize = BinaryReader::GetBinarySize(stream);
 	if (fileSize < (sizeof(std::uint8_t) * 8)) {
 		POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
@@ -60,36 +60,36 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(
 	if (stream.fail()) {
 		POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
 	}
-	
+
 	if (IsPNGFormat(signature))
 	{
 		constexpr auto SignatureLength = sizeof(std::uint8_t) * 8;
-	
+
 		POMDOG_ASSERT(stream.tellg() == std::streampos(SignatureLength));
-		
+
 		std::vector<std::uint8_t> binaryWithoutSignature(fileSize - SignatureLength);
 		stream.read(reinterpret_cast<char*>(binaryWithoutSignature.data()), binaryWithoutSignature.size());
-		
+
 		auto graphicsDevice = loaderContext.GraphicsDevice.lock();
 		POMDOG_ASSERT(graphicsDevice);
-		
+
 		return PNGTextureReader::Read(graphicsDevice, binaryWithoutSignature.data(), binaryWithoutSignature.size());
 	}
 	else if (IsDDSFormat(signature))
 	{
 		constexpr auto FourCCLength = sizeof(std::uint8_t) * 4;
-		
+
 		stream.seekg(FourCCLength, stream.beg);
-		
+
 		std::vector<std::uint8_t> binaryWithoutFourCC(fileSize - FourCCLength);
 		stream.read(reinterpret_cast<char*>(binaryWithoutFourCC.data()), binaryWithoutFourCC.size());
-		
+
 		auto graphicsDevice = loaderContext.GraphicsDevice.lock();
 		POMDOG_ASSERT(graphicsDevice);
-		
+
 		return DDSTextureReader::Read(graphicsDevice, binaryWithoutFourCC.data(), binaryWithoutFourCC.size());
 	}
-	
+
 	POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid/unsupported texture format.");
 }
 //-----------------------------------------------------------------------

@@ -67,7 +67,7 @@ public:
 	///@~Japanese
 	/// @brief バッファの使用方法を取得します。
 	Pomdog::BufferUsage BufferUsage() const;
-	
+
 	///@~Japanese
 	/// @brief 頂点データを格納します。
 	/// @param source ソースバッファ
@@ -84,7 +84,7 @@ public:
 
 public:
 	Details::RenderSystem::NativeVertexBuffer* NativeVertexBuffer();
-	
+
 private:
 	std::unique_ptr<Details::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
 	std::uint32_t vertexCount;

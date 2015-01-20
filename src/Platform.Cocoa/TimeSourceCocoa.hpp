@@ -22,7 +22,7 @@ public:
 	TimeSourceCocoa();
 
 	TimePointSeconds Now() const;
-	
+
 private:
 	double secondsPerTick;
 };

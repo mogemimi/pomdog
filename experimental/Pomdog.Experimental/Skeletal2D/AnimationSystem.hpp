@@ -24,13 +24,13 @@ class AnimationSystem {
 public:
 	AnimationSystem();
 	~AnimationSystem();
-	
+
 	void Add(std::shared_ptr<AnimationState> const& state,
 		std::shared_ptr<Skeleton const> const& skeleton,
 		std::shared_ptr<SkeletonPose> const& skeletonPose);
-	
+
 	void Remove(std::shared_ptr<AnimationState> const& state);
-	
+
 	void Update(GameClock const& clock);
 
 private:

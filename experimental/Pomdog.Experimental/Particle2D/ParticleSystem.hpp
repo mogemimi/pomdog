@@ -31,18 +31,18 @@ public:
 	void Play();
 	void Pause();
 	void Stop();
-	
+
 	void Simulate(GameObject & gameObject, DurationSeconds const& duration);
-	
+
 	bool IsAlive() const;
-	
+
 	std::vector<Particle> const& Particles() const { return particles; }
-	
+
 	std::size_t ParticleCount() const { return particles.size(); }
-	
+
 	bool Loop() const { return emitter.Looping; }
 	void Loop(bool loop) { emitter.Looping = loop; }
-	
+
 	bool EnableEmission() const { return enableEmission; }
 	void EnableEmission(bool enableEmissionIn) { this->enableEmission = enableEmissionIn; }
 

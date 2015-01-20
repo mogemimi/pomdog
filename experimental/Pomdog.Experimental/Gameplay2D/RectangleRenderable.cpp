@@ -41,7 +41,7 @@ void RectangleRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 	}
 
 	dirtyFlags = 0;
-	
+
 	command.drawOrder = DrawOrder;
 
 	auto offsetMatrix = Matrix3x2::CreateTranslation(-Vector2(command.rectangle.Width, command.rectangle.Height) * originPivot);
@@ -56,10 +56,10 @@ void RectangleRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 	else {
 		command.transform = offsetMatrix;
 	}
-	
+
 	POMDOG_ASSERT(command.rectangle.Width > 0);
 	POMDOG_ASSERT(command.rectangle.Height > 0);
-	
+
 	renderer.PushCommand(command);
 }
 //-----------------------------------------------------------------------

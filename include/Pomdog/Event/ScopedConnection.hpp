@@ -25,12 +25,12 @@ public:
 	ScopedConnection() = default;
 	ScopedConnection(ScopedConnection const&) = delete;
 	ScopedConnection(ScopedConnection &&) = default;
-	
+
 	ScopedConnection(EventConnection const& connection);
 	ScopedConnection(EventConnection && connection);
-	
+
 	~ScopedConnection();
-	
+
 	ScopedConnection & operator=(ScopedConnection const&) = delete;
 	ScopedConnection & operator=(ScopedConnection &&) = default;
 

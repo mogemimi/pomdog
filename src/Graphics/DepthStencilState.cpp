@@ -34,7 +34,7 @@ DepthStencilState::CreateReadWriteDepth(std::shared_ptr<GraphicsDevice> const& g
 	desc.DepthBufferEnable = true;
 	desc.DepthBufferWriteEnable = true;
 	POMDOG_ASSERT(desc.StencilEnable == false);
-	
+
 	return std::make_shared<DepthStencilState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------
@@ -45,7 +45,7 @@ DepthStencilState::CreateReadOnlyDepth(std::shared_ptr<GraphicsDevice> const& gr
 	desc.DepthBufferEnable = true;
 	desc.DepthBufferWriteEnable = false;
 	POMDOG_ASSERT(desc.StencilEnable == false);
-	
+
 	return std::make_shared<DepthStencilState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------
@@ -56,7 +56,7 @@ DepthStencilState::CreateNone(std::shared_ptr<GraphicsDevice> const& graphicsDev
 	desc.DepthBufferEnable = false;
 	desc.DepthBufferWriteEnable = false;
 	POMDOG_ASSERT(desc.StencilEnable == false);
-	
+
 	return std::make_shared<DepthStencilState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------

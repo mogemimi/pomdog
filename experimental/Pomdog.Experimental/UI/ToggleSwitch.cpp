@@ -69,7 +69,7 @@ void ToggleSwitch::OffContent(std::string const& offContentIn)
 void ToggleSwitch::OnParentChanged()
 {
 	auto parent = Parent().lock();
-	
+
 	POMDOG_ASSERT(parent);
 	POMDOG_ASSERT(!parent->Dispatcher().expired());
 
@@ -101,11 +101,11 @@ void ToggleSwitch::OnRenderSizeChanged(std::uint32_t widthIn, std::uint32_t heig
 void ToggleSwitch::Draw(DrawingContext & drawingContext)
 {
 	auto transform = Transform() * drawingContext.Top();
-	
+
 	drawingContext.Push(Matrix3x2::CreateTranslation(Vector2(Width() - button.Width, 0.0f)) * transform);
 	button.Draw(drawingContext, isOn, isEnabled);
 	drawingContext.Pop();
-	
+
 	if (isOn) {
 		drawingContext.DrawString(transform * Matrix3x2::CreateTranslation(Vector2(0, 2)),
 			{181,181,181,255}, FontWeight::Bold, FontSize::Medium, onContent);
@@ -125,11 +125,11 @@ ToggleSwitch::ToggleSwitchButton::ToggleSwitchButton(std::uint16_t widthIn, std:
 void ToggleSwitch::ToggleSwitchButton::Draw(DrawingContext & drawingContext, bool isOnIn, bool isEnabledIn)
 {
 	auto transform = drawingContext.Top();
-	
+
 	Color backgroundColor = {121, 121, 121, 255};
 	Color innerColor = {109, 109, 109, 255};
 	Color thumbColor = Color::White;
-	
+
 	const Color toggleOnInnerColor = {4, 125, 137, 255};
 	const Color disabledInnerColor = {81, 81, 81, 255};
 	const Color disabledThumbColor = {137, 137, 137, 255};
@@ -141,7 +141,7 @@ void ToggleSwitch::ToggleSwitchButton::Draw(DrawingContext & drawingContext, boo
 		innerColor = disabledInnerColor;
 		thumbColor = disabledThumbColor;
 	}
-	
+
 	if (isOnIn && isEnabledIn)
 	{
 		innerColor = toggleOnInnerColor;
@@ -149,12 +149,12 @@ void ToggleSwitch::ToggleSwitchButton::Draw(DrawingContext & drawingContext, boo
 
 	drawingContext.DrawRectangle(transform, backgroundColor, Rectangle(0, 0, Width, lineThickness));
 	drawingContext.DrawRectangle(transform, backgroundColor, Rectangle(0, Height - lineThickness, Width, lineThickness));
-	
+
 	constexpr int innerLineThickness = 1;
 	drawingContext.DrawRectangle(transform, innerColor, Rectangle(lineThickness + innerLineThickness, lineThickness + innerLineThickness,
 		Width - (lineThickness * 2 + innerLineThickness * 2),
 		Height - (lineThickness * 2 + innerLineThickness * 2)));
-	
+
 	constexpr std::uint16_t thumbWidth = 12;
 	if (isOnIn) {
 		drawingContext.DrawRectangle(transform, backgroundColor, Rectangle(0, 0, lineThickness, Height));

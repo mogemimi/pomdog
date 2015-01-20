@@ -35,19 +35,19 @@ public:
 	void Update();
 
 	void DrawGUI(GraphicsContext & graphicsContext);
-	
+
 	void AddView(std::shared_ptr<UI::UIView> const& element);
-	
+
 private:
 	UI::UIElementHierarchy hierarchy;
 	ScopedConnection clientSizeChangedConnection;
 	SceneEditor::EditorColorScheme editorColorScheme;
-	
+
 	std::shared_ptr<GameHost> gameHost;
 
 	std::shared_ptr<DepthStencilState> depthStencilState;
 	std::shared_ptr<BlendState> blendState;
-	
+
 	std::unique_ptr<SpriteBatch> spriteBatch;
 	std::shared_ptr<SpriteFont> spriteFont;
 	std::unique_ptr<SpriteBatch> spriteBatchDistanceField;

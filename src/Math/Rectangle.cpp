@@ -93,7 +93,7 @@ ContainmentType Rectangle::Contains(Point2D const& point) const
 	{
 		return ContainmentType::Disjoint;
 	}
-	
+
 	if (point.X == Left()
 		|| point.Y == Top()
 		|| point.X == Right()
@@ -101,7 +101,7 @@ ContainmentType Rectangle::Contains(Point2D const& point) const
 	{
 		return ContainmentType::Intersects;
 	}
-	
+
 	return ContainmentType::Contains;
 }
 //-----------------------------------------------------------------------
@@ -114,7 +114,7 @@ ContainmentType Rectangle::Contains(Rectangle const& rect) const
 	{
 		return ContainmentType::Disjoint;
 	}
-	
+
 	if (rect.Left() >= Left()
 		&& rect.Right() <= Right()
 		&& rect.Top() >= Top()

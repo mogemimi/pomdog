@@ -52,7 +52,7 @@ public:
 		SurfaceFormat format, DepthFormat depthStencilFormat);
 
 	~RenderTarget2D();
-	
+
 	RenderTarget2D & operator=(RenderTarget2D const&) = delete;
 	RenderTarget2D & operator=(RenderTarget2D &&) = default;
 
@@ -80,7 +80,7 @@ public:
 	///@~Japanese
 	/// @brief レンダーターゲットを表す矩形を取得します。
 	Rectangle Bounds() const;
-	
+
 public:
 	Details::RenderSystem::NativeRenderTarget2D* NativeRenderTarget2D();
 

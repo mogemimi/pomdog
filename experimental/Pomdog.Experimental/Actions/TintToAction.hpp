@@ -35,7 +35,7 @@ public:
 	{
 		POMDOG_ASSERT(gameObject);
 		POMDOG_ASSERT(gameObject.HasComponent<Renderable>());
-		
+
 		auto renderable = gameObject.Component<Renderable>();
 		startColor = renderable->Material.Color;
 	}
@@ -44,7 +44,7 @@ public:
 	{
 		POMDOG_ASSERT(gameObject);
 		POMDOG_ASSERT(gameObject.HasComponent<Renderable>());
-		
+
 		auto renderable = gameObject.Component<Renderable>();
 		auto color = Color::Lerp(startColor, endColor, normalizedTime);
 		renderable->Material.Color = color;

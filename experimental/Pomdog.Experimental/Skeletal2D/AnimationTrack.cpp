@@ -54,40 +54,40 @@ void RotationTrack::Apply(AnimationTimeInterval const& time, Skeleton const& ske
 {
 	RotationKeyframe point;
 	point.Time = time;
-	
+
 	POMDOG_ASSERT(!keys.empty());
 	auto pointPair = BinarySearchNearestPoints(std::begin(keys), std::end(keys), point);
-	
+
 	auto & joint = skeleton.Joints(jointIndex);
 	auto & bindPose = joint.BindPose;
-	
+
 	POMDOG_ASSERT(*jointIndex < skeletonPose.JointPoses.size());
 	auto & pose = skeletonPose.JointPoses[*jointIndex];
-	
+
 	if (pointPair.first == pointPair.second)
 	{
 		POMDOG_ASSERT((time <= keys.front().Time) || (time >= keys.back().Time));
-		
+
 		auto diff = pointPair.first->Rotation.ToFloat();
 		POMDOG_ASSERT(diff <= MathConstants<float>::Pi());
 		POMDOG_ASSERT(diff >= -MathConstants<float>::Pi());
 		pose.Rotation = bindPose.Rotation + diff;
 		return;
 	}
-	
+
 	POMDOG_ASSERT(pointPair.first != pointPair.second);
 	POMDOG_ASSERT(pointPair.first->Time < pointPair.second->Time);
 	POMDOG_ASSERT(pointPair.first->Time <= time);
 	POMDOG_ASSERT(pointPair.second->Time >= time);
-	
+
 	auto diffTime = (time - pointPair.first->Time);
 	auto frameTime = pointPair.second->Time - pointPair.first->Time;
-	
+
 	POMDOG_ASSERT(frameTime.count() != 0);
 	float amount =  diffTime / frameTime;
 	auto rotation1 = pointPair.first->Rotation.ToFloat();
 	auto rotation2 = pointPair.second->Rotation.ToFloat();
-	
+
 	POMDOG_ASSERT(rotation1 <= MathConstants<float>::Pi());
 	POMDOG_ASSERT(rotation1 >= -MathConstants<float>::Pi());
 	POMDOG_ASSERT(rotation2 <= MathConstants<float>::Pi());
@@ -119,32 +119,32 @@ void ScaleTrack::Apply(AnimationTimeInterval const& time, Skeleton const& skelet
 {
 	ScaleKeyframe point;
 	point.Time = time;
-	
+
 	POMDOG_ASSERT(!keys.empty());
 	auto pointPair = BinarySearchNearestPoints(std::begin(keys), std::end(keys), point);
-	
+
 	auto & joint = skeleton.Joints(jointIndex);
 	auto & bindPose = joint.BindPose;
-	
+
 	POMDOG_ASSERT(*jointIndex < skeletonPose.JointPoses.size());
 	auto & pose = skeletonPose.JointPoses[*jointIndex];
-	
+
 	if (pointPair.first == pointPair.second)
 	{
 		POMDOG_ASSERT((time <= keys.front().Time) || (time >= keys.back().Time));
-		
+
 		pose.Scale = bindPose.Scale * pointPair.first->Scale.ToFloat();
 		return;
 	}
-	
+
 	POMDOG_ASSERT(pointPair.first != pointPair.second);
 	POMDOG_ASSERT(pointPair.first->Time < pointPair.second->Time);
 	POMDOG_ASSERT(pointPair.first->Time <= time);
 	POMDOG_ASSERT(pointPair.second->Time >= time);
-	
+
 	auto diffTime = (time - pointPair.first->Time);
 	auto frameTime = pointPair.second->Time - pointPair.first->Time;
-	
+
 	POMDOG_ASSERT(frameTime.count() != 0);
 	float amount = diffTime / frameTime;
 	float scale1 = pointPair.first->Scale.ToFloat();
@@ -175,38 +175,38 @@ void TranslationTrack::Apply(AnimationTimeInterval const& time, Skeleton const& 
 {
 	TranslationKeyframe point;
 	point.Time = time;
-	
+
 	POMDOG_ASSERT(!keys.empty());
 	auto pointPair = BinarySearchNearestPoints(std::begin(keys), std::end(keys), point);
-		
+
 	auto & joint = skeleton.Joints(jointIndex);
 	auto & bindPose = joint.BindPose;
-	
+
 	POMDOG_ASSERT(*jointIndex < skeletonPose.JointPoses.size());
 	auto & pose = skeletonPose.JointPoses[*jointIndex];
-	
+
 	if (pointPair.first == pointPair.second)
 	{
 		POMDOG_ASSERT((time <= keys.front().Time) || (time >= keys.back().Time));
-		
+
 		auto diff = Vector2{pointPair.first->TranslateX.ToFloat(), pointPair.first->TranslateY.ToFloat()};
 		pose.Translate = bindPose.Translate + diff;
 		return;
 	}
-	
+
 	POMDOG_ASSERT(pointPair.first != pointPair.second);
 	POMDOG_ASSERT(pointPair.first->Time < pointPair.second->Time);
 	POMDOG_ASSERT(pointPair.first->Time <= time);
 	POMDOG_ASSERT(pointPair.second->Time >= time);
-	
+
 	auto diffTime = (time - pointPair.first->Time);
 	auto frameTime = pointPair.second->Time - pointPair.first->Time;
-	
+
 	POMDOG_ASSERT(frameTime.count() != 0);
 	float amount =  diffTime / frameTime;
 	auto translate1 = Vector2{pointPair.first->TranslateX.ToFloat(), pointPair.first->TranslateY.ToFloat()};
 	auto translate2 = Vector2{pointPair.second->TranslateX.ToFloat(), pointPair.second->TranslateY.ToFloat()};
-	
+
 	pose.Translate = bindPose.Translate + Vector2::Lerp(translate1, translate2, amount);
 }
 //-----------------------------------------------------------------------

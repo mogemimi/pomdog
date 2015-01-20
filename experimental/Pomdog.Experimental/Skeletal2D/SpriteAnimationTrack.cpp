@@ -46,7 +46,7 @@ void SpriteAnimationTrack::Apply(Skin & skin, AnimationTimeInterval const& time)
 {
 	SpriteKeyframe point;
 	point.Time = time;
-	
+
 	POMDOG_ASSERT(!keys.empty());
 	auto pointPair = BinarySearchNearestPoints(std::begin(keys), std::end(keys), point);
 

@@ -37,27 +37,27 @@ void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string co
 	constexpr auto IdSize = MakeFourCC('S', 'I', 'Z', 'E');
 	constexpr auto IdXYZI = MakeFourCC('X', 'Y', 'Z', 'I');
 	constexpr auto IdRGBA = MakeFourCC('R', 'G', 'B', 'A');
-	
+
 	struct Size {
 		std::int32_t X;
 		std::int32_t Y;
 		std::int32_t Z;
 	};
-	
+
 	Size size;
 	size.X = model.X;
 	size.Y = model.Y;
 	size.Z = model.Z;
-	
+
 	POMDOG_ASSERT(model.Voxels.size() <= std::numeric_limits<std::int32_t>::max());
 	std::int32_t const voxelCount = static_cast<std::int32_t>(model.Voxels.size());
 	std::vector<MagicaVoxel::Voxel> voxels = model.Voxels;
-	
+
 	std::array<Color, 256> colors = model.ColorPalette;
-	
+
 	POMDOG_ASSERT(model.ColorPalette.size() == 256);
 	std::rotate(std::begin(colors), std::next(std::begin(colors), 1), std::end(colors));
-	
+
 	POMDOG_ASSERT(colors.back() == Color::Black);
 
 	using MagicaVoxel::VoxChunkHeader;
@@ -73,12 +73,12 @@ void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string co
 	POMDOG_ASSERT(xyziChunkContentSize <= std::numeric_limits<std::int32_t>::max());
 	xyziChunk.ContentSize = static_cast<std::int32_t>(xyziChunkContentSize);
 	xyziChunk.ChildrenSize = 0;
-	
+
 	VoxChunkHeader rgbaChunk;
 	rgbaChunk.ID = IdRGBA;
 	rgbaChunk.ContentSize = (sizeof(Color) * colors.size());
 	rgbaChunk.ChildrenSize = 0;
-	
+
 	VoxChunkHeader mainChunk;
 	mainChunk.ID = IdMain;
 	mainChunk.ContentSize = 0;
@@ -86,7 +86,7 @@ void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string co
 		sizeof(sizeChunk) + sizeChunk.ContentSize
 		+ sizeof(xyziChunk) + xyziChunk.ContentSize
 		+ sizeof(rgbaChunk) + rgbaChunk.ContentSize;
-	
+
 //	std::printf("\n========\n");
 //	std::printf("mainChunk.ContentSize: %d\n", mainChunk.ContentSize);
 //	std::printf("mainChunk.ChildrenSize: %d\n", mainChunk.ChildrenSize);
@@ -96,13 +96,13 @@ void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string co
 //	std::printf("xyziChunk.ChildrenSize: %d\n", xyziChunk.ChildrenSize);
 //	std::printf("rgbaChunk.ContentSize: %d\n", rgbaChunk.ContentSize);
 //	std::printf("rgbaChunk.ChildrenSize: %d\n", rgbaChunk.ChildrenSize);
-	
+
 	std::ofstream stream(filePath, std::ios::binary);
-	
+
 	if (stream.fail()) {
 		POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(filePath, "cannot open file"));
 	}
-	
+
 	stream.write(reinterpret_cast<char const*>(&fourCC), sizeof(fourCC));
 	stream.write(reinterpret_cast<char const*>(&MagicaVoxelVersion), sizeof(MagicaVoxelVersion));
 	stream.write(reinterpret_cast<char const*>(&mainChunk), sizeof(mainChunk));

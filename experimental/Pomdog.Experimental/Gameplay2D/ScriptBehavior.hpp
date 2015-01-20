@@ -24,7 +24,7 @@ public:
 	void Start(GameObject & gameObject) override;
 
 	void Update(GameObject & gameObject, DurationSeconds const& frameDuration) override;
-	
+
 private:
 	//sel::State state;
 };

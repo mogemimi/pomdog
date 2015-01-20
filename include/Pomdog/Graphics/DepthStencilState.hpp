@@ -57,10 +57,10 @@ public:
 	/// @brief 深度ステンシルバッファを使用しないステートを作成します。
 	static std::shared_ptr<DepthStencilState>
 	CreateNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-	
+
 public:
 	Details::RenderSystem::NativeDepthStencilState* NativeDepthStencilState();
-	
+
 private:
 	std::unique_ptr<Details::RenderSystem::NativeDepthStencilState> nativeDepthStencilState;
 	DepthStencilDescription description;

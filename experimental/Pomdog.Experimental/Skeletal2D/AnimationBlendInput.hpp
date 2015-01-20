@@ -20,7 +20,7 @@ class AnimationBlendInput {
 public:
 	///@todo replace by CRC32
 	std::string Name;
-	
+
 	AnimationBlendInputType Type;
 };
 

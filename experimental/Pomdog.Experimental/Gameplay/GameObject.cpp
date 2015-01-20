@@ -52,7 +52,7 @@ void GameObject::Destroy()
 {
 	POMDOG_ASSERT(context);
 	POMDOG_ASSERT(context->Valid(id));
-	
+
 	if (context->Valid(id))
 	{
 		context->Destroy(id);
@@ -63,7 +63,7 @@ void GameObject::DestroyImmediate()
 {
 	POMDOG_ASSERT(context);
 	POMDOG_ASSERT(context->Valid(id));
-	
+
 	if (context->Valid(id))
 	{
 		context->DestroyImmediate(id);

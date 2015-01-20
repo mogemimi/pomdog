@@ -33,10 +33,10 @@ public:
 	Joint const& Root() const;
 	Joint const& Joints(JointIndex const& jointIndex) const;
 	std::uint16_t JointCount() const;
-	
+
 	typedef std::vector<Joint>::const_iterator const_iterator;
 	typedef std::vector<Joint>::iterator iterator;
-	
+
 	const_iterator begin() const;
 	const_iterator end() const;
 	iterator begin();

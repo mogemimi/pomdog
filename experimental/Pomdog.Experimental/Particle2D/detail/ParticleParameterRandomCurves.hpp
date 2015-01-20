@@ -48,7 +48,7 @@ public:
 		return Details::Particles::ParticleCurveLerp<T>()(
 			curve1.Compute(normalizedTime), curve2.Compute(normalizedTime), amount);
 	}
-	
+
 	float GenerateVariance(std::mt19937 & random) const override
 	{
 		return std::generate_canonical<float, std::numeric_limits<float>::digits>(random);

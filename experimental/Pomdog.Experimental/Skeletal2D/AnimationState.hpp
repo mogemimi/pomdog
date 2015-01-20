@@ -34,13 +34,13 @@ public:
 
 	float PlaybackRate() const;
 	void PlaybackRate(float playbackRate);
-	
+
 	bool Enabled() const;
 	void Enabled(bool enabled);
-	
+
 	bool Loop() const;
 	void Loop(bool loop);
-	
+
 private:
 	std::shared_ptr<AnimationClip> clip;
 	AnimationTimeInterval time;

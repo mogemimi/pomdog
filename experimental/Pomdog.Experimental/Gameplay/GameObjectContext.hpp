@@ -40,39 +40,39 @@ public:
 	EntityContext();
 
 	GameObjectID Create();
-	
+
 	std::size_t Count() const;
-	
+
 	std::size_t Capacity() const;
 
 	void Clear();
 
 	void Refresh();
-	
+
 	void Destroy(GameObjectID const& id);
-	
+
 	void DestroyImmediate(GameObjectID const& id);
-	
+
 	bool Valid(GameObjectID const& id) const;
-	
+
 	template <typename Type, typename...Arguments>
 	Type & AddComponent(GameObjectID const& id, Arguments &&...arguments);
-	
+
 	template <typename Type>
 	Type & AddComponent(GameObjectID const& id, std::unique_ptr<Type> && component);
-	
+
 	template <typename Type>
 	void RemoveComponent(GameObjectID const& id);
-	
+
 	template <typename Type>
 	bool HasComponent(GameObjectID const& id) const;
-	
+
 	template <typename T, typename...Components>
 	bool HasComponents(GameObjectID const& id) const;
-	
+
 	template <typename Type>
 	auto Component(GameObjectID const& id)-> typename std::enable_if<std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>::type;
-	
+
 	template <typename Type>
 	auto Component(GameObjectID const& id)-> typename std::enable_if<!std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>::type;
 
@@ -111,11 +111,11 @@ GameObjectID EntityContext<MaxComponentCapacity>::Create()
 		index = deletedIndices.front();
 		deletedIndices.pop_front();
 	}
-	
+
 	auto & desc = descriptions[index];
 	POMDOG_ASSERT(desc.ComponentBitMask.none());
 	POMDOG_ASSERT(desc.IncremantalCounter > 0);
-	
+
 	#ifdef DEBUG
 	{
 		for (auto & entities: components)
@@ -126,7 +126,7 @@ GameObjectID EntityContext<MaxComponentCapacity>::Create()
 		}
 	}
 	#endif
-	
+
 	++entityCount;
 	return {desc.IncremantalCounter, index};
 }
@@ -149,12 +149,12 @@ void EntityContext<MaxComponentCapacity>::Clear()
 	for (std::uint32_t index = 0; index < descriptions.size(); ++index)
 	{
 		auto & desc = descriptions[index];
-		
+
 		if (desc.ComponentBitMask.any()) {
 			DestroyComponents(index);
 		}
 		deletedIndices.push_back(index);
-		
+
 		desc.ComponentBitMask.reset();
 		++desc.IncremantalCounter;
 	#ifdef DEBUG
@@ -190,7 +190,7 @@ void EntityContext<MaxComponentCapacity>::Refresh()
 		DestroyComponents(index);
 		deletedIndices.push_back(index);
 	}
-	
+
 	destroyedObjects.clear();
 }
 
@@ -198,18 +198,18 @@ template <std::uint8_t MaxComponentCapacity>
 void EntityContext<MaxComponentCapacity>::Destroy(GameObjectID const& id)
 {
 	POMDOG_ASSERT(Valid(id));
-	
+
 	auto const index = id.Index();
-	
+
 	POMDOG_ASSERT(index < descriptions.size());
 	POMDOG_ASSERT(descriptions[index].IncremantalCounter == id.SequenceNumber());
-	
+
 	auto & desc = descriptions[index];
 	desc.ComponentBitMask.reset();
 	++desc.IncremantalCounter;
-	
+
 	destroyedObjects.push_back(id);
-	
+
 	POMDOG_ASSERT(entityCount > 0);
 	--entityCount;
 }
@@ -223,14 +223,14 @@ void EntityContext<MaxComponentCapacity>::DestroyImmediate(GameObjectID const& i
 
 	POMDOG_ASSERT(index < descriptions.size());
 	POMDOG_ASSERT(descriptions[index].IncremantalCounter == id.SequenceNumber());
-	
+
 	auto & desc = descriptions[index];
 	desc.ComponentBitMask.reset();
 	++desc.IncremantalCounter;
-	
+
 	DestroyComponents(index);
 	deletedIndices.push_back(index);
-	
+
 	POMDOG_ASSERT(entityCount > 0);
 	--entityCount;
 }
@@ -264,7 +264,7 @@ Type & EntityContext<MaxComponentCapacity>::AddComponent(GameObjectID const& id,
 	if (typeIndex >= components.size())
 	{
 		components.resize(typeIndex + 1U);
-	
+
 		POMDOG_ASSERT(components.size() <= MaxComponentCapacity);
 		if (components.capacity() > MaxComponentCapacity)
 		{
@@ -272,10 +272,10 @@ Type & EntityContext<MaxComponentCapacity>::AddComponent(GameObjectID const& id,
 			POMDOG_ASSERT(components.capacity() == MaxComponentCapacity);
 		}
 	}
-	
+
 	POMDOG_ASSERT(typeIndex < components.size());
 	auto & entities = components[typeIndex];
-	
+
 	if (id.Index() >= entities.size())
 	{
 		static_assert(std::is_unsigned<decltype(id.Index())>::value, "" );
@@ -288,12 +288,12 @@ Type & EntityContext<MaxComponentCapacity>::AddComponent(GameObjectID const& id,
 
 	POMDOG_ASSERT(id.Index() < descriptions.size());
 	auto & desc = descriptions[id.Index()];
-	
+
 	POMDOG_ASSERT(desc.IncremantalCounter > 0);
 	POMDOG_ASSERT(typeIndex < desc.ComponentBitMask.size());
 	POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
 	desc.ComponentBitMask[typeIndex] = 1;
-	
+
 	POMDOG_ASSERT(entities[id.Index()]);
 	POMDOG_ASSERT(entities[id.Index()].get() != nullptr);
 	POMDOG_ASSERT(dynamic_cast<Type*>(entities[id.Index()].get()) == static_cast<Type*>(entities[id.Index()].get()));
@@ -305,7 +305,7 @@ template <typename Type>
 void EntityContext<MaxComponentCapacity>::RemoveComponent(GameObjectID const& id)
 {
 	static_assert(std::is_base_of<GameComponent, Type>::value, "");
-	
+
 	auto const typeIndex = Type::TypeIndex();
 	POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
 	POMDOG_ASSERT(id.Index() < descriptions.size());
@@ -313,16 +313,16 @@ void EntityContext<MaxComponentCapacity>::RemoveComponent(GameObjectID const& id
 	if (typeIndex >= components.size()) {
 		return;
 	}
-	
+
 	auto & entities = components[typeIndex];
-	
+
 	POMDOG_ASSERT(!entities.empty());
 	POMDOG_ASSERT(id.Index() < entities.size());
 	entities[id.Index()].reset();
-	
+
 	POMDOG_ASSERT(id.Index() < descriptions.size());
 	auto & desc = descriptions[id.Index()];
-	
+
 	POMDOG_ASSERT(typeIndex < desc.ComponentBitMask.size());
 	desc.ComponentBitMask[typeIndex] = 0;
 }
@@ -333,7 +333,7 @@ bool EntityContext<MaxComponentCapacity>::HasComponent(GameObjectID const& id) c
 {
 	static_assert(std::is_base_of<GameComponent, Type>::value, "");
 	static_assert(std::is_base_of<Pomdog::Component<Type>, Type>::value, "TOOD: Not implemented");
-	
+
 	POMDOG_ASSERT(Type::TypeIndex() < MaxComponentCapacity);
 	POMDOG_ASSERT(id.Index() < descriptions.size());
 	return descriptions[id.Index()].ComponentBitMask[Type::TypeIndex()];
@@ -366,7 +366,7 @@ bool EntityContext<MaxComponentCapacity>::HasComponents(GameObjectID const& id) 
 {
 	static_assert(std::is_base_of<GameComponent, Type>::value, "");
 	static_assert(std::is_base_of<Pomdog::Component<Type>, Type>::value, "TOOD: Not implemented");
-	
+
 	POMDOG_ASSERT(Type::TypeIndex() < MaxComponentCapacity);
 	POMDOG_ASSERT(id.Index() < descriptions.size());
 	auto mask = Helper::ComponentMask<MaxComponentCapacity, Type, Components...>();
@@ -387,13 +387,13 @@ auto EntityContext<MaxComponentCapacity>::Component(GameObjectID const& id)
 	if (typeIndex >= components.size()) {
 		return nullptr;
 	}
-	
+
 	auto & entities = components[typeIndex];
-	
+
 	if (id.Index() >= entities.size()) {
 		return nullptr;
 	}
-	
+
 	POMDOG_ASSERT(id.Index() < entities.size());
 
 	if (entities[id.Index()])
@@ -420,13 +420,13 @@ auto EntityContext<MaxComponentCapacity>::Component(GameObjectID const& id)
 	if (typeIndex >= components.size()) {
 		return nullptr;
 	}
-	
+
 	auto & entities = components[typeIndex];
-	
+
 	if (id.Index() >= entities.size()) {
 		return nullptr;
 	}
-	
+
 	POMDOG_ASSERT(id.Index() < entities.size());
 
 	if (entities[id.Index()])

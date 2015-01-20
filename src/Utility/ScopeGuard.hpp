@@ -23,7 +23,7 @@ public:
 	ScopeGuard() = delete;
 	ScopeGuard(ScopeGuard const&) = delete;
 	ScopeGuard(ScopeGuard &&) = default;
-	
+
 	explicit ScopeGuard(std::function<void()> const& f)
 		: func(f)
 	{}
@@ -37,7 +37,7 @@ public:
 		POMDOG_ASSERT(func);
 		func();
 	}
-	
+
 	ScopeGuard & operator=(ScopeGuard const&) = delete;
 	ScopeGuard & operator=(ScopeGuard &&) = default;
 

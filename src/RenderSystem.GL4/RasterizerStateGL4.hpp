@@ -26,12 +26,12 @@ using FillModeGL4 = Tagged<GLenum, FillMode>;
 class RasterizerStateGL4 final: public NativeRasterizerState {
 public:
 	RasterizerStateGL4() = delete;
-	
+
 	explicit RasterizerStateGL4(RasterizerDescription const& description);
-	
+
 	///@copydoc NativeRasterizerState
 	void Apply(NativeGraphicsContext & graphicsContext) override;
-	
+
 private:
 	FillModeGL4 fillMode;
 	CullMode cullMode;

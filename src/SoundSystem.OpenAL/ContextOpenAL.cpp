@@ -42,7 +42,7 @@ ContextOpenAL::~ContextOpenAL()
 	if (context) {
 		alcDestroyContext(context);
 	}
-	
+
 	if (device) {
 		alcCloseDevice(device);
 	}

@@ -41,7 +41,7 @@ struct BuiltinEffectChromaticAberrationTrait {
 ChromaticAberration::ChromaticAberration(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
 	samplerState = SamplerState::CreateLinearClamp(graphicsDevice);
-	
+
 	effectPass = effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectChromaticAberrationTrait>(*graphicsDevice);
 	constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 	inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,

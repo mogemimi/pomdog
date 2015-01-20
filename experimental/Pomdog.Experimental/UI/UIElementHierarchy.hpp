@@ -30,15 +30,15 @@ public:
 	explicit UIElementHierarchy(std::shared_ptr<GameWindow> const& window);
 
 	void Touch(MouseState const& mouseState);
-	
+
 	void UpdateAnimation(DurationSeconds const& frameDuration);
-	
+
 	void AddChild(std::shared_ptr<UIView> const& node);
-	
+
 	void AddChild(std::shared_ptr<UIView> && node);
-	
+
 	void Draw(DrawingContext & drawingContext);
-	
+
 	void RenderSizeChanged(std::uint32_t width, std::uint32_t height);
 
 	std::shared_ptr<UIEventDispatcher> Dispatcher() const;

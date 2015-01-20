@@ -22,9 +22,9 @@ public:
 	GameLevel() = default;
 	GameLevel(GameLevel const&) = delete;
 	GameLevel & operator=(GameLevel const&) = delete;
-	
+
 	virtual ~GameLevel() = default;
-	
+
 	virtual void Update(GameHost & gameHost, GameWorld & world) = 0;
 };
 

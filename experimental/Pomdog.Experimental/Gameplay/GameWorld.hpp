@@ -23,38 +23,38 @@ class GameObject;
 class GameWorld {
 public:
 	GameWorld();
-	
+
 	GameWorld(GameWorld const&) = delete;
 	GameWorld(GameWorld &&) = default;
-	
+
 	GameWorld & operator=(GameWorld const&) = delete;
 	GameWorld & operator=(GameWorld &&) = default;
 
 	GameObject CreateObject();
-	
+
 	//template <typename T, typename...Components>
 	//std::vector<T> QueryComponent();
-	
+
 	template <typename T, typename...Components>
 	std::vector<GameObject> QueryComponents();
-	
+
 	template <typename T>
 	T const* Component(GameObjectID const& id) const;
-	
+
 	template <typename T>
 	T* Component(GameObjectID const& id);
-	
+
 	template <typename T>
 	bool HasComponent(GameObjectID const& id) const;
-	
+
 	bool Valid(GameObjectID const& id) const;
-	
+
 	void Refresh();
-	
+
 	void Clear();
-	
+
 	std::size_t Count() const;
-	
+
 	std::size_t Capacity() const;
 
 private:

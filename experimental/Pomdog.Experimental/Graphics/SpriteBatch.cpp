@@ -52,23 +52,23 @@ class SpriteBatch::Impl {
 private:
 	static constexpr std::size_t MaxBatchSize = 2048;
 	static constexpr std::size_t MinBatchSize = 128;
-	
+
 	static_assert(MaxBatchSize >= MinBatchSize, "");
 
 	struct alignas(16) SpriteInfo {
 		// {xy__} = position.xy
 		// {__zw} = scale.xy
 		Vector4 Translation;
-		
+
 		// {xy__} = xy
 		// {__zw} = {width, height}
 		Vector4 SourceRect;
-		
+
 		// {xy__} = originPivot.xy
 		// {__z_} = rotation
 		// {___w} = layerDepth
 		Vector4 OriginRotationLayerDepth;
-		
+
 		// {rgb_} = color.rgb
 		// {___a} = color.a
 		Vector4 Color;
@@ -76,19 +76,19 @@ private:
 
 private:
 	std::shared_ptr<GraphicsContext> graphicsContext;
-	
+
 	std::vector<std::vector<SpriteInfo>> spriteQueues;
 	std::vector<std::shared_ptr<Texture2D>> textures;
 
 	std::shared_ptr<VertexBuffer> planeVertices;
 	std::shared_ptr<IndexBuffer> planeIndices;
 	std::shared_ptr<VertexBuffer> instanceVertices;
-	
+
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 	std::shared_ptr<InputLayout> inputLayout;
 	alignas(16) Matrix4x4 transposedTransformProjectionMatrix;
-	
+
 	SpriteSortMode sortMode;
 
 public:
@@ -96,21 +96,21 @@ public:
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		std::shared_ptr<EffectPass> const& effectPass,
 		std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
-	
+
 	void Begin(SpriteSortMode sortMode);
-	
+
 	void Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrix);
-	
+
 	void Draw(std::shared_ptr<Texture2D> const& texture,
 		Vector2 const& position, Color const& color,
 		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
-	
+
 	void Draw(std::shared_ptr<Texture2D> const& texture,
 		Vector2 const& position, Rectangle const& sourceRect, Color const& color,
 		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
-	
+
 	void End();
-	
+
 private:
 	void Flush();
 	void DrawInstance(std::shared_ptr<Texture2D> const& texture, std::vector<SpriteInfo> const& sprites);
@@ -128,9 +128,9 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextI
 {
 	using PositionTextureCoord = CustomVertex<Vector4>;
 	using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4>;
-	
+
 	{
-	
+
 		std::array<PositionTextureCoord, 4> const verticesCombo = {
 		#ifdef POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
 			Vector4(0.0f, 0.0f, 0.0f, 0.0f), // left-top
@@ -188,7 +188,7 @@ void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn)
 
 	POMDOG_ASSERT(viewport.Width() > 0);
 	POMDOG_ASSERT(viewport.Height() > 0);
-	
+
 #ifdef POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
 	transposedTransformProjectionMatrix = Matrix4x4::Transpose(
 		Matrix4x4::CreateTranslation(Vector3(-viewport.Width() / 2, -viewport.Height() / 2, 1)) *
@@ -210,7 +210,7 @@ void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn, Matrix4x4 const& transf
 
 	POMDOG_ASSERT(viewport.Width() > 0);
 	POMDOG_ASSERT(viewport.Height() > 0);
-	
+
 #ifdef POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
 	transposedTransformProjectionMatrix = Matrix4x4::Transpose(transformMatrix
 		* Matrix4x4::CreateTranslation(Vector3(-viewport.Width() / 2, -viewport.Height() / 2, 1))
@@ -234,15 +234,15 @@ void SpriteBatch::Impl::Flush()
 	if (textures.empty()) {
 		return;
 	}
-	
+
 	for (std::size_t queuePos = 0; queuePos < textures.size(); ++queuePos)
 	{
 		POMDOG_ASSERT(!spriteQueues.empty());
 		POMDOG_ASSERT(queuePos < spriteQueues.size());
 		POMDOG_ASSERT(!spriteQueues[queuePos].empty());
-		
+
 		auto & sprites = spriteQueues[queuePos];
-		
+
 		switch (sortMode) {
 		case SpriteSortMode::BackToFront:
 			std::sort(std::begin(sprites), std::end(sprites), [](SpriteInfo const& a, SpriteInfo const& b) {
@@ -261,7 +261,7 @@ void SpriteBatch::Impl::Flush()
 		DrawInstance(textures[queuePos], sprites);
 		sprites.clear();
 	}
-	
+
 	textures.clear();
 	spriteQueues.clear();
 }
@@ -270,26 +270,26 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
 {
 	POMDOG_ASSERT(texture);
 	POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
-	
+
 	{
 		POMDOG_ASSERT(texture->Width() > 0);
 		POMDOG_ASSERT(texture->Height() > 0);
-		
+
 		Vector2 inverseTextureSize {
 			(texture->Width() > 0) ? (1.0f / static_cast<float>(texture->Width())): 0.0f,
 			(texture->Height() > 0) ? (1.0f / static_cast<float>(texture->Height())): 0.0f,
 		};
-		
+
 		struct alignas(16) SpriteBatchConstants {
 			Matrix4x4 Transform;
 			Vector2 InverseTextureSize;
 		};
-		
+
 		alignas(16) SpriteBatchConstants info {
 			transposedTransformProjectionMatrix,
 			inverseTextureSize,
 		};
-		
+
 		auto parameter = constantBuffers->Find("SpriteBatchConstants");
 		parameter->SetValue(info);
 	}
@@ -313,7 +313,7 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 	if (scale.X == 0.0f || scale.Y == 0.0f) {
 		return;
 	}
-	
+
 	POMDOG_ASSERT(texture);
 
 	if (spriteQueues.empty()
@@ -323,15 +323,15 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 		spriteQueues.push_back({});
 		spriteQueues.back().reserve(MinBatchSize);
 	}
-	
+
 	POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
-	
+
 	POMDOG_ASSERT(layerDepth >= 0.0f);
 	POMDOG_ASSERT(layerDepth <= 1.0f);
-	
+
 	POMDOG_ASSERT(texture->Width() > 0);
 	POMDOG_ASSERT(texture->Height() > 0);
-	
+
 	SpriteInfo info;
 	info.Translation = Vector4(position.X, position.Y, scale.X, scale.Y);
 	info.SourceRect = Vector4(0, 0, texture->Width(), texture->Height());
@@ -341,7 +341,7 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 	info.OriginRotationLayerDepth = Vector4(originPivot.X, originPivot.Y, rotation.value, layerDepth);
 #endif
 	info.Color = color.ToVector4();
-	
+
 	spriteQueues.back().push_back(std::move(info));
 	POMDOG_ASSERT(spriteQueues.back().size() <= MaxBatchSize);
 }
@@ -353,7 +353,7 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 	if (scale.X == 0.0f || scale.Y == 0.0f) {
 		return;
 	}
-	
+
 	POMDOG_ASSERT(texture);
 
 	if (spriteQueues.empty()
@@ -364,15 +364,15 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 		spriteQueues.push_back({});
 		spriteQueues.back().reserve(MinBatchSize);
 	}
-	
+
 	POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
-	
+
 	POMDOG_ASSERT(layerDepth >= 0.0f);
 	POMDOG_ASSERT(layerDepth <= 1.0f);
-	
+
 	POMDOG_ASSERT(sourceRect.Width > 0);
 	POMDOG_ASSERT(sourceRect.Height > 0);
-	
+
 	SpriteInfo info;
 	info.Translation = Vector4(position.X, position.Y, scale.X, scale.Y);
 	info.SourceRect = Vector4(sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
@@ -382,7 +382,7 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 	info.OriginRotationLayerDepth = Vector4(originPivot.X, originPivot.Y, rotation.value, layerDepth);
 #endif
 	info.Color = color.ToVector4();
-	
+
 	spriteQueues.back().push_back(std::move(info));
 	POMDOG_ASSERT(spriteQueues.back().size() <= MaxBatchSize);
 }

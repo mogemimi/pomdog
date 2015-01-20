@@ -31,13 +31,13 @@ class AnimationGraph {
 public:
 	std::vector<AnimationGraphState> States;
 	std::vector<AnimationBlendInput> Inputs;
-	
+
 	Optional<std::uint16_t> FindParameter(std::string const& name) const
 	{
 		auto iter = std::find_if(std::begin(Inputs), std::end(Inputs), [&name](AnimationBlendInput const& input) {
 			return input.Name == name;
 		});
-		
+
 		if (iter != std::end(Inputs)) {
 			return std::distance(std::begin(Inputs), iter);
 		}

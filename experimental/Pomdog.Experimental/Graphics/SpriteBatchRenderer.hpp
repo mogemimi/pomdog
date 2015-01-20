@@ -30,23 +30,23 @@ class SpriteBatchRenderer {
 public:
 	SpriteBatchRenderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-	
+
 	~SpriteBatchRenderer();
 
 	void SetProjectionMatrix(Matrix4x4 const& projectionMatrix);
 
 	void Begin(Matrix4x4 const& transformMatrix);
-	
+
 	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 		Color const& color, Vector2 const& originPivot);
-	
+
 	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 		Rectangle const& sourceRect, Color const& color, Vector2 const& originPivot);
-	
+
 	void End();
-	
+
 	std::uint32_t DrawCallCount() const;
-	
+
 private:
 	class Impl;
 	std::unique_ptr<Impl> impl;

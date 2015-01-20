@@ -33,13 +33,13 @@ public:
 	Tagged() = default;
 	Tagged(Tagged const&) = default;
 	Tagged(Tagged &&) = default;
-	
+
 	Tagged & operator=(Tagged const&) = default;
 	Tagged & operator=(Tagged &&) = default;
 
 	Tagged(value_type const& v)
 		: value(v) {}
-		
+
 	Tagged(value_type && v)
 		: value(std::move(v)) {}
 

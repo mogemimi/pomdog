@@ -29,7 +29,7 @@ class POMDOG_EXPORT FloatingPointMatrix2x2 {
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");
 	typedef T value_type;
-		
+
 	std::array<std::array<T, 2>, 2> m;
 
 private:
@@ -39,28 +39,28 @@ private:
 public:
 	// Constructors:
 	FloatingPointMatrix2x2() = default;
-	
+
 	///@brief Copy constructor.
 	FloatingPointMatrix2x2(FloatingPointMatrix2x2 const&) = default;
-	
+
 	///@brief Move constructor.
 	FloatingPointMatrix2x2(FloatingPointMatrix2x2 &&) = default;
-	
+
 	///@brief Construct from floating-point values.
 	FloatingPointMatrix2x2(T m00, T m01, T m10, T m11);
-	
+
 	// Assignment operators:
 	///@brief Assignment.
 	FloatingPointMatrix2x2 & operator=(FloatingPointMatrix2x2 const&) = default;
 	///@brief Move assignment.
 	FloatingPointMatrix2x2 & operator=(FloatingPointMatrix2x2 &&) = default;
-	
+
 	FloatingPointMatrix2x2 & operator*=(FloatingPointMatrix2x2 const& other);
 	FloatingPointMatrix2x2 & operator+=(FloatingPointMatrix2x2 const& other);
 	FloatingPointMatrix2x2 & operator-= (FloatingPointMatrix2x2 const& other);
 	FloatingPointMatrix2x2 & operator*=(T scaleFactor);
 	FloatingPointMatrix2x2 & operator/=(T scaleFactor);
-	
+
 	// Unary operators:
 	FloatingPointMatrix2x2 operator+() const;
 	FloatingPointMatrix2x2 operator-() const;
@@ -71,7 +71,7 @@ public:
 	FloatingPointMatrix2x2 operator*(FloatingPointMatrix2x2 const& other) const;
 	FloatingPointMatrix2x2 operator*(T scaleFactor) const;
 	FloatingPointMatrix2x2 operator/(T scaleFactor) const;
-	
+
 	bool operator==(FloatingPointMatrix2x2 const& other) const;
 	bool operator!=(FloatingPointMatrix2x2 const& other) const;
 
@@ -102,7 +102,7 @@ public:
 	///@~Japanese
 	/// @brief 最初の要素へのポインタを返します。
 	T* Data();
-	
+
 	///@~Japanese
 	/// @brief 単位行列です。
 	static FloatingPointMatrix2x2 const Identity;

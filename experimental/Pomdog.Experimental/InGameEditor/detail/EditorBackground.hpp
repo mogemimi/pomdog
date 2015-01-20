@@ -28,7 +28,7 @@ public:
 	void SetViewProjection(Matrix4x4 const& viewProjection);
 
 	void Draw(GraphicsContext & graphicsContext);
-	
+
 private:
 	LineBatch lineBatch;
 	Matrix4x4 viewProjectionMatrix;

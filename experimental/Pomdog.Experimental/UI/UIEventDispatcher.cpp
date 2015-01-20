@@ -61,7 +61,7 @@ std::shared_ptr<UIView> UIEventDispatcher::Find(Point2D const& position)
 void UIEventDispatcher::Touch(MouseState const& mouseState)
 {
 	auto position = mouseState.Position;
-	
+
 	if (!pointerState)
 	{
 		if (auto node = Find(position))
@@ -70,11 +70,11 @@ void UIEventDispatcher::Touch(MouseState const& mouseState)
 			PointerEntered(position, mouseState, node);
 		}
 	}
-	
+
 	if (!pointerState) {
 		return;
 	}
-	
+
 	switch (pointerState->pointerPoint.Event) {
 	case PointerEventType::Canceled:
 		break;
@@ -90,7 +90,7 @@ void UIEventDispatcher::Touch(MouseState const& mouseState)
 		else if (auto pointerMouseEvent = FindPointerMouseEvent(mouseState)) {
 			pointerState->pointerPoint.MouseEvent = pointerMouseEvent;
 			POMDOG_ASSERT(CheckMouseButton(mouseState, *pointerMouseEvent) == ButtonState::Pressed);
-		
+
 			POMDOG_ASSERT(node == pointerState->focusedElement);
 			POMDOG_ASSERT(Intersects(position, *pointerState->focusedElement));
 			PointerPressed(position);
@@ -112,13 +112,13 @@ void UIEventDispatcher::Touch(MouseState const& mouseState)
 	case PointerEventType::WheelChanged:
 		break;
 	}
-	
+
 	if (pointerState)
 	{
 		auto oldMouseWheelDelta = pointerState->pointerPoint.MouseWheelDelta;
 		pointerState->pointerPoint.MouseWheelDelta = mouseState.ScrollWheel - pointerState->PrevScrollWheel;
 		pointerState->PrevScrollWheel = mouseState.ScrollWheel;
-		
+
 		if (oldMouseWheelDelta != pointerState->pointerPoint.MouseWheelDelta)
 		{
 			POMDOG_ASSERT(pointerState->focusedElement);
@@ -145,7 +145,7 @@ void UIEventDispatcher::PointerEntered(Point2D const& position, MouseState const
 	else {
 		window->SetMouseCursor(MouseCursor::Arrow);
 	}
-	
+
 	pointerState->focusedElement = node;
 }
 //-----------------------------------------------------------------------
@@ -178,7 +178,7 @@ void UIEventDispatcher::PointerMoved(Point2D const& position)
 {
 	POMDOG_ASSERT(pointerState);
 	POMDOG_ASSERT(pointerState->focusedElement);
-	
+
 	pointerState->pointerPoint.Event = PointerEventType::Moved;
 	pointerState->pointerPoint.Position = position;
 
@@ -215,7 +215,7 @@ Details::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIView> &&
 	std::shared_ptr<SubscribeRequestDispatcherType> sharedDispatcher(
 		shared_from_this(), &subscribeRequests);
 	Details::UIEventConnection connection {std::move(sharedDispatcher), child};
-	
+
 	subscribeRequests.AddChild(std::move(child));
 	return std::move(connection);
 }

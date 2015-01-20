@@ -21,10 +21,10 @@ class SkeletonPose;
 class AnimationTrack {
 public:
 	virtual ~AnimationTrack() = default;
-	
+
 	virtual void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton,
 		SkeletonPose & skeletonPose) = 0;
-	
+
 	virtual AnimationTimeInterval Length() const = 0;
 };
 

@@ -68,7 +68,7 @@ public:
 	/// @brief 0.0 から 1.0 の範囲外にあるテクスチャの w 座標を解決するために使用されるテクスチャアドレッシングモードです。
 	/// デフォルト値は TextureAddressMode::Clamp です。
 	TextureAddressMode AddressW = TextureAddressMode::Clamp;
-	
+
 	//Color BorderColor = Color::TransparentBlack;
 };
 

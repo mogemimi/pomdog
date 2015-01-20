@@ -19,7 +19,7 @@ SpriteCommandProcessor::SpriteCommandProcessor(std::shared_ptr<GraphicsContext> 
 void SpriteCommandProcessor::Begin(GraphicsContext & graphicsContext)
 {
 	drawCallCount = 0;
-	
+
 	spriteBatch.Begin(Matrix4x4::Identity);
 }
 //-----------------------------------------------------------------------

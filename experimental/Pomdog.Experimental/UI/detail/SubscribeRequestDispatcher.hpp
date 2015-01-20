@@ -27,7 +27,7 @@ public:
 	{
 		Added.push_back(child);
 	}
-	
+
 	void AddChild(std::shared_ptr<ListenerType> && child)
 	{
 		Added.push_back(std::move(child));

@@ -29,7 +29,7 @@ enum class LogLevel: std::uint8_t {
 	///@~Japanese
 	/// @brief 日常的なログを示します。
 	Info = 2,
-	
+
 	///@~Japanese
 	/// @brief エンジンの内部処理に関するログを除くすべてのメッセージを示します。
 	Verbose = 3,

@@ -28,15 +28,15 @@ public:
 	BeamSystem();
 
 	void Update(DurationSeconds const& frameDuration, Transform2D const& emitterTransform, Vector2 const& target);
-	
+
 	static Vector2 CreateTarget(Transform2D const& emitterTransform, float distance);
-	
+
 public:
 	BeamEmitter emitter;
 	BeamBranching branching;
-	
+
 	std::vector<Beam> beams;
-	
+
 private:
 	DurationSeconds erapsedTime;
 	DurationSeconds emissionTimer;

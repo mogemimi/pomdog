@@ -25,9 +25,9 @@ public:
 	virtual void Draw(GraphicsContext & graphicsContext, Renderer & renderer) = 0;
 
 	std::int32_t DrawOrder() const;
-	
+
 	void DrawOrder(std::int32_t drawOrder);
-	
+
 private:
 	std::int32_t drawOrder = 0;
 };

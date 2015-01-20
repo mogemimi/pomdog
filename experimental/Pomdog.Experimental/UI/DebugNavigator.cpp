@@ -22,14 +22,14 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
 	constexpr float minFramerate = 10.0f;
 	constexpr float maxFramerate = 60.0f;
 	constexpr std::uint16_t maxHistories = 20;
-	
+
 	{
 		if (clock->TotalGameTime() - duration > DurationSeconds(0.2))
 		{
 			auto frameRate = clock->FrameRate();
 			frameRateString = StringFormat("%4.2f fps", frameRate);
 			frameRates.push_back(MathHelper::Clamp(frameRate, minFramerate, maxFramerate));
-			
+
 			if (frameRates.size() > maxHistories)
 			{
 				frameRates.pop_front();
@@ -37,11 +37,11 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
 			duration = clock->TotalGameTime();
 		}
 	}
-	
+
 	auto transform = Transform() * drawingContext.Top();
 	{
 		auto graphTransform = Matrix3x2::CreateTranslation(Vector2{0, 16}) * transform;
-	
+
 		constexpr std::uint16_t maxGraphHeight = 26;
 		constexpr float graphMarginLeft = 1.0f;
 

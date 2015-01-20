@@ -34,19 +34,19 @@ ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
 	// Create effect reflection:
 	POMDOG_ASSERT(nativeEffectPass);
 	auto effectReflection = nativeDevice->CreateEffectReflection(*nativeEffectPass);
-	
+
 	POMDOG_ASSERT(effectReflection);
 	auto constantBuffers = effectReflection->GetConstantBuffers();
-	
+
 	// Create effect parameters:
 	for (auto & constantBuffer: constantBuffers)
 	{
 		auto parameter = std::make_shared<EffectParameter>(graphicsDevice, constantBuffer.ByteSize);
 		effectParameters[constantBuffer.Name] = std::move(parameter);
 	}
-	
+
 	nativeConstantLayout = nativeEffectPass->CreateConstantLayout();
-	
+
 	// Bind constant buffers:
 	for (auto & parameter: effectParameters)
 	{
@@ -71,7 +71,7 @@ std::shared_ptr<EffectParameter> const& ConstantBufferBinding::Find(std::string 
 {
 	POMDOG_ASSERT(!parameterName.empty());
 	POMDOG_ASSERT(!effectParameters.empty());
-	
+
 	auto iter = effectParameters.find(parameterName);
 	if (iter != std::end(effectParameters)) {
 		return iter->second;

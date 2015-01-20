@@ -36,8 +36,8 @@ TaggedClass Get(OpenGLGetTraits<TaggedClass>* = nullptr)
 	GLint oldBuffer = 0;
 	::glGetIntegerv(
 		OpenGLGetTraits<TaggedClass>::bufferObjectBinding,
-		&oldBuffer
-	);
+		&oldBuffer);
+
 	return TaggedClass(static_cast<value_type>(oldBuffer));
 }
 
@@ -46,8 +46,7 @@ void BindBuffer(TaggedClass const& bufferObject)
 {
 	::glBindBuffer(
 		OpenGLGetTraits<TaggedClass>::bufferObjectTarget,
-		bufferObject.value
-	);
+		bufferObject.value);
 }
 
 template <class TaggedClass>
@@ -55,8 +54,7 @@ void BindTexture(TaggedClass const& textureObject)
 {
 	::glBindTexture(
 		OpenGLGetTraits<TaggedClass>::textureObjectTarget,
-		textureObject.value
-	);
+		textureObject.value);
 }
 
 }// namespace TypesafeHelperGL4

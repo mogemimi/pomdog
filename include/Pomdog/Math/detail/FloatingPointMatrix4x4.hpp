@@ -29,7 +29,7 @@ class POMDOG_EXPORT FloatingPointMatrix4x4 {
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");
 	typedef T value_type;
-	
+
 	//union {
 	//	std::array<std::array<T, 4>, 4> m;
 	//#if defined __i386__ || defined __x86_64__
@@ -37,7 +37,7 @@ public:
 	//#endif
 	//};
 	std::array<std::array<T, 4>, 4> m;
-	
+
 private:
 	static constexpr std::size_t RowSize = 4;
 	static constexpr std::size_t ColumnSize = 4;
@@ -45,20 +45,20 @@ private:
 public:
 	// Constructors:
 	FloatingPointMatrix4x4() = default;
-	
+
 	///@brief Copy constructor.
 	FloatingPointMatrix4x4(FloatingPointMatrix4x4 const&) = default;
-	
+
 	///@brief Move constructor.
 	FloatingPointMatrix4x4(FloatingPointMatrix4x4 &&) = default;
-	
+
 	///@brief Construct from floating-point values.
 	FloatingPointMatrix4x4(
 		T m00, T m01, T m02, T m03,
 		T m10, T m11, T m12, T m13,
 		T m20, T m21, T m22, T m23,
 		T m30, T m31, T m32, T m33);
-	
+
 	// Assignment operators:
 	FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 const&) = default;
 	FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 &&) = default;
@@ -85,7 +85,7 @@ public:
 	// Function-call operators:
 	T const& operator()(std::size_t row, std::size_t column) const;
 	T & operator()(std::size_t row, std::size_t column);
-	
+
 	///@~Japanese
 	/// @brief 平行移動ベクトルを設定します。
 	void SetTranslation(FloatingPointVector3<T> const&);
@@ -93,7 +93,7 @@ public:
 	///@~Japanese
 	/// @brief 平行移動ベクトルを取得します。
 	FloatingPointVector3<T> GetTranslation() const;
-		
+
 	///@~Japanese
 	/// @brief スケールベクトルを設定します。
 	void SetScale(FloatingPointVector3<T> const&);
@@ -101,15 +101,14 @@ public:
 	///@~Japanese
 	/// @brief スケールベクトルを取得します。
 	FloatingPointVector3<T> GetScale() const;
-		
 	///@~Japanese
 	/// @brief 行列式を計算します。
 	T Determinant() const;
-		
+
 	///@~Japanese
 	/// @brief 指定された行列を結合します。4x4 の正方行列の積を計算します。
 	FloatingPointMatrix4x4 Concatenate(FloatingPointMatrix4x4 const&) const;
-		
+
 	///@~Japanese
 	/// @brief 4x4 の正方行列の積を計算します。
 	FloatingPointMatrix4x4 Concatenate(T scaleFactor) const;
@@ -279,12 +278,12 @@ public:
 	static void
 	CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy, T aspect, T zNear, T zFar,
 		FloatingPointMatrix4x4 & result);
-		
+
 	///@~Japanese
 	/// @brief 視野に基づいて、左手座標系パースペクティブ射影行列を作成します。
 	static FloatingPointMatrix4x4
 	CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy, T aspect, T zNear, T zFar);
-	
+
 	///@~Japanese
 	/// @brief 視野に基づいて、右手座標系パースペクティブ射影行列を作成します。
 	static void
@@ -383,7 +382,7 @@ public:
 	///@~Japanese
 	/// @brief 最初の要素へのポインタを返します。
 	T* Data();
-	
+
 	///@~Japanese
 	/// @brief 単位行列です。
 	static FloatingPointMatrix4x4 const Identity;

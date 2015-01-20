@@ -22,9 +22,9 @@ public:
 	// {xy__} = position.xy
 	// {__zw} = textureCoord.xy
 	Vector4 PositionTextureCoord;
-	
+
 	std::array<float, 4> Weights;
-	
+
 	std::array<std::int32_t, 4> Joints;
 };
 

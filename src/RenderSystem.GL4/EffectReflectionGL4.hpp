@@ -50,15 +50,15 @@ struct UniformGL4 {
 class EffectReflectionGL4: public NativeEffectReflection {
 public:
 	EffectReflectionGL4() = delete;
-	
+
 	explicit EffectReflectionGL4(ShaderProgramGL4 const& shaderProgram);
 
 	std::vector<EffectConstantDescription> GetConstantBuffers() const override;
 
 	std::vector<UniformBlockGL4> GetNativeUniformBlocks();
-	
+
 	std::vector<UniformGL4> GetNativeUniforms();
-	
+
 private:
 	ShaderProgramGL4 shaderProgram;
 };

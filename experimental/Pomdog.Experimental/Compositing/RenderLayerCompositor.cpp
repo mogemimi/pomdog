@@ -37,7 +37,7 @@ void RenderLayerCompositor::Draw(GraphicsContext & graphicsContext, Renderer & r
 			[](std::shared_ptr<RenderLayer> const& a, std::shared_ptr<RenderLayer> const& b){
 				return a->DrawOrder() < b->DrawOrder();
 			});
-		
+
 		needSort = false;
 	}
 

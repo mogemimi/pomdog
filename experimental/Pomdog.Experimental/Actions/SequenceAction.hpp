@@ -40,7 +40,7 @@ public:
 		, index(0)
 		, isCompleted(false)
 	{}
-	
+
 	SequenceAction(std::unique_ptr<Action> && action1, std::unique_ptr<Action> && action2, std::unique_ptr<Action> && action3)
 		: actions({std::move(action1), std::move(action2), std::move(action3)})
 		, actionCount(3)
@@ -60,20 +60,20 @@ public:
 		if (isCompleted) {
 			return;
 		}
-		
+
 		POMDOG_ASSERT(index < actions.size());
 		POMDOG_ASSERT(index < actionCount);
-		
+
 		auto & action = actions[index];
-		
+
 		POMDOG_ASSERT(action);
 		action->Act(gameObject, frameDuration);
-		
+
 		if (action->IsCompleted()) {
 			POMDOG_ASSERT(index < actionCount);
 			++index;
 		}
-		
+
 		if (index >= actionCount) {
 			isCompleted = true;
 		}

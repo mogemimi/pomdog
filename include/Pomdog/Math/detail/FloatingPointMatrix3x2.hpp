@@ -29,7 +29,7 @@ class POMDOG_EXPORT FloatingPointMatrix3x2 {
 public:
 	static_assert(std::is_floating_point<T>::value, "T is floating point.");
 	typedef T value_type;
-	
+
 	std::array<std::array<T, 2>, 3> m;
 
 private:
@@ -39,35 +39,35 @@ private:
 public:
 	// Constructors:
 	FloatingPointMatrix3x2() = default;
-	
+
 	///@brief Copy constructor.
 	FloatingPointMatrix3x2(FloatingPointMatrix3x2 const&) = default;
-	
+
 	///@brief Move constructor.
 	FloatingPointMatrix3x2(FloatingPointMatrix3x2 &&) = default;
-	
+
 	///@brief Construct from floating-point values.
 	FloatingPointMatrix3x2(
 		T m00, T m01,
 		T m10, T m11,
 		T m20, T m21);
-	
+
 	// Assignment operators:
 	///@brief Assignment.
 	FloatingPointMatrix3x2 & operator=(FloatingPointMatrix3x2 const&) = default;
 	///@brief Move assignment.
 	FloatingPointMatrix3x2 & operator=(FloatingPointMatrix3x2 &&) = default;
-	
+
 	FloatingPointMatrix3x2 & operator*=(FloatingPointMatrix3x2 const& other);
 	FloatingPointMatrix3x2 & operator+=(FloatingPointMatrix3x2 const& other);
 	FloatingPointMatrix3x2 & operator-=(FloatingPointMatrix3x2 const& other);
 	FloatingPointMatrix3x2 & operator*=(T scaleFactor);
 	FloatingPointMatrix3x2 & operator/=(T scaleFactor);
-	
+
 	// Unary operators:
 	FloatingPointMatrix3x2 operator+() const;
 	FloatingPointMatrix3x2 operator-() const;
-	
+
 	// Binary operators:
 	FloatingPointMatrix3x2 operator+(FloatingPointMatrix3x2 const& other) const;
 	FloatingPointMatrix3x2 operator-(FloatingPointMatrix3x2 const& other) const;
@@ -77,7 +77,7 @@ public:
 
 	bool operator==(FloatingPointMatrix3x2 const& other) const;
 	bool operator!=(FloatingPointMatrix3x2 const& other) const;
-	
+
 	// Function-call operators:
 	T const& operator()(std::size_t row, std::size_t column) const;
 	T & operator()(std::size_t row, std::size_t column);
@@ -89,7 +89,7 @@ public:
 	///@~Japanese
 	/// @brief 指定された行列を結合します。3x2 の行列の積を計算します。
 	FloatingPointMatrix3x2 Concatenate(FloatingPointMatrix3x2 const& other) const;
-	
+
 	///@~Japanese
 	/// @brief 3x2 の行列の積を計算します。
 	FloatingPointMatrix3x2 Concatenate(T scaleFactor) const;
@@ -123,7 +123,7 @@ public:
 	/// @brief スケーリング行列を作成します。
 	static FloatingPointMatrix3x2
 	CreateScale(T scale);
-	
+
 	///@~Japanese
 	/// @brief スケーリング行列を作成します。
 	static void
@@ -133,7 +133,7 @@ public:
 	/// @brief スケーリング行列を作成します。
 	static FloatingPointMatrix3x2
 	CreateScale(FloatingPointVector2<T> const& scale);
-	
+
 	///@~Japanese
 	/// @brief z 軸を回転軸とした回転行列を作成します。
 	static void
@@ -143,7 +143,7 @@ public:
 	/// @brief z 軸を回転軸とした回転行列を作成します。
 	static FloatingPointMatrix3x2
 	CreateRotation(Radian<T> const& angle);
-	
+
 	///@~Japanese
 	/// @brief スキューイング行列を作成します。
 	static void
@@ -177,7 +177,7 @@ public:
 	///@~Japanese
 	/// @brief 最初の要素へのポインタを返します。
 	T* Data();
-	
+
 	///@~Japanese
 	/// @brief 単位行列です。
 	static FloatingPointMatrix3x2 const Identity;

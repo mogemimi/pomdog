@@ -54,24 +54,24 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 	AudioFileID audioFile;
 	auto errorCode = AudioFileOpenURL(url, kAudioFileReadPermission, kAudioFileWAVEType, &audioFile);
 	CFRelease(url);
-	
+
 	if (errorCode != noErr)
 	{
 		POMDOG_THROW_EXCEPTION(std::runtime_error,
 			"Cannot open audio file");
 	}
-	
+
 	AudioStreamBasicDescription basicDescription;
 	UInt32 propertySize = sizeof(basicDescription);
 	errorCode = AudioFileGetProperty(audioFile, kAudioFilePropertyDataFormat, &propertySize, &basicDescription);
-	
+
 	if (errorCode != noErr)
 	{
 		AudioFileClose(audioFile);
 		POMDOG_THROW_EXCEPTION(std::runtime_error,
 			"Failed to get audio file propety");
 	}
-	
+
 	if (basicDescription.mFormatID != kAudioFormatLinearPCM)
 	{
 		AudioFileClose(audioFile);
@@ -82,14 +82,14 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 	UInt64 audioDataByteCount = 0;
 	propertySize = sizeof(audioDataByteCount);
 	errorCode = AudioFileGetProperty(audioFile, kAudioFilePropertyAudioDataByteCount, &propertySize, &audioDataByteCount);
-	
+
 	if (errorCode != noErr)
 	{
 		AudioFileClose(audioFile);
 		POMDOG_THROW_EXCEPTION(std::runtime_error,
 			"Cannot get the byte count of the audio data");
 	}
-	
+
 	Float64 estimatedDuration = 0;
 	propertySize = sizeof(estimatedDuration);
 	errorCode = AudioFileGetProperty(audioFile, kAudioFilePropertyEstimatedDuration, &propertySize, &estimatedDuration);
@@ -100,7 +100,7 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 		POMDOG_THROW_EXCEPTION(std::runtime_error,
 			"Cannot get the estimated duration of the audio data");
 	}
-	
+
 	if (basicDescription.mChannelsPerFrame < 1
 		&& basicDescription.mChannelsPerFrame > 2)
 	{
@@ -108,7 +108,7 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 		POMDOG_THROW_EXCEPTION(std::runtime_error,
 			"4, 5.1, 6.1 and 7.1 channel audio are not supported. You can use mono and stereo.");
 	}
-	
+
 	if (basicDescription.mBitsPerChannel < 8
 		&& basicDescription.mBitsPerChannel > 32
 		&& (basicDescription.mBitsPerChannel % 8 != 0))
@@ -117,7 +117,7 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 		POMDOG_THROW_EXCEPTION(std::runtime_error,
 			"4, 5.1, 6.1 and 7.1 channel audio are not supported. You can use mono and stereo.");
 	}
-	
+
 	POMDOG_ASSERT(basicDescription.mBitsPerChannel == 8
 		|| basicDescription.mBitsPerChannel == 16
 		|| basicDescription.mBitsPerChannel == 24
@@ -125,33 +125,33 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 
 	std::vector<std::uint8_t> audioData;
 	audioData.resize(audioDataByteCount);
-	
+
 	UInt32 byteCountToRead = static_cast<UInt32>(audioData.size());
 	errorCode = AudioFileReadBytes(audioFile, false, 0, &byteCountToRead, audioData.data());
 	AudioFileClose(audioFile);
-	
+
 	if (errorCode != noErr)
 	{
 		POMDOG_THROW_EXCEPTION(std::runtime_error,
 			"Failed to read audio data");
 	}
-	
+
 	if (byteCountToRead != audioDataByteCount)
 	{
 		POMDOG_THROW_EXCEPTION(std::runtime_error,
 			"Failed to read audio data");
 	}
-	
+
 	using Details::SoundSystem::OpenAL::AudioClipAL;
-	
+
 	auto channels = ToAudioChannels(basicDescription.mChannelsPerFrame);
-	
+
 	auto nativeAudioClip = std::make_unique<AudioClipAL>(
 		audioData.data(), audioData.size(),
 		basicDescription.mSampleRate,
 		basicDescription.mBitsPerChannel,
 		channels);
-	
+
 	auto audioClip = std::make_unique<AudioClip>(
 		std::move(nativeAudioClip),
 		basicDescription.mSampleRate,
@@ -290,7 +290,7 @@ static std::vector<std::uint8_t> ReadWaveAudioData(HMMIO ioHandle, MMCKINFO cons
 	if (dataChunk.cksize <= 0) {
 		POMDOG_THROW_EXCEPTION(std::runtime_error, "Data chunk is empty");
 	}
-	
+
 	std::vector<std::uint8_t> result;
 	result.resize(dataChunk.cksize);
 

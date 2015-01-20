@@ -36,9 +36,9 @@ public:
 
 	void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton,
 		SkeletonPose & skeletonPose) override;
-	
+
 	AnimationTimeInterval Length() const override;
-	
+
 private:
 	std::vector<ScaleKeyframe> keys;
 	JointIndex jointIndex;

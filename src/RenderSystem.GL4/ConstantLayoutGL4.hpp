@@ -35,9 +35,9 @@ public:
 	explicit ConstantLayoutGL4(std::vector<ConstantBufferBindingGL4> && bindings);
 
 	void SetConstantBuffer(std::string const& constantName, std::shared_ptr<NativeConstantBuffer> const& constantBuffer) override;
-	
+
 	void SetConstantBuffer(std::string const& constantName) override;
-	
+
 	void Apply();
 
 private:

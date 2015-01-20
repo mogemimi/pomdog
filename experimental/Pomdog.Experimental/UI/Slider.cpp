@@ -73,7 +73,7 @@ void Slider::IsEnabled(bool isEnabledIn)
 void Slider::OnParentChanged()
 {
 	auto parent = Parent().lock();
-	
+
 	POMDOG_ASSERT(parent);
 	POMDOG_ASSERT(!parent->Dispatcher().expired());
 
@@ -113,16 +113,16 @@ void Slider::OnPointerPressed(PointerPoint const& pointerPoint)
 	if (pointerPoint.MouseEvent && *pointerPoint.MouseEvent != UI::PointerMouseEvent::LeftButtonPressed) {
 		return;
 	}
-	
+
 	if (!isEnabled) {
 		return;
 	}
 
 	POMDOG_ASSERT(Width() > 0);
-	
+
 	// NOTE: float thumbOffset = thumbWidth / 2
 	constexpr float thumbOffset = 5;
-	
+
 	auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
 	auto amount = (pointInView.X - thumbOffset / 2) / (Width() - 2 * thumbOffset);
 	value = MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum);
@@ -134,7 +134,7 @@ void Slider::OnPointerMoved(PointerPoint const& pointerPoint)
 	if (pointerPoint.MouseEvent && *pointerPoint.MouseEvent != UI::PointerMouseEvent::LeftButtonPressed) {
 		return;
 	}
-	
+
 	if (!isEnabled) {
 		return;
 	}
@@ -143,7 +143,7 @@ void Slider::OnPointerMoved(PointerPoint const& pointerPoint)
 
 	// NOTE: float thumbOffset = thumbWidth / 2
 	constexpr float thumbOffset = 5;
-	
+
 	auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
 	auto amount = (pointInView.X - thumbOffset / 2) / (Width() - 2 * thumbOffset);
 	value = MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum);
@@ -159,13 +159,13 @@ void Slider::UpdateAnimation(DurationSeconds const& frameDuration)
 	if (!colorAnimation) {
 		return;
 	}
-	
+
 	colorAnimation->time += frameDuration.count();
 	colorAnimation->time = std::min(colorAnimation->time, colorAnimation->duration);
-	
+
 	fillColor = Color::SmoothStep(colorAnimation->startColor, colorAnimation->targetColor,
 		colorAnimation->time / colorAnimation->duration);
-	
+
 	if (colorAnimation->time >= colorAnimation->duration) {
 		colorAnimation = OptionalType::NullOptional;
 	}
@@ -183,28 +183,28 @@ void Slider::Draw(DrawingContext & drawingContext)
 
 	POMDOG_ASSERT(value >= minimum);
 	POMDOG_ASSERT(value <= maximum);
-	
+
 	auto sliderWidth2 = Width() * ((value - minimum) / (maximum - minimum));
 	auto controlPosition2 = (Width() - Height()) * ((value - minimum) / (maximum - minimum));
-	
+
 	auto transform = Transform() * drawingContext.Top();
-	
+
 	drawingContext.DrawString(transform * Matrix3x2::CreateTranslation(Vector2(Width() + 5, -2.5f)),
 		Color::White, FontWeight::Normal, FontSize::Medium, StringFormat("%5.3lf", value));
 	drawingContext.DrawRectangle(transform, trackColor, Rectangle(0, 0, Width(), Height()));
 	drawingContext.DrawRectangle(transform, fillColor, Rectangle(0, 0, sliderWidth2, Height()));
-	
+
 	if (isEnabled && isDragging)
 	{
 		constexpr float pixel = 2.0f;
-		
+
 		auto pos = Vector2(controlPosition2 - pixel, -pixel);
 		auto size = Vector2(Height() + 2 * pixel, Height() + 2 * pixel);
-		
+
 		drawingContext.DrawRectangle(transform, colorScheme.FocusedThumbColor,
 			Rectangle(pos.X, pos.Y, size.X, size.Y));
 	}
-	
+
 	if (isEnabled)
 	{
 		auto pos = Vector2(controlPosition2, 0);

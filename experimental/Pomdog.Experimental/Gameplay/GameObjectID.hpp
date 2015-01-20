@@ -27,11 +27,11 @@ public:
 	std::uint32_t SequenceNumber() const {
 		return id >> 32;
 	}
-	
+
 	std::uint32_t Index() const {
 		return id & 0xffffffffUL;
 	}
-		
+
 	std::uint64_t Value() const {
 		return id;
 	}
@@ -39,11 +39,11 @@ public:
 	bool operator==(GameObjectID const& other) const {
 		return id == other.id;
 	}
-	
+
 	bool operator!=(GameObjectID const& other) const {
 		return id != other.id;
 	}
-	
+
 	bool operator<(GameObjectID const& other) const {
 		return id < other.id;
 	}

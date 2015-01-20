@@ -25,7 +25,7 @@ public:
 	NativeIndexBuffer & operator=(NativeIndexBuffer const&) = delete;
 
 	virtual ~NativeIndexBuffer() = default;
-	
+
 	///@~Japanese
 	/// @brief インデックスデータを格納します。
 	/// @remarks イミュータブルなインデックスバッファでは使用しないでください。

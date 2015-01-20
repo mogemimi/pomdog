@@ -28,9 +28,9 @@ public:
 	UI::VerticalAlignment VerticalAlignment() const override { return UI::VerticalAlignment::Top; }
 
 	void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
-	
+
 	void Draw(DrawingContext & drawingContext) override;
-	
+
 private:
 	std::string text;
 };

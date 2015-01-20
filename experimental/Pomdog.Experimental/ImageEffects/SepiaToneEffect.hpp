@@ -19,12 +19,12 @@ namespace Pomdog {
 class SepiaToneEffect {
 public:
 	explicit SepiaToneEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-	
+
 	void SetViewport(float width, float height);
 	void SetTexture(std::shared_ptr<RenderTarget2D> const& texture);
-	
+
 	void Apply(GraphicsContext & graphicsContext);
-	
+
 private:
 	std::shared_ptr<RenderTarget2D> texture;
 	std::shared_ptr<SamplerState> samplerLinear;

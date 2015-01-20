@@ -20,7 +20,7 @@ namespace Pomdog {
 enum class IndexElementSize: std::uint8_t {
 	///@brief 16 bit.
 	SixteenBits,
-	
+
 	///@brief 32 bit.
 	ThirtyTwoBits,
 };

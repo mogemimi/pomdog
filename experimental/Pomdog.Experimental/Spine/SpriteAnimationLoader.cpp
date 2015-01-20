@@ -32,11 +32,11 @@ std::vector<Details::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrac
 		// Error: Cannot find animation clip
 		return {};
 	}
-	
+
 	auto & animationClip = *iter;
-	
+
 	std::vector<SpriteAnimationTrack> tracks;
-	
+
 	for (auto & animationTrack: animationClip.SlotTracks)
 	{
 		auto slotIndex = Hashing::CRC32::BlockChecksum(animationTrack.SlotName.data(), animationTrack.SlotName.size());
@@ -45,20 +45,20 @@ std::vector<Details::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrac
 		{
 			std::vector<SpriteKeyframe> keys;
 			keys.reserve(animationTrack.AttachmentSamples.size());
-			
+
 			for (auto & sample: animationTrack.AttachmentSamples)
 			{
 				auto textureAtlasRegion = std::find_if(std::begin(textureAtlas.regions), std::end(textureAtlas.regions),
 					[&](TexturePacker::TextureAtlasRegion const& region) {
 						return region.Name == sample.AttachmentName;
 					});
-			
+
 				if (textureAtlasRegion == std::end(textureAtlas.regions)) {
 					///@todo Not implemented
 					// Error: Cannot find attachment
 					continue;
 				}
-			
+
 				SpriteKeyframe key;
 				key.Time = sample.Time;
 				key.TexturePage = textureAtlasRegion->TexturePage;
@@ -70,20 +70,20 @@ std::vector<Details::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrac
 					/ textureAtlasRegion->Region.Subrect.Width;
 				key.Origin.Y = static_cast<float>(textureAtlasRegion->Region.Height / 2 - textureYOffset)
 					/ textureAtlasRegion->Region.Subrect.Height;
-				
+
 				if (textureAtlasRegion->Region.Rotate) {
 					std::swap(key.Subrect.Width, key.Subrect.Height);
 					std::swap(key.Origin.X, key.Origin.Y);
 				}
-				
+
 				keys.push_back(std::move(key));
 			}
-			
+
 			std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<SpriteKeyframe>);
 			tracks.emplace_back(std::move(keys), slotIndex);
 		}
 	}
-	
+
 	return tracks;
 }
 

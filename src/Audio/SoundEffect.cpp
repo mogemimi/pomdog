@@ -72,7 +72,7 @@ void SoundEffect::Stop()
 	if (state == SoundState::Stopped) {
 		return;
 	}
-	
+
 	POMDOG_ASSERT(nativeSoundEffect);
 	nativeSoundEffect->Stop();
 	state = SoundState::Stopped;

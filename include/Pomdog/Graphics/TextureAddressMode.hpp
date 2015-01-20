@@ -29,7 +29,7 @@ enum class TextureAddressMode: std::uint8_t {
 	/// @note See also:
 	/// http://msdn.microsoft.com/ja-jp/library/bb147201(v=vs.85).aspx
 	Mirror,
-	
+
 	///@~Japanese
 	/// @brief テクスチャ座標を [0.0, 1.0] の範囲にクランプします。
 	/// @note See also:

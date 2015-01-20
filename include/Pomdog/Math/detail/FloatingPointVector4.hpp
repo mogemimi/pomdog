@@ -36,17 +36,17 @@ public:
 public:
 	// Constructors:
 	FloatingPointVector4() = default;
-	
+
 	///@brief Copy constructor.
 	FloatingPointVector4(FloatingPointVector4 const&) = default;
-	
+
 	///@brief Move constructor.
 	FloatingPointVector4(FloatingPointVector4 &&) = default;
 
 	///@brief Construct from floating-point values.
 	FloatingPointVector4(T x, T y, T z, T w);
 	FloatingPointVector4(FloatingPointVector3<T> const& xyz, T w);
-	
+
 	// Assignment operators:
 	FloatingPointVector4 & operator=(FloatingPointVector4 const& other) = default;
 	FloatingPointVector4 & operator=(FloatingPointVector4 && other) = default;
@@ -67,16 +67,16 @@ public:
 	FloatingPointVector4 operator/(FloatingPointVector4 const& other) const;
 	FloatingPointVector4 operator*(T scaleFactor) const;
 	FloatingPointVector4 operator/(T scaleFactor) const;
-	
+
 	bool operator == (FloatingPointVector4 const& other) const;
 	bool operator != (FloatingPointVector4 const& other) const;
 
 	// Products and length, normalize:
-	
+
 	///@~Japanese
 	/// @brief ベクトルの長さを計算します。
 	T Length() const;
-	
+
 	///@~Japanese
 	/// @brief ベクトルの長さの 2 乗を計算します。
 	T LengthSquared() const;

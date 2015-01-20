@@ -24,7 +24,7 @@ static JointIndex FindJoint(std::vector<BoneDesc> const& bones, std::string cons
 {
 	auto iter = std::find_if(std::begin(bones), std::end(bones),
 		[&name](BoneDesc const& desc){ return desc.Name == name; });
-	
+
 	if (iter != std::end(bones)) {
 		return JointIndex(std::distance(std::begin(bones), iter));
 	}
@@ -45,23 +45,23 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 		// Error: Cannot find animation clip
 		return {};
 	}
-	
+
 	auto & animationClip = *iter;
-	
+
 	std::vector<std::unique_ptr<AnimationTrack>> tracks;
-	
+
 	for (auto & track: animationClip.BoneTracks)
 	{
 		auto jointIndex = FindJoint(desc.Bones, track.BoneName);
 		POMDOG_ASSERT(jointIndex);
-		
+
 		using namespace Pomdog::Details::Skeletal2D;
 
 		if (!track.RotateSamples.empty())
 		{
 			std::vector<RotationKeyframe> keys;
 			keys.reserve(track.RotateSamples.size());
-			
+
 			for (auto & sample: track.RotateSamples)
 			{
 				RotationKeyframe key;
@@ -69,17 +69,17 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 				key.Time = sample.Time;
 				keys.push_back(std::move(key));
 			}
-			
+
 			std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<RotationKeyframe>);
 			auto timeline = std::make_unique<RotationTrack>(std::move(keys), std::move(jointIndex));
 			tracks.push_back(std::move(timeline));
 		}
-		
+
 		if (!track.ScaleSamples.empty())
 		{
 			std::vector<ScaleKeyframe> keys;
 			keys.reserve(track.ScaleSamples.size());
-			
+
 			for (auto & sample: track.ScaleSamples)
 			{
 				ScaleKeyframe key;
@@ -87,17 +87,17 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 				key.Time = sample.Time;
 				keys.push_back(std::move(key));
 			}
-			
+
 			std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<ScaleKeyframe>);
 			auto timeline = std::make_unique<ScaleTrack>(std::move(keys), std::move(jointIndex));
 			tracks.push_back(std::move(timeline));
 		}
-		
+
 		if (!track.TranslateSamples.empty())
 		{
 			std::vector<TranslationKeyframe> keys;
 			keys.reserve(track.TranslateSamples.size());
-			
+
 			for (auto & sample: track.TranslateSamples)
 			{
 				TranslationKeyframe key;
@@ -112,7 +112,7 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 			tracks.push_back(std::move(timeline));
 		}
 	}
-	
+
 	return AnimationClip(std::move(tracks));
 }
 

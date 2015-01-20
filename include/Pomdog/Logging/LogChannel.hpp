@@ -40,7 +40,7 @@ public:
 	///@~Japanese
 	/// @brief メッセージを送ります。
 	void Log(LogEntry const& logEntry);
-	
+
 	///@~Japanese
 	/// @brief 指定されたスロットを接続します。
 	EventConnection Connect(std::function<void(LogEntry const&)> const& slot);

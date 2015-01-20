@@ -40,7 +40,7 @@ class ConnectionBodyOverride final: public ConnectionBody {
 private:
 	typedef std::weak_ptr<Slot<Function>> WeakSlot;
 	typedef std::weak_ptr<SignalBody<Function>> WeakSignal;
-	
+
 	WeakSignal weakSignal;
 	WeakSlot weakSlot;
 
@@ -49,7 +49,7 @@ public:
 		: weakSignal(std::forward<WeakSignal>(weakSignalIn))
 		, weakSlot(std::forward<WeakSlot>(weakSlotIn))
 	{}
-	
+
 	ConnectionBodyOverride(WeakSignal const& weakSignalIn, WeakSlot const& weakSlotIn)
 		: weakSignal(weakSignalIn)
 		, weakSlot(weakSlotIn)
@@ -60,9 +60,9 @@ public:
 		if (weakSlot.expired()) {
 			return;
 		}
-		
+
 		auto locked_slot = weakSlot.lock();
-		
+
 		if (auto locked_signal = weakSignal.lock()) {
 			locked_signal->Disconnect(locked_slot.get());
 			weakSignal.reset();
@@ -70,7 +70,7 @@ public:
 
 		weakSlot.reset();
 	}
-	
+
 	std::unique_ptr<ConnectionBody> DeepCopy() const
 	{
 		return std::make_unique<ConnectionBodyOverride>(weakSignal, weakSlot);
@@ -86,7 +86,7 @@ private:
 
 public:
 	SignalBody();
-	
+
 	SignalBody(SignalBody const&) = delete;
 	SignalBody & operator=(SignalBody const&) = delete;
 
@@ -95,17 +95,17 @@ public:
 
 	template <typename Function>
 	std::unique_ptr<ConnectionBodyType> Connect(Function && slot);
-	
+
 	void Disconnect(SlotType const* observer);
 
 	void operator()(Arguments &&... arguments);
-	
+
 	std::size_t InvocationCount() const;
-	
+
 private:
 	void PushBackAddedListeners();
 	void EraseRemovedListeners();
-	
+
 private:
 	std::vector<std::shared_ptr<SlotType>> observers;
 	std::vector<std::shared_ptr<SlotType>> addedObservers;
@@ -135,7 +135,7 @@ auto SignalBody<void(Arguments...)>::Connect(Function && slot)->std::unique_ptr<
 		POMDOG_ASSERT(std::end(addedObservers) == std::find(std::begin(addedObservers), std::end(addedObservers), observer));
 		addedObservers.push_back(observer);
 	}
-	
+
 	std::weak_ptr<SignalBody> weakSignal = this->shared_from_this();
 	POMDOG_ASSERT(!weakSignal.expired());
 	return std::make_unique<ConnectionBodyType>(std::move(weakSignal), observer);

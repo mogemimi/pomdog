@@ -24,31 +24,31 @@ namespace UI {
 class StackPanel: public Panel, public std::enable_shared_from_this<StackPanel> {
 public:
 	StackPanel(std::uint32_t widthIn, std::uint32_t heightIn);
-	
+
 	bool SizeToFitContent() const override { return false; }
 
 	std::weak_ptr<UIEventDispatcher> Dispatcher() const override { return weakDispatcher; }
-	
+
 	void OnParentChanged() override;
 
 	void OnPointerCanceled(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerCaptureLost(PointerPoint const& pointerPoint) override;
 
 	void OnPointerEntered(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerExited(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerPressed(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerMoved(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerReleased(PointerPoint const& pointerPoint) override;
-	
+
 	void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
-	
+
 	void Draw(DrawingContext & drawingContext) override;
-	
+
 	void UpdateAnimation(DurationSeconds const& frameDuration) override;
 
 	void AddChild(std::shared_ptr<UIView> const& element);
@@ -58,13 +58,13 @@ public:
 private:
 	using UIElementCollection = std::list<std::shared_ptr<UIElement>>;
 	UIElementCollection children;
-	
+
 	std::weak_ptr<UIEventDispatcher> weakDispatcher;
 	Details::UIEventConnection connection;
-	
+
 	Thickness padding;
 	std::uint16_t barHeight;
-	
+
 	Optional<Vector2> startTouchPoint;
 };
 

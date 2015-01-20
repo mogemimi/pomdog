@@ -59,7 +59,7 @@ public:
 	/// desc.FillMode = FillMode::Solid;
 	static std::shared_ptr<RasterizerState>
 	CreateCullCounterClockwise(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-	
+
 	///@~Japanese
 	/// @brief カリングを無効化する設定を持つラスタライザステートを作成します。
 	/// @details
@@ -68,10 +68,10 @@ public:
 	/// desc.FillMode = FillMode::Solid;
 	static std::shared_ptr<RasterizerState>
 	CreateCullNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-	
+
 public:
 	Details::RenderSystem::NativeRasterizerState* NativeRasterizerState();
-	
+
 private:
 	std::unique_ptr<Details::RenderSystem::NativeRasterizerState> nativeRasterizerState;
 	RasterizerDescription description;

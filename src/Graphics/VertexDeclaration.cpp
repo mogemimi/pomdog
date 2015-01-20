@@ -31,9 +31,9 @@ static std::vector<VertexElement> BuildVertexElements(std::initializer_list<Vert
 {
 	std::vector<VertexElement> vertexElements;
 	vertexElements.reserve(formats.size());
-	
+
 	std::uint16_t offsetBytes = 0;
-	
+
 	for (auto & format: formats)
 	{
 		vertexElements.push_back({offsetBytes, format});

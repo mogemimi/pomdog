@@ -33,7 +33,7 @@ public:
 
 	void Region(TextureRegion const& region);
 	TextureRegion const& Region() const;
-	
+
 	Rectangle BoundingBox() const;
 
 private:

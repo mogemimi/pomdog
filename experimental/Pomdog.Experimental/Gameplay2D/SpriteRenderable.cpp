@@ -66,7 +66,7 @@ void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 	if (!IsVisible) {
 		return;
 	}
-	
+
 	if (dirtyFlags & SpriteRenderableDirtyFlags::Region)
 	{
 		auto & region = command.textureRegion;
@@ -79,7 +79,7 @@ void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 		command.originPivot = originPivot * Vector2(region.Width, region.Height) / Vector2(region.Subrect.Width, region.Subrect.Height);
 	}
 	dirtyFlags = 0;
-	
+
 	command.drawOrder = DrawOrder;
 	command.color = Material.Color;
 
@@ -93,13 +93,13 @@ void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 	else {
 		command.transform = offsetMatrix;
 	}
-	
+
 	POMDOG_ASSERT(command.texture);
 	POMDOG_ASSERT(command.textureRegion.Width > 0);
 	POMDOG_ASSERT(command.textureRegion.Height > 0);
 	POMDOG_ASSERT(command.textureRegion.Subrect.Width > 0);
 	POMDOG_ASSERT(command.textureRegion.Subrect.Height > 0);
-	
+
 	renderer.PushCommand(command);
 }
 //-----------------------------------------------------------------------

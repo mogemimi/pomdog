@@ -35,7 +35,7 @@ public:
 	{
 		POMDOG_ASSERT(gameObject);
 		POMDOG_ASSERT(gameObject.HasComponent<Transform2D>());
-		
+
 		auto transform = gameObject.Component<Transform2D>();
 		startScale = transform->Scale;
 	}
@@ -44,7 +44,7 @@ public:
 	{
 		POMDOG_ASSERT(gameObject);
 		POMDOG_ASSERT(gameObject.HasComponent<Transform2D>());
-		
+
 		auto transform = gameObject.Component<Transform2D>();
 		transform->Scale = Vector2::Lerp(startScale, endScale, normalizedTime);
 	}

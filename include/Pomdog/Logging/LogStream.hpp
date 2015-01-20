@@ -33,7 +33,7 @@ private:
 
 public:
 	LogStream() = delete;
-	
+
 	explicit LogStream(LogChannel & channel, LogLevel level = LogLevel::Verbose);
 
 	LogStream(LogChannel & channel, std::string const& sourceChannel, LogLevel level = LogLevel::Verbose);
@@ -42,16 +42,16 @@ public:
 	LogStream(LogStream &&) = default;
 	LogStream & operator=(LogStream const&) = delete;
 	LogStream & operator=(LogStream &&) = delete;
-	
+
 	~LogStream();
 
 	template <typename T>
 	LogStream & operator<<(T const& message);
-	
+
 	void Flush();
-	
+
 	void Clear();
-	
+
 	std::string String() const;
 };
 

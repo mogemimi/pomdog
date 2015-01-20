@@ -51,7 +51,7 @@ public:
 	struct Vertex {
 		// {xyz} = position.xyz
 		Vector3 Position;
-		
+
 		// {xyzw} = color.rgba
 		Vector4 Color;
 	};
@@ -64,7 +64,7 @@ private:
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 	std::shared_ptr<InputLayout> inputLayout;
-	
+
 public:
 	std::uint32_t drawCallCount;
 
@@ -76,9 +76,9 @@ public:
 
 	void DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
 		Vector4 const& color1, Vector4 const& color2, Vector4 const& color3);
-	
+
 	void End();
-	
+
 	void Flush();
 };
 //-----------------------------------------------------------------------
@@ -107,7 +107,7 @@ void PolygonBatch::Impl::Begin(Matrix4x4 const& transformMatrix)
 
 	auto parameter = constantBuffers->Find("TransformMatrix");
 	parameter->SetValue(transposedMatrix);
-	
+
 	drawCallCount = 0;
 }
 //-----------------------------------------------------------------------
@@ -125,15 +125,15 @@ void PolygonBatch::Impl::Flush()
 	POMDOG_ASSERT(!vertices.empty());
 	POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
 	vertexBuffer->SetData(vertices.data(), static_cast<std::uint32_t>(vertices.size()));
-	
+
 	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffer(vertexBuffer);
 	graphicsContext->SetEffectPass(effectPass);
 	graphicsContext->SetConstantBuffers(constantBuffers);
 	graphicsContext->Draw(PrimitiveTopology::TriangleList, static_cast<std::uint32_t>(vertices.size()));
-	
+
 	++drawCallCount;
-	
+
 	vertices.clear();
 }
 //-----------------------------------------------------------------------
@@ -184,13 +184,13 @@ void PolygonBatch::DrawCircle(Vector2 const& position, float radius, Color const
 	}
 
 	POMDOG_ASSERT(radius > 0);
-	
+
 	POMDOG_ASSERT(segments >= 3);
 	Radian<float> centralAngle = MathConstants<float>::TwoPi() / segments;
 	Vector2 prevPoint = position + Vector2{radius, 0};
-	
+
 	auto colorVector = color.ToVector4();
-	
+
 	for (std::size_t i = 0; i < segments; ++i)
 	{
 		auto rad = centralAngle * (i + 1);
@@ -208,27 +208,27 @@ void PolygonBatch::DrawCircle(Vector2 const& position, float radius, Color const
 //	POMDOG_ASSERT(!points.empty());
 //	POMDOG_ASSERT(points.size() >= 2);
 //	POMDOG_ASSERT(thickness >= 0);
-//	
+//
 //	if (thickness <= 0) {
 //		return;
 //	}
-//	
+//
 //	auto prevPoint = points.front();
 //	for (auto iter = std::next(std::begin(points)); iter < std::end(points); ++iter)
 //	{
 //		auto & origin = *iter;
 //		auto tangent = origin - prevPoint;
 //		auto normal = Vector2{-tangent.Y, tangent.X};
-//		
+//
 //		auto p1 = prevPoint + (thickness * normal);
 //		auto p2 = prevPoint + (-thickness * normal);
-//		
+//
 //		Vector2 nextPoint = *iter;
 //		auto nextIter = std::next(iter);
 //		if (nextIter != std::end(points))
 //		{
 //			nextPoint = *nextIter;
-//			
+//
 //			// TODO
 //			// ...
 //		}
@@ -252,7 +252,7 @@ void PolygonBatch::DrawRectangle(Rectangle const& sourceRect,
 	Color const& color1, Color const& color2, Color const& color3, Color const& color4)
 {
 	POMDOG_ASSERT(impl);
-	
+
 	if (sourceRect.Width <= 0 || sourceRect.Height <= 0) {
 		return;
 	}
@@ -263,7 +263,7 @@ void PolygonBatch::DrawRectangle(Rectangle const& sourceRect,
 		Vector2(sourceRect.Right(), sourceRect.Y + sourceRect.Height),
 		Vector2(sourceRect.Right(), sourceRect.Y),
 	};
-	
+
 	auto colorVector1 = color1.ToVector4();
 	auto colorVector2 = color2.ToVector4();
 	auto colorVector3 = color3.ToVector4();
@@ -287,7 +287,7 @@ void PolygonBatch::DrawRectangle(Matrix3x2 const& matrix,
 	Color const& color1, Color const& color2, Color const& color3, Color const& color4)
 {
 	POMDOG_ASSERT(impl);
-	
+
 	if (sourceRect.Width <= 0 || sourceRect.Height <= 0) {
 		return;
 	}
@@ -298,7 +298,7 @@ void PolygonBatch::DrawRectangle(Matrix3x2 const& matrix,
 		Vector2(sourceRect.Right(), sourceRect.Y + sourceRect.Height),
 		Vector2(sourceRect.Right(), sourceRect.Y),
 	};
-	
+
 	for (auto & vertex: rectVertices) {
 		vertex = Vector2::Transform(vertex, matrix);
 	}

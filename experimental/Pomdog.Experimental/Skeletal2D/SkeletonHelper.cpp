@@ -19,7 +19,7 @@ void SkeletonHelper::Traverse(Skeleton const& skeleton, JointIndex const& jointI
 	POMDOG_ASSERT(jointIndex);
 	auto & joint = skeleton.Joints(jointIndex);
 	traverser(joint);
-	
+
 	if (joint.FirstChild) {
 		Traverse(skeleton, joint.FirstChild, traverser);
 	}
@@ -50,7 +50,7 @@ void SkeletonHelper::ToGlobalPose(Skeleton const& skeleton,
 		Matrix3x2 matrix = Matrix3x2::CreateScale(pose.Scale);
 		matrix *= Matrix3x2::CreateRotation(pose.Rotation);
 		matrix *= Matrix3x2::CreateTranslation(pose.Translate);
-		
+
 		if (bone.Parent)
 		{
 			POMDOG_ASSERT(*bone.Parent < globalPose.size());

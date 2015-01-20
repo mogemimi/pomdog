@@ -22,17 +22,17 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
 
 	std::vector<RigidSlot> slots;
 	slots.reserve(slotDescs.size());
-	
+
 	std::uint16_t drawOrder = 0;
-	
+
 	for (auto & slotDesc: slotDescs)
 	{
 		auto iter = std::find_if(std::begin(skinSlotDescs), std::end(skinSlotDescs), [&slotDesc](SkinSlotDesc const& desc) {
 			return desc.SlotName == slotDesc.Name;
 		});
-		
+
 		POMDOG_ASSERT(iter != std::end(skinSlotDescs));
-		
+
 		if (iter == std::end(skinSlotDescs)) {
 			///@todo Not implemented
 			// Error
@@ -42,7 +42,7 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
 		if (iter->Attachments.empty() && !iter->SkinnedMeshAttachments.empty())
 		{
 			///@todo Not implemented
-			
+
 //			///@note push dummy attachment data
 //			RigidSlot slot;
 //			slot.JointIndex = JointIndex(0);
@@ -60,7 +60,7 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
 //			++drawOrder;
 			continue;
 		}
-		
+
 		POMDOG_ASSERT(!iter->Attachments.empty());
 
 		if (iter->Attachments.empty()) {
@@ -68,7 +68,7 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
 			// Error
 			continue;
 		}
-		
+
 		auto attachment = std::find_if(std::begin(iter->Attachments), std::end(iter->Attachments), [&slotDesc](AttachmentDesc const& desc) {
 			return desc.Name == slotDesc.Attachement;
 		});
@@ -80,11 +80,11 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
 			// Error
 			continue;
 		}
-		
+
 		auto textureAtlasRegion = std::find_if(std::begin(textureAtlas.regions), std::end(textureAtlas.regions), [&attachment](TextureAtlasRegion const& region) {
 			return region.Name == attachment->Name;
 		});
-		
+
 		POMDOG_ASSERT(textureAtlasRegion != std::end(textureAtlas.regions));
 
 		if (textureAtlasRegion == std::end(textureAtlas.regions)) {
@@ -92,9 +92,9 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
 			// Error
 			continue;
 		}
-		
+
 		RigidSlot slot;
-		
+
 		POMDOG_ASSERT(slotDesc.Joint);
 		slot.JointIndex = slotDesc.Joint;
 		slot.HashId = Hashing::CRC32::BlockChecksum(slotDesc.Name.data(), slotDesc.Name.size());
@@ -104,7 +104,7 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
 		slot.Scale = attachment->Scale;
 		slot.Translate = attachment->Translate;
 		slot.Rotation = attachment->Rotation;
-		
+
 		slot.TexturePage = textureAtlasRegion->TexturePage;
 		slot.TextureRotate = textureAtlasRegion->Region.Rotate;
 		slot.Subrect = textureAtlasRegion->Region.Subrect;
@@ -119,11 +119,11 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
 			std::swap(slot.Subrect.Width, slot.Subrect.Height);
 			std::swap(slot.Origin.X, slot.Origin.Y);
 		}
-	
+
 		slots.push_back(std::move(slot));
 		++drawOrder;
 	}
-	
+
 	return std::move(slots);
 }
 
@@ -146,12 +146,12 @@ Skin CreateSkin(SkeletonDesc const& skeletonDesc,
 	}
 
 	POMDOG_ASSERT(iter != std::end(skeletonDesc.Skins));
-	
+
 	///@todo Notimplemented
 //	if (iter == std::end(skeletonDesc.Skins)) {
 //		throw NotFound;
 //	}
-	
+
 	Skin skin(CreateSlots(skeletonDesc.Slots, iter->Slots, textureAtlas));
 	return std::move(skin);
 }

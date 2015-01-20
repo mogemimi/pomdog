@@ -22,7 +22,7 @@ class ParticleEmitterShapeBox final: public ParticleEmitterShape {
 private:
 	float width;
 	float height;
-	
+
 public:
 	ParticleEmitterShapeBox(float widthIn, float heightIn)
 		: width(widthIn)
@@ -33,7 +33,7 @@ public:
 	{
 		POMDOG_ASSERT(width >= 0.0f);
 		POMDOG_ASSERT(height >= 0.0f);
-		
+
 		std::uniform_real_distribution<float> distribution(-0.5f, 0.5f);
 		emitPosition.X = width * distribution(random);
 		emitPosition.Y = height * distribution(random);

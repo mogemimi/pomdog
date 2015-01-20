@@ -30,14 +30,14 @@ SoundEffectAL::SoundEffectAL(AudioEngineAL &,
 	#ifdef DEBUG
 	ErrorCheckerAL::CheckError("alGenSources", __FILE__, __LINE__);
 	#endif
-		
+
 	POMDOG_ASSERT(source);
 	alSourcei(source->value, AL_BUFFER, audioClip->NativeBuffer());
-	
+
 	#ifdef DEBUG
 	ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
 	#endif
-	
+
 	POMDOG_ASSERT(source);
 	alSourcei(source->value, AL_LOOPING, (isLooped ? AL_TRUE: AL_FALSE));
 
@@ -57,7 +57,7 @@ void SoundEffectAL::Pause()
 {
 	POMDOG_ASSERT(source);
 	alSourcePause(source->value);
-	
+
 	#ifdef DEBUG
 	ErrorCheckerAL::CheckError("alSourcePause", __FILE__, __LINE__);
 	#endif
@@ -67,7 +67,7 @@ void SoundEffectAL::Play()
 {
 	POMDOG_ASSERT(source);
 	alSourcePlay(source->value);
-	
+
 	#ifdef DEBUG
 	ErrorCheckerAL::CheckError("alSourcePlay", __FILE__, __LINE__);
 	#endif
@@ -77,14 +77,14 @@ void SoundEffectAL::Stop()
 {
 	POMDOG_ASSERT(source);
 	alSourceStop(source->value);
-	
+
 	#ifdef DEBUG
 	ErrorCheckerAL::CheckError("alSourceStop", __FILE__, __LINE__);
 	#endif
-	
+
 	POMDOG_ASSERT(source);
 	alSourceRewind(source->value);
-	
+
 	#ifdef DEBUG
 	ErrorCheckerAL::CheckError("alSourceRewind", __FILE__, __LINE__);
 	#endif
@@ -97,14 +97,14 @@ void SoundEffectAL::Apply3D(AudioListener const& listener, AudioEmitter const& e
 		alSourcefv(source->value, AL_POSITION, emitter.Position.Data());
 		alSourcefv(source->value, AL_VELOCITY, emitter.Velocity.Data());
 		alSourcefv(source->value, AL_DIRECTION, emitter.Forward.Data());
-		
+
 		#ifdef DEBUG
 		ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
 		#endif
-		
+
 		POMDOG_ASSERT(emitter.DopplerScale >= 0.0f);
 		alDopplerFactor(emitter.DopplerScale);
-		
+
 		#ifdef DEBUG
 		ErrorCheckerAL::CheckError("alDopplerFactor", __FILE__, __LINE__);
 		#endif
@@ -113,11 +113,11 @@ void SoundEffectAL::Apply3D(AudioListener const& listener, AudioEmitter const& e
 		std::array<ALfloat, 6> orientation {{
 			listener.Forward.X, listener.Forward.Y, listener.Forward.Z,
 			listener.Up.X, listener.Up.Y, listener.Up.Z}};
-		
+
 		alListenerfv(AL_POSITION, listener.Position.Data());
 		alListenerfv(AL_VELOCITY, listener.Velocity.Data());
 		alListenerfv(AL_ORIENTATION, orientation.data());
-		
+
 		#ifdef DEBUG
 		ErrorCheckerAL::CheckError("alListenerfv", __FILE__, __LINE__);
 		#endif
@@ -141,7 +141,7 @@ void SoundEffectAL::Pitch(float pitch)
 	// -1.0f --> 0.5f
 	// +1.0f --> 1.5f
 	auto nativePitch = 1.0f + (0.5f * pitch);
-	
+
 	POMDOG_ASSERT(source);
 	POMDOG_ASSERT(nativePitch > 0.0f);
 	alSourcef(source->value, AL_PITCH, nativePitch);
@@ -156,7 +156,7 @@ void SoundEffectAL::Volume(float volume)
 	POMDOG_ASSERT(source);
 	POMDOG_ASSERT(volume >= 0.0f);
 	alSourcef(source->value, AL_GAIN, volume);
-	
+
 	#ifdef DEBUG
 	ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
 	#endif

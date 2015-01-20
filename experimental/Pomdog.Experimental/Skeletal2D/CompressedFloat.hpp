@@ -26,7 +26,7 @@ public:
 	static_assert(std::is_integral<T>::value, "");
 
 	T data;
-	
+
 	CompressedFloat() = default;
 	CompressedFloat(float scalar)
 		: data(scalar * Denominator)
@@ -48,19 +48,19 @@ public:
 		static_assert(Denominator != 0, "");
 		return data * (1.0f / Denominator);
 	}
-	
+
 	constexpr static float Max()
 	{
 		static_assert(Denominator != 0, "");
 		return std::numeric_limits<T>::max()/Denominator;
 	}
-	
+
 	constexpr static float Min()
 	{
 		static_assert(Denominator != 0, "");
 		return std::numeric_limits<T>::min()/Denominator;
 	}
-	
+
 	bool operator<(CompressedFloat const& other) const
 	{
 		return data < other.data;

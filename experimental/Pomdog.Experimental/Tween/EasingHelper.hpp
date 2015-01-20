@@ -30,12 +30,12 @@ public:
 	{
 		return Function(normalizedTime);
 	}
-	
+
 	static T Out(T normalizedTime)
 	{
 		return 1 - Function(1 - normalizedTime);
 	}
-	
+
 	static T InOut(T normalizedTime)
 	{
 		constexpr auto half = T(1) / 2;
@@ -148,7 +148,7 @@ T Bounce(T time)
 		auto t = time - 2.25/2.75;
 		return 1 - (7.5625 * t * t + 0.9375);
 	}
-	
+
 	auto postFix = time -= 2.625/2.75;
 	return 1 - (7.5625 * postFix * time + 0.984375);
 }

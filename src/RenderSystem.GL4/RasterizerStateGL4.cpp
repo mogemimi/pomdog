@@ -66,11 +66,11 @@ void RasterizerStateGL4::Apply(NativeGraphicsContext &)
 
 	// FillMode:
 	glPolygonMode(GL_FRONT_AND_BACK, fillMode.value);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glPolygonMode", __FILE__, __LINE__);
 	#endif
-	
+
 	// Scissor Test:
 	if (scissorTestEnable) {
 		glEnable(GL_SCISSOR_TEST);
@@ -78,7 +78,7 @@ void RasterizerStateGL4::Apply(NativeGraphicsContext &)
 	else {
 		glDisable(GL_SCISSOR_TEST);
 	}
-	
+
 	// Depth bias:
 	if (depthBias != 0.0f && slopeScaledDepthBias != 0.0f)
 	{
@@ -88,11 +88,11 @@ void RasterizerStateGL4::Apply(NativeGraphicsContext &)
 	else {
 		glDisable(GL_POLYGON_OFFSET_FILL);
 	}
-	
+
 	// Multisample Anti-Aliasing:
 	if (multisampleAntiAliasEnable) {
 		glEnable(GL_MULTISAMPLE);
-		
+
 		#ifdef DEBUG
 		ErrorChecker::CheckError("glEnable", __FILE__, __LINE__);
 		#endif

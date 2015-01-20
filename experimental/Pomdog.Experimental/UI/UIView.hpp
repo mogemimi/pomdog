@@ -29,9 +29,9 @@ namespace UI {
 class UIView: public UIElement, public UIEventListener {
 public:
 	UIView(Matrix3x2 const& transform, std::uint32_t width, std::uint32_t height);
-	
+
 	virtual ~UIView() = default;
-	
+
 	Matrix3x2 Transform() const override final;
 	void Transform(Matrix3x2 const& matrix) override final;
 	void Transform(Matrix3x2 && matrix) override final;
@@ -39,13 +39,13 @@ public:
 
 	std::weak_ptr<UIElement const> Parent() const override final;
 	std::weak_ptr<UIElement> Parent() override final;
-	
+
 	void Parent(std::weak_ptr<UIElement> const& parentIn);
 
 	virtual void UpdateTransform() override;
 	void MarkParentTransformDirty() override final;
 	Matrix3x2 GlobalTransform() const override final;
-	
+
 	void MarkParentDrawOrderDirty() override final;
 	std::int32_t GlobalDrawOrder() override final;
 	void DrawOrder(std::int32_t drawOrder) override final;
@@ -56,7 +56,7 @@ public:
 
 	void Width(std::uint16_t widthIn) { this->width = widthIn; }
 	void Height(std::uint16_t heightIn) { this->height = heightIn; }
-	
+
 	Rectangle BoundingBox() const override;
 
 	UI::HorizontalAlignment HorizontalAlignment() const override { return UI::HorizontalAlignment::Stretch; }
@@ -65,29 +65,29 @@ public:
 	bool SizeToFitContent() const override;
 
 	std::weak_ptr<UIEventDispatcher> Dispatcher() const override;
-	
+
 	void OnParentChanged() override;
 
 	void OnPointerCanceled(PointerPoint const&) override;
-	
+
 	void OnPointerCaptureLost(PointerPoint const&) override;
-	
+
 	void OnPointerWheelChanged(PointerPoint const&) override;
-	
+
 	void OnPointerEntered(PointerPoint const&) override;
-	
+
 	void OnPointerExited(PointerPoint const&) override;
-	
+
 	void OnPointerPressed(PointerPoint const&) override;
-	
+
 	void OnPointerMoved(PointerPoint const&) override;
-	
+
 	void OnPointerReleased(PointerPoint const&) override;
-	
+
 	void OnRenderSizeChanged(std::uint32_t, std::uint32_t) override;
-	
+
 	void Draw(DrawingContext &) override;
-	
+
 	void UpdateAnimation(DurationSeconds const&) override;
 
 	void SetCursor(MouseCursor cursor);

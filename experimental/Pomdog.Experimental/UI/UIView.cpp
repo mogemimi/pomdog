@@ -84,7 +84,7 @@ std::int32_t UIView::GlobalDrawOrder()
 		}
 		isParentDrawOrderDirty = false;
 	}
-	
+
 	return drawOrder + parentDrawOrder;
 }
 //-----------------------------------------------------------------------

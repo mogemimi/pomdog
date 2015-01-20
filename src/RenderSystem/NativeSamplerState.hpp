@@ -24,9 +24,9 @@ public:
 	NativeSamplerState() = default;
 	NativeSamplerState(NativeSamplerState const&) = delete;
 	NativeSamplerState & operator=(NativeSamplerState const&) = delete;
-	
+
 	virtual ~NativeSamplerState() = default;
-	
+
 	///@~Japanese
 	/// @brief レンダリングの直前にサンプラーステートを適用します。
 	virtual void Apply(NativeGraphicsContext & graphicsContext, std::uint32_t index) = 0;

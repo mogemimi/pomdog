@@ -23,12 +23,12 @@ StackPanel::StackPanel(std::uint32_t widthIn, std::uint32_t heightIn)
 void StackPanel::OnParentChanged()
 {
 	auto parent = Parent().lock();
-	
+
 	POMDOG_ASSERT(parent);
 	POMDOG_ASSERT(!parent->Dispatcher().expired());
-	
+
 	this->weakDispatcher = parent->Dispatcher();
-	
+
 	if (auto dispatcher = weakDispatcher.lock())
 	{
 		connection = dispatcher->Connect(shared_from_this());
@@ -54,7 +54,7 @@ void StackPanel::OnPointerExited(PointerPoint const& pointerPoint)
 void StackPanel::OnPointerPressed(PointerPoint const& pointerPoint)
 {
 	Rectangle captionBar{0, 0, Width(), barHeight + padding.Top};
-	
+
 	auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
 	if (!captionBar.Intersects(pointInView)) {
 		return;
@@ -68,7 +68,7 @@ void StackPanel::OnPointerMoved(PointerPoint const& pointerPoint)
 	if (!startTouchPoint) {
 		return;
 	}
-	
+
 	auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
 	auto position = Vector2(pointInView.X, pointInView.Y);
 
@@ -78,12 +78,12 @@ void StackPanel::OnPointerMoved(PointerPoint const& pointerPoint)
 	if (distanceSquared >= 1.4143f)
 	{
 		Transform(Transform() * Matrix3x2::CreateTranslation(tangent));
-		
+
 		///@note recalculate position in current coordinate system
 		pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
 		position = Vector2(pointInView.X, pointInView.Y);
 		startTouchPoint = position;
-		
+
 		for (auto & child: children)
 		{
 			POMDOG_ASSERT(child);
@@ -97,7 +97,7 @@ void StackPanel::OnPointerReleased(PointerPoint const& pointerPoint)
 	if (!startTouchPoint) {
 		return;
 	}
-	
+
 	startTouchPoint = OptionalType::NullOptional;
 }
 //-----------------------------------------------------------------------
@@ -119,7 +119,7 @@ void StackPanel::AddChild(std::shared_ptr<UIView> const& element)
 		position.Y += child->Height();
 		position.Y += innerMarginBottom;
 	}
-	
+
 	children.push_back(element);
 
 	element->MarkParentDrawOrderDirty();
@@ -139,10 +139,10 @@ void StackPanel::AddChild(std::shared_ptr<UIView> const& element)
 	case HorizontalAlignment::Left:
 		break;
 	}
-	
+
 	position.Y += element->Height();
 	position.Y += padding.Bottom;
-	
+
 	if (position.Y > Height())
 	{
 		Height(position.Y);
@@ -155,25 +155,25 @@ void StackPanel::Draw(DrawingContext & drawingContext)
 
 	drawingContext.DrawRectangle(transform, Color{45, 45, 48, 225},
 		Rectangle(0, 0, Width(), Height()));
-	
+
 	Color const borderColor{40, 40, 40, 255};
-	
+
 	drawingContext.DrawLine(transform, borderColor, 1.0f, {0.0f, 0.0f}, {static_cast<float>(Width()), 0.0f});
 	drawingContext.DrawLine(transform, borderColor, 1.0f, {0.0f, 0.0f}, {0.0f, static_cast<float>(Height())});
 	drawingContext.DrawLine(transform, borderColor, 1.0f, Vector2(0.0f, Height()), Vector2(Width(), Height()));
 	drawingContext.DrawLine(transform, borderColor, 1.0f, Vector2(Width(), 0.0f), Vector2(Width(), Height()));
-	
+
 	Color const highlightColor{106, 106, 106, 255};
 	drawingContext.DrawLine(transform, highlightColor, 1.0f, {1.0f, 1.0f}, {static_cast<float>(Width()) - 1.0f, 1.0f});
-	
+
 	drawingContext.Push(transform);
-	
+
 	for (auto & child: children)
 	{
 		POMDOG_ASSERT(child);
 		child->Draw(drawingContext);
 	}
-	
+
 	drawingContext.Pop();
 }
 //-----------------------------------------------------------------------

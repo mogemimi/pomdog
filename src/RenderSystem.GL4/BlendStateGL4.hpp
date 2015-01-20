@@ -28,12 +28,12 @@ using BlendFunctionGL4 = Tagged<GLenum, BlendFunction>;
 class BlendStateGL4 final: public NativeBlendState {
 public:
 	BlendStateGL4() = delete;
-	
+
 	explicit BlendStateGL4(BlendDescription const& description);
 
 	///@copydoc NativeBlendState
 	void Apply(NativeGraphicsContext & graphicsContext) override;
-	
+
 private:
 	Color blendColor;
 

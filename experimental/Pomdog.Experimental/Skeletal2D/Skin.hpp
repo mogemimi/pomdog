@@ -23,10 +23,10 @@ public:
 	explicit Skin(std::vector<RigidSlot> && slots);
 
 	std::vector<RigidSlot> const& Slots() const;
-	
+
 	std::uint16_t FindSlotIndexById(std::uint32_t hashId) const;
 	std::uint16_t FindSlotIndexById(std::uint32_t hashId);
-	
+
 	RigidSlot const& SlotByIndex(std::uint16_t slotIndex) const;
 	RigidSlot & SlotByIndex(std::uint16_t slotIndex);
 

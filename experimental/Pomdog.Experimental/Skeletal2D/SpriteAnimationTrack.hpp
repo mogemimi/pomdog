@@ -38,9 +38,9 @@ public:
 	SpriteAnimationTrack(std::vector<SpriteKeyframe> && keys, std::uint32_t slotHashId);
 
 	void Apply(Skin & skin, AnimationTimeInterval const& time);
-	
+
 	AnimationTimeInterval Length() const;
-	
+
 private:
 	std::vector<SpriteKeyframe> keys;
 	std::uint32_t slotHashId;

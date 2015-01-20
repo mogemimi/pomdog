@@ -23,13 +23,13 @@ public:
 	void Draw(DrawingContext & drawingContext) override
 	{
 		drawingContext.Push(Matrix3x2::Identity);
-	
+
 		for (auto & child: children)
 		{
 			POMDOG_ASSERT(child);
 			child->Draw(drawingContext);
 		}
-		
+
 		drawingContext.Pop();
 	}
 
@@ -42,12 +42,12 @@ public:
 		element->Parent(shared_from_this());
 		element->OnParentChanged();
 	}
-	
+
 	std::weak_ptr<UIEventDispatcher> Dispatcher() const override final
 	{
 		return dispatcher;
 	}
-	
+
 	void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override
 	{
 		for (auto & child: children)

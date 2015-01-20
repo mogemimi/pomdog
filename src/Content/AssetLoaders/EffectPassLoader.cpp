@@ -25,15 +25,15 @@ namespace {
 static std::vector<std::uint8_t> ReadBinaryFile(std::ifstream && streamIn)
 {
 	std::ifstream stream = std::move(streamIn);
-	
+
 	if (!stream) {
 		return {};
 	}
-	
+
 	stream.seekg(0, stream.end);
 	auto const length = static_cast<std::size_t>(stream.tellg());
 	stream.seekg(0, stream.beg);
-	
+
 	std::vector<std::uint8_t> result(length + 1, 0);
 	stream.read(reinterpret_cast<char*>(result.data()), result.size());
 	return std::move(result);
@@ -57,7 +57,7 @@ std::shared_ptr<EffectPass> AssetLoader<EffectPass>::operator()(
 	}
 
 	auto graphicsDevice = loaderContext.GraphicsDevice.lock();
-	
+
 	if (!graphicsDevice) {
 		POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid graphics device.");
 	}

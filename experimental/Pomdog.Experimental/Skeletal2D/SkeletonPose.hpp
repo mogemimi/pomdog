@@ -22,7 +22,7 @@ class Skeleton;
 class SkeletonPose {
 public:
 	std::vector<JointPose> JointPoses;
-	
+
 	static SkeletonPose CreateBindPose(Skeleton const& skeleton);
 };
 

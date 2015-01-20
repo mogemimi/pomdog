@@ -25,7 +25,7 @@ enum class Blend: std::uint8_t {
 	///@~Japanese
 	/// @brief ソースカラーは白 (1, 1, 1, 1) です。
 	One,
-	
+
 	///@~Japanese
 	/// @brief ソースカラーはピクセルシェーダからのカラーデータです。
 	/// 各成分は (Rs, Gs, Bs, As) となります。

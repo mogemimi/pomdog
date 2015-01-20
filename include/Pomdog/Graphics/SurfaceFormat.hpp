@@ -23,19 +23,19 @@ enum class SurfaceFormat: std::uint8_t {
 	///@~Japanese
 	/// @brief 8 bit アルファの符号なし整数フォーマット（Unsigned Normalized Intager）です。
 	A8_UNorm,
-	
+
 	///@~English
 	/// @brief 8-bit alpha only.
 	///@~Japanese
 	/// @brief 8 bit の符号なし整数フォーマット（Unsigned Normalized Intager）です。
 	R8_UNorm,
-	
+
 	///@~English
 	/// @remarks UNorm means "unsigned normalized" integer.
 	///@~Japanese
 	/// @brief 2 チャンネル、16 bit の符号なし整数フォーマットです。各チャンネルにそれぞれ 8 bit 使用します。
 	R8G8_UNorm,
-	
+
 	///@~English
 	/// @remarks UNorm means "unsigned normalized" integer.
 	///@~Japanese
@@ -67,7 +67,7 @@ enum class SurfaceFormat: std::uint8_t {
 	///@~Japanese
 	/// @brief 2 成分の 32 bit 浮動小数点フォーマットです。1 成分にそれぞれ 16 bit 使用します。
 	R16G16_Float,
-	
+
 	///@~Japanese
 	/// @brief 4 成分の 64 bit 浮動小数点フォーマットです。1 成分にそれぞれ 16 bit 使用します。
 	R16G16B16A16_Float,

@@ -36,17 +36,17 @@ public:
 public:
 	// Constructors:
 	FloatingPointVector3() = default;
-	
+
 	///@brief Copy constructor.
 	FloatingPointVector3(FloatingPointVector3 const&) = default;
-	
+
 	///@brief Move constructor.
 	FloatingPointVector3(FloatingPointVector3 &&) = default;
-	
+
 	///@brief Construct from floating-point values.
 	FloatingPointVector3(T x, T y, T z);
 	FloatingPointVector3(FloatingPointVector2<T> const& vec, T z);
-	
+
 	// Assignment operators:
 	FloatingPointVector3 & operator=(FloatingPointVector3 const&) = default;
 	FloatingPointVector3 & operator=(FloatingPointVector3 &&) = default;
@@ -73,11 +73,11 @@ public:
 	///@~Japanese
 	/// @brief ベクトルの長さを計算します。
 	T Length() const;
-	
+
 	///@~Japanese
 	/// @brief ベクトルの長さの 2 乗を計算します。
 	T LengthSquared() const;
-	
+
 	///@~Japanese
 	/// @brief 2 つのベクトル間の距離を計算します。
 	static T Distance(FloatingPointVector3 const& a, FloatingPointVector3 const& b);
@@ -152,7 +152,7 @@ public:
 	///@~Japanese
 	/// @brief 指定されたベクトルの単位ベクトルを計算します。
 	static void Normalize(FloatingPointVector3 const&, FloatingPointVector3 & result);
-	
+
 	///@~Japanese
 	/// @brief 指定された行列を使用して 3 次元ベクトルをトランスフォームします。
 	/// @param position 元となる 3 次元ベクトル

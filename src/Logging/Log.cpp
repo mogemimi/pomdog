@@ -73,7 +73,7 @@ public:
 	///@~Japanese
 	/// @brief 指定されたチャンネルのストリームを取得します。
 	LogStream Stream(std::string const& channelName, LogLevel verbosity = LogLevel::Verbose);
-	
+
 private:
 	LogChannel defaultChannel;
 	struct ChannelTuple {
@@ -109,19 +109,19 @@ EventConnection Logger::Connect(std::string const& channelName, std::function<vo
 	if (std::end(channels) == iter)
 	{
 		std::lock_guard<std::recursive_mutex> lock(channelsProtection);
-		
+
 		ChannelTuple tuple;
 		tuple.channel = LogChannel{channelName};
 		channels.push_back(std::move(tuple));
 		iter = std::prev(channels.end());
 	}
-	
+
 	POMDOG_ASSERT(iter != std::end(channels));
 	POMDOG_ASSERT(channelName == iter->channel.Name());
-	
+
 	auto & channel = iter->channel;
 	auto & connection = iter->connection;
-	
+
 	connection = channel.Connect([this](LogEntry const& entry) {
 		defaultChannel.Log(entry);
 	});
@@ -134,7 +134,7 @@ EventConnection Logger::Connect(std::string const& channelName, std::function<vo
 	if (std::end(channels) == iter)
 	{
 		std::lock_guard<std::recursive_mutex> lock(channelsProtection);
-		
+
 		ChannelTuple tuple;
 		tuple.channel = LogChannel{channelName};
 		channels.push_back(std::move(tuple));
@@ -143,10 +143,10 @@ EventConnection Logger::Connect(std::string const& channelName, std::function<vo
 
 	POMDOG_ASSERT(iter != std::end(channels));
 	POMDOG_ASSERT(channelName == iter->channel.Name());
-	
+
 	auto & channel = iter->channel;
 	auto & connection = iter->connection;
-	
+
 	connection = channel.Connect([this](LogEntry const& entry) {
 		defaultChannel.Log(entry);
 	});
@@ -214,11 +214,11 @@ LogStream Logger::Stream(LogLevel verbosity)
 LogStream Logger::Stream(std::string const& channelName, LogLevel verbosity)
 {
 	auto iter = FindChannnel(channelName, channels);
-	
+
 	if (std::end(channels) != iter) {
 		return LogStream(iter->channel, verbosity);
 	}
-	
+
 	return LogStream(defaultChannel, channelName, verbosity);
 }
 //-----------------------------------------------------------------------

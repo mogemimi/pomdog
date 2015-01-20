@@ -24,7 +24,7 @@ namespace SceneEditor {
 class PrimitiveGrid {
 public:
 	PrimitiveGrid(Color const& primaryColor, Color const& secondaryColor);
-	
+
 	void Draw(LineBatch & lineBatch);
 
 private:

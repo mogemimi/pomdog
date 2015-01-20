@@ -100,7 +100,7 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 			POMDOG_ASSERT(1 <= description.MaxAnisotropy && description.MaxAnisotropy <= 16);
 
 			GLfloat deviceMaxAnisotropy = 1.0f;
-			
+
 			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &deviceMaxAnisotropy);
 
 			#ifdef DEBUG
@@ -110,7 +110,7 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 			deviceMaxAnisotropy = std::min(deviceMaxAnisotropy, static_cast<GLfloat>(description.MaxAnisotropy));
 
 			glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_ANISOTROPY_EXT, deviceMaxAnisotropy);
-			
+
 			#ifdef DEBUG
 			ErrorChecker::CheckError("glSamplerParameterf", __FILE__, __LINE__);
 			#endif

@@ -24,7 +24,7 @@ public:
 	NativeDepthStencilState & operator=(NativeDepthStencilState const&) = delete;
 
 	virtual ~NativeDepthStencilState() = default;
-	
+
 	///@~Japanese
 	/// @brief レンダリングの直前に深度ステンシルステートを適用します。
 	virtual void Apply(NativeGraphicsContext & graphicsContext) = 0;

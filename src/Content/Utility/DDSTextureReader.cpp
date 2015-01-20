@@ -186,7 +186,7 @@ std::size_t ComputePixelDataByteLength(DDSHeader const& ddsHeader)
 {
 	auto const bytesPerBlock = ddsHeader.PixelFormat.RgbBitCount;
 	auto const levelCount = (ddsHeader.MipMapCount > 0) ? ddsHeader.MipMapCount: 1;
-	
+
 	std::size_t result = 0;
 	std::size_t mipMapPixelWidth = ddsHeader.PixelWidth;
 	std::size_t mipMapPixelHeight = ddsHeader.PixelHeight;
@@ -196,7 +196,7 @@ std::size_t ComputePixelDataByteLength(DDSHeader const& ddsHeader)
 		std::size_t const strideBytesPerMipMap = ((mipMapPixelWidth + 3)/4) * ((mipMapPixelHeight + 3)/4) * bytesPerBlock;
 
 		result += strideBytesPerMipMap;
-	
+
 		mipMapPixelWidth = (mipMapPixelWidth >> 1) ? (mipMapPixelWidth >> 1): 1;
 		mipMapPixelHeight = (mipMapPixelHeight >> 1) ? (mipMapPixelHeight >> 1): 1;
 	}
@@ -211,9 +211,9 @@ std::shared_ptr<Texture2D> DDSTextureReader::Read(std::shared_ptr<GraphicsDevice
 	POMDOG_ASSERT(graphicsDevice);
 	POMDOG_ASSERT(data != nullptr);
 	POMDOG_ASSERT(byteLength > 0);
-	
+
 	std::size_t offsetBytes = 0;
-	
+
 	if (!BinaryReader::CanRead<DDSHeader>(byteLength - offsetBytes))
 	{
 		POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
@@ -229,7 +229,7 @@ std::shared_ptr<Texture2D> DDSTextureReader::Read(std::shared_ptr<GraphicsDevice
 	{
 		POMDOG_THROW_EXCEPTION(std::domain_error, "DDSHeader has invalid format.");
 	}
-	
+
 	bool hasDXT10Header = false;
 
 	if ((ddsHeader.PixelFormat.Flags & DirectDrawPixelFormat::FourCC) &&
@@ -243,7 +243,7 @@ std::shared_ptr<Texture2D> DDSTextureReader::Read(std::shared_ptr<GraphicsDevice
 		///@todo Not implemented.
 		POMDOG_THROW_EXCEPTION(std::runtime_error, "Sorry, DXT10 header is not supported.");
 	}
-	
+
 	std::uint32_t pixelWidth = ddsHeader.PixelWidth;
 	std::uint32_t pixelHeight = ddsHeader.PixelHeight;
 	SurfaceFormat surfaceFormat = ToSurfaceFormatFromDDSPixelFormat(ddsHeader.PixelFormat);
@@ -256,12 +256,12 @@ std::shared_ptr<Texture2D> DDSTextureReader::Read(std::shared_ptr<GraphicsDevice
 
 	auto texture = std::make_shared<Texture2D>(graphicsDevice,
 		pixelWidth, pixelHeight, generateMipmap, surfaceFormat);
-	
+
 	if (texture)
 	{
 		texture->SetData(data + offsetBytes);
 	}
-	
+
 	return std::move(texture);
 }
 

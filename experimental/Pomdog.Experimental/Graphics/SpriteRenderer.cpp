@@ -48,7 +48,7 @@ class SpriteRenderer::Impl {
 private:
 	static constexpr std::size_t MaxBatchSize = 2048;
 	static constexpr std::size_t MinBatchSize = 128;
-	
+
 	static_assert(MaxBatchSize >= MinBatchSize, "");
 
 	struct alignas(16) SpriteInfo
@@ -58,21 +58,21 @@ private:
 		// {__z_} = worldMatrix.M10
 		// {___w} = worldMatrix.M11
 		Vector4 TransformMatrix1;
-		
+
 		// {x___} = worldMatrix.M20
 		// {_y__} = worldMatrix.M21
 		// {__z_} = layerDepth
 		// {___w} = rotation
 		Vector4 TransformMatrix2;
-		
+
 		// {xy__} = xy
 		// {__zw} = {width, height}
 		Vector4 SourceRect;
-		
+
 		// {xy__} = originPivot.xy
 		// {__zw} = scale.xy
 		Vector4 OriginScale;
-		
+
 		// {rgb_} = color.rgb
 		// {___a} = color.a
 		Vector4 Color;
@@ -80,41 +80,41 @@ private:
 
 private:
 	std::shared_ptr<GraphicsContext> graphicsContext;
-	
+
 	std::vector<std::vector<SpriteInfo>> spriteQueues;
 	std::vector<std::shared_ptr<Texture2D>> textures;
 
 	std::shared_ptr<VertexBuffer> planeVertices;
 	std::shared_ptr<IndexBuffer> planeIndices;
 	std::shared_ptr<VertexBuffer> instanceVertices;
-	
+
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 	std::shared_ptr<InputLayout> inputLayout;
-	
+
 	Matrix4x4 projectionMatrix;
 	SpriteSortMode sortMode;
 
 public:
 	Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-	
+
 	void ResetProjectionMatrix(Matrix4x4 const& projectionMatrix);
-	
+
 	void Begin(SpriteSortMode sortMode);
-	
+
 	void Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrix);
-	
+
 	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 		Vector2 const& position, Color const& color,
 		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
-	
+
 	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
 		Vector2 const& position, Rectangle const& sourceRect, Color const& color,
 		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
-	
+
 	void End();
-	
+
 private:
 	void Flush();
 	void DrawInstance(std::shared_ptr<Texture2D> const& texture, std::vector<SpriteInfo> const& sprites);
@@ -165,7 +165,7 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
 
 		auto declartation = PositionTextureCoord::Declaration();
 		using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4, Vector4>;
-		
+
 		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
 			std::initializer_list<VertexBufferBinding>{
 				{declartation, 0, 0},
@@ -210,13 +210,13 @@ void SpriteRenderer::Impl::Flush()
 	if (textures.empty()) {
 		return;
 	}
-	
+
 	for (std::size_t queuePos = 0; queuePos < textures.size(); ++queuePos)
 	{
 		POMDOG_ASSERT(!spriteQueues.empty());
 		POMDOG_ASSERT(queuePos < spriteQueues.size());
 		POMDOG_ASSERT(!spriteQueues[queuePos].empty());
-		
+
 		auto & sprites = spriteQueues[queuePos];
 
 		switch (sortMode) {
@@ -233,11 +233,11 @@ void SpriteRenderer::Impl::Flush()
 		case SpriteSortMode::Deferred:
 			break;
 		}
-		
+
 		DrawInstance(textures[queuePos], sprites);
 		sprites.clear();
 	}
-	
+
 	textures.clear();
 	spriteQueues.clear();
 }
@@ -246,11 +246,11 @@ void SpriteRenderer::Impl::DrawInstance(std::shared_ptr<Texture2D> const& textur
 {
 	POMDOG_ASSERT(texture);
 	POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
-	
+
 	{
 		POMDOG_ASSERT(texture->Width() > 0);
 		POMDOG_ASSERT(texture->Height() > 0);
-		
+
 		alignas(16) Vector2 inverseTexturePixelWidth {
 			(texture->Width() > 0) ? (1.0f / static_cast<float>(texture->Width())): 0.0f,
 			(texture->Height() > 0) ? (1.0f / static_cast<float>(texture->Height())): 0.0f,
@@ -279,7 +279,7 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
 	if (scale.X == 0.0f || scale.Y == 0.0f) {
 		return;
 	}
-	
+
 	POMDOG_ASSERT(texture);
 
 	if (spriteQueues.empty() || (textures.back() != texture)) {
@@ -287,22 +287,22 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
 		spriteQueues.push_back({});
 		spriteQueues.back().reserve(MinBatchSize);
 	}
-	
+
 	POMDOG_ASSERT(layerDepth >= 0.0f);
 	POMDOG_ASSERT(layerDepth <= 1.0f);
-	
+
 	POMDOG_ASSERT(texture->Width() > 0);
 	POMDOG_ASSERT(texture->Height() > 0);
-	
+
 	auto transform = Matrix3x2::CreateTranslation(position) * worldMatrix;
-	
+
 	SpriteInfo info;
 	info.TransformMatrix1 = {transform(0, 0), transform(0, 1), transform(1, 0), transform(1, 1)};
 	info.TransformMatrix2 = {transform(2, 0), transform(2, 1), layerDepth, rotation.value};
 	info.SourceRect = Vector4(0, 0, texture->Width(), texture->Height());
 	info.OriginScale = Vector4(originPivot.X, originPivot.Y, scale.X, scale.Y);
 	info.Color = color.ToVector4();
-	
+
 	spriteQueues.back().push_back(std::move(info));
 	POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
 }
@@ -314,7 +314,7 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
 	if (scale.X == 0.0f || scale.Y == 0.0f) {
 		return;
 	}
-	
+
 	POMDOG_ASSERT(texture);
 
 	if (spriteQueues.empty()
@@ -325,22 +325,22 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
 		spriteQueues.push_back({});
 		spriteQueues.back().reserve(MinBatchSize);
 	}
-	
+
 	POMDOG_ASSERT(layerDepth >= 0.0f);
 	POMDOG_ASSERT(layerDepth <= 1.0f);
-	
+
 	POMDOG_ASSERT(sourceRect.Width > 0);
 	POMDOG_ASSERT(sourceRect.Height > 0);
-	
+
 	auto transform = Matrix3x2::CreateTranslation(position) * worldMatrix;
-	
+
 	SpriteInfo info;
 	info.TransformMatrix1 = {transform(0, 0), transform(0, 1), transform(1, 0), transform(1, 1)};
 	info.TransformMatrix2 = {transform(2, 0), transform(2, 1), layerDepth, rotation.value};
 	info.SourceRect = Vector4(sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
 	info.OriginScale = Vector4(originPivot.X, originPivot.Y, scale.X, scale.Y);
 	info.Color = color.ToVector4();
-	
+
 	spriteQueues.back().push_back(std::move(info));
 	POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
 }

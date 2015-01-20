@@ -27,13 +27,13 @@ public:
 		if (isCompleted) {
 			return;
 		}
-		
+
 		POMDOG_ASSERT(gameObject);
-		
+
 		if (gameObject) {
 			gameObject.Destroy();
 		}
-		
+
 		isCompleted = true;
 	}
 

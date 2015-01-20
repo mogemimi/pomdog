@@ -30,7 +30,7 @@ public:
 	explicit VertexDeclaration(std::vector<VertexElement> const& vertexElements);
 
 	explicit VertexDeclaration(std::vector<VertexElement> && vertexElements);
-	
+
 	VertexDeclaration(VertexElement const* vertexElements, std::size_t elementCount);
 
 	///@~Japanese

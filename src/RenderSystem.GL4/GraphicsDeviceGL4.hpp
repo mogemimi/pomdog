@@ -24,16 +24,16 @@ public:
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeIndexBuffer>
 	CreateIndexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage) override;
-	
+
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeIndexBuffer>
 	CreateIndexBuffer(void const* indices, std::uint32_t sizeInBytes,
 		BufferUsage bufferUsage) override;
-	
+
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeVertexBuffer>
 	CreateVertexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage) override;
-	
+
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeVertexBuffer>
 	CreateVertexBuffer(void const* vertices, std::uint32_t sizeInBytes,
@@ -54,30 +54,30 @@ public:
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeRasterizerState>
 	CreateRasterizerState(RasterizerDescription const& description) override;
-	
+
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeEffectPass>
 	CreateEffectPass(ShaderBytecode const& vertexShaderBytecode,
 		ShaderBytecode const& pixelShaderBytecode) override;
-	
+
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeConstantBuffer> CreateConstantBuffer(
 		std::uint32_t byteConstants) override;
-	
+
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeEffectReflection> CreateEffectReflection(
 		NativeEffectPass & nativeEffectPass) override;
-	
+
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeInputLayout>
 	CreateInputLayout(NativeEffectPass & nativeEffectPass,
 		std::vector<VertexBufferBinding> const& vertexBufferBindings) override;
-	
+
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeTexture2D>
 	CreateTexture2D(std::int32_t width, std::int32_t height,
 		std::uint32_t mipmapLevels, SurfaceFormat format) override;
-	
+
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeRenderTarget2D>
 	CreateRenderTarget2D(std::int32_t width, std::int32_t height,

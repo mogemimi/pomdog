@@ -25,7 +25,7 @@ public:
 	void AddProcessor(std::type_index const& index, std::unique_ptr<RenderCommandProcessor> && processor);
 
 	void Render(GraphicsContext & graphicsContext);
-	
+
 	void Clear();
 
 public:
@@ -52,7 +52,7 @@ void Renderer::Impl::AddProcessor(std::type_index const& index, std::unique_ptr<
 void Renderer::Impl::Render(GraphicsContext & graphicsContext)
 {
 	drawCallCount = 0;
-	
+
 	for (auto & iter: processors) {
 		auto & processor = iter.second;
 		POMDOG_ASSERT(processor);
@@ -65,52 +65,52 @@ void Renderer::Impl::Render(GraphicsContext & graphicsContext)
 	renderQueue.Enumerate([&](RenderCommand & command)
 	{
 		auto iter = processors.find(command.TypeIndex());
-		
+
 		if (prevIter != iter)
 		{
 			if (prevIter != std::end(processors))
 			{
 				auto & processor = prevIter->second;
-				
+
 				POMDOG_ASSERT(processor);
 				processor->End(graphicsContext);
-				
+
 				POMDOG_ASSERT(processor->DrawCallCount() >= 0);
 				drawCallCount += processor->DrawCallCount();
 			}
-		
+
 			if (iter != std::end(processors))
 			{
 				auto & processor = iter->second;
-				
+
 				POMDOG_ASSERT(processor);
 				processor->Begin(graphicsContext);
 			}
-		
+
 			prevIter = iter;
 		}
-		
+
 		POMDOG_ASSERT(prevIter == iter);
-		
+
 		if (iter == std::end(processors)) {
 			// warning
 			return;
 		}
-		
+
 		POMDOG_ASSERT(iter != std::end(processors));
 		POMDOG_ASSERT(iter->second);
-		
+
 		auto & processor = iter->second;
-		
+
 		processor->Draw(graphicsContext, command);
 	});
-	
+
 	if (std::end(processors) != prevIter)
 	{
 		POMDOG_ASSERT(prevIter->second);
 		auto & processor = prevIter->second;
 		processor->End(graphicsContext);
-		
+
 		POMDOG_ASSERT(processor->DrawCallCount() >= 0);
 		drawCallCount += processor->DrawCallCount();
 	}

@@ -32,17 +32,17 @@ public:
 	GraphicsDevice() = delete;
 	GraphicsDevice(GraphicsDevice const&) = delete;
 	GraphicsDevice & operator=(GraphicsDevice const&) = delete;
-	
+
 	explicit GraphicsDevice(std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> && nativeDevice);
-	
+
 	~GraphicsDevice();
-	
+
 	Details::BuiltinShaderPool & ShaderPool();
-	
+
 public:
 	///@brief internal method
 	Details::RenderSystem::NativeGraphicsDevice* NativeGraphicsDevice();
-	
+
 private:
 	class Impl;
 	std::unique_ptr<Impl> impl;

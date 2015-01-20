@@ -30,7 +30,7 @@ ConstantBufferGL4::ConstantBufferGL4(std::uint32_t byteWidth)
 		glGenBuffers(1, constantBuffer.Data());
 		return std::move(constantBuffer);
 	})();
-	
+
 	auto const oldBufferObject = TypesafeHelperGL4::Get<ConstantBufferObjectGL4>();
 	ScopeGuard scope([&oldBufferObject] {
 		TypesafeHelperGL4::BindBuffer(oldBufferObject);
@@ -61,7 +61,7 @@ void ConstantBufferGL4::GetData(std::uint32_t byteWidth, void* result) const
 {
 	POMDOG_ASSERT(result != nullptr);
 	POMDOG_ASSERT(byteWidth > 0);
-	
+
 	auto const oldBufferObject = TypesafeHelperGL4::Get<ConstantBufferObjectGL4>();
 	ScopeGuard scope([&oldBufferObject] {
 		TypesafeHelperGL4::BindBuffer(oldBufferObject);
@@ -73,7 +73,7 @@ void ConstantBufferGL4::GetData(std::uint32_t byteWidth, void* result) const
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif
-	
+
 	#if defined(DEBUG) && !defined(NDEBUG)
 	{
 		GLint bufferSize = 0;
@@ -81,9 +81,9 @@ void ConstantBufferGL4::GetData(std::uint32_t byteWidth, void* result) const
 		POMDOG_ASSERT(byteWidth <= static_cast<std::size_t>(bufferSize));
 	}
 	#endif
-	
+
 	glGetBufferSubData(GL_UNIFORM_BUFFER, 0, byteWidth, result);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glGetBufferSubData", __FILE__, __LINE__);
 	#endif
@@ -105,7 +105,7 @@ void ConstantBufferGL4::SetData(std::uint32_t offsetInBytes,
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
 	#endif
-	
+
 	#if defined(DEBUG) && !defined(NDEBUG)
 	{
 		GLint bufferSize = 0;
@@ -116,7 +116,7 @@ void ConstantBufferGL4::SetData(std::uint32_t offsetInBytes,
 
 	POMDOG_ASSERT(sizeInBytes > 0);
 	glBufferSubData(GL_UNIFORM_BUFFER, offsetInBytes, sizeInBytes, source);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBufferSubData", __FILE__, __LINE__);
 	#endif
@@ -125,7 +125,7 @@ void ConstantBufferGL4::SetData(std::uint32_t offsetInBytes,
 void ConstantBufferGL4::Apply(std::uint32_t slotIndex)
 {
 	POMDOG_ASSERT(bufferObject);
-	
+
 	#if defined(DEBUG) && !defined(NDEBUG)
 	{
 		static auto const maxUniformBufferBindings = ([] {
@@ -133,11 +133,11 @@ void ConstantBufferGL4::Apply(std::uint32_t slotIndex)
 			glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &value);
 			return value;
 		})();
-		
+
 		POMDOG_ASSERT(slotIndex < static_cast<std::uint32_t>(maxUniformBufferBindings));
 	}
 	#endif
-	
+
 	glBindBufferBase(GL_UNIFORM_BUFFER, slotIndex, bufferObject->value);
 }
 //-----------------------------------------------------------------------

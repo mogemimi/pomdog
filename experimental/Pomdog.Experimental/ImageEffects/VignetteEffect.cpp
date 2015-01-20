@@ -65,7 +65,7 @@ void VignetteEffect::SetIntensity(float intensity)
 	struct VignetteBlock {
 		float Intensity;
 	};
-	
+
 	VignetteBlock block;
 	block.Intensity = intensity;
 	constantBuffers->Find("VignetteBlock")->SetValue(std::move(block));

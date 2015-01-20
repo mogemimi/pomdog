@@ -35,12 +35,12 @@ public:
 class AnimationSystem::Impl {
 public:
 	std::vector<SkeletonAnimationContext> skeletonAnimations;
-	
+
 public:
 	void Add(std::shared_ptr<AnimationState> const& state,
 		std::shared_ptr<Skeleton const> const& skeleton,
 		std::shared_ptr<SkeletonPose> const& skeletonPose);
-	
+
 	void Remove(std::shared_ptr<AnimationState> const& state);
 
 	void Update(GameClock const& clock);
@@ -72,9 +72,9 @@ void AnimationSystem::Impl::Update(GameClock const& clock)
 		auto & clip = state.Clip();
 		auto & skeleton = *animationContext.Skeleton;
 		auto & skeletonPose = *animationContext.SkeletonPose;
-		
+
 		clip->Apply(state.Time(), skeleton, skeletonPose);
-		
+
 		// (3) Pose blending:
 		///@todo Not implemented
 	}

@@ -19,7 +19,7 @@ static std::uint16_t ComputeMipmapLevelCount(std::uint32_t width, std::uint32_t 
 {
 	auto size = std::max(width, height);
 	std::uint16_t levelCount = 1;
-	
+
 	while (size > 1)
 	{
 		size = size / 2;

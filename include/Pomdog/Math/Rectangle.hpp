@@ -44,7 +44,7 @@ public:
 	Rectangle() = default;
 	Rectangle(Rectangle const&) = default;
 	Rectangle(Rectangle &&) = default;
-	
+
 	Rectangle(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height);
 	Rectangle(Point2D const& position, std::int32_t width, std::int32_t height);
 
@@ -91,19 +91,19 @@ public:
 	///@~Japanese
 	/// @brief 矩形の位置をオフセット値で変更します。
 	void Offset(Point2D const& offset);
-	
+
 	///@~Japanese
 	/// @brief 指定された境界ボリュームを含むかどうかを確認します。
 	ContainmentType Contains(Point2D const& point) const;
-	
+
 	///@~Japanese
 	/// @brief 指定された境界ボリュームを含むかどうかを確認します。
 	ContainmentType Contains(Rectangle const& rectangle) const;
-	
+
 	///@~Japanese
 	/// @brief 指定された境界ボリュームと交差するかどうかを確認します。
 	bool Intersects(Point2D const& point) const;
-	
+
 	///@~Japanese
 	/// @brief 指定された境界ボリュームと交差するかどうかを確認します。
 	bool Intersects(Rectangle const& rectangle) const;

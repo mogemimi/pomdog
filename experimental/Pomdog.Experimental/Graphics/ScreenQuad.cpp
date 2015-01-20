@@ -21,19 +21,19 @@ namespace Pomdog {
 ScreenQuad::ScreenQuad(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
 	using ScreenQuadVertex = CustomVertex<Vector3, Vector2>;
-	
+
 	std::array<ScreenQuadVertex, 4> const verticesCombo = {
 		Vector3{-1.0f, -1.0f, 0.5f}, Vector2{0.0f, 0.0f},
 		Vector3{-1.0f,  1.0f, 0.5f}, Vector2{0.0f, 1.0f},
 		Vector3{ 1.0f,  1.0f, 0.5f}, Vector2{1.0f, 1.0f},
 		Vector3{ 1.0f, -1.0f, 0.5f}, Vector2{1.0f, 0.0f},
 	};
-	
+
 	std::array<ScreenQuadVertex, 6> const vertices = {
 		verticesCombo[0], verticesCombo[1], verticesCombo[2],
 		verticesCombo[2], verticesCombo[3], verticesCombo[0],
 	};
-	
+
 	vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
 		vertices.data(), vertices.size(), sizeof(ScreenQuadVertex), BufferUsage::Immutable);
 }

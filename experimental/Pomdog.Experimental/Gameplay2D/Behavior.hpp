@@ -24,7 +24,7 @@ public:
 	virtual ~Behavior() = default;
 
 	virtual void Start(GameObject & gameObject) = 0;
-	
+
 	virtual void Update(GameObject & gameObject, DurationSeconds const& frameDuration) = 0;
 };
 

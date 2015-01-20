@@ -35,7 +35,7 @@ static ALenum ToFormat(AudioChannels channel, std::uint16_t bitPerSample)
 		}
 		break;
 	}
-	
+
 	POMDOG_ASSERT(false);
 	return AL_FORMAT_MONO8;
 }
@@ -53,19 +53,19 @@ AudioClipAL::AudioClipAL(void const* data, std::size_t size,
 		alGenBuffers(1, &nativeBuffer);
 		return std::move(nativeBuffer);
 	})();
-	
+
 	#ifdef DEBUG
 	ErrorCheckerAL::CheckError("alGenBuffers", __FILE__, __LINE__);
 	#endif
-	
+
 	POMDOG_ASSERT(buffer);
-	
+
 	POMDOG_ASSERT(data);
 	POMDOG_ASSERT(size > 0);
-	
+
 	ALenum format = ToFormat(channel, bitsPerSample);
 	alBufferData(*buffer, format, data, static_cast<ALsizei>(size), sampleRate);
-	
+
 	#ifdef DEBUG
 	ErrorCheckerAL::CheckError("alBufferData", __FILE__, __LINE__);
 	#endif

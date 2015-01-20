@@ -31,7 +31,7 @@ public:
 
 	virtual void SetConstantBuffer(std::string const& constantName,
 		std::shared_ptr<NativeConstantBuffer> const& constantBuffer) = 0;
-	
+
 	virtual void SetConstantBuffer(std::string const& constantName) = 0;
 };
 

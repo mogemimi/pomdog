@@ -31,15 +31,15 @@ public:
 
 	explicit GameObject(std::shared_ptr<GameObjectContext> const& context);
 	explicit GameObject(std::shared_ptr<GameObjectContext> && context);
-	
+
 	GameObject(std::shared_ptr<GameObjectContext> const& context, GameObjectID const& id);
 	GameObject(std::shared_ptr<GameObjectContext> && context, GameObjectID const& id);
-	
+
 	explicit operator bool() const;
-	
+
 	bool operator==(GameObject const& gameObject) const;
 	bool operator!=(GameObject const& gameObject) const;
-	
+
 	///@~Japanese
 	/// @brief インスタンス固有の値である 32 ビットの ID を取得します。
 	GameObjectID ID() const;
@@ -48,22 +48,22 @@ public:
 	/// @brief コンポーネントを取得します。
 	template <typename T>
 	T const* Component() const;
-	
+
 	///@~Japanese
 	/// @brief コンポーネントを取得します。
 	template <typename T>
 	T* Component();
-	
+
 	///@~Japanese
 	/// @brief 指定されたコンポーネントを持っているかどうか取得します。
 	template <typename T>
 	bool HasComponent() const;
-	
+
 	///@~Japanese
 	/// @brief コンポーネントを追加します。
 	template <typename T>
 	T & AddComponent(std::unique_ptr<T> && component);
-	
+
 	///@~Japanese
 	/// @brief コンポーネントを追加します。
 	template <typename T, typename...Arguments>
@@ -73,15 +73,15 @@ public:
 	/// @brief 指定されたコンポーネントを削除します。
 	template <typename T>
 	void RemoveComponent();
-	
+
 	///@~Japanese
 	/// @brief オブジェクトのコンポーネントをすべて削除し、オブジェクトをゲームワールドから取り除きます。
 	void Destroy();
-	
+
 	///@~Japanese
 	/// @brief 即座にオブジェクトのコンポーネントをすべて削除し、オブジェクトをゲームワールドから取り除きます。
 	void DestroyImmediate();
-	
+
 private:
 	std::shared_ptr<GameObjectContext> context;
 	GameObjectID id;

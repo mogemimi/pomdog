@@ -71,21 +71,21 @@ static ScalarTypeGL4 ToScalarType(GLenum attributeClass)
 
 	case GL_BYTE:
 		return ScalarTypeGL4(GL_BYTE);
-		
+
 	case GL_UNSIGNED_BYTE:
 		return ScalarTypeGL4(GL_UNSIGNED_BYTE);
-		
+
 	case GL_SHORT:
 		return ScalarTypeGL4(GL_SHORT);
-		
+
 	case GL_UNSIGNED_SHORT:
 		return ScalarTypeGL4(GL_UNSIGNED_SHORT);
 	}
-	
+
 	// Not supported:
 	POMDOG_ASSERT(attributeClass != GL_HALF_FLOAT);
 	POMDOG_ASSERT(attributeClass != GL_FIXED);
-	
+
 #ifdef DEBUG
 	Log::Stream(LogLevel::Internal)
 		<< "Failed to find scalar type '"  << attributeClass << "'.";
@@ -107,11 +107,11 @@ static bool IsIntegerType(ScalarTypeGL4 const& scalarType)
 	case GL_UNSIGNED_SHORT:
 		return true;
 	}
-	
+
 	// Not supported:
 	POMDOG_ASSERT(scalarType.value != GL_HALF_FLOAT);
 	POMDOG_ASSERT(scalarType.value != GL_FIXED);
-	
+
 #ifdef DEBUG
 	Log::Stream(LogLevel::Internal)
 		<< "Failed to find scalar type '"  << scalarType.value << "'.";
@@ -210,7 +210,7 @@ static InputElementSize ToInputElementSize(GLenum attributeClass)
 	case GL_DOUBLE_MAT4x3:
 		return { 4, 3 };
 	}
-	
+
 	// Not supported:
 	POMDOG_ASSERT(attributeClass != GL_HALF_FLOAT);
 	POMDOG_ASSERT(attributeClass != GL_FIXED);
@@ -234,7 +234,7 @@ std::uint8_t ToByteWithFromScalarTypeGL4(ScalarTypeGL4 scalarType)
 	case GL_SHORT: return sizeof(GLshort);
 	case GL_UNSIGNED_SHORT: return sizeof(GLushort);
 	}
-	
+
 	// Not supported:
 	POMDOG_ASSERT(scalarType.value != GL_HALF_FLOAT);
 	POMDOG_ASSERT(scalarType.value != GL_FIXED);
@@ -297,7 +297,7 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
 			///@todo badcode
 			// For matrix class in GLSL:
 			attributeLocation += 1;
-			
+
 			//#ifdef DEBUG
 			//Log::Stream(LogLevel::Internal)
 			//	<< "[GLSL] Attribute: StartSlot = " << static_cast<std::uint32_t>(attribute.StartSlot)
@@ -305,7 +305,7 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
 			//#endif // defined(DEBUG)
 		}
 	}
-	
+
 	std::sort(std::begin(attributes), std::end(attributes), [](InputElementGL4 const& a, InputElementGL4 const& b) {
 		return a.StartSlot < b.StartSlot;
 	});
@@ -334,7 +334,7 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
 	//		<< "'";
 	//};
 	//#endif // defined(DEBUG)
-	
+
 	return std::move(attributes);
 }
 //-----------------------------------------------------------------------
@@ -366,7 +366,7 @@ static std::vector<InputBindingGL4> BuildInputBindings(std::vector<InputElementG
 
 	std::vector<InputBindingGL4> result(1);
 	POMDOG_ASSERT(!result.empty());
-	
+
 	InputBindingGL4 & inputBinding = result.front();
 	inputBinding.InstanceFrequency = 0;
 
@@ -387,16 +387,16 @@ static std::vector<InputBindingGL4> BuildInputBindings(
 	POMDOG_ASSERT(!attributes.empty());
 
 	std::vector<InputBindingGL4> result;
-	
+
 	auto attributeIter = std::begin(attributes);
 
 	for (auto & binding: vertexBindings)
 	{
 		auto const strideBytes = binding.Declaration.StrideBytes();
-		
+
 		std::uint32_t offsetBytes = 0;
 		POMDOG_ASSERT(attributeIter != std::end(attributes));
-		
+
 		InputBindingGL4 inputBinding;
 		inputBinding.InstanceFrequency = binding.InstanceFrequency;
 
@@ -406,17 +406,17 @@ static std::vector<InputBindingGL4> BuildInputBindings(
 			offsetBytes = CalculateByteOffset(offsetBytes, inputBinding.InputElements.back());
 			return offsetBytes >= strideBytes;
 		});
-		
+
 		POMDOG_ASSERT(offsetBytes == strideBytes);
 
 		result.emplace_back(std::move(inputBinding));
-		
+
 		if (attributeIter != std::end(attributes)) {
 			++attributeIter;
 		}
 	}
 	POMDOG_ASSERT(attributeIter == std::end(attributes));
-	
+
 	return std::move(result);
 }
 //-----------------------------------------------------------------------
@@ -432,19 +432,19 @@ static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings
 {
 	POMDOG_ASSERT(!inputBindings.empty());
 	POMDOG_ASSERT(inputBindings.size() == vertexBuffers.size());
-	
+
 	auto vertexBufferIter = std::begin(vertexBuffers);
 
 	for (auto & binding: inputBindings)
 	{
 		POMDOG_ASSERT(vertexBufferIter != std::end(vertexBuffers));
 		auto nativeVertexBuffer = dynamic_cast<VertexBufferGL4*>((*vertexBufferIter)->NativeVertexBuffer());
-		
+
 		POMDOG_ASSERT(nativeVertexBuffer);
 		nativeVertexBuffer->BindBuffer(); // Note: glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
 		auto const strideBytes = (*vertexBufferIter)->StrideBytes();
-		
+
 		for (auto & attribute: binding.InputElements)
 		{
 			if (attribute.IsInteger)
@@ -455,7 +455,7 @@ static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings
 					attribute.ScalarType.value,
 					strideBytes,
 					ComputeBufferOffset(attribute.ByteOffset));
-					
+
 				#ifdef DEBUG
 				ErrorChecker::CheckError("glVertexAttribIPointer", __FILE__, __LINE__);
 				#endif
@@ -469,7 +469,7 @@ static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings
 					GL_FALSE,
 					strideBytes,
 					ComputeBufferOffset(attribute.ByteOffset));
-					
+
 				#ifdef DEBUG
 				ErrorChecker::CheckError("glVertexAttribPointer", __FILE__, __LINE__);
 				#endif
@@ -480,7 +480,7 @@ static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings
 			ErrorChecker::CheckError("glVertexAttribDivisor", __FILE__, __LINE__);
 			#endif
 		}
-		
+
 		++vertexBufferIter;
 	}
 	POMDOG_ASSERT(vertexBufferIter == std::end(vertexBuffers));
@@ -506,20 +506,20 @@ InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram,
 		glGenVertexArrays(1, vertexArray.Data());
 		return std::move(vertexArray);
 	})();
-	
+
 	auto const oldInputLayout = TypesafeHelperGL4::Get<VertexArrayGL4>();
 	ScopeGuard scope([&oldInputLayout]{
 		glBindVertexArray(oldInputLayout.value);
 	});
-	
+
 	glBindVertexArray(inputLayout->value);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindVertexArray", __FILE__, __LINE__);
 	#endif
-	
+
 	auto const attributes = BuildAttributes(shaderProgram);
-	
+
 	if (vertexBinding.empty()) {
 		inputBindings = BuildInputBindings(attributes);
 	}
@@ -543,7 +543,7 @@ void InputLayoutGL4::Apply(std::vector<std::shared_ptr<VertexBuffer>> const& ver
 {
 	POMDOG_ASSERT(inputLayout);
 	glBindVertexArray(inputLayout->value);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindVertexArray", __FILE__, __LINE__);
 	#endif
@@ -551,7 +551,7 @@ void InputLayoutGL4::Apply(std::vector<std::shared_ptr<VertexBuffer>> const& ver
 	//for (auto& bindings: inputBindings) {
 	//	EnableAttributes(bindings.InputElements);
 	//}
-	
+
 	ApplyInputBindings(inputBindings, vertexBuffers);
 }
 //-----------------------------------------------------------------------

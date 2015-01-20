@@ -33,19 +33,19 @@ public:
 	///@~Japanese
 	/// @brief ソースバッファの全長（秒単位）。
 	DurationSeconds Duration() const;
-	
+
 	///@~Japanese
 	/// @brief サンプリングレート（1秒あたりのサンプル数）。
 	std::uint32_t SampleRate() const;
-	
+
 	///@~Japanese
 	/// @brief サンプルあたりのビット数。
 	std::uint16_t BitsPerSample() const;
 
 	AudioChannels Channels() const;
-	
+
 	Details::SoundSystem::NativeAudioClip* NativeAudioClip();
-	
+
 private:
 	std::unique_ptr<Details::SoundSystem::NativeAudioClip> nativeAudioClip;
 	DurationSeconds duration;

@@ -40,27 +40,27 @@ void ParticleRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 	if (!IsVisible) {
 		return;
 	}
-	
+
 	auto particleSystem = gameObject.Component<ParticleSystem>();
-	
+
 	POMDOG_ASSERT(particleSystem);
-	
+
 	if (!particleSystem) {
 		return;
 	}
-	
+
 	if (particleSystem->Particles().empty()) {
 		return;
 	}
 
 	command.particles = &particleSystem->Particles();
 	command.drawOrder = DrawOrder;
-	
+
 	if (auto transform = gameObject.Component<Transform2D>())
 	{
 		command.transform = CreateTransformMatrix3x2(*transform);
 	}
-	
+
 	renderer.PushCommand(command);
 }
 //-----------------------------------------------------------------------

@@ -40,15 +40,15 @@ struct UniformBlockBindingGL4 {
 class EffectPassGL4 final: public NativeEffectPass {
 public:
 	EffectPassGL4() = delete;
-	
+
 	EffectPassGL4(ShaderBytecode const& vertexShaderBytecode, ShaderBytecode const& pixelShaderBytecode);
-	
+
 	~EffectPassGL4();
 
 	std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
 
 	void ApplyShaders();
-	
+
 	ShaderProgramGL4 GetShaderProgram() const;
 
 private:

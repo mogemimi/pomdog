@@ -21,30 +21,30 @@ enum class ClearOptions: std::uint8_t {
 	///@~Japanese
 	/// @brief 深度バッファをクリアします。
 	DepthBuffer = 0x1,
-	
+
 	///@~English
 	/// @brief Clear the stencil buffer.
 	///@~Japanese
 	/// @brief ステンシルバッファをクリアします。
 	Stencil = 0x2,
-	
+
 	///@~English
 	/// @brief Clear the rendering target.
 	///@~Japanese
 	/// @brief レンダリングターゲットをクリアします。
 	RenderTarget = 0x4,
-	
+
 	// Details:
-	
+
 	///@brief レンダリングターゲット + 深度バッファ + ステンシルバッファ
 	ClearOptions_Details_TargetDepthStencil = 0x1 | 0x2 | 0x4,
-	
+
 	///@brief 深度バッファ + ステンシルバッファ
 	ClearOptions_Details_DepthStecil = 0x1 | 0x2,
-	
+
 	///@brief レンダリングターゲット + ステンシルバッファ
 	ClearOptions_Details_TargetStencil = 0x2 | 0x4,
-	
+
 	///@brief レンダリングターゲット + 深度バッファ
 	ClearOptions_Details_TargetDepth = 0x4 | 0x1,
 };

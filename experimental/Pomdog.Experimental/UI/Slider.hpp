@@ -57,38 +57,38 @@ private:
 
 public:
 	Slider(double minimum, double maximum);
-	
+
 	Slider(SliderColorScheme const& colorScheme, double minimum, double maximum);
-	
+
 	void Value(double valueIn);
 	double Value() const;
-	
+
 	double Minimum() const;
 	double Maximum() const;
-	
+
 	bool IsEnabled() const;
 	void IsEnabled(bool isEnabled);
 
 	UI::VerticalAlignment VerticalAlignment() const override { return UI::VerticalAlignment::Top; }
 
 	bool SizeToFitContent() const override { return false; }
-	
+
 	void OnParentChanged() override;
-	
+
 	void OnPointerEntered(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerExited(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerPressed(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerMoved(PointerPoint const& pointerPoint) override;
-	
+
 	void OnPointerReleased(PointerPoint const& pointerPoint) override;
-	
+
 	void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
-	
+
 	void Draw(DrawingContext & drawingContext) override;
-	
+
 	void UpdateAnimation(DurationSeconds const& frameDuration) override;
 };
 

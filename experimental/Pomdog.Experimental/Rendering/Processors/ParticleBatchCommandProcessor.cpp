@@ -29,14 +29,14 @@ ParticleBatchCommandProcessor::ParticleBatchCommandProcessor(std::shared_ptr<Gra
 void ParticleBatchCommandProcessor::Begin(GraphicsContext & graphicsContext)
 {
 	drawCallCount = 0;
-	
+
 	spriteBatch.Begin(Matrix4x4::Identity);
 }
 //-----------------------------------------------------------------------
 void ParticleBatchCommandProcessor::Draw(GraphicsContext & graphicsContext, RenderCommand & command)
 {
 	using Details::Rendering::ParticleBatchCommand;
-	
+
 	auto & particleCommand = static_cast<ParticleBatchCommand &>(command);
 	for (auto & particle: *particleCommand.particles)
 	{

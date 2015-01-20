@@ -29,7 +29,7 @@ static TextureAtlasRegion CreateAtlasRegion(std::string const& line, std::uint32
 	TextureAtlasRegion region;
 	region.Name = line;
 	region.TexturePage = pageIndex;
-	
+
 	region.Region.Subrect = {0, 0, 1, 1};
 	region.Region.Width = 1;
 	region.Region.Height = 1;
@@ -48,7 +48,7 @@ TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string co
 
 	TextureAtlas result;
 	std::uint32_t pageIndex = 0;
-	
+
 	ParserState state = ParserState::PageName;
 
 	std::string line;
@@ -66,7 +66,7 @@ TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string co
 			page.Name = line;
 			result.pages.push_back(page);
 			POMDOG_ASSERT((pageIndex + 1) == result.pages.size());
-			
+
 			state = ParserState::PageProperties;
 			break;
 		}
@@ -110,22 +110,22 @@ TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string co
 				state = ParserState::RegionProperties;
 				break;
 			}
-			
+
 			std::replace(std::begin(line), std::end(line), ':', ' ');
 			std::replace(std::begin(line), std::end(line), ',', ' ');
 
 			std::istringstream ss(line);
 			std::string propertyName;
 			ss >> propertyName;
-			
+
 			if (propertyName.empty()) {
 				state = ParserState::ParsingError;
 				break;
 			}
-			
+
 			POMDOG_ASSERT(!result.regions.empty());
 			auto & region = result.regions.back();
-			
+
 			if ("rotate" == propertyName) {
 				std::string value;
 				ss >> value;
@@ -154,14 +154,14 @@ TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string co
 			//else if ("index" == propertyName) {
 			//	// TODO
 			//}
-			
+
 			if (!ss) {
 				state = ParserState::ParsingError;
 			}
 			break;
 		}
 		}// switch (state)
-		
+
 		if (state == ParserState::ParsingError) {
 			break;
 		}
@@ -171,7 +171,7 @@ TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string co
 		result.pages.clear();
 		result.regions.clear();
 	}
-	
+
 	return std::move(result);
 }
 //-----------------------------------------------------------------------

@@ -29,7 +29,7 @@ public:
 	///@~Japanese
 	/// @brief 指定されたキーが押されているかどうかを取得します。
 	bool IsKeyDown(Keys key) const;
-	
+
 	///@~Japanese
 	/// @brief 指定されたキーが離されているかどうかを取得します。
 	bool IsKeyUp(Keys key) const;

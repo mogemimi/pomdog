@@ -114,7 +114,7 @@ void DepthStencilStateGL4::ApplyDepthTest()
 
 	// depth function
 	glDepthFunc(depthFunction.value);
-	
+
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDepthFunc", __FILE__, __LINE__);
 	#endif
@@ -136,18 +136,18 @@ void DepthStencilStateGL4::ApplyStencilTest()
 		POMDOG_ASSERT(GL_CW == frontFace);
 	}
 	#endif
-	
+
 	// ClockwiseFace:
 	glStencilFuncSeparate(GL_FRONT,
 		clockwiseFace.stencilFunction.value,
 		referenceStencil,
 		stencilMask);
-	
+
 	glStencilOpSeparate(GL_FRONT,
 		clockwiseFace.stencilFail.value,
 		clockwiseFace.stencilDepthBufferFail.value,
 		clockwiseFace.stencilPass.value);
-	
+
 	// CounterClockwiseFace:
 	glStencilFuncSeparate(GL_BACK,
 		counterClockwiseFace.stencilFunction.value,
@@ -158,7 +158,7 @@ void DepthStencilStateGL4::ApplyStencilTest()
 		counterClockwiseFace.stencilFail.value,
 		counterClockwiseFace.stencilDepthBufferFail.value,
 		counterClockwiseFace.stencilPass.value);
-	
+
 	glStencilMask(stencilWriteMask);
 
 	#ifdef DEBUG

@@ -24,13 +24,13 @@ public:
 	void Begin(GraphicsContext & graphicsContext) override;
 
 	void Draw(GraphicsContext & graphicsContext, RenderCommand & command) override;
-	
+
 	void End(GraphicsContext & graphicsContext) override;
-	
+
 	int DrawCallCount() const override;
-	
+
 	void SetViewProjection(Matrix4x4 const& view, Matrix4x4 const& projection) override;
-	
+
 public:
 	SkinnedEffect skinnedEffect;
 	Matrix4x4 viewProjection;

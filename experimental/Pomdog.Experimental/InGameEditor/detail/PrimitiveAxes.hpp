@@ -26,9 +26,9 @@ namespace SceneEditor {
 class PrimitiveAxes {
 public:
 	PrimitiveAxes(Color const& xAxisColor, Color const& yAxisColor, Color const& zAxisColor);
-	
+
 	void Draw(LineBatch & lineBatch);
-	
+
 private:
 	struct Line {
 		Vector3 Point1;

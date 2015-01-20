@@ -41,7 +41,7 @@ private:
 public:
 	SoundEffectAL(AudioEngineAL & audioEngine,
 		std::shared_ptr<AudioClipAL> const& audioClip, bool isLooped);
-	
+
 	~SoundEffectAL();
 
 	void Pause();
@@ -49,7 +49,7 @@ public:
 	void Play();
 
 	void Stop();
-	
+
 	void Apply3D(AudioListener const& listener, AudioEmitter const& emitter);
 
 	void ExitLoop();

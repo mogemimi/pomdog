@@ -51,7 +51,7 @@ public:
 	{
 		return Details::Particles::ParticleCurveLerp<T>()(min, max, amount);
 	}
-	
+
 	float GenerateVariance(std::mt19937 & random) const override
 	{
 		return std::generate_canonical<float, std::numeric_limits<float>::digits>(random);

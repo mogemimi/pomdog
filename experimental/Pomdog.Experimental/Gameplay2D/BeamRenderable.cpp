@@ -15,13 +15,13 @@ BeamRenderable::BeamRenderable()
 void BeamRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 {
 	///@todo Not implemented
-	
+
 //	auto blendStateAdditive = BlendState::CreateAdditive(gameHost->GraphicsDevice());
 //	auto blendState = graphicsContext->GetBlendState();
 //	graphicsContext->SetBlendState(blendStateAdditive);
-//	
+//
 //	DrawBeam();
-//	
+//
 //	graphicsContext->SetBlendState(blendState);
 }
 //-----------------------------------------------------------------------
@@ -46,18 +46,18 @@ void BeamRenderable::Update(GameClock const& clock)
 	{
 		//auto const& muzzleRifleMatrix = maidGlobalPose[35];
 		auto const& muzzleRifleMatrix = Matrix3x2::Identity;
-	
+
 		Transform2D transform;
 		transform.Scale = {1.0f, 1.0f};
 		transform.Rotation = 0.0f;
 		transform.Position = Vector2::Transform(Vector2{10.0f, 0.0f}, muzzleRifleMatrix);
 		Vector2 target = Vector2::Transform(Vector2{500.0f, 0.0f}, muzzleRifleMatrix);
-		
+
 //		if (slider2->Value() > 0.4f) {
 //			transform.Position = {900.0f, 1000.0f};
 //			target = transform.Position + Vector2{100.0f, 100.0f};
 //		}
-		
+
 		beamSystem.Update(clock.FrameDuration(), transform, target);
 	}
 }
@@ -101,7 +101,7 @@ void BeamRenderable::DrawBeam()
 //					POMDOG_ASSERT(i > 0);
 //					auto & start = points[i - 1];
 //					auto & end = points[i];
-//					
+//
 //					spriteLine.Draw(*spriteRenderer, start, end, lineThickness, color, 0);
 //				}
 //			}
@@ -113,12 +113,12 @@ void BeamRenderable::DrawBeam()
 //					POMDOG_ASSERT(i > 0);
 //					auto & start = points[i - 1];
 //					auto & end = points[i];
-//					
+//
 //					spriteLine.Draw(*spriteRenderer, start, end, lineThickness, color, 0);
 //				}
 //			}
 //		};
-//		
+//
 //		for (auto & beam: beamSystem.beams)
 //		{
 //			DrawBeam(beam.Points, beam.Thickness, beam.Color, beam.TimeToLive/beamSystem.emitter.StartLifetime);

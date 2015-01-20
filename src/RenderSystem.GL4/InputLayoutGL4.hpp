@@ -49,7 +49,7 @@ struct InputElementGL4 {
 
 	// Must be 1, 2, 3, and 4.
 	std::int8_t Components;
-	
+
 	bool IsInteger = false;
 };
 
@@ -61,15 +61,15 @@ struct InputBindingGL4 {
 class InputLayoutGL4: public NativeInputLayout {
 public:
 	InputLayoutGL4() = delete;
-	
+
 	explicit InputLayoutGL4(ShaderProgramGL4 const& shaderProgram);
 
 	InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::vector<VertexBufferBinding> const& vertexBufferBinding);
-	
+
 	~InputLayoutGL4();
 
 	void Apply(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers);
-	
+
 private:
 	std::vector<InputBindingGL4> inputBindings;
 	Optional<VertexArrayGL4> inputLayout;

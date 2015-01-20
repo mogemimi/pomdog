@@ -20,7 +20,7 @@ static AnimationTimeInterval ComputeLength(std::vector<std::unique_ptr<Animation
 	{
 		POMDOG_ASSERT(track);
 		auto length = track->Length();
-		
+
 		if (length > maxLength)
 		{
 			maxLength = length;

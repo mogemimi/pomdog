@@ -57,18 +57,18 @@ public:
 	virtual std::unique_ptr<NativeIndexBuffer>
 	CreateIndexBuffer(void const* indices, std::uint32_t sizeInBytes,
 		BufferUsage bufferUsage) = 0;
-	
+
 	///@~Japanese
 	/// @brief 頂点バッファを作成します。
 	virtual std::unique_ptr<NativeVertexBuffer>
 	CreateVertexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage) = 0;
-	
+
 	///@~Japanese
 	/// @brief 頂点バッファを作成します。
 	virtual std::unique_ptr<NativeVertexBuffer>
 	CreateVertexBuffer(void const* vertices, std::uint32_t sizeInBytes,
 		BufferUsage bufferUsage) = 0;
-	
+
 	///@~Japanese
 	/// @brief ブレンディングステートを作成します。
 	virtual std::unique_ptr<NativeBlendState>
@@ -88,13 +88,13 @@ public:
 	/// @brief ラスタライザーステートを作成します。
 	virtual std::unique_ptr<NativeRasterizerState>
 	CreateRasterizerState(RasterizerDescription const& description) = 0;
-		
+
 	///@~Japanese
 	/// @brief エフェクトパスを作成します。
 	virtual std::unique_ptr<NativeEffectPass>
 	CreateEffectPass(ShaderBytecode const& vertexShaderBytecode,
 		ShaderBytecode const& pixelShaderBytecode) = 0;
-	
+
 	///@~Japanese
 	/// @brief 指定されたエフェクトパスからエフェクトリフレクションを作成します。
 	virtual std::unique_ptr<NativeEffectReflection>
@@ -111,7 +111,7 @@ public:
 	virtual std::unique_ptr<NativeTexture2D>
 	CreateTexture2D(std::int32_t width, std::int32_t height,
 		std::uint32_t mipmapLevels, SurfaceFormat format) = 0;
-	
+
 	///@~Japanese
 	/// @brief 2 次元のレンダーターゲットを作成します。
 	virtual std::unique_ptr<NativeRenderTarget2D>
