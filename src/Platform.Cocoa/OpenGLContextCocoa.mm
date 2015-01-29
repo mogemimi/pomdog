@@ -12,15 +12,10 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 //-----------------------------------------------------------------------
-OpenGLContextCocoa::OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormatIn)
-	: pixelFormat(pixelFormatIn)
-	, openGLContext(nil)
+OpenGLContextCocoa::OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormat)
+	: openGLContext(nil)
 {
 	POMDOG_ASSERT(pixelFormat != nil);
-
-#if !__has_feature(objc_arc)
-	[pixelFormat retain];
-#endif
 
 	openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext: nil];
 	[openGLContext makeCurrentContext];
@@ -33,10 +28,8 @@ OpenGLContextCocoa::~OpenGLContextCocoa()
 {
 #if !__has_feature(objc_arc)
 	[openGLContext release];
-	[pixelFormat release];
 #endif
 	openGLContext = nil;
-	pixelFormat = nil;
 }
 //-----------------------------------------------------------------------
 void OpenGLContextCocoa::MakeCurrent()

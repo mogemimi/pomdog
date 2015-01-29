@@ -25,7 +25,7 @@ public:
 	OpenGLContextCocoa() = delete;
 
 	explicit OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormat);
-	
+
 	~OpenGLContextCocoa();
 
 	void MakeCurrent() override;
@@ -33,15 +33,14 @@ public:
 	void ClearCurrent() override;
 
 	void SwapBuffers() override;
-	
+
 	void Lock();
-	
+
 	void Unlock();
-	
+
 	NSOpenGLContext* NativeOpenGLContext();
-	
+
 private:
-	NSOpenGLPixelFormat* pixelFormat;
 	NSOpenGLContext* openGLContext;
 };
 
