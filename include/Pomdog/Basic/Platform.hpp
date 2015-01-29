@@ -39,6 +39,9 @@ namespace Details {
 #if defined(linux) || defined(__linux) || defined(__linux__)
 #	// Linux
 #	define POMDOG_PLATFORM_LINUX
+#elif defined(__PS4__) && defined(__FreeBSD__)
+#	// PlayStation 4
+#	define POMDOG_PLATFORM_PlayStation4
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
 #	// BSD
 #	define POMDOG_PLATFORM_BSD
@@ -51,8 +54,9 @@ namespace Details {
 #elif defined(ANDROID) || defined(__ANDROID__)
 #	// Android OS
 #	define POMDOG_PLATFORM_ANDROID
-#elif defined(__APPLE_CC__) && ((__IPHONE_OS_VERSION_MIN_REQUIRED >= 60000) || (__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 60000))
-#	// Apple iOS 6 or later
+#elif (defined(__APPLE_CC__) && ((__IPHONE_OS_VERSION_MIN_REQUIRED >= 70000)) \
+	|| (__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 70000))
+#	// Apple iOS 7 or later
 #	define POMDOG_PLATFORM_APPLE_IOS
 #elif defined(__APPLE_CC__)
 #	// Mac OSX
