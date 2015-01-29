@@ -41,7 +41,7 @@ namespace Details {
 #	define POMDOG_PLATFORM_LINUX
 #elif defined(__PS4__) && defined(__FreeBSD__)
 #	// PlayStation 4
-#	define POMDOG_PLATFORM_PlayStation4
+#	define POMDOG_PLATFORM_PLAYSTATION4
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
 #	// BSD
 #	define POMDOG_PLATFORM_BSD
