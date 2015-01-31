@@ -5,7 +5,7 @@
 # gyp build/TestApp.gyp --depth=. -f msvs -G msvs_version=2013 --generator-output=./build.msvs/
 
 {
-  'includes': ['common.gypi', 'experimental.gypi'],
+  'includes': ['common.gypi'],
   'make_global_settings': [
     ['CXX','/usr/bin/clang++'],
     ['LINK','/usr/bin/clang++'],
@@ -21,7 +21,7 @@
             'GenerateDebugInformation': 'true', # /DEBUG
           },
         },
-      }, # Debug
+      },
     },
     'msbuild_settings':{
       'ClCompile': {
@@ -66,16 +66,13 @@
       'type': 'executable',
       'mac_bundle': 1,
       'dependencies': [
-        '../third-party/lua/lua.gyp:lua_static',
+        'experimental.gyp:pomdog_experimental',
       ],
       'include_dirs': [
         '../include',
         '../experimental',
-        '../third-party/rapidjson/include',
-        '../third-party/lua/src',
       ],
       'sources': [
-        '<@(pomdog_experimental_2d_sources)',
         '../test/TestApp/Utilities/LogSkeletalInfo.cpp',
         '../test/TestApp/Utilities/LogSkeletalInfo.hpp',
         '../test/TestApp/Utilities/SandboxHelper.hpp',
@@ -124,7 +121,6 @@
           'link_settings': {
             'libraries': [
               '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
-              '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
             ],
           },
           'actions': [

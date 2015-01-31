@@ -1,7 +1,8 @@
 {
+  'includes': ['common.gypi'],
   'variables': {
     'pomdog_expr_dir': '../experimental/Pomdog.Experimental',
-    'pomdog_experimental_2d_sources': [
+    'pomdog_experimental_sources': [
       '<@(pomdog_expr_dir)/Experimental.hpp',
 
       '<@(pomdog_expr_dir)/Actions/Action.hpp',
@@ -257,4 +258,86 @@
       '<@(pomdog_expr_dir)/UI/detail/UIEventConnection.hpp',
     ],
   },
+  'target_defaults': {
+    'configurations': {
+      'Debug': {
+        'msbuild_settings': {
+          'Link': {
+            'GenerateDebugInformation': 'true', # /DEBUG
+          },
+        },
+      },
+    },
+    'msbuild_settings':{
+      'ClCompile': {
+        'WarningLevel': 'Level4', # /W4
+        'TreatWarningAsError': 'true', # /WX
+      },
+    },
+    'xcode_settings': {
+      'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
+      'CLANG_CXX_LANGUAGE_STANDARD': 'c++14',
+      'MACOSX_DEPLOYMENT_TARGET': '10.9', # OS X Deployment Target: 10.9
+      'CLANG_CXX_LIBRARY': 'libc++', # libc++ requires OS X 10.7 or later
+      #'SKIP_INSTALL': 'NO',
+      # Warnings:
+      'CLANG_WARN_EMPTY_BODY': 'YES',
+      'GCC_WARN_64_TO_32_BIT_CONVERSION': 'YES',
+      'GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS': 'YES',
+      'GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS': 'YES',
+      'GCC_WARN_ABOUT_MISSING_NEWLINE': 'YES',
+      'GCC_WARN_ABOUT_RETURN_TYPE': 'YES',
+      'GCC_WARN_CHECK_SWITCH_STATEMENTS': 'YES',
+      'GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS': 'YES',
+      #'GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED': 'YES',
+      'GCC_WARN_MISSING_PARENTHESES': 'YES',
+      'GCC_WARN_NON_VIRTUAL_DESTRUCTOR': 'YES',
+      'GCC_WARN_SHADOW': 'YES',
+      'GCC_WARN_SIGN_COMPARE': 'YES',
+      'GCC_WARN_TYPECHECK_CALLS_TO_PRINTF': 'YES',
+      'GCC_WARN_UNINITIALIZED_AUTOS': 'YES',
+      'GCC_WARN_UNKNOWN_PRAGMAS': 'YES',
+      'GCC_WARN_UNUSED_FUNCTION': 'YES',
+      'GCC_WARN_UNUSED_LABEL': 'YES',
+      'GCC_WARN_UNUSED_VALUE': 'YES',
+      'GCC_WARN_UNUSED_VARIABLE': 'YES',
+      'GCC_TREAT_WARNINGS_AS_ERRORS': 'YES',
+    },
+  },
+  'targets': [
+    {
+      'target_name': 'pomdog_experimental',
+      'product_name': 'pomdog_experimental',
+      'type': 'static_library',
+      'dependencies': [
+        '../third-party/lua/lua.gyp:lua_static',
+      ],
+      'include_dirs': [
+        '../experimental',
+        '../include',
+        '../third-party/rapidjson/include',
+        '../third-party/lua/src',
+      ],
+      'sources': [
+        '<@(pomdog_experimental_sources)',
+      ],
+      'xcode_settings': {
+        'SKIP_INSTALL': 'YES',
+      },
+      'conditions': [
+        ['component == "shared_library"', {
+          'dependencies': [
+            'pomdog.gyp:pomdog-shared',
+          ],
+          'defines': [
+            'POMDOG_USING_LIBRARY_EXPORTS=1',
+          ],
+        }, {
+          'dependencies': [
+            'pomdog.gyp:pomdog-static',
+          ],
+        }],
+      ],
+    },
+  ],
 }

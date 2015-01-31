@@ -13,7 +13,6 @@
 
 #include "Component.hpp"
 #include "GameObjectID.hpp"
-#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstdint>
 #include <type_traits>
@@ -28,14 +27,14 @@ namespace Details {
 namespace Gameplay {
 
 template <std::uint8_t MaxComponentCapacity>
-class POMDOG_EXPORT EntityDescription {
+class EntityDescription {
 public:
 	std::bitset<MaxComponentCapacity> ComponentBitMask;
 	std::uint32_t IncremantalCounter = 1;
 };
 
 template <std::uint8_t MaxComponentCapacity>
-class POMDOG_EXPORT EntityContext {
+class EntityContext {
 public:
 	EntityContext();
 

@@ -621,5 +621,5 @@
         'DYLIB_INSTALL_NAME_BASE': '@executable_path/../../..',
       },
     },
-  ],# "targets"
+  ],
 }
