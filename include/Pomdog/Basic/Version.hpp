@@ -14,7 +14,7 @@
 namespace Pomdog {
 
 ///@brief yyyy mm dd (year, month and day)
-#define POMDOG_VERSION 20150101L
+#define POMDOG_INTERNAL_VERSION 20150131L
 
 }// namespace Pomdog
 
