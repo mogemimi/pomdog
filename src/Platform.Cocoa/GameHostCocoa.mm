@@ -140,7 +140,7 @@ public:
 		std::shared_ptr<SystemEventDispatcher> const& dipatcher,
 		PresentationParameters const& presentationParameters);
 
-	~Impl() = default;
+	~Impl();
 
 	void Run(Game & game);
 
@@ -236,6 +236,20 @@ GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& window,
 
 	POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
 	presentationInterval = DurationSeconds(1) / presentationParameters.PresentationInterval;
+}
+//-----------------------------------------------------------------------
+GameHostCocoa::Impl::~Impl()
+{
+	systemEventConnection.Disconnect();
+	assetManager.reset();
+	keyboard.reset();
+	mouse.reset();
+	audioEngine.reset();
+	graphicsContext.reset();
+	graphicsDevice.reset();
+	openGLContext.reset();
+	gameWindow.reset();
+	systemEventDispatcher.reset();
 }
 //-----------------------------------------------------------------------
 void GameHostCocoa::Impl::Run(Game & game)

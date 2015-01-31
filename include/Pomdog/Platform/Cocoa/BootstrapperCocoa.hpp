@@ -11,30 +11,33 @@
 #pragma once
 #endif
 
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
+#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
 #include <memory>
-#include <functional>
-
-@class NSWindow;
 
 namespace Pomdog {
 
 class GameHost;
-class PresentationParameters;
 
 namespace Details {
 namespace Cocoa {
 
-///@~Japanese
-/// @brief すべてのサブシステムの起動、およびアプリケーションの実行を行います。
 class POMDOG_EXPORT BootstrapperCocoa final {
 public:
-	void Run(NSWindow* nativeWindow,
-		std::function<void(std::shared_ptr<GameHost> const&)> const& runGame);
-	
-	void Run(NSWindow* nativeWindow, PresentationParameters const& presentationParameters,
-		std::function<void(std::shared_ptr<GameHost> const&)> const& runGame);
+	BootstrapperCocoa & SetSurfaceFormat(SurfaceFormat surfaceFormat);
+
+	BootstrapperCocoa & SetDepthFormat(DepthFormat depthFormat);
+
+	BootstrapperCocoa & SetPresentationInterval(std::uint32_t presentationInterval);
+
+	std::shared_ptr<GameHost> CreateGameHost(NSWindow* nativeWindow);
+
+private:
+	std::uint32_t presentationInterval = 60;
+	SurfaceFormat surfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
+	DepthFormat depthFormat = DepthFormat::Depth24Stencil8;
 };
 
 }// namespace Cocoa

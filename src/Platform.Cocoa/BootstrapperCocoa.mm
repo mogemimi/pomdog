@@ -15,25 +15,38 @@ namespace Pomdog {
 namespace Details {
 namespace Cocoa {
 //-----------------------------------------------------------------------
-void BootstrapperCocoa::Run(NSWindow* nativeWindow,
-	std::function<void(std::shared_ptr<GameHost> const&)> const& runGame)
+BootstrapperCocoa & BootstrapperCocoa::SetSurfaceFormat(SurfaceFormat surfaceFormatIn)
+{
+	surfaceFormat = surfaceFormatIn;
+	return *this;
+}
+//-----------------------------------------------------------------------
+BootstrapperCocoa & BootstrapperCocoa::SetDepthFormat(DepthFormat depthFormatIn)
+{
+	depthFormat = depthFormatIn;
+	return *this;
+}
+//-----------------------------------------------------------------------
+BootstrapperCocoa & BootstrapperCocoa::SetPresentationInterval(std::uint32_t presentationIntervalIn)
+{
+	POMDOG_ASSERT(presentationIntervalIn > 0);
+	POMDOG_ASSERT(presentationIntervalIn <= 120);
+	presentationInterval = presentationIntervalIn;
+	return *this;
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<GameHost> BootstrapperCocoa::CreateGameHost(NSWindow* nativeWindow)
 {
 	NSRect bounds = [[nativeWindow contentView] bounds];
 
 	PresentationParameters presentationParameters;
-	presentationParameters.SurfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
-	presentationParameters.DepthFormat = DepthFormat::Depth24Stencil8;
-	presentationParameters.PresentationInterval = 60;
+	presentationParameters.SurfaceFormat = surfaceFormat;
+	presentationParameters.DepthFormat = depthFormat;
+	presentationParameters.PresentationInterval = presentationInterval;
 	presentationParameters.BackBufferWidth = bounds.size.width;
 	presentationParameters.BackBufferHeight = bounds.size.height;
 	presentationParameters.IsFullScreen = false;
-	
-	BootstrapperCocoa::Run(nativeWindow, presentationParameters, runGame);
-}
-//-----------------------------------------------------------------------
-void BootstrapperCocoa::Run(NSWindow* nativeWindow, PresentationParameters const& presentationParameters,
-	std::function<void(std::shared_ptr<GameHost> const&)> const& runGame)
-{
+
 	auto eventDispatcher = std::make_shared<SystemEventDispatcher>();
 
 	POMDOG_ASSERT(nativeWindow != nil);
@@ -41,12 +54,8 @@ void BootstrapperCocoa::Run(NSWindow* nativeWindow, PresentationParameters const
 
 	auto gameHost = std::make_shared<GameHostCocoa>(gameWindow,
 		eventDispatcher, presentationParameters);
-	
-	POMDOG_ASSERT(runGame);
-	runGame(gameHost);
 
-	gameHost.reset();
-	gameWindow.reset();
+	return std::move(gameHost);
 }
 //-----------------------------------------------------------------------
 }// namespace Cocoa
