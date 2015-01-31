@@ -1,5 +1,6 @@
 ﻿#include "QuickStartGame.hpp"
 #include <utility>
+#include <cmath>
 
 namespace QuickStart {
 //-----------------------------------------------------------------------
@@ -12,7 +13,7 @@ QuickStartGame::QuickStartGame(std::shared_ptr<GameHost> const& gameHostIn)
 void QuickStartGame::Initialize()
 {
 	auto window = gameHost->Window();
-	window->Title("QuickStart Game");
+	window->Title("QuickStart");
 	window->AllowPlayerResizing(false);
 
 	auto graphicsDevice = gameHost->GraphicsDevice();
@@ -64,18 +65,13 @@ void QuickStartGame::Initialize()
 //-----------------------------------------------------------------------
 void QuickStartGame::Update()
 {
-	static float value = 0.0f;
-	value += 0.008f;
-	if (value > 1.0f) {
-		value = -1.0f;
-	}
-
-	Vector2 vec {std::abs(value), (1.0f + value) * 0.5f};
-
+	auto clock = gameHost->Clock();
 	auto parameter = constantBuffers->Find("TestStructure");
-	parameter->SetValue(vec);
+	auto totalTime = static_cast<float>(clock->TotalGameTime().count());
 
-	auto vector2 = parameter->GetValue<Vector2>();
+	parameter->SetValue(Vector2{
+		std::cos(totalTime) * 0.5f + 0.5f,
+		std::sin(totalTime) * 0.5f + 0.5f});
 }
 //-----------------------------------------------------------------------
 void QuickStartGame::Draw()

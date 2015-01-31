@@ -1,15 +1,5 @@
-# Examples(Xcode):
-# gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
-#
-# Examples(MSVS 2013):
-# gyp Build/QuickStart.gyp --depth=. -f msvs -G msvs_version=2013 --generator-output=./build.msvc/
-
 {
   'includes': ['common.gypi'],
-  'make_global_settings': [
-    ['CXX','/usr/bin/clang++'],
-    ['LINK','/usr/bin/clang++'],
-  ],
   'target_defaults': {
     'configurations': {
       'Debug': {
@@ -28,8 +18,8 @@
     'xcode_settings': {
       'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
       'CLANG_CXX_LANGUAGE_STANDARD': 'c++14',
-      'MACOSX_DEPLOYMENT_TARGET': '10.9', # OS X Deployment Target: 10.9
-      'CLANG_CXX_LIBRARY': 'libc++', # libc++ requires OS X 10.7 or later
+      'MACOSX_DEPLOYMENT_TARGET': '10.9',
+      'CLANG_CXX_LIBRARY': 'libc++',
     },
     'include_dirs': [
       '../Pomdog/include',
@@ -47,17 +37,12 @@
           '../Pomdog/build/pomdog.gyp:pomdog-static',
         ],
       }],
-      ['OS == "win"', {
-          'sources': [
-          ],
-      }], # OS == "win"
       ['OS == "mac"', {
-          'link_settings': {
-            'libraries': [
-              '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
-              '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
-            ],
-          },
+        'link_settings': {
+          'libraries': [
+            '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
+          ],
+        },
       }], # OS == "mac"
     ],
   },
@@ -105,5 +90,5 @@
         'CLANG_ENABLE_OBJC_ARC': 'YES',
       },
     },
-  ],# "targets"
+  ],
 }
