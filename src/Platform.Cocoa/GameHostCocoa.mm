@@ -146,21 +146,21 @@ public:
 
 	void Exit();
 
-	std::shared_ptr<Pomdog::GameWindow> Window();
+	std::shared_ptr<Pomdog::GameWindow> GetWindow();
 
-	std::shared_ptr<Pomdog::GameClock> Clock(std::shared_ptr<GameHost> && gameHost);
+	std::shared_ptr<Pomdog::GameClock> GetClock(std::shared_ptr<GameHost> && gameHost);
 
-	std::shared_ptr<Pomdog::GraphicsContext> GraphicsContext();
+	std::shared_ptr<Pomdog::GraphicsContext> GetGraphicsContext();
 
-	std::shared_ptr<Pomdog::GraphicsDevice> GraphicsDevice();
+	std::shared_ptr<Pomdog::GraphicsDevice> GetGraphicsDevice();
 
-	std::shared_ptr<Pomdog::AssetManager> AssetManager(std::shared_ptr<GameHost> && gameHost);
+	std::shared_ptr<Pomdog::AssetManager> GetAssetManager(std::shared_ptr<GameHost> && gameHost);
 
-	std::shared_ptr<Pomdog::AudioEngine> AudioEngine();
+	std::shared_ptr<Pomdog::AudioEngine> GetAudioEngine();
 
-	std::shared_ptr<Pomdog::Keyboard> Keyboard();
+	std::shared_ptr<Pomdog::Keyboard> GetKeyboard();
 
-	std::shared_ptr<Pomdog::Mouse> Mouse();
+	std::shared_ptr<Pomdog::Mouse> GetMouse();
 
 private:
 	void RenderFrame(Game & game);
@@ -173,35 +173,31 @@ private:
 
 private:
 	GameClock clock;
+	ScopedConnection systemEventConnection;
 	std::mutex renderMutex;
 	std::atomic_bool viewLiveResizing;
 
 	//std::weak_ptr<Game> game;
-	std::shared_ptr<GameWindowCocoa> gameWindow;
-
 	std::shared_ptr<SystemEventDispatcher> systemEventDispatcher;
-	ScopedConnection systemEventConnection;
-
+	std::shared_ptr<GameWindowCocoa> window;
 	std::shared_ptr<OpenGLContextCocoa> openGLContext;
-	std::shared_ptr<Pomdog::GraphicsContext> graphicsContext;
 	std::shared_ptr<Pomdog::GraphicsDevice> graphicsDevice;
+	std::shared_ptr<Pomdog::GraphicsContext> graphicsContext;
 	std::shared_ptr<Pomdog::AudioEngine> audioEngine;
 	std::unique_ptr<Pomdog::AssetManager> assetManager;
-
 	std::shared_ptr<KeyboardCocoa> keyboard;
 	std::shared_ptr<MouseCocoa> mouse;
 
 	DurationSeconds presentationInterval;
-
 	bool exitRequest;
 };
 //-----------------------------------------------------------------------
-GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& window,
+GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& windowIn,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
 	PresentationParameters const& presentationParameters)
 	: viewLiveResizing(false)
-	, gameWindow(window)
 	, systemEventDispatcher(eventDispatcher)
+	, window(windowIn)
 	, presentationInterval(DurationSeconds(1) / 60)
 	, exitRequest(false)
 {
@@ -210,12 +206,12 @@ GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& window,
 	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
 	graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::make_unique<GraphicsDeviceGL4>());
 
-	graphicsContext = CreateGraphicsContext(openGLContext, gameWindow, presentationParameters, graphicsDevice);
+	graphicsContext = CreateGraphicsContext(openGLContext, window, presentationParameters, graphicsDevice);
 
 	audioEngine = std::make_shared<Pomdog::AudioEngine>();
 
-	POMDOG_ASSERT(gameWindow);
-	gameWindow->ResetGLContext(openGLContext);
+	POMDOG_ASSERT(window);
+	window->ResetGLContext(openGLContext);
 
 	POMDOG_ASSERT(systemEventDispatcher);
 	systemEventConnection = systemEventDispatcher->Connect([this](Event const& event){
@@ -224,7 +220,7 @@ GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& window,
 
 	keyboard = std::make_shared<KeyboardCocoa>();
 	mouse = std::make_shared<MouseCocoa>();
-	gameWindow->BindToDelegate(mouse);
+	window->BindToDelegate(mouse);
 
 	{
 		NSString* path = [[NSBundle mainBundle] resourcePath];
@@ -248,7 +244,7 @@ GameHostCocoa::Impl::~Impl()
 	graphicsContext.reset();
 	graphicsDevice.reset();
 	openGLContext.reset();
-	gameWindow.reset();
+	window.reset();
 	systemEventDispatcher.reset();
 }
 //-----------------------------------------------------------------------
@@ -263,7 +259,7 @@ void GameHostCocoa::Impl::Run(Game & game)
 		return;
 	}
 
-	gameWindow->SetRenderCallbackOnLiveResizing([&] {
+	window->SetRenderCallbackOnLiveResizing([&] {
 		std::lock_guard<std::mutex> lock(renderMutex);
 		ClientSizeChanged();
 		RenderFrame(game);
@@ -290,10 +286,9 @@ void GameHostCocoa::Impl::Run(Game & game)
 		}
 	}
 
-	gameWindow->SetRenderCallbackOnLiveResizing();
+	window->SetRenderCallbackOnLiveResizing();
 
-	gameWindow->Close();
-	//DoEvents();
+	window->Close();
 }
 //-----------------------------------------------------------------------
 void GameHostCocoa::Impl::Exit()
@@ -303,10 +298,9 @@ void GameHostCocoa::Impl::Exit()
 //-----------------------------------------------------------------------
 void GameHostCocoa::Impl::RenderFrame(Game & game)
 {
-	POMDOG_ASSERT(gameWindow);
+	POMDOG_ASSERT(window);
 
-	bool skipRender = (!gameWindow
-		|| gameWindow->IsMinimized()
+	bool skipRender = (!window || window->IsMinimized()
 		|| [NSApp isHidden] == YES);
 
 	if (skipRender) {
@@ -342,7 +336,7 @@ void GameHostCocoa::Impl::ProcessSystemEvents(Event const& event)
 	{
 		viewLiveResizing = true;
 
-		auto rect = gameWindow->ClientBounds();
+		auto rect = window->ClientBounds();
 		Log::Internal(StringFormat("ViewWillStartLiveResizeEvent: {w: %d, h: %d}",
 			rect.Width, rect.Height));
 	}
@@ -350,7 +344,7 @@ void GameHostCocoa::Impl::ProcessSystemEvents(Event const& event)
 	{
 		viewLiveResizing = false;
 
-		auto rect = gameWindow->ClientBounds();
+		auto rect = window->ClientBounds();
 		Log::Internal(StringFormat("ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
 			rect.Width, rect.Height));
 	}
@@ -378,50 +372,50 @@ void GameHostCocoa::Impl::ClientSizeChanged()
 		POMDOG_ASSERT(openGLContext->NativeOpenGLContext() != nil);
 		[openGLContext->NativeOpenGLContext() update];
 
-		auto bounds = gameWindow->ClientBounds();
-		gameWindow->ClientSizeChanged(bounds.Width, bounds.Height);
+		auto bounds = window->ClientBounds();
+		window->ClientSizeChanged(bounds.Width, bounds.Height);
 	}
 	openGLContext->Unlock();
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GameWindow> GameHostCocoa::Impl::Window()
+std::shared_ptr<Pomdog::GameWindow> GameHostCocoa::Impl::GetWindow()
 {
-	return gameWindow;
+	return window;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GameClock> GameHostCocoa::Impl::Clock(std::shared_ptr<GameHost> && gameHost)
+std::shared_ptr<Pomdog::GameClock> GameHostCocoa::Impl::GetClock(std::shared_ptr<GameHost> && gameHost)
 {
 	std::shared_ptr<Pomdog::GameClock> sharedClock(gameHost, &clock);
 	return std::move(sharedClock);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GraphicsContext> GameHostCocoa::Impl::GraphicsContext()
+std::shared_ptr<Pomdog::GraphicsContext> GameHostCocoa::Impl::GetGraphicsContext()
 {
 	return graphicsContext;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GraphicsDevice> GameHostCocoa::Impl::GraphicsDevice()
+std::shared_ptr<Pomdog::GraphicsDevice> GameHostCocoa::Impl::GetGraphicsDevice()
 {
 	return graphicsDevice;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::AudioEngine> GameHostCocoa::Impl::AudioEngine()
+std::shared_ptr<Pomdog::AudioEngine> GameHostCocoa::Impl::GetAudioEngine()
 {
 	return audioEngine;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::AssetManager> GameHostCocoa::Impl::AssetManager(std::shared_ptr<GameHost> && gameHost)
+std::shared_ptr<Pomdog::AssetManager> GameHostCocoa::Impl::GetAssetManager(std::shared_ptr<GameHost> && gameHost)
 {
 	std::shared_ptr<Pomdog::AssetManager> sharedAssetManager(gameHost, assetManager.get());
 	return std::move(sharedAssetManager);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::Keyboard> GameHostCocoa::Impl::Keyboard()
+std::shared_ptr<Pomdog::Keyboard> GameHostCocoa::Impl::GetKeyboard()
 {
 	return keyboard;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::Mouse> GameHostCocoa::Impl::Mouse()
+std::shared_ptr<Pomdog::Mouse> GameHostCocoa::Impl::GetMouse()
 {
 	return mouse;
 }
@@ -451,49 +445,49 @@ void GameHostCocoa::Exit()
 std::shared_ptr<Pomdog::GameWindow> GameHostCocoa::Window()
 {
 	POMDOG_ASSERT(impl);
-	return impl->Window();
+	return impl->GetWindow();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GameClock> GameHostCocoa::Clock()
 {
 	POMDOG_ASSERT(impl);
-	return impl->Clock(shared_from_this());
+	return impl->GetClock(shared_from_this());
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GraphicsContext> GameHostCocoa::GraphicsContext()
 {
 	POMDOG_ASSERT(impl);
-	return impl->GraphicsContext();
+	return impl->GetGraphicsContext();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GraphicsDevice> GameHostCocoa::GraphicsDevice()
 {
 	POMDOG_ASSERT(impl);
-	return impl->GraphicsDevice();
+	return impl->GetGraphicsDevice();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::AudioEngine> GameHostCocoa::AudioEngine()
 {
 	POMDOG_ASSERT(impl);
-	return impl->AudioEngine();
+	return impl->GetAudioEngine();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::AssetManager> GameHostCocoa::AssetManager()
 {
 	POMDOG_ASSERT(impl);
-	return impl->AssetManager(shared_from_this());
+	return impl->GetAssetManager(shared_from_this());
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::Keyboard> GameHostCocoa::Keyboard()
 {
 	POMDOG_ASSERT(impl);
-	return impl->Keyboard();
+	return impl->GetKeyboard();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::Mouse> GameHostCocoa::Mouse()
 {
 	POMDOG_ASSERT(impl);
-	return impl->Mouse();
+	return impl->GetMouse();
 }
 //-----------------------------------------------------------------------
 }// namespace Cocoa

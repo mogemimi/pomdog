@@ -71,21 +71,21 @@ public:
 
 	void Exit();
 
-	std::shared_ptr<Pomdog::GameWindow> Window();
+	std::shared_ptr<Pomdog::GameWindow> GetWindow();
 
-	std::shared_ptr<Pomdog::GameClock> Clock(std::shared_ptr<GameHost> && gameHost);
+	std::shared_ptr<Pomdog::GameClock> GetClock(std::shared_ptr<GameHost> && gameHost);
 
-	std::shared_ptr<Pomdog::GraphicsContext> GraphicsContext();
+	std::shared_ptr<Pomdog::GraphicsContext> GetGraphicsContext();
 
-	std::shared_ptr<Pomdog::GraphicsDevice> GraphicsDevice();
+	std::shared_ptr<Pomdog::GraphicsDevice> GetGraphicsDevice();
 
-	std::shared_ptr<Pomdog::AudioEngine> AudioEngine();
+	std::shared_ptr<Pomdog::AudioEngine> GetAudioEngine();
 
-	std::shared_ptr<Pomdog::AssetManager> AssetManager(std::shared_ptr<GameHost> && gameHost);
+	std::shared_ptr<Pomdog::AssetManager> GetAssetManager(std::shared_ptr<GameHost> && gameHost);
 
-	std::shared_ptr<Pomdog::Keyboard> Keyboard();
+	std::shared_ptr<Pomdog::Keyboard> GetKeyboard();
 
-	std::shared_ptr<Pomdog::Mouse> Mouse();
+	std::shared_ptr<Pomdog::Mouse> GetMouse();
 
 private:
 	void RenderFrame(Game & game);
@@ -99,11 +99,10 @@ private:
 private:
 	GameClock clock;
 	Details::SubsystemScheduler subsystemScheduler;
-
-	std::shared_ptr<GameWindowWin32> gameWindow;
+	ScopedConnection systemEventConnection;
 
 	std::shared_ptr<SystemEventDispatcher> systemEventDispatcher;
-	ScopedConnection systemEventConnection;
+	std::shared_ptr<GameWindowWin32> window;
 
 	std::shared_ptr<Pomdog::GraphicsContext> graphicsContext;
 	std::shared_ptr<Pomdog::GraphicsDevice> graphicsDevice;
@@ -120,12 +119,12 @@ private:
 	bool surfaceResizeRequest;
 };
 //-----------------------------------------------------------------------
-GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& window,
+GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
 	std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
 	PresentationParameters const& presentationParameters,
 	std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactoryIn)
-	: gameWindow(window)
-	, systemEventDispatcher(eventDispatcher)
+	: systemEventDispatcher(eventDispatcher)
+	, window(windowIn)
 	, inputDeviceFactory(std::move(inputDeviceFactoryIn))
 	, exitRequest(false)
 	, surfaceResizeRequest(false)
@@ -152,7 +151,7 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& window,
 	graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::move(nativeGraphicsDevice));
 
 	graphicsContext = std::make_shared<Pomdog::GraphicsContext>(
-		std::make_unique<GraphicsContextGL4>(openGLContext, gameWindow),
+		std::make_unique<GraphicsContextGL4>(openGLContext, window),
 		presentationParameters, graphicsDevice);
 #elif defined(POMDOG_RENDERSYSTEM_DIRECT3D11)
 	using Details::RenderSystem::Direct3D11::GraphicsDeviceDirect3D11;
@@ -214,7 +213,7 @@ void GameHostWin32::Impl::Run(Game & game)
 		}
 	}
 
-	gameWindow->Close();
+	window->Close();
 	//DoEvents();
 	MessagePump();
 }
@@ -226,9 +225,9 @@ void GameHostWin32::Impl::Exit()
 //-----------------------------------------------------------------------
 void GameHostWin32::Impl::RenderFrame(Game & game)
 {
-	POMDOG_ASSERT(gameWindow);
+	POMDOG_ASSERT(window);
 
-	if (!gameWindow || gameWindow->IsMinimized()) {
+	if (!window || window->IsMinimized()) {
 		// skip rendering
 		return;
 	}
@@ -261,54 +260,54 @@ void GameHostWin32::Impl::ProcessSystemEvents(Event const& event)
 //-----------------------------------------------------------------------
 void GameHostWin32::Impl::ClientSizeChanged()
 {
-	POMDOG_ASSERT(gameWindow);
-	auto bounds = gameWindow->ClientBounds();
-	gameWindow->ClientSizeChanged(bounds.Width, bounds.Height);
+	POMDOG_ASSERT(window);
+	auto bounds = window->ClientBounds();
+	window->ClientSizeChanged(bounds.Width, bounds.Height);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GameWindow> GameHostWin32::Impl::Window()
+std::shared_ptr<Pomdog::GameWindow> GameHostWin32::Impl::GetWindow()
 {
-	return gameWindow;
+	return window;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GameClock> GameHostWin32::Impl::Clock(std::shared_ptr<GameHost> && gameHost)
+std::shared_ptr<Pomdog::GameClock> GameHostWin32::Impl::GetClock(std::shared_ptr<GameHost> && gameHost)
 {
 	std::shared_ptr<Pomdog::GameClock> sharedClock(gameHost, &clock);
 	return std::move(sharedClock);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GraphicsContext> GameHostWin32::Impl::GraphicsContext()
+std::shared_ptr<Pomdog::GraphicsContext> GameHostWin32::Impl::GetGraphicsContext()
 {
 	POMDOG_ASSERT(graphicsContext);
 	return graphicsContext;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GraphicsDevice> GameHostWin32::Impl::GraphicsDevice()
+std::shared_ptr<Pomdog::GraphicsDevice> GameHostWin32::Impl::GetGraphicsDevice()
 {
 	POMDOG_ASSERT(graphicsDevice);
 	return graphicsDevice;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::AudioEngine> GameHostWin32::Impl::AudioEngine()
+std::shared_ptr<Pomdog::AudioEngine> GameHostWin32::Impl::GetAudioEngine()
 {
 	POMDOG_ASSERT(audioEngine);
 	return audioEngine;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::AssetManager> GameHostWin32::Impl::AssetManager(std::shared_ptr<GameHost> && gameHost)
+std::shared_ptr<Pomdog::AssetManager> GameHostWin32::Impl::GetAssetManager(std::shared_ptr<GameHost> && gameHost)
 {
 	POMDOG_ASSERT(assetManager);
 	std::shared_ptr<Pomdog::AssetManager> sharedAssetManager(gameHost, assetManager.get());
 	return std::move(sharedAssetManager);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::Keyboard> GameHostWin32::Impl::Keyboard()
+std::shared_ptr<Pomdog::Keyboard> GameHostWin32::Impl::GetKeyboard()
 {
 	POMDOG_ASSERT(keyboard);
 	return keyboard;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::Mouse> GameHostWin32::Impl::Mouse()
+std::shared_ptr<Pomdog::Mouse> GameHostWin32::Impl::GetMouse()
 {
 	POMDOG_ASSERT(mouse);
 	return mouse;
@@ -338,49 +337,49 @@ void GameHostWin32::Exit()
 std::shared_ptr<Pomdog::GameWindow> GameHostWin32::Window()
 {
 	POMDOG_ASSERT(impl);
-	return impl->Window();
+	return impl->GetWindow();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GameClock> GameHostWin32::Clock()
 {
 	POMDOG_ASSERT(impl);
-	return impl->Clock(shared_from_this());
+	return impl->GetClock(shared_from_this());
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GraphicsContext> GameHostWin32::GraphicsContext()
 {
 	POMDOG_ASSERT(impl);
-	return impl->GraphicsContext();
+	return impl->GetGraphicsContext();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GraphicsDevice> GameHostWin32::GraphicsDevice()
 {
 	POMDOG_ASSERT(impl);
-	return impl->GraphicsDevice();
+	return impl->GetGraphicsDevice();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::AudioEngine> GameHostWin32::AudioEngine()
 {
 	POMDOG_ASSERT(impl);
-	return impl->AudioEngine();
+	return impl->GetAudioEngine();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::AssetManager> GameHostWin32::AssetManager()
 {
 	POMDOG_ASSERT(impl);
-	return impl->AssetManager(shared_from_this());
+	return impl->GetAssetManager(shared_from_this());
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::Keyboard> GameHostWin32::Keyboard()
 {
 	POMDOG_ASSERT(impl);
-	return impl->Keyboard();
+	return impl->GetKeyboard();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::Mouse> GameHostWin32::Mouse()
 {
 	POMDOG_ASSERT(impl);
-	return impl->Mouse();
+	return impl->GetMouse();
 }
 //-----------------------------------------------------------------------
 }// namespace Win32
