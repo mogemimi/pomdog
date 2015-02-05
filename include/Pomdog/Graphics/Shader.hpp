@@ -15,7 +15,7 @@ namespace Pomdog {
 
 class Shader {
 public:
-	
+	virtual ~Shader() = default;
 };
 
 }// namespace Pomdog

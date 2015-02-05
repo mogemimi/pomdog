@@ -85,6 +85,7 @@
 #include "Graphics/EffectVariableClass.hpp"
 #include "Graphics/EffectVariableType.hpp"
 #include "Graphics/EffectPass.hpp"
+#include "Graphics/EffectPassDescription.hpp"
 #include "Graphics/EffectReflection.hpp"
 #include "Graphics/EffectVariable.hpp"
 #include "Graphics/FillMode.hpp"
@@ -100,6 +101,8 @@
 #include "Graphics/RenderTarget2D.hpp"
 #include "Graphics/SamplerDescription.hpp"
 #include "Graphics/SamplerState.hpp"
+#include "Graphics/Shader.hpp"
+#include "Graphics/ShaderLanguage.hpp"
 #include "Graphics/StencilOperation.hpp"
 #include "Graphics/SurfaceFormat.hpp"
 #include "Graphics/Texture.hpp"
@@ -112,6 +115,8 @@
 #include "Graphics/VertexElement.hpp"
 #include "Graphics/VertexElementFormat.hpp"
 #include "Graphics/Viewport.hpp"
+#include "Graphics/ShaderCompilers/GLSLCompiler.hpp"
+#include "Graphics/ShaderCompilers/HLSLCompiler.hpp"
 
 // Input
 #include "Input/ButtonState.hpp"

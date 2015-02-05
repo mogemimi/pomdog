@@ -22,6 +22,9 @@ namespace GL4 {
 class GraphicsDeviceGL4 final: public NativeGraphicsDevice {
 public:
 	///@copydoc NativeGraphicsDevice
+	ShaderLanguage GetSupportedLanguage() const override;
+
+	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeIndexBuffer>
 	CreateIndexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage) override;
 
@@ -57,8 +60,7 @@ public:
 
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeEffectPass>
-	CreateEffectPass(ShaderBytecode const& vertexShaderBytecode,
-		ShaderBytecode const& pixelShaderBytecode) override;
+	CreateEffectPass(EffectPassDescription const& description) override;
 
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeConstantBuffer> CreateConstantBuffer(

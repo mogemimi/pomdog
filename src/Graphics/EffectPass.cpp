@@ -14,18 +14,18 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 EffectPass::EffectPass(GraphicsDevice & graphicsDevice,
-	Details::ShaderBytecode const& vertexShader, Details::ShaderBytecode const& pixelShader)
+	EffectPassDescription const& description)
 {
 	auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
 
 	// Create effect pass:
 	POMDOG_ASSERT(nativeDevice);
-	nativeEffectPass = nativeDevice->CreateEffectPass(vertexShader, pixelShader);
+	nativeEffectPass = nativeDevice->CreateEffectPass(description);
 }
 //-----------------------------------------------------------------------
 EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	Details::ShaderBytecode const& vertexShader, Details::ShaderBytecode const& pixelShader)
-	: EffectPass(*graphicsDevice, vertexShader, pixelShader)
+	EffectPassDescription const& description)
+	: EffectPass(*graphicsDevice, description)
 {}
 //-----------------------------------------------------------------------
 EffectPass::~EffectPass() = default;

@@ -21,9 +21,6 @@
 
 namespace Pomdog {
 namespace Details {
-
-class ShaderBytecode;
-
 namespace RenderSystem {
 namespace GL4 {
 
@@ -41,7 +38,7 @@ class EffectPassGL4 final: public NativeEffectPass {
 public:
 	EffectPassGL4() = delete;
 
-	EffectPassGL4(ShaderBytecode const& vertexShaderBytecode, ShaderBytecode const& pixelShaderBytecode);
+	explicit EffectPassGL4(EffectPassDescription const& description);
 
 	~EffectPassGL4();
 

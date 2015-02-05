@@ -62,11 +62,13 @@ std::shared_ptr<EffectPass> AssetLoader<EffectPass>::operator()(
 		POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid graphics device.");
 	}
 
-	auto effectPass = std::make_shared<EffectPass>(graphicsDevice,
-		Details::ShaderBytecode { vertexShader.data(), vertexShader.size() },
-		Details::ShaderBytecode { pixelShader.data(), pixelShader.size() });
+	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 
-	return std::move(effectPass);
+//	auto effectPass = std::make_shared<EffectPass>(graphicsDevice,
+//		Details::ShaderBytecode { vertexShader.data(), vertexShader.size() },
+//		Details::ShaderBytecode { pixelShader.data(), pixelShader.size() });
+//
+//	return std::move(effectPass);
 }
 //-----------------------------------------------------------------------
 }// namespace Details

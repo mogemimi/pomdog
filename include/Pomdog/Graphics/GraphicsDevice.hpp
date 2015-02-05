@@ -37,6 +37,8 @@ public:
 
 	~GraphicsDevice();
 
+	ShaderLanguage GetSupportedLanguage() const;
+
 	Details::BuiltinShaderPool & ShaderPool();
 
 public:

@@ -17,6 +17,7 @@
 #include "Texture2DGL4.hpp"
 #include "RenderTarget2DGL4.hpp"
 #include "VertexBufferGL4.hpp"
+#include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
@@ -24,6 +25,11 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
+//-----------------------------------------------------------------------
+ShaderLanguage GraphicsDeviceGL4::GetSupportedLanguage() const
+{
+	return ShaderLanguage::GLSL;
+}
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeIndexBuffer>
 GraphicsDeviceGL4::CreateIndexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage)
@@ -76,9 +82,9 @@ GraphicsDeviceGL4::CreateRasterizerState(RasterizerDescription const& descriptio
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectPass>
-GraphicsDeviceGL4::CreateEffectPass(ShaderBytecode const& vertexShaderBytecode, ShaderBytecode const& pixelShaderBytecode)
+GraphicsDeviceGL4::CreateEffectPass(EffectPassDescription const& description)
 {
-	return std::make_unique<EffectPassGL4>(vertexShaderBytecode, pixelShaderBytecode);
+	return std::make_unique<EffectPassGL4>(description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeConstantBuffer>

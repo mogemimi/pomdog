@@ -18,9 +18,6 @@
 
 namespace Pomdog {
 namespace Details {
-
-class ShaderBytecode;
-
 namespace RenderSystem {
 
 class NativeBlendState;
@@ -41,6 +38,8 @@ class NativeVertexBuffer;
 class NativeGraphicsDevice: Noncopyable {
 public:
 	virtual ~NativeGraphicsDevice() = default;
+
+	virtual ShaderLanguage GetSupportedLanguage() const = 0;
 
 	///@~Japanese
 	/// @brief 定数バッファを作成します。
@@ -92,8 +91,7 @@ public:
 	///@~Japanese
 	/// @brief エフェクトパスを作成します。
 	virtual std::unique_ptr<NativeEffectPass>
-	CreateEffectPass(ShaderBytecode const& vertexShaderBytecode,
-		ShaderBytecode const& pixelShaderBytecode) = 0;
+	CreateEffectPass(EffectPassDescription const& description) = 0;
 
 	///@~Japanese
 	/// @brief 指定されたエフェクトパスからエフェクトリフレクションを作成します。

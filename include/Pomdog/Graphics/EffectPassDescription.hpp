@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "ForwardDeclarations.hpp"
+#include "detail/ForwardDeclarations.hpp"
 #include "VertexBufferBinding.hpp"
 #include <memory>
 #include <vector>

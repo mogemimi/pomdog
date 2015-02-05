@@ -8,12 +8,14 @@
 #include "EffectReflectionGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "ConstantLayoutGL4.hpp"
+#include "ShaderGL4.hpp"
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogLevel.hpp"
 #include "Pomdog/Logging/LogStream.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
+#include "Pomdog/Graphics/EffectPassDescription.hpp"
 #include <type_traits>
 #include <array>
 #include <string>
@@ -22,79 +24,17 @@ namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
 namespace GL4 {
-//-----------------------------------------------------------------------
 namespace {
-namespace Tags {
 
-struct VertexShaderTag {};
-struct PixelShaderTag {};
-
-}// namespace Tags
-//-----------------------------------------------------------------------
-using VertexShaderGL4 = Tagged<GLuint, Tags::VertexShaderTag>;
-using PixelShaderGL4 = Tagged<GLuint, Tags::PixelShaderTag>;
-//-----------------------------------------------------------------------
-template <class Tag> static
-Optional<Tagged<GLuint, Tag>>
-CompileShader(ShaderBytecode const& source)
-{
-	static_assert(std::is_same<Tag, Tags::VertexShaderTag>::value ||
-		std::is_same<Tag, Tags::PixelShaderTag>::value, "You can only use 'vertex' or 'pixel' shader.");
-
-	constexpr auto pipelineStage = typename std::conditional<
-		std::is_same<Tag, Tags::VertexShaderTag>::value,
-		std::integral_constant<GLenum, GL_VERTEX_SHADER>,
-		std::integral_constant<GLenum, GL_FRAGMENT_SHADER>
-	>::type();
-
-	static_assert((std::is_same<Tag, Tags::VertexShaderTag>::value && (pipelineStage == GL_VERTEX_SHADER)) ||
-		(std::is_same<Tag, Tags::PixelShaderTag>::value && (pipelineStage == GL_FRAGMENT_SHADER)), "");
-
-	auto result = MakeTagged<GLuint, Tag>(glCreateShader(pipelineStage));
-
-	std::array<GLchar const*, 1> shaderSource = {{
-		reinterpret_cast<GLchar const*>(source.Code)
-	}};
-
-	POMDOG_ASSERT(source.ByteLength < std::numeric_limits<GLint>::max());
-	GLint const sourceLength = static_cast<GLint>(source.ByteLength);
-
-	glShaderSource(result.value, 1, shaderSource.data(), &sourceLength);
-
-	glCompileShader(result.value);
-
-	GLint compileSuccess = 0;
-	glGetShaderiv(result.value, GL_COMPILE_STATUS, &compileSuccess);
-
-	if (compileSuccess == GL_FALSE)
-	{
-#ifdef DEBUG
-		std::array<GLchar, 256> messageBuffer;
-
-		glGetShaderInfoLog(result.value, messageBuffer.size(), 0, messageBuffer.data());
-		std::string const message = messageBuffer.data();
-
-		Log::Stream(LogLevel::Critical)
-			<< "Failed to compile shader.\nerror: " << message;
-#endif // defined(DEBUG)
-
-		glDeleteShader(result.value);
-		return OptionalType::NullOptional;
-	}
-
-	return result;
-}
-//-----------------------------------------------------------------------
-static
-Optional<ShaderProgramGL4>
-LinkShaders(VertexShaderGL4 const& vertexShader, PixelShaderGL4 const& pixelShader)
+static Optional<ShaderProgramGL4> LinkShaders(
+	VertexShaderGL4 const& vertexShader, PixelShaderGL4 const& pixelShader)
 {
 	ShaderProgramGL4 const program {
 		glCreateProgram()
 	};
 
-	glAttachShader(program.value, vertexShader.value);
-	glAttachShader(program.value, pixelShader.value);
+	glAttachShader(program.value, vertexShader.NativeShader());
+	glAttachShader(program.value, pixelShader.NativeShader());
 
 	glLinkProgram(program.value);
 
@@ -126,39 +66,25 @@ LinkShaders(VertexShaderGL4 const& vertexShader, PixelShaderGL4 const& pixelShad
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-EffectPassGL4::EffectPassGL4(ShaderBytecode const& vertexShaderBytecode,
-	ShaderBytecode const& pixelShaderBytecode)
+EffectPassGL4::EffectPassGL4(EffectPassDescription const& description)
 {
-	auto vertexShader = CompileShader<VertexShaderGL4::tag_type>(vertexShaderBytecode);
+	auto vertexShader = std::dynamic_pointer_cast<VertexShaderGL4>(description.VertexShader);
 	if (!vertexShader) {
-		POMDOG_THROW_EXCEPTION(std::domain_error,
-			"Failed to compile vertex shader.");
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "");
 	}
 
-	ScopeGuard vertexScope([&]{
-		POMDOG_ASSERT(vertexShader);
-		glDeleteShader(vertexShader->value);
-	});
-
-	auto pixelShader = CompileShader<PixelShaderGL4::tag_type>(pixelShaderBytecode);
+	auto pixelShader = std::dynamic_pointer_cast<PixelShaderGL4>(description.PixelShader);
 	if (!pixelShader) {
-		POMDOG_THROW_EXCEPTION(std::domain_error,
-			"Failed to compile pixel shader.");
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "");
 	}
-
-	ScopeGuard pixelScope([&]{
-		POMDOG_ASSERT(pixelShader);
-		glDeleteShader(pixelShader->value);
-	});
 
 	POMDOG_ASSERT(vertexShader);
 	POMDOG_ASSERT(pixelShader);
 
 	shaderProgram = LinkShaders(*vertexShader, *pixelShader);
 
-	if (!pixelShader) {
-		POMDOG_THROW_EXCEPTION(std::domain_error,
-			"Failed to link shader program.");
+	if (!shaderProgram) {
+		POMDOG_THROW_EXCEPTION(std::domain_error, "Failed to link shader program.");
 	}
 
 	EffectReflectionGL4 shaderReflection(*shaderProgram);
