@@ -5,22 +5,59 @@
 //
 
 #include "Pomdog/Graphics/ShaderCompilers/GLSLCompiler.hpp"
+#include "../../RenderSystem/NativeGraphicsDevice.hpp"
+#include "../../RenderSystem/ShaderCompileOptions.hpp"
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/Shader.hpp"
+#include "Pomdog/Graphics/ShaderLanguage.hpp"
+#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> GLSLCompiler::CreateVertexShader(
-	GraphicsDevice & graphicsDevice, void const* shaderBytecode, std::size_t byteLength)
+	GraphicsDevice & graphicsDevice, void const* source, std::size_t byteLength)
 {
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+	POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::GLSL);
+
+	using Details::ShaderBytecode;
+	using Details::RenderSystem::ShaderCompileOptions;
+	using Details::RenderSystem::ShaderPipelineStage;
+
+	auto nativeGraphicsDevice = graphicsDevice.NativeGraphicsDevice();
+
+	ShaderBytecode shaderBytecode;
+	shaderBytecode.Code = source;
+	shaderBytecode.ByteLength = byteLength;
+
+	ShaderCompileOptions compileOptions;
+	compileOptions.EntryPoint = "main";
+	compileOptions.Profile.PipelineStage = ShaderPipelineStage::VertexShader;
+
+	return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> GLSLCompiler::CreatePixelShader(
-	GraphicsDevice & graphicsDevice, void const* shaderBytecode, std::size_t byteLength)
+	GraphicsDevice & graphicsDevice, void const* source, std::size_t byteLength)
 {
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+	POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::GLSL);
+
+	using Details::ShaderBytecode;
+	using Details::RenderSystem::ShaderCompileOptions;
+	using Details::RenderSystem::ShaderPipelineStage;
+
+	auto nativeGraphicsDevice = graphicsDevice.NativeGraphicsDevice();
+
+	ShaderBytecode shaderBytecode;
+	shaderBytecode.Code = source;
+	shaderBytecode.ByteLength = byteLength;
+
+	ShaderCompileOptions compileOptions;
+	compileOptions.EntryPoint = "main";
+	compileOptions.Profile.PipelineStage = ShaderPipelineStage::PixelShader;
+
+	return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

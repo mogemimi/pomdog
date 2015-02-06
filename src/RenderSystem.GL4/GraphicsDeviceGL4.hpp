@@ -25,6 +25,11 @@ public:
 	ShaderLanguage GetSupportedLanguage() const override;
 
 	///@copydoc NativeGraphicsDevice
+	std::unique_ptr<Shader>
+	CreateShader(ShaderBytecode const& shaderBytecode,
+		ShaderCompileOptions const& compileOptions) override;
+
+	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeIndexBuffer>
 	CreateIndexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage) override;
 

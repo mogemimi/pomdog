@@ -18,6 +18,9 @@
 
 namespace Pomdog {
 namespace Details {
+
+class ShaderBytecode;
+
 namespace RenderSystem {
 
 class NativeBlendState;
@@ -32,6 +35,7 @@ class NativeRenderTarget2D;
 class NativeSamplerState;
 class NativeTexture2D;
 class NativeVertexBuffer;
+class ShaderCompileOptions;
 
 ///@~Japanese
 /// @brief グラフィックスリソースの作成を行います。
@@ -40,6 +44,10 @@ public:
 	virtual ~NativeGraphicsDevice() = default;
 
 	virtual ShaderLanguage GetSupportedLanguage() const = 0;
+
+	virtual std::unique_ptr<Shader>
+	CreateShader(ShaderBytecode const& shaderBytecode,
+		ShaderCompileOptions const& compileOptions) = 0;
 
 	///@~Japanese
 	/// @brief 定数バッファを作成します。

@@ -70,12 +70,12 @@ EffectPassGL4::EffectPassGL4(EffectPassDescription const& description)
 {
 	auto vertexShader = std::dynamic_pointer_cast<VertexShaderGL4>(description.VertexShader);
 	if (!vertexShader) {
-		POMDOG_THROW_EXCEPTION(std::runtime_error, "");
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid vertex shader.");
 	}
 
 	auto pixelShader = std::dynamic_pointer_cast<PixelShaderGL4>(description.PixelShader);
 	if (!pixelShader) {
-		POMDOG_THROW_EXCEPTION(std::runtime_error, "");
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid pixel shader.");
 	}
 
 	POMDOG_ASSERT(vertexShader);

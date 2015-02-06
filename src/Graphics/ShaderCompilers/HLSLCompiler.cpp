@@ -11,7 +11,7 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> HLSLCompiler::CreateVertexShader(
 	GraphicsDevice & graphicsDevice,
-	void const* shaderBytecode, std::size_t byteLength, std::string const& entrypoint)
+	void const* source, std::size_t byteLength, std::string const& entrypoint)
 {
 	///@todo Not implemented
 	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
@@ -19,7 +19,7 @@ std::unique_ptr<Shader> HLSLCompiler::CreateVertexShader(
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> HLSLCompiler::CreatePixelShader(
 	GraphicsDevice & graphicsDevice,
-	void const* shaderBytecode, std::size_t byteLength, std::string const& entrypoint)
+	void const* source, std::size_t byteLength, std::string const& entrypoint)
 {
 	///@todo Not implemented
 	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");

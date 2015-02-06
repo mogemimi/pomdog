@@ -21,10 +21,10 @@ class Shader;
 
 struct GLSLCompiler final {
 	static std::unique_ptr<Shader> CreateVertexShader(GraphicsDevice & graphicsDevice,
-		void const* shaderBytecode, std::size_t byteLength);
+		void const* source, std::size_t byteLength);
 
 	static std::unique_ptr<Shader> CreatePixelShader(GraphicsDevice & graphicsDevice,
-		void const* shaderBytecode, std::size_t byteLength);
+		void const* source, std::size_t byteLength);
 };
 
 }// namespace Pomdog

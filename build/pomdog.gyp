@@ -275,6 +275,7 @@
       '../src/RenderSystem/NativeSamplerState.hpp',
       '../src/RenderSystem/NativeTexture2D.hpp',
       '../src/RenderSystem/NativeVertexBuffer.hpp',
+      '../src/RenderSystem/ShaderCompileOptions.hpp',
     ],
     'pomdog_library_opengl4_sources': [
       '../src/RenderSystem.GL4/BlendStateGL4.cpp',

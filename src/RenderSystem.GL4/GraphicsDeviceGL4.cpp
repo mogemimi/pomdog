@@ -14,9 +14,11 @@
 #include "InputLayoutGL4.hpp"
 #include "RasterizerStateGL4.hpp"
 #include "SamplerStateGL4.hpp"
+#include "ShaderGL4.hpp"
 #include "Texture2DGL4.hpp"
 #include "RenderTarget2DGL4.hpp"
 #include "VertexBufferGL4.hpp"
+#include "../RenderSystem/ShaderCompileOptions.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -29,6 +31,22 @@ namespace GL4 {
 ShaderLanguage GraphicsDeviceGL4::GetSupportedLanguage() const
 {
 	return ShaderLanguage::GLSL;
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<Shader>
+GraphicsDeviceGL4::CreateShader(ShaderBytecode const& shaderBytecode,
+	ShaderCompileOptions const& compileOptions)
+{
+	switch (compileOptions.Profile.PipelineStage) {
+	case ShaderPipelineStage::VertexShader: {
+		return std::make_unique<VertexShaderGL4>(shaderBytecode);
+	}
+	case ShaderPipelineStage::PixelShader: {
+		return std::make_unique<PixelShaderGL4>(shaderBytecode);
+	}
+	}
+
+	POMDOG_THROW_EXCEPTION(std::domain_error, "Failed to create shader");
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeIndexBuffer>
