@@ -11,6 +11,7 @@
 #pragma once
 #endif
 
+#include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <cstddef>
 #include <string>
@@ -20,16 +21,19 @@ namespace Pomdog {
 class GraphicsDevice;
 class Shader;
 
-struct HLSLCompiler final {
+namespace ShaderCompilers {
+
+struct POMDOG_EXPORT HLSLCompiler final {
 	static std::unique_ptr<Shader> CreateVertexShader(GraphicsDevice & graphicsDevice,
-		void const* shaderBytecode, std::size_t byteLength,
-		std::string const& entrypoint);
+		void const* shaderSource, std::size_t byteLength,
+		std::string const& entryPoint);
 
 	static std::unique_ptr<Shader> CreatePixelShader(GraphicsDevice & graphicsDevice,
-		void const* shaderBytecode, std::size_t byteLength,
-		std::string const& entrypoint);
+		void const* shaderSource, std::size_t byteLength,
+		std::string const& entryPoint);
 };
 
+}// namespace ShaderCompilers
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_HLSLCOMPILER_223CB751_DD53_4FAB_8C8B_BB901AE266BA_HPP)

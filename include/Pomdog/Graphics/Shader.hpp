@@ -11,9 +11,11 @@
 #pragma once
 #endif
 
+#include "Pomdog/Basic/Export.hpp"
+
 namespace Pomdog {
 
-class Shader {
+class POMDOG_EXPORT Shader {
 public:
 	virtual ~Shader() = default;
 };

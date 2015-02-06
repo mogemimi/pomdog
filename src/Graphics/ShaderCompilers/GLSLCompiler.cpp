@@ -12,52 +12,50 @@
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
-std::unique_ptr<Shader> GLSLCompiler::CreateVertexShader(
-	GraphicsDevice & graphicsDevice, void const* source, std::size_t byteLength)
-{
-	POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::GLSL);
+namespace ShaderCompilers {
+namespace {
 
-	using Details::ShaderBytecode;
-	using Details::RenderSystem::ShaderCompileOptions;
-	using Details::RenderSystem::ShaderPipelineStage;
+using Details::ShaderBytecode;
+using Details::RenderSystem::ShaderCompileOptions;
+using Details::RenderSystem::ShaderPipelineStage;
+
+static std::unique_ptr<Shader> CompileGLSLShader(GraphicsDevice & graphicsDevice,
+	void const* shaderSource, std::size_t byteLength, ShaderPipelineStage pipelineStage)
+{
+	POMDOG_ASSERT(shaderSource != nullptr);
+	POMDOG_ASSERT(byteLength > 0);
+	POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::GLSL);
 
 	auto nativeGraphicsDevice = graphicsDevice.NativeGraphicsDevice();
 
 	ShaderBytecode shaderBytecode;
-	shaderBytecode.Code = source;
+	shaderBytecode.Code = shaderSource;
 	shaderBytecode.ByteLength = byteLength;
 
 	ShaderCompileOptions compileOptions;
 	compileOptions.EntryPoint = "main";
-	compileOptions.Profile.PipelineStage = ShaderPipelineStage::VertexShader;
+	compileOptions.Profile.PipelineStage = pipelineStage;
 
 	return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
+}
+
+}// unnamed namespace
+//-----------------------------------------------------------------------
+std::unique_ptr<Shader> GLSLCompiler::CreateVertexShader(
+	GraphicsDevice & graphicsDevice, void const* shaderSource, std::size_t byteLength)
+{
+	return CompileGLSLShader(graphicsDevice, shaderSource, byteLength,
+		ShaderPipelineStage::VertexShader);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> GLSLCompiler::CreatePixelShader(
-	GraphicsDevice & graphicsDevice, void const* source, std::size_t byteLength)
+	GraphicsDevice & graphicsDevice, void const* shaderSource, std::size_t byteLength)
 {
-	POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::GLSL);
-
-	using Details::ShaderBytecode;
-	using Details::RenderSystem::ShaderCompileOptions;
-	using Details::RenderSystem::ShaderPipelineStage;
-
-	auto nativeGraphicsDevice = graphicsDevice.NativeGraphicsDevice();
-
-	ShaderBytecode shaderBytecode;
-	shaderBytecode.Code = source;
-	shaderBytecode.ByteLength = byteLength;
-
-	ShaderCompileOptions compileOptions;
-	compileOptions.EntryPoint = "main";
-	compileOptions.Profile.PipelineStage = ShaderPipelineStage::PixelShader;
-
-	return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
+	return CompileGLSLShader(graphicsDevice, shaderSource, byteLength,
+		ShaderPipelineStage::PixelShader);
 }
 //-----------------------------------------------------------------------
+}// namespace ShaderCompilers
 }// namespace Pomdog

@@ -23,15 +23,13 @@ enum class ShaderPipelineStage: std::uint8_t {
 	VertexShader,
 	PixelShader,
 	//GeometryShader,
-	//DomainShader,
 	//ComputeShader,
-	//HullShader,
 };
 
 class ShaderModel {
 public:
-	std::uint8_t Major = 4;
-	std::uint8_t Minor = 0;
+	std::uint8_t Major;
+	std::uint8_t Minor;
 };
 
 class ShaderProfile {

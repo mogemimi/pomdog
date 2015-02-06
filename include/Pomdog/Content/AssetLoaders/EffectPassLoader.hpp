@@ -21,6 +21,7 @@ namespace Pomdog {
 class EffectPass;
 class GraphicsDevice;
 class VertexBufferBinding;
+class VertexDeclaration;
 
 namespace Details {
 class AssetLoaderContext;
@@ -48,6 +49,10 @@ public:
 	EffectPassLoader & InputElements(std::vector<VertexBufferBinding> const& inputElements);
 
 	EffectPassLoader & InputElements(std::vector<VertexBufferBinding> && inputElements);
+
+	EffectPassLoader & InputElements(VertexDeclaration const& vertexDeclaration);
+
+	EffectPassLoader & InputElements(VertexDeclaration && vertexDeclaration);
 
 	std::shared_ptr<EffectPass> Load();
 

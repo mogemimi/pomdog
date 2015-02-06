@@ -26,6 +26,10 @@
 #include <memory>
 
 namespace Pomdog {
+
+using ShaderCompilers::GLSLCompiler;
+using ShaderCompilers::HLSLCompiler;
+
 namespace AssetLoaders {
 namespace {
 
@@ -50,22 +54,18 @@ static std::vector<std::uint8_t> ReadBinaryFile(std::ifstream && streamIn)
 //-----------------------------------------------------------------------
 class EffectPassLoader::Impl final {
 public:
-	EffectPassDescription Description;
-	Details::AssetLoaderContext LoaderContext;
-	std::shared_ptr<GraphicsDevice> GraphicsDevice;
-	Optional<std::string> VertexShaderPath;
-	Optional<std::string> PixelShaderPath;
-	std::string VertexShaderEntryPoint;
-	std::string PixelShaderEntryPoint;
+	EffectPassDescription description;
+	Details::AssetLoaderContext loaderContext;
+	std::shared_ptr<GraphicsDevice> graphicsDevice;
 };
 //-----------------------------------------------------------------------
 EffectPassLoader::EffectPassLoader(Details::AssetLoaderContext const& loaderContextIn)
 	: impl(std::make_unique<Impl>())
 {
 	POMDOG_ASSERT(impl);
-	impl->LoaderContext = loaderContextIn;
-	impl->GraphicsDevice = loaderContextIn.GraphicsDevice.lock();
-	POMDOG_ASSERT(impl->GraphicsDevice);
+	impl->loaderContext = loaderContextIn;
+	impl->graphicsDevice = loaderContextIn.GraphicsDevice.lock();
+	POMDOG_ASSERT(impl->graphicsDevice);
 }
 //-----------------------------------------------------------------------
 EffectPassLoader::EffectPassLoader(EffectPassLoader &&) = default;
@@ -77,8 +77,15 @@ EffectPassLoader & EffectPassLoader::VertexShaderGLSL(std::string const& filePat
 	POMDOG_ASSERT(!filePath.empty());
 	POMDOG_ASSERT(impl);
 
-	if (impl->GraphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL) {
-		impl->VertexShaderPath = filePath;
+	if (impl->graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL)
+	{
+		auto shaderSource = ReadBinaryFile(impl->loaderContext.OpenStream(filePath));
+		if (shaderSource.empty()) {
+			POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
+		}
+
+		impl->description.VertexShader = GLSLCompiler::CreateVertexShader(
+			*impl->graphicsDevice, shaderSource.data(), shaderSource.size());
 	}
 	return *this;
 }
@@ -88,8 +95,15 @@ EffectPassLoader & EffectPassLoader::PixelShaderGLSL(std::string const& filePath
 	POMDOG_ASSERT(!filePath.empty());
 	POMDOG_ASSERT(impl);
 
-	if (impl->GraphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL) {
-		impl->PixelShaderPath = filePath;
+	if (impl->graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL)
+	{
+		auto shaderSource = ReadBinaryFile(impl->loaderContext.OpenStream(filePath));
+		if (shaderSource.empty()) {
+			POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
+		}
+
+		impl->description.PixelShader = GLSLCompiler::CreatePixelShader(
+			*impl->graphicsDevice, shaderSource.data(), shaderSource.size());
 	}
 	return *this;
 }
@@ -100,9 +114,15 @@ EffectPassLoader & EffectPassLoader::VertexShaderHLSL(std::string const& filePat
 	POMDOG_ASSERT(!entryPoint.empty());
 	POMDOG_ASSERT(impl);
 
-	if (impl->GraphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL) {
-		impl->VertexShaderPath = filePath;
-		impl->VertexShaderEntryPoint = entryPoint;
+	if (impl->graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL)
+	{
+		auto shaderSource = ReadBinaryFile(impl->loaderContext.OpenStream(filePath));
+		if (shaderSource.empty()) {
+			POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
+		}
+
+		impl->description.VertexShader = HLSLCompiler::CreateVertexShader(
+			*impl->graphicsDevice, shaderSource.data(), shaderSource.size(), entryPoint);
 	}
 	return *this;
 }
@@ -113,9 +133,15 @@ EffectPassLoader & EffectPassLoader::PixelShaderHLSL(std::string const& filePath
 	POMDOG_ASSERT(!entryPoint.empty());
 	POMDOG_ASSERT(impl);
 
-	if (impl->GraphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL) {
-		impl->PixelShaderPath = filePath;
-		impl->PixelShaderEntryPoint = entryPoint;
+	if (impl->graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL)
+	{
+		auto shaderSource = ReadBinaryFile(impl->loaderContext.OpenStream(filePath));
+		if (shaderSource.empty()) {
+			POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
+		}
+
+		impl->description.PixelShader = HLSLCompiler::CreatePixelShader(
+			*impl->graphicsDevice, shaderSource.data(), shaderSource.size(), entryPoint);
 	}
 	return *this;
 }
@@ -124,83 +150,35 @@ EffectPassLoader & EffectPassLoader::InputElements(std::vector<VertexBufferBindi
 {
 	POMDOG_ASSERT(!inputElements.empty());
 	POMDOG_ASSERT(impl);
-	impl->Description.VertexBindings = inputElements;
+	impl->description.VertexBindings = inputElements;
 	return *this;
 }
 //-----------------------------------------------------------------------
 EffectPassLoader & EffectPassLoader::InputElements(std::vector<VertexBufferBinding> && inputElements)
 {
 	POMDOG_ASSERT(impl);
-	impl->Description.VertexBindings = std::move(inputElements);
+	impl->description.VertexBindings = std::move(inputElements);
+	return *this;
+}
+//-----------------------------------------------------------------------
+EffectPassLoader & EffectPassLoader::InputElements(VertexDeclaration const& vertexDeclaration)
+{
+	POMDOG_ASSERT(impl);
+	impl->description.VertexBindings = {vertexDeclaration};
+	return *this;
+}
+//-----------------------------------------------------------------------
+EffectPassLoader & EffectPassLoader::InputElements(VertexDeclaration && vertexDeclaration)
+{
+	POMDOG_ASSERT(impl);
+	impl->description.VertexBindings = {std::move(vertexDeclaration)};
 	return *this;
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<EffectPass> EffectPassLoader::Load()
 {
 	POMDOG_ASSERT(impl);
-	auto & graphicsDevice = impl->GraphicsDevice;
-	auto & effectPassDescription = impl->Description;
-
-	switch (graphicsDevice->GetSupportedLanguage()) {
-	case ShaderLanguage::GLSL: {
-		if (impl->VertexShaderPath)
-		{
-			auto shaderSource = ReadBinaryFile(impl->LoaderContext.OpenStream(*impl->VertexShaderPath));
-
-			if (shaderSource.empty()) {
-				POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
-			}
-
-			effectPassDescription.VertexShader = GLSLCompiler::CreateVertexShader(
-				*graphicsDevice, shaderSource.data(), shaderSource.size());
-		}
-		if (impl->PixelShaderPath)
-		{
-			auto shaderSource = ReadBinaryFile(impl->LoaderContext.OpenStream(*impl->PixelShaderPath));
-
-			if (shaderSource.empty()) {
-				POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
-			}
-
-			effectPassDescription.PixelShader = GLSLCompiler::CreatePixelShader(
-				*graphicsDevice, shaderSource.data(), shaderSource.size());
-		}
-		break;
-	}
-	case ShaderLanguage::HLSL: {
-		if (impl->VertexShaderPath)
-		{
-			auto shaderSource = ReadBinaryFile(impl->LoaderContext.OpenStream(*impl->VertexShaderPath));
-
-			if (shaderSource.empty()) {
-				POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
-			}
-
-			effectPassDescription.VertexShader = HLSLCompiler::CreateVertexShader(
-				*graphicsDevice, shaderSource.data(), shaderSource.size(), impl->VertexShaderEntryPoint);
-		}
-		if (impl->PixelShaderPath)
-		{
-			auto shaderSource = ReadBinaryFile(impl->LoaderContext.OpenStream(*impl->PixelShaderPath));
-
-			if (shaderSource.empty()) {
-				POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
-			}
-
-			effectPassDescription.PixelShader = HLSLCompiler::CreatePixelShader(
-				*graphicsDevice, shaderSource.data(), shaderSource.size(), impl->PixelShaderEntryPoint);
-		}
-		break;
-	}
-	case ShaderLanguage::Metal: {
-//		auto library = MetalCompiler::CompileLibrary(graphicsDevice, "float4 DeferredVS{} float4 DeferredPS{}");
-//		effectPassDescription.VertexShader = MetalCompiler::CreateVertexShader(library, "DeferredVS");
-//		effectPassDescription.PixelShader = MetalCompiler::CreatePixelShader(library, "DeferredPS");
-		break;
-	}
-	}
-
-	auto effectPass = std::make_shared<EffectPass>(graphicsDevice, effectPassDescription);
+	auto effectPass = std::make_shared<EffectPass>(impl->graphicsDevice, impl->description);
 	return std::move(effectPass);
 }
 //-----------------------------------------------------------------------
