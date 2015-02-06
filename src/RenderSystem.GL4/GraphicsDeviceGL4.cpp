@@ -120,16 +120,6 @@ GraphicsDeviceGL4::CreateEffectReflection(NativeEffectPass & nativeEffectPass)
 	return std::make_unique<EffectReflectionGL4>(effectPassGL4->GetShaderProgram());
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeInputLayout>
-GraphicsDeviceGL4::CreateInputLayout(NativeEffectPass & nativeEffectPass,
-	std::vector<VertexBufferBinding> const& vertexBufferBindings)
-{
-	auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(&nativeEffectPass);
-	POMDOG_ASSERT(effectPassGL4 != nullptr);
-
-	return std::make_unique<InputLayoutGL4>(effectPassGL4->GetShaderProgram(), vertexBufferBindings);
-}
-//-----------------------------------------------------------------------
 std::unique_ptr<NativeTexture2D>
 GraphicsDeviceGL4::CreateTexture2D(std::int32_t width, std::int32_t height, std::uint32_t mipmapLevels,
 	SurfaceFormat format)

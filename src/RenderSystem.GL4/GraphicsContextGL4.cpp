@@ -19,7 +19,6 @@
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Graphics/ClearOptions.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
-#include "Pomdog/Graphics/InputLayout.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
@@ -229,6 +228,9 @@ void GraphicsContextGL4::Present()
 void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount)
 {
 	// Bind input-layout to the input-assembler stage:
+	POMDOG_ASSERT(effectPass);
+	auto inputLayout = effectPass->GetInputLayout();
+
 	POMDOG_ASSERT(inputLayout);
 	POMDOG_ASSERT(!vertexBuffers.empty());
 	inputLayout->Apply(vertexBuffers);
@@ -260,6 +262,9 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 	std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount)
 {
 	// Bind input-layout to the input-assembler stage:
+	POMDOG_ASSERT(effectPass);
+	auto inputLayout = effectPass->GetInputLayout();
+
 	POMDOG_ASSERT(inputLayout);
 	POMDOG_ASSERT(!vertexBuffers.empty());
 	inputLayout->Apply(vertexBuffers);
@@ -296,6 +301,9 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount, std::uint32_t instanceCount)
 {
 	// Bind input-layout to the input-assembler stage:
+	POMDOG_ASSERT(effectPass);
+	auto inputLayout = effectPass->GetInputLayout();
+
 	POMDOG_ASSERT(inputLayout);
 	POMDOG_ASSERT(!vertexBuffers.empty());
 	inputLayout->Apply(vertexBuffers);
@@ -329,6 +337,9 @@ void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopolog
 	std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount)
 {
 	// Bind input-layout to the input-assembler stage:
+	POMDOG_ASSERT(effectPass);
+	auto inputLayout = effectPass->GetInputLayout();
+
 	POMDOG_ASSERT(inputLayout);
 	POMDOG_ASSERT(!vertexBuffers.empty());
 	inputLayout->Apply(vertexBuffers);
@@ -448,18 +459,6 @@ void GraphicsContextGL4::SetScissorRectangle(Rectangle const& rectangle)
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glScissor", __FILE__, __LINE__);
 	#endif
-}
-//-----------------------------------------------------------------------
-void GraphicsContextGL4::SetInputLayout(std::shared_ptr<InputLayout> const& inputLayoutIn)
-{
-	POMDOG_ASSERT(inputLayoutIn);
-
-	auto nativeInputLayout = dynamic_cast<InputLayoutGL4*>(inputLayoutIn->NativeInputLayout());
-	POMDOG_ASSERT(nativeInputLayout);
-
-	if (nativeInputLayout != nullptr) {
-		this->inputLayout = std::shared_ptr<InputLayoutGL4>(inputLayoutIn, nativeInputLayout);
-	}
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffersIn)

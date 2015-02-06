@@ -8,6 +8,7 @@
 #include "EffectReflectionGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "ConstantLayoutGL4.hpp"
+#include "InputLayoutGL4.hpp"
 #include "ShaderGL4.hpp"
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Logging/Log.hpp"
@@ -86,6 +87,8 @@ EffectPassGL4::EffectPassGL4(EffectPassDescription const& description)
 	if (!shaderProgram) {
 		POMDOG_THROW_EXCEPTION(std::domain_error, "Failed to link shader program.");
 	}
+
+	inputLayout = std::make_unique<InputLayoutGL4>(*shaderProgram, description.VertexBindings);
 
 	EffectReflectionGL4 shaderReflection(*shaderProgram);
 	{
@@ -184,6 +187,12 @@ ShaderProgramGL4 EffectPassGL4::GetShaderProgram() const
 {
 	POMDOG_ASSERT(shaderProgram);
 	return shaderProgram.value();
+}
+//-----------------------------------------------------------------------
+InputLayoutGL4* EffectPassGL4::GetInputLayout() const
+{
+	POMDOG_ASSERT(inputLayout);
+	return inputLayout.get();
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

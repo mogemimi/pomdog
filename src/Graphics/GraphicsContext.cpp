@@ -109,7 +109,6 @@ public:
 	std::shared_ptr<BlendState> blendState;
 	std::shared_ptr<DepthStencilState> depthStencilState;
 	std::shared_ptr<RasterizerState> rasterizerState;
-	std::shared_ptr<InputLayout> inputLayout;
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 
@@ -485,16 +484,6 @@ void GraphicsContext::SetSamplerState(std::uint32_t index, std::shared_ptr<Sampl
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(samplerState);
 	impl->SetSamplerState(index, samplerState);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetInputLayout(std::shared_ptr<InputLayout> const& inputLayout)
-{
-	POMDOG_ASSERT(inputLayout);
-	POMDOG_ASSERT(impl);
-	POMDOG_ASSERT(impl->nativeContext);
-
-	impl->inputLayout = inputLayout;
-	impl->nativeContext->SetInputLayout(inputLayout);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetVertexBuffer(std::shared_ptr<VertexBuffer> const& vertexBuffer)

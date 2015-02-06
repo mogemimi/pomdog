@@ -94,7 +94,6 @@
 #include "Graphics/GraphicsDevice.hpp"
 #include "Graphics/IndexBuffer.hpp"
 #include "Graphics/IndexElementSize.hpp"
-#include "Graphics/InputLayout.hpp"
 #include "Graphics/PresentationParameters.hpp"
 #include "Graphics/PrimitiveTopology.hpp"
 #include "Graphics/RasterizerDescription.hpp"

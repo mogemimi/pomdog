@@ -29,7 +29,6 @@ class NativeDepthStencilState;
 class NativeEffectPass;
 class NativeEffectReflection;
 class NativeIndexBuffer;
-class NativeInputLayout;
 class NativeRasterizerState;
 class NativeRenderTarget2D;
 class NativeSamplerState;
@@ -105,12 +104,6 @@ public:
 	/// @brief 指定されたエフェクトパスからエフェクトリフレクションを作成します。
 	virtual std::unique_ptr<NativeEffectReflection>
 	CreateEffectReflection(NativeEffectPass & nativeEffectPass) = 0;
-
-	///@~Japanese
-	/// @brief 入力レイアウトを作成します。
-	virtual std::unique_ptr<NativeInputLayout>
-	CreateInputLayout(NativeEffectPass & nativeEffectPass,
-		std::vector<VertexBufferBinding> const& vertexBufferBindings) = 0;
 
 	///@~Japanese
 	/// @brief 2 次元テクスチャを作成します。

@@ -76,11 +76,6 @@ public:
 		NativeEffectPass & nativeEffectPass) override;
 
 	///@copydoc NativeGraphicsDevice
-	std::unique_ptr<NativeInputLayout>
-	CreateInputLayout(NativeEffectPass & nativeEffectPass,
-		std::vector<VertexBufferBinding> const& vertexBufferBindings) override;
-
-	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeTexture2D>
 	CreateTexture2D(std::int32_t width, std::int32_t height,
 		std::uint32_t mipmapLevels, SurfaceFormat format) override;

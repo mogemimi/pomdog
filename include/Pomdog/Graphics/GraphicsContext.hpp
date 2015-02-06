@@ -133,10 +133,6 @@ public:
 	void SetSamplerState(std::uint32_t index, std::shared_ptr<SamplerState> const& samplerState);
 
 	///@~Japanese
-	/// @brief 入力レイアウトを設定します。
-	void SetInputLayout(std::shared_ptr<InputLayout> const& inputLayout);
-
-	///@~Japanese
 	/// @brief 頂点バッファを設定します。
 	void SetVertexBuffer(std::shared_ptr<VertexBuffer> const& vertexBuffer);
 

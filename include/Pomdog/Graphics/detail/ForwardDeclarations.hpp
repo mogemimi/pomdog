@@ -18,8 +18,6 @@ namespace Pomdog {
 // Classes
 class BlendState;
 class ConstantBufferBinding;
-template <typename T, typename... Arguments>
-class CustomVertex;
 class DepthStencilState;
 class EffectConstantDescription;
 class EffectParameter;
@@ -29,7 +27,6 @@ class EffectReflection;
 class GraphicsContext;
 class GraphicsDevice;
 class IndexBuffer;
-class InputLayout;
 class RasterizerState;
 class RenderTarget2D;
 class SamplerState;

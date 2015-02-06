@@ -13,7 +13,6 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
-#include "../RenderSystem/NativeInputLayout.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/detail/Tagged.hpp"
 #include "Pomdog/Utility/Optional.hpp"
@@ -31,11 +30,12 @@ class VertexBufferGL4;
 namespace Tags {
 
 struct ScalarDataTypeTag {};
+struct VertexArrayTag {};
 
 }// namespace Tags
 
 using ScalarTypeGL4 = Tagged<GLuint, Tags::ScalarDataTypeTag>;
-using VertexArrayGL4 = Tagged<GLuint, InputLayout>;
+using VertexArrayGL4 = Tagged<GLuint, Tags::VertexArrayTag>;
 
 struct InputElementGL4 {
 	// Attribute location.
@@ -58,7 +58,7 @@ struct InputBindingGL4 {
 	std::uint32_t InstanceFrequency;
 };
 
-class InputLayoutGL4: public NativeInputLayout {
+class InputLayoutGL4 final {
 public:
 	InputLayoutGL4() = delete;
 

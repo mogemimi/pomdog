@@ -65,9 +65,6 @@ public:
 	virtual void SetScissorRectangle(Rectangle const& rectangle) = 0;
 
 	///@copydoc Pomdog::GraphicsContext
-	virtual void SetInputLayout(std::shared_ptr<InputLayout> const& inputLayout) = 0;
-
-	///@copydoc Pomdog::GraphicsContext
 	virtual void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) = 0;
 
 	///@copydoc Pomdog::GraphicsContext

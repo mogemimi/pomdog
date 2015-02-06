@@ -24,6 +24,8 @@ namespace Details {
 namespace RenderSystem {
 namespace GL4 {
 
+class InputLayoutGL4;
+
 struct TextureBindingGL4 {
 	GLint UniformLocation;
 	std::uint16_t SlotIndex;
@@ -48,10 +50,13 @@ public:
 
 	ShaderProgramGL4 GetShaderProgram() const;
 
+	InputLayoutGL4* GetInputLayout() const;
+
 private:
 	std::vector<TextureBindingGL4> textureBindings;
 	std::vector<UniformBlockBindingGL4> uniformBlockBindings;
 	Optional<ShaderProgramGL4> shaderProgram;
+	std::unique_ptr<InputLayoutGL4> inputLayout;
 };
 
 }// namespace GL4
