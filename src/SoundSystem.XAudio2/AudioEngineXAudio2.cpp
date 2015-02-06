@@ -145,7 +145,7 @@ static std::vector<AudioDeviceDetails> EnumerateAudioDevices()
 		AudioDeviceDetails deviceDetails;
 		deviceDetails.DeviceID = id.GetRawBuffer(nullptr);
 		deviceDetails.DisplayName = name.GetRawBuffer(nullptr);
-		
+
 		result.push_back(std::move(deviceDetails));
 	}
 
@@ -192,7 +192,7 @@ AudioEngineXAudio2::AudioEngineXAudio2()
 
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
 	std::vector<AudioDeviceDetails> audioDevices;
-	
+
 	try {
 		audioDevices = EnumerateAudioDevices();
 	}

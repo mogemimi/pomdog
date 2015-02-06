@@ -301,7 +301,7 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Concatenate(FloatingPointMa
 		, lhs.m[3][0] * rhs.m[0][0] + lhs.m[3][1] * rhs.m[1][0] + lhs.m[3][2] * rhs.m[2][0] + lhs.m[3][3] * rhs.m[3][0]
 		, lhs.m[3][0] * rhs.m[0][1] + lhs.m[3][1] * rhs.m[1][1] + lhs.m[3][2] * rhs.m[2][1] + lhs.m[3][3] * rhs.m[3][1]
 		, lhs.m[3][0] * rhs.m[0][2] + lhs.m[3][1] * rhs.m[1][2] + lhs.m[3][2] * rhs.m[2][2] + lhs.m[3][3] * rhs.m[3][2]
-		, lhs.m[3][0] * rhs.m[0][3] + lhs.m[3][1] * rhs.m[1][3] + lhs.m[3][2] * rhs.m[2][3] + lhs.m[3][3] * rhs.m[3][3] 
+		, lhs.m[3][0] * rhs.m[0][3] + lhs.m[3][1] * rhs.m[1][3] + lhs.m[3][2] * rhs.m[2][3] + lhs.m[3][3] * rhs.m[3][3]
 		);
 }
 //-----------------------------------------------------------------------
@@ -383,7 +383,7 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix4x4<T>::Minor3x3(std::size_t row, s
 
 	//      4x4 matrix                              3x3 minor
 	//     c0  c1  c2  c3
-	// r0 |11, 12, 13, 14|                       |11, 12, 13, x| 
+	// r0 |11, 12, 13, 14|                       |11, 12, 13, x|
 	// r1 |21, 22, 23, 24| Minor3x3(mat, r2, c3) |21, 22. 23, x|
 	// r2 |31, 32, 33, 34| --------------------> |41, 42, 43, x|
 	// r3 |41, 42, 43, 44|                       | x,  x,  x, x|
@@ -423,12 +423,12 @@ FloatingPointMatrix4x4<T>::Adjoint(FloatingPointMatrix4x4 const& matrix)
 		,  matrix.Minor3x3(1, 1).Determinant()
 		, -matrix.Minor3x3(2, 1).Determinant()
 		,  matrix.Minor3x3(3, 1).Determinant()
-		 
+
 		,  matrix.Minor3x3(0, 2).Determinant()
 		, -matrix.Minor3x3(1, 2).Determinant()
 		,  matrix.Minor3x3(2, 2).Determinant()
 		, -matrix.Minor3x3(3, 2).Determinant()
-		  
+
 		, -matrix.Minor3x3(0, 3).Determinant()
 		,  matrix.Minor3x3(1, 3).Determinant()
 		, -matrix.Minor3x3(2, 3).Determinant()
@@ -687,7 +687,7 @@ FloatingPointMatrix4x4<T>::CreateLookAtLH(FloatingPointVector3<T> const & eye, F
 	// zaxis = normal(At - Eye)
 	// xaxis = normal(cross(Up, zaxis))
 	// yaxis = cross(zaxis, xaxis)
-	// 
+	//
 	//  xaxis.x           yaxis.x           zaxis.x          0
 	//  xaxis.y           yaxis.y           zaxis.y          0
 	//  xaxis.z           yaxis.z           zaxis.z          0
@@ -736,7 +736,7 @@ FloatingPointMatrix4x4<T>::CreateLookAtRH(FloatingPointVector3<T> const& eye, Fl
 	// zaxis = normal(Eye - At)
 	// xaxis = normal(cross(Up, zaxis))
 	// yaxis = cross(zaxis, xaxis)
-	// 
+	//
 	//  xaxis.x           yaxis.x           zaxis.x          0
 	//  xaxis.y           yaxis.y           zaxis.y          0
 	//  xaxis.z           yaxis.z           zaxis.z          0
@@ -873,7 +873,7 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy,
 	// h = cot(fovY/2): ビュー空間の高さ
 	// w = h / Aspect : ビュー空間の幅
 	// cot(fovY/2) = 1/tan(fovY/2)
-	// 
+	//
 	// w   0   0              0
 	// 0   h   0              0
 	// 0   0   zf/(zf-zn)     1

@@ -298,7 +298,7 @@ void GameWindowWin32::Impl::SetMouseCursorVisible(bool visibleIn)
 		else {
 			auto nativeCursor = LoadCursor(nullptr, ToStandardCursorID(MouseCursor::Arrow));
 			::SetCursor(nativeCursor);
-		}	
+		}
 	}
 	else {
 		::SetCursor(nullptr);
@@ -308,7 +308,7 @@ void GameWindowWin32::Impl::SetMouseCursorVisible(bool visibleIn)
 void GameWindowWin32::Impl::SetMouseCursor(MouseCursor cursorIn)
 {
 	gameCursor = LoadCursor(nullptr, ToStandardCursorID(cursorIn));
-	
+
 	if (isMouseCursorVisible) {
 		::SetCursor(*gameCursor);
 	}

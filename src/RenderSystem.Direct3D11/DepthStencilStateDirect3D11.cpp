@@ -72,7 +72,7 @@ DepthStencilStateDirect3D11::DepthStencilStateDirect3D11(ID3D11Device* nativeDev
 
 	POMDOG_ASSERT(nativeDevice);
 	HRESULT hr = nativeDevice->CreateDepthStencilState(&depthStencilDesc, &nativeDepthStencilState);
-	
+
 	if (FAILED(hr))
 	{
 		///@todo throw exception

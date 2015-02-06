@@ -84,7 +84,7 @@ static std::vector<EffectVariable> EnumerateEffectVariables(
 	if (constantBufferDesc.Variables > 0) {
 		variables.reserve(constantBufferDesc.Variables);
 	}
-	
+
 	for (UINT index = 0; index < constantBufferDesc.Variables; ++index)
 	{
 		D3D11_SHADER_VARIABLE_DESC shaderVariableDesc;

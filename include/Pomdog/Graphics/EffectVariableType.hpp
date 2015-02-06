@@ -48,7 +48,7 @@ enum class EffectVariableType: std::uint8_t {
 
 	///@~Japanese
 	/// @brief 文字列です。
-	String, 
+	String,
 
 	///@~Japanese
 	/// @brief 1 次元テクスチャです。

@@ -24,16 +24,16 @@ public:
 
 	///@copydoc Pomdog::Mouse
 	MouseState GetState() const override;
-	
+
 	void Position(Point2D const& position);
 	void LeftButton(ButtonState buttonState);
 	void RightButton(ButtonState buttonState);
 	void MiddleButton(ButtonState buttonState);
 	void XButton1(ButtonState buttonState);
 	void XButton2(ButtonState buttonState);
-	
+
 	void WheelDelta(double wheelDelta);
-	
+
 private:
 	MouseState state;
 	double scrollWheel;

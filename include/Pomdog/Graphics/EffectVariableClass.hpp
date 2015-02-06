@@ -25,7 +25,7 @@ enum class EffectVariableClass: std::uint8_t {
 	Vector,
 
 	///@~Japanese 行列です。
-	Matrix, 
+	Matrix,
 
 	///@~Japanese テクスチャオブジェクトまたはシェーダ、あるいは文字列オブジェクトです。
 	Object,

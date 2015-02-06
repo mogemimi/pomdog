@@ -74,7 +74,7 @@ FloatingPointVector2<T> FloatingPointVector2<T>::operator*(T scaleFactor) const
 	return FloatingPointVector2(X * scaleFactor, Y * scaleFactor);
 }
 //-----------------------------------------------------------------------
-template <typename T> 
+template <typename T>
 FloatingPointVector2<T> FloatingPointVector2<T>::operator/(T scaleFactor) const
 {
 	POMDOG_ASSERT(scaleFactor != 0);
@@ -282,7 +282,7 @@ T* FloatingPointVector2<T>::Data()
 	return &X;
 }
 //-----------------------------------------------------------------------
-template <typename T> 
+template <typename T>
 FloatingPointVector2<T> operator*(T scaleFactor, FloatingPointVector2<T> const& vector)
 {
 	return FloatingPointVector2<T>(scaleFactor * vector.X, scaleFactor * vector.Y);

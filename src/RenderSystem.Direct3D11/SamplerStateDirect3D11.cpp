@@ -63,7 +63,7 @@ SamplerStateDirect3D11::SamplerStateDirect3D11(ID3D11Device* nativeDevice, Sampl
 
 	POMDOG_ASSERT(nativeDevice);
 	HRESULT hr = nativeDevice->CreateSamplerState(&samplerDesc, &nativeSamplerState);
-	
+
 	if (FAILED(hr))
 	{
 		///@todo throw exception

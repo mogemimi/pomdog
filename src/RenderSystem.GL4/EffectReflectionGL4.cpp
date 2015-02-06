@@ -291,7 +291,7 @@ static EffectVariableType ToEffectVariableType(GLenum uniformType)
 	case GL_FLOAT_MAT4x3:
 		return EffectVariableType::Float;
 
-	case GL_INT: 
+	case GL_INT:
 	case GL_INT_VEC2:
 	case GL_INT_VEC3:
 	case GL_INT_VEC4:
@@ -483,7 +483,7 @@ static void ToComponents(GLenum uniformType, std::uint8_t & RowCount, std::uint8
 	case GL_INT:
 	case GL_UNSIGNED_INT:
 	case GL_BOOL:
-	case GL_BYTE: 
+	case GL_BYTE:
 	case GL_UNSIGNED_BYTE:
 	case GL_SHORT:
 	case GL_UNSIGNED_SHORT:
@@ -578,7 +578,7 @@ static void ToComponents(GLenum uniformType, std::uint8_t & RowCount, std::uint8
 	case GL_DOUBLE_MAT3x4:
 		RowCount = 3; ColumnCount = 4; return;
 
-	case GL_FLOAT_MAT4x3: 
+	case GL_FLOAT_MAT4x3:
 	case GL_DOUBLE_MAT4x3:
 		RowCount = 4; ColumnCount = 3; return;
 	}

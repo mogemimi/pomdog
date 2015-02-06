@@ -130,7 +130,7 @@ EffectPassDirect3D11::EffectPassDirect3D11(ID3D11Device * device,
 	// Create the pixel shader
 	hr = device->CreatePixelShader(pixelShaderBytecode.Code,
 		pixelShaderBytecode.ByteLength, nullptr, &pixelShader);
-	
+
 	if (FAILED(hr)) {
 		// FUS RO DAH!!
 		// throw exception

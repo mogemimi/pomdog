@@ -72,7 +72,7 @@
 	if (openGLContext_ == nil) {
 		return;
 	}
-	
+
 	if ([openGLContext_ view] != self) {
 		[openGLContext_ setView:self];
 	}
@@ -100,7 +100,7 @@
 	if ([self window] == nil) {
 		[[self openGLContext] clearDrawable];
 	}
-	
+
 	trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
 }
 //-----------------------------------------------------------------------
@@ -138,7 +138,7 @@
 	wasAcceptingMouseEvents = [[self window] acceptsMouseMovedEvents];
 	[[self window] setAcceptsMouseMovedEvents:YES];
 	[[self window] makeFirstResponder:self];
-	
+
 	[[self delegate] mouseEntered:theEvent];
 }
 //-----------------------------------------------------------------------
@@ -150,7 +150,7 @@
 - (void)mouseExited:(NSEvent *)theEvent
 {
 	[[self window] setAcceptsMouseMovedEvents:wasAcceptingMouseEvents];
-	
+
 	[[self delegate] mouseExited:theEvent];
 }
 //-----------------------------------------------------------------------

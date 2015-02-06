@@ -103,7 +103,7 @@ Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* nativeDevice,
 	if (FAILED(hr))
 	{
 		//// FUS RO DAH!!!
-		//POMDOG_THROW_EXCEPTION(ExceptionCode::RenderingAPIError, 
+		//POMDOG_THROW_EXCEPTION(ExceptionCode::RenderingAPIError,
 		//	"failed to create Direct3D11Texture.", "Texture2DDirect3D11::Texture2DDirect3D11");
 	}
 
@@ -119,7 +119,7 @@ Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* nativeDevice,
 	if (FAILED(hr))
 	{
 		//// FUS RO DAH!!!
-		//POMDOG_THROW_EXCEPTION(ExceptionCode::RenderingAPIError, 
+		//POMDOG_THROW_EXCEPTION(ExceptionCode::RenderingAPIError,
 		//	"failed to create Direct3D11Texture.", "Texture2DDirect3D11::Texture2DDirect3D11");
 	}
 }

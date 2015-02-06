@@ -18,7 +18,7 @@ namespace {
 static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 {
 	//return Pomdog::Point2D(point.x, point.y);
-	
+
 	///@todo badcode
 	return Pomdog::Point2D(point.x - 2, point.y - 2);
 }
@@ -26,7 +26,7 @@ static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 {
 	using Pomdog::Keys;
-	
+
 	constexpr std::array<Keys, 127> keyTable = {{
 		/* 0x00 */ Keys::A, // kVK_ANSI_A
 		/* 0x01 */ Keys::S, // kVK_ANSI_S
@@ -156,7 +156,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 		/* 0x7D */ Keys::DownArrow, // kVK_DownArrow
 		/* 0x7E */ Keys::UpArrow, // kVK_UpArrow
 	}};
-	
+
 	if (keyCode < keyTable.size()) {
 		return keyTable[keyCode];
 	}
@@ -229,7 +229,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 {
 	if (mouse_) {
 		mouse_->LeftButton(ButtonState::Pressed);
-	
+
 		POMDOG_ASSERT(view_ != nil);
 		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
 		mouse_->Position(ToPoint2D(locationInView));
@@ -240,7 +240,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 {
 	if (mouse_) {
 		mouse_->LeftButton(ButtonState::Pressed);
-		
+
 		POMDOG_ASSERT(view_ != nil);
 		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
 		mouse_->Position(ToPoint2D(locationInView));
@@ -251,7 +251,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 {
 	if (mouse_) {
 		mouse_->LeftButton(ButtonState::Released);
-		
+
 		POMDOG_ASSERT(view_ != nil);
 		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
 		mouse_->Position(ToPoint2D(locationInView));
@@ -262,7 +262,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 {
 	if (mouse_) {
 		mouse_->RightButton(ButtonState::Pressed);
-		
+
 		POMDOG_ASSERT(view_ != nil);
 		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
 		mouse_->Position(ToPoint2D(locationInView));
@@ -273,7 +273,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 {
 	if (mouse_) {
 		mouse_->RightButton(ButtonState::Pressed);
-		
+
 		POMDOG_ASSERT(view_ != nil);
 		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
 		mouse_->Position(ToPoint2D(locationInView));
@@ -284,7 +284,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 {
 	if (mouse_) {
 		mouse_->RightButton(ButtonState::Released);
-		
+
 		POMDOG_ASSERT(view_ != nil);
 		NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
 		mouse_->Position(ToPoint2D(locationInView));
@@ -296,9 +296,9 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 	if (!mouse_) {
 		return;
 	}
-	
+
 	NSInteger buttonNumber = [theEvent buttonNumber];
-	
+
 	if (buttonNumber == 2) {
 		mouse_->MiddleButton(ButtonState::Pressed);
 	}
@@ -308,7 +308,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 	else if (buttonNumber == 4) {
 		mouse_->XButton2(ButtonState::Pressed);
 	}
-	
+
 	POMDOG_ASSERT(view_ != nil);
 	NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
 	mouse_->Position(ToPoint2D(locationInView));
@@ -319,9 +319,9 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 	if (!mouse_) {
 		return;
 	}
-	
+
 	NSInteger buttonNumber = [theEvent buttonNumber];
-	
+
 	if (buttonNumber == 2) {
 		mouse_->MiddleButton(ButtonState::Pressed);
 	}
@@ -331,7 +331,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 	else if (buttonNumber == 4) {
 		mouse_->XButton2(ButtonState::Pressed);
 	}
-	
+
 	POMDOG_ASSERT(view_ != nil);
 	NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
 	mouse_->Position(ToPoint2D(locationInView));
@@ -342,9 +342,9 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 	if (!mouse_) {
 		return;
 	}
-	
+
 	NSInteger buttonNumber = [theEvent buttonNumber];
-	
+
 	if (buttonNumber == 2) {
 		mouse_->MiddleButton(ButtonState::Released);
 	}
@@ -354,7 +354,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 	else if (buttonNumber == 4) {
 		mouse_->XButton2(ButtonState::Released);
 	}
-	
+
 	POMDOG_ASSERT(view_ != nil);
 	NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
 	mouse_->Position(ToPoint2D(locationInView));
@@ -390,10 +390,10 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 		using Pomdog::Details::InputKeyDownEvent;
 		eventDispatcher->Enqueue<InputKeyDownEvent>(key);
 	}
-	
+
 //	using Pomdog::Details::InputCharacterEvent;
 //	auto length = [[theEvent characters] length];
-//	
+//
 //	for (size_t i = 0; i < length; ++i)
 //	{
 //		auto character = [[theEvent characters] characterAtIndex:i];
@@ -409,10 +409,10 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 		using Pomdog::Details::InputKeyUpEvent;
 		eventDispatcher->Enqueue<InputKeyUpEvent>(key);
 	}
-	
+
 //	using Pomdog::Details::InputCharacterEvent;
 //	auto length = [[theEvent characters] length];
-//	
+//
 //	for (size_t i = 0; i < length; ++i)
 //	{
 //		std::uint16_t character = [[theEvent characters] characterAtIndex:i];

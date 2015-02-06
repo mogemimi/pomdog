@@ -29,7 +29,7 @@ public:
 	OpenGLContextWin32() = delete;
 
 	OpenGLContextWin32(HWND windowHandle, PresentationParameters const& presentationParameters);
-	
+
 	~OpenGLContextWin32();
 
 	void MakeCurrent() override;

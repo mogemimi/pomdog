@@ -156,7 +156,7 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
 #elif defined(POMDOG_RENDERSYSTEM_DIRECT3D11)
 	using Details::RenderSystem::Direct3D11::GraphicsDeviceDirect3D11;
 	using Details::RenderSystem::Direct3D11::GraphicsContextDirect3D11;
-	
+
 	auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceDirect3D11>();
 	auto deviceContext = nativeGraphicsDevice->DeviceContext();
 	auto nativeDevice = nativeGraphicsDevice->NativeDevice();

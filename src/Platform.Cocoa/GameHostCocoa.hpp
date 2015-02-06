@@ -34,25 +34,25 @@ public:
 
 	///@copydoc GameHost
 	void Run(Game & game) override;
-	
+
 	///@copydoc GameHost
 	void Exit() override;
 
 	///@copydoc GameHost
 	std::shared_ptr<Pomdog::GameWindow> Window() override;
-	
+
 	///@copydoc GameHost
 	std::shared_ptr<Pomdog::GameClock> Clock() override;
-	
+
 	///@copydoc GameHost
 	std::shared_ptr<Pomdog::GraphicsContext> GraphicsContext() override;
-	
+
 	///@copydoc GameHost
 	std::shared_ptr<Pomdog::GraphicsDevice> GraphicsDevice() override;
-	
+
 	///@copydoc GameHost
 	std::shared_ptr<Pomdog::AudioEngine> AudioEngine() override;
-	
+
 	///@copydoc GameHost
 	std::shared_ptr<Pomdog::AssetManager> AssetManager() override;
 

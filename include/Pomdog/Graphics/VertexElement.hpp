@@ -17,7 +17,7 @@
 
 namespace Pomdog {
 
-///@~Japanese 
+///@~Japanese
 /// @brief 頂点を構成する要素を定義します。
 class POMDOG_EXPORT VertexElement {
 public:

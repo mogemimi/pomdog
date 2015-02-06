@@ -140,7 +140,7 @@ static Optional<Keys> ToKeys(::UINT directInputKeycode)
 	case DIK_MINUS: return Keys::Minus;
 	case DIK_APOSTROPHE: return Keys::Quote;
 	case DIK_BACKSLASH: return Keys::Backslash;
-	
+
 	//case : return Keys::Plus;
 	//case : return Keys::Question;
 	//case : return Keys::DoubleQuote;

@@ -138,7 +138,7 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
 
 		backBuffer = std::make_shared<RenderTarget2DDirect3D11>(nativeDevice.Get(),
 			swapChain.Get(), windowWidth, windowHeight, DepthFormat::Depth24Stencil8);
-		
+
 		boundRenderTargets.reserve(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
 		boundRenderTargets.push_back(backBuffer);
 	}
@@ -309,7 +309,7 @@ void GraphicsContextDirect3D11::SetScissorRectangle(Rectangle const& rectangle)
 	rect.top = rectangle.Top();
 
 	std::fill(std::begin(rects), std::end(rects), rect);
-	
+
 	POMDOG_ASSERT(!rects.empty());
 
 	deviceContext->RSSetScissorRects(rects.size(), rects.data());

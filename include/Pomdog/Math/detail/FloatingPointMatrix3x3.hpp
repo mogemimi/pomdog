@@ -48,8 +48,8 @@ public:
 
 	///@brief Construct from floating-point values.
 	FloatingPointMatrix3x3(
-		T m00, T m01, T m02, 
-		T m10, T m11, T m12, 
+		T m00, T m01, T m02,
+		T m10, T m11, T m12,
 		T m20, T m21, T m22);
 
 	// Assignment operators:

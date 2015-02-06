@@ -31,7 +31,7 @@ GameWindowCocoa::GameWindowCocoa(NSWindow* nativeWindowIn, std::shared_ptr<Syste
 #endif
 
 	NSRect frameRect = [[nativeWindow contentView] bounds];
-	
+
 	// Create OpenGLView
 	openGLView = [[CocoaOpenGLView alloc] initWithFrame:frameRect];
 	[openGLView setHidden:NO];
@@ -41,11 +41,11 @@ GameWindowCocoa::GameWindowCocoa(NSWindow* nativeWindowIn, std::shared_ptr<Syste
 	// Create WindowDelegate
 	windowDelegate = [[CocoaWindowDelegate alloc] initWithEventDispatcher:eventDispatcher];
 	[nativeWindow setDelegate:windowDelegate];
-	
+
 	// OpenGLView autoresize to fit nativeWindow's contentView
 	[[nativeWindow contentView] setAutoresizesSubviews:YES];
 	[openGLView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-	
+
 	// Create ViewDelegate
 	viewDelegate = [[CocoaGameViewDelegate alloc] initWithEventDispatcher:eventDispatcher];
 	[viewDelegate setView:openGLView];
@@ -56,12 +56,12 @@ GameWindowCocoa::~GameWindowCocoa()
 {
 	// Remove delegate from window:
 	[nativeWindow setDelegate:nil];
-	
+
 	// Remove OpenGLView from window:
 	[viewDelegate setView:nil];
 	[openGLView setDelegate:nil];
 	[openGLView removeFromSuperview];
-	
+
 #if !__has_feature(objc_arc)
 	[viewDelegate release];
 	[windowDelegate release];
@@ -109,10 +109,10 @@ Rectangle GameWindowCocoa::ClientBounds() const
 	POMDOG_ASSERT([nativeWindow contentView] != nil);
 	NSRect bounds = [[nativeWindow contentView] bounds];
 	NSPoint origin = [nativeWindow frame].origin;
-	
+
 	NSSize windowSize = [nativeWindow frame].size;
 	NSSize screenSize = [[nativeWindow screen] visibleFrame].size;
-	
+
 	Rectangle rect {
 		static_cast<std::int32_t>(origin.x),
 		static_cast<std::int32_t>(screenSize.height - windowSize.height - origin.y),
@@ -155,7 +155,7 @@ void GameWindowCocoa::IsMouseCursorVisible(bool visibleIn)
 		[NSCursor unhide];
 	}
 	else {
-		[NSCursor hide];	
+		[NSCursor hide];
 	}
 }
 //-----------------------------------------------------------------------
@@ -175,7 +175,7 @@ void GameWindowCocoa::SetMouseCursor(MouseCursor cursor)
 			return [NSCursor resizeUpDownCursor];
 		}
 	})();
-	
+
 	[nativeCursor set];
 }
 //-----------------------------------------------------------------------
@@ -190,7 +190,7 @@ void GameWindowCocoa::Close()
 {
 	// Removes the window from the screen list, which hides the window:
 	//[nativeWindow orderOut:nil];
-	
+
 	[nativeWindow close];
 }
 //-----------------------------------------------------------------------
@@ -200,7 +200,7 @@ void GameWindowCocoa::ResetGLContext(std::shared_ptr<OpenGLContextCocoa> const& 
 {
 	POMDOG_ASSERT(contextIn);
 	openGLContext = contextIn;
-	
+
 	POMDOG_ASSERT(openGLView);
 	POMDOG_ASSERT(openGLContext);
 	[openGLView setOpenGLContext:openGLContext->NativeOpenGLContext()];
@@ -209,7 +209,7 @@ void GameWindowCocoa::ResetGLContext(std::shared_ptr<OpenGLContextCocoa> const& 
 void GameWindowCocoa::ResetGLContext()
 {
 	openGLContext.reset();
-	
+
 	POMDOG_ASSERT(openGLView);
 	[openGLView clearGLContext];
 }

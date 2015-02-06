@@ -26,12 +26,12 @@ FloatingPointMatrix3x3<T> const FloatingPointMatrix3x3<T>::Identity(
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T>::FloatingPointMatrix3x3(
-	T m00, T m01, T m02, 
-	T m10, T m11, T m12, 
+	T m00, T m01, T m02,
+	T m10, T m11, T m12,
 	T m20, T m21, T m22)
 {
 	m[0][0] = m00;
-	m[0][1] = m01; 
+	m[0][1] = m01;
 	m[0][2] = m02;
 	m[1][0] = m10;
 	m[1][1] = m11;
@@ -173,11 +173,11 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator/(T scaleFactor) co
 		( m[0][0] * inverseDivider
 		, m[0][1] * inverseDivider
 		, m[0][2] * inverseDivider
-		, m[1][0] * inverseDivider 
-		, m[1][1] * inverseDivider 
-		, m[1][2] * inverseDivider 
-		, m[2][0] * inverseDivider 
-		, m[2][1] * inverseDivider 
+		, m[1][0] * inverseDivider
+		, m[1][1] * inverseDivider
+		, m[1][2] * inverseDivider
+		, m[2][0] * inverseDivider
+		, m[2][1] * inverseDivider
 		, m[2][2] * inverseDivider
 		);
 }
@@ -245,7 +245,7 @@ FloatingPointVector3<T> FloatingPointMatrix3x3<T>::GetScale() const
 template <typename T>
 T FloatingPointMatrix3x3<T>::Determinant() const
 {
-	// | m00 m01 m02 | determinant = 
+	// | m00 m01 m02 | determinant =
 	// | m10 m11 m12 |   (m00 * m11 * m22) +(m10 * m21 * m02) +(m20 *01 * m12)
 	// | m20 m21 m22 |  -(m02 * m11 * m20) -(m12 * m21 * m00) -(m22 *01 * m10)
 	//
@@ -314,7 +314,7 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
 {
 	//   Matrix3x3 mat                     Matrix2x2 minor
 	//     c0  c1  c2
-	// r0 |11, 12, 13|                       |11, 13, x| 
+	// r0 |11, 12, 13|                       |11, 13, x|
 	// r1 |21, 22, 23| Minor2x2(mat, r2, c1) |21, 23. x|
 	// r2 |31, 32, 33| --------------------> | x,  x, x|
 

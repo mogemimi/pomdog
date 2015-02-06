@@ -39,10 +39,10 @@ static ScalarTypeGL4 ToScalarType(GLenum attributeClass)
 	case GL_FLOAT_MAT3x2:
 	case GL_FLOAT_MAT3x4:
 	case GL_FLOAT_MAT4x2:
-	case GL_FLOAT_MAT4x3: 
+	case GL_FLOAT_MAT4x3:
 		return ScalarTypeGL4(GL_FLOAT);
 
-	case GL_INT: 
+	case GL_INT:
 	case GL_INT_VEC2:
 	case GL_INT_VEC3:
 	case GL_INT_VEC4:
@@ -54,7 +54,7 @@ static ScalarTypeGL4 ToScalarType(GLenum attributeClass)
 	case GL_UNSIGNED_INT_VEC4:
 		return ScalarTypeGL4(GL_UNSIGNED_INT);
 
-	case GL_DOUBLE: 
+	case GL_DOUBLE:
 	case GL_DOUBLE_VEC2:
 	case GL_DOUBLE_VEC3:
 	case GL_DOUBLE_VEC4:
@@ -145,15 +145,15 @@ static InputElementSize ToInputElementSize(GLenum attributeClass)
 {
 	switch (attributeClass) {
 	case GL_FLOAT:
-	case GL_INT: 
-	case GL_UNSIGNED_INT: 
+	case GL_INT:
+	case GL_UNSIGNED_INT:
 	case GL_DOUBLE:
-	case GL_BYTE: 
+	case GL_BYTE:
 	case GL_UNSIGNED_BYTE:
 	case GL_SHORT:
 	case GL_UNSIGNED_SHORT:
 	// 'GL_UNSIGNED_INT_VEC' See also: http://www.opengl.org/sdk/docs/man/xhtml/glGetActiveAttrib.xml
-	//case GL_UNSIGNED_INT_VEC: 
+	//case GL_UNSIGNED_INT_VEC:
 		return { 1, 1 };
 
 	case GL_FLOAT_VEC2:
@@ -173,7 +173,7 @@ static InputElementSize ToInputElementSize(GLenum attributeClass)
 	case GL_UNSIGNED_INT_VEC4:
 	case GL_DOUBLE_VEC4:
 		return { 1, 4 };
- 
+
 	case GL_FLOAT_MAT2:
 	case GL_DOUBLE_MAT2:
 		return { 2, 2 };
@@ -206,7 +206,7 @@ static InputElementSize ToInputElementSize(GLenum attributeClass)
 	case GL_DOUBLE_MAT3x4:
 		return { 3, 4 };
 
-	case GL_FLOAT_MAT4x3: 
+	case GL_FLOAT_MAT4x3:
 	case GL_DOUBLE_MAT4x3:
 		return { 4, 3 };
 	}

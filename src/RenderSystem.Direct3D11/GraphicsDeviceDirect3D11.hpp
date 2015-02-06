@@ -91,7 +91,7 @@ public:
 
 public:
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> DeviceContext() const;
-	
+
 	Microsoft::WRL::ComPtr<ID3D11Device> NativeDevice() const;
 
 	Microsoft::WRL::ComPtr<IDXGIFactory1> DXGIFactory() const;

@@ -103,7 +103,7 @@ namespace Details {
 ||  defined(__IA64__) \
 ||  defined(_IA64) \
 ||  defined(ia64)
-#	// Itanium architecture, 64-bit processors 
+#	// Itanium architecture, 64-bit processors
 #	define POMDOG_ARCHITECTURE_IA64
 #elif \
     defined(__arm__) /* gcc */ \
@@ -140,7 +140,7 @@ namespace Details {
 #elif \
     defined(_M_ALPHA) /* msvc */ \
 ||  defined(__alpha__) \
-||	defined(__alpha) 
+||	defined(__alpha)
 #	// DEC Alpha platforms
 #	define POMDOG_ARCHITECTURE_ALPHA
 #endif

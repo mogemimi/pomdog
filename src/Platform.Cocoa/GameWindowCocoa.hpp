@@ -50,7 +50,7 @@ public:
 
 	///@copydoc GameWindow
 	void ClientBounds(Rectangle const& clientBounds) override;
-	
+
 	///@copydoc GameWindow
 	bool IsMouseCursorVisible() const override;
 
@@ -66,7 +66,7 @@ public:
 	/// @brief ウィンドウが最小化状態かどうかを取得します。
 	/// @return ウィンドウが最小化のときは true を、それ以外は false を返します。
 	bool IsMinimized() const;
-	
+
 	///@~Japanese
 	/// @brief ウィンドウを閉じます。
 	void Close();
@@ -74,11 +74,11 @@ public:
 	void ResetGLContext(std::shared_ptr<OpenGLContextCocoa> const& context);
 
 	void ResetGLContext();
-	
+
 	void SetRenderCallbackOnLiveResizing(std::function<void()> const& callback);
-	
+
 	void SetRenderCallbackOnLiveResizing();
-	
+
 	void BindToDelegate(std::shared_ptr<MouseCocoa> mouse);
 
 private:

@@ -24,9 +24,9 @@ public:
 
 	///@copydoc Pomdog::Mouse
 	KeyboardState GetState() const override;
-	
+
 	void SetKey(Keys key, KeyState keyState);
-	
+
 private:
 	KeyboardState state;
 };

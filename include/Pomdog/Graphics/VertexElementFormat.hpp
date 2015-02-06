@@ -15,7 +15,7 @@
 
 namespace Pomdog {
 
-///@~Japanese 
+///@~Japanese
 /// @brief 頂点を構成する要素のフォーマットを定義します。
 enum class VertexElementFormat: std::uint8_t {
 	///@brief A single-component, 32-bit floating-point format.

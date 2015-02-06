@@ -26,8 +26,8 @@ FloatingPointMatrix3x2<T> const FloatingPointMatrix3x2<T>::Identity(
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x2<T>::FloatingPointMatrix3x2(
-	T m00, T m01, 
-	T m10, T m11, 
+	T m00, T m01,
+	T m10, T m11,
 	T m20, T m21)
 {
 	m[0][0] = m00;
@@ -151,7 +151,7 @@ FloatingPointMatrix3x2<T> FloatingPointMatrix3x2<T>::operator/(T scaleFactor) co
 	return FloatingPointMatrix3x2
 		( m[0][0] * inverseDivider
 		, m[0][1] * inverseDivider
-		, m[1][0] * inverseDivider 
+		, m[1][0] * inverseDivider
 		, m[1][1] * inverseDivider
 		, m[2][0] * inverseDivider
 		, m[2][1] * inverseDivider

@@ -26,7 +26,7 @@ constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Cha
 	// FourCC's byte order is little endian.
 	return (static_cast<std::uint32_t>(c0))
 		| (static_cast<std::uint32_t>(c1) << 8)
-		| (static_cast<std::uint32_t>(c2) << 16) 
+		| (static_cast<std::uint32_t>(c2) << 16)
 		| (static_cast<std::uint32_t>(c3) << 24);
 }
 

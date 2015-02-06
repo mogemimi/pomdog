@@ -40,7 +40,7 @@ static void TranslateToMouseState(DIDEVICEOBJECTDATA const& source, MouseState &
 	case DIMOFS_BUTTON1: {
 		mouseState.RightButton = ToButtonState(source.dwData);
 		break;
-	}	
+	}
 	case DIMOFS_BUTTON2: {
 		mouseState.MiddleButton = ToButtonState(source.dwData);
 		break;
@@ -48,7 +48,7 @@ static void TranslateToMouseState(DIDEVICEOBJECTDATA const& source, MouseState &
 	case DIMOFS_BUTTON3: {
 		mouseState.XButton1 = ToButtonState(source.dwData);
 		break;
-	}	
+	}
 	case DIMOFS_BUTTON4: {
 		mouseState.XButton2 = ToButtonState(source.dwData);
 		break;

@@ -45,7 +45,7 @@ void BootstrapperWin32::Run(std::function<void(std::shared_ptr<GameHost> const& 
 		useOpenGL, systemEventDispatcher, presentationParameters);
 
 	auto inputDeviceFactory = std::make_unique<Details::InputSystem::InputDeviceFactory>();
-	
+
 	{
 		using namespace Details::InputSystem::DirectInput;
 		auto deviceContext = std::make_shared<DeviceContextDirectInput>(
