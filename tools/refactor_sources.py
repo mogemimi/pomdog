@@ -14,8 +14,9 @@ from string import Template
 
 
 def ParsingCommandLineAraguments():
-    parser = argparse.ArgumentParser(prog='source2utf8',
-                                     description='Convert source files to UTF-8 with signature.')
+    parser = argparse.ArgumentParser(
+        prog='refactor_sources',
+        description='Convert source files to UTF-8 with signature.')
     parser.add_argument('directory', default='def')
     parser.add_argument('-v', '--version', action='version', version='%(prog)s version 0.1.0')
     args = parser.parse_args()
@@ -38,19 +39,42 @@ def ReadContent(path):
     f.close()
     return str
 
-def WriteContent(path, bom, content):
+def WriteContent(path, content, bom = None):
     f = open(path, 'wb')
-    f.write(bom.encode('utf-8'))
+    if bom != None:
+        f.write(bom.encode('utf-8'))
     f.write(content.encode('utf-8'))
     f.close()
 
+def RemoveUnnecessaryBlankSpaces(content):
+    result = unicode("", 'utf-8')
+    for line in content.split('\n'):
+        result += line.rstrip(' ').rstrip('\t')
+        result += '\n'
+    result = result.rstrip('\n') + '\n'
+    return result
+
 def ConvertSourceFile(path):
+    isChanged = False
+    statusWithBom = "---"
     content = unicode(ReadContent(path), 'utf-8')
     bom = u'\ufeff'
-    if content.startswith(bom):
-        return
-    print("=> {0}".format(path))
-    WriteContent(path, bom, content.replace('\r\n', '\n'))
+    if not content.startswith(bom):
+        content = bom + content
+        statusWithBom = "bom"
+        isChanged = True
+
+    statusWithTab = "---"
+    removed = RemoveUnnecessaryBlankSpaces(content.replace('\r\n', '\n'))
+    if content != removed:
+        content = removed
+        statusWithTab = "tab"
+        isChanged = True
+        print("remove space")
+
+    if isChanged:
+        print("=> ({0} {1}) {2}".format(statusWithBom, statusWithTab, path))
+        WriteContent(path, content)
 
 def Run():
     args = ParsingCommandLineAraguments()
