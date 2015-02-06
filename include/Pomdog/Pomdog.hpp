@@ -31,6 +31,7 @@
 
 // Content
 #include "Content/AssetManager.hpp"
+#include "Content/AssetLoaders/EffectPassLoader.hpp"
 
 // Event
 #include "Event/Event.hpp"

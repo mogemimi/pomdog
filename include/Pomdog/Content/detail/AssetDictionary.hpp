@@ -12,7 +12,6 @@
 #endif
 
 #include "AssetLoaders/AudioClipLoader.hpp"
-#include "AssetLoaders/EffectPassLoader.hpp"
 #include "AssetLoaders/Texture2DLoader.hpp"
 #include "Pomdog/Utility/detail/Any.hpp"
 #include "Pomdog/Utility/Assert.hpp"

@@ -17,6 +17,11 @@
 #include <utility>
 
 namespace Pomdog {
+namespace AssetLoaders {
+
+class EffectPassLoader;
+
+}// namespace AssetLoaders
 
 class POMDOG_EXPORT AssetManager {
 public:
@@ -29,6 +34,8 @@ public:
 	{
 		return assets.Load<T>(loaderContext, assetName);
 	}
+
+	AssetLoaders::EffectPassLoader LoadEffectPass();
 
 	///@~Japanese
 	/// @brief 読み込まれたすべてのアセットを破棄します。

@@ -5,12 +5,20 @@
 //
 
 #include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Content/AssetLoaders/EffectPassLoader.hpp"
+#include <utility>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
 AssetManager::AssetManager(Details::AssetLoaderContext && loaderContextIn)
 	: loaderContext(std::move(loaderContextIn))
 {}
+//-----------------------------------------------------------------------
+AssetLoaders::EffectPassLoader AssetManager::LoadEffectPass()
+{
+	AssetLoaders::EffectPassLoader loader(loaderContext);
+	return std::move(loader);
+}
 //-----------------------------------------------------------------------
 void AssetManager::Unload()
 {
