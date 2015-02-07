@@ -70,7 +70,6 @@ def ConvertSourceFile(path):
         content = removed
         statusWithTab = "tab"
         isChanged = True
-        print("remove space")
 
     if isChanged:
         print("=> ({0} {1}) {2}".format(statusWithBom, statusWithTab, path))
