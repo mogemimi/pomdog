@@ -6,8 +6,8 @@ namespace QuickStart {
 //-----------------------------------------------------------------------
 QuickStartGame::QuickStartGame(std::shared_ptr<GameHost> const& gameHostIn)
 	: gameHost(gameHostIn)
+	, graphicsContext(gameHostIn->GraphicsContext())
 {
-	graphicsContext = gameHost->GraphicsContext();
 }
 //-----------------------------------------------------------------------
 void QuickStartGame::Initialize()
@@ -57,7 +57,7 @@ void QuickStartGame::Initialize()
 		auto sampler = SamplerState::CreatePointClamp(graphicsDevice);
 		graphicsContext->SetSamplerState(0, sampler);
 
-		// Laod a PNG as texture
+		// Load a PNG as texture
 		texture = assets->Load<Texture2D>("pomdog.png");
 	}
 	{
