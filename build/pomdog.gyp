@@ -207,7 +207,6 @@
       '../include/Pomdog/Graphics/VertexBuffer.hpp',
       '../include/Pomdog/Graphics/detail/BuiltinShaderPool.hpp',
       '../include/Pomdog/Graphics/detail/EffectBinaryParameter.hpp',
-      '../include/Pomdog/Graphics/detail/ShaderBytecode.hpp',
       '../include/Pomdog/Graphics/ShaderCompilers/GLSLCompiler.hpp',
       '../include/Pomdog/Graphics/ShaderCompilers/HLSLCompiler.hpp',
       '../include/Pomdog/Input/Gamepad.hpp',
@@ -272,6 +271,7 @@
       '../src/RenderSystem/NativeSamplerState.hpp',
       '../src/RenderSystem/NativeTexture2D.hpp',
       '../src/RenderSystem/NativeVertexBuffer.hpp',
+      '../src/RenderSystem/ShaderBytecode.hpp',
       '../src/RenderSystem/ShaderCompileOptions.hpp',
     ],
     'pomdog_library_opengl4_sources': [

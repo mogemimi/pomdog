@@ -6,7 +6,7 @@
 
 #include "ShaderGL4.hpp"
 #include "ErrorChecker.hpp"
-#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
+#include "../RenderSystem/ShaderBytecode.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogLevel.hpp"
 #include "Pomdog/Logging/LogStream.hpp"

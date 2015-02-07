@@ -17,10 +17,10 @@
 
 namespace Pomdog {
 namespace Details {
+namespace RenderSystem {
 
 class ShaderBytecode;
 
-namespace RenderSystem {
 namespace GL4 {
 
 template <GLenum PipelineStage>

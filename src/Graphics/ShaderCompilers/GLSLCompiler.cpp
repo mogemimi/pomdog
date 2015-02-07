@@ -6,18 +6,18 @@
 
 #include "Pomdog/Graphics/ShaderCompilers/GLSLCompiler.hpp"
 #include "../../RenderSystem/NativeGraphicsDevice.hpp"
+#include "../../RenderSystem/ShaderBytecode.hpp"
 #include "../../RenderSystem/ShaderCompileOptions.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
-#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace ShaderCompilers {
 namespace {
 
-using Details::ShaderBytecode;
+using Details::RenderSystem::ShaderBytecode;
 using Details::RenderSystem::ShaderCompileOptions;
 using Details::RenderSystem::ShaderPipelineStage;
 
