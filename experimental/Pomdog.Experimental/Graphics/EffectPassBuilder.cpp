@@ -129,6 +129,8 @@ EffectPassBuilder & EffectPassBuilder::InputElements(VertexDeclaration && vertex
 std::shared_ptr<EffectPass> EffectPassBuilder::Create()
 {
 	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(!impl->description.InputElements.empty());
+	POMDOG_ASSERT(!impl->description.InputElements.front().Declaration.VertexElements().empty());
 
 	auto effectPass = std::make_shared<EffectPass>(impl->graphicsDevice, impl->description);
 	return std::move(effectPass);

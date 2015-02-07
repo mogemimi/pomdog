@@ -177,6 +177,9 @@ EffectPassLoader & EffectPassLoader::InputElements(VertexDeclaration && vertexDe
 std::shared_ptr<EffectPass> EffectPassLoader::Load()
 {
 	POMDOG_ASSERT(impl);
+	POMDOG_ASSERT(!impl->description.InputElements.empty());
+	POMDOG_ASSERT(!impl->description.InputElements.front().Declaration.VertexElements().empty());
+
 	auto effectPass = std::make_shared<EffectPass>(impl->graphicsDevice, impl->description);
 	return std::move(effectPass);
 }
