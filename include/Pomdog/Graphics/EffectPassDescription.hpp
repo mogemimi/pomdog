@@ -20,7 +20,7 @@ namespace Pomdog {
 
 class EffectPassDescription final {
 public:
-	std::vector<VertexBufferBinding> VertexBindings;
+	std::vector<VertexBufferBinding> InputElements;
 	std::shared_ptr<Shader> VertexShader;
 	std::shared_ptr<Shader> PixelShader;
 };

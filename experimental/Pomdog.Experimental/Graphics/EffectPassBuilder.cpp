@@ -101,28 +101,28 @@ EffectPassBuilder & EffectPassBuilder::PixelShaderHLSL(void const* shaderSource,
 EffectPassBuilder & EffectPassBuilder::InputElements(std::vector<VertexBufferBinding> const& inputElements)
 {
 	POMDOG_ASSERT(impl);
-	impl->description.VertexBindings = inputElements;
+	impl->description.InputElements = inputElements;
 	return *this;
 }
 //-----------------------------------------------------------------------
 EffectPassBuilder & EffectPassBuilder::InputElements(std::vector<VertexBufferBinding> && inputElements)
 {
 	POMDOG_ASSERT(impl);
-	impl->description.VertexBindings = std::move(inputElements);
+	impl->description.InputElements = std::move(inputElements);
 	return *this;
 }
 //-----------------------------------------------------------------------
 EffectPassBuilder & EffectPassBuilder::InputElements(VertexDeclaration const& vertexDeclaration)
 {
 	POMDOG_ASSERT(impl);
-	impl->description.VertexBindings = {vertexDeclaration};
+	impl->description.InputElements = {vertexDeclaration};
 	return *this;
 }
 //-----------------------------------------------------------------------
 EffectPassBuilder & EffectPassBuilder::InputElements(VertexDeclaration && vertexDeclaration)
 {
 	POMDOG_ASSERT(impl);
-	impl->description.VertexBindings = {std::move(vertexDeclaration)};
+	impl->description.InputElements = {std::move(vertexDeclaration)};
 	return *this;
 }
 //-----------------------------------------------------------------------

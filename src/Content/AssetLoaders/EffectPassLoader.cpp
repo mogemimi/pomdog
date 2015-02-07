@@ -150,28 +150,28 @@ EffectPassLoader & EffectPassLoader::InputElements(std::vector<VertexBufferBindi
 {
 	POMDOG_ASSERT(!inputElements.empty());
 	POMDOG_ASSERT(impl);
-	impl->description.VertexBindings = inputElements;
+	impl->description.InputElements = inputElements;
 	return *this;
 }
 //-----------------------------------------------------------------------
 EffectPassLoader & EffectPassLoader::InputElements(std::vector<VertexBufferBinding> && inputElements)
 {
 	POMDOG_ASSERT(impl);
-	impl->description.VertexBindings = std::move(inputElements);
+	impl->description.InputElements = std::move(inputElements);
 	return *this;
 }
 //-----------------------------------------------------------------------
 EffectPassLoader & EffectPassLoader::InputElements(VertexDeclaration const& vertexDeclaration)
 {
 	POMDOG_ASSERT(impl);
-	impl->description.VertexBindings = {vertexDeclaration};
+	impl->description.InputElements = {vertexDeclaration};
 	return *this;
 }
 //-----------------------------------------------------------------------
 EffectPassLoader & EffectPassLoader::InputElements(VertexDeclaration && vertexDeclaration)
 {
 	POMDOG_ASSERT(impl);
-	impl->description.VertexBindings = {std::move(vertexDeclaration)};
+	impl->description.InputElements = {std::move(vertexDeclaration)};
 	return *this;
 }
 //-----------------------------------------------------------------------

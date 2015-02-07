@@ -88,7 +88,7 @@ EffectPassGL4::EffectPassGL4(EffectPassDescription const& description)
 		POMDOG_THROW_EXCEPTION(std::domain_error, "Failed to link shader program.");
 	}
 
-	inputLayout = std::make_unique<InputLayoutGL4>(*shaderProgram, description.VertexBindings);
+	inputLayout = std::make_unique<InputLayoutGL4>(*shaderProgram, description.InputElements);
 
 	EffectReflectionGL4 shaderReflection(*shaderProgram);
 	{
