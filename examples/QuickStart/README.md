@@ -26,13 +26,13 @@ git clone https://chromium.googlesource.com/external/gyp.git Tools/gyp
 **1. Generating the Xcode project file**
 
 ```bash
-Tools/gyp/gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
+Tools/gyp/gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=./Build.xcodefiles/
 ```
 
 You can also use `gyp` instead of `Tools/gyp/gyp`:
 
 ```bash
-gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
+gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=./Build.xcodefiles/
 ```
 
 For information on how to install gyp, see [How to Install GYP](https://github.com/mogemimi/pomdog/wiki/How-to-Install-GYP) on the wiki.
@@ -40,13 +40,13 @@ For information on how to install gyp, see [How to Install GYP](https://github.c
 **2. Building (Release/Debug)**
 
 ```
-xcodebuild -project build.xcodefiles/Build/QuickStart.xcodeproj
+xcodebuild -project Build.xcodefiles/Build/QuickStart.xcodeproj
 ```
 
 To build in release mode, use `-configuration` option:
 
 ```bash
-xcodebuild -project build.xcodefiles/Build/QuickStart.xcodeproj -configuration Release
+xcodebuild -project Build.xcodefiles/Build/QuickStart.xcodeproj -configuration Release
 ```
 
 **3. Running app**

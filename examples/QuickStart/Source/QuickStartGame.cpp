@@ -28,7 +28,7 @@ void QuickStartGame::Initialize()
 			Vector3( 0.8f,  0.8f, 0.0f), Vector2(1.0f, 1.0f),
 			Vector3( 0.8f, -0.8f, 0.0f), Vector2(1.0f, 0.0f),
 		};
-		
+
 		// Create vertex buffer
 		vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
 			verticesCombo.data(), verticesCombo.size(),
@@ -45,10 +45,13 @@ void QuickStartGame::Initialize()
 			IndexElementSize::SixteenBits, indices.data(), indices.size(), BufferUsage::Immutable);
 	}
 	{
-		effectPass = assets->Load<EffectPass>("SimpleEffect");
+		effectPass = assets->LoadEffectPass()
+			.InputElements({VertexElementFormat::Float3, VertexElementFormat::Float2})
+			.VertexShaderGLSL("SimpleEffect/VertexShader.glsl")
+			.PixelShaderGLSL("SimpleEffect/PixelShader.glsl")
+			.Load();
+
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
-		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
-			VertexDeclaration{VertexElementFormat::Float3, VertexElementFormat::Float2});
 	}
 	{
 		auto sampler = SamplerState::CreatePointClamp(graphicsDevice);
@@ -79,7 +82,6 @@ void QuickStartGame::Draw()
 	graphicsContext->Clear(Color::CornflowerBlue);
 
 	graphicsContext->SetTexture(0, texture);
-	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffer(vertexBuffer);
 	graphicsContext->SetEffectPass(effectPass);
 	graphicsContext->SetConstantBuffers(constantBuffers);
