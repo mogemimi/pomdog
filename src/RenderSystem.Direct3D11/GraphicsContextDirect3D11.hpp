@@ -75,9 +75,6 @@ public:
 	void SetScissorRectangle(Rectangle const& rectangle) override;
 
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
-	void SetInputLayout(std::shared_ptr<InputLayout> const& inputLayout) override;
-
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
 	void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) override;
 
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext

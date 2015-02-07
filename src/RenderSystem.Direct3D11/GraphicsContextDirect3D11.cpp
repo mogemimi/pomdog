@@ -18,7 +18,6 @@
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Graphics/ClearOptions.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
-#include "Pomdog/Graphics/InputLayout.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
@@ -313,17 +312,6 @@ void GraphicsContextDirect3D11::SetScissorRectangle(Rectangle const& rectangle)
 	POMDOG_ASSERT(!rects.empty());
 
 	deviceContext->RSSetScissorRects(rects.size(), rects.data());
-}
-//-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::SetInputLayout(std::shared_ptr<InputLayout> const& inputLayout)
-{
-	POMDOG_ASSERT(deviceContext);
-
-	POMDOG_ASSERT(inputLayout);
-	POMDOG_ASSERT(dynamic_cast<InputLayoutDirect3D11*>(inputLayout->NativeInputLayout()));
-
-	auto nativeInputLayout = static_cast<InputLayoutDirect3D11*>(inputLayout->NativeInputLayout());
-	nativeInputLayout->Apply(deviceContext.Get());
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffersIn)

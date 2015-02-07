@@ -12,28 +12,23 @@
 #endif
 
 #include "PrerequisitesDirect3D11.hpp"
-#include "../RenderSystem/NativeInputLayout.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <vector>
 #include <string>
 
 namespace Pomdog {
 namespace Details {
+namespace RenderSystem {
 
 class ShaderBytecode;
 
-namespace RenderSystem {
 namespace Direct3D11 {
 
-class InputLayoutDirect3D11 final: public NativeInputLayout {
-public:
-	InputLayoutDirect3D11(ID3D11Device* device, ShaderBytecode const& vertexShaderBytecode,
+struct InputLayoutHelper final {
+	static Microsoft::WRL::ComPtr<ID3D11InputLayout>
+	CreateInputLayout(ID3D11Device* device,
+		ShaderBytecode const& vertexShaderBytecode,
 		std::vector<VertexBufferBinding> const& vertexBufferBindings);
-
-	void Apply(ID3D11DeviceContext* deviceContext);
-
-private:
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> nativeInputLayout;
 };
 
 }// namespace Direct3D11

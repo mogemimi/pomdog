@@ -11,13 +11,14 @@
 #include "EffectPassDirect3D11.hpp"
 #include "EffectReflectionDirect3D11.hpp"
 #include "IndexBufferDirect3D11.hpp"
-#include "InputLayoutDirect3D11.hpp"
 #include "RasterizerStateDirect3D11.hpp"
 #include "RenderTarget2DDirect3D11.hpp"
 #include "SamplerStateDirect3D11.hpp"
 #include "Texture2DDirect3D11.hpp"
 #include "VertexBufferDirect3D11.hpp"
-#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
+#include "../RenderSystem/ShaderBytecode.hpp"
+#include "../RenderSystem/ShaderCompileOptions.hpp"
+#include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/StringFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -299,6 +300,29 @@ GraphicsDeviceDirect3D11::GraphicsDeviceDirect3D11()
 //-----------------------------------------------------------------------
 GraphicsDeviceDirect3D11::~GraphicsDeviceDirect3D11() = default;
 //-----------------------------------------------------------------------
+ShaderLanguage GraphicsDeviceDirect3D11::GetSupportedLanguage() const
+{
+	return ShaderLanguage::HLSL;
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<Shader>
+GraphicsDeviceDirect3D11::CreateShader(ShaderBytecode const& shaderBytecode,
+	ShaderCompileOptions const& compileOptions)
+{
+	switch (compileOptions.Profile.PipelineStage) {
+	case ShaderPipelineStage::VertexShader: {
+		return std::make_unique<VertexShaderDirect3D11>(
+			impl->nativeDevice.Get(), shaderBytecode, compileOptions);
+	}
+	case ShaderPipelineStage::PixelShader: {
+		return std::make_unique<PixelShaderDirect3D11>(
+			impl->nativeDevice.Get(), shaderBytecode, compileOptions);
+	}
+	}
+
+	POMDOG_THROW_EXCEPTION(std::domain_error, "Failed to create shader");
+}
+//-----------------------------------------------------------------------
 std::unique_ptr<NativeIndexBuffer>
 GraphicsDeviceDirect3D11::CreateIndexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage)
 {
@@ -390,13 +414,12 @@ GraphicsDeviceDirect3D11::CreateRasterizerState(RasterizerDescription const& des
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectPass>
-GraphicsDeviceDirect3D11::CreateEffectPass(ShaderBytecode const& vertexShaderBytecode, ShaderBytecode const& pixelShaderBytecode)
+GraphicsDeviceDirect3D11::CreateEffectPass(EffectPassDescription const& description)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeDevice);
 
-	return std::make_unique<EffectPassDirect3D11>(impl->nativeDevice.Get(),
-		vertexShaderBytecode, pixelShaderBytecode);
+	return std::make_unique<EffectPassDirect3D11>(impl->nativeDevice.Get(), description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeConstantBuffer>
@@ -424,26 +447,6 @@ GraphicsDeviceDirect3D11::CreateEffectReflection(NativeEffectPass & nativeEffect
 
 	return std::make_unique<EffectReflectionDirect3D11>(
 		effectPass->GetVertexShaderBlob(), effectPass->GetPixelShaderBlob());
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeInputLayout>
-GraphicsDeviceDirect3D11::CreateInputLayout(NativeEffectPass & nativeEffectPass,
-	std::vector<VertexBufferBinding> const& vertexBufferBindings)
-{
-	POMDOG_ASSERT(impl);
-	POMDOG_ASSERT(impl->nativeDevice);
-
-	auto const effectPass = dynamic_cast<EffectPassDirect3D11*>(&nativeEffectPass);
-	POMDOG_ASSERT(effectPass != nullptr);
-
-	if (!effectPass) {
-		// FUS RO DAH!
-		///@todo throw exception
-		return {};
-	}
-
-	return std::make_unique<InputLayoutDirect3D11>(impl->nativeDevice.Get(),
-		effectPass->GetVertexShaderBlob(), vertexBufferBindings);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeTexture2D>

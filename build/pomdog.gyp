@@ -383,6 +383,8 @@
       '../src/RenderSystem.Direct3D11/SamplerStateDirect3D11.hpp',
       '../src/RenderSystem.Direct3D11/ShaderCompiling.cpp',
       '../src/RenderSystem.Direct3D11/ShaderCompiling.hpp',
+      '../src/RenderSystem.Direct3D11/ShaderDirect3D11.cpp',
+      '../src/RenderSystem.Direct3D11/ShaderDirect3D11.hpp',
       '../src/RenderSystem.Direct3D11/Texture2DDirect3D11.cpp',
       '../src/RenderSystem.Direct3D11/Texture2DDirect3D11.hpp',
       '../src/RenderSystem.Direct3D11/VertexBufferDirect3D11.cpp',

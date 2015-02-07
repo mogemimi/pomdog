@@ -17,10 +17,10 @@
 
 namespace Pomdog {
 namespace Details {
+namespace RenderSystem {
 
 class ShaderBytecode;
 
-namespace RenderSystem {
 namespace Direct3D11 {
 
 class EffectReflectionDirect3D11 final: public NativeEffectReflection {

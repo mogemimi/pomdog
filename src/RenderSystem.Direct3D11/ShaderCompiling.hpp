@@ -12,46 +12,21 @@
 #endif
 
 #include "PrerequisitesDirect3D11.hpp"
-#include <string>
-#include <vector>
 #include <cstdint>
 
 namespace Pomdog {
 namespace Details {
 namespace RenderSystem {
+
+class ShaderBytecode;
+class ShaderCompileOptions;
+
 namespace Direct3D11 {
 
-enum class ShaderProgramType: std::uint8_t {
-	VertexShader,
-	PixelShader,
-	GeometryShader,
-	DomainShader,
-	ComputeShader,
-	HullShader,
-};
-
-enum class ShaderModel: std::uint8_t {
-	SM_2_0,
-	SM_3_0,
-	SM_4_0,
-	SM_5_0,
-};
-
-struct ShaderProfile {
-	ShaderModel ShaderModel;
-	ShaderProgramType ProgramType;
-};
-
-class ShaderCompiling final {
-public:
-	static std::vector<std::uint8_t> CompileShader(std::string const& source,
-		ShaderProfile const& shaderProfile, std::string const& entrypoint,
-		std::string const& currentDirectory);
-
-	//static std::vector<std::uint8_t> CompileShader(std::string const& source,
-	//	ShaderProfile const& shaderProfile, std::string const& entrypoint,
-	//	std::vector<D3D_SHADER_MACRO> const& defines,
-	//	std::string const& currentDirectory);
+struct ShaderCompiling final {
+	static Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(
+		ShaderBytecode const& shaderBytecode,
+		ShaderCompileOptions const& compileOptions);
 };
 
 }// namespace Direct3D11

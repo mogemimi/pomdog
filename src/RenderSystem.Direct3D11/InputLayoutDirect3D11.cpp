@@ -5,11 +5,11 @@
 //
 
 #include "InputLayoutDirect3D11.hpp"
-#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
+#include "../RenderSystem/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/VertexElementFormat.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include <utility>
 
 namespace Pomdog {
@@ -76,8 +76,8 @@ static std::vector<D3D11_INPUT_ELEMENT_DESC> BuildInputElements(
 			//elementDesc.AlignedByteOffset = iterBinding->VertexOffset + iter->Offset;
 			elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 
-			elementDesc.InstanceDataStepRate = iterBinding->InstanceFrequency;
-			elementDesc.InputSlotClass = ((0 < iterBinding->InstanceFrequency) ?
+			elementDesc.InstanceDataStepRate = iterBinding->InstanceStepRate;
+			elementDesc.InputSlotClass = ((0 < iterBinding->InstanceStepRate) ?
 				D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA);
 
 			inputElements.push_back(std::move(elementDesc));
@@ -160,7 +160,8 @@ static DXGI_FORMAT ToDXGIFormat(D3D_REGISTER_COMPONENT_TYPE registerType, BYTE m
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-InputLayoutDirect3D11::InputLayoutDirect3D11(ID3D11Device* device,
+Microsoft::WRL::ComPtr<ID3D11InputLayout> InputLayoutHelper::CreateInputLayout(
+	ID3D11Device* device,
 	ShaderBytecode const& vertexShaderBytecode,
 	std::vector<VertexBufferBinding> const& vertexBufferBindings)
 {
@@ -175,21 +176,15 @@ InputLayoutDirect3D11::InputLayoutDirect3D11(ID3D11Device* device,
 	auto signatureParameters = EnumerateSignatureParameters(shaderReflector.Get(), shaderDesc);
 	auto inputElements = BuildInputElements(signatureParameters, vertexBufferBindings);
 
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> nativeInputLayout;
 	HRESULT hr = device->CreateInputLayout(inputElements.data(), inputElements.size(),
 		vertexShaderBytecode.Code, vertexShaderBytecode.ByteLength, &nativeInputLayout);
 
-	if (FAILED(hr))
-	{
-		///@todo throw exception
-		// error, FUS RO DAH!
+	if (FAILED(hr)) {
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create InputLayout");
 	}
-}
-//-----------------------------------------------------------------------
-void InputLayoutDirect3D11::Apply(ID3D11DeviceContext* deviceContext)
-{
-	POMDOG_ASSERT(deviceContext);
-	POMDOG_ASSERT(nativeInputLayout);
-	deviceContext->IASetInputLayout(nativeInputLayout.Get());
+
+	return std::move(nativeInputLayout);
 }
 //-----------------------------------------------------------------------
 }// namespace Direct3D11

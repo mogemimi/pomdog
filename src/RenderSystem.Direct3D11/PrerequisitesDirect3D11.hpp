@@ -30,7 +30,6 @@ class EffectReflectionDirect3D11;
 class GraphicsDeviceDirect3D11;
 class GraphicsContextDirect3D11;
 class IndexBufferDirect3D11;
-class InputLayoutDirect3D11;
 class RasterizerStateDirect3D11;
 class RenderTarget2DDirect3D11;
 class SamplerStateDirect3D11;

@@ -7,9 +7,12 @@
 #include "EffectPassDirect3D11.hpp"
 #include "ConstantLayoutDirect3D11.hpp"
 #include "GraphicsDeviceDirect3D11.hpp"
-#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
-#include "Pomdog/Utility/Exception.hpp"
+#include "InputLayoutDirect3D11.hpp"
+#include "ShaderDirect3D11.hpp"
+#include "../RenderSystem/ShaderBytecode.hpp"
+#include "Pomdog/Graphics/EffectPassDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
 #include <utility>
 
@@ -111,50 +114,33 @@ static std::vector<ConstantBufferBindingDirect3D11> CreateConstantBufferBindings
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-EffectPassDirect3D11::EffectPassDirect3D11(ID3D11Device * device,
-	ShaderBytecode const& vertexShaderBytecode,
-	ShaderBytecode const& pixelShaderBytecode)
+EffectPassDirect3D11::EffectPassDirect3D11(ID3D11Device* device,
+	EffectPassDescription const& description)
 {
 	POMDOG_ASSERT(device);
 
-	// Create the vertex shader
-	HRESULT hr = device->CreateVertexShader(vertexShaderBytecode.Code,
-		vertexShaderBytecode.ByteLength, nullptr, &vertexShader);
-
-	if (FAILED(hr)) {
-		// FUS RO DAH!!
-		///@todo throw exception
-		return;
+	vertexShader = std::dynamic_pointer_cast<Direct3D11::VertexShaderDirect3D11>(description.VertexShader);
+	if (!vertexShader) {
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid vertex shader.");
 	}
 
-	// Create the pixel shader
-	hr = device->CreatePixelShader(pixelShaderBytecode.Code,
-		pixelShaderBytecode.ByteLength, nullptr, &pixelShader);
-
-	if (FAILED(hr)) {
-		// FUS RO DAH!!
-		// throw exception
-		return;
+	pixelShader = std::dynamic_pointer_cast<Direct3D11::PixelShaderDirect3D11>(description.PixelShader);
+	if (!pixelShader) {
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid pixel shader.");
 	}
 
-	vertexShaderBlob.resize(vertexShaderBytecode.ByteLength);
-	std::memcpy(vertexShaderBlob.data(), vertexShaderBytecode.Code, vertexShaderBlob.size());
-
-	pixelShaderBlob.resize(pixelShaderBytecode.ByteLength);
-	std::memcpy(pixelShaderBlob.data(), pixelShaderBytecode.Code, pixelShaderBlob.size());
+	inputLayout = InputLayoutHelper::CreateInputLayout(
+		device, vertexShader->GetShaderBytecode(), description.InputElements);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeConstantLayout> EffectPassDirect3D11::CreateConstantLayout()
 {
-	ShaderBytecode vertexShaderBytecode;
-	vertexShaderBytecode.Code = vertexShaderBlob.data();
-	vertexShaderBytecode.ByteLength = vertexShaderBlob.size();
+	POMDOG_ASSERT(vertexShader);
+	POMDOG_ASSERT(pixelShader);
 
-	ShaderBytecode pixelShaderBytecode;
-	pixelShaderBytecode.Code = pixelShaderBlob.data();
-	pixelShaderBytecode.ByteLength = pixelShaderBlob.size();
-
-	auto bindings = CreateConstantBufferBindings(vertexShaderBytecode, pixelShaderBytecode);
+	auto bindings = CreateConstantBufferBindings(
+		vertexShader->GetShaderBytecode(),
+		pixelShader->GetShaderBytecode());
 
 	auto constantLayout = std::make_unique<ConstantLayoutDirect3D11>(std::move(bindings));
 	return std::move(constantLayout);
@@ -163,29 +149,25 @@ std::unique_ptr<NativeConstantLayout> EffectPassDirect3D11::CreateConstantLayout
 void EffectPassDirect3D11::Apply(ID3D11DeviceContext * deviceContext)
 {
 	POMDOG_ASSERT(deviceContext);
+	POMDOG_ASSERT(inputLayout);
 	POMDOG_ASSERT(vertexShader);
 	POMDOG_ASSERT(pixelShader);
 
-	deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
-	deviceContext->PSSetShader(pixelShader.Get(), nullptr, 0);
+	deviceContext->IASetInputLayout(inputLayout.Get());
+	deviceContext->VSSetShader(vertexShader->GetNativeShader(), nullptr, 0);
+	deviceContext->PSSetShader(pixelShader->GetNativeShader(), nullptr, 0);
 }
 //-----------------------------------------------------------------------
 ShaderBytecode EffectPassDirect3D11::GetVertexShaderBlob() const
 {
-	POMDOG_ASSERT(!vertexShaderBlob.empty());
-	ShaderBytecode shaderBytecode;
-	shaderBytecode.Code = vertexShaderBlob.data();
-	shaderBytecode.ByteLength = vertexShaderBlob.size();
-	return std::move(shaderBytecode);
+	POMDOG_ASSERT(vertexShader);
+	return vertexShader->GetShaderBytecode();
 }
 //-----------------------------------------------------------------------
 ShaderBytecode EffectPassDirect3D11::GetPixelShaderBlob() const
 {
-	POMDOG_ASSERT(!pixelShaderBlob.empty());
-	ShaderBytecode shaderBytecode;
-	shaderBytecode.Code = pixelShaderBlob.data();
-	shaderBytecode.ByteLength = pixelShaderBlob.size();
-	return std::move(shaderBytecode);
+	POMDOG_ASSERT(pixelShader);
+	return pixelShader->GetShaderBytecode();
 }
 //-----------------------------------------------------------------------
 }// namespace Direct3D11

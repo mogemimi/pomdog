@@ -5,12 +5,17 @@
 //
 
 #include "ShaderCompiling.hpp"
+#include "../RenderSystem/ShaderBytecode.hpp"
+#include "../RenderSystem/ShaderCompileOptions.hpp"
 #include "../Utility/PathHelper.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/StringFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include <utility>
+#include <vector>
+#include <string>
 #include <fstream>
 
 namespace Pomdog {
@@ -22,41 +27,32 @@ namespace {
 static std::string ToString(ShaderProfile const& profile)
 {
 	std::string output;
-	switch (profile.ProgramType) {
-	case ShaderProgramType::VertexShader:
+
+	switch (profile.PipelineStage) {
+	case ShaderPipelineStage::VertexShader:
 		output += "vs_";
 		break;
-	case ShaderProgramType::PixelShader:
+	case ShaderPipelineStage::PixelShader:
 		output += "ps_";
 		break;
-	case ShaderProgramType::GeometryShader:
-		output += "gs_";
-		break;
-	case ShaderProgramType::DomainShader:
-		output += "ds_";
-		break;
-	case ShaderProgramType::ComputeShader:
-		output += "cs_";
-		break;
-	case ShaderProgramType::HullShader:
-		output += "hs_";
-		break;
+	//case ShaderPipelineStage::GeometryShader:
+	//	output += "gs_";
+	//	break;
+	//case ShaderPipelineStage::DomainShader:
+	//	output += "ds_";
+	//	break;
+	//case ShaderPipelineStage::ComputeShader:
+	//	output += "cs_";
+	//	break;
+	//case ShaderPipelineStage::HullShader:
+	//	output += "hs_";
+	//	break;
 	}
 
-	switch (profile.ShaderModel) {
-	case ShaderModel::SM_2_0:
-		output += "2_0";
-		break;
-	case ShaderModel::SM_3_0:
-		output += "3_0";
-		break;
-	case ShaderModel::SM_4_0:
-		output += "4_0";
-		break;
-	case ShaderModel::SM_5_0:
-		output += "5_0";
-		break;
-	}
+	output += std::to_string(profile.ShaderModel.Major);
+	output += '_';
+	output += std::to_string(profile.ShaderModel.Minor);
+
 	return std::move(output);
 }
 //-----------------------------------------------------------------------
@@ -138,10 +134,14 @@ public:
 	}
 };
 //-----------------------------------------------------------------------
-static void CompileFromShaderFile(std::string const& source,
-	std::string const& shaderProfile, std::string const& entrypoint,
-	std::string const& currentDirectory, ID3DBlob** ppBlobOut)
+static void CompileFromShaderFile(ShaderBytecode const& shaderBytecode,
+	std::string const& entrypoint, std::string const& shaderProfile,
+	std::string const& currentDirectory, D3D_SHADER_MACRO const* preprocessorMacros,
+	ID3DBlob** ppBlobOut)
 {
+	POMDOG_ASSERT(shaderBytecode.Code != nullptr);
+	POMDOG_ASSERT(shaderBytecode.ByteLength > 0);
+
 	DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined(DEBUG) && !defined(NDEBUG)
 	shaderFlags |= D3DCOMPILE_DEBUG;
@@ -150,20 +150,19 @@ static void CompileFromShaderFile(std::string const& source,
 	HLSLCodeInclude shaderInclude(currentDirectory);
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
 
-	HRESULT hr = ::D3DCompile(source.c_str(), source.size(), nullptr, nullptr, &shaderInclude,
+	HRESULT hr = ::D3DCompile(shaderBytecode.Code, shaderBytecode.ByteLength,
+		nullptr, preprocessorMacros, &shaderInclude,
 		entrypoint.c_str(), shaderProfile.c_str(), shaderFlags, 0, ppBlobOut, &errorBlob);
 
 	if (FAILED(hr))
 	{
-		///@todo throw exception
-		// error, FUS RO DAH!
-
 		if (errorBlob) {
-			Log::Internal(StringFormat(
-				"Failed to compile shader. The HLSL file cannot be compiled.\nerror: %s",
+			POMDOG_THROW_EXCEPTION(std::runtime_error, StringFormat(
+				"Failed to compile shader.\n"
+				"error: %s",
 				reinterpret_cast<LPCSTR>(errorBlob->GetBufferPointer())));
 		}
-		return;
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to compile shader.");
 	}
 
 	if (errorBlob) {
@@ -174,21 +173,45 @@ static void CompileFromShaderFile(std::string const& source,
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-std::vector<std::uint8_t> ShaderCompiling::CompileShader(std::string const& source,
-	ShaderProfile const& shaderProfile, std::string const& entrypoint,
-	std::string const& currentDirectory)
+Microsoft::WRL::ComPtr<ID3DBlob> ShaderCompiling::CompileShader(
+	ShaderBytecode const& shaderBytecode,
+	ShaderCompileOptions const& compileOptions)
 {
-	const auto target = ToString(shaderProfile);
+	const auto target = ToString(compileOptions.Profile);
 	POMDOG_ASSERT(!target.empty());
 
+	std::vector<D3D_SHADER_MACRO> defines;
+	defines.reserve(compileOptions.PreprocessorMacros.size());
+
+	for (auto & macro: compileOptions.PreprocessorMacros)
+	{
+		if (macro.Name.empty()) {
+			continue;
+		}
+
+		D3D_SHADER_MACRO shaderMacro;
+		shaderMacro.Name = macro.Name.c_str();
+		shaderMacro.Definition = macro.Definition.empty() ? nullptr: macro.Definition.c_str();
+		defines.push_back(std::move(shaderMacro));
+	}
+
+	if (!defines.empty())
+	{
+		D3D_SHADER_MACRO shaderMacro;
+		shaderMacro.Name = nullptr;
+		shaderMacro.Definition = nullptr;
+		defines.push_back(std::move(shaderMacro));
+	}
+
 	Microsoft::WRL::ComPtr<ID3DBlob> codeBlob;
-	CompileFromShaderFile(source, target, entrypoint, currentDirectory, &codeBlob);
+	CompileFromShaderFile(shaderBytecode,
+		compileOptions.EntryPoint,
+		target,
+		compileOptions.CurrentDirectory,
+		(defines.empty() ? nullptr: defines.data()),
+		&codeBlob);
 
-	POMDOG_ASSERT(codeBlob);
-	std::vector<std::uint8_t> shaderBytecode(codeBlob->GetBufferSize());
-	std::memcpy(shaderBytecode.data(), codeBlob->GetBufferPointer(), shaderBytecode.size());
-
-	return std::move(shaderBytecode);
+	return std::move(codeBlob);
 }
 
 }// namespace Direct3D11

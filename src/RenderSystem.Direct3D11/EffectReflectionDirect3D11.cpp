@@ -5,7 +5,7 @@
 //
 
 #include "EffectReflectionDirect3D11.hpp"
-#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
+#include "../RenderSystem/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/EffectConstantDescription.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Exception.hpp"

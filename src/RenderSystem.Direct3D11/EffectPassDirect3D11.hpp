@@ -12,23 +12,22 @@
 #endif
 
 #include "PrerequisitesDirect3D11.hpp"
+#include "ShaderDirect3D11.hpp"
 #include "../RenderSystem/NativeEffectPass.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <vector>
 
 namespace Pomdog {
 namespace Details {
+namespace RenderSystem {
 
 class ShaderBytecode;
 
-namespace RenderSystem {
 namespace Direct3D11 {
 
 class EffectPassDirect3D11 final: public NativeEffectPass {
 public:
-	EffectPassDirect3D11(ID3D11Device * device,
-		ShaderBytecode const& vertexShaderBytecode,
-		ShaderBytecode const& pixelShaderBytecode);
+	EffectPassDirect3D11(ID3D11Device* device, EffectPassDescription const& description);
 
 	std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
 
@@ -39,10 +38,9 @@ public:
 	ShaderBytecode GetPixelShaderBlob() const;
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
-	std::vector<std::uint8_t> vertexShaderBlob;
-	std::vector<std::uint8_t> pixelShaderBlob;
+	std::shared_ptr<VertexShaderDirect3D11> vertexShader;
+	std::shared_ptr<PixelShaderDirect3D11> pixelShader;
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
 };
 
 }// namespace Direct3D11

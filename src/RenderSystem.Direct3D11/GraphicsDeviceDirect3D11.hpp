@@ -28,6 +28,14 @@ public:
 	~GraphicsDeviceDirect3D11();
 
 	///@copydoc NativeGraphicsDevice
+	ShaderLanguage GetSupportedLanguage() const override;
+
+	///@copydoc NativeGraphicsDevice
+	std::unique_ptr<Shader>
+	CreateShader(ShaderBytecode const& shaderBytecode,
+		ShaderCompileOptions const& compileOptions) override;
+
+	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeIndexBuffer>
 	CreateIndexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage) override;
 
@@ -63,8 +71,7 @@ public:
 
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeEffectPass>
-	CreateEffectPass(ShaderBytecode const& vertexShaderBytecode,
-		ShaderBytecode const& pixelShaderBytecode) override;
+	CreateEffectPass(EffectPassDescription const& description) override;
 
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeConstantBuffer>
@@ -73,11 +80,6 @@ public:
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeEffectReflection>
 	CreateEffectReflection(NativeEffectPass & nativeEffectPass) override;
-
-	///@copydoc NativeGraphicsDevice
-	std::unique_ptr<NativeInputLayout>
-	CreateInputLayout(NativeEffectPass & nativeEffectPass,
-		std::vector<VertexBufferBinding> const& vertexBufferBindings) override;
 
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeTexture2D>
