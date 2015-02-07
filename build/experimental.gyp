@@ -304,6 +304,10 @@
       'GCC_WARN_UNUSED_VALUE': 'YES',
       'GCC_WARN_UNUSED_VARIABLE': 'YES',
       'GCC_TREAT_WARNINGS_AS_ERRORS': 'YES',
+      # Symbols:
+      'CLANG_ENABLE_OBJC_ARC': 'YES',
+      'GCC_INLINES_ARE_PRIVATE_EXTERN': 'YES', # '-fvisibility-inlines-hidden'
+      'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES', # '-fvisibility=hidden'
     },
   },
   'targets': [
