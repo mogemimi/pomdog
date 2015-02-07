@@ -55,7 +55,7 @@ struct InputElementGL4 {
 
 struct InputBindingGL4 {
 	std::vector<InputElementGL4> InputElements;
-	std::uint32_t InstanceFrequency;
+	std::uint32_t InstanceStepRate;
 };
 
 class InputLayoutGL4 final {

@@ -12,27 +12,27 @@ namespace Pomdog {
 VertexBufferBinding::VertexBufferBinding(VertexDeclaration const& vertexDeclarationIn)
 : Declaration(vertexDeclarationIn)
 , VertexOffset(0)
-, InstanceFrequency(0)
+, InstanceStepRate(0)
 {}
 //-----------------------------------------------------------------------
 VertexBufferBinding::VertexBufferBinding(VertexDeclaration && vertexDeclarationIn)
 : Declaration(std::move(vertexDeclarationIn))
 , VertexOffset(0)
-, InstanceFrequency(0)
+, InstanceStepRate(0)
 {}
 //-----------------------------------------------------------------------
 VertexBufferBinding::VertexBufferBinding(VertexDeclaration const& vertexDeclarationIn,
-	std::uint32_t vertexOffsetIn, std::uint32_t instanceFrequencyIn)
+	std::uint32_t vertexOffsetIn, std::uint32_t stepRateIn)
 : Declaration(vertexDeclarationIn)
 , VertexOffset(vertexOffsetIn)
-, InstanceFrequency(instanceFrequencyIn)
+, InstanceStepRate(stepRateIn)
 {}
 //-----------------------------------------------------------------------
 VertexBufferBinding::VertexBufferBinding(VertexDeclaration && vertexDeclarationIn,
-	std::uint32_t vertexOffsetIn, std::uint32_t instanceFrequencyIn)
+	std::uint32_t vertexOffsetIn, std::uint32_t stepRateIn)
 : Declaration(std::move(vertexDeclarationIn))
 , VertexOffset(vertexOffsetIn)
-, InstanceFrequency(instanceFrequencyIn)
+, InstanceStepRate(stepRateIn)
 {}
 //-----------------------------------------------------------------------
 }// namespace Pomdog

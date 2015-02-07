@@ -368,7 +368,7 @@ static std::vector<InputBindingGL4> BuildInputBindings(std::vector<InputElementG
 	POMDOG_ASSERT(!result.empty());
 
 	InputBindingGL4 & inputBinding = result.front();
-	inputBinding.InstanceFrequency = 0;
+	inputBinding.InstanceStepRate = 0;
 
 	std::uint32_t offsetBytes = 0;
 	for (auto const& attribute: attributes)
@@ -398,7 +398,7 @@ static std::vector<InputBindingGL4> BuildInputBindings(
 		POMDOG_ASSERT(attributeIter != std::end(attributes));
 
 		InputBindingGL4 inputBinding;
-		inputBinding.InstanceFrequency = binding.InstanceFrequency;
+		inputBinding.InstanceStepRate = binding.InstanceStepRate;
 
 		attributeIter = std::find_if(attributeIter, std::end(attributes), [&](InputElementGL4 const& attribute)
 		{
@@ -475,7 +475,7 @@ static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings
 				#endif
 			}
 
-			glVertexAttribDivisor(attribute.StartSlot, binding.InstanceFrequency);
+			glVertexAttribDivisor(attribute.StartSlot, binding.InstanceStepRate);
 			#ifdef DEBUG
 			ErrorChecker::CheckError("glVertexAttribDivisor", __FILE__, __LINE__);
 			#endif

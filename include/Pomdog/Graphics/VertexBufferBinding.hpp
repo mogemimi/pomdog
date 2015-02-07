@@ -18,21 +18,21 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT VertexBufferBinding {
+class POMDOG_EXPORT VertexBufferBinding final {
 public:
 	VertexDeclaration Declaration;
 	std::uint32_t VertexOffset;
-	std::uint32_t InstanceFrequency;
+	std::uint32_t InstanceStepRate;
 
 	VertexBufferBinding(VertexDeclaration const& vertexDeclaration);
 
 	VertexBufferBinding(VertexDeclaration && vertexDeclaration);
 
 	VertexBufferBinding(VertexDeclaration const& vertexDeclaration,
-		std::uint32_t vertexOffset, std::uint32_t instanceFrequency = 0);
+		std::uint32_t vertexOffset, std::uint32_t stepRate = 0);
 
 	VertexBufferBinding(VertexDeclaration && vertexDeclaration,
-		std::uint32_t vertexOffset, std::uint32_t instanceFrequency = 0);
+		std::uint32_t vertexOffset, std::uint32_t stepRate = 0);
 };
 
 }// namespace Pomdog
