@@ -22,15 +22,20 @@ namespace {
 
 static Optional<GLuint> CompileShader(ShaderBytecode const& source, GLenum pipelineStage)
 {
-	POMDOG_ASSERT(pipelineStage == GL_VERTEX_SHADER
-		|| pipelineStage == GL_FRAGMENT_SHADER
-		|| pipelineStage == GL_GEOMETRY_SHADER
-		|| pipelineStage == GL_TESS_CONTROL_SHADER
-		|| pipelineStage == GL_TESS_EVALUATION_SHADER
-	#ifdef GL_COMPUTE_SHADER
-		|| pipelineStage == GL_COMPUTE_SHADER
-	#endif
-	);
+#if defined(DEBUG)
+	{
+		auto validPipelineStage = pipelineStage == GL_VERTEX_SHADER
+			|| pipelineStage == GL_FRAGMENT_SHADER
+			|| pipelineStage == GL_GEOMETRY_SHADER
+			|| pipelineStage == GL_TESS_CONTROL_SHADER
+			|| pipelineStage == GL_TESS_EVALUATION_SHADER
+		#ifdef GL_COMPUTE_SHADER
+			|| pipelineStage == GL_COMPUTE_SHADER
+		#endif
+			;
+		POMDOG_ASSERT(validPipelineStage);
+	}
+#endif
 
 	auto result = MakeOptional<GLuint>(glCreateShader(pipelineStage));
 
@@ -43,7 +48,7 @@ static Optional<GLuint> CompileShader(ShaderBytecode const& source, GLenum pipel
 		reinterpret_cast<GLchar const*>(source.Code)
 	}};
 
-	POMDOG_ASSERT(source.ByteLength < std::numeric_limits<GLint>::max());
+	POMDOG_ASSERT(source.ByteLength < static_cast<decltype(source.ByteLength)>(std::numeric_limits<GLint>::max()));
 	GLint const sourceLength = static_cast<GLint>(source.ByteLength);
 
 	glShaderSource(result.value(), 1, shaderSource.data(), &sourceLength);
