@@ -7,7 +7,6 @@
 #include "SkinnedEffect.hpp"
 #include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
-#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/VertexDeclaration.hpp"
 
 namespace Pomdog {

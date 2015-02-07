@@ -7,7 +7,6 @@
 #include "SpriteBatch.hpp"
 #include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
-#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/CustomVertex.hpp"
 #include "Pomdog/Graphics/EffectParameter.hpp"

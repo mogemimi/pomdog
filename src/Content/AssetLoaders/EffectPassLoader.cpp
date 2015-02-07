@@ -9,7 +9,6 @@
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/GLSLCompiler.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/HLSLCompiler.hpp"
-#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/EffectPassDescription.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"

@@ -12,7 +12,6 @@
 #include "Pomdog.Experimental/Graphics/SpriteFontLoader.hpp"
 #include "Pomdog.Experimental/UI/UIView.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
-#include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 
 namespace Pomdog {
 namespace SceneEditor {
