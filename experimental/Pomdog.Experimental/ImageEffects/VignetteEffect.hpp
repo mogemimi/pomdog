@@ -33,7 +33,6 @@ private:
 	std::shared_ptr<SamplerState> samplerLinear;
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
-	std::shared_ptr<InputLayout> inputLayout;
 };
 
 }// namespace Pomdog

@@ -5,13 +5,13 @@
 //
 
 #include "PolygonBatch.hpp"
+#include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/EffectParameter.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
-#include "Pomdog/Graphics/InputLayout.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Graphics/VertexDeclaration.hpp"
@@ -30,10 +30,12 @@ namespace {
 struct BuiltinEffectPolygonBatchTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
 	{
-		using Details::ShaderBytecode;
-		ShaderBytecode vertexShaderCode = {Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS)};
-		ShaderBytecode pixelShaderCode = {Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS)};
-		return std::make_shared<EffectPass>(graphicsDevice, vertexShaderCode, pixelShaderCode);
+		auto effectPass = EffectPassBuilder(graphicsDevice)
+			.VertexShaderGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
+			.PixelShaderGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
+			.InputElements({VertexElementFormat::Float3, VertexElementFormat::Float4})
+			.Create();
+		return std::move(effectPass);
 	}
 };
 
@@ -63,7 +65,6 @@ private:
 	std::shared_ptr<VertexBuffer> vertexBuffer;
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
-	std::shared_ptr<InputLayout> inputLayout;
 
 public:
 	std::uint32_t drawCallCount;
@@ -96,8 +97,6 @@ PolygonBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContext
 	{
 		effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectPolygonBatchTrait>(*graphicsDevice);
 		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
-		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
-			VertexDeclaration{{VertexElementFormat::Float3, VertexElementFormat::Float4}});
 	}
 }
 //-----------------------------------------------------------------------
@@ -126,7 +125,6 @@ void PolygonBatch::Impl::Flush()
 	POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
 	vertexBuffer->SetData(vertices.data(), static_cast<std::uint32_t>(vertices.size()));
 
-	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffer(vertexBuffer);
 	graphicsContext->SetEffectPass(effectPass);
 	graphicsContext->SetConstantBuffers(constantBuffers);

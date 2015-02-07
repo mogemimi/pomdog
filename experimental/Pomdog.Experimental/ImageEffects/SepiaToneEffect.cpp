@@ -5,6 +5,7 @@
 //
 
 #include "SepiaToneEffect.hpp"
+#include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
@@ -12,7 +13,6 @@
 #include "Pomdog/Graphics/EffectParameter.hpp"
 #include "Pomdog/Graphics/GraphicsContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
-#include "Pomdog/Graphics/InputLayout.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/VertexDeclaration.hpp"
@@ -29,10 +29,12 @@ namespace {
 struct BuiltinEffectSepiaToneTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
 	{
-		using Details::ShaderBytecode;
-		ShaderBytecode vertexShaderCode = {Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS)};
-		ShaderBytecode pixelShaderCode = {Builtin_GLSL_SepiaTone_PS, std::strlen(Builtin_GLSL_SepiaTone_PS)};
-		return std::make_shared<EffectPass>(graphicsDevice, vertexShaderCode, pixelShaderCode);
+		auto effectPass = EffectPassBuilder(graphicsDevice)
+			.VertexShaderGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
+			.PixelShaderGLSL(Builtin_GLSL_SepiaTone_PS, std::strlen(Builtin_GLSL_SepiaTone_PS))
+			.InputElements({VertexElementFormat::Float3, VertexElementFormat::Float2})
+			.Create();
+		return std::move(effectPass);
 	}
 };
 
@@ -44,8 +46,6 @@ SepiaToneEffect::SepiaToneEffect(std::shared_ptr<GraphicsDevice> const& graphics
 
 	effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectSepiaToneTrait>(*graphicsDevice);
 	constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
-	inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
-		VertexDeclaration{{VertexElementFormat::Float3, VertexElementFormat::Float2}});
 }
 //-----------------------------------------------------------------------
 void SepiaToneEffect::SetViewport(float width, float height)
@@ -66,7 +66,6 @@ void SepiaToneEffect::Apply(GraphicsContext & graphicsContext)
 
 	graphicsContext.SetSamplerState(0, samplerLinear);
 	graphicsContext.SetTexture(0, texture);
-	graphicsContext.SetInputLayout(inputLayout);
 	graphicsContext.SetEffectPass(effectPass);
 	graphicsContext.SetConstantBuffers(constantBuffers);
 }

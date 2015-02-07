@@ -50,6 +50,8 @@
       '<@(pomdog_expr_dir)/Gameplay2D/SpriteRenderable.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/Transform2D.hpp',
 
+      '<@(pomdog_expr_dir)/Graphics/EffectPassBuilder.cpp',
+      '<@(pomdog_expr_dir)/Graphics/EffectPassBuilder.hpp',
       '<@(pomdog_expr_dir)/Graphics/LineBatch.cpp',
       '<@(pomdog_expr_dir)/Graphics/LineBatch.hpp',
       '<@(pomdog_expr_dir)/Graphics/PolygonBatch.cpp',

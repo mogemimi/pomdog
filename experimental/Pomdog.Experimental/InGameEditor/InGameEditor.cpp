@@ -6,6 +6,7 @@
 
 #include "InGameEditor.hpp"
 #include "detail/SpriteDrawingContext.hpp"
+#include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteBatch.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteFont.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteFontLoader.hpp"
@@ -24,10 +25,20 @@ namespace {
 struct BuiltinEffectSpriteBatchDistanceFieldTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
 	{
-		using Details::ShaderBytecode;
-		ShaderBytecode vertexShaderCode = {Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS)};
-		ShaderBytecode pixelShaderCode = {Builtin_GLSL_Sprite_DistanceField_PS, std::strlen(Builtin_GLSL_Sprite_DistanceField_PS)};
-		return std::make_shared<EffectPass>(graphicsDevice, vertexShaderCode, pixelShaderCode);
+		using PositionTextureCoord = CustomVertex<Vector4>;
+		using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4>;
+
+		auto declartation = PositionTextureCoord::Declaration();
+
+		auto effectPass = EffectPassBuilder(graphicsDevice)
+			.VertexShaderGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
+			.PixelShaderGLSL(Builtin_GLSL_Sprite_DistanceField_PS, std::strlen(Builtin_GLSL_Sprite_DistanceField_PS))
+			.InputElements(std::initializer_list<VertexBufferBinding>{
+				{declartation, 0, 0},
+				{SpriteInfoVertex::Declaration(), declartation.StrideBytes(), 1}
+			})
+			.Create();
+		return std::move(effectPass);
 	}
 };
 

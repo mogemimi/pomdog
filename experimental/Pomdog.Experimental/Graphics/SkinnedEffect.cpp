@@ -5,6 +5,7 @@
 //
 
 #include "SkinnedEffect.hpp"
+#include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/VertexDeclaration.hpp"
@@ -18,10 +19,12 @@ namespace {
 struct BuiltinEffectSkinningTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
 	{
-		using Details::ShaderBytecode;
-		ShaderBytecode vertexShaderCode = {Builtin_GLSL_SkinnedEffect_VS, std::strlen(Builtin_GLSL_SkinnedEffect_VS)};
-		ShaderBytecode pixelShaderCode = {Builtin_GLSL_SkinnedEffect_PS, std::strlen(Builtin_GLSL_SkinnedEffect_PS)};
-		return std::make_shared<EffectPass>(graphicsDevice, vertexShaderCode, pixelShaderCode);
+		auto effectPass = EffectPassBuilder(graphicsDevice)
+			.VertexShaderGLSL(Builtin_GLSL_SkinnedEffect_VS, std::strlen(Builtin_GLSL_SkinnedEffect_VS))
+			.PixelShaderGLSL(Builtin_GLSL_SkinnedEffect_PS, std::strlen(Builtin_GLSL_SkinnedEffect_PS))
+			.InputElements({VertexElementFormat::Float4, VertexElementFormat::Float4, VertexElementFormat::Int4})
+			.Create();
+		return std::move(effectPass);
 	}
 };
 
@@ -43,7 +46,6 @@ public:
 	std::shared_ptr<Texture2D> texture;
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
-	std::shared_ptr<InputLayout> inputLayout;
 	Color color;
 };
 //-----------------------------------------------------------------------
@@ -52,8 +54,6 @@ SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice)
 {
 	effectPass = graphicsDevice.ShaderPool().Create<BuiltinEffectSkinningTrait>(graphicsDevice);
 	constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
-	inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
-		VertexDeclaration{{VertexElementFormat::Float4, VertexElementFormat::Float4, VertexElementFormat::Int4}});
 }
 //-----------------------------------------------------------------------
 void SkinnedEffect::Impl::Apply(GraphicsContext & graphicsContext)
@@ -71,7 +71,6 @@ void SkinnedEffect::Impl::Apply(GraphicsContext & graphicsContext)
 	constantBuffers->Find("SkinningConstants")->SetValue(bones);
 
 	graphicsContext.SetTexture(0, texture);
-	graphicsContext.SetInputLayout(inputLayout);
 	graphicsContext.SetEffectPass(effectPass);
 	graphicsContext.SetConstantBuffers(constantBuffers);
 }

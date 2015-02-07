@@ -5,6 +5,7 @@
 //
 
 #include "SpriteBatch.hpp"
+#include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/detail/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
@@ -13,7 +14,6 @@
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/IndexElementSize.hpp"
-#include "Pomdog/Graphics/InputLayout.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
@@ -33,10 +33,20 @@ namespace {
 struct BuiltinEffectSpriteBatchTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
 	{
-		using Details::ShaderBytecode;
-		ShaderBytecode vertexShaderCode = {Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS)};
-		ShaderBytecode pixelShaderCode = {Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS)};
-		return std::make_shared<EffectPass>(graphicsDevice, vertexShaderCode, pixelShaderCode);
+		using PositionTextureCoord = CustomVertex<Vector4>;
+		using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4>;
+
+		auto declartation = PositionTextureCoord::Declaration();
+
+		auto effectPass = EffectPassBuilder(graphicsDevice)
+			.VertexShaderGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
+			.PixelShaderGLSL(Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS))
+			.InputElements(std::initializer_list<VertexBufferBinding>{
+				{declartation, 0, 0},
+				{SpriteInfoVertex::Declaration(), declartation.StrideBytes(), 1}
+			})
+			.Create();
+		return std::move(effectPass);
 	}
 };
 
@@ -86,7 +96,6 @@ private:
 
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
-	std::shared_ptr<InputLayout> inputLayout;
 	alignas(16) Matrix4x4 transposedTransformProjectionMatrix;
 
 	SpriteSortMode sortMode;
@@ -167,16 +176,6 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextI
 		auto maxBatchSize = MaxBatchSize;
 		instanceVertices = std::make_shared<VertexBuffer>(graphicsDevice,
 			maxBatchSize, sizeof(SpriteInfo), BufferUsage::Dynamic);
-	}
-	{
-		POMDOG_ASSERT(effectPass);
-
-		auto declartation = PositionTextureCoord::Declaration();
-		inputLayout = std::make_shared<InputLayout>(graphicsDevice, effectPass,
-			std::initializer_list<VertexBufferBinding>{
-				{declartation, 0, 0},
-				{SpriteInfoVertex::Declaration(), declartation.StrideBytes(), 1}
-			});
 	}
 }
 //-----------------------------------------------------------------------
@@ -298,7 +297,6 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
 	instanceVertices->SetData(sprites.data(), static_cast<std::uint32_t>(sprites.size()));
 
 	graphicsContext->SetTexture(0, texture);
-	graphicsContext->SetInputLayout(inputLayout);
 	graphicsContext->SetVertexBuffers({planeVertices, instanceVertices});
 	graphicsContext->SetEffectPass(effectPass);
 	graphicsContext->SetConstantBuffers(constantBuffers);
