@@ -37,6 +37,7 @@ static std::unique_ptr<Shader> CompileGLSLShader(GraphicsDevice & graphicsDevice
 	ShaderCompileOptions compileOptions;
 	compileOptions.EntryPoint = "main";
 	compileOptions.Profile.PipelineStage = pipelineStage;
+	compileOptions.Precompiled = false;
 
 	return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
 }

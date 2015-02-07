@@ -12,7 +12,7 @@
 #endif
 
 #include <cstdint>
-#include <tuple>
+#include <vector>
 #include <string>
 
 namespace Pomdog {
@@ -38,11 +38,19 @@ public:
 	ShaderPipelineStage PipelineStage;
 };
 
+class ShaderMacro {
+public:
+	std::string Name;
+	std::string Definition;
+};
+
 class ShaderCompileOptions {
 public:
 	std::string EntryPoint;
-	std::vector<std::tuple<std::string, std::string>> PreprocessorMacros;
+	std::string CurrentDirectory;
+	std::vector<ShaderMacro> PreprocessorMacros;
 	ShaderProfile Profile;
+	bool Precompiled;
 };
 
 }// namespace RenderSystem
