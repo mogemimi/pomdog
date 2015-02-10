@@ -39,14 +39,12 @@ def ReadContent(path):
     f.close()
     return str
 
-def WriteContent(path, content, bom = None):
+def WriteContent(path, content):
     f = open(path, 'wb')
-    if bom != None:
-        f.write(bom.encode('utf-8'))
     f.write(content.encode('utf-8'))
     f.close()
 
-def RemoveUnnecessaryBlankSpaces(content):
+def RemoveUnnecessaryWhitespace(content):
     result = unicode("", 'utf-8')
     for line in content.split('\n'):
         result += line.rstrip(' ').rstrip('\t')
@@ -65,7 +63,7 @@ def ConvertSourceFile(path):
         isChanged = True
 
     statusWithTab = "---"
-    removed = RemoveUnnecessaryBlankSpaces(content.replace('\r\n', '\n'))
+    removed = RemoveUnnecessaryWhitespace(content.replace('\r\n', '\n'))
     if content != removed:
         content = removed
         statusWithTab = "tab"
