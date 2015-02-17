@@ -7,6 +7,7 @@
 #include "HardwareBufferHelper.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include <utility>
 
 namespace Pomdog {
@@ -31,9 +32,8 @@ static BufferDescription ToDescription(BufferUsage bufferUsage)
 	return { D3D11_USAGE_DEFAULT, 0 };
 }
 //-----------------------------------------------------------------------
-template <UINT bindFlags>
 static ID3D11Buffer* CreateNativeBuffer(ID3D11Device* nativeDevice,
-	std::size_t byteWidth, void const* data, BufferUsage bufferUsage)
+	std::size_t byteWidth, void const* data, BufferUsage bufferUsage, UINT bindFlags)
 {
 	const auto description = ToDescription(bufferUsage);
 
@@ -51,18 +51,18 @@ static ID3D11Buffer* CreateNativeBuffer(ID3D11Device* nativeDevice,
 	subresourceData.SysMemSlicePitch = 0;
 
 	POMDOG_ASSERT(nativeDevice);
-	POMDOG_ASSERT((bufferDesc.Usage != D3D11_USAGE_IMMUTABLE) ||
-			((bufferDesc.Usage == D3D11_USAGE_IMMUTABLE) && (data != nullptr)));
+	POMDOG_ASSERT((bufferDesc.Usage != D3D11_USAGE_IMMUTABLE)
+		|| ((bufferDesc.Usage == D3D11_USAGE_IMMUTABLE) && (data != nullptr)));
+
+	auto initialData = (data != nullptr) ? &subresourceData : nullptr;
 
 	ID3D11Buffer* buffer = nullptr;
-	HRESULT hr = nativeDevice->CreateBuffer(&bufferDesc, &subresourceData, &buffer);
+	HRESULT hr = nativeDevice->CreateBuffer(&bufferDesc, initialData, &buffer);
 
 	if (FAILED(hr))
 	{
-		///@todo Not implemented
-		// error, FUS RO DAH!
-		//POMDOG_THROW_EXCEPTION(ExceptionCode::RenderingAPIError,
-		//	"Failed to create ID3D11Buffer");
+		///@error FUS RO DAH!
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create ID3D11Buffer");
 	}
 
 	return std::move(buffer);
@@ -74,14 +74,16 @@ Microsoft::WRL::ComPtr<ID3D11Buffer>
 HardwareBufferHelper::CreateVertexBuffer(ID3D11Device* nativeDevice,
 	void const* data, std::size_t sizeInBytes, BufferUsage bufferUsage)
 {
-	return CreateNativeBuffer<D3D11_BIND_VERTEX_BUFFER>(nativeDevice, sizeInBytes, data, bufferUsage);
+	return CreateNativeBuffer(nativeDevice, sizeInBytes, data, bufferUsage,
+		D3D11_BIND_VERTEX_BUFFER);
 }
 //-----------------------------------------------------------------------
 Microsoft::WRL::ComPtr<ID3D11Buffer>
 HardwareBufferHelper::CreateIndexBuffer(ID3D11Device* nativeDevice,
 	void const* data, std::size_t sizeInBytes, BufferUsage bufferUsage)
 {
-	return CreateNativeBuffer<D3D11_BIND_INDEX_BUFFER>(nativeDevice, sizeInBytes, data, bufferUsage);
+	return CreateNativeBuffer(nativeDevice, sizeInBytes, data, bufferUsage,
+		D3D11_BIND_INDEX_BUFFER);
 }
 //-----------------------------------------------------------------------
 Microsoft::WRL::ComPtr<ID3D11Buffer>
@@ -92,7 +94,8 @@ HardwareBufferHelper::CreateConstantBuffer(ID3D11Device* nativeDevice,
 	POMDOG_ASSERT_MESSAGE(sizeInBytes <= D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT,
 		"You must set the sizeInBytes value less than or equal to D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT.");
 
-	return CreateNativeBuffer<D3D11_BIND_CONSTANT_BUFFER>(nativeDevice, sizeInBytes, data, bufferUsage);
+	return CreateNativeBuffer(nativeDevice, sizeInBytes, data, bufferUsage,
+		D3D11_BIND_CONSTANT_BUFFER);
 }
 //-----------------------------------------------------------------------
 void HardwareBufferHelper::SetData(ID3D11Buffer* buffer, ID3D11DeviceContext* deviceContext,
@@ -106,10 +109,8 @@ void HardwareBufferHelper::SetData(ID3D11Buffer* buffer, ID3D11DeviceContext* de
 
 	if (FAILED(hr))
 	{
-		///@todo Not implemented
-		// error, FUS RO DAH!
-		//POMDOG_THROW_EXCEPTION(ExceptionCode::RenderingAPIError,
-		//	"Failed to map buffer");
+		///@error FUS RO DAH!
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to map buffer");
 	}
 
 	POMDOG_ASSERT(source);
@@ -131,10 +132,8 @@ void HardwareBufferHelper::GetData(ID3D11Buffer* buffer, ID3D11DeviceContext* de
 
 	if (FAILED(hr))
 	{
-		///@todo Not implemented
-		// error, FUS RO DAH!
-		//POMDOG_THROW_EXCEPTION(ExceptionCode::RenderingAPIError,
-		//	"Failed to map buffer");
+		///@error FUS RO DAH!
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to map buffer");
 	}
 
 	POMDOG_ASSERT(output);
