@@ -80,6 +80,7 @@ Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* nativeDevice,
 	std::uint32_t levelCount, SurfaceFormat format)
 	: deviceContext(deviceContextIn)
 {
+	POMDOG_ASSERT(nativeDevice != nullptr);
 	POMDOG_ASSERT(pixelWidth > 0);
 	POMDOG_ASSERT(pixelHeight > 0);
 
@@ -94,7 +95,7 @@ Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* nativeDevice,
 	textureDesc.SampleDesc.Quality = 0;
 	textureDesc.Usage = D3D11_USAGE_DYNAMIC;
 	//textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	textureDesc.BindFlags = (D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+	textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	//textureDesc.CPUAccessFlags = 0;
 	textureDesc.MiscFlags = 0;
@@ -102,9 +103,9 @@ Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* nativeDevice,
 	auto hr = nativeDevice->CreateTexture2D(&textureDesc, nullptr, &nativeTexture2D);
 	if (FAILED(hr))
 	{
-		//// FUS RO DAH!!!
-		//POMDOG_THROW_EXCEPTION(ExceptionCode::RenderingAPIError,
-		//	"failed to create Direct3D11Texture.", "Texture2DDirect3D11::Texture2DDirect3D11");
+		///@error FUS RO DAH!
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Failed to create D3D11Texture2D");
 	}
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
@@ -118,9 +119,9 @@ Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* nativeDevice,
 		&shaderResourceViewDesc, &shaderResourceView);
 	if (FAILED(hr))
 	{
-		//// FUS RO DAH!!!
-		//POMDOG_THROW_EXCEPTION(ExceptionCode::RenderingAPIError,
-		//	"failed to create Direct3D11Texture.", "Texture2DDirect3D11::Texture2DDirect3D11");
+		///@error FUS RO DAH!
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Failed to create the shader resource view");
 	}
 }
 //-----------------------------------------------------------------------
@@ -137,10 +138,9 @@ void Texture2DDirect3D11::SetData(std::int32_t pixelWidth, std::int32_t pixelHei
 
 	if (FAILED(hr))
 	{
-		///@todo Not implemented
-		//// FUS RO DAH!!!
-		//POMDOG_THROW_EXCEPTION(ExceptionCode::RenderingAPIError,
-		//	"Failed to map buffer", "HardwareBufferHelper::SetData");
+		///@error FUS RO DAH!
+		POMDOG_THROW_EXCEPTION(std::runtime_error,
+			"Failed to map buffer");
 	}
 
 	POMDOG_ASSERT(pixelData);
