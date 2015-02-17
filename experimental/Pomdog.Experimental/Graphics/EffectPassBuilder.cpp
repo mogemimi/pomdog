@@ -77,7 +77,7 @@ EffectPassBuilder & EffectPassBuilder::VertexShaderHLSL(void const* shaderSource
 	POMDOG_ASSERT(impl);
 
 	if (impl->graphicsDevice.GetSupportedLanguage() == ShaderLanguage::HLSL) {
-		impl->description.VertexShader = HLSLCompiler::CreateVertexShader(
+		impl->description.VertexShader = HLSLCompiler::CreateVertexShaderFromSource(
 			impl->graphicsDevice, shaderSource, byteLength, entryPoint);
 	}
 
@@ -91,8 +91,36 @@ EffectPassBuilder & EffectPassBuilder::PixelShaderHLSL(void const* shaderSource,
 	POMDOG_ASSERT(impl);
 
 	if (impl->graphicsDevice.GetSupportedLanguage() == ShaderLanguage::HLSL) {
-		impl->description.PixelShader = HLSLCompiler::CreatePixelShader(
+		impl->description.PixelShader = HLSLCompiler::CreatePixelShaderFromSource(
 			impl->graphicsDevice, shaderSource, byteLength, entryPoint);
+	}
+
+	return *this;
+}
+//-----------------------------------------------------------------------
+EffectPassBuilder & EffectPassBuilder::VertexShaderHLSLPrecompiled(void const* shaderSource, std::size_t byteLength)
+{
+	POMDOG_ASSERT(shaderSource != nullptr);
+	POMDOG_ASSERT(byteLength > 0);
+	POMDOG_ASSERT(impl);
+
+	if (impl->graphicsDevice.GetSupportedLanguage() == ShaderLanguage::HLSL) {
+		impl->description.VertexShader = HLSLCompiler::CreateVertexShader(
+			impl->graphicsDevice, shaderSource, byteLength);
+	}
+
+	return *this;
+}
+//-----------------------------------------------------------------------
+EffectPassBuilder & EffectPassBuilder::PixelShaderHLSLPrecompiled(void const* shaderSource, std::size_t byteLength)
+{
+	POMDOG_ASSERT(shaderSource != nullptr);
+	POMDOG_ASSERT(byteLength > 0);
+	POMDOG_ASSERT(impl);
+
+	if (impl->graphicsDevice.GetSupportedLanguage() == ShaderLanguage::HLSL) {
+		impl->description.PixelShader = HLSLCompiler::CreatePixelShader(
+			impl->graphicsDevice, shaderSource, byteLength);
 	}
 
 	return *this;

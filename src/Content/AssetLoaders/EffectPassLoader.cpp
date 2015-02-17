@@ -120,7 +120,7 @@ EffectPassLoader & EffectPassLoader::VertexShaderHLSL(std::string const& filePat
 			POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
 		}
 
-		impl->description.VertexShader = HLSLCompiler::CreateVertexShader(
+		impl->description.VertexShader = HLSLCompiler::CreateVertexShaderFromSource(
 			*impl->graphicsDevice, shaderSource.data(), shaderSource.size(), entryPoint);
 	}
 	return *this;
@@ -139,7 +139,7 @@ EffectPassLoader & EffectPassLoader::PixelShaderHLSL(std::string const& filePath
 			POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
 		}
 
-		impl->description.PixelShader = HLSLCompiler::CreatePixelShader(
+		impl->description.PixelShader = HLSLCompiler::CreatePixelShaderFromSource(
 			*impl->graphicsDevice, shaderSource.data(), shaderSource.size(), entryPoint);
 	}
 	return *this;

@@ -20,13 +20,33 @@ using Details::RenderSystem::ShaderBytecode;
 using Details::RenderSystem::ShaderCompileOptions;
 using Details::RenderSystem::ShaderPipelineStage;
 
-static std::unique_ptr<Shader> CompileHLSLShader(GraphicsDevice & graphicsDevice,
+static std::unique_ptr<Shader> CreateShaderFromPrecompiledBinary(GraphicsDevice & graphicsDevice,
+	void const* shaderSource, std::size_t byteLength, ShaderPipelineStage pipelineStage)
+{
+	POMDOG_ASSERT(shaderSource != nullptr);
+	POMDOG_ASSERT(byteLength > 0);
+	POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::HLSL);
+
+	auto nativeGraphicsDevice = graphicsDevice.NativeGraphicsDevice();
+
+	ShaderBytecode shaderBytecode;
+	shaderBytecode.Code = shaderSource;
+	shaderBytecode.ByteLength = byteLength;
+
+	ShaderCompileOptions compileOptions;
+	compileOptions.Profile.PipelineStage = pipelineStage;
+	compileOptions.Precompiled = true;
+
+	return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
+}
+//-----------------------------------------------------------------------
+static std::unique_ptr<Shader> CompileHLSLShaderFromSource(GraphicsDevice & graphicsDevice,
 	void const* shaderSource, std::size_t byteLength,
 	std::string const& entryPoint, ShaderPipelineStage pipelineStage)
 {
 	POMDOG_ASSERT(shaderSource != nullptr);
 	POMDOG_ASSERT(byteLength > 0);
-	POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::GLSL);
+	POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::HLSL);
 
 	auto nativeGraphicsDevice = graphicsDevice.NativeGraphicsDevice();
 
@@ -43,21 +63,34 @@ static std::unique_ptr<Shader> CompileHLSLShader(GraphicsDevice & graphicsDevice
 
 	return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
 }
-
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> HLSLCompiler::CreateVertexShader(
-	GraphicsDevice & graphicsDevice, void const* shaderSource, std::size_t byteLength,
-	std::string const& entryPoint)
+	GraphicsDevice & graphicsDevice, void const* shaderSource, std::size_t byteLength)
 {
-	return CompileHLSLShader(graphicsDevice, shaderSource, byteLength,
-		entryPoint, ShaderPipelineStage::VertexShader);
+	return CreateShaderFromPrecompiledBinary(graphicsDevice, shaderSource, byteLength,
+		ShaderPipelineStage::VertexShader);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> HLSLCompiler::CreatePixelShader(
+	GraphicsDevice & graphicsDevice, void const* shaderSource, std::size_t byteLength)
+{
+	return CreateShaderFromPrecompiledBinary(graphicsDevice, shaderSource, byteLength,
+		ShaderPipelineStage::PixelShader);
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<Shader> HLSLCompiler::CreateVertexShaderFromSource(
 	GraphicsDevice & graphicsDevice, void const* shaderSource, std::size_t byteLength,
 	std::string const& entryPoint)
 {
-	return CompileHLSLShader(graphicsDevice, shaderSource, byteLength,
+	return CompileHLSLShaderFromSource(graphicsDevice, shaderSource, byteLength,
+		entryPoint, ShaderPipelineStage::VertexShader);
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<Shader> HLSLCompiler::CreatePixelShaderFromSource(
+	GraphicsDevice & graphicsDevice, void const* shaderSource, std::size_t byteLength,
+	std::string const& entryPoint)
+{
+	return CompileHLSLShaderFromSource(graphicsDevice, shaderSource, byteLength,
 		entryPoint, ShaderPipelineStage::PixelShader);
 }
 //-----------------------------------------------------------------------

@@ -40,6 +40,10 @@ public:
 
 	EffectPassBuilder & PixelShaderHLSL(void const* shaderSource, std::size_t byteLength, std::string const& entryPoint);
 
+	EffectPassBuilder & VertexShaderHLSLPrecompiled(void const* shaderSource, std::size_t byteLength);
+
+	EffectPassBuilder & PixelShaderHLSLPrecompiled(void const* shaderSource, std::size_t byteLength);
+
 	EffectPassBuilder & InputElements(std::vector<VertexBufferBinding> const& inputElements);
 
 	EffectPassBuilder & InputElements(std::vector<VertexBufferBinding> && inputElements);
