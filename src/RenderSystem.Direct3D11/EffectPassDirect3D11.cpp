@@ -101,12 +101,12 @@ static std::vector<ConstantBufferBindingDirect3D11> CreateConstantBufferBindings
 	EnumerateConstantBuffers(vertexShaderBytecode, bindings);
 	EnumerateConstantBuffers(pixelShaderBytecode, bindings);
 
-	auto equal = [](Desc const& a, Desc const& b) {
-		return a.Name == b.Name;
-	};
+	std::sort(std::begin(bindings), std::end(bindings),
+		[](Desc const& a, Desc const& b) { return a.Name < b.Name; });
 
-	std::sort(std::begin(bindings), std::end(bindings), equal);
-	bindings.erase(std::unique(std::begin(bindings), std::end(bindings), equal), std::end(bindings));
+	bindings.erase(std::unique(std::begin(bindings), std::end(bindings),
+		[](Desc const& a, Desc const& b) { return a.Name == b.Name; }), std::end(bindings));
+
 	bindings.shrink_to_fit();
 
 	return std::move(bindings);

@@ -191,6 +191,11 @@ std::vector<EffectConstantDescription> EffectReflectionDirect3D11::GetConstantBu
 	EnumerateConstantBuffer(vertexShaderReflector.Get(), result);
 	EnumerateConstantBuffer(pixelShaderReflector.Get(), result);
 
+	std::sort(std::begin(result), std::end(result),
+		[](EffectConstantDescription const& a, EffectConstantDescription const& b) {
+			return a.Name < b.Name;
+		});
+
 	auto equal = [](EffectConstantDescription const& a, EffectConstantDescription const& b) {
 	#if defined(DEBUG) && !defined(NDEBUG)
 		if (a.Name == b.Name)
@@ -212,7 +217,6 @@ std::vector<EffectConstantDescription> EffectReflectionDirect3D11::GetConstantBu
 		return a.Name == b.Name;
 	};
 
-	std::sort(std::begin(result), std::end(result), equal);
 	result.erase(std::unique(std::begin(result), std::end(result), equal), std::end(result));
 	result.shrink_to_fit();
 
