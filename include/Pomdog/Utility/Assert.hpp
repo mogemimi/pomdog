@@ -62,7 +62,8 @@ inline constexpr bool ConstexprAssert(bool condition,
 			static_cast<bool>(expression), #expression, __FILE__, __LINE__))
 #elif defined(DEBUG) && defined(_MSC_VER)
 #	// Debug mode under Visual Studio
-#	define POMDOG_ASSERT(expression) _ASSERT(expression)
+#	define POMDOG_ASSERT(expression) \
+		static_cast<void>((!!(expression)) || (_CrtDbgBreak(), _ASSERT(expression), false))
 #	define POMDOG_ASSERT_MESSAGE(expression, message) \
 		static_cast<void>((!!(expression)) \
 			|| (1 != _CrtDbgReportW(_CRT_ASSERT, _CRT_WIDE(__FILE__), __LINE__, nullptr, L"%s", message)) \
