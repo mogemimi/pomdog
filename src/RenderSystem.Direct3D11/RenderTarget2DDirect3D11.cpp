@@ -207,6 +207,32 @@ ID3D11ShaderResourceView* RenderTarget2DDirect3D11::ShaderResourceView() const
 	return textureResourceView.Get();
 }
 //-----------------------------------------------------------------------
+void RenderTarget2DDirect3D11::ResetBackBuffer(ID3D11Device* nativeDevice, IDXGISwapChain* swapChain,
+	std::int32_t pixelWidth, std::int32_t pixelHeight, DepthFormat depthStencilFormat)
+{
+	POMDOG_ASSERT(nativeDevice != nullptr);
+	POMDOG_ASSERT(swapChain != nullptr);
+
+	renderTargetView.Reset();
+	renderTexture.Reset();
+	depthStencilView.Reset();
+	depthStencil.Reset();
+
+	constexpr std::uint32_t backBufferMipLevels = 1;
+
+	BuildBackBufferBySwapChain(nativeDevice, swapChain,
+		renderTexture, renderTargetView);
+
+	BuildDepthBuffer(nativeDevice, depthStencilFormat, pixelWidth, pixelHeight, backBufferMipLevels,
+		depthStencil, depthStencilView);
+}
+//-----------------------------------------------------------------------
+void RenderTarget2DDirect3D11::ResetBackBuffer()
+{
+	renderTargetView.Reset();
+	renderTexture.Reset();
+}
+//-----------------------------------------------------------------------
 }// namespace Direct3D11
 }// namespace RenderSystem
 }// namespace Details

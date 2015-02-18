@@ -98,6 +98,8 @@ public:
 	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
 	void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& nativeConstantLayout) override;
 
+	void ResizeBackBuffers(ID3D11Device* nativeDevice, int backBufferWidth, int backBufferHeight);
+
 public:
 	ID3D11DeviceContext* GetDeviceContext();
 
@@ -110,6 +112,9 @@ private:
 	std::shared_ptr<RenderTarget2DDirect3D11> backBuffer;
 	int preferredBackBufferWidth;
 	int preferredBackBufferHeight;
+	UINT backBufferCount;
+	SurfaceFormat backBufferFormat;
+	DepthFormat backBufferDepthFormat;
 };
 
 }// namespace Direct3D11

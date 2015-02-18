@@ -6,6 +6,7 @@
 
 #include "GraphicsContextDirect3D11.hpp"
 #include "ConstantLayoutDirect3D11.hpp"
+#include "DXGIFormatHelper.hpp"
 #include "EffectPassDirect3D11.hpp"
 #include "IndexBufferDirect3D11.hpp"
 #include "InputLayoutDirect3D11.hpp"
@@ -65,6 +66,9 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
 	: deviceContext(deviceContextIn)
 	, preferredBackBufferWidth(1)
 	, preferredBackBufferHeight(1)
+	, backBufferCount(2)
+	, backBufferFormat(SurfaceFormat::R8G8B8A8_UNorm)
+	, backBufferDepthFormat(DepthFormat::Depth24Stencil8)
 {
 	using Microsoft::WRL::ComPtr;
 
@@ -117,10 +121,10 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
 	{
 		DXGI_SWAP_CHAIN_DESC swapChainDesc;
 		ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
-		swapChainDesc.BufferCount = 1;
+		swapChainDesc.BufferCount = backBufferCount;
 		swapChainDesc.BufferDesc.Width = preferredBackBufferWidth;
 		swapChainDesc.BufferDesc.Height = preferredBackBufferHeight;
-		swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		swapChainDesc.BufferDesc.Format = DXGIFormatHelper::ToDXGIFormat(backBufferFormat);
 		swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
 		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -137,9 +141,11 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
 			// FUS RO DAH!
 			POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create SwapChain");
 		}
-
+	}
+	{
 		backBuffer = std::make_shared<RenderTarget2DDirect3D11>(nativeDevice.Get(),
-			swapChain.Get(), preferredBackBufferWidth, preferredBackBufferHeight, DepthFormat::Depth24Stencil8);
+			swapChain.Get(), preferredBackBufferWidth, preferredBackBufferHeight,
+			backBufferDepthFormat);
 
 		boundRenderTargets.reserve(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
 		boundRenderTargets.push_back(backBuffer);
@@ -453,6 +459,41 @@ void GraphicsContextDirect3D11::SetConstantBuffers(std::shared_ptr<NativeConstan
 
 	auto & constantLayout = static_cast<ConstantLayoutDirect3D11&>(*nativeConstantLayout);
 	constantLayout.Apply(deviceContext.Get());
+}
+//-----------------------------------------------------------------------
+void GraphicsContextDirect3D11::ResizeBackBuffers(ID3D11Device* nativeDevice,
+	int backBufferWidthIn, int backBufferHeightIn)
+{
+	POMDOG_ASSERT(nativeDevice != nullptr);
+	POMDOG_ASSERT(backBufferWidthIn > 0);
+	POMDOG_ASSERT(backBufferHeightIn > 0);
+
+	preferredBackBufferWidth = backBufferWidthIn;
+	preferredBackBufferHeight = backBufferHeightIn;
+
+	bool isActive = false;
+
+	if (!boundRenderTargets.empty()) {
+		isActive = (backBuffer == boundRenderTargets.front());
+	}
+
+	POMDOG_ASSERT(backBuffer);
+	backBuffer->ResetBackBuffer();
+
+	POMDOG_ASSERT(swapChain);
+	auto hr = swapChain->ResizeBuffers(backBufferCount, preferredBackBufferWidth,
+		preferredBackBufferHeight, DXGIFormatHelper::ToDXGIFormat(backBufferFormat), 0);
+
+	if (FAILED(hr)) {
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to resize back buffer");
+	}
+
+	backBuffer->ResetBackBuffer(nativeDevice, swapChain.Get(),
+		preferredBackBufferWidth, preferredBackBufferHeight, backBufferDepthFormat);
+
+	if (isActive) {
+		SetRenderTarget();
+	}
 }
 //-----------------------------------------------------------------------
 ID3D11DeviceContext* GraphicsContextDirect3D11::GetDeviceContext()

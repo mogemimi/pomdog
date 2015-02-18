@@ -262,6 +262,23 @@ void GameHostWin32::Impl::ClientSizeChanged()
 {
 	POMDOG_ASSERT(window);
 	auto bounds = window->ClientBounds();
+
+#if defined(POMDOG_RENDERSYSTEM_DIRECT3D11)
+	{
+		using Details::RenderSystem::Direct3D11::GraphicsDeviceDirect3D11;
+		using Details::RenderSystem::Direct3D11::GraphicsContextDirect3D11;
+
+		auto nativeGraphicsDevice = dynamic_cast<GraphicsDeviceDirect3D11*>(graphicsDevice->NativeGraphicsDevice());
+		auto nativeGraphicsContext = dynamic_cast<GraphicsContextDirect3D11*>(graphicsContext->NativeGraphicsContext());
+
+		POMDOG_ASSERT(nativeGraphicsDevice != nullptr);
+		POMDOG_ASSERT(nativeGraphicsContext != nullptr);
+
+		nativeGraphicsContext->ResizeBackBuffers(
+			nativeGraphicsDevice->NativeDevice().Get(), bounds.Width, bounds.Height);
+	}
+#endif
+
 	window->ClientSizeChanged(bounds.Width, bounds.Height);
 }
 //-----------------------------------------------------------------------

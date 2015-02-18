@@ -37,6 +37,11 @@ public:
 
 	ID3D11ShaderResourceView* ShaderResourceView() const;
 
+	void ResetBackBuffer(ID3D11Device* nativeDevice, IDXGISwapChain* swapChain,
+		std::int32_t pixelWidth, std::int32_t pixelHeight, DepthFormat depthStencilFormat);
+
+	void ResetBackBuffer();
+
 private:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> renderTexture;
