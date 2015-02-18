@@ -93,24 +93,28 @@ static SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(DDSPixelFormat const& pix
 
 	if (pixelFormat.Flags & DirectDrawPixelFormat::FourCC)
 	{
-		switch (pixelFormat.FourCC)
-		{
-		case MakeFourCC('D','X','T','1'):
+		if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '1')) {
 			return SurfaceFormat::BlockComp1_UNorm;
-		case MakeFourCC('D','X','T','2'):
-		case MakeFourCC('D','X','T','3'):
+		}
+		else if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '2')) {
 			return SurfaceFormat::BlockComp2_UNorm;
-		case MakeFourCC('D','X','T','4'):
-		case MakeFourCC('D','X','T','5'):
+		}
+		else if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '3')) {
+			return SurfaceFormat::BlockComp2_UNorm;
+		}
+		else if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '4')) {
 			return SurfaceFormat::BlockComp3_UNorm;
-		case FourCC_A32B32G32R32_Float:
+		}
+		else if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '5')) {
+			return SurfaceFormat::BlockComp3_UNorm;
+		}
+		else if (pixelFormat.FourCC == FourCC_A32B32G32R32_Float) {
 			return SurfaceFormat::R32G32B32A32_Float;
 		}
 	}
 	else if (pixelFormat.Flags & DirectDrawPixelFormat::RGB)
 	{
-		switch (pixelFormat.RgbBitCount)
-		{
+		switch (pixelFormat.RgbBitCount) {
 		case 32:
 			if (
 				(0x000000ff == pixelFormat.RedBitMask) &&
@@ -150,8 +154,7 @@ static SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(DDSPixelFormat const& pix
 	}
 	else if (pixelFormat.Flags & DirectDrawPixelFormat::Luminance)
 	{
-		switch (pixelFormat.RgbBitCount)
-		{
+		switch (pixelFormat.RgbBitCount) {
 		case 8:
 			if (
 				(0x000000ff == pixelFormat.RedBitMask) &&
