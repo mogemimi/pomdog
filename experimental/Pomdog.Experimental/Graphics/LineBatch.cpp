@@ -24,6 +24,8 @@ namespace {
 // Built-in shaders
 #include "Shaders/GLSL.Embedded/LineBatch_VS.inc.h"
 #include "Shaders/GLSL.Embedded/LineBatch_PS.inc.h"
+#include "Shaders/HLSL.Embedded/LineBatch_VS.inc.hpp"
+#include "Shaders/HLSL.Embedded/LineBatch_PS.inc.hpp"
 
 struct BuiltinEffectLineBatchTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
@@ -31,6 +33,8 @@ struct BuiltinEffectLineBatchTrait {
 		auto effectPass = EffectPassBuilder(graphicsDevice)
 			.VertexShaderGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
 			.PixelShaderGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
+			.VertexShaderHLSLPrecompiled(BuiltinHLSL_LineBatch_VS, sizeof(BuiltinHLSL_LineBatch_VS))
+			.PixelShaderHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS))
 			.InputElements({VertexElementFormat::Float3, VertexElementFormat::Float4})
 			.Create();
 		return std::move(effectPass);

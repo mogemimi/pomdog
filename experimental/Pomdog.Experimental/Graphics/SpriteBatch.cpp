@@ -14,6 +14,7 @@
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/IndexElementSize.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
+#include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
@@ -28,6 +29,8 @@ namespace {
 // Built-in shaders
 #include "Shaders/GLSL.Embedded/SpriteBatch_VS.inc.h"
 #include "Shaders/GLSL.Embedded/SpriteBatch_PS.inc.h"
+#include "Shaders/HLSL.Embedded/SpriteBatch_VS.inc.hpp"
+#include "Shaders/HLSL.Embedded/SpriteBatch_PS.inc.hpp"
 
 struct BuiltinEffectSpriteBatchTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
@@ -40,6 +43,8 @@ struct BuiltinEffectSpriteBatchTrait {
 		auto effectPass = EffectPassBuilder(graphicsDevice)
 			.VertexShaderGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
 			.PixelShaderGLSL(Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS))
+			.VertexShaderHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
+			.PixelShaderHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS))
 			.InputElements(std::initializer_list<VertexBufferBinding>{
 				{declartation, 0, 0},
 				{SpriteInfoVertex::Declaration(), declartation.StrideBytes(), 1}
