@@ -275,9 +275,6 @@
       '../src/InputSystem/GamepadHelper.hpp',
       '../src/InputSystem/GamepadMappings.cpp',
       '../src/InputSystem/GamepadMappings.hpp',
-      '../src/InputSystem/InputDeviceCreator.hpp',
-      '../src/InputSystem/InputDeviceFactory.cpp',
-      '../src/InputSystem/InputDeviceFactory.hpp',
       '../src/InputSystem/NativeGamepad.hpp',
       '../src/Logging/Log.cpp',
       '../src/Logging/LogChannel.cpp',
@@ -519,8 +516,8 @@
       '../src/SoundSystem.XAudio2/SoundEffectXAudio2.hpp',
     ],
     'pomdog_library_directinput_sources': [
-      '../src/InputSystem.DirectInput/DeviceContextDirectInput.cpp',
-      '../src/InputSystem.DirectInput/DeviceContextDirectInput.hpp',
+      '../src/InputSystem.DirectInput/GamepadDirectInput.cpp',
+      '../src/InputSystem.DirectInput/GamepadDirectInput.hpp',
       '../src/InputSystem.DirectInput/PrerequisitesDirectInput.hpp',
     ],
     'pomdog_library_win32_sources': [

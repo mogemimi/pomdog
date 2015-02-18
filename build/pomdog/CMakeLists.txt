@@ -286,9 +286,6 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/InputSystem/GamepadHelper.hpp
   ${POMDOG_DIR}/src/InputSystem/GamepadMappings.cpp
   ${POMDOG_DIR}/src/InputSystem/GamepadMappings.hpp
-  ${POMDOG_DIR}/src/InputSystem/InputDeviceCreator.hpp
-  ${POMDOG_DIR}/src/InputSystem/InputDeviceFactory.cpp
-  ${POMDOG_DIR}/src/InputSystem/InputDeviceFactory.hpp
   ${POMDOG_DIR}/src/InputSystem/NativeGamepad.hpp
   ${POMDOG_DIR}/src/Logging/Log.cpp
   ${POMDOG_DIR}/src/Logging/LogChannel.cpp
@@ -538,8 +535,8 @@ set(POMDOG_SOURCES_XAUDIO2
 )
 
 set(POMDOG_SOURCES_DIRECTINPUT
-  ${POMDOG_DIR}/src/InputSystem.DirectInput/DeviceContextDirectInput.cpp
-  ${POMDOG_DIR}/src/InputSystem.DirectInput/DeviceContextDirectInput.hpp
+  ${POMDOG_DIR}/src/InputSystem.DirectInput/GamepadDirectInput.cpp
+  ${POMDOG_DIR}/src/InputSystem.DirectInput/GamepadDirectInput.hpp
   ${POMDOG_DIR}/src/InputSystem.DirectInput/PrerequisitesDirectInput.hpp
 )
 

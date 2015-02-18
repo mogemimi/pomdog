@@ -28,6 +28,16 @@ namespace {
 #define __LINUX__ 1
 #endif
 #endif
+
+#ifdef POMDOG_PLATFORM_WIN32
+#ifndef SDL_JOYSTICK_XINPUT
+#define SDL_JOYSTICK_XINPUT 1
+#endif
+#ifndef SDL_JOYSTICK_DINPUT
+#define SDL_JOYSTICK_DINPUT 1
+#endif
+#endif
+
 #include "SDL_gamecontrollerdb.h"
 
 std::tuple<std::string, const char*> Parse(const char* source, char delimiter)
