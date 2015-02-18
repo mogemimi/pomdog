@@ -20,6 +20,8 @@ namespace {
 // Built-in shaders
 #include "Pomdog.Experimental/Graphics/Shaders/GLSL.Embedded/SpriteBatch_VS.inc.h"
 #include "Pomdog.Experimental/Graphics/Shaders/GLSL.Embedded/Sprite_DistanceField_PS.inc.h"
+#include "Pomdog.Experimental/Graphics/Shaders/HLSL.Embedded/SpriteBatch_VS.inc.hpp"
+#include "Pomdog.Experimental/Graphics/Shaders/HLSL.Embedded/SpriteDistanceField_PS.inc.hpp"
 
 struct BuiltinEffectSpriteBatchDistanceFieldTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
@@ -32,6 +34,8 @@ struct BuiltinEffectSpriteBatchDistanceFieldTrait {
 		auto effectPass = EffectPassBuilder(graphicsDevice)
 			.VertexShaderGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
 			.PixelShaderGLSL(Builtin_GLSL_Sprite_DistanceField_PS, std::strlen(Builtin_GLSL_Sprite_DistanceField_PS))
+			.VertexShaderHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
+			.PixelShaderHLSLPrecompiled(BuiltinHLSL_SpriteDistanceField_PS, sizeof(BuiltinHLSL_SpriteDistanceField_PS))
 			.InputElements(std::initializer_list<VertexBufferBinding>{
 				{declartation, 0, 0},
 				{SpriteInfoVertex::Declaration(), declartation.StrideBytes(), 1}
