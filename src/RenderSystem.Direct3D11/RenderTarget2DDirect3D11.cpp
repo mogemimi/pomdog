@@ -18,7 +18,6 @@ namespace {
 
 using Microsoft::WRL::ComPtr;
 
-//-----------------------------------------------------------------------
 static void BuildRenderTarget(ID3D11Device* nativeDevice, SurfaceFormat format,
 	std::int32_t pixelWidth, std::int32_t pixelHeight, std::uint32_t levelCount, bool isSharedTexture,
 	ComPtr<ID3D11Texture2D> & renderTexture,
@@ -47,9 +46,8 @@ static void BuildRenderTarget(ID3D11Device* nativeDevice, SurfaceFormat format,
 	HRESULT	hr = nativeDevice->CreateTexture2D(&textureDesc, nullptr, &renderTexture);
 
 	if (FAILED(hr)) {
-		// error: FUS RO DAH!
-		///@todo throw exception
-		return;
+		// FUS RO DAH!
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create render target texture");
 	}
 
 	// Create a render target view
@@ -62,9 +60,8 @@ static void BuildRenderTarget(ID3D11Device* nativeDevice, SurfaceFormat format,
 	hr = nativeDevice->CreateRenderTargetView(renderTexture.Get(), &renderTargetViewDesc, &renderTargetView);
 
 	if (FAILED(hr)) {
-		// error: FUS RO DAH!
-		///@todo throw exception
-		return;
+		// FUS RO DAH!
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create RendetTargetView");
 	}
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
@@ -77,11 +74,8 @@ static void BuildRenderTarget(ID3D11Device* nativeDevice, SurfaceFormat format,
 	// Create shader resource view
 	hr = nativeDevice->CreateShaderResourceView(renderTexture.Get(), &shaderResourceViewDesc, &textureResourceView);
 	if (FAILED(hr)) {
-		// error: FUS RO DAH!
-		///@todo throw exception
-		//POMDOG_THROW_EXCEPTION(ExceptionCode::RenderingAPIError,
-		//	"Failed to create ShaderResourceView");
-		return;
+		// FUS RO DAH!
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create shader resource view");
 	}
 }
 //-----------------------------------------------------------------------
@@ -116,9 +110,8 @@ static void BuildDepthBuffer(ID3D11Device* nativeDevice, DepthFormat depthStenci
 	HRESULT hr = nativeDevice->CreateTexture2D(&descDepth, nullptr, &depthStencil);
 
 	if (FAILED(hr)) {
-		// error: FUS RO DAH!
-		///@todo throw exception
-		return;
+		// FUS RO DAH!
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create depth stencil buffer");
 	}
 
 	// Create the depth stencil view
@@ -132,9 +125,8 @@ static void BuildDepthBuffer(ID3D11Device* nativeDevice, DepthFormat depthStenci
 	hr = nativeDevice->CreateDepthStencilView(depthStencil.Get(), &descDSV, &depthStencilView);
 
 	if (FAILED(hr)) {
-		// error: FUS RO DAH!
-		///@todo throw exception
-		return;
+		// FUS RO DAH!
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create DepthStencilView");
 	}
 }
 //-----------------------------------------------------------------------
@@ -150,9 +142,8 @@ static void BuildBackBufferBySwapChain(ID3D11Device* nativeDevice, IDXGISwapChai
 		reinterpret_cast<void**>(renderTexture.GetAddressOf()));
 
 	if (FAILED(hr)) {
-		// error: FUS RO DAH!
-		///@todo throw exception
-		return;
+		// FUS RO DAH!
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to call IDXGISwapChain::GetBuffer");
 	}
 
 	// Create a render target view
@@ -160,9 +151,8 @@ static void BuildBackBufferBySwapChain(ID3D11Device* nativeDevice, IDXGISwapChai
 	hr = nativeDevice->CreateRenderTargetView(renderTexture.Get(), nullptr, &renderTargetView);
 
 	if (FAILED(hr)) {
-		// error: FUS RO DAH!
-		///@todo throw exception
-		return;
+		// FUS RO DAH!
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create RenderTargetView");
 	}
 }
 
@@ -174,6 +164,7 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(ID3D11Device* nativeDevice,
 {
 	BuildRenderTarget(nativeDevice, format, pixelWidth, pixelHeight, levelCount,
 		false, renderTexture, renderTargetView, textureResourceView);
+
 	BuildDepthBuffer(nativeDevice, depthStencilFormat, pixelWidth, pixelHeight, levelCount,
 		depthStencil, depthStencilView);
 }
@@ -186,6 +177,7 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(ID3D11Device* nativeDevice,
 
 	BuildBackBufferBySwapChain(nativeDevice, swapChain,
 		renderTexture, renderTargetView);
+
 	BuildDepthBuffer(nativeDevice, depthStencilFormat, pixelWidth, pixelHeight, backBufferMipLevels,
 		depthStencil, depthStencilView);
 }

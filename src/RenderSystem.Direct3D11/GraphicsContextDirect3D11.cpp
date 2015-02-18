@@ -42,7 +42,7 @@ static D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(PrimitiveTopology primi
 	case PrimitiveTopology::TriangleList: return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	case PrimitiveTopology::LineList: return D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
 	case PrimitiveTopology::LineStrip: return D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
-	};
+	}
 	return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 }
 //-----------------------------------------------------------------------
@@ -51,7 +51,7 @@ static DXGI_FORMAT ToDXGIFormat(IndexElementSize elementSize)
 	switch (elementSize) {
 	case IndexElementSize::SixteenBits: return DXGI_FORMAT_R16_UINT;
 	case IndexElementSize::ThirtyTwoBits: return DXGI_FORMAT_R32_UINT;
-	};
+	}
 	return DXGI_FORMAT_UNKNOWN;
 }
 
