@@ -4,6 +4,7 @@
 #include "GameWindowWin32.hpp"
 #include "KeyboardWin32.hpp"
 #include "MouseWin32.hpp"
+#include "../InputSystem/NativeGamepad.hpp"
 #if !defined(POMDOG_DISABLE_GL4)
 #include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
 #include "../Platform.Win32/OpenGLContextWin32.hpp"
@@ -17,7 +18,6 @@
 #endif
 #include "../Application/SubsystemScheduler.hpp"
 #include "../Application/SystemEvents.hpp"
-#include "../InputSystem/InputDeviceFactory.hpp"
 #include "../SoundSystem.XAudio2/AudioEngineXAudio2.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameClock.hpp"
@@ -38,6 +38,7 @@
 #include <chrono>
 
 using Pomdog::Detail::Win32::GameWindowWin32;
+using Pomdog::Detail::InputSystem::NativeGamepad;
 #if !defined(POMDOG_DISABLE_DIRECT3D11)
 using Pomdog::Detail::Direct3D11::GraphicsContextDirect3D11;
 using Pomdog::Detail::Direct3D11::GraphicsDeviceDirect3D11;
@@ -180,8 +181,8 @@ public:
     Impl(
         const std::shared_ptr<GameWindowWin32>& window,
         const std::shared_ptr<EventQueue>& eventQueue,
+        const std::shared_ptr<InputSystem::NativeGamepad>& gamepad,
         const PresentationParameters& presentationParameters,
-        std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory,
         bool useOpenGL);
 
     ~Impl();
@@ -205,6 +206,8 @@ public:
     std::shared_ptr<Keyboard> GetKeyboard();
 
     std::shared_ptr<Mouse> GetMouse();
+
+    std::shared_ptr<Gamepad> GetGamepad();
 
     SurfaceFormat GetBackBufferSurfaceFormat() const noexcept;
 
@@ -233,9 +236,9 @@ private:
     std::unique_ptr<Pomdog::AssetManager> assetManager;
     std::shared_ptr<AudioEngine> audioEngine;
 
-    std::unique_ptr<InputSystem::InputDeviceFactory> inputDeviceFactory;
     std::shared_ptr<KeyboardWin32> keyboard;
     std::shared_ptr<MouseWin32> mouse;
+    std::shared_ptr<NativeGamepad> gamepad;
 
     Duration presentationInterval;
     SurfaceFormat backBufferSurfaceFormat;
@@ -247,12 +250,11 @@ private:
 GameHostWin32::Impl::Impl(
     const std::shared_ptr<GameWindowWin32>& windowIn,
     const std::shared_ptr<EventQueue>& eventQueueIn,
+    const std::shared_ptr<InputSystem::NativeGamepad>& gamepadIn,
     const PresentationParameters& presentationParameters,
-    std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactoryIn,
     bool useOpenGL)
     : eventQueue(eventQueueIn)
     , window(windowIn)
-    , inputDeviceFactory(std::move(inputDeviceFactoryIn))
     , backBufferSurfaceFormat(presentationParameters.BackBufferFormat)
     , backBufferDepthStencilFormat(presentationParameters.DepthStencilFormat)
     , exitRequest(false)
@@ -285,9 +287,9 @@ GameHostWin32::Impl::Impl(
 
     audioEngine = std::make_shared<Pomdog::AudioEngine>();
 
-    POMDOG_ASSERT(inputDeviceFactory);
     keyboard = std::make_shared<KeyboardWin32>();
     mouse = std::make_shared<MouseWin32>(window->NativeWindowHandle());
+    gamepad = gamepadIn;
 
     Detail::AssetLoaderContext loaderContext;
     loaderContext.RootDirectory = PathHelper::Join(
@@ -300,9 +302,9 @@ GameHostWin32::Impl::~Impl()
 {
     eventQueue.reset();
     assetManager.reset();
+    gamepad.reset();
     keyboard.reset();
     mouse.reset();
-    inputDeviceFactory.reset();
     audioEngine.reset();
     graphicsBridge.reset();
     graphicsCommandQueue.reset();
@@ -319,6 +321,11 @@ void GameHostWin32::Impl::Run(Game & game)
         clock.Tick();
         MessagePump();
         DoEvents();
+        constexpr int64_t gamepadDetectionInterval = 240;
+        if (((clock.GetFrameNumber() % gamepadDetectionInterval) == 16) && (clock.GetFrameRate() >= 30.0f)) {
+            gamepad->EnumerateDevices();
+        }
+        gamepad->PollEvents();
         subsystemScheduler.OnUpdate();
         game.Update();
         RenderFrame(game);
@@ -441,6 +448,12 @@ std::shared_ptr<Mouse> GameHostWin32::Impl::GetMouse()
     return mouse;
 }
 
+std::shared_ptr<Gamepad> GameHostWin32::Impl::GetGamepad()
+{
+    POMDOG_ASSERT(gamepad);
+    return gamepad;
+}
+
 SurfaceFormat GameHostWin32::Impl::GetBackBufferSurfaceFormat() const noexcept
 {
     return backBufferSurfaceFormat;
@@ -454,14 +467,14 @@ DepthFormat GameHostWin32::Impl::GetBackBufferDepthStencilFormat() const noexcep
 GameHostWin32::GameHostWin32(
     const std::shared_ptr<GameWindowWin32>& window,
     const std::shared_ptr<EventQueue>& eventQueue,
+    const std::shared_ptr<InputSystem::NativeGamepad>& gamepad,
     const PresentationParameters& presentationParameters,
-    std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory,
     bool useOpenGL)
     : impl(std::make_unique<Impl>(
         window,
         eventQueue,
+        gamepad,
         presentationParameters,
-        std::move(inputDeviceFactory),
         useOpenGL))
 {}
 
@@ -530,9 +543,7 @@ std::shared_ptr<Mouse> GameHostWin32::GetMouse()
 std::shared_ptr<Gamepad> GameHostWin32::GetGamepad()
 {
     POMDOG_ASSERT(impl);
-    // FIXME: Add DirectInput support
-    // https://github.com/mogemimi/pomdog/pull/16
-    return nullptr;
+    return impl->GetGamepad();
 }
 
 SurfaceFormat GameHostWin32::GetBackBufferSurfaceFormat() const

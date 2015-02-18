@@ -3,12 +3,13 @@
 #include "Pomdog/Platform/Win32/Bootstrap.hpp"
 #include "GameHostWin32.hpp"
 #include "GameWindowWin32.hpp"
-#include "../InputSystem.DirectInput/DeviceContextDirectInput.hpp"
-#include "../InputSystem/InputDeviceFactory.hpp"
+#include "../InputSystem.DirectInput/GamepadDirectInput.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Logging/Log.hpp"
+
+using Pomdog::Detail::InputSystem::DirectInput::GamepadDirectInput;
 
 namespace Pomdog {
 namespace Win32 {
@@ -94,19 +95,11 @@ void Bootstrap::Run(
         hInstance, cmdShow, icon, iconSmall,
         useOpenGL, eventQueue, presentationParameters);
 
-    auto inputDeviceFactory = std::make_unique<Detail::InputSystem::InputDeviceFactory>();
+    auto gamepad = std::make_shared<GamepadDirectInput>(
+        hInstance, gameWindow->NativeWindowHandle());
 
-    //{
-    //    using namespace Detail::InputSystem::DirectInput;
-    //    auto deviceContext = std::make_shared<DeviceContextDirectInput>(
-    //        hInstance, gameWindow->NativeWindowHandle());
-    //
-    //    auto gamepadCreator = std::make_unique<GamepadCreatorDirectInput>(deviceContext);
-    //    inputDeviceFactory->AddCreator(std::move(gamepadCreator));
-    //}
-
-    auto gameHost = std::make_shared<GameHostWin32>(gameWindow,
-        eventQueue, presentationParameters, std::move(inputDeviceFactory), useOpenGL);
+    auto gameHost = std::make_shared<GameHostWin32>(
+        gameWindow, eventQueue, gamepad, presentationParameters, useOpenGL);
 
     POMDOG_ASSERT(createApp);
     auto game = createApp(gameHost);

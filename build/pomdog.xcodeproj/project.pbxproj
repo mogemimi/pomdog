@@ -94,7 +94,6 @@
 		6AF7B562E9CA059894EB5359 /* MSWaveAudioLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CF76618636C36F96145C2A9 /* MSWaveAudioLoader.cpp */; };
 		6CAD968D14E4A83B87CE38BD /* GraphicsDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0732B0AF8F54DAE712BFE595 /* GraphicsDevice.cpp */; };
 		6DED53A00BC530C5F59A2547 /* AudioEngineAL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B1323537C7C990BE1436C /* AudioEngineAL.cpp */; };
-		6E7FC2384465DDDB5C5B0A25 /* InputDeviceFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B7379F84C54E861AD074AA1C /* InputDeviceFactory.cpp */; };
 		6FA8A4ED33396758E9052EAD /* GraphicsCommandQueueImmediate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA6CF7478713A3FBFCCEA57D /* GraphicsCommandQueueImmediate.cpp */; };
 		70214CEF1A1CF63D334FD75E /* ErrorChecker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 74C791C392D2DF46A553FC0F /* ErrorChecker.cpp */; };
 		70602D1132700C62F76B98C7 /* DepthStencilStateGL4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 09B86E4752B8088B0C3A217A /* DepthStencilStateGL4.cpp */; };
@@ -243,7 +242,6 @@
 		D36D164E7998A51B8BC0C0DB /* Viewport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A651CE22C9DE13920AB99E12 /* Viewport.cpp */; };
 		D5CAE3F16D482B36E58155CA /* LogChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4406B12793DCB512528775FC /* LogChannel.cpp */; };
 		D6B00FCEBABBF1A29ADD25A1 /* GraphicsDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0732B0AF8F54DAE712BFE595 /* GraphicsDevice.cpp */; };
-		D7EAEFE80CEE8FFAA2DB9282 /* InputDeviceFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B7379F84C54E861AD074AA1C /* InputDeviceFactory.cpp */; };
 		D8E9871132965BADBA4BE734 /* FloatingPointMatrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 029A2B232511421D3FDB9FAC /* FloatingPointMatrix3x3.cpp */; };
 		DA4579E5970831E615EA005D /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EB2111ED9B45715040451A9 /* Ray.cpp */; };
 		DC83323F55585B855108ED51 /* AudioClipLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9524A580BCEF4C5E9F56EB43 /* AudioClipLoader.cpp */; };
@@ -369,7 +367,6 @@
 		1892782F88759D12052FFC2B /* InputElement.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = InputElement.hpp; sourceTree = "<group>"; };
 		1AEA83A100F195FE0816B39C /* PlayerIndex.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = PlayerIndex.hpp; sourceTree = "<group>"; };
 		1BED371B011B6BD6EDF26BB8 /* Texture2DLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Texture2DLoader.hpp; sourceTree = "<group>"; };
-		1C7CBAD3B25BA6B0D155A5E6 /* InputDeviceCreator.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = InputDeviceCreator.hpp; sourceTree = "<group>"; };
 		1D9DD11937173B699F763FAA /* AudioClip.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = AudioClip.hpp; sourceTree = "<group>"; };
 		1EC5597A41696495C978EDC9 /* MakeFourCC.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = MakeFourCC.hpp; sourceTree = "<group>"; };
 		1F2D3469F0692959C9DCC878 /* FloatingPointMatrix3x2.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = FloatingPointMatrix3x2.hpp; sourceTree = "<group>"; };
@@ -436,7 +433,6 @@
 		54A7AF2C7D84D4B4AA3A6B53 /* FloatingPointMatrix3x3.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = FloatingPointMatrix3x3.hpp; sourceTree = "<group>"; };
 		55900864C39A4FB67890BF0E /* Signal.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Signal.hpp; sourceTree = "<group>"; };
 		55D0921E3DA34A09344C0E0A /* AudioEngine.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = AudioEngine.hpp; sourceTree = "<group>"; };
-		5672D00947C663520B460134 /* InputDeviceFactory.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = InputDeviceFactory.hpp; sourceTree = "<group>"; };
 		5698DDE55D53D7EAA02C2490 /* AudioChannels.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = AudioChannels.hpp; sourceTree = "<group>"; };
 		582304B2F09B38708AF61AFC /* ErrorChecker.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = ErrorChecker.hpp; sourceTree = "<group>"; };
 		58C01CA2BC12335C6CC85121 /* Texture2DGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Texture2DGL4.hpp; sourceTree = "<group>"; };
@@ -657,7 +653,6 @@
 		B2AEB843C0EAE82FED23106B /* ConnectionList.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ConnectionList.cpp; sourceTree = "<group>"; };
 		B5B53A56551DA75B254A8BF5 /* Version.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Version.hpp; sourceTree = "<group>"; };
 		B5C78F551ABA7E2DE11CF40F /* GraphicsDevice.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GraphicsDevice.hpp; sourceTree = "<group>"; };
-		B7379F84C54E861AD074AA1C /* InputDeviceFactory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = InputDeviceFactory.cpp; sourceTree = "<group>"; };
 		B8D261783FA846F7C3A474EC /* GamepadState.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GamepadState.hpp; sourceTree = "<group>"; };
 		B908835B58A865ED1EC9B55F /* InputElementFormat.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = InputElementFormat.hpp; sourceTree = "<group>"; };
 		B9B61FF78819BA1E5B2CBFE8 /* BlendDescription.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = BlendDescription.hpp; sourceTree = "<group>"; };
@@ -949,9 +944,6 @@
 				A9E4B869210CD9C0003F87DC /* GamepadHelper.hpp */,
 				A9E4B866210CD9C0003F87DC /* GamepadMappings.cpp */,
 				A9E4B867210CD9C0003F87DC /* GamepadMappings.hpp */,
-				1C7CBAD3B25BA6B0D155A5E6 /* InputDeviceCreator.hpp */,
-				B7379F84C54E861AD074AA1C /* InputDeviceFactory.cpp */,
-				5672D00947C663520B460134 /* InputDeviceFactory.hpp */,
 				A9E4B86E210CDCC7003F87DC /* NativeGamepad.hpp */,
 			);
 			path = InputSystem;
@@ -1898,7 +1890,6 @@
 				A992AF021C2B1168003170C9 /* Coordinate2D.cpp in Sources */,
 				96250C0AF1475E290503FBF7 /* HLSLCompiler.cpp in Sources */,
 				6AC6140DEE87DAE2DC52FFE7 /* KeyboardState.cpp in Sources */,
-				6E7FC2384465DDDB5C5B0A25 /* InputDeviceFactory.cpp in Sources */,
 				1650793D0884E1424679277F /* Log.cpp in Sources */,
 				D5CAE3F16D482B36E58155CA /* LogChannel.cpp in Sources */,
 				5FC19F99728314D0AB72DDB8 /* BoundingBox.cpp in Sources */,
@@ -2027,7 +2018,6 @@
 				A992AF031C2B1168003170C9 /* Coordinate2D.cpp in Sources */,
 				10C3C865D4638E1512AD0274 /* HLSLCompiler.cpp in Sources */,
 				2C6A8330B306F09980C8EFE0 /* KeyboardState.cpp in Sources */,
-				D7EAEFE80CEE8FFAA2DB9282 /* InputDeviceFactory.cpp in Sources */,
 				1F0E6CB61ABDCD22F870F258 /* Log.cpp in Sources */,
 				2253F43FA13A0B293FE79749 /* LogChannel.cpp in Sources */,
 				15C4EF0C411554073735CCF7 /* BoundingBox.cpp in Sources */,
