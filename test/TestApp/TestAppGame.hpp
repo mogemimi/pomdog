@@ -27,6 +27,6 @@ private:
     std::unique_ptr<Game> game;
 };
 
-}// namespace TestApp
+} // namespace TestApp
 
 #endif // POMDOG_COCOATESTGAME_HPP

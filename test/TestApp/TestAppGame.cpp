@@ -2,12 +2,13 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "TestAppGame.hpp"
-#include <utility>
 #include "MaidChanGame.hpp"
 #include "GrassBlendingGame.hpp"
 #include "ParticleTestGame.hpp"
 #include "LightningTestGame.hpp"
 #include "MaidBeamGame.hpp"
+#include <cmath>
+#include <utility>
 
 namespace TestApp {
 //-----------------------------------------------------------------------
@@ -25,12 +26,18 @@ void TestAppGame::Initialize()
     //this->game = std::make_unique<GrassBlendingGame>(gameHost);
     //this->game = std::make_unique<MaidBeamGame>(gameHost);
 
-    game->Initialize();
+    if (game) {
+        game->Initialize();
+    }
 }
 //-----------------------------------------------------------------------
 void TestAppGame::Update()
 {
     if (!game) {
+        gameHost->Window()->Title(StringFormat(
+            "%3.0f fps, FrameNumber = %6d",
+            std::round(gameHost->Clock()->FrameRate()),
+            gameHost->Clock()->FrameNumber()));
         return;
     }
 
@@ -39,8 +46,7 @@ void TestAppGame::Update()
 //-----------------------------------------------------------------------
 void TestAppGame::Draw()
 {
-    if (!game)
-    {
+    if (!game) {
         auto graphicsContext = gameHost->GraphicsContext();
         graphicsContext->Clear(Color::CornflowerBlue);
         graphicsContext->Present();
@@ -50,4 +56,4 @@ void TestAppGame::Draw()
     game->Draw();
 }
 //-----------------------------------------------------------------------
-}// namespace TestApp
+} // namespace TestApp
