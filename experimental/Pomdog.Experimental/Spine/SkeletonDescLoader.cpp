@@ -9,6 +9,7 @@
 #include "Pomdog/Math/Degree.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include <rapidjson/document.h>
 #include <utility>
 #include <fstream>
@@ -444,30 +445,26 @@ static SkinnedMeshAttachmentDesc ReadSkinnedMeshAttachment(rapidjson::Value::Con
 	if (!attachmentObject.HasMember("type")
 		|| !attachmentObject["type"].IsString()
 		|| std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") != 0) {
-		///@todo Not implemented
 		// Error
-		return {};
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: invalid format");
 	}
 
 	POMDOG_ASSERT(!(!attachmentObject.HasMember("triangles") || !attachmentObject["triangles"].IsArray()));
 	if (!attachmentObject.HasMember("triangles") || !attachmentObject["triangles"].IsArray()) {
-		///@todo Not implemented
 		// Error
-		return {};
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: invalid format");
 	}
 
 	POMDOG_ASSERT(!(!attachmentObject.HasMember("vertices") || !attachmentObject["vertices"].IsArray()));
 	if (!attachmentObject.HasMember("vertices") || !attachmentObject["vertices"].IsArray()) {
-		///@todo Not implemented
 		// Error
-		return {};
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: invalid format");
 	}
 
 	POMDOG_ASSERT(!(!attachmentObject.HasMember("uvs") || !attachmentObject["uvs"].IsArray()));
 	if (!attachmentObject.HasMember("uvs") || !attachmentObject["uvs"].IsArray()) {
-		///@todo Not implemented
 		// Error
-		return {};
+		POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: invalid format");
 	}
 
 	SkinnedMeshAttachmentDesc desc;
