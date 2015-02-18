@@ -63,6 +63,8 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
 	Microsoft::WRL::ComPtr<ID3D11Device> const& nativeDevice,
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContextIn)
 	: deviceContext(deviceContextIn)
+	, preferredBackBufferWidth(1)
+	, preferredBackBufferHeight(1)
 {
 	using Microsoft::WRL::ComPtr;
 
@@ -106,14 +108,18 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
 	{
 		RECT rect;
 		::GetClientRect(windowHandle, &rect);
-		UINT const windowWidth = static_cast<UINT const>(rect.right - rect.left);
-		UINT const windowHeight = static_cast<UINT const>(rect.bottom - rect.top);
+		auto const windowWidth = rect.right - rect.left;
+		auto const windowHeight = rect.bottom - rect.top;
 
+		preferredBackBufferWidth = std::max<int>(preferredBackBufferWidth, windowWidth);
+		preferredBackBufferHeight = std::max<int>(preferredBackBufferHeight, windowHeight);
+	}
+	{
 		DXGI_SWAP_CHAIN_DESC swapChainDesc;
 		ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 		swapChainDesc.BufferCount = 1;
-		swapChainDesc.BufferDesc.Width = windowWidth;
-		swapChainDesc.BufferDesc.Height = windowHeight;
+		swapChainDesc.BufferDesc.Width = preferredBackBufferWidth;
+		swapChainDesc.BufferDesc.Height = preferredBackBufferHeight;
 		swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
 		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
@@ -127,20 +133,19 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
 		POMDOG_ASSERT(dxgiFactory);
 		HRESULT hr = dxgiFactory->CreateSwapChain(nativeDevice.Get(), &swapChainDesc, &swapChain);
 
-		if (FAILED(hr))
-		{
-			///@todo throw exception
-
+		if (FAILED(hr)) {
 			// FUS RO DAH!
-			Log::Internal("Failed to create SwapChain");
+			POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create SwapChain");
 		}
 
 		backBuffer = std::make_shared<RenderTarget2DDirect3D11>(nativeDevice.Get(),
-			swapChain.Get(), windowWidth, windowHeight, DepthFormat::Depth24Stencil8);
+			swapChain.Get(), preferredBackBufferWidth, preferredBackBufferHeight, DepthFormat::Depth24Stencil8);
 
 		boundRenderTargets.reserve(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
 		boundRenderTargets.push_back(backBuffer);
 	}
+
+	SetRenderTarget();
 }
 //-----------------------------------------------------------------------
 GraphicsContextDirect3D11::~GraphicsContextDirect3D11()

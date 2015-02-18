@@ -108,6 +108,8 @@ private:
 	static constexpr std::size_t MaxTextureCount = 8;
 	std::array<ID3D11ShaderResourceView*, MaxTextureCount> boundTextureViews;
 	std::shared_ptr<RenderTarget2DDirect3D11> backBuffer;
+	int preferredBackBufferWidth;
+	int preferredBackBufferHeight;
 };
 
 }// namespace Direct3D11
