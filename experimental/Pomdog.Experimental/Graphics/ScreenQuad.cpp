@@ -10,6 +10,7 @@
 #include "Pomdog/Graphics/GraphicsContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
+#include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Vector2.hpp"
@@ -20,14 +21,25 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 ScreenQuad::ScreenQuad(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
-	using ScreenQuadVertex = CustomVertex<Vector3, Vector2>;
+	struct ScreenQuadVertex {
+		Vector3 Position;
+		Vector2 TextureCoord;
+	};
 
-	std::array<ScreenQuadVertex, 4> const verticesCombo = {
+	std::array<ScreenQuadVertex, 4> verticesCombo = {
 		Vector3{-1.0f, -1.0f, 0.5f}, Vector2{0.0f, 0.0f},
 		Vector3{-1.0f,  1.0f, 0.5f}, Vector2{0.0f, 1.0f},
 		Vector3{ 1.0f,  1.0f, 0.5f}, Vector2{1.0f, 1.0f},
 		Vector3{ 1.0f, -1.0f, 0.5f}, Vector2{1.0f, 0.0f},
 	};
+
+	if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL)
+	{
+		// Convert to Texture Coordinates in Direct3D
+		for (auto & vertex: verticesCombo) {
+			vertex.TextureCoord.Y = (1.0f - vertex.TextureCoord.Y);
+		}
+	}
 
 	std::array<ScreenQuadVertex, 6> const vertices = {
 		verticesCombo[0], verticesCombo[1], verticesCombo[2],

@@ -24,6 +24,8 @@ namespace {
 // Built-in shaders
 #include "Shaders/GLSL.Embedded/FXAA_VS.inc.hpp"
 #include "Shaders/GLSL.Embedded/FXAA_PS.inc.hpp"
+#include "Shaders/HLSL.Embedded/FXAA_VS.inc.hpp"
+#include "Shaders/HLSL.Embedded/FXAA_PS.inc.hpp"
 
 struct BuiltinEffectFxaaTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
@@ -31,6 +33,8 @@ struct BuiltinEffectFxaaTrait {
 		auto effectPass = EffectPassBuilder(graphicsDevice)
 			.VertexShaderGLSL(Builtin_GLSL_FXAA_VS, std::strlen(Builtin_GLSL_FXAA_VS))
 			.PixelShaderGLSL(Builtin_GLSL_FXAA_PS, std::strlen(Builtin_GLSL_FXAA_PS))
+			.VertexShaderHLSLPrecompiled(BuiltinHLSL_FXAA_VS, sizeof(BuiltinHLSL_FXAA_VS))
+			.PixelShaderHLSLPrecompiled(BuiltinHLSL_FXAA_PS, sizeof(BuiltinHLSL_FXAA_PS))
 			.InputElements({VertexElementFormat::Float3, VertexElementFormat::Float2})
 			.Create();
 		return std::move(effectPass);
