@@ -7,6 +7,7 @@
 #include "Texture2DGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
+#include "../RenderSystem/SurfaceFormatHelper.hpp"
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
@@ -116,36 +117,6 @@ static GLenum ToPixelFundamentalType(SurfaceFormat format)
 #endif
 }
 //-----------------------------------------------------------------------
-static std::uint16_t ToBytesPerBlock(SurfaceFormat format)
-{
-	switch (format) {
-	case SurfaceFormat::A8_UNorm:
-	case SurfaceFormat::R8_UNorm:
-	case SurfaceFormat::BlockComp1_UNorm:
-		return 1;
-	case SurfaceFormat::R8G8_UNorm:
-	case SurfaceFormat::BlockComp2_UNorm:
-	case SurfaceFormat::BlockComp3_UNorm:
-		return 2;
-	case SurfaceFormat::R8G8B8A8_UNorm:
-	case SurfaceFormat::B8G8R8A8_UNorm:
-	case SurfaceFormat::R10G10B10A2_UNorm:
-	case SurfaceFormat::R11G11B10_Float:
-	case SurfaceFormat::R16G16_Float:
-	case SurfaceFormat::R32_Float:
-		return 4;
-	case SurfaceFormat::R16G16B16A16_Float:
-		return 8;
-	case SurfaceFormat::R32G32B32A32_Float:
-		return 16;
-	};
-
-#ifdef _MSC_VER
-	// FUS RO DAH!
-	return 1;
-#endif
-}
-//-----------------------------------------------------------------------
 template <typename T>
 static GLenum ToTextureUnitIndexGL4(T index)
 {
@@ -178,7 +149,7 @@ static void SetPixelDataTexture2DCompressedGL4(std::uint32_t pixelWidth, std::ui
 		format == SurfaceFormat::BlockComp3_UNorm);
 
 	auto const internalFormat = ToInternalFormatGL4(format);
-	auto const bytesPerBlock = ToBytesPerBlock(format);
+	auto const bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format);
 	std::size_t startOffset = 0;
 
 	POMDOG_ASSERT(pixelWidth > 0);

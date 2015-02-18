@@ -6,6 +6,7 @@
 
 #include "Texture2DDirect3D11.hpp"
 #include "DXGIFormatHelper.hpp"
+#include "../RenderSystem/SurfaceFormatHelper.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -17,34 +18,6 @@ namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
 
-static std::uint16_t ToBytesPerBlock(SurfaceFormat format)
-{
-	switch (format) {
-	case SurfaceFormat::A8_UNorm:
-	case SurfaceFormat::R8_UNorm:
-	case SurfaceFormat::BlockComp1_UNorm:
-		return 1;
-	case SurfaceFormat::R8G8_UNorm:
-	case SurfaceFormat::BlockComp2_UNorm:
-	case SurfaceFormat::BlockComp3_UNorm:
-		return 2;
-	case SurfaceFormat::R8G8B8A8_UNorm:
-	case SurfaceFormat::B8G8R8A8_UNorm:
-	case SurfaceFormat::R10G10B10A2_UNorm:
-	case SurfaceFormat::R11G11B10_Float:
-	case SurfaceFormat::R16G16_Float:
-	case SurfaceFormat::R32_Float:
-		return 4;
-	case SurfaceFormat::R32G32B32A32_Float:
-		return 16;
-	};
-
-#ifdef _MSC_VER
-	// FUS RO DAH!
-	return 1;
-#endif
-}
-//-----------------------------------------------------------------------
 static std::size_t MipmapImageDataBytes(std::size_t pixelWidth, std::size_t pixelHeight, std::size_t bytesPerBlock)
 {
 	return pixelWidth * pixelHeight * bytesPerBlock;
@@ -57,7 +30,7 @@ static std::size_t ComputeTextureBufferSize(std::size_t pixelWidth, std::size_t 
 	POMDOG_ASSERT(pixelHeight > 0);
 	POMDOG_ASSERT(levelCount >= 1);
 
-	auto const bytesPerBlock = ToBytesPerBlock(format);
+	auto const bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format);
 
 	std::size_t sizeInBytes = 0;
 	std::size_t mipMapPixelWidth = pixelWidth;
