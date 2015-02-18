@@ -80,8 +80,7 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
 		const auto chunk = BinaryReader::Read<VoxChunkHeader>(stream);
 		const auto chunkEnd = ChunkSize(stream, chunk);
 
-		switch (chunk.ID) {
-		case IdSize: {
+		if (chunk.ID == IdSize) {
 			const auto x = BinaryReader::Read<std::int32_t>(stream);
 			const auto y = BinaryReader::Read<std::int32_t>(stream);
 			const auto z = BinaryReader::Read<std::int32_t>(stream);
@@ -93,9 +92,8 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
 			model.X = static_cast<std::uint32_t>(x);
 			model.Y = static_cast<std::uint32_t>(y);
 			model.Z = static_cast<std::uint32_t>(z);
-			break;
 		}
-		case IdXYZI: {
+		else if (chunk.ID == IdXYZI) {
 			const auto voxelCount = BinaryReader::Read<std::int32_t>(stream);
 			if (voxelCount < 0) {
 				POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "negative number of voxels"));
@@ -104,19 +102,14 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
 			if (voxelCount > 0) {
 				model.Voxels = BinaryReader::ReadArray<MagicaVoxel::Voxel>(stream, voxelCount);
 			}
-			break;
 		}
-		case IdRGBA: {
+		else if (chunk.ID == IdRGBA) {
 			model.ColorPalette = BinaryReader::Read<decltype(model.ColorPalette)>(stream);
 
 			model.ColorPalette.back() = Color::Black;
 
 			POMDOG_ASSERT(model.ColorPalette.size() == 256);
 			std::rotate(std::begin(model.ColorPalette), std::next(std::begin(model.ColorPalette), 255), std::end(model.ColorPalette));
-			break;
-		}
-		default:
-			break;
 		}
 
 		stream.seekg(chunkEnd, std::ios::beg);
