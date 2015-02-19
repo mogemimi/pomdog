@@ -190,7 +190,7 @@ static void SetPixelDataTexture2DGL4(std::uint32_t pixelWidth, std::uint32_t pix
 
 	auto const formatComponents = ToFormatComponents(format);
 	auto const pixelFundamentalType = ToPixelFundamentalType(format);
-	auto const bytesPerBlock = ToBytesPerBlock(format);
+	auto const bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format);
 
 	GLsizei mipMapPixelWidth = pixelWidth;
 	GLsizei mipMapPixelHeight = pixelHeight;
