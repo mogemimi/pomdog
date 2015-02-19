@@ -7,7 +7,7 @@
 #ifndef POMDOG_COCOATESTGAME_HPP
 #define POMDOG_COCOATESTGAME_HPP
 
-#if (_MSC_VER > 1000)
+#if _MSC_VER > 1000
 #pragma once
 #endif
 
