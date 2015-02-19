@@ -89,7 +89,7 @@ public:
 
 	void Draw(DrawingContext & drawingContext) override;
 
-	void UpdateAnimation(DurationSeconds const& frameDuration) override;
+	void UpdateAnimation(Duration const& frameDuration) override;
 };
 
 }// namespace UI

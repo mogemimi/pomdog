@@ -24,10 +24,10 @@ TimeSourceCocoa::TimeSourceCocoa()
 	secondsPerTick = nanoScale * nanoSecondsPerTick;
 }
 //-----------------------------------------------------------------------
-TimePointSeconds TimeSourceCocoa::Now() const
+TimePoint TimeSourceCocoa::Now() const
 {
 	auto currentSeconds = mach_absolute_time() * secondsPerTick;
-	return TimePointSeconds(DurationSeconds(currentSeconds));
+	return TimePoint(Duration(currentSeconds));
 }
 
 }// namespace Cocoa

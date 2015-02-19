@@ -31,7 +31,7 @@ public:
 
 	void Touch(MouseState const& mouseState);
 
-	void UpdateAnimation(DurationSeconds const& frameDuration);
+	void UpdateAnimation(Duration const& frameDuration);
 
 	void AddChild(std::shared_ptr<UIView> const& node);
 

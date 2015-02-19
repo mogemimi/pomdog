@@ -188,7 +188,7 @@ private:
 	std::shared_ptr<KeyboardCocoa> keyboard;
 	std::shared_ptr<MouseCocoa> mouse;
 
-	DurationSeconds presentationInterval;
+	Duration presentationInterval;
 	bool exitRequest;
 };
 //-----------------------------------------------------------------------
@@ -198,7 +198,7 @@ GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& windowIn,
 	: viewLiveResizing(false)
 	, systemEventDispatcher(eventDispatcher)
 	, window(windowIn)
-	, presentationInterval(DurationSeconds(1) / 60)
+	, presentationInterval(Duration(1) / 60)
 	, exitRequest(false)
 {
 	openGLContext = CreateOpenGLContext(presentationParameters);
@@ -231,7 +231,7 @@ GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& windowIn,
 	}
 
 	POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
-	presentationInterval = DurationSeconds(1) / presentationParameters.PresentationInterval;
+	presentationInterval = Duration(1) / presentationParameters.PresentationInterval;
 }
 //-----------------------------------------------------------------------
 GameHostCocoa::Impl::~Impl()

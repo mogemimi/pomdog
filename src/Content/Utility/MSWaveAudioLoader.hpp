@@ -12,7 +12,7 @@
 #endif
 
 #include "Pomdog/Audio/AudioChannels.hpp"
-#include "Pomdog/Application/DurationSeconds.hpp"
+#include "Pomdog/Application/Duration.hpp"
 #include <cstdint>
 #include <memory>
 #include <string>

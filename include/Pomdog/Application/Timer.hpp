@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "DurationSeconds.hpp"
+#include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Event/ScopedConnection.hpp"
 #include <memory>
 
@@ -37,16 +37,16 @@ public:
 
 	bool Enabled() const;
 
-	DurationSeconds TotalTime() const;
-	DurationSeconds FrameDuration() const;
+	Duration TotalTime() const;
+	Duration FrameDuration() const;
 
 	void Scale(float scale);
 	float Scale() const;
 
 private:
 	ScopedConnection connection;
-	DurationSeconds totalTime;
-	DurationSeconds frameDuration;
+	Duration totalTime;
+	Duration frameDuration;
 	float scale;
 	bool  enabled;
 };

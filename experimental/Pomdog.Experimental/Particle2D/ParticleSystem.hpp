@@ -15,7 +15,7 @@
 #include "ParticleEmitter.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
-#include "Pomdog/Application/DurationSeconds.hpp"
+#include "Pomdog/Application/Duration.hpp"
 #include <cstdint>
 #include <vector>
 #include <random>
@@ -32,7 +32,7 @@ public:
 	void Pause();
 	void Stop();
 
-	void Simulate(GameObject & gameObject, DurationSeconds const& duration);
+	void Simulate(GameObject & gameObject, Duration const& duration);
 
 	bool IsAlive() const;
 
@@ -56,8 +56,8 @@ private:
 	ParticleEmitter emitter;
 	std::vector<Particle> particles;
 	std::shared_ptr<ParticleClip const> clip;
-	DurationSeconds erapsedTime;
-	DurationSeconds emissionTimer;
+	Duration erapsedTime;
+	Duration emissionTimer;
 	std::mt19937 random;
 	ParticleSystemState state;
 	bool enableEmission;

@@ -14,7 +14,7 @@
 #include "detail/ParticleEmitterShape.hpp"
 #include "detail/ParticleParameter.hpp"
 #include "ParticleEmitter.hpp"
-#include "Pomdog/Application/DurationSeconds.hpp"
+#include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Radian.hpp"
 #include <cstdint>
@@ -50,7 +50,7 @@ public:
 	///@brief パーティクルの生存期間に応じたサイズを指定します。
 	std::unique_ptr<Details::Particles::ParticleParameter<float>> SizeOverLifetime;
 
-	DurationSeconds Duration = std::chrono::seconds(5);
+	Pomdog::Duration Duration = std::chrono::seconds(5);
 };
 
 }// namespace Pomdog

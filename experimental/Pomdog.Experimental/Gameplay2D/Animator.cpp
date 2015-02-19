@@ -118,9 +118,9 @@ public:
 		std::shared_ptr<SkeletonTransform> const& skeletonTransform,
 		std::shared_ptr<AnimationGraph> const& animationGraph);
 
-	void Update(DurationSeconds const& frameDuration);
+	void Update(Duration const& frameDuration);
 
-	void CrossFade(std::string const& stateName, DurationSeconds const& transitionDuration);
+	void CrossFade(std::string const& stateName, Duration const& transitionDuration);
 
 	void Play(std::string const& stateName);
 
@@ -180,7 +180,7 @@ Animator::Impl::Impl(std::shared_ptr<Skeleton> const& skeletonIn,
 		animationGraph->States.front().Tree.get());
 }
 //-----------------------------------------------------------------------
-void Animator::Impl::Update(DurationSeconds const& frameDuration)
+void Animator::Impl::Update(Duration const& frameDuration)
 {
 	// (1) Update time:
 	{
@@ -218,13 +218,13 @@ void Animator::Impl::Update(DurationSeconds const& frameDuration)
 	SkeletonHelper::ToGlobalPose(*skeleton, skeletonTransform->Pose, skeletonTransform->GlobalPose);
 }
 //-----------------------------------------------------------------------
-void Animator::Impl::CrossFade(std::string const& stateName, DurationSeconds const& transitionDuration)
+void Animator::Impl::CrossFade(std::string const& stateName, Duration const& transitionDuration)
 {
 	if (nextAnimation) {
 		return;
 	}
 
-	POMDOG_ASSERT(transitionDuration > DurationSeconds::zero());
+	POMDOG_ASSERT(transitionDuration > Duration::zero());
 	POMDOG_ASSERT(!std::isnan(transitionDuration.count()));
 
 	auto iter = FindState(animationGraph->States, stateName);
@@ -309,13 +309,13 @@ Animator::Animator(std::shared_ptr<Skeleton> const& skeleton,
 //-----------------------------------------------------------------------
 Animator::~Animator() = default;
 //-----------------------------------------------------------------------
-void Animator::Update(DurationSeconds const& frameDuration)
+void Animator::Update(Duration const& frameDuration)
 {
 	POMDOG_ASSERT(impl);
 	impl->Update(frameDuration);
 }
 //-----------------------------------------------------------------------
-void Animator::CrossFade(std::string const& state, DurationSeconds const& transitionDuration)
+void Animator::CrossFade(std::string const& state, Duration const& transitionDuration)
 {
 	POMDOG_ASSERT(impl);
 	impl->CrossFade(state, transitionDuration);

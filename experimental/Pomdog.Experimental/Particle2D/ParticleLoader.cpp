@@ -160,8 +160,8 @@ static ParticleClip ReadParticleClip(rapidjson::Value const& object)
 		POMDOG_ASSERT(duration >= 0 || duration == DurationInfinity);
 	#endif
 		emitter.Looping = (duration <= 0);
-		clip.Duration = DurationSeconds{std::max<double>(duration, emitter.StartLifetime)};
-		POMDOG_ASSERT(clip.Duration > DurationSeconds::zero());
+		clip.Duration = Duration{std::max<double>(duration, emitter.StartLifetime)};
+		POMDOG_ASSERT(clip.Duration > Duration::zero());
 	}
 
 	using Particles::ParticleCurveKey;

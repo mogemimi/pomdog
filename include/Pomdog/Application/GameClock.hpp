@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "Pomdog/Application/DurationSeconds.hpp"
+#include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Event/Signal.hpp"
 #include <cstdint>
@@ -36,7 +36,7 @@ public:
 
 	///@~Japanese
 	/// @brief アプリケーションが起動してから現在のフレームまでの経過時間（秒）を取得します。
-	DurationSeconds TotalGameTime() const;
+	Duration TotalGameTime() const;
 
 	///@~Japanese
 	/// @brief 現在のフレーム番号を取得します。
@@ -44,7 +44,7 @@ public:
 
 	///@~Japanese
 	/// @brief 現在のフレームにかかる処理時間の予測値を取得します。
-	DurationSeconds FrameDuration() const;
+	Duration FrameDuration() const;
 
 	///@~Japanese
 	/// @brief 現在のフレームレートを取得します。
@@ -52,9 +52,9 @@ public:
 
 	///@~Japanese
 	/// @brief フレームの開始時から現在までの経過時間（秒）を取得します。
-	DurationSeconds ElapsedTime() const;
+	Duration ElapsedTime() const;
 
-	Signal<void(DurationSeconds const& frameDuration)> OnTick;
+	Signal<void(Duration const& frameDuration)> OnTick;
 
 private:
 	class Impl;

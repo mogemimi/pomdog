@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "Pomdog/Application/DurationSeconds.hpp"
+#include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include <cstdint>
 #include <random>
@@ -20,7 +20,7 @@ namespace Pomdog {
 
 class BeamEmitter {
 public:
-	DurationSeconds Duration {5.0};
+	Pomdog::Duration Duration {5.0};
 	bool Looping = true;
 
 	Color StartColor = Color::White;

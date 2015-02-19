@@ -220,7 +220,7 @@ Details::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIView> &&
 	return std::move(connection);
 }
 //-----------------------------------------------------------------------
-void UIEventDispatcher::UpdateAnimation(DurationSeconds const& frameDuration)
+void UIEventDispatcher::UpdateAnimation(Duration const& frameDuration)
 {
 	for (auto & node: children)
 	{

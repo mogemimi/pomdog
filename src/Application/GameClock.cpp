@@ -26,29 +26,29 @@ public:
 
 	void Restart();
 
-	DurationSeconds TotalGameTime() const;
+	Duration TotalGameTime() const;
 
 	std::uint32_t FrameNumber() const;
 
-	DurationSeconds FrameDuration() const;
+	Duration FrameDuration() const;
 
 	float FrameRate() const;
 
-	DurationSeconds ElapsedTime() const;
+	Duration ElapsedTime() const;
 
 private:
-	DurationSeconds GetExactLastFrameDuration();
-	void AddToFrameHistory(DurationSeconds const& exactFrameDuration);
-	DurationSeconds PredictFrameDuration() const;
+	Duration GetExactLastFrameDuration();
+	void AddToFrameHistory(Duration const& exactFrameDuration);
+	Duration PredictFrameDuration() const;
 
 public:
 	Details::TimeSource timeSource;
-	TimePointSeconds sourceStartTime;
-	TimePointSeconds sourceLastTime;
-	std::deque<DurationSeconds> frameDurationHistory;
+	TimePoint sourceStartTime;
+	TimePoint sourceLastTime;
+	std::deque<Duration> frameDurationHistory;
 
-	DurationSeconds predictedFrameTime;
-	DurationSeconds accumulatedCurrentTime;
+	Duration predictedFrameTime;
+	Duration accumulatedCurrentTime;
 	std::uint32_t frameNumber;
 };
 //-----------------------------------------------------------------------
@@ -57,8 +57,8 @@ GameClock::Impl::Impl()
 	, accumulatedCurrentTime(0)
 	, frameNumber(0)
 {
-	// frameDefault = (1.0 sec) / (30 fps) = 0.033 sec/frame
-	DurationSeconds frameDefault(0.033);
+	constexpr int framePerSecond = 30;
+	constexpr Duration frameDefault = Duration(1.0) / framePerSecond;
 	frameDurationHistory.clear();
 	frameDurationHistory.push_back(frameDefault);
 
@@ -71,7 +71,7 @@ void GameClock::Impl::Restart()
 	sourceLastTime = sourceLastTime;
 }
 //-----------------------------------------------------------------------
-DurationSeconds GameClock::Impl::GetExactLastFrameDuration()
+Duration GameClock::Impl::GetExactLastFrameDuration()
 {
 	auto now = timeSource.Now();
 	auto frameDuration = now - sourceLastTime;
@@ -83,7 +83,7 @@ DurationSeconds GameClock::Impl::GetExactLastFrameDuration()
 	return frameDuration;
 }
 //-----------------------------------------------------------------------
-void GameClock::Impl::AddToFrameHistory(DurationSeconds const& exactFrameDuration)
+void GameClock::Impl::AddToFrameHistory(Duration const& exactFrameDuration)
 {
 	constexpr std::size_t MaxFrameHistorySize = 20;
 
@@ -94,12 +94,12 @@ void GameClock::Impl::AddToFrameHistory(DurationSeconds const& exactFrameDuratio
 	}
 }
 //-----------------------------------------------------------------------
-DurationSeconds GameClock::Impl::PredictFrameDuration() const
+Duration GameClock::Impl::PredictFrameDuration() const
 {
 	POMDOG_ASSERT(!frameDurationHistory.empty());
 
 	auto totalFrameTime = std::accumulate(
-		std::begin(frameDurationHistory), std::end(frameDurationHistory), DurationSeconds{0});
+		std::begin(frameDurationHistory), std::end(frameDurationHistory), Duration::zero());
 	return totalFrameTime / frameDurationHistory.size();
 }
 //-----------------------------------------------------------------------
@@ -114,7 +114,7 @@ void GameClock::Impl::Tick()
 	++frameNumber;
 }
 //-----------------------------------------------------------------------
-DurationSeconds GameClock::Impl::TotalGameTime() const
+Duration GameClock::Impl::TotalGameTime() const
 {
 	return accumulatedCurrentTime;
 }
@@ -124,7 +124,7 @@ std::uint32_t GameClock::Impl::FrameNumber() const
 	return frameNumber;
 }
 //-----------------------------------------------------------------------
-DurationSeconds GameClock::Impl::FrameDuration() const
+Duration GameClock::Impl::FrameDuration() const
 {
 	return predictedFrameTime;
 }
@@ -135,7 +135,7 @@ float GameClock::Impl::FrameRate() const
 	return 1 / static_cast<float>(predictedFrameTime.count());
 }
 //-----------------------------------------------------------------------
-DurationSeconds GameClock::Impl::ElapsedTime() const
+Duration GameClock::Impl::ElapsedTime() const
 {
 	return timeSource.Now() - sourceLastTime;
 }
@@ -158,7 +158,7 @@ void GameClock::Tick()
 	OnTick(impl->FrameDuration());
 }
 //-----------------------------------------------------------------------
-DurationSeconds GameClock::TotalGameTime() const
+Duration GameClock::TotalGameTime() const
 {
 	POMDOG_ASSERT(impl);
 	return impl->TotalGameTime();
@@ -170,7 +170,7 @@ std::uint32_t GameClock::FrameNumber() const
 	return impl->FrameNumber();
 }
 //-----------------------------------------------------------------------
-DurationSeconds GameClock::FrameDuration() const
+Duration GameClock::FrameDuration() const
 {
 	POMDOG_ASSERT(impl);
 	return impl->FrameDuration();
@@ -182,7 +182,7 @@ float GameClock::FrameRate() const
 	return impl->FrameRate();
 }
 //-----------------------------------------------------------------------
-DurationSeconds GameClock::ElapsedTime() const
+Duration GameClock::ElapsedTime() const
 {
 	POMDOG_ASSERT(impl);
 	return impl->ElapsedTime();

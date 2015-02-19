@@ -68,7 +68,7 @@ static const auto ZoomAnimationInterval = std::chrono::milliseconds(400);
 //-----------------------------------------------------------------------
 ScenePanel::ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn)
 	: Panel(Matrix3x2::Identity, widthIn, heightIn)
-	, timer(DurationSeconds::zero())
+	, timer(Duration::zero())
 	, normalizedScrollDirection(0.0f)
 	, scrollAcceleration(0.0f)
 	, isFocused(false)
@@ -116,7 +116,7 @@ void ScenePanel::OnPointerWheelChanged(PointerPoint const& pointerPoint)
 
 	constexpr float accel = 1.2f;
 
-	if (timer <= DurationSeconds::zero()) {
+	if (timer <= Duration::zero()) {
 		timer = ZoomAnimationInterval;
 		scrollAcceleration = accel;
 	}
@@ -275,11 +275,11 @@ void ScenePanel::OnMouseRightButtonMoved(PointerPoint const& pointerPoint)
 	SceneTouch(ConvertToPanelSpace(pointerPoint.Position));
 }
 //-----------------------------------------------------------------------
-void ScenePanel::UpdateAnimation(DurationSeconds const& frameDuration)
+void ScenePanel::UpdateAnimation(Duration const& frameDuration)
 {
-	timer = std::max(timer - frameDuration, DurationSeconds::zero());
+	timer = std::max(timer - frameDuration, Duration::zero());
 
-	if (timer <= DurationSeconds::zero()) {
+	if (timer <= Duration::zero()) {
 		scrollAcceleration = 1.0f;
 		return;
 	}

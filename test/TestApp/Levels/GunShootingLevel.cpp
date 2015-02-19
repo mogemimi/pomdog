@@ -50,7 +50,7 @@ void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const
 }// unnamed namespace
 //-----------------------------------------------------------------------
 GunShootingLevel::GunShootingLevel(GameHost & gameHost, GameWorld & world)
-	: spawnTime(DurationSeconds::zero())
+	: spawnTime(Duration::zero())
 {
 	auto graphicsDevice = gameHost.GraphicsDevice();
 	auto assets = gameHost.AssetManager();
@@ -110,7 +110,7 @@ void GunShootingLevel::Update(GameHost & gameHost, GameWorld & world)
 	auto frameDuration = clock->FrameDuration();
 	spawnTime += frameDuration;
 
-	if (spawnTime > DurationSeconds{2.0})
+	if (spawnTime > Duration{2.0})
 	{
 		auto graphicsDevice = gameHost.GraphicsDevice();
 		auto assets = gameHost.AssetManager();
@@ -130,7 +130,7 @@ void GunShootingLevel::Update(GameHost & gameHost, GameWorld & world)
 			
 			gameObject.AddComponent<Ghost>();
 		}
-		spawnTime = DurationSeconds::zero();
+		spawnTime = Duration::zero();
 	}
 
 	for (auto & ghost: world.QueryComponents<Transform2D, Ghost>())

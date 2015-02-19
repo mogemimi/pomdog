@@ -15,7 +15,7 @@
 #include "BeamBranching.hpp"
 #include "BeamEmitter.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
-#include "Pomdog/Application/DurationSeconds.hpp"
+#include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include <cstdint>
 #include <vector>
@@ -27,7 +27,7 @@ class BeamSystem {
 public:
 	BeamSystem();
 
-	void Update(DurationSeconds const& frameDuration, Transform2D const& emitterTransform, Vector2 const& target);
+	void Update(Duration const& frameDuration, Transform2D const& emitterTransform, Vector2 const& target);
 
 	static Vector2 CreateTarget(Transform2D const& emitterTransform, float distance);
 
@@ -38,8 +38,8 @@ public:
 	std::vector<Beam> beams;
 
 private:
-	DurationSeconds erapsedTime;
-	DurationSeconds emissionTimer;
+	Duration erapsedTime;
+	Duration emissionTimer;
 	std::mt19937 random;
 };
 

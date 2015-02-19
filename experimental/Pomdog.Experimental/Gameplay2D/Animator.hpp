@@ -12,7 +12,7 @@
 #endif
 
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
-#include "Pomdog/Application/GameClock.hpp"
+#include "Pomdog/Application/Duration.hpp"
 #include <memory>
 
 namespace Pomdog {
@@ -29,9 +29,9 @@ public:
 
 	~Animator();
 
-	void Update(DurationSeconds const& frameDuration);
+	void Update(Duration const& frameDuration);
 
-	void CrossFade(std::string const& state, DurationSeconds const& transitionDuration);
+	void CrossFade(std::string const& state, Duration const& transitionDuration);
 
 	void Play(std::string const& state);
 

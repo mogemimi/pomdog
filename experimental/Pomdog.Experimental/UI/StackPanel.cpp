@@ -177,7 +177,7 @@ void StackPanel::Draw(DrawingContext & drawingContext)
 	drawingContext.Pop();
 }
 //-----------------------------------------------------------------------
-void StackPanel::UpdateAnimation(DurationSeconds const& frameDuration)
+void StackPanel::UpdateAnimation(Duration const& frameDuration)
 {
 }
 //-----------------------------------------------------------------------

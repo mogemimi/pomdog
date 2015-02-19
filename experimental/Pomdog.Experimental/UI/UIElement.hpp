@@ -75,7 +75,7 @@ public:
 
 	virtual void Draw(DrawingContext & drawingContext) = 0;
 
-	virtual void UpdateAnimation(DurationSeconds const& frameDuration) = 0;
+	virtual void UpdateAnimation(Duration const& frameDuration) = 0;
 };
 
 }// namespace UI

@@ -88,7 +88,7 @@ public:
 
 	void Draw(DrawingContext &) override;
 
-	void UpdateAnimation(DurationSeconds const&) override;
+	void UpdateAnimation(Duration const&) override;
 
 	void SetCursor(MouseCursor cursor);
 

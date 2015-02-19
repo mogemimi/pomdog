@@ -28,7 +28,7 @@ public:
 private:
 	std::shared_ptr<GameClock> clock;
 	std::deque<float> frameRates;
-	DurationSeconds duration;
+	Duration duration;
 	std::string frameRateString;
 };
 

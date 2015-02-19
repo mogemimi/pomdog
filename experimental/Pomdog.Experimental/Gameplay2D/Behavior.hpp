@@ -12,7 +12,7 @@
 #endif
 
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
-#include "Pomdog/Application/DurationSeconds.hpp"
+#include "Pomdog/Application/Duration.hpp"
 #include <memory>
 
 namespace Pomdog {
@@ -25,7 +25,7 @@ public:
 
 	virtual void Start(GameObject & gameObject) = 0;
 
-	virtual void Update(GameObject & gameObject, DurationSeconds const& frameDuration) = 0;
+	virtual void Update(GameObject & gameObject, Duration const& frameDuration) = 0;
 };
 
 }// namespace Pomdog

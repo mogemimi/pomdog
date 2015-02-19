@@ -28,7 +28,7 @@ private:
 	GameObject mainCamera;
 	GameObject maid;
 	GameObject lightningBeam;
-	DurationSeconds spawnTime;
+	Duration spawnTime;
 
 	std::shared_ptr<Skeleton> ghostSkeleton;
 	std::shared_ptr<AnimationGraph> ghostAnimGraph;

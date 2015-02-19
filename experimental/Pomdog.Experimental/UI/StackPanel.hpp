@@ -49,7 +49,7 @@ public:
 
 	void Draw(DrawingContext & drawingContext) override;
 
-	void UpdateAnimation(DurationSeconds const& frameDuration) override;
+	void UpdateAnimation(Duration const& frameDuration) override;
 
 	void AddChild(std::shared_ptr<UIView> const& element);
 

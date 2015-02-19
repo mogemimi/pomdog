@@ -50,7 +50,7 @@ public:
 
 	void Draw(DrawingContext & drawingContext) override;
 
-	void UpdateAnimation(DurationSeconds const& frameDuration) override;
+	void UpdateAnimation(Duration const& frameDuration) override;
 
 	// Events:
 	Signal<void(Vector2 const& point)> SceneTouch;
@@ -71,7 +71,7 @@ private:
 	Optional<Vector2> tumbleStartPosition;
 	Optional<Vector2> trackStartPosition;
 
-	DurationSeconds timer;
+	Duration timer;
 	float normalizedScrollDirection;
 	float scrollAcceleration;
 

@@ -151,13 +151,13 @@ BeamSystem::BeamSystem()
 	beams.reserve(emitter.MaxBeams);
 }
 //-----------------------------------------------------------------------
-void BeamSystem::Update(DurationSeconds const& frameDuration, Transform2D const& emitterTransform, Vector2 const& target)
+void BeamSystem::Update(Duration const& frameDuration, Transform2D const& emitterTransform, Vector2 const& target)
 {
 	erapsedTime += frameDuration;
 
 	if (emitter.Looping && erapsedTime > emitter.Duration)
 	{
-		erapsedTime = DurationSeconds{0};
+		erapsedTime = Duration::zero();
 	}
 
 	if (emitter.Looping || erapsedTime <= emitter.Duration)
@@ -165,8 +165,8 @@ void BeamSystem::Update(DurationSeconds const& frameDuration, Transform2D const&
 		emissionTimer += frameDuration;
 
 		POMDOG_ASSERT(emitter.EmissionRate > 0);
-		auto emissionInterval = std::max(std::numeric_limits<DurationSeconds>::epsilon(),
-			DurationSeconds(1) / emitter.EmissionRate);
+		auto emissionInterval = std::max(std::numeric_limits<Duration>::epsilon(),
+			Duration(1) / emitter.EmissionRate);
 
 		POMDOG_ASSERT(emissionInterval.count() > 0);
 

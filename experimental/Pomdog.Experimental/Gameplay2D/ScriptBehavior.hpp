@@ -11,9 +11,9 @@
 #pragma once
 #endif
 
+#include "Behavior.hpp"
 //#include <selene.h>
 #include <Pomdog/Pomdog.hpp>
-#include "Behavior.hpp"
 
 namespace Pomdog {
 
@@ -23,7 +23,7 @@ public:
 
 	void Start(GameObject & gameObject) override;
 
-	void Update(GameObject & gameObject, DurationSeconds const& frameDuration) override;
+	void Update(GameObject & gameObject, Duration const& frameDuration) override;
 
 private:
 	//sel::State state;

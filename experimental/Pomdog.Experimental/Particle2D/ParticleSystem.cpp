@@ -86,7 +86,7 @@ ParticleSystem::ParticleSystem(std::shared_ptr<ParticleClip const> const& clipIn
 	particles.reserve(emitter.MaxParticles);
 }
 //-----------------------------------------------------------------------
-void ParticleSystem::Simulate(GameObject & gameObject, DurationSeconds const& duration)
+void ParticleSystem::Simulate(GameObject & gameObject, Duration const& duration)
 {
 	if (state != ParticleSystemState::Playing) {
 		return;
@@ -101,7 +101,7 @@ void ParticleSystem::Simulate(GameObject & gameObject, DurationSeconds const& du
 
 	if (emitter.Looping && erapsedTime > clip->Duration)
 	{
-		erapsedTime = DurationSeconds{0};
+		erapsedTime = Duration::zero();
 	}
 
 	if (emitter.Looping || erapsedTime <= clip->Duration)
@@ -109,8 +109,8 @@ void ParticleSystem::Simulate(GameObject & gameObject, DurationSeconds const& du
 		emissionTimer += duration;
 
 		POMDOG_ASSERT(emitter.EmissionRate > 0);
-		auto emissionInterval = std::max(std::numeric_limits<DurationSeconds>::epsilon(),
-			DurationSeconds(1) / emitter.EmissionRate);
+		auto emissionInterval = std::max(std::numeric_limits<Duration>::epsilon(),
+			Duration(1) / emitter.EmissionRate);
 
 		POMDOG_ASSERT(emissionInterval.count() > 0);
 
@@ -184,7 +184,7 @@ void ParticleSystem::Pause()
 void ParticleSystem::Stop()
 {
 	state = ParticleSystemState::Stopped;
-	erapsedTime = DurationSeconds::zero();
+	erapsedTime = Duration::zero();
 	particles.clear();
 }
 //-----------------------------------------------------------------------

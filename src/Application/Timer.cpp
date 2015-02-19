@@ -11,12 +11,12 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 Timer::Timer(GameClock & clock)
-	: totalTime(DurationSeconds::zero())
-	, frameDuration(DurationSeconds::zero())
+	: totalTime(Duration::zero())
+	, frameDuration(Duration::zero())
 	, scale(1.0f)
 	, enabled(true)
 {
-	auto onTick = [this](DurationSeconds const& frameDurationIn) {
+	auto onTick = [this](Duration const& frameDurationIn) {
 		if (!enabled) {
 			return;
 		}
@@ -40,7 +40,7 @@ void Timer::Stop()
 //-----------------------------------------------------------------------
 void Timer::Reset()
 {
-	totalTime = DurationSeconds::zero();
+	totalTime = Duration::zero();
 }
 //-----------------------------------------------------------------------
 bool Timer::Enabled() const
@@ -48,12 +48,12 @@ bool Timer::Enabled() const
 	return this->enabled;
 }
 //-----------------------------------------------------------------------
-DurationSeconds Timer::TotalTime() const
+Duration Timer::TotalTime() const
 {
 	return this->totalTime;
 }
 //-----------------------------------------------------------------------
-DurationSeconds Timer::FrameDuration() const
+Duration Timer::FrameDuration() const
 {
 	return this->frameDuration;
 }

@@ -110,7 +110,7 @@ void UIElementHierarchy::AddChild(std::shared_ptr<UIView> && view)
 	root->AddChild(view);
 }
 //-----------------------------------------------------------------------
-void UIElementHierarchy::UpdateAnimation(DurationSeconds const& frameDuration)
+void UIElementHierarchy::UpdateAnimation(Duration const& frameDuration)
 {
 	POMDOG_ASSERT(dispatcher);
 	dispatcher->UpdateAnimation(frameDuration);

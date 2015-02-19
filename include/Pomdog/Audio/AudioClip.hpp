@@ -13,7 +13,7 @@
 
 #include "detail/ForwardDeclarations.hpp"
 #include "AudioChannels.hpp"
-#include "Pomdog/Application/DurationSeconds.hpp"
+#include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <memory>
@@ -32,7 +32,7 @@ public:
 
 	///@~Japanese
 	/// @brief ソースバッファの全長（秒単位）。
-	DurationSeconds Duration() const;
+	Duration Length() const;
 
 	///@~Japanese
 	/// @brief サンプリングレート（1秒あたりのサンプル数）。
@@ -48,7 +48,6 @@ public:
 
 private:
 	std::unique_ptr<Details::SoundSystem::NativeAudioClip> nativeAudioClip;
-	DurationSeconds duration;
 	std::uint32_t sampleRate;
 	std::uint16_t bitsPerSample;
 	AudioChannels channels;

@@ -151,7 +151,7 @@ void UIView::OnRenderSizeChanged(std::uint32_t, std::uint32_t) {}
 //-----------------------------------------------------------------------
 void UIView::Draw(DrawingContext &) {}
 //-----------------------------------------------------------------------
-void UIView::UpdateAnimation(DurationSeconds const&) {}
+void UIView::UpdateAnimation(Duration const&) {}
 //-----------------------------------------------------------------------
 }// namespace UI
 }// namespace Pomdog

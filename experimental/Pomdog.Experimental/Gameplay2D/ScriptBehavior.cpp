@@ -18,7 +18,7 @@ void ScriptBehavior::Start(GameObject & gameObject)
 {
 }
 //-----------------------------------------------------------------------
-void ScriptBehavior::Update(GameObject & gameObject, DurationSeconds const& frameDuration)
+void ScriptBehavior::Update(GameObject & gameObject, Duration const& frameDuration)
 {
 //	auto transform = gameObject.Component<Transform2D>();
 //

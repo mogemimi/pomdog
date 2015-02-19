@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "Pomdog/Application/DurationSeconds.hpp"
+#include "Pomdog/Application/TimePoint.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -21,7 +21,7 @@ class TimeSourceLinux {
 public:
 	TimeSourceLinux() = default;
 
-	TimePointSeconds Now() const;
+	TimePoint Now() const;
 };
 
 }// namespace Linux

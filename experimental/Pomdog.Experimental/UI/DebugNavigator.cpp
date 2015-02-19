@@ -13,7 +13,7 @@ namespace UI {
 DebugNavigator::DebugNavigator(std::shared_ptr<GameClock> const& clockIn)
 	: Control(Matrix3x2::Identity, 150, 40)
 	, clock(clockIn)
-	, duration(DurationSeconds::zero())
+	, duration(Duration::zero())
 	, frameRateString("-- fps")
 {}
 //-----------------------------------------------------------------------
@@ -24,7 +24,7 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
 	constexpr std::uint16_t maxHistories = 20;
 
 	{
-		if (clock->TotalGameTime() - duration > DurationSeconds(0.2))
+		if (clock->TotalGameTime() - duration > Duration(0.2))
 		{
 			auto frameRate = clock->FrameRate();
 			frameRateString = StringFormat("%4.2f fps", frameRate);

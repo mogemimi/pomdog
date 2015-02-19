@@ -40,7 +40,7 @@ static std::size_t GetSamples(std::size_t sizeInBytes,
 	return sizeInBytes / divisior;
 }
 //-----------------------------------------------------------------------
-static DurationSeconds GetSampleDuration(std::size_t samples, std::uint32_t sampleRate)
+static Duration GetSampleDuration(std::size_t samples, std::uint32_t sampleRate)
 {
 	POMDOG_ASSERT(sampleRate > 0);
 	POMDOG_ASSERT(sampleRate >= 8000);
@@ -57,16 +57,16 @@ AudioClip::AudioClip(std::unique_ptr<Details::SoundSystem::NativeAudioClip> && n
 	, bitsPerSample(bitsPerSampleIn)
 	, channels(channelsIn)
 {
-	POMDOG_ASSERT(nativeAudioClip);
-	auto samples = GetSamples(nativeAudioClip->SizeInBytes(), bitsPerSample, channels);
-	duration = GetSampleDuration(samples, sampleRate);
 }
 //-----------------------------------------------------------------------
 AudioClip::~AudioClip() = default;
 //-----------------------------------------------------------------------
-DurationSeconds AudioClip::Duration() const
+Duration AudioClip::Length() const
 {
-	return duration;
+	POMDOG_ASSERT(nativeAudioClip);
+	auto samples = GetSamples(nativeAudioClip->SizeInBytes(), bitsPerSample, channels);
+	auto sampleDuration = GetSampleDuration(samples, sampleRate);
+	return std::move(sampleDuration);
 }
 //-----------------------------------------------------------------------
 std::uint32_t AudioClip::SampleRate() const

@@ -154,7 +154,7 @@ void Slider::OnPointerReleased(PointerPoint const& pointerPoint)
 	isDragging = false;
 }
 //-----------------------------------------------------------------------
-void Slider::UpdateAnimation(DurationSeconds const& frameDuration)
+void Slider::UpdateAnimation(Duration const& frameDuration)
 {
 	if (!colorAnimation) {
 		return;
