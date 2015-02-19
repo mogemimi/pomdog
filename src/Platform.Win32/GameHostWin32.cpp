@@ -113,7 +113,7 @@ private:
 	std::shared_ptr<Pomdog::Keyboard> keyboard;
 	std::shared_ptr<Pomdog::Mouse> mouse;
 
-	DurationSeconds presentationInterval;
+	Duration presentationInterval;
 
 	bool exitRequest;
 	bool surfaceResizeRequest;
@@ -130,7 +130,7 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
 	, surfaceResizeRequest(false)
 {
 	POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
-	presentationInterval = DurationSeconds(1.0) / presentationParameters.PresentationInterval;
+	presentationInterval = Duration(1.0) / presentationParameters.PresentationInterval;
 
 #if defined(POMDOG_RENDERSYSTEM_GL4)
 	using Details::RenderSystem::GL4::GraphicsDeviceGL4;

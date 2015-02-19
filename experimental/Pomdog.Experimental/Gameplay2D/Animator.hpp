@@ -13,6 +13,7 @@
 
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog/Application/Duration.hpp"
+#include <string>
 #include <memory>
 
 namespace Pomdog {

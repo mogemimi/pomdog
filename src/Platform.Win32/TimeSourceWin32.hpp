@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "Pomdog/Application/DurationSeconds.hpp"
+#include "Pomdog/Application/TimePoint.hpp"
 
 namespace Pomdog {
 namespace Details {
@@ -21,7 +21,7 @@ class TimeSourceWin32 {
 public:
 	TimeSourceWin32();
 
-	TimePointSeconds Now() const;
+	TimePoint Now() const;
 
 private:
 	double secondsPerTick;

@@ -23,12 +23,12 @@ TimeSourceWin32::TimeSourceWin32()
 	secondsPerTick = 1.0 / frequency.QuadPart;
 }
 //-----------------------------------------------------------------------
-TimePointSeconds TimeSourceWin32::Now() const
+TimePoint TimeSourceWin32::Now() const
 {
 	LARGE_INTEGER time;
 	::QueryPerformanceCounter(&time);
 	auto currentSeconds = time.QuadPart * secondsPerTick;
-	return TimePointSeconds(DurationSeconds(currentSeconds));
+	return TimePoint(Duration(currentSeconds));
 }
 
 }// namespace Win32

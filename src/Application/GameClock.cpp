@@ -58,7 +58,8 @@ GameClock::Impl::Impl()
 	, frameNumber(0)
 {
 	constexpr int framePerSecond = 30;
-	constexpr Duration frameDefault = Duration(1.0) / framePerSecond;
+	const Duration frameDefault = Duration(1.0) / framePerSecond;
+
 	frameDurationHistory.clear();
 	frameDurationHistory.push_back(frameDefault);
 
