@@ -95,7 +95,7 @@ FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator*=(T scaleFactor)
 template <typename T>
 FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator/=(T scaleFactor)
 {
-	auto const inverseDivider = static_cast<T>(1) / scaleFactor;
+	auto const inverseDivider = T{1} / scaleFactor;
 	m[0][0] *= inverseDivider;
 	m[0][1] *= inverseDivider;
 	m[0][2] *= inverseDivider;
@@ -117,7 +117,7 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator+() const
 template <typename T>
 FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator-() const
 {
-	return this->Concatenate(static_cast<T>(-1));
+	return this->Concatenate(T{-1});
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -165,8 +165,8 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator*(T scaleFactor) co
 template <typename T>
 FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator/(T scaleFactor) const
 {
-	POMDOG_ASSERT(scaleFactor != static_cast<T>(0));
-	auto const inverseDivider = static_cast<T>(1) / scaleFactor;
+	POMDOG_ASSERT(scaleFactor != T{0});
+	auto const inverseDivider = T{1} / scaleFactor;
 	return {
 		m[0][0] * inverseDivider,
 		m[0][1] * inverseDivider,
@@ -368,7 +368,7 @@ FloatingPointMatrix3x3<T>::Invert(FloatingPointMatrix3x3 const& matrix)
 {
 	auto const determinant = matrix.Determinant();
 	static_assert(std::is_same<decltype(matrix.Determinant()), T>::value, "determinant is T");
-	POMDOG_ASSERT_MESSAGE(static_cast<T>(0) != determinant, "This is singular matrix");
+	POMDOG_ASSERT_MESSAGE(T{0} != determinant, "This is singular matrix");
 
 	return Adjoint(matrix) / determinant;
 }
@@ -595,7 +595,7 @@ FloatingPointMatrix3x3<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& ax
 	auto const sinAngle = std::sin(angle.value);
 	auto const cosAngle = std::cos(angle.value);
 
-	auto const t  = static_cast<T>(1) - cosAngle;
+	auto const t  = T{1} - cosAngle;
 	auto const xx = axis.X * axis.X;
 	auto const yy = axis.Y * axis.Y;
 	auto const zz = axis.Z * axis.Z;

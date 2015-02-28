@@ -70,8 +70,8 @@ template <typename T>
 FloatingPointMatrix2x2<T> &
 FloatingPointMatrix2x2<T>::operator/=(T scaleFactor)
 {
-	POMDOG_ASSERT(scaleFactor != static_cast<T>(0));
-	auto const inverseDivider = static_cast<T>(1) / scaleFactor;
+	POMDOG_ASSERT(scaleFactor != T{0});
+	auto const inverseDivider = T{1} / scaleFactor;
 	m[0][0] *= inverseDivider;
 	m[0][1] *= inverseDivider;
 	m[1][0] *= inverseDivider;
@@ -126,7 +126,7 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator*(T scaleFactor) co
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator/(T scaleFactor) const
 {
-	auto const inverseDivider = static_cast<T>(1) / scaleFactor;
+	auto const inverseDivider = T{1} / scaleFactor;
 	return {
 		m[0][0] * inverseDivider,
 		m[0][1] * inverseDivider,

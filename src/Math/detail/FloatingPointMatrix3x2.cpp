@@ -83,7 +83,7 @@ FloatingPointMatrix3x2<T> & FloatingPointMatrix3x2<T>::operator*=(T scaleFactor)
 template <typename T>
 FloatingPointMatrix3x2<T> & FloatingPointMatrix3x2<T>::operator/=(T scaleFactor)
 {
-	auto const inverseDivider = static_cast<T>(1) / scaleFactor;
+	auto const inverseDivider = T{1} / scaleFactor;
 	m[0][0] *= inverseDivider;
 	m[0][1] *= inverseDivider;
 	m[1][0] *= inverseDivider;
@@ -102,7 +102,7 @@ FloatingPointMatrix3x2<T> FloatingPointMatrix3x2<T>::operator+() const
 template <typename T>
 FloatingPointMatrix3x2<T> FloatingPointMatrix3x2<T>::operator-() const
 {
-	return this->Concatenate(static_cast<T>(-1));
+	return this->Concatenate(T{-1});
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -144,8 +144,8 @@ FloatingPointMatrix3x2<T> FloatingPointMatrix3x2<T>::operator*(T scaleFactor) co
 template <typename T>
 FloatingPointMatrix3x2<T> FloatingPointMatrix3x2<T>::operator/(T scaleFactor) const
 {
-	POMDOG_ASSERT(scaleFactor != static_cast<T>(0));
-	auto const inverseDivider = static_cast<T>(1) / scaleFactor;
+	POMDOG_ASSERT(scaleFactor != T{0});
+	auto const inverseDivider = T{1} / scaleFactor;
 	return {
 		m[0][0] * inverseDivider,
 		m[0][1] * inverseDivider,
@@ -231,11 +231,12 @@ FloatingPointMatrix3x2<T>::Invert(FloatingPointMatrix3x2 const& matrix)
 	auto const determinant = matrix.Determinant();
 
 	static_assert(std::is_same<decltype(matrix.Determinant()), T>::value, "determinant is T");
-	POMDOG_ASSERT_MESSAGE(static_cast<T>(0) != determinant, "This is singular matrix");
+	POMDOG_ASSERT_MESSAGE(T{0} != determinant, "This is singular matrix");
 
-	auto inverseDeterminant = static_cast<T>(1) / determinant;
-	auto offsetX = matrix(2, 0);
-	auto offsetY = matrix(2, 1);
+	auto const inverseDeterminant = T{1} / determinant;
+	auto const offsetX = matrix(2, 0);
+	auto const offsetY = matrix(2, 1);
+
 	return {
 		 matrix(1, 1) * inverseDeterminant,
 		-matrix(0, 1) * inverseDeterminant,

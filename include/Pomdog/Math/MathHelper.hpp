@@ -64,7 +64,7 @@ template <typename T>
 T Saturate(T const& x)
 {
 	static_assert(std::is_floating_point<T>::value, "T is floaing point number");
-	return Clamp(x, T(0), T(1));
+	return Clamp(x, T{0}, T{1});
 }
 //-------------------------------------------------------------------
 ///@~Japanese
@@ -85,7 +85,7 @@ T SmoothStep(T const& min, T const& max, T const& amount)
 	//POMDOG_ASSERT(amount >= 0);
 	//POMDOG_ASSERT(amount <= 1);
 	auto x = Saturate(amount);
-	auto scale = x * x * (T(3) - T(2) * x);
+	auto scale = x * x * (T{3} - T{2} * x);
 	return min + scale * (max - min);
 }
 //-------------------------------------------------------------------
@@ -93,7 +93,7 @@ template <typename T>
 Radian<T> ToRadians(Degree<T> const& degrees)
 {
 	static_assert(std::is_floating_point<T>::value, "");
-	constexpr auto scaleFactor = MathConstants<T>::Pi() * (static_cast<T>(1) / static_cast<T>(180));
+	constexpr auto scaleFactor = MathConstants<T>::Pi() * (T{1} / T{180});
 	return Radian<T>(degrees.value * scaleFactor);
 }
 //-------------------------------------------------------------------
@@ -101,7 +101,7 @@ template <typename T>
 Degree<T> ToDegrees(Radian<T> const& radians)
 {
 	static_assert(std::is_floating_point<T>::value, "");
-	constexpr auto scaleFactor = static_cast<T>(180) * (static_cast<T>(1) / MathConstants<T>::Pi());
+	constexpr auto scaleFactor = T{180} * (T{1} / MathConstants<T>::Pi());
 	return Degree<T>(radians.value * scaleFactor);
 }
 

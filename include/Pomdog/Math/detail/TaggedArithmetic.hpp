@@ -141,7 +141,7 @@ public:
 
 	TaggedArithmetic operator/(TaggedArithmetic const& v) const
 	{
-		POMDOG_ASSERT(v.value != static_cast<T>(0));
+		POMDOG_ASSERT(v.value != T{0});
 		return TaggedArithmetic(value / v.value);
 	}
 
@@ -152,7 +152,7 @@ public:
 
 	TaggedArithmetic operator/(T scale) const
 	{
-		POMDOG_ASSERT(scale != static_cast<T>(0));
+		POMDOG_ASSERT(scale != T{0});
 		return TaggedArithmetic(value / scale);
 	}
 

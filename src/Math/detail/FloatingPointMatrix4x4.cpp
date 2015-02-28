@@ -231,7 +231,8 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator*(T scaleFactor) co
 template <typename T>
 FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator/(T scaleFactor) const
 {
-	auto const inverseDivider = 1 / scaleFactor;
+	POMDOG_ASSERT(scaleFactor != T{0});
+	auto const inverseDivider = T{1} / scaleFactor;
 	return {
 		m[0][0] * inverseDivider,
 		m[0][1] * inverseDivider,
@@ -1204,7 +1205,7 @@ FloatingPointMatrix4x4<T>::CreateFromAxisAngle(
 {
 	auto const sinAngle = std::sin(angle.value);
 	auto const cosAngle = std::cos(angle.value);
-	auto const scaleFactor = static_cast<T>(1) - cosAngle;
+	auto const scaleFactor = T{1} - cosAngle;
 	auto const xx = axis.X * axis.X;
 	auto const yy = axis.Y * axis.Y;
 	auto const zz = axis.Z * axis.Z;

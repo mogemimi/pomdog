@@ -295,7 +295,7 @@ void CreateFromRotationMatrixImplementation(MatrixClass const& rotation, Floatin
 		std::is_same<decltype(rotation(0, 0)), T>::value, "");
 
 	auto const trace = rotation(0, 0) + rotation(1, 1) + rotation(2, 2);
-	constexpr T half = static_cast<T>(0.5);
+	constexpr T half = T{0.5};
 
 	if (trace > 0)
 	{
@@ -322,7 +322,7 @@ void CreateFromRotationMatrixImplementation(MatrixClass const& rotation, Floatin
 		std::size_t const j = indices[i];
 		std::size_t const k = indices[j];
 
-		auto root = std::sqrt(rotation(i, i) - rotation(j, j) - rotation(k, k) + static_cast<T>(1));
+		auto root = std::sqrt(rotation(i, i) - rotation(j, j) - rotation(k, k) + T{1});
 		std::array<T*, 3> const quat = {{ &result.X, &result.Y, &result.Z }};
 		*quat[i] = half * root;
 		root = half / root;
