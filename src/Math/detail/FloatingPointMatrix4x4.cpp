@@ -19,11 +19,11 @@ namespace Details {
 
 template <typename T>
 FloatingPointMatrix4x4<T> const
-FloatingPointMatrix4x4<T>::Identity(
+FloatingPointMatrix4x4<T>::Identity = {
 	1, 0, 0, 0,
 	0, 1, 0, 0,
 	0, 0, 1, 0,
-	0, 0, 0, 1);
+	0, 0, 0, 1};
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>::FloatingPointMatrix4x4(
@@ -175,53 +175,45 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-() const
 template <typename T>
 FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator+(FloatingPointMatrix4x4 const& other) const
 {
-	return FloatingPointMatrix4x4
-		( m[0][0] + other.m[0][0]
-		, m[0][1] + other.m[0][1]
-		, m[0][2] + other.m[0][2]
-		, m[0][3] + other.m[0][3]
-
-		, m[1][0] + other.m[1][0]
-		, m[1][1] + other.m[1][1]
-		, m[1][2] + other.m[1][2]
-		, m[1][3] + other.m[1][3]
-
-		, m[2][0] + other.m[2][0]
-		, m[2][1] + other.m[2][1]
-		, m[2][2] + other.m[2][2]
-		, m[2][3] + other.m[2][3]
-
-		, m[3][0] + other.m[3][0]
-		, m[3][1] + other.m[3][1]
-		, m[3][2] + other.m[3][2]
-		, m[3][3] + other.m[3][3]
-		);
+	return {
+		m[0][0] + other.m[0][0],
+		m[0][1] + other.m[0][1],
+		m[0][2] + other.m[0][2],
+		m[0][3] + other.m[0][3],
+		m[1][0] + other.m[1][0],
+		m[1][1] + other.m[1][1],
+		m[1][2] + other.m[1][2],
+		m[1][3] + other.m[1][3],
+		m[2][0] + other.m[2][0],
+		m[2][1] + other.m[2][1],
+		m[2][2] + other.m[2][2],
+		m[2][3] + other.m[2][3],
+		m[3][0] + other.m[3][0],
+		m[3][1] + other.m[3][1],
+		m[3][2] + other.m[3][2],
+		m[3][3] + other.m[3][3]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-(FloatingPointMatrix4x4 const& other) const
 {
-	return FloatingPointMatrix4x4
-		( m[0][0] - other.m[0][0]
-		, m[0][1] - other.m[0][1]
-		, m[0][2] - other.m[0][2]
-		, m[0][3] - other.m[0][3]
-
-		, m[1][0] - other.m[1][0]
-		, m[1][1] - other.m[1][1]
-		, m[1][2] - other.m[1][2]
-		, m[1][3] - other.m[1][3]
-
-		, m[2][0] - other.m[2][0]
-		, m[2][1] - other.m[2][1]
-		, m[2][2] - other.m[2][2]
-		, m[2][3] - other.m[2][3]
-
-		, m[3][0] - other.m[3][0]
-		, m[3][1] - other.m[3][1]
-		, m[3][2] - other.m[3][2]
-		, m[3][3] - other.m[3][3]
-		);
+	return {
+		m[0][0] - other.m[0][0],
+		m[0][1] - other.m[0][1],
+		m[0][2] - other.m[0][2],
+		m[0][3] - other.m[0][3],
+		m[1][0] - other.m[1][0],
+		m[1][1] - other.m[1][1],
+		m[1][2] - other.m[1][2],
+		m[1][3] - other.m[1][3],
+		m[2][0] - other.m[2][0],
+		m[2][1] - other.m[2][1],
+		m[2][2] - other.m[2][2],
+		m[2][3] - other.m[2][3],
+		m[3][0] - other.m[3][0],
+		m[3][1] - other.m[3][1],
+		m[3][2] - other.m[3][2],
+		m[3][3] - other.m[3][3]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -240,24 +232,23 @@ template <typename T>
 FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator/(T scaleFactor) const
 {
 	auto const inverseDivider = 1 / scaleFactor;
-	return FloatingPointMatrix4x4
-		( m[0][0] * inverseDivider
-		, m[0][1] * inverseDivider
-		, m[0][2] * inverseDivider
-		, m[0][3] * inverseDivider
-		, m[1][0] * inverseDivider
-		, m[1][1] * inverseDivider
-		, m[1][2] * inverseDivider
-		, m[1][3] * inverseDivider
-		, m[2][0] * inverseDivider
-		, m[2][1] * inverseDivider
-		, m[2][2] * inverseDivider
-		, m[2][3] * inverseDivider
-		, m[3][0] * inverseDivider
-		, m[3][1] * inverseDivider
-		, m[3][2] * inverseDivider
-		, m[3][3] * inverseDivider
-		);
+	return {
+		m[0][0] * inverseDivider,
+		m[0][1] * inverseDivider,
+		m[0][2] * inverseDivider,
+		m[0][3] * inverseDivider,
+		m[1][0] * inverseDivider,
+		m[1][1] * inverseDivider,
+		m[1][2] * inverseDivider,
+		m[1][3] * inverseDivider,
+		m[2][0] * inverseDivider,
+		m[2][1] * inverseDivider,
+		m[2][2] * inverseDivider,
+		m[2][3] * inverseDivider,
+		m[3][0] * inverseDivider,
+		m[3][1] * inverseDivider,
+		m[3][2] * inverseDivider,
+		m[3][3] * inverseDivider};
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -282,53 +273,48 @@ template <typename T>
 FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Concatenate(FloatingPointMatrix4x4 const& rhs) const
 {
 	FloatingPointMatrix4x4 const& lhs(*this);
-	return FloatingPointMatrix4x4
-		( lhs.m[0][0] * rhs.m[0][0] + lhs.m[0][1] * rhs.m[1][0] + lhs.m[0][2] * rhs.m[2][0] + lhs.m[0][3] * rhs.m[3][0]
-		, lhs.m[0][0] * rhs.m[0][1] + lhs.m[0][1] * rhs.m[1][1] + lhs.m[0][2] * rhs.m[2][1] + lhs.m[0][3] * rhs.m[3][1]
-		, lhs.m[0][0] * rhs.m[0][2] + lhs.m[0][1] * rhs.m[1][2] + lhs.m[0][2] * rhs.m[2][2] + lhs.m[0][3] * rhs.m[3][2]
-		, lhs.m[0][0] * rhs.m[0][3] + lhs.m[0][1] * rhs.m[1][3] + lhs.m[0][2] * rhs.m[2][3] + lhs.m[0][3] * rhs.m[3][3]
+	return {
+		lhs.m[0][0] * rhs.m[0][0] + lhs.m[0][1] * rhs.m[1][0] + lhs.m[0][2] * rhs.m[2][0] + lhs.m[0][3] * rhs.m[3][0],
+		lhs.m[0][0] * rhs.m[0][1] + lhs.m[0][1] * rhs.m[1][1] + lhs.m[0][2] * rhs.m[2][1] + lhs.m[0][3] * rhs.m[3][1],
+		lhs.m[0][0] * rhs.m[0][2] + lhs.m[0][1] * rhs.m[1][2] + lhs.m[0][2] * rhs.m[2][2] + lhs.m[0][3] * rhs.m[3][2],
+		lhs.m[0][0] * rhs.m[0][3] + lhs.m[0][1] * rhs.m[1][3] + lhs.m[0][2] * rhs.m[2][3] + lhs.m[0][3] * rhs.m[3][3],
 
-		, lhs.m[1][0] * rhs.m[0][0] + lhs.m[1][1] * rhs.m[1][0] + lhs.m[1][2] * rhs.m[2][0] + lhs.m[1][3] * rhs.m[3][0]
-		, lhs.m[1][0] * rhs.m[0][1] + lhs.m[1][1] * rhs.m[1][1] + lhs.m[1][2] * rhs.m[2][1] + lhs.m[1][3] * rhs.m[3][1]
-		, lhs.m[1][0] * rhs.m[0][2] + lhs.m[1][1] * rhs.m[1][2] + lhs.m[1][2] * rhs.m[2][2] + lhs.m[1][3] * rhs.m[3][2]
-		, lhs.m[1][0] * rhs.m[0][3] + lhs.m[1][1] * rhs.m[1][3] + lhs.m[1][2] * rhs.m[2][3] + lhs.m[1][3] * rhs.m[3][3]
+		lhs.m[1][0] * rhs.m[0][0] + lhs.m[1][1] * rhs.m[1][0] + lhs.m[1][2] * rhs.m[2][0] + lhs.m[1][3] * rhs.m[3][0],
+		lhs.m[1][0] * rhs.m[0][1] + lhs.m[1][1] * rhs.m[1][1] + lhs.m[1][2] * rhs.m[2][1] + lhs.m[1][3] * rhs.m[3][1],
+		lhs.m[1][0] * rhs.m[0][2] + lhs.m[1][1] * rhs.m[1][2] + lhs.m[1][2] * rhs.m[2][2] + lhs.m[1][3] * rhs.m[3][2],
+		lhs.m[1][0] * rhs.m[0][3] + lhs.m[1][1] * rhs.m[1][3] + lhs.m[1][2] * rhs.m[2][3] + lhs.m[1][3] * rhs.m[3][3],
 
-		, lhs.m[2][0] * rhs.m[0][0] + lhs.m[2][1] * rhs.m[1][0] + lhs.m[2][2] * rhs.m[2][0] + lhs.m[2][3] * rhs.m[3][0]
-		, lhs.m[2][0] * rhs.m[0][1] + lhs.m[2][1] * rhs.m[1][1] + lhs.m[2][2] * rhs.m[2][1] + lhs.m[2][3] * rhs.m[3][1]
-		, lhs.m[2][0] * rhs.m[0][2] + lhs.m[2][1] * rhs.m[1][2] + lhs.m[2][2] * rhs.m[2][2] + lhs.m[2][3] * rhs.m[3][2]
-		, lhs.m[2][0] * rhs.m[0][3] + lhs.m[2][1] * rhs.m[1][3] + lhs.m[2][2] * rhs.m[2][3] + lhs.m[2][3] * rhs.m[3][3]
+		lhs.m[2][0] * rhs.m[0][0] + lhs.m[2][1] * rhs.m[1][0] + lhs.m[2][2] * rhs.m[2][0] + lhs.m[2][3] * rhs.m[3][0],
+		lhs.m[2][0] * rhs.m[0][1] + lhs.m[2][1] * rhs.m[1][1] + lhs.m[2][2] * rhs.m[2][1] + lhs.m[2][3] * rhs.m[3][1],
+		lhs.m[2][0] * rhs.m[0][2] + lhs.m[2][1] * rhs.m[1][2] + lhs.m[2][2] * rhs.m[2][2] + lhs.m[2][3] * rhs.m[3][2],
+		lhs.m[2][0] * rhs.m[0][3] + lhs.m[2][1] * rhs.m[1][3] + lhs.m[2][2] * rhs.m[2][3] + lhs.m[2][3] * rhs.m[3][3],
 
-		, lhs.m[3][0] * rhs.m[0][0] + lhs.m[3][1] * rhs.m[1][0] + lhs.m[3][2] * rhs.m[2][0] + lhs.m[3][3] * rhs.m[3][0]
-		, lhs.m[3][0] * rhs.m[0][1] + lhs.m[3][1] * rhs.m[1][1] + lhs.m[3][2] * rhs.m[2][1] + lhs.m[3][3] * rhs.m[3][1]
-		, lhs.m[3][0] * rhs.m[0][2] + lhs.m[3][1] * rhs.m[1][2] + lhs.m[3][2] * rhs.m[2][2] + lhs.m[3][3] * rhs.m[3][2]
-		, lhs.m[3][0] * rhs.m[0][3] + lhs.m[3][1] * rhs.m[1][3] + lhs.m[3][2] * rhs.m[2][3] + lhs.m[3][3] * rhs.m[3][3]
-		);
+		lhs.m[3][0] * rhs.m[0][0] + lhs.m[3][1] * rhs.m[1][0] + lhs.m[3][2] * rhs.m[2][0] + lhs.m[3][3] * rhs.m[3][0],
+		lhs.m[3][0] * rhs.m[0][1] + lhs.m[3][1] * rhs.m[1][1] + lhs.m[3][2] * rhs.m[2][1] + lhs.m[3][3] * rhs.m[3][1],
+		lhs.m[3][0] * rhs.m[0][2] + lhs.m[3][1] * rhs.m[1][2] + lhs.m[3][2] * rhs.m[2][2] + lhs.m[3][3] * rhs.m[3][2],
+		lhs.m[3][0] * rhs.m[0][3] + lhs.m[3][1] * rhs.m[1][3] + lhs.m[3][2] * rhs.m[2][3] + lhs.m[3][3] * rhs.m[3][3]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Concatenate(T scaleFactor) const
 {
-	return FloatingPointMatrix4x4
-		( m[0][0] * scaleFactor
-		, m[0][1] * scaleFactor
-		, m[0][2] * scaleFactor
-		, m[0][3] * scaleFactor
-
-		, m[1][0] * scaleFactor
-		, m[1][1] * scaleFactor
-		, m[1][2] * scaleFactor
-		, m[1][3] * scaleFactor
-
-		, m[2][0] * scaleFactor
-		, m[2][1] * scaleFactor
-		, m[2][2] * scaleFactor
-		, m[2][3] * scaleFactor
-
-		, m[3][0] * scaleFactor
-		, m[3][1] * scaleFactor
-		, m[3][2] * scaleFactor
-		, m[3][3] * scaleFactor
-		);
+	return {
+		m[0][0] * scaleFactor,
+		m[0][1] * scaleFactor,
+		m[0][2] * scaleFactor,
+		m[0][3] * scaleFactor,
+		m[1][0] * scaleFactor,
+		m[1][1] * scaleFactor,
+		m[1][2] * scaleFactor,
+		m[1][3] * scaleFactor,
+		m[2][0] * scaleFactor,
+		m[2][1] * scaleFactor,
+		m[2][2] * scaleFactor,
+		m[2][3] * scaleFactor,
+		m[3][0] * scaleFactor,
+		m[3][1] * scaleFactor,
+		m[3][2] * scaleFactor,
+		m[3][3] * scaleFactor};
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -342,7 +328,7 @@ void FloatingPointMatrix4x4<T>::SetTranslation(FloatingPointVector3<T> const& po
 template <typename T>
 FloatingPointVector3<T> FloatingPointMatrix4x4<T>::GetTranslation() const
 {
-	return FloatingPointVector3<T>(m[3][0], m[3][1], m[3][2]);
+	return {m[3][0], m[3][1], m[3][2]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -356,7 +342,7 @@ void FloatingPointMatrix4x4<T>::SetScale(FloatingPointVector3<T> const& scale)
 template <typename T>
 FloatingPointVector3<T> FloatingPointMatrix4x4<T>::GetScale() const
 {
-	return FloatingPointVector3<T>(m[0][0], m[1][1], m[2][2]);
+	return {m[0][0], m[1][1], m[2][2]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -413,49 +399,45 @@ template <typename T>
 FloatingPointMatrix4x4<T>
 FloatingPointMatrix4x4<T>::Adjoint(FloatingPointMatrix4x4 const& matrix)
 {
-	return FloatingPointMatrix4x4
-		(  matrix.Minor3x3(0, 0).Determinant()
-		, -matrix.Minor3x3(1, 0).Determinant()
-		,  matrix.Minor3x3(2, 0).Determinant()
-		, -matrix.Minor3x3(3, 0).Determinant()
-
-		, -matrix.Minor3x3(0, 1).Determinant()
-		,  matrix.Minor3x3(1, 1).Determinant()
-		, -matrix.Minor3x3(2, 1).Determinant()
-		,  matrix.Minor3x3(3, 1).Determinant()
-
-		,  matrix.Minor3x3(0, 2).Determinant()
-		, -matrix.Minor3x3(1, 2).Determinant()
-		,  matrix.Minor3x3(2, 2).Determinant()
-		, -matrix.Minor3x3(3, 2).Determinant()
-
-		, -matrix.Minor3x3(0, 3).Determinant()
-		,  matrix.Minor3x3(1, 3).Determinant()
-		, -matrix.Minor3x3(2, 3).Determinant()
-		,  matrix.Minor3x3(3, 3).Determinant()
-		);
+	return {
+		 matrix.Minor3x3(0, 0).Determinant(),
+		-matrix.Minor3x3(1, 0).Determinant(),
+		 matrix.Minor3x3(2, 0).Determinant(),
+		-matrix.Minor3x3(3, 0).Determinant(),
+		-matrix.Minor3x3(0, 1).Determinant(),
+		 matrix.Minor3x3(1, 1).Determinant(),
+		-matrix.Minor3x3(2, 1).Determinant(),
+		 matrix.Minor3x3(3, 1).Determinant(),
+		 matrix.Minor3x3(0, 2).Determinant(),
+		-matrix.Minor3x3(1, 2).Determinant(),
+		 matrix.Minor3x3(2, 2).Determinant(),
+		-matrix.Minor3x3(3, 2).Determinant(),
+		-matrix.Minor3x3(0, 3).Determinant(),
+		 matrix.Minor3x3(1, 3).Determinant(),
+		-matrix.Minor3x3(2, 3).Determinant(),
+		 matrix.Minor3x3(3, 3).Determinant()};
 }
 //-----------------------------------------------------------------------
 template <typename T>
 void
 FloatingPointMatrix4x4<T>::Transpose(FloatingPointMatrix4x4 const& matrix, FloatingPointMatrix4x4 & result)
 {
-	result = FloatingPointMatrix4x4(
+	result = {
 		matrix.m[0][0], matrix.m[1][0], matrix.m[2][0], matrix.m[3][0],
 		matrix.m[0][1], matrix.m[1][1], matrix.m[2][1], matrix.m[3][1],
 		matrix.m[0][2], matrix.m[1][2], matrix.m[2][2], matrix.m[3][2],
-		matrix.m[0][3], matrix.m[1][3], matrix.m[2][3], matrix.m[3][3]);
+		matrix.m[0][3], matrix.m[1][3], matrix.m[2][3], matrix.m[3][3]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
 FloatingPointMatrix4x4<T>::Transpose(FloatingPointMatrix4x4 const& matrix)
 {
-	return FloatingPointMatrix4x4(
+	return {
 		matrix.m[0][0], matrix.m[1][0], matrix.m[2][0], matrix.m[3][0],
 		matrix.m[0][1], matrix.m[1][1], matrix.m[2][1], matrix.m[3][1],
 		matrix.m[0][2], matrix.m[1][2], matrix.m[2][2], matrix.m[3][2],
-		matrix.m[0][3], matrix.m[1][3], matrix.m[2][3], matrix.m[3][3]);
+		matrix.m[0][3], matrix.m[1][3], matrix.m[2][3], matrix.m[3][3]};
 }
 //-----------------------------------------------------------------------
 template <typename T>

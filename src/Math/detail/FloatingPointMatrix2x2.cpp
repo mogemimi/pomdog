@@ -13,9 +13,9 @@ namespace Pomdog {
 namespace Details {
 
 template <typename T>
-FloatingPointMatrix2x2<T> const FloatingPointMatrix2x2<T>::Identity(
+FloatingPointMatrix2x2<T> const FloatingPointMatrix2x2<T>::Identity = {
 	1, 0,
-	0, 1);
+	0, 1};
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix2x2<T>::FloatingPointMatrix2x2(T m00, T m01, T m10, T m11)
@@ -88,34 +88,27 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator+() const
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator-() const
 {
-	return FloatingPointMatrix2x2
-		( -m[0][0]
-		, -m[0][1]
-		, -m[1][0]
-		, -m[1][1]
-		);
+	return {-m[0][0], -m[0][1], -m[1][0], -m[1][1]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator+(FloatingPointMatrix2x2 const& other) const
 {
-	return FloatingPointMatrix2x2
-		( m[0][0] + other.m[0][0]
-		, m[0][1] + other.m[0][1]
-		, m[1][0] + other.m[1][0]
-		, m[1][1] + other.m[1][1]
-		);
+	return {
+		m[0][0] + other.m[0][0],
+		m[0][1] + other.m[0][1],
+		m[1][0] + other.m[1][0],
+		m[1][1] + other.m[1][1]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator-(FloatingPointMatrix2x2 const& other) const
 {
-	return FloatingPointMatrix2x2
-		( m[0][0] - other.m[0][0]
-		, m[0][1] - other.m[0][1]
-		, m[1][0] - other.m[1][0]
-		, m[1][1] - other.m[1][1]
-		);
+	return {
+		m[0][0] - other.m[0][0],
+		m[0][1] - other.m[0][1],
+		m[1][0] - other.m[1][0],
+		m[1][1] - other.m[1][1]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -134,12 +127,11 @@ template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator/(T scaleFactor) const
 {
 	auto const inverseDivider = static_cast<T>(1) / scaleFactor;
-	return FloatingPointMatrix2x2
-		( m[0][0] * inverseDivider
-		, m[0][1] * inverseDivider
-		, m[1][0] * inverseDivider
-		, m[1][1] * inverseDivider
-		);
+	return {
+		m[0][0] * inverseDivider,
+		m[0][1] * inverseDivider,
+		m[1][0] * inverseDivider,
+		m[1][1] * inverseDivider};
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -175,23 +167,21 @@ T const& FloatingPointMatrix2x2<T>::operator()(std::size_t row, std::size_t colu
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::Concatenate(FloatingPointMatrix2x2 const& other) const
 {
-	return FloatingPointMatrix2x2
-		( this->m[0][0] * other.m[0][0] + this->m[0][1] * other.m[1][0]
-		, this->m[0][0] * other.m[0][1] + this->m[0][1] * other.m[1][1]
-		, this->m[1][0] * other.m[0][0] + this->m[1][1] * other.m[1][0]
-		, this->m[1][0] * other.m[0][1] + this->m[1][1] * other.m[1][1]
-		);
+	return {
+		m[0][0] * other.m[0][0] + m[0][1] * other.m[1][0],
+		m[0][0] * other.m[0][1] + m[0][1] * other.m[1][1],
+		m[1][0] * other.m[0][0] + m[1][1] * other.m[1][0],
+		m[1][0] * other.m[0][1] + m[1][1] * other.m[1][1]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::Concatenate(T scaleFactor) const
 {
-	return FloatingPointMatrix2x2
-		( this->m[0][0] * scaleFactor
-		, this->m[0][1] * scaleFactor
-		, this->m[1][0] * scaleFactor
-		, this->m[1][1] * scaleFactor
-		);
+	return {
+		m[0][0] * scaleFactor,
+		m[0][1] * scaleFactor,
+		m[1][0] * scaleFactor,
+		m[1][1] * scaleFactor};
 }
 //-----------------------------------------------------------------------
 template <typename T>

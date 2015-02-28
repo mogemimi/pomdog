@@ -19,10 +19,10 @@ namespace Pomdog {
 namespace Details {
 
 template <typename T>
-FloatingPointMatrix3x2<T> const FloatingPointMatrix3x2<T>::Identity(
+FloatingPointMatrix3x2<T> const FloatingPointMatrix3x2<T>::Identity = {
 	1, 0,
 	0, 1,
-	0, 0);
+	0, 0};
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x2<T>::FloatingPointMatrix3x2(
@@ -108,27 +108,25 @@ FloatingPointMatrix3x2<T> FloatingPointMatrix3x2<T>::operator-() const
 template <typename T>
 FloatingPointMatrix3x2<T> FloatingPointMatrix3x2<T>::operator+(FloatingPointMatrix3x2 const& other) const
 {
-	return FloatingPointMatrix3x2
-		( m[0][0] + other.m[0][0]
-		, m[0][1] + other.m[0][1]
-		, m[1][0] + other.m[1][0]
-		, m[1][1] + other.m[1][1]
-		, m[2][0] + other.m[2][0]
-		, m[2][1] + other.m[2][1]
-		);
+	return {
+		m[0][0] + other.m[0][0],
+		m[0][1] + other.m[0][1],
+		m[1][0] + other.m[1][0],
+		m[1][1] + other.m[1][1],
+		m[2][0] + other.m[2][0],
+		m[2][1] + other.m[2][1]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x2<T> FloatingPointMatrix3x2<T>::operator-(FloatingPointMatrix3x2 const& other) const
 {
-	return FloatingPointMatrix3x2
-		( m[0][0] - other.m[0][0]
-		, m[0][1] - other.m[0][1]
-		, m[1][0] - other.m[1][0]
-		, m[1][1] - other.m[1][1]
-		, m[2][0] - other.m[2][0]
-		, m[2][1] - other.m[2][1]
-		);
+	return {
+		m[0][0] - other.m[0][0],
+		m[0][1] - other.m[0][1],
+		m[1][0] - other.m[1][0],
+		m[1][1] - other.m[1][1],
+		m[2][0] - other.m[2][0],
+		m[2][1] - other.m[2][1]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -148,14 +146,13 @@ FloatingPointMatrix3x2<T> FloatingPointMatrix3x2<T>::operator/(T scaleFactor) co
 {
 	POMDOG_ASSERT(scaleFactor != static_cast<T>(0));
 	auto const inverseDivider = static_cast<T>(1) / scaleFactor;
-	return FloatingPointMatrix3x2
-		( m[0][0] * inverseDivider
-		, m[0][1] * inverseDivider
-		, m[1][0] * inverseDivider
-		, m[1][1] * inverseDivider
-		, m[2][0] * inverseDivider
-		, m[2][1] * inverseDivider
-		);
+	return {
+		m[0][0] * inverseDivider,
+		m[0][1] * inverseDivider,
+		m[1][0] * inverseDivider,
+		m[1][1] * inverseDivider,
+		m[2][0] * inverseDivider,
+		m[2][1] * inverseDivider};
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -199,27 +196,25 @@ T FloatingPointMatrix3x2<T>::Determinant() const
 template <typename T>
 FloatingPointMatrix3x2<T> FloatingPointMatrix3x2<T>::Concatenate(FloatingPointMatrix3x2 const& other) const
 {
-	return FloatingPointMatrix3x2
-		( this->m[0][0] * other.m[0][0] + this->m[0][1] * other.m[1][0]
-		, this->m[0][0] * other.m[0][1] + this->m[0][1] * other.m[1][1]
-		, this->m[1][0] * other.m[0][0] + this->m[1][1] * other.m[1][0]
-		, this->m[1][0] * other.m[0][1] + this->m[1][1] * other.m[1][1]
-		, this->m[2][0] * other.m[0][0] + this->m[2][1] * other.m[1][0] + other.m[2][0]
-		, this->m[2][0] * other.m[0][1] + this->m[2][1] * other.m[1][1] + other.m[2][1]
-		);
+	return {
+		m[0][0] * other.m[0][0] + m[0][1] * other.m[1][0],
+		m[0][0] * other.m[0][1] + m[0][1] * other.m[1][1],
+		m[1][0] * other.m[0][0] + m[1][1] * other.m[1][0],
+		m[1][0] * other.m[0][1] + m[1][1] * other.m[1][1],
+		m[2][0] * other.m[0][0] + m[2][1] * other.m[1][0] + other.m[2][0],
+		m[2][0] * other.m[0][1] + m[2][1] * other.m[1][1] + other.m[2][1]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x2<T> FloatingPointMatrix3x2<T>::Concatenate(T scaleFactor) const
 {
-	return FloatingPointMatrix3x2
-		( m[0][0] * scaleFactor
-		, m[0][1] * scaleFactor
-		, m[1][0] * scaleFactor
-		, m[1][1] * scaleFactor
-		, m[2][0] * scaleFactor
-		, m[2][1] * scaleFactor
-		);
+	return {
+		m[0][0] * scaleFactor,
+		m[0][1] * scaleFactor,
+		m[1][0] * scaleFactor,
+		m[1][1] * scaleFactor,
+		m[2][0] * scaleFactor,
+		m[2][1] * scaleFactor};
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -241,13 +236,13 @@ FloatingPointMatrix3x2<T>::Invert(FloatingPointMatrix3x2 const& matrix)
 	auto inverseDeterminant = static_cast<T>(1) / determinant;
 	auto offsetX = matrix(2, 0);
 	auto offsetY = matrix(2, 1);
-	return FloatingPointMatrix3x2(
-		matrix(1, 1) * inverseDeterminant,
+	return {
+		 matrix(1, 1) * inverseDeterminant,
 		-matrix(0, 1) * inverseDeterminant,
 		-matrix(1, 0) * inverseDeterminant,
-		matrix(0, 0) * inverseDeterminant,
+		 matrix(0, 0) * inverseDeterminant,
 		(matrix(1, 0) * offsetY - offsetX * matrix(1, 1)) * inverseDeterminant,
-		(offsetX * matrix(0, 1) - matrix(0, 0) * offsetY) * inverseDeterminant);
+		(offsetX * matrix(0, 1) - matrix(0, 0) * offsetY) * inverseDeterminant};
 }
 //-----------------------------------------------------------------------
 template <typename T>
