@@ -9,13 +9,9 @@ char const* Builtin_GLSL_LineBatch_VS =
 "layout(location=0)in vec3 Position;\n"
 "layout(location=1)in vec4 Color;\n"
 "out VertexData{\n"
-"vec4 DestinationColor;\n"
-"}Out;\n"
+"vec4 DestinationColor;}Out;\n"
 "uniform TransformMatrix{\n"
-"mat4 ViewProjection;\n"
-"};\n"
-"void main()\n"
-"{\n"
+"mat4 ViewProjection;};\n"
+"void main(){\n"
 "gl_Position=vec4(Position.xyz,1.0)*ViewProjection;\n"
-"Out.DestinationColor=Color;\n"
-"}\n";
+"Out.DestinationColor=Color;}\n";

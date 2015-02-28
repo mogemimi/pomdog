@@ -18,8 +18,8 @@ namespace SceneEditor {
 namespace {
 
 // Built-in shaders
-#include "Pomdog.Experimental/Graphics/Shaders/GLSL.Embedded/SpriteBatch_VS.inc.h"
-#include "Pomdog.Experimental/Graphics/Shaders/GLSL.Embedded/Sprite_DistanceField_PS.inc.h"
+#include "Pomdog.Experimental/Graphics/Shaders/GLSL.Embedded/SpriteBatch_VS.inc.hpp"
+#include "Pomdog.Experimental/Graphics/Shaders/GLSL.Embedded/Sprite_DistanceField_PS.inc.hpp"
 #include "Pomdog.Experimental/Graphics/Shaders/HLSL.Embedded/SpriteBatch_VS.inc.hpp"
 #include "Pomdog.Experimental/Graphics/Shaders/HLSL.Embedded/SpriteDistanceField_PS.inc.hpp"
 

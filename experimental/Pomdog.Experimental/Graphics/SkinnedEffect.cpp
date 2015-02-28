@@ -12,8 +12,8 @@
 namespace Pomdog {
 namespace {
 
-#include "Shaders/GLSL.Embedded/SkinnedEffect_VS.inc.h"
-#include "Shaders/GLSL.Embedded/SkinnedEffect_PS.inc.h"
+#include "Shaders/GLSL.Embedded/SkinnedEffect_VS.inc.hpp"
+#include "Shaders/GLSL.Embedded/SkinnedEffect_PS.inc.hpp"
 
 struct BuiltinEffectSkinningTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)

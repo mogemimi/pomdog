@@ -27,8 +27,8 @@ namespace Pomdog {
 namespace {
 
 // Built-in shaders
-#include "Shaders/GLSL.Embedded/SpriteBatch_VS.inc.h"
-#include "Shaders/GLSL.Embedded/SpriteBatch_PS.inc.h"
+#include "Shaders/GLSL.Embedded/SpriteBatch_VS.inc.hpp"
+#include "Shaders/GLSL.Embedded/SpriteBatch_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/SpriteBatch_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/SpriteBatch_PS.inc.hpp"
 

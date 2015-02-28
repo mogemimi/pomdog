@@ -26,8 +26,8 @@ namespace Rendering {
 namespace {
 
 // Built-in shaders
-#include "Shaders/GLSL.Embedded/SpriteBatchRenderer_VS.inc.h"
-#include "Shaders/GLSL.Embedded/SpriteBatchRenderer_PS.inc.h"
+#include "Shaders/GLSL.Embedded/SpriteBatchRenderer_VS.inc.hpp"
+#include "Shaders/GLSL.Embedded/SpriteBatchRenderer_PS.inc.hpp"
 
 struct BuiltinEffectSpriteBatchRendererTrait {
 	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)

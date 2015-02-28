@@ -22,8 +22,8 @@ namespace Pomdog {
 namespace {
 
 // Built-in shaders
-#include "Shaders/GLSL.Embedded/LineBatch_VS.inc.h"
-#include "Shaders/GLSL.Embedded/LineBatch_PS.inc.h"
+#include "Shaders/GLSL.Embedded/LineBatch_VS.inc.hpp"
+#include "Shaders/GLSL.Embedded/LineBatch_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/LineBatch_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/LineBatch_PS.inc.hpp"
 
