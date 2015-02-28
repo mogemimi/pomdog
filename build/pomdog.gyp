@@ -170,6 +170,7 @@
       '../src/RenderSystem/TextureHelper.hpp',
       '../src/Utility/CRC32.cpp',
       '../src/Utility/Noncopyable.hpp',
+      '../src/Utility/NumericHelper.hpp',
       '../src/Utility/PathHelper.cpp',
       '../src/Utility/PathHelper.hpp',
       '../src/Utility/ScopeGuard.hpp',
