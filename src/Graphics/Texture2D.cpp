@@ -7,31 +7,13 @@
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeTexture2D.hpp"
+#include "../RenderSystem/TextureHelper.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
 
 namespace Pomdog {
-namespace {
-//-----------------------------------------------------------------------
-static std::uint16_t ComputeMipmapLevelCount(std::int32_t width, std::int32_t height)
-{
-	POMDOG_ASSERT(width >= 0);
-	POMDOG_ASSERT(height >= 0);
-
-	auto size = std::max(width, height);
-	std::uint16_t levelCount = 1;
-
-	while (size > 1)
-	{
-		size = size / 2;
-		++levelCount;
-	}
-	return levelCount;
-}
-
-}// unnamed namespace
 //-----------------------------------------------------------------------
 Texture2D::Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	std::int32_t pixelWidthIn, std::int32_t pixelHeightIn)
@@ -43,7 +25,7 @@ Texture2D::Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 	bool mipMap, SurfaceFormat formatIn)
 	: pixelWidth(pixelWidthIn)
 	, pixelHeight(pixelHeightIn)
-	, levelCount(mipMap ? ComputeMipmapLevelCount(pixelWidth, pixelHeight): 1)
+	, levelCount(mipMap ? Detail::TextureHelper::ComputeMipmapLevelCount(pixelWidth, pixelHeight): 1)
 	, format(formatIn)
 {
 	POMDOG_ASSERT(pixelWidth > 0);

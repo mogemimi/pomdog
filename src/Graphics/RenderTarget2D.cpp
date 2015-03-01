@@ -7,28 +7,13 @@
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
+#include "../RenderSystem/TextureHelper.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 
 namespace Pomdog {
-namespace {
-//-----------------------------------------------------------------------
-static std::uint16_t ComputeMipmapLevelCount(std::uint32_t width, std::uint32_t height)
-{
-	auto size = std::max(width, height);
-	std::uint16_t levelCount = 1;
-
-	while (size > 1)
-	{
-		size = size / 2;
-		++levelCount;
-	}
-	return levelCount;
-}
-
-}// unnamed namespace
 //-----------------------------------------------------------------------
 RenderTarget2D::RenderTarget2D(GraphicsDevice & graphicsDevice,
 	std::int32_t pixelWidthIn, std::int32_t pixelHeightIn)
@@ -41,7 +26,7 @@ RenderTarget2D::RenderTarget2D(GraphicsDevice & graphicsDevice,
 	bool generateMipmap, SurfaceFormat formatIn, DepthFormat depthStencilFormatIn)
 	: pixelWidth(pixelWidthIn)
 	, pixelHeight(pixelHeightIn)
-	, levelCount(generateMipmap ? ComputeMipmapLevelCount(pixelWidthIn, pixelHeightIn): 1)
+	, levelCount(generateMipmap ? Detail::TextureHelper::ComputeMipmapLevelCount(pixelWidthIn, pixelHeightIn): 1)
 	, format(formatIn)
 	, depthStencilFormat(depthStencilFormatIn)
 {
