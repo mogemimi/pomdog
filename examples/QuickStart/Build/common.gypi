@@ -1,35 +1,8 @@
 {
   'variables': {
-    'conditions': [
-      ['OS == "mac"', {
-        'target_arch%': 'x64',
-      }, {
-        'target_arch%': 'ia32',
-      }],
-    ],
-    #'target_arch%': '<(target_arch)',
     'component%': 'static_library', # static_library or shared_library
   },
   'target_defaults': {
-    'defines': [],
-    'conditions': [
-      ['target_arch == "arm"', {
-        # arm
-      }], # target_archs == "arm"
-      ['target_arch == "ia32"', {
-        'xcode_settings': {
-          'ARCHS': ['i386'],
-        },
-      }], # target_archs == "ia32"
-      ['target_arch == "mipsel"', {
-        # mipsel
-      }], # target_archs == "mipsel"
-      ['target_arch == "x64"', {
-        'xcode_settings': {
-          'ARCHS': ['x86_64'], # For the non-fragile objective-c ABI.
-        },
-      }], # target_archs == "x64"
-    ],
     'msvs_configuration_attributes': {
       #'CharacterSet': '1', # Unicode
       #'OutputDirectory': '$(SolutionDir)$(ConfigurationName)',
@@ -45,6 +18,9 @@
         ],
       },
     },
+    'xcode_settings': {
+      'ONLY_ACTIVE_ARCH': 'YES',
+    },
     'default_configuration': 'Release',#'Debug',
     'configurations': {
       'Common': {
@@ -54,19 +30,19 @@
         'inherit_from': ['Common'],
         'defines': ['DEBUG=1'],
         'cflags': ['-g', '-O0'],
-        'msvs_settings': {
-          'VCCLCompilerTool': {
-            'Optimization': '0', # /Od
+        'msbuild_settings': {
+          'ClCompile': {
+            'Optimization': 'Disabled', # /Od
             'conditions': [
               ['OS == "win" and component == "shared_library"', {
-                'RuntimeLibrary': '3', # /MDd
+                'RuntimeLibrary': 'MultiThreadedDebugDLL', # /MDd
               }, {
-                'RuntimeLibrary': '1', # /MTd
+                'RuntimeLibrary': 'MultiThreadedDebug', # /MTd
               }],
             ],
           },
-          'VCLinkerTool': {
-            'LinkIncremental': '2',
+          'Link': {
+            #'LinkIncremental': 'true', # /INCREMENTAL
           },
         },
         'xcode_settings': {
@@ -78,32 +54,26 @@
         'inherit_from': ['Common'],
         'defines': ['NDEBUG=1'],
         'cflags': ['-O3'],
-        'msvs_settings':{
-          'VCCLCompilerTool': {
-            'Optimization': '2', # /O2
-            'InlineFunctionExpansion': '2',
+        'msbuild_settings': {
+          'ClCompile': {
+            'Optimization': 'MaxSpeed', # /O2
+            'InlineFunctionExpansion': 'AnySuitable', # /Ob2
             'conditions': [
               ['OS == "win" and component == "shared_library"', {
-                'RuntimeLibrary': '2', # /MD
+                'RuntimeLibrary': 'MultiThreadedDLL', # /MD
               }, {
-                'RuntimeLibrary': '0', # /MT
+                'RuntimeLibrary': 'MultiThreaded', # /MT
               }],
             ],
           },
-          'VCLinkerTool': {
-            'LinkIncremental': '1',
-            'OptimizeReferences': '2',
+          'Link': {
+            #'LinkIncremental': 'false', # /INCREMENTAL:NO
+            'OptimizeReferences': 'true', # /OPT:REF
           },
         },
         'xcode_settings': {
           'GCC_OPTIMIZATION_LEVEL': '3', # -O3
         },
-        'conditions': [
-          ['OS == "linux" or OS == "android"', {
-            # Linux and Android settings
-            # todo: not implemented
-          }], # OS == "linux" or OS == "android"
-        ], # conditions
       }, # Release
     },
   }, # target_defaults

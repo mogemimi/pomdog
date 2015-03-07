@@ -1,35 +1,8 @@
 {
   'variables': {
-    'conditions': [
-      ['OS == "mac"', {
-        'target_arch%': 'x64',
-      }, {
-        'target_arch%': 'ia32',
-      }],
-    ],
-    #'target_arch%': '<(target_arch)',
     'component%': 'shared_library', # static_library or shared_library
   },
   'target_defaults': {
-    'defines': [],
-    'conditions': [
-      ['target_arch == "arm"', {
-        # arm
-      }], # target_archs == "arm"
-      ['target_arch == "ia32"', {
-        'xcode_settings': {
-          'ARCHS': ['i386'],
-        },
-      }], # target_archs == "ia32"
-      ['target_arch == "mipsel"', {
-        # mipsel
-      }], # target_archs == "mipsel"
-      ['target_arch == "x64"', {
-        'xcode_settings': {
-          'ARCHS': ['x86_64'], # For the non-fragile objective-c ABI.
-        },
-      }], # target_archs == "x64"
-    ],
     'msvs_configuration_attributes': {
       #'CharacterSet': '1', # Unicode
       #'OutputDirectory': '$(SolutionDir)$(ConfigurationName)',
@@ -45,6 +18,9 @@
           'NOMINMAX',
         ],
       },
+    },
+    'xcode_settings': {
+      'ONLY_ACTIVE_ARCH': 'YES',
     },
     'default_configuration': 'Release',
     #'default_configuration': 'Debug',
