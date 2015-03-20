@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_MATH_DETAIL_FLOATINGPOINTQUATERNION_5F875CA6_CC28_4B92_977C_50E535631465_HPP
 #define POMDOG_MATH_DETAIL_FLOATINGPOINTQUATERNION_5F875CA6_CC28_4B92_977C_50E535631465_HPP

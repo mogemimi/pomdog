@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_SPRITECOMMAND_8EB48EFB_54D7_4AF1_AB24_B8607C44B642_HPP
 #define POMDOG_SPRITECOMMAND_8EB48EFB_54D7_4AF1_AB24_B8607C44B642_HPP

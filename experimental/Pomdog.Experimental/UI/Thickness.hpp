@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_THICKNESS_291572C7_D0A0_4EED_84EE_E0E74F4D2FF8_HPP
 #define POMDOG_THICKNESS_291572C7_D0A0_4EED_84EE_E0E74F4D2FF8_HPP

@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_WEIGHTBLENDINGHELPER_EC5A3515_C7FB_4F93_A810_79F3F8F59CEE_HPP
 #define POMDOG_WEIGHTBLENDINGHELPER_EC5A3515_C7FB_4F93_A810_79F3F8F59CEE_HPP

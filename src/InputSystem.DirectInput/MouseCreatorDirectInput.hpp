@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_MOUSECREATORDIRECTINPUT_62BF491B_21FD_4578_B48B_1AF23A69E1A3_HPP
 #define POMDOG_MOUSECREATORDIRECTINPUT_62BF491B_21FD_4578_B48B_1AF23A69E1A3_HPP

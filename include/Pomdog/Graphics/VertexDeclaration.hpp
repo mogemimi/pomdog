@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_VERTEXDECLARATION_5FD2E1E3_E19B_4C29_BE93_D10685FCEB02_HPP
 #define POMDOG_VERTEXDECLARATION_5FD2E1E3_E19B_4C29_BE93_D10685FCEB02_HPP

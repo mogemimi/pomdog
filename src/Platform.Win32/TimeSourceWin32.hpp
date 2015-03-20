@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_SRC_WIN32_TIMESOURCEWIN32_A31ECBBA_1FF3_46D6_B8EA_5289C0FABFC9_HPP
 #define POMDOG_SRC_WIN32_TIMESOURCEWIN32_A31ECBBA_1FF3_46D6_B8EA_5289C0FABFC9_HPP

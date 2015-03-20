@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_MATH_DETAIL_COORDINATE3DIMPLEMENTATION_4B7428C8_1C28_4604_949D_0B5D766C171C_HPP
 #define POMDOG_MATH_DETAIL_COORDINATE3DIMPLEMENTATION_4B7428C8_1C28_4604_949D_0B5D766C171C_HPP

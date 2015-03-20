@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_ANIMATIONLERPNODE_22AAFE06_B82E_49EC_8B16_EC01D32BC836_HPP
 #define POMDOG_ANIMATIONLERPNODE_22AAFE06_B82E_49EC_8B16_EC01D32BC836_HPP

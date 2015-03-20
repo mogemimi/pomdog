@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_SEPIATONEEFFECT_BD1A4ABD_E2D0_4D28_94D4_74722D54C7A0_HPP
 #define POMDOG_SEPIATONEEFFECT_BD1A4ABD_E2D0_4D28_94D4_74722D54C7A0_HPP

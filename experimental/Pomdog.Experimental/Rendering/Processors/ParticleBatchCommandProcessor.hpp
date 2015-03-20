@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_PARTICLEBATCHCOMMANDPROCESSOR_29CECBB2_4602_44F1_B146_121E3E118ABF_HPP
 #define POMDOG_PARTICLEBATCHCOMMANDPROCESSOR_29CECBB2_4602_44F1_B146_121E3E118ABF_HPP

@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_MOUSESTATE_0CEDE70B_5845_49FD_AA5F_2572AE32B73E_HPP
 #define POMDOG_MOUSESTATE_0CEDE70B_5845_49FD_AA5F_2572AE32B73E_HPP

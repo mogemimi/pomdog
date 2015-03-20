@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_GAMEHOSTCOCOA_29C3B75B_9D10_4DA7_BD1A_3AD8511B7D4F_HPP
 #define POMDOG_GAMEHOSTCOCOA_29C3B75B_9D10_4DA7_BD1A_3AD8511B7D4F_HPP

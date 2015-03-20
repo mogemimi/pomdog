@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_TEXTUREREGION_9F020F68_0E51_40CE_8219_6F207E478559_HPP
 #define POMDOG_TEXTUREREGION_9F020F68_0E51_40CE_8219_6F207E478559_HPP

@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_UIHELPER_25E8AD61_F482_4291_B3E0_EA50C4CD3649_HPP
 #define POMDOG_UIHELPER_25E8AD61_F482_4291_B3E0_EA50C4CD3649_HPP

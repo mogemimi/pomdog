@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_TRANSLATIONTRACK_6A0FA1BF_E029_40A4_BBB4_80B20013D984_HPP
 #define POMDOG_TRANSLATIONTRACK_6A0FA1BF_E029_40A4_BBB4_80B20013D984_HPP

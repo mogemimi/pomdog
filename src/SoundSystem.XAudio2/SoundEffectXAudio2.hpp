@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_SOUNDEFFECTXAUDIO2_ED1F6835_CC69_4922_802F_961D8011F154_HPP
 #define POMDOG_SOUNDEFFECTXAUDIO2_ED1F6835_CC69_4922_802F_961D8011F154_HPP

@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_CONTEXTOPENAL_79017363_0C9F_44B8_B79F_C3D84CBB340C_HPP
 #define POMDOG_CONTEXTOPENAL_79017363_0C9F_44B8_B79F_C3D84CBB340C_HPP

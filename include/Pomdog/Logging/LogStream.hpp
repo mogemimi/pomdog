@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_LOGSTREAM_9EF46BAA_9822_46E4_BCC6_DC71864ADAE5_HPP
 #define POMDOG_LOGSTREAM_9EF46BAA_9822_46E4_BCC6_DC71864ADAE5_HPP

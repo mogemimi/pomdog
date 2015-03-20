@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_GLSLCOMPILER_9FED2927_CB1F_4D98_93D0_CC5E72F0C95B_HPP
 #define POMDOG_GLSLCOMPILER_9FED2927_CB1F_4D98_93D0_CC5E72F0C95B_HPP

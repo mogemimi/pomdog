@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_PRIMITIVETOPOLOGY_46F3C71C_626F_43D4_8CBD_F4FC28EE1933_HPP
 #define POMDOG_PRIMITIVETOPOLOGY_46F3C71C_626F_43D4_8CBD_F4FC28EE1933_HPP

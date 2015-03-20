@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_SURFACEFORMAT_D6D95081_3481_483B_AA66_D40D74FAC014_HPP
 #define POMDOG_SURFACEFORMAT_D6D95081_3481_483B_AA66_D40D74FAC014_HPP

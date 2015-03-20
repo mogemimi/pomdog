@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_ANIMATIONGRAPHWEIGHT_2B7D7365_F1DB_4D21_A939_F9E06945754A_HPP
 #define POMDOG_ANIMATIONGRAPHWEIGHT_2B7D7365_F1DB_4D21_A939_F9E06945754A_HPP

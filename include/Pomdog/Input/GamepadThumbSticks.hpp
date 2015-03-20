@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_GAMEPADTHUMBSTICKS_444752C9_1DEB_45F4_B42E_9212410AEE8D_HPP
 #define POMDOG_GAMEPADTHUMBSTICKS_444752C9_1DEB_45F4_B42E_9212410AEE8D_HPP

@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_ANIMATIONTIMEINTERVAL_DEA1AD60_E2E2_45F6_9B79_A2DDB30EDC4E_HPP
 #define POMDOG_ANIMATIONTIMEINTERVAL_DEA1AD60_E2E2_45F6_9B79_A2DDB30EDC4E_HPP

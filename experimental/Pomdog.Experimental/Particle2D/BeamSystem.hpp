@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_BEAMSYSTEM_616FE7EE_4C71_411A_A44D_C50248FB7B7E_HPP
 #define POMDOG_BEAMSYSTEM_616FE7EE_4C71_411A_A44D_C50248FB7B7E_HPP

@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_EFFECTPASSGL4_5C5F046F_F42A_4AAD_AC22_389698C435EB_HPP
 #define POMDOG_EFFECTPASSGL4_5C5F046F_F42A_4AAD_AC22_389698C435EB_HPP

@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_AUDIOENGINE_0BAB9209_2564_48EB_A65A_F3B826A56E02_HPP
 #define POMDOG_AUDIOENGINE_0BAB9209_2564_48EB_A65A_F3B826A56E02_HPP

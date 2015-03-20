@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_VERTICALALIGNMENT_07A78998_A0BA_444F_9389_BB7B619F27A9_HPP
 #define POMDOG_VERTICALALIGNMENT_07A78998_A0BA_444F_9389_BB7B619F27A9_HPP

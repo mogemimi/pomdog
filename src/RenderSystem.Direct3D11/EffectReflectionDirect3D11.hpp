@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_EFFECTREFLECTIONDIRECT3D11_10267AA4_F5EC_4BC4_A092_51877E2D340F_HPP
 #define POMDOG_EFFECTREFLECTIONDIRECT3D11_10267AA4_F5EC_4BC4_A092_51877E2D340F_HPP

@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_TEMPORALACTION_DD16B93C_A710_4BD1_914B_5E1AF09287E9_HPP
 #define POMDOG_TEMPORALACTION_DD16B93C_A710_4BD1_914B_5E1AF09287E9_HPP

@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_RECTANGLERENDERABLE_FFA98981_CBE5_4F24_AFDB_C7ECD07CC66E_HPP
 #define POMDOG_RECTANGLERENDERABLE_FFA98981_CBE5_4F24_AFDB_C7ECD07CC66E_HPP

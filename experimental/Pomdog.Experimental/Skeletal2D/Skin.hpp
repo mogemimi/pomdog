@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_SKIN_8B9C736F_D6E4_449A_A310_1F791AA6ABC5_HPP
 #define POMDOG_SKIN_8B9C736F_D6E4_449A_A310_1F791AA6ABC5_HPP

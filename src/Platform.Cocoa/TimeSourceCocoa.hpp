@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_TIMESOURCECOCOA_3820AACF_C0B9_4A13_A493_C1164C3C19E7_HPP
 #define POMDOG_TIMESOURCECOCOA_3820AACF_C0B9_4A13_A493_C1164C3C19E7_HPP

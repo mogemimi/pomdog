@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_RASTERIZERDESCRIPTION_AD753EE4_3D3A_44B2_85B3_A54B2C5D1B4A_HPP
 #define POMDOG_RASTERIZERDESCRIPTION_AD753EE4_3D3A_44B2_85B3_A54B2C5D1B4A_HPP

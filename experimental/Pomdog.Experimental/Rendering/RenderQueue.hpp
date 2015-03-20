@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_RENDERQUEUE_32005F81_9DE4_4E2F_A57C_BCC9DC5AF832_HPP
 #define POMDOG_RENDERQUEUE_32005F81_9DE4_4E2F_A57C_BCC9DC5AF832_HPP

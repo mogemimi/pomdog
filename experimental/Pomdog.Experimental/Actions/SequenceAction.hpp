@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_SEQUENCEACTION_63378BE5_A1FC_420F_987E_3334185AF829_HPP
 #define POMDOG_SEQUENCEACTION_63378BE5_A1FC_420F_987E_3334185AF829_HPP

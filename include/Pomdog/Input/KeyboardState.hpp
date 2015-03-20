@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_KEYBOARDSTATE_8518E1F7_25E7_4E90_AD55_055740A9EA0E_HPP
 #define POMDOG_KEYBOARDSTATE_8518E1F7_25E7_4E90_AD55_055740A9EA0E_HPP

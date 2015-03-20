@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_DEPTHSTENCILSTATEDIRECT3D11_F08A14A0_EDA2_4794_88ED_C43CC4059658_HPP
 #define POMDOG_DEPTHSTENCILSTATEDIRECT3D11_F08A14A0_EDA2_4794_88ED_C43CC4059658_HPP

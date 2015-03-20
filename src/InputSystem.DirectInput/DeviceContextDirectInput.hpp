@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_DEVICECONTEXTDIRECTINPUT_A3771E91_2E13_44AD_B199_10ECE47A646E_HPP
 #define POMDOG_DEVICECONTEXTDIRECTINPUT_A3771E91_2E13_44AD_B199_10ECE47A646E_HPP

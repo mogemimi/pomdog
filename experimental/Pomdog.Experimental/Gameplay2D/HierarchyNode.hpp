@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_HIERARCHYNODE_65A32766_DE9A_40C5_9F1A_2FA6F042E424_HPP
 #define POMDOG_HIERARCHYNODE_65A32766_DE9A_40C5_9F1A_2FA6F042E424_HPP

@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_SKINNEDVERTEX_181A0BE4_93EE_47D0_9239_2EC75635A335_HPP
 #define POMDOG_SKINNEDVERTEX_181A0BE4_93EE_47D0_9239_2EC75635A335_HPP

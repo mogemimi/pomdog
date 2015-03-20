@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_PARTICLEPARAMETERCURVE_75DE11C7_EA59_43B4_B41F_BFF98F8A2906_HPP
 #define POMDOG_PARTICLEPARAMETERCURVE_75DE11C7_EA59_43B4_B41F_BFF98F8A2906_HPP

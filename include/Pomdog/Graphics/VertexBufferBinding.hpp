@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_VERTEXBUFFERBINDING_3055CF20_F4BD_4372_B6C5_8A279BA46082_HPP
 #define POMDOG_VERTEXBUFFERBINDING_3055CF20_F4BD_4372_B6C5_8A279BA46082_HPP

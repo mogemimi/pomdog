@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_PREREQUISITESOPENAL_0DE392F4_D959_4DA7_8C19_20F82016DFA2_HPP
 #define POMDOG_PREREQUISITESOPENAL_0DE392F4_D959_4DA7_8C19_20F82016DFA2_HPP

@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_PRIMITIVECOMMANDPROCESSOR_78CC3F16_1297_4C1B_BE10_2F174451E3B4_HPP
 #define POMDOG_PRIMITIVECOMMANDPROCESSOR_78CC3F16_1297_4C1B_BE10_2F174451E3B4_HPP

@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_POINT2D_278F3036_BF52_41E0_870B_A12EBC3E43CE_HPP
 #define POMDOG_POINT2D_278F3036_BF52_41E0_870B_A12EBC3E43CE_HPP

@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_TIMESOURCELINUX_60ECC32A_9ADC_4A84_A672_FD0A7EEE9E16_HPP
 #define POMDOG_TIMESOURCELINUX_60ECC32A_9ADC_4A84_A672_FD0A7EEE9E16_HPP

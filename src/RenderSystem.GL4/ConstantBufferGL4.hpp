@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_CONSTANTBUFFERGL4_98395F08_1611_4948_9C35_81FE756DE978_HPP
 #define POMDOG_CONSTANTBUFFERGL4_98395F08_1611_4948_9C35_81FE756DE978_HPP

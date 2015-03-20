@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_SCOPEDCONNECTION_009320AB_E09C_4157_8F9D_E7FBCE812DD8_HPP
 #define POMDOG_SCOPEDCONNECTION_009320AB_E09C_4157_8F9D_E7FBCE812DD8_HPP
