@@ -20,7 +20,7 @@ namespace Pomdog {
 
 class GameHost;
 
-namespace Details {
+namespace Detail {
 namespace Win32 {
 
 class BootstrapperWin32 {
@@ -34,7 +34,7 @@ private:
 };
 
 }// namespace Win32
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_BOOTSTRAPPERWIN32_4778D685_22F5_4D2E_B7D5_5D8F47760747_HPP)

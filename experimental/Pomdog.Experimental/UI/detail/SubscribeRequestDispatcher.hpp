@@ -18,7 +18,7 @@
 
 namespace Pomdog {
 namespace UI {
-namespace Details {
+namespace Detail {
 
 template <class ListenerType>
 class SubscribeRequestDispatcher {
@@ -43,7 +43,7 @@ public:
 	std::vector<std::weak_ptr<ListenerType>> Removed;
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace UI
 }// namespace Pomdog
 

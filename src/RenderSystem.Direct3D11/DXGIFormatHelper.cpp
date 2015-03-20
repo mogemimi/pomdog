@@ -10,7 +10,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 //-----------------------------------------------------------------------
@@ -53,5 +53,5 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(SurfaceFormat format)
 //-----------------------------------------------------------------------
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

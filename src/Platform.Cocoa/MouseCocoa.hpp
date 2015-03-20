@@ -15,7 +15,7 @@
 #include "Pomdog/Input/MouseState.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Cocoa {
 
 class MouseCocoa final: public Mouse {
@@ -40,7 +40,7 @@ private:
 };
 
 }// namespace Cocoa
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_MOUSECOCOA_E737D799_3080_4B3E_A2A8_E3886D4800D1_HPP)

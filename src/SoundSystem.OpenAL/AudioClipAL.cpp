@@ -10,7 +10,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
 namespace {
@@ -91,5 +91,5 @@ ALuint AudioClipAL::NativeBuffer() const
 //-----------------------------------------------------------------------
 }// namespace OpenAL
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

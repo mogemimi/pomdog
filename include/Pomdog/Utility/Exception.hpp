@@ -16,7 +16,7 @@
 #include <sstream>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace ExceptionInternal {
 
 template <typename T> constexpr
@@ -53,7 +53,7 @@ T CreateException(std::string const& description, std::string const& source, cha
 }
 
 }// namespace ExceptionInternal
-}// namespace Details
+}// namespace Detail
 
 #if !defined(POMDOG_THROW_EXCEPTION)
 
@@ -62,7 +62,7 @@ T CreateException(std::string const& description, std::string const& source, cha
 /// @param exceptionCode ExceptionCode を指定します。
 /// @param description エラーの詳細です。
 #define POMDOG_THROW_EXCEPTION(exceptionClass, description) \
-	throw Pomdog::Details::ExceptionInternal::CreateException< \
+	throw Pomdog::Detail::ExceptionInternal::CreateException< \
 		exceptionClass>(description, __func__, __FILE__, __LINE__)
 
 #endif // !defined(POMDOG_THROW_EXCEPTION)

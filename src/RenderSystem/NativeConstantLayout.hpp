@@ -16,7 +16,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeConstantBuffer;
@@ -36,7 +36,7 @@ public:
 };
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_NATIVECONSTANTLAYOUT_9EA37BC8_0C0C_4453_B115_8EAC2D32FCB4_HPP)

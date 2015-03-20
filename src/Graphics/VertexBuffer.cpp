@@ -89,7 +89,7 @@ void VertexBuffer::SetData(std::uint32_t offsetInBytes, void const* source, std:
 	nativeVertexBuffer->SetData(offsetInBytes, source, elementCount * strideBytesIn);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeVertexBuffer* VertexBuffer::NativeVertexBuffer()
+Detail::RenderSystem::NativeVertexBuffer* VertexBuffer::NativeVertexBuffer()
 {
 	POMDOG_ASSERT(nativeVertexBuffer);
 	return nativeVertexBuffer.get();

@@ -18,16 +18,16 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 //-----------------------------------------------------------------------
 std::shared_ptr<AudioClip> AssetLoader<AudioClip>::operator()(
 	AssetLoaderContext const& loaderContext, std::string const& assetName)
 {
-	std::shared_ptr<AudioClip> audioClip = Details::MSWaveAudioLoader::Load(
+	std::shared_ptr<AudioClip> audioClip = Detail::MSWaveAudioLoader::Load(
 		PathHelper::Join(loaderContext.RootDirectory, assetName));
 
 	return std::move(audioClip);
 }
 //-----------------------------------------------------------------------
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

@@ -11,7 +11,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
@@ -235,5 +235,5 @@ void RenderTarget2DDirect3D11::ResetBackBuffer()
 //-----------------------------------------------------------------------
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

@@ -60,7 +60,7 @@ DepthStencilState::CreateNone(std::shared_ptr<GraphicsDevice> const& graphicsDev
 	return std::make_shared<DepthStencilState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeDepthStencilState* DepthStencilState::NativeDepthStencilState()
+Detail::RenderSystem::NativeDepthStencilState* DepthStencilState::NativeDepthStencilState()
 {
 	return nativeDepthStencilState.get();
 }

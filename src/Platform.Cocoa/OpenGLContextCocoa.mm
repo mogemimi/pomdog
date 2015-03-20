@@ -9,7 +9,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Cocoa {
 //-----------------------------------------------------------------------
 OpenGLContextCocoa::OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormat)
@@ -68,5 +68,5 @@ NSOpenGLContext* OpenGLContextCocoa::NativeOpenGLContext()
 }
 //-----------------------------------------------------------------------
 }// namespace Cocoa
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

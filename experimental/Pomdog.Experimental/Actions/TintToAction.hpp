@@ -18,7 +18,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Actions {
 
 class TintTo {
@@ -52,9 +52,9 @@ public:
 };
 
 }// namespace Actions
-}// namespace Details
+}// namespace Detail
 
-using TintToAction = Details::Actions::TemporalAction<Details::Actions::TintTo>;
+using TintToAction = Detail::Actions::TemporalAction<Detail::Actions::TintTo>;
 
 }// namespace Pomdog
 

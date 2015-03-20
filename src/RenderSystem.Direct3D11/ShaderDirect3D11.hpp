@@ -17,7 +17,7 @@
 #include <cstdint>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class ShaderBytecode;
@@ -45,7 +45,7 @@ using PixelShaderDirect3D11 = ShaderDirect3D11<ID3D11PixelShader>;
 
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SHADERDIRECT3D11_F7D61E35_F8F5_4C56_982E_279FAEE85DE4_HPP)

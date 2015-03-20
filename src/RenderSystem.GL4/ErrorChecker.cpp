@@ -12,7 +12,7 @@
 #include <sstream>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
@@ -69,5 +69,5 @@ void ErrorChecker::CheckError(char const* command, char const* filename, int lin
 //-----------------------------------------------------------------------
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

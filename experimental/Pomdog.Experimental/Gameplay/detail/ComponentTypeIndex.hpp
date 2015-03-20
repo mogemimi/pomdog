@@ -17,7 +17,7 @@
 #include <limits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Gameplay {
 
 template <typename BaseComponentType, typename IndexType>
@@ -50,7 +50,7 @@ template <typename BaseComponentType, typename IndexType>
 IndexType ComponentTypeIndex<BaseComponentType, IndexType>::count = 0;
 
 }// namespace Gameplay
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_COMPONENTTYPEINDEX_7EECA00A_8F27_4D17_A85A_E6B122008DB3_HPP)

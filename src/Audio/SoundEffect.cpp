@@ -20,9 +20,9 @@
 namespace Pomdog {
 namespace {
 
-static std::shared_ptr<Details::SoundSystem::NativeAudioClip> GetNativeBuffer(std::shared_ptr<AudioClip> const& audioClip)
+static std::shared_ptr<Detail::SoundSystem::NativeAudioClip> GetNativeBuffer(std::shared_ptr<AudioClip> const& audioClip)
 {
-	std::shared_ptr<Details::SoundSystem::NativeAudioClip> nativeAudioClip(
+	std::shared_ptr<Detail::SoundSystem::NativeAudioClip> nativeAudioClip(
 		audioClip, audioClip->NativeAudioClip());
 	return std::move(nativeAudioClip);
 }
@@ -39,7 +39,7 @@ SoundEffect::SoundEffect(AudioEngine & audioEngine,
 	auto nativeAudioEngine = audioEngine.NativeAudioEngine();
 	POMDOG_ASSERT(nativeAudioEngine);
 
-	nativeSoundEffect = std::make_unique<Details::SoundSystem::NativeSoundEffect>(
+	nativeSoundEffect = std::make_unique<Detail::SoundSystem::NativeSoundEffect>(
 		*nativeAudioEngine, GetNativeBuffer(audioClip), isLooped);
 }
 //-----------------------------------------------------------------------

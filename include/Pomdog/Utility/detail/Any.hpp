@@ -20,7 +20,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 class POMDOG_EXPORT Any final {
 private:
@@ -99,7 +99,7 @@ public:
 	}
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ANY_2C2DCE41_BD36_4065_BD33_D045184AE06C_HPP)

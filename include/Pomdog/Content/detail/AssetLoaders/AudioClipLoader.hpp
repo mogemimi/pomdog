@@ -20,7 +20,7 @@ namespace Pomdog {
 
 class AudioClip;
 
-namespace Details {
+namespace Detail {
 
 class AssetLoaderContext;
 
@@ -31,7 +31,7 @@ struct POMDOG_EXPORT AssetLoader<AudioClip> final {
 		std::string const& assetName);
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_AUDIOCLIPLOADER_18B28F6C_03C2_407A_8514_38A44B778177_HPP)

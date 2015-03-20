@@ -32,7 +32,7 @@
 #include <thread>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Cocoa {
 namespace {
 
@@ -203,7 +203,7 @@ GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& windowIn,
 {
 	openGLContext = CreateOpenGLContext(presentationParameters);
 
-	using Details::RenderSystem::GL4::GraphicsDeviceGL4;
+	using Detail::RenderSystem::GL4::GraphicsDeviceGL4;
 	graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::make_unique<GraphicsDeviceGL4>());
 
 	graphicsContext = CreateGraphicsContext(openGLContext, window, presentationParameters, graphicsDevice);
@@ -225,7 +225,7 @@ GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& windowIn,
 	{
 		NSString* path = [[NSBundle mainBundle] resourcePath];
 		std::string rootDirectory = [[path stringByAppendingPathComponent: @"Content"] UTF8String];
-		Details::AssetLoaderContext loaderContext{rootDirectory, graphicsDevice};
+		Detail::AssetLoaderContext loaderContext{rootDirectory, graphicsDevice};
 
 		assetManager = std::make_unique<Pomdog::AssetManager>(std::move(loaderContext));
 	}
@@ -491,5 +491,5 @@ std::shared_ptr<Pomdog::Mouse> GameHostCocoa::Mouse()
 }
 //-----------------------------------------------------------------------
 }// namespace Cocoa
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

@@ -17,7 +17,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 struct PNGTextureReader {
 	static std::shared_ptr<Texture2D> Read(
@@ -25,7 +25,7 @@ struct PNGTextureReader {
 		std::uint8_t const* data, std::size_t byteLength);
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PNGTEXTUREREADER_C00C0E02_8156_45AD_80DA_DD3B4D89302B_HPP)

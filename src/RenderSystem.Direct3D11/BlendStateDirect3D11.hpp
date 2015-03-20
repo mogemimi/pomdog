@@ -17,7 +17,7 @@
 #include "Pomdog/Math/Vector4.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 
@@ -38,7 +38,7 @@ private:
 
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_BLENDSTATEDIRECT3D11_24607C21_74E1_49B1_B7AB_033D7F5B8E4B_HPP)

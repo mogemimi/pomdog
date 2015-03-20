@@ -14,7 +14,7 @@
 #include <cstddef>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class GraphicsCapabilities {
@@ -23,7 +23,7 @@ public:
 };
 
 }// namespace RenderSystems
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_GRAPHICSCAPABILITIES_17FEAA5D_4BF2_4EEB_8D34_77B032B1534B_HPP)

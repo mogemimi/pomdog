@@ -20,7 +20,7 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace {
 //-----------------------------------------------------------------------
 static std::vector<char> ReadBinaryFile(std::string const& path)
@@ -339,5 +339,5 @@ ParticleClip ParticleLoader::Load(AssetManager & assets, std::string const& asse
 	return LoadFromJson(assets, assetName);
 }
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

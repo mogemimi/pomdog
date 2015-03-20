@@ -8,7 +8,7 @@
 #include <gtest/iutest_switch.hpp>
 #include <memory>
 
-using Pomdog::Details::Any;
+using Pomdog::Detail::Any;
 
 TEST(Any, FirstCase)
 {

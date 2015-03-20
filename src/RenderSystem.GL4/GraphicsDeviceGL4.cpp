@@ -24,7 +24,7 @@
 #include "Pomdog/Utility/Exception.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
@@ -136,5 +136,5 @@ GraphicsDeviceGL4::CreateRenderTarget2D(std::int32_t width, std::int32_t height,
 //-----------------------------------------------------------------------
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

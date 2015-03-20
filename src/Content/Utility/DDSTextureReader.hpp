@@ -17,7 +17,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 namespace DDSTextureReader {
 
@@ -26,7 +26,7 @@ std::shared_ptr<Texture2D> Read(std::shared_ptr<GraphicsDevice> const& graphicsD
 
 }// namespace DDSTextureReader
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_DDSTEXTUREREADER_0C8072DF_9382_4D3F_9812_DDBF397296C6_HPP)

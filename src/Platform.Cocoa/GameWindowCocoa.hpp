@@ -22,7 +22,7 @@
 @class CocoaGameViewDelegate;
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Cocoa {
 
 class OpenGLContextCocoa;
@@ -91,7 +91,7 @@ private:
 };
 
 }// namespace Cocoa
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP)

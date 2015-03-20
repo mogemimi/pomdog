@@ -44,7 +44,7 @@
 	gameRunThread = std::thread([self]
 	{
 		try {
-			using Bootstrap = Pomdog::Details::Cocoa::BootstrapperCocoa;
+			using Bootstrap = Pomdog::Detail::Cocoa::BootstrapperCocoa;
 			auto gameHost = Bootstrap().CreateGameHost([self window]);
 
 			TestApp::TestAppGame game{gameHost};

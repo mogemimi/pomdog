@@ -26,7 +26,7 @@
 #include <array>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
@@ -491,5 +491,5 @@ Microsoft::WRL::ComPtr<IDXGIFactory1> GraphicsDeviceDirect3D11::DXGIFactory() co
 //-----------------------------------------------------------------------
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

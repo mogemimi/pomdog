@@ -8,7 +8,7 @@
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 //-----------------------------------------------------------------------
 int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format)
@@ -42,5 +42,5 @@ int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format)
 }
 //-----------------------------------------------------------------------
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

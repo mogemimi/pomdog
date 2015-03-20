@@ -13,7 +13,7 @@
 #include <array>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
 //-----------------------------------------------------------------------
@@ -164,5 +164,5 @@ void SoundEffectAL::Volume(float volume)
 //-----------------------------------------------------------------------
 }// namespace OpenAL
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

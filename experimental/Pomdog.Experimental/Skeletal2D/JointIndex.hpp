@@ -17,7 +17,7 @@
 #include <limits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SkeletalAnimation2D {
 
 template <typename T>
@@ -67,11 +67,11 @@ public:
 };
 
 }// namespace SkeletalAnimation2D
-}// namespace Details
+}// namespace Detail
 
 ///@~Japanese
 /// @brief スケルタルアニメーションにおけるジョイント（間接）に割り当てられるインデックス番号です。
-using JointIndex = Details::SkeletalAnimation2D::OptionalUnsigned<std::uint8_t>;
+using JointIndex = Detail::SkeletalAnimation2D::OptionalUnsigned<std::uint8_t>;
 
 }// namespace Pomdog
 

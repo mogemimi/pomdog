@@ -23,15 +23,15 @@ class GraphicsDevice;
 class VertexBufferBinding;
 class VertexDeclaration;
 
-namespace Details {
+namespace Detail {
 class AssetLoaderContext;
-}// namespace Details
+}// namespace Detail
 
 namespace AssetLoaders {
 
 class POMDOG_EXPORT EffectPassLoader final {
 public:
-	explicit EffectPassLoader(Details::AssetLoaderContext const& loaderContext);
+	explicit EffectPassLoader(Detail::AssetLoaderContext const& loaderContext);
 
 	EffectPassLoader(EffectPassLoader &&);
 	EffectPassLoader & operator=(EffectPassLoader &&);

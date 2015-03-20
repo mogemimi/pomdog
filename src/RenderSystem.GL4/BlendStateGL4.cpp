@@ -12,7 +12,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
@@ -116,5 +116,5 @@ void BlendStateGL4::Apply(NativeGraphicsContext &)
 //-----------------------------------------------------------------------
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

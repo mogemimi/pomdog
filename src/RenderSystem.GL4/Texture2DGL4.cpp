@@ -14,7 +14,7 @@
 #include <algorithm>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
@@ -359,5 +359,5 @@ Texture2DObjectGL4 const& Texture2DGL4::NativeHandle() const
 //-----------------------------------------------------------------------
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

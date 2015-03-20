@@ -15,7 +15,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Particles {
 
 template <typename T>
@@ -48,7 +48,7 @@ public:
 };
 
 }// namespace Particles
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PARTICLEPARAMETERCONSTANT_0CA7D811_75D8_4AB0_9EA0_A2F9B2EDE095_HPP)

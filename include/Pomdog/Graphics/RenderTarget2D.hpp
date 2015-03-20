@@ -21,13 +21,13 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeRenderTarget2D;
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 
 ///@~Japanese
 /// @brief 深度バッファを含む、2 次元のレンダーターゲットです。
@@ -82,10 +82,10 @@ public:
 	Rectangle Bounds() const;
 
 public:
-	Details::RenderSystem::NativeRenderTarget2D* NativeRenderTarget2D();
+	Detail::RenderSystem::NativeRenderTarget2D* NativeRenderTarget2D();
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeRenderTarget2D> nativeRenderTarget2D;
+	std::unique_ptr<Detail::RenderSystem::NativeRenderTarget2D> nativeRenderTarget2D;
 	std::int32_t pixelWidth;
 	std::int32_t pixelHeight;
 	std::uint32_t levelCount;

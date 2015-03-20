@@ -18,13 +18,13 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeEffectPass;
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 
 class POMDOG_EXPORT EffectPass {
 public:
@@ -44,10 +44,10 @@ public:
 	EffectPass & operator=(EffectPass &&) = default;
 
 public:
-	Details::RenderSystem::NativeEffectPass* NativeEffectPass();
+	Detail::RenderSystem::NativeEffectPass* NativeEffectPass();
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeEffectPass> nativeEffectPass;
+	std::unique_ptr<Detail::RenderSystem::NativeEffectPass> nativeEffectPass;
 };
 
 }// namespace Pomdog

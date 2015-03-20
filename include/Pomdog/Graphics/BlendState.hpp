@@ -17,13 +17,13 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeBlendState;
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 
 ///@~Japanese
 /// @brief ブレンディングステートです。
@@ -65,10 +65,10 @@ public:
 	CreateOpaque(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 public:
-	Details::RenderSystem::NativeBlendState* NativeBlendState();
+	Detail::RenderSystem::NativeBlendState* NativeBlendState();
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeBlendState> nativeBlendState;
+	std::unique_ptr<Detail::RenderSystem::NativeBlendState> nativeBlendState;
 	BlendDescription description;
 };
 

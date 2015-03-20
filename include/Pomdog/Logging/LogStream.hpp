@@ -56,7 +56,7 @@ public:
 };
 
 
-namespace Details {
+namespace Detail {
 namespace Logging {
 
 template<typename E>
@@ -78,12 +78,12 @@ T const& LogStreamInvork(T const& message, typename std::enable_if<!std::is_enum
 }
 
 }// namespace Logging
-}// namespace Details
+}// namespace Detail
 
 template <typename T>
 LogStream & LogStream::operator<<(T const& message)
 {
-	cache << Details::Logging::LogStreamInvork(message);
+	cache << Detail::Logging::LogStreamInvork(message);
 	return *this;
 }
 

@@ -38,9 +38,9 @@ public:
 		static_assert(std::is_object<typename std::remove_reference<T>::type>::value, "T is object type.");
 		static_assert(!std::is_pointer<T>::value, "pointer type is not supported.");
 
-		typedef Details::EventArgumentsContainer<typename std::remove_reference<T>::type> Container;
+		typedef Detail::EventArgumentsContainer<typename std::remove_reference<T>::type> Container;
 
-		static_assert(std::is_base_of<Details::EventArguments, Container>::value,
+		static_assert(std::is_base_of<Detail::EventArguments, Container>::value,
 			"Container is not a base class of 'EventArguments'");
 
 		data = std::make_unique<Container>(std::forward<T>(arguments));
@@ -54,7 +54,7 @@ public:
 		static_assert(std::is_object<T>::value, "T is object type.");
 
 		POMDOG_ASSERT(data);
-		return data && (data->HashCode() == Details::EventComponentHashCode<T>::value);
+		return data && (data->HashCode() == Detail::EventComponentHashCode<T>::value);
 	}
 
 	template <class T>
@@ -64,9 +64,9 @@ public:
 		static_assert(!std::is_pointer<T>::value, "pointer type is not supported.");
 		static_assert(std::is_object<T>::value, "T is object type.");
 
-		typedef Details::EventArgumentsContainer<T> Container;
+		typedef Detail::EventArgumentsContainer<T> Container;
 
-		static_assert(std::is_base_of<Details::EventArguments, Container>::value,
+		static_assert(std::is_base_of<Detail::EventArguments, Container>::value,
 			"T is not a base class of 'EventArguments'.");
 
 		POMDOG_ASSERT(data);
@@ -80,7 +80,7 @@ public:
 	}
 
 private:
-	std::unique_ptr<Details::EventArguments> data;
+	std::unique_ptr<Detail::EventArguments> data;
 };
 
 }// namespace Pomdog

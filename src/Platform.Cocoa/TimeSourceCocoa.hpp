@@ -14,7 +14,7 @@
 #include "Pomdog/Application/TimePoint.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Cocoa {
 
 class TimeSourceCocoa {
@@ -28,7 +28,7 @@ private:
 };
 
 }// namespace Cocoa
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_TIMESOURCECOCOA_3820AACF_C0B9_4A13_A493_C1164C3C19E7_HPP)

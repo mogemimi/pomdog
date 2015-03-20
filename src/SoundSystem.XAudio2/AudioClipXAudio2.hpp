@@ -21,7 +21,7 @@ namespace Pomdog {
 
 enum class AudioChannels : std::uint8_t;
 
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 namespace XAudio2 {
 
@@ -43,7 +43,7 @@ private:
 
 }// namespace XAudio2
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_AUDIOCLIPXAUDIO2_26CA9C69_BA0C_455B_80AA_CC85E274D3A2_HPP)

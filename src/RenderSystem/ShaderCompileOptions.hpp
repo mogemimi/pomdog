@@ -16,7 +16,7 @@
 #include <string>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 enum class ShaderPipelineStage: std::uint8_t {
@@ -54,7 +54,7 @@ public:
 };
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SHADERCOMPILEOPTIONS_11A9FF1A_9BA1_431B_AE9E_BB99CD2AB5F9_HPP)

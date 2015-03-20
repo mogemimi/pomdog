@@ -39,7 +39,7 @@ public:
 
 
 private:
-	Details::Rendering::PrimitiveCommand command;
+	Detail::Rendering::PrimitiveCommand command;
 	Vector2 originPivot;
 	std::uint32_t dirtyFlags;
 };

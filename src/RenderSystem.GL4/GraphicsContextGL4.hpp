@@ -22,7 +22,7 @@ namespace Pomdog {
 
 class GameWindow;
 
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 
@@ -47,64 +47,64 @@ public:
 
 	~GraphicsContextGL4();
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void Clear(Color const& color) override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void Clear(ClearOptions options, Color const& color, float depth, std::int32_t stencil) override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void Present() override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void Draw(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount) override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void DrawIndexed(PrimitiveTopology primitiveTopology,
 		std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount) override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void DrawInstanced(PrimitiveTopology primitiveTopology,
 		std::uint32_t vertexCount, std::uint32_t instanceCount) override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
 		std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount) override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	GraphicsCapabilities GetCapabilities() const override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void SetViewport(Viewport const& viewport) override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	Rectangle GetScissorRectangle() const override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void SetScissorRectangle(Rectangle const& rectangle) override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void SetTexture(std::uint32_t index) override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void SetTexture(std::uint32_t index, Texture2D & texture) override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void SetTexture(std::uint32_t index, RenderTarget2D & texture) override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void SetRenderTarget() override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets) override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void SetEffectPass(std::shared_ptr<NativeEffectPass> const& nativeEffectPass) override;
 
-	///@copydoc Pomdog::Details::RenderSystem::NativeGraphicsContext
+	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& nativeConstantLayout) override;
 
 private:
@@ -120,7 +120,7 @@ private:
 
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_GRAPHICSCONTEXTGL4_1FF90EA8_4C6A_47DE_A12F_27CA348E4932_HPP)

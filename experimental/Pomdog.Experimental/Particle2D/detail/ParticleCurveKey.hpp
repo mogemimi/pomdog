@@ -12,7 +12,7 @@
 #endif
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Particles {
 
 template <typename T>
@@ -23,7 +23,7 @@ struct ParticleCurveKey {
 };
 
 }// namespace Particles
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PARTICLECURVEKEY_6EBF4743_2FC9_43B9_9760_0FE25327F8F4_HPP)

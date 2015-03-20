@@ -21,7 +21,7 @@
 #include "Pomdog/Math/Vector4.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Rendering {
 namespace {
 
@@ -416,5 +416,5 @@ std::uint32_t SpriteBatchRenderer::DrawCallCount() const
 }
 //-----------------------------------------------------------------------
 }// namespace Rendering
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

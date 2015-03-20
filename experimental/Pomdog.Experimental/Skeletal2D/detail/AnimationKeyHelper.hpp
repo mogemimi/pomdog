@@ -12,7 +12,7 @@
 #endif
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 
 namespace AnimationKeyHelper {
@@ -24,7 +24,7 @@ namespace AnimationKeyHelper {
 }
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ANIMATIONKEYHELPER_1AC67582_2235_4181_93A6_6E414A9520F5_HPP)

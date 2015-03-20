@@ -19,7 +19,7 @@ namespace Pomdog {
 
 class EffectParameter;
 
-namespace Details {
+namespace Detail {
 namespace EffectBinaryParameter {
 
 void POMDOG_EXPORT Get(EffectParameter const& effectParameter, bool & result);
@@ -63,7 +63,7 @@ void Set(EffectParameter & effectParameter, T const& value)
 }
 
 }// namespace EffectBinaryParameter
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_DETAIL_GRAPHICS_EFFECTBINARYPARAMETER_F5EA7DB2_2233_4221_973E_189E6ECFB1F0_HPP)

@@ -18,7 +18,7 @@
 #include <wrl/client.h>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 class SubsystemScheduler;
 
@@ -46,7 +46,7 @@ private:
 
 }// namespace DirectInput
 }// namespace InputSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_KEYBOARDDIRECTINPUT_C564C1C5_4C17_432D_8E0D_7673012F1D0D_HPP)

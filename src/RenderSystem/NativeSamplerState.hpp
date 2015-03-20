@@ -14,7 +14,7 @@
 #include <cstdint>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeGraphicsContext;
@@ -33,7 +33,7 @@ public:
 };
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_NATIVESAMPLERSTATE_4A6E443C_3960_4E46_BEFA_2BE77ABC1AFD_HPP)

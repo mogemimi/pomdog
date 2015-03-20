@@ -15,7 +15,7 @@
 #include <cstdint>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class ShaderBytecode;
@@ -31,7 +31,7 @@ struct ShaderCompiling final {
 
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SHADERCOMPILING_C56F5C9E_7275_478F_989F_35B4404DC08F_HPP)

@@ -15,14 +15,14 @@
 #include "Pomdog/Event/Signal.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 class SubsystemScheduler: Noncopyable {
 public:
 	Signal<void()> OnUpdate;
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SUBSYSTEMSCHEDULER_15398B34_AE1E_4AAA_BE2A_EC942196DC84_HPP)

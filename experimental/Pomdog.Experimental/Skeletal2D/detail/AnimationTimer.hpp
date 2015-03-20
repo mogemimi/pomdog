@@ -14,7 +14,7 @@
 #include "Pomdog.Experimental/Skeletal2D/AnimationTimeInterval.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 
 class AnimationTimer {
@@ -35,7 +35,7 @@ private:
 };
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ANIMATIONTIMER_A9EAE898_56A1_4928_B031_22D9304214E6_HPP)

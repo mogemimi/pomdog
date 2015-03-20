@@ -20,7 +20,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Particles {
 
 template <typename ForwardIterator, typename KeyType>
@@ -71,7 +71,7 @@ public:
 
 		ParticleCurveKey<T> key;
 		key.TimeSeconds = normalizedScale;
-		using Details::Particles::BinarySearchNearestPoints;
+		using Detail::Particles::BinarySearchNearestPoints;
 		auto pair = BinarySearchNearestPoints(std::begin(keys), std::end(keys), key);
 
 		if (pair.first == pair.second)
@@ -87,7 +87,7 @@ public:
 		POMDOG_ASSERT(frameTime != 0.0f);
 		auto amount =  diffTime / frameTime;
 
-		using Details::Particles::ParticleCurveLerp;
+		using Detail::Particles::ParticleCurveLerp;
 		return ParticleCurveLerp<T>()(pair.first->Value, pair.second->Value, amount);
 	}
 
@@ -108,7 +108,7 @@ public:
 };
 
 }// namespace Particles
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PARTICLEPARAMETERCURVE_75DE11C7_EA59_43B4_B41F_BFF98F8A2906_HPP)

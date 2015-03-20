@@ -38,13 +38,13 @@ public:
 	std::size_t InvocationCount() const;
 
 private:
-	std::shared_ptr<Details::SignalsAndSlots::SignalBody<void(Arguments...)>> body;
+	std::shared_ptr<Detail::SignalsAndSlots::SignalBody<void(Arguments...)>> body;
 };
 
 //-----------------------------------------------------------------------
 template <typename...Arguments>
 Signal<void(Arguments...)>::Signal()
-	: body(std::make_shared<Details::SignalsAndSlots::SignalBody<void(Arguments...)>>())
+	: body(std::make_shared<Detail::SignalsAndSlots::SignalBody<void(Arguments...)>>())
 {}
 //-----------------------------------------------------------------------
 template <typename...Arguments>

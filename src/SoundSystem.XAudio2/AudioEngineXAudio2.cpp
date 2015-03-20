@@ -22,7 +22,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 namespace XAudio2 {
 namespace {
@@ -290,5 +290,5 @@ IXAudio2* AudioEngineXAudio2::XAudio2Engine() const
 //-----------------------------------------------------------------------
 }// namespace XAudio2
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

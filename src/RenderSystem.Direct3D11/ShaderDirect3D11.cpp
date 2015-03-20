@@ -13,7 +13,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
@@ -91,5 +91,5 @@ template class ShaderDirect3D11<ID3D11PixelShader>;
 //-----------------------------------------------------------------------
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

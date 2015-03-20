@@ -18,7 +18,7 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 
 class RotationKeyframe {
@@ -45,7 +45,7 @@ private:
 };
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ROTATIONTRACK_96A9D69A_686F_41DF_B6CB_8AB551DD12D5_HPP)

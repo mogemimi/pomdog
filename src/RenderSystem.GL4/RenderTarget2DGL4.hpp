@@ -19,7 +19,7 @@
 #include "Pomdog/Utility/Optional.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 
@@ -48,7 +48,7 @@ private:
 
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_RENDERTARGET2DGL4_0C6A48A1_E6BF_4896_9EB9_9F9A4082ABDF_HPP)

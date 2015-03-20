@@ -10,7 +10,7 @@
 #include <limits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 template <typename T>
 FloatingPointMatrix2x2<T> const FloatingPointMatrix2x2<T>::Identity = {
@@ -224,5 +224,5 @@ template class FloatingPointMatrix2x2<long double>;
 template FloatingPointMatrix2x2<long double> operator*<long double>(long double, FloatingPointMatrix2x2<long double> const&);
 #endif
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

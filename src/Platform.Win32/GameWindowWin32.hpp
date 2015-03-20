@@ -20,7 +20,7 @@ namespace Pomdog {
 
 class PresentationParameters;
 
-namespace Details {
+namespace Detail {
 namespace Win32 {
 
 class GameWindowWin32 final: public GameWindow {
@@ -78,7 +78,7 @@ private:
 };
 
 }// namespace Win32
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SRC_WIN32_GAMEWINDOWWIN32_2EC902FC_1DBE_4A3C_BCF0_C25FDDBBA5D7_HPP)

@@ -19,7 +19,7 @@
 #include <type_traits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 ///@~English
 /// @brief vector in three-dimensional space.
@@ -193,7 +193,7 @@ template <typename T>
 FloatingPointVector3<T> POMDOG_EXPORT
 operator*(T scaleFactor, FloatingPointVector3<T> const& vector);
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_MATH_DETAIL_FLOATINGPOINTVECTOR3_D6230CBF_0247_4B72_BDB8_C7FD3C47A0CB_HPP)

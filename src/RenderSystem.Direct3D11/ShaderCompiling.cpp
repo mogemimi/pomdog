@@ -19,7 +19,7 @@
 #include <fstream>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
@@ -216,5 +216,5 @@ Microsoft::WRL::ComPtr<ID3DBlob> ShaderCompiling::CompileShader(
 
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

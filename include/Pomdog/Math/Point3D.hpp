@@ -16,7 +16,7 @@
 
 namespace Pomdog {
 
-using Point3D = Details::Coordinate3D<std::int32_t>;
+using Point3D = Detail::Coordinate3D<std::int32_t>;
 
 }// namespace Pomdog
 

@@ -9,7 +9,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Win32 {
 
 TimeSourceWin32::TimeSourceWin32()
@@ -32,5 +32,5 @@ TimePoint TimeSourceWin32::Now() const
 }
 
 }// namespace Win32
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

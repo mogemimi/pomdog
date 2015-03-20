@@ -17,7 +17,7 @@
 #include <cstddef>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 template <class T>
 class EventComponentHashCode {
@@ -66,7 +66,7 @@ public:
 	T data;
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_EVENT_DETAIL_EVENTARGUMENTS_9EA2B1CE_A235_4143_AE93_18447FB0684A_HPP)

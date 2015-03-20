@@ -8,7 +8,7 @@
 #include <typeinfo>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Rendering {
 //-----------------------------------------------------------------------
 std::type_index SpriteCommand::TypeIndex() const
@@ -18,5 +18,5 @@ std::type_index SpriteCommand::TypeIndex() const
 }
 //-----------------------------------------------------------------------
 }// namespace Rendering
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

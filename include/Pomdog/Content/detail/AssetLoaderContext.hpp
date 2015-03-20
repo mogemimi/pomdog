@@ -20,7 +20,7 @@ namespace Pomdog {
 
 class GraphicsDevice;
 
-namespace Details {
+namespace Detail {
 
 class POMDOG_EXPORT AssetLoaderContext {
 public:
@@ -30,7 +30,7 @@ public:
 	std::ifstream OpenStream(std::string const& assetName) const;
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ASSETLOADERCONTEXT_E4996CA2_38E7_45F5_BBED_9DC401425E70_HPP)

@@ -39,8 +39,8 @@ static std::ifstream::pos_type ChunkSize(std::ifstream & stream, MagicaVoxel::Vo
 VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& assetName)
 {
 	using MagicaVoxel::VoxChunkHeader;
-	using Details::BinaryReader;
-	using Details::MakeFourCC;
+	using Detail::BinaryReader;
+	using Detail::MakeFourCC;
 
 	constexpr std::int32_t MagicaVoxelVersion = 150;
 	constexpr auto fourCC = MakeFourCC('V', 'O', 'X', ' ');

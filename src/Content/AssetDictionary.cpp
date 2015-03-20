@@ -7,7 +7,7 @@
 #include "Pomdog/Content/detail/AssetDictionary.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 //-----------------------------------------------------------------------
 AssetDictionary::AssetDictionary() = default;
 //-----------------------------------------------------------------------
@@ -18,5 +18,5 @@ void AssetDictionary::Unload()
 	assets.clear();
 }
 //-----------------------------------------------------------------------
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

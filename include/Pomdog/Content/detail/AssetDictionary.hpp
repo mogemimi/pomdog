@@ -22,7 +22,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 class AssetLoaderContext;
 
@@ -70,7 +70,7 @@ public:
 	void Unload();
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ASSETDICTIONARY_8088231B_F800_4D65_A75E_0160C4ED42B8_HPP)

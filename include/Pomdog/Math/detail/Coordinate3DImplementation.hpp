@@ -14,7 +14,7 @@
 //#include "../Coordinate3D.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 template <typename T>
 Coordinate3D<T> const Coordinate3D<T>::Zero(0, 0, 0);
@@ -142,7 +142,7 @@ Coordinate3D<T> operator/(T scaleFactor, Coordinate3D<T> const& coordinate)
 		scaleFactor / coordinate.Z);
 }
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_MATH_DETAIL_COORDINATE3DIMPLEMENTATION_4B7428C8_1C28_4604_949D_0B5D766C171C_HPP)

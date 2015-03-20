@@ -11,7 +11,7 @@
 #include <array>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
@@ -91,5 +91,5 @@ void SamplerStateDirect3D11::Apply(NativeGraphicsContext & graphicsContext, std:
 //-----------------------------------------------------------------------
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

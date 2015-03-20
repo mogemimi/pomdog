@@ -14,7 +14,7 @@
 #include <functional>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SignalsAndSlots {
 
 template <typename Function>
@@ -24,7 +24,7 @@ template <typename Function>
 class SignalBody;
 
 }// namespace SignalsAndSlots
-}// namespace Details
+}// namespace Detail
 
 class Event;
 class EventConnection;

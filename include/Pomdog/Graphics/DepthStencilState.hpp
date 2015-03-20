@@ -17,13 +17,13 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeDepthStencilState;
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 
 ///@~Japanese
 /// @brief 深度ステンシルステートを定義します。
@@ -59,10 +59,10 @@ public:
 	CreateNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 public:
-	Details::RenderSystem::NativeDepthStencilState* NativeDepthStencilState();
+	Detail::RenderSystem::NativeDepthStencilState* NativeDepthStencilState();
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeDepthStencilState> nativeDepthStencilState;
+	std::unique_ptr<Detail::RenderSystem::NativeDepthStencilState> nativeDepthStencilState;
 	DepthStencilDescription description;
 };
 

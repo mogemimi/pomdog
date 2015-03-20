@@ -25,7 +25,7 @@ void PrimitiveCommandProcessor::Begin(GraphicsContext & graphicsContext)
 //-----------------------------------------------------------------------
 void PrimitiveCommandProcessor::Draw(GraphicsContext & graphicsContext, RenderCommand & command)
 {
-	using Details::Rendering::PrimitiveCommand;
+	using Detail::Rendering::PrimitiveCommand;
 
 	auto & primitiveCommand = static_cast<PrimitiveCommand &>(command);
 	primitiveBatch.DrawRectangle(primitiveCommand.transform,

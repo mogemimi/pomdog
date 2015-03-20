@@ -25,7 +25,7 @@ void SpriteCommandProcessor::Begin(GraphicsContext & graphicsContext)
 //-----------------------------------------------------------------------
 void SpriteCommandProcessor::Draw(GraphicsContext & graphicsContext, RenderCommand & command)
 {
-	using Details::Rendering::SpriteCommand;
+	using Detail::Rendering::SpriteCommand;
 
 	auto & spriteCommand = static_cast<SpriteCommand &>(command);
 	spriteBatch.Draw(spriteCommand.texture, spriteCommand.transform,

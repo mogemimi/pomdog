@@ -18,13 +18,13 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeEffectReflection;
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 
 ///@~Japanese
 /// @brief エフェクトリフレクションです。
@@ -42,10 +42,10 @@ public:
 	std::vector<EffectConstantDescription> GetConstantBuffers() const;
 
 public:
-	Details::RenderSystem::NativeEffectReflection* NativeEffectReflection();
+	Detail::RenderSystem::NativeEffectReflection* NativeEffectReflection();
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeEffectReflection> nativeEffectReflection;
+	std::unique_ptr<Detail::RenderSystem::NativeEffectReflection> nativeEffectReflection;
 };
 
 }// namespace Pomdog

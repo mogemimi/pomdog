@@ -19,13 +19,13 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeTexture2D;
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 
 ///@~Japanese
 /// @brief 2 次元テクスチャです。
@@ -78,10 +78,10 @@ public:
 	void SetData(void const* pixelData);
 
 public:
-	Details::RenderSystem::NativeTexture2D* NativeTexture2D();
+	Detail::RenderSystem::NativeTexture2D* NativeTexture2D();
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeTexture2D> nativeTexture2D;
+	std::unique_ptr<Detail::RenderSystem::NativeTexture2D> nativeTexture2D;
 	std::int32_t pixelWidth;
 	std::int32_t pixelHeight;
 	std::uint32_t levelCount;

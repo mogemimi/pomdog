@@ -17,7 +17,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 template <typename T, class Tag>
 class POMDOG_EXPORT Tagged final {
@@ -71,14 +71,14 @@ Tagged<T, Tag> MakeTagged(Arguments &&... arguments)
 	return Tagged<T, Tag>(std::forward<T>(arguments)...);
 }
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 namespace std {
 
 template <typename T, class U>
-struct hash<Pomdog::Details::Tagged<T, U>> {
-	std::size_t operator()(Pomdog::Details::Tagged<T, U> const& key)
+struct hash<Pomdog::Detail::Tagged<T, U>> {
+	std::size_t operator()(Pomdog::Detail::Tagged<T, U> const& key)
 	{
 		return std::hash<T>()(key.value);
 	}

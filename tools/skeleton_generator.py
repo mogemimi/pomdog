@@ -190,7 +190,7 @@ def CreateClassHeader(identifier_without_directory):
            return_code +\
            CreateIncludeGuardSection(
                identifier_without_directory,
-               CreateNamespace("Pomdog", CreateNamespace("Details")) + return_code) +\
+               CreateNamespace("Pomdog", CreateNamespace("Detail")) + return_code) +\
            return_code
 
 
@@ -200,7 +200,7 @@ def CreateImplement(identifier_without_directory):
            return_code +\
 		   CreateIncludeHeader(identifier_without_directory) +\
 		   return_code +\
-           CreateNamespace("Pomdog", CreateNamespace("Details")) +\
+           CreateNamespace("Pomdog", CreateNamespace("Detail")) +\
            return_code
 
 

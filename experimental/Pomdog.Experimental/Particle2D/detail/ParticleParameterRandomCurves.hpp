@@ -18,7 +18,7 @@
 #include <limits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Particles {
 
 template <typename T>
@@ -45,7 +45,7 @@ public:
 
 	T Compute(float normalizedTime, float amount) const override
 	{
-		return Details::Particles::ParticleCurveLerp<T>()(
+		return Detail::Particles::ParticleCurveLerp<T>()(
 			curve1.Compute(normalizedTime), curve2.Compute(normalizedTime), amount);
 	}
 
@@ -56,7 +56,7 @@ public:
 };
 
 }// namespace Particles
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PARTICLEPARAMETERRANDOMCURVES_BD1EDD05_8FD4_44FB_A7F3_720E3833A351_HPP)

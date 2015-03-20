@@ -12,7 +12,7 @@
 #endif
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeGraphicsContext;
@@ -31,7 +31,7 @@ public:
 };
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_NATIVERASTERIZERSTATE_F1119CE4_3026_4F9A_89AE_C5B035A87704_HPP)

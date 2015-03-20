@@ -7,7 +7,7 @@
 #include "AnimationTimer.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 //-----------------------------------------------------------------------
 AnimationTimer::AnimationTimer()
@@ -50,5 +50,5 @@ bool AnimationTimer::IsPlaying() const
 }
 //-----------------------------------------------------------------------
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

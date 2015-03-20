@@ -17,13 +17,13 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeSamplerState;
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 
 class GraphicsDevice;
 
@@ -80,10 +80,10 @@ public:
 	CreatePointWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 public:
-	Details::RenderSystem::NativeSamplerState* NativeSamplerState();
+	Detail::RenderSystem::NativeSamplerState* NativeSamplerState();
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeSamplerState> nativeSamplerState;
+	std::unique_ptr<Detail::RenderSystem::NativeSamplerState> nativeSamplerState;
 	SamplerDescription description;
 };
 

@@ -16,7 +16,7 @@
 #include "../Utility/Noncopyable.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
 
@@ -35,7 +35,7 @@ private:
 
 }// namespace OpenAL
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_AUDIOENGINEAL_4B9A3A11_27A6_4393_A5FF_F10183A42D92_HPP)

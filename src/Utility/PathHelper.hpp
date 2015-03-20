@@ -14,13 +14,13 @@
 #include <string>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 struct PathHelper {
 	static std::string Join(std::string const& path1, std::string const& path2);
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PATHHELPER_BDBB516A_B1C9_42C1_8E30_64062CC7F84E_HPP)

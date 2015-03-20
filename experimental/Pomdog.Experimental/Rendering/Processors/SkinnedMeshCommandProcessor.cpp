@@ -74,7 +74,7 @@ void SkinnedMeshCommandProcessor::Begin(GraphicsContext & graphicsContext)
 //-----------------------------------------------------------------------
 void SkinnedMeshCommandProcessor::Draw(GraphicsContext & graphicsContext, RenderCommand & command)
 {
-	using Details::Rendering::SkinnedMeshCommand;
+	using Detail::Rendering::SkinnedMeshCommand;
 
 	auto & skinnedMeshCommand = static_cast<SkinnedMeshCommand &>(command);
 

@@ -87,7 +87,7 @@ BlendState::CreateOpaque(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	return std::make_shared<BlendState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeBlendState* BlendState::NativeBlendState()
+Detail::RenderSystem::NativeBlendState* BlendState::NativeBlendState()
 {
 	return nativeBlendState.get();
 }

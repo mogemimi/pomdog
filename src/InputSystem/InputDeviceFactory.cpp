@@ -10,7 +10,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace InputSystem {
 //-----------------------------------------------------------------------
 InputDeviceFactory::~InputDeviceFactory() = default;
@@ -58,5 +58,5 @@ void InputDeviceFactory::AddCreator(std::unique_ptr<MouseCreator> && creatorIn)
 }
 //-----------------------------------------------------------------------
 }// namespace InputSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

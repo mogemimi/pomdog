@@ -14,16 +14,16 @@
 #include "detail/TaggedArithmetic.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Tags {
 
 struct RadianTag {};
 
 }// namespace Tags
-}// namespace Details
+}// namespace Detail
 
 template <typename T>
-using Radian = Details::TaggedArithmetic<T, Details::Tags::RadianTag>;
+using Radian = Detail::TaggedArithmetic<T, Detail::Tags::RadianTag>;
 
 }// namespace Pomdog
 

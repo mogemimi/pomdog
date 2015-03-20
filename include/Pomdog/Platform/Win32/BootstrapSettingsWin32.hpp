@@ -14,7 +14,7 @@
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Win32 {
 
 struct BootstrapSettingsWin32 {
@@ -28,7 +28,7 @@ struct BootstrapSettingsWin32 {
 };
 
 }// namespace Win32
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_BOOTSTRAPSETTINGSWIN32_F058A6BA_63F0_4807_8B2B_2EA2D8FB512A_HPP)

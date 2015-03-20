@@ -45,7 +45,7 @@ public:
 	void Tick();
 
 private:
-	typedef Details::SignalsAndSlots::SignalBody<void(Event const&)> SignalType;
+	typedef Detail::SignalsAndSlots::SignalBody<void(Event const&)> SignalType;
 
 	std::vector<Event> events;
 	std::shared_ptr<SignalType> signalBody;

@@ -9,7 +9,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
 //-----------------------------------------------------------------------
@@ -34,5 +34,5 @@ void AudioEngineAL::MasterVolume(float volume)
 //-----------------------------------------------------------------------
 }// namespace OpenAL
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

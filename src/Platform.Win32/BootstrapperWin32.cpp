@@ -16,7 +16,7 @@
 #include "Pomdog/Logging/Log.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Win32 {
 //-----------------------------------------------------------------------
 BootstrapperWin32::BootstrapperWin32(BootstrapSettingsWin32 const& settingsIn)
@@ -44,10 +44,10 @@ void BootstrapperWin32::Run(std::function<void(std::shared_ptr<GameHost> const& 
 	auto gameWindow = std::make_shared<GameWindowWin32>(settings.HInstance, settings.CmdShow, settings.Icon, settings.IconSmall,
 		useOpenGL, systemEventDispatcher, presentationParameters);
 
-	auto inputDeviceFactory = std::make_unique<Details::InputSystem::InputDeviceFactory>();
+	auto inputDeviceFactory = std::make_unique<Detail::InputSystem::InputDeviceFactory>();
 
 	{
-		using namespace Details::InputSystem::DirectInput;
+		using namespace Detail::InputSystem::DirectInput;
 		auto deviceContext = std::make_shared<DeviceContextDirectInput>(
 			settings.HInstance, gameWindow->NativeWindowHandle());
 
@@ -69,5 +69,5 @@ void BootstrapperWin32::Run(std::function<void(std::shared_ptr<GameHost> const& 
 }
 //-----------------------------------------------------------------------
 }// namespace Win32
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

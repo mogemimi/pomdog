@@ -37,10 +37,10 @@ public:
 	/// @param volume 0.0f（無音） ~ 1.0f（音量の最大値） の範囲でボリュームを指定してください。
 	void MasterVolume(float volume);
 
-	Details::SoundSystem::NativeAudioEngine* NativeAudioEngine();
+	Detail::SoundSystem::NativeAudioEngine* NativeAudioEngine();
 
 private:
-	std::unique_ptr<Details::SoundSystem::NativeAudioEngine> nativeAudioEngine;
+	std::unique_ptr<Detail::SoundSystem::NativeAudioEngine> nativeAudioEngine;
 };
 
 }// namespace Pomdog

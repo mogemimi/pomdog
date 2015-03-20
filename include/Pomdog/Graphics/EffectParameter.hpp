@@ -21,13 +21,13 @@
 #include <type_traits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeConstantBuffer;
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 
 ///@~Japanese
 /// @brief エフェクトパラメータです。
@@ -53,7 +53,7 @@ public:
 	{
 		static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
 		T result;
-		Details::EffectBinaryParameter::Get<T>(*this, result);
+		Detail::EffectBinaryParameter::Get<T>(*this, result);
 		return std::move(result);
 	}
 
@@ -69,7 +69,7 @@ public:
 	void SetValue(T const& value)
 	{
 		static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
-		Details::EffectBinaryParameter::Set(*this, value);
+		Detail::EffectBinaryParameter::Set(*this, value);
 	}
 
 	///@~Japanese
@@ -78,7 +78,7 @@ public:
 	void SetValue(T const* data, std::uint32_t count)
 	{
 		static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
-		Details::EffectBinaryParameter::Set(*this, data, count);
+		Detail::EffectBinaryParameter::Set(*this, data, count);
 	}
 
 	///@~Japanese
@@ -88,10 +88,10 @@ public:
 	void SetValue(void const* data, std::uint32_t byteWidth);
 
 public:
-	Details::RenderSystem::NativeConstantBuffer* NativeConstantBuffer();
+	Detail::RenderSystem::NativeConstantBuffer* NativeConstantBuffer();
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeConstantBuffer> nativeConstantBuffer;
+	std::unique_ptr<Detail::RenderSystem::NativeConstantBuffer> nativeConstantBuffer;
 };
 
 }// namespace Pomdog

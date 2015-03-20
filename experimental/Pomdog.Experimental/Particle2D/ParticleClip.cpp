@@ -7,8 +7,8 @@
 #include "ParticleClip.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

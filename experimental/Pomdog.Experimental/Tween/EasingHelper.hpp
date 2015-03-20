@@ -17,7 +17,7 @@
 #include <cmath>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Easings {
 
 template <typename T, T(*Function)(T)>
@@ -195,20 +195,20 @@ template <typename T>
 using EaseSine = Ease<T, Sine<T>>;
 
 }// namespace Easings
-}// namespace Details
+}// namespace Detail
 
 namespace Easings {
 
-using EaseBack = Details::Easings::EaseBack<float>;
-using EaseBounce = Details::Easings::EaseBounce<float>;
-using EaseCircle = Details::Easings::EaseCircle<float>;
-using EaseCubic = Details::Easings::EaseCubic<float>;
-using EaseElastic = Details::Easings::EaseElastic<float>;
-using EaseExponential = Details::Easings::EaseExponential<float>;
-using EaseQuadratic = Details::Easings::EaseQuadratic<float>;
-using EaseQuartic = Details::Easings::EaseQuartic<float>;
-using EaseQuintic = Details::Easings::EaseQuintic<float>;
-using EaseSine = Details::Easings::EaseSine<float>;
+using EaseBack = Detail::Easings::EaseBack<float>;
+using EaseBounce = Detail::Easings::EaseBounce<float>;
+using EaseCircle = Detail::Easings::EaseCircle<float>;
+using EaseCubic = Detail::Easings::EaseCubic<float>;
+using EaseElastic = Detail::Easings::EaseElastic<float>;
+using EaseExponential = Detail::Easings::EaseExponential<float>;
+using EaseQuadratic = Detail::Easings::EaseQuadratic<float>;
+using EaseQuartic = Detail::Easings::EaseQuartic<float>;
+using EaseQuintic = Detail::Easings::EaseQuintic<float>;
+using EaseSine = Detail::Easings::EaseSine<float>;
 
 }// namespace Easings
 }// namespace Pomdog

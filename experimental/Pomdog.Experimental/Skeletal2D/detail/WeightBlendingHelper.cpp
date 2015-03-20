@@ -10,7 +10,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 
 void WeightBlendingHelper::Lerp(std::vector<JointPose> const& sourcePoses1,
@@ -37,5 +37,5 @@ void WeightBlendingHelper::Lerp(std::vector<JointPose> const& sourcePoses1,
 }
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

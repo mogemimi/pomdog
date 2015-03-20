@@ -15,19 +15,19 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 class GraphicsDevice::Impl {
 public:
-	explicit Impl(std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> && device);
+	explicit Impl(std::unique_ptr<Detail::RenderSystem::NativeGraphicsDevice> && device);
 
 public:
-	Details::BuiltinShaderPool shaderPool;
+	Detail::BuiltinShaderPool shaderPool;
 
-	std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> nativeGraphicsDevice;
+	std::unique_ptr<Detail::RenderSystem::NativeGraphicsDevice> nativeGraphicsDevice;
 };
 //-----------------------------------------------------------------------
-GraphicsDevice::Impl::Impl(std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> && device)
+GraphicsDevice::Impl::Impl(std::unique_ptr<Detail::RenderSystem::NativeGraphicsDevice> && device)
 	: nativeGraphicsDevice(std::move(device))
 {}
 //-----------------------------------------------------------------------
-GraphicsDevice::GraphicsDevice(std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> && device)
+GraphicsDevice::GraphicsDevice(std::unique_ptr<Detail::RenderSystem::NativeGraphicsDevice> && device)
 	: impl(std::make_unique<Impl>(std::move(device)))
 {}
 //-----------------------------------------------------------------------
@@ -40,13 +40,13 @@ ShaderLanguage GraphicsDevice::GetSupportedLanguage() const
 	return impl->nativeGraphicsDevice->GetSupportedLanguage();
 }
 //-----------------------------------------------------------------------
-Details::BuiltinShaderPool & GraphicsDevice::ShaderPool()
+Detail::BuiltinShaderPool & GraphicsDevice::ShaderPool()
 {
 	POMDOG_ASSERT(impl);
 	return impl->shaderPool;
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeGraphicsDevice* GraphicsDevice::NativeGraphicsDevice()
+Detail::RenderSystem::NativeGraphicsDevice* GraphicsDevice::NativeGraphicsDevice()
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeGraphicsDevice);

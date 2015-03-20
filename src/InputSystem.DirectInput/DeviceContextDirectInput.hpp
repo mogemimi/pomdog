@@ -17,7 +17,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace InputSystem {
 namespace DirectInput {
 
@@ -38,7 +38,7 @@ private:
 
 }// namespace DirectInput
 }// namespace InputSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_DEVICECONTEXTDIRECTINPUT_A3771E91_2E13_44AD_B199_10ECE47A646E_HPP)

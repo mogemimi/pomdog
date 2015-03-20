@@ -15,7 +15,7 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeEffectReflection {
@@ -30,7 +30,7 @@ public:
 };
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_NATIVEEFFECTREFLECTION_F923B192_157E_4D4E_BBBF_300ABEA0485A_HPP)

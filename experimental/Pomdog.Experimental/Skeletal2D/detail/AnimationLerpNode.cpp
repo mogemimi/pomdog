@@ -14,7 +14,7 @@
 #include <algorithm>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 //-----------------------------------------------------------------------
 AnimationLerpNode::AnimationLerpNode(std::unique_ptr<AnimationNode> && blendNode1In,
@@ -44,7 +44,7 @@ std::unique_ptr<AnimationNode> const& AnimationLerpNode::B() const
 }
 //-----------------------------------------------------------------------
 void AnimationLerpNode::Calculate(AnimationTimeInterval const& time,
-	Details::Skeletal2D::AnimationGraphWeightCollection const& weights,
+	Detail::Skeletal2D::AnimationGraphWeightCollection const& weights,
 	Skeleton const& skeleton, SkeletonPose & skeletonPose) const
 {
 	auto sourcePose1 = SkeletonPose::CreateBindPose(skeleton);
@@ -57,10 +57,10 @@ void AnimationLerpNode::Calculate(AnimationTimeInterval const& time,
 	nodeB->Calculate(time, weights, skeleton, sourcePose2);
 
 	auto weight = weights.At(weightIndex).GetFloat();
-	using Details::Skeletal2D::WeightBlendingHelper;
+	using Detail::Skeletal2D::WeightBlendingHelper;
 	WeightBlendingHelper::Lerp(sourcePose1.JointPoses, sourcePose2.JointPoses, weight, skeletonPose.JointPoses);
 }
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

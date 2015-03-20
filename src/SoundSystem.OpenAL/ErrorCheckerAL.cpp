@@ -13,7 +13,7 @@
 #include <sstream>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
 namespace {
@@ -64,5 +64,5 @@ void ErrorCheckerAL::CheckError(char const* command, char const* filename, int l
 //-----------------------------------------------------------------------
 }// namespace OpenAL
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

@@ -16,13 +16,13 @@
 #include <cstdint>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace VertexElementHelper {
 
 std::uint8_t POMDOG_EXPORT ToByteSize(VertexElementFormat format);
 
 }// namespace VertexElementHelper
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_VERTEXELEMENTHELPER_8D22B0DB_DF29_466C_BD6B_7A095650D28F_HPP)

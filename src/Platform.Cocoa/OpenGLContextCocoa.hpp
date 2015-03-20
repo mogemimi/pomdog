@@ -17,7 +17,7 @@
 @class NSOpenGLContext, NSOpenGLPixelFormat;
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Cocoa {
 
 class OpenGLContextCocoa final: public RenderSystem::GL4::OpenGLContext {
@@ -45,7 +45,7 @@ private:
 };
 
 }// namespace Cocoa
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_OPENGLCONTEXTCOCOA_306ECA78_18CF_4A87_A039_0C823668622C_HPP)

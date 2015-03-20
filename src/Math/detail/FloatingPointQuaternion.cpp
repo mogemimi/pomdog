@@ -16,7 +16,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 template <typename T>
 FloatingPointQuaternion<T> const FloatingPointQuaternion<T>::Identity(0, 0, 0, 1);
@@ -440,5 +440,5 @@ template class FloatingPointQuaternion<long double>;
 template FloatingPointQuaternion<long double> operator*<long double>(long double, FloatingPointQuaternion<long double> const&);
 #endif
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

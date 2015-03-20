@@ -17,7 +17,7 @@ namespace Pomdog {
 
 enum class SurfaceFormat : std::uint8_t;
 
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 struct SurfaceFormatHelper final {
@@ -25,7 +25,7 @@ struct SurfaceFormatHelper final {
 };
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SURFACEFORMATHELPER_BDAD06C9_A6EC_4A3C_A1AA_A82A6C9B0B1F_HPP)

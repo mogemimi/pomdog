@@ -19,8 +19,8 @@
 
 @interface CocoaGameViewDelegate : NSResponder
 
-- (id)initWithEventDispatcher:(std::shared_ptr<Pomdog::Details::SystemEventDispatcher>)dispatcher;
-- (void)resetMouse:(std::shared_ptr<Pomdog::Details::Cocoa::MouseCocoa>)mouse;
+- (id)initWithEventDispatcher:(std::shared_ptr<Pomdog::Detail::SystemEventDispatcher>)dispatcher;
+- (void)resetMouse:(std::shared_ptr<Pomdog::Detail::Cocoa::MouseCocoa>)mouse;
 - (void)resetMouse;
 
 @property (nonatomic, retain) NSView* view;

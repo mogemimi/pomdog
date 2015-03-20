@@ -89,7 +89,7 @@ public:
 	void Volume(float volume);
 
 private:
-	std::unique_ptr<Details::SoundSystem::NativeSoundEffect> nativeSoundEffect;
+	std::unique_ptr<Detail::SoundSystem::NativeSoundEffect> nativeSoundEffect;
 	float pitch;
 	float volume;
 	SoundState state;

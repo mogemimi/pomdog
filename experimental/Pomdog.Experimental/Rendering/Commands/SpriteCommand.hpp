@@ -17,7 +17,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Rendering {
 
 class SpriteCommand final: public RenderCommand {
@@ -39,7 +39,7 @@ public:
 };
 
 }// namespace Rendering
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SPRITECOMMAND_8EB48EFB_54D7_4AF1_AB24_B8607C44B642_HPP)

@@ -15,7 +15,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 
@@ -26,7 +26,7 @@ struct DXGIFormatHelper final {
 
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_DXGIFORMATHELPER_9FB57D4A_D20F_4F3C_8A2F_DA0696D56CD1_HPP)

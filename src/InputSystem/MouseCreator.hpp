@@ -17,13 +17,13 @@ namespace Pomdog {
 
 class Mouse;
 
-namespace Details {
+namespace Detail {
 namespace InputSystem {
 
 using MouseCreator = InputDeviceCreator<Mouse>;
 
 }// namespace InputSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_MOUSECREATOR_CE792896_2613_477F_A03D_327BE3F1A650_HPP)

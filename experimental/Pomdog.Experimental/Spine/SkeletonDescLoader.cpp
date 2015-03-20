@@ -102,7 +102,7 @@ static void ReadJsonMember(rapidjson::Value const& object, char const* memberNam
 //-----------------------------------------------------------------------
 template <typename T, T Denom>
 static void ReadJsonMember(rapidjson::Value const& object, char const* memberName,
-	Details::Skeletal2D::CompressedFloat<T, Denom> & output)
+	Detail::Skeletal2D::CompressedFloat<T, Denom> & output)
 {
 	if (!object.HasMember(memberName)) {
 		return;

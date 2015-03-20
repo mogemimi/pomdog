@@ -16,7 +16,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 
@@ -35,7 +35,7 @@ private:
 
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_RASTERIZERSTATEDIRECT3D11_35B2E2F8_2BA8_4906_A6F9_D2273F71F45C_HPP)

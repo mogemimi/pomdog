@@ -11,7 +11,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 //-----------------------------------------------------------------------
@@ -51,5 +51,5 @@ ID3D11Buffer* ConstantBufferDirect3D11::NativeBuffer() const
 //-----------------------------------------------------------------------
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

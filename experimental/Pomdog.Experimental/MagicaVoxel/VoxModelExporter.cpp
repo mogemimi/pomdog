@@ -29,7 +29,7 @@ static std::string Error(std::string const& assetName, char const* description)
 //-----------------------------------------------------------------------
 void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string const& filePath)
 {
-	using Details::MakeFourCC;
+	using Detail::MakeFourCC;
 
 	constexpr std::int32_t MagicaVoxelVersion = 150;
 	constexpr auto fourCC = MakeFourCC('V', 'O', 'X', ' ');

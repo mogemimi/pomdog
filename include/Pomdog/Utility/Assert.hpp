@@ -19,7 +19,7 @@
 #endif
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Assertion {
 
 //inline void ReportAssertionFailure(char const* expression,
@@ -58,7 +58,7 @@ inline constexpr bool ConstexprAssert(bool condition,
 			}\
 		} while(false)
 #	define POMDOG_CONSTEXPR_ASSERT(expression) \
-		static_cast<void>(Pomdog::Details::Assertion::ConstexprAssert(\
+		static_cast<void>(Pomdog::Detail::Assertion::ConstexprAssert(\
 			static_cast<bool>(expression), #expression, __FILE__, __LINE__))
 #elif defined(DEBUG) && defined(_MSC_VER)
 #	// Debug mode under Visual Studio
@@ -94,7 +94,7 @@ inline constexpr bool ConstexprAssert(bool condition,
 #	define POMDOG_CONSTEXPR_ASSERT(expression) static_cast<void const>(0)
 #endif
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ASSERT_7D111D58_5951_4927_A438_EF5F9E62DDFE_HPP)

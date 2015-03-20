@@ -30,7 +30,7 @@ EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 //-----------------------------------------------------------------------
 EffectPass::~EffectPass() = default;
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeEffectPass* EffectPass::NativeEffectPass()
+Detail::RenderSystem::NativeEffectPass* EffectPass::NativeEffectPass()
 {
 	return nativeEffectPass.get();
 }

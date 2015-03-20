@@ -11,7 +11,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
@@ -146,5 +146,5 @@ void HardwareBufferHelper::GetData(ID3D11Buffer* buffer, ID3D11DeviceContext* de
 //-----------------------------------------------------------------------
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

@@ -16,7 +16,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 class BuiltinShaderPool;
 
@@ -25,7 +25,7 @@ namespace RenderSystem {
 class NativeGraphicsDevice;
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 
 class POMDOG_EXPORT GraphicsDevice {
 public:
@@ -33,17 +33,17 @@ public:
 	GraphicsDevice(GraphicsDevice const&) = delete;
 	GraphicsDevice & operator=(GraphicsDevice const&) = delete;
 
-	explicit GraphicsDevice(std::unique_ptr<Details::RenderSystem::NativeGraphicsDevice> && nativeDevice);
+	explicit GraphicsDevice(std::unique_ptr<Detail::RenderSystem::NativeGraphicsDevice> && nativeDevice);
 
 	~GraphicsDevice();
 
 	ShaderLanguage GetSupportedLanguage() const;
 
-	Details::BuiltinShaderPool & ShaderPool();
+	Detail::BuiltinShaderPool & ShaderPool();
 
 public:
 	///@brief internal method
-	Details::RenderSystem::NativeGraphicsDevice* NativeGraphicsDevice();
+	Detail::RenderSystem::NativeGraphicsDevice* NativeGraphicsDevice();
 
 private:
 	class Impl;

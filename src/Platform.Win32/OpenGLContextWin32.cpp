@@ -14,7 +14,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Win32 {
 namespace {
 
@@ -165,5 +165,5 @@ void OpenGLContextWin32::SwapBuffers()
 }
 //-----------------------------------------------------------------------
 }// namespace Win32
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

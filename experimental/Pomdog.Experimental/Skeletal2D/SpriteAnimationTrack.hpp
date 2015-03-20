@@ -20,7 +20,7 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 
 class SpriteKeyframe {
@@ -48,7 +48,7 @@ private:
 };
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SPRITEANIMATIONTRACK_FC96976A_7E94_44C6_87DA_EC4C3C372204_HPP)

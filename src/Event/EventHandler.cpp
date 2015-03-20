@@ -11,7 +11,7 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 EventHandler::EventHandler()
-	: signalBody(std::make_shared<Details::SignalsAndSlots::SignalBody<void(Event const&)>>())
+	: signalBody(std::make_shared<Detail::SignalsAndSlots::SignalBody<void(Event const&)>>())
 {}
 //-----------------------------------------------------------------------
 EventConnection EventHandler::Connect(std::function<void(Event const&)> const& slot)

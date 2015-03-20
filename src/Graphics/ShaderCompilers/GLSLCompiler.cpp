@@ -17,9 +17,9 @@ namespace Pomdog {
 namespace ShaderCompilers {
 namespace {
 
-using Details::RenderSystem::ShaderBytecode;
-using Details::RenderSystem::ShaderCompileOptions;
-using Details::RenderSystem::ShaderPipelineStage;
+using Detail::RenderSystem::ShaderBytecode;
+using Detail::RenderSystem::ShaderCompileOptions;
+using Detail::RenderSystem::ShaderPipelineStage;
 
 static std::unique_ptr<Shader> CompileGLSLShader(GraphicsDevice & graphicsDevice,
 	void const* shaderSource, std::size_t byteLength, ShaderPipelineStage pipelineStage)

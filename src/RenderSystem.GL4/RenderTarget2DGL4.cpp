@@ -9,7 +9,7 @@
 #include "Pomdog/Graphics/DepthFormat.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 namespace {
@@ -114,5 +114,5 @@ void RenderTarget2DGL4::BindDepthStencilBuffer()
 //-----------------------------------------------------------------------
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

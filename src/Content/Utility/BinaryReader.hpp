@@ -20,7 +20,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 struct POMDOG_EXPORT BinaryReader {
 	template <class Stream>
@@ -79,7 +79,7 @@ struct POMDOG_EXPORT BinaryReader {
 	}
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_BINARYREADER_80B251B8_159B_4CE5_97BC_ED14AE71F9B0_HPP)

@@ -30,7 +30,7 @@ public:
 	void Visit(GameObject & gameObject, Renderer & renderer) override;
 
 private:
-	Details::Rendering::SkinnedMeshCommand command;
+	Detail::Rendering::SkinnedMeshCommand command;
 };
 
 }// namespace Pomdog

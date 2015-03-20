@@ -18,7 +18,7 @@
 #include "Pomdog/Utility/Optional.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 
@@ -45,7 +45,7 @@ private:
 
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_VERTEXBUFFERGL4_A0F173BB_E5E5_4A9B_81E8_4AC8BBA92F01_HPP)

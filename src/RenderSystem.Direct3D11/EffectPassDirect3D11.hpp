@@ -18,7 +18,7 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class ShaderBytecode;
@@ -45,7 +45,7 @@ private:
 
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_EFFECTPASSDIRECT3D11_0A0A09ED_D3D3_4E70_B836_D24811A8FA94_HPP)

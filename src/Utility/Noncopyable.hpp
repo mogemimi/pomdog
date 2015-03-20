@@ -12,7 +12,7 @@
 #endif
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 class Noncopyable {
 public:
@@ -21,7 +21,7 @@ public:
 	Noncopyable & operator=(Noncopyable const&) = delete;
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_NONCOPYABLE_C87EECF3_1CA8_4C76_B8B0_413B0CEF41B3_HPP)

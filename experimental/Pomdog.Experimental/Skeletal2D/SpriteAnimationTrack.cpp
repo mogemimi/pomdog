@@ -11,7 +11,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 namespace {
 
@@ -73,5 +73,5 @@ AnimationTimeInterval SpriteAnimationTrack::Length() const
 }
 //-----------------------------------------------------------------------
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

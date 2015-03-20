@@ -22,7 +22,7 @@
 #include <string>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 namespace {
@@ -197,5 +197,5 @@ InputLayoutGL4* EffectPassGL4::GetInputLayout() const
 //-----------------------------------------------------------------------
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

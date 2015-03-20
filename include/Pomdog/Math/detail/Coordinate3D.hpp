@@ -15,7 +15,7 @@
 #include <type_traits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 template <typename T>
 class POMDOG_EXPORT Coordinate3D final {
@@ -68,7 +68,7 @@ template <typename T>
 Coordinate3D<T> POMDOG_EXPORT
 operator*(T scaleFactor, Coordinate3D<T> const& coordinate);
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #include "Coordinate3DImplementation.hpp"

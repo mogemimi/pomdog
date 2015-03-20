@@ -33,7 +33,7 @@ public:
 	void SetViewProjection(Matrix4x4 const& view, Matrix4x4 const& projection) override;
 
 public:
-	Details::Rendering::SpriteBatchRenderer spriteBatch;
+	Detail::Rendering::SpriteBatchRenderer spriteBatch;
 	std::uint32_t drawCallCount;
 };
 

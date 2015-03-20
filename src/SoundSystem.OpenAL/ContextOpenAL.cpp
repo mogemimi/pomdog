@@ -9,7 +9,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
 //-----------------------------------------------------------------------
@@ -50,5 +50,5 @@ ContextOpenAL::~ContextOpenAL()
 //-----------------------------------------------------------------------
 }// namespace OpenAL
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

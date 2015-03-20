@@ -49,8 +49,8 @@ static std::unique_ptr<AnimationNode> CreateAnimationNode(
 	AnimationNodeDesc const& desc, std::vector<AnimationBlendInput> & inputs,
 		std::vector<AnimationNodeDesc> const& nodes, SkeletonDesc const& skeletonDesc)
 {
-	using Details::Skeletal2D::AnimationClipNode;
-	using Details::Skeletal2D::AnimationLerpNode;
+	using Detail::Skeletal2D::AnimationClipNode;
+	using Detail::Skeletal2D::AnimationLerpNode;
 
 	switch (desc.Type) {
 	case AnimationNodeType::Clip: {

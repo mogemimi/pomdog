@@ -9,7 +9,7 @@
 #include <mach/mach_time.h>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Cocoa {
 
 TimeSourceCocoa::TimeSourceCocoa()
@@ -31,5 +31,5 @@ TimePoint TimeSourceCocoa::Now() const
 }
 
 }// namespace Cocoa
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

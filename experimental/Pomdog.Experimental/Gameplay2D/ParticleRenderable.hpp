@@ -26,7 +26,7 @@ public:
 	void Visit(GameObject & gameObject, Renderer & renderer) override;
 
 private:
-	Details::Rendering::ParticleBatchCommand command;
+	Detail::Rendering::ParticleBatchCommand command;
 };
 
 }// namespace Pomdog

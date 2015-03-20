@@ -57,7 +57,7 @@ RasterizerState::CreateCullNone(std::shared_ptr<GraphicsDevice> const& graphicsD
 	return std::make_shared<RasterizerState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeRasterizerState* RasterizerState::NativeRasterizerState()
+Detail::RenderSystem::NativeRasterizerState* RasterizerState::NativeRasterizerState()
 {
 	return nativeRasterizerState.get();
 }

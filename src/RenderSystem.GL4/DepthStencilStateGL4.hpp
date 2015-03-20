@@ -17,7 +17,7 @@
 #include "Pomdog/Utility/detail/Tagged.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 
@@ -59,7 +59,7 @@ private:
 
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_DEPTHSTENCILSTATEGL4_B1C75682_46D9_4523_AE37_B5ED393AC50E_HPP)

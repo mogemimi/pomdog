@@ -17,7 +17,7 @@ namespace Pomdog {
 
 ///@~Japanese
 /// @brief 2x2 の float 型の行列を定義します。
-using Matrix2x2 = Details::FloatingPointMatrix2x2<float>;
+using Matrix2x2 = Detail::FloatingPointMatrix2x2<float>;
 
 }// namespace Pomdog
 

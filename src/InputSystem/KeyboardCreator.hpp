@@ -17,13 +17,13 @@ namespace Pomdog {
 
 class Keyboard;
 
-namespace Details {
+namespace Detail {
 namespace InputSystem {
 
 using KeyboardCreator = InputDeviceCreator<Keyboard>;
 
 }// namespace InputSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_KEYBOARDCREATOR_E5930C37_6D5B_4529_A6DB_2F789D2CA82E_HPP)

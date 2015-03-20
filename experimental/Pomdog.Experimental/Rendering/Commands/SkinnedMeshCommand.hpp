@@ -19,7 +19,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Rendering {
 
 class SkinnedMeshCommand final: public RenderCommand {
@@ -42,7 +42,7 @@ public:
 };
 
 }// namespace Rendering
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SKINNEDMESHCOMMAND_E70DE762_89CF_4D78_873D_281192FE5CA5_HPP)

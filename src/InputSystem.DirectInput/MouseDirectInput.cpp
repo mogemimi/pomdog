@@ -14,7 +14,7 @@
 #include <array>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace InputSystem {
 namespace DirectInput {
 namespace {
@@ -186,5 +186,5 @@ void MouseDirectInput::Update()
 //-----------------------------------------------------------------------
 }// namespace DirectInput
 }// namespace InputSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

@@ -103,7 +103,7 @@ void IndexBuffer::SetData(std::uint32_t offsetInBytes, void const* source, std::
 	nativeIndexBuffer->SetData(offsetInBytes, source, ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeIndexBuffer* IndexBuffer::NativeIndexBuffer()
+Detail::RenderSystem::NativeIndexBuffer* IndexBuffer::NativeIndexBuffer()
 {
 	POMDOG_ASSERT(nativeIndexBuffer);
 	return nativeIndexBuffer.get();

@@ -18,7 +18,7 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 
 class TranslationKeyframe {
@@ -48,7 +48,7 @@ private:
 };
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_TRANSLATIONTRACK_6A0FA1BF_E029_40A4_BBB4_80B20013D984_HPP)

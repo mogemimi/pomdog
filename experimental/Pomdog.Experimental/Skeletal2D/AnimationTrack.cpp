@@ -15,7 +15,7 @@
 #include <algorithm>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 namespace {
 
@@ -219,5 +219,5 @@ AnimationTimeInterval TranslationTrack::Length() const
 }
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

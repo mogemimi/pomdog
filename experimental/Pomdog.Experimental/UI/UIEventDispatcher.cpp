@@ -196,25 +196,25 @@ void UIEventDispatcher::PointerReleased(Point2D const& position)
 	pointerState->focusedElement->OnPointerReleased(pointerState->pointerPoint);
 }
 //-----------------------------------------------------------------------
-Details::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIView> const& child)
+Detail::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIView> const& child)
 {
 	POMDOG_ASSERT(child);
 
 	std::shared_ptr<SubscribeRequestDispatcherType> sharedDispatcher(
 		shared_from_this(), &subscribeRequests);
-	Details::UIEventConnection connection {std::move(sharedDispatcher), child};
+	Detail::UIEventConnection connection {std::move(sharedDispatcher), child};
 
 	subscribeRequests.AddChild(child);
 	return std::move(connection);
 }
 //-----------------------------------------------------------------------
-Details::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIView> && child)
+Detail::UIEventConnection UIEventDispatcher::Connect(std::shared_ptr<UIView> && child)
 {
 	POMDOG_ASSERT(child);
 
 	std::shared_ptr<SubscribeRequestDispatcherType> sharedDispatcher(
 		shared_from_this(), &subscribeRequests);
-	Details::UIEventConnection connection {std::move(sharedDispatcher), child};
+	Detail::UIEventConnection connection {std::move(sharedDispatcher), child};
 
 	subscribeRequests.AddChild(std::move(child));
 	return std::move(connection);

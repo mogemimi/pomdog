@@ -42,7 +42,7 @@ void EffectParameter::SetValue(void const* data, std::uint32_t byteWidth)
 	return nativeConstantBuffer->SetData(0, data, byteWidth);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeConstantBuffer* EffectParameter::NativeConstantBuffer()
+Detail::RenderSystem::NativeConstantBuffer* EffectParameter::NativeConstantBuffer()
 {
 	POMDOG_ASSERT(nativeConstantBuffer);
 	return nativeConstantBuffer.get();

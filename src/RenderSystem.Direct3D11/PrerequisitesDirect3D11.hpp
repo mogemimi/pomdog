@@ -17,7 +17,7 @@
 #include <wrl/client.h> // ComPtr
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 
@@ -38,7 +38,7 @@ class VertexBufferDirect3D11;
 
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Readymade
 
 #endif // !defined(POMDOG_PREREQUISITESDIRECT3D11_EED05C73_4879_45F8_B1EB_0AABCC8FBCD5_HPP)

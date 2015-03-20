@@ -20,7 +20,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 class POMDOG_EXPORT BuiltinShaderPool {
 public:
@@ -58,7 +58,7 @@ private:
 	std::map<std::type_index, std::weak_ptr<EffectPass>> effects;
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_BUILTINSHADERPOOL_98B72B25_3798_4646_AC33_8C8B4FB9451A_HPP)

@@ -18,7 +18,7 @@
 #include "Pomdog/Math/Color.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 
@@ -48,7 +48,7 @@ private:
 
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_BLENDSTATEGL4_5A1F407F_670E_455C_BDEE_57E1472471F4_HPP)

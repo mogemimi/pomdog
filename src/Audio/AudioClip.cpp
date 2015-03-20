@@ -50,7 +50,7 @@ static Duration GetSampleDuration(std::size_t samples, std::uint32_t sampleRate)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-AudioClip::AudioClip(std::unique_ptr<Details::SoundSystem::NativeAudioClip> && nativeAudioClipIn,
+AudioClip::AudioClip(std::unique_ptr<Detail::SoundSystem::NativeAudioClip> && nativeAudioClipIn,
 	std::uint32_t sampleRateIn, std::uint16_t bitsPerSampleIn, AudioChannels channelsIn)
 	: nativeAudioClip(std::move(nativeAudioClipIn))
 	, sampleRate(sampleRateIn)
@@ -84,7 +84,7 @@ AudioChannels AudioClip::Channels() const
 	return channels;
 }
 //-----------------------------------------------------------------------
-Details::SoundSystem::NativeAudioClip* AudioClip::NativeAudioClip()
+Detail::SoundSystem::NativeAudioClip* AudioClip::NativeAudioClip()
 {
 	POMDOG_ASSERT(nativeAudioClip);
 	return nativeAudioClip.get();

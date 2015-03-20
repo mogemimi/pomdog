@@ -12,7 +12,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
@@ -155,5 +155,5 @@ void SamplerStateGL4::Apply(NativeGraphicsContext &, std::uint32_t index)
 //-----------------------------------------------------------------------
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

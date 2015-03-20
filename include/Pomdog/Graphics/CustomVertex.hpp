@@ -22,7 +22,7 @@
 #include <initializer_list>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Graphics {
 
 template <typename T> struct ToVertexElementFormat;
@@ -84,17 +84,17 @@ struct VertexElementTuple<Head, ElementTypes...> {
 };
 
 }// namespace Graphics
-}// namespace Details
+}// namespace Detail
 
 template <typename T, typename... Arguments>
 class CustomVertex {
 public:
-	Details::Graphics::VertexElementTuple<T, Arguments...> Tuple;
+	Detail::Graphics::VertexElementTuple<T, Arguments...> Tuple;
 
 	static VertexDeclaration Declaration()
 	{
-		using Details::Graphics::VertexCombined;
-		using Details::Graphics::ToVertexElementFormat;
+		using Detail::Graphics::VertexCombined;
+		using Detail::Graphics::ToVertexElementFormat;
 		return VertexDeclaration(VertexCombined<
 			ToVertexElementFormat<T>::value,
 			ToVertexElementFormat<Arguments>::value...

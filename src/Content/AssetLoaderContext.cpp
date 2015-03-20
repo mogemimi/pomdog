@@ -9,7 +9,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 //-----------------------------------------------------------------------
 std::ifstream AssetLoaderContext::OpenStream(std::string const& assetName) const
 {
@@ -18,5 +18,5 @@ std::ifstream AssetLoaderContext::OpenStream(std::string const& assetName) const
 	return std::move(stream);
 }
 //-----------------------------------------------------------------------
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

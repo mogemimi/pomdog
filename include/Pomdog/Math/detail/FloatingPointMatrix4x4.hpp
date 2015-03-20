@@ -20,7 +20,7 @@
 #include <array>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 ///@~Japanese
 /// @brief 4x4 の浮動小数点数の行列を定義します。
@@ -392,7 +392,7 @@ template <typename T>
 FloatingPointMatrix4x4<T> POMDOG_EXPORT
 operator*(T scaleFactor, FloatingPointMatrix4x4<T> const& matrix);
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_MATH_DETAIL_FLOATINGPOINTMATRIX4X4_DE77F1B1_1A17_4AFC_BCA2_232A4FB6ADD5_HPP)

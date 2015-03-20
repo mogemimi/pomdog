@@ -15,7 +15,7 @@
 #include <type_traits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 template <typename Character>
 constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Character c3)
@@ -30,7 +30,7 @@ constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Cha
 		| (static_cast<std::uint32_t>(c3) << 24);
 }
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_MAKEFOURCC_ED6FB253_174A_46D4_9EDA_D3ADDDAB06C2_HPP)

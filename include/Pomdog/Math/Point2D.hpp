@@ -16,7 +16,7 @@
 
 namespace Pomdog {
 
-using Point2D = Details::Coordinate2D<std::int32_t>;
+using Point2D = Detail::Coordinate2D<std::int32_t>;
 
 }// namespace Pomdog
 

@@ -13,7 +13,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
@@ -189,5 +189,5 @@ Microsoft::WRL::ComPtr<ID3D11InputLayout> InputLayoutHelper::CreateInputLayout(
 //-----------------------------------------------------------------------
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

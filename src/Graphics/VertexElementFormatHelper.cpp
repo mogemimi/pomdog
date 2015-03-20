@@ -7,7 +7,7 @@
 #include "VertexElementFormatHelper.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
     // Insert code here to run your application
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

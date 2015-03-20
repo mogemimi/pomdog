@@ -25,7 +25,7 @@ class EffectPassLoader;
 
 class POMDOG_EXPORT AssetManager {
 public:
-	AssetManager(Details::AssetLoaderContext && loaderContext);
+	AssetManager(Detail::AssetLoaderContext && loaderContext);
 
 	///@~Japanese
 	/// @brief アセットを読み込みます。
@@ -46,8 +46,8 @@ public:
 	std::ifstream OpenStream(std::string const& assetName) const;
 
 private:
-	Details::AssetLoaderContext loaderContext;
-	Details::AssetDictionary assets;
+	Detail::AssetLoaderContext loaderContext;
+	Detail::AssetDictionary assets;
 };
 
 }// namespace Pomdog

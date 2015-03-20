@@ -17,13 +17,13 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeRasterizerState;
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 
 ///@~Japanese
 /// @brief ラスタライザステートです。
@@ -70,10 +70,10 @@ public:
 	CreateCullNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 public:
-	Details::RenderSystem::NativeRasterizerState* NativeRasterizerState();
+	Detail::RenderSystem::NativeRasterizerState* NativeRasterizerState();
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeRasterizerState> nativeRasterizerState;
+	std::unique_ptr<Detail::RenderSystem::NativeRasterizerState> nativeRasterizerState;
 	RasterizerDescription description;
 };
 

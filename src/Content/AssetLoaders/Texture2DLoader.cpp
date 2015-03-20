@@ -21,7 +21,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace {
 //-----------------------------------------------------------------------
 static bool IsPNGFormat(std::array<std::uint8_t, 8> const& signature)
@@ -93,5 +93,5 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(
 	POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid/unsupported texture format.");
 }
 //-----------------------------------------------------------------------
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

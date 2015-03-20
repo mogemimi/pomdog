@@ -95,7 +95,7 @@ Rectangle RenderTarget2D::Bounds() const
 	return Rectangle{0, 0, pixelWidth, pixelHeight};
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeRenderTarget2D* RenderTarget2D::NativeRenderTarget2D()
+Detail::RenderSystem::NativeRenderTarget2D* RenderTarget2D::NativeRenderTarget2D()
 {
 	return nativeRenderTarget2D.get();
 }

@@ -16,7 +16,7 @@
 #include <random>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Particles {
 
 class ParticleEmitterShape {
@@ -27,7 +27,7 @@ public:
 };
 
 }// namespace Particles
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PARTICLEEMITTERSHAPE_DCE4AD88_E068_4AF6_8F1F_EEE13290929E_HPP)

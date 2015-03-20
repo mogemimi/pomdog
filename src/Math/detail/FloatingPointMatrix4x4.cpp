@@ -15,7 +15,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 template <typename T>
 FloatingPointMatrix4x4<T> const
@@ -1274,5 +1274,5 @@ template class FloatingPointMatrix4x4<long double>;
 template FloatingPointMatrix4x4<long double> operator*<long double>(long double, FloatingPointMatrix4x4<long double> const&);
 #endif
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

@@ -15,7 +15,7 @@
 #include <cstdint>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeTexture2D {
@@ -33,7 +33,7 @@ public:
 };
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_NATIVETEXTURE2D_309E0647_8B22_4554_A9E8_8269BC1035C5_HPP)

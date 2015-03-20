@@ -21,7 +21,7 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 class SpriteFont::Impl {
 public:
-	typedef Details::SpriteFonts::Glyph Glyph;
+	typedef Detail::SpriteFonts::Glyph Glyph;
 
 	std::unordered_map<std::uint32_t, Glyph> spriteFontMap;
 
@@ -32,7 +32,7 @@ public:
 	std::uint16_t spacing;
 
 	Impl(std::vector<std::shared_ptr<Texture2D>> && textures,
-		std::vector<Details::SpriteFonts::Glyph> const& glyphs,
+		std::vector<Detail::SpriteFonts::Glyph> const& glyphs,
 		std::uint32_t defaultCharacter, std::int16_t spacing, std::int16_t lineSpacing);
 
 	Vector2 MeasureString(std::u32string const& text) const;
@@ -47,7 +47,7 @@ private:
 };
 //-----------------------------------------------------------------------
 SpriteFont::Impl::Impl(std::vector<std::shared_ptr<Texture2D>> && texturesIn,
-	std::vector<Details::SpriteFonts::Glyph> const& glyphsIn,
+	std::vector<Detail::SpriteFonts::Glyph> const& glyphsIn,
 	std::uint32_t defaultCharacterIn, std::int16_t spacingIn, std::int16_t lineSpacingIn)
 	: textures(std::move(texturesIn))
 	, defaultCharacter(defaultCharacterIn)
@@ -198,7 +198,7 @@ void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
 #endif
 //-----------------------------------------------------------------------
 SpriteFont::SpriteFont(std::vector<std::shared_ptr<Texture2D>> && textures,
-	std::vector<Details::SpriteFonts::Glyph> const& glyphs,
+	std::vector<Detail::SpriteFonts::Glyph> const& glyphs,
 	std::uint32_t defaultCharacter, std::int16_t spacing, std::int16_t lineSpacing)
 	: impl(std::make_unique<Impl>(std::move(textures), glyphs, defaultCharacter, spacing, lineSpacing))
 {

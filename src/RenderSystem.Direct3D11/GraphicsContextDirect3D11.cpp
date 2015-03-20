@@ -31,7 +31,7 @@
 #include <algorithm>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
@@ -504,5 +504,5 @@ ID3D11DeviceContext* GraphicsContextDirect3D11::GetDeviceContext()
 //-----------------------------------------------------------------------
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

@@ -15,7 +15,7 @@
 #include <array>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 namespace {
@@ -121,5 +121,5 @@ template class ShaderGL4<GL_FRAGMENT_SHADER>;
 //-----------------------------------------------------------------------
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

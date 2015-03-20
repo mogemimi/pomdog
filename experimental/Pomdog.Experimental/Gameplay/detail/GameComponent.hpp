@@ -12,7 +12,7 @@
 #endif
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Gameplay {
 
 class GameComponent {
@@ -21,7 +21,7 @@ public:
 };
 
 }// namespace Gameplay
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_DETAIL_GAMECOMPONENT_68E8B2BF_A61D_463F_AE84_7D2CE4A8A5F2_HPP)

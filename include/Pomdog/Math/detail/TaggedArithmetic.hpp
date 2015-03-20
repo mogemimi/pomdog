@@ -17,7 +17,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 ///@code
 /// struct pixel_tag {};
@@ -222,7 +222,7 @@ public:
 	}
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_MATH_DETAIL_TAGGEDARITHMETIC_4493CED1_FBAE_438C_8F8C_B2FD921C900F_HPP)

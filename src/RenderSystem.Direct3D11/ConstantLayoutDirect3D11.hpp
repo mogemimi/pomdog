@@ -17,7 +17,7 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 
@@ -45,7 +45,7 @@ private:
 
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_CONSTANTLAYOUTDIRECT3D11_7DB9A007_8433_4668_8CF5_CA16E4F87F96_HPP)

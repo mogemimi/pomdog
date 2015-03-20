@@ -17,7 +17,7 @@
 #include <limits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 
 template <typename T, T Denominator>
@@ -68,7 +68,7 @@ public:
 };
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_COMPRESSEDFLOAT_727406C1_ACE9_4924_89A8_6A8BCCD56CCC_HPP)

@@ -16,7 +16,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 template <typename T>
 FloatingPointMatrix3x2<T> const FloatingPointMatrix3x2<T>::Identity = {
@@ -415,5 +415,5 @@ template class FloatingPointMatrix3x2<long double>;
 template FloatingPointMatrix3x2<long double> operator*<long double>(long double, FloatingPointMatrix3x2<long double> const&);
 #endif
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

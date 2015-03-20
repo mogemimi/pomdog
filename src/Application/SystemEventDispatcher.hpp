@@ -15,7 +15,7 @@
 #include "Pomdog/Input/Keys.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 using SystemEventDispatcher = EventQueue;
 
@@ -38,7 +38,7 @@ struct InputKeyUpEvent {
 	Keys Key;
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SYSTEMEVENTDISPATCHER_7D649F10_0048_43D1_97DA_92FD44BE74E4_HPP)

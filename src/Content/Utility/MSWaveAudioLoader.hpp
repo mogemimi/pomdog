@@ -21,13 +21,13 @@ namespace Pomdog {
 
 class AudioClip;
 
-namespace Details {
+namespace Detail {
 
 struct MSWaveAudioLoader {
 	static std::unique_ptr<AudioClip> Load(std::string const& filePath);
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_MSWAVEAUDIOLOADER_8808FBBE_6F7C_4FB1_84C9_CB1833D51283_HPP)

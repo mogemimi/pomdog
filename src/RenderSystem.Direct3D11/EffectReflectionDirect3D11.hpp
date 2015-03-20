@@ -16,7 +16,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class ShaderBytecode;
@@ -37,7 +37,7 @@ private:
 
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_EFFECTREFLECTIONDIRECT3D11_10267AA4_F5EC_4BC4_A092_51877E2D340F_HPP)

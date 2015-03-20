@@ -17,7 +17,7 @@ namespace Pomdog {
 
 class ParticleClip;
 
-namespace Details {
+namespace Detail {
 
 struct ParticleLoader {
 	static ParticleClip LoadFromJson(AssetManager & assets, std::string const& assetName);
@@ -25,7 +25,7 @@ struct ParticleLoader {
 	static ParticleClip Load(AssetManager & assets, std::string const& assetName);
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PARTICLELOADER_D0266408_F310_4DD3_B852_3AF14EA7737B_HPP)

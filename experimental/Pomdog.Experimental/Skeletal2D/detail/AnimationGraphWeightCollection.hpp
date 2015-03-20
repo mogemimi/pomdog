@@ -16,7 +16,7 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 
 class AnimationGraphWeightCollection {
@@ -40,7 +40,7 @@ private:
 };
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ANIMATIONGRAPHWEIGHTCOLLECTION_5506C893_2829_4E01_8EE5_72B642FF79AB_HPP)

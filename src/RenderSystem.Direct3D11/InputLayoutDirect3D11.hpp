@@ -17,7 +17,7 @@
 #include <string>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class ShaderBytecode;
@@ -33,7 +33,7 @@ struct InputLayoutHelper final {
 
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_INPUTLAYOUTDIRECT3D11_93CA68F0_7EE1_4BC3_9B42_D90E5CB7E839_HPP)

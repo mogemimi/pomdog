@@ -18,7 +18,7 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 
 class ScaleKeyframe {
@@ -45,7 +45,7 @@ private:
 };
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SCALETRACK_D087D656_A9AE_450F_A413_CC4BB795C36C_HPP)

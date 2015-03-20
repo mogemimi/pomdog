@@ -20,7 +20,7 @@ namespace Pomdog {
 
 class Texture2D;
 
-namespace Details {
+namespace Detail {
 
 class AssetLoaderContext;
 
@@ -31,7 +31,7 @@ struct POMDOG_EXPORT AssetLoader<Texture2D> final {
 		std::string const& assetName);
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_TEXTURE2DLOADER_84BCFDDA_4E0C_4783_B628_2D48B5008588_HPP)

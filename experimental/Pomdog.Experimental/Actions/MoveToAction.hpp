@@ -18,7 +18,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Actions {
 
 class MoveTo {
@@ -51,9 +51,9 @@ public:
 };
 
 }// namespace Actions
-}// namespace Details
+}// namespace Detail
 
-using MoveToAction = Details::Actions::TemporalAction<Details::Actions::MoveTo>;
+using MoveToAction = Detail::Actions::TemporalAction<Detail::Actions::MoveTo>;
 
 }// namespace Pomdog
 

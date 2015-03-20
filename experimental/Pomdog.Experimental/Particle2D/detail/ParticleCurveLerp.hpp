@@ -16,7 +16,7 @@
 #include "Pomdog/Math/Radian.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Particles {
 
 template <typename T>
@@ -44,7 +44,7 @@ struct ParticleCurveLerp<Color> {
 };
 
 }// namespace Particles
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PARTICLECURVELERP_7AA431A6_08A8_4716_AA4F_0F52D3AC7793_HPP)

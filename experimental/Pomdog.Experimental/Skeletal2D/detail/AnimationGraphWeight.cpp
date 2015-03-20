@@ -8,7 +8,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 //-----------------------------------------------------------------------
 AnimationGraphWeight::AnimationGraphWeight(float value)
@@ -48,5 +48,5 @@ bool AnimationGraphWeight::GetBool() const
 }
 //-----------------------------------------------------------------------
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

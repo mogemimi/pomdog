@@ -16,7 +16,7 @@ extern "C" {
 #include <vector>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace {
 
 struct PNGBinaryContext {
@@ -186,5 +186,5 @@ std::shared_ptr<Texture2D> PNGTextureReader::Read(std::shared_ptr<GraphicsDevice
 	return std::move(texture);
 }
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

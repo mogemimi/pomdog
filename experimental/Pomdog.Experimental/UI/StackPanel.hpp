@@ -60,7 +60,7 @@ private:
 	UIElementCollection children;
 
 	std::weak_ptr<UIEventDispatcher> weakDispatcher;
-	Details::UIEventConnection connection;
+	Detail::UIEventConnection connection;
 
 	Thickness padding;
 	std::uint16_t barHeight;

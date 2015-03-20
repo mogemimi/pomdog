@@ -13,7 +13,7 @@
 
 @interface CocoaWindowDelegate : NSObject <NSWindowDelegate>
 
-- (id)initWithEventDispatcher:(std::shared_ptr<Pomdog::Details::SystemEventDispatcher>)dispatcher;
+- (id)initWithEventDispatcher:(std::shared_ptr<Pomdog::Detail::SystemEventDispatcher>)dispatcher;
 
 @end
 

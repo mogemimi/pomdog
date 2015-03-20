@@ -7,7 +7,7 @@
 #include "KeyboardCocoa.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Cocoa {
 
 KeyboardCocoa::KeyboardCocoa() = default;
@@ -23,5 +23,5 @@ void KeyboardCocoa::SetKey(Keys key, KeyState keyState)
 }
 
 }// namespace Cocoa
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

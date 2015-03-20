@@ -10,7 +10,7 @@
 #include "Pomdog/Utility/Exception.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace InputSystem {
 namespace DirectInput {
 //-----------------------------------------------------------------------
@@ -45,5 +45,5 @@ IDirectInput8* DeviceContextDirectInput::GetDirectInput() const
 //-----------------------------------------------------------------------
 }// namespace DirectInput
 }// namespace InputSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

@@ -18,13 +18,13 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeVertexBuffer;
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 
 ///@~Japanese
 /// @brief 頂点バッファです。
@@ -83,10 +83,10 @@ public:
 	void SetData(std::uint32_t offsetInBytes, void const* source, std::uint32_t elementCount, std::uint16_t strideBytes);
 
 public:
-	Details::RenderSystem::NativeVertexBuffer* NativeVertexBuffer();
+	Detail::RenderSystem::NativeVertexBuffer* NativeVertexBuffer();
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
+	std::unique_ptr<Detail::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
 	std::uint32_t vertexCount;
 	std::uint16_t strideBytes;
 	Pomdog::BufferUsage bufferUsage;

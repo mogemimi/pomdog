@@ -15,7 +15,7 @@
 #include <wrl/client.h>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 namespace XAudio2 {
 
@@ -38,7 +38,7 @@ private:
 
 }// namespace XAudio2
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_AUDIOENGINEXAUDIO2_349E822E_8912_46FC_B085_7F3B02738901_HPP)

@@ -21,7 +21,7 @@ namespace Pomdog {
 
 class SpriteRenderer;
 
-namespace Details {
+namespace Detail {
 namespace Rendering {
 
 class ParticleBatchCommand final: public RenderCommand {
@@ -43,7 +43,7 @@ public:
 };
 
 }// namespace Rendering
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PARTICLEBATCHCOMMAND_BBF33260_CA29_4B07_BBEB_8C19916FF5CC_HPP)

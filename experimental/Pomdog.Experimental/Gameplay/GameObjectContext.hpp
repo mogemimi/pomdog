@@ -23,7 +23,7 @@
 #include <list>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Gameplay {
 
 template <std::uint8_t MaxComponentCapacity>
@@ -438,9 +438,9 @@ auto EntityContext<MaxComponentCapacity>::Component(GameObjectID const& id)
 }
 
 }// namespace Gameplay
-}// namespace Details
+}// namespace Detail
 
-using GameObjectContext = Details::Gameplay::EntityContext<64>;
+using GameObjectContext = Detail::Gameplay::EntityContext<64>;
 
 }// namespace Pomdog
 

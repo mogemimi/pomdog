@@ -15,7 +15,7 @@
 #include <cstdint>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeVertexBuffer {
@@ -37,7 +37,7 @@ public:
 };
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_NATIVEVERTEXBUFFER_37AE3D68_01A8_4D42_83CF_C2EE0D92AC91_HPP)

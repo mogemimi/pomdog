@@ -55,7 +55,7 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 		auto jointIndex = FindJoint(desc.Bones, track.BoneName);
 		POMDOG_ASSERT(jointIndex);
 
-		using namespace Pomdog::Details::Skeletal2D;
+		using namespace Pomdog::Detail::Skeletal2D;
 
 		if (!track.RotateSamples.empty())
 		{

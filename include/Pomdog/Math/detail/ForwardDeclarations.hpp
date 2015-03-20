@@ -17,7 +17,7 @@
 // Forward declarations of Math
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 template <typename T>
 class Coordinate2D;
@@ -58,21 +58,21 @@ struct RadianTag;
 
 }// namespace Tags
 
-}// namespace Details
+}// namespace Detail
 
-using Matrix2x2 = Details::FloatingPointMatrix2x2<float>;
-using Matrix3x2 = Details::FloatingPointMatrix3x2<float>;
-using Matrix3x3 = Details::FloatingPointMatrix3x3<float>;
-using Matrix4x4 = Details::FloatingPointMatrix4x4<float>;
-using Point2D = Details::Coordinate2D<std::int32_t>;
-using Point3D = Details::Coordinate3D<std::int32_t>;
-using Quaternion = Details::FloatingPointQuaternion<float>;
-using Vector2 = Details::FloatingPointVector2<float>;
-using Vector3 = Details::FloatingPointVector3<float>;
-using Vector4 = Details::FloatingPointVector4<float>;
+using Matrix2x2 = Detail::FloatingPointMatrix2x2<float>;
+using Matrix3x2 = Detail::FloatingPointMatrix3x2<float>;
+using Matrix3x3 = Detail::FloatingPointMatrix3x3<float>;
+using Matrix4x4 = Detail::FloatingPointMatrix4x4<float>;
+using Point2D = Detail::Coordinate2D<std::int32_t>;
+using Point3D = Detail::Coordinate3D<std::int32_t>;
+using Quaternion = Detail::FloatingPointQuaternion<float>;
+using Vector2 = Detail::FloatingPointVector2<float>;
+using Vector3 = Detail::FloatingPointVector3<float>;
+using Vector4 = Detail::FloatingPointVector4<float>;
 
 template <typename T>
-using Radian = Details::TaggedArithmetic<T, Details::Tags::RadianTag>;
+using Radian = Detail::TaggedArithmetic<T, Detail::Tags::RadianTag>;
 
 // Structures:
 class Color;

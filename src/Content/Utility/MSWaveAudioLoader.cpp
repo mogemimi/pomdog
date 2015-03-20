@@ -25,7 +25,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace {
 //-----------------------------------------------------------------------
 static AudioChannels ToAudioChannels(std::uint32_t channels)
@@ -142,7 +142,7 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 			"Failed to read audio data");
 	}
 
-	using Details::SoundSystem::OpenAL::AudioClipAL;
+	using Detail::SoundSystem::OpenAL::AudioClipAL;
 
 	auto channels = ToAudioChannels(basicDescription.mChannelsPerFrame);
 
@@ -342,7 +342,7 @@ static std::unique_ptr<AudioClip> LoadMSWave_Win32(std::string const& filePath)
 		::mmioClose(ioHandle, 0);
 		ioHandle = nullptr;
 
-		using Details::SoundSystem::XAudio2::AudioClipXAudio2;
+		using Detail::SoundSystem::XAudio2::AudioClipXAudio2;
 		auto nativeAudioClip = std::make_unique<AudioClipXAudio2>(
 			std::move(audioData), std::move(waveFormat));
 
@@ -376,5 +376,5 @@ std::unique_ptr<AudioClip> MSWaveAudioLoader::Load(std::string const& filePath)
 #endif
 }
 //-----------------------------------------------------------------------
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

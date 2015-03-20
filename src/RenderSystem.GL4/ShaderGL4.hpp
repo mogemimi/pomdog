@@ -16,7 +16,7 @@
 #include "Pomdog/Utility/Optional.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class ShaderBytecode;
@@ -52,7 +52,7 @@ using PixelShaderGL4 = ShaderGL4<GL_FRAGMENT_SHADER>;
 
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SHADERGL4_39E4A790_D7E4_4CA7_960D_F27CF80FCF2A_HPP)

@@ -15,12 +15,12 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 template <typename T>
 struct AssetLoader;
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ASSETLOADER_99766070_FFCB_413B_AB39_ACC223591570_HPP)

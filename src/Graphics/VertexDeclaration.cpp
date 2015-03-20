@@ -19,7 +19,7 @@ static std::uint32_t AccumulateStrideBytes(std::vector<VertexElement> const& ele
 	for (auto & vertexElement: elements)
 	{
 		std::uint32_t currentStride = vertexElement.Offset
-			+ Details::VertexElementHelper::ToByteSize(vertexElement.VertexElementFormat);
+			+ Detail::VertexElementHelper::ToByteSize(vertexElement.VertexElementFormat);
 		if (strideBytes < currentStride) {
 			strideBytes = currentStride;
 		}
@@ -37,7 +37,7 @@ static std::vector<VertexElement> BuildVertexElements(std::initializer_list<Vert
 	for (auto & format: formats)
 	{
 		vertexElements.push_back({offsetBytes, format});
-		offsetBytes += Details::VertexElementHelper::ToByteSize(format);
+		offsetBytes += Detail::VertexElementHelper::ToByteSize(format);
 	}
 
 	return std::move(vertexElements);

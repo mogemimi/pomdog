@@ -17,7 +17,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Rendering {
 
 class PrimitiveCommand final: public RenderCommand {
@@ -41,7 +41,7 @@ public:
 };
 
 }// namespace Rendering
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PRIMITIVECOMMAND_4CCAFA9C_9995_45A4_8646_411676A87B19_HPP)

@@ -41,7 +41,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	Log::SetLevel(Pomdog::LogLevel::Internal);
 #endif
 
-	Details::Win32::BootstrapSettingsWin32 settings;
+	Detail::Win32::BootstrapSettingsWin32 settings;
 	settings.HInstance = hInstance;
 	settings.CmdShow = nCmdShow;
 	settings.Icon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_POMDOG_ICON));
@@ -50,7 +50,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	settings.Height = 480;
 	settings.IsFullscreen = false;
 
-	Details::Win32::BootstrapperWin32 bootstrapper(settings);
+	Detail::Win32::BootstrapperWin32 bootstrapper(settings);
 
 	bootstrapper.Run([](std::shared_ptr<GameHost> const& gameHost)
 	{

@@ -15,7 +15,7 @@
 #include "Pomdog/Utility/detail/Tagged.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 
@@ -29,7 +29,7 @@ using ShaderProgramGL4 = Tagged<GLuint, Tags::ShaderProgramTag>;
 
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_TYPESAFEGL4_B23282F8_F9C8_416A_81F6_FC0BC2E63525_HPP)

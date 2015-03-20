@@ -66,7 +66,7 @@ private:
 	Vector2 ConvertToPanelSpace(Point2D const& point) const;
 
 private:
-	Details::UIEventConnection connection;
+	Detail::UIEventConnection connection;
 
 	Optional<Vector2> tumbleStartPosition;
 	Optional<Vector2> trackStartPosition;

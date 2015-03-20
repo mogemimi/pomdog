@@ -18,7 +18,7 @@
 #include <cfloat>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace EffectBinaryParameter {
 //-----------------------------------------------------------------------
 namespace {
@@ -223,5 +223,5 @@ template void Set<double>(EffectParameter & effectParameter, FloatingPointQuater
 #endif
 //-----------------------------------------------------------------------
 }// namespace EffectBinaryParameter
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

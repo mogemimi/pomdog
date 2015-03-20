@@ -61,7 +61,7 @@ private:
 	};
 
 	ToggleSwitchButton button;
-	Details::UIEventConnection connection;
+	Detail::UIEventConnection connection;
 	std::string onContent;
 	std::string offContent;
 	bool isOn;

@@ -19,7 +19,7 @@ namespace Pomdog {
 /// @brief vector in two-dimensional space.
 ///@~Japanese
 /// @brief 2 つの要素を持つベクトル（2 次元ベクトル）を定義します。
-using Vector2 = Details::FloatingPointVector2<float>;
+using Vector2 = Detail::FloatingPointVector2<float>;
 
 }// namespace Pomdog
 

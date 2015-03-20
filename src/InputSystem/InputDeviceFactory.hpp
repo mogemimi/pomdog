@@ -21,7 +21,7 @@ namespace Pomdog {
 class Keyboard;
 class Mouse;
 
-namespace Details {
+namespace Detail {
 namespace InputSystem {
 
 class InputDeviceFactory final: Noncopyable {
@@ -44,7 +44,7 @@ private:
 };
 
 }// namespace InputSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_INPUTDEVICEFACTORY_60E2AEA5_DD8F_4F83_85A6_E364081B2E01_HPP)

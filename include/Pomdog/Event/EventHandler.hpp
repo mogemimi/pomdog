@@ -41,7 +41,7 @@ public:
 	}
 
 private:
-	std::shared_ptr<Details::SignalsAndSlots::SignalBody<void(Event const&)>> signalBody;
+	std::shared_ptr<Detail::SignalsAndSlots::SignalBody<void(Event const&)>> signalBody;
 };
 
 }// namespace Pomdog

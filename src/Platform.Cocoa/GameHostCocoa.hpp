@@ -19,7 +19,7 @@ namespace Pomdog {
 
 class PresentationParameters;
 
-namespace Details {
+namespace Detail {
 namespace Cocoa {
 
 class GameWindowCocoa;
@@ -68,7 +68,7 @@ private:
 };
 
 }// namespace Cocoa
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_GAMEHOSTCOCOA_29C3B75B_9D10_4DA7_BD1A_3AD8511B7D4F_HPP)

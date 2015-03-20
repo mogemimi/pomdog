@@ -15,7 +15,7 @@
 #include <type_traits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 template <typename T>
 class POMDOG_EXPORT Coordinate2D final {
@@ -68,7 +68,7 @@ template <typename T>
 Coordinate2D<T> POMDOG_EXPORT
 operator*(T scaleFactor, Coordinate2D<T> const& coordinate);
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #include "Coordinate2DImplementation.hpp"

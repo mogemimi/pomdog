@@ -14,7 +14,7 @@
 #include <limits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 template <typename T>
 FloatingPointVector2<T> const FloatingPointVector2<T>::Zero(0, 0);
@@ -302,5 +302,5 @@ template class FloatingPointVector2<long double>;
 template FloatingPointVector2<long double> operator*<long double>(long double, FloatingPointVector2<long double> const&);
 #endif
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

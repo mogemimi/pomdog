@@ -12,7 +12,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Cocoa {
 //-----------------------------------------------------------------------
 BootstrapperCocoa & BootstrapperCocoa::SetSurfaceFormat(SurfaceFormat surfaceFormatIn)
@@ -59,5 +59,5 @@ std::shared_ptr<GameHost> BootstrapperCocoa::CreateGameHost(NSWindow* nativeWind
 }
 //-----------------------------------------------------------------------
 }// namespace Cocoa
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

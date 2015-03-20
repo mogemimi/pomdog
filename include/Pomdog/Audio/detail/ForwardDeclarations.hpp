@@ -14,7 +14,7 @@
 #include "Pomdog/Basic/Platform.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
@@ -48,7 +48,7 @@ using NativeSoundEffect = XAudio2::SoundEffectXAudio2;
 #endif
 
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_FORWARDDECLARATIONS_0BAC0396_5240_4F14_AFF8_13A71B8E0B54_HPP)

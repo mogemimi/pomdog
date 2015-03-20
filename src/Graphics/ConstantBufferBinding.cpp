@@ -50,7 +50,7 @@ ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
 	// Bind constant buffers:
 	for (auto & parameter: effectParameters)
 	{
-		using Details::RenderSystem::NativeConstantBuffer;
+		using Detail::RenderSystem::NativeConstantBuffer;
 		std::shared_ptr<NativeConstantBuffer> nativeConstantBuffer(
 			parameter.second, parameter.second->NativeConstantBuffer());
 
@@ -84,7 +84,7 @@ EffectParameterCollection const& ConstantBufferBinding::Find() const
 	return effectParameters;
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeConstantLayout* ConstantBufferBinding::NativeConstantLayout()
+Detail::RenderSystem::NativeConstantLayout* ConstantBufferBinding::NativeConstantLayout()
 {
 	return nativeConstantLayout.get();
 }

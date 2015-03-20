@@ -21,7 +21,7 @@ namespace Pomdog {
 
 enum class AudioChannels: std::uint8_t;
 
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
 
@@ -44,7 +44,7 @@ private:
 
 }// namespace OpenAL
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_AUDIOCLIPAL_88AB8594_0292_40AB_84D9_F82EDDAD63A9_HPP)

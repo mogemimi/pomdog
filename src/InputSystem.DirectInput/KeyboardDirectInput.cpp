@@ -18,7 +18,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace InputSystem {
 namespace DirectInput {
 namespace {
@@ -286,5 +286,5 @@ void KeyboardDirectInput::Update()
 //-----------------------------------------------------------------------
 }// namespace DirectInput
 }// namespace InputSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

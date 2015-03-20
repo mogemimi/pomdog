@@ -17,7 +17,7 @@
 #include <limits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Particles {
 
 template <typename T>
@@ -38,7 +38,7 @@ public:
 
 	T Compute(std::mt19937 & random) const
 	{
-		return Details::Particles::ParticleCurveLerp<T>()(min, max,
+		return Detail::Particles::ParticleCurveLerp<T>()(min, max,
 			std::generate_canonical<float, std::numeric_limits<float>::digits>(random));
 	}
 
@@ -49,7 +49,7 @@ public:
 
 	T Compute(float, float amount) const override
 	{
-		return Details::Particles::ParticleCurveLerp<T>()(min, max, amount);
+		return Detail::Particles::ParticleCurveLerp<T>()(min, max, amount);
 	}
 
 	float GenerateVariance(std::mt19937 & random) const override
@@ -59,7 +59,7 @@ public:
 };
 
 }// namespace Particles
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PARTICLEPARAMETERRANDOM_03DC4686_AC5B_4B47_9ABB_3693A67A21DE_HPP)

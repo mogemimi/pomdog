@@ -14,7 +14,7 @@
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace {
 
 #if defined(POMDOG_COMPILER_MSVC)
@@ -268,5 +268,5 @@ std::shared_ptr<Texture2D> DDSTextureReader::Read(std::shared_ptr<GraphicsDevice
 	return std::move(texture);
 }
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

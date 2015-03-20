@@ -90,8 +90,8 @@ enum class KeyframeCurve: std::uint8_t {
 class AnimationSamplePointTranslate {
 public:
 	AnimationTimeInterval Time;
-	Details::Skeletal2D::CompressedFloat<std::int16_t, 7> TranslateX;
-	Details::Skeletal2D::CompressedFloat<std::int16_t, 7> TranslateY;
+	Detail::Skeletal2D::CompressedFloat<std::int16_t, 7> TranslateX;
+	Detail::Skeletal2D::CompressedFloat<std::int16_t, 7> TranslateY;
 	KeyframeCurve Curve;
 
 	static_assert(decltype(TranslateX)::Max() > 1024.0f, "");
@@ -103,7 +103,7 @@ public:
 class AnimationSamplePointRotate {
 public:
 	AnimationTimeInterval Time;
-	Details::Skeletal2D::CompressedFloat<std::int16_t, 4500> Rotation;
+	Detail::Skeletal2D::CompressedFloat<std::int16_t, 4500> Rotation;
 	KeyframeCurve Curve;
 
 	static_assert(decltype(Rotation)::Max() > 3.1416f*2.0f, "");
@@ -113,7 +113,7 @@ public:
 class AnimationSamplePointScale {
 public:
 	AnimationTimeInterval Time;
-	Details::Skeletal2D::CompressedFloat<std::int16_t, 1500> Scale;
+	Detail::Skeletal2D::CompressedFloat<std::int16_t, 1500> Scale;
 	KeyframeCurve Curve;
 
 	static_assert(decltype(Scale)::Max() > 20.0f, "");

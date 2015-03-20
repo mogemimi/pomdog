@@ -85,7 +85,7 @@ void Texture2D::SetData(void const* pixelData)
 	nativeTexture2D->SetData(pixelWidth, pixelHeight, levelCount, format, pixelData);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeTexture2D* Texture2D::NativeTexture2D()
+Detail::RenderSystem::NativeTexture2D* Texture2D::NativeTexture2D()
 {
 	return nativeTexture2D.get();
 }

@@ -16,7 +16,7 @@
 #include <cstddef>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 
@@ -40,7 +40,7 @@ public:
 
 }// namespace Direct3D11
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_HARDWAREBUFFERHELPER_3C0164CA_35BF_4EFF_B716_BC9058257CFA_HPP)

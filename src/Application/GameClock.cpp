@@ -42,7 +42,7 @@ private:
 	Duration PredictFrameDuration() const;
 
 public:
-	Details::TimeSource timeSource;
+	Detail::TimeSource timeSource;
 	TimePoint sourceStartTime;
 	TimePoint sourceLastTime;
 	std::deque<Duration> frameDurationHistory;

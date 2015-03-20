@@ -45,7 +45,7 @@ private:
 
 	Optional<ColorAnimation> colorAnimation;
 
-	Details::UIEventConnection connection;
+	Detail::UIEventConnection connection;
 
 	SliderColorScheme colorScheme;
 

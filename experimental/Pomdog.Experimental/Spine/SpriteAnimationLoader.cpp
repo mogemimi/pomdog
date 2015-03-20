@@ -15,12 +15,12 @@
 namespace Pomdog {
 namespace Spine {
 //-----------------------------------------------------------------------
-std::vector<Details::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack(
+std::vector<Detail::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack(
 	SkeletonDesc const& desc,
 	TexturePacker::TextureAtlas const& textureAtlas,
 	char const* name)
 {
-	using namespace Details::Skeletal2D;
+	using namespace Detail::Skeletal2D;
 
 	auto iter = std::find_if(std::begin(desc.AnimationClips), std::end(desc.AnimationClips),
 		[name](AnimationClipDesc const& clip){ return clip.Name == name; });

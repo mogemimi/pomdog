@@ -54,11 +54,11 @@ static std::vector<std::uint8_t> ReadBinaryFile(std::ifstream && streamIn)
 class EffectPassLoader::Impl final {
 public:
 	EffectPassDescription description;
-	Details::AssetLoaderContext loaderContext;
+	Detail::AssetLoaderContext loaderContext;
 	std::shared_ptr<GraphicsDevice> graphicsDevice;
 };
 //-----------------------------------------------------------------------
-EffectPassLoader::EffectPassLoader(Details::AssetLoaderContext const& loaderContextIn)
+EffectPassLoader::EffectPassLoader(Detail::AssetLoaderContext const& loaderContextIn)
 	: impl(std::make_unique<Impl>())
 {
 	POMDOG_ASSERT(impl);

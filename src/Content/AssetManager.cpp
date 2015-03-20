@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-AssetManager::AssetManager(Details::AssetLoaderContext && loaderContextIn)
+AssetManager::AssetManager(Detail::AssetLoaderContext && loaderContextIn)
 	: loaderContext(std::move(loaderContextIn))
 {}
 //-----------------------------------------------------------------------

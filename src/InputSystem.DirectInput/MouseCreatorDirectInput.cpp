@@ -11,7 +11,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace InputSystem {
 namespace DirectInput {
 //-----------------------------------------------------------------------
@@ -31,5 +31,5 @@ std::shared_ptr<Mouse> MouseCreatorDirectInput::Create(SubsystemScheduler & sche
 //-----------------------------------------------------------------------
 }// namespace DirectInput
 }// namespace InputSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

@@ -65,7 +65,7 @@ public:
 	{}
 
 	void Calculate(AnimationTimeInterval const& time,
-		Details::Skeletal2D::AnimationGraphWeightCollection const& weights,
+		Detail::Skeletal2D::AnimationGraphWeightCollection const& weights,
 		Skeleton const& skeleton,
 		SkeletonPose & skeletonPose) const override
 	{
@@ -96,7 +96,7 @@ public:
 		POMDOG_ASSERT(weight >= 0.0f);
 		POMDOG_ASSERT(weight <= 1.0f);
 
-		using Details::Skeletal2D::WeightBlendingHelper;
+		using Detail::Skeletal2D::WeightBlendingHelper;
 		WeightBlendingHelper::Lerp(sourcePose1.JointPoses, sourcePose2.JointPoses, weight, skeletonPose.JointPoses);
 	}
 
@@ -135,7 +135,7 @@ public:
 	std::string GetCurrentStateName() const;
 
 private:
-	Details::Skeletal2D::AnimationGraphWeightCollection graphWeights;
+	Detail::Skeletal2D::AnimationGraphWeightCollection graphWeights;
 	std::shared_ptr<Skeleton> skeleton;
 	std::shared_ptr<SkeletonTransform> skeletonTransform;
 	SkeletonAnimationState currentAnimation;

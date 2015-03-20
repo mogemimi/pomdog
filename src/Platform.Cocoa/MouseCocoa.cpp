@@ -8,7 +8,7 @@
 #include <type_traits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Cocoa {
 //-----------------------------------------------------------------------
 MouseCocoa::MouseCocoa()
@@ -59,5 +59,5 @@ void MouseCocoa::XButton2(ButtonState buttonState)
 }
 //-----------------------------------------------------------------------
 }// namespace Cocoa
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

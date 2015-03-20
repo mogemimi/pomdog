@@ -11,10 +11,10 @@
 
 @implementation CocoaWindowDelegate
 {
-	std::shared_ptr<Pomdog::Details::SystemEventDispatcher> eventDispatcher;
+	std::shared_ptr<Pomdog::Detail::SystemEventDispatcher> eventDispatcher;
 }
 //-----------------------------------------------------------------------
-- (id)initWithEventDispatcher:(std::shared_ptr<Pomdog::Details::SystemEventDispatcher>)dispatcher
+- (id)initWithEventDispatcher:(std::shared_ptr<Pomdog::Detail::SystemEventDispatcher>)dispatcher
 {
 	self = [super init];
 	if (self) {
@@ -27,14 +27,14 @@
 //-----------------------------------------------------------------------
 - (BOOL)windowShouldClose:(id)sender
 {
-	using Pomdog::Details::WindowShouldCloseEvent;
+	using Pomdog::Detail::WindowShouldCloseEvent;
 	eventDispatcher->Enqueue<WindowShouldCloseEvent>();
     return NO;
 }
 //-----------------------------------------------------------------------
 - (void)windowWillClose:(NSNotification *)notification
 {
-	using Pomdog::Details::WindowWillCloseEvent;
+	using Pomdog::Detail::WindowWillCloseEvent;
 	eventDispatcher->Enqueue<WindowWillCloseEvent>();
 }
 //-----------------------------------------------------------------------

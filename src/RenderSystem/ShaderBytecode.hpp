@@ -14,7 +14,7 @@
 #include <cstddef>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class ShaderBytecode {
@@ -24,7 +24,7 @@ public:
 };
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_DETAIL_GRAPHICS_SHADERBYTECODE_02AC7B6D_D9F3_4354_AFF4_63F439E542DC_HPP)

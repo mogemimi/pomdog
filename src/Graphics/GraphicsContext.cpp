@@ -53,7 +53,7 @@ public:
 	Impl(Impl const&) = delete;
 	Impl(Impl &&) = default;
 
-	Impl(std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
+	Impl(std::unique_ptr<Detail::RenderSystem::NativeGraphicsContext> nativeContext,
 		PresentationParameters const& presentationParameters);
 
 	void BuildResources(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
@@ -112,10 +112,10 @@ public:
 	std::shared_ptr<EffectPass> effectPass;
 	std::shared_ptr<ConstantBufferBinding> constantBuffers;
 
-	std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext;
+	std::unique_ptr<Detail::RenderSystem::NativeGraphicsContext> nativeContext;
 };
 //-----------------------------------------------------------------------
-GraphicsContext::Impl::Impl(std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeGraphicsContext,
+GraphicsContext::Impl::Impl(std::unique_ptr<Detail::RenderSystem::NativeGraphicsContext> nativeGraphicsContext,
 	PresentationParameters const& presentationParameters)
 	: nativeContext(std::move(nativeGraphicsContext))
 {
@@ -302,7 +302,7 @@ void GraphicsContext::Impl::SetEffectPass(std::shared_ptr<EffectPass> const& eff
 	POMDOG_ASSERT(nativeContext);
 	effectPass = effectPassIn;
 
-	using Details::RenderSystem::NativeEffectPass;
+	using Detail::RenderSystem::NativeEffectPass;
 	std::shared_ptr<NativeEffectPass> nativeEffectPass(effectPass, effectPass->NativeEffectPass());
 	nativeContext->SetEffectPass(nativeEffectPass);
 }
@@ -313,7 +313,7 @@ void GraphicsContext::Impl::SetConstantBuffers(std::shared_ptr<ConstantBufferBin
 	POMDOG_ASSERT(nativeContext);
 	constantBuffers = constantBuffersIn;
 
-	using Details::RenderSystem::NativeConstantLayout;
+	using Detail::RenderSystem::NativeConstantLayout;
 	std::shared_ptr<NativeConstantLayout> nativeConstantLayout(constantBuffers, constantBuffers->NativeConstantLayout());
 	nativeContext->SetConstantBuffers(nativeConstantLayout);
 }
@@ -323,7 +323,7 @@ void GraphicsContext::Impl::SetConstantBuffers(std::shared_ptr<ConstantBufferBin
 #endif
 //-----------------------------------------------------------------------
 GraphicsContext::GraphicsContext(
-	std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
+	std::unique_ptr<Detail::RenderSystem::NativeGraphicsContext> nativeContext,
 	PresentationParameters const& presentationParameters,
 	std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 	: impl(std::make_unique<Impl>(std::move(nativeContext), presentationParameters))
@@ -625,7 +625,7 @@ void GraphicsContext::SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> 
 	impl->SetConstantBuffers(constantBuffers);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeGraphicsContext* GraphicsContext::NativeGraphicsContext()
+Detail::RenderSystem::NativeGraphicsContext* GraphicsContext::NativeGraphicsContext()
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);

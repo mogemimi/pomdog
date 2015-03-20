@@ -14,7 +14,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 class SubsystemScheduler;
 
@@ -29,7 +29,7 @@ public:
 };
 
 }// namespace InputSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_INPUTDEVICECREATOR_D5540F16_00DB_404F_BD2F_C24E6819474A_HPP)

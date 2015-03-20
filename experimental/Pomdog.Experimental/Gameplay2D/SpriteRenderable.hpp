@@ -37,7 +37,7 @@ public:
 	Rectangle BoundingBox() const;
 
 private:
-	Details::Rendering::SpriteCommand command;
+	Detail::Rendering::SpriteCommand command;
 	Matrix3x2 offsetMatrix;
 	Vector2 originPivot;
 	std::uint32_t dirtyFlags;

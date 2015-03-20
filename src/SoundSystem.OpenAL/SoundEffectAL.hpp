@@ -23,7 +23,7 @@ class AudioListener;
 }// namespace Pomdog
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
 
@@ -61,7 +61,7 @@ public:
 
 }// namespace OpenAL
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SOUNDEFFECTAL_4A967601_7B5B_4A2E_BBF7_3658E1856E6F_HPP)

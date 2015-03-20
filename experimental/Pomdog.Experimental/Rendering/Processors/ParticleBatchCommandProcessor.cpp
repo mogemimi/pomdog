@@ -35,7 +35,7 @@ void ParticleBatchCommandProcessor::Begin(GraphicsContext & graphicsContext)
 //-----------------------------------------------------------------------
 void ParticleBatchCommandProcessor::Draw(GraphicsContext & graphicsContext, RenderCommand & command)
 {
-	using Details::Rendering::ParticleBatchCommand;
+	using Detail::Rendering::ParticleBatchCommand;
 
 	auto & particleCommand = static_cast<ParticleBatchCommand &>(command);
 	for (auto & particle: *particleCommand.particles)

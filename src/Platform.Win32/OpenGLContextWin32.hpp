@@ -21,7 +21,7 @@ namespace Pomdog {
 
 class PresentationParameters;
 
-namespace Details {
+namespace Detail {
 namespace Win32 {
 
 class OpenGLContextWin32 final: public RenderSystem::GL4::OpenGLContext {
@@ -53,7 +53,7 @@ private:
 };
 
 }// namespace Win32
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_OPENGLCONTEXTWIN32_A7C60FF2_4CA1_4345_80A7_2496218BC0EA_HPP)

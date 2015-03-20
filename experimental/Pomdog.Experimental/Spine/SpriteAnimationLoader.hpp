@@ -15,18 +15,18 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 
 class SpriteAnimationTrack;
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 namespace Spine {
 
 class SkeletonDesc;
 
-std::vector<Details::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack(
+std::vector<Detail::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack(
 	SkeletonDesc const& desc,
 	TexturePacker::TextureAtlas const& textureAtlas,
 	char const* name);

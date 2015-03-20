@@ -9,7 +9,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 
 AnimationClipNode::AnimationClipNode(std::shared_ptr<AnimationClip> const& animationClipIn)
@@ -23,7 +23,7 @@ AnimationTimeInterval AnimationClipNode::Length() const
 }
 //-----------------------------------------------------------------------
 void AnimationClipNode::Calculate(AnimationTimeInterval const& time,
-	Details::Skeletal2D::AnimationGraphWeightCollection const&,
+	Detail::Skeletal2D::AnimationGraphWeightCollection const&,
 	Skeleton const& skeleton, SkeletonPose & skeletonPose) const
 {
 	POMDOG_ASSERT(clip);
@@ -31,5 +31,5 @@ void AnimationClipNode::Calculate(AnimationTimeInterval const& time,
 }
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

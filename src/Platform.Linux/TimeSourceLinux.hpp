@@ -14,7 +14,7 @@
 #include "Pomdog/Application/TimePoint.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Linux {
 
 class TimeSourceLinux {
@@ -25,7 +25,7 @@ public:
 };
 
 }// namespace Linux
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_TIMESOURCELINUX_60ECC32A_9ADC_4A84_A672_FD0A7EEE9E16_HPP)

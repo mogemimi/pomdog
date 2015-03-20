@@ -15,7 +15,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace InputSystem {
 namespace DirectInput {
 
@@ -33,7 +33,7 @@ private:
 
 }// namespace DirectInput
 }// namespace InputSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_KEYBOARDCREATORDIRECTINPUT_9AFA1F66_4BE2_41F1_A887_169B8FAC359F_HPP)

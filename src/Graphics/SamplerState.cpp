@@ -103,7 +103,7 @@ SamplerState::CreatePointWrap(std::shared_ptr<GraphicsDevice> const& graphicsDev
 	return std::make_shared<SamplerState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------
-Details::RenderSystem::NativeSamplerState* SamplerState::NativeSamplerState()
+Detail::RenderSystem::NativeSamplerState* SamplerState::NativeSamplerState()
 {
 	return nativeSamplerState.get();
 }

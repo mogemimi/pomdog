@@ -22,11 +22,11 @@
 
 namespace Pomdog {
 namespace UI {
-namespace Details {
+namespace Detail {
 
 class UIEventConnection;
 
-}// namespace Details
+}// namespace Detail
 
 
 class UIEventDispatcher: public std::enable_shared_from_this<UIEventDispatcher> {
@@ -39,8 +39,8 @@ public:
 
 	void UpdateAnimation(Duration const& frameDuration);
 
-	Details::UIEventConnection Connect(std::shared_ptr<UIView> const& child);
-	Details::UIEventConnection Connect(std::shared_ptr<UIView> && child);
+	Detail::UIEventConnection Connect(std::shared_ptr<UIView> const& child);
+	Detail::UIEventConnection Connect(std::shared_ptr<UIView> && child);
 
 private:
 	std::shared_ptr<UIView> Find(Point2D const& position);
@@ -68,7 +68,7 @@ private:
 		std::int32_t PrevScrollWheel;
 	};
 
-	typedef Details::SubscribeRequestDispatcher<UIView> SubscribeRequestDispatcherType;
+	typedef Detail::SubscribeRequestDispatcher<UIView> SubscribeRequestDispatcherType;
 	SubscribeRequestDispatcherType subscribeRequests;
 	std::vector<std::shared_ptr<UIView>> children;
 	std::unique_ptr<PointerState> pointerState;

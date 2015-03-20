@@ -19,7 +19,7 @@
 #include <type_traits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 ///@~Japanese
 /// @brief 四元数（クォータニオン）を表す 4 次元ベクトルを定義します。
@@ -177,7 +177,7 @@ template <typename T>
 FloatingPointQuaternion<T> POMDOG_EXPORT
 operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion);
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_MATH_DETAIL_FLOATINGPOINTQUATERNION_5F875CA6_CC28_4B92_977C_50E535631465_HPP)

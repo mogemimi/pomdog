@@ -15,7 +15,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 
 class AnimationAdditiveNode final: public AnimationNode {
@@ -24,7 +24,7 @@ public:
 		std::unique_ptr<AnimationNode> && blendNode2In);
 
 	void Calculate(AnimationTimeInterval const& time,
-		Details::Skeletal2D::AnimationGraphWeightCollection const& weights,
+		Detail::Skeletal2D::AnimationGraphWeightCollection const& weights,
 		Skeleton const& skeleton,
 		SkeletonPose & skeletonPose) const override;
 
@@ -44,7 +44,7 @@ private:
 };
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_ANIMATIONADDITIVENODE_48896792_129A_489D_B3F3_55D3814CFD38_HPP)

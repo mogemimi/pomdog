@@ -231,9 +231,9 @@ BitmapFontPage ParsePage(std::istream & stream)
 	return std::move(result);
 }
 //-----------------------------------------------------------------------
-Details::SpriteFonts::Glyph ParseGlyph(std::istream & stream)
+Detail::SpriteFonts::Glyph ParseGlyph(std::istream & stream)
 {
-	Details::SpriteFonts::Glyph result;
+	Detail::SpriteFonts::Glyph result;
 
 	std::string source;
 	while (stream >> source && !stream.fail())
@@ -299,7 +299,7 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
 	POMDOG_ASSERT(stream.is_open());
 
 	std::vector<BitmapFontPage> pages;
-	std::vector<Details::SpriteFonts::Glyph> glyphs;
+	std::vector<Detail::SpriteFonts::Glyph> glyphs;
 	glyphs.reserve(127);
 
 	BitmapFontInfo info;

@@ -18,13 +18,13 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeConstantLayout;
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 
 using EffectParameterCollection = std::unordered_map<std::string, std::shared_ptr<EffectParameter>>;
 
@@ -52,11 +52,11 @@ public:
 	EffectParameterCollection const& Find() const;
 
 public:
-	Details::RenderSystem::NativeConstantLayout* NativeConstantLayout();
+	Detail::RenderSystem::NativeConstantLayout* NativeConstantLayout();
 
 private:
 	EffectParameterCollection effectParameters;
-	std::unique_ptr<Details::RenderSystem::NativeConstantLayout> nativeConstantLayout;
+	std::unique_ptr<Detail::RenderSystem::NativeConstantLayout> nativeConstantLayout;
 };
 
 }// namespace Pomdog

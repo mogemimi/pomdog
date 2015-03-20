@@ -14,7 +14,7 @@
 #include <cstdint>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeRenderTarget2D {
@@ -29,7 +29,7 @@ public:
 };
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_NATIVERENDERTARGET2D_9D701F83_BFE4_4D67_9305_A213A1DC7E77_HPP)

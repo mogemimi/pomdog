@@ -14,7 +14,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Cocoa {
 //-----------------------------------------------------------------------
 GameWindowCocoa::GameWindowCocoa(NSWindow* nativeWindowIn, std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
@@ -233,5 +233,5 @@ void GameWindowCocoa::BindToDelegate(std::shared_ptr<MouseCocoa> mouse)
 }
 //-----------------------------------------------------------------------
 }// namespace Cocoa
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

@@ -21,7 +21,7 @@ namespace UI {
 
 class UIView;
 
-namespace Details {
+namespace Detail {
 
 class UIEventConnection final {
 public:
@@ -87,7 +87,7 @@ private:
 	std::weak_ptr<ListenerType> element;
 };
 
-}// namespace Details
+}// namespace Detail
 }// namespace UI
 }// namespace Pomdog
 

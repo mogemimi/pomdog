@@ -25,7 +25,7 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SignalsAndSlots {
 
 class POMDOG_EXPORT ConnectionBody {
@@ -237,7 +237,7 @@ std::size_t SignalBody<void(Arguments...)>::InvocationCount() const
 }
 
 }// namespace SignalsAndSlots
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_EVENT_DETAIL_SIGNAL_F551D1BA_C805_462F_B5E5_87CFF3302EB9_HPP)

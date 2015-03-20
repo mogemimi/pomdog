@@ -19,13 +19,13 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeIndexBuffer;
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 
 ///@~Japanese
 /// @brief インデックスバッファです。
@@ -82,10 +82,10 @@ public:
 	void SetData(std::uint32_t offsetInBytes, void const* source, std::uint32_t elementCount);
 
 public:
-	Details::RenderSystem::NativeIndexBuffer* NativeIndexBuffer();
+	Detail::RenderSystem::NativeIndexBuffer* NativeIndexBuffer();
 
 private:
-	std::unique_ptr<Details::RenderSystem::NativeIndexBuffer> nativeIndexBuffer;
+	std::unique_ptr<Detail::RenderSystem::NativeIndexBuffer> nativeIndexBuffer;
 	std::uint32_t indexCount;
 	IndexElementSize elementSize;
 	Pomdog::BufferUsage bufferUsage;

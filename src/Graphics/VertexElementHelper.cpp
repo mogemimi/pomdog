@@ -9,7 +9,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 std::uint8_t VertexElementHelper::ToByteSize(VertexElementFormat format)
 {
@@ -34,5 +34,5 @@ std::uint8_t VertexElementHelper::ToByteSize(VertexElementFormat format)
 #endif
 }
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

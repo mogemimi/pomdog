@@ -16,7 +16,7 @@
 #include <type_traits>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 
@@ -61,7 +61,7 @@ void BindTexture(TaggedClass const& textureObject)
 
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_TYPESAFEHELPERGL4_8C888821_4B58_49F0_B733_396CDAF91F53_HPP)

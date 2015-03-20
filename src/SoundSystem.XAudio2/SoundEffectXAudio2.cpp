@@ -13,7 +13,7 @@
 #include <cmath>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 namespace XAudio2 {
 //-----------------------------------------------------------------------
@@ -133,5 +133,5 @@ void SoundEffectXAudio2::Volume(float volume)
 //-----------------------------------------------------------------------
 }// namespace XAudio2
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

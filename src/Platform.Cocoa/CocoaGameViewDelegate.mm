@@ -167,15 +167,15 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 
 @implementation CocoaGameViewDelegate
 {
-	std::shared_ptr<Pomdog::Details::SystemEventDispatcher> eventDispatcher;
-	std::shared_ptr<Pomdog::Details::Cocoa::MouseCocoa> mouse_;
+	std::shared_ptr<Pomdog::Detail::SystemEventDispatcher> eventDispatcher;
+	std::shared_ptr<Pomdog::Detail::Cocoa::MouseCocoa> mouse_;
 	NSView* view_;
 }
 
 @synthesize view = view_;
 
 //-----------------------------------------------------------------------
-- (id)initWithEventDispatcher:(std::shared_ptr<Pomdog::Details::SystemEventDispatcher>)dispatcher
+- (id)initWithEventDispatcher:(std::shared_ptr<Pomdog::Detail::SystemEventDispatcher>)dispatcher
 {
 	self = [super init];
 	if (self) {
@@ -186,7 +186,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 	return self;
 }
 //-----------------------------------------------------------------------
-- (void)resetMouse:(std::shared_ptr<Pomdog::Details::Cocoa::MouseCocoa>)mouse
+- (void)resetMouse:(std::shared_ptr<Pomdog::Detail::Cocoa::MouseCocoa>)mouse
 {
 	mouse_ = mouse;
 }
@@ -387,11 +387,11 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 	auto key = TranslateKey([theEvent keyCode]);
 	if (key != Pomdog::Keys::None)
 	{
-		using Pomdog::Details::InputKeyDownEvent;
+		using Pomdog::Detail::InputKeyDownEvent;
 		eventDispatcher->Enqueue<InputKeyDownEvent>(key);
 	}
 
-//	using Pomdog::Details::InputCharacterEvent;
+//	using Pomdog::Detail::InputCharacterEvent;
 //	auto length = [[theEvent characters] length];
 //
 //	for (size_t i = 0; i < length; ++i)
@@ -406,11 +406,11 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 	auto key = TranslateKey([theEvent keyCode]);
 	if (key != Pomdog::Keys::None)
 	{
-		using Pomdog::Details::InputKeyUpEvent;
+		using Pomdog::Detail::InputKeyUpEvent;
 		eventDispatcher->Enqueue<InputKeyUpEvent>(key);
 	}
 
-//	using Pomdog::Details::InputCharacterEvent;
+//	using Pomdog::Detail::InputCharacterEvent;
 //	auto length = [[theEvent characters] length];
 //
 //	for (size_t i = 0; i < length; ++i)
@@ -424,13 +424,13 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 //-----------------------------------------------------------------------
 - (void)viewWillStartLiveResize
 {
-	using Pomdog::Details::ViewWillStartLiveResizeEvent;
+	using Pomdog::Detail::ViewWillStartLiveResizeEvent;
 	eventDispatcher->Enqueue<ViewWillStartLiveResizeEvent>();
 }
 //-----------------------------------------------------------------------
 - (void)viewDidEndLiveResize
 {
-	using Pomdog::Details::ViewDidEndLiveResizeEvent;
+	using Pomdog::Detail::ViewDidEndLiveResizeEvent;
 	eventDispatcher->Enqueue<ViewDidEndLiveResizeEvent>();
 }
 //-----------------------------------------------------------------------

@@ -15,7 +15,7 @@
 #include <algorithm>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 namespace {
@@ -714,5 +714,5 @@ std::vector<EffectConstantDescription> EffectReflectionGL4::GetConstantBuffers()
 
 }// namespace GL4
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

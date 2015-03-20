@@ -23,7 +23,7 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Rendering {
 
 class SpriteBatchRenderer {
@@ -53,7 +53,7 @@ private:
 };
 
 }// namespace Rendering
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SPRITEBATCHRENDERER_FAFB0E53_90D1_47DF_B4EA_C9D551D0721E_HPP)

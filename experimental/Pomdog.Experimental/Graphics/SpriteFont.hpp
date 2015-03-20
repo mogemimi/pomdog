@@ -21,7 +21,7 @@
 #include <string>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SpriteFonts {
 
 struct Glyph {
@@ -36,7 +36,7 @@ struct Glyph {
 };
 
 }// namespace SpriteFonts
-}// namespace Details
+}// namespace Detail
 
 class SpriteBatch;
 
@@ -45,7 +45,7 @@ class SpriteBatch;
 class SpriteFont final {
 public:
 	SpriteFont(std::vector<std::shared_ptr<Texture2D>> && textures,
-		std::vector<Details::SpriteFonts::Glyph> const& glyphs,
+		std::vector<Detail::SpriteFonts::Glyph> const& glyphs,
 		std::uint32_t defaultCharacter,
 		std::int16_t spacing,
 		std::int16_t lineSpacing);

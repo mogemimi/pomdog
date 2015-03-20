@@ -12,7 +12,7 @@
 #endif
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 //----------------------------
 // Choose compiler
@@ -237,7 +237,7 @@ namespace Details {
 #	error "Both DEBUG and NDEBUG are defined."
 #endif
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_PLATFORM_C59B59BE_0311_4CB7_96D7_541924F8C06A_HPP)

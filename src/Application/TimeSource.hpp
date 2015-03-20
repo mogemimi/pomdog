@@ -26,14 +26,14 @@
 #endif
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 
 #if defined(POMDOG_PLATFORM_MACOSX)
-using TimeSource = Details::Cocoa::TimeSourceCocoa;
+using TimeSource = Detail::Cocoa::TimeSourceCocoa;
 #elif defined(POMDOG_PLATFORM_WIN32)
-using TimeSource = Details::Win32::TimeSourceWin32;
+using TimeSource = Detail::Win32::TimeSourceWin32;
 #elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
-using TimeSource = Details::Linux::TimeSourceLinux;
+using TimeSource = Detail::Linux::TimeSourceLinux;
 #else
 
 class TimeSource {
@@ -47,7 +47,7 @@ public:
 
 #endif
 
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_TIMESOURCE_C4211975_ADF9_4F64_950B_B891B9E5C0BD_HPP)

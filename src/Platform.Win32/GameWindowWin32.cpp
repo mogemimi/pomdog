@@ -14,7 +14,7 @@
 #include <string>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Win32 {
 namespace {
 
@@ -481,5 +481,5 @@ HWND GameWindowWin32::NativeWindowHandle() const
 }
 //-----------------------------------------------------------------------
 }// namespace Win32
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

@@ -75,9 +75,9 @@ private:
 	std::shared_ptr<Texture2D> maidTexture;
 	std::vector<Matrix3x2> maidGlobalPose;
 	std::shared_ptr<AnimationClip> maidAnimationClipIdle;
-	Details::Skeletal2D::AnimationTimer maidAnimationTimer;
+	Detail::Skeletal2D::AnimationTimer maidAnimationTimer;
 	Skin maidSkin;
-	std::vector<Details::Skeletal2D::SpriteAnimationTrack> maidSpriteAnimationTracks;
+	std::vector<Detail::Skeletal2D::SpriteAnimationTrack> maidSpriteAnimationTracks;
 
 	SkinnedMesh maidSkinnedMesh;
 	std::shared_ptr<SkinnedEffect> maidSkinningEffect;

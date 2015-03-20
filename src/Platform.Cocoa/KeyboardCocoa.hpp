@@ -15,7 +15,7 @@
 #include "Pomdog/Input/KeyboardState.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Cocoa {
 
 class KeyboardCocoa final: public Keyboard {
@@ -32,7 +32,7 @@ private:
 };
 
 }// namespace Cocoa
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_KEYBOARDCOCOA_E0980F30_9516_49D4_80A0_CCE22DAB9F05_HPP)

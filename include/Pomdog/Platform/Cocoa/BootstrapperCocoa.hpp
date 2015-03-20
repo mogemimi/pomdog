@@ -21,7 +21,7 @@ namespace Pomdog {
 
 class GameHost;
 
-namespace Details {
+namespace Detail {
 namespace Cocoa {
 
 class POMDOG_EXPORT BootstrapperCocoa final {
@@ -41,7 +41,7 @@ private:
 };
 
 }// namespace Cocoa
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_DETAIL_BOOTSTRAPPERCOCOA_13B44EFA_9FFA_4AE2_953A_22EFEB4FC322_HPP)

@@ -13,7 +13,7 @@
 #include "Pomdog/Math/MathHelper.hpp"
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Skeletal2D {
 namespace {
 
@@ -57,7 +57,7 @@ AnimationTimeInterval AnimationAdditiveNode::Length() const
 }
 //-----------------------------------------------------------------------
 void AnimationAdditiveNode::Calculate(AnimationTimeInterval const& time,
-	Details::Skeletal2D::AnimationGraphWeightCollection const& weights,
+	Detail::Skeletal2D::AnimationGraphWeightCollection const& weights,
 	Skeleton const& skeleton, SkeletonPose & skeletonPose) const
 {
 	auto sourcePose1 = SkeletonPose::CreateBindPose(skeleton);
@@ -101,5 +101,5 @@ void AnimationAdditiveNode::Calculate(AnimationTimeInterval const& time,
 }
 
 }// namespace Skeletal2D
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

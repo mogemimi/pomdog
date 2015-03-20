@@ -9,7 +9,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 namespace XAudio2 {
 //-----------------------------------------------------------------------
@@ -43,5 +43,5 @@ std::size_t AudioClipXAudio2::SizeInBytes() const
 //-----------------------------------------------------------------------
 }// namespace XAudio2
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

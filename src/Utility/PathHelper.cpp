@@ -8,7 +8,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 //-----------------------------------------------------------------------
 std::string PathHelper::Join(std::string const& path1, std::string const& path2)
 {
@@ -24,5 +24,5 @@ std::string PathHelper::Join(std::string const& path1, std::string const& path2)
 	return std::move(result);
 }
 //-----------------------------------------------------------------------
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog

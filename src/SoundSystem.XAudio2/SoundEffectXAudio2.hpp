@@ -21,7 +21,7 @@ class AudioListener;
 }// namespace Pomdog
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace SoundSystem {
 namespace XAudio2 {
 
@@ -56,7 +56,7 @@ private:
 
 }// namespace XAudio2
 }// namespace SoundSystem
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
 
 #endif // !defined(POMDOG_SOUNDEFFECTXAUDIO2_ED1F6835_CC69_4922_802F_961D8011F154_HPP)

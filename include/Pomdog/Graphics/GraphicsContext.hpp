@@ -23,13 +23,13 @@ namespace Pomdog {
 
 class PresentationParameters;
 
-namespace Details {
+namespace Detail {
 namespace RenderSystem {
 
 class NativeGraphicsContext;
 
 }// namespace RenderSystem
-}// namespace Details
+}// namespace Detail
 
 ///@~Japanese
 /// @brief 下位レベルの API を提供するグラフィックスコンテキストです。レンダリングコマンドを生成するために使用します。
@@ -39,7 +39,7 @@ public:
 	GraphicsContext(GraphicsContext const&) = delete;
 	GraphicsContext & operator=(GraphicsContext const&) = delete;
 
-	GraphicsContext(std::unique_ptr<Details::RenderSystem::NativeGraphicsContext> nativeContext,
+	GraphicsContext(std::unique_ptr<Detail::RenderSystem::NativeGraphicsContext> nativeContext,
 		PresentationParameters const& presentationParameters,
 		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
@@ -196,7 +196,7 @@ public:
 	void SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
 
 public:
-	Details::RenderSystem::NativeGraphicsContext* NativeGraphicsContext();
+	Detail::RenderSystem::NativeGraphicsContext* NativeGraphicsContext();
 
 private:
 	class Impl;

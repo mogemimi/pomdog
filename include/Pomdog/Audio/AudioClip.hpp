@@ -22,7 +22,7 @@ namespace Pomdog {
 
 class POMDOG_EXPORT AudioClip {
 public:
-	AudioClip(std::unique_ptr<Details::SoundSystem::NativeAudioClip> && nativeAudioClip,
+	AudioClip(std::unique_ptr<Detail::SoundSystem::NativeAudioClip> && nativeAudioClip,
 		std::uint32_t sampleRate, std::uint16_t bitsPerSample, AudioChannels channels);
 
 	AudioClip(AudioClip const&) = delete;
@@ -44,10 +44,10 @@ public:
 
 	AudioChannels Channels() const;
 
-	Details::SoundSystem::NativeAudioClip* NativeAudioClip();
+	Detail::SoundSystem::NativeAudioClip* NativeAudioClip();
 
 private:
-	std::unique_ptr<Details::SoundSystem::NativeAudioClip> nativeAudioClip;
+	std::unique_ptr<Detail::SoundSystem::NativeAudioClip> nativeAudioClip;
 	std::uint32_t sampleRate;
 	std::uint16_t bitsPerSample;
 	AudioChannels channels;

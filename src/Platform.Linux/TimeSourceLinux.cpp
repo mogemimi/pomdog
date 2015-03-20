@@ -9,7 +9,7 @@
 #include <ctime>
 
 namespace Pomdog {
-namespace Details {
+namespace Detail {
 namespace Linux {
 
 TimePoint TimeSourceLinux::Now() const
@@ -26,5 +26,5 @@ TimePoint TimeSourceLinux::Now() const
 }
 
 }// namespace Linux
-}// namespace Details
+}// namespace Detail
 }// namespace Pomdog
