@@ -110,13 +110,11 @@ Rectangle GameWindowCocoa::ClientBounds() const
 	NSSize windowSize = [nativeWindow frame].size;
 	NSSize screenSize = [[nativeWindow screen] visibleFrame].size;
 
-	Rectangle rect {
-		static_cast<std::int32_t>(origin.x),
-		static_cast<std::int32_t>(screenSize.height - windowSize.height - origin.y),
-		static_cast<std::int32_t>(bounds.size.width),
-		static_cast<std::int32_t>(bounds.size.height)
-	};
-	return std::move(rect);
+	return Rectangle(
+		origin.x,
+		screenSize.height - windowSize.height - origin.y,
+		bounds.size.width,
+		bounds.size.height);
 }
 //-----------------------------------------------------------------------
 void GameWindowCocoa::ClientBounds(Rectangle const& clientBounds)

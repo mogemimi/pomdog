@@ -24,10 +24,7 @@ struct UIHelper {
 	static Point2D ConvertToChildSpace(Point2D const& position, Matrix3x2 const& transform)
 	{
 		auto positionInChild = ConvertToChildSpace(Vector2(position.X, position.Y), transform);
-		return {
-			static_cast<std::int32_t>(positionInChild.X),
-			static_cast<std::int32_t>(positionInChild.Y)
-		};
+		return Point2D(positionInChild.X, positionInChild.Y);
 	}
 };
 
