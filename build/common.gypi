@@ -19,9 +19,6 @@
         ],
       },
     },
-    'xcode_settings': {
-      'ONLY_ACTIVE_ARCH': 'YES',
-    },
     'default_configuration': 'Release',
     #'default_configuration': 'Debug',
     'configurations': {
@@ -50,6 +47,7 @@
         'xcode_settings': {
           'OTHER_CFLAGS': ['-g'],
           'GCC_OPTIMIZATION_LEVEL': '0', # -O0
+          'ONLY_ACTIVE_ARCH': 'YES',
         },
       }, # Debug
       'Release': {
