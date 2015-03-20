@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_SANDBOXHELPER_254CE54A_4E5C_490B_A7A7_A0DF1AE34C85_HPP
 #define POMDOG_SANDBOXHELPER_254CE54A_4E5C_490B_A7A7_A0DF1AE34C85_HPP

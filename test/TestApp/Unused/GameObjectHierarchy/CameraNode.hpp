@@ -1,8 +1,5 @@
-﻿//
-//  Copyright (C) 2013-2015 mogemimi.
-//  Distributed under the MIT License. See LICENSE.md or
-//  http://enginetrouble.net/pomdog/license for details.
-//
+﻿// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_CAMERANODE_6C0263F9_8E18_46DA_B679_76CEF633448D_HPP
 #define POMDOG_CAMERANODE_6C0263F9_8E18_46DA_B679_76CEF633448D_HPP
