@@ -17,33 +17,31 @@ enum class ClearOptions: std::uint8_t {
 	/// @brief Clear the depth buffer.
 	///@~Japanese
 	/// @brief 深度バッファをクリアします。
-	DepthBuffer = 0x1,
+	DepthBuffer = 0b001,
 
 	///@~English
 	/// @brief Clear the stencil buffer.
 	///@~Japanese
 	/// @brief ステンシルバッファをクリアします。
-	Stencil = 0x2,
+	Stencil = 0b010,
 
 	///@~English
 	/// @brief Clear the rendering target.
 	///@~Japanese
 	/// @brief レンダリングターゲットをクリアします。
-	RenderTarget = 0x4,
-
-	// Details:
+	RenderTarget = 0b100,
 
 	///@brief レンダリングターゲット + 深度バッファ + ステンシルバッファ
-	ClearOptions_Details_TargetDepthStencil = 0x1 | 0x2 | 0x4,
+	ClearOptions_Detail_TargetDepthStencil = 0b001 | 0b010 | 0b100,
 
 	///@brief 深度バッファ + ステンシルバッファ
-	ClearOptions_Details_DepthStecil = 0x1 | 0x2,
+	ClearOptions_Detail_DepthStecil = 0b001 | 0b010,
 
 	///@brief レンダリングターゲット + ステンシルバッファ
-	ClearOptions_Details_TargetStencil = 0x2 | 0x4,
+	ClearOptions_Detail_TargetStencil = 0b010 | 0b100,
 
 	///@brief レンダリングターゲット + 深度バッファ
-	ClearOptions_Details_TargetDepth = 0x4 | 0x1,
+	ClearOptions_Detail_TargetDepth = 0b100 | 0b001,
 };
 
 constexpr ClearOptions operator|(ClearOptions a, ClearOptions b)
