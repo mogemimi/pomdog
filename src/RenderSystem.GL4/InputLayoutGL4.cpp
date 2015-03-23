@@ -435,12 +435,17 @@ static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings
 	for (auto & binding: inputBindings)
 	{
 		POMDOG_ASSERT(vertexBufferIter != std::end(vertexBuffers));
-		auto nativeVertexBuffer = dynamic_cast<VertexBufferGL4*>((*vertexBufferIter)->NativeVertexBuffer());
+		auto & vertexBuffer = (*vertexBufferIter);
+		auto nativeVertexBuffer = dynamic_cast<VertexBufferGL4*>(vertexBuffer->NativeVertexBuffer());
 
 		POMDOG_ASSERT(nativeVertexBuffer);
-		nativeVertexBuffer->BindBuffer(); // Note: glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+		// NOTE:
+		// The following code is the same as `glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer)`.
+		nativeVertexBuffer->BindBuffer();
 
-		auto const strideBytes = (*vertexBufferIter)->StrideBytes();
+		POMDOG_ASSERT(vertexBuffer->StrideBytes() <= std::numeric_limits<GLsizei>::max());
+		POMDOG_ASSERT(vertexBuffer->StrideBytes() > 0);
+		const auto strideBytes = static_cast<GLsizei>(vertexBuffer->StrideBytes());
 
 		for (auto & attribute: binding.InputElements)
 		{

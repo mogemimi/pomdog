@@ -86,7 +86,7 @@ public:
 private:
 	std::unique_ptr<Detail::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
 	std::uint32_t vertexCount;
-	std::uint16_t strideBytes;
+	std::uint32_t strideBytes;
 	Pomdog::BufferUsage bufferUsage;
 };
 

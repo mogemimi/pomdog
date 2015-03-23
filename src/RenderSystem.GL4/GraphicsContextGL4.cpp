@@ -13,6 +13,7 @@
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include "../RenderSystem/NativeTexture2D.hpp"
+#include "../Utility/NumericHelper.hpp"
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Graphics/ClearOptions.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
@@ -248,7 +249,7 @@ void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::size_t v
 	glDrawArrays(
 		ToPrimitiveTopology(primitiveTopology),
 		0,
-		vertexCount);
+		NumericHelper::Cast<GLsizei>(vertexCount));
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDrawArrays", __FILE__, __LINE__);
@@ -286,7 +287,7 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 
 	glDrawElements(
 		ToPrimitiveTopology(primitiveTopology),
-		indexCount,
+		NumericHelper::Cast<GLsizei>(indexCount),
 		ToIndexElementType(indexBuffer->ElementSize()),
 		nullptr);
 
@@ -323,8 +324,8 @@ void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology,
 	glDrawArraysInstanced(
 		ToPrimitiveTopology(primitiveTopology),
 		0,
-		vertexCount,
-		instanceCount);
+		NumericHelper::Cast<GLsizei>(vertexCount),
+		NumericHelper::Cast<GLsizei>(instanceCount));
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDrawArraysInstanced", __FILE__, __LINE__);
@@ -365,10 +366,10 @@ void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopolog
 
 	glDrawElementsInstanced(
 		ToPrimitiveTopology(primitiveTopology),
-		indexCount,
+		NumericHelper::Cast<GLsizei>(indexCount),
 		ToIndexElementType(indexBuffer->ElementSize()),
 		nullptr,
-		instanceCount);
+		NumericHelper::Cast<GLsizei>(instanceCount));
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDrawElementsInstanced", __FILE__, __LINE__);
