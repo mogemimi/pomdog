@@ -44,7 +44,7 @@ std::int32_t Texture2D::Height() const
 	return pixelHeight;
 }
 //-----------------------------------------------------------------------
-std::uint32_t Texture2D::LevelCount() const
+std::int32_t Texture2D::LevelCount() const
 {
 	return levelCount;
 }
@@ -60,7 +60,7 @@ void Texture2D::SetData(void const* pixelData)
 	POMDOG_ASSERT(pixelData);
 	POMDOG_ASSERT(pixelWidth > 0);
 	POMDOG_ASSERT(pixelHeight > 0);
-	POMDOG_ASSERT((pixelWidth * pixelHeight) > 0);
+	POMDOG_ASSERT(levelCount >= 1);
 	nativeTexture2D->SetData(pixelWidth, pixelHeight, levelCount, format, pixelData);
 }
 //-----------------------------------------------------------------------

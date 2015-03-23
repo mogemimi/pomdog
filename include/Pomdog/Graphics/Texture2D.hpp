@@ -64,7 +64,7 @@ public:
 	///@~Japanese
 	/// @brief ミップマップレベルを取得します。
 	/// @remarks ミップマップレベルは 1 以上を有効とします。
-	std::uint32_t LevelCount() const;
+	std::int32_t LevelCount() const;
 
 	///@~Japanese
 	/// @brief テクスチャのフォーマットを取得します。
@@ -81,7 +81,7 @@ private:
 	std::unique_ptr<Detail::RenderSystem::NativeTexture2D> nativeTexture2D;
 	std::int32_t pixelWidth;
 	std::int32_t pixelHeight;
-	std::uint32_t levelCount;
+	std::int32_t levelCount;
 	SurfaceFormat format;
 };
 

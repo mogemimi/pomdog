@@ -143,8 +143,8 @@ static GLsizei MipmapImageDataBytes(GLsizei pixelWidth, GLsizei pixelHeight, GLs
 	return pixelWidth * pixelHeight * bytesPerBlock;
 }
 //-----------------------------------------------------------------------
-static void SetPixelDataTexture2DCompressedGL4(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
-	std::uint32_t levelCount, SurfaceFormat format, std::uint8_t const* pixelData)
+static void SetPixelDataTexture2DCompressedGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
+	std::int32_t levelCount, SurfaceFormat format, std::uint8_t const* pixelData)
 {
 	POMDOG_ASSERT(format == SurfaceFormat::BlockComp1_UNorm ||
 		format == SurfaceFormat::BlockComp2_UNorm ||
@@ -161,7 +161,7 @@ static void SetPixelDataTexture2DCompressedGL4(std::uint32_t pixelWidth, std::ui
 	GLsizei mipMapPixelHeight = pixelHeight;
 
 	POMDOG_ASSERT(levelCount >= 1);
-	for (GLint mipmapLevel = 0; mipmapLevel < static_cast<GLint>(levelCount); ++mipmapLevel)
+	for (GLint mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel)
 	{
 		POMDOG_ASSERT(mipMapPixelWidth > 0);
 		POMDOG_ASSERT(mipMapPixelHeight > 0);
@@ -183,8 +183,8 @@ static void SetPixelDataTexture2DCompressedGL4(std::uint32_t pixelWidth, std::ui
 	}
 }
 //-----------------------------------------------------------------------
-static void SetPixelDataTexture2DGL4(std::uint32_t pixelWidth, std::uint32_t pixelHeight,
-	std::uint32_t levelCount, SurfaceFormat format, std::uint8_t const* pixelData)
+static void SetPixelDataTexture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
+	std::int32_t levelCount, SurfaceFormat format, std::uint8_t const* pixelData)
 {
 	POMDOG_ASSERT(pixelWidth > 0);
 	POMDOG_ASSERT(pixelHeight > 0);
@@ -199,7 +199,7 @@ static void SetPixelDataTexture2DGL4(std::uint32_t pixelWidth, std::uint32_t pix
 
 	std::size_t startOffset = 0;
 
-	for (GLint mipmapLevel = 0; mipmapLevel < static_cast<GLint>(levelCount); ++mipmapLevel)
+	for (GLint mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel)
 	{
 		GLsizei const strideBytesPerMipmap = MipmapImageDataBytes(mipMapPixelWidth, mipMapPixelHeight, bytesPerBlock);
 
@@ -227,7 +227,7 @@ struct TypesafeHelperGL4::OpenGLGetTraits<Texture2DObjectGL4> {
 };
 //-----------------------------------------------------------------------
 Texture2DGL4::Texture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
-	std::uint32_t levelCount, SurfaceFormat format)
+	std::int32_t levelCount, SurfaceFormat format)
 {
 	// Create Texture2D
 	textureObject = ([]{
@@ -273,7 +273,7 @@ Texture2DGL4::~Texture2DGL4()
 }
 //-----------------------------------------------------------------------
 void Texture2DGL4::SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
-	std::uint32_t levelCount, SurfaceFormat format, void const* pixelData)
+	std::int32_t levelCount, SurfaceFormat format, void const* pixelData)
 {
 	POMDOG_ASSERT(pixelWidth > 0);
 	POMDOG_ASSERT(pixelHeight > 0);

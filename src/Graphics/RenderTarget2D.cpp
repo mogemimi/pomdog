@@ -27,6 +27,8 @@ RenderTarget2D::RenderTarget2D(GraphicsDevice & graphicsDevice,
 	, format(formatIn)
 	, depthStencilFormat(depthStencilFormatIn)
 {
+	POMDOG_ASSERT(pixelWidth > 0);
+	POMDOG_ASSERT(pixelHeight > 0);
 	POMDOG_ASSERT(levelCount >= 1);
 	nativeRenderTarget2D = graphicsDevice.NativeGraphicsDevice()->CreateRenderTarget2D(
 		pixelWidth, pixelHeight, levelCount, format, depthStencilFormat);
@@ -57,7 +59,7 @@ std::int32_t RenderTarget2D::Height() const
 	return pixelHeight;
 }
 //-----------------------------------------------------------------------
-std::uint32_t RenderTarget2D::LevelCount() const
+std::int32_t RenderTarget2D::LevelCount() const
 {
 	return levelCount;
 }
