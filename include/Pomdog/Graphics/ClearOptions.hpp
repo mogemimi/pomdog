@@ -8,6 +8,7 @@
 #pragma once
 #endif
 
+#include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 
 namespace Pomdog {
@@ -30,18 +31,6 @@ enum class ClearOptions: std::uint8_t {
 	///@~Japanese
 	/// @brief レンダリングターゲットをクリアします。
 	RenderTarget = 0b100,
-
-	///@brief レンダリングターゲット + 深度バッファ + ステンシルバッファ
-	ClearOptions_Detail_TargetDepthStencil = 0b001 | 0b010 | 0b100,
-
-	///@brief 深度バッファ + ステンシルバッファ
-	ClearOptions_Detail_DepthStecil = 0b001 | 0b010,
-
-	///@brief レンダリングターゲット + ステンシルバッファ
-	ClearOptions_Detail_TargetStencil = 0b010 | 0b100,
-
-	///@brief レンダリングターゲット + 深度バッファ
-	ClearOptions_Detail_TargetDepth = 0b100 | 0b001,
 };
 
 constexpr ClearOptions operator|(ClearOptions a, ClearOptions b)
@@ -49,7 +38,15 @@ constexpr ClearOptions operator|(ClearOptions a, ClearOptions b)
 	return static_cast<ClearOptions>(static_cast<std::uint8_t>(a) | static_cast<std::uint8_t>(b));
 }
 
-ClearOptions & operator|=(ClearOptions & a, ClearOptions b);
+#if __cplusplus < 201402L
+POMDOG_EXPORT ClearOptions & operator|=(ClearOptions & a, ClearOptions b);
+#else
+constexpr ClearOptions & operator|=(ClearOptions & a, ClearOptions b)
+{
+	a = a | b;
+	return a;
+}
+#endif
 
 }// namespace Pomdog
 
