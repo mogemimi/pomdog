@@ -31,7 +31,7 @@ void BeamRenderable::Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 void BeamRenderable::Update(GameClock const& clock)
 {
 	{
-		beamSystem.emitter.InterpolationPoints = static_cast<std::uint16_t>(95);
+		beamSystem.emitter.InterpolationPoints = 95;
 		beamSystem.emitter.StartThickness = 1.374f;
 		beamSystem.branching.BranchingRate = 0.134f;
 		beamSystem.branching.InheritThickness = 0.5f;

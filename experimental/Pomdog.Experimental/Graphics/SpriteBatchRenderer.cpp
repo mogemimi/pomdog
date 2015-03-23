@@ -229,19 +229,20 @@ void SpriteBatchRenderer::Impl::DrawInstance(std::vector<SpriteInfo> const& spri
 {
 	POMDOG_ASSERT(!textures.empty());
 	POMDOG_ASSERT(textures.size() <= MaxTextureCount);
+	POMDOG_ASSERT(textures.size() <= std::numeric_limits<int>::max());
 	POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
 
 	auto parameter = constantBuffers->Find("TextureConstants");
 	parameter->SetValue(textureConstant);
 
 	POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
-	instanceVertices->SetData(sprites.data(), static_cast<std::uint32_t>(sprites.size()));
+	instanceVertices->SetData(sprites.data(), sprites.size());
 
-	for (std::uint32_t index = 0; index < textures.size(); ++index) {
+	for (int index = 0; index < static_cast<int>(textures.size()); ++index) {
 		graphicsContext->SetTexture(index, textures[index]);
 	}
 
-	for (std::uint32_t index = static_cast<std::uint32_t>(textures.size()); index < MaxTextureCount; ++index) {
+	for (int index = static_cast<int>(textures.size()); index < static_cast<int>(MaxTextureCount); ++index) {
 		///@note Set the dummy texture to texture unit:
 		graphicsContext->SetTexture(index, textures.front());
 	}
@@ -250,7 +251,7 @@ void SpriteBatchRenderer::Impl::DrawInstance(std::vector<SpriteInfo> const& spri
 	graphicsContext->SetEffectPass(effectPass);
 	graphicsContext->SetConstantBuffers(constantBuffers);
 	graphicsContext->DrawIndexedInstanced(PrimitiveTopology::TriangleList,
-		planeIndices, planeIndices->IndexCount(), static_cast<std::uint32_t>(sprites.size()));
+		planeIndices, planeIndices->IndexCount(), sprites.size());
 
 	++drawCallCount;
 }

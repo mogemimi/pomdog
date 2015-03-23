@@ -170,9 +170,10 @@ void BeamSystem::Update(Duration const& frameDuration, Transform2D const& emitte
 		POMDOG_ASSERT(emitter.Duration.count() > 0);
 		//float normalizedTime = erapsedTime / emitter.Duration;
 
-		auto CreateBranchBeam = [this](std::size_t parentBeamIndex, Vector2 const& sourceStart, Vector2 const& sourceEnd) {
+		auto CreateBranchBeam = [this](std::size_t parentBeamIndex, Vector2 const& sourceStart, Vector2 const& sourceEnd)
+		{
 			std::uniform_real_distribution<float> distribution(0.0f, branching.MaxBranches * branching.BranchingRate);
-			auto const maxBranches = static_cast<std::size_t>(distribution(random));
+			auto const maxBranches = distribution(random);
 
 			for (std::size_t i = 0; i < maxBranches; ++i) {
 				if (beams.size() + 1 >= emitter.MaxBeams) {

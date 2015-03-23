@@ -119,12 +119,12 @@ void PolygonBatch::Impl::Flush()
 {
 	POMDOG_ASSERT(!vertices.empty());
 	POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
-	vertexBuffer->SetData(vertices.data(), static_cast<std::uint32_t>(vertices.size()));
+	vertexBuffer->SetData(vertices.data(), vertices.size());
 
 	graphicsContext->SetVertexBuffer(vertexBuffer);
 	graphicsContext->SetEffectPass(effectPass);
 	graphicsContext->SetConstantBuffers(constantBuffers);
-	graphicsContext->Draw(PrimitiveTopology::TriangleList, static_cast<std::uint32_t>(vertices.size()));
+	graphicsContext->Draw(PrimitiveTopology::TriangleList, vertices.size());
 
 	++drawCallCount;
 

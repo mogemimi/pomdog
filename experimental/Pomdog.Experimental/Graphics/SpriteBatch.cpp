@@ -295,14 +295,14 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
 	}
 
 	POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
-	instanceVertices->SetData(sprites.data(), static_cast<std::uint32_t>(sprites.size()));
+	instanceVertices->SetData(sprites.data(), sprites.size());
 
 	graphicsContext->SetTexture(0, texture);
 	graphicsContext->SetVertexBuffers({planeVertices, instanceVertices});
 	graphicsContext->SetEffectPass(effectPass);
 	graphicsContext->SetConstantBuffers(constantBuffers);
 	graphicsContext->DrawIndexedInstanced(PrimitiveTopology::TriangleList,
-		planeIndices, planeIndices->IndexCount(), static_cast<std::uint32_t>(sprites.size()));
+		planeIndices, planeIndices->IndexCount(), sprites.size());
 }
 //-----------------------------------------------------------------------
 void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,

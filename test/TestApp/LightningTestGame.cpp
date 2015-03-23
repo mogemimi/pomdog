@@ -172,7 +172,7 @@ void LightningTestGame::Update()
 		gameEditor->Update();
 	}
 	{
-		beamSystem.emitter.InterpolationPoints = static_cast<std::uint16_t>(slider1->Value());
+		beamSystem.emitter.InterpolationPoints = slider1->Value();
 		beamSystem.emitter.StartThickness = slider2->Value();
 		beamSystem.branching.BranchingRate = slider3->Value();
 		beamSystem.emitter.SwayRange = std::uniform_real_distribution<float>(-slider4->Value(), slider4->Value());
