@@ -12,8 +12,8 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 VertexBuffer::VertexBuffer(GraphicsDevice & graphicsDevice,
-	void const* vertices, std::uint32_t vertexCountIn,
-	std::uint16_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
+	void const* vertices, std::size_t vertexCountIn,
+	std::size_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
 	: nativeVertexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateVertexBuffer(
 		vertices, vertexCountIn * strideBytesIn, bufferUsageIn))
 	, vertexCount(vertexCountIn)
@@ -21,10 +21,13 @@ VertexBuffer::VertexBuffer(GraphicsDevice & graphicsDevice,
 	, bufferUsage(bufferUsageIn)
 {
 	POMDOG_ASSERT(nativeVertexBuffer);
+	POMDOG_ASSERT(vertices != nullptr);
+	POMDOG_ASSERT(vertexCountIn > 0);
+	POMDOG_ASSERT(strideBytesIn > 0);
 }
 //-----------------------------------------------------------------------
 VertexBuffer::VertexBuffer(GraphicsDevice & graphicsDevice,
-	std::uint32_t vertexCountIn, std::uint16_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
+	std::size_t vertexCountIn, std::size_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
 	: nativeVertexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateVertexBuffer(
 		vertexCountIn * strideBytesIn, bufferUsageIn))
 	, vertexCount(vertexCountIn)
@@ -32,18 +35,21 @@ VertexBuffer::VertexBuffer(GraphicsDevice & graphicsDevice,
 	, bufferUsage(bufferUsageIn)
 {
 	POMDOG_ASSERT(nativeVertexBuffer);
+	POMDOG_ASSERT(bufferUsageIn != BufferUsage::Immutable);
+	POMDOG_ASSERT(vertexCountIn > 0);
+	POMDOG_ASSERT(strideBytesIn > 0);
 }
 //-----------------------------------------------------------------------
 VertexBuffer::VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	void const* vertices, std::uint32_t vertexCountIn,
-	std::uint16_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
+	void const* vertices, std::size_t vertexCountIn,
+	std::size_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
 	: VertexBuffer(*graphicsDevice, vertices, vertexCountIn, strideBytesIn, bufferUsageIn)
 {
 	POMDOG_ASSERT(nativeVertexBuffer);
 }
 //-----------------------------------------------------------------------
 VertexBuffer::VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	std::uint32_t vertexCountIn, std::uint16_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
+	std::size_t vertexCountIn, std::size_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
 	: VertexBuffer(*graphicsDevice, vertexCountIn, strideBytesIn, bufferUsageIn)
 {
 	POMDOG_ASSERT(nativeVertexBuffer);
@@ -51,7 +57,7 @@ VertexBuffer::VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice
 //-----------------------------------------------------------------------
 VertexBuffer::~VertexBuffer() = default;
 //-----------------------------------------------------------------------
-std::uint16_t VertexBuffer::StrideBytes() const
+std::size_t VertexBuffer::StrideBytes() const
 {
 	return strideBytes;
 }
@@ -61,12 +67,12 @@ BufferUsage VertexBuffer::BufferUsage() const
 	return bufferUsage;
 }
 //-----------------------------------------------------------------------
-std::uint32_t VertexBuffer::VertexCount() const
+std::size_t VertexBuffer::VertexCount() const
 {
 	return vertexCount;
 }
 //-----------------------------------------------------------------------
-void VertexBuffer::SetData(void const* source, std::uint32_t elementCount)
+void VertexBuffer::SetData(void const* source, std::size_t elementCount)
 {
 	POMDOG_ASSERT(source != nullptr);
 	POMDOG_ASSERT(elementCount > 0);
@@ -76,7 +82,8 @@ void VertexBuffer::SetData(void const* source, std::uint32_t elementCount)
 	nativeVertexBuffer->SetData(0, source, elementCount * strideBytes);
 }
 //-----------------------------------------------------------------------
-void VertexBuffer::SetData(std::uint32_t offsetInBytes, void const* source, std::uint32_t elementCount, std::uint16_t strideBytesIn)
+void VertexBuffer::SetData(std::size_t offsetInBytes, void const* source,
+	std::size_t elementCount, std::size_t strideBytesIn)
 {
 	POMDOG_ASSERT(source != nullptr);
 	POMDOG_ASSERT(elementCount > 0);

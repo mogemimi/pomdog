@@ -37,11 +37,11 @@ public:
 
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeVertexBuffer>
-	CreateVertexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage) override;
+	CreateVertexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage) override;
 
 	///@copydoc NativeGraphicsDevice
 	std::unique_ptr<NativeVertexBuffer>
-	CreateVertexBuffer(void const* vertices, std::uint32_t sizeInBytes,
+	CreateVertexBuffer(void const* vertices, std::size_t sizeInBytes,
 		BufferUsage bufferUsage) override;
 
 	///@copydoc NativeGraphicsDevice

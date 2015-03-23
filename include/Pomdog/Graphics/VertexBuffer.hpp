@@ -32,19 +32,19 @@ public:
 	VertexBuffer(VertexBuffer &&) = default;
 
 	VertexBuffer(GraphicsDevice & graphicsDevice,
-		void const* vertices, std::uint32_t vertexCount,
-		std::uint16_t strideBytes, Pomdog::BufferUsage bufferUsage);
+		void const* vertices, std::size_t vertexCount,
+		std::size_t strideBytes, Pomdog::BufferUsage bufferUsage);
 
 	VertexBuffer(GraphicsDevice & graphicsDevice,
-		std::uint32_t vertexCount, std::uint16_t strideBytes,
+		std::size_t vertexCount, std::size_t strideBytes,
 		Pomdog::BufferUsage bufferUsage);
 
 	VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		void const* vertices, std::uint32_t vertexCount,
-		std::uint16_t strideBytes, Pomdog::BufferUsage bufferUsage);
+		void const* vertices, std::size_t vertexCount,
+		std::size_t strideBytes, Pomdog::BufferUsage bufferUsage);
 
 	VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		std::uint32_t vertexCount, std::uint16_t strideBytes,
+		std::size_t vertexCount, std::size_t strideBytes,
 		Pomdog::BufferUsage bufferUsage);
 
 	~VertexBuffer();
@@ -54,12 +54,12 @@ public:
 
 	///@~Japanese
 	/// @brief 頂点の数を取得します。
-	std::uint32_t VertexCount() const;
+	std::size_t VertexCount() const;
 
 	///@~Japanese
 	/// @brief 頂点データ 1 つ分のサイズをバイト単位で取得します。
 	/// @remarks 1 つの頂点の先頭から次の頂点までのバイト数です。
-	std::uint16_t StrideBytes() const;
+	std::size_t StrideBytes() const;
 
 	///@~Japanese
 	/// @brief バッファの使用方法を取得します。
@@ -69,7 +69,7 @@ public:
 	/// @brief 頂点データを格納します。
 	/// @param source ソースバッファ
 	/// @param elementCount 頂点の数
-	void SetData(void const* source, std::uint32_t elementCount);
+	void SetData(void const* source, std::size_t elementCount);
 
 	///@~Japanese
 	/// @brief 頂点データを格納します。
@@ -77,7 +77,8 @@ public:
 	/// @param source ソースバッファ
 	/// @param elementCount 頂点の数
 	/// @param strideBytes 頂点 1 つ分のバイト単位のサイズ
-	void SetData(std::uint32_t offsetInBytes, void const* source, std::uint32_t elementCount, std::uint16_t strideBytes);
+	void SetData(std::size_t offsetInBytes, void const* source,
+		std::size_t elementCount, std::size_t strideBytes);
 
 public:
 	Detail::RenderSystem::NativeVertexBuffer* NativeVertexBuffer();

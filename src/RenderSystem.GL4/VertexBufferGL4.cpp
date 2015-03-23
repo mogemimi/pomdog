@@ -36,13 +36,13 @@ struct TypesafeHelperGL4::OpenGLGetTraits<VertexBufferObjectGL4> {
 	constexpr static GLenum bufferObjectTarget = GL_ARRAY_BUFFER;
 };
 //-----------------------------------------------------------------------
-VertexBufferGL4::VertexBufferGL4(std::uint32_t sizeInBytes, BufferUsage bufferUsage)
-	: VertexBufferGL4(static_cast<void const*>(nullptr), sizeInBytes, bufferUsage)
+VertexBufferGL4::VertexBufferGL4(std::size_t sizeInBytes, BufferUsage bufferUsage)
+	: VertexBufferGL4(nullptr, sizeInBytes, bufferUsage)
 {
 	POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
 }
 //-----------------------------------------------------------------------
-VertexBufferGL4::VertexBufferGL4(void const* vertices, std::uint32_t sizeInBytes,
+VertexBufferGL4::VertexBufferGL4(void const* vertices, std::size_t sizeInBytes,
 	BufferUsage bufferUsage)
 {
 	POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable ? vertices != nullptr: true);
@@ -82,8 +82,8 @@ VertexBufferGL4::~VertexBufferGL4()
 	}
 }
 //-----------------------------------------------------------------------
-void VertexBufferGL4::SetData(std::uint32_t offsetInBytes,
-	void const* source, std::uint32_t sizeInBytes)
+void VertexBufferGL4::SetData(std::size_t offsetInBytes,
+	void const* source, std::size_t sizeInBytes)
 {
 	POMDOG_ASSERT(source != nullptr);
 

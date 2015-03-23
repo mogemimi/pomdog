@@ -60,14 +60,14 @@ GraphicsDeviceGL4::CreateIndexBuffer(void const* indices,
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeVertexBuffer>
-GraphicsDeviceGL4::CreateVertexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage)
+GraphicsDeviceGL4::CreateVertexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage)
 {
 	return std::make_unique<VertexBufferGL4>(sizeInBytes, bufferUsage);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeVertexBuffer>
 GraphicsDeviceGL4::CreateVertexBuffer(void const* vertices,
-	std::uint32_t sizeInBytes, BufferUsage bufferUsage)
+	std::size_t sizeInBytes, BufferUsage bufferUsage)
 {
 	return std::make_unique<VertexBufferGL4>(vertices, sizeInBytes, bufferUsage);
 }

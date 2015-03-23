@@ -222,7 +222,7 @@ void GraphicsContextGL4::Present()
 	#endif
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount)
+void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::size_t vertexCount)
 {
 	// Bind input-layout to the input-assembler stage:
 	POMDOG_ASSERT(effectPass);
@@ -256,7 +256,7 @@ void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::uint32_t
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
-	std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount)
+	std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount)
 {
 	// Bind input-layout to the input-assembler stage:
 	POMDOG_ASSERT(effectPass);
@@ -295,7 +295,8 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 	#endif
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount, std::uint32_t instanceCount)
+void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology,
+	std::size_t vertexCount, std::size_t instanceCount)
 {
 	// Bind input-layout to the input-assembler stage:
 	POMDOG_ASSERT(effectPass);
@@ -331,7 +332,7 @@ void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology, std:
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
-	std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount)
+	std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount)
 {
 	// Bind input-layout to the input-assembler stage:
 	POMDOG_ASSERT(effectPass);

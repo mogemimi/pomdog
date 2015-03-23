@@ -11,6 +11,7 @@
 #include "../Utility/Noncopyable.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
+#include <cstddef>
 #include <vector>
 #include <memory>
 
@@ -36,18 +37,18 @@ public:
 	virtual void Present() = 0;
 
 	///@copydoc Pomdog::GraphicsContext
-	virtual void Draw(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount) = 0;
+	virtual void Draw(PrimitiveTopology primitiveTopology, std::size_t vertexCount) = 0;
 
 	///@copydoc Pomdog::GraphicsContext
 	virtual void DrawIndexed(PrimitiveTopology primitiveTopology,
-		std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount) = 0;
+		std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount) = 0;
 
 	///@copydoc Pomdog::GraphicsContext
-	virtual void DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount, std::uint32_t instanceCount) = 0;
+	virtual void DrawInstanced(PrimitiveTopology primitiveTopology, std::size_t vertexCount, std::size_t instanceCount) = 0;
 
 	///@copydoc Pomdog::GraphicsContext
 	virtual void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
-		std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount) = 0;
+		std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount) = 0;
 
 	///@brief Retrieves the capabilities of a GraphicsContext
 	virtual GraphicsCapabilities GetCapabilities() const = 0;

@@ -355,7 +355,7 @@ void GraphicsContext::Present()
 	impl->nativeContext->Present();
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Draw(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount)
+void GraphicsContext::Draw(PrimitiveTopology primitiveTopology, std::size_t vertexCount)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);
@@ -368,7 +368,7 @@ void GraphicsContext::Draw(PrimitiveTopology primitiveTopology, std::uint32_t ve
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::DrawIndexed(PrimitiveTopology primitiveTopology,
-	std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount)
+	std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);
@@ -381,7 +381,7 @@ void GraphicsContext::DrawIndexed(PrimitiveTopology primitiveTopology,
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::DrawInstanced(PrimitiveTopology primitiveTopology,
-	std::uint32_t vertexCount, std::uint32_t instanceCount)
+	std::size_t vertexCount, std::size_t instanceCount)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);
@@ -394,7 +394,7 @@ void GraphicsContext::DrawInstanced(PrimitiveTopology primitiveTopology,
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
-	std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount)
+	std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);
