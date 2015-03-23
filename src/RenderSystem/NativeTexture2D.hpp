@@ -25,8 +25,6 @@ public:
 
 	virtual void SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
 		std::int32_t levelCount, SurfaceFormat format, void const* pixelData) = 0;
-
-	virtual void Apply(std::uint32_t index) = 0;
 };
 
 }// namespace RenderSystem

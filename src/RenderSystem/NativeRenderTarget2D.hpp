@@ -21,8 +21,6 @@ public:
 	NativeRenderTarget2D & operator=(NativeRenderTarget2D const&) = delete;
 
 	virtual ~NativeRenderTarget2D() = default;
-
-	virtual void Apply(std::uint32_t index) = 0;
 };
 
 }// namespace RenderSystem

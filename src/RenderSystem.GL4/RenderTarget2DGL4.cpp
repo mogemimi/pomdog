@@ -68,15 +68,10 @@ RenderTarget2DGL4::~RenderTarget2DGL4()
 	}
 }
 //-----------------------------------------------------------------------
-void RenderTarget2DGL4::Apply(std::uint32_t index)
-{
-	texture.Apply(index);
-}
-//-----------------------------------------------------------------------
 void RenderTarget2DGL4::BindToFramebuffer(GLenum attachmentPoint)
 {
 	glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint, GL_TEXTURE_2D,
-		texture.NativeHandle().value, 0);
+		texture.GetTextureHandle().value, 0);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glFramebufferTexture2D", __FILE__, __LINE__);
@@ -107,6 +102,11 @@ void RenderTarget2DGL4::BindDepthStencilBuffer()
 		ErrorChecker::CheckError("glFramebufferRenderbuffer", __FILE__, __LINE__);
 		#endif
 	}
+}
+//-----------------------------------------------------------------------
+Texture2DObjectGL4 const& RenderTarget2DGL4::GetTextureHandle() const
+{
+	return texture.GetTextureHandle();
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

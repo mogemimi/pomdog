@@ -119,25 +119,6 @@ static GLenum ToPixelFundamentalType(SurfaceFormat format)
 #endif
 }
 //-----------------------------------------------------------------------
-template <typename T>
-static GLenum ToTextureUnitIndexGL4(T index)
-{
-	static_assert(std::is_unsigned<T>::value, "T is unsigned type.");
-
-	static_assert(GL_TEXTURE0  == (GL_TEXTURE0 + 0), "");
-	static_assert(GL_TEXTURE1  == (GL_TEXTURE0 + 1), "");
-	static_assert(GL_TEXTURE2  == (GL_TEXTURE0 + 2), "");
-	static_assert(GL_TEXTURE3  == (GL_TEXTURE0 + 3), "");
-	static_assert(GL_TEXTURE4  == (GL_TEXTURE0 + 4), "");
-	static_assert(GL_TEXTURE5  == (GL_TEXTURE0 + 5), "");
-	static_assert(GL_TEXTURE6  == (GL_TEXTURE0 + 6), "");
-	static_assert(GL_TEXTURE7  == (GL_TEXTURE0 + 7), "");
-	static_assert(GL_TEXTURE8  == (GL_TEXTURE0 + 8), "");
-	static_assert(GL_TEXTURE9  == (GL_TEXTURE0 + 9), "");
-
-	return static_cast<GLenum>(GL_TEXTURE0 + index);
-}
-//-----------------------------------------------------------------------
 static GLsizei MipmapImageDataBytes(GLsizei pixelWidth, GLsizei pixelHeight, GLsizei bytesPerBlock)
 {
 	return pixelWidth * pixelHeight * bytesPerBlock;
@@ -306,35 +287,6 @@ void Texture2DGL4::SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
 	}
 }
 //-----------------------------------------------------------------------
-void Texture2DGL4::Apply(std::uint32_t index)
-{
-	#if defined(DEBUG) && !defined(NDEBUG)
-	{
-		static std::uint32_t const MaxCombinedTextureImageUnits = ([]{
-			GLint maxCombinedTextureImageUnits = 0;
-			glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxCombinedTextureImageUnits);
-			return maxCombinedTextureImageUnits;
-		})();
-
-		POMDOG_ASSERT(index < MaxCombinedTextureImageUnits);
-	}
-	#endif
-
-	glActiveTexture(ToTextureUnitIndexGL4(index));
-
-	#ifdef DEBUG
-	ErrorChecker::CheckError("glActiveTexture", __FILE__, __LINE__);
-	#endif
-
-	// Bind texture
-	POMDOG_ASSERT(textureObject);
-	glBindTexture(GL_TEXTURE_2D, textureObject->value);
-
-	#ifdef DEBUG
-	ErrorChecker::CheckError("glBindTexture", __FILE__, __LINE__);
-	#endif
-}
-//-----------------------------------------------------------------------
 void Texture2DGL4::GenerateMipmap()
 {
 	POMDOG_ASSERT(textureObject);
@@ -353,7 +305,7 @@ void Texture2DGL4::GenerateMipmap()
 	#endif
 }
 //-----------------------------------------------------------------------
-Texture2DObjectGL4 const& Texture2DGL4::NativeHandle() const
+Texture2DObjectGL4 const& Texture2DGL4::GetTextureHandle() const
 {
 	POMDOG_ASSERT(textureObject);
 	return textureObject.value();

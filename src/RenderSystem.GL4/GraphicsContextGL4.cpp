@@ -33,6 +33,7 @@
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogStream.hpp"
 
+#include <limits>
 #include <cmath>
 #include <array>
 #include <utility>
@@ -74,17 +75,18 @@ static GLenum ToIndexElementType(IndexElementSize indexElementSize)
 template <typename T>
 static GLenum ToTextureUnitIndexGL4(T index)
 {
-	static_assert(std::is_unsigned<T>::value, "T is unsigned type.");
-	static_assert(GL_TEXTURE0  == (GL_TEXTURE0 + 0), "");
-	static_assert(GL_TEXTURE1  == (GL_TEXTURE0 + 1), "");
-	static_assert(GL_TEXTURE2  == (GL_TEXTURE0 + 2), "");
-	static_assert(GL_TEXTURE3  == (GL_TEXTURE0 + 3), "");
-	static_assert(GL_TEXTURE4  == (GL_TEXTURE0 + 4), "");
-	static_assert(GL_TEXTURE5  == (GL_TEXTURE0 + 5), "");
-	static_assert(GL_TEXTURE6  == (GL_TEXTURE0 + 6), "");
-	static_assert(GL_TEXTURE7  == (GL_TEXTURE0 + 7), "");
-	static_assert(GL_TEXTURE8  == (GL_TEXTURE0 + 8), "");
-	static_assert(GL_TEXTURE9  == (GL_TEXTURE0 + 9), "");
+	static_assert(std::is_integral<T>::value, "T is an integral type.");
+	static_assert(GL_TEXTURE0 == (GL_TEXTURE0 + 0), "");
+	static_assert(GL_TEXTURE1 == (GL_TEXTURE0 + 1), "");
+	static_assert(GL_TEXTURE2 == (GL_TEXTURE0 + 2), "");
+	static_assert(GL_TEXTURE3 == (GL_TEXTURE0 + 3), "");
+	static_assert(GL_TEXTURE4 == (GL_TEXTURE0 + 4), "");
+	static_assert(GL_TEXTURE5 == (GL_TEXTURE0 + 5), "");
+	static_assert(GL_TEXTURE6 == (GL_TEXTURE0 + 6), "");
+	static_assert(GL_TEXTURE7 == (GL_TEXTURE0 + 7), "");
+
+	POMDOG_ASSERT(index >= 0);
+	POMDOG_ASSERT(index < 128);
 
 	return static_cast<GLenum>(GL_TEXTURE0 + index);
 }
@@ -92,19 +94,19 @@ static GLenum ToTextureUnitIndexGL4(T index)
 template <typename T>
 static GLenum ToColorAttachment(T index)
 {
-	static_assert(std::is_unsigned<T>::value, "T is unsigned type.");
-	static_assert(GL_COLOR_ATTACHMENT0  == (GL_COLOR_ATTACHMENT0 + 0), "");
-	static_assert(GL_COLOR_ATTACHMENT1  == (GL_COLOR_ATTACHMENT0 + 1), "");
-	static_assert(GL_COLOR_ATTACHMENT2  == (GL_COLOR_ATTACHMENT0 + 2), "");
-	static_assert(GL_COLOR_ATTACHMENT3  == (GL_COLOR_ATTACHMENT0 + 3), "");
-	static_assert(GL_COLOR_ATTACHMENT4  == (GL_COLOR_ATTACHMENT0 + 4), "");
-	static_assert(GL_COLOR_ATTACHMENT5  == (GL_COLOR_ATTACHMENT0 + 5), "");
-	static_assert(GL_COLOR_ATTACHMENT6  == (GL_COLOR_ATTACHMENT0 + 6), "");
-	static_assert(GL_COLOR_ATTACHMENT7  == (GL_COLOR_ATTACHMENT0 + 7), "");
-	static_assert(GL_COLOR_ATTACHMENT8  == (GL_COLOR_ATTACHMENT0 + 8), "");
-	static_assert(GL_COLOR_ATTACHMENT9  == (GL_COLOR_ATTACHMENT0 + 9), "");
+	static_assert(std::is_integral<T>::value, "T is an integral type.");
+	static_assert(GL_COLOR_ATTACHMENT0 == (GL_COLOR_ATTACHMENT0 + 0), "");
+	static_assert(GL_COLOR_ATTACHMENT1 == (GL_COLOR_ATTACHMENT0 + 1), "");
+	static_assert(GL_COLOR_ATTACHMENT2 == (GL_COLOR_ATTACHMENT0 + 2), "");
+	static_assert(GL_COLOR_ATTACHMENT3 == (GL_COLOR_ATTACHMENT0 + 3), "");
+	static_assert(GL_COLOR_ATTACHMENT4 == (GL_COLOR_ATTACHMENT0 + 4), "");
+	static_assert(GL_COLOR_ATTACHMENT5 == (GL_COLOR_ATTACHMENT0 + 5), "");
+	static_assert(GL_COLOR_ATTACHMENT6 == (GL_COLOR_ATTACHMENT0 + 6), "");
+	static_assert(GL_COLOR_ATTACHMENT7 == (GL_COLOR_ATTACHMENT0 + 7), "");
 
-	return static_cast<GLenum>(index + GL_COLOR_ATTACHMENT0);
+	POMDOG_ASSERT(index >= 0);
+	POMDOG_ASSERT(index < 16);
+	return static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + index);
 }
 //-----------------------------------------------------------------------
 static Optional<FrameBufferGL4> CreateFrameBuffer()
@@ -132,6 +134,32 @@ static Optional<FrameBufferGL4> CreateFrameBuffer()
 	}
 
 	return std::move(frameBuffer);
+}
+//-----------------------------------------------------------------------
+static void SetTextureAsShaderResource(int index, Texture2DObjectGL4 const& textureObject)
+{
+	#if defined(DEBUG) && !defined(NDEBUG)
+	{
+		static const auto MaxCombinedTextureImageUnits = ([]{
+			GLint units = 0;
+			glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &units);
+			return units;
+		})();
+		POMDOG_ASSERT(index < MaxCombinedTextureImageUnits);
+	}
+	#endif
+
+	glActiveTexture(ToTextureUnitIndexGL4(index));
+
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glActiveTexture", __FILE__, __LINE__);
+	#endif
+
+	glBindTexture(GL_TEXTURE_2D, textureObject.value);
+
+	#ifdef DEBUG
+	ErrorChecker::CheckError("glBindTexture", __FILE__, __LINE__);
+	#endif
 }
 
 }// unnamed namespace
@@ -525,7 +553,10 @@ void GraphicsContextGL4::SetTexture(int textureUnit, Texture2D & textureIn)
 	textures[textureUnit] = textureType;
 
 	POMDOG_ASSERT(textureIn.NativeTexture2D());
-	textureIn.NativeTexture2D()->Apply(textureUnit);
+	auto textureGL4 = dynamic_cast<Texture2DGL4*>(textureIn.NativeTexture2D());
+
+	POMDOG_ASSERT(textureGL4 != nullptr);
+	SetTextureAsShaderResource(textureUnit, textureGL4->GetTextureHandle());
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetTexture(int textureUnit, RenderTarget2D & textureIn)
@@ -545,7 +576,10 @@ void GraphicsContextGL4::SetTexture(int textureUnit, RenderTarget2D & textureIn)
 	textures[textureUnit] = textureType;
 
 	POMDOG_ASSERT(textureIn.NativeRenderTarget2D());
-	textureIn.NativeRenderTarget2D()->Apply(textureUnit);
+	auto renderTargetGL4 = dynamic_cast<RenderTarget2DGL4*>(textureIn.NativeRenderTarget2D());
+
+	POMDOG_ASSERT(renderTargetGL4 != nullptr);
+	SetTextureAsShaderResource(textureUnit, renderTargetGL4->GetTextureHandle());
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetRenderTarget()

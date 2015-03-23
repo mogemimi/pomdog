@@ -29,13 +29,12 @@ public:
 
 	~RenderTarget2DGL4();
 
-	///@copydoc NativeTexture2D
-	void Apply(std::uint32_t index) override;
-
 	void BindToFramebuffer(GLenum attachmentPoint);
 	void UnbindFromFramebuffer(GLenum attachmentPoint);
 
 	void BindDepthStencilBuffer();
+
+	Texture2DObjectGL4 const& GetTextureHandle() const;
 
 private:
 	Texture2DGL4 texture;

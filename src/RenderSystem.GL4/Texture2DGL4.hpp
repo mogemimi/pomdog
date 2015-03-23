@@ -31,12 +31,9 @@ public:
 	void SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
 		std::int32_t levelCount, SurfaceFormat format, void const* pixelData) override;
 
-	///@copydoc NativeTexture2D
-	void Apply(std::uint32_t index) override;
-
 	void GenerateMipmap();
 
-	Texture2DObjectGL4 const& NativeHandle() const;
+	Texture2DObjectGL4 const& GetTextureHandle() const;
 
 private:
 	Optional<Texture2DObjectGL4> textureObject;
