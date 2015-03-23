@@ -347,15 +347,11 @@ void GameHostCocoa::Impl::ProcessSystemEvents(Event const& event)
 	}
 	else if (auto keyDownEvent = event.As<InputKeyDownEvent>())
 	{
-		//Log::Internal(StringFormat("KeyDown: %d", static_cast<int>(keyDownEvent->Key)));
-
 		POMDOG_ASSERT(keyboard);
 		keyboard->SetKey(keyDownEvent->Key, KeyState::Down);
 	}
 	else if (auto keyUpEvent = event.As<InputKeyUpEvent>())
 	{
-		//Log::Internal(StringFormat("KeyUp: %d", static_cast<int>(keyUpEvent->Key)));
-
 		POMDOG_ASSERT(keyboard);
 		keyboard->SetKey(keyUpEvent->Key, KeyState::Up);
 	}

@@ -50,7 +50,8 @@ static GLenum ToInternalFormatGL4(SurfaceFormat format)
 	};
 
 #ifdef _MSC_VER
-	return GL_R8;// FUS RO DAH!!!
+	// FUS RO DAH!
+	return GL_R8;
 #endif
 }
 //-----------------------------------------------------------------------
@@ -76,11 +77,13 @@ static GLenum ToFormatComponents(SurfaceFormat format)
 	case SurfaceFormat::BlockComp1_UNorm:
 	case SurfaceFormat::BlockComp2_UNorm:
 	case SurfaceFormat::BlockComp3_UNorm:
-		return GL_RED;///@note Cannot find format
+		///@note Cannot find format
+		return GL_RED;
 	};
 
 #ifdef _MSC_VER
-	return GL_RED;// FUS RO DAH!!!
+	// FUS RO DAH!
+	return GL_RED;
 #endif
 }
 //-----------------------------------------------------------------------
@@ -106,11 +109,13 @@ static GLenum ToPixelFundamentalType(SurfaceFormat format)
 	case SurfaceFormat::BlockComp1_UNorm:
 	case SurfaceFormat::BlockComp2_UNorm:
 	case SurfaceFormat::BlockComp3_UNorm:
-		return GL_UNSIGNED_BYTE;///@note Cannot find format
+		///@note Cannot find format
+		return GL_UNSIGNED_BYTE;
 	};
 
 #ifdef _MSC_VER
-	return GL_UNSIGNED_BYTE;// FUS RO DAH!!!
+	// FUS RO DAH!
+	return GL_UNSIGNED_BYTE;
 #endif
 }
 //-----------------------------------------------------------------------
