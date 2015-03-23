@@ -14,7 +14,6 @@ namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
-//-----------------------------------------------------------------------
 namespace {
 
 static GLenum ToIndexBufferUsage(BufferUsage bufferUsage)
@@ -38,7 +37,7 @@ struct TypesafeHelperGL4::OpenGLGetTraits<IndexBufferObjectGL4> {
 };
 //-----------------------------------------------------------------------
 IndexBufferGL4::IndexBufferGL4(std::uint32_t sizeInBytes, BufferUsage bufferUsage)
-	: IndexBufferGL4(static_cast<void const*>(nullptr), sizeInBytes, bufferUsage)
+	: IndexBufferGL4(nullptr, sizeInBytes, bufferUsage)
 {
 	POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
 }
@@ -68,8 +67,7 @@ IndexBufferGL4::IndexBufferGL4(void const* indices,
 	#endif
 
 	POMDOG_ASSERT(sizeInBytes > 0);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeInBytes,
-		static_cast<GLvoid const*>(indices),
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeInBytes, indices,
 		ToIndexBufferUsage(bufferUsage));
 
 	#ifdef DEBUG

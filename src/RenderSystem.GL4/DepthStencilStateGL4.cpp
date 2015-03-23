@@ -73,9 +73,9 @@ static void ToDepthStencilFaceOperationGL4(DepthStencilOperation const& face, De
 //-----------------------------------------------------------------------
 DepthStencilStateGL4::DepthStencilStateGL4(DepthStencilDescription const& description)
 	: depthFunction(ToComparisonFunctionGL4(description.DepthBufferFunction))
-	, referenceStencil(static_cast<GLint>(description.ReferenceStencil))
-	, stencilMask(static_cast<GLuint>(description.StencilMask))
-	, stencilWriteMask(static_cast<GLuint>(description.StencilWriteMask))
+	, referenceStencil(description.ReferenceStencil)
+	, stencilMask(description.StencilMask)
+	, stencilWriteMask(description.StencilWriteMask)
 	, depthBufferWriteEnable(description.DepthBufferWriteEnable ? GL_TRUE: GL_FALSE)
 	, stencilEnable(description.StencilEnable)
 	, depthBufferEnable(description.DepthBufferEnable)

@@ -143,7 +143,7 @@ void SamplerStateGL4::Apply(NativeGraphicsContext &, std::uint32_t index)
 	POMDOG_ASSERT(index <= 19);
 
 	POMDOG_ASSERT(samplerObject);
-	glBindSampler(static_cast<GLuint>(index), samplerObject->value);
+	glBindSampler(index, samplerObject->value);
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glBindSampler", __FILE__, __LINE__);
