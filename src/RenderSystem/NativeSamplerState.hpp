@@ -26,7 +26,7 @@ public:
 
 	///@~Japanese
 	/// @brief レンダリングの直前にサンプラーステートを適用します。
-	virtual void Apply(NativeGraphicsContext & graphicsContext, std::uint32_t index) = 0;
+	virtual void Apply(NativeGraphicsContext & graphicsContext, int index) = 0;
 };
 
 }// namespace RenderSystem

@@ -127,7 +127,7 @@ public:
 
 	///@~Japanese
 	/// @brief テクスチャサンプラーステートを設定します。
-	void SetSamplerState(std::uint32_t index, std::shared_ptr<SamplerState> const& samplerState);
+	void SetSamplerState(int index, std::shared_ptr<SamplerState> const& samplerState);
 
 	///@~Japanese
 	/// @brief 頂点バッファを設定します。
@@ -144,24 +144,24 @@ public:
 	///@~Japanese
 	/// @brief 指定されたテクスチャスロットにテクスチャを取得します。
 	/// @param index 0 から始まるテクスチャスロットのインデックスを指定します。
-	std::shared_ptr<Texture> GetTexture(std::uint32_t index) const;
+	std::shared_ptr<Texture> GetTexture(int index) const;
 
 	///@~Japanese
 	/// @brief グラフィックスコンテキストに設定されているテクスチャをテクスチャユニットから外します。
 	/// @param index 0 から始まるテクスチャスロットのインデックスを指定します。
-	void SetTexture(std::uint32_t index);
+	void SetTexture(int index);
 
 	///@~Japanese
 	/// @brief 指定されたテクスチャスロットにテクスチャを設定します。
 	/// @param index 0 から始まるテクスチャスロットのインデックスを指定します。
 	/// @param texture テクスチャスロットにバインドするテクスチャ
-	void SetTexture(std::uint32_t index, std::shared_ptr<Texture2D> const& texture);
+	void SetTexture(int index, std::shared_ptr<Texture2D> const& texture);
 
 	///@~Japanese
 	/// @brief 指定されたテクスチャスロットにテクスチャを設定します。
 	/// @param index 0 から始まるテクスチャスロットのインデックスを指定します。
 	/// @param texture テクスチャスロットにバインドするテクスチャ
-	void SetTexture(std::uint32_t index, std::shared_ptr<RenderTarget2D> const& texture);
+	void SetTexture(int index, std::shared_ptr<RenderTarget2D> const& texture);
 
 	///@~Japanese
 	/// @brief レンダーターゲットを取得します。

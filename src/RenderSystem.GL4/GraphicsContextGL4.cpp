@@ -484,10 +484,11 @@ void GraphicsContextGL4::SetConstantBuffers(std::shared_ptr<NativeConstantLayout
 	this->constantLayout = nativeConstantLayout;
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetTexture(std::uint32_t textureUnit)
+void GraphicsContextGL4::SetTexture(int textureUnit)
 {
 	POMDOG_ASSERT(!textures.empty());
-	POMDOG_ASSERT(textureUnit < textures.size());
+	POMDOG_ASSERT(textureUnit >= 0);
+	POMDOG_ASSERT(textureUnit < static_cast<int>(textures.size()));
 
 	if (textures[textureUnit])
 	{
@@ -507,10 +508,11 @@ void GraphicsContextGL4::SetTexture(std::uint32_t textureUnit)
 	textures[textureUnit] = OptionalType::NullOptional;
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetTexture(std::uint32_t textureUnit, Texture2D & textureIn)
+void GraphicsContextGL4::SetTexture(int textureUnit, Texture2D & textureIn)
 {
 	POMDOG_ASSERT(!textures.empty());
-	POMDOG_ASSERT(textureUnit < textures.size());
+	POMDOG_ASSERT(textureUnit >= 0);
+	POMDOG_ASSERT(textureUnit < static_cast<int>(textures.size()));
 
 	constexpr GLenum textureType = GL_TEXTURE_2D;
 
@@ -526,10 +528,11 @@ void GraphicsContextGL4::SetTexture(std::uint32_t textureUnit, Texture2D & textu
 	textureIn.NativeTexture2D()->Apply(textureUnit);
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetTexture(std::uint32_t textureUnit, RenderTarget2D & textureIn)
+void GraphicsContextGL4::SetTexture(int textureUnit, RenderTarget2D & textureIn)
 {
 	POMDOG_ASSERT(!textures.empty());
-	POMDOG_ASSERT(textureUnit < textures.size());
+	POMDOG_ASSERT(textureUnit >= 0);
+	POMDOG_ASSERT(textureUnit < static_cast<int>(textures.size()));
 
 	constexpr GLenum textureType = GL_TEXTURE_2D;
 

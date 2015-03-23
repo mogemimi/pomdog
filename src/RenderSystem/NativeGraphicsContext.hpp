@@ -66,13 +66,13 @@ public:
 	virtual void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) = 0;
 
 	///@copydoc Pomdog::GraphicsContext
-	virtual void SetTexture(std::uint32_t index) = 0;
+	virtual void SetTexture(int index) = 0;
 
 	///@copydoc Pomdog::GraphicsContext
-	virtual void SetTexture(std::uint32_t index, Texture2D & texture) = 0;
+	virtual void SetTexture(int index, Texture2D & texture) = 0;
 
 	///@copydoc Pomdog::GraphicsContext
-	virtual void SetTexture(std::uint32_t index, RenderTarget2D & texture) = 0;
+	virtual void SetTexture(int index, RenderTarget2D & texture) = 0;
 
 	///@copydoc Pomdog::GraphicsContext
 	virtual void SetRenderTarget() = 0;

@@ -68,16 +68,16 @@ public:
 	void SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState);
 
 	///@copydoc GraphicsContext
-	void SetSamplerState(std::uint32_t samplerSlot, std::shared_ptr<SamplerState> const& samplerState);
+	void SetSamplerState(int samplerSlot, std::shared_ptr<SamplerState> const& samplerState);
 
 	///@copydoc GraphicsContext
-	void SetTexture(std::uint32_t textureSlot);
+	void SetTexture(int textureSlot);
 
 	///@copydoc GraphicsContext
-	void SetTexture(std::uint32_t textureSlot, std::shared_ptr<Texture2D> const& texture);
+	void SetTexture(int textureSlot, std::shared_ptr<Texture2D> const& texture);
 
 	///@copydoc GraphicsContext
-	void SetTexture(std::uint32_t textureSlot, std::shared_ptr<RenderTarget2D> const& texture);
+	void SetTexture(int textureSlot, std::shared_ptr<RenderTarget2D> const& texture);
 
 	///@copydoc GraphicsContext
 	void SetRenderTarget();
@@ -205,13 +205,15 @@ void GraphicsContext::Impl::SetRasterizerState(std::shared_ptr<RasterizerState> 
 	rasterizerState->NativeRasterizerState()->Apply(*nativeContext);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetSamplerState(std::uint32_t samplerSlot, std::shared_ptr<SamplerState> const& samplerStateIn)
+void GraphicsContext::Impl::SetSamplerState(int samplerSlot, std::shared_ptr<SamplerState> const& samplerStateIn)
 {
 	POMDOG_ASSERT(samplerStateIn);
 	POMDOG_ASSERT(!samplerStates.empty());
-	POMDOG_ASSERT(samplerStates.size() > samplerSlot);
 
-	if (samplerStates.size() > samplerSlot)
+	POMDOG_ASSERT(samplerSlot >= 0);
+	POMDOG_ASSERT(samplerSlot < static_cast<int>(samplerStates.size()));
+
+	if (samplerSlot < static_cast<int>(samplerStates.size()))
 	{
 		samplerStates[samplerSlot] = samplerStateIn;
 
@@ -221,40 +223,43 @@ void GraphicsContext::Impl::SetSamplerState(std::uint32_t samplerSlot, std::shar
 	}
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetTexture(std::uint32_t textureSlot)
+void GraphicsContext::Impl::SetTexture(int textureSlot)
 {
 	POMDOG_ASSERT(!textures.empty());
-	POMDOG_ASSERT(textures.size() > textureSlot);
+	POMDOG_ASSERT(textureSlot >= 0);
+	POMDOG_ASSERT(textureSlot < static_cast<int>(textures.size()));
 	POMDOG_ASSERT(nativeContext);
 
-	if (textures.size() > textureSlot)
+	if (textureSlot < static_cast<int>(textures.size()))
 	{
 		nativeContext->SetTexture(textureSlot);
 		textures[textureSlot].reset();
 	}
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetTexture(std::uint32_t textureSlot, std::shared_ptr<Texture2D> const& textureIn)
+void GraphicsContext::Impl::SetTexture(int textureSlot, std::shared_ptr<Texture2D> const& textureIn)
 {
 	POMDOG_ASSERT(textureIn);
 	POMDOG_ASSERT(!textures.empty());
-	POMDOG_ASSERT(textures.size() > textureSlot);
+	POMDOG_ASSERT(textureSlot >= 0);
+	POMDOG_ASSERT(textureSlot < static_cast<int>(textures.size()));
 	POMDOG_ASSERT(nativeContext);
 
-	if (textures.size() > textureSlot)
+	if (textureSlot < static_cast<int>(textures.size()))
 	{
 		textures[textureSlot] = textureIn;
 		nativeContext->SetTexture(textureSlot, *textureIn);
 	}
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetTexture(std::uint32_t textureSlot, std::shared_ptr<RenderTarget2D> const& textureIn)
+void GraphicsContext::Impl::SetTexture(int textureSlot, std::shared_ptr<RenderTarget2D> const& textureIn)
 {
 	POMDOG_ASSERT(textureIn);
 	POMDOG_ASSERT(!textures.empty());
-	POMDOG_ASSERT(textures.size() > textureSlot);
+	POMDOG_ASSERT(textureSlot >= 0);
+	POMDOG_ASSERT(textureSlot < static_cast<int>(textures.size()));
 
-	if (textures.size() > textureSlot)
+	if (textureSlot < static_cast<int>(textures.size()))
 	{
 		textures[textureSlot] = textureIn;
 		nativeContext->SetTexture(textureSlot, *textureIn);
@@ -476,7 +481,7 @@ void GraphicsContext::SetRasterizerState(std::shared_ptr<RasterizerState> const&
 	impl->SetRasterizerState(rasterizerState);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::SetSamplerState(std::uint32_t index, std::shared_ptr<SamplerState> const& samplerState)
+void GraphicsContext::SetSamplerState(int index, std::shared_ptr<SamplerState> const& samplerState)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(samplerState);
@@ -515,17 +520,19 @@ void GraphicsContext::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>
 	impl->nativeContext->SetVertexBuffers(impl->vertexBuffers);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Texture> GraphicsContext::GetTexture(std::uint32_t index) const
+std::shared_ptr<Texture> GraphicsContext::GetTexture(int index) const
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);
 
 	POMDOG_ASSERT(!impl->textures.empty());
-	POMDOG_ASSERT(impl->textures.size() > index);
+	POMDOG_ASSERT(index >= 0);
+	POMDOG_ASSERT(index < static_cast<int>(impl->textures.size()));
+
 	return impl->textures[index];
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::SetTexture(std::uint32_t index)
+void GraphicsContext::SetTexture(int index)
 {
 	POMDOG_ASSERT(impl);
 	POMDOG_ASSERT(impl->nativeContext);
@@ -533,7 +540,7 @@ void GraphicsContext::SetTexture(std::uint32_t index)
 	impl->SetTexture(index);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::SetTexture(std::uint32_t index, std::shared_ptr<Texture2D> const& texture)
+void GraphicsContext::SetTexture(int index, std::shared_ptr<Texture2D> const& texture)
 {
 	POMDOG_ASSERT(texture);
 	POMDOG_ASSERT(impl);
@@ -542,7 +549,7 @@ void GraphicsContext::SetTexture(std::uint32_t index, std::shared_ptr<Texture2D>
 	impl->SetTexture(index, texture);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::SetTexture(std::uint32_t index, std::shared_ptr<RenderTarget2D> const& texture)
+void GraphicsContext::SetTexture(int index, std::shared_ptr<RenderTarget2D> const& texture)
 {
 	POMDOG_ASSERT(texture);
 	POMDOG_ASSERT(impl);
