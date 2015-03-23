@@ -138,7 +138,7 @@ def GetGitUserName():
 
 
 def CreateHeader(copyright_holder):
-    return Template("""// Copyright (C) $year $copyright_holder.
+    return Template("""// Copyright (c) $year $copyright_holder.
 // Distributed under the MIT license. See LICENSE.md file for details.
 """).substitute(year="2013-2015", copyright_holder=copyright_holder)
 
