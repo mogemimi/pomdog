@@ -6,6 +6,7 @@
 
 #include "AnimationBlendInput.hpp"
 #include "AnimationNode.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <cstdint>
 #include <memory>
@@ -32,7 +33,11 @@ public:
         });
 
         if (iter != std::end(Inputs)) {
-            return std::distance(std::begin(Inputs), iter);
+            POMDOG_ASSERT(Inputs.size() <= std::numeric_limits<std::uint16_t>::max());
+            auto d = std::distance(std::begin(Inputs), iter);
+
+            POMDOG_ASSERT(d <= std::numeric_limits<std::uint16_t>::max());
+            return static_cast<std::uint16_t>(d);
         }
         return OptionalType::NullOptional;
     }
