@@ -4,22 +4,20 @@
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeVertexBuffer.hpp"
-#include "../Utility/NumericHelper.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
 namespace Pomdog {
-using Detail::NumericHelper;
 //-----------------------------------------------------------------------
 VertexBuffer::VertexBuffer(GraphicsDevice & graphicsDevice,
 	void const* vertices, std::size_t vertexCountIn,
 	std::size_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
 	: nativeVertexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateVertexBuffer(
 		vertices, vertexCountIn * strideBytesIn, bufferUsageIn))
-	, vertexCount(NumericHelper::Cast<decltype(vertexCount)>(vertexCountIn))
-	, strideBytes(NumericHelper::Cast<decltype(strideBytes)>(strideBytesIn))
+	, vertexCount(static_cast<decltype(vertexCount)>(vertexCountIn))
+	, strideBytes(static_cast<decltype(strideBytes)>(strideBytesIn))
 	, bufferUsage(bufferUsageIn)
 {
 	POMDOG_ASSERT(nativeVertexBuffer);
@@ -32,8 +30,8 @@ VertexBuffer::VertexBuffer(GraphicsDevice & graphicsDevice,
 	std::size_t vertexCountIn, std::size_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
 	: nativeVertexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateVertexBuffer(
 		vertexCountIn * strideBytesIn, bufferUsageIn))
-	, vertexCount(NumericHelper::Cast<decltype(vertexCount)>(vertexCountIn))
-	, strideBytes(NumericHelper::Cast<decltype(strideBytes)>(strideBytesIn))
+	, vertexCount(static_cast<decltype(vertexCount)>(vertexCountIn))
+	, strideBytes(static_cast<decltype(strideBytes)>(strideBytesIn))
 	, bufferUsage(bufferUsageIn)
 {
 	POMDOG_ASSERT(nativeVertexBuffer);
