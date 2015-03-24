@@ -45,9 +45,7 @@ def CreateFilePath(directory_path, identifier, file_extension):
 
 
 def SaveSourceFileUTF8(path, content):
-    bom = u'\ufeff'
     f = open(path, 'wb')
-    f.write(bom.encode('utf-8'))
     f.write(content)
     f.close()
     print "Create implement file: " + path
@@ -146,7 +144,7 @@ def CreateHeader(copyright_holder):
 def CreateNamespace(name, content="    // Insert code here to run your application"):
     return Template("""namespace $name {
 $content
-}// namespace $name""").substitute(name=name, content=content)
+} // namespace $name""").substitute(name=name, content=content)
 
 
 def CreateIncludeGuardUUID(identifier):

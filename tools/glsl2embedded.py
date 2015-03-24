@@ -23,8 +23,6 @@ def ReadGLSLSource(path):
 
 def SaveEmbeddedCode(path, content):
     f = open(path, 'w')
-    bom = u'\ufeff'
-    f.write(bom.encode('utf-8'))
     f.write(content)
     f.close()
     print "Create new file: " + path

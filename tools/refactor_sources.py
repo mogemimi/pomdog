@@ -49,25 +49,44 @@ def RemoveUnnecessaryWhitespace(content):
     result = result.rstrip('\n') + '\n'
     return result
 
+def ReplaceHardTabsWithWhiteSpaces(content):
+    result = unicode("", 'utf-8')
+    for line in content.split('\n'):
+        result += line.replace('\t', '    ')
+        result += '\n'
+    result = result.rstrip('\n') + '\n'
+    return result
+
 def ConvertSourceFile(path):
     isChanged = False
-    statusWithBom = "---"
+    statusRemoveBom = "---"
     content = unicode(ReadContent(path), 'utf-8')
     bom = u'\ufeff'
-    if not content.startswith(bom):
-        content = bom + content
-        statusWithBom = "bom"
+    if content.startswith(bom):
+        content = content.replace(bom, '')
+        statusRemoveBom = "bom"
         isChanged = True
 
-    statusWithTab = "---"
+    statusUnusedSpaces = "-----"
     removed = RemoveUnnecessaryWhitespace(content.replace('\r\n', '\n'))
     if content != removed:
         content = removed
-        statusWithTab = "tab"
+        statusUnusedSpaces = "space"
+        isChanged = True
+
+    statusReplaceIndentWithSpaces = "------"
+    replaced = ReplaceHardTabsWithWhiteSpaces(content)
+    if content != replaced:
+        content = replaced
+        statusReplaceIndentWithSpaces = "indent"
         isChanged = True
 
     if isChanged:
-        print("=> ({0} {1}) {2}".format(statusWithBom, statusWithTab, path))
+        print("=> ({0} {1} {2}) {3}".format(
+            statusRemoveBom,
+            statusUnusedSpaces,
+            statusReplaceIndentWithSpaces,
+            path))
         WriteContent(path, content)
 
 def Run():
