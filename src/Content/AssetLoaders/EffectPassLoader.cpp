@@ -14,7 +14,6 @@
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <fstream>
 #include <vector>
 #include <utility>

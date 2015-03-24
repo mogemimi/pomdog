@@ -104,8 +104,8 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 			ErrorChecker::CheckError("glGetFloatv", __FILE__, __LINE__);
 			#endif
 
-			deviceMaxAnisotropy = std::min<decltype(deviceMaxAnisotropy)>(
-				deviceMaxAnisotropy, description.MaxAnisotropy);
+			deviceMaxAnisotropy = std::min(deviceMaxAnisotropy,
+				static_cast<decltype(deviceMaxAnisotropy)>(description.MaxAnisotropy));
 
 			glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_ANISOTROPY_EXT, deviceMaxAnisotropy);
 

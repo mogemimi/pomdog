@@ -13,7 +13,6 @@
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include "../RenderSystem/NativeTexture2D.hpp"
-#include "../Utility/NumericHelper.hpp"
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Graphics/ClearOptions.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
@@ -272,12 +271,13 @@ void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::size_t v
 	// Draw:
 	POMDOG_ASSERT(!vertexBuffers.empty());
 	POMDOG_ASSERT(vertexBuffers.front());
+	POMDOG_ASSERT(vertexCount > 0);
 	POMDOG_ASSERT(vertexCount <= vertexBuffers.front()->VertexCount());
 
 	glDrawArrays(
 		ToPrimitiveTopology(primitiveTopology),
 		0,
-		NumericHelper::Cast<GLsizei>(vertexCount));
+		static_cast<GLsizei>(vertexCount));
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDrawArrays", __FILE__, __LINE__);
@@ -304,8 +304,6 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 	constantLayout->Apply();
 
 	// Bind index-buffer:
-	POMDOG_ASSERT(indexCount > 0);
-	POMDOG_ASSERT(indexCount <= indexBuffer->IndexCount());
 	POMDOG_ASSERT(indexBuffer);
 
 	auto nativeIndexBuffer = dynamic_cast<IndexBufferGL4*>(indexBuffer->NativeIndexBuffer());
@@ -313,9 +311,12 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 
 	nativeIndexBuffer->BindBuffer();
 
+	POMDOG_ASSERT(indexCount > 0);
+	POMDOG_ASSERT(indexCount <= indexBuffer->IndexCount());
+
 	glDrawElements(
 		ToPrimitiveTopology(primitiveTopology),
-		NumericHelper::Cast<GLsizei>(indexCount),
+		static_cast<GLsizei>(indexCount),
 		ToIndexElementType(indexBuffer->ElementSize()),
 		nullptr);
 
@@ -346,14 +347,16 @@ void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology,
 	// Draw
 	POMDOG_ASSERT(!vertexBuffers.empty());
 	POMDOG_ASSERT(vertexBuffers.front());
+	POMDOG_ASSERT(vertexCount > 0);
 	POMDOG_ASSERT(vertexCount <= vertexBuffers.front()->VertexCount());
-	POMDOG_ASSERT(0 < instanceCount);
+	POMDOG_ASSERT(instanceCount > 0);
+	POMDOG_ASSERT(instanceCount <= static_cast<decltype(instanceCount)>(std::numeric_limits<GLsizei>::max()));
 
 	glDrawArraysInstanced(
 		ToPrimitiveTopology(primitiveTopology),
 		0,
-		NumericHelper::Cast<GLsizei>(vertexCount),
-		NumericHelper::Cast<GLsizei>(instanceCount));
+		static_cast<GLsizei>(vertexCount),
+		static_cast<GLsizei>(instanceCount));
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDrawArraysInstanced", __FILE__, __LINE__);
@@ -380,8 +383,6 @@ void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopolog
 	constantLayout->Apply();
 
 	// Bind index-buffer:
-	POMDOG_ASSERT(indexCount > 0);
-	POMDOG_ASSERT(indexCount <= indexBuffer->IndexCount());
 	POMDOG_ASSERT(indexBuffer);
 
 	auto nativeIndexBuffer = dynamic_cast<IndexBufferGL4*>(indexBuffer->NativeIndexBuffer());
@@ -390,14 +391,17 @@ void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopolog
 	nativeIndexBuffer->BindBuffer();
 
 	// Draw
-	POMDOG_ASSERT(0 < instanceCount);
+	POMDOG_ASSERT(indexCount > 0);
+	POMDOG_ASSERT(indexCount <= indexBuffer->IndexCount());
+	POMDOG_ASSERT(instanceCount > 0);
+	POMDOG_ASSERT(instanceCount < static_cast<decltype(instanceCount)>(std::numeric_limits<GLsizei>::max()));
 
 	glDrawElementsInstanced(
 		ToPrimitiveTopology(primitiveTopology),
-		NumericHelper::Cast<GLsizei>(indexCount),
+		static_cast<GLsizei>(indexCount),
 		ToIndexElementType(indexBuffer->ElementSize()),
 		nullptr,
-		NumericHelper::Cast<GLsizei>(instanceCount));
+		static_cast<GLsizei>(instanceCount));
 
 	#ifdef DEBUG
 	ErrorChecker::CheckError("glDrawElementsInstanced", __FILE__, __LINE__);
@@ -689,7 +693,7 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
 	}
 
 	POMDOG_ASSERT(!attachments.empty());
-	POMDOG_ASSERT(std::numeric_limits<GLsizei>::max() >= attachments.size());
+	POMDOG_ASSERT(attachments.size() <= static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()));
 	glDrawBuffers(static_cast<GLsizei>(attachments.size()), attachments.data());
 
 	#ifdef DEBUG

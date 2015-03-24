@@ -593,7 +593,7 @@ static EffectAnnotation ToEffectAnnotation(UniformVariableGL4 const& uniform)
 	annotation.VariableType = ToEffectVariableType(uniform.Type);
 	annotation.VariableClass = ToEffectVariableClass(uniform.Type);
 	ToComponents(uniform.Type, annotation.RowCount, annotation.ColumnCount);
-	annotation.Elements = (uniform.Elements > 1) ? uniform.Elements: 0;
+	annotation.Elements = (uniform.Elements > 1) ? static_cast<decltype(annotation.Elements)>(uniform.Elements): 0;
 	POMDOG_ASSERT(annotation.Elements != 1);
 	return std::move(annotation);
 }
