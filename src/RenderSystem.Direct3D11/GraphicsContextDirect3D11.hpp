@@ -75,13 +75,13 @@ public:
 	void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) override;
 
 	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
-	void SetTexture(std::uint32_t index) override;
+	void SetTexture(int index) override;
 
 	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
-	void SetTexture(std::uint32_t index, Texture2D & texture) override;
+	void SetTexture(int index, Texture2D & texture) override;
 
 	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
-	void SetTexture(std::uint32_t index, RenderTarget2D & texture) override;
+	void SetTexture(int index, RenderTarget2D & texture) override;
 
 	///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
 	void SetRenderTarget() override;

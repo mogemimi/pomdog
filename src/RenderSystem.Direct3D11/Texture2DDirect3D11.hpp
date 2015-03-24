@@ -25,10 +25,7 @@ public:
 		std::uint32_t levelCount, SurfaceFormat format);
 
 	void SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
-		std::uint32_t levelCount, SurfaceFormat format, void const* pixelData) override;
-
-	///@copydoc NativeTexture2D
-	void Apply(std::uint32_t index) override;
+		std::int32_t levelCount, SurfaceFormat format, void const* pixelData) override;
 
 	ID3D11ShaderResourceView* ShaderResourceView() const;
 

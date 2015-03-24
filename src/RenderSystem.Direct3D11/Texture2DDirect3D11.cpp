@@ -97,7 +97,7 @@ Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* nativeDevice,
 }
 //-----------------------------------------------------------------------
 void Texture2DDirect3D11::SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
-	std::uint32_t levelCount, SurfaceFormat format, void const* pixelData)
+	std::int32_t levelCount, SurfaceFormat format, void const* pixelData)
 {
 	POMDOG_ASSERT(nativeTexture2D);
 	POMDOG_ASSERT(deviceContext);
@@ -119,13 +119,6 @@ void Texture2DDirect3D11::SetData(std::int32_t pixelWidth, std::int32_t pixelHei
 	std::memcpy(mappedResource.pData, pixelData, sizeInBytes);
 
 	deviceContext->Unmap(nativeTexture2D.Get(), 0);
-}
-//-----------------------------------------------------------------------
-void Texture2DDirect3D11::Apply(std::uint32_t index)
-{
-	(&index);
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
 ID3D11ShaderResourceView* Texture2DDirect3D11::ShaderResourceView() const

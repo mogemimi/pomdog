@@ -355,10 +355,11 @@ void GraphicsContextDirect3D11::SetVertexBuffers(std::vector<std::shared_ptr<Ver
 		strides.data(), offsets.data());
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::SetTexture(std::uint32_t index)
+void GraphicsContextDirect3D11::SetTexture(int index)
 {
+	POMDOG_ASSERT(index >= 0);
 	POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-	POMDOG_ASSERT(index < boundTextureViews.size());
+	POMDOG_ASSERT(index < static_cast<int>(boundTextureViews.size()));
 
 	boundTextureViews[index] = nullptr;
 
@@ -367,10 +368,11 @@ void GraphicsContextDirect3D11::SetTexture(std::uint32_t index)
 	deviceContext->PSSetShaderResources(index, 1, &boundTextureViews[index]);
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::SetTexture(std::uint32_t index, Texture2D & textureIn)
+void GraphicsContextDirect3D11::SetTexture(int index, Texture2D & textureIn)
 {
+	POMDOG_ASSERT(index >= 0);
 	POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-	POMDOG_ASSERT(index < boundTextureViews.size());
+	POMDOG_ASSERT(index < static_cast<int>(boundTextureViews.size()));
 
 	POMDOG_ASSERT(textureIn.NativeTexture2D());
 	POMDOG_ASSERT(dynamic_cast<Texture2DDirect3D11*>(textureIn.NativeTexture2D()));
@@ -382,10 +384,11 @@ void GraphicsContextDirect3D11::SetTexture(std::uint32_t index, Texture2D & text
 	deviceContext->PSSetShaderResources(0, 1, &boundTextureViews[index]);
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::SetTexture(std::uint32_t index, RenderTarget2D & textureIn)
+void GraphicsContextDirect3D11::SetTexture(int index, RenderTarget2D & textureIn)
 {
+	POMDOG_ASSERT(index >= 0);
 	POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-	POMDOG_ASSERT(index < boundTextureViews.size());
+	POMDOG_ASSERT(index < static_cast<int>(boundTextureViews.size()));
 
 	POMDOG_ASSERT(textureIn.NativeRenderTarget2D());
 	POMDOG_ASSERT(dynamic_cast<RenderTarget2DDirect3D11*>(textureIn.NativeRenderTarget2D()));

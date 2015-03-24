@@ -24,7 +24,7 @@ public:
 	SamplerStateDirect3D11(ID3D11Device* nativeDevice, SamplerDescription const& description);
 
 	///@copydoc NativeSamplerState
-	void Apply(NativeGraphicsContext & graphicsContext, std::uint32_t index) override;
+	void Apply(NativeGraphicsContext & graphicsContext, int index) override;
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> nativeSamplerState;

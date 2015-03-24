@@ -26,8 +26,6 @@ public:
 	RenderTarget2DDirect3D11(ID3D11Device* nativeDevice, IDXGISwapChain* swapChain,
 		std::int32_t pixelWidth, std::int32_t pixelHeight, DepthFormat depthStencilFormat);
 
-	void Apply(std::uint32_t index) override;
-
 	ID3D11RenderTargetView* RenderTargetView() const;
 
 	ID3D11DepthStencilView* DepthStencilView() const;

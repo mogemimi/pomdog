@@ -179,14 +179,6 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(ID3D11Device* nativeDevice,
 		depthStencil, depthStencilView);
 }
 //-----------------------------------------------------------------------
-void RenderTarget2DDirect3D11::Apply(std::uint32_t index)
-{
-	(&index);
-
-	///@todo Not implemented
-	POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-}
-//-----------------------------------------------------------------------
 ID3D11RenderTargetView* RenderTarget2DDirect3D11::RenderTargetView() const
 {
 	POMDOG_ASSERT(renderTargetView);

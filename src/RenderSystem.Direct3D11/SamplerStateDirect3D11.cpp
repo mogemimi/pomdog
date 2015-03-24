@@ -70,8 +70,9 @@ SamplerStateDirect3D11::SamplerStateDirect3D11(ID3D11Device* nativeDevice, Sampl
 	}
 }
 //-----------------------------------------------------------------------
-void SamplerStateDirect3D11::Apply(NativeGraphicsContext & graphicsContext, std::uint32_t index)
+void SamplerStateDirect3D11::Apply(NativeGraphicsContext & graphicsContext, int index)
 {
+	POMDOG_ASSERT(index >= 0);
 	POMDOG_ASSERT(index < D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT);
 
 	std::array<ID3D11SamplerState*, 1> const states = { nativeSamplerState.Get() };
