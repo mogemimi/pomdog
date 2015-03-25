@@ -22,8 +22,6 @@ class NativeBlendState;
 }// namespace RenderSystem
 }// namespace Detail
 
-///@~Japanese
-/// @brief ブレンディングステートです。
 class POMDOG_EXPORT BlendState {
 public:
 	BlendState() = delete;
@@ -34,30 +32,17 @@ public:
 
 	~BlendState();
 
-	///@~Japanese
-	/// @brief ブレンディングステートを作成するために記述したブレンディングステートの設定内容を取得します。
 	BlendDescription Description() const;
 
-	///@~Japanese
-	/// @brief 加算ブレンディングを有効にするブレンディングステートです。
 	static std::shared_ptr<BlendState>
 	CreateAdditive(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	///@~Japanese
-	/// @brief 乗算済みアルファを使用したアルファブレンディングを有効にするブレンディングステートです。
-	/// @remarks 補間アルファを使用したアルファブレンディングの場合は、CreateNonPremultiplied を使います。
 	static std::shared_ptr<BlendState>
 	CreateAlphaBlend(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	///@~Japanese
-	/// @brief 補間アルファを使用したアルファブレンディングを有効にするブレンディングステートです。
 	static std::shared_ptr<BlendState>
 	CreateNonPremultiplied(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	///@~Japanese
-	/// @brief 不透明ブレンディングを有効にするブレンディングステートです。
-	/// @remarks BlendDescription の既定値を設定したステートを生成します。
-	/// @details このステートはデフォルトで設定されています。
 	static std::shared_ptr<BlendState>
 	CreateOpaque(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 

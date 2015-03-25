@@ -13,28 +13,16 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief エフェクト変数の型を示すメタデータです。
 class EffectAnnotation {
 public:
-	///@~Japanese
-	/// @brief エフェクト変数のクラスです。
 	EffectVariableClass VariableClass;
 
-	///@~Japanese
-	/// @brief エフェクト変数の型です。
 	EffectVariableType VariableType;
 
-	///@~Japanese
-	/// @brief 列の数です。
 	std::uint8_t ColumnCount;
 
-	///@~Japanese
-	/// @brief 行の数です。
 	std::uint8_t RowCount;
 
-	///@~Japanese
-	/// @brief 配列の要素数です。配列を持たない場合は 0 となります。
 	std::uint8_t Elements;
 	//std::optional<std::uint8_t> Elements;
 };

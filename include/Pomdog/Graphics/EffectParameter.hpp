@@ -26,8 +26,6 @@ class NativeConstantBuffer;
 }// namespace RenderSystem
 }// namespace Detail
 
-///@~Japanese
-/// @brief エフェクトパラメータです。
 class POMDOG_EXPORT EffectParameter {
 public:
 	EffectParameter() = default;
@@ -42,9 +40,6 @@ public:
 
 	~EffectParameter();
 
-	///@~Japanese
-	/// @brief 指定された型として定数バッファの値を取得します。
-	/// @details キャストできなかった場合 std::runtime_error を投げます。
 	template <typename T>
 	T GetValue() const
 	{
@@ -54,14 +49,8 @@ public:
 		return std::move(result);
 	}
 
-	///@~Japanese
-	/// @brief エフェクトパラメータに設定されている値を取得します。
-	/// @param byteWidth バイト単位のバッファサイズ。
-	/// @param result バッファの先頭を示すポインタ。
 	void GetValue(std::uint32_t byteWidth, void* result) const;
 
-	///@~Japanese
-	/// @brief エフェクトパラメータに値を設定します。
 	template <typename T>
 	void SetValue(T const& value)
 	{
@@ -69,8 +58,6 @@ public:
 		Detail::EffectBinaryParameter::Set(*this, value);
 	}
 
-	///@~Japanese
-	/// @brief エフェクトパラメータに値を設定します。
 	template <typename T>
 	void SetValue(T const* data, std::uint32_t count)
 	{
@@ -78,10 +65,6 @@ public:
 		Detail::EffectBinaryParameter::Set(*this, data, count);
 	}
 
-	///@~Japanese
-	/// @brief エフェクトパラメータに値を設定します。
-	/// @param data バイナリデータの先頭を示すポインタ。
-	/// @param byteWidth バイト単位のデータサイズ。
 	void SetValue(void const* data, std::uint32_t byteWidth);
 
 public:

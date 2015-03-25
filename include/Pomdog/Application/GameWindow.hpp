@@ -18,8 +18,6 @@ namespace Pomdog {
 class Rectangle;
 enum class MouseCursor: std::uint8_t;
 
-///@~Japanese
-/// @brief ゲームウィンドウです。
 class POMDOG_EXPORT GameWindow {
 public:
 	GameWindow() = default;
@@ -28,34 +26,16 @@ public:
 
 	virtual ~GameWindow() = default;
 
-	///@~Japanese
-	/// @brief プレイヤーによるウィンドウサイズの変更を許可するかどうかを取得します。
-	/// @return プレイヤーによるウィンドウサイズの変更を許可する場合は true を返却します。
-	/// @note Windows Store アプリは、この値に関わらず
-	/// プレイヤーによるウィンドウサイズの変更が許可されています。
 	virtual bool AllowPlayerResizing() const = 0;
 
-	///@~Japanese
-	/// @brief プレイヤーによるウィンドウサイズの変更を許可するかどうかを設定します。
-	/// @param allowResizing プレイヤーによるウィンドウサイズの変更を許可する場合は true を指定します。
 	virtual void AllowPlayerResizing(bool allowResizing) = 0;
 
-	///@~Japanese
-	/// @brief 現在のウィンドウタイトルをを文字列として取得します。
 	virtual std::string Title() const = 0;
 
-	///@~Japanese
-	/// @brief ウィンドウタイトルを設定します。
 	virtual void Title(std::string const& title) = 0;
 
-	///@~Japanese
-	/// @brief 現在のクライアント領域のサイズを取得します。
-	/// @return クライアント領域を表すサイズを返却します。
 	virtual Rectangle ClientBounds() const = 0;
 
-	///@~Japanese
-	/// @brief ゲームウィンドウのクライアント領域のサイズを設定します。
-	/// @param clientBounds ゲームウィンドウのクライアント領域のサイズを指定します。
 	virtual void ClientBounds(Rectangle const& clientBounds) = 0;
 
 	///@brief Return true if the mouse cursor is visible, false otherwise.
@@ -65,8 +45,6 @@ public:
 
 	virtual void SetMouseCursor(MouseCursor cursor) = 0;
 
-	///@~Japanese
-	/// @brief ゲームウィンドウのクライアント領域のサイズが変更されたときに呼ばれるイベントです。
 	Signal<void(int width, int height)> ClientSizeChanged;
 };
 

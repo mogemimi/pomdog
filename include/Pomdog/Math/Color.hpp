@@ -15,8 +15,6 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief 赤、緑、青、およびアルファ（不透明度）の 4 成分を持つ色を定義します。
 class POMDOG_EXPORT Color {
 public:
 	std::uint32_t PackedValue;
@@ -57,18 +55,8 @@ public:
 	Vector3 ToVector3() const;
 	Vector4 ToVector4() const;
 
-	///@~Japanese
-	/// @brief 指定された 2 色間を線形補間します。
-	/// @param source1 ソースとなる色1
-	/// @param source2 ソースとなる色2
-	/// @param amount 線形補間する際に使用されるパラメータで、値の範囲に制限はありません。
 	static Color Lerp(Color const& source1, Color const& source2, float amount);
 
-	///@~Japanese
-	/// @brief 指定された 2 色間をスムーズに補間します。
-	/// @param source1 ソースとなる色1
-	/// @param source2 ソースとなる色2
-	/// @param amount 線形補間する際に使用されるパラメータで、値の範囲に制限はありません。
 	static Color SmoothStep(Color const& source1, Color const& source2, float amount);
 
 	// static public attributes

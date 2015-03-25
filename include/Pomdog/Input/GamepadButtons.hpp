@@ -13,8 +13,6 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief ゲームパッドの任意のボタンの状態を示します。
 class GamepadButtons {
 public:
 	ButtonState A = ButtonState::Released;

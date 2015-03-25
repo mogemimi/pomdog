@@ -25,12 +25,6 @@ public:
 	///@copydoc ConstantBuffer
 	virtual void GetData(std::uint32_t byteWidth, void* result) const = 0;
 
-	///@~Japanese
-	/// @brief 定数バッファデータを格納します。
-	/// @remarks イミュータブルな定数バッファでは使用しないでください。
-	/// @param offsetInBytes バッファの先頭から出力先までのバイト単位のオフセット
-	/// @param source ソースバッファ
-	/// @param sizeInBytes 頂点データのバイト単位のサイズ
 	virtual void SetData(std::uint32_t offsetInBytes,
 		void const* source, std::uint32_t sizeInBytes) = 0;
 };

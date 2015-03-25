@@ -13,20 +13,12 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief メッセージ情報を含むログエントリです。
 class LogEntry {
 public:
-	///@~Japanese
-	/// @brief ログのメッセージ本文です。
 	std::string Message;
 
-	///@~Japanese
-	/// @brief タグです。
 	std::string Tag;
 
-	///@~Japanese
-	/// @brief ログの冗長レベルです。
 	LogLevel Verbosity;
 };
 

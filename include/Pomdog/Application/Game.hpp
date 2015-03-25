@@ -12,10 +12,6 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief ゲームの内容を記述します。
-/// @remarks プラットフォームを意識することなくゲームのコンテンツ開発に集中できる
-/// ようにします。
 class POMDOG_EXPORT Game {
 public:
 	Game() = default;
@@ -24,21 +20,12 @@ public:
 
 	virtual ~Game() = default;
 
-	///@~Japanese
-	/// @brief アプリケーションの初期化を行います。
 	virtual void Initialize() = 0;
 
-	///@~Japanese
-	/// @brief ゲームの初期化が完了しているかどうかを取得します。
-	/// @return 初期化が完了している場合は true を、未初期化の場合は false を返します。
 	virtual bool CompleteInitialize() const { return true; }
 
-	///@~Japanese
-	/// @brief ゲームの更新を行います。
 	virtual void Update() = 0;
 
-	///@~Japanese
-	/// @brief シーンがレンダリングされる際に毎フレーム呼び出されます。
 	virtual void Draw() = 0;
 };
 

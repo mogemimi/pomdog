@@ -19,12 +19,8 @@ class POMDOG_EXPORT Gamepad {
 public:
 	virtual ~Gamepad() = default;
 
-	///@~Japanese
-	/// @brief ゲームパッドの能力を取得します。
 	virtual GamepadCapabilities GetCapabilities() const = 0;
 
-	///@~Japanese
-	/// @brief ゲームパッドの現在の状態を取得します。
 	virtual GamepadState GetState() const = 0;
 };
 

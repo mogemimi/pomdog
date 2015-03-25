@@ -14,8 +14,6 @@ namespace Pomdog {
 
 class MouseState;
 
-///@~Japanese
-/// @brief マウスによる入力を取得するのに使います。
 class POMDOG_EXPORT Mouse {
 public:
 	Mouse() = default;
@@ -24,8 +22,6 @@ public:
 
 	virtual ~Mouse() = default;
 
-	///@~Japanese
-	/// @brief マウスの現在の状態を取得します。
 	virtual MouseState GetState() const = 0;
 };
 

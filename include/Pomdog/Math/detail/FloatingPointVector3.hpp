@@ -18,10 +18,7 @@
 namespace Pomdog {
 namespace Detail {
 
-///@~English
-/// @brief vector in three-dimensional space.
-///@~Japanese
-/// @brief 3 つの要素を持つベクトル（3 次元ベクトル）を定義します。
+///@brief vector in three-dimensional space.
 template <typename T>
 class POMDOG_EXPORT FloatingPointVector3 {
 public:
@@ -67,110 +64,43 @@ public:
 	bool operator==(FloatingPointVector3 const& other) const;
 	bool operator!=(FloatingPointVector3 const& other) const;
 
-	///@~Japanese
-	/// @brief ベクトルの長さを計算します。
 	T Length() const;
 
-	///@~Japanese
-	/// @brief ベクトルの長さの 2 乗を計算します。
 	T LengthSquared() const;
 
-	///@~Japanese
-	/// @brief 2 つのベクトル間の距離を計算します。
 	static T Distance(FloatingPointVector3 const& a, FloatingPointVector3 const& b);
 
-	///@~Japanese
-	/// @brief 2 つのベクトル間の距離の 2 乗を計算します。
 	static T DistanceSquared(FloatingPointVector3 const& a, FloatingPointVector3 const& b);
 
-	///@~Japanese
-	/// @brief 2 つのベクトルの内積を計算します。
 	static T Dot(FloatingPointVector3 const& a, FloatingPointVector3 const& b);
 
-	///@~Japanese
-	/// @brief 2 つのベクトルの外積を計算します。
 	static FloatingPointVector3 Cross(FloatingPointVector3 const& a, FloatingPointVector3 const& b);
 
-	///@~Japanese
-	/// @brief 2 つのベクトルが含む成分の最小値で構成されたベクトルを返します。
-	/// @details 返却値は次のベクトルと同じです。
-	/// FloatingPointVector3 result;
-	/// result.x = std::min(a.x, b.x);
-	/// result.y = std::min(a.y, b.y);
-	/// result.z = std::min(a.z, b.z);
 	static FloatingPointVector3 Min(FloatingPointVector3 const& a, FloatingPointVector3 const& b);
 
-	///@~Japanese
-	/// @brief 2 つのベクトルが含む成分の最大値で構成されたベクトルを返します。
-	/// @details 返却値は次のベクトルと同じです。
-	/// FloatingPointVector3 result;
-	/// result.x = std::max(a.x, b.x);
-	/// result.y = std::max(a.y, b.y);
-	/// result.z = std::max(a.z, b.z);
 	static FloatingPointVector3 Max(FloatingPointVector3 const& a, FloatingPointVector3 const& b);
 
-	///@~Japanese
-	/// @brief 指定された範囲内にベクトルをクランプします。
-	/// @param source クランプするベクトル
-	/// @param min 最小値
-	/// @param max 最大値
-	/// @details 返却値は次のベクトルと同じです。
-	/// FloatingPointVector3 result;
-	/// result.x = MathHelper::Clamp(source.x, min.x, max.x);
-	/// result.y = MathHelper::Clamp(source.y, min.y, max.y);
-	/// result.z = MathHelper::Clamp(source.z, min.z, max.z);
 	static FloatingPointVector3 Clamp(FloatingPointVector3 const& source,
 		FloatingPointVector3 const& min, FloatingPointVector3 const& max);
 
-	///@~Japanese
-	/// @brief 2 つのベクトル間を線形補間します。
-	/// @param source1 ソースとなるベクトル1
-	/// @param source2 ソースとなるベクトル2
-	/// @param amount 線形補間する際に使用されるパラメータで、値の範囲に制限はありません。
 	static FloatingPointVector3 Lerp(FloatingPointVector3 const& source1, FloatingPointVector3 const& source2, T amount);
 
-	///@~Japanese
-	/// @brief 2 つのベクトル間をスムーズに補間します。
-	/// @details 返却値は次のベクトルと同じです。
-	/// FloatingPointVector3 result;
-	/// result.x = MathHelper::SmoothStep(source1.x, source2.x, amount);
-	/// result.y = MathHelper::SmoothStep(source1.y, source2.y, amount);
-	/// result.z = MathHelper::SmoothStep(source1.z, source2.z, amount);
 	static FloatingPointVector3 SmoothStep(FloatingPointVector3 const& source1, FloatingPointVector3 const& source2, T amount);
 
-	///@~Japanese
-	/// @brief 現在のベクトルを単位ベクトルに変換します。
 	void Normalize();
 
-	///@~Japanese
-	/// @brief 指定されたベクトルの単位ベクトルを計算します。
 	static FloatingPointVector3 Normalize(FloatingPointVector3 const& source);
 
-	///@~Japanese
-	/// @brief 指定されたベクトルの単位ベクトルを計算します。
 	static void Normalize(FloatingPointVector3 const&, FloatingPointVector3 & result);
 
-	///@~Japanese
-	/// @brief 指定された行列を使用して 3 次元ベクトルをトランスフォームします。
-	/// @param position 元となる 3 次元ベクトル
-	/// @param matrix 4x4 のトランスフォーム行列
-	/// @return トランスフォームされた 3 次元ベクトル
 	static FloatingPointVector3 Transform(FloatingPointVector3 const& position, FloatingPointMatrix4x4<T> const& matrix);
 
-	///@~Japanese
-	/// @brief 指定された行列を使用して法線ベクトルをトランスフォームします。
 	static FloatingPointVector3 TransformNormal(FloatingPointVector3 const& normal, FloatingPointMatrix4x4<T> const& matrix);
 
-	///@~English
-	/// @brief Returns pointer to the first element.
-	///@~Japanese
-	/// @brief 最初の要素へのポインタを返します。
+	///@brief Returns pointer to the first element.
 	T const* Data() const;
 
-	///@~English
-	/// @brief Returns pointer to the first element.
-	///@~Japanese
-	/// @brief 最初の要素へのポインタを返します。
+	///@brief Returns pointer to the first element.
 	T* Data();
 
 	///@note (0, 0, 0)

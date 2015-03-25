@@ -12,8 +12,6 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief ゲームパッドの方向キー (DPad) の状態を示します。
 class GamepadDPad {
 public:
 	ButtonState Down = ButtonState::Released;

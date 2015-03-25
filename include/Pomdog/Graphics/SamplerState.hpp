@@ -24,8 +24,6 @@ class NativeSamplerState;
 
 class GraphicsDevice;
 
-///@~Japanese
-/// @brief テクスチャのサンプリング方法を指定するサンプラーステートです。
 class POMDOG_EXPORT SamplerState {
 public:
 	SamplerState() = delete;
@@ -36,43 +34,23 @@ public:
 
 	~SamplerState();
 
-	///@~Japanese
-	/// @brief サンプラーステートを作成するために記述したサンプラーステートの設定内容を取得します。
 	SamplerDescription Description() const;
 
-	///@~Japanese
-	/// @brief 異方性フィルタリングを有効にするサンプラステートを作成します。
-	/// 範囲外テクスチャ座標のアドレッシング方法は TextureAddressMode::Clamp を使用します。
 	static std::shared_ptr<SamplerState>
 	CreateAnisotropicClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	///@~Japanese
-	/// @brief 異方性フィルタリングを有効にするサンプラステートを作成します。
-	/// 範囲外テクスチャ座標のアドレッシング方法は TextureAddressMode::Wrap を使用します。
 	static std::shared_ptr<SamplerState>
 	CreateAnisotropicWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	///@~Japanese
-	/// @brief 線形フィルタリングを有効にするサンプラステートを作成します。
-	/// 範囲外テクスチャ座標のアドレッシング方法は TextureAddressMode::Clamp を使用します。
 	static std::shared_ptr<SamplerState>
 	CreateLinearClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	///@~Japanese
-	/// @brief 線形フィルタリングを有効にするサンプラステートを作成します。
-	/// 範囲外テクスチャ座標のアドレッシング方法は TextureAddressMode::Wrap を使用します。
 	static std::shared_ptr<SamplerState>
 	CreateLinearWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	///@~Japanese
-	/// @brief ポイントフィルタリングを有効にするサンプラステートを作成します。
-	/// 範囲外テクスチャ座標のアドレッシング方法は TextureAddressMode::Clamp を使用します。
 	static std::shared_ptr<SamplerState>
 	CreatePointClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	///@~Japanese
-	/// @brief ポイントフィルタリングを有効にするサンプラステートを作成します。
-	/// 範囲外テクスチャ座標のアドレッシング方法は TextureAddressMode::Wrap を使用します。
 	static std::shared_ptr<SamplerState>
 	CreatePointWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 

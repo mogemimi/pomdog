@@ -14,8 +14,6 @@ namespace Pomdog {
 
 class KeyboardState;
 
-///@~Japanese
-/// @brief キーボードの入力を取得するために使います。
 class POMDOG_EXPORT Keyboard {
 public:
 	Keyboard() = default;
@@ -24,8 +22,6 @@ public:
 
 	virtual ~Keyboard() = default;
 
-	///@~Japanese
-	/// @brief キーボードの現在の状態を取得します。
 	virtual KeyboardState GetState() const = 0;
 };
 

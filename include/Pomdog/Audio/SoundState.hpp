@@ -12,19 +12,11 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief サウンドの現在の状態を定義します。
 enum class SoundState: std::uint8_t {
-	///@~Japanese
-	/// @brief 一時停止しています。
 	Paused,
 
-	///@~Japanese
-	/// @brief 再生しています。
 	Playing,
 
-	///@~Japanese
-	/// @brief 停止しています。
 	Stopped,
 };
 

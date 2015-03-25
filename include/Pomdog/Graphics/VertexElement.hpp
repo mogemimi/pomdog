@@ -14,16 +14,10 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief 頂点を構成する要素を定義します。
 class POMDOG_EXPORT VertexElement {
 public:
-	///@~Japanese
-	/// @brief 頂点データの先頭から頂点要素までのバイト単位のオフセットを指定します。
 	std::uint16_t Offset;
 
-	///@~Japanese
-	/// @brief 頂点を構成する要素のフォーマットを指定します。
 	VertexElementFormat VertexElementFormat;
 };
 

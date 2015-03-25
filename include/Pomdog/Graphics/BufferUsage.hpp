@@ -12,8 +12,6 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief バッファの使用方法を定義します。
 enum class BufferUsage: std::uint8_t {
 	Immutable,
 	Dynamic,

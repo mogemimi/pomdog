@@ -24,27 +24,15 @@ class NativeTexture2D;
 }// namespace RenderSystem
 }// namespace Detail
 
-///@~Japanese
-/// @brief 2 次元テクスチャです。
 class POMDOG_EXPORT Texture2D : public Texture {
 public:
 	Texture2D() = delete;
 	Texture2D(Texture2D const&) = delete;
 	Texture2D(Texture2D &&) = default;
 
-	///@~Japanese
-	/// @param graphicsDevice グラフィックスデバイス
-	/// @param width テクスチャの水平方向のピクセル単位の長さ
-	/// @param height テクスチャの垂直方向のピクセル単位の長さ
 	Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		std::int32_t width, std::int32_t height);
 
-	///@~Japanese
-	/// @param graphicsDevice グラフィックスデバイス
-	/// @param width テクスチャの水平方向のピクセル単位の長さ
-	/// @param height テクスチャの垂直方向のピクセル単位の長さ
-	/// @param mipMap ミップマップを生成する場合は true を指定します。
-	/// @param format テクスチャのピクセルフォーマット
 	Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 		std::int32_t width, std::int32_t height, bool mipMap, SurfaceFormat format);
 
@@ -53,25 +41,14 @@ public:
 	Texture2D & operator=(Texture2D const&) = delete;
 	Texture2D & operator=(Texture2D &&) = default;
 
-	///@~Japanese
-	/// @brief テクスチャの水平方向の幅（ピクセル単位）を取得します。
 	std::int32_t Width() const;
 
-	///@~Japanese
-	/// @brief テクスチャの垂直方向の幅（ピクセル単位）を取得します。
 	std::int32_t Height() const;
 
-	///@~Japanese
-	/// @brief ミップマップレベルを取得します。
-	/// @remarks ミップマップレベルは 1 以上を有効とします。
 	std::int32_t LevelCount() const;
 
-	///@~Japanese
-	/// @brief テクスチャのフォーマットを取得します。
 	SurfaceFormat Format() const;
 
-	///@~Japanese
-	/// @brief ピクセルデータを格納します。
 	void SetData(void const* pixelData);
 
 public:

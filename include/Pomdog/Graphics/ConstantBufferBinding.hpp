@@ -40,12 +40,8 @@ public:
 	ConstantBufferBinding & operator=(ConstantBufferBinding const&) = delete;
 	ConstantBufferBinding & operator=(ConstantBufferBinding &&) = default;
 
-	///@~Japanese
-	/// @brief エフェクトパラメータを取得します。
 	std::shared_ptr<EffectParameter> const& Find(std::string const& parameterName) const;
 
-	///@~Japanese
-	/// @brief エフェクトパラメータのコンテナを取得します。
 	EffectParameterCollection const& Find() const;
 
 public:

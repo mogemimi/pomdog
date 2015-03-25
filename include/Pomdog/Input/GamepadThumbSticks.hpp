@@ -12,8 +12,6 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief ゲームパッドのサムスティックの状態を示します。
 class GamepadThumbSticks {
 public:
 	Vector2 Left = Vector2::Zero;

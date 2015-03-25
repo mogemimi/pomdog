@@ -14,8 +14,6 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief ゲームパッドの状態を示します。
 class GamepadState {
 public:
 	GamepadButtons Buttons;

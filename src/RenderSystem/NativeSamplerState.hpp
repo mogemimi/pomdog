@@ -24,8 +24,6 @@ public:
 
 	virtual ~NativeSamplerState() = default;
 
-	///@~Japanese
-	/// @brief レンダリングの直前にサンプラーステートを適用します。
 	virtual void Apply(NativeGraphicsContext & graphicsContext, int index) = 0;
 };
 

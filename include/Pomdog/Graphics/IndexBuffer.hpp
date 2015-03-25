@@ -24,8 +24,6 @@ class NativeIndexBuffer;
 }// namespace RenderSystem
 }// namespace Detail
 
-///@~Japanese
-/// @brief インデックスバッファです。
 class POMDOG_EXPORT IndexBuffer {
 public:
 	IndexBuffer() = delete;
@@ -53,29 +51,14 @@ public:
 	IndexBuffer & operator=(IndexBuffer const&) = delete;
 	IndexBuffer & operator=(IndexBuffer &&) = default;
 
-	///@~Japanese
-	/// @brief インデックスの個数を取得します。
 	std::uint32_t IndexCount() const;
 
-	///@~Japanese
-	/// @brief インデックスの要素 1 つ分のサイズを取得します。
 	IndexElementSize ElementSize() const;
 
-	///@~Japanese
-	/// @brief バッファの使用方法を取得します。
 	Pomdog::BufferUsage BufferUsage() const;
 
-	///@~Japanese
-	/// @brief インデックスデータを格納します。
-	/// @param source ソースバッファ
-	/// @param elementCount インデックスの要素数
 	void SetData(void const* source, std::uint32_t elementCount);
 
-	///@~Japanese
-	/// @brief インデックスデータを格納します。
-	/// @param offsetInBytes バッファの先頭から出力先までのバイト単位のオフセット
-	/// @param source ソースバッファ
-	/// @param elementCount インデックスの要素数
 	void SetData(std::uint32_t offsetInBytes, void const* source, std::uint32_t elementCount);
 
 public:

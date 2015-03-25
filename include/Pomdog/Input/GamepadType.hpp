@@ -12,8 +12,6 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief ゲームパッドの種類を識別するのに使います。
 enum class GamepadType: std::uint8_t {
 	Unknown,
 	Gamepad,

@@ -15,52 +15,26 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief マウスの状態を表します。
 class POMDOG_EXPORT MouseState {
 public:
-	///@~English
-	/// @brief Position of the mouse cursor
-	///@~Japanese
-	/// @brief マウスカーソルの位置
-	/// @remarks
-	/// ゲームウィンドウの左上隅を基準とした位置を示します。
-	/// マウスカーソルがクライアント領域外である左端、上端を越えた場合、
-	/// 負の値をとることがあります。
+	///@brief Position of the mouse cursor
 	Point2D Position {0, 0};
 
-	///@~Japanese
-	/// @brief マウススクロールホイールの移動量
 	std::int32_t ScrollWheel = 0;
 
-	///@~English
-	/// @brief Left mouse button
-	///@~Japanese
-	/// @brief マウス左ボタン
+	///@brief Left mouse button
 	ButtonState LeftButton = ButtonState::Released;
 
-	///@~English
-	/// @brief Middle mouse button
-	///@~Japanese
-	/// @brief マウス中央ボタン
+	///@brief Middle mouse button
 	ButtonState MiddleButton = ButtonState::Released;
 
-	///@~English
-	/// @brief Right mouse button
-	///@~Japanese
-	/// @brief マウス右ボタン
+	///@brief Right mouse button
 	ButtonState RightButton = ButtonState::Released;
 
-	///@~English
-	/// @brief First extended mouse button
-	///@~Japanese
-	/// @brief マウス拡張ボタン1
+	///@brief First extended mouse button
 	ButtonState XButton1 = ButtonState::Released;
 
-	///@~English
-	/// @brief Second extended mouse button
-	///@~Japanese
-	/// @brief マウス拡張ボタン2
+	///@brief Second extended mouse button
 	ButtonState XButton2 = ButtonState::Released;
 };
 

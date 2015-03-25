@@ -16,19 +16,12 @@ namespace Pomdog {
 enum class KeyState: bool;
 enum class Keys: std::uint8_t;
 
-/// @brief キーボードの状態です。
 class POMDOG_EXPORT KeyboardState {
 public:
-	///@~Japanese
-	/// @brief 指定されたキーの現在の状態を取得します。
 	KeyState operator[](Keys key) const;
 
-	///@~Japanese
-	/// @brief 指定されたキーが押されているかどうかを取得します。
 	bool IsKeyDown(Keys key) const;
 
-	///@~Japanese
-	/// @brief 指定されたキーが離されているかどうかを取得します。
 	bool IsKeyUp(Keys key) const;
 
 	void SetKey(Keys key, KeyState keyState);

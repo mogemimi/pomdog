@@ -57,15 +57,9 @@ public:
 	///@copydoc GameWindow
 	void SetMouseCursor(MouseCursor cursor) override;
 
-	///@~English
-	/// @return true if the window is minimized, false otherwise.
-	///@~Japanese
-	/// @brief ウィンドウが最小化状態かどうかを取得します。
-	/// @return ウィンドウが最小化のときは true を、それ以外は false を返します。
+	///@return true if the window is minimized, false otherwise.
 	bool IsMinimized() const;
 
-	///@~Japanese
-	/// @brief ウィンドウを閉じます。
 	void Close();
 
 	void ResetGLContext(std::shared_ptr<OpenGLContextCocoa> const& context);

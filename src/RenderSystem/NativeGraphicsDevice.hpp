@@ -31,8 +31,6 @@ class NativeVertexBuffer;
 class ShaderBytecode;
 class ShaderCompileOptions;
 
-///@~Japanese
-/// @brief グラフィックスリソースの作成を行います。
 class NativeGraphicsDevice: Noncopyable {
 public:
 	virtual ~NativeGraphicsDevice() = default;
@@ -43,71 +41,45 @@ public:
 	CreateShader(ShaderBytecode const& shaderBytecode,
 		ShaderCompileOptions const& compileOptions) = 0;
 
-	///@~Japanese
-	/// @brief 定数バッファを作成します。
 	virtual std::unique_ptr<NativeConstantBuffer>
 	CreateConstantBuffer(std::uint32_t sizeInBytes) = 0;
 
-	///@~Japanese
-	/// @brief インデックスバッファを作成します。
 	virtual std::unique_ptr<NativeIndexBuffer>
 	CreateIndexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage) = 0;
 
-	///@~Japanese
-	/// @brief インデックスバッファを作成します。
 	virtual std::unique_ptr<NativeIndexBuffer>
 	CreateIndexBuffer(void const* indices, std::uint32_t sizeInBytes,
 		BufferUsage bufferUsage) = 0;
 
-	///@~Japanese
-	/// @brief 頂点バッファを作成します。
 	virtual std::unique_ptr<NativeVertexBuffer>
 	CreateVertexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage) = 0;
 
-	///@~Japanese
-	/// @brief 頂点バッファを作成します。
 	virtual std::unique_ptr<NativeVertexBuffer>
 	CreateVertexBuffer(void const* vertices, std::size_t sizeInBytes,
 		BufferUsage bufferUsage) = 0;
 
-	///@~Japanese
-	/// @brief ブレンディングステートを作成します。
 	virtual std::unique_ptr<NativeBlendState>
 	CreateBlendState(BlendDescription const& description) = 0;
 
-	///@~Japanese
-	/// @brief 深度ステンシルステートを作成します。
 	virtual std::unique_ptr<NativeDepthStencilState>
 	CreateDepthStencilState(DepthStencilDescription const& description) = 0;
 
-	///@~Japanese
-	/// @brief サンプラーステートを作成します。
 	virtual std::unique_ptr<NativeSamplerState>
 	CreateSamplerState(SamplerDescription const& description) = 0;
 
-	///@~Japanese
-	/// @brief ラスタライザーステートを作成します。
 	virtual std::unique_ptr<NativeRasterizerState>
 	CreateRasterizerState(RasterizerDescription const& description) = 0;
 
-	///@~Japanese
-	/// @brief エフェクトパスを作成します。
 	virtual std::unique_ptr<NativeEffectPass>
 	CreateEffectPass(EffectPassDescription const& description) = 0;
 
-	///@~Japanese
-	/// @brief 指定されたエフェクトパスからエフェクトリフレクションを作成します。
 	virtual std::unique_ptr<NativeEffectReflection>
 	CreateEffectReflection(NativeEffectPass & nativeEffectPass) = 0;
 
-	///@~Japanese
-	/// @brief 2 次元テクスチャを作成します。
 	virtual std::unique_ptr<NativeTexture2D>
 	CreateTexture2D(std::int32_t width, std::int32_t height,
 		std::uint32_t mipmapLevels, SurfaceFormat format) = 0;
 
-	///@~Japanese
-	/// @brief 2 次元のレンダーターゲットを作成します。
 	virtual std::unique_ptr<NativeRenderTarget2D>
 	CreateRenderTarget2D(std::int32_t width, std::int32_t height,
 		std::uint32_t mipmapLevels, SurfaceFormat format, DepthFormat depthStencilFormat) = 0;

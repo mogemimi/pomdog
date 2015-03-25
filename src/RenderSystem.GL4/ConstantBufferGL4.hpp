@@ -42,8 +42,6 @@ public:
 	void SetData(std::uint32_t offsetInBytes,
 		void const* source, std::uint32_t sizeInBytes) override;
 
-	///@~Japanese
-	/// @brief シェーダプログラムに定数バッファを適用します。
 	void Apply(std::uint32_t slotIndex);
 
 private:

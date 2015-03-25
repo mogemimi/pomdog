@@ -14,22 +14,13 @@
 namespace Pomdog {
 
 enum class ClearOptions: std::uint8_t {
-	///@~English
-	/// @brief Clear the depth buffer.
-	///@~Japanese
-	/// @brief 深度バッファをクリアします。
+	///@brief Clear the depth buffer.
 	DepthBuffer = 0b001,
 
-	///@~English
-	/// @brief Clear the stencil buffer.
-	///@~Japanese
-	/// @brief ステンシルバッファをクリアします。
+	///@brief Clear the stencil buffer.
 	Stencil = 0b010,
 
-	///@~English
-	/// @brief Clear the rendering target.
-	///@~Japanese
-	/// @brief レンダリングターゲットをクリアします。
+	///@brief Clear the rendering target.
 	RenderTarget = 0b100,
 };
 

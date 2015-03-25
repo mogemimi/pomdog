@@ -12,25 +12,11 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief テクスチャの境界である 0.0 から 1.0 の範囲外にあるテクスチャ座標のアドレッシング方法を定義します。
 enum class TextureAddressMode: std::uint8_t {
-	///@~Japanese
-	/// @brief 整数境界ごとにテクスチャを繰り返します。
-	/// @note See also:
-	/// http://msdn.microsoft.com/ja-jp/library/bb206366(v=vs.85).aspx
 	Wrap,
 
-	///@~Japanese
-	/// @brief 整数境界ごとにテクスチャをミラーリングします。
-	/// @note See also:
-	/// http://msdn.microsoft.com/ja-jp/library/bb147201(v=vs.85).aspx
 	Mirror,
 
-	///@~Japanese
-	/// @brief テクスチャ座標を [0.0, 1.0] の範囲にクランプします。
-	/// @note See also:
-	/// http://msdn.microsoft.com/ja-jp/library/bb204826(v=vs.85).aspx
 	Clamp,
 };
 

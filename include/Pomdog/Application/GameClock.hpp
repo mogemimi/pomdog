@@ -27,28 +27,16 @@ public:
 
 	~GameClock();
 
-	///@~Japanese
-	/// @brief フレーム毎に 1 度だけ呼び出し、フレーム時間の更新やデルタ時間の予測を行います。
 	void Tick();
 
-	///@~Japanese
-	/// @brief アプリケーションが起動してから現在のフレームまでの経過時間（秒）を取得します。
 	Duration TotalGameTime() const;
 
-	///@~Japanese
-	/// @brief 現在のフレーム番号を取得します。
 	std::uint32_t FrameNumber() const;
 
-	///@~Japanese
-	/// @brief 現在のフレームにかかる処理時間の予測値を取得します。
 	Duration FrameDuration() const;
 
-	///@~Japanese
-	/// @brief 現在のフレームレートを取得します。
 	float FrameRate() const;
 
-	///@~Japanese
-	/// @brief フレームの開始時から現在までの経過時間（秒）を取得します。
 	Duration ElapsedTime() const;
 
 	Signal<void(Duration const& frameDuration)> OnTick;

@@ -12,15 +12,9 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief オーディオデータのチャンネル数を示します。
 enum class AudioChannels: std::uint8_t {
-	///@~Japanese
-	/// @brief チャンネル数1つのモノラル音声
 	Mono = 1,
 
-	///@~Japanese
-	/// @brief チャンネル数2つのステレオ音声
 	Stereo = 2,
 };
 

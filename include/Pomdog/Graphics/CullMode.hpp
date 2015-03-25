@@ -12,19 +12,11 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief 背面カリングに使用するプリミティブのワインディング順序を定義します。
 enum class CullMode: std::uint8_t {
-	///@~Japanese
-	/// @brief 常にすべての三角形を描画します。
 	None,
 
-	///@~Japanese
-	/// @brief ワインディング順序が時計回りの頂点列に対して背面カリングを行います。
 	ClockwiseFace,
 
-	///@~Japanese
-	/// @brief ワインディング順序が反時計回りの頂点列に対して背面カリングを行います。デフォルト値です。
 	CounterClockwiseFace,
 };
 

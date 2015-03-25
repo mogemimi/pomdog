@@ -19,8 +19,6 @@
 namespace Pomdog {
 namespace Detail {
 
-///@~Japanese
-/// @brief 3x3 の浮動小数点数の行列を定義します。
 template <typename T>
 class POMDOG_EXPORT FloatingPointMatrix3x3 {
 public:
@@ -79,161 +77,95 @@ public:
 	T const& operator()(std::size_t row, std::size_t column) const;
 	T & operator()(std::size_t row, std::size_t column);
 
-	///@~Japanese
-	/// @brief スケールベクトルを設定します。
 	void SetScale(FloatingPointVector3<T> const& scale);
 
-	///@~Japanese
-	/// @brief スケールベクトルを取得します。
 	FloatingPointVector3<T> GetScale() const;
 
-	///@~Japanese
-	/// @brief 行列式を計算します。
 	T Determinant() const;
 
-	///@~Japanese
-	/// @brief 指定された行列を結合します。3x3 の正方行列の積を計算します。
 	FloatingPointMatrix3x3 Concatenate(FloatingPointMatrix3x3 const& other) const;
 
-	///@~Japanese
-	/// @brief 3x3 の正方行列の積を計算します。
 	FloatingPointMatrix3x3 Concatenate(T scaleFactor) const;
 
-	///@~Japanese
-	/// @brief 2x2 の部分行列（小行列式）を取得します。
 	FloatingPointMatrix2x2<T> Minor2x2(std::size_t row, std::size_t column) const;
 
-	///@~Japanese
-	/// @brief 余因子行列を計算します。
 	static FloatingPointMatrix3x3
 	Adjoint(FloatingPointMatrix3x3 const& matrix);
 
-	///@~Japanese
-	/// @brief 転置行列を計算します。
 	static void
 	Transpose(FloatingPointMatrix3x3 const& matrix, FloatingPointMatrix3x3 & result);
 
-	///@~Japanese
-	/// @brief 転置行列を計算します。
 	static FloatingPointMatrix3x3
 	Transpose(FloatingPointMatrix3x3 const& matrix);
 
-	///@~Japanese
-	/// @brief 指定された行列の逆行列を作成します。
 	static void
 	Invert(FloatingPointMatrix3x3 const& matrix, FloatingPointMatrix3x3 & result);
 
-	///@~Japanese
-	/// @brief 指定された行列の逆行列を作成します。
 	static FloatingPointMatrix3x3
 	Invert(FloatingPointMatrix3x3 const& matrix);
 
-	///@~Japanese
-	/// @brief オフセットを指定して、平行移動行列を作成します。
 	static void
 	CreateTranslation(FloatingPointVector2<T> const& position, FloatingPointMatrix3x3 & result);
 
-	///@~Japanese
-	/// @brief オフセットを指定して、平行移動行列を作成します。
 	static FloatingPointMatrix3x3
 	CreateTranslation(FloatingPointVector2<T> const& position);
 
-	///@~Japanese
-	/// @brief スケーリング行列を作成します。
 	static void
 	CreateScale(T scale, FloatingPointMatrix3x3 & result);
 
-	///@~Japanese
-	/// @brief スケーリング行列を作成します。
 	static FloatingPointMatrix3x3
 	CreateScale(T scale);
 
-	///@~Japanese
-	/// @brief スケーリング行列を作成します。
 	static void
 	CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix3x3 & result);
 
-	///@~Japanese
-	/// @brief スケーリング行列を作成します。
 	static FloatingPointMatrix3x3
 	CreateScale(FloatingPointVector3<T> const& scale);
 
-	///@~Japanese
-	/// @brief x 軸を回転軸とした回転行列を作成します。
 	static void
 	CreateRotationX(Radian<T> const& angle, FloatingPointMatrix3x3 & result);
 
-	///@~Japanese
-	/// @brief x 軸を回転軸とした回転行列を作成します。
 	static FloatingPointMatrix3x3
 	CreateRotationX(Radian<T> const& angle);
 
-	///@~Japanese
-	/// @brief y 軸を回転軸とした回転行列を作成します。
 	static void
 	CreateRotationY(Radian<T> const& angle, FloatingPointMatrix3x3 & result);
 
-	///@~Japanese
-	/// @brief y 軸を回転軸とした回転行列を作成します。
 	static FloatingPointMatrix3x3
 	CreateRotationY(Radian<T> const& angle);
 
-	///@~Japanese
-	/// @brief z 軸を回転軸とした回転行列を作成します。
 	static void
 	CreateRotationZ(Radian<T> const& angle, FloatingPointMatrix3x3 & result);
 
-	///@~Japanese
-	/// @brief z 軸を回転軸とした回転行列を作成します。
 	static FloatingPointMatrix3x3
 	CreateRotationZ(Radian<T> const& angle);
 
-	///@~Japanese
-	/// @brief クォータニオンから行列を作成します。
 	static void
 	CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion, FloatingPointMatrix3x3 & result);
 
-	///@~Japanese
-	/// @brief クォータニオンから行列を作成します。
 	static FloatingPointMatrix3x3
 	CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion);
 
-	///@~Japanese
-	/// @brief 2つの行列間の対応する値を線形補間した行列を作成します。
 	static void
 	CreateLerp(FloatingPointMatrix3x3 const& source1, FloatingPointMatrix3x3 const& source2,
 		T amount, FloatingPointMatrix3x3 & result);
 
-	///@~Japanese
-	/// @brief 2つの行列間の対応する値を線形補間した行列を作成します。
 	static FloatingPointMatrix3x3
 	CreateLerp(FloatingPointMatrix3x3 const& source1, FloatingPointMatrix3x3 const& source2,
 		T amount);
 
-	///@~Japanese
-	/// @brief 任意の軸を回転軸とした回転行列を作成します。
 	static void
 	CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle, FloatingPointMatrix3x3 & result);
 
-	///@~Japanese
-	/// @brief 任意の軸を回転軸とした回転行列を作成します。
 	static FloatingPointMatrix3x3
 	CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle);
 
-	///@~English
-	/// @brief Returns pointer to the first element.
-	///@~Japanese
-	/// @brief 最初の要素へのポインタを返します。
+	///@brief Returns pointer to the first element.
 	T const* Data() const;
 
-	///@~English
-	/// @brief Returns pointer to the first element.
-	///@~Japanese
-	/// @brief 最初の要素へのポインタを返します。
+	///@brief Returns pointer to the first element.
 	T* Data();
 
-	///@~Japanese
-	/// @brief 単位行列です。
 	static FloatingPointMatrix3x3 const Identity;
 };
 

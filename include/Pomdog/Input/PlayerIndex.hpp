@@ -12,8 +12,6 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief 入力デバイスのプレイヤーを識別する列挙型です。
 enum class PlayerIndex: std::uint8_t {
 	One = 1,
 	Two = 2,

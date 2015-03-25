@@ -24,14 +24,8 @@ public:
 	AudioEngine(AudioEngine &&) = default;
 	AudioEngine & operator=(AudioEngine &&) = default;
 
-	///@~Japanese
-	/// @brief すべてのサウンドに影響を与えるマスターボリュームを取得します。
-	/// @return 0.0f（無音） ~ 1.0f（音量の最大値） の範囲で現在の音量を返却します。
 	float MasterVolume() const;
 
-	///@~Japanese
-	/// @brief すべてのサウンドに影響を与えるマスターボリュームを設定します。
-	/// @param volume 0.0f（無音） ~ 1.0f（音量の最大値） の範囲でボリュームを指定してください。
 	void MasterVolume(float volume);
 
 	Detail::SoundSystem::NativeAudioEngine* NativeAudioEngine();

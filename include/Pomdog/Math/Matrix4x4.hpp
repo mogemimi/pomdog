@@ -12,8 +12,6 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief 4x4 の float 型の行列を定義します。
 using Matrix4x4 = Detail::FloatingPointMatrix4x4<float>;
 
 }// namespace Pomdog

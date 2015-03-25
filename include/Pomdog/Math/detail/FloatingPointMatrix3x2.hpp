@@ -19,8 +19,6 @@
 namespace Pomdog {
 namespace Detail {
 
-///@~Japanese
-/// @brief 3x2 の浮動小数点数の行列を定義します。
 template <typename T>
 class POMDOG_EXPORT FloatingPointMatrix3x2 {
 public:
@@ -79,104 +77,62 @@ public:
 	T const& operator()(std::size_t row, std::size_t column) const;
 	T & operator()(std::size_t row, std::size_t column);
 
-	///@~Japanese
-	/// @brief 行列式を計算します。
 	T Determinant() const;
 
-	///@~Japanese
-	/// @brief 指定された行列を結合します。3x2 の行列の積を計算します。
 	FloatingPointMatrix3x2 Concatenate(FloatingPointMatrix3x2 const& other) const;
 
-	///@~Japanese
-	/// @brief 3x2 の行列の積を計算します。
 	FloatingPointMatrix3x2 Concatenate(T scaleFactor) const;
 
-	///@~Japanese
-	/// @brief 指定された行列の逆行列を作成します。
 	static void
 	Invert(FloatingPointMatrix3x2 const& matrix, FloatingPointMatrix3x2 & result);
 
-	///@~Japanese
-	/// @brief 指定された行列の逆行列を作成します。
 	static FloatingPointMatrix3x2
 	Invert(FloatingPointMatrix3x2 const& matrix);
 
-	///@~Japanese
-	/// @brief オフセットを指定して、平行移動行列を作成します。
 	static void
 	CreateTranslation(FloatingPointVector2<T> const& position, FloatingPointMatrix3x2 & result);
 
-	///@~Japanese
-	/// @brief オフセットを指定して、平行移動行列を作成します。
 	static FloatingPointMatrix3x2
 	CreateTranslation(FloatingPointVector2<T> const& position);
 
-	///@~Japanese
-	/// @brief スケーリング行列を作成します。
 	static void
 	CreateScale(T scale, FloatingPointMatrix3x2 & result);
 
-	///@~Japanese
-	/// @brief スケーリング行列を作成します。
 	static FloatingPointMatrix3x2
 	CreateScale(T scale);
 
-	///@~Japanese
-	/// @brief スケーリング行列を作成します。
 	static void
 	CreateScale(FloatingPointVector2<T> const& scale, FloatingPointMatrix3x2 & result);
 
-	///@~Japanese
-	/// @brief スケーリング行列を作成します。
 	static FloatingPointMatrix3x2
 	CreateScale(FloatingPointVector2<T> const& scale);
 
-	///@~Japanese
-	/// @brief z 軸を回転軸とした回転行列を作成します。
 	static void
 	CreateRotation(Radian<T> const& angle, FloatingPointMatrix3x2 & result);
 
-	///@~Japanese
-	/// @brief z 軸を回転軸とした回転行列を作成します。
 	static FloatingPointMatrix3x2
 	CreateRotation(Radian<T> const& angle);
 
-	///@~Japanese
-	/// @brief スキューイング行列を作成します。
 	static void
 	CreateSkew(FloatingPointVector2<T> const& skew, FloatingPointMatrix3x2 & result);
 
-	///@~Japanese
-	/// @brief スキューイング行列を作成します。
 	static FloatingPointMatrix3x2
 	CreateSkew(FloatingPointVector2<T> const& skew);
 
-	///@~Japanese
-	/// @brief 2つの行列間の対応する値を線形補間した行列を作成します。
 	static void
 	CreateLerp(FloatingPointMatrix3x2 const& source1, FloatingPointMatrix3x2 const& source2,
 		T amount, FloatingPointMatrix3x2 & result);
 
-	///@~Japanese
-	/// @brief 2つの行列間の対応する値を線形補間した行列を作成します。
 	static FloatingPointMatrix3x2
 	CreateLerp(FloatingPointMatrix3x2 const& source1, FloatingPointMatrix3x2 const& source2,
 		T amount);
 
-	///@~English
-	/// @brief Returns pointer to the first element.
-	///@~Japanese
-	/// @brief 最初の要素へのポインタを返します。
+	///@brief Returns pointer to the first element.
 	T const* Data() const;
 
-	///@~English
-	/// @brief Returns pointer to the first element.
-	///@~Japanese
-	/// @brief 最初の要素へのポインタを返します。
+	///@brief Returns pointer to the first element.
 	T* Data();
 
-	///@~Japanese
-	/// @brief 単位行列です。
 	static FloatingPointMatrix3x2 const Identity;
 };
 

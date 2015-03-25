@@ -12,10 +12,7 @@
 
 namespace Pomdog {
 
-///@~English
-/// @brief Specifies keyboard keys and key codes.
-///@~Japanese
-/// @brief キーボードのキーとキーコードを定義します。
+///@brief Specifies keyboard keys and key codes.
 enum class Keys: std::uint8_t {
 	///@brief Reserved (never is pressed)
 	None = 0,

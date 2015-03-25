@@ -19,8 +19,6 @@ namespace Pomdog {
 
 class LogChannel;
 
-///@~Japanese
-/// @brief ログストリームです。
 class POMDOG_EXPORT LogStream {
 private:
 	std::stringstream cache;

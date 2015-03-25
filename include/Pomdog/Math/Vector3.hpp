@@ -12,10 +12,7 @@
 
 namespace Pomdog {
 
-///@~English
-/// @brief vector in three-dimensional space.
-///@~Japanese
-/// @brief 3 つの要素を持つベクトル（3 次元ベクトル）を定義します。
+///@brief vector in three-dimensional space.
 using Vector3 = Detail::FloatingPointVector3<float>;
 
 }// namespace Pomdog

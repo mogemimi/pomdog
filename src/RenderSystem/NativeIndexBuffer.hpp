@@ -23,12 +23,6 @@ public:
 
 	virtual ~NativeIndexBuffer() = default;
 
-	///@~Japanese
-	/// @brief インデックスデータを格納します。
-	/// @remarks イミュータブルなインデックスバッファでは使用しないでください。
-	/// @param offsetInBytes バッファの先頭から出力先までのバイト単位のオフセット
-	/// @param source ソースバッファ
-	/// @param sizeInBytes インデックスデータのバイト単位のサイズ
 	virtual void SetData(std::uint32_t offsetInBytes,
 		void const* source, std::uint32_t sizeInBytes) = 0;
 };

@@ -23,8 +23,6 @@ class NativeEffectReflection;
 }// namespace RenderSystem
 }// namespace Detail
 
-///@~Japanese
-/// @brief エフェクトリフレクションです。
 class POMDOG_EXPORT EffectReflection {
 public:
 	EffectReflection() = delete;

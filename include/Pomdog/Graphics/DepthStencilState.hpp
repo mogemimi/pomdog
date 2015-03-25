@@ -22,8 +22,6 @@ class NativeDepthStencilState;
 }// namespace RenderSystem
 }// namespace Detail
 
-///@~Japanese
-/// @brief 深度ステンシルステートを定義します。
 class POMDOG_EXPORT DepthStencilState {
 public:
 	DepthStencilState() = delete;
@@ -34,24 +32,14 @@ public:
 
 	~DepthStencilState();
 
-	///@~Japanese
-	/// @brief 深度ステンシルステートを作成するために記述した深度ステンシルステートの設定内容を取得します。
 	DepthStencilDescription Description() const;
 
-	///@~Japanese
-	/// @brief 深度ステンシルバッファを有効化するステートを作成します。
-	/// @remarks DepthStencilDescription の既定値を設定したステートを生成します。
-	/// @details このステートはデフォルトで設定されています。
 	static std::shared_ptr<DepthStencilState>
 	CreateReadWriteDepth(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	///@~Japanese
-	/// @brief 読み取り専用の深度ステンシルバッファを有効化するステートを作成します。
 	static std::shared_ptr<DepthStencilState>
 	CreateReadOnlyDepth(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	///@~Japanese
-	/// @brief 深度ステンシルバッファを使用しないステートを作成します。
 	static std::shared_ptr<DepthStencilState>
 	CreateNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 

@@ -17,58 +17,30 @@ namespace {
 
 class Logger {
 public:
-	///@~Japanese
-	/// @brief デフォルトのチャンネルに接続します。
 	EventConnection Connect(std::function<void(LogEntry const&)> const& slot);
 
-	///@~Japanese
-	/// @brief デフォルトのチャンネルに接続します。
 	EventConnection Connect(std::function<void(LogEntry const&)> && slot);
 
-	///@~Japanese
-	/// @brief 指定されたチャンネルに接続します。
-	/// @remarks 指定されたチャンネルが存在しない場合、新しくチャンネルを作成します。
 	EventConnection Connect(std::string const& channelName, std::function<void(LogEntry const&)> const& slot);
 
-	///@~Japanese
-	/// @brief 指定されたチャンネルに接続します。
-	/// @remarks 指定されたチャンネルが存在しない場合、新しくチャンネルを作成します。
 	EventConnection Connect(std::string const& channelName, std::function<void(LogEntry const&)> && slot);
 
-	///@~Japanese
-	/// @brief 使用されていないチャンネルを削除します。
 	void RemoveUnusedChannel();
 
-	///@~Japanese
-	/// @brief デフォルトのチャンネルの冗長レベルを取得します。
 	LogLevel GetLevel() const;
 
-	///@~Japanese
-	/// @brief デフォルトのチャンネルの冗長レベルを設定します。
 	void SetLevel(LogLevel verbosity);
 
-	///@~Japanese
-	/// @brief 指定されたチャンネルの冗長レベルを取得します。
 	LogLevel GetLevel(std::string const& channelName) const;
 
-	///@~Japanese
-	/// @brief 指定されたチャンネルの冗長レベルを設定します。
 	void SetLevel(std::string const& channelName, LogLevel verbosity);
 
-	///@~Japanese
-	/// @brief メッセージを送ります。
 	void Log(std::string const& message, LogLevel verbosity = LogLevel::Verbose);
 
-	///@~Japanese
-	/// @brief 指定されたチャンネルにログを出力します。
 	void Log(LogEntry const& entry);
 
-	///@~Japanese
-	/// @brief 指定されたチャンネルのストリームを取得します。
 	LogStream Stream(LogLevel verbosity = LogLevel::Verbose);
 
-	///@~Japanese
-	/// @brief 指定されたチャンネルのストリームを取得します。
 	LogStream Stream(std::string const& channelName, LogLevel verbosity = LogLevel::Verbose);
 
 private:

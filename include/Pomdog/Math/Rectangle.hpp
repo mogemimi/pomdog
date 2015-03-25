@@ -16,21 +16,18 @@ namespace Pomdog {
 
 enum class ContainmentType: std::uint8_t;
 
-///@~Japanese
-/// @brief 長方形を表す幾何学クラスです。
-/// @code
-/// //           width
-/// //  _______________________
-/// // |* <--(x, y)            |
-/// // |                       |
-/// // |           *           | height
-/// // |         Center        |
-/// // |                       | Right = x + width
-/// // |_______________________|
-/// //
-/// //    Bottom = y + height
-/// //
-/// @endcode
+///@code
+///            width
+///   _______________________
+///  |* <--(x, y)            |
+///  |                       |
+///  |           *           | height
+///  |         Center        |
+///  |                       | Right = x + width
+///  |_______________________|
+/// 
+///     Bottom = y + height
+///@endcode
 class POMDOG_EXPORT Rectangle {
 public:
 	std::int32_t X, Y;
@@ -53,56 +50,30 @@ public:
 	bool operator==(Rectangle const&) const;
 	bool operator!=(Rectangle const&) const;
 
-	///@~Japanese
-	/// @brief 矩形の下端の Y 座標を計算します。
 	std::int32_t Bottom() const;
 
-	///@~Japanese
-	/// @brief 矩形の右端の X 座標を計算します。
 	std::int32_t Right() const;
 
-	///@~Japanese
-	/// @brief 矩形の上端の Y 座標を計算します。
 	std::int32_t Top() const;
 
-	///@~Japanese
-	/// @brief 矩形の左端の X 座標を計算します。
 	std::int32_t Left() const;
 
-	///@~Japanese
-	/// @brief 矩形の中心点の座標を計算します。
 	Point2D Center() const;
 
-	///@~Japanese
-	/// @brief 矩形の左上隅の位置を取得します。
 	Point2D Location() const;
 
-	///@~Japanese
-	/// @brief 矩形の左上隅の位置を設定します。
 	void Location(Point2D const& position);
 
-	///@~Japanese
-	/// @brief 矩形の位置をオフセット値で変更します。
 	void Offset(std::int32_t offsetX, std::int32_t offsetY);
 
-	///@~Japanese
-	/// @brief 矩形の位置をオフセット値で変更します。
 	void Offset(Point2D const& offset);
 
-	///@~Japanese
-	/// @brief 指定された境界ボリュームを含むかどうかを確認します。
 	ContainmentType Contains(Point2D const& point) const;
 
-	///@~Japanese
-	/// @brief 指定された境界ボリュームを含むかどうかを確認します。
 	ContainmentType Contains(Rectangle const& rectangle) const;
 
-	///@~Japanese
-	/// @brief 指定された境界ボリュームと交差するかどうかを確認します。
 	bool Intersects(Point2D const& point) const;
 
-	///@~Japanese
-	/// @brief 指定された境界ボリュームと交差するかどうかを確認します。
 	bool Intersects(Rectangle const& rectangle) const;
 };
 

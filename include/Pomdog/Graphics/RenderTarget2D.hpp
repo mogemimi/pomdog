@@ -26,8 +26,6 @@ class NativeRenderTarget2D;
 }// namespace RenderSystem
 }// namespace Detail
 
-///@~Japanese
-/// @brief 深度バッファを含む、2 次元のレンダーターゲットです。
 class POMDOG_EXPORT RenderTarget2D : public Texture {
 public:
 	RenderTarget2D() = delete;
@@ -53,29 +51,16 @@ public:
 	RenderTarget2D & operator=(RenderTarget2D const&) = delete;
 	RenderTarget2D & operator=(RenderTarget2D &&) = default;
 
-	///@~Japanese
-	/// @brief テクスチャの水平方向の幅（ピクセル単位）を取得します。
 	std::int32_t Width() const;
 
-	///@~Japanese
-	/// @brief テクスチャの垂直方向の幅（ピクセル単位）を取得します。
 	std::int32_t Height() const;
 
-	///@~Japanese
-	/// @brief ミップマップレベルを取得します。
-	/// @remarks ミップマップレベルは 1 以上を有効とします。
 	std::int32_t LevelCount() const;
 
-	///@~Japanese
-	/// @brief テクスチャのフォーマットを取得します。
 	SurfaceFormat Format() const;
 
-	///@~Japanese
-	/// @brief 深度バッファのフォーマットを取得します。
 	DepthFormat DepthStencilFormat() const;
 
-	///@~Japanese
-	/// @brief レンダーターゲットを表す矩形を取得します。
 	Rectangle Bounds() const;
 
 public:

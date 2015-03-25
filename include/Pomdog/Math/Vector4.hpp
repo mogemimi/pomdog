@@ -12,10 +12,7 @@
 
 namespace Pomdog {
 
-///@~English
-/// @brief vector in four-dimensional space.
-///@~Japanese
-/// @brief 4 つの要素を持つベクトル（4 次元ベクトル）を定義します。
+///@brief vector in four-dimensional space.
 using Vector4 = Detail::FloatingPointVector4<float>;
 
 }// namespace Pomdog

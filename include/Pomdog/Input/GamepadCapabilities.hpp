@@ -13,37 +13,18 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief ゲームパッドの能力を示します。
 class GamepadCapabilities {
 public:
-	///@~Japanese
-	/// @brief ゲームパッドの種類を表します。
 	GamepadType GamepadType = GamepadType::Unknown;
 
-	///@~Japanese
-	/// @brief ゲームパッドが接続されているかどうか取得します。
-	/// @remarks 接続されている場合は true を、それ以外は false をとります。
 	bool IsConnected = false;
 
-	///@~Japanese
-	/// @brief 左サムスティックの水平移動が有効かどうか取得します。
-	/// @remarks 有効である場合は true を、それ以外は false をとります。
 	bool HasLeftXThumbStick = false;
 
-	///@~Japanese
-	/// @brief 左サムスティックの垂直移動が有効かどうか取得します。
-	/// @remarks 有効である場合は true を、それ以外は false をとります。
 	bool HasLeftYThumbStick = false;
 
-	///@~Japanese
-	/// @brief 右サムスティックの水平移動が有効かどうか取得します。
-	/// @remarks 有効である場合は true を、それ以外は false をとります。
 	bool HasRightXThumbStick = false;
 
-	///@~Japanese
-	/// @brief 右サムスティックの垂直移動が有効かどうか取得します。
-	/// @remarks 有効である場合は true を、それ以外は false をとります。
 	bool HasRightYThumbStick = false;
 };
 

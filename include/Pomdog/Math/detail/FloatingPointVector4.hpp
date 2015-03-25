@@ -18,10 +18,7 @@
 namespace Pomdog {
 namespace Detail {
 
-///@~English
-/// @brief vector in four-dimensional space.
-///@~Japanese
-/// @brief 4 つの要素を持つベクトル（4 次元ベクトル）を定義します。
+///@brief vector in four-dimensional space.
 template <typename T>
 class POMDOG_EXPORT FloatingPointVector4 {
 public:
@@ -68,50 +65,26 @@ public:
 	bool operator == (FloatingPointVector4 const& other) const;
 	bool operator != (FloatingPointVector4 const& other) const;
 
-	// Products and length, normalize:
-
-	///@~Japanese
-	/// @brief ベクトルの長さを計算します。
 	T Length() const;
 
-	///@~Japanese
-	/// @brief ベクトルの長さの 2 乗を計算します。
 	T LengthSquared() const;
 
-	///@~Japanese
-	/// @brief 2 つのベクトル間の距離を計算します。
 	static T Distance(FloatingPointVector4 const& a, FloatingPointVector4 const& b);
 
-	///@~Japanese
-	/// @brief 2 つのベクトル間の距離の 2 乗を計算します。
 	static T DistanceSquared(FloatingPointVector4 const& a, FloatingPointVector4 const& b);
 
-	///@~Japanese
-	/// @brief 2 つのベクトルの内積を計算します。
 	static T Dot(FloatingPointVector4 const& a, FloatingPointVector4 const& b);
 
-	///@~Japanese
-	/// @brief 現在のベクトルを単位ベクトルに変換します。
 	void Normalize();
 
-	///@~Japanese
-	/// @brief 指定されたベクトルの単位ベクトルを計算します。
 	static FloatingPointVector4 Normalize(FloatingPointVector4 const& source);
 
-	///@~Japanese
-	/// @brief 指定されたベクトルの単位ベクトルを計算します。
 	static void Normalize(FloatingPointVector4 const& source, FloatingPointVector4 & result);
 
-	///@~English
-	/// @brief Returns pointer to the first element.
-	///@~Japanese
-	/// @brief 最初の要素へのポインタを返します。
+	///@brief Returns pointer to the first element.
 	T const* Data() const;
 
-	///@~English
-	/// @brief Returns pointer to the first element.
-	///@~Japanese
-	/// @brief 最初の要素へのポインタを返します。
+	///@brief Returns pointer to the first element.
 	T* Data();
 };
 

@@ -31,44 +31,24 @@ public:
 
 	virtual ~GameHost() = default;
 
-	///@~Japanese
-	/// @brief アプリケーションを実行します。
 	virtual void Run(Game & game) = 0;
 
-	///@~Japanese
-	/// @brief 実行中のゲームおよびアプリケーションを終了します。
 	virtual void Exit() = 0;
 
-	///@~Japanese
-	/// @brief ウィンドウを取得します。
 	virtual std::shared_ptr<GameWindow> Window() = 0;
 
-	///@~Japanese
-	/// @brief ゲームクロックを取得します。
 	virtual std::shared_ptr<GameClock> Clock() = 0;
 
-	///@~Japanese
-	/// @brief グラフィックスコンテキストを取得します。
 	virtual std::shared_ptr<GraphicsContext> GraphicsContext() = 0;
 
-	///@~Japanese
-	/// @brief グラフィックスデバイスを取得します。
 	virtual std::shared_ptr<GraphicsDevice> GraphicsDevice() = 0;
 
-	///@~Japanese
-	/// @brief オーディオエンジンを取得します。
 	virtual std::shared_ptr<AudioEngine> AudioEngine() = 0;
 
-	///@~Japanese
-	/// @brief アセットマネージャを取得します。
 	virtual std::shared_ptr<AssetManager> AssetManager() = 0;
 
-	///@~Japanese
-	/// @brief キーボードを取得します。
 	virtual std::shared_ptr<Keyboard> Keyboard() = 0;
 
-	///@~Japanese
-	/// @brief マウスを取得します。
 	virtual std::shared_ptr<Mouse> Mouse() = 0;
 };
 

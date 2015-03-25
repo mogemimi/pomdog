@@ -24,8 +24,6 @@ class POMDOG_EXPORT AssetManager {
 public:
 	AssetManager(Detail::AssetLoaderContext && loaderContext);
 
-	///@~Japanese
-	/// @brief アセットを読み込みます。
 	template <typename T>
 	std::shared_ptr<T> Load(std::string const& assetName)
 	{
@@ -34,8 +32,6 @@ public:
 
 	AssetLoaders::EffectPassLoader LoadEffectPass();
 
-	///@~Japanese
-	/// @brief 読み込まれたすべてのアセットを破棄します。
 	void Unload();
 
 	std::string RootDirectory() const;

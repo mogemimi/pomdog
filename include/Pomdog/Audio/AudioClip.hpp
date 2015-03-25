@@ -27,16 +27,10 @@ public:
 
 	~AudioClip();
 
-	///@~Japanese
-	/// @brief ソースバッファの全長（秒単位）。
 	Duration Length() const;
 
-	///@~Japanese
-	/// @brief サンプリングレート（1秒あたりのサンプル数）。
 	std::uint32_t SampleRate() const;
 
-	///@~Japanese
-	/// @brief サンプルあたりのビット数。
 	std::uint16_t BitsPerSample() const;
 
 	AudioChannels Channels() const;

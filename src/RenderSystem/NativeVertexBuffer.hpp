@@ -23,12 +23,6 @@ public:
 
 	virtual ~NativeVertexBuffer() = default;
 
-	///@~Japanese
-	/// @brief 頂点データを格納します。
-	/// @remarks イミュータブルな頂点バッファでは使用しないでください。
-	/// @param offsetInBytes バッファの先頭から出力先までのバイト単位のオフセット
-	/// @param source ソースバッファ
-	/// @param sizeInBytes 頂点データのバイト単位のサイズ
 	virtual void SetData(std::size_t offsetInBytes,
 		void const* source, std::size_t sizeInBytes) = 0;
 };

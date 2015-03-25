@@ -13,16 +13,10 @@
 namespace Pomdog {
 
 enum class ContainmentType: std::uint8_t {
-	///@~Japanese
-	/// @brief 境界ボリュームが別の境界ボリュームを完全に内包していることを示します。
 	Contains,
 
-	///@~Japanese
-	/// @brief 境界ボリューム同士が交差していないことを示します。
 	Disjoint,
 
-	///@~Japanese
-	/// @brief 境界ボリューム同士が部分的に交差していることを示します。
 	Intersects
 };
 

@@ -64,8 +64,6 @@ T Saturate(T const& x)
 	return Clamp(x, T{0}, T{1});
 }
 //-------------------------------------------------------------------
-///@~Japanese
-/// @brief 線形補間を行います。
 template <typename T>
 T Lerp(T const& source1, T const& source2, T const& amount)
 {
@@ -73,8 +71,6 @@ T Lerp(T const& source1, T const& source2, T const& amount)
 	return source1 + amount * (source2 - source1);
 }
 //-------------------------------------------------------------------
-///@~Japanese
-/// @brief スムーズなエルミート補間を行います。
 template <typename T>
 T SmoothStep(T const& min, T const& max, T const& amount)
 {

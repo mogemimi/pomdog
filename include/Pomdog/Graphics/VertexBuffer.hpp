@@ -23,8 +23,6 @@ class NativeVertexBuffer;
 }// namespace RenderSystem
 }// namespace Detail
 
-///@~Japanese
-/// @brief 頂点バッファです。
 class POMDOG_EXPORT VertexBuffer {
 public:
 	VertexBuffer() = delete;
@@ -52,31 +50,14 @@ public:
 	VertexBuffer & operator=(VertexBuffer const&) = delete;
 	VertexBuffer & operator=(VertexBuffer &&) = default;
 
-	///@~Japanese
-	/// @brief 頂点の数を取得します。
 	std::size_t VertexCount() const;
 
-	///@~Japanese
-	/// @brief 頂点データ 1 つ分のサイズをバイト単位で取得します。
-	/// @remarks 1 つの頂点の先頭から次の頂点までのバイト数です。
 	std::size_t StrideBytes() const;
 
-	///@~Japanese
-	/// @brief バッファの使用方法を取得します。
 	Pomdog::BufferUsage BufferUsage() const;
 
-	///@~Japanese
-	/// @brief 頂点データを格納します。
-	/// @param source ソースバッファ
-	/// @param elementCount 頂点の数
 	void SetData(void const* source, std::size_t elementCount);
 
-	///@~Japanese
-	/// @brief 頂点データを格納します。
-	/// @param offsetInBytes バッファの先頭から出力先までのバイト単位のオフセット
-	/// @param source ソースバッファ
-	/// @param elementCount 頂点の数
-	/// @param strideBytes 頂点 1 つ分のバイト単位のサイズ
 	void SetData(std::size_t offsetInBytes, void const* source,
 		std::size_t elementCount, std::size_t strideBytes);
 

@@ -22,8 +22,6 @@ public:
 
 	virtual ~NativeRasterizerState() = default;
 
-	///@~Japanese
-	/// @brief レンダリングの直前にラスタライザステートを適用します。
 	virtual void Apply(NativeGraphicsContext & graphicsContext) = 0;
 };
 

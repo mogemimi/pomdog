@@ -19,8 +19,6 @@
 namespace Pomdog {
 namespace Detail {
 
-///@~Japanese
-/// @brief 2x2 の浮動小数点数の行列を定義します。
 template <typename T>
 class POMDOG_EXPORT FloatingPointMatrix2x2 {
 public:
@@ -76,32 +74,18 @@ public:
 	T const& operator()(std::size_t row, std::size_t column) const;
 	T & operator()(std::size_t row, std::size_t column);
 
-	///@~Japanese
-	/// @brief 指定された行列を結合します。2x2 の正方行列の積を計算します。
 	FloatingPointMatrix2x2 Concatenate(FloatingPointMatrix2x2 const& other) const;
 
-	///@~Japanese
-	/// @brief 2x2 の正方行列の積を計算します。
 	FloatingPointMatrix2x2 Concatenate(T scaleFactor) const;
 
-	///@~Japanese
-	/// @brief 行列式を計算します。
 	T Determinant() const;
 
-	///@~English
-	/// @brief Returns pointer to the first element.
-	///@~Japanese
-	/// @brief 最初の要素へのポインタを返します。
+	///@brief Returns pointer to the first element.
 	T const* Data() const;
 
-	///@~English
-	/// @brief Returns pointer to the first element.
-	///@~Japanese
-	/// @brief 最初の要素へのポインタを返します。
+	///@brief Returns pointer to the first element.
 	T* Data();
 
-	///@~Japanese
-	/// @brief 単位行列です。
 	static FloatingPointMatrix2x2 const Identity;
 };
 
