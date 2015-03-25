@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_KEYSTATE_0C5E11FF_3B98_436F_9243_679933DA89E8_HPP

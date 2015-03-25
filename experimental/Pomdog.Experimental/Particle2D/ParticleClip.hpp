@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_PARTICLECLIP_CC5B71B4_5A11_4D2A_8225_5633A4BCD516_HPP

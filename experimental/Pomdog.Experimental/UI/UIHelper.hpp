@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_UIHELPER_25E8AD61_F482_4291_B3E0_EA50C4CD3649_HPP

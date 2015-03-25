@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_VOXCHUNKHEADER_6CE19808_F282_40CE_9945_216DE941C13D_HPP

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_CHROMATICABERRATION_DEEDC0FF_389D_47A5_A9B1_0D46AF2D4577_HPP

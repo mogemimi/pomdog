@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_EFFECTPASSBUILDER_BFDE27AA_3A8F_4DF7_BAD6_71FBB446BFC6_HPP

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_UIELEMENTHIERARCHY_ECF3A74B_7527_4C04_95B9_9EB2962F468B_HPP

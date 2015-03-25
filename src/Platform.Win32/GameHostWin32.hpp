@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_SRC_WIN32_GAMEHOSTWIN32_F8172FE6_1CB8_49D0_B6FE_B5448E094B9C_HPP

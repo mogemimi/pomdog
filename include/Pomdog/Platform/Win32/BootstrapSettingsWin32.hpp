@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_BOOTSTRAPSETTINGSWIN32_F058A6BA_63F0_4807_8B2B_2EA2D8FB512A_HPP

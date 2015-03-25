@@ -1,4 +1,4 @@
-﻿const uint8_t BuiltinHLSL_FXAA_PS[] = {
+const uint8_t BuiltinHLSL_FXAA_PS[] = {
  68,  88,  66,  67,  18,  75,
 134,  55, 208,  60,  26, 128,
 168, 116,  80, 187,  68, 147,

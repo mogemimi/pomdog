@@ -1,4 +1,4 @@
-﻿const uint8_t BuiltinHLSL_SpriteDistanceField_PS[] = {
+const uint8_t BuiltinHLSL_SpriteDistanceField_PS[] = {
  68,  88,  66,  67,  58,  92,
 120,  45, 130, 201, 189,  96,
 231, 230, 135, 106,  94, 164,

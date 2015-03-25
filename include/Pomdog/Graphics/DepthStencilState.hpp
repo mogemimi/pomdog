@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_DEPTHSTENCILSTATE_8D3E62B6_0EDC_4443_BB95_C5ECBD493B38_HPP

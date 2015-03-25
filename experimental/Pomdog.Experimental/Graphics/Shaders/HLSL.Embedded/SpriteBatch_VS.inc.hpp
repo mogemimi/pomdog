@@ -1,4 +1,4 @@
-﻿const uint8_t BuiltinHLSL_SpriteBatch_VS[] = {
+const uint8_t BuiltinHLSL_SpriteBatch_VS[] = {
  68,  88,  66,  67,   0, 109,
 211,  49,  59, 245,  64,  94,
  22, 142, 155, 213, 165, 184,

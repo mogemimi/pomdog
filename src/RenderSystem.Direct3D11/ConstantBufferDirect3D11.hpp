@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_CONSTANTBUFFERDIRECT3D11_FCEBAAAC_FF4D_4266_B8C4_BF5A4A512E72_HPP

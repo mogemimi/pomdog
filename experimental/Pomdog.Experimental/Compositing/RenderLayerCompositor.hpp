@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_RENDERLAYERCOMPOSITOR_2AC2E2AD_BE41_41DE_B626_7831FE3A3F11_HPP

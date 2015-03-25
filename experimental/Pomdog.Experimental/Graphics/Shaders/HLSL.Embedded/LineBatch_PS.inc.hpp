@@ -1,4 +1,4 @@
-﻿const uint8_t BuiltinHLSL_LineBatch_PS[] = {
+const uint8_t BuiltinHLSL_LineBatch_PS[] = {
  68,  88,  66,  67, 198, 243,
 135,  56,  81, 183, 213, 191,
 227,  91, 155, 142, 156,  41,

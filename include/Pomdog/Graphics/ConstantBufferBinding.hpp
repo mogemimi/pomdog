@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_CONSTANTBUFFERBINDING_4C538B17_4EF0_47AC_B3BA_2369FD5A0540_HPP

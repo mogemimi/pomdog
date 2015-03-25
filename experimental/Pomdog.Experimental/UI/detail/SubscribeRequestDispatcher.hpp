@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_SUBSCRIBEREQUESTDISPATCHER_B5E9A001_3318_45C5_B257_51344C2E2F36_HPP

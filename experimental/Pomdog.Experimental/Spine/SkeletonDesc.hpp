@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_SPINE_SKELETONDESC_BCCD55FC_EEDC_43CB_AC5F_194D7A58686D_HPP

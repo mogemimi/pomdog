@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_VERTEXELEMENTFORMAT_55DBF01E_DA84_470F_A170_6E4DBEF6FDA6_HPP

@@ -1,4 +1,4 @@
-﻿const uint8_t BuiltinHLSL_SpriteRenderer_PS[] = {
+const uint8_t BuiltinHLSL_SpriteRenderer_PS[] = {
  68,  88,  66,  67, 239, 105,
  54,  80, 216, 154, 230,  72,
  49, 172,  84, 134, 232,  77,

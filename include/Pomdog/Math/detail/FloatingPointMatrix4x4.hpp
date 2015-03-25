@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_MATH_DETAIL_FLOATINGPOINTMATRIX4X4_DE77F1B1_1A17_4AFC_BCA2_232A4FB6ADD5_HPP

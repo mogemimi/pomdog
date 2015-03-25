@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_OPENGLPREREQUISITES_70C95DBA_5F82_41A6_A732_5FB0470F0A3D_HPP

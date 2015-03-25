@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #ifndef POMDOG_INPUTDEVICEFACTORY_60E2AEA5_DD8F_4F83_85A6_E364081B2E01_HPP
