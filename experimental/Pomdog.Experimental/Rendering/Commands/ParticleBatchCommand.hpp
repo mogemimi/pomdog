@@ -23,20 +23,20 @@ namespace Rendering {
 
 class ParticleBatchCommand final: public RenderCommand {
 public:
-	float DrawOrder() const override
-	{
-		return drawOrder;
-	}
+    float DrawOrder() const override
+    {
+        return drawOrder;
+    }
 
-	std::type_index TypeIndex() const override;
+    std::type_index TypeIndex() const override;
 
 public:
-	TextureRegion textureRegion;
-	Matrix3x2 transform;
-	std::shared_ptr<BlendState> blendState;
-	std::shared_ptr<Texture2D> texture;
-	std::vector<Particle> const* particles = nullptr;
-	float drawOrder;
+    TextureRegion textureRegion;
+    Matrix3x2 transform;
+    std::shared_ptr<BlendState> blendState;
+    std::shared_ptr<Texture2D> texture;
+    std::vector<Particle> const* particles = nullptr;
+    float drawOrder;
 };
 
 }// namespace Rendering

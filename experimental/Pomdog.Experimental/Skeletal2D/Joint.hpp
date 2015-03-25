@@ -16,12 +16,12 @@ namespace Pomdog {
 
 class Joint {
 public:
-	Matrix3x2 InverseBindPose;
-	JointPose BindPose;
-	JointIndex Index;
-	JointIndex Parent;
-	JointIndex FirstChild;
-	JointIndex Sibling;
+    Matrix3x2 InverseBindPose;
+    JointPose BindPose;
+    JointIndex Index;
+    JointIndex Parent;
+    JointIndex FirstChild;
+    JointIndex Sibling;
 };
 
 }// namespace Pomdog

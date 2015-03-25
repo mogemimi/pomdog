@@ -17,7 +17,7 @@ class VoxModel;
 
 class VoxModelExporter {
 public:
-	static void Export(MagicaVoxel::VoxModel const& model, std::string const& filePath);
+    static void Export(MagicaVoxel::VoxModel const& model, std::string const& filePath);
 };
 
 }// namespace MagicaVoxel

@@ -10,21 +10,21 @@ namespace Detail {
 namespace Skeletal2D {
 
 AnimationClipNode::AnimationClipNode(std::shared_ptr<AnimationClip> const& animationClipIn)
-	: clip(animationClipIn)
+    : clip(animationClipIn)
 {}
 //-----------------------------------------------------------------------
 AnimationTimeInterval AnimationClipNode::Length() const
 {
-	POMDOG_ASSERT(clip);
-	return clip->Length();
+    POMDOG_ASSERT(clip);
+    return clip->Length();
 }
 //-----------------------------------------------------------------------
 void AnimationClipNode::Calculate(AnimationTimeInterval const& time,
-	Detail::Skeletal2D::AnimationGraphWeightCollection const&,
-	Skeleton const& skeleton, SkeletonPose & skeletonPose) const
+    Detail::Skeletal2D::AnimationGraphWeightCollection const&,
+    Skeleton const& skeleton, SkeletonPose & skeletonPose) const
 {
-	POMDOG_ASSERT(clip);
-	clip->Apply(time, skeleton, skeletonPose);
+    POMDOG_ASSERT(clip);
+    clip->Apply(time, skeleton, skeletonPose);
 }
 
 }// namespace Skeletal2D

@@ -24,39 +24,39 @@ namespace Pomdog {
 
 class SpriteRenderer {
 public:
-	SpriteRenderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
-		std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    SpriteRenderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
+        std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	~SpriteRenderer();
+    ~SpriteRenderer();
 
-	void SetProjectionMatrix(Matrix4x4 const& projectionMatrix);
+    void SetProjectionMatrix(Matrix4x4 const& projectionMatrix);
 
-	void Begin(SpriteSortMode sortMode);
+    void Begin(SpriteSortMode sortMode);
 
-	void Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrix);
+    void Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrix);
 
-	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-		Rectangle const& sourceRect, Color const& color);
+    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
+        Rectangle const& sourceRect, Color const& color);
 
-	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-		Vector2 const& position, Color const& color);
+    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
+        Vector2 const& position, Color const& color);
 
-	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-		Vector2 const& position, Rectangle const& sourceRect, Color const& color);
+    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
+        Vector2 const& position, Rectangle const& sourceRect, Color const& color);
 
-	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-		Vector2 const& position, Rectangle const& sourceRect, Color const& color,
-		Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth);
+    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
+        Vector2 const& position, Rectangle const& sourceRect, Color const& color,
+        Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth);
 
-	void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-		Vector2 const& position, Rectangle const& sourceRect, Color const& color,
-		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
+    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
+        Vector2 const& position, Rectangle const& sourceRect, Color const& color,
+        Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
 
-	void End();
+    void End();
 
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+    class Impl;
+    std::unique_ptr<Impl> impl;
 };
 
 }// namespace Pomdog

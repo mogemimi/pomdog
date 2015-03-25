@@ -18,16 +18,16 @@ namespace Pomdog {
 
 class SkinnedMeshRenderable: public Renderable {
 public:
-	SkinnedMeshRenderable(
-		std::shared_ptr<Skeleton> const& skeleton,
-		std::shared_ptr<SkeletonTransform> const& skeletonTransform,
-		std::shared_ptr<SkinnedMesh> const& mesh,
-		std::shared_ptr<Texture2D> const& texture);
+    SkinnedMeshRenderable(
+        std::shared_ptr<Skeleton> const& skeleton,
+        std::shared_ptr<SkeletonTransform> const& skeletonTransform,
+        std::shared_ptr<SkinnedMesh> const& mesh,
+        std::shared_ptr<Texture2D> const& texture);
 
-	void Visit(GameObject & gameObject, Renderer & renderer) override;
+    void Visit(GameObject & gameObject, Renderer & renderer) override;
 
 private:
-	Detail::Rendering::SkinnedMeshCommand command;
+    Detail::Rendering::SkinnedMeshCommand command;
 };
 
 }// namespace Pomdog

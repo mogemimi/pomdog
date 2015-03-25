@@ -16,22 +16,22 @@ namespace Pomdog {
 
 class SkinnedMeshCommandProcessor final: public RenderCommandProcessor {
 public:
-	explicit SkinnedMeshCommandProcessor(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    explicit SkinnedMeshCommandProcessor(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	void Begin(GraphicsContext & graphicsContext) override;
+    void Begin(GraphicsContext & graphicsContext) override;
 
-	void Draw(GraphicsContext & graphicsContext, RenderCommand & command) override;
+    void Draw(GraphicsContext & graphicsContext, RenderCommand & command) override;
 
-	void End(GraphicsContext & graphicsContext) override;
+    void End(GraphicsContext & graphicsContext) override;
 
-	int DrawCallCount() const override;
+    int DrawCallCount() const override;
 
-	void SetViewProjection(Matrix4x4 const& view, Matrix4x4 const& projection) override;
+    void SetViewProjection(Matrix4x4 const& view, Matrix4x4 const& projection) override;
 
 public:
-	SkinnedEffect skinnedEffect;
-	Matrix4x4 viewProjection;
-	std::uint32_t drawCallCount;
+    SkinnedEffect skinnedEffect;
+    Matrix4x4 viewProjection;
+    std::uint32_t drawCallCount;
 };
 
 }// namespace Pomdog

@@ -18,9 +18,9 @@ namespace Pomdog {
 
 class SkinnedMesh {
 public:
-	std::shared_ptr<VertexBuffer> VertexBuffer;
-	std::shared_ptr<IndexBuffer> IndexBuffer;
-	std::vector<SkinnedMeshPart> MeshParts;
+    std::shared_ptr<VertexBuffer> VertexBuffer;
+    std::shared_ptr<IndexBuffer> IndexBuffer;
+    std::vector<SkinnedMeshPart> MeshParts;
 };
 
 }// namespace Pomdog

@@ -23,47 +23,47 @@ namespace {
 #include "Shaders/GLSL.Embedded/FishEye_PS.inc.hpp"
 
 struct BuiltinEffectFishEyeTrait {
-	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
-	{
-		auto effectPass = EffectPassBuilder(graphicsDevice)
-			.VertexShaderGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
-			.PixelShaderGLSL(Builtin_GLSL_FishEye_PS, std::strlen(Builtin_GLSL_FishEye_PS))
-			.InputElements({VertexElementFormat::Float3, VertexElementFormat::Float2})
-			.Create();
-		return std::move(effectPass);
-	}
+    static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
+    {
+        auto effectPass = EffectPassBuilder(graphicsDevice)
+            .VertexShaderGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
+            .PixelShaderGLSL(Builtin_GLSL_FishEye_PS, std::strlen(Builtin_GLSL_FishEye_PS))
+            .InputElements({VertexElementFormat::Float3, VertexElementFormat::Float2})
+            .Create();
+        return std::move(effectPass);
+    }
 };
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
 FishEyeEffect::FishEyeEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
-	samplerLinear = SamplerState::CreateLinearWrap(graphicsDevice);
+    samplerLinear = SamplerState::CreateLinearWrap(graphicsDevice);
 
-	effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectFishEyeTrait>(*graphicsDevice);
-	constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
+    effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectFishEyeTrait>(*graphicsDevice);
+    constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 }
 //-----------------------------------------------------------------------
 void FishEyeEffect::SetViewport(float width, float height)
 {
-	Vector2 renderTargetSize(width, height);
-	constantBuffers->Find("Constants")->SetValue(renderTargetSize);
+    Vector2 renderTargetSize(width, height);
+    constantBuffers->Find("Constants")->SetValue(renderTargetSize);
 }
 //-----------------------------------------------------------------------
 void FishEyeEffect::SetTexture(std::shared_ptr<RenderTarget2D> const& textureIn)
 {
-	POMDOG_ASSERT(textureIn);
-	texture = textureIn;
+    POMDOG_ASSERT(textureIn);
+    texture = textureIn;
 }
 //-----------------------------------------------------------------------
 void FishEyeEffect::Apply(GraphicsContext & graphicsContext)
 {
-	POMDOG_ASSERT(texture);
+    POMDOG_ASSERT(texture);
 
-	graphicsContext.SetSamplerState(0, samplerLinear);
-	graphicsContext.SetTexture(0, texture);
-	graphicsContext.SetEffectPass(effectPass);
-	graphicsContext.SetConstantBuffers(constantBuffers);
+    graphicsContext.SetSamplerState(0, samplerLinear);
+    graphicsContext.SetTexture(0, texture);
+    graphicsContext.SetEffectPass(effectPass);
+    graphicsContext.SetConstantBuffers(constantBuffers);
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

@@ -16,28 +16,28 @@ namespace Pomdog {
 
 class RemoveActorAction: public Action {
 private:
-	bool isCompleted = false;
+    bool isCompleted = false;
 
 public:
-	void Act(GameObject & gameObject, AnimationTimeInterval const&) override
-	{
-		if (isCompleted) {
-			return;
-		}
+    void Act(GameObject & gameObject, AnimationTimeInterval const&) override
+    {
+        if (isCompleted) {
+            return;
+        }
 
-		POMDOG_ASSERT(gameObject);
+        POMDOG_ASSERT(gameObject);
 
-		if (gameObject) {
-			gameObject.Destroy();
-		}
+        if (gameObject) {
+            gameObject.Destroy();
+        }
 
-		isCompleted = true;
-	}
+        isCompleted = true;
+    }
 
-	bool IsCompleted() const override
-	{
-		return isCompleted;
-	}
+    bool IsCompleted() const override
+    {
+        return isCompleted;
+    }
 };
 
 }// namespace Pomdog

@@ -13,11 +13,11 @@
 namespace Pomdog {
 
 enum class SpriteSortMode: std::uint8_t {
-	Deferred,
+    Deferred,
 
-	BackToFront,
+    BackToFront,
 
-	FrontToBack,
+    FrontToBack,
 };
 
 }// namespace Pomdog

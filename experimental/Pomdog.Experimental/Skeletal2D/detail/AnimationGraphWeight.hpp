@@ -17,19 +17,19 @@ namespace Skeletal2D {
 
 class AnimationGraphWeight {
 public:
-	explicit AnimationGraphWeight(float value);
+    explicit AnimationGraphWeight(float value);
 
-	explicit AnimationGraphWeight(bool value);
+    explicit AnimationGraphWeight(bool value);
 
-	void SetValue(float value);
-	void SetValue(bool value);
+    void SetValue(float value);
+    void SetValue(bool value);
 
-	float GetFloat() const;
-	bool GetBool() const;
+    float GetFloat() const;
+    bool GetBool() const;
 
 private:
-	float weight;
-	AnimationBlendInputType type;
+    float weight;
+    AnimationBlendInputType type;
 };
 
 }// namespace Skeletal2D

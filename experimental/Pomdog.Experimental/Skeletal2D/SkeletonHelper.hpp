@@ -20,16 +20,16 @@ class SkeletonPose;
 class Joint;
 
 namespace SkeletonHelper {
-	void Traverse(Skeleton const& skeleton, JointIndex const& jointIndex,
-		std::function<void(Joint const&)> const& traverser);
+    void Traverse(Skeleton const& skeleton, JointIndex const& jointIndex,
+        std::function<void(Joint const&)> const& traverser);
 
-	void Traverse(Skeleton const& skeleton,
-		std::function<void(Joint const&)> const& traverser);
+    void Traverse(Skeleton const& skeleton,
+        std::function<void(Joint const&)> const& traverser);
 
-	void ToGlobalPose(Skeleton const& skeleton, SkeletonPose const& skeletonPose,
-		std::vector<Matrix3x2> & globalPose);
+    void ToGlobalPose(Skeleton const& skeleton, SkeletonPose const& skeletonPose,
+        std::vector<Matrix3x2> & globalPose);
 
-	std::vector<Matrix3x2> ToGlobalPose(Skeleton const& skeleton, SkeletonPose const& skeletonPose);
+    std::vector<Matrix3x2> ToGlobalPose(Skeleton const& skeleton, SkeletonPose const& skeletonPose);
 }
 
 }// namespace Pomdog

@@ -16,13 +16,13 @@ namespace Pomdog {
 
 class alignas(16) SkinnedVertex {
 public:
-	// {xy__} = position.xy
-	// {__zw} = textureCoord.xy
-	Vector4 PositionTextureCoord;
+    // {xy__} = position.xy
+    // {__zw} = textureCoord.xy
+    Vector4 PositionTextureCoord;
 
-	std::array<float, 4> Weights;
+    std::array<float, 4> Weights;
 
-	std::array<std::int32_t, 4> Joints;
+    std::array<std::int32_t, 4> Joints;
 };
 
 }// namespace Pomdog

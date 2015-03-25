@@ -17,9 +17,9 @@ namespace Pomdog {
 
 class POMDOG_EXPORT Transform2D: public Component<Transform2D> {
 public:
-	Vector2 Position {0, 0};
-	Vector2 Scale {1, 1};
-	Radian<float> Rotation {0};
+    Vector2 Position {0, 0};
+    Vector2 Scale {1, 1};
+    Radian<float> Rotation {0};
 };
 
 }// namespace Pomdog

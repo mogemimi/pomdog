@@ -23,46 +23,46 @@ namespace {
 #include "Shaders/GLSL.Embedded/ChromaticAberration_PS.inc.hpp"
 
 struct BuiltinEffectChromaticAberrationTrait {
-	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
-	{
-		auto effectPass = EffectPassBuilder(graphicsDevice)
-			.VertexShaderGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
-			.PixelShaderGLSL(Builtin_GLSL_ChromaticAberration_PS, std::strlen(Builtin_GLSL_ChromaticAberration_PS))
-			.InputElements({VertexElementFormat::Float3, VertexElementFormat::Float2})
-			.Create();
-		return std::move(effectPass);
-	}
+    static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
+    {
+        auto effectPass = EffectPassBuilder(graphicsDevice)
+            .VertexShaderGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
+            .PixelShaderGLSL(Builtin_GLSL_ChromaticAberration_PS, std::strlen(Builtin_GLSL_ChromaticAberration_PS))
+            .InputElements({VertexElementFormat::Float3, VertexElementFormat::Float2})
+            .Create();
+        return std::move(effectPass);
+    }
 };
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
 ChromaticAberration::ChromaticAberration(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
-	samplerState = SamplerState::CreateLinearClamp(graphicsDevice);
+    samplerState = SamplerState::CreateLinearClamp(graphicsDevice);
 
-	effectPass = effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectChromaticAberrationTrait>(*graphicsDevice);
-	constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
+    effectPass = effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectChromaticAberrationTrait>(*graphicsDevice);
+    constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
 }
 //-----------------------------------------------------------------------
 void ChromaticAberration::SetViewport(float width, float height)
 {
-	Vector2 renderTargetSize(width, height);
-	constantBuffers->Find("Constants")->SetValue(renderTargetSize);
+    Vector2 renderTargetSize(width, height);
+    constantBuffers->Find("Constants")->SetValue(renderTargetSize);
 }
 //-----------------------------------------------------------------------
 void ChromaticAberration::SetTexture(std::shared_ptr<RenderTarget2D> const& textureIn)
 {
-	POMDOG_ASSERT(textureIn);
-	texture = textureIn;
+    POMDOG_ASSERT(textureIn);
+    texture = textureIn;
 }
 //-----------------------------------------------------------------------
 void ChromaticAberration::Apply(GraphicsContext & graphicsContext)
 {
-	POMDOG_ASSERT(texture);
-	graphicsContext.SetSamplerState(0, samplerState);
-	graphicsContext.SetTexture(0, texture);
-	graphicsContext.SetEffectPass(effectPass);
-	graphicsContext.SetConstantBuffers(constantBuffers);
+    POMDOG_ASSERT(texture);
+    graphicsContext.SetSamplerState(0, samplerState);
+    graphicsContext.SetTexture(0, texture);
+    graphicsContext.SetEffectPass(effectPass);
+    graphicsContext.SetConstantBuffers(constantBuffers);
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

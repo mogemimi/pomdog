@@ -18,18 +18,18 @@ namespace Pomdog {
 class Renderer;
 
 struct Material {
-	Color Color = Color::White;
+    Color Color = Color::White;
 };
 
 class Renderable: public Component<Renderable> {
 public:
-	virtual ~Renderable() = default;
+    virtual ~Renderable() = default;
 
-	virtual void Visit(GameObject & gameObject, Renderer & renderer) = 0;
+    virtual void Visit(GameObject & gameObject, Renderer & renderer) = 0;
 
-	Material Material;
-	float DrawOrder = 0.0f;
-	bool IsVisible = true;
+    Material Material;
+    float DrawOrder = 0.0f;
+    bool IsVisible = true;
 };
 
 }// namespace Pomdog

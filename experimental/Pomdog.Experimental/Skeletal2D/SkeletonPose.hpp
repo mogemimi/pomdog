@@ -18,9 +18,9 @@ class Skeleton;
 
 class SkeletonPose {
 public:
-	std::vector<JointPose> JointPoses;
+    std::vector<JointPose> JointPoses;
 
-	static SkeletonPose CreateBindPose(Skeleton const& skeleton);
+    static SkeletonPose CreateBindPose(Skeleton const& skeleton);
 };
 
 }// namespace Pomdog

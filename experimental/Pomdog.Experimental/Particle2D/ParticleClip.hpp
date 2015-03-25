@@ -21,26 +21,26 @@ namespace Pomdog {
 
 class ParticleClip {
 public:
-	ParticleEmitter Emitter;
+    ParticleEmitter Emitter;
 
-	///@note StartSpeed (pixel/second)
-	std::unique_ptr<Detail::Particles::ParticleParameter<float>> StartSpeed;
+    ///@note StartSpeed (pixel/second)
+    std::unique_ptr<Detail::Particles::ParticleParameter<float>> StartSpeed;
 
-	std::unique_ptr<Detail::Particles::ParticleEmitterShape> Shape;
+    std::unique_ptr<Detail::Particles::ParticleEmitterShape> Shape;
 
-	std::unique_ptr<Detail::Particles::ParticleParameter<Color>> StartColor;
+    std::unique_ptr<Detail::Particles::ParticleParameter<Color>> StartColor;
 
-	std::unique_ptr<Detail::Particles::ParticleParameter<Color>> ColorOverLifetime;
+    std::unique_ptr<Detail::Particles::ParticleParameter<Color>> ColorOverLifetime;
 
-	std::unique_ptr<Detail::Particles::ParticleParameter<Radian<float>>> StartRotation;
+    std::unique_ptr<Detail::Particles::ParticleParameter<Radian<float>>> StartRotation;
 
-	std::unique_ptr<Detail::Particles::ParticleParameter<Radian<float>>> RotationOverLifetime;
+    std::unique_ptr<Detail::Particles::ParticleParameter<Radian<float>>> RotationOverLifetime;
 
-	std::unique_ptr<Detail::Particles::ParticleParameter<float>> StartSize;
+    std::unique_ptr<Detail::Particles::ParticleParameter<float>> StartSize;
 
-	std::unique_ptr<Detail::Particles::ParticleParameter<float>> SizeOverLifetime;
+    std::unique_ptr<Detail::Particles::ParticleParameter<float>> SizeOverLifetime;
 
-	Pomdog::Duration Duration = std::chrono::seconds(5);
+    Pomdog::Duration Duration = std::chrono::seconds(5);
 };
 
 }// namespace Pomdog

@@ -19,20 +19,20 @@ namespace Rendering {
 
 class SpriteCommand final: public RenderCommand {
 public:
-	float DrawOrder() const override
-	{
-		return drawOrder;
-	}
+    float DrawOrder() const override
+    {
+        return drawOrder;
+    }
 
-	std::type_index TypeIndex() const override;
+    std::type_index TypeIndex() const override;
 
 public:
-	Matrix3x2 transform;
-	TextureRegion textureRegion;
-	std::shared_ptr<Texture2D> texture;
-	Vector2 originPivot;
-	Color color;
-	float drawOrder;
+    Matrix3x2 transform;
+    TextureRegion textureRegion;
+    std::shared_ptr<Texture2D> texture;
+    Vector2 originPivot;
+    Color color;
+    float drawOrder;
 };
 
 }// namespace Rendering

@@ -19,98 +19,98 @@ namespace {
 
 static JointIndex FindJoint(std::vector<BoneDesc> const& bones, std::string const& name)
 {
-	auto iter = std::find_if(std::begin(bones), std::end(bones),
-		[&name](BoneDesc const& desc){ return desc.Name == name; });
+    auto iter = std::find_if(std::begin(bones), std::end(bones),
+        [&name](BoneDesc const& desc){ return desc.Name == name; });
 
-	if (iter != std::end(bones)) {
-		return JointIndex(std::distance(std::begin(bones), iter));
-	}
-	return {};
+    if (iter != std::end(bones)) {
+        return JointIndex(std::distance(std::begin(bones), iter));
+    }
+    return {};
 }
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
 AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 {
-	auto iter = std::find_if(std::begin(desc.AnimationClips), std::end(desc.AnimationClips),
-		[name](AnimationClipDesc const& clip){ return clip.Name == name; });
+    auto iter = std::find_if(std::begin(desc.AnimationClips), std::end(desc.AnimationClips),
+        [name](AnimationClipDesc const& clip){ return clip.Name == name; });
 
-	POMDOG_ASSERT(std::end(desc.AnimationClips) != iter);
+    POMDOG_ASSERT(std::end(desc.AnimationClips) != iter);
 
-	if (std::end(desc.AnimationClips) == iter) {
-		///@todo Not implemented
-		// Error: Cannot find animation clip
-		return {};
-	}
+    if (std::end(desc.AnimationClips) == iter) {
+        ///@todo Not implemented
+        // Error: Cannot find animation clip
+        return {};
+    }
 
-	auto & animationClip = *iter;
+    auto & animationClip = *iter;
 
-	std::vector<std::unique_ptr<AnimationTrack>> tracks;
+    std::vector<std::unique_ptr<AnimationTrack>> tracks;
 
-	for (auto & track: animationClip.BoneTracks)
-	{
-		auto jointIndex = FindJoint(desc.Bones, track.BoneName);
-		POMDOG_ASSERT(jointIndex);
+    for (auto & track: animationClip.BoneTracks)
+    {
+        auto jointIndex = FindJoint(desc.Bones, track.BoneName);
+        POMDOG_ASSERT(jointIndex);
 
-		using namespace Pomdog::Detail::Skeletal2D;
+        using namespace Pomdog::Detail::Skeletal2D;
 
-		if (!track.RotateSamples.empty())
-		{
-			std::vector<RotationKeyframe> keys;
-			keys.reserve(track.RotateSamples.size());
+        if (!track.RotateSamples.empty())
+        {
+            std::vector<RotationKeyframe> keys;
+            keys.reserve(track.RotateSamples.size());
 
-			for (auto & sample: track.RotateSamples)
-			{
-				RotationKeyframe key;
-				key.Rotation = sample.Rotation;
-				key.Time = sample.Time;
-				keys.push_back(std::move(key));
-			}
+            for (auto & sample: track.RotateSamples)
+            {
+                RotationKeyframe key;
+                key.Rotation = sample.Rotation;
+                key.Time = sample.Time;
+                keys.push_back(std::move(key));
+            }
 
-			std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<RotationKeyframe>);
-			auto timeline = std::make_unique<RotationTrack>(std::move(keys), std::move(jointIndex));
-			tracks.push_back(std::move(timeline));
-		}
+            std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<RotationKeyframe>);
+            auto timeline = std::make_unique<RotationTrack>(std::move(keys), std::move(jointIndex));
+            tracks.push_back(std::move(timeline));
+        }
 
-		if (!track.ScaleSamples.empty())
-		{
-			std::vector<ScaleKeyframe> keys;
-			keys.reserve(track.ScaleSamples.size());
+        if (!track.ScaleSamples.empty())
+        {
+            std::vector<ScaleKeyframe> keys;
+            keys.reserve(track.ScaleSamples.size());
 
-			for (auto & sample: track.ScaleSamples)
-			{
-				ScaleKeyframe key;
-				key.Scale = sample.Scale;
-				key.Time = sample.Time;
-				keys.push_back(std::move(key));
-			}
+            for (auto & sample: track.ScaleSamples)
+            {
+                ScaleKeyframe key;
+                key.Scale = sample.Scale;
+                key.Time = sample.Time;
+                keys.push_back(std::move(key));
+            }
 
-			std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<ScaleKeyframe>);
-			auto timeline = std::make_unique<ScaleTrack>(std::move(keys), std::move(jointIndex));
-			tracks.push_back(std::move(timeline));
-		}
+            std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<ScaleKeyframe>);
+            auto timeline = std::make_unique<ScaleTrack>(std::move(keys), std::move(jointIndex));
+            tracks.push_back(std::move(timeline));
+        }
 
-		if (!track.TranslateSamples.empty())
-		{
-			std::vector<TranslationKeyframe> keys;
-			keys.reserve(track.TranslateSamples.size());
+        if (!track.TranslateSamples.empty())
+        {
+            std::vector<TranslationKeyframe> keys;
+            keys.reserve(track.TranslateSamples.size());
 
-			for (auto & sample: track.TranslateSamples)
-			{
-				TranslationKeyframe key;
-				key.TranslateX = sample.TranslateX;
-				key.TranslateY = sample.TranslateY;
-				key.Time = sample.Time;
-				keys.push_back(std::move(key));
-			}
+            for (auto & sample: track.TranslateSamples)
+            {
+                TranslationKeyframe key;
+                key.TranslateX = sample.TranslateX;
+                key.TranslateY = sample.TranslateY;
+                key.Time = sample.Time;
+                keys.push_back(std::move(key));
+            }
 
-			std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<TranslationKeyframe>);
-			auto timeline = std::make_unique<TranslationTrack>(std::move(keys), std::move(jointIndex));
-			tracks.push_back(std::move(timeline));
-		}
-	}
+            std::sort(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<TranslationKeyframe>);
+            auto timeline = std::make_unique<TranslationTrack>(std::move(keys), std::move(jointIndex));
+            tracks.push_back(std::move(timeline));
+        }
+    }
 
-	return AnimationClip(std::move(tracks));
+    return AnimationClip(std::move(tracks));
 }
 
 }// namespace Spine

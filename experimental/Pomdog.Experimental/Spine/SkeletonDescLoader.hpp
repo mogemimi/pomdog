@@ -18,7 +18,7 @@ namespace Spine {
 
 class SkeletonDescLoader final {
 public:
-	static SkeletonDesc Load(AssetManager const& assets, std::string const& assetName);
+    static SkeletonDesc Load(AssetManager const& assets, std::string const& assetName);
 };
 
 }// namespace Spine

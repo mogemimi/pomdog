@@ -20,17 +20,17 @@ class Renderer;
 
 class RenderLayerCompositor {
 public:
-	RenderLayerCompositor();
+    RenderLayerCompositor();
 
-	void AddLayer(std::shared_ptr<RenderLayer> const& layer);
+    void AddLayer(std::shared_ptr<RenderLayer> const& layer);
 
-	void RemoveLayer(std::shared_ptr<RenderLayer> const& layer);
+    void RemoveLayer(std::shared_ptr<RenderLayer> const& layer);
 
-	void Draw(GraphicsContext & graphicsContext, Renderer & renderer);
+    void Draw(GraphicsContext & graphicsContext, Renderer & renderer);
 
 private:
-	std::vector<std::shared_ptr<RenderLayer>> layers;
-	bool needSort;
+    std::vector<std::shared_ptr<RenderLayer>> layers;
+    bool needSort;
 };
 
 }// namespace Pomdog

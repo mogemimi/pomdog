@@ -19,14 +19,14 @@ namespace Pomdog {
 template <class T>
 class Component: public Detail::Gameplay::GameComponent {
 public:
-	static_assert(std::is_class<T>::value, "T is class");
+    static_assert(std::is_class<T>::value, "T is class");
 
-	virtual ~Component() = default;
+    virtual ~Component() = default;
 
-	static std::uint8_t TypeIndex()
-	{
-		return Detail::Gameplay::ComponentTypeIndex<GameComponent, std::uint8_t>::Index<T>();
-	}
+    static std::uint8_t TypeIndex()
+    {
+        return Detail::Gameplay::ComponentTypeIndex<GameComponent, std::uint8_t>::Index<T>();
+    }
 };
 
 }// namespace Pomdog

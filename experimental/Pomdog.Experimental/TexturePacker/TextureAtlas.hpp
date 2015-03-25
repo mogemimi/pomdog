@@ -18,19 +18,19 @@ namespace Pomdog {
 namespace TexturePacker {
 
 struct TextureAtlasPage {
-	std::string Name;
+    std::string Name;
 };
 
 struct TextureAtlasRegion {
-	std::string Name;
-	TextureRegion Region;
-	std::uint16_t TexturePage;
+    std::string Name;
+    TextureRegion Region;
+    std::uint16_t TexturePage;
 };
 
 class TextureAtlas {
 public:
-	std::vector<TextureAtlasPage> pages;
-	std::vector<TextureAtlasRegion> regions;
+    std::vector<TextureAtlasPage> pages;
+    std::vector<TextureAtlasRegion> regions;
 };
 
 }// namespace TexturePacker

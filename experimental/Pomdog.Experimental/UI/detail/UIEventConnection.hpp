@@ -22,66 +22,66 @@ namespace Detail {
 
 class UIEventConnection final {
 public:
-	typedef UIView ListenerType;
-	typedef SubscribeRequestDispatcher<UIView> DispatcherType;
+    typedef UIView ListenerType;
+    typedef SubscribeRequestDispatcher<UIView> DispatcherType;
 
-	UIEventConnection(std::weak_ptr<DispatcherType> const& weakDispatcherIn, std::weak_ptr<ListenerType> const& elementIn)
-		: weakDispatcher(weakDispatcherIn)
-		, element(elementIn)
-	{
-		POMDOG_ASSERT(!weakDispatcher.expired());
-		POMDOG_ASSERT(!element.expired());
-	}
+    UIEventConnection(std::weak_ptr<DispatcherType> const& weakDispatcherIn, std::weak_ptr<ListenerType> const& elementIn)
+        : weakDispatcher(weakDispatcherIn)
+        , element(elementIn)
+    {
+        POMDOG_ASSERT(!weakDispatcher.expired());
+        POMDOG_ASSERT(!element.expired());
+    }
 
-	UIEventConnection() = default;
+    UIEventConnection() = default;
 
-	~UIEventConnection()
-	{
-		Disconnect();
-	}
+    ~UIEventConnection()
+    {
+        Disconnect();
+    }
 
-	UIEventConnection(UIEventConnection const& connection) = delete;
-	UIEventConnection & operator=(UIEventConnection const& connection) = delete;
+    UIEventConnection(UIEventConnection const& connection) = delete;
+    UIEventConnection & operator=(UIEventConnection const& connection) = delete;
 
-	UIEventConnection(UIEventConnection && connection)
-	{
-		Disconnect();
+    UIEventConnection(UIEventConnection && connection)
+    {
+        Disconnect();
 
-		POMDOG_ASSERT(weakDispatcher.expired());
-		POMDOG_ASSERT(element.expired());
-		std::swap(weakDispatcher, connection.weakDispatcher);
-		std::swap(element, connection.element);
-	}
+        POMDOG_ASSERT(weakDispatcher.expired());
+        POMDOG_ASSERT(element.expired());
+        std::swap(weakDispatcher, connection.weakDispatcher);
+        std::swap(element, connection.element);
+    }
 
-	UIEventConnection & operator=(UIEventConnection && connection)
-	{
-		Disconnect();
-		POMDOG_ASSERT(weakDispatcher.expired());
-		POMDOG_ASSERT(element.expired());
-		std::swap(weakDispatcher, connection.weakDispatcher);
-		std::swap(element, connection.element);
-		return *this;
-	}
-
-private:
-	void Disconnect()
-	{
-		if (element.expired()) {
-			return;
-		}
-
-		if (auto dispatcher = weakDispatcher.lock())
-		{
-			dispatcher->RemoveChild(element);
-		}
-
-		weakDispatcher.reset();
-		element.reset();
-	}
+    UIEventConnection & operator=(UIEventConnection && connection)
+    {
+        Disconnect();
+        POMDOG_ASSERT(weakDispatcher.expired());
+        POMDOG_ASSERT(element.expired());
+        std::swap(weakDispatcher, connection.weakDispatcher);
+        std::swap(element, connection.element);
+        return *this;
+    }
 
 private:
-	std::weak_ptr<DispatcherType> weakDispatcher;
-	std::weak_ptr<ListenerType> element;
+    void Disconnect()
+    {
+        if (element.expired()) {
+            return;
+        }
+
+        if (auto dispatcher = weakDispatcher.lock())
+        {
+            dispatcher->RemoveChild(element);
+        }
+
+        weakDispatcher.reset();
+        element.reset();
+    }
+
+private:
+    std::weak_ptr<DispatcherType> weakDispatcher;
+    std::weak_ptr<ListenerType> element;
 };
 
 }// namespace Detail

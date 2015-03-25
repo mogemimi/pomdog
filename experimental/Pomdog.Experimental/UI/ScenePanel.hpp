@@ -19,92 +19,92 @@ namespace UI {
 
 class ScenePanel: public Panel, public std::enable_shared_from_this<ScenePanel> {
 public:
-	GameObject cameraObject;
+    GameObject cameraObject;
 
 public:
-	ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn);
+    ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn);
 
-	bool IsEnabled() const;
-	void IsEnabled(bool isEnabled);
+    bool IsEnabled() const;
+    void IsEnabled(bool isEnabled);
 
-	bool SizeToFitContent() const override { return true; }
+    bool SizeToFitContent() const override { return true; }
 
-	void OnParentChanged() override;
+    void OnParentChanged() override;
 
-	void OnPointerWheelChanged(PointerPoint const& pointerPoint) override;
+    void OnPointerWheelChanged(PointerPoint const& pointerPoint) override;
 
-	void OnPointerEntered(PointerPoint const& pointerPoint) override;
+    void OnPointerEntered(PointerPoint const& pointerPoint) override;
 
-	void OnPointerExited(PointerPoint const& pointerPoint) override;
+    void OnPointerExited(PointerPoint const& pointerPoint) override;
 
-	void OnPointerPressed(PointerPoint const& pointerPoint) override;
+    void OnPointerPressed(PointerPoint const& pointerPoint) override;
 
-	void OnPointerMoved(PointerPoint const& pointerPoint) override;
+    void OnPointerMoved(PointerPoint const& pointerPoint) override;
 
-	void OnPointerReleased(PointerPoint const& pointerPoint) override;
+    void OnPointerReleased(PointerPoint const& pointerPoint) override;
 
-	void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
+    void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
 
-	void Draw(DrawingContext & drawingContext) override;
+    void Draw(DrawingContext & drawingContext) override;
 
-	void UpdateAnimation(Duration const& frameDuration) override;
+    void UpdateAnimation(Duration const& frameDuration) override;
 
-	// Events:
-	Signal<void(Vector2 const& point)> SceneTouch;
-
-private:
-	void OnMouseLeftButtonPressed(PointerPoint const& pointerPoint);
-	void OnMouseLeftButtonMoved(PointerPoint const& pointerPoint);
-	void OnMouseMiddleButtonPressed(PointerPoint const& pointerPoint);
-	void OnMouseMiddleButtonMoved(PointerPoint const& pointerPoint);
-	void OnMouseRightButtonPressed(PointerPoint const& pointerPoint);
-	void OnMouseRightButtonMoved(PointerPoint const& pointerPoint);
-
-	Vector2 ConvertToPanelSpace(Point2D const& point) const;
+    // Events:
+    Signal<void(Vector2 const& point)> SceneTouch;
 
 private:
-	Detail::UIEventConnection connection;
+    void OnMouseLeftButtonPressed(PointerPoint const& pointerPoint);
+    void OnMouseLeftButtonMoved(PointerPoint const& pointerPoint);
+    void OnMouseMiddleButtonPressed(PointerPoint const& pointerPoint);
+    void OnMouseMiddleButtonMoved(PointerPoint const& pointerPoint);
+    void OnMouseRightButtonPressed(PointerPoint const& pointerPoint);
+    void OnMouseRightButtonMoved(PointerPoint const& pointerPoint);
 
-	Optional<Vector2> tumbleStartPosition;
-	Optional<Vector2> trackStartPosition;
+    Vector2 ConvertToPanelSpace(Point2D const& point) const;
 
-	Duration timer;
-	float normalizedScrollDirection;
-	float scrollAcceleration;
+private:
+    Detail::UIEventConnection connection;
 
-	bool isFocused;
-	bool isEnabled;
+    Optional<Vector2> tumbleStartPosition;
+    Optional<Vector2> trackStartPosition;
 
-	class ScrollWheelSampler {
-	private:
-		///@todo replace with std::deque<float>
-		Optional<float> average;
+    Duration timer;
+    float normalizedScrollDirection;
+    float scrollAcceleration;
 
-	public:
-		void AddWheelDelta(int wheelDelta)
-		{
-			if (wheelDelta == 0) {
-				return;
-			}
+    bool isFocused;
+    bool isEnabled;
 
-			if (!average) {
-				average = std::abs(wheelDelta);
-			}
-			else {
-				average = std::max((*average + std::abs(wheelDelta)) / 2, 1.0f);
-			}
-		}
+    class ScrollWheelSampler {
+    private:
+        ///@todo replace with std::deque<float>
+        Optional<float> average;
 
-		float GetScrollWheelDeltaAverage() const
-		{
-			if (average) {
-				return *average;
-			}
-			return 1.0f;
-		}
-	};
+    public:
+        void AddWheelDelta(int wheelDelta)
+        {
+            if (wheelDelta == 0) {
+                return;
+            }
 
-	ScrollWheelSampler scrollWheelSampler;
+            if (!average) {
+                average = std::abs(wheelDelta);
+            }
+            else {
+                average = std::max((*average + std::abs(wheelDelta)) / 2, 1.0f);
+            }
+        }
+
+        float GetScrollWheelDeltaAverage() const
+        {
+            if (average) {
+                return *average;
+            }
+            return 1.0f;
+        }
+    };
+
+    ScrollWheelSampler scrollWheelSampler;
 };
 
 }// namespace UI

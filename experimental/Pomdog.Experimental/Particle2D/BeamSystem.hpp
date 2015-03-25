@@ -22,22 +22,22 @@ namespace Pomdog {
 
 class BeamSystem {
 public:
-	BeamSystem();
+    BeamSystem();
 
-	void Update(Duration const& frameDuration, Transform2D const& emitterTransform, Vector2 const& target);
+    void Update(Duration const& frameDuration, Transform2D const& emitterTransform, Vector2 const& target);
 
-	static Vector2 CreateTarget(Transform2D const& emitterTransform, float distance);
+    static Vector2 CreateTarget(Transform2D const& emitterTransform, float distance);
 
 public:
-	BeamEmitter emitter;
-	BeamBranching branching;
+    BeamEmitter emitter;
+    BeamBranching branching;
 
-	std::vector<Beam> beams;
+    std::vector<Beam> beams;
 
 private:
-	Duration erapsedTime;
-	Duration emissionTimer;
-	std::mt19937 random;
+    Duration erapsedTime;
+    Duration emissionTimer;
+    std::mt19937 random;
 };
 
 }// namespace Pomdog

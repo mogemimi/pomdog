@@ -20,20 +20,20 @@ namespace SceneEditor {
 
 class EditorBackground {
 public:
-	explicit EditorBackground(std::shared_ptr<GameHost> const& gameHost);
+    explicit EditorBackground(std::shared_ptr<GameHost> const& gameHost);
 
-	void SetViewProjection(Matrix4x4 const& viewProjection);
+    void SetViewProjection(Matrix4x4 const& viewProjection);
 
-	void Draw(GraphicsContext & graphicsContext);
+    void Draw(GraphicsContext & graphicsContext);
 
 private:
-	LineBatch lineBatch;
-	Matrix4x4 viewProjectionMatrix;
-	SceneEditor::EditorColorScheme editorColorScheme;
-	SceneEditor::PrimitiveAxes primitiveAxes;
-	SceneEditor::PrimitiveGrid primitiveGrid;
-	std::shared_ptr<DepthStencilState> depthStencilState;
-	std::shared_ptr<BlendState> blendState;
+    LineBatch lineBatch;
+    Matrix4x4 viewProjectionMatrix;
+    SceneEditor::EditorColorScheme editorColorScheme;
+    SceneEditor::PrimitiveAxes primitiveAxes;
+    SceneEditor::PrimitiveGrid primitiveGrid;
+    std::shared_ptr<DepthStencilState> depthStencilState;
+    std::shared_ptr<BlendState> blendState;
 };
 
 }// namespace SceneEditor

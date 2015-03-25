@@ -21,27 +21,27 @@ class RenderCommandProcessor;
 
 class Renderer {
 public:
-	Renderer();
+    Renderer();
 
-	~Renderer();
+    ~Renderer();
 
-	void ViewMatrix(Matrix4x4 const& viewMatrix);
+    void ViewMatrix(Matrix4x4 const& viewMatrix);
 
-	void ProjectionMatrix(Matrix4x4 const& projectionMatrix);
+    void ProjectionMatrix(Matrix4x4 const& projectionMatrix);
 
-	void Render(GraphicsContext & graphicsContext);
+    void Render(GraphicsContext & graphicsContext);
 
-	void PushCommand(std::reference_wrapper<RenderCommand> && command);
+    void PushCommand(std::reference_wrapper<RenderCommand> && command);
 
-	void Clear();
+    void Clear();
 
-	void AddProcessor(std::type_index const& index, std::unique_ptr<RenderCommandProcessor> && processor);
+    void AddProcessor(std::type_index const& index, std::unique_ptr<RenderCommandProcessor> && processor);
 
-	std::uint32_t DrawCallCount() const;
+    std::uint32_t DrawCallCount() const;
 
 public:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+    class Impl;
+    std::unique_ptr<Impl> impl;
 };
 
 }// namespace Pomdog

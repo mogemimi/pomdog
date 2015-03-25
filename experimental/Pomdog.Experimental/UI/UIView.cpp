@@ -7,123 +7,123 @@ namespace Pomdog {
 namespace UI {
 //-----------------------------------------------------------------------
 UIView::UIView(Matrix3x2 const& transformIn, std::uint32_t widthIn, std::uint32_t heightIn)
-	: transform(transformIn)
-	, parentTransform(Matrix3x2::Identity)
-	, drawOrder(0)
-	, parentDrawOrder(0)
-	, width(widthIn)
-	, height(heightIn)
-	, isParentTransformDirty(true)
-	, isParentDrawOrderDirty(true)
+    : transform(transformIn)
+    , parentTransform(Matrix3x2::Identity)
+    , drawOrder(0)
+    , parentDrawOrder(0)
+    , width(widthIn)
+    , height(heightIn)
+    , isParentTransformDirty(true)
+    , isParentDrawOrderDirty(true)
 {
 }
 //-----------------------------------------------------------------------
 Matrix3x2 UIView::Transform() const {
-	return transform;
+    return transform;
 }
 //-----------------------------------------------------------------------
 void UIView::Transform(Matrix3x2 const& transformMatrixIn) {
-	this->transform = transformMatrixIn;
+    this->transform = transformMatrixIn;
 }
 //-----------------------------------------------------------------------
 void UIView::Transform(Matrix3x2 && transformMatrixIn) {
-	this->transform = std::move(transformMatrixIn);
+    this->transform = std::move(transformMatrixIn);
 }
 //-----------------------------------------------------------------------
 std::weak_ptr<UIElement const> UIView::Parent() const
 {
-	return parent;
+    return parent;
 }
 //-----------------------------------------------------------------------
 std::weak_ptr<UIElement> UIView::Parent()
 {
-	return parent;
+    return parent;
 }
 //-----------------------------------------------------------------------
 void UIView::Parent(std::weak_ptr<UIElement> const& parentIn)
 {
-	this->parent = parentIn;
+    this->parent = parentIn;
 }
 //-----------------------------------------------------------------------
 void UIView::UpdateTransform()
 {
-	if (isParentTransformDirty)
-	{
-		if (auto element = parent.lock()) {
-			parentTransform = element->GlobalTransform();
-		}
-		isParentTransformDirty = false;
-	}
+    if (isParentTransformDirty)
+    {
+        if (auto element = parent.lock()) {
+            parentTransform = element->GlobalTransform();
+        }
+        isParentTransformDirty = false;
+    }
 }
 //-----------------------------------------------------------------------
 void UIView::MarkParentTransformDirty()
 {
-	this->isParentTransformDirty = true;
+    this->isParentTransformDirty = true;
 }
 //-----------------------------------------------------------------------
 Matrix3x2 UIView::GlobalTransform() const
 {
-	POMDOG_ASSERT(!isParentTransformDirty);
-	return transform * parentTransform;
+    POMDOG_ASSERT(!isParentTransformDirty);
+    return transform * parentTransform;
 }
 //-----------------------------------------------------------------------
 void UIView::MarkParentDrawOrderDirty()
 {
-	this->isParentDrawOrderDirty = true;
+    this->isParentDrawOrderDirty = true;
 }
 //-----------------------------------------------------------------------
 std::int32_t UIView::GlobalDrawOrder()
 {
-	if (isParentDrawOrderDirty)
-	{
-		if (auto element = parent.lock()) {
-			parentDrawOrder = element->GlobalDrawOrder() - 1;
-		}
-		isParentDrawOrderDirty = false;
-	}
+    if (isParentDrawOrderDirty)
+    {
+        if (auto element = parent.lock()) {
+            parentDrawOrder = element->GlobalDrawOrder() - 1;
+        }
+        isParentDrawOrderDirty = false;
+    }
 
-	return drawOrder + parentDrawOrder;
+    return drawOrder + parentDrawOrder;
 }
 //-----------------------------------------------------------------------
 void UIView::DrawOrder(std::int32_t drawOrderIn)
 {
-	this->drawOrder = drawOrderIn;
+    this->drawOrder = drawOrderIn;
 }
 //-----------------------------------------------------------------------
 std::int32_t UIView::DrawOrder() const
 {
-	return drawOrder;
+    return drawOrder;
 }
 //-----------------------------------------------------------------------
 void UIView::SetCursor(MouseCursor cursorIn)
 {
-	cursor = cursorIn;
+    cursor = cursorIn;
 }
 //-----------------------------------------------------------------------
 void UIView::ResetCursor()
 {
-	cursor = OptionalType::NullOptional;
+    cursor = OptionalType::NullOptional;
 }
 //-----------------------------------------------------------------------
 Optional<MouseCursor> UIView::CurrentCursor() const
 {
-	return cursor;
+    return cursor;
 }
 //-----------------------------------------------------------------------
 Rectangle UIView::BoundingBox() const
 {
-	return Rectangle{0, 0, width, height};
+    return Rectangle{0, 0, width, height};
 }
 //-----------------------------------------------------------------------
 bool UIView::SizeToFitContent() const
 {
-	return false;
+    return false;
 }
 //-----------------------------------------------------------------------
 std::weak_ptr<UIEventDispatcher> UIView::Dispatcher() const
 {
-	POMDOG_ASSERT(false);
-	return {};
+    POMDOG_ASSERT(false);
+    return {};
 }
 //-----------------------------------------------------------------------
 void UIView::OnParentChanged() {}

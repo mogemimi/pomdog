@@ -20,18 +20,18 @@ namespace SceneEditor {
 
 class PrimitiveGrid {
 public:
-	PrimitiveGrid(Color const& primaryColor, Color const& secondaryColor);
+    PrimitiveGrid(Color const& primaryColor, Color const& secondaryColor);
 
-	void Draw(LineBatch & lineBatch);
+    void Draw(LineBatch & lineBatch);
 
 private:
-	struct Line {
-		Vector2 Point1;
-		Vector2 Point2;
-		Color Color;
-	};
+    struct Line {
+        Vector2 Point1;
+        Vector2 Point2;
+        Color Color;
+    };
 
-	std::vector<Line> lines;
+    std::vector<Line> lines;
 };
 
 }// namespace SceneEditor

@@ -16,14 +16,14 @@ namespace Pomdog {
 
 class ScriptBehavior: public Behavior {
 public:
-	ScriptBehavior(AssetManager const& assets, std::string const& filePath);
+    ScriptBehavior(AssetManager const& assets, std::string const& filePath);
 
-	void Start(GameObject & gameObject) override;
+    void Start(GameObject & gameObject) override;
 
-	void Update(GameObject & gameObject, Duration const& frameDuration) override;
+    void Update(GameObject & gameObject, Duration const& frameDuration) override;
 
 private:
-	//sel::State state;
+    //sel::State state;
 };
 
 }// namespace Pomdog

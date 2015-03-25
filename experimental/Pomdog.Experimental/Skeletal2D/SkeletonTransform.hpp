@@ -16,8 +16,8 @@ namespace Pomdog {
 
 class SkeletonTransform {
 public:
-	SkeletonPose Pose;
-	std::vector<Matrix3x2> GlobalPose;
+    SkeletonPose Pose;
+    std::vector<Matrix3x2> GlobalPose;
 };
 
 }// namespace Pomdog

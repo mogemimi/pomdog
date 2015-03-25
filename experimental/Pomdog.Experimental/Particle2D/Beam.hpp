@@ -16,10 +16,10 @@ namespace Pomdog {
 
 class Beam {
 public:
-	std::vector<Vector2> Points;
-	Color Color;
-	float Thickness;
-	float TimeToLive;
+    std::vector<Vector2> Points;
+    Color Color;
+    float Thickness;
+    float TimeToLive;
 };
 
 }// namespace Pomdog

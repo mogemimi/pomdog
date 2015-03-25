@@ -8,78 +8,78 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 AnimationState::AnimationState(std::shared_ptr<AnimationClip> const& animationClipIn)
-	: AnimationState(animationClipIn, 1, false)
+    : AnimationState(animationClipIn, 1, false)
 {}
 //-----------------------------------------------------------------------
 AnimationState::AnimationState(std::shared_ptr<AnimationClip> const& animationClipIn, float playbackRateIn, bool loopIn)
-	: clip(animationClipIn)
-	, playbackRate(playbackRateIn)
-	, enabled(true)
-	, loop(loopIn)
+    : clip(animationClipIn)
+    , playbackRate(playbackRateIn)
+    , enabled(true)
+    , loop(loopIn)
 {
 }
 //-----------------------------------------------------------------------
 void AnimationState::Update(AnimationTimeInterval const& frameDuration)
 {
-	time = time + frameDuration * playbackRate;
-	if (time < AnimationTimeInterval::zero()) {
-		time = Length();
-	}
-	else if (time > Length()) {
-		POMDOG_ASSERT(loop);
-		time = AnimationTimeInterval::zero();
-	}
+    time = time + frameDuration * playbackRate;
+    if (time < AnimationTimeInterval::zero()) {
+        time = Length();
+    }
+    else if (time > Length()) {
+        POMDOG_ASSERT(loop);
+        time = AnimationTimeInterval::zero();
+    }
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<AnimationClip> const& AnimationState::Clip() const
 {
-	return clip;
+    return clip;
 }
 //-----------------------------------------------------------------------
 AnimationTimeInterval AnimationState::Time() const
 {
-	return time;
+    return time;
 }
 //-----------------------------------------------------------------------
 void AnimationState::Time(AnimationTimeInterval const& timeIn)
 {
-	POMDOG_ASSERT(timeIn.count() >= 0);
-	this->time = timeIn;
+    POMDOG_ASSERT(timeIn.count() >= 0);
+    this->time = timeIn;
 }
 //-----------------------------------------------------------------------
 AnimationTimeInterval AnimationState::Length() const
 {
-	return clip->Length();
+    return clip->Length();
 }
 //-----------------------------------------------------------------------
 float AnimationState::PlaybackRate() const
 {
-	return playbackRate;
+    return playbackRate;
 }
 //-----------------------------------------------------------------------
 void AnimationState::PlaybackRate(float playbackRateIn)
 {
-	this->playbackRate = playbackRateIn;
+    this->playbackRate = playbackRateIn;
 }
 //-----------------------------------------------------------------------
 bool AnimationState::Enabled() const
 {
-	return enabled;
+    return enabled;
 }
 //-----------------------------------------------------------------------
 void AnimationState::Enabled(bool enabledIn)
 {
-	this->enabled = enabledIn;
+    this->enabled = enabledIn;
 }
 //-----------------------------------------------------------------------
 bool AnimationState::Loop() const
 {
-	return loop;
+    return loop;
 }
 //-----------------------------------------------------------------------
 void AnimationState::Loop(bool loopIn)
 {
-	this->loop = loopIn;
+    this->loop = loopIn;
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

@@ -24,25 +24,25 @@ class UIView;
 
 class UIElementHierarchy {
 public:
-	explicit UIElementHierarchy(std::shared_ptr<GameWindow> const& window);
+    explicit UIElementHierarchy(std::shared_ptr<GameWindow> const& window);
 
-	void Touch(MouseState const& mouseState);
+    void Touch(MouseState const& mouseState);
 
-	void UpdateAnimation(Duration const& frameDuration);
+    void UpdateAnimation(Duration const& frameDuration);
 
-	void AddChild(std::shared_ptr<UIView> const& node);
+    void AddChild(std::shared_ptr<UIView> const& node);
 
-	void AddChild(std::shared_ptr<UIView> && node);
+    void AddChild(std::shared_ptr<UIView> && node);
 
-	void Draw(DrawingContext & drawingContext);
+    void Draw(DrawingContext & drawingContext);
 
-	void RenderSizeChanged(std::uint32_t width, std::uint32_t height);
+    void RenderSizeChanged(std::uint32_t width, std::uint32_t height);
 
-	std::shared_ptr<UIEventDispatcher> Dispatcher() const;
+    std::shared_ptr<UIEventDispatcher> Dispatcher() const;
 
 private:
-	std::shared_ptr<UIEventDispatcher> dispatcher;
-	std::shared_ptr<GameEditorView> root;
+    std::shared_ptr<UIEventDispatcher> dispatcher;
+    std::shared_ptr<GameEditorView> root;
 };
 
 }// namespace UI

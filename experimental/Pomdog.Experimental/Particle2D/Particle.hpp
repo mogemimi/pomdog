@@ -17,21 +17,21 @@ namespace Pomdog {
 
 class Particle {
 public:
-	Vector2 Position {0, 0};
-	Vector2 Velocity {1, 1};
+    Vector2 Position {0, 0};
+    Vector2 Velocity {1, 1};
 
-	Color StartColor = Color::White;
-	Color Color = Color::White;
-	float ColorVariance = 0;
+    Color StartColor = Color::White;
+    Color Color = Color::White;
+    float ColorVariance = 0;
 
-	Radian<float> Rotation = 0;
-	float RotationVariance = 0;
+    Radian<float> Rotation = 0;
+    float RotationVariance = 0;
 
-	float StartSize = 1;
-	float Size = 1;
-	float SizeVariance = 0;
+    float StartSize = 1;
+    float Size = 1;
+    float SizeVariance = 0;
 
-	float TimeToLive = 2;
+    float TimeToLive = 2;
 };
 
 }// namespace Pomdog

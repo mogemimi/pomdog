@@ -24,9 +24,9 @@ namespace Spine {
 class SkeletonDesc;
 
 std::vector<Detail::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack(
-	SkeletonDesc const& desc,
-	TexturePacker::TextureAtlas const& textureAtlas,
-	char const* name);
+    SkeletonDesc const& desc,
+    TexturePacker::TextureAtlas const& textureAtlas,
+    char const* name);
 
 }// namespace Spine
 }// namespace Pomdog

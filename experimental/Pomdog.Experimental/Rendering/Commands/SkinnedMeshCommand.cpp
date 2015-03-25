@@ -10,8 +10,8 @@ namespace Rendering {
 //-----------------------------------------------------------------------
 std::type_index SkinnedMeshCommand::TypeIndex() const
 {
-	static const std::type_index index = typeid(SkinnedMeshCommand);
-	return index;
+    static const std::type_index index = typeid(SkinnedMeshCommand);
+    return index;
 }
 //-----------------------------------------------------------------------
 }// namespace Rendering

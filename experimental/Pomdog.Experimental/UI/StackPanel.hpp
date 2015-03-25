@@ -20,49 +20,49 @@ namespace UI {
 
 class StackPanel: public Panel, public std::enable_shared_from_this<StackPanel> {
 public:
-	StackPanel(std::uint32_t widthIn, std::uint32_t heightIn);
+    StackPanel(std::uint32_t widthIn, std::uint32_t heightIn);
 
-	bool SizeToFitContent() const override { return false; }
+    bool SizeToFitContent() const override { return false; }
 
-	std::weak_ptr<UIEventDispatcher> Dispatcher() const override { return weakDispatcher; }
+    std::weak_ptr<UIEventDispatcher> Dispatcher() const override { return weakDispatcher; }
 
-	void OnParentChanged() override;
+    void OnParentChanged() override;
 
-	void OnPointerCanceled(PointerPoint const& pointerPoint) override;
+    void OnPointerCanceled(PointerPoint const& pointerPoint) override;
 
-	void OnPointerCaptureLost(PointerPoint const& pointerPoint) override;
+    void OnPointerCaptureLost(PointerPoint const& pointerPoint) override;
 
-	void OnPointerEntered(PointerPoint const& pointerPoint) override;
+    void OnPointerEntered(PointerPoint const& pointerPoint) override;
 
-	void OnPointerExited(PointerPoint const& pointerPoint) override;
+    void OnPointerExited(PointerPoint const& pointerPoint) override;
 
-	void OnPointerPressed(PointerPoint const& pointerPoint) override;
+    void OnPointerPressed(PointerPoint const& pointerPoint) override;
 
-	void OnPointerMoved(PointerPoint const& pointerPoint) override;
+    void OnPointerMoved(PointerPoint const& pointerPoint) override;
 
-	void OnPointerReleased(PointerPoint const& pointerPoint) override;
+    void OnPointerReleased(PointerPoint const& pointerPoint) override;
 
-	void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
+    void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
 
-	void Draw(DrawingContext & drawingContext) override;
+    void Draw(DrawingContext & drawingContext) override;
 
-	void UpdateAnimation(Duration const& frameDuration) override;
+    void UpdateAnimation(Duration const& frameDuration) override;
 
-	void AddChild(std::shared_ptr<UIView> const& element);
+    void AddChild(std::shared_ptr<UIView> const& element);
 
-	void UpdateTransform() override final;
+    void UpdateTransform() override final;
 
 private:
-	using UIElementCollection = std::list<std::shared_ptr<UIElement>>;
-	UIElementCollection children;
+    using UIElementCollection = std::list<std::shared_ptr<UIElement>>;
+    UIElementCollection children;
 
-	std::weak_ptr<UIEventDispatcher> weakDispatcher;
-	Detail::UIEventConnection connection;
+    std::weak_ptr<UIEventDispatcher> weakDispatcher;
+    Detail::UIEventConnection connection;
 
-	Thickness padding;
-	std::uint16_t barHeight;
+    Thickness padding;
+    std::uint16_t barHeight;
 
-	Optional<Vector2> startTouchPoint;
+    Optional<Vector2> startTouchPoint;
 };
 
 }// namespace UI

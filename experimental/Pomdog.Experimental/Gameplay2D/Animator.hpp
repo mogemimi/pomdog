@@ -21,29 +21,29 @@ class AnimationGraph;
 
 class Animator: public Component<Animator> {
 public:
-	Animator(std::shared_ptr<Skeleton> const& skeleton,
-		std::shared_ptr<SkeletonTransform> const& skeletonTransform,
-		std::shared_ptr<AnimationGraph> const& animationGraph);
+    Animator(std::shared_ptr<Skeleton> const& skeleton,
+        std::shared_ptr<SkeletonTransform> const& skeletonTransform,
+        std::shared_ptr<AnimationGraph> const& animationGraph);
 
-	~Animator();
+    ~Animator();
 
-	void Update(Duration const& frameDuration);
+    void Update(Duration const& frameDuration);
 
-	void CrossFade(std::string const& state, Duration const& transitionDuration);
+    void CrossFade(std::string const& state, Duration const& transitionDuration);
 
-	void Play(std::string const& state);
+    void Play(std::string const& state);
 
-	float PlaybackRate() const;
-	void PlaybackRate(float playbackRate);
+    float PlaybackRate() const;
+    void PlaybackRate(float playbackRate);
 
-	void SetFloat(std::string const& name, float value);
-	void SetBool(std::string const& name, bool value);
+    void SetFloat(std::string const& name, float value);
+    void SetBool(std::string const& name, bool value);
 
-	std::string GetCurrentStateName() const;
+    std::string GetCurrentStateName() const;
 
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+    class Impl;
+    std::unique_ptr<Impl> impl;
 };
 
 }// namespace Pomdog

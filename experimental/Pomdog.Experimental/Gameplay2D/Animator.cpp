@@ -16,91 +16,91 @@ namespace Pomdog {
 namespace {
 
 struct SkeletonAnimationState {
-	std::shared_ptr<AnimationNode const> Node;
-	std::string Name;
+    std::shared_ptr<AnimationNode const> Node;
+    std::string Name;
 };
 
 static auto FindState(std::vector<AnimationGraphState> const& states, std::string const& stateName)
-	->decltype(states.begin())
+    ->decltype(states.begin())
 {
-	return std::find_if(std::begin(states), std::end(states),
-		[&stateName](AnimationGraphState const& state) {
-			return state.Name == stateName;
-		});
+    return std::find_if(std::begin(states), std::end(states),
+        [&stateName](AnimationGraphState const& state) {
+            return state.Name == stateName;
+        });
 }
 
 static AnimationTimeInterval WrapTime(AnimationTimeInterval const& source, AnimationTimeInterval const& max)
 {
-	auto time = source;
-	while (time > max) {
-		time -= max;
-	}
+    auto time = source;
+    while (time > max) {
+        time -= max;
+    }
 
-	POMDOG_ASSERT(time >= AnimationTimeInterval::zero());
-	POMDOG_ASSERT(time <= max);
+    POMDOG_ASSERT(time >= AnimationTimeInterval::zero());
+    POMDOG_ASSERT(time <= max);
 
-	return std::move(time);
+    return std::move(time);
 }
 
 class AnimationCrossFadeNode final: public AnimationNode {
 private:
-	SkeletonAnimationState currentAnimation;
-	SkeletonAnimationState nextAnimation;
-	AnimationTimeInterval transitionDuration;
-	AnimationTimeInterval currentAnimationStartTime;
+    SkeletonAnimationState currentAnimation;
+    SkeletonAnimationState nextAnimation;
+    AnimationTimeInterval transitionDuration;
+    AnimationTimeInterval currentAnimationStartTime;
 
 public:
-	AnimationCrossFadeNode(
-		SkeletonAnimationState const& currentAnimationIn,
-		SkeletonAnimationState const& nextAnimationIn,
-		AnimationTimeInterval const& transitionDurationIn,
-		AnimationTimeInterval const& currentAnimationStartTimeIn)
-		: currentAnimation(currentAnimationIn)
-		, nextAnimation(nextAnimationIn)
-		, transitionDuration(transitionDurationIn)
-		, currentAnimationStartTime(currentAnimationStartTimeIn)
-	{}
+    AnimationCrossFadeNode(
+        SkeletonAnimationState const& currentAnimationIn,
+        SkeletonAnimationState const& nextAnimationIn,
+        AnimationTimeInterval const& transitionDurationIn,
+        AnimationTimeInterval const& currentAnimationStartTimeIn)
+        : currentAnimation(currentAnimationIn)
+        , nextAnimation(nextAnimationIn)
+        , transitionDuration(transitionDurationIn)
+        , currentAnimationStartTime(currentAnimationStartTimeIn)
+    {}
 
-	void Calculate(AnimationTimeInterval const& time,
-		Detail::Skeletal2D::AnimationGraphWeightCollection const& weights,
-		Skeleton const& skeleton,
-		SkeletonPose & skeletonPose) const override
-	{
-		auto sourcePose1 = SkeletonPose::CreateBindPose(skeleton);
-		auto sourcePose2 = SkeletonPose::CreateBindPose(skeleton);
+    void Calculate(AnimationTimeInterval const& time,
+        Detail::Skeletal2D::AnimationGraphWeightCollection const& weights,
+        Skeleton const& skeleton,
+        SkeletonPose & skeletonPose) const override
+    {
+        auto sourcePose1 = SkeletonPose::CreateBindPose(skeleton);
+        auto sourcePose2 = SkeletonPose::CreateBindPose(skeleton);
 
-		{
-			auto sourceTime = WrapTime(currentAnimationStartTime + time, currentAnimation.Node->Length());
+        {
+            auto sourceTime = WrapTime(currentAnimationStartTime + time, currentAnimation.Node->Length());
 
-			POMDOG_ASSERT(sourceTime >= AnimationTimeInterval::zero());
-			POMDOG_ASSERT(sourceTime <= currentAnimation.Node->Length());
+            POMDOG_ASSERT(sourceTime >= AnimationTimeInterval::zero());
+            POMDOG_ASSERT(sourceTime <= currentAnimation.Node->Length());
 
-			POMDOG_ASSERT(currentAnimation.Node);
-			currentAnimation.Node->Calculate(sourceTime, weights, skeleton, sourcePose1);
-		}
-		{
-			auto sourceTime = WrapTime(time, nextAnimation.Node->Length());
+            POMDOG_ASSERT(currentAnimation.Node);
+            currentAnimation.Node->Calculate(sourceTime, weights, skeleton, sourcePose1);
+        }
+        {
+            auto sourceTime = WrapTime(time, nextAnimation.Node->Length());
 
-			POMDOG_ASSERT(sourceTime >= AnimationTimeInterval::zero());
-			POMDOG_ASSERT(sourceTime <= nextAnimation.Node->Length());
+            POMDOG_ASSERT(sourceTime >= AnimationTimeInterval::zero());
+            POMDOG_ASSERT(sourceTime <= nextAnimation.Node->Length());
 
-			POMDOG_ASSERT(nextAnimation.Node);
-			nextAnimation.Node->Calculate(sourceTime, weights, skeleton, sourcePose2);
-		}
+            POMDOG_ASSERT(nextAnimation.Node);
+            nextAnimation.Node->Calculate(sourceTime, weights, skeleton, sourcePose2);
+        }
 
-		POMDOG_ASSERT(transitionDuration.count() > 0);
-		float weight = (time / transitionDuration.count()).count();
-		POMDOG_ASSERT(weight >= 0.0f);
-		POMDOG_ASSERT(weight <= 1.0f);
+        POMDOG_ASSERT(transitionDuration.count() > 0);
+        float weight = (time / transitionDuration.count()).count();
+        POMDOG_ASSERT(weight >= 0.0f);
+        POMDOG_ASSERT(weight <= 1.0f);
 
-		using Detail::Skeletal2D::WeightBlendingHelper;
-		WeightBlendingHelper::Lerp(sourcePose1.JointPoses, sourcePose2.JointPoses, weight, skeletonPose.JointPoses);
-	}
+        using Detail::Skeletal2D::WeightBlendingHelper;
+        WeightBlendingHelper::Lerp(sourcePose1.JointPoses, sourcePose2.JointPoses, weight, skeletonPose.JointPoses);
+    }
 
-	AnimationTimeInterval Length() const
-	{
-		return transitionDuration;
-	}
+    AnimationTimeInterval Length() const
+    {
+        return transitionDuration;
+    }
 };
 
 }// unnamed namespace
@@ -111,187 +111,187 @@ public:
 //-----------------------------------------------------------------------
 class Animator::Impl final {
 public:
-	Impl(std::shared_ptr<Skeleton> const& skeleton,
-		std::shared_ptr<SkeletonTransform> const& skeletonTransform,
-		std::shared_ptr<AnimationGraph> const& animationGraph);
+    Impl(std::shared_ptr<Skeleton> const& skeleton,
+        std::shared_ptr<SkeletonTransform> const& skeletonTransform,
+        std::shared_ptr<AnimationGraph> const& animationGraph);
 
-	void Update(Duration const& frameDuration);
+    void Update(Duration const& frameDuration);
 
-	void CrossFade(std::string const& stateName, Duration const& transitionDuration);
+    void CrossFade(std::string const& stateName, Duration const& transitionDuration);
 
-	void Play(std::string const& stateName);
+    void Play(std::string const& stateName);
 
-	float PlaybackRate() const;
+    float PlaybackRate() const;
 
-	void PlaybackRate(float playbackRate);
+    void PlaybackRate(float playbackRate);
 
-	void SetFloat(std::string const& name, float value);
+    void SetFloat(std::string const& name, float value);
 
-	void SetBool(std::string const& name, bool value);
+    void SetBool(std::string const& name, bool value);
 
-	std::string GetCurrentStateName() const;
+    std::string GetCurrentStateName() const;
 
 private:
-	Detail::Skeletal2D::AnimationGraphWeightCollection graphWeights;
-	std::shared_ptr<Skeleton> skeleton;
-	std::shared_ptr<SkeletonTransform> skeletonTransform;
-	SkeletonAnimationState currentAnimation;
-	Optional<SkeletonAnimationState> nextAnimation;
-	std::shared_ptr<AnimationGraph const> animationGraph;
-	AnimationTimeInterval time;
-	float playbackRate;
+    Detail::Skeletal2D::AnimationGraphWeightCollection graphWeights;
+    std::shared_ptr<Skeleton> skeleton;
+    std::shared_ptr<SkeletonTransform> skeletonTransform;
+    SkeletonAnimationState currentAnimation;
+    Optional<SkeletonAnimationState> nextAnimation;
+    std::shared_ptr<AnimationGraph const> animationGraph;
+    AnimationTimeInterval time;
+    float playbackRate;
 };
 //-----------------------------------------------------------------------
 Animator::Impl::Impl(std::shared_ptr<Skeleton> const& skeletonIn,
-	std::shared_ptr<SkeletonTransform> const& skeletonTransformIn,
-	std::shared_ptr<AnimationGraph> const& animationGraphIn)
-	: skeleton(skeletonIn)
-	, skeletonTransform(skeletonTransformIn)
-	, animationGraph(animationGraphIn)
-	, time(AnimationTimeInterval::zero())
-	, playbackRate(1.0f)
+    std::shared_ptr<SkeletonTransform> const& skeletonTransformIn,
+    std::shared_ptr<AnimationGraph> const& animationGraphIn)
+    : skeleton(skeletonIn)
+    , skeletonTransform(skeletonTransformIn)
+    , animationGraph(animationGraphIn)
+    , time(AnimationTimeInterval::zero())
+    , playbackRate(1.0f)
 {
-	POMDOG_ASSERT(skeleton);
-	POMDOG_ASSERT(skeletonTransform);
-	POMDOG_ASSERT(animationGraph);
+    POMDOG_ASSERT(skeleton);
+    POMDOG_ASSERT(skeletonTransform);
+    POMDOG_ASSERT(animationGraph);
 
-	graphWeights.Reserve(animationGraph->Inputs.size());
-	for (auto & parameter: animationGraph->Inputs)
-	{
-		switch (parameter.Type) {
-		case AnimationBlendInputType::Float:
-			graphWeights.AddFloat();
-			break;
-		case AnimationBlendInputType::Bool:
-			graphWeights.AddBool();
-			break;
-		}
-	}
+    graphWeights.Reserve(animationGraph->Inputs.size());
+    for (auto & parameter: animationGraph->Inputs)
+    {
+        switch (parameter.Type) {
+        case AnimationBlendInputType::Float:
+            graphWeights.AddFloat();
+            break;
+        case AnimationBlendInputType::Bool:
+            graphWeights.AddBool();
+            break;
+        }
+    }
 
-	POMDOG_ASSERT(animationGraph);
-	POMDOG_ASSERT(!animationGraph->States.empty());
-	POMDOG_ASSERT(animationGraph->States.front().Tree);
+    POMDOG_ASSERT(animationGraph);
+    POMDOG_ASSERT(!animationGraph->States.empty());
+    POMDOG_ASSERT(animationGraph->States.front().Tree);
 
-	currentAnimation.Name = animationGraph->States.front().Name;
-	currentAnimation.Node = std::shared_ptr<AnimationNode>(animationGraph,
-		animationGraph->States.front().Tree.get());
+    currentAnimation.Name = animationGraph->States.front().Name;
+    currentAnimation.Node = std::shared_ptr<AnimationNode>(animationGraph,
+        animationGraph->States.front().Tree.get());
 }
 //-----------------------------------------------------------------------
 void Animator::Impl::Update(Duration const& frameDuration)
 {
-	// (1) Update time:
-	{
-		time = time + frameDuration * playbackRate;
+    // (1) Update time:
+    {
+        time = time + frameDuration * playbackRate;
 
-		POMDOG_ASSERT(currentAnimation.Node);
-		if (time < AnimationTimeInterval::zero()) {
-			time = currentAnimation.Node->Length();
-		}
-		else if (time > currentAnimation.Node->Length()) {
-			if (nextAnimation) {
-				// transit
-				currentAnimation.Node = nextAnimation->Node;
-				currentAnimation.Name = nextAnimation->Name;
-				nextAnimation->Node.reset();
-				nextAnimation->Name.clear();
-				nextAnimation = OptionalType::NullOptional;
+        POMDOG_ASSERT(currentAnimation.Node);
+        if (time < AnimationTimeInterval::zero()) {
+            time = currentAnimation.Node->Length();
+        }
+        else if (time > currentAnimation.Node->Length()) {
+            if (nextAnimation) {
+                // transit
+                currentAnimation.Node = nextAnimation->Node;
+                currentAnimation.Name = nextAnimation->Name;
+                nextAnimation->Node.reset();
+                nextAnimation->Name.clear();
+                nextAnimation = OptionalType::NullOptional;
 
-				time = WrapTime(time, currentAnimation.Node->Length());
-				POMDOG_ASSERT(time >= AnimationTimeInterval::zero());
-				POMDOG_ASSERT(time <= currentAnimation.Node->Length());
-			}
-			else {
-				//POMDOG_ASSERT(loop);
-				time = AnimationTimeInterval::zero();
-			}
-		}
-	}
+                time = WrapTime(time, currentAnimation.Node->Length());
+                POMDOG_ASSERT(time >= AnimationTimeInterval::zero());
+                POMDOG_ASSERT(time <= currentAnimation.Node->Length());
+            }
+            else {
+                //POMDOG_ASSERT(loop);
+                time = AnimationTimeInterval::zero();
+            }
+        }
+    }
 
-	// (2) Pose extraction, and (3) Pose blending:
-	POMDOG_ASSERT(currentAnimation.Node);
-	currentAnimation.Node->Calculate(time, graphWeights, *skeleton, skeletonTransform->Pose);
+    // (2) Pose extraction, and (3) Pose blending:
+    POMDOG_ASSERT(currentAnimation.Node);
+    currentAnimation.Node->Calculate(time, graphWeights, *skeleton, skeletonTransform->Pose);
 
-	// (4) Global pose generation:
-	SkeletonHelper::ToGlobalPose(*skeleton, skeletonTransform->Pose, skeletonTransform->GlobalPose);
+    // (4) Global pose generation:
+    SkeletonHelper::ToGlobalPose(*skeleton, skeletonTransform->Pose, skeletonTransform->GlobalPose);
 }
 //-----------------------------------------------------------------------
 void Animator::Impl::CrossFade(std::string const& stateName, Duration const& transitionDuration)
 {
-	if (nextAnimation) {
-		return;
-	}
+    if (nextAnimation) {
+        return;
+    }
 
-	POMDOG_ASSERT(transitionDuration > Duration::zero());
-	POMDOG_ASSERT(!std::isnan(transitionDuration.count()));
+    POMDOG_ASSERT(transitionDuration > Duration::zero());
+    POMDOG_ASSERT(!std::isnan(transitionDuration.count()));
 
-	auto iter = FindState(animationGraph->States, stateName);
-	POMDOG_ASSERT(iter != std::end(animationGraph->States));
+    auto iter = FindState(animationGraph->States, stateName);
+    POMDOG_ASSERT(iter != std::end(animationGraph->States));
 
-	if (iter == std::end(animationGraph->States)) {
-		// Error: Cannot find the state
-		return;
-	}
+    if (iter == std::end(animationGraph->States)) {
+        // Error: Cannot find the state
+        return;
+    }
 
-	POMDOG_ASSERT(iter->Tree);
-	nextAnimation = SkeletonAnimationState{};
-	nextAnimation->Node = std::shared_ptr<AnimationNode>(animationGraph, iter->Tree.get());
-	nextAnimation->Name = stateName;
+    POMDOG_ASSERT(iter->Tree);
+    nextAnimation = SkeletonAnimationState{};
+    nextAnimation->Node = std::shared_ptr<AnimationNode>(animationGraph, iter->Tree.get());
+    nextAnimation->Name = stateName;
 
-	auto crossFade = std::make_shared<AnimationCrossFadeNode>(currentAnimation, *nextAnimation, transitionDuration, time);
+    auto crossFade = std::make_shared<AnimationCrossFadeNode>(currentAnimation, *nextAnimation, transitionDuration, time);
 
-	currentAnimation.Node = crossFade;
-	time = AnimationTimeInterval::zero();
+    currentAnimation.Node = crossFade;
+    time = AnimationTimeInterval::zero();
 }
 //-----------------------------------------------------------------------
 void Animator::Impl::Play(std::string const& stateName)
 {
-	POMDOG_ASSERT(animationGraph);
-	POMDOG_ASSERT(!animationGraph->States.empty());
+    POMDOG_ASSERT(animationGraph);
+    POMDOG_ASSERT(!animationGraph->States.empty());
 
-	auto iter = FindState(animationGraph->States, stateName);
-	POMDOG_ASSERT(iter != std::end(animationGraph->States));
+    auto iter = FindState(animationGraph->States, stateName);
+    POMDOG_ASSERT(iter != std::end(animationGraph->States));
 
-	if (iter == std::end(animationGraph->States)) {
-		// Error: Cannot find the state
-		return;
-	}
+    if (iter == std::end(animationGraph->States)) {
+        // Error: Cannot find the state
+        return;
+    }
 
-	POMDOG_ASSERT(iter->Tree);
-	currentAnimation.Node = std::shared_ptr<AnimationNode>(animationGraph, iter->Tree.get());
-	currentAnimation.Name = stateName;
-	time = AnimationTimeInterval::zero();
+    POMDOG_ASSERT(iter->Tree);
+    currentAnimation.Node = std::shared_ptr<AnimationNode>(animationGraph, iter->Tree.get());
+    currentAnimation.Name = stateName;
+    time = AnimationTimeInterval::zero();
 }
 //-----------------------------------------------------------------------
 float Animator::Impl::PlaybackRate() const
 {
-	return playbackRate;
+    return playbackRate;
 }
 //-----------------------------------------------------------------------
 void Animator::Impl::PlaybackRate(float playbackRateIn)
 {
-	this->playbackRate = playbackRateIn;
+    this->playbackRate = playbackRateIn;
 }
 //-----------------------------------------------------------------------
 void Animator::Impl::SetFloat(std::string const& name, float value)
 {
-	POMDOG_ASSERT(!std::isnan(value));
-	POMDOG_ASSERT(animationGraph);
-	if (auto index = animationGraph->FindParameter(name)) {
-		graphWeights.SetValue(*index, value);
-	}
+    POMDOG_ASSERT(!std::isnan(value));
+    POMDOG_ASSERT(animationGraph);
+    if (auto index = animationGraph->FindParameter(name)) {
+        graphWeights.SetValue(*index, value);
+    }
 }
 //-----------------------------------------------------------------------
 void Animator::Impl::SetBool(std::string const& name, bool value)
 {
-	POMDOG_ASSERT(animationGraph);
-	if (auto index = animationGraph->FindParameter(name)) {
-		graphWeights.SetValue(*index, value);
-	}
+    POMDOG_ASSERT(animationGraph);
+    if (auto index = animationGraph->FindParameter(name)) {
+        graphWeights.SetValue(*index, value);
+    }
 }
 //-----------------------------------------------------------------------
 std::string Animator::Impl::GetCurrentStateName() const
 {
-	return currentAnimation.Name;
+    return currentAnimation.Name;
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -299,59 +299,59 @@ std::string Animator::Impl::GetCurrentStateName() const
 #endif
 //-----------------------------------------------------------------------
 Animator::Animator(std::shared_ptr<Skeleton> const& skeleton,
-	std::shared_ptr<SkeletonTransform> const& skeletonTransform,
-	std::shared_ptr<AnimationGraph> const& animationGraph)
-	: impl(std::make_unique<Impl>(skeleton, skeletonTransform, animationGraph))
+    std::shared_ptr<SkeletonTransform> const& skeletonTransform,
+    std::shared_ptr<AnimationGraph> const& animationGraph)
+    : impl(std::make_unique<Impl>(skeleton, skeletonTransform, animationGraph))
 {}
 //-----------------------------------------------------------------------
 Animator::~Animator() = default;
 //-----------------------------------------------------------------------
 void Animator::Update(Duration const& frameDuration)
 {
-	POMDOG_ASSERT(impl);
-	impl->Update(frameDuration);
+    POMDOG_ASSERT(impl);
+    impl->Update(frameDuration);
 }
 //-----------------------------------------------------------------------
 void Animator::CrossFade(std::string const& state, Duration const& transitionDuration)
 {
-	POMDOG_ASSERT(impl);
-	impl->CrossFade(state, transitionDuration);
+    POMDOG_ASSERT(impl);
+    impl->CrossFade(state, transitionDuration);
 }
 //-----------------------------------------------------------------------
 void Animator::Play(std::string const& state)
 {
-	POMDOG_ASSERT(impl);
-	impl->Play(state);
+    POMDOG_ASSERT(impl);
+    impl->Play(state);
 }
 //-----------------------------------------------------------------------
 float Animator::PlaybackRate() const
 {
-	POMDOG_ASSERT(impl);
-	return impl->PlaybackRate();
+    POMDOG_ASSERT(impl);
+    return impl->PlaybackRate();
 }
 //-----------------------------------------------------------------------
 void Animator::PlaybackRate(float playbackRate)
 {
-	POMDOG_ASSERT(impl);
-	impl->PlaybackRate(playbackRate);
+    POMDOG_ASSERT(impl);
+    impl->PlaybackRate(playbackRate);
 }
 //-----------------------------------------------------------------------
 void Animator::SetFloat(std::string const& name, float value)
 {
-	POMDOG_ASSERT(impl);
-	impl->SetFloat(name, value);
+    POMDOG_ASSERT(impl);
+    impl->SetFloat(name, value);
 }
 //-----------------------------------------------------------------------
 void Animator::SetBool(std::string const& name, bool value)
 {
-	POMDOG_ASSERT(impl);
-	impl->SetBool(name, value);
+    POMDOG_ASSERT(impl);
+    impl->SetBool(name, value);
 }
 //-----------------------------------------------------------------------
 std::string Animator::GetCurrentStateName() const
 {
-	POMDOG_ASSERT(impl);
-	return impl->GetCurrentStateName();
+    POMDOG_ASSERT(impl);
+    return impl->GetCurrentStateName();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

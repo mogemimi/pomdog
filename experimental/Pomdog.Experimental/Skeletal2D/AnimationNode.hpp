@@ -24,14 +24,14 @@ class SkeletonPose;
 
 class AnimationNode {
 public:
-	virtual ~AnimationNode() = default;
+    virtual ~AnimationNode() = default;
 
-	virtual void Calculate(AnimationTimeInterval const& time,
-		Detail::Skeletal2D::AnimationGraphWeightCollection const& weights,
-		Skeleton const& skeleton,
-		SkeletonPose & skeletonPose) const = 0;
+    virtual void Calculate(AnimationTimeInterval const& time,
+        Detail::Skeletal2D::AnimationGraphWeightCollection const& weights,
+        Skeleton const& skeleton,
+        SkeletonPose & skeletonPose) const = 0;
 
-	virtual AnimationTimeInterval Length() const = 0;
+    virtual AnimationTimeInterval Length() const = 0;
 };
 
 }// namespace Pomdog

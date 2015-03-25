@@ -20,47 +20,47 @@ namespace SkeletalAnimation2D {
 template <typename T>
 class OptionalUnsigned final {
 public:
-	static_assert(std::is_unsigned<T>::value, "T is unsigned integer type.");
-	T Data;
+    static_assert(std::is_unsigned<T>::value, "T is unsigned integer type.");
+    T Data;
 
-	// Constructors:
-	constexpr OptionalUnsigned()
-		: Data(std::numeric_limits<T>::max())
-	{}
+    // Constructors:
+    constexpr OptionalUnsigned()
+        : Data(std::numeric_limits<T>::max())
+    {}
 
-	constexpr OptionalUnsigned(T v)
-		: Data(v)
-	{}
+    constexpr OptionalUnsigned(T v)
+        : Data(v)
+    {}
 
-	// Binary operators:
-	constexpr bool operator==(OptionalUnsigned const& v) const
-	{
-		return POMDOG_CONSTEXPR_ASSERT(Data != std::numeric_limits<T>::max()),
-			Data == v.Data;
-	}
+    // Binary operators:
+    constexpr bool operator==(OptionalUnsigned const& v) const
+    {
+        return POMDOG_CONSTEXPR_ASSERT(Data != std::numeric_limits<T>::max()),
+            Data == v.Data;
+    }
 
-	constexpr bool operator!=(OptionalUnsigned const& v) const
-	{
-		return POMDOG_CONSTEXPR_ASSERT(Data != std::numeric_limits<T>::max()),
-			Data != v.Data;
-	}
+    constexpr bool operator!=(OptionalUnsigned const& v) const
+    {
+        return POMDOG_CONSTEXPR_ASSERT(Data != std::numeric_limits<T>::max()),
+            Data != v.Data;
+    }
 
-	T const& operator*() const
-	{
-		POMDOG_ASSERT(Data != std::numeric_limits<T>::max());
-		return Data;
-	}
+    T const& operator*() const
+    {
+        POMDOG_ASSERT(Data != std::numeric_limits<T>::max());
+        return Data;
+    }
 
-	T & operator*()
-	{
-		POMDOG_ASSERT(Data != std::numeric_limits<T>::max());
-		return Data;
-	}
+    T & operator*()
+    {
+        POMDOG_ASSERT(Data != std::numeric_limits<T>::max());
+        return Data;
+    }
 
-	constexpr explicit operator bool() const noexcept
-	{
-		return Data != std::numeric_limits<T>::max();
-	}
+    constexpr explicit operator bool() const noexcept
+    {
+        return Data != std::numeric_limits<T>::max();
+    }
 };
 
 }// namespace SkeletalAnimation2D

@@ -23,41 +23,41 @@ class ParticleClip;
 
 class ParticleSystem: public Component<ParticleSystem> {
 public:
-	explicit ParticleSystem(std::shared_ptr<ParticleClip const> const& clip);
+    explicit ParticleSystem(std::shared_ptr<ParticleClip const> const& clip);
 
-	void Play();
-	void Pause();
-	void Stop();
+    void Play();
+    void Pause();
+    void Stop();
 
-	void Simulate(GameObject & gameObject, Duration const& duration);
+    void Simulate(GameObject & gameObject, Duration const& duration);
 
-	bool IsAlive() const;
+    bool IsAlive() const;
 
-	std::vector<Particle> const& Particles() const { return particles; }
+    std::vector<Particle> const& Particles() const { return particles; }
 
-	std::size_t ParticleCount() const { return particles.size(); }
+    std::size_t ParticleCount() const { return particles.size(); }
 
-	bool Loop() const { return emitter.Looping; }
-	void Loop(bool loop) { emitter.Looping = loop; }
+    bool Loop() const { return emitter.Looping; }
+    void Loop(bool loop) { emitter.Looping = loop; }
 
-	bool EnableEmission() const { return enableEmission; }
-	void EnableEmission(bool enableEmissionIn) { this->enableEmission = enableEmissionIn; }
+    bool EnableEmission() const { return enableEmission; }
+    void EnableEmission(bool enableEmissionIn) { this->enableEmission = enableEmissionIn; }
 
 private:
-	enum class ParticleSystemState: std::uint8_t {
-		Paused,
-		Playing,
-		Stopped
-	};
+    enum class ParticleSystemState: std::uint8_t {
+        Paused,
+        Playing,
+        Stopped
+    };
 
-	ParticleEmitter emitter;
-	std::vector<Particle> particles;
-	std::shared_ptr<ParticleClip const> clip;
-	Duration erapsedTime;
-	Duration emissionTimer;
-	std::mt19937 random;
-	ParticleSystemState state;
-	bool enableEmission;
+    ParticleEmitter emitter;
+    std::vector<Particle> particles;
+    std::shared_ptr<ParticleClip const> clip;
+    Duration erapsedTime;
+    Duration emissionTimer;
+    std::mt19937 random;
+    ParticleSystemState state;
+    bool enableEmission;
 };
 
 }// namespace Pomdog

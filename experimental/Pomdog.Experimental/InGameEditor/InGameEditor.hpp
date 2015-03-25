@@ -25,32 +25,32 @@ namespace SceneEditor {
 
 class InGameEditor {
 public:
-	explicit InGameEditor(std::shared_ptr<GameHost> const& gameHost);
+    explicit InGameEditor(std::shared_ptr<GameHost> const& gameHost);
 
-	~InGameEditor();
+    ~InGameEditor();
 
-	void Update();
+    void Update();
 
-	void DrawGUI(GraphicsContext & graphicsContext);
+    void DrawGUI(GraphicsContext & graphicsContext);
 
-	void AddView(std::shared_ptr<UI::UIView> const& element);
+    void AddView(std::shared_ptr<UI::UIView> const& element);
 
 private:
-	UI::UIElementHierarchy hierarchy;
-	ScopedConnection clientSizeChangedConnection;
-	SceneEditor::EditorColorScheme editorColorScheme;
+    UI::UIElementHierarchy hierarchy;
+    ScopedConnection clientSizeChangedConnection;
+    SceneEditor::EditorColorScheme editorColorScheme;
 
-	std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<GameHost> gameHost;
 
-	std::shared_ptr<DepthStencilState> depthStencilState;
-	std::shared_ptr<BlendState> blendState;
+    std::shared_ptr<DepthStencilState> depthStencilState;
+    std::shared_ptr<BlendState> blendState;
 
-	std::unique_ptr<SpriteBatch> spriteBatch;
-	std::shared_ptr<SpriteFont> spriteFont;
-	std::unique_ptr<SpriteBatch> spriteBatchDistanceField;
-	std::shared_ptr<EffectPass> distanceFieldEffect;
-	std::shared_ptr<ConstantBufferBinding> constantBuffers;
-	std::shared_ptr<Texture2D> blankTexture;
+    std::unique_ptr<SpriteBatch> spriteBatch;
+    std::shared_ptr<SpriteFont> spriteFont;
+    std::unique_ptr<SpriteBatch> spriteBatchDistanceField;
+    std::shared_ptr<EffectPass> distanceFieldEffect;
+    std::shared_ptr<ConstantBufferBinding> constantBuffers;
+    std::shared_ptr<Texture2D> blankTexture;
 };
 
 }// namespace SceneEditor

@@ -18,7 +18,7 @@ namespace MagicaVoxel {
 
 class VoxModelLoader final {
 public:
-	static VoxModel Load(AssetManager const& assets, std::string const& assetName);
+    static VoxModel Load(AssetManager const& assets, std::string const& assetName);
 };
 
 }// namespace MagicaVoxel

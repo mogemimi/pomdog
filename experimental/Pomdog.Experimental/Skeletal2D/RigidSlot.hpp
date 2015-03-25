@@ -19,17 +19,17 @@ namespace Pomdog {
 
 class RigidSlot {
 public:
-	Rectangle Subrect;
-	Vector2 Translate;
-	Vector2 Scale;
-	Radian<float> Rotation;
-	Color Color;
-	Vector2 Origin;
-	JointIndex JointIndex;
-	std::uint32_t HashId;
-	std::uint16_t DrawOrder;
-	std::uint16_t TexturePage;
-	bool TextureRotate;
+    Rectangle Subrect;
+    Vector2 Translate;
+    Vector2 Scale;
+    Radian<float> Rotation;
+    Color Color;
+    Vector2 Origin;
+    JointIndex JointIndex;
+    std::uint32_t HashId;
+    std::uint16_t DrawOrder;
+    std::uint16_t TexturePage;
+    bool TextureRotate;
 };
 
 }// namespace Pomdog

@@ -18,20 +18,20 @@ class RenderCommand;
 
 class RenderQueue {
 public:
-	void PushBack(std::reference_wrapper<RenderCommand> && command);
+    void PushBack(std::reference_wrapper<RenderCommand> && command);
 
-	void Sort();
+    void Sort();
 
-	std::size_t Count() const;
+    std::size_t Count() const;
 
-	void Clear();
+    void Clear();
 
-	void Enumerate(std::function<void(RenderCommand &)> const& callback) const;
+    void Enumerate(std::function<void(RenderCommand &)> const& callback) const;
 
 private:
-	std::vector<std::reference_wrapper<RenderCommand>> negativeCommands;
-	std::vector<std::reference_wrapper<RenderCommand>> positiveCommands;
-	std::vector<std::reference_wrapper<RenderCommand>> zeroCommands;
+    std::vector<std::reference_wrapper<RenderCommand>> negativeCommands;
+    std::vector<std::reference_wrapper<RenderCommand>> positiveCommands;
+    std::vector<std::reference_wrapper<RenderCommand>> zeroCommands;
 };
 
 }// namespace Pomdog

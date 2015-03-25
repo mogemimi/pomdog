@@ -23,12 +23,12 @@ namespace Spine {
 class SkeletonDesc;
 
 SkinnedMesh CreateSkinnedMesh(
-	GraphicsDevice & graphicsDevice,
-	std::vector<Matrix3x2> const& bindPosesInGlobal,
-	SkeletonDesc const& skeletonDesc,
-	TexturePacker::TextureAtlas const& textureAtlas,
-	Vector2 const& textureSize,
-	std::string const& skinName);
+    GraphicsDevice & graphicsDevice,
+    std::vector<Matrix3x2> const& bindPosesInGlobal,
+    SkeletonDesc const& skeletonDesc,
+    TexturePacker::TextureAtlas const& textureAtlas,
+    Vector2 const& textureSize,
+    std::string const& skinName);
 
 }// namespace Spine
 }// namespace Pomdog

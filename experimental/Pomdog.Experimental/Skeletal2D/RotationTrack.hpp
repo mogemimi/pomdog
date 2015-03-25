@@ -20,25 +20,25 @@ namespace Skeletal2D {
 
 class RotationKeyframe {
 public:
-	AnimationTimeInterval Time;
-	CompressedFloat<std::int16_t, 4500> Rotation;
+    AnimationTimeInterval Time;
+    CompressedFloat<std::int16_t, 4500> Rotation;
 
-	static_assert(decltype(Rotation)::Max() > 3.1416f*2.0f, "");
-	static_assert(decltype(Rotation)::Min() < -3.1416f*2.0f, "");
+    static_assert(decltype(Rotation)::Max() > 3.1416f*2.0f, "");
+    static_assert(decltype(Rotation)::Min() < -3.1416f*2.0f, "");
 };
 
 class RotationTrack final: public AnimationTrack {
 public:
-	RotationTrack(std::vector<RotationKeyframe> && keys, JointIndex && jointIndex);
+    RotationTrack(std::vector<RotationKeyframe> && keys, JointIndex && jointIndex);
 
-	void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton,
-		SkeletonPose & skeletonPose) override;
+    void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton,
+        SkeletonPose & skeletonPose) override;
 
-	AnimationTimeInterval Length() const override;
+    AnimationTimeInterval Length() const override;
 
 private:
-	std::vector<RotationKeyframe> keys;
-	JointIndex jointIndex;
+    std::vector<RotationKeyframe> keys;
+    JointIndex jointIndex;
 };
 
 }// namespace Skeletal2D

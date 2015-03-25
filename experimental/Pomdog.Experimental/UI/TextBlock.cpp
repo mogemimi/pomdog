@@ -11,8 +11,8 @@ namespace Pomdog {
 namespace UI {
 //-----------------------------------------------------------------------
 TextBlock::TextBlock()
-	: UIView(Matrix3x2::Identity, 50, 15)
-	, text()
+    : UIView(Matrix3x2::Identity, 50, 15)
+    , text()
 {}
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -31,15 +31,15 @@ void TextBlock::Text(std::string const& textIn)
 //-----------------------------------------------------------------------
 void TextBlock::OnRenderSizeChanged(std::uint32_t widthIn, std::uint32_t heightIn)
 {
-	Width(widthIn);
-	Height(heightIn);
+    Width(widthIn);
+    Height(heightIn);
 }
 //-----------------------------------------------------------------------
 void TextBlock::Draw(DrawingContext & drawingContext)
 {
-	auto transform = Transform() * drawingContext.Top();
+    auto transform = Transform() * drawingContext.Top();
 
-	drawingContext.DrawString(transform, Color::White, FontWeight::Normal, FontSize::Medium, text);
+    drawingContext.DrawString(transform, Color::White, FontWeight::Normal, FontSize::Medium, text);
 }
 //-----------------------------------------------------------------------
 }// namespace UI

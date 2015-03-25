@@ -19,25 +19,25 @@ namespace Pomdog {
 
 class SpriteRenderable: public Renderable {
 public:
-	explicit SpriteRenderable(std::shared_ptr<Texture2D> const& texture);
+    explicit SpriteRenderable(std::shared_ptr<Texture2D> const& texture);
 
-	SpriteRenderable(std::shared_ptr<Texture2D> const& texture, TextureRegion const& textureRegion);
+    SpriteRenderable(std::shared_ptr<Texture2D> const& texture, TextureRegion const& textureRegion);
 
-	void Visit(GameObject & gameObject, Renderer & renderer) override;
+    void Visit(GameObject & gameObject, Renderer & renderer) override;
 
-	void OriginPivot(Vector2 const& originPivot);
-	Vector2 OriginPivot() const;
+    void OriginPivot(Vector2 const& originPivot);
+    Vector2 OriginPivot() const;
 
-	void Region(TextureRegion const& region);
-	TextureRegion const& Region() const;
+    void Region(TextureRegion const& region);
+    TextureRegion const& Region() const;
 
-	Rectangle BoundingBox() const;
+    Rectangle BoundingBox() const;
 
 private:
-	Detail::Rendering::SpriteCommand command;
-	Matrix3x2 offsetMatrix;
-	Vector2 originPivot;
-	std::uint32_t dirtyFlags;
+    Detail::Rendering::SpriteCommand command;
+    Matrix3x2 offsetMatrix;
+    Vector2 originPivot;
+    std::uint32_t dirtyFlags;
 };
 
 }// namespace Pomdog

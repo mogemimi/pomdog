@@ -22,26 +22,26 @@ namespace Skeletal2D {
 
 class SpriteKeyframe {
 public:
-	Rectangle Subrect;
-	Vector2 Origin;
-	AnimationTimeInterval Time;
-	std::uint16_t TexturePage;
-	bool TextureRotate;
+    Rectangle Subrect;
+    Vector2 Origin;
+    AnimationTimeInterval Time;
+    std::uint16_t TexturePage;
+    bool TextureRotate;
 };
 
 class SpriteAnimationTrack final {
 public:
-	SpriteAnimationTrack() = default;
-	SpriteAnimationTrack(std::vector<SpriteKeyframe> && keys, std::uint32_t slotHashId);
+    SpriteAnimationTrack() = default;
+    SpriteAnimationTrack(std::vector<SpriteKeyframe> && keys, std::uint32_t slotHashId);
 
-	void Apply(Skin & skin, AnimationTimeInterval const& time);
+    void Apply(Skin & skin, AnimationTimeInterval const& time);
 
-	AnimationTimeInterval Length() const;
+    AnimationTimeInterval Length() const;
 
 private:
-	std::vector<SpriteKeyframe> keys;
-	std::uint32_t slotHashId;
-	Optional<std::uint16_t> slotIndex;
+    std::vector<SpriteKeyframe> keys;
+    std::uint32_t slotHashId;
+    Optional<std::uint16_t> slotIndex;
 };
 
 }// namespace Skeletal2D

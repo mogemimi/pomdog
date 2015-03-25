@@ -15,9 +15,9 @@ namespace Pomdog {
 
 class JointPose {
 public:
-	Vector2 Translate;
-	Radian<float> Rotation;
-	float Scale;
+    Vector2 Translate;
+    Radian<float> Rotation;
+    float Scale;
 };
 
 }// namespace Pomdog

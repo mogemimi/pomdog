@@ -16,19 +16,19 @@ namespace Skeletal2D {
 
 class AnimationTimer {
 public:
-	AnimationTimer();
+    AnimationTimer();
 
-	void Update(AnimationTimeInterval const& time);
-	void Pause();
-	void Resume();
-	void Reset();
+    void Update(AnimationTimeInterval const& time);
+    void Pause();
+    void Resume();
+    void Reset();
 
-	AnimationTimeInterval Time() const;
-	bool IsPlaying() const;
+    AnimationTimeInterval Time() const;
+    bool IsPlaying() const;
 
 private:
-	AnimationTimeInterval time;
-	bool isPlaying;
+    AnimationTimeInterval time;
+    bool isPlaying;
 };
 
 }// namespace Skeletal2D

@@ -14,23 +14,23 @@ namespace Pomdog {
 
 class ParticleEmitter {
 public:
-	float StartDelay = 0;
+    float StartDelay = 0;
 
-	float StartLifetime = 1;
+    float StartLifetime = 1;
 
-	float GravityModifier = 0;
+    float GravityModifier = 0;
 
-	std::uint16_t MaxParticles = 128;
+    std::uint16_t MaxParticles = 128;
 
-	std::uint16_t EmissionRate = 16;
+    std::uint16_t EmissionRate = 16;
 
-	//float InheritVelocity;
+    //float InheritVelocity;
 
-	//ParticleSimulationSpace SimulationSpace;
+    //ParticleSimulationSpace SimulationSpace;
 
-	bool Looping = true;
+    bool Looping = true;
 
-	//bool Prewarm = false;
+    //bool Prewarm = false;
 };
 
 }// namespace Pomdog

@@ -20,17 +20,17 @@ namespace Skeletal2D {
 
 class AnimationClipNode final: public AnimationNode {
 public:
-	AnimationClipNode(std::shared_ptr<AnimationClip> const& animationClip);
+    AnimationClipNode(std::shared_ptr<AnimationClip> const& animationClip);
 
-	void Calculate(AnimationTimeInterval const& time,
-		Detail::Skeletal2D::AnimationGraphWeightCollection const& weights,
-		Skeleton const& skeleton,
-		SkeletonPose & skeletonPose) const override;
+    void Calculate(AnimationTimeInterval const& time,
+        Detail::Skeletal2D::AnimationGraphWeightCollection const& weights,
+        Skeleton const& skeleton,
+        SkeletonPose & skeletonPose) const override;
 
-	AnimationTimeInterval Length() const override;
+    AnimationTimeInterval Length() const override;
 
 private:
-	std::shared_ptr<AnimationClip> clip;
+    std::shared_ptr<AnimationClip> clip;
 };
 
 }// namespace Skeletal2D

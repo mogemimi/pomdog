@@ -14,14 +14,14 @@ namespace Pomdog {
 namespace UI {
 
 enum class PointerEventType: std::uint8_t {
-	Canceled,
-	CaptureLost,
-	Entered,
-	Exited,
-	Moved,
-	Pressed,
-	Released,
-	WheelChanged,
+    Canceled,
+    CaptureLost,
+    Entered,
+    Exited,
+    Moved,
+    Pressed,
+    Released,
+    WheelChanged,
 };
 
 }// namespace UI

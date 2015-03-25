@@ -16,21 +16,21 @@ namespace Pomdog {
 namespace UI {
 
 enum class PointerMouseEvent {
-	LeftButtonPressed,
-	MiddleButtonPressed,
-	RightButtonPressed,
-	XButton1Pressed,
-	XButton2Pressed,
-	ScrollWheel,
+    LeftButtonPressed,
+    MiddleButtonPressed,
+    RightButtonPressed,
+    XButton1Pressed,
+    XButton2Pressed,
+    ScrollWheel,
 };
 
 class PointerPoint {
 public:
-	Point2D Position {0, 0};
-	std::int32_t MouseWheelDelta = 0;
-	PointerEventType Event = PointerEventType::CaptureLost;
-	Optional<PointerMouseEvent> MouseEvent;
-	std::uint32_t Id = 0;
+    Point2D Position {0, 0};
+    std::int32_t MouseWheelDelta = 0;
+    PointerEventType Event = PointerEventType::CaptureLost;
+    Optional<PointerMouseEvent> MouseEvent;
+    std::uint32_t Id = 0;
 };
 
 }// namespace UI

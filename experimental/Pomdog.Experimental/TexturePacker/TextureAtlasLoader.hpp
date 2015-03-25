@@ -19,8 +19,8 @@ namespace TexturePacker {
 
 class TextureAtlasLoader final {
 public:
-	static TextureAtlas Load(AssetManager const& assets,
-		std::string const& assetName);
+    static TextureAtlas Load(AssetManager const& assets,
+        std::string const& assetName);
 };
 
 }// namespace TexturePacker

@@ -20,32 +20,32 @@ namespace Actions {
 
 class TintTo {
 private:
-	Color startColor;
-	Color endColor;
+    Color startColor;
+    Color endColor;
 
 public:
-	explicit TintTo(Color const& colorIn)
-		: endColor(colorIn)
-	{}
+    explicit TintTo(Color const& colorIn)
+        : endColor(colorIn)
+    {}
 
-	void Begin(GameObject const& gameObject)
-	{
-		POMDOG_ASSERT(gameObject);
-		POMDOG_ASSERT(gameObject.HasComponent<Renderable>());
+    void Begin(GameObject const& gameObject)
+    {
+        POMDOG_ASSERT(gameObject);
+        POMDOG_ASSERT(gameObject.HasComponent<Renderable>());
 
-		auto renderable = gameObject.Component<Renderable>();
-		startColor = renderable->Material.Color;
-	}
+        auto renderable = gameObject.Component<Renderable>();
+        startColor = renderable->Material.Color;
+    }
 
-	void Update(GameObject & gameObject, float normalizedTime)
-	{
-		POMDOG_ASSERT(gameObject);
-		POMDOG_ASSERT(gameObject.HasComponent<Renderable>());
+    void Update(GameObject & gameObject, float normalizedTime)
+    {
+        POMDOG_ASSERT(gameObject);
+        POMDOG_ASSERT(gameObject.HasComponent<Renderable>());
 
-		auto renderable = gameObject.Component<Renderable>();
-		auto color = Color::Lerp(startColor, endColor, normalizedTime);
-		renderable->Material.Color = color;
-	}
+        auto renderable = gameObject.Component<Renderable>();
+        auto color = Color::Lerp(startColor, endColor, normalizedTime);
+        renderable->Material.Color = color;
+    }
 };
 
 }// namespace Actions

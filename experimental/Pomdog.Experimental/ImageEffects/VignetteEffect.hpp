@@ -15,21 +15,21 @@ namespace Pomdog {
 
 class VignetteEffect {
 public:
-	explicit VignetteEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    explicit VignetteEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	void SetViewport(float width, float height);
+    void SetViewport(float width, float height);
 
-	void SetTexture(std::shared_ptr<RenderTarget2D> const& texture);
+    void SetTexture(std::shared_ptr<RenderTarget2D> const& texture);
 
-	void SetIntensity(float intensity);
+    void SetIntensity(float intensity);
 
-	void Apply(GraphicsContext & graphicsContext);
+    void Apply(GraphicsContext & graphicsContext);
 
 private:
-	std::shared_ptr<RenderTarget2D> texture;
-	std::shared_ptr<SamplerState> samplerLinear;
-	std::shared_ptr<EffectPass> effectPass;
-	std::shared_ptr<ConstantBufferBinding> constantBuffers;
+    std::shared_ptr<RenderTarget2D> texture;
+    std::shared_ptr<SamplerState> samplerLinear;
+    std::shared_ptr<EffectPass> effectPass;
+    std::shared_ptr<ConstantBufferBinding> constantBuffers;
 };
 
 }// namespace Pomdog

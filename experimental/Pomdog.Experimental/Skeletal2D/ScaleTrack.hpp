@@ -20,25 +20,25 @@ namespace Skeletal2D {
 
 class ScaleKeyframe {
 public:
-	AnimationTimeInterval Time;
-	CompressedFloat<std::int16_t, 1500> Scale;
+    AnimationTimeInterval Time;
+    CompressedFloat<std::int16_t, 1500> Scale;
 
-	static_assert(decltype(Scale)::Max() > 20.0f, "");
-	static_assert(decltype(Scale)::Min() < -20.0f, "");
+    static_assert(decltype(Scale)::Max() > 20.0f, "");
+    static_assert(decltype(Scale)::Min() < -20.0f, "");
 };
 
 class ScaleTrack final: public AnimationTrack {
 public:
-	ScaleTrack(std::vector<ScaleKeyframe> && keys, JointIndex && jointIndex);
+    ScaleTrack(std::vector<ScaleKeyframe> && keys, JointIndex && jointIndex);
 
-	void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton,
-		SkeletonPose & skeletonPose) override;
+    void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton,
+        SkeletonPose & skeletonPose) override;
 
-	AnimationTimeInterval Length() const override;
+    AnimationTimeInterval Length() const override;
 
 private:
-	std::vector<ScaleKeyframe> keys;
-	JointIndex jointIndex;
+    std::vector<ScaleKeyframe> keys;
+    JointIndex jointIndex;
 };
 
 }// namespace Skeletal2D

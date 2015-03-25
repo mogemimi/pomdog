@@ -7,12 +7,12 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 std::int32_t RenderLayer::DrawOrder() const
 {
-	return drawOrder;
+    return drawOrder;
 }
 //-----------------------------------------------------------------------
 void RenderLayer::DrawOrder(std::int32_t drawOrderIn)
 {
-	this->drawOrder = drawOrderIn;
+    this->drawOrder = drawOrderIn;
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

@@ -15,10 +15,10 @@ namespace Pomdog {
 
 class AnimationBlendInput {
 public:
-	///@todo replace by CRC32
-	std::string Name;
+    ///@todo replace by CRC32
+    std::string Name;
 
-	AnimationBlendInputType Type;
+    AnimationBlendInputType Type;
 };
 
 }// namespace Pomdog

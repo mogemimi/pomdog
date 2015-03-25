@@ -14,7 +14,7 @@ namespace Gameplay {
 
 class GameComponent {
 public:
-	virtual ~GameComponent() = default;
+    virtual ~GameComponent() = default;
 };
 
 }// namespace Gameplay

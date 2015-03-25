@@ -21,99 +21,99 @@ namespace {
 #include "Pomdog.Experimental/Graphics/Shaders/HLSL.Embedded/SpriteDistanceField_PS.inc.hpp"
 
 struct BuiltinEffectSpriteBatchDistanceFieldTrait {
-	static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
-	{
-		using PositionTextureCoord = CustomVertex<Vector4>;
-		using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4>;
+    static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
+    {
+        using PositionTextureCoord = CustomVertex<Vector4>;
+        using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4>;
 
-		auto declartation = PositionTextureCoord::Declaration();
+        auto declartation = PositionTextureCoord::Declaration();
 
-		auto effectPass = EffectPassBuilder(graphicsDevice)
-			.VertexShaderGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
-			.PixelShaderGLSL(Builtin_GLSL_Sprite_DistanceField_PS, std::strlen(Builtin_GLSL_Sprite_DistanceField_PS))
-			.VertexShaderHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
-			.PixelShaderHLSLPrecompiled(BuiltinHLSL_SpriteDistanceField_PS, sizeof(BuiltinHLSL_SpriteDistanceField_PS))
-			.InputElements(std::initializer_list<VertexBufferBinding>{
-				{declartation, 0, 0},
-				{SpriteInfoVertex::Declaration(), declartation.StrideBytes(), 1}
-			})
-			.Create();
-		return std::move(effectPass);
-	}
+        auto effectPass = EffectPassBuilder(graphicsDevice)
+            .VertexShaderGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
+            .PixelShaderGLSL(Builtin_GLSL_Sprite_DistanceField_PS, std::strlen(Builtin_GLSL_Sprite_DistanceField_PS))
+            .VertexShaderHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
+            .PixelShaderHLSLPrecompiled(BuiltinHLSL_SpriteDistanceField_PS, sizeof(BuiltinHLSL_SpriteDistanceField_PS))
+            .InputElements(std::initializer_list<VertexBufferBinding>{
+                {declartation, 0, 0},
+                {SpriteInfoVertex::Declaration(), declartation.StrideBytes(), 1}
+            })
+            .Create();
+        return std::move(effectPass);
+    }
 };
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
 InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
-	: hierarchy(gameHostIn->Window())
-	, gameHost(gameHostIn)
+    : hierarchy(gameHostIn->Window())
+    , gameHost(gameHostIn)
 {
-	auto graphicsContext = gameHost->GraphicsContext();
-	auto graphicsDevice = gameHost->GraphicsDevice();
-	auto assets = gameHost->AssetManager();
-	auto window = gameHost->Window();
+    auto graphicsContext = gameHost->GraphicsContext();
+    auto graphicsDevice = gameHost->GraphicsDevice();
+    auto assets = gameHost->AssetManager();
+    auto window = gameHost->Window();
 
-	{
-		spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice);
-		//spriteFont = SpriteFontLoader::Load(*assets, "BitmapFonts/UbuntuMono-Regular.fnt");
-		spriteFont = SpriteFontLoader::Load(*assets, "BitmapFonts/Ubuntu-Regular.fnt");
-		distanceFieldEffect = graphicsDevice->ShaderPool().Create<BuiltinEffectSpriteBatchDistanceFieldTrait>(*graphicsDevice);
-		constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *distanceFieldEffect);
-		spriteBatchDistanceField = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice,
-			distanceFieldEffect, constantBuffers);
-	}
-	{
-		blankTexture = std::make_shared<Texture2D>(graphicsDevice,
-			1, 1, false, SurfaceFormat::R8G8B8A8_UNorm);
-		std::array<std::uint32_t, 1> pixelData = {0xffffffff};
-		blankTexture->SetData(pixelData.data());
-	}
-	{
-		depthStencilState = DepthStencilState::CreateNone(graphicsDevice);
-		blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
-	}
+    {
+        spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice);
+        //spriteFont = SpriteFontLoader::Load(*assets, "BitmapFonts/UbuntuMono-Regular.fnt");
+        spriteFont = SpriteFontLoader::Load(*assets, "BitmapFonts/Ubuntu-Regular.fnt");
+        distanceFieldEffect = graphicsDevice->ShaderPool().Create<BuiltinEffectSpriteBatchDistanceFieldTrait>(*graphicsDevice);
+        constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *distanceFieldEffect);
+        spriteBatchDistanceField = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice,
+            distanceFieldEffect, constantBuffers);
+    }
+    {
+        blankTexture = std::make_shared<Texture2D>(graphicsDevice,
+            1, 1, false, SurfaceFormat::R8G8B8A8_UNorm);
+        std::array<std::uint32_t, 1> pixelData = {0xffffffff};
+        blankTexture->SetData(pixelData.data());
+    }
+    {
+        depthStencilState = DepthStencilState::CreateNone(graphicsDevice);
+        blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
+    }
 
-	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
-		hierarchy.RenderSizeChanged(width, height);
-	});
+    clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
+        hierarchy.RenderSizeChanged(width, height);
+    });
 }
 //-----------------------------------------------------------------------
 InGameEditor::~InGameEditor() = default;
 //-----------------------------------------------------------------------
 void InGameEditor::AddView(std::shared_ptr<UI::UIView> const& view)
 {
-	POMDOG_ASSERT(view->Parent().expired());
-	hierarchy.AddChild(view);
+    POMDOG_ASSERT(view->Parent().expired());
+    hierarchy.AddChild(view);
 }
 //-----------------------------------------------------------------------
 void InGameEditor::Update()
 {
-	if (auto mouse = gameHost->Mouse()) {
-		hierarchy.Touch(mouse->GetState());
-	}
+    if (auto mouse = gameHost->Mouse()) {
+        hierarchy.Touch(mouse->GetState());
+    }
 
-	auto clock = gameHost->Clock();
-	hierarchy.UpdateAnimation(clock->FrameDuration());
+    auto clock = gameHost->Clock();
+    hierarchy.UpdateAnimation(clock->FrameDuration());
 }
 //-----------------------------------------------------------------------
 void InGameEditor::DrawGUI(GraphicsContext & graphicsContext)
 {
-	auto depthStencilStateOld = graphicsContext.GetDepthStencilState();
-	graphicsContext.SetDepthStencilState(depthStencilState);
+    auto depthStencilStateOld = graphicsContext.GetDepthStencilState();
+    graphicsContext.SetDepthStencilState(depthStencilState);
 
-	auto blendStateOld = graphicsContext.GetBlendState();
-	graphicsContext.SetBlendState(blendState);
+    auto blendStateOld = graphicsContext.GetBlendState();
+    graphicsContext.SetBlendState(blendState);
 
-	{
-		POMDOG_ASSERT(spriteBatch);
-		spriteBatch->Begin(SpriteSortMode::BackToFront);
-		UI::SpriteDrawingContext drawingContext(*spriteBatch, *spriteBatchDistanceField, distanceFieldEffect, constantBuffers, *spriteFont, blankTexture);
-		hierarchy.Draw(drawingContext);
-		spriteBatch->End();
-	}
+    {
+        POMDOG_ASSERT(spriteBatch);
+        spriteBatch->Begin(SpriteSortMode::BackToFront);
+        UI::SpriteDrawingContext drawingContext(*spriteBatch, *spriteBatchDistanceField, distanceFieldEffect, constantBuffers, *spriteFont, blankTexture);
+        hierarchy.Draw(drawingContext);
+        spriteBatch->End();
+    }
 
-	graphicsContext.SetDepthStencilState(depthStencilStateOld);
-	graphicsContext.SetBlendState(blendStateOld);
+    graphicsContext.SetDepthStencilState(depthStencilStateOld);
+    graphicsContext.SetBlendState(blendStateOld);
 }
 //-----------------------------------------------------------------------
 }// namespace SceneEditor

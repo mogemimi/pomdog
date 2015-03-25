@@ -22,14 +22,14 @@ namespace Detail {
 namespace SpriteFonts {
 
 struct Glyph {
-	Rectangle Subrect;
+    Rectangle Subrect;
 
-	///@note UTF-32
-	std::uint32_t Character;
-	std::int16_t XOffset;
-	std::int16_t YOffset;
-	std::int16_t XAdvance;
-	std::uint8_t TexturePage;
+    ///@note UTF-32
+    std::uint32_t Character;
+    std::int16_t XOffset;
+    std::int16_t YOffset;
+    std::int16_t XAdvance;
+    std::uint8_t TexturePage;
 };
 
 }// namespace SpriteFonts
@@ -39,43 +39,43 @@ class SpriteBatch;
 
 class SpriteFont final {
 public:
-	SpriteFont(std::vector<std::shared_ptr<Texture2D>> && textures,
-		std::vector<Detail::SpriteFonts::Glyph> const& glyphs,
-		std::uint32_t defaultCharacter,
-		std::int16_t spacing,
-		std::int16_t lineSpacing);
+    SpriteFont(std::vector<std::shared_ptr<Texture2D>> && textures,
+        std::vector<Detail::SpriteFonts::Glyph> const& glyphs,
+        std::uint32_t defaultCharacter,
+        std::int16_t spacing,
+        std::int16_t lineSpacing);
 
-	~SpriteFont();
+    ~SpriteFont();
 
-	Vector2 MeasureString(char const* text) const;
+    Vector2 MeasureString(char const* text) const;
 
-	//Vector2 MeasureString(std::string const& text) const;
+    //Vector2 MeasureString(std::string const& text) const;
 
-	std::uint32_t DefaultCharacter() const;
+    std::uint32_t DefaultCharacter() const;
 
-	void DefaultCharacter(std::uint32_t character);
+    void DefaultCharacter(std::uint32_t character);
 
-	float LineSpacing() const;
+    float LineSpacing() const;
 
-	void LineSpacing(float lineSpacing);
+    void LineSpacing(float lineSpacing);
 
-	bool ContainsCharacter(std::uint32_t character) const;
+    bool ContainsCharacter(std::uint32_t character) const;
 
-	void Begin(Matrix4x4 const& transformMatrix);
+    void Begin(Matrix4x4 const& transformMatrix);
 
-	void Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color);
+    void Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color);
 
-	void Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color,
-		Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth);
+    void Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color,
+        Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth);
 
-	void Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color,
-		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
+    void Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color,
+        Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
 
-	void End();
+    void End();
 
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+    class Impl;
+    std::unique_ptr<Impl> impl;
 };
 
 }// namespace Pomdog

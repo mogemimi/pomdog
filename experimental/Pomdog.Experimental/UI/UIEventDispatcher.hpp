@@ -28,48 +28,48 @@ class UIEventConnection;
 
 class UIEventDispatcher: public std::enable_shared_from_this<UIEventDispatcher> {
 public:
-	explicit UIEventDispatcher(std::shared_ptr<GameWindow> const& window);
+    explicit UIEventDispatcher(std::shared_ptr<GameWindow> const& window);
 
-	void UpdateChildren();
+    void UpdateChildren();
 
-	void Touch(MouseState const& mouseState);
+    void Touch(MouseState const& mouseState);
 
-	void UpdateAnimation(Duration const& frameDuration);
+    void UpdateAnimation(Duration const& frameDuration);
 
-	Detail::UIEventConnection Connect(std::shared_ptr<UIView> const& child);
-	Detail::UIEventConnection Connect(std::shared_ptr<UIView> && child);
-
-private:
-	std::shared_ptr<UIView> Find(Point2D const& position);
-
-	void PointerEntered(Point2D const& position, MouseState const& mouseState, std::shared_ptr<UIView> const& node);
-
-	void PointerExited(Point2D const& position);
-
-	void PointerPressed(Point2D const& position);
-
-	void PointerMoved(Point2D const& position);
-
-	void PointerReleased(Point2D const& position);
-
-	Optional<PointerMouseEvent> FindPointerMouseEvent(MouseState const& mouseState) const;
-
-	ButtonState CheckMouseButton(MouseState const& mouseState, PointerMouseEvent const& pointerMouseEvent) const;
-
-	void Sort();
+    Detail::UIEventConnection Connect(std::shared_ptr<UIView> const& child);
+    Detail::UIEventConnection Connect(std::shared_ptr<UIView> && child);
 
 private:
-	struct PointerState {
-		std::shared_ptr<UIView> focusedElement;
-		PointerPoint pointerPoint;
-		std::int32_t PrevScrollWheel;
-	};
+    std::shared_ptr<UIView> Find(Point2D const& position);
 
-	typedef Detail::SubscribeRequestDispatcher<UIView> SubscribeRequestDispatcherType;
-	SubscribeRequestDispatcherType subscribeRequests;
-	std::vector<std::shared_ptr<UIView>> children;
-	std::unique_ptr<PointerState> pointerState;
-	std::shared_ptr<GameWindow> window;
+    void PointerEntered(Point2D const& position, MouseState const& mouseState, std::shared_ptr<UIView> const& node);
+
+    void PointerExited(Point2D const& position);
+
+    void PointerPressed(Point2D const& position);
+
+    void PointerMoved(Point2D const& position);
+
+    void PointerReleased(Point2D const& position);
+
+    Optional<PointerMouseEvent> FindPointerMouseEvent(MouseState const& mouseState) const;
+
+    ButtonState CheckMouseButton(MouseState const& mouseState, PointerMouseEvent const& pointerMouseEvent) const;
+
+    void Sort();
+
+private:
+    struct PointerState {
+        std::shared_ptr<UIView> focusedElement;
+        PointerPoint pointerPoint;
+        std::int32_t PrevScrollWheel;
+    };
+
+    typedef Detail::SubscribeRequestDispatcher<UIView> SubscribeRequestDispatcherType;
+    SubscribeRequestDispatcherType subscribeRequests;
+    std::vector<std::shared_ptr<UIView>> children;
+    std::unique_ptr<PointerState> pointerState;
+    std::shared_ptr<GameWindow> window;
 };
 
 }// namespace UI

@@ -20,40 +20,40 @@ namespace Pomdog {
 
 class EffectPassBuilder final {
 public:
-	explicit EffectPassBuilder(GraphicsDevice & graphicsDevice);
+    explicit EffectPassBuilder(GraphicsDevice & graphicsDevice);
 
-	explicit EffectPassBuilder(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    explicit EffectPassBuilder(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	EffectPassBuilder(EffectPassBuilder &&);
-	EffectPassBuilder & operator=(EffectPassBuilder &&);
+    EffectPassBuilder(EffectPassBuilder &&);
+    EffectPassBuilder & operator=(EffectPassBuilder &&);
 
-	~EffectPassBuilder();
+    ~EffectPassBuilder();
 
-	EffectPassBuilder & VertexShaderGLSL(void const* shaderSource, std::size_t byteLength);
+    EffectPassBuilder & VertexShaderGLSL(void const* shaderSource, std::size_t byteLength);
 
-	EffectPassBuilder & PixelShaderGLSL(void const* shaderSource, std::size_t byteLength);
+    EffectPassBuilder & PixelShaderGLSL(void const* shaderSource, std::size_t byteLength);
 
-	EffectPassBuilder & VertexShaderHLSL(void const* shaderSource, std::size_t byteLength, std::string const& entryPoint);
+    EffectPassBuilder & VertexShaderHLSL(void const* shaderSource, std::size_t byteLength, std::string const& entryPoint);
 
-	EffectPassBuilder & PixelShaderHLSL(void const* shaderSource, std::size_t byteLength, std::string const& entryPoint);
+    EffectPassBuilder & PixelShaderHLSL(void const* shaderSource, std::size_t byteLength, std::string const& entryPoint);
 
-	EffectPassBuilder & VertexShaderHLSLPrecompiled(void const* shaderSource, std::size_t byteLength);
+    EffectPassBuilder & VertexShaderHLSLPrecompiled(void const* shaderSource, std::size_t byteLength);
 
-	EffectPassBuilder & PixelShaderHLSLPrecompiled(void const* shaderSource, std::size_t byteLength);
+    EffectPassBuilder & PixelShaderHLSLPrecompiled(void const* shaderSource, std::size_t byteLength);
 
-	EffectPassBuilder & InputElements(std::vector<VertexBufferBinding> const& inputElements);
+    EffectPassBuilder & InputElements(std::vector<VertexBufferBinding> const& inputElements);
 
-	EffectPassBuilder & InputElements(std::vector<VertexBufferBinding> && inputElements);
+    EffectPassBuilder & InputElements(std::vector<VertexBufferBinding> && inputElements);
 
-	EffectPassBuilder & InputElements(VertexDeclaration const& vertexDeclaration);
+    EffectPassBuilder & InputElements(VertexDeclaration const& vertexDeclaration);
 
-	EffectPassBuilder & InputElements(VertexDeclaration && vertexDeclaration);
+    EffectPassBuilder & InputElements(VertexDeclaration && vertexDeclaration);
 
-	std::shared_ptr<EffectPass> Create();
+    std::shared_ptr<EffectPass> Create();
 
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+    class Impl;
+    std::unique_ptr<Impl> impl;
 };
 
 }// namespace Pomdog

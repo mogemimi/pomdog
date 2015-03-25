@@ -17,11 +17,11 @@ class GraphicsContext;
 
 class RenderCommand {
 public:
-	virtual ~RenderCommand() = default;
+    virtual ~RenderCommand() = default;
 
-	virtual std::type_index TypeIndex() const = 0;
+    virtual std::type_index TypeIndex() const = 0;
 
-	virtual float DrawOrder() const = 0;
+    virtual float DrawOrder() const = 0;
 };
 
 }// namespace Pomdog

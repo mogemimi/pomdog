@@ -14,10 +14,10 @@ namespace Pomdog {
 namespace UI {
 
 enum class HorizontalAlignment: std::uint8_t {
-	Left,
-	//Center,
-	Stretch,
-	//Right,
+    Left,
+    //Center,
+    Stretch,
+    //Right,
 };
 
 }// namespace UI

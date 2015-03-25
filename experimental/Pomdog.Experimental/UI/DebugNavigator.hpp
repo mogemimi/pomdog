@@ -18,15 +18,15 @@ namespace UI {
 
 class DebugNavigator: public Control {
 public:
-	DebugNavigator(std::shared_ptr<GameClock> const& clock);
+    DebugNavigator(std::shared_ptr<GameClock> const& clock);
 
-	void Draw(DrawingContext & drawingContext) override;
+    void Draw(DrawingContext & drawingContext) override;
 
 private:
-	std::shared_ptr<GameClock> clock;
-	std::deque<float> frameRates;
-	Duration duration;
-	std::string frameRateString;
+    std::shared_ptr<GameClock> clock;
+    std::deque<float> frameRates;
+    Duration duration;
+    std::string frameRateString;
 };
 
 }// namespace UI

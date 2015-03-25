@@ -14,13 +14,13 @@ namespace Pomdog {
 
 class SkinnedMeshPart {
 public:
-	std::uint16_t VertexCount;
+    std::uint16_t VertexCount;
 
-	std::uint16_t VertexOffset;
+    std::uint16_t VertexOffset;
 
-	std::uint16_t PrimitiveCount;
+    std::uint16_t PrimitiveCount;
 
-	std::uint16_t StartIndex;
+    std::uint16_t StartIndex;
 };
 
 }// namespace Pomdog

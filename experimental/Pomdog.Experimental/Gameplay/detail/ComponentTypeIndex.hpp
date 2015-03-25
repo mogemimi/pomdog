@@ -20,27 +20,27 @@ namespace Gameplay {
 template <typename BaseComponentType, typename IndexType>
 class ComponentTypeIndex {
 public:
-	static_assert(std::is_unsigned<IndexType>::value, "IdentType is unsigned integer.");
+    static_assert(std::is_unsigned<IndexType>::value, "IdentType is unsigned integer.");
 
-	template <typename ComponentType>
-	static IndexType Index()
-	{
-		static_assert(!std::is_pointer<ComponentType>::value, "T is not pointer.");
-		static_assert(std::is_object<ComponentType>::value, "T is not object type.");
-		static const auto value = IncrementIndex();
-		return value;
-	}
+    template <typename ComponentType>
+    static IndexType Index()
+    {
+        static_assert(!std::is_pointer<ComponentType>::value, "T is not pointer.");
+        static_assert(std::is_object<ComponentType>::value, "T is not object type.");
+        static const auto value = IncrementIndex();
+        return value;
+    }
 
 private:
-	static IndexType count;
+    static IndexType count;
 
-	static IndexType IncrementIndex()
-	{
-		POMDOG_ASSERT(count < std::numeric_limits<IndexType>::max());
-		++count;
-		POMDOG_ASSERT(count > 0);
-		return count;
-	}
+    static IndexType IncrementIndex()
+    {
+        POMDOG_ASSERT(count < std::numeric_limits<IndexType>::max());
+        ++count;
+        POMDOG_ASSERT(count > 0);
+        return count;
+    }
 };
 
 template <typename BaseComponentType, typename IndexType>

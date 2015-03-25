@@ -16,20 +16,20 @@ namespace UI {
 
 class TextBlock: public UIView, public std::enable_shared_from_this<TextBlock> {
 public:
-	TextBlock();
+    TextBlock();
 
-	std::string Text() const;
-	void Text(std::string const& text);
+    std::string Text() const;
+    void Text(std::string const& text);
 
-	UI::HorizontalAlignment HorizontalAlignment() const override { return UI::HorizontalAlignment::Stretch; }
-	UI::VerticalAlignment VerticalAlignment() const override { return UI::VerticalAlignment::Top; }
+    UI::HorizontalAlignment HorizontalAlignment() const override { return UI::HorizontalAlignment::Stretch; }
+    UI::VerticalAlignment VerticalAlignment() const override { return UI::VerticalAlignment::Top; }
 
-	void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
+    void OnRenderSizeChanged(std::uint32_t width, std::uint32_t height) override;
 
-	void Draw(DrawingContext & drawingContext) override;
+    void Draw(DrawingContext & drawingContext) override;
 
 private:
-	std::string text;
+    std::string text;
 };
 
 }// namespace UI

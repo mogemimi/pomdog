@@ -17,16 +17,16 @@ class Renderer;
 
 class RenderLayer {
 public:
-	virtual ~RenderLayer() = default;
+    virtual ~RenderLayer() = default;
 
-	virtual void Draw(GraphicsContext & graphicsContext, Renderer & renderer) = 0;
+    virtual void Draw(GraphicsContext & graphicsContext, Renderer & renderer) = 0;
 
-	std::int32_t DrawOrder() const;
+    std::int32_t DrawOrder() const;
 
-	void DrawOrder(std::int32_t drawOrder);
+    void DrawOrder(std::int32_t drawOrder);
 
 private:
-	std::int32_t drawOrder = 0;
+    std::int32_t drawOrder = 0;
 };
 
 }// namespace Pomdog

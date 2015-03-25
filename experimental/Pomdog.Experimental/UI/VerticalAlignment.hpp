@@ -14,10 +14,10 @@ namespace Pomdog {
 namespace UI {
 
 enum class VerticalAlignment: std::uint8_t {
-	//Bottom,
-	//Center,
-	Stretch,
-	Top,
+    //Bottom,
+    //Center,
+    Stretch,
+    Top,
 };
 
 }// namespace UI

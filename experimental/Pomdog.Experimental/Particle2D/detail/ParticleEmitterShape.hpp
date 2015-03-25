@@ -18,9 +18,9 @@ namespace Particles {
 
 class ParticleEmitterShape {
 public:
-	virtual ~ParticleEmitterShape() = default;
+    virtual ~ParticleEmitterShape() = default;
 
-	virtual void Compute(std::mt19937 & random, Vector2 & emitPosition, Radian<float> & emitAngle) const = 0;
+    virtual void Compute(std::mt19937 & random, Vector2 & emitPosition, Radian<float> & emitAngle) const = 0;
 };
 
 }// namespace Particles

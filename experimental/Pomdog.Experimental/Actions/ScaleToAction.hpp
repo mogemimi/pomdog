@@ -20,31 +20,31 @@ namespace Actions {
 
 class ScaleTo {
 private:
-	Vector2 startScale;
-	Vector2 endScale;
+    Vector2 startScale;
+    Vector2 endScale;
 
 public:
-	explicit ScaleTo(Vector2 const& scaleIn)
-		: endScale(scaleIn)
-	{}
+    explicit ScaleTo(Vector2 const& scaleIn)
+        : endScale(scaleIn)
+    {}
 
-	void Begin(GameObject const& gameObject)
-	{
-		POMDOG_ASSERT(gameObject);
-		POMDOG_ASSERT(gameObject.HasComponent<Transform2D>());
+    void Begin(GameObject const& gameObject)
+    {
+        POMDOG_ASSERT(gameObject);
+        POMDOG_ASSERT(gameObject.HasComponent<Transform2D>());
 
-		auto transform = gameObject.Component<Transform2D>();
-		startScale = transform->Scale;
-	}
+        auto transform = gameObject.Component<Transform2D>();
+        startScale = transform->Scale;
+    }
 
-	void Update(GameObject & gameObject, float normalizedTime)
-	{
-		POMDOG_ASSERT(gameObject);
-		POMDOG_ASSERT(gameObject.HasComponent<Transform2D>());
+    void Update(GameObject & gameObject, float normalizedTime)
+    {
+        POMDOG_ASSERT(gameObject);
+        POMDOG_ASSERT(gameObject.HasComponent<Transform2D>());
 
-		auto transform = gameObject.Component<Transform2D>();
-		transform->Scale = Vector2::Lerp(startScale, endScale, normalizedTime);
-	}
+        auto transform = gameObject.Component<Transform2D>();
+        transform->Scale = Vector2::Lerp(startScale, endScale, normalizedTime);
+    }
 };
 
 }// namespace Actions

@@ -22,18 +22,18 @@ namespace SceneEditor {
 
 class PrimitiveAxes {
 public:
-	PrimitiveAxes(Color const& xAxisColor, Color const& yAxisColor, Color const& zAxisColor);
+    PrimitiveAxes(Color const& xAxisColor, Color const& yAxisColor, Color const& zAxisColor);
 
-	void Draw(LineBatch & lineBatch);
+    void Draw(LineBatch & lineBatch);
 
 private:
-	struct Line {
-		Vector3 Point1;
-		Vector3 Point2;
-		Color Color;
-	};
+    struct Line {
+        Vector3 Point1;
+        Vector3 Point2;
+        Color Color;
+    };
 
-	std::array<Line, 3> lines;
+    std::array<Line, 3> lines;
 };
 
 }// namespace SceneEditor

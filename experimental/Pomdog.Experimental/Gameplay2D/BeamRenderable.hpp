@@ -20,18 +20,18 @@ namespace Pomdog {
 
 class BeamRenderable: public Renderable {
 public:
-	BeamRenderable();
+    BeamRenderable();
 
-	void Visit(GameObject & gameObject, Renderer & renderer) override;
+    void Visit(GameObject & gameObject, Renderer & renderer) override;
 
-	void Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice, std::shared_ptr<AssetManager> const& assets);
-	void Update(GameClock const& clock);
+    void Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice, std::shared_ptr<AssetManager> const& assets);
+    void Update(GameClock const& clock);
 
-	void DrawBeam();
+    void DrawBeam();
 
 private:
-	BeamSystem beamSystem;
-	std::shared_ptr<Texture2D> texture;
+    BeamSystem beamSystem;
+    std::shared_ptr<Texture2D> texture;
 };
 
 }// namespace Pomdog

@@ -15,38 +15,38 @@ namespace Pomdog {
 
 class GameObjectID {
 public:
-	GameObjectID(): id(0x0) {}
+    GameObjectID(): id(0x0) {}
 
-	GameObjectID(std::uint32_t sequenceNumber, std::uint32_t index)
-		: id((static_cast<uint64_t>(sequenceNumber) << 32) | (index & 0xffffffffUL))
-	{}
+    GameObjectID(std::uint32_t sequenceNumber, std::uint32_t index)
+        : id((static_cast<uint64_t>(sequenceNumber) << 32) | (index & 0xffffffffUL))
+    {}
 
-	std::uint32_t SequenceNumber() const {
-		return id >> 32;
-	}
+    std::uint32_t SequenceNumber() const {
+        return id >> 32;
+    }
 
-	std::uint32_t Index() const {
-		return id & 0xffffffffUL;
-	}
+    std::uint32_t Index() const {
+        return id & 0xffffffffUL;
+    }
 
-	std::uint64_t Value() const {
-		return id;
-	}
+    std::uint64_t Value() const {
+        return id;
+    }
 
-	bool operator==(GameObjectID const& other) const {
-		return id == other.id;
-	}
+    bool operator==(GameObjectID const& other) const {
+        return id == other.id;
+    }
 
-	bool operator!=(GameObjectID const& other) const {
-		return id != other.id;
-	}
+    bool operator!=(GameObjectID const& other) const {
+        return id != other.id;
+    }
 
-	bool operator<(GameObjectID const& other) const {
-		return id < other.id;
-	}
+    bool operator<(GameObjectID const& other) const {
+        return id < other.id;
+    }
 
 private:
-	std::uint64_t id;
+    std::uint64_t id;
 };
 
 }// namespace Pomdog
@@ -55,10 +55,10 @@ namespace std {
 
 template<>
 struct std::hash<Pomdog::GameObjectID> {
-	std::size_t operator()(Pomdog::GameObjectID const& key)
-	{
-		return std::hash<std::uint64_t>()(key.Value());
-	}
+    std::size_t operator()(Pomdog::GameObjectID const& key)
+    {
+        return std::hash<std::uint64_t>()(key.Value());
+    }
 };
 
 }// namespace std

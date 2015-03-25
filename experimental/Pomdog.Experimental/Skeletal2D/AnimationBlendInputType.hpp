@@ -13,8 +13,8 @@
 namespace Pomdog {
 
 enum class AnimationBlendInputType: std::uint8_t {
-	Float,
-	Bool,
+    Float,
+    Bool,
 };
 
 }// namespace Pomdog

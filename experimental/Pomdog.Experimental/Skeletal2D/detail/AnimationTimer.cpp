@@ -8,42 +8,42 @@ namespace Detail {
 namespace Skeletal2D {
 //-----------------------------------------------------------------------
 AnimationTimer::AnimationTimer()
-	: time(AnimationTimeInterval::zero())
-	, isPlaying(true)
+    : time(AnimationTimeInterval::zero())
+    , isPlaying(true)
 {
 }
 //-----------------------------------------------------------------------
 void AnimationTimer::Update(AnimationTimeInterval const& timeIn)
 {
-	if (isPlaying)
-	{
-		time += timeIn;
-	}
+    if (isPlaying)
+    {
+        time += timeIn;
+    }
 }
 //-----------------------------------------------------------------------
 void AnimationTimer::Reset()
 {
-	time = AnimationTimeInterval::zero();
+    time = AnimationTimeInterval::zero();
 }
 //-----------------------------------------------------------------------
 void AnimationTimer::Pause()
 {
-	isPlaying = false;
+    isPlaying = false;
 }
 //-----------------------------------------------------------------------
 void AnimationTimer::Resume()
 {
-	isPlaying = true;
+    isPlaying = true;
 }
 //-----------------------------------------------------------------------
 AnimationTimeInterval AnimationTimer::Time() const
 {
-	return time;
+    return time;
 }
 //-----------------------------------------------------------------------
 bool AnimationTimer::IsPlaying() const
 {
-	return isPlaying;
+    return isPlaying;
 }
 //-----------------------------------------------------------------------
 }// namespace Skeletal2D

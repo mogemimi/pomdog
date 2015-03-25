@@ -19,22 +19,22 @@ namespace Rendering {
 
 class PrimitiveCommand final: public RenderCommand {
 public:
-	float DrawOrder() const override
-	{
-		return drawOrder;
-	}
+    float DrawOrder() const override
+    {
+        return drawOrder;
+    }
 
-	std::type_index TypeIndex() const override;
+    std::type_index TypeIndex() const override;
 
 public:
-	Matrix3x2 transform;
-	//Vector2 originPivot;
-	Rectangle rectangle;
-	Color leftTopColor;
-	Color rightTopColor;
-	Color leftBottomColor;
-	Color rightBottomColor;
-	float drawOrder;
+    Matrix3x2 transform;
+    //Vector2 originPivot;
+    Rectangle rectangle;
+    Color leftTopColor;
+    Color rightTopColor;
+    Color leftBottomColor;
+    Color rightBottomColor;
+    float drawOrder;
 };
 
 }// namespace Rendering

@@ -16,21 +16,21 @@ namespace UI {
 
 class Control: public UIView {
 public:
-	virtual ~Control() = default;
+    virtual ~Control() = default;
 
-	Control(Matrix3x2 const& transformIn, std::uint32_t widthIn, std::uint32_t heightIn)
-		: UIView(transformIn, widthIn, heightIn)
-	{}
+    Control(Matrix3x2 const& transformIn, std::uint32_t widthIn, std::uint32_t heightIn)
+        : UIView(transformIn, widthIn, heightIn)
+    {}
 
-//	UI::HorizontalAlignment HorizontalAlignment() const final override { return horizontalAlignment; }
-//	UI::VerticalAlignment VerticalAlignment() const final override { return verticalAlignment; }
+//    UI::HorizontalAlignment HorizontalAlignment() const final override { return horizontalAlignment; }
+//    UI::VerticalAlignment VerticalAlignment() const final override { return verticalAlignment; }
 //
-//	void HorizontalAlignment(UI::HorizontalAlignment alighnment) { this->horizontalAlignment = alighnment; }
-//	void VerticalAlignment(UI::VerticalAlignment alighnment) { this->verticalAlignment = alighnment; }
+//    void HorizontalAlignment(UI::HorizontalAlignment alighnment) { this->horizontalAlignment = alighnment; }
+//    void VerticalAlignment(UI::VerticalAlignment alighnment) { this->verticalAlignment = alighnment; }
 //
 //private:
-//	UI::HorizontalAlignment horizontalAlignment = UI::HorizontalAlignment::Stretch;
-//	UI::VerticalAlignment verticalAlignment = UI::VerticalAlignment::Stretch;
+//    UI::HorizontalAlignment horizontalAlignment = UI::HorizontalAlignment::Stretch;
+//    UI::VerticalAlignment verticalAlignment = UI::VerticalAlignment::Stretch;
 };
 
 }// namespace UI

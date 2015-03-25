@@ -15,19 +15,19 @@ namespace Pomdog {
 
 class ChromaticAberration {
 public:
-	explicit ChromaticAberration(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    explicit ChromaticAberration(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	void SetViewport(float width, float height);
+    void SetViewport(float width, float height);
 
-	void SetTexture(std::shared_ptr<RenderTarget2D> const& texture);
+    void SetTexture(std::shared_ptr<RenderTarget2D> const& texture);
 
-	void Apply(GraphicsContext & graphicsContext);
+    void Apply(GraphicsContext & graphicsContext);
 
 private:
-	std::shared_ptr<SamplerState> samplerState;
-	std::shared_ptr<RenderTarget2D> texture;
-	std::shared_ptr<EffectPass> effectPass;
-	std::shared_ptr<ConstantBufferBinding> constantBuffers;
+    std::shared_ptr<SamplerState> samplerState;
+    std::shared_ptr<RenderTarget2D> texture;
+    std::shared_ptr<EffectPass> effectPass;
+    std::shared_ptr<ConstantBufferBinding> constantBuffers;
 };
 
 }// namespace Pomdog

@@ -18,16 +18,16 @@ namespace MagicaVoxel {
 
 class Voxel {
 public:
-	std::uint8_t X, Y, Z, ColorIndex;
+    std::uint8_t X, Y, Z, ColorIndex;
 };
 
 class VoxModel {
 public:
-	std::array<Color, 256> ColorPalette;
-	std::vector<Voxel> Voxels;
-	std::uint32_t X;
-	std::uint32_t Y;
-	std::uint32_t Z;
+    std::array<Color, 256> ColorPalette;
+    std::vector<Voxel> Voxels;
+    std::uint32_t X;
+    std::uint32_t Y;
+    std::uint32_t Z;
 };
 
 }// namespace MagicaVoxel

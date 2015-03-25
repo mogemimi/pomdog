@@ -20,17 +20,17 @@ class SkeletonPose;
 
 class AnimationClip {
 public:
-	AnimationClip() = default;
+    AnimationClip() = default;
 
-	explicit AnimationClip(std::vector<std::unique_ptr<AnimationTrack>> && tracks);
+    explicit AnimationClip(std::vector<std::unique_ptr<AnimationTrack>> && tracks);
 
-	void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose);
+    void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose);
 
-	AnimationTimeInterval Length() const;
+    AnimationTimeInterval Length() const;
 
 private:
-	std::vector<std::unique_ptr<AnimationTrack>> tracks;
-	AnimationTimeInterval length;
+    std::vector<std::unique_ptr<AnimationTrack>> tracks;
+    AnimationTimeInterval length;
 };
 
 }// namespace Pomdog

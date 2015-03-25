@@ -10,8 +10,8 @@ namespace Rendering {
 //-----------------------------------------------------------------------
 std::type_index PrimitiveCommand::TypeIndex() const
 {
-	static const std::type_index index = typeid(PrimitiveCommand);
-	return index;
+    static const std::type_index index = typeid(PrimitiveCommand);
+    return index;
 }
 //-----------------------------------------------------------------------
 }// namespace Rendering

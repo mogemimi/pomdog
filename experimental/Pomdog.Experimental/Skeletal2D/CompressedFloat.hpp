@@ -20,48 +20,48 @@ namespace Skeletal2D {
 template <typename T, T Denominator>
 class CompressedFloat {
 public:
-	static_assert(std::is_integral<T>::value, "");
+    static_assert(std::is_integral<T>::value, "");
 
-	T data;
+    T data;
 
-	CompressedFloat() = default;
-	CompressedFloat(float scalar)
-		: data(scalar * Denominator)
-	{
-		POMDOG_ASSERT(scalar < Max());
-		POMDOG_ASSERT(scalar >= Min());
-	}
+    CompressedFloat() = default;
+    CompressedFloat(float scalar)
+        : data(scalar * Denominator)
+    {
+        POMDOG_ASSERT(scalar < Max());
+        POMDOG_ASSERT(scalar >= Min());
+    }
 
-	CompressedFloat & operator=(float scalar)
-	{
-		POMDOG_ASSERT(scalar < Max());
-		POMDOG_ASSERT(scalar >= Min());
-		data = scalar * Denominator;
-		return *this;
-	}
+    CompressedFloat & operator=(float scalar)
+    {
+        POMDOG_ASSERT(scalar < Max());
+        POMDOG_ASSERT(scalar >= Min());
+        data = scalar * Denominator;
+        return *this;
+    }
 
-	float ToFloat() const
-	{
-		static_assert(Denominator != 0, "");
-		return data * (1.0f / Denominator);
-	}
+    float ToFloat() const
+    {
+        static_assert(Denominator != 0, "");
+        return data * (1.0f / Denominator);
+    }
 
-	constexpr static float Max()
-	{
-		static_assert(Denominator != 0, "");
-		return std::numeric_limits<T>::max()/Denominator;
-	}
+    constexpr static float Max()
+    {
+        static_assert(Denominator != 0, "");
+        return std::numeric_limits<T>::max()/Denominator;
+    }
 
-	constexpr static float Min()
-	{
-		static_assert(Denominator != 0, "");
-		return std::numeric_limits<T>::min()/Denominator;
-	}
+    constexpr static float Min()
+    {
+        static_assert(Denominator != 0, "");
+        return std::numeric_limits<T>::min()/Denominator;
+    }
 
-	bool operator<(CompressedFloat const& other) const
-	{
-		return data < other.data;
-	}
+    bool operator<(CompressedFloat const& other) const
+    {
+        return data < other.data;
+    }
 };
 
 }// namespace Skeletal2D

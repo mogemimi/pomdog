@@ -20,28 +20,28 @@ namespace Skeletal2D {
 
 class TranslationKeyframe {
 public:
-	AnimationTimeInterval Time;
-	CompressedFloat<std::int16_t, 7> TranslateX;
-	CompressedFloat<std::int16_t, 7> TranslateY;
+    AnimationTimeInterval Time;
+    CompressedFloat<std::int16_t, 7> TranslateX;
+    CompressedFloat<std::int16_t, 7> TranslateY;
 
-	static_assert(decltype(TranslateX)::Max() > 1024.0f, "");
-	static_assert(decltype(TranslateX)::Min() < -1024.0f, "");
-	static_assert(decltype(TranslateY)::Max() > 1024.0f, "");
-	static_assert(decltype(TranslateY)::Min() < -1024.0f, "");
+    static_assert(decltype(TranslateX)::Max() > 1024.0f, "");
+    static_assert(decltype(TranslateX)::Min() < -1024.0f, "");
+    static_assert(decltype(TranslateY)::Max() > 1024.0f, "");
+    static_assert(decltype(TranslateY)::Min() < -1024.0f, "");
 };
 
 class TranslationTrack final: public AnimationTrack {
 public:
-	TranslationTrack(std::vector<TranslationKeyframe> && keys, JointIndex && jointIndex);
+    TranslationTrack(std::vector<TranslationKeyframe> && keys, JointIndex && jointIndex);
 
-	void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton,
-		SkeletonPose & skeletonPose) override;
+    void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton,
+        SkeletonPose & skeletonPose) override;
 
-	AnimationTimeInterval Length() const override;
+    AnimationTimeInterval Length() const override;
 
 private:
-	std::vector<TranslationKeyframe> keys;
-	JointIndex jointIndex;
+    std::vector<TranslationKeyframe> keys;
+    JointIndex jointIndex;
 };
 
 }// namespace Skeletal2D
