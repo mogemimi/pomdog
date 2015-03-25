@@ -66,8 +66,6 @@ public:
 }// namespace SkeletalAnimation2D
 }// namespace Detail
 
-///@~Japanese
-/// @brief スケルタルアニメーションにおけるジョイント（間接）に割り当てられるインデックス番号です。
 using JointIndex = Detail::SkeletalAnimation2D::OptionalUnsigned<std::uint8_t>;
 
 }// namespace Pomdog

@@ -37,8 +37,6 @@ struct Glyph {
 
 class SpriteBatch;
 
-///@~Japanese
-/// @brief バッチレンダリング可能なスプライトフォントです。
 class SpriteFont final {
 public:
 	SpriteFont(std::vector<std::shared_ptr<Texture2D>> && textures,
@@ -49,53 +47,27 @@ public:
 
 	~SpriteFont();
 
-	///@~Japanese
-	/// @brief テキストの描画時の水平方向の長さと垂直方向の長さ（ピクセル単位）を取得します。
-	/// @details 指定する文字列のエンコーディング形式は UTF-8 エンコーディングです。
 	Vector2 MeasureString(char const* text) const;
 
 	//Vector2 MeasureString(std::string const& text) const;
 
-	///@~Japanese
-	/// @brief デフォルト文字を取得します。
-	/// @remarks 指定された文字のフォントが見つからない場合、デフォルト文字が表示されます。
-	/// 文字列のエンコーディング形式は UTF-32 エンコーディングです。
 	std::uint32_t DefaultCharacter() const;
 
-	///@~Japanese
-	/// @brief デフォルト文字を設定します。
-	/// @remarks 指定された文字のフォントが見つからない場合、デフォルト文字が表示されます。
-	/// 文字列のエンコーディング形式は UTF-32 エンコーディングです。
 	void DefaultCharacter(std::uint32_t character);
 
-	///@~Japanese
-	/// @brief 行間を取得します。
 	float LineSpacing() const;
 
-	///@~Japanese
-	/// @brief 行間を設定します。
 	void LineSpacing(float lineSpacing);
 
-	///@~Japanese
-	/// @brief 指定した文字のフォントを含んでいるかどうか取得します。含んでいる場合は、true を返却します。
 	bool ContainsCharacter(std::uint32_t character) const;
 
 	void Begin(Matrix4x4 const& transformMatrix);
 
-	///@~Japanese
-	/// @brief 文字列をスプライトバッチを使って描画します。
-	/// @remarks 文字列のエンコーディング形式は UTF-8 エンコーディングです。
 	void Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color);
 
-	///@~Japanese
-	/// @brief 文字列をスプライトバッチを使って描画します。
-	/// @remarks 文字列のエンコーディング形式は UTF-8 エンコーディングです。
 	void Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color,
 		Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth);
 
-	///@~Japanese
-	/// @brief 文字列をスプライトバッチを使って描画します。
-	/// @remarks 文字列のエンコーディング形式は UTF-8 エンコーディングです。
 	void Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color,
 		Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
 

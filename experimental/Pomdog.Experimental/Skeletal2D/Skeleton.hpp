@@ -15,8 +15,6 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief ジョイント（間接）またはボーンから構成されるスケルトンです。
 class Skeleton {
 public:
 	Skeleton() = default;

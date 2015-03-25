@@ -52,8 +52,8 @@ class SkinnedMeshVertexDesc {
 public:
 	Vector2 Position;
 	Vector2 TextureCoordinate;
-	///@note 最後のウェイト係数は省略している
-	/// Weight3 = 1 - (Weights[0] + Weights[1] + Weights[2]);
+	///@note To get the Weights[3] value, run the following code:
+	/// auto weight3 = 1 - (Weights[0] + Weights[1] + Weights[2]);
 	std::array<float, 3> Weights;
 	std::array<JointIndex, 4> Joints;
 };

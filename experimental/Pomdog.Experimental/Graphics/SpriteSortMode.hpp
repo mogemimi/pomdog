@@ -12,19 +12,11 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief バッチレンダリングのソート方法を定義します。
 enum class SpriteSortMode: std::uint8_t {
-	///@~Japanese
-	/// @brief 並び変えず、追加された順に描画します。
 	Deferred,
 
-	///@~Japanese
-	/// @brief 深度値が奥から前になるように並び変え、描画します。
 	BackToFront,
 
-	///@~Japanese
-	/// @brief 深度値が前から奥になるように並び変え、描画します。
 	FrontToBack,
 };
 

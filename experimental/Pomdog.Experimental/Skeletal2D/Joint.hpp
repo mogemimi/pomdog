@@ -14,8 +14,6 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @brief スケルタルアニメーションにおけるジョイント（間接）またはボーンです。
 class Joint {
 public:
 	Matrix3x2 InverseBindPose;

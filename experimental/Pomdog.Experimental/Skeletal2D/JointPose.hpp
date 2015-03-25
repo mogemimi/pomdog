@@ -13,9 +13,6 @@
 
 namespace Pomdog {
 
-///@~Japanese
-/// @note スケーリングが一様であること（Vector2 ではなく float のスカラー量になっていること）に注意してください。
-/// スケーリングが一様なのは、パフォーマンス上の制約が理由になります。
 class JointPose {
 public:
 	Vector2 Translate;

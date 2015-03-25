@@ -28,23 +28,16 @@ public:
 
 	std::unique_ptr<Detail::Particles::ParticleEmitterShape> Shape;
 
-	///@brief パーティクルの初期色を指定します。
 	std::unique_ptr<Detail::Particles::ParticleParameter<Color>> StartColor;
 
-	///@brief パーティクルの生存期間に応じた色を指定します。
-	///@note このパラメータで指定された色と各パーティクルの初期色を乗算した結果が最終的な色となります。
 	std::unique_ptr<Detail::Particles::ParticleParameter<Color>> ColorOverLifetime;
 
-	///@brief パーティクルの初期回転角を指定します。
 	std::unique_ptr<Detail::Particles::ParticleParameter<Radian<float>>> StartRotation;
 
-	///@brief パーティクルの生存期間に応じた 1 秒あたりの回転速度を指定します。
 	std::unique_ptr<Detail::Particles::ParticleParameter<Radian<float>>> RotationOverLifetime;
 
-	///@brief パーティクルの初期サイズを指定します。
 	std::unique_ptr<Detail::Particles::ParticleParameter<float>> StartSize;
 
-	///@brief パーティクルの生存期間に応じたサイズを指定します。
 	std::unique_ptr<Detail::Particles::ParticleParameter<float>> SizeOverLifetime;
 
 	Pomdog::Duration Duration = std::chrono::seconds(5);
