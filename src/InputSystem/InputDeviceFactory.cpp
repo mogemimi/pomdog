@@ -14,44 +14,44 @@ InputDeviceFactory::~InputDeviceFactory() = default;
 //-----------------------------------------------------------------------
 std::shared_ptr<Keyboard> InputDeviceFactory::CreateKeyboard(SubsystemScheduler & scheduler)
 {
-	if (!keyboardCreator) {
-		// FUS RO DAH!
-		POMDOG_THROW_EXCEPTION(std::runtime_error,
-			"Cannot find keyboard device creator");
-	}
+    if (!keyboardCreator) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Cannot find keyboard device creator");
+    }
 
-	POMDOG_ASSERT(keyboardCreator);
-	auto keyboard = keyboardCreator->Create(scheduler);
+    POMDOG_ASSERT(keyboardCreator);
+    auto keyboard = keyboardCreator->Create(scheduler);
 
-	POMDOG_ASSERT(keyboard);
-	return std::move(keyboard);
+    POMDOG_ASSERT(keyboard);
+    return std::move(keyboard);
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Mouse> InputDeviceFactory::CreateMouse(SubsystemScheduler & scheduler)
 {
-	if (!mouseCreator) {
-		// FUS RO DAH!
-		POMDOG_THROW_EXCEPTION(std::runtime_error,
-			"Cannot find mouse device creator");
-	}
+    if (!mouseCreator) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Cannot find mouse device creator");
+    }
 
-	POMDOG_ASSERT(mouseCreator);
-	auto mouse = mouseCreator->Create(scheduler);
+    POMDOG_ASSERT(mouseCreator);
+    auto mouse = mouseCreator->Create(scheduler);
 
-	POMDOG_ASSERT(mouse);
-	return std::move(mouse);
+    POMDOG_ASSERT(mouse);
+    return std::move(mouse);
 }
 //-----------------------------------------------------------------------
 void InputDeviceFactory::AddCreator(std::unique_ptr<KeyboardCreator> && creatorIn)
 {
-	POMDOG_ASSERT(creatorIn);
-	keyboardCreator = std::move(creatorIn);
+    POMDOG_ASSERT(creatorIn);
+    keyboardCreator = std::move(creatorIn);
 }
 //-----------------------------------------------------------------------
 void InputDeviceFactory::AddCreator(std::unique_ptr<MouseCreator> && creatorIn)
 {
-	POMDOG_ASSERT(creatorIn);
-	mouseCreator = std::move(creatorIn);
+    POMDOG_ASSERT(creatorIn);
+    mouseCreator = std::move(creatorIn);
 }
 //-----------------------------------------------------------------------
 }// namespace InputSystem

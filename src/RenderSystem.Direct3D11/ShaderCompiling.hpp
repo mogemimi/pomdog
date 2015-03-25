@@ -21,9 +21,9 @@ class ShaderCompileOptions;
 namespace Direct3D11 {
 
 struct ShaderCompiling final {
-	static Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(
-		ShaderBytecode const& shaderBytecode,
-		ShaderCompileOptions const& compileOptions);
+    static Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(
+        ShaderBytecode const& shaderBytecode,
+        ShaderCompileOptions const& compileOptions);
 };
 
 }// namespace Direct3D11

@@ -22,50 +22,50 @@ namespace Win32 {
 
 class GameWindowWin32 final: public GameWindow {
 public:
-	GameWindowWin32(HINSTANCE hInstance, int nCmdShow,
-		HICON icon, HICON iconSmall, bool useOpenGL,
-		std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
-		PresentationParameters const& presentationParameters);
+    GameWindowWin32(HINSTANCE hInstance, int nCmdShow,
+        HICON icon, HICON iconSmall, bool useOpenGL,
+        std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
+        PresentationParameters const& presentationParameters);
 
-	~GameWindowWin32();
+    ~GameWindowWin32();
 
-	///@copydoc GameWindow
-	bool AllowPlayerResizing() const override;
+    ///@copydoc GameWindow
+    bool AllowPlayerResizing() const override;
 
-	///@copydoc GameWindow
-	void AllowPlayerResizing(bool allowResizing) override;
+    ///@copydoc GameWindow
+    void AllowPlayerResizing(bool allowResizing) override;
 
-	///@copydoc GameWindow
-	std::string Title() const override;
+    ///@copydoc GameWindow
+    std::string Title() const override;
 
-	///@copydoc GameWindow
-	void Title(std::string const& title) override;
+    ///@copydoc GameWindow
+    void Title(std::string const& title) override;
 
-	///@copydoc GameWindow
-	Rectangle ClientBounds() const override;
+    ///@copydoc GameWindow
+    Rectangle ClientBounds() const override;
 
-	///@copydoc GameWindow
-	void ClientBounds(Rectangle const& clientBounds) override;
+    ///@copydoc GameWindow
+    void ClientBounds(Rectangle const& clientBounds) override;
 
-	///@copydoc GameWindow
-	bool IsMouseCursorVisible() const override;
+    ///@copydoc GameWindow
+    bool IsMouseCursorVisible() const override;
 
-	///@copydoc GameWindow
-	void IsMouseCursorVisible(bool visible) override;
+    ///@copydoc GameWindow
+    void IsMouseCursorVisible(bool visible) override;
 
-	///@copydoc GameWindow
-	void SetMouseCursor(MouseCursor cursor) override;
+    ///@copydoc GameWindow
+    void SetMouseCursor(MouseCursor cursor) override;
 
-	///@return true if the window is minimized, false otherwise.
-	bool IsMinimized() const;
+    ///@return true if the window is minimized, false otherwise.
+    bool IsMinimized() const;
 
-	void Close();
+    void Close();
 
-	HWND NativeWindowHandle() const;
+    HWND NativeWindowHandle() const;
 
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+    class Impl;
+    std::unique_ptr<Impl> impl;
 };
 
 }// namespace Win32

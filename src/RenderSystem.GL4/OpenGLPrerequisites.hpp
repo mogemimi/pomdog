@@ -11,13 +11,13 @@
 #include "Pomdog/Basic/Platform.hpp"
 
 #if defined(POMDOG_PLATFORM_WIN32)
-#	include <GL/glew.h>
-#	include <GL/wglew.h>
+#    include <GL/glew.h>
+#    include <GL/wglew.h>
 #elif defined(POMDOG_PLATFORM_MACOSX)
-#	include <OpenGL/gl3.h>
-#	include <OpenGL/gl3ext.h>
+#    include <OpenGL/gl3.h>
+#    include <OpenGL/gl3ext.h>
 #elif defined(POMDOG_PLATFORM_LINUX)
-#	include <GL/glew.h>
+#    include <GL/glew.h>
 #endif
 
 #endif // !defined(POMDOG_OPENGLPREREQUISITES_70C95DBA_5F82_41A6_A732_5FB0470F0A3D_HPP)

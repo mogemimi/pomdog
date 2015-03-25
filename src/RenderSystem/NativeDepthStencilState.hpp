@@ -16,13 +16,13 @@ class NativeGraphicsContext;
 
 class NativeDepthStencilState {
 public:
-	NativeDepthStencilState() = default;
-	NativeDepthStencilState(NativeDepthStencilState const&) = delete;
-	NativeDepthStencilState & operator=(NativeDepthStencilState const&) = delete;
+    NativeDepthStencilState() = default;
+    NativeDepthStencilState(NativeDepthStencilState const&) = delete;
+    NativeDepthStencilState & operator=(NativeDepthStencilState const&) = delete;
 
-	virtual ~NativeDepthStencilState() = default;
+    virtual ~NativeDepthStencilState() = default;
 
-	virtual void Apply(NativeGraphicsContext & graphicsContext) = 0;
+    virtual void Apply(NativeGraphicsContext & graphicsContext) = 0;
 };
 
 }// namespace RenderSystem

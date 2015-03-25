@@ -7,24 +7,24 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 EventConnection::EventConnection(EventConnection const& connection)
 {
-	if (connection.body) {
-		body = connection.body->DeepCopy();
-	}
+    if (connection.body) {
+        body = connection.body->DeepCopy();
+    }
 }
 //-----------------------------------------------------------------------
 EventConnection & EventConnection::operator=(EventConnection const& connection)
 {
-	if (connection.body) {
-		body = connection.body->DeepCopy();
-	}
-	return *this;
+    if (connection.body) {
+        body = connection.body->DeepCopy();
+    }
+    return *this;
 }
 //-----------------------------------------------------------------------
 void EventConnection::Disconnect()
 {
-	if (body) {
-		body->Disconnect();
-	}
+    if (body) {
+        body->Disconnect();
+    }
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

@@ -24,36 +24,36 @@ namespace GL4 {
 class InputLayoutGL4;
 
 struct TextureBindingGL4 {
-	GLint UniformLocation;
-	std::uint16_t SlotIndex;
+    GLint UniformLocation;
+    std::uint16_t SlotIndex;
 };
 
 struct UniformBlockBindingGL4 {
-	std::string Name;
-	std::uint16_t SlotIndex;
+    std::string Name;
+    std::uint16_t SlotIndex;
 };
 
 class EffectPassGL4 final: public NativeEffectPass {
 public:
-	EffectPassGL4() = delete;
+    EffectPassGL4() = delete;
 
-	explicit EffectPassGL4(EffectPassDescription const& description);
+    explicit EffectPassGL4(EffectPassDescription const& description);
 
-	~EffectPassGL4();
+    ~EffectPassGL4();
 
-	std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
+    std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
 
-	void ApplyShaders();
+    void ApplyShaders();
 
-	ShaderProgramGL4 GetShaderProgram() const;
+    ShaderProgramGL4 GetShaderProgram() const;
 
-	InputLayoutGL4* GetInputLayout() const;
+    InputLayoutGL4* GetInputLayout() const;
 
 private:
-	std::vector<TextureBindingGL4> textureBindings;
-	std::vector<UniformBlockBindingGL4> uniformBlockBindings;
-	Optional<ShaderProgramGL4> shaderProgram;
-	std::unique_ptr<InputLayoutGL4> inputLayout;
+    std::vector<TextureBindingGL4> textureBindings;
+    std::vector<UniformBlockBindingGL4> uniformBlockBindings;
+    Optional<ShaderProgramGL4> shaderProgram;
+    std::unique_ptr<InputLayoutGL4> inputLayout;
 };
 
 }// namespace GL4

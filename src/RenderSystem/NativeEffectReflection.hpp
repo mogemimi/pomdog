@@ -17,13 +17,13 @@ namespace RenderSystem {
 
 class NativeEffectReflection {
 public:
-	NativeEffectReflection() = default;
-	NativeEffectReflection(NativeEffectReflection const&) = delete;
-	NativeEffectReflection & operator=(NativeEffectReflection const&) = delete;
+    NativeEffectReflection() = default;
+    NativeEffectReflection(NativeEffectReflection const&) = delete;
+    NativeEffectReflection & operator=(NativeEffectReflection const&) = delete;
 
-	virtual ~NativeEffectReflection() = default;
+    virtual ~NativeEffectReflection() = default;
 
-	virtual std::vector<EffectConstantDescription> GetConstantBuffers() const = 0;
+    virtual std::vector<EffectConstantDescription> GetConstantBuffers() const = 0;
 };
 
 }// namespace RenderSystem

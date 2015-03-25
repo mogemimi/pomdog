@@ -25,33 +25,33 @@ struct OpenGLGetTraits;
 template <class TaggedClass>
 TaggedClass Get(OpenGLGetTraits<TaggedClass>* = nullptr)
 {
-	typedef typename TaggedClass::value_type value_type;
+    typedef typename TaggedClass::value_type value_type;
 
-	static_assert(std::is_fundamental<value_type>::value, "");
-	static_assert(std::is_integral<value_type>::value, "");
+    static_assert(std::is_fundamental<value_type>::value, "");
+    static_assert(std::is_integral<value_type>::value, "");
 
-	GLint oldBuffer = 0;
-	::glGetIntegerv(
-		OpenGLGetTraits<TaggedClass>::bufferObjectBinding,
-		&oldBuffer);
+    GLint oldBuffer = 0;
+    ::glGetIntegerv(
+        OpenGLGetTraits<TaggedClass>::bufferObjectBinding,
+        &oldBuffer);
 
-	return TaggedClass(static_cast<value_type>(oldBuffer));
+    return TaggedClass(static_cast<value_type>(oldBuffer));
 }
 
 template <class TaggedClass>
 void BindBuffer(TaggedClass const& bufferObject)
 {
-	::glBindBuffer(
-		OpenGLGetTraits<TaggedClass>::bufferObjectTarget,
-		bufferObject.value);
+    ::glBindBuffer(
+        OpenGLGetTraits<TaggedClass>::bufferObjectTarget,
+        bufferObject.value);
 }
 
 template <class TaggedClass>
 void BindTexture(TaggedClass const& textureObject)
 {
-	::glBindTexture(
-		OpenGLGetTraits<TaggedClass>::textureObjectTarget,
-		textureObject.value);
+    ::glBindTexture(
+        OpenGLGetTraits<TaggedClass>::textureObjectTarget,
+        textureObject.value);
 }
 
 }// namespace TypesafeHelperGL4

@@ -32,28 +32,28 @@ class AudioEngineAL;
 
 class SoundEffectAL final: Noncopyable {
 private:
-	std::shared_ptr<AudioClipAL> audioClip;
-	Optional<AudioSourceAL> source;
+    std::shared_ptr<AudioClipAL> audioClip;
+    Optional<AudioSourceAL> source;
 
 public:
-	SoundEffectAL(AudioEngineAL & audioEngine,
-		std::shared_ptr<AudioClipAL> const& audioClip, bool isLooped);
+    SoundEffectAL(AudioEngineAL & audioEngine,
+        std::shared_ptr<AudioClipAL> const& audioClip, bool isLooped);
 
-	~SoundEffectAL();
+    ~SoundEffectAL();
 
-	void Pause();
+    void Pause();
 
-	void Play();
+    void Play();
 
-	void Stop();
+    void Stop();
 
-	void Apply3D(AudioListener const& listener, AudioEmitter const& emitter);
+    void Apply3D(AudioListener const& listener, AudioEmitter const& emitter);
 
-	void ExitLoop();
+    void ExitLoop();
 
-	void Pitch(float pitch);
+    void Pitch(float pitch);
 
-	void Volume(float volume);
+    void Volume(float volume);
 };
 
 }// namespace OpenAL

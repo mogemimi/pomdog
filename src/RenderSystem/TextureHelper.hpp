@@ -14,8 +14,8 @@ namespace Pomdog {
 namespace Detail {
 
 struct TextureHelper final {
-	static std::int32_t ComputeMipmapLevelCount(
-		std::int32_t width, std::int32_t height);
+    static std::int32_t ComputeMipmapLevelCount(
+        std::int32_t width, std::int32_t height);
 };
 
 }// namespace Detail

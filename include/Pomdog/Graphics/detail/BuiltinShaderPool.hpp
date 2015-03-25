@@ -21,38 +21,38 @@ namespace Detail {
 
 class POMDOG_EXPORT BuiltinShaderPool {
 public:
-	BuiltinShaderPool() = default;
-	BuiltinShaderPool(BuiltinShaderPool const&) = delete;
-	BuiltinShaderPool & operator=(BuiltinShaderPool const&) = delete;
-	BuiltinShaderPool(BuiltinShaderPool &&) = delete;
-	BuiltinShaderPool & operator=(BuiltinShaderPool &&) = delete;
+    BuiltinShaderPool() = default;
+    BuiltinShaderPool(BuiltinShaderPool const&) = delete;
+    BuiltinShaderPool & operator=(BuiltinShaderPool const&) = delete;
+    BuiltinShaderPool(BuiltinShaderPool &&) = delete;
+    BuiltinShaderPool & operator=(BuiltinShaderPool &&) = delete;
 
-	template <class Trait>
-	std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
-	{
-		std::type_index key{typeid(Trait)};
+    template <class Trait>
+    std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
+    {
+        std::type_index key{typeid(Trait)};
 
-		auto iter = effects.find(key);
-		if (iter != std::end(effects))
-		{
-			if (auto effect = iter->second.lock()) {
-				return effect;
-			}
+        auto iter = effects.find(key);
+        if (iter != std::end(effects))
+        {
+            if (auto effect = iter->second.lock()) {
+                return effect;
+            }
 
-			effects.erase(iter);
-		}
+            effects.erase(iter);
+        }
 
-		POMDOG_ASSERT(effects.find(key) == std::end(effects));
+        POMDOG_ASSERT(effects.find(key) == std::end(effects));
 
-		auto effect = Trait::Create(graphicsDevice);
-		effects.insert(std::make_pair(key, effect));
+        auto effect = Trait::Create(graphicsDevice);
+        effects.insert(std::make_pair(key, effect));
 
-		static_assert(std::is_same<decltype(effect), std::shared_ptr<EffectPass>>::value, "");
-		return effect;
-	}
+        static_assert(std::is_same<decltype(effect), std::shared_ptr<EffectPass>>::value, "");
+        return effect;
+    }
 
 private:
-	std::map<std::type_index, std::weak_ptr<EffectPass>> effects;
+    std::map<std::type_index, std::weak_ptr<EffectPass>> effects;
 };
 
 }// namespace Detail

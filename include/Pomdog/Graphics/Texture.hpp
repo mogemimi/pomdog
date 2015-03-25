@@ -14,14 +14,14 @@ namespace Pomdog {
 
 class POMDOG_EXPORT Texture {
 public:
-	Texture() = default;
-	Texture(Texture const&) = delete;
-	Texture(Texture &&) = default;
+    Texture() = default;
+    Texture(Texture const&) = delete;
+    Texture(Texture &&) = default;
 
-	Texture & operator=(Texture const&) = delete;
-	Texture & operator=(Texture &&) = default;
+    Texture & operator=(Texture const&) = delete;
+    Texture & operator=(Texture &&) = default;
 
-	virtual ~Texture() = default;
+    virtual ~Texture() = default;
 };
 
 }// namespace Pomdog

@@ -13,9 +13,9 @@
 namespace Pomdog {
 
 enum class KeyState: bool {
-	Up = false,
+    Up = false,
 
-	Down = true,
+    Down = true,
 };
 
 }// namespace Pomdog

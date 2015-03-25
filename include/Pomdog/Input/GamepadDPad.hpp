@@ -14,10 +14,10 @@ namespace Pomdog {
 
 class GamepadDPad {
 public:
-	ButtonState Down = ButtonState::Released;
-	ButtonState Up = ButtonState::Released;
-	ButtonState Left = ButtonState::Released;
-	ButtonState Right = ButtonState::Released;
+    ButtonState Down = ButtonState::Released;
+    ButtonState Up = ButtonState::Released;
+    ButtonState Left = ButtonState::Released;
+    ButtonState Right = ButtonState::Released;
 };
 
 }// namespace Pomdog

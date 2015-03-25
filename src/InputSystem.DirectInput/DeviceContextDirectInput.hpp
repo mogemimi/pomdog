@@ -20,17 +20,17 @@ namespace DirectInput {
 
 class DeviceContextDirectInput final: Noncopyable {
 public:
-	DeviceContextDirectInput(HINSTANCE hInstance, HWND windowHandle);
+    DeviceContextDirectInput(HINSTANCE hInstance, HWND windowHandle);
 
-	~DeviceContextDirectInput();
+    ~DeviceContextDirectInput();
 
-	HWND WindowHandle() const;
+    HWND WindowHandle() const;
 
-	IDirectInput8* GetDirectInput() const;
+    IDirectInput8* GetDirectInput() const;
 
 private:
-	HWND windowHandle;
-	Microsoft::WRL::ComPtr<IDirectInput8> directInput;
+    HWND windowHandle;
+    Microsoft::WRL::ComPtr<IDirectInput8> directInput;
 };
 
 }// namespace DirectInput

@@ -17,9 +17,9 @@ namespace Pomdog {
 
 class EffectConstantDescription {
 public:
-	std::vector<EffectVariable> Variables;
-	std::string Name;
-	std::uint32_t ByteSize;
+    std::vector<EffectVariable> Variables;
+    std::string Name;
+    std::uint32_t ByteSize;
 };
 
 }// namespace Pomdog

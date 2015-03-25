@@ -14,7 +14,7 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 AudioEngine::AudioEngine()
-	: nativeAudioEngine(std::make_unique<Detail::SoundSystem::NativeAudioEngine>())
+    : nativeAudioEngine(std::make_unique<Detail::SoundSystem::NativeAudioEngine>())
 {
 }
 //-----------------------------------------------------------------------
@@ -22,21 +22,21 @@ AudioEngine::~AudioEngine() = default;
 //-----------------------------------------------------------------------
 float AudioEngine::MasterVolume() const
 {
-	POMDOG_ASSERT(nativeAudioEngine);
-	return nativeAudioEngine->MasterVolume();
+    POMDOG_ASSERT(nativeAudioEngine);
+    return nativeAudioEngine->MasterVolume();
 }
 //-----------------------------------------------------------------------
 void AudioEngine::MasterVolume(float volume)
 {
-	POMDOG_ASSERT(volume >= 0.0f);
-	POMDOG_ASSERT(nativeAudioEngine);
-	nativeAudioEngine->MasterVolume(volume);
+    POMDOG_ASSERT(volume >= 0.0f);
+    POMDOG_ASSERT(nativeAudioEngine);
+    nativeAudioEngine->MasterVolume(volume);
 }
 //-----------------------------------------------------------------------
 Detail::SoundSystem::NativeAudioEngine* AudioEngine::NativeAudioEngine()
 {
-	POMDOG_ASSERT(nativeAudioEngine);
-	return nativeAudioEngine.get();
+    POMDOG_ASSERT(nativeAudioEngine);
+    return nativeAudioEngine.get();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

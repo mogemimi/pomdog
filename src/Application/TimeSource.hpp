@@ -11,15 +11,15 @@
 #include "Pomdog/Basic/Platform.hpp"
 
 #if defined(POMDOG_PLATFORM_MACOSX)
-#	include "../Platform.Cocoa/TimeSourceCocoa.hpp"
+#    include "../Platform.Cocoa/TimeSourceCocoa.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32)
-#	include "../Platform.Win32/TimeSourceWin32.hpp"
+#    include "../Platform.Win32/TimeSourceWin32.hpp"
 #elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
-#	include "../Platform.Linux/TimeSourceLinux.hpp"
+#    include "../Platform.Linux/TimeSourceLinux.hpp"
 #else
-#	include "Pomdog/Application/DurationSeconds.hpp"
-#	include <chrono>
-#	error "Platform undefined or not supported."
+#    include "Pomdog/Application/DurationSeconds.hpp"
+#    include <chrono>
+#    error "Platform undefined or not supported."
 #endif
 
 namespace Pomdog {
@@ -35,11 +35,11 @@ using TimeSource = Detail::Linux::TimeSourceLinux;
 
 class TimeSource {
 public:
-	DurationSeconds Now() const
-	{
-		auto timePoint = std::chrono::high_resolution_clock::now();
-		return DurationSeconds(std::chrono::time_point_cast<std::chrono::duration<double>>(timePoint).time_since_epoch().count());
-	}
+    DurationSeconds Now() const
+    {
+        auto timePoint = std::chrono::high_resolution_clock::now();
+        return DurationSeconds(std::chrono::time_point_cast<std::chrono::duration<double>>(timePoint).time_since_epoch().count());
+    }
 };
 
 #endif

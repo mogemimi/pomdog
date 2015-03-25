@@ -13,23 +13,23 @@
 namespace Pomdog {
 
 enum class TextureFilter: std::uint8_t {
-	Linear,
+    Linear,
 
-	Point,
+    Point,
 
-	Anisotropic,
+    Anisotropic,
 
-	LinearMipPoint,
+    LinearMipPoint,
 
-	PointMipLinear,
+    PointMipLinear,
 
-	MinLinearMagPointMipLinear,
+    MinLinearMagPointMipLinear,
 
-	MinLinearMagPointMipPoint,
+    MinLinearMagPointMipPoint,
 
-	MinPointMagLinearMipLinear,
+    MinPointMagLinearMipLinear,
 
-	MinPointMagLinearMipPoint,
+    MinPointMagLinearMipPoint,
 };
 
 }// namespace Pomdog

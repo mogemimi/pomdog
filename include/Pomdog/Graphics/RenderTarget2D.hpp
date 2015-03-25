@@ -28,51 +28,51 @@ class NativeRenderTarget2D;
 
 class POMDOG_EXPORT RenderTarget2D : public Texture {
 public:
-	RenderTarget2D() = delete;
-	RenderTarget2D(RenderTarget2D const&) = delete;
-	RenderTarget2D(RenderTarget2D &&) = default;
+    RenderTarget2D() = delete;
+    RenderTarget2D(RenderTarget2D const&) = delete;
+    RenderTarget2D(RenderTarget2D &&) = default;
 
-	RenderTarget2D(GraphicsDevice & graphicsDevice,
-		std::int32_t width, std::int32_t height);
+    RenderTarget2D(GraphicsDevice & graphicsDevice,
+        std::int32_t width, std::int32_t height);
 
-	RenderTarget2D(GraphicsDevice & graphicsDevice,
-		std::int32_t width, std::int32_t height, bool generateMipmap,
-		SurfaceFormat format, DepthFormat depthStencilFormat);
+    RenderTarget2D(GraphicsDevice & graphicsDevice,
+        std::int32_t width, std::int32_t height, bool generateMipmap,
+        SurfaceFormat format, DepthFormat depthStencilFormat);
 
-	RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		std::int32_t width, std::int32_t height);
+    RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        std::int32_t width, std::int32_t height);
 
-	RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		std::int32_t width, std::int32_t height, bool generateMipmap,
-		SurfaceFormat format, DepthFormat depthStencilFormat);
+    RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        std::int32_t width, std::int32_t height, bool generateMipmap,
+        SurfaceFormat format, DepthFormat depthStencilFormat);
 
-	~RenderTarget2D();
+    ~RenderTarget2D();
 
-	RenderTarget2D & operator=(RenderTarget2D const&) = delete;
-	RenderTarget2D & operator=(RenderTarget2D &&) = default;
+    RenderTarget2D & operator=(RenderTarget2D const&) = delete;
+    RenderTarget2D & operator=(RenderTarget2D &&) = default;
 
-	std::int32_t Width() const;
+    std::int32_t Width() const;
 
-	std::int32_t Height() const;
+    std::int32_t Height() const;
 
-	std::int32_t LevelCount() const;
+    std::int32_t LevelCount() const;
 
-	SurfaceFormat Format() const;
+    SurfaceFormat Format() const;
 
-	DepthFormat DepthStencilFormat() const;
+    DepthFormat DepthStencilFormat() const;
 
-	Rectangle Bounds() const;
+    Rectangle Bounds() const;
 
 public:
-	Detail::RenderSystem::NativeRenderTarget2D* NativeRenderTarget2D();
+    Detail::RenderSystem::NativeRenderTarget2D* NativeRenderTarget2D();
 
 private:
-	std::unique_ptr<Detail::RenderSystem::NativeRenderTarget2D> nativeRenderTarget2D;
-	std::int32_t pixelWidth;
-	std::int32_t pixelHeight;
-	std::int32_t levelCount;
-	SurfaceFormat format;
-	DepthFormat depthStencilFormat;
+    std::unique_ptr<Detail::RenderSystem::NativeRenderTarget2D> nativeRenderTarget2D;
+    std::int32_t pixelWidth;
+    std::int32_t pixelHeight;
+    std::int32_t levelCount;
+    SurfaceFormat format;
+    DepthFormat depthStencilFormat;
 };
 
 }// namespace Pomdog

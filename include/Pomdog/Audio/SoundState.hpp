@@ -13,11 +13,11 @@
 namespace Pomdog {
 
 enum class SoundState: std::uint8_t {
-	Paused,
+    Paused,
 
-	Playing,
+    Playing,
 
-	Stopped,
+    Stopped,
 };
 
 }// namespace Pomdog

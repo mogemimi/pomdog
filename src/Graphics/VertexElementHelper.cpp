@@ -10,24 +10,24 @@ namespace Detail {
 
 std::uint8_t VertexElementHelper::ToByteSize(VertexElementFormat format)
 {
-	static_assert(sizeof(float) == 4, "FUS RO DAH");
-	switch (format) {
-	case VertexElementFormat::Byte4:
-	case VertexElementFormat::Float:
-	case VertexElementFormat::HalfFloat2:
-		return 4;
-	case VertexElementFormat::Float2:
-	case VertexElementFormat::HalfFloat4:
-		return 8;
-	case VertexElementFormat::Float3:
-		return 12;
-	case VertexElementFormat::Int4:
-	case VertexElementFormat::Float4:
-		return 16;
-	}
+    static_assert(sizeof(float) == 4, "FUS RO DAH");
+    switch (format) {
+    case VertexElementFormat::Byte4:
+    case VertexElementFormat::Float:
+    case VertexElementFormat::HalfFloat2:
+        return 4;
+    case VertexElementFormat::Float2:
+    case VertexElementFormat::HalfFloat4:
+        return 8;
+    case VertexElementFormat::Float3:
+        return 12;
+    case VertexElementFormat::Int4:
+    case VertexElementFormat::Float4:
+        return 16;
+    }
 #ifdef _MSC_VER
-	POMDOG_ASSERT("cannot find format.");
-	return 4;
+    POMDOG_ASSERT("cannot find format.");
+    return 4;
 #endif
 }
 

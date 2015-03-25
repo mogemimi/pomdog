@@ -23,17 +23,17 @@ using SamplerObjectGL4 = Tagged<GLuint, SamplerState>;
 
 class SamplerStateGL4 final: public NativeSamplerState {
 public:
-	SamplerStateGL4() = delete;
+    SamplerStateGL4() = delete;
 
-	explicit SamplerStateGL4(SamplerDescription const& description);
+    explicit SamplerStateGL4(SamplerDescription const& description);
 
-	~SamplerStateGL4() override;
+    ~SamplerStateGL4() override;
 
-	///@copydoc NativeSamplerState
-	void Apply(NativeGraphicsContext & graphicsContext, int index) override;
+    ///@copydoc NativeSamplerState
+    void Apply(NativeGraphicsContext & graphicsContext, int index) override;
 
 private:
-	Optional<SamplerObjectGL4> samplerObject;
+    Optional<SamplerObjectGL4> samplerObject;
 };
 
 }// namespace GL4

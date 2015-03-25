@@ -16,10 +16,10 @@ namespace Pomdog {
 
 class GamepadState {
 public:
-	GamepadButtons Buttons;
-	GamepadThumbSticks ThumbSticks;
-	GamepadDPad DPad;
-	bool IsConnected = false;
+    GamepadButtons Buttons;
+    GamepadThumbSticks ThumbSticks;
+    GamepadDPad DPad;
+    bool IsConnected = false;
 };
 
 }// namespace Pomdog

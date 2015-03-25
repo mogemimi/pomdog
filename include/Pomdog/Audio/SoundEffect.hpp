@@ -24,48 +24,48 @@ enum class SoundState: std::uint8_t;
 
 class POMDOG_EXPORT SoundEffect {
 public:
-	SoundEffect(AudioEngine & audioEngine,
-		std::shared_ptr<AudioClip> const& audioClip, bool isLooped);
+    SoundEffect(AudioEngine & audioEngine,
+        std::shared_ptr<AudioClip> const& audioClip, bool isLooped);
 
-	~SoundEffect();
+    ~SoundEffect();
 
-	SoundEffect(SoundEffect const&) = delete;
-	SoundEffect(SoundEffect &&) = default;
-	SoundEffect & operator=(SoundEffect const&) = delete;
-	SoundEffect & operator=(SoundEffect &&) = default;
+    SoundEffect(SoundEffect const&) = delete;
+    SoundEffect(SoundEffect &&) = default;
+    SoundEffect & operator=(SoundEffect const&) = delete;
+    SoundEffect & operator=(SoundEffect &&) = default;
 
-	void Pause();
+    void Pause();
 
-	void Play();
+    void Play();
 
-	void Stop();
+    void Stop();
 
-	void Apply3D(AudioListener const& listener, AudioEmitter const& emitter);
+    void Apply3D(AudioListener const& listener, AudioEmitter const& emitter);
 
-	bool IsLooped() const;
+    bool IsLooped() const;
 
-	void ExitLoop();
+    void ExitLoop();
 
-	SoundState State() const;
+    SoundState State() const;
 
-	float Pan() const;
+    float Pan() const;
 
-	void Pan(float panpot);
+    void Pan(float panpot);
 
-	float Pitch() const;
+    float Pitch() const;
 
-	void Pitch(float pitch);
+    void Pitch(float pitch);
 
-	float Volume() const;
+    float Volume() const;
 
-	void Volume(float volume);
+    void Volume(float volume);
 
 private:
-	std::unique_ptr<Detail::SoundSystem::NativeSoundEffect> nativeSoundEffect;
-	float pitch;
-	float volume;
-	SoundState state;
-	bool isLooped;
+    std::unique_ptr<Detail::SoundSystem::NativeSoundEffect> nativeSoundEffect;
+    float pitch;
+    float volume;
+    SoundState state;
+    bool isLooped;
 };
 
 }// namespace Pomdog

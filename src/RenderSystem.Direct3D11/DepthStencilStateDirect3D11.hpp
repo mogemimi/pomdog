@@ -19,15 +19,15 @@ namespace Direct3D11 {
 
 class DepthStencilStateDirect3D11 final: public NativeDepthStencilState {
 public:
-	DepthStencilStateDirect3D11() = delete;
+    DepthStencilStateDirect3D11() = delete;
 
-	DepthStencilStateDirect3D11(ID3D11Device* nativeDevice, DepthStencilDescription const& description);
+    DepthStencilStateDirect3D11(ID3D11Device* nativeDevice, DepthStencilDescription const& description);
 
-	///@copydoc NativeDepthStencilState
-	void Apply(NativeGraphicsContext & graphicsContext) override;
+    ///@copydoc NativeDepthStencilState
+    void Apply(NativeGraphicsContext & graphicsContext) override;
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> nativeDepthStencilState;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> nativeDepthStencilState;
 };
 
 }// namespace Direct3D11

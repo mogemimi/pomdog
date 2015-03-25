@@ -21,23 +21,23 @@ namespace Direct3D11 {
 class ConstantBufferDirect3D11;
 
 struct ConstantBufferBindingDirect3D11 {
-	std::shared_ptr<ConstantBufferDirect3D11> ConstantBuffer;
-	std::string Name;
-	std::uint16_t StartSlot;
+    std::shared_ptr<ConstantBufferDirect3D11> ConstantBuffer;
+    std::string Name;
+    std::uint16_t StartSlot;
 };
 
 class ConstantLayoutDirect3D11 final: public NativeConstantLayout {
 public:
-	explicit ConstantLayoutDirect3D11(std::vector<ConstantBufferBindingDirect3D11> && bindings);
+    explicit ConstantLayoutDirect3D11(std::vector<ConstantBufferBindingDirect3D11> && bindings);
 
-	void SetConstantBuffer(std::string const& constantName, std::shared_ptr<NativeConstantBuffer> const& constantBuffer) override;
+    void SetConstantBuffer(std::string const& constantName, std::shared_ptr<NativeConstantBuffer> const& constantBuffer) override;
 
-	void SetConstantBuffer(std::string const& constantName) override;
+    void SetConstantBuffer(std::string const& constantName) override;
 
-	void Apply(ID3D11DeviceContext * deviceContext);
+    void Apply(ID3D11DeviceContext * deviceContext);
 
 private:
-	std::vector<ConstantBufferBindingDirect3D11> bindings;
+    std::vector<ConstantBufferBindingDirect3D11> bindings;
 };
 
 }// namespace Direct3D11

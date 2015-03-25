@@ -13,36 +13,36 @@
 namespace Pomdog {
 
 enum class Blend: std::uint8_t {
-	Zero,
+    Zero,
 
-	One,
+    One,
 
-	SourceColor,
+    SourceColor,
 
-	InverseSourceColor,
+    InverseSourceColor,
 
-	SourceAlpha,
+    SourceAlpha,
 
-	InverseSourceAlpha,
+    InverseSourceAlpha,
 
-	DestinationAlpha,
+    DestinationAlpha,
 
-	InverseDestinationAlpha,
+    InverseDestinationAlpha,
 
-	DestinationColor,
+    DestinationColor,
 
-	InverseDestinationColor,
+    InverseDestinationColor,
 
-	SourceAlphaSaturation,
+    SourceAlphaSaturation,
 
-	BlendFactor,
+    BlendFactor,
 
-	InvereseBlendFactor,
+    InvereseBlendFactor,
 
-	//Source1Color,
-	//InverseSource1Color,
-	//Source1Alpha,
-	//InverseSource1Alpha,
+    //Source1Color,
+    //InverseSource1Color,
+    //Source1Alpha,
+    //InverseSource1Alpha,
 };
 
 }// namespace Pomdog

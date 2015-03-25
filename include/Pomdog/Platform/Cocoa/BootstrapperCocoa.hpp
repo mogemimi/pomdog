@@ -23,18 +23,18 @@ namespace Cocoa {
 
 class POMDOG_EXPORT BootstrapperCocoa final {
 public:
-	BootstrapperCocoa & SetSurfaceFormat(SurfaceFormat surfaceFormat);
+    BootstrapperCocoa & SetSurfaceFormat(SurfaceFormat surfaceFormat);
 
-	BootstrapperCocoa & SetDepthFormat(DepthFormat depthFormat);
+    BootstrapperCocoa & SetDepthFormat(DepthFormat depthFormat);
 
-	BootstrapperCocoa & SetPresentationInterval(std::uint32_t presentationInterval);
+    BootstrapperCocoa & SetPresentationInterval(std::uint32_t presentationInterval);
 
-	std::shared_ptr<GameHost> CreateGameHost(NSWindow* nativeWindow);
+    std::shared_ptr<GameHost> CreateGameHost(NSWindow* nativeWindow);
 
 private:
-	std::uint32_t presentationInterval = 60;
-	SurfaceFormat surfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
-	DepthFormat depthFormat = DepthFormat::Depth24Stencil8;
+    std::uint32_t presentationInterval = 60;
+    SurfaceFormat surfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
+    DepthFormat depthFormat = DepthFormat::Depth24Stencil8;
 };
 
 }// namespace Cocoa

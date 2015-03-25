@@ -19,40 +19,40 @@ using Detail::RenderSystem::ShaderCompileOptions;
 using Detail::RenderSystem::ShaderPipelineStage;
 
 static std::unique_ptr<Shader> CompileGLSLShader(GraphicsDevice & graphicsDevice,
-	void const* shaderSource, std::size_t byteLength, ShaderPipelineStage pipelineStage)
+    void const* shaderSource, std::size_t byteLength, ShaderPipelineStage pipelineStage)
 {
-	POMDOG_ASSERT(shaderSource != nullptr);
-	POMDOG_ASSERT(byteLength > 0);
-	POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::GLSL);
+    POMDOG_ASSERT(shaderSource != nullptr);
+    POMDOG_ASSERT(byteLength > 0);
+    POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::GLSL);
 
-	auto nativeGraphicsDevice = graphicsDevice.NativeGraphicsDevice();
+    auto nativeGraphicsDevice = graphicsDevice.NativeGraphicsDevice();
 
-	ShaderBytecode shaderBytecode;
-	shaderBytecode.Code = shaderSource;
-	shaderBytecode.ByteLength = byteLength;
+    ShaderBytecode shaderBytecode;
+    shaderBytecode.Code = shaderSource;
+    shaderBytecode.ByteLength = byteLength;
 
-	ShaderCompileOptions compileOptions;
-	compileOptions.EntryPoint = "main";
-	compileOptions.Profile.PipelineStage = pipelineStage;
-	compileOptions.Precompiled = false;
+    ShaderCompileOptions compileOptions;
+    compileOptions.EntryPoint = "main";
+    compileOptions.Profile.PipelineStage = pipelineStage;
+    compileOptions.Precompiled = false;
 
-	return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
+    return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
 }
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> GLSLCompiler::CreateVertexShader(
-	GraphicsDevice & graphicsDevice, void const* shaderSource, std::size_t byteLength)
+    GraphicsDevice & graphicsDevice, void const* shaderSource, std::size_t byteLength)
 {
-	return CompileGLSLShader(graphicsDevice, shaderSource, byteLength,
-		ShaderPipelineStage::VertexShader);
+    return CompileGLSLShader(graphicsDevice, shaderSource, byteLength,
+        ShaderPipelineStage::VertexShader);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> GLSLCompiler::CreatePixelShader(
-	GraphicsDevice & graphicsDevice, void const* shaderSource, std::size_t byteLength)
+    GraphicsDevice & graphicsDevice, void const* shaderSource, std::size_t byteLength)
 {
-	return CompileGLSLShader(graphicsDevice, shaderSource, byteLength,
-		ShaderPipelineStage::PixelShader);
+    return CompileGLSLShader(graphicsDevice, shaderSource, byteLength,
+        ShaderPipelineStage::PixelShader);
 }
 //-----------------------------------------------------------------------
 }// namespace ShaderCompilers

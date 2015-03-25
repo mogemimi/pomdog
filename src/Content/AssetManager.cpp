@@ -8,28 +8,28 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 AssetManager::AssetManager(Detail::AssetLoaderContext && loaderContextIn)
-	: loaderContext(std::move(loaderContextIn))
+    : loaderContext(std::move(loaderContextIn))
 {}
 //-----------------------------------------------------------------------
 AssetLoaders::EffectPassLoader AssetManager::LoadEffectPass()
 {
-	AssetLoaders::EffectPassLoader loader(loaderContext);
-	return std::move(loader);
+    AssetLoaders::EffectPassLoader loader(loaderContext);
+    return std::move(loader);
 }
 //-----------------------------------------------------------------------
 void AssetManager::Unload()
 {
-	assets.Unload();
+    assets.Unload();
 }
 //-----------------------------------------------------------------------
 std::string AssetManager::RootDirectory() const
 {
-	return loaderContext.RootDirectory;
+    return loaderContext.RootDirectory;
 }
 //-----------------------------------------------------------------------
 std::ifstream AssetManager::OpenStream(std::string const& assetName) const
 {
-	return loaderContext.OpenStream(assetName);
+    return loaderContext.OpenStream(assetName);
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

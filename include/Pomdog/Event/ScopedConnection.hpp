@@ -16,25 +16,25 @@ namespace Pomdog {
 
 class POMDOG_EXPORT ScopedConnection final {
 private:
-	EventConnection connection;
+    EventConnection connection;
 
 public:
-	ScopedConnection() = default;
-	ScopedConnection(ScopedConnection const&) = delete;
-	ScopedConnection(ScopedConnection &&) = default;
+    ScopedConnection() = default;
+    ScopedConnection(ScopedConnection const&) = delete;
+    ScopedConnection(ScopedConnection &&) = default;
 
-	ScopedConnection(EventConnection const& connection);
-	ScopedConnection(EventConnection && connection);
+    ScopedConnection(EventConnection const& connection);
+    ScopedConnection(EventConnection && connection);
 
-	~ScopedConnection();
+    ~ScopedConnection();
 
-	ScopedConnection & operator=(ScopedConnection const&) = delete;
-	ScopedConnection & operator=(ScopedConnection &&) = default;
+    ScopedConnection & operator=(ScopedConnection const&) = delete;
+    ScopedConnection & operator=(ScopedConnection &&) = default;
 
-	ScopedConnection & operator=(EventConnection const& c);
-	ScopedConnection & operator=(EventConnection && c);
+    ScopedConnection & operator=(EventConnection const& c);
+    ScopedConnection & operator=(EventConnection && c);
 
-	void Disconnect();
+    void Disconnect();
 };
 
 }// namespace Pomdog

@@ -13,7 +13,7 @@ namespace Hashing {
 
 // CRC-32 (Cyclic Redundancy Check for 32bit)
 namespace CRC32 {
-	std::uint32_t POMDOG_EXPORT BlockChecksum(void const* data, std::size_t length);
+    std::uint32_t POMDOG_EXPORT BlockChecksum(void const* data, std::size_t length);
 }
 
 }// namespace Hashing

@@ -20,16 +20,16 @@ class NativeConstantBuffer;
 
 class NativeConstantLayout {
 public:
-	NativeConstantLayout() = default;
-	NativeConstantLayout(NativeConstantLayout const&) = delete;
-	NativeConstantLayout & operator=(NativeConstantLayout const&) = delete;
+    NativeConstantLayout() = default;
+    NativeConstantLayout(NativeConstantLayout const&) = delete;
+    NativeConstantLayout & operator=(NativeConstantLayout const&) = delete;
 
-	virtual ~NativeConstantLayout() = default;
+    virtual ~NativeConstantLayout() = default;
 
-	virtual void SetConstantBuffer(std::string const& constantName,
-		std::shared_ptr<NativeConstantBuffer> const& constantBuffer) = 0;
+    virtual void SetConstantBuffer(std::string const& constantName,
+        std::shared_ptr<NativeConstantBuffer> const& constantBuffer) = 0;
 
-	virtual void SetConstantBuffer(std::string const& constantName) = 0;
+    virtual void SetConstantBuffer(std::string const& constantName) = 0;
 };
 
 }// namespace RenderSystem

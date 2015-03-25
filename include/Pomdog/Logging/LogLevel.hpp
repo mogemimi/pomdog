@@ -13,15 +13,15 @@
 namespace Pomdog {
 
 enum class LogLevel: std::uint8_t {
-	Critical = 0,
+    Critical = 0,
 
-	Warning = 1,
+    Warning = 1,
 
-	Info = 2,
+    Info = 2,
 
-	Verbose = 3,
+    Verbose = 3,
 
-	Internal = 4,
+    Internal = 4,
 };
 
 }// namespace Pomdog

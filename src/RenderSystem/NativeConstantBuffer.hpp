@@ -16,17 +16,17 @@ namespace RenderSystem {
 
 class NativeConstantBuffer {
 public:
-	NativeConstantBuffer() = default;
-	NativeConstantBuffer(NativeConstantBuffer const&) = delete;
-	NativeConstantBuffer & operator=(NativeConstantBuffer const&) = delete;
+    NativeConstantBuffer() = default;
+    NativeConstantBuffer(NativeConstantBuffer const&) = delete;
+    NativeConstantBuffer & operator=(NativeConstantBuffer const&) = delete;
 
-	virtual ~NativeConstantBuffer() = default;
+    virtual ~NativeConstantBuffer() = default;
 
-	///@copydoc ConstantBuffer
-	virtual void GetData(std::uint32_t byteWidth, void* result) const = 0;
+    ///@copydoc ConstantBuffer
+    virtual void GetData(std::uint32_t byteWidth, void* result) const = 0;
 
-	virtual void SetData(std::uint32_t offsetInBytes,
-		void const* source, std::uint32_t sizeInBytes) = 0;
+    virtual void SetData(std::uint32_t offsetInBytes,
+        void const* source, std::uint32_t sizeInBytes) = 0;
 };
 
 }// namespace RenderSystem

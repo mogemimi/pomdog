@@ -25,46 +25,46 @@ class AssetLoaderContext;
 
 class POMDOG_EXPORT AssetDictionary final {
 private:
-	std::unordered_map<std::string, Any> assets;
+    std::unordered_map<std::string, Any> assets;
 
 public:
-	AssetDictionary();
+    AssetDictionary();
 
-	~AssetDictionary();
+    ~AssetDictionary();
 
-	template <typename T>
-	std::shared_ptr<T> Load(AssetLoaderContext const& loaderContext, std::string const& assetName)
-	{
-		static_assert(std::is_object<T>::value, "");
+    template <typename T>
+    std::shared_ptr<T> Load(AssetLoaderContext const& loaderContext, std::string const& assetName)
+    {
+        static_assert(std::is_object<T>::value, "");
 
-		std::type_index const typeIndex = typeid(std::shared_ptr<T>);
+        std::type_index const typeIndex = typeid(std::shared_ptr<T>);
 
-		auto const iter = assets.find(assetName);
-		if (iter != std::end(assets))
-		{
-			auto & assetHolder = iter->second;
+        auto const iter = assets.find(assetName);
+        if (iter != std::end(assets))
+        {
+            auto & assetHolder = iter->second;
 
-			if (assetHolder.Type() == typeIndex) {
-				return assetHolder.As<std::shared_ptr<T>>();
-			}
+            if (assetHolder.Type() == typeIndex) {
+                return assetHolder.As<std::shared_ptr<T>>();
+            }
 
-			assets.erase(iter);
-		}
+            assets.erase(iter);
+        }
 
-		AssetLoader<T> loader;
-		auto asset = loader(loaderContext, assetName);
+        AssetLoader<T> loader;
+        auto asset = loader(loaderContext, assetName);
 
-		static_assert(std::is_same<decltype(asset), std::shared_ptr<T>>::value, "");
+        static_assert(std::is_same<decltype(asset), std::shared_ptr<T>>::value, "");
 
-		Any assetHolder = asset;
-		POMDOG_ASSERT(assetHolder.Type() == typeIndex);
+        Any assetHolder = asset;
+        POMDOG_ASSERT(assetHolder.Type() == typeIndex);
 
-		assets.emplace(assetName, std::move(assetHolder));
+        assets.emplace(assetName, std::move(assetHolder));
 
-		return std::move(asset);
-	}
+        return std::move(asset);
+    }
 
-	void Unload();
+    void Unload();
 };
 
 }// namespace Detail

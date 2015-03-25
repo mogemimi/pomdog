@@ -22,36 +22,36 @@ using ComparisonFunctionGL4 = Tagged<GLenum, ComparisonFunction>;
 using StencilOperationGL4 = Tagged<GLenum, StencilOperation>;
 
 struct DepthStencilFaceOperationGL4 final {
-	ComparisonFunctionGL4 stencilFunction = GL_ALWAYS;
-	StencilOperationGL4 stencilFail = GL_KEEP;
-	StencilOperationGL4 stencilDepthBufferFail = GL_KEEP;
-	StencilOperationGL4 stencilPass = GL_KEEP;
+    ComparisonFunctionGL4 stencilFunction = GL_ALWAYS;
+    StencilOperationGL4 stencilFail = GL_KEEP;
+    StencilOperationGL4 stencilDepthBufferFail = GL_KEEP;
+    StencilOperationGL4 stencilPass = GL_KEEP;
 };
 
 class DepthStencilStateGL4 final: public NativeDepthStencilState {
 public:
-	DepthStencilStateGL4() = delete;
+    DepthStencilStateGL4() = delete;
 
-	explicit DepthStencilStateGL4(DepthStencilDescription const& description);
+    explicit DepthStencilStateGL4(DepthStencilDescription const& description);
 
-	///@copydoc NativeDepthStencilState
-	void Apply(NativeGraphicsContext & graphicsContext) override;
-
-private:
-	void ApplyDepthTest();
-	void ApplyStencilTest();
+    ///@copydoc NativeDepthStencilState
+    void Apply(NativeGraphicsContext & graphicsContext) override;
 
 private:
-	DepthStencilFaceOperationGL4 clockwiseFace;
-	DepthStencilFaceOperationGL4 counterClockwiseFace;
-	ComparisonFunctionGL4 const depthFunction;
+    void ApplyDepthTest();
+    void ApplyStencilTest();
 
-	GLint const referenceStencil;
-	GLuint const stencilMask;
-	GLuint const stencilWriteMask;
-	GLboolean const depthBufferWriteEnable;
-	bool const stencilEnable;
-	bool const depthBufferEnable;
+private:
+    DepthStencilFaceOperationGL4 clockwiseFace;
+    DepthStencilFaceOperationGL4 counterClockwiseFace;
+    ComparisonFunctionGL4 const depthFunction;
+
+    GLint const referenceStencil;
+    GLuint const stencilMask;
+    GLuint const stencilWriteMask;
+    GLboolean const depthBufferWriteEnable;
+    bool const stencilEnable;
+    bool const depthBufferEnable;
 };
 
 }// namespace GL4

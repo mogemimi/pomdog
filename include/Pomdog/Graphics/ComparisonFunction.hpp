@@ -13,21 +13,21 @@
 namespace Pomdog {
 
 enum class ComparisonFunction: std::uint8_t {
-	Never,
+    Never,
 
-	Less,
+    Less,
 
-	Equal,
+    Equal,
 
-	LessEqual,
+    LessEqual,
 
-	Greater,
+    Greater,
 
-	NotEqual,
+    NotEqual,
 
-	GreaterEqual,
+    GreaterEqual,
 
-	Always,
+    Always,
 };
 
 }// namespace Pomdog

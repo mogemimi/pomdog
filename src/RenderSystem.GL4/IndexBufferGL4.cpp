@@ -18,13 +18,13 @@ namespace {
 
 static GLenum ToIndexBufferUsage(BufferUsage bufferUsage)
 {
-	switch (bufferUsage) {
-	case BufferUsage::Dynamic: return GL_DYNAMIC_DRAW;
-	//case BufferUsage::Dynamic: return GL_STREAM_DRAW;
-	case BufferUsage::Immutable: return GL_STATIC_DRAW;
-	}
+    switch (bufferUsage) {
+    case BufferUsage::Dynamic: return GL_DYNAMIC_DRAW;
+    //case BufferUsage::Dynamic: return GL_STREAM_DRAW;
+    case BufferUsage::Immutable: return GL_STATIC_DRAW;
+    }
 #ifdef _MSC_VER
-	return GL_STATIC_DRAW;
+    return GL_STATIC_DRAW;
 #endif
 }
 
@@ -32,89 +32,89 @@ static GLenum ToIndexBufferUsage(BufferUsage bufferUsage)
 //-----------------------------------------------------------------------
 template<>
 struct TypesafeHelperGL4::OpenGLGetTraits<IndexBufferObjectGL4> {
-	constexpr static GLenum bufferObjectBinding = GL_ELEMENT_ARRAY_BUFFER_BINDING;
-	constexpr static GLenum bufferObjectTarget = GL_ELEMENT_ARRAY_BUFFER;
+    constexpr static GLenum bufferObjectBinding = GL_ELEMENT_ARRAY_BUFFER_BINDING;
+    constexpr static GLenum bufferObjectTarget = GL_ELEMENT_ARRAY_BUFFER;
 };
 //-----------------------------------------------------------------------
 IndexBufferGL4::IndexBufferGL4(std::uint32_t sizeInBytes, BufferUsage bufferUsage)
-	: IndexBufferGL4(nullptr, sizeInBytes, bufferUsage)
+    : IndexBufferGL4(nullptr, sizeInBytes, bufferUsage)
 {
-	POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
+    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
 }
 //-----------------------------------------------------------------------
 IndexBufferGL4::IndexBufferGL4(void const* indices,
-	std::uint32_t sizeInBytes, BufferUsage bufferUsage)
+    std::uint32_t sizeInBytes, BufferUsage bufferUsage)
 {
-	POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable ? indices != nullptr: true);
+    POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable ? indices != nullptr: true);
 
-	// Generate index buffer
-	bufferObject = ([]{
-		IndexBufferObjectGL4 indexBuffer;
-		glGenBuffers(1, indexBuffer.Data());
-		return std::move(indexBuffer);
-	})();
+    // Generate index buffer
+    bufferObject = ([]{
+        IndexBufferObjectGL4 indexBuffer;
+        glGenBuffers(1, indexBuffer.Data());
+        return std::move(indexBuffer);
+    })();
 
-	auto const oldBufferObject = TypesafeHelperGL4::Get<IndexBufferObjectGL4>();
-	ScopeGuard scope([&oldBufferObject]{
-		TypesafeHelperGL4::BindBuffer(oldBufferObject);
-	});
+    auto const oldBufferObject = TypesafeHelperGL4::Get<IndexBufferObjectGL4>();
+    ScopeGuard scope([&oldBufferObject]{
+        TypesafeHelperGL4::BindBuffer(oldBufferObject);
+    });
 
-	POMDOG_ASSERT(bufferObject);
-	TypesafeHelperGL4::BindBuffer(*bufferObject);
+    POMDOG_ASSERT(bufferObject);
+    TypesafeHelperGL4::BindBuffer(*bufferObject);
 
-	#ifdef DEBUG
-	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
-	#endif
+    #ifdef DEBUG
+    ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
+    #endif
 
-	POMDOG_ASSERT(sizeInBytes > 0);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeInBytes, indices,
-		ToIndexBufferUsage(bufferUsage));
+    POMDOG_ASSERT(sizeInBytes > 0);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeInBytes, indices,
+        ToIndexBufferUsage(bufferUsage));
 
-	#ifdef DEBUG
-	ErrorChecker::CheckError("glBufferData", __FILE__, __LINE__);
-	#endif
+    #ifdef DEBUG
+    ErrorChecker::CheckError("glBufferData", __FILE__, __LINE__);
+    #endif
 }
 //-----------------------------------------------------------------------
 IndexBufferGL4::~IndexBufferGL4()
 {
-	if (bufferObject) {
-		glDeleteBuffers(1, bufferObject->Data());
-	}
+    if (bufferObject) {
+        glDeleteBuffers(1, bufferObject->Data());
+    }
 }
 //-----------------------------------------------------------------------
 void IndexBufferGL4::SetData(std::uint32_t offsetInBytes, void const* source, std::uint32_t sizeInBytes)
 {
-	POMDOG_ASSERT(source != nullptr);
+    POMDOG_ASSERT(source != nullptr);
 
-	auto const oldBufferObject = TypesafeHelperGL4::Get<IndexBufferObjectGL4>();
-	ScopeGuard scope([&oldBufferObject]{
-		TypesafeHelperGL4::BindBuffer(oldBufferObject);
-	});
+    auto const oldBufferObject = TypesafeHelperGL4::Get<IndexBufferObjectGL4>();
+    ScopeGuard scope([&oldBufferObject]{
+        TypesafeHelperGL4::BindBuffer(oldBufferObject);
+    });
 
-	POMDOG_ASSERT(bufferObject);
-	TypesafeHelperGL4::BindBuffer(*bufferObject);
+    POMDOG_ASSERT(bufferObject);
+    TypesafeHelperGL4::BindBuffer(*bufferObject);
 
-	#ifdef DEBUG
-	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
-	#endif
+    #ifdef DEBUG
+    ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
+    #endif
 
-	POMDOG_ASSERT(sizeInBytes > 0);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offsetInBytes,
-		sizeInBytes, source);
+    POMDOG_ASSERT(sizeInBytes > 0);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offsetInBytes,
+        sizeInBytes, source);
 
-	#ifdef DEBUG
-	ErrorChecker::CheckError("glBufferSubData", __FILE__, __LINE__);
-	#endif
+    #ifdef DEBUG
+    ErrorChecker::CheckError("glBufferSubData", __FILE__, __LINE__);
+    #endif
 }
 //-----------------------------------------------------------------------
 void IndexBufferGL4::BindBuffer()
 {
-	POMDOG_ASSERT(bufferObject);
-	TypesafeHelperGL4::BindBuffer(*bufferObject);
+    POMDOG_ASSERT(bufferObject);
+    TypesafeHelperGL4::BindBuffer(*bufferObject);
 
-	#ifdef DEBUG
-	ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
-	#endif
+    #ifdef DEBUG
+    ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
+    #endif
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

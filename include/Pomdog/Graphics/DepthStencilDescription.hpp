@@ -18,23 +18,23 @@ namespace Pomdog {
 
 class POMDOG_EXPORT DepthStencilDescription {
 public:
-	DepthStencilOperation ClockwiseFace;
+    DepthStencilOperation ClockwiseFace;
 
-	DepthStencilOperation CounterClockwiseFace;
+    DepthStencilOperation CounterClockwiseFace;
 
-	std::int32_t ReferenceStencil = 0;
+    std::int32_t ReferenceStencil = 0;
 
-	std::uint32_t StencilMask = std::numeric_limits<std::uint32_t>::max();
+    std::uint32_t StencilMask = std::numeric_limits<std::uint32_t>::max();
 
-	std::uint32_t StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
+    std::uint32_t StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
 
-	ComparisonFunction DepthBufferFunction = ComparisonFunction::LessEqual;
+    ComparisonFunction DepthBufferFunction = ComparisonFunction::LessEqual;
 
-	bool DepthBufferEnable = true;
+    bool DepthBufferEnable = true;
 
-	bool DepthBufferWriteEnable = true;
+    bool DepthBufferWriteEnable = true;
 
-	bool StencilEnable = false;
+    bool StencilEnable = false;
 };
 
 }// namespace Pomdog

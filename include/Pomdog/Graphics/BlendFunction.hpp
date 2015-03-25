@@ -13,15 +13,15 @@
 namespace Pomdog {
 
 enum class BlendFunction: std::uint8_t {
-	Add,
+    Add,
 
-	Subtract,
+    Subtract,
 
-	ReverseSubtract,
+    ReverseSubtract,
 
-	Min,
+    Min,
 
-	Max,
+    Max,
 };
 
 }// namespace Pomdog

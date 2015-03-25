@@ -13,9 +13,9 @@ namespace Detail {
 
 class Noncopyable {
 public:
-	Noncopyable() = default;
-	Noncopyable(Noncopyable const&) = delete;
-	Noncopyable & operator=(Noncopyable const&) = delete;
+    Noncopyable() = default;
+    Noncopyable(Noncopyable const&) = delete;
+    Noncopyable & operator=(Noncopyable const&) = delete;
 };
 
 }// namespace Detail

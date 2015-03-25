@@ -18,7 +18,7 @@ namespace Detail {
 namespace RenderSystem {
 
 struct SurfaceFormatHelper final {
-	static int ToBytesPerBlock(SurfaceFormat format);
+    static int ToBytesPerBlock(SurfaceFormat format);
 };
 
 }// namespace RenderSystem

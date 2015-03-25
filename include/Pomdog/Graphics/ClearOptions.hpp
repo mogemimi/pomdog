@@ -14,19 +14,19 @@
 namespace Pomdog {
 
 enum class ClearOptions: std::uint8_t {
-	///@brief Clear the depth buffer.
-	DepthBuffer = 0b001,
+    ///@brief Clear the depth buffer.
+    DepthBuffer = 0b001,
 
-	///@brief Clear the stencil buffer.
-	Stencil = 0b010,
+    ///@brief Clear the stencil buffer.
+    Stencil = 0b010,
 
-	///@brief Clear the rendering target.
-	RenderTarget = 0b100,
+    ///@brief Clear the rendering target.
+    RenderTarget = 0b100,
 };
 
 constexpr ClearOptions operator|(ClearOptions a, ClearOptions b)
 {
-	return static_cast<ClearOptions>(static_cast<std::uint8_t>(a) | static_cast<std::uint8_t>(b));
+    return static_cast<ClearOptions>(static_cast<std::uint8_t>(a) | static_cast<std::uint8_t>(b));
 }
 
 #if __cplusplus < 201402L
@@ -34,8 +34,8 @@ POMDOG_EXPORT ClearOptions & operator|=(ClearOptions & a, ClearOptions b);
 #else
 constexpr ClearOptions & operator|=(ClearOptions & a, ClearOptions b)
 {
-	a = a | b;
-	return a;
+    a = a | b;
+    return a;
 }
 #endif
 

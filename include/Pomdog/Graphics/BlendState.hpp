@@ -24,34 +24,34 @@ class NativeBlendState;
 
 class POMDOG_EXPORT BlendState {
 public:
-	BlendState() = delete;
-	BlendState(BlendState const&) = delete;
-	BlendState & operator=(BlendState const&) = delete;
+    BlendState() = delete;
+    BlendState(BlendState const&) = delete;
+    BlendState & operator=(BlendState const&) = delete;
 
-	BlendState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, BlendDescription const& description);
+    BlendState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, BlendDescription const& description);
 
-	~BlendState();
+    ~BlendState();
 
-	BlendDescription Description() const;
+    BlendDescription Description() const;
 
-	static std::shared_ptr<BlendState>
-	CreateAdditive(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<BlendState>
+    CreateAdditive(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	static std::shared_ptr<BlendState>
-	CreateAlphaBlend(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<BlendState>
+    CreateAlphaBlend(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	static std::shared_ptr<BlendState>
-	CreateNonPremultiplied(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<BlendState>
+    CreateNonPremultiplied(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	static std::shared_ptr<BlendState>
-	CreateOpaque(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<BlendState>
+    CreateOpaque(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 public:
-	Detail::RenderSystem::NativeBlendState* NativeBlendState();
+    Detail::RenderSystem::NativeBlendState* NativeBlendState();
 
 private:
-	std::unique_ptr<Detail::RenderSystem::NativeBlendState> nativeBlendState;
-	BlendDescription description;
+    std::unique_ptr<Detail::RenderSystem::NativeBlendState> nativeBlendState;
+    BlendDescription description;
 };
 
 }// namespace Pomdog

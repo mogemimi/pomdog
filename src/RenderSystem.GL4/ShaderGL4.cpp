@@ -20,62 +20,62 @@ namespace {
 static Optional<GLuint> CompileShader(ShaderBytecode const& source, GLenum pipelineStage)
 {
 #if defined(DEBUG)
-	{
-		auto validPipelineStage = pipelineStage == GL_VERTEX_SHADER
-			|| pipelineStage == GL_FRAGMENT_SHADER
-			|| pipelineStage == GL_GEOMETRY_SHADER
-			|| pipelineStage == GL_TESS_CONTROL_SHADER
-			|| pipelineStage == GL_TESS_EVALUATION_SHADER
-		#ifdef GL_COMPUTE_SHADER
-			|| pipelineStage == GL_COMPUTE_SHADER
-		#endif
-			;
-		POMDOG_ASSERT(validPipelineStage);
-	}
+    {
+        auto validPipelineStage = pipelineStage == GL_VERTEX_SHADER
+            || pipelineStage == GL_FRAGMENT_SHADER
+            || pipelineStage == GL_GEOMETRY_SHADER
+            || pipelineStage == GL_TESS_CONTROL_SHADER
+            || pipelineStage == GL_TESS_EVALUATION_SHADER
+        #ifdef GL_COMPUTE_SHADER
+            || pipelineStage == GL_COMPUTE_SHADER
+        #endif
+            ;
+        POMDOG_ASSERT(validPipelineStage);
+    }
 #endif
 
-	auto result = MakeOptional<GLuint>(glCreateShader(pipelineStage));
+    auto result = MakeOptional<GLuint>(glCreateShader(pipelineStage));
 
-	if (result.value() == 0) {
-		// error
-		return OptionalType::NullOptional;
-	}
+    if (result.value() == 0) {
+        // error
+        return OptionalType::NullOptional;
+    }
 
-	std::array<GLchar const*, 1> shaderSource = {{
-		reinterpret_cast<GLchar const*>(source.Code)
-	}};
+    std::array<GLchar const*, 1> shaderSource = {{
+        reinterpret_cast<GLchar const*>(source.Code)
+    }};
 
-	POMDOG_ASSERT(source.ByteLength < static_cast<decltype(source.ByteLength)>(std::numeric_limits<GLint>::max()));
-	GLint const sourceLength = static_cast<GLint>(source.ByteLength);
+    POMDOG_ASSERT(source.ByteLength < static_cast<decltype(source.ByteLength)>(std::numeric_limits<GLint>::max()));
+    GLint const sourceLength = static_cast<GLint>(source.ByteLength);
 
-	glShaderSource(result.value(), 1, shaderSource.data(), &sourceLength);
+    glShaderSource(result.value(), 1, shaderSource.data(), &sourceLength);
 
-	glCompileShader(result.value());
+    glCompileShader(result.value());
 
-	#ifdef DEBUG
-	ErrorChecker::CheckError("glCompileShader", __FILE__, __LINE__);
-	#endif
+    #ifdef DEBUG
+    ErrorChecker::CheckError("glCompileShader", __FILE__, __LINE__);
+    #endif
 
-	GLint compileSuccess = 0;
-	glGetShaderiv(result.value(), GL_COMPILE_STATUS, &compileSuccess);
+    GLint compileSuccess = 0;
+    glGetShaderiv(result.value(), GL_COMPILE_STATUS, &compileSuccess);
 
-	if (compileSuccess == GL_FALSE)
-	{
+    if (compileSuccess == GL_FALSE)
+    {
 #ifdef DEBUG
-		std::array<GLchar, 256> messageBuffer;
+        std::array<GLchar, 256> messageBuffer;
 
-		glGetShaderInfoLog(result.value(), messageBuffer.size(), 0, messageBuffer.data());
-		std::string const message = messageBuffer.data();
+        glGetShaderInfoLog(result.value(), messageBuffer.size(), 0, messageBuffer.data());
+        std::string const message = messageBuffer.data();
 
-		Log::Stream(LogLevel::Critical)
-			<< "Failed to compile shader.\nerror: " << message;
+        Log::Stream(LogLevel::Critical)
+            << "Failed to compile shader.\nerror: " << message;
 #endif // defined(DEBUG)
 
-		glDeleteShader(result.value());
-		return OptionalType::NullOptional;
-	}
+        glDeleteShader(result.value());
+        return OptionalType::NullOptional;
+    }
 
-	return result;
+    return result;
 }
 
 }// unnamed namespace
@@ -86,26 +86,26 @@ constexpr GLenum ShaderGL4<PipelineStage>::pipelineStage;
 template <GLenum PipelineStage>
 ShaderGL4<PipelineStage>::ShaderGL4(ShaderBytecode const& source)
 {
-	shader = CompileShader(source, pipelineStage);
-	if (!shader) {
-		POMDOG_THROW_EXCEPTION(std::domain_error, "Failed to compile shader");
-	}
+    shader = CompileShader(source, pipelineStage);
+    if (!shader) {
+        POMDOG_THROW_EXCEPTION(std::domain_error, "Failed to compile shader");
+    }
 }
 //-----------------------------------------------------------------------
 template <GLenum PipelineStage>
 ShaderGL4<PipelineStage>::~ShaderGL4()
 {
-	if (shader) {
-		glDeleteShader(*shader);
-		shader = OptionalType::NullOptional;
-	}
+    if (shader) {
+        glDeleteShader(*shader);
+        shader = OptionalType::NullOptional;
+    }
 }
 //-----------------------------------------------------------------------
 template <GLenum PipelineStage>
 GLuint ShaderGL4<PipelineStage>::NativeShader() const
 {
-	POMDOG_ASSERT(shader);
-	return *shader;
+    POMDOG_ASSERT(shader);
+    return *shader;
 }
 //-----------------------------------------------------------------------
 // explicit instantiations

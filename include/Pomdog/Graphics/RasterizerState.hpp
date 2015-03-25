@@ -24,31 +24,31 @@ class NativeRasterizerState;
 
 class POMDOG_EXPORT RasterizerState {
 public:
-	RasterizerState() = delete;
-	RasterizerState(RasterizerState const&) = delete;
-	RasterizerState & operator=(RasterizerState const&) = delete;
+    RasterizerState() = delete;
+    RasterizerState(RasterizerState const&) = delete;
+    RasterizerState & operator=(RasterizerState const&) = delete;
 
-	RasterizerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, RasterizerDescription const& description);
+    RasterizerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, RasterizerDescription const& description);
 
-	~RasterizerState();
+    ~RasterizerState();
 
-	RasterizerDescription Description() const;
+    RasterizerDescription Description() const;
 
-	static std::shared_ptr<RasterizerState>
-	CreateCullClockwise(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<RasterizerState>
+    CreateCullClockwise(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	static std::shared_ptr<RasterizerState>
-	CreateCullCounterClockwise(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<RasterizerState>
+    CreateCullCounterClockwise(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	static std::shared_ptr<RasterizerState>
-	CreateCullNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<RasterizerState>
+    CreateCullNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 public:
-	Detail::RenderSystem::NativeRasterizerState* NativeRasterizerState();
+    Detail::RenderSystem::NativeRasterizerState* NativeRasterizerState();
 
 private:
-	std::unique_ptr<Detail::RenderSystem::NativeRasterizerState> nativeRasterizerState;
-	RasterizerDescription description;
+    std::unique_ptr<Detail::RenderSystem::NativeRasterizerState> nativeRasterizerState;
+    RasterizerDescription description;
 };
 
 }// namespace Pomdog

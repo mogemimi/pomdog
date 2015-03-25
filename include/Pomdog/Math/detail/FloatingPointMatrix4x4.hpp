@@ -22,236 +22,236 @@ namespace Detail {
 template <typename T>
 class POMDOG_EXPORT FloatingPointMatrix4x4 {
 public:
-	static_assert(std::is_floating_point<T>::value, "T is floating point.");
-	typedef T value_type;
+    static_assert(std::is_floating_point<T>::value, "T is floating point.");
+    typedef T value_type;
 
-	//union {
-	//	std::array<std::array<T, 4>, 4> m;
-	//#if defined __i386__ || defined __x86_64__
-	//	std::array<__m128, 4>
-	//#endif
-	//};
-	std::array<std::array<T, 4>, 4> m;
+    //union {
+    //    std::array<std::array<T, 4>, 4> m;
+    //#if defined __i386__ || defined __x86_64__
+    //    std::array<__m128, 4>
+    //#endif
+    //};
+    std::array<std::array<T, 4>, 4> m;
 
 private:
-	static constexpr std::size_t RowSize = 4;
-	static constexpr std::size_t ColumnSize = 4;
+    static constexpr std::size_t RowSize = 4;
+    static constexpr std::size_t ColumnSize = 4;
 
 public:
-	// Constructors:
-	FloatingPointMatrix4x4() = default;
+    // Constructors:
+    FloatingPointMatrix4x4() = default;
 
-	///@brief Copy constructor.
-	FloatingPointMatrix4x4(FloatingPointMatrix4x4 const&) = default;
+    ///@brief Copy constructor.
+    FloatingPointMatrix4x4(FloatingPointMatrix4x4 const&) = default;
 
-	///@brief Move constructor.
-	FloatingPointMatrix4x4(FloatingPointMatrix4x4 &&) = default;
+    ///@brief Move constructor.
+    FloatingPointMatrix4x4(FloatingPointMatrix4x4 &&) = default;
 
-	///@brief Construct from floating-point values.
-	FloatingPointMatrix4x4(
-		T m00, T m01, T m02, T m03,
-		T m10, T m11, T m12, T m13,
-		T m20, T m21, T m22, T m23,
-		T m30, T m31, T m32, T m33);
+    ///@brief Construct from floating-point values.
+    FloatingPointMatrix4x4(
+        T m00, T m01, T m02, T m03,
+        T m10, T m11, T m12, T m13,
+        T m20, T m21, T m22, T m23,
+        T m30, T m31, T m32, T m33);
 
-	// Assignment operators:
-	FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 const&) = default;
-	FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 &&) = default;
-	FloatingPointMatrix4x4 & operator*=(FloatingPointMatrix4x4 const&);
-	FloatingPointMatrix4x4 & operator+=(FloatingPointMatrix4x4 const&);
-	FloatingPointMatrix4x4 & operator-=(FloatingPointMatrix4x4 const&);
-	FloatingPointMatrix4x4 & operator*=(T scaleFactor);
-	FloatingPointMatrix4x4 & operator/=(T scaleFactor);
+    // Assignment operators:
+    FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 const&) = default;
+    FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 &&) = default;
+    FloatingPointMatrix4x4 & operator*=(FloatingPointMatrix4x4 const&);
+    FloatingPointMatrix4x4 & operator+=(FloatingPointMatrix4x4 const&);
+    FloatingPointMatrix4x4 & operator-=(FloatingPointMatrix4x4 const&);
+    FloatingPointMatrix4x4 & operator*=(T scaleFactor);
+    FloatingPointMatrix4x4 & operator/=(T scaleFactor);
 
-	// Unary operators:
-	FloatingPointMatrix4x4 operator+() const;
-	FloatingPointMatrix4x4 operator-() const;
+    // Unary operators:
+    FloatingPointMatrix4x4 operator+() const;
+    FloatingPointMatrix4x4 operator-() const;
 
-	// Binary operators:
-	FloatingPointMatrix4x4 operator+(FloatingPointMatrix4x4 const&) const;
-	FloatingPointMatrix4x4 operator-(FloatingPointMatrix4x4 const&) const;
-	FloatingPointMatrix4x4 operator*(FloatingPointMatrix4x4 const&) const;
-	FloatingPointMatrix4x4 operator*(T scaleFactor) const;
-	FloatingPointMatrix4x4 operator/(T scaleFactor) const;
+    // Binary operators:
+    FloatingPointMatrix4x4 operator+(FloatingPointMatrix4x4 const&) const;
+    FloatingPointMatrix4x4 operator-(FloatingPointMatrix4x4 const&) const;
+    FloatingPointMatrix4x4 operator*(FloatingPointMatrix4x4 const&) const;
+    FloatingPointMatrix4x4 operator*(T scaleFactor) const;
+    FloatingPointMatrix4x4 operator/(T scaleFactor) const;
 
-	bool operator==(FloatingPointMatrix4x4 const&) const;
-	bool operator!=(FloatingPointMatrix4x4 const&) const;
+    bool operator==(FloatingPointMatrix4x4 const&) const;
+    bool operator!=(FloatingPointMatrix4x4 const&) const;
 
-	// Function-call operators:
-	T const& operator()(std::size_t row, std::size_t column) const;
-	T & operator()(std::size_t row, std::size_t column);
+    // Function-call operators:
+    T const& operator()(std::size_t row, std::size_t column) const;
+    T & operator()(std::size_t row, std::size_t column);
 
-	void SetTranslation(FloatingPointVector3<T> const&);
+    void SetTranslation(FloatingPointVector3<T> const&);
 
-	FloatingPointVector3<T> GetTranslation() const;
+    FloatingPointVector3<T> GetTranslation() const;
 
-	void SetScale(FloatingPointVector3<T> const&);
+    void SetScale(FloatingPointVector3<T> const&);
 
-	FloatingPointVector3<T> GetScale() const;
+    FloatingPointVector3<T> GetScale() const;
 
-	T Determinant() const;
+    T Determinant() const;
 
-	FloatingPointMatrix4x4 Concatenate(FloatingPointMatrix4x4 const&) const;
+    FloatingPointMatrix4x4 Concatenate(FloatingPointMatrix4x4 const&) const;
 
-	FloatingPointMatrix4x4 Concatenate(T scaleFactor) const;
+    FloatingPointMatrix4x4 Concatenate(T scaleFactor) const;
 
-	FloatingPointMatrix3x3<T> Minor3x3(std::size_t row, std::size_t column) const;
+    FloatingPointMatrix3x3<T> Minor3x3(std::size_t row, std::size_t column) const;
 
-	static FloatingPointMatrix4x4
-	Adjoint(FloatingPointMatrix4x4 const& matrix);
+    static FloatingPointMatrix4x4
+    Adjoint(FloatingPointMatrix4x4 const& matrix);
 
-	static void
-	Transpose(FloatingPointMatrix4x4 const& matrix, FloatingPointMatrix4x4 & result);
+    static void
+    Transpose(FloatingPointMatrix4x4 const& matrix, FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	Transpose(FloatingPointMatrix4x4 const& matrix);
+    static FloatingPointMatrix4x4
+    Transpose(FloatingPointMatrix4x4 const& matrix);
 
-	static void
-	Invert(FloatingPointMatrix4x4 const& matrix, FloatingPointMatrix4x4 & result);
+    static void
+    Invert(FloatingPointMatrix4x4 const& matrix, FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	Invert(FloatingPointMatrix4x4 const& matrix);
+    static FloatingPointMatrix4x4
+    Invert(FloatingPointMatrix4x4 const& matrix);
 
-	static void
-	Lerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2, T amount,
-		FloatingPointMatrix4x4 & result);
+    static void
+    Lerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2, T amount,
+        FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	Lerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2, T amount);
+    static FloatingPointMatrix4x4
+    Lerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2, T amount);
 
-	static void
-	CreateTranslation(FloatingPointVector3<T> const& position, FloatingPointMatrix4x4 & result);
+    static void
+    CreateTranslation(FloatingPointVector3<T> const& position, FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreateTranslation(FloatingPointVector3<T> const& position);
+    static FloatingPointMatrix4x4
+    CreateTranslation(FloatingPointVector3<T> const& position);
 
-	static void
-	CreateScale(T scale, FloatingPointMatrix4x4 & result);
+    static void
+    CreateScale(T scale, FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreateScale(T scale);
+    static FloatingPointMatrix4x4
+    CreateScale(T scale);
 
-	static void
-	CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix4x4 & result);
+    static void
+    CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreateScale(FloatingPointVector3<T> const& scale);
+    static FloatingPointMatrix4x4
+    CreateScale(FloatingPointVector3<T> const& scale);
 
-	static void
-	CreateRotationX(Radian<T> const& angle, FloatingPointMatrix4x4 & result);
+    static void
+    CreateRotationX(Radian<T> const& angle, FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreateRotationX(Radian<T> const& angle);
+    static FloatingPointMatrix4x4
+    CreateRotationX(Radian<T> const& angle);
 
-	static void
-	CreateRotationY(Radian<T> const& angle, FloatingPointMatrix4x4 & result);
+    static void
+    CreateRotationY(Radian<T> const& angle, FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreateRotationY(Radian<T> const& angle);
+    static FloatingPointMatrix4x4
+    CreateRotationY(Radian<T> const& angle);
 
-	static void
-	CreateRotationZ(Radian<T> const& angle, FloatingPointMatrix4x4 & result);
+    static void
+    CreateRotationZ(Radian<T> const& angle, FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreateRotationZ(Radian<T> const& angle);
+    static FloatingPointMatrix4x4
+    CreateRotationZ(Radian<T> const& angle);
 
-	static void
-	CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion, FloatingPointMatrix4x4 & result);
+    static void
+    CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion, FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion);
+    static FloatingPointMatrix4x4
+    CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion);
 
-	static void
-	CreateLookAtLH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
-		FloatingPointVector3<T> const& up, FloatingPointMatrix4x4 & result);
+    static void
+    CreateLookAtLH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
+        FloatingPointVector3<T> const& up, FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreateLookAtLH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
-		FloatingPointVector3<T> const& up);
+    static FloatingPointMatrix4x4
+    CreateLookAtLH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
+        FloatingPointVector3<T> const& up);
 
-	static void
-	CreateLookAtRH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
-		FloatingPointVector3<T> const& up, FloatingPointMatrix4x4 & result);
+    static void
+    CreateLookAtRH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
+        FloatingPointVector3<T> const& up, FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreateLookAtRH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
-		FloatingPointVector3<T> const& up);
+    static FloatingPointMatrix4x4
+    CreateLookAtRH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
+        FloatingPointVector3<T> const& up);
 
-	static void
-	CreatePerspectiveLH(T width, T height, T zNear, T zFar, FloatingPointMatrix4x4 & result);
+    static void
+    CreatePerspectiveLH(T width, T height, T zNear, T zFar, FloatingPointMatrix4x4 & result);
 
-	static void
-	CreatePerspectiveRH(T width, T height, T zNear, T zFar, FloatingPointMatrix4x4 & result);
+    static void
+    CreatePerspectiveRH(T width, T height, T zNear, T zFar, FloatingPointMatrix4x4 & result);
 
-	static void
-	CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy, T aspect, T zNear, T zFar,
-		FloatingPointMatrix4x4 & result);
+    static void
+    CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy, T aspect, T zNear, T zFar,
+        FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy, T aspect, T zNear, T zFar);
+    static FloatingPointMatrix4x4
+    CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy, T aspect, T zNear, T zFar);
 
-	static void
-	CreatePerspectiveFieldOfViewRH(Radian<T> const& fovy, T aspect, T zNear, T zFar,
-		FloatingPointMatrix4x4 & result);
+    static void
+    CreatePerspectiveFieldOfViewRH(Radian<T> const& fovy, T aspect, T zNear, T zFar,
+        FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreatePerspectiveFieldOfViewRH(Radian<T> const& fovy, T aspect, T zNear, T zFar);
+    static FloatingPointMatrix4x4
+    CreatePerspectiveFieldOfViewRH(Radian<T> const& fovy, T aspect, T zNear, T zFar);
 
-	static void
-	CreatePerspectiveOffCenterLH(T left, T right, T bottom, T top, T zNear, T zFar,
-		FloatingPointMatrix4x4 & result);
+    static void
+    CreatePerspectiveOffCenterLH(T left, T right, T bottom, T top, T zNear, T zFar,
+        FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreatePerspectiveOffCenterLH(T left, T right, T bottom, T top, T zNear, T zFar);
+    static FloatingPointMatrix4x4
+    CreatePerspectiveOffCenterLH(T left, T right, T bottom, T top, T zNear, T zFar);
 
-	static void
-	CreatePerspectiveOffCenterRH(T left, T right, T bottom, T top, T zNear, T zFar,
-		FloatingPointMatrix4x4 & result);
+    static void
+    CreatePerspectiveOffCenterRH(T left, T right, T bottom, T top, T zNear, T zFar,
+        FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreatePerspectiveOffCenterRH(T left, T right, T bottom, T top, T zNear, T zFar);
+    static FloatingPointMatrix4x4
+    CreatePerspectiveOffCenterRH(T left, T right, T bottom, T top, T zNear, T zFar);
 
-	static void
-	CreateOrthographicLH(T width, T height, T zNearPlane, T zFarPlane,
-		FloatingPointMatrix4x4 & result);
+    static void
+    CreateOrthographicLH(T width, T height, T zNearPlane, T zFarPlane,
+        FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreateOrthographicLH(T width, T height, T zNearPlane, T zFarPlane);
+    static FloatingPointMatrix4x4
+    CreateOrthographicLH(T width, T height, T zNearPlane, T zFarPlane);
 
-	static void
-	CreateOrthographicRH(T width, T height, T zNearPlane, T zFarPlane,
-		FloatingPointMatrix4x4 & result);
+    static void
+    CreateOrthographicRH(T width, T height, T zNearPlane, T zFarPlane,
+        FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreateOrthographicRH(T width, T height, T zNearPlane, T zFarPlane);
+    static FloatingPointMatrix4x4
+    CreateOrthographicRH(T width, T height, T zNearPlane, T zFarPlane);
 
-	static void
-	CreateOrthographicOffCenterLH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane,
-		FloatingPointMatrix4x4 & result);
+    static void
+    CreateOrthographicOffCenterLH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane,
+        FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreateOrthographicOffCenterLH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane);
+    static FloatingPointMatrix4x4
+    CreateOrthographicOffCenterLH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane);
 
-	static void
-	CreateOrthographicOffCenterRH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane,
-		FloatingPointMatrix4x4 & result);
+    static void
+    CreateOrthographicOffCenterRH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane,
+        FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreateOrthographicOffCenterRH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane);
+    static FloatingPointMatrix4x4
+    CreateOrthographicOffCenterRH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane);
 
-	static void
-	CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle, FloatingPointMatrix4x4 & result);
+    static void
+    CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle, FloatingPointMatrix4x4 & result);
 
-	static FloatingPointMatrix4x4
-	CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle);
+    static FloatingPointMatrix4x4
+    CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle);
 
-	///@brief Returns pointer to the first element.
-	T const* Data() const;
+    ///@brief Returns pointer to the first element.
+    T const* Data() const;
 
-	///@brief Returns pointer to the first element.
-	T* Data();
+    ///@brief Returns pointer to the first element.
+    T* Data();
 
-	static FloatingPointMatrix4x4 const Identity;
+    static FloatingPointMatrix4x4 const Identity;
 };
 
 template <typename T>

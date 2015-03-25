@@ -13,15 +13,15 @@
 namespace Pomdog {
 
 enum class EffectVariableClass: std::uint8_t {
-	Scalar,
+    Scalar,
 
-	Vector,
+    Vector,
 
-	Matrix,
+    Matrix,
 
-	Object,
+    Object,
 
-	Struct,
+    Struct,
 };
 
 }// namespace Pomdog

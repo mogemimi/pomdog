@@ -11,21 +11,21 @@ namespace Win32 {
 
 TimeSourceWin32::TimeSourceWin32()
 {
-	LARGE_INTEGER frequency;
-	::QueryPerformanceFrequency(&frequency);
+    LARGE_INTEGER frequency;
+    ::QueryPerformanceFrequency(&frequency);
 
-	POMDOG_ASSERT_MESSAGE(0 != frequency.QuadPart,
-		"High-resolution performance counter not supported by installed hardware.");
+    POMDOG_ASSERT_MESSAGE(0 != frequency.QuadPart,
+        "High-resolution performance counter not supported by installed hardware.");
 
-	secondsPerTick = 1.0 / frequency.QuadPart;
+    secondsPerTick = 1.0 / frequency.QuadPart;
 }
 //-----------------------------------------------------------------------
 TimePoint TimeSourceWin32::Now() const
 {
-	LARGE_INTEGER time;
-	::QueryPerformanceCounter(&time);
-	auto currentSeconds = time.QuadPart * secondsPerTick;
-	return TimePoint(Duration(currentSeconds));
+    LARGE_INTEGER time;
+    ::QueryPerformanceCounter(&time);
+    auto currentSeconds = time.QuadPart * secondsPerTick;
+    return TimePoint(Duration(currentSeconds));
 }
 
 }// namespace Win32

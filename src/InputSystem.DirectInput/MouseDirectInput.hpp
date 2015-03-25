@@ -24,22 +24,22 @@ namespace DirectInput {
 
 class MouseDirectInput final: public Mouse {
 public:
-	MouseDirectInput(IDirectInput8* directInput, HWND windowHandle,
-		SubsystemScheduler & scheduler);
+    MouseDirectInput(IDirectInput8* directInput, HWND windowHandle,
+        SubsystemScheduler & scheduler);
 
-	~MouseDirectInput();
+    ~MouseDirectInput();
 
-	MouseState GetState() const override;
-
-private:
-	void Update();
+    MouseState GetState() const override;
 
 private:
-	ScopedConnection connection;
-	MouseState mouseState;
-	Microsoft::WRL::ComPtr<IDirectInputDevice8> inputDevice;
-	HWND windowHandle;
-	static constexpr std::size_t MaxKeyBufferSize = 16;
+    void Update();
+
+private:
+    ScopedConnection connection;
+    MouseState mouseState;
+    Microsoft::WRL::ComPtr<IDirectInputDevice8> inputDevice;
+    HWND windowHandle;
+    static constexpr std::size_t MaxKeyBufferSize = 16;
 };
 
 }// namespace DirectInput

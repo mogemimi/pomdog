@@ -22,25 +22,25 @@ class EffectPassLoader;
 
 class POMDOG_EXPORT AssetManager {
 public:
-	AssetManager(Detail::AssetLoaderContext && loaderContext);
+    AssetManager(Detail::AssetLoaderContext && loaderContext);
 
-	template <typename T>
-	std::shared_ptr<T> Load(std::string const& assetName)
-	{
-		return assets.Load<T>(loaderContext, assetName);
-	}
+    template <typename T>
+    std::shared_ptr<T> Load(std::string const& assetName)
+    {
+        return assets.Load<T>(loaderContext, assetName);
+    }
 
-	AssetLoaders::EffectPassLoader LoadEffectPass();
+    AssetLoaders::EffectPassLoader LoadEffectPass();
 
-	void Unload();
+    void Unload();
 
-	std::string RootDirectory() const;
+    std::string RootDirectory() const;
 
-	std::ifstream OpenStream(std::string const& assetName) const;
+    std::ifstream OpenStream(std::string const& assetName) const;
 
 private:
-	Detail::AssetLoaderContext loaderContext;
-	Detail::AssetDictionary assets;
+    Detail::AssetLoaderContext loaderContext;
+    Detail::AssetDictionary assets;
 };
 
 }// namespace Pomdog

@@ -28,50 +28,50 @@ class NativeConstantBuffer;
 
 class POMDOG_EXPORT EffectParameter {
 public:
-	EffectParameter() = default;
+    EffectParameter() = default;
 
-	EffectParameter(EffectParameter const&) = delete;
-	EffectParameter & operator=(EffectParameter const&) = delete;
+    EffectParameter(EffectParameter const&) = delete;
+    EffectParameter & operator=(EffectParameter const&) = delete;
 
-	EffectParameter(GraphicsDevice & graphicsDevice, std::uint32_t byteConstants);
+    EffectParameter(GraphicsDevice & graphicsDevice, std::uint32_t byteConstants);
 
-	EffectParameter(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		std::uint32_t byteConstants);
+    EffectParameter(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        std::uint32_t byteConstants);
 
-	~EffectParameter();
+    ~EffectParameter();
 
-	template <typename T>
-	T GetValue() const
-	{
-		static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
-		T result;
-		Detail::EffectBinaryParameter::Get<T>(*this, result);
-		return std::move(result);
-	}
+    template <typename T>
+    T GetValue() const
+    {
+        static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
+        T result;
+        Detail::EffectBinaryParameter::Get<T>(*this, result);
+        return std::move(result);
+    }
 
-	void GetValue(std::uint32_t byteWidth, void* result) const;
+    void GetValue(std::uint32_t byteWidth, void* result) const;
 
-	template <typename T>
-	void SetValue(T const& value)
-	{
-		static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
-		Detail::EffectBinaryParameter::Set(*this, value);
-	}
+    template <typename T>
+    void SetValue(T const& value)
+    {
+        static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
+        Detail::EffectBinaryParameter::Set(*this, value);
+    }
 
-	template <typename T>
-	void SetValue(T const* data, std::uint32_t count)
-	{
-		static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
-		Detail::EffectBinaryParameter::Set(*this, data, count);
-	}
+    template <typename T>
+    void SetValue(T const* data, std::uint32_t count)
+    {
+        static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
+        Detail::EffectBinaryParameter::Set(*this, data, count);
+    }
 
-	void SetValue(void const* data, std::uint32_t byteWidth);
+    void SetValue(void const* data, std::uint32_t byteWidth);
 
 public:
-	Detail::RenderSystem::NativeConstantBuffer* NativeConstantBuffer();
+    Detail::RenderSystem::NativeConstantBuffer* NativeConstantBuffer();
 
 private:
-	std::unique_ptr<Detail::RenderSystem::NativeConstantBuffer> nativeConstantBuffer;
+    std::unique_ptr<Detail::RenderSystem::NativeConstantBuffer> nativeConstantBuffer;
 };
 
 }// namespace Pomdog

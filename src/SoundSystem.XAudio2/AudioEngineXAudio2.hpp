@@ -18,19 +18,19 @@ namespace XAudio2 {
 
 class AudioEngineXAudio2 {
 public:
-	AudioEngineXAudio2();
+    AudioEngineXAudio2();
 
-	~AudioEngineXAudio2();
+    ~AudioEngineXAudio2();
 
-	IXAudio2* XAudio2Engine() const;
+    IXAudio2* XAudio2Engine() const;
 
-	float MasterVolume() const;
+    float MasterVolume() const;
 
-	void MasterVolume(float volume);
+    void MasterVolume(float volume);
 
 private:
-	Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
-	IXAudio2MasteringVoice* masteringVoice;
+    Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
+    IXAudio2MasteringVoice* masteringVoice;
 };
 
 }// namespace XAudio2

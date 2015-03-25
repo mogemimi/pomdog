@@ -23,21 +23,21 @@ namespace InputSystem {
 
 class InputDeviceFactory final: Noncopyable {
 public:
-	~InputDeviceFactory();
+    ~InputDeviceFactory();
 
-	//std::shared_ptr<Gamepad> CreateGamepad(SubsystemScheduler & scheduler);
+    //std::shared_ptr<Gamepad> CreateGamepad(SubsystemScheduler & scheduler);
 
-	std::shared_ptr<Keyboard> CreateKeyboard(SubsystemScheduler & scheduler);
+    std::shared_ptr<Keyboard> CreateKeyboard(SubsystemScheduler & scheduler);
 
-	std::shared_ptr<Mouse> CreateMouse(SubsystemScheduler & scheduler);
+    std::shared_ptr<Mouse> CreateMouse(SubsystemScheduler & scheduler);
 
-	void AddCreator(std::unique_ptr<KeyboardCreator> && creator);
+    void AddCreator(std::unique_ptr<KeyboardCreator> && creator);
 
-	void AddCreator(std::unique_ptr<MouseCreator> && creator);
+    void AddCreator(std::unique_ptr<MouseCreator> && creator);
 
 private:
-	std::unique_ptr<KeyboardCreator> keyboardCreator;
-	std::unique_ptr<MouseCreator> mouseCreator;
+    std::unique_ptr<KeyboardCreator> keyboardCreator;
+    std::unique_ptr<MouseCreator> mouseCreator;
 };
 
 }// namespace InputSystem

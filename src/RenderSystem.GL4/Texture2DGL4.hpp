@@ -23,20 +23,20 @@ using Texture2DObjectGL4 = Tagged<GLuint, Texture2D>;
 
 class Texture2DGL4 final: public NativeTexture2D {
 public:
-	Texture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
-		std::int32_t levelCount, SurfaceFormat format);
+    Texture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
+        std::int32_t levelCount, SurfaceFormat format);
 
-	~Texture2DGL4() override;
+    ~Texture2DGL4() override;
 
-	void SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
-		std::int32_t levelCount, SurfaceFormat format, void const* pixelData) override;
+    void SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
+        std::int32_t levelCount, SurfaceFormat format, void const* pixelData) override;
 
-	void GenerateMipmap();
+    void GenerateMipmap();
 
-	Texture2DObjectGL4 const& GetTextureHandle() const;
+    Texture2DObjectGL4 const& GetTextureHandle() const;
 
 private:
-	Optional<Texture2DObjectGL4> textureObject;
+    Optional<Texture2DObjectGL4> textureObject;
 };
 
 }// namespace GL4

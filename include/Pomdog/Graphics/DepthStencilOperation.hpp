@@ -15,13 +15,13 @@ namespace Pomdog {
 
 class DepthStencilOperation {
 public:
-	StencilOperation StencilDepthBufferFail = StencilOperation::Keep;
+    StencilOperation StencilDepthBufferFail = StencilOperation::Keep;
 
-	StencilOperation StencilFail = StencilOperation::Keep;
+    StencilOperation StencilFail = StencilOperation::Keep;
 
-	StencilOperation StencilPass = StencilOperation::Keep;
+    StencilOperation StencilPass = StencilOperation::Keep;
 
-	ComparisonFunction StencilFunction = ComparisonFunction::Always;
+    ComparisonFunction StencilFunction = ComparisonFunction::Always;
 };
 
 }// namespace Pomdog

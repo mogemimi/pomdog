@@ -17,14 +17,14 @@ namespace RenderSystem {
 
 class NativeIndexBuffer {
 public:
-	NativeIndexBuffer() = default;
-	NativeIndexBuffer(NativeIndexBuffer const&) = delete;
-	NativeIndexBuffer & operator=(NativeIndexBuffer const&) = delete;
+    NativeIndexBuffer() = default;
+    NativeIndexBuffer(NativeIndexBuffer const&) = delete;
+    NativeIndexBuffer & operator=(NativeIndexBuffer const&) = delete;
 
-	virtual ~NativeIndexBuffer() = default;
+    virtual ~NativeIndexBuffer() = default;
 
-	virtual void SetData(std::uint32_t offsetInBytes,
-		void const* source, std::uint32_t sizeInBytes) = 0;
+    virtual void SetData(std::uint32_t offsetInBytes,
+        void const* source, std::uint32_t sizeInBytes) = 0;
 };
 
 }// namespace RenderSystem

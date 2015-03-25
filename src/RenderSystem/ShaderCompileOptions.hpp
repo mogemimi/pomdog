@@ -17,37 +17,37 @@ namespace Detail {
 namespace RenderSystem {
 
 enum class ShaderPipelineStage: std::uint8_t {
-	VertexShader,
-	PixelShader,
-	//GeometryShader,
-	//ComputeShader,
+    VertexShader,
+    PixelShader,
+    //GeometryShader,
+    //ComputeShader,
 };
 
 class ShaderModel {
 public:
-	std::uint8_t Major;
-	std::uint8_t Minor;
+    std::uint8_t Major;
+    std::uint8_t Minor;
 };
 
 class ShaderProfile {
 public:
-	ShaderModel ShaderModel;
-	ShaderPipelineStage PipelineStage;
+    ShaderModel ShaderModel;
+    ShaderPipelineStage PipelineStage;
 };
 
 class ShaderMacro {
 public:
-	std::string Name;
-	std::string Definition;
+    std::string Name;
+    std::string Definition;
 };
 
 class ShaderCompileOptions {
 public:
-	std::string EntryPoint;
-	std::string CurrentDirectory;
-	std::vector<ShaderMacro> PreprocessorMacros;
-	ShaderProfile Profile;
-	bool Precompiled;
+    std::string EntryPoint;
+    std::string CurrentDirectory;
+    std::vector<ShaderMacro> PreprocessorMacros;
+    ShaderProfile Profile;
+    bool Precompiled;
 };
 
 }// namespace RenderSystem

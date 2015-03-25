@@ -18,34 +18,34 @@ class GameClock;
 
 class Timer {
 public:
-	explicit Timer(GameClock & clock);
+    explicit Timer(GameClock & clock);
 
-	Timer() = delete;
-	Timer(Timer const&) = delete;
-	Timer(Timer &&) = default;
-	Timer & operator=(Timer const&) = delete;
-	Timer & operator=(Timer &&) = default;
+    Timer() = delete;
+    Timer(Timer const&) = delete;
+    Timer(Timer &&) = default;
+    Timer & operator=(Timer const&) = delete;
+    Timer & operator=(Timer &&) = default;
 
-	~Timer();
+    ~Timer();
 
-	void Start();
-	void Stop();
-	void Reset();
+    void Start();
+    void Stop();
+    void Reset();
 
-	bool Enabled() const;
+    bool Enabled() const;
 
-	Duration TotalTime() const;
-	Duration FrameDuration() const;
+    Duration TotalTime() const;
+    Duration FrameDuration() const;
 
-	void Scale(float scale);
-	float Scale() const;
+    void Scale(float scale);
+    float Scale() const;
 
 private:
-	ScopedConnection connection;
-	Duration totalTime;
-	Duration frameDuration;
-	float scale;
-	bool  enabled;
+    ScopedConnection connection;
+    Duration totalTime;
+    Duration frameDuration;
+    float scale;
+    bool  enabled;
 };
 
 }// namespace Pomdog

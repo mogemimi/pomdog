@@ -16,7 +16,7 @@ namespace Detail {
 
 class SubsystemScheduler: Noncopyable {
 public:
-	Signal<void()> OnUpdate;
+    Signal<void()> OnUpdate;
 };
 
 }// namespace Detail

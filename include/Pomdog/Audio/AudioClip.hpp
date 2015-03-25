@@ -19,29 +19,29 @@ namespace Pomdog {
 
 class POMDOG_EXPORT AudioClip {
 public:
-	AudioClip(std::unique_ptr<Detail::SoundSystem::NativeAudioClip> && nativeAudioClip,
-		std::uint32_t sampleRate, std::uint16_t bitsPerSample, AudioChannels channels);
+    AudioClip(std::unique_ptr<Detail::SoundSystem::NativeAudioClip> && nativeAudioClip,
+        std::uint32_t sampleRate, std::uint16_t bitsPerSample, AudioChannels channels);
 
-	AudioClip(AudioClip const&) = delete;
-	AudioClip & operator=(AudioClip const&) = delete;
+    AudioClip(AudioClip const&) = delete;
+    AudioClip & operator=(AudioClip const&) = delete;
 
-	~AudioClip();
+    ~AudioClip();
 
-	Duration Length() const;
+    Duration Length() const;
 
-	std::uint32_t SampleRate() const;
+    std::uint32_t SampleRate() const;
 
-	std::uint16_t BitsPerSample() const;
+    std::uint16_t BitsPerSample() const;
 
-	AudioChannels Channels() const;
+    AudioChannels Channels() const;
 
-	Detail::SoundSystem::NativeAudioClip* NativeAudioClip();
+    Detail::SoundSystem::NativeAudioClip* NativeAudioClip();
 
 private:
-	std::unique_ptr<Detail::SoundSystem::NativeAudioClip> nativeAudioClip;
-	std::uint32_t sampleRate;
-	std::uint16_t bitsPerSample;
-	AudioChannels channels;
+    std::unique_ptr<Detail::SoundSystem::NativeAudioClip> nativeAudioClip;
+    std::uint32_t sampleRate;
+    std::uint16_t bitsPerSample;
+    AudioChannels channels;
 };
 
 }// namespace Pomdog

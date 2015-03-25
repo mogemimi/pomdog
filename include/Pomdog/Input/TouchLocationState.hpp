@@ -13,10 +13,10 @@
 namespace Pomdog {
 
 enum class TouchLocationState: std::uint8_t {
-	Invalid,
-	Moved,
-	Pressed,
-	Released,
+    Invalid,
+    Moved,
+    Pressed,
+    Released,
 };
 
 }// namespace Pomdog

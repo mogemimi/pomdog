@@ -25,31 +25,31 @@ class Mouse;
 
 class POMDOG_EXPORT GameHost: public std::enable_shared_from_this<GameHost> {
 public:
-	GameHost() = default;
-	GameHost(GameHost const&) = delete;
-	GameHost & operator=(GameHost const&) = delete;
+    GameHost() = default;
+    GameHost(GameHost const&) = delete;
+    GameHost & operator=(GameHost const&) = delete;
 
-	virtual ~GameHost() = default;
+    virtual ~GameHost() = default;
 
-	virtual void Run(Game & game) = 0;
+    virtual void Run(Game & game) = 0;
 
-	virtual void Exit() = 0;
+    virtual void Exit() = 0;
 
-	virtual std::shared_ptr<GameWindow> Window() = 0;
+    virtual std::shared_ptr<GameWindow> Window() = 0;
 
-	virtual std::shared_ptr<GameClock> Clock() = 0;
+    virtual std::shared_ptr<GameClock> Clock() = 0;
 
-	virtual std::shared_ptr<GraphicsContext> GraphicsContext() = 0;
+    virtual std::shared_ptr<GraphicsContext> GraphicsContext() = 0;
 
-	virtual std::shared_ptr<GraphicsDevice> GraphicsDevice() = 0;
+    virtual std::shared_ptr<GraphicsDevice> GraphicsDevice() = 0;
 
-	virtual std::shared_ptr<AudioEngine> AudioEngine() = 0;
+    virtual std::shared_ptr<AudioEngine> AudioEngine() = 0;
 
-	virtual std::shared_ptr<AssetManager> AssetManager() = 0;
+    virtual std::shared_ptr<AssetManager> AssetManager() = 0;
 
-	virtual std::shared_ptr<Keyboard> Keyboard() = 0;
+    virtual std::shared_ptr<Keyboard> Keyboard() = 0;
 
-	virtual std::shared_ptr<Mouse> Mouse() = 0;
+    virtual std::shared_ptr<Mouse> Mouse() = 0;
 };
 
 }// namespace Pomdog

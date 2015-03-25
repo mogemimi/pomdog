@@ -24,15 +24,15 @@ struct ViewWillStartLiveResizeEvent {};
 struct ViewDidEndLiveResizeEvent {};
 
 //struct InputCharacterEvent {
-//	std::uint16_t Character;
+//    std::uint16_t Character;
 //};
 
 struct InputKeyDownEvent {
-	Keys Key;
+    Keys Key;
 };
 
 struct InputKeyUpEvent {
-	Keys Key;
+    Keys Key;
 };
 
 }// namespace Detail

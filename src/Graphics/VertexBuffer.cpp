@@ -12,91 +12,91 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 VertexBuffer::VertexBuffer(GraphicsDevice & graphicsDevice,
-	void const* vertices, std::size_t vertexCountIn,
-	std::size_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
-	: nativeVertexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateVertexBuffer(
-		vertices, vertexCountIn * strideBytesIn, bufferUsageIn))
-	, vertexCount(static_cast<decltype(vertexCount)>(vertexCountIn))
-	, strideBytes(static_cast<decltype(strideBytes)>(strideBytesIn))
-	, bufferUsage(bufferUsageIn)
+    void const* vertices, std::size_t vertexCountIn,
+    std::size_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
+    : nativeVertexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateVertexBuffer(
+        vertices, vertexCountIn * strideBytesIn, bufferUsageIn))
+    , vertexCount(static_cast<decltype(vertexCount)>(vertexCountIn))
+    , strideBytes(static_cast<decltype(strideBytes)>(strideBytesIn))
+    , bufferUsage(bufferUsageIn)
 {
-	POMDOG_ASSERT(nativeVertexBuffer);
-	POMDOG_ASSERT(vertices != nullptr);
-	POMDOG_ASSERT(vertexCount > 0);
-	POMDOG_ASSERT(strideBytes > 0);
+    POMDOG_ASSERT(nativeVertexBuffer);
+    POMDOG_ASSERT(vertices != nullptr);
+    POMDOG_ASSERT(vertexCount > 0);
+    POMDOG_ASSERT(strideBytes > 0);
 }
 //-----------------------------------------------------------------------
 VertexBuffer::VertexBuffer(GraphicsDevice & graphicsDevice,
-	std::size_t vertexCountIn, std::size_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
-	: nativeVertexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateVertexBuffer(
-		vertexCountIn * strideBytesIn, bufferUsageIn))
-	, vertexCount(static_cast<decltype(vertexCount)>(vertexCountIn))
-	, strideBytes(static_cast<decltype(strideBytes)>(strideBytesIn))
-	, bufferUsage(bufferUsageIn)
+    std::size_t vertexCountIn, std::size_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
+    : nativeVertexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateVertexBuffer(
+        vertexCountIn * strideBytesIn, bufferUsageIn))
+    , vertexCount(static_cast<decltype(vertexCount)>(vertexCountIn))
+    , strideBytes(static_cast<decltype(strideBytes)>(strideBytesIn))
+    , bufferUsage(bufferUsageIn)
 {
-	POMDOG_ASSERT(nativeVertexBuffer);
-	POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
-	POMDOG_ASSERT(vertexCount > 0);
-	POMDOG_ASSERT(strideBytes > 0);
+    POMDOG_ASSERT(nativeVertexBuffer);
+    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
+    POMDOG_ASSERT(vertexCount > 0);
+    POMDOG_ASSERT(strideBytes > 0);
 }
 //-----------------------------------------------------------------------
 VertexBuffer::VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	void const* vertices, std::size_t vertexCountIn,
-	std::size_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
-	: VertexBuffer(*graphicsDevice, vertices, vertexCountIn, strideBytesIn, bufferUsageIn)
+    void const* vertices, std::size_t vertexCountIn,
+    std::size_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
+    : VertexBuffer(*graphicsDevice, vertices, vertexCountIn, strideBytesIn, bufferUsageIn)
 {
-	POMDOG_ASSERT(nativeVertexBuffer);
+    POMDOG_ASSERT(nativeVertexBuffer);
 }
 //-----------------------------------------------------------------------
 VertexBuffer::VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	std::size_t vertexCountIn, std::size_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
-	: VertexBuffer(*graphicsDevice, vertexCountIn, strideBytesIn, bufferUsageIn)
+    std::size_t vertexCountIn, std::size_t strideBytesIn, Pomdog::BufferUsage bufferUsageIn)
+    : VertexBuffer(*graphicsDevice, vertexCountIn, strideBytesIn, bufferUsageIn)
 {
-	POMDOG_ASSERT(nativeVertexBuffer);
+    POMDOG_ASSERT(nativeVertexBuffer);
 }
 //-----------------------------------------------------------------------
 VertexBuffer::~VertexBuffer() = default;
 //-----------------------------------------------------------------------
 std::size_t VertexBuffer::StrideBytes() const
 {
-	return strideBytes;
+    return strideBytes;
 }
 //-----------------------------------------------------------------------
 BufferUsage VertexBuffer::BufferUsage() const
 {
-	return bufferUsage;
+    return bufferUsage;
 }
 //-----------------------------------------------------------------------
 std::size_t VertexBuffer::VertexCount() const
 {
-	return vertexCount;
+    return vertexCount;
 }
 //-----------------------------------------------------------------------
 void VertexBuffer::SetData(void const* source, std::size_t elementCount)
 {
-	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(elementCount > 0);
-	POMDOG_ASSERT(elementCount <= vertexCount);
-	POMDOG_ASSERT(nativeVertexBuffer);
-	POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
-	nativeVertexBuffer->SetData(0, source, elementCount * strideBytes);
+    POMDOG_ASSERT(source != nullptr);
+    POMDOG_ASSERT(elementCount > 0);
+    POMDOG_ASSERT(elementCount <= vertexCount);
+    POMDOG_ASSERT(nativeVertexBuffer);
+    POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
+    nativeVertexBuffer->SetData(0, source, elementCount * strideBytes);
 }
 //-----------------------------------------------------------------------
 void VertexBuffer::SetData(std::size_t offsetInBytes, void const* source,
-	std::size_t elementCount, std::size_t strideBytesIn)
+    std::size_t elementCount, std::size_t strideBytesIn)
 {
-	POMDOG_ASSERT(source != nullptr);
-	POMDOG_ASSERT(elementCount > 0);
-	POMDOG_ASSERT(elementCount <= vertexCount);
-	POMDOG_ASSERT(nativeVertexBuffer);
-	POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
-	nativeVertexBuffer->SetData(offsetInBytes, source, elementCount * strideBytesIn);
+    POMDOG_ASSERT(source != nullptr);
+    POMDOG_ASSERT(elementCount > 0);
+    POMDOG_ASSERT(elementCount <= vertexCount);
+    POMDOG_ASSERT(nativeVertexBuffer);
+    POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
+    nativeVertexBuffer->SetData(offsetInBytes, source, elementCount * strideBytesIn);
 }
 //-----------------------------------------------------------------------
 Detail::RenderSystem::NativeVertexBuffer* VertexBuffer::NativeVertexBuffer()
 {
-	POMDOG_ASSERT(nativeVertexBuffer);
-	return nativeVertexBuffer.get();
+    POMDOG_ASSERT(nativeVertexBuffer);
+    return nativeVertexBuffer.get();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

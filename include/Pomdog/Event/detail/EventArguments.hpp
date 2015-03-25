@@ -19,10 +19,10 @@ namespace Detail {
 template <class T>
 class EventComponentHashCode {
 public:
-	static_assert(!std::is_pointer<T>::value, "T is not pointer.");
-	static_assert(std::is_object<T>::value, "T is not object type.");
+    static_assert(!std::is_pointer<T>::value, "T is not pointer.");
+    static_assert(std::is_object<T>::value, "T is not object type.");
 
-	static std::size_t const value;
+    static std::size_t const value;
 };
 
 template <class T>
@@ -31,36 +31,36 @@ std::size_t const EventComponentHashCode<T>::value = typeid(T const*).hash_code(
 
 class EventArguments {
 public:
-	EventArguments() = default;
-	EventArguments(EventArguments const&) = delete;
-	EventArguments & operator=(EventArguments const&) = delete;
+    EventArguments() = default;
+    EventArguments(EventArguments const&) = delete;
+    EventArguments & operator=(EventArguments const&) = delete;
 
-	virtual ~EventArguments() = default;
+    virtual ~EventArguments() = default;
 
-	virtual std::size_t HashCode() const = 0;
+    virtual std::size_t HashCode() const = 0;
 };
 
 
 template <typename T>
 class EventArgumentsContainer final: public EventArguments {
 public:
-	typedef typename std::remove_reference<T>::type value_type;
+    typedef typename std::remove_reference<T>::type value_type;
 
-	static_assert(!std::is_reference<T>::value, "reference type is not supported.");
-	static_assert(!std::is_pointer<T>::value, "pointer type is not supported.");
-	static_assert(std::is_object<T>::value, "T is object type.");
+    static_assert(!std::is_reference<T>::value, "reference type is not supported.");
+    static_assert(!std::is_pointer<T>::value, "pointer type is not supported.");
+    static_assert(std::is_object<T>::value, "T is object type.");
 
-	template <typename...Arguments>
-	explicit EventArgumentsContainer(Arguments &&...argument)
-		: data(std::forward<Arguments>(argument)...)
-	{}
+    template <typename...Arguments>
+    explicit EventArgumentsContainer(Arguments &&...argument)
+        : data(std::forward<Arguments>(argument)...)
+    {}
 
-	std::size_t HashCode() const override
-	{
-		return EventComponentHashCode<T>::value;
-	}
+    std::size_t HashCode() const override
+    {
+        return EventComponentHashCode<T>::value;
+    }
 
-	T data;
+    T data;
 };
 
 }// namespace Detail

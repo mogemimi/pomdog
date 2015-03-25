@@ -16,9 +16,9 @@ namespace Linux {
 
 class TimeSourceLinux {
 public:
-	TimeSourceLinux() = default;
+    TimeSourceLinux() = default;
 
-	TimePoint Now() const;
+    TimePoint Now() const;
 };
 
 }// namespace Linux

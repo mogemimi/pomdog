@@ -10,53 +10,53 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 RasterizerState::RasterizerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	RasterizerDescription const& descriptionIn)
-	: nativeRasterizerState(graphicsDevice->NativeGraphicsDevice()->CreateRasterizerState(descriptionIn))
-	, description(descriptionIn)
+    RasterizerDescription const& descriptionIn)
+    : nativeRasterizerState(graphicsDevice->NativeGraphicsDevice()->CreateRasterizerState(descriptionIn))
+    , description(descriptionIn)
 {
-	POMDOG_ASSERT(nativeRasterizerState);
+    POMDOG_ASSERT(nativeRasterizerState);
 }
 //-----------------------------------------------------------------------
 RasterizerState::~RasterizerState() = default;
 //-----------------------------------------------------------------------
 RasterizerDescription RasterizerState::Description() const
 {
-	return description;
+    return description;
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<RasterizerState>
 RasterizerState::CreateCullClockwise(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
-	RasterizerDescription desc;
-	desc.CullMode = CullMode::ClockwiseFace;
-	desc.FillMode = FillMode::Solid;
+    RasterizerDescription desc;
+    desc.CullMode = CullMode::ClockwiseFace;
+    desc.FillMode = FillMode::Solid;
 
-	return std::make_shared<RasterizerState>(graphicsDevice, desc);
+    return std::make_shared<RasterizerState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<RasterizerState>
 RasterizerState::CreateCullCounterClockwise(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
-	RasterizerDescription desc;
-	desc.CullMode = CullMode::CounterClockwiseFace;
-	desc.FillMode = FillMode::Solid;
+    RasterizerDescription desc;
+    desc.CullMode = CullMode::CounterClockwiseFace;
+    desc.FillMode = FillMode::Solid;
 
-	return std::make_shared<RasterizerState>(graphicsDevice, desc);
+    return std::make_shared<RasterizerState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<RasterizerState>
 RasterizerState::CreateCullNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
-	RasterizerDescription desc;
-	desc.CullMode = CullMode::None;
-	desc.FillMode = FillMode::Solid;
+    RasterizerDescription desc;
+    desc.CullMode = CullMode::None;
+    desc.FillMode = FillMode::Solid;
 
-	return std::make_shared<RasterizerState>(graphicsDevice, desc);
+    return std::make_shared<RasterizerState>(graphicsDevice, desc);
 }
 //-----------------------------------------------------------------------
 Detail::RenderSystem::NativeRasterizerState* RasterizerState::NativeRasterizerState()
 {
-	return nativeRasterizerState.get();
+    return nativeRasterizerState.get();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

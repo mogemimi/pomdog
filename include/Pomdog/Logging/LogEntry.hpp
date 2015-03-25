@@ -15,11 +15,11 @@ namespace Pomdog {
 
 class LogEntry {
 public:
-	std::string Message;
+    std::string Message;
 
-	std::string Tag;
+    std::string Tag;
 
-	LogLevel Verbosity;
+    LogLevel Verbosity;
 };
 
 }// namespace Pomdog

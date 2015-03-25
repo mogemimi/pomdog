@@ -24,20 +24,20 @@ namespace Direct3D11 {
 
 class EffectPassDirect3D11 final: public NativeEffectPass {
 public:
-	EffectPassDirect3D11(ID3D11Device* device, EffectPassDescription const& description);
+    EffectPassDirect3D11(ID3D11Device* device, EffectPassDescription const& description);
 
-	std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
+    std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
 
-	void Apply(ID3D11DeviceContext * deviceContext);
+    void Apply(ID3D11DeviceContext * deviceContext);
 
-	ShaderBytecode GetVertexShaderBlob() const;
+    ShaderBytecode GetVertexShaderBlob() const;
 
-	ShaderBytecode GetPixelShaderBlob() const;
+    ShaderBytecode GetPixelShaderBlob() const;
 
 private:
-	std::shared_ptr<VertexShaderDirect3D11> vertexShader;
-	std::shared_ptr<PixelShaderDirect3D11> pixelShader;
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
+    std::shared_ptr<VertexShaderDirect3D11> vertexShader;
+    std::shared_ptr<PixelShaderDirect3D11> pixelShader;
+    Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
 };
 
 }// namespace Direct3D11

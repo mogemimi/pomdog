@@ -13,9 +13,9 @@
 namespace Pomdog {
 
 enum class ButtonState: bool {
-	Released = false,
+    Released = false,
 
-	Pressed = true
+    Pressed = true
 };
 
 }// namespace Pomdog

@@ -13,17 +13,17 @@ namespace InputSystem {
 namespace DirectInput {
 //-----------------------------------------------------------------------
 MouseCreatorDirectInput::MouseCreatorDirectInput(std::shared_ptr<DeviceContextDirectInput> const& deviceContextIn)
-	: deviceContext(deviceContextIn)
+    : deviceContext(deviceContextIn)
 {}
 //-----------------------------------------------------------------------
 std::shared_ptr<Mouse> MouseCreatorDirectInput::Create(SubsystemScheduler & scheduler)
 {
-	POMDOG_ASSERT(deviceContext);
-	auto windowHandle = deviceContext->WindowHandle();
-	auto directInput = deviceContext->GetDirectInput();
+    POMDOG_ASSERT(deviceContext);
+    auto windowHandle = deviceContext->WindowHandle();
+    auto directInput = deviceContext->GetDirectInput();
 
-	auto mouse = std::make_shared<MouseDirectInput>(directInput, windowHandle, scheduler);
-	return std::move(mouse);
+    auto mouse = std::make_shared<MouseDirectInput>(directInput, windowHandle, scheduler);
+    return std::move(mouse);
 }
 //-----------------------------------------------------------------------
 }// namespace DirectInput

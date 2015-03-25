@@ -15,13 +15,13 @@ namespace Detail {
 namespace Win32 {
 
 struct BootstrapSettingsWin32 {
-	HINSTANCE HInstance = nullptr;
-	int CmdShow = SW_SHOWDEFAULT;
-	HICON Icon = nullptr;
-	HICON IconSmall = nullptr;
-	int Width = 800;
-	int Height = 480;
-	bool IsFullscreen = false;
+    HINSTANCE HInstance = nullptr;
+    int CmdShow = SW_SHOWDEFAULT;
+    HICON Icon = nullptr;
+    HICON IconSmall = nullptr;
+    int Width = 800;
+    int Height = 480;
+    bool IsFullscreen = false;
 };
 
 }// namespace Win32

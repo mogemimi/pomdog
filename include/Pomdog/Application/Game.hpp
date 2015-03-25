@@ -14,19 +14,19 @@ namespace Pomdog {
 
 class POMDOG_EXPORT Game {
 public:
-	Game() = default;
-	Game(Game const&) = delete;
-	Game & operator=(Game const&) = delete;
+    Game() = default;
+    Game(Game const&) = delete;
+    Game & operator=(Game const&) = delete;
 
-	virtual ~Game() = default;
+    virtual ~Game() = default;
 
-	virtual void Initialize() = 0;
+    virtual void Initialize() = 0;
 
-	virtual bool CompleteInitialize() const { return true; }
+    virtual bool CompleteInitialize() const { return true; }
 
-	virtual void Update() = 0;
+    virtual void Update() = 0;
 
-	virtual void Draw() = 0;
+    virtual void Draw() = 0;
 };
 
 }// namespace Pomdog

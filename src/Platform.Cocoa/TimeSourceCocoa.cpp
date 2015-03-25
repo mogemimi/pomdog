@@ -11,20 +11,20 @@ namespace Cocoa {
 
 TimeSourceCocoa::TimeSourceCocoa()
 {
-	mach_timebase_info_data_t timeBase;
-	mach_timebase_info(&timeBase);
+    mach_timebase_info_data_t timeBase;
+    mach_timebase_info(&timeBase);
 
-	POMDOG_ASSERT(0 != timeBase.denom);
-	double const nanoSecondsPerTick = static_cast<double>(timeBase.numer) / timeBase.denom;
+    POMDOG_ASSERT(0 != timeBase.denom);
+    double const nanoSecondsPerTick = static_cast<double>(timeBase.numer) / timeBase.denom;
 
-	constexpr double nanoScale = (1.0 / 1000000000LL);
-	secondsPerTick = nanoScale * nanoSecondsPerTick;
+    constexpr double nanoScale = (1.0 / 1000000000LL);
+    secondsPerTick = nanoScale * nanoSecondsPerTick;
 }
 //-----------------------------------------------------------------------
 TimePoint TimeSourceCocoa::Now() const
 {
-	auto currentSeconds = mach_absolute_time() * secondsPerTick;
-	return TimePoint(Duration(currentSeconds));
+    auto currentSeconds = mach_absolute_time() * secondsPerTick;
+    return TimePoint(Duration(currentSeconds));
 }
 
 }// namespace Cocoa

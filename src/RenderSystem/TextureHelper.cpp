@@ -10,20 +10,20 @@ namespace Detail {
 
 std::int32_t TextureHelper::ComputeMipmapLevelCount(std::int32_t width, std::int32_t height)
 {
-	POMDOG_ASSERT(width >= 0);
-	POMDOG_ASSERT(height >= 0);
+    POMDOG_ASSERT(width >= 0);
+    POMDOG_ASSERT(height >= 0);
 
-	auto size = std::max(width, height);
-	std::int32_t levelCount = 1;
+    auto size = std::max(width, height);
+    std::int32_t levelCount = 1;
 
-	POMDOG_ASSERT(size >= 0);
+    POMDOG_ASSERT(size >= 0);
 
-	while (size > 1)
-	{
-		size = size / 2;
-		++levelCount;
-	}
-	return levelCount;
+    while (size > 1)
+    {
+        size = size / 2;
+        ++levelCount;
+    }
+    return levelCount;
 }
 
 }// namespace Detail

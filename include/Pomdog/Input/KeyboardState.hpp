@@ -18,18 +18,18 @@ enum class Keys: std::uint8_t;
 
 class POMDOG_EXPORT KeyboardState {
 public:
-	KeyState operator[](Keys key) const;
+    KeyState operator[](Keys key) const;
 
-	bool IsKeyDown(Keys key) const;
+    bool IsKeyDown(Keys key) const;
 
-	bool IsKeyUp(Keys key) const;
+    bool IsKeyUp(Keys key) const;
 
-	void SetKey(Keys key, KeyState keyState);
+    void SetKey(Keys key, KeyState keyState);
 
-	void ClearAllKeys();
+    void ClearAllKeys();
 
 private:
-	std::bitset<128> keyset;
+    std::bitset<128> keyset;
 };
 
 }// namespace Pomdog

@@ -17,8 +17,8 @@ namespace RenderSystem {
 namespace Direct3D11 {
 
 struct DXGIFormatHelper final {
-	static DXGI_FORMAT ToDXGIFormat(DepthFormat format);
-	static DXGI_FORMAT ToDXGIFormat(SurfaceFormat format);
+    static DXGI_FORMAT ToDXGIFormat(DepthFormat format);
+    static DXGI_FORMAT ToDXGIFormat(SurfaceFormat format);
 };
 
 }// namespace Direct3D11

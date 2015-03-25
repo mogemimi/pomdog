@@ -22,20 +22,20 @@ using FillModeGL4 = Tagged<GLenum, FillMode>;
 
 class RasterizerStateGL4 final: public NativeRasterizerState {
 public:
-	RasterizerStateGL4() = delete;
+    RasterizerStateGL4() = delete;
 
-	explicit RasterizerStateGL4(RasterizerDescription const& description);
+    explicit RasterizerStateGL4(RasterizerDescription const& description);
 
-	///@copydoc NativeRasterizerState
-	void Apply(NativeGraphicsContext & graphicsContext) override;
+    ///@copydoc NativeRasterizerState
+    void Apply(NativeGraphicsContext & graphicsContext) override;
 
 private:
-	FillModeGL4 fillMode;
-	CullMode cullMode;
-	GLfloat depthBias;
-	GLfloat slopeScaledDepthBias;
-	bool multisampleAntiAliasEnable;
-	bool scissorTestEnable;
+    FillModeGL4 fillMode;
+    CullMode cullMode;
+    GLfloat depthBias;
+    GLfloat slopeScaledDepthBias;
+    bool multisampleAntiAliasEnable;
+    bool scissorTestEnable;
 };
 
 }// namespace GL4

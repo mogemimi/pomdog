@@ -13,8 +13,8 @@
 namespace Pomdog {
 
 enum class BufferUsage: std::uint8_t {
-	Immutable,
-	Dynamic,
+    Immutable,
+    Dynamic,
 };
 
 }// namespace Pomdog

@@ -12,7 +12,7 @@ AssetDictionary::~AssetDictionary() = default;
 //-----------------------------------------------------------------------
 void AssetDictionary::Unload()
 {
-	assets.clear();
+    assets.clear();
 }
 //-----------------------------------------------------------------------
 }// namespace Detail

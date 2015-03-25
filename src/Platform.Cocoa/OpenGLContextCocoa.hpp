@@ -19,26 +19,26 @@ namespace Cocoa {
 
 class OpenGLContextCocoa final: public RenderSystem::GL4::OpenGLContext {
 public:
-	OpenGLContextCocoa() = delete;
+    OpenGLContextCocoa() = delete;
 
-	explicit OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormat);
+    explicit OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormat);
 
-	~OpenGLContextCocoa();
+    ~OpenGLContextCocoa();
 
-	void MakeCurrent() override;
+    void MakeCurrent() override;
 
-	void ClearCurrent() override;
+    void ClearCurrent() override;
 
-	void SwapBuffers() override;
+    void SwapBuffers() override;
 
-	void Lock();
+    void Lock();
 
-	void Unlock();
+    void Unlock();
 
-	NSOpenGLContext* NativeOpenGLContext();
+    NSOpenGLContext* NativeOpenGLContext();
 
 private:
-	NSOpenGLContext* openGLContext;
+    NSOpenGLContext* openGLContext;
 };
 
 }// namespace Cocoa

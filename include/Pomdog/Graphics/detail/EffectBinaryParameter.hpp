@@ -28,8 +28,8 @@ void POMDOG_EXPORT Get(EffectParameter const& effectParameter, double & result);
 template <class T, class EffectParameter>
 void Get(EffectParameter const& effectParameter, T & result)
 {
-	static_assert(std::is_pod<T>::value, "You can only use POD value.");
-	effectParameter.GetValue(sizeof(result), static_cast<void*>(&result));
+    static_assert(std::is_pod<T>::value, "You can only use POD value.");
+    effectParameter.GetValue(sizeof(result), static_cast<void*>(&result));
 }
 
 void POMDOG_EXPORT Set(EffectParameter & effectParameter, bool value);
@@ -55,8 +55,8 @@ template <typename T> void POMDOG_EXPORT Set(EffectParameter & effectParameter, 
 template <class T, class EffectParameter>
 void Set(EffectParameter & effectParameter, T const& value)
 {
-	static_assert(std::is_pod<T>::value, "You can only use POD value.");
-	effectParameter.SetValue(static_cast<void const*>(&value), sizeof(value));
+    static_assert(std::is_pod<T>::value, "You can only use POD value.");
+    effectParameter.SetValue(static_cast<void const*>(&value), sizeof(value));
 }
 
 }// namespace EffectBinaryParameter

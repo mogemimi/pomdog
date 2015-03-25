@@ -16,13 +16,13 @@ class KeyboardState;
 
 class POMDOG_EXPORT Keyboard {
 public:
-	Keyboard() = default;
-	Keyboard(Keyboard const&) = delete;
-	Keyboard & operator=(Keyboard const&) = delete;
+    Keyboard() = default;
+    Keyboard(Keyboard const&) = delete;
+    Keyboard & operator=(Keyboard const&) = delete;
 
-	virtual ~Keyboard() = default;
+    virtual ~Keyboard() = default;
 
-	virtual KeyboardState GetState() const = 0;
+    virtual KeyboardState GetState() const = 0;
 };
 
 }// namespace Pomdog

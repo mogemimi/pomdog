@@ -12,32 +12,32 @@ namespace InputSystem {
 namespace DirectInput {
 //-----------------------------------------------------------------------
 DeviceContextDirectInput::DeviceContextDirectInput(HINSTANCE hInstance, HWND windowHandleIn)
-	: windowHandle(windowHandleIn)
+    : windowHandle(windowHandleIn)
 {
-	POMDOG_ASSERT(hInstance);
-	POMDOG_ASSERT(windowHandle);
+    POMDOG_ASSERT(hInstance);
+    POMDOG_ASSERT(windowHandle);
 
-	auto hr = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
-		&directInput, nullptr);
+    auto hr = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
+        &directInput, nullptr);
 
-	if (FAILED(hr)) {
-		// error: FUS RO DAH!
-		///@todo Not implemented
-	}
+    if (FAILED(hr)) {
+        // error: FUS RO DAH!
+        ///@todo Not implemented
+    }
 }
 //-----------------------------------------------------------------------
 DeviceContextDirectInput::~DeviceContextDirectInput() = default;
 //-----------------------------------------------------------------------
 HWND DeviceContextDirectInput::WindowHandle() const
 {
-	POMDOG_ASSERT(windowHandle);
-	return windowHandle;
+    POMDOG_ASSERT(windowHandle);
+    return windowHandle;
 }
 //-----------------------------------------------------------------------
 IDirectInput8* DeviceContextDirectInput::GetDirectInput() const
 {
-	POMDOG_ASSERT(directInput);
-	return directInput.Get();
+    POMDOG_ASSERT(directInput);
+    return directInput.Get();
 }
 //-----------------------------------------------------------------------
 }// namespace DirectInput

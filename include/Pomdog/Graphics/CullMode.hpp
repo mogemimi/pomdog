@@ -13,11 +13,11 @@
 namespace Pomdog {
 
 enum class CullMode: std::uint8_t {
-	None,
+    None,
 
-	ClockwiseFace,
+    ClockwiseFace,
 
-	CounterClockwiseFace,
+    CounterClockwiseFace,
 };
 
 }// namespace Pomdog

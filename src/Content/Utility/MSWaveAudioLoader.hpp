@@ -21,7 +21,7 @@ class AudioClip;
 namespace Detail {
 
 struct MSWaveAudioLoader {
-	static std::unique_ptr<AudioClip> Load(std::string const& filePath);
+    static std::unique_ptr<AudioClip> Load(std::string const& filePath);
 };
 
 }// namespace Detail

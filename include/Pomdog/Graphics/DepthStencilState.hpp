@@ -24,31 +24,31 @@ class NativeDepthStencilState;
 
 class POMDOG_EXPORT DepthStencilState {
 public:
-	DepthStencilState() = delete;
-	DepthStencilState(DepthStencilState const&) = delete;
-	DepthStencilState & operator=(DepthStencilState const&) = delete;
+    DepthStencilState() = delete;
+    DepthStencilState(DepthStencilState const&) = delete;
+    DepthStencilState & operator=(DepthStencilState const&) = delete;
 
-	DepthStencilState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, DepthStencilDescription const& description);
+    DepthStencilState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, DepthStencilDescription const& description);
 
-	~DepthStencilState();
+    ~DepthStencilState();
 
-	DepthStencilDescription Description() const;
+    DepthStencilDescription Description() const;
 
-	static std::shared_ptr<DepthStencilState>
-	CreateReadWriteDepth(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<DepthStencilState>
+    CreateReadWriteDepth(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	static std::shared_ptr<DepthStencilState>
-	CreateReadOnlyDepth(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<DepthStencilState>
+    CreateReadOnlyDepth(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	static std::shared_ptr<DepthStencilState>
-	CreateNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<DepthStencilState>
+    CreateNone(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 public:
-	Detail::RenderSystem::NativeDepthStencilState* NativeDepthStencilState();
+    Detail::RenderSystem::NativeDepthStencilState* NativeDepthStencilState();
 
 private:
-	std::unique_ptr<Detail::RenderSystem::NativeDepthStencilState> nativeDepthStencilState;
-	DepthStencilDescription description;
+    std::unique_ptr<Detail::RenderSystem::NativeDepthStencilState> nativeDepthStencilState;
+    DepthStencilDescription description;
 };
 
 }// namespace Pomdog

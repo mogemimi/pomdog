@@ -18,32 +18,32 @@ namespace Pomdog {
 
 class POMDOG_EXPORT GameClock {
 public:
-	GameClock();
-	GameClock(GameClock const&) = delete;
-	GameClock(GameClock &&) = default;
+    GameClock();
+    GameClock(GameClock const&) = delete;
+    GameClock(GameClock &&) = default;
 
-	GameClock & operator=(GameClock const&) = delete;
-	GameClock & operator=(GameClock &&) = default;
+    GameClock & operator=(GameClock const&) = delete;
+    GameClock & operator=(GameClock &&) = default;
 
-	~GameClock();
+    ~GameClock();
 
-	void Tick();
+    void Tick();
 
-	Duration TotalGameTime() const;
+    Duration TotalGameTime() const;
 
-	std::uint32_t FrameNumber() const;
+    std::uint32_t FrameNumber() const;
 
-	Duration FrameDuration() const;
+    Duration FrameDuration() const;
 
-	float FrameRate() const;
+    float FrameRate() const;
 
-	Duration ElapsedTime() const;
+    Duration ElapsedTime() const;
 
-	Signal<void(Duration const& frameDuration)> OnTick;
+    Signal<void(Duration const& frameDuration)> OnTick;
 
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+    class Impl;
+    std::unique_ptr<Impl> impl;
 };
 
 }// namespace Pomdog

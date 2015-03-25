@@ -17,14 +17,14 @@ namespace RenderSystem {
 
 class NativeVertexBuffer {
 public:
-	NativeVertexBuffer() = default;
-	NativeVertexBuffer(NativeVertexBuffer const&) = delete;
-	NativeVertexBuffer & operator=(NativeVertexBuffer const&) = delete;
+    NativeVertexBuffer() = default;
+    NativeVertexBuffer(NativeVertexBuffer const&) = delete;
+    NativeVertexBuffer & operator=(NativeVertexBuffer const&) = delete;
 
-	virtual ~NativeVertexBuffer() = default;
+    virtual ~NativeVertexBuffer() = default;
 
-	virtual void SetData(std::size_t offsetInBytes,
-		void const* source, std::size_t sizeInBytes) = 0;
+    virtual void SetData(std::size_t offsetInBytes,
+        void const* source, std::size_t sizeInBytes) = 0;
 };
 
 }// namespace RenderSystem

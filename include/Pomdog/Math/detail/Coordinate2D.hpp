@@ -17,48 +17,48 @@ namespace Detail {
 template <typename T>
 class POMDOG_EXPORT Coordinate2D final {
 public:
-	static_assert(std::is_arithmetic<T>::value, "You can only use arithmetic types.");
-	typedef T value_type;
+    static_assert(std::is_arithmetic<T>::value, "You can only use arithmetic types.");
+    typedef T value_type;
 
-	T X, Y;
+    T X, Y;
 
 public:
-	// Constructors:
-	Coordinate2D() = default;
+    // Constructors:
+    Coordinate2D() = default;
 
-	///@brief Copy constructor.
-	Coordinate2D(Coordinate2D const&) = default;
+    ///@brief Copy constructor.
+    Coordinate2D(Coordinate2D const&) = default;
 
-	///@brief Move constructor.
-	Coordinate2D(Coordinate2D &&) = default;
+    ///@brief Move constructor.
+    Coordinate2D(Coordinate2D &&) = default;
 
-	///@brief Construct from T values.
-	Coordinate2D(T x, T y);
+    ///@brief Construct from T values.
+    Coordinate2D(T x, T y);
 
-	// Assignment operators:
-	Coordinate2D & operator=(Coordinate2D const&) = default;
-	Coordinate2D & operator=(Coordinate2D &&) = default;
-	Coordinate2D & operator+=(Coordinate2D const&);
-	Coordinate2D & operator-=(Coordinate2D const&);
-	Coordinate2D & operator*=(T scaleFactor);
-	Coordinate2D & operator/=(T scaleFactor);
+    // Assignment operators:
+    Coordinate2D & operator=(Coordinate2D const&) = default;
+    Coordinate2D & operator=(Coordinate2D &&) = default;
+    Coordinate2D & operator+=(Coordinate2D const&);
+    Coordinate2D & operator-=(Coordinate2D const&);
+    Coordinate2D & operator*=(T scaleFactor);
+    Coordinate2D & operator/=(T scaleFactor);
 
-	// Unary operators:
-	Coordinate2D operator+() const;
-	Coordinate2D operator-() const;
+    // Unary operators:
+    Coordinate2D operator+() const;
+    Coordinate2D operator-() const;
 
-	// Binary operators:
-	Coordinate2D operator+(Coordinate2D const&) const;
-	Coordinate2D operator-(Coordinate2D const&) const;
-	Coordinate2D operator*(Coordinate2D const&) const;
-	Coordinate2D operator/(Coordinate2D const&) const;
-	Coordinate2D operator*(T scaleFactor) const;
-	Coordinate2D operator/(T scaleFactor) const;
+    // Binary operators:
+    Coordinate2D operator+(Coordinate2D const&) const;
+    Coordinate2D operator-(Coordinate2D const&) const;
+    Coordinate2D operator*(Coordinate2D const&) const;
+    Coordinate2D operator/(Coordinate2D const&) const;
+    Coordinate2D operator*(T scaleFactor) const;
+    Coordinate2D operator/(T scaleFactor) const;
 
-	bool operator==(Coordinate2D const&) const;
-	bool operator!=(Coordinate2D const&) const;
+    bool operator==(Coordinate2D const&) const;
+    bool operator!=(Coordinate2D const&) const;
 
-	static Coordinate2D const Zero;
+    static Coordinate2D const Zero;
 };
 
 template <typename T>

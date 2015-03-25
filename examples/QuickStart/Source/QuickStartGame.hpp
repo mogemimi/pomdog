@@ -13,23 +13,23 @@ using namespace Pomdog;
 
 class QuickStartGame: public Game {
 public:
-	explicit QuickStartGame(std::shared_ptr<GameHost> const& gameHost);
+    explicit QuickStartGame(std::shared_ptr<GameHost> const& gameHost);
 
-	void Initialize() override;
+    void Initialize() override;
 
-	void Update() override;
+    void Update() override;
 
-	void Draw() override;
+    void Draw() override;
 
 private:
-	std::shared_ptr<GameHost> gameHost;
-	std::shared_ptr<GraphicsContext> graphicsContext;
-	std::shared_ptr<VertexBuffer> vertexBuffer;
-	std::shared_ptr<IndexBuffer> indexBuffer;
-	std::shared_ptr<EffectPass> effectPass;
-	std::shared_ptr<ConstantBufferBinding> constantBuffers;
-	std::shared_ptr<Texture2D> texture;
-	std::shared_ptr<RenderTarget2D> renderTarget;
+    std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<GraphicsContext> graphicsContext;
+    std::shared_ptr<VertexBuffer> vertexBuffer;
+    std::shared_ptr<IndexBuffer> indexBuffer;
+    std::shared_ptr<EffectPass> effectPass;
+    std::shared_ptr<ConstantBufferBinding> constantBuffers;
+    std::shared_ptr<Texture2D> texture;
+    std::shared_ptr<RenderTarget2D> renderTarget;
 };
 
 }// namespace QuickStart

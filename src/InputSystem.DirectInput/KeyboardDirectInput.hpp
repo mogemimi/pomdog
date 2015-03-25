@@ -24,21 +24,21 @@ namespace DirectInput {
 
 class KeyboardDirectInput final: public Keyboard {
 public:
-	KeyboardDirectInput(IDirectInput8* directInput, HWND windowHandle,
-		SubsystemScheduler & scheduler);
+    KeyboardDirectInput(IDirectInput8* directInput, HWND windowHandle,
+        SubsystemScheduler & scheduler);
 
-	~KeyboardDirectInput();
+    ~KeyboardDirectInput();
 
-	KeyboardState GetState() const override;
-
-private:
-	void Update();
+    KeyboardState GetState() const override;
 
 private:
-	ScopedConnection connection;
-	KeyboardState keyboardState;
-	Microsoft::WRL::ComPtr<IDirectInputDevice8> inputDevice;
-	static constexpr std::size_t MaxKeyBufferSize = 8;
+    void Update();
+
+private:
+    ScopedConnection connection;
+    KeyboardState keyboardState;
+    Microsoft::WRL::ComPtr<IDirectInputDevice8> inputDevice;
+    static constexpr std::size_t MaxKeyBufferSize = 8;
 };
 
 }// namespace DirectInput

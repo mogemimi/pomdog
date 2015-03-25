@@ -35,41 +35,41 @@ using ScalarTypeGL4 = Tagged<GLuint, Tags::ScalarDataTypeTag>;
 using VertexArrayGL4 = Tagged<GLuint, Tags::VertexArrayTag>;
 
 struct InputElementGL4 {
-	// Attribute location.
-	GLuint StartSlot;
+    // Attribute location.
+    GLuint StartSlot;
 
-	// Input element offset.
-	std::uint32_t ByteOffset;
+    // Input element offset.
+    std::uint32_t ByteOffset;
 
-	// Specifies the scalar data type.
-	ScalarTypeGL4 ScalarType;
+    // Specifies the scalar data type.
+    ScalarTypeGL4 ScalarType;
 
-	// Must be 1, 2, 3, and 4.
-	std::int8_t Components;
+    // Must be 1, 2, 3, and 4.
+    std::int8_t Components;
 
-	bool IsInteger = false;
+    bool IsInteger = false;
 };
 
 struct InputBindingGL4 {
-	std::vector<InputElementGL4> InputElements;
-	std::uint32_t InstanceStepRate;
+    std::vector<InputElementGL4> InputElements;
+    std::uint32_t InstanceStepRate;
 };
 
 class InputLayoutGL4 final {
 public:
-	InputLayoutGL4() = delete;
+    InputLayoutGL4() = delete;
 
-	explicit InputLayoutGL4(ShaderProgramGL4 const& shaderProgram);
+    explicit InputLayoutGL4(ShaderProgramGL4 const& shaderProgram);
 
-	InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::vector<VertexBufferBinding> const& vertexBufferBinding);
+    InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::vector<VertexBufferBinding> const& vertexBufferBinding);
 
-	~InputLayoutGL4();
+    ~InputLayoutGL4();
 
-	void Apply(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers);
+    void Apply(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers);
 
 private:
-	std::vector<InputBindingGL4> inputBindings;
-	Optional<VertexArrayGL4> inputLayout;
+    std::vector<InputBindingGL4> inputBindings;
+    Optional<VertexArrayGL4> inputLayout;
 };
 
 }// namespace GL4

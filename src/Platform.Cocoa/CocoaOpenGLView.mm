@@ -8,12 +8,12 @@
 
 @implementation CocoaOpenGLView {
 @private
-	std::function<void()> renderCallback_;
-	NSOpenGLContext* openGLContext_;
-	CocoaGameViewDelegate* delegate_;
-	NSTrackingRectTag trackingRect;
-	BOOL wasAcceptingMouseEvents;
-	bool viewLiveResizing;
+    std::function<void()> renderCallback_;
+    NSOpenGLContext* openGLContext_;
+    CocoaGameViewDelegate* delegate_;
+    NSTrackingRectTag trackingRect;
+    BOOL wasAcceptingMouseEvents;
+    bool viewLiveResizing;
 }
 
 @synthesize openGLContext = openGLContext_;
@@ -22,209 +22,209 @@
 //-----------------------------------------------------------------------
 - (id)initWithFrame:(NSRect)frameRect
 {
-	self = [super initWithFrame:frameRect];
-	if (self) {
-		[[NSNotificationCenter defaultCenter] addObserver:self
-			selector:@selector(_surfaceNeedsUpdate:)
-			name:NSViewGlobalFrameDidChangeNotification
-			object:self];
-		wasAcceptingMouseEvents = NO;
-	}
-	return self;
+    self = [super initWithFrame:frameRect];
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+            selector:@selector(_surfaceNeedsUpdate:)
+            name:NSViewGlobalFrameDidChangeNotification
+            object:self];
+        wasAcceptingMouseEvents = NO;
+    }
+    return self;
 }
 //-----------------------------------------------------------------------
 - (BOOL)isFlipped
 {
-	return TRUE;
+    return TRUE;
 }
 //-----------------------------------------------------------------------
 - (void)_surfaceNeedsUpdate:(NSNotification*)notification
 {
-	[self update];
+    [self update];
 }
 //-----------------------------------------------------------------------
 - (void)clearGLContext
 {
-	if (openGLContext_ != nil) {
-		[self setOpenGLContext:nil];
-	}
+    if (openGLContext_ != nil) {
+        [self setOpenGLContext:nil];
+    }
 }
 //-----------------------------------------------------------------------
 - (void)update
 {
-	if ([openGLContext_ view] == self) {
-		//[openGLContext_ update];
-	}
+    if ([openGLContext_ view] == self) {
+        //[openGLContext_ update];
+    }
 }
 //-----------------------------------------------------------------------
 - (void)reshape
 {
-	///@todo Not implemented
+    ///@todo Not implemented
 }
 //-----------------------------------------------------------------------
 - (void)lockFocus
 {
-	[super lockFocus];
+    [super lockFocus];
 
-	if (openGLContext_ == nil) {
-		return;
-	}
+    if (openGLContext_ == nil) {
+        return;
+    }
 
-	if ([openGLContext_ view] != self) {
-		[openGLContext_ setView:self];
-	}
-	[openGLContext_ makeCurrentContext];
+    if ([openGLContext_ view] != self) {
+        [openGLContext_ setView:self];
+    }
+    [openGLContext_ makeCurrentContext];
 }
 //-----------------------------------------------------------------------
 - (void)drawRect:(NSRect)dirtyRect
 {
-	[super drawRect:dirtyRect];
+    [super drawRect:dirtyRect];
 
-	if (viewLiveResizing && renderCallback_) {
-		renderCallback_();
-	}
+    if (viewLiveResizing && renderCallback_) {
+        renderCallback_();
+    }
 }
 //-----------------------------------------------------------------------
 - (void)setRenderCallback:(std::function<void()>)callback
 {
-	renderCallback_ = callback;
+    renderCallback_ = callback;
 }
 //-----------------------------------------------------------------------
 -(void)viewDidMoveToWindow
 {
-	[super viewDidMoveToWindow];
+    [super viewDidMoveToWindow];
 
-	if ([self window] == nil) {
-		[[self openGLContext] clearDrawable];
-	}
+    if ([self window] == nil) {
+        [[self openGLContext] clearDrawable];
+    }
 
-	trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
+    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
 }
 //-----------------------------------------------------------------------
 #pragma mark - Mouse-Tracking and Cursor
 //-----------------------------------------------------------------------
 - (void)setFrame:(NSRect)frame
 {
-	[super setFrame:frame];
-	[self removeTrackingRect:trackingRect];
-	trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
+    [super setFrame:frame];
+    [self removeTrackingRect:trackingRect];
+    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
 }
 //-----------------------------------------------------------------------
 - (void)setBounds:(NSRect)bounds
 {
-	[super setBounds:bounds];
-	[self removeTrackingRect:trackingRect];
-	trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
+    [super setBounds:bounds];
+    [self removeTrackingRect:trackingRect];
+    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
 }
 //-----------------------------------------------------------------------
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow
 {
-	if ([self window] && trackingRect) {
-		[self removeTrackingRect:trackingRect];
-	}
+    if ([self window] && trackingRect) {
+        [self removeTrackingRect:trackingRect];
+    }
 }
 //-----------------------------------------------------------------------
 #pragma mark - Mouse Event Delegated
 //-----------------------------------------------------------------------
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-	if (![self delegate]) {
-		return;
-	}
+    if (![self delegate]) {
+        return;
+    }
 
-	wasAcceptingMouseEvents = [[self window] acceptsMouseMovedEvents];
-	[[self window] setAcceptsMouseMovedEvents:YES];
-	[[self window] makeFirstResponder:self];
+    wasAcceptingMouseEvents = [[self window] acceptsMouseMovedEvents];
+    [[self window] setAcceptsMouseMovedEvents:YES];
+    [[self window] makeFirstResponder:self];
 
-	[[self delegate] mouseEntered:theEvent];
+    [[self delegate] mouseEntered:theEvent];
 }
 //-----------------------------------------------------------------------
 -(void)mouseMoved:(NSEvent *)theEvent
 {
-	[[self delegate] mouseMoved:theEvent];
+    [[self delegate] mouseMoved:theEvent];
 }
 //-----------------------------------------------------------------------
 - (void)mouseExited:(NSEvent *)theEvent
 {
-	[[self window] setAcceptsMouseMovedEvents:wasAcceptingMouseEvents];
+    [[self window] setAcceptsMouseMovedEvents:wasAcceptingMouseEvents];
 
-	[[self delegate] mouseExited:theEvent];
+    [[self delegate] mouseExited:theEvent];
 }
 //-----------------------------------------------------------------------
 - (void)mouseDown:(NSEvent *)theEvent
 {
-	[[self delegate] mouseDown:theEvent];
+    [[self delegate] mouseDown:theEvent];
 }
 //-----------------------------------------------------------------------
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-	[[self delegate] mouseDragged:theEvent];
+    [[self delegate] mouseDragged:theEvent];
 }
 //-----------------------------------------------------------------------
 - (void)mouseUp:(NSEvent *)theEvent
 {
-	[[self delegate] mouseUp:theEvent];
+    [[self delegate] mouseUp:theEvent];
 }
 //-----------------------------------------------------------------------
 - (void)rightMouseDown:(NSEvent *)theEvent
 {
-	[[self delegate] rightMouseDown:theEvent];
+    [[self delegate] rightMouseDown:theEvent];
 }
 //-----------------------------------------------------------------------
 - (void)rightMouseDragged:(NSEvent *)theEvent
 {
-	[[self delegate] rightMouseDragged:theEvent];
+    [[self delegate] rightMouseDragged:theEvent];
 }
 //-----------------------------------------------------------------------
 - (void)rightMouseUp:(NSEvent *)theEvent
 {
-	[[self delegate] rightMouseUp:theEvent];
+    [[self delegate] rightMouseUp:theEvent];
 }
 //-----------------------------------------------------------------------
 - (void)otherMouseDown:(NSEvent *)theEvent
 {
-	[[self delegate] otherMouseDown:theEvent];
+    [[self delegate] otherMouseDown:theEvent];
 }
 //-----------------------------------------------------------------------
 - (void)otherMouseDragged:(NSEvent *)theEvent
 {
-	[[self delegate] otherMouseDragged:theEvent];
+    [[self delegate] otherMouseDragged:theEvent];
 }
 //-----------------------------------------------------------------------
 - (void)otherMouseUp:(NSEvent *)theEvent
 {
-	[[self delegate] otherMouseUp:theEvent];
+    [[self delegate] otherMouseUp:theEvent];
 }
 //-----------------------------------------------------------------------
 - (void)scrollWheel:(NSEvent *)theEvent
 {
-	[[self delegate] scrollWheel:theEvent];
+    [[self delegate] scrollWheel:theEvent];
 }
 //-----------------------------------------------------------------------
 #pragma mark - Keyboard Event Delegated
 //-----------------------------------------------------------------------
 - (void)keyDown:(NSEvent *)theEvent
 {
-	[[self delegate] keyDown:theEvent];
+    [[self delegate] keyDown:theEvent];
 }
 //-----------------------------------------------------------------------
 - (void)keyUp:(NSEvent *)theEvent
 {
-	[[self delegate] keyUp:theEvent];
+    [[self delegate] keyUp:theEvent];
 }
 //-----------------------------------------------------------------------
 #pragma mark - View Event Delegated
 //-----------------------------------------------------------------------
 - (void)viewWillStartLiveResize
 {
-	viewLiveResizing = true;
-	[[self delegate] viewWillStartLiveResize];
+    viewLiveResizing = true;
+    [[self delegate] viewWillStartLiveResize];
 }
 //-----------------------------------------------------------------------
 - (void)viewDidEndLiveResize
 {
-	viewLiveResizing = false;
-	[[self delegate] viewDidEndLiveResize];
+    viewLiveResizing = false;
+    [[self delegate] viewDidEndLiveResize];
 }
 //-----------------------------------------------------------------------
 @end

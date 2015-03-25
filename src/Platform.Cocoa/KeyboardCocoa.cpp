@@ -11,12 +11,12 @@ KeyboardCocoa::KeyboardCocoa() = default;
 //-----------------------------------------------------------------------
 KeyboardState KeyboardCocoa::GetState() const
 {
-	return state;
+    return state;
 }
 //-----------------------------------------------------------------------
 void KeyboardCocoa::SetKey(Keys key, KeyState keyState)
 {
-	state.SetKey(key, keyState);
+    state.SetKey(key, keyState);
 }
 
 }// namespace Cocoa

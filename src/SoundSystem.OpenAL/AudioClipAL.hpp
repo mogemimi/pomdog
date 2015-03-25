@@ -24,19 +24,19 @@ namespace OpenAL {
 
 class AudioClipAL final: Noncopyable {
 public:
-	AudioClipAL(void const* data, std::size_t size,
-		std::uint32_t sampleRate, std::uint16_t bitsPerSample,
-		AudioChannels channel);
+    AudioClipAL(void const* data, std::size_t size,
+        std::uint32_t sampleRate, std::uint16_t bitsPerSample,
+        AudioChannels channel);
 
-	~AudioClipAL();
+    ~AudioClipAL();
 
-	std::size_t SizeInBytes() const;
+    std::size_t SizeInBytes() const;
 
-	ALuint NativeBuffer() const;
+    ALuint NativeBuffer() const;
 
 private:
-	Optional<ALuint> buffer;
-	std::size_t sizeInBytes;
+    Optional<ALuint> buffer;
+    std::size_t sizeInBytes;
 };
 
 }// namespace OpenAL

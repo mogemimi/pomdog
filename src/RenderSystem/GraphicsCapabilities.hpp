@@ -16,7 +16,7 @@ namespace RenderSystem {
 
 class GraphicsCapabilities {
 public:
-	std::size_t SamplerSlotCount;
+    std::size_t SamplerSlotCount;
 };
 
 }// namespace RenderSystems

@@ -27,58 +27,58 @@ class MouseCocoa;
 
 class GameWindowCocoa final: public GameWindow {
 public:
-	GameWindowCocoa(NSWindow* window, std::shared_ptr<SystemEventDispatcher> const& eventDispatcher);
-	~GameWindowCocoa();
+    GameWindowCocoa(NSWindow* window, std::shared_ptr<SystemEventDispatcher> const& eventDispatcher);
+    ~GameWindowCocoa();
 
-	///@copydoc GameWindow
-	bool AllowPlayerResizing() const override;
+    ///@copydoc GameWindow
+    bool AllowPlayerResizing() const override;
 
-	///@copydoc GameWindow
-	void AllowPlayerResizing(bool allowResizing) override;
+    ///@copydoc GameWindow
+    void AllowPlayerResizing(bool allowResizing) override;
 
-	///@copydoc GameWindow
-	std::string Title() const override;
+    ///@copydoc GameWindow
+    std::string Title() const override;
 
-	///@copydoc GameWindow
-	void Title(std::string const& title) override;
+    ///@copydoc GameWindow
+    void Title(std::string const& title) override;
 
-	///@copydoc GameWindow
-	Rectangle ClientBounds() const override;
+    ///@copydoc GameWindow
+    Rectangle ClientBounds() const override;
 
-	///@copydoc GameWindow
-	void ClientBounds(Rectangle const& clientBounds) override;
+    ///@copydoc GameWindow
+    void ClientBounds(Rectangle const& clientBounds) override;
 
-	///@copydoc GameWindow
-	bool IsMouseCursorVisible() const override;
+    ///@copydoc GameWindow
+    bool IsMouseCursorVisible() const override;
 
-	///@copydoc GameWindow
-	void IsMouseCursorVisible(bool visible) override;
+    ///@copydoc GameWindow
+    void IsMouseCursorVisible(bool visible) override;
 
-	///@copydoc GameWindow
-	void SetMouseCursor(MouseCursor cursor) override;
+    ///@copydoc GameWindow
+    void SetMouseCursor(MouseCursor cursor) override;
 
-	///@return true if the window is minimized, false otherwise.
-	bool IsMinimized() const;
+    ///@return true if the window is minimized, false otherwise.
+    bool IsMinimized() const;
 
-	void Close();
+    void Close();
 
-	void ResetGLContext(std::shared_ptr<OpenGLContextCocoa> const& context);
+    void ResetGLContext(std::shared_ptr<OpenGLContextCocoa> const& context);
 
-	void ResetGLContext();
+    void ResetGLContext();
 
-	void SetRenderCallbackOnLiveResizing(std::function<void()> const& callback);
+    void SetRenderCallbackOnLiveResizing(std::function<void()> const& callback);
 
-	void SetRenderCallbackOnLiveResizing();
+    void SetRenderCallbackOnLiveResizing();
 
-	void BindToDelegate(std::shared_ptr<MouseCocoa> mouse);
+    void BindToDelegate(std::shared_ptr<MouseCocoa> mouse);
 
 private:
-	std::shared_ptr<OpenGLContextCocoa> openGLContext;
-	NSWindow* nativeWindow;
-	CocoaOpenGLView* openGLView;
-	CocoaWindowDelegate* windowDelegate;
-	CocoaGameViewDelegate* viewDelegate;
-	bool isMouseCursorVisible;
+    std::shared_ptr<OpenGLContextCocoa> openGLContext;
+    NSWindow* nativeWindow;
+    CocoaOpenGLView* openGLView;
+    CocoaWindowDelegate* windowDelegate;
+    CocoaGameViewDelegate* viewDelegate;
+    bool isMouseCursorVisible;
 };
 
 }// namespace Cocoa

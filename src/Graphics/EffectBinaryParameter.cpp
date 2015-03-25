@@ -23,15 +23,15 @@ namespace {
 template <typename T> static
 void const* BinaryCast(T const* data)
 {
-	static_assert(!std::is_pointer<T>::value, "T is not pointer.");
-	return static_cast<void const*>(data);
+    static_assert(!std::is_pointer<T>::value, "T is not pointer.");
+    return static_cast<void const*>(data);
 }
 
 template <typename T> static
 void* BinaryCast(T * data)
 {
-	static_assert(!std::is_pointer<T>::value, "T is not pointer.");
-	return static_cast<void*>(data);
+    static_assert(!std::is_pointer<T>::value, "T is not pointer.");
+    return static_cast<void*>(data);
 }
 
 }// unnamed namespace
@@ -42,55 +42,55 @@ void* BinaryCast(T * data)
 //-----------------------------------------------------------------------
 void Get(EffectParameter & effectParameter, bool & value)
 {
-	std::uint32_t unsignedValue = 0;
-	effectParameter.GetValue(sizeof(unsignedValue), BinaryCast(&unsignedValue));
-	value = (unsignedValue != 0);
+    std::uint32_t unsignedValue = 0;
+    effectParameter.GetValue(sizeof(unsignedValue), BinaryCast(&unsignedValue));
+    value = (unsignedValue != 0);
 }
 //-----------------------------------------------------------------------
 void Get(EffectParameter & effectParameter, std::int32_t & value)
 {
-	effectParameter.GetValue(sizeof(value), BinaryCast(&value));
+    effectParameter.GetValue(sizeof(value), BinaryCast(&value));
 }
 //-----------------------------------------------------------------------
 void Get(EffectParameter & effectParameter, std::uint32_t & value)
 {
-	effectParameter.GetValue(sizeof(value), BinaryCast(&value));
+    effectParameter.GetValue(sizeof(value), BinaryCast(&value));
 }
 //-----------------------------------------------------------------------
 void Get(EffectParameter & effectParameter, float & value)
 {
-	effectParameter.GetValue(sizeof(value), BinaryCast(&value));
+    effectParameter.GetValue(sizeof(value), BinaryCast(&value));
 }
 //-----------------------------------------------------------------------
 void Get(EffectParameter & effectParameter, double & value)
 {
-	effectParameter.GetValue(sizeof(value), BinaryCast(&value));
+    effectParameter.GetValue(sizeof(value), BinaryCast(&value));
 }
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, bool value)
 {
-	std::uint32_t const unsignedValue = value ? 1: 0;
-	effectParameter.SetValue(BinaryCast(&unsignedValue), sizeof(unsignedValue));
+    std::uint32_t const unsignedValue = value ? 1: 0;
+    effectParameter.SetValue(BinaryCast(&unsignedValue), sizeof(unsignedValue));
 }
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, std::int32_t value)
 {
-	effectParameter.SetValue(BinaryCast(&value), sizeof(value));
+    effectParameter.SetValue(BinaryCast(&value), sizeof(value));
 }
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, std::uint32_t value)
 {
-	effectParameter.SetValue(BinaryCast(&value), sizeof(value));
+    effectParameter.SetValue(BinaryCast(&value), sizeof(value));
 }
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, float value)
 {
-	effectParameter.SetValue(BinaryCast(&value), sizeof(value));
+    effectParameter.SetValue(BinaryCast(&value), sizeof(value));
 }
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, double value)
 {
-	effectParameter.SetValue(BinaryCast(&value), sizeof(value));
+    effectParameter.SetValue(BinaryCast(&value), sizeof(value));
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -99,38 +99,38 @@ void Set(EffectParameter & effectParameter, double value)
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, std::int32_t const* data, std::uint32_t count)
 {
-	using type = std::remove_pointer<decltype(data)>::type;
-	static_assert(std::is_same<type, std::int32_t const>::value, "");
+    using type = std::remove_pointer<decltype(data)>::type;
+    static_assert(std::is_same<type, std::int32_t const>::value, "");
 
-	POMDOG_ASSERT(count > 0);
-	effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
+    POMDOG_ASSERT(count > 0);
+    effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, std::uint32_t const* data, std::uint32_t count)
 {
-	using type = std::remove_pointer<decltype(data)>::type;
-	static_assert(std::is_same<type, std::uint32_t const>::value, "");
+    using type = std::remove_pointer<decltype(data)>::type;
+    static_assert(std::is_same<type, std::uint32_t const>::value, "");
 
-	POMDOG_ASSERT(count > 0);
-	effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
+    POMDOG_ASSERT(count > 0);
+    effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, float const* data, std::uint32_t count)
 {
-	using type = std::remove_pointer<decltype(data)>::type;
-	static_assert(std::is_same<type, float const>::value, "");
+    using type = std::remove_pointer<decltype(data)>::type;
+    static_assert(std::is_same<type, float const>::value, "");
 
-	POMDOG_ASSERT(count > 0);
-	effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
+    POMDOG_ASSERT(count > 0);
+    effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
 void Set(EffectParameter & effectParameter, double const* data, std::uint32_t count)
 {
-	using type = std::remove_pointer<decltype(data)>::type;
-	static_assert(std::is_same<type, double const>::value, "");
+    using type = std::remove_pointer<decltype(data)>::type;
+    static_assert(std::is_same<type, double const>::value, "");
 
-	POMDOG_ASSERT(count > 0);
-	effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
+    POMDOG_ASSERT(count > 0);
+    effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -140,50 +140,50 @@ void Set(EffectParameter & effectParameter, double const* data, std::uint32_t co
 template <typename T> void
 Set(EffectParameter & effectParameter, FloatingPointVector2<T> const& value)
 {
-	static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-	effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
+    static_assert(std::is_floating_point<T>::value, "T is floating point number.");
+    effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
 Set(EffectParameter & effectParameter, FloatingPointVector3<T> const& value)
 {
-	static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-	effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
+    static_assert(std::is_floating_point<T>::value, "T is floating point number.");
+    effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
 Set(EffectParameter & effectParameter, FloatingPointVector4<T> const& value)
 {
-	static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-	effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
+    static_assert(std::is_floating_point<T>::value, "T is floating point number.");
+    effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
 Set(EffectParameter & effectParameter, FloatingPointMatrix2x2<T> const& value)
 {
-	static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-	effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
+    static_assert(std::is_floating_point<T>::value, "T is floating point number.");
+    effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
 Set(EffectParameter & effectParameter, FloatingPointMatrix3x3<T> const& value)
 {
-	static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-	effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
+    static_assert(std::is_floating_point<T>::value, "T is floating point number.");
+    effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
 Set(EffectParameter & effectParameter, FloatingPointMatrix4x4<T> const& value)
 {
-	static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-	effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
+    static_assert(std::is_floating_point<T>::value, "T is floating point number.");
+    effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
 Set(EffectParameter & effectParameter, FloatingPointQuaternion<T> const& value)
 {
-	static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-	effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
+    static_assert(std::is_floating_point<T>::value, "T is floating point number.");
+    effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)

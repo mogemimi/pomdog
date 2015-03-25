@@ -25,50 +25,50 @@ class NativeVertexBuffer;
 
 class POMDOG_EXPORT VertexBuffer {
 public:
-	VertexBuffer() = delete;
-	VertexBuffer(VertexBuffer const&) = delete;
-	VertexBuffer(VertexBuffer &&) = default;
+    VertexBuffer() = delete;
+    VertexBuffer(VertexBuffer const&) = delete;
+    VertexBuffer(VertexBuffer &&) = default;
 
-	VertexBuffer(GraphicsDevice & graphicsDevice,
-		void const* vertices, std::size_t vertexCount,
-		std::size_t strideBytes, Pomdog::BufferUsage bufferUsage);
+    VertexBuffer(GraphicsDevice & graphicsDevice,
+        void const* vertices, std::size_t vertexCount,
+        std::size_t strideBytes, Pomdog::BufferUsage bufferUsage);
 
-	VertexBuffer(GraphicsDevice & graphicsDevice,
-		std::size_t vertexCount, std::size_t strideBytes,
-		Pomdog::BufferUsage bufferUsage);
+    VertexBuffer(GraphicsDevice & graphicsDevice,
+        std::size_t vertexCount, std::size_t strideBytes,
+        Pomdog::BufferUsage bufferUsage);
 
-	VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		void const* vertices, std::size_t vertexCount,
-		std::size_t strideBytes, Pomdog::BufferUsage bufferUsage);
+    VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        void const* vertices, std::size_t vertexCount,
+        std::size_t strideBytes, Pomdog::BufferUsage bufferUsage);
 
-	VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		std::size_t vertexCount, std::size_t strideBytes,
-		Pomdog::BufferUsage bufferUsage);
+    VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        std::size_t vertexCount, std::size_t strideBytes,
+        Pomdog::BufferUsage bufferUsage);
 
-	~VertexBuffer();
+    ~VertexBuffer();
 
-	VertexBuffer & operator=(VertexBuffer const&) = delete;
-	VertexBuffer & operator=(VertexBuffer &&) = default;
+    VertexBuffer & operator=(VertexBuffer const&) = delete;
+    VertexBuffer & operator=(VertexBuffer &&) = default;
 
-	std::size_t VertexCount() const;
+    std::size_t VertexCount() const;
 
-	std::size_t StrideBytes() const;
+    std::size_t StrideBytes() const;
 
-	Pomdog::BufferUsage BufferUsage() const;
+    Pomdog::BufferUsage BufferUsage() const;
 
-	void SetData(void const* source, std::size_t elementCount);
+    void SetData(void const* source, std::size_t elementCount);
 
-	void SetData(std::size_t offsetInBytes, void const* source,
-		std::size_t elementCount, std::size_t strideBytes);
+    void SetData(std::size_t offsetInBytes, void const* source,
+        std::size_t elementCount, std::size_t strideBytes);
 
 public:
-	Detail::RenderSystem::NativeVertexBuffer* NativeVertexBuffer();
+    Detail::RenderSystem::NativeVertexBuffer* NativeVertexBuffer();
 
 private:
-	std::unique_ptr<Detail::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
-	std::uint32_t vertexCount;
-	std::uint32_t strideBytes;
-	Pomdog::BufferUsage bufferUsage;
+    std::unique_ptr<Detail::RenderSystem::NativeVertexBuffer> nativeVertexBuffer;
+    std::uint32_t vertexCount;
+    std::uint32_t strideBytes;
+    Pomdog::BufferUsage bufferUsage;
 };
 
 }// namespace Pomdog

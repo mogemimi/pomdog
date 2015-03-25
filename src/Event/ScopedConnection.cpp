@@ -7,35 +7,35 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 ScopedConnection::ScopedConnection(EventConnection const& eventConnection)
-	: connection(eventConnection)
+    : connection(eventConnection)
 {}
 //-----------------------------------------------------------------------
 ScopedConnection::ScopedConnection(EventConnection && eventConnection)
-	: connection(std::move(eventConnection))
+    : connection(std::move(eventConnection))
 {}
 //-----------------------------------------------------------------------
 ScopedConnection::~ScopedConnection()
 {
-	connection.Disconnect();
+    connection.Disconnect();
 }
 //-----------------------------------------------------------------------
 ScopedConnection & ScopedConnection::operator=(EventConnection const& c)
 {
-	connection.Disconnect();
-	connection = c;
-	return *this;
+    connection.Disconnect();
+    connection = c;
+    return *this;
 }
 //-----------------------------------------------------------------------
 ScopedConnection & ScopedConnection::operator=(EventConnection && c)
 {
-	connection.Disconnect();
-	connection = std::move(c);
-	return *this;
+    connection.Disconnect();
+    connection = std::move(c);
+    return *this;
 }
 //-----------------------------------------------------------------------
 void ScopedConnection::Disconnect()
 {
-	connection.Disconnect();
+    connection.Disconnect();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

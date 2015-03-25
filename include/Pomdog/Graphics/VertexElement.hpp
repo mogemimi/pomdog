@@ -16,9 +16,9 @@ namespace Pomdog {
 
 class POMDOG_EXPORT VertexElement {
 public:
-	std::uint16_t Offset;
+    std::uint16_t Offset;
 
-	VertexElementFormat VertexElementFormat;
+    VertexElementFormat VertexElementFormat;
 };
 
 }// namespace Pomdog

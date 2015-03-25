@@ -27,28 +27,28 @@ class AudioEngineXAudio2;
 
 class SoundEffectXAudio2 final: Noncopyable {
 public:
-	SoundEffectXAudio2(AudioEngineXAudio2 & audioEngine,
-		std::shared_ptr<AudioClipXAudio2> const& audioClip, bool isLooped);
+    SoundEffectXAudio2(AudioEngineXAudio2 & audioEngine,
+        std::shared_ptr<AudioClipXAudio2> const& audioClip, bool isLooped);
 
-	~SoundEffectXAudio2();
+    ~SoundEffectXAudio2();
 
-	void ExitLoop();
+    void ExitLoop();
 
-	void Pause();
+    void Pause();
 
-	void Play();
+    void Play();
 
-	void Stop();
+    void Stop();
 
-	void Apply3D(AudioListener const& listener, AudioEmitter const& emitter);
+    void Apply3D(AudioListener const& listener, AudioEmitter const& emitter);
 
-	void Pitch(float pitch);
+    void Pitch(float pitch);
 
-	void Volume(float volume);
+    void Volume(float volume);
 
 private:
-	std::shared_ptr<AudioClipXAudio2> audioClip;
-	IXAudio2SourceVoice* sourceVoice;
+    std::shared_ptr<AudioClipXAudio2> audioClip;
+    IXAudio2SourceVoice* sourceVoice;
 };
 
 }// namespace XAudio2

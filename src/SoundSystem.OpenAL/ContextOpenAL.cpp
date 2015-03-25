@@ -11,38 +11,38 @@ namespace SoundSystem {
 namespace OpenAL {
 //-----------------------------------------------------------------------
 ContextOpenAL::ContextOpenAL()
-	: device(nullptr)
-	, context(nullptr)
+    : device(nullptr)
+    , context(nullptr)
 {
-	device = alcOpenDevice(nullptr);
+    device = alcOpenDevice(nullptr);
 
-	#ifdef DEBUG
-	ErrorCheckerAL::CheckError("alcOpenDevice", __FILE__, __LINE__);
-	#endif
+    #ifdef DEBUG
+    ErrorCheckerAL::CheckError("alcOpenDevice", __FILE__, __LINE__);
+    #endif
 
-	POMDOG_ASSERT(device);
-	context = alcCreateContext(device, nullptr);
-	alcMakeContextCurrent(context);
+    POMDOG_ASSERT(device);
+    context = alcCreateContext(device, nullptr);
+    alcMakeContextCurrent(context);
 
-	#ifdef DEBUG
-	ErrorCheckerAL::CheckError("alcMakeContextCurrent", __FILE__, __LINE__);
-	#endif
+    #ifdef DEBUG
+    ErrorCheckerAL::CheckError("alcMakeContextCurrent", __FILE__, __LINE__);
+    #endif
 }
 //-----------------------------------------------------------------------
 ContextOpenAL::~ContextOpenAL()
 {
-	auto currentContext = alcGetCurrentContext();
-	if (currentContext == context) {
-		alcMakeContextCurrent(nullptr);
-	}
+    auto currentContext = alcGetCurrentContext();
+    if (currentContext == context) {
+        alcMakeContextCurrent(nullptr);
+    }
 
-	if (context) {
-		alcDestroyContext(context);
-	}
+    if (context) {
+        alcDestroyContext(context);
+    }
 
-	if (device) {
-		alcCloseDevice(device);
-	}
+    if (device) {
+        alcCloseDevice(device);
+    }
 }
 //-----------------------------------------------------------------------
 }// namespace OpenAL

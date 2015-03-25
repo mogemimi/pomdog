@@ -22,12 +22,12 @@ namespace Win32 {
 
 class BootstrapperWin32 {
 public:
-	explicit BootstrapperWin32(BootstrapSettingsWin32 const& settings);
+    explicit BootstrapperWin32(BootstrapSettingsWin32 const& settings);
 
-	void Run(std::function<void(std::shared_ptr<GameHost> const& gameHost)> const& run);
+    void Run(std::function<void(std::shared_ptr<GameHost> const& gameHost)> const& run);
 
 private:
-	BootstrapSettingsWin32 settings;
+    BootstrapSettingsWin32 settings;
 };
 
 }// namespace Win32

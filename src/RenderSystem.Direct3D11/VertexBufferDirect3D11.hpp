@@ -19,25 +19,25 @@ namespace Direct3D11 {
 
 class VertexBufferDirect3D11 final: public NativeVertexBuffer {
 public:
-	VertexBufferDirect3D11() = delete;
+    VertexBufferDirect3D11() = delete;
 
-	VertexBufferDirect3D11(ID3D11Device* nativeDevice,
-		Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
-		std::uint32_t sizeInBytes, BufferUsage bufferUsage);
+    VertexBufferDirect3D11(ID3D11Device* nativeDevice,
+        Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
+        std::uint32_t sizeInBytes, BufferUsage bufferUsage);
 
-	VertexBufferDirect3D11(ID3D11Device* nativeDevice,
-		Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
-		void const* vertices, std::uint32_t sizeInBytes, BufferUsage bufferUsage);
+    VertexBufferDirect3D11(ID3D11Device* nativeDevice,
+        Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
+        void const* vertices, std::uint32_t sizeInBytes, BufferUsage bufferUsage);
 
-	///@copydoc NativeVertexBuffer
-	void SetData(std::uint32_t offsetInBytes, void const* source,
-		std::uint32_t sizeInBytes) override;
+    ///@copydoc NativeVertexBuffer
+    void SetData(std::uint32_t offsetInBytes, void const* source,
+        std::uint32_t sizeInBytes) override;
 
-	ID3D11Buffer* NativeBuffer() const;
+    ID3D11Buffer* NativeBuffer() const;
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11Buffer> nativeVertexBuffer;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> nativeVertexBuffer;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
 };
 
 }// namespace Direct3D11

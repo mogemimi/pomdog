@@ -21,33 +21,33 @@ class LogChannel;
 
 class POMDOG_EXPORT LogStream {
 private:
-	std::stringstream cache;
-	std::string sourceChannel;
-	LogChannel & channel;
-	LogLevel level;
+    std::stringstream cache;
+    std::string sourceChannel;
+    LogChannel & channel;
+    LogLevel level;
 
 public:
-	LogStream() = delete;
+    LogStream() = delete;
 
-	explicit LogStream(LogChannel & channel, LogLevel level = LogLevel::Verbose);
+    explicit LogStream(LogChannel & channel, LogLevel level = LogLevel::Verbose);
 
-	LogStream(LogChannel & channel, std::string const& sourceChannel, LogLevel level = LogLevel::Verbose);
+    LogStream(LogChannel & channel, std::string const& sourceChannel, LogLevel level = LogLevel::Verbose);
 
-	LogStream(LogStream const&);
-	LogStream(LogStream &&) = default;
-	LogStream & operator=(LogStream const&) = delete;
-	LogStream & operator=(LogStream &&) = delete;
+    LogStream(LogStream const&);
+    LogStream(LogStream &&) = default;
+    LogStream & operator=(LogStream const&) = delete;
+    LogStream & operator=(LogStream &&) = delete;
 
-	~LogStream();
+    ~LogStream();
 
-	template <typename T>
-	LogStream & operator<<(T const& message);
+    template <typename T>
+    LogStream & operator<<(T const& message);
 
-	void Flush();
+    void Flush();
 
-	void Clear();
+    void Clear();
 
-	std::string String() const;
+    std::string String() const;
 };
 
 
@@ -57,19 +57,19 @@ namespace Logging {
 template<typename E>
 auto ToIntegral(E e)->typename std::underlying_type<E>::type
 {
-	return static_cast<typename std::underlying_type<E>::type>(e);
+    return static_cast<typename std::underlying_type<E>::type>(e);
 }
 
 template <typename T>
 auto LogStreamInvork(T const& message, typename std::enable_if<std::is_enum<T>::value>::type* = nullptr)->decltype(ToIntegral(message))
 {
-	return ToIntegral(message);
+    return ToIntegral(message);
 }
 
 template <typename T>
 T const& LogStreamInvork(T const& message, typename std::enable_if<!std::is_enum<T>::value>::type* = nullptr)
 {
-	return message;
+    return message;
 }
 
 }// namespace Logging
@@ -78,8 +78,8 @@ T const& LogStreamInvork(T const& message, typename std::enable_if<!std::is_enum
 template <typename T>
 LogStream & LogStream::operator<<(T const& message)
 {
-	cache << Detail::Logging::LogStreamInvork(message);
-	return *this;
+    cache << Detail::Logging::LogStreamInvork(message);
+    return *this;
 }
 
 }// namespace Pomdog

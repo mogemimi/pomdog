@@ -16,9 +16,9 @@ namespace Pomdog {
 
 class EffectVariable {
 public:
-	std::string Name;
-	EffectAnnotation Annotation;
-	std::uint32_t StartOffset;
+    std::string Name;
+    EffectAnnotation Annotation;
+    std::uint32_t StartOffset;
 };
 
 }// namespace Pomdog

@@ -25,56 +25,56 @@ enum class ContainmentType: std::uint8_t;
 ///  |         Center        |
 ///  |                       | Right = x + width
 ///  |_______________________|
-/// 
+///
 ///     Bottom = y + height
 ///@endcode
 class POMDOG_EXPORT Rectangle {
 public:
-	std::int32_t X, Y;
-	std::int32_t Width, Height;
+    std::int32_t X, Y;
+    std::int32_t Width, Height;
 
 public:
-	// Constructors:
-	Rectangle() = default;
-	Rectangle(Rectangle const&) = default;
-	Rectangle(Rectangle &&) = default;
+    // Constructors:
+    Rectangle() = default;
+    Rectangle(Rectangle const&) = default;
+    Rectangle(Rectangle &&) = default;
 
-	Rectangle(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height);
-	Rectangle(Point2D const& position, std::int32_t width, std::int32_t height);
+    Rectangle(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height);
+    Rectangle(Point2D const& position, std::int32_t width, std::int32_t height);
 
-	// Assignment operators:
-	Rectangle & operator=(Rectangle const&) = default;
-	Rectangle & operator=(Rectangle &&) = default;
+    // Assignment operators:
+    Rectangle & operator=(Rectangle const&) = default;
+    Rectangle & operator=(Rectangle &&) = default;
 
-	// Binary operators:
-	bool operator==(Rectangle const&) const;
-	bool operator!=(Rectangle const&) const;
+    // Binary operators:
+    bool operator==(Rectangle const&) const;
+    bool operator!=(Rectangle const&) const;
 
-	std::int32_t Bottom() const;
+    std::int32_t Bottom() const;
 
-	std::int32_t Right() const;
+    std::int32_t Right() const;
 
-	std::int32_t Top() const;
+    std::int32_t Top() const;
 
-	std::int32_t Left() const;
+    std::int32_t Left() const;
 
-	Point2D Center() const;
+    Point2D Center() const;
 
-	Point2D Location() const;
+    Point2D Location() const;
 
-	void Location(Point2D const& position);
+    void Location(Point2D const& position);
 
-	void Offset(std::int32_t offsetX, std::int32_t offsetY);
+    void Offset(std::int32_t offsetX, std::int32_t offsetY);
 
-	void Offset(Point2D const& offset);
+    void Offset(Point2D const& offset);
 
-	ContainmentType Contains(Point2D const& point) const;
+    ContainmentType Contains(Point2D const& point) const;
 
-	ContainmentType Contains(Rectangle const& rectangle) const;
+    ContainmentType Contains(Rectangle const& rectangle) const;
 
-	bool Intersects(Point2D const& point) const;
+    bool Intersects(Point2D const& point) const;
 
-	bool Intersects(Rectangle const& rectangle) const;
+    bool Intersects(Rectangle const& rectangle) const;
 };
 
 }// namespace Pomdog

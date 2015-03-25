@@ -14,8 +14,8 @@ namespace Pomdog {
 
 class GamepadThumbSticks {
 public:
-	Vector2 Left = Vector2::Zero;
-	Vector2 Right = Vector2::Zero;
+    Vector2 Left = Vector2::Zero;
+    Vector2 Right = Vector2::Zero;
 };
 
 }// namespace Pomdog

@@ -20,12 +20,12 @@ class DeviceContextDirectInput;
 
 class KeyboardCreatorDirectInput final: public KeyboardCreator {
 public:
-	explicit KeyboardCreatorDirectInput(std::shared_ptr<DeviceContextDirectInput> const& deviceContext);
+    explicit KeyboardCreatorDirectInput(std::shared_ptr<DeviceContextDirectInput> const& deviceContext);
 
-	std::shared_ptr<Keyboard> Create(SubsystemScheduler & scheduler) override;
+    std::shared_ptr<Keyboard> Create(SubsystemScheduler & scheduler) override;
 
 private:
-	std::shared_ptr<DeviceContextDirectInput> deviceContext;
+    std::shared_ptr<DeviceContextDirectInput> deviceContext;
 };
 
 }// namespace DirectInput

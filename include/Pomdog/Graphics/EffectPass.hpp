@@ -25,26 +25,26 @@ class NativeEffectPass;
 
 class POMDOG_EXPORT EffectPass {
 public:
-	EffectPass() = delete;
-	EffectPass(EffectPass const&) = delete;
-	EffectPass(EffectPass &&) = default;
+    EffectPass() = delete;
+    EffectPass(EffectPass const&) = delete;
+    EffectPass(EffectPass &&) = default;
 
-	EffectPass(GraphicsDevice & graphicsDevice,
-		EffectPassDescription const& description);
+    EffectPass(GraphicsDevice & graphicsDevice,
+        EffectPassDescription const& description);
 
-	EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		EffectPassDescription const& description);
+    EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        EffectPassDescription const& description);
 
-	~EffectPass();
+    ~EffectPass();
 
-	EffectPass & operator=(EffectPass const&) = delete;
-	EffectPass & operator=(EffectPass &&) = default;
+    EffectPass & operator=(EffectPass const&) = delete;
+    EffectPass & operator=(EffectPass &&) = default;
 
 public:
-	Detail::RenderSystem::NativeEffectPass* NativeEffectPass();
+    Detail::RenderSystem::NativeEffectPass* NativeEffectPass();
 
 private:
-	std::unique_ptr<Detail::RenderSystem::NativeEffectPass> nativeEffectPass;
+    std::unique_ptr<Detail::RenderSystem::NativeEffectPass> nativeEffectPass;
 };
 
 }// namespace Pomdog

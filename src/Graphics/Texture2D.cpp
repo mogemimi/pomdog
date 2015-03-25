@@ -13,60 +13,60 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 Texture2D::Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	std::int32_t pixelWidthIn, std::int32_t pixelHeightIn)
-	: Texture2D(graphicsDevice, pixelWidthIn, pixelHeightIn, false, SurfaceFormat::R8G8B8A8_UNorm)
+    std::int32_t pixelWidthIn, std::int32_t pixelHeightIn)
+    : Texture2D(graphicsDevice, pixelWidthIn, pixelHeightIn, false, SurfaceFormat::R8G8B8A8_UNorm)
 {}
 //-----------------------------------------------------------------------
 Texture2D::Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	std::int32_t pixelWidthIn, std::int32_t pixelHeightIn,
-	bool mipMap, SurfaceFormat formatIn)
-	: pixelWidth(pixelWidthIn)
-	, pixelHeight(pixelHeightIn)
-	, levelCount(mipMap ? Detail::TextureHelper::ComputeMipmapLevelCount(pixelWidth, pixelHeight): 1)
-	, format(formatIn)
+    std::int32_t pixelWidthIn, std::int32_t pixelHeightIn,
+    bool mipMap, SurfaceFormat formatIn)
+    : pixelWidth(pixelWidthIn)
+    , pixelHeight(pixelHeightIn)
+    , levelCount(mipMap ? Detail::TextureHelper::ComputeMipmapLevelCount(pixelWidth, pixelHeight): 1)
+    , format(formatIn)
 {
-	POMDOG_ASSERT(pixelWidth > 0);
-	POMDOG_ASSERT(pixelHeight > 0);
-	POMDOG_ASSERT(levelCount >= 1);
-	nativeTexture2D = graphicsDevice->NativeGraphicsDevice()->CreateTexture2D(
-		pixelWidthIn, pixelHeightIn, levelCount, formatIn);
+    POMDOG_ASSERT(pixelWidth > 0);
+    POMDOG_ASSERT(pixelHeight > 0);
+    POMDOG_ASSERT(levelCount >= 1);
+    nativeTexture2D = graphicsDevice->NativeGraphicsDevice()->CreateTexture2D(
+        pixelWidthIn, pixelHeightIn, levelCount, formatIn);
 }
 //-----------------------------------------------------------------------
 Texture2D::~Texture2D() = default;
 //-----------------------------------------------------------------------
 std::int32_t Texture2D::Width() const
 {
-	return pixelWidth;
+    return pixelWidth;
 }
 //-----------------------------------------------------------------------
 std::int32_t Texture2D::Height() const
 {
-	return pixelHeight;
+    return pixelHeight;
 }
 //-----------------------------------------------------------------------
 std::int32_t Texture2D::LevelCount() const
 {
-	return levelCount;
+    return levelCount;
 }
 //-----------------------------------------------------------------------
 SurfaceFormat Texture2D::Format() const
 {
-	return format;
+    return format;
 }
 //-----------------------------------------------------------------------
 void Texture2D::SetData(void const* pixelData)
 {
-	POMDOG_ASSERT(nativeTexture2D);
-	POMDOG_ASSERT(pixelData);
-	POMDOG_ASSERT(pixelWidth > 0);
-	POMDOG_ASSERT(pixelHeight > 0);
-	POMDOG_ASSERT(levelCount >= 1);
-	nativeTexture2D->SetData(pixelWidth, pixelHeight, levelCount, format, pixelData);
+    POMDOG_ASSERT(nativeTexture2D);
+    POMDOG_ASSERT(pixelData);
+    POMDOG_ASSERT(pixelWidth > 0);
+    POMDOG_ASSERT(pixelHeight > 0);
+    POMDOG_ASSERT(levelCount >= 1);
+    nativeTexture2D->SetData(pixelWidth, pixelHeight, levelCount, format, pixelData);
 }
 //-----------------------------------------------------------------------
 Detail::RenderSystem::NativeTexture2D* Texture2D::NativeTexture2D()
 {
-	return nativeTexture2D.get();
+    return nativeTexture2D.get();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

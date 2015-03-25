@@ -10,58 +10,58 @@ namespace Detail {
 namespace Cocoa {
 //-----------------------------------------------------------------------
 OpenGLContextCocoa::OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormat)
-	: openGLContext(nil)
+    : openGLContext(nil)
 {
-	POMDOG_ASSERT(pixelFormat != nil);
+    POMDOG_ASSERT(pixelFormat != nil);
 
-	openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext: nil];
-	[openGLContext makeCurrentContext];
+    openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext: nil];
+    [openGLContext makeCurrentContext];
 
-	constexpr GLint swapInterval = 1;
-	[openGLContext setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
+    constexpr GLint swapInterval = 1;
+    [openGLContext setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
 }
 //-----------------------------------------------------------------------
 OpenGLContextCocoa::~OpenGLContextCocoa()
 {
 #if !__has_feature(objc_arc)
-	[openGLContext release];
+    [openGLContext release];
 #endif
-	openGLContext = nil;
+    openGLContext = nil;
 }
 //-----------------------------------------------------------------------
 void OpenGLContextCocoa::MakeCurrent()
 {
-	POMDOG_ASSERT(openGLContext != nil);
-	[openGLContext makeCurrentContext];
+    POMDOG_ASSERT(openGLContext != nil);
+    [openGLContext makeCurrentContext];
 }
 //-----------------------------------------------------------------------
 void OpenGLContextCocoa::ClearCurrent()
 {
-	POMDOG_ASSERT(openGLContext != nil);
-	[NSOpenGLContext clearCurrentContext];
+    POMDOG_ASSERT(openGLContext != nil);
+    [NSOpenGLContext clearCurrentContext];
 }
 //-----------------------------------------------------------------------
 void OpenGLContextCocoa::SwapBuffers()
 {
-	POMDOG_ASSERT(openGLContext != nil);
-	[openGLContext flushBuffer];
+    POMDOG_ASSERT(openGLContext != nil);
+    [openGLContext flushBuffer];
 }
 //-----------------------------------------------------------------------
 void OpenGLContextCocoa::Lock()
 {
-	POMDOG_ASSERT(openGLContext != nil);
-	CGLLockContext([openGLContext CGLContextObj]);
+    POMDOG_ASSERT(openGLContext != nil);
+    CGLLockContext([openGLContext CGLContextObj]);
 }
 //-----------------------------------------------------------------------
 void OpenGLContextCocoa::Unlock()
 {
-	POMDOG_ASSERT(openGLContext != nil);
-	CGLUnlockContext([openGLContext CGLContextObj]);
+    POMDOG_ASSERT(openGLContext != nil);
+    CGLUnlockContext([openGLContext CGLContextObj]);
 }
 //-----------------------------------------------------------------------
 NSOpenGLContext* OpenGLContextCocoa::NativeOpenGLContext()
 {
-	return openGLContext;
+    return openGLContext;
 }
 //-----------------------------------------------------------------------
 }// namespace Cocoa

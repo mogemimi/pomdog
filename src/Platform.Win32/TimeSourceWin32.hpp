@@ -16,12 +16,12 @@ namespace Win32 {
 
 class TimeSourceWin32 {
 public:
-	TimeSourceWin32();
+    TimeSourceWin32();
 
-	TimePoint Now() const;
+    TimePoint Now() const;
 
 private:
-	double secondsPerTick;
+    double secondsPerTick;
 };
 
 }// namespace Win32

@@ -13,21 +13,21 @@
 namespace Pomdog {
 
 enum class StencilOperation: std::uint8_t {
-	Keep,
+    Keep,
 
-	Zero,
+    Zero,
 
-	Replace,
+    Replace,
 
-	IncrementSaturation,
+    IncrementSaturation,
 
-	DecrementSaturation,
+    DecrementSaturation,
 
-	Invert,
+    Invert,
 
-	Increment,
+    Increment,
 
-	Decrement,
+    Decrement,
 };
 
 }// namespace Pomdog

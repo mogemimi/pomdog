@@ -26,40 +26,40 @@ class GraphicsDevice;
 
 class POMDOG_EXPORT SamplerState {
 public:
-	SamplerState() = delete;
-	SamplerState(SamplerState const&) = delete;
-	SamplerState & operator=(SamplerState const&) = delete;
+    SamplerState() = delete;
+    SamplerState(SamplerState const&) = delete;
+    SamplerState & operator=(SamplerState const&) = delete;
 
-	SamplerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, SamplerDescription const& description);
+    SamplerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, SamplerDescription const& description);
 
-	~SamplerState();
+    ~SamplerState();
 
-	SamplerDescription Description() const;
+    SamplerDescription Description() const;
 
-	static std::shared_ptr<SamplerState>
-	CreateAnisotropicClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<SamplerState>
+    CreateAnisotropicClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	static std::shared_ptr<SamplerState>
-	CreateAnisotropicWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<SamplerState>
+    CreateAnisotropicWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	static std::shared_ptr<SamplerState>
-	CreateLinearClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<SamplerState>
+    CreateLinearClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	static std::shared_ptr<SamplerState>
-	CreateLinearWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<SamplerState>
+    CreateLinearWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	static std::shared_ptr<SamplerState>
-	CreatePointClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<SamplerState>
+    CreatePointClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-	static std::shared_ptr<SamplerState>
-	CreatePointWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    static std::shared_ptr<SamplerState>
+    CreatePointWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
 public:
-	Detail::RenderSystem::NativeSamplerState* NativeSamplerState();
+    Detail::RenderSystem::NativeSamplerState* NativeSamplerState();
 
 private:
-	std::unique_ptr<Detail::RenderSystem::NativeSamplerState> nativeSamplerState;
-	SamplerDescription description;
+    std::unique_ptr<Detail::RenderSystem::NativeSamplerState> nativeSamplerState;
+    SamplerDescription description;
 };
 
 }// namespace Pomdog

@@ -20,17 +20,17 @@ namespace Direct3D11 {
 
 class BlendStateDirect3D11 final: public NativeBlendState {
 public:
-	BlendStateDirect3D11() = delete;
+    BlendStateDirect3D11() = delete;
 
-	BlendStateDirect3D11(ID3D11Device* nativeDevice, BlendDescription const& description);
+    BlendStateDirect3D11(ID3D11Device* nativeDevice, BlendDescription const& description);
 
-	///@copydoc NativeBlendState
-	void Apply(NativeGraphicsContext & graphicsContext) override;
+    ///@copydoc NativeBlendState
+    void Apply(NativeGraphicsContext & graphicsContext) override;
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11BlendState> nativeBlendState;
-	Vector4 const blendFactor;
-	UINT const multiSampleMask;
+    Microsoft::WRL::ComPtr<ID3D11BlendState> nativeBlendState;
+    Vector4 const blendFactor;
+    UINT const multiSampleMask;
 };
 
 }// namespace Direct3D11

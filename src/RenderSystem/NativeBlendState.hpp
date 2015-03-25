@@ -16,13 +16,13 @@ class NativeGraphicsContext;
 
 class NativeBlendState {
 public:
-	NativeBlendState() = default;
-	NativeBlendState(NativeBlendState const&) = delete;
-	NativeBlendState & operator=(NativeBlendState const&) = delete;
+    NativeBlendState() = default;
+    NativeBlendState(NativeBlendState const&) = delete;
+    NativeBlendState & operator=(NativeBlendState const&) = delete;
 
-	virtual ~NativeBlendState() = default;
+    virtual ~NativeBlendState() = default;
 
-	virtual void Apply(NativeGraphicsContext & graphicsContext) = 0;
+    virtual void Apply(NativeGraphicsContext & graphicsContext) = 0;
 };
 
 }// namespace RenderSystem

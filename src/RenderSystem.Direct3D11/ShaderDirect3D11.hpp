@@ -25,16 +25,16 @@ namespace Direct3D11 {
 template <class NativeShaderType>
 class ShaderDirect3D11 final: public Shader {
 public:
-	ShaderDirect3D11(ID3D11Device* device, ShaderBytecode const& shaderBytecode,
-		ShaderCompileOptions const& compileOptions);
+    ShaderDirect3D11(ID3D11Device* device, ShaderBytecode const& shaderBytecode,
+        ShaderCompileOptions const& compileOptions);
 
-	NativeShaderType* GetNativeShader() const;
+    NativeShaderType* GetNativeShader() const;
 
-	ShaderBytecode GetShaderBytecode() const;
+    ShaderBytecode GetShaderBytecode() const;
 
 private:
-	Microsoft::WRL::ComPtr<NativeShaderType> nativeShader;
-	std::vector<std::uint8_t> codeBlob;
+    Microsoft::WRL::ComPtr<NativeShaderType> nativeShader;
+    std::vector<std::uint8_t> codeBlob;
 };
 
 using VertexShaderDirect3D11 = ShaderDirect3D11<ID3D11VertexShader>;

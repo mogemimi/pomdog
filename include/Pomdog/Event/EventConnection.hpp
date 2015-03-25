@@ -18,23 +18,23 @@ namespace Pomdog {
 
 class POMDOG_EXPORT EventConnection {
 private:
-	std::unique_ptr<Detail::SignalsAndSlots::ConnectionBody> body;
+    std::unique_ptr<Detail::SignalsAndSlots::ConnectionBody> body;
 
 public:
-	EventConnection() = default;
+    EventConnection() = default;
 
-	EventConnection(EventConnection const& connection);
-	EventConnection(EventConnection && connection) = default;
+    EventConnection(EventConnection const& connection);
+    EventConnection(EventConnection && connection) = default;
 
-	EventConnection & operator=(EventConnection const& connection);
-	EventConnection & operator=(EventConnection && connection) = default;
+    EventConnection & operator=(EventConnection const& connection);
+    EventConnection & operator=(EventConnection && connection) = default;
 
-	template <typename Function>
-	explicit EventConnection(std::unique_ptr<Detail::SignalsAndSlots::ConnectionBodyOverride<Function>> && bodyIn)
-		: body(std::forward<std::unique_ptr<Detail::SignalsAndSlots::ConnectionBodyOverride<Function>>>(bodyIn))
-	{}
+    template <typename Function>
+    explicit EventConnection(std::unique_ptr<Detail::SignalsAndSlots::ConnectionBodyOverride<Function>> && bodyIn)
+        : body(std::forward<std::unique_ptr<Detail::SignalsAndSlots::ConnectionBodyOverride<Function>>>(bodyIn))
+    {}
 
-	void Disconnect();
+    void Disconnect();
 };
 
 }// namespace Pomdog

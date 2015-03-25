@@ -22,70 +22,70 @@ namespace Detail {
 template <typename T>
 class POMDOG_EXPORT FloatingPointVector4 {
 public:
-	static_assert(std::is_floating_point<T>::value, "T is floating point.");
-	typedef T value_type;
+    static_assert(std::is_floating_point<T>::value, "T is floating point.");
+    typedef T value_type;
 
-	T X, Y, Z, W;
+    T X, Y, Z, W;
 
 public:
-	// Constructors:
-	FloatingPointVector4() = default;
+    // Constructors:
+    FloatingPointVector4() = default;
 
-	///@brief Copy constructor.
-	FloatingPointVector4(FloatingPointVector4 const&) = default;
+    ///@brief Copy constructor.
+    FloatingPointVector4(FloatingPointVector4 const&) = default;
 
-	///@brief Move constructor.
-	FloatingPointVector4(FloatingPointVector4 &&) = default;
+    ///@brief Move constructor.
+    FloatingPointVector4(FloatingPointVector4 &&) = default;
 
-	///@brief Construct from floating-point values.
-	FloatingPointVector4(T x, T y, T z, T w);
-	FloatingPointVector4(FloatingPointVector3<T> const& xyz, T w);
+    ///@brief Construct from floating-point values.
+    FloatingPointVector4(T x, T y, T z, T w);
+    FloatingPointVector4(FloatingPointVector3<T> const& xyz, T w);
 
-	// Assignment operators:
-	FloatingPointVector4 & operator=(FloatingPointVector4 const& other) = default;
-	FloatingPointVector4 & operator=(FloatingPointVector4 && other) = default;
+    // Assignment operators:
+    FloatingPointVector4 & operator=(FloatingPointVector4 const& other) = default;
+    FloatingPointVector4 & operator=(FloatingPointVector4 && other) = default;
 
-	FloatingPointVector4 & operator+=(FloatingPointVector4 const& other);
-	FloatingPointVector4 & operator-=(FloatingPointVector4 const& other);
-	FloatingPointVector4 & operator*=(T scaleFactor);
-	FloatingPointVector4 & operator/=(T scaleFactor);
+    FloatingPointVector4 & operator+=(FloatingPointVector4 const& other);
+    FloatingPointVector4 & operator-=(FloatingPointVector4 const& other);
+    FloatingPointVector4 & operator*=(T scaleFactor);
+    FloatingPointVector4 & operator/=(T scaleFactor);
 
-	// Unary operators:
-	FloatingPointVector4 operator+() const;
-	FloatingPointVector4 operator-() const;
+    // Unary operators:
+    FloatingPointVector4 operator+() const;
+    FloatingPointVector4 operator-() const;
 
-	// Binary operators:
-	FloatingPointVector4 operator+(FloatingPointVector4 const& other) const;
-	FloatingPointVector4 operator-(FloatingPointVector4 const& other) const;
-	FloatingPointVector4 operator*(FloatingPointVector4 const& other) const;
-	FloatingPointVector4 operator/(FloatingPointVector4 const& other) const;
-	FloatingPointVector4 operator*(T scaleFactor) const;
-	FloatingPointVector4 operator/(T scaleFactor) const;
+    // Binary operators:
+    FloatingPointVector4 operator+(FloatingPointVector4 const& other) const;
+    FloatingPointVector4 operator-(FloatingPointVector4 const& other) const;
+    FloatingPointVector4 operator*(FloatingPointVector4 const& other) const;
+    FloatingPointVector4 operator/(FloatingPointVector4 const& other) const;
+    FloatingPointVector4 operator*(T scaleFactor) const;
+    FloatingPointVector4 operator/(T scaleFactor) const;
 
-	bool operator == (FloatingPointVector4 const& other) const;
-	bool operator != (FloatingPointVector4 const& other) const;
+    bool operator == (FloatingPointVector4 const& other) const;
+    bool operator != (FloatingPointVector4 const& other) const;
 
-	T Length() const;
+    T Length() const;
 
-	T LengthSquared() const;
+    T LengthSquared() const;
 
-	static T Distance(FloatingPointVector4 const& a, FloatingPointVector4 const& b);
+    static T Distance(FloatingPointVector4 const& a, FloatingPointVector4 const& b);
 
-	static T DistanceSquared(FloatingPointVector4 const& a, FloatingPointVector4 const& b);
+    static T DistanceSquared(FloatingPointVector4 const& a, FloatingPointVector4 const& b);
 
-	static T Dot(FloatingPointVector4 const& a, FloatingPointVector4 const& b);
+    static T Dot(FloatingPointVector4 const& a, FloatingPointVector4 const& b);
 
-	void Normalize();
+    void Normalize();
 
-	static FloatingPointVector4 Normalize(FloatingPointVector4 const& source);
+    static FloatingPointVector4 Normalize(FloatingPointVector4 const& source);
 
-	static void Normalize(FloatingPointVector4 const& source, FloatingPointVector4 & result);
+    static void Normalize(FloatingPointVector4 const& source, FloatingPointVector4 & result);
 
-	///@brief Returns pointer to the first element.
-	T const* Data() const;
+    ///@brief Returns pointer to the first element.
+    T const* Data() const;
 
-	///@brief Returns pointer to the first element.
-	T* Data();
+    ///@brief Returns pointer to the first element.
+    T* Data();
 };
 
 template <typename T>

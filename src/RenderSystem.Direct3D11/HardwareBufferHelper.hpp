@@ -19,20 +19,20 @@ namespace Direct3D11 {
 
 class HardwareBufferHelper {
 public:
-	static Microsoft::WRL::ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* nativeDevice,
-		void const* data, std::size_t sizeInBytes, BufferUsage bufferUsage);
+    static Microsoft::WRL::ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* nativeDevice,
+        void const* data, std::size_t sizeInBytes, BufferUsage bufferUsage);
 
-	static Microsoft::WRL::ComPtr<ID3D11Buffer> CreateIndexBuffer(ID3D11Device* nativeDevice,
-		void const* data, std::size_t sizeInBytes, BufferUsage bufferUsage);
+    static Microsoft::WRL::ComPtr<ID3D11Buffer> CreateIndexBuffer(ID3D11Device* nativeDevice,
+        void const* data, std::size_t sizeInBytes, BufferUsage bufferUsage);
 
-	static Microsoft::WRL::ComPtr<ID3D11Buffer> CreateConstantBuffer(ID3D11Device* nativeDevice,
-		void const* data, std::size_t sizeInBytes, BufferUsage bufferUsage);
+    static Microsoft::WRL::ComPtr<ID3D11Buffer> CreateConstantBuffer(ID3D11Device* nativeDevice,
+        void const* data, std::size_t sizeInBytes, BufferUsage bufferUsage);
 
-	static void SetData(ID3D11Buffer* buffer, ID3D11DeviceContext* deviceContext,
-		std::size_t offsetInBytes, void const* source, std::size_t sizeInBytes);
+    static void SetData(ID3D11Buffer* buffer, ID3D11DeviceContext* deviceContext,
+        std::size_t offsetInBytes, void const* source, std::size_t sizeInBytes);
 
-	static void GetData(ID3D11Buffer* buffer, ID3D11DeviceContext* deviceContext,
-		std::size_t offsetInBytes, std::size_t sizeInBytes, void* output);
+    static void GetData(ID3D11Buffer* buffer, ID3D11DeviceContext* deviceContext,
+        std::size_t offsetInBytes, std::size_t sizeInBytes, void* output);
 };
 
 }// namespace Direct3D11

@@ -11,14 +11,14 @@
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
-#	// for Windows 8
-#	include <xaudio2.h>
+#    // for Windows 8
+#    include <xaudio2.h>
 #else
-#	// for Windows 7, Vista
-#	ifndef _WIN32_DCOM
-#		define _WIN32_DCOM
-#	endif
-#	include <XAudio2.h>
+#    // for Windows 7, Vista
+#    ifndef _WIN32_DCOM
+#        define _WIN32_DCOM
+#    endif
+#    include <XAudio2.h>
 #endif
 
 #endif // !defined(POMDOG_PREREQUISITESXAUDIO2_89DAE035_1711_4093_962F_B8CEF06B9889_HPP)

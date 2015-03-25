@@ -24,46 +24,46 @@ namespace Graphics {
 
 template <typename T> struct ToVertexElementFormat;
 template <> struct ToVertexElementFormat<float> {
-	static constexpr VertexElementFormat value = VertexElementFormat::Float;
+    static constexpr VertexElementFormat value = VertexElementFormat::Float;
 };
 template <> struct ToVertexElementFormat<Vector2> {
-	static constexpr VertexElementFormat value = VertexElementFormat::Float2;
+    static constexpr VertexElementFormat value = VertexElementFormat::Float2;
 };
 template <> struct ToVertexElementFormat<Vector3> {
-	static constexpr VertexElementFormat value = VertexElementFormat::Float3;
+    static constexpr VertexElementFormat value = VertexElementFormat::Float3;
 };
 template <> struct ToVertexElementFormat<Vector4> {
-	static constexpr VertexElementFormat value = VertexElementFormat::Float4;
+    static constexpr VertexElementFormat value = VertexElementFormat::Float4;
 };
 template <> struct ToVertexElementFormat<Color> {
-	static constexpr VertexElementFormat value = VertexElementFormat::Float4;
+    static constexpr VertexElementFormat value = VertexElementFormat::Float4;
 };
 template <> struct ToVertexElementFormat<Quaternion> {
-	static constexpr VertexElementFormat value = VertexElementFormat::Float4;
+    static constexpr VertexElementFormat value = VertexElementFormat::Float4;
 };
 template <> struct ToVertexElementFormat<std::array<std::uint8_t, 4>> {
-	static constexpr VertexElementFormat value = VertexElementFormat::Byte4;
+    static constexpr VertexElementFormat value = VertexElementFormat::Byte4;
 };
 template <> struct ToVertexElementFormat<std::uint8_t[4]> {
-	static constexpr VertexElementFormat value = VertexElementFormat::Byte4;
+    static constexpr VertexElementFormat value = VertexElementFormat::Byte4;
 };
 template <> struct ToVertexElementFormat<std::int32_t[4]> {
-	static constexpr VertexElementFormat value = VertexElementFormat::Int4;
+    static constexpr VertexElementFormat value = VertexElementFormat::Int4;
 };
 
 template <VertexElementFormat... Formats>
 std::vector<VertexElement> VertexCombined()
 {
-	std::initializer_list<VertexElementFormat> formats { Formats... };
+    std::initializer_list<VertexElementFormat> formats { Formats... };
 
-	std::vector<VertexElement> vertexElements;
-	vertexElements.reserve(formats.size());
-	std::uint16_t offsetBytes = 0;
-	for (auto format: formats) {
-		vertexElements.push_back({offsetBytes, format});
-		offsetBytes += VertexElementHelper::ToByteSize(format);
-	}
-	return std::move(vertexElements);
+    std::vector<VertexElement> vertexElements;
+    vertexElements.reserve(formats.size());
+    std::uint16_t offsetBytes = 0;
+    for (auto format: formats) {
+        vertexElements.push_back({offsetBytes, format});
+        offsetBytes += VertexElementHelper::ToByteSize(format);
+    }
+    return std::move(vertexElements);
 }
 
 template <typename... ElementTypes>
@@ -71,13 +71,13 @@ struct VertexElementTuple;
 
 template <typename Element>
 struct VertexElementTuple<Element> {
-	Element end;
+    Element end;
 };
 
 template <typename Head, typename... ElementTypes>
 struct VertexElementTuple<Head, ElementTypes...> {
-	Head first;
-	VertexElementTuple<ElementTypes...> elements;
+    Head first;
+    VertexElementTuple<ElementTypes...> elements;
 };
 
 }// namespace Graphics
@@ -86,17 +86,17 @@ struct VertexElementTuple<Head, ElementTypes...> {
 template <typename T, typename... Arguments>
 class CustomVertex {
 public:
-	Detail::Graphics::VertexElementTuple<T, Arguments...> Tuple;
+    Detail::Graphics::VertexElementTuple<T, Arguments...> Tuple;
 
-	static VertexDeclaration Declaration()
-	{
-		using Detail::Graphics::VertexCombined;
-		using Detail::Graphics::ToVertexElementFormat;
-		return VertexDeclaration(VertexCombined<
-			ToVertexElementFormat<T>::value,
-			ToVertexElementFormat<Arguments>::value...
-		>());
-	}
+    static VertexDeclaration Declaration()
+    {
+        using Detail::Graphics::VertexCombined;
+        using Detail::Graphics::ToVertexElementFormat;
+        return VertexDeclaration(VertexCombined<
+            ToVertexElementFormat<T>::value,
+            ToVertexElementFormat<Arguments>::value...
+        >());
+    }
 };
 
 }// namespace Pomdog

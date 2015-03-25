@@ -25,22 +25,22 @@ class NativeEffectReflection;
 
 class POMDOG_EXPORT EffectReflection {
 public:
-	EffectReflection() = delete;
-	EffectReflection(EffectReflection const&) = delete;
-	EffectReflection(EffectReflection &&) = default;
+    EffectReflection() = delete;
+    EffectReflection(EffectReflection const&) = delete;
+    EffectReflection(EffectReflection &&) = default;
 
-	EffectReflection(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		std::shared_ptr<EffectPass> const& effectPass);
+    EffectReflection(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        std::shared_ptr<EffectPass> const& effectPass);
 
-	~EffectReflection();
+    ~EffectReflection();
 
-	std::vector<EffectConstantDescription> GetConstantBuffers() const;
+    std::vector<EffectConstantDescription> GetConstantBuffers() const;
 
 public:
-	Detail::RenderSystem::NativeEffectReflection* NativeEffectReflection();
+    Detail::RenderSystem::NativeEffectReflection* NativeEffectReflection();
 
 private:
-	std::unique_ptr<Detail::RenderSystem::NativeEffectReflection> nativeEffectReflection;
+    std::unique_ptr<Detail::RenderSystem::NativeEffectReflection> nativeEffectReflection;
 };
 
 }// namespace Pomdog

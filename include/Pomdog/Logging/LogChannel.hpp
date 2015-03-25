@@ -20,34 +20,34 @@ class LogEntry;
 
 class POMDOG_EXPORT LogChannel {
 public:
-	explicit LogChannel(std::string const& name);
+    explicit LogChannel(std::string const& name);
 
-	LogChannel() = default;
-	LogChannel(LogChannel const&) = delete;
-	LogChannel(LogChannel &&) = default;
-	LogChannel & operator=(LogChannel const&) = delete;
-	LogChannel & operator=(LogChannel &&) = default;
+    LogChannel() = default;
+    LogChannel(LogChannel const&) = delete;
+    LogChannel(LogChannel &&) = default;
+    LogChannel & operator=(LogChannel const&) = delete;
+    LogChannel & operator=(LogChannel &&) = default;
 
-	void Log(std::string const& message, LogLevel verbosity);
+    void Log(std::string const& message, LogLevel verbosity);
 
-	void Log(LogEntry const& logEntry);
+    void Log(LogEntry const& logEntry);
 
-	EventConnection Connect(std::function<void(LogEntry const&)> const& slot);
+    EventConnection Connect(std::function<void(LogEntry const&)> const& slot);
 
-	EventConnection Connect(std::function<void(LogEntry const&)> && slot);
+    EventConnection Connect(std::function<void(LogEntry const&)> && slot);
 
-	std::string const& Name() const;
+    std::string const& Name() const;
 
-	LogLevel Level() const;
+    LogLevel Level() const;
 
-	void Level(LogLevel level);
+    void Level(LogLevel level);
 
-	std::size_t ConnectionCount() const;
+    std::size_t ConnectionCount() const;
 
 private:
-	Signal<void(LogEntry const&)> signal;
-	std::string name;
-	LogLevel level;
+    Signal<void(LogEntry const&)> signal;
+    std::string name;
+    LogLevel level;
 };
 
 }// namespace Pomdog

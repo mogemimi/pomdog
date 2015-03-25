@@ -21,13 +21,13 @@ class NativeGraphicsDevice;
 
 class NativeEffectPass {
 public:
-	NativeEffectPass() = default;
-	NativeEffectPass(NativeEffectPass const&) = delete;
-	NativeEffectPass & operator=(NativeEffectPass const&) = delete;
+    NativeEffectPass() = default;
+    NativeEffectPass(NativeEffectPass const&) = delete;
+    NativeEffectPass & operator=(NativeEffectPass const&) = delete;
 
-	virtual ~NativeEffectPass() = default;
+    virtual ~NativeEffectPass() = default;
 
-	virtual std::unique_ptr<NativeConstantLayout> CreateConstantLayout() = 0;
+    virtual std::unique_ptr<NativeConstantLayout> CreateConstantLayout() = 0;
 };
 
 }// namespace RenderSystem

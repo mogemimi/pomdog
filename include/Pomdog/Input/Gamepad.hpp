@@ -17,11 +17,11 @@ class GamepadCapabilities;
 
 class POMDOG_EXPORT Gamepad {
 public:
-	virtual ~Gamepad() = default;
+    virtual ~Gamepad() = default;
 
-	virtual GamepadCapabilities GetCapabilities() const = 0;
+    virtual GamepadCapabilities GetCapabilities() const = 0;
 
-	virtual GamepadState GetState() const = 0;
+    virtual GamepadState GetState() const = 0;
 };
 
 }// namespace Pomdog

@@ -19,15 +19,15 @@ namespace Direct3D11 {
 
 class RasterizerStateDirect3D11 final: public NativeRasterizerState {
 public:
-	RasterizerStateDirect3D11() = delete;
+    RasterizerStateDirect3D11() = delete;
 
-	RasterizerStateDirect3D11(ID3D11Device* nativeDevice, RasterizerDescription const& description);
+    RasterizerStateDirect3D11(ID3D11Device* nativeDevice, RasterizerDescription const& description);
 
-	///@copydoc NativeRasterizerState
-	void Apply(NativeGraphicsContext & graphicsContext) override;
+    ///@copydoc NativeRasterizerState
+    void Apply(NativeGraphicsContext & graphicsContext) override;
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11RasterizerState> nativeRasterizerState;
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState> nativeRasterizerState;
 };
 
 }// namespace Direct3D11

@@ -17,29 +17,29 @@ namespace Detail {
 
 class ScopeGuard final {
 public:
-	ScopeGuard() = delete;
-	ScopeGuard(ScopeGuard const&) = delete;
-	ScopeGuard(ScopeGuard &&) = default;
+    ScopeGuard() = delete;
+    ScopeGuard(ScopeGuard const&) = delete;
+    ScopeGuard(ScopeGuard &&) = default;
 
-	explicit ScopeGuard(std::function<void()> const& f)
-		: func(f)
-	{}
+    explicit ScopeGuard(std::function<void()> const& f)
+        : func(f)
+    {}
 
-	explicit ScopeGuard(std::function<void()> && f)
-		: func(std::move(f))
-	{}
+    explicit ScopeGuard(std::function<void()> && f)
+        : func(std::move(f))
+    {}
 
-	~ScopeGuard()
-	{
-		POMDOG_ASSERT(func);
-		func();
-	}
+    ~ScopeGuard()
+    {
+        POMDOG_ASSERT(func);
+        func();
+    }
 
-	ScopeGuard & operator=(ScopeGuard const&) = delete;
-	ScopeGuard & operator=(ScopeGuard &&) = default;
+    ScopeGuard & operator=(ScopeGuard const&) = delete;
+    ScopeGuard & operator=(ScopeGuard &&) = default;
 
 private:
-	std::function<void()> func;
+    std::function<void()> func;
 };
 
 }// namespace Detail

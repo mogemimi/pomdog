@@ -18,13 +18,13 @@ class NativeGraphicsContext;
 
 class NativeSamplerState {
 public:
-	NativeSamplerState() = default;
-	NativeSamplerState(NativeSamplerState const&) = delete;
-	NativeSamplerState & operator=(NativeSamplerState const&) = delete;
+    NativeSamplerState() = default;
+    NativeSamplerState(NativeSamplerState const&) = delete;
+    NativeSamplerState & operator=(NativeSamplerState const&) = delete;
 
-	virtual ~NativeSamplerState() = default;
+    virtual ~NativeSamplerState() = default;
 
-	virtual void Apply(NativeGraphicsContext & graphicsContext, int index) = 0;
+    virtual void Apply(NativeGraphicsContext & graphicsContext, int index) = 0;
 };
 
 }// namespace RenderSystem

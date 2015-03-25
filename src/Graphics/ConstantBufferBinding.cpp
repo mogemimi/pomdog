@@ -22,43 +22,43 @@ static auto dummyParameter = std::make_shared<EffectParameter>();
 }// unnamed namespace
 //-----------------------------------------------------------------------
 ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
-	EffectPass & effectPass)
+    EffectPass & effectPass)
 {
-	auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+    auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
 
-	auto nativeEffectPass = effectPass.NativeEffectPass();
+    auto nativeEffectPass = effectPass.NativeEffectPass();
 
-	// Create effect reflection:
-	POMDOG_ASSERT(nativeEffectPass);
-	auto effectReflection = nativeDevice->CreateEffectReflection(*nativeEffectPass);
+    // Create effect reflection:
+    POMDOG_ASSERT(nativeEffectPass);
+    auto effectReflection = nativeDevice->CreateEffectReflection(*nativeEffectPass);
 
-	POMDOG_ASSERT(effectReflection);
-	auto constantBuffers = effectReflection->GetConstantBuffers();
+    POMDOG_ASSERT(effectReflection);
+    auto constantBuffers = effectReflection->GetConstantBuffers();
 
-	// Create effect parameters:
-	for (auto & constantBuffer: constantBuffers)
-	{
-		auto parameter = std::make_shared<EffectParameter>(graphicsDevice, constantBuffer.ByteSize);
-		effectParameters[constantBuffer.Name] = std::move(parameter);
-	}
+    // Create effect parameters:
+    for (auto & constantBuffer: constantBuffers)
+    {
+        auto parameter = std::make_shared<EffectParameter>(graphicsDevice, constantBuffer.ByteSize);
+        effectParameters[constantBuffer.Name] = std::move(parameter);
+    }
 
-	nativeConstantLayout = nativeEffectPass->CreateConstantLayout();
+    nativeConstantLayout = nativeEffectPass->CreateConstantLayout();
 
-	// Bind constant buffers:
-	for (auto & parameter: effectParameters)
-	{
-		using Detail::RenderSystem::NativeConstantBuffer;
-		std::shared_ptr<NativeConstantBuffer> nativeConstantBuffer(
-			parameter.second, parameter.second->NativeConstantBuffer());
+    // Bind constant buffers:
+    for (auto & parameter: effectParameters)
+    {
+        using Detail::RenderSystem::NativeConstantBuffer;
+        std::shared_ptr<NativeConstantBuffer> nativeConstantBuffer(
+            parameter.second, parameter.second->NativeConstantBuffer());
 
-		POMDOG_ASSERT(nativeConstantLayout);
-		nativeConstantLayout->SetConstantBuffer(parameter.first, nativeConstantBuffer);
-	}
+        POMDOG_ASSERT(nativeConstantLayout);
+        nativeConstantLayout->SetConstantBuffer(parameter.first, nativeConstantBuffer);
+    }
 }
 //-----------------------------------------------------------------------
 ConstantBufferBinding::ConstantBufferBinding(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	EffectPass & effectPass)
-	: ConstantBufferBinding(*graphicsDevice, effectPass)
+    EffectPass & effectPass)
+    : ConstantBufferBinding(*graphicsDevice, effectPass)
 {
 }
 //-----------------------------------------------------------------------
@@ -66,24 +66,24 @@ ConstantBufferBinding::~ConstantBufferBinding() = default;
 //-----------------------------------------------------------------------
 std::shared_ptr<EffectParameter> const& ConstantBufferBinding::Find(std::string const& parameterName) const
 {
-	POMDOG_ASSERT(!parameterName.empty());
-	POMDOG_ASSERT(!effectParameters.empty());
+    POMDOG_ASSERT(!parameterName.empty());
+    POMDOG_ASSERT(!effectParameters.empty());
 
-	auto iter = effectParameters.find(parameterName);
-	if (iter != std::end(effectParameters)) {
-		return iter->second;
-	}
-	return dummyParameter;
+    auto iter = effectParameters.find(parameterName);
+    if (iter != std::end(effectParameters)) {
+        return iter->second;
+    }
+    return dummyParameter;
 }
 //-----------------------------------------------------------------------
 EffectParameterCollection const& ConstantBufferBinding::Find() const
 {
-	return effectParameters;
+    return effectParameters;
 }
 //-----------------------------------------------------------------------
 Detail::RenderSystem::NativeConstantLayout* ConstantBufferBinding::NativeConstantLayout()
 {
-	return nativeConstantLayout.get();
+    return nativeConstantLayout.get();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

@@ -24,23 +24,23 @@ using BlendFunctionGL4 = Tagged<GLenum, BlendFunction>;
 
 class BlendStateGL4 final: public NativeBlendState {
 public:
-	BlendStateGL4() = delete;
+    BlendStateGL4() = delete;
 
-	explicit BlendStateGL4(BlendDescription const& description);
+    explicit BlendStateGL4(BlendDescription const& description);
 
-	///@copydoc NativeBlendState
-	void Apply(NativeGraphicsContext & graphicsContext) override;
+    ///@copydoc NativeBlendState
+    void Apply(NativeGraphicsContext & graphicsContext) override;
 
 private:
-	Color blendColor;
+    Color blendColor;
 
-	BlendFunctionGL4 const alphaFunction;
-	BlendGL4 const alphaSource;
-	BlendGL4 const alphaDestination;
+    BlendFunctionGL4 const alphaFunction;
+    BlendGL4 const alphaSource;
+    BlendGL4 const alphaDestination;
 
-	BlendFunctionGL4 const colorFunction;
-	BlendGL4 const colorSource;
-	BlendGL4 const colorDestination;
+    BlendFunctionGL4 const colorFunction;
+    BlendGL4 const colorSource;
+    BlendGL4 const colorDestination;
 };
 
 }// namespace GL4

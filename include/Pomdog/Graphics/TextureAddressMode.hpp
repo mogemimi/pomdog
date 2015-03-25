@@ -13,11 +13,11 @@
 namespace Pomdog {
 
 enum class TextureAddressMode: std::uint8_t {
-	Wrap,
+    Wrap,
 
-	Mirror,
+    Mirror,
 
-	Clamp,
+    Clamp,
 };
 
 }// namespace Pomdog

@@ -16,11 +16,11 @@ namespace RenderSystem {
 
 class NativeRenderTarget2D {
 public:
-	NativeRenderTarget2D() = default;
-	NativeRenderTarget2D(NativeRenderTarget2D const&) = delete;
-	NativeRenderTarget2D & operator=(NativeRenderTarget2D const&) = delete;
+    NativeRenderTarget2D() = default;
+    NativeRenderTarget2D(NativeRenderTarget2D const&) = delete;
+    NativeRenderTarget2D & operator=(NativeRenderTarget2D const&) = delete;
 
-	virtual ~NativeRenderTarget2D() = default;
+    virtual ~NativeRenderTarget2D() = default;
 };
 
 }// namespace RenderSystem

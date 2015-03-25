@@ -27,29 +27,29 @@ using EffectParameterCollection = std::unordered_map<std::string, std::shared_pt
 
 class POMDOG_EXPORT ConstantBufferBinding {
 public:
-	ConstantBufferBinding() = delete;
-	ConstantBufferBinding(ConstantBufferBinding const&) = delete;
-	ConstantBufferBinding(ConstantBufferBinding &&) = default;
+    ConstantBufferBinding() = delete;
+    ConstantBufferBinding(ConstantBufferBinding const&) = delete;
+    ConstantBufferBinding(ConstantBufferBinding &&) = default;
 
-	ConstantBufferBinding(GraphicsDevice & graphicsDevice, EffectPass & effectPass);
+    ConstantBufferBinding(GraphicsDevice & graphicsDevice, EffectPass & effectPass);
 
-	ConstantBufferBinding(std::shared_ptr<GraphicsDevice> const& graphicsDevice, EffectPass & effectPass);
+    ConstantBufferBinding(std::shared_ptr<GraphicsDevice> const& graphicsDevice, EffectPass & effectPass);
 
-	~ConstantBufferBinding();
+    ~ConstantBufferBinding();
 
-	ConstantBufferBinding & operator=(ConstantBufferBinding const&) = delete;
-	ConstantBufferBinding & operator=(ConstantBufferBinding &&) = default;
+    ConstantBufferBinding & operator=(ConstantBufferBinding const&) = delete;
+    ConstantBufferBinding & operator=(ConstantBufferBinding &&) = default;
 
-	std::shared_ptr<EffectParameter> const& Find(std::string const& parameterName) const;
+    std::shared_ptr<EffectParameter> const& Find(std::string const& parameterName) const;
 
-	EffectParameterCollection const& Find() const;
+    EffectParameterCollection const& Find() const;
 
 public:
-	Detail::RenderSystem::NativeConstantLayout* NativeConstantLayout();
+    Detail::RenderSystem::NativeConstantLayout* NativeConstantLayout();
 
 private:
-	EffectParameterCollection effectParameters;
-	std::unique_ptr<Detail::RenderSystem::NativeConstantLayout> nativeConstantLayout;
+    EffectParameterCollection effectParameters;
+    std::unique_ptr<Detail::RenderSystem::NativeConstantLayout> nativeConstantLayout;
 };
 
 }// namespace Pomdog

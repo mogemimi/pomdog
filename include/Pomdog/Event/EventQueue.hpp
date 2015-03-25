@@ -21,32 +21,32 @@ namespace Pomdog {
 
 class POMDOG_EXPORT EventQueue {
 public:
-	EventQueue();
-	EventQueue(EventQueue const&) = delete;
-	EventQueue(EventQueue &&) = delete;
-	EventQueue & operator=(EventQueue const&) = delete;
-	EventQueue & operator=(EventQueue &&) = delete;
+    EventQueue();
+    EventQueue(EventQueue const&) = delete;
+    EventQueue(EventQueue &&) = delete;
+    EventQueue & operator=(EventQueue const&) = delete;
+    EventQueue & operator=(EventQueue &&) = delete;
 
-	EventConnection Connect(std::function<void(Event const&)> const& slot);
+    EventConnection Connect(std::function<void(Event const&)> const& slot);
 
-	EventConnection Connect(std::function<void(Event const&)> && slot);
+    EventConnection Connect(std::function<void(Event const&)> && slot);
 
-	void Enqueue(Event && event);
+    void Enqueue(Event && event);
 
-	template <typename T, typename...Arguments>
-	void Enqueue(Arguments && ...arguments)
-	{
-		Enqueue(Event{T{std::forward<Arguments>(arguments)...}});
-	}
+    template <typename T, typename...Arguments>
+    void Enqueue(Arguments && ...arguments)
+    {
+        Enqueue(Event{T{std::forward<Arguments>(arguments)...}});
+    }
 
-	void Tick();
+    void Tick();
 
 private:
-	typedef Detail::SignalsAndSlots::SignalBody<void(Event const&)> SignalType;
+    typedef Detail::SignalsAndSlots::SignalBody<void(Event const&)> SignalType;
 
-	std::vector<Event> events;
-	std::shared_ptr<SignalType> signalBody;
-	std::recursive_mutex notificationProtection;
+    std::vector<Event> events;
+    std::shared_ptr<SignalType> signalBody;
+    std::recursive_mutex notificationProtection;
 };
 
 }// namespace Pomdog

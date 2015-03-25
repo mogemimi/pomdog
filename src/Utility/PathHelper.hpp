@@ -14,7 +14,7 @@ namespace Pomdog {
 namespace Detail {
 
 struct PathHelper {
-	static std::string Join(std::string const& path1, std::string const& path2);
+    static std::string Join(std::string const& path1, std::string const& path2);
 };
 
 }// namespace Detail

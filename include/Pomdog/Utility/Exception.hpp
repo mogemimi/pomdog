@@ -35,18 +35,18 @@ template<> constexpr char const* ToString<std::underflow_error>(){ return "Under
 template <typename T>
 T CreateException(std::string const& description, std::string const& source, char const* filename, int line)
 {
-	static_assert(std::is_base_of<std::exception, T>::value, "T is base of std::exception");
+    static_assert(std::is_base_of<std::exception, T>::value, "T is base of std::exception");
 
-	// examples:
-	// > File "filename", line 4 in source
-	// > Runtime error exception: description
-	std::stringstream ss;
-	ss << "File \"" << filename << "\", line " << line
-		<< " in " << (source.empty()? "?": source) << std::endl
-		<< ExceptionInternal::ToString<T>()
-		<< ": " << description;
+    // examples:
+    // > File "filename", line 4 in source
+    // > Runtime error exception: description
+    std::stringstream ss;
+    ss << "File \"" << filename << "\", line " << line
+        << " in " << (source.empty()? "?": source) << std::endl
+        << ExceptionInternal::ToString<T>()
+        << ": " << description;
 
-	return T(ss.str());
+    return T(ss.str());
 }
 
 }// namespace ExceptionInternal
@@ -55,8 +55,8 @@ T CreateException(std::string const& description, std::string const& source, cha
 #if !defined(POMDOG_THROW_EXCEPTION)
 
 #define POMDOG_THROW_EXCEPTION(exceptionClass, description) \
-	throw Pomdog::Detail::ExceptionInternal::CreateException< \
-		exceptionClass>(description, __func__, __FILE__, __LINE__)
+    throw Pomdog::Detail::ExceptionInternal::CreateException< \
+        exceptionClass>(description, __func__, __FILE__, __LINE__)
 
 #endif // !defined(POMDOG_THROW_EXCEPTION)
 

@@ -20,9 +20,9 @@ namespace InputSystem {
 template <class T>
 class InputDeviceCreator {
 public:
-	virtual ~InputDeviceCreator() = default;
+    virtual ~InputDeviceCreator() = default;
 
-	virtual std::shared_ptr<T> Create(SubsystemScheduler & scheduler) = 0;
+    virtual std::shared_ptr<T> Create(SubsystemScheduler & scheduler) = 0;
 };
 
 }// namespace InputSystem

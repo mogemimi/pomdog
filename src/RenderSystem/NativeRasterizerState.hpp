@@ -16,13 +16,13 @@ class NativeGraphicsContext;
 
 class NativeRasterizerState {
 public:
-	NativeRasterizerState() = default;
-	NativeRasterizerState(NativeRasterizerState const&) = delete;
-	NativeRasterizerState & operator=(NativeRasterizerState const&) = delete;
+    NativeRasterizerState() = default;
+    NativeRasterizerState(NativeRasterizerState const&) = delete;
+    NativeRasterizerState & operator=(NativeRasterizerState const&) = delete;
 
-	virtual ~NativeRasterizerState() = default;
+    virtual ~NativeRasterizerState() = default;
 
-	virtual void Apply(NativeGraphicsContext & graphicsContext) = 0;
+    virtual void Apply(NativeGraphicsContext & graphicsContext) = 0;
 };
 
 }// namespace RenderSystem

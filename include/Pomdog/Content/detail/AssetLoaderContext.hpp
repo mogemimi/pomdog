@@ -21,10 +21,10 @@ namespace Detail {
 
 class POMDOG_EXPORT AssetLoaderContext {
 public:
-	std::string RootDirectory;
-	std::weak_ptr<Pomdog::GraphicsDevice> GraphicsDevice;
+    std::string RootDirectory;
+    std::weak_ptr<Pomdog::GraphicsDevice> GraphicsDevice;
 
-	std::ifstream OpenStream(std::string const& assetName) const;
+    std::ifstream OpenStream(std::string const& assetName) const;
 };
 
 }// namespace Detail

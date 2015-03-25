@@ -22,71 +22,71 @@ namespace Detail {
 template <typename T>
 class POMDOG_EXPORT FloatingPointMatrix2x2 {
 public:
-	static_assert(std::is_floating_point<T>::value, "T is floating point.");
-	typedef T value_type;
+    static_assert(std::is_floating_point<T>::value, "T is floating point.");
+    typedef T value_type;
 
-	std::array<std::array<T, 2>, 2> m;
+    std::array<std::array<T, 2>, 2> m;
 
 private:
-	static constexpr std::size_t RowSize = 2;
-	static constexpr std::size_t ColumnSize = 2;
+    static constexpr std::size_t RowSize = 2;
+    static constexpr std::size_t ColumnSize = 2;
 
 public:
-	// Constructors:
-	FloatingPointMatrix2x2() = default;
+    // Constructors:
+    FloatingPointMatrix2x2() = default;
 
-	///@brief Copy constructor.
-	FloatingPointMatrix2x2(FloatingPointMatrix2x2 const&) = default;
+    ///@brief Copy constructor.
+    FloatingPointMatrix2x2(FloatingPointMatrix2x2 const&) = default;
 
-	///@brief Move constructor.
-	FloatingPointMatrix2x2(FloatingPointMatrix2x2 &&) = default;
+    ///@brief Move constructor.
+    FloatingPointMatrix2x2(FloatingPointMatrix2x2 &&) = default;
 
-	///@brief Construct from floating-point values.
-	FloatingPointMatrix2x2(T m00, T m01, T m10, T m11);
+    ///@brief Construct from floating-point values.
+    FloatingPointMatrix2x2(T m00, T m01, T m10, T m11);
 
-	// Assignment operators:
-	///@brief Assignment.
-	FloatingPointMatrix2x2 & operator=(FloatingPointMatrix2x2 const&) = default;
-	///@brief Move assignment.
-	FloatingPointMatrix2x2 & operator=(FloatingPointMatrix2x2 &&) = default;
+    // Assignment operators:
+    ///@brief Assignment.
+    FloatingPointMatrix2x2 & operator=(FloatingPointMatrix2x2 const&) = default;
+    ///@brief Move assignment.
+    FloatingPointMatrix2x2 & operator=(FloatingPointMatrix2x2 &&) = default;
 
-	FloatingPointMatrix2x2 & operator*=(FloatingPointMatrix2x2 const& other);
-	FloatingPointMatrix2x2 & operator+=(FloatingPointMatrix2x2 const& other);
-	FloatingPointMatrix2x2 & operator-= (FloatingPointMatrix2x2 const& other);
-	FloatingPointMatrix2x2 & operator*=(T scaleFactor);
-	FloatingPointMatrix2x2 & operator/=(T scaleFactor);
+    FloatingPointMatrix2x2 & operator*=(FloatingPointMatrix2x2 const& other);
+    FloatingPointMatrix2x2 & operator+=(FloatingPointMatrix2x2 const& other);
+    FloatingPointMatrix2x2 & operator-= (FloatingPointMatrix2x2 const& other);
+    FloatingPointMatrix2x2 & operator*=(T scaleFactor);
+    FloatingPointMatrix2x2 & operator/=(T scaleFactor);
 
-	// Unary operators:
-	FloatingPointMatrix2x2 operator+() const;
-	FloatingPointMatrix2x2 operator-() const;
+    // Unary operators:
+    FloatingPointMatrix2x2 operator+() const;
+    FloatingPointMatrix2x2 operator-() const;
 
-	// Binary operators:
-	FloatingPointMatrix2x2 operator+(FloatingPointMatrix2x2 const& other) const;
-	FloatingPointMatrix2x2 operator-(FloatingPointMatrix2x2 const& other) const;
-	FloatingPointMatrix2x2 operator*(FloatingPointMatrix2x2 const& other) const;
-	FloatingPointMatrix2x2 operator*(T scaleFactor) const;
-	FloatingPointMatrix2x2 operator/(T scaleFactor) const;
+    // Binary operators:
+    FloatingPointMatrix2x2 operator+(FloatingPointMatrix2x2 const& other) const;
+    FloatingPointMatrix2x2 operator-(FloatingPointMatrix2x2 const& other) const;
+    FloatingPointMatrix2x2 operator*(FloatingPointMatrix2x2 const& other) const;
+    FloatingPointMatrix2x2 operator*(T scaleFactor) const;
+    FloatingPointMatrix2x2 operator/(T scaleFactor) const;
 
-	bool operator==(FloatingPointMatrix2x2 const& other) const;
-	bool operator!=(FloatingPointMatrix2x2 const& other) const;
+    bool operator==(FloatingPointMatrix2x2 const& other) const;
+    bool operator!=(FloatingPointMatrix2x2 const& other) const;
 
-	// Function-call operators:
-	T const& operator()(std::size_t row, std::size_t column) const;
-	T & operator()(std::size_t row, std::size_t column);
+    // Function-call operators:
+    T const& operator()(std::size_t row, std::size_t column) const;
+    T & operator()(std::size_t row, std::size_t column);
 
-	FloatingPointMatrix2x2 Concatenate(FloatingPointMatrix2x2 const& other) const;
+    FloatingPointMatrix2x2 Concatenate(FloatingPointMatrix2x2 const& other) const;
 
-	FloatingPointMatrix2x2 Concatenate(T scaleFactor) const;
+    FloatingPointMatrix2x2 Concatenate(T scaleFactor) const;
 
-	T Determinant() const;
+    T Determinant() const;
 
-	///@brief Returns pointer to the first element.
-	T const* Data() const;
+    ///@brief Returns pointer to the first element.
+    T const* Data() const;
 
-	///@brief Returns pointer to the first element.
-	T* Data();
+    ///@brief Returns pointer to the first element.
+    T* Data();
 
-	static FloatingPointMatrix2x2 const Identity;
+    static FloatingPointMatrix2x2 const Identity;
 };
 
 template <typename T>

@@ -19,30 +19,30 @@ namespace Direct3D11 {
 
 class RenderTarget2DDirect3D11 final: public NativeRenderTarget2D {
 public:
-	RenderTarget2DDirect3D11(ID3D11Device* nativeDevice,
-		std::int32_t pixelWidth, std::int32_t pixelHeight,
-		std::uint32_t levelCount, SurfaceFormat format, DepthFormat depthStencilFormat);
+    RenderTarget2DDirect3D11(ID3D11Device* nativeDevice,
+        std::int32_t pixelWidth, std::int32_t pixelHeight,
+        std::uint32_t levelCount, SurfaceFormat format, DepthFormat depthStencilFormat);
 
-	RenderTarget2DDirect3D11(ID3D11Device* nativeDevice, IDXGISwapChain* swapChain,
-		std::int32_t pixelWidth, std::int32_t pixelHeight, DepthFormat depthStencilFormat);
+    RenderTarget2DDirect3D11(ID3D11Device* nativeDevice, IDXGISwapChain* swapChain,
+        std::int32_t pixelWidth, std::int32_t pixelHeight, DepthFormat depthStencilFormat);
 
-	ID3D11RenderTargetView* RenderTargetView() const;
+    ID3D11RenderTargetView* RenderTargetView() const;
 
-	ID3D11DepthStencilView* DepthStencilView() const;
+    ID3D11DepthStencilView* DepthStencilView() const;
 
-	ID3D11ShaderResourceView* ShaderResourceView() const;
+    ID3D11ShaderResourceView* ShaderResourceView() const;
 
-	void ResetBackBuffer(ID3D11Device* nativeDevice, IDXGISwapChain* swapChain,
-		std::int32_t pixelWidth, std::int32_t pixelHeight, DepthFormat depthStencilFormat);
+    void ResetBackBuffer(ID3D11Device* nativeDevice, IDXGISwapChain* swapChain,
+        std::int32_t pixelWidth, std::int32_t pixelHeight, DepthFormat depthStencilFormat);
 
-	void ResetBackBuffer();
+    void ResetBackBuffer();
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> renderTexture;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureResourceView;
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> renderTexture;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureResourceView;
 };
 
 }// namespace Direct3D11

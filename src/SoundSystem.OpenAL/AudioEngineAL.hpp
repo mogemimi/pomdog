@@ -19,15 +19,15 @@ namespace OpenAL {
 
 class AudioEngineAL final: Noncopyable {
 public:
-	AudioEngineAL();
-	~AudioEngineAL();
+    AudioEngineAL();
+    ~AudioEngineAL();
 
-	float MasterVolume() const;
+    float MasterVolume() const;
 
-	void MasterVolume(float volume);
+    void MasterVolume(float volume);
 
 private:
-	ContextOpenAL context;
+    ContextOpenAL context;
 };
 
 }// namespace OpenAL

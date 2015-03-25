@@ -17,14 +17,14 @@ namespace RenderSystem {
 
 class NativeTexture2D {
 public:
-	NativeTexture2D() = default;
-	NativeTexture2D(NativeTexture2D const&) = delete;
-	NativeTexture2D & operator=(NativeTexture2D const&) = delete;
+    NativeTexture2D() = default;
+    NativeTexture2D(NativeTexture2D const&) = delete;
+    NativeTexture2D & operator=(NativeTexture2D const&) = delete;
 
-	virtual ~NativeTexture2D() = default;
+    virtual ~NativeTexture2D() = default;
 
-	virtual void SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
-		std::int32_t levelCount, SurfaceFormat format, void const* pixelData) = 0;
+    virtual void SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
+        std::int32_t levelCount, SurfaceFormat format, void const* pixelData) = 0;
 };
 
 }// namespace RenderSystem

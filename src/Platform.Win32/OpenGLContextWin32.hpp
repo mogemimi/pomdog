@@ -23,30 +23,30 @@ namespace Win32 {
 
 class OpenGLContextWin32 final: public RenderSystem::GL4::OpenGLContext {
 public:
-	OpenGLContextWin32() = delete;
+    OpenGLContextWin32() = delete;
 
-	OpenGLContextWin32(HWND windowHandle, PresentationParameters const& presentationParameters);
+    OpenGLContextWin32(HWND windowHandle, PresentationParameters const& presentationParameters);
 
-	~OpenGLContextWin32();
+    ~OpenGLContextWin32();
 
-	void MakeCurrent() override;
+    void MakeCurrent() override;
 
-	void ClearCurrent() override;
+    void ClearCurrent() override;
 
-	void SwapBuffers() override;
+    void SwapBuffers() override;
 
 private:
-	HWND windowHandle;
+    HWND windowHandle;
 
-	std::unique_ptr<
-		std::remove_pointer<HDC>::type,
-		std::function<void(HDC)>
-	> hdc;
+    std::unique_ptr<
+        std::remove_pointer<HDC>::type,
+        std::function<void(HDC)>
+    > hdc;
 
-	std::unique_ptr<
-		std::remove_pointer<HGLRC>::type,
-		std::function<void(HGLRC)>
-	> glrc;
+    std::unique_ptr<
+        std::remove_pointer<HGLRC>::type,
+        std::function<void(HGLRC)>
+    > glrc;
 };
 
 }// namespace Win32

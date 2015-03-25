@@ -19,26 +19,26 @@ namespace Pomdog {
 
 class POMDOG_EXPORT EventHandler {
 public:
-	EventHandler();
-	EventHandler(EventHandler const&) = delete;
-	EventHandler(EventHandler &&) = default;
-	EventHandler & operator=(EventHandler const&) = delete;
-	EventHandler & operator=(EventHandler &&) = default;
+    EventHandler();
+    EventHandler(EventHandler const&) = delete;
+    EventHandler(EventHandler &&) = default;
+    EventHandler & operator=(EventHandler const&) = delete;
+    EventHandler & operator=(EventHandler &&) = default;
 
-	EventConnection Connect(std::function<void(Event const&)> const& slot);
+    EventConnection Connect(std::function<void(Event const&)> const& slot);
 
-	EventConnection Connect(std::function<void(Event const&)> && slot);
+    EventConnection Connect(std::function<void(Event const&)> && slot);
 
-	void Invoke(Event && event);
+    void Invoke(Event && event);
 
-	template <typename T, typename...Arguments>
-	void Invoke(Arguments && ...arguments)
-	{
-		Invoke(Event{T{std::forward<Arguments>(arguments)...}});
-	}
+    template <typename T, typename...Arguments>
+    void Invoke(Arguments && ...arguments)
+    {
+        Invoke(Event{T{std::forward<Arguments>(arguments)...}});
+    }
 
 private:
-	std::shared_ptr<Detail::SignalsAndSlots::SignalBody<void(Event const&)>> signalBody;
+    std::shared_ptr<Detail::SignalsAndSlots::SignalBody<void(Event const&)>> signalBody;
 };
 
 }// namespace Pomdog

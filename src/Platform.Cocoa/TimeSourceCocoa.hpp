@@ -16,12 +16,12 @@ namespace Cocoa {
 
 class TimeSourceCocoa {
 public:
-	TimeSourceCocoa();
+    TimeSourceCocoa();
 
-	TimePoint Now() const;
+    TimePoint Now() const;
 
 private:
-	double secondsPerTick;
+    double secondsPerTick;
 };
 
 }// namespace Cocoa

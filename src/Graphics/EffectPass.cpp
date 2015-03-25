@@ -11,25 +11,25 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 EffectPass::EffectPass(GraphicsDevice & graphicsDevice,
-	EffectPassDescription const& description)
+    EffectPassDescription const& description)
 {
-	auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+    auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
 
-	// Create effect pass:
-	POMDOG_ASSERT(nativeDevice);
-	nativeEffectPass = nativeDevice->CreateEffectPass(description);
+    // Create effect pass:
+    POMDOG_ASSERT(nativeDevice);
+    nativeEffectPass = nativeDevice->CreateEffectPass(description);
 }
 //-----------------------------------------------------------------------
 EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-	EffectPassDescription const& description)
-	: EffectPass(*graphicsDevice, description)
+    EffectPassDescription const& description)
+    : EffectPass(*graphicsDevice, description)
 {}
 //-----------------------------------------------------------------------
 EffectPass::~EffectPass() = default;
 //-----------------------------------------------------------------------
 Detail::RenderSystem::NativeEffectPass* EffectPass::NativeEffectPass()
 {
-	return nativeEffectPass.get();
+    return nativeEffectPass.get();
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

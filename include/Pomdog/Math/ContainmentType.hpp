@@ -13,11 +13,11 @@
 namespace Pomdog {
 
 enum class ContainmentType: std::uint8_t {
-	Contains,
+    Contains,
 
-	Disjoint,
+    Disjoint,
 
-	Intersects
+    Intersects
 };
 
 }// namespace Pomdog

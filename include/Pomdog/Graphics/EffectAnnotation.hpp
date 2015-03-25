@@ -15,16 +15,16 @@ namespace Pomdog {
 
 class EffectAnnotation {
 public:
-	EffectVariableClass VariableClass;
+    EffectVariableClass VariableClass;
 
-	EffectVariableType VariableType;
+    EffectVariableType VariableType;
 
-	std::uint8_t ColumnCount;
+    std::uint8_t ColumnCount;
 
-	std::uint8_t RowCount;
+    std::uint8_t RowCount;
 
-	std::uint8_t Elements;
-	//std::optional<std::uint8_t> Elements;
+    std::uint8_t Elements;
+    //std::optional<std::uint8_t> Elements;
 };
 
 }// namespace Pomdog

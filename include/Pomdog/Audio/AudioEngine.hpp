@@ -16,22 +16,22 @@ namespace Pomdog {
 
 class POMDOG_EXPORT AudioEngine {
 public:
-	AudioEngine();
-	~AudioEngine();
+    AudioEngine();
+    ~AudioEngine();
 
-	AudioEngine(AudioEngine const&) = delete;
-	AudioEngine & operator=(AudioEngine const&) = delete;
-	AudioEngine(AudioEngine &&) = default;
-	AudioEngine & operator=(AudioEngine &&) = default;
+    AudioEngine(AudioEngine const&) = delete;
+    AudioEngine & operator=(AudioEngine const&) = delete;
+    AudioEngine(AudioEngine &&) = default;
+    AudioEngine & operator=(AudioEngine &&) = default;
 
-	float MasterVolume() const;
+    float MasterVolume() const;
 
-	void MasterVolume(float volume);
+    void MasterVolume(float volume);
 
-	Detail::SoundSystem::NativeAudioEngine* NativeAudioEngine();
+    Detail::SoundSystem::NativeAudioEngine* NativeAudioEngine();
 
 private:
-	std::unique_ptr<Detail::SoundSystem::NativeAudioEngine> nativeAudioEngine;
+    std::unique_ptr<Detail::SoundSystem::NativeAudioEngine> nativeAudioEngine;
 };
 
 }// namespace Pomdog

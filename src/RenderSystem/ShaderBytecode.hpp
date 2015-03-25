@@ -16,8 +16,8 @@ namespace RenderSystem {
 
 class ShaderBytecode {
 public:
-	void const* Code;
-	std::size_t ByteLength;
+    void const* Code;
+    std::size_t ByteLength;
 };
 
 }// namespace RenderSystem

@@ -20,12 +20,12 @@ class DeviceContextDirectInput;
 
 class MouseCreatorDirectInput final: public MouseCreator {
 public:
-	explicit MouseCreatorDirectInput(std::shared_ptr<DeviceContextDirectInput> const& deviceContext);
+    explicit MouseCreatorDirectInput(std::shared_ptr<DeviceContextDirectInput> const& deviceContext);
 
-	std::shared_ptr<Mouse> Create(SubsystemScheduler & scheduler) override;
+    std::shared_ptr<Mouse> Create(SubsystemScheduler & scheduler) override;
 
 private:
-	std::shared_ptr<DeviceContextDirectInput> deviceContext;
+    std::shared_ptr<DeviceContextDirectInput> deviceContext;
 };
 
 }// namespace DirectInput

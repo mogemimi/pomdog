@@ -17,15 +17,15 @@ namespace Cocoa {
 
 class KeyboardCocoa final: public Keyboard {
 public:
-	KeyboardCocoa();
+    KeyboardCocoa();
 
-	///@copydoc Pomdog::Mouse
-	KeyboardState GetState() const override;
+    ///@copydoc Pomdog::Mouse
+    KeyboardState GetState() const override;
 
-	void SetKey(Keys key, KeyState keyState);
+    void SetKey(Keys key, KeyState keyState);
 
 private:
-	KeyboardState state;
+    KeyboardState state;
 };
 
 }// namespace Cocoa

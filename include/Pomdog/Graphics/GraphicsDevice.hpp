@@ -26,25 +26,25 @@ class NativeGraphicsDevice;
 
 class POMDOG_EXPORT GraphicsDevice {
 public:
-	GraphicsDevice() = delete;
-	GraphicsDevice(GraphicsDevice const&) = delete;
-	GraphicsDevice & operator=(GraphicsDevice const&) = delete;
+    GraphicsDevice() = delete;
+    GraphicsDevice(GraphicsDevice const&) = delete;
+    GraphicsDevice & operator=(GraphicsDevice const&) = delete;
 
-	explicit GraphicsDevice(std::unique_ptr<Detail::RenderSystem::NativeGraphicsDevice> && nativeDevice);
+    explicit GraphicsDevice(std::unique_ptr<Detail::RenderSystem::NativeGraphicsDevice> && nativeDevice);
 
-	~GraphicsDevice();
+    ~GraphicsDevice();
 
-	ShaderLanguage GetSupportedLanguage() const;
+    ShaderLanguage GetSupportedLanguage() const;
 
-	Detail::BuiltinShaderPool & ShaderPool();
+    Detail::BuiltinShaderPool & ShaderPool();
 
 public:
-	///@brief internal method
-	Detail::RenderSystem::NativeGraphicsDevice* NativeGraphicsDevice();
+    ///@brief internal method
+    Detail::RenderSystem::NativeGraphicsDevice* NativeGraphicsDevice();
 
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+    class Impl;
+    std::unique_ptr<Impl> impl;
 };
 
 }// namespace Pomdog

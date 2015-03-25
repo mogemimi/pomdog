@@ -13,14 +13,14 @@
 namespace Pomdog {
 
 enum class GamepadType: std::uint8_t {
-	Unknown,
-	Gamepad,
-	ArcadeStick,
-	DancePad,
-	DrumKit,
-	FlightStick,
-	Xbox360Pad,
-	XboxOnePad,
+    Unknown,
+    Gamepad,
+    ArcadeStick,
+    DancePad,
+    DrumKit,
+    FlightStick,
+    Xbox360Pad,
+    XboxOnePad,
 };
 
 }// namespace Pomdog

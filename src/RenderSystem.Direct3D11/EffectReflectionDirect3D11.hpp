@@ -22,14 +22,14 @@ namespace Direct3D11 {
 
 class EffectReflectionDirect3D11 final: public NativeEffectReflection {
 public:
-	EffectReflectionDirect3D11(ShaderBytecode const& vertexShaderBytecode,
-		ShaderBytecode const& pixelShaderBytecode);
+    EffectReflectionDirect3D11(ShaderBytecode const& vertexShaderBytecode,
+        ShaderBytecode const& pixelShaderBytecode);
 
-	std::vector<EffectConstantDescription> GetConstantBuffers() const override;
+    std::vector<EffectConstantDescription> GetConstantBuffers() const override;
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11ShaderReflection> vertexShaderReflector;
-	Microsoft::WRL::ComPtr<ID3D11ShaderReflection> pixelShaderReflector;
+    Microsoft::WRL::ComPtr<ID3D11ShaderReflection> vertexShaderReflector;
+    Microsoft::WRL::ComPtr<ID3D11ShaderReflection> pixelShaderReflector;
 };
 
 }// namespace Direct3D11

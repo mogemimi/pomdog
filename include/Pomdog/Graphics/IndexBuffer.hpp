@@ -26,49 +26,49 @@ class NativeIndexBuffer;
 
 class POMDOG_EXPORT IndexBuffer {
 public:
-	IndexBuffer() = delete;
-	IndexBuffer(IndexBuffer const&) = delete;
-	IndexBuffer(IndexBuffer &&) = default;
+    IndexBuffer() = delete;
+    IndexBuffer(IndexBuffer const&) = delete;
+    IndexBuffer(IndexBuffer &&) = default;
 
-	IndexBuffer(GraphicsDevice & graphicsDevice,
-		IndexElementSize elementSize, void const* indices, std::uint32_t indexCount,
-		Pomdog::BufferUsage bufferUsage);
+    IndexBuffer(GraphicsDevice & graphicsDevice,
+        IndexElementSize elementSize, void const* indices, std::uint32_t indexCount,
+        Pomdog::BufferUsage bufferUsage);
 
-	IndexBuffer(GraphicsDevice & graphicsDevice,
-		IndexElementSize elementSize, std::uint32_t indexCount,
-		Pomdog::BufferUsage bufferUsage);
+    IndexBuffer(GraphicsDevice & graphicsDevice,
+        IndexElementSize elementSize, std::uint32_t indexCount,
+        Pomdog::BufferUsage bufferUsage);
 
-	IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		IndexElementSize elementSize, void const* indices, std::uint32_t indexCount,
-		Pomdog::BufferUsage bufferUsage);
+    IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        IndexElementSize elementSize, void const* indices, std::uint32_t indexCount,
+        Pomdog::BufferUsage bufferUsage);
 
-	IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-		IndexElementSize elementSize, std::uint32_t indexCount,
-		Pomdog::BufferUsage bufferUsage);
+    IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        IndexElementSize elementSize, std::uint32_t indexCount,
+        Pomdog::BufferUsage bufferUsage);
 
-	~IndexBuffer();
+    ~IndexBuffer();
 
-	IndexBuffer & operator=(IndexBuffer const&) = delete;
-	IndexBuffer & operator=(IndexBuffer &&) = default;
+    IndexBuffer & operator=(IndexBuffer const&) = delete;
+    IndexBuffer & operator=(IndexBuffer &&) = default;
 
-	std::uint32_t IndexCount() const;
+    std::uint32_t IndexCount() const;
 
-	IndexElementSize ElementSize() const;
+    IndexElementSize ElementSize() const;
 
-	Pomdog::BufferUsage BufferUsage() const;
+    Pomdog::BufferUsage BufferUsage() const;
 
-	void SetData(void const* source, std::uint32_t elementCount);
+    void SetData(void const* source, std::uint32_t elementCount);
 
-	void SetData(std::uint32_t offsetInBytes, void const* source, std::uint32_t elementCount);
+    void SetData(std::uint32_t offsetInBytes, void const* source, std::uint32_t elementCount);
 
 public:
-	Detail::RenderSystem::NativeIndexBuffer* NativeIndexBuffer();
+    Detail::RenderSystem::NativeIndexBuffer* NativeIndexBuffer();
 
 private:
-	std::unique_ptr<Detail::RenderSystem::NativeIndexBuffer> nativeIndexBuffer;
-	std::uint32_t indexCount;
-	IndexElementSize elementSize;
-	Pomdog::BufferUsage bufferUsage;
+    std::unique_ptr<Detail::RenderSystem::NativeIndexBuffer> nativeIndexBuffer;
+    std::uint32_t indexCount;
+    IndexElementSize elementSize;
+    Pomdog::BufferUsage bufferUsage;
 };
 
 }// namespace Pomdog

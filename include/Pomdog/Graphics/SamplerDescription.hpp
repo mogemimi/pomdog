@@ -18,23 +18,23 @@ namespace Pomdog {
 
 class POMDOG_EXPORT SamplerDescription {
 public:
-	std::uint32_t MaxAnisotropy = 0;
+    std::uint32_t MaxAnisotropy = 0;
 
-	float MinMipLevel = 0.0f;
+    float MinMipLevel = 0.0f;
 
-	float MaxMipLevel = std::numeric_limits<float>::max();
+    float MaxMipLevel = std::numeric_limits<float>::max();
 
-	float MipMapLevelOfDetailBias = 0.0f;
+    float MipMapLevelOfDetailBias = 0.0f;
 
-	TextureFilter Filter = TextureFilter::Linear;
+    TextureFilter Filter = TextureFilter::Linear;
 
-	TextureAddressMode AddressU = TextureAddressMode::Clamp;
+    TextureAddressMode AddressU = TextureAddressMode::Clamp;
 
-	TextureAddressMode AddressV = TextureAddressMode::Clamp;
+    TextureAddressMode AddressV = TextureAddressMode::Clamp;
 
-	TextureAddressMode AddressW = TextureAddressMode::Clamp;
+    TextureAddressMode AddressW = TextureAddressMode::Clamp;
 
-	//Color BorderColor = Color::TransparentBlack;
+    //Color BorderColor = Color::TransparentBlack;
 };
 
 }// namespace Pomdog

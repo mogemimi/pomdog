@@ -18,12 +18,12 @@ namespace OpenAL {
 
 class ContextOpenAL final: Noncopyable {
 private:
-	ALCdevice* device;
-	ALCcontext* context;
+    ALCdevice* device;
+    ALCcontext* context;
 
 public:
-	ContextOpenAL();
-	~ContextOpenAL();
+    ContextOpenAL();
+    ~ContextOpenAL();
 };
 
 }// namespace OpenAL

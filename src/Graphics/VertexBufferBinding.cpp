@@ -19,14 +19,14 @@ VertexBufferBinding::VertexBufferBinding(VertexDeclaration && vertexDeclarationI
 {}
 //-----------------------------------------------------------------------
 VertexBufferBinding::VertexBufferBinding(VertexDeclaration const& vertexDeclarationIn,
-	std::uint32_t vertexOffsetIn, std::uint32_t stepRateIn)
+    std::uint32_t vertexOffsetIn, std::uint32_t stepRateIn)
 : Declaration(vertexDeclarationIn)
 , VertexOffset(vertexOffsetIn)
 , InstanceStepRate(stepRateIn)
 {}
 //-----------------------------------------------------------------------
 VertexBufferBinding::VertexBufferBinding(VertexDeclaration && vertexDeclarationIn,
-	std::uint32_t vertexOffsetIn, std::uint32_t stepRateIn)
+    std::uint32_t vertexOffsetIn, std::uint32_t stepRateIn)
 : Declaration(std::move(vertexDeclarationIn))
 , VertexOffset(vertexOffsetIn)
 , InstanceStepRate(stepRateIn)

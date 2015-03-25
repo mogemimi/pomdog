@@ -17,48 +17,48 @@ namespace Detail {
 template <typename T>
 class POMDOG_EXPORT Coordinate3D final {
 public:
-	static_assert(std::is_arithmetic<T>::value, "You can only use arithmetic types.");
-	typedef T value_type;
+    static_assert(std::is_arithmetic<T>::value, "You can only use arithmetic types.");
+    typedef T value_type;
 
-	T X, Y, Z;
+    T X, Y, Z;
 
 public:
-	// Constructors:
-	Coordinate3D() = default;
+    // Constructors:
+    Coordinate3D() = default;
 
-	///@brief Copy constructor.
-	Coordinate3D(Coordinate3D const&) = default;
+    ///@brief Copy constructor.
+    Coordinate3D(Coordinate3D const&) = default;
 
-	///@brief Move constructor.
-	Coordinate3D(Coordinate3D &&) = default;
+    ///@brief Move constructor.
+    Coordinate3D(Coordinate3D &&) = default;
 
-	///@brief Construct from T values.
-	Coordinate3D(T x, T y, T z);
+    ///@brief Construct from T values.
+    Coordinate3D(T x, T y, T z);
 
-	// Assignment operators:
-	Coordinate3D & operator=(Coordinate3D const&) = default;
-	Coordinate3D & operator=(Coordinate3D &&) = default;
-	Coordinate3D & operator+=(Coordinate3D const&);
-	Coordinate3D & operator-=(Coordinate3D const&);
-	Coordinate3D & operator*=(T scaleFactor);
-	Coordinate3D & operator/=(T scaleFactor);
+    // Assignment operators:
+    Coordinate3D & operator=(Coordinate3D const&) = default;
+    Coordinate3D & operator=(Coordinate3D &&) = default;
+    Coordinate3D & operator+=(Coordinate3D const&);
+    Coordinate3D & operator-=(Coordinate3D const&);
+    Coordinate3D & operator*=(T scaleFactor);
+    Coordinate3D & operator/=(T scaleFactor);
 
-	// Unary operators:
-	Coordinate3D operator+() const;
-	Coordinate3D operator-() const;
+    // Unary operators:
+    Coordinate3D operator+() const;
+    Coordinate3D operator-() const;
 
-	// Binary operators:
-	Coordinate3D operator+(Coordinate3D const&) const;
-	Coordinate3D operator-(Coordinate3D const&) const;
-	Coordinate3D operator*(Coordinate3D const&) const;
-	Coordinate3D operator/(Coordinate3D const&) const;
-	Coordinate3D operator*(T scaleFactor) const;
-	Coordinate3D operator/(T scaleFactor) const;
+    // Binary operators:
+    Coordinate3D operator+(Coordinate3D const&) const;
+    Coordinate3D operator-(Coordinate3D const&) const;
+    Coordinate3D operator*(Coordinate3D const&) const;
+    Coordinate3D operator/(Coordinate3D const&) const;
+    Coordinate3D operator*(T scaleFactor) const;
+    Coordinate3D operator/(T scaleFactor) const;
 
-	bool operator==(Coordinate3D const&) const;
-	bool operator!=(Coordinate3D const&) const;
+    bool operator==(Coordinate3D const&) const;
+    bool operator!=(Coordinate3D const&) const;
 
-	static Coordinate3D const Zero;
+    static Coordinate3D const Zero;
 };
 
 template <typename T>

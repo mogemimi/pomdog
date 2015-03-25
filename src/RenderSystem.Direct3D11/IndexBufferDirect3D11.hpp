@@ -19,24 +19,24 @@ namespace Direct3D11 {
 
 class IndexBufferDirect3D11 final: public NativeIndexBuffer {
 public:
-	IndexBufferDirect3D11() = delete;
+    IndexBufferDirect3D11() = delete;
 
-	IndexBufferDirect3D11(ID3D11Device* nativeDevice,
-		Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
-		std::uint32_t sizeInBytes, BufferUsage bufferUsage);
+    IndexBufferDirect3D11(ID3D11Device* nativeDevice,
+        Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
+        std::uint32_t sizeInBytes, BufferUsage bufferUsage);
 
-	IndexBufferDirect3D11(ID3D11Device* nativeDevice,
-		Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
-		void const* indices, std::uint32_t sizeInBytes, BufferUsage bufferUsage);
+    IndexBufferDirect3D11(ID3D11Device* nativeDevice,
+        Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
+        void const* indices, std::uint32_t sizeInBytes, BufferUsage bufferUsage);
 
-	void SetData(std::uint32_t offsetInBytes,
-		void const* source, std::uint32_t sizeInBytes) override;
+    void SetData(std::uint32_t offsetInBytes,
+        void const* source, std::uint32_t sizeInBytes) override;
 
-	ID3D11Buffer* NativeBuffer() const;
+    ID3D11Buffer* NativeBuffer() const;
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11Buffer> nativeIndexBuffer;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> nativeIndexBuffer;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
 };
 
 }// namespace Direct3D11

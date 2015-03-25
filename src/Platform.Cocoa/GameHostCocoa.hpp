@@ -23,45 +23,45 @@ class GameWindowCocoa;
 
 class GameHostCocoa final: public GameHost {
 public:
-	GameHostCocoa(std::shared_ptr<GameWindowCocoa> const& window,
-		std::shared_ptr<SystemEventDispatcher> const& dispatcher,
-		PresentationParameters const& presentationParameters);
+    GameHostCocoa(std::shared_ptr<GameWindowCocoa> const& window,
+        std::shared_ptr<SystemEventDispatcher> const& dispatcher,
+        PresentationParameters const& presentationParameters);
 
-	~GameHostCocoa();
+    ~GameHostCocoa();
 
-	///@copydoc GameHost
-	void Run(Game & game) override;
+    ///@copydoc GameHost
+    void Run(Game & game) override;
 
-	///@copydoc GameHost
-	void Exit() override;
+    ///@copydoc GameHost
+    void Exit() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::GameWindow> Window() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::GameWindow> Window() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::GameClock> Clock() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::GameClock> Clock() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::GraphicsContext> GraphicsContext() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::GraphicsContext> GraphicsContext() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::GraphicsDevice> GraphicsDevice() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::GraphicsDevice> GraphicsDevice() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::AudioEngine> AudioEngine() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::AudioEngine> AudioEngine() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::AssetManager> AssetManager() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::AssetManager> AssetManager() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::Keyboard> Keyboard() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::Keyboard> Keyboard() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::Mouse> Mouse() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::Mouse> Mouse() override;
 
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+    class Impl;
+    std::unique_ptr<Impl> impl;
 };
 
 }// namespace Cocoa

@@ -19,23 +19,23 @@ namespace Pomdog {
 
 class POMDOG_EXPORT BlendDescription {
 public:
-	Color BlendFactor = Color::White;
+    Color BlendFactor = Color::White;
 
-	std::uint32_t MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
+    std::uint32_t MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
 
-	BlendFunction ColorBlendFunction = BlendFunction::Add;
+    BlendFunction ColorBlendFunction = BlendFunction::Add;
 
-	BlendFunction AlphaBlendFunction = BlendFunction::Add;
+    BlendFunction AlphaBlendFunction = BlendFunction::Add;
 
-	Blend ColorSourceBlend = Blend::One;
+    Blend ColorSourceBlend = Blend::One;
 
-	Blend AlphaSourceBlend = Blend::One;
+    Blend AlphaSourceBlend = Blend::One;
 
-	Blend ColorDestinationBlend = Blend::One;
+    Blend ColorDestinationBlend = Blend::One;
 
-	Blend AlphaDestinationBlend = Blend::One;
+    Blend AlphaDestinationBlend = Blend::One;
 
-	bool AlphaToCoverageEnable = false;
+    bool AlphaToCoverageEnable = false;
 };
 
 }// namespace Pomdog

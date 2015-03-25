@@ -15,17 +15,17 @@ namespace Pomdog {
 
 class GamepadCapabilities {
 public:
-	GamepadType GamepadType = GamepadType::Unknown;
+    GamepadType GamepadType = GamepadType::Unknown;
 
-	bool IsConnected = false;
+    bool IsConnected = false;
 
-	bool HasLeftXThumbStick = false;
+    bool HasLeftXThumbStick = false;
 
-	bool HasLeftYThumbStick = false;
+    bool HasLeftYThumbStick = false;
 
-	bool HasRightXThumbStick = false;
+    bool HasRightXThumbStick = false;
 
-	bool HasRightYThumbStick = false;
+    bool HasRightYThumbStick = false;
 };
 
 }// namespace Pomdog

@@ -13,10 +13,10 @@
 namespace Pomdog {
 
 enum class PlayerIndex: std::uint8_t {
-	One = 1,
-	Two = 2,
-	Three = 3,
-	Four = 4,
+    One = 1,
+    Two = 2,
+    Three = 3,
+    Four = 4,
 };
 
 }// namespace Pomdog

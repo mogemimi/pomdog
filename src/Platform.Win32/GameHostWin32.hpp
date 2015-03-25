@@ -28,46 +28,46 @@ class GameWindowWin32;
 
 class GameHostWin32 final: public GameHost {
 public:
-	GameHostWin32(std::shared_ptr<GameWindowWin32> const& window,
-		std::shared_ptr<SystemEventDispatcher> const& dispatcher,
-		PresentationParameters const& presentationParameters,
-		std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory);
+    GameHostWin32(std::shared_ptr<GameWindowWin32> const& window,
+        std::shared_ptr<SystemEventDispatcher> const& dispatcher,
+        PresentationParameters const& presentationParameters,
+        std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory);
 
-	~GameHostWin32();
+    ~GameHostWin32();
 
-	///@copydoc GameHost
-	void Run(Game & game) override;
+    ///@copydoc GameHost
+    void Run(Game & game) override;
 
-	///@copydoc GameHost
-	void Exit() override;
+    ///@copydoc GameHost
+    void Exit() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::GameWindow> Window() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::GameWindow> Window() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::GameClock> Clock() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::GameClock> Clock() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::GraphicsContext> GraphicsContext() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::GraphicsContext> GraphicsContext() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::GraphicsDevice> GraphicsDevice() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::GraphicsDevice> GraphicsDevice() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::AudioEngine> AudioEngine() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::AudioEngine> AudioEngine() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::AssetManager> AssetManager() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::AssetManager> AssetManager() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::Keyboard> Keyboard() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::Keyboard> Keyboard() override;
 
-	///@copydoc GameHost
-	std::shared_ptr<Pomdog::Mouse> Mouse() override;
+    ///@copydoc GameHost
+    std::shared_ptr<Pomdog::Mouse> Mouse() override;
 
 private:
-	class Impl;
-	std::unique_ptr<Impl> impl;
+    class Impl;
+    std::unique_ptr<Impl> impl;
 };
 
 }// namespace Win32

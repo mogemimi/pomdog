@@ -27,196 +27,196 @@ namespace Detail {
 template <typename T, class PhantomType>
 class POMDOG_EXPORT TaggedArithmetic final {
 public:
-	static_assert(std::is_arithmetic<T>::value, "T is arithmetic type.");
-	static_assert(std::is_pod<T>::value, "T is pod type.");
+    static_assert(std::is_arithmetic<T>::value, "T is arithmetic type.");
+    static_assert(std::is_pod<T>::value, "T is pod type.");
 
-	T value;
+    T value;
 
 public:
-	// Constructors:
-	TaggedArithmetic() = default;
-	TaggedArithmetic(TaggedArithmetic const&) = default;
-	TaggedArithmetic(TaggedArithmetic &&) = default;
+    // Constructors:
+    TaggedArithmetic() = default;
+    TaggedArithmetic(TaggedArithmetic const&) = default;
+    TaggedArithmetic(TaggedArithmetic &&) = default;
 
-	TaggedArithmetic(T v)
-		: value(v)
-	{}
+    TaggedArithmetic(T v)
+        : value(v)
+    {}
 
-	// Assignment operators:
-	TaggedArithmetic & operator=(TaggedArithmetic const&) = default;
-	TaggedArithmetic & operator=(TaggedArithmetic &&) = default;
+    // Assignment operators:
+    TaggedArithmetic & operator=(TaggedArithmetic const&) = default;
+    TaggedArithmetic & operator=(TaggedArithmetic &&) = default;
 
-	TaggedArithmetic & operator+=(TaggedArithmetic const& v)
-	{
-		value += v.value;
-		return *this;
-	}
+    TaggedArithmetic & operator+=(TaggedArithmetic const& v)
+    {
+        value += v.value;
+        return *this;
+    }
 
-	TaggedArithmetic & operator+=(TaggedArithmetic && v)
-	{
-		value += std::move(v.value);
-		return *this;
-	}
+    TaggedArithmetic & operator+=(TaggedArithmetic && v)
+    {
+        value += std::move(v.value);
+        return *this;
+    }
 
-	TaggedArithmetic & operator-=(TaggedArithmetic const& v)
-	{
-		value -= v.value;
-		return *this;
-	}
+    TaggedArithmetic & operator-=(TaggedArithmetic const& v)
+    {
+        value -= v.value;
+        return *this;
+    }
 
-	TaggedArithmetic & operator-=(TaggedArithmetic && v)
-	{
-		value -= std::move(v.value);
-		return *this;
-	}
+    TaggedArithmetic & operator-=(TaggedArithmetic && v)
+    {
+        value -= std::move(v.value);
+        return *this;
+    }
 
-	TaggedArithmetic & operator*=(TaggedArithmetic const& v)
-	{
-		value *= v.value;
-		return *this;
-	}
+    TaggedArithmetic & operator*=(TaggedArithmetic const& v)
+    {
+        value *= v.value;
+        return *this;
+    }
 
-	TaggedArithmetic & operator*=(TaggedArithmetic && v)
-	{
-		value *= std::move(v.value);
-		return *this;
-	}
+    TaggedArithmetic & operator*=(TaggedArithmetic && v)
+    {
+        value *= std::move(v.value);
+        return *this;
+    }
 
-	TaggedArithmetic & operator/=(TaggedArithmetic const& v)
-	{
-		POMDOG_ASSERT(v.value != 0);
-		value /= v.value;
-		return *this;
-	}
+    TaggedArithmetic & operator/=(TaggedArithmetic const& v)
+    {
+        POMDOG_ASSERT(v.value != 0);
+        value /= v.value;
+        return *this;
+    }
 
-	TaggedArithmetic & operator/=(TaggedArithmetic && v)
-	{
-		POMDOG_ASSERT(v.value != 0);
-		value /= std::move(v.value);
-		return *this;
-	}
+    TaggedArithmetic & operator/=(TaggedArithmetic && v)
+    {
+        POMDOG_ASSERT(v.value != 0);
+        value /= std::move(v.value);
+        return *this;
+    }
 
-	TaggedArithmetic & operator*=(T scale)
-	{
-		value *= scale;
-		return *this;
-	}
+    TaggedArithmetic & operator*=(T scale)
+    {
+        value *= scale;
+        return *this;
+    }
 
-	TaggedArithmetic & operator/=(T scale)
-	{
-		POMDOG_ASSERT(scale != 0);
-		value /= scale;
-		return *this;
-	}
+    TaggedArithmetic & operator/=(T scale)
+    {
+        POMDOG_ASSERT(scale != 0);
+        value /= scale;
+        return *this;
+    }
 
-	// Unary operators:
-	TaggedArithmetic operator+() const
-	{
-		return TaggedArithmetic(+value);
-	}
+    // Unary operators:
+    TaggedArithmetic operator+() const
+    {
+        return TaggedArithmetic(+value);
+    }
 
-	TaggedArithmetic operator-() const
-	{
-		return TaggedArithmetic(-value);
-	}
+    TaggedArithmetic operator-() const
+    {
+        return TaggedArithmetic(-value);
+    }
 
-	// Binary operators:
-	TaggedArithmetic operator+(TaggedArithmetic const& v) const
-	{
-		return TaggedArithmetic(value + v.value);
-	}
+    // Binary operators:
+    TaggedArithmetic operator+(TaggedArithmetic const& v) const
+    {
+        return TaggedArithmetic(value + v.value);
+    }
 
-	TaggedArithmetic operator-(TaggedArithmetic const& v) const
-	{
-		return TaggedArithmetic(value - v.value);
-	}
+    TaggedArithmetic operator-(TaggedArithmetic const& v) const
+    {
+        return TaggedArithmetic(value - v.value);
+    }
 
-	TaggedArithmetic operator*(TaggedArithmetic const& v) const
-	{
-		return TaggedArithmetic(value * v.value);
-	}
+    TaggedArithmetic operator*(TaggedArithmetic const& v) const
+    {
+        return TaggedArithmetic(value * v.value);
+    }
 
-	TaggedArithmetic operator/(TaggedArithmetic const& v) const
-	{
-		POMDOG_ASSERT(v.value != T{0});
-		return TaggedArithmetic(value / v.value);
-	}
+    TaggedArithmetic operator/(TaggedArithmetic const& v) const
+    {
+        POMDOG_ASSERT(v.value != T{0});
+        return TaggedArithmetic(value / v.value);
+    }
 
-	TaggedArithmetic operator*(T scale) const
-	{
-		return TaggedArithmetic(value * scale);
-	}
+    TaggedArithmetic operator*(T scale) const
+    {
+        return TaggedArithmetic(value * scale);
+    }
 
-	TaggedArithmetic operator/(T scale) const
-	{
-		POMDOG_ASSERT(scale != T{0});
-		return TaggedArithmetic(value / scale);
-	}
+    TaggedArithmetic operator/(T scale) const
+    {
+        POMDOG_ASSERT(scale != T{0});
+        return TaggedArithmetic(value / scale);
+    }
 
-	friend TaggedArithmetic operator*(T scale, TaggedArithmetic const& v)
-	{
-		return TaggedArithmetic(scale * v.value);
-	}
+    friend TaggedArithmetic operator*(T scale, TaggedArithmetic const& v)
+    {
+        return TaggedArithmetic(scale * v.value);
+    }
 
-	bool operator==(TaggedArithmetic const& v) const
-	{
-		return value == v.value;
-	}
+    bool operator==(TaggedArithmetic const& v) const
+    {
+        return value == v.value;
+    }
 
-	bool operator!=(TaggedArithmetic const& v) const
-	{
-		return value != v.value;
-	}
+    bool operator!=(TaggedArithmetic const& v) const
+    {
+        return value != v.value;
+    }
 
-	bool operator==(T scalar) const
-	{
-		return value == scalar;
-	}
+    bool operator==(T scalar) const
+    {
+        return value == scalar;
+    }
 
-	bool operator!=(T scalar) const
-	{
-		return value != scalar;
-	}
+    bool operator!=(T scalar) const
+    {
+        return value != scalar;
+    }
 
-	bool operator<(TaggedArithmetic const& v) const
-	{
-		return value < v.value;
-	}
+    bool operator<(TaggedArithmetic const& v) const
+    {
+        return value < v.value;
+    }
 
-	bool operator>(TaggedArithmetic const& v) const
-	{
-		return value > v.value;
-	}
+    bool operator>(TaggedArithmetic const& v) const
+    {
+        return value > v.value;
+    }
 
-	bool operator<=(TaggedArithmetic const& v) const
-	{
-		return value <= v.value;
-	}
+    bool operator<=(TaggedArithmetic const& v) const
+    {
+        return value <= v.value;
+    }
 
-	bool operator>=(TaggedArithmetic const& v) const
-	{
-		return value >= v.value;
-	}
+    bool operator>=(TaggedArithmetic const& v) const
+    {
+        return value >= v.value;
+    }
 
-	bool operator<(T scalar) const
-	{
-		return value < scalar;
-	}
+    bool operator<(T scalar) const
+    {
+        return value < scalar;
+    }
 
-	bool operator>(T scalar) const
-	{
-		return value > scalar;
-	}
+    bool operator>(T scalar) const
+    {
+        return value > scalar;
+    }
 
-	bool operator<=(T scalar) const
-	{
-		return value <= scalar;
-	}
+    bool operator<=(T scalar) const
+    {
+        return value <= scalar;
+    }
 
-	bool operator>=(T scalar) const
-	{
-		return value >= scalar;
-	}
+    bool operator>=(T scalar) const
+    {
+        return value >= scalar;
+    }
 };
 
 }// namespace Detail

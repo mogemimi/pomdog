@@ -20,32 +20,32 @@ enum class MouseCursor: std::uint8_t;
 
 class POMDOG_EXPORT GameWindow {
 public:
-	GameWindow() = default;
-	GameWindow(GameWindow const&) = delete;
-	GameWindow & operator=(GameWindow const&) = delete;
+    GameWindow() = default;
+    GameWindow(GameWindow const&) = delete;
+    GameWindow & operator=(GameWindow const&) = delete;
 
-	virtual ~GameWindow() = default;
+    virtual ~GameWindow() = default;
 
-	virtual bool AllowPlayerResizing() const = 0;
+    virtual bool AllowPlayerResizing() const = 0;
 
-	virtual void AllowPlayerResizing(bool allowResizing) = 0;
+    virtual void AllowPlayerResizing(bool allowResizing) = 0;
 
-	virtual std::string Title() const = 0;
+    virtual std::string Title() const = 0;
 
-	virtual void Title(std::string const& title) = 0;
+    virtual void Title(std::string const& title) = 0;
 
-	virtual Rectangle ClientBounds() const = 0;
+    virtual Rectangle ClientBounds() const = 0;
 
-	virtual void ClientBounds(Rectangle const& clientBounds) = 0;
+    virtual void ClientBounds(Rectangle const& clientBounds) = 0;
 
-	///@brief Return true if the mouse cursor is visible, false otherwise.
-	virtual bool IsMouseCursorVisible() const = 0;
+    ///@brief Return true if the mouse cursor is visible, false otherwise.
+    virtual bool IsMouseCursorVisible() const = 0;
 
-	virtual void IsMouseCursorVisible(bool visible) = 0;
+    virtual void IsMouseCursorVisible(bool visible) = 0;
 
-	virtual void SetMouseCursor(MouseCursor cursor) = 0;
+    virtual void SetMouseCursor(MouseCursor cursor) = 0;
 
-	Signal<void(int width, int height)> ClientSizeChanged;
+    Signal<void(int width, int height)> ClientSizeChanged;
 };
 
 }// namespace Pomdog

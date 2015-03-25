@@ -13,31 +13,31 @@
 namespace Pomdog {
 
 enum class EffectVariableType: std::uint8_t {
-	Bool,
+    Bool,
 
-	///@brief 32-bit signed integer.
-	Int32,
+    ///@brief 32-bit signed integer.
+    Int32,
 
-	///@brief 32-bit unsigned integer.
-	UInt32,
+    ///@brief 32-bit unsigned integer.
+    UInt32,
 
-	///@brief 32-bit floating point value.
-	Float,
+    ///@brief 32-bit floating point value.
+    Float,
 
-	///@brief 64-bit floating point value.
-	Double,
+    ///@brief 64-bit floating point value.
+    Double,
 
-	String,
+    String,
 
-	Texture1D,
+    Texture1D,
 
-	Texture2D,
+    Texture2D,
 
-	Texture3D,
+    Texture3D,
 
-	TextureCube,
+    TextureCube,
 
-	Void,
+    Void,
 };
 
 }// namespace Pomdog

@@ -8,8 +8,8 @@ namespace Pomdog {
 #if __cplusplus < 201402L
 ClearOptions & operator|=(ClearOptions & a, ClearOptions b)
 {
-	a = a | b;
-	return a;
+    a = a | b;
+    return a;
 }
 #endif
 
