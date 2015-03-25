@@ -20,24 +20,13 @@ public:
     std::uint32_t PackedValue;
 
 public:
-    // Constructors:
-    Color() = default;
-
-    ///@brief Copy constructor.
-    Color(Color const&) = default;
-
-    ///@brief Move constructor.
-    Color(Color &&) = default;
+    Color() noexcept = default;
 
     ///@brief Construct from unsigned integer values.
     Color(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha);
 
     explicit Color(Vector3 const& vector);
     explicit Color(Vector4 const& vector);
-
-    // Assignment operators:
-    Color & operator=(Color const&) = default;
-    Color & operator=(Color &&) = default;
 
     bool operator==(Color const&) const;
     bool operator!=(Color const&) const;
@@ -58,8 +47,6 @@ public:
     static Color Lerp(Color const& source1, Color const& source2, float amount);
 
     static Color SmoothStep(Color const& source1, Color const& source2, float amount);
-
-    // static public attributes
 
     ///@note (R, G, B, A) = (255, 255, 255, 255)
     static const Color White;

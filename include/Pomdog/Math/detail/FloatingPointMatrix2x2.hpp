@@ -33,23 +33,12 @@ private:
 
 public:
     // Constructors:
-    FloatingPointMatrix2x2() = default;
-
-    ///@brief Copy constructor.
-    FloatingPointMatrix2x2(FloatingPointMatrix2x2 const&) = default;
-
-    ///@brief Move constructor.
-    FloatingPointMatrix2x2(FloatingPointMatrix2x2 &&) = default;
+    FloatingPointMatrix2x2() noexcept = default;
 
     ///@brief Construct from floating-point values.
-    FloatingPointMatrix2x2(T m00, T m01, T m10, T m11);
+    FloatingPointMatrix2x2(T m00, T m01, T m10, T m11) noexcept;
 
     // Assignment operators:
-    ///@brief Assignment.
-    FloatingPointMatrix2x2 & operator=(FloatingPointMatrix2x2 const&) = default;
-    ///@brief Move assignment.
-    FloatingPointMatrix2x2 & operator=(FloatingPointMatrix2x2 &&) = default;
-
     FloatingPointMatrix2x2 & operator*=(FloatingPointMatrix2x2 const& other);
     FloatingPointMatrix2x2 & operator+=(FloatingPointMatrix2x2 const& other);
     FloatingPointMatrix2x2 & operator-= (FloatingPointMatrix2x2 const& other);
@@ -81,10 +70,10 @@ public:
     T Determinant() const;
 
     ///@brief Returns pointer to the first element.
-    T const* Data() const;
+    T const* Data() const noexcept;
 
     ///@brief Returns pointer to the first element.
-    T* Data();
+    T* Data() noexcept;
 
     static FloatingPointMatrix2x2 const Identity;
 };

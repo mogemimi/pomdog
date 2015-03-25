@@ -7,7 +7,7 @@
 
 namespace Pomdog {
 
-Rectangle::Rectangle(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height)
+Rectangle::Rectangle(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height) noexcept
     : X(x)
     , Y(y)
     , Width(width)

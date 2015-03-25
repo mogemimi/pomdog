@@ -25,7 +25,7 @@ template <typename T>
 FloatingPointMatrix3x3<T>::FloatingPointMatrix3x3(
     T m00, T m01, T m02,
     T m10, T m11, T m12,
-    T m20, T m21, T m22)
+    T m20, T m21, T m22) noexcept
 {
     m[0][0] = m00;
     m[0][1] = m01;
@@ -623,14 +623,14 @@ FloatingPointMatrix3x3<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& ax
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T const* FloatingPointMatrix3x3<T>::Data() const
+T const* FloatingPointMatrix3x3<T>::Data() const noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return m[0].data();
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T* FloatingPointMatrix3x3<T>::Data()
+T* FloatingPointMatrix3x3<T>::Data() noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return m[0].data();

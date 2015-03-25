@@ -27,7 +27,7 @@ FloatingPointMatrix4x4<T>::FloatingPointMatrix4x4(
     T m00, T m01, T m02, T m03,
     T m10, T m11, T m12, T m13,
     T m20, T m21, T m22, T m23,
-    T m30, T m31, T m32, T m33)
+    T m30, T m31, T m32, T m33) noexcept
 {
     m[0][0] = m00;
     m[0][1] = m01;
@@ -1238,14 +1238,14 @@ FloatingPointMatrix4x4<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& ax
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T const* FloatingPointMatrix4x4<T>::Data() const
+T const* FloatingPointMatrix4x4<T>::Data() const noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return m[0].data();
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T* FloatingPointMatrix4x4<T>::Data()
+T* FloatingPointMatrix4x4<T>::Data() noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return m[0].data();

@@ -35,16 +35,11 @@ public:
 
 public:
     // Constructors:
-    Rectangle() = default;
-    Rectangle(Rectangle const&) = default;
-    Rectangle(Rectangle &&) = default;
+    Rectangle() noexcept = default;
 
-    Rectangle(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height);
+    Rectangle(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height) noexcept;
+
     Rectangle(Point2D const& position, std::int32_t width, std::int32_t height);
-
-    // Assignment operators:
-    Rectangle & operator=(Rectangle const&) = default;
-    Rectangle & operator=(Rectangle &&) = default;
 
     // Binary operators:
     bool operator==(Rectangle const&) const;

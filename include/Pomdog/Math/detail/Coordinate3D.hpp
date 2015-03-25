@@ -24,20 +24,12 @@ public:
 
 public:
     // Constructors:
-    Coordinate3D() = default;
-
-    ///@brief Copy constructor.
-    Coordinate3D(Coordinate3D const&) = default;
-
-    ///@brief Move constructor.
-    Coordinate3D(Coordinate3D &&) = default;
+    Coordinate3D() noexcept = default;
 
     ///@brief Construct from T values.
-    Coordinate3D(T x, T y, T z);
+    Coordinate3D(T x, T y, T z) noexcept;
 
     // Assignment operators:
-    Coordinate3D & operator=(Coordinate3D const&) = default;
-    Coordinate3D & operator=(Coordinate3D &&) = default;
     Coordinate3D & operator+=(Coordinate3D const&);
     Coordinate3D & operator-=(Coordinate3D const&);
     Coordinate3D & operator*=(T scaleFactor);

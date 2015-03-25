@@ -17,7 +17,7 @@ FloatingPointVector4<T>::FloatingPointVector4(FloatingPointVector3<T> const& xyz
 {}
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector4<T>::FloatingPointVector4(T x, T y, T z, T w)
+FloatingPointVector4<T>::FloatingPointVector4(T x, T y, T z, T w) noexcept
     : X(x), Y(y), Z(z), W(w)
 {}
 //-----------------------------------------------------------------------
@@ -210,14 +210,14 @@ void FloatingPointVector4<T>::Normalize(FloatingPointVector4 const& source, Floa
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T const* FloatingPointVector4<T>::Data() const
+T const* FloatingPointVector4<T>::Data() const noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return &X;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T* FloatingPointVector4<T>::Data()
+T* FloatingPointVector4<T>::Data() noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return &X;

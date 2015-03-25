@@ -17,7 +17,7 @@ template <typename T>
 Coordinate3D<T> const Coordinate3D<T>::Zero(0, 0, 0);
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate3D<T>::Coordinate3D(T x, T y, T z)
+Coordinate3D<T>::Coordinate3D(T x, T y, T z) noexcept
     : X(x), Y(y), Z(z)
 {}
 //-----------------------------------------------------------------------

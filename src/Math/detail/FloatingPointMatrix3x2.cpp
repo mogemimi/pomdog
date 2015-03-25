@@ -25,7 +25,7 @@ template <typename T>
 FloatingPointMatrix3x2<T>::FloatingPointMatrix3x2(
     T m00, T m01,
     T m10, T m11,
-    T m20, T m21)
+    T m20, T m21) noexcept
 {
     m[0][0] = m00;
     m[0][1] = m01;
@@ -379,14 +379,14 @@ FloatingPointMatrix3x2<T>::CreateLerp(FloatingPointMatrix3x2 const& source1,
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T const* FloatingPointMatrix3x2<T>::Data() const
+T const* FloatingPointMatrix3x2<T>::Data() const noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return m[0].data();
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T* FloatingPointMatrix3x2<T>::Data()
+T* FloatingPointMatrix3x2<T>::Data() noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return m[0].data();

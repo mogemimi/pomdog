@@ -17,7 +17,7 @@ template <typename T>
 FloatingPointVector2<T> const FloatingPointVector2<T>::Zero(0, 0);
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector2<T>::FloatingPointVector2(T x, T y)
+FloatingPointVector2<T>::FloatingPointVector2(T x, T y) noexcept
     : X(x), Y(y)
 {}
 //-----------------------------------------------------------------------
@@ -266,14 +266,14 @@ FloatingPointVector2<T>::TransformNormal(FloatingPointVector2 const& normal, Flo
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T const* FloatingPointVector2<T>::Data() const
+T const* FloatingPointVector2<T>::Data() const noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return &X;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T* FloatingPointVector2<T>::Data()
+T* FloatingPointVector2<T>::Data() noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return &X;

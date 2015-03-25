@@ -33,26 +33,15 @@ private:
 
 public:
     // Constructors:
-    FloatingPointMatrix3x3() = default;
-
-    ///@brief Copy constructor.
-    FloatingPointMatrix3x3(FloatingPointMatrix3x3 const&) = default;
-
-    ///@brief Move constructor.
-    FloatingPointMatrix3x3(FloatingPointMatrix3x3 &&) = default;
+    FloatingPointMatrix3x3() noexcept = default;
 
     ///@brief Construct from floating-point values.
     FloatingPointMatrix3x3(
         T m00, T m01, T m02,
         T m10, T m11, T m12,
-        T m20, T m21, T m22);
+        T m20, T m21, T m22) noexcept;
 
     // Assignment operators:
-    ///@brief Assignment.
-    FloatingPointMatrix3x3 & operator=(FloatingPointMatrix3x3 const&) = default;
-    ///@brief Move assignment.
-    FloatingPointMatrix3x3 & operator=(FloatingPointMatrix3x3 &&) = default;
-
     FloatingPointMatrix3x3 & operator*=(FloatingPointMatrix3x3 const& other);
     FloatingPointMatrix3x3 & operator+=(FloatingPointMatrix3x3 const& other);
     FloatingPointMatrix3x3 & operator-=(FloatingPointMatrix3x3 const& other);
@@ -161,10 +150,10 @@ public:
     CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle);
 
     ///@brief Returns pointer to the first element.
-    T const* Data() const;
+    T const* Data() const noexcept;
 
     ///@brief Returns pointer to the first element.
-    T* Data();
+    T* Data() noexcept;
 
     static FloatingPointMatrix3x3 const Identity;
 };

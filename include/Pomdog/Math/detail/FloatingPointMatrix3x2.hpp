@@ -33,26 +33,15 @@ private:
 
 public:
     // Constructors:
-    FloatingPointMatrix3x2() = default;
-
-    ///@brief Copy constructor.
-    FloatingPointMatrix3x2(FloatingPointMatrix3x2 const&) = default;
-
-    ///@brief Move constructor.
-    FloatingPointMatrix3x2(FloatingPointMatrix3x2 &&) = default;
+    FloatingPointMatrix3x2() noexcept = default;
 
     ///@brief Construct from floating-point values.
     FloatingPointMatrix3x2(
         T m00, T m01,
         T m10, T m11,
-        T m20, T m21);
+        T m20, T m21) noexcept;
 
     // Assignment operators:
-    ///@brief Assignment.
-    FloatingPointMatrix3x2 & operator=(FloatingPointMatrix3x2 const&) = default;
-    ///@brief Move assignment.
-    FloatingPointMatrix3x2 & operator=(FloatingPointMatrix3x2 &&) = default;
-
     FloatingPointMatrix3x2 & operator*=(FloatingPointMatrix3x2 const& other);
     FloatingPointMatrix3x2 & operator+=(FloatingPointMatrix3x2 const& other);
     FloatingPointMatrix3x2 & operator-=(FloatingPointMatrix3x2 const& other);
@@ -128,10 +117,10 @@ public:
         T amount);
 
     ///@brief Returns pointer to the first element.
-    T const* Data() const;
+    T const* Data() const noexcept;
 
     ///@brief Returns pointer to the first element.
-    T* Data();
+    T* Data() noexcept;
 
     static FloatingPointMatrix3x2 const Identity;
 };

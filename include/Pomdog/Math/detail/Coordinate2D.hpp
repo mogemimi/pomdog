@@ -24,20 +24,12 @@ public:
 
 public:
     // Constructors:
-    Coordinate2D() = default;
-
-    ///@brief Copy constructor.
-    Coordinate2D(Coordinate2D const&) = default;
-
-    ///@brief Move constructor.
-    Coordinate2D(Coordinate2D &&) = default;
+    Coordinate2D() noexcept = default;
 
     ///@brief Construct from T values.
-    Coordinate2D(T x, T y);
+    Coordinate2D(T x, T y) noexcept;
 
     // Assignment operators:
-    Coordinate2D & operator=(Coordinate2D const&) = default;
-    Coordinate2D & operator=(Coordinate2D &&) = default;
     Coordinate2D & operator+=(Coordinate2D const&);
     Coordinate2D & operator-=(Coordinate2D const&);
     Coordinate2D & operator*=(T scaleFactor);

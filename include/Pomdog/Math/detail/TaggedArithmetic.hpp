@@ -34,18 +34,13 @@ public:
 
 public:
     // Constructors:
-    TaggedArithmetic() = default;
-    TaggedArithmetic(TaggedArithmetic const&) = default;
-    TaggedArithmetic(TaggedArithmetic &&) = default;
+    TaggedArithmetic() noexcept = default;
 
-    TaggedArithmetic(T v)
+    TaggedArithmetic(T v) noexcept
         : value(v)
     {}
 
     // Assignment operators:
-    TaggedArithmetic & operator=(TaggedArithmetic const&) = default;
-    TaggedArithmetic & operator=(TaggedArithmetic &&) = default;
-
     TaggedArithmetic & operator+=(TaggedArithmetic const& v)
     {
         value += v.value;
@@ -96,13 +91,13 @@ public:
         return *this;
     }
 
-    TaggedArithmetic & operator*=(T scale)
+    TaggedArithmetic & operator*=(T const& scale)
     {
         value *= scale;
         return *this;
     }
 
-    TaggedArithmetic & operator/=(T scale)
+    TaggedArithmetic & operator/=(T const& scale)
     {
         POMDOG_ASSERT(scale != 0);
         value /= scale;
@@ -112,68 +107,68 @@ public:
     // Unary operators:
     TaggedArithmetic operator+() const
     {
-        return TaggedArithmetic(+value);
+        return {+value};
     }
 
     TaggedArithmetic operator-() const
     {
-        return TaggedArithmetic(-value);
+        return {-value};
     }
 
     // Binary operators:
     TaggedArithmetic operator+(TaggedArithmetic const& v) const
     {
-        return TaggedArithmetic(value + v.value);
+        return {value + v.value};
     }
 
     TaggedArithmetic operator-(TaggedArithmetic const& v) const
     {
-        return TaggedArithmetic(value - v.value);
+        return {value - v.value};
     }
 
     TaggedArithmetic operator*(TaggedArithmetic const& v) const
     {
-        return TaggedArithmetic(value * v.value);
+        return {value * v.value};
     }
 
     TaggedArithmetic operator/(TaggedArithmetic const& v) const
     {
         POMDOG_ASSERT(v.value != T{0});
-        return TaggedArithmetic(value / v.value);
+        return {value / v.value};
     }
 
     TaggedArithmetic operator*(T scale) const
     {
-        return TaggedArithmetic(value * scale);
+        return {value * scale};
     }
 
     TaggedArithmetic operator/(T scale) const
     {
         POMDOG_ASSERT(scale != T{0});
-        return TaggedArithmetic(value / scale);
+        return {value / scale};
     }
 
-    friend TaggedArithmetic operator*(T scale, TaggedArithmetic const& v)
+    friend TaggedArithmetic operator*(T const& scale, TaggedArithmetic const& v)
     {
-        return TaggedArithmetic(scale * v.value);
+        return {scale * v.value};
     }
 
-    bool operator==(TaggedArithmetic const& v) const
+    bool operator==(TaggedArithmetic const& v) const noexcept
     {
         return value == v.value;
     }
 
-    bool operator!=(TaggedArithmetic const& v) const
+    bool operator!=(TaggedArithmetic const& v) const noexcept
     {
         return value != v.value;
     }
 
-    bool operator==(T scalar) const
+    bool operator==(T const& scalar) const noexcept
     {
         return value == scalar;
     }
 
-    bool operator!=(T scalar) const
+    bool operator!=(T const& scalar) const noexcept
     {
         return value != scalar;
     }
@@ -198,22 +193,22 @@ public:
         return value >= v.value;
     }
 
-    bool operator<(T scalar) const
+    bool operator<(T const& scalar) const
     {
         return value < scalar;
     }
 
-    bool operator>(T scalar) const
+    bool operator>(T const& scalar) const
     {
         return value > scalar;
     }
 
-    bool operator<=(T scalar) const
+    bool operator<=(T const& scalar) const
     {
         return value <= scalar;
     }
 
-    bool operator>=(T scalar) const
+    bool operator>=(T const& scalar) const
     {
         return value >= scalar;
     }

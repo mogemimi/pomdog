@@ -26,7 +26,7 @@ template <typename T>
 FloatingPointVector3<T> const FloatingPointVector3<T>::UnitZ(0, 0, 1);
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T>::FloatingPointVector3(T x, T y, T z)
+FloatingPointVector3<T>::FloatingPointVector3(T x, T y, T z) noexcept
     : X(x), Y(y), Z(z)
 {}
 //-----------------------------------------------------------------------
@@ -299,14 +299,14 @@ FloatingPointVector3<T>::TransformNormal(FloatingPointVector3 const& normal, Flo
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T const* FloatingPointVector3<T>::Data() const
+T const* FloatingPointVector3<T>::Data() const noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return &X;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T* FloatingPointVector3<T>::Data()
+T* FloatingPointVector3<T>::Data() noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return &X;

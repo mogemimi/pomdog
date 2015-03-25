@@ -29,20 +29,12 @@ public:
 
 public:
     // Constructors:
-    FloatingPointVector2() = default;
-
-    ///@brief Copy constructor.
-    FloatingPointVector2(FloatingPointVector2 const&) = default;
-
-    ///@brief Move constructor.
-    FloatingPointVector2(FloatingPointVector2 &&) = default;
+    FloatingPointVector2() noexcept = default;
 
     ///@brief Construct from floating-point values.
-    FloatingPointVector2(T x, T y);
+    FloatingPointVector2(T x, T y) noexcept;
 
     // Assignment operators:
-    FloatingPointVector2 & operator=(FloatingPointVector2 const&) = default;
-    FloatingPointVector2 & operator=(FloatingPointVector2 &&) = default;
     FloatingPointVector2 & operator+=(FloatingPointVector2 const&);
     FloatingPointVector2 & operator-=(FloatingPointVector2 const&);
     FloatingPointVector2 & operator*=(T);
@@ -102,10 +94,10 @@ public:
     static FloatingPointVector2 SmoothStep(FloatingPointVector2 const& source1, FloatingPointVector2 const& source2, T amount);
 
     ///@brief Returns pointer to the first element.
-    T const* Data() const;
+    T const* Data() const noexcept;
 
     ///@brief Returns pointer to the first element.
-    T* Data();
+    T* Data() noexcept;
 
     ///@note (0, 0, 0)
     static FloatingPointVector2 const Zero;

@@ -19,7 +19,7 @@ template <typename T>
 FloatingPointQuaternion<T> const FloatingPointQuaternion<T>::Identity(0, 0, 0, 1);
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T>::FloatingPointQuaternion(T x, T y, T z, T w)
+FloatingPointQuaternion<T>::FloatingPointQuaternion(T x, T y, T z, T w) noexcept
     : X(x), Y(y), Z(z), W(w)
 {}
 //-----------------------------------------------------------------------
@@ -400,14 +400,14 @@ FloatingPointQuaternion<T>::CreateFromYawPitchRoll(
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T const* FloatingPointQuaternion<T>::Data() const
+T const* FloatingPointQuaternion<T>::Data() const noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return &X;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T* FloatingPointQuaternion<T>::Data()
+T* FloatingPointQuaternion<T>::Data() noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return &X;

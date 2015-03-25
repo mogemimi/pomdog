@@ -29,21 +29,14 @@ public:
 
 public:
     // Constructors:
-    FloatingPointVector3() = default;
-
-    ///@brief Copy constructor.
-    FloatingPointVector3(FloatingPointVector3 const&) = default;
-
-    ///@brief Move constructor.
-    FloatingPointVector3(FloatingPointVector3 &&) = default;
+    FloatingPointVector3() noexcept = default;
 
     ///@brief Construct from floating-point values.
-    FloatingPointVector3(T x, T y, T z);
+    FloatingPointVector3(T x, T y, T z) noexcept;
+
     FloatingPointVector3(FloatingPointVector2<T> const& vec, T z);
 
     // Assignment operators:
-    FloatingPointVector3 & operator=(FloatingPointVector3 const&) = default;
-    FloatingPointVector3 & operator=(FloatingPointVector3 &&) = default;
     FloatingPointVector3 & operator+=(FloatingPointVector3 const&);
     FloatingPointVector3 & operator-=(FloatingPointVector3 const&);
     FloatingPointVector3 & operator*=(T);
@@ -98,10 +91,10 @@ public:
     static FloatingPointVector3 TransformNormal(FloatingPointVector3 const& normal, FloatingPointMatrix4x4<T> const& matrix);
 
     ///@brief Returns pointer to the first element.
-    T const* Data() const;
+    T const* Data() const noexcept;
 
     ///@brief Returns pointer to the first element.
-    T* Data();
+    T* Data() noexcept;
 
     ///@note (0, 0, 0)
     static FloatingPointVector3 const Zero;

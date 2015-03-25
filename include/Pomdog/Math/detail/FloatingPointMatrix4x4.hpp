@@ -39,24 +39,16 @@ private:
 
 public:
     // Constructors:
-    FloatingPointMatrix4x4() = default;
-
-    ///@brief Copy constructor.
-    FloatingPointMatrix4x4(FloatingPointMatrix4x4 const&) = default;
-
-    ///@brief Move constructor.
-    FloatingPointMatrix4x4(FloatingPointMatrix4x4 &&) = default;
+    FloatingPointMatrix4x4() noexcept = default;
 
     ///@brief Construct from floating-point values.
     FloatingPointMatrix4x4(
         T m00, T m01, T m02, T m03,
         T m10, T m11, T m12, T m13,
         T m20, T m21, T m22, T m23,
-        T m30, T m31, T m32, T m33);
+        T m30, T m31, T m32, T m33) noexcept;
 
     // Assignment operators:
-    FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 const&) = default;
-    FloatingPointMatrix4x4 & operator=(FloatingPointMatrix4x4 &&) = default;
     FloatingPointMatrix4x4 & operator*=(FloatingPointMatrix4x4 const&);
     FloatingPointMatrix4x4 & operator+=(FloatingPointMatrix4x4 const&);
     FloatingPointMatrix4x4 & operator-=(FloatingPointMatrix4x4 const&);
@@ -246,10 +238,10 @@ public:
     CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle);
 
     ///@brief Returns pointer to the first element.
-    T const* Data() const;
+    T const* Data() const noexcept;
 
     ///@brief Returns pointer to the first element.
-    T* Data();
+    T* Data() noexcept;
 
     static FloatingPointMatrix4x4 const Identity;
 };

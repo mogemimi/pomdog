@@ -29,22 +29,13 @@ public:
 
 public:
     // Constructors:
-    FloatingPointVector4() = default;
-
-    ///@brief Copy constructor.
-    FloatingPointVector4(FloatingPointVector4 const&) = default;
-
-    ///@brief Move constructor.
-    FloatingPointVector4(FloatingPointVector4 &&) = default;
+    FloatingPointVector4() noexcept = default;
 
     ///@brief Construct from floating-point values.
-    FloatingPointVector4(T x, T y, T z, T w);
+    FloatingPointVector4(T x, T y, T z, T w) noexcept;
     FloatingPointVector4(FloatingPointVector3<T> const& xyz, T w);
 
     // Assignment operators:
-    FloatingPointVector4 & operator=(FloatingPointVector4 const& other) = default;
-    FloatingPointVector4 & operator=(FloatingPointVector4 && other) = default;
-
     FloatingPointVector4 & operator+=(FloatingPointVector4 const& other);
     FloatingPointVector4 & operator-=(FloatingPointVector4 const& other);
     FloatingPointVector4 & operator*=(T scaleFactor);
@@ -82,10 +73,10 @@ public:
     static void Normalize(FloatingPointVector4 const& source, FloatingPointVector4 & result);
 
     ///@brief Returns pointer to the first element.
-    T const* Data() const;
+    T const* Data() const noexcept;
 
     ///@brief Returns pointer to the first element.
-    T* Data();
+    T* Data() noexcept;
 };
 
 template <typename T>

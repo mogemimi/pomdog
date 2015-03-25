@@ -28,20 +28,12 @@ public:
 
 public:
     // Constructors:
-    FloatingPointQuaternion() = default;
-
-    ///@brief Copy constructor.
-    FloatingPointQuaternion(FloatingPointQuaternion const&) = default;
-
-    ///@brief Move constructor.
-    FloatingPointQuaternion(FloatingPointQuaternion &&) = default;
+    FloatingPointQuaternion() noexcept = default;
 
     ///@brief Construct from floating-point values.
-    FloatingPointQuaternion(T x, T y, T z, T w);
+    FloatingPointQuaternion(T x, T y, T z, T w) noexcept;
 
     // Assignment operators:
-    FloatingPointQuaternion & operator=(FloatingPointQuaternion const&) = default;
-    FloatingPointQuaternion & operator=(FloatingPointQuaternion &&) = default;
     FloatingPointQuaternion & operator+=(FloatingPointQuaternion const&);
     FloatingPointQuaternion & operator-=(FloatingPointQuaternion const&);
     FloatingPointQuaternion & operator*=(FloatingPointQuaternion const&);
@@ -115,10 +107,10 @@ public:
     CreateFromYawPitchRoll(Radian<T> const& yaw, Radian<T> const& pitch, Radian<T> const& roll);
 
     ///@brief Returns pointer to the first element.
-    T const* Data() const;
+    T const* Data() const noexcept;
 
     ///@brief Returns pointer to the first element.
-    T* Data();
+    T* Data() noexcept;
 
     static FloatingPointQuaternion const Identity;
 };
