@@ -12,42 +12,42 @@
 namespace TestApp {
 //-----------------------------------------------------------------------
 TestAppGame::TestAppGame(std::shared_ptr<GameHost> const& gameHostIn)
-	: gameHost(gameHostIn)
+    : gameHost(gameHostIn)
 {}
 //-----------------------------------------------------------------------
 TestAppGame::~TestAppGame() = default;
 //-----------------------------------------------------------------------
 void TestAppGame::Initialize()
 {
-	//this->game = std::make_unique<LightningTestGame>(gameHost);
-	//this->game = std::make_unique<ParticleTestGame>(gameHost);
-	this->game = std::make_unique<MaidChanGame>(gameHost);
-	//this->game = std::make_unique<GrassBlendingGame>(gameHost);
-	//this->game = std::make_unique<MaidBeamGame>(gameHost);
+    //this->game = std::make_unique<LightningTestGame>(gameHost);
+    //this->game = std::make_unique<ParticleTestGame>(gameHost);
+    this->game = std::make_unique<MaidChanGame>(gameHost);
+    //this->game = std::make_unique<GrassBlendingGame>(gameHost);
+    //this->game = std::make_unique<MaidBeamGame>(gameHost);
 
-	game->Initialize();
+    game->Initialize();
 }
 //-----------------------------------------------------------------------
 void TestAppGame::Update()
 {
-	if (!game) {
-		return;
-	}
+    if (!game) {
+        return;
+    }
 
-	game->Update();
+    game->Update();
 }
 //-----------------------------------------------------------------------
 void TestAppGame::Draw()
 {
-	if (!game)
-	{
-		auto graphicsContext = gameHost->GraphicsContext();
-		graphicsContext->Clear(Color::CornflowerBlue);
-		graphicsContext->Present();
-		return;
-	}
+    if (!game)
+    {
+        auto graphicsContext = gameHost->GraphicsContext();
+        graphicsContext->Clear(Color::CornflowerBlue);
+        graphicsContext->Present();
+        return;
+    }
 
-	game->Draw();
+    game->Draw();
 }
 //-----------------------------------------------------------------------
 }// namespace TestApp

@@ -24,46 +24,46 @@ using namespace Pomdog;
 
 class MaidBeamGame: public Game {
 public:
-	explicit MaidBeamGame(std::shared_ptr<GameHost> const& gameHost);
+    explicit MaidBeamGame(std::shared_ptr<GameHost> const& gameHost);
 
-	~MaidBeamGame();
+    ~MaidBeamGame();
 
-	void Initialize();
+    void Initialize();
 
-	void Update();
+    void Update();
 
-	void Draw();
-
-private:
-	void DrawScene(Transform2D const& transform, Camera2D const& camera);
+    void Draw();
 
 private:
-	std::shared_ptr<GameHost> gameHost;
-	std::shared_ptr<GraphicsContext> graphicsContext;
+    void DrawScene(Transform2D const& transform, Camera2D const& camera);
 
-	std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
-	std::unique_ptr<SceneEditor::EditorBackground> editorBackground;
-	bool sandboxMode;
+private:
+    std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<GraphicsContext> graphicsContext;
 
-	std::shared_ptr<UI::ScenePanel> scenePanel;
-	std::shared_ptr<UI::Slider> slider1;
-	std::shared_ptr<UI::Slider> slider2;
-	std::shared_ptr<UI::ToggleSwitch> toggleSwitch1;
-	std::shared_ptr<UI::ToggleSwitch> toggleSwitch2;
-	std::shared_ptr<UI::TextBlock> textBlock1;
+    std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
+    std::unique_ptr<SceneEditor::EditorBackground> editorBackground;
+    bool sandboxMode;
 
-	GameWorld gameWorld;
-	std::unique_ptr<GameLevel> level;
-	GameObject editorCamera;
+    std::shared_ptr<UI::ScenePanel> scenePanel;
+    std::shared_ptr<UI::Slider> slider1;
+    std::shared_ptr<UI::Slider> slider2;
+    std::shared_ptr<UI::ToggleSwitch> toggleSwitch1;
+    std::shared_ptr<UI::ToggleSwitch> toggleSwitch2;
+    std::shared_ptr<UI::TextBlock> textBlock1;
 
-	Renderer renderer;
-	std::shared_ptr<RenderTarget2D> renderTarget;
-	std::unique_ptr<FXAA> fxaa;
-	std::unique_ptr<ScreenQuad> screenQuad;
-	std::vector<SpriteRenderable> cameraSprites;
+    GameWorld gameWorld;
+    std::unique_ptr<GameLevel> level;
+    GameObject editorCamera;
 
-	ScopedConnection clientSizeChangedConnection;
-	ScopedConnection cameraChangedConnection;
+    Renderer renderer;
+    std::shared_ptr<RenderTarget2D> renderTarget;
+    std::unique_ptr<FXAA> fxaa;
+    std::unique_ptr<ScreenQuad> screenQuad;
+    std::vector<SpriteRenderable> cameraSprites;
+
+    ScopedConnection clientSizeChangedConnection;
+    ScopedConnection cameraChangedConnection;
 };
 
 }// namespace TestApp

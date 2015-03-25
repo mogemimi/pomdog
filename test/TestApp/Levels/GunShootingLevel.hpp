@@ -17,20 +17,20 @@ using namespace Pomdog;
 
 class GunShootingLevel final: public GameLevel {
 public:
-	GunShootingLevel(GameHost & gameHost, GameWorld & world);
+    GunShootingLevel(GameHost & gameHost, GameWorld & world);
 
-	void Update(GameHost & gameHost, GameWorld & world) override;
+    void Update(GameHost & gameHost, GameWorld & world) override;
 
 private:
-	GameObject mainCamera;
-	GameObject maid;
-	GameObject lightningBeam;
-	Duration spawnTime;
+    GameObject mainCamera;
+    GameObject maid;
+    GameObject lightningBeam;
+    Duration spawnTime;
 
-	std::shared_ptr<Skeleton> ghostSkeleton;
-	std::shared_ptr<AnimationGraph> ghostAnimGraph;
-	std::shared_ptr<Texture2D> ghostTexture;
-	std::shared_ptr<SkinnedMesh> ghostMesh;
+    std::shared_ptr<Skeleton> ghostSkeleton;
+    std::shared_ptr<AnimationGraph> ghostAnimGraph;
+    std::shared_ptr<Texture2D> ghostTexture;
+    std::shared_ptr<SkinnedMesh> ghostMesh;
 };
 
 }// namespace TestApp

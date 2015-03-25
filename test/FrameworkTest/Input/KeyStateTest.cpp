@@ -8,6 +8,6 @@ using Pomdog::KeyState;
 
 TEST(KeyState, StaticCastBoolean)
 {
-	static_assert(static_cast<bool>(KeyState::Down) == true, "");
-	static_assert(static_cast<bool>(KeyState::Up) == false, "");
+    static_assert(static_cast<bool>(KeyState::Down) == true, "");
+    static_assert(static_cast<bool>(KeyState::Up) == false, "");
 }

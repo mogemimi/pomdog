@@ -8,6 +8,6 @@ using Pomdog::ButtonState;
 
 TEST(ButtonState, StaticCastBoolean)
 {
-	static_assert(static_cast<bool>(ButtonState::Pressed) == true, "");
-	static_assert(static_cast<bool>(ButtonState::Released) == false, "");
+    static_assert(static_cast<bool>(ButtonState::Pressed) == true, "");
+    static_assert(static_cast<bool>(ButtonState::Released) == false, "");
 }

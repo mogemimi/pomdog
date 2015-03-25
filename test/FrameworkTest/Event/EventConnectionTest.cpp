@@ -13,87 +13,87 @@ using Pomdog::EventConnection;
 
 TEST(EventConnection, Disconnect)
 {
-	EventHandler eventHandler;
-	EventConnection connection;
-	int count = 0;
+    EventHandler eventHandler;
+    EventConnection connection;
+    int count = 0;
 
-	connection = eventHandler.Connect([&](Event const&) {
-		++count;
-	});
+    connection = eventHandler.Connect([&](Event const&) {
+        ++count;
+    });
 
-	eventHandler.Invoke<std::string>("event");
-	EXPECT_EQ(1, count);
-	eventHandler.Invoke<std::string>("event");
-	EXPECT_EQ(2, count);
-	eventHandler.Invoke<std::string>("event");
-	EXPECT_EQ(3, count);
+    eventHandler.Invoke<std::string>("event");
+    EXPECT_EQ(1, count);
+    eventHandler.Invoke<std::string>("event");
+    EXPECT_EQ(2, count);
+    eventHandler.Invoke<std::string>("event");
+    EXPECT_EQ(3, count);
 
-	connection.Disconnect();
+    connection.Disconnect();
 
-	eventHandler.Invoke<std::string>("event");
-	EXPECT_EQ(3, count);
+    eventHandler.Invoke<std::string>("event");
+    EXPECT_EQ(3, count);
 }
 
 TEST(EventConnection, CopyAssignmentOperator)
 {
-	EventHandler eventHandler;
-	int count = 0;
+    EventHandler eventHandler;
+    int count = 0;
 
-	EventConnection connection1;
-	{
-		EventConnection connection2;
+    EventConnection connection1;
+    {
+        EventConnection connection2;
 
-		connection2 = eventHandler.Connect([&](Event const&){
-			++count;
-		});
+        connection2 = eventHandler.Connect([&](Event const&){
+            ++count;
+        });
 
-		eventHandler.Invoke<std::string>("event");
-		EXPECT_EQ(1, count);
+        eventHandler.Invoke<std::string>("event");
+        EXPECT_EQ(1, count);
 
-		connection1 = connection2;
-	}
+        connection1 = connection2;
+    }
 
-	eventHandler.Invoke<std::string>("event");
-	EXPECT_EQ(2, count);
+    eventHandler.Invoke<std::string>("event");
+    EXPECT_EQ(2, count);
 
-	connection1.Disconnect();
+    connection1.Disconnect();
 
-	eventHandler.Invoke<std::string>("event");
-	EXPECT_EQ(2, count);
+    eventHandler.Invoke<std::string>("event");
+    EXPECT_EQ(2, count);
 }
 
 TEST(EventConnection, MoveAssignmentOperator)
 {
-	EventHandler eventHandler;
-	int count = 0;
+    EventHandler eventHandler;
+    int count = 0;
 
-	EventConnection connection1;
-	{
-		EventConnection connection2;
+    EventConnection connection1;
+    {
+        EventConnection connection2;
 
-		connection2 = eventHandler.Connect([&](Event const&){
-			++count;
-		});
+        connection2 = eventHandler.Connect([&](Event const&){
+            ++count;
+        });
 
-		eventHandler.Invoke<std::string>("event");
-		EXPECT_EQ(1, count);
+        eventHandler.Invoke<std::string>("event");
+        EXPECT_EQ(1, count);
 
-		connection1 = std::move(connection2);
+        connection1 = std::move(connection2);
 
-		eventHandler.Invoke<std::string>("event");
-		EXPECT_EQ(2, count);
+        eventHandler.Invoke<std::string>("event");
+        EXPECT_EQ(2, count);
 
-		connection2.Disconnect();
+        connection2.Disconnect();
 
-		eventHandler.Invoke<std::string>("event");
-		EXPECT_EQ(3, count);
-	}
+        eventHandler.Invoke<std::string>("event");
+        EXPECT_EQ(3, count);
+    }
 
-	eventHandler.Invoke<std::string>("event");
-	EXPECT_EQ(4, count);
+    eventHandler.Invoke<std::string>("event");
+    EXPECT_EQ(4, count);
 
-	connection1.Disconnect();
+    connection1.Disconnect();
 
-	eventHandler.Invoke<std::string>("event");
-	EXPECT_EQ(4, count);
+    eventHandler.Invoke<std::string>("event");
+    EXPECT_EQ(4, count);
 }

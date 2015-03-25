@@ -16,19 +16,19 @@ using namespace Pomdog;
 
 class TestAppGame: public Game {
 public:
-	explicit TestAppGame(std::shared_ptr<GameHost> const& gameHost);
+    explicit TestAppGame(std::shared_ptr<GameHost> const& gameHost);
 
-	~TestAppGame();
+    ~TestAppGame();
 
-	void Initialize();
+    void Initialize();
 
-	void Update();
+    void Update();
 
-	void Draw();
+    void Draw();
 
 private:
-	std::shared_ptr<GameHost> gameHost;
-	std::unique_ptr<Game> game;
+    std::shared_ptr<GameHost> gameHost;
+    std::unique_ptr<Game> game;
 };
 
 }// namespace TestApp

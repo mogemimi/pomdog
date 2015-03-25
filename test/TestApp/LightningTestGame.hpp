@@ -26,52 +26,52 @@ using namespace Pomdog;
 
 class LightningTestGame: public Game {
 public:
-	explicit LightningTestGame(std::shared_ptr<GameHost> const& gameHost);
+    explicit LightningTestGame(std::shared_ptr<GameHost> const& gameHost);
 
-	~LightningTestGame();
+    ~LightningTestGame();
 
-	void Initialize();
+    void Initialize();
 
-	void Update();
+    void Update();
 
-	void Draw();
-
-private:
-	void DrawSprites();
+    void Draw();
 
 private:
-	std::shared_ptr<GameHost> gameHost;
-	std::shared_ptr<GraphicsContext> graphicsContext;
+    void DrawSprites();
 
-	std::shared_ptr<Texture2D> texture;
-	std::unique_ptr<SpriteBatch> spriteBatch;
-	std::unique_ptr<SpriteRenderer> spriteRenderer;
+private:
+    std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<GraphicsContext> graphicsContext;
 
-	//std::shared_ptr<SamplerState> samplerPoint;
-	std::shared_ptr<RenderTarget2D> renderTarget;
-	std::unique_ptr<FXAA> fxaa;
-	std::unique_ptr<ScreenQuad> screenQuad;
+    std::shared_ptr<Texture2D> texture;
+    std::unique_ptr<SpriteBatch> spriteBatch;
+    std::unique_ptr<SpriteRenderer> spriteRenderer;
 
-	std::shared_ptr<BlendState> blendStateAdditive;
-	std::shared_ptr<BlendState> blendStateNonPremultiplied;
-	std::shared_ptr<DepthStencilState> depthStencilState;
+    //std::shared_ptr<SamplerState> samplerPoint;
+    std::shared_ptr<RenderTarget2D> renderTarget;
+    std::unique_ptr<FXAA> fxaa;
+    std::unique_ptr<ScreenQuad> screenQuad;
 
-	std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
-	std::unique_ptr<SceneEditor::EditorBackground> editorBackground;
-	std::shared_ptr<UI::ScenePanel> scenePanel;
-	std::shared_ptr<UI::Slider> slider1;
-	std::shared_ptr<UI::Slider> slider2;
-	std::shared_ptr<UI::Slider> slider3;
-	std::shared_ptr<UI::Slider> slider4;
-	std::shared_ptr<UI::Slider> slider5;
+    std::shared_ptr<BlendState> blendStateAdditive;
+    std::shared_ptr<BlendState> blendStateNonPremultiplied;
+    std::shared_ptr<DepthStencilState> depthStencilState;
 
-	GameWorld gameWorld;
-	GameObject mainCamera;
+    std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
+    std::unique_ptr<SceneEditor::EditorBackground> editorBackground;
+    std::shared_ptr<UI::ScenePanel> scenePanel;
+    std::shared_ptr<UI::Slider> slider1;
+    std::shared_ptr<UI::Slider> slider2;
+    std::shared_ptr<UI::Slider> slider3;
+    std::shared_ptr<UI::Slider> slider4;
+    std::shared_ptr<UI::Slider> slider5;
 
-	BeamSystem beamSystem;
-	Vector2 touchPoint;
+    GameWorld gameWorld;
+    GameObject mainCamera;
 
-	ScopedConnection clientSizeChangedConnection;
+    BeamSystem beamSystem;
+    Vector2 touchPoint;
+
+    ScopedConnection clientSizeChangedConnection;
 };
 
 }// namespace TestApp
