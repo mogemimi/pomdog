@@ -37,7 +37,7 @@ static std::array<std::uint32_t, 256U> MakeCRCTable()
 
     for (std::uint32_t i = 0; i < crctable.size(); ++i)
     {
-        std::uint32_t c    = i;
+        std::uint32_t c = i;
         for (std::size_t j = 0; j < 8; ++j)
         {
             c = (c & 1) ? poly ^ (c >> 1) : (c >> 1);

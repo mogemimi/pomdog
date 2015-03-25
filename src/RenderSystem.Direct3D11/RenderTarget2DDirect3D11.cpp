@@ -40,7 +40,7 @@ static void BuildRenderTarget(ID3D11Device* nativeDevice, SurfaceFormat format,
     textureDesc.MiscFlags = (isSharedTexture ? D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX : 0);
 
     POMDOG_ASSERT(nativeDevice);
-    HRESULT    hr = nativeDevice->CreateTexture2D(&textureDesc, nullptr, &renderTexture);
+    HRESULT hr = nativeDevice->CreateTexture2D(&textureDesc, nullptr, &renderTexture);
 
     if (FAILED(hr)) {
         // FUS RO DAH!
@@ -135,7 +135,7 @@ static void BuildBackBufferBySwapChain(ID3D11Device* nativeDevice, IDXGISwapChai
     POMDOG_ASSERT(swapChain);
 
     // Get a surface in the swap chain
-    HRESULT    hr = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
+    HRESULT hr = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
         reinterpret_cast<void**>(renderTexture.GetAddressOf()));
 
     if (FAILED(hr)) {

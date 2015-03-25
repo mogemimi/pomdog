@@ -243,7 +243,7 @@ void GraphicsDeviceDirect3D11::Impl::BuildDevice()
         D3D_FEATURE_LEVEL_9_1,
     };
 
-    HRESULT    hr = S_OK;
+    HRESULT hr = S_OK;
 
     auto adapter = adapters.ActiveAdapter();
     for (auto & type: driverTypes)
