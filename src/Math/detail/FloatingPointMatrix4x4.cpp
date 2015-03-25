@@ -346,8 +346,8 @@ FloatingPointVector3<T> FloatingPointMatrix4x4<T>::GetScale() const
 template <typename T>
 T FloatingPointMatrix4x4<T>::Determinant() const
 {
-	///@todo 余因子(cofactor)を出したほうがたぶん速い。
-	/// See FloatingPointMatrix3x3::Determinant implementation
+	// TODO: Replace with simple process using cofactors to compute a determinant
+	// please see: FloatingPointMatrix3x3::Determinant implementation
 	return
 	+ m[0][0] * m[1][1] * m[2][2] * m[3][3] + m[0][0] * m[1][2] * m[2][3] * m[3][1] + m[0][0] * m[1][3] * m[2][1] * m[3][2]
 	+ m[0][1] * m[1][0] * m[2][3] * m[3][2] + m[0][1] * m[1][2] * m[2][0] * m[3][3] + m[0][1] * m[1][3] * m[2][2] * m[3][0]
@@ -850,8 +850,8 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy,
 	POMDOG_ASSERT_MESSAGE(zFar > 0,  "zFar: out of range");
 	POMDOG_ASSERT_MESSAGE(zNear < zFar, "zNear: out of range");
 
-	// h = cot(fovY/2): ビュー空間の高さ
-	// w = h / Aspect : ビュー空間の幅
+	// h = cot(fovY/2): The height in view space
+	// w = h / Aspect : The width in view space
 	// cot(fovY/2) = 1/tan(fovY/2)
 	//
 	// w   0   0              0
@@ -905,8 +905,8 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(Radian<T> const& fovy,
 	POMDOG_ASSERT_MESSAGE(zFar > 0,    "zFar: out of range");
 	POMDOG_ASSERT_MESSAGE(zNear < zFar, "zNear: out of range");
 
-	// h = cot(fovY/2): ビュー空間の高さ
-	// w = h / Aspect : ビュー空間の幅
+	// h = cot(fovY/2): The height in view space
+	// w = h / Aspect : The width in view space
 	// cot(fovY/2) == 1/tan(fovY/2)
 	//
 	// w   0   0              0
