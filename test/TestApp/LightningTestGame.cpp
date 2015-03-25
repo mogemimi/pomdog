@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "LightningTestGame.hpp"
@@ -19,7 +19,7 @@ void LightningTestGame::Initialize()
 	auto window = gameHost->Window();
 	window->Title("TestApp - Enjoy Game Dev, Have Fun.");
 	window->AllowPlayerResizing(true);
-	
+
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
 
@@ -30,7 +30,7 @@ void LightningTestGame::Initialize()
 	{
 		//samplerPoint = SamplerState::CreatePointWrap(graphicsDevice);
 		//graphicsContext->SetSamplerState(0, samplerPoint);
-		
+
 		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 		graphicsContext->SetBlendState(blendState);
 		texture = assets->Load<Texture2D>("Particles/lightning.png");
@@ -63,14 +63,14 @@ void LightningTestGame::Initialize()
 //		auto & sprite = gameObject->AddComponent<Sprite>();
 //		sprite.Origin = Vector2{0.5f, 0.5f};
 //		sprite.Subrect = Rectangle(0, 0, texture->Width(), texture->Height());
-//	
+//
 //		gameObject->AddComponent<Transform2D>();
 //		gameObject->AddComponent<CanvasItem>();
-//		
+//
 //		auto transform = gameObject->Component<Transform2D>();
 //		transform->Position = {0, 0};
 //		transform->Scale = {2, 2};
-//		
+//
 //		auto node = std::make_shared<HierarchyNode>(gameObject);
 //		rootNode->AddChild(node);
 //	}
@@ -82,19 +82,19 @@ void LightningTestGame::Initialize()
 //
 //		auto & sprite = gameObject->AddComponent<Sprite>();
 //		auto & transform = gameObject->AddComponent<Transform2D>();
-//		
+//
 //		transform.Position = {i * 64 * 2.0f, 0};
 //		transform.Scale = {2.0f, 2.0f};
 //		transform.Rotation = (0.5f * i) * MathConstants<float>::PiOver4();
 //		sprite.Origin = Vector2{0.5f, 0.5f};
 //		sprite.Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
-//		
+//
 //		auto node = std::make_shared<HierarchyNode>(gameObject);
 //		rootNode->AddChild(node);
 //	}
-	
+
 	touchPoint = {0, -300};
-	
+
 	{
 		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
 		scenePanel->cameraObject = mainCamera;
@@ -139,10 +139,10 @@ void LightningTestGame::Initialize()
 		scenePanel->SceneTouch.Connect([this](Vector2 const& positionInView) {
 			auto transform = mainCamera.Component<Transform2D>();
 			auto camera = mainCamera.Component<Camera2D>();
-		
+
 			POMDOG_ASSERT(transform && camera);
 			auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix(*transform, *camera));
-			
+
 			auto position = Vector3::Transform(Vector3(
 				positionInView.X - graphicsContext->Viewport().Width() / 2,
 				positionInView.Y - graphicsContext->Viewport().Height() / 2,
@@ -151,11 +151,11 @@ void LightningTestGame::Initialize()
 			touchPoint = Vector2{position.X, position.Y};
 		});
 	}
-	
+
 	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
 		graphicsContext->Viewport(Viewport{0, 0, width, height});
 		graphicsContext->ScissorRectangle(Rectangle{0, 0, width, height});
-	
+
 		renderTarget = std::make_shared<RenderTarget2D>(
 			gameHost->GraphicsDevice(), width, height,
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
@@ -191,7 +191,7 @@ void LightningTestGame::DrawSprites()
 {
 	auto transform = mainCamera.Component<Transform2D>();
 	auto camera = mainCamera.Component<Camera2D>();
-		
+
 	POMDOG_ASSERT(transform && camera);
 	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
 	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
@@ -223,7 +223,7 @@ void LightningTestGame::DrawSprites()
 				spriteLine.Draw(*spriteRenderer, start, end, lineThickness, color, 0);
 			}
 		};
-		
+
 		for (auto & beam: beamSystem.beams)
 		{
 			DrawBeam(beam.Points, beam.Thickness, beam.Color);
@@ -240,16 +240,16 @@ void LightningTestGame::Draw()
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
-	
+
 	SceneEditor::EditorColorScheme colorScheme;
-	
+
 	graphicsContext->Clear(colorScheme.BackgroundDark);
 	editorBackground->Draw(*graphicsContext);
 
 	//graphicsContext->SetSamplerState(0, samplerPoint);
 	graphicsContext->SetDepthStencilState(depthStencilState);
 	DrawSprites();
-	
+
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget();
 		graphicsContext->Clear(Color::CornflowerBlue);

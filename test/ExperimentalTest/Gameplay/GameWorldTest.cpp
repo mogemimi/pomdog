@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include <Pomdog/Gameplay/GameWorld.hpp>
@@ -9,7 +9,7 @@
 using namespace Pomdog;
 
 namespace {
-	
+
 struct TransformComponent: public Component<TransformComponent>
 {
 	TransformComponent() = default;
@@ -33,7 +33,7 @@ struct PhysicsComponent: public Component<PhysicsComponent>
 struct RendererComponent: public Component<RendererComponent>
 {
 	virtual ~RendererComponent() = default;
-	
+
 	virtual void SetZOrder(int z) = 0;
 	virtual int GetZOrder() const = 0;
 };
@@ -50,7 +50,7 @@ struct MeshRendererComponent final: public RendererComponent
 private:
 	int z;
 };
-	
+
 }// unnamed namespace
 
 TEST(GameWorld, CreateObject)
@@ -88,11 +88,11 @@ TEST(GameWorld, CreateObject)
 	{
 		auto gameObjects = world.QueryComponents<TransformComponent>();
 		EXPECT_EQ(2, gameObjects.size());
-		
+
 		for (auto & objects: gameObjects) {
 			objects.DestroyImmediate();
 		}
-		
+
 		gameObjects = world.QueryComponents<TransformComponent>();
 		EXPECT_TRUE(gameObjects.empty());
 	}
@@ -117,9 +117,9 @@ TEST(GameWorld, CreateObject)
 //	auto gameObject = world.CreateObject();
 //	gameObject.AddComponent<TransformComponent>();
 //	gameObject.AddComponent<PhysicsComponent>();
-//	
+//
 //	EXPECT_FALSE(gameObject->HasComponent<Texture3D>());
-//	
+//
 //	{
 //		auto gameObject2 = world.CreateObject();
 //		gameObject2->AddComponent<Transform>();
@@ -131,7 +131,7 @@ TEST(GameWorld, CreateObject)
 //	{
 //		auto gameObject4 = world.CreateObject();
 //	}
-//	
+//
 //	auto objects = world.QueryComponents<Transform, Collider>();
 //	EXPECT_EQ(1, objects.size());
 //
@@ -139,19 +139,19 @@ TEST(GameWorld, CreateObject)
 //	{
 //		auto transform = gameObject->Component<Transform>();
 //		auto collider = gameObject->Component<Collider>();
-//		
+//
 //		ASSERT_NE(nullptr, transform);
 //		transform->x = 480;
 //		transform->y = 320;
-//		
+//
 //		ASSERT_NE(nullptr, collider);
 //		collider->radius = 50;
 //	}
-//	
+//
 //	ASSERT_NE(nullptr, gameObject->Component<Transform>());
 //	EXPECT_EQ(480, gameObject->Component<Transform>()->x);
 //	EXPECT_EQ(320, gameObject->Component<Transform>()->y);
-//	
+//
 //	ASSERT_NE(nullptr, gameObject->Component<Collider>());
 //	EXPECT_EQ(50, gameObject->Component<Collider>()->radius);
 //}
@@ -176,7 +176,7 @@ TEST(GameWorld, CreateObject)
 //	{
 //		auto gameObject = world.CreateObject();
 //	}
-//	
+//
 //	auto objects = world.QueryComponents<Transform, ComponentQuery::Not<Collider>>();
 //	EXPECT_EQ(1, objects.size());
 //
@@ -184,7 +184,7 @@ TEST(GameWorld, CreateObject)
 //	{
 //		EXPECT_NE(nullptr, gameObject->Component<Transform>());
 //		EXPECT_TRUE(gameObject->HasComponent<Transform>());
-//		
+//
 //		EXPECT_EQ(nullptr, gameObject->Component<Collider>());
 //		EXPECT_FALSE(gameObject->HasComponent<Collider>());
 //	}

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include <Pomdog/Logging/Log.hpp>
@@ -39,10 +39,10 @@ TEST_F(LogTest, FirstCase)
 		tags.push_back(entry.Tag);
 		levels.push_back(entry.Verbosity);
 	});
-	
+
 	Log::Info("Hello");
 	Log::Info("Hi");
-	
+
 	ASSERT_EQ(2, messages.size());
 	EXPECT_EQ("Hello", messages[0]);
 	EXPECT_EQ("Hi", messages[1]);
@@ -58,13 +58,13 @@ TEST_F(LogTest, StreamWithDefaultChannel)
 		tags.push_back(entry.Tag);
 		levels.push_back(entry.Verbosity);
 	});
-	
+
 	Log::Stream() << "Why is the answer to everything " << 42 << '?';
 	{
 		auto stream = Log::Stream();
 		stream << "Nyan" << "Nyan" << "Nyan";
 	}
-	
+
 	ASSERT_EQ(2, messages.size());
 	EXPECT_EQ("Why is the answer to everything 42?", messages[0]);
 	EXPECT_EQ("NyanNyanNyan", messages[1]);
@@ -80,12 +80,12 @@ TEST_F(LogTest, ConnectToChannel)
 		tags.push_back(entry.Tag);
 		levels.push_back(entry.Verbosity);
 	});
-	
+
 	Log::Info("Nyan1");
 	Log::Info("#TestChannel", "Nyan2");
 	Log::Info("#TestChannel", "Nyan3");
 	Log::Info("#ABC", "Nyan4");
-	
+
 	ASSERT_EQ(2, messages.size());
 	EXPECT_EQ("Nyan2", messages[0]);
 	EXPECT_EQ("Nyan3", messages[1]);
@@ -101,18 +101,18 @@ TEST_F(LogTest, ConnectToChannel2)
 		tags.push_back(entry.Tag + "(in Dog)");
 		levels.push_back(entry.Verbosity);
 	});
-	
+
 	ScopedConnection connectionCat = Log::Connect("#Cat", [&](LogEntry const& entry) {
 		messages.push_back(entry.Message + "(in Cat)");
 		tags.push_back(entry.Tag + "(in Cat)");
 		levels.push_back(entry.Verbosity);
 	});
-	
+
 	Log::Info("Nyan1");
 	Log::Info("#Dog", "Nyan2");
 	Log::Info("#Cat", "Nyan3");
 	Log::Info("#ABC", "Nyan4");
-	
+
 	ASSERT_EQ(2, messages.size());
 	EXPECT_EQ("Nyan2(in Dog)", messages[0]);
 	EXPECT_EQ("Nyan3(in Cat)", messages[1]);
@@ -128,17 +128,17 @@ TEST_F(LogTest, ConnectToDefaultChannel)
 		tags.push_back(entry.Tag);
 		levels.push_back(entry.Verbosity);
 	});
-	
+
 	ScopedConnection connectionCat = Log::Connect("#Cat", [&](LogEntry const& entry) {
 		messages.push_back(entry.Message + "(in Cat)");
 		tags.push_back(entry.Tag + "(in Cat)");
 		levels.push_back(entry.Verbosity);
 	});
-	
+
 	Log::Info("Nyan1");
 	Log::Info("#Dog", "Nyan2");
 	Log::Info("#Cat", "Nyan3");
-	
+
 	ASSERT_EQ(4, messages.size());
 	EXPECT_EQ("Nyan1", messages[0]);
 	EXPECT_EQ("Nyan2", messages[1]);
@@ -158,17 +158,17 @@ TEST_F(LogTest, ConnectToDefaultChannelAndStream)
 		tags.push_back(entry.Tag);
 		levels.push_back(entry.Verbosity);
 	});
-	
+
 	ScopedConnection connectionCat = Log::Connect("#Cat", [&](LogEntry const& entry) {
 		messages.push_back(entry.Message + "(in Cat)");
 		tags.push_back(entry.Tag + "(in Cat)");
 		levels.push_back(entry.Verbosity);
 	});
-	
+
 	Log::Stream() << "Nyan1";
 	Log::Stream("#Dog") << "Nyan2";
 	Log::Stream("#Cat") << "Nyan3";
-	
+
 	ASSERT_EQ(4, messages.size());
 	EXPECT_EQ("Nyan1", messages[0]);
 	EXPECT_EQ("Nyan2", messages[1]);
@@ -187,19 +187,19 @@ TEST(Log, SetDefaultLevels)
 
 	Log::SetLevel(LogLevel::Internal);
 	EXPECT_EQ(LogLevel::Internal, Log::GetLevel());
-	
+
 	Log::SetLevel(LogLevel::Verbose);
 	EXPECT_EQ(LogLevel::Verbose, Log::GetLevel());
-	
+
 	Log::SetLevel(LogLevel::Info);
 	EXPECT_EQ(LogLevel::Info, Log::GetLevel());
-	
+
 	Log::SetLevel(LogLevel::Warning);
 	EXPECT_EQ(LogLevel::Warning, Log::GetLevel());
-	
+
 	Log::SetLevel(LogLevel::Critical);
 	EXPECT_EQ(LogLevel::Critical, Log::GetLevel());
-	
+
 	Log::SetLevel(verbosity);
 }
 
@@ -210,7 +210,7 @@ TEST_F(LogTest, SetVerbosityLevels)
 		tags.push_back(entry.Tag);
 		levels.push_back(entry.Verbosity);
 	});
-	
+
 	Log::SetLevel("TestChannel", LogLevel::Internal);
 	Log::Internal("TestChannel", "(A) Internal");
 	Log::Verbose("TestChannel",  "(A) Verbose");
@@ -218,7 +218,7 @@ TEST_F(LogTest, SetVerbosityLevels)
 	Log::Warning("TestChannel",  "(A) Warning");
 	Log::Critical("TestChannel", "(A) Critical");
 	EXPECT_EQ(LogLevel::Internal, Log::GetLevel("TestChannel"));
-	
+
 	Log::SetLevel("TestChannel", LogLevel::Verbose);
 	Log::Internal("TestChannel", "(B) Internal");
 	Log::Verbose("TestChannel",  "(B) Verbose");
@@ -226,7 +226,7 @@ TEST_F(LogTest, SetVerbosityLevels)
 	Log::Warning("TestChannel",  "(B) Warning");
 	Log::Critical("TestChannel", "(B) Critical");
 	EXPECT_EQ(LogLevel::Verbose, Log::GetLevel("TestChannel"));
-	
+
 	Log::SetLevel("TestChannel", LogLevel::Info);
 	Log::Internal("TestChannel", "(C) Internal");
 	Log::Verbose("TestChannel",  "(C) Verbose");
@@ -234,7 +234,7 @@ TEST_F(LogTest, SetVerbosityLevels)
 	Log::Warning("TestChannel",  "(C) Warning");
 	Log::Critical("TestChannel", "(C) Critical");
 	EXPECT_EQ(LogLevel::Info, Log::GetLevel("TestChannel"));
-	
+
 	Log::SetLevel("TestChannel", LogLevel::Warning);
 	Log::Internal("TestChannel", "(D) Internal");
 	Log::Verbose("TestChannel",  "(D) Verbose");
@@ -242,7 +242,7 @@ TEST_F(LogTest, SetVerbosityLevels)
 	Log::Warning("TestChannel",  "(D) Warning");
 	Log::Critical("TestChannel", "(D) Critical");
 	EXPECT_EQ(LogLevel::Warning, Log::GetLevel("TestChannel"));
-	
+
 	Log::SetLevel("TestChannel", LogLevel::Critical);
 	Log::Internal("TestChannel", "(E) Internal");
 	Log::Verbose("TestChannel",  "(E) Verbose");
@@ -250,7 +250,7 @@ TEST_F(LogTest, SetVerbosityLevels)
 	Log::Warning("TestChannel",  "(E) Warning");
 	Log::Critical("TestChannel", "(E) Critical");
 	EXPECT_EQ(LogLevel::Critical, Log::GetLevel("TestChannel"));
-	
+
 	ASSERT_EQ(15, messages.size());
 	EXPECT_EQ("(A) Internal", messages[0]);
 	EXPECT_EQ("(A) Verbose", messages[1]);
@@ -267,7 +267,7 @@ TEST_F(LogTest, SetVerbosityLevels)
 	EXPECT_EQ("(D) Warning", messages[12]);
 	EXPECT_EQ("(D) Critical", messages[13]);
 	EXPECT_EQ("(E) Critical", messages[14]);
-	
+
 	ASSERT_EQ(15, levels.size());
 	EXPECT_EQ(LogLevel::Internal, levels[0]);
 	EXPECT_EQ(LogLevel::Verbose, levels[1]);
@@ -292,24 +292,24 @@ TEST_F(LogTest, SendToUserChannels)
 		messages.push_back(entry.Message);
 		tags.push_back(entry.Tag);
 	};
-	
+
 	ScopedConnection connection1(Log::Connect("#Test1", handler));
 	ScopedConnection connection2(Log::Connect("#Test2", handler));
-	
+
 	Log::SetLevel("Test1", LogLevel::Verbose);
 	Log::SetLevel("Test2", LogLevel::Verbose);
-	
+
 	Log::Info("(A) Send to default channel");
 	Log::Info("#Test1", "(B) Send to channel Test1");
 	Log::Info("#Test2", "(C) Send to channel Test2");
 	Log::Info("#NyanNyanCat", "(D) Send to nonexistent channel");
-	
+
 	// Connect
 	ScopedConnection connection3(Log::Connect("#NyanNyanCat", handler));
 	Log::SetLevel("#NyanNyanCat", LogLevel::Verbose);
-	
+
 	Log::Info("#NyanNyanCat", "(E) Send to new channel");
-	
+
 	// Disconnect
 	connection1.Disconnect();
 	Log::Info("#Test1", "(F) Send to channel Test1");
@@ -320,7 +320,7 @@ TEST_F(LogTest, SendToUserChannels)
 	EXPECT_EQ(messages[1], "(C) Send to channel Test2");
 	EXPECT_EQ(messages[2], "(E) Send to new channel");
 	EXPECT_EQ(messages[3], "(G) Send to channel Test2");
-	
+
 	ASSERT_EQ(4, tags.size());
 	EXPECT_EQ(tags[0], "#Test1");
 	EXPECT_EQ(tags[1], "#Test2");
@@ -331,7 +331,7 @@ TEST_F(LogTest, SendToUserChannels)
 TEST_F(LogTest, CallToDisconnectInCallback)
 {
 	ScopedConnection connectionA, connectionB;
-	
+
 	connectionA = Log::Connect([&](LogEntry const& entry){
 		messages.push_back(entry.Message + " at A");
 
@@ -339,16 +339,16 @@ TEST_F(LogTest, CallToDisconnectInCallback)
 			connectionB.Disconnect();
 		}
 	});
-	
+
 	connectionB = Log::Connect([&](LogEntry const& entry){
 		messages.push_back(entry.Message + " at B");
 	});
-	
+
 	Log::Info("Hello");
 	Log::Info("Hi");
 	Log::Info("Disconnect B");
 	Log::Info("Chuck Norris");
-	
+
 	ASSERT_EQ(6, messages.size());
 	EXPECT_EQ(messages[0], "Hello at A");
 	EXPECT_EQ(messages[1], "Hello at B");
@@ -361,7 +361,7 @@ TEST_F(LogTest, CallToDisconnectInCallback)
 TEST_F(LogTest, CallToDisconnectSelfInCallback)
 {
 	ScopedConnection connectionA;
-	
+
 	connectionA = Log::Connect([&](LogEntry const& entry){
 		messages.push_back(entry.Message + " at A");
 
@@ -369,12 +369,12 @@ TEST_F(LogTest, CallToDisconnectSelfInCallback)
 			connectionA.Disconnect();
 		}
 	});
-	
+
 	Log::Info("Hello");
 	Log::Info("Hi");
 	Log::Info("Disconnect");
 	Log::Info("Chuck Norris");
-	
+
 	ASSERT_EQ(3, messages.size());
 	EXPECT_EQ(messages[0], "Hello at A");
 	EXPECT_EQ(messages[1], "Hi at A");

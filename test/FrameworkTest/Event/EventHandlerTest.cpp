@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include <Pomdog/Event/EventConnection.hpp>
@@ -22,10 +22,10 @@ struct EventHandlerTest: public ::testing::Test
 	{
 		integers.clear();
 		names.clear();
-		
+
 		EventHandler eventHandlerNew;
 		handler = std::move(eventHandlerNew);
-		
+
 		slot = [&](Event const& event) {
 			ASSERT_TRUE(event.Is<int>());
 			integers.push_back(*event.As<int>());
@@ -91,7 +91,7 @@ TEST_F(EventHandlerTest, MoveConstructor)
 {
 	auto connection = handler.Connect(slot);
 	Pomdog::EventHandler handlerNew = std::move(handler);
-	
+
 	handlerNew.Invoke<int>(42);
 	connection.Disconnect();
 	handlerNew.Invoke<int>(43);
@@ -105,7 +105,7 @@ TEST_F(EventHandlerTest, MoveConstructor)
 //	Pomdog::EventHandler handlerOld;
 //	Pomdog::EventHandler handlerNew = std::move(handlerOld);
 //	auto connection = handlerOld.Connect(slot);
-//	
+//
 //	handlerNew.Invoke<int>(42);
 //	connection.Disconnect();
 //	handlerNew.Invoke<int>(43);
@@ -122,7 +122,7 @@ TEST_F(EventHandlerTest, MoveAssignment)
 		ASSERT_TRUE(event.Is<int>());
 		integers.push_back(*event.As<int>() + 900);
 	});
-	
+
 	handlerNew.Invoke<int>(42);
 	handler.Invoke<int>(43);
 	handlerNew = std::move(handler);
@@ -141,7 +141,7 @@ TEST_F(EventHandlerTest, ConnectSomeSlots)
 	handler.Connect(slot);
 	handler.Connect(slot);
 	handler.Connect(slot);
-	
+
 	handler.Invoke<int>(42);
 
 	ASSERT_EQ(3, integers.size());
@@ -155,7 +155,7 @@ TEST_F(EventHandlerTest, DisconnectSlots)
 	auto connection = handler.Connect(slot);
 	handler.Connect(slot);
 	handler.Connect(slot);
-	
+
 	handler.Invoke<int>(42);
 	connection.Disconnect();
 	handler.Invoke<int>(72);

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include <Pomdog/Math/detail/ForwardDeclarations.hpp>
@@ -26,7 +26,7 @@ TEST(CustomVertex, Float)
 {
 	using VertexCombined = CustomVertex<float>;
 	auto declaration = VertexCombined::Declaration();
-	
+
 	EXPECT_EQ(4, declaration.StrideBytes());
 	ASSERT_EQ(1, declaration.VertexElements().size());
 	EXPECT_EQ(VertexElementFormat::Float, declaration.VertexElements()[0].VertexElementFormat);
@@ -105,7 +105,7 @@ TEST(CustomVertex, Vector4Three)
 {
 	using VertexCombined = CustomVertex<Vector4, Vector4, Vector4>;
 	auto declaration = VertexCombined::Declaration();
-	
+
 	EXPECT_EQ(16 * 3, declaration.StrideBytes());
 	ASSERT_EQ(3, declaration.VertexElements().size());
 	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
@@ -120,7 +120,7 @@ TEST(CustomVertex, Vector4Four)
 {
 	using VertexCombined = CustomVertex<Vector4, Vector4, Vector4, Vector4>;
 	auto declaration = VertexCombined::Declaration();
-	
+
 	EXPECT_EQ(16 * 4, declaration.StrideBytes());
 	ASSERT_EQ(4, declaration.VertexElements().size());
 	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
@@ -137,7 +137,7 @@ TEST(CustomVertex, VectorTuple2)
 {
 	using VertexCombined = CustomVertex<Vector4, Vector3>;
 	auto declaration = VertexCombined::Declaration();
-	
+
 	EXPECT_EQ(16+12, declaration.StrideBytes());
 	ASSERT_EQ(2, declaration.VertexElements().size());
 	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
@@ -150,7 +150,7 @@ TEST(CustomVertex, VectorTuple3)
 {
 	using VertexCombined = CustomVertex<Vector4, Vector3, Vector2>;
 	auto declaration = VertexCombined::Declaration();
-	
+
 	EXPECT_EQ(16+12+8, declaration.StrideBytes());
 	ASSERT_EQ(3, declaration.VertexElements().size());
 	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
@@ -165,7 +165,7 @@ TEST(CustomVertex, VectorTuple4)
 {
 	using VertexCombined = CustomVertex<Vector4, Vector3, Vector2, float>;
 	auto declaration = VertexCombined::Declaration();
-	
+
 	EXPECT_EQ(16+12+8+4, declaration.StrideBytes());
 	ASSERT_EQ(4, declaration.VertexElements().size());
 	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);
@@ -185,7 +185,7 @@ TEST(CustomVertex, VectorTuple8)
 		Vector4, Vector3, Vector2, float
 	>;
 	auto declaration = VertexCombined::Declaration();
-	
+
 	EXPECT_EQ(16+12+8+4+16+12+8+4, declaration.StrideBytes());
 	ASSERT_EQ(8, declaration.VertexElements().size());
 	EXPECT_EQ(VertexElementFormat::Float4, declaration.VertexElements()[0].VertexElementFormat);

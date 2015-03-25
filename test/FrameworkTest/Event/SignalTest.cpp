@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include <Pomdog/Event/Signal.hpp>
@@ -144,16 +144,16 @@ TEST(Singal, CustomClass)
 {
 	struct Chuck {
 		int value;
-	
+
 		Chuck(): value(0) {};
 		Chuck(int v): value(v) {};
-	
+
 		Chuck(Chuck const&) = delete;
 		Chuck(Chuck &&) = delete;
 		Chuck & operator=(Chuck const&) = delete;
 		Chuck & operator=(Chuck &&) = delete;
 	};
-	
+
 	{
 		Signal<void(Chuck const&)> signal;
 		int result = 0;

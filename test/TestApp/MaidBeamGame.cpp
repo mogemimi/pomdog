@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "MaidBeamGame.hpp"
@@ -22,7 +22,7 @@ void MaidBeamGame::Initialize()
 	auto window = gameHost->Window();
 	window->Title("MaidBeamGame - Enjoy Game Dev, Have Fun.");
 	window->AllowPlayerResizing(true);
-	
+
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
 
@@ -45,7 +45,7 @@ void MaidBeamGame::Initialize()
 		editorCamera = gameWorld.CreateObject();
 		editorCamera.AddComponent<Transform2D>();
 		editorCamera.AddComponent<Camera2D>();
-		
+
 		level = std::make_unique<GunShootingLevel>(*gameHost, gameWorld);
 	}
 	{
@@ -104,11 +104,11 @@ void MaidBeamGame::Initialize()
 				sandboxMode = isOn;
 				scenePanel->IsEnabled(sandboxMode);
 			});
-			
+
 			stackPanel->AddChild(toggleSwitch2);
 		}
 	}
-	
+
 	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
 		graphicsContext->Viewport(Viewport{0, 0, width, height});
 		graphicsContext->ScissorRectangle(Rectangle{0, 0, width, height});
@@ -131,7 +131,7 @@ void MaidBeamGame::Update()
 	for (auto & gameObject: gameWorld.QueryComponents<Animator>())
 	{
 		auto animator = gameObject.Component<Animator>();
-		
+
 		POMDOG_ASSERT(animator);
 		animator->Update(clock->FrameDuration());
 	}
@@ -139,13 +139,13 @@ void MaidBeamGame::Update()
 	for (auto & gameObject: gameWorld.QueryComponents<Behavior>())
 	{
 		auto behavior = gameObject.Component<Behavior>();
-		
+
 		POMDOG_ASSERT(behavior);
 		behavior->Update(gameObject, clock->FrameDuration());
 	}
 
 	gameWorld.Refresh();
-	
+
 	{
 		gameEditor->Update();
 		textBlock1->Text(StringFormat("Draw Calls: %d", renderer.DrawCallCount()));
@@ -155,17 +155,17 @@ void MaidBeamGame::Update()
 void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camera)
 {
 	auto clientBounds = gameHost->Window()->ClientBounds();
-	
+
 	Viewport viewport(
 		clientBounds.Width * camera.NormalizedViewportX,
 		clientBounds.Height * camera.NormalizedViewportY,
 		clientBounds.Width * camera.NormalizedViewportWidth,
 		clientBounds.Height * camera.NormalizedViewportHeight);
-	
+
 	auto viewMatrix = SandboxHelper::CreateViewMatrix(transform, camera);
 	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 		viewport.Width(), viewport.Height(), camera.Near, camera.Far);
-	
+
 	editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 	renderer.ViewMatrix(viewMatrix);
 	renderer.ProjectionMatrix(projectionMatrix);
@@ -177,7 +177,7 @@ void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camer
 	}
 
 	graphicsContext->Viewport(viewport);
-	
+
 	if (sandboxMode)
 	{
 		size_t cameraIndex = 0;
@@ -206,30 +206,30 @@ void MaidBeamGame::Draw()
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
-	
+
 	{
 		auto viewport = graphicsContext->Viewport();
-		
+
 		if (!sandboxMode)
 		{
 //			bool cleared = false;
-			
+
 			for (auto & cameraObject: gameWorld.QueryComponents<Camera2D, Transform2D>())
 			{
 				auto camera = cameraObject.Component<Camera2D>();
-				
+
 //				if (!camera->Enabled) {
 //					continue;
 //				}
-//				
+//
 //				if (!cleared)
 //				{
 //					graphicsContext->Clear(camera->BackgroundColor);
 //					cleared = true;
 //				}
-										
+
 				auto transform = cameraObject.Component<Transform2D>();
-				
+
 				POMDOG_ASSERT(transform && camera);
 				DrawScene(*transform, *camera);
 			}
@@ -238,14 +238,14 @@ void MaidBeamGame::Draw()
 		{
 			auto camera = editorCamera.Component<Camera2D>();
 			auto transform = editorCamera.Component<Transform2D>();
-			
+
 //			graphicsContext->Clear(camera->BackgroundColor);
 			DrawScene(*transform, *camera);
 		}
-		
+
 		graphicsContext->Viewport(viewport);
 	}
-	
+
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget();
 		graphicsContext->Clear(Color::CornflowerBlue);

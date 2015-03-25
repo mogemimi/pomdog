@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "ParticleTestGame.hpp"
@@ -19,7 +19,7 @@ void ParticleTestGame::Initialize()
 	auto window = gameHost->Window();
 	window->Title("ParticleTestGame - Enjoy Game Dev, Have Fun.");
 	window->AllowPlayerResizing(false);
-	
+
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
 
@@ -42,7 +42,7 @@ void ParticleTestGame::Initialize()
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
 		editorBackground = std::make_unique<SceneEditor::EditorBackground>(gameHost);
 	}
-	
+
 	{
 		mainCamera = gameWorld.CreateObject();
 		mainCamera.AddComponent<Transform2D>();
@@ -55,7 +55,7 @@ void ParticleTestGame::Initialize()
 		auto blendState = BlendState::CreateAdditive(graphicsDevice);
 		particleObject.AddComponent(std::make_unique<ParticleRenderable>(texture, blendState));
 	}
-	
+
 	{
 		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
 		scenePanel->cameraObject = mainCamera;
@@ -85,10 +85,10 @@ void ParticleTestGame::Initialize()
 		scenePanel->SceneTouch.Connect([this](Vector2 const& positionInView) {
 			auto transform = mainCamera.Component<Transform2D>();
 			auto camera = mainCamera.Component<Camera2D>();
-		
+
 			POMDOG_ASSERT(transform && camera);
 			auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix(*transform, *camera));
-			
+
 			auto position = Vector3::Transform(Vector3(
 				positionInView.X - graphicsContext->Viewport().Width() / 2,
 				positionInView.Y - graphicsContext->Viewport().Height() / 2,
@@ -105,7 +105,7 @@ void ParticleTestGame::Update()
 	{
 		gameEditor->Update();
 	}
-	
+
 	if (auto transform = particleObject.Component<Transform2D>())
 	{
 		transform->Position = touchPoint;
@@ -119,7 +119,7 @@ void ParticleTestGame::Update()
 //		particleSystem.emitter.EmissionRate = static_cast<std::uint16_t>(slider1->Value());
 //		particleSystem.emitter.GravityModifier = slider2->Value();
 //	}
-		
+
 //	for (auto & gameObject: gameWorld.QueryComponents<ParticleRenderable, Transform2D>())
 //	{
 //		auto particleRenderable = gameObject->Component<ParticleRenderable>();
@@ -137,15 +137,15 @@ void ParticleTestGame::Draw()
 	{
 		auto transform = mainCamera.Component<Transform2D>();
 		auto camera = mainCamera.Component<Camera2D>();
-			
+
 		POMDOG_ASSERT(transform && camera);
 		auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
 		auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 			gameHost->Window()->ClientBounds().Width, gameHost->Window()->ClientBounds().Height, camera->Near, camera->Far);
-		
+
 		editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 	}
-	
+
 	for (auto & gameObject: gameWorld.QueryComponents<Renderable, Transform2D>())
 	{
 		auto renderable = gameObject.Component<Renderable>();
@@ -157,7 +157,7 @@ void ParticleTestGame::Draw()
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
-	
+
 	graphicsContext->Clear(Color::CornflowerBlue);
 	editorBackground->Draw(*graphicsContext);
 	renderer.Render(*graphicsContext);

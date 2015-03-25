@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include <Pomdog/Math/Vector4.hpp>
@@ -13,7 +13,7 @@ TEST(Vector4, TrivialCase)
 	EXPECT_EQ(vec.Y, 0.0f);
 	EXPECT_EQ(vec.Z, 0.0f);
 	EXPECT_EQ(vec.W, 0.0f);
-	
+
 	vec = {1, 2, 3, 4};
 	EXPECT_EQ(vec.X, 1.0f);
 	EXPECT_EQ(vec.Y, 2.0f);

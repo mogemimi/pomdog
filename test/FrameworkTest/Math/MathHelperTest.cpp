@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include <Pomdog/Math/MathHelper.hpp>
@@ -19,7 +19,7 @@ TEST(MathHelper, Clamp)
 	EXPECT_EQ(0.5f, MathHelper::Clamp(0.5f, 0.0f, 1.0f));
 	EXPECT_EQ(1.0f, MathHelper::Clamp(1.0f, 0.0f, 1.0f));
 	EXPECT_EQ(1.0f, MathHelper::Clamp(std::numeric_limits<float>::max(), 0.0f, 1.0f));
-	
+
 	EXPECT_EQ(-4.0f, MathHelper::Clamp(-4.3f, -4.0f, 5.0f));
 	EXPECT_EQ(-2.5f, MathHelper::Clamp(-2.5f, -4.0f, 5.0f));
 	EXPECT_EQ(0.0f, MathHelper::Clamp(0.0f, -4.0f, 5.0f));
@@ -38,7 +38,7 @@ TEST(MathHelper, Saturate)
 	EXPECT_EQ(1.0, MathHelper::Saturate(1.0));
 	EXPECT_EQ(1.0, MathHelper::Saturate(1.1));
 	EXPECT_EQ(1.0, MathHelper::Saturate(std::numeric_limits<double>::max()));
-	
+
 	EXPECT_EQ(0.0f, MathHelper::Saturate(std::numeric_limits<float>::lowest()));
 	EXPECT_EQ(0.0f, MathHelper::Saturate(-0.1f));
 	EXPECT_EQ(0.0f, MathHelper::Saturate(0.0f));
@@ -53,7 +53,7 @@ TEST(MathHelper, Saturate)
 TEST(MathHelper, Lerp)
 {
 	constexpr auto epsilon = std::numeric_limits<float>::epsilon();
-	
+
 	EXPECT_NEAR(0.0f, MathHelper::Lerp(0.0f, 1.0f, 0.0f), epsilon);
 	EXPECT_NEAR(0.2f, MathHelper::Lerp(0.0f, 1.0f, 0.2f), epsilon);
 	EXPECT_NEAR(0.5f, MathHelper::Lerp(0.0f, 1.0f, 0.5f), epsilon);
@@ -65,13 +65,13 @@ TEST(MathHelper, Lerp)
 	EXPECT_NEAR(0.0f, MathHelper::Lerp(-1.0f, 1.0f, 0.5f), epsilon);
 	EXPECT_NEAR(0.6f, MathHelper::Lerp(-1.0f, 1.0f, 0.8f), epsilon);
 	EXPECT_NEAR(1.0f, MathHelper::Lerp(-1.0f, 1.0f, 1.0f), epsilon);
-	
+
 	EXPECT_NEAR(-0.5f, MathHelper::Lerp(-0.5f, 0.5f, 0.0f), epsilon);
 	EXPECT_NEAR(-0.3f, MathHelper::Lerp(-0.5f, 0.5f, 0.2f), epsilon);
 	EXPECT_NEAR(0.0f, MathHelper::Lerp(-0.5f, 0.5f, 0.5f), epsilon);
 	EXPECT_NEAR(0.3f, MathHelper::Lerp(-0.5f, 0.5f, 0.8f), epsilon);
 	EXPECT_NEAR(0.5f, MathHelper::Lerp(-0.5f, 0.5f, 1.0f), epsilon);
-	
+
 	EXPECT_LT(MathHelper::Lerp(0.0f, 1.0f, 0.0f), MathHelper::Lerp(0.0f, 1.0f, 0.1f));
 	EXPECT_LT(MathHelper::Lerp(0.0f, 1.0f, 0.1f), MathHelper::Lerp(0.0f, 1.0f, 0.2f));
 	EXPECT_LT(MathHelper::Lerp(0.0f, 1.0f, 0.2f), MathHelper::Lerp(0.0f, 1.0f, 0.3f));
@@ -87,7 +87,7 @@ TEST(MathHelper, Lerp)
 TEST(MathHelper, SmoothStep)
 {
 	constexpr auto epsilon = std::numeric_limits<float>::epsilon();
-	
+
 	EXPECT_NEAR(0.0f, MathHelper::SmoothStep(0.0f, 1.0f, 0.0f), epsilon);
 	EXPECT_NEAR(0.5f, MathHelper::SmoothStep(0.0f, 1.0f, 0.5f), epsilon);
 	EXPECT_NEAR(1.0f, MathHelper::SmoothStep(0.0f, 1.0f, 1.0f), epsilon);
@@ -95,11 +95,11 @@ TEST(MathHelper, SmoothStep)
 	EXPECT_NEAR(-1.0f, MathHelper::SmoothStep(-1.0f, 1.0f, 0.0f), epsilon);
 	EXPECT_NEAR(0.0f, MathHelper::SmoothStep(-1.0f, 1.0f, 0.5f), epsilon);
 	EXPECT_NEAR(1.0f, MathHelper::SmoothStep(-1.0f, 1.0f, 1.0f), epsilon);
-	
+
 	EXPECT_NEAR(-0.5f, MathHelper::SmoothStep(-0.5f, 0.5f, 0.0f), epsilon);
 	EXPECT_NEAR(0.0f, MathHelper::SmoothStep(-0.5f, 0.5f, 0.5f), epsilon);
 	EXPECT_NEAR(0.5f, MathHelper::SmoothStep(-0.5f, 0.5f, 1.0f), epsilon);
-	
+
 	EXPECT_LT(MathHelper::SmoothStep(0.0f, 1.0f, 0.0f), MathHelper::SmoothStep(0.0f, 1.0f, 0.1f));
 	EXPECT_LT(MathHelper::SmoothStep(0.0f, 1.0f, 0.1f), MathHelper::SmoothStep(0.0f, 1.0f, 0.2f));
 	EXPECT_LT(MathHelper::SmoothStep(0.0f, 1.0f, 0.2f), MathHelper::SmoothStep(0.0f, 1.0f, 0.3f));

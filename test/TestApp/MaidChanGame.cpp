@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "MaidChanGame.hpp"
@@ -20,16 +20,16 @@ void MaidChanGame::Initialize()
 	auto window = gameHost->Window();
 	window->Title("TestApp - Enjoy Game Dev, Have Fun.");
 	window->AllowPlayerResizing(true);
-	
+
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
 
 	{
 		samplerPoint = SamplerState::CreateLinearWrap(graphicsDevice);
-		
+
 		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 		graphicsContext->SetBlendState(blendState);
-		
+
 		texture = std::make_shared<Texture2D>(graphicsDevice,
 			1, 1, false, SurfaceFormat::R8G8B8A8_UNorm);
 		std::array<std::uint32_t, 1> pixelData = {0xffffffff};
@@ -51,7 +51,7 @@ void MaidChanGame::Initialize()
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
 		editorBackground = std::make_unique<SceneEditor::EditorBackground>(gameHost);
 	}
-	
+
 
 	{
 		mainCamera = gameWorld.CreateObject();
@@ -61,24 +61,24 @@ void MaidChanGame::Initialize()
 	{
 		auto textureAtlas = TexturePacker::TextureAtlasLoader::Load(*assets, "MaidChan/skeleton.atlas");
 		auto skeletonDesc = Spine::SkeletonDescLoader::Load(*assets, "MaidChan/skeleton.json");
-		
+
 		LogTexturePackerInfo(textureAtlas);
 		LogSkeletalInfo(skeletonDesc);
-		
+
 		maidSkeleton = std::make_shared<Skeleton>(Spine::CreateSkeleton(skeletonDesc.Bones));
 		maidSkeletonPose = std::make_shared<SkeletonPose>(SkeletonPose::CreateBindPose(*maidSkeleton));
 		auto animationClip = std::make_shared<AnimationClip>(Spine::CreateAnimationClip(skeletonDesc, "Walk"));
 		maidAnimationState = std::make_shared<AnimationState>(animationClip, 1.0f, true);
-		
+
 		maidGlobalPose = SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose);
-		
+
 		maidSkin = Spine::CreateSkin(skeletonDesc, textureAtlas, "default");
 		maidSpriteAnimationTracks = Spine::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
 		maidTexture = assets->Load<Texture2D>("MaidChan/skeleton.png");
-		
+
 		animationSystem.Add(maidAnimationState, maidSkeleton, maidSkeletonPose);
 	}
-	
+
 	{
 		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
 		scenePanel->cameraObject = mainCamera;
@@ -124,11 +124,11 @@ void MaidChanGame::Initialize()
 			stackPanel->AddChild(toggleSwitch4);
 		}
 	}
-	
+
 	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
 		graphicsContext->Viewport(Viewport{0, 0, width, height});
 		graphicsContext->ScissorRectangle(Rectangle{0, 0, width, height});
-	
+
 		renderTarget = std::make_shared<RenderTarget2D>(
 			gameHost->GraphicsDevice(), width, height,
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
@@ -148,7 +148,7 @@ void MaidChanGame::Update()
 	{
 		maidAnimationState->PlaybackRate(slider2->Value());
 	}
-	
+
 	if (toggleSwitch1->IsOn()) {
 		animationSystem.Update(*clock);
 	}
@@ -172,19 +172,19 @@ void MaidChanGame::DrawSprites()
 {
 	auto transform = mainCamera.Component<Transform2D>();
 	auto camera = mainCamera.Component<Camera2D>();
-		
+
 	POMDOG_ASSERT(transform && camera);
 	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
 	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 		graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
-	
+
 	editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 
 	POMDOG_ASSERT(spriteRenderer);
 	spriteRenderer->Begin(SpriteSortMode::BackToFront, viewMatrix);
-	
+
 	auto const& globalPoses = maidGlobalPose;
-	
+
 	if (toggleSwitch3->IsOn())
 	{
 		for (auto & joint: *maidSkeleton)
@@ -208,18 +208,18 @@ void MaidChanGame::DrawSprites()
 				slot.Origin, slot.Scale, (maidSkin.Slots().size() - slot.DrawOrder) / maidSkin.Slots().size());
 		}
 	}
-	
+
 	spriteRenderer->End();
-	
+
 	if (toggleSwitch4->IsOn())
 	{
 		RasterizerDescription rasterizerDesc;
 		rasterizerDesc.FillMode = FillMode::WireFrame;
 		auto rasterizerState = std::make_shared<RasterizerState>(gameHost->GraphicsDevice(), rasterizerDesc);
-		
+
 		graphicsContext->SetRasterizerState(rasterizerState);
 		spriteRenderer->Begin(SpriteSortMode::BackToFront, viewMatrix);
-		
+
 		for (auto & slot: maidSkin.Slots())
 		{
 			spriteRenderer->Draw(texture, globalPoses[*slot.JointIndex], slot.Translate, slot.Subrect,
@@ -227,7 +227,7 @@ void MaidChanGame::DrawSprites()
 				(slot.TextureRotate ? slot.Rotation - MathConstants<float>::PiOver2(): slot.Rotation),
 				slot.Origin, slot.Scale, (maidSkin.Slots().size() - slot.DrawOrder) / maidSkin.Slots().size());
 		}
-		
+
 		spriteRenderer->End();
 
 		graphicsContext->SetRasterizerState(RasterizerState::CreateCullCounterClockwise(gameHost->GraphicsDevice()));
@@ -241,15 +241,15 @@ void MaidChanGame::Draw()
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
-	
+
 	SceneEditor::EditorColorScheme colorScheme;
-	
+
 	graphicsContext->Clear(colorScheme.Background);
 	editorBackground->Draw(*graphicsContext);
-	
+
 	graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();
-	
+
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget();
 		graphicsContext->Clear(Color::CornflowerBlue);
@@ -257,7 +257,7 @@ void MaidChanGame::Draw()
 		fxaa->Apply(*graphicsContext);
 		screenQuad->DrawQuad(*graphicsContext);
 	}
-	
+
 	gameEditor->DrawGUI(*graphicsContext);
 	graphicsContext->Present();
 }

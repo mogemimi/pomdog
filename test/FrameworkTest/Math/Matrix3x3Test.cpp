@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include <Pomdog/Math/Matrix3x3.hpp>
@@ -33,7 +33,7 @@ TEST(Matrix3x3, FirstTestCase)
 	EXPECT_EQ(1.0f, matrix(2, 0));
 	EXPECT_EQ(1.0f, matrix(2, 1));
 	EXPECT_EQ(1.0f, matrix(2, 2));
-	
+
 	matrix = Matrix3x3 {
 		0.0f, 1.0f, 2.0f,
 		3.0f, 4.0f, 5.0f,
@@ -61,7 +61,7 @@ TEST(Matrix3x3, Identity)
 	EXPECT_EQ(0.0f, Matrix3x3::Identity(2, 0));
 	EXPECT_EQ(0.0f, Matrix3x3::Identity(2, 1));
 	EXPECT_EQ(1.0f, Matrix3x3::Identity(2, 2));
-	
+
 	Matrix3x3 matrix = Matrix3x3::Identity;
 	EXPECT_EQ(1.0f, matrix(0, 0));
 	EXPECT_EQ(0.0f, matrix(0, 1));
@@ -100,7 +100,7 @@ TEST(Matrix3x3, CreateScale)
 	EXPECT_EQ(0.0f, matrix(2, 0));
 	EXPECT_EQ(0.0f, matrix(2, 1));
 	EXPECT_EQ(5.0f, matrix(2, 2));
-	
+
 	matrix = Matrix3x3::CreateScale(7.0f);
 	EXPECT_EQ(7.0f, matrix(0, 0));
 	EXPECT_EQ(0.0f, matrix(0, 1));
@@ -120,7 +120,7 @@ TEST(Matrix3x3, CreateRotationX)
 	EXPECT_NEAR(std::sin(3.0f), matrix(1, 2), Epsilon);
 	EXPECT_NEAR(-std::sin(3.0f), matrix(2, 1), Epsilon);
 	EXPECT_NEAR(std::cos(3.0f), matrix(2, 2), Epsilon);
-	
+
 	EXPECT_EQ(1.0f, matrix(0, 0));
 	EXPECT_EQ(0.0f, matrix(0, 1));
 	EXPECT_EQ(0.0f, matrix(0, 2));
@@ -135,7 +135,7 @@ TEST(Matrix3x3, CreateRotationY)
 	EXPECT_NEAR(-std::sin(3.0f), matrix(0, 2), Epsilon);
 	EXPECT_NEAR(std::sin(3.0f), matrix(2, 0), Epsilon);
 	EXPECT_NEAR(std::cos(3.0f), matrix(2, 2), Epsilon);
-	
+
 	EXPECT_EQ(0.0f, matrix(0, 1));
 	EXPECT_EQ(0.0f, matrix(1, 0));
 	EXPECT_EQ(1.0f, matrix(1, 1));
@@ -150,7 +150,7 @@ TEST(Matrix3x3, CreateRotationZ)
 	EXPECT_NEAR(std::sin(3.0f), matrix(0, 1), Epsilon);
 	EXPECT_NEAR(-std::sin(3.0f), matrix(1, 0), Epsilon);
 	EXPECT_NEAR(std::cos(3.0f), matrix(1, 1), Epsilon);
-	
+
 	EXPECT_EQ(0.0f, matrix(0, 2));
 	EXPECT_EQ(0.0f, matrix(1, 2));
 	EXPECT_EQ(0.0f, matrix(2, 0));

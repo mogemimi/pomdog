@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include <Pomdog/Math/Matrix4x4.hpp>
@@ -39,7 +39,7 @@ TEST(Matrix4x4, FirstTestCase)
 	EXPECT_EQ(1.0f, matrix(3, 1));
 	EXPECT_EQ(1.0f, matrix(3, 2));
 	EXPECT_EQ(1.0f, matrix(3, 3));
-	
+
 	matrix = Matrix4x4 {
 		0.0f, 1.0f, 2.0f, 3.0f,
 		4.0f, 5.0f, 6.0f, 7.0f,
@@ -82,7 +82,7 @@ TEST(Matrix4x4, Identity)
 	EXPECT_EQ(0.0f, Matrix4x4::Identity(3, 1));
 	EXPECT_EQ(0.0f, Matrix4x4::Identity(3, 2));
 	EXPECT_EQ(1.0f, Matrix4x4::Identity(3, 3));
-	
+
 	Matrix4x4 matrix = Matrix4x4::Identity;
 	EXPECT_EQ(1.0f, matrix(0, 0));
 	EXPECT_EQ(0.0f, matrix(0, 1));
@@ -109,7 +109,7 @@ TEST(Matrix4x4, CreateTranslation)
 	EXPECT_EQ(4.0f, matrix(3, 1));
 	EXPECT_EQ(5.0f, matrix(3, 2));
 	EXPECT_EQ(1.0f, matrix(3, 3));
-	
+
 	EXPECT_EQ(1.0f, matrix(0, 0));
 	EXPECT_EQ(0.0f, matrix(0, 1));
 	EXPECT_EQ(0.0f, matrix(0, 2));
@@ -131,7 +131,7 @@ TEST(Matrix4x4, CreateScale)
 	EXPECT_EQ(4.0f, matrix(1, 1));
 	EXPECT_EQ(5.0f, matrix(2, 2));
 	EXPECT_EQ(1.0f, matrix(3, 3));
-	
+
 	EXPECT_EQ(0.0f, matrix(0, 1));
 	EXPECT_EQ(0.0f, matrix(0, 2));
 	EXPECT_EQ(0.0f, matrix(0, 3));
@@ -153,7 +153,7 @@ TEST(Matrix4x4, CreateRotationX)
 	EXPECT_NEAR(std::sin(3.0f), matrix(1, 2), Epsilon);
 	EXPECT_NEAR(-std::sin(3.0f), matrix(2, 1), Epsilon);
 	EXPECT_NEAR(std::cos(3.0f), matrix(2, 2), Epsilon);
-	
+
 	EXPECT_EQ(1.0f, matrix(0, 0));
 	EXPECT_EQ(0.0f, matrix(0, 1));
 	EXPECT_EQ(0.0f, matrix(0, 2));
@@ -175,7 +175,7 @@ TEST(Matrix4x4, CreateRotationY)
 	EXPECT_NEAR(-std::sin(3.0f), matrix(0, 2), Epsilon);
 	EXPECT_NEAR(std::sin(3.0f), matrix(2, 0), Epsilon);
 	EXPECT_NEAR(std::cos(3.0f), matrix(2, 2), Epsilon);
-	
+
 	EXPECT_EQ(0.0f, matrix(0, 1));
 	EXPECT_EQ(0.0f, matrix(0, 3));
 	EXPECT_EQ(0.0f, matrix(1, 0));
@@ -197,7 +197,7 @@ TEST(Matrix4x4, CreateRotationZ)
 	EXPECT_NEAR(std::sin(3.0f), matrix(0, 1), Epsilon);
 	EXPECT_NEAR(-std::sin(3.0f), matrix(1, 0), Epsilon);
 	EXPECT_NEAR(std::cos(3.0f), matrix(1, 1), Epsilon);
-	
+
 	EXPECT_EQ(0.0f, matrix(0, 2));
 	EXPECT_EQ(0.0f, matrix(0, 3));
 	EXPECT_EQ(0.0f, matrix(1, 2));

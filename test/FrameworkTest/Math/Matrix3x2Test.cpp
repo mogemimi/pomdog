@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include <Pomdog/Math/Matrix3x2.hpp>
@@ -29,7 +29,7 @@ TEST(Matrix3x2, FirstTestCase)
 	EXPECT_EQ(1.0f, matrix(1, 1));
 	EXPECT_EQ(1.0f, matrix(2, 0));
 	EXPECT_EQ(1.0f, matrix(2, 1));
-	
+
 	matrix = Matrix3x2 {
 		0.0f, 1.0f,
 		3.0f, 4.0f,
@@ -51,7 +51,7 @@ TEST(Matrix3x2, Identity)
 	EXPECT_EQ(1.0f, Matrix3x2::Identity(1, 1));
 	EXPECT_EQ(0.0f, Matrix3x2::Identity(2, 0));
 	EXPECT_EQ(0.0f, Matrix3x2::Identity(2, 1));
-	
+
 	Matrix3x2 matrix = Matrix3x2::Identity;
 	EXPECT_EQ(1.0f, matrix(0, 0));
 	EXPECT_EQ(0.0f, matrix(0, 1));
@@ -65,7 +65,7 @@ TEST(Matrix3x2, Add)
 {
 	auto matrix1 = Matrix3x2::CreateTranslation({3.0f, 4.0f});
 	auto matrix2 = Matrix3x2::CreateTranslation({5.0f, 2.0f});
-	
+
 	auto matrix = matrix1 + matrix2;
 	EXPECT_EQ(2.0f, matrix(0, 0));
 	EXPECT_EQ(0.0f, matrix(0, 1));
@@ -79,7 +79,7 @@ TEST(Matrix3x2, Subtract)
 {
 	auto matrix1 = Matrix3x2::CreateTranslation({5.0f, 4.0f});
 	auto matrix2 = Matrix3x2::CreateTranslation({2.0f, 3.0f});
-	
+
 	auto matrix = matrix1 - matrix2;
 	EXPECT_EQ(0.0f, matrix(0, 0));
 	EXPECT_EQ(0.0f, matrix(0, 1));
@@ -109,7 +109,7 @@ TEST(Matrix3x2, CreateScale)
 	EXPECT_EQ(4.0f, matrix(1, 1));
 	EXPECT_EQ(0.0f, matrix(2, 0));
 	EXPECT_EQ(0.0f, matrix(2, 1));
-	
+
 	matrix = Matrix3x2::CreateScale(7.0f);
 	EXPECT_EQ(7.0f, matrix(0, 0));
 	EXPECT_EQ(0.0f, matrix(0, 1));

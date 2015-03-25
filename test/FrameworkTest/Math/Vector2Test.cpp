@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include <Pomdog/Math/Vector2.hpp>
@@ -11,7 +11,7 @@ TEST(Vector2, TrivialCase)
 	Vector2 vec {0, 0};
 	EXPECT_EQ(vec.X, 0.0f);
 	EXPECT_EQ(vec.Y, 0.0f);
-	
+
 	vec = {1, 2};
 	EXPECT_EQ(vec.X, 1.0f);
 	EXPECT_EQ(vec.Y, 2.0f);
@@ -31,7 +31,7 @@ TEST(Vector2, Subtraction)
 TEST(Vector2, Multiply)
 {
 	Vector2 const result(4.0f * 3.0f, 7.0f * 3.0f);
-	
+
 	EXPECT_EQ(result, Vector2(4, 7) * 3);
 	EXPECT_EQ(result, Vector2(4, 7) * Vector2(3, 3));
 	EXPECT_EQ(result, Vector2(3, 3) * Vector2(4, 7));

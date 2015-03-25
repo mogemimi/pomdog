@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include <Pomdog/Input/Keys.hpp>
@@ -12,7 +12,7 @@ TEST(Keys, None)
 	static_assert(std::is_same<std::uint8_t, typename std::underlying_type<Keys>::type>::value,
 		"Keys is std::uint8_t.");
 	EXPECT_EQ(0, static_cast<std::uint8_t>(Keys::None));
-	
+
 	EXPECT_TRUE(Keys::None != Keys::A);
 	EXPECT_TRUE(Keys::None != Keys::B);
 	EXPECT_TRUE(Keys::None != Keys::C);
@@ -40,4 +40,3 @@ TEST(Keys, None)
 	EXPECT_TRUE(Keys::None != Keys::Y);
 	EXPECT_TRUE(Keys::None != Keys::Z);
 }
-

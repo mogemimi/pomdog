@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "LogSkeletalInfo.hpp"
@@ -12,12 +12,12 @@ void LogTexturePackerInfo(TexturePacker::TextureAtlas const& textureAtlas)
 {
 	Log::Info(StringFormat("TextureAtlas.Pages = %ld", textureAtlas.pages.size()));
 	Log::Info(StringFormat("TextureAtlas.Regions = %ld", textureAtlas.regions.size()));
-	
+
 	for (auto page: textureAtlas.pages)
 	{
 		Log::Info(StringFormat("Page.Name = %s", page.Name.c_str()));
 	}
-	
+
 	for (auto region: textureAtlas.regions)
 	{
 		Log::Info(StringFormat("Region.Name = %s", region.Name.c_str()));
@@ -28,7 +28,7 @@ void LogTexturePackerInfo(TexturePacker::TextureAtlas const& textureAtlas)
 		Log::Info(StringFormat("  Region.Offset = %d %d", (int)region.Region.XOffset, (int)region.Region.YOffset));
 		Log::Info(StringFormat("  Region.OriginalSize = %d %d", (int)region.Region.Width, (int)region.Region.Height));
 	}
-	
+
 	Log::Info("-------------------------");
 }
 //-----------------------------------------------------------------------
@@ -44,7 +44,7 @@ void LogSkeletalInfo(Spine::SkeletonDesc const& skeletonDesc)
 		Log::Info(StringFormat("  Bone.Scale = %f", bone.Pose.Scale));
 		++boneIndex;
 	}
-	
+
 	Log::Info("-------------------------");
 	for (auto & animationClip: skeletonDesc.AnimationClips)
 	{

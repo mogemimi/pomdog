@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include <Pomdog/Math/Point3D.hpp>
@@ -12,12 +12,12 @@ TEST(Point3D, FirstTestCase)
 	EXPECT_EQ(coodinate.X, 0);
 	EXPECT_EQ(coodinate.Y, 0);
 	EXPECT_EQ(coodinate.Z, 0);
-	
+
 	coodinate = {1, 2, 3};
 	EXPECT_EQ(coodinate.X, 1);
 	EXPECT_EQ(coodinate.Y, 2);
 	EXPECT_EQ(coodinate.Z, 3);
-	
+
 	coodinate = {
 		std::numeric_limits<int>::max(),
 		std::numeric_limits<int>::min(),
@@ -43,7 +43,7 @@ TEST(Point3D, Subtraction)
 TEST(Point3D, Multiply)
 {
 	Point3D const coordinate{3, 4, 5};
-	
+
 	EXPECT_EQ(Point3D(9, 16, 25), coordinate * coordinate);
 	EXPECT_EQ(Point3D(6, 8, 10), coordinate * 2);
 	EXPECT_EQ(Point3D(6, 8, 10), 2 * coordinate);
@@ -52,7 +52,7 @@ TEST(Point3D, Multiply)
 TEST(Point3D, Division)
 {
 	Point3D const coordinate{6, 8, 10};
-	
+
 	EXPECT_EQ(Point3D(1, 1, 1), coordinate / coordinate);
 	EXPECT_EQ(Point3D(3, 4, 5), coordinate / 2);
 }

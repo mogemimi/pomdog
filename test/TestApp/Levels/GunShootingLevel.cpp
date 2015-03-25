@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "GunShootingLevel.hpp"
@@ -9,7 +9,7 @@ namespace {
 
 class Ghost: public Component<Ghost> {
 public:
-	
+
 };
 
 void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const& graphicsDevice,
@@ -17,7 +17,7 @@ void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const
 {
 	auto skeletonDesc = Spine::SkeletonDescLoader::Load(assets, "MaidGun/MaidGun.json");
 	TestApp::LogSkeletalInfo(skeletonDesc);
-	
+
 	auto skeleton = std::make_shared<Skeleton>(Spine::CreateSkeleton(skeletonDesc.Bones));
 
 	auto skeletonTransform = std::make_shared<SkeletonTransform>();
@@ -30,7 +30,7 @@ void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const
 	{
 		auto textureAtlas = TexturePacker::TextureAtlasLoader::Load(assets, "MaidGun/MaidGun.atlas");
 		auto texture = assets.Load<Texture2D>("MaidGun/MaidGun.png");
-	
+
 		TestApp::LogTexturePackerInfo(textureAtlas);
 
 		auto bindPose = SkeletonPose::CreateBindPose(*skeleton);
@@ -83,13 +83,13 @@ GunShootingLevel::GunShootingLevel(GameHost & gameHost, GameWorld & world)
 	{
 		auto skeletonDesc = Spine::SkeletonDescLoader::Load(*assets, "Ghost/Ghost.json");
 		TestApp::LogSkeletalInfo(skeletonDesc);
-		
+
 		ghostSkeleton = std::make_shared<Skeleton>(Spine::CreateSkeleton(skeletonDesc.Bones));
 		ghostAnimGraph = Spine::LoadAnimationGraph(skeletonDesc, *assets, "Ghost/AnimationGraph.json");
 		{
 			auto textureAtlas = TexturePacker::TextureAtlasLoader::Load(*assets, "Ghost/Ghost.atlas");
 			TestApp::LogTexturePackerInfo(textureAtlas);
-			
+
 			ghostTexture = assets->Load<Texture2D>("Ghost/Ghost.png");
 
 			auto bindPose = SkeletonPose::CreateBindPose(*ghostSkeleton);
@@ -111,20 +111,20 @@ void GunShootingLevel::Update(GameHost & gameHost, GameWorld & world)
 	{
 		auto graphicsDevice = gameHost.GraphicsDevice();
 		auto assets = gameHost.AssetManager();
-	
+
 		for (int i = 0; i < 5; ++i)
 		{
 			auto gameObject = world.CreateObject();
 			auto & transform = gameObject.AddComponent<Transform2D>();
 			transform.Position = {600.0f, 150.0f * i + 70.0f};
-			
+
 			auto skeletonTransform = std::make_shared<SkeletonTransform>();
 			skeletonTransform->Pose = SkeletonPose::CreateBindPose(*ghostSkeleton);
 			skeletonTransform->GlobalPose = SkeletonHelper::ToGlobalPose(*ghostSkeleton, skeletonTransform->Pose);
 			gameObject.AddComponent(std::make_unique<Animator>(ghostSkeleton, skeletonTransform, ghostAnimGraph));
 			gameObject.AddComponent(std::make_unique<SkinnedMeshRenderable>(
 				ghostSkeleton, skeletonTransform, ghostMesh, ghostTexture));
-			
+
 			gameObject.AddComponent<Ghost>();
 		}
 		spawnTime = Duration::zero();
@@ -134,7 +134,7 @@ void GunShootingLevel::Update(GameHost & gameHost, GameWorld & world)
 	{
 		auto transform = ghost.Component<Transform2D>();
 		transform->Position.X -= 200.0f * frameDuration.count();
-		
+
 		if (transform->Position.X < -300.0f)
 		{
 			ghost.Destroy();
@@ -143,7 +143,7 @@ void GunShootingLevel::Update(GameHost & gameHost, GameWorld & world)
 
 //	{
 //		auto keyboard = gameHost->Keyboard();
-//		
+//
 //		if (auto transform = maid->Component<Transform2D>())
 //		{
 //			Vector2 velocity = Vector2::Zero;
@@ -160,7 +160,7 @@ void GunShootingLevel::Update(GameHost & gameHost, GameWorld & world)
 //			if (keyboard->State().IsKeyDown(Keys::S)) {
 //				velocity.Y -= 50.0f;
 //			}
-//			
+//
 //			transform->Position = transform->Position + (velocity * clock->FrameDuration().count());
 //		}
 //	}
@@ -169,7 +169,7 @@ void GunShootingLevel::Update(GameHost & gameHost, GameWorld & world)
 //	{
 //		animator->PlaybackRate(slider1->Value());
 //		animator->SetFloat("Run.Weight", slider2->Value());
-//		
+//
 //		if (!toggleSwitch1->IsOn()) {
 //			animator->PlaybackRate(0.0f);
 //		}
@@ -178,14 +178,14 @@ void GunShootingLevel::Update(GameHost & gameHost, GameWorld & world)
 //	if (auto renderable = maid.Component<Renderable>())
 //	{
 //		renderable->IsVisible = toggleSwitch2->IsOn();
-//		
+//
 ////		if (toggleSwitch3->IsOn()) {
 ////			renderer->SkeletonDebugDrawEnable = true;
 ////		}
 ////		else {
 ////			renderer->SkeletonDebugDrawEnable = false;
 ////		}
-////		
+////
 ////		if (toggleSwitch4->IsOn()) {
 ////			renderer->MeshWireframeEnable = true;
 ////		}

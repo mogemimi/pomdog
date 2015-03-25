@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include <Pomdog/Event/EventConnection.hpp>
@@ -21,7 +21,7 @@ struct EventQueueTest: public ::testing::Test
 	{
 		integers.clear();
 		names.clear();
-		
+
 		slot = [&](Event const& event) {
 			ASSERT_TRUE(event.Is<int>());
 			integers.push_back(*event.As<int>());
@@ -39,7 +39,7 @@ TEST_F(EventQueueTest, InvokeInt)
 	eventQueue.Enqueue<int>(43);
 	eventQueue.Enqueue<int>(44);
 	ASSERT_TRUE(integers.empty());
-	
+
 	eventQueue.Tick();
 	ASSERT_EQ(3, integers.size());
 	EXPECT_EQ(42, integers[0]);
@@ -67,7 +67,7 @@ TEST_F(EventQueueTest, InvokePODStruct)
 	eventQueue.Enqueue<User>("Goofy", 43);
 	ASSERT_TRUE(names.empty());
 	ASSERT_TRUE(integers.empty());
-	
+
 	eventQueue.Tick();
 	ASSERT_EQ(2, names.size());
 	EXPECT_EQ("Donald", names[0]);
@@ -84,7 +84,7 @@ TEST_F(EventQueueTest, Disconnect)
 
 	eventQueue.Enqueue<int>(42);
 	ASSERT_TRUE(integers.empty());
-	
+
 	connection.Disconnect();
 	eventQueue.Tick();
 	ASSERT_TRUE(integers.empty());
@@ -99,7 +99,7 @@ TEST_F(EventQueueTest, Conenct)
 
 	eventQueue.Enqueue<int>(42);
 	ASSERT_TRUE(integers.empty());
-	
+
 	eventQueue.Tick();
 	ASSERT_EQ(3, integers.size());
 	EXPECT_EQ(42, integers[0]);
@@ -113,15 +113,15 @@ TEST_F(EventQueueTest, RecursiveConnection)
 	auto connection = eventQueue.Connect([&](Event const&) {
 		eventQueue.Connect(slot);
 	});
-	
+
 	eventQueue.Enqueue<int>(42);
 	ASSERT_TRUE(integers.empty());
 	eventQueue.Tick();
 	ASSERT_TRUE(integers.empty());
-	
+
 	eventQueue.Enqueue<int>(43);
 	ASSERT_TRUE(integers.empty());
-	
+
 	eventQueue.Tick();
 	ASSERT_EQ(1, integers.size());
 	EXPECT_EQ(43, integers[0]);
@@ -135,13 +135,13 @@ TEST_F(EventQueueTest, CallingDisconnect)
 		slot(event);
 		connection.Disconnect();
 	});
-	
+
 	eventQueue.Enqueue<int>(42);
 	ASSERT_TRUE(integers.empty());
 	eventQueue.Tick();
 	ASSERT_EQ(1, integers.size());
 	EXPECT_EQ(42, integers[0]);
-	
+
 	integers.clear();
 	eventQueue.Enqueue<int>(43);
 	ASSERT_TRUE(integers.empty());

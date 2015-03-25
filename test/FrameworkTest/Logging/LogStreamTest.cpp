@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Logging/LogLevel.hpp"
@@ -20,17 +20,17 @@ TEST(LogStream, LogStreamFlush)
 {
 	LogChannel channel("test");
 	LogStream stream(channel, LogLevel::Critical);
-	
+
 	std::string message;
 	auto connection = channel.Connect([&message](LogEntry const& entry){
 		message = entry.Message;
 	});
-	
+
 	message.clear();
 	stream << "Chuck " << "Norris " << "Approval.";
 	stream.Flush();
 	EXPECT_EQ(message, "Chuck Norris Approval.");
-	
+
 	message.clear();
 	stream << "Chuck ";
 	stream << "Norris ";
@@ -46,12 +46,12 @@ TEST(LogStream, EnumerationToString)
 {
 	LogChannel channel("test");
 	LogStream stream(channel, LogLevel::Critical);
-	
+
 	std::string message;
 	auto connection = channel.Connect([&message](LogEntry const& entry){
 		message = entry.Message;
 	});
-	
+
 	enum class Numbers: int
 	{
 		Zero = 0,
@@ -60,27 +60,27 @@ TEST(LogStream, EnumerationToString)
 		Three = 3,
 		TheAnswerToLifeTheUniverseAndEverything = 42,
 	};
-	
+
 	message.clear();
 	stream << Numbers::Zero;
 	stream.Flush();
 	EXPECT_EQ(message, "0");
-	
+
 	message.clear();
 	stream << Numbers::One;
 	stream.Flush();
 	EXPECT_EQ(message, "1");
-	
+
 	message.clear();
 	stream << Numbers::Two;
 	stream.Flush();
 	EXPECT_EQ(message, "2");
-	
+
 	message.clear();
 	stream << Numbers::Three;
 	stream.Flush();
 	EXPECT_EQ(message, "3");
-	
+
 	message.clear();
 	stream << Numbers::TheAnswerToLifeTheUniverseAndEverything;
 	stream.Flush();
@@ -91,7 +91,7 @@ TEST(LogStream, CopyConstrunctor)
 {
 	LogChannel channel("test");
 	std::string message;
-	
+
 	auto connection = channel.Connect([&message](LogEntry const& entry){
 		message = entry.Message;
 	});
@@ -99,7 +99,7 @@ TEST(LogStream, CopyConstrunctor)
 	LogStream stream(channel, LogLevel::Critical);
 	stream << "Chuck ";
 	EXPECT_TRUE(message.empty());
-	
+
 	Pomdog::LogStream stream2 = stream;
 	stream2 << "Norris";
 	stream2.Flush();
@@ -110,7 +110,7 @@ TEST(LogStream, MoveConstrunctor)
 {
 	LogChannel channel("test");
 	std::string message;
-	
+
 	auto connection = channel.Connect([&message](LogEntry const& entry){
 		message = entry.Message;
 	});

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013-2015 mogemimi.
+// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "GrassBlendingGame.hpp"
@@ -20,16 +20,16 @@ void GrassBlendingGame::Initialize()
 	auto window = gameHost->Window();
 	window->Title("TestApp - Enjoy Game Dev, Have Fun.");
 	window->AllowPlayerResizing(true);
-	
+
 	auto graphicsDevice = gameHost->GraphicsDevice();
 	auto assets = gameHost->AssetManager();
 
 	{
 		samplerPoint = SamplerState::CreateLinearWrap(graphicsDevice);
-		
+
 		auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
 		graphicsContext->SetBlendState(blendState);
-		
+
 		texture = std::make_shared<Texture2D>(graphicsDevice,
 			1, 1, false, SurfaceFormat::R8G8B8A8_UNorm);
 		std::array<std::uint32_t, 1> pixelData = {0xffffffff};
@@ -52,7 +52,7 @@ void GrassBlendingGame::Initialize()
 		gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
 		editorBackground = std::make_unique<SceneEditor::EditorBackground>(gameHost);
 	}
-	
+
 	{
 		mainCamera = gameWorld.CreateObject();
 		mainCamera.AddComponent<Transform2D>();
@@ -62,19 +62,19 @@ void GrassBlendingGame::Initialize()
 		auto textureAtlas = TexturePacker::TextureAtlasLoader::Load(*assets, "MaidChan2/skeleton.atlas");
 		auto skeletonDesc = Spine::SkeletonDescLoader::Load(*assets, "MaidChan2/skeleton.json");
 		maidTexture = assets->Load<Texture2D>("MaidChan2/skeleton.png");
-		
+
 		LogTexturePackerInfo(textureAtlas);
 		LogSkeletalInfo(skeletonDesc);
-		
+
 		maidSkeleton = std::make_shared<Skeleton>(Spine::CreateSkeleton(skeletonDesc.Bones));
 		maidSkeletonPose = std::make_shared<SkeletonPose>(SkeletonPose::CreateBindPose(*maidSkeleton));
 		auto animationClip = std::make_shared<AnimationClip>(Spine::CreateAnimationClip(skeletonDesc, "Walk"));
 		maidAnimationState = std::make_shared<AnimationState>(animationClip, 1.0f, true);
 		maidAnimationClipIdle = std::make_shared<AnimationClip>(Spine::CreateAnimationClip(skeletonDesc, "Idle"));
-		
+
 		maidSkin = Spine::CreateSkin(skeletonDesc, textureAtlas, "default");
 		maidSpriteAnimationTracks = Spine::CreateSpriteAnimationTrack(skeletonDesc, textureAtlas, "Walk");
-		
+
 		animationSystem.Add(maidAnimationState, maidSkeleton, maidSkeletonPose);
 
 		maidGlobalPose = SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose);
@@ -87,7 +87,7 @@ void GrassBlendingGame::Initialize()
 			Vector2(maidTexture->Width(), maidTexture->Height()), "default");
 		maidSkinningEffect = std::make_unique<SkinnedEffect>(*graphicsDevice);
 	}
-	
+
 	{
 		scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
 		scenePanel->cameraObject = mainCamera;
@@ -135,11 +135,11 @@ void GrassBlendingGame::Initialize()
 			stackPanel->AddChild(toggleSwitch4);
 		}
 	}
-	
+
 	clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
 		graphicsContext->Viewport(Viewport{0, 0, width, height});
 		graphicsContext->ScissorRectangle(Rectangle{0, 0, width, height});
-		
+
 		renderTarget = std::make_shared<RenderTarget2D>(
 			gameHost->GraphicsDevice(), width, height,
 			false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
@@ -159,23 +159,23 @@ void GrassBlendingGame::Update()
 	{
 		maidAnimationState->PlaybackRate(slider1->Value());
 	}
-	
+
 	if (toggleSwitch1->IsOn())
 	{
 		animationSystem.Update(*clock);
-		
+
 		SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose, maidGlobalPose);
-	
+
 		{
 //			///@note Test code for animation blending
 //			auto clipNode1 = std::make_unique<AnimationClipNode>(maidAnimationState->Clip());
 //			auto clipNode2 = std::make_unique<AnimationClipNode>(maidAnimationClipIdle);
-//		
+//
 //			auto lerpNode = std::make_unique<AnimationLerpNode>(std::move(clipNode1), std::move(clipNode2));
 //			lerpNode->Weight(slider2->Value());
-//			
+//
 //			lerpNode->Calculate(maidAnimationState->Time(), *maidSkeleton, *maidSkeletonPose);
-			
+
 			SkeletonHelper::ToGlobalPose(*maidSkeleton, *maidSkeletonPose, maidGlobalPose);
 		}
 	}
@@ -197,7 +197,7 @@ void GrassBlendingGame::DrawSprites()
 {
 	auto transform = mainCamera.Component<Transform2D>();
 	auto camera = mainCamera.Component<Camera2D>();
-		
+
 	POMDOG_ASSERT(transform && camera);
 	auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
 	auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
@@ -207,11 +207,11 @@ void GrassBlendingGame::DrawSprites()
 	polygonBatch->Begin(viewMatrix * projectionMatrix);
 
 	auto const& globalPoses = maidGlobalPose;
-	
+
 	if (toggleSwitch3->IsOn())
 	{
 		Color boneColor {160, 160, 160, 255};
-	
+
 		for (auto & joint: *maidSkeleton)
 		{
 			auto & matrix = globalPoses[*joint.Index];
@@ -223,13 +223,13 @@ void GrassBlendingGame::DrawSprites()
 					Vector2::Transform({1.7f, 4.7f}, matrix),
 					Vector2::Transform({25, 0}, matrix), boneColor);
 			}
-			
+
 			auto center = Vector2::Transform(Vector2::Zero, matrix);
 			polygonBatch->DrawCircle(center, 5.0f, boneColor, 18);
 			polygonBatch->DrawCircle(center, 3.0f, Color::White, 13);
 		}
 	}
-	
+
 	polygonBatch->End();
 }
 //-----------------------------------------------------------------------
@@ -238,12 +238,12 @@ void GrassBlendingGame::DrawSkinnedMesh()
 	{
 		auto transform = mainCamera.Component<Transform2D>();
 		auto camera = mainCamera.Component<Camera2D>();
-		
+
 		POMDOG_ASSERT(transform && camera);
 		auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
 		auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 			graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
-		
+
 		maidSkinningEffect->SetWorldViewProjection(viewMatrix * projectionMatrix);
 
 		std::array<Matrix3x2, 64> matrices;
@@ -259,7 +259,7 @@ void GrassBlendingGame::DrawSkinnedMesh()
 		maidSkinningEffect->SetBoneTransforms(matrices.data(), matrices.size());
 		maidSkinningEffect->SetTexture(maidTexture);
 	}
-	
+
 	if (toggleSwitch2->IsOn())
 	{
 		graphicsContext->SetVertexBuffer(maidSkinnedMesh.VertexBuffer);
@@ -267,21 +267,21 @@ void GrassBlendingGame::DrawSkinnedMesh()
 		graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList,
 			maidSkinnedMesh.IndexBuffer, maidSkinnedMesh.IndexBuffer->IndexCount());
 	}
-	
+
 	if (toggleSwitch4->IsOn())
 	{
 		RasterizerDescription rasterizerDesc;
 		rasterizerDesc.FillMode = FillMode::WireFrame;
 		auto rasterizerState = std::make_shared<RasterizerState>(gameHost->GraphicsDevice(), rasterizerDesc);
-		
+
 		graphicsContext->SetRasterizerState(rasterizerState);
-		
+
 		maidSkinningEffect->SetTexture(texture);
 		graphicsContext->SetVertexBuffer(maidSkinnedMesh.VertexBuffer);
 		maidSkinningEffect->Apply(*graphicsContext);
 		graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList,
 									 maidSkinnedMesh.IndexBuffer, maidSkinnedMesh.IndexBuffer->IndexCount());
-		
+
 		graphicsContext->SetRasterizerState(RasterizerState::CreateCullCounterClockwise(gameHost->GraphicsDevice()));
 	}
 }
@@ -293,17 +293,17 @@ void GrassBlendingGame::Draw()
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget(renderTarget);
 	}
-	
+
 	graphicsContext->Clear(Color::CornflowerBlue);
 	{
 		auto transform = mainCamera.Component<Transform2D>();
 		auto camera = mainCamera.Component<Camera2D>();
-			
+
 		POMDOG_ASSERT(transform && camera);
 		auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
 		auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
 			graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
-		
+
 		editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 	}
 	editorBackground->Draw(*graphicsContext);
@@ -311,7 +311,7 @@ void GrassBlendingGame::Draw()
 	graphicsContext->SetSamplerState(0, samplerPoint);
 	DrawSprites();
 	DrawSkinnedMesh();
-	
+
 	if (enableFxaa) {
 		graphicsContext->SetRenderTarget();
 		graphicsContext->Clear(Color::CornflowerBlue);
