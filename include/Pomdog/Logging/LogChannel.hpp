@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_LOGCHANNEL_4C388D05_4E15_4A29_8E76_D0A535C514F5_HPP
-#define POMDOG_LOGCHANNEL_4C388D05_4E15_4A29_8E76_D0A535C514F5_HPP
+#ifndef POMDOG_LOGCHANNEL_4C388D05_HPP
+#define POMDOG_LOGCHANNEL_4C388D05_HPP
 
 #include "LogLevel.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -48,4 +48,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_LOGCHANNEL_4C388D05_4E15_4A29_8E76_D0A535C514F5_HPP)
+#endif // POMDOG_LOGCHANNEL_4C388D05_HPP

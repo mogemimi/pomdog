@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_CULLMODE_DBEE9F5F_6FD8_4B0A_BED4_064A6635E957_HPP
-#define POMDOG_CULLMODE_DBEE9F5F_6FD8_4B0A_BED4_064A6635E957_HPP
+#ifndef POMDOG_CULLMODE_DBEE9F5F_HPP
+#define POMDOG_CULLMODE_DBEE9F5F_HPP
 
 #include <cstdint>
 
@@ -18,4 +18,4 @@ enum class CullMode: std::uint8_t {
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_CULLMODE_DBEE9F5F_6FD8_4B0A_BED4_064A6635E957_HPP)
+#endif // POMDOG_CULLMODE_DBEE9F5F_HPP

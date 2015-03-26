@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SOUNDEFFECT_0793F2D9_5D45_44A0_BA2A_66B75D99D015_HPP
-#define POMDOG_SOUNDEFFECT_0793F2D9_5D45_44A0_BA2A_66B75D99D015_HPP
+#ifndef POMDOG_SOUNDEFFECT_0793F2D9_HPP
+#define POMDOG_SOUNDEFFECT_0793F2D9_HPP
 
 #include "detail/ForwardDeclarations.hpp"
 #include "SoundState.hpp"
@@ -66,4 +66,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SOUNDEFFECT_0793F2D9_5D45_44A0_BA2A_66B75D99D015_HPP)
+#endif // POMDOG_SOUNDEFFECT_0793F2D9_HPP

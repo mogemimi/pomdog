@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_INDEXBUFFERDIRECT3D11_94E97F4A_C7E4_4128_9B93_BB47AFF63697_HPP
-#define POMDOG_INDEXBUFFERDIRECT3D11_94E97F4A_C7E4_4128_9B93_BB47AFF63697_HPP
+#ifndef POMDOG_INDEXBUFFERDIRECT3D11_94E97F4A_HPP
+#define POMDOG_INDEXBUFFERDIRECT3D11_94E97F4A_HPP
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeIndexBuffer.hpp"
@@ -40,4 +40,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_INDEXBUFFERDIRECT3D11_94E97F4A_C7E4_4128_9B93_BB47AFF63697_HPP)
+#endif // POMDOG_INDEXBUFFERDIRECT3D11_94E97F4A_HPP

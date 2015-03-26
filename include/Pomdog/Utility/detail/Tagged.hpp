@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_DETAIL_TAGGED_1B3449F5_9833_496C_A481_71FB7536CBF5_HPP
-#define POMDOG_DETAIL_TAGGED_1B3449F5_9833_496C_A481_71FB7536CBF5_HPP
+#ifndef POMDOG_TAGGED_1B3449F5_HPP
+#define POMDOG_TAGGED_1B3449F5_HPP
 
 #include "Pomdog/Basic/Export.hpp"
 #include <type_traits>
@@ -79,4 +79,4 @@ struct hash<Pomdog::Detail::Tagged<T, U>> {
 
 }// namespace std
 
-#endif // !defined(POMDOG_DETAIL_TAGGED_1B3449F5_9833_496C_A481_71FB7536CBF5_HPP)
+#endif // POMDOG_TAGGED_1B3449F5_HPP

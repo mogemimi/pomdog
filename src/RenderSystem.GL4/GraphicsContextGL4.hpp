@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_GRAPHICSCONTEXTGL4_1FF90EA8_4C6A_47DE_A12F_27CA348E4932_HPP
-#define POMDOG_GRAPHICSCONTEXTGL4_1FF90EA8_4C6A_47DE_A12F_27CA348E4932_HPP
+#ifndef POMDOG_GRAPHICSCONTEXTGL4_1FF90EA8_HPP
+#define POMDOG_GRAPHICSCONTEXTGL4_1FF90EA8_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
@@ -116,4 +116,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_GRAPHICSCONTEXTGL4_1FF90EA8_4C6A_47DE_A12F_27CA348E4932_HPP)
+#endif // POMDOG_GRAPHICSCONTEXTGL4_1FF90EA8_HPP

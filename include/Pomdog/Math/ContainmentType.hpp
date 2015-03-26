@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_CONTAINMENTTYPE_21BFFFDA_D1CD_4222_B556_0EFF89954D5D_HPP
-#define POMDOG_CONTAINMENTTYPE_21BFFFDA_D1CD_4222_B556_0EFF89954D5D_HPP
+#ifndef POMDOG_CONTAINMENTTYPE_21BFFFDA_HPP
+#define POMDOG_CONTAINMENTTYPE_21BFFFDA_HPP
 
 #include <cstdint>
 
@@ -18,4 +18,4 @@ enum class ContainmentType: std::uint8_t {
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_CONTAINMENTTYPE_21BFFFDA_D1CD_4222_B556_0EFF89954D5D_HPP)
+#endif // POMDOG_CONTAINMENTTYPE_21BFFFDA_HPP

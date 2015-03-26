@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_AUDIOENGINEXAUDIO2_349E822E_8912_46FC_B085_7F3B02738901_HPP
-#define POMDOG_AUDIOENGINEXAUDIO2_349E822E_8912_46FC_B085_7F3B02738901_HPP
+#ifndef POMDOG_AUDIOENGINEXAUDIO2_349E822E_HPP
+#define POMDOG_AUDIOENGINEXAUDIO2_349E822E_HPP
 
 #include "PrerequisitesXAudio2.hpp"
 #include <wrl/client.h>
@@ -34,4 +34,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_AUDIOENGINEXAUDIO2_349E822E_8912_46FC_B085_7F3B02738901_HPP)
+#endif // POMDOG_AUDIOENGINEXAUDIO2_349E822E_HPP

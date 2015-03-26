@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_KEYS_13ECB5F8_A30A_4388_8785_2CDBD108AC25_HPP
-#define POMDOG_KEYS_13ECB5F8_A30A_4388_8785_2CDBD108AC25_HPP
+#ifndef POMDOG_KEYS_13ECB5F8_HPP
+#define POMDOG_KEYS_13ECB5F8_HPP
 
 #include <cstdint>
 
@@ -405,4 +405,4 @@ enum class Keys: std::uint8_t {
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_KEYS_13ECB5F8_A30A_4388_8785_2CDBD108AC25_HPP)
+#endif // POMDOG_KEYS_13ECB5F8_HPP

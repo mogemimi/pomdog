@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_ASSETDICTIONARY_8088231B_F800_4D65_A75E_0160C4ED42B8_HPP
-#define POMDOG_ASSETDICTIONARY_8088231B_F800_4D65_A75E_0160C4ED42B8_HPP
+#ifndef POMDOG_ASSETDICTIONARY_8088231B_HPP
+#define POMDOG_ASSETDICTIONARY_8088231B_HPP
 
 #include "AssetLoaders/AudioClipLoader.hpp"
 #include "AssetLoaders/Texture2DLoader.hpp"
@@ -66,4 +66,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_ASSETDICTIONARY_8088231B_F800_4D65_A75E_0160C4ED42B8_HPP)
+#endif // POMDOG_ASSETDICTIONARY_8088231B_HPP

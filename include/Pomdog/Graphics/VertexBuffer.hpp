@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_VERTEXBUFFER_3DDFD5CB_025A_40AE_9438_85D3064CE7D9_HPP
-#define POMDOG_VERTEXBUFFER_3DDFD5CB_025A_40AE_9438_85D3064CE7D9_HPP
+#ifndef POMDOG_VERTEXBUFFER_3DDFD5CB_HPP
+#define POMDOG_VERTEXBUFFER_3DDFD5CB_HPP
 
 #include "detail/ForwardDeclarations.hpp"
 #include "BufferUsage.hpp"
@@ -69,4 +69,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_VERTEXBUFFER_3DDFD5CB_025A_40AE_9438_85D3064CE7D9_HPP)
+#endif // POMDOG_VERTEXBUFFER_3DDFD5CB_HPP

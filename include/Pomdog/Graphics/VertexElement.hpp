@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_VERTEXELEMENT_1A25E253_DA05_4C23_AEBD_4D04882E23E0_HPP
-#define POMDOG_VERTEXELEMENT_1A25E253_DA05_4C23_AEBD_4D04882E23E0_HPP
+#ifndef POMDOG_VERTEXELEMENT_1A25E253_HPP
+#define POMDOG_VERTEXELEMENT_1A25E253_HPP
 
 #include "VertexElementFormat.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -19,4 +19,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_VERTEXELEMENT_1A25E253_DA05_4C23_AEBD_4D04882E23E0_HPP)
+#endif // POMDOG_VERTEXELEMENT_1A25E253_HPP

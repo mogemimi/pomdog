@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_TIMESOURCE_C4211975_ADF9_4F64_950B_B891B9E5C0BD_HPP
-#define POMDOG_TIMESOURCE_C4211975_ADF9_4F64_950B_B891B9E5C0BD_HPP
+#ifndef POMDOG_TIMESOURCE_C4211975_HPP
+#define POMDOG_TIMESOURCE_C4211975_HPP
 
 #include "Pomdog/Basic/Platform.hpp"
 
@@ -43,4 +43,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_TIMESOURCE_C4211975_ADF9_4F64_950B_B891B9E5C0BD_HPP)
+#endif // POMDOG_TIMESOURCE_C4211975_HPP

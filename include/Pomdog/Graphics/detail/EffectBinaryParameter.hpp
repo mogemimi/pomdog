@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_DETAIL_GRAPHICS_EFFECTBINARYPARAMETER_F5EA7DB2_2233_4221_973E_189E6ECFB1F0_HPP
-#define POMDOG_DETAIL_GRAPHICS_EFFECTBINARYPARAMETER_F5EA7DB2_2233_4221_973E_189E6ECFB1F0_HPP
+#ifndef POMDOG_EFFECTBINARYPARAMETER_F5EA7DB2_HPP
+#define POMDOG_EFFECTBINARYPARAMETER_F5EA7DB2_HPP
 
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -59,4 +59,4 @@ void Set(EffectParameter & effectParameter, T const& value)
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DETAIL_GRAPHICS_EFFECTBINARYPARAMETER_F5EA7DB2_2233_4221_973E_189E6ECFB1F0_HPP)
+#endif // POMDOG_EFFECTBINARYPARAMETER_F5EA7DB2_HPP

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_ERRORCHECKER_52C9764D_200D_48D2_8943_2813C3BE72EA_HPP
-#define POMDOG_ERRORCHECKER_52C9764D_200D_48D2_8943_2813C3BE72EA_HPP
+#ifndef POMDOG_ERRORCHECKER_52C9764D_HPP
+#define POMDOG_ERRORCHECKER_52C9764D_HPP
 
 namespace Pomdog {
 namespace Detail {
@@ -18,4 +18,4 @@ struct ErrorChecker {
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_ERRORCHECKER_52C9764D_200D_48D2_8943_2813C3BE72EA_HPP)
+#endif // POMDOG_ERRORCHECKER_52C9764D_HPP

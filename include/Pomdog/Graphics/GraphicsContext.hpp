@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_GRAPHICSCONTEXT_F873DD34_5F2E_44DD_A419_0E78FE2D56E5_HPP
-#define POMDOG_GRAPHICSCONTEXT_F873DD34_5F2E_44DD_A419_0E78FE2D56E5_HPP
+#ifndef POMDOG_GRAPHICSCONTEXT_F873DD34_HPP
+#define POMDOG_GRAPHICSCONTEXT_F873DD34_HPP
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
@@ -113,4 +113,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_GRAPHICSCONTEXT_F873DD34_5F2E_44DD_A419_0E78FE2D56E5_HPP)
+#endif // POMDOG_GRAPHICSCONTEXT_F873DD34_HPP

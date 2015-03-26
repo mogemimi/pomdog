@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_MATH_DETAIL_FLOATINGPOINTVECTOR3_D6230CBF_0247_4B72_BDB8_C7FD3C47A0CB_HPP
-#define POMDOG_MATH_DETAIL_FLOATINGPOINTVECTOR3_D6230CBF_0247_4B72_BDB8_C7FD3C47A0CB_HPP
+#ifndef POMDOG_FLOATINGPOINTVECTOR3_D6230CBF_HPP
+#define POMDOG_FLOATINGPOINTVECTOR3_D6230CBF_HPP
 
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -112,4 +112,4 @@ operator*(T scaleFactor, FloatingPointVector3<T> const& vector);
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_MATH_DETAIL_FLOATINGPOINTVECTOR3_D6230CBF_0247_4B72_BDB8_C7FD3C47A0CB_HPP)
+#endif // POMDOG_FLOATINGPOINTVECTOR3_D6230CBF_HPP

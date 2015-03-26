@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_BINARYREADER_80B251B8_159B_4CE5_97BC_ED14AE71F9B0_HPP
-#define POMDOG_BINARYREADER_80B251B8_159B_4CE5_97BC_ED14AE71F9B0_HPP
+#ifndef POMDOG_BINARYREADER_80B251B8_HPP
+#define POMDOG_BINARYREADER_80B251B8_HPP
 
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -75,4 +75,4 @@ struct POMDOG_EXPORT BinaryReader {
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_BINARYREADER_80B251B8_159B_4CE5_97BC_ED14AE71F9B0_HPP)
+#endif // POMDOG_BINARYREADER_80B251B8_HPP

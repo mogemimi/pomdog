@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_NATIVEEFFECTREFLECTION_F923B192_157E_4D4E_BBBF_300ABEA0485A_HPP
-#define POMDOG_NATIVEEFFECTREFLECTION_F923B192_157E_4D4E_BBBF_300ABEA0485A_HPP
+#ifndef POMDOG_NATIVEEFFECTREFLECTION_F923B192_HPP
+#define POMDOG_NATIVEEFFECTREFLECTION_F923B192_HPP
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <vector>
@@ -26,4 +26,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_NATIVEEFFECTREFLECTION_F923B192_157E_4D4E_BBBF_300ABEA0485A_HPP)
+#endif // POMDOG_NATIVEEFFECTREFLECTION_F923B192_HPP

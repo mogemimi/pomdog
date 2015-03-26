@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_STRINGFORMAT_FF9D5A44_E2AB_4484_815C_4BEC31D0796E_HPP
-#define POMDOG_STRINGFORMAT_FF9D5A44_E2AB_4484_815C_4BEC31D0796E_HPP
+#ifndef POMDOG_STRINGFORMAT_FF9D5A44_HPP
+#define POMDOG_STRINGFORMAT_FF9D5A44_HPP
 
 #include "Pomdog/Basic/Export.hpp"
 #include <string>
@@ -22,4 +22,4 @@ __attribute__((__format__(printf, 1, 2)));
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_STRINGFORMAT_FF9D5A44_E2AB_4484_815C_4BEC31D0796E_HPP)
+#endif // POMDOG_STRINGFORMAT_FF9D5A44_HPP

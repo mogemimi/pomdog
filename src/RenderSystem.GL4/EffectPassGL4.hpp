@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EFFECTPASSGL4_5C5F046F_F42A_4AAD_AC22_389698C435EB_HPP
-#define POMDOG_EFFECTPASSGL4_5C5F046F_F42A_4AAD_AC22_389698C435EB_HPP
+#ifndef POMDOG_EFFECTPASSGL4_5C5F046F_HPP
+#define POMDOG_EFFECTPASSGL4_5C5F046F_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
@@ -57,4 +57,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EFFECTPASSGL4_5C5F046F_F42A_4AAD_AC22_389698C435EB_HPP)
+#endif // POMDOG_EFFECTPASSGL4_5C5F046F_HPP

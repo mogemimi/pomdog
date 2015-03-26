@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_BLENDSTATEGL4_5A1F407F_670E_455C_BDEE_57E1472471F4_HPP
-#define POMDOG_BLENDSTATEGL4_5A1F407F_670E_455C_BDEE_57E1472471F4_HPP
+#ifndef POMDOG_BLENDSTATEGL4_5A1F407F_HPP
+#define POMDOG_BLENDSTATEGL4_5A1F407F_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeBlendState.hpp"
@@ -44,4 +44,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_BLENDSTATEGL4_5A1F407F_670E_455C_BDEE_57E1472471F4_HPP)
+#endif // POMDOG_BLENDSTATEGL4_5A1F407F_HPP

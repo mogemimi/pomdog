@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_RASTERIZERSTATE_BED8234F_ECEE_4505_972B_A1061D1EB4A6_HPP
-#define POMDOG_RASTERIZERSTATE_BED8234F_ECEE_4505_972B_A1061D1EB4A6_HPP
+#ifndef POMDOG_RASTERIZERSTATE_BED8234F_HPP
+#define POMDOG_RASTERIZERSTATE_BED8234F_HPP
 
 #include "detail/ForwardDeclarations.hpp"
 #include "RasterizerDescription.hpp"
@@ -49,4 +49,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_RASTERIZERSTATE_BED8234F_ECEE_4505_972B_A1061D1EB4A6_HPP)
+#endif // POMDOG_RASTERIZERSTATE_BED8234F_HPP

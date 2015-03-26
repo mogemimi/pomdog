@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SYSTEMEVENTDISPATCHER_7D649F10_0048_43D1_97DA_92FD44BE74E4_HPP
-#define POMDOG_SYSTEMEVENTDISPATCHER_7D649F10_0048_43D1_97DA_92FD44BE74E4_HPP
+#ifndef POMDOG_SYSTEMEVENTDISPATCHER_7D649F10_HPP
+#define POMDOG_SYSTEMEVENTDISPATCHER_7D649F10_HPP
 
 #include "Pomdog/Event/EventQueue.hpp"
 #include "Pomdog/Input/Keys.hpp"
@@ -34,4 +34,4 @@ struct InputKeyUpEvent {
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SYSTEMEVENTDISPATCHER_7D649F10_0048_43D1_97DA_92FD44BE74E4_HPP)
+#endif // POMDOG_SYSTEMEVENTDISPATCHER_7D649F10_HPP

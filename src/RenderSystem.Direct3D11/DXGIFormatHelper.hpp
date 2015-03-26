@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_DXGIFORMATHELPER_9FB57D4A_D20F_4F3C_8A2F_DA0696D56CD1_HPP
-#define POMDOG_DXGIFORMATHELPER_9FB57D4A_D20F_4F3C_8A2F_DA0696D56CD1_HPP
+#ifndef POMDOG_DXGIFORMATHELPER_9FB57D4A_HPP
+#define POMDOG_DXGIFORMATHELPER_9FB57D4A_HPP
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -22,4 +22,4 @@ struct DXGIFormatHelper final {
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DXGIFORMATHELPER_9FB57D4A_D20F_4F3C_8A2F_DA0696D56CD1_HPP)
+#endif // POMDOG_DXGIFORMATHELPER_9FB57D4A_HPP

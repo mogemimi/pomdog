@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_MAKEFOURCC_ED6FB253_174A_46D4_9EDA_D3ADDDAB06C2_HPP
-#define POMDOG_MAKEFOURCC_ED6FB253_174A_46D4_9EDA_D3ADDDAB06C2_HPP
+#ifndef POMDOG_MAKEFOURCC_ED6FB253_HPP
+#define POMDOG_MAKEFOURCC_ED6FB253_HPP
 
 #include <cstdint>
 #include <type_traits>
@@ -26,4 +26,4 @@ constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Cha
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_MAKEFOURCC_ED6FB253_174A_46D4_9EDA_D3ADDDAB06C2_HPP)
+#endif // POMDOG_MAKEFOURCC_ED6FB253_HPP

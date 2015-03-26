@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SHADERGL4_39E4A790_D7E4_4CA7_960D_F27CF80FCF2A_HPP
-#define POMDOG_SHADERGL4_39E4A790_D7E4_4CA7_960D_F27CF80FCF2A_HPP
+#ifndef POMDOG_SHADERGL4_39E4A790_HPP
+#define POMDOG_SHADERGL4_39E4A790_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
@@ -48,4 +48,4 @@ using PixelShaderGL4 = ShaderGL4<GL_FRAGMENT_SHADER>;
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SHADERGL4_39E4A790_D7E4_4CA7_960D_F27CF80FCF2A_HPP)
+#endif // POMDOG_SHADERGL4_39E4A790_HPP

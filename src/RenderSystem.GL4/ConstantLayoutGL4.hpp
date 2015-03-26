@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_CONSTANTLAYOUTGL4_25949458_085E_49FD_91A9_EFF89B064B88_HPP
-#define POMDOG_CONSTANTLAYOUTGL4_25949458_085E_49FD_91A9_EFF89B064B88_HPP
+#ifndef POMDOG_CONSTANTLAYOUTGL4_25949458_HPP
+#define POMDOG_CONSTANTLAYOUTGL4_25949458_HPP
 
 #include "../RenderSystem/NativeConstantLayout.hpp"
 #include <cstdint>
@@ -42,4 +42,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_CONSTANTLAYOUTGL4_25949458_085E_49FD_91A9_EFF89B064B88_HPP)
+#endif // POMDOG_CONSTANTLAYOUTGL4_25949458_HPP

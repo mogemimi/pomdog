@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_FORWARDDECLARATIONS_0BAC0396_5240_4F14_AFF8_13A71B8E0B54_HPP
-#define POMDOG_FORWARDDECLARATIONS_0BAC0396_5240_4F14_AFF8_13A71B8E0B54_HPP
+#ifndef POMDOG_FORWARDDECLARATIONS_0BAC0396_HPP
+#define POMDOG_FORWARDDECLARATIONS_0BAC0396_HPP
 
 #include "Pomdog/Basic/Platform.hpp"
 
@@ -44,4 +44,4 @@ using NativeSoundEffect = XAudio2::SoundEffectXAudio2;
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_FORWARDDECLARATIONS_0BAC0396_5240_4F14_AFF8_13A71B8E0B54_HPP)
+#endif // POMDOG_FORWARDDECLARATIONS_0BAC0396_HPP

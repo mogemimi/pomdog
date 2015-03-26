@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_VIEWPORT_AA637108_9222_46B7_BC9D_293048246897_HPP
-#define POMDOG_VIEWPORT_AA637108_9222_46B7_BC9D_293048246897_HPP
+#ifndef POMDOG_VIEWPORT_AA637108_HPP
+#define POMDOG_VIEWPORT_AA637108_HPP
 
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -39,4 +39,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_VIEWPORT_AA637108_9222_46B7_BC9D_293048246897_HPP)
+#endif // POMDOG_VIEWPORT_AA637108_HPP

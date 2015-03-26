@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EFFECTPASS_3FA791E9_F535_41AF_B197_3DF71A12085A_HPP
-#define POMDOG_EFFECTPASS_3FA791E9_F535_41AF_B197_3DF71A12085A_HPP
+#ifndef POMDOG_EFFECTPASS_3FA791E9_HPP
+#define POMDOG_EFFECTPASS_3FA791E9_HPP
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -45,4 +45,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EFFECTPASS_3FA791E9_F535_41AF_B197_3DF71A12085A_HPP)
+#endif // POMDOG_EFFECTPASS_3FA791E9_HPP

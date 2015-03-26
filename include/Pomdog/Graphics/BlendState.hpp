@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_BLENDSTATE_CFC118A6_5546_4C83_9888_2399BF4E6602_HPP
-#define POMDOG_BLENDSTATE_CFC118A6_5546_4C83_9888_2399BF4E6602_HPP
+#ifndef POMDOG_BLENDSTATE_CFC118A6_HPP
+#define POMDOG_BLENDSTATE_CFC118A6_HPP
 
 #include "detail/ForwardDeclarations.hpp"
 #include "BlendDescription.hpp"
@@ -52,4 +52,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_BLENDSTATE_CFC118A6_5546_4C83_9888_2399BF4E6602_HPP)
+#endif // POMDOG_BLENDSTATE_CFC118A6_HPP

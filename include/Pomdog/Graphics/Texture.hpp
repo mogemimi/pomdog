@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_TEXTURE_3A7EAD6D_145C_4F90_8749_568FC6DD4338_HPP
-#define POMDOG_TEXTURE_3A7EAD6D_145C_4F90_8749_568FC6DD4338_HPP
+#ifndef POMDOG_TEXTURE_3A7EAD6D_HPP
+#define POMDOG_TEXTURE_3A7EAD6D_HPP
 
 #include "Pomdog/Basic/Export.hpp"
 
@@ -22,4 +22,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_TEXTURE_3A7EAD6D_145C_4F90_8749_568FC6DD4338_HPP)
+#endif // POMDOG_TEXTURE_3A7EAD6D_HPP

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_GRAPHICSDEVICE_7A54711C_54D1_4067_AD81_252DC98015CE_HPP
-#define POMDOG_GRAPHICSDEVICE_7A54711C_54D1_4067_AD81_252DC98015CE_HPP
+#ifndef POMDOG_GRAPHICSDEVICE_7A54711C_HPP
+#define POMDOG_GRAPHICSDEVICE_7A54711C_HPP
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -45,4 +45,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_GRAPHICSDEVICE_7A54711C_54D1_4067_AD81_252DC98015CE_HPP)
+#endif // POMDOG_GRAPHICSDEVICE_7A54711C_HPP

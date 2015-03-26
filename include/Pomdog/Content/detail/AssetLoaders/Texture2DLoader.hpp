@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_TEXTURE2DLOADER_84BCFDDA_4E0C_4783_B628_2D48B5008588_HPP
-#define POMDOG_TEXTURE2DLOADER_84BCFDDA_4E0C_4783_B628_2D48B5008588_HPP
+#ifndef POMDOG_TEXTURE2DLOADER_84BCFDDA_HPP
+#define POMDOG_TEXTURE2DLOADER_84BCFDDA_HPP
 
 #include "Pomdog/Content/detail/AssetLoader.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -27,4 +27,4 @@ struct POMDOG_EXPORT AssetLoader<Texture2D> final {
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_TEXTURE2DLOADER_84BCFDDA_4E0C_4783_B628_2D48B5008588_HPP)
+#endif // POMDOG_TEXTURE2DLOADER_84BCFDDA_HPP

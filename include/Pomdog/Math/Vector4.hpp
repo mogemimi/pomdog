@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_VECTOR4_142CAE48_C528_4EAE_B8D1_9D04F174FDF1_HPP
-#define POMDOG_VECTOR4_142CAE48_C528_4EAE_B8D1_9D04F174FDF1_HPP
+#ifndef POMDOG_VECTOR4_142CAE48_HPP
+#define POMDOG_VECTOR4_142CAE48_HPP
 
 #include "detail/FloatingPointVector4.hpp"
 
@@ -13,4 +13,4 @@ using Vector4 = Detail::FloatingPointVector4<float>;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_VECTOR4_142CAE48_C528_4EAE_B8D1_9D04F174FDF1_HPP)
+#endif // POMDOG_VECTOR4_142CAE48_HPP

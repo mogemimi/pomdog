@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SAMPLERSTATEGL4_B8072910_B914_4640_9103_CEA8D030AD4F_HPP
-#define POMDOG_SAMPLERSTATEGL4_B8072910_B914_4640_9103_CEA8D030AD4F_HPP
+#ifndef POMDOG_SAMPLERSTATEGL4_B8072910_HPP
+#define POMDOG_SAMPLERSTATEGL4_B8072910_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeSamplerState.hpp"
@@ -37,4 +37,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SAMPLERSTATEGL4_B8072910_B914_4640_9103_CEA8D030AD4F_HPP)
+#endif // POMDOG_SAMPLERSTATEGL4_B8072910_HPP

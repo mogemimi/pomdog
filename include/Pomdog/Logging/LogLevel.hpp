@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_LOGLEVEL_5E5C0F27_1A1E_45E8_881A_74F60B906155_HPP
-#define POMDOG_LOGLEVEL_5E5C0F27_1A1E_45E8_881A_74F60B906155_HPP
+#ifndef POMDOG_LOGLEVEL_5E5C0F27_HPP
+#define POMDOG_LOGLEVEL_5E5C0F27_HPP
 
 #include <cstdint>
 
@@ -22,4 +22,4 @@ enum class LogLevel: std::uint8_t {
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_LOGLEVEL_5E5C0F27_1A1E_45E8_881A_74F60B906155_HPP)
+#endif // POMDOG_LOGLEVEL_5E5C0F27_HPP

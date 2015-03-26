@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_HLSLCOMPILER_223CB751_DD53_4FAB_8C8B_BB901AE266BA_HPP
-#define POMDOG_HLSLCOMPILER_223CB751_DD53_4FAB_8C8B_BB901AE266BA_HPP
+#ifndef POMDOG_HLSLCOMPILER_223CB751_HPP
+#define POMDOG_HLSLCOMPILER_223CB751_HPP
 
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
@@ -35,4 +35,4 @@ struct POMDOG_EXPORT HLSLCompiler final {
 }// namespace ShaderCompilers
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_HLSLCOMPILER_223CB751_DD53_4FAB_8C8B_BB901AE266BA_HPP)
+#endif // POMDOG_HLSLCOMPILER_223CB751_HPP

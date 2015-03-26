@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_KEYSTATE_0C5E11FF_3B98_436F_9243_679933DA89E8_HPP
-#define POMDOG_KEYSTATE_0C5E11FF_3B98_436F_9243_679933DA89E8_HPP
+#ifndef POMDOG_KEYSTATE_0C5E11FF_HPP
+#define POMDOG_KEYSTATE_0C5E11FF_HPP
 
 #include <cstdint>
 
@@ -16,4 +16,4 @@ enum class KeyState: bool {
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_KEYSTATE_0C5E11FF_3B98_436F_9243_679933DA89E8_HPP)
+#endif // POMDOG_KEYSTATE_0C5E11FF_HPP

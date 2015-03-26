@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_ASSERT_7D111D58_5951_4927_A438_EF5F9E62DDFE_HPP
-#define POMDOG_ASSERT_7D111D58_5951_4927_A438_EF5F9E62DDFE_HPP
+#ifndef POMDOG_ASSERT_7D111D58_HPP
+#define POMDOG_ASSERT_7D111D58_HPP
 
 #include "Pomdog/Basic/Platform.hpp"
 #include <cassert>
@@ -90,4 +90,4 @@ inline constexpr bool ConstexprAssert(bool condition,
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_ASSERT_7D111D58_5951_4927_A438_EF5F9E62DDFE_HPP)
+#endif // POMDOG_ASSERT_7D111D58_HPP

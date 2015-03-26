@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SOUNDEFFECTXAUDIO2_ED1F6835_CC69_4922_802F_961D8011F154_HPP
-#define POMDOG_SOUNDEFFECTXAUDIO2_ED1F6835_CC69_4922_802F_961D8011F154_HPP
+#ifndef POMDOG_SOUNDEFFECTXAUDIO2_ED1F6835_HPP
+#define POMDOG_SOUNDEFFECTXAUDIO2_ED1F6835_HPP
 
 #include "PrerequisitesXAudio2.hpp"
 #include "../Utility/Noncopyable.hpp"
@@ -52,4 +52,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SOUNDEFFECTXAUDIO2_ED1F6835_CC69_4922_802F_961D8011F154_HPP)
+#endif // POMDOG_SOUNDEFFECTXAUDIO2_ED1F6835_HPP

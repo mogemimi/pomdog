@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_NATIVEINDEXBUFFER_C6FFE20E_160B_4B28_BD28_4F4A509BEC47_HPP
-#define POMDOG_NATIVEINDEXBUFFER_C6FFE20E_160B_4B28_BD28_4F4A509BEC47_HPP
+#ifndef POMDOG_NATIVEINDEXBUFFER_C6FFE20E_HPP
+#define POMDOG_NATIVEINDEXBUFFER_C6FFE20E_HPP
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstdint>
@@ -27,4 +27,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_NATIVEINDEXBUFFER_C6FFE20E_160B_4B28_BD28_4F4A509BEC47_HPP)
+#endif // POMDOG_NATIVEINDEXBUFFER_C6FFE20E_HPP

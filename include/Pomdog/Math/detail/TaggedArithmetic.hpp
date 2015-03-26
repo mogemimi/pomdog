@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_MATH_DETAIL_TAGGEDARITHMETIC_4493CED1_FBAE_438C_8F8C_B2FD921C900F_HPP
-#define POMDOG_MATH_DETAIL_TAGGEDARITHMETIC_4493CED1_FBAE_438C_8F8C_B2FD921C900F_HPP
+#ifndef POMDOG_TAGGEDARITHMETIC_4493CED1_HPP
+#define POMDOG_TAGGEDARITHMETIC_4493CED1_HPP
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -213,4 +213,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_MATH_DETAIL_TAGGEDARITHMETIC_4493CED1_FBAE_438C_8F8C_B2FD921C900F_HPP)
+#endif // POMDOG_TAGGEDARITHMETIC_4493CED1_HPP

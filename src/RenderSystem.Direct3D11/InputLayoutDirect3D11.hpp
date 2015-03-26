@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_INPUTLAYOUTDIRECT3D11_93CA68F0_7EE1_4BC3_9B42_D90E5CB7E839_HPP
-#define POMDOG_INPUTLAYOUTDIRECT3D11_93CA68F0_7EE1_4BC3_9B42_D90E5CB7E839_HPP
+#ifndef POMDOG_INPUTLAYOUTDIRECT3D11_93CA68F0_HPP
+#define POMDOG_INPUTLAYOUTDIRECT3D11_93CA68F0_HPP
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -29,4 +29,4 @@ struct InputLayoutHelper final {
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_INPUTLAYOUTDIRECT3D11_93CA68F0_7EE1_4BC3_9B42_D90E5CB7E839_HPP)
+#endif // POMDOG_INPUTLAYOUTDIRECT3D11_93CA68F0_HPP

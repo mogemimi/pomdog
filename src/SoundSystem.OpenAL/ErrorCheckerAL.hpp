@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_ERRORCHECKERAL_CD663609_0C15_464F_A972_6E33B2F595BA_HPP
-#define POMDOG_ERRORCHECKERAL_CD663609_0C15_464F_A972_6E33B2F595BA_HPP
+#ifndef POMDOG_ERRORCHECKERAL_CD663609_HPP
+#define POMDOG_ERRORCHECKERAL_CD663609_HPP
 
 namespace Pomdog {
 namespace Detail {
@@ -19,4 +19,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_ERRORCHECKERAL_CD663609_0C15_464F_A972_6E33B2F595BA_HPP)
+#endif // POMDOG_ERRORCHECKERAL_CD663609_HPP

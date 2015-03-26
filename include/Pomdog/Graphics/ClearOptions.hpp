@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_CLEAROPTIONS_F51CCEF3_A5F7_418E_AD9A_35610A589BB1_HPP
-#define POMDOG_CLEAROPTIONS_F51CCEF3_A5F7_418E_AD9A_35610A589BB1_HPP
+#ifndef POMDOG_CLEAROPTIONS_F51CCEF3_HPP
+#define POMDOG_CLEAROPTIONS_F51CCEF3_HPP
 
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
@@ -37,4 +37,4 @@ constexpr ClearOptions & operator|=(ClearOptions & a, ClearOptions b)
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_CLEAROPTIONS_F51CCEF3_A5F7_418E_AD9A_35610A589BB1_HPP)
+#endif // POMDOG_CLEAROPTIONS_F51CCEF3_HPP

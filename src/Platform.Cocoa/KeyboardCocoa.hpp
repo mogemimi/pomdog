@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_KEYBOARDCOCOA_E0980F30_9516_49D4_80A0_CCE22DAB9F05_HPP
-#define POMDOG_KEYBOARDCOCOA_E0980F30_9516_49D4_80A0_CCE22DAB9F05_HPP
+#ifndef POMDOG_KEYBOARDCOCOA_E0980F30_HPP
+#define POMDOG_KEYBOARDCOCOA_E0980F30_HPP
 
 #include "Pomdog/Input/Keyboard.hpp"
 #include "Pomdog/Input/KeyboardState.hpp"
@@ -28,4 +28,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_KEYBOARDCOCOA_E0980F30_9516_49D4_80A0_CCE22DAB9F05_HPP)
+#endif // POMDOG_KEYBOARDCOCOA_E0980F30_HPP

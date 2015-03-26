@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_RENDERTARGET2DGL4_0C6A48A1_E6BF_4896_9EB9_9F9A4082ABDF_HPP
-#define POMDOG_RENDERTARGET2DGL4_0C6A48A1_E6BF_4896_9EB9_9F9A4082ABDF_HPP
+#ifndef POMDOG_RENDERTARGET2DGL4_0C6A48A1_HPP
+#define POMDOG_RENDERTARGET2DGL4_0C6A48A1_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "Texture2DGL4.hpp"
@@ -43,4 +43,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_RENDERTARGET2DGL4_0C6A48A1_E6BF_4896_9EB9_9F9A4082ABDF_HPP)
+#endif // POMDOG_RENDERTARGET2DGL4_0C6A48A1_HPP

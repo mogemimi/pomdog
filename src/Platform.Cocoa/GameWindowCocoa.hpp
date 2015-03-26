@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP
-#define POMDOG_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP
+#ifndef POMDOG_GAMEWINDOWCOCOA_BA8D88CA_HPP
+#define POMDOG_GAMEWINDOWCOCOA_BA8D88CA_HPP
 
 #include "../Application/SystemEventDispatcher.hpp"
 #include "Pomdog/Application/GameWindow.hpp"
@@ -81,4 +81,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP)
+#endif // POMDOG_GAMEWINDOWCOCOA_BA8D88CA_HPP

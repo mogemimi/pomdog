@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_AUDIOENGINEAL_4B9A3A11_27A6_4393_A5FF_F10183A42D92_HPP
-#define POMDOG_AUDIOENGINEAL_4B9A3A11_27A6_4393_A5FF_F10183A42D92_HPP
+#ifndef POMDOG_AUDIOENGINEAL_4B9A3A11_HPP
+#define POMDOG_AUDIOENGINEAL_4B9A3A11_HPP
 
 #include "PrerequisitesOpenAL.hpp"
 #include "ContextOpenAL.hpp"
@@ -31,4 +31,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_AUDIOENGINEAL_4B9A3A11_27A6_4393_A5FF_F10183A42D92_HPP)
+#endif // POMDOG_AUDIOENGINEAL_4B9A3A11_HPP

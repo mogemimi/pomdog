@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_DEGREE_8B079286_FF3F_4EEC_BDD2_85D914A0B064_HPP
-#define POMDOG_DEGREE_8B079286_FF3F_4EEC_BDD2_85D914A0B064_HPP
+#ifndef POMDOG_DEGREE_8B079286_HPP
+#define POMDOG_DEGREE_8B079286_HPP
 
 #include "detail/TaggedArithmetic.hpp"
 
@@ -20,4 +20,4 @@ using Degree = Detail::TaggedArithmetic<T, Detail::Tags::DegreeTag>;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DEGREE_8B079286_FF3F_4EEC_BDD2_85D914A0B064_HPP)
+#endif // POMDOG_DEGREE_8B079286_HPP

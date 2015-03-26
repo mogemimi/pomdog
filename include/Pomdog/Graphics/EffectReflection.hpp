@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EFFECTREFLECTION_88543BAB_9612_40DD_9CD1_D6DB38D4D8DC_HPP
-#define POMDOG_EFFECTREFLECTION_88543BAB_9612_40DD_9CD1_D6DB38D4D8DC_HPP
+#ifndef POMDOG_EFFECTREFLECTION_88543BAB_HPP
+#define POMDOG_EFFECTREFLECTION_88543BAB_HPP
 
 #include "detail/ForwardDeclarations.hpp"
 #include "EffectConstantDescription.hpp"
@@ -41,4 +41,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EFFECTREFLECTION_88543BAB_9612_40DD_9CD1_D6DB38D4D8DC_HPP)
+#endif // POMDOG_EFFECTREFLECTION_88543BAB_HPP

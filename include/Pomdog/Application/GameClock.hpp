@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_GAMECLOCK_06D5BC45_786E_4B42_BE61_413BE23C6AF1_HPP
-#define POMDOG_GAMECLOCK_06D5BC45_786E_4B42_BE61_413BE23C6AF1_HPP
+#ifndef POMDOG_GAMECLOCK_06D5BC45_HPP
+#define POMDOG_GAMECLOCK_06D5BC45_HPP
 
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -44,4 +44,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_GAMECLOCK_06D5BC45_786E_4B42_BE61_413BE23C6AF1_HPP)
+#endif // POMDOG_GAMECLOCK_06D5BC45_HPP

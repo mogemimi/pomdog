@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_DETAIL_BOOTSTRAPPERCOCOA_13B44EFA_9FFA_4AE2_953A_22EFEB4FC322_HPP
-#define POMDOG_DETAIL_BOOTSTRAPPERCOCOA_13B44EFA_9FFA_4AE2_953A_22EFEB4FC322_HPP
+#ifndef POMDOG_BOOTSTRAPPERCOCOA_13B44EFA_HPP
+#define POMDOG_BOOTSTRAPPERCOCOA_13B44EFA_HPP
 
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
@@ -37,4 +37,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DETAIL_BOOTSTRAPPERCOCOA_13B44EFA_9FFA_4AE2_953A_22EFEB4FC322_HPP)
+#endif // POMDOG_BOOTSTRAPPERCOCOA_13B44EFA_HPP

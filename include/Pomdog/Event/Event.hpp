@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EVENT_56ECB270_07B0_4678_BE7E_FF46C5D1A02B_HPP
-#define POMDOG_EVENT_56ECB270_07B0_4678_BE7E_FF46C5D1A02B_HPP
+#ifndef POMDOG_EVENT_56ECB270_HPP
+#define POMDOG_EVENT_56ECB270_HPP
 
 #include "detail/EventArguments.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -76,4 +76,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EVENT_56ECB270_07B0_4678_BE7E_FF46C5D1A02B_HPP)
+#endif // POMDOG_EVENT_56ECB270_HPP

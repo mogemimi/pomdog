@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_MATH_DETAIL_COORDINATE2D_9F61E901_0DBD_451E_B518_E52D38B77A9E_HPP
-#define POMDOG_MATH_DETAIL_COORDINATE2D_9F61E901_0DBD_451E_B518_E52D38B77A9E_HPP
+#ifndef POMDOG_COORDINATE2D_9F61E901_HPP
+#define POMDOG_COORDINATE2D_9F61E901_HPP
 
 #include "Pomdog/Basic/Export.hpp"
 #include <type_traits>
@@ -58,4 +58,4 @@ operator*(T scaleFactor, Coordinate2D<T> const& coordinate);
 
 #include "Coordinate2DImplementation.hpp"
 
-#endif // !defined(POMDOG_MATH_DETAIL_COORDINATE2D_9F61E901_0DBD_451E_B518_E52D38B77A9E_HPP)
+#endif // POMDOG_COORDINATE2D_9F61E901_HPP

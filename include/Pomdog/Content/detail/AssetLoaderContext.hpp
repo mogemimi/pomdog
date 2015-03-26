@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_ASSETLOADERCONTEXT_E4996CA2_38E7_45F5_BBED_9DC401425E70_HPP
-#define POMDOG_ASSETLOADERCONTEXT_E4996CA2_38E7_45F5_BBED_9DC401425E70_HPP
+#ifndef POMDOG_ASSETLOADERCONTEXT_E4996CA2_HPP
+#define POMDOG_ASSETLOADERCONTEXT_E4996CA2_HPP
 
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
@@ -26,4 +26,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_ASSETLOADERCONTEXT_E4996CA2_38E7_45F5_BBED_9DC401425E70_HPP)
+#endif // POMDOG_ASSETLOADERCONTEXT_E4996CA2_HPP

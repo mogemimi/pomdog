@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SRC_WIN32_GAMEWINDOWWIN32_2EC902FC_1DBE_4A3C_BCF0_C25FDDBBA5D7_HPP
-#define POMDOG_SRC_WIN32_GAMEWINDOWWIN32_2EC902FC_1DBE_4A3C_BCF0_C25FDDBBA5D7_HPP
+#ifndef POMDOG_GAMEWINDOWWIN32_2EC902FC_HPP
+#define POMDOG_GAMEWINDOWWIN32_2EC902FC_HPP
 
 #include "../Application/SystemEventDispatcher.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
@@ -68,4 +68,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SRC_WIN32_GAMEWINDOWWIN32_2EC902FC_1DBE_4A3C_BCF0_C25FDDBBA5D7_HPP)
+#endif // POMDOG_GAMEWINDOWWIN32_2EC902FC_HPP

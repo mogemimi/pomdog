@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_TEXTUREHELPER_FDC1E68E_244E_4210_AA2A_9DE6C8AD9BC9_HPP
-#define POMDOG_TEXTUREHELPER_FDC1E68E_244E_4210_AA2A_9DE6C8AD9BC9_HPP
+#ifndef POMDOG_TEXTUREHELPER_FDC1E68E_HPP
+#define POMDOG_TEXTUREHELPER_FDC1E68E_HPP
 
 #include <cstdint>
 
@@ -17,4 +17,4 @@ struct TextureHelper final {
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_TEXTUREHELPER_FDC1E68E_244E_4210_AA2A_9DE6C8AD9BC9_HPP)
+#endif // POMDOG_TEXTUREHELPER_FDC1E68E_HPP

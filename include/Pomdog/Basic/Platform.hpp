@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_PLATFORM_C59B59BE_0311_4CB7_96D7_541924F8C06A_HPP
-#define POMDOG_PLATFORM_C59B59BE_0311_4CB7_96D7_541924F8C06A_HPP
+#ifndef POMDOG_PLATFORM_C59B59BE_HPP
+#define POMDOG_PLATFORM_C59B59BE_HPP
 
 namespace Pomdog {
 namespace Detail {
@@ -233,4 +233,4 @@ namespace Detail {
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_PLATFORM_C59B59BE_0311_4CB7_96D7_541924F8C06A_HPP)
+#endif // POMDOG_PLATFORM_C59B59BE_HPP

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_GAMEWINDOW_22D747BC_F865_4F1E_B8BB_609D297F662F_HPP
-#define POMDOG_GAMEWINDOW_22D747BC_F865_4F1E_B8BB_609D297F662F_HPP
+#ifndef POMDOG_GAMEWINDOW_22D747BC_HPP
+#define POMDOG_GAMEWINDOW_22D747BC_HPP
 
 #include "Pomdog/Event/Signal.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -46,4 +46,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_GAMEWINDOW_22D747BC_F865_4F1E_B8BB_609D297F662F_HPP)
+#endif // POMDOG_GAMEWINDOW_22D747BC_HPP

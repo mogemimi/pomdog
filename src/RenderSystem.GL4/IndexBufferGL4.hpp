@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_INDEXBUFFERGL4_752BED0C_BBD7_4563_B489_47AEAC302545_HPP
-#define POMDOG_INDEXBUFFERGL4_752BED0C_BBD7_4563_B489_47AEAC302545_HPP
+#ifndef POMDOG_INDEXBUFFERGL4_752BED0C_HPP
+#define POMDOG_INDEXBUFFERGL4_752BED0C_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeIndexBuffer.hpp"
@@ -41,4 +41,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_INDEXBUFFERGL4_752BED0C_BBD7_4563_B489_47AEAC302545_HPP)
+#endif // POMDOG_INDEXBUFFERGL4_752BED0C_HPP

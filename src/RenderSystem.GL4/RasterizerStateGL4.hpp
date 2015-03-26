@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_RASTERIZERSTATEGL4_CD96D51A_56D8_4EC5_BD1F_2FB19D26A089_HPP
-#define POMDOG_RASTERIZERSTATEGL4_CD96D51A_56D8_4EC5_BD1F_2FB19D26A089_HPP
+#ifndef POMDOG_RASTERIZERSTATEGL4_CD96D51A_HPP
+#define POMDOG_RASTERIZERSTATEGL4_CD96D51A_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeRasterizerState.hpp"
@@ -39,4 +39,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_RASTERIZERSTATEGL4_CD96D51A_56D8_4EC5_BD1F_2FB19D26A089_HPP)
+#endif // POMDOG_RASTERIZERSTATEGL4_CD96D51A_HPP

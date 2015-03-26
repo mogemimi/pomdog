@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SOUNDEFFECTAL_4A967601_7B5B_4A2E_BBF7_3658E1856E6F_HPP
-#define POMDOG_SOUNDEFFECTAL_4A967601_7B5B_4A2E_BBF7_3658E1856E6F_HPP
+#ifndef POMDOG_SOUNDEFFECTAL_4A967601_HPP
+#define POMDOG_SOUNDEFFECTAL_4A967601_HPP
 
 #include "PrerequisitesOpenAL.hpp"
 #include "../Utility/Noncopyable.hpp"
@@ -57,4 +57,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SOUNDEFFECTAL_4A967601_7B5B_4A2E_BBF7_3658E1856E6F_HPP)
+#endif // POMDOG_SOUNDEFFECTAL_4A967601_HPP

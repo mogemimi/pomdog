@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_MOUSECREATOR_CE792896_2613_477F_A03D_327BE3F1A650_HPP
-#define POMDOG_MOUSECREATOR_CE792896_2613_477F_A03D_327BE3F1A650_HPP
+#ifndef POMDOG_MOUSECREATOR_CE792896_HPP
+#define POMDOG_MOUSECREATOR_CE792896_HPP
 
 #include "InputDeviceCreator.hpp"
 
@@ -19,4 +19,4 @@ using MouseCreator = InputDeviceCreator<Mouse>;
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_MOUSECREATOR_CE792896_2613_477F_A03D_327BE3F1A650_HPP)
+#endif // POMDOG_MOUSECREATOR_CE792896_HPP

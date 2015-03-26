@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_OPENGLCONTEXTWIN32_A7C60FF2_4CA1_4345_80A7_2496218BC0EA_HPP
-#define POMDOG_OPENGLCONTEXTWIN32_A7C60FF2_4CA1_4345_80A7_2496218BC0EA_HPP
+#ifndef POMDOG_OPENGLCONTEXTWIN32_A7C60FF2_HPP
+#define POMDOG_OPENGLCONTEXTWIN32_A7C60FF2_HPP
 
 #include "../RenderSystem.GL4/OpenGLContext.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
@@ -49,4 +49,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_OPENGLCONTEXTWIN32_A7C60FF2_4CA1_4345_80A7_2496218BC0EA_HPP)
+#endif // POMDOG_OPENGLCONTEXTWIN32_A7C60FF2_HPP

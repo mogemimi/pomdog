@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_DEPTHFORMAT_5FF8041D_B10E_4EBC_A142_2BAAA12C234B_HPP
-#define POMDOG_DEPTHFORMAT_5FF8041D_B10E_4EBC_A142_2BAAA12C234B_HPP
+#ifndef POMDOG_DEPTHFORMAT_5FF8041D_HPP
+#define POMDOG_DEPTHFORMAT_5FF8041D_HPP
 
 #include <cstdint>
 
@@ -24,4 +24,4 @@ enum class DepthFormat: std::uint8_t {
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DEPTHFORMAT_5FF8041D_B10E_4EBC_A142_2BAAA12C234B_HPP)
+#endif // POMDOG_DEPTHFORMAT_5FF8041D_HPP

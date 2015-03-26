@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_VERTEXBUFFERGL4_A0F173BB_E5E5_4A9B_81E8_4AC8BBA92F01_HPP
-#define POMDOG_VERTEXBUFFERGL4_A0F173BB_E5E5_4A9B_81E8_4AC8BBA92F01_HPP
+#ifndef POMDOG_VERTEXBUFFERGL4_A0F173BB_HPP
+#define POMDOG_VERTEXBUFFERGL4_A0F173BB_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeVertexBuffer.hpp"
@@ -41,4 +41,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_VERTEXBUFFERGL4_A0F173BB_E5E5_4A9B_81E8_4AC8BBA92F01_HPP)
+#endif // POMDOG_VERTEXBUFFERGL4_A0F173BB_HPP

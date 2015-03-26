@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_KEYBOARD_B6F4D4B4_A74A_4EFF_88D9_828C7D9FC5F7_HPP
-#define POMDOG_KEYBOARD_B6F4D4B4_A74A_4EFF_88D9_828C7D9FC5F7_HPP
+#ifndef POMDOG_KEYBOARD_B6F4D4B4_HPP
+#define POMDOG_KEYBOARD_B6F4D4B4_HPP
 
 #include "Pomdog/Basic/Export.hpp"
 
@@ -23,4 +23,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_KEYBOARD_B6F4D4B4_A74A_4EFF_88D9_828C7D9FC5F7_HPP)
+#endif // POMDOG_KEYBOARD_B6F4D4B4_HPP

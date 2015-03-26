@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_KEYBOARDDIRECTINPUT_C564C1C5_4C17_432D_8E0D_7673012F1D0D_HPP
-#define POMDOG_KEYBOARDDIRECTINPUT_C564C1C5_4C17_432D_8E0D_7673012F1D0D_HPP
+#ifndef POMDOG_KEYBOARDDIRECTINPUT_C564C1C5_HPP
+#define POMDOG_KEYBOARDDIRECTINPUT_C564C1C5_HPP
 
 #include "PrerequisitesDirectInput.hpp"
 #include "Pomdog/Input/Keyboard.hpp"
@@ -42,4 +42,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_KEYBOARDDIRECTINPUT_C564C1C5_4C17_432D_8E0D_7673012F1D0D_HPP)
+#endif // POMDOG_KEYBOARDDIRECTINPUT_C564C1C5_HPP

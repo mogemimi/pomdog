@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_MATH_DETAIL_FLOATINGPOINTMATRIX3X3_69EBDB78_9A8B_47F1_A99C_D568F466F249_HPP
-#define POMDOG_MATH_DETAIL_FLOATINGPOINTMATRIX3X3_69EBDB78_9A8B_47F1_A99C_D568F466F249_HPP
+#ifndef POMDOG_FLOATINGPOINTMATRIX3X3_69EBDB78_HPP
+#define POMDOG_FLOATINGPOINTMATRIX3X3_69EBDB78_HPP
 
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -161,4 +161,4 @@ operator*(T scaleFactor, FloatingPointMatrix3x3<T> const& matrix);
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_MATH_DETAIL_FLOATINGPOINTMATRIX3X3_69EBDB78_9A8B_47F1_A99C_D568F466F249_HPP)
+#endif // POMDOG_FLOATINGPOINTMATRIX3X3_69EBDB78_HPP

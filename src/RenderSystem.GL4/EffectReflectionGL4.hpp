@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EFFECTREFLECTIONGL4_98947466_A9FF_4349_A3F0_876FEF470821_HPP
-#define POMDOG_EFFECTREFLECTIONGL4_98947466_A9FF_4349_A3F0_876FEF470821_HPP
+#ifndef POMDOG_EFFECTREFLECTIONGL4_98947466_HPP
+#define POMDOG_EFFECTREFLECTIONGL4_98947466_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
@@ -61,4 +61,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EFFECTREFLECTIONGL4_98947466_A9FF_4349_A3F0_876FEF470821_HPP)
+#endif // POMDOG_EFFECTREFLECTIONGL4_98947466_HPP

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_OPENGLCONTEXTCOCOA_306ECA78_18CF_4A87_A039_0C823668622C_HPP
-#define POMDOG_OPENGLCONTEXTCOCOA_306ECA78_18CF_4A87_A039_0C823668622C_HPP
+#ifndef POMDOG_OPENGLCONTEXTCOCOA_306ECA78_HPP
+#define POMDOG_OPENGLCONTEXTCOCOA_306ECA78_HPP
 
 #include "../RenderSystem.GL4/OpenGLContext.hpp"
 #import <Cocoa/Cocoa.h>
@@ -41,4 +41,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_OPENGLCONTEXTCOCOA_306ECA78_18CF_4A87_A039_0C823668622C_HPP)
+#endif // POMDOG_OPENGLCONTEXTCOCOA_306ECA78_HPP

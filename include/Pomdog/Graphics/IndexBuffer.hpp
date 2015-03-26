@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_INDEXBUFFER_4119FC34_308A_4EF7_BC78_92FD2D6DBC43_HPP
-#define POMDOG_INDEXBUFFER_4119FC34_308A_4EF7_BC78_92FD2D6DBC43_HPP
+#ifndef POMDOG_INDEXBUFFER_4119FC34_HPP
+#define POMDOG_INDEXBUFFER_4119FC34_HPP
 
 #include "detail/ForwardDeclarations.hpp"
 #include "BufferUsage.hpp"
@@ -69,4 +69,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_INDEXBUFFER_4119FC34_308A_4EF7_BC78_92FD2D6DBC43_HPP)
+#endif // POMDOG_INDEXBUFFER_4119FC34_HPP

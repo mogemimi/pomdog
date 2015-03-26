@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_HARDWAREBUFFERHELPER_3C0164CA_35BF_4EFF_B716_BC9058257CFA_HPP
-#define POMDOG_HARDWAREBUFFERHELPER_3C0164CA_35BF_4EFF_B716_BC9058257CFA_HPP
+#ifndef POMDOG_HARDWAREBUFFERHELPER_3C0164CA_HPP
+#define POMDOG_HARDWAREBUFFERHELPER_3C0164CA_HPP
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -36,4 +36,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_HARDWAREBUFFERHELPER_3C0164CA_35BF_4EFF_B716_BC9058257CFA_HPP)
+#endif // POMDOG_HARDWAREBUFFERHELPER_3C0164CA_HPP

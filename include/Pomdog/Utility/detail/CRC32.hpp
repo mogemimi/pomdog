@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_UTILITY_CRC32_7EBEE5EE_0A7A_4875_BBF4_48CAF21443FF_HPP
-#define POMDOG_UTILITY_CRC32_7EBEE5EE_0A7A_4875_BBF4_48CAF21443FF_HPP
+#ifndef POMDOG_CRC32_7EBEE5EE_HPP
+#define POMDOG_CRC32_7EBEE5EE_HPP
 
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
@@ -19,4 +19,4 @@ namespace CRC32 {
 }// namespace Hashing
 }// namespace Pomdof
 
-#endif // !defined(POMDOG_UTILITY_CRC32_7EBEE5EE_0A7A_4875_BBF4_48CAF21443FF_HPP)
+#endif // POMDOG_CRC32_7EBEE5EE_HPP

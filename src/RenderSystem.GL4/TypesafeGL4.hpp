@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_TYPESAFEGL4_B23282F8_F9C8_416A_81F6_FC0BC2E63525_HPP
-#define POMDOG_TYPESAFEGL4_B23282F8_F9C8_416A_81F6_FC0BC2E63525_HPP
+#ifndef POMDOG_TYPESAFEGL4_B23282F8_HPP
+#define POMDOG_TYPESAFEGL4_B23282F8_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "Pomdog/Utility/detail/Tagged.hpp"
@@ -25,4 +25,4 @@ using ShaderProgramGL4 = Tagged<GLuint, Tags::ShaderProgramTag>;
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_TYPESAFEGL4_B23282F8_F9C8_416A_81F6_FC0BC2E63525_HPP)
+#endif // POMDOG_TYPESAFEGL4_B23282F8_HPP

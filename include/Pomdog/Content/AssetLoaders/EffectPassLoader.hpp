@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EFFECTPASSLOADER_C9744EEA_2F5B_46D6_8880_B11D2DF37382_HPP
-#define POMDOG_EFFECTPASSLOADER_C9744EEA_2F5B_46D6_8880_B11D2DF37382_HPP
+#ifndef POMDOG_EFFECTPASSLOADER_C9744EEA_HPP
+#define POMDOG_EFFECTPASSLOADER_C9744EEA_HPP
 
 #include "Pomdog/Basic/Export.hpp"
 #include <string>
@@ -57,4 +57,4 @@ private:
 }// namespace AssetLoaders
 }// namespace Pomdogs
 
-#endif // !defined(POMDOG_EFFECTPASSLOADER_C9744EEA_2F5B_46D6_8880_B11D2DF37382_HPP)
+#endif // POMDOG_EFFECTPASSLOADER_C9744EEA_HPP

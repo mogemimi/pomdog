@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EFFECTPARAMETER_6D116595_A4BD_4566_8445_7BD68FF219B7_HPP
-#define POMDOG_EFFECTPARAMETER_6D116595_A4BD_4566_8445_7BD68FF219B7_HPP
+#ifndef POMDOG_EFFECTPARAMETER_6D116595_HPP
+#define POMDOG_EFFECTPARAMETER_6D116595_HPP
 
 #include "detail/ForwardDeclarations.hpp"
 #include "detail/EffectBinaryParameter.hpp"
@@ -72,4 +72,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EFFECTPARAMETER_6D116595_A4BD_4566_8445_7BD68FF219B7_HPP)
+#endif // POMDOG_EFFECTPARAMETER_6D116595_HPP

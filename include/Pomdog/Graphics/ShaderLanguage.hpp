@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SHADERLANGUAGE_D009E979_B7EC_447B_8628_15130E02F6EB_HPP
-#define POMDOG_SHADERLANGUAGE_D009E979_B7EC_447B_8628_15130E02F6EB_HPP
+#ifndef POMDOG_SHADERLANGUAGE_D009E979_HPP
+#define POMDOG_SHADERLANGUAGE_D009E979_HPP
 
 #include <cstdint>
 
@@ -21,4 +21,4 @@ enum class ShaderLanguage: std::uint8_t {
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SHADERLANGUAGE_D009E979_B7EC_447B_8628_15130E02F6EB_HPP)
+#endif // POMDOG_SHADERLANGUAGE_D009E979_HPP

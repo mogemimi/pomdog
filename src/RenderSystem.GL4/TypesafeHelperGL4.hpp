@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_TYPESAFEHELPERGL4_8C888821_4B58_49F0_B733_396CDAF91F53_HPP
-#define POMDOG_TYPESAFEHELPERGL4_8C888821_4B58_49F0_B733_396CDAF91F53_HPP
+#ifndef POMDOG_TYPESAFEHELPERGL4_8C888821_HPP
+#define POMDOG_TYPESAFEHELPERGL4_8C888821_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "Pomdog/Utility/detail/Tagged.hpp"
@@ -57,4 +57,4 @@ void BindTexture(TaggedClass const& textureObject)
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_TYPESAFEHELPERGL4_8C888821_4B58_49F0_B733_396CDAF91F53_HPP)
+#endif // POMDOG_TYPESAFEHELPERGL4_8C888821_HPP

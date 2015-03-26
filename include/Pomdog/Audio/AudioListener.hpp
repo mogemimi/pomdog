@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_AUDIOLISTENER_C5B766B1_A5C8_444F_96C6_30CFF18CCF91_HPP
-#define POMDOG_AUDIOLISTENER_C5B766B1_A5C8_444F_96C6_30CFF18CCF91_HPP
+#ifndef POMDOG_AUDIOLISTENER_C5B766B1_HPP
+#define POMDOG_AUDIOLISTENER_C5B766B1_HPP
 
 #include "Pomdog/Math/Vector3.hpp"
 
@@ -18,4 +18,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_AUDIOLISTENER_C5B766B1_A5C8_444F_96C6_30CFF18CCF91_HPP)
+#endif // POMDOG_AUDIOLISTENER_C5B766B1_HPP

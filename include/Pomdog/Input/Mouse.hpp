@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_MOUSE_8BFC478A_C7F2_4D4E_A4FE_C756500D5E33_HPP
-#define POMDOG_MOUSE_8BFC478A_C7F2_4D4E_A4FE_C756500D5E33_HPP
+#ifndef POMDOG_MOUSE_8BFC478A_HPP
+#define POMDOG_MOUSE_8BFC478A_HPP
 
 #include "Pomdog/Basic/Export.hpp"
 
@@ -23,4 +23,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_MOUSE_8BFC478A_C7F2_4D4E_A4FE_C756500D5E33_HPP)
+#endif // POMDOG_MOUSE_8BFC478A_HPP

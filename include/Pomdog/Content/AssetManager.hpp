@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_ASSETMANAGER_FAF5E4A4_3E1E_4A97_BA13_57E85E5B9156_HPP
-#define POMDOG_ASSETMANAGER_FAF5E4A4_3E1E_4A97_BA13_57E85E5B9156_HPP
+#ifndef POMDOG_ASSETMANAGER_FAF5E4A4_HPP
+#define POMDOG_ASSETMANAGER_FAF5E4A4_HPP
 
 #include "detail/AssetLoaderContext.hpp"
 #include "detail/AssetDictionary.hpp"
@@ -41,4 +41,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_ASSETMANAGER_FAF5E4A4_3E1E_4A97_BA13_57E85E5B9156_HPP)
+#endif // POMDOG_ASSETMANAGER_FAF5E4A4_HPP

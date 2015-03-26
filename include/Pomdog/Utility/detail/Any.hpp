@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_ANY_2C2DCE41_BD36_4065_BD33_D045184AE06C_HPP
-#define POMDOG_ANY_2C2DCE41_BD36_4065_BD33_D045184AE06C_HPP
+#ifndef POMDOG_ANY_2C2DCE41_HPP
+#define POMDOG_ANY_2C2DCE41_HPP
 
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -95,4 +95,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_ANY_2C2DCE41_BD36_4065_BD33_D045184AE06C_HPP)
+#endif // POMDOG_ANY_2C2DCE41_HPP

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EXCEPTION_46DED4E6_2D2D_4D68_8B7F_6F4983D6C660_HPP
-#define POMDOG_EXCEPTION_46DED4E6_2D2D_4D68_8B7F_6F4983D6C660_HPP
+#ifndef POMDOG_EXCEPTION_46DED4E6_HPP
+#define POMDOG_EXCEPTION_46DED4E6_HPP
 
 #include <stdexcept>
 #include <string>
@@ -58,4 +58,4 @@ T CreateException(std::string const& description, std::string const& source, cha
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EXCEPTION_46DED4E6_2D2D_4D68_8B7F_6F4983D6C660_HPP)
+#endif // POMDOG_EXCEPTION_46DED4E6_HPP

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_CONSTANTBUFFERGL4_98395F08_1611_4948_9C35_81FE756DE978_HPP
-#define POMDOG_CONSTANTBUFFERGL4_98395F08_1611_4948_9C35_81FE756DE978_HPP
+#ifndef POMDOG_CONSTANTBUFFERGL4_98395F08_HPP
+#define POMDOG_CONSTANTBUFFERGL4_98395F08_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeConstantBuffer.hpp"
@@ -49,4 +49,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_CONSTANTBUFFERGL4_98395F08_1611_4948_9C35_81FE756DE978_HPP)
+#endif // POMDOG_CONSTANTBUFFERGL4_98395F08_HPP

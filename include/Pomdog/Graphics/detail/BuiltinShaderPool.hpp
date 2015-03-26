@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_BUILTINSHADERPOOL_98B72B25_3798_4646_AC33_8C8B4FB9451A_HPP
-#define POMDOG_BUILTINSHADERPOOL_98B72B25_3798_4646_AC33_8C8B4FB9451A_HPP
+#ifndef POMDOG_BUILTINSHADERPOOL_98B72B25_HPP
+#define POMDOG_BUILTINSHADERPOOL_98B72B25_HPP
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -54,4 +54,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_BUILTINSHADERPOOL_98B72B25_3798_4646_AC33_8C8B4FB9451A_HPP)
+#endif // POMDOG_BUILTINSHADERPOOL_98B72B25_HPP

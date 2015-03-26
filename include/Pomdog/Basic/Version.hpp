@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_VERSION_805A8424_9383_4CB5_A16C_02EDB5B40B5F_HPP
-#define POMDOG_VERSION_805A8424_9383_4CB5_A16C_02EDB5B40B5F_HPP
+#ifndef POMDOG_VERSION_805A8424_HPP
+#define POMDOG_VERSION_805A8424_HPP
 
 namespace Pomdog {
 
@@ -11,4 +11,4 @@ namespace Pomdog {
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_VERSION_805A8424_9383_4CB5_A16C_02EDB5B40B5F_HPP)
+#endif // POMDOG_VERSION_805A8424_HPP

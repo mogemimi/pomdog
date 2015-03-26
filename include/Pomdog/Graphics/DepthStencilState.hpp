@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_DEPTHSTENCILSTATE_8D3E62B6_0EDC_4443_BB95_C5ECBD493B38_HPP
-#define POMDOG_DEPTHSTENCILSTATE_8D3E62B6_0EDC_4443_BB95_C5ECBD493B38_HPP
+#ifndef POMDOG_DEPTHSTENCILSTATE_8D3E62B6_HPP
+#define POMDOG_DEPTHSTENCILSTATE_8D3E62B6_HPP
 
 #include "detail/ForwardDeclarations.hpp"
 #include "DepthStencilDescription.hpp"
@@ -49,4 +49,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DEPTHSTENCILSTATE_8D3E62B6_0EDC_4443_BB95_C5ECBD493B38_HPP)
+#endif // POMDOG_DEPTHSTENCILSTATE_8D3E62B6_HPP

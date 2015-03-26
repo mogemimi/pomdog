@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EVENT_DETAIL_SIGNAL_F551D1BA_C805_462F_B5E5_87CFF3302EB9_HPP
-#define POMDOG_EVENT_DETAIL_SIGNAL_F551D1BA_C805_462F_B5E5_87CFF3302EB9_HPP
+#ifndef POMDOG_SIGNALBODY_F551D1BA_HPP
+#define POMDOG_SIGNALBODY_F551D1BA_HPP
 
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -233,4 +233,4 @@ std::size_t SignalBody<void(Arguments...)>::InvocationCount() const
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EVENT_DETAIL_SIGNAL_F551D1BA_C805_462F_B5E5_87CFF3302EB9_HPP)
+#endif // POMDOG_SIGNALBODY_F551D1BA_HPP

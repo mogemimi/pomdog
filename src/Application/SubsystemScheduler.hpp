@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SUBSYSTEMSCHEDULER_15398B34_AE1E_4AAA_BE2A_EC942196DC84_HPP
-#define POMDOG_SUBSYSTEMSCHEDULER_15398B34_AE1E_4AAA_BE2A_EC942196DC84_HPP
+#ifndef POMDOG_SUBSYSTEMSCHEDULER_15398B34_HPP
+#define POMDOG_SUBSYSTEMSCHEDULER_15398B34_HPP
 
 #include "../Utility/Noncopyable.hpp"
 #include "Pomdog/Event/Signal.hpp"
@@ -18,4 +18,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SUBSYSTEMSCHEDULER_15398B34_AE1E_4AAA_BE2A_EC942196DC84_HPP)
+#endif // POMDOG_SUBSYSTEMSCHEDULER_15398B34_HPP

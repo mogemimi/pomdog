@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_MOUSEDIRECTINPUT_02D734AC_5354_4EBE_988D_B35AE3CCEE38_HPP
-#define POMDOG_MOUSEDIRECTINPUT_02D734AC_5354_4EBE_988D_B35AE3CCEE38_HPP
+#ifndef POMDOG_MOUSEDIRECTINPUT_02D734AC_HPP
+#define POMDOG_MOUSEDIRECTINPUT_02D734AC_HPP
 
 #include "PrerequisitesDirectInput.hpp"
 #include "Pomdog/Input/Mouse.hpp"
@@ -43,4 +43,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_MOUSEDIRECTINPUT_02D734AC_5354_4EBE_988D_B35AE3CCEE38_HPP)
+#endif // POMDOG_MOUSEDIRECTINPUT_02D734AC_HPP

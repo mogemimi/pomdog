@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SRC_WIN32_GAMEHOSTWIN32_F8172FE6_1CB8_49D0_B6FE_B5448E094B9C_HPP
-#define POMDOG_SRC_WIN32_GAMEHOSTWIN32_F8172FE6_1CB8_49D0_B6FE_B5448E094B9C_HPP
+#ifndef POMDOG_GAMEHOSTWIN32_F8172FE6_HPP
+#define POMDOG_GAMEHOSTWIN32_F8172FE6_HPP
 
 #include "../Application/SystemEventDispatcher.hpp"
 #include "Pomdog/Application/GameHost.hpp"
@@ -70,4 +70,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SRC_WIN32_GAMEHOSTWIN32_F8172FE6_1CB8_49D0_B6FE_B5448E094B9C_HPP)
+#endif // POMDOG_GAMEHOSTWIN32_F8172FE6_HPP

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_BLEND_A27CB239_A90C_46B1_841D_637B0D8343D6_HPP
-#define POMDOG_BLEND_A27CB239_A90C_46B1_841D_637B0D8343D6_HPP
+#ifndef POMDOG_BLEND_A27CB239_HPP
+#define POMDOG_BLEND_A27CB239_HPP
 
 #include <cstdint>
 
@@ -43,4 +43,4 @@ enum class Blend: std::uint8_t {
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_BLEND_A27CB239_A90C_46B1_841D_637B0D8343D6_HPP)
+#endif // POMDOG_BLEND_A27CB239_HPP

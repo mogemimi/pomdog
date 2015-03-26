@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_MATHHELPER_F07877B3_827B_4997_8895_51BD6934A0B7_HPP
-#define POMDOG_MATHHELPER_F07877B3_827B_4997_8895_51BD6934A0B7_HPP
+#ifndef POMDOG_MATHHELPER_F07877B3_HPP
+#define POMDOG_MATHHELPER_F07877B3_HPP
 
 #include "Degree.hpp"
 #include "Radian.hpp"
@@ -97,4 +97,4 @@ Degree<T> ToDegrees(Radian<T> const& radians)
 }// namespace MathHelper
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_MATHHELPER_F07877B3_827B_4997_8895_51BD6934A0B7_HPP)
+#endif // POMDOG_MATHHELPER_F07877B3_HPP

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SIGNAL_51888AFF_8963_45DD_8BFC_FE29E829BBFD_HPP
-#define POMDOG_SIGNAL_51888AFF_8963_45DD_8BFC_FE29E829BBFD_HPP
+#ifndef POMDOG_SIGNAL_51888AFF_HPP
+#define POMDOG_SIGNAL_51888AFF_HPP
 
 #include "detail/SignalBody.hpp"
 #include "EventConnection.hpp"
@@ -71,4 +71,4 @@ std::size_t Signal<void(Arguments...)>::InvocationCount() const
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SIGNAL_51888AFF_8963_45DD_8BFC_FE29E829BBFD_HPP)
+#endif // POMDOG_SIGNAL_51888AFF_HPP

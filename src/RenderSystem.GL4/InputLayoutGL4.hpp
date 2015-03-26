@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_INPUTLAYOUTGL4_F0AF2367_CC09_4F30_B3CD_E1B0A3BE5C22_HPP
-#define POMDOG_INPUTLAYOUTGL4_F0AF2367_CC09_4F30_B3CD_E1B0A3BE5C22_HPP
+#ifndef POMDOG_INPUTLAYOUTGL4_F0AF2367_HPP
+#define POMDOG_INPUTLAYOUTGL4_F0AF2367_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
@@ -73,4 +73,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_INPUTLAYOUTGL4_F0AF2367_CC09_4F30_B3CD_E1B0A3BE5C22_HPP)
+#endif // POMDOG_INPUTLAYOUTGL4_F0AF2367_HPP

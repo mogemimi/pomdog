@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_BOOTSTRAPPERWIN32_4778D685_22F5_4D2E_B7D5_5D8F47760747_HPP
-#define POMDOG_BOOTSTRAPPERWIN32_4778D685_22F5_4D2E_B7D5_5D8F47760747_HPP
+#ifndef POMDOG_BOOTSTRAPPERWIN32_4778D685_HPP
+#define POMDOG_BOOTSTRAPPERWIN32_4778D685_HPP
 
 #include "BootstrapSettingsWin32.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
@@ -30,4 +30,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_BOOTSTRAPPERWIN32_4778D685_22F5_4D2E_B7D5_5D8F47760747_HPP)
+#endif // POMDOG_BOOTSTRAPPERWIN32_4778D685_HPP
