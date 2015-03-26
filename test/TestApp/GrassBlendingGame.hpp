@@ -1,12 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_GRASSBLENDINGGAME_544D7F2A_1541_499F_84A6_3C16FBA45699_HPP
-#define POMDOG_GRASSBLENDINGGAME_544D7F2A_1541_499F_84A6_3C16FBA45699_HPP
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
+#ifndef POMDOG_GRASSBLENDINGGAME_544D7F2A_HPP
+#define POMDOG_GRASSBLENDINGGAME_544D7F2A_HPP
 
 #include <Pomdog.Experimental/InGameEditor/detail/EditorBackground.hpp>
 #include <Pomdog.Experimental/Skeletal2D/detail/AnimationTimer.hpp>
@@ -86,4 +82,4 @@ private:
 
 }// namespace TestApp
 
-#endif // !defined(POMDOG_GRASSBLENDINGGAME_544D7F2A_1541_499F_84A6_3C16FBA45699_HPP)
+#endif // POMDOG_GRASSBLENDINGGAME_544D7F2A_HPP

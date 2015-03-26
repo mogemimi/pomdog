@@ -1,12 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_LOGSKELETALINFO_7178CCE1_65C2_4CB5_96CD_AB53B07E4601_HPP
-#define POMDOG_LOGSKELETALINFO_7178CCE1_65C2_4CB5_96CD_AB53B07E4601_HPP
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
+#ifndef POMDOG_LOGSKELETALINFO_7178CCE1_HPP
+#define POMDOG_LOGSKELETALINFO_7178CCE1_HPP
 
 #include "Pomdog.Experimental/Spine/SkeletonDesc.hpp"
 #include "Pomdog.Experimental/TexturePacker/TextureAtlasLoader.hpp"
@@ -21,4 +17,4 @@ void LogSkeletalInfo(Spine::SkeletonDesc const& skeletonDesc);
 
 }// namespace TestApp
 
-#endif // !defined(POMDOG_LOGSKELETALINFO_7178CCE1_65C2_4CB5_96CD_AB53B07E4601_HPP)
+#endif // POMDOG_LOGSKELETALINFO_7178CCE1_HPP

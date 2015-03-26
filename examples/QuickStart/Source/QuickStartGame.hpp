@@ -30,4 +30,4 @@ private:
 
 }// namespace QuickStart
 
-#endif // !defined(QUICKSTARTGAME_HPP)
+#endif // QUICKSTARTGAME_HPP

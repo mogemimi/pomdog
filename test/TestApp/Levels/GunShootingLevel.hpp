@@ -1,12 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_GUNSHOOTINGLEVEL_2CB60E26_E685_4FB0_9BCE_E28C699DE2AE_HPP
-#define POMDOG_GUNSHOOTINGLEVEL_2CB60E26_E685_4FB0_9BCE_E28C699DE2AE_HPP
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
+#ifndef POMDOG_GUNSHOOTINGLEVEL_2CB60E26_HPP
+#define POMDOG_GUNSHOOTINGLEVEL_2CB60E26_HPP
 
 #include <Pomdog.Experimental/Experimental.hpp>
 #include <Pomdog/Pomdog.hpp>
@@ -35,4 +31,4 @@ private:
 
 }// namespace TestApp
 
-#endif // !defined(POMDOG_GUNSHOOTINGLEVEL_2CB60E26_E685_4FB0_9BCE_E28C699DE2AE_HPP)
+#endif // POMDOG_GUNSHOOTINGLEVEL_2CB60E26_HPP

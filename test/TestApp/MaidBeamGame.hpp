@@ -1,12 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_MAIDBEAMGAME_EC7DAEEE_4167_40CD_931D_B8627B24F68E_HPP
-#define POMDOG_MAIDBEAMGAME_EC7DAEEE_4167_40CD_931D_B8627B24F68E_HPP
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
+#ifndef POMDOG_MAIDBEAMGAME_EC7DAEEE_HPP
+#define POMDOG_MAIDBEAMGAME_EC7DAEEE_HPP
 
 #include <Pomdog.Experimental/InGameEditor/detail/EditorBackground.hpp>
 #include <Pomdog.Experimental/Experimental.hpp>
@@ -68,4 +64,4 @@ private:
 
 }// namespace TestApp
 
-#endif // !defined(POMDOG_MAIDBEAMGAME_EC7DAEEE_4167_40CD_931D_B8627B24F68E_HPP)
+#endif // POMDOG_MAIDBEAMGAME_EC7DAEEE_HPP

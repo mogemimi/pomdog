@@ -4,10 +4,6 @@
 #ifndef POMDOG_COCOATESTGAME_HPP
 #define POMDOG_COCOATESTGAME_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <Pomdog/Pomdog.hpp>
 
 namespace TestApp {
@@ -33,4 +29,4 @@ private:
 
 }// namespace TestApp
 
-#endif // !defined(POMDOG_COCOATESTGAME_HPP)
+#endif // POMDOG_COCOATESTGAME_HPP

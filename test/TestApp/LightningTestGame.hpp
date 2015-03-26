@@ -1,12 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_LIGHTNINGTESTGAME_FCB927D5_9F3B_4B26_B625_A91D2BC743E8_HPP
-#define POMDOG_LIGHTNINGTESTGAME_FCB927D5_9F3B_4B26_B625_A91D2BC743E8_HPP
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
+#ifndef POMDOG_LIGHTNINGTESTGAME_FCB927D5_HPP
+#define POMDOG_LIGHTNINGTESTGAME_FCB927D5_HPP
 
 #include <Pomdog.Experimental/InGameEditor/detail/EditorBackground.hpp>
 #include <Pomdog.Experimental/Experimental.hpp>
@@ -76,4 +72,4 @@ private:
 
 }// namespace TestApp
 
-#endif // !defined(POMDOG_LIGHTNINGTESTGAME_FCB927D5_9F3B_4B26_B625_A91D2BC743E8_HPP)
+#endif // POMDOG_LIGHTNINGTESTGAME_FCB927D5_HPP
