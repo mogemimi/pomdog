@@ -7,6 +7,7 @@ import os
 import argparse
 import subprocess
 import uuid
+
 from string import Template
 
 
@@ -19,6 +20,7 @@ def ParsingCommandLineAraguments():
     args = parser.parse_args()
     return args
 
+
 def IsSourceFile(path):
     root, ext = os.path.splitext(path)
     return (ext == '.cpp'
@@ -30,16 +32,19 @@ def IsSourceFile(path):
       or ext == '.c'
       or ext == '.inc')
 
+
 def ReadContent(path):
     f = open(path, 'rb')
     str = f.read()
     f.close()
     return str
 
+
 def WriteContent(path, content):
     f = open(path, 'wb')
     f.write(content.encode('utf-8'))
     f.close()
+
 
 def RemoveUnnecessaryWhitespace(content):
     result = unicode("", 'utf-8')
@@ -49,6 +54,7 @@ def RemoveUnnecessaryWhitespace(content):
     result = result.rstrip('\n') + '\n'
     return result
 
+
 def ReplaceHardTabsWithWhiteSpaces(content):
     result = unicode("", 'utf-8')
     for line in content.split('\n'):
@@ -56,6 +62,7 @@ def ReplaceHardTabsWithWhiteSpaces(content):
         result += '\n'
     result = result.rstrip('\n') + '\n'
     return result
+
 
 def ConvertSourceFile(path):
     isChanged = False
@@ -89,7 +96,8 @@ def ConvertSourceFile(path):
             path))
         WriteContent(path, content)
 
-def Run():
+
+def main():
     args = ParsingCommandLineAraguments()
 
     #print("args = {0}".format(vars(args))) # for Debug
@@ -110,4 +118,5 @@ def Run():
           #print(path)
           ConvertSourceFile(path)
 
-Run()
+if __name__ == '__main__':
+    main()

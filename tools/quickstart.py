@@ -1,10 +1,7 @@
 # Copyright (c) 2013-2015 mogemimi.
 # Distributed under the MIT license. See LICENSE.md file for details.
 
-
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
-import six
 
 import sys
 import os
@@ -12,6 +9,9 @@ import argparse
 import subprocess
 import uuid
 import shutil
+import six
+
+from __future__ import unicode_literals, print_function
 from string import Template
 
 
@@ -99,6 +99,7 @@ def RenameSourceContent(project_root, identifier, source):
     f.write(content)
     f.close()
 
+
 def RenameContentByUrl(project_root, url, source):
     path = os.path.join(project_root, source)
 
@@ -115,6 +116,7 @@ def RenameContentByUrl(project_root, url, source):
     f.write(content)
     f.close()
 
+
 def RenameFilename(project_root, identifier, source):
     path = os.path.join(project_root, source)
 
@@ -125,6 +127,7 @@ def RenameFilename(project_root, identifier, source):
     dest = os.path.join(project_root, source.replace('QuickStart', identifier))
     if source != dest:
         os.rename(path, dest)
+
 
 def CreateNewProject(config):
     identifier = os.path.basename(config['name'])
@@ -150,10 +153,12 @@ def CreateNewProject(config):
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.cpp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.hpp')
 
+
 def ReadInput(prompt):
     if six.PY3:
         return input(prompt)
     return raw_input(prompt)
+
 
 def Ask(question, default=None):
     result = ''
@@ -176,7 +181,7 @@ def Ask(question, default=None):
     return result
 
 
-def Run():
+def main():
     config = {
         'path': '.',
         'name': 'QuickStart',
@@ -199,4 +204,6 @@ def Run():
     CreateNewProject(config)
     print('Done.')
 
-Run()
+
+if __name__ == '__main__':
+    main()

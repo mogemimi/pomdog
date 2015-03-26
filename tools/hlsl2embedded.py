@@ -18,74 +18,77 @@ import string
 
 
 def ReadCompiledShader(path):
-  f = open(path, 'rb')
-  content = f.read()
-  f.close()
-  return content
+    f = open(path, 'rb')
+    content = f.read()
+    f.close()
+    return content
+
 
 def SaveEmbeddedCode(path, content):
-  f = open(path, 'w')
-  f.write(content)
-  f.close()
-  print "Create new file: " + path
+    f = open(path, 'w')
+    f.write(content)
+    f.close()
+    print "Create new file: " + path
+
 
 def BinaryToAsciiCodeArray(binary):
-  content = u''
-  column = 0
-  elementsPerLine = 6
+    content = u''
+    column = 0
+    elementsPerLine = 6
 
-  for index in range(len(binary)):
-    content += str('{0:3d}').format(ord(binary[index]))
-    content += ','
-    column += 1
-    if column >= elementsPerLine:
-      content += '\n'
-      column = 0
-    else:
-      content += ' '
+    for index in range(len(binary)):
+        content += str('{0:3d}').format(ord(binary[index]))
+        content += ','
+        column += 1
+        if column >= elementsPerLine:
+            content += '\n'
+            column = 0
+        else:
+            content += ' '
 
-  return content.rstrip('\n').rstrip(' ').rstrip(',')
+    return content.rstrip('\n').rstrip(' ').rstrip(',')
+
 
 def Compile(sourcePath, entrypoint, shaderProfile):
-  splittedPath, ext = os.path.splitext(sourcePath)
-  identifier = os.path.basename(splittedPath)
-  directory = os.path.dirname(sourcePath)
+    splittedPath, ext = os.path.splitext(sourcePath)
+    identifier = os.path.basename(splittedPath)
+    directory = os.path.dirname(sourcePath)
 
-  destDirectory = (directory + '.Embedded/')
-  objectPath = os.path.join(destDirectory, (identifier + '.fxo'))
-  destPath = os.path.join(destDirectory, (identifier + '.inc.hpp'))
+    destDirectory = (directory + '.Embedded/')
+    objectPath = os.path.join(destDirectory, (identifier + '.fxo'))
+    destPath = os.path.join(destDirectory, (identifier + '.inc.hpp'))
 
-  is64bits = sys.maxsize > 2**32
-  compilerExeFile = u'C:/Program Files (x86)/Windows Kits/8.1/bin/{0}/fxc.exe'.format('x86' if is64bits else 'x64')
+    is64bits = sys.maxsize > 2**32
+    compilerExeFile = u'C:/Program Files (x86)/Windows Kits/8.1/bin/{0}/fxc.exe'.format(
+        'x86' if is64bits else 'x64')
 
-  if not os.path.exists(compilerExeFile):
-    print(u'Error: Cannot find HLSL compiler "{0}"').format(compilerExeFile)
-    return False
+    if not os.path.exists(compilerExeFile):
+        print(u'Error: Cannot find HLSL compiler "{0}"').format(compilerExeFile)
+        return False
 
-  cmd = u'"{0}" /nologo /T {1} /E {2} /Fo {3}  {4}'.format(
-    compilerExeFile, shaderProfile, entrypoint, objectPath, sourcePath)
+    cmd = u'"{0}" /nologo /T {1} /E {2} /Fo {3}  {4}'.format(
+        compilerExeFile, shaderProfile, entrypoint, objectPath, sourcePath)
 
-  errorCode = os.system(cmd)
+    errorCode = os.system(cmd)
 
-  if errorCode != 0:
-    return False
+    if errorCode != 0:
+        return False
 
-  if not os.path.exists(objectPath):
-    print(u'Error: Cannot find object file "{0}"'.format(objectPath))
-    return False
+    if not os.path.exists(objectPath):
+        print(u'Error: Cannot find object file "{0}"'.format(objectPath))
+        return False
 
-  compiledShader = ReadCompiledShader(objectPath)
+    compiledShader = ReadCompiledShader(objectPath)
 
-  content = u'const uint8_t BuiltinHLSL_{0}[] = '.format(identifier)
-  content += u'{\n'
-  content += BinaryToAsciiCodeArray(compiledShader)
-  content += u'\n};\n'
+    content = u'const uint8_t BuiltinHLSL_{0}[] = '.format(identifier)
+    content += u'{\n'
+    content += BinaryToAsciiCodeArray(compiledShader)
+    content += u'\n};\n'
 
-  SaveEmbeddedCode(destPath, content)
+    SaveEmbeddedCode(destPath, content)
+    os.remove(objectPath)
+    return True
 
-  os.remove(objectPath)
-
-  return True
 
 def ParsingCommandLineAraguments():
     parser = argparse.ArgumentParser(description='Compile HLSL shader file to embedded C++ code')
@@ -96,11 +99,13 @@ def ParsingCommandLineAraguments():
     args = parser.parse_args()
     return args
 
-def Run():
-  args = ParsingCommandLineAraguments()
 
-  succeeded = Compile(args.sourcePath, args.entrypoint, args.profile)
-  if succeeded:
-    print '\nCompile is successful (beer)'
+def main():
+    args = ParsingCommandLineAraguments()
+    succeeded = Compile(args.sourcePath, args.entrypoint, args.profile)
+    if succeeded:
+        print '\nCompile is successful (beer)'
 
-Run()
+
+if __name__ == '__main__':
+    main()

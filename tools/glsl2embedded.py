@@ -8,9 +8,11 @@ import argparse
 import string
 import re
 
+
 # How to use:
 # >>> python tools/glsl2embedded.py VertexShader.glsl
 # Create new file: VertexShader.embedded.glsl
+
 
 def ReadGLSLSource(path):
     if not os.path.exists(path):
@@ -21,11 +23,13 @@ def ReadGLSLSource(path):
     f.close()
     return str
 
+
 def SaveEmbeddedCode(path, content):
     f = open(path, 'w')
     f.write(content)
     f.close()
     print "Create new file: " + path
+
 
 def RemoveWhiteSpace(source):
     result = ""
@@ -36,10 +40,12 @@ def RemoveWhiteSpace(source):
           result += '\n'
     return result
 
+
 def RemoveCommentOut(source):
     source = re.sub(re.compile("/\*.*?\*/", re.DOTALL), "", source)
     source = re.sub(re.compile("//.*?\n"), "", source)
     return source
+
 
 def Replace(source, oldString, newString):
     result = ""
@@ -51,6 +57,7 @@ def Replace(source, oldString, newString):
         result += line
         result += '\n';
     return result
+
 
 def CompressGLSLCode(source):
     preformatted = RemoveCommentOut(RemoveWhiteSpace(source))
@@ -77,6 +84,7 @@ def CompressGLSLCode(source):
     preformatted = preformatted.replace('void main()\n{', 'void main(){')
     return preformatted
 
+
 def ConvertGLSL2EmbeddedCode(source):
     formatted = CompressGLSLCode(source)
     result = ""
@@ -89,11 +97,13 @@ def ConvertGLSL2EmbeddedCode(source):
         result += '\\n"\n'
     return result
 
+
 def GetSourceHeader():
     return """// Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 """
+
 
 def CreateEmbeddedCode(identifier, content):
     name = "Builtin_GLSL_"
@@ -104,6 +114,7 @@ def CreateEmbeddedCode(identifier, content):
     result += ';\n'
     return result
 
+
 def ParsingCommandLineAraguments():
     parser = argparse.ArgumentParser(prog='skeleton_generator',
                                      description='Convert GLSL to embedded C++ code.')
@@ -112,7 +123,8 @@ def ParsingCommandLineAraguments():
     args = parser.parse_args()
     return args
 
-def Run():
+
+def main():
     args = ParsingCommandLineAraguments()
 
     path = args.identifier
@@ -129,4 +141,6 @@ def Run():
     dest = directory + ".Embedded/" + identifier + '.inc.hpp'
     SaveEmbeddedCode(dest, embedded)
 
-Run()
+
+if __name__ == '__main__':
+    main()
