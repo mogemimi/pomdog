@@ -4,10 +4,6 @@
 #ifndef POMDOG_EFFECTCONSTANTDESCRIPTION_5EBD0C28_B36E_485D_AD3C_2D1108556F9C_HPP
 #define POMDOG_EFFECTCONSTANTDESCRIPTION_5EBD0C28_B36E_485D_AD3C_2D1108556F9C_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "EffectVariable.hpp"
 #include <cstdint>
 #include <string>

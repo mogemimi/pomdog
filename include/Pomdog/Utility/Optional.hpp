@@ -4,10 +4,6 @@
 #ifndef POMDOG_OPTIONAL_D43800AB_794D_41B0_8820_203F5CA7D6CB_HPP
 #define POMDOG_OPTIONAL_D43800AB_794D_41B0_8820_203F5CA7D6CB_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Utility/Assert.hpp"
 #include <type_traits>
 #include <utility>

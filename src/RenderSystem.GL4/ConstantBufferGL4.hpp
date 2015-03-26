@@ -4,10 +4,6 @@
 #ifndef POMDOG_CONSTANTBUFFERGL4_98395F08_1611_4948_9C35_81FE756DE978_HPP
 #define POMDOG_CONSTANTBUFFERGL4_98395F08_1611_4948_9C35_81FE756DE978_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeConstantBuffer.hpp"
 #include "Pomdog/Utility/detail/Tagged.hpp"

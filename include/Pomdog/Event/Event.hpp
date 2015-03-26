@@ -4,10 +4,6 @@
 #ifndef POMDOG_EVENT_56ECB270_07B0_4678_BE7E_FF46C5D1A02B_HPP
 #define POMDOG_EVENT_56ECB270_07B0_4678_BE7E_FF46C5D1A02B_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/EventArguments.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Utility/Assert.hpp"

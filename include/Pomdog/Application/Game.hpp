@@ -4,10 +4,6 @@
 #ifndef POMDOG_GAME_8B7C90B7_0C6E_4161_9C57_2BDE1DC6DD57_HPP
 #define POMDOG_GAME_8B7C90B7_0C6E_4161_9C57_2BDE1DC6DD57_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Basic/Export.hpp"
 
 namespace Pomdog {

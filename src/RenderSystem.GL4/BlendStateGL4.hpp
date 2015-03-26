@@ -4,10 +4,6 @@
 #ifndef POMDOG_BLENDSTATEGL4_5A1F407F_670E_455C_BDEE_57E1472471F4_HPP
 #define POMDOG_BLENDSTATEGL4_5A1F407F_670E_455C_BDEE_57E1472471F4_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeBlendState.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"

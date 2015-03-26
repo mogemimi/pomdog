@@ -4,10 +4,6 @@
 #ifndef POMDOG_EVENT_DETAIL_EVENTARGUMENTS_9EA2B1CE_A235_4143_AE93_18447FB0684A_HPP
 #define POMDOG_EVENT_DETAIL_EVENTARGUMENTS_9EA2B1CE_A235_4143_AE93_18447FB0684A_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <typeinfo>
 #include <type_traits>
 #include <utility>

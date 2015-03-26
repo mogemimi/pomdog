@@ -4,10 +4,6 @@
 #ifndef POMDOG_INPUTLAYOUTDIRECT3D11_93CA68F0_7EE1_4BC3_9B42_D90E5CB7E839_HPP
 #define POMDOG_INPUTLAYOUTDIRECT3D11_93CA68F0_7EE1_4BC3_9B42_D90E5CB7E839_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <vector>

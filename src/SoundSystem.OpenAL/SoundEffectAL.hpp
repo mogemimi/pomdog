@@ -4,10 +4,6 @@
 #ifndef POMDOG_SOUNDEFFECTAL_4A967601_7B5B_4A2E_BBF7_3658E1856E6F_HPP
 #define POMDOG_SOUNDEFFECTAL_4A967601_7B5B_4A2E_BBF7_3658E1856E6F_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "PrerequisitesOpenAL.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include "Pomdog/Utility/detail/Tagged.hpp"

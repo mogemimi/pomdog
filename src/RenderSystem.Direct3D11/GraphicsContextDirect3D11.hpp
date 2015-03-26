@@ -4,10 +4,6 @@
 #ifndef POMDOG_GRAPHICSCONTEXTDIRECT3D11_596CF1CC_F17F_44AB_9185_812C9D43D191_HPP
 #define POMDOG_GRAPHICSCONTEXTDIRECT3D11_596CF1CC_F17F_44AB_9185_812C9D43D191_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include <memory>

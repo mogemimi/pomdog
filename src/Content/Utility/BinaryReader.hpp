@@ -4,10 +4,6 @@
 #ifndef POMDOG_BINARYREADER_80B251B8_159B_4CE5_97BC_ED14AE71F9B0_HPP
 #define POMDOG_BINARYREADER_80B251B8_159B_4CE5_97BC_ED14AE71F9B0_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstddef>

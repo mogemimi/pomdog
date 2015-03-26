@@ -4,10 +4,6 @@
 #ifndef POMDOG_LOGLEVEL_5E5C0F27_1A1E_45E8_881A_74F60B906155_HPP
 #define POMDOG_LOGLEVEL_5E5C0F27_1A1E_45E8_881A_74F60B906155_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <cstdint>
 
 namespace Pomdog {

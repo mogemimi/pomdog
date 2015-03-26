@@ -4,10 +4,6 @@
 #ifndef POMDOG_AUDIOLISTENER_C5B766B1_A5C8_444F_96C6_30CFF18CCF91_HPP
 #define POMDOG_AUDIOLISTENER_C5B766B1_A5C8_444F_96C6_30CFF18CCF91_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Math/Vector3.hpp"
 
 namespace Pomdog {

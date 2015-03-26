@@ -4,10 +4,6 @@
 #ifndef POMDOG_GAMEHOSTCOCOA_29C3B75B_9D10_4DA7_BD1A_3AD8511B7D4F_HPP
 #define POMDOG_GAMEHOSTCOCOA_29C3B75B_9D10_4DA7_BD1A_3AD8511B7D4F_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "../Application/SystemEventDispatcher.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include <memory>

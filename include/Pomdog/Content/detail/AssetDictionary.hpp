@@ -4,10 +4,6 @@
 #ifndef POMDOG_ASSETDICTIONARY_8088231B_F800_4D65_A75E_0160C4ED42B8_HPP
 #define POMDOG_ASSETDICTIONARY_8088231B_F800_4D65_A75E_0160C4ED42B8_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "AssetLoaders/AudioClipLoader.hpp"
 #include "AssetLoaders/Texture2DLoader.hpp"
 #include "Pomdog/Utility/detail/Any.hpp"

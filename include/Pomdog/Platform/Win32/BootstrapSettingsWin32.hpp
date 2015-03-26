@@ -4,10 +4,6 @@
 #ifndef POMDOG_BOOTSTRAPSETTINGSWIN32_F058A6BA_63F0_4807_8B2B_2EA2D8FB512A_HPP
 #define POMDOG_BOOTSTRAPSETTINGSWIN32_F058A6BA_63F0_4807_8B2B_2EA2D8FB512A_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 
 namespace Pomdog {

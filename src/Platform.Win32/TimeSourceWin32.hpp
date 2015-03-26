@@ -4,10 +4,6 @@
 #ifndef POMDOG_SRC_WIN32_TIMESOURCEWIN32_A31ECBBA_1FF3_46D6_B8EA_5289C0FABFC9_HPP
 #define POMDOG_SRC_WIN32_TIMESOURCEWIN32_A31ECBBA_1FF3_46D6_B8EA_5289C0FABFC9_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Application/TimePoint.hpp"
 
 namespace Pomdog {

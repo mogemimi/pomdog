@@ -4,10 +4,6 @@
 #ifndef POMDOG_VECTOR4_142CAE48_C528_4EAE_B8D1_9D04F174FDF1_HPP
 #define POMDOG_VECTOR4_142CAE48_C528_4EAE_B8D1_9D04F174FDF1_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/FloatingPointVector4.hpp"
 
 namespace Pomdog {

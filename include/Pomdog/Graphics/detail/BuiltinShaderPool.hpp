@@ -4,10 +4,6 @@
 #ifndef POMDOG_BUILTINSHADERPOOL_98B72B25_3798_4646_AC33_8C8B4FB9451A_HPP
 #define POMDOG_BUILTINSHADERPOOL_98B72B25_3798_4646_AC33_8C8B4FB9451A_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Basic/Export.hpp"

@@ -4,10 +4,6 @@
 #ifndef POMDOG_ERRORCHECKERAL_CD663609_0C15_464F_A972_6E33B2F595BA_HPP
 #define POMDOG_ERRORCHECKERAL_CD663609_0C15_464F_A972_6E33B2F595BA_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 namespace Pomdog {
 namespace Detail {
 namespace SoundSystem {

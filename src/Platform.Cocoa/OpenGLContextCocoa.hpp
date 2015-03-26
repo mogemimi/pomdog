@@ -4,10 +4,6 @@
 #ifndef POMDOG_OPENGLCONTEXTCOCOA_306ECA78_18CF_4A87_A039_0C823668622C_HPP
 #define POMDOG_OPENGLCONTEXTCOCOA_306ECA78_18CF_4A87_A039_0C823668622C_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "../RenderSystem.GL4/OpenGLContext.hpp"
 #import <Cocoa/Cocoa.h>
 

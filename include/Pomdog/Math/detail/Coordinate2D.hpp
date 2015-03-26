@@ -4,10 +4,6 @@
 #ifndef POMDOG_MATH_DETAIL_COORDINATE2D_9F61E901_0DBD_451E_B518_E52D38B77A9E_HPP
 #define POMDOG_MATH_DETAIL_COORDINATE2D_9F61E901_0DBD_451E_B518_E52D38B77A9E_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Basic/Export.hpp"
 #include <type_traits>
 

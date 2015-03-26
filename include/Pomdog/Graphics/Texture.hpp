@@ -4,10 +4,6 @@
 #ifndef POMDOG_TEXTURE_3A7EAD6D_145C_4F90_8749_568FC6DD4338_HPP
 #define POMDOG_TEXTURE_3A7EAD6D_145C_4F90_8749_568FC6DD4338_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Basic/Export.hpp"
 
 namespace Pomdog {

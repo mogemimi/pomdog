@@ -4,10 +4,6 @@
 #ifndef POMDOG_EFFECTPASSLOADER_C9744EEA_2F5B_46D6_8880_B11D2DF37382_HPP
 #define POMDOG_EFFECTPASSLOADER_C9744EEA_2F5B_46D6_8880_B11D2DF37382_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Basic/Export.hpp"
 #include <string>
 #include <memory>

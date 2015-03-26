@@ -4,10 +4,6 @@
 #ifndef POMDOG_TEXTURE2DDIRECT3D11_BA251B9A_30C1_4F55_ACF2_AAE304E8EFFA_HPP
 #define POMDOG_TEXTURE2DDIRECT3D11_BA251B9A_30C1_4F55_ACF2_AAE304E8EFFA_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeTexture2D.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"

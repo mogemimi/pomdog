@@ -4,10 +4,6 @@
 #ifndef POMDOG_EVENT_DETAIL_SIGNAL_F551D1BA_C805_462F_B5E5_87CFF3302EB9_HPP
 #define POMDOG_EVENT_DETAIL_SIGNAL_F551D1BA_C805_462F_B5E5_87CFF3302EB9_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Basic/Export.hpp"

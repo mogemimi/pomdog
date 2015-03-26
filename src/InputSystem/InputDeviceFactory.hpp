@@ -4,10 +4,6 @@
 #ifndef POMDOG_INPUTDEVICEFACTORY_60E2AEA5_DD8F_4F83_85A6_E364081B2E01_HPP
 #define POMDOG_INPUTDEVICEFACTORY_60E2AEA5_DD8F_4F83_85A6_E364081B2E01_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "KeyboardCreator.hpp"
 #include "MouseCreator.hpp"
 #include "../Utility/Noncopyable.hpp"

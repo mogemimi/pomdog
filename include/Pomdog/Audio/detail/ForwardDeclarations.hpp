@@ -4,10 +4,6 @@
 #ifndef POMDOG_FORWARDDECLARATIONS_0BAC0396_5240_4F14_AFF8_13A71B8E0B54_HPP
 #define POMDOG_FORWARDDECLARATIONS_0BAC0396_5240_4F14_AFF8_13A71B8E0B54_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Basic/Platform.hpp"
 
 namespace Pomdog {

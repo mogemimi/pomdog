@@ -4,10 +4,6 @@
 #ifndef POMDOG_AUDIOCLIPLOADER_18B28F6C_03C2_407A_8514_38A44B778177_HPP
 #define POMDOG_AUDIOCLIPLOADER_18B28F6C_03C2_407A_8514_38A44B778177_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Content/detail/AssetLoader.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <string>

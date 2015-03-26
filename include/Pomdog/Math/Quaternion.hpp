@@ -4,10 +4,6 @@
 #ifndef POMDOG_QUATERNION_601F9EDC_AA32_4901_8824_EDD91E38D6E2_HPP
 #define POMDOG_QUATERNION_601F9EDC_AA32_4901_8824_EDD91E38D6E2_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/FloatingPointQuaternion.hpp"
 
 namespace Pomdog {

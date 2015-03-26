@@ -4,10 +4,6 @@
 #ifndef POMDOG_DEPTHSTENCILSTATE_8D3E62B6_0EDC_4443_BB95_C5ECBD493B38_HPP
 #define POMDOG_DEPTHSTENCILSTATE_8D3E62B6_0EDC_4443_BB95_C5ECBD493B38_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/ForwardDeclarations.hpp"
 #include "DepthStencilDescription.hpp"
 #include "Pomdog/Basic/Export.hpp"

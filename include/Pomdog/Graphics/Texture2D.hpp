@@ -4,10 +4,6 @@
 #ifndef POMDOG_TEXTURE2D_F041ED3F_9089_4056_BC4F_1C145612778F_HPP
 #define POMDOG_TEXTURE2D_F041ED3F_9089_4056_BC4F_1C145612778F_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/ForwardDeclarations.hpp"
 #include "Texture.hpp"
 #include "SurfaceFormat.hpp"

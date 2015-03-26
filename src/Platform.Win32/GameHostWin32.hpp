@@ -4,10 +4,6 @@
 #ifndef POMDOG_SRC_WIN32_GAMEHOSTWIN32_F8172FE6_1CB8_49D0_B6FE_B5448E094B9C_HPP
 #define POMDOG_SRC_WIN32_GAMEHOSTWIN32_F8172FE6_1CB8_49D0_B6FE_B5448E094B9C_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "../Application/SystemEventDispatcher.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include <memory>

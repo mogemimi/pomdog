@@ -4,10 +4,6 @@
 #ifndef POMDOG_CONSTANTBUFFERBINDING_4C538B17_4EF0_47AC_B3BA_2369FD5A0540_HPP
 #define POMDOG_CONSTANTBUFFERBINDING_4C538B17_4EF0_47AC_B3BA_2369FD5A0540_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <unordered_map>

@@ -4,10 +4,6 @@
 #ifndef POMDOG_EFFECTREFLECTIONGL4_98947466_A9FF_4349_A3F0_876FEF470821_HPP
 #define POMDOG_EFFECTREFLECTIONGL4_98947466_A9FF_4349_A3F0_876FEF470821_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
 #include "../RenderSystem/NativeEffectReflection.hpp"

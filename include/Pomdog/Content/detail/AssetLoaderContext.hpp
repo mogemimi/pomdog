@@ -4,10 +4,6 @@
 #ifndef POMDOG_ASSETLOADERCONTEXT_E4996CA2_38E7_45F5_BBED_9DC401425E70_HPP
 #define POMDOG_ASSETLOADERCONTEXT_E4996CA2_38E7_45F5_BBED_9DC401425E70_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <string>

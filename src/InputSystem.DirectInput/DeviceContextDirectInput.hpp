@@ -4,10 +4,6 @@
 #ifndef POMDOG_DEVICECONTEXTDIRECTINPUT_A3771E91_2E13_44AD_B199_10ECE47A646E_HPP
 #define POMDOG_DEVICECONTEXTDIRECTINPUT_A3771E91_2E13_44AD_B199_10ECE47A646E_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "PrerequisitesDirectInput.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include <wrl/client.h>

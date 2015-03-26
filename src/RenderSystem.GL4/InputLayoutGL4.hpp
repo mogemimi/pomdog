@@ -4,10 +4,6 @@
 #ifndef POMDOG_INPUTLAYOUTGL4_F0AF2367_CC09_4F30_B3CD_E1B0A3BE5C22_HPP
 #define POMDOG_INPUTLAYOUTGL4_F0AF2367_CC09_4F30_B3CD_E1B0A3BE5C22_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"

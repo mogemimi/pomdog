@@ -4,10 +4,6 @@
 #ifndef POMDOG_VERTEXBUFFER_3DDFD5CB_025A_40AE_9438_85D3064CE7D9_HPP
 #define POMDOG_VERTEXBUFFER_3DDFD5CB_025A_40AE_9438_85D3064CE7D9_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/ForwardDeclarations.hpp"
 #include "BufferUsage.hpp"
 #include "Pomdog/Basic/Export.hpp"

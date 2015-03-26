@@ -4,10 +4,6 @@
 #ifndef POMDOG_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP
 #define POMDOG_GAMEWINDOWCOCOA_BA8D88CA_87F8_46A5_8F32_7FA2C73F58B1_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "../Application/SystemEventDispatcher.hpp"
 #include "Pomdog/Application/GameWindow.hpp"
 #include "Pomdog/Math/Rectangle.hpp"

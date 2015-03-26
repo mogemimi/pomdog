@@ -4,10 +4,6 @@
 #ifndef POMDOG_GLSLCOMPILER_9FED2927_CB1F_4D98_93D0_CC5E72F0C95B_HPP
 #define POMDOG_GLSLCOMPILER_9FED2927_CB1F_4D98_93D0_CC5E72F0C95B_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <cstddef>

@@ -4,10 +4,6 @@
 #ifndef POMDOG_LOG_B5157F87_E1D1_460C_8346_161983EF05D9_HPP
 #define POMDOG_LOG_B5157F87_E1D1_460C_8346_161983EF05D9_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "LogLevel.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <string>

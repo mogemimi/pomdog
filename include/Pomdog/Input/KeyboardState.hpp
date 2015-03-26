@@ -4,10 +4,6 @@
 #ifndef POMDOG_KEYBOARDSTATE_8518E1F7_25E7_4E90_AD55_055740A9EA0E_HPP
 #define POMDOG_KEYBOARDSTATE_8518E1F7_25E7_4E90_AD55_055740A9EA0E_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Basic/Export.hpp"
 #include <bitset>
 

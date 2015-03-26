@@ -4,10 +4,6 @@
 #ifndef POMDOG_KEYBOARDCREATOR_E5930C37_6D5B_4529_A6DB_2F789D2CA82E_HPP
 #define POMDOG_KEYBOARDCREATOR_E5930C37_6D5B_4529_A6DB_2F789D2CA82E_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "InputDeviceCreator.hpp"
 
 namespace Pomdog {

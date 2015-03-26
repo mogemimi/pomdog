@@ -4,10 +4,6 @@
 #ifndef POMDOG_BLENDDESCRIPTION_0C296679_CD00_43E5_8EFC_6AE11478FB02_HPP
 #define POMDOG_BLENDDESCRIPTION_0C296679_CD00_43E5_8EFC_6AE11478FB02_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Blend.hpp"
 #include "BlendFunction.hpp"
 #include "Pomdog/Math/Color.hpp"

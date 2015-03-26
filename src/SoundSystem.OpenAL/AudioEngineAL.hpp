@@ -4,10 +4,6 @@
 #ifndef POMDOG_AUDIOENGINEAL_4B9A3A11_27A6_4393_A5FF_F10183A42D92_HPP
 #define POMDOG_AUDIOENGINEAL_4B9A3A11_27A6_4393_A5FF_F10183A42D92_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "PrerequisitesOpenAL.hpp"
 #include "ContextOpenAL.hpp"
 #include "../Utility/Noncopyable.hpp"

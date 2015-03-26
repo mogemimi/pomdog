@@ -4,10 +4,6 @@
 #ifndef POMDOG_MAKEFOURCC_ED6FB253_174A_46D4_9EDA_D3ADDDAB06C2_HPP
 #define POMDOG_MAKEFOURCC_ED6FB253_174A_46D4_9EDA_D3ADDDAB06C2_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <cstdint>
 #include <type_traits>
 

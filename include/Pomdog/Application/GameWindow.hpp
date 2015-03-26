@@ -4,10 +4,6 @@
 #ifndef POMDOG_GAMEWINDOW_22D747BC_F865_4F1E_B8BB_609D297F662F_HPP
 #define POMDOG_GAMEWINDOW_22D747BC_F865_4F1E_B8BB_609D297F662F_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Event/Signal.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <string>

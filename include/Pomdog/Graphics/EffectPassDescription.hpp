@@ -4,10 +4,6 @@
 #ifndef POMDOG_EFFECTPASSDESCRIPTION_E706BE44_0599_4E5B_B49F_BC11B1C2E177_HPP
 #define POMDOG_EFFECTPASSDESCRIPTION_E706BE44_0599_4E5B_B49F_BC11B1C2E177_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/ForwardDeclarations.hpp"
 #include "VertexBufferBinding.hpp"
 #include <memory>

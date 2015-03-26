@@ -4,10 +4,6 @@
 #ifndef POMDOG_GAMECLOCK_06D5BC45_786E_4B42_BE61_413BE23C6AF1_HPP
 #define POMDOG_GAMECLOCK_06D5BC45_786E_4B42_BE61_413BE23C6AF1_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Event/Signal.hpp"

@@ -4,10 +4,6 @@
 #ifndef POMDOG_BLENDSTATE_CFC118A6_5546_4C83_9888_2399BF4E6602_HPP
 #define POMDOG_BLENDSTATE_CFC118A6_5546_4C83_9888_2399BF4E6602_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/ForwardDeclarations.hpp"
 #include "BlendDescription.hpp"
 #include "Pomdog/Basic/Export.hpp"

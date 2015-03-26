@@ -4,10 +4,6 @@
 #ifndef POMDOG_POINT3D_53E0AC10_9ECA_44A2_A3B0_E7D7F331C801_HPP
 #define POMDOG_POINT3D_53E0AC10_9ECA_44A2_A3B0_E7D7F331C801_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/Coordinate3D.hpp"
 #include <cstdint>
 

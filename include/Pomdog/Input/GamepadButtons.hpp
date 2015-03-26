@@ -4,10 +4,6 @@
 #ifndef POMDOG_GAMEPADBUTTONS_7EF60FA0_1450_4C86_8013_7C72030AEBD8_HPP
 #define POMDOG_GAMEPADBUTTONS_7EF60FA0_1450_4C86_8013_7C72030AEBD8_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "ButtonState.hpp"
 #include <cstdint>
 

@@ -4,10 +4,6 @@
 #ifndef POMDOG_EFFECTREFLECTION_88543BAB_9612_40DD_9CD1_D6DB38D4D8DC_HPP
 #define POMDOG_EFFECTREFLECTION_88543BAB_9612_40DD_9CD1_D6DB38D4D8DC_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/ForwardDeclarations.hpp"
 #include "EffectConstantDescription.hpp"
 #include "Pomdog/Basic/Export.hpp"

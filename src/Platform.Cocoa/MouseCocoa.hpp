@@ -4,10 +4,6 @@
 #ifndef POMDOG_MOUSECOCOA_E737D799_3080_4B3E_A2A8_E3886D4800D1_HPP
 #define POMDOG_MOUSECOCOA_E737D799_3080_4B3E_A2A8_E3886D4800D1_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Input/Mouse.hpp"
 #include "Pomdog/Input/MouseState.hpp"
 

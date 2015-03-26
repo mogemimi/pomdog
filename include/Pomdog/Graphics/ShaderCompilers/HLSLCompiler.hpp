@@ -4,10 +4,6 @@
 #ifndef POMDOG_HLSLCOMPILER_223CB751_DD53_4FAB_8C8B_BB901AE266BA_HPP
 #define POMDOG_HLSLCOMPILER_223CB751_DD53_4FAB_8C8B_BB901AE266BA_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <cstddef>

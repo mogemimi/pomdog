@@ -4,10 +4,6 @@
 #ifndef POMDOG_VERTEXBUFFERDIRECT3D11_EABF11E7_176B_40C2_86B9_08FB57DDF6B7_HPP
 #define POMDOG_VERTEXBUFFERDIRECT3D11_EABF11E7_176B_40C2_86B9_08FB57DDF6B7_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeVertexBuffer.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"

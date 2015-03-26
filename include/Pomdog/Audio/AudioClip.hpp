@@ -4,10 +4,6 @@
 #ifndef POMDOG_AUDIOCLIP_C1887233_F337_44F3_8AAC_784260497BCE_HPP
 #define POMDOG_AUDIOCLIP_C1887233_F337_44F3_8AAC_784260497BCE_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/ForwardDeclarations.hpp"
 #include "AudioChannels.hpp"
 #include "Pomdog/Application/Duration.hpp"

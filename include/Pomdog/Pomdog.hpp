@@ -4,10 +4,6 @@
 #ifndef POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP
 #define POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 // Application
 #include "Application/Duration.hpp"
 #include "Application/Game.hpp"

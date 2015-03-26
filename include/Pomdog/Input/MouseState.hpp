@@ -4,10 +4,6 @@
 #ifndef POMDOG_MOUSESTATE_0CEDE70B_5845_49FD_AA5F_2572AE32B73E_HPP
 #define POMDOG_MOUSESTATE_0CEDE70B_5845_49FD_AA5F_2572AE32B73E_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "ButtonState.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/Point2D.hpp"

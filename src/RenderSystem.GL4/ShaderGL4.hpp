@@ -4,10 +4,6 @@
 #ifndef POMDOG_SHADERGL4_39E4A790_D7E4_4CA7_960D_F27CF80FCF2A_HPP
 #define POMDOG_SHADERGL4_39E4A790_D7E4_4CA7_960D_F27CF80FCF2A_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "OpenGLPrerequisites.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Utility/Optional.hpp"

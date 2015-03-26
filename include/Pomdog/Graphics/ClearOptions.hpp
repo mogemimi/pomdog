@@ -4,10 +4,6 @@
 #ifndef POMDOG_CLEAROPTIONS_F51CCEF3_A5F7_418E_AD9A_35610A589BB1_HPP
 #define POMDOG_CLEAROPTIONS_F51CCEF3_A5F7_418E_AD9A_35610A589BB1_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 

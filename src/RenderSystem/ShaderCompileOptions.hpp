@@ -4,10 +4,6 @@
 #ifndef POMDOG_SHADERCOMPILEOPTIONS_11A9FF1A_9BA1_431B_AE9E_BB99CD2AB5F9_HPP
 #define POMDOG_SHADERCOMPILEOPTIONS_11A9FF1A_9BA1_431B_AE9E_BB99CD2AB5F9_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <cstdint>
 #include <vector>
 #include <string>

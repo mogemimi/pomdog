@@ -4,10 +4,6 @@
 #ifndef POMDOG_SRC_WIN32_GAMEWINDOWWIN32_2EC902FC_1DBE_4A3C_BCF0_C25FDDBBA5D7_HPP
 #define POMDOG_SRC_WIN32_GAMEWINDOWWIN32_2EC902FC_1DBE_4A3C_BCF0_C25FDDBBA5D7_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "../Application/SystemEventDispatcher.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Application/GameWindow.hpp"

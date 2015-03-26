@@ -4,10 +4,6 @@
 #ifndef POMDOG_BLENDSTATEDIRECT3D11_24607C21_74E1_49B1_B7AB_033D7F5B8E4B_HPP
 #define POMDOG_BLENDSTATEDIRECT3D11_24607C21_74E1_49B1_B7AB_033D7F5B8E4B_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeBlendState.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"

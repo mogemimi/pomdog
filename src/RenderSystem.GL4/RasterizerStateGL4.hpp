@@ -4,10 +4,6 @@
 #ifndef POMDOG_RASTERIZERSTATEGL4_CD96D51A_56D8_4EC5_BD1F_2FB19D26A089_HPP
 #define POMDOG_RASTERIZERSTATEGL4_CD96D51A_56D8_4EC5_BD1F_2FB19D26A089_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeRasterizerState.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"

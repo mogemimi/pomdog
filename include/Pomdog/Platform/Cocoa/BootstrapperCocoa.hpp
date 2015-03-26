@@ -4,10 +4,6 @@
 #ifndef POMDOG_DETAIL_BOOTSTRAPPERCOCOA_13B44EFA_9FFA_4AE2_953A_22EFEB4FC322_HPP
 #define POMDOG_DETAIL_BOOTSTRAPPERCOCOA_13B44EFA_9FFA_4AE2_953A_22EFEB4FC322_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Basic/Export.hpp"

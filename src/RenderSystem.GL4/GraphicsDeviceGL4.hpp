@@ -4,10 +4,6 @@
 #ifndef POMDOG_GRAPHICSDEVICEGL4_74F5BC81_6BDB_4FDC_99F4_DF45CEC32B5F_HPP
 #define POMDOG_GRAPHICSDEVICEGL4_74F5BC81_6BDB_4FDC_99F4_DF45CEC32B5F_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include <memory>
 

@@ -4,10 +4,6 @@
 #ifndef POMDOG_CONSTANTBUFFERDIRECT3D11_FCEBAAAC_FF4D_4266_B8C4_BF5A4A512E72_HPP
 #define POMDOG_CONSTANTBUFFERDIRECT3D11_FCEBAAAC_FF4D_4266_B8C4_BF5A4A512E72_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeConstantBuffer.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"

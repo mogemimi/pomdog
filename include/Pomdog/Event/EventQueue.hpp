@@ -4,10 +4,6 @@
 #ifndef POMDOG_EVENTQUEUE_4A197647_AE4E_42C7_AC78_B5E621DD2DA2_HPP
 #define POMDOG_EVENTQUEUE_4A197647_AE4E_42C7_AC78_B5E621DD2DA2_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/ForwardDeclarations.hpp"
 #include "Event.hpp"
 #include "Pomdog/Basic/Export.hpp"

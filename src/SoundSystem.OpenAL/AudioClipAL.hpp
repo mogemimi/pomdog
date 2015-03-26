@@ -4,10 +4,6 @@
 #ifndef POMDOG_AUDIOCLIPAL_88AB8594_0292_40AB_84D9_F82EDDAD63A9_HPP
 #define POMDOG_AUDIOCLIPAL_88AB8594_0292_40AB_84D9_F82EDDAD63A9_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "PrerequisitesOpenAL.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include "Pomdog/Utility/Optional.hpp"

@@ -4,10 +4,6 @@
 #ifndef POMDOG_TEXTUREHELPER_FDC1E68E_244E_4210_AA2A_9DE6C8AD9BC9_HPP
 #define POMDOG_TEXTUREHELPER_FDC1E68E_244E_4210_AA2A_9DE6C8AD9BC9_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <cstdint>
 
 namespace Pomdog {

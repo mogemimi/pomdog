@@ -4,10 +4,6 @@
 #ifndef POMDOG_RENDERTARGET2DDIRECT3D11_75264088_5BBA_4784_95F9_9717260F6FF8_HPP
 #define POMDOG_RENDERTARGET2DDIRECT3D11_75264088_5BBA_4784_95F9_9717260F6FF8_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"

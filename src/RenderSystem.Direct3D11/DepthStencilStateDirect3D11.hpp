@@ -4,10 +4,6 @@
 #ifndef POMDOG_DEPTHSTENCILSTATEDIRECT3D11_F08A14A0_EDA2_4794_88ED_C43CC4059658_HPP
 #define POMDOG_DEPTHSTENCILSTATEDIRECT3D11_F08A14A0_EDA2_4794_88ED_C43CC4059658_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeDepthStencilState.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"

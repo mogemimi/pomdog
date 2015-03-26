@@ -4,10 +4,6 @@
 #ifndef POMDOG_ASSETMANAGER_FAF5E4A4_3E1E_4A97_BA13_57E85E5B9156_HPP
 #define POMDOG_ASSETMANAGER_FAF5E4A4_3E1E_4A97_BA13_57E85E5B9156_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/AssetLoaderContext.hpp"
 #include "detail/AssetDictionary.hpp"
 #include "Pomdog/Basic/Export.hpp"

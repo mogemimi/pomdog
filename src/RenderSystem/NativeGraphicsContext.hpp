@@ -4,10 +4,6 @@
 #ifndef POMDOG_NATIVEGRAPHICSCONTEXT_D292A72E_1944_423B_B25A_6A311774AC04_HPP
 #define POMDOG_NATIVEGRAPHICSCONTEXT_D292A72E_1944_423B_B25A_6A311774AC04_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "../Utility/Noncopyable.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"

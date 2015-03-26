@@ -4,10 +4,6 @@
 #ifndef POMDOG_RENDERTARGET2DGL4_0C6A48A1_E6BF_4896_9EB9_9F9A4082ABDF_HPP
 #define POMDOG_RENDERTARGET2DGL4_0C6A48A1_E6BF_4896_9EB9_9F9A4082ABDF_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "OpenGLPrerequisites.hpp"
 #include "Texture2DGL4.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"

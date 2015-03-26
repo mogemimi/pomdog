@@ -4,10 +4,6 @@
 #ifndef POMDOG_CUSTOMVERTEX_614B90BE_45A7_486E_909C_2A51C33975C8_HPP
 #define POMDOG_CUSTOMVERTEX_614B90BE_45A7_486E_909C_2A51C33975C8_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/VertexElementHelper.hpp"
 #include "VertexDeclaration.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"

@@ -4,10 +4,6 @@
 #ifndef POMDOG_TYPESAFEGL4_B23282F8_F9C8_416A_81F6_FC0BC2E63525_HPP
 #define POMDOG_TYPESAFEGL4_B23282F8_F9C8_416A_81F6_FC0BC2E63525_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "OpenGLPrerequisites.hpp"
 #include "Pomdog/Utility/detail/Tagged.hpp"
 

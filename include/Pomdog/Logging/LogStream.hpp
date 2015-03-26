@@ -4,10 +4,6 @@
 #ifndef POMDOG_LOGSTREAM_9EF46BAA_9822_46E4_BCC6_DC71864ADAE5_HPP
 #define POMDOG_LOGSTREAM_9EF46BAA_9822_46E4_BCC6_DC71864ADAE5_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "LogLevel.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <type_traits>

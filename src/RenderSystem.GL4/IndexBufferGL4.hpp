@@ -4,10 +4,6 @@
 #ifndef POMDOG_INDEXBUFFERGL4_752BED0C_BBD7_4563_B489_47AEAC302545_HPP
 #define POMDOG_INDEXBUFFERGL4_752BED0C_BBD7_4563_B489_47AEAC302545_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeIndexBuffer.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"

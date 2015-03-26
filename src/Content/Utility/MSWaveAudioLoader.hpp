@@ -4,10 +4,6 @@
 #ifndef POMDOG_MSWAVEAUDIOLOADER_8808FBBE_6F7C_4FB1_84C9_CB1833D51283_HPP
 #define POMDOG_MSWAVEAUDIOLOADER_8808FBBE_6F7C_4FB1_84C9_CB1833D51283_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Audio/AudioChannels.hpp"
 #include "Pomdog/Application/Duration.hpp"
 #include <cstdint>

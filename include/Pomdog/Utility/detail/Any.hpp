@@ -4,10 +4,6 @@
 #ifndef POMDOG_ANY_2C2DCE41_BD36_4065_BD33_D045184AE06C_HPP
 #define POMDOG_ANY_2C2DCE41_BD36_4065_BD33_D045184AE06C_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <typeindex>

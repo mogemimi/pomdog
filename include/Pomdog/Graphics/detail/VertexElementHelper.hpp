@@ -4,10 +4,6 @@
 #ifndef POMDOG_VERTEXELEMENTHELPER_8D22B0DB_DF29_466C_BD6B_7A095650D28F_HPP
 #define POMDOG_VERTEXELEMENTHELPER_8D22B0DB_DF29_466C_BD6B_7A095650D28F_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>

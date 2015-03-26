@@ -4,10 +4,6 @@
 #ifndef POMDOG_SHADERDIRECT3D11_F7D61E35_F8F5_4C56_982E_279FAEE85DE4_HPP
 #define POMDOG_SHADERDIRECT3D11_F7D61E35_F8F5_4C56_982E_279FAEE85DE4_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include <vector>

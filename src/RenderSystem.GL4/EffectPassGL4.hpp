@@ -4,10 +4,6 @@
 #ifndef POMDOG_EFFECTPASSGL4_5C5F046F_F42A_4AAD_AC22_389698C435EB_HPP
 #define POMDOG_EFFECTPASSGL4_5C5F046F_F42A_4AAD_AC22_389698C435EB_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
 #include "../RenderSystem/NativeEffectPass.hpp"

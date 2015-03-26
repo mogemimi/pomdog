@@ -4,10 +4,6 @@
 #ifndef POMDOG_MATH_DETAIL_TAGGEDARITHMETIC_4493CED1_FBAE_438C_8F8C_B2FD921C900F_HPP
 #define POMDOG_MATH_DETAIL_TAGGEDARITHMETIC_4493CED1_FBAE_438C_8F8C_B2FD921C900F_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <type_traits>

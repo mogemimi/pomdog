@@ -4,10 +4,6 @@
 #ifndef POMDOG_DURATION_5FF1F824_9894_4804_8D7D_39A0655A55AC_HPP
 #define POMDOG_DURATION_5FF1F824_9894_4804_8D7D_39A0655A55AC_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <chrono>
 
 namespace Pomdog {

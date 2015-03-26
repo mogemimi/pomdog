@@ -4,10 +4,6 @@
 #ifndef POMDOG_MATH_DETAIL_FLOATINGPOINTMATRIX3X3_69EBDB78_9A8B_47F1_A99C_D568F466F249_HPP
 #define POMDOG_MATH_DETAIL_FLOATINGPOINTMATRIX3X3_69EBDB78_9A8B_47F1_A99C_D568F466F249_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstddef>

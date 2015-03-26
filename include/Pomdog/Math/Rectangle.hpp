@@ -4,10 +4,6 @@
 #ifndef POMDOG_RECTANGLE_4B874E7C_F063_45FC_9ED7_B493476A646C_HPP
 #define POMDOG_RECTANGLE_4B874E7C_F063_45FC_9ED7_B493476A646C_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Point2D.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>

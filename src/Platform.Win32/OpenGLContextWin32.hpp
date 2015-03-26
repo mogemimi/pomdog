@@ -4,10 +4,6 @@
 #ifndef POMDOG_OPENGLCONTEXTWIN32_A7C60FF2_4CA1_4345_80A7_2496218BC0EA_HPP
 #define POMDOG_OPENGLCONTEXTWIN32_A7C60FF2_4CA1_4345_80A7_2496218BC0EA_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "../RenderSystem.GL4/OpenGLContext.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include <functional>

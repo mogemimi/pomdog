@@ -4,10 +4,6 @@
 #ifndef POMDOG_DEPTHFORMAT_5FF8041D_B10E_4EBC_A142_2BAAA12C234B_HPP
 #define POMDOG_DEPTHFORMAT_5FF8041D_B10E_4EBC_A142_2BAAA12C234B_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <cstdint>
 
 namespace Pomdog {

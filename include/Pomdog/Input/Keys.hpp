@@ -4,10 +4,6 @@
 #ifndef POMDOG_KEYS_13ECB5F8_A30A_4388_8785_2CDBD108AC25_HPP
 #define POMDOG_KEYS_13ECB5F8_A30A_4388_8785_2CDBD108AC25_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <cstdint>
 
 namespace Pomdog {

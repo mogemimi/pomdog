@@ -4,10 +4,6 @@
 #ifndef POMDOG_MATHHELPER_F07877B3_827B_4997_8895_51BD6934A0B7_HPP
 #define POMDOG_MATHHELPER_F07877B3_827B_4997_8895_51BD6934A0B7_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Degree.hpp"
 #include "Radian.hpp"
 #include <cstdint>

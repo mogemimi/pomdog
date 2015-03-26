@@ -4,10 +4,6 @@
 #ifndef POMDOG_LOGENTRY_F0B169C2_B3E2_4144_939B_F1FBE89BF3AC_HPP
 #define POMDOG_LOGENTRY_F0B169C2_B3E2_4144_939B_F1FBE89BF3AC_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "LogLevel.hpp"
 #include <string>
 

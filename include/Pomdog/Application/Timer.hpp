@@ -4,10 +4,6 @@
 #ifndef POMDOG_TIMER_CAC74AF2_EF38_48B5_93D0_673E21E66979_HPP
 #define POMDOG_TIMER_CAC74AF2_EF38_48B5_93D0_673E21E66979_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Event/ScopedConnection.hpp"
 #include <memory>
