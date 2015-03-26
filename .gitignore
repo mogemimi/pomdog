@@ -27,6 +27,9 @@
 /tools/gyp
 /tools/python
 
+# Python
+tools/*.pyc
+
 # PyCharm
 .idea/
 build/.idea/

@@ -30,7 +30,9 @@ import os
 import argparse
 import subprocess
 import uuid
+
 from string import Template
+from include_guard_uuid import GenerateHash
 
 
 def CreateFilePath(directory_path, identifier, file_extension):
@@ -110,25 +112,6 @@ def ParsingTargetFileFlags(args):
     return enable_header_, enable_implementation_
 
 
-def Run():
-    args = ParsingCommandLineAraguments()
-
-    #print("args = {0}".format(vars(args))) # for Debug
-
-    identifier = os.path.basename(args.identifier)
-    directory = os.path.dirname(args.identifier)
-
-    enable_header_, enable_implementation_ = ParsingTargetFileFlags(args)
-
-    if enable_header_:
-        GenerateCplusplusHeader(identifier, directory)
-
-    if args.objective_cpp and enable_implementation_:
-        GenerateObjectiveCppImplementation(identifier, directory)
-    elif enable_implementation_:
-        GenerateCplusplusImplementation(identifier, directory)
-
-
 def GetGitUserName():
     process = subprocess.Popen(["git", "config", "user.name"], stdout=subprocess.PIPE)
     username = process.communicate()[0]
@@ -141,7 +124,7 @@ def CreateHeader(copyright_holder):
 """).substitute(year="2013-2015", copyright_holder=copyright_holder)
 
 
-def CreateNamespace(name, content="    // Insert code here to run your application"):
+def CreateNamespace(name, content="\n// Insert code here to run your application\n"):
     return Template("""namespace $name {
 $content
 } // namespace $name""").substitute(name=name, content=content)
@@ -150,31 +133,24 @@ $content
 def CreateIncludeGuardUUID(identifier):
     prefix_ = "POMDOG_"
     suffix_ = "_HPP"
-    uuid_ = str(uuid.uuid4()).replace('-', '_').upper()
+    uuid_ = GenerateHash()
     include_guard = prefix_ + str(identifier).upper() + '_' + uuid_ + suffix_
     return include_guard
-
-
-def CreateIncludeGuardMSVCStyle():
-    return """#if _MSC_VER > 1000
-#pragma once
-#endif
-"""
 
 
 def CreateIncludeGuardSection(identifier, content=""):
     return Template("""#ifndef $include_guard
 #define $include_guard
 
-$msvc_style_pragma_once
 $content
-#endif // !defined($include_guard)""").substitute(
+#endif // $include_guard""").substitute(
         include_guard=CreateIncludeGuardUUID(identifier),
-        msvc_style_pragma_once=CreateIncludeGuardMSVCStyle(),
         content=content)
+
 
 def CreateIncludeHeader(identifier):
     return Template("#include \"$header_file\"\n").substitute(header_file=(identifier+".hpp"));
+
 
 def CreateClassHeader(identifier_without_directory):
     return_code = '\n'
@@ -196,4 +172,24 @@ def CreateImplement(identifier_without_directory):
            return_code
 
 
-Run()
+def main():
+    args = ParsingCommandLineAraguments()
+
+    #print("args = {0}".format(vars(args))) # for Debug
+
+    identifier = os.path.basename(args.identifier)
+    directory = os.path.dirname(args.identifier)
+
+    enable_header_, enable_implementation_ = ParsingTargetFileFlags(args)
+
+    if enable_header_:
+        GenerateCplusplusHeader(identifier, directory)
+
+    if args.objective_cpp and enable_implementation_:
+        GenerateObjectiveCppImplementation(identifier, directory)
+    elif enable_implementation_:
+        GenerateCplusplusImplementation(identifier, directory)
+
+
+if __name__ == '__main__':
+    main()

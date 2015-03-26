@@ -30,13 +30,19 @@ def ParsingCommandLineAraguments():
     args = parser.parse_args()
     return args
 
+def GenerateUUID():
+    return str(uuid.uuid4()).replace('-', '_').upper()
 
-def Run():
+def GenerateHash():
+    return str(uuid.uuid4())[0:8].upper()
+
+def main():
     args = ParsingCommandLineAraguments()
 
     #print("args = {0}".format(vars(args))) # for Debug
 
-    uuid_ = str(uuid.uuid4()).replace('-', '_').upper() + '\n'
-    args.outfile.write(uuid_)
+    uuid_ = GenerateHash()
+    args.outfile.write(uuid_ + '\n')
 
-Run()
+if __name__ == '__main__':
+    main()
