@@ -4,10 +4,6 @@
 #ifndef POMDOG_TINTTOACTION_EC615DAE_A054_447B_88F8_E6FAF8AD0DB9_HPP
 #define POMDOG_TINTTOACTION_EC615DAE_A054_447B_88F8_E6FAF8AD0DB9_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Renderable.hpp"

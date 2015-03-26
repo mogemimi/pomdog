@@ -4,10 +4,6 @@
 #ifndef POMDOG_UIELEMENT_92B47634_F035_41EC_A03C_C117576A4C75_HPP
 #define POMDOG_UIELEMENT_92B47634_F035_41EC_A03C_C117576A4C75_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "HorizontalAlignment.hpp"
 #include "VerticalAlignment.hpp"
 #include <Pomdog/Pomdog.hpp>

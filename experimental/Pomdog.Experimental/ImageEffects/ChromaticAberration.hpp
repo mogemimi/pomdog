@@ -4,10 +4,6 @@
 #ifndef POMDOG_CHROMATICABERRATION_DEEDC0FF_389D_47A5_A9B1_0D46AF2D4577_HPP
 #define POMDOG_CHROMATICABERRATION_DEEDC0FF_389D_47A5_A9B1_0D46AF2D4577_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 

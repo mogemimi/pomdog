@@ -4,10 +4,6 @@
 #ifndef POMDOG_RENDERER_1196526B_9C0E_408B_A501_2A5D941209ED_HPP
 #define POMDOG_RENDERER_1196526B_9C0E_408B_A501_2A5D941209ED_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Math/Matrix4x4.hpp"
 #include "Pomdog/Graphics/GraphicsContext.hpp"
 #include <cstdint>

@@ -4,10 +4,6 @@
 #ifndef POMDOG_GAMEOBJECTID_F68B7FC0_7009_433E_8F5E_153D5502766A_HPP
 #define POMDOG_GAMEOBJECTID_F68B7FC0_7009_433E_8F5E_153D5502766A_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <cstdint>
 #include <functional>
 

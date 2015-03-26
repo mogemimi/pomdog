@@ -4,10 +4,6 @@
 #ifndef POMDOG_SPRITEBATCH_B4DEBA3B_98DD_4767_A79A_4CAFC8A81AF4_HPP
 #define POMDOG_SPRITEBATCH_B4DEBA3B_98DD_4767_A79A_4CAFC8A81AF4_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "SpriteSortMode.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"

@@ -4,10 +4,6 @@
 #ifndef POMDOG_SKINNEDEFFECT_3BADC686_76B4_4F06_94E7_1A8775F1D00D_HPP
 #define POMDOG_SKINNEDEFFECT_3BADC686_76B4_4F06_94E7_1A8775F1D00D_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <Pomdog/Pomdog.hpp>
 #include <cstdint>
 #include <cstddef>

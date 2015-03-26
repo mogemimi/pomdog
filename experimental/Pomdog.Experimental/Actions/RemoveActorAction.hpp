@@ -4,10 +4,6 @@
 #ifndef POMDOG_REMOVEACTORACTION_4E4B9484_EB63_42E0_BA11_5559A4810AF7_HPP
 #define POMDOG_REMOVEACTORACTION_4E4B9484_EB63_42E0_BA11_5559A4810AF7_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog.Experimental/Actions/Action.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
 #include "Pomdog/Utility/Assert.hpp"

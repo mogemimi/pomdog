@@ -4,10 +4,6 @@
 #ifndef POMDOG_PARTICLE_3943827E_5585_430A_B0B0_51463FA3DA07_HPP
 #define POMDOG_PARTICLE_3943827E_5585_430A_B0B0_51463FA3DA07_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Radian.hpp"

@@ -4,10 +4,6 @@
 #ifndef POMDOG_PARTICLEPARAMETERRANDOM_03DC4686_AC5B_4B47_9ABB_3693A67A21DE_HPP
 #define POMDOG_PARTICLEPARAMETERRANDOM_03DC4686_AC5B_4B47_9ABB_3693A67A21DE_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "ParticleParameter.hpp"
 #include "ParticleCurveLerp.hpp"
 #include <random>

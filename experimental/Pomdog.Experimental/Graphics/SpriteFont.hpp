@@ -4,10 +4,6 @@
 #ifndef POMDOG_SPRITEFONT_1C2133CC_E7F0_4FC2_A4D8_2D2862E4B3C6_HPP
 #define POMDOG_SPRITEFONT_1C2133CC_E7F0_4FC2_A4D8_2D2862E4B3C6_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector2.hpp"

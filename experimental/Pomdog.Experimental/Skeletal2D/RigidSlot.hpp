@@ -4,10 +4,6 @@
 #ifndef POMDOG_RIGIDSLOT_4C507F41_9ED4_483A_A6C3_E3133BF6398D_HPP
 #define POMDOG_RIGIDSLOT_4C507F41_9ED4_483A_A6C3_E3133BF6398D_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "JointIndex.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector2.hpp"

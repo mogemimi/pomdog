@@ -4,10 +4,6 @@
 #ifndef POMDOG_PARTICLECURVELERP_7AA431A6_08A8_4716_AA4F_0F52D3AC7793_HPP
 #define POMDOG_PARTICLECURVELERP_7AA431A6_08A8_4716_AA4F_0F52D3AC7793_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Radian.hpp"

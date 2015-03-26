@@ -4,10 +4,6 @@
 #ifndef POMDOG_FISHEYEEFFECT_62F772C0_3432_453B_A70D_D857D9CAEFB7_HPP
 #define POMDOG_FISHEYEEFFECT_62F772C0_3432_453B_A70D_D857D9CAEFB7_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 

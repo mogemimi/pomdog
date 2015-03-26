@@ -4,10 +4,6 @@
 #ifndef POMDOG_SCALETOACTION_5EB92B4C_56E3_4D2B_AC93_999860ED5A8F_HPP
 #define POMDOG_SCALETOACTION_5EB92B4C_56E3_4D2B_AC93_999860ED5A8F_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"

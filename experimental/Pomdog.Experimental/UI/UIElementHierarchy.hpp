@@ -4,10 +4,6 @@
 #ifndef POMDOG_UIELEMENTHIERARCHY_ECF3A74B_7527_4C04_95B9_9EB2962F468B_HPP
 #define POMDOG_UIELEMENTHIERARCHY_ECF3A74B_7527_4C04_95B9_9EB2962F468B_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "UIElement.hpp"
 #include "UIEventDispatcher.hpp"
 #include <Pomdog/Pomdog.hpp>

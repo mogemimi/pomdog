@@ -4,10 +4,6 @@
 #ifndef POMDOG_ANIMATIONGRAPH_CFF1C0A9_DB7B_4B31_B1A9_F54EB357E33B_HPP
 #define POMDOG_ANIMATIONGRAPH_CFF1C0A9_DB7B_4B31_B1A9_F54EB357E33B_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "AnimationBlendInput.hpp"
 #include "AnimationNode.hpp"
 #include "Pomdog/Utility/Optional.hpp"

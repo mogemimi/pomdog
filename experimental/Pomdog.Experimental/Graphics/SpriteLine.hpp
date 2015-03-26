@@ -4,10 +4,6 @@
 #ifndef POMDOG_SPRITELINE_9221505C_23E2_4F07_B803_87E11F0ED86F_HPP
 #define POMDOG_SPRITELINE_9221505C_23E2_4F07_B803_87E11F0ED86F_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "SpriteBatch.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Vector2.hpp"

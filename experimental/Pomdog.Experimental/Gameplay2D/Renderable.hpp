@@ -4,10 +4,6 @@
 #ifndef POMDOG_RENDERABLE_45A0A118_A075_4172_929C_05DF1A2E47FF_HPP
 #define POMDOG_RENDERABLE_45A0A118_A075_4172_929C_05DF1A2E47FF_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
 #include "Pomdog/Math/Color.hpp"

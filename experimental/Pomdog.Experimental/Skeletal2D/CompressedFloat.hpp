@@ -4,10 +4,6 @@
 #ifndef POMDOG_COMPRESSEDFLOAT_727406C1_ACE9_4924_89A8_6A8BCCD56CCC_HPP
 #define POMDOG_COMPRESSEDFLOAT_727406C1_ACE9_4924_89A8_6A8BCCD56CCC_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Utility/Assert.hpp"
 #include <type_traits>
 #include <cstdint>

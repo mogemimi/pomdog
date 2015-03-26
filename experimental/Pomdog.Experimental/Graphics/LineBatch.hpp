@@ -4,10 +4,6 @@
 #ifndef POMDOG_LINEBATCH_EA425637_9D8E_4225_B209_B01F2A592475_HPP
 #define POMDOG_LINEBATCH_EA425637_9D8E_4225_B209_B01F2A592475_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Graphics/GraphicsContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Math/Color.hpp"

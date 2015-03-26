@@ -4,10 +4,6 @@
 #ifndef POMDOG_GAMEOBJECTCONTEXT_DFD4E6A6_66AE_4494_85C3_7155EF07CD89_HPP
 #define POMDOG_GAMEOBJECTCONTEXT_DFD4E6A6_66AE_4494_85C3_7155EF07CD89_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Component.hpp"
 #include "GameObjectID.hpp"
 #include "Pomdog/Utility/Assert.hpp"

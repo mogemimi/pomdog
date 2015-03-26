@@ -4,10 +4,6 @@
 #ifndef POMDOG_SPRITEFONTLOADER_30D6FB29_E5E2_407C_B1C9_46B5C3CDE875_HPP
 #define POMDOG_SPRITEFONTLOADER_30D6FB29_E5E2_407C_B1C9_46B5C3CDE875_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "SpriteFont.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include <memory>

@@ -4,10 +4,6 @@
 #ifndef POMDOG_PRIMITIVECOMMAND_4CCAFA9C_9995_45A4_8646_411676A87B19_HPP
 #define POMDOG_PRIMITIVECOMMAND_4CCAFA9C_9995_45A4_8646_411676A87B19_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
 #include "Pomdog.Experimental/Graphics/TextureRegion.hpp"
 #include <Pomdog/Pomdog.hpp>

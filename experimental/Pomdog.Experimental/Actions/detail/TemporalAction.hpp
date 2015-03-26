@@ -4,10 +4,6 @@
 #ifndef POMDOG_TEMPORALACTION_DD16B93C_A710_4BD1_914B_5E1AF09287E9_HPP
 #define POMDOG_TEMPORALACTION_DD16B93C_A710_4BD1_914B_5E1AF09287E9_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog.Experimental/Actions/Action.hpp"
 
 namespace Pomdog {

@@ -4,10 +4,6 @@
 #ifndef POMDOG_CAMERA2D_6E6D82E9_5A8E_4A79_9B34_2A6BE225A7FF_HPP
 #define POMDOG_CAMERA2D_6E6D82E9_5A8E_4A79_9B34_2A6BE225A7FF_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>

@@ -4,10 +4,6 @@
 #ifndef POMDOG_BEHAVIOR_00BB3FAF_A505_418B_A5B0_937A692B91E8_HPP
 #define POMDOG_BEHAVIOR_00BB3FAF_A505_418B_A5B0_937A692B91E8_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog/Application/Duration.hpp"
 #include <memory>

@@ -4,10 +4,6 @@
 #ifndef POMDOG_PRIMITIVEAXES_B7717D29_25D2_44E7_8F48_2642088D2B41_HPP
 #define POMDOG_PRIMITIVEAXES_B7717D29_25D2_44E7_8F48_2642088D2B41_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"

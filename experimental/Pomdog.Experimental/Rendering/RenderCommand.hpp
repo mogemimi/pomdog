@@ -4,10 +4,6 @@
 #ifndef POMDOG_RENDERCOMMAND_B320B370_4577_4D5D_A9D2_A12F0291F0E1_HPP
 #define POMDOG_RENDERCOMMAND_B320B370_4577_4D5D_A9D2_A12F0291F0E1_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <memory>
 #include <typeindex>
 

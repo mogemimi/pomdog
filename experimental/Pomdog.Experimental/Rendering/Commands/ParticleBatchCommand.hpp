@@ -4,10 +4,6 @@
 #ifndef POMDOG_PARTICLEBATCHCOMMAND_BBF33260_CA29_4B07_BBEB_8C19916FF5CC_HPP
 #define POMDOG_PARTICLEBATCHCOMMAND_BBF33260_CA29_4B07_BBEB_8C19916FF5CC_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
 #include "Pomdog.Experimental/Graphics/TextureRegion.hpp"
 #include "Pomdog.Experimental/Particle2D/Particle.hpp"

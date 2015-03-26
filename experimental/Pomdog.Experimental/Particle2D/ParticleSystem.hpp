@@ -4,10 +4,6 @@
 #ifndef POMDOG_PARTICLESYSTEM_2AEA7BC5_5CCE_4688_8FAC_D26A97A8F8B7_HPP
 #define POMDOG_PARTICLESYSTEM_2AEA7BC5_5CCE_4688_8FAC_D26A97A8F8B7_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Particle.hpp"
 #include "ParticleEmitter.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"

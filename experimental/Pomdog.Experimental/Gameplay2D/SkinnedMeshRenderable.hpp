@@ -4,10 +4,6 @@
 #ifndef POMDOG_SKINNEDMESHRENDERABLE_6584A6D1_C7C5_4782_90D2_DA79EDC75518_HPP
 #define POMDOG_SKINNEDMESHRENDERABLE_6584A6D1_C7C5_4782_90D2_DA79EDC75518_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Renderable.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/SkinnedMeshCommand.hpp"
 #include "Pomdog.Experimental/Graphics/PolygonBatch.hpp"

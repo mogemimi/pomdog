@@ -4,10 +4,6 @@
 #ifndef POMDOG_RENDERQUEUE_32005F81_9DE4_4E2F_A57C_BCC9DC5AF832_HPP
 #define POMDOG_RENDERQUEUE_32005F81_9DE4_4E2F_A57C_BCC9DC5AF832_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <vector>
 #include <memory>
 #include <functional>

@@ -4,10 +4,6 @@
 #ifndef POMDOG_BEAMRENDERABLE_5F289224_7B9B_4C29_9890_16140FFB6DFB_HPP
 #define POMDOG_BEAMRENDERABLE_5F289224_7B9B_4C29_9890_16140FFB6DFB_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Renderable.hpp"
 #include "Pomdog.Experimental/Particle2D/BeamSystem.hpp"
 #include "Pomdog/Application/GameClock.hpp"

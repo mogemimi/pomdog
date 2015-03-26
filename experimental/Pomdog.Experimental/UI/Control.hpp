@@ -4,10 +4,6 @@
 #ifndef POMDOG_CONTROL_50F0BA0B_6FCF_4DB2_BF99_451A0CB2B4D2_HPP
 #define POMDOG_CONTROL_50F0BA0B_6FCF_4DB2_BF99_451A0CB2B4D2_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "UIView.hpp"
 #include <Pomdog/Pomdog.hpp>
 

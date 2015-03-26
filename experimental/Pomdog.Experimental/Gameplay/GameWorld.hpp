@@ -4,10 +4,6 @@
 #ifndef POMDOG_GAMEWORLD_FE6556F6_01FB_4EF9_A702_E5EB80BE3512_HPP
 #define POMDOG_GAMEWORLD_FE6556F6_01FB_4EF9_A702_E5EB80BE3512_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "GameObject.hpp"
 #include <cstdint>
 #include <memory>

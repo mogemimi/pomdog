@@ -4,10 +4,6 @@
 #ifndef POMDOG_GAMELEVEL_20FE69E2_A4EB_4800_AFA8_3B039147EDFA_HPP
 #define POMDOG_GAMELEVEL_20FE69E2_A4EB_4800_AFA8_3B039147EDFA_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <Pomdog/Pomdog.hpp>
 
 namespace Pomdog {

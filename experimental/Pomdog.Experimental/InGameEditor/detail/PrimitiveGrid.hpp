@@ -4,10 +4,6 @@
 #ifndef POMDOG_PRIMITIVEGRID_8E899444_553D_4CCC_87EB_11D70DFEC99C_HPP
 #define POMDOG_PRIMITIVEGRID_8E899444_553D_4CCC_87EB_11D70DFEC99C_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include <vector>

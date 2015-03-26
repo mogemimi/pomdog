@@ -4,10 +4,6 @@
 #ifndef POMDOG_SKELETON_015B5D6C_C3A5_4AC7_B9BB_501EF76F5C7B_HPP
 #define POMDOG_SKELETON_015B5D6C_C3A5_4AC7_B9BB_501EF76F5C7B_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Joint.hpp"
 #include "JointPose.hpp"
 #include <cstdint>

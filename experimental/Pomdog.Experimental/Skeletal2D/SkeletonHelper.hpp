@@ -4,10 +4,6 @@
 #ifndef POMDOG_SKELETONHELPER_16AC5743_D6BE_4B86_AB0B_04AD6506605B_HPP
 #define POMDOG_SKELETONHELPER_16AC5743_D6BE_4B86_AB0B_04AD6506605B_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "JointIndex.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
 #include <vector>

@@ -4,10 +4,6 @@
 #ifndef POMDOG_DETAIL_GAMECOMPONENT_68E8B2BF_A61D_463F_AE84_7D2CE4A8A5F2_HPP
 #define POMDOG_DETAIL_GAMECOMPONENT_68E8B2BF_A61D_463F_AE84_7D2CE4A8A5F2_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 namespace Pomdog {
 namespace Detail {
 namespace Gameplay {

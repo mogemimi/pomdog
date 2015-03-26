@@ -4,10 +4,6 @@
 #ifndef POMDOG_PRIMITIVECOMMANDPROCESSOR_78CC3F16_1297_4C1B_BE10_2F174451E3B4_HPP
 #define POMDOG_PRIMITIVECOMMANDPROCESSOR_78CC3F16_1297_4C1B_BE10_2F174451E3B4_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog.Experimental/Graphics/PolygonBatch.hpp"
 #include "Pomdog.Experimental/Rendering/RenderCommandProcessor.hpp"
 #include <Pomdog/Pomdog.hpp>

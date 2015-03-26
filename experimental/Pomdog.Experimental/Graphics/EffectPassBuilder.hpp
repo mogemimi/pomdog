@@ -4,10 +4,6 @@
 #ifndef POMDOG_EFFECTPASSBUILDER_BFDE27AA_3A8F_4DF7_BAD6_71FBB446BFC6_HPP
 #define POMDOG_EFFECTPASSBUILDER_BFDE27AA_3A8F_4DF7_BAD6_71FBB446BFC6_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"

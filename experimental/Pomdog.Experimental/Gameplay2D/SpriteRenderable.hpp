@@ -4,10 +4,6 @@
 #ifndef POMDOG_SPRITERENDERABLE_552FA480_6E30_4845_A7B9_6480CB2E5884_HPP
 #define POMDOG_SPRITERENDERABLE_552FA480_6E30_4845_A7B9_6480CB2E5884_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Renderable.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/SpriteCommand.hpp"
 #include "Pomdog/Math/Rectangle.hpp"

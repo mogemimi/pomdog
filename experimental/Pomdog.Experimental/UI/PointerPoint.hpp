@@ -4,10 +4,6 @@
 #ifndef POMDOG_POINTERPOINT_DAEC8B7F_D25B_4146_BB15_965A4AF81FF3_HPP
 #define POMDOG_POINTERPOINT_DAEC8B7F_D25B_4146_BB15_965A4AF81FF3_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "PointerEventType.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <cstdint>

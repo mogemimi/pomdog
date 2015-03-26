@@ -4,10 +4,6 @@
 #ifndef POMDOG_SLIDER_8DA97A75_03EF_4C73_9B53_62B6BD9FB7BB_HPP
 #define POMDOG_SLIDER_8DA97A75_03EF_4C73_9B53_62B6BD9FB7BB_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Control.hpp"
 #include "UIView.hpp"
 #include "detail/UIEventConnection.hpp"

@@ -4,10 +4,6 @@
 #ifndef POMDOG_SPRITERENDERER_8ACAC405_03FF_42D3_87CA_D25B183EF883_HPP
 #define POMDOG_SPRITERENDERER_8ACAC405_03FF_42D3_87CA_D25B183EF883_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "SpriteSortMode.hpp"
 #include "Pomdog/Graphics/GraphicsContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"

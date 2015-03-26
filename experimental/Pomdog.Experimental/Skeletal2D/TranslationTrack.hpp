@@ -4,10 +4,6 @@
 #ifndef POMDOG_TRANSLATIONTRACK_6A0FA1BF_E029_40A4_BBB4_80B20013D984_HPP
 #define POMDOG_TRANSLATIONTRACK_6A0FA1BF_E029_40A4_BBB4_80B20013D984_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "AnimationTrack.hpp"
 #include "AnimationTimeInterval.hpp"
 #include "CompressedFloat.hpp"

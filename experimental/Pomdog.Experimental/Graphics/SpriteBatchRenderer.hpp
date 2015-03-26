@@ -4,10 +4,6 @@
 #ifndef POMDOG_SPRITEBATCHRENDERER_FAFB0E53_90D1_47DF_B4EA_C9D551D0721E_HPP
 #define POMDOG_SPRITEBATCHRENDERER_FAFB0E53_90D1_47DF_B4EA_C9D551D0721E_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Graphics/GraphicsContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"

@@ -4,10 +4,6 @@
 #ifndef POMDOG_BEAMEMITTER_89CB54AB_FD79_45B7_BAF1_EF7FC1F748B2_HPP
 #define POMDOG_BEAMEMITTER_89CB54AB_FD79_45B7_BAF1_EF7FC1F748B2_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include <cstdint>

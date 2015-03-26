@@ -4,10 +4,6 @@
 #ifndef POMDOG_UIVIEW_6665F0EE_DCD8_4BFE_B293_1F0F83957750_HPP
 #define POMDOG_UIVIEW_6665F0EE_DCD8_4BFE_B293_1F0F83957750_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "UIElement.hpp"
 #include "UIEventListener.hpp"
 #include "Pomdog/Application/MouseCursor.hpp"

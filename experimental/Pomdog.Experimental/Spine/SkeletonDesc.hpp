@@ -4,10 +4,6 @@
 #ifndef POMDOG_SPINE_SKELETONDESC_BCCD55FC_EEDC_43CB_AC5F_194D7A58686D_HPP
 #define POMDOG_SPINE_SKELETONDESC_BCCD55FC_EEDC_43CB_AC5F_194D7A58686D_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog.Experimental/Skeletal2D/AnimationTimeInterval.hpp"
 #include "Pomdog.Experimental/Skeletal2D/CompressedFloat.hpp"
 #include "Pomdog.Experimental/Skeletal2D/JointPose.hpp"

@@ -4,10 +4,6 @@
 #ifndef POMDOG_ANIMATOR_0CFC0E37_CCD5_481A_9275_E8579887ACB0_HPP
 #define POMDOG_ANIMATOR_0CFC0E37_CCD5_481A_9275_E8579887ACB0_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog/Application/Duration.hpp"
 #include <string>

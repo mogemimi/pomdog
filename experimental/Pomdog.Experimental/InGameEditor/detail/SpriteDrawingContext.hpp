@@ -4,10 +4,6 @@
 #ifndef POMDOG_SPRITEDRAWINGCONTEXT_4AC87153_9AFF_4B5C_AA4F_B9125DD093DE_HPP
 #define POMDOG_SPRITEDRAWINGCONTEXT_4AC87153_9AFF_4B5C_AA4F_B9125DD093DE_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog.Experimental/UI/DrawingContext.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteBatch.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteFont.hpp"

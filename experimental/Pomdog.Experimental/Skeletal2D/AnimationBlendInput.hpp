@@ -4,10 +4,6 @@
 #ifndef POMDOG_ANIMATIONBLENDINPUT_304DF276_651C_4D69_8408_F9354A03E7D8_HPP
 #define POMDOG_ANIMATIONBLENDINPUT_304DF276_651C_4D69_8408_F9354A03E7D8_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "AnimationBlendInputType.hpp"
 #include <string>
 

@@ -4,10 +4,6 @@
 #ifndef POMDOG_DRAWINGCONTEXT_693D88E1_20B1_45FB_A7CC_51EE5A85E085_HPP
 #define POMDOG_DRAWINGCONTEXT_693D88E1_20B1_45FB_A7CC_51EE5A85E085_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"

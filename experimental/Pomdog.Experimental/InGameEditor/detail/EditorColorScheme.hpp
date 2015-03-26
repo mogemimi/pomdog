@@ -4,10 +4,6 @@
 #ifndef POMDOG_EDITORCOLORSCHEME_EFD082F5_C42B_4243_A6FB_292C08E782A4_HPP
 #define POMDOG_EDITORCOLORSCHEME_EFD082F5_C42B_4243_A6FB_292C08E782A4_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Math/Color.hpp"
 
 namespace Pomdog {

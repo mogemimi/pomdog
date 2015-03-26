@@ -4,10 +4,6 @@
 #ifndef POMDOG_VIGNETTEEFFECT_395F49A8_9033_426B_AD02_FD8563F40232_HPP
 #define POMDOG_VIGNETTEEFFECT_395F49A8_9033_426B_AD02_FD8563F40232_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 

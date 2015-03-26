@@ -4,10 +4,6 @@
 #ifndef POMDOG_TRANSFORM2D_9973161D_D63B_499A_9158_F635629B7A26_HPP
 #define POMDOG_TRANSFORM2D_9973161D_D63B_499A_9158_F635629B7A26_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/Vector2.hpp"

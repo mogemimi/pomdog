@@ -4,10 +4,6 @@
 #ifndef POMDOG_TEXTUREREGION_9F020F68_0E51_40CE_8219_6F207E478559_HPP
 #define POMDOG_TEXTUREREGION_9F020F68_0E51_40CE_8219_6F207E478559_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Math/Rectangle.hpp"
 #include <cstdint>
 

@@ -4,10 +4,6 @@
 #ifndef POMDOG_EDITORBACKGROUND_B1467252_52F8_4CA7_92A1_D4154D624DFD_HPP
 #define POMDOG_EDITORBACKGROUND_B1467252_52F8_4CA7_92A1_D4154D624DFD_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "EditorColorScheme.hpp"
 #include "PrimitiveAxes.hpp"
 #include "PrimitiveGrid.hpp"

@@ -4,10 +4,6 @@
 #ifndef POMDOG_ANIMATIONTIMER_A9EAE898_56A1_4928_B031_22D9304214E6_HPP
 #define POMDOG_ANIMATIONTIMER_A9EAE898_56A1_4928_B031_22D9304214E6_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog.Experimental/Skeletal2D/AnimationTimeInterval.hpp"
 
 namespace Pomdog {

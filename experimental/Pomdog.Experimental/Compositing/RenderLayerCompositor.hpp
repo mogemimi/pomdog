@@ -4,10 +4,6 @@
 #ifndef POMDOG_RENDERLAYERCOMPOSITOR_2AC2E2AD_BE41_41DE_B626_7831FE3A3F11_HPP
 #define POMDOG_RENDERLAYERCOMPOSITOR_2AC2E2AD_BE41_41DE_B626_7831FE3A3F11_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <cstdint>
 #include <vector>
 #include <memory>

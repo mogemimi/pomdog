@@ -4,10 +4,6 @@
 #ifndef POMDOG_JOINTPOSE_160B1EF6_234E_4107_ACA9_10FA3189A67C_HPP
 #define POMDOG_JOINTPOSE_160B1EF6_234E_4107_ACA9_10FA3189A67C_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Radian.hpp"
 

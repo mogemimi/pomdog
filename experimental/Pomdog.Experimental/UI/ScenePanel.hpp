@@ -4,10 +4,6 @@
 #ifndef POMDOG_SCENEPANEL_F59B1210_FA6C_4446_9752_7754A8017116_HPP
 #define POMDOG_SCENEPANEL_F59B1210_FA6C_4446_9752_7754A8017116_HPP
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "Panel.hpp"
 #include "detail/UIEventConnection.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
