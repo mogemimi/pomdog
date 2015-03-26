@@ -64,6 +64,14 @@ def ReplaceHardTabsWithWhiteSpaces(content):
     return result
 
 
+def RemoveOldStyleCode(content):
+    return content.replace("""
+
+#if _MSC_VER > 1000
+#pragma once
+#endif""", '')
+
+
 def ConvertSourceFile(path):
     isChanged = False
     statusRemoveBom = "---"
@@ -88,11 +96,19 @@ def ConvertSourceFile(path):
         statusReplaceIndentWithSpaces = "indent"
         isChanged = True
 
+    statusRemoveOldStyleCode = "---"
+    replaced = RemoveOldStyleCode(content)
+    if content != replaced:
+        content = replaced
+        statusRemoveOldStyleCode = "old"
+        isChanged = True
+
     if isChanged:
-        print("=> ({0} {1} {2}) {3}".format(
+        print("=> ({0} {1} {2} {3}) {4}".format(
             statusRemoveBom,
             statusUnusedSpaces,
             statusReplaceIndentWithSpaces,
+            statusRemoveOldStyleCode,
             path))
         WriteContent(path, content)
 
