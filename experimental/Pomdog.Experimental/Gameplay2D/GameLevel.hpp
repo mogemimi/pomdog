@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_GAMELEVEL_20FE69E2_A4EB_4800_AFA8_3B039147EDFA_HPP
-#define POMDOG_GAMELEVEL_20FE69E2_A4EB_4800_AFA8_3B039147EDFA_HPP
+#ifndef POMDOG_GAMELEVEL_20FE69E2_HPP
+#define POMDOG_GAMELEVEL_20FE69E2_HPP
 
 #include <Pomdog/Pomdog.hpp>
 
@@ -23,4 +23,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_GAMELEVEL_20FE69E2_A4EB_4800_AFA8_3B039147EDFA_HPP)
+#endif // POMDOG_GAMELEVEL_20FE69E2_HPP

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_UIELEMENT_92B47634_F035_41EC_A03C_C117576A4C75_HPP
-#define POMDOG_UIELEMENT_92B47634_F035_41EC_A03C_C117576A4C75_HPP
+#ifndef POMDOG_UIELEMENT_92B47634_HPP
+#define POMDOG_UIELEMENT_92B47634_HPP
 
 #include "HorizontalAlignment.hpp"
 #include "VerticalAlignment.hpp"
@@ -74,4 +74,4 @@ public:
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_UIELEMENT_92B47634_F035_41EC_A03C_C117576A4C75_HPP)
+#endif // POMDOG_UIELEMENT_92B47634_HPP

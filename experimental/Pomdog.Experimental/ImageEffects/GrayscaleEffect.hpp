@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_GRAYSCALEEFFECT_C2865F07_9F22_4BB6_8222_A317EE8C764A_HPP
-#define POMDOG_GRAYSCALEEFFECT_C2865F07_9F22_4BB6_8222_A317EE8C764A_HPP
+#ifndef POMDOG_GRAYSCALEEFFECT_C2865F07_HPP
+#define POMDOG_GRAYSCALEEFFECT_C2865F07_HPP
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
@@ -27,4 +27,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_GRAYSCALEEFFECT_C2865F07_9F22_4BB6_8222_A317EE8C764A_HPP)
+#endif // POMDOG_GRAYSCALEEFFECT_C2865F07_HPP

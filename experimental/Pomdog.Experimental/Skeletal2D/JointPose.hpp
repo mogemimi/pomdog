@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_JOINTPOSE_160B1EF6_234E_4107_ACA9_10FA3189A67C_HPP
-#define POMDOG_JOINTPOSE_160B1EF6_234E_4107_ACA9_10FA3189A67C_HPP
+#ifndef POMDOG_JOINTPOSE_160B1EF6_HPP
+#define POMDOG_JOINTPOSE_160B1EF6_HPP
 
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Radian.hpp"
@@ -18,4 +18,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_JOINTPOSE_160B1EF6_234E_4107_ACA9_10FA3189A67C_HPP)
+#endif // POMDOG_JOINTPOSE_160B1EF6_HPP

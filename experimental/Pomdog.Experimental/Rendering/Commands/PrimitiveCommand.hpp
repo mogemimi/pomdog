@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_PRIMITIVECOMMAND_4CCAFA9C_9995_45A4_8646_411676A87B19_HPP
-#define POMDOG_PRIMITIVECOMMAND_4CCAFA9C_9995_45A4_8646_411676A87B19_HPP
+#ifndef POMDOG_PRIMITIVECOMMAND_4CCAFA9C_HPP
+#define POMDOG_PRIMITIVECOMMAND_4CCAFA9C_HPP
 
 #include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
 #include "Pomdog.Experimental/Graphics/TextureRegion.hpp"
@@ -37,4 +37,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_PRIMITIVECOMMAND_4CCAFA9C_9995_45A4_8646_411676A87B19_HPP)
+#endif // POMDOG_PRIMITIVECOMMAND_4CCAFA9C_HPP

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_BEAMEMITTER_89CB54AB_FD79_45B7_BAF1_EF7FC1F748B2_HPP
-#define POMDOG_BEAMEMITTER_89CB54AB_FD79_45B7_BAF1_EF7FC1F748B2_HPP
+#ifndef POMDOG_BEAMEMITTER_89CB54AB_HPP
+#define POMDOG_BEAMEMITTER_89CB54AB_HPP
 
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Math/Color.hpp"
@@ -40,4 +40,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_BEAMEMITTER_89CB54AB_FD79_45B7_BAF1_EF7FC1F748B2_HPP)
+#endif // POMDOG_BEAMEMITTER_89CB54AB_HPP

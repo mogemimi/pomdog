@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SKIN_8B9C736F_D6E4_449A_A310_1F791AA6ABC5_HPP
-#define POMDOG_SKIN_8B9C736F_D6E4_449A_A310_1F791AA6ABC5_HPP
+#ifndef POMDOG_SKIN_8B9C736F_HPP
+#define POMDOG_SKIN_8B9C736F_HPP
 
 #include "RigidSlot.hpp"
 #include <cstdint>
@@ -29,4 +29,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SKIN_8B9C736F_D6E4_449A_A310_1F791AA6ABC5_HPP)
+#endif // POMDOG_SKIN_8B9C736F_HPP

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SCENEPANEL_F59B1210_FA6C_4446_9752_7754A8017116_HPP
-#define POMDOG_SCENEPANEL_F59B1210_FA6C_4446_9752_7754A8017116_HPP
+#ifndef POMDOG_SCENEPANEL_F59B1210_HPP
+#define POMDOG_SCENEPANEL_F59B1210_HPP
 
 #include "Panel.hpp"
 #include "detail/UIEventConnection.hpp"
@@ -106,4 +106,4 @@ private:
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SCENEPANEL_F59B1210_FA6C_4446_9752_7754A8017116_HPP)
+#endif // POMDOG_SCENEPANEL_F59B1210_HPP

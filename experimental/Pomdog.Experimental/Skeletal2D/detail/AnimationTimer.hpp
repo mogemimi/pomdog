@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_ANIMATIONTIMER_A9EAE898_56A1_4928_B031_22D9304214E6_HPP
-#define POMDOG_ANIMATIONTIMER_A9EAE898_56A1_4928_B031_22D9304214E6_HPP
+#ifndef POMDOG_ANIMATIONTIMER_A9EAE898_HPP
+#define POMDOG_ANIMATIONTIMER_A9EAE898_HPP
 
 #include "Pomdog.Experimental/Skeletal2D/AnimationTimeInterval.hpp"
 
@@ -31,4 +31,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_ANIMATIONTIMER_A9EAE898_56A1_4928_B031_22D9304214E6_HPP)
+#endif // POMDOG_ANIMATIONTIMER_A9EAE898_HPP

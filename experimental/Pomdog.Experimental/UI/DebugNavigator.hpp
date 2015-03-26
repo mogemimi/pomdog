@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_DEBUGNAVIGATOR_9FDE3D88_77EB_4B69_8A1D_99504294B826_HPP
-#define POMDOG_DEBUGNAVIGATOR_9FDE3D88_77EB_4B69_8A1D_99504294B826_HPP
+#ifndef POMDOG_DEBUGNAVIGATOR_9FDE3D88_HPP
+#define POMDOG_DEBUGNAVIGATOR_9FDE3D88_HPP
 
 #include "Control.hpp"
 #include "Pomdog/Utility/Optional.hpp"
@@ -28,4 +28,4 @@ private:
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DEBUGNAVIGATOR_9FDE3D88_77EB_4B69_8A1D_99504294B826_HPP)
+#endif // POMDOG_DEBUGNAVIGATOR_9FDE3D88_HPP

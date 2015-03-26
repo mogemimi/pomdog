@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_TRANSLATIONTRACK_6A0FA1BF_E029_40A4_BBB4_80B20013D984_HPP
-#define POMDOG_TRANSLATIONTRACK_6A0FA1BF_E029_40A4_BBB4_80B20013D984_HPP
+#ifndef POMDOG_TRANSLATIONTRACK_6A0FA1BF_HPP
+#define POMDOG_TRANSLATIONTRACK_6A0FA1BF_HPP
 
 #include "AnimationTrack.hpp"
 #include "AnimationTimeInterval.hpp"
@@ -44,4 +44,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_TRANSLATIONTRACK_6A0FA1BF_E029_40A4_BBB4_80B20013D984_HPP)
+#endif // POMDOG_TRANSLATIONTRACK_6A0FA1BF_HPP

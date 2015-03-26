@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_PRIMITIVEAXES_B7717D29_25D2_44E7_8F48_2642088D2B41_HPP
-#define POMDOG_PRIMITIVEAXES_B7717D29_25D2_44E7_8F48_2642088D2B41_HPP
+#ifndef POMDOG_PRIMITIVEAXES_B7717D29_HPP
+#define POMDOG_PRIMITIVEAXES_B7717D29_HPP
 
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector3.hpp"
@@ -35,4 +35,4 @@ private:
 }// namespace SceneEditor
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_PRIMITIVEAXES_B7717D29_25D2_44E7_8F48_2642088D2B41_HPP)
+#endif // POMDOG_PRIMITIVEAXES_B7717D29_HPP

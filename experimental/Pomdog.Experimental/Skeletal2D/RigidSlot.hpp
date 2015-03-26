@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_RIGIDSLOT_4C507F41_9ED4_483A_A6C3_E3133BF6398D_HPP
-#define POMDOG_RIGIDSLOT_4C507F41_9ED4_483A_A6C3_E3133BF6398D_HPP
+#ifndef POMDOG_RIGIDSLOT_4C507F41_HPP
+#define POMDOG_RIGIDSLOT_4C507F41_HPP
 
 #include "JointIndex.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
@@ -30,4 +30,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_RIGIDSLOT_4C507F41_9ED4_483A_A6C3_E3133BF6398D_HPP)
+#endif // POMDOG_RIGIDSLOT_4C507F41_HPP

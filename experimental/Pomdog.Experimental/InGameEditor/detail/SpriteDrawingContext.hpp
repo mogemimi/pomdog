@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SPRITEDRAWINGCONTEXT_4AC87153_9AFF_4B5C_AA4F_B9125DD093DE_HPP
-#define POMDOG_SPRITEDRAWINGCONTEXT_4AC87153_9AFF_4B5C_AA4F_B9125DD093DE_HPP
+#ifndef POMDOG_SPRITEDRAWINGCONTEXT_4AC87153_HPP
+#define POMDOG_SPRITEDRAWINGCONTEXT_4AC87153_HPP
 
 #include "Pomdog.Experimental/UI/DrawingContext.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteBatch.hpp"
@@ -46,4 +46,4 @@ public:
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SPRITEDRAWINGCONTEXT_4AC87153_9AFF_4B5C_AA4F_B9125DD093DE_HPP)
+#endif // POMDOG_SPRITEDRAWINGCONTEXT_4AC87153_HPP

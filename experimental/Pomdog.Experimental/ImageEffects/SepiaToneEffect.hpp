@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SEPIATONEEFFECT_BD1A4ABD_E2D0_4D28_94D4_74722D54C7A0_HPP
-#define POMDOG_SEPIATONEEFFECT_BD1A4ABD_E2D0_4D28_94D4_74722D54C7A0_HPP
+#ifndef POMDOG_SEPIATONEEFFECT_BD1A4ABD_HPP
+#define POMDOG_SEPIATONEEFFECT_BD1A4ABD_HPP
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
@@ -27,4 +27,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SEPIATONEEFFECT_BD1A4ABD_E2D0_4D28_94D4_74722D54C7A0_HPP)
+#endif // POMDOG_SEPIATONEEFFECT_BD1A4ABD_HPP

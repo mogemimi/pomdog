@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EXPERIMENTAL_113A86BE_D2CB_4B4D_8927_74889ACD23F2_HPP
-#define POMDOG_EXPERIMENTAL_113A86BE_D2CB_4B4D_8927_74889ACD23F2_HPP
+#ifndef POMDOG_EXPERIMENTAL_113A86BE_HPP
+#define POMDOG_EXPERIMENTAL_113A86BE_HPP
 
 #include "Actions/Action.hpp"
 #include "Actions/MoveToAction.hpp"
@@ -132,4 +132,4 @@
 #include "UI/UIView.hpp"
 #include "UI/VerticalAlignment.hpp"
 
-#endif // !defined(POMDOG_EXPERIMENTAL_113A86BE_D2CB_4B4D_8927_74889ACD23F2_HPP)
+#endif // POMDOG_EXPERIMENTAL_113A86BE_HPP

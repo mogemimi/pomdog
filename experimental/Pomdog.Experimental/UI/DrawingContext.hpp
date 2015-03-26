@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_DRAWINGCONTEXT_693D88E1_20B1_45FB_A7CC_51EE5A85E085_HPP
-#define POMDOG_DRAWINGCONTEXT_693D88E1_20B1_45FB_A7CC_51EE5A85E085_HPP
+#ifndef POMDOG_DRAWINGCONTEXT_693D88E1_HPP
+#define POMDOG_DRAWINGCONTEXT_693D88E1_HPP
 
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
@@ -46,4 +46,4 @@ public:
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_DRAWINGCONTEXT_693D88E1_20B1_45FB_A7CC_51EE5A85E085_HPP)
+#endif // POMDOG_DRAWINGCONTEXT_693D88E1_HPP

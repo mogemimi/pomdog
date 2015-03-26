@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_THICKNESS_291572C7_D0A0_4EED_84EE_E0E74F4D2FF8_HPP
-#define POMDOG_THICKNESS_291572C7_D0A0_4EED_84EE_E0E74F4D2FF8_HPP
+#ifndef POMDOG_THICKNESS_291572C7_HPP
+#define POMDOG_THICKNESS_291572C7_HPP
 
 #include <cstdint>
 
@@ -20,4 +20,4 @@ public:
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_THICKNESS_291572C7_D0A0_4EED_84EE_E0E74F4D2FF8_HPP)
+#endif // POMDOG_THICKNESS_291572C7_HPP

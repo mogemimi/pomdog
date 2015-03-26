@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_TOGGLESWITCH_62F7E7F0_48AA_45A8_9010_1426B8EBD8A2_HPP
-#define POMDOG_TOGGLESWITCH_62F7E7F0_48AA_45A8_9010_1426B8EBD8A2_HPP
+#ifndef POMDOG_TOGGLESWITCH_62F7E7F0_HPP
+#define POMDOG_TOGGLESWITCH_62F7E7F0_HPP
 
 #include "Control.hpp"
 #include "detail/UIEventConnection.hpp"
@@ -64,4 +64,4 @@ private:
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_TOGGLESWITCH_62F7E7F0_48AA_45A8_9010_1426B8EBD8A2_HPP)
+#endif // POMDOG_TOGGLESWITCH_62F7E7F0_HPP

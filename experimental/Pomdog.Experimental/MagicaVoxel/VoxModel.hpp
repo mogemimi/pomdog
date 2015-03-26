@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_VOXMODEL_536F1B05_A4BD_4174_8CD3_B1112DBDD7EE_HPP
-#define POMDOG_VOXMODEL_536F1B05_A4BD_4174_8CD3_B1112DBDD7EE_HPP
+#ifndef POMDOG_VOXMODEL_536F1B05_HPP
+#define POMDOG_VOXMODEL_536F1B05_HPP
 
 #include "Pomdog/Math/Color.hpp"
 #include <vector>
@@ -29,4 +29,4 @@ public:
 }// namespace MagicaVoxel
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_VOXMODEL_536F1B05_A4BD_4174_8CD3_B1112DBDD7EE_HPP)
+#endif // POMDOG_VOXMODEL_536F1B05_HPP

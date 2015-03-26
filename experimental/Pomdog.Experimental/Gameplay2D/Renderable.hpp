@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_RENDERABLE_45A0A118_A075_4172_929C_05DF1A2E47FF_HPP
-#define POMDOG_RENDERABLE_45A0A118_A075_4172_929C_05DF1A2E47FF_HPP
+#ifndef POMDOG_RENDERABLE_45A0A118_HPP
+#define POMDOG_RENDERABLE_45A0A118_HPP
 
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
@@ -30,4 +30,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_RENDERABLE_45A0A118_A075_4172_929C_05DF1A2E47FF_HPP)
+#endif // POMDOG_RENDERABLE_45A0A118_HPP

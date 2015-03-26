@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_PARTICLECURVEKEY_6EBF4743_2FC9_43B9_9760_0FE25327F8F4_HPP
-#define POMDOG_PARTICLECURVEKEY_6EBF4743_2FC9_43B9_9760_0FE25327F8F4_HPP
+#ifndef POMDOG_PARTICLECURVEKEY_6EBF4743_HPP
+#define POMDOG_PARTICLECURVEKEY_6EBF4743_HPP
 
 namespace Pomdog {
 namespace Detail {
@@ -19,4 +19,4 @@ struct ParticleCurveKey {
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_PARTICLECURVEKEY_6EBF4743_2FC9_43B9_9760_0FE25327F8F4_HPP)
+#endif // POMDOG_PARTICLECURVEKEY_6EBF4743_HPP

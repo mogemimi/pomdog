@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_UIHELPER_25E8AD61_F482_4291_B3E0_EA50C4CD3649_HPP
-#define POMDOG_UIHELPER_25E8AD61_F482_4291_B3E0_EA50C4CD3649_HPP
+#ifndef POMDOG_UIHELPER_25E8AD61_HPP
+#define POMDOG_UIHELPER_25E8AD61_HPP
 
 #include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Math/Vector2.hpp"
@@ -27,4 +27,4 @@ struct UIHelper {
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_UIHELPER_25E8AD61_F482_4291_B3E0_EA50C4CD3649_HPP)
+#endif // POMDOG_UIHELPER_25E8AD61_HPP

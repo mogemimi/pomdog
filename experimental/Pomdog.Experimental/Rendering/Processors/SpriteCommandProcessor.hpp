@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SPRITECOMMANDPROCESSOR_1D9B87F7_A4BD_4BC2_AD4C_48E683760A2E_HPP
-#define POMDOG_SPRITECOMMANDPROCESSOR_1D9B87F7_A4BD_4BC2_AD4C_48E683760A2E_HPP
+#ifndef POMDOG_SPRITECOMMANDPROCESSOR_1D9B87F7_HPP
+#define POMDOG_SPRITECOMMANDPROCESSOR_1D9B87F7_HPP
 
 #include "Pomdog.Experimental/Graphics/SpriteBatchRenderer.hpp"
 #include "Pomdog.Experimental/Rendering/RenderCommandProcessor.hpp"
@@ -32,4 +32,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SPRITECOMMANDPROCESSOR_1D9B87F7_A4BD_4BC2_AD4C_48E683760A2E_HPP)
+#endif // POMDOG_SPRITECOMMANDPROCESSOR_1D9B87F7_HPP

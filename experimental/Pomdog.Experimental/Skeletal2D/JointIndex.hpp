@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_JOINTINDEX_F35DB555_D353_45D1_938C_AF77D680DD52_HPP
-#define POMDOG_JOINTINDEX_F35DB555_D353_45D1_938C_AF77D680DD52_HPP
+#ifndef POMDOG_JOINTINDEX_F35DB555_HPP
+#define POMDOG_JOINTINDEX_F35DB555_HPP
 
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstdint>
@@ -66,4 +66,4 @@ using JointIndex = Detail::SkeletalAnimation2D::OptionalUnsigned<std::uint8_t>;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_JOINTINDEX_F35DB555_D353_45D1_938C_AF77D680DD52_HPP)
+#endif // POMDOG_JOINTINDEX_F35DB555_HPP

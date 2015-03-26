@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_ANIMATIONKEYHELPER_1AC67582_2235_4181_93A6_6E414A9520F5_HPP
-#define POMDOG_ANIMATIONKEYHELPER_1AC67582_2235_4181_93A6_6E414A9520F5_HPP
+#ifndef POMDOG_ANIMATIONKEYHELPER_1AC67582_HPP
+#define POMDOG_ANIMATIONKEYHELPER_1AC67582_HPP
 
 namespace Pomdog {
 namespace Detail {
@@ -20,4 +20,4 @@ namespace AnimationKeyHelper {
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_ANIMATIONKEYHELPER_1AC67582_2235_4181_93A6_6E414A9520F5_HPP)
+#endif // POMDOG_ANIMATIONKEYHELPER_1AC67582_HPP

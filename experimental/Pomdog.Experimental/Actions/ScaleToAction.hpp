@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SCALETOACTION_5EB92B4C_56E3_4D2B_AC93_999860ED5A8F_HPP
-#define POMDOG_SCALETOACTION_5EB92B4C_56E3_4D2B_AC93_999860ED5A8F_HPP
+#ifndef POMDOG_SCALETOACTION_5EB92B4C_HPP
+#define POMDOG_SCALETOACTION_5EB92B4C_HPP
 
 #include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
@@ -50,4 +50,4 @@ using ScaleToAction = Detail::Actions::TemporalAction<Detail::Actions::ScaleTo>;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SCALETOACTION_5EB92B4C_56E3_4D2B_AC93_999860ED5A8F_HPP)
+#endif // POMDOG_SCALETOACTION_5EB92B4C_HPP

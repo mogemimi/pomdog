@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EASINGHELPER_2D00DDAA_9595_4407_90C9_B84D6BA447D2_HPP
-#define POMDOG_EASINGHELPER_2D00DDAA_9595_4407_90C9_B84D6BA447D2_HPP
+#ifndef POMDOG_EASINGHELPER_2D00DDAA_HPP
+#define POMDOG_EASINGHELPER_2D00DDAA_HPP
 
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -206,4 +206,4 @@ using EaseSine = Detail::Easings::EaseSine<float>;
 }// namespace Easings
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_EASINGHELPER_2D00DDAA_9595_4407_90C9_B84D6BA447D2_HPP)
+#endif // POMDOG_EASINGHELPER_2D00DDAA_HPP

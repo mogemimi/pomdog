@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_PARTICLECURVELERP_7AA431A6_08A8_4716_AA4F_0F52D3AC7793_HPP
-#define POMDOG_PARTICLECURVELERP_7AA431A6_08A8_4716_AA4F_0F52D3AC7793_HPP
+#ifndef POMDOG_PARTICLECURVELERP_7AA431A6_HPP
+#define POMDOG_PARTICLECURVELERP_7AA431A6_HPP
 
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Color.hpp"
@@ -40,4 +40,4 @@ struct ParticleCurveLerp<Color> {
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_PARTICLECURVELERP_7AA431A6_08A8_4716_AA4F_0F52D3AC7793_HPP)
+#endif // POMDOG_PARTICLECURVELERP_7AA431A6_HPP

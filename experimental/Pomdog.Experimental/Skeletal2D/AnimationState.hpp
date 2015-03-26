@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_ANIMATIONSTATE_35B967B3_9C05_4433_AFF4_9777DCED9525_HPP
-#define POMDOG_ANIMATIONSTATE_35B967B3_9C05_4433_AFF4_9777DCED9525_HPP
+#ifndef POMDOG_ANIMATIONSTATE_35B967B3_HPP
+#define POMDOG_ANIMATIONSTATE_35B967B3_HPP
 
 #include "AnimationTimeInterval.hpp"
 #include <memory>
@@ -45,4 +45,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_ANIMATIONSTATE_35B967B3_9C05_4433_AFF4_9777DCED9525_HPP)
+#endif // POMDOG_ANIMATIONSTATE_35B967B3_HPP

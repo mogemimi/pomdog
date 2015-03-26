@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_RECTANGLERENDERABLE_FFA98981_CBE5_4F24_AFDB_C7ECD07CC66E_HPP
-#define POMDOG_RECTANGLERENDERABLE_FFA98981_CBE5_4F24_AFDB_C7ECD07CC66E_HPP
+#ifndef POMDOG_RECTANGLERENDERABLE_FFA98981_HPP
+#define POMDOG_RECTANGLERENDERABLE_FFA98981_HPP
 
 #include "Renderable.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/PrimitiveCommand.hpp"
@@ -39,4 +39,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_RECTANGLERENDERABLE_FFA98981_CBE5_4F24_AFDB_C7ECD07CC66E_HPP)
+#endif // POMDOG_RECTANGLERENDERABLE_FFA98981_HPP

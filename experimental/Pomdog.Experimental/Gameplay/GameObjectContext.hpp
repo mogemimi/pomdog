@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_GAMEOBJECTCONTEXT_DFD4E6A6_66AE_4494_85C3_7155EF07CD89_HPP
-#define POMDOG_GAMEOBJECTCONTEXT_DFD4E6A6_66AE_4494_85C3_7155EF07CD89_HPP
+#ifndef POMDOG_GAMEOBJECTCONTEXT_DFD4E6A6_HPP
+#define POMDOG_GAMEOBJECTCONTEXT_DFD4E6A6_HPP
 
 #include "Component.hpp"
 #include "GameObjectID.hpp"
@@ -437,4 +437,4 @@ using GameObjectContext = Detail::Gameplay::EntityContext<64>;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_GAMEOBJECTCONTEXT_DFD4E6A6_66AE_4494_85C3_7155EF07CD89_HPP)
+#endif // POMDOG_GAMEOBJECTCONTEXT_DFD4E6A6_HPP

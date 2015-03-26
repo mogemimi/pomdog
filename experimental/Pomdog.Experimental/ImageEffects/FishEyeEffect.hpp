@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_FISHEYEEFFECT_62F772C0_3432_453B_A70D_D857D9CAEFB7_HPP
-#define POMDOG_FISHEYEEFFECT_62F772C0_3432_453B_A70D_D857D9CAEFB7_HPP
+#ifndef POMDOG_FISHEYEEFFECT_62F772C0_HPP
+#define POMDOG_FISHEYEEFFECT_62F772C0_HPP
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
@@ -27,4 +27,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_FISHEYEEFFECT_62F772C0_3432_453B_A70D_D857D9CAEFB7_HPP)
+#endif // POMDOG_FISHEYEEFFECT_62F772C0_HPP

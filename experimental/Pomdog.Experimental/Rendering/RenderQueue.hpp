@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_RENDERQUEUE_32005F81_9DE4_4E2F_A57C_BCC9DC5AF832_HPP
-#define POMDOG_RENDERQUEUE_32005F81_9DE4_4E2F_A57C_BCC9DC5AF832_HPP
+#ifndef POMDOG_RENDERQUEUE_32005F81_HPP
+#define POMDOG_RENDERQUEUE_32005F81_HPP
 
 #include <vector>
 #include <memory>
@@ -32,4 +32,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_RENDERQUEUE_32005F81_9DE4_4E2F_A57C_BCC9DC5AF832_HPP)
+#endif // POMDOG_RENDERQUEUE_32005F81_HPP

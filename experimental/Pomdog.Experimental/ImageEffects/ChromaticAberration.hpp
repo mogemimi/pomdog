@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_CHROMATICABERRATION_DEEDC0FF_389D_47A5_A9B1_0D46AF2D4577_HPP
-#define POMDOG_CHROMATICABERRATION_DEEDC0FF_389D_47A5_A9B1_0D46AF2D4577_HPP
+#ifndef POMDOG_CHROMATICABERRATION_DEEDC0FF_HPP
+#define POMDOG_CHROMATICABERRATION_DEEDC0FF_HPP
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
@@ -28,4 +28,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_CHROMATICABERRATION_DEEDC0FF_389D_47A5_A9B1_0D46AF2D4577_HPP)
+#endif // POMDOG_CHROMATICABERRATION_DEEDC0FF_HPP

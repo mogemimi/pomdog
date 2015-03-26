@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_ACTION_F54B5D22_1554_43AF_8F4A_F79479F7F312_HPP
-#define POMDOG_ACTION_F54B5D22_1554_43AF_8F4A_F79479F7F312_HPP
+#ifndef POMDOG_ACTION_F54B5D22_HPP
+#define POMDOG_ACTION_F54B5D22_HPP
 
 #include "Pomdog.Experimental/Skeletal2D/AnimationTimeInterval.hpp"
 
@@ -21,4 +21,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_ACTION_F54B5D22_1554_43AF_8F4A_F79479F7F312_HPP)
+#endif // POMDOG_ACTION_F54B5D22_HPP

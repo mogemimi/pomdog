@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SKELETON_015B5D6C_C3A5_4AC7_B9BB_501EF76F5C7B_HPP
-#define POMDOG_SKELETON_015B5D6C_C3A5_4AC7_B9BB_501EF76F5C7B_HPP
+#ifndef POMDOG_SKELETON_015B5D6C_HPP
+#define POMDOG_SKELETON_015B5D6C_HPP
 
 #include "Joint.hpp"
 #include "JointPose.hpp"
@@ -39,4 +39,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SKELETON_015B5D6C_C3A5_4AC7_B9BB_501EF76F5C7B_HPP)
+#endif // POMDOG_SKELETON_015B5D6C_HPP

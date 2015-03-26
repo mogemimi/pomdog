@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_UIEVENTCONNECTION_EBC5870C_B234_4780_8CBE_4736866F1926_HPP
-#define POMDOG_UIEVENTCONNECTION_EBC5870C_B234_4780_8CBE_4736866F1926_HPP
+#ifndef POMDOG_UIEVENTCONNECTION_EBC5870C_HPP
+#define POMDOG_UIEVENTCONNECTION_EBC5870C_HPP
 
 #include "SubscribeRequestDispatcher.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -84,4 +84,4 @@ private:
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_UIEVENTCONNECTION_EBC5870C_B234_4780_8CBE_4736866F1926_HPP)
+#endif // POMDOG_UIEVENTCONNECTION_EBC5870C_HPP

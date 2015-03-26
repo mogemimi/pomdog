@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_HORIZONTALALIGNMENT_9170DFBF_70EB_4FB6_B18E_71ECB2A0007D_HPP
-#define POMDOG_HORIZONTALALIGNMENT_9170DFBF_70EB_4FB6_B18E_71ECB2A0007D_HPP
+#ifndef POMDOG_HORIZONTALALIGNMENT_9170DFBF_HPP
+#define POMDOG_HORIZONTALALIGNMENT_9170DFBF_HPP
 
 #include <cstdint>
 
@@ -19,4 +19,4 @@ enum class HorizontalAlignment: std::uint8_t {
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_HORIZONTALALIGNMENT_9170DFBF_70EB_4FB6_B18E_71ECB2A0007D_HPP)
+#endif // POMDOG_HORIZONTALALIGNMENT_9170DFBF_HPP

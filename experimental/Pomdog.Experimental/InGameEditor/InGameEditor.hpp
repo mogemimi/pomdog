@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_INGAMEEDITOR_9210CCAC_0DDA_4BF4_8FD8_467873B18326_HPP
-#define POMDOG_INGAMEEDITOR_9210CCAC_0DDA_4BF4_8FD8_467873B18326_HPP
+#ifndef POMDOG_INGAMEEDITOR_9210CCAC_HPP
+#define POMDOG_INGAMEEDITOR_9210CCAC_HPP
 
 #include "detail/EditorColorScheme.hpp"
 #include "Pomdog.Experimental/UI/UIElementHierarchy.hpp"
@@ -52,4 +52,4 @@ private:
 }// namespace SceneEditor
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_INGAMEEDITOR_9210CCAC_0DDA_4BF4_8FD8_467873B18326_HPP)
+#endif // POMDOG_INGAMEEDITOR_9210CCAC_HPP

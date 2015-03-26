@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_VOXCHUNKHEADER_6CE19808_F282_40CE_9945_216DE941C13D_HPP
-#define POMDOG_VOXCHUNKHEADER_6CE19808_F282_40CE_9945_216DE941C13D_HPP
+#ifndef POMDOG_VOXCHUNKHEADER_6CE19808_HPP
+#define POMDOG_VOXCHUNKHEADER_6CE19808_HPP
 
 #include <cstdint>
 
@@ -18,4 +18,4 @@ struct VoxChunkHeader {
 }// namespace MagicaVoxel
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_VOXCHUNKHEADER_6CE19808_F282_40CE_9945_216DE941C13D_HPP)
+#endif // POMDOG_VOXCHUNKHEADER_6CE19808_HPP

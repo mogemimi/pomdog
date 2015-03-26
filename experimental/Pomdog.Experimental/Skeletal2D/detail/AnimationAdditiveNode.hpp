@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_ANIMATIONADDITIVENODE_48896792_129A_489D_B3F3_55D3814CFD38_HPP
-#define POMDOG_ANIMATIONADDITIVENODE_48896792_129A_489D_B3F3_55D3814CFD38_HPP
+#ifndef POMDOG_ANIMATIONADDITIVENODE_48896792_HPP
+#define POMDOG_ANIMATIONADDITIVENODE_48896792_HPP
 
 #include "Pomdog.Experimental/Skeletal2D/AnimationNode.hpp"
 #include <memory>
@@ -40,4 +40,4 @@ private:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_ANIMATIONADDITIVENODE_48896792_129A_489D_B3F3_55D3814CFD38_HPP)
+#endif // POMDOG_ANIMATIONADDITIVENODE_48896792_HPP

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_RENDERER_1196526B_9C0E_408B_A501_2A5D941209ED_HPP
-#define POMDOG_RENDERER_1196526B_9C0E_408B_A501_2A5D941209ED_HPP
+#ifndef POMDOG_RENDERER_1196526B_HPP
+#define POMDOG_RENDERER_1196526B_HPP
 
 #include "Pomdog/Math/Matrix4x4.hpp"
 #include "Pomdog/Graphics/GraphicsContext.hpp"
@@ -42,4 +42,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_RENDERER_1196526B_9C0E_408B_A501_2A5D941209ED_HPP)
+#endif // POMDOG_RENDERER_1196526B_HPP

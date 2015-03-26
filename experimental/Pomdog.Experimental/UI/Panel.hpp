@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_PANEL_C95AA33F_4C44_4692_863A_0C270E741F09_HPP
-#define POMDOG_PANEL_C95AA33F_4C44_4692_863A_0C270E741F09_HPP
+#ifndef POMDOG_PANEL_C95AA33F_HPP
+#define POMDOG_PANEL_C95AA33F_HPP
 
 #include "UIView.hpp"
 #include <Pomdog/Pomdog.hpp>
@@ -32,4 +32,4 @@ public:
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_PANEL_C95AA33F_4C44_4692_863A_0C270E741F09_HPP)
+#endif // POMDOG_PANEL_C95AA33F_HPP

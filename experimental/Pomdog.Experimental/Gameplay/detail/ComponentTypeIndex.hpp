@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_COMPONENTTYPEINDEX_7EECA00A_8F27_4D17_A85A_E6B122008DB3_HPP
-#define POMDOG_COMPONENTTYPEINDEX_7EECA00A_8F27_4D17_A85A_E6B122008DB3_HPP
+#ifndef POMDOG_COMPONENTTYPEINDEX_7EECA00A_HPP
+#define POMDOG_COMPONENTTYPEINDEX_7EECA00A_HPP
 
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstdint>
@@ -46,4 +46,4 @@ IndexType ComponentTypeIndex<BaseComponentType, IndexType>::count = 0;
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_COMPONENTTYPEINDEX_7EECA00A_8F27_4D17_A85A_E6B122008DB3_HPP)
+#endif // POMDOG_COMPONENTTYPEINDEX_7EECA00A_HPP

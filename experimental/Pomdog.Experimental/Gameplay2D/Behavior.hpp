@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_BEHAVIOR_00BB3FAF_A505_418B_A5B0_937A692B91E8_HPP
-#define POMDOG_BEHAVIOR_00BB3FAF_A505_418B_A5B0_937A692B91E8_HPP
+#ifndef POMDOG_BEHAVIOR_00BB3FAF_HPP
+#define POMDOG_BEHAVIOR_00BB3FAF_HPP
 
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog/Application/Duration.hpp"
@@ -23,4 +23,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_BEHAVIOR_00BB3FAF_A505_418B_A5B0_937A692B91E8_HPP)
+#endif // POMDOG_BEHAVIOR_00BB3FAF_HPP

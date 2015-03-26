@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_RENDERLAYER_925B26B2_1D0D_4A78_9A84_DBE025AD0BA3_HPP
-#define POMDOG_RENDERLAYER_925B26B2_1D0D_4A78_9A84_DBE025AD0BA3_HPP
+#ifndef POMDOG_RENDERLAYER_925B26B2_HPP
+#define POMDOG_RENDERLAYER_925B26B2_HPP
 
 #include <cstdint>
 
@@ -27,4 +27,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_RENDERLAYER_925B26B2_1D0D_4A78_9A84_DBE025AD0BA3_HPP)
+#endif // POMDOG_RENDERLAYER_925B26B2_HPP

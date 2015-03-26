@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_PRIMITIVEGRID_8E899444_553D_4CCC_87EB_11D70DFEC99C_HPP
-#define POMDOG_PRIMITIVEGRID_8E899444_553D_4CCC_87EB_11D70DFEC99C_HPP
+#ifndef POMDOG_PRIMITIVEGRID_8E899444_HPP
+#define POMDOG_PRIMITIVEGRID_8E899444_HPP
 
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Color.hpp"
@@ -33,4 +33,4 @@ private:
 }// namespace SceneEditor
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_PRIMITIVEGRID_8E899444_553D_4CCC_87EB_11D70DFEC99C_HPP)
+#endif // POMDOG_PRIMITIVEGRID_8E899444_HPP

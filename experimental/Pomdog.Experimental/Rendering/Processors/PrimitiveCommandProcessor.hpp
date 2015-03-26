@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_PRIMITIVECOMMANDPROCESSOR_78CC3F16_1297_4C1B_BE10_2F174451E3B4_HPP
-#define POMDOG_PRIMITIVECOMMANDPROCESSOR_78CC3F16_1297_4C1B_BE10_2F174451E3B4_HPP
+#ifndef POMDOG_PRIMITIVECOMMANDPROCESSOR_78CC3F16_HPP
+#define POMDOG_PRIMITIVECOMMANDPROCESSOR_78CC3F16_HPP
 
 #include "Pomdog.Experimental/Graphics/PolygonBatch.hpp"
 #include "Pomdog.Experimental/Rendering/RenderCommandProcessor.hpp"
@@ -33,4 +33,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_PRIMITIVECOMMANDPROCESSOR_78CC3F16_1297_4C1B_BE10_2F174451E3B4_HPP)
+#endif // POMDOG_PRIMITIVECOMMANDPROCESSOR_78CC3F16_HPP

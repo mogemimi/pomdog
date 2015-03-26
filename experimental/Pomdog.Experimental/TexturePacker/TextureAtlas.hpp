@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_TEXTUREPACKER_TEXTUREATLAS_DDCCEF0C_6514_4E2B_AD31_7617D2A899B3_HPP
-#define POMDOG_TEXTUREPACKER_TEXTUREATLAS_DDCCEF0C_6514_4E2B_AD31_7617D2A899B3_HPP
+#ifndef POMDOG_TEXTUREATLAS_DDCCEF0C_HPP
+#define POMDOG_TEXTUREATLAS_DDCCEF0C_HPP
 
 #include "Pomdog.Experimental/Graphics/TextureRegion.hpp"
 #include <cstdint>
@@ -32,4 +32,4 @@ public:
 }// namespace TexturePacker
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_TEXTUREPACKER_TEXTUREATLAS_DDCCEF0C_6514_4E2B_AD31_7617D2A899B3_HPP)
+#endif // POMDOG_TEXTUREATLAS_DDCCEF0C_HPP

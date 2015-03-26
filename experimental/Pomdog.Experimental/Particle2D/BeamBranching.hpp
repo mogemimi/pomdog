@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_BEAMBRANCHING_1888F4E0_8B38_413D_B9ED_260B011E70D4_HPP
-#define POMDOG_BEAMBRANCHING_1888F4E0_8B38_413D_B9ED_260B011E70D4_HPP
+#ifndef POMDOG_BEAMBRANCHING_1888F4E0_HPP
+#define POMDOG_BEAMBRANCHING_1888F4E0_HPP
 
 #include <cstdint>
 #include <random>
@@ -22,4 +22,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_BEAMBRANCHING_1888F4E0_8B38_413D_B9ED_260B011E70D4_HPP)
+#endif // POMDOG_BEAMBRANCHING_1888F4E0_HPP

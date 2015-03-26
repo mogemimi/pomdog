@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_COMPRESSEDFLOAT_727406C1_ACE9_4924_89A8_6A8BCCD56CCC_HPP
-#define POMDOG_COMPRESSEDFLOAT_727406C1_ACE9_4924_89A8_6A8BCCD56CCC_HPP
+#ifndef POMDOG_COMPRESSEDFLOAT_727406C1_HPP
+#define POMDOG_COMPRESSEDFLOAT_727406C1_HPP
 
 #include "Pomdog/Utility/Assert.hpp"
 #include <type_traits>
@@ -64,4 +64,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_COMPRESSEDFLOAT_727406C1_ACE9_4924_89A8_6A8BCCD56CCC_HPP)
+#endif // POMDOG_COMPRESSEDFLOAT_727406C1_HPP

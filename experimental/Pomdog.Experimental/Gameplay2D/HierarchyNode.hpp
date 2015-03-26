@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_HIERARCHYNODE_65A32766_DE9A_40C5_9F1A_2FA6F042E424_HPP
-#define POMDOG_HIERARCHYNODE_65A32766_DE9A_40C5_9F1A_2FA6F042E424_HPP
+#ifndef POMDOG_HIERARCHYNODE_65A32766_HPP
+#define POMDOG_HIERARCHYNODE_65A32766_HPP
 
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -44,4 +44,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_HIERARCHYNODE_65A32766_DE9A_40C5_9F1A_2FA6F042E424_HPP)
+#endif // POMDOG_HIERARCHYNODE_65A32766_HPP

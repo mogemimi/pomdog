@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_PARTICLEEMITTERSHAPE_DCE4AD88_E068_4AF6_8F1F_EEE13290929E_HPP
-#define POMDOG_PARTICLEEMITTERSHAPE_DCE4AD88_E068_4AF6_8F1F_EEE13290929E_HPP
+#ifndef POMDOG_PARTICLEEMITTERSHAPE_DCE4AD88_HPP
+#define POMDOG_PARTICLEEMITTERSHAPE_DCE4AD88_HPP
 
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Radian.hpp"
@@ -23,4 +23,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_PARTICLEEMITTERSHAPE_DCE4AD88_E068_4AF6_8F1F_EEE13290929E_HPP)
+#endif // POMDOG_PARTICLEEMITTERSHAPE_DCE4AD88_HPP

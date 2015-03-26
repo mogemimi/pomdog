@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_UIEVENTDISPATCHER_83873A91_6AAF_472C_9018_E882810EF741_HPP
-#define POMDOG_UIEVENTDISPATCHER_83873A91_6AAF_472C_9018_E882810EF741_HPP
+#ifndef POMDOG_UIEVENTDISPATCHER_83873A91_HPP
+#define POMDOG_UIEVENTDISPATCHER_83873A91_HPP
 
 #include "UIView.hpp"
 #include "PointerPoint.hpp"
@@ -71,4 +71,4 @@ private:
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_UIEVENTDISPATCHER_83873A91_6AAF_472C_9018_E882810EF741_HPP)
+#endif // POMDOG_UIEVENTDISPATCHER_83873A91_HPP

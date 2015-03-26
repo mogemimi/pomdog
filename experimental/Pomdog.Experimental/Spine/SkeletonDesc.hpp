@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SPINE_SKELETONDESC_BCCD55FC_EEDC_43CB_AC5F_194D7A58686D_HPP
-#define POMDOG_SPINE_SKELETONDESC_BCCD55FC_EEDC_43CB_AC5F_194D7A58686D_HPP
+#ifndef POMDOG_SKELETONDESC_BCCD55FC_HPP
+#define POMDOG_SKELETONDESC_BCCD55FC_HPP
 
 #include "Pomdog.Experimental/Skeletal2D/AnimationTimeInterval.hpp"
 #include "Pomdog.Experimental/Skeletal2D/CompressedFloat.hpp"
@@ -151,4 +151,4 @@ public:
 }// namespace Spine
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SPINE_SKELETONDESC_BCCD55FC_EEDC_43CB_AC5F_194D7A58686D_HPP)
+#endif // POMDOG_SKELETONDESC_BCCD55FC_HPP

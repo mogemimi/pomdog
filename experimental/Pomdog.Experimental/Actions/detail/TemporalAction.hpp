@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_TEMPORALACTION_DD16B93C_A710_4BD1_914B_5E1AF09287E9_HPP
-#define POMDOG_TEMPORALACTION_DD16B93C_A710_4BD1_914B_5E1AF09287E9_HPP
+#ifndef POMDOG_TEMPORALACTION_DD16B93C_HPP
+#define POMDOG_TEMPORALACTION_DD16B93C_HPP
 
 #include "Pomdog.Experimental/Actions/Action.hpp"
 
@@ -83,4 +83,4 @@ public:
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_TEMPORALACTION_DD16B93C_A710_4BD1_914B_5E1AF09287E9_HPP)
+#endif // POMDOG_TEMPORALACTION_DD16B93C_HPP

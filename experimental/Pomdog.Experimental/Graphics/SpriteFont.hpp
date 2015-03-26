@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SPRITEFONT_1C2133CC_E7F0_4FC2_A4D8_2D2862E4B3C6_HPP
-#define POMDOG_SPRITEFONT_1C2133CC_E7F0_4FC2_A4D8_2D2862E4B3C6_HPP
+#ifndef POMDOG_SPRITEFONT_1C2133CC_HPP
+#define POMDOG_SPRITEFONT_1C2133CC_HPP
 
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
@@ -76,4 +76,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SPRITEFONT_1C2133CC_E7F0_4FC2_A4D8_2D2862E4B3C6_HPP)
+#endif // POMDOG_SPRITEFONT_1C2133CC_HPP

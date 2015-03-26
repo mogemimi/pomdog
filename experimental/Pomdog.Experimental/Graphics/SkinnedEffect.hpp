@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SKINNEDEFFECT_3BADC686_76B4_4F06_94E7_1A8775F1D00D_HPP
-#define POMDOG_SKINNEDEFFECT_3BADC686_76B4_4F06_94E7_1A8775F1D00D_HPP
+#ifndef POMDOG_SKINNEDEFFECT_3BADC686_HPP
+#define POMDOG_SKINNEDEFFECT_3BADC686_HPP
 
 #include <Pomdog/Pomdog.hpp>
 #include <cstdint>
@@ -36,4 +36,4 @@ private:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_SKINNEDEFFECT_3BADC686_76B4_4F06_94E7_1A8775F1D00D_HPP)
+#endif // POMDOG_SKINNEDEFFECT_3BADC686_HPP

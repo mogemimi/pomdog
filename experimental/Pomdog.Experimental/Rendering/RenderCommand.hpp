@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_RENDERCOMMAND_B320B370_4577_4D5D_A9D2_A12F0291F0E1_HPP
-#define POMDOG_RENDERCOMMAND_B320B370_4577_4D5D_A9D2_A12F0291F0E1_HPP
+#ifndef POMDOG_RENDERCOMMAND_B320B370_HPP
+#define POMDOG_RENDERCOMMAND_B320B370_HPP
 
 #include <memory>
 #include <typeindex>
@@ -22,4 +22,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_RENDERCOMMAND_B320B370_4577_4D5D_A9D2_A12F0291F0E1_HPP)
+#endif // POMDOG_RENDERCOMMAND_B320B370_HPP

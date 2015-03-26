@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_PARTICLELOADER_D0266408_F310_4DD3_B852_3AF14EA7737B_HPP
-#define POMDOG_PARTICLELOADER_D0266408_F310_4DD3_B852_3AF14EA7737B_HPP
+#ifndef POMDOG_PARTICLELOADER_D0266408_HPP
+#define POMDOG_PARTICLELOADER_D0266408_HPP
 
 #include <Pomdog/Pomdog.hpp>
 
@@ -21,4 +21,4 @@ struct ParticleLoader {
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_PARTICLELOADER_D0266408_F310_4DD3_B852_3AF14EA7737B_HPP)
+#endif // POMDOG_PARTICLELOADER_D0266408_HPP

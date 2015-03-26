@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_MOVETOACTION_69978A4F_8913_4A3E_86D4_AA5A69A58586_HPP
-#define POMDOG_MOVETOACTION_69978A4F_8913_4A3E_86D4_AA5A69A58586_HPP
+#ifndef POMDOG_MOVETOACTION_69978A4F_HPP
+#define POMDOG_MOVETOACTION_69978A4F_HPP
 
 #include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
@@ -50,4 +50,4 @@ using MoveToAction = Detail::Actions::TemporalAction<Detail::Actions::MoveTo>;
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_MOVETOACTION_69978A4F_8913_4A3E_86D4_AA5A69A58586_HPP)
+#endif // POMDOG_MOVETOACTION_69978A4F_HPP

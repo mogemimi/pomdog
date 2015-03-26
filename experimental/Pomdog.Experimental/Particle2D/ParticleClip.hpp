@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_PARTICLECLIP_CC5B71B4_5A11_4D2A_8225_5633A4BCD516_HPP
-#define POMDOG_PARTICLECLIP_CC5B71B4_5A11_4D2A_8225_5633A4BCD516_HPP
+#ifndef POMDOG_PARTICLECLIP_CC5B71B4_HPP
+#define POMDOG_PARTICLECLIP_CC5B71B4_HPP
 
 #include "detail/ParticleEmitterShape.hpp"
 #include "detail/ParticleParameter.hpp"
@@ -41,4 +41,4 @@ public:
 
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_PARTICLECLIP_CC5B71B4_5A11_4D2A_8225_5633A4BCD516_HPP)
+#endif // POMDOG_PARTICLECLIP_CC5B71B4_HPP

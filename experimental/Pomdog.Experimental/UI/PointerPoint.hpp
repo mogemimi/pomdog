@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_POINTERPOINT_DAEC8B7F_D25B_4146_BB15_965A4AF81FF3_HPP
-#define POMDOG_POINTERPOINT_DAEC8B7F_D25B_4146_BB15_965A4AF81FF3_HPP
+#ifndef POMDOG_POINTERPOINT_DAEC8B7F_HPP
+#define POMDOG_POINTERPOINT_DAEC8B7F_HPP
 
 #include "PointerEventType.hpp"
 #include "Pomdog/Utility/Optional.hpp"
@@ -32,4 +32,4 @@ public:
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_POINTERPOINT_DAEC8B7F_D25B_4146_BB15_965A4AF81FF3_HPP)
+#endif // POMDOG_POINTERPOINT_DAEC8B7F_HPP

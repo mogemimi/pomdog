@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_GAMEOBJECTID_F68B7FC0_7009_433E_8F5E_153D5502766A_HPP
-#define POMDOG_GAMEOBJECTID_F68B7FC0_7009_433E_8F5E_153D5502766A_HPP
+#ifndef POMDOG_GAMEOBJECTID_F68B7FC0_HPP
+#define POMDOG_GAMEOBJECTID_F68B7FC0_HPP
 
 #include <cstdint>
 #include <functional>
@@ -59,4 +59,4 @@ struct std::hash<Pomdog::GameObjectID> {
 
 }// namespace std
 
-#endif // !defined(POMDOG_GAMEOBJECTID_F68B7FC0_7009_433E_8F5E_153D5502766A_HPP)
+#endif // POMDOG_GAMEOBJECTID_F68B7FC0_HPP

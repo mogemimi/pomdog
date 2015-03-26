@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_POINTEREVENTTYPE_2ABE882F_69A8_4F0D_AE08_A712EE914EA0_HPP
-#define POMDOG_POINTEREVENTTYPE_2ABE882F_69A8_4F0D_AE08_A712EE914EA0_HPP
+#ifndef POMDOG_POINTEREVENTTYPE_2ABE882F_HPP
+#define POMDOG_POINTEREVENTTYPE_2ABE882F_HPP
 
 #include <cstdint>
 
@@ -23,4 +23,4 @@ enum class PointerEventType: std::uint8_t {
 }// namespace UI
 }// namespace Pomdog
 
-#endif // !defined(POMDOG_POINTEREVENTTYPE_2ABE882F_69A8_4F0D_AE08_A712EE914EA0_HPP)
+#endif // POMDOG_POINTEREVENTTYPE_2ABE882F_HPP
