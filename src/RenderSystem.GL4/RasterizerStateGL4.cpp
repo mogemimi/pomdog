@@ -36,7 +36,7 @@ RasterizerStateGL4::RasterizerStateGL4(RasterizerDescription const& description)
 {
 }
 //-----------------------------------------------------------------------
-void RasterizerStateGL4::Apply(NativeGraphicsContext &)
+void RasterizerStateGL4::Apply()
 {
     #if defined(DEBUG) && !defined(NDEBUG)
     {
@@ -77,8 +77,7 @@ void RasterizerStateGL4::Apply(NativeGraphicsContext &)
     }
 
     // Depth bias:
-    if (depthBias != 0.0f && slopeScaledDepthBias != 0.0f)
-    {
+    if (depthBias != 0 && slopeScaledDepthBias != 0) {
         glEnable(GL_POLYGON_OFFSET_FILL);
         glPolygonOffset(slopeScaledDepthBias, depthBias);
     }

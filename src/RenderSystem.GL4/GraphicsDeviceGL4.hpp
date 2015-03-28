@@ -53,10 +53,6 @@ public:
     CreateSamplerState(SamplerDescription const& description) override;
 
     ///@copydoc NativeGraphicsDevice
-    std::unique_ptr<NativeRasterizerState>
-    CreateRasterizerState(RasterizerDescription const& description) override;
-
-    ///@copydoc NativeGraphicsDevice
     std::unique_ptr<NativeEffectPass>
     CreateEffectPass(EffectPassDescription const& description) override;
 

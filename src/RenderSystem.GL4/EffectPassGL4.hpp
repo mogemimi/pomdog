@@ -5,6 +5,7 @@
 #define POMDOG_EFFECTPASSGL4_5C5F046F_HPP
 
 #include "OpenGLPrerequisites.hpp"
+#include "RasterizerStateGL4.hpp"
 #include "TypesafeGL4.hpp"
 #include "../RenderSystem/NativeEffectPass.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -50,6 +51,7 @@ private:
     std::vector<UniformBlockBindingGL4> uniformBlockBindings;
     Optional<ShaderProgramGL4> shaderProgram;
     std::unique_ptr<InputLayoutGL4> inputLayout;
+    RasterizerStateGL4 rasterizerState;
 };
 
 }// namespace GL4

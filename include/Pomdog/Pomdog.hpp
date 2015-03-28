@@ -91,7 +91,6 @@
 #include "Graphics/PresentationParameters.hpp"
 #include "Graphics/PrimitiveTopology.hpp"
 #include "Graphics/RasterizerDescription.hpp"
-#include "Graphics/RasterizerState.hpp"
 #include "Graphics/RenderTarget2D.hpp"
 #include "Graphics/SamplerDescription.hpp"
 #include "Graphics/SamplerState.hpp"

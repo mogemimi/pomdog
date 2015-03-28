@@ -101,6 +101,9 @@ public:
     void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& nativeConstantLayout) override;
 
 private:
+    void ApplyPipelineState();
+
+private:
     std::vector<std::shared_ptr<VertexBuffer>> vertexBuffers;
     std::shared_ptr<OpenGLContext> nativeContext;
     std::shared_ptr<EffectPassGL4> effectPass;

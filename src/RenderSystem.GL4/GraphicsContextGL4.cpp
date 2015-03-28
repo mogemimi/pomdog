@@ -250,7 +250,7 @@ void GraphicsContextGL4::Present()
     #endif
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::size_t vertexCount)
+void GraphicsContextGL4::ApplyPipelineState()
 {
     // Bind input-layout to the input-assembler stage:
     POMDOG_ASSERT(effectPass);
@@ -263,6 +263,11 @@ void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::size_t v
     // Use shader program:
     POMDOG_ASSERT(effectPass);
     effectPass->ApplyShaders();
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::size_t vertexCount)
+{
+    ApplyPipelineState();
 
     // Apply constant layout:
     POMDOG_ASSERT(constantLayout);
@@ -287,17 +292,7 @@ void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::size_t v
 void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
     std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount)
 {
-    // Bind input-layout to the input-assembler stage:
-    POMDOG_ASSERT(effectPass);
-    auto inputLayout = effectPass->GetInputLayout();
-
-    POMDOG_ASSERT(inputLayout);
-    POMDOG_ASSERT(!vertexBuffers.empty());
-    inputLayout->Apply(vertexBuffers);
-
-    // Use shader program:
-    POMDOG_ASSERT(effectPass);
-    effectPass->ApplyShaders();
+    ApplyPipelineState();
 
     // Apply constant layout:
     POMDOG_ASSERT(constantLayout);
@@ -328,17 +323,7 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
 void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology,
     std::size_t vertexCount, std::size_t instanceCount)
 {
-    // Bind input-layout to the input-assembler stage:
-    POMDOG_ASSERT(effectPass);
-    auto inputLayout = effectPass->GetInputLayout();
-
-    POMDOG_ASSERT(inputLayout);
-    POMDOG_ASSERT(!vertexBuffers.empty());
-    inputLayout->Apply(vertexBuffers);
-
-    // Use shader program:
-    POMDOG_ASSERT(effectPass);
-    effectPass->ApplyShaders();
+    ApplyPipelineState();
 
     // Apply constant layout:
     POMDOG_ASSERT(constantLayout);
@@ -366,17 +351,7 @@ void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology,
 void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
     std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount)
 {
-    // Bind input-layout to the input-assembler stage:
-    POMDOG_ASSERT(effectPass);
-    auto inputLayout = effectPass->GetInputLayout();
-
-    POMDOG_ASSERT(inputLayout);
-    POMDOG_ASSERT(!vertexBuffers.empty());
-    inputLayout->Apply(vertexBuffers);
-
-    // Use shader program:
-    POMDOG_ASSERT(effectPass);
-    effectPass->ApplyShaders();
+    ApplyPipelineState();
 
     // Apply constant layout:
     POMDOG_ASSERT(constantLayout);

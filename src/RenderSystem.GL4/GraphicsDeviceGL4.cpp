@@ -9,7 +9,6 @@
 #include "EffectReflectionGL4.hpp"
 #include "IndexBufferGL4.hpp"
 #include "InputLayoutGL4.hpp"
-#include "RasterizerStateGL4.hpp"
 #include "SamplerStateGL4.hpp"
 #include "ShaderGL4.hpp"
 #include "Texture2DGL4.hpp"
@@ -88,12 +87,6 @@ std::unique_ptr<NativeSamplerState>
 GraphicsDeviceGL4::CreateSamplerState(SamplerDescription const& description)
 {
     return std::make_unique<SamplerStateGL4>(description);
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeRasterizerState>
-GraphicsDeviceGL4::CreateRasterizerState(RasterizerDescription const& description)
-{
-    return std::make_unique<RasterizerStateGL4>(description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectPass>

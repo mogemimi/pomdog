@@ -19,7 +19,6 @@ class NativeDepthStencilState;
 class NativeEffectPass;
 class NativeEffectReflection;
 class NativeIndexBuffer;
-class NativeRasterizerState;
 class NativeRenderTarget2D;
 class NativeSamplerState;
 class NativeTexture2D;
@@ -62,9 +61,6 @@ public:
 
     virtual std::unique_ptr<NativeSamplerState>
     CreateSamplerState(SamplerDescription const& description) = 0;
-
-    virtual std::unique_ptr<NativeRasterizerState>
-    CreateRasterizerState(RasterizerDescription const& description) = 0;
 
     virtual std::unique_ptr<NativeEffectPass>
     CreateEffectPass(EffectPassDescription const& description) = 0;

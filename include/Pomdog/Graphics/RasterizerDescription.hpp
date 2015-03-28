@@ -24,6 +24,43 @@ public:
     bool MultisampleEnable = false;
 
     bool ScissorTestEnable = false;
+
+public:
+    static RasterizerDescription CreateCullClockwise()
+    {
+        RasterizerDescription desc;
+        desc.CullMode = CullMode::ClockwiseFace;
+        desc.FillMode = FillMode::Solid;
+        desc.DepthBias = 0;
+        desc.SlopeScaledDepthBias = 0;
+        desc.MultisampleEnable = false;
+        desc.ScissorTestEnable = false;
+        return desc;
+    }
+
+    static RasterizerDescription CreateCullCounterClockwise()
+    {
+        RasterizerDescription desc;
+        desc.CullMode = CullMode::CounterClockwiseFace;
+        desc.FillMode = FillMode::Solid;
+        desc.DepthBias = 0;
+        desc.SlopeScaledDepthBias = 0;
+        desc.MultisampleEnable = false;
+        desc.ScissorTestEnable = false;
+        return desc;
+    }
+
+    static RasterizerDescription CreateCullNone()
+    {
+        RasterizerDescription desc;
+        desc.CullMode = CullMode::None;
+        desc.FillMode = FillMode::Solid;
+        desc.DepthBias = 0;
+        desc.SlopeScaledDepthBias = 0;
+        desc.MultisampleEnable = false;
+        desc.ScissorTestEnable = false;
+        return desc;
+    }
 };
 
 }// namespace Pomdog

@@ -6,14 +6,12 @@
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include "../RenderSystem/NativeBlendState.hpp"
 #include "../RenderSystem/NativeDepthStencilState.hpp"
-#include "../RenderSystem/NativeRasterizerState.hpp"
 #include "../RenderSystem/NativeSamplerState.hpp"
 #include "Pomdog/Graphics/BlendState.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/DepthStencilState.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Graphics/RasterizerState.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
@@ -65,9 +63,6 @@ public:
     void SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilState);
 
     ///@copydoc GraphicsContext
-    void SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState);
-
-    ///@copydoc GraphicsContext
     void SetSamplerState(int samplerSlot, std::shared_ptr<SamplerState> const& samplerState);
 
     ///@copydoc GraphicsContext
@@ -105,7 +100,6 @@ public:
     std::vector<std::shared_ptr<RenderTarget2D>> renderTargets;
     std::shared_ptr<BlendState> blendState;
     std::shared_ptr<DepthStencilState> depthStencilState;
-    std::shared_ptr<RasterizerState> rasterizerState;
     std::shared_ptr<EffectPass> effectPass;
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
 
@@ -140,7 +134,6 @@ void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const
     POMDOG_ASSERT(graphicsDevice);
 
     blendState = BlendState::CreateOpaque(graphicsDevice);
-    rasterizerState = RasterizerState::CreateCullCounterClockwise(graphicsDevice);
     depthStencilState = DepthStencilState::CreateReadWriteDepth(graphicsDevice);
 
     POMDOG_ASSERT(!samplerStates.empty());
@@ -153,9 +146,6 @@ void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const
     }
     if (depthStencilState) {
         SetDepthStencilState(depthStencilState);
-    }
-    if (rasterizerState) {
-        SetRasterizerState(rasterizerState);
     }
     for (std::uint32_t index = 0; index < samplerStates.size(); ++index) {
         if (samplerStates[index]) {
@@ -193,16 +183,6 @@ void GraphicsContext::Impl::SetDepthStencilState(std::shared_ptr<DepthStencilSta
     POMDOG_ASSERT(nativeContext);
     POMDOG_ASSERT(depthStencilState->NativeDepthStencilState());
     depthStencilState->NativeDepthStencilState()->Apply(*nativeContext);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerStateIn)
-{
-    POMDOG_ASSERT(rasterizerStateIn);
-    rasterizerState = rasterizerStateIn;
-
-    POMDOG_ASSERT(nativeContext);
-    POMDOG_ASSERT(rasterizerState->NativeRasterizerState());
-    rasterizerState->NativeRasterizerState()->Apply(*nativeContext);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::Impl::SetSamplerState(int samplerSlot, std::shared_ptr<SamplerState> const& samplerStateIn)
@@ -465,20 +445,6 @@ void GraphicsContext::SetDepthStencilState(std::shared_ptr<DepthStencilState> co
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(depthStencilState);
     impl->SetDepthStencilState(depthStencilState);
-}
-//-----------------------------------------------------------------------
-std::shared_ptr<RasterizerState> GraphicsContext::GetRasterizerState() const
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->rasterizerState);
-    return impl->rasterizerState;
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(rasterizerState);
-    impl->SetRasterizerState(rasterizerState);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetSamplerState(int index, std::shared_ptr<SamplerState> const& samplerState)

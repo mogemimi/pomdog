@@ -69,10 +69,6 @@ public:
 
     void SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilState);
 
-    std::shared_ptr<RasterizerState> GetRasterizerState() const;
-
-    void SetRasterizerState(std::shared_ptr<RasterizerState> const& rasterizerState);
-
     void SetSamplerState(int index, std::shared_ptr<SamplerState> const& samplerState);
 
     void SetVertexBuffer(std::shared_ptr<VertexBuffer> const& vertexBuffer);

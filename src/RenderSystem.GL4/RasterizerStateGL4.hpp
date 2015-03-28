@@ -5,7 +5,6 @@
 #define POMDOG_RASTERIZERSTATEGL4_CD96D51A_HPP
 
 #include "OpenGLPrerequisites.hpp"
-#include "../RenderSystem/NativeRasterizerState.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/detail/Tagged.hpp"
 
@@ -16,14 +15,13 @@ namespace GL4 {
 
 using FillModeGL4 = Tagged<GLenum, FillMode>;
 
-class RasterizerStateGL4 final: public NativeRasterizerState {
+class RasterizerStateGL4 final {
 public:
     RasterizerStateGL4() = delete;
 
     explicit RasterizerStateGL4(RasterizerDescription const& description);
 
-    ///@copydoc NativeRasterizerState
-    void Apply(NativeGraphicsContext & graphicsContext) override;
+    void Apply();
 
 private:
     FillModeGL4 fillMode;

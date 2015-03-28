@@ -20,7 +20,6 @@ class EffectReflection;
 class GraphicsContext;
 class GraphicsDevice;
 class IndexBuffer;
-class RasterizerState;
 class RenderTarget2D;
 class SamplerState;
 class Shader;
