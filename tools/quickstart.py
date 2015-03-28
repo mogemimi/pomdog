@@ -1,17 +1,14 @@
 # Copyright (c) 2013-2015 mogemimi.
 # Distributed under the MIT license. See LICENSE.md file for details.
 
-# -*- coding: utf-8 -*-
-
 import sys
 import os
 import argparse
 import subprocess
 import uuid
 import shutil
-import six
 
-from __future__ import unicode_literals, print_function
+
 from string import Template
 
 
@@ -155,8 +152,8 @@ def CreateNewProject(config):
 
 
 def ReadInput(prompt):
-    if six.PY3:
-        return input(prompt)
+    #if six.PY3:
+    #    return input(prompt)
     return raw_input(prompt)
 
 
