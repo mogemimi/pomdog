@@ -51,11 +51,11 @@ public:
 private:
     std::vector<TextureBindingGL4> textureBindings;
     std::vector<UniformBlockBindingGL4> uniformBlockBindings;
-    Optional<ShaderProgramGL4> shaderProgram;
-    std::unique_ptr<InputLayoutGL4> inputLayout;
     BlendStateGL4 blendState;
     RasterizerStateGL4 rasterizerState;
     DepthStencilStateGL4 depthStencilState;
+    Optional<ShaderProgramGL4> shaderProgram;
+    std::unique_ptr<InputLayoutGL4> inputLayout;
 };
 
 }// namespace GL4
