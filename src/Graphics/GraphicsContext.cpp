@@ -50,37 +50,26 @@ public:
 
     void BuildResources(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-    ///@copydoc GraphicsContext
     void SetViewport(Viewport const& viewport);
 
-    ///@copydoc GraphicsContext
     void SetSamplerState(int samplerSlot, std::shared_ptr<SamplerState> const& samplerState);
 
-    ///@copydoc GraphicsContext
     void SetTexture(int textureSlot);
 
-    ///@copydoc GraphicsContext
     void SetTexture(int textureSlot, std::shared_ptr<Texture2D> const& texture);
 
-    ///@copydoc GraphicsContext
     void SetTexture(int textureSlot, std::shared_ptr<RenderTarget2D> const& texture);
 
-    ///@copydoc GraphicsContext
     void SetRenderTarget();
 
-    ///@copydoc GraphicsContext
     void SetRenderTarget(std::shared_ptr<RenderTarget2D> const& renderTarget);
 
-    ///@copydoc GraphicsContext
     void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets);
 
-    ///@copydoc GraphicsContext
     void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets);
 
-    ///@copydoc GraphicsContext
     void SetEffectPass(std::shared_ptr<EffectPass> const& effectPass);
 
-    ///@copydoc GraphicsContext
     void SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
 
 public:
