@@ -53,13 +53,13 @@ public:
     void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
         std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount);
 
-    Pomdog::Viewport const& Viewport() const;
+    Viewport GetViewport() const;
 
-    void Viewport(Pomdog::Viewport const& viewport);
+    void SetViewport(Viewport const& viewport);
 
-    Pomdog::Rectangle ScissorRectangle() const;
+    Rectangle GetScissorRectangle() const;
 
-    void ScissorRectangle(Pomdog::Rectangle const& rectangle);
+    void SetScissorRectangle(Rectangle const& rectangle);
 
     void SetBlendFactor(Color const& blendFactor);
 

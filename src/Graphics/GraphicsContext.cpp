@@ -51,7 +51,7 @@ public:
     void BuildResources(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
     ///@copydoc GraphicsContext
-    void SetViewport(Pomdog::Viewport const& viewport);
+    void SetViewport(Viewport const& viewport);
 
     ///@copydoc GraphicsContext
     void SetSamplerState(int samplerSlot, std::shared_ptr<SamplerState> const& samplerState);
@@ -84,7 +84,7 @@ public:
     void SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
 
 public:
-    Pomdog::Viewport viewport;
+    Viewport viewport;
     std::vector<std::shared_ptr<VertexBuffer>> vertexBuffers;
     std::vector<std::shared_ptr<SamplerState>> samplerStates;
     std::vector<std::shared_ptr<Texture>> textures;
@@ -353,7 +353,7 @@ void GraphicsContext::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
     impl->nativeContext->DrawIndexedInstanced(primitiveTopology, indexBuffer, indexCount, instanceCount);
 }
 //-----------------------------------------------------------------------
-Viewport const& GraphicsContext::Viewport() const
+Viewport GraphicsContext::GetViewport() const
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeContext);
@@ -361,20 +361,20 @@ Viewport const& GraphicsContext::Viewport() const
     return impl->viewport;
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Viewport(Pomdog::Viewport const& viewport)
+void GraphicsContext::SetViewport(Pomdog::Viewport const& viewport)
 {
     POMDOG_ASSERT(impl);
     impl->SetViewport(viewport);
 }
 //-----------------------------------------------------------------------
-Rectangle GraphicsContext::ScissorRectangle() const
+Rectangle GraphicsContext::GetScissorRectangle() const
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeContext);
     return impl->nativeContext->GetScissorRectangle();
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::ScissorRectangle(Pomdog::Rectangle const& rectangle)
+void GraphicsContext::SetScissorRectangle(Pomdog::Rectangle const& rectangle)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeContext);
