@@ -47,20 +47,8 @@ public:
         BufferUsage bufferUsage) override;
 
     ///@copydoc NativeGraphicsDevice
-    std::unique_ptr<NativeBlendState>
-    CreateBlendState(BlendDescription const& description) override;
-
-    ///@copydoc NativeGraphicsDevice
-    std::unique_ptr<NativeDepthStencilState>
-    CreateDepthStencilState(DepthStencilDescription const& description) override;
-
-    ///@copydoc NativeGraphicsDevice
     std::unique_ptr<NativeSamplerState>
     CreateSamplerState(SamplerDescription const& description) override;
-
-    ///@copydoc NativeGraphicsDevice
-    std::unique_ptr<NativeRasterizerState>
-    CreateRasterizerState(RasterizerDescription const& description) override;
 
     ///@copydoc NativeGraphicsDevice
     std::unique_ptr<NativeEffectPass>

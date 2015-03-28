@@ -8,6 +8,7 @@
 #include "ShaderDirect3D11.hpp"
 #include "../RenderSystem/NativeEffectPass.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Math/Vector4.hpp"
 #include <vector>
 
 namespace Pomdog {
@@ -34,6 +35,11 @@ private:
     std::shared_ptr<VertexShaderDirect3D11> vertexShader;
     std::shared_ptr<PixelShaderDirect3D11> pixelShader;
     Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
+    Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
+    Vector4 blendFactor;
+    UINT sampleMask;
 };
 
 }// namespace Direct3D11

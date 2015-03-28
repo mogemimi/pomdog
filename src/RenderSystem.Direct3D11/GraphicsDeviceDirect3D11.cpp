@@ -2,13 +2,10 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "GraphicsDeviceDirect3D11.hpp"
-#include "BlendStateDirect3D11.hpp"
 #include "ConstantBufferDirect3D11.hpp"
-#include "DepthStencilStateDirect3D11.hpp"
 #include "EffectPassDirect3D11.hpp"
 #include "EffectReflectionDirect3D11.hpp"
 #include "IndexBufferDirect3D11.hpp"
-#include "RasterizerStateDirect3D11.hpp"
 #include "RenderTarget2DDirect3D11.hpp"
 #include "SamplerStateDirect3D11.hpp"
 #include "Texture2DDirect3D11.hpp"
@@ -374,24 +371,6 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(void const* vertices,
         impl->nativeDevice.Get(), impl->deviceContext, vertices, sizeInBytes, bufferUsage);
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeBlendState>
-GraphicsDeviceDirect3D11::CreateBlendState(BlendDescription const& description)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeDevice);
-
-    return std::make_unique<BlendStateDirect3D11>(impl->nativeDevice.Get(), description);
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeDepthStencilState>
-GraphicsDeviceDirect3D11::CreateDepthStencilState(DepthStencilDescription const& description)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeDevice);
-
-    return std::make_unique<DepthStencilStateDirect3D11>(impl->nativeDevice.Get(), description);
-}
-//-----------------------------------------------------------------------
 std::unique_ptr<NativeSamplerState>
 GraphicsDeviceDirect3D11::CreateSamplerState(SamplerDescription const& description)
 {
@@ -399,15 +378,6 @@ GraphicsDeviceDirect3D11::CreateSamplerState(SamplerDescription const& descripti
     POMDOG_ASSERT(impl->nativeDevice);
 
     return std::make_unique<SamplerStateDirect3D11>(impl->nativeDevice.Get(), description);
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeRasterizerState>
-GraphicsDeviceDirect3D11::CreateRasterizerState(RasterizerDescription const& description)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeDevice);
-
-    return std::make_unique<RasterizerStateDirect3D11>(impl->nativeDevice.Get(), description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectPass>
