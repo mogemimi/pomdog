@@ -77,6 +77,9 @@ public:
     void SetScissorRectangle(Rectangle const& rectangle) override;
 
     ///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
+    void SetBlendFactor(Color const& blendFactor) override;
+
+    ///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
     void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) override;
 
     ///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext

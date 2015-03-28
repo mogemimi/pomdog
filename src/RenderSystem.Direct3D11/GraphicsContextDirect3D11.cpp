@@ -61,11 +61,13 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
     Microsoft::WRL::ComPtr<ID3D11Device> const& nativeDevice,
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContextIn)
     : deviceContext(deviceContextIn)
+    , blendFactor({1.0f, 1.0f, 1.0f, 1.0f})
     , preferredBackBufferWidth(1)
     , preferredBackBufferHeight(1)
     , backBufferCount(2)
     , backBufferFormat(SurfaceFormat::R8G8B8A8_UNorm)
     , backBufferDepthFormat(DepthFormat::Depth24Stencil8)
+    , needToApplyPipelineState(true)
 {
     using Microsoft::WRL::ComPtr;
 
@@ -214,9 +216,21 @@ void GraphicsContextDirect3D11::Present()
     swapChain->Present(0, 0);
 }
 //-----------------------------------------------------------------------
+void GraphicsContextDirect3D11::ApplyPipelineState()
+{
+    POMDOG_ASSERT(effectPass);
+
+    if (needToApplyPipelineState) {
+        effectPass->Apply(deviceContext.Get(), blendFactor.data());
+        needToApplyPipelineState = false;
+    }
+}
+//-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::Draw(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount)
 {
     POMDOG_ASSERT(deviceContext);
+
+    ApplyPipelineState();
 
     deviceContext->IASetPrimitiveTopology(ToD3D11PrimitiveTopology(primitiveTopology));
 
@@ -227,6 +241,8 @@ void GraphicsContextDirect3D11::DrawIndexed(PrimitiveTopology primitiveTopology,
     std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount)
 {
     POMDOG_ASSERT(deviceContext);
+
+    ApplyPipelineState();
 
     POMDOG_ASSERT(indexBuffer);
     POMDOG_ASSERT(indexBuffer->NativeIndexBuffer());
@@ -246,6 +262,8 @@ void GraphicsContextDirect3D11::DrawInstanced(PrimitiveTopology primitiveTopolog
 {
     POMDOG_ASSERT(deviceContext);
 
+    ApplyPipelineState();
+
     deviceContext->IASetPrimitiveTopology(ToD3D11PrimitiveTopology(primitiveTopology));
 
     deviceContext->DrawInstanced(vertexCount, instanceCount, 0, 0);
@@ -255,6 +273,8 @@ void GraphicsContextDirect3D11::DrawIndexedInstanced(PrimitiveTopology primitive
     std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount)
 {
     POMDOG_ASSERT(deviceContext);
+
+    ApplyPipelineState();
 
     POMDOG_ASSERT(indexBuffer);
     POMDOG_ASSERT(indexBuffer->NativeIndexBuffer());
@@ -320,6 +340,16 @@ void GraphicsContextDirect3D11::SetScissorRectangle(Rectangle const& rectangle)
     POMDOG_ASSERT(!rects.empty());
 
     deviceContext->RSSetScissorRects(rects.size(), rects.data());
+}
+//-----------------------------------------------------------------------
+void GraphicsContextDirect3D11::SetBlendFactor(Color const& blendFactorIn)
+{
+    auto vec = blendFactorIn.ToVector4();
+    blendFactor[0] = vec.X;
+    blendFactor[1] = vec.Y;
+    blendFactor[2] = vec.Z;
+    blendFactor[3] = vec.W;
+    needToApplyPipelineState = true;
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffersIn)
@@ -442,12 +472,12 @@ void GraphicsContextDirect3D11::SetRenderTargets(std::vector<std::shared_ptr<Ren
 void GraphicsContextDirect3D11::SetEffectPass(std::shared_ptr<NativeEffectPass> const& nativeEffectPass)
 {
     POMDOG_ASSERT(deviceContext);
-
     POMDOG_ASSERT(nativeEffectPass);
-    POMDOG_ASSERT(dynamic_cast<EffectPassDirect3D11*>(nativeEffectPass.get()));
 
-    auto & effectPass = static_cast<EffectPassDirect3D11&>(*nativeEffectPass);
-    effectPass.Apply(deviceContext.Get());
+    effectPass = std::dynamic_pointer_cast<EffectPassDirect3D11>(nativeEffectPass);
+    POMDOG_ASSERT(effectPass);
+
+    needToApplyPipelineState = true;
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& nativeConstantLayout)

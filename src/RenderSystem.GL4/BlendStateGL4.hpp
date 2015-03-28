@@ -26,15 +26,13 @@ public:
     void Apply();
 
 private:
-    Color blendColor;
+    BlendFunctionGL4 alphaFunction;
+    BlendGL4 alphaSource;
+    BlendGL4 alphaDestination;
 
-    BlendFunctionGL4 const alphaFunction;
-    BlendGL4 const alphaSource;
-    BlendGL4 const alphaDestination;
-
-    BlendFunctionGL4 const colorFunction;
-    BlendGL4 const colorSource;
-    BlendGL4 const colorDestination;
+    BlendFunctionGL4 colorFunction;
+    BlendGL4 colorSource;
+    BlendGL4 colorDestination;
 };
 
 }// namespace GL4

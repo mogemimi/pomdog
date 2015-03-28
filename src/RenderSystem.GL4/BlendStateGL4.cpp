@@ -4,7 +4,6 @@
 #include "BlendStateGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
-#include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
@@ -64,10 +63,8 @@ static BlendFunctionGL4 ToBlendFunctionGL4(BlendFunction func)
 }// unnamed namespace
 //-----------------------------------------------------------------------
 BlendStateGL4::BlendStateGL4(BlendDescription const& description)
-    // Blend factor
-    : blendColor(description.BlendFactor)
     // Alpha data
-    , alphaFunction(ToBlendFunctionGL4(description.AlphaBlendFunction))
+    : alphaFunction(ToBlendFunctionGL4(description.AlphaBlendFunction))
     , alphaSource(ToBlendGL4(description.AlphaSourceBlend))
     , alphaDestination(ToBlendGL4(description.AlphaDestinationBlend))
     // Color data
@@ -90,13 +87,6 @@ void BlendStateGL4::Apply()
 
     #ifdef DEBUG
     ErrorChecker::CheckError("glBlendFuncSeparate", __FILE__, __LINE__);
-    #endif
-
-    auto colorVector = blendColor.ToVector4();
-    glBlendColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBlendColor", __FILE__, __LINE__);
     #endif
 
     ///@todo Not implemented alpha to coverage.

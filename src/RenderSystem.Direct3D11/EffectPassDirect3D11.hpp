@@ -25,7 +25,7 @@ public:
 
     std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
 
-    void Apply(ID3D11DeviceContext * deviceContext);
+    void Apply(ID3D11DeviceContext * deviceContext, FLOAT const blendFactor[4]);
 
     ShaderBytecode GetVertexShaderBlob() const;
 
@@ -38,7 +38,6 @@ private:
     Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;
     Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
-    Vector4 blendFactor;
     UINT sampleMask;
 };
 

@@ -61,6 +61,8 @@ public:
 
     void ScissorRectangle(Pomdog::Rectangle const& rectangle);
 
+    void SetBlendFactor(Color const& blendFactor);
+
     void SetSamplerState(int index, std::shared_ptr<SamplerState> const& samplerState);
 
     void SetVertexBuffer(std::shared_ptr<VertexBuffer> const& vertexBuffer);

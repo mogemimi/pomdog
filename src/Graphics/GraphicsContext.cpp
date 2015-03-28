@@ -13,6 +13,7 @@
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
+#include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <utility>
@@ -114,6 +115,8 @@ GraphicsContext::Impl::Impl(std::unique_ptr<Detail::RenderSystem::NativeGraphics
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     SetViewport(viewport);
+
+    nativeContext->SetBlendFactor(Color::White);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
@@ -376,6 +379,13 @@ void GraphicsContext::ScissorRectangle(Pomdog::Rectangle const& rectangle)
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeContext);
     impl->nativeContext->SetScissorRectangle(rectangle);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetBlendFactor(Color const& blendFactor)
+{
+    POMDOG_ASSERT(impl);
+    POMDOG_ASSERT(impl->nativeContext);
+    impl->nativeContext->SetBlendFactor(blendFactor);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetSamplerState(int index, std::shared_ptr<SamplerState> const& samplerState)

@@ -38,14 +38,14 @@ private:
 private:
     DepthStencilFaceOperationGL4 clockwiseFace;
     DepthStencilFaceOperationGL4 counterClockwiseFace;
-    ComparisonFunctionGL4 const depthFunction;
+    ComparisonFunctionGL4 depthFunction;
 
-    GLint const referenceStencil;
-    GLuint const stencilMask;
-    GLuint const stencilWriteMask;
-    GLboolean const depthBufferWriteEnable;
-    bool const stencilEnable;
-    bool const depthBufferEnable;
+    GLint referenceStencil;
+    GLuint stencilMask;
+    GLuint stencilWriteMask;
+    GLboolean depthBufferWriteEnable;
+    bool stencilEnable;
+    bool depthBufferEnable;
 };
 
 }// namespace GL4

@@ -14,16 +14,13 @@ namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 
-class BlendStateDirect3D11;
 class ConstantBufferDirect3D11;
 class ConstantLayoutDirect3D11;
-class DepthStencilStateDirect3D11;
 class EffectPassDirect3D11;
 class EffectReflectionDirect3D11;
 class GraphicsDeviceDirect3D11;
 class GraphicsContextDirect3D11;
 class IndexBufferDirect3D11;
-class RasterizerStateDirect3D11;
 class RenderTarget2DDirect3D11;
 class SamplerStateDirect3D11;
 class Texture2DDirect3D11;

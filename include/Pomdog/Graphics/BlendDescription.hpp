@@ -6,7 +6,6 @@
 
 #include "Blend.hpp"
 #include "BlendFunction.hpp"
-#include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <limits>
@@ -15,8 +14,6 @@ namespace Pomdog {
 
 class POMDOG_EXPORT BlendDescription {
 public:
-    Color BlendFactor = Color::White;
-
     std::uint32_t MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
 
     BlendFunction ColorBlendFunction = BlendFunction::Add;
@@ -42,7 +39,6 @@ public:
     static BlendDescription CreateAdditive()
     {
         BlendDescription desc;
-        desc.BlendFactor = Color::White;
         desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
         desc.AlphaToCoverageEnable = false;
 
@@ -58,7 +54,6 @@ public:
     static BlendDescription CreateAlphaBlend()
     {
         BlendDescription desc;
-        desc.BlendFactor = Color::White;
         desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
         desc.AlphaToCoverageEnable = false;
 
@@ -74,7 +69,6 @@ public:
     static BlendDescription CreateNonPremultiplied()
     {
         BlendDescription desc;
-        desc.BlendFactor = Color::White;
         desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
         desc.AlphaToCoverageEnable = false;
 
@@ -90,7 +84,6 @@ public:
     static BlendDescription CreateOpaque()
     {
         BlendDescription desc;
-        desc.BlendFactor = Color::White;
         desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
         desc.AlphaToCoverageEnable = false;
 

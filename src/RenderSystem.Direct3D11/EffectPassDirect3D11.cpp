@@ -311,7 +311,6 @@ EffectPassDirect3D11::EffectPassDirect3D11(ID3D11Device* device,
 {
     POMDOG_ASSERT(device);
 
-    blendFactor = description.BlendState.BlendFactor.ToVector4();
     sampleMask = static_cast<UINT>(description.BlendState.MultiSampleMask);
 
     blendState = CreateBlendState(device, description.BlendState);
@@ -345,7 +344,8 @@ std::unique_ptr<NativeConstantLayout> EffectPassDirect3D11::CreateConstantLayout
     return std::move(constantLayout);
 }
 //-----------------------------------------------------------------------
-void EffectPassDirect3D11::Apply(ID3D11DeviceContext * deviceContext)
+void EffectPassDirect3D11::Apply(ID3D11DeviceContext * deviceContext,
+    FLOAT const blendFactor[4])
 {
     POMDOG_ASSERT(deviceContext);
     POMDOG_ASSERT(inputLayout);
@@ -358,7 +358,7 @@ void EffectPassDirect3D11::Apply(ID3D11DeviceContext * deviceContext)
     deviceContext->IASetInputLayout(inputLayout.Get());
     deviceContext->VSSetShader(vertexShader->GetNativeShader(), nullptr, 0);
     deviceContext->PSSetShader(pixelShader->GetNativeShader(), nullptr, 0);
-    deviceContext->OMSetBlendState(blendState.Get(), blendFactor.Data(), sampleMask);
+    deviceContext->OMSetBlendState(blendState.Get(), blendFactor, sampleMask);
     deviceContext->OMSetDepthStencilState(depthStencilState.Get(), 0);
     deviceContext->RSSetState(rasterizerState.Get());
 }

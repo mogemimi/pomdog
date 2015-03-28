@@ -59,6 +59,9 @@ public:
     virtual void SetScissorRectangle(Rectangle const& rectangle) = 0;
 
     ///@copydoc Pomdog::GraphicsContext
+    virtual void SetBlendFactor(Color const& blendFactor) = 0;
+
+    ///@copydoc Pomdog::GraphicsContext
     virtual void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) = 0;
 
     ///@copydoc Pomdog::GraphicsContext

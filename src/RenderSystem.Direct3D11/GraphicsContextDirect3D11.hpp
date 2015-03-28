@@ -68,6 +68,9 @@ public:
     void SetScissorRectangle(Rectangle const& rectangle) override;
 
     ///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
+    void SetBlendFactor(Color const& blendFactor) override;
+
+    ///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
     void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) override;
 
     ///@copydoc Pomdog::Detail::RenderSystem::NativeGraphicsContext
@@ -97,17 +100,23 @@ public:
     ID3D11DeviceContext* GetDeviceContext();
 
 private:
+    void ApplyPipelineState();
+
+private:
     Microsoft::WRL::ComPtr<ID3D11DeviceContext>    deviceContext;
     Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
     std::vector<std::shared_ptr<RenderTarget2DDirect3D11>> boundRenderTargets;
     static constexpr std::size_t MaxTextureCount = 8;
     std::array<ID3D11ShaderResourceView*, MaxTextureCount> boundTextureViews;
     std::shared_ptr<RenderTarget2DDirect3D11> backBuffer;
+    std::shared_ptr<EffectPassDirect3D11> effectPass;
+    std::array<FLOAT, 4> blendFactor;
     int preferredBackBufferWidth;
     int preferredBackBufferHeight;
     UINT backBufferCount;
     SurfaceFormat backBufferFormat;
     DepthFormat backBufferDepthFormat;
+    bool needToApplyPipelineState;
 };
 
 }// namespace Direct3D11

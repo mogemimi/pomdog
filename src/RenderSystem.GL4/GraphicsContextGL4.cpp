@@ -467,6 +467,16 @@ void GraphicsContextGL4::SetScissorRectangle(Rectangle const& rectangle)
     #endif
 }
 //-----------------------------------------------------------------------
+void GraphicsContextGL4::SetBlendFactor(Color const& blendFactor)
+{
+    auto colorVector = blendFactor.ToVector4();
+    glBlendColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
+
+#ifdef DEBUG
+    ErrorChecker::CheckError("glBlendColor", __FILE__, __LINE__);
+#endif
+}
+//-----------------------------------------------------------------------
 void GraphicsContextGL4::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffersIn)
 {
     POMDOG_ASSERT(!vertexBuffersIn.empty());
