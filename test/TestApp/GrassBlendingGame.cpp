@@ -134,8 +134,8 @@ void GrassBlendingGame::Initialize()
     }
 
     clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
-        graphicsContext->Viewport(Viewport{0, 0, width, height});
-        graphicsContext->ScissorRectangle(Rectangle{0, 0, width, height});
+        graphicsContext->SetViewport(Viewport{0, 0, width, height});
+        graphicsContext->SetScissorRectangle(Rectangle{0, 0, width, height});
 
         renderTarget = std::make_shared<RenderTarget2D>(
             gameHost->GraphicsDevice(), width, height,
@@ -238,8 +238,9 @@ void GrassBlendingGame::DrawSkinnedMesh()
 
         POMDOG_ASSERT(transform && camera);
         auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
+        auto viewport = graphicsContext->GetViewport();
         auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-            graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
+            viewport.Width(), viewport.Height(), 0.1f, 1000.0f);
 
         maidSkinningEffect->SetWorldViewProjection(viewMatrix * projectionMatrix);
 
@@ -290,8 +291,9 @@ void GrassBlendingGame::Draw()
 
         POMDOG_ASSERT(transform && camera);
         auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
+        auto viewport = graphicsContext->GetViewport();
         auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-            graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
+            viewport.Width(), viewport.Height(), 0.1f, 1000.0f);
 
         editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
     }

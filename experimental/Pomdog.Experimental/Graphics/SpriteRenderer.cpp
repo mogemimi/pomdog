@@ -142,7 +142,7 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
     using PositionTextureCoord = CustomVertex<Vector4>;
 
     {
-        auto viewport = graphicsContext->Viewport();
+        auto viewport = graphicsContext->GetViewport();
         POMDOG_ASSERT(viewport.Width() > 0);
         POMDOG_ASSERT(viewport.Height() > 0);
         projectionMatrix = Matrix4x4::CreateOrthographicLH(viewport.Width(), viewport.Height(), 0.1f, 100.0f);

@@ -188,7 +188,7 @@ void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn)
 {
     this->sortMode = sortModeIn;
 
-    auto viewport = graphicsContext->Viewport();
+    auto viewport = graphicsContext->GetViewport();
 
     POMDOG_ASSERT(viewport.Width() > 0);
     POMDOG_ASSERT(viewport.Height() > 0);
@@ -210,7 +210,7 @@ void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn, Matrix4x4 const& transf
 {
     this->sortMode = sortModeIn;
 
-    auto viewport = graphicsContext->Viewport();
+    auto viewport = graphicsContext->GetViewport();
 
     POMDOG_ASSERT(viewport.Width() > 0);
     POMDOG_ASSERT(viewport.Height() > 0);

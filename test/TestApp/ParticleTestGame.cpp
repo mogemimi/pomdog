@@ -84,9 +84,11 @@ void ParticleTestGame::Initialize()
             POMDOG_ASSERT(transform && camera);
             auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix(*transform, *camera));
 
+            auto viewport = graphicsContext->GetViewport();
+
             auto position = Vector3::Transform(Vector3(
-                positionInView.X - graphicsContext->Viewport().Width() / 2,
-                positionInView.Y - graphicsContext->Viewport().Height() / 2,
+                positionInView.X - viewport.Width() / 2,
+                positionInView.Y - viewport.Height() / 2,
                 0), inverseViewMatrix3D);
 
             touchPoint = Vector2{position.X, position.Y};

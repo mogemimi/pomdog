@@ -106,8 +106,8 @@ void MaidBeamGame::Initialize()
     }
 
     clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
-        graphicsContext->Viewport(Viewport{0, 0, width, height});
-        graphicsContext->ScissorRectangle(Rectangle{0, 0, width, height});
+        graphicsContext->SetViewport(Viewport{0, 0, width, height});
+        graphicsContext->SetScissorRectangle(Rectangle{0, 0, width, height});
 
         renderTarget = std::make_shared<RenderTarget2D>(
             gameHost->GraphicsDevice(), width, height,
@@ -172,7 +172,7 @@ void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camer
         renderable->Visit(gameObject, renderer);
     }
 
-    graphicsContext->Viewport(viewport);
+    graphicsContext->SetViewport(viewport);
 
     if (sandboxMode)
     {
@@ -204,7 +204,7 @@ void MaidBeamGame::Draw()
     }
 
     {
-        auto viewport = graphicsContext->Viewport();
+        auto viewport = graphicsContext->GetViewport();
 
         if (!sandboxMode)
         {
@@ -239,7 +239,7 @@ void MaidBeamGame::Draw()
             DrawScene(*transform, *camera);
         }
 
-        graphicsContext->Viewport(viewport);
+        graphicsContext->SetViewport(viewport);
     }
 
     if (enableFxaa) {

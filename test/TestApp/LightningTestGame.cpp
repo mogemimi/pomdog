@@ -137,9 +137,11 @@ void LightningTestGame::Initialize()
             POMDOG_ASSERT(transform && camera);
             auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix(*transform, *camera));
 
+            auto viewport = graphicsContext->GetViewport();
+
             auto position = Vector3::Transform(Vector3(
-                positionInView.X - graphicsContext->Viewport().Width() / 2,
-                positionInView.Y - graphicsContext->Viewport().Height() / 2,
+                positionInView.X - viewport.Width() / 2,
+                positionInView.Y - viewport.Height() / 2,
                 0), inverseViewMatrix3D);
 
             touchPoint = Vector2{position.X, position.Y};
@@ -147,8 +149,8 @@ void LightningTestGame::Initialize()
     }
 
     clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
-        graphicsContext->Viewport(Viewport{0, 0, width, height});
-        graphicsContext->ScissorRectangle(Rectangle{0, 0, width, height});
+        graphicsContext->SetViewport(Viewport{0, 0, width, height});
+        graphicsContext->SetScissorRectangle(Rectangle{0, 0, width, height});
 
         renderTarget = std::make_shared<RenderTarget2D>(
             gameHost->GraphicsDevice(), width, height,
@@ -188,8 +190,9 @@ void LightningTestGame::DrawSprites()
 
     POMDOG_ASSERT(transform && camera);
     auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
+    auto viewport = graphicsContext->GetViewport();
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        graphicsContext->Viewport().Width(), graphicsContext->Viewport().Height(), 0.1f, 1000.0f);
+        viewport.Width(), viewport.Height(), 0.1f, 1000.0f);
 
     editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 
