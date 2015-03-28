@@ -33,6 +33,11 @@ public:
     bool StencilEnable = false;
 
 public:
+    static DepthStencilDescription CreateDefault()
+    {
+        return CreateReadWriteDepth();
+    }
+
     static DepthStencilDescription CreateReadWriteDepth()
     {
         DepthStencilDescription desc;

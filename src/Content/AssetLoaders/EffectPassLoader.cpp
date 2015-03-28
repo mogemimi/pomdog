@@ -52,7 +52,37 @@ public:
     EffectPassDescription description;
     Detail::AssetLoaderContext loaderContext;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
+    bool hasBlendState = false;
+    bool hasRasterizerState = false;
+    bool hasDepthStencilState = false;
+
+public:
+    std::shared_ptr<EffectPass> Load();
 };
+//-----------------------------------------------------------------------
+std::shared_ptr<EffectPass> EffectPassLoader::Impl::Load()
+{
+    POMDOG_ASSERT(!description.InputElements.empty());
+    POMDOG_ASSERT(!description.InputElements.front().Declaration.VertexElements().empty());
+
+    if (!hasBlendState) {
+        description.BlendState = BlendDescription::CreateDefault();
+        hasBlendState = true;
+    }
+
+    if (!hasRasterizerState) {
+        description.RasterizerState = RasterizerDescription::CreateDefault();
+        hasRasterizerState = true;
+    }
+
+    if (!hasDepthStencilState) {
+        description.DepthStencilState = DepthStencilDescription::CreateDefault();
+        hasDepthStencilState = true;
+    }
+
+    auto effectPass = std::make_shared<EffectPass>(graphicsDevice, description);
+    return std::move(effectPass);
+}
 //-----------------------------------------------------------------------
 EffectPassLoader::EffectPassLoader(Detail::AssetLoaderContext const& loaderContextIn)
     : impl(std::make_unique<Impl>())
@@ -173,11 +203,7 @@ EffectPassLoader & EffectPassLoader::InputElements(VertexDeclaration && vertexDe
 std::shared_ptr<EffectPass> EffectPassLoader::Load()
 {
     POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(!impl->description.InputElements.empty());
-    POMDOG_ASSERT(!impl->description.InputElements.front().Declaration.VertexElements().empty());
-
-    auto effectPass = std::make_shared<EffectPass>(impl->graphicsDevice, impl->description);
-    return std::move(effectPass);
+    return impl->Load();
 }
 //-----------------------------------------------------------------------
 }// namespace AssetLoaders

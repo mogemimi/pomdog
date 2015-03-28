@@ -34,6 +34,11 @@ public:
     bool AlphaToCoverageEnable = false;
 
 public:
+    static BlendDescription CreateDefault()
+    {
+        return CreateOpaque();
+    }
+
     static BlendDescription CreateAdditive()
     {
         BlendDescription desc;

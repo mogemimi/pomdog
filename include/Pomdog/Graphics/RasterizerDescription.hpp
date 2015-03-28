@@ -26,6 +26,11 @@ public:
     bool ScissorTestEnable = false;
 
 public:
+    static RasterizerDescription CreateDefault()
+    {
+        return CreateCullCounterClockwise();
+    }
+
     static RasterizerDescription CreateCullClockwise()
     {
         RasterizerDescription desc;

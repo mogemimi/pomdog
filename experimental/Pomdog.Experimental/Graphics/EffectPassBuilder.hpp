@@ -45,6 +45,12 @@ public:
 
     EffectPassBuilder & InputElements(VertexDeclaration && vertexDeclaration);
 
+    EffectPassBuilder & BlendState(BlendDescription const& blendState);
+
+    EffectPassBuilder & RasterizerState(RasterizerDescription const& rasterizerState);
+
+    EffectPassBuilder & DepthStencilState(DepthStencilDescription const& depthStencilState);
+
     std::shared_ptr<EffectPass> Create();
 
 private:

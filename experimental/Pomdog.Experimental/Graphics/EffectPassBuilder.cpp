@@ -20,10 +20,16 @@ class EffectPassBuilder::Impl final {
 public:
     GraphicsDevice & graphicsDevice;
     EffectPassDescription description;
+    bool hasBlendState;
+    bool hasRasterizerState;
+    bool hasDepthStencilState;
 
 public:
     explicit Impl(GraphicsDevice & graphicsDeviceIn)
         : graphicsDevice(graphicsDeviceIn)
+        , hasBlendState(false)
+        , hasRasterizerState(false)
+        , hasDepthStencilState(false)
     {}
 };
 //-----------------------------------------------------------------------
@@ -151,11 +157,50 @@ EffectPassBuilder & EffectPassBuilder::InputElements(VertexDeclaration && vertex
     return *this;
 }
 //-----------------------------------------------------------------------
+EffectPassBuilder & EffectPassBuilder::BlendState(BlendDescription const& blendState)
+{
+    POMDOG_ASSERT(impl);
+    impl->description.BlendState = blendState;
+    impl->hasBlendState = true;
+    return *this;
+}
+//-----------------------------------------------------------------------
+EffectPassBuilder & EffectPassBuilder::RasterizerState(RasterizerDescription const& rasterizerState)
+{
+    POMDOG_ASSERT(impl);
+    impl->description.RasterizerState = rasterizerState;
+    impl->hasRasterizerState = true;
+    return *this;
+}
+//-----------------------------------------------------------------------
+EffectPassBuilder & EffectPassBuilder::DepthStencilState(DepthStencilDescription const& depthStencilState)
+{
+    POMDOG_ASSERT(impl);
+    impl->description.DepthStencilState = depthStencilState;
+    impl->hasDepthStencilState = true;
+    return *this;
+}
+//-----------------------------------------------------------------------
 std::shared_ptr<EffectPass> EffectPassBuilder::Create()
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!impl->description.InputElements.empty());
     POMDOG_ASSERT(!impl->description.InputElements.front().Declaration.VertexElements().empty());
+
+    if (!impl->hasBlendState) {
+        impl->description.BlendState = BlendDescription::CreateDefault();
+        impl->hasBlendState = true;
+    }
+
+    if (!impl->hasRasterizerState) {
+        impl->description.RasterizerState = RasterizerDescription::CreateDefault();
+        impl->hasRasterizerState = true;
+    }
+
+    if (!impl->hasDepthStencilState) {
+        impl->description.DepthStencilState = DepthStencilDescription::CreateDefault();
+        impl->hasDepthStencilState = true;
+    }
 
     auto effectPass = std::make_shared<EffectPass>(impl->graphicsDevice, impl->description);
     return std::move(effectPass);
