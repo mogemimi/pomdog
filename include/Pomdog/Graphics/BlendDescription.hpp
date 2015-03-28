@@ -32,6 +32,71 @@ public:
     Blend AlphaDestinationBlend = Blend::One;
 
     bool AlphaToCoverageEnable = false;
+
+public:
+    static BlendDescription CreateAdditive()
+    {
+        BlendDescription desc;
+        desc.BlendFactor = Color::White;
+        desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
+        desc.AlphaToCoverageEnable = false;
+
+        desc.ColorBlendFunction = BlendFunction::Add;
+        desc.AlphaBlendFunction = BlendFunction::Add;
+        desc.ColorSourceBlend = Blend::SourceAlpha;
+        desc.AlphaSourceBlend = Blend::SourceAlpha;
+        desc.ColorDestinationBlend = Blend::One;
+        desc.AlphaDestinationBlend = Blend::One;
+        return desc;
+    }
+
+    static BlendDescription CreateAlphaBlend()
+    {
+        BlendDescription desc;
+        desc.BlendFactor = Color::White;
+        desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
+        desc.AlphaToCoverageEnable = false;
+
+        desc.ColorBlendFunction = BlendFunction::Add;
+        desc.AlphaBlendFunction = BlendFunction::Add;
+        desc.ColorSourceBlend = Blend::One;
+        desc.AlphaSourceBlend = Blend::One;
+        desc.ColorDestinationBlend = Blend::InverseSourceAlpha;
+        desc.AlphaDestinationBlend = Blend::InverseSourceAlpha;
+        return desc;
+    }
+
+    static BlendDescription CreateNonPremultiplied()
+    {
+        BlendDescription desc;
+        desc.BlendFactor = Color::White;
+        desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
+        desc.AlphaToCoverageEnable = false;
+
+        desc.ColorBlendFunction = BlendFunction::Add;
+        desc.AlphaBlendFunction = BlendFunction::Add;
+        desc.ColorSourceBlend = Blend::SourceAlpha;
+        desc.AlphaSourceBlend = Blend::SourceAlpha;
+        desc.ColorDestinationBlend = Blend::InverseSourceAlpha;
+        desc.AlphaDestinationBlend = Blend::InverseSourceAlpha;
+        return desc;
+    }
+
+    static BlendDescription CreateOpaque()
+    {
+        BlendDescription desc;
+        desc.BlendFactor = Color::White;
+        desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
+        desc.AlphaToCoverageEnable = false;
+
+        desc.ColorBlendFunction = BlendFunction::Add;
+        desc.AlphaBlendFunction = BlendFunction::Add;
+        desc.ColorSourceBlend = Blend::One;
+        desc.AlphaSourceBlend = Blend::One;
+        desc.ColorDestinationBlend = Blend::Zero;
+        desc.AlphaDestinationBlend = Blend::Zero;
+        return desc;
+    }
 };
 
 }// namespace Pomdog

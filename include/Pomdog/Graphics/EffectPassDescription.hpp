@@ -5,6 +5,7 @@
 #define POMDOG_EFFECTPASSDESCRIPTION_E706BE44_HPP
 
 #include "detail/ForwardDeclarations.hpp"
+#include "BlendDescription.hpp"
 #include "RasterizerDescription.hpp"
 #include "VertexBufferBinding.hpp"
 #include <memory>
@@ -17,6 +18,7 @@ public:
     std::vector<VertexBufferBinding> InputElements;
     std::shared_ptr<Shader> VertexShader;
     std::shared_ptr<Shader> PixelShader;
+    BlendDescription BlendState;
     RasterizerDescription RasterizerState;
 };
 

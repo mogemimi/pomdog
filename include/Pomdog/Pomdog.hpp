@@ -64,7 +64,6 @@
 #include "Graphics/Blend.hpp"
 #include "Graphics/BlendDescription.hpp"
 #include "Graphics/BlendFunction.hpp"
-#include "Graphics/BlendState.hpp"
 #include "Graphics/BufferUsage.hpp"
 #include "Graphics/ClearOptions.hpp"
 #include "Graphics/ComparisonFunction.hpp"

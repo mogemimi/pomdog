@@ -53,16 +53,12 @@ static GLenum ToBlendFunctionGL4NonTypesafe(BlendFunction func)
 //-----------------------------------------------------------------------
 static BlendGL4 ToBlendGL4(Blend blend)
 {
-    return BlendGL4{
-        ToBlendGL4NonTypesafe(blend)
-    };
+    return BlendGL4{ToBlendGL4NonTypesafe(blend)};
 }
 //-----------------------------------------------------------------------
 static BlendFunctionGL4 ToBlendFunctionGL4(BlendFunction func)
 {
-    return BlendFunctionGL4{
-        ToBlendFunctionGL4NonTypesafe(func)
-    };
+    return BlendFunctionGL4{ToBlendFunctionGL4NonTypesafe(func)};
 }
 
 }// unnamed namespace
@@ -81,7 +77,7 @@ BlendStateGL4::BlendStateGL4(BlendDescription const& description)
 {
 }
 //-----------------------------------------------------------------------
-void BlendStateGL4::Apply(NativeGraphicsContext &)
+void BlendStateGL4::Apply()
 {
     glEnable(GL_BLEND);
 

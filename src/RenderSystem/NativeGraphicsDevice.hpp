@@ -13,7 +13,6 @@ namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
 
-class NativeBlendState;
 class NativeConstantBuffer;
 class NativeDepthStencilState;
 class NativeEffectPass;
@@ -52,9 +51,6 @@ public:
     virtual std::unique_ptr<NativeVertexBuffer>
     CreateVertexBuffer(void const* vertices, std::size_t sizeInBytes,
         BufferUsage bufferUsage) = 0;
-
-    virtual std::unique_ptr<NativeBlendState>
-    CreateBlendState(BlendDescription const& description) = 0;
 
     virtual std::unique_ptr<NativeDepthStencilState>
     CreateDepthStencilState(DepthStencilDescription const& description) = 0;

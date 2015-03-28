@@ -4,10 +4,8 @@
 #include "Pomdog/Graphics/GraphicsContext.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
-#include "../RenderSystem/NativeBlendState.hpp"
 #include "../RenderSystem/NativeDepthStencilState.hpp"
 #include "../RenderSystem/NativeSamplerState.hpp"
-#include "Pomdog/Graphics/BlendState.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/DepthStencilState.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
@@ -57,9 +55,6 @@ public:
     void SetViewport(Pomdog::Viewport const& viewport);
 
     ///@copydoc GraphicsContext
-    void SetBlendState(std::shared_ptr<BlendState> const& blendState);
-
-    ///@copydoc GraphicsContext
     void SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilState);
 
     ///@copydoc GraphicsContext
@@ -98,7 +93,6 @@ public:
     std::vector<std::shared_ptr<SamplerState>> samplerStates;
     std::vector<std::shared_ptr<Texture>> textures;
     std::vector<std::shared_ptr<RenderTarget2D>> renderTargets;
-    std::shared_ptr<BlendState> blendState;
     std::shared_ptr<DepthStencilState> depthStencilState;
     std::shared_ptr<EffectPass> effectPass;
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
@@ -133,7 +127,6 @@ void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const
     POMDOG_ASSERT(nativeContext);
     POMDOG_ASSERT(graphicsDevice);
 
-    blendState = BlendState::CreateOpaque(graphicsDevice);
     depthStencilState = DepthStencilState::CreateReadWriteDepth(graphicsDevice);
 
     POMDOG_ASSERT(!samplerStates.empty());
@@ -141,9 +134,6 @@ void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const
         samplerStates[index] = SamplerState::CreateLinearClamp(graphicsDevice);
     }
 
-    if (blendState) {
-        SetBlendState(blendState);
-    }
     if (depthStencilState) {
         SetDepthStencilState(depthStencilState);
     }
@@ -163,16 +153,6 @@ void GraphicsContext::Impl::SetViewport(Pomdog::Viewport const& newViewport)
 
     this->viewport = newViewport;
     nativeContext->SetViewport(this->viewport);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetBlendState(std::shared_ptr<BlendState> const& blendStateIn)
-{
-    POMDOG_ASSERT(blendStateIn);
-    blendState = blendStateIn;
-
-    POMDOG_ASSERT(nativeContext);
-    POMDOG_ASSERT(blendState->NativeBlendState());
-    blendState->NativeBlendState()->Apply(*nativeContext);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::Impl::SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilStateIn)
@@ -417,20 +397,6 @@ void GraphicsContext::ScissorRectangle(Pomdog::Rectangle const& rectangle)
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeContext);
     impl->nativeContext->SetScissorRectangle(rectangle);
-}
-//-----------------------------------------------------------------------
-std::shared_ptr<BlendState> GraphicsContext::GetBlendState() const
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->blendState);
-    return impl->blendState;
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetBlendState(std::shared_ptr<BlendState> const& blendState)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(blendState);
-    impl->SetBlendState(blendState);
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<DepthStencilState> GraphicsContext::GetDepthStencilState() const

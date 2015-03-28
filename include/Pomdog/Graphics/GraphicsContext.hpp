@@ -61,10 +61,6 @@ public:
 
     void ScissorRectangle(Pomdog::Rectangle const& rectangle);
 
-    std::shared_ptr<BlendState> GetBlendState() const;
-
-    void SetBlendState(std::shared_ptr<BlendState> const& blendState);
-
     std::shared_ptr<DepthStencilState> GetDepthStencilState() const;
 
     void SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilState);

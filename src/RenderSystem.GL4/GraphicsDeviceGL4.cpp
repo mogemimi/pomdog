@@ -2,7 +2,6 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "GraphicsDeviceGL4.hpp"
-#include "BlendStateGL4.hpp"
 #include "ConstantBufferGL4.hpp"
 #include "DepthStencilStateGL4.hpp"
 #include "EffectPassGL4.hpp"
@@ -69,12 +68,6 @@ GraphicsDeviceGL4::CreateVertexBuffer(void const* vertices,
     std::size_t sizeInBytes, BufferUsage bufferUsage)
 {
     return std::make_unique<VertexBufferGL4>(vertices, sizeInBytes, bufferUsage);
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeBlendState>
-GraphicsDeviceGL4::CreateBlendState(BlendDescription const& description)
-{
-    return std::make_unique<BlendStateGL4>(description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeDepthStencilState>

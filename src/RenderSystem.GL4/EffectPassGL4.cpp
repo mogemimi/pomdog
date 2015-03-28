@@ -65,7 +65,8 @@ static Optional<ShaderProgramGL4> LinkShaders(
 }// unnamed namespace
 //-----------------------------------------------------------------------
 EffectPassGL4::EffectPassGL4(EffectPassDescription const& description)
-    : rasterizerState(description.RasterizerState)
+    : blendState(description.BlendState)
+    , rasterizerState(description.RasterizerState)
 {
     auto vertexShader = std::dynamic_pointer_cast<VertexShaderGL4>(description.VertexShader);
     if (!vertexShader) {
@@ -164,6 +165,7 @@ std::unique_ptr<NativeConstantLayout> EffectPassGL4::CreateConstantLayout()
 //-----------------------------------------------------------------------
 void EffectPassGL4::ApplyShaders()
 {
+    blendState.Apply();
     rasterizerState.Apply();
 
     POMDOG_ASSERT(shaderProgram);
