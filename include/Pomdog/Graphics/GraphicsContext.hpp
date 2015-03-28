@@ -61,10 +61,6 @@ public:
 
     void ScissorRectangle(Pomdog::Rectangle const& rectangle);
 
-    std::shared_ptr<DepthStencilState> GetDepthStencilState() const;
-
-    void SetDepthStencilState(std::shared_ptr<DepthStencilState> const& depthStencilState);
-
     void SetSamplerState(int index, std::shared_ptr<SamplerState> const& samplerState);
 
     void SetVertexBuffer(std::shared_ptr<VertexBuffer> const& vertexBuffer);

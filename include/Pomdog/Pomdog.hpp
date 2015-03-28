@@ -72,7 +72,6 @@
 #include "Graphics/CustomVertex.hpp"
 #include "Graphics/DepthStencilDescription.hpp"
 #include "Graphics/DepthStencilOperation.hpp"
-#include "Graphics/DepthStencilState.hpp"
 #include "Graphics/EffectAnnotation.hpp"
 #include "Graphics/EffectConstantDescription.hpp"
 #include "Graphics/EffectParameter.hpp"

@@ -10,7 +10,6 @@ namespace Pomdog {
 
 // Classes
 class ConstantBufferBinding;
-class DepthStencilState;
 class EffectConstantDescription;
 class EffectParameter;
 class EffectPass;

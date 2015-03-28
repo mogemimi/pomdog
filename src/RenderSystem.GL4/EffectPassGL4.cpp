@@ -67,6 +67,7 @@ static Optional<ShaderProgramGL4> LinkShaders(
 EffectPassGL4::EffectPassGL4(EffectPassDescription const& description)
     : blendState(description.BlendState)
     , rasterizerState(description.RasterizerState)
+    , depthStencilState(description.DepthStencilState)
 {
     auto vertexShader = std::dynamic_pointer_cast<VertexShaderGL4>(description.VertexShader);
     if (!vertexShader) {
@@ -167,6 +168,7 @@ void EffectPassGL4::ApplyShaders()
 {
     blendState.Apply();
     rasterizerState.Apply();
+    depthStencilState.Apply();
 
     POMDOG_ASSERT(shaderProgram);
     glUseProgram(shaderProgram->value);

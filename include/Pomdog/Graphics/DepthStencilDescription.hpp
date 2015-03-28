@@ -31,6 +31,46 @@ public:
     bool DepthBufferWriteEnable = true;
 
     bool StencilEnable = false;
+
+public:
+    static DepthStencilDescription CreateReadWriteDepth()
+    {
+        DepthStencilDescription desc;
+        desc.DepthBufferEnable = true;
+        desc.DepthBufferWriteEnable = true;
+        desc.StencilEnable = false;
+        desc.DepthBufferFunction = ComparisonFunction::LessEqual;
+        desc.ReferenceStencil = 0;
+        desc.StencilMask = std::numeric_limits<std::uint32_t>::max();
+        desc.StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
+        return desc;
+    }
+
+    static DepthStencilDescription CreateReadOnlyDepth()
+    {
+        DepthStencilDescription desc;
+        desc.DepthBufferEnable = true;
+        desc.DepthBufferWriteEnable = false;
+        desc.StencilEnable = false;
+        desc.DepthBufferFunction = ComparisonFunction::LessEqual;
+        desc.ReferenceStencil = 0;
+        desc.StencilMask = std::numeric_limits<std::uint32_t>::max();
+        desc.StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
+        return desc;
+    }
+
+    static DepthStencilDescription CreateNone()
+    {
+        DepthStencilDescription desc;
+        desc.DepthBufferEnable = false;
+        desc.DepthBufferWriteEnable = false;
+        desc.StencilEnable = false;
+        desc.DepthBufferFunction = ComparisonFunction::LessEqual;
+        desc.ReferenceStencil = 0;
+        desc.StencilMask = std::numeric_limits<std::uint32_t>::max();
+        desc.StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
+        return desc;
+    }
 };
 
 }// namespace Pomdog

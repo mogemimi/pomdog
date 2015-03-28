@@ -14,7 +14,6 @@ namespace Detail {
 namespace RenderSystem {
 
 class NativeConstantBuffer;
-class NativeDepthStencilState;
 class NativeEffectPass;
 class NativeEffectReflection;
 class NativeIndexBuffer;
@@ -51,9 +50,6 @@ public:
     virtual std::unique_ptr<NativeVertexBuffer>
     CreateVertexBuffer(void const* vertices, std::size_t sizeInBytes,
         BufferUsage bufferUsage) = 0;
-
-    virtual std::unique_ptr<NativeDepthStencilState>
-    CreateDepthStencilState(DepthStencilDescription const& description) = 0;
 
     virtual std::unique_ptr<NativeSamplerState>
     CreateSamplerState(SamplerDescription const& description) = 0;

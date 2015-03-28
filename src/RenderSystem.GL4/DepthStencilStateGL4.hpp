@@ -5,7 +5,6 @@
 #define POMDOG_DEPTHSTENCILSTATEGL4_B1C75682_HPP
 
 #include "OpenGLPrerequisites.hpp"
-#include "../RenderSystem/NativeDepthStencilState.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/detail/Tagged.hpp"
 
@@ -24,14 +23,13 @@ struct DepthStencilFaceOperationGL4 final {
     StencilOperationGL4 stencilPass = GL_KEEP;
 };
 
-class DepthStencilStateGL4 final: public NativeDepthStencilState {
+class DepthStencilStateGL4 final {
 public:
     DepthStencilStateGL4() = delete;
 
     explicit DepthStencilStateGL4(DepthStencilDescription const& description);
 
-    ///@copydoc NativeDepthStencilState
-    void Apply(NativeGraphicsContext & graphicsContext) override;
+    void Apply();
 
 private:
     void ApplyDepthTest();

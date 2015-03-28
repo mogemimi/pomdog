@@ -6,6 +6,7 @@
 
 #include "detail/ForwardDeclarations.hpp"
 #include "BlendDescription.hpp"
+#include "DepthStencilDescription.hpp"
 #include "RasterizerDescription.hpp"
 #include "VertexBufferBinding.hpp"
 #include <memory>
@@ -20,6 +21,7 @@ public:
     std::shared_ptr<Shader> PixelShader;
     BlendDescription BlendState;
     RasterizerDescription RasterizerState;
+    DepthStencilDescription DepthStencilState;
 };
 
 }// namespace Pomdog

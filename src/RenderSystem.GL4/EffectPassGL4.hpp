@@ -6,6 +6,7 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "BlendStateGL4.hpp"
+#include "DepthStencilStateGL4.hpp"
 #include "RasterizerStateGL4.hpp"
 #include "TypesafeGL4.hpp"
 #include "../RenderSystem/NativeEffectPass.hpp"
@@ -54,6 +55,7 @@ private:
     std::unique_ptr<InputLayoutGL4> inputLayout;
     BlendStateGL4 blendState;
     RasterizerStateGL4 rasterizerState;
+    DepthStencilStateGL4 depthStencilState;
 };
 
 }// namespace GL4
