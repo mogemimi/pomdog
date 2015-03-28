@@ -7,8 +7,8 @@
 namespace Pomdog {
 
 ///@brief yyyy mm dd (year, month and day)
-#define POMDOG_INTERNAL_VERSION 20150325L
+#define POMDOG_INTERNAL_VERSION 20150329L
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_VERSION_805A8424_HPP
