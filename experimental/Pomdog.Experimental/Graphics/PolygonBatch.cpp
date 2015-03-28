@@ -4,8 +4,10 @@
 #include "PolygonBatch.hpp"
 #include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
+#include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
+#include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Graphics/EffectParameter.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
@@ -30,6 +32,8 @@ struct BuiltinEffectPolygonBatchTrait {
             .VertexShaderGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
             .PixelShaderGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
             .InputElements({VertexElementFormat::Float3, VertexElementFormat::Float4})
+            .BlendState(BlendDescription::CreateNonPremultiplied())
+            .DepthStencilState(DepthStencilDescription::CreateNone())
             .Create();
         return std::move(effectPass);
     }

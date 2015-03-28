@@ -28,8 +28,6 @@ private:
     SceneEditor::EditorColorScheme editorColorScheme;
     SceneEditor::PrimitiveAxes primitiveAxes;
     SceneEditor::PrimitiveGrid primitiveGrid;
-    std::shared_ptr<DepthStencilState> depthStencilState;
-    std::shared_ptr<BlendState> blendState;
 };
 
 }// namespace SceneEditor

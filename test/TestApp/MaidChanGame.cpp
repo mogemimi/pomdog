@@ -27,9 +27,6 @@ void MaidChanGame::Initialize()
     {
         samplerPoint = SamplerState::CreateLinearWrap(graphicsDevice);
 
-        auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
-        graphicsContext->SetBlendState(blendState);
-
         texture = std::make_shared<Texture2D>(graphicsDevice,
             1, 1, false, SurfaceFormat::R8G8B8A8_UNorm);
         std::array<std::uint32_t, 1> pixelData = {0xffffffff};
@@ -213,11 +210,6 @@ void MaidChanGame::DrawSprites()
 
     if (toggleSwitch4->IsOn())
     {
-        RasterizerDescription rasterizerDesc;
-        rasterizerDesc.FillMode = FillMode::WireFrame;
-        auto rasterizerState = std::make_shared<RasterizerState>(gameHost->GraphicsDevice(), rasterizerDesc);
-
-        graphicsContext->SetRasterizerState(rasterizerState);
         spriteRenderer->Begin(SpriteSortMode::BackToFront, viewMatrix);
 
         for (auto & slot: maidSkin.Slots())
@@ -229,8 +221,6 @@ void MaidChanGame::DrawSprites()
         }
 
         spriteRenderer->End();
-
-        graphicsContext->SetRasterizerState(RasterizerState::CreateCullCounterClockwise(gameHost->GraphicsDevice()));
     }
 }
 //-----------------------------------------------------------------------

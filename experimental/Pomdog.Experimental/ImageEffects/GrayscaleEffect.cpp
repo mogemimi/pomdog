@@ -4,7 +4,9 @@
 #include "GrayscaleEffect.hpp"
 #include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
+#include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
+#include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/EffectParameter.hpp"
 #include "Pomdog/Graphics/GraphicsContext.hpp"
@@ -29,6 +31,8 @@ struct BuiltinEffectGrayscaleTrait {
             .VertexShaderGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
             .PixelShaderGLSL(Builtin_GLSL_Grayscale_PS, std::strlen(Builtin_GLSL_Grayscale_PS))
             .InputElements({VertexElementFormat::Float3, VertexElementFormat::Float2})
+            .BlendState(BlendDescription::CreateNonPremultiplied())
+            .DepthStencilState(DepthStencilDescription::CreateNone())
             .Create();
         return std::move(effectPass);
     }

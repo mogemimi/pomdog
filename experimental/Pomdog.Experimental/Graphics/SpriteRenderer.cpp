@@ -4,9 +4,11 @@
 #include "SpriteRenderer.hpp"
 #include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
+#include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/CustomVertex.hpp"
+#include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Graphics/EffectParameter.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
@@ -44,6 +46,8 @@ struct BuiltinEffectSpriteRendererTrait {
                 {declartation, 0, 0},
                 {SpriteInfoVertex::Declaration(), declartation.StrideBytes(), 1}
             })
+            .BlendState(BlendDescription::CreateNonPremultiplied())
+            .DepthStencilState(DepthStencilDescription::CreateNone())
             .Create();
         return std::move(effectPass);
     }

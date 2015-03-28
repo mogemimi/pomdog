@@ -38,9 +38,6 @@ private:
 
     std::shared_ptr<GameHost> gameHost;
 
-    std::shared_ptr<DepthStencilState> depthStencilState;
-    std::shared_ptr<BlendState> blendState;
-
     std::unique_ptr<SpriteBatch> spriteBatch;
     std::shared_ptr<SpriteFont> spriteFont;
     std::unique_ptr<SpriteBatch> spriteBatchDistanceField;

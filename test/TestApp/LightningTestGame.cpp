@@ -31,13 +31,7 @@ void LightningTestGame::Initialize()
         //samplerPoint = SamplerState::CreatePointWrap(graphicsDevice);
         //graphicsContext->SetSamplerState(0, samplerPoint);
 
-        auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
-        graphicsContext->SetBlendState(blendState);
         texture = assets->Load<Texture2D>("Particles/lightning.png");
-
-        blendStateAdditive = BlendState::CreateAdditive(graphicsDevice);
-        blendStateNonPremultiplied = BlendState::CreateNonPremultiplied(graphicsDevice);
-        depthStencilState = DepthStencilState::CreateNone(graphicsDevice);
     }
     {
         renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
@@ -230,7 +224,6 @@ void LightningTestGame::DrawSprites()
         }
     }
     spriteRenderer->End();
-    graphicsContext->SetBlendState(blendStateNonPremultiplied);
 }
 //-----------------------------------------------------------------------
 void LightningTestGame::Draw()
@@ -247,7 +240,6 @@ void LightningTestGame::Draw()
     editorBackground->Draw(*graphicsContext);
 
     //graphicsContext->SetSamplerState(0, samplerPoint);
-    graphicsContext->SetDepthStencilState(depthStencilState);
     DrawSprites();
 
     if (enableFxaa) {

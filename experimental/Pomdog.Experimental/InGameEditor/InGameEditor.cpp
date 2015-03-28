@@ -37,6 +37,8 @@ struct BuiltinEffectSpriteBatchDistanceFieldTrait {
                 {declartation, 0, 0},
                 {SpriteInfoVertex::Declaration(), declartation.StrideBytes(), 1}
             })
+            .BlendState(BlendDescription::CreateNonPremultiplied())
+            .DepthStencilState(DepthStencilDescription::CreateNone())
             .Create();
         return std::move(effectPass);
     }
@@ -68,10 +70,6 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
         std::array<std::uint32_t, 1> pixelData = {0xffffffff};
         blankTexture->SetData(pixelData.data());
     }
-    {
-        depthStencilState = DepthStencilState::CreateNone(graphicsDevice);
-        blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
-    }
 
     clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
         hierarchy.RenderSizeChanged(width, height);
@@ -98,22 +96,13 @@ void InGameEditor::Update()
 //-----------------------------------------------------------------------
 void InGameEditor::DrawGUI(GraphicsContext & graphicsContext)
 {
-    auto depthStencilStateOld = graphicsContext.GetDepthStencilState();
-    graphicsContext.SetDepthStencilState(depthStencilState);
-
-    auto blendStateOld = graphicsContext.GetBlendState();
-    graphicsContext.SetBlendState(blendState);
-
-    {
-        POMDOG_ASSERT(spriteBatch);
-        spriteBatch->Begin(SpriteSortMode::BackToFront);
-        UI::SpriteDrawingContext drawingContext(*spriteBatch, *spriteBatchDistanceField, distanceFieldEffect, constantBuffers, *spriteFont, blankTexture);
-        hierarchy.Draw(drawingContext);
-        spriteBatch->End();
-    }
-
-    graphicsContext.SetDepthStencilState(depthStencilStateOld);
-    graphicsContext.SetBlendState(blendStateOld);
+    POMDOG_ASSERT(spriteBatch);
+    spriteBatch->Begin(SpriteSortMode::BackToFront);
+    UI::SpriteDrawingContext drawingContext(
+        *spriteBatch, *spriteBatchDistanceField, distanceFieldEffect,
+        constantBuffers, *spriteFont, blankTexture);
+    hierarchy.Draw(drawingContext);
+    spriteBatch->End();
 }
 //-----------------------------------------------------------------------
 }// namespace SceneEditor

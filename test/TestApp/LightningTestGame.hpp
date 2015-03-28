@@ -48,10 +48,6 @@ private:
     std::unique_ptr<FXAA> fxaa;
     std::unique_ptr<ScreenQuad> screenQuad;
 
-    std::shared_ptr<BlendState> blendStateAdditive;
-    std::shared_ptr<BlendState> blendStateNonPremultiplied;
-    std::shared_ptr<DepthStencilState> depthStencilState;
-
     std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
     std::unique_ptr<SceneEditor::EditorBackground> editorBackground;
     std::shared_ptr<UI::ScenePanel> scenePanel;

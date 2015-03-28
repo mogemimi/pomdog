@@ -18,7 +18,7 @@ static Matrix3x2 CreateTransformMatrix3x2(Transform2D const& transform)
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-ParticleRenderable::ParticleRenderable(std::shared_ptr<Texture2D> const& texture, std::shared_ptr<BlendState> const& blendState)
+ParticleRenderable::ParticleRenderable(std::shared_ptr<Texture2D> const& texture)
 {
     command.texture = texture;
     command.textureRegion.Subrect = Rectangle{0, 0, texture->Width(), texture->Height()};
@@ -28,7 +28,6 @@ ParticleRenderable::ParticleRenderable(std::shared_ptr<Texture2D> const& texture
     command.textureRegion.Height = texture->Height();
     command.textureRegion.Rotate = false;
     command.transform = Matrix3x2::Identity;
-    command.blendState = blendState;
     command.particles = nullptr;
 }
 //-----------------------------------------------------------------------

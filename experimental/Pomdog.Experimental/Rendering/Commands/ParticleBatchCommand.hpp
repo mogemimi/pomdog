@@ -29,7 +29,6 @@ public:
 public:
     TextureRegion textureRegion;
     Matrix3x2 transform;
-    std::shared_ptr<BlendState> blendState;
     std::shared_ptr<Texture2D> texture;
     std::vector<Particle> const* particles = nullptr;
     float drawOrder;

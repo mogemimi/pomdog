@@ -27,10 +27,6 @@ void MaidBeamGame::Initialize()
     auto assets = gameHost->AssetManager();
 
     {
-        auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
-        graphicsContext->SetBlendState(blendState);
-    }
-    {
         renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
             window->ClientBounds().Width, window->ClientBounds().Height,
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);

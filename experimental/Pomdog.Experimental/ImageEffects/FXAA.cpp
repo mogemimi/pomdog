@@ -4,7 +4,9 @@
 #include "FXAA.hpp"
 #include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
+#include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
+#include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/EffectParameter.hpp"
 #include "Pomdog/Graphics/GraphicsContext.hpp"
@@ -33,6 +35,8 @@ struct BuiltinEffectFxaaTrait {
             .VertexShaderHLSLPrecompiled(BuiltinHLSL_FXAA_VS, sizeof(BuiltinHLSL_FXAA_VS))
             .PixelShaderHLSLPrecompiled(BuiltinHLSL_FXAA_PS, sizeof(BuiltinHLSL_FXAA_PS))
             .InputElements({VertexElementFormat::Float3, VertexElementFormat::Float2})
+            .BlendState(BlendDescription::CreateNonPremultiplied())
+            .DepthStencilState(DepthStencilDescription::CreateNone())
             .Create();
         return std::move(effectPass);
     }

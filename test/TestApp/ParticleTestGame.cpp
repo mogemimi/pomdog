@@ -24,10 +24,6 @@ void ParticleTestGame::Initialize()
     auto assets = gameHost->AssetManager();
 
     {
-        auto blendState = BlendState::CreateNonPremultiplied(graphicsDevice);
-        graphicsContext->SetBlendState(blendState);
-    }
-    {
         renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
             window->ClientBounds().Width, window->ClientBounds().Height,
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
@@ -52,8 +48,7 @@ void ParticleTestGame::Initialize()
         particleObject = gameWorld.CreateObject();
         particleObject.AddComponent<Transform2D>();
         auto texture = assets->Load<Texture2D>("Particles/smoke.png");
-        auto blendState = BlendState::CreateAdditive(graphicsDevice);
-        particleObject.AddComponent(std::make_unique<ParticleRenderable>(texture, blendState));
+        particleObject.AddComponent(std::make_unique<ParticleRenderable>(texture));
     }
 
     {

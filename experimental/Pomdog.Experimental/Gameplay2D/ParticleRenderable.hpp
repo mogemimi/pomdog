@@ -13,7 +13,7 @@ namespace Pomdog {
 
 class ParticleRenderable: public Renderable {
 public:
-    ParticleRenderable(std::shared_ptr<Texture2D> const& texture, std::shared_ptr<BlendState> const& blendState);
+    ParticleRenderable(std::shared_ptr<Texture2D> const& texture);
     //ParticleRenderable(std::shared_ptr<Texture2D> const& texture, TextureRegion const& textureRegion);
 
     void Visit(GameObject & gameObject, Renderer & renderer) override;
