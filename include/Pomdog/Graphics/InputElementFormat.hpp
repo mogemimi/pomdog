@@ -1,14 +1,14 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_VERTEXELEMENTFORMAT_55DBF01E_HPP
-#define POMDOG_VERTEXELEMENTFORMAT_55DBF01E_HPP
+#ifndef POMDOG_INPUTELEMENTFORMAT_9DA1879C_HPP
+#define POMDOG_INPUTELEMENTFORMAT_9DA1879C_HPP
 
 #include <cstdint>
 
 namespace Pomdog {
 
-enum class VertexElementFormat: std::uint8_t {
+enum class InputElementFormat : std::uint8_t {
     ///@brief A single-component, 32-bit floating-point format.
     Float,
 
@@ -39,6 +39,6 @@ enum class VertexElementFormat: std::uint8_t {
     HalfFloat4,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
-#endif // POMDOG_VERTEXELEMENTFORMAT_55DBF01E_HPP
+#endif // POMDOG_INPUTELEMENTFORMAT_9DA1879C_HPP

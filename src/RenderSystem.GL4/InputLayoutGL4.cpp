@@ -6,8 +6,8 @@
 #include "TypesafeHelperGL4.hpp"
 #include "VertexBufferGL4.hpp"
 #include "../Utility/ScopeGuard.hpp"
+#include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
-#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogStream.hpp"
 #include "Pomdog/Logging/LogLevel.hpp"
@@ -285,8 +285,10 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
             attribute.StartSlot = attributeLocation;
             attribute.ScalarType = attributeScalarType;
             attribute.Components = static_cast<GLint>(attributeSize.ComponentCount);
-            attribute.ByteOffset = 0; // Note: See CalculateByteOffset function.
             attribute.IsInteger = IsIntegerType(attribute.ScalarType);
+            attribute.ByteOffset = 0; // NOTE: See CalculateByteOffset function.
+            attribute.BufferIndex = 0;
+            attribute.InstanceStepRate = 0;
 
             POMDOG_ASSERT(attribute.Components >= 1 && attribute.Components <= 4);
             attributes.push_back(attribute);
@@ -335,11 +337,11 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
     return std::move(attributes);
 }
 //-----------------------------------------------------------------------
-static void EnableAttributes(std::vector<InputElementGL4> const& attributes)
+static void EnableAttributes(std::vector<InputElementGL4> const& inputElements)
 {
-    for (auto& attribute: attributes)
+    for (auto& inputElement: inputElements)
     {
-        glEnableVertexAttribArray(attribute.StartSlot);
+        glEnableVertexAttribArray(inputElement.StartSlot);
 
         #ifdef DEBUG
         ErrorChecker::CheckError("glEnableVertexAttribArray", __FILE__, __LINE__);
@@ -347,74 +349,154 @@ static void EnableAttributes(std::vector<InputElementGL4> const& attributes)
     }
 }
 //-----------------------------------------------------------------------
-static std::uint32_t CalculateByteOffset(std::uint32_t const offsetBytes, InputElementGL4 & attribute)
+static std::uint32_t CalculateByteOffset(InputElementGL4 const& inputElement)
 {
-    attribute.ByteOffset = offsetBytes;
+    POMDOG_ASSERT(inputElement.Components >= 1);
+    POMDOG_ASSERT(inputElement.Components <= 4);
 
-    std::uint32_t const byteWidth = ToByteWithFromScalarTypeGL4(attribute.ScalarType) * attribute.Components;
-    POMDOG_ASSERT(byteWidth > 0);
-
-    return offsetBytes + byteWidth;
+    return ToByteWithFromScalarTypeGL4(inputElement.ScalarType) *
+        inputElement.Components;
 }
 //-----------------------------------------------------------------------
-static std::vector<InputBindingGL4> BuildInputBindings(std::vector<InputElementGL4> const& attributes)
+static std::vector<InputElementGL4> BuildInputElements(
+    std::vector<InputElementGL4> && inputElements,
+    std::vector<VertexDeclarationGL4> & vertexDeclarations)
 {
-    POMDOG_ASSERT(!attributes.empty());
-
-    std::vector<InputBindingGL4> result(1);
-    POMDOG_ASSERT(!result.empty());
-
-    InputBindingGL4 & inputBinding = result.front();
-    inputBinding.InstanceStepRate = 0;
+    POMDOG_ASSERT(!inputElements.empty());
 
     std::uint32_t offsetBytes = 0;
-    for (auto const& attribute: attributes)
+    for (auto & inputElement: inputElements)
     {
-        inputBinding.InputElements.push_back(attribute);
-        offsetBytes = CalculateByteOffset(offsetBytes, inputBinding.InputElements.back());
+        inputElement.ByteOffset = offsetBytes;
+        inputElement.InstanceStepRate = 0;
+        inputElement.BufferIndex = 0;
+        offsetBytes += CalculateByteOffset(inputElement);
+        POMDOG_ASSERT(offsetBytes > 0);
     }
-    return std::move(result);
+
+    VertexDeclarationGL4 declaration;
+    declaration.StrideBytes = offsetBytes;
+
+    POMDOG_ASSERT(vertexDeclarations.empty());
+    vertexDeclarations.reserve(1);
+    vertexDeclarations.push_back(std::move(declaration));
+
+    return std::move(inputElements);
 }
 //-----------------------------------------------------------------------
-static std::vector<InputBindingGL4> BuildInputBindings(
-    std::vector<VertexBufferBinding> const& vertexBindings,
-    std::vector<InputElementGL4> const& attributes)
+#if defined(DEBUG) && !defined(NDEBUG)
+static ScalarTypeGL4 ToScalarTypeGL4(InputElementFormat format)
 {
-    POMDOG_ASSERT(!vertexBindings.empty());
+    switch (format) {
+    case InputElementFormat::Byte4:
+        return {GL_BYTE};
+    case InputElementFormat::Float:
+    case InputElementFormat::Float2:
+    case InputElementFormat::Float3:
+    case InputElementFormat::Float4:
+        return {GL_FLOAT};
+    case InputElementFormat::HalfFloat2:
+    case InputElementFormat::HalfFloat4:
+        return {GL_HALF_FLOAT};
+    case InputElementFormat::Int4:
+        return {GL_INT};
+    }
+#ifdef _MSC_VER
+    return {GL_FLOAT};
+#endif
+}
+//-----------------------------------------------------------------------
+static std::int8_t ToComponentsGL4(InputElementFormat format)
+{
+    switch (format) {
+    case InputElementFormat::Float:
+        return 1;
+    case InputElementFormat::Float2:
+    case InputElementFormat::HalfFloat2:
+        return 2;
+    case InputElementFormat::Float3:
+        return 3;
+    case InputElementFormat::Byte4:
+    case InputElementFormat::Float4:
+    case InputElementFormat::HalfFloat4:
+    case InputElementFormat::Int4:
+        return 4;
+    }
+#ifdef _MSC_VER
+    return 1;
+#endif
+}
+#endif // defined(DEBUG) && !defined(NDEBUG)
+//-----------------------------------------------------------------------
+static std::vector<InputElementGL4> BuildInputElements(
+    InputLayoutDescription const& description,
+    std::vector<InputElementGL4> && attributes,
+    std::vector<VertexDeclarationGL4> & vertexDeclarations)
+{
+    POMDOG_ASSERT(!description.InputElements.empty());
     POMDOG_ASSERT(!attributes.empty());
+    POMDOG_ASSERT(vertexDeclarations.empty());
 
-    std::vector<InputBindingGL4> result;
-
-    auto attributeIter = std::begin(attributes);
-
-    for (auto & binding: vertexBindings)
-    {
-        auto const strideBytes = binding.Declaration.StrideBytes();
-
-        std::uint32_t offsetBytes = 0;
-        POMDOG_ASSERT(attributeIter != std::end(attributes));
-
-        InputBindingGL4 inputBinding;
-        inputBinding.InstanceStepRate = binding.InstanceStepRate;
-
-        attributeIter = std::find_if(attributeIter, std::end(attributes), [&](InputElementGL4 const& attribute)
-        {
-            inputBinding.InputElements.push_back(attribute);
-            offsetBytes = CalculateByteOffset(offsetBytes, inputBinding.InputElements.back());
-            return offsetBytes >= strideBytes;
+    auto sortedElements = description.InputElements;
+    std::sort(std::begin(sortedElements), std::end(sortedElements),
+        [](InputElement const& a, InputElement const& b) {
+            if (a.BufferIndex == b.BufferIndex) {
+                return a.ByteOffset < b.ByteOffset;
+            }
+            return a.BufferIndex < b.BufferIndex;
         });
 
-        POMDOG_ASSERT(offsetBytes == strideBytes);
+    POMDOG_ASSERT(!sortedElements.empty());
+    POMDOG_ASSERT(sortedElements.front().BufferIndex >= 0);
+    POMDOG_ASSERT(sortedElements.front().BufferIndex <= sortedElements.back().BufferIndex);
 
-        result.emplace_back(std::move(inputBinding));
+    std::vector<InputElementGL4> inputElements;
+    inputElements.reserve(sortedElements.size());
 
-        if (attributeIter != std::end(attributes)) {
-            ++attributeIter;
+    auto currentBufferIndex = sortedElements.front().BufferIndex;
+    std::uint32_t offsetBytes = 0;
+
+    auto vertexAttribute = std::begin(attributes);
+
+    for (auto & sourceElement: sortedElements)
+    {
+        POMDOG_ASSERT(currentBufferIndex <= sourceElement.BufferIndex);
+
+        if (currentBufferIndex != sourceElement.BufferIndex) {
+            VertexDeclarationGL4 declaration;
+            declaration.StrideBytes = offsetBytes;
+            vertexDeclarations.push_back(std::move(declaration));
+
+            currentBufferIndex = sourceElement.BufferIndex;
+            offsetBytes = 0;
         }
-    }
-    POMDOG_ASSERT(attributeIter == std::end(attributes));
 
-    return std::move(result);
+        InputElementGL4 inputElement;
+        inputElement.StartSlot = vertexAttribute->StartSlot;
+        inputElement.ScalarType = vertexAttribute->ScalarType;
+        inputElement.Components = vertexAttribute->Components;
+        inputElement.IsInteger = vertexAttribute->IsInteger;
+        inputElement.ByteOffset = sourceElement.ByteOffset;
+        inputElement.InstanceStepRate = sourceElement.InstanceStepRate;
+        inputElement.BufferIndex = sourceElement.BufferIndex;
+
+#if defined(DEBUG) && !defined(NDEBUG)
+        POMDOG_ASSERT(inputElement.ScalarType == ToScalarTypeGL4(sourceElement.Format));
+        POMDOG_ASSERT(inputElement.Components == ToComponentsGL4(sourceElement.Format));
+#endif // defined(DEBUG) && !defined(NDEBUG)
+
+        offsetBytes += CalculateByteOffset(inputElement);
+        POMDOG_ASSERT(offsetBytes > 0);
+
+        inputElements.push_back(std::move(inputElement));
+        ++vertexAttribute;
+    }
+
+    VertexDeclarationGL4 declaration;
+    declaration.StrideBytes = offsetBytes;
+    vertexDeclarations.push_back(std::move(declaration));
+
+    return std::move(inputElements);
 }
 //-----------------------------------------------------------------------
 template <typename T> static
@@ -424,40 +506,52 @@ GLubyte const* ComputeBufferOffset(T const offsetBytes)
     return reinterpret_cast<GLubyte const*>(0) + offsetBytes;
 }
 //-----------------------------------------------------------------------
-static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings,
+static void ApplyInputElements(
+    std::vector<InputElementGL4> const& inputElements,
+    std::vector<VertexDeclarationGL4> const& vertexDeclarations,
     std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers)
 {
-    POMDOG_ASSERT(!inputBindings.empty());
-    POMDOG_ASSERT(inputBindings.size() == vertexBuffers.size());
+    POMDOG_ASSERT(!inputElements.empty());
+    POMDOG_ASSERT(!vertexDeclarations.empty());
+    POMDOG_ASSERT(!vertexBuffers.empty());
+    POMDOG_ASSERT(vertexDeclarations.size() == vertexBuffers.size());
 
-    auto vertexBufferIter = std::begin(vertexBuffers);
+    auto vertexBuffer = std::begin(vertexBuffers);
+    auto inputElement = std::begin(inputElements);
 
-    for (auto & binding: inputBindings)
+    for (auto & vertexDeclaration: vertexDeclarations)
     {
-        POMDOG_ASSERT(vertexBufferIter != std::end(vertexBuffers));
-        auto & vertexBuffer = (*vertexBufferIter);
-        auto nativeVertexBuffer = dynamic_cast<VertexBufferGL4*>(vertexBuffer->NativeVertexBuffer());
+        POMDOG_ASSERT(inputElement != std::end(inputElements));
+        POMDOG_ASSERT(vertexBuffer != std::end(vertexBuffers));
 
+        auto nativeVertexBuffer = dynamic_cast<VertexBufferGL4*>((*vertexBuffer)->NativeVertexBuffer());
         POMDOG_ASSERT(nativeVertexBuffer);
-        // NOTE:
-        // The following code is the same as `glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer)`.
+
+        // NOTE: The following code is the same as
+        // `glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer)`.
         nativeVertexBuffer->BindBuffer();
 
-        POMDOG_ASSERT(vertexBuffer->StrideBytes() > 0);
-        POMDOG_ASSERT(vertexBuffer->StrideBytes() <= static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()));
+        POMDOG_ASSERT((*vertexBuffer)->StrideBytes() > 0);
+        POMDOG_ASSERT((*vertexBuffer)->StrideBytes() <= static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()));
 
-        const auto strideBytes = static_cast<GLsizei>(vertexBuffer->StrideBytes());
+        const auto currentBufferIndex = inputElement->BufferIndex;
 
-        for (auto & attribute: binding.InputElements)
+        for (; inputElement != std::end(inputElements); ++inputElement)
         {
-            if (attribute.IsInteger)
+            POMDOG_ASSERT(currentBufferIndex <= inputElement->BufferIndex);
+
+            if (currentBufferIndex != inputElement->BufferIndex) {
+                break;
+            }
+
+            if (inputElement->IsInteger)
             {
                 glVertexAttribIPointer(
-                    attribute.StartSlot,
-                    attribute.Components,
-                    attribute.ScalarType.value,
-                    strideBytes,
-                    ComputeBufferOffset(attribute.ByteOffset));
+                    inputElement->StartSlot,
+                    inputElement->Components,
+                    inputElement->ScalarType.value,
+                    vertexDeclaration.StrideBytes,
+                    ComputeBufferOffset(inputElement->ByteOffset));
 
                 #ifdef DEBUG
                 ErrorChecker::CheckError("glVertexAttribIPointer", __FILE__, __LINE__);
@@ -466,27 +560,30 @@ static void ApplyInputBindings(std::vector<InputBindingGL4> const& inputBindings
             else
             {
                 glVertexAttribPointer(
-                    attribute.StartSlot,
-                    attribute.Components,
-                    attribute.ScalarType.value,
+                    inputElement->StartSlot,
+                    inputElement->Components,
+                    inputElement->ScalarType.value,
                     GL_FALSE,
-                    strideBytes,
-                    ComputeBufferOffset(attribute.ByteOffset));
+                    vertexDeclaration.StrideBytes,
+                    ComputeBufferOffset(inputElement->ByteOffset));
 
                 #ifdef DEBUG
                 ErrorChecker::CheckError("glVertexAttribPointer", __FILE__, __LINE__);
                 #endif
             }
 
-            glVertexAttribDivisor(attribute.StartSlot, binding.InstanceStepRate);
+            glVertexAttribDivisor(inputElement->StartSlot, inputElement->InstanceStepRate);
+
             #ifdef DEBUG
             ErrorChecker::CheckError("glVertexAttribDivisor", __FILE__, __LINE__);
             #endif
         }
 
-        ++vertexBufferIter;
+        ++vertexBuffer;
     }
-    POMDOG_ASSERT(vertexBufferIter == std::end(vertexBuffers));
+
+    POMDOG_ASSERT(inputElement == std::end(inputElements));
+    POMDOG_ASSERT(vertexBuffer == std::end(vertexBuffers));
 }
 //-----------------------------------------------------------------------
 }// unnamed namespace
@@ -501,7 +598,7 @@ InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram)
 {}
 //-----------------------------------------------------------------------
 InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram,
-    std::vector<VertexBufferBinding> const& vertexBinding)
+    InputLayoutDescription const& description)
 {
     // Build vertex array object
     inputLayout = ([] {
@@ -521,18 +618,21 @@ InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram,
     ErrorChecker::CheckError("glBindVertexArray", __FILE__, __LINE__);
     #endif
 
-    auto const attributes = BuildAttributes(shaderProgram);
+    inputElements = BuildAttributes(shaderProgram);
 
-    if (vertexBinding.empty()) {
-        inputBindings = BuildInputBindings(attributes);
+    if (description.InputElements.empty()) {
+        inputElements = BuildInputElements(
+            std::move(inputElements), vertexDeclarations);
     }
     else {
-        inputBindings = BuildInputBindings(vertexBinding, attributes);
+        inputElements = BuildInputElements(description,
+            std::move(inputElements), vertexDeclarations);
     }
 
-    for (auto& bindings: inputBindings) {
-        EnableAttributes(bindings.InputElements);
-    }
+    inputElements.shrink_to_fit();
+    vertexDeclarations.shrink_to_fit();
+
+    EnableAttributes(inputElements);
 }
 //-----------------------------------------------------------------------
 InputLayoutGL4::~InputLayoutGL4()
@@ -551,11 +651,7 @@ void InputLayoutGL4::Apply(std::vector<std::shared_ptr<VertexBuffer>> const& ver
     ErrorChecker::CheckError("glBindVertexArray", __FILE__, __LINE__);
     #endif
 
-    //for (auto& bindings: inputBindings) {
-    //    EnableAttributes(bindings.InputElements);
-    //}
-
-    ApplyInputBindings(inputBindings, vertexBuffers);
+    ApplyInputElements(inputElements, vertexDeclarations, vertexBuffers);
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

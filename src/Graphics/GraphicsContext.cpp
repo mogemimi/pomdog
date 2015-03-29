@@ -11,7 +11,6 @@
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
-#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Utility/Assert.hpp"

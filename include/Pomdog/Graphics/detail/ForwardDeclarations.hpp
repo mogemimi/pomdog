@@ -10,10 +10,8 @@ namespace Pomdog {
 
 // Classes
 class ConstantBufferBinding;
-class EffectConstantDescription;
 class EffectParameter;
 class EffectPass;
-class EffectPassDescription;
 class EffectReflection;
 class GraphicsContext;
 class GraphicsDevice;
@@ -30,13 +28,14 @@ class BlendDescription;
 class DepthStencilDescription;
 class DepthStencilOperation;
 class EffectAnnotation;
+class EffectConstantDescription;
+class EffectPassDescription;
 class EffectVariable;
+class InputElement;
+class InputLayoutDescription;
 class RasterizerDescription;
 class SamplerDescription;
-class VertexDeclaration;
-class VertexElement;
 class Viewport;
-class VertexBufferBinding;
 
 // Enumerations
 enum class Blend: std::uint8_t;
@@ -50,14 +49,15 @@ enum class EffectVariableClass: std::uint8_t;
 enum class EffectVariableType: std::uint8_t;
 enum class FillMode: std::uint8_t;
 enum class IndexElementSize: std::uint8_t;
+enum class InputClassification: std::uint8_t;
+enum class InputElementFormat: std::uint8_t;
 enum class PrimitiveTopology: std::uint8_t;
 enum class ShaderLanguage: std::uint8_t;
 enum class StencilOperation: std::uint8_t;
 enum class SurfaceFormat: std::uint8_t;
 enum class TextureAddressMode: std::uint8_t;
 enum class TextureFilter: std::uint8_t;
-enum class VertexElementFormat: std::uint8_t;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_FORWARDDECLARATIONS_1D9B55F8_HPP

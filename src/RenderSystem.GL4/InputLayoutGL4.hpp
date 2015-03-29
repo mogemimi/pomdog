@@ -37,6 +37,10 @@ struct InputElementGL4 {
     // Input element offset.
     std::uint32_t ByteOffset;
 
+    std::uint16_t BufferIndex;
+
+    std::uint16_t InstanceStepRate;
+
     // Specifies the scalar data type.
     ScalarTypeGL4 ScalarType;
 
@@ -46,9 +50,8 @@ struct InputElementGL4 {
     bool IsInteger = false;
 };
 
-struct InputBindingGL4 {
-    std::vector<InputElementGL4> InputElements;
-    std::uint32_t InstanceStepRate;
+struct VertexDeclarationGL4 {
+    GLsizei StrideBytes;
 };
 
 class InputLayoutGL4 final {
@@ -57,14 +60,15 @@ public:
 
     explicit InputLayoutGL4(ShaderProgramGL4 const& shaderProgram);
 
-    InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, std::vector<VertexBufferBinding> const& vertexBufferBinding);
+    InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, InputLayoutDescription const& description);
 
     ~InputLayoutGL4();
 
     void Apply(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers);
 
 private:
-    std::vector<InputBindingGL4> inputBindings;
+    std::vector<InputElementGL4> inputElements;
+    std::vector<VertexDeclarationGL4> vertexDeclarations;
     Optional<VertexArrayGL4> inputLayout;
 };
 

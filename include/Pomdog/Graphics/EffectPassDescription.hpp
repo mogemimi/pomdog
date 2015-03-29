@@ -7,8 +7,8 @@
 #include "detail/ForwardDeclarations.hpp"
 #include "BlendDescription.hpp"
 #include "DepthStencilDescription.hpp"
+#include "InputLayoutDescription.hpp"
 #include "RasterizerDescription.hpp"
-#include "VertexBufferBinding.hpp"
 #include <memory>
 #include <vector>
 
@@ -16,9 +16,9 @@ namespace Pomdog {
 
 class EffectPassDescription final {
 public:
-    std::vector<VertexBufferBinding> InputElements;
     std::shared_ptr<Shader> VertexShader;
     std::shared_ptr<Shader> PixelShader;
+    InputLayoutDescription InputLayout;
     BlendDescription BlendState;
     RasterizerDescription RasterizerState;
     DepthStencilDescription DepthStencilState;
