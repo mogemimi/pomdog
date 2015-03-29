@@ -13,10 +13,9 @@ namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
-//-----------------------------------------------------------------------
 namespace {
 
-static GLenum ToVertexBufferUsage(BufferUsage bufferUsage)
+static GLenum ToVertexBufferUsage(BufferUsage bufferUsage) noexcept
 {
     switch (bufferUsage) {
     case BufferUsage::Dynamic: return GL_DYNAMIC_DRAW;

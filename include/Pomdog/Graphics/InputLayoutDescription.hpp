@@ -5,12 +5,11 @@
 #define POMDOG_INPUTLAYOUTDESCRIPTION_DBCB4EF9_HPP
 
 #include "InputElement.hpp"
-#include "Pomdog/Basic/Export.hpp"
 #include <vector>
 
 namespace Pomdog {
 
-class POMDOG_EXPORT InputLayoutDescription {
+class InputLayoutDescription {
 public:
     std::vector<InputElement> InputElements;
 };

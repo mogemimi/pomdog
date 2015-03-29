@@ -14,10 +14,9 @@ namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
-//-----------------------------------------------------------------------
 namespace {
 
-static GLenum ToInternalFormatGL4(SurfaceFormat format)
+static GLenum ToInternalFormatGL4(SurfaceFormat format) noexcept
 {
     switch (format) {
     case SurfaceFormat::BlockComp1_UNorm:
@@ -50,12 +49,11 @@ static GLenum ToInternalFormatGL4(SurfaceFormat format)
     };
 
 #ifdef _MSC_VER
-    // FUS RO DAH!
     return GL_R8;
 #endif
 }
 //-----------------------------------------------------------------------
-static GLenum ToFormatComponents(SurfaceFormat format)
+static GLenum ToFormatComponents(SurfaceFormat format) noexcept
 {
     switch (format) {
     case SurfaceFormat::R8G8B8A8_UNorm:
@@ -82,12 +80,11 @@ static GLenum ToFormatComponents(SurfaceFormat format)
     };
 
 #ifdef _MSC_VER
-    // FUS RO DAH!
     return GL_RED;
 #endif
 }
 //-----------------------------------------------------------------------
-static GLenum ToPixelFundamentalType(SurfaceFormat format)
+static GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
 {
     switch (format) {
     case SurfaceFormat::A8_UNorm:
@@ -114,7 +111,6 @@ static GLenum ToPixelFundamentalType(SurfaceFormat format)
     };
 
 #ifdef _MSC_VER
-    // FUS RO DAH!
     return GL_UNSIGNED_BYTE;
 #endif
 }

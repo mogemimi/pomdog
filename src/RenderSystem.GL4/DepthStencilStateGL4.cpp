@@ -13,7 +13,8 @@ namespace GL4 {
 //-----------------------------------------------------------------------
 namespace {
 
-static GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction const& comparison)
+static GLenum ToComparisonFunctionGL4NonTypesafe(
+    ComparisonFunction const& comparison) noexcept
 {
     switch (comparison) {
     case ComparisonFunction::Always: return GL_ALWAYS;
@@ -30,13 +31,18 @@ static GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction const& compa
 #endif
 }
 //-----------------------------------------------------------------------
-static GLenum ToStencilOperationGL4NonTypesafe(StencilOperation const& operation)
+static GLenum ToStencilOperationGL4NonTypesafe(
+    StencilOperation const& operation) noexcept
 {
+    // **NOTE**
+    // `GL_DECR` clamps to 0.
+    // `GL_INCR` clamps to the maximum representable unsigned value.
+
     switch (operation) {
     case StencilOperation::Decrement: return GL_DECR_WRAP;
-    case StencilOperation::DecrementSaturation: return GL_DECR; // Clamps to 0.
+    case StencilOperation::DecrementSaturation: return GL_DECR;
     case StencilOperation::Increment: return GL_INCR_WRAP;
-    case StencilOperation::IncrementSaturation: return GL_INCR; // Clamps to the maximum representable unsigned value.
+    case StencilOperation::IncrementSaturation: return GL_INCR;
     case StencilOperation::Invert: return GL_INVERT;
     case StencilOperation::Keep: return GL_KEEP;
     case StencilOperation::Replace: return GL_REPLACE;
@@ -50,18 +56,17 @@ static GLenum ToStencilOperationGL4NonTypesafe(StencilOperation const& operation
 static ComparisonFunctionGL4 ToComparisonFunctionGL4(ComparisonFunction const& comparison)
 {
     return ComparisonFunctionGL4{
-        ToComparisonFunctionGL4NonTypesafe(comparison)
-    };
+        ToComparisonFunctionGL4NonTypesafe(comparison)};
 }
 //-----------------------------------------------------------------------
 static StencilOperationGL4 ToStencilOperationGL4(StencilOperation const& operation)
 {
     return StencilOperationGL4{
-        ToStencilOperationGL4NonTypesafe(operation)
-    };
+        ToStencilOperationGL4NonTypesafe(operation)};
 }
 //-----------------------------------------------------------------------
-static void ToDepthStencilFaceOperationGL4(DepthStencilOperation const& face, DepthStencilFaceOperationGL4 & result)
+static void ToDepthStencilFaceOperationGL4(DepthStencilOperation const& face,
+    DepthStencilFaceOperationGL4 & result)
 {
     result.stencilFunction = ToComparisonFunctionGL4(face.StencilFunction);
     result.stencilDepthBufferFail = ToStencilOperationGL4(face.StencilDepthBufferFail);

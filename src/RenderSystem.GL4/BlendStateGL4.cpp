@@ -14,7 +14,7 @@ namespace GL4 {
 //-----------------------------------------------------------------------
 namespace {
 
-static GLenum ToBlendGL4NonTypesafe(Blend blend)
+static GLenum ToBlendGL4NonTypesafe(Blend blend) noexcept
 {
     switch (blend) {
     case Blend::Zero: return GL_ZERO;
@@ -40,7 +40,7 @@ static GLenum ToBlendGL4NonTypesafe(Blend blend)
 #endif
 }
 //-----------------------------------------------------------------------
-static GLenum ToBlendFunctionGL4NonTypesafe(BlendFunction func)
+static GLenum ToBlendFunctionGL4NonTypesafe(BlendFunction func) noexcept
 {
     switch (func) {
     case BlendFunction::Add: return GL_FUNC_ADD;

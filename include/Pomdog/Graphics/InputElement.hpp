@@ -6,12 +6,11 @@
 
 #include "InputClassification.hpp"
 #include "InputElementFormat.hpp"
-#include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 
 namespace Pomdog {
 
-class POMDOG_EXPORT InputElement {
+class InputElement {
 public:
     std::uint16_t ByteOffset;
 

@@ -16,7 +16,7 @@ namespace RenderSystem {
 namespace GL4 {
 namespace {
 
-static GLenum ToIndexBufferUsage(BufferUsage bufferUsage)
+static GLenum ToIndexBufferUsage(BufferUsage bufferUsage) noexcept
 {
     switch (bufferUsage) {
     case BufferUsage::Dynamic: return GL_DYNAMIC_DRAW;
