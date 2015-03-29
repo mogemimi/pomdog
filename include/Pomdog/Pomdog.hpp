@@ -69,7 +69,6 @@
 #include "Graphics/ComparisonFunction.hpp"
 #include "Graphics/ConstantBufferBinding.hpp"
 #include "Graphics/CullMode.hpp"
-#include "Graphics/CustomVertex.hpp"
 #include "Graphics/DepthStencilDescription.hpp"
 #include "Graphics/DepthStencilOperation.hpp"
 #include "Graphics/EffectAnnotation.hpp"
