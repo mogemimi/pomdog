@@ -69,6 +69,7 @@
       '../include/Pomdog/Graphics/EffectVariable.hpp',
       '../include/Pomdog/Graphics/FillMode.hpp',
       '../include/Pomdog/Graphics/IndexElementSize.hpp',
+      '../include/Pomdog/Graphics/InputClassification.hpp',
       '../include/Pomdog/Graphics/PrimitiveTopology.hpp',
       '../include/Pomdog/Graphics/RasterizerDescription.hpp',
       '../include/Pomdog/Graphics/SamplerDescription.hpp',
