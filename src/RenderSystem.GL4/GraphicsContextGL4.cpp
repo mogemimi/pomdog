@@ -175,6 +175,8 @@ struct TypesafeHelperGL4::OpenGLGetTraits<FrameBufferGL4> {
 GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> const& openGLContextIn, std::weak_ptr<GameWindow> windowIn)
     : nativeContext(openGLContextIn)
     , gameWindow(std::move(windowIn))
+    , needToApplyInputLayout(true)
+    , needToApplyPipelineState(true)
 {
     auto version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
     Log::Stream(LogLevel::Internal) << "OpenGL Version: " << version;
@@ -252,17 +254,26 @@ void GraphicsContextGL4::Present()
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::ApplyPipelineState()
 {
-    // Bind input-layout to the input-assembler stage:
     POMDOG_ASSERT(effectPass);
-    auto inputLayout = effectPass->GetInputLayout();
 
-    POMDOG_ASSERT(inputLayout);
-    POMDOG_ASSERT(!vertexBuffers.empty());
-    inputLayout->Apply(vertexBuffers);
+    if (needToApplyInputLayout) {
+        // Bind input-layout to the input-assembler stage:
+        auto inputLayout = effectPass->GetInputLayout();
 
-    // Use shader program:
-    POMDOG_ASSERT(effectPass);
-    effectPass->ApplyShaders();
+        POMDOG_ASSERT(inputLayout);
+        POMDOG_ASSERT(!vertexBuffers.empty());
+        inputLayout->Apply(vertexBuffers);
+
+        needToApplyInputLayout = false;
+    }
+
+    if (needToApplyPipelineState) {
+        // Use shader program:
+        POMDOG_ASSERT(effectPass);
+        effectPass->ApplyShaders();
+
+        needToApplyPipelineState = false;
+    }
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::size_t vertexCount)
@@ -481,6 +492,7 @@ void GraphicsContextGL4::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuff
 {
     POMDOG_ASSERT(!vertexBuffersIn.empty());
     this->vertexBuffers = vertexBuffersIn;
+    needToApplyInputLayout = true;
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetEffectPass(std::shared_ptr<NativeEffectPass> const& effectPassIn)
@@ -490,6 +502,8 @@ void GraphicsContextGL4::SetEffectPass(std::shared_ptr<NativeEffectPass> const& 
 
     POMDOG_ASSERT(nativeEffectPass);
     this->effectPass = nativeEffectPass;
+    needToApplyPipelineState = true;
+    needToApplyInputLayout = true;
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayoutIn)

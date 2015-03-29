@@ -95,6 +95,8 @@ private:
     std::vector<Optional<GLenum>> textures;
     Optional<FrameBufferGL4> frameBuffer;
     std::vector<std::shared_ptr<RenderTarget2DGL4>> renderTargets;
+    bool needToApplyInputLayout;
+    bool needToApplyPipelineState;
 };
 
 }// namespace GL4
