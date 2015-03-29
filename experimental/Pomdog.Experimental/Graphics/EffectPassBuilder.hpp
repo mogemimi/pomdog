@@ -6,7 +6,7 @@
 
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
-#include "Pomdog/Graphics/VertexBufferBinding.hpp"
+#include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include <string>
 #include <memory>
 #include <vector>
@@ -37,13 +37,9 @@ public:
 
     EffectPassBuilder & PixelShaderHLSLPrecompiled(void const* shaderSource, std::size_t byteLength);
 
-    EffectPassBuilder & InputElements(std::vector<VertexBufferBinding> const& inputElements);
+    EffectPassBuilder & InputLayout(InputLayoutDescription const& inputLayout);
 
-    EffectPassBuilder & InputElements(std::vector<VertexBufferBinding> && inputElements);
-
-    EffectPassBuilder & InputElements(VertexDeclaration const& vertexDeclaration);
-
-    EffectPassBuilder & InputElements(VertexDeclaration && vertexDeclaration);
+    EffectPassBuilder & InputLayout(InputLayoutDescription && inputLayout);
 
     EffectPassBuilder & BlendState(BlendDescription const& blendState);
 

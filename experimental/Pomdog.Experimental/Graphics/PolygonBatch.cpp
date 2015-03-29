@@ -10,9 +10,9 @@
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Graphics/EffectParameter.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
+#include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
-#include "Pomdog/Graphics/VertexDeclaration.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Vector4.hpp"
@@ -28,10 +28,13 @@ namespace {
 struct BuiltinEffectPolygonBatchTrait {
     static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
     {
+        InputLayoutHelper inputLayout;
+        inputLayout.Float3().Float4();
+
         auto effectPass = EffectPassBuilder(graphicsDevice)
             .VertexShaderGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
             .PixelShaderGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
-            .InputElements({VertexElementFormat::Float3, VertexElementFormat::Float4})
+            .InputLayout(inputLayout.CreateInputLayout())
             .BlendState(BlendDescription::CreateNonPremultiplied())
             .DepthStencilState(DepthStencilDescription::CreateNone())
             .Create();

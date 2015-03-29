@@ -129,31 +129,17 @@ EffectPassBuilder & EffectPassBuilder::PixelShaderHLSLPrecompiled(void const* sh
     return *this;
 }
 //-----------------------------------------------------------------------
-EffectPassBuilder & EffectPassBuilder::InputElements(std::vector<VertexBufferBinding> const& inputElements)
+EffectPassBuilder & EffectPassBuilder::InputLayout(InputLayoutDescription const& inputLayout)
 {
     POMDOG_ASSERT(impl);
-    impl->description.InputElements = inputElements;
+    impl->description.InputLayout = inputLayout;
     return *this;
 }
 //-----------------------------------------------------------------------
-EffectPassBuilder & EffectPassBuilder::InputElements(std::vector<VertexBufferBinding> && inputElements)
+EffectPassBuilder & EffectPassBuilder::InputLayout(InputLayoutDescription && inputLayout)
 {
     POMDOG_ASSERT(impl);
-    impl->description.InputElements = std::move(inputElements);
-    return *this;
-}
-//-----------------------------------------------------------------------
-EffectPassBuilder & EffectPassBuilder::InputElements(VertexDeclaration const& vertexDeclaration)
-{
-    POMDOG_ASSERT(impl);
-    impl->description.InputElements = {vertexDeclaration};
-    return *this;
-}
-//-----------------------------------------------------------------------
-EffectPassBuilder & EffectPassBuilder::InputElements(VertexDeclaration && vertexDeclaration)
-{
-    POMDOG_ASSERT(impl);
-    impl->description.InputElements = {std::move(vertexDeclaration)};
+    impl->description.InputLayout = std::move(inputLayout);
     return *this;
 }
 //-----------------------------------------------------------------------
@@ -184,8 +170,7 @@ EffectPassBuilder & EffectPassBuilder::DepthStencilState(DepthStencilDescription
 std::shared_ptr<EffectPass> EffectPassBuilder::Create()
 {
     POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(!impl->description.InputElements.empty());
-    POMDOG_ASSERT(!impl->description.InputElements.front().Declaration.VertexElements().empty());
+    POMDOG_ASSERT(!impl->description.InputLayout.InputElements.empty());
 
     if (!impl->hasBlendState) {
         impl->description.BlendState = BlendDescription::CreateDefault();

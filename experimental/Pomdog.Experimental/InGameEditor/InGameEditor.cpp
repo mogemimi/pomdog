@@ -9,6 +9,7 @@
 #include "Pomdog.Experimental/Graphics/SpriteFontLoader.hpp"
 #include "Pomdog.Experimental/UI/UIView.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
+#include "Pomdog/Graphics/InputLayoutHelper.hpp"
 
 namespace Pomdog {
 namespace SceneEditor {
@@ -23,20 +24,18 @@ namespace {
 struct BuiltinEffectSpriteBatchDistanceFieldTrait {
     static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
     {
-        using PositionTextureCoord = CustomVertex<Vector4>;
-        using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4>;
-
-        auto declartation = PositionTextureCoord::Declaration();
+        InputLayoutHelper inputLayout;
+        inputLayout.StartBuffer()
+            .Float4()
+            .StartBuffer(InputClassification::InputPerInstance, 1)
+            .Float4().Float4().Float4().Float4();
 
         auto effectPass = EffectPassBuilder(graphicsDevice)
             .VertexShaderGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
             .PixelShaderGLSL(Builtin_GLSL_Sprite_DistanceField_PS, std::strlen(Builtin_GLSL_Sprite_DistanceField_PS))
             .VertexShaderHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
             .PixelShaderHLSLPrecompiled(BuiltinHLSL_SpriteDistanceField_PS, sizeof(BuiltinHLSL_SpriteDistanceField_PS))
-            .InputElements(std::initializer_list<VertexBufferBinding>{
-                {declartation, 0, 0},
-                {SpriteInfoVertex::Declaration(), declartation.StrideBytes(), 1}
-            })
+            .InputLayout(inputLayout.CreateInputLayout())
             .BlendState(BlendDescription::CreateNonPremultiplied())
             .DepthStencilState(DepthStencilDescription::CreateNone())
             .Create();

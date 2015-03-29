@@ -6,21 +6,21 @@
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
-#include "Pomdog/Graphics/CustomVertex.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Graphics/EffectParameter.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/IndexElementSize.hpp"
+#include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
-#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include <algorithm>
 #include <vector>
+#include <tuple>
 
 namespace Pomdog {
 namespace {
@@ -34,20 +34,18 @@ namespace {
 struct BuiltinEffectSpriteBatchTrait {
     static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
     {
-        using PositionTextureCoord = CustomVertex<Vector4>;
-        using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4>;
-
-        auto declartation = PositionTextureCoord::Declaration();
+        InputLayoutHelper inputLayout;
+        inputLayout.StartBuffer()
+            .Float4()
+            .StartBuffer(InputClassification::InputPerInstance, 1)
+            .Float4().Float4().Float4().Float4();
 
         auto effectPass = EffectPassBuilder(graphicsDevice)
             .VertexShaderGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
             .PixelShaderGLSL(Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS))
             .VertexShaderHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
             .PixelShaderHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS))
-            .InputElements(std::initializer_list<VertexBufferBinding>{
-                {declartation, 0, 0},
-                {SpriteInfoVertex::Declaration(), declartation.StrideBytes(), 1}
-            })
+            .InputLayout(inputLayout.CreateInputLayout())
             .BlendState(BlendDescription::CreateNonPremultiplied())
             .DepthStencilState(DepthStencilDescription::CreateNone())
             .Create();
@@ -140,10 +138,8 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextI
     , constantBuffers(constantBuffersIn)
     , sortMode(SpriteSortMode::BackToFront)
 {
-    using PositionTextureCoord = CustomVertex<Vector4>;
-    using SpriteInfoVertex = CustomVertex<Vector4, Vector4, Vector4, Vector4>;
-
     {
+        using PositionTextureCoord = std::tuple<Vector4>;
 
         std::array<PositionTextureCoord, 4> const verticesCombo = {
         #ifdef POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
@@ -160,7 +156,7 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextI
         };
         planeVertices = std::make_shared<VertexBuffer>(graphicsDevice,
             verticesCombo.data(), verticesCombo.size(),
-            PositionTextureCoord::Declaration().StrideBytes(), BufferUsage::Immutable);
+            sizeof(PositionTextureCoord), BufferUsage::Immutable);
     }
     {
         std::array<std::uint16_t, 6> const indices = {

@@ -4,9 +4,9 @@
 #include "SkinnedEffect.hpp"
 #include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
 #include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
-#include "Pomdog/Graphics/VertexDeclaration.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
+#include "Pomdog/Graphics/InputLayoutHelper.hpp"
 
 namespace Pomdog {
 namespace {
@@ -17,10 +17,13 @@ namespace {
 struct BuiltinEffectSkinningTrait {
     static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
     {
+        InputLayoutHelper inputLayout;
+        inputLayout.Float4().Float4().Int4();
+
         auto effectPass = EffectPassBuilder(graphicsDevice)
             .VertexShaderGLSL(Builtin_GLSL_SkinnedEffect_VS, std::strlen(Builtin_GLSL_SkinnedEffect_VS))
             .PixelShaderGLSL(Builtin_GLSL_SkinnedEffect_PS, std::strlen(Builtin_GLSL_SkinnedEffect_PS))
-            .InputElements({VertexElementFormat::Float4, VertexElementFormat::Float4, VertexElementFormat::Int4})
+            .InputLayout(inputLayout.CreateInputLayout())
             .BlendState(BlendDescription::CreateNonPremultiplied())
             .DepthStencilState(DepthStencilDescription::CreateNone())
             .Create();
