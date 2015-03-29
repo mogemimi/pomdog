@@ -4,18 +4,13 @@
 #ifndef POMDOG_EFFECTPASSLOADER_C9744EEA_HPP
 #define POMDOG_EFFECTPASSLOADER_C9744EEA_HPP
 
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <string>
 #include <memory>
 #include <vector>
 
 namespace Pomdog {
-
-class EffectPass;
-class GraphicsDevice;
-class VertexBufferBinding;
-class VertexDeclaration;
-
 namespace Detail {
 class AssetLoaderContext;
 }// namespace Detail
@@ -39,13 +34,9 @@ public:
 
     EffectPassLoader & PixelShaderHLSL(std::string const& filePath, std::string const& entryPoint);
 
-    EffectPassLoader & InputElements(std::vector<VertexBufferBinding> const& inputElements);
+    EffectPassLoader & InputLayout(InputLayoutDescription const& inputLayout);
 
-    EffectPassLoader & InputElements(std::vector<VertexBufferBinding> && inputElements);
-
-    EffectPassLoader & InputElements(VertexDeclaration const& vertexDeclaration);
-
-    EffectPassLoader & InputElements(VertexDeclaration && vertexDeclaration);
+    EffectPassLoader & InputLayout(InputLayoutDescription && inputLayout);
 
     std::shared_ptr<EffectPass> Load();
 

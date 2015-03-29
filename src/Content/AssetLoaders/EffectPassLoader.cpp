@@ -11,7 +11,6 @@
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
-#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <fstream>
@@ -62,8 +61,7 @@ public:
 //-----------------------------------------------------------------------
 std::shared_ptr<EffectPass> EffectPassLoader::Impl::Load()
 {
-    POMDOG_ASSERT(!description.InputElements.empty());
-    POMDOG_ASSERT(!description.InputElements.front().Declaration.VertexElements().empty());
+    POMDOG_ASSERT(!description.InputLayout.InputElements.empty());
 
     if (!hasBlendState) {
         description.BlendState = BlendDescription::CreateDefault();
@@ -171,32 +169,19 @@ EffectPassLoader & EffectPassLoader::PixelShaderHLSL(std::string const& filePath
     return *this;
 }
 //-----------------------------------------------------------------------
-EffectPassLoader & EffectPassLoader::InputElements(std::vector<VertexBufferBinding> const& inputElements)
+EffectPassLoader & EffectPassLoader::InputLayout(InputLayoutDescription const& inputLayout)
 {
-    POMDOG_ASSERT(!inputElements.empty());
     POMDOG_ASSERT(impl);
-    impl->description.InputElements = inputElements;
+    POMDOG_ASSERT(!inputLayout.InputElements.empty());
+    impl->description.InputLayout = inputLayout;
     return *this;
 }
 //-----------------------------------------------------------------------
-EffectPassLoader & EffectPassLoader::InputElements(std::vector<VertexBufferBinding> && inputElements)
+EffectPassLoader & EffectPassLoader::InputLayout(InputLayoutDescription && inputLayout)
 {
     POMDOG_ASSERT(impl);
-    impl->description.InputElements = std::move(inputElements);
-    return *this;
-}
-//-----------------------------------------------------------------------
-EffectPassLoader & EffectPassLoader::InputElements(VertexDeclaration const& vertexDeclaration)
-{
-    POMDOG_ASSERT(impl);
-    impl->description.InputElements = {vertexDeclaration};
-    return *this;
-}
-//-----------------------------------------------------------------------
-EffectPassLoader & EffectPassLoader::InputElements(VertexDeclaration && vertexDeclaration)
-{
-    POMDOG_ASSERT(impl);
-    impl->description.InputElements = {std::move(vertexDeclaration)};
+    POMDOG_ASSERT(!inputLayout.InputElements.empty());
+    impl->description.InputLayout = std::move(inputLayout);
     return *this;
 }
 //-----------------------------------------------------------------------
