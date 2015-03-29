@@ -35,12 +35,15 @@ enum class Blend: std::uint8_t {
 
     InvereseBlendFactor,
 
-    //Source1Color,
-    //InverseSource1Color,
-    //Source1Alpha,
-    //InverseSource1Alpha,
+    Source1Color,
+
+    InverseSource1Color,
+
+    Source1Alpha,
+
+    InverseSource1Alpha,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_BLEND_A27CB239_HPP

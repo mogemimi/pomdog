@@ -30,6 +30,10 @@ static GLenum ToBlendGL4NonTypesafe(Blend blend)
     case Blend::SourceAlphaSaturation: return GL_SRC_ALPHA_SATURATE;
     case Blend::BlendFactor: return GL_CONSTANT_COLOR;
     case Blend::InvereseBlendFactor: return GL_ONE_MINUS_CONSTANT_COLOR;
+    case Blend::Source1Color: return GL_SRC1_COLOR;
+    case Blend::InverseSource1Color: return GL_ONE_MINUS_SRC1_COLOR;
+    case Blend::Source1Alpha: return GL_SRC1_ALPHA;
+    case Blend::InverseSource1Alpha: return GL_ONE_MINUS_SRC1_ALPHA;
     }
 #ifdef _MSC_VER
     return GL_ZERO;
