@@ -89,6 +89,7 @@
 #include "Graphics/InputElement.hpp"
 #include "Graphics/InputElementFormat.hpp"
 #include "Graphics/InputLayoutDescription.hpp"
+#include "Graphics/InputLayoutHelper.hpp"
 #include "Graphics/PresentationParameters.hpp"
 #include "Graphics/PrimitiveTopology.hpp"
 #include "Graphics/RasterizerDescription.hpp"
