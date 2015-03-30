@@ -31,13 +31,15 @@ static std::uint8_t ToByteSize(InputElementFormat format)
 #endif
 }
 
+static constexpr std::uint16_t MaxInputSlotCount = 16;
+
 } // unnamed namespace
 //-----------------------------------------------------------------------
 InputLayoutHelper & InputLayoutHelper::PushBack(InputElementFormat format)
 {
     InputElement element;
     element.Format = format;
-    element.BufferIndex = bufferIndex;
+    element.InputSlot = inputSlot;
     element.InputSlotClass = slotClass;
     element.InstanceStepRate = instanceStepRate;
     element.ByteOffset = byteOffset;
@@ -84,29 +86,35 @@ InputLayoutHelper & InputLayoutHelper::Int4()
     return *this;
 }
 //-----------------------------------------------------------------------
-InputLayoutHelper & InputLayoutHelper::StartBuffer()
+InputLayoutHelper & InputLayoutHelper::AddInputSlot()
 {
     if (!elements.empty()) {
-        ++bufferIndex;
+        ++inputSlot;
     }
+
+    POMDOG_ASSERT(inputSlot >= 0);
+    POMDOG_ASSERT(inputSlot < MaxInputSlotCount);
+
     instanceStepRate = 0;
     slotClass = InputClassification::InputPerVertex;
     byteOffset = 0;
     return *this;
 }
 //-----------------------------------------------------------------------
-InputLayoutHelper & InputLayoutHelper::StartBuffer(
+InputLayoutHelper & InputLayoutHelper::AddInputSlot(
     InputClassification slotClassIn, std::uint16_t instanceStepRateIn)
 {
     POMDOG_ASSERT(instanceStepRateIn >= 0);
-    POMDOG_ASSERT(bufferIndex >= 0);
-
     POMDOG_ASSERT(instanceStepRateIn == 0 ||
         slotClassIn == InputClassification::InputPerInstance);
 
     if (!elements.empty()) {
-        ++bufferIndex;
+        ++inputSlot;
     }
+
+    POMDOG_ASSERT(inputSlot >= 0);
+    POMDOG_ASSERT(inputSlot < MaxInputSlotCount);
+
     instanceStepRate = instanceStepRateIn;
     slotClass = slotClassIn;
     byteOffset = 0;

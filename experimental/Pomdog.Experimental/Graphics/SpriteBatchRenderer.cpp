@@ -32,9 +32,9 @@ struct BuiltinEffectSpriteBatchRendererTrait {
     static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
     {
         InputLayoutHelper inputLayout;
-        inputLayout.StartBuffer()
+        inputLayout.AddInputSlot()
             .Float4()
-            .StartBuffer(InputClassification::InputPerInstance, 1)
+            .AddInputSlot(InputClassification::InputPerInstance, 1)
             .Float4().Float4().Float4().Float4().Float4();
 
         auto effectPass = EffectPassBuilder(graphicsDevice)

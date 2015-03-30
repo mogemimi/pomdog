@@ -31,13 +31,12 @@ using ScalarTypeGL4 = Tagged<GLuint, Tags::ScalarDataTypeTag>;
 using VertexArrayGL4 = Tagged<GLuint, Tags::VertexArrayTag>;
 
 struct InputElementGL4 {
-    // Attribute location.
-    GLuint StartSlot;
+    GLuint AttributeLocation;
 
     // Input element offset.
     std::uint32_t ByteOffset;
 
-    std::uint16_t BufferIndex;
+    std::uint16_t InputSlot;
 
     std::uint16_t InstanceStepRate;
 

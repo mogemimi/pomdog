@@ -29,16 +29,16 @@ public:
 
     InputLayoutHelper & Int4();
 
-    InputLayoutHelper & StartBuffer();
+    InputLayoutHelper & AddInputSlot();
 
-    InputLayoutHelper & StartBuffer(InputClassification slotClass,
+    InputLayoutHelper & AddInputSlot(InputClassification slotClass,
         std::uint16_t instanceStepRate);
 
     InputLayoutDescription CreateInputLayout();
 
 private:
     std::vector<InputElement> elements;
-    std::uint16_t bufferIndex = 0;
+    std::uint16_t inputSlot = 0;
     std::uint16_t byteOffset = 0;
     std::uint16_t instanceStepRate = 0;
     InputClassification slotClass = InputClassification::InputPerVertex;
