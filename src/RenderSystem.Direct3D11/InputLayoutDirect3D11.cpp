@@ -3,8 +3,8 @@
 
 #include "InputLayoutDirect3D11.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
-#include "Pomdog/Graphics/VertexBufferBinding.hpp"
-#include "Pomdog/Graphics/VertexElementFormat.hpp"
+#include "Pomdog/Graphics/InputElementFormat.hpp"
+#include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <utility>
@@ -15,79 +15,79 @@ namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
 
-static DXGI_FORMAT ToDXGIFormat(VertexElementFormat format)
+static DXGI_FORMAT ToDXGIFormat(InputElementFormat format) noexcept
 {
     switch (format) {
-    case VertexElementFormat::Byte4: return DXGI_FORMAT_R8G8B8A8_UINT;
-    case VertexElementFormat::Float: return DXGI_FORMAT_R32_FLOAT;
-    case VertexElementFormat::Float2: return DXGI_FORMAT_R32G32_FLOAT;
-    case VertexElementFormat::Float3: return DXGI_FORMAT_R32G32B32_FLOAT;
-    case VertexElementFormat::Float4: return DXGI_FORMAT_R32G32B32A32_FLOAT;
-    case VertexElementFormat::HalfFloat2: return DXGI_FORMAT_R16G16_FLOAT;
-    case VertexElementFormat::HalfFloat4: return DXGI_FORMAT_R16G16B16A16_FLOAT;
-    case VertexElementFormat::Int4: return DXGI_FORMAT_R32G32B32A32_SINT;
+    case InputElementFormat::Byte4: return DXGI_FORMAT_R8G8B8A8_UINT;
+    case InputElementFormat::Float: return DXGI_FORMAT_R32_FLOAT;
+    case InputElementFormat::Float2: return DXGI_FORMAT_R32G32_FLOAT;
+    case InputElementFormat::Float3: return DXGI_FORMAT_R32G32B32_FLOAT;
+    case InputElementFormat::Float4: return DXGI_FORMAT_R32G32B32A32_FLOAT;
+    case InputElementFormat::HalfFloat2: return DXGI_FORMAT_R16G16_FLOAT;
+    case InputElementFormat::HalfFloat4: return DXGI_FORMAT_R16G16B16A16_FLOAT;
+    case InputElementFormat::Int4: return DXGI_FORMAT_R32G32B32A32_SINT;
     }
     return DXGI_FORMAT_R32_FLOAT;
 }
 //-----------------------------------------------------------------------
+static D3D11_INPUT_CLASSIFICATION ToD3D11InputClassification(
+    InputClassification slotClass) noexcept
+{
+    switch (slotClass) {
+    case InputClassification::InputPerVertex: return D3D11_INPUT_PER_VERTEX_DATA;
+    case InputClassification::InputPerInstance: return D3D11_INPUT_PER_INSTANCE_DATA;
+    }
+    return D3D11_INPUT_PER_VERTEX_DATA;
+}
+//-----------------------------------------------------------------------
 static std::vector<D3D11_INPUT_ELEMENT_DESC> BuildInputElements(
     std::vector<D3D11_SIGNATURE_PARAMETER_DESC> const& signatureParameters,
-    std::vector<VertexBufferBinding> const& vertexBufferBindings)
+    InputLayoutDescription const& description)
 {
     POMDOG_ASSERT(!signatureParameters.empty());
-    POMDOG_ASSERT(!vertexBufferBindings.empty());
+    POMDOG_ASSERT(!description.InputElements.empty());
+    POMDOG_ASSERT(signatureParameters.size() == description.InputElements.size());
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements;
+    inputElements.reserve(description.InputElements.size());
 
     auto signature = std::begin(signatureParameters);
-    auto iterBinding = std::begin(vertexBufferBindings);
 
-    for (UINT inputSlot = 0; std::end(vertexBufferBindings) != iterBinding; ++inputSlot, ++iterBinding)
+    for (auto & sourceElement: description.InputElements)
     {
-        POMDOG_ASSERT(inputSlot <= D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT);
+        POMDOG_ASSERT(signature != std::end(signatureParameters));
 
-        auto & vertexDeclaration = iterBinding->Declaration;
-        auto const vertexElements = vertexDeclaration.VertexElements();
-
-        auto iter = std::begin(vertexElements);
-        auto const iterEnd = std::end(vertexElements);
-
-        while (iterEnd != iter)
-        {
-            D3D11_INPUT_ELEMENT_DESC elementDesc;
-
-            POMDOG_ASSERT(std::end(signatureParameters) != signature);
-
-            if (std::end(signatureParameters) == signature)
-            {
-                ///@todo throw exception
-                // error, FUS RO DAH!
-                //break;
-            }
-
-            elementDesc.SemanticName = signature->SemanticName;
-            elementDesc.SemanticIndex = signature->SemanticIndex;
-            elementDesc.Format = ToDXGIFormat(iter->VertexElementFormat);
-            elementDesc.InputSlot = inputSlot;
-
-            //elementDesc.AlignedByteOffset = iterBinding->VertexOffset + iter->Offset;
-            elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-
-            elementDesc.InstanceDataStepRate = iterBinding->InstanceStepRate;
-            elementDesc.InputSlotClass = ((0 < iterBinding->InstanceStepRate) ?
-                D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA);
-
-            inputElements.push_back(std::move(elementDesc));
-
-            ++iter;
-            ++signature;
+        if (signature == std::end(signatureParameters)) {
+            ///@todo throw exception
+            // error: FUS RO DAH!
+            break;
         }
+
+        POMDOG_ASSERT(sourceElement.InstanceStepRate == 0 ||
+            sourceElement.InputSlotClass == InputClassification::InputPerInstance);
+
+        D3D11_INPUT_ELEMENT_DESC elementDesc;
+        elementDesc.SemanticName = signature->SemanticName;
+        elementDesc.SemanticIndex = signature->SemanticIndex;
+        elementDesc.Format = ToDXGIFormat(sourceElement.Format);
+        elementDesc.InputSlot = sourceElement.BufferIndex;
+        elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+        elementDesc.InputSlotClass = ToD3D11InputClassification(sourceElement.InputSlotClass);
+        elementDesc.InstanceDataStepRate = sourceElement.InstanceStepRate;
+
+        POMDOG_ASSERT(elementDesc.InputSlot <= D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT);
+        POMDOG_ASSERT(elementDesc.InstanceDataStepRate >= 0);
+
+        inputElements.push_back(std::move(elementDesc));
+
+        ++signature;
     }
 
     return std::move(inputElements);
 }
 //-----------------------------------------------------------------------
-static std::vector<D3D11_SIGNATURE_PARAMETER_DESC> EnumerateSignatureParameters(ID3D11ShaderReflection* shaderReflector,
+static std::vector<D3D11_SIGNATURE_PARAMETER_DESC> EnumerateSignatureParameters(
+    ID3D11ShaderReflection* shaderReflector,
     D3D11_SHADER_DESC const& shaderDesc)
 {
     POMDOG_ASSERT(shaderReflector);
@@ -160,7 +160,7 @@ static DXGI_FORMAT ToDXGIFormat(D3D_REGISTER_COMPONENT_TYPE registerType, BYTE m
 Microsoft::WRL::ComPtr<ID3D11InputLayout> InputLayoutHelper::CreateInputLayout(
     ID3D11Device* device,
     ShaderBytecode const& vertexShaderBytecode,
-    std::vector<VertexBufferBinding> const& vertexBufferBindings)
+    InputLayoutDescription const& description)
 {
     POMDOG_ASSERT(device);
     POMDOG_ASSERT(vertexShaderBytecode.Code);
@@ -171,7 +171,7 @@ Microsoft::WRL::ComPtr<ID3D11InputLayout> InputLayoutHelper::CreateInputLayout(
     ReflectShaderBytecode(vertexShaderBytecode, shaderReflector, shaderDesc);
 
     auto signatureParameters = EnumerateSignatureParameters(shaderReflector.Get(), shaderDesc);
-    auto inputElements = BuildInputElements(signatureParameters, vertexBufferBindings);
+    auto inputElements = BuildInputElements(signatureParameters, description);
 
     Microsoft::WRL::ComPtr<ID3D11InputLayout> nativeInputLayout;
     HRESULT hr = device->CreateInputLayout(inputElements.data(), inputElements.size(),

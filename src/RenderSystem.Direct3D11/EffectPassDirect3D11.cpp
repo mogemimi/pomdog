@@ -21,7 +21,7 @@ namespace {
 
 using Microsoft::WRL::ComPtr;
 
-static D3D11_BLEND_OP ToBlendFunctionDirect3D11(BlendFunction blendOperation)
+static D3D11_BLEND_OP ToBlendFunctionDirect3D11(BlendFunction blendOperation) noexcept
 {
     switch (blendOperation) {
     case BlendFunction::Add: return D3D11_BLEND_OP_ADD;
@@ -33,7 +33,7 @@ static D3D11_BLEND_OP ToBlendFunctionDirect3D11(BlendFunction blendOperation)
     return D3D11_BLEND_OP_ADD;
 }
 //-----------------------------------------------------------------------
-static D3D11_BLEND ToBlendDirect3D11(Blend blend)
+static D3D11_BLEND ToBlendDirect3D11(Blend blend) noexcept
 {
     switch (blend) {
     case Blend::Zero: return D3D11_BLEND_ZERO;
@@ -53,7 +53,7 @@ static D3D11_BLEND ToBlendDirect3D11(Blend blend)
     return D3D11_BLEND_ONE;
 }
 //-----------------------------------------------------------------------
-static D3D11_STENCIL_OP ToStencilOperationDirect3D11(StencilOperation operation)
+static D3D11_STENCIL_OP ToStencilOperationDirect3D11(StencilOperation operation) noexcept
 {
     switch (operation) {
     case StencilOperation::Keep: return D3D11_STENCIL_OP_KEEP;
@@ -68,7 +68,7 @@ static D3D11_STENCIL_OP ToStencilOperationDirect3D11(StencilOperation operation)
     return D3D11_STENCIL_OP_KEEP;
 }
 //-----------------------------------------------------------------------
-static D3D11_COMPARISON_FUNC ToComparisonFunctionDirect3D11(ComparisonFunction compareFunction)
+static D3D11_COMPARISON_FUNC ToComparisonFunctionDirect3D11(ComparisonFunction compareFunction) noexcept
 {
     switch (compareFunction) {
     case ComparisonFunction::Never: return D3D11_COMPARISON_NEVER;
@@ -83,7 +83,7 @@ static D3D11_COMPARISON_FUNC ToComparisonFunctionDirect3D11(ComparisonFunction c
     return D3D11_COMPARISON_LESS_EQUAL;
 }
 //-----------------------------------------------------------------------
-static D3D11_CULL_MODE ToCullModeDirect3D11(CullMode cullMode)
+static D3D11_CULL_MODE ToCullModeDirect3D11(CullMode cullMode) noexcept
 {
     switch (cullMode) {
     case CullMode::ClockwiseFace: return D3D11_CULL_FRONT;
@@ -93,7 +93,7 @@ static D3D11_CULL_MODE ToCullModeDirect3D11(CullMode cullMode)
     return D3D11_CULL_BACK;
 }
 //-----------------------------------------------------------------------
-static D3D11_FILL_MODE ToFillModeDirect3D11(FillMode fillMode)
+static D3D11_FILL_MODE ToFillModeDirect3D11(FillMode fillMode) noexcept
 {
     switch (fillMode) {
     case FillMode::WireFrame: return D3D11_FILL_WIREFRAME;
@@ -328,7 +328,7 @@ EffectPassDirect3D11::EffectPassDirect3D11(ID3D11Device* device,
     }
 
     inputLayout = InputLayoutHelper::CreateInputLayout(
-        device, vertexShader->GetShaderBytecode(), description.InputElements);
+        device, vertexShader->GetShaderBytecode(), description.InputLayout);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeConstantLayout> EffectPassDirect3D11::CreateConstantLayout()

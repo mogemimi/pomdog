@@ -18,10 +18,10 @@ class ShaderBytecode;
 namespace Direct3D11 {
 
 struct InputLayoutHelper final {
-    static Microsoft::WRL::ComPtr<ID3D11InputLayout>
-    CreateInputLayout(ID3D11Device* device,
+    static Microsoft::WRL::ComPtr<ID3D11InputLayout> CreateInputLayout(
+        ID3D11Device* device,
         ShaderBytecode const& vertexShaderBytecode,
-        std::vector<VertexBufferBinding> const& vertexBufferBindings);
+        InputLayoutDescription const& description);
 };
 
 }// namespace Direct3D11
