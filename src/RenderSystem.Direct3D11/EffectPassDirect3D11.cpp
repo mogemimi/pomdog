@@ -106,33 +106,39 @@ static D3D11_FILL_MODE ToFillModeDirect3D11(FillMode fillMode) noexcept
     return D3D11_FILL_SOLID;
 }
 //-----------------------------------------------------------------------
-ComPtr<ID3D11BlendState> CreateBlendState(ID3D11Device* nativeDevice,
+static inline BOOL ToD3D11Boolean(bool is) noexcept
+{
+    return is ? TRUE : FALSE;
+}
+//-----------------------------------------------------------------------
+static void ConvertToD3D11Desc(RenderTargetBlendDescription const& desc,
+    D3D11_RENDER_TARGET_BLEND_DESC & result) noexcept
+{
+    result.BlendEnable = ToD3D11Boolean(desc.BlendEnable);
+    result.BlendOp = ToBlendFunctionDirect3D11(desc.ColorBlendFunction);
+    result.BlendOpAlpha = ToBlendFunctionDirect3D11(desc.AlphaBlendFunction);
+    result.DestBlend = ToBlendDirect3D11(desc.ColorDestinationBlend);
+    result.DestBlendAlpha = ToBlendDirect3D11(desc.AlphaDestinationBlend);
+    result.SrcBlend = ToBlendDirect3D11(desc.ColorSourceBlend);
+    result.SrcBlendAlpha = ToBlendDirect3D11(desc.AlphaSourceBlend);
+    result.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+}
+//-----------------------------------------------------------------------
+static ComPtr<ID3D11BlendState> CreateBlendState(ID3D11Device* nativeDevice,
     BlendDescription const& description)
 {
-    D3D11_RENDER_TARGET_BLEND_DESC renderTargetBlendDesc;
-    ZeroMemory(&renderTargetBlendDesc, sizeof(renderTargetBlendDesc));
-
-    ///@todo badcode
-    renderTargetBlendDesc.BlendEnable =
-        (Blend::One == description.ColorSourceBlend) &&
-        (Blend::One == description.AlphaSourceBlend) &&
-        (Blend::Zero == description.ColorDestinationBlend) &&
-        (Blend::Zero == description.AlphaDestinationBlend) ? FALSE : TRUE;
-
-    renderTargetBlendDesc.BlendOp = ToBlendFunctionDirect3D11(description.ColorBlendFunction);
-    renderTargetBlendDesc.BlendOpAlpha = ToBlendFunctionDirect3D11(description.AlphaBlendFunction);
-    renderTargetBlendDesc.DestBlend = ToBlendDirect3D11(description.ColorDestinationBlend);
-    renderTargetBlendDesc.DestBlendAlpha = ToBlendDirect3D11(description.AlphaDestinationBlend);
-    renderTargetBlendDesc.SrcBlend = ToBlendDirect3D11(description.ColorSourceBlend);
-    renderTargetBlendDesc.SrcBlendAlpha = ToBlendDirect3D11(description.AlphaSourceBlend);
-
-    renderTargetBlendDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
     D3D11_BLEND_DESC blendDesc;
     ::ZeroMemory(&blendDesc, sizeof(blendDesc));
-    blendDesc.AlphaToCoverageEnable = (description.AlphaToCoverageEnable ? TRUE : FALSE);
-    blendDesc.IndependentBlendEnable = FALSE;//TRUE;
-    blendDesc.RenderTarget[0] = renderTargetBlendDesc;
+    blendDesc.AlphaToCoverageEnable = ToD3D11Boolean(description.AlphaToCoverageEnable);
+    blendDesc.IndependentBlendEnable = ToD3D11Boolean(description.IndependentBlendEnable);
+
+    const auto renderTargetCount = std::min<UINT>(
+        description.RenderTargets.size(),
+        D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
+
+    for (UINT i = 0; i < renderTargetCount; ++i) {
+        ConvertToD3D11Desc(description.RenderTargets[i], blendDesc.RenderTarget[i]);
+    }
 
     POMDOG_ASSERT(nativeDevice);
 
@@ -154,11 +160,11 @@ ComPtr<ID3D11DepthStencilState> CreateDepthStencilState(ID3D11Device* nativeDevi
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
     ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
-    depthStencilDesc.DepthEnable = (description.DepthBufferEnable ? TRUE : FALSE);
+    depthStencilDesc.DepthEnable = ToD3D11Boolean(description.DepthBufferEnable);
     depthStencilDesc.DepthWriteMask = (description.DepthBufferWriteEnable ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO);
     depthStencilDesc.DepthFunc = ToComparisonFunctionDirect3D11(description.DepthBufferFunction);
 
-    depthStencilDesc.StencilEnable = (description.StencilEnable ? TRUE : FALSE);
+    depthStencilDesc.StencilEnable = ToD3D11Boolean(description.StencilEnable);
     depthStencilDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
     depthStencilDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
 
@@ -200,8 +206,8 @@ ComPtr<ID3D11RasterizerState> CreateRasterizerState(ID3D11Device* nativeDevice,
     rasterizerDesc.DepthBiasClamp = 0.0f;
     rasterizerDesc.SlopeScaledDepthBias = static_cast<FLOAT>(description.SlopeScaledDepthBias);
     rasterizerDesc.AntialiasedLineEnable = FALSE;
-    rasterizerDesc.MultisampleEnable = (description.MultisampleEnable ? TRUE : FALSE);
-    rasterizerDesc.ScissorEnable = (description.ScissorTestEnable ? TRUE : FALSE);
+    rasterizerDesc.MultisampleEnable = ToD3D11Boolean(description.MultisampleEnable);
+    rasterizerDesc.ScissorEnable = ToD3D11Boolean(description.ScissorTestEnable);
 
     POMDOG_ASSERT(!rasterizerDesc.AntialiasedLineEnable
         || (rasterizerDesc.AntialiasedLineEnable && !rasterizerDesc.MultisampleEnable));

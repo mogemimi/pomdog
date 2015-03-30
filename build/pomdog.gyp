@@ -75,6 +75,7 @@
       '../include/Pomdog/Graphics/InputLayoutHelper.hpp',
       '../include/Pomdog/Graphics/PrimitiveTopology.hpp',
       '../include/Pomdog/Graphics/RasterizerDescription.hpp',
+      '../include/Pomdog/Graphics/RenderTargetBlendDescription.hpp',
       '../include/Pomdog/Graphics/SamplerDescription.hpp',
       '../include/Pomdog/Graphics/ShaderLanguage.hpp',
       '../include/Pomdog/Graphics/SurfaceFormat.hpp',

@@ -63,35 +63,85 @@ static BlendFunctionGL4 ToBlendFunctionGL4(BlendFunction func)
 {
     return BlendFunctionGL4{ToBlendFunctionGL4NonTypesafe(func)};
 }
+//-----------------------------------------------------------------------
+static void ToRenderTargetBlendGL4(RenderTargetBlendDescription const& desc,
+    RenderTargetBlendDescGL4 & result)
+{
+    result.ColorSource = ToBlendGL4(desc.ColorSourceBlend);
+    result.ColorDestination = ToBlendGL4(desc.ColorDestinationBlend);
+    result.ColorFunction = ToBlendFunctionGL4(desc.ColorBlendFunction);
+    result.AlphaSource = ToBlendGL4(desc.AlphaSourceBlend);
+    result.AlphaDestination = ToBlendGL4(desc.AlphaDestinationBlend);
+    result.AlphaFunction = ToBlendFunctionGL4(desc.AlphaBlendFunction);
+    result.BlendEnable = desc.BlendEnable;
+}
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
 BlendStateGL4::BlendStateGL4(BlendDescription const& description)
-    // Alpha data
-    : alphaFunction(ToBlendFunctionGL4(description.AlphaBlendFunction))
-    , alphaSource(ToBlendGL4(description.AlphaSourceBlend))
-    , alphaDestination(ToBlendGL4(description.AlphaDestinationBlend))
-    // Color data
-    , colorFunction(ToBlendFunctionGL4(description.ColorBlendFunction))
-    , colorSource(ToBlendGL4(description.ColorSourceBlend))
-    , colorDestination(ToBlendGL4(description.ColorDestinationBlend))
+    : independentBlendEnable(description.IndependentBlendEnable)
 {
+    for (std::size_t i = 0; i < description.RenderTargets.size(); ++i) {
+        POMDOG_ASSERT(i < renderTargets.size());
+        ToRenderTargetBlendGL4(description.RenderTargets[i], renderTargets[i]);
+    }
 }
 //-----------------------------------------------------------------------
 void BlendStateGL4::Apply()
 {
-    glEnable(GL_BLEND);
+    if (independentBlendEnable) {
+        GLuint index = 0;
+        for (auto & renderTarget : renderTargets) {
+            if (renderTarget.BlendEnable) {
+                glEnablei(GL_BLEND, index);
+            }
+            else {
+                glDisablei(GL_BLEND, index);
+            }
+            
+            glBlendFuncSeparatei(
+                index,
+                renderTarget.ColorSource.value,
+                renderTarget.ColorDestination.value,
+                renderTarget.AlphaSource.value,
+                renderTarget.AlphaDestination.value);
+        #ifdef DEBUG
+                ErrorChecker::CheckError("glBlendFuncSeparatei", __FILE__, __LINE__);
+        #endif
+            glBlendEquationSeparatei(
+                index,
+                renderTarget.ColorFunction.value,
+                renderTarget.AlphaFunction.value);
+        #ifdef DEBUG
+            ErrorChecker::CheckError("glBlendEquationSeparatei", __FILE__, __LINE__);
+        #endif
+            ++index;
+        }
+    }
+    else {
+        auto & renderTarget = renderTargets.front();
+        if (renderTarget.BlendEnable) {
+            glEnable(GL_BLEND);
+        }
+        else {
+            glDisable(GL_BLEND);
+        }
 
-    glBlendEquationSeparate(colorFunction.value, alphaFunction.value);
-    glBlendFuncSeparate(
-        colorSource.value,
-        colorDestination.value,
-        alphaSource.value,
-        alphaDestination.value);
-
+        glBlendEquationSeparate(
+            renderTarget.ColorFunction.value,
+            renderTarget.AlphaFunction.value);
     #ifdef DEBUG
-    ErrorChecker::CheckError("glBlendFuncSeparate", __FILE__, __LINE__);
+        ErrorChecker::CheckError("glBlendEquationSeparate", __FILE__, __LINE__);
     #endif
+        glBlendFuncSeparate(
+            renderTarget.ColorSource.value,
+            renderTarget.ColorDestination.value,
+            renderTarget.AlphaSource.value,
+            renderTarget.AlphaDestination.value);
+    #ifdef DEBUG
+        ErrorChecker::CheckError("glBlendFuncSeparate", __FILE__, __LINE__);
+    #endif
+    }
 
     ///@todo Not implemented alpha to coverage.
     //{

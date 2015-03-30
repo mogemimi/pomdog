@@ -4,31 +4,21 @@
 #ifndef POMDOG_BLENDDESCRIPTION_0C296679_HPP
 #define POMDOG_BLENDDESCRIPTION_0C296679_HPP
 
-#include "Blend.hpp"
-#include "BlendFunction.hpp"
+#include "RenderTargetBlendDescription.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <limits>
+#include <array>
+#include <utility>
 
 namespace Pomdog {
 
 class POMDOG_EXPORT BlendDescription {
 public:
-    std::uint32_t MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
-
-    BlendFunction ColorBlendFunction = BlendFunction::Add;
-
-    BlendFunction AlphaBlendFunction = BlendFunction::Add;
-
-    Blend ColorSourceBlend = Blend::One;
-
-    Blend AlphaSourceBlend = Blend::One;
-
-    Blend ColorDestinationBlend = Blend::One;
-
-    Blend AlphaDestinationBlend = Blend::One;
-
-    bool AlphaToCoverageEnable = false;
+    std::array<RenderTargetBlendDescription, 8> RenderTargets;
+    std::uint32_t MultiSampleMask;
+    bool AlphaToCoverageEnable;
+    bool IndependentBlendEnable;
 
 public:
     static BlendDescription CreateDefault()
@@ -41,14 +31,11 @@ public:
         BlendDescription desc;
         desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
         desc.AlphaToCoverageEnable = false;
-
-        desc.ColorBlendFunction = BlendFunction::Add;
-        desc.AlphaBlendFunction = BlendFunction::Add;
-        desc.ColorSourceBlend = Blend::SourceAlpha;
-        desc.AlphaSourceBlend = Blend::SourceAlpha;
-        desc.ColorDestinationBlend = Blend::One;
-        desc.AlphaDestinationBlend = Blend::One;
-        return desc;
+        desc.IndependentBlendEnable = false;
+        for (auto & renderTarget: desc.RenderTargets) {
+            renderTarget = RenderTargetBlendDescription::CreateAdditive();
+        }
+        return std::move(desc);
     }
 
     static BlendDescription CreateAlphaBlend()
@@ -56,14 +43,11 @@ public:
         BlendDescription desc;
         desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
         desc.AlphaToCoverageEnable = false;
-
-        desc.ColorBlendFunction = BlendFunction::Add;
-        desc.AlphaBlendFunction = BlendFunction::Add;
-        desc.ColorSourceBlend = Blend::One;
-        desc.AlphaSourceBlend = Blend::One;
-        desc.ColorDestinationBlend = Blend::InverseSourceAlpha;
-        desc.AlphaDestinationBlend = Blend::InverseSourceAlpha;
-        return desc;
+        desc.IndependentBlendEnable = false;
+        for (auto & renderTarget : desc.RenderTargets) {
+            renderTarget = RenderTargetBlendDescription::CreateAlphaBlend();
+        }
+        return std::move(desc);
     }
 
     static BlendDescription CreateNonPremultiplied()
@@ -71,14 +55,11 @@ public:
         BlendDescription desc;
         desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
         desc.AlphaToCoverageEnable = false;
-
-        desc.ColorBlendFunction = BlendFunction::Add;
-        desc.AlphaBlendFunction = BlendFunction::Add;
-        desc.ColorSourceBlend = Blend::SourceAlpha;
-        desc.AlphaSourceBlend = Blend::SourceAlpha;
-        desc.ColorDestinationBlend = Blend::InverseSourceAlpha;
-        desc.AlphaDestinationBlend = Blend::InverseSourceAlpha;
-        return desc;
+        desc.IndependentBlendEnable = false;
+        for (auto & renderTarget : desc.RenderTargets) {
+            renderTarget = RenderTargetBlendDescription::CreateNonPremultiplied();
+        }
+        return std::move(desc);
     }
 
     static BlendDescription CreateOpaque()
@@ -86,17 +67,14 @@ public:
         BlendDescription desc;
         desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
         desc.AlphaToCoverageEnable = false;
-
-        desc.ColorBlendFunction = BlendFunction::Add;
-        desc.AlphaBlendFunction = BlendFunction::Add;
-        desc.ColorSourceBlend = Blend::One;
-        desc.AlphaSourceBlend = Blend::One;
-        desc.ColorDestinationBlend = Blend::Zero;
-        desc.AlphaDestinationBlend = Blend::Zero;
-        return desc;
+        desc.IndependentBlendEnable = false;
+        for (auto & renderTarget : desc.RenderTargets) {
+            renderTarget = RenderTargetBlendDescription::CreateOpaque();
+        }
+        return std::move(desc);
     }
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_BLENDDESCRIPTION_0C296679_HPP
