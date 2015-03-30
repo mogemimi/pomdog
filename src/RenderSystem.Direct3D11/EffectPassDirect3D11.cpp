@@ -49,6 +49,10 @@ static D3D11_BLEND ToBlendDirect3D11(Blend blend) noexcept
     case Blend::SourceAlphaSaturation: return D3D11_BLEND_SRC_ALPHA_SAT;
     case Blend::BlendFactor: return D3D11_BLEND_BLEND_FACTOR;
     case Blend::InvereseBlendFactor: return D3D11_BLEND_INV_BLEND_FACTOR;
+    case Blend::Source1Color: return D3D11_BLEND_SRC1_COLOR;
+    case Blend::InverseSource1Color: return D3D11_BLEND_INV_SRC1_COLOR;
+    case Blend::Source1Alpha: return D3D11_BLEND_SRC1_ALPHA;
+    case Blend::InverseSource1Alpha: return D3D11_BLEND_INV_SRC1_ALPHA;
     };
     return D3D11_BLEND_ONE;
 }
