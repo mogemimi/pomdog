@@ -116,10 +116,7 @@ void DepthStencilStateGL4::ApplyDepthTest()
 
     // depth function
     glDepthFunc(depthFunction.value);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glDepthFunc", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glDepthFunc");
 }
 //-----------------------------------------------------------------------
 void DepthStencilStateGL4::ApplyStencilTest()
@@ -162,10 +159,7 @@ void DepthStencilStateGL4::ApplyStencilTest()
         counterClockwiseFace.stencilPass.value);
 
     glStencilMask(stencilWriteMask);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glStencilMask", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glStencilMask");
 }
 //-----------------------------------------------------------------------
 void DepthStencilStateGL4::Apply()

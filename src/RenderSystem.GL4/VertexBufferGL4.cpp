@@ -60,18 +60,12 @@ VertexBufferGL4::VertexBufferGL4(void const* vertices, std::size_t sizeInBytes,
 
     POMDOG_ASSERT(bufferObject);
     TypesafeHelperGL4::BindBuffer(*bufferObject);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
     POMDOG_ASSERT(sizeInBytes > 0);
     glBufferData(GL_ARRAY_BUFFER, sizeInBytes, vertices,
         ToVertexBufferUsage(bufferUsage));
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBufferData", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBufferData");
 }
 //-----------------------------------------------------------------------
 VertexBufferGL4::~VertexBufferGL4()
@@ -93,27 +87,18 @@ void VertexBufferGL4::SetData(std::size_t offsetInBytes,
 
     POMDOG_ASSERT(bufferObject);
     TypesafeHelperGL4::BindBuffer(*bufferObject);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
     POMDOG_ASSERT(sizeInBytes > 0);
     glBufferSubData(GL_ARRAY_BUFFER, offsetInBytes, sizeInBytes, source);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBufferSubData", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBufferSubData");
 }
 //-----------------------------------------------------------------------
 void VertexBufferGL4::BindBuffer()
 {
     POMDOG_ASSERT(bufferObject);
     TypesafeHelperGL4::BindBuffer(*bufferObject);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

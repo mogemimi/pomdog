@@ -148,10 +148,7 @@ static void SetPixelDataTexture2DCompressedGL4(std::int32_t pixelWidth, std::int
         glCompressedTexSubImage2D(GL_TEXTURE_2D, mipmapLevel, 0, 0,
             mipMapPixelWidth, mipMapPixelHeight, internalFormat, strideBytesPerMipmap,
             pixelData + startOffset);
-
-        #ifdef DEBUG
-        ErrorChecker::CheckError("glCompressedTexSubImage2D", __FILE__, __LINE__);
-        #endif
+        POMDOG_CHECK_ERROR_GL4("glCompressedTexSubImage2D");
 
         startOffset += strideBytesPerMipmap;
 
@@ -183,10 +180,7 @@ static void SetPixelDataTexture2DGL4(std::int32_t pixelWidth, std::int32_t pixel
         glTexSubImage2D(GL_TEXTURE_2D, mipmapLevel, 0, 0,
             mipMapPixelWidth, mipMapPixelHeight, formatComponents, pixelFundamentalType,
             pixelData + startOffset);
-
-        #ifdef DEBUG
-        ErrorChecker::CheckError("glTexSubImage2D", __FILE__, __LINE__);
-        #endif
+        POMDOG_CHECK_ERROR_GL4("glTexSubImage2D");
 
         startOffset += strideBytesPerMipmap;
 
@@ -220,10 +214,7 @@ Texture2DGL4::Texture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
 
     POMDOG_ASSERT(textureObject);
     TypesafeHelperGL4::BindTexture(*textureObject);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindTexture", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindTexture");
 
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
@@ -231,10 +222,7 @@ Texture2DGL4::Texture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
     POMDOG_ASSERT(levelCount <= std::numeric_limits<GLsizei>::max());
 
     glTexStorage2D(GL_TEXTURE_2D, levelCount, ToInternalFormatGL4(format), pixelWidth, pixelHeight);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glTexStorage2D", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glTexStorage2D");
 
     // Set mipmap levels.
     POMDOG_ASSERT(levelCount >= 1);
@@ -264,10 +252,7 @@ void Texture2DGL4::SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
 
     POMDOG_ASSERT(textureObject);
     TypesafeHelperGL4::BindTexture(*textureObject);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindTexture", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindTexture");
 
     switch (format) {
     case SurfaceFormat::BlockComp1_UNorm:
@@ -295,10 +280,7 @@ void Texture2DGL4::GenerateMipmap()
     // Generate mipmap
     glBindTexture(GL_TEXTURE_2D, textureObject->value);
     glGenerateMipmap(GL_TEXTURE_2D);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glGenerateMipmap", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glGenerateMipmap");
 }
 //-----------------------------------------------------------------------
 Texture2DObjectGL4 const& Texture2DGL4::GetTextureHandle() const

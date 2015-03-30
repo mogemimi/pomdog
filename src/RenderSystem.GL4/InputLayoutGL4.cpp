@@ -251,10 +251,7 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
     GLint maxAttributeLength = 0;
     glGetProgramiv(shaderProgram.value, GL_ACTIVE_ATTRIBUTES, &attributeCount);
     glGetProgramiv(shaderProgram.value, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxAttributeLength);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glGetProgramiv", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glGetProgramiv");
 
     POMDOG_ASSERT(attributeCount >= 0);
     POMDOG_ASSERT(maxAttributeLength > 0);
@@ -339,13 +336,9 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
 //-----------------------------------------------------------------------
 static void EnableAttributes(std::vector<InputElementGL4> const& inputElements)
 {
-    for (auto& inputElement: inputElements)
-    {
+    for (auto& inputElement: inputElements) {
         glEnableVertexAttribArray(inputElement.AttributeLocation);
-
-        #ifdef DEBUG
-        ErrorChecker::CheckError("glEnableVertexAttribArray", __FILE__, __LINE__);
-        #endif
+        POMDOG_CHECK_ERROR_GL4("glEnableVertexAttribArray");
     }
 }
 //-----------------------------------------------------------------------
@@ -562,10 +555,7 @@ static void ApplyInputElements(
                     inputElement->ScalarType.value,
                     vertexDeclaration.StrideBytes,
                     ComputeBufferOffset(inputElement->ByteOffset));
-
-                #ifdef DEBUG
-                ErrorChecker::CheckError("glVertexAttribIPointer", __FILE__, __LINE__);
-                #endif
+                POMDOG_CHECK_ERROR_GL4("glVertexAttribIPointer");
             }
             else
             {
@@ -576,17 +566,11 @@ static void ApplyInputElements(
                     GL_FALSE,
                     vertexDeclaration.StrideBytes,
                     ComputeBufferOffset(inputElement->ByteOffset));
-
-                #ifdef DEBUG
-                ErrorChecker::CheckError("glVertexAttribPointer", __FILE__, __LINE__);
-                #endif
+                POMDOG_CHECK_ERROR_GL4("glVertexAttribPointer");
             }
 
             glVertexAttribDivisor(inputElement->AttributeLocation, inputElement->InstanceStepRate);
-
-            #ifdef DEBUG
-            ErrorChecker::CheckError("glVertexAttribDivisor", __FILE__, __LINE__);
-            #endif
+            POMDOG_CHECK_ERROR_GL4("glVertexAttribDivisor");
         }
 
         ++vertexBuffer;
@@ -623,10 +607,7 @@ InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram,
     });
 
     glBindVertexArray(inputLayout->value);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindVertexArray", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindVertexArray");
 
     inputElements = BuildAttributes(shaderProgram);
 
@@ -656,10 +637,7 @@ void InputLayoutGL4::Apply(std::vector<std::shared_ptr<VertexBuffer>> const& ver
 {
     POMDOG_ASSERT(inputLayout);
     glBindVertexArray(inputLayout->value);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindVertexArray", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindVertexArray");
 
     ApplyInputElements(inputElements, vertexDeclarations, vertexBuffers);
 }

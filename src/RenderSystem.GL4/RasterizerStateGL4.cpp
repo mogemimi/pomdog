@@ -63,10 +63,7 @@ void RasterizerStateGL4::Apply()
 
     // FillMode:
     glPolygonMode(GL_FRONT_AND_BACK, fillMode.value);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glPolygonMode", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glPolygonMode");
 
     // Scissor Test:
     if (scissorTestEnable) {
@@ -88,10 +85,7 @@ void RasterizerStateGL4::Apply()
     // Multisample Anti-Aliasing:
     if (multisampleAntiAliasEnable) {
         glEnable(GL_MULTISAMPLE);
-
-        #ifdef DEBUG
-        ErrorChecker::CheckError("glEnable", __FILE__, __LINE__);
-        #endif
+        POMDOG_CHECK_ERROR_GL4("glEnable");
     }
     else {
         glDisable(GL_MULTISAMPLE);

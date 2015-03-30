@@ -9,9 +9,17 @@ namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 
-struct ErrorChecker {
-    static void CheckError(char const* command, char const* filename, int line);
-};
+namespace ErrorChecker {
+void CheckError(char const* command, char const* filename, int line);
+}
+
+#if defined(DEBUG) && !defined(NDEBUG)
+#define POMDOG_CHECK_ERROR_GL4(name) \
+    Pomdog::Detail::RenderSystem::GL4::\
+    ErrorChecker::CheckError(name, __FILE__, __LINE__)
+#else
+#define POMDOG_CHECK_ERROR_GL4(name)
+#endif
 
 }// namespace GL4
 }// namespace RenderSystem

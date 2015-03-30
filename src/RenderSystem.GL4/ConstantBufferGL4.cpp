@@ -35,16 +35,10 @@ ConstantBufferGL4::ConstantBufferGL4(std::uint32_t byteWidth)
 
     POMDOG_ASSERT(bufferObject);
     TypesafeHelperGL4::BindBuffer(*bufferObject);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
     glBufferData(GL_UNIFORM_BUFFER, byteWidth, nullptr, GL_DYNAMIC_DRAW);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBufferData", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBufferData");
 }
 //-----------------------------------------------------------------------
 ConstantBufferGL4::~ConstantBufferGL4()
@@ -66,10 +60,7 @@ void ConstantBufferGL4::GetData(std::uint32_t byteWidth, void* result) const
 
     POMDOG_ASSERT(bufferObject);
     TypesafeHelperGL4::BindBuffer(*bufferObject);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
     #if defined(DEBUG) && !defined(NDEBUG)
     {
@@ -80,10 +71,7 @@ void ConstantBufferGL4::GetData(std::uint32_t byteWidth, void* result) const
     #endif
 
     glGetBufferSubData(GL_UNIFORM_BUFFER, 0, byteWidth, result);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glGetBufferSubData", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glGetBufferSubData");
 }
 //-----------------------------------------------------------------------
 void ConstantBufferGL4::SetData(std::uint32_t offsetInBytes,
@@ -98,10 +86,7 @@ void ConstantBufferGL4::SetData(std::uint32_t offsetInBytes,
 
     POMDOG_ASSERT(bufferObject);
     TypesafeHelperGL4::BindBuffer(*bufferObject);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
     #if defined(DEBUG) && !defined(NDEBUG)
     {
@@ -113,10 +98,7 @@ void ConstantBufferGL4::SetData(std::uint32_t offsetInBytes,
 
     POMDOG_ASSERT(sizeInBytes > 0);
     glBufferSubData(GL_UNIFORM_BUFFER, offsetInBytes, sizeInBytes, source);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBufferSubData", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBufferSubData");
 }
 //-----------------------------------------------------------------------
 void ConstantBufferGL4::Apply(std::uint32_t slotIndex)

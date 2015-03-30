@@ -117,10 +117,7 @@ static Optional<FrameBufferGL4> CreateFrameBuffer()
 
     FrameBufferGL4 frameBuffer;
     glGenFramebuffers(1, frameBuffer.Data());
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glGenFramebuffers", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glGenFramebuffers");
 
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.value);
 
@@ -149,16 +146,10 @@ static void SetTextureAsShaderResource(int index, Texture2DObjectGL4 const& text
     #endif
 
     glActiveTexture(ToTextureUnitIndexGL4(index));
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glActiveTexture", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glActiveTexture");
 
     glBindTexture(GL_TEXTURE_2D, textureObject.value);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindTexture", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindTexture");
 }
 
 }// unnamed namespace
@@ -188,10 +179,7 @@ GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> const& ope
     }
 
     glFrontFace(GL_CW);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glFrontFace", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glFrontFace");
 
     frameBuffer = CreateFrameBuffer();
 }
@@ -200,8 +188,7 @@ GraphicsContextGL4::~GraphicsContextGL4()
 {
     renderTargets.clear();
 
-    if (frameBuffer)
-    {
+    if (frameBuffer) {
         glDeleteFramebuffers(1, frameBuffer->Data());
         frameBuffer = OptionalType::NullOptional;
     }
@@ -212,10 +199,7 @@ void GraphicsContextGL4::Clear(Color const& color)
     auto colorVector = color.ToVector4();
     glClearColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    #ifdef DEBUG
-    RenderSystem::GL4::ErrorChecker::CheckError("glClear", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glClear");
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float depth, std::int32_t stencil)
@@ -237,19 +221,13 @@ void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float d
     }
 
     glClear(mask);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glClear", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glClear");
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Present()
 {
     nativeContext->SwapBuffers();
-
-    #ifdef DEBUG
-    RenderSystem::GL4::ErrorChecker::CheckError("SwapBuffers", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("SwapBuffers");
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::ApplyPipelineState()
@@ -294,10 +272,7 @@ void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::size_t v
         ToPrimitiveTopology(primitiveTopology),
         0,
         static_cast<GLsizei>(vertexCount));
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glDrawArrays", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glDrawArrays");
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
@@ -325,10 +300,7 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
         static_cast<GLsizei>(indexCount),
         ToIndexElementType(indexBuffer->ElementSize()),
         nullptr);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glDrawElements", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glDrawElements");
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology,
@@ -353,10 +325,7 @@ void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology,
         0,
         static_cast<GLsizei>(vertexCount),
         static_cast<GLsizei>(instanceCount));
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glDrawArraysInstanced", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glDrawArraysInstanced");
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
@@ -388,10 +357,7 @@ void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopolog
         ToIndexElementType(indexBuffer->ElementSize()),
         nullptr,
         static_cast<GLsizei>(instanceCount));
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glDrawElementsInstanced", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glDrawElementsInstanced");
 }
 //-----------------------------------------------------------------------
 GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const
@@ -420,10 +386,7 @@ void GraphicsContextGL4::SetViewport(Viewport const& viewport)
     }
 
     glViewport(viewport.TopLeftX(), viewportY, viewport.Width(), viewport.Height());
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glViewport", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glViewport");
 
     static_assert(std::is_same<GLfloat, decltype(viewport.MinDepth)>::value
         && std::is_same<GLfloat, decltype(viewport.MaxDepth)>::value,
@@ -436,10 +399,7 @@ void GraphicsContextGL4::SetViewport(Viewport const& viewport)
 
     POMDOG_ASSERT_MESSAGE(glDepthRangef != nullptr, "glDepthRangef() not found");
     glDepthRangef(viewport.MinDepth, viewport.MaxDepth);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glDepthRangef", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glDepthRangef");
 }
 //-----------------------------------------------------------------------
 Rectangle GraphicsContextGL4::GetScissorRectangle() const
@@ -472,20 +432,14 @@ void GraphicsContextGL4::SetScissorRectangle(Rectangle const& rectangle)
     }
 
     glScissor(rectangle.X, lowerLeftCornerY, rectangle.Width, rectangle.Height);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glScissor", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glScissor");
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetBlendFactor(Color const& blendFactor)
 {
     auto colorVector = blendFactor.ToVector4();
     glBlendColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
-
-#ifdef DEBUG
-    ErrorChecker::CheckError("glBlendColor", __FILE__, __LINE__);
-#endif
+    POMDOG_CHECK_ERROR_GL4("glBlendColor");
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffersIn)
@@ -501,9 +455,11 @@ void GraphicsContextGL4::SetEffectPass(std::shared_ptr<NativeEffectPass> const& 
     auto nativeEffectPass = std::dynamic_pointer_cast<EffectPassGL4>(effectPassIn);
 
     POMDOG_ASSERT(nativeEffectPass);
-    this->effectPass = nativeEffectPass;
-    needToApplyPipelineState = true;
-    needToApplyInputLayout = true;
+    if (effectPass != nativeEffectPass) {
+        this->effectPass = nativeEffectPass;
+        needToApplyPipelineState = true;
+        needToApplyInputLayout = true;
+    }
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayoutIn)
@@ -524,16 +480,10 @@ void GraphicsContextGL4::SetTexture(int textureUnit)
     if (textures[textureUnit])
     {
         glActiveTexture(ToTextureUnitIndexGL4(textureUnit));
-
-        #ifdef DEBUG
-        ErrorChecker::CheckError("glActiveTexture", __FILE__, __LINE__);
-        #endif
+        POMDOG_CHECK_ERROR_GL4("glActiveTexture");
 
         glBindTexture(*textures[textureUnit], 0);
-
-        #ifdef DEBUG
-        ErrorChecker::CheckError("glBindTexture", __FILE__, __LINE__);
-        #endif
+        POMDOG_CHECK_ERROR_GL4("glBindTexture");
     }
 
     textures[textureUnit] = OptionalType::NullOptional;
@@ -591,10 +541,7 @@ void GraphicsContextGL4::SetRenderTarget()
 
     // Bind framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->value);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindFramebuffer", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
 
     // Unbind render targets
     {
@@ -610,17 +557,11 @@ void GraphicsContextGL4::SetRenderTarget()
 
     // Unbind depth stencil buffer
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glFramebufferRenderbuffer", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glFramebufferRenderbuffer");
 
     // Bind default framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindFramebuffer", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargetsIn)
@@ -630,10 +571,7 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
 
     // Bind framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->value);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindFramebuffer", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
 
     // Unbind render targets
     {
@@ -649,10 +587,7 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
 
     // Unbind depth stencil buffer
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glFramebufferRenderbuffer", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glFramebufferRenderbuffer");
 
     std::vector<GLenum> attachments;
     attachments.reserve(renderTargetsIn.size());
@@ -685,19 +620,16 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
     }
 
     // Check framebuffer status
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    {
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to make complete framebuffer.");
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to make complete framebuffer.");
     }
 
     POMDOG_ASSERT(!attachments.empty());
     POMDOG_ASSERT(attachments.size() <= static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()));
     glDrawBuffers(static_cast<GLsizei>(attachments.size()), attachments.data());
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glDrawBuffers", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glDrawBuffers");
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

@@ -51,10 +51,7 @@ static Optional<GLuint> CompileShader(ShaderBytecode const& source, GLenum pipel
     glShaderSource(result.value(), 1, shaderSource.data(), &sourceLength);
 
     glCompileShader(result.value());
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glCompileShader", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glCompileShader");
 
     GLint compileSuccess = 0;
     glGetShaderiv(result.value(), GL_COMPILE_STATUS, &compileSuccess);

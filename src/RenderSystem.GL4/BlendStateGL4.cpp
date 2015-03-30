@@ -11,7 +11,6 @@ namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
-//-----------------------------------------------------------------------
 namespace {
 
 static GLenum ToBlendGL4NonTypesafe(Blend blend) noexcept
@@ -94,27 +93,24 @@ void BlendStateGL4::Apply()
         for (auto & renderTarget : renderTargets) {
             if (renderTarget.BlendEnable) {
                 glEnablei(GL_BLEND, index);
+                POMDOG_CHECK_ERROR_GL4("glEnablei");
             }
             else {
                 glDisablei(GL_BLEND, index);
+                POMDOG_CHECK_ERROR_GL4("glDisablei");
             }
-            
             glBlendFuncSeparatei(
                 index,
                 renderTarget.ColorSource.value,
                 renderTarget.ColorDestination.value,
                 renderTarget.AlphaSource.value,
                 renderTarget.AlphaDestination.value);
-        #ifdef DEBUG
-                ErrorChecker::CheckError("glBlendFuncSeparatei", __FILE__, __LINE__);
-        #endif
+            POMDOG_CHECK_ERROR_GL4("glBlendFuncSeparatei");
             glBlendEquationSeparatei(
                 index,
                 renderTarget.ColorFunction.value,
                 renderTarget.AlphaFunction.value);
-        #ifdef DEBUG
-            ErrorChecker::CheckError("glBlendEquationSeparatei", __FILE__, __LINE__);
-        #endif
+            POMDOG_CHECK_ERROR_GL4("glBlendEquationSeparatei");
             ++index;
         }
     }
@@ -126,21 +122,16 @@ void BlendStateGL4::Apply()
         else {
             glDisable(GL_BLEND);
         }
-
         glBlendEquationSeparate(
             renderTarget.ColorFunction.value,
             renderTarget.AlphaFunction.value);
-    #ifdef DEBUG
-        ErrorChecker::CheckError("glBlendEquationSeparate", __FILE__, __LINE__);
-    #endif
+        POMDOG_CHECK_ERROR_GL4("glBlendEquationSeparate");
         glBlendFuncSeparate(
             renderTarget.ColorSource.value,
             renderTarget.ColorDestination.value,
             renderTarget.AlphaSource.value,
             renderTarget.AlphaDestination.value);
-    #ifdef DEBUG
-        ErrorChecker::CheckError("glBlendFuncSeparate", __FILE__, __LINE__);
-    #endif
+        POMDOG_CHECK_ERROR_GL4("glBlendFuncSeparate");
     }
 
     ///@todo Not implemented alpha to coverage.

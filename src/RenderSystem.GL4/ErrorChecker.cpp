@@ -12,7 +12,6 @@ namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
-//-----------------------------------------------------------------------
 namespace {
 
 struct ErrorCodeTag;

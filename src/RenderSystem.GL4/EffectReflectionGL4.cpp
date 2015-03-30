@@ -22,10 +22,7 @@ static GLint GetActiveUniformBlockIntValue(ShaderProgramGL4 const& shaderProgram
 {
     GLint result = 0;
     glGetActiveUniformBlockiv(shaderProgram.value, uniformBlockIndex, parameterName, &result);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glGetActiveUniformBlockiv", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glGetActiveUniformBlockiv");
 
     return std::move(result);
 }
@@ -41,10 +38,7 @@ static std::string GetActiveUniformBlockName(
     GLsizei uniformBlockNameLength = 0;
     glGetActiveUniformBlockName(shaderProgram.value, uniformBlockIndex,
         maxUniformBlockNameLength, &uniformBlockNameLength, uniformBlockName.data());
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glGetActiveUniformBlockName", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glGetActiveUniformBlockName");
 
     result.assign(uniformBlockName.data(), uniformBlockNameLength);
 
@@ -60,10 +54,7 @@ static std::vector<GLuint> GetActiveUniformBlockIndices(
     std::vector<GLint> uniformIndices(uniformCount, 0);
     glGetActiveUniformBlockiv(shaderProgram.value, uniformBlockIndex,
         GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES, uniformIndices.data());
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glGetActiveUniformBlockiv", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glGetActiveUniformBlockiv");
 
     std::vector<GLuint> result(uniformIndices.begin(), uniformIndices.end());
     return std::move(result);
@@ -128,10 +119,7 @@ EnumerateUniformBlocks(ShaderProgramGL4 const& shaderProgram)
 {
     GLint uniformBlockCount = 0;
     glGetProgramiv(shaderProgram.value, GL_ACTIVE_UNIFORM_BLOCKS, &uniformBlockCount);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glGetProgramiv", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glGetProgramiv");
 
     if (uniformBlockCount <= 0)
     {
@@ -165,10 +153,7 @@ static std::vector<UniformGL4> EnumerateUniforms(ShaderProgramGL4 const& shaderP
 {
     GLint uniformCount = 0;
     glGetProgramiv(shaderProgram.value, GL_ACTIVE_UNIFORMS, &uniformCount);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glGetProgramiv", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glGetProgramiv");
 
     if (uniformCount <= 0)
     {
@@ -178,10 +163,7 @@ static std::vector<UniformGL4> EnumerateUniforms(ShaderProgramGL4 const& shaderP
 
     GLint maxUniformNameLength = 0;
     glGetProgramiv(shaderProgram.value, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformNameLength);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glGetProgramiv", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glGetProgramiv");
 
     if (maxUniformNameLength <= 0)
     {
@@ -201,18 +183,12 @@ static std::vector<UniformGL4> EnumerateUniforms(ShaderProgramGL4 const& shaderP
 
         glGetActiveUniform(shaderProgram.value, uniformIndex, maxUniformNameLength,
             &uniformNameLength, &arrayCount, &uniformType, name.data());
-
-        #ifdef DEBUG
-        ErrorChecker::CheckError("glGetActiveUniform", __FILE__, __LINE__);
-        #endif
+        POMDOG_CHECK_ERROR_GL4("glGetActiveUniform");
 
         POMDOG_ASSERT(uniformNameLength > 0);
 
         auto const location = glGetUniformLocation(shaderProgram.value, name.data());
-
-        #ifdef DEBUG
-        ErrorChecker::CheckError("glGetUniformLocation", __FILE__, __LINE__);
-        #endif
+        POMDOG_CHECK_ERROR_GL4("glGetUniformLocation");
 
         if (location != -1) {
             ///@note When uniform location is '-1', it is uniform variable in uniform block.

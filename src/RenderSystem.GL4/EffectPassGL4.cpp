@@ -35,10 +35,7 @@ static Optional<ShaderProgramGL4> LinkShaders(
     glAttachShader(program.value, pixelShader.NativeShader());
 
     glLinkProgram(program.value);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glLinkProgram", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glLinkProgram");
 
     GLint linkSuccess = 0;
     glGetProgramiv(program.value, GL_LINK_STATUS, &linkSuccess);
@@ -172,18 +169,11 @@ void EffectPassGL4::ApplyShaders()
 
     POMDOG_ASSERT(shaderProgram);
     glUseProgram(shaderProgram->value);
+    POMDOG_CHECK_ERROR_GL4("glUseProgram");
 
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glUseProgram", __FILE__, __LINE__);
-    #endif
-
-    for (auto & binding: textureBindings)
-    {
+    for (auto & binding: textureBindings) {
         glUniform1i(binding.UniformLocation, binding.SlotIndex);
-
-        #ifdef DEBUG
-        ErrorChecker::CheckError("glUniform1i", __FILE__, __LINE__);
-        #endif
+        POMDOG_CHECK_ERROR_GL4("glUniform1i");
     }
 }
 //-----------------------------------------------------------------------

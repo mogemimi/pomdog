@@ -43,19 +43,13 @@ RenderTarget2DGL4::RenderTarget2DGL4(std::int32_t pixelWidth, std::int32_t pixel
         POMDOG_ASSERT(renderBuffer);
 
         glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer->value);
-
-        #ifdef DEBUG
-        ErrorChecker::CheckError("glBindRenderbuffer", __FILE__, __LINE__);
-        #endif
+        POMDOG_CHECK_ERROR_GL4("glBindRenderbuffer");
 
         POMDOG_ASSERT(pixelWidth > 0);
         POMDOG_ASSERT(pixelHeight > 0);
 
         glRenderbufferStorage(GL_RENDERBUFFER, *ToGLDepthStencilFormat(depthStencilFormat), pixelWidth, pixelHeight);
-
-        #ifdef DEBUG
-        ErrorChecker::CheckError("glRenderbufferStorage", __FILE__, __LINE__);
-        #endif
+        POMDOG_CHECK_ERROR_GL4("glRenderbufferStorage");
 
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
     }
@@ -72,35 +66,24 @@ void RenderTarget2DGL4::BindToFramebuffer(GLenum attachmentPoint)
 {
     glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint, GL_TEXTURE_2D,
         texture.GetTextureHandle().value, 0);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glFramebufferTexture2D", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glFramebufferTexture2D");
 }
 //-----------------------------------------------------------------------
 void RenderTarget2DGL4::UnbindFromFramebuffer(GLenum attachmentPoint)
 {
     glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint, GL_TEXTURE_2D, 0, 0);
+    POMDOG_CHECK_ERROR_GL4("glFramebufferTexture2D");
 
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glFramebufferTexture2D", __FILE__, __LINE__);
-    #endif
-
-    if (generateMipmap)
-    {
+    if (generateMipmap) {
         texture.GenerateMipmap();
     }
 }
 //-----------------------------------------------------------------------
 void RenderTarget2DGL4::BindDepthStencilBuffer()
 {
-    if (renderBuffer)
-    {
+    if (renderBuffer) {
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBuffer->value);
-
-        #ifdef DEBUG
-        ErrorChecker::CheckError("glFramebufferRenderbuffer", __FILE__, __LINE__);
-        #endif
+        POMDOG_CHECK_ERROR_GL4("glFramebufferRenderbuffer");
     }
 }
 //-----------------------------------------------------------------------

@@ -36,20 +36,15 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
     samplerObject = ([] {
         SamplerObjectGL4 sampler;
         glGenSamplers(1, sampler.Data());
+        POMDOG_CHECK_ERROR_GL4("glGenSamplers");
         return std::move(sampler);
     })();
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glGenSamplers", __FILE__, __LINE__);
-    #endif
 
     glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_S, ToTextureAddressModeGL4(description.AddressU).value);
     glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_T, ToTextureAddressModeGL4(description.AddressV).value);
     glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_R, ToTextureAddressModeGL4(description.AddressW).value);
 
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glSamplerParameteri", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glSamplerParameteri");
 
     switch (description.Filter) {
     case TextureFilter::Linear:
@@ -89,29 +84,20 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
             ///@todo Not implemented:
             glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-            #ifdef DEBUG
-            ErrorChecker::CheckError("glSamplerParameteri", __FILE__, __LINE__);
-            #endif
+            POMDOG_CHECK_ERROR_GL4("glSamplerParameteri");
 
             POMDOG_ASSERT(1 <= description.MaxAnisotropy && description.MaxAnisotropy <= 16);
 
             GLfloat deviceMaxAnisotropy = 1.0f;
 
             glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &deviceMaxAnisotropy);
-
-            #ifdef DEBUG
-            ErrorChecker::CheckError("glGetFloatv", __FILE__, __LINE__);
-            #endif
+            POMDOG_CHECK_ERROR_GL4("glGetFloatv");
 
             deviceMaxAnisotropy = std::min(deviceMaxAnisotropy,
                 static_cast<decltype(deviceMaxAnisotropy)>(description.MaxAnisotropy));
 
             glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_ANISOTROPY_EXT, deviceMaxAnisotropy);
-
-            #ifdef DEBUG
-            ErrorChecker::CheckError("glSamplerParameterf", __FILE__, __LINE__);
-            #endif
+            POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
         }
         break;
     }
@@ -123,10 +109,7 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
         glSamplerParameterf(samplerObject->value, GL_TEXTURE_MIN_LOD, description.MaxMipLevel);
         glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_LOD, description.MaxMipLevel);
         glSamplerParameterf(samplerObject->value, GL_TEXTURE_LOD_BIAS, description.MipMapLevelOfDetailBias);
-
-        #ifdef DEBUG
-        ErrorChecker::CheckError("glSamplerParameterf", __FILE__, __LINE__);
-        #endif
+        POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
     }
 }
 //-----------------------------------------------------------------------
@@ -134,6 +117,7 @@ SamplerStateGL4::~SamplerStateGL4()
 {
     if (samplerObject) {
         glDeleteSamplers(1, samplerObject->Data());
+        POMDOG_CHECK_ERROR_GL4("glDeleteSamplers");
     }
 }
 //-----------------------------------------------------------------------
@@ -145,10 +129,7 @@ void SamplerStateGL4::Apply(NativeGraphicsContext &, int index)
 
     POMDOG_ASSERT(samplerObject);
     glBindSampler(index, samplerObject->value);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindSampler", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindSampler");
 }
 //-----------------------------------------------------------------------
 }// namespace GL4

@@ -152,10 +152,7 @@ void OpenGLContextWin32::ClearCurrent()
 void OpenGLContextWin32::SwapBuffers()
 {
     glFlush();
-
-    #ifdef DEBUG
-    RenderSystem::GL4::ErrorChecker::CheckError("glFlush", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glFlush");
 
     POMDOG_ASSERT(hdc);
     ::SwapBuffers(hdc.get());

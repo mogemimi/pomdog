@@ -61,18 +61,12 @@ IndexBufferGL4::IndexBufferGL4(void const* indices,
 
     POMDOG_ASSERT(bufferObject);
     TypesafeHelperGL4::BindBuffer(*bufferObject);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
     POMDOG_ASSERT(sizeInBytes > 0);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeInBytes, indices,
         ToIndexBufferUsage(bufferUsage));
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBufferData", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBufferData");
 }
 //-----------------------------------------------------------------------
 IndexBufferGL4::~IndexBufferGL4()
@@ -93,28 +87,19 @@ void IndexBufferGL4::SetData(std::uint32_t offsetInBytes, void const* source, st
 
     POMDOG_ASSERT(bufferObject);
     TypesafeHelperGL4::BindBuffer(*bufferObject);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
     POMDOG_ASSERT(sizeInBytes > 0);
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offsetInBytes,
         sizeInBytes, source);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBufferSubData", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBufferSubData");
 }
 //-----------------------------------------------------------------------
 void IndexBufferGL4::BindBuffer()
 {
     POMDOG_ASSERT(bufferObject);
     TypesafeHelperGL4::BindBuffer(*bufferObject);
-
-    #ifdef DEBUG
-    ErrorChecker::CheckError("glBindBuffer", __FILE__, __LINE__);
-    #endif
+    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 }
 //-----------------------------------------------------------------------
 }// namespace GL4
