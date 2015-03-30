@@ -38,7 +38,7 @@ InputLayoutHelper & InputLayoutHelper::PushBack(InputElementFormat format)
     InputElement element;
     element.Format = format;
     element.BufferIndex = bufferIndex;
-    element.InputSlotClass = InputClassification::InputPerVertex;
+    element.InputSlotClass = slotClass;
     element.InstanceStepRate = instanceStepRate;
     element.ByteOffset = byteOffset;
 
@@ -100,6 +100,9 @@ InputLayoutHelper & InputLayoutHelper::StartBuffer(
 {
     POMDOG_ASSERT(instanceStepRateIn >= 0);
     POMDOG_ASSERT(bufferIndex >= 0);
+
+    POMDOG_ASSERT(instanceStepRateIn == 0 ||
+        slotClassIn == InputClassification::InputPerInstance);
 
     if (!elements.empty()) {
         ++bufferIndex;
