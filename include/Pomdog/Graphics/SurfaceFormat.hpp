@@ -46,6 +46,6 @@ enum class SurfaceFormat: std::uint8_t {
     BlockComp3_UNorm,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SURFACEFORMAT_D6D95081_HPP

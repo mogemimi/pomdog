@@ -10,15 +10,6 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Detail {
-namespace RenderSystem {
-
-class NativeSamplerState;
-
-}// namespace RenderSystem
-}// namespace Detail
-
-class GraphicsDevice;
 
 class POMDOG_EXPORT SamplerState {
 public:
@@ -26,7 +17,8 @@ public:
     SamplerState(SamplerState const&) = delete;
     SamplerState & operator=(SamplerState const&) = delete;
 
-    SamplerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice, SamplerDescription const& description);
+    SamplerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        SamplerDescription const& description);
 
     ~SamplerState();
 
@@ -58,6 +50,6 @@ private:
     SamplerDescription description;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SAMPLERSTATE_87568CD5_HPP

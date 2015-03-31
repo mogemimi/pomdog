@@ -45,4 +45,4 @@ Detail::RenderSystem::NativeConstantBuffer* EffectParameter::NativeConstantBuffe
     return nativeConstantBuffer.get();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

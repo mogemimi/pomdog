@@ -50,4 +50,4 @@ Detail::RenderSystem::NativeGraphicsDevice* GraphicsDevice::NativeGraphicsDevice
     return impl->nativeGraphicsDevice.get();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

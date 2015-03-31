@@ -21,7 +21,7 @@ static std::uint32_t ToIndexElementOffsetBytes(IndexElementSize elementSize)
 #endif
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
     IndexElementSize elementSizeIn, void const* indices, std::uint32_t indexCountIn,
@@ -106,4 +106,4 @@ Detail::RenderSystem::NativeIndexBuffer* IndexBuffer::NativeIndexBuffer()
     return nativeIndexBuffer.get();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

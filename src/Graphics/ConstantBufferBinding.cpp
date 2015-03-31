@@ -14,12 +14,11 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
 namespace {
 
 static auto dummyParameter = std::make_shared<EffectParameter>();
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
     EffectPass & effectPass)
@@ -86,4 +85,4 @@ Detail::RenderSystem::NativeConstantLayout* ConstantBufferBinding::NativeConstan
     return nativeConstantLayout.get();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

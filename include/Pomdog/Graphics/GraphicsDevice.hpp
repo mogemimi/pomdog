@@ -13,12 +13,7 @@ namespace Detail {
 
 class BuiltinShaderPool;
 
-namespace RenderSystem {
-
-class NativeGraphicsDevice;
-
-}// namespace RenderSystem
-}// namespace Detail
+} // namespace Detail
 
 class POMDOG_EXPORT GraphicsDevice {
 public:
@@ -43,6 +38,6 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GRAPHICSDEVICE_7A54711C_HPP

@@ -12,13 +12,6 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Detail {
-namespace RenderSystem {
-
-class NativeIndexBuffer;
-
-}// namespace RenderSystem
-}// namespace Detail
 
 class POMDOG_EXPORT IndexBuffer {
 public:
@@ -67,6 +60,6 @@ private:
     Pomdog::BufferUsage bufferUsage;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_INDEXBUFFER_4119FC34_HPP

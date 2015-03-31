@@ -10,12 +10,10 @@ namespace Pomdog {
 
 enum class TextureAddressMode: std::uint8_t {
     Wrap,
-
     Mirror,
-
     Clamp,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_TEXTUREADDRESSMODE_256FCFEC_HPP

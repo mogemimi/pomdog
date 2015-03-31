@@ -16,6 +16,6 @@ enum class IndexElementSize: std::uint8_t {
     ThirtyTwoBits,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_INDEXELEMENTSIZE_0E367BDB_HPP

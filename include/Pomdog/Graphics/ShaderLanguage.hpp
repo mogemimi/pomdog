@@ -19,6 +19,6 @@ enum class ShaderLanguage: std::uint8_t {
     Metal,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SHADERLANGUAGE_D009E979_HPP

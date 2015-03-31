@@ -13,6 +13,6 @@ enum class BufferUsage: std::uint8_t {
     Dynamic,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_BUFFERUSAGE_E289E712_HPP

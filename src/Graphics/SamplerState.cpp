@@ -105,4 +105,4 @@ Detail::RenderSystem::NativeSamplerState* SamplerState::NativeSamplerState()
     return nativeSamplerState.get();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

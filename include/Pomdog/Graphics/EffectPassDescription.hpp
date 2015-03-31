@@ -24,6 +24,6 @@ public:
     DepthStencilDescription DepthStencilState;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_EFFECTPASSDESCRIPTION_E706BE44_HPP

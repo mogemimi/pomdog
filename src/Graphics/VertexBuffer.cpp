@@ -99,4 +99,4 @@ Detail::RenderSystem::NativeVertexBuffer* VertexBuffer::NativeVertexBuffer()
     return nativeVertexBuffer.get();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

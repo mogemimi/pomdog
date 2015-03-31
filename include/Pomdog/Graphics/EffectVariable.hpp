@@ -17,6 +17,6 @@ public:
     std::uint32_t StartOffset;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_EFFECTVARIABLE_B6867EDF_HPP

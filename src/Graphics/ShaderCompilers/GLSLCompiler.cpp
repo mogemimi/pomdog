@@ -39,7 +39,7 @@ static std::unique_ptr<Shader> CompileGLSLShader(GraphicsDevice & graphicsDevice
     return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> GLSLCompiler::CreateVertexShader(
     GraphicsDevice & graphicsDevice, void const* shaderSource, std::size_t byteLength)
@@ -55,5 +55,5 @@ std::unique_ptr<Shader> GLSLCompiler::CreatePixelShader(
         ShaderPipelineStage::PixelShader);
 }
 //-----------------------------------------------------------------------
-}// namespace ShaderCompilers
-}// namespace Pomdog
+} // namespace ShaderCompilers
+} // namespace Pomdog

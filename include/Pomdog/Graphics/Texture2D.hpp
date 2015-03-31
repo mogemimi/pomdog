@@ -12,13 +12,6 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Detail {
-namespace RenderSystem {
-
-class NativeTexture2D;
-
-}// namespace RenderSystem
-}// namespace Detail
 
 class POMDOG_EXPORT Texture2D : public Texture {
 public:
@@ -58,6 +51,6 @@ private:
     SurfaceFormat format;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_TEXTURE2D_F041ED3F_HPP

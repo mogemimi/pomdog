@@ -84,4 +84,4 @@ Detail::RenderSystem::NativeRenderTarget2D* RenderTarget2D::NativeRenderTarget2D
     return nativeRenderTarget2D.get();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

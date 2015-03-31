@@ -32,7 +32,7 @@ static void CheckUnbindingRenderTargetsError(std::vector<std::shared_ptr<RenderT
 }
 #endif
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - GraphicsContext::Impl class
@@ -531,4 +531,4 @@ Detail::RenderSystem::NativeGraphicsContext* GraphicsContext::NativeGraphicsCont
     return impl->nativeContext.get();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

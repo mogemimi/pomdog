@@ -18,6 +18,6 @@ public:
     std::uint32_t ByteSize;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_EFFECTCONSTANTDESCRIPTION_5EBD0C28_HPP

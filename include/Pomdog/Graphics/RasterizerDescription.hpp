@@ -68,6 +68,6 @@ public:
     }
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_RASTERIZERDESCRIPTION_AD753EE4_HPP

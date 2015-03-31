@@ -14,13 +14,6 @@
 #include <type_traits>
 
 namespace Pomdog {
-namespace Detail {
-namespace RenderSystem {
-
-class NativeConstantBuffer;
-
-}// namespace RenderSystem
-}// namespace Detail
 
 class POMDOG_EXPORT EffectParameter {
 public:
@@ -70,6 +63,6 @@ private:
     std::unique_ptr<Detail::RenderSystem::NativeConstantBuffer> nativeConstantBuffer;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_EFFECTPARAMETER_6D116595_HPP

@@ -17,7 +17,6 @@
 namespace Pomdog {
 namespace Detail {
 namespace EffectBinaryParameter {
-//-----------------------------------------------------------------------
 namespace {
 
 template <typename T> static
@@ -34,7 +33,7 @@ void* BinaryCast(T * data)
     return static_cast<void*>(data);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - Fundamental types(Scalars)
@@ -219,6 +218,6 @@ template void Set<double>(EffectParameter & effectParameter, FloatingPointQuater
 //template void Set<long double>(EffectParameter & effectParameter, FloatingPointQuaternion<long double> const& value);
 #endif
 //-----------------------------------------------------------------------
-}// namespace EffectBinaryParameter
-}// namespace Detail
-}// namespace Pomdog
+} // namespace EffectBinaryParameter
+} // namespace Detail
+} // namespace Pomdog

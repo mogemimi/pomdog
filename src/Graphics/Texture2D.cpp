@@ -69,4 +69,4 @@ Detail::RenderSystem::NativeTexture2D* Texture2D::NativeTexture2D()
     return nativeTexture2D.get();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

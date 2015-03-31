@@ -22,6 +22,6 @@ enum class DepthFormat: std::uint8_t {
     None,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_DEPTHFORMAT_5FF8041D_HPP

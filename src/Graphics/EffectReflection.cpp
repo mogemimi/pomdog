@@ -26,4 +26,4 @@ std::vector<EffectConstantDescription> EffectReflection::GetConstantBuffers() co
     return nativeEffectReflection->GetConstantBuffers();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

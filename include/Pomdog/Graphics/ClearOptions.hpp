@@ -20,21 +20,22 @@ enum class ClearOptions: std::uint8_t {
     RenderTarget = 0b100,
 };
 
-constexpr ClearOptions operator|(ClearOptions a, ClearOptions b)
+constexpr ClearOptions operator|(ClearOptions a, ClearOptions b) noexcept
 {
-    return static_cast<ClearOptions>(static_cast<std::uint8_t>(a) | static_cast<std::uint8_t>(b));
+    return static_cast<ClearOptions>(
+        static_cast<std::uint8_t>(a) | static_cast<std::uint8_t>(b));
 }
 
 #if __cplusplus < 201402L
-POMDOG_EXPORT ClearOptions & operator|=(ClearOptions & a, ClearOptions b);
+POMDOG_EXPORT ClearOptions & operator|=(ClearOptions & a, ClearOptions b) noexcept;
 #else
-constexpr ClearOptions & operator|=(ClearOptions & a, ClearOptions b)
+constexpr ClearOptions & operator|=(ClearOptions & a, ClearOptions b) noexcept
 {
     a = a | b;
     return a;
 }
 #endif
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_CLEAROPTIONS_F51CCEF3_HPP

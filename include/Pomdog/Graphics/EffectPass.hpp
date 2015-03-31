@@ -6,18 +6,9 @@
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <unordered_map>
-#include <string>
 #include <memory>
 
 namespace Pomdog {
-namespace Detail {
-namespace RenderSystem {
-
-class NativeEffectPass;
-
-}// namespace RenderSystem
-}// namespace Detail
 
 class POMDOG_EXPORT EffectPass {
 public:

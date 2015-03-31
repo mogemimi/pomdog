@@ -14,13 +14,6 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Detail {
-namespace RenderSystem {
-
-class NativeRenderTarget2D;
-
-}// namespace RenderSystem
-}// namespace Detail
 
 class POMDOG_EXPORT RenderTarget2D : public Texture {
 public:
@@ -71,6 +64,6 @@ private:
     DepthFormat depthStencilFormat;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_RENDERTARGET2D_65AA5E90_HPP

@@ -32,4 +32,4 @@ Detail::RenderSystem::NativeEffectPass* EffectPass::NativeEffectPass()
     return nativeEffectPass.get();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

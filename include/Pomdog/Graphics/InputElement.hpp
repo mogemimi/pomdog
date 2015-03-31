@@ -13,13 +13,9 @@ namespace Pomdog {
 class InputElement {
 public:
     std::uint16_t ByteOffset;
-
     std::uint16_t InputSlot;
-
     InputElementFormat Format;
-
     InputClassification InputSlotClass;
-
     std::uint16_t InstanceStepRate;
 };
 

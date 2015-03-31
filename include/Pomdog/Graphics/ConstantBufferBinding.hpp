@@ -11,13 +11,6 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Detail {
-namespace RenderSystem {
-
-class NativeConstantLayout;
-
-}// namespace RenderSystem
-}// namespace Detail
 
 using EffectParameterCollection = std::unordered_map<std::string, std::shared_ptr<EffectParameter>>;
 
@@ -48,6 +41,6 @@ private:
     std::unique_ptr<Detail::RenderSystem::NativeConstantLayout> nativeConstantLayout;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_CONSTANTBUFFERBINDING_4C538B17_HPP

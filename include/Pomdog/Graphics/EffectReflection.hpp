@@ -11,13 +11,6 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Detail {
-namespace RenderSystem {
-
-class NativeEffectReflection;
-
-}// namespace RenderSystem
-}// namespace Detail
 
 class POMDOG_EXPORT EffectReflection {
 public:
@@ -39,6 +32,6 @@ private:
     std::unique_ptr<Detail::RenderSystem::NativeEffectReflection> nativeEffectReflection;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_EFFECTREFLECTION_88543BAB_HPP

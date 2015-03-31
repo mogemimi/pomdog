@@ -16,6 +16,6 @@ enum class CullMode: std::uint8_t {
     CounterClockwiseFace,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_CULLMODE_DBEE9F5F_HPP

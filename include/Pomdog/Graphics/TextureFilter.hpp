@@ -28,6 +28,6 @@ enum class TextureFilter: std::uint8_t {
     MinPointMagLinearMipPoint,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_TEXTUREFILTER_129A8A36_HPP

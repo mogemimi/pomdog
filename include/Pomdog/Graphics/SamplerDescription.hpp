@@ -33,6 +33,6 @@ public:
     //Color BorderColor = Color::TransparentBlack;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SAMPLERDESCRIPTION_CA2C90E4_HPP

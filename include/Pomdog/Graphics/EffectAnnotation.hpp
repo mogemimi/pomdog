@@ -23,6 +23,6 @@ public:
     //std::optional<std::uint8_t> Elements;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_EFFECTANNOTATION_5BD74CC6_HPP

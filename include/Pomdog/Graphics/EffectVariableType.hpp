@@ -36,6 +36,6 @@ enum class EffectVariableType: std::uint8_t {
     Void,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_EFFECTVARIABLETYPE_54C9D81C_HPP

@@ -78,6 +78,6 @@ public:
     }
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_DEPTHSTENCILDESCRIPTION_E14C5D77_HPP

@@ -91,5 +91,5 @@ std::unique_ptr<Shader> HLSLCompiler::CreatePixelShaderFromSource(
         entryPoint, ShaderPipelineStage::PixelShader);
 }
 //-----------------------------------------------------------------------
-}// namespace ShaderCompilers
-}// namespace Pomdog
+} // namespace ShaderCompilers
+} // namespace Pomdog

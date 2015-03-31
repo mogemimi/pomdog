@@ -6,11 +6,11 @@
 namespace Pomdog {
 
 #if __cplusplus < 201402L
-ClearOptions & operator|=(ClearOptions & a, ClearOptions b)
+ClearOptions & operator|=(ClearOptions & a, ClearOptions b) noexcept
 {
     a = a | b;
     return a;
 }
 #endif
 
-}// namespace Pomdog
+} // namespace Pomdog

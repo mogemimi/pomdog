@@ -20,6 +20,6 @@ public:
     bool IsFullScreen = false;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_PRESENTATIONPARAMETERS_2A860062_HPP

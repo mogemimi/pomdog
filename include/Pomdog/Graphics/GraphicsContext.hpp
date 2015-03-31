@@ -14,16 +14,6 @@
 
 namespace Pomdog {
 
-class PresentationParameters;
-
-namespace Detail {
-namespace RenderSystem {
-
-class NativeGraphicsContext;
-
-}// namespace RenderSystem
-}// namespace Detail
-
 class POMDOG_EXPORT GraphicsContext {
 public:
     GraphicsContext() = delete;
@@ -101,6 +91,6 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GRAPHICSCONTEXT_F873DD34_HPP

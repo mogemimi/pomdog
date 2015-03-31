@@ -20,6 +20,6 @@ public:
     virtual ~Texture() = default;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_TEXTURE_3A7EAD6D_HPP

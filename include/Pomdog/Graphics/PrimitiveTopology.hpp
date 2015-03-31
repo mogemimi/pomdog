@@ -22,6 +22,6 @@ enum class PrimitiveTopology: std::uint8_t {
     LineStrip,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_PRIMITIVETOPOLOGY_46F3C71C_HPP

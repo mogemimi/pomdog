@@ -7,6 +7,23 @@
 #include <cstdint>
 
 namespace Pomdog {
+namespace Detail {
+namespace RenderSystem {
+
+class NativeConstantBuffer;
+class NativeConstantLayout;
+class NativeEffectPass;
+class NativeEffectReflection;
+class NativeGraphicsContext;
+class NativeGraphicsDevice;
+class NativeIndexBuffer;
+class NativeRenderTarget2D;
+class NativeSamplerState;
+class NativeTexture2D;
+class NativeVertexBuffer;
+
+} // namespace RenderSystem
+} // namespace Detail
 
 // Classes
 class ConstantBufferBinding;
@@ -33,6 +50,7 @@ class EffectPassDescription;
 class EffectVariable;
 class InputElement;
 class InputLayoutDescription;
+class PresentationParameters;
 class RasterizerDescription;
 class SamplerDescription;
 class Viewport;

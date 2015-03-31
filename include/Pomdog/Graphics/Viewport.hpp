@@ -18,25 +18,31 @@ public:
 
 public:
     Viewport() = default;
+
     explicit Viewport(Rectangle const& bounds);
-    Viewport(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height);
-    Viewport(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, float minDepth, float maxDepth);
 
-    void Width(std::int32_t width);
+    Viewport(std::int32_t x, std::int32_t y,
+        std::int32_t width, std::int32_t height);
 
-    std::int32_t Width() const;
+    Viewport(std::int32_t x, std::int32_t y,
+        std::int32_t width, std::int32_t height,
+        float minDepth, float maxDepth);
 
-    void Height(std::int32_t height);
+    void Width(std::int32_t width) noexcept;
 
-    std::int32_t Height() const;
+    std::int32_t Width() const noexcept;
 
-    std::int32_t TopLeftX() const;
+    void Height(std::int32_t height) noexcept;
 
-    std::int32_t TopLeftY() const;
+    std::int32_t Height() const noexcept;
+
+    std::int32_t TopLeftX() const noexcept;
+
+    std::int32_t TopLeftY() const noexcept;
 
     float AspectRatio() const;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_VIEWPORT_AA637108_HPP

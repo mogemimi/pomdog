@@ -12,44 +12,46 @@ Viewport::Viewport(Rectangle const& boundsIn)
     , MaxDepth(1.0f)
 {}
 //-----------------------------------------------------------------------
-Viewport::Viewport(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height)
+Viewport::Viewport(std::int32_t x, std::int32_t y,
+    std::int32_t width, std::int32_t height)
     : Bounds(x, y, width, height)
     , MinDepth(0.0f)
     , MaxDepth(1.0f)
 {}
 //-----------------------------------------------------------------------
-Viewport::Viewport(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height, float minDepthIn, float maxDepthIn)
+Viewport::Viewport(std::int32_t x, std::int32_t y,
+    std::int32_t width, std::int32_t height, float minDepthIn, float maxDepthIn)
     : Bounds(x, y, width, height)
     , MinDepth(minDepthIn)
     , MaxDepth(maxDepthIn)
 {}
 //-----------------------------------------------------------------------
-void Viewport::Width(std::int32_t width)
+void Viewport::Width(std::int32_t width) noexcept
 {
     Bounds.Width = width;
 }
 //-----------------------------------------------------------------------
-std::int32_t Viewport::Width() const
+std::int32_t Viewport::Width() const noexcept
 {
     return Bounds.Width;
 }
 //-----------------------------------------------------------------------
-void Viewport::Height(std::int32_t height)
+void Viewport::Height(std::int32_t height) noexcept
 {
     Bounds.Height = height;
 }
 //-----------------------------------------------------------------------
-std::int32_t Viewport::Height() const
+std::int32_t Viewport::Height() const noexcept
 {
     return Bounds.Height;
 }
 //-----------------------------------------------------------------------
-std::int32_t Viewport::TopLeftX() const
+std::int32_t Viewport::TopLeftX() const noexcept
 {
     return Bounds.X;
 }
 //-----------------------------------------------------------------------
-std::int32_t Viewport::TopLeftY() const
+std::int32_t Viewport::TopLeftY() const noexcept
 {
     return Bounds.Y;
 }
@@ -63,4 +65,4 @@ float Viewport::AspectRatio() const
     return 0.0f;
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

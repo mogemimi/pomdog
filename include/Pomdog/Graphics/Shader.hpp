@@ -13,6 +13,6 @@ public:
     virtual ~Shader() = default;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SHADER_AFCFB49A_HPP

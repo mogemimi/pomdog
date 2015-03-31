@@ -11,13 +11,6 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Detail {
-namespace RenderSystem {
-
-class NativeVertexBuffer;
-
-}// namespace RenderSystem
-}// namespace Detail
 
 class POMDOG_EXPORT VertexBuffer {
 public:
@@ -67,6 +60,6 @@ private:
     Pomdog::BufferUsage bufferUsage;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_VERTEXBUFFER_3DDFD5CB_HPP
