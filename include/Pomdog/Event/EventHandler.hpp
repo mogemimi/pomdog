@@ -21,9 +21,9 @@ public:
     EventHandler & operator=(EventHandler const&) = delete;
     EventHandler & operator=(EventHandler &&) = default;
 
-    EventConnection Connect(std::function<void(Event const&)> const& slot);
+    Connection Connect(std::function<void(Event const&)> const& slot);
 
-    EventConnection Connect(std::function<void(Event const&)> && slot);
+    Connection Connect(std::function<void(Event const&)> && slot);
 
     void Invoke(Event && event);
 
@@ -34,9 +34,10 @@ public:
     }
 
 private:
-    std::shared_ptr<Detail::SignalsAndSlots::SignalBody<void(Event const&)>> signalBody;
+    typedef Detail::Signals::SignalBody<void(Event const&)> SignalBody;
+    std::shared_ptr<SignalBody> signalBody;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_EVENTHANDLER_13D11737_HPP

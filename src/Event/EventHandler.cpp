@@ -2,27 +2,27 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Event/EventHandler.hpp"
-#include "Pomdog/Event/EventConnection.hpp"
+#include "Pomdog/Event/Connection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
 EventHandler::EventHandler()
-    : signalBody(std::make_shared<Detail::SignalsAndSlots::SignalBody<void(Event const&)>>())
+    : signalBody(std::make_shared<SignalBody>())
 {}
 //-----------------------------------------------------------------------
-EventConnection EventHandler::Connect(std::function<void(Event const&)> const& slot)
+Connection EventHandler::Connect(std::function<void(Event const&)> const& slot)
 {
     POMDOG_ASSERT(slot);
     POMDOG_ASSERT(this->signalBody);
-    return EventConnection{signalBody->Connect(slot)};
+    return Connection{signalBody->Connect(slot)};
 }
 //-----------------------------------------------------------------------
-EventConnection EventHandler::Connect(std::function<void(Event const&)> && slot)
+Connection EventHandler::Connect(std::function<void(Event const&)> && slot)
 {
     POMDOG_ASSERT(slot);
     POMDOG_ASSERT(this->signalBody);
-    return EventConnection{signalBody->Connect(slot)};
+    return Connection{signalBody->Connect(slot)};
 }
 //-----------------------------------------------------------------------
 void EventHandler::Invoke(Event && event)
@@ -31,4 +31,4 @@ void EventHandler::Invoke(Event && event)
     signalBody->operator()(std::move(event));
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

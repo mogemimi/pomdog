@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace SignalsAndSlots {
+namespace Signals {
 
 template <typename Function>
 using Slot = std::function<Function>;
@@ -16,18 +16,19 @@ using Slot = std::function<Function>;
 template <typename Function>
 class SignalBody;
 
-}// namespace SignalsAndSlots
-}// namespace Detail
+} // namespace Signals
+} // namespace Detail
 
 class Event;
-class EventConnection;
 class EventHandler;
 class EventQueue;
+
+class Connection;
 class ScopedConnection;
 
 template <typename Function>
 class Signal;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_FORWARDDECLARATIONS_7CF2D9B3_HPP

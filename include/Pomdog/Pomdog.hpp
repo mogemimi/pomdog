@@ -28,8 +28,8 @@
 #include "Content/AssetLoaders/EffectPassLoader.hpp"
 
 // Event
+#include "Event/Connection.hpp"
 #include "Event/Event.hpp"
-#include "Event/EventConnection.hpp"
 #include "Event/EventHandler.hpp"
 #include "Event/EventQueue.hpp"
 #include "Event/ScopedConnection.hpp"

@@ -3,7 +3,7 @@
 
 #include "Pomdog/Logging/LogChannel.hpp"
 #include "Pomdog/Logging/LogEntry.hpp"
-#include "Pomdog/Event/EventConnection.hpp"
+#include "Pomdog/Event/Connection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
@@ -27,13 +27,13 @@ void LogChannel::Log(LogEntry const& logEntry)
     }
 }
 //-----------------------------------------------------------------------
-EventConnection LogChannel::Connect(std::function<void(LogEntry const&)> const& slot)
+Connection LogChannel::Connect(std::function<void(LogEntry const&)> const& slot)
 {
     POMDOG_ASSERT(slot);
     return signal.Connect(slot);
 }
 //-----------------------------------------------------------------------
-EventConnection LogChannel::Connect(std::function<void(LogEntry const&)> && slot)
+Connection LogChannel::Connect(std::function<void(LogEntry const&)> && slot)
 {
     POMDOG_ASSERT(slot);
     return signal.Connect(std::move(slot));

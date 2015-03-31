@@ -5,7 +5,7 @@
 #define POMDOG_SIGNAL_51888AFF_HPP
 
 #include "detail/SignalBody.hpp"
-#include "EventConnection.hpp"
+#include "Connection.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <functional>
@@ -22,38 +22,41 @@ public:
     Signal & operator=(Signal const&) = delete;
     Signal & operator=(Signal &&) = default;
 
-    EventConnection Connect(std::function<void(Arguments...)> const& slot);
+    Connection Connect(std::function<void(Arguments...)> const& slot);
 
-    EventConnection Connect(std::function<void(Arguments...)> && slot);
+    Connection Connect(std::function<void(Arguments...)> && slot);
 
     void operator()(Arguments... arguments);
 
     std::size_t InvocationCount() const;
 
 private:
-    std::shared_ptr<Detail::SignalsAndSlots::SignalBody<void(Arguments...)>> body;
+    typedef Detail::Signals::SignalBody<void(Arguments...)> SignalBody;
+    std::shared_ptr<SignalBody> body;
 };
 
 //-----------------------------------------------------------------------
 template <typename...Arguments>
 Signal<void(Arguments...)>::Signal()
-    : body(std::make_shared<Detail::SignalsAndSlots::SignalBody<void(Arguments...)>>())
+    : body(std::make_shared<SignalBody>())
 {}
 //-----------------------------------------------------------------------
 template <typename...Arguments>
-EventConnection Signal<void(Arguments...)>::Connect(std::function<void(Arguments...)> const& slot)
+Connection Signal<void(Arguments...)>::Connect(
+    std::function<void(Arguments...)> const& slot)
 {
     POMDOG_ASSERT(slot);
     POMDOG_ASSERT(body);
-    return EventConnection{body->Connect(slot)};
+    return Connection{body->Connect(slot)};
 }
 //-----------------------------------------------------------------------
 template <typename...Arguments>
-EventConnection Signal<void(Arguments...)>::Connect(std::function<void(Arguments...)> && slot)
+Connection Signal<void(Arguments...)>::Connect(
+    std::function<void(Arguments...)> && slot)
 {
     POMDOG_ASSERT(slot);
     POMDOG_ASSERT(body);
-    return EventConnection{body->Connect(std::move(slot))};
+    return Connection{body->Connect(std::move(slot))};
 }
 //-----------------------------------------------------------------------
 template <typename...Arguments>
@@ -69,6 +72,6 @@ std::size_t Signal<void(Arguments...)>::InvocationCount() const
     return body->InvocationCount();
 }
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SIGNAL_51888AFF_HPP

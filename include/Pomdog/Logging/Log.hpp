@@ -11,19 +11,19 @@
 
 namespace Pomdog {
 
-class EventConnection;
+class Connection;
 class LogEntry;
 class LogStream;
 
 class POMDOG_EXPORT Log {
 public:
-    static EventConnection Connect(std::function<void(LogEntry const&)> const& slot);
+    static Connection Connect(std::function<void(LogEntry const&)> const& slot);
 
-    static EventConnection Connect(std::function<void(LogEntry const&)> && slot);
+    static Connection Connect(std::function<void(LogEntry const&)> && slot);
 
-    static EventConnection Connect(std::string const& channelName, std::function<void(LogEntry const&)> const& slot);
+    static Connection Connect(std::string const& channelName, std::function<void(LogEntry const&)> const& slot);
 
-    static EventConnection Connect(std::string const& channelName, std::function<void(LogEntry const&)> && slot);
+    static Connection Connect(std::string const& channelName, std::function<void(LogEntry const&)> && slot);
 
     static LogLevel GetLevel();
 
@@ -54,6 +54,6 @@ public:
     static void Internal(std::string const& channel, std::string const& message);
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_LOG_B5157F87_HPP

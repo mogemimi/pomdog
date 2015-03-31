@@ -1,18 +1,22 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "Pomdog/Event/EventConnection.hpp"
+#include "Pomdog/Event/Connection.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-EventConnection::EventConnection(EventConnection const& connection)
+Connection::Connection(std::unique_ptr<ConnectionBody> && bodyIn)
+    : body(std::forward<std::unique_ptr<ConnectionBody>>(bodyIn))
+{}
+//-----------------------------------------------------------------------
+Connection::Connection(Connection const& connection)
 {
     if (connection.body) {
         body = connection.body->DeepCopy();
     }
 }
 //-----------------------------------------------------------------------
-EventConnection & EventConnection::operator=(EventConnection const& connection)
+Connection & Connection::operator=(Connection const& connection)
 {
     if (connection.body) {
         body = connection.body->DeepCopy();
@@ -20,11 +24,11 @@ EventConnection & EventConnection::operator=(EventConnection const& connection)
     return *this;
 }
 //-----------------------------------------------------------------------
-void EventConnection::Disconnect()
+void Connection::Disconnect()
 {
     if (body) {
         body->Disconnect();
     }
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

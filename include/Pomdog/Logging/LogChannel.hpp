@@ -28,9 +28,9 @@ public:
 
     void Log(LogEntry const& logEntry);
 
-    EventConnection Connect(std::function<void(LogEntry const&)> const& slot);
+    Connection Connect(std::function<void(LogEntry const&)> const& slot);
 
-    EventConnection Connect(std::function<void(LogEntry const&)> && slot);
+    Connection Connect(std::function<void(LogEntry const&)> && slot);
 
     std::string const& Name() const;
 

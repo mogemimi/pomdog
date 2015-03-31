@@ -23,9 +23,9 @@ public:
     EventQueue & operator=(EventQueue const&) = delete;
     EventQueue & operator=(EventQueue &&) = delete;
 
-    EventConnection Connect(std::function<void(Event const&)> const& slot);
+    Connection Connect(std::function<void(Event const&)> const& slot);
 
-    EventConnection Connect(std::function<void(Event const&)> && slot);
+    Connection Connect(std::function<void(Event const&)> && slot);
 
     void Enqueue(Event && event);
 
@@ -38,13 +38,12 @@ public:
     void Tick();
 
 private:
-    typedef Detail::SignalsAndSlots::SignalBody<void(Event const&)> SignalType;
-
+    typedef Detail::Signals::SignalBody<void(Event const&)> SignalBody;
     std::vector<Event> events;
-    std::shared_ptr<SignalType> signalBody;
+    std::shared_ptr<SignalBody> signalBody;
     std::recursive_mutex notificationProtection;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_EVENTQUEUE_4A197647_HPP

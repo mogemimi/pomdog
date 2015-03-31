@@ -5,7 +5,7 @@
 #include "Pomdog/Logging/LogEntry.hpp"
 #include "Pomdog/Logging/LogStream.hpp"
 #include "Pomdog/Logging/LogChannel.hpp"
-#include "Pomdog/Event/EventConnection.hpp"
+#include "Pomdog/Event/Connection.hpp"
 #include "Pomdog/Event/ScopedConnection.hpp"
 #include <algorithm>
 #include <memory>
@@ -17,13 +17,13 @@ namespace {
 
 class Logger {
 public:
-    EventConnection Connect(std::function<void(LogEntry const&)> const& slot);
+    Connection Connect(std::function<void(LogEntry const&)> const& slot);
 
-    EventConnection Connect(std::function<void(LogEntry const&)> && slot);
+    Connection Connect(std::function<void(LogEntry const&)> && slot);
 
-    EventConnection Connect(std::string const& channelName, std::function<void(LogEntry const&)> const& slot);
+    Connection Connect(std::string const& channelName, std::function<void(LogEntry const&)> const& slot);
 
-    EventConnection Connect(std::string const& channelName, std::function<void(LogEntry const&)> && slot);
+    Connection Connect(std::string const& channelName, std::function<void(LogEntry const&)> && slot);
 
     void RemoveUnusedChannel();
 
@@ -53,12 +53,12 @@ private:
     std::recursive_mutex channelsProtection;
 };
 //-----------------------------------------------------------------------
-EventConnection Logger::Connect(std::function<void(LogEntry const&)> const& slot)
+Connection Logger::Connect(std::function<void(LogEntry const&)> const& slot)
 {
     return defaultChannel.Connect(slot);
 }
 //-----------------------------------------------------------------------
-EventConnection Logger::Connect(std::function<void(LogEntry const&)> && slot)
+Connection Logger::Connect(std::function<void(LogEntry const&)> && slot)
 {
     return defaultChannel.Connect(std::move(slot));
 }
@@ -72,7 +72,7 @@ static auto FindChannnel(std::string const& channelName, T & channels) ->decltyp
         });
 }
 //-----------------------------------------------------------------------
-EventConnection Logger::Connect(std::string const& channelName, std::function<void(LogEntry const&)> const& slot)
+Connection Logger::Connect(std::string const& channelName, std::function<void(LogEntry const&)> const& slot)
 {
     auto iter = FindChannnel(channelName, channels);
     if (std::end(channels) == iter)
@@ -97,7 +97,7 @@ EventConnection Logger::Connect(std::string const& channelName, std::function<vo
     return channel.Connect(slot);
 }
 //-----------------------------------------------------------------------
-EventConnection Logger::Connect(std::string const& channelName, std::function<void(LogEntry const&)> && slot)
+Connection Logger::Connect(std::string const& channelName, std::function<void(LogEntry const&)> && slot)
 {
     auto iter = FindChannnel(channelName, channels);
     if (std::end(channels) == iter)
@@ -203,25 +203,25 @@ static Logger & GetLoggerInstance()
 #pragma mark - Log class
 #endif
 //-----------------------------------------------------------------------
-EventConnection Log::Connect(std::function<void(LogEntry const&)> const& slot)
+Connection Log::Connect(std::function<void(LogEntry const&)> const& slot)
 {
     auto & logger = GetLoggerInstance();
     return logger.Connect(slot);
 }
 //-----------------------------------------------------------------------
-EventConnection Log::Connect(std::function<void(LogEntry const&)> && slot)
+Connection Log::Connect(std::function<void(LogEntry const&)> && slot)
 {
     auto & logger = GetLoggerInstance();
     return logger.Connect(std::move(slot));
 }
 //-----------------------------------------------------------------------
-EventConnection Log::Connect(std::string const& channelName, std::function<void(LogEntry const&)> const& slot)
+Connection Log::Connect(std::string const& channelName, std::function<void(LogEntry const&)> const& slot)
 {
     auto & logger = GetLoggerInstance();
     return logger.Connect(channelName, slot);
 }
 //-----------------------------------------------------------------------
-EventConnection Log::Connect(std::string const& channelName, std::function<void(LogEntry const&)> && slot)
+Connection Log::Connect(std::string const& channelName, std::function<void(LogEntry const&)> && slot)
 {
     auto & logger = GetLoggerInstance();
     return logger.Connect(channelName, std::move(slot));

@@ -19,7 +19,7 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace SignalsAndSlots {
+namespace Signals {
 
 class POMDOG_EXPORT ConnectionBody {
 public:
@@ -71,14 +71,14 @@ public:
 };
 
 template <typename...Arguments>
-class SignalBody<void(Arguments...)>
+class SignalBody<void(Arguments...)> final
     : public std::enable_shared_from_this<SignalBody<void(Arguments...)>> {
 private:
     typedef Slot<void(Arguments...)> SlotType;
     typedef ConnectionBodyOverride<void(Arguments...)> ConnectionBodyType;
 
 public:
-    SignalBody();
+    SignalBody() = default;
 
     SignalBody(SignalBody const&) = delete;
     SignalBody & operator=(SignalBody const&) = delete;
@@ -106,15 +106,9 @@ private:
     std::recursive_mutex addingProtection;
     std::recursive_mutex slotsProtection;
 
-    std::uint32_t nestedMethodCallCount;
+    std::int32_t nestedMethodCallCount = 0;
 };
 
-
-//-----------------------------------------------------------------------
-template <typename...Arguments>
-SignalBody<void(Arguments...)>::SignalBody()
-    : nestedMethodCallCount(0)
-{}
 //-----------------------------------------------------------------------
 template <typename...Arguments>
 template <typename Function>
@@ -229,8 +223,8 @@ std::size_t SignalBody<void(Arguments...)>::InvocationCount() const
     return observers.size();
 }
 
-}// namespace SignalsAndSlots
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Signals
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SIGNALBODY_F551D1BA_HPP
