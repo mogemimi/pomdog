@@ -9,28 +9,111 @@
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <limits>
+#include <utility>
 
 namespace Pomdog {
 
 class POMDOG_EXPORT SamplerDescription {
 public:
-    std::uint32_t MaxAnisotropy = 0;
+    std::uint32_t MaxAnisotropy;
+    float MinMipLevel;
+    float MaxMipLevel;
+    float MipMapLevelOfDetailBias;
+    TextureFilter Filter;
+    TextureAddressMode AddressU;
+    TextureAddressMode AddressV;
+    TextureAddressMode AddressW;
+    //std::array<float, 4> BorderColor;
 
-    float MinMipLevel = 0.0f;
+public:
+    static SamplerDescription CreateDefault()
+    {
+        return CreateLinearClamp();
+    }
 
-    float MaxMipLevel = std::numeric_limits<float>::max();
+    static SamplerDescription CreateAnisotropicClamp()
+    {
+        SamplerDescription desc;
+        desc.Filter = TextureFilter::Anisotropic;
+        desc.AddressU = TextureAddressMode::Clamp;
+        desc.AddressV = TextureAddressMode::Clamp;
+        desc.AddressW = TextureAddressMode::Clamp;
+        desc.MipMapLevelOfDetailBias = 0;
+        desc.MaxAnisotropy = 0;
+        desc.MinMipLevel = 0;
+        desc.MaxMipLevel = 1000;
+        return std::move(desc);
+    }
 
-    float MipMapLevelOfDetailBias = 0.0f;
+    static SamplerDescription CreateAnisotropicWrap()
+    {
+        SamplerDescription desc;
+        desc.Filter = TextureFilter::Anisotropic;
+        desc.AddressU = TextureAddressMode::Wrap;
+        desc.AddressV = TextureAddressMode::Wrap;
+        desc.AddressW = TextureAddressMode::Wrap;
+        desc.MipMapLevelOfDetailBias = 0;
+        desc.MaxAnisotropy = 0;
+        desc.MinMipLevel = 0;
+        desc.MaxMipLevel = 1000;
+        return std::move(desc);
+    }
 
-    TextureFilter Filter = TextureFilter::Linear;
+    static SamplerDescription CreateLinearClamp()
+    {
+        SamplerDescription desc;
+        desc.Filter = TextureFilter::Linear;
+        desc.AddressU = TextureAddressMode::Clamp;
+        desc.AddressV = TextureAddressMode::Clamp;
+        desc.AddressW = TextureAddressMode::Clamp;
+        desc.MipMapLevelOfDetailBias = 0;
+        desc.MaxAnisotropy = 0;
+        desc.MinMipLevel = 0;
+        desc.MaxMipLevel = std::numeric_limits<float>::max();
+        return std::move(desc);
+    }
 
-    TextureAddressMode AddressU = TextureAddressMode::Clamp;
+    static SamplerDescription CreateLinearWrap()
+    {
+        SamplerDescription desc;
+        desc.Filter = TextureFilter::Linear;
+        desc.AddressU = TextureAddressMode::Wrap;
+        desc.AddressV = TextureAddressMode::Wrap;
+        desc.AddressW = TextureAddressMode::Wrap;
+        desc.MipMapLevelOfDetailBias = 0;
+        desc.MaxAnisotropy = 0;
+        desc.MinMipLevel = 0;
+        desc.MaxMipLevel = std::numeric_limits<float>::max();
+        return std::move(desc);
+    }
 
-    TextureAddressMode AddressV = TextureAddressMode::Clamp;
+    static SamplerDescription CreatePointClamp()
+    {
+        SamplerDescription desc;
+        desc.Filter = TextureFilter::Point;
+        desc.AddressU = TextureAddressMode::Clamp;
+        desc.AddressV = TextureAddressMode::Clamp;
+        desc.AddressW = TextureAddressMode::Clamp;
+        desc.MipMapLevelOfDetailBias = 0;
+        desc.MaxAnisotropy = 0;
+        desc.MinMipLevel = 0;
+        desc.MaxMipLevel = std::numeric_limits<float>::max();
+        return std::move(desc);
+    }
 
-    TextureAddressMode AddressW = TextureAddressMode::Clamp;
-
-    //Color BorderColor = Color::TransparentBlack;
+    static SamplerDescription CreatePointWrap()
+    {
+        SamplerDescription desc;
+        desc.Filter = TextureFilter::Point;
+        desc.AddressU = TextureAddressMode::Wrap;
+        desc.AddressV = TextureAddressMode::Wrap;
+        desc.AddressW = TextureAddressMode::Wrap;
+        desc.MipMapLevelOfDetailBias = 0;
+        desc.MaxAnisotropy = 0;
+        desc.MinMipLevel = 0;
+        desc.MaxMipLevel = std::numeric_limits<float>::max();
+        return std::move(desc);
+    }
 };
 
 } // namespace Pomdog

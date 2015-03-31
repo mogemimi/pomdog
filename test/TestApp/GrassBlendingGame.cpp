@@ -25,7 +25,8 @@ void GrassBlendingGame::Initialize()
     auto assets = gameHost->AssetManager();
 
     {
-        samplerPoint = SamplerState::CreateLinearWrap(graphicsDevice);
+        samplerPoint = std::make_shared<SamplerState>(graphicsDevice,
+            SamplerDescription::CreateLinearWrap());
 
         texture = std::make_shared<Texture2D>(graphicsDevice,
             1, 1, false, SurfaceFormat::R8G8B8A8_UNorm);

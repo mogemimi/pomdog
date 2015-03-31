@@ -45,7 +45,8 @@ struct BuiltinEffectFishEyeTrait {
 //-----------------------------------------------------------------------
 FishEyeEffect::FishEyeEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
-    samplerLinear = SamplerState::CreateLinearWrap(graphicsDevice);
+    samplerLinear = std::make_shared<SamplerState>(graphicsDevice,
+        SamplerDescription::CreateLinearWrap());
 
     effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectFishEyeTrait>(*graphicsDevice);
     constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);

@@ -113,8 +113,10 @@ void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const
     POMDOG_ASSERT(graphicsDevice);
 
     POMDOG_ASSERT(!samplerStates.empty());
+
+    auto samplerDesc = SamplerDescription::CreateDefault();
     for (std::size_t index = 0; index < samplerStates.size(); ++index) {
-        samplerStates[index] = SamplerState::CreateLinearClamp(graphicsDevice);
+        samplerStates[index] = std::make_shared<SamplerState>(graphicsDevice, samplerDesc);
     }
 
     for (std::uint32_t index = 0; index < samplerStates.size(); ++index) {

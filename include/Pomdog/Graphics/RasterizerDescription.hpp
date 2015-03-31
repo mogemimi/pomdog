@@ -13,17 +13,12 @@ namespace Pomdog {
 
 class POMDOG_EXPORT RasterizerDescription {
 public:
-    std::int32_t DepthBias = 0;
-
-    float SlopeScaledDepthBias = 0;
-
-    CullMode CullMode = CullMode::CounterClockwiseFace;
-
-    FillMode FillMode = FillMode::Solid;
-
-    bool MultisampleEnable = false;
-
-    bool ScissorTestEnable = false;
+    std::int32_t DepthBias;
+    float SlopeScaledDepthBias;
+    CullMode CullMode;
+    FillMode FillMode;
+    bool MultisampleEnable;
+    bool ScissorTestEnable;
 
 public:
     static RasterizerDescription CreateDefault()

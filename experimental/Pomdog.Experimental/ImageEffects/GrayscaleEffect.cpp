@@ -45,7 +45,8 @@ struct BuiltinEffectGrayscaleTrait {
 //-----------------------------------------------------------------------
 GrayscaleEffect::GrayscaleEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
-    samplerLinear = SamplerState::CreateLinearWrap(graphicsDevice);
+    samplerLinear = std::make_shared<SamplerState>(graphicsDevice,
+        SamplerDescription::CreateLinearWrap());
 
     effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectGrayscaleTrait>(*graphicsDevice);
     constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);

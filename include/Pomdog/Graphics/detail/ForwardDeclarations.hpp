@@ -39,6 +39,7 @@ class Shader;
 class Texture;
 class Texture2D;
 class VertexBuffer;
+class Viewport;
 
 // Structures
 class BlendDescription;
@@ -53,7 +54,6 @@ class InputLayoutDescription;
 class PresentationParameters;
 class RasterizerDescription;
 class SamplerDescription;
-class Viewport;
 
 // Enumerations
 enum class Blend: std::uint8_t;

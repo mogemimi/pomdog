@@ -49,7 +49,8 @@ struct BuiltinEffectFxaaTrait {
 //-----------------------------------------------------------------------
 FXAA::FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
-    samplerLinear = SamplerState::CreateLinearClamp(graphicsDevice);
+    samplerLinear = std::make_shared<SamplerState>(graphicsDevice,
+        SamplerDescription::CreateLinearClamp());
 
     effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectFxaaTrait>(*graphicsDevice);
     constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);

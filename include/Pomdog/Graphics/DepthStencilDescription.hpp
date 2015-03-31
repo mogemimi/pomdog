@@ -15,22 +15,14 @@ namespace Pomdog {
 class POMDOG_EXPORT DepthStencilDescription {
 public:
     DepthStencilOperation ClockwiseFace;
-
     DepthStencilOperation CounterClockwiseFace;
-
-    std::int32_t ReferenceStencil = 0;
-
-    std::uint32_t StencilMask = std::numeric_limits<std::uint32_t>::max();
-
-    std::uint32_t StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
-
-    ComparisonFunction DepthBufferFunction = ComparisonFunction::LessEqual;
-
-    bool DepthBufferEnable = true;
-
-    bool DepthBufferWriteEnable = true;
-
-    bool StencilEnable = false;
+    std::int32_t ReferenceStencil;
+    std::uint32_t StencilMask;
+    std::uint32_t StencilWriteMask;
+    ComparisonFunction DepthBufferFunction;
+    bool DepthBufferEnable;
+    bool DepthBufferWriteEnable;
+    bool StencilEnable;
 
 public:
     static DepthStencilDescription CreateDefault()
@@ -48,6 +40,12 @@ public:
         desc.ReferenceStencil = 0;
         desc.StencilMask = std::numeric_limits<std::uint32_t>::max();
         desc.StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
+        DepthStencilOperation defaultOperation = {
+            StencilOperation::Keep, StencilOperation::Keep,
+            StencilOperation::Keep, ComparisonFunction::Always
+        };
+        desc.ClockwiseFace = defaultOperation;
+        desc.CounterClockwiseFace = defaultOperation;
         return desc;
     }
 
@@ -61,6 +59,12 @@ public:
         desc.ReferenceStencil = 0;
         desc.StencilMask = std::numeric_limits<std::uint32_t>::max();
         desc.StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
+        DepthStencilOperation defaultOperation = {
+            StencilOperation::Keep, StencilOperation::Keep,
+            StencilOperation::Keep, ComparisonFunction::Always
+        };
+        desc.ClockwiseFace = defaultOperation;
+        desc.CounterClockwiseFace = defaultOperation;
         return desc;
     }
 
@@ -74,6 +78,12 @@ public:
         desc.ReferenceStencil = 0;
         desc.StencilMask = std::numeric_limits<std::uint32_t>::max();
         desc.StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
+        DepthStencilOperation defaultOperation = {
+            StencilOperation::Keep, StencilOperation::Keep,
+            StencilOperation::Keep, ComparisonFunction::Always
+        };
+        desc.ClockwiseFace = defaultOperation;
+        desc.CounterClockwiseFace = defaultOperation;
         return desc;
     }
 };

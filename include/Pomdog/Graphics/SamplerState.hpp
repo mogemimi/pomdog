@@ -22,32 +22,11 @@ public:
 
     ~SamplerState();
 
-    SamplerDescription Description() const;
-
-    static std::shared_ptr<SamplerState>
-    CreateAnisotropicClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-
-    static std::shared_ptr<SamplerState>
-    CreateAnisotropicWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-
-    static std::shared_ptr<SamplerState>
-    CreateLinearClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-
-    static std::shared_ptr<SamplerState>
-    CreateLinearWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-
-    static std::shared_ptr<SamplerState>
-    CreatePointClamp(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-
-    static std::shared_ptr<SamplerState>
-    CreatePointWrap(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
-
 public:
     Detail::RenderSystem::NativeSamplerState* NativeSamplerState();
 
 private:
     std::unique_ptr<Detail::RenderSystem::NativeSamplerState> nativeSamplerState;
-    SamplerDescription description;
 };
 
 } // namespace Pomdog
