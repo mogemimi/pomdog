@@ -24,10 +24,16 @@ Connection & Connection::operator=(Connection const& connection)
     return *this;
 }
 //-----------------------------------------------------------------------
+Connection::operator bool() const noexcept
+{
+    return body && body->Valid();
+}
+//-----------------------------------------------------------------------
 void Connection::Disconnect()
 {
     if (body) {
         body->Disconnect();
+        body.reset();
     }
 }
 //-----------------------------------------------------------------------

@@ -28,6 +28,8 @@ public:
     Connection & operator=(Connection const& connection);
     Connection & operator=(Connection && connection) = default;
 
+    operator bool() const noexcept;
+
     void Disconnect();
 };
 

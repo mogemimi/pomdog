@@ -25,6 +25,7 @@ class POMDOG_EXPORT ConnectionBody {
 public:
     virtual ~ConnectionBody() = default;
     virtual void Disconnect() = 0;
+    virtual bool Valid() const noexcept = 0;
     virtual std::unique_ptr<ConnectionBody> DeepCopy() const = 0;
 };
 
@@ -64,7 +65,12 @@ public:
         weakSlot.reset();
     }
 
-    std::unique_ptr<ConnectionBody> DeepCopy() const
+    bool Valid() const noexcept override
+    {
+        return !weakSlot.expired() && !weakSignal.expired();
+    }
+
+    std::unique_ptr<ConnectionBody> DeepCopy() const override
     {
         return std::make_unique<ConnectionBodyOverride>(weakSignal, weakSlot);
     }
@@ -112,14 +118,16 @@ private:
 //-----------------------------------------------------------------------
 template <typename...Arguments>
 template <typename Function>
-auto SignalBody<void(Arguments...)>::Connect(Function && slot)->std::unique_ptr<ConnectionBodyType>
+auto SignalBody<void(Arguments...)>::Connect(Function && slot)
+    ->std::unique_ptr<ConnectionBodyType>
 {
     POMDOG_ASSERT(slot);
     auto observer = std::make_shared<SlotType>(std::forward<Function>(slot));
     {
         std::lock_guard<std::recursive_mutex> lock(addingProtection);
 
-        POMDOG_ASSERT(std::end(addedObservers) == std::find(std::begin(addedObservers), std::end(addedObservers), observer));
+        POMDOG_ASSERT(std::end(addedObservers) == std::find(
+            std::begin(addedObservers), std::end(addedObservers), observer));
         addedObservers.push_back(observer);
     }
 
@@ -136,13 +144,13 @@ void SignalBody<void(Arguments...)>::Disconnect(SlotType const* observer)
         std::lock_guard<std::recursive_mutex> lock(addingProtection);
 
         addedObservers.erase(std::remove_if(std::begin(addedObservers), std::end(addedObservers),
-            [observer](std::shared_ptr<SlotType> const& p){
+            [observer](std::shared_ptr<SlotType> const& p) {
                 return p.get() == observer;
             }),
             std::end(addedObservers));
     }
 
-    auto const iter    = std::find_if(std::begin(observers), std::end(observers),
+    auto const iter = std::find_if(std::begin(observers), std::end(observers),
         [observer](std::shared_ptr<SlotType> const& p) {
             return p.get() == observer;
         });
@@ -161,14 +169,14 @@ void SignalBody<void(Arguments...)>::PushBackAddedListeners()
     std::vector<std::shared_ptr<SlotType>> temporarySlots;
     {
         std::lock_guard<std::recursive_mutex> lock(addingProtection);
-
         std::swap(temporarySlots, addedObservers);
     }
     {
         std::lock_guard<std::recursive_mutex> lock(slotsProtection);
 
         for (auto & slot: temporarySlots) {
-            POMDOG_ASSERT(std::end(observers) == std::find(std::begin(observers), std::end(observers), slot));
+            POMDOG_ASSERT(std::end(observers) == std::find(
+                std::begin(observers), std::end(observers), slot));
             observers.push_back(slot);
         }
     }
@@ -195,9 +203,10 @@ void SignalBody<void(Arguments...)>::operator()(Arguments &&... arguments)
         return;
     }
 
-    try {
-        ++nestedMethodCallCount;
+    POMDOG_ASSERT(nestedMethodCallCount >= 0);
+    ++nestedMethodCallCount;
 
+    try {
         for (auto & observer: observers) {
             if (auto scoped = observer) {
                 scoped->operator()(std::forward<Arguments>(arguments)...);
