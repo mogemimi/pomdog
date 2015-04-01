@@ -4,6 +4,7 @@
 #include <Pomdog/Event/Signal.hpp>
 #include <gtest/iutest_switch.hpp>
 #include <utility>
+#include <vector>
 
 using Pomdog::Signal;
 
@@ -175,4 +176,140 @@ TEST(Singal, CustomClass)
         signal(chuck, chuck);
         EXPECT_EQ(((3 + 3) * 2) * 4, result);
     }
+}
+
+TEST(Singal, InvokeInt)
+{
+    Signal<void(int)> valueChanged;
+    std::vector<int> integers;
+
+    auto slot = [&](int n) { integers.push_back(n); };
+    auto connection = valueChanged.Connect(slot);
+
+    valueChanged(42);
+    valueChanged(43);
+    valueChanged(44);
+
+    ASSERT_EQ(3, integers.size());
+    EXPECT_EQ(42, integers[0]);
+    EXPECT_EQ(43, integers[1]);
+    EXPECT_EQ(44, integers[2]);
+}
+
+TEST(Singal, Disconnect)
+{
+    Signal<void(int)> valueChanged;
+    std::vector<int> integers;
+
+    auto slot = [&](int n) { integers.push_back(n); };
+    auto connection = valueChanged.Connect(slot);
+
+    valueChanged(42);
+    valueChanged(43);
+    connection.Disconnect();
+    valueChanged(44);
+
+    ASSERT_EQ(2, integers.size());
+    EXPECT_EQ(42, integers[0]);
+    EXPECT_EQ(43, integers[1]);
+}
+
+TEST(Singal, MoveConstructor)
+{
+    Signal<void(int)> valueChanged;
+    std::vector<int> integers;
+
+    auto slot = [&](int n) { integers.push_back(n); };
+    auto connection = valueChanged.Connect(slot);
+
+    Signal<void(int)> signalNew = std::move(valueChanged);
+
+    signalNew(42);
+    connection.Disconnect();
+    signalNew(43);
+
+    ASSERT_EQ(1, integers.size());
+    EXPECT_EQ(42, integers[0]);
+}
+
+//TEST(Singal, MoveConstructor_Reconnect)
+//{
+//    std::vector<int> integers;
+//    Signal<void(int)> signalOld;
+//    Signal<void(int)> signalNew = std::move(signalOld);
+//    auto slot = [&](int n) { integers.push_back(n); };
+//    auto connection = signalOld.Connect(slot);
+//    signalNew(42);
+//    ASSERT_TRUE(integers.empty());
+//}
+
+TEST(Singal, MoveAssignment)
+{
+    Signal<void(int)> valueChanged;
+    std::vector<int> integers;
+
+    auto slot = [&](int n) { integers.push_back(n); };
+    auto connection = valueChanged.Connect(slot);
+
+    Signal<void(int)> signalNew;
+    signalNew.Connect([&](int n) {
+        integers.push_back(n + 900);
+    });
+
+    signalNew(42);
+    valueChanged(43);
+    signalNew = std::move(valueChanged);
+    signalNew(44);
+    connection.Disconnect();
+    signalNew(45);
+
+    ASSERT_EQ(3, integers.size());
+    EXPECT_EQ(942, integers[0]);
+    EXPECT_EQ(43, integers[1]);
+    EXPECT_EQ(44, integers[2]);
+}
+
+TEST(Singal, ConnectSomeSlots)
+{
+    Signal<void(int)> valueChanged;
+    std::vector<int> integers;
+
+    auto slot = [&](int n) { integers.push_back(n); };
+    valueChanged.Connect(slot);
+    valueChanged.Connect(slot);
+    valueChanged.Connect(slot);
+
+    valueChanged(42);
+
+    ASSERT_EQ(3, integers.size());
+    EXPECT_EQ(42, integers[0]);
+    EXPECT_EQ(42, integers[1]);
+    EXPECT_EQ(42, integers[2]);
+}
+
+TEST(Singal, DisconnectSlots)
+{
+    Signal<void(int)> valueChanged;
+    std::vector<int> integers;
+
+    auto slot = [&](int n) { integers.push_back(n); };
+    auto connection1 = valueChanged.Connect(slot);
+    auto connection2 = valueChanged.Connect(slot);
+    auto connection3 = valueChanged.Connect(slot);
+
+    valueChanged(42);
+    connection1.Disconnect();
+    valueChanged(43);
+    connection2.Disconnect();
+    valueChanged(44);
+    connection3.Disconnect();
+    valueChanged(45);
+
+    ASSERT_EQ(6, integers.size());
+    EXPECT_EQ(42, integers[0]);
+    EXPECT_EQ(42, integers[1]);
+    EXPECT_EQ(42, integers[2]);
+    EXPECT_EQ(43, integers[3]);
+    EXPECT_EQ(43, integers[4]);
+    EXPECT_EQ(44, integers[5]);
 }

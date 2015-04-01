@@ -1,165 +1,126 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include <Pomdog/Event/Event.hpp>
-#include <Pomdog/Event/EventConnection.hpp>
-#include <Pomdog/Event/EventHandler.hpp>
+#include <Pomdog/Event/Connection.hpp>
 #include <Pomdog/Event/ScopedConnection.hpp>
+#include <Pomdog/Event/Signal.hpp>
 #include <gtest/iutest_switch.hpp>
 #include <utility>
 
-using Pomdog::Event;
-using Pomdog::EventConnection;
-using Pomdog::EventHandler;
+using Pomdog::Connection;
 using Pomdog::ScopedConnection;
+using Pomdog::Signal;
 
 TEST(ScopedConnection, ScopeGuard)
 {
-    EventHandler eventHandler;
-    int count = 0;
-
+    Signal<void(int)> valueChanged;
+    std::vector<int> integers;
     {
         ScopedConnection connection;
-        connection = eventHandler.Connect([&](Event const&) {
-            ++count;
-        });
+        auto slot = [&](int n){ integers.push_back(n); };
+        connection = valueChanged.Connect(slot);
 
-        eventHandler.Invoke<std::string>("event");
-        EXPECT_EQ(1, count);
-        eventHandler.Invoke<std::string>("event");
-        EXPECT_EQ(2, count);
+        valueChanged(42);
+        valueChanged(43);
     }
+    valueChanged(44);
 
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(2, count);
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(2, count);
+    ASSERT_EQ(2, integers.size());
+    EXPECT_EQ(42, integers[0]);
+    EXPECT_EQ(43, integers[1]);
 }
 
 TEST(ScopedConnection, ExplicitDisconnect)
 {
-    EventHandler eventHandler;
+    Signal<void(int)> valueChanged;
+    std::vector<int> integers;
     ScopedConnection connection;
-    int count = 0;
 
-    connection = eventHandler.Connect([&](Event const&) {
-        ++count;
-    });
+    auto slot = [&](int n){ integers.push_back(n); };
+    connection = valueChanged.Connect(slot);
 
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(1, count);
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(2, count);
-
+    valueChanged(42);
+    valueChanged(43);
     connection.Disconnect();
+    valueChanged(44);
 
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(2, count);
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(2, count);
+    ASSERT_EQ(2, integers.size());
+    EXPECT_EQ(42, integers[0]);
+    EXPECT_EQ(43, integers[1]);
 }
 
 TEST(ScopedConnection, MoveAssignment)
 {
-    EventHandler eventHandler;
-    int count = 0;
+    Signal<void(int)> valueChanged;
+    std::vector<int> integers;
 
     ScopedConnection connection1;
     {
-        ScopedConnection connection2;
-
-        connection2 = eventHandler.Connect([&](Event const&) {
-            ++count;
-        });
-
-        eventHandler.Invoke<std::string>("event");
-        EXPECT_EQ(1, count);
-        eventHandler.Invoke<std::string>("event");
-        EXPECT_EQ(2, count);
-
+        auto slot = [&](int n){ integers.push_back(n); };
+        ScopedConnection connection2 = valueChanged.Connect(slot);
+        valueChanged(42);
         connection1 = std::move(connection2);
+        valueChanged(43);
     }
 
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(3, count);
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(4, count);
-
+    valueChanged(44);
     connection1.Disconnect();
+    valueChanged(45);
 
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(4, count);
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(4, count);
+    ASSERT_EQ(3, integers.size());
+    EXPECT_EQ(42, integers[0]);
+    EXPECT_EQ(43, integers[1]);
+    EXPECT_EQ(44, integers[2]);
 }
 
 TEST(ScopedConnection, CopyAssignmentEventConnection)
 {
-    EventHandler eventHandler;
-    int count = 0;
+    Signal<void(int)> valueChanged;
+    std::vector<int> integers;
 
     ScopedConnection connection1;
     {
-        EventConnection connection2;
-
-        connection2 = eventHandler.Connect([&](Event const&) {
-            ++count;
-        });
-
-        eventHandler.Invoke<std::string>("event");
-        EXPECT_EQ(1, count);
-
+        auto slot = [&](int n){ integers.push_back(n); };
+        Connection connection2 = valueChanged.Connect(slot);
+        valueChanged(42);
         connection1 = connection2;
-
-        eventHandler.Invoke<std::string>("event");
-        EXPECT_EQ(2, count);
+        valueChanged(43);
     }
 
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(3, count);
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(4, count);
-
+    valueChanged(44);
     connection1.Disconnect();
+    valueChanged(45);
 
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(4, count);
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(4, count);
+    ASSERT_EQ(3, integers.size());
+    EXPECT_EQ(42, integers[0]);
+    EXPECT_EQ(43, integers[1]);
+    EXPECT_EQ(44, integers[2]);
 }
 
 TEST(ScopedConnection, MoveAssignmentEventConnection)
 {
-    EventHandler eventHandler;
-    int count = 0;
+    Signal<void(int)> valueChanged;
+    std::vector<int> integers;
 
     ScopedConnection connection1;
     {
-        EventConnection connection2;
+        auto slot = [&](int n){ integers.push_back(n); };
+        Connection connection2 = valueChanged.Connect(slot);
 
-        connection2 = eventHandler.Connect([&](Event const&) {
-            ++count;
-        });
-
-        eventHandler.Invoke<std::string>("event");
-        EXPECT_EQ(1, count);
-
+        valueChanged(42);
         connection1 = std::move(connection2);
-
-        eventHandler.Invoke<std::string>("event");
-        EXPECT_EQ(2, count);
-
+        valueChanged(43);
         connection2.Disconnect();
-
-        eventHandler.Invoke<std::string>("event");
-        EXPECT_EQ(3, count);
+        valueChanged(44);
     }
 
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(4, count);
-
+    valueChanged(45);
     connection1.Disconnect();
+    valueChanged(46);
 
-    eventHandler.Invoke<std::string>("event");
-    EXPECT_EQ(4, count);
+    ASSERT_EQ(4, integers.size());
+    EXPECT_EQ(42, integers[0]);
+    EXPECT_EQ(43, integers[1]);
+    EXPECT_EQ(44, integers[2]);
+    EXPECT_EQ(45, integers[3]);
 }

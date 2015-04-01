@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include <Pomdog/Event/EventConnection.hpp>
+#include <Pomdog/Event/Connection.hpp>
 #include <Pomdog/Event/Event.hpp>
 #include <Pomdog/Event/EventQueue.hpp>
 #include <gtest/iutest_switch.hpp>
@@ -9,7 +9,7 @@
 
 using Pomdog::Event;
 using Pomdog::EventQueue;
-using Pomdog::EventConnection;
+using Pomdog::Connection;
 
 struct EventQueueTest: public ::testing::Test
 {
@@ -130,7 +130,7 @@ TEST_F(EventQueueTest, RecursiveConnection)
 TEST_F(EventQueueTest, CallingDisconnect)
 {
     EventQueue eventQueue;
-    EventConnection connection;
+    Connection connection;
     connection = eventQueue.Connect([&](Event const& event){
         slot(event);
         connection.Disconnect();

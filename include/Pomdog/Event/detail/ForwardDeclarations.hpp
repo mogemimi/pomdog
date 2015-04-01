@@ -20,7 +20,6 @@ class SignalBody;
 } // namespace Detail
 
 class Event;
-class EventHandler;
 class EventQueue;
 
 class Connection;
