@@ -70,10 +70,10 @@ public:
 
 private:
     std::shared_ptr<OpenGLContextCocoa> openGLContext;
-    NSWindow* nativeWindow;
-    CocoaOpenGLView* openGLView;
-    CocoaWindowDelegate* windowDelegate;
-    CocoaGameViewDelegate* viewDelegate;
+    __strong NSWindow* nativeWindow;
+    __strong CocoaOpenGLView* openGLView;
+    __strong CocoaWindowDelegate* windowDelegate;
+    __strong CocoaGameViewDelegate* viewDelegate;
     bool isMouseCursorVisible;
 };
 

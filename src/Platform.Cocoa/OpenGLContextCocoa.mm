@@ -23,9 +23,6 @@ OpenGLContextCocoa::OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormat)
 //-----------------------------------------------------------------------
 OpenGLContextCocoa::~OpenGLContextCocoa()
 {
-#if !__has_feature(objc_arc)
-    [openGLContext release];
-#endif
     openGLContext = nil;
 }
 //-----------------------------------------------------------------------

@@ -34,7 +34,7 @@ public:
     NSOpenGLContext* NativeOpenGLContext();
 
 private:
-    NSOpenGLContext* openGLContext;
+    __strong NSOpenGLContext* openGLContext;
 };
 
 }// namespace Cocoa

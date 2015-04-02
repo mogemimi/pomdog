@@ -23,10 +23,6 @@ GameWindowCocoa::GameWindowCocoa(NSWindow* nativeWindowIn, std::shared_ptr<Syste
 {
     POMDOG_ASSERT(nativeWindow);
 
-#if !__has_feature(objc_arc)
-    [nativeWindow retain];
-#endif
-
     NSRect frameRect = [[nativeWindow contentView] bounds];
 
     // Create OpenGLView
@@ -59,12 +55,10 @@ GameWindowCocoa::~GameWindowCocoa()
     [openGLView setDelegate:nil];
     [openGLView removeFromSuperview];
 
-#if !__has_feature(objc_arc)
-    [viewDelegate release];
-    [windowDelegate release];
-    [openGLView release];
-    [nativeWindow release];
-#endif
+    viewDelegate = nil;
+    windowDelegate = nil;
+    openGLView = nil;
+    nativeWindow = nil;
 }
 //-----------------------------------------------------------------------
 bool GameWindowCocoa::AllowPlayerResizing() const
@@ -75,7 +69,7 @@ bool GameWindowCocoa::AllowPlayerResizing() const
 //-----------------------------------------------------------------------
 void GameWindowCocoa::AllowPlayerResizing(bool allowResizing)
 {
-    POMDOG_ASSERT(nativeWindow);
+    POMDOG_ASSERT(nativeWindow != nil);
 
     NSUInteger styleMask = [nativeWindow styleMask];
     if (allowResizing) {
@@ -206,7 +200,7 @@ void GameWindowCocoa::ResetGLContext(std::shared_ptr<OpenGLContextCocoa> const& 
     POMDOG_ASSERT(contextIn);
     openGLContext = contextIn;
 
-    POMDOG_ASSERT(openGLView);
+    POMDOG_ASSERT(openGLView != nil);
     POMDOG_ASSERT(openGLContext);
     [openGLView setOpenGLContext:openGLContext->NativeOpenGLContext()];
 }
@@ -215,19 +209,20 @@ void GameWindowCocoa::ResetGLContext()
 {
     openGLContext.reset();
 
-    POMDOG_ASSERT(openGLView);
+    POMDOG_ASSERT(openGLView != nil);
     [openGLView clearGLContext];
 }
 //-----------------------------------------------------------------------
 void GameWindowCocoa::SetRenderCallbackOnLiveResizing(std::function<void()> const& callback)
 {
     POMDOG_ASSERT(callback);
-    POMDOG_ASSERT(openGLView);
+    POMDOG_ASSERT(openGLView != nil);
     [openGLView setRenderCallback: callback];
 }
 //-----------------------------------------------------------------------
 void GameWindowCocoa::SetRenderCallbackOnLiveResizing()
 {
+    POMDOG_ASSERT(openGLView != nil);
     [openGLView setRenderCallback: {}];
 }
 //-----------------------------------------------------------------------
