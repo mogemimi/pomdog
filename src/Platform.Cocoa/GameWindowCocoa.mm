@@ -87,7 +87,10 @@ void GameWindowCocoa::AllowPlayerResizing(bool allowResizing)
         styleMask ^= NSResizableWindowMask;
         POMDOG_ASSERT((styleMask & NSResizableWindowMask) != NSResizableWindowMask);
     }
-    [nativeWindow setStyleMask:styleMask];
+
+    dispatch_async(dispatch_get_main_queue(), [=] {
+        [nativeWindow setStyleMask:styleMask];
+    });
 }
 //-----------------------------------------------------------------------
 std::string GameWindowCocoa::Title() const
@@ -98,7 +101,9 @@ std::string GameWindowCocoa::Title() const
 //-----------------------------------------------------------------------
 void GameWindowCocoa::Title(std::string const& title)
 {
-    [nativeWindow setTitle:[NSString stringWithUTF8String:title.c_str()]];
+    dispatch_async(dispatch_get_main_queue(), [=] {
+        [nativeWindow setTitle:[NSString stringWithUTF8String:title.c_str()]];
+    });
 }
 //-----------------------------------------------------------------------
 Rectangle GameWindowCocoa::ClientBounds() const
@@ -127,7 +132,10 @@ void GameWindowCocoa::ClientBounds(Rectangle const& clientBounds)
 
     auto origin = NSMakePoint(clientBounds.X,
         screenSize.height - (clientBounds.Y + windowSize.height));
-    [nativeWindow setFrameOrigin:origin];
+
+    dispatch_async(dispatch_get_main_queue(), [=] {
+        [nativeWindow setFrameOrigin:origin];
+    });
 
     //NSRect bounds;
     //bounds.origin.x = clientBounds.X;
@@ -183,10 +191,12 @@ bool GameWindowCocoa::IsMinimized() const
 //-----------------------------------------------------------------------
 void GameWindowCocoa::Close()
 {
-    // Removes the window from the screen list, which hides the window:
-    //[nativeWindow orderOut:nil];
+    dispatch_async(dispatch_get_main_queue(), [=] {
+        // Removes the window from the screen list, which hides the window:
+        //[nativeWindow orderOut:nil];
 
-    [nativeWindow close];
+        [nativeWindow close];
+    });
 }
 //-----------------------------------------------------------------------
 #pragma mark - OpenGLView
