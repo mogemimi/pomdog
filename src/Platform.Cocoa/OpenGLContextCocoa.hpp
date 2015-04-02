@@ -10,8 +10,16 @@
 @class NSOpenGLContext, NSOpenGLPixelFormat;
 
 namespace Pomdog {
+
+class PresentationParameters;
+
 namespace Detail {
 namespace Cocoa {
+
+struct CocoaOpenGLHelper {
+    static NSOpenGLPixelFormat* CreatePixelFormat(
+        PresentationParameters const& presentationParameters);
+};
 
 class OpenGLContextCocoa final: public RenderSystem::GL4::OpenGLContext {
 public:
@@ -31,14 +39,18 @@ public:
 
     void Unlock();
 
+    void SetView(NSView* view);
+
+    void SetView();
+
     NSOpenGLContext* NativeOpenGLContext();
 
 private:
     __strong NSOpenGLContext* openGLContext;
 };
 
-}// namespace Cocoa
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Cocoa
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_OPENGLCONTEXTCOCOA_306ECA78_HPP

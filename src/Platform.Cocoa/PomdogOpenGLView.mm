@@ -1,31 +1,44 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#import "CocoaGameViewDelegate.hpp"
-#include "MouseCocoa.hpp"
+#import "Pomdog/Platform/Cocoa/PomdogOpenGLView.hpp"
+
+#include "GameHostCocoa.hpp"
+#include "OpenGLContextCocoa.hpp"
 #include "../Application/SystemEvents.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Event/Event.hpp"
-#include <array>
+#include "Pomdog/Math/Point2D.hpp"
+#include "Pomdog/Input/ButtonState.hpp"
+#include "Pomdog/Input/Keys.hpp"
+#include <memory>
+#include <utility>
 
+using Pomdog::EventQueue;
+using Pomdog::Detail::Cocoa::OpenGLContextCocoa;
 using Pomdog::Event;
-using Pomdog::ButtonState;
+using Pomdog::KeyState;
+using Pomdog::Detail::MousePositionEvent;
+using Pomdog::Detail::MouseButtonEvent;
+using Pomdog::Detail::MouseButtons;
+using Pomdog::Detail::MouseButtonState;
+using Pomdog::Detail::MouseEventType;
+using Pomdog::Detail::InputKeyEvent;
 
 namespace {
 
 static Pomdog::Point2D ToPoint2D(NSPoint const& point)
 {
-    //return Pomdog::Point2D(point.x, point.y);
-
-    ///@todo badcode
+    ///@todo FIXME
     return Pomdog::Point2D(point.x - 2, point.y - 2);
+    //return Pomdog::Point2D(point.x, point.y);
 }
 //-----------------------------------------------------------------------
 static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 {
     using Pomdog::Keys;
 
-    constexpr std::array<Keys, 127> keyTable = {{
+    constexpr Keys keyTable[127] = {
         /* 0x00 */ Keys::A, // kVK_ANSI_A
         /* 0x01 */ Keys::S, // kVK_ANSI_S
         /* 0x02 */ Keys::D, // kVK_ANSI_D
@@ -153,239 +166,370 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
         /* 0x7C */ Keys::RightArrow, // kVK_RightArrow
         /* 0x7D */ Keys::DownArrow, // kVK_DownArrow
         /* 0x7E */ Keys::UpArrow, // kVK_UpArrow
-    }};
+    };
 
-    if (keyCode < keyTable.size()) {
+    if (keyCode < sizeof(keyTable)) {
         return keyTable[keyCode];
     }
     return Keys::None;
 }
 
-}// unnamed namespace
+} // unnamed namespace
 
-@implementation CocoaGameViewDelegate
-{
-    std::shared_ptr<Pomdog::EventQueue> eventQueue;
-    std::shared_ptr<Pomdog::Detail::Cocoa::MouseCocoa> mouse_;
-    NSView* view_;
+@implementation PomdogOpenGLView {
+@private
+    std::function<void()> renderCallback;
+    std::function<void(bool)> resizingCallback;
+    std::shared_ptr<EventQueue> eventQueue;
+    std::shared_ptr<OpenGLContextCocoa> openGLContext;
+    NSTrackingRectTag trackingRect;
+    BOOL wasAcceptingMouseEvents;
 }
-
-@synthesize view = view_;
-
 //-----------------------------------------------------------------------
-- (id)initWithEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueueIn
+- (id)initWithFrame:(NSRect)frameRect
 {
-    self = [super init];
+    self = [super initWithFrame:frameRect];
     if (self) {
-        POMDOG_ASSERT(eventQueueIn);
-        eventQueue = eventQueueIn;
+        wasAcceptingMouseEvents = NO;
     }
     return self;
 }
 //-----------------------------------------------------------------------
-- (void)resetMouse:(std::shared_ptr<Pomdog::Detail::Cocoa::MouseCocoa>)mouse
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    mouse_ = mouse;
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        wasAcceptingMouseEvents = NO;
+    }
+    return self;
 }
 //-----------------------------------------------------------------------
-- (void)resetMouse
+- (void)drawRect:(NSRect)dirtyRect
 {
-    mouse_.reset();
+    [super drawRect:dirtyRect];
+    if (renderCallback) {
+        renderCallback();
+    }
+}
+//-----------------------------------------------------------------------
+- (void)lockFocus
+{
+    [super lockFocus];
+
+    if (!openGLContext) {
+        return;
+    }
+
+    openGLContext->Lock();
+    if ([openGLContext->NativeOpenGLContext() view] != self) {
+        [openGLContext->NativeOpenGLContext() setView:self];
+    }
+    openGLContext->MakeCurrent();
+    openGLContext->Unlock();
+}
+//-----------------------------------------------------------------------
+#pragma mark - View Event Handling
+//-----------------------------------------------------------------------
+- (void)viewWillStartLiveResize
+{
+    using Pomdog::Detail::ViewWillStartLiveResizeEvent;
+    if (eventQueue) {
+        eventQueue->Enqueue<ViewWillStartLiveResizeEvent>();
+    }
+
+    if (resizingCallback) {
+        resizingCallback(true);
+    }
+}
+//-----------------------------------------------------------------------
+- (void)viewDidEndLiveResize
+{
+    using Pomdog::Detail::ViewDidEndLiveResizeEvent;
+    if (eventQueue) {
+        eventQueue->Enqueue<ViewDidEndLiveResizeEvent>();
+    }
+
+    if (resizingCallback) {
+        resizingCallback(false);
+    }
+}
+//-----------------------------------------------------------------------
+-(void)viewDidMoveToWindow
+{
+    [super viewDidMoveToWindow];
+
+    if ([self window] == nil) {
+        [openGLContext->NativeOpenGLContext() clearDrawable];
+    }
+
+    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
+}
+//-----------------------------------------------------------------------
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow
+{
+    [super viewWillMoveToWindow:newWindow];
+
+    if ([self window] && trackingRect) {
+        [self removeTrackingRect:trackingRect];
+    }
+}
+//-----------------------------------------------------------------------
+#pragma mark - Mouse-Tracking and Cursor
+//-----------------------------------------------------------------------
+- (void)setFrame:(NSRect)frame
+{
+    [super setFrame:frame];
+    [self removeTrackingRect:trackingRect];
+    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
+}
+//-----------------------------------------------------------------------
+- (void)setBounds:(NSRect)bounds
+{
+    [super setBounds:bounds];
+    [self removeTrackingRect:trackingRect];
+    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
+}
+//-----------------------------------------------------------------------
+#pragma mark - Getter/Setter
+//-----------------------------------------------------------------------
+- (void)setEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueueIn
+{
+    eventQueue = eventQueueIn;
+}
+//-----------------------------------------------------------------------
+- (void)setOpenGLContext:(std::shared_ptr<
+    Pomdog::Detail::Cocoa::OpenGLContextCocoa>)openGLContextIn
+{
+    openGLContext = openGLContextIn;
+}
+//-----------------------------------------------------------------------
+- (void)setRenderCallback:(std::function<void()>)callback
+{
+    renderCallback = callback;
+}
+//-----------------------------------------------------------------------
+- (void)setResizingCallback:(std::function<void(bool)>)callback
+{
+    resizingCallback = callback;
+}
+//-----------------------------------------------------------------------
+#pragma mark - Settings
+//-----------------------------------------------------------------------
+- (BOOL)isFlipped
+{
+    return TRUE;
 }
 //-----------------------------------------------------------------------
 #pragma mark - Mouse Event Handling
 //-----------------------------------------------------------------------
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-    if (mouse_) {
-        POMDOG_ASSERT(view_ != nil);
-        NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
-        mouse_->Position(ToPoint2D(locationInView));
+    if (!eventQueue) {
+        return;
     }
+
+    wasAcceptingMouseEvents = [[self window] acceptsMouseMovedEvents];
+    [[self window] setAcceptsMouseMovedEvents:YES];
+    [[self window] makeFirstResponder:self];
+
+    NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    eventQueue->Enqueue<MousePositionEvent>(
+        ToPoint2D(locationInView),
+        MouseEventType::Entered);
 }
 //-----------------------------------------------------------------------
 -(void)mouseMoved:(NSEvent *)theEvent
 {
-    if (mouse_) {
-        POMDOG_ASSERT(view_ != nil);
-        NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
-        mouse_->Position(ToPoint2D(locationInView));
+    if (eventQueue) {
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        eventQueue->Enqueue<MousePositionEvent>(
+            ToPoint2D(locationInView),
+            MouseEventType::Moved);
     }
 }
 //-----------------------------------------------------------------------
 - (void)mouseExited:(NSEvent *)theEvent
 {
-    if (mouse_) {
-        POMDOG_ASSERT(view_ != nil);
-        NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
-        mouse_->Position(ToPoint2D(locationInView));
-    }
-}
-//-----------------------------------------------------------------------
--(void)mouseDown:(NSEvent *)theEvent
-{
-    if (mouse_) {
-        mouse_->LeftButton(ButtonState::Pressed);
+    [[self window] setAcceptsMouseMovedEvents:wasAcceptingMouseEvents];
 
-        POMDOG_ASSERT(view_ != nil);
-        NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
-        mouse_->Position(ToPoint2D(locationInView));
+    if (eventQueue) {
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        eventQueue->Enqueue<MousePositionEvent>(
+            ToPoint2D(locationInView),
+            MouseEventType::Exited);
     }
 }
 //-----------------------------------------------------------------------
--(void)mouseDragged:(NSEvent *)theEvent
+- (void)mouseDown:(NSEvent *)theEvent
 {
-    if (mouse_) {
-        mouse_->LeftButton(ButtonState::Pressed);
-
-        POMDOG_ASSERT(view_ != nil);
-        NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
-        mouse_->Position(ToPoint2D(locationInView));
+    if (eventQueue) {
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        eventQueue->Enqueue<MouseButtonEvent>(
+            ToPoint2D(locationInView),
+            MouseButtons::Left,
+            MouseButtonState::Down);
     }
 }
 //-----------------------------------------------------------------------
--(void)mouseUp:(NSEvent *)theEvent
+- (void)mouseDragged:(NSEvent *)theEvent
 {
-    if (mouse_) {
-        mouse_->LeftButton(ButtonState::Released);
-
-        POMDOG_ASSERT(view_ != nil);
-        NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
-        mouse_->Position(ToPoint2D(locationInView));
+    if (eventQueue) {
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        eventQueue->Enqueue<MouseButtonEvent>(
+            ToPoint2D(locationInView),
+            MouseButtons::Left,
+            MouseButtonState::Dragged);
     }
 }
 //-----------------------------------------------------------------------
--(void)rightMouseDown:(NSEvent *)theEvent
+- (void)mouseUp:(NSEvent *)theEvent
 {
-    if (mouse_) {
-        mouse_->RightButton(ButtonState::Pressed);
-
-        POMDOG_ASSERT(view_ != nil);
-        NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
-        mouse_->Position(ToPoint2D(locationInView));
+    if (eventQueue) {
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        eventQueue->Enqueue<MouseButtonEvent>(
+            ToPoint2D(locationInView),
+            MouseButtons::Left,
+            MouseButtonState::Up);
     }
 }
 //-----------------------------------------------------------------------
--(void)rightMouseDragged:(NSEvent *)theEvent
+- (void)rightMouseDown:(NSEvent *)theEvent
 {
-    if (mouse_) {
-        mouse_->RightButton(ButtonState::Pressed);
-
-        POMDOG_ASSERT(view_ != nil);
-        NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
-        mouse_->Position(ToPoint2D(locationInView));
+    if (eventQueue) {
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        eventQueue->Enqueue<MouseButtonEvent>(
+            ToPoint2D(locationInView),
+            MouseButtons::Right,
+            MouseButtonState::Down);
     }
 }
 //-----------------------------------------------------------------------
--(void)rightMouseUp:(NSEvent *)theEvent
+- (void)rightMouseDragged:(NSEvent *)theEvent
 {
-    if (mouse_) {
-        mouse_->RightButton(ButtonState::Released);
-
-        POMDOG_ASSERT(view_ != nil);
-        NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
-        mouse_->Position(ToPoint2D(locationInView));
+    if (eventQueue) {
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        eventQueue->Enqueue<MouseButtonEvent>(
+            ToPoint2D(locationInView),
+            MouseButtons::Right,
+            MouseButtonState::Dragged);
     }
 }
 //-----------------------------------------------------------------------
--(void)otherMouseDown:(NSEvent *)theEvent
+- (void)rightMouseUp:(NSEvent *)theEvent
 {
-    if (!mouse_) {
+    if (eventQueue) {
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        eventQueue->Enqueue<MouseButtonEvent>(
+            ToPoint2D(locationInView),
+            MouseButtons::Right,
+            MouseButtonState::Up);
+    }
+}
+//-----------------------------------------------------------------------
+- (void)otherMouseDown:(NSEvent *)theEvent
+{
+    if (!eventQueue) {
         return;
     }
 
+    MouseButtonEvent event;
     NSInteger buttonNumber = [theEvent buttonNumber];
 
     if (buttonNumber == 2) {
-        mouse_->MiddleButton(ButtonState::Pressed);
+        event.Button = MouseButtons::Middle;
     }
     else if (buttonNumber == 3) {
-        mouse_->XButton1(ButtonState::Pressed);
+        event.Button = MouseButtons::XButton1;
     }
     else if (buttonNumber == 4) {
-        mouse_->XButton2(ButtonState::Pressed);
+        event.Button = MouseButtons::XButton2;
     }
 
-    POMDOG_ASSERT(view_ != nil);
-    NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
-    mouse_->Position(ToPoint2D(locationInView));
+    NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+
+    event.State = MouseButtonState::Up;
+    event.Position = ToPoint2D(locationInView);
+    eventQueue->Enqueue(Event{std::move(event)});
 }
 //-----------------------------------------------------------------------
--(void)otherMouseDragged:(NSEvent *)theEvent
+- (void)otherMouseDragged:(NSEvent *)theEvent
 {
-    if (!mouse_) {
+    if (!eventQueue) {
         return;
     }
 
+    MouseButtonEvent event;
     NSInteger buttonNumber = [theEvent buttonNumber];
 
     if (buttonNumber == 2) {
-        mouse_->MiddleButton(ButtonState::Pressed);
+        event.Button = MouseButtons::Middle;
     }
     else if (buttonNumber == 3) {
-        mouse_->XButton1(ButtonState::Pressed);
+        event.Button = MouseButtons::XButton1;
     }
     else if (buttonNumber == 4) {
-        mouse_->XButton2(ButtonState::Pressed);
+        event.Button = MouseButtons::XButton2;
     }
 
-    POMDOG_ASSERT(view_ != nil);
-    NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
-    mouse_->Position(ToPoint2D(locationInView));
+    NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+
+    event.State = MouseButtonState::Dragged;
+    event.Position = ToPoint2D(locationInView);
+    eventQueue->Enqueue(Event{std::move(event)});
 }
 //-----------------------------------------------------------------------
--(void)otherMouseUp:(NSEvent *)theEvent
+- (void)otherMouseUp:(NSEvent *)theEvent
 {
-    if (!mouse_) {
+    if (!eventQueue) {
         return;
     }
 
+    MouseButtonEvent event;
     NSInteger buttonNumber = [theEvent buttonNumber];
 
     if (buttonNumber == 2) {
-        mouse_->MiddleButton(ButtonState::Released);
+        event.Button = MouseButtons::Middle;
     }
     else if (buttonNumber == 3) {
-        mouse_->XButton1(ButtonState::Released);
+        event.Button = MouseButtons::XButton1;
     }
     else if (buttonNumber == 4) {
-        mouse_->XButton2(ButtonState::Released);
+        event.Button = MouseButtons::XButton2;
     }
 
-    POMDOG_ASSERT(view_ != nil);
-    NSPoint locationInView = [view_ convertPoint:[theEvent locationInWindow] fromView:nil];
-    mouse_->Position(ToPoint2D(locationInView));
+    NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+
+    event.State = MouseButtonState::Up;
+    event.Position = ToPoint2D(locationInView);
+    eventQueue->Enqueue(Event{std::move(event)});
 }
 //-----------------------------------------------------------------------
--(void)scrollWheel:(NSEvent *)theEvent
+- (void)scrollWheel:(NSEvent *)theEvent
 {
+    if (!eventQueue) {
+        return;
+    }
+
+    Pomdog::Detail::ScrollWheelEvent event;
+
     double scrollingDeltaY = static_cast<double>([theEvent scrollingDeltaY]);
-    if ([theEvent hasPreciseScrollingDeltas])
-    {
-        //NSLog(@"hasPreciseScrollingDeltas=YES,scrollingDeltaY=%f", scrollingDeltaY);
-        mouse_->WheelDelta(scrollingDeltaY * 0.1);
+    if ([theEvent hasPreciseScrollingDeltas]) {
+        event.ScrollingDeltaY = scrollingDeltaY * 0.1;
     }
-    else
-    {
-        //NSLog(@"hasPreciseScrollingDeltas=NO, scrollingDeltaY=%f", scrollingDeltaY);
-        mouse_->WheelDelta(scrollingDeltaY);
+    else {
+        event.ScrollingDeltaY = scrollingDeltaY;
     }
+
+    eventQueue->Enqueue(Event{std::move(event)});
 }
 //-----------------------------------------------------------------------
-#pragma mark - Keyboard Event Delegated
-//-----------------------------------------------------------------------
-//- (BOOL)acceptsFirstResponder
-//{
-//    return YES;
-//}
+#pragma mark - Keyboard Event Handling
 //-----------------------------------------------------------------------
 - (void)keyDown:(NSEvent *)theEvent
 {
     auto key = TranslateKey([theEvent keyCode]);
-    if (key != Pomdog::Keys::None)
-    {
-        using Pomdog::Detail::InputKeyDownEvent;
-        eventQueue->Enqueue<InputKeyDownEvent>(key);
+    if (key != Pomdog::Keys::None) {
+        eventQueue->Enqueue<InputKeyEvent>(KeyState::Down, key);
     }
 
 //    using Pomdog::Detail::InputCharacterEvent;
@@ -401,10 +545,8 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 - (void)keyUp:(NSEvent *)theEvent
 {
     auto key = TranslateKey([theEvent keyCode]);
-    if (key != Pomdog::Keys::None)
-    {
-        using Pomdog::Detail::InputKeyUpEvent;
-        eventQueue->Enqueue<InputKeyUpEvent>(key);
+    if (key != Pomdog::Keys::None) {
+        eventQueue->Enqueue<InputKeyEvent>(KeyState::Up, key);
     }
 
 //    using Pomdog::Detail::InputCharacterEvent;
@@ -416,19 +558,5 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 //        eventQueue->Enqueue<InputCharacterEvent>(character);
 //    }
 }
-//-----------------------------------------------------------------------
-#pragma mark - View Event Handling
-//-----------------------------------------------------------------------
-- (void)viewWillStartLiveResize
-{
-    using Pomdog::Detail::ViewWillStartLiveResizeEvent;
-    eventQueue->Enqueue<ViewWillStartLiveResizeEvent>();
-}
-//-----------------------------------------------------------------------
-- (void)viewDidEndLiveResize
-{
-    using Pomdog::Detail::ViewDidEndLiveResizeEvent;
-    eventQueue->Enqueue<ViewDidEndLiveResizeEvent>();
-}
-//-----------------------------------------------------------------------
+
 @end

@@ -11,7 +11,6 @@ namespace Pomdog {
 
 class AssetManager;
 class AudioEngine;
-class Game;
 class GameClock;
 class GameWindow;
 class GraphicsContext;
@@ -26,8 +25,6 @@ public:
     GameHost & operator=(GameHost const&) = delete;
 
     virtual ~GameHost() = default;
-
-    virtual void Run(Game & game) = 0;
 
     virtual void Exit() = 0;
 

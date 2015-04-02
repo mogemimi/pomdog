@@ -1,9 +1,3 @@
-# Examples(Xcode):
-# gyp build/TestApp.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
-#
-# Examples(MSVS 2013):
-# gyp build/TestApp.gyp --depth=. -f msvs -G msvs_version=2013 --generator-output=./build.msvs/
-
 {
   'includes': ['common.gypi'],
   'make_global_settings': [
@@ -61,7 +55,7 @@
   },
   'targets': [
     {
-      'target_name': 'testapp',
+      'target_name': 'TestApp',
       'product_name': 'TestApp',
       'type': 'executable',
       'mac_bundle': 1,
@@ -117,6 +111,10 @@
             '../test/TestApp/Platform.Cocoa/Prefix.pch',
             '../test/TestApp/Platform.Cocoa/AppDelegate.h',
             '../test/TestApp/Platform.Cocoa/AppDelegate.mm',
+            '../test/TestApp/Platform.Cocoa/GameView.h',
+            '../test/TestApp/Platform.Cocoa/GameView.mm',
+            '../test/TestApp/Platform.Cocoa/GameViewController.h',
+            '../test/TestApp/Platform.Cocoa/GameViewController.mm',
           ],
           'link_settings': {
             'libraries': [

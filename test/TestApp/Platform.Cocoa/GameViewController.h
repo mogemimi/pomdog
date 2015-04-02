@@ -3,6 +3,10 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface AppDelegate : NSObject <NSApplicationDelegate>
+#import "GameView.h"
+
+@interface GameViewController : NSViewController
+
+@property (assign) IBOutlet GameView *gameView;
 
 @end

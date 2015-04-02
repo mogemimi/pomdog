@@ -3,11 +3,84 @@
 
 #include "OpenGLContextCocoa.hpp"
 #include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <vector>
 
 namespace Pomdog {
 namespace Detail {
 namespace Cocoa {
+//-----------------------------------------------------------------------
+NSOpenGLPixelFormat* CocoaOpenGLHelper::CreatePixelFormat(
+    PresentationParameters const& presentationParameters)
+{
+    std::vector<NSOpenGLPixelFormatAttribute> attributes =
+    {
+        NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
+        NSOpenGLPFADoubleBuffer,
+        NSOpenGLPFAAccelerated,
+        NSOpenGLPFANoRecovery,
+        NSOpenGLPFAAllowOfflineRenderers,
+    };
+
+    ///@todo Not implemented
+//    if (presentationParameters.MultiSampleCount > 0) {
+//        attributes.push_back(NSOpenGLPFAMultisample);
+//        attributes.push_back(NSOpenGLPFASampleBuffers);
+//        attributes.push_back(1);
+//        attributes.push_back(NSOpenGLPFASamples);
+//        attributes.push_back(presentationParameters.MultiSampleCount);
+//    }
+
+    switch (presentationParameters.SurfaceFormat) {
+    case SurfaceFormat::R8G8B8A8_UNorm:
+        attributes.push_back(NSOpenGLPFAColorSize);
+        attributes.push_back(24);
+        attributes.push_back(NSOpenGLPFAAlphaSize);
+        attributes.push_back(8);
+        break;
+    case SurfaceFormat::R16G16B16A16_Float:
+        attributes.push_back(NSOpenGLPFAColorSize);
+        attributes.push_back(48);
+        attributes.push_back(NSOpenGLPFAAlphaSize);
+        attributes.push_back(16);
+        break;
+    case SurfaceFormat::R32G32B32A32_Float:
+        attributes.push_back(NSOpenGLPFAColorSize);
+        attributes.push_back(96);
+        attributes.push_back(NSOpenGLPFAAlphaSize);
+        attributes.push_back(32);
+        break;
+    default:
+        attributes.push_back(NSOpenGLPFAColorSize);
+        attributes.push_back(24);
+        attributes.push_back(NSOpenGLPFAAlphaSize);
+        attributes.push_back(8);
+        break;
+    }
+
+    switch (presentationParameters.DepthFormat) {
+    case DepthFormat::Depth16:
+        attributes.push_back(NSOpenGLPFADepthSize);
+        attributes.push_back(16);
+        break;
+    case DepthFormat::Depth24Stencil8:
+        attributes.push_back(NSOpenGLPFADepthSize);
+        attributes.push_back(24);
+        attributes.push_back(NSOpenGLPFAStencilSize);
+        attributes.push_back(8);
+        break;
+    case DepthFormat::Depth32:
+        attributes.push_back(NSOpenGLPFADepthSize);
+        attributes.push_back(32);
+        break;
+    case DepthFormat::None:
+        break;
+    }
+
+    attributes.push_back(0);
+    return [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes.data()];
+}
 //-----------------------------------------------------------------------
 OpenGLContextCocoa::OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormat)
     : openGLContext(nil)
@@ -56,11 +129,24 @@ void OpenGLContextCocoa::Unlock()
     CGLUnlockContext([openGLContext CGLContextObj]);
 }
 //-----------------------------------------------------------------------
+void OpenGLContextCocoa::SetView(NSView* view)
+{
+    POMDOG_ASSERT(openGLContext != nil);
+    POMDOG_ASSERT(view != nil);
+    [openGLContext setView:view];
+}
+//-----------------------------------------------------------------------
+void OpenGLContextCocoa::SetView()
+{
+    POMDOG_ASSERT(openGLContext != nil);
+    [openGLContext setView:nil];
+}
+//-----------------------------------------------------------------------
 NSOpenGLContext* OpenGLContextCocoa::NativeOpenGLContext()
 {
     return openGLContext;
 }
 //-----------------------------------------------------------------------
-}// namespace Cocoa
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Cocoa
+} // namespace Detail
+} // namespace Pomdog

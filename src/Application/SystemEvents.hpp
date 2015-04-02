@@ -4,7 +4,10 @@
 #ifndef POMDOG_SYSTEMEVENTS_7D649F10_HPP
 #define POMDOG_SYSTEMEVENTS_7D649F10_HPP
 
+#include "Pomdog/Input/ButtonState.hpp"
+#include "Pomdog/Input/KeyState.hpp"
 #include "Pomdog/Input/Keys.hpp"
+#include "Pomdog/Math/Point2D.hpp"
 
 namespace Pomdog {
 namespace Detail {
@@ -20,12 +23,44 @@ struct ViewDidEndLiveResizeEvent {};
 //    std::uint16_t Character;
 //};
 
-struct InputKeyDownEvent {
+struct InputKeyEvent {
+    KeyState State;
     Keys Key;
 };
 
-struct InputKeyUpEvent {
-    Keys Key;
+enum class MouseEventType {
+    Entered,
+    Moved,
+    Exited,
+};
+
+struct MousePositionEvent {
+    Point2D Position;
+    MouseEventType Type;
+};
+
+enum class MouseButtons {
+    Left,
+    Middle,
+    Right,
+    XButton1,
+    XButton2,
+};
+
+enum class MouseButtonState {
+    Down,
+    Dragged,
+    Up,
+};
+
+struct MouseButtonEvent {
+    Point2D Position;
+    MouseButtons Button;
+    MouseButtonState State;
+};
+
+struct ScrollWheelEvent {
+    double ScrollingDeltaY;
 };
 
 }// namespace Detail
