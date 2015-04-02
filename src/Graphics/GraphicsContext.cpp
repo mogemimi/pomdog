@@ -257,7 +257,7 @@ void GraphicsContext::Impl::SetConstantBuffers(std::shared_ptr<ConstantBufferBin
 #endif
 //-----------------------------------------------------------------------
 GraphicsContext::GraphicsContext(
-    std::unique_ptr<Detail::RenderSystem::NativeGraphicsContext> nativeContext,
+    std::unique_ptr<Detail::RenderSystem::NativeGraphicsContext> && nativeContext,
     PresentationParameters const& presentationParameters,
     std::shared_ptr<GraphicsDevice> const& graphicsDevice)
     : impl(std::make_unique<Impl>(std::move(nativeContext), presentationParameters))

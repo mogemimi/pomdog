@@ -20,8 +20,8 @@ private:
     double secondsPerTick;
 };
 
-}// namespace Cocoa
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Cocoa
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_TIMESOURCECOCOA_3820AACF_HPP

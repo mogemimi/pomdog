@@ -15,10 +15,10 @@ TimeSourceCocoa::TimeSourceCocoa()
     mach_timebase_info(&timeBase);
 
     POMDOG_ASSERT(0 != timeBase.denom);
-    double const nanoSecondsPerTick = static_cast<double>(timeBase.numer) / timeBase.denom;
+    double nanoSeconds = static_cast<double>(timeBase.numer) / timeBase.denom;
 
     constexpr double nanoScale = (1.0 / 1000000000LL);
-    secondsPerTick = nanoScale * nanoSecondsPerTick;
+    secondsPerTick = nanoScale * nanoSeconds;
 }
 //-----------------------------------------------------------------------
 TimePoint TimeSourceCocoa::Now() const
@@ -27,6 +27,6 @@ TimePoint TimeSourceCocoa::Now() const
     return TimePoint(Duration(currentSeconds));
 }
 
-}// namespace Cocoa
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Cocoa
+} // namespace Detail
+} // namespace Pomdog
