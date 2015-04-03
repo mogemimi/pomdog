@@ -6,20 +6,18 @@
 #include "../Application/SystemEvents.hpp"
 #include "../InputSystem/InputDeviceFactory.hpp"
 
-#if defined(POMDOG_RENDERSYSTEM_GL4) \
-    && defined(POMDOG_RENDERSYSTEM_DIRECT3D11)
-#    error "Both POMDOG_RENDERSYSTEM_GL4 and POMDOG_RENDERSYSTEM_DIRECT3D11 are defined."
-#elif defined(POMDOG_RENDERSYSTEM_GL4)
-#elif defined(POMDOG_RENDERSYSTEM_DIRECT3D11)
+#if defined(POMDOG_ENABLE_DIRECT3D11)
+#elif defined(POMDOG_ENABLE_GL4)
 #else
-#    error "Cannot find render system"
+#error "Cannot find render system"
 #endif
 
-#ifdef POMDOG_RENDERSYSTEM_GL4
+#if defined(POMDOG_ENABLE_GL4)
 #include "../Platform.Win32/OpenGLContextWin32.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
-#else
+#endif
+#if defined(POMDOG_ENABLE_DIRECT3D11)
 #include "../RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp"
 #include "../RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.hpp"
 #endif
@@ -63,7 +61,8 @@ public:
     Impl(std::shared_ptr<GameWindowWin32> const& window,
         std::shared_ptr<EventQueue> const& eventQueue,
         PresentationParameters const& presentationParameters,
-        std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory);
+        std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory,
+        bool useOpenGL);
 
     void Run(Game & game);
 
@@ -115,56 +114,64 @@ private:
 
     bool exitRequest;
     bool surfaceResizeRequest;
+    bool useOpenGL;
 };
 //-----------------------------------------------------------------------
 GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
     std::shared_ptr<EventQueue> const& eventQueueIn,
     PresentationParameters const& presentationParameters,
-    std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactoryIn)
+    std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactoryIn,
+    bool useOpenGLIn)
     : eventQueue(eventQueueIn)
     , window(windowIn)
     , inputDeviceFactory(std::move(inputDeviceFactoryIn))
     , exitRequest(false)
     , surfaceResizeRequest(false)
+    , useOpenGL(useOpenGLIn)
 {
     POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
     presentationInterval = Duration(1.0) / presentationParameters.PresentationInterval;
 
-#if defined(POMDOG_RENDERSYSTEM_GL4)
-    using Detail::RenderSystem::GL4::GraphicsDeviceGL4;
-    using Detail::RenderSystem::GL4::GraphicsContextGL4;
+#if defined(POMDOG_ENABLE_GL4)
+    if (useOpenGL) {
+        using Detail::RenderSystem::GL4::GraphicsDeviceGL4;
+        using Detail::RenderSystem::GL4::GraphicsContextGL4;
 
-    auto openGLContext = std::make_shared<Win32::OpenGLContextWin32>(
-        window->NativeWindowHandle(), presentationParameters);
+        auto openGLContext = std::make_shared<Win32::OpenGLContextWin32>(
+            window->NativeWindowHandle(), presentationParameters);
 
-    if (glewInit() != GLEW_OK)
-    {
-        //POMDOG_THROW_EXCEPTION(std::runtime_error,
-        //    "Failed to initialize glew.");
+        if (glewInit() != GLEW_OK)
+        {
+            //POMDOG_THROW_EXCEPTION(std::runtime_error,
+            //    "Failed to initialize glew.");
+        }
+
+        openGLContext->MakeCurrent();
+
+        auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceGL4>();
+        graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::move(nativeGraphicsDevice));
+
+        graphicsContext = std::make_shared<Pomdog::GraphicsContext>(
+            std::make_unique<GraphicsContextGL4>(openGLContext, window),
+            presentationParameters, graphicsDevice);
     }
+#endif
+#if defined(POMDOG_ENABLE_DIRECT3D11)
+    if (!useOpenGL) {
+        using Detail::RenderSystem::Direct3D11::GraphicsDeviceDirect3D11;
+        using Detail::RenderSystem::Direct3D11::GraphicsContextDirect3D11;
 
-    openGLContext->MakeCurrent();
+        auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceDirect3D11>();
+        auto deviceContext = nativeGraphicsDevice->DeviceContext();
+        auto nativeDevice = nativeGraphicsDevice->NativeDevice();
+        auto dxgiFactory = nativeGraphicsDevice->DXGIFactory();
 
-    auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceGL4>();
-    graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::move(nativeGraphicsDevice));
+        graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::move(nativeGraphicsDevice));
 
-    graphicsContext = std::make_shared<Pomdog::GraphicsContext>(
-        std::make_unique<GraphicsContextGL4>(openGLContext, window),
-        presentationParameters, graphicsDevice);
-#elif defined(POMDOG_RENDERSYSTEM_DIRECT3D11)
-    using Detail::RenderSystem::Direct3D11::GraphicsDeviceDirect3D11;
-    using Detail::RenderSystem::Direct3D11::GraphicsContextDirect3D11;
-
-    auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceDirect3D11>();
-    auto deviceContext = nativeGraphicsDevice->DeviceContext();
-    auto nativeDevice = nativeGraphicsDevice->NativeDevice();
-    auto dxgiFactory = nativeGraphicsDevice->DXGIFactory();
-
-    graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::move(nativeGraphicsDevice));
-
-    graphicsContext = std::make_shared<Pomdog::GraphicsContext>(
-        std::make_unique<GraphicsContextDirect3D11>(window->NativeWindowHandle(), dxgiFactory, nativeDevice, deviceContext),
-        presentationParameters, graphicsDevice);
+        graphicsContext = std::make_shared<Pomdog::GraphicsContext>(
+            std::make_unique<GraphicsContextDirect3D11>(window->NativeWindowHandle(), dxgiFactory, nativeDevice, deviceContext),
+            presentationParameters, graphicsDevice);
+    }
 #endif
 
     POMDOG_ASSERT(eventQueue);
@@ -261,7 +268,8 @@ void GameHostWin32::Impl::ClientSizeChanged()
     POMDOG_ASSERT(window);
     auto bounds = window->ClientBounds();
 
-#if defined(POMDOG_RENDERSYSTEM_DIRECT3D11)
+#if defined(POMDOG_ENABLE_DIRECT3D11)
+    if (!useOpenGL)
     {
         using Detail::RenderSystem::Direct3D11::GraphicsDeviceDirect3D11;
         using Detail::RenderSystem::Direct3D11::GraphicsContextDirect3D11;
@@ -331,8 +339,9 @@ std::shared_ptr<Pomdog::Mouse> GameHostWin32::Impl::GetMouse()
 GameHostWin32::GameHostWin32(std::shared_ptr<GameWindowWin32> const& window,
     std::shared_ptr<EventQueue> const& eventQueue,
     PresentationParameters const& presentationParameters,
-    std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory)
-    : impl(std::make_unique<Impl>(window, eventQueue, presentationParameters, std::move(inputDeviceFactory)))
+    std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory,
+    bool enableOpenGL)
+    : impl(std::make_unique<Impl>(window, eventQueue, presentationParameters, std::move(inputDeviceFactory), enableOpenGL))
 {}
 //-----------------------------------------------------------------------
 GameHostWin32::~GameHostWin32() = default;

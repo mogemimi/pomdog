@@ -8,7 +8,7 @@
     ['OS == "win"', {
       'variables': {
         'application_platform%': 'Win32',
-        'renderer%': 'Direct3D11',
+        'renderers%': ['Direct3D11', 'GL4'],
         'audio%': 'XAudio2',
         'input_devices%': ['DirectInput'],
       },
@@ -16,7 +16,7 @@
     ['OS == "mac"', {
       'variables': {
         'application_platform%': 'Cocoa',
-        'renderer%': 'OpenGL',
+        'renderers%': ['GL4'],
         'audio%': 'OpenAL',
         'input_devices%': [],
       },
@@ -24,7 +24,7 @@
     ['OS == "linux" or OS == "freebsd" or OS == "openbsd"', {
       'variables': {
         'application_platform%': 'X11',
-        'renderer%': 'OpenGL',
+        'renderers%': ['GL4'],
         'audio%': 'OpenAL',
         'input_devices%': [],
       },
@@ -397,10 +397,10 @@
       '../src/InputSystem.DirectInput/PrerequisitesDirectInput.hpp',
     ],
     'pomdog_library_win32_sources': [
-      '../include/Pomdog/Platform/Win32/BootstrapperWin32.hpp',
+      '../include/Pomdog/Platform/Win32/Bootstrap.hpp',
       '../include/Pomdog/Platform/Win32/BootstrapSettingsWin32.hpp',
       '../include/Pomdog/Platform/Win32/PrerequisitesWin32.hpp',
-      '../src/Platform.Win32/BootstrapperWin32.cpp',
+      '../src/Platform.Win32/Bootstrap.cpp',
       '../src/Platform.Win32/GameHostWin32.cpp',
       '../src/Platform.Win32/GameHostWin32.hpp',
       '../src/Platform.Win32/GameWindowWin32.cpp',
@@ -472,8 +472,8 @@
       'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES', # '-fvisibility=hidden'
     },
     'conditions': [
-      ['renderer == "Direct3D11"', {
-        'defines': ['POMDOG_RENDERSYSTEM_DIRECT3D11'],
+      ['"Direct3D11" in renderers', {
+        'defines': ['POMDOG_ENABLE_DIRECT3D11'],
         'sources': [
           '<@(pomdog_library_direct3d11_sources)',
         ],
@@ -485,14 +485,14 @@
             '-ldxguid.lib', # using _IID_ID3D11ShaderReflection
           ],
         },
-      }], # OS == "Direct3D11"
-      ['renderer == "OpenGL"', {
-        'defines': ['POMDOG_RENDERSYSTEM_GL4'],
+      }],
+      ['"GL4" in renderers', {
+        'defines': ['POMDOG_ENABLE_GL4'],
         'sources': [
           '<@(pomdog_library_opengl4_sources)',
         ],
-      }], # renderer == "OpenGL"
-      ['renderer == "OpenGL" and OS == "win"', {
+      }],
+      ['"GL4" in renderers and OS == "win"', {
         'sources': [
           '<@(pomdog_library_win32_opengl_sources)',
         ],

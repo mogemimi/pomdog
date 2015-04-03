@@ -10,6 +10,7 @@
 
 namespace Pomdog {
 
+class Game;
 class PresentationParameters;
 
 namespace Detail {
@@ -27,38 +28,29 @@ public:
     GameHostWin32(std::shared_ptr<GameWindowWin32> const& window,
         std::shared_ptr<EventQueue> const& eventQueue,
         PresentationParameters const& presentationParameters,
-        std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory);
+        std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory,
+        bool useOpenGL);
 
     ~GameHostWin32();
 
-    ///@copydoc GameHost
-    void Run(Game & game) override;
+    void Run(Game & game);
 
-    ///@copydoc GameHost
     void Exit() override;
 
-    ///@copydoc GameHost
     std::shared_ptr<Pomdog::GameWindow> Window() override;
 
-    ///@copydoc GameHost
     std::shared_ptr<Pomdog::GameClock> Clock() override;
 
-    ///@copydoc GameHost
     std::shared_ptr<Pomdog::GraphicsContext> GraphicsContext() override;
 
-    ///@copydoc GameHost
     std::shared_ptr<Pomdog::GraphicsDevice> GraphicsDevice() override;
 
-    ///@copydoc GameHost
     std::shared_ptr<Pomdog::AudioEngine> AudioEngine() override;
 
-    ///@copydoc GameHost
     std::shared_ptr<Pomdog::AssetManager> AssetManager() override;
 
-    ///@copydoc GameHost
     std::shared_ptr<Pomdog::Keyboard> Keyboard() override;
 
-    ///@copydoc GameHost
     std::shared_ptr<Pomdog::Mouse> Mouse() override;
 
 private:
@@ -66,8 +58,8 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-}// namespace Win32
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Win32
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_GAMEHOSTWIN32_F8172FE6_HPP

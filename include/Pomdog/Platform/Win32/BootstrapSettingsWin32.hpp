@@ -18,6 +18,7 @@ struct BootstrapSettingsWin32 {
     int Width = 800;
     int Height = 480;
     bool IsFullscreen = false;
+    bool OpenGLEnabled = false;
 };
 
 }// namespace Win32
