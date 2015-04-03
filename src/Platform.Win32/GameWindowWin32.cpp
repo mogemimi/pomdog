@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "GameWindowWin32.hpp"
+#include "../Application/SystemEvents.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Application/MouseCursor.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
@@ -42,7 +43,7 @@ class GameWindowWin32::Impl {
 public:
     Impl(HINSTANCE hInstance, int nCmdShow,
         HICON icon, HICON iconSmall, bool useOpenGL,
-        std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
+        std::shared_ptr<EventQueue> const& eventQueue,
         PresentationParameters const& presentationParameters);
 
     ~Impl();
@@ -61,7 +62,7 @@ private:
     static LRESULT CALLBACK WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 public:
-    std::shared_ptr<SystemEventDispatcher> eventDispatcher;
+    std::shared_ptr<EventQueue> eventQueue;
     std::string title;
     Rectangle clientBounds;
     Optional<HCURSOR> gameCursor;
@@ -74,9 +75,9 @@ public:
 //-----------------------------------------------------------------------
 GameWindowWin32::Impl::Impl(HINSTANCE hInstance, int nCmdShow,
     HICON icon, HICON iconSmall, bool useOpenGL,
-    std::shared_ptr<SystemEventDispatcher> const& eventDispatcherIn,
+    std::shared_ptr<EventQueue> const& eventQueueIn,
     PresentationParameters const& presentationParameters)
-    : eventDispatcher(eventDispatcherIn)
+    : eventQueue(eventQueueIn)
     , title("Game")
     , clientBounds(0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight)
     , instanceHandle(hInstance)
@@ -320,7 +321,7 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(HWND hWnd, UINT msg, WPA
     switch (msg) {
     case WM_CLOSE: {
         if (window) {
-            window->eventDispatcher->Enqueue<WindowShouldCloseEvent>();
+            window->eventQueue->Enqueue<WindowShouldCloseEvent>();
         }
         return 0;
     }
@@ -339,19 +340,19 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(HWND hWnd, UINT msg, WPA
     }
     case WM_ENTERSIZEMOVE: {
         if (window) {
-            window->eventDispatcher->Enqueue<ViewWillStartLiveResizeEvent>();
+            window->eventQueue->Enqueue<ViewWillStartLiveResizeEvent>();
         }
         return 0;
     }
     case WM_EXITSIZEMOVE: {
         if (window) {
-            window->eventDispatcher->Enqueue<ViewDidEndLiveResizeEvent>();
+            window->eventQueue->Enqueue<ViewDidEndLiveResizeEvent>();
         }
         return 0;
     }
     case WM_SIZING: {
         if (window) {
-            window->eventDispatcher->Enqueue<ViewNeedsUpdateSurfaceEvent>();
+            window->eventQueue->Enqueue<ViewNeedsUpdateSurfaceEvent>();
         }
         return TRUE;
     }
@@ -376,7 +377,7 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(HWND hWnd, UINT msg, WPA
         const int exitCode = 0;
         ::PostQuitMessage(exitCode);
         if (window) {
-            window->eventDispatcher->Enqueue<WindowWillCloseEvent>();
+            window->eventQueue->Enqueue<WindowWillCloseEvent>();
         }
         return 0;
     }
@@ -397,9 +398,10 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(HWND hWnd, UINT msg, WPA
 //-----------------------------------------------------------------------
 GameWindowWin32::GameWindowWin32(HINSTANCE hInstance, int nCmdShow,
     HICON icon, HICON iconSmall, bool useOpenGL,
-    std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
+    std::shared_ptr<EventQueue> const& eventQueue,
     PresentationParameters const& presentationParameters)
-    : impl(std::make_unique<Impl>(hInstance, nCmdShow, icon, iconSmall, useOpenGL, eventDispatcher, presentationParameters))
+    : impl(std::make_unique<Impl>(hInstance, nCmdShow, icon, iconSmall,
+        useOpenGL, eventQueue, presentationParameters))
 {
 }
 //-----------------------------------------------------------------------

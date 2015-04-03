@@ -4,7 +4,7 @@
 #ifndef POMDOG_GAMEHOSTCOCOA_29C3B75B_HPP
 #define POMDOG_GAMEHOSTCOCOA_29C3B75B_HPP
 
-#include "../Application/SystemEventDispatcher.hpp"
+#include "Pomdog/Event/EventQueue.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include <memory>
 
@@ -19,8 +19,9 @@ class GameWindowCocoa;
 
 class GameHostCocoa final: public GameHost {
 public:
-    GameHostCocoa(std::shared_ptr<GameWindowCocoa> const& window,
-        std::shared_ptr<SystemEventDispatcher> const& dispatcher,
+    GameHostCocoa(
+        std::shared_ptr<GameWindowCocoa> const& window,
+        std::shared_ptr<EventQueue> const& eventQueue,
         PresentationParameters const& presentationParameters);
 
     ~GameHostCocoa();

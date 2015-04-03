@@ -4,13 +4,13 @@
 #ifndef POMDOG_COCOAWINDOWDELEGATE_56FEB6D8_HPP
 #define POMDOG_COCOAWINDOWDELEGATE_56FEB6D8_HPP
 
-#include "../Application/SystemEventDispatcher.hpp"
+#include "Pomdog/Event/EventQueue.hpp"
 #import <Cocoa/Cocoa.h>
 #include <memory>
 
 @interface CocoaWindowDelegate : NSObject <NSWindowDelegate>
 
-- (id)initWithEventDispatcher:(std::shared_ptr<Pomdog::Detail::SystemEventDispatcher>)dispatcher;
+- (id)initWithEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueue;
 
 @end
 

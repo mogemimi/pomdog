@@ -4,7 +4,7 @@
 #ifndef POMDOG_GAMEWINDOWWIN32_2EC902FC_HPP
 #define POMDOG_GAMEWINDOWWIN32_2EC902FC_HPP
 
-#include "../Application/SystemEventDispatcher.hpp"
+#include "Pomdog/Event/EventQueue.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Application/GameWindow.hpp"
 #include <memory>
@@ -20,7 +20,7 @@ class GameWindowWin32 final: public GameWindow {
 public:
     GameWindowWin32(HINSTANCE hInstance, int nCmdShow,
         HICON icon, HICON iconSmall, bool useOpenGL,
-        std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
+        std::shared_ptr<EventQueue> const& eventQueue,
         PresentationParameters const& presentationParameters);
 
     ~GameWindowWin32();

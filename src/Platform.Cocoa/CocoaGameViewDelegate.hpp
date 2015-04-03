@@ -7,12 +7,12 @@
 #import <Cocoa/Cocoa.h>
 
 #include "MouseCocoa.hpp"
-#include "../Application/SystemEventDispatcher.hpp"
+#include "Pomdog/Event/EventQueue.hpp"
 #include <memory>
 
 @interface CocoaGameViewDelegate : NSResponder
 
-- (id)initWithEventDispatcher:(std::shared_ptr<Pomdog::Detail::SystemEventDispatcher>)dispatcher;
+- (id)initWithEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueue;
 - (void)resetMouse:(std::shared_ptr<Pomdog::Detail::Cocoa::MouseCocoa>)mouse;
 - (void)resetMouse;
 

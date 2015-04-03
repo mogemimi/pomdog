@@ -14,7 +14,8 @@ namespace Pomdog {
 namespace Detail {
 namespace Cocoa {
 //-----------------------------------------------------------------------
-GameWindowCocoa::GameWindowCocoa(NSWindow* nativeWindowIn, std::shared_ptr<SystemEventDispatcher> const& eventDispatcher)
+GameWindowCocoa::GameWindowCocoa(NSWindow* nativeWindowIn,
+    std::shared_ptr<EventQueue> const& eventQueue)
     : nativeWindow(nativeWindowIn)
     , openGLView(nil)
     , windowDelegate(nil)
@@ -32,7 +33,7 @@ GameWindowCocoa::GameWindowCocoa(NSWindow* nativeWindowIn, std::shared_ptr<Syste
     [[nativeWindow contentView] addSubview:openGLView];
 
     // Create WindowDelegate
-    windowDelegate = [[CocoaWindowDelegate alloc] initWithEventDispatcher:eventDispatcher];
+    windowDelegate = [[CocoaWindowDelegate alloc] initWithEventQueue:eventQueue];
     [nativeWindow setDelegate:windowDelegate];
 
     // OpenGLView autoresize to fit nativeWindow's contentView
@@ -40,7 +41,7 @@ GameWindowCocoa::GameWindowCocoa(NSWindow* nativeWindowIn, std::shared_ptr<Syste
     [openGLView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 
     // Create ViewDelegate
-    viewDelegate = [[CocoaGameViewDelegate alloc] initWithEventDispatcher:eventDispatcher];
+    viewDelegate = [[CocoaGameViewDelegate alloc] initWithEventQueue:eventQueue];
     [viewDelegate setView:openGLView];
     [openGLView setDelegate:viewDelegate];
 }

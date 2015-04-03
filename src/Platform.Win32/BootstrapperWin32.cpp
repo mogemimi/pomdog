@@ -30,7 +30,7 @@ void BootstrapperWin32::Run(std::function<void(std::shared_ptr<GameHost> const& 
     presentationParameters.DepthFormat = DepthFormat::Depth24Stencil8;
     presentationParameters.IsFullScreen = settings.IsFullscreen;
 
-    auto systemEventDispatcher = std::make_shared<SystemEventDispatcher>();
+    auto eventQueue = std::make_shared<EventQueue>();
 
 #if defined(POMDOG_RENDERSYSTEM_GL4)
     bool useOpenGL = true;
@@ -39,7 +39,7 @@ void BootstrapperWin32::Run(std::function<void(std::shared_ptr<GameHost> const& 
 #endif
 
     auto gameWindow = std::make_shared<GameWindowWin32>(settings.HInstance, settings.CmdShow, settings.Icon, settings.IconSmall,
-        useOpenGL, systemEventDispatcher, presentationParameters);
+        useOpenGL, eventQueue, presentationParameters);
 
     auto inputDeviceFactory = std::make_unique<Detail::InputSystem::InputDeviceFactory>();
 
@@ -56,7 +56,7 @@ void BootstrapperWin32::Run(std::function<void(std::shared_ptr<GameHost> const& 
     }
 
     auto gameHost = std::make_shared<GameHostWin32>(gameWindow,
-        systemEventDispatcher, presentationParameters, std::move(inputDeviceFactory));
+        eventQueue, presentationParameters, std::move(inputDeviceFactory));
 
     POMDOG_ASSERT(runGame);
     runGame(gameHost);

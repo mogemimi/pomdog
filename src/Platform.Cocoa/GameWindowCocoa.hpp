@@ -4,8 +4,8 @@
 #ifndef POMDOG_GAMEWINDOWCOCOA_BA8D88CA_HPP
 #define POMDOG_GAMEWINDOWCOCOA_BA8D88CA_HPP
 
-#include "../Application/SystemEventDispatcher.hpp"
 #include "Pomdog/Application/GameWindow.hpp"
+#include "Pomdog/Event/EventQueue.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #import <Cocoa/Cocoa.h>
 
@@ -23,7 +23,8 @@ class MouseCocoa;
 
 class GameWindowCocoa final: public GameWindow {
 public:
-    GameWindowCocoa(NSWindow* window, std::shared_ptr<SystemEventDispatcher> const& eventDispatcher);
+    GameWindowCocoa(NSWindow* window, std::shared_ptr<EventQueue> const& eventQueue);
+
     ~GameWindowCocoa();
 
     ///@copydoc GameWindow

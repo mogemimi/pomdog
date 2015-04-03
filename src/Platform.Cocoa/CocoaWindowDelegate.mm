@@ -2,22 +2,21 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #import "CocoaWindowDelegate.hpp"
-#include "../Application/SystemEventDispatcher.hpp"
+#include "../Application/SystemEvents.hpp"
 #include "Pomdog/Event/Event.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 @implementation CocoaWindowDelegate
 {
-    std::shared_ptr<Pomdog::Detail::SystemEventDispatcher> eventDispatcher;
+    std::shared_ptr<Pomdog::EventQueue> eventQueue;
 }
 //-----------------------------------------------------------------------
-- (id)initWithEventDispatcher:(std::shared_ptr<Pomdog::Detail::SystemEventDispatcher>)dispatcher
+- (id)initWithEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueueIn
 {
     self = [super init];
     if (self) {
-        // insert code here to initialize delegate
-        POMDOG_ASSERT(dispatcher);
-        eventDispatcher = dispatcher;
+        POMDOG_ASSERT(eventQueueIn);
+        eventQueue = eventQueueIn;
     }
     return self;
 }
@@ -25,14 +24,14 @@
 - (BOOL)windowShouldClose:(id)sender
 {
     using Pomdog::Detail::WindowShouldCloseEvent;
-    eventDispatcher->Enqueue<WindowShouldCloseEvent>();
+    eventQueue->Enqueue<WindowShouldCloseEvent>();
     return NO;
 }
 //-----------------------------------------------------------------------
 - (void)windowWillClose:(NSNotification *)notification
 {
     using Pomdog::Detail::WindowWillCloseEvent;
-    eventDispatcher->Enqueue<WindowWillCloseEvent>();
+    eventQueue->Enqueue<WindowWillCloseEvent>();
 }
 //-----------------------------------------------------------------------
 @end

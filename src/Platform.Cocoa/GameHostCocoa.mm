@@ -8,6 +8,7 @@
 #include "MouseCocoa.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
+#include "../Application/SystemEvents.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Audio/AudioEngine.hpp"
@@ -134,7 +135,7 @@ static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 class GameHostCocoa::Impl final {
 public:
     Impl(std::shared_ptr<GameWindowCocoa> const& window,
-        std::shared_ptr<SystemEventDispatcher> const& dipatcher,
+        std::shared_ptr<EventQueue> const& eventQueue,
         PresentationParameters const& presentationParameters);
 
     ~Impl();
@@ -175,7 +176,7 @@ private:
     std::atomic_bool viewLiveResizing;
 
     //std::weak_ptr<Game> game;
-    std::shared_ptr<SystemEventDispatcher> systemEventDispatcher;
+    std::shared_ptr<EventQueue> eventQueue;
     std::shared_ptr<GameWindowCocoa> window;
     std::shared_ptr<OpenGLContextCocoa> openGLContext;
     std::shared_ptr<Pomdog::GraphicsDevice> graphicsDevice;
@@ -190,10 +191,10 @@ private:
 };
 //-----------------------------------------------------------------------
 GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& windowIn,
-    std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
+    std::shared_ptr<EventQueue> const& eventQueueIn,
     PresentationParameters const& presentationParameters)
     : viewLiveResizing(false)
-    , systemEventDispatcher(eventDispatcher)
+    , eventQueue(eventQueueIn)
     , window(windowIn)
     , presentationInterval(Duration(1) / 60)
     , exitRequest(false)
@@ -210,10 +211,9 @@ GameHostCocoa::Impl::Impl(std::shared_ptr<GameWindowCocoa> const& windowIn,
     POMDOG_ASSERT(window);
     window->ResetGLContext(openGLContext);
 
-    POMDOG_ASSERT(systemEventDispatcher);
-    systemEventConnection = systemEventDispatcher->Connect([this](Event const& event){
-        ProcessSystemEvents(event);
-    });
+    POMDOG_ASSERT(eventQueue);
+    systemEventConnection = eventQueue->Connect(
+        [this](Event const& event) { ProcessSystemEvents(event); });
 
     keyboard = std::make_shared<KeyboardCocoa>();
     mouse = std::make_shared<MouseCocoa>();
@@ -242,7 +242,7 @@ GameHostCocoa::Impl::~Impl()
     graphicsDevice.reset();
     openGLContext.reset();
     window.reset();
-    systemEventDispatcher.reset();
+    systemEventQueue.reset();
 }
 //-----------------------------------------------------------------------
 void GameHostCocoa::Impl::Run(Game & game)
@@ -314,7 +314,7 @@ void GameHostCocoa::Impl::RenderFrame(Game & game)
 //-----------------------------------------------------------------------
 void GameHostCocoa::Impl::DoEvents()
 {
-    systemEventDispatcher->Tick();
+    eventQueue->Tick();
 }
 //-----------------------------------------------------------------------
 void GameHostCocoa::Impl::ProcessSystemEvents(Event const& event)
@@ -416,9 +416,9 @@ std::shared_ptr<Pomdog::Mouse> GameHostCocoa::Impl::GetMouse()
 #pragma mark - GameHostCocoa
 //-----------------------------------------------------------------------
 GameHostCocoa::GameHostCocoa(std::shared_ptr<GameWindowCocoa> const& window,
-    std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
+    std::shared_ptr<EventQueue> const& eventQueue,
     PresentationParameters const& presentationParameters)
-    : impl(std::make_unique<Impl>(window, eventDispatcher, presentationParameters))
+    : impl(std::make_unique<Impl>(window, eventQueue, presentationParameters))
 {}
 //-----------------------------------------------------------------------
 GameHostCocoa::~GameHostCocoa() = default;

@@ -212,7 +212,7 @@
       '../include/Pomdog/Input/Mouse.hpp',
       '../src/Application/GameClock.cpp',
       '../src/Application/SubsystemScheduler.hpp',
-      '../src/Application/SystemEventDispatcher.hpp',
+      '../src/Application/SystemEvents.hpp',
       '../src/Application/Timer.cpp',
       '../src/Application/TimeSource.hpp',
       '../src/Audio/AudioClip.cpp',

@@ -3,6 +3,7 @@
 
 #include "GameHostWin32.hpp"
 #include "GameWindowWin32.hpp"
+#include "../Application/SystemEvents.hpp"
 #include "../InputSystem/InputDeviceFactory.hpp"
 
 #if defined(POMDOG_RENDERSYSTEM_GL4) \
@@ -60,7 +61,7 @@ static void MessagePump()
 class GameHostWin32::Impl final {
 public:
     Impl(std::shared_ptr<GameWindowWin32> const& window,
-        std::shared_ptr<SystemEventDispatcher> const& dipatcher,
+        std::shared_ptr<EventQueue> const& eventQueue,
         PresentationParameters const& presentationParameters,
         std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory);
 
@@ -98,7 +99,7 @@ private:
     Detail::SubsystemScheduler subsystemScheduler;
     ScopedConnection systemEventConnection;
 
-    std::shared_ptr<SystemEventDispatcher> systemEventDispatcher;
+    std::shared_ptr<EventQueue> eventQueue;
     std::shared_ptr<GameWindowWin32> window;
 
     std::shared_ptr<Pomdog::GraphicsContext> graphicsContext;
@@ -117,10 +118,10 @@ private:
 };
 //-----------------------------------------------------------------------
 GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
-    std::shared_ptr<SystemEventDispatcher> const& eventDispatcher,
+    std::shared_ptr<EventQueue> const& eventQueueIn,
     PresentationParameters const& presentationParameters,
     std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactoryIn)
-    : systemEventDispatcher(eventDispatcher)
+    : eventQueue(eventQueueIn)
     , window(windowIn)
     , inputDeviceFactory(std::move(inputDeviceFactoryIn))
     , exitRequest(false)
@@ -166,8 +167,8 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
         presentationParameters, graphicsDevice);
 #endif
 
-    POMDOG_ASSERT(systemEventDispatcher);
-    systemEventConnection = systemEventDispatcher->Connect([this](Event const& event) {
+    POMDOG_ASSERT(eventQueue);
+    systemEventConnection = eventQueue->Connect([this](Event const& event) {
         ProcessSystemEvents(event);
     });
 
@@ -234,7 +235,7 @@ void GameHostWin32::Impl::RenderFrame(Game & game)
 //-----------------------------------------------------------------------
 void GameHostWin32::Impl::DoEvents()
 {
-    systemEventDispatcher->Tick();
+    eventQueue->Tick();
 
     if (surfaceResizeRequest) {
         ClientSizeChanged();
@@ -328,10 +329,10 @@ std::shared_ptr<Pomdog::Mouse> GameHostWin32::Impl::GetMouse()
 }
 //-----------------------------------------------------------------------
 GameHostWin32::GameHostWin32(std::shared_ptr<GameWindowWin32> const& window,
-    std::shared_ptr<SystemEventDispatcher> const& dispatcher,
+    std::shared_ptr<EventQueue> const& eventQueue,
     PresentationParameters const& presentationParameters,
     std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory)
-    : impl(std::make_unique<Impl>(window, dispatcher, presentationParameters, std::move(inputDeviceFactory)))
+    : impl(std::make_unique<Impl>(window, eventQueue, presentationParameters, std::move(inputDeviceFactory)))
 {}
 //-----------------------------------------------------------------------
 GameHostWin32::~GameHostWin32() = default;

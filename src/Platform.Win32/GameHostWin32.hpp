@@ -4,7 +4,7 @@
 #ifndef POMDOG_GAMEHOSTWIN32_F8172FE6_HPP
 #define POMDOG_GAMEHOSTWIN32_F8172FE6_HPP
 
-#include "../Application/SystemEventDispatcher.hpp"
+#include "Pomdog/Event/EventQueue.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include <memory>
 
@@ -25,7 +25,7 @@ class GameWindowWin32;
 class GameHostWin32 final: public GameHost {
 public:
     GameHostWin32(std::shared_ptr<GameWindowWin32> const& window,
-        std::shared_ptr<SystemEventDispatcher> const& dispatcher,
+        std::shared_ptr<EventQueue> const& eventQueue,
         PresentationParameters const& presentationParameters,
         std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory);
 

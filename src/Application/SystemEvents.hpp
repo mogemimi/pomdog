@@ -1,16 +1,13 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SYSTEMEVENTDISPATCHER_7D649F10_HPP
-#define POMDOG_SYSTEMEVENTDISPATCHER_7D649F10_HPP
+#ifndef POMDOG_SYSTEMEVENTS_7D649F10_HPP
+#define POMDOG_SYSTEMEVENTS_7D649F10_HPP
 
-#include "Pomdog/Event/EventQueue.hpp"
 #include "Pomdog/Input/Keys.hpp"
 
 namespace Pomdog {
 namespace Detail {
-
-using SystemEventDispatcher = EventQueue;
 
 struct WindowWillCloseEvent {};
 struct WindowShouldCloseEvent {};
@@ -34,4 +31,4 @@ struct InputKeyUpEvent {
 }// namespace Detail
 }// namespace Pomdog
 
-#endif // POMDOG_SYSTEMEVENTDISPATCHER_7D649F10_HPP
+#endif // POMDOG_SYSTEMEVENTS_7D649F10_HPP
