@@ -26,13 +26,13 @@ git clone https://chromium.googlesource.com/external/gyp.git Tools/gyp
 **1. Generating the Xcode project file**
 
 ```bash
-Tools/gyp/gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=./Build.xcodefiles/
+Tools/gyp/gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
 ```
 
 You can also use `gyp` instead of `Tools/gyp/gyp`:
 
 ```bash
-gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=./Build.xcodefiles/
+gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
 ```
 
 For information on how to install gyp, see [How to Install GYP](https://github.com/mogemimi/pomdog/wiki/How-to-Install-GYP) on the wiki.

@@ -108,7 +108,6 @@
         ['OS == "mac"', {
           'sources': [
             '../test/TestApp/Platform.Cocoa/main.mm',
-            '../test/TestApp/Platform.Cocoa/Prefix.pch',
             '../test/TestApp/Platform.Cocoa/AppDelegate.h',
             '../test/TestApp/Platform.Cocoa/AppDelegate.mm',
             '../test/TestApp/Platform.Cocoa/GameView.h',

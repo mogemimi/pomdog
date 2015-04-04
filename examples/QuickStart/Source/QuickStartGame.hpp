@@ -7,7 +7,7 @@ namespace QuickStart {
 
 using namespace Pomdog;
 
-class QuickStartGame: public Game {
+class QuickStartGame : public Game {
 public:
     explicit QuickStartGame(std::shared_ptr<GameHost> const& gameHost);
 
@@ -23,11 +23,12 @@ private:
     std::shared_ptr<VertexBuffer> vertexBuffer;
     std::shared_ptr<IndexBuffer> indexBuffer;
     std::shared_ptr<EffectPass> effectPass;
+    std::shared_ptr<SamplerState> sampler;
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
     std::shared_ptr<Texture2D> texture;
     std::shared_ptr<RenderTarget2D> renderTarget;
 };
 
-}// namespace QuickStart
+} // namespace QuickStart
 
 #endif // QUICKSTARTGAME_HPP

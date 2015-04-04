@@ -64,9 +64,12 @@
         ['OS == "mac"', {
           'sources': [
             '../Platform.Cocoa/main.mm',
-            '../Platform.Cocoa/Prefix.pch',
             '../Platform.Cocoa/AppDelegate.h',
             '../Platform.Cocoa/AppDelegate.mm',
+            '../Platform.Cocoa/GameView.h',
+            '../Platform.Cocoa/GameView.mm',
+            '../Platform.Cocoa/GameViewController.h',
+            '../Platform.Cocoa/GameViewController.mm',
           ],
           'actions': [
             {
