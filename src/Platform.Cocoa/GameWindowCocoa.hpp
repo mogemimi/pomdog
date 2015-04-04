@@ -43,9 +43,9 @@ public:
     void SetMouseCursor(MouseCursor cursor) override;
 
     ///@return true if the window is minimized, false otherwise.
-    bool IsMinimized() const;
+    bool IsMinimized() const noexcept;
 
-    void SetView(NSView* gameView);
+    void SetView(NSView* gameView) noexcept;
 
 private:
     std::shared_ptr<EventQueue> eventQueue;

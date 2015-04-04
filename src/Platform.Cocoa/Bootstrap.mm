@@ -44,7 +44,8 @@ void Bootstrap::OnCompleted(std::function<void()> onCompletedIn)
     onCompleted = onCompletedIn;
 }
 //-----------------------------------------------------------------------
-void Bootstrap::Run(std::function<std::unique_ptr<Game>(std::shared_ptr<GameHost> const&)> const& createApp)
+void Bootstrap::Run(std::function<std::unique_ptr<Game>(
+    std::shared_ptr<GameHost> const&)> const& createApp)
 {
     POMDOG_ASSERT(openGLView != nil);
     POMDOG_ASSERT(createApp);

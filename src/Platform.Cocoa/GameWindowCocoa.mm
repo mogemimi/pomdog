@@ -158,12 +158,12 @@ void GameWindowCocoa::SetMouseCursor(MouseCursor cursor)
 //-----------------------------------------------------------------------
 #pragma mark - Low-Level API for GameHostCocoa
 //-----------------------------------------------------------------------
-bool GameWindowCocoa::IsMinimized() const
+bool GameWindowCocoa::IsMinimized() const noexcept
 {
     return [nativeWindow isMiniaturized] == YES;
 }
 //-----------------------------------------------------------------------
-void GameWindowCocoa::SetView(NSView* gameViewIn)
+void GameWindowCocoa::SetView(NSView* gameViewIn) noexcept
 {
     gameView = gameViewIn;
 }

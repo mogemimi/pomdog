@@ -10,7 +10,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Cocoa {
 
-class TimeSourceCocoa {
+class TimeSourceCocoa final {
 public:
     TimeSourceCocoa();
 

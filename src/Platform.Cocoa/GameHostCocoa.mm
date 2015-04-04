@@ -300,6 +300,7 @@ CVReturn GameHostCocoa::Impl::DisplayLinkCallback(
     void* displayLinkContext)
 {
     auto gameHost = reinterpret_cast<GameHostCocoa::Impl*>(displayLinkContext);
+    POMDOG_ASSERT(gameHost != nullptr);
     gameHost->GameLoop();
     return kCVReturnSuccess;
 }
