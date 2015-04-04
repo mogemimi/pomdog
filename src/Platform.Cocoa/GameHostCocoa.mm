@@ -316,7 +316,12 @@ void GameHostCocoa::Impl::GameLoop()
 
     clock.Tick();
     DoEvents();
+
+    openGLContext->Lock();
+    openGLContext->SetView(openGLView);
+    openGLContext->MakeCurrent();
     game->Update();
+    openGLContext->Unlock();
 
     if (!viewLiveResizing.load()) {
         RenderFrame();
