@@ -38,6 +38,12 @@ public:
 
     EffectPassLoader & InputLayout(InputLayoutDescription && inputLayout);
 
+    EffectPassLoader & BlendState(BlendDescription const& blendState);
+
+    EffectPassLoader & RasterizerState(RasterizerDescription const& rasterizerState);
+
+    EffectPassLoader & DepthStencilState(DepthStencilDescription const& depthStencilState);
+
     std::shared_ptr<EffectPass> Load();
 
 private:

@@ -185,6 +185,30 @@ EffectPassLoader & EffectPassLoader::InputLayout(InputLayoutDescription && input
     return *this;
 }
 //-----------------------------------------------------------------------
+EffectPassLoader & EffectPassLoader::BlendState(BlendDescription const& blendState)
+{
+    POMDOG_ASSERT(impl);
+    impl->description.BlendState = blendState;
+    impl->hasBlendState = true;
+    return *this;
+}
+//-----------------------------------------------------------------------
+EffectPassLoader & EffectPassLoader::RasterizerState(RasterizerDescription const& rasterizerState)
+{
+    POMDOG_ASSERT(impl);
+    impl->description.RasterizerState = rasterizerState;
+    impl->hasRasterizerState = true;
+    return *this;
+}
+//-----------------------------------------------------------------------
+EffectPassLoader & EffectPassLoader::DepthStencilState(DepthStencilDescription const& depthStencilState)
+{
+    POMDOG_ASSERT(impl);
+    impl->description.DepthStencilState = depthStencilState;
+    impl->hasDepthStencilState = true;
+    return *this;
+}
+//-----------------------------------------------------------------------
 std::shared_ptr<EffectPass> EffectPassLoader::Load()
 {
     POMDOG_ASSERT(impl);
