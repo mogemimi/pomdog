@@ -4,7 +4,11 @@
     ['OS == "win"', {
       'variables': {
         'application_platform%': 'Win32',
-        'renderers%': ['Direct3D11', 'GL4'],
+        'renderers%': [
+          'Direct3D12',
+          'Direct3D11',
+          'GL4',
+        ],
         'audio%': 'XAudio2',
         'input_devices%': ['DirectInput'],
       },
@@ -399,6 +403,27 @@
       '../src/RenderSystem.Direct3D11/Texture2DDirect3D11.cpp',
       '../src/RenderSystem.Direct3D11/Texture2DDirect3D11.hpp',
     ],
+    'pomdog_library_direct3d12_sources': [
+      '../src/RenderSystem.Direct3D12/BufferDirect3D12.cpp',
+      '../src/RenderSystem.Direct3D12/BufferDirect3D12.hpp',
+      '../src/RenderSystem.Direct3D12/ConstantLayoutDirect3D12.cpp',
+      '../src/RenderSystem.Direct3D12/ConstantLayoutDirect3D12.hpp',
+      '../src/RenderSystem.Direct3D12/EffectReflectionDirect3D12.cpp',
+      '../src/RenderSystem.Direct3D12/EffectReflectionDirect3D12.hpp',
+      '../src/RenderSystem.Direct3D12/GraphicsDeviceDirect3D12.cpp',
+      '../src/RenderSystem.Direct3D12/GraphicsDeviceDirect3D12.hpp',
+      '../src/RenderSystem.Direct3D12/GraphicsContextDirect3D12.cpp',
+      '../src/RenderSystem.Direct3D12/GraphicsContextDirect3D12.hpp',
+      '../src/RenderSystem.Direct3D12/PipelineStateDirect3D12.cpp',
+      '../src/RenderSystem.Direct3D12/PipelineStateDirect3D12.hpp',
+      '../src/RenderSystem.Direct3D12/RenderTarget2DDirect3D12.cpp',
+      '../src/RenderSystem.Direct3D12/RenderTarget2DDirect3D12.hpp',
+      '../src/RenderSystem.Direct3D12/SamplerStateDirect3D12.cpp',
+      '../src/RenderSystem.Direct3D12/SamplerStateDirect3D12.hpp',
+      '../src/RenderSystem.Direct3D12/ShaderDirect3D12.hpp',
+      '../src/RenderSystem.Direct3D12/Texture2DDirect3D12.cpp',
+      '../src/RenderSystem.Direct3D12/Texture2DDirect3D12.hpp',
+    ],
     'pomdog_library_xaudio2_sources': [
       '../src/SoundSystem.XAudio2/AudioClipXAudio2.cpp',
       '../src/SoundSystem.XAudio2/AudioClipXAudio2.hpp',
@@ -535,6 +560,22 @@
             '-ld3d11.lib',
             '-ld3dcompiler.lib',
             '-ldxguid.lib', # using _IID_ID3D11ShaderReflection
+          ],
+        },
+      }],
+      ['"Direct3D12" in renderers', {
+        'defines': ['POMDOG_ENABLE_DIRECT3D12'],
+        'sources': [
+          '<@(pomdog_library_dxgi_sources)',
+          '<@(pomdog_library_direct3d_sources)',
+          '<@(pomdog_library_direct3d12_sources)',
+        ],
+        'link_settings': {
+          'libraries': [
+            '-ldxgi.lib',
+            '-ld3d12.lib',
+            '-ld3dcompiler.lib',
+            '-ldxguid.lib', # using _IID_ID3D12ShaderReflection
           ],
         },
       }],
