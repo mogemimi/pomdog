@@ -4,9 +4,9 @@
 #ifndef POMDOG_GAMEWINDOWWIN32_2EC902FC_HPP
 #define POMDOG_GAMEWINDOWWIN32_2EC902FC_HPP
 
-#include "Pomdog/Event/EventQueue.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Application/GameWindow.hpp"
+#include "Pomdog/Signals/EventQueue.hpp"
 #include <memory>
 
 namespace Pomdog {

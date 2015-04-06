@@ -4,12 +4,12 @@
 #ifndef POMDOG_GAMEHOSTWIN32_F8172FE6_HPP
 #define POMDOG_GAMEHOSTWIN32_F8172FE6_HPP
 
-#include "Pomdog/Event/EventQueue.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include <memory>
 
 namespace Pomdog {
 
+class EventQueue;
 class Game;
 class PresentationParameters;
 

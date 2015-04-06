@@ -31,10 +31,11 @@
 #include "Pomdog/Graphics/GraphicsContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Event/ScopedConnection.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Signals/EventQueue.hpp"
+#include "Pomdog/Signals/ScopedConnection.hpp"
 
 #include <thread>
 #include <chrono>

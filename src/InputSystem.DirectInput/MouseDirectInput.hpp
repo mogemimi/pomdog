@@ -7,7 +7,7 @@
 #include "PrerequisitesDirectInput.hpp"
 #include "Pomdog/Input/Mouse.hpp"
 #include "Pomdog/Input/MouseState.hpp"
-#include "Pomdog/Event/ScopedConnection.hpp"
+#include "Pomdog/Signals/ScopedConnection.hpp"
 #include <wrl/client.h>
 
 namespace Pomdog {

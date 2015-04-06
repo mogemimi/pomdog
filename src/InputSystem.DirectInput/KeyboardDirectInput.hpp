@@ -7,7 +7,7 @@
 #include "PrerequisitesDirectInput.hpp"
 #include "Pomdog/Input/Keyboard.hpp"
 #include "Pomdog/Input/KeyboardState.hpp"
-#include "Pomdog/Event/ScopedConnection.hpp"
+#include "Pomdog/Signals/ScopedConnection.hpp"
 #include <wrl/client.h>
 
 namespace Pomdog {
