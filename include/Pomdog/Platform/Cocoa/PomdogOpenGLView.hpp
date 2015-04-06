@@ -5,7 +5,7 @@
 #define POMDOG_OPENGLVIEW_5390FBCF_HPP
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Event/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
 #include <memory>
 #include <functional>
 

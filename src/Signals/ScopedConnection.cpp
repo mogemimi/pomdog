@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "Pomdog/Event/ScopedConnection.hpp"
+#include "Pomdog/Signals/ScopedConnection.hpp"
 #include <utility>
 
 namespace Pomdog {
@@ -38,4 +38,4 @@ void ScopedConnection::Disconnect()
     connection.Disconnect();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

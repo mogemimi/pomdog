@@ -5,8 +5,8 @@
 #include "Pomdog/Logging/LogEntry.hpp"
 #include "Pomdog/Logging/LogStream.hpp"
 #include "Pomdog/Logging/LogChannel.hpp"
-#include "Pomdog/Event/Connection.hpp"
-#include "Pomdog/Event/ScopedConnection.hpp"
+#include "Pomdog/Signals/Connection.hpp"
+#include "Pomdog/Signals/ScopedConnection.hpp"
 #include <algorithm>
 #include <memory>
 #include <mutex>

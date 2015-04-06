@@ -5,7 +5,7 @@
 #define POMDOG_SUBSYSTEMSCHEDULER_15398B34_HPP
 
 #include "../Utility/Noncopyable.hpp"
-#include "Pomdog/Event/Signal.hpp"
+#include "Pomdog/Signals/Signal.hpp"
 
 namespace Pomdog {
 namespace Detail {

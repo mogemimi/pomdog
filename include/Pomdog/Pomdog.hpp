@@ -27,13 +27,6 @@
 #include "Content/AssetManager.hpp"
 #include "Content/AssetLoaders/EffectPassLoader.hpp"
 
-// Event
-#include "Event/Connection.hpp"
-#include "Event/Event.hpp"
-#include "Event/EventQueue.hpp"
-#include "Event/ScopedConnection.hpp"
-#include "Event/Signal.hpp"
-
 // Math
 #include "Math/Color.hpp"
 #include "Math/ContainmentType.hpp"
@@ -126,6 +119,12 @@
 #include "Input/PlayerIndex.hpp"
 #include "Input/TouchLocation.hpp"
 #include "Input/TouchLocationState.hpp"
+
+#include "Signals/Connection.hpp"
+#include "Signals/Event.hpp"
+#include "Signals/EventQueue.hpp"
+#include "Signals/ScopedConnection.hpp"
+#include "Signals/Signal.hpp"
 
 #include "Utility/Assert.hpp"
 #include "Utility/Exception.hpp"

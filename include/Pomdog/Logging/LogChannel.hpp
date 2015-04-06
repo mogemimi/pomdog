@@ -6,7 +6,7 @@
 
 #include "LogLevel.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Event/Signal.hpp"
+#include "Pomdog/Signals/Signal.hpp"
 #include <functional>
 #include <string>
 

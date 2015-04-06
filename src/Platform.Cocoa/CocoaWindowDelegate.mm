@@ -3,7 +3,7 @@
 
 #import "CocoaWindowDelegate.hpp"
 #include "../Application/SystemEvents.hpp"
-#include "Pomdog/Event/Event.hpp"
+#include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 @implementation CocoaWindowDelegate

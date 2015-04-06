@@ -5,7 +5,7 @@
 #define POMDOG_TIMER_CAC74AF2_HPP
 
 #include "Pomdog/Application/Duration.hpp"
-#include "Pomdog/Event/ScopedConnection.hpp"
+#include "Pomdog/Signals/ScopedConnection.hpp"
 #include <memory>
 
 namespace Pomdog {

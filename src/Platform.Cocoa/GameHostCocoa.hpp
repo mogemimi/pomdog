@@ -4,7 +4,7 @@
 #ifndef POMDOG_GAMEHOSTCOCOA_29C3B75B_HPP
 #define POMDOG_GAMEHOSTCOCOA_29C3B75B_HPP
 
-#include "Pomdog/Event/EventQueue.hpp"
+#include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include <memory>
 

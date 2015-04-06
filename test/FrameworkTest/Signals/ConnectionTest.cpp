@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include <Pomdog/Event/Connection.hpp>
-#include <Pomdog/Event/Signal.hpp>
+#include <Pomdog/Signals/Connection.hpp>
+#include <Pomdog/Signals/Signal.hpp>
 #include <gtest/iutest_switch.hpp>
 #include <utility>
 

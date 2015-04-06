@@ -4,7 +4,7 @@
 #ifndef POMDOG_COCOAWINDOWDELEGATE_56FEB6D8_HPP
 #define POMDOG_COCOAWINDOWDELEGATE_56FEB6D8_HPP
 
-#include "Pomdog/Event/EventQueue.hpp"
+#include "Pomdog/Signals/EventQueue.hpp"
 #import <Cocoa/Cocoa.h>
 #include <memory>
 

@@ -5,8 +5,8 @@
 #include <Pomdog/Logging/LogChannel.hpp>
 #include <Pomdog/Logging/LogEntry.hpp>
 #include <Pomdog/Logging/LogStream.hpp>
-#include <Pomdog/Event/Event.hpp>
-#include <Pomdog/Event/ScopedConnection.hpp>
+#include <Pomdog/Signals/Event.hpp>
+#include <Pomdog/Signals/ScopedConnection.hpp>
 #include <gtest/iutest_switch.hpp>
 #include <vector>
 

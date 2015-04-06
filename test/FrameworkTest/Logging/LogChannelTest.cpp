@@ -3,8 +3,8 @@
 
 #include <Pomdog/Logging/LogChannel.hpp>
 #include <Pomdog/Logging/LogEntry.hpp>
-#include <Pomdog/Event/Connection.hpp>
-#include <Pomdog/Event/ScopedConnection.hpp>
+#include <Pomdog/Signals/Connection.hpp>
+#include <Pomdog/Signals/ScopedConnection.hpp>
 #include <gtest/iutest_switch.hpp>
 
 using Pomdog::LogChannel;

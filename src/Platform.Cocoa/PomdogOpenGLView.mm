@@ -7,7 +7,7 @@
 #include "OpenGLContextCocoa.hpp"
 #include "../Application/SystemEvents.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Event/Event.hpp"
+#include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Input/ButtonState.hpp"
 #include "Pomdog/Input/Keys.hpp"

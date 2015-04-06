@@ -5,7 +5,7 @@
 #define POMDOG_GAMEWINDOWCOCOA_BA8D88CA_HPP
 
 #include "Pomdog/Application/GameWindow.hpp"
-#include "Pomdog/Event/EventQueue.hpp"
+#include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #import <Cocoa/Cocoa.h>
 

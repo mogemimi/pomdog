@@ -4,7 +4,7 @@
 #ifndef POMDOG_GAMEWINDOW_22D747BC_HPP
 #define POMDOG_GAMEWINDOW_22D747BC_HPP
 
-#include "Pomdog/Event/Signal.hpp"
+#include "Pomdog/Signals/Signal.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <string>
 #include <cstdint>
