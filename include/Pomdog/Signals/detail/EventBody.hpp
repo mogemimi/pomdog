@@ -1,0 +1,62 @@
+// Copyright (c) 2013-2015 mogemimi.
+// Distributed under the MIT license. See LICENSE.md file for details.
+
+#ifndef POMDOG_EVENTBODY_9EA2B1CE_HPP
+#define POMDOG_EVENTBODY_9EA2B1CE_HPP
+
+#include <typeinfo>
+#include <type_traits>
+#include <utility>
+
+namespace Pomdog {
+namespace Detail {
+
+template <class T>
+struct EventHashCode final {
+    static_assert(!std::is_pointer<T>::value, "T is not pointer.");
+    static_assert(std::is_object<T>::value, "T is not object type.");
+
+    static const std::size_t value;
+};
+
+template <class T>
+const std::size_t EventHashCode<T>::value = typeid(T const*).hash_code();
+
+class EventBody {
+public:
+    EventBody() = default;
+    EventBody(EventBody const&) = delete;
+    EventBody & operator=(EventBody const&) = delete;
+
+    virtual ~EventBody() = default;
+
+    virtual std::size_t HashCode() const noexcept = 0;
+};
+
+template <typename T>
+class EventBodyOverride final : public EventBody {
+public:
+    static_assert(!std::is_reference<T>::value,
+        "reference type is not supported.");
+    static_assert(!std::is_pointer<T>::value,
+        "pointer type is not supported.");
+    static_assert(std::is_object<T>::value,
+        "T is object type.");
+
+    template <typename...Arguments>
+    explicit EventBodyOverride(Arguments &&...argument)
+        : data(std::forward<Arguments>(argument)...)
+    {}
+
+    std::size_t HashCode() const noexcept override
+    {
+        return EventHashCode<T>::value;
+    }
+
+    T data;
+};
+
+} // namespace Detail
+} // namespace Pomdog
+
+#endif // POMDOG_EVENTBODY_9EA2B1CE_HPP

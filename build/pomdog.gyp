@@ -129,7 +129,7 @@
       '../include/Pomdog/Signals/EventQueue.hpp',
       '../include/Pomdog/Signals/ScopedConnection.hpp',
       '../include/Pomdog/Signals/Signal.hpp',
-      '../include/Pomdog/Signals/detail/EventArguments.hpp',
+      '../include/Pomdog/Signals/detail/EventBody.hpp',
       '../include/Pomdog/Signals/detail/ForwardDeclarations.hpp',
       '../include/Pomdog/Signals/detail/SignalBody.hpp',
       '../include/Pomdog/Utility/Assert.hpp',
