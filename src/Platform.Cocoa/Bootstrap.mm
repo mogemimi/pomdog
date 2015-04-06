@@ -8,6 +8,7 @@
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Logging/Log.hpp"
 #import "PomdogOpenGLView.hpp"
 
 using Pomdog::Detail::Cocoa::GameHostCocoa;
@@ -80,6 +81,9 @@ void Bootstrap::Run(std::function<std::unique_ptr<Game>(
             onError(e);
         }
         else {
+#if defined(DEBUG) && !defined(NDEBUG)
+            Log::Critical("Pomdog", e.what());
+#endif
             throw e;
         }
     }

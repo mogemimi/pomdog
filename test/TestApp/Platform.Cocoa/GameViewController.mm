@@ -17,11 +17,6 @@
     Pomdog::Cocoa::Bootstrap bootstrap;
 }
 
--(void)awakeFromNib
-{
-    [super awakeFromNib];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
