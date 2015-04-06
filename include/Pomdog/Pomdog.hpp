@@ -4,7 +4,6 @@
 #ifndef POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP
 #define POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP
 
-// Application
 #include "Application/Duration.hpp"
 #include "Application/Game.hpp"
 #include "Application/GameClock.hpp"
@@ -14,7 +13,6 @@
 #include "Application/TimePoint.hpp"
 #include "Application/Timer.hpp"
 
-// Audio
 #include "Audio/AudioChannels.hpp"
 #include "Audio/AudioClip.hpp"
 #include "Audio/AudioEmitter.hpp"
@@ -23,11 +21,9 @@
 #include "Audio/SoundEffect.hpp"
 #include "Audio/SoundState.hpp"
 
-// Content
 #include "Content/AssetManager.hpp"
 #include "Content/AssetLoaders/EffectPassLoader.hpp"
 
-// Math
 #include "Math/Color.hpp"
 #include "Math/ContainmentType.hpp"
 #include "Math/Degree.hpp"
@@ -45,14 +41,12 @@
 #include "Math/Vector3.hpp"
 #include "Math/Vector4.hpp"
 
-// Logging
 #include "Logging/Log.hpp"
 #include "Logging/LogChannel.hpp"
 #include "Logging/LogEntry.hpp"
 #include "Logging/LogLevel.hpp"
 #include "Logging/LogStream.hpp"
 
-// Graphics
 #include "Graphics/Blend.hpp"
 #include "Graphics/BlendDescription.hpp"
 #include "Graphics/BlendFunction.hpp"
@@ -134,4 +128,4 @@
 #include "Basic/Platform.hpp"
 #include "Basic/Version.hpp"
 
-#endif // !defined(POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP)
+#endif // POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP

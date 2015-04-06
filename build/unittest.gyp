@@ -1,8 +1,3 @@
-# Building under Mac OSX and Xcode:
-# gyp build/unittest.gyp --depth=. -f xcode --generator-output=./build.xcodefiles/
-#
-# Building under Windows and MSVC2015+:
-# gyp build/unittest.gyp --depth=. -f msvs -G msvs_version=2013 --generator-output=./build.msvs/
 {
   'includes': ['common.gypi'],
   'make_global_settings': [

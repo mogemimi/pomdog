@@ -31,7 +31,9 @@ static std::uint8_t ToByteSize(InputElementFormat format)
 #endif
 }
 
+#ifdef DEBUG
 static constexpr std::uint16_t MaxInputSlotCount = 16;
+#endif
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
