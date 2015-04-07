@@ -1,13 +1,13 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EFFECTPARAMETER_6D116595_HPP
-#define POMDOG_EFFECTPARAMETER_6D116595_HPP
+#ifndef POMDOG_CONSTANTBUFFER_6D116595_HPP
+#define POMDOG_CONSTANTBUFFER_6D116595_HPP
 
 #include "detail/ForwardDeclarations.hpp"
 #include "detail/EffectBinaryParameter.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <cstdint>
+#include <cstddef>
 #include <memory>
 #include <vector>
 #include <utility>
@@ -15,19 +15,20 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT EffectParameter {
+class POMDOG_EXPORT ConstantBuffer {
 public:
-    EffectParameter() = default;
+    ConstantBuffer() = default;
 
-    EffectParameter(EffectParameter const&) = delete;
-    EffectParameter & operator=(EffectParameter const&) = delete;
+    ConstantBuffer(ConstantBuffer const&) = delete;
+    ConstantBuffer & operator=(ConstantBuffer const&) = delete;
 
-    EffectParameter(GraphicsDevice & graphicsDevice, std::uint32_t byteConstants);
+    ConstantBuffer(GraphicsDevice & graphicsDevice,
+        std::size_t byteConstants);
 
-    EffectParameter(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        std::uint32_t byteConstants);
+    ConstantBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        std::size_t byteConstants);
 
-    ~EffectParameter();
+    ~ConstantBuffer();
 
     template <typename T>
     T GetValue() const
@@ -38,7 +39,7 @@ public:
         return std::move(result);
     }
 
-    void GetValue(std::uint32_t byteWidth, void* result) const;
+    void GetValue(std::size_t byteWidth, void* result) const;
 
     template <typename T>
     void SetValue(T const& value)
@@ -48,13 +49,13 @@ public:
     }
 
     template <typename T>
-    void SetValue(T const* data, std::uint32_t count)
+    void SetValue(T const* data, std::size_t count)
     {
         static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
         Detail::EffectBinaryParameter::Set(*this, data, count);
     }
 
-    void SetValue(void const* data, std::uint32_t byteWidth);
+    void SetValue(void const* data, std::size_t byteWidth);
 
 public:
     Detail::RenderSystem::NativeBuffer* NativeConstantBuffer();
@@ -65,4 +66,4 @@ private:
 
 } // namespace Pomdog
 
-#endif // POMDOG_EFFECTPARAMETER_6D116595_HPP
+#endif // POMDOG_CONSTANTBUFFER_6D116595_HPP

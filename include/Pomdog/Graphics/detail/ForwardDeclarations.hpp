@@ -24,8 +24,8 @@ class NativeTexture2D;
 } // namespace Detail
 
 // Classes
+class ConstantBuffer;
 class ConstantBufferBinding;
-class EffectParameter;
 class EffectPass;
 class EffectReflection;
 class GraphicsContext;

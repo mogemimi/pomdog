@@ -12,7 +12,8 @@
 
 namespace Pomdog {
 
-using EffectParameterCollection = std::unordered_map<std::string, std::shared_ptr<EffectParameter>>;
+using ConstantBufferCollection = std::unordered_map<
+    std::string, std::shared_ptr<ConstantBuffer>>;
 
 class POMDOG_EXPORT ConstantBufferBinding {
 public:
@@ -29,15 +30,15 @@ public:
     ConstantBufferBinding & operator=(ConstantBufferBinding const&) = delete;
     ConstantBufferBinding & operator=(ConstantBufferBinding &&) = default;
 
-    std::shared_ptr<EffectParameter> const& Find(std::string const& parameterName) const;
+    std::shared_ptr<ConstantBuffer> const& Find(std::string const& parameterName) const;
 
-    EffectParameterCollection const& Find() const;
+    ConstantBufferCollection const& Find() const;
 
 public:
     Detail::RenderSystem::NativeConstantLayout* NativeConstantLayout();
 
 private:
-    EffectParameterCollection effectParameters;
+    ConstantBufferCollection constantBuffers;
     std::unique_ptr<Detail::RenderSystem::NativeConstantLayout> nativeConstantLayout;
 };
 

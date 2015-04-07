@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Graphics/detail/EffectBinaryParameter.hpp"
-#include "Pomdog/Graphics/EffectParameter.hpp"
+#include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Vector4.hpp"
@@ -39,97 +39,97 @@ void* BinaryCast(T * data)
 #pragma mark - Fundamental types(Scalars)
 #endif
 //-----------------------------------------------------------------------
-void Get(EffectParameter & effectParameter, bool & value)
+void Get(ConstantBuffer & constantBuffer, bool & value)
 {
     std::uint32_t unsignedValue = 0;
-    effectParameter.GetValue(sizeof(unsignedValue), BinaryCast(&unsignedValue));
+    constantBuffer.GetValue(sizeof(unsignedValue), BinaryCast(&unsignedValue));
     value = (unsignedValue != 0);
 }
 //-----------------------------------------------------------------------
-void Get(EffectParameter & effectParameter, std::int32_t & value)
+void Get(ConstantBuffer & constantBuffer, std::int32_t & value)
 {
-    effectParameter.GetValue(sizeof(value), BinaryCast(&value));
+    constantBuffer.GetValue(sizeof(value), BinaryCast(&value));
 }
 //-----------------------------------------------------------------------
-void Get(EffectParameter & effectParameter, std::uint32_t & value)
+void Get(ConstantBuffer & constantBuffer, std::uint32_t & value)
 {
-    effectParameter.GetValue(sizeof(value), BinaryCast(&value));
+    constantBuffer.GetValue(sizeof(value), BinaryCast(&value));
 }
 //-----------------------------------------------------------------------
-void Get(EffectParameter & effectParameter, float & value)
+void Get(ConstantBuffer & constantBuffer, float & value)
 {
-    effectParameter.GetValue(sizeof(value), BinaryCast(&value));
+    constantBuffer.GetValue(sizeof(value), BinaryCast(&value));
 }
 //-----------------------------------------------------------------------
-void Get(EffectParameter & effectParameter, double & value)
+void Get(ConstantBuffer & constantBuffer, double & value)
 {
-    effectParameter.GetValue(sizeof(value), BinaryCast(&value));
+    constantBuffer.GetValue(sizeof(value), BinaryCast(&value));
 }
 //-----------------------------------------------------------------------
-void Set(EffectParameter & effectParameter, bool value)
+void Set(ConstantBuffer & constantBuffer, bool value)
 {
     std::uint32_t const unsignedValue = value ? 1: 0;
-    effectParameter.SetValue(BinaryCast(&unsignedValue), sizeof(unsignedValue));
+    constantBuffer.SetValue(BinaryCast(&unsignedValue), sizeof(unsignedValue));
 }
 //-----------------------------------------------------------------------
-void Set(EffectParameter & effectParameter, std::int32_t value)
+void Set(ConstantBuffer & constantBuffer, std::int32_t value)
 {
-    effectParameter.SetValue(BinaryCast(&value), sizeof(value));
+    constantBuffer.SetValue(BinaryCast(&value), sizeof(value));
 }
 //-----------------------------------------------------------------------
-void Set(EffectParameter & effectParameter, std::uint32_t value)
+void Set(ConstantBuffer & constantBuffer, std::uint32_t value)
 {
-    effectParameter.SetValue(BinaryCast(&value), sizeof(value));
+    constantBuffer.SetValue(BinaryCast(&value), sizeof(value));
 }
 //-----------------------------------------------------------------------
-void Set(EffectParameter & effectParameter, float value)
+void Set(ConstantBuffer & constantBuffer, float value)
 {
-    effectParameter.SetValue(BinaryCast(&value), sizeof(value));
+    constantBuffer.SetValue(BinaryCast(&value), sizeof(value));
 }
 //-----------------------------------------------------------------------
-void Set(EffectParameter & effectParameter, double value)
+void Set(ConstantBuffer & constantBuffer, double value)
 {
-    effectParameter.SetValue(BinaryCast(&value), sizeof(value));
+    constantBuffer.SetValue(BinaryCast(&value), sizeof(value));
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - Arrays
 #endif
 //-----------------------------------------------------------------------
-void Set(EffectParameter & effectParameter, std::int32_t const* data, std::uint32_t count)
+void Set(ConstantBuffer & constantBuffer, std::int32_t const* data, std::uint32_t count)
 {
     using type = std::remove_pointer<decltype(data)>::type;
     static_assert(std::is_same<type, std::int32_t const>::value, "");
 
     POMDOG_ASSERT(count > 0);
-    effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
+    constantBuffer.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
-void Set(EffectParameter & effectParameter, std::uint32_t const* data, std::uint32_t count)
+void Set(ConstantBuffer & constantBuffer, std::uint32_t const* data, std::uint32_t count)
 {
     using type = std::remove_pointer<decltype(data)>::type;
     static_assert(std::is_same<type, std::uint32_t const>::value, "");
 
     POMDOG_ASSERT(count > 0);
-    effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
+    constantBuffer.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
-void Set(EffectParameter & effectParameter, float const* data, std::uint32_t count)
+void Set(ConstantBuffer & constantBuffer, float const* data, std::uint32_t count)
 {
     using type = std::remove_pointer<decltype(data)>::type;
     static_assert(std::is_same<type, float const>::value, "");
 
     POMDOG_ASSERT(count > 0);
-    effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
+    constantBuffer.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
-void Set(EffectParameter & effectParameter, double const* data, std::uint32_t count)
+void Set(ConstantBuffer & constantBuffer, double const* data, std::uint32_t count)
 {
     using type = std::remove_pointer<decltype(data)>::type;
     static_assert(std::is_same<type, double const>::value, "");
 
     POMDOG_ASSERT(count > 0);
-    effectParameter.SetValue(BinaryCast(data), sizeof(type) * count);
+    constantBuffer.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
@@ -137,85 +137,74 @@ void Set(EffectParameter & effectParameter, double const* data, std::uint32_t co
 #endif
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(EffectParameter & effectParameter, FloatingPointVector2<T> const& value)
+Set(ConstantBuffer & constantBuffer, FloatingPointVector2<T> const& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-    effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
+    constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(EffectParameter & effectParameter, FloatingPointVector3<T> const& value)
+Set(ConstantBuffer & constantBuffer, FloatingPointVector3<T> const& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-    effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
+    constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(EffectParameter & effectParameter, FloatingPointVector4<T> const& value)
+Set(ConstantBuffer & constantBuffer, FloatingPointVector4<T> const& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-    effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
+    constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(EffectParameter & effectParameter, FloatingPointMatrix2x2<T> const& value)
+Set(ConstantBuffer & constantBuffer, FloatingPointMatrix2x2<T> const& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-    effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
+    constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(EffectParameter & effectParameter, FloatingPointMatrix3x3<T> const& value)
+Set(ConstantBuffer & constantBuffer, FloatingPointMatrix3x3<T> const& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-    effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
+    constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(EffectParameter & effectParameter, FloatingPointMatrix4x4<T> const& value)
+Set(ConstantBuffer & constantBuffer, FloatingPointMatrix4x4<T> const& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-    effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
+    constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(EffectParameter & effectParameter, FloatingPointQuaternion<T> const& value)
+Set(ConstantBuffer & constantBuffer, FloatingPointQuaternion<T> const& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
-    effectParameter.SetValue(BinaryCast(value.Data()), sizeof(value));
+    constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - Explicit instantiations
 #endif
 //-----------------------------------------------------------------------
-template void Set<float>(EffectParameter & effectParameter, FloatingPointVector2<float> const& value);
-template void Set<float>(EffectParameter & effectParameter, FloatingPointVector3<float> const& value);
-template void Set<float>(EffectParameter & effectParameter, FloatingPointVector4<float> const& value);
-template void Set<float>(EffectParameter & effectParameter, FloatingPointMatrix2x2<float> const& value);
-template void Set<float>(EffectParameter & effectParameter, FloatingPointMatrix3x3<float> const& value);
-template void Set<float>(EffectParameter & effectParameter, FloatingPointMatrix4x4<float> const& value);
-template void Set<float>(EffectParameter & effectParameter, FloatingPointQuaternion<float> const& value);
+template void Set<float>(ConstantBuffer &, FloatingPointVector2<float> const&);
+template void Set<float>(ConstantBuffer &, FloatingPointVector3<float> const&);
+template void Set<float>(ConstantBuffer &, FloatingPointVector4<float> const&);
+template void Set<float>(ConstantBuffer &, FloatingPointMatrix2x2<float> const&);
+template void Set<float>(ConstantBuffer &, FloatingPointMatrix3x3<float> const&);
+template void Set<float>(ConstantBuffer &, FloatingPointMatrix4x4<float> const&);
+template void Set<float>(ConstantBuffer &, FloatingPointQuaternion<float> const&);
 
 #if defined(DBL_MANT_DIG)
-template void Set<double>(EffectParameter & effectParameter, FloatingPointVector2<double> const& value);
-template void Set<double>(EffectParameter & effectParameter, FloatingPointVector3<double> const& value);
-template void Set<double>(EffectParameter & effectParameter, FloatingPointVector4<double> const& value);
-template void Set<double>(EffectParameter & effectParameter, FloatingPointMatrix2x2<double> const& value);
-template void Set<double>(EffectParameter & effectParameter, FloatingPointMatrix3x3<double> const& value);
-template void Set<double>(EffectParameter & effectParameter, FloatingPointMatrix4x4<double> const& value);
-template void Set<double>(EffectParameter & effectParameter, FloatingPointQuaternion<double> const& value);
-#endif
-
-#if defined(LDBL_MANT_DIG)
-// Notes: Long-double value is not supported.
-//template void Set<long double>(EffectParameter & effectParameter, FloatingPointVector2<long double> const& value);
-//template void Set<long double>(EffectParameter & effectParameter, FloatingPointVector3<long double> const& value);
-//template void Set<long double>(EffectParameter & effectParameter, FloatingPointVector4<long double> const& value);
-//template void Set<long double>(EffectParameter & effectParameter, FloatingPointMatrix2x2<long double> const& value);
-//template void Set<long double>(EffectParameter & effectParameter, FloatingPointMatrix3x3<long double> const& value);
-//template void Set<long double>(EffectParameter & effectParameter, FloatingPointMatrix4x4<long double> const& value);
-//template void Set<long double>(EffectParameter & effectParameter, FloatingPointQuaternion<long double> const& value);
+template void Set<double>(ConstantBuffer &, FloatingPointVector2<double> const&);
+template void Set<double>(ConstantBuffer &, FloatingPointVector3<double> const&);
+template void Set<double>(ConstantBuffer &, FloatingPointVector4<double> const&);
+template void Set<double>(ConstantBuffer &, FloatingPointMatrix2x2<double> const&);
+template void Set<double>(ConstantBuffer &, FloatingPointMatrix3x3<double> const&);
+template void Set<double>(ConstantBuffer &, FloatingPointMatrix4x4<double> const&);
+template void Set<double>(ConstantBuffer &, FloatingPointQuaternion<double> const&);
 #endif
 //-----------------------------------------------------------------------
 } // namespace EffectBinaryParameter

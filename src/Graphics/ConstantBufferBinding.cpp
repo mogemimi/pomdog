@@ -7,16 +7,16 @@
 #include "../RenderSystem/NativeEffectPass.hpp"
 #include "../RenderSystem/NativeEffectReflection.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
+#include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/EffectConstantDescription.hpp"
-#include "Pomdog/Graphics/EffectParameter.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace {
 
-static auto dummyParameter = std::make_shared<EffectParameter>();
+static auto dummyParameter = std::make_shared<ConstantBuffer>();
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
@@ -32,30 +32,33 @@ ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
     auto effectReflection = nativeDevice->CreateEffectReflection(*nativeEffectPass);
 
     POMDOG_ASSERT(effectReflection);
-    auto constantBuffers = effectReflection->GetConstantBuffers();
+    auto constants = effectReflection->GetConstantBuffers();
 
-    // Create effect parameters:
-    for (auto & constantBuffer: constantBuffers)
+    // Create constant buffers:
+    for (auto & desc: constants)
     {
-        auto parameter = std::make_shared<EffectParameter>(graphicsDevice, constantBuffer.ByteSize);
-        effectParameters[constantBuffer.Name] = std::move(parameter);
+        auto constantBuffer = std::make_shared<ConstantBuffer>(
+            graphicsDevice, desc.ByteSize);
+        constantBuffers[desc.Name] = std::move(constantBuffer);
     }
 
     nativeConstantLayout = nativeEffectPass->CreateConstantLayout();
 
     // Bind constant buffers:
-    for (auto & parameter: effectParameters)
+    for (auto & parameter: constantBuffers)
     {
         using Detail::RenderSystem::NativeBuffer;
         std::shared_ptr<NativeBuffer> nativeConstantBuffer(
             parameter.second, parameter.second->NativeConstantBuffer());
 
         POMDOG_ASSERT(nativeConstantLayout);
-        nativeConstantLayout->SetConstantBuffer(parameter.first, nativeConstantBuffer);
+        nativeConstantLayout->SetConstantBuffer(
+            parameter.first, nativeConstantBuffer);
     }
 }
 //-----------------------------------------------------------------------
-ConstantBufferBinding::ConstantBufferBinding(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+ConstantBufferBinding::ConstantBufferBinding(
+    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     EffectPass & effectPass)
     : ConstantBufferBinding(*graphicsDevice, effectPass)
 {
@@ -63,21 +66,22 @@ ConstantBufferBinding::ConstantBufferBinding(std::shared_ptr<GraphicsDevice> con
 //-----------------------------------------------------------------------
 ConstantBufferBinding::~ConstantBufferBinding() = default;
 //-----------------------------------------------------------------------
-std::shared_ptr<EffectParameter> const& ConstantBufferBinding::Find(std::string const& parameterName) const
+std::shared_ptr<ConstantBuffer> const& ConstantBufferBinding::Find(
+    std::string const& parameterName) const
 {
     POMDOG_ASSERT(!parameterName.empty());
-    POMDOG_ASSERT(!effectParameters.empty());
+    POMDOG_ASSERT(!constantBuffers.empty());
 
-    auto iter = effectParameters.find(parameterName);
-    if (iter != std::end(effectParameters)) {
+    auto iter = constantBuffers.find(parameterName);
+    if (iter != std::end(constantBuffers)) {
         return iter->second;
     }
     return dummyParameter;
 }
 //-----------------------------------------------------------------------
-EffectParameterCollection const& ConstantBufferBinding::Find() const
+ConstantBufferCollection const& ConstantBufferBinding::Find() const
 {
-    return effectParameters;
+    return constantBuffers;
 }
 //-----------------------------------------------------------------------
 Detail::RenderSystem::NativeConstantLayout* ConstantBufferBinding::NativeConstantLayout()
