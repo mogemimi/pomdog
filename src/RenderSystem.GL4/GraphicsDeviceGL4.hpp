@@ -20,7 +20,7 @@ public:
     CreateShader(ShaderBytecode const& shaderBytecode,
         ShaderCompileOptions const& compileOptions) override;
 
-    std::unique_ptr<NativeConstantBuffer>
+    std::unique_ptr<NativeBuffer>
     CreateConstantBuffer(std::size_t byteConstants) override;
 
     std::unique_ptr<NativeBuffer>
@@ -45,8 +45,8 @@ public:
     std::unique_ptr<NativeEffectPass>
     CreateEffectPass(EffectPassDescription const& description) override;
 
-    std::unique_ptr<NativeEffectReflection> CreateEffectReflection(
-        NativeEffectPass & nativeEffectPass) override;
+    std::unique_ptr<NativeEffectReflection>
+    CreateEffectReflection(NativeEffectPass & nativeEffectPass) override;
 
     std::unique_ptr<NativeTexture2D>
     CreateTexture2D(std::int32_t width, std::int32_t height,
@@ -54,7 +54,8 @@ public:
 
     std::unique_ptr<NativeRenderTarget2D>
     CreateRenderTarget2D(std::int32_t width, std::int32_t height,
-        std::uint32_t mipmapLevels, SurfaceFormat format, DepthFormat depthStencilFormat) override;
+        std::uint32_t mipmapLevels,
+        SurfaceFormat format, DepthFormat depthStencilFormat) override;
 };
 
 } // namespace GL4

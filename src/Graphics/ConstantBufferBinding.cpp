@@ -2,11 +2,11 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
-#include "../RenderSystem/NativeConstantBuffer.hpp"
+#include "../RenderSystem/NativeBuffer.hpp"
 #include "../RenderSystem/NativeConstantLayout.hpp"
 #include "../RenderSystem/NativeEffectPass.hpp"
-#include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeEffectReflection.hpp"
+#include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/EffectConstantDescription.hpp"
 #include "Pomdog/Graphics/EffectParameter.hpp"
@@ -46,8 +46,8 @@ ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
     // Bind constant buffers:
     for (auto & parameter: effectParameters)
     {
-        using Detail::RenderSystem::NativeConstantBuffer;
-        std::shared_ptr<NativeConstantBuffer> nativeConstantBuffer(
+        using Detail::RenderSystem::NativeBuffer;
+        std::shared_ptr<NativeBuffer> nativeConstantBuffer(
             parameter.second, parameter.second->NativeConstantBuffer());
 
         POMDOG_ASSERT(nativeConstantLayout);

@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Graphics/EffectParameter.hpp"
-#include "../RenderSystem/NativeConstantBuffer.hpp"
+#include "../RenderSystem/NativeBuffer.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -39,7 +39,7 @@ void EffectParameter::SetValue(void const* data, std::uint32_t byteWidth)
     return nativeConstantBuffer->SetData(0, data, byteWidth);
 }
 //-----------------------------------------------------------------------
-Detail::RenderSystem::NativeConstantBuffer* EffectParameter::NativeConstantBuffer()
+Detail::RenderSystem::NativeBuffer* EffectParameter::NativeConstantBuffer()
 {
     POMDOG_ASSERT(nativeConstantBuffer);
     return nativeConstantBuffer.get();

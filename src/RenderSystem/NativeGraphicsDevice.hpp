@@ -14,7 +14,6 @@ namespace Detail {
 namespace RenderSystem {
 
 class NativeBuffer;
-class NativeConstantBuffer;
 class NativeEffectPass;
 class NativeEffectReflection;
 class NativeRenderTarget2D;
@@ -33,7 +32,7 @@ public:
     CreateShader(ShaderBytecode const& shaderBytecode,
         ShaderCompileOptions const& compileOptions) = 0;
 
-    virtual std::unique_ptr<NativeConstantBuffer>
+    virtual std::unique_ptr<NativeBuffer>
     CreateConstantBuffer(std::size_t sizeInBytes) = 0;
 
     virtual std::unique_ptr<NativeBuffer>
@@ -65,7 +64,8 @@ public:
 
     virtual std::unique_ptr<NativeRenderTarget2D>
     CreateRenderTarget2D(std::int32_t width, std::int32_t height,
-        std::uint32_t mipmapLevels, SurfaceFormat format, DepthFormat depthStencilFormat) = 0;
+        std::uint32_t mipmapLevels, SurfaceFormat format,
+        DepthFormat depthStencilFormat) = 0;
 };
 
 } // namespace RenderSystem

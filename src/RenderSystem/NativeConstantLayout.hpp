@@ -4,7 +4,6 @@
 #ifndef POMDOG_NATIVECONSTANTLAYOUT_9EA37BC8_HPP
 #define POMDOG_NATIVECONSTANTLAYOUT_9EA37BC8_HPP
 
-#include <cstdint>
 #include <string>
 #include <memory>
 
@@ -12,7 +11,7 @@ namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
 
-class NativeConstantBuffer;
+class NativeBuffer;
 
 class NativeConstantLayout {
 public:
@@ -23,13 +22,13 @@ public:
     virtual ~NativeConstantLayout() = default;
 
     virtual void SetConstantBuffer(std::string const& constantName,
-        std::shared_ptr<NativeConstantBuffer> const& constantBuffer) = 0;
+        std::shared_ptr<NativeBuffer> const& constantBuffer) = 0;
 
     virtual void SetConstantBuffer(std::string const& constantName) = 0;
 };
 
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_NATIVECONSTANTLAYOUT_9EA37BC8_HPP

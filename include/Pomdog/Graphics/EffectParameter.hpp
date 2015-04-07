@@ -57,10 +57,10 @@ public:
     void SetValue(void const* data, std::uint32_t byteWidth);
 
 public:
-    Detail::RenderSystem::NativeConstantBuffer* NativeConstantBuffer();
+    Detail::RenderSystem::NativeBuffer* NativeConstantBuffer();
 
 private:
-    std::unique_ptr<Detail::RenderSystem::NativeConstantBuffer> nativeConstantBuffer;
+    std::unique_ptr<Detail::RenderSystem::NativeBuffer> nativeConstantBuffer;
 };
 
 } // namespace Pomdog

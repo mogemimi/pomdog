@@ -253,7 +253,6 @@
       '../src/InputSystem/MouseCreator.hpp',
       '../src/RenderSystem/GraphicsCapabilities.hpp',
       '../src/RenderSystem/NativeBuffer.hpp',
-      '../src/RenderSystem/NativeConstantBuffer.hpp',
       '../src/RenderSystem/NativeConstantLayout.hpp',
       '../src/RenderSystem/NativeEffectPass.hpp',
       '../src/RenderSystem/NativeEffectReflection.hpp',

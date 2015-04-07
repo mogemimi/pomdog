@@ -42,7 +42,7 @@ GraphicsDeviceGL4::CreateShader(ShaderBytecode const& shaderBytecode,
     POMDOG_THROW_EXCEPTION(std::domain_error, "Failed to create shader");
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeConstantBuffer>
+std::unique_ptr<NativeBuffer>
 GraphicsDeviceGL4::CreateConstantBuffer(std::size_t byteConstants)
 {
     return std::make_unique<ConstantBufferGL4>(byteConstants);

@@ -15,17 +15,19 @@ ConstantLayoutGL4::ConstantLayoutGL4(std::vector<ConstantBufferBindingGL4> && bi
     : bindings(std::move(bindingsIn))
 {}
 //-----------------------------------------------------------------------
-void ConstantLayoutGL4::SetConstantBuffer(std::string const& constantName, std::shared_ptr<NativeConstantBuffer> const& constantBuffer)
+void ConstantLayoutGL4::SetConstantBuffer(std::string const& constantName,
+    std::shared_ptr<NativeBuffer> const& constantBuffer)
 {
     auto iter = std::find_if(std::begin(bindings), std::end(bindings),
-        [&constantName](ConstantBufferBindingGL4 const& binding) { return binding.Name == constantName; });
+        [&](ConstantBufferBindingGL4 const& binding) {
+            return binding.Name == constantName;
+        });
 
     POMDOG_ASSERT(std::end(bindings) != iter);
 
-    auto nativeConstantBuffer = std::dynamic_pointer_cast<ConstantBufferGL4>(constantBuffer);
-    POMDOG_ASSERT(nativeConstantBuffer);
-
     if (std::end(bindings) != iter) {
+        auto nativeConstantBuffer = std::dynamic_pointer_cast<ConstantBufferGL4>(constantBuffer);
+        POMDOG_ASSERT(nativeConstantBuffer);
         iter->ConstantBuffer = nativeConstantBuffer;
     }
 }
@@ -33,7 +35,9 @@ void ConstantLayoutGL4::SetConstantBuffer(std::string const& constantName, std::
 void ConstantLayoutGL4::SetConstantBuffer(std::string const& constantName)
 {
     auto iter = std::find_if(std::begin(bindings), std::end(bindings),
-        [&constantName](ConstantBufferBindingGL4 const& binding) { return binding.Name == constantName; });
+        [&](ConstantBufferBindingGL4 const& binding) {
+            return binding.Name == constantName;
+        });
 
     POMDOG_ASSERT(std::end(bindings) != iter);
 
@@ -52,7 +56,7 @@ void ConstantLayoutGL4::Apply()
     }
 }
 //-----------------------------------------------------------------------
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

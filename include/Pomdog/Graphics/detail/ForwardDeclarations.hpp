@@ -11,7 +11,6 @@ namespace Detail {
 namespace RenderSystem {
 
 class NativeBuffer;
-class NativeConstantBuffer;
 class NativeConstantLayout;
 class NativeEffectPass;
 class NativeEffectReflection;

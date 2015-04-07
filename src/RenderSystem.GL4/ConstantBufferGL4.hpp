@@ -5,10 +5,10 @@
 #define POMDOG_CONSTANTBUFFERGL4_98395F08_HPP
 
 #include "OpenGLPrerequisites.hpp"
-#include "../RenderSystem/NativeConstantBuffer.hpp"
+#include "../RenderSystem/NativeBuffer.hpp"
 #include "Pomdog/Utility/detail/Tagged.hpp"
 #include "Pomdog/Utility/Optional.hpp"
-#include <cstdint>
+#include <cstddef>
 
 namespace Pomdog {
 namespace Detail {
@@ -23,30 +23,28 @@ struct ConstantBufferObjectTag {};
 
 using ConstantBufferObjectGL4 = Tagged<GLuint, Tags::ConstantBufferObjectTag>;
 
-class ConstantBufferGL4 final: public NativeConstantBuffer {
+class ConstantBufferGL4 final : public NativeBuffer {
 public:
     ConstantBufferGL4() = delete;
 
-    explicit ConstantBufferGL4(std::uint32_t sizeInBytes);
+    explicit ConstantBufferGL4(std::size_t sizeInBytes);
 
     ~ConstantBufferGL4();
 
-    ///@copydoc NativeConstantBuffer
-    void GetData(std::uint32_t byteWidth, void* result) const override;
+    void GetData(std::size_t byteWidth, void* result) const override;
 
-    ///@copydoc NativeConstantBuffer
-    void SetData(std::uint32_t offsetInBytes,
-        void const* source, std::uint32_t sizeInBytes) override;
+    void SetData(std::size_t offsetInBytes,
+        void const* source, std::size_t sizeInBytes) override;
 
-    void Apply(std::uint32_t slotIndex);
+    void Apply(int slotIndex);
 
 private:
     Optional<ConstantBufferObjectGL4> bufferObject;
 };
 
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_CONSTANTBUFFERGL4_98395F08_HPP

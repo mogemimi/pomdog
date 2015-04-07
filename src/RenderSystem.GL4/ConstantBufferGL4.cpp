@@ -19,7 +19,7 @@ struct TypesafeHelperGL4::OpenGLGetTraits<ConstantBufferObjectGL4> {
     constexpr static GLenum bufferObjectTarget = GL_UNIFORM_BUFFER;
 };
 //-----------------------------------------------------------------------
-ConstantBufferGL4::ConstantBufferGL4(std::uint32_t byteWidth)
+ConstantBufferGL4::ConstantBufferGL4(std::size_t byteWidth)
 {
     // Generate constant buffer
     bufferObject = ([] {
@@ -46,7 +46,7 @@ ConstantBufferGL4::~ConstantBufferGL4()
     }
 }
 //-----------------------------------------------------------------------
-void ConstantBufferGL4::GetData(std::uint32_t byteWidth, void* result) const
+void ConstantBufferGL4::GetData(std::size_t byteWidth, void* result) const
 {
     POMDOG_ASSERT(result != nullptr);
     POMDOG_ASSERT(byteWidth > 0);
@@ -70,8 +70,8 @@ void ConstantBufferGL4::GetData(std::uint32_t byteWidth, void* result) const
     POMDOG_CHECK_ERROR_GL4("glGetBufferSubData");
 }
 //-----------------------------------------------------------------------
-void ConstantBufferGL4::SetData(std::uint32_t offsetInBytes,
-    void const* source, std::uint32_t sizeInBytes)
+void ConstantBufferGL4::SetData(std::size_t offsetInBytes,
+    void const* source, std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(source != nullptr);
 
@@ -95,7 +95,7 @@ void ConstantBufferGL4::SetData(std::uint32_t offsetInBytes,
     POMDOG_CHECK_ERROR_GL4("glBufferSubData");
 }
 //-----------------------------------------------------------------------
-void ConstantBufferGL4::Apply(std::uint32_t slotIndex)
+void ConstantBufferGL4::Apply(int slotIndex)
 {
     POMDOG_ASSERT(bufferObject);
 
@@ -107,14 +107,15 @@ void ConstantBufferGL4::Apply(std::uint32_t slotIndex)
             return value;
         })();
 
-        POMDOG_ASSERT(slotIndex < static_cast<std::uint32_t>(maxUniformBufferBindings));
+        POMDOG_ASSERT(slotIndex < maxUniformBufferBindings);
     }
 #endif
 
+    POMDOG_ASSERT(slotIndex >= 0);
     glBindBufferBase(GL_UNIFORM_BUFFER, slotIndex, bufferObject->value);
 }
 //-----------------------------------------------------------------------
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
