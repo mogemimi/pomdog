@@ -33,7 +33,7 @@ void EventQueue::Enqueue(Event && event)
     events.emplace_back(std::move(event));
 }
 //-----------------------------------------------------------------------
-void EventQueue::Tick()
+void EventQueue::Emit()
 {
     POMDOG_ASSERT(this->signalBody);
 

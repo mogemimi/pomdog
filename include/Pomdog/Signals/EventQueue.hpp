@@ -35,7 +35,7 @@ public:
         Enqueue(Event{T{std::forward<Arguments>(arguments)...}});
     }
 
-    void Tick();
+    void Emit();
 
 private:
     typedef Detail::Signals::SignalBody<void(Event const&)> SignalBody;

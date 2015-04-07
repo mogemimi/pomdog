@@ -367,7 +367,7 @@ void GameHostCocoa::Impl::RenderFrame()
 //-----------------------------------------------------------------------
 void GameHostCocoa::Impl::DoEvents()
 {
-    eventQueue->Tick();
+    eventQueue->Emit();
 }
 //-----------------------------------------------------------------------
 void GameHostCocoa::Impl::ProcessSystemEvents(Event const& event)

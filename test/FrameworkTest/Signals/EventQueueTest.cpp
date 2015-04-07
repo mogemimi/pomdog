@@ -40,7 +40,7 @@ TEST_F(EventQueueTest, InvokeInt)
     eventQueue.Enqueue<int>(44);
     ASSERT_TRUE(integers.empty());
 
-    eventQueue.Tick();
+    eventQueue.Emit();
     ASSERT_EQ(3, integers.size());
     EXPECT_EQ(42, integers[0]);
     EXPECT_EQ(43, integers[1]);
@@ -68,7 +68,7 @@ TEST_F(EventQueueTest, InvokePODStruct)
     ASSERT_TRUE(names.empty());
     ASSERT_TRUE(integers.empty());
 
-    eventQueue.Tick();
+    eventQueue.Emit();
     ASSERT_EQ(2, names.size());
     EXPECT_EQ("Donald", names[0]);
     EXPECT_EQ("Goofy", names[1]);
@@ -86,7 +86,7 @@ TEST_F(EventQueueTest, Disconnect)
     ASSERT_TRUE(integers.empty());
 
     connection.Disconnect();
-    eventQueue.Tick();
+    eventQueue.Emit();
     ASSERT_TRUE(integers.empty());
 }
 
@@ -100,7 +100,7 @@ TEST_F(EventQueueTest, Conenct)
     eventQueue.Enqueue<int>(42);
     ASSERT_TRUE(integers.empty());
 
-    eventQueue.Tick();
+    eventQueue.Emit();
     ASSERT_EQ(3, integers.size());
     EXPECT_EQ(42, integers[0]);
     EXPECT_EQ(42, integers[1]);
@@ -116,13 +116,13 @@ TEST_F(EventQueueTest, RecursiveConnection)
 
     eventQueue.Enqueue<int>(42);
     ASSERT_TRUE(integers.empty());
-    eventQueue.Tick();
+    eventQueue.Emit();
     ASSERT_TRUE(integers.empty());
 
     eventQueue.Enqueue<int>(43);
     ASSERT_TRUE(integers.empty());
 
-    eventQueue.Tick();
+    eventQueue.Emit();
     ASSERT_EQ(1, integers.size());
     EXPECT_EQ(43, integers[0]);
 }
@@ -138,14 +138,14 @@ TEST_F(EventQueueTest, CallingDisconnect)
 
     eventQueue.Enqueue<int>(42);
     ASSERT_TRUE(integers.empty());
-    eventQueue.Tick();
+    eventQueue.Emit();
     ASSERT_EQ(1, integers.size());
     EXPECT_EQ(42, integers[0]);
 
     integers.clear();
     eventQueue.Enqueue<int>(43);
     ASSERT_TRUE(integers.empty());
-    eventQueue.Tick();
+    eventQueue.Emit();
     ASSERT_TRUE(integers.empty());
 }
 
