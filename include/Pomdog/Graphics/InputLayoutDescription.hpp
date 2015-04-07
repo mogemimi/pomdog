@@ -9,8 +9,7 @@
 
 namespace Pomdog {
 
-class InputLayoutDescription {
-public:
+struct InputLayoutDescription {
     std::vector<InputElement> InputElements;
 };
 

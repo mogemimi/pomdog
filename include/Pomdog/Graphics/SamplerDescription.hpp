@@ -13,8 +13,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT SamplerDescription {
-public:
+struct POMDOG_EXPORT SamplerDescription {
     std::uint32_t MaxAnisotropy;
     float MinMipLevel;
     float MaxMipLevel;
@@ -25,7 +24,6 @@ public:
     TextureAddressMode AddressW;
     //std::array<float, 4> BorderColor;
 
-public:
     static SamplerDescription CreateDefault()
     {
         return CreateLinearClamp();

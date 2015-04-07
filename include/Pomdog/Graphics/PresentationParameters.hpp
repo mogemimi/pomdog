@@ -10,14 +10,13 @@
 
 namespace Pomdog {
 
-class PresentationParameters {
-public:
-    std::uint32_t BackBufferWidth = 800;
-    std::uint32_t BackBufferHeight = 480;
-    std::uint32_t PresentationInterval = 60;
-    SurfaceFormat SurfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
-    DepthFormat DepthFormat = DepthFormat::Depth24Stencil8;
-    bool IsFullScreen = false;
+struct PresentationParameters {
+    std::uint32_t BackBufferWidth;
+    std::uint32_t BackBufferHeight;
+    std::uint32_t PresentationInterval;
+    SurfaceFormat SurfaceFormat;
+    DepthFormat DepthFormat;
+    bool IsFullScreen;
 };
 
 } // namespace Pomdog

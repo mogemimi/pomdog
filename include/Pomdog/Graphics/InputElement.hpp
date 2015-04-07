@@ -10,8 +10,7 @@
 
 namespace Pomdog {
 
-class InputElement {
-public:
+struct InputElement {
     std::uint16_t ByteOffset;
     std::uint16_t InputSlot;
     InputElementFormat Format;

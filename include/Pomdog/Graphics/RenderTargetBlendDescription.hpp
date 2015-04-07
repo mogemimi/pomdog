@@ -11,8 +11,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT RenderTargetBlendDescription {
-public:
+struct POMDOG_EXPORT RenderTargetBlendDescription {
     Blend ColorSourceBlend;
     Blend ColorDestinationBlend;
     BlendFunction ColorBlendFunction;
@@ -21,7 +20,6 @@ public:
     BlendFunction AlphaBlendFunction;
     bool BlendEnable;
 
-public:
     static RenderTargetBlendDescription CreateAdditive()
     {
         RenderTargetBlendDescription desc;

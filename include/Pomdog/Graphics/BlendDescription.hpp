@@ -13,14 +13,12 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT BlendDescription {
-public:
+struct POMDOG_EXPORT BlendDescription {
     std::array<RenderTargetBlendDescription, 8> RenderTargets;
     std::uint32_t MultiSampleMask;
     bool AlphaToCoverageEnable;
     bool IndependentBlendEnable;
 
-public:
     static BlendDescription CreateDefault()
     {
         return CreateOpaque();

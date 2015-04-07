@@ -12,8 +12,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT DepthStencilDescription {
-public:
+struct POMDOG_EXPORT DepthStencilDescription {
     DepthStencilOperation ClockwiseFace;
     DepthStencilOperation CounterClockwiseFace;
     std::int32_t ReferenceStencil;
@@ -24,7 +23,6 @@ public:
     bool DepthBufferWriteEnable;
     bool StencilEnable;
 
-public:
     static DepthStencilDescription CreateDefault()
     {
         return CreateReadWriteDepth();

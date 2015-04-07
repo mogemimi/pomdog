@@ -9,8 +9,7 @@
 
 namespace Pomdog {
 
-class EffectAnnotation {
-public:
+struct EffectAnnotation {
     EffectVariableClass VariableClass;
     EffectVariableType VariableType;
     std::uint8_t ColumnCount;

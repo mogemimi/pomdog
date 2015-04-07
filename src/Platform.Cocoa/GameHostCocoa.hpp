@@ -13,7 +13,7 @@
 namespace Pomdog {
 
 class Game;
-class PresentationParameters;
+struct PresentationParameters;
 
 namespace Detail {
 namespace Cocoa {

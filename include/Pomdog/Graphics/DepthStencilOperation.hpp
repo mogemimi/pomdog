@@ -9,8 +9,7 @@
 
 namespace Pomdog {
 
-class DepthStencilOperation {
-public:
+struct DepthStencilOperation {
     StencilOperation StencilDepthBufferFail;
     StencilOperation StencilFail;
     StencilOperation StencilPass;

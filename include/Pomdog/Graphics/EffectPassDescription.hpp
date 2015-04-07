@@ -14,8 +14,7 @@
 
 namespace Pomdog {
 
-class EffectPassDescription final {
-public:
+struct EffectPassDescription {
     std::shared_ptr<Shader> VertexShader;
     std::shared_ptr<Shader> PixelShader;
     InputLayoutDescription InputLayout;

@@ -34,6 +34,6 @@ private:
     std::unique_ptr<Detail::RenderSystem::NativeEffectPass> nativeEffectPass;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_EFFECTPASS_3FA791E9_HPP

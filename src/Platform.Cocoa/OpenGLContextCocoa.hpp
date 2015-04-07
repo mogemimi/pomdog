@@ -5,14 +5,12 @@
 #define POMDOG_OPENGLCONTEXTCOCOA_306ECA78_HPP
 
 #include "../RenderSystem.GL4/OpenGLContext.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #import <Cocoa/Cocoa.h>
 
 @class NSOpenGLContext, NSOpenGLPixelFormat;
 
 namespace Pomdog {
-
-class PresentationParameters;
-
 namespace Detail {
 namespace Cocoa {
 
