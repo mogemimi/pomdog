@@ -13,14 +13,13 @@ namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
 
+class NativeBuffer;
 class NativeConstantBuffer;
 class NativeEffectPass;
 class NativeEffectReflection;
-class NativeIndexBuffer;
 class NativeRenderTarget2D;
 class NativeSamplerState;
 class NativeTexture2D;
-class NativeVertexBuffer;
 class ShaderBytecode;
 class ShaderCompileOptions;
 
@@ -35,19 +34,19 @@ public:
         ShaderCompileOptions const& compileOptions) = 0;
 
     virtual std::unique_ptr<NativeConstantBuffer>
-    CreateConstantBuffer(std::uint32_t sizeInBytes) = 0;
+    CreateConstantBuffer(std::size_t sizeInBytes) = 0;
 
-    virtual std::unique_ptr<NativeIndexBuffer>
-    CreateIndexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage) = 0;
+    virtual std::unique_ptr<NativeBuffer>
+    CreateIndexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage) = 0;
 
-    virtual std::unique_ptr<NativeIndexBuffer>
-    CreateIndexBuffer(void const* indices, std::uint32_t sizeInBytes,
+    virtual std::unique_ptr<NativeBuffer>
+    CreateIndexBuffer(void const* indices, std::size_t sizeInBytes,
         BufferUsage bufferUsage) = 0;
 
-    virtual std::unique_ptr<NativeVertexBuffer>
+    virtual std::unique_ptr<NativeBuffer>
     CreateVertexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage) = 0;
 
-    virtual std::unique_ptr<NativeVertexBuffer>
+    virtual std::unique_ptr<NativeBuffer>
     CreateVertexBuffer(void const* vertices, std::size_t sizeInBytes,
         BufferUsage bufferUsage) = 0;
 
@@ -69,8 +68,8 @@ public:
         std::uint32_t mipmapLevels, SurfaceFormat format, DepthFormat depthStencilFormat) = 0;
 };
 
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_NATIVEGRAPHICSDEVICE_B06DA321_HPP

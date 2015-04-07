@@ -8,7 +8,7 @@
 #include "BufferUsage.hpp"
 #include "IndexElementSize.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <cstdint>
+#include <cstddef>
 #include <memory>
 
 namespace Pomdog {
@@ -20,19 +20,21 @@ public:
     IndexBuffer(IndexBuffer &&) = default;
 
     IndexBuffer(GraphicsDevice & graphicsDevice,
-        IndexElementSize elementSize, void const* indices, std::uint32_t indexCount,
+        IndexElementSize elementSize,
+        void const* indices, std::size_t indexCount,
         Pomdog::BufferUsage bufferUsage);
 
     IndexBuffer(GraphicsDevice & graphicsDevice,
-        IndexElementSize elementSize, std::uint32_t indexCount,
+        IndexElementSize elementSize, std::size_t indexCount,
         Pomdog::BufferUsage bufferUsage);
 
     IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        IndexElementSize elementSize, void const* indices, std::uint32_t indexCount,
+        IndexElementSize elementSize,
+        void const* indices, std::size_t indexCount,
         Pomdog::BufferUsage bufferUsage);
 
     IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        IndexElementSize elementSize, std::uint32_t indexCount,
+        IndexElementSize elementSize, std::size_t indexCount,
         Pomdog::BufferUsage bufferUsage);
 
     ~IndexBuffer();
@@ -40,21 +42,22 @@ public:
     IndexBuffer & operator=(IndexBuffer const&) = delete;
     IndexBuffer & operator=(IndexBuffer &&) = default;
 
-    std::uint32_t IndexCount() const;
+    std::size_t IndexCount() const;
 
     IndexElementSize ElementSize() const;
 
     Pomdog::BufferUsage BufferUsage() const;
 
-    void SetData(void const* source, std::uint32_t elementCount);
+    void SetData(void const* source, std::size_t elementCount);
 
-    void SetData(std::uint32_t offsetInBytes, void const* source, std::uint32_t elementCount);
+    void SetData(std::size_t offsetInBytes,
+        void const* source, std::size_t elementCount);
 
 public:
-    Detail::RenderSystem::NativeIndexBuffer* NativeIndexBuffer();
+    Detail::RenderSystem::NativeBuffer* NativeIndexBuffer();
 
 private:
-    std::unique_ptr<Detail::RenderSystem::NativeIndexBuffer> nativeIndexBuffer;
+    std::unique_ptr<Detail::RenderSystem::NativeBuffer> nativeIndexBuffer;
     std::uint32_t indexCount;
     IndexElementSize elementSize;
     Pomdog::BufferUsage bufferUsage;

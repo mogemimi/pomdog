@@ -2,8 +2,8 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Graphics/VertexBuffer.hpp"
+#include "../RenderSystem/NativeBuffer.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
-#include "../RenderSystem/NativeVertexBuffer.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -93,7 +93,7 @@ void VertexBuffer::SetData(std::size_t offsetInBytes, void const* source,
     nativeVertexBuffer->SetData(offsetInBytes, source, elementCount * strideBytesIn);
 }
 //-----------------------------------------------------------------------
-Detail::RenderSystem::NativeVertexBuffer* VertexBuffer::NativeVertexBuffer()
+Detail::RenderSystem::NativeBuffer* VertexBuffer::NativeVertexBuffer()
 {
     POMDOG_ASSERT(nativeVertexBuffer);
     return nativeVertexBuffer.get();

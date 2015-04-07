@@ -10,17 +10,16 @@ namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
 
+class NativeBuffer;
 class NativeConstantBuffer;
 class NativeConstantLayout;
 class NativeEffectPass;
 class NativeEffectReflection;
 class NativeGraphicsContext;
 class NativeGraphicsDevice;
-class NativeIndexBuffer;
 class NativeRenderTarget2D;
 class NativeSamplerState;
 class NativeTexture2D;
-class NativeVertexBuffer;
 
 } // namespace RenderSystem
 } // namespace Detail

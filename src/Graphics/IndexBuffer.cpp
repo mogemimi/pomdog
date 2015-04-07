@@ -2,8 +2,8 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Graphics/IndexBuffer.hpp"
+#include "../RenderSystem/NativeBuffer.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
-#include "../RenderSystem/NativeIndexBuffer.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
@@ -24,11 +24,11 @@ static std::uint32_t ToIndexElementOffsetBytes(IndexElementSize elementSize)
 } // unnamed namespace
 //-----------------------------------------------------------------------
 IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
-    IndexElementSize elementSizeIn, void const* indices, std::uint32_t indexCountIn,
+    IndexElementSize elementSizeIn, void const* indices, std::size_t indexCountIn,
     Pomdog::BufferUsage bufferUsageIn)
     : nativeIndexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateIndexBuffer(
         indices, ToIndexElementOffsetBytes(elementSizeIn) * indexCountIn, bufferUsageIn))
-    , indexCount(indexCountIn)
+    , indexCount(static_cast<decltype(indexCount)>(indexCountIn))
     , elementSize(elementSizeIn)
     , bufferUsage(bufferUsageIn)
 {
@@ -36,11 +36,11 @@ IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
 }
 //-----------------------------------------------------------------------
 IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
-    IndexElementSize elementSizeIn, std::uint32_t indexCountIn,
+    IndexElementSize elementSizeIn, std::size_t indexCountIn,
     Pomdog::BufferUsage bufferUsageIn)
     : nativeIndexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateIndexBuffer(
         ToIndexElementOffsetBytes(elementSizeIn) * indexCountIn, bufferUsageIn))
-    , indexCount(indexCountIn)
+    , indexCount(static_cast<decltype(indexCount)>(indexCountIn))
     , elementSize(elementSizeIn)
     , bufferUsage(bufferUsageIn)
 {
@@ -48,7 +48,7 @@ IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
 }
 //-----------------------------------------------------------------------
 IndexBuffer::IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    IndexElementSize elementSizeIn, void const* indices, std::uint32_t indexCountIn,
+    IndexElementSize elementSizeIn, void const* indices, std::size_t indexCountIn,
     Pomdog::BufferUsage bufferUsageIn)
     : IndexBuffer(*graphicsDevice, elementSizeIn, indices, indexCountIn, bufferUsageIn)
 {
@@ -56,7 +56,7 @@ IndexBuffer::IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 }
 //-----------------------------------------------------------------------
 IndexBuffer::IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    IndexElementSize elementSizeIn, std::uint32_t indexCountIn,
+    IndexElementSize elementSizeIn, std::size_t indexCountIn,
     Pomdog::BufferUsage bufferUsageIn)
     : IndexBuffer(*graphicsDevice, elementSizeIn, indexCountIn, bufferUsageIn)
 {
@@ -65,7 +65,7 @@ IndexBuffer::IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 //-----------------------------------------------------------------------
 IndexBuffer::~IndexBuffer() = default;
 //-----------------------------------------------------------------------
-std::uint32_t IndexBuffer::IndexCount() const
+std::size_t IndexBuffer::IndexCount() const
 {
     return indexCount;
 }
@@ -80,27 +80,30 @@ BufferUsage IndexBuffer::BufferUsage() const
     return bufferUsage;
 }
 //-----------------------------------------------------------------------
-void IndexBuffer::SetData(void const* source, std::uint32_t elementCountIn)
+void IndexBuffer::SetData(void const* source, std::size_t elementCountIn)
 {
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(elementCountIn > 0);
     POMDOG_ASSERT(elementCountIn <= indexCount);
     POMDOG_ASSERT(nativeIndexBuffer);
     POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
-    nativeIndexBuffer->SetData(0, source, ToIndexElementOffsetBytes(elementSize) * elementCountIn);
+    nativeIndexBuffer->SetData(0, source,
+        ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
 //-----------------------------------------------------------------------
-void IndexBuffer::SetData(std::uint32_t offsetInBytes, void const* source, std::uint32_t elementCountIn)
+void IndexBuffer::SetData(std::size_t offsetInBytes,
+    void const* source, std::size_t elementCountIn)
 {
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(elementCountIn > 0);
     POMDOG_ASSERT(elementCountIn <= indexCount);
     POMDOG_ASSERT(nativeIndexBuffer);
     POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
-    nativeIndexBuffer->SetData(offsetInBytes, source, ToIndexElementOffsetBytes(elementSize) * elementCountIn);
+    nativeIndexBuffer->SetData(offsetInBytes, source,
+        ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
 //-----------------------------------------------------------------------
-Detail::RenderSystem::NativeIndexBuffer* IndexBuffer::NativeIndexBuffer()
+Detail::RenderSystem::NativeBuffer* IndexBuffer::NativeIndexBuffer()
 {
     POMDOG_ASSERT(nativeIndexBuffer);
     return nativeIndexBuffer.get();

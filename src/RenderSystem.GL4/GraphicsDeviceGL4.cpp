@@ -42,26 +42,32 @@ GraphicsDeviceGL4::CreateShader(ShaderBytecode const& shaderBytecode,
     POMDOG_THROW_EXCEPTION(std::domain_error, "Failed to create shader");
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeIndexBuffer>
-GraphicsDeviceGL4::CreateIndexBuffer(std::uint32_t sizeInBytes, BufferUsage bufferUsage)
+std::unique_ptr<NativeConstantBuffer>
+GraphicsDeviceGL4::CreateConstantBuffer(std::size_t byteConstants)
+{
+    return std::make_unique<ConstantBufferGL4>(byteConstants);
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeBuffer>
+GraphicsDeviceGL4::CreateIndexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage)
 {
     return std::make_unique<IndexBufferGL4>(sizeInBytes, bufferUsage);
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeIndexBuffer>
+std::unique_ptr<NativeBuffer>
 GraphicsDeviceGL4::CreateIndexBuffer(void const* indices,
-    std::uint32_t sizeInBytes, BufferUsage bufferUsage)
+    std::size_t sizeInBytes, BufferUsage bufferUsage)
 {
     return std::make_unique<IndexBufferGL4>(indices, sizeInBytes, bufferUsage);
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeVertexBuffer>
+std::unique_ptr<NativeBuffer>
 GraphicsDeviceGL4::CreateVertexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage)
 {
     return std::make_unique<VertexBufferGL4>(sizeInBytes, bufferUsage);
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeVertexBuffer>
+std::unique_ptr<NativeBuffer>
 GraphicsDeviceGL4::CreateVertexBuffer(void const* vertices,
     std::size_t sizeInBytes, BufferUsage bufferUsage)
 {
@@ -78,12 +84,6 @@ std::unique_ptr<NativeEffectPass>
 GraphicsDeviceGL4::CreateEffectPass(EffectPassDescription const& description)
 {
     return std::make_unique<EffectPassGL4>(description);
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeConstantBuffer>
-GraphicsDeviceGL4::CreateConstantBuffer(std::uint32_t byteConstants)
-{
-    return std::make_unique<ConstantBufferGL4>(byteConstants);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectReflection>
@@ -109,7 +109,7 @@ GraphicsDeviceGL4::CreateRenderTarget2D(std::int32_t width, std::int32_t height,
     return std::make_unique<RenderTarget2DGL4>(width, height, mipmapLevels, format, depthStencilFormat);
 }
 //-----------------------------------------------------------------------
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

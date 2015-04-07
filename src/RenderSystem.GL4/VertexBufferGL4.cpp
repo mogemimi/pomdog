@@ -27,7 +27,7 @@ static GLenum ToVertexBufferUsage(BufferUsage bufferUsage) noexcept
 #endif
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 template<>
 struct TypesafeHelperGL4::OpenGLGetTraits<VertexBufferObjectGL4> {
@@ -53,10 +53,8 @@ VertexBufferGL4::VertexBufferGL4(void const* vertices, std::size_t sizeInBytes,
         return std::move(vertexBuffer);
     })();
 
-    auto const oldBufferObject = TypesafeHelperGL4::Get<VertexBufferObjectGL4>();
-    ScopeGuard scope([&oldBufferObject]{
-        TypesafeHelperGL4::BindBuffer(oldBufferObject);
-    });
+    auto const oldBuffer = TypesafeHelperGL4::Get<VertexBufferObjectGL4>();
+    ScopeGuard scope([&] { TypesafeHelperGL4::BindBuffer(oldBuffer); });
 
     POMDOG_ASSERT(bufferObject);
     TypesafeHelperGL4::BindBuffer(*bufferObject);
@@ -75,15 +73,37 @@ VertexBufferGL4::~VertexBufferGL4()
     }
 }
 //-----------------------------------------------------------------------
+void VertexBufferGL4::GetData(std::size_t byteWidth, void* result) const
+{
+    POMDOG_ASSERT(result != nullptr);
+    POMDOG_ASSERT(byteWidth > 0);
+
+    auto const oldBuffer = TypesafeHelperGL4::Get<VertexBufferObjectGL4>();
+    ScopeGuard scope([&] { TypesafeHelperGL4::BindBuffer(oldBuffer); });
+
+    POMDOG_ASSERT(bufferObject);
+    TypesafeHelperGL4::BindBuffer(*bufferObject);
+    POMDOG_CHECK_ERROR_GL4("glBindBuffer");
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    {
+        GLint bufferSize = 0;
+        glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &bufferSize);
+        POMDOG_ASSERT(byteWidth <= static_cast<std::size_t>(bufferSize));
+    }
+#endif
+
+    glGetBufferSubData(GL_ARRAY_BUFFER, 0, byteWidth, result);
+    POMDOG_CHECK_ERROR_GL4("glGetBufferSubData");
+}
+//-----------------------------------------------------------------------
 void VertexBufferGL4::SetData(std::size_t offsetInBytes,
     void const* source, std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(source != nullptr);
 
-    auto const oldBufferObject = TypesafeHelperGL4::Get<VertexBufferObjectGL4>();
-    ScopeGuard scope([&oldBufferObject]{
-        TypesafeHelperGL4::BindBuffer(oldBufferObject);
-    });
+    auto const oldBuffer = TypesafeHelperGL4::Get<VertexBufferObjectGL4>();
+    ScopeGuard scope([&] { TypesafeHelperGL4::BindBuffer(oldBuffer); });
 
     POMDOG_ASSERT(bufferObject);
     TypesafeHelperGL4::BindBuffer(*bufferObject);
@@ -101,7 +121,7 @@ void VertexBufferGL4::BindBuffer()
     POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 }
 //-----------------------------------------------------------------------
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

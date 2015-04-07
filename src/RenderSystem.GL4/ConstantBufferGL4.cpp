@@ -28,10 +28,8 @@ ConstantBufferGL4::ConstantBufferGL4(std::uint32_t byteWidth)
         return std::move(constantBuffer);
     })();
 
-    auto const oldBufferObject = TypesafeHelperGL4::Get<ConstantBufferObjectGL4>();
-    ScopeGuard scope([&oldBufferObject] {
-        TypesafeHelperGL4::BindBuffer(oldBufferObject);
-    });
+    auto const oldBuffer = TypesafeHelperGL4::Get<ConstantBufferObjectGL4>();
+    ScopeGuard scope([&] { TypesafeHelperGL4::BindBuffer(oldBuffer); });
 
     POMDOG_ASSERT(bufferObject);
     TypesafeHelperGL4::BindBuffer(*bufferObject);
@@ -53,22 +51,20 @@ void ConstantBufferGL4::GetData(std::uint32_t byteWidth, void* result) const
     POMDOG_ASSERT(result != nullptr);
     POMDOG_ASSERT(byteWidth > 0);
 
-    auto const oldBufferObject = TypesafeHelperGL4::Get<ConstantBufferObjectGL4>();
-    ScopeGuard scope([&oldBufferObject] {
-        TypesafeHelperGL4::BindBuffer(oldBufferObject);
-    });
+    auto const oldBuffer = TypesafeHelperGL4::Get<ConstantBufferObjectGL4>();
+    ScopeGuard scope([&] { TypesafeHelperGL4::BindBuffer(oldBuffer); });
 
     POMDOG_ASSERT(bufferObject);
     TypesafeHelperGL4::BindBuffer(*bufferObject);
     POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
-    #if defined(DEBUG) && !defined(NDEBUG)
+#if defined(DEBUG) && !defined(NDEBUG)
     {
         GLint bufferSize = 0;
         glGetBufferParameteriv(GL_UNIFORM_BUFFER, GL_BUFFER_SIZE, &bufferSize);
         POMDOG_ASSERT(byteWidth <= static_cast<std::size_t>(bufferSize));
     }
-    #endif
+#endif
 
     glGetBufferSubData(GL_UNIFORM_BUFFER, 0, byteWidth, result);
     POMDOG_CHECK_ERROR_GL4("glGetBufferSubData");
@@ -79,22 +75,20 @@ void ConstantBufferGL4::SetData(std::uint32_t offsetInBytes,
 {
     POMDOG_ASSERT(source != nullptr);
 
-    auto const oldBufferObject = TypesafeHelperGL4::Get<ConstantBufferObjectGL4>();
-    ScopeGuard scope([&oldBufferObject] {
-        TypesafeHelperGL4::BindBuffer(oldBufferObject);
-    });
+    auto const oldBuffer = TypesafeHelperGL4::Get<ConstantBufferObjectGL4>();
+    ScopeGuard scope([&] { TypesafeHelperGL4::BindBuffer(oldBuffer); });
 
     POMDOG_ASSERT(bufferObject);
     TypesafeHelperGL4::BindBuffer(*bufferObject);
     POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
-    #if defined(DEBUG) && !defined(NDEBUG)
+#if defined(DEBUG) && !defined(NDEBUG)
     {
         GLint bufferSize = 0;
         glGetBufferParameteriv(GL_UNIFORM_BUFFER, GL_BUFFER_SIZE, &bufferSize);
         POMDOG_ASSERT(sizeInBytes <= static_cast<std::size_t>(bufferSize));
     }
-    #endif
+#endif
 
     POMDOG_ASSERT(sizeInBytes > 0);
     glBufferSubData(GL_UNIFORM_BUFFER, offsetInBytes, sizeInBytes, source);
@@ -105,7 +99,7 @@ void ConstantBufferGL4::Apply(std::uint32_t slotIndex)
 {
     POMDOG_ASSERT(bufferObject);
 
-    #if defined(DEBUG) && !defined(NDEBUG)
+#if defined(DEBUG) && !defined(NDEBUG)
     {
         static auto const maxUniformBufferBindings = ([] {
             GLint value = 0;
@@ -115,7 +109,7 @@ void ConstantBufferGL4::Apply(std::uint32_t slotIndex)
 
         POMDOG_ASSERT(slotIndex < static_cast<std::uint32_t>(maxUniformBufferBindings));
     }
-    #endif
+#endif
 
     glBindBufferBase(GL_UNIFORM_BUFFER, slotIndex, bufferObject->value);
 }
