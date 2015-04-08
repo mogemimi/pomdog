@@ -11,7 +11,7 @@
 
 namespace Pomdog {
 
-class PresentationParameters;
+struct PresentationParameters;
 
 namespace Detail {
 namespace Win32 {

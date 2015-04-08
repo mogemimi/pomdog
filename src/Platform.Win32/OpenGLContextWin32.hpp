@@ -5,23 +5,22 @@
 #define POMDOG_OPENGLCONTEXTWIN32_A7C60FF2_HPP
 
 #include "../RenderSystem.GL4/OpenGLContext.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include <functional>
 #include <memory>
 #include <type_traits>
 
 namespace Pomdog {
-
-class PresentationParameters;
-
 namespace Detail {
 namespace Win32 {
 
-class OpenGLContextWin32 final: public RenderSystem::GL4::OpenGLContext {
+class OpenGLContextWin32 final : public RenderSystem::GL4::OpenGLContext {
 public:
     OpenGLContextWin32() = delete;
 
-    OpenGLContextWin32(HWND windowHandle, PresentationParameters const& presentationParameters);
+    OpenGLContextWin32(HWND windowHandle,
+        PresentationParameters const& presentationParameters);
 
     ~OpenGLContextWin32();
 
@@ -45,8 +44,8 @@ private:
     > glrc;
 };
 
-}// namespace Win32
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Win32
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_OPENGLCONTEXTWIN32_A7C60FF2_HPP

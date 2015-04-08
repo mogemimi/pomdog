@@ -113,7 +113,7 @@ void Bootstrap::Run(std::function<std::unique_ptr<Game>(
 
     POMDOG_ASSERT(createApp);
     auto game = createApp(gameHost);
-    
+
     POMDOG_ASSERT(game);
     if (game) {
         gameHost->Run(*game);

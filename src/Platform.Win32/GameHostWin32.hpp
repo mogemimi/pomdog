@@ -11,7 +11,7 @@ namespace Pomdog {
 
 class EventQueue;
 class Game;
-class PresentationParameters;
+struct PresentationParameters;
 
 namespace Detail {
 namespace InputSystem {

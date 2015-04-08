@@ -243,7 +243,7 @@ void GameHostWin32::Impl::RenderFrame(Game & game)
 //-----------------------------------------------------------------------
 void GameHostWin32::Impl::DoEvents()
 {
-    eventQueue->Tick();
+    eventQueue->Emit();
 
     if (surfaceResizeRequest) {
         ClientSizeChanged();
