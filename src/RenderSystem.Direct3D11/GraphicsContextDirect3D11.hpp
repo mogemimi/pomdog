@@ -89,7 +89,7 @@ private:
     static constexpr std::size_t MaxTextureCount = 8;
     std::array<ID3D11ShaderResourceView*, MaxTextureCount> boundTextureViews;
     std::shared_ptr<RenderTarget2DDirect3D11> backBuffer;
-    std::shared_ptr<EffectPassDirect3D11> effectPass;
+    std::shared_ptr<PipelineStateDirect3D11> pipelineState;
     std::array<FLOAT, 4> blendFactor;
     int preferredBackBufferWidth;
     int preferredBackBufferHeight;

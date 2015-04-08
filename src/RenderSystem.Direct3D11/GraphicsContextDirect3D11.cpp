@@ -4,7 +4,7 @@
 #include "GraphicsContextDirect3D11.hpp"
 #include "ConstantLayoutDirect3D11.hpp"
 #include "DXGIFormatHelper.hpp"
-#include "EffectPassDirect3D11.hpp"
+#include "PipelineStateDirect3D11.hpp"
 #include "HardwareBufferDirect3D11.hpp"
 #include "InputLayoutDirect3D11.hpp"
 #include "Texture2DDirect3D11.hpp"
@@ -217,10 +217,10 @@ void GraphicsContextDirect3D11::Present()
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::ApplyPipelineState()
 {
-    POMDOG_ASSERT(effectPass);
+    POMDOG_ASSERT(pipelineState);
 
     if (needToApplyPipelineState) {
-        effectPass->Apply(deviceContext.Get(), blendFactor.data());
+        pipelineState->Apply(deviceContext.Get(), blendFactor.data());
         needToApplyPipelineState = false;
     }
 }
@@ -473,9 +473,9 @@ void GraphicsContextDirect3D11::SetPipelineState(std::shared_ptr<NativePipelineS
     POMDOG_ASSERT(deviceContext);
     POMDOG_ASSERT(pipelineStateIn);
 
-    if (effectPass != pipelineStateIn) {
-        effectPass = std::dynamic_pointer_cast<EffectPassDirect3D11>(pipelineStateIn);
-        POMDOG_ASSERT(effectPass);
+    if (pipelineState != pipelineStateIn) {
+        pipelineState = std::dynamic_pointer_cast<PipelineStateDirect3D11>(pipelineStateIn);
+        POMDOG_ASSERT(pipelineState);
 
         needToApplyPipelineState = true;
     }

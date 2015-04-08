@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EFFECTPASSDIRECT3D11_0A0A09ED_HPP
-#define POMDOG_EFFECTPASSDIRECT3D11_0A0A09ED_HPP
+#ifndef POMDOG_PIPELINESTATEDIRECT3D11_0A0A09ED_HPP
+#define POMDOG_PIPELINESTATEDIRECT3D11_0A0A09ED_HPP
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "ShaderDirect3D11.hpp"
@@ -19,9 +19,10 @@ class ShaderBytecode;
 
 namespace Direct3D11 {
 
-class EffectPassDirect3D11 final : public NativePipelineState {
+class PipelineStateDirect3D11 final : public NativePipelineState {
 public:
-    EffectPassDirect3D11(ID3D11Device* device, EffectPassDescription const& description);
+    PipelineStateDirect3D11(ID3D11Device* device,
+        EffectPassDescription const& description);
 
     std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
 
@@ -46,4 +47,4 @@ private:
 } // namespace Detail
 } // namespace Pomdog
 
-#endif // POMDOG_EFFECTPASSDIRECT3D11_0A0A09ED_HPP
+#endif // POMDOG_PIPELINESTATEDIRECT3D11_0A0A09ED_HPP

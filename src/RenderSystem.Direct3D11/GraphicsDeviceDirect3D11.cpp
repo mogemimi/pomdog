@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "GraphicsDeviceDirect3D11.hpp"
-#include "EffectPassDirect3D11.hpp"
+#include "PipelineStateDirect3D11.hpp"
 #include "EffectReflectionDirect3D11.hpp"
 #include "HardwareBufferDirect3D11.hpp"
 #include "RenderTarget2DDirect3D11.hpp"
@@ -437,23 +437,24 @@ GraphicsDeviceDirect3D11::CreatePipelineState(EffectPassDescription const& descr
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeDevice);
 
-    return std::make_unique<EffectPassDirect3D11>(impl->nativeDevice.Get(), description);
+    return std::make_unique<PipelineStateDirect3D11>(impl->nativeDevice.Get(), description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectReflection>
 GraphicsDeviceDirect3D11::CreateEffectReflection(NativePipelineState & pipelineStateIn)
 {
-    auto const effectPass = dynamic_cast<EffectPassDirect3D11*>(&pipelineStateIn);
-    POMDOG_ASSERT(effectPass != nullptr);
+    auto const pipelineState = dynamic_cast<PipelineStateDirect3D11*>(&pipelineStateIn);
+    POMDOG_ASSERT(pipelineState != nullptr);
 
-    if (!effectPass) {
+    if (pipelineState == nullptr) {
         // FUS RO DAH!
-        ///@todo throw exception
-        return {};
+        POMDOG_THROW_EXCEPTION(std::domain_error,
+            "Failed to cast pipeline state to PipelineStateDirect3D11");
     }
 
     return std::make_unique<EffectReflectionDirect3D11>(
-        effectPass->GetVertexShaderBlob(), effectPass->GetPixelShaderBlob());
+        pipelineState->GetVertexShaderBlob(),
+        pipelineState->GetPixelShaderBlob());
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeTexture2D>

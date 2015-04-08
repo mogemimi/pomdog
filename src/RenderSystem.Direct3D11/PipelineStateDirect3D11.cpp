@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "EffectPassDirect3D11.hpp"
+#include "PipelineStateDirect3D11.hpp"
 #include "ConstantLayoutDirect3D11.hpp"
 #include "GraphicsDeviceDirect3D11.hpp"
 #include "InputLayoutDirect3D11.hpp"
@@ -316,7 +316,7 @@ static std::vector<ConstantBufferBindingDirect3D11> CreateConstantBufferBindings
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-EffectPassDirect3D11::EffectPassDirect3D11(ID3D11Device* device,
+PipelineStateDirect3D11::PipelineStateDirect3D11(ID3D11Device* device,
     EffectPassDescription const& description)
 {
     POMDOG_ASSERT(device);
@@ -341,7 +341,7 @@ EffectPassDirect3D11::EffectPassDirect3D11(ID3D11Device* device,
         device, vertexShader->GetShaderBytecode(), description.InputLayout);
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeConstantLayout> EffectPassDirect3D11::CreateConstantLayout()
+std::unique_ptr<NativeConstantLayout> PipelineStateDirect3D11::CreateConstantLayout()
 {
     POMDOG_ASSERT(vertexShader);
     POMDOG_ASSERT(pixelShader);
@@ -354,7 +354,7 @@ std::unique_ptr<NativeConstantLayout> EffectPassDirect3D11::CreateConstantLayout
     return std::move(constantLayout);
 }
 //-----------------------------------------------------------------------
-void EffectPassDirect3D11::Apply(ID3D11DeviceContext * deviceContext,
+void PipelineStateDirect3D11::Apply(ID3D11DeviceContext * deviceContext,
     FLOAT const blendFactor[4])
 {
     POMDOG_ASSERT(deviceContext);
@@ -373,19 +373,19 @@ void EffectPassDirect3D11::Apply(ID3D11DeviceContext * deviceContext,
     deviceContext->RSSetState(rasterizerState.Get());
 }
 //-----------------------------------------------------------------------
-ShaderBytecode EffectPassDirect3D11::GetVertexShaderBlob() const
+ShaderBytecode PipelineStateDirect3D11::GetVertexShaderBlob() const
 {
     POMDOG_ASSERT(vertexShader);
     return vertexShader->GetShaderBytecode();
 }
 //-----------------------------------------------------------------------
-ShaderBytecode EffectPassDirect3D11::GetPixelShaderBlob() const
+ShaderBytecode PipelineStateDirect3D11::GetPixelShaderBlob() const
 {
     POMDOG_ASSERT(pixelShader);
     return pixelShader->GetShaderBytecode();
 }
 //-----------------------------------------------------------------------
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
