@@ -19,8 +19,10 @@ struct TypesafeHelperGL4::OpenGLGetTraits<ConstantBufferObjectGL4> {
     constexpr static GLenum bufferObjectTarget = GL_UNIFORM_BUFFER;
 };
 //-----------------------------------------------------------------------
-ConstantBufferGL4::ConstantBufferGL4(std::size_t byteWidth)
+ConstantBufferGL4::ConstantBufferGL4(std::size_t sizeInBytes)
 {
+    POMDOG_ASSERT(sizeInBytes > 0);
+
     // Generate constant buffer
     bufferObject = ([] {
         ConstantBufferObjectGL4 constantBuffer;
@@ -35,7 +37,7 @@ ConstantBufferGL4::ConstantBufferGL4(std::size_t byteWidth)
     TypesafeHelperGL4::BindBuffer(*bufferObject);
     POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
-    glBufferData(GL_UNIFORM_BUFFER, byteWidth, nullptr, GL_DYNAMIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeInBytes, nullptr, GL_DYNAMIC_DRAW);
     POMDOG_CHECK_ERROR_GL4("glBufferData");
 }
 //-----------------------------------------------------------------------
@@ -46,10 +48,10 @@ ConstantBufferGL4::~ConstantBufferGL4()
     }
 }
 //-----------------------------------------------------------------------
-void ConstantBufferGL4::GetData(std::size_t byteWidth, void* result) const
+void ConstantBufferGL4::GetData(std::size_t sizeInBytes, void* result) const
 {
     POMDOG_ASSERT(result != nullptr);
-    POMDOG_ASSERT(byteWidth > 0);
+    POMDOG_ASSERT(sizeInBytes > 0);
 
     auto const oldBuffer = TypesafeHelperGL4::Get<ConstantBufferObjectGL4>();
     ScopeGuard scope([&] { TypesafeHelperGL4::BindBuffer(oldBuffer); });
@@ -62,11 +64,11 @@ void ConstantBufferGL4::GetData(std::size_t byteWidth, void* result) const
     {
         GLint bufferSize = 0;
         glGetBufferParameteriv(GL_UNIFORM_BUFFER, GL_BUFFER_SIZE, &bufferSize);
-        POMDOG_ASSERT(byteWidth <= static_cast<std::size_t>(bufferSize));
+        POMDOG_ASSERT(sizeInBytes <= static_cast<std::size_t>(bufferSize));
     }
 #endif
 
-    glGetBufferSubData(GL_UNIFORM_BUFFER, 0, byteWidth, result);
+    glGetBufferSubData(GL_UNIFORM_BUFFER, 0, sizeInBytes, result);
     POMDOG_CHECK_ERROR_GL4("glGetBufferSubData");
 }
 //-----------------------------------------------------------------------
