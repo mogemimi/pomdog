@@ -23,7 +23,7 @@ namespace Tags {
 
 struct FrameBufferTag;
 
-}// namespace Tags
+} // namespace Tags
 
 using FrameBufferGL4 = Tagged<GLuint, Tags::FrameBufferTag>;
 
@@ -99,9 +99,9 @@ private:
     bool needToApplyPipelineState;
 };
 
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_GRAPHICSCONTEXTGL4_1FF90EA8_HPP

@@ -47,6 +47,8 @@ public:
     Impl(std::unique_ptr<Detail::RenderSystem::NativeGraphicsContext> nativeContext,
         PresentationParameters const& presentationParameters);
 
+    ~Impl();
+
     void BuildResources(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
     void SetViewport(Viewport const& viewport);
@@ -105,6 +107,18 @@ GraphicsContext::Impl::Impl(std::unique_ptr<Detail::RenderSystem::NativeGraphics
     SetViewport(viewport);
 
     nativeContext->SetBlendFactor(Color::White);
+}
+//-----------------------------------------------------------------------
+GraphicsContext::Impl::~Impl()
+{
+    constantBuffers.reset();
+    effectPass.reset();
+    vertexBuffers.clear();
+    samplerStates.clear();
+    textures.clear();
+    renderTargets.clear();
+
+    nativeContext.reset();
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const& graphicsDevice)

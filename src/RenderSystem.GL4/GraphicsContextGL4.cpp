@@ -152,7 +152,7 @@ static void SetTextureAsShaderResource(int index, Texture2DObjectGL4 const& text
     POMDOG_CHECK_ERROR_GL4("glBindTexture");
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 template<>
 struct TypesafeHelperGL4::OpenGLGetTraits<FrameBufferGL4> {
@@ -186,12 +186,20 @@ GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> const& ope
 //-----------------------------------------------------------------------
 GraphicsContextGL4::~GraphicsContextGL4()
 {
+    constantLayout.reset();
+    pipelineState.reset();
+    vertexBuffers.clear();
+    textures.clear();
     renderTargets.clear();
 
     if (frameBuffer) {
         glDeleteFramebuffers(1, frameBuffer->Data());
+        POMDOG_CHECK_ERROR_GL4("glDeleteFramebuffers");
         frameBuffer = OptionalType::NullOptional;
     }
+
+    nativeContext.reset();
+    gameWindow.reset();
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::Clear(Color const& color)
@@ -631,7 +639,7 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
     POMDOG_CHECK_ERROR_GL4("glDrawBuffers");
 }
 //-----------------------------------------------------------------------
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

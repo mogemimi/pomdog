@@ -59,6 +59,7 @@ RenderTarget2DGL4::~RenderTarget2DGL4()
 {
     if (renderBuffer) {
         glDeleteRenderbuffers(1, renderBuffer->Data());
+        POMDOG_CHECK_ERROR_GL4("glDeleteRenderbuffers");
     }
 }
 //-----------------------------------------------------------------------

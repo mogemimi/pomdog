@@ -234,6 +234,7 @@ Texture2DGL4::~Texture2DGL4()
 {
     if (textureObject) {
         glDeleteTextures(1, textureObject->Data());
+        POMDOG_CHECK_ERROR_GL4("glDeleteTextures");
     }
 }
 //-----------------------------------------------------------------------

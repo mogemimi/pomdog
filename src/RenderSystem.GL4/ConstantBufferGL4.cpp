@@ -45,6 +45,7 @@ ConstantBufferGL4::~ConstantBufferGL4()
 {
     if (bufferObject) {
         glDeleteBuffers(1, bufferObject->Data());
+        POMDOG_CHECK_ERROR_GL4("glDeleteBuffers");
     }
 }
 //-----------------------------------------------------------------------
@@ -103,6 +104,7 @@ void ConstantBufferGL4::SetData(std::size_t offsetInBytes,
 void ConstantBufferGL4::Apply(int slotIndex)
 {
     POMDOG_ASSERT(bufferObject);
+    POMDOG_ASSERT(slotIndex >= 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
     {
@@ -116,8 +118,8 @@ void ConstantBufferGL4::Apply(int slotIndex)
     }
 #endif
 
-    POMDOG_ASSERT(slotIndex >= 0);
     glBindBufferBase(GL_UNIFORM_BUFFER, slotIndex, bufferObject->value);
+    POMDOG_CHECK_ERROR_GL4("glBindBufferBase");
 }
 //-----------------------------------------------------------------------
 } // namespace GL4

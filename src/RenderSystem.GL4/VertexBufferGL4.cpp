@@ -70,6 +70,7 @@ VertexBufferGL4::~VertexBufferGL4()
 {
     if (bufferObject) {
         glDeleteBuffers(1, bufferObject->Data());
+        POMDOG_CHECK_ERROR_GL4("glDeleteBuffers");
     }
 }
 //-----------------------------------------------------------------------

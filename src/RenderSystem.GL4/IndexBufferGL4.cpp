@@ -71,6 +71,7 @@ IndexBufferGL4::~IndexBufferGL4()
 {
     if (bufferObject) {
         glDeleteBuffers(1, bufferObject->Data());
+        POMDOG_CHECK_ERROR_GL4("glDeleteBuffers");
     }
 }
 //-----------------------------------------------------------------------
