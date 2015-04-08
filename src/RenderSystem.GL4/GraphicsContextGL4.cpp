@@ -449,14 +449,13 @@ void GraphicsContextGL4::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuff
     needToApplyInputLayout = true;
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetEffectPass(std::shared_ptr<NativeEffectPass> const& effectPassIn)
+void GraphicsContextGL4::SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineStateIn)
 {
-    POMDOG_ASSERT(effectPassIn);
-    auto nativeEffectPass = std::dynamic_pointer_cast<EffectPassGL4>(effectPassIn);
+    POMDOG_ASSERT(pipelineStateIn);
+    if (effectPass != pipelineStateIn) {
+        this->effectPass = std::dynamic_pointer_cast<EffectPassGL4>(pipelineStateIn);
+        POMDOG_ASSERT(effectPass);
 
-    POMDOG_ASSERT(nativeEffectPass);
-    if (effectPass != nativeEffectPass) {
-        this->effectPass = nativeEffectPass;
         needToApplyPipelineState = true;
         needToApplyInputLayout = true;
     }

@@ -6,7 +6,7 @@
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "ShaderDirect3D11.hpp"
-#include "../RenderSystem/NativeEffectPass.hpp"
+#include "../RenderSystem/NativePipelineState.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include <vector>
@@ -19,7 +19,7 @@ class ShaderBytecode;
 
 namespace Direct3D11 {
 
-class EffectPassDirect3D11 final: public NativeEffectPass {
+class EffectPassDirect3D11 final : public NativePipelineState {
 public:
     EffectPassDirect3D11(ID3D11Device* device, EffectPassDescription const& description);
 
@@ -41,9 +41,9 @@ private:
     UINT sampleMask;
 };
 
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_EFFECTPASSDIRECT3D11_0A0A09ED_HPP

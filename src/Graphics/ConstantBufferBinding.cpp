@@ -4,7 +4,7 @@
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "../RenderSystem/NativeBuffer.hpp"
 #include "../RenderSystem/NativeConstantLayout.hpp"
-#include "../RenderSystem/NativeEffectPass.hpp"
+#include "../RenderSystem/NativePipelineState.hpp"
 #include "../RenderSystem/NativeEffectReflection.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
@@ -25,11 +25,11 @@ ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
 {
     auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
 
-    auto nativeEffectPass = effectPass.NativeEffectPass();
+    auto nativePipelineState = effectPass.NativePipelineState();
 
     // Create effect reflection:
-    POMDOG_ASSERT(nativeEffectPass);
-    auto effectReflection = nativeDevice->CreateEffectReflection(*nativeEffectPass);
+    POMDOG_ASSERT(nativePipelineState);
+    auto effectReflection = nativeDevice->CreateEffectReflection(*nativePipelineState);
 
     POMDOG_ASSERT(effectReflection);
     auto constants = effectReflection->GetConstantBuffers();
@@ -42,7 +42,7 @@ ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
         constantBuffers[desc.Name] = std::move(constantBuffer);
     }
 
-    nativeConstantLayout = nativeEffectPass->CreateConstantLayout();
+    nativeConstantLayout = nativePipelineState->CreateConstantLayout();
 
     // Bind constant buffers:
     for (auto & parameter: constantBuffers)

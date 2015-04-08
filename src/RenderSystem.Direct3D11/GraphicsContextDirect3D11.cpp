@@ -468,25 +468,27 @@ void GraphicsContextDirect3D11::SetRenderTargets(std::vector<std::shared_ptr<Ren
         boundRenderTargets.front()->DepthStencilView());
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::SetEffectPass(std::shared_ptr<NativeEffectPass> const& nativeEffectPass)
+void GraphicsContextDirect3D11::SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineStateIn)
 {
     POMDOG_ASSERT(deviceContext);
-    POMDOG_ASSERT(nativeEffectPass);
+    POMDOG_ASSERT(pipelineStateIn);
 
-    effectPass = std::dynamic_pointer_cast<EffectPassDirect3D11>(nativeEffectPass);
-    POMDOG_ASSERT(effectPass);
+    if (effectPass != pipelineStateIn) {
+        effectPass = std::dynamic_pointer_cast<EffectPassDirect3D11>(pipelineStateIn);
+        POMDOG_ASSERT(effectPass);
 
-    needToApplyPipelineState = true;
+        needToApplyPipelineState = true;
+    }
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& nativeConstantLayout)
+void GraphicsContextDirect3D11::SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayoutIn)
 {
     POMDOG_ASSERT(deviceContext);
 
-    POMDOG_ASSERT(nativeConstantLayout);
-    POMDOG_ASSERT(dynamic_cast<ConstantLayoutDirect3D11*>(nativeConstantLayout.get()));
+    POMDOG_ASSERT(constantLayoutIn);
+    POMDOG_ASSERT(dynamic_cast<ConstantLayoutDirect3D11*>(constantLayoutIn.get()));
 
-    auto & constantLayout = static_cast<ConstantLayoutDirect3D11&>(*nativeConstantLayout);
+    auto & constantLayout = static_cast<ConstantLayoutDirect3D11&>(*constantLayoutIn);
     constantLayout.Apply(deviceContext.Get());
 }
 //-----------------------------------------------------------------------

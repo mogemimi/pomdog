@@ -46,11 +46,11 @@ public:
     std::unique_ptr<NativeSamplerState>
     CreateSamplerState(SamplerDescription const& description) override;
 
-    std::unique_ptr<NativeEffectPass>
-    CreateEffectPass(EffectPassDescription const& description) override;
+    std::unique_ptr<NativePipelineState>
+    CreatePipelineState(EffectPassDescription const& description) override;
 
     std::unique_ptr<NativeEffectReflection>
-    CreateEffectReflection(NativeEffectPass & nativeEffectPass) override;
+    CreateEffectReflection(NativePipelineState & pipelineState) override;
 
     std::unique_ptr<NativeTexture2D>
     CreateTexture2D(std::int32_t width, std::int32_t height,

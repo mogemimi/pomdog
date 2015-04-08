@@ -14,8 +14,8 @@ namespace Detail {
 namespace RenderSystem {
 
 class NativeBuffer;
-class NativeEffectPass;
 class NativeEffectReflection;
+class NativePipelineState;
 class NativeRenderTarget2D;
 class NativeSamplerState;
 class NativeTexture2D;
@@ -52,11 +52,11 @@ public:
     virtual std::unique_ptr<NativeSamplerState>
     CreateSamplerState(SamplerDescription const& description) = 0;
 
-    virtual std::unique_ptr<NativeEffectPass>
-    CreateEffectPass(EffectPassDescription const& description) = 0;
+    virtual std::unique_ptr<NativePipelineState>
+    CreatePipelineState(EffectPassDescription const& description) = 0;
 
     virtual std::unique_ptr<NativeEffectReflection>
-    CreateEffectReflection(NativeEffectPass & nativeEffectPass) = 0;
+    CreateEffectReflection(NativePipelineState & pipelineState) = 0;
 
     virtual std::unique_ptr<NativeTexture2D>
     CreateTexture2D(std::int32_t width, std::int32_t height,

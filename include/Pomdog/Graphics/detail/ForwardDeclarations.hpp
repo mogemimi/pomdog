@@ -12,10 +12,10 @@ namespace RenderSystem {
 
 class NativeBuffer;
 class NativeConstantLayout;
-class NativeEffectPass;
 class NativeEffectReflection;
 class NativeGraphicsContext;
 class NativeGraphicsDevice;
+class NativePipelineState;
 class NativeRenderTarget2D;
 class NativeSamplerState;
 class NativeTexture2D;

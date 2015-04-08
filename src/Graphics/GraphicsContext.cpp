@@ -236,9 +236,11 @@ void GraphicsContext::Impl::SetEffectPass(std::shared_ptr<EffectPass> const& eff
     POMDOG_ASSERT(nativeContext);
     effectPass = effectPassIn;
 
-    using Detail::RenderSystem::NativeEffectPass;
-    std::shared_ptr<NativeEffectPass> nativeEffectPass(effectPass, effectPass->NativeEffectPass());
-    nativeContext->SetEffectPass(nativeEffectPass);
+    using Detail::RenderSystem::NativePipelineState;
+    std::shared_ptr<NativePipelineState> nativePipelineState(
+        effectPass, effectPass->NativePipelineState());
+
+    nativeContext->SetPipelineState(nativePipelineState);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::Impl::SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> const& constantBuffersIn)

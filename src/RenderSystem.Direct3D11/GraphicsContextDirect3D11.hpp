@@ -70,9 +70,9 @@ public:
 
     void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets) override;
 
-    void SetEffectPass(std::shared_ptr<NativeEffectPass> const& nativeEffectPass) override;
+    void SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState) override;
 
-    void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& nativeConstantLayout) override;
+    void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayout) override;
 
     void ResizeBackBuffers(ID3D11Device* nativeDevice, int backBufferWidth, int backBufferHeight);
 

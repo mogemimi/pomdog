@@ -16,8 +16,8 @@ namespace Detail {
 namespace RenderSystem {
 
 class GraphicsCapabilities;
-class NativeEffectPass;
 class NativeConstantLayout;
+class NativePipelineState;
 
 class NativeGraphicsContext: Noncopyable {
 public:
@@ -62,15 +62,13 @@ public:
 
     virtual void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets) = 0;
 
-    ///@details low-level API
-    virtual void SetEffectPass(std::shared_ptr<NativeEffectPass> const& nativeEffectPass) = 0;
+    virtual void SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState) = 0;
 
-    ///@details low-level API
-    virtual void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& nativeConstantLayout) = 0;
+    virtual void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayout) = 0;
 };
 
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_NATIVEGRAPHICSCONTEXT_D292A72E_HPP

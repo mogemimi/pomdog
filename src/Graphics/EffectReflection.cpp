@@ -14,8 +14,8 @@ EffectReflection::EffectReflection(std::shared_ptr<GraphicsDevice> const& graphi
     std::shared_ptr<EffectPass> const& effectPass)
 {
     POMDOG_ASSERT(graphicsDevice && graphicsDevice->NativeGraphicsDevice());
-    POMDOG_ASSERT(effectPass && effectPass->NativeEffectPass());
-    nativeEffectReflection = graphicsDevice->NativeGraphicsDevice()->CreateEffectReflection(*effectPass->NativeEffectPass());
+    POMDOG_ASSERT(effectPass && effectPass->NativePipelineState());
+    nativeEffectReflection = graphicsDevice->NativeGraphicsDevice()->CreateEffectReflection(*effectPass->NativePipelineState());
 }
 //-----------------------------------------------------------------------
 EffectReflection::~EffectReflection() = default;

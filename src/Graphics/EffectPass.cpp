@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Graphics/EffectPass.hpp"
-#include "../RenderSystem/NativeEffectPass.hpp"
+#include "../RenderSystem/NativePipelineState.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "Pomdog/Graphics/EffectPassDescription.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -15,9 +15,8 @@ EffectPass::EffectPass(GraphicsDevice & graphicsDevice,
 {
     auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
 
-    // Create effect pass:
     POMDOG_ASSERT(nativeDevice);
-    nativeEffectPass = nativeDevice->CreateEffectPass(description);
+    nativePipelineState = nativeDevice->CreatePipelineState(description);
 }
 //-----------------------------------------------------------------------
 EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
@@ -27,9 +26,9 @@ EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 //-----------------------------------------------------------------------
 EffectPass::~EffectPass() = default;
 //-----------------------------------------------------------------------
-Detail::RenderSystem::NativeEffectPass* EffectPass::NativeEffectPass()
+Detail::RenderSystem::NativePipelineState* EffectPass::NativePipelineState()
 {
-    return nativeEffectPass.get();
+    return nativePipelineState.get();
 }
 //-----------------------------------------------------------------------
 } // namespace Pomdog

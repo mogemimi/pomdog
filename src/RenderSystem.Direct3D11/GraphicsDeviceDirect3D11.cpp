@@ -431,8 +431,8 @@ GraphicsDeviceDirect3D11::CreateSamplerState(SamplerDescription const& descripti
     return std::make_unique<SamplerStateDirect3D11>(impl->nativeDevice.Get(), description);
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeEffectPass>
-GraphicsDeviceDirect3D11::CreateEffectPass(EffectPassDescription const& description)
+std::unique_ptr<NativePipelineState>
+GraphicsDeviceDirect3D11::CreatePipelineState(EffectPassDescription const& description)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeDevice);
@@ -441,9 +441,9 @@ GraphicsDeviceDirect3D11::CreateEffectPass(EffectPassDescription const& descript
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectReflection>
-GraphicsDeviceDirect3D11::CreateEffectReflection(NativeEffectPass & nativeEffectPass)
+GraphicsDeviceDirect3D11::CreateEffectReflection(NativePipelineState & pipelineStateIn)
 {
-    auto const effectPass = dynamic_cast<EffectPassDirect3D11*>(&nativeEffectPass);
+    auto const effectPass = dynamic_cast<EffectPassDirect3D11*>(&pipelineStateIn);
     POMDOG_ASSERT(effectPass != nullptr);
 
     if (!effectPass) {

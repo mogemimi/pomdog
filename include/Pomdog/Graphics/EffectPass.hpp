@@ -28,10 +28,10 @@ public:
     EffectPass & operator=(EffectPass &&) = default;
 
 public:
-    Detail::RenderSystem::NativeEffectPass* NativeEffectPass();
+    Detail::RenderSystem::NativePipelineState* NativePipelineState();
 
 private:
-    std::unique_ptr<Detail::RenderSystem::NativeEffectPass> nativeEffectPass;
+    std::unique_ptr<Detail::RenderSystem::NativePipelineState> nativePipelineState;
 };
 
 } // namespace Pomdog

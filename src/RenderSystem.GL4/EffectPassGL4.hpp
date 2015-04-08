@@ -9,7 +9,7 @@
 #include "DepthStencilStateGL4.hpp"
 #include "RasterizerStateGL4.hpp"
 #include "TypesafeGL4.hpp"
-#include "../RenderSystem/NativeEffectPass.hpp"
+#include "../RenderSystem/NativePipelineState.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <cstdint>
@@ -32,7 +32,7 @@ struct UniformBlockBindingGL4 {
     std::uint16_t SlotIndex;
 };
 
-class EffectPassGL4 final: public NativeEffectPass {
+class EffectPassGL4 final : public NativePipelineState {
 public:
     EffectPassGL4() = delete;
 
@@ -58,9 +58,9 @@ private:
     std::unique_ptr<InputLayoutGL4> inputLayout;
 };
 
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_EFFECTPASSGL4_5C5F046F_HPP
