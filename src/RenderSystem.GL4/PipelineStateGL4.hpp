@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EFFECTPASSGL4_5C5F046F_HPP
-#define POMDOG_EFFECTPASSGL4_5C5F046F_HPP
+#ifndef POMDOG_PIPELINESTATEGL4_5C5F046F_HPP
+#define POMDOG_PIPELINESTATEGL4_5C5F046F_HPP
 
 #include "OpenGLPrerequisites.hpp"
 #include "BlendStateGL4.hpp"
@@ -32,13 +32,11 @@ struct UniformBlockBindingGL4 {
     std::uint16_t SlotIndex;
 };
 
-class EffectPassGL4 final : public NativePipelineState {
+class PipelineStateGL4 final : public NativePipelineState {
 public:
-    EffectPassGL4() = delete;
+    explicit PipelineStateGL4(EffectPassDescription const& description);
 
-    explicit EffectPassGL4(EffectPassDescription const& description);
-
-    ~EffectPassGL4();
+    ~PipelineStateGL4();
 
     std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
 
@@ -63,4 +61,4 @@ private:
 } // namespace Detail
 } // namespace Pomdog
 
-#endif // POMDOG_EFFECTPASSGL4_5C5F046F_HPP
+#endif // POMDOG_PIPELINESTATEGL4_5C5F046F_HPP

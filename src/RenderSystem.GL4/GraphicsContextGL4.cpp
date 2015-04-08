@@ -4,7 +4,7 @@
 #include "GraphicsContextGL4.hpp"
 #include "OpenGLContext.hpp"
 #include "ConstantLayoutGL4.hpp"
-#include "EffectPassGL4.hpp"
+#include "PipelineStateGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "IndexBufferGL4.hpp"
 #include "InputLayoutGL4.hpp"
@@ -232,11 +232,11 @@ void GraphicsContextGL4::Present()
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::ApplyPipelineState()
 {
-    POMDOG_ASSERT(effectPass);
+    POMDOG_ASSERT(pipelineState);
 
     if (needToApplyInputLayout) {
         // Bind input-layout to the input-assembler stage:
-        auto inputLayout = effectPass->GetInputLayout();
+        auto inputLayout = pipelineState->GetInputLayout();
 
         POMDOG_ASSERT(inputLayout);
         POMDOG_ASSERT(!vertexBuffers.empty());
@@ -247,8 +247,8 @@ void GraphicsContextGL4::ApplyPipelineState()
 
     if (needToApplyPipelineState) {
         // Use shader program:
-        POMDOG_ASSERT(effectPass);
-        effectPass->ApplyShaders();
+        POMDOG_ASSERT(pipelineState);
+        pipelineState->ApplyShaders();
 
         needToApplyPipelineState = false;
     }
@@ -452,9 +452,9 @@ void GraphicsContextGL4::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuff
 void GraphicsContextGL4::SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineStateIn)
 {
     POMDOG_ASSERT(pipelineStateIn);
-    if (effectPass != pipelineStateIn) {
-        this->effectPass = std::dynamic_pointer_cast<EffectPassGL4>(pipelineStateIn);
-        POMDOG_ASSERT(effectPass);
+    if (pipelineState != pipelineStateIn) {
+        this->pipelineState = std::dynamic_pointer_cast<PipelineStateGL4>(pipelineStateIn);
+        POMDOG_ASSERT(pipelineState);
 
         needToApplyPipelineState = true;
         needToApplyInputLayout = true;

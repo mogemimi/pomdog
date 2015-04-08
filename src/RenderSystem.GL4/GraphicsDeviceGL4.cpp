@@ -3,7 +3,7 @@
 
 #include "GraphicsDeviceGL4.hpp"
 #include "ConstantBufferGL4.hpp"
-#include "EffectPassGL4.hpp"
+#include "PipelineStateGL4.hpp"
 #include "EffectReflectionGL4.hpp"
 #include "IndexBufferGL4.hpp"
 #include "SamplerStateGL4.hpp"
@@ -83,16 +83,17 @@ GraphicsDeviceGL4::CreateSamplerState(SamplerDescription const& description)
 std::unique_ptr<NativePipelineState>
 GraphicsDeviceGL4::CreatePipelineState(EffectPassDescription const& description)
 {
-    return std::make_unique<EffectPassGL4>(description);
+    return std::make_unique<PipelineStateGL4>(description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectReflection>
 GraphicsDeviceGL4::CreateEffectReflection(NativePipelineState & pipelineState)
 {
-    auto const effectPassGL4 = dynamic_cast<EffectPassGL4*>(&pipelineState);
-    POMDOG_ASSERT(effectPassGL4 != nullptr);
+    auto const pipelineStateGL4 = dynamic_cast<PipelineStateGL4*>(&pipelineState);
+    POMDOG_ASSERT(pipelineStateGL4 != nullptr);
 
-    return std::make_unique<EffectReflectionGL4>(effectPassGL4->GetShaderProgram());
+    return std::make_unique<EffectReflectionGL4>(
+        pipelineStateGL4->GetShaderProgram());
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeTexture2D>

@@ -29,7 +29,7 @@ using FrameBufferGL4 = Tagged<GLuint, Tags::FrameBufferTag>;
 
 class OpenGLContext;
 class ConstantLayoutGL4;
-class EffectPassGL4;
+class PipelineStateGL4;
 class RenderTarget2DGL4;
 
 class GraphicsContextGL4 final: public NativeGraphicsContext {
@@ -89,7 +89,7 @@ private:
 private:
     std::vector<std::shared_ptr<VertexBuffer>> vertexBuffers;
     std::shared_ptr<OpenGLContext> nativeContext;
-    std::shared_ptr<EffectPassGL4> effectPass;
+    std::shared_ptr<PipelineStateGL4> pipelineState;
     std::shared_ptr<ConstantLayoutGL4> constantLayout;
     std::weak_ptr<GameWindow> gameWindow;
     std::vector<Optional<GLenum>> textures;

@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "EffectPassGL4.hpp"
+#include "PipelineStateGL4.hpp"
 #include "EffectReflectionGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "ConstantLayoutGL4.hpp"
@@ -59,9 +59,9 @@ static Optional<ShaderProgramGL4> LinkShaders(
     return program;
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
-EffectPassGL4::EffectPassGL4(EffectPassDescription const& description)
+PipelineStateGL4::PipelineStateGL4(EffectPassDescription const& description)
     : blendState(description.BlendState)
     , rasterizerState(description.RasterizerState)
     , depthStencilState(description.DepthStencilState)
@@ -137,14 +137,15 @@ EffectPassGL4::EffectPassGL4(EffectPassDescription const& description)
     }
 }
 //-----------------------------------------------------------------------
-EffectPassGL4::~EffectPassGL4()
+PipelineStateGL4::~PipelineStateGL4()
 {
     if (shaderProgram) {
         glDeleteProgram(shaderProgram->value);
+        POMDOG_CHECK_ERROR_GL4("glDeleteProgram");
     }
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<NativeConstantLayout> EffectPassGL4::CreateConstantLayout()
+std::unique_ptr<NativeConstantLayout> PipelineStateGL4::CreateConstantLayout()
 {
     EffectReflectionGL4 shaderReflection(*shaderProgram);
 
@@ -161,7 +162,7 @@ std::unique_ptr<NativeConstantLayout> EffectPassGL4::CreateConstantLayout()
     return std::make_unique<ConstantLayoutGL4>(std::move(bindings));
 }
 //-----------------------------------------------------------------------
-void EffectPassGL4::ApplyShaders()
+void PipelineStateGL4::ApplyShaders()
 {
     blendState.Apply();
     rasterizerState.Apply();
@@ -177,19 +178,19 @@ void EffectPassGL4::ApplyShaders()
     }
 }
 //-----------------------------------------------------------------------
-ShaderProgramGL4 EffectPassGL4::GetShaderProgram() const
+ShaderProgramGL4 PipelineStateGL4::GetShaderProgram() const
 {
     POMDOG_ASSERT(shaderProgram);
     return shaderProgram.value();
 }
 //-----------------------------------------------------------------------
-InputLayoutGL4* EffectPassGL4::GetInputLayout() const
+InputLayoutGL4* PipelineStateGL4::GetInputLayout() const
 {
     POMDOG_ASSERT(inputLayout);
     return inputLayout.get();
 }
 //-----------------------------------------------------------------------
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
