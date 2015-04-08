@@ -153,7 +153,7 @@ static void BuildBackBufferBySwapChain(ID3D11Device* nativeDevice, IDXGISwapChai
     }
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(ID3D11Device* nativeDevice,
     std::int32_t pixelWidth, std::int32_t pixelHeight,
@@ -222,7 +222,7 @@ void RenderTarget2DDirect3D11::ResetBackBuffer()
     renderTexture.Reset();
 }
 //-----------------------------------------------------------------------
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

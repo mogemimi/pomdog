@@ -168,7 +168,7 @@ static void CompileFromShaderFile(ShaderBytecode const& shaderBytecode,
     }
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 Microsoft::WRL::ComPtr<ID3DBlob> ShaderCompiling::CompileShader(
     ShaderBytecode const& shaderBytecode,
@@ -211,7 +211,7 @@ Microsoft::WRL::ComPtr<ID3DBlob> ShaderCompiling::CompileShader(
     return std::move(codeBlob);
 }
 
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

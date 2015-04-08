@@ -161,7 +161,8 @@ ComPtr<ID3D11DepthStencilState> CreateDepthStencilState(ID3D11Device* nativeDevi
     ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
     depthStencilDesc.DepthEnable = ToD3D11Boolean(description.DepthBufferEnable);
-    depthStencilDesc.DepthWriteMask = (description.DepthBufferWriteEnable ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO);
+    depthStencilDesc.DepthWriteMask = (description.DepthBufferWriteEnable
+        ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO);
     depthStencilDesc.DepthFunc = ToComparisonFunctionDirect3D11(description.DepthBufferFunction);
 
     depthStencilDesc.StencilEnable = ToD3D11Boolean(description.StencilEnable);
@@ -314,7 +315,7 @@ static std::vector<ConstantBufferBindingDirect3D11> CreateConstantBufferBindings
     return std::move(bindings);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 PipelineStateDirect3D11::PipelineStateDirect3D11(ID3D11Device* device,
     EffectPassDescription const& description)

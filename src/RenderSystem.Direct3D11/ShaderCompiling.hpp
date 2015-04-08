@@ -5,6 +5,7 @@
 #define POMDOG_SHADERCOMPILING_C56F5C9E_HPP
 
 #include "PrerequisitesDirect3D11.hpp"
+#include <wrl/client.h>
 #include <cstdint>
 
 namespace Pomdog {
@@ -22,9 +23,9 @@ struct ShaderCompiling final {
         ShaderCompileOptions const& compileOptions);
 };
 
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SHADERCOMPILING_C56F5C9E_HPP

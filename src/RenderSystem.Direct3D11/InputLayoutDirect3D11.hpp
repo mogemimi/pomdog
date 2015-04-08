@@ -6,6 +6,7 @@
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include <wrl/client.h>
 #include <vector>
 #include <string>
 
@@ -24,9 +25,9 @@ struct InputLayoutHelper final {
         InputLayoutDescription const& description);
 };
 
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_INPUTLAYOUTDIRECT3D11_93CA68F0_HPP

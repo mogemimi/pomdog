@@ -9,6 +9,7 @@
 #include "../RenderSystem/NativePipelineState.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Vector4.hpp"
+#include <wrl/client.h>
 #include <vector>
 
 namespace Pomdog {

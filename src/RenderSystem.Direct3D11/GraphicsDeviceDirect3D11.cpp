@@ -184,7 +184,7 @@ static void CheckError(ID3D11InfoQueue* infoQueue)
     }
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 class GraphicsDeviceDirect3D11::Impl {
 public:
@@ -497,7 +497,7 @@ Microsoft::WRL::ComPtr<IDXGIFactory1> GraphicsDeviceDirect3D11::DXGIFactory() co
     return impl->adapters.GetFactory();
 }
 //-----------------------------------------------------------------------
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

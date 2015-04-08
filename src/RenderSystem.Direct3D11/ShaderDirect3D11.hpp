@@ -6,6 +6,7 @@
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
+#include <wrl/client.h>
 #include <vector>
 #include <cstdint>
 
@@ -36,9 +37,9 @@ private:
 using VertexShaderDirect3D11 = ShaderDirect3D11<ID3D11VertexShader>;
 using PixelShaderDirect3D11 = ShaderDirect3D11<ID3D11PixelShader>;
 
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SHADERDIRECT3D11_F7D61E35_HPP

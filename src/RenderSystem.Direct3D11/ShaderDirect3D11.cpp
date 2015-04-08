@@ -27,7 +27,7 @@ static HRESULT CreateShader(ID3D11Device* device, void const* shaderByteCode,
     return device->CreatePixelShader(shaderByteCode, bytecodeLength, nullptr, pixelShader);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 template <class NativeShaderType>
 ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(ID3D11Device* device,
@@ -86,7 +86,7 @@ template class ShaderDirect3D11<ID3D11PixelShader>;
 //template class ShaderDirect3D11<ID3D11HullShader>;
 //template class ShaderDirect3D11<ID3D11ComputeShader>;
 //-----------------------------------------------------------------------
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

@@ -7,6 +7,7 @@
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeEffectReflection.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include <wrl/client.h>
 
 namespace Pomdog {
 namespace Detail {
@@ -28,9 +29,9 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection> pixelShaderReflector;
 };
 
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_EFFECTREFLECTIONDIRECT3D11_10267AA4_HPP

@@ -7,7 +7,6 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <d3d11shader.h>
-#include <wrl/client.h> // ComPtr
 
 namespace Pomdog {
 namespace Detail {

@@ -7,6 +7,7 @@
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include <wrl/client.h>
 
 namespace Pomdog {
 namespace Detail {
@@ -41,9 +42,9 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureResourceView;
 };
 
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_RENDERTARGET2DDIRECT3D11_75264088_HPP

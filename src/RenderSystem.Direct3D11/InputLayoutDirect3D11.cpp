@@ -155,7 +155,7 @@ static DXGI_FORMAT ToDXGIFormat(D3D_REGISTER_COMPONENT_TYPE registerType, BYTE m
     return DXGI_FORMAT_R32_FLOAT;
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 Microsoft::WRL::ComPtr<ID3D11InputLayout> InputLayoutHelper::CreateInputLayout(
     ID3D11Device* device,
@@ -184,7 +184,7 @@ Microsoft::WRL::ComPtr<ID3D11InputLayout> InputLayoutHelper::CreateInputLayout(
     return std::move(nativeInputLayout);
 }
 //-----------------------------------------------------------------------
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

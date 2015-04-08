@@ -7,6 +7,7 @@
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
+#include <wrl/client.h>
 #include <memory>
 
 namespace Pomdog {

@@ -17,9 +17,9 @@ struct DXGIFormatHelper final {
     static DXGI_FORMAT ToDXGIFormat(SurfaceFormat format);
 };
 
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_DXGIFORMATHELPER_9FB57D4A_HPP

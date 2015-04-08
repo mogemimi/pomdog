@@ -52,7 +52,7 @@ static DXGI_FORMAT ToDXGIFormat(IndexElementSize elementSize)
     return DXGI_FORMAT_UNKNOWN;
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 GraphicsContextDirect3D11::GraphicsContextDirect3D11(
     HWND windowHandle,
@@ -516,7 +516,8 @@ void GraphicsContextDirect3D11::ResizeBackBuffers(ID3D11Device* nativeDevice,
         preferredBackBufferHeight, DXGIFormatHelper::ToDXGIFormat(backBufferFormat), 0);
 
     if (FAILED(hr)) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to resize back buffer");
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to resize back buffer");
     }
 
     backBuffer->ResetBackBuffer(nativeDevice, swapChain.Get(),
@@ -533,7 +534,7 @@ ID3D11DeviceContext* GraphicsContextDirect3D11::GetDeviceContext()
     return deviceContext.Get();
 }
 //-----------------------------------------------------------------------
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

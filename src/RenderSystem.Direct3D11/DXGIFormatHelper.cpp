@@ -48,7 +48,7 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(SurfaceFormat format)
     return DXGI_FORMAT_UNKNOWN;
 }
 //-----------------------------------------------------------------------
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

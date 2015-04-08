@@ -43,7 +43,7 @@ static std::size_t ComputeTextureBufferSize(std::size_t pixelWidth, std::size_t 
     return sizeInBytes;
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* nativeDevice,
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContextIn,
@@ -127,7 +127,7 @@ ID3D11ShaderResourceView* Texture2DDirect3D11::ShaderResourceView() const
     return shaderResourceView.Get();
 }
 //-----------------------------------------------------------------------
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

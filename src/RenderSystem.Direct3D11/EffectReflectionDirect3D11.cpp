@@ -171,7 +171,7 @@ static void EnumerateConstantBuffer(ID3D11ShaderReflection* shaderReflector,
     }
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 EffectReflectionDirect3D11::EffectReflectionDirect3D11(
     ShaderBytecode const& vertexShaderBytecode,
@@ -220,7 +220,7 @@ std::vector<EffectConstantDescription> EffectReflectionDirect3D11::GetConstantBu
     return std::move(result);
 }
 //-----------------------------------------------------------------------
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

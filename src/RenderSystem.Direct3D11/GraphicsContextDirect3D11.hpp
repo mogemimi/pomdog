@@ -6,6 +6,7 @@
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
+#include <wrl/client.h>
 #include <memory>
 #include <vector>
 #include <array>
@@ -16,7 +17,7 @@ namespace Win32 {
 
 class GameWindowWin32;
 
-}// namespace Win32
+} // namespace Win32
 namespace RenderSystem {
 namespace Direct3D11 {
 
@@ -99,9 +100,9 @@ private:
     bool needToApplyPipelineState;
 };
 
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_GRAPHICSCONTEXTDIRECT3D11_596CF1CC_HPP

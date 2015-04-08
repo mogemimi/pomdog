@@ -39,7 +39,7 @@ static D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressModeDirect3D11(TextureAddressM
     return D3D11_TEXTURE_ADDRESS_WRAP;
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 SamplerStateDirect3D11::SamplerStateDirect3D11(ID3D11Device* nativeDevice, SamplerDescription const& description)
 {
@@ -87,7 +87,7 @@ void SamplerStateDirect3D11::Apply(NativeGraphicsContext & graphicsContext, int 
     deviceContext->PSSetSamplers(index, states.size(), states.data());
 }
 //-----------------------------------------------------------------------
-}// namespace Direct3D11
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Direct3D11
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
