@@ -18,7 +18,8 @@ public:
 
     virtual ~NativeBuffer() = default;
 
-    virtual void GetData(std::size_t sizeInBytes, void* result) const = 0;
+    virtual void GetData(std::size_t offsetInBytes,
+        void* destination, std::size_t sizeInBytes) const = 0;
 
     virtual void SetData(std::size_t offsetInBytes,
         void const* source, std::size_t sizeInBytes) = 0;

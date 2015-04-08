@@ -25,10 +25,11 @@ public:
         void const* vertices, std::size_t sizeInBytes,
         BufferUsage bufferUsage, D3D11_BIND_FLAG bindFlag);
 
-    void GetData(std::size_t sizeInBytes, void* result) const override;
+    void GetData(std::size_t offsetInBytes,
+        void* destination, std::size_t sizeInBytes) const override;
 
-    void SetData(std::size_t offsetInBytes, void const* source,
-        std::size_t sizeInBytes) override;
+    void SetData(std::size_t offsetInBytes,
+        void const* source, std::size_t sizeInBytes) override;
 
     ID3D11Buffer* GetBuffer() const;
 

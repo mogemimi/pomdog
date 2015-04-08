@@ -99,12 +99,12 @@ HardwareBufferDirect3D11::HardwareBufferDirect3D11(ID3D11Device* nativeDevice,
         sourceData, bufferUsage, bindFlag);
 }
 //-----------------------------------------------------------------------
-void HardwareBufferDirect3D11::GetData(std::size_t sizeInBytes,
-    void* output) const
+void HardwareBufferDirect3D11::GetData(std::size_t offsetInBytes,
+    void* destination, std::size_t sizeInBytes) const
 {
     POMDOG_ASSERT(nativeBuffer);
     POMDOG_ASSERT(deviceContext);
-    POMDOG_ASSERT(output != nullptr);
+    POMDOG_ASSERT(destination != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -116,10 +116,9 @@ void HardwareBufferDirect3D11::GetData(std::size_t sizeInBytes,
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to map buffer");
     }
 
-    constexpr std::size_t offsetInBytes = 0;
     auto mappedMemory = reinterpret_cast<std::uint8_t*>(mappedResource.pData)
         + offsetInBytes;
-    std::memcpy(output, mappedMemory, sizeInBytes);
+    std::memcpy(destination, mappedMemory, sizeInBytes);
 
     deviceContext->Unmap(nativeBuffer.Get(), 0);
 }

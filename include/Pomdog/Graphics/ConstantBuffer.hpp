@@ -39,7 +39,7 @@ public:
         return std::move(result);
     }
 
-    void GetValue(std::size_t byteWidth, void* result) const;
+    void GetValue(std::size_t sizeInBytes, void* result) const;
 
     template <typename T>
     void SetValue(T const& value)
@@ -55,7 +55,7 @@ public:
         Detail::EffectBinaryParameter::Set(*this, data, count);
     }
 
-    void SetValue(void const* data, std::size_t byteWidth);
+    void SetValue(void const* data, std::size_t sizeInBytes);
 
 public:
     Detail::RenderSystem::NativeBuffer* NativeConstantBuffer();

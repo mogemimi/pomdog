@@ -25,20 +25,20 @@ ConstantBuffer::ConstantBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDe
 //-----------------------------------------------------------------------
 ConstantBuffer::~ConstantBuffer() = default;
 //-----------------------------------------------------------------------
-void ConstantBuffer::GetValue(std::size_t byteWidth, void* result) const
+void ConstantBuffer::GetValue(std::size_t sizeInBytes, void* result) const
 {
-    POMDOG_ASSERT(byteWidth > 0);
+    POMDOG_ASSERT(sizeInBytes > 0);
     POMDOG_ASSERT(result != nullptr);
     POMDOG_ASSERT(nativeConstantBuffer);
-    nativeConstantBuffer->GetData(byteWidth, result);
+    nativeConstantBuffer->GetData(0, result, sizeInBytes);
 }
 //-----------------------------------------------------------------------
-void ConstantBuffer::SetValue(void const* data, std::size_t byteWidth)
+void ConstantBuffer::SetValue(void const* data, std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(data != nullptr);
-    POMDOG_ASSERT(byteWidth > 0);
+    POMDOG_ASSERT(sizeInBytes > 0);
     POMDOG_ASSERT(nativeConstantBuffer);
-    return nativeConstantBuffer->SetData(0, data, byteWidth);
+    return nativeConstantBuffer->SetData(0, data, sizeInBytes);
 }
 //-----------------------------------------------------------------------
 Detail::RenderSystem::NativeBuffer* ConstantBuffer::NativeConstantBuffer()

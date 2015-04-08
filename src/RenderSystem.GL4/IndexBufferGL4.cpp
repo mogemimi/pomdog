@@ -74,9 +74,10 @@ IndexBufferGL4::~IndexBufferGL4()
     }
 }
 //-----------------------------------------------------------------------
-void IndexBufferGL4::GetData(std::size_t sizeInBytes, void* result) const
+void IndexBufferGL4::GetData(std::size_t offsetInBytes,
+    void* destination, std::size_t sizeInBytes) const
 {
-    POMDOG_ASSERT(result != nullptr);
+    POMDOG_ASSERT(destination != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
 
     auto const oldBuffer = TypesafeHelperGL4::Get<IndexBufferObjectGL4>();
@@ -90,11 +91,13 @@ void IndexBufferGL4::GetData(std::size_t sizeInBytes, void* result) const
     {
         GLint bufferSize = 0;
         glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &bufferSize);
-        POMDOG_ASSERT(sizeInBytes <= static_cast<std::size_t>(bufferSize));
+        POMDOG_ASSERT((offsetInBytes + sizeInBytes)
+            <= static_cast<std::size_t>(bufferSize));
     }
 #endif
 
-    glGetBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeInBytes, result);
+    glGetBufferSubData(GL_ELEMENT_ARRAY_BUFFER,
+        offsetInBytes, sizeInBytes, destination);
     POMDOG_CHECK_ERROR_GL4("glGetBufferSubData");
 }
 //-----------------------------------------------------------------------
