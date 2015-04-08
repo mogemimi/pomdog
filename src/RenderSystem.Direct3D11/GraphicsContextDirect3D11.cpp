@@ -5,9 +5,8 @@
 #include "ConstantLayoutDirect3D11.hpp"
 #include "DXGIFormatHelper.hpp"
 #include "EffectPassDirect3D11.hpp"
-#include "IndexBufferDirect3D11.hpp"
+#include "HardwareBufferDirect3D11.hpp"
 #include "InputLayoutDirect3D11.hpp"
-#include "VertexBufferDirect3D11.hpp"
 #include "Texture2DDirect3D11.hpp"
 #include "RenderTarget2DDirect3D11.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
@@ -246,11 +245,11 @@ void GraphicsContextDirect3D11::DrawIndexed(PrimitiveTopology primitiveTopology,
 
     POMDOG_ASSERT(indexBuffer);
     POMDOG_ASSERT(indexBuffer->NativeIndexBuffer());
-    POMDOG_ASSERT(dynamic_cast<IndexBufferDirect3D11*>(indexBuffer->NativeIndexBuffer()));
+    POMDOG_ASSERT(dynamic_cast<HardwareBufferDirect3D11*>(indexBuffer->NativeIndexBuffer()));
 
-    auto const nativeIndexBuffer = static_cast<IndexBufferDirect3D11*>(indexBuffer->NativeIndexBuffer());
+    auto const nativeIndexBuffer = static_cast<HardwareBufferDirect3D11*>(indexBuffer->NativeIndexBuffer());
 
-    deviceContext->IASetIndexBuffer(nativeIndexBuffer->NativeBuffer(),
+    deviceContext->IASetIndexBuffer(nativeIndexBuffer->GetBuffer(),
         ToDXGIFormat(indexBuffer->ElementSize()), 0);
 
     deviceContext->IASetPrimitiveTopology(ToD3D11PrimitiveTopology(primitiveTopology));
@@ -278,11 +277,11 @@ void GraphicsContextDirect3D11::DrawIndexedInstanced(PrimitiveTopology primitive
 
     POMDOG_ASSERT(indexBuffer);
     POMDOG_ASSERT(indexBuffer->NativeIndexBuffer());
-    POMDOG_ASSERT(dynamic_cast<IndexBufferDirect3D11*>(indexBuffer->NativeIndexBuffer()));
+    POMDOG_ASSERT(dynamic_cast<HardwareBufferDirect3D11*>(indexBuffer->NativeIndexBuffer()));
 
-    auto const nativeIndexBuffer = static_cast<IndexBufferDirect3D11*>(indexBuffer->NativeIndexBuffer());
+    auto const nativeIndexBuffer = static_cast<HardwareBufferDirect3D11*>(indexBuffer->NativeIndexBuffer());
 
-    deviceContext->IASetIndexBuffer(nativeIndexBuffer->NativeBuffer(),
+    deviceContext->IASetIndexBuffer(nativeIndexBuffer->GetBuffer(),
         ToDXGIFormat(indexBuffer->ElementSize()), 0);
 
     deviceContext->IASetPrimitiveTopology(ToD3D11PrimitiveTopology(primitiveTopology));
@@ -370,12 +369,12 @@ void GraphicsContextDirect3D11::SetVertexBuffers(std::vector<std::shared_ptr<Ver
         POMDOG_ASSERT(vertexBuffer);
         POMDOG_ASSERT(vertexBuffer->NativeVertexBuffer());
 
-        auto nativeVertexBuffer = static_cast<VertexBufferDirect3D11*>(vertexBuffer->NativeVertexBuffer());
+        auto nativeVertexBuffer = static_cast<HardwareBufferDirect3D11*>(vertexBuffer->NativeVertexBuffer());
 
         POMDOG_ASSERT(nativeVertexBuffer);
-        POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<VertexBufferDirect3D11*>(vertexBuffer->NativeVertexBuffer()));
+        POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<HardwareBufferDirect3D11*>(vertexBuffer->NativeVertexBuffer()));
 
-        vertexBuffers.push_back(nativeVertexBuffer->NativeBuffer());
+        vertexBuffers.push_back(nativeVertexBuffer->GetBuffer());
         strides.push_back(vertexBuffer->StrideBytes());
         offsets.push_back(0);
     }
