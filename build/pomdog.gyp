@@ -205,7 +205,6 @@
       '../include/Pomdog/Graphics/Texture.hpp',
       '../include/Pomdog/Graphics/Texture2D.hpp',
       '../include/Pomdog/Graphics/VertexBuffer.hpp',
-      '../include/Pomdog/Graphics/detail/BuiltinShaderPool.hpp',
       '../include/Pomdog/Graphics/detail/EffectBinaryParameter.hpp',
       '../include/Pomdog/Graphics/ShaderCompilers/GLSLCompiler.hpp',
       '../include/Pomdog/Graphics/ShaderCompilers/HLSLCompiler.hpp',

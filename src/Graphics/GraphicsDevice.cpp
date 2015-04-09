@@ -4,7 +4,6 @@
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
-#include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
@@ -15,8 +14,6 @@ public:
     explicit Impl(std::unique_ptr<Detail::RenderSystem::NativeGraphicsDevice> && device);
 
 public:
-    Detail::BuiltinShaderPool shaderPool;
-
     std::unique_ptr<Detail::RenderSystem::NativeGraphicsDevice> nativeGraphicsDevice;
 };
 //-----------------------------------------------------------------------
@@ -35,12 +32,6 @@ ShaderLanguage GraphicsDevice::GetSupportedLanguage() const
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeGraphicsDevice);
     return impl->nativeGraphicsDevice->GetSupportedLanguage();
-}
-//-----------------------------------------------------------------------
-Detail::BuiltinShaderPool & GraphicsDevice::ShaderPool()
-{
-    POMDOG_ASSERT(impl);
-    return impl->shaderPool;
 }
 //-----------------------------------------------------------------------
 Detail::RenderSystem::NativeGraphicsDevice* GraphicsDevice::NativeGraphicsDevice()

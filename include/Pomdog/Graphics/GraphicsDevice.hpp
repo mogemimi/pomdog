@@ -9,11 +9,6 @@
 #include <memory>
 
 namespace Pomdog {
-namespace Detail {
-
-class BuiltinShaderPool;
-
-} // namespace Detail
 
 class POMDOG_EXPORT GraphicsDevice {
 public:
@@ -27,10 +22,7 @@ public:
 
     ShaderLanguage GetSupportedLanguage() const;
 
-    Detail::BuiltinShaderPool & ShaderPool();
-
 public:
-    ///@brief internal method
     Detail::RenderSystem::NativeGraphicsDevice* NativeGraphicsDevice();
 
 private:
