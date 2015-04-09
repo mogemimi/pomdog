@@ -2,8 +2,8 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "LineBatch.hpp"
-#include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
-#include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
+#include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
@@ -12,6 +12,7 @@
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
+#include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Vector3.hpp"
@@ -25,25 +26,6 @@ namespace {
 #include "Shaders/GLSL.Embedded/LineBatch_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/LineBatch_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/LineBatch_PS.inc.hpp"
-
-struct BuiltinEffectLineBatchTrait {
-    static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
-    {
-        InputLayoutHelper inputLayout;
-        inputLayout.Float3().Float4();
-
-        auto effectPass = EffectPassBuilder(graphicsDevice)
-            .VertexShaderGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
-            .PixelShaderGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
-            .VertexShaderHLSLPrecompiled(BuiltinHLSL_LineBatch_VS, sizeof(BuiltinHLSL_LineBatch_VS))
-            .PixelShaderHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS))
-            .InputLayout(inputLayout.CreateInputLayout())
-            .BlendState(BlendDescription::CreateNonPremultiplied())
-            .DepthStencilState(DepthStencilDescription::CreateNone())
-            .Create();
-        return std::move(effectPass);
-    }
-};
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
@@ -74,7 +56,8 @@ private:
 
 public:
     Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        AssetManager & assets);
 
     void Begin(Matrix4x4 const& transformMatrix);
 
@@ -93,7 +76,8 @@ public:
 };
 //-----------------------------------------------------------------------
 LineBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    AssetManager & assets)
     : graphicsContext(graphicsContextIn)
 {
     vertices.reserve(MinVertexCount);
@@ -103,8 +87,29 @@ LineBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
             maxVertexCount, sizeof(Vertex), BufferUsage::Dynamic);
     }
     {
-        effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectLineBatchTrait>(*graphicsDevice);
-        constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
+        auto inputLayout = InputLayoutHelper{}
+            .Float3().Float4();
+
+        auto vertexShader = assets.CreateBuilder<Shader>()
+            .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
+            .SetGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
+            .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_VS, sizeof(BuiltinHLSL_LineBatch_VS));
+
+        auto pixelShader = assets.CreateBuilder<Shader>()
+            .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
+            .SetGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
+            .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS));
+
+        effectPass = assets.CreateBuilder<EffectPass>()
+            .SetVertexShader(vertexShader.Build())
+            .SetPixelShader(pixelShader.Build())
+            .SetInputLayout(inputLayout.CreateInputLayout())
+            .SetBlendState(BlendDescription::CreateNonPremultiplied())
+            .SetDepthStencilState(DepthStencilDescription::CreateNone())
+            .Build();
+
+        constantBuffers = std::make_shared<ConstantBufferBinding>(
+            graphicsDevice, *effectPass);
     }
 }
 //-----------------------------------------------------------------------
@@ -184,8 +189,9 @@ void LineBatch::Impl::DrawTriangle(Vector2 const& point1, Vector2 const& point2,
 #endif
 //-----------------------------------------------------------------------
 LineBatch::LineBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice)
-    : impl(std::make_unique<Impl>(graphicsContext, graphicsDevice))
+    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    AssetManager & assets)
+    : impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))
 {}
 //-----------------------------------------------------------------------
 LineBatch::~LineBatch() = default;

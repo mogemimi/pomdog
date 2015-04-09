@@ -12,8 +12,10 @@ namespace Pomdog {
 
 class PrimitiveCommandProcessor final: public RenderCommandProcessor {
 public:
-    PrimitiveCommandProcessor(std::shared_ptr<GraphicsContext> const& graphicsContext,
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    PrimitiveCommandProcessor(
+        std::shared_ptr<GraphicsContext> const& graphicsContext,
+        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        AssetManager & assets);
 
     void Begin(GraphicsContext & graphicsContext) override;
 

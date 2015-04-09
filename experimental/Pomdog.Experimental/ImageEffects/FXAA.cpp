@@ -2,8 +2,8 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "FXAA.hpp"
-#include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
-#include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
+#include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
@@ -14,6 +14,7 @@
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
+#include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
@@ -26,34 +27,37 @@ namespace {
 #include "Shaders/HLSL.Embedded/FXAA_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/FXAA_PS.inc.hpp"
 
-struct BuiltinEffectFxaaTrait {
-    static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
-    {
-        InputLayoutHelper inputLayout;
-        inputLayout.Float3().Float2();
-
-        auto effectPass = EffectPassBuilder(graphicsDevice)
-            .VertexShaderGLSL(Builtin_GLSL_FXAA_VS, std::strlen(Builtin_GLSL_FXAA_VS))
-            .PixelShaderGLSL(Builtin_GLSL_FXAA_PS, std::strlen(Builtin_GLSL_FXAA_PS))
-            .VertexShaderHLSLPrecompiled(BuiltinHLSL_FXAA_VS, sizeof(BuiltinHLSL_FXAA_VS))
-            .PixelShaderHLSLPrecompiled(BuiltinHLSL_FXAA_PS, sizeof(BuiltinHLSL_FXAA_PS))
-            .InputLayout(inputLayout.CreateInputLayout())
-            .BlendState(BlendDescription::CreateNonPremultiplied())
-            .DepthStencilState(DepthStencilDescription::CreateNone())
-            .Create();
-        return std::move(effectPass);
-    }
-};
-
 }// unnamed namespace
 //-----------------------------------------------------------------------
-FXAA::FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+FXAA::FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    AssetManager & assets)
 {
     samplerLinear = std::make_shared<SamplerState>(graphicsDevice,
         SamplerDescription::CreateLinearClamp());
 
-    effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectFxaaTrait>(*graphicsDevice);
-    constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
+    auto inputLayout = InputLayoutHelper{}
+        .Float3().Float2();
+
+    auto vertexShader = assets.CreateBuilder<Shader>()
+        .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
+        .SetGLSL(Builtin_GLSL_FXAA_VS, std::strlen(Builtin_GLSL_FXAA_VS))
+        .SetHLSLPrecompiled(BuiltinHLSL_FXAA_VS, sizeof(BuiltinHLSL_FXAA_VS));
+
+    auto pixelShader = assets.CreateBuilder<Shader>()
+        .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
+        .SetGLSL(Builtin_GLSL_FXAA_PS, std::strlen(Builtin_GLSL_FXAA_PS))
+        .SetHLSLPrecompiled(BuiltinHLSL_FXAA_PS, sizeof(BuiltinHLSL_FXAA_PS));
+
+    effectPass = assets.CreateBuilder<EffectPass>()
+        .SetVertexShader(vertexShader.Build())
+        .SetPixelShader(pixelShader.Build())
+        .SetInputLayout(inputLayout.CreateInputLayout())
+        .SetBlendState(BlendDescription::CreateNonPremultiplied())
+        .SetDepthStencilState(DepthStencilDescription::CreateNone())
+        .Build();
+
+    constantBuffers = std::make_shared<ConstantBufferBinding>(
+        graphicsDevice, *effectPass);
 }
 //-----------------------------------------------------------------------
 void FXAA::SetViewport(float width, float height)

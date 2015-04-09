@@ -4,6 +4,7 @@
 #ifndef POMDOG_CHROMATICABERRATION_DEEDC0FF_HPP
 #define POMDOG_CHROMATICABERRATION_DEEDC0FF_HPP
 
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 
@@ -11,7 +12,8 @@ namespace Pomdog {
 
 class ChromaticAberration {
 public:
-    explicit ChromaticAberration(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    explicit ChromaticAberration(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        AssetManager & assets);
 
     void SetViewport(float width, float height);
 

@@ -13,7 +13,8 @@ namespace Pomdog {
 
 class SkinnedEffect {
 public:
-    explicit SkinnedEffect(GraphicsDevice & graphicsDevice);
+    explicit SkinnedEffect(GraphicsDevice & graphicsDevice,
+        AssetManager & assets);
 
     ~SkinnedEffect();
 

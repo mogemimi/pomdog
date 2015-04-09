@@ -5,6 +5,7 @@
 #define POMDOG_SPRITEBATCH_B4DEBA3B_HPP
 
 #include "SpriteSortMode.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/GraphicsContext.hpp"
@@ -22,7 +23,8 @@ namespace Pomdog {
 class SpriteBatch {
 public:
     SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        AssetManager & assets);
 
     SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
         std::shared_ptr<GraphicsDevice> const& graphicsDevice,

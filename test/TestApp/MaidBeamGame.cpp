@@ -32,7 +32,7 @@ void MaidBeamGame::Initialize()
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
     }
     {
-        fxaa = std::make_unique<FXAA>(graphicsDevice);
+        fxaa = std::make_unique<FXAA>(graphicsDevice, *assets);
         auto bounds = window->ClientBounds();
         fxaa->SetViewport(bounds.Width, bounds.Height);
         screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);

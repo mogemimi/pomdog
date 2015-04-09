@@ -12,7 +12,9 @@ namespace Pomdog {
 
 class SkinnedMeshCommandProcessor final: public RenderCommandProcessor {
 public:
-    explicit SkinnedMeshCommandProcessor(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    SkinnedMeshCommandProcessor(
+        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        AssetManager & assets);
 
     void Begin(GraphicsContext & graphicsContext) override;
 

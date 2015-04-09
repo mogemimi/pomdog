@@ -13,7 +13,8 @@ namespace Pomdog {
 class SpriteCommandProcessor final: public RenderCommandProcessor {
 public:
     SpriteCommandProcessor(std::shared_ptr<GraphicsContext> const& graphicsContext,
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        AssetManager & assets);
 
     void Begin(GraphicsContext & graphicsContext) override;
 

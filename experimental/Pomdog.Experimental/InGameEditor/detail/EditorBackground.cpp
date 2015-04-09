@@ -7,7 +7,7 @@ namespace Pomdog {
 namespace SceneEditor {
 //-----------------------------------------------------------------------
 EditorBackground::EditorBackground(std::shared_ptr<GameHost> const& gameHost)
-    : lineBatch(gameHost->GraphicsContext(), gameHost->GraphicsDevice())
+    : lineBatch(gameHost->GraphicsContext(), gameHost->GraphicsDevice(), *gameHost->AssetManager())
     , primitiveAxes(editorColorScheme.CenterAxisX, editorColorScheme.CenterAxisY, editorColorScheme.CenterAxisZ)
     , primitiveGrid(editorColorScheme.GuideLine, editorColorScheme.Grid)
 {}

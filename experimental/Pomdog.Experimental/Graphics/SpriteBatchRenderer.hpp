@@ -4,6 +4,7 @@
 #ifndef POMDOG_SPRITEBATCHRENDERER_FAFB0E53_HPP
 #define POMDOG_SPRITEBATCHRENDERER_FAFB0E53_HPP
 
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/GraphicsContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
@@ -22,7 +23,8 @@ namespace Rendering {
 class SpriteBatchRenderer {
 public:
     SpriteBatchRenderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        AssetManager & assets);
 
     ~SpriteBatchRenderer();
 

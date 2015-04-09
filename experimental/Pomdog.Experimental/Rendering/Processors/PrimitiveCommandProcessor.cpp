@@ -6,9 +6,11 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-PrimitiveCommandProcessor::PrimitiveCommandProcessor(std::shared_ptr<GraphicsContext> const& graphicsContext,
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice)
-    : primitiveBatch(graphicsContext, graphicsDevice)
+PrimitiveCommandProcessor::PrimitiveCommandProcessor(
+    std::shared_ptr<GraphicsContext> const& graphicsContext,
+    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    AssetManager & assets)
+    : primitiveBatch(graphicsContext, graphicsDevice, assets)
     , drawCallCount(0)
 {
 }

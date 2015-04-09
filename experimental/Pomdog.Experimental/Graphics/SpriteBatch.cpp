@@ -2,8 +2,8 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "SpriteBatch.hpp"
-#include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
-#include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
+#include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
@@ -13,6 +13,7 @@
 #include "Pomdog/Graphics/IndexElementSize.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
+#include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
@@ -30,28 +31,6 @@ namespace {
 #include "Shaders/GLSL.Embedded/SpriteBatch_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/SpriteBatch_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/SpriteBatch_PS.inc.hpp"
-
-struct BuiltinEffectSpriteBatchTrait {
-    static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
-    {
-        InputLayoutHelper inputLayout;
-        inputLayout.AddInputSlot()
-            .Float4()
-            .AddInputSlot(InputClassification::InputPerInstance, 1)
-            .Float4().Float4().Float4().Float4();
-
-        auto effectPass = EffectPassBuilder(graphicsDevice)
-            .VertexShaderGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
-            .PixelShaderGLSL(Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS))
-            .VertexShaderHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
-            .PixelShaderHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS))
-            .InputLayout(inputLayout.CreateInputLayout())
-            .BlendState(BlendDescription::CreateNonPremultiplied())
-            .DepthStencilState(DepthStencilDescription::CreateNone())
-            .Create();
-        return std::move(effectPass);
-    }
-};
 
 #define POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
 
@@ -391,10 +370,35 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 #endif
 //-----------------------------------------------------------------------
 SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    AssetManager & assets)
 {
-    auto effectPass = graphicsDevice->ShaderPool().Create<BuiltinEffectSpriteBatchTrait>(*graphicsDevice);
-    auto constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
+    auto inputLayout = InputLayoutHelper{}
+        .AddInputSlot()
+        .Float4()
+        .AddInputSlot(InputClassification::InputPerInstance, 1)
+        .Float4().Float4().Float4().Float4();
+
+    auto vertexShader = assets.CreateBuilder<Shader>()
+        .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
+        .SetGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
+        .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS));
+
+    auto pixelShader = assets.CreateBuilder<Shader>()
+        .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
+        .SetGLSL(Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS))
+        .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS));
+
+    auto effectPass = assets.CreateBuilder<EffectPass>()
+        .SetVertexShader(vertexShader.Build())
+        .SetPixelShader(pixelShader.Build())
+        .SetInputLayout(inputLayout.CreateInputLayout())
+        .SetBlendState(BlendDescription::CreateNonPremultiplied())
+        .SetDepthStencilState(DepthStencilDescription::CreateNone())
+        .Build();
+
+    auto constantBuffers = std::make_shared<ConstantBufferBinding>(
+        graphicsDevice, *effectPass);
 
     impl = std::make_unique<Impl>(graphicsContext, graphicsDevice, effectPass, constantBuffers);
 }

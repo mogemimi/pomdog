@@ -3,13 +3,14 @@
 
 #include "InGameEditor.hpp"
 #include "detail/SpriteDrawingContext.hpp"
-#include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteBatch.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteFont.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteFontLoader.hpp"
 #include "Pomdog.Experimental/UI/UIView.hpp"
-#include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
+#include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
+#include "Pomdog/Graphics/Shader.hpp"
 
 namespace Pomdog {
 namespace SceneEditor {
@@ -20,28 +21,6 @@ namespace {
 #include "Pomdog.Experimental/Graphics/Shaders/GLSL.Embedded/Sprite_DistanceField_PS.inc.hpp"
 #include "Pomdog.Experimental/Graphics/Shaders/HLSL.Embedded/SpriteBatch_VS.inc.hpp"
 #include "Pomdog.Experimental/Graphics/Shaders/HLSL.Embedded/SpriteDistanceField_PS.inc.hpp"
-
-struct BuiltinEffectSpriteBatchDistanceFieldTrait {
-    static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
-    {
-        InputLayoutHelper inputLayout;
-        inputLayout.AddInputSlot()
-            .Float4()
-            .AddInputSlot(InputClassification::InputPerInstance, 1)
-            .Float4().Float4().Float4().Float4();
-
-        auto effectPass = EffectPassBuilder(graphicsDevice)
-            .VertexShaderGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
-            .PixelShaderGLSL(Builtin_GLSL_Sprite_DistanceField_PS, std::strlen(Builtin_GLSL_Sprite_DistanceField_PS))
-            .VertexShaderHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
-            .PixelShaderHLSLPrecompiled(BuiltinHLSL_SpriteDistanceField_PS, sizeof(BuiltinHLSL_SpriteDistanceField_PS))
-            .InputLayout(inputLayout.CreateInputLayout())
-            .BlendState(BlendDescription::CreateNonPremultiplied())
-            .DepthStencilState(DepthStencilDescription::CreateNone())
-            .Create();
-        return std::move(effectPass);
-    }
-};
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
@@ -55,12 +34,39 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
     auto window = gameHost->Window();
 
     {
-        spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice);
+        spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
         //spriteFont = SpriteFontLoader::Load(*assets, "BitmapFonts/UbuntuMono-Regular.fnt");
         spriteFont = SpriteFontLoader::Load(*assets, "BitmapFonts/Ubuntu-Regular.fnt");
-        distanceFieldEffect = graphicsDevice->ShaderPool().Create<BuiltinEffectSpriteBatchDistanceFieldTrait>(*graphicsDevice);
-        constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *distanceFieldEffect);
-        spriteBatchDistanceField = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice,
+
+        auto inputLayout = InputLayoutHelper{}
+            .AddInputSlot()
+            .Float4()
+            .AddInputSlot(InputClassification::InputPerInstance, 1)
+            .Float4().Float4().Float4().Float4();
+
+        auto vertexShader = assets->CreateBuilder<Shader>()
+            .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
+            .SetGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
+            .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS));
+
+        auto pixelShader = assets->CreateBuilder<Shader>()
+            .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
+            .SetGLSL(Builtin_GLSL_Sprite_DistanceField_PS, std::strlen(Builtin_GLSL_Sprite_DistanceField_PS))
+            .SetHLSLPrecompiled(BuiltinHLSL_SpriteDistanceField_PS, sizeof(BuiltinHLSL_SpriteDistanceField_PS));
+
+        distanceFieldEffect = assets->CreateBuilder<EffectPass>()
+            .SetVertexShader(vertexShader.Build())
+            .SetPixelShader(pixelShader.Build())
+            .SetInputLayout(inputLayout.CreateInputLayout())
+            .SetBlendState(BlendDescription::CreateNonPremultiplied())
+            .SetDepthStencilState(DepthStencilDescription::CreateNone())
+            .Build();
+
+        constantBuffers = std::make_shared<ConstantBufferBinding>(
+            graphicsDevice, *distanceFieldEffect);
+
+        spriteBatchDistanceField = std::make_unique<SpriteBatch>(
+            graphicsContext, graphicsDevice,
             distanceFieldEffect, constantBuffers);
     }
     {

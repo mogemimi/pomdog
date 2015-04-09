@@ -4,6 +4,7 @@
 #ifndef POMDOG_SEPIATONEEFFECT_BD1A4ABD_HPP
 #define POMDOG_SEPIATONEEFFECT_BD1A4ABD_HPP
 
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 
@@ -11,7 +12,8 @@ namespace Pomdog {
 
 class SepiaToneEffect {
 public:
-    explicit SepiaToneEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    explicit SepiaToneEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        AssetManager & assets);
 
     void SetViewport(float width, float height);
     void SetTexture(std::shared_ptr<RenderTarget2D> const& texture);

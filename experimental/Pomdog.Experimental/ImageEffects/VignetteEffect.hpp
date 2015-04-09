@@ -4,6 +4,7 @@
 #ifndef POMDOG_VIGNETTEEFFECT_395F49A8_HPP
 #define POMDOG_VIGNETTEEFFECT_395F49A8_HPP
 
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 
@@ -11,7 +12,8 @@ namespace Pomdog {
 
 class VignetteEffect {
 public:
-    explicit VignetteEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    explicit VignetteEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        AssetManager & assets);
 
     void SetViewport(float width, float height);
 

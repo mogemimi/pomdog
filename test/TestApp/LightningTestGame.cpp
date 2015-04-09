@@ -39,9 +39,9 @@ void LightningTestGame::Initialize()
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
     }
     {
-        spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice);
-        spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice);
-        fxaa = std::make_unique<FXAA>(graphicsDevice);
+        spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
+        spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
+        fxaa = std::make_unique<FXAA>(graphicsDevice, *assets);
         auto bounds = window->ClientBounds();
         fxaa->SetViewport(bounds.Width, bounds.Height);
         screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);

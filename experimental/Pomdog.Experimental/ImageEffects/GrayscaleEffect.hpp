@@ -4,6 +4,7 @@
 #ifndef POMDOG_GRAYSCALEEFFECT_C2865F07_HPP
 #define POMDOG_GRAYSCALEEFFECT_C2865F07_HPP
 
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 
@@ -11,7 +12,8 @@ namespace Pomdog {
 
 class GrayscaleEffect {
 public:
-    explicit GrayscaleEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
+    explicit GrayscaleEffect(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        AssetManager & assets);
 
     void SetViewport(float width, float height);
     void SetTexture(std::shared_ptr<RenderTarget2D> const& texture);

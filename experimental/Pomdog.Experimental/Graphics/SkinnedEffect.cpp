@@ -2,34 +2,18 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "SkinnedEffect.hpp"
-#include "Pomdog.Experimental/Graphics/EffectPassBuilder.hpp"
-#include "Pomdog/Graphics/detail/BuiltinShaderPool.hpp"
+#include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
+#include "Pomdog/Graphics/Shader.hpp"
 
 namespace Pomdog {
 namespace {
 
 #include "Shaders/GLSL.Embedded/SkinnedEffect_VS.inc.hpp"
 #include "Shaders/GLSL.Embedded/SkinnedEffect_PS.inc.hpp"
-
-struct BuiltinEffectSkinningTrait {
-    static std::shared_ptr<EffectPass> Create(GraphicsDevice & graphicsDevice)
-    {
-        InputLayoutHelper inputLayout;
-        inputLayout.Float4().Float4().Int4();
-
-        auto effectPass = EffectPassBuilder(graphicsDevice)
-            .VertexShaderGLSL(Builtin_GLSL_SkinnedEffect_VS, std::strlen(Builtin_GLSL_SkinnedEffect_VS))
-            .PixelShaderGLSL(Builtin_GLSL_SkinnedEffect_PS, std::strlen(Builtin_GLSL_SkinnedEffect_PS))
-            .InputLayout(inputLayout.CreateInputLayout())
-            .BlendState(BlendDescription::CreateNonPremultiplied())
-            .DepthStencilState(DepthStencilDescription::CreateNone())
-            .Create();
-        return std::move(effectPass);
-    }
-};
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
@@ -39,7 +23,7 @@ struct BuiltinEffectSkinningTrait {
 //-----------------------------------------------------------------------
 class SkinnedEffect::Impl {
 public:
-    explicit Impl(GraphicsDevice & graphicsDevice);
+    explicit Impl(GraphicsDevice & graphicsDevice, AssetManager & assets);
 
     void Apply(GraphicsContext & graphicsContext);
 
@@ -52,11 +36,31 @@ public:
     Color color;
 };
 //-----------------------------------------------------------------------
-SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice)
+SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice,
+    AssetManager & assets)
     : color(Color::White)
 {
-    effectPass = graphicsDevice.ShaderPool().Create<BuiltinEffectSkinningTrait>(graphicsDevice);
-    constantBuffers = std::make_shared<ConstantBufferBinding>(graphicsDevice, *effectPass);
+    auto inputLayout = InputLayoutHelper{}
+        .Float4().Float4().Int4();
+
+    auto vertexShader = assets.CreateBuilder<Shader>()
+        .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
+        .SetGLSL(Builtin_GLSL_SkinnedEffect_VS, std::strlen(Builtin_GLSL_SkinnedEffect_VS));
+
+    auto pixelShader = assets.CreateBuilder<Shader>()
+        .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
+        .SetGLSL(Builtin_GLSL_SkinnedEffect_PS, std::strlen(Builtin_GLSL_SkinnedEffect_PS));
+
+    effectPass = assets.CreateBuilder<EffectPass>()
+        .SetVertexShader(vertexShader.Build())
+        .SetPixelShader(pixelShader.Build())
+        .SetInputLayout(inputLayout.CreateInputLayout())
+        .SetBlendState(BlendDescription::CreateNonPremultiplied())
+        .SetDepthStencilState(DepthStencilDescription::CreateNone())
+        .Build();
+
+    constantBuffers = std::make_shared<ConstantBufferBinding>(
+        graphicsDevice, *effectPass);
 }
 //-----------------------------------------------------------------------
 void SkinnedEffect::Impl::Apply(GraphicsContext & graphicsContext)
@@ -82,8 +86,9 @@ void SkinnedEffect::Impl::Apply(GraphicsContext & graphicsContext)
 #pragma mark - SkinnedEffect
 #endif
 //-----------------------------------------------------------------------
-SkinnedEffect::SkinnedEffect(GraphicsDevice & graphicsDevice)
-    : impl(std::make_unique<Impl>(graphicsDevice))
+SkinnedEffect::SkinnedEffect(GraphicsDevice & graphicsDevice,
+    AssetManager & assets)
+    : impl(std::make_unique<Impl>(graphicsDevice, assets))
 {}
 //-----------------------------------------------------------------------
 SkinnedEffect::~SkinnedEffect() = default;

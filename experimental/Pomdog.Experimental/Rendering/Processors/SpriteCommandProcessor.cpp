@@ -6,9 +6,11 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-SpriteCommandProcessor::SpriteCommandProcessor(std::shared_ptr<GraphicsContext> const& graphicsContext,
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice)
-    : spriteBatch(graphicsContext, graphicsDevice)
+SpriteCommandProcessor::SpriteCommandProcessor(
+    std::shared_ptr<GraphicsContext> const& graphicsContext,
+    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    AssetManager & assets)
+    : spriteBatch(graphicsContext, graphicsDevice, assets)
     , drawCallCount(0)
 {
 }
