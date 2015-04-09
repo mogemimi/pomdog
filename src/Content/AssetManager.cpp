@@ -2,7 +2,8 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Content/AssetManager.hpp"
-#include "Pomdog/Content/AssetLoaders/EffectPassLoader.hpp"
+#include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include <utility>
 
 namespace Pomdog {
@@ -10,12 +11,6 @@ namespace Pomdog {
 AssetManager::AssetManager(Detail::AssetLoaderContext && loaderContextIn)
     : loaderContext(std::move(loaderContextIn))
 {}
-//-----------------------------------------------------------------------
-AssetLoaders::EffectPassLoader AssetManager::LoadEffectPass()
-{
-    AssetLoaders::EffectPassLoader loader(loaderContext);
-    return std::move(loader);
-}
 //-----------------------------------------------------------------------
 void AssetManager::Unload()
 {
@@ -32,4 +27,4 @@ std::ifstream AssetManager::OpenStream(std::string const& assetName) const
     return loaderContext.OpenStream(assetName);
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

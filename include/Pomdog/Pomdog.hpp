@@ -22,7 +22,8 @@
 #include "Audio/SoundState.hpp"
 
 #include "Content/AssetManager.hpp"
-#include "Content/AssetLoaders/EffectPassLoader.hpp"
+#include "Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Content/AssetBuilders/ShaderBuilder.hpp"
 
 #include "Math/Color.hpp"
 #include "Math/ContainmentType.hpp"

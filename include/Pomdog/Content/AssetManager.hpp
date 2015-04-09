@@ -6,15 +6,11 @@
 
 #include "detail/AssetLoaderContext.hpp"
 #include "detail/AssetDictionary.hpp"
+#include "AssetBuilders/Builder.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <utility>
 
 namespace Pomdog {
-namespace AssetLoaders {
-
-class EffectPassLoader;
-
-}// namespace AssetLoaders
 
 class POMDOG_EXPORT AssetManager {
 public:
@@ -26,7 +22,12 @@ public:
         return assets.Load<T>(loaderContext, assetName);
     }
 
-    AssetLoaders::EffectPassLoader LoadEffectPass();
+    template <typename T>
+    AssetBuilders::Builder<T> CreateBuilder()
+    {
+        AssetBuilders::Builder<T> builder(loaderContext);
+        return std::move(builder);
+    }
 
     void Unload();
 
@@ -39,6 +40,6 @@ private:
     Detail::AssetDictionary assets;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_ASSETMANAGER_FAF5E4A4_HPP
