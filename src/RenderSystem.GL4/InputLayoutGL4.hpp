@@ -10,7 +10,6 @@
 #include "Pomdog/Utility/detail/Tagged.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <vector>
-#include <limits>
 #include <memory>
 
 namespace Pomdog {
@@ -25,7 +24,7 @@ namespace Tags {
 struct ScalarDataTypeTag {};
 struct VertexArrayTag {};
 
-}// namespace Tags
+} // namespace Tags
 
 using ScalarTypeGL4 = Tagged<GLuint, Tags::ScalarDataTypeTag>;
 using VertexArrayGL4 = Tagged<GLuint, Tags::VertexArrayTag>;
@@ -55,11 +54,10 @@ struct VertexDeclarationGL4 {
 
 class InputLayoutGL4 final {
 public:
-    InputLayoutGL4() = delete;
-
     explicit InputLayoutGL4(ShaderProgramGL4 const& shaderProgram);
 
-    InputLayoutGL4(ShaderProgramGL4 const& shaderProgram, InputLayoutDescription const& description);
+    InputLayoutGL4(ShaderProgramGL4 const& shaderProgram,
+        InputLayoutDescription const& description);
 
     ~InputLayoutGL4();
 
@@ -71,9 +69,9 @@ private:
     Optional<VertexArrayGL4> inputLayout;
 };
 
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_INPUTLAYOUTGL4_F0AF2367_HPP

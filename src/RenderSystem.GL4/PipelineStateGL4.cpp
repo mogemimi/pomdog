@@ -16,7 +16,6 @@
 #include "Pomdog/Graphics/EffectPassDescription.hpp"
 #include <type_traits>
 #include <array>
-#include <string>
 
 namespace Pomdog {
 namespace Detail {

@@ -13,6 +13,8 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <cstdint>
+#include <memory>
+#include <string>
 #include <vector>
 
 namespace Pomdog {

@@ -14,6 +14,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 #include <algorithm>
+#include <limits>
 
 namespace Pomdog {
 namespace Detail {
@@ -579,8 +580,8 @@ static void ApplyInputElements(
     POMDOG_ASSERT(inputElement == std::end(inputElements));
     POMDOG_ASSERT(vertexBuffer == std::end(vertexBuffers));
 }
-//-----------------------------------------------------------------------
-}// unnamed namespace
+
+} // unnamed namespace
 //-----------------------------------------------------------------------
 template<>
 struct TypesafeHelperGL4::OpenGLGetTraits<VertexArrayGL4> {
@@ -602,9 +603,7 @@ InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram,
     })();
 
     auto const oldInputLayout = TypesafeHelperGL4::Get<VertexArrayGL4>();
-    ScopeGuard scope([&oldInputLayout]{
-        glBindVertexArray(oldInputLayout.value);
-    });
+    ScopeGuard scope([&] { glBindVertexArray(oldInputLayout.value); });
 
     glBindVertexArray(inputLayout->value);
     POMDOG_CHECK_ERROR_GL4("glBindVertexArray");
@@ -630,6 +629,7 @@ InputLayoutGL4::~InputLayoutGL4()
 {
     if (inputLayout) {
         glDeleteVertexArrays(1, inputLayout->Data());
+        POMDOG_CHECK_ERROR_GL4("glDeleteVertexArrays");
     }
 }
 //-----------------------------------------------------------------------
@@ -642,7 +642,7 @@ void InputLayoutGL4::Apply(std::vector<std::shared_ptr<VertexBuffer>> const& ver
     ApplyInputElements(inputElements, vertexDeclarations, vertexBuffers);
 }
 //-----------------------------------------------------------------------
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
