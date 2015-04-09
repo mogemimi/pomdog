@@ -26,11 +26,11 @@ class NativeTexture2D;
 // Classes
 class ConstantBuffer;
 class ConstantBufferBinding;
-class EffectPass;
 class EffectReflection;
 class GraphicsContext;
 class GraphicsDevice;
 class IndexBuffer;
+class PipelineState;
 class RenderTarget2D;
 class SamplerState;
 class Shader;

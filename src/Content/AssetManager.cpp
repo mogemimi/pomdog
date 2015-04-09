@@ -2,8 +2,6 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Content/AssetManager.hpp"
-#include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
-#include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include <utility>
 
 namespace Pomdog {

@@ -19,7 +19,7 @@ public:
     EffectReflection(EffectReflection &&) = default;
 
     EffectReflection(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        std::shared_ptr<EffectPass> const& effectPass);
+        std::shared_ptr<PipelineState> const& pipelineState);
 
     ~EffectReflection();
 

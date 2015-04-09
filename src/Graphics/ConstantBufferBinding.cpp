@@ -8,9 +8,9 @@
 #include "../RenderSystem/NativeEffectReflection.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
-#include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/EffectConstantDescription.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
@@ -21,11 +21,11 @@ static auto dummyParameter = std::make_shared<ConstantBuffer>();
 } // unnamed namespace
 //-----------------------------------------------------------------------
 ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
-    EffectPass & effectPass)
+    PipelineState & pipelineState)
 {
     auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
 
-    auto nativePipelineState = effectPass.NativePipelineState();
+    auto nativePipelineState = pipelineState.NativePipelineState();
 
     // Create effect reflection:
     POMDOG_ASSERT(nativePipelineState);
@@ -59,8 +59,8 @@ ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
 //-----------------------------------------------------------------------
 ConstantBufferBinding::ConstantBufferBinding(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    EffectPass & effectPass)
-    : ConstantBufferBinding(*graphicsDevice, effectPass)
+    PipelineState & pipelineState)
+    : ConstantBufferBinding(*graphicsDevice, pipelineState)
 {
 }
 //-----------------------------------------------------------------------

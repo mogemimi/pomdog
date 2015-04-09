@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "Pomdog/Graphics/EffectPass.hpp"
+#include "Pomdog/Graphics/PipelineState.hpp"
 #include "../RenderSystem/NativePipelineState.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-EffectPass::EffectPass(GraphicsDevice & graphicsDevice,
+PipelineState::PipelineState(GraphicsDevice & graphicsDevice,
     PipelineStateDescription const& description)
 {
     auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
@@ -19,14 +19,15 @@ EffectPass::EffectPass(GraphicsDevice & graphicsDevice,
     nativePipelineState = nativeDevice->CreatePipelineState(description);
 }
 //-----------------------------------------------------------------------
-EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+PipelineState::PipelineState(
+    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     PipelineStateDescription const& description)
-    : EffectPass(*graphicsDevice, description)
+    : PipelineState(*graphicsDevice, description)
 {}
 //-----------------------------------------------------------------------
-EffectPass::~EffectPass() = default;
+PipelineState::~PipelineState() = default;
 //-----------------------------------------------------------------------
-Detail::RenderSystem::NativePipelineState* EffectPass::NativePipelineState()
+Detail::RenderSystem::NativePipelineState* PipelineState::NativePipelineState()
 {
     return nativePipelineState.get();
 }

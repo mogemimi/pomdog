@@ -5,17 +5,22 @@
 #include "../RenderSystem/NativeEffectReflection.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
-#include "Pomdog/Graphics/EffectPass.hpp"
+#include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-EffectReflection::EffectReflection(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    std::shared_ptr<EffectPass> const& effectPass)
+EffectReflection::EffectReflection(
+    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    std::shared_ptr<PipelineState> const& pipelineState)
 {
     POMDOG_ASSERT(graphicsDevice && graphicsDevice->NativeGraphicsDevice());
-    POMDOG_ASSERT(effectPass && effectPass->NativePipelineState());
-    nativeEffectReflection = graphicsDevice->NativeGraphicsDevice()->CreateEffectReflection(*effectPass->NativePipelineState());
+    POMDOG_ASSERT(pipelineState && pipelineState->NativePipelineState());
+
+    auto nativeDevice = graphicsDevice->NativeGraphicsDevice();
+
+    nativeEffectReflection = nativeDevice->CreateEffectReflection(
+        *pipelineState->NativePipelineState());
 }
 //-----------------------------------------------------------------------
 EffectReflection::~EffectReflection() = default;

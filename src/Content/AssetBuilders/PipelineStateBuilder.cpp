@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
-#include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -14,7 +14,7 @@
 namespace Pomdog {
 namespace AssetBuilders {
 //-----------------------------------------------------------------------
-class Builder<EffectPass>::Impl final {
+class Builder<PipelineState>::Impl final {
 public:
     PipelineStateDescription description;
     Detail::AssetLoaderContext loaderContext;
@@ -24,10 +24,10 @@ public:
     bool hasDepthStencilState = false;
 
 public:
-    std::shared_ptr<EffectPass> Load();
+    std::shared_ptr<PipelineState> Load();
 };
 //-----------------------------------------------------------------------
-std::shared_ptr<EffectPass> Builder<EffectPass>::Impl::Load()
+std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
 {
     POMDOG_ASSERT(!description.InputLayout.InputElements.empty());
 
@@ -46,14 +46,14 @@ std::shared_ptr<EffectPass> Builder<EffectPass>::Impl::Load()
         hasDepthStencilState = true;
     }
 
-    auto effectPass = std::make_shared<EffectPass>(graphicsDevice, description);
-    return std::move(effectPass);
+    auto pipelineState = std::make_shared<PipelineState>(graphicsDevice, description);
+    return std::move(pipelineState);
 }
 //-----------------------------------------------------------------------
 // explicit instantiations
-template class Builder<EffectPass>;
+template class Builder<PipelineState>;
 //-----------------------------------------------------------------------
-Builder<EffectPass>::Builder(Detail::AssetLoaderContext const& contextIn)
+Builder<PipelineState>::Builder(Detail::AssetLoaderContext const& contextIn)
     : impl(std::make_unique<Impl>())
 {
     POMDOG_ASSERT(impl);
@@ -62,11 +62,11 @@ Builder<EffectPass>::Builder(Detail::AssetLoaderContext const& contextIn)
     POMDOG_ASSERT(impl->graphicsDevice);
 }
 //-----------------------------------------------------------------------
-Builder<EffectPass>::Builder(Builder<EffectPass> &&) = default;
-Builder<EffectPass> & Builder<EffectPass>::operator=(Builder<EffectPass> &&) = default;
-Builder<EffectPass>::~Builder() = default;
+Builder<PipelineState>::Builder(Builder<PipelineState> &&) = default;
+Builder<PipelineState> & Builder<PipelineState>::operator=(Builder<PipelineState> &&) = default;
+Builder<PipelineState>::~Builder() = default;
 //-----------------------------------------------------------------------
-Builder<EffectPass> & Builder<EffectPass>::SetVertexShader(
+Builder<PipelineState> & Builder<PipelineState>::SetVertexShader(
     std::unique_ptr<Shader> && vertexShader)
 {
     POMDOG_ASSERT(impl);
@@ -75,7 +75,7 @@ Builder<EffectPass> & Builder<EffectPass>::SetVertexShader(
     return *this;
 }
 //-----------------------------------------------------------------------
-Builder<EffectPass> & Builder<EffectPass>::SetPixelShader(
+Builder<PipelineState> & Builder<PipelineState>::SetPixelShader(
     std::unique_ptr<Shader> && pixelShader)
 {
     POMDOG_ASSERT(impl);
@@ -84,7 +84,7 @@ Builder<EffectPass> & Builder<EffectPass>::SetPixelShader(
     return *this;
 }
 //-----------------------------------------------------------------------
-Builder<EffectPass> & Builder<EffectPass>::SetInputLayout(
+Builder<PipelineState> & Builder<PipelineState>::SetInputLayout(
     InputLayoutDescription const& inputLayout)
 {
     POMDOG_ASSERT(impl);
@@ -93,7 +93,7 @@ Builder<EffectPass> & Builder<EffectPass>::SetInputLayout(
     return *this;
 }
 //-----------------------------------------------------------------------
-Builder<EffectPass> & Builder<EffectPass>::SetInputLayout(
+Builder<PipelineState> & Builder<PipelineState>::SetInputLayout(
     InputLayoutDescription && inputLayout)
 {
     POMDOG_ASSERT(impl);
@@ -102,7 +102,7 @@ Builder<EffectPass> & Builder<EffectPass>::SetInputLayout(
     return *this;
 }
 //-----------------------------------------------------------------------
-Builder<EffectPass> & Builder<EffectPass>::SetBlendState(
+Builder<PipelineState> & Builder<PipelineState>::SetBlendState(
     BlendDescription const& blendState)
 {
     POMDOG_ASSERT(impl);
@@ -111,7 +111,7 @@ Builder<EffectPass> & Builder<EffectPass>::SetBlendState(
     return *this;
 }
 //-----------------------------------------------------------------------
-Builder<EffectPass> & Builder<EffectPass>::SetRasterizerState(
+Builder<PipelineState> & Builder<PipelineState>::SetRasterizerState(
     RasterizerDescription const& rasterizerState)
 {
     POMDOG_ASSERT(impl);
@@ -120,7 +120,7 @@ Builder<EffectPass> & Builder<EffectPass>::SetRasterizerState(
     return *this;
 }
 //-----------------------------------------------------------------------
-Builder<EffectPass> & Builder<EffectPass>::SetDepthStencilState(
+Builder<PipelineState> & Builder<PipelineState>::SetDepthStencilState(
     DepthStencilDescription const& depthStencilState)
 {
     POMDOG_ASSERT(impl);
@@ -129,7 +129,7 @@ Builder<EffectPass> & Builder<EffectPass>::SetDepthStencilState(
     return *this;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<EffectPass> Builder<EffectPass>::Build()
+std::shared_ptr<PipelineState> Builder<PipelineState>::Build()
 {
     POMDOG_ASSERT(impl);
     return impl->Load();

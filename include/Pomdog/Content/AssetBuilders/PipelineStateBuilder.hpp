@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EFFECTPASSBUILDER_0DAFFCC3_HPP
-#define POMDOG_EFFECTPASSBUILDER_0DAFFCC3_HPP
+#ifndef POMDOG_PIPELINESTATEBUILDER_0DAFFCC3_HPP
+#define POMDOG_PIPELINESTATEBUILDER_0DAFFCC3_HPP
 
 #include "Pomdog/Content/AssetBuilders/Builder.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -18,7 +18,7 @@ class AssetLoaderContext;
 namespace AssetBuilders {
 
 template <>
-class POMDOG_EXPORT Builder<EffectPass> {
+class POMDOG_EXPORT Builder<PipelineState> {
 public:
     explicit Builder(Detail::AssetLoaderContext const& loaderContext);
 
@@ -42,7 +42,7 @@ public:
 
     Builder & SetDepthStencilState(DepthStencilDescription const& depthStencilState);
 
-    std::shared_ptr<EffectPass> Build();
+    std::shared_ptr<PipelineState> Build();
 
 private:
     class Impl;
@@ -52,4 +52,4 @@ private:
 } // namespace AssetBuilders
 } // namespace Pomdogs
 
-#endif // POMDOG_EFFECTPASSBUILDER_0DAFFCC3_HPP
+#endif // POMDOG_PIPELINESTATEBUILDER_0DAFFCC3_HPP

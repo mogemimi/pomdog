@@ -6,7 +6,7 @@
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include "../RenderSystem/NativeSamplerState.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
-#include "Pomdog/Graphics/EffectPass.hpp"
+#include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
@@ -69,7 +69,7 @@ public:
 
     void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets);
 
-    void SetEffectPass(std::shared_ptr<EffectPass> const& effectPass);
+    void SetPipelineState(std::shared_ptr<PipelineState> const& pipelineState);
 
     void SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
 
@@ -79,7 +79,7 @@ public:
     std::vector<std::shared_ptr<SamplerState>> samplerStates;
     std::vector<std::shared_ptr<Texture>> textures;
     std::vector<std::shared_ptr<RenderTarget2D>> renderTargets;
-    std::shared_ptr<EffectPass> effectPass;
+    std::shared_ptr<PipelineState> pipelineState;
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
 
     std::unique_ptr<Detail::RenderSystem::NativeGraphicsContext> nativeContext;
@@ -112,7 +112,7 @@ GraphicsContext::Impl::Impl(std::unique_ptr<Detail::RenderSystem::NativeGraphics
 GraphicsContext::Impl::~Impl()
 {
     constantBuffers.reset();
-    effectPass.reset();
+    pipelineState.reset();
     vertexBuffers.clear();
     samplerStates.clear();
     textures.clear();
@@ -244,15 +244,15 @@ void GraphicsContext::Impl::SetRenderTargets(std::vector<std::shared_ptr<RenderT
     nativeContext->SetRenderTargets(renderTargets);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetEffectPass(std::shared_ptr<EffectPass> const& effectPassIn)
+void GraphicsContext::Impl::SetPipelineState(std::shared_ptr<PipelineState> const& pipelineStateIn)
 {
-    POMDOG_ASSERT(effectPassIn);
+    POMDOG_ASSERT(pipelineStateIn);
     POMDOG_ASSERT(nativeContext);
-    effectPass = effectPassIn;
+    pipelineState = pipelineStateIn;
 
     using Detail::RenderSystem::NativePipelineState;
     std::shared_ptr<NativePipelineState> nativePipelineState(
-        effectPass, effectPass->NativePipelineState());
+        pipelineState, pipelineState->NativePipelineState());
 
     nativeContext->SetPipelineState(nativePipelineState);
 }
@@ -526,12 +526,12 @@ void GraphicsContext::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2
     impl->SetRenderTargets(std::move(renderTargets));
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::SetEffectPass(std::shared_ptr<EffectPass> const& effectPass)
+void GraphicsContext::SetPipelineState(std::shared_ptr<PipelineState> const& pipelineState)
 {
-    POMDOG_ASSERT(effectPass);
+    POMDOG_ASSERT(pipelineState);
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeContext);
-    impl->SetEffectPass(effectPass);
+    impl->SetPipelineState(pipelineState);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> const& constantBuffers)

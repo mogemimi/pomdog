@@ -79,7 +79,7 @@ public:
 
     void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets);
 
-    void SetEffectPass(std::shared_ptr<EffectPass> const& effectPass);
+    void SetPipelineState(std::shared_ptr<PipelineState> const& pipelineState);
 
     void SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
 

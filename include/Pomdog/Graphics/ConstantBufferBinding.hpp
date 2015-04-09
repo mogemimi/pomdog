@@ -21,9 +21,11 @@ public:
     ConstantBufferBinding(ConstantBufferBinding const&) = delete;
     ConstantBufferBinding(ConstantBufferBinding &&) = default;
 
-    ConstantBufferBinding(GraphicsDevice & graphicsDevice, EffectPass & effectPass);
+    ConstantBufferBinding(GraphicsDevice & graphicsDevice,
+        PipelineState & pipelineState);
 
-    ConstantBufferBinding(std::shared_ptr<GraphicsDevice> const& graphicsDevice, EffectPass & effectPass);
+    ConstantBufferBinding(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        PipelineState & pipelineState);
 
     ~ConstantBufferBinding();
 

@@ -22,7 +22,7 @@
 #include "Audio/SoundState.hpp"
 
 #include "Content/AssetManager.hpp"
-#include "Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Content/AssetBuilders/ShaderBuilder.hpp"
 
 #include "Math/Color.hpp"
@@ -61,10 +61,9 @@
 #include "Graphics/DepthStencilOperation.hpp"
 #include "Graphics/EffectAnnotation.hpp"
 #include "Graphics/EffectConstantDescription.hpp"
+#include "Graphics/EffectReflection.hpp"
 #include "Graphics/EffectVariableClass.hpp"
 #include "Graphics/EffectVariableType.hpp"
-#include "Graphics/EffectPass.hpp"
-#include "Graphics/EffectReflection.hpp"
 #include "Graphics/EffectVariable.hpp"
 #include "Graphics/FillMode.hpp"
 #include "Graphics/GraphicsContext.hpp"
@@ -76,6 +75,7 @@
 #include "Graphics/InputElementFormat.hpp"
 #include "Graphics/InputLayoutDescription.hpp"
 #include "Graphics/InputLayoutHelper.hpp"
+#include "Graphics/PipelineState.hpp"
 #include "Graphics/PipelineStateDescription.hpp"
 #include "Graphics/PresentationParameters.hpp"
 #include "Graphics/PrimitiveTopology.hpp"
@@ -96,7 +96,6 @@
 #include "Graphics/ShaderCompilers/GLSLCompiler.hpp"
 #include "Graphics/ShaderCompilers/HLSLCompiler.hpp"
 
-// Input
 #include "Input/ButtonState.hpp"
 #include "Input/Gamepad.hpp"
 #include "Input/GamepadButtons.hpp"
