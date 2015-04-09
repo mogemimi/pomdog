@@ -2,15 +2,15 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "LineBatch.hpp"
-#include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
-#include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
+#include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
@@ -51,7 +51,7 @@ public:
 private:
     std::shared_ptr<GraphicsContext> graphicsContext;
     std::shared_ptr<VertexBuffer> vertexBuffer;
-    std::shared_ptr<EffectPass> effectPass;
+    std::shared_ptr<PipelineState> pipelineState;
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
 
 public:
@@ -100,7 +100,7 @@ LineBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
             .SetGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS));
 
-        effectPass = assets.CreateBuilder<EffectPass>()
+        pipelineState = assets.CreateBuilder<PipelineState>()
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
@@ -109,7 +109,7 @@ LineBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
             .Build();
 
         constantBuffers = std::make_shared<ConstantBufferBinding>(
-            graphicsDevice, *effectPass);
+            graphicsDevice, *pipelineState);
     }
 }
 //-----------------------------------------------------------------------
@@ -137,7 +137,7 @@ void LineBatch::Impl::Flush()
     vertexBuffer->SetData(vertices.data(), vertices.size());
 
     graphicsContext->SetVertexBuffer(vertexBuffer);
-    graphicsContext->SetEffectPass(effectPass);
+    graphicsContext->SetPipelineState(pipelineState);
     graphicsContext->SetConstantBuffers(constantBuffers);
     graphicsContext->Draw(PrimitiveTopology::LineList, vertices.size());
 

@@ -7,7 +7,7 @@
 #include "Pomdog.Experimental/Graphics/SpriteFont.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteFontLoader.hpp"
 #include "Pomdog.Experimental/UI/UIView.hpp"
-#include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
@@ -54,7 +54,7 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
             .SetGLSL(Builtin_GLSL_Sprite_DistanceField_PS, std::strlen(Builtin_GLSL_Sprite_DistanceField_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_SpriteDistanceField_PS, sizeof(BuiltinHLSL_SpriteDistanceField_PS));
 
-        distanceFieldEffect = assets->CreateBuilder<EffectPass>()
+        distanceFieldEffect = assets->CreateBuilder<PipelineState>()
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())

@@ -24,7 +24,7 @@ public:
 private:
     std::shared_ptr<SamplerState> samplerState;
     std::shared_ptr<RenderTarget2D> texture;
-    std::shared_ptr<EffectPass> effectPass;
+    std::shared_ptr<PipelineState> pipelineState;
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
 };
 

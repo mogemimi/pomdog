@@ -2,17 +2,17 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "SpriteBatchRenderer.hpp"
-#include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
-#include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/IndexElementSize.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
+#include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
@@ -86,7 +86,7 @@ private:
     std::shared_ptr<IndexBuffer> planeIndices;
     std::shared_ptr<VertexBuffer> instanceVertices;
 
-    std::shared_ptr<EffectPass> effectPass;
+    std::shared_ptr<PipelineState> pipelineState;
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
 
     Matrix4x4 projectionMatrix;
@@ -174,7 +174,7 @@ SpriteBatchRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphics
             .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_SpriteBatchRenderer_PS, std::strlen(Builtin_GLSL_SpriteBatchRenderer_PS));
 
-        effectPass = assets.CreateBuilder<EffectPass>()
+        pipelineState = assets.CreateBuilder<PipelineState>()
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
@@ -183,7 +183,7 @@ SpriteBatchRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphics
             .Build();
 
         constantBuffers = std::make_shared<ConstantBufferBinding>(
-            graphicsDevice, *effectPass);
+            graphicsDevice, *pipelineState);
     }
     {
         spriteQueue.reserve(MinBatchSize);
@@ -256,7 +256,7 @@ void SpriteBatchRenderer::Impl::DrawInstance(std::vector<SpriteInfo> const& spri
     }
 
     graphicsContext->SetVertexBuffers({planeVertices, instanceVertices});
-    graphicsContext->SetEffectPass(effectPass);
+    graphicsContext->SetPipelineState(pipelineState);
     graphicsContext->SetConstantBuffers(constantBuffers);
     graphicsContext->DrawIndexedInstanced(PrimitiveTopology::TriangleList,
         planeIndices, planeIndices->IndexCount(), sprites.size());

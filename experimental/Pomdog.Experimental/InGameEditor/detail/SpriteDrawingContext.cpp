@@ -7,7 +7,7 @@ namespace Pomdog {
 namespace UI {
 //-----------------------------------------------------------------------
 SpriteDrawingContext::SpriteDrawingContext(SpriteBatch & spriteBatchIn, SpriteBatch & spriteFontBatchIn,
-    std::shared_ptr<EffectPass> const& distanceFieldEffectIn,
+    std::shared_ptr<PipelineState> const& distanceFieldEffectIn,
     std::shared_ptr<ConstantBufferBinding> const& constantBuffersIn,
     SpriteFont & spriteFontIn, std::shared_ptr<Texture2D> const& textureIn)
     : spriteBatch(spriteBatchIn)

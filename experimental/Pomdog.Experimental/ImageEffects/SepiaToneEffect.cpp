@@ -2,16 +2,16 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "SepiaToneEffect.hpp"
-#include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
-#include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/GraphicsContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
+#include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
@@ -45,7 +45,7 @@ SepiaToneEffect::SepiaToneEffect(
         .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
         .SetGLSL(Builtin_GLSL_SepiaTone_PS, std::strlen(Builtin_GLSL_SepiaTone_PS));
 
-    effectPass = assets.CreateBuilder<EffectPass>()
+    pipelineState = assets.CreateBuilder<PipelineState>()
         .SetVertexShader(vertexShader.Build())
         .SetPixelShader(pixelShader.Build())
         .SetInputLayout(inputLayout.CreateInputLayout())
@@ -54,7 +54,7 @@ SepiaToneEffect::SepiaToneEffect(
         .Build();
 
     constantBuffers = std::make_shared<ConstantBufferBinding>(
-        graphicsDevice, *effectPass);
+        graphicsDevice, *pipelineState);
 }
 //-----------------------------------------------------------------------
 void SepiaToneEffect::SetViewport(float width, float height)
@@ -75,7 +75,7 @@ void SepiaToneEffect::Apply(GraphicsContext & graphicsContext)
 
     graphicsContext.SetSamplerState(0, samplerLinear);
     graphicsContext.SetTexture(0, texture);
-    graphicsContext.SetEffectPass(effectPass);
+    graphicsContext.SetPipelineState(pipelineState);
     graphicsContext.SetConstantBuffers(constantBuffers);
 }
 //-----------------------------------------------------------------------

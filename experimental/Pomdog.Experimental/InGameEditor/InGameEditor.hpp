@@ -41,7 +41,7 @@ private:
     std::unique_ptr<SpriteBatch> spriteBatch;
     std::shared_ptr<SpriteFont> spriteFont;
     std::unique_ptr<SpriteBatch> spriteBatchDistanceField;
-    std::shared_ptr<EffectPass> distanceFieldEffect;
+    std::shared_ptr<PipelineState> distanceFieldEffect;
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
     std::shared_ptr<Texture2D> blankTexture;
 };

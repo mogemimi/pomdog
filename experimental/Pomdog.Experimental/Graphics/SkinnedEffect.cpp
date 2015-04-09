@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "SkinnedEffect.hpp"
-#include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
@@ -31,7 +31,7 @@ public:
     std::array<std::array<Vector4, 2>, SkinnedEffect::MaxBones> bones;
     Matrix4x4 worldViewProjection;
     std::shared_ptr<Texture2D> texture;
-    std::shared_ptr<EffectPass> effectPass;
+    std::shared_ptr<PipelineState> pipelineState;
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
     Color color;
 };
@@ -51,7 +51,7 @@ SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice,
         .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
         .SetGLSL(Builtin_GLSL_SkinnedEffect_PS, std::strlen(Builtin_GLSL_SkinnedEffect_PS));
 
-    effectPass = assets.CreateBuilder<EffectPass>()
+    pipelineState = assets.CreateBuilder<PipelineState>()
         .SetVertexShader(vertexShader.Build())
         .SetPixelShader(pixelShader.Build())
         .SetInputLayout(inputLayout.CreateInputLayout())
@@ -60,7 +60,7 @@ SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice,
         .Build();
 
     constantBuffers = std::make_shared<ConstantBufferBinding>(
-        graphicsDevice, *effectPass);
+        graphicsDevice, *pipelineState);
 }
 //-----------------------------------------------------------------------
 void SkinnedEffect::Impl::Apply(GraphicsContext & graphicsContext)
@@ -78,7 +78,7 @@ void SkinnedEffect::Impl::Apply(GraphicsContext & graphicsContext)
     constantBuffers->Find("SkinningConstants")->SetValue(bones);
 
     graphicsContext.SetTexture(0, texture);
-    graphicsContext.SetEffectPass(effectPass);
+    graphicsContext.SetPipelineState(pipelineState);
     graphicsContext.SetConstantBuffers(constantBuffers);
 }
 //-----------------------------------------------------------------------

@@ -7,9 +7,9 @@
 #include "SpriteSortMode.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
-#include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/GraphicsContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
@@ -28,7 +28,7 @@ public:
 
     SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
         std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        std::shared_ptr<EffectPass> const& effectPass,
+        std::shared_ptr<PipelineState> const& pipelineState,
         std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
 
     ~SpriteBatch();

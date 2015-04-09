@@ -2,16 +2,16 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "SpriteBatch.hpp"
-#include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
+#include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
-#include "Pomdog/Graphics/EffectPass.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/IndexElementSize.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
+#include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
@@ -76,7 +76,7 @@ private:
     std::shared_ptr<IndexBuffer> planeIndices;
     std::shared_ptr<VertexBuffer> instanceVertices;
 
-    std::shared_ptr<EffectPass> effectPass;
+    std::shared_ptr<PipelineState> pipelineState;
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
     alignas(16) Matrix4x4 transposedTransformProjectionMatrix;
 
@@ -85,7 +85,7 @@ private:
 public:
     Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
         std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        std::shared_ptr<EffectPass> const& effectPass,
+        std::shared_ptr<PipelineState> const& pipelineState,
         std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
 
     void Begin(SpriteSortMode sortMode);
@@ -109,11 +109,11 @@ private:
 //-----------------------------------------------------------------------
 SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    std::shared_ptr<EffectPass> const& effectPassIn,
+    std::shared_ptr<PipelineState> const& pipelineStateIn,
     std::shared_ptr<ConstantBufferBinding> const& constantBuffersIn)
     : graphicsContext(graphicsContextIn)
     , transposedTransformProjectionMatrix(Matrix4x4::Identity)
-    , effectPass(effectPassIn)
+    , pipelineState(pipelineStateIn)
     , constantBuffers(constantBuffersIn)
     , sortMode(SpriteSortMode::BackToFront)
 {
@@ -176,9 +176,6 @@ void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn)
     transposedTransformProjectionMatrix = Matrix4x4::Transpose(
         Matrix4x4::CreateOrthographicLH(viewport.Width(), viewport.Height(), 0.1f, 100.0f));
 #endif
-
-//    auto parameter = effectPass->Parameters("Matrices");
-//    parameter->SetValue(transposedTransformProjectionMatrix);
 }
 //-----------------------------------------------------------------------
 void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn, Matrix4x4 const& transformMatrix)
@@ -198,9 +195,6 @@ void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn, Matrix4x4 const& transf
     transposedTransformProjectionMatrix = Matrix4x4::Transpose(transformMatrix
         * Matrix4x4::CreateOrthographicLH(viewport.Width(), viewport.Height(), 0.1f, 100.0f));
 #endif
-
-//    auto parameter = effectPass->Parameters("Matrices");
-//    parameter->SetValue(transposedTransformProjectionMatrix);
 }
 //-----------------------------------------------------------------------
 void SpriteBatch::Impl::End()
@@ -278,7 +272,7 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
 
     graphicsContext->SetTexture(0, texture);
     graphicsContext->SetVertexBuffers({planeVertices, instanceVertices});
-    graphicsContext->SetEffectPass(effectPass);
+    graphicsContext->SetPipelineState(pipelineState);
     graphicsContext->SetConstantBuffers(constantBuffers);
     graphicsContext->DrawIndexedInstanced(PrimitiveTopology::TriangleList,
         planeIndices, planeIndices->IndexCount(), sprites.size());
@@ -389,7 +383,7 @@ SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext
         .SetGLSL(Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS))
         .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS));
 
-    auto effectPass = assets.CreateBuilder<EffectPass>()
+    auto pipelineState = assets.CreateBuilder<PipelineState>()
         .SetVertexShader(vertexShader.Build())
         .SetPixelShader(pixelShader.Build())
         .SetInputLayout(inputLayout.CreateInputLayout())
@@ -398,16 +392,16 @@ SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext
         .Build();
 
     auto constantBuffers = std::make_shared<ConstantBufferBinding>(
-        graphicsDevice, *effectPass);
+        graphicsDevice, *pipelineState);
 
-    impl = std::make_unique<Impl>(graphicsContext, graphicsDevice, effectPass, constantBuffers);
+    impl = std::make_unique<Impl>(graphicsContext, graphicsDevice, pipelineState, constantBuffers);
 }
 //-----------------------------------------------------------------------
 SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    std::shared_ptr<EffectPass> const& effectPass,
+    std::shared_ptr<PipelineState> const& pipelineState,
     std::shared_ptr<ConstantBufferBinding> const& constantBuffers)
-    : impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, effectPass, constantBuffers))
+    : impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, pipelineState, constantBuffers))
 {}
 //-----------------------------------------------------------------------
 SpriteBatch::~SpriteBatch() = default;
