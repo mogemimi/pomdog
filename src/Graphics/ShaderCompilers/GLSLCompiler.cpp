@@ -12,14 +12,17 @@
 
 namespace Pomdog {
 namespace ShaderCompilers {
-namespace {
 
 using Detail::RenderSystem::ShaderBytecode;
 using Detail::RenderSystem::ShaderCompileOptions;
 using Detail::RenderSystem::ShaderPipelineStage;
 
-static std::unique_ptr<Shader> CompileGLSLShader(GraphicsDevice & graphicsDevice,
-    void const* shaderSource, std::size_t byteLength, ShaderPipelineStage pipelineStage)
+//-----------------------------------------------------------------------
+std::unique_ptr<Shader> GLSLCompiler::CreateShader(
+    GraphicsDevice & graphicsDevice,
+    void const* shaderSource,
+    std::size_t byteLength,
+    Detail::RenderSystem::ShaderPipelineStage pipelineStage)
 {
     POMDOG_ASSERT(shaderSource != nullptr);
     POMDOG_ASSERT(byteLength > 0);
@@ -37,22 +40,6 @@ static std::unique_ptr<Shader> CompileGLSLShader(GraphicsDevice & graphicsDevice
     compileOptions.Precompiled = false;
 
     return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
-}
-
-} // unnamed namespace
-//-----------------------------------------------------------------------
-std::unique_ptr<Shader> GLSLCompiler::CreateVertexShader(
-    GraphicsDevice & graphicsDevice, void const* shaderSource, std::size_t byteLength)
-{
-    return CompileGLSLShader(graphicsDevice, shaderSource, byteLength,
-        ShaderPipelineStage::VertexShader);
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<Shader> GLSLCompiler::CreatePixelShader(
-    GraphicsDevice & graphicsDevice, void const* shaderSource, std::size_t byteLength)
-{
-    return CompileGLSLShader(graphicsDevice, shaderSource, byteLength,
-        ShaderPipelineStage::PixelShader);
 }
 //-----------------------------------------------------------------------
 } // namespace ShaderCompilers

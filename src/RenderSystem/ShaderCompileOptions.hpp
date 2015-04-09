@@ -4,6 +4,7 @@
 #ifndef POMDOG_SHADERCOMPILEOPTIONS_11A9FF1A_HPP
 #define POMDOG_SHADERCOMPILEOPTIONS_11A9FF1A_HPP
 
+#include "Pomdog/Graphics/ShaderCompilers/ShaderPipelineStage.hpp"
 #include <cstdint>
 #include <vector>
 #include <string>
@@ -12,12 +13,7 @@ namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
 
-enum class ShaderPipelineStage: std::uint8_t {
-    VertexShader,
-    PixelShader,
-    //GeometryShader,
-    //ComputeShader,
-};
+using ShaderCompilers::ShaderPipelineStage;
 
 class ShaderModel {
 public:

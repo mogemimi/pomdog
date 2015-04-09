@@ -207,6 +207,7 @@
       '../include/Pomdog/Graphics/detail/EffectBinaryParameter.hpp',
       '../include/Pomdog/Graphics/ShaderCompilers/GLSLCompiler.hpp',
       '../include/Pomdog/Graphics/ShaderCompilers/HLSLCompiler.hpp',
+      '../include/Pomdog/Graphics/ShaderCompilers/ShaderPipelineStage.hpp',
       '../include/Pomdog/Input/Gamepad.hpp',
       '../include/Pomdog/Input/Keyboard.hpp',
       '../include/Pomdog/Input/Mouse.hpp',

@@ -4,6 +4,7 @@
 #ifndef POMDOG_HLSLCOMPILER_223CB751_HPP
 #define POMDOG_HLSLCOMPILER_223CB751_HPP
 
+#include "ShaderPipelineStage.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <cstddef>
@@ -17,22 +18,21 @@ class Shader;
 namespace ShaderCompilers {
 
 struct POMDOG_EXPORT HLSLCompiler final {
-    static std::unique_ptr<Shader> CreateVertexShader(GraphicsDevice & graphicsDevice,
-        void const* shaderSource, std::size_t byteLength);
+    static std::unique_ptr<Shader> CreateShaderFromBinary(
+        GraphicsDevice & graphicsDevice,
+        void const* shaderSource,
+        std::size_t byteLength,
+        ShaderPipelineStage pipelineStage);
 
-    static std::unique_ptr<Shader> CreatePixelShader(GraphicsDevice & graphicsDevice,
-        void const* shaderSource, std::size_t byteLength);
-
-    static std::unique_ptr<Shader> CreateVertexShaderFromSource(GraphicsDevice & graphicsDevice,
-        void const* shaderSource, std::size_t byteLength,
-        std::string const& entryPoint);
-
-    static std::unique_ptr<Shader> CreatePixelShaderFromSource(GraphicsDevice & graphicsDevice,
-        void const* shaderSource, std::size_t byteLength,
-        std::string const& entryPoint);
+    static std::unique_ptr<Shader> CreateShaderFromSource(
+        GraphicsDevice & graphicsDevice,
+        void const* shaderSource,
+        std::size_t byteLength,
+        std::string const& entryPoint,
+        ShaderPipelineStage pipelineStage);
 };
 
-}// namespace ShaderCompilers
-}// namespace Pomdog
+} // namespace ShaderCompilers
+} // namespace Pomdog
 
 #endif // POMDOG_HLSLCOMPILER_223CB751_HPP

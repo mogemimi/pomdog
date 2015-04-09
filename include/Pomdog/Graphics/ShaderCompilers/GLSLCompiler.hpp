@@ -4,6 +4,7 @@
 #ifndef POMDOG_GLSLCOMPILER_9FED2927_HPP
 #define POMDOG_GLSLCOMPILER_9FED2927_HPP
 
+#include "ShaderPipelineStage.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <cstddef>
@@ -16,14 +17,14 @@ class Shader;
 namespace ShaderCompilers {
 
 struct POMDOG_EXPORT GLSLCompiler final {
-    static std::unique_ptr<Shader> CreateVertexShader(GraphicsDevice & graphicsDevice,
-        void const* shaderSource, std::size_t byteLength);
-
-    static std::unique_ptr<Shader> CreatePixelShader(GraphicsDevice & graphicsDevice,
-        void const* shaderSource, std::size_t byteLength);
+    static std::unique_ptr<Shader> CreateShader(
+        GraphicsDevice & graphicsDevice,
+        void const* shaderSource,
+        std::size_t byteLength,
+        ShaderPipelineStage pipelineStage);
 };
 
-}// namespace ShaderCompilers
-}// namespace Pomdog
+} // namespace ShaderCompilers
+} // namespace Pomdog
 
 #endif // POMDOG_GLSLCOMPILER_9FED2927_HPP
