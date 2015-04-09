@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_EFFECTPASSDESCRIPTION_E706BE44_HPP
-#define POMDOG_EFFECTPASSDESCRIPTION_E706BE44_HPP
+#ifndef POMDOG_PIPELINESTATEDESCRIPTION_E706BE44_HPP
+#define POMDOG_PIPELINESTATEDESCRIPTION_E706BE44_HPP
 
 #include "detail/ForwardDeclarations.hpp"
 #include "BlendDescription.hpp"
@@ -14,7 +14,7 @@
 
 namespace Pomdog {
 
-struct EffectPassDescription {
+struct PipelineStateDescription {
     std::shared_ptr<Shader> VertexShader;
     std::shared_ptr<Shader> PixelShader;
     InputLayoutDescription InputLayout;
@@ -25,4 +25,4 @@ struct EffectPassDescription {
 
 } // namespace Pomdog
 
-#endif // POMDOG_EFFECTPASSDESCRIPTION_E706BE44_HPP
+#endif // POMDOG_PIPELINESTATEDESCRIPTION_E706BE44_HPP

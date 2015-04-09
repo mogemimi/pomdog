@@ -4,14 +4,14 @@
 #include "Pomdog/Graphics/EffectPass.hpp"
 #include "../RenderSystem/NativePipelineState.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
-#include "Pomdog/Graphics/EffectPassDescription.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
 EffectPass::EffectPass(GraphicsDevice & graphicsDevice,
-    EffectPassDescription const& description)
+    PipelineStateDescription const& description)
 {
     auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
 
@@ -20,7 +20,7 @@ EffectPass::EffectPass(GraphicsDevice & graphicsDevice,
 }
 //-----------------------------------------------------------------------
 EffectPass::EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    EffectPassDescription const& description)
+    PipelineStateDescription const& description)
     : EffectPass(*graphicsDevice, description)
 {}
 //-----------------------------------------------------------------------

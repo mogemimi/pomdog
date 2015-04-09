@@ -43,7 +43,7 @@ public:
     CreateSamplerState(SamplerDescription const& description) override;
 
     std::unique_ptr<NativePipelineState>
-    CreatePipelineState(EffectPassDescription const& description) override;
+    CreatePipelineState(PipelineStateDescription const& description) override;
 
     std::unique_ptr<NativeEffectReflection>
     CreateEffectReflection(NativePipelineState & pipelineState) override;

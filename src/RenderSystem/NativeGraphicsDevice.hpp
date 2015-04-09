@@ -53,7 +53,7 @@ public:
     CreateSamplerState(SamplerDescription const& description) = 0;
 
     virtual std::unique_ptr<NativePipelineState>
-    CreatePipelineState(EffectPassDescription const& description) = 0;
+    CreatePipelineState(PipelineStateDescription const& description) = 0;
 
     virtual std::unique_ptr<NativeEffectReflection>
     CreateEffectReflection(NativePipelineState & pipelineState) = 0;

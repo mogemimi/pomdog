@@ -4,8 +4,8 @@
 #include "Pomdog/Content/AssetBuilders/EffectPassBuilder.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
 #include "Pomdog/Graphics/EffectPass.hpp"
-#include "Pomdog/Graphics/EffectPassDescription.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -16,7 +16,7 @@ namespace AssetBuilders {
 //-----------------------------------------------------------------------
 class Builder<EffectPass>::Impl final {
 public:
-    EffectPassDescription description;
+    PipelineStateDescription description;
     Detail::AssetLoaderContext loaderContext;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
     bool hasBlendState = false;

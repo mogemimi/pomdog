@@ -17,10 +17,10 @@ public:
     EffectPass(EffectPass &&) = default;
 
     EffectPass(GraphicsDevice & graphicsDevice,
-        EffectPassDescription const& description);
+        PipelineStateDescription const& description);
 
     EffectPass(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        EffectPassDescription const& description);
+        PipelineStateDescription const& description);
 
     ~EffectPass();
 

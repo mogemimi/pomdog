@@ -23,7 +23,7 @@ namespace Direct3D11 {
 class PipelineStateDirect3D11 final : public NativePipelineState {
 public:
     PipelineStateDirect3D11(ID3D11Device* device,
-        EffectPassDescription const& description);
+        PipelineStateDescription const& description);
 
     std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
 

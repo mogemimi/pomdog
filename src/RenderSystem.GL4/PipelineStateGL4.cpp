@@ -8,12 +8,12 @@
 #include "InputLayoutGL4.hpp"
 #include "ShaderGL4.hpp"
 #include "../Utility/ScopeGuard.hpp"
+#include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogLevel.hpp"
 #include "Pomdog/Logging/LogStream.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Graphics/EffectPassDescription.hpp"
 #include <type_traits>
 #include <array>
 
@@ -60,7 +60,7 @@ static Optional<ShaderProgramGL4> LinkShaders(
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-PipelineStateGL4::PipelineStateGL4(EffectPassDescription const& description)
+PipelineStateGL4::PipelineStateGL4(PipelineStateDescription const& description)
     : blendState(description.BlendState)
     , rasterizerState(description.RasterizerState)
     , depthStencilState(description.DepthStencilState)

@@ -432,7 +432,7 @@ GraphicsDeviceDirect3D11::CreateSamplerState(SamplerDescription const& descripti
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativePipelineState>
-GraphicsDeviceDirect3D11::CreatePipelineState(EffectPassDescription const& description)
+GraphicsDeviceDirect3D11::CreatePipelineState(PipelineStateDescription const& description)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeDevice);

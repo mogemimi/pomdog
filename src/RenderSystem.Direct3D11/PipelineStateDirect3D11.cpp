@@ -7,7 +7,7 @@
 #include "InputLayoutDirect3D11.hpp"
 #include "ShaderDirect3D11.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
-#include "Pomdog/Graphics/EffectPassDescription.hpp"
+#include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
@@ -318,7 +318,7 @@ static std::vector<ConstantBufferBindingDirect3D11> CreateConstantBufferBindings
 } // unnamed namespace
 //-----------------------------------------------------------------------
 PipelineStateDirect3D11::PipelineStateDirect3D11(ID3D11Device* device,
-    EffectPassDescription const& description)
+    PipelineStateDescription const& description)
 {
     POMDOG_ASSERT(device);
 

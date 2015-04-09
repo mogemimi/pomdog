@@ -81,7 +81,7 @@ GraphicsDeviceGL4::CreateSamplerState(SamplerDescription const& description)
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativePipelineState>
-GraphicsDeviceGL4::CreatePipelineState(EffectPassDescription const& description)
+GraphicsDeviceGL4::CreatePipelineState(PipelineStateDescription const& description)
 {
     return std::make_unique<PipelineStateGL4>(description);
 }
