@@ -405,7 +405,6 @@ void GraphicsContextGL4::SetViewport(Viewport const& viewport)
     POMDOG_ASSERT(!std::isnan(viewport.MinDepth));
     POMDOG_ASSERT(!std::isnan(viewport.MaxDepth));
 
-    POMDOG_ASSERT_MESSAGE(glDepthRangef != nullptr, "glDepthRangef() not found");
     glDepthRangef(viewport.MinDepth, viewport.MaxDepth);
     POMDOG_CHECK_ERROR_GL4("glDepthRangef");
 }
