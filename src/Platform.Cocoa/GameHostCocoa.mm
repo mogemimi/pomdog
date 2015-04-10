@@ -235,7 +235,8 @@ void GameHostCocoa::Impl::Run(std::weak_ptr<Game> const& weakGameIn,
     game->Initialize();
     openGLContext->Unlock();
 
-    if (!game->CompleteInitialize()) {
+    if (exitRequest) {
+        GameWillExit();
         return;
     }
 
@@ -263,10 +264,6 @@ void GameHostCocoa::Impl::Run(std::weak_ptr<Game> const& weakGameIn,
 //-----------------------------------------------------------------------
 void GameHostCocoa::Impl::GameWillExit()
 {
-    if (displayLink != nullptr) {
-        CVDisplayLinkStop(displayLink);
-    }
-
     if (openGLView != nil) {
         [openGLView setRenderCallback: []{}];
     }
@@ -287,6 +284,9 @@ void GameHostCocoa::Impl::Exit()
     exitRequest = true;
 
     if (displayLinkEnabled) {
+        if (displayLink != nullptr) {
+            CVDisplayLinkStop(displayLink);
+        }
         GameWillExit();
     }
 }
