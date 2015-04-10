@@ -59,4 +59,4 @@ std::size_t LogChannel::ConnectionCount() const
     return signal.InvocationCount();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

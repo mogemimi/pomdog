@@ -14,7 +14,8 @@ LogStream::LogStream(LogChannel & channelIn, LogLevel levelIn)
     , level(levelIn)
 {}
 //-----------------------------------------------------------------------
-LogStream::LogStream(LogChannel & channelIn, std::string const& sourceChannelIn, LogLevel levelIn)
+LogStream::LogStream(LogChannel & channelIn,
+    std::string const& sourceChannelIn, LogLevel levelIn)
     : sourceChannel(sourceChannelIn)
     , channel(channelIn)
     , level(levelIn)
@@ -55,4 +56,4 @@ std::string LogStream::String() const
     return cache.str();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

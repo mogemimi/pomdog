@@ -46,6 +46,6 @@ private:
     LogLevel level;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_LOGCHANNEL_4C388D05_HPP

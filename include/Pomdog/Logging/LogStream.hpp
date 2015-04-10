@@ -46,7 +46,6 @@ public:
     std::string String() const;
 };
 
-
 namespace Detail {
 namespace Logging {
 
@@ -57,19 +56,22 @@ auto ToIntegral(E e)->typename std::underlying_type<E>::type
 }
 
 template <typename T>
-auto LogStreamInvork(T const& message, typename std::enable_if<std::is_enum<T>::value>::type* = nullptr)->decltype(ToIntegral(message))
+auto LogStreamInvork(T const& message,
+    typename std::enable_if<std::is_enum<T>::value>::type* = nullptr)
+    ->decltype(ToIntegral(message))
 {
     return ToIntegral(message);
 }
 
 template <typename T>
-T const& LogStreamInvork(T const& message, typename std::enable_if<!std::is_enum<T>::value>::type* = nullptr)
+T const& LogStreamInvork(T const& message,
+    typename std::enable_if<!std::is_enum<T>::value>::type* = nullptr)
 {
     return message;
 }
 
-}// namespace Logging
-}// namespace Detail
+} // namespace Logging
+} // namespace Detail
 
 template <typename T>
 LogStream & LogStream::operator<<(T const& message)
@@ -78,6 +80,6 @@ LogStream & LogStream::operator<<(T const& message)
     return *this;
 }
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_LOGSTREAM_9EF46BAA_HPP

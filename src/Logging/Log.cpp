@@ -21,9 +21,11 @@ public:
 
     Connection Connect(std::function<void(LogEntry const&)> && slot);
 
-    Connection Connect(std::string const& channelName, std::function<void(LogEntry const&)> const& slot);
+    Connection Connect(std::string const& channelName,
+        std::function<void(LogEntry const&)> const& slot);
 
-    Connection Connect(std::string const& channelName, std::function<void(LogEntry const&)> && slot);
+    Connection Connect(std::string const& channelName,
+        std::function<void(LogEntry const&)> && slot);
 
     void RemoveUnusedChannel();
 
@@ -35,13 +37,13 @@ public:
 
     void SetLevel(std::string const& channelName, LogLevel verbosity);
 
-    void Log(std::string const& message, LogLevel verbosity = LogLevel::Verbose);
+    void Log(std::string const& message, LogLevel verbosity);
 
     void Log(LogEntry const& entry);
 
-    LogStream Stream(LogLevel verbosity = LogLevel::Verbose);
+    LogStream Stream(LogLevel verbosity);
 
-    LogStream Stream(std::string const& channelName, LogLevel verbosity = LogLevel::Verbose);
+    LogStream Stream(std::string const& channelName, LogLevel verbosity);
 
 private:
     LogChannel defaultChannel;
@@ -64,7 +66,8 @@ Connection Logger::Connect(std::function<void(LogEntry const&)> && slot)
 }
 //-----------------------------------------------------------------------
 template <typename T>
-static auto FindChannnel(std::string const& channelName, T & channels) ->decltype(channels.begin())
+static auto FindChannnel(std::string const& channelName, T & channels)
+    ->decltype(channels.begin())
 {
     return std::find_if(std::begin(channels), std::end(channels),
         [&channelName](decltype(channels.front()) const& tuple) {
@@ -72,7 +75,8 @@ static auto FindChannnel(std::string const& channelName, T & channels) ->decltyp
         });
 }
 //-----------------------------------------------------------------------
-Connection Logger::Connect(std::string const& channelName, std::function<void(LogEntry const&)> const& slot)
+Connection Logger::Connect(std::string const& channelName,
+    std::function<void(LogEntry const&)> const& slot)
 {
     auto iter = FindChannnel(channelName, channels);
     if (std::end(channels) == iter)
@@ -97,7 +101,8 @@ Connection Logger::Connect(std::string const& channelName, std::function<void(Lo
     return channel.Connect(slot);
 }
 //-----------------------------------------------------------------------
-Connection Logger::Connect(std::string const& channelName, std::function<void(LogEntry const&)> && slot)
+Connection Logger::Connect(std::string const& channelName,
+    std::function<void(LogEntry const&)> && slot)
 {
     auto iter = FindChannnel(channelName, channels);
     if (std::end(channels) == iter)
@@ -197,7 +202,7 @@ static Logger & GetLoggerInstance()
     return logger;
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - Log class
@@ -215,13 +220,15 @@ Connection Log::Connect(std::function<void(LogEntry const&)> && slot)
     return logger.Connect(std::move(slot));
 }
 //-----------------------------------------------------------------------
-Connection Log::Connect(std::string const& channelName, std::function<void(LogEntry const&)> const& slot)
+Connection Log::Connect(std::string const& channelName,
+    std::function<void(LogEntry const&)> const& slot)
 {
     auto & logger = GetLoggerInstance();
     return logger.Connect(channelName, slot);
 }
 //-----------------------------------------------------------------------
-Connection Log::Connect(std::string const& channelName, std::function<void(LogEntry const&)> && slot)
+Connection Log::Connect(std::string const& channelName,
+    std::function<void(LogEntry const&)> && slot)
 {
     auto & logger = GetLoggerInstance();
     return logger.Connect(channelName, std::move(slot));
@@ -311,4 +318,4 @@ void Log::Internal(std::string const& channel, std::string const& message)
     logger.Log(LogEntry{message, channel, LogLevel::Internal});
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

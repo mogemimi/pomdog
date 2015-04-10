@@ -12,12 +12,10 @@ namespace Pomdog {
 class LogEntry {
 public:
     std::string Message;
-
     std::string Tag;
-
     LogLevel Verbosity;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_LOGENTRY_F0B169C2_HPP

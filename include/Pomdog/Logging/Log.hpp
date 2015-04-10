@@ -21,9 +21,11 @@ public:
 
     static Connection Connect(std::function<void(LogEntry const&)> && slot);
 
-    static Connection Connect(std::string const& channelName, std::function<void(LogEntry const&)> const& slot);
+    static Connection Connect(std::string const& channelName,
+        std::function<void(LogEntry const&)> const& slot);
 
-    static Connection Connect(std::string const& channelName, std::function<void(LogEntry const&)> && slot);
+    static Connection Connect(std::string const& channelName,
+        std::function<void(LogEntry const&)> && slot);
 
     static LogLevel GetLevel();
 
@@ -35,7 +37,8 @@ public:
 
     static LogStream Stream(LogLevel verbosity = LogLevel::Verbose);
 
-    static LogStream Stream(std::string const& channelName, LogLevel verbosity = LogLevel::Verbose);
+    static LogStream Stream(std::string const& channelName,
+        LogLevel verbosity = LogLevel::Verbose);
 
     static void Critical(std::string const& channel, std::string const& message);
 
