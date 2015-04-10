@@ -318,6 +318,10 @@
       '../src/SoundSystem.OpenAL/SoundEffectAL.cpp',
       '../src/SoundSystem.OpenAL/SoundEffectAL.hpp',
     ],
+    'pomdog_library_apple_sources': [
+      '../src/Platform.Apple/TimeSourceApple.cpp',
+      '../src/Platform.Apple/TimeSourceApple.hpp',
+    ],
     'pomdog_library_cocoa_sources': [
       '../include/Pomdog/Platform/Cocoa/Bootstrap.hpp',
       '../include/Pomdog/Platform/Cocoa/PomdogOpenGLView.hpp',
@@ -335,8 +339,6 @@
       '../src/Platform.Cocoa/OpenGLContextCocoa.hpp',
       '../src/Platform.Cocoa/OpenGLContextCocoa.mm',
       '../src/Platform.Cocoa/PomdogOpenGLView.mm',
-      '../src/Platform.Cocoa/TimeSourceCocoa.cpp',
-      '../src/Platform.Cocoa/TimeSourceCocoa.hpp',
     ],
     'pomdog_library_direct3d11_sources': [
       '../src/RenderSystem.Direct3D11/ConstantLayoutDirect3D11.cpp',
@@ -507,7 +509,15 @@
         'sources': [
           '<@(pomdog_library_openal_sources)',
         ],
-      }], # audio == "OpenAL"
+      }],
+      ['audio == "OpenAL" and OS == "mac"', {
+        'link_settings': {
+          'libraries': [
+            '$(SDKROOT)/System/Library/Frameworks/AudioToolBox.framework',
+            '$(SDKROOT)/System/Library/Frameworks/OpenAL.framework',
+          ],
+        },
+      }],
       ['audio == "XAudio2"', {
         'sources': [
           '<@(pomdog_library_xaudio2_sources)',
@@ -538,10 +548,13 @@
             '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
             '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
             '$(SDKROOT)/System/Library/Frameworks/QuartzCore.framework',
-            '$(SDKROOT)/System/Library/Frameworks/AudioToolBox.framework',
-            '$(SDKROOT)/System/Library/Frameworks/OpenAL.framework',
           ],
         },
+      }],
+      ['OS == "mac" or OS == "ios"', {
+        'sources': [
+          '<@(pomdog_library_apple_sources)',
+        ],
       }],
       ['OS == "win"', {
         'sources': [

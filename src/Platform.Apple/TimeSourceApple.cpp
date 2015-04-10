@@ -1,15 +1,15 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "TimeSourceCocoa.hpp"
+#include "TimeSourceApple.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <mach/mach_time.h>
 
 namespace Pomdog {
 namespace Detail {
-namespace Cocoa {
+namespace Apple {
 
-TimeSourceCocoa::TimeSourceCocoa()
+TimeSourceApple::TimeSourceApple()
 {
     mach_timebase_info_data_t timeBase;
     mach_timebase_info(&timeBase);
@@ -21,12 +21,12 @@ TimeSourceCocoa::TimeSourceCocoa()
     secondsPerTick = nanoScale * nanoSeconds;
 }
 //-----------------------------------------------------------------------
-TimePoint TimeSourceCocoa::Now() const
+TimePoint TimeSourceApple::Now() const
 {
     auto currentSeconds = mach_absolute_time() * secondsPerTick;
     return TimePoint(Duration(currentSeconds));
 }
 
-} // namespace Cocoa
+} // namespace Apple
 } // namespace Detail
 } // namespace Pomdog

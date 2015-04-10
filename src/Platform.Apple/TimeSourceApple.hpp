@@ -1,18 +1,18 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_TIMESOURCECOCOA_3820AACF_HPP
-#define POMDOG_TIMESOURCECOCOA_3820AACF_HPP
+#ifndef POMDOG_TIMESOURCEAPPLE_3820AACF_HPP
+#define POMDOG_TIMESOURCEAPPLE_3820AACF_HPP
 
 #include "Pomdog/Application/TimePoint.hpp"
 
 namespace Pomdog {
 namespace Detail {
-namespace Cocoa {
+namespace Apple {
 
-class TimeSourceCocoa final {
+class TimeSourceApple final {
 public:
-    TimeSourceCocoa();
+    TimeSourceApple();
 
     TimePoint Now() const;
 
@@ -20,8 +20,8 @@ private:
     double secondsPerTick;
 };
 
-} // namespace Cocoa
+} // namespace Apple
 } // namespace Detail
 } // namespace Pomdog
 
-#endif // POMDOG_TIMESOURCECOCOA_3820AACF_HPP
+#endif // POMDOG_TIMESOURCEAPPLE_3820AACF_HPP

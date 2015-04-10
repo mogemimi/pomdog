@@ -6,8 +6,8 @@
 
 #include "Pomdog/Basic/Platform.hpp"
 
-#if defined(POMDOG_PLATFORM_MACOSX)
-#include "../Platform.Cocoa/TimeSourceCocoa.hpp"
+#if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
+#include "../Platform.Apple/TimeSourceApple.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32)
 #include "../Platform.Win32/TimeSourceWin32.hpp"
 #elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
@@ -19,8 +19,8 @@
 namespace Pomdog {
 namespace Detail {
 
-#if defined(POMDOG_PLATFORM_MACOSX)
-using TimeSource = Detail::Cocoa::TimeSourceCocoa;
+#if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
+using TimeSource = Detail::Apple::TimeSourceApple;
 #elif defined(POMDOG_PLATFORM_WIN32)
 using TimeSource = Detail::Win32::TimeSourceWin32;
 #elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
