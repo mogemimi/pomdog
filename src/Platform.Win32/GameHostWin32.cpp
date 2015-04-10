@@ -34,6 +34,7 @@
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 
@@ -55,7 +56,7 @@ static void MessagePump()
     }
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 class GameHostWin32::Impl final {
 public:
@@ -141,10 +142,9 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
         auto openGLContext = std::make_shared<Win32::OpenGLContextWin32>(
             window->NativeWindowHandle(), presentationParameters);
 
-        if (glewInit() != GLEW_OK)
-        {
-            //POMDOG_THROW_EXCEPTION(std::runtime_error,
-            //    "Failed to initialize glew.");
+        if (glewInit() != GLEW_OK) {
+            POMDOG_THROW_EXCEPTION(std::runtime_error,
+                "Failed to initialize glew.");
         }
 
         openGLContext->MakeCurrent();
@@ -154,7 +154,8 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
 
         graphicsContext = std::make_shared<Pomdog::GraphicsContext>(
             std::make_unique<GraphicsContextGL4>(openGLContext, window),
-            presentationParameters, graphicsDevice);
+            presentationParameters,
+            graphicsDevice);
     }
 #endif
 #if defined(POMDOG_ENABLE_DIRECT3D11)
@@ -167,11 +168,17 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
         auto nativeDevice = nativeGraphicsDevice->NativeDevice();
         auto dxgiFactory = nativeGraphicsDevice->DXGIFactory();
 
-        graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::move(nativeGraphicsDevice));
+        graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(
+            std::move(nativeGraphicsDevice));
 
         graphicsContext = std::make_shared<Pomdog::GraphicsContext>(
-            std::make_unique<GraphicsContextDirect3D11>(window->NativeWindowHandle(), dxgiFactory, nativeDevice, deviceContext),
-            presentationParameters, graphicsDevice);
+            std::make_unique<GraphicsContextDirect3D11>(
+                window->NativeWindowHandle(),
+                dxgiFactory,
+                nativeDevice,
+                deviceContext),
+            presentationParameters,
+            graphicsDevice);
     }
 #endif
 
@@ -198,10 +205,6 @@ void GameHostWin32::Impl::Run(Game & game)
 {
     game.Initialize();
 
-    if (!game.CompleteInitialize()) {
-        return;
-    }
-
     while (!exitRequest)
     {
         clock.Tick();
@@ -214,8 +217,9 @@ void GameHostWin32::Impl::Run(Game & game)
         auto elapsedTime = clock.ElapsedTime();
 
         if (elapsedTime < presentationInterval) {
-            auto sleepTime = std::chrono::duration_cast<std::chrono::milliseconds>(presentationInterval - elapsedTime);
-            std::this_thread::sleep_for(sleepTime);
+            auto sleepTime = presentationInterval - elapsedTime;
+            using namespace std::chrono;
+            std::this_thread::sleep_for(duration_cast<milliseconds>(sleepTime));
         }
     }
 
@@ -294,7 +298,8 @@ std::shared_ptr<Pomdog::GameWindow> GameHostWin32::Impl::GetWindow()
     return window;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GameClock> GameHostWin32::Impl::GetClock(std::shared_ptr<GameHost> && gameHost)
+std::shared_ptr<Pomdog::GameClock> GameHostWin32::Impl::GetClock(
+    std::shared_ptr<GameHost> && gameHost)
 {
     std::shared_ptr<Pomdog::GameClock> sharedClock(gameHost, &clock);
     return std::move(sharedClock);
@@ -318,7 +323,8 @@ std::shared_ptr<Pomdog::AudioEngine> GameHostWin32::Impl::GetAudioEngine()
     return audioEngine;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::AssetManager> GameHostWin32::Impl::GetAssetManager(std::shared_ptr<GameHost> && gameHost)
+std::shared_ptr<Pomdog::AssetManager> GameHostWin32::Impl::GetAssetManager(
+    std::shared_ptr<GameHost> && gameHost)
 {
     POMDOG_ASSERT(assetManager);
     std::shared_ptr<Pomdog::AssetManager> sharedAssetManager(gameHost, assetManager.get());
@@ -342,7 +348,8 @@ GameHostWin32::GameHostWin32(std::shared_ptr<GameWindowWin32> const& window,
     PresentationParameters const& presentationParameters,
     std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory,
     bool enableOpenGL)
-    : impl(std::make_unique<Impl>(window, eventQueue, presentationParameters, std::move(inputDeviceFactory), enableOpenGL))
+    : impl(std::make_unique<Impl>(window, eventQueue, presentationParameters,
+        std::move(inputDeviceFactory), enableOpenGL))
 {}
 //-----------------------------------------------------------------------
 GameHostWin32::~GameHostWin32() = default;
@@ -407,6 +414,6 @@ std::shared_ptr<Pomdog::Mouse> GameHostWin32::Mouse()
     return impl->GetMouse();
 }
 //-----------------------------------------------------------------------
-}// namespace Win32
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Win32
+} // namespace Detail
+} // namespace Pomdog
