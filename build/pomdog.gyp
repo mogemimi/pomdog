@@ -433,7 +433,6 @@
     'xcode_settings': {
       'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
       'CLANG_CXX_LANGUAGE_STANDARD': 'c++14',
-      'MACOSX_DEPLOYMENT_TARGET': '10.9', # OS X Deployment Target: 10.9
       'CLANG_CXX_LIBRARY': 'libc++', # libc++ requires OS X 10.7 or later
       # Warnings:
       'CLANG_WARN_EMPTY_BODY': 'YES',
@@ -556,6 +555,11 @@
           '<@(pomdog_library_apple_sources)',
         ],
       }],
+      ['OS == "mac"', {
+        'xcode_settings': {
+          'MACOSX_DEPLOYMENT_TARGET': '10.9',
+        },
+      }],
       ['OS == "win"', {
         'sources': [
           '<@(pomdog_library_win32_sources)',
@@ -602,8 +606,14 @@
       'msvs_guid': 'A8F27BAE-660F-42B4-BC27-D5A435EF94BF',
       'mac_bundle': 1,
       'defines': ['POMDOG_BUILDING_LIBRARY_EXPORTS=1'],
+      'conditions': [
+        ['OS == "mac"', {
+          'xcode_settings': {
+            'INFOPLIST_FILE': '../src/Platform.Cocoa/Xcode/Info.plist',
+          },
+        }],
+      ],
       'xcode_settings': {
-        'INFOPLIST_FILE': '../src/Platform.Cocoa/Xcode/Pomdog-Info.plist',
         'DYLIB_INSTALL_NAME_BASE': '@executable_path/../../..',
       },
     },
