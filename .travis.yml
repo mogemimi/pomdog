@@ -13,3 +13,6 @@ script:
   - xcodebuild -project build.xcodefiles/build/unittest.xcodeproj clean
   - xcodebuild -project build.xcodefiles/build/unittest.xcodeproj
   - build/build/Release/unittest
+
+notifications:
+  email: false
