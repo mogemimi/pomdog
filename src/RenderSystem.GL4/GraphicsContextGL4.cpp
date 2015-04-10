@@ -182,6 +182,7 @@ GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> const& ope
     POMDOG_CHECK_ERROR_GL4("glFrontFace");
 
     frameBuffer = CreateFrameBuffer();
+    primitiveTopology = ToPrimitiveTopology(PrimitiveTopology::TriangleList);
 }
 //-----------------------------------------------------------------------
 GraphicsContextGL4::~GraphicsContextGL4()
@@ -262,7 +263,7 @@ void GraphicsContextGL4::ApplyPipelineState()
     }
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::size_t vertexCount)
+void GraphicsContextGL4::Draw(std::size_t vertexCount)
 {
     ApplyPipelineState();
 
@@ -277,13 +278,13 @@ void GraphicsContextGL4::Draw(PrimitiveTopology primitiveTopology, std::size_t v
     POMDOG_ASSERT(vertexCount <= vertexBuffers.front()->VertexCount());
 
     glDrawArrays(
-        ToPrimitiveTopology(primitiveTopology),
+        primitiveTopology.value,
         0,
         static_cast<GLsizei>(vertexCount));
     POMDOG_CHECK_ERROR_GL4("glDrawArrays");
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
+void GraphicsContextGL4::DrawIndexed(
     std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount)
 {
     ApplyPipelineState();
@@ -304,14 +305,14 @@ void GraphicsContextGL4::DrawIndexed(PrimitiveTopology primitiveTopology,
     POMDOG_ASSERT(indexCount <= indexBuffer->IndexCount());
 
     glDrawElements(
-        ToPrimitiveTopology(primitiveTopology),
+        primitiveTopology.value,
         static_cast<GLsizei>(indexCount),
         ToIndexElementType(indexBuffer->ElementSize()),
         nullptr);
     POMDOG_CHECK_ERROR_GL4("glDrawElements");
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology,
+void GraphicsContextGL4::DrawInstanced(
     std::size_t vertexCount, std::size_t instanceCount)
 {
     ApplyPipelineState();
@@ -329,15 +330,17 @@ void GraphicsContextGL4::DrawInstanced(PrimitiveTopology primitiveTopology,
     POMDOG_ASSERT(instanceCount <= static_cast<decltype(instanceCount)>(std::numeric_limits<GLsizei>::max()));
 
     glDrawArraysInstanced(
-        ToPrimitiveTopology(primitiveTopology),
+        primitiveTopology.value,
         0,
         static_cast<GLsizei>(vertexCount),
         static_cast<GLsizei>(instanceCount));
     POMDOG_CHECK_ERROR_GL4("glDrawArraysInstanced");
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
-    std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount)
+void GraphicsContextGL4::DrawIndexedInstanced(
+    std::shared_ptr<IndexBuffer> const& indexBuffer,
+    std::size_t indexCount,
+    std::size_t instanceCount)
 {
     ApplyPipelineState();
 
@@ -360,7 +363,7 @@ void GraphicsContextGL4::DrawIndexedInstanced(PrimitiveTopology primitiveTopolog
     POMDOG_ASSERT(instanceCount < static_cast<decltype(instanceCount)>(std::numeric_limits<GLsizei>::max()));
 
     glDrawElementsInstanced(
-        ToPrimitiveTopology(primitiveTopology),
+        primitiveTopology.value,
         static_cast<GLsizei>(indexCount),
         ToIndexElementType(indexBuffer->ElementSize()),
         nullptr,
@@ -440,6 +443,11 @@ void GraphicsContextGL4::SetScissorRectangle(Rectangle const& rectangle)
 
     glScissor(rectangle.X, lowerLeftCornerY, rectangle.Width, rectangle.Height);
     POMDOG_CHECK_ERROR_GL4("glScissor");
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::SetPrimitiveTopology(PrimitiveTopology primitiveTopologyIn)
+{
+    primitiveTopology = ToPrimitiveTopology(primitiveTopologyIn);
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetBlendFactor(Color const& blendFactor)

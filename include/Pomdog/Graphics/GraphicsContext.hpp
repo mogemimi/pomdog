@@ -32,16 +32,20 @@ public:
 
     void Present();
 
-    void Draw(PrimitiveTopology primitiveTopology, std::size_t vertexCount);
+    void Draw(std::size_t vertexCount);
 
-    void DrawIndexed(PrimitiveTopology primitiveTopology,
-        std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount);
+    void DrawIndexed(
+        std::shared_ptr<IndexBuffer> const& indexBuffer,
+        std::size_t indexCount);
 
-    void DrawInstanced(PrimitiveTopology primitiveTopology,
-        std::size_t vertexCount, std::size_t instanceCount);
+    void DrawInstanced(
+        std::size_t vertexCount,
+        std::size_t instanceCount);
 
-    void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
-        std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount);
+    void DrawIndexedInstanced(
+        std::shared_ptr<IndexBuffer> const& indexBuffer,
+        std::size_t indexCount,
+        std::size_t instanceCount);
 
     Viewport GetViewport() const;
 
@@ -50,6 +54,8 @@ public:
     Rectangle GetScissorRectangle() const;
 
     void SetScissorRectangle(Rectangle const& rectangle);
+
+    void SetPrimitiveTopology(PrimitiveTopology primitiveTopology);
 
     void SetBlendFactor(Color const& blendFactor);
 

@@ -29,15 +29,20 @@ public:
 
     virtual void Present() = 0;
 
-    virtual void Draw(PrimitiveTopology primitiveTopology, std::size_t vertexCount) = 0;
+    virtual void Draw(std::size_t vertexCount) = 0;
 
-    virtual void DrawIndexed(PrimitiveTopology primitiveTopology,
-        std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount) = 0;
+    virtual void DrawIndexed(
+        std::shared_ptr<IndexBuffer> const& indexBuffer,
+        std::size_t indexCount) = 0;
 
-    virtual void DrawInstanced(PrimitiveTopology primitiveTopology, std::size_t vertexCount, std::size_t instanceCount) = 0;
+    virtual void DrawInstanced(
+        std::size_t vertexCount,
+        std::size_t instanceCount) = 0;
 
-    virtual void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
-        std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount) = 0;
+    virtual void DrawIndexedInstanced(
+        std::shared_ptr<IndexBuffer> const& indexBuffer,
+        std::size_t indexCount,
+        std::size_t instanceCount) = 0;
 
     ///@brief Retrieves the capabilities of a GraphicsContext
     virtual GraphicsCapabilities GetCapabilities() const = 0;
@@ -47,6 +52,8 @@ public:
     virtual Rectangle GetScissorRectangle() const = 0;
 
     virtual void SetScissorRectangle(Rectangle const& rectangle) = 0;
+
+    virtual void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) = 0;
 
     virtual void SetBlendFactor(Color const& blendFactor) = 0;
 

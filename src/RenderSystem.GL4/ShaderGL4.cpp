@@ -34,6 +34,9 @@ static Optional<GLuint> CompileShader(ShaderBytecode const& source, GLenum pipel
     }
 #endif
 
+    POMDOG_ASSERT(source.Code != nullptr);
+    POMDOG_ASSERT(source.ByteLength > 0);
+
     auto result = MakeOptional<GLuint>(glCreateShader(pipelineStage));
 
     if (result.value() == 0) {

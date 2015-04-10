@@ -308,7 +308,7 @@ void GraphicsContext::Present()
     impl->nativeContext->Present();
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Draw(PrimitiveTopology primitiveTopology, std::size_t vertexCount)
+void GraphicsContext::Draw(std::size_t vertexCount)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeContext);
@@ -317,10 +317,10 @@ void GraphicsContext::Draw(PrimitiveTopology primitiveTopology, std::size_t vert
     CheckUnbindingRenderTargetsError(impl->renderTargets, impl->textures);
 #endif
 
-    impl->nativeContext->Draw(primitiveTopology, vertexCount);
+    impl->nativeContext->Draw(vertexCount);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::DrawIndexed(PrimitiveTopology primitiveTopology,
+void GraphicsContext::DrawIndexed(
     std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount)
 {
     POMDOG_ASSERT(impl);
@@ -330,10 +330,10 @@ void GraphicsContext::DrawIndexed(PrimitiveTopology primitiveTopology,
     CheckUnbindingRenderTargetsError(impl->renderTargets, impl->textures);
 #endif
 
-    impl->nativeContext->DrawIndexed(primitiveTopology, indexBuffer, indexCount);
+    impl->nativeContext->DrawIndexed(indexBuffer, indexCount);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::DrawInstanced(PrimitiveTopology primitiveTopology,
+void GraphicsContext::DrawInstanced(
     std::size_t vertexCount, std::size_t instanceCount)
 {
     POMDOG_ASSERT(impl);
@@ -343,11 +343,12 @@ void GraphicsContext::DrawInstanced(PrimitiveTopology primitiveTopology,
     CheckUnbindingRenderTargetsError(impl->renderTargets, impl->textures);
 #endif
 
-    impl->nativeContext->DrawInstanced(primitiveTopology, vertexCount, instanceCount);
+    impl->nativeContext->DrawInstanced(vertexCount, instanceCount);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
-    std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount)
+void GraphicsContext::DrawIndexedInstanced(
+    std::shared_ptr<IndexBuffer> const& indexBuffer,
+    std::size_t indexCount, std::size_t instanceCount)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeContext);
@@ -356,7 +357,7 @@ void GraphicsContext::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
     CheckUnbindingRenderTargetsError(impl->renderTargets, impl->textures);
 #endif
 
-    impl->nativeContext->DrawIndexedInstanced(primitiveTopology, indexBuffer, indexCount, instanceCount);
+    impl->nativeContext->DrawIndexedInstanced(indexBuffer, indexCount, instanceCount);
 }
 //-----------------------------------------------------------------------
 Viewport GraphicsContext::GetViewport() const
@@ -385,6 +386,13 @@ void GraphicsContext::SetScissorRectangle(Pomdog::Rectangle const& rectangle)
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeContext);
     impl->nativeContext->SetScissorRectangle(rectangle);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
+{
+    POMDOG_ASSERT(impl);
+    POMDOG_ASSERT(impl->nativeContext);
+    impl->nativeContext->SetPrimitiveTopology(primitiveTopology);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetBlendFactor(Color const& blendFactor)

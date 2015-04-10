@@ -26,6 +26,7 @@ struct FrameBufferTag;
 } // namespace Tags
 
 using FrameBufferGL4 = Tagged<GLuint, Tags::FrameBufferTag>;
+using PrimitiveTopologyGL4 = Tagged<GLenum, PrimitiveTopology>;
 
 class OpenGLContext;
 class ConstantLayoutGL4;
@@ -46,16 +47,20 @@ public:
 
     void Present() override;
 
-    void Draw(PrimitiveTopology primitiveTopology, std::size_t vertexCount) override;
+    void Draw(std::size_t vertexCount) override;
 
-    void DrawIndexed(PrimitiveTopology primitiveTopology,
-        std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount) override;
+    void DrawIndexed(
+        std::shared_ptr<IndexBuffer> const& indexBuffer,
+        std::size_t indexCount) override;
 
-    void DrawInstanced(PrimitiveTopology primitiveTopology,
-        std::size_t vertexCount, std::size_t instanceCount) override;
+    void DrawInstanced(
+        std::size_t vertexCount,
+        std::size_t instanceCount) override;
 
-    void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
-        std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount, std::size_t instanceCount) override;
+    void DrawIndexedInstanced(
+        std::shared_ptr<IndexBuffer> const& indexBuffer,
+        std::size_t indexCount,
+        std::size_t instanceCount) override;
 
     GraphicsCapabilities GetCapabilities() const override;
 
@@ -64,6 +69,8 @@ public:
     Rectangle GetScissorRectangle() const override;
 
     void SetScissorRectangle(Rectangle const& rectangle) override;
+
+    void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) override;
 
     void SetBlendFactor(Color const& blendFactor) override;
 
@@ -95,6 +102,7 @@ private:
     std::vector<Optional<GLenum>> textures;
     Optional<FrameBufferGL4> frameBuffer;
     std::vector<std::shared_ptr<RenderTarget2DGL4>> renderTargets;
+    PrimitiveTopologyGL4 primitiveTopology;
     bool needToApplyInputLayout;
     bool needToApplyPipelineState;
 };
