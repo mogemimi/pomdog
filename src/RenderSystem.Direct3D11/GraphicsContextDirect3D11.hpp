@@ -39,15 +39,20 @@ public:
 
     void Present() override;
 
-    void Draw(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount) override;
+    void Draw(std::uint32_t vertexCount) override;
 
-    void DrawIndexed(PrimitiveTopology primitiveTopology,
-        std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount) override;
+    void DrawIndexed(
+        std::shared_ptr<IndexBuffer> const& indexBuffer,
+        std::uint32_t indexCount) override;
 
-    void DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount, std::uint32_t instanceCount) override;
+    void DrawInstanced(
+        std::uint32_t vertexCount,
+        std::uint32_t instanceCount) override;
 
-    void DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
-        std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount) override;
+    void DrawIndexedInstanced(
+        std::shared_ptr<IndexBuffer> const& indexBuffer,
+        std::uint32_t indexCount,
+        std::uint32_t instanceCount) override;
 
     GraphicsCapabilities GetCapabilities() const override;
 
@@ -56,6 +61,8 @@ public:
     Rectangle GetScissorRectangle() const override;
 
     void SetScissorRectangle(Rectangle const& rectangle) override;
+
+    void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) override;
 
     void SetBlendFactor(Color const& blendFactor) override;
 

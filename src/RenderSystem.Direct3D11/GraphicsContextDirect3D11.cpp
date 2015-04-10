@@ -225,18 +225,16 @@ void GraphicsContextDirect3D11::ApplyPipelineState()
     }
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::Draw(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount)
+void GraphicsContextDirect3D11::Draw(std::uint32_t vertexCount)
 {
     POMDOG_ASSERT(deviceContext);
 
     ApplyPipelineState();
 
-    deviceContext->IASetPrimitiveTopology(ToD3D11PrimitiveTopology(primitiveTopology));
-
     deviceContext->Draw(vertexCount, 0);
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::DrawIndexed(PrimitiveTopology primitiveTopology,
+void GraphicsContextDirect3D11::DrawIndexed(
     std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount)
 {
     POMDOG_ASSERT(deviceContext);
@@ -252,23 +250,19 @@ void GraphicsContextDirect3D11::DrawIndexed(PrimitiveTopology primitiveTopology,
     deviceContext->IASetIndexBuffer(nativeIndexBuffer->GetBuffer(),
         ToDXGIFormat(indexBuffer->ElementSize()), 0);
 
-    deviceContext->IASetPrimitiveTopology(ToD3D11PrimitiveTopology(primitiveTopology));
-
     deviceContext->DrawIndexed(indexCount, 0, 0);
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::DrawInstanced(PrimitiveTopology primitiveTopology, std::uint32_t vertexCount, std::uint32_t instanceCount)
+void GraphicsContextDirect3D11::DrawInstanced(std::uint32_t vertexCount, std::uint32_t instanceCount)
 {
     POMDOG_ASSERT(deviceContext);
 
     ApplyPipelineState();
 
-    deviceContext->IASetPrimitiveTopology(ToD3D11PrimitiveTopology(primitiveTopology));
-
     deviceContext->DrawInstanced(vertexCount, instanceCount, 0, 0);
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::DrawIndexedInstanced(PrimitiveTopology primitiveTopology,
+void GraphicsContextDirect3D11::DrawIndexedInstanced(
     std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount)
 {
     POMDOG_ASSERT(deviceContext);
@@ -283,8 +277,6 @@ void GraphicsContextDirect3D11::DrawIndexedInstanced(PrimitiveTopology primitive
 
     deviceContext->IASetIndexBuffer(nativeIndexBuffer->GetBuffer(),
         ToDXGIFormat(indexBuffer->ElementSize()), 0);
-
-    deviceContext->IASetPrimitiveTopology(ToD3D11PrimitiveTopology(primitiveTopology));
 
     deviceContext->DrawIndexedInstanced(indexCount, instanceCount, 0, 0, 0);
 }
@@ -339,6 +331,12 @@ void GraphicsContextDirect3D11::SetScissorRectangle(Rectangle const& rectangle)
     POMDOG_ASSERT(!rects.empty());
 
     deviceContext->RSSetScissorRects(rects.size(), rects.data());
+}
+//-----------------------------------------------------------------------
+void GraphicsContextDirect3D11::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
+{
+    deviceContext->IASetPrimitiveTopology(
+        ToD3D11PrimitiveTopology(primitiveTopology));
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetBlendFactor(Color const& blendFactorIn)
