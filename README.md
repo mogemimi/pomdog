@@ -1,5 +1,4 @@
-Pomdog
-=======
+# Pomdog [![Build Status](https://travis-ci.org/mogemimi/pomdog.svg?branch=master)](https://travis-ci.org/mogemimi/pomdog)
 
 [Homepage](http://enginetrouble.net/pomdog) | [GitHub](https://github.com/mogemimi/pomdog) | [Wiki](https://github.com/mogemimi/pomdog/wiki)
 
