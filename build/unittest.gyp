@@ -36,7 +36,7 @@
       'product_name': 'unittest',
       'type': 'executable',
       'dependencies': [
-        'pomdog.gyp:pomdog-testable',
+        'pomdog.gyp:pomdog-static',
       ],
       'include_dirs': [
         '../include',
