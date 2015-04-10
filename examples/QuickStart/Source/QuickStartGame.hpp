@@ -22,7 +22,7 @@ private:
     std::shared_ptr<GraphicsContext> graphicsContext;
     std::shared_ptr<VertexBuffer> vertexBuffer;
     std::shared_ptr<IndexBuffer> indexBuffer;
-    std::shared_ptr<EffectPass> effectPass;
+    std::shared_ptr<PipelineState> pipelineState;
     std::shared_ptr<SamplerState> sampler;
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
     std::shared_ptr<Texture2D> texture;

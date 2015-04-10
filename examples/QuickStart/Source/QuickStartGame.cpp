@@ -49,17 +49,25 @@ void QuickStartGame::Initialize()
             indices.data(), indices.size(), BufferUsage::Immutable);
     }
     {
-        InputLayoutHelper inputLayout;
-        inputLayout.Float3().Float2();
+        auto inputLayout = InputLayoutHelper{}
+            .Float3().Float2();
 
-        effectPass = assets->LoadEffectPass()
-            .InputLayout(inputLayout.CreateInputLayout())
-            .VertexShaderGLSL("SimpleEffect/VertexShader.glsl")
-            .PixelShaderGLSL("SimpleEffect/PixelShader.glsl")
-            .Load();
+        auto vertexShader = assets->CreateBuilder<Shader>()
+            .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
+            .SetGLSLFromFile("SimpleEffect/VertexShader.glsl");
+
+        auto pixelShader = assets->CreateBuilder<Shader>()
+            .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
+            .SetGLSLFromFile("SimpleEffect/PixelShader.glsl");
+
+        pipelineState = assets->CreateBuilder<PipelineState>()
+            .SetInputLayout(inputLayout.CreateInputLayout())
+            .SetVertexShader(vertexShader.Build())
+            .SetPixelShader(pixelShader.Build())
+            .Build();
 
         constantBuffers = std::make_shared<ConstantBufferBinding>(
-            graphicsDevice, *effectPass);
+            graphicsDevice, *pipelineState);
     }
     {
         sampler = std::make_shared<SamplerState>(graphicsDevice,
@@ -92,12 +100,12 @@ void QuickStartGame::Draw()
     graphicsContext->SetSamplerState(0, sampler);
     graphicsContext->SetTexture(0, texture);
     graphicsContext->SetVertexBuffer(vertexBuffer);
-    graphicsContext->SetEffectPass(effectPass);
+    graphicsContext->SetPipelineState(pipelineState);
     graphicsContext->SetConstantBuffers(constantBuffers);
-    graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList,
-        indexBuffer, indexBuffer->IndexCount());
+    graphicsContext->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
+    graphicsContext->DrawIndexed(indexBuffer, indexBuffer->IndexCount());
 
     graphicsContext->Present();
 }
 //-----------------------------------------------------------------------
-}// namespace QuickStart
+} // namespace QuickStart
