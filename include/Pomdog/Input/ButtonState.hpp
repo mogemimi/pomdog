@@ -4,16 +4,13 @@
 #ifndef POMDOG_BUTTONSTATE_092E7B2B_HPP
 #define POMDOG_BUTTONSTATE_092E7B2B_HPP
 
-#include <cstdint>
-
 namespace Pomdog {
 
-enum class ButtonState: bool {
+enum class ButtonState : bool {
     Released = false,
-
     Pressed = true
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_BUTTONSTATE_092E7B2B_HPP
