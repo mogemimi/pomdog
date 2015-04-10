@@ -46,7 +46,21 @@ static std::vector<std::uint8_t> ReadBinaryFile(std::ifstream && streamIn)
 // explicit instantiations
 template class Builder<Shader>;
 //-----------------------------------------------------------------------
-Builder<Shader>::Builder(Detail::AssetLoaderContext const& contextIn)
+class Builder<Shader>::Impl {
+public:
+    std::reference_wrapper<Detail::AssetLoaderContext const> loaderContext;
+    std::vector<std::uint8_t> shaderBlob;
+    ShaderCompilers::ShaderPipelineStage pipelineStage;
+    void const* shaderSource;
+    std::size_t byteLength;
+    std::string entryPoint;
+    bool precompiled;
+
+public:
+    explicit Impl(Detail::AssetLoaderContext const& context);
+};
+//-----------------------------------------------------------------------
+Builder<Shader>::Impl::Impl(Detail::AssetLoaderContext const& contextIn)
     : loaderContext(contextIn)
     , pipelineStage(ShaderPipelineStage::VertexShader)
     , shaderSource(nullptr)
@@ -55,27 +69,35 @@ Builder<Shader>::Builder(Detail::AssetLoaderContext const& contextIn)
 {
 }
 //-----------------------------------------------------------------------
+Builder<Shader>::Builder(Detail::AssetLoaderContext const& contextIn)
+    : impl(std::make_shared<Impl>(contextIn))
+{}
+//-----------------------------------------------------------------------
+Builder<Shader>::~Builder() = default;
+//-----------------------------------------------------------------------
 Builder<Shader> & Builder<Shader>::SetPipelineStage(
     ShaderCompilers::ShaderPipelineStage pipelineStageIn)
 {
-    pipelineStage = pipelineStageIn;
+    POMDOG_ASSERT(impl);
+    impl->pipelineStage = pipelineStageIn;
     return *this;
 }
 //-----------------------------------------------------------------------
 Builder<Shader> & Builder<Shader>::SetGLSL(
     void const* shaderSourceIn, std::size_t byteLengthIn)
 {
+    POMDOG_ASSERT(impl);
     POMDOG_ASSERT(shaderSourceIn != nullptr);
     POMDOG_ASSERT(byteLengthIn > 0);
 
-    auto graphicsDevice = loaderContext.get().GraphicsDevice.lock();
+    auto graphicsDevice = impl->loaderContext.get().GraphicsDevice.lock();
     POMDOG_ASSERT(graphicsDevice);
 
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL)
     {
-        shaderSource = shaderSourceIn;
-        byteLength = byteLengthIn;
-        precompiled = false;
+        impl->shaderSource = shaderSourceIn;
+        impl->byteLength = byteLengthIn;
+        impl->precompiled = false;
     }
     return *this;
 }
@@ -84,19 +106,19 @@ Builder<Shader> & Builder<Shader>::SetGLSLFromFile(std::string const& filePath)
 {
     POMDOG_ASSERT(!filePath.empty());
 
-    auto graphicsDevice = loaderContext.get().GraphicsDevice.lock();
+    auto graphicsDevice = impl->loaderContext.get().GraphicsDevice.lock();
     POMDOG_ASSERT(graphicsDevice);
 
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL)
     {
-        shaderBlob = ReadBinaryFile(loaderContext.get().OpenStream(filePath));
-        if (shaderBlob.empty()) {
+        impl->shaderBlob = ReadBinaryFile(impl->loaderContext.get().OpenStream(filePath));
+        if (impl->shaderBlob.empty()) {
             POMDOG_THROW_EXCEPTION(std::runtime_error,
                 "Failed to open file.");
         }
 
-        shaderSource = shaderBlob.data();
-        byteLength = shaderBlob.size();
+        impl->shaderSource = impl->shaderBlob.data();
+        impl->byteLength = impl->shaderBlob.size();
     }
     return *this;
 }
@@ -109,15 +131,15 @@ Builder<Shader> & Builder<Shader>::SetHLSL(
     POMDOG_ASSERT(byteLengthIn > 0);
     POMDOG_ASSERT(!entryPointIn.empty());
 
-    auto graphicsDevice = loaderContext.get().GraphicsDevice.lock();
+    auto graphicsDevice = impl->loaderContext.get().GraphicsDevice.lock();
     POMDOG_ASSERT(graphicsDevice);
 
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL)
     {
-        shaderSource = shaderSourceIn;
-        byteLength = byteLengthIn;
-        entryPoint = entryPointIn;
-        precompiled = false;
+        impl->shaderSource = shaderSourceIn;
+        impl->byteLength = byteLengthIn;
+        impl->entryPoint = entryPointIn;
+        impl->precompiled = false;
     }
     return *this;
 }
@@ -128,14 +150,14 @@ Builder<Shader> & Builder<Shader>::SetHLSLPrecompiled(
     POMDOG_ASSERT(shaderSourceIn != nullptr);
     POMDOG_ASSERT(byteLengthIn > 0);
 
-    auto graphicsDevice = loaderContext.get().GraphicsDevice.lock();
+    auto graphicsDevice = impl->loaderContext.get().GraphicsDevice.lock();
     POMDOG_ASSERT(graphicsDevice);
 
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL)
     {
-        shaderSource = shaderSourceIn;
-        byteLength = byteLengthIn;
-        precompiled = true;
+        impl->shaderSource = shaderSourceIn;
+        impl->byteLength = byteLengthIn;
+        impl->precompiled = true;
     }
     return *this;
 }
@@ -146,50 +168,50 @@ Builder<Shader> & Builder<Shader>::SetHLSLFromFile(
     POMDOG_ASSERT(!filePath.empty());
     POMDOG_ASSERT(!entryPointIn.empty());
 
-    auto graphicsDevice = loaderContext.get().GraphicsDevice.lock();
+    auto graphicsDevice = impl->loaderContext.get().GraphicsDevice.lock();
     POMDOG_ASSERT(graphicsDevice);
 
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL)
     {
-        shaderBlob = ReadBinaryFile(loaderContext.get().OpenStream(filePath));
-        if (shaderBlob.empty()) {
+        impl->shaderBlob = ReadBinaryFile(impl->loaderContext.get().OpenStream(filePath));
+        if (impl->shaderBlob.empty()) {
             POMDOG_THROW_EXCEPTION(std::runtime_error,
                 "Failed to open file.");
         }
 
-        shaderSource = shaderBlob.data();
-        byteLength = shaderBlob.size();
-        entryPoint = entryPointIn;
-        precompiled = false;
+        impl->shaderSource = impl->shaderBlob.data();
+        impl->byteLength = impl->shaderBlob.size();
+        impl->entryPoint = entryPointIn;
+        impl->precompiled = false;
     }
     return *this;
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> Builder<Shader>::Build()
 {
-    auto graphicsDevice = loaderContext.get().GraphicsDevice.lock();
+    auto graphicsDevice = impl->loaderContext.get().GraphicsDevice.lock();
     POMDOG_ASSERT(graphicsDevice);
 
-    POMDOG_ASSERT(shaderSource != nullptr);
-    POMDOG_ASSERT(byteLength > 0);
+    POMDOG_ASSERT(impl->shaderSource != nullptr);
+    POMDOG_ASSERT(impl->byteLength > 0);
 
     const auto shaderLanguage = graphicsDevice->GetSupportedLanguage();
 
     if (shaderLanguage == ShaderLanguage::GLSL)
     {
         return GLSLCompiler::CreateShader(*graphicsDevice,
-            shaderSource, byteLength, pipelineStage);
+            impl->shaderSource, impl->byteLength, impl->pipelineStage);
     }
     else if (shaderLanguage == ShaderLanguage::HLSL)
     {
-        if (precompiled) {
+        if (impl->precompiled) {
             return HLSLCompiler::CreateShaderFromBinary(*graphicsDevice,
-                shaderSource, byteLength, pipelineStage);
+                impl->shaderSource, impl->byteLength, impl->pipelineStage);
         }
 
-        POMDOG_ASSERT(!entryPoint.empty());
+        POMDOG_ASSERT(!impl->entryPoint.empty());
         return HLSLCompiler::CreateShaderFromSource(*graphicsDevice,
-            shaderSource, byteLength, entryPoint, pipelineStage);
+            impl->shaderSource, impl->byteLength, impl->entryPoint, impl->pipelineStage);
     }
 
     // error: FUS RO DAH!

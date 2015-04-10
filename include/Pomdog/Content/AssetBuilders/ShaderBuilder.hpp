@@ -8,8 +8,6 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/ShaderPipelineStage.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <utility>
-#include <vector>
 #include <cstdint>
 #include <cstddef>
 #include <string>
@@ -27,6 +25,13 @@ template <>
 class POMDOG_EXPORT Builder<Shader> {
 public:
     explicit Builder(Detail::AssetLoaderContext const& loaderContext);
+
+    Builder(Builder &&) = default;
+    Builder(Builder const&) = default;
+    Builder & operator=(Builder &&) = default;
+    Builder & operator=(Builder const&) = default;
+
+    ~Builder();
 
     Builder & SetPipelineStage(ShaderCompilers::ShaderPipelineStage pipelineStage);
 
@@ -46,13 +51,8 @@ public:
     std::unique_ptr<Shader> Build();
 
 private:
-    std::reference_wrapper<Detail::AssetLoaderContext const> loaderContext;
-    std::vector<std::uint8_t> shaderBlob;
-    ShaderCompilers::ShaderPipelineStage pipelineStage;
-    void const* shaderSource;
-    std::size_t byteLength;
-    std::string entryPoint;
-    bool precompiled;
+    class Impl;
+    std::shared_ptr<Impl> impl;
 };
 
 } // namespace AssetBuilders
