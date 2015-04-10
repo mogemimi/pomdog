@@ -49,7 +49,8 @@ ScreenQuad::ScreenQuad(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 void ScreenQuad::DrawQuad(GraphicsContext & graphicsContext)
 {
     graphicsContext.SetVertexBuffer(vertexBuffer);
-    graphicsContext.Draw(PrimitiveTopology::TriangleList, vertexBuffer->VertexCount());
+    graphicsContext.SetPrimitiveTopology(PrimitiveTopology::TriangleList);
+    graphicsContext.Draw(vertexBuffer->VertexCount());
 }
 //-----------------------------------------------------------------------
 }// namespace Pomdog

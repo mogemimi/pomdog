@@ -274,7 +274,8 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
     graphicsContext->SetVertexBuffers({planeVertices, instanceVertices});
     graphicsContext->SetPipelineState(pipelineState);
     graphicsContext->SetConstantBuffers(constantBuffers);
-    graphicsContext->DrawIndexedInstanced(PrimitiveTopology::TriangleList,
+    graphicsContext->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
+    graphicsContext->DrawIndexedInstanced(
         planeIndices, planeIndices->IndexCount(), sprites.size());
 }
 //-----------------------------------------------------------------------

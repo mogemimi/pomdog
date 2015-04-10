@@ -90,7 +90,8 @@ void SkinnedMeshCommandProcessor::Draw(GraphicsContext & graphicsContext, Render
         graphicsContext.SetVertexBuffer(skinnedMeshCommand.mesh->VertexBuffer);
         skinnedEffect.Apply(graphicsContext);
 
-        graphicsContext.DrawIndexed(PrimitiveTopology::TriangleList,
+        graphicsContext.SetPrimitiveTopology(PrimitiveTopology::TriangleList);
+        graphicsContext.DrawIndexed(
             skinnedMeshCommand.mesh->IndexBuffer,
             skinnedMeshCommand.mesh->IndexBuffer->IndexCount());
 

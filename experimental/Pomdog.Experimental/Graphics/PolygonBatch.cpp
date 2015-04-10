@@ -136,7 +136,8 @@ void PolygonBatch::Impl::Flush()
     graphicsContext->SetVertexBuffer(vertexBuffer);
     graphicsContext->SetPipelineState(pipelineState);
     graphicsContext->SetConstantBuffers(constantBuffers);
-    graphicsContext->Draw(PrimitiveTopology::TriangleList, vertices.size());
+    graphicsContext->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
+    graphicsContext->Draw(vertices.size());
 
     ++drawCallCount;
 

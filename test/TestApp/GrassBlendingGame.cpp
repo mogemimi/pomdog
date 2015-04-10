@@ -263,8 +263,9 @@ void GrassBlendingGame::DrawSkinnedMesh()
     {
         graphicsContext->SetVertexBuffer(maidSkinnedMesh.VertexBuffer);
         maidSkinningEffect->Apply(*graphicsContext);
-        graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList,
-            maidSkinnedMesh.IndexBuffer, maidSkinnedMesh.IndexBuffer->IndexCount());
+        graphicsContext->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
+        graphicsContext->DrawIndexed(maidSkinnedMesh.IndexBuffer,
+            maidSkinnedMesh.IndexBuffer->IndexCount());
     }
 
     if (toggleSwitch4->IsOn())
@@ -272,8 +273,9 @@ void GrassBlendingGame::DrawSkinnedMesh()
         maidSkinningEffect->SetTexture(texture);
         graphicsContext->SetVertexBuffer(maidSkinnedMesh.VertexBuffer);
         maidSkinningEffect->Apply(*graphicsContext);
-        graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList,
-            maidSkinnedMesh.IndexBuffer, maidSkinnedMesh.IndexBuffer->IndexCount());
+        graphicsContext->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
+        graphicsContext->DrawIndexed(maidSkinnedMesh.IndexBuffer,
+            maidSkinnedMesh.IndexBuffer->IndexCount());
     }
 }
 //-----------------------------------------------------------------------

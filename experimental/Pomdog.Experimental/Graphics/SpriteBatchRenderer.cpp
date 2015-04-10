@@ -258,7 +258,8 @@ void SpriteBatchRenderer::Impl::DrawInstance(std::vector<SpriteInfo> const& spri
     graphicsContext->SetVertexBuffers({planeVertices, instanceVertices});
     graphicsContext->SetPipelineState(pipelineState);
     graphicsContext->SetConstantBuffers(constantBuffers);
-    graphicsContext->DrawIndexedInstanced(PrimitiveTopology::TriangleList,
+    graphicsContext->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
+    graphicsContext->DrawIndexedInstanced(
         planeIndices, planeIndices->IndexCount(), sprites.size());
 
     ++drawCallCount;

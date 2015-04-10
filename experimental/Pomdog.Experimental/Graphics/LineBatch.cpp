@@ -139,7 +139,8 @@ void LineBatch::Impl::Flush()
     graphicsContext->SetVertexBuffer(vertexBuffer);
     graphicsContext->SetPipelineState(pipelineState);
     graphicsContext->SetConstantBuffers(constantBuffers);
-    graphicsContext->Draw(PrimitiveTopology::LineList, vertices.size());
+    graphicsContext->SetPrimitiveTopology(PrimitiveTopology::LineList);
+    graphicsContext->Draw(vertices.size());
 
     vertices.clear();
 }
