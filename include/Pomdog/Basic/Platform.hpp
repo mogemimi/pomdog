@@ -38,6 +38,10 @@
 //----------------------------
 // Platform detection
 //----------------------------
+#ifdef __APPLE_CC__
+#include <Availability.h>
+#endif
+
 #if defined(linux) || defined(__linux) || defined(__linux__)
 #   // Linux
 #   define POMDOG_PLATFORM_LINUX

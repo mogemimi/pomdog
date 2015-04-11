@@ -606,14 +606,8 @@
       'msvs_guid': 'A8F27BAE-660F-42B4-BC27-D5A435EF94BF',
       'mac_bundle': 1,
       'defines': ['POMDOG_BUILDING_LIBRARY_EXPORTS=1'],
-      'conditions': [
-        ['OS == "mac"', {
-          'xcode_settings': {
-            'INFOPLIST_FILE': '../src/Platform.Cocoa/Xcode/Info.plist',
-          },
-        }],
-      ],
       'xcode_settings': {
+        'INFOPLIST_FILE': '../src/Platform.Apple/Info.plist',
         'DYLIB_INSTALL_NAME_BASE': '@executable_path/../../..',
       },
     },
