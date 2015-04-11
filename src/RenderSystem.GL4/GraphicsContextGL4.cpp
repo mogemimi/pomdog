@@ -217,16 +217,20 @@ void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float d
 
     if ((options | ClearOptions::DepthBuffer) == options) {
         mask |= GL_DEPTH_BUFFER_BIT;
-        glClearDepth(static_cast<GLclampd>(depth));
+        auto clamped = std::min(std::max(depth, 0.0f), 1.0f);
+        glClearDepthf(clamped);
+        POMDOG_CHECK_ERROR_GL4("glClearDepthf");
     }
     if ((options | ClearOptions::Stencil) == options) {
         mask |= GL_STENCIL_BUFFER_BIT;
         glClearStencil(stencil);
+        POMDOG_CHECK_ERROR_GL4("glClearStencil");
     }
     if ((options | ClearOptions::RenderTarget) == options) {
         mask |= GL_COLOR_BUFFER_BIT;
         auto colorVector = color.ToVector4();
         glClearColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
+        POMDOG_CHECK_ERROR_GL4("glClearColor");
     }
 
     glClear(mask);

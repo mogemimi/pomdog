@@ -21,13 +21,19 @@ static Optional<GLuint> CompileShader(ShaderBytecode const& source, GLenum pipel
 {
 #if defined(DEBUG)
     {
-        auto validPipelineStage = pipelineStage == GL_VERTEX_SHADER
-            || pipelineStage == GL_FRAGMENT_SHADER
-            || pipelineStage == GL_GEOMETRY_SHADER
-            || pipelineStage == GL_TESS_CONTROL_SHADER
-            || pipelineStage == GL_TESS_EVALUATION_SHADER
+        auto validPipelineStage = (pipelineStage == GL_VERTEX_SHADER)
+            || (pipelineStage == GL_FRAGMENT_SHADER)
+        #ifdef GL_GEOMETRY_SHADER
+            || (pipelineStage == GL_GEOMETRY_SHADER)
+        #endif
+        #ifdef GL_TESS_CONTROL_SHADER
+            || (pipelineStage == GL_TESS_CONTROL_SHADER)
+        #endif
+        #ifdef GL_TESS_EVALUATION_SHADER
+            || (pipelineStage == GL_TESS_EVALUATION_SHADER)
+        #endif
         #ifdef GL_COMPUTE_SHADER
-            || pipelineStage == GL_COMPUTE_SHADER
+            || (pipelineStage == GL_COMPUTE_SHADER)
         #endif
             ;
         POMDOG_ASSERT(validPipelineStage);

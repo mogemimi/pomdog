@@ -29,9 +29,15 @@ private:
     static constexpr GLenum pipelineStage = PipelineStage;
     static_assert(pipelineStage == GL_VERTEX_SHADER
         || pipelineStage == GL_FRAGMENT_SHADER
+    #ifdef GL_GEOMETRY_SHADER
         || pipelineStage == GL_GEOMETRY_SHADER
+    #endif
+    #ifdef GL_TESS_CONTROL_SHADER
         || pipelineStage == GL_TESS_CONTROL_SHADER
+    #endif
+    #ifdef GL_TESS_EVALUATION_SHADER
         || pipelineStage == GL_TESS_EVALUATION_SHADER
+    #endif
     #ifdef GL_COMPUTE_SHADER
         || pipelineStage == GL_COMPUTE_SHADER
     #endif
