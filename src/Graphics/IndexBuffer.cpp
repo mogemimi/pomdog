@@ -10,7 +10,8 @@
 namespace Pomdog {
 namespace {
 
-static std::uint32_t ToIndexElementOffsetBytes(IndexElementSize elementSize)
+static std::uint32_t ToIndexElementOffsetBytes(
+    IndexElementSize elementSize) noexcept
 {
     switch (elementSize) {
     case IndexElementSize::ThirtyTwoBits: return 4;
@@ -65,17 +66,23 @@ IndexBuffer::IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
 //-----------------------------------------------------------------------
 IndexBuffer::~IndexBuffer() = default;
 //-----------------------------------------------------------------------
-std::size_t IndexBuffer::IndexCount() const
+std::size_t IndexBuffer::IndexCount() const noexcept
 {
     return indexCount;
 }
 //-----------------------------------------------------------------------
-IndexElementSize IndexBuffer::ElementSize() const
+IndexElementSize IndexBuffer::ElementSize() const noexcept
 {
     return elementSize;
 }
 //-----------------------------------------------------------------------
-BufferUsage IndexBuffer::BufferUsage() const
+std::size_t IndexBuffer::SizeInBytes() const noexcept
+{
+    POMDOG_ASSERT(indexCount > 0);
+    return indexCount * ToIndexElementOffsetBytes(elementSize);
+}
+//-----------------------------------------------------------------------
+BufferUsage IndexBuffer::BufferUsage() const noexcept
 {
     return bufferUsage;
 }

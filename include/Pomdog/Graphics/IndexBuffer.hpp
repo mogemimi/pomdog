@@ -42,11 +42,13 @@ public:
     IndexBuffer & operator=(IndexBuffer const&) = delete;
     IndexBuffer & operator=(IndexBuffer &&) = default;
 
-    std::size_t IndexCount() const;
+    std::size_t IndexCount() const noexcept;
 
-    IndexElementSize ElementSize() const;
+    IndexElementSize ElementSize() const noexcept;
 
-    Pomdog::BufferUsage BufferUsage() const;
+    std::size_t SizeInBytes() const noexcept;
+
+    Pomdog::BufferUsage BufferUsage() const noexcept;
 
     void SetData(void const* source, std::size_t elementCount);
 
