@@ -22,7 +22,7 @@ static std::string Error(std::string const& assetName, char const* description)
     return description + (": " + assetName);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string const& filePath)
 {
@@ -53,7 +53,10 @@ void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string co
     std::array<Color, 256> colors = model.ColorPalette;
 
     POMDOG_ASSERT(model.ColorPalette.size() == 256);
-    std::rotate(std::begin(colors), std::next(std::begin(colors), 1), std::end(colors));
+    std::rotate(
+        std::begin(colors),
+        std::next(std::begin(colors), 1),
+        std::end(colors));
 
     POMDOG_ASSERT(colors.back() == Color::Black);
 
@@ -112,5 +115,5 @@ void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string co
     stream.write(reinterpret_cast<char const*>(colors.data()), sizeof(colors.front()) * colors.size());
 }
 //-----------------------------------------------------------------------
-}// namespace MagicaVoxel
-}// namespace Pomdog
+} // namespace MagicaVoxel
+} // namespace Pomdog

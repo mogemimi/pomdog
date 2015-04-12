@@ -31,7 +31,7 @@ static std::ifstream::pos_type ChunkSize(std::ifstream & stream, MagicaVoxel::Vo
     return stream.tellg() + static_cast<std::ifstream::pos_type>(chunk.ContentSize + chunk.ChildrenSize);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& assetName)
 {
@@ -49,21 +49,25 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
     std::ifstream stream = assets.OpenStream(assetName);
 
     if (stream.fail()) {
-        POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "cannot open file"));
+        POMDOG_THROW_EXCEPTION(std::invalid_argument,
+            Error(assetName, "cannot open file"));
     }
 
     if (fourCC != BinaryReader::Read<std::uint32_t>(stream)) {
-        POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "invalid format"));
+        POMDOG_THROW_EXCEPTION(std::invalid_argument,
+            Error(assetName, "invalid format"));
     }
 
     if (MagicaVoxelVersion != BinaryReader::Read<std::int32_t>(stream)) {
-        POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "version does not much"));
+        POMDOG_THROW_EXCEPTION(std::invalid_argument,
+            Error(assetName, "version does not much"));
     }
 
     const auto mainChunk = BinaryReader::Read<VoxChunkHeader>(stream);
 
     if (mainChunk.ID != IdMain) {
-        POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "cannot find main chunk"));
+        POMDOG_THROW_EXCEPTION(std::invalid_argument,
+            Error(assetName, "cannot find main chunk"));
     }
 
     const auto mainChunkEnd = ChunkSize(stream, mainChunk);
@@ -78,22 +82,24 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
         const auto chunkEnd = ChunkSize(stream, chunk);
 
         if (chunk.ID == IdSize) {
-            const auto x = BinaryReader::Read<std::int32_t>(stream);
-            const auto y = BinaryReader::Read<std::int32_t>(stream);
-            const auto z = BinaryReader::Read<std::int32_t>(stream);
+            model.X = BinaryReader::Read<std::int32_t>(stream);
+            model.Y = BinaryReader::Read<std::int32_t>(stream);
+            model.Z = BinaryReader::Read<std::int32_t>(stream);
 
-            POMDOG_ASSERT(x >= 0);
-            POMDOG_ASSERT(y >= 0);
-            POMDOG_ASSERT(z >= 0);
+            POMDOG_ASSERT(model.X >= 0);
+            POMDOG_ASSERT(model.Y >= 0);
+            POMDOG_ASSERT(model.Z >= 0);
 
-            model.X = static_cast<std::uint32_t>(x);
-            model.Y = static_cast<std::uint32_t>(y);
-            model.Z = static_cast<std::uint32_t>(z);
+            if (model.X < 0 || model.Y < 0 || model.Z < 0) {
+                POMDOG_THROW_EXCEPTION(std::invalid_argument,
+                    Error(assetName, "invalid format"));
+            }
         }
         else if (chunk.ID == IdXYZI) {
             const auto voxelCount = BinaryReader::Read<std::int32_t>(stream);
             if (voxelCount < 0) {
-                POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(assetName, "negative number of voxels"));
+                POMDOG_THROW_EXCEPTION(std::invalid_argument,
+                    Error(assetName, "negative number of voxels"));
             }
 
             if (voxelCount > 0) {
@@ -106,7 +112,10 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
             model.ColorPalette.back() = Color::Black;
 
             POMDOG_ASSERT(model.ColorPalette.size() == 256);
-            std::rotate(std::begin(model.ColorPalette), std::next(std::begin(model.ColorPalette), 255), std::end(model.ColorPalette));
+            std::rotate(
+                std::begin(model.ColorPalette),
+                std::next(std::begin(model.ColorPalette), 255),
+                std::end(model.ColorPalette));
         }
 
         stream.seekg(chunkEnd, std::ios::beg);
@@ -115,5 +124,5 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
     return std::move(model);
 }
 //-----------------------------------------------------------------------
-}// namespace MagicaVoxel
-}// namespace Pomdog
+} // namespace MagicaVoxel
+} // namespace Pomdog

@@ -11,12 +11,13 @@ namespace MagicaVoxel {
 
 class VoxModel;
 
-class VoxModelExporter {
-public:
-    static void Export(MagicaVoxel::VoxModel const& model, std::string const& filePath);
+struct VoxModelExporter {
+    static void Export(
+        MagicaVoxel::VoxModel const& model,
+        std::string const& filePath);
 };
 
-}// namespace MagicaVoxel
-}// namespace Pomdog
+} // namespace MagicaVoxel
+} // namespace Pomdog
 
 #endif // POMDOG_VOXMODELEXPORTER_F3E3A4F5_HPP

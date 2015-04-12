@@ -12,12 +12,13 @@ class AssetManager;
 
 namespace MagicaVoxel {
 
-class VoxModelLoader final {
-public:
-    static VoxModel Load(AssetManager const& assets, std::string const& assetName);
+struct VoxModelLoader {
+    static VoxModel Load(
+        AssetManager const& assets,
+        std::string const& assetName);
 };
 
-}// namespace MagicaVoxel
-}// namespace Pomdog
+} // namespace MagicaVoxel
+} // namespace Pomdog
 
 #endif // POMDOG_VOXMODELLOADER_37B4E86A_HPP
