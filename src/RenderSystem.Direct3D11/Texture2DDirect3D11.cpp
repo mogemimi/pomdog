@@ -3,7 +3,7 @@
 
 #include "Texture2DDirect3D11.hpp"
 #include "../RenderSystem.DXGI/DXGIFormatHelper.hpp"
-#include "../RenderSystem/SurfaceFormatHelper.hpp"
+#include "../RenderSystem/TextureHelper.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -13,49 +13,19 @@ namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
-namespace {
 
 using DXGI::DXGIFormatHelper;
-
-static std::size_t MipmapImageDataBytes(std::size_t pixelWidth, std::size_t pixelHeight, std::size_t bytesPerBlock)
-{
-    return pixelWidth * pixelHeight * bytesPerBlock;
-}
-//-----------------------------------------------------------------------
-static std::size_t ComputeTextureBufferSize(std::size_t pixelWidth, std::size_t pixelHeight,
-    std::uint32_t levelCount, SurfaceFormat format)
-{
-    POMDOG_ASSERT(pixelWidth > 0);
-    POMDOG_ASSERT(pixelHeight > 0);
-    POMDOG_ASSERT(levelCount >= 1);
-
-    auto const bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format);
-
-    std::size_t sizeInBytes = 0;
-    std::size_t mipMapPixelWidth = pixelWidth;
-    std::size_t mipMapPixelHeight = pixelHeight;
-
-    for (std::size_t mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel)
-    {
-        sizeInBytes += MipmapImageDataBytes(pixelWidth, pixelHeight, bytesPerBlock);
-        mipMapPixelWidth = std::max((mipMapPixelWidth >> 1), 1U);
-        mipMapPixelHeight = std::max((mipMapPixelHeight >> 1), 1U);
-    }
-
-    return sizeInBytes;
-}
-
-} // unnamed namespace
 //-----------------------------------------------------------------------
 Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* nativeDevice,
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContextIn,
     std::int32_t pixelWidth, std::int32_t pixelHeight,
-    std::uint32_t levelCount, SurfaceFormat format)
+    std::int32_t levelCount, SurfaceFormat format)
     : deviceContext(deviceContextIn)
 {
     POMDOG_ASSERT(nativeDevice != nullptr);
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
+    POMDOG_ASSERT(levelCount >= 1);
 
     D3D11_TEXTURE2D_DESC textureDesc;
     ZeroMemory(&textureDesc, sizeof(textureDesc));
@@ -73,7 +43,7 @@ Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* nativeDevice,
     //textureDesc.CPUAccessFlags = 0;
     textureDesc.MiscFlags = 0;
 
-    auto hr = nativeDevice->CreateTexture2D(&textureDesc, nullptr, &nativeTexture2D);
+    auto hr = nativeDevice->CreateTexture2D(&textureDesc, nullptr, &texture2D);
     if (FAILED(hr))
     {
         ///@error FUS RO DAH!
@@ -88,7 +58,7 @@ Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* nativeDevice,
     shaderResourceViewDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 
     // Create the shader resource view.
-    hr = nativeDevice->CreateShaderResourceView(nativeTexture2D.Get(),
+    hr = nativeDevice->CreateShaderResourceView(texture2D.Get(),
         &shaderResourceViewDesc, &shaderResourceView);
     if (FAILED(hr))
     {
@@ -101,13 +71,14 @@ Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* nativeDevice,
 void Texture2DDirect3D11::SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
     std::int32_t levelCount, SurfaceFormat format, void const* pixelData)
 {
-    POMDOG_ASSERT(nativeTexture2D);
+    POMDOG_ASSERT(texture2D);
     POMDOG_ASSERT(deviceContext);
 
-    std::size_t sizeInBytes = ComputeTextureBufferSize(pixelWidth, pixelHeight, levelCount, format);
+    std::size_t sizeInBytes = TextureHelper::ComputeTextureSizeInBytes(
+        pixelWidth, pixelHeight, levelCount, format);
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    auto hr = deviceContext->Map(nativeTexture2D.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    auto hr = deviceContext->Map(texture2D.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
     if (FAILED(hr))
     {
@@ -120,7 +91,7 @@ void Texture2DDirect3D11::SetData(std::int32_t pixelWidth, std::int32_t pixelHei
     POMDOG_ASSERT(sizeInBytes > 0);
     std::memcpy(mappedResource.pData, pixelData, sizeInBytes);
 
-    deviceContext->Unmap(nativeTexture2D.Get(), 0);
+    deviceContext->Unmap(texture2D.Get(), 0);
 }
 //-----------------------------------------------------------------------
 ID3D11ShaderResourceView* Texture2DDirect3D11::ShaderResourceView() const

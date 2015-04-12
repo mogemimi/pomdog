@@ -16,18 +16,25 @@ namespace Direct3D11 {
 
 class Texture2DDirect3D11 final: public NativeTexture2D {
 public:
-    Texture2DDirect3D11(ID3D11Device* nativeDevice,
+    Texture2DDirect3D11(
+        ID3D11Device* nativeDevice,
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
-        std::int32_t pixelWidth, std::int32_t pixelHeight,
-        std::uint32_t levelCount, SurfaceFormat format);
+        std::int32_t pixelWidth,
+        std::int32_t pixelHeight,
+        std::int32_t levelCount,
+        SurfaceFormat format);
 
-    void SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
-        std::int32_t levelCount, SurfaceFormat format, void const* pixelData) override;
+    void SetData(
+        std::int32_t pixelWidth,
+        std::int32_t pixelHeight,
+        std::int32_t levelCount,
+        SurfaceFormat format,
+        void const* pixelData) override;
 
     ID3D11ShaderResourceView* ShaderResourceView() const;
 
 private:
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> nativeTexture2D;
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2D;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView;
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
 };
