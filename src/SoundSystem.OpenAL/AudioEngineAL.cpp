@@ -29,7 +29,7 @@ void AudioEngineAL::MasterVolume(float volume)
     alListenerf(AL_GAIN, volume);
 }
 //-----------------------------------------------------------------------
-}// namespace OpenAL
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace OpenAL
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog

@@ -14,9 +14,9 @@ public:
     static void CheckError(char const* command, char const* filename, int line);
 };
 
-}// namespace OpenAL
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace OpenAL
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_ERRORCHECKERAL_CD663609_HPP

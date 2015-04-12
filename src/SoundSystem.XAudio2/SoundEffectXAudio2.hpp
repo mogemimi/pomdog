@@ -11,7 +11,7 @@
 namespace Pomdog {
 class AudioEmitter;
 class AudioListener;
-}// namespace Pomdog
+} // namespace Pomdog
 
 namespace Pomdog {
 namespace Detail {
@@ -47,9 +47,9 @@ private:
     IXAudio2SourceVoice* sourceVoice;
 };
 
-}// namespace XAudio2
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace XAudio2
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SOUNDEFFECTXAUDIO2_ED1F6835_HPP

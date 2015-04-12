@@ -45,7 +45,7 @@ ContextOpenAL::~ContextOpenAL()
     }
 }
 //-----------------------------------------------------------------------
-}// namespace OpenAL
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace OpenAL
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog

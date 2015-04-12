@@ -34,9 +34,9 @@ private:
     std::vector<std::uint8_t> waveFormat;
 };
 
-}// namespace XAudio2
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace XAudio2
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_AUDIOCLIPXAUDIO2_26CA9C69_HPP

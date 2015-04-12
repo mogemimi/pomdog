@@ -30,6 +30,6 @@ private:
     std::unique_ptr<Detail::SoundSystem::NativeAudioEngine> nativeAudioEngine;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_AUDIOENGINE_0BAB9209_HPP

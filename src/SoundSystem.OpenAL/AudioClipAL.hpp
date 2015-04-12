@@ -21,7 +21,7 @@ namespace OpenAL {
 class AudioClipAL final: Noncopyable {
 public:
     AudioClipAL(void const* data, std::size_t size,
-        std::uint32_t sampleRate, std::uint16_t bitsPerSample,
+        int sampleRate, int bitsPerSample,
         AudioChannels channel);
 
     ~AudioClipAL();
@@ -35,9 +35,9 @@ private:
     std::size_t sizeInBytes;
 };
 
-}// namespace OpenAL
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace OpenAL
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_AUDIOCLIPAL_88AB8594_HPP

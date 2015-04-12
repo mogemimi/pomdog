@@ -39,4 +39,4 @@ Detail::SoundSystem::NativeAudioEngine* AudioEngine::NativeAudioEngine()
     return nativeAudioEngine.get();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

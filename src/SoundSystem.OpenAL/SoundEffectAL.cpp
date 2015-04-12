@@ -159,7 +159,7 @@ void SoundEffectAL::Volume(float volume)
     #endif
 }
 //-----------------------------------------------------------------------
-}// namespace OpenAL
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace OpenAL
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog

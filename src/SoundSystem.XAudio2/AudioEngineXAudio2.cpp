@@ -151,7 +151,7 @@ static std::vector<AudioDeviceDetails> EnumerateAudioDevices()
 }
 #endif
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 AudioEngineXAudio2::AudioEngineXAudio2()
     : masteringVoice(nullptr)
@@ -285,7 +285,7 @@ IXAudio2* AudioEngineXAudio2::XAudio2Engine() const
     return xAudio2.Get();
 }
 //-----------------------------------------------------------------------
-}// namespace XAudio2
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace XAudio2
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog

@@ -64,6 +64,6 @@ private:
     bool isLooped;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SOUNDEFFECT_0793F2D9_HPP

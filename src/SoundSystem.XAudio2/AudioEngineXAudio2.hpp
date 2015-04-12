@@ -29,9 +29,9 @@ private:
     IXAudio2MasteringVoice* masteringVoice;
 };
 
-}// namespace XAudio2
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace XAudio2
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_AUDIOENGINEXAUDIO2_349E822E_HPP

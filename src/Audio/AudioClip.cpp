@@ -16,7 +16,7 @@ namespace Pomdog {
 namespace {
 
 static std::size_t GetSamples(std::size_t sizeInBytes,
-    std::size_t bitsPerSample, AudioChannels channels)
+    int bitsPerSample, AudioChannels channels)
 {
     POMDOG_ASSERT(bitsPerSample >= 8);
     POMDOG_ASSERT(bitsPerSample == 8
@@ -37,7 +37,7 @@ static std::size_t GetSamples(std::size_t sizeInBytes,
     return sizeInBytes / divisior;
 }
 //-----------------------------------------------------------------------
-static Duration GetSampleDuration(std::size_t samples, std::uint32_t sampleRate)
+static Duration GetSampleDuration(std::size_t samples, int sampleRate)
 {
     POMDOG_ASSERT(sampleRate > 0);
     POMDOG_ASSERT(sampleRate >= 8000);
@@ -45,10 +45,10 @@ static Duration GetSampleDuration(std::size_t samples, std::uint32_t sampleRate)
     return std::chrono::seconds(samples / sampleRate);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 AudioClip::AudioClip(std::unique_ptr<Detail::SoundSystem::NativeAudioClip> && nativeAudioClipIn,
-    std::uint32_t sampleRateIn, std::uint16_t bitsPerSampleIn, AudioChannels channelsIn)
+    int sampleRateIn, int bitsPerSampleIn, AudioChannels channelsIn)
     : nativeAudioClip(std::move(nativeAudioClipIn))
     , sampleRate(sampleRateIn)
     , bitsPerSample(bitsPerSampleIn)
@@ -66,12 +66,12 @@ Duration AudioClip::Length() const
     return std::move(sampleDuration);
 }
 //-----------------------------------------------------------------------
-std::uint32_t AudioClip::SampleRate() const
+int AudioClip::SampleRate() const
 {
     return sampleRate;
 }
 //-----------------------------------------------------------------------
-std::uint16_t AudioClip::BitsPerSample() const
+int AudioClip::BitsPerSample() const
 {
     return bitsPerSample;
 }
@@ -87,4 +87,4 @@ Detail::SoundSystem::NativeAudioClip* AudioClip::NativeAudioClip()
     return nativeAudioClip.get();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

@@ -17,6 +17,6 @@ public:
     float DopplerScale;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_AUDIOEMITTER_AC108A5B_HPP

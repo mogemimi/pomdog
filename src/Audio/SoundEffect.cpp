@@ -24,7 +24,7 @@ static std::shared_ptr<Detail::SoundSystem::NativeAudioClip> GetNativeBuffer(std
     return std::move(nativeAudioClip);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 SoundEffect::SoundEffect(AudioEngine & audioEngine,
     std::shared_ptr<AudioClip> const& audioClip, bool isLoopedIn)
@@ -140,4 +140,4 @@ void SoundEffect::Volume(float volumeIn)
     nativeSoundEffect->Volume(volume);
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

@@ -37,10 +37,10 @@ static ALenum ToFormat(AudioChannels channel, std::uint16_t bitPerSample)
     return AL_FORMAT_MONO8;
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 AudioClipAL::AudioClipAL(void const* data, std::size_t size,
-    std::uint32_t sampleRate, std::uint16_t bitsPerSample, AudioChannels channel)
+    int sampleRate, int bitsPerSample, AudioChannels channel)
     : sizeInBytes(size)
 {
     POMDOG_ASSERT(bitsPerSample == 8 || bitsPerSample == 16);
@@ -86,7 +86,7 @@ ALuint AudioClipAL::NativeBuffer() const
     return *buffer;
 }
 //-----------------------------------------------------------------------
-}// namespace OpenAL
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace OpenAL
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog

@@ -7,10 +7,10 @@
 #include "Pomdog/Basic/Platform.hpp"
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
-#    include <OpenAL/al.h>
-#    include <OpenAL/alc.h>
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
 #elif defined(POMDOG_PLATFORM_LINUX)
-#    // TODO
+#// TODO
 #endif
 
 #endif // POMDOG_PREREQUISITESOPENAL_0DE392F4_HPP

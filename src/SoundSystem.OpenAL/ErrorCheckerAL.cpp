@@ -32,7 +32,7 @@ static std::string ToString(ErrorCodeAL const& errorCode)
     return ss.str();
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 void ErrorCheckerAL::CheckError(char const* command, char const* filename, int line)
 {
@@ -59,7 +59,7 @@ void ErrorCheckerAL::CheckError(char const* command, char const* filename, int l
     }
 }
 //-----------------------------------------------------------------------
-}// namespace OpenAL
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace OpenAL
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog

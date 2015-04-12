@@ -13,7 +13,7 @@
 namespace Pomdog {
 class AudioEmitter;
 class AudioListener;
-}// namespace Pomdog
+} // namespace Pomdog
 
 namespace Pomdog {
 namespace Detail {
@@ -52,9 +52,9 @@ public:
     void Volume(float volume);
 };
 
-}// namespace OpenAL
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace OpenAL
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SOUNDEFFECTAL_4A967601_HPP

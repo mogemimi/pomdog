@@ -26,9 +26,9 @@ private:
     ContextOpenAL context;
 };
 
-}// namespace OpenAL
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace OpenAL
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_AUDIOENGINEAL_4B9A3A11_HPP

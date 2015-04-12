@@ -16,7 +16,7 @@ namespace Pomdog {
 class POMDOG_EXPORT AudioClip {
 public:
     AudioClip(std::unique_ptr<Detail::SoundSystem::NativeAudioClip> && nativeAudioClip,
-        std::uint32_t sampleRate, std::uint16_t bitsPerSample, AudioChannels channels);
+        int sampleRate, int bitsPerSample, AudioChannels channels);
 
     AudioClip(AudioClip const&) = delete;
     AudioClip & operator=(AudioClip const&) = delete;
@@ -25,9 +25,9 @@ public:
 
     Duration Length() const;
 
-    std::uint32_t SampleRate() const;
+    int SampleRate() const;
 
-    std::uint16_t BitsPerSample() const;
+    int BitsPerSample() const;
 
     AudioChannels Channels() const;
 
@@ -35,11 +35,11 @@ public:
 
 private:
     std::unique_ptr<Detail::SoundSystem::NativeAudioClip> nativeAudioClip;
-    std::uint32_t sampleRate;
-    std::uint16_t bitsPerSample;
+    std::int32_t sampleRate;
+    std::int32_t bitsPerSample;
     AudioChannels channels;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_AUDIOCLIP_C1887233_HPP

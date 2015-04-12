@@ -22,9 +22,9 @@ public:
     ~ContextOpenAL();
 };
 
-}// namespace OpenAL
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace OpenAL
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_CONTEXTOPENAL_79017363_HPP

@@ -38,7 +38,7 @@ std::size_t AudioClipXAudio2::SizeInBytes() const
     return sizeof(std::uint8_t) * audioData.size();
 }
 //-----------------------------------------------------------------------
-}// namespace XAudio2
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace XAudio2
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog

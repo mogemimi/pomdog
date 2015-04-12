@@ -128,7 +128,7 @@ void SoundEffectXAudio2::Volume(float volume)
     sourceVoice->SetVolume(volume);
 }
 //-----------------------------------------------------------------------
-}// namespace XAudio2
-}// namespace SoundSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace XAudio2
+} // namespace SoundSystem
+} // namespace Detail
+} // namespace Pomdog
