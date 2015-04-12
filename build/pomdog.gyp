@@ -340,11 +340,13 @@
       '../src/Platform.Cocoa/OpenGLContextCocoa.mm',
       '../src/Platform.Cocoa/PomdogOpenGLView.mm',
     ],
+    'pomdog_library_dxgi_sources': [
+      '../src/RenderSystem.DXGI/DXGIFormatHelper.cpp',
+      '../src/RenderSystem.DXGI/DXGIFormatHelper.hpp',
+    ],
     'pomdog_library_direct3d11_sources': [
       '../src/RenderSystem.Direct3D11/ConstantLayoutDirect3D11.cpp',
       '../src/RenderSystem.Direct3D11/ConstantLayoutDirect3D11.hpp',
-      '../src/RenderSystem.Direct3D11/DXGIFormatHelper.cpp',
-      '../src/RenderSystem.Direct3D11/DXGIFormatHelper.hpp',
       '../src/RenderSystem.Direct3D11/EffectReflectionDirect3D11.cpp',
       '../src/RenderSystem.Direct3D11/EffectReflectionDirect3D11.hpp',
       '../src/RenderSystem.Direct3D11/GraphicsContextDirect3D11.cpp',
@@ -468,6 +470,7 @@
       ['"Direct3D11" in renderers', {
         'defines': ['POMDOG_ENABLE_DIRECT3D11'],
         'sources': [
+          '<@(pomdog_library_dxgi_sources)',
           '<@(pomdog_library_direct3d11_sources)',
         ],
         'link_settings': {

@@ -3,12 +3,12 @@
 
 #include "GraphicsContextDirect3D11.hpp"
 #include "ConstantLayoutDirect3D11.hpp"
-#include "DXGIFormatHelper.hpp"
 #include "PipelineStateDirect3D11.hpp"
 #include "HardwareBufferDirect3D11.hpp"
 #include "InputLayoutDirect3D11.hpp"
 #include "Texture2DDirect3D11.hpp"
 #include "RenderTarget2DDirect3D11.hpp"
+#include "../RenderSystem.DXGI/DXGIFormatHelper.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Vector4.hpp"
@@ -42,15 +42,8 @@ static D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(PrimitiveTopology primi
     }
     return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 }
-//-----------------------------------------------------------------------
-static DXGI_FORMAT ToDXGIFormat(IndexElementSize elementSize)
-{
-    switch (elementSize) {
-    case IndexElementSize::SixteenBits: return DXGI_FORMAT_R16_UINT;
-    case IndexElementSize::ThirtyTwoBits: return DXGI_FORMAT_R32_UINT;
-    }
-    return DXGI_FORMAT_UNKNOWN;
-}
+
+using DXGI::DXGIFormatHelper;
 
 } // unnamed namespace
 //-----------------------------------------------------------------------

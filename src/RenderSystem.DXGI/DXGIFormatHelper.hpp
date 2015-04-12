@@ -4,20 +4,21 @@
 #ifndef POMDOG_DXGIFORMATHELPER_9FB57D4A_HPP
 #define POMDOG_DXGIFORMATHELPER_9FB57D4A_HPP
 
-#include "PrerequisitesDirect3D11.hpp"
+#include <dxgi.h>
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 
 namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
-namespace Direct3D11 {
+namespace DXGI {
 
 struct DXGIFormatHelper final {
-    static DXGI_FORMAT ToDXGIFormat(DepthFormat format);
-    static DXGI_FORMAT ToDXGIFormat(SurfaceFormat format);
+    static DXGI_FORMAT ToDXGIFormat(DepthFormat format) noexcept;
+    static DXGI_FORMAT ToDXGIFormat(SurfaceFormat format) noexcept;
+    static DXGI_FORMAT ToDXGIFormat(IndexElementSize elementSize) noexcept;
 };
 
-} // namespace Direct3D11
+} // namespace DXGI
 } // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

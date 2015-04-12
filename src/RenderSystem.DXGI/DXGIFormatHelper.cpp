@@ -3,30 +3,29 @@
 
 #include "DXGIFormatHelper.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
+#include "Pomdog/Graphics/IndexElementSize.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
-namespace Direct3D11 {
+namespace DXGI {
 //-----------------------------------------------------------------------
-DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(DepthFormat format)
+DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(DepthFormat format) noexcept
 {
     POMDOG_ASSERT(format != DepthFormat::None);
-
     switch (format) {
     case DepthFormat::Depth16: return DXGI_FORMAT_D16_UNORM;
     case DepthFormat::Depth32: return DXGI_FORMAT_D32_FLOAT;
     case DepthFormat::Depth24Stencil8: return DXGI_FORMAT_D24_UNORM_S8_UINT;
     case DepthFormat::None:
         break;
-    };
-
+    }
     return DXGI_FORMAT_UNKNOWN;
 }
 //-----------------------------------------------------------------------
-DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(SurfaceFormat format)
+DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(SurfaceFormat format) noexcept
 {
     switch (format) {
     case SurfaceFormat::A8_UNorm: return DXGI_FORMAT_A8_UNORM;
@@ -43,12 +42,20 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(SurfaceFormat format)
     case SurfaceFormat::R8G8B8A8_UNorm: return DXGI_FORMAT_R8G8B8A8_UNORM;
     case SurfaceFormat::R8G8_UNorm: return DXGI_FORMAT_R8G8_UNORM;
     case SurfaceFormat::R8_UNorm: return DXGI_FORMAT_R8_UNORM;
-    };
-
+    }
     return DXGI_FORMAT_UNKNOWN;
 }
 //-----------------------------------------------------------------------
-} // namespace Direct3D11
+DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(IndexElementSize elementSize) noexcept
+{
+    switch (elementSize) {
+    case IndexElementSize::SixteenBits: return DXGI_FORMAT_R16_UINT;
+    case IndexElementSize::ThirtyTwoBits: return DXGI_FORMAT_R32_UINT;
+    }
+    return DXGI_FORMAT_UNKNOWN;
+}
+//-----------------------------------------------------------------------
+} // namespace DXGI
 } // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

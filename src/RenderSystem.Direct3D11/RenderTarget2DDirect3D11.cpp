@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "RenderTarget2DDirect3D11.hpp"
-#include "DXGIFormatHelper.hpp"
+#include "../RenderSystem.DXGI/DXGIFormatHelper.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -14,6 +14,7 @@ namespace Direct3D11 {
 namespace {
 
 using Microsoft::WRL::ComPtr;
+using DXGI::DXGIFormatHelper;
 
 static void BuildRenderTarget(ID3D11Device* nativeDevice, SurfaceFormat format,
     std::int32_t pixelWidth, std::int32_t pixelHeight, std::uint32_t levelCount, bool isSharedTexture,

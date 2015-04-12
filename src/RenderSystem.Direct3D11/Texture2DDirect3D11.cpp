@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Texture2DDirect3D11.hpp"
-#include "DXGIFormatHelper.hpp"
+#include "../RenderSystem.DXGI/DXGIFormatHelper.hpp"
 #include "../RenderSystem/SurfaceFormatHelper.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -14,6 +14,8 @@ namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
+
+using DXGI::DXGIFormatHelper;
 
 static std::size_t MipmapImageDataBytes(std::size_t pixelWidth, std::size_t pixelHeight, std::size_t bytesPerBlock)
 {
