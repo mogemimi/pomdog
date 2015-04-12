@@ -1,5 +1,7 @@
 # Pomdog [![Build Status](https://travis-ci.org/mogemimi/pomdog.svg?branch=master)](https://travis-ci.org/mogemimi/pomdog)
 
+[![Join the chat at https://gitter.im/mogemimi/pomdog](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mogemimi/pomdog?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [Homepage](http://enginetrouble.net/pomdog) | [GitHub](https://github.com/mogemimi/pomdog) | [Wiki](https://github.com/mogemimi/pomdog/wiki)
 
 Pomdog is an experimental game engine, written in C++14 or later, developed as a hobby.
