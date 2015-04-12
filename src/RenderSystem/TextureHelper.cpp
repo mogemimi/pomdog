@@ -10,10 +10,10 @@ namespace Pomdog {
 namespace Detail {
 namespace {
 
-static std::size_t MipmapImageDataBytes(
-    std::size_t pixelWidth,
-    std::size_t pixelHeight,
-    std::size_t bytesPerBlock) noexcept
+static std::int32_t MipmapImageDataBytes(
+    std::int32_t pixelWidth,
+    std::int32_t pixelHeight,
+    std::int32_t bytesPerBlock) noexcept
 {
     return pixelWidth * pixelHeight * bytesPerBlock;
 }
@@ -51,19 +51,21 @@ std::int32_t TextureHelper::ComputeTextureSizeInBytes(
     using RenderSystem::SurfaceFormatHelper;
     auto const bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format);
 
-    std::size_t sizeInBytes = 0;
-    std::size_t mipMapPixelWidth = pixelWidth;
-    std::size_t mipMapPixelHeight = pixelHeight;
+    std::int32_t sizeInBytes = 0;
+    std::int32_t mipMapWidth = pixelWidth;
+    std::int32_t mipMapHeight = pixelHeight;
 
     for (int mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel)
     {
-        sizeInBytes += MipmapImageDataBytes(pixelWidth, pixelHeight, bytesPerBlock);
-        mipMapPixelWidth = std::max((mipMapPixelWidth >> 1), 1U);
-        mipMapPixelHeight = std::max((mipMapPixelHeight >> 1), 1U);
+        sizeInBytes += MipmapImageDataBytes(
+            mipMapWidth, mipMapHeight, bytesPerBlock);
+
+        mipMapWidth = std::max((mipMapWidth >> 1), 1);
+        mipMapHeight = std::max((mipMapHeight >> 1), 1);
     }
 
     return sizeInBytes;
 }
 //-----------------------------------------------------------------------
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

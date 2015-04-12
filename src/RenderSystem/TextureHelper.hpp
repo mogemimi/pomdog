@@ -22,7 +22,7 @@ struct TextureHelper final {
         SurfaceFormat format);
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_TEXTUREHELPER_FDC1E68E_HPP
