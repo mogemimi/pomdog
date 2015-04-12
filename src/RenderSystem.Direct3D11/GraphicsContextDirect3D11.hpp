@@ -68,6 +68,8 @@ public:
 
     void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) override;
 
+    void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer);
+
     void SetTexture(int index) override;
 
     void SetTexture(int index, Texture2D & texture) override;
@@ -91,7 +93,7 @@ private:
     void ApplyPipelineState();
 
 private:
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext>    deviceContext;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
     Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
     std::vector<std::shared_ptr<RenderTarget2DDirect3D11>> boundRenderTargets;
     static constexpr std::size_t MaxTextureCount = 8;

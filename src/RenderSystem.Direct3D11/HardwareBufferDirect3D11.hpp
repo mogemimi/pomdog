@@ -19,18 +19,25 @@ public:
     HardwareBufferDirect3D11(ID3D11Device* nativeDevice,
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
         std::size_t sizeInBytes,
-        BufferUsage bufferUsage, D3D11_BIND_FLAG bindFlag);
+        BufferUsage bufferUsage,
+        D3D11_BIND_FLAG bindFlag);
 
     HardwareBufferDirect3D11(ID3D11Device* nativeDevice,
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
-        void const* vertices, std::size_t sizeInBytes,
-        BufferUsage bufferUsage, D3D11_BIND_FLAG bindFlag);
+        void const* sourceData,
+        std::size_t sizeInBytes,
+        BufferUsage bufferUsage,
+        D3D11_BIND_FLAG bindFlag);
 
-    void GetData(std::size_t offsetInBytes,
-        void* destination, std::size_t sizeInBytes) const override;
+    void GetData(
+        std::size_t offsetInBytes,
+        void* destination,
+        std::size_t sizeInBytes) const override;
 
-    void SetData(std::size_t offsetInBytes,
-        void const* source, std::size_t sizeInBytes) override;
+    void SetData(
+        std::size_t offsetInBytes,
+        void const* sourceData,
+        std::size_t sizeInBytes) override;
 
     ID3D11Buffer* GetBuffer() const;
 

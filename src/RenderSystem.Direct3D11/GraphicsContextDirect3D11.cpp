@@ -233,15 +233,7 @@ void GraphicsContextDirect3D11::DrawIndexed(
     POMDOG_ASSERT(deviceContext);
 
     ApplyPipelineState();
-
-    POMDOG_ASSERT(indexBuffer);
-    POMDOG_ASSERT(indexBuffer->NativeIndexBuffer());
-    POMDOG_ASSERT(dynamic_cast<HardwareBufferDirect3D11*>(indexBuffer->NativeIndexBuffer()));
-
-    auto const nativeIndexBuffer = static_cast<HardwareBufferDirect3D11*>(indexBuffer->NativeIndexBuffer());
-
-    deviceContext->IASetIndexBuffer(nativeIndexBuffer->GetBuffer(),
-        ToDXGIFormat(indexBuffer->ElementSize()), 0);
+    SetIndexBuffer(indexBuffer);
 
     deviceContext->DrawIndexed(indexCount, 0, 0);
 }
@@ -261,17 +253,24 @@ void GraphicsContextDirect3D11::DrawIndexedInstanced(
     POMDOG_ASSERT(deviceContext);
 
     ApplyPipelineState();
-
-    POMDOG_ASSERT(indexBuffer);
-    POMDOG_ASSERT(indexBuffer->NativeIndexBuffer());
-    POMDOG_ASSERT(dynamic_cast<HardwareBufferDirect3D11*>(indexBuffer->NativeIndexBuffer()));
-
-    auto const nativeIndexBuffer = static_cast<HardwareBufferDirect3D11*>(indexBuffer->NativeIndexBuffer());
-
-    deviceContext->IASetIndexBuffer(nativeIndexBuffer->GetBuffer(),
-        ToDXGIFormat(indexBuffer->ElementSize()), 0);
+    SetIndexBuffer(indexBuffer);
 
     deviceContext->DrawIndexedInstanced(indexCount, instanceCount, 0, 0, 0);
+}
+//-----------------------------------------------------------------------
+void GraphicsContextDirect3D11::SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer)
+{
+    POMDOG_ASSERT(indexBuffer);
+
+    auto nativeIndexBuffer = static_cast<HardwareBufferDirect3D11*>(
+        indexBuffer->NativeIndexBuffer());
+
+    POMDOG_ASSERT(nativeIndexBuffer != nullptr);
+    POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<HardwareBufferDirect3D11*>(
+        indexBuffer->NativeIndexBuffer()));
+
+    deviceContext->IASetIndexBuffer(nativeIndexBuffer->GetBuffer(),
+        DXGIFormatHelper::ToDXGIFormat(indexBuffer->ElementSize()), 0);
 }
 //-----------------------------------------------------------------------
 GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const
