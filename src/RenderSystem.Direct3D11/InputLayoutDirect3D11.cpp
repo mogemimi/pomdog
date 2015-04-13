@@ -7,6 +7,7 @@
 #include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include <d3dcompiler.h>
 #include <utility>
 
 namespace Pomdog {
@@ -111,48 +112,28 @@ static std::vector<D3D11_SIGNATURE_PARAMETER_DESC> EnumerateSignatureParameters(
     return std::move(signatureParameters);
 }
 //-----------------------------------------------------------------------
-static void ReflectShaderBytecode(ShaderBytecode const& shaderBytecode,
-    Microsoft::WRL::ComPtr<ID3D11ShaderReflection> & shaderReflector, D3D11_SHADER_DESC & shaderDesc)
+static void ReflectShaderBytecode(
+    ShaderBytecode const& shaderBytecode,
+    Microsoft::WRL::ComPtr<ID3D11ShaderReflection> & shaderReflector,
+    D3D11_SHADER_DESC & shaderDesc)
 {
     HRESULT hr = D3DReflect(shaderBytecode.Code, shaderBytecode.ByteLength,
         IID_ID3D11ShaderReflection, reinterpret_cast<void**>(shaderReflector.GetAddressOf()));
 
-    if (FAILED(hr))
-    {
-        // FUS RO DAH!!
-        ///@todo throw exception
+    if (FAILED(hr)) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to D3DReflect");
     }
 
     POMDOG_ASSERT(shaderReflector);
     hr = shaderReflector->GetDesc(&shaderDesc);
 
-    if (FAILED(hr))
-    {
-        // FUS RO DAH!!
-        ///@todo throw exception
+    if (FAILED(hr)) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to get shader description");
     }
-}
-//-----------------------------------------------------------------------
-static DXGI_FORMAT ToDXGIFormat(D3D_REGISTER_COMPONENT_TYPE registerType, BYTE mask)
-{
-    POMDOG_ASSERT(registerType != D3D_REGISTER_COMPONENT_UNKNOWN);
-
-    switch (registerType) {
-    case D3D_REGISTER_COMPONENT_FLOAT32: {
-        if (mask && 0x1) {
-            return DXGI_FORMAT_R32_FLOAT;
-        }
-    }
-    case D3D_REGISTER_COMPONENT_SINT32: {
-
-    }
-    case D3D_REGISTER_COMPONENT_UINT32: {
-
-    }
-    case D3D_REGISTER_COMPONENT_UNKNOWN:
-        break;
-    }
-    return DXGI_FORMAT_R32_FLOAT;
 }
 
 } // unnamed namespace

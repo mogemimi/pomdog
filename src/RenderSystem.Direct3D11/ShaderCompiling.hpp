@@ -6,6 +6,7 @@
 
 #include "PrerequisitesDirect3D11.hpp"
 #include <wrl/client.h>
+#include <d3dcompiler.h>
 #include <cstdint>
 
 namespace Pomdog {

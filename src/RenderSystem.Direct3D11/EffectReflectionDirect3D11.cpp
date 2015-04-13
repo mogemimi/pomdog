@@ -7,6 +7,7 @@
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <d3dcompiler.h>
 #include <algorithm>
 #include <utility>
 
@@ -23,10 +24,10 @@ static ID3D11ShaderReflection* ReflectShaderBytecode(ShaderBytecode const& shade
     HRESULT hr = D3DReflect(shaderBytecode.Code, shaderBytecode.ByteLength,
         IID_ID3D11ShaderReflection, reinterpret_cast<void**>(&shaderReflector));
 
-    if (FAILED(hr))
-    {
-        // FUS RO DAH!!
-        ///@todo throw exception
+    if (FAILED(hr)) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to D3DReflect");
     }
 
     return std::move(shaderReflector);
@@ -72,8 +73,9 @@ static std::vector<EffectVariable> EnumerateEffectVariables(
     HRESULT hr = constantBufferReflector->GetDesc(&constantBufferDesc);
 
     if (FAILED(hr)) {
-        // FUS RO DAH!!
-        ///@todo throw exception
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to get shader buffer description");
     }
 
     std::vector<EffectVariable> variables;
@@ -92,16 +94,18 @@ static std::vector<EffectVariable> EnumerateEffectVariables(
             hr = variableReflector->GetDesc(&shaderVariableDesc);
 
             if (FAILED(hr)) {
-                // FUS RO DAH!!
-                ///@todo throw exception
+                // FUS RO DAH!
+                POMDOG_THROW_EXCEPTION(std::runtime_error,
+                    "Failed to get shader variable description");
             }
 
             auto shaderVariableType = variableReflector->GetType();
             hr = shaderVariableType->GetDesc(&shaderVariableTypeDesc);
 
             if (FAILED(hr)) {
-                // FUS RO DAH!!
-                ///@todo throw exception
+                // FUS RO DAH!
+                POMDOG_THROW_EXCEPTION(std::runtime_error,
+                    "Failed to get shader type description");
             }
         }
 
@@ -135,10 +139,10 @@ static void EnumerateConstantBuffer(ID3D11ShaderReflection* shaderReflector,
     D3D11_SHADER_DESC shaderDesc;
     HRESULT hr = shaderReflector->GetDesc(&shaderDesc);
 
-    if (FAILED(hr))
-    {
-        // FUS RO DAH!!
-        ///@todo throw exception
+    if (FAILED(hr)) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to get shader description");
     }
 
     for (UINT index = 0; index < shaderDesc.ConstantBuffers; ++index)
@@ -149,11 +153,10 @@ static void EnumerateConstantBuffer(ID3D11ShaderReflection* shaderReflector,
         D3D11_SHADER_BUFFER_DESC bufferDesc;
         hr = constantBufferReflector->GetDesc(&bufferDesc);
 
-        if (FAILED(hr))
-        {
-            // FUS RO DAH!!
-            ///@todo throw exception
-            continue;
+        if (FAILED(hr)) {
+            // FUS RO DAH!
+            POMDOG_THROW_EXCEPTION(std::runtime_error,
+                "Failed to get shader buffer description");
         }
 
         //if (D3D11_CT_CBUFFER != constantBufferDesc.Type)

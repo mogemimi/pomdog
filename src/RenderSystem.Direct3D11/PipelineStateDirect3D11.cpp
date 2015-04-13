@@ -10,6 +10,7 @@
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include <d3dcompiler.h>
 #include <algorithm>
 #include <utility>
 

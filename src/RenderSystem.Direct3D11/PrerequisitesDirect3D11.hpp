@@ -5,7 +5,6 @@
 #define POMDOG_PREREQUISITESDIRECT3D11_EED05C73_HPP
 
 #include <d3d11.h>
-#include <d3dcompiler.h>
 #include <d3d11shader.h>
 
 namespace Pomdog {
