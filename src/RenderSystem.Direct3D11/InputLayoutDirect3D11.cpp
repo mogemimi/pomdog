@@ -2,8 +2,8 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "InputLayoutDirect3D11.hpp"
+#include "../RenderSystem.DXGI/DXGIFormatHelper.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
-#include "Pomdog/Graphics/InputElementFormat.hpp"
 #include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -16,21 +16,6 @@ namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
 
-static DXGI_FORMAT ToDXGIFormat(InputElementFormat format) noexcept
-{
-    switch (format) {
-    case InputElementFormat::Byte4: return DXGI_FORMAT_R8G8B8A8_UINT;
-    case InputElementFormat::Float: return DXGI_FORMAT_R32_FLOAT;
-    case InputElementFormat::Float2: return DXGI_FORMAT_R32G32_FLOAT;
-    case InputElementFormat::Float3: return DXGI_FORMAT_R32G32B32_FLOAT;
-    case InputElementFormat::Float4: return DXGI_FORMAT_R32G32B32A32_FLOAT;
-    case InputElementFormat::HalfFloat2: return DXGI_FORMAT_R16G16_FLOAT;
-    case InputElementFormat::HalfFloat4: return DXGI_FORMAT_R16G16B16A16_FLOAT;
-    case InputElementFormat::Int4: return DXGI_FORMAT_R32G32B32A32_SINT;
-    }
-    return DXGI_FORMAT_R32_FLOAT;
-}
-//-----------------------------------------------------------------------
 static D3D11_INPUT_CLASSIFICATION ToD3D11InputClassification(
     InputClassification slotClass) noexcept
 {
@@ -67,10 +52,12 @@ static std::vector<D3D11_INPUT_ELEMENT_DESC> BuildInputElements(
         POMDOG_ASSERT(sourceElement.InstanceStepRate == 0 ||
             sourceElement.InputSlotClass == InputClassification::InputPerInstance);
 
+        using DXGI::DXGIFormatHelper;
+
         D3D11_INPUT_ELEMENT_DESC elementDesc;
         elementDesc.SemanticName = signature->SemanticName;
         elementDesc.SemanticIndex = signature->SemanticIndex;
-        elementDesc.Format = ToDXGIFormat(sourceElement.Format);
+        elementDesc.Format = DXGIFormatHelper::ToDXGIFormat(sourceElement.Format);
         elementDesc.InputSlot = sourceElement.InputSlot;
         elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
         elementDesc.InputSlotClass = ToD3D11InputClassification(sourceElement.InputSlotClass);
@@ -101,9 +88,9 @@ static std::vector<D3D11_SIGNATURE_PARAMETER_DESC> EnumerateSignatureParameters(
         shaderReflector->GetInputParameterDesc(i, &signatureDesc);
 
         switch (signatureDesc.SystemValueType) {
-        case D3D10_NAME_INSTANCE_ID:
-        case D3D10_NAME_VERTEX_ID:
-        case D3D10_NAME_PRIMITIVE_ID:
+        case D3D_NAME_INSTANCE_ID:
+        case D3D_NAME_VERTEX_ID:
+        case D3D_NAME_PRIMITIVE_ID:
             continue;
         }
         signatureParameters.push_back(signatureDesc);

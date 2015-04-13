@@ -4,6 +4,7 @@
 #include "DXGIFormatHelper.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/IndexElementSize.hpp"
+#include "Pomdog/Graphics/InputElementFormat.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
@@ -53,6 +54,21 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(IndexElementSize elementSize) noexcep
     case IndexElementSize::ThirtyTwoBits: return DXGI_FORMAT_R32_UINT;
     }
     return DXGI_FORMAT_UNKNOWN;
+}
+//-----------------------------------------------------------------------
+DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(InputElementFormat format) noexcept
+{
+    switch (format) {
+    case InputElementFormat::Byte4: return DXGI_FORMAT_R8G8B8A8_UINT;
+    case InputElementFormat::Float: return DXGI_FORMAT_R32_FLOAT;
+    case InputElementFormat::Float2: return DXGI_FORMAT_R32G32_FLOAT;
+    case InputElementFormat::Float3: return DXGI_FORMAT_R32G32B32_FLOAT;
+    case InputElementFormat::Float4: return DXGI_FORMAT_R32G32B32A32_FLOAT;
+    case InputElementFormat::HalfFloat2: return DXGI_FORMAT_R16G16_FLOAT;
+    case InputElementFormat::HalfFloat4: return DXGI_FORMAT_R16G16B16A16_FLOAT;
+    case InputElementFormat::Int4: return DXGI_FORMAT_R32G32B32A32_SINT;
+    }
+    return DXGI_FORMAT_R32_FLOAT;
 }
 //-----------------------------------------------------------------------
 } // namespace DXGI

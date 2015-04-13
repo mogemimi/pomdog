@@ -22,7 +22,7 @@ namespace {
 
 using Microsoft::WRL::ComPtr;
 
-static D3D11_BLEND_OP ToBlendFunctionDirect3D11(BlendFunction blendOperation) noexcept
+static D3D11_BLEND_OP ToBlendFunction(BlendFunction blendOperation) noexcept
 {
     switch (blendOperation) {
     case BlendFunction::Add: return D3D11_BLEND_OP_ADD;
@@ -30,11 +30,11 @@ static D3D11_BLEND_OP ToBlendFunctionDirect3D11(BlendFunction blendOperation) no
     case BlendFunction::ReverseSubtract: return D3D11_BLEND_OP_REV_SUBTRACT;
     case BlendFunction::Min: return D3D11_BLEND_OP_MIN;
     case BlendFunction::Max: return D3D11_BLEND_OP_MAX;
-    };
+    }
     return D3D11_BLEND_OP_ADD;
 }
 //-----------------------------------------------------------------------
-static D3D11_BLEND ToBlendDirect3D11(Blend blend) noexcept
+static D3D11_BLEND ToBlend(Blend blend) noexcept
 {
     switch (blend) {
     case Blend::Zero: return D3D11_BLEND_ZERO;
@@ -54,11 +54,11 @@ static D3D11_BLEND ToBlendDirect3D11(Blend blend) noexcept
     case Blend::InverseSource1Color: return D3D11_BLEND_INV_SRC1_COLOR;
     case Blend::Source1Alpha: return D3D11_BLEND_SRC1_ALPHA;
     case Blend::InverseSource1Alpha: return D3D11_BLEND_INV_SRC1_ALPHA;
-    };
+    }
     return D3D11_BLEND_ONE;
 }
 //-----------------------------------------------------------------------
-static D3D11_STENCIL_OP ToStencilOperationDirect3D11(StencilOperation operation) noexcept
+static D3D11_STENCIL_OP ToStencilOperation(StencilOperation operation) noexcept
 {
     switch (operation) {
     case StencilOperation::Keep: return D3D11_STENCIL_OP_KEEP;
@@ -73,7 +73,7 @@ static D3D11_STENCIL_OP ToStencilOperationDirect3D11(StencilOperation operation)
     return D3D11_STENCIL_OP_KEEP;
 }
 //-----------------------------------------------------------------------
-static D3D11_COMPARISON_FUNC ToComparisonFunctionDirect3D11(ComparisonFunction compareFunction) noexcept
+static D3D11_COMPARISON_FUNC ToComparisonFunction(ComparisonFunction compareFunction) noexcept
 {
     switch (compareFunction) {
     case ComparisonFunction::Never: return D3D11_COMPARISON_NEVER;
@@ -88,22 +88,22 @@ static D3D11_COMPARISON_FUNC ToComparisonFunctionDirect3D11(ComparisonFunction c
     return D3D11_COMPARISON_LESS_EQUAL;
 }
 //-----------------------------------------------------------------------
-static D3D11_CULL_MODE ToCullModeDirect3D11(CullMode cullMode) noexcept
+static D3D11_CULL_MODE ToCullMode(CullMode cullMode) noexcept
 {
     switch (cullMode) {
     case CullMode::ClockwiseFace: return D3D11_CULL_FRONT;
     case CullMode::CounterClockwiseFace: return D3D11_CULL_BACK;
     case CullMode::None: return D3D11_CULL_NONE;
-    };
+    }
     return D3D11_CULL_BACK;
 }
 //-----------------------------------------------------------------------
-static D3D11_FILL_MODE ToFillModeDirect3D11(FillMode fillMode) noexcept
+static D3D11_FILL_MODE ToFillMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
     case FillMode::WireFrame: return D3D11_FILL_WIREFRAME;
     case FillMode::Solid: return D3D11_FILL_SOLID;
-    };
+    }
     return D3D11_FILL_SOLID;
 }
 //-----------------------------------------------------------------------
@@ -112,16 +112,16 @@ static inline BOOL ToD3D11Boolean(bool is) noexcept
     return is ? TRUE : FALSE;
 }
 //-----------------------------------------------------------------------
-static void ConvertToD3D11Desc(RenderTargetBlendDescription const& desc,
+static void ToD3D11Desc(RenderTargetBlendDescription const& desc,
     D3D11_RENDER_TARGET_BLEND_DESC & result) noexcept
 {
     result.BlendEnable = ToD3D11Boolean(desc.BlendEnable);
-    result.BlendOp = ToBlendFunctionDirect3D11(desc.ColorBlendFunction);
-    result.BlendOpAlpha = ToBlendFunctionDirect3D11(desc.AlphaBlendFunction);
-    result.DestBlend = ToBlendDirect3D11(desc.ColorDestinationBlend);
-    result.DestBlendAlpha = ToBlendDirect3D11(desc.AlphaDestinationBlend);
-    result.SrcBlend = ToBlendDirect3D11(desc.ColorSourceBlend);
-    result.SrcBlendAlpha = ToBlendDirect3D11(desc.AlphaSourceBlend);
+    result.BlendOp = ToBlendFunction(desc.ColorBlendFunction);
+    result.BlendOpAlpha = ToBlendFunction(desc.AlphaBlendFunction);
+    result.DestBlend = ToBlend(desc.ColorDestinationBlend);
+    result.DestBlendAlpha = ToBlend(desc.AlphaDestinationBlend);
+    result.SrcBlend = ToBlend(desc.ColorSourceBlend);
+    result.SrcBlendAlpha = ToBlend(desc.AlphaSourceBlend);
     result.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 }
 //-----------------------------------------------------------------------
@@ -133,12 +133,12 @@ static ComPtr<ID3D11BlendState> CreateBlendState(ID3D11Device* nativeDevice,
     blendDesc.AlphaToCoverageEnable = ToD3D11Boolean(description.AlphaToCoverageEnable);
     blendDesc.IndependentBlendEnable = ToD3D11Boolean(description.IndependentBlendEnable);
 
-    const auto renderTargetCount = std::min<UINT>(
+    const auto renderTargetCount = std::min<int>(
         description.RenderTargets.size(),
         D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
 
-    for (UINT i = 0; i < renderTargetCount; ++i) {
-        ConvertToD3D11Desc(description.RenderTargets[i], blendDesc.RenderTarget[i]);
+    for (int i = 0; i < renderTargetCount; ++i) {
+        ToD3D11Desc(description.RenderTargets[i], blendDesc.RenderTarget[i]);
     }
 
     POMDOG_ASSERT(nativeDevice);
@@ -162,23 +162,24 @@ ComPtr<ID3D11DepthStencilState> CreateDepthStencilState(ID3D11Device* nativeDevi
     ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
     depthStencilDesc.DepthEnable = ToD3D11Boolean(description.DepthBufferEnable);
+    depthStencilDesc.DepthFunc = ToComparisonFunction(description.DepthBufferFunction);
     depthStencilDesc.DepthWriteMask = (description.DepthBufferWriteEnable
-        ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO);
-    depthStencilDesc.DepthFunc = ToComparisonFunctionDirect3D11(description.DepthBufferFunction);
+        ? D3D11_DEPTH_WRITE_MASK_ALL
+        : D3D11_DEPTH_WRITE_MASK_ZERO);
 
     depthStencilDesc.StencilEnable = ToD3D11Boolean(description.StencilEnable);
     depthStencilDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
     depthStencilDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
 
-    depthStencilDesc.BackFace.StencilDepthFailOp = ToStencilOperationDirect3D11(description.CounterClockwiseFace.StencilDepthBufferFail);
-    depthStencilDesc.BackFace.StencilFailOp = ToStencilOperationDirect3D11(description.CounterClockwiseFace.StencilFail);
-    depthStencilDesc.BackFace.StencilPassOp = ToStencilOperationDirect3D11(description.CounterClockwiseFace.StencilPass);
-    depthStencilDesc.BackFace.StencilFunc = ToComparisonFunctionDirect3D11(description.CounterClockwiseFace.StencilFunction);
+    depthStencilDesc.BackFace.StencilDepthFailOp = ToStencilOperation(description.CounterClockwiseFace.StencilDepthBufferFail);
+    depthStencilDesc.BackFace.StencilFailOp = ToStencilOperation(description.CounterClockwiseFace.StencilFail);
+    depthStencilDesc.BackFace.StencilPassOp = ToStencilOperation(description.CounterClockwiseFace.StencilPass);
+    depthStencilDesc.BackFace.StencilFunc = ToComparisonFunction(description.CounterClockwiseFace.StencilFunction);
 
-    depthStencilDesc.FrontFace.StencilDepthFailOp = ToStencilOperationDirect3D11(description.ClockwiseFace.StencilDepthBufferFail);
-    depthStencilDesc.FrontFace.StencilFailOp = ToStencilOperationDirect3D11(description.ClockwiseFace.StencilFail);
-    depthStencilDesc.FrontFace.StencilPassOp = ToStencilOperationDirect3D11(description.ClockwiseFace.StencilPass);
-    depthStencilDesc.FrontFace.StencilFunc = ToComparisonFunctionDirect3D11(description.ClockwiseFace.StencilFunction);
+    depthStencilDesc.FrontFace.StencilDepthFailOp = ToStencilOperation(description.ClockwiseFace.StencilDepthBufferFail);
+    depthStencilDesc.FrontFace.StencilFailOp = ToStencilOperation(description.ClockwiseFace.StencilFail);
+    depthStencilDesc.FrontFace.StencilPassOp = ToStencilOperation(description.ClockwiseFace.StencilPass);
+    depthStencilDesc.FrontFace.StencilFunc = ToComparisonFunction(description.ClockwiseFace.StencilFunction);
 
     POMDOG_ASSERT(nativeDevice);
 
@@ -200,13 +201,13 @@ ComPtr<ID3D11RasterizerState> CreateRasterizerState(ID3D11Device* nativeDevice,
     D3D11_RASTERIZER_DESC rasterizerDesc;
     ZeroMemory(&rasterizerDesc, sizeof(rasterizerDesc));
 
-    rasterizerDesc.CullMode = ToCullModeDirect3D11(description.CullMode);
-    rasterizerDesc.FillMode = ToFillModeDirect3D11(description.FillMode);
+    rasterizerDesc.CullMode = ToCullMode(description.CullMode);
+    rasterizerDesc.FillMode = ToFillMode(description.FillMode);
     rasterizerDesc.FrontCounterClockwise = FALSE;
 
     rasterizerDesc.DepthBias = static_cast<INT>(description.DepthBias);
     rasterizerDesc.DepthBiasClamp = 0.0f;
-    rasterizerDesc.SlopeScaledDepthBias = static_cast<FLOAT>(description.SlopeScaledDepthBias);
+    rasterizerDesc.SlopeScaledDepthBias = description.SlopeScaledDepthBias;
     rasterizerDesc.AntialiasedLineEnable = FALSE;
     rasterizerDesc.MultisampleEnable = ToD3D11Boolean(description.MultisampleEnable);
     rasterizerDesc.ScissorEnable = ToD3D11Boolean(description.ScissorTestEnable);
@@ -229,7 +230,8 @@ ComPtr<ID3D11RasterizerState> CreateRasterizerState(ID3D11Device* nativeDevice,
 }
 //-----------------------------------------------------------------------
 static void ReflectShaderBytecode(ShaderBytecode const& shaderBytecode,
-    Microsoft::WRL::ComPtr<ID3D11ShaderReflection> & shaderReflector, D3D11_SHADER_DESC & shaderDesc)
+    Microsoft::WRL::ComPtr<ID3D11ShaderReflection> & shaderReflector,
+    D3D11_SHADER_DESC & shaderDesc)
 {
     HRESULT hr = D3DReflect(shaderBytecode.Code, shaderBytecode.ByteLength,
         IID_ID3D11ShaderReflection, reinterpret_cast<void**>(shaderReflector.GetAddressOf()));
