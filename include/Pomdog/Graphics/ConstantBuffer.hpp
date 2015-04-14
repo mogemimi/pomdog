@@ -23,10 +23,22 @@ public:
     ConstantBuffer & operator=(ConstantBuffer const&) = delete;
 
     ConstantBuffer(GraphicsDevice & graphicsDevice,
-        std::size_t byteConstants);
+        std::size_t sizeInBytes,
+        Pomdog::BufferUsage bufferUsage);
 
     ConstantBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        std::size_t byteConstants);
+        std::size_t sizeInBytes,
+        Pomdog::BufferUsage bufferUsage);
+
+    ConstantBuffer(GraphicsDevice & graphicsDevice,
+        void const* sourceData,
+        std::size_t sizeInBytes,
+        Pomdog::BufferUsage bufferUsage);
+
+    ConstantBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        void const* sourceData,
+        std::size_t sizeInBytes,
+        Pomdog::BufferUsage bufferUsage);
 
     ~ConstantBuffer();
 
@@ -57,11 +69,17 @@ public:
 
     void SetValue(void const* data, std::size_t sizeInBytes);
 
+    std::size_t SizeInBytes() const noexcept;
+
+    Pomdog::BufferUsage BufferUsage() const noexcept;
+
 public:
     Detail::RenderSystem::NativeBuffer* NativeConstantBuffer();
 
 private:
     std::unique_ptr<Detail::RenderSystem::NativeBuffer> nativeConstantBuffer;
+    std::uint32_t sizeInBytes;
+    Pomdog::BufferUsage bufferUsage;
 };
 
 } // namespace Pomdog

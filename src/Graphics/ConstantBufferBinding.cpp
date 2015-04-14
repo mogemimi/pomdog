@@ -7,6 +7,7 @@
 #include "../RenderSystem/NativePipelineState.hpp"
 #include "../RenderSystem/NativeEffectReflection.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
+#include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/EffectConstantDescription.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -38,7 +39,7 @@ ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
     for (auto & desc: constants)
     {
         auto constantBuffer = std::make_shared<ConstantBuffer>(
-            graphicsDevice, desc.ByteSize);
+            graphicsDevice, desc.ByteSize, BufferUsage::Dynamic);
         constantBuffers[desc.Name] = std::move(constantBuffer);
     }
 

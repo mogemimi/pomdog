@@ -317,7 +317,8 @@ GraphicsDeviceDirect3D11::CreateShader(ShaderBytecode const& shaderBytecode,
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBuffer>
-GraphicsDeviceDirect3D11::CreateConstantBuffer(std::size_t sizeInBytes)
+GraphicsDeviceDirect3D11::CreateConstantBuffer(std::size_t sizeInBytes,
+    BufferUsage bufferUsage)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeDevice);
@@ -326,7 +327,30 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(std::size_t sizeInBytes)
     try {
         return std::make_unique<HardwareBufferDirect3D11>(
             impl->nativeDevice.Get(), impl->deviceContext.Get(), sizeInBytes,
-            BufferUsage::Dynamic, D3D11_BIND_CONSTANT_BUFFER);
+            bufferUsage, D3D11_BIND_CONSTANT_BUFFER);
+    }
+    catch (std::exception const& e) {
+#if defined(DEBUG) && !defined(NDEBUG)
+        CheckError(impl->infoQueue.Get());
+#endif
+        throw e;
+    }
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeBuffer>
+GraphicsDeviceDirect3D11::CreateConstantBuffer(
+    void const* sourceData, std::size_t sizeInBytes,
+    BufferUsage bufferUsage)
+{
+    POMDOG_ASSERT(impl);
+    POMDOG_ASSERT(impl->nativeDevice);
+    POMDOG_ASSERT(impl->deviceContext);
+
+    try {
+        return std::make_unique<HardwareBufferDirect3D11>(
+            impl->nativeDevice.Get(), impl->deviceContext.Get(),
+            sourceData, sizeInBytes,
+            bufferUsage, D3D11_BIND_CONSTANT_BUFFER);
     }
     catch (std::exception const& e) {
 #if defined(DEBUG) && !defined(NDEBUG)

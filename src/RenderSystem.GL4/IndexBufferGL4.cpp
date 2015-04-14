@@ -45,7 +45,8 @@ IndexBufferGL4::IndexBufferGL4(std::size_t sizeInBytes, BufferUsage bufferUsage)
 IndexBufferGL4::IndexBufferGL4(void const* indices,
     std::size_t sizeInBytes, BufferUsage bufferUsage)
 {
-    POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable ? indices != nullptr: true);
+    POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable
+        ? indices != nullptr: true);
 
     // Generate index buffer
     bufferObject = ([]{

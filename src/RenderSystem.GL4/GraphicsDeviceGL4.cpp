@@ -43,9 +43,18 @@ GraphicsDeviceGL4::CreateShader(ShaderBytecode const& shaderBytecode,
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBuffer>
-GraphicsDeviceGL4::CreateConstantBuffer(std::size_t byteConstants)
+GraphicsDeviceGL4::CreateConstantBuffer(
+    std::size_t sizeInBytes, BufferUsage bufferUsage)
 {
-    return std::make_unique<ConstantBufferGL4>(byteConstants);
+    return std::make_unique<ConstantBufferGL4>(sizeInBytes, bufferUsage);
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeBuffer>
+GraphicsDeviceGL4::CreateConstantBuffer(
+    void const* sourceData, std::size_t sizeInBytes, BufferUsage bufferUsage)
+{
+    return std::make_unique<ConstantBufferGL4>(
+        sourceData, sizeInBytes, bufferUsage);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBuffer>

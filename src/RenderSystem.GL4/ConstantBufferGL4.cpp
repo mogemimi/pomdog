@@ -5,6 +5,7 @@
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
 #include "../Utility/ScopeGuard.hpp"
+#include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
@@ -12,6 +13,21 @@ namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
+namespace {
+
+static GLenum ToBufferUsage(BufferUsage bufferUsage) noexcept
+{
+    switch (bufferUsage) {
+    case BufferUsage::Dynamic: return GL_DYNAMIC_DRAW;
+    //case BufferUsage::Dynamic: return GL_STREAM_DRAW;
+    case BufferUsage::Immutable: return GL_STATIC_DRAW;
+    }
+#ifdef _MSC_VER
+    return GL_STATIC_DRAW;
+#endif
+}
+
+} // unnamed namespace
 //-----------------------------------------------------------------------
 template<>
 struct TypesafeHelperGL4::OpenGLGetTraits<ConstantBufferObjectGL4> {
@@ -19,9 +35,17 @@ struct TypesafeHelperGL4::OpenGLGetTraits<ConstantBufferObjectGL4> {
     constexpr static GLenum bufferObjectTarget = GL_UNIFORM_BUFFER;
 };
 //-----------------------------------------------------------------------
-ConstantBufferGL4::ConstantBufferGL4(std::size_t sizeInBytes)
+ConstantBufferGL4::ConstantBufferGL4(std::size_t sizeInBytes, BufferUsage bufferUsage)
+    : ConstantBufferGL4(nullptr, sizeInBytes, bufferUsage)
 {
-    POMDOG_ASSERT(sizeInBytes > 0);
+    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
+}
+//-----------------------------------------------------------------------
+ConstantBufferGL4::ConstantBufferGL4(void const* sourceData, std::size_t sizeInBytes,
+    BufferUsage bufferUsage)
+{
+    POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable
+        ? sourceData != nullptr : true);
 
     // Generate constant buffer
     bufferObject = ([] {
@@ -37,7 +61,9 @@ ConstantBufferGL4::ConstantBufferGL4(std::size_t sizeInBytes)
     TypesafeHelperGL4::BindBuffer(*bufferObject);
     POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
-    glBufferData(GL_UNIFORM_BUFFER, sizeInBytes, nullptr, GL_DYNAMIC_DRAW);
+    POMDOG_ASSERT(sizeInBytes > 0);
+    glBufferData(GL_UNIFORM_BUFFER, sizeInBytes, sourceData,
+        ToBufferUsage(bufferUsage));
     POMDOG_CHECK_ERROR_GL4("glBufferData");
 }
 //-----------------------------------------------------------------------

@@ -6,6 +6,7 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeBuffer.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/detail/Tagged.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <cstddef>
@@ -27,7 +28,10 @@ class ConstantBufferGL4 final : public NativeBuffer {
 public:
     ConstantBufferGL4() = delete;
 
-    explicit ConstantBufferGL4(std::size_t sizeInBytes);
+    ConstantBufferGL4(std::size_t sizeInBytes, BufferUsage bufferUsage);
+
+    ConstantBufferGL4(void const* sourceData, std::size_t sizeInBytes,
+        BufferUsage bufferUsage);
 
     ~ConstantBufferGL4();
 

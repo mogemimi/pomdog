@@ -33,7 +33,12 @@ public:
         ShaderCompileOptions const& compileOptions) = 0;
 
     virtual std::unique_ptr<NativeBuffer>
-    CreateConstantBuffer(std::size_t sizeInBytes) = 0;
+    CreateConstantBuffer(std::size_t sizeInBytes,
+        BufferUsage bufferUsage) = 0;
+
+    virtual std::unique_ptr<NativeBuffer>
+    CreateConstantBuffer(void const* sourceData, std::size_t sizeInBytes,
+        BufferUsage bufferUsage) = 0;
 
     virtual std::unique_ptr<NativeBuffer>
     CreateIndexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage) = 0;

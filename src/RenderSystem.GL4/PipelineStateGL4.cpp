@@ -146,8 +146,6 @@ PipelineStateGL4::~PipelineStateGL4()
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeConstantLayout> PipelineStateGL4::CreateConstantLayout()
 {
-    EffectReflectionGL4 shaderReflection(*shaderProgram);
-
     std::vector<ConstantBufferBindingGL4> bindings;
 
     for (auto & uniformBlock: uniformBlockBindings)

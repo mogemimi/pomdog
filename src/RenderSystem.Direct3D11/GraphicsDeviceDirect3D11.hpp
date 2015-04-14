@@ -28,7 +28,12 @@ public:
         ShaderCompileOptions const& compileOptions) override;
 
     std::unique_ptr<NativeBuffer>
-    CreateConstantBuffer(std::size_t sizeInBytes) override;
+    CreateConstantBuffer(std::size_t sizeInBytes,
+        BufferUsage bufferUsage) override;
+
+    std::unique_ptr<NativeBuffer>
+    CreateConstantBuffer(void const* sourceData, std::size_t sizeInBytes,
+        BufferUsage bufferUsage) override;
 
     std::unique_ptr<NativeBuffer>
     CreateIndexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage) override;
