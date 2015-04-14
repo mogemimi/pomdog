@@ -31,16 +31,13 @@ public:
 
     virtual void Draw(std::size_t vertexCount) = 0;
 
-    virtual void DrawIndexed(
-        std::shared_ptr<IndexBuffer> const& indexBuffer,
-        std::size_t indexCount) = 0;
+    virtual void DrawIndexed(std::size_t indexCount) = 0;
 
     virtual void DrawInstanced(
         std::size_t vertexCount,
         std::size_t instanceCount) = 0;
 
     virtual void DrawIndexedInstanced(
-        std::shared_ptr<IndexBuffer> const& indexBuffer,
         std::size_t indexCount,
         std::size_t instanceCount) = 0;
 
@@ -58,6 +55,8 @@ public:
     virtual void SetBlendFactor(Color const& blendFactor) = 0;
 
     virtual void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) = 0;
+
+    virtual void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer) = 0;
 
     virtual void SetTexture(int index) = 0;
 

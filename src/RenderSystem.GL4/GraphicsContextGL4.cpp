@@ -271,11 +271,11 @@ void GraphicsContextGL4::Draw(std::size_t vertexCount)
 {
     ApplyPipelineState();
 
-    // Apply constant layout:
+    // Apply constant layout
     POMDOG_ASSERT(constantLayout);
     constantLayout->Apply();
 
-    // Draw:
+    // Draw
     POMDOG_ASSERT(!vertexBuffers.empty());
     POMDOG_ASSERT(vertexBuffers.front());
     POMDOG_ASSERT(vertexCount > 0);
@@ -288,23 +288,22 @@ void GraphicsContextGL4::Draw(std::size_t vertexCount)
     POMDOG_CHECK_ERROR_GL4("glDrawArrays");
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::DrawIndexed(
-    std::shared_ptr<IndexBuffer> const& indexBuffer, std::size_t indexCount)
+void GraphicsContextGL4::DrawIndexed(std::size_t indexCount)
 {
     ApplyPipelineState();
 
-    // Apply constant layout:
+    // Apply constant layout
     POMDOG_ASSERT(constantLayout);
     constantLayout->Apply();
 
-    // Bind index-buffer:
+    // Bind index buffer
     POMDOG_ASSERT(indexBuffer);
+    auto indexBufferGL = dynamic_cast<IndexBufferGL4*>(indexBuffer->NativeIndexBuffer());
+    POMDOG_ASSERT(indexBufferGL != nullptr);
+    indexBufferGL->BindBuffer();
 
-    auto nativeIndexBuffer = dynamic_cast<IndexBufferGL4*>(indexBuffer->NativeIndexBuffer());
-    POMDOG_ASSERT(nativeIndexBuffer != nullptr);
-
-    nativeIndexBuffer->BindBuffer();
-
+    // Draw
+    POMDOG_ASSERT(indexBuffer);
     POMDOG_ASSERT(indexCount > 0);
     POMDOG_ASSERT(indexCount <= indexBuffer->IndexCount());
 
@@ -321,7 +320,7 @@ void GraphicsContextGL4::DrawInstanced(
 {
     ApplyPipelineState();
 
-    // Apply constant layout:
+    // Apply constant layout
     POMDOG_ASSERT(constantLayout);
     constantLayout->Apply();
 
@@ -342,23 +341,20 @@ void GraphicsContextGL4::DrawInstanced(
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::DrawIndexedInstanced(
-    std::shared_ptr<IndexBuffer> const& indexBuffer,
     std::size_t indexCount,
     std::size_t instanceCount)
 {
     ApplyPipelineState();
 
-    // Apply constant layout:
+    // Apply constant layout
     POMDOG_ASSERT(constantLayout);
     constantLayout->Apply();
 
-    // Bind index-buffer:
+    // Bind index buffer
     POMDOG_ASSERT(indexBuffer);
-
-    auto nativeIndexBuffer = dynamic_cast<IndexBufferGL4*>(indexBuffer->NativeIndexBuffer());
-    POMDOG_ASSERT(nativeIndexBuffer != nullptr);
-
-    nativeIndexBuffer->BindBuffer();
+    auto indexBufferGL = dynamic_cast<IndexBufferGL4*>(indexBuffer->NativeIndexBuffer());
+    POMDOG_ASSERT(indexBufferGL != nullptr);
+    indexBufferGL->BindBuffer();
 
     // Draw
     POMDOG_ASSERT(indexCount > 0);
@@ -466,6 +462,12 @@ void GraphicsContextGL4::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuff
     POMDOG_ASSERT(!vertexBuffersIn.empty());
     this->vertexBuffers = vertexBuffersIn;
     needToApplyInputLayout = true;
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBufferIn)
+{
+    POMDOG_ASSERT(indexBufferIn);
+    indexBuffer = indexBufferIn;
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineStateIn)

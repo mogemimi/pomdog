@@ -49,16 +49,13 @@ public:
 
     void Draw(std::size_t vertexCount) override;
 
-    void DrawIndexed(
-        std::shared_ptr<IndexBuffer> const& indexBuffer,
-        std::size_t indexCount) override;
+    void DrawIndexed(std::size_t indexCount) override;
 
     void DrawInstanced(
         std::size_t vertexCount,
         std::size_t instanceCount) override;
 
     void DrawIndexedInstanced(
-        std::shared_ptr<IndexBuffer> const& indexBuffer,
         std::size_t indexCount,
         std::size_t instanceCount) override;
 
@@ -75,6 +72,8 @@ public:
     void SetBlendFactor(Color const& blendFactor) override;
 
     void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) override;
+
+    void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer) override;
 
     void SetTexture(int index) override;
 
@@ -98,6 +97,7 @@ private:
     std::shared_ptr<OpenGLContext> nativeContext;
     std::shared_ptr<PipelineStateGL4> pipelineState;
     std::shared_ptr<ConstantLayoutGL4> constantLayout;
+    std::shared_ptr<IndexBuffer> indexBuffer;
     std::weak_ptr<GameWindow> gameWindow;
     std::vector<Optional<GLenum>> textures;
     Optional<FrameBufferGL4> frameBuffer;

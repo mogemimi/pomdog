@@ -330,7 +330,8 @@ void GraphicsContext::DrawIndexed(
     CheckUnbindingRenderTargetsError(impl->renderTargets, impl->textures);
 #endif
 
-    impl->nativeContext->DrawIndexed(indexBuffer, indexCount);
+    impl->nativeContext->SetIndexBuffer(indexBuffer);
+    impl->nativeContext->DrawIndexed(indexCount);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::DrawInstanced(
@@ -357,7 +358,8 @@ void GraphicsContext::DrawIndexedInstanced(
     CheckUnbindingRenderTargetsError(impl->renderTargets, impl->textures);
 #endif
 
-    impl->nativeContext->DrawIndexedInstanced(indexBuffer, indexCount, instanceCount);
+    impl->nativeContext->SetIndexBuffer(indexBuffer);
+    impl->nativeContext->DrawIndexedInstanced(indexCount, instanceCount);
 }
 //-----------------------------------------------------------------------
 Viewport GraphicsContext::GetViewport() const

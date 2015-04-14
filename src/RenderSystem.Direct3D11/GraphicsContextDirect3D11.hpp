@@ -41,16 +41,13 @@ public:
 
     void Draw(std::uint32_t vertexCount) override;
 
-    void DrawIndexed(
-        std::shared_ptr<IndexBuffer> const& indexBuffer,
-        std::uint32_t indexCount) override;
+    void DrawIndexed(std::uint32_t indexCount) override;
 
     void DrawInstanced(
         std::uint32_t vertexCount,
         std::uint32_t instanceCount) override;
 
     void DrawIndexedInstanced(
-        std::shared_ptr<IndexBuffer> const& indexBuffer,
         std::uint32_t indexCount,
         std::uint32_t instanceCount) override;
 
@@ -68,7 +65,7 @@ public:
 
     void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) override;
 
-    void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer);
+    void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer) override;
 
     void SetTexture(int index) override;
 

@@ -227,13 +227,11 @@ void GraphicsContextDirect3D11::Draw(std::uint32_t vertexCount)
     deviceContext->Draw(vertexCount, 0);
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::DrawIndexed(
-    std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount)
+void GraphicsContextDirect3D11::DrawIndexed(std::uint32_t indexCount)
 {
     POMDOG_ASSERT(deviceContext);
 
     ApplyPipelineState();
-    SetIndexBuffer(indexBuffer);
 
     deviceContext->DrawIndexed(indexCount, 0, 0);
 }
@@ -248,12 +246,11 @@ void GraphicsContextDirect3D11::DrawInstanced(std::uint32_t vertexCount, std::ui
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::DrawIndexedInstanced(
-    std::shared_ptr<IndexBuffer> const& indexBuffer, std::uint32_t indexCount, std::uint32_t instanceCount)
+    std::uint32_t indexCount, std::uint32_t instanceCount)
 {
     POMDOG_ASSERT(deviceContext);
 
     ApplyPipelineState();
-    SetIndexBuffer(indexBuffer);
 
     deviceContext->DrawIndexedInstanced(indexCount, instanceCount, 0, 0, 0);
 }
