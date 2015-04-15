@@ -165,7 +165,7 @@ void GraphicsContext::Impl::SetSamplerState(int samplerSlot, std::shared_ptr<Sam
 
         POMDOG_ASSERT(nativeContext);
         POMDOG_ASSERT(samplerStateIn->NativeSamplerState());
-        samplerStateIn->NativeSamplerState()->Apply(*nativeContext, samplerSlot);
+        nativeContext->SetSampler(samplerSlot, samplerStateIn->NativeSamplerState());
     }
 }
 //-----------------------------------------------------------------------

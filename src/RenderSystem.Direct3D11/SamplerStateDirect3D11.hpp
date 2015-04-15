@@ -16,16 +16,14 @@ namespace Direct3D11 {
 
 class SamplerStateDirect3D11 final: public NativeSamplerState {
 public:
-    SamplerStateDirect3D11() = delete;
-
     SamplerStateDirect3D11(
         ID3D11Device* device,
         SamplerDescription const& description);
 
-    void Apply(NativeGraphicsContext & graphicsContext, int index) override;
+    ID3D11SamplerState* GetSamplerState() const;
 
 private:
-    Microsoft::WRL::ComPtr<ID3D11SamplerState> nativeSamplerState;
+    Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
 };
 
 } // namespace Direct3D11

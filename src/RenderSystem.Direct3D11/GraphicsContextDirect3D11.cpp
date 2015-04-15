@@ -6,6 +6,7 @@
 #include "PipelineStateDirect3D11.hpp"
 #include "HardwareBufferDirect3D11.hpp"
 #include "InputLayoutDirect3D11.hpp"
+#include "SamplerStateDirect3D11.hpp"
 #include "Texture2DDirect3D11.hpp"
 #include "RenderTarget2DDirect3D11.hpp"
 #include "../RenderSystem.DXGI/DXGIFormatHelper.hpp"
@@ -32,7 +33,7 @@ namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
 
-static D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(PrimitiveTopology primitiveTopology)
+static D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
     case PrimitiveTopology::TriangleStrip: return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
@@ -371,6 +372,25 @@ void GraphicsContextDirect3D11::SetVertexBuffers(std::vector<std::shared_ptr<Ver
         strides.data(), offsets.data());
 }
 //-----------------------------------------------------------------------
+void GraphicsContextDirect3D11::SetSampler(int index, NativeSamplerState* samplerIn)
+{
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT);
+    POMDOG_ASSERT(samplerIn != nullptr);
+
+    auto sampler = static_cast<SamplerStateDirect3D11*>(samplerIn);
+
+    POMDOG_ASSERT(sampler != nullptr);
+    POMDOG_ASSERT(sampler == dynamic_cast<SamplerStateDirect3D11*>(samplerIn));
+    POMDOG_ASSERT(sampler->GetSamplerState() != nullptr);
+
+    std::array<ID3D11SamplerState*, 1> const states = {
+        sampler->GetSamplerState() };
+
+    POMDOG_ASSERT(deviceContext);
+    deviceContext->PSSetSamplers(index, states.size(), states.data());
+}
+//-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetTexture(int index)
 {
     POMDOG_ASSERT(index >= 0);
@@ -380,7 +400,6 @@ void GraphicsContextDirect3D11::SetTexture(int index)
     boundTextureViews[index] = nullptr;
 
     POMDOG_ASSERT(deviceContext);
-
     deviceContext->PSSetShaderResources(index, 1, &boundTextureViews[index]);
 }
 //-----------------------------------------------------------------------
@@ -389,12 +408,14 @@ void GraphicsContextDirect3D11::SetTexture(int index, Texture2D & textureIn)
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
     POMDOG_ASSERT(index < static_cast<int>(boundTextureViews.size()));
+    POMDOG_ASSERT(textureIn.NativeTexture2D() != nullptr);
 
-    POMDOG_ASSERT(textureIn.NativeTexture2D());
-    POMDOG_ASSERT(dynamic_cast<Texture2DDirect3D11*>(textureIn.NativeTexture2D()));
-    auto nativeTexture = static_cast<Texture2DDirect3D11*>(textureIn.NativeTexture2D());
+    auto texture = static_cast<Texture2DDirect3D11*>(textureIn.NativeTexture2D());
 
-    boundTextureViews[index] = nativeTexture->ShaderResourceView();
+    POMDOG_ASSERT(texture != nullptr);
+    POMDOG_ASSERT(texture == dynamic_cast<Texture2DDirect3D11*>(textureIn.NativeTexture2D()));
+
+    boundTextureViews[index] = texture->ShaderResourceView();
 
     POMDOG_ASSERT(deviceContext);
     deviceContext->PSSetShaderResources(0, 1, &boundTextureViews[index]);
@@ -405,12 +426,14 @@ void GraphicsContextDirect3D11::SetTexture(int index, RenderTarget2D & textureIn
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
     POMDOG_ASSERT(index < static_cast<int>(boundTextureViews.size()));
+    POMDOG_ASSERT(textureIn.NativeRenderTarget2D() != nullptr);
+    
+    auto texture = static_cast<RenderTarget2DDirect3D11*>(textureIn.NativeRenderTarget2D());
 
-    POMDOG_ASSERT(textureIn.NativeRenderTarget2D());
-    POMDOG_ASSERT(dynamic_cast<RenderTarget2DDirect3D11*>(textureIn.NativeRenderTarget2D()));
-    auto nativeTexture = static_cast<RenderTarget2DDirect3D11*>(textureIn.NativeRenderTarget2D());
+    POMDOG_ASSERT(texture != nullptr);
+    POMDOG_ASSERT(texture == dynamic_cast<RenderTarget2DDirect3D11*>(textureIn.NativeRenderTarget2D()));
 
-    boundTextureViews[index] = nativeTexture->ShaderResourceView();
+    boundTextureViews[index] = texture->ShaderResourceView();
 
     POMDOG_ASSERT(deviceContext);
     deviceContext->PSSetShaderResources(0, 1, &boundTextureViews[index]);

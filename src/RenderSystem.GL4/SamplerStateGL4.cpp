@@ -15,21 +15,19 @@ namespace GL4 {
 //-----------------------------------------------------------------------
 namespace {
 
-using TextureAddressModeGL4 = Tagged<GLenum, TextureAddressMode>;
-
-static TextureAddressModeGL4 ToTextureAddressModeGL4(TextureAddressMode const& address)
+static GLenum ToTextureAddressMode(TextureAddressMode address) noexcept
 {
     switch (address) {
-    case TextureAddressMode::Clamp: return TextureAddressModeGL4{ GL_CLAMP_TO_EDGE };
-    case TextureAddressMode::Mirror: return TextureAddressModeGL4{ GL_MIRRORED_REPEAT };
-    case TextureAddressMode::Wrap: return TextureAddressModeGL4{ GL_REPEAT };
+    case TextureAddressMode::Clamp: return GL_CLAMP_TO_EDGE;
+    case TextureAddressMode::Mirror: return GL_MIRRORED_REPEAT;
+    case TextureAddressMode::Wrap: return GL_REPEAT;
     }
 #ifdef _MSC_VER
-    return TextureAddressModeGL4{ GL_REPEAT };
+    return GL_REPEAT;
 #endif
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
 {
@@ -40,9 +38,9 @@ SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
         return std::move(sampler);
     })();
 
-    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_S, ToTextureAddressModeGL4(description.AddressU).value);
-    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_T, ToTextureAddressModeGL4(description.AddressV).value);
-    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_R, ToTextureAddressModeGL4(description.AddressW).value);
+    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_S, ToTextureAddressMode(description.AddressU));
+    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_T, ToTextureAddressMode(description.AddressV));
+    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_R, ToTextureAddressMode(description.AddressW));
 
     POMDOG_CHECK_ERROR_GL4("glSamplerParameteri");
 
@@ -121,7 +119,7 @@ SamplerStateGL4::~SamplerStateGL4()
     }
 }
 //-----------------------------------------------------------------------
-void SamplerStateGL4::Apply(NativeGraphicsContext &, int index)
+void SamplerStateGL4::Apply(int index)
 {
     static_assert(GL_TEXTURE19 == (GL_TEXTURE0 + 19), "");
     POMDOG_ASSERT(index >= 0);
@@ -132,7 +130,7 @@ void SamplerStateGL4::Apply(NativeGraphicsContext &, int index)
     POMDOG_CHECK_ERROR_GL4("glBindSampler");
 }
 //-----------------------------------------------------------------------
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

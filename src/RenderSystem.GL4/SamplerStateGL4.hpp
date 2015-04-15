@@ -19,22 +19,19 @@ using SamplerObjectGL4 = Tagged<GLuint, SamplerState>;
 
 class SamplerStateGL4 final: public NativeSamplerState {
 public:
-    SamplerStateGL4() = delete;
-
     explicit SamplerStateGL4(SamplerDescription const& description);
 
     ~SamplerStateGL4() override;
 
-    ///@copydoc NativeSamplerState
-    void Apply(NativeGraphicsContext & graphicsContext, int index) override;
+    void Apply(int index);
 
 private:
     Optional<SamplerObjectGL4> samplerObject;
 };
 
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SAMPLERSTATEGL4_B8072910_HPP

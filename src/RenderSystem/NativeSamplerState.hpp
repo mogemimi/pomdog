@@ -19,8 +19,6 @@ public:
     NativeSamplerState & operator=(NativeSamplerState const&) = delete;
 
     virtual ~NativeSamplerState() = default;
-
-    virtual void Apply(NativeGraphicsContext & graphicsContext, int index) = 0;
 };
 
 }// namespace RenderSystem

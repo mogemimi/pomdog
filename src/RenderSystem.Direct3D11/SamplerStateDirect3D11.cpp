@@ -2,7 +2,6 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "SamplerStateDirect3D11.hpp"
-#include "../RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp"
 #include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -42,7 +41,8 @@ static D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addres
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-SamplerStateDirect3D11::SamplerStateDirect3D11(ID3D11Device* device, SamplerDescription const& description)
+SamplerStateDirect3D11::SamplerStateDirect3D11(ID3D11Device* device,
+    SamplerDescription const& description)
 {
     D3D11_SAMPLER_DESC samplerDesc;
     ZeroMemory(&samplerDesc, sizeof(samplerDesc));
@@ -60,7 +60,7 @@ SamplerStateDirect3D11::SamplerStateDirect3D11(ID3D11Device* device, SamplerDesc
     POMDOG_ASSERT(samplerDesc.MaxLOD <= D3D11_FLOAT32_MAX);
 
     POMDOG_ASSERT(device != nullptr);
-    HRESULT hr = device->CreateSamplerState(&samplerDesc, &nativeSamplerState);
+    HRESULT hr = device->CreateSamplerState(&samplerDesc, &samplerState);
 
     if (FAILED(hr)) {
         // FUS RO DAH!
@@ -69,21 +69,10 @@ SamplerStateDirect3D11::SamplerStateDirect3D11(ID3D11Device* device, SamplerDesc
     }
 }
 //-----------------------------------------------------------------------
-void SamplerStateDirect3D11::Apply(NativeGraphicsContext & graphicsContext, int index)
+ID3D11SamplerState* SamplerStateDirect3D11::GetSamplerState() const
 {
-    POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(index < D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT);
-
-    std::array<ID3D11SamplerState*, 1> const states = { nativeSamplerState.Get() };
-
-    POMDOG_ASSERT(static_cast<GraphicsContextDirect3D11*>(&graphicsContext)
-        == dynamic_cast<GraphicsContextDirect3D11*>(&graphicsContext));
-
-    auto & nativeGraphicsContext = static_cast<GraphicsContextDirect3D11 &>(graphicsContext);
-    auto deviceContext = nativeGraphicsContext.GetDeviceContext();
-
-    POMDOG_ASSERT(deviceContext);
-    deviceContext->PSSetSamplers(index, states.size(), states.data());
+    POMDOG_ASSERT(samplerState);
+    return samplerState.Get();
 }
 //-----------------------------------------------------------------------
 } // namespace Direct3D11

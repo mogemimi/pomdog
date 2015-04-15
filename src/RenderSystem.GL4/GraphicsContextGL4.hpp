@@ -75,6 +75,8 @@ public:
 
     void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer) override;
 
+    void SetSampler(int index, NativeSamplerState* sampler) override;
+
     void SetTexture(int index) override;
 
     void SetTexture(int index, Texture2D & texture) override;

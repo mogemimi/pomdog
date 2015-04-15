@@ -9,6 +9,7 @@
 #include "IndexBufferGL4.hpp"
 #include "InputLayoutGL4.hpp"
 #include "RenderTarget2DGL4.hpp"
+#include "SamplerStateGL4.hpp"
 #include "TypesafeHelperGL4.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
@@ -489,6 +490,19 @@ void GraphicsContextGL4::SetConstantBuffers(std::shared_ptr<NativeConstantLayout
 
     POMDOG_ASSERT(nativeConstantLayout);
     this->constantLayout = nativeConstantLayout;
+}
+//-----------------------------------------------------------------------
+void GraphicsContextGL4::SetSampler(int index, NativeSamplerState* sampler)
+{
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(sampler != nullptr);
+
+    auto samplerStateGL = static_cast<SamplerStateGL4*>(sampler);
+
+    POMDOG_ASSERT(samplerStateGL != nullptr);
+    POMDOG_ASSERT(samplerStateGL == dynamic_cast<SamplerStateGL4*>(sampler));
+
+    samplerStateGL->Apply(index);
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetTexture(int textureUnit)

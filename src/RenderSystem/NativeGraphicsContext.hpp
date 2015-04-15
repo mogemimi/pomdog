@@ -58,6 +58,8 @@ public:
 
     virtual void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer) = 0;
 
+    virtual void SetSampler(int index, NativeSamplerState* sampler) = 0;
+
     virtual void SetTexture(int index) = 0;
 
     virtual void SetTexture(int index, Texture2D & texture) = 0;
