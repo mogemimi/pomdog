@@ -191,6 +191,7 @@ GraphicsContextGL4::~GraphicsContextGL4()
     constantLayout.reset();
     pipelineState.reset();
     vertexBuffers.clear();
+    indexBuffer.reset();
     textures.clear();
     renderTargets.clear();
 
