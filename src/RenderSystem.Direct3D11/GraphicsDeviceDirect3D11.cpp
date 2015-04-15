@@ -241,7 +241,8 @@ void GraphicsDeviceDirect3D11::Impl::BuildDevice()
         D3D_DRIVER_TYPE_REFERENCE,
     };
 
-    constexpr std::array<D3D_FEATURE_LEVEL, 6> featureLevels = {
+    constexpr std::array<D3D_FEATURE_LEVEL, 7> featureLevels = {
+        D3D_FEATURE_LEVEL_11_1,
         D3D_FEATURE_LEVEL_11_0,
         D3D_FEATURE_LEVEL_10_1,
         D3D_FEATURE_LEVEL_10_0,
