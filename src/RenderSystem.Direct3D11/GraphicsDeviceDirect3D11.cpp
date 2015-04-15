@@ -46,13 +46,11 @@ public:
         ComPtr<IDXGIFactory1> dxgiFactory;
 
         POMDOG_ASSERT(activeAdapter);
-        HRESULT hr = activeAdapter->GetParent(__uuidof(IDXGIFactory1), &dxgiFactory);
-        if (FAILED(hr))
-        {
-            ///@todo throw exception
-
+        HRESULT hr = activeAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
+        if (FAILED(hr)) {
             // FUS RO DAH!
-            Log::Internal("Failed to get DXGIFactory1");
+            POMDOG_THROW_EXCEPTION(std::runtime_error,
+                "Failed to get DXGIFactory1");
         }
 
         return std::move(dxgiFactory);
@@ -62,26 +60,22 @@ public:
 void AdapterManager::EnumAdapters()
 {
     Microsoft::WRL::ComPtr<IDXGIFactory1> dxgiFactory;
-    HRESULT hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(dxgiFactory.GetAddressOf()));
+    HRESULT hr = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
 
-    if (FAILED(hr))
-    {
-        // error
-        ///@todo throw exception
-        Log::Internal("Failed to create DXGIFactory1.");
-        return;
+    if (FAILED(hr)) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to create DXGIFactory1");
     }
 
     UINT i = 0;
     Microsoft::WRL::ComPtr<IDXGIAdapter1> newAdapter;
     while ((hr = dxgiFactory->EnumAdapters1(i, &newAdapter)) != DXGI_ERROR_NOT_FOUND)
     {
-        if (FAILED(hr))
-        {
-            // error
-            ///@todo throw exception
-            Log::Internal("Failed to enumerate adapters.");
-            break;
+        if (FAILED(hr)) {
+            // FUS RO DAH!
+            POMDOG_THROW_EXCEPTION(std::runtime_error,
+                "Failed to enumerate adapters");
         }
 
         adapters.push_back(newAdapter);
@@ -89,11 +83,10 @@ void AdapterManager::EnumAdapters()
         ++i;
     }
 
-    if (adapters.empty())
-    {
-        // error
-        ///@todo throw exception
-        return;
+    if (adapters.empty()) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "List of DXGI adapters is empty");
     }
 
     POMDOG_ASSERT(!adapters.empty());
@@ -200,7 +193,7 @@ static D3D11_BIND_FLAG ToBindFlag(BufferBindMode bindMode) noexcept
 class GraphicsDeviceDirect3D11::Impl {
 public:
     AdapterManager adapters;
-    ComPtr<ID3D11Device> nativeDevice;
+    ComPtr<ID3D11Device> device;
     ComPtr<ID3D11DeviceContext> deviceContext;
     ComPtr<ID3D11InfoQueue> infoQueue;
     D3D_DRIVER_TYPE driverType;
@@ -220,12 +213,12 @@ GraphicsDeviceDirect3D11::Impl::Impl()
     adapters.EnumAdapters();
     BuildDevice();
 
-    infoQueue = BuildInfoQueue(nativeDevice.Get());
+    infoQueue = BuildInfoQueue(device.Get());
 }
 //-----------------------------------------------------------------------
 void GraphicsDeviceDirect3D11::Impl::BuildDevice()
 {
-    POMDOG_ASSERT(!nativeDevice);
+    POMDOG_ASSERT(!device);
     POMDOG_ASSERT(!deviceContext);
 
     UINT createDeviceFlags = 0;
@@ -257,29 +250,27 @@ void GraphicsDeviceDirect3D11::Impl::BuildDevice()
     for (auto & type: driverTypes)
     {
         driverType = type;
-        hr = D3D11CreateDevice(adapter
-            , (nullptr != adapter ? D3D_DRIVER_TYPE_UNKNOWN : driverType)
-            , nullptr
-            , createDeviceFlags
-            , featureLevels.data()
-            , static_cast<UINT>(featureLevels.size())
-            , D3D11_SDK_VERSION
-            , &nativeDevice
-            , &featureLevel
-            , &deviceContext);
+        hr = D3D11CreateDevice(
+            adapter,
+            (nullptr != adapter ? D3D_DRIVER_TYPE_UNKNOWN : driverType),
+            nullptr,
+            createDeviceFlags,
+            featureLevels.data(),
+            static_cast<UINT>(featureLevels.size()),
+            D3D11_SDK_VERSION,
+            &device,
+            &featureLevel,
+            &deviceContext);
 
         if (SUCCEEDED(hr)) {
             break;
         }
     }
 
-    if (FAILED(hr))
-    {
-        ///@todo throw exception
-
+    if (FAILED(hr)) {
         // FUS RO DAH!
-        Log::Internal("Failed to create ID3D11Device");
-        return;
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to create ID3D11Device");
     }
 
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -317,11 +308,11 @@ GraphicsDeviceDirect3D11::CreateShader(ShaderBytecode const& shaderBytecode,
     switch (compileOptions.Profile.PipelineStage) {
     case ShaderPipelineStage::VertexShader: {
         return std::make_unique<VertexShaderDirect3D11>(
-            impl->nativeDevice.Get(), shaderBytecode, compileOptions);
+            impl->device.Get(), shaderBytecode, compileOptions);
     }
     case ShaderPipelineStage::PixelShader: {
         return std::make_unique<PixelShaderDirect3D11>(
-            impl->nativeDevice.Get(), shaderBytecode, compileOptions);
+            impl->device.Get(), shaderBytecode, compileOptions);
     }
     }
 
@@ -333,12 +324,12 @@ GraphicsDeviceDirect3D11::CreateBuffer(std::size_t sizeInBytes,
     BufferUsage bufferUsage, BufferBindMode bindMode)
 {
     POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeDevice);
+    POMDOG_ASSERT(impl->device);
     POMDOG_ASSERT(impl->deviceContext);
 
     try {
         return std::make_unique<BufferDirect3D11>(
-            impl->nativeDevice.Get(),
+            impl->device.Get(),
             impl->deviceContext.Get(),
             sizeInBytes,
             bufferUsage,
@@ -358,12 +349,12 @@ GraphicsDeviceDirect3D11::CreateBuffer(
     BufferUsage bufferUsage, BufferBindMode bindMode)
 {
     POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeDevice);
+    POMDOG_ASSERT(impl->device);
     POMDOG_ASSERT(impl->deviceContext);
 
     try {
         return std::make_unique<BufferDirect3D11>(
-            impl->nativeDevice.Get(),
+            impl->device.Get(),
             impl->deviceContext.Get(),
             sourceData,
             sizeInBytes,
@@ -382,18 +373,18 @@ std::unique_ptr<NativeSamplerState>
 GraphicsDeviceDirect3D11::CreateSamplerState(SamplerDescription const& description)
 {
     POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeDevice);
+    POMDOG_ASSERT(impl->device);
 
-    return std::make_unique<SamplerStateDirect3D11>(impl->nativeDevice.Get(), description);
+    return std::make_unique<SamplerStateDirect3D11>(impl->device.Get(), description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativePipelineState>
 GraphicsDeviceDirect3D11::CreatePipelineState(PipelineStateDescription const& description)
 {
     POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeDevice);
+    POMDOG_ASSERT(impl->device);
 
-    return std::make_unique<PipelineStateDirect3D11>(impl->nativeDevice.Get(), description);
+    return std::make_unique<PipelineStateDirect3D11>(impl->device.Get(), description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectReflection>
@@ -418,10 +409,10 @@ GraphicsDeviceDirect3D11::CreateTexture2D(std::int32_t width, std::int32_t heigh
     SurfaceFormat format)
 {
     POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeDevice);
+    POMDOG_ASSERT(impl->device);
     POMDOG_ASSERT(impl->deviceContext);
 
-    return std::make_unique<Texture2DDirect3D11>(impl->nativeDevice.Get(),
+    return std::make_unique<Texture2DDirect3D11>(impl->device.Get(),
         impl->deviceContext, width, height, mipmapLevels, format);
 }
 //-----------------------------------------------------------------------
@@ -430,24 +421,24 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(std::int32_t width, std::int32_t 
     std::uint32_t mipmapLevels, SurfaceFormat format, DepthFormat depthStencilFormat)
 {
     POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeDevice);
-    return std::make_unique<RenderTarget2DDirect3D11>(impl->nativeDevice.Get(),
+    POMDOG_ASSERT(impl->device);
+    return std::make_unique<RenderTarget2DDirect3D11>(impl->device.Get(),
         width, height, mipmapLevels, format, depthStencilFormat);
 }
 //-----------------------------------------------------------------------
-Microsoft::WRL::ComPtr<ID3D11DeviceContext> GraphicsDeviceDirect3D11::DeviceContext() const
+Microsoft::WRL::ComPtr<ID3D11Device> GraphicsDeviceDirect3D11::GetDevice() const
+{
+    POMDOG_ASSERT(impl);
+    return impl->device;
+}
+//-----------------------------------------------------------------------
+Microsoft::WRL::ComPtr<ID3D11DeviceContext> GraphicsDeviceDirect3D11::GetDeviceContext() const
 {
     POMDOG_ASSERT(impl);
     return impl->deviceContext;
 }
 //-----------------------------------------------------------------------
-Microsoft::WRL::ComPtr<ID3D11Device> GraphicsDeviceDirect3D11::NativeDevice() const
-{
-    POMDOG_ASSERT(impl);
-    return impl->nativeDevice;
-}
-//-----------------------------------------------------------------------
-Microsoft::WRL::ComPtr<IDXGIFactory1> GraphicsDeviceDirect3D11::DXGIFactory() const
+Microsoft::WRL::ComPtr<IDXGIFactory1> GraphicsDeviceDirect3D11::GetDXGIFactory() const
 {
     POMDOG_ASSERT(impl);
     return impl->adapters.GetFactory();

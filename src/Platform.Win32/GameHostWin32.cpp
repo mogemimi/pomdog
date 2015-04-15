@@ -164,9 +164,9 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
         using Detail::RenderSystem::Direct3D11::GraphicsContextDirect3D11;
 
         auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceDirect3D11>();
-        auto deviceContext = nativeGraphicsDevice->DeviceContext();
-        auto nativeDevice = nativeGraphicsDevice->NativeDevice();
-        auto dxgiFactory = nativeGraphicsDevice->DXGIFactory();
+        auto device = nativeGraphicsDevice->GetDevice();
+        auto deviceContext = nativeGraphicsDevice->GetDeviceContext();
+        auto dxgiFactory = nativeGraphicsDevice->GetDXGIFactory();
 
         graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(
             std::move(nativeGraphicsDevice));
@@ -175,7 +175,7 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
             std::make_unique<GraphicsContextDirect3D11>(
                 window->NativeWindowHandle(),
                 dxgiFactory,
-                nativeDevice,
+                device,
                 deviceContext),
             presentationParameters,
             graphicsDevice);
@@ -285,8 +285,10 @@ void GameHostWin32::Impl::ClientSizeChanged()
         POMDOG_ASSERT(nativeGraphicsDevice != nullptr);
         POMDOG_ASSERT(nativeGraphicsContext != nullptr);
 
+        auto device = nativeGraphicsDevice->GetDevice();
+
         nativeGraphicsContext->ResizeBackBuffers(
-            nativeGraphicsDevice->NativeDevice().Get(), bounds.Width, bounds.Height);
+            device.Get(), bounds.Width, bounds.Height);
     }
 #endif
 
