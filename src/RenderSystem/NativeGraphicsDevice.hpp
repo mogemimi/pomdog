@@ -22,6 +22,12 @@ class NativeTexture2D;
 class ShaderBytecode;
 class ShaderCompileOptions;
 
+enum class BufferBindMode {
+    ConstantBuffer,
+    IndexBuffer,
+    VertexBuffer,
+};
+
 class NativeGraphicsDevice: Noncopyable {
 public:
     virtual ~NativeGraphicsDevice() = default;
@@ -33,26 +39,17 @@ public:
         ShaderCompileOptions const& compileOptions) = 0;
 
     virtual std::unique_ptr<NativeBuffer>
-    CreateConstantBuffer(std::size_t sizeInBytes,
-        BufferUsage bufferUsage) = 0;
+    CreateBuffer(
+        std::size_t sizeInBytes,
+        BufferUsage bufferUsage,
+        BufferBindMode bindMode) = 0;
 
     virtual std::unique_ptr<NativeBuffer>
-    CreateConstantBuffer(void const* sourceData, std::size_t sizeInBytes,
-        BufferUsage bufferUsage) = 0;
-
-    virtual std::unique_ptr<NativeBuffer>
-    CreateIndexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage) = 0;
-
-    virtual std::unique_ptr<NativeBuffer>
-    CreateIndexBuffer(void const* indices, std::size_t sizeInBytes,
-        BufferUsage bufferUsage) = 0;
-
-    virtual std::unique_ptr<NativeBuffer>
-    CreateVertexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage) = 0;
-
-    virtual std::unique_ptr<NativeBuffer>
-    CreateVertexBuffer(void const* vertices, std::size_t sizeInBytes,
-        BufferUsage bufferUsage) = 0;
+    CreateBuffer(
+        void const* sourceData,
+        std::size_t sizeInBytes,
+        BufferUsage bufferUsage,
+        BufferBindMode bindMode) = 0;
 
     virtual std::unique_ptr<NativeSamplerState>
     CreateSamplerState(SamplerDescription const& description) = 0;
@@ -64,12 +61,18 @@ public:
     CreateEffectReflection(NativePipelineState & pipelineState) = 0;
 
     virtual std::unique_ptr<NativeTexture2D>
-    CreateTexture2D(std::int32_t width, std::int32_t height,
-        std::uint32_t mipmapLevels, SurfaceFormat format) = 0;
+    CreateTexture2D(
+        std::int32_t width,
+        std::int32_t height,
+        std::uint32_t mipmapLevels,
+        SurfaceFormat format) = 0;
 
     virtual std::unique_ptr<NativeRenderTarget2D>
-    CreateRenderTarget2D(std::int32_t width, std::int32_t height,
-        std::uint32_t mipmapLevels, SurfaceFormat format,
+    CreateRenderTarget2D(
+        std::int32_t width,
+        std::int32_t height,
+        std::uint32_t mipmapLevels,
+        SurfaceFormat format,
         DepthFormat depthStencilFormat) = 0;
 };
 

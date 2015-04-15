@@ -20,18 +20,15 @@ ConstantBuffer::ConstantBuffer(
     POMDOG_ASSERT(sizeInBytes > 0);
 
     auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
-    POMDOG_ASSERT(nativeDevice != nullptr);
 
-    nativeConstantBuffer = nativeDevice->CreateConstantBuffer(
-        sizeInBytes, bufferUsage);
+    POMDOG_ASSERT(nativeDevice != nullptr);
+    using Detail::RenderSystem::BufferBindMode;
+
+    nativeConstantBuffer = nativeDevice->CreateBuffer(
+        sizeInBytes, bufferUsage, BufferBindMode::ConstantBuffer);
+
+    POMDOG_ASSERT(nativeConstantBuffer);
 }
-//-----------------------------------------------------------------------
-ConstantBuffer::ConstantBuffer(
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    std::size_t sizeInBytesIn,
-    Pomdog::BufferUsage bufferUsageIn)
-    : ConstantBuffer(*graphicsDevice, sizeInBytesIn, bufferUsageIn)
-{}
 //-----------------------------------------------------------------------
 ConstantBuffer::ConstantBuffer(
     GraphicsDevice & graphicsDevice,
@@ -44,11 +41,22 @@ ConstantBuffer::ConstantBuffer(
     POMDOG_ASSERT(sizeInBytes > 0);
 
     auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
-    POMDOG_ASSERT(nativeDevice != nullptr);
 
-    nativeConstantBuffer = nativeDevice->CreateConstantBuffer(
-        sourceData, sizeInBytes, bufferUsage);
+    POMDOG_ASSERT(nativeDevice != nullptr);
+    using Detail::RenderSystem::BufferBindMode;
+
+    nativeConstantBuffer = nativeDevice->CreateBuffer(
+        sourceData, sizeInBytes, bufferUsage, BufferBindMode::ConstantBuffer);
+
+    POMDOG_ASSERT(nativeConstantBuffer);
 }
+//-----------------------------------------------------------------------
+ConstantBuffer::ConstantBuffer(
+    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    std::size_t sizeInBytesIn,
+    Pomdog::BufferUsage bufferUsageIn)
+    : ConstantBuffer(*graphicsDevice, sizeInBytesIn, bufferUsageIn)
+{}
 //-----------------------------------------------------------------------
 ConstantBuffer::ConstantBuffer(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,

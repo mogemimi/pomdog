@@ -12,32 +12,52 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 VertexBuffer::VertexBuffer(GraphicsDevice & graphicsDevice,
-    void const* vertices, std::size_t vertexCountIn,
-    std::size_t strideInBytesIn, Pomdog::BufferUsage bufferUsageIn)
-    : nativeVertexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateVertexBuffer(
-        vertices, vertexCountIn * strideInBytesIn, bufferUsageIn))
-    , vertexCount(static_cast<decltype(vertexCount)>(vertexCountIn))
+    void const* vertices,
+    std::size_t vertexCountIn,
+    std::size_t strideInBytesIn,
+    Pomdog::BufferUsage bufferUsageIn)
+    : vertexCount(static_cast<decltype(vertexCount)>(vertexCountIn))
     , strideInBytes(static_cast<decltype(strideInBytes)>(strideInBytesIn))
     , bufferUsage(bufferUsageIn)
 {
-    POMDOG_ASSERT(nativeVertexBuffer);
     POMDOG_ASSERT(vertices != nullptr);
     POMDOG_ASSERT(vertexCount > 0);
     POMDOG_ASSERT(strideInBytes > 0);
+
+    auto sizeInBytes = vertexCount * strideInBytes;
+    auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+
+    POMDOG_ASSERT(nativeDevice != nullptr);
+    using Detail::RenderSystem::BufferBindMode;
+
+    nativeVertexBuffer = nativeDevice->CreateBuffer(
+        vertices, sizeInBytes, bufferUsage, BufferBindMode::VertexBuffer);
+
+    POMDOG_ASSERT(nativeVertexBuffer);
 }
 //-----------------------------------------------------------------------
 VertexBuffer::VertexBuffer(GraphicsDevice & graphicsDevice,
-    std::size_t vertexCountIn, std::size_t strideInBytesIn, Pomdog::BufferUsage bufferUsageIn)
-    : nativeVertexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateVertexBuffer(
-        vertexCountIn * strideInBytesIn, bufferUsageIn))
-    , vertexCount(static_cast<decltype(vertexCount)>(vertexCountIn))
+    std::size_t vertexCountIn,
+    std::size_t strideInBytesIn,
+    Pomdog::BufferUsage bufferUsageIn)
+    : vertexCount(static_cast<decltype(vertexCount)>(vertexCountIn))
     , strideInBytes(static_cast<decltype(strideInBytes)>(strideInBytesIn))
     , bufferUsage(bufferUsageIn)
 {
-    POMDOG_ASSERT(nativeVertexBuffer);
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(vertexCount > 0);
     POMDOG_ASSERT(strideInBytes > 0);
+
+    auto sizeInBytes = vertexCount * strideInBytes;
+    auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+
+    POMDOG_ASSERT(nativeDevice != nullptr);
+    using Detail::RenderSystem::BufferBindMode;
+
+    nativeVertexBuffer = nativeDevice->CreateBuffer(
+        sizeInBytes, bufferUsage, BufferBindMode::VertexBuffer);
+
+    POMDOG_ASSERT(nativeVertexBuffer);
 }
 //-----------------------------------------------------------------------
 VertexBuffer::VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,

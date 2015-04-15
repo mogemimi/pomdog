@@ -43,44 +43,42 @@ GraphicsDeviceGL4::CreateShader(ShaderBytecode const& shaderBytecode,
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBuffer>
-GraphicsDeviceGL4::CreateConstantBuffer(
-    std::size_t sizeInBytes, BufferUsage bufferUsage)
+GraphicsDeviceGL4::CreateBuffer(
+    std::size_t sizeInBytes, BufferUsage bufferUsage, BufferBindMode bindMode)
 {
-    return std::make_unique<ConstantBufferGL4>(sizeInBytes, bufferUsage);
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeBuffer>
-GraphicsDeviceGL4::CreateConstantBuffer(
-    void const* sourceData, std::size_t sizeInBytes, BufferUsage bufferUsage)
-{
-    return std::make_unique<ConstantBufferGL4>(
-        sourceData, sizeInBytes, bufferUsage);
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeBuffer>
-GraphicsDeviceGL4::CreateIndexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage)
-{
-    return std::make_unique<IndexBufferGL4>(sizeInBytes, bufferUsage);
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeBuffer>
-GraphicsDeviceGL4::CreateIndexBuffer(void const* indices,
-    std::size_t sizeInBytes, BufferUsage bufferUsage)
-{
-    return std::make_unique<IndexBufferGL4>(indices, sizeInBytes, bufferUsage);
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeBuffer>
-GraphicsDeviceGL4::CreateVertexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage)
-{
+    switch (bindMode) {
+    case BufferBindMode::ConstantBuffer:
+        return std::make_unique<ConstantBufferGL4>(sizeInBytes, bufferUsage);
+        break;
+    case BufferBindMode::IndexBuffer:
+        return std::make_unique<IndexBufferGL4>(sizeInBytes, bufferUsage);
+        break;
+    case BufferBindMode::VertexBuffer:
+        break;
+    }
     return std::make_unique<VertexBufferGL4>(sizeInBytes, bufferUsage);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBuffer>
-GraphicsDeviceGL4::CreateVertexBuffer(void const* vertices,
-    std::size_t sizeInBytes, BufferUsage bufferUsage)
+GraphicsDeviceGL4::CreateBuffer(
+    void const* sourceData, std::size_t sizeInBytes,
+    BufferUsage bufferUsage, BufferBindMode bindMode)
 {
-    return std::make_unique<VertexBufferGL4>(vertices, sizeInBytes, bufferUsage);
+    switch (bindMode) {
+    case BufferBindMode::ConstantBuffer:
+        return std::make_unique<ConstantBufferGL4>(
+            sourceData, sizeInBytes, bufferUsage);
+        break;
+    case BufferBindMode::IndexBuffer:
+        return std::make_unique<IndexBufferGL4>(
+            sourceData, sizeInBytes, bufferUsage);
+        break;
+    case BufferBindMode::VertexBuffer:
+        break;
+    }
+
+    return std::make_unique<VertexBufferGL4>(
+        sourceData, sizeInBytes, bufferUsage);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeSamplerState>

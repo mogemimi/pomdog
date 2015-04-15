@@ -28,26 +28,12 @@ public:
         ShaderCompileOptions const& compileOptions) override;
 
     std::unique_ptr<NativeBuffer>
-    CreateConstantBuffer(std::size_t sizeInBytes,
-        BufferUsage bufferUsage) override;
+    CreateBuffer(std::size_t sizeInBytes,
+        BufferUsage bufferUsage, BufferBindMode bindMode) override;
 
     std::unique_ptr<NativeBuffer>
-    CreateConstantBuffer(void const* sourceData, std::size_t sizeInBytes,
-        BufferUsage bufferUsage) override;
-
-    std::unique_ptr<NativeBuffer>
-    CreateIndexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage) override;
-
-    std::unique_ptr<NativeBuffer>
-    CreateIndexBuffer(void const* indices, std::size_t sizeInBytes,
-        BufferUsage bufferUsage) override;
-
-    std::unique_ptr<NativeBuffer>
-    CreateVertexBuffer(std::size_t sizeInBytes, BufferUsage bufferUsage) override;
-
-    std::unique_ptr<NativeBuffer>
-    CreateVertexBuffer(void const* vertices, std::size_t sizeInBytes,
-        BufferUsage bufferUsage) override;
+    CreateBuffer(void const* sourceData,  std::size_t sizeInBytes,
+        BufferUsage bufferUsage, BufferBindMode bindMode) override;
 
     std::unique_ptr<NativeSamplerState>
     CreateSamplerState(SamplerDescription const& description) override;

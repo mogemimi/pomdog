@@ -183,6 +183,17 @@ static void CheckError(ID3D11InfoQueue* infoQueue)
         Log::Internal(message);
     }
 }
+//-----------------------------------------------------------------------
+static D3D11_BIND_FLAG ToBindFlag(BufferBindMode bindMode) noexcept
+{
+    switch (bindMode) {
+    case BufferBindMode::ConstantBuffer: return D3D11_BIND_CONSTANT_BUFFER;
+    case BufferBindMode::IndexBuffer: return D3D11_BIND_INDEX_BUFFER;
+    case BufferBindMode::VertexBuffer:
+        break;
+    }
+    return D3D11_BIND_VERTEX_BUFFER;
+}
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
@@ -317,8 +328,8 @@ GraphicsDeviceDirect3D11::CreateShader(ShaderBytecode const& shaderBytecode,
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBuffer>
-GraphicsDeviceDirect3D11::CreateConstantBuffer(std::size_t sizeInBytes,
-    BufferUsage bufferUsage)
+GraphicsDeviceDirect3D11::CreateBuffer(std::size_t sizeInBytes,
+    BufferUsage bufferUsage, BufferBindMode bindMode)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeDevice);
@@ -326,8 +337,11 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(std::size_t sizeInBytes,
 
     try {
         return std::make_unique<BufferDirect3D11>(
-            impl->nativeDevice.Get(), impl->deviceContext.Get(), sizeInBytes,
-            bufferUsage, D3D11_BIND_CONSTANT_BUFFER);
+            impl->nativeDevice.Get(),
+            impl->deviceContext.Get(),
+            sizeInBytes,
+            bufferUsage,
+            ToBindFlag(bindMode));
     }
     catch (std::exception const& e) {
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -338,9 +352,9 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(std::size_t sizeInBytes,
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBuffer>
-GraphicsDeviceDirect3D11::CreateConstantBuffer(
+GraphicsDeviceDirect3D11::CreateBuffer(
     void const* sourceData, std::size_t sizeInBytes,
-    BufferUsage bufferUsage)
+    BufferUsage bufferUsage, BufferBindMode bindMode)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeDevice);
@@ -348,95 +362,12 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(
 
     try {
         return std::make_unique<BufferDirect3D11>(
-            impl->nativeDevice.Get(), impl->deviceContext.Get(),
-            sourceData, sizeInBytes,
-            bufferUsage, D3D11_BIND_CONSTANT_BUFFER);
-    }
-    catch (std::exception const& e) {
-#if defined(DEBUG) && !defined(NDEBUG)
-        CheckError(impl->infoQueue.Get());
-#endif
-        throw e;
-    }
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeBuffer>
-GraphicsDeviceDirect3D11::CreateIndexBuffer(std::size_t sizeInBytes,
-    BufferUsage bufferUsage)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeDevice);
-    POMDOG_ASSERT(impl->deviceContext);
-
-    try {
-        return std::make_unique<BufferDirect3D11>(
-            impl->nativeDevice.Get(), impl->deviceContext, sizeInBytes,
-            bufferUsage, D3D11_BIND_INDEX_BUFFER);
-    }
-    catch (std::exception const& e) {
-#if defined(DEBUG) && !defined(NDEBUG)
-        CheckError(impl->infoQueue.Get());
-#endif
-        throw e;
-    }
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeBuffer>
-GraphicsDeviceDirect3D11::CreateIndexBuffer(void const* indices,
-    std::size_t sizeInBytes, BufferUsage bufferUsage)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeDevice);
-    POMDOG_ASSERT(impl->deviceContext);
-
-    try {
-        return std::make_unique<BufferDirect3D11>(
-            impl->nativeDevice.Get(), impl->deviceContext,
-            indices, sizeInBytes,
-            bufferUsage, D3D11_BIND_INDEX_BUFFER);
-    }
-    catch (std::exception const& e) {
-#if defined(DEBUG) && !defined(NDEBUG)
-        CheckError(impl->infoQueue.Get());
-#endif
-        throw e;
-    }
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeBuffer>
-GraphicsDeviceDirect3D11::CreateVertexBuffer(std::size_t sizeInBytes,
-    BufferUsage bufferUsage)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeDevice);
-    POMDOG_ASSERT(impl->deviceContext);
-
-    try {
-        return std::make_unique<BufferDirect3D11>(
-            impl->nativeDevice.Get(), impl->deviceContext, sizeInBytes,
-            bufferUsage, D3D11_BIND_VERTEX_BUFFER);
-    }
-    catch (std::exception const& e) {
-#if defined(DEBUG) && !defined(NDEBUG)
-        CheckError(impl->infoQueue.Get());
-#endif
-        throw e;
-    }
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeBuffer>
-GraphicsDeviceDirect3D11::CreateVertexBuffer(void const* vertices,
-    std::size_t sizeInBytes, BufferUsage bufferUsage)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeDevice);
-    POMDOG_ASSERT(impl->deviceContext);
-
-    try {
-        return std::make_unique<BufferDirect3D11>(
-            impl->nativeDevice.Get(), impl->deviceContext,
-            vertices, sizeInBytes,
-            bufferUsage, D3D11_BIND_VERTEX_BUFFER);
+            impl->nativeDevice.Get(),
+            impl->deviceContext.Get(),
+            sourceData,
+            sizeInBytes,
+            bufferUsage,
+            ToBindFlag(bindMode));
     }
     catch (std::exception const& e) {
 #if defined(DEBUG) && !defined(NDEBUG)

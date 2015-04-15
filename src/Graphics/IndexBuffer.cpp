@@ -18,33 +18,56 @@ static std::uint32_t ToIndexElementOffsetBytes(
     case IndexElementSize::SixteenBits: return 2;
     };
 #ifdef _MSC_VER
-    return 4;// FUS RO DAH!!!
+    // FUS RO DAH!
+    return 4;
 #endif
 }
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
 IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
-    IndexElementSize elementSizeIn, void const* indices, std::size_t indexCountIn,
+    IndexElementSize elementSizeIn,
+    void const* indices,
+    std::size_t indexCountIn,
     Pomdog::BufferUsage bufferUsageIn)
-    : nativeIndexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateIndexBuffer(
-        indices, ToIndexElementOffsetBytes(elementSizeIn) * indexCountIn, bufferUsageIn))
-    , indexCount(static_cast<decltype(indexCount)>(indexCountIn))
+    : indexCount(static_cast<decltype(indexCount)>(indexCountIn))
     , elementSize(elementSizeIn)
     , bufferUsage(bufferUsageIn)
 {
+    POMDOG_ASSERT(indexCount > 0);
+
+    auto sizeInBytes = indexCount * ToIndexElementOffsetBytes(elementSize);
+    auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+
+    POMDOG_ASSERT(nativeDevice != nullptr);
+    using Detail::RenderSystem::BufferBindMode;
+
+    nativeIndexBuffer = nativeDevice->CreateBuffer(
+        indices, sizeInBytes, bufferUsage, BufferBindMode::IndexBuffer);
+
     POMDOG_ASSERT(nativeIndexBuffer);
 }
 //-----------------------------------------------------------------------
 IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
-    IndexElementSize elementSizeIn, std::size_t indexCountIn,
+    IndexElementSize elementSizeIn,
+    std::size_t indexCountIn,
     Pomdog::BufferUsage bufferUsageIn)
-    : nativeIndexBuffer(graphicsDevice.NativeGraphicsDevice()->CreateIndexBuffer(
-        ToIndexElementOffsetBytes(elementSizeIn) * indexCountIn, bufferUsageIn))
-    , indexCount(static_cast<decltype(indexCount)>(indexCountIn))
+    : indexCount(static_cast<decltype(indexCount)>(indexCountIn))
     , elementSize(elementSizeIn)
     , bufferUsage(bufferUsageIn)
 {
+    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
+    POMDOG_ASSERT(indexCount > 0);
+
+    auto sizeInBytes = indexCount * ToIndexElementOffsetBytes(elementSize);
+    auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+
+    POMDOG_ASSERT(nativeDevice != nullptr);
+    using Detail::RenderSystem::BufferBindMode;
+
+    nativeIndexBuffer = nativeDevice->CreateBuffer(
+        sizeInBytes, bufferUsage, BufferBindMode::IndexBuffer);
+
     POMDOG_ASSERT(nativeIndexBuffer);
 }
 //-----------------------------------------------------------------------
