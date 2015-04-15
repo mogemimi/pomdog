@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "ConstantLayoutDirect3D11.hpp"
-#include "HardwareBufferDirect3D11.hpp"
+#include "BufferDirect3D11.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 #include <utility>
@@ -19,7 +19,7 @@ ConstantLayoutDirect3D11::ConstantLayoutDirect3D11(
 //-----------------------------------------------------------------------
 void ConstantLayoutDirect3D11::SetConstantBuffer(
     std::string const& constantName,
-    std::shared_ptr<NativeBuffer> const& constantBuffer)
+    std::shared_ptr<NativeBuffer> const& constantBufferIn)
 {
     auto iter = std::find_if(std::begin(bindings), std::end(bindings),
         [&](ConstantBufferBindingDirect3D11 const& binding) {
@@ -28,11 +28,11 @@ void ConstantLayoutDirect3D11::SetConstantBuffer(
 
     POMDOG_ASSERT(std::end(bindings) != iter);
 
-    auto nativeConstantBuffer = std::dynamic_pointer_cast<HardwareBufferDirect3D11>(constantBuffer);
-    POMDOG_ASSERT(nativeConstantBuffer);
+    auto constantBuffer = std::dynamic_pointer_cast<BufferDirect3D11>(constantBufferIn);
+    POMDOG_ASSERT(constantBuffer);
 
     if (std::end(bindings) != iter) {
-        iter->ConstantBuffer = nativeConstantBuffer;
+        iter->ConstantBuffer = constantBuffer;
     }
 }
 //-----------------------------------------------------------------------

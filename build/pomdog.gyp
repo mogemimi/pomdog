@@ -345,6 +345,8 @@
       '../src/RenderSystem.DXGI/DXGIFormatHelper.hpp',
     ],
     'pomdog_library_direct3d11_sources': [
+      '../src/RenderSystem.Direct3D11/BufferDirect3D11.cpp',
+      '../src/RenderSystem.Direct3D11/BufferDirect3D11.hpp',
       '../src/RenderSystem.Direct3D11/ConstantLayoutDirect3D11.cpp',
       '../src/RenderSystem.Direct3D11/ConstantLayoutDirect3D11.hpp',
       '../src/RenderSystem.Direct3D11/EffectReflectionDirect3D11.cpp',
@@ -353,8 +355,6 @@
       '../src/RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp',
       '../src/RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.cpp',
       '../src/RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.hpp',
-      '../src/RenderSystem.Direct3D11/HardwareBufferDirect3D11.cpp',
-      '../src/RenderSystem.Direct3D11/HardwareBufferDirect3D11.hpp',
       '../src/RenderSystem.Direct3D11/InputLayoutDirect3D11.cpp',
       '../src/RenderSystem.Direct3D11/InputLayoutDirect3D11.hpp',
       '../src/RenderSystem.Direct3D11/PipelineStateDirect3D11.cpp',

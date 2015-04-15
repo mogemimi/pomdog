@@ -2,9 +2,9 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "GraphicsDeviceDirect3D11.hpp"
-#include "PipelineStateDirect3D11.hpp"
+#include "BufferDirect3D11.hpp"
 #include "EffectReflectionDirect3D11.hpp"
-#include "HardwareBufferDirect3D11.hpp"
+#include "PipelineStateDirect3D11.hpp"
 #include "RenderTarget2DDirect3D11.hpp"
 #include "SamplerStateDirect3D11.hpp"
 #include "Texture2DDirect3D11.hpp"
@@ -325,7 +325,7 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(std::size_t sizeInBytes,
     POMDOG_ASSERT(impl->deviceContext);
 
     try {
-        return std::make_unique<HardwareBufferDirect3D11>(
+        return std::make_unique<BufferDirect3D11>(
             impl->nativeDevice.Get(), impl->deviceContext.Get(), sizeInBytes,
             bufferUsage, D3D11_BIND_CONSTANT_BUFFER);
     }
@@ -347,7 +347,7 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(
     POMDOG_ASSERT(impl->deviceContext);
 
     try {
-        return std::make_unique<HardwareBufferDirect3D11>(
+        return std::make_unique<BufferDirect3D11>(
             impl->nativeDevice.Get(), impl->deviceContext.Get(),
             sourceData, sizeInBytes,
             bufferUsage, D3D11_BIND_CONSTANT_BUFFER);
@@ -369,7 +369,7 @@ GraphicsDeviceDirect3D11::CreateIndexBuffer(std::size_t sizeInBytes,
     POMDOG_ASSERT(impl->deviceContext);
 
     try {
-        return std::make_unique<HardwareBufferDirect3D11>(
+        return std::make_unique<BufferDirect3D11>(
             impl->nativeDevice.Get(), impl->deviceContext, sizeInBytes,
             bufferUsage, D3D11_BIND_INDEX_BUFFER);
     }
@@ -390,7 +390,7 @@ GraphicsDeviceDirect3D11::CreateIndexBuffer(void const* indices,
     POMDOG_ASSERT(impl->deviceContext);
 
     try {
-        return std::make_unique<HardwareBufferDirect3D11>(
+        return std::make_unique<BufferDirect3D11>(
             impl->nativeDevice.Get(), impl->deviceContext,
             indices, sizeInBytes,
             bufferUsage, D3D11_BIND_INDEX_BUFFER);
@@ -412,7 +412,7 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(std::size_t sizeInBytes,
     POMDOG_ASSERT(impl->deviceContext);
 
     try {
-        return std::make_unique<HardwareBufferDirect3D11>(
+        return std::make_unique<BufferDirect3D11>(
             impl->nativeDevice.Get(), impl->deviceContext, sizeInBytes,
             bufferUsage, D3D11_BIND_VERTEX_BUFFER);
     }
@@ -433,7 +433,7 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(void const* vertices,
     POMDOG_ASSERT(impl->deviceContext);
 
     try {
-        return std::make_unique<HardwareBufferDirect3D11>(
+        return std::make_unique<BufferDirect3D11>(
             impl->nativeDevice.Get(), impl->deviceContext,
             vertices, sizeInBytes,
             bufferUsage, D3D11_BIND_VERTEX_BUFFER);

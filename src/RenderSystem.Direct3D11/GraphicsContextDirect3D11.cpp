@@ -2,13 +2,13 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "GraphicsContextDirect3D11.hpp"
+#include "BufferDirect3D11.hpp"
 #include "ConstantLayoutDirect3D11.hpp"
-#include "PipelineStateDirect3D11.hpp"
-#include "HardwareBufferDirect3D11.hpp"
 #include "InputLayoutDirect3D11.hpp"
+#include "PipelineStateDirect3D11.hpp"
+#include "RenderTarget2DDirect3D11.hpp"
 #include "SamplerStateDirect3D11.hpp"
 #include "Texture2DDirect3D11.hpp"
-#include "RenderTarget2DDirect3D11.hpp"
 #include "../RenderSystem.DXGI/DXGIFormatHelper.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "Pomdog/Math/Color.hpp"
@@ -260,11 +260,11 @@ void GraphicsContextDirect3D11::SetIndexBuffer(std::shared_ptr<IndexBuffer> cons
 {
     POMDOG_ASSERT(indexBuffer);
 
-    auto nativeIndexBuffer = static_cast<HardwareBufferDirect3D11*>(
+    auto nativeIndexBuffer = static_cast<BufferDirect3D11*>(
         indexBuffer->NativeIndexBuffer());
 
     POMDOG_ASSERT(nativeIndexBuffer != nullptr);
-    POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<HardwareBufferDirect3D11*>(
+    POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<BufferDirect3D11*>(
         indexBuffer->NativeIndexBuffer()));
 
     deviceContext->IASetIndexBuffer(nativeIndexBuffer->GetBuffer(),
@@ -357,10 +357,12 @@ void GraphicsContextDirect3D11::SetVertexBuffers(std::vector<std::shared_ptr<Ver
         POMDOG_ASSERT(vertexBuffer);
         POMDOG_ASSERT(vertexBuffer->NativeVertexBuffer());
 
-        auto nativeVertexBuffer = static_cast<HardwareBufferDirect3D11*>(vertexBuffer->NativeVertexBuffer());
+        auto nativeVertexBuffer = static_cast<BufferDirect3D11*>(
+            vertexBuffer->NativeVertexBuffer());
 
-        POMDOG_ASSERT(nativeVertexBuffer);
-        POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<HardwareBufferDirect3D11*>(vertexBuffer->NativeVertexBuffer()));
+        POMDOG_ASSERT(nativeVertexBuffer != nullptr);
+        POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<BufferDirect3D11*>(
+            vertexBuffer->NativeVertexBuffer()));
 
         vertexBuffers.push_back(nativeVertexBuffer->GetBuffer());
         strides.push_back(vertexBuffer->StrideBytes());

@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "HardwareBufferDirect3D11.hpp"
+#include "BufferDirect3D11.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -79,26 +79,32 @@ static ID3D11Buffer* CreateNativeBuffer(
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-HardwareBufferDirect3D11::HardwareBufferDirect3D11(ID3D11Device* device,
+BufferDirect3D11::BufferDirect3D11(
+    ID3D11Device* device,
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContextIn,
-    std::size_t sizeInBytes, BufferUsage bufferUsage, D3D11_BIND_FLAG bindFlag)
+    std::size_t sizeInBytes,
+    BufferUsage bufferUsage,
+    D3D11_BIND_FLAG bindFlag)
     : deviceContext(deviceContextIn)
 {
     buffer = CreateNativeBuffer(device, sizeInBytes,
         nullptr, bufferUsage, bindFlag);
 }
 //-----------------------------------------------------------------------
-HardwareBufferDirect3D11::HardwareBufferDirect3D11(ID3D11Device* device,
+BufferDirect3D11::BufferDirect3D11(
+    ID3D11Device* device,
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContextIn,
-    void const* sourceData, std::size_t sizeInBytes,
-    BufferUsage bufferUsage, D3D11_BIND_FLAG bindFlag)
+    void const* sourceData,
+    std::size_t sizeInBytes,
+    BufferUsage bufferUsage,
+    D3D11_BIND_FLAG bindFlag)
     : deviceContext(deviceContextIn)
 {
     buffer = CreateNativeBuffer(device, sizeInBytes,
         sourceData, bufferUsage, bindFlag);
 }
 //-----------------------------------------------------------------------
-void HardwareBufferDirect3D11::GetData(std::size_t offsetInBytes,
+void BufferDirect3D11::GetData(std::size_t offsetInBytes,
     void* destination, std::size_t sizeInBytes) const
 {
     POMDOG_ASSERT(buffer);
@@ -122,7 +128,7 @@ void HardwareBufferDirect3D11::GetData(std::size_t offsetInBytes,
     deviceContext->Unmap(buffer.Get(), 0);
 }
 //-----------------------------------------------------------------------
-void HardwareBufferDirect3D11::SetData(std::size_t offsetInBytes,
+void BufferDirect3D11::SetData(std::size_t offsetInBytes,
     void const* source, std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(buffer);
@@ -146,7 +152,7 @@ void HardwareBufferDirect3D11::SetData(std::size_t offsetInBytes,
     deviceContext->Unmap(buffer.Get(), 0);
 }
 //-----------------------------------------------------------------------
-ID3D11Buffer* HardwareBufferDirect3D11::GetBuffer() const
+ID3D11Buffer* BufferDirect3D11::GetBuffer() const
 {
     POMDOG_ASSERT(buffer);
     return buffer.Get();
