@@ -50,11 +50,17 @@ SamplerStateDirect3D11::SamplerStateDirect3D11(ID3D11Device* device,
     samplerDesc.AddressU = ToTextureAddressMode(description.AddressU);
     samplerDesc.AddressV = ToTextureAddressMode(description.AddressV);
     samplerDesc.AddressW = ToTextureAddressMode(description.AddressW);
-    samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
     samplerDesc.MinLOD = description.MinMipLevel;
     samplerDesc.MaxLOD = description.MaxMipLevel;
     samplerDesc.MipLODBias = description.MipMapLevelOfDetailBias;
     samplerDesc.MaxAnisotropy = description.MaxAnisotropy;
+
+    ///@todo Add support for the following options in SamplerDescription
+    samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    samplerDesc.BorderColor[0] = 0.0f;
+    samplerDesc.BorderColor[1] = 0.0f;
+    samplerDesc.BorderColor[2] = 0.0f;
+    samplerDesc.BorderColor[3] = 0.0f;
 
     POMDOG_ASSERT(samplerDesc.MinLOD <= samplerDesc.MaxLOD);
     POMDOG_ASSERT(samplerDesc.MaxLOD <= D3D11_FLOAT32_MAX);

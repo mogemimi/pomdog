@@ -13,24 +13,11 @@ namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
 
-struct BufferDescription {
-    D3D11_USAGE Usage;
-    UINT CPUAccessFlags;
-};
-
-static BufferDescription ToDescription(BufferUsage bufferUsage)
-{
-    switch (bufferUsage) {
-    case BufferUsage::Dynamic:
-        return{ D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE };
-    case BufferUsage::Immutable:
-        return{ D3D11_USAGE_IMMUTABLE, 0 };
-    }
-    return{ D3D11_USAGE_DEFAULT, 0 };
-}
-//-----------------------------------------------------------------------
-static ID3D11Buffer* CreateNativeBuffer(ID3D11Device* device,
-    std::size_t sizeInBytes, void const* data, BufferUsage bufferUsage,
+static ID3D11Buffer* CreateNativeBuffer(
+    ID3D11Device* device,
+    std::size_t sizeInBytes,
+    void const* data,
+    BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag)
 {
     POMDOG_ASSERT(bindFlag == D3D11_BIND_CONSTANT_BUFFER
@@ -46,15 +33,26 @@ static ID3D11Buffer* CreateNativeBuffer(ID3D11Device* device,
     }
 #endif
 
-    const auto description = ToDescription(bufferUsage);
-
     D3D11_BUFFER_DESC bufferDesc;
-    bufferDesc.Usage = description.Usage;
     bufferDesc.ByteWidth = static_cast<::UINT>(sizeInBytes);
     bufferDesc.BindFlags = bindFlag;
-    bufferDesc.CPUAccessFlags = description.CPUAccessFlags;
     bufferDesc.MiscFlags = 0;
     bufferDesc.StructureByteStride = 0;
+
+    switch (bufferUsage) {
+    case BufferUsage::Dynamic:
+        bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+        bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        break;
+    case BufferUsage::Immutable:
+        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+        bufferDesc.CPUAccessFlags = 0;
+        break;
+    default:
+        bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+        bufferDesc.CPUAccessFlags = 0;
+        break;
+    }
 
     D3D11_SUBRESOURCE_DATA subresourceData;
     subresourceData.pSysMem = data;
@@ -71,8 +69,9 @@ static ID3D11Buffer* CreateNativeBuffer(ID3D11Device* device,
     HRESULT hr = device->CreateBuffer(&bufferDesc, initialData, &buffer);
 
     if (FAILED(hr)) {
-        // error: FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create ID3D11Buffer");
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to create ID3D11Buffer");
     }
 
     return std::move(buffer);
@@ -112,7 +111,7 @@ void HardwareBufferDirect3D11::GetData(std::size_t offsetInBytes,
         D3D11_MAP_READ, 0, &mappedResource);
 
     if (FAILED(hr)) {
-        // error: FUS RO DAH!
+        // FUS RO DAH!
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to map buffer");
     }
 
@@ -136,7 +135,7 @@ void HardwareBufferDirect3D11::SetData(std::size_t offsetInBytes,
         D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
     if (FAILED(hr)) {
-        // error: FUS RO DAH!
+        // FUS RO DAH!
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to map buffer");
     }
 

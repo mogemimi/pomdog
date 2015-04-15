@@ -427,7 +427,7 @@ void GraphicsContextDirect3D11::SetTexture(int index, RenderTarget2D & textureIn
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
     POMDOG_ASSERT(index < static_cast<int>(boundTextureViews.size()));
     POMDOG_ASSERT(textureIn.NativeRenderTarget2D() != nullptr);
-    
+
     auto texture = static_cast<RenderTarget2DDirect3D11*>(textureIn.NativeRenderTarget2D());
 
     POMDOG_ASSERT(texture != nullptr);

@@ -44,8 +44,8 @@ public:
     ID3D11Buffer* GetBuffer() const;
 
 private:
-    Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
 };
 
 } // namespace Direct3D11
