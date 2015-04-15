@@ -4,7 +4,7 @@ in VertexData {
 	vec2 TextureCoord;
 } In;
 
-uniform TestStructure {
+uniform MyConstants {
 	vec2 Rotation;
 };
 

@@ -25,6 +25,7 @@ private:
     std::shared_ptr<PipelineState> pipelineState;
     std::shared_ptr<SamplerState> sampler;
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
+    std::shared_ptr<ConstantBuffer> constantBuffer;
     std::shared_ptr<Texture2D> texture;
     std::shared_ptr<RenderTarget2D> renderTarget;
 };

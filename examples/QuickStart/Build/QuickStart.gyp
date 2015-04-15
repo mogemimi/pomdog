@@ -59,6 +59,9 @@
       'conditions': [
         ['OS == "win"', {
           'sources': [
+            '../Platform.Win32/main.cpp',
+            '../Platform.Win32/Resource.hpp',
+            '../Platform.Win32/game.rc',
           ],
         }], # OS == "win"
         ['OS == "mac"', {

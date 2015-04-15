@@ -26,10 +26,10 @@ void QuickStartGame::Initialize()
         };
 
         std::array<VertexCombined, 4> const verticesCombo = {
-            Vector3(-0.8f, -0.8f, 0.0f), Vector2(0.0f, 0.0f),
-            Vector3(-0.8f,  0.8f, 0.0f), Vector2(0.0f, 1.0f),
-            Vector3( 0.8f,  0.8f, 0.0f), Vector2(1.0f, 1.0f),
-            Vector3( 0.8f, -0.8f, 0.0f), Vector2(1.0f, 0.0f),
+            Vector3(-0.8f, -0.8f, 0.0f), Vector2(0.0f, 1.0f),
+            Vector3(-0.8f,  0.8f, 0.0f), Vector2(0.0f, 0.0f),
+            Vector3( 0.8f,  0.8f, 0.0f), Vector2(1.0f, 0.0f),
+            Vector3( 0.8f, -0.8f, 0.0f), Vector2(1.0f, 1.0f),
         };
 
         // Create vertex buffer
@@ -54,11 +54,13 @@ void QuickStartGame::Initialize()
 
         auto vertexShader = assets->CreateBuilder<Shader>()
             .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
-            .SetGLSLFromFile("SimpleEffect/VertexShader.glsl");
+            .SetGLSLFromFile("SimpleEffect_VS.glsl")
+            .SetHLSLFromFile("SimpleEffect_VS.hlsl", "SimpleEffectVS");
 
         auto pixelShader = assets->CreateBuilder<Shader>()
             .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
-            .SetGLSLFromFile("SimpleEffect/PixelShader.glsl");
+            .SetGLSLFromFile("SimpleEffect_PS.glsl")
+            .SetHLSLFromFile("SimpleEffect_PS.hlsl", "SimpleEffectPS");
 
         pipelineState = assets->CreateBuilder<PipelineState>()
             .SetInputLayout(inputLayout.CreateInputLayout())
@@ -68,6 +70,8 @@ void QuickStartGame::Initialize()
 
         constantBuffers = std::make_shared<ConstantBufferBinding>(
             graphicsDevice, *pipelineState);
+
+        constantBuffer = constantBuffers->Find("MyConstants");
     }
     {
         sampler = std::make_shared<SamplerState>(graphicsDevice,
@@ -85,12 +89,18 @@ void QuickStartGame::Initialize()
 void QuickStartGame::Update()
 {
     auto clock = gameHost->Clock();
-    auto parameter = constantBuffers->Find("TestStructure");
     auto totalTime = static_cast<float>(clock->TotalGameTime().count());
 
-    parameter->SetValue(Vector2{
+    struct MyConstants {
+        Vector2 Rotation;
+    };
+
+    MyConstants myShaderConstants;
+    myShaderConstants.Rotation = Vector2{
         std::cos(totalTime) * 0.5f + 0.5f,
-        std::sin(totalTime) * 0.5f + 0.5f});
+        std::sin(totalTime) * 0.5f + 0.5f};
+
+    constantBuffer->SetValue(myShaderConstants);
 }
 //-----------------------------------------------------------------------
 void QuickStartGame::Draw()

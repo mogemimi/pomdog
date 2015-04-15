@@ -1,7 +1,7 @@
 #import "GameViewController.h"
 #include "../Source/QuickStartGame.hpp"
-#include "Pomdog/Platform/Cocoa/Bootstrap.hpp"
-#include "Pomdog/Pomdog.hpp"
+#include <Pomdog/Platform/Cocoa/Bootstrap.hpp>
+#include <Pomdog/Pomdog.hpp>
 #ifdef DEBUG
 #include <iostream>
 #endif

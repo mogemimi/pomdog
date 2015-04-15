@@ -38,6 +38,7 @@ def CopyTemplates(template_directory, project_root):
         "Content",
         "Source",
         "Platform.Cocoa",
+        "Platform.Win32",
         "Build",
         "README.md",
         ".gitignore",
@@ -60,6 +61,7 @@ def CopyFrameworkFiles(framework_root, project_root):
         "build",
         "include",
         "src",
+        "third-party/glew",
         "third-party/zlib",
         "third-party/libpng",
         "LICENSE.md",
@@ -147,6 +149,7 @@ def CreateNewProject(config):
     RenameSourceContent(project_root, identifier, 'Platform.Cocoa/GameViewController.mm')
     RenameSourceContent(project_root, identifier, 'Platform.Cocoa/Info.plist')
     RenameSourceContent(project_root, identifier, 'Platform.Cocoa/Base.lproj/MainMenu.xib')
+    RenameSourceContent(project_root, identifier, 'Platform.Win32/main.cpp')
     RenameFilename(project_root, identifier, 'Build/QuickStart.gyp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.cpp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.hpp')
