@@ -29,7 +29,7 @@ static BufferDescription ToDescription(BufferUsage bufferUsage)
     return{ D3D11_USAGE_DEFAULT, 0 };
 }
 //-----------------------------------------------------------------------
-static ID3D11Buffer* CreateNativeBuffer(ID3D11Device* nativeDevice,
+static ID3D11Buffer* CreateNativeBuffer(ID3D11Device* device,
     std::size_t sizeInBytes, void const* data, BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag)
 {
@@ -61,14 +61,14 @@ static ID3D11Buffer* CreateNativeBuffer(ID3D11Device* nativeDevice,
     subresourceData.SysMemPitch = 0;
     subresourceData.SysMemSlicePitch = 0;
 
-    POMDOG_ASSERT(nativeDevice);
+    POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT((bufferDesc.Usage != D3D11_USAGE_IMMUTABLE)
         || ((bufferDesc.Usage == D3D11_USAGE_IMMUTABLE) && (data != nullptr)));
 
     auto initialData = (data != nullptr) ? &subresourceData : nullptr;
 
     ID3D11Buffer* buffer = nullptr;
-    HRESULT hr = nativeDevice->CreateBuffer(&bufferDesc, initialData, &buffer);
+    HRESULT hr = device->CreateBuffer(&bufferDesc, initialData, &buffer);
 
     if (FAILED(hr)) {
         // error: FUS RO DAH!
@@ -80,35 +80,35 @@ static ID3D11Buffer* CreateNativeBuffer(ID3D11Device* nativeDevice,
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-HardwareBufferDirect3D11::HardwareBufferDirect3D11(ID3D11Device* nativeDevice,
+HardwareBufferDirect3D11::HardwareBufferDirect3D11(ID3D11Device* device,
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContextIn,
     std::size_t sizeInBytes, BufferUsage bufferUsage, D3D11_BIND_FLAG bindFlag)
     : deviceContext(deviceContextIn)
 {
-    nativeBuffer = CreateNativeBuffer(nativeDevice, sizeInBytes,
+    buffer = CreateNativeBuffer(device, sizeInBytes,
         nullptr, bufferUsage, bindFlag);
 }
 //-----------------------------------------------------------------------
-HardwareBufferDirect3D11::HardwareBufferDirect3D11(ID3D11Device* nativeDevice,
+HardwareBufferDirect3D11::HardwareBufferDirect3D11(ID3D11Device* device,
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContextIn,
     void const* sourceData, std::size_t sizeInBytes,
     BufferUsage bufferUsage, D3D11_BIND_FLAG bindFlag)
     : deviceContext(deviceContextIn)
 {
-    nativeBuffer = CreateNativeBuffer(nativeDevice, sizeInBytes,
+    buffer = CreateNativeBuffer(device, sizeInBytes,
         sourceData, bufferUsage, bindFlag);
 }
 //-----------------------------------------------------------------------
 void HardwareBufferDirect3D11::GetData(std::size_t offsetInBytes,
     void* destination, std::size_t sizeInBytes) const
 {
-    POMDOG_ASSERT(nativeBuffer);
+    POMDOG_ASSERT(buffer);
     POMDOG_ASSERT(deviceContext);
     POMDOG_ASSERT(destination != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    auto hr = deviceContext->Map(nativeBuffer.Get(), 0,
+    auto hr = deviceContext->Map(buffer.Get(), 0,
         D3D11_MAP_READ, 0, &mappedResource);
 
     if (FAILED(hr)) {
@@ -120,19 +120,19 @@ void HardwareBufferDirect3D11::GetData(std::size_t offsetInBytes,
         + offsetInBytes;
     std::memcpy(destination, mappedMemory, sizeInBytes);
 
-    deviceContext->Unmap(nativeBuffer.Get(), 0);
+    deviceContext->Unmap(buffer.Get(), 0);
 }
 //-----------------------------------------------------------------------
 void HardwareBufferDirect3D11::SetData(std::size_t offsetInBytes,
     void const* source, std::size_t sizeInBytes)
 {
-    POMDOG_ASSERT(nativeBuffer);
+    POMDOG_ASSERT(buffer);
     POMDOG_ASSERT(deviceContext);
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    auto hr = deviceContext->Map(nativeBuffer.Get(), 0,
+    auto hr = deviceContext->Map(buffer.Get(), 0,
         D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
     if (FAILED(hr)) {
@@ -144,13 +144,13 @@ void HardwareBufferDirect3D11::SetData(std::size_t offsetInBytes,
         + offsetInBytes;
     std::memcpy(mappedMemory, source, sizeInBytes);
 
-    deviceContext->Unmap(nativeBuffer.Get(), 0);
+    deviceContext->Unmap(buffer.Get(), 0);
 }
 //-----------------------------------------------------------------------
 ID3D11Buffer* HardwareBufferDirect3D11::GetBuffer() const
 {
-    POMDOG_ASSERT(nativeBuffer);
-    return nativeBuffer.Get();
+    POMDOG_ASSERT(buffer);
+    return buffer.Get();
 }
 //-----------------------------------------------------------------------
 } // namespace Direct3D11

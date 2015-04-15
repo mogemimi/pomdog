@@ -14,24 +14,4 @@
 #include <d3d11shader.h>
 #endif
 
-namespace Pomdog {
-namespace Detail {
-namespace RenderSystem {
-namespace Direct3D11 {
-
-class ConstantLayoutDirect3D11;
-class EffectReflectionDirect3D11;
-class GraphicsDeviceDirect3D11;
-class GraphicsContextDirect3D11;
-class HardwareBufferDirect3D11;
-class PipelineStateDirect3D11;
-class RenderTarget2DDirect3D11;
-class SamplerStateDirect3D11;
-class Texture2DDirect3D11;
-
-} // namespace Direct3D11
-} // namespace RenderSystem
-} // namespace Detail
-} // namespace Readymade
-
 #endif // POMDOG_PREREQUISITESDIRECT3D11_EED05C73_HPP

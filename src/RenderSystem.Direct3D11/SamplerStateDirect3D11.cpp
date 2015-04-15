@@ -5,6 +5,7 @@
 #include "../RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp"
 #include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include <array>
 
 namespace Pomdog {
@@ -13,7 +14,7 @@ namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
 
-static D3D11_FILTER ToFilterDirect3D11(TextureFilter textureFilter)
+static D3D11_FILTER ToFilter(TextureFilter textureFilter) noexcept
 {
     switch (textureFilter) {
     case TextureFilter::Anisotropic:    return D3D11_FILTER_ANISOTROPIC;
@@ -29,7 +30,7 @@ static D3D11_FILTER ToFilterDirect3D11(TextureFilter textureFilter)
     return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 }
 //-----------------------------------------------------------------------
-static D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressModeDirect3D11(TextureAddressMode addressMode)
+static D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) noexcept
 {
     switch (addressMode) {
     case TextureAddressMode::Wrap: return D3D11_TEXTURE_ADDRESS_WRAP;
@@ -41,14 +42,14 @@ static D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressModeDirect3D11(TextureAddressM
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-SamplerStateDirect3D11::SamplerStateDirect3D11(ID3D11Device* nativeDevice, SamplerDescription const& description)
+SamplerStateDirect3D11::SamplerStateDirect3D11(ID3D11Device* device, SamplerDescription const& description)
 {
     D3D11_SAMPLER_DESC samplerDesc;
     ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-    samplerDesc.Filter = ToFilterDirect3D11(description.Filter);
-    samplerDesc.AddressU = ToTextureAddressModeDirect3D11(description.AddressU);
-    samplerDesc.AddressV = ToTextureAddressModeDirect3D11(description.AddressV);
-    samplerDesc.AddressW = ToTextureAddressModeDirect3D11(description.AddressW);
+    samplerDesc.Filter = ToFilter(description.Filter);
+    samplerDesc.AddressU = ToTextureAddressMode(description.AddressU);
+    samplerDesc.AddressV = ToTextureAddressMode(description.AddressV);
+    samplerDesc.AddressW = ToTextureAddressMode(description.AddressW);
     samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
     samplerDesc.MinLOD = description.MinMipLevel;
     samplerDesc.MaxLOD = description.MaxMipLevel;
@@ -58,15 +59,13 @@ SamplerStateDirect3D11::SamplerStateDirect3D11(ID3D11Device* nativeDevice, Sampl
     POMDOG_ASSERT(samplerDesc.MinLOD <= samplerDesc.MaxLOD);
     POMDOG_ASSERT(samplerDesc.MaxLOD <= D3D11_FLOAT32_MAX);
 
-    POMDOG_ASSERT(nativeDevice);
-    HRESULT hr = nativeDevice->CreateSamplerState(&samplerDesc, &nativeSamplerState);
+    POMDOG_ASSERT(device != nullptr);
+    HRESULT hr = device->CreateSamplerState(&samplerDesc, &nativeSamplerState);
 
-    if (FAILED(hr))
-    {
-        ///@todo throw exception
-        // error, FUS RO DAH!
-        //POMDOG_THROW_EXCEPTION(ExceptionCode::RenderingAPIError,
-        //    "failed to create ID3D11SamplerState.");
+    if (FAILED(hr)) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to create ID3D11SamplerState.");
     }
 }
 //-----------------------------------------------------------------------

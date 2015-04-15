@@ -18,7 +18,8 @@ class SamplerStateDirect3D11 final: public NativeSamplerState {
 public:
     SamplerStateDirect3D11() = delete;
 
-    SamplerStateDirect3D11(ID3D11Device* nativeDevice,
+    SamplerStateDirect3D11(
+        ID3D11Device* device,
         SamplerDescription const& description);
 
     void Apply(NativeGraphicsContext & graphicsContext, int index) override;

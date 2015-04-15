@@ -14,6 +14,8 @@ namespace Detail {
 namespace RenderSystem {
 namespace Direct3D11 {
 
+class HardwareBufferDirect3D11;
+
 struct ConstantBufferBindingDirect3D11 {
     std::shared_ptr<HardwareBufferDirect3D11> ConstantBuffer;
     std::string Name;

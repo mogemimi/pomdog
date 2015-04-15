@@ -22,7 +22,9 @@ namespace Direct3D11 {
 template <class NativeShaderType>
 class ShaderDirect3D11 final: public Shader {
 public:
-    ShaderDirect3D11(ID3D11Device* device, ShaderBytecode const& shaderBytecode,
+    ShaderDirect3D11(
+        ID3D11Device* device,
+        ShaderBytecode const& shaderBytecode,
         ShaderCompileOptions const& compileOptions);
 
     NativeShaderType* GetNativeShader() const;

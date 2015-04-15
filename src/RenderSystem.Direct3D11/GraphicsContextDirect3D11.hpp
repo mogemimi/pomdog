@@ -21,6 +21,9 @@ class GameWindowWin32;
 namespace RenderSystem {
 namespace Direct3D11 {
 
+class PipelineStateDirect3D11;
+class RenderTarget2DDirect3D11;
+
 class GraphicsContextDirect3D11 final : public NativeGraphicsContext {
 public:
     GraphicsContextDirect3D11() = delete;

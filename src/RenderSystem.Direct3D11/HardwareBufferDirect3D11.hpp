@@ -16,13 +16,15 @@ namespace Direct3D11 {
 
 class HardwareBufferDirect3D11 final : public NativeBuffer {
 public:
-    HardwareBufferDirect3D11(ID3D11Device* nativeDevice,
+    HardwareBufferDirect3D11(
+        ID3D11Device* device,
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
         D3D11_BIND_FLAG bindFlag);
 
-    HardwareBufferDirect3D11(ID3D11Device* nativeDevice,
+    HardwareBufferDirect3D11(
+        ID3D11Device* devuce,
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
         void const* sourceData,
         std::size_t sizeInBytes,
@@ -42,7 +44,7 @@ public:
     ID3D11Buffer* GetBuffer() const;
 
 private:
-    Microsoft::WRL::ComPtr<ID3D11Buffer> nativeBuffer;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
 };
 

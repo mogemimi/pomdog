@@ -16,8 +16,13 @@ namespace {
 using Microsoft::WRL::ComPtr;
 using DXGI::DXGIFormatHelper;
 
-static void BuildRenderTarget(ID3D11Device* nativeDevice, SurfaceFormat format,
-    std::int32_t pixelWidth, std::int32_t pixelHeight, std::uint32_t levelCount, bool isSharedTexture,
+static void BuildRenderTarget(
+    ID3D11Device* device,
+    SurfaceFormat format,
+    std::int32_t pixelWidth,
+    std::int32_t pixelHeight,
+    std::uint32_t levelCount,
+    bool isSharedTexture,
     ComPtr<ID3D11Texture2D> & renderTexture,
     ComPtr<ID3D11RenderTargetView> & renderTargetView,
     ComPtr<ID3D11ShaderResourceView> & textureResourceView)
@@ -40,8 +45,8 @@ static void BuildRenderTarget(ID3D11Device* nativeDevice, SurfaceFormat format,
     textureDesc.CPUAccessFlags = 0;
     textureDesc.MiscFlags = (isSharedTexture ? D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX : 0);
 
-    POMDOG_ASSERT(nativeDevice);
-    HRESULT hr = nativeDevice->CreateTexture2D(&textureDesc, nullptr, &renderTexture);
+    POMDOG_ASSERT(device != nullptr);
+    HRESULT hr = device->CreateTexture2D(&textureDesc, nullptr, &renderTexture);
 
     if (FAILED(hr)) {
         // FUS RO DAH!
@@ -55,7 +60,7 @@ static void BuildRenderTarget(ID3D11Device* nativeDevice, SurfaceFormat format,
     renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 
     POMDOG_ASSERT(renderTexture);
-    hr = nativeDevice->CreateRenderTargetView(renderTexture.Get(), &renderTargetViewDesc, &renderTargetView);
+    hr = device->CreateRenderTargetView(renderTexture.Get(), &renderTargetViewDesc, &renderTargetView);
 
     if (FAILED(hr)) {
         // FUS RO DAH!
@@ -70,15 +75,19 @@ static void BuildRenderTarget(ID3D11Device* nativeDevice, SurfaceFormat format,
     shaderResourceViewDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 
     // Create shader resource view
-    hr = nativeDevice->CreateShaderResourceView(renderTexture.Get(), &shaderResourceViewDesc, &textureResourceView);
+    hr = device->CreateShaderResourceView(renderTexture.Get(), &shaderResourceViewDesc, &textureResourceView);
     if (FAILED(hr)) {
         // FUS RO DAH!
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create shader resource view");
     }
 }
 //-----------------------------------------------------------------------
-static void BuildDepthBuffer(ID3D11Device* nativeDevice, DepthFormat depthStencilFormat,
-    std::int32_t pixelWidth, std::int32_t pixelHeight, std::uint32_t levelCount,
+static void BuildDepthBuffer(
+    ID3D11Device* device,
+    DepthFormat depthStencilFormat,
+    std::int32_t pixelWidth,
+    std::int32_t pixelHeight,
+    std::uint32_t levelCount,
     ComPtr<ID3D11Texture2D> & depthStencil,
     ComPtr<ID3D11DepthStencilView> & depthStencilView)
 {
@@ -104,8 +113,8 @@ static void BuildDepthBuffer(ID3D11Device* nativeDevice, DepthFormat depthStenci
     descDepth.CPUAccessFlags = 0;
     descDepth.MiscFlags = 0;
 
-    POMDOG_ASSERT(nativeDevice);
-    HRESULT hr = nativeDevice->CreateTexture2D(&descDepth, nullptr, &depthStencil);
+    POMDOG_ASSERT(device);
+    HRESULT hr = device->CreateTexture2D(&descDepth, nullptr, &depthStencil);
 
     if (FAILED(hr)) {
         // FUS RO DAH!
@@ -120,7 +129,7 @@ static void BuildDepthBuffer(ID3D11Device* nativeDevice, DepthFormat depthStenci
     descDSV.Texture2D.MipSlice = 0;
 
     POMDOG_ASSERT(depthStencil);
-    hr = nativeDevice->CreateDepthStencilView(depthStencil.Get(), &descDSV, &depthStencilView);
+    hr = device->CreateDepthStencilView(depthStencil.Get(), &descDSV, &depthStencilView);
 
     if (FAILED(hr)) {
         // FUS RO DAH!
@@ -128,11 +137,13 @@ static void BuildDepthBuffer(ID3D11Device* nativeDevice, DepthFormat depthStenci
     }
 }
 //-----------------------------------------------------------------------
-static void BuildBackBufferBySwapChain(ID3D11Device* nativeDevice, IDXGISwapChain* swapChain,
+static void BuildBackBufferBySwapChain(
+    ID3D11Device* device,
+    IDXGISwapChain* swapChain,
     ComPtr<ID3D11Texture2D> & renderTexture,
     ComPtr<ID3D11RenderTargetView> & renderTargetView)
 {
-    POMDOG_ASSERT(nativeDevice);
+    POMDOG_ASSERT(device);
     POMDOG_ASSERT(swapChain);
 
     // Get a surface in the swap chain
@@ -146,7 +157,7 @@ static void BuildBackBufferBySwapChain(ID3D11Device* nativeDevice, IDXGISwapChai
 
     // Create a render target view
     POMDOG_ASSERT(renderTexture);
-    hr = nativeDevice->CreateRenderTargetView(renderTexture.Get(), nullptr, &renderTargetView);
+    hr = device->CreateRenderTargetView(renderTexture.Get(), nullptr, &renderTargetView);
 
     if (FAILED(hr)) {
         // FUS RO DAH!
@@ -156,27 +167,34 @@ static void BuildBackBufferBySwapChain(ID3D11Device* nativeDevice, IDXGISwapChai
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(ID3D11Device* nativeDevice,
-    std::int32_t pixelWidth, std::int32_t pixelHeight,
-    std::uint32_t levelCount, SurfaceFormat format, DepthFormat depthStencilFormat)
+RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
+    ID3D11Device* device,
+    std::int32_t pixelWidth,
+    std::int32_t pixelHeight,
+    std::uint32_t levelCount,
+    SurfaceFormat format,
+    DepthFormat depthStencilFormat)
 {
-    BuildRenderTarget(nativeDevice, format, pixelWidth, pixelHeight, levelCount,
+    BuildRenderTarget(device, format, pixelWidth, pixelHeight, levelCount,
         false, renderTexture, renderTargetView, textureResourceView);
 
-    BuildDepthBuffer(nativeDevice, depthStencilFormat, pixelWidth, pixelHeight, levelCount,
+    BuildDepthBuffer(device, depthStencilFormat, pixelWidth, pixelHeight, levelCount,
         depthStencil, depthStencilView);
 }
 //-----------------------------------------------------------------------
-RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(ID3D11Device* nativeDevice,
-    IDXGISwapChain* swapChain, std::int32_t pixelWidth, std::int32_t pixelHeight,
+RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
+    ID3D11Device* device,
+    IDXGISwapChain* swapChain,
+    std::int32_t pixelWidth,
+    std::int32_t pixelHeight,
     DepthFormat depthStencilFormat)
 {
     constexpr std::uint32_t backBufferMipLevels = 1;
 
-    BuildBackBufferBySwapChain(nativeDevice, swapChain,
+    BuildBackBufferBySwapChain(device, swapChain,
         renderTexture, renderTargetView);
 
-    BuildDepthBuffer(nativeDevice, depthStencilFormat, pixelWidth, pixelHeight, backBufferMipLevels,
+    BuildDepthBuffer(device, depthStencilFormat, pixelWidth, pixelHeight, backBufferMipLevels,
         depthStencil, depthStencilView);
 }
 //-----------------------------------------------------------------------
@@ -197,10 +215,10 @@ ID3D11ShaderResourceView* RenderTarget2DDirect3D11::ShaderResourceView() const
     return textureResourceView.Get();
 }
 //-----------------------------------------------------------------------
-void RenderTarget2DDirect3D11::ResetBackBuffer(ID3D11Device* nativeDevice, IDXGISwapChain* swapChain,
+void RenderTarget2DDirect3D11::ResetBackBuffer(ID3D11Device* device, IDXGISwapChain* swapChain,
     std::int32_t pixelWidth, std::int32_t pixelHeight, DepthFormat depthStencilFormat)
 {
-    POMDOG_ASSERT(nativeDevice != nullptr);
+    POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(swapChain != nullptr);
 
     renderTargetView.Reset();
@@ -210,10 +228,10 @@ void RenderTarget2DDirect3D11::ResetBackBuffer(ID3D11Device* nativeDevice, IDXGI
 
     constexpr std::uint32_t backBufferMipLevels = 1;
 
-    BuildBackBufferBySwapChain(nativeDevice, swapChain,
+    BuildBackBufferBySwapChain(device, swapChain,
         renderTexture, renderTargetView);
 
-    BuildDepthBuffer(nativeDevice, depthStencilFormat, pixelWidth, pixelHeight, backBufferMipLevels,
+    BuildDepthBuffer(device, depthStencilFormat, pixelWidth, pixelHeight, backBufferMipLevels,
         depthStencil, depthStencilView);
 }
 //-----------------------------------------------------------------------
