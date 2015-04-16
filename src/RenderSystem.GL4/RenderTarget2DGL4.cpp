@@ -11,10 +11,9 @@ namespace RenderSystem {
 namespace GL4 {
 namespace {
 
-static Optional<GLenum> ToGLDepthStencilFormat(DepthFormat depthFormat)
+static GLenum ToDepthStencilFormat(DepthFormat depthFormat) noexcept
 {
     POMDOG_ASSERT(depthFormat != DepthFormat::None);
-
     switch (depthFormat) {
     case DepthFormat::Depth16: return GL_DEPTH_COMPONENT16;
     case DepthFormat::Depth24Stencil8: return GL_DEPTH24_STENCIL8;
@@ -22,15 +21,21 @@ static Optional<GLenum> ToGLDepthStencilFormat(DepthFormat depthFormat)
     case DepthFormat::None:
         break;
     }
-    return OptionalType::NullOptional;
+    return GL_DEPTH24_STENCIL8;
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
-RenderTarget2DGL4::RenderTarget2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
-    std::uint32_t levelCount, SurfaceFormat format, DepthFormat depthStencilFormat)
+RenderTarget2DGL4::RenderTarget2DGL4(
+    std::int32_t pixelWidth,
+    std::int32_t pixelHeight,
+    std::uint32_t levelCount,
+    SurfaceFormat format,
+    DepthFormat depthStencilFormat,
+    std::int32_t multiSampleCount)
     : texture(pixelWidth, pixelHeight, levelCount, format)
     , generateMipmap(levelCount > 1)
+    , multiSampleEnabled(multiSampleCount > 1)
 {
     if (DepthFormat::None != depthStencilFormat)
     {
@@ -48,7 +53,10 @@ RenderTarget2DGL4::RenderTarget2DGL4(std::int32_t pixelWidth, std::int32_t pixel
         POMDOG_ASSERT(pixelWidth > 0);
         POMDOG_ASSERT(pixelHeight > 0);
 
-        glRenderbufferStorage(GL_RENDERBUFFER, *ToGLDepthStencilFormat(depthStencilFormat), pixelWidth, pixelHeight);
+        glRenderbufferStorage(GL_RENDERBUFFER,
+            ToDepthStencilFormat(depthStencilFormat),
+            pixelWidth,
+            pixelHeight);
         POMDOG_CHECK_ERROR_GL4("glRenderbufferStorage");
 
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -65,7 +73,11 @@ RenderTarget2DGL4::~RenderTarget2DGL4()
 //-----------------------------------------------------------------------
 void RenderTarget2DGL4::BindToFramebuffer(GLenum attachmentPoint)
 {
-    glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint, GL_TEXTURE_2D,
+    GLenum textureTarget = (multiSampleEnabled
+        ? GL_TEXTURE_2D_MULTISAMPLE
+        : GL_TEXTURE_2D);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint, textureTarget,
         texture.GetTextureHandle().value, 0);
     POMDOG_CHECK_ERROR_GL4("glFramebufferTexture2D");
 }

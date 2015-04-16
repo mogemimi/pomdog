@@ -53,6 +53,8 @@ void Bootstrap::SetPresentationInterval(int presentationIntervalIn) noexcept
 //-----------------------------------------------------------------------
 void Bootstrap::SetBackBufferSize(int width, int height) noexcept
 {
+    POMDOG_ASSERT(width >= 0);
+    POMDOG_ASSERT(height >= 0);
     backBufferWidth = width;
     backBufferHeight = height;
 }
@@ -81,9 +83,10 @@ void Bootstrap::Run(std::function<std::unique_ptr<Game>(
     PresentationParameters presentationParameters;
     presentationParameters.BackBufferHeight = backBufferHeight;
     presentationParameters.BackBufferWidth = backBufferWidth;
-    presentationParameters.PresentationInterval = 60;
-    presentationParameters.SurfaceFormat = surfaceFormat;
-    presentationParameters.DepthFormat = depthFormat;
+    presentationParameters.PresentationInterval = presentationInterval;
+    presentationParameters.BackBufferFormat = surfaceFormat;
+    presentationParameters.DepthStencilFormat = depthFormat;
+    presentationParameters.MultiSampleCount = 1;
     presentationParameters.IsFullScreen = isFullScreen;
 
     auto eventQueue = std::make_shared<EventQueue>();

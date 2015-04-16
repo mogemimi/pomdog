@@ -164,7 +164,9 @@ struct TypesafeHelperGL4::OpenGLGetTraits<FrameBufferGL4> {
 #pragma mark - GraphicsContextGL4
 #endif
 //-----------------------------------------------------------------------
-GraphicsContextGL4::GraphicsContextGL4(std::shared_ptr<OpenGLContext> const& openGLContextIn, std::weak_ptr<GameWindow> windowIn)
+GraphicsContextGL4::GraphicsContextGL4(
+    std::shared_ptr<OpenGLContext> const& openGLContextIn,
+    std::weak_ptr<GameWindow> windowIn)
     : nativeContext(openGLContextIn)
     , gameWindow(std::move(windowIn))
     , needToApplyInputLayout(true)

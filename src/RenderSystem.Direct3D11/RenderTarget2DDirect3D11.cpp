@@ -173,8 +173,12 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
     std::int32_t pixelHeight,
     std::uint32_t levelCount,
     SurfaceFormat format,
-    DepthFormat depthStencilFormat)
+    DepthFormat depthStencilFormat,
+    std::int32_t multiSampleCount)
 {
+    ///@todo MSAA is not implemnted yet
+    UNREFERENCED_PARAMETER(multiSampleCount);
+
     BuildRenderTarget(device, format, pixelWidth, pixelHeight, levelCount,
         false, renderTexture, renderTargetView, textureResourceView);
 
@@ -187,8 +191,12 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
     IDXGISwapChain* swapChain,
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
-    DepthFormat depthStencilFormat)
+    DepthFormat depthStencilFormat,
+    std::int32_t multiSampleCount)
 {
+    ///@todo MSAA is not implemnted yet
+    UNREFERENCED_PARAMETER(multiSampleCount);
+
     constexpr std::uint32_t backBufferMipLevels = 1;
 
     BuildBackBufferBySwapChain(device, swapChain,

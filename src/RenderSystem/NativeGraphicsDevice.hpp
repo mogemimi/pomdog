@@ -73,7 +73,8 @@ public:
         std::int32_t height,
         std::uint32_t mipmapLevels,
         SurfaceFormat format,
-        DepthFormat depthStencilFormat) = 0;
+        DepthFormat depthStencilFormat,
+        std::int32_t multiSampleCount) = 0;
 };
 
 } // namespace RenderSystem

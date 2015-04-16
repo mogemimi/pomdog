@@ -176,7 +176,8 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
                 window->NativeWindowHandle(),
                 dxgiFactory,
                 device,
-                deviceContext),
+                deviceContext,
+                presentationParameters),
             presentationParameters,
             graphicsDevice);
     }

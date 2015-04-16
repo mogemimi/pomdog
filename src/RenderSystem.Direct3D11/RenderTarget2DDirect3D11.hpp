@@ -22,14 +22,16 @@ public:
         std::int32_t pixelHeight,
         std::uint32_t levelCount,
         SurfaceFormat format,
-        DepthFormat depthStencilFormat);
+        DepthFormat depthStencilFormat,
+        std::int32_t multiSampleCount);
 
     RenderTarget2DDirect3D11(
         ID3D11Device* device,
         IDXGISwapChain* swapChain,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
-        DepthFormat depthStencilFormat);
+        DepthFormat depthStencilFormat,
+        std::int32_t multiSampleCount);
 
     ID3D11RenderTargetView* RenderTargetView() const;
 

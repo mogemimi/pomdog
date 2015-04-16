@@ -32,7 +32,8 @@ public:
         HWND windowHandle,
         Microsoft::WRL::ComPtr<IDXGIFactory1> const& dxgiFactory,
         Microsoft::WRL::ComPtr<ID3D11Device> const& nativeDevice,
-        Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext);
+        Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
+        PresentationParameters const& presentationParameters);
 
     ~GraphicsContextDirect3D11();
 
@@ -106,7 +107,7 @@ private:
     int preferredBackBufferWidth;
     int preferredBackBufferHeight;
     UINT backBufferCount;
-    SurfaceFormat backBufferFormat;
+    DXGI_FORMAT backBufferFormat;
     DepthFormat backBufferDepthFormat;
     bool needToApplyPipelineState;
 };

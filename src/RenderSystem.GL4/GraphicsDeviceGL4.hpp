@@ -44,7 +44,9 @@ public:
     std::unique_ptr<NativeRenderTarget2D>
     CreateRenderTarget2D(std::int32_t width, std::int32_t height,
         std::uint32_t mipmapLevels,
-        SurfaceFormat format, DepthFormat depthStencilFormat) override;
+        SurfaceFormat format,
+        DepthFormat depthStencilFormat,
+        std::int32_t multiSampleCount) override;
 };
 
 } // namespace GL4

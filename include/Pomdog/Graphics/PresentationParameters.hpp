@@ -11,11 +11,12 @@
 namespace Pomdog {
 
 struct PresentationParameters {
-    std::uint32_t BackBufferWidth;
-    std::uint32_t BackBufferHeight;
-    std::uint32_t PresentationInterval;
-    SurfaceFormat SurfaceFormat;
-    DepthFormat DepthFormat;
+    std::int32_t BackBufferWidth;
+    std::int32_t BackBufferHeight;
+    std::int32_t PresentationInterval;
+    std::int32_t MultiSampleCount;
+    SurfaceFormat BackBufferFormat;
+    DepthFormat DepthStencilFormat;
     bool IsFullScreen;
 };
 

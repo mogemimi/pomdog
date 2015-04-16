@@ -30,8 +30,16 @@ RenderTarget2D::RenderTarget2D(GraphicsDevice & graphicsDevice,
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
     POMDOG_ASSERT(levelCount >= 1);
-    nativeRenderTarget2D = graphicsDevice.NativeGraphicsDevice()->CreateRenderTarget2D(
-        pixelWidth, pixelHeight, levelCount, format, depthStencilFormat);
+
+    auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+    POMDOG_ASSERT(nativeDevice != nullptr);
+
+    ///@todo MSAA is not implemented yet
+    constexpr int multiSampleCount = 1;
+
+    nativeRenderTarget2D = nativeDevice->CreateRenderTarget2D(
+        pixelWidth, pixelHeight, levelCount, format, depthStencilFormat,
+        multiSampleCount);
 }
 //-----------------------------------------------------------------------
 RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,

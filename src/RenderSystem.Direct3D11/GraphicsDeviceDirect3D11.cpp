@@ -417,13 +417,19 @@ GraphicsDeviceDirect3D11::CreateTexture2D(std::int32_t width, std::int32_t heigh
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeRenderTarget2D>
-GraphicsDeviceDirect3D11::CreateRenderTarget2D(std::int32_t width, std::int32_t height,
-    std::uint32_t mipmapLevels, SurfaceFormat format, DepthFormat depthStencilFormat)
+GraphicsDeviceDirect3D11::CreateRenderTarget2D(
+    std::int32_t width,
+    std::int32_t height,
+    std::uint32_t mipmapLevels,
+    SurfaceFormat format,
+    DepthFormat depthStencilFormat,
+    std::int32_t multiSampleCount)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device);
     return std::make_unique<RenderTarget2DDirect3D11>(impl->device.Get(),
-        width, height, mipmapLevels, format, depthStencilFormat);
+        width, height, mipmapLevels, format, depthStencilFormat,
+        multiSampleCount);
 }
 //-----------------------------------------------------------------------
 Microsoft::WRL::ComPtr<ID3D11Device> GraphicsDeviceDirect3D11::GetDevice() const

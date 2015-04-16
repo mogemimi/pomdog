@@ -15,7 +15,8 @@ namespace Detail {
 namespace Win32 {
 namespace {
 
-static PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(PresentationParameters const& presentationParameters)
+static PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
+    PresentationParameters const& presentationParameters)
 {
     PIXELFORMATDESCRIPTOR descriptor =
     {
@@ -34,7 +35,7 @@ static PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(PresentationParameters cons
         0, 0, 0
     };
 
-    switch (presentationParameters.SurfaceFormat) {
+    switch (presentationParameters.BackBufferFormat) {
     case SurfaceFormat::R8G8B8A8_UNorm:
         descriptor.cColorBits = 32;
         break;
@@ -49,7 +50,7 @@ static PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(PresentationParameters cons
         break;
     }
 
-    switch (presentationParameters.DepthFormat) {
+    switch (presentationParameters.DepthStencilFormat) {
     case DepthFormat::Depth16:
         descriptor.cDepthBits = 16;
         descriptor.cStencilBits = 0;
@@ -73,7 +74,8 @@ static PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(PresentationParameters cons
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-OpenGLContextWin32::OpenGLContextWin32(HWND windowHandleIn, PresentationParameters const& presentationParameters)
+OpenGLContextWin32::OpenGLContextWin32(HWND windowHandleIn,
+    PresentationParameters const& presentationParameters)
     : windowHandle(windowHandleIn)
     , hdc(nullptr, [this](HDC hdcIn) {
         ReleaseDC(windowHandle, hdcIn);

@@ -16,9 +16,10 @@
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Graphics/ClearOptions.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
-#include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
+#include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -33,6 +34,8 @@ namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
 
+using DXGI::DXGIFormatHelper;
+
 static D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
@@ -43,64 +46,78 @@ static D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(PrimitiveTopology primi
     }
     return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 }
+//-----------------------------------------------------------------------
+static void ChooseMultiSampleSetting(
+    ID3D11Device* device,
+    DXGI_FORMAT backBufferFormat,
+    int preferredMultiSampleCount,
+    DXGI_SAMPLE_DESC & sampleDesc)
+{
+    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(preferredMultiSampleCount >= 1);
+    POMDOG_ASSERT(preferredMultiSampleCount <= 32);
 
-using DXGI::DXGIFormatHelper;
+    const auto maxSampleCount = std::min(
+        preferredMultiSampleCount,
+        D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT);
+
+    for (int sampleCount = maxSampleCount; sampleCount >= 1; --sampleCount)
+    {
+        UINT qualityLevels = 0;
+
+        auto hr = device->CheckMultisampleQualityLevels(
+            backBufferFormat, sampleCount, &qualityLevels);
+
+        if (SUCCEEDED(hr) && (0 < qualityLevels)) {
+            sampleDesc.Count = sampleCount;
+            sampleDesc.Quality = qualityLevels - 1;
+            return;
+        }
+    }
+}
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
 GraphicsContextDirect3D11::GraphicsContextDirect3D11(
     HWND windowHandle,
     Microsoft::WRL::ComPtr<IDXGIFactory1> const& dxgiFactory,
-    Microsoft::WRL::ComPtr<ID3D11Device> const& nativeDevice,
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContextIn)
+    Microsoft::WRL::ComPtr<ID3D11Device> const& device,
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContextIn,
+    PresentationParameters const& presentationParameters)
     : deviceContext(deviceContextIn)
     , blendFactor({1.0f, 1.0f, 1.0f, 1.0f})
     , preferredBackBufferWidth(1)
     , preferredBackBufferHeight(1)
     , backBufferCount(2)
-    , backBufferFormat(SurfaceFormat::R8G8B8A8_UNorm)
-    , backBufferDepthFormat(DepthFormat::Depth24Stencil8)
+    , backBufferFormat(DXGIFormatHelper::ToDXGIFormat(presentationParameters.BackBufferFormat))
+    , backBufferDepthFormat(presentationParameters.DepthStencilFormat)
     , needToApplyPipelineState(true)
 {
     using Microsoft::WRL::ComPtr;
 
+    POMDOG_ASSERT(device);
     POMDOG_ASSERT(deviceContext);
 
     DXGI_SAMPLE_DESC sampleDesc;
     sampleDesc.Count = 1;
     sampleDesc.Quality = 0;
-    {
-        //UINT msaaSampleCount = 4;//x1, x2, x4, x8, x16 ...
-        //
-        //if (msaaSampleCount > D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT) {
-        //    msaaSampleCount = D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT;
-        //}
-        //
-        //for (UINT i = 0; i <= msaaSampleCount; ++i)
-        //{
-        //    UINT numQualityLevels(0);
-        //
-        //    auto hr = nativeDevice->CheckMultisampleQualityLevels(
-        //        DXGI_FORMAT_R8G8B8A8_UNORM, i, &numQualityLevels );
-        //
-        //    if (SUCCEEDED(hr)) {
-        //        if (0 < numQualityLevels) {
-        //            sampleDesc.Count = i;
-        //            sampleDesc.Quality = numQualityLevels - 1;
-        //        }
-        //    }
-        //}
+
+    if (presentationParameters.MultiSampleCount > 1) {
+        ChooseMultiSampleSetting(
+            device.Get(),
+            backBufferFormat,
+            presentationParameters.MultiSampleCount,
+            sampleDesc);
+    }
 
 #if defined(DEBUG) && !defined(NDEBUG)
-        {
-            Log::Internal(StringFormat(
-                "MSAA.Sample.Count  : %d\n"
-                "MSAA.Sample.Quality: %d",
-                sampleDesc.Count,
-                sampleDesc.Quality));
-        }
+    Log::Internal(StringFormat(
+        "DXGI_SAMPLE_DESC.Count  : %d\n"
+        "DXGI_SAMPLE_DESC.Quality: %d",
+        sampleDesc.Count,
+        sampleDesc.Quality));
 #endif
-    }
+
     {
         RECT rect;
         ::GetClientRect(windowHandle, &rect);
@@ -116,7 +133,7 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
         swapChainDesc.BufferCount = backBufferCount;
         swapChainDesc.BufferDesc.Width = preferredBackBufferWidth;
         swapChainDesc.BufferDesc.Height = preferredBackBufferHeight;
-        swapChainDesc.BufferDesc.Format = DXGIFormatHelper::ToDXGIFormat(backBufferFormat);
+        swapChainDesc.BufferDesc.Format = backBufferFormat;
         swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
         swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
         swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -125,9 +142,8 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
         swapChainDesc.SampleDesc.Count = sampleDesc.Count;
         swapChainDesc.SampleDesc.Quality = sampleDesc.Quality;
 
-        POMDOG_ASSERT(nativeDevice);
         POMDOG_ASSERT(dxgiFactory);
-        HRESULT hr = dxgiFactory->CreateSwapChain(nativeDevice.Get(), &swapChainDesc, &swapChain);
+        HRESULT hr = dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain);
 
         if (FAILED(hr)) {
             // FUS RO DAH!
@@ -135,9 +151,16 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
         }
     }
     {
-        backBuffer = std::make_shared<RenderTarget2DDirect3D11>(nativeDevice.Get(),
-            swapChain.Get(), preferredBackBufferWidth, preferredBackBufferHeight,
-            backBufferDepthFormat);
+        ///@todo MSAA is not implemented yet
+        constexpr int multiSampleCount = 1;
+
+        backBuffer = std::make_shared<RenderTarget2DDirect3D11>(
+            device.Get(),
+            swapChain.Get(),
+            preferredBackBufferWidth,
+            preferredBackBufferHeight,
+            backBufferDepthFormat,
+            multiSampleCount);
 
         boundRenderTargets.reserve(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
         boundRenderTargets.push_back(backBuffer);
@@ -504,38 +527,46 @@ void GraphicsContextDirect3D11::SetConstantBuffers(std::shared_ptr<NativeConstan
     constantLayout.Apply(deviceContext.Get());
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::ResizeBackBuffers(ID3D11Device* nativeDevice,
+void GraphicsContextDirect3D11::ResizeBackBuffers(ID3D11Device* device,
     int backBufferWidthIn, int backBufferHeightIn)
 {
-    POMDOG_ASSERT(nativeDevice != nullptr);
+    POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(backBufferWidthIn > 0);
     POMDOG_ASSERT(backBufferHeightIn > 0);
 
     preferredBackBufferWidth = backBufferWidthIn;
     preferredBackBufferHeight = backBufferHeightIn;
 
-    bool isActive = false;
+    bool isBackBufferActive = false;
 
     if (!boundRenderTargets.empty()) {
-        isActive = (backBuffer == boundRenderTargets.front());
+        isBackBufferActive = (backBuffer == boundRenderTargets.front());
     }
 
     POMDOG_ASSERT(backBuffer);
     backBuffer->ResetBackBuffer();
 
     POMDOG_ASSERT(swapChain);
-    auto hr = swapChain->ResizeBuffers(backBufferCount, preferredBackBufferWidth,
-        preferredBackBufferHeight, DXGIFormatHelper::ToDXGIFormat(backBufferFormat), 0);
+    auto hr = swapChain->ResizeBuffers(
+        backBufferCount,
+        preferredBackBufferWidth,
+        preferredBackBufferHeight,
+        backBufferFormat,
+        0);
 
     if (FAILED(hr)) {
         POMDOG_THROW_EXCEPTION(std::runtime_error,
             "Failed to resize back buffer");
     }
 
-    backBuffer->ResetBackBuffer(nativeDevice, swapChain.Get(),
-        preferredBackBufferWidth, preferredBackBufferHeight, backBufferDepthFormat);
+    backBuffer->ResetBackBuffer(
+        device,
+        swapChain.Get(),
+        preferredBackBufferWidth,
+        preferredBackBufferHeight,
+        backBufferDepthFormat);
 
-    if (isActive) {
+    if (isBackBufferActive) {
         SetRenderTarget();
     }
 }

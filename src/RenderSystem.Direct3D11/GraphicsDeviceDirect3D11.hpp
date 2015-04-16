@@ -50,8 +50,10 @@ public:
 
     std::unique_ptr<NativeRenderTarget2D>
     CreateRenderTarget2D(std::int32_t width, std::int32_t height,
-        std::uint32_t mipmapLevels, SurfaceFormat format,
-        DepthFormat depthStencilFormat) override;
+        std::uint32_t mipmapLevels,
+        SurfaceFormat format,
+        DepthFormat depthStencilFormat,
+        std::int32_t multiSampleCount) override;
 
 public:
     Microsoft::WRL::ComPtr<ID3D11Device> GetDevice() const;

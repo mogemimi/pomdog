@@ -111,10 +111,16 @@ GraphicsDeviceGL4::CreateTexture2D(std::int32_t width, std::int32_t height, std:
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeRenderTarget2D>
-GraphicsDeviceGL4::CreateRenderTarget2D(std::int32_t width, std::int32_t height,
-    std::uint32_t mipmapLevels, SurfaceFormat format, DepthFormat depthStencilFormat)
+GraphicsDeviceGL4::CreateRenderTarget2D(
+    std::int32_t width, 
+    std::int32_t height,
+    std::uint32_t mipmapLevels,
+    SurfaceFormat format,
+    DepthFormat depthStencilFormat,
+    std::int32_t multiSampleCount)
 {
-    return std::make_unique<RenderTarget2DGL4>(width, height, mipmapLevels, format, depthStencilFormat);
+    return std::make_unique<RenderTarget2DGL4>(width, height, mipmapLevels,
+        format, depthStencilFormat, multiSampleCount);
 }
 //-----------------------------------------------------------------------
 } // namespace GL4
