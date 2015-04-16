@@ -4,8 +4,6 @@
 #ifndef POMDOG_NATIVERENDERTARGET2D_9D701F83_HPP
 #define POMDOG_NATIVERENDERTARGET2D_9D701F83_HPP
 
-#include <cstdint>
-
 namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
@@ -19,8 +17,8 @@ public:
     virtual ~NativeRenderTarget2D() = default;
 };
 
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_NATIVERENDERTARGET2D_9D701F83_HPP
