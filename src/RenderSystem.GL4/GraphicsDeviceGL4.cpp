@@ -94,7 +94,9 @@ GraphicsDeviceGL4::CreatePipelineState(PipelineStateDescription const& descripti
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectReflection>
-GraphicsDeviceGL4::CreateEffectReflection(NativePipelineState & pipelineState)
+GraphicsDeviceGL4::CreateEffectReflection(
+    PipelineStateDescription const&,
+    NativePipelineState & pipelineState)
 {
     auto const pipelineStateGL4 = dynamic_cast<PipelineStateGL4*>(&pipelineState);
     POMDOG_ASSERT(pipelineStateGL4 != nullptr);
@@ -104,8 +106,8 @@ GraphicsDeviceGL4::CreateEffectReflection(NativePipelineState & pipelineState)
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeTexture2D>
-GraphicsDeviceGL4::CreateTexture2D(std::int32_t width, std::int32_t height, std::uint32_t mipmapLevels,
-    SurfaceFormat format)
+GraphicsDeviceGL4::CreateTexture2D(std::int32_t width, std::int32_t height,
+    std::uint32_t mipmapLevels, SurfaceFormat format)
 {
     return std::make_unique<Texture2DGL4>(width, height, mipmapLevels, format);
 }

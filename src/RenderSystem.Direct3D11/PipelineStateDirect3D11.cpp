@@ -252,7 +252,7 @@ static void ReflectShaderBytecode(ShaderBytecode const& shaderBytecode,
 //-----------------------------------------------------------------------
 static void EnumerateConstantBuffers(
     ShaderBytecode const& shaderBytecode,
-    std::vector<ConstantBufferBindingDirect3D11> & output)
+    std::vector<ConstantBufferBindDesc> & output)
 {
     POMDOG_ASSERT(shaderBytecode.Code);
 
@@ -286,22 +286,21 @@ static void EnumerateConstantBuffers(
         D3D11_SHADER_INPUT_BIND_DESC shaderInputBindDesc;
         shaderReflector->GetResourceBindingDescByName(bufferDesc.Name, &shaderInputBindDesc);
 
-        ConstantBufferBindingDirect3D11 binding;
-        binding.Name = bufferDesc.Name;
-        binding.StartSlot = static_cast<std::uint16_t>(shaderInputBindDesc.BindPoint);
+        ConstantBufferBindDesc desc;
+        desc.Name = bufferDesc.Name;
+        desc.BindPoint = shaderInputBindDesc.BindPoint;
 
-        POMDOG_ASSERT(shaderInputBindDesc.BindPoint < std::numeric_limits<decltype(binding.StartSlot)>::max());
-        POMDOG_ASSERT(shaderInputBindDesc.BindPoint < D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
-
-        output.push_back(std::move(binding));
+        POMDOG_ASSERT(shaderInputBindDesc.BindPoint
+            <= D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
+        output.push_back(std::move(desc));
     }
 }
 //-----------------------------------------------------------------------
-static std::vector<ConstantBufferBindingDirect3D11> CreateConstantBufferBindings(
+static std::vector<ConstantBufferBindDesc> CreateConstantBufferBindDescs(
     ShaderBytecode const& vertexShaderBytecode,
     ShaderBytecode const& pixelShaderBytecode)
 {
-    using Desc = ConstantBufferBindingDirect3D11;
+    using Desc = ConstantBufferBindDesc;
 
     std::vector<Desc> bindings;
     EnumerateConstantBuffers(vertexShaderBytecode, bindings);
@@ -331,18 +330,35 @@ PipelineStateDirect3D11::PipelineStateDirect3D11(ID3D11Device* device,
     depthStencilState = CreateDepthStencilState(device, description.DepthStencilState);
     rasterizerState = CreateRasterizerState(device, description.RasterizerState);
 
-    vertexShader = std::dynamic_pointer_cast<Direct3D11::VertexShaderDirect3D11>(description.VertexShader);
-    if (!vertexShader) {
+    auto vertexShaderD3D = std::dynamic_pointer_cast<VertexShaderDirect3D11>(description.VertexShader);
+    if (!vertexShaderD3D) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid vertex shader.");
     }
 
-    pixelShader = std::dynamic_pointer_cast<Direct3D11::PixelShaderDirect3D11>(description.PixelShader);
-    if (!pixelShader) {
+    vertexShader = vertexShaderD3D->GetNativeShader();
+    if (!vertexShader) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "The vertex shader is null");
+    }
+
+    auto pixelShaderD3D = std::dynamic_pointer_cast<PixelShaderDirect3D11>(description.PixelShader);
+    if (!pixelShaderD3D) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid pixel shader.");
     }
 
+    pixelShader = pixelShaderD3D->GetNativeShader();
+    if (!pixelShader) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "The pixel shader is null");
+    }
+
     inputLayout = InputLayoutHelper::CreateInputLayout(
-        device, vertexShader->GetShaderBytecode(), description.InputLayout);
+        device, vertexShaderD3D->GetShaderBytecode(), description.InputLayout);
+
+    POMDOG_ASSERT(vertexShaderD3D);
+    POMDOG_ASSERT(pixelShaderD3D);
+
+    constantBufferBinds = CreateConstantBufferBindDescs(
+        vertexShaderD3D->GetShaderBytecode(),
+        pixelShaderD3D->GetShaderBytecode());
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeConstantLayout> PipelineStateDirect3D11::CreateConstantLayout()
@@ -350,9 +366,15 @@ std::unique_ptr<NativeConstantLayout> PipelineStateDirect3D11::CreateConstantLay
     POMDOG_ASSERT(vertexShader);
     POMDOG_ASSERT(pixelShader);
 
-    auto bindings = CreateConstantBufferBindings(
-        vertexShader->GetShaderBytecode(),
-        pixelShader->GetShaderBytecode());
+    std::vector<ConstantBufferBindingDirect3D11> bindings;
+    bindings.reserve(constantBufferBinds.size());
+
+    for (auto & desc: constantBufferBinds) {
+        ConstantBufferBindingDirect3D11 binding;
+        binding.Name = desc.Name;
+        binding.SlotIndex = desc.BindPoint;
+        bindings.push_back(std::move(binding));
+    }
 
     auto constantLayout = std::make_unique<ConstantLayoutDirect3D11>(std::move(bindings));
     return std::move(constantLayout);
@@ -370,23 +392,11 @@ void PipelineStateDirect3D11::Apply(ID3D11DeviceContext * deviceContext,
     POMDOG_ASSERT(depthStencilState);
 
     deviceContext->IASetInputLayout(inputLayout.Get());
-    deviceContext->VSSetShader(vertexShader->GetNativeShader(), nullptr, 0);
-    deviceContext->PSSetShader(pixelShader->GetNativeShader(), nullptr, 0);
+    deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
+    deviceContext->PSSetShader(pixelShader.Get(), nullptr, 0);
     deviceContext->OMSetBlendState(blendState.Get(), blendFactor, sampleMask);
     deviceContext->OMSetDepthStencilState(depthStencilState.Get(), 0);
     deviceContext->RSSetState(rasterizerState.Get());
-}
-//-----------------------------------------------------------------------
-ShaderBytecode PipelineStateDirect3D11::GetVertexShaderBlob() const
-{
-    POMDOG_ASSERT(vertexShader);
-    return vertexShader->GetShaderBytecode();
-}
-//-----------------------------------------------------------------------
-ShaderBytecode PipelineStateDirect3D11::GetPixelShaderBlob() const
-{
-    POMDOG_ASSERT(pixelShader);
-    return pixelShader->GetShaderBytecode();
 }
 //-----------------------------------------------------------------------
 } // namespace Direct3D11

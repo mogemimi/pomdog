@@ -22,6 +22,7 @@ static auto dummyParameter = std::make_shared<ConstantBuffer>();
 } // unnamed namespace
 //-----------------------------------------------------------------------
 ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
+    PipelineStateDescription const& pipelineStateDescription,
     PipelineState & pipelineState)
 {
     auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
@@ -30,7 +31,9 @@ ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
 
     // Create effect reflection:
     POMDOG_ASSERT(nativePipelineState);
-    auto effectReflection = nativeDevice->CreateEffectReflection(*nativePipelineState);
+    auto effectReflection = nativeDevice->CreateEffectReflection(
+        pipelineStateDescription,
+        *nativePipelineState);
 
     POMDOG_ASSERT(effectReflection);
     auto constants = effectReflection->GetConstantBuffers();
@@ -60,8 +63,12 @@ ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
 //-----------------------------------------------------------------------
 ConstantBufferBinding::ConstantBufferBinding(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    PipelineStateDescription const& pipelineStateDescription,
     PipelineState & pipelineState)
-    : ConstantBufferBinding(*graphicsDevice, pipelineState)
+    : ConstantBufferBinding(
+        *graphicsDevice,
+        pipelineStateDescription,
+        pipelineState)
 {
 }
 //-----------------------------------------------------------------------

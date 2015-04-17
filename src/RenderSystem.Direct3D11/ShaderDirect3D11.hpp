@@ -27,7 +27,7 @@ public:
         ShaderBytecode const& shaderBytecode,
         ShaderCompileOptions const& compileOptions);
 
-    NativeShaderType* GetNativeShader() const;
+    Microsoft::WRL::ComPtr<NativeShaderType> GetNativeShader() const;
 
     ShaderBytecode GetShaderBytecode() const;
 

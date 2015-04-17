@@ -18,7 +18,12 @@ public:
     EffectReflection(EffectReflection const&) = delete;
     EffectReflection(EffectReflection &&) = default;
 
+    EffectReflection(GraphicsDevice & graphicsDevice,
+        PipelineStateDescription const& pipelineStateDescription,
+        std::shared_ptr<PipelineState> const& pipelineState);
+
     EffectReflection(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        PipelineStateDescription const& pipelineStateDescription,
         std::shared_ptr<PipelineState> const& pipelineState);
 
     ~EffectReflection();

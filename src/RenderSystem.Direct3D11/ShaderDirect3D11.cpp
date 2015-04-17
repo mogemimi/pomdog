@@ -62,10 +62,10 @@ ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(ID3D11Device* device,
 }
 //-----------------------------------------------------------------------
 template <class NativeShaderType>
-NativeShaderType* ShaderDirect3D11<NativeShaderType>::GetNativeShader() const
+Microsoft::WRL::ComPtr<NativeShaderType> ShaderDirect3D11<NativeShaderType>::GetNativeShader() const
 {
     POMDOG_ASSERT(nativeShader);
-    return nativeShader.Get();
+    return nativeShader;
 }
 //-----------------------------------------------------------------------
 template <class NativeShaderType>

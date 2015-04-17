@@ -35,7 +35,8 @@ public:
     CreatePipelineState(PipelineStateDescription const& description) override;
 
     std::unique_ptr<NativeEffectReflection>
-    CreateEffectReflection(NativePipelineState & pipelineState) override;
+    CreateEffectReflection(PipelineStateDescription const& description,
+        NativePipelineState & pipelineState) override;
 
     std::unique_ptr<NativeTexture2D>
     CreateTexture2D(std::int32_t width, std::int32_t height,

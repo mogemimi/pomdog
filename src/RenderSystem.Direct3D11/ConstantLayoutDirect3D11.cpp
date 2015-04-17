@@ -56,8 +56,8 @@ void ConstantLayoutDirect3D11::Apply(ID3D11DeviceContext * deviceContext)
     {
         auto constantBuffer = binding.ConstantBuffer->GetBuffer();
         POMDOG_ASSERT(constantBuffer);
-        deviceContext->VSSetConstantBuffers(binding.StartSlot, 1, &constantBuffer);
-        deviceContext->PSSetConstantBuffers(binding.StartSlot, 1, &constantBuffer);
+        deviceContext->VSSetConstantBuffers(binding.SlotIndex, 1, &constantBuffer);
+        deviceContext->PSSetConstantBuffers(binding.SlotIndex, 1, &constantBuffer);
     }
 }
 //-----------------------------------------------------------------------

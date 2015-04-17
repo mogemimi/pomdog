@@ -7,10 +7,12 @@
 #include "PipelineStateDirect3D11.hpp"
 #include "RenderTarget2DDirect3D11.hpp"
 #include "SamplerStateDirect3D11.hpp"
+#include "ShaderDirect3D11.hpp"
 #include "Texture2DDirect3D11.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "../RenderSystem/ShaderCompileOptions.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
+#include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/StringFormat.hpp"
@@ -388,9 +390,11 @@ GraphicsDeviceDirect3D11::CreatePipelineState(PipelineStateDescription const& de
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectReflection>
-GraphicsDeviceDirect3D11::CreateEffectReflection(NativePipelineState & pipelineStateIn)
+GraphicsDeviceDirect3D11::CreateEffectReflection(
+    PipelineStateDescription const& description,
+    NativePipelineState & pipelineStateIn)
 {
-    auto const pipelineState = dynamic_cast<PipelineStateDirect3D11*>(&pipelineStateIn);
+    auto pipelineState = dynamic_cast<PipelineStateDirect3D11*>(&pipelineStateIn);
     POMDOG_ASSERT(pipelineState != nullptr);
 
     if (pipelineState == nullptr) {
@@ -399,14 +403,30 @@ GraphicsDeviceDirect3D11::CreateEffectReflection(NativePipelineState & pipelineS
             "Failed to cast pipeline state to PipelineStateDirect3D11");
     }
 
+    auto vertexShader = std::dynamic_pointer_cast<VertexShaderDirect3D11>(description.VertexShader);
+
+    if (!vertexShader) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::domain_error,
+            "Failed to cast to vertex shader");
+    }
+
+    auto pixelShader = std::dynamic_pointer_cast<PixelShaderDirect3D11>(description.PixelShader);
+
+    if (!pixelShader) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::domain_error,
+            "Failed to cast to pixel shader");
+    }
+
     return std::make_unique<EffectReflectionDirect3D11>(
-        pipelineState->GetVertexShaderBlob(),
-        pipelineState->GetPixelShaderBlob());
+        vertexShader->GetShaderBytecode(),
+        pixelShader->GetShaderBytecode());
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeTexture2D>
-GraphicsDeviceDirect3D11::CreateTexture2D(std::int32_t width, std::int32_t height, std::uint32_t mipmapLevels,
-    SurfaceFormat format)
+GraphicsDeviceDirect3D11::CreateTexture2D(std::int32_t width, std::int32_t height,
+    std::uint32_t mipmapLevels, SurfaceFormat format)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device);

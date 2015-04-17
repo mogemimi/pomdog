@@ -40,7 +40,7 @@ struct UniformGL4 {
     GLuint ArrayCount;
 };
 
-class EffectReflectionGL4: public NativeEffectReflection {
+class EffectReflectionGL4 final : public NativeEffectReflection {
 public:
     EffectReflectionGL4() = delete;
 
@@ -56,9 +56,9 @@ private:
     ShaderProgramGL4 shaderProgram;
 };
 
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_EFFECTREFLECTIONGL4_98947466_HPP

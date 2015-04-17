@@ -22,9 +22,11 @@ public:
     ConstantBufferBinding(ConstantBufferBinding &&) = default;
 
     ConstantBufferBinding(GraphicsDevice & graphicsDevice,
+        PipelineStateDescription const& pipelineStateDescription,
         PipelineState & pipelineState);
 
     ConstantBufferBinding(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        PipelineStateDescription const& pipelineStateDescription,
         PipelineState & pipelineState);
 
     ~ConstantBufferBinding();

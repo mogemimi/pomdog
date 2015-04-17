@@ -638,7 +638,7 @@ static void DebugLogUniforms(std::vector<UniformGL4> const& uniforms)
 }
 #endif
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 EffectReflectionGL4::EffectReflectionGL4(ShaderProgramGL4 const& shaderProgramIn)
     : shaderProgram(shaderProgramIn)
@@ -685,7 +685,7 @@ std::vector<EffectConstantDescription> EffectReflectionGL4::GetConstantBuffers()
     return std::move(result);
 }
 
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

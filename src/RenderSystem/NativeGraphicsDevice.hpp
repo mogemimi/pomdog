@@ -58,7 +58,9 @@ public:
     CreatePipelineState(PipelineStateDescription const& description) = 0;
 
     virtual std::unique_ptr<NativeEffectReflection>
-    CreateEffectReflection(NativePipelineState & pipelineState) = 0;
+    CreateEffectReflection(
+        PipelineStateDescription const& description,
+        NativePipelineState & pipelineState) = 0;
 
     virtual std::unique_ptr<NativeTexture2D>
     CreateTexture2D(
