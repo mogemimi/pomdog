@@ -3,6 +3,8 @@
 
 #include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
+#include "Pomdog/Graphics/ConstantBufferBinding.hpp"
+#include "Pomdog/Graphics/EffectReflection.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
@@ -133,6 +135,38 @@ std::shared_ptr<PipelineState> Builder<PipelineState>::Build()
 {
     POMDOG_ASSERT(impl);
     return impl->Load();
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<ConstantBufferBinding> Builder<PipelineState>::CreateConstantBuffers(
+    std::shared_ptr<PipelineState> const& pipelineState)
+{
+    POMDOG_ASSERT(impl);
+    POMDOG_ASSERT(pipelineState);
+
+    auto constantBuffers = std::make_shared<ConstantBufferBinding>(
+        impl->graphicsDevice,
+        impl->description,
+        *pipelineState);
+    return std::move(constantBuffers);
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<EffectReflection> Builder<PipelineState>::CreateEffectReflection(
+    std::shared_ptr<PipelineState> const& pipelineState)
+{
+    POMDOG_ASSERT(impl);
+    POMDOG_ASSERT(pipelineState);
+
+    auto effectReflection = std::make_shared<EffectReflection>(
+        impl->graphicsDevice,
+        impl->description,
+        pipelineState);
+    return std::move(effectReflection);
+}
+//-----------------------------------------------------------------------
+PipelineStateDescription const& Builder<PipelineState>::GetDescription() const
+{
+    POMDOG_ASSERT(impl);
+    return impl->description;
 }
 //-----------------------------------------------------------------------
 } // namespace AssetBuilders
