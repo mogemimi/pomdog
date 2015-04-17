@@ -4,6 +4,7 @@
 #ifndef POMDOG_CONSTANTLAYOUTGL4_25949458_HPP
 #define POMDOG_CONSTANTLAYOUTGL4_25949458_HPP
 
+#include "BufferGL4.hpp"
 #include "../RenderSystem/NativeConstantLayout.hpp"
 #include <cstdint>
 #include <vector>
@@ -12,8 +13,6 @@ namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
-
-class ConstantBufferGL4;
 
 struct ConstantBufferBindingGL4 {
     std::shared_ptr<ConstantBufferGL4> ConstantBuffer;

@@ -268,8 +268,8 @@
     'pomdog_library_opengl4_sources': [
       '../src/RenderSystem.GL4/BlendStateGL4.cpp',
       '../src/RenderSystem.GL4/BlendStateGL4.hpp',
-      '../src/RenderSystem.GL4/ConstantBufferGL4.cpp',
-      '../src/RenderSystem.GL4/ConstantBufferGL4.hpp',
+      '../src/RenderSystem.GL4/BufferGL4.cpp',
+      '../src/RenderSystem.GL4/BufferGL4.hpp',
       '../src/RenderSystem.GL4/ConstantLayoutGL4.cpp',
       '../src/RenderSystem.GL4/ConstantLayoutGL4.hpp',
       '../src/RenderSystem.GL4/DepthStencilStateGL4.cpp',
@@ -282,8 +282,6 @@
       '../src/RenderSystem.GL4/GraphicsContextGL4.hpp',
       '../src/RenderSystem.GL4/GraphicsDeviceGL4.cpp',
       '../src/RenderSystem.GL4/GraphicsDeviceGL4.hpp',
-      '../src/RenderSystem.GL4/IndexBufferGL4.cpp',
-      '../src/RenderSystem.GL4/IndexBufferGL4.hpp',
       '../src/RenderSystem.GL4/InputLayoutGL4.cpp',
       '../src/RenderSystem.GL4/InputLayoutGL4.hpp',
       '../src/RenderSystem.GL4/OpenGLContext.hpp',
@@ -302,8 +300,6 @@
       '../src/RenderSystem.GL4/Texture2DGL4.hpp',
       '../src/RenderSystem.GL4/TypesafeGL4.hpp',
       '../src/RenderSystem.GL4/TypesafeHelperGL4.hpp',
-      '../src/RenderSystem.GL4/VertexBufferGL4.cpp',
-      '../src/RenderSystem.GL4/VertexBufferGL4.hpp',
     ],
     'pomdog_library_openal_sources': [
       '../src/SoundSystem.OpenAL/AudioClipAL.cpp',

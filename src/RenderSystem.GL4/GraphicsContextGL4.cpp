@@ -2,12 +2,12 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "GraphicsContextGL4.hpp"
-#include "OpenGLContext.hpp"
+#include "BufferGL4.hpp"
 #include "ConstantLayoutGL4.hpp"
-#include "PipelineStateGL4.hpp"
 #include "ErrorChecker.hpp"
-#include "IndexBufferGL4.hpp"
 #include "InputLayoutGL4.hpp"
+#include "OpenGLContext.hpp"
+#include "PipelineStateGL4.hpp"
 #include "RenderTarget2DGL4.hpp"
 #include "SamplerStateGL4.hpp"
 #include "TypesafeHelperGL4.hpp"

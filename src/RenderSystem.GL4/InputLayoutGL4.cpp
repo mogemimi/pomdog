@@ -2,9 +2,9 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "InputLayoutGL4.hpp"
+#include "BufferGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
-#include "VertexBufferGL4.hpp"
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"

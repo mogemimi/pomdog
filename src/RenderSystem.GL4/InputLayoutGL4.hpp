@@ -17,8 +17,6 @@ namespace Detail {
 namespace RenderSystem {
 namespace GL4 {
 
-class VertexBufferGL4;
-
 namespace Tags {
 
 struct ScalarDataTypeTag {};

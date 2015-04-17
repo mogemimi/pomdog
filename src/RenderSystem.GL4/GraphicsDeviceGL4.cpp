@@ -2,15 +2,13 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "GraphicsDeviceGL4.hpp"
-#include "ConstantBufferGL4.hpp"
-#include "PipelineStateGL4.hpp"
+#include "BufferGL4.hpp"
 #include "EffectReflectionGL4.hpp"
-#include "IndexBufferGL4.hpp"
+#include "PipelineStateGL4.hpp"
 #include "SamplerStateGL4.hpp"
 #include "ShaderGL4.hpp"
-#include "Texture2DGL4.hpp"
 #include "RenderTarget2DGL4.hpp"
-#include "VertexBufferGL4.hpp"
+#include "Texture2DGL4.hpp"
 #include "../RenderSystem/ShaderCompileOptions.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
