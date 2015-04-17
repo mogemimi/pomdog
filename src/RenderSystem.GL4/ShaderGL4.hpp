@@ -23,7 +23,7 @@ public:
 
     ~ShaderGL4();
 
-    GLuint NativeShader() const;
+    GLuint GetShader() const;
 
 private:
     static constexpr GLenum pipelineStage = PipelineStage;

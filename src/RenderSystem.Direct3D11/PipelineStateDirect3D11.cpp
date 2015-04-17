@@ -335,7 +335,7 @@ PipelineStateDirect3D11::PipelineStateDirect3D11(ID3D11Device* device,
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid vertex shader.");
     }
 
-    vertexShader = vertexShaderD3D->GetNativeShader();
+    vertexShader = vertexShaderD3D->GetShader();
     if (!vertexShader) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "The vertex shader is null");
     }
@@ -345,7 +345,7 @@ PipelineStateDirect3D11::PipelineStateDirect3D11(ID3D11Device* device,
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid pixel shader.");
     }
 
-    pixelShader = pixelShaderD3D->GetNativeShader();
+    pixelShader = pixelShaderD3D->GetShader();
     if (!pixelShader) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "The pixel shader is null");
     }

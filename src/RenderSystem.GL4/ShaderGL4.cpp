@@ -108,7 +108,7 @@ ShaderGL4<PipelineStage>::~ShaderGL4()
 }
 //-----------------------------------------------------------------------
 template <GLenum PipelineStage>
-GLuint ShaderGL4<PipelineStage>::NativeShader() const
+GLuint ShaderGL4<PipelineStage>::GetShader() const
 {
     POMDOG_ASSERT(shader);
     return *shader;

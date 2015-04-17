@@ -27,12 +27,12 @@ public:
         ShaderBytecode const& shaderBytecode,
         ShaderCompileOptions const& compileOptions);
 
-    Microsoft::WRL::ComPtr<NativeShaderType> GetNativeShader() const;
+    Microsoft::WRL::ComPtr<NativeShaderType> GetShader() const;
 
     ShaderBytecode GetShaderBytecode() const;
 
 private:
-    Microsoft::WRL::ComPtr<NativeShaderType> nativeShader;
+    Microsoft::WRL::ComPtr<NativeShaderType> shader;
     std::vector<std::uint8_t> codeBlob;
 };
 

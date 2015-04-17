@@ -30,8 +30,8 @@ static Optional<ShaderProgramGL4> LinkShaders(
         glCreateProgram()
     };
 
-    glAttachShader(program.value, vertexShader.NativeShader());
-    glAttachShader(program.value, pixelShader.NativeShader());
+    glAttachShader(program.value, vertexShader.GetShader());
+    glAttachShader(program.value, pixelShader.GetShader());
 
     glLinkProgram(program.value);
     POMDOG_CHECK_ERROR_GL4("glLinkProgram");

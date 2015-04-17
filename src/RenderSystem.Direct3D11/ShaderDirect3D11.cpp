@@ -54,7 +54,7 @@ ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(ID3D11Device* device,
     POMDOG_ASSERT(device);
     POMDOG_ASSERT(!codeBlob.empty());
 
-    HRESULT hr = CreateShader(device, codeBlob.data(), codeBlob.size(), &nativeShader);
+    HRESULT hr = CreateShader(device, codeBlob.data(), codeBlob.size(), &shader);
     if (FAILED(hr)) {
         // error: FUS RO DAH!!
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create shader");
@@ -62,10 +62,10 @@ ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(ID3D11Device* device,
 }
 //-----------------------------------------------------------------------
 template <class NativeShaderType>
-Microsoft::WRL::ComPtr<NativeShaderType> ShaderDirect3D11<NativeShaderType>::GetNativeShader() const
+Microsoft::WRL::ComPtr<NativeShaderType> ShaderDirect3D11<NativeShaderType>::GetShader() const
 {
-    POMDOG_ASSERT(nativeShader);
-    return nativeShader;
+    POMDOG_ASSERT(shader);
+    return shader;
 }
 //-----------------------------------------------------------------------
 template <class NativeShaderType>
