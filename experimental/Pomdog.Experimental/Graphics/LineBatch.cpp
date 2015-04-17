@@ -100,7 +100,8 @@ LineBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
             .SetGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS));
 
-        pipelineState = assets.CreateBuilder<PipelineState>()
+        auto builder = assets.CreateBuilder<PipelineState>();
+        pipelineState = builder
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
@@ -108,8 +109,7 @@ LineBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
             .SetDepthStencilState(DepthStencilDescription::CreateNone())
             .Build();
 
-        constantBuffers = std::make_shared<ConstantBufferBinding>(
-            graphicsDevice, *pipelineState);
+        constantBuffers = builder.CreateConstantBuffers(pipelineState);
     }
 }
 //-----------------------------------------------------------------------

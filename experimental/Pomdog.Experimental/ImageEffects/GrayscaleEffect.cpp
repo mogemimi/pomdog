@@ -45,7 +45,8 @@ GrayscaleEffect::GrayscaleEffect(
         .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
         .SetGLSL(Builtin_GLSL_Grayscale_PS, std::strlen(Builtin_GLSL_Grayscale_PS));
 
-    pipelineState = assets.CreateBuilder<PipelineState>()
+    auto builder = assets.CreateBuilder<PipelineState>();
+    pipelineState = builder
         .SetVertexShader(vertexShader.Build())
         .SetPixelShader(pixelShader.Build())
         .SetInputLayout(inputLayout.CreateInputLayout())
@@ -53,8 +54,7 @@ GrayscaleEffect::GrayscaleEffect(
         .SetDepthStencilState(DepthStencilDescription::CreateNone())
         .Build();
 
-    constantBuffers = std::make_shared<ConstantBufferBinding>(
-        graphicsDevice, *pipelineState);
+    constantBuffers = builder.CreateConstantBuffers(pipelineState);
 }
 //-----------------------------------------------------------------------
 void GrayscaleEffect::SetViewport(float width, float height)

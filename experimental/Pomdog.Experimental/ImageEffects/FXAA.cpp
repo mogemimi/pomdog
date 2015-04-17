@@ -48,7 +48,8 @@ FXAA::FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         .SetGLSL(Builtin_GLSL_FXAA_PS, std::strlen(Builtin_GLSL_FXAA_PS))
         .SetHLSLPrecompiled(BuiltinHLSL_FXAA_PS, sizeof(BuiltinHLSL_FXAA_PS));
 
-    pipelineState = assets.CreateBuilder<PipelineState>()
+    auto builder = assets.CreateBuilder<PipelineState>();
+    pipelineState = builder
         .SetVertexShader(vertexShader.Build())
         .SetPixelShader(pixelShader.Build())
         .SetInputLayout(inputLayout.CreateInputLayout())
@@ -56,8 +57,7 @@ FXAA::FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         .SetDepthStencilState(DepthStencilDescription::CreateNone())
         .Build();
 
-    constantBuffers = std::make_shared<ConstantBufferBinding>(
-        graphicsDevice, *pipelineState);
+    constantBuffers = builder.CreateConstantBuffers(pipelineState);
 }
 //-----------------------------------------------------------------------
 void FXAA::SetViewport(float width, float height)

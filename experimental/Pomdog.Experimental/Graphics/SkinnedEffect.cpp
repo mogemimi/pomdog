@@ -51,7 +51,8 @@ SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice,
         .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
         .SetGLSL(Builtin_GLSL_SkinnedEffect_PS, std::strlen(Builtin_GLSL_SkinnedEffect_PS));
 
-    pipelineState = assets.CreateBuilder<PipelineState>()
+    auto builder = assets.CreateBuilder<PipelineState>();
+    pipelineState = builder
         .SetVertexShader(vertexShader.Build())
         .SetPixelShader(pixelShader.Build())
         .SetInputLayout(inputLayout.CreateInputLayout())
@@ -59,8 +60,7 @@ SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice,
         .SetDepthStencilState(DepthStencilDescription::CreateNone())
         .Build();
 
-    constantBuffers = std::make_shared<ConstantBufferBinding>(
-        graphicsDevice, *pipelineState);
+    constantBuffers = builder.CreateConstantBuffers(pipelineState);
 }
 //-----------------------------------------------------------------------
 void SkinnedEffect::Impl::Apply(GraphicsContext & graphicsContext)

@@ -54,7 +54,8 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
             .SetGLSL(Builtin_GLSL_Sprite_DistanceField_PS, std::strlen(Builtin_GLSL_Sprite_DistanceField_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_SpriteDistanceField_PS, sizeof(BuiltinHLSL_SpriteDistanceField_PS));
 
-        distanceFieldEffect = assets->CreateBuilder<PipelineState>()
+        auto builder = assets->CreateBuilder<PipelineState>();
+        distanceFieldEffect = builder
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
@@ -62,8 +63,7 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
             .SetDepthStencilState(DepthStencilDescription::CreateNone())
             .Build();
 
-        constantBuffers = std::make_shared<ConstantBufferBinding>(
-            graphicsDevice, *distanceFieldEffect);
+        constantBuffers = builder.CreateConstantBuffers(distanceFieldEffect);
 
         spriteBatchDistanceField = std::make_unique<SpriteBatch>(
             graphicsContext, graphicsDevice,

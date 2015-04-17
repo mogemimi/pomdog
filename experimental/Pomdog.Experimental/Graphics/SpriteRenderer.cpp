@@ -168,7 +168,8 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
             .SetGLSL(Builtin_GLSL_SpriteRenderer_PS, std::strlen(Builtin_GLSL_SpriteRenderer_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_SpriteRenderer_PS, sizeof(BuiltinHLSL_SpriteRenderer_PS));
 
-        pipelineState = assets.CreateBuilder<PipelineState>()
+        auto builder = assets.CreateBuilder<PipelineState>();
+        pipelineState = builder
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
@@ -176,8 +177,7 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
             .SetDepthStencilState(DepthStencilDescription::CreateNone())
             .Build();
 
-        constantBuffers = std::make_shared<ConstantBufferBinding>(
-            graphicsDevice, *pipelineState);
+        constantBuffers = builder.CreateConstantBuffers(pipelineState);
     }
 }
 //-----------------------------------------------------------------------

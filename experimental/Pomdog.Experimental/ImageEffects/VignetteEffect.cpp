@@ -45,7 +45,8 @@ VignetteEffect::VignetteEffect(
         .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
         .SetGLSL(Builtin_GLSL_Vignette_PS, std::strlen(Builtin_GLSL_Vignette_PS));
 
-    pipelineState = assets.CreateBuilder<PipelineState>()
+    auto builder = assets.CreateBuilder<PipelineState>();
+    pipelineState = builder
         .SetVertexShader(vertexShader.Build())
         .SetPixelShader(pixelShader.Build())
         .SetInputLayout(inputLayout.CreateInputLayout())
@@ -53,8 +54,7 @@ VignetteEffect::VignetteEffect(
         .SetDepthStencilState(DepthStencilDescription::CreateNone())
         .Build();
 
-    constantBuffers = std::make_shared<ConstantBufferBinding>(
-        graphicsDevice, *pipelineState);
+    constantBuffers = builder.CreateConstantBuffers(pipelineState);
 }
 //-----------------------------------------------------------------------
 void VignetteEffect::SetViewport(float width, float height)

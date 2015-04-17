@@ -45,7 +45,8 @@ FishEyeEffect::FishEyeEffect(
         .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
         .SetGLSL(Builtin_GLSL_FishEye_PS, std::strlen(Builtin_GLSL_FishEye_PS));
 
-    pipelineState = assets.CreateBuilder<PipelineState>()
+    auto builder = assets.CreateBuilder<PipelineState>();
+    pipelineState = builder
         .SetVertexShader(vertexShader.Build())
         .SetPixelShader(pixelShader.Build())
         .SetInputLayout(inputLayout.CreateInputLayout())
@@ -53,8 +54,7 @@ FishEyeEffect::FishEyeEffect(
         .SetDepthStencilState(DepthStencilDescription::CreateNone())
         .Build();
 
-    constantBuffers = std::make_shared<ConstantBufferBinding>(
-        graphicsDevice, *pipelineState);
+    constantBuffers = builder.CreateConstantBuffers(pipelineState);
 }
 //-----------------------------------------------------------------------
 void FishEyeEffect::SetViewport(float width, float height)

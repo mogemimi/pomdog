@@ -174,7 +174,8 @@ SpriteBatchRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphics
             .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_SpriteBatchRenderer_PS, std::strlen(Builtin_GLSL_SpriteBatchRenderer_PS));
 
-        pipelineState = assets.CreateBuilder<PipelineState>()
+        auto builder = assets.CreateBuilder<PipelineState>();
+        pipelineState = builder
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
@@ -182,8 +183,7 @@ SpriteBatchRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphics
             .SetDepthStencilState(DepthStencilDescription::CreateNone())
             .Build();
 
-        constantBuffers = std::make_shared<ConstantBufferBinding>(
-            graphicsDevice, *pipelineState);
+        constantBuffers = builder.CreateConstantBuffers(pipelineState);
     }
     {
         spriteQueue.reserve(MinBatchSize);
