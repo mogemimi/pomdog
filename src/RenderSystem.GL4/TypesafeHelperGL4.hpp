@@ -5,7 +5,6 @@
 #define POMDOG_TYPESAFEHELPERGL4_8C888821_HPP
 
 #include "OpenGLPrerequisites.hpp"
-#include "Pomdog/Utility/detail/Tagged.hpp"
 #include <type_traits>
 
 namespace Pomdog {
@@ -15,46 +14,38 @@ namespace GL4 {
 
 namespace TypesafeHelperGL4 {
 
-template <class TaggedClass>
-struct OpenGLGetTraits;
+template <class Tagged>
+struct Traits;
 
-template <class TaggedClass>
-TaggedClass Get(OpenGLGetTraits<TaggedClass>* = nullptr)
+template <class Tagged>
+Tagged Get(Traits<Tagged>* = nullptr)
 {
-    typedef typename TaggedClass::value_type value_type;
-
+    typedef typename Tagged::value_type value_type;
     static_assert(std::is_fundamental<value_type>::value, "");
     static_assert(std::is_integral<value_type>::value, "");
 
-    GLint oldBuffer = 0;
-    ::glGetIntegerv(
-        OpenGLGetTraits<TaggedClass>::bufferObjectBinding,
-        &oldBuffer);
-
-    return TaggedClass(static_cast<value_type>(oldBuffer));
+    GLint buffer = 0;
+    glGetIntegerv(Traits<Tagged>::BufferBinding, &buffer);
+    return Tagged{ static_cast<value_type>(buffer) };
 }
 
-template <class TaggedClass>
-void BindBuffer(TaggedClass const& bufferObject)
+template <class Tagged>
+void BindBuffer(Tagged const& buffer)
 {
-    ::glBindBuffer(
-        OpenGLGetTraits<TaggedClass>::bufferObjectTarget,
-        bufferObject.value);
+    glBindBuffer(Traits<Tagged>::BufferTarget, buffer.value);
 }
 
-template <class TaggedClass>
-void BindTexture(TaggedClass const& textureObject)
+template <class Tagged>
+void BindTexture(Tagged const& texture)
 {
-    ::glBindTexture(
-        OpenGLGetTraits<TaggedClass>::textureObjectTarget,
-        textureObject.value);
+    glBindTexture(Traits<Tagged>::TextureTarget, texture.value);
 }
 
-}// namespace TypesafeHelperGL4
+} // namespace TypesafeHelperGL4
 
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_TYPESAFEHELPERGL4_8C888821_HPP

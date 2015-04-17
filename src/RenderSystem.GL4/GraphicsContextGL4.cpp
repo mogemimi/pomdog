@@ -45,7 +45,7 @@ namespace GL4 {
 //-----------------------------------------------------------------------
 namespace {
 
-static GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology)
+static GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
     case PrimitiveTopology::TriangleList: return GL_TRIANGLES;
@@ -155,9 +155,8 @@ static void SetTextureAsShaderResource(int index, Texture2DObjectGL4 const& text
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-template<>
-struct TypesafeHelperGL4::OpenGLGetTraits<FrameBufferGL4> {
-    constexpr static GLenum bufferObjectBinding = GL_FRAMEBUFFER_BINDING;
+template<> struct TypesafeHelperGL4::Traits<FrameBufferGL4> {
+    constexpr static GLenum BufferBinding = GL_FRAMEBUFFER_BINDING;
 };
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)

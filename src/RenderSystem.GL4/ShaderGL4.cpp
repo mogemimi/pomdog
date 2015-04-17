@@ -84,7 +84,7 @@ static Optional<GLuint> CompileShader(ShaderBytecode const& source, GLenum pipel
     return result;
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 template <GLenum PipelineStage>
 constexpr GLenum ShaderGL4<PipelineStage>::pipelineStage;
@@ -122,7 +122,7 @@ template class ShaderGL4<GL_FRAGMENT_SHADER>;
 //template class ShaderGL4<GL_TESS_EVALUATION_SHADER>;
 //template class ShaderGL4<GL_COMPUTE_SHADER>;
 //-----------------------------------------------------------------------
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

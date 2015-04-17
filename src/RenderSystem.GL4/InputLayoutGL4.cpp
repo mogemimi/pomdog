@@ -583,9 +583,8 @@ static void ApplyInputElements(
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-template<>
-struct TypesafeHelperGL4::OpenGLGetTraits<VertexArrayGL4> {
-    constexpr static GLenum bufferObjectBinding = GL_VERTEX_ARRAY_BINDING;
+template<> struct TypesafeHelperGL4::Traits<VertexArrayGL4> {
+    constexpr static GLenum BufferBinding = GL_VERTEX_ARRAY_BINDING;
 };
 //-----------------------------------------------------------------------
 InputLayoutGL4::InputLayoutGL4(ShaderProgramGL4 const& shaderProgram)

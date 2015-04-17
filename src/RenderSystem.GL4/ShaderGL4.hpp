@@ -49,9 +49,9 @@ private:
 using VertexShaderGL4 = ShaderGL4<GL_VERTEX_SHADER>;
 using PixelShaderGL4 = ShaderGL4<GL_FRAGMENT_SHADER>;
 
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SHADERGL4_39E4A790_HPP

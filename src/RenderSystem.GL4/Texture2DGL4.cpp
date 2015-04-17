@@ -191,10 +191,9 @@ static void SetPixelDataTexture2DGL4(std::int32_t pixelWidth, std::int32_t pixel
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-template<>
-struct TypesafeHelperGL4::OpenGLGetTraits<Texture2DObjectGL4> {
-    constexpr static GLenum bufferObjectBinding = GL_TEXTURE_BINDING_2D;
-    constexpr static GLenum textureObjectTarget = GL_TEXTURE_2D;
+template<> struct TypesafeHelperGL4::Traits<Texture2DObjectGL4> {
+    constexpr static GLenum BufferBinding = GL_TEXTURE_BINDING_2D;
+    constexpr static GLenum TextureTarget = GL_TEXTURE_2D;
 };
 //-----------------------------------------------------------------------
 Texture2DGL4::Texture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
