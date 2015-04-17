@@ -23,16 +23,15 @@ NSOpenGLPixelFormat* CocoaOpenGLHelper::CreatePixelFormat(
         NSOpenGLPFAAllowOfflineRenderers,
     };
 
-    ///@todo Not implemented
-//    if (presentationParameters.MultiSampleCount > 0) {
-//        attributes.push_back(NSOpenGLPFAMultisample);
-//        attributes.push_back(NSOpenGLPFASampleBuffers);
-//        attributes.push_back(1);
-//        attributes.push_back(NSOpenGLPFASamples);
-//        attributes.push_back(presentationParameters.MultiSampleCount);
-//    }
+    if (presentationParameters.MultiSampleCount > 1) {
+        attributes.push_back(NSOpenGLPFAMultisample);
+        attributes.push_back(NSOpenGLPFASampleBuffers);
+        attributes.push_back(1);
+        attributes.push_back(NSOpenGLPFASamples);
+        attributes.push_back(presentationParameters.MultiSampleCount);
+    }
 
-    switch (presentationParameters.SurfaceFormat) {
+    switch (presentationParameters.BackBufferFormat) {
     case SurfaceFormat::R8G8B8A8_UNorm:
         attributes.push_back(NSOpenGLPFAColorSize);
         attributes.push_back(24);
@@ -59,7 +58,7 @@ NSOpenGLPixelFormat* CocoaOpenGLHelper::CreatePixelFormat(
         break;
     }
 
-    switch (presentationParameters.DepthFormat) {
+    switch (presentationParameters.DepthStencilFormat) {
     case DepthFormat::Depth16:
         attributes.push_back(NSOpenGLPFADepthSize);
         attributes.push_back(16);

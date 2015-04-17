@@ -57,9 +57,10 @@ void Bootstrap::Run(std::function<std::unique_ptr<Game>(
     NSRect bounds = [openGLView bounds];
 
     PresentationParameters presentationParameters;
-    presentationParameters.SurfaceFormat = surfaceFormat;
-    presentationParameters.DepthFormat = depthFormat;
+    presentationParameters.BackBufferFormat = surfaceFormat;
+    presentationParameters.DepthStencilFormat = depthFormat;
     presentationParameters.PresentationInterval = 60;
+    presentationParameters.MultiSampleCount = 1;
     presentationParameters.BackBufferWidth = bounds.size.width;
     presentationParameters.BackBufferHeight = bounds.size.height;
     presentationParameters.IsFullScreen = false;
