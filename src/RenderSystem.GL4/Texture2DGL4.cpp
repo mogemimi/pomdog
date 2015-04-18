@@ -75,7 +75,7 @@ static GLenum ToFormatComponents(SurfaceFormat format) noexcept
     case SurfaceFormat::BlockComp1_UNorm:
     case SurfaceFormat::BlockComp2_UNorm:
     case SurfaceFormat::BlockComp3_UNorm:
-        ///@note Cannot find format
+        // Cannot find format
         return GL_RED;
     };
 
@@ -106,7 +106,7 @@ static GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
     case SurfaceFormat::BlockComp1_UNorm:
     case SurfaceFormat::BlockComp2_UNorm:
     case SurfaceFormat::BlockComp3_UNorm:
-        ///@note Cannot find format
+        // Cannot find format
         return GL_UNSIGNED_BYTE;
     };
 
@@ -115,39 +115,51 @@ static GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
 #endif
 }
 //-----------------------------------------------------------------------
-static GLsizei MipmapImageDataBytes(GLsizei pixelWidth, GLsizei pixelHeight, GLsizei bytesPerBlock)
+static GLsizei MipmapImageDataBytes(
+    GLsizei width,
+    GLsizei height,
+    GLsizei bytesPerBlock) noexcept
 {
-    return pixelWidth * pixelHeight * bytesPerBlock;
+    return width * height * bytesPerBlock;
 }
 //-----------------------------------------------------------------------
-static void SetPixelDataTexture2DCompressedGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
-    std::int32_t levelCount, SurfaceFormat format, std::uint8_t const* pixelData)
+static void SetPixelDataTexture2DCompressedGL4(
+    std::int32_t pixelWidth,
+    std::int32_t pixelHeight,
+    std::int32_t levelCount,
+    SurfaceFormat format,
+    void const* pixelData)
 {
-    POMDOG_ASSERT(format == SurfaceFormat::BlockComp1_UNorm ||
-        format == SurfaceFormat::BlockComp2_UNorm ||
-        format == SurfaceFormat::BlockComp3_UNorm);
+    POMDOG_ASSERT(pixelWidth > 0);
+    POMDOG_ASSERT(pixelHeight > 0);
+    POMDOG_ASSERT(levelCount >= 1);
+    POMDOG_ASSERT(pixelData != nullptr);
+    POMDOG_ASSERT(format == SurfaceFormat::BlockComp1_UNorm
+        || format == SurfaceFormat::BlockComp2_UNorm
+        || format == SurfaceFormat::BlockComp3_UNorm);
 
     auto const internalFormat = ToInternalFormatGL4(format);
     auto const bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format);
     std::size_t startOffset = 0;
 
-    POMDOG_ASSERT(pixelWidth > 0);
-    POMDOG_ASSERT(pixelHeight > 0);
-
     GLsizei mipMapPixelWidth = pixelWidth;
     GLsizei mipMapPixelHeight = pixelHeight;
 
-    POMDOG_ASSERT(levelCount >= 1);
     for (GLint mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel)
     {
         POMDOG_ASSERT(mipMapPixelWidth > 0);
         POMDOG_ASSERT(mipMapPixelHeight > 0);
 
-        GLsizei const strideBytesPerMipmap = MipmapImageDataBytes(mipMapPixelWidth, mipMapPixelHeight, bytesPerBlock);
+        GLsizei const strideBytesPerMipmap = MipmapImageDataBytes(
+            mipMapPixelWidth, mipMapPixelHeight, bytesPerBlock);
 
-        glCompressedTexSubImage2D(GL_TEXTURE_2D, mipmapLevel, 0, 0,
-            mipMapPixelWidth, mipMapPixelHeight, internalFormat, strideBytesPerMipmap,
-            pixelData + startOffset);
+        glCompressedTexSubImage2D(GL_TEXTURE_2D,
+            mipmapLevel, 0, 0,
+            mipMapPixelWidth,
+            mipMapPixelHeight,
+            internalFormat,
+            strideBytesPerMipmap,
+            reinterpret_cast<std::uint8_t const*>(pixelData) + startOffset);
         POMDOG_CHECK_ERROR_GL4("glCompressedTexSubImage2D");
 
         startOffset += strideBytesPerMipmap;
@@ -157,12 +169,20 @@ static void SetPixelDataTexture2DCompressedGL4(std::int32_t pixelWidth, std::int
     }
 }
 //-----------------------------------------------------------------------
-static void SetPixelDataTexture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
-    std::int32_t levelCount, SurfaceFormat format, std::uint8_t const* pixelData)
+static void SetPixelDataTexture2DGL4(
+    std::int32_t pixelWidth,
+    std::int32_t pixelHeight,
+    std::int32_t levelCount,
+    SurfaceFormat format,
+    void const* pixelData)
 {
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
     POMDOG_ASSERT(levelCount >= 1);
+    POMDOG_ASSERT(pixelData != nullptr);
+    POMDOG_ASSERT(format != SurfaceFormat::BlockComp1_UNorm
+        && format != SurfaceFormat::BlockComp2_UNorm
+        && format != SurfaceFormat::BlockComp3_UNorm);
 
     auto const formatComponents = ToFormatComponents(format);
     auto const pixelFundamentalType = ToPixelFundamentalType(format);
@@ -175,11 +195,16 @@ static void SetPixelDataTexture2DGL4(std::int32_t pixelWidth, std::int32_t pixel
 
     for (GLint mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel)
     {
-        GLsizei const strideBytesPerMipmap = MipmapImageDataBytes(mipMapPixelWidth, mipMapPixelHeight, bytesPerBlock);
+        GLsizei const strideBytesPerMipmap = MipmapImageDataBytes(
+            mipMapPixelWidth, mipMapPixelHeight, bytesPerBlock);
 
-        glTexSubImage2D(GL_TEXTURE_2D, mipmapLevel, 0, 0,
-            mipMapPixelWidth, mipMapPixelHeight, formatComponents, pixelFundamentalType,
-            pixelData + startOffset);
+        glTexSubImage2D(GL_TEXTURE_2D,
+            mipmapLevel, 0, 0,
+            mipMapPixelWidth,
+            mipMapPixelHeight,
+            formatComponents,
+            pixelFundamentalType,
+            reinterpret_cast<std::uint8_t const*>(pixelData) + startOffset);
         POMDOG_CHECK_ERROR_GL4("glTexSubImage2D");
 
         startOffset += strideBytesPerMipmap;
@@ -189,7 +214,7 @@ static void SetPixelDataTexture2DGL4(std::int32_t pixelWidth, std::int32_t pixel
     }
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 template<> struct TypesafeHelperGL4::Traits<Texture2DObjectGL4> {
     constexpr static GLenum BufferBinding = GL_TEXTURE_BINDING_2D;
@@ -220,10 +245,11 @@ Texture2DGL4::Texture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
     POMDOG_ASSERT(levelCount >= 1);
     POMDOG_ASSERT(levelCount <= std::numeric_limits<GLsizei>::max());
 
-    glTexStorage2D(GL_TEXTURE_2D, levelCount, ToInternalFormatGL4(format), pixelWidth, pixelHeight);
+    glTexStorage2D(GL_TEXTURE_2D, levelCount, ToInternalFormatGL4(format),
+        pixelWidth, pixelHeight);
     POMDOG_CHECK_ERROR_GL4("glTexStorage2D");
 
-    // Set mipmap levels.
+    // Set mipmap levels
     POMDOG_ASSERT(levelCount >= 1);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, levelCount - 1);
@@ -245,10 +271,8 @@ void Texture2DGL4::SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
     POMDOG_ASSERT(levelCount >= 1);
     POMDOG_ASSERT(pixelData != nullptr);
 
-    auto const oldTextureObject = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
-    ScopeGuard scope([&oldTextureObject]{
-        TypesafeHelperGL4::BindTexture(oldTextureObject);
-    });
+    const auto oldTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
+    ScopeGuard scope([&] { TypesafeHelperGL4::BindTexture(oldTexture); });
 
     POMDOG_ASSERT(textureObject);
     TypesafeHelperGL4::BindTexture(*textureObject);
@@ -258,12 +282,12 @@ void Texture2DGL4::SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
     case SurfaceFormat::BlockComp1_UNorm:
     case SurfaceFormat::BlockComp2_UNorm:
     case SurfaceFormat::BlockComp3_UNorm:
-        SetPixelDataTexture2DCompressedGL4(pixelWidth, pixelHeight, levelCount, format,
-            reinterpret_cast<std::uint8_t const*>(pixelData));
+        SetPixelDataTexture2DCompressedGL4(
+            pixelWidth, pixelHeight, levelCount, format, pixelData);
         break;
     default:
-        SetPixelDataTexture2DGL4(pixelWidth, pixelHeight, levelCount, format,
-            reinterpret_cast<std::uint8_t const*>(pixelData));
+        SetPixelDataTexture2DGL4(
+            pixelWidth, pixelHeight, levelCount, format, pixelData);
         break;
     }
 }
@@ -272,10 +296,8 @@ void Texture2DGL4::GenerateMipmap()
 {
     POMDOG_ASSERT(textureObject);
 
-    auto const prevTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
-    ScopeGuard scope([&prevTexture]{
-        TypesafeHelperGL4::BindTexture(prevTexture);
-    });
+    const auto oldTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
+    ScopeGuard scope([&] { TypesafeHelperGL4::BindTexture(oldTexture); });
 
     // Generate mipmap
     glBindTexture(GL_TEXTURE_2D, textureObject->value);
@@ -289,7 +311,7 @@ Texture2DObjectGL4 const& Texture2DGL4::GetTextureHandle() const
     return textureObject.value();
 }
 //-----------------------------------------------------------------------
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
