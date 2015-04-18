@@ -105,16 +105,16 @@ GraphicsDeviceGL4::CreateEffectReflection(
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeTexture2D>
 GraphicsDeviceGL4::CreateTexture2D(std::int32_t width, std::int32_t height,
-    std::uint32_t mipmapLevels, SurfaceFormat format)
+    std::int32_t mipmapLevels, SurfaceFormat format)
 {
     return std::make_unique<Texture2DGL4>(width, height, mipmapLevels, format);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeRenderTarget2D>
 GraphicsDeviceGL4::CreateRenderTarget2D(
-    std::int32_t width, 
+    std::int32_t width,
     std::int32_t height,
-    std::uint32_t mipmapLevels,
+    std::int32_t mipmapLevels,
     SurfaceFormat format,
     DepthFormat depthStencilFormat,
     std::int32_t multiSampleCount)

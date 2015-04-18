@@ -23,7 +23,7 @@ public:
     RenderTarget2DGL4(
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
-        std::uint32_t levelCount,
+        std::int32_t levelCount,
         SurfaceFormat format,
         DepthFormat depthStencilFormat,
         std::int32_t multiSampleCount);
@@ -44,9 +44,9 @@ private:
     bool multiSampleEnabled;
 };
 
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_RENDERTARGET2DGL4_0C6A48A1_HPP

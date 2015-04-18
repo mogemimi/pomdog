@@ -29,7 +29,7 @@ static GLenum ToDepthStencilFormat(DepthFormat depthFormat) noexcept
 RenderTarget2DGL4::RenderTarget2DGL4(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
-    std::uint32_t levelCount,
+    std::int32_t levelCount,
     SurfaceFormat format,
     DepthFormat depthStencilFormat,
     std::int32_t multiSampleCount)
@@ -84,7 +84,12 @@ void RenderTarget2DGL4::BindToFramebuffer(GLenum attachmentPoint)
 //-----------------------------------------------------------------------
 void RenderTarget2DGL4::UnbindFromFramebuffer(GLenum attachmentPoint)
 {
-    glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint, GL_TEXTURE_2D, 0, 0);
+    GLenum textureTarget = (multiSampleEnabled
+        ? GL_TEXTURE_2D_MULTISAMPLE
+        : GL_TEXTURE_2D);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint, textureTarget,
+        0, 0);
     POMDOG_CHECK_ERROR_GL4("glFramebufferTexture2D");
 
     if (generateMipmap) {
@@ -95,7 +100,11 @@ void RenderTarget2DGL4::UnbindFromFramebuffer(GLenum attachmentPoint)
 void RenderTarget2DGL4::BindDepthStencilBuffer()
 {
     if (renderBuffer) {
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBuffer->value);
+        glFramebufferRenderbuffer(
+            GL_FRAMEBUFFER,
+            GL_DEPTH_ATTACHMENT,
+            GL_RENDERBUFFER,
+            renderBuffer->value);
         POMDOG_CHECK_ERROR_GL4("glFramebufferRenderbuffer");
     }
 }
@@ -105,7 +114,7 @@ Texture2DObjectGL4 const& RenderTarget2DGL4::GetTextureHandle() const
     return texture.GetTextureHandle();
 }
 //-----------------------------------------------------------------------
-}// namespace GL4
-}// namespace RenderSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace RenderSystem
+} // namespace Detail
+} // namespace Pomdog

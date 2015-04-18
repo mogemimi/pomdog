@@ -20,7 +20,7 @@ public:
         ID3D11Device* device,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
-        std::uint32_t levelCount,
+        std::int32_t levelCount,
         SurfaceFormat format,
         DepthFormat depthStencilFormat,
         std::int32_t multiSampleCount);

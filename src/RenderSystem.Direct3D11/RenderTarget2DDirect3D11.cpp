@@ -21,7 +21,7 @@ static void BuildRenderTarget(
     SurfaceFormat format,
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
-    std::uint32_t levelCount,
+    std::int32_t levelCount,
     bool isSharedTexture,
     ComPtr<ID3D11Texture2D> & renderTexture,
     ComPtr<ID3D11RenderTargetView> & renderTargetView,
@@ -29,6 +29,7 @@ static void BuildRenderTarget(
 {
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
+    POMDOG_ASSERT(levelCount > 0);
 
     // Create a render texture
     D3D11_TEXTURE2D_DESC textureDesc;
@@ -87,7 +88,7 @@ static void BuildDepthBuffer(
     DepthFormat depthStencilFormat,
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
-    std::uint32_t levelCount,
+    std::int32_t levelCount,
     ComPtr<ID3D11Texture2D> & depthStencil,
     ComPtr<ID3D11DepthStencilView> & depthStencilView)
 {
@@ -97,6 +98,7 @@ static void BuildDepthBuffer(
 
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
+    POMDOG_ASSERT(levelCount > 0);
 
     // Create depth stencil texture
     D3D11_TEXTURE2D_DESC descDepth;
@@ -171,19 +173,21 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
     ID3D11Device* device,
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
-    std::uint32_t levelCount,
+    std::int32_t levelCount,
     SurfaceFormat format,
     DepthFormat depthStencilFormat,
     std::int32_t multiSampleCount)
 {
+    POMDOG_ASSERT(levelCount > 0);
+
     ///@todo MSAA is not implemnted yet
     UNREFERENCED_PARAMETER(multiSampleCount);
 
     BuildRenderTarget(device, format, pixelWidth, pixelHeight, levelCount,
         false, renderTexture, renderTargetView, textureResourceView);
 
-    BuildDepthBuffer(device, depthStencilFormat, pixelWidth, pixelHeight, levelCount,
-        depthStencil, depthStencilView);
+    BuildDepthBuffer(device, depthStencilFormat, pixelWidth, pixelHeight,
+        levelCount, depthStencil, depthStencilView);
 }
 //-----------------------------------------------------------------------
 RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
@@ -202,8 +206,8 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
     BuildBackBufferBySwapChain(device, swapChain,
         renderTexture, renderTargetView);
 
-    BuildDepthBuffer(device, depthStencilFormat, pixelWidth, pixelHeight, backBufferMipLevels,
-        depthStencil, depthStencilView);
+    BuildDepthBuffer(device, depthStencilFormat, pixelWidth, pixelHeight,
+        backBufferMipLevels, depthStencil, depthStencilView);
 }
 //-----------------------------------------------------------------------
 ID3D11RenderTargetView* RenderTarget2DDirect3D11::RenderTargetView() const
@@ -223,8 +227,10 @@ ID3D11ShaderResourceView* RenderTarget2DDirect3D11::ShaderResourceView() const
     return textureResourceView.Get();
 }
 //-----------------------------------------------------------------------
-void RenderTarget2DDirect3D11::ResetBackBuffer(ID3D11Device* device, IDXGISwapChain* swapChain,
-    std::int32_t pixelWidth, std::int32_t pixelHeight, DepthFormat depthStencilFormat)
+void RenderTarget2DDirect3D11::ResetBackBuffer(
+    ID3D11Device* device, IDXGISwapChain* swapChain,
+    std::int32_t pixelWidth, std::int32_t pixelHeight,
+    DepthFormat depthStencilFormat)
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(swapChain != nullptr);
@@ -239,8 +245,8 @@ void RenderTarget2DDirect3D11::ResetBackBuffer(ID3D11Device* device, IDXGISwapCh
     BuildBackBufferBySwapChain(device, swapChain,
         renderTexture, renderTargetView);
 
-    BuildDepthBuffer(device, depthStencilFormat, pixelWidth, pixelHeight, backBufferMipLevels,
-        depthStencil, depthStencilView);
+    BuildDepthBuffer(device, depthStencilFormat, pixelWidth, pixelHeight,
+        backBufferMipLevels, depthStencil, depthStencilView);
 }
 //-----------------------------------------------------------------------
 void RenderTarget2DDirect3D11::ResetBackBuffer()

@@ -66,14 +66,14 @@ public:
     CreateTexture2D(
         std::int32_t width,
         std::int32_t height,
-        std::uint32_t mipmapLevels,
+        std::int32_t mipmapLevels,
         SurfaceFormat format) = 0;
 
     virtual std::unique_ptr<NativeRenderTarget2D>
     CreateRenderTarget2D(
         std::int32_t width,
         std::int32_t height,
-        std::uint32_t mipmapLevels,
+        std::int32_t mipmapLevels,
         SurfaceFormat format,
         DepthFormat depthStencilFormat,
         std::int32_t multiSampleCount) = 0;

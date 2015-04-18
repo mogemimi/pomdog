@@ -426,7 +426,7 @@ GraphicsDeviceDirect3D11::CreateEffectReflection(
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeTexture2D>
 GraphicsDeviceDirect3D11::CreateTexture2D(std::int32_t width, std::int32_t height,
-    std::uint32_t mipmapLevels, SurfaceFormat format)
+    std::int32_t mipmapLevels, SurfaceFormat format)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device);
@@ -440,7 +440,7 @@ std::unique_ptr<NativeRenderTarget2D>
 GraphicsDeviceDirect3D11::CreateRenderTarget2D(
     std::int32_t width,
     std::int32_t height,
-    std::uint32_t mipmapLevels,
+    std::int32_t mipmapLevels,
     SurfaceFormat format,
     DepthFormat depthStencilFormat,
     std::int32_t multiSampleCount)
