@@ -4,7 +4,6 @@
 #include "GraphicsContextDirect3D11.hpp"
 #include "BufferDirect3D11.hpp"
 #include "ConstantLayoutDirect3D11.hpp"
-#include "InputLayoutDirect3D11.hpp"
 #include "PipelineStateDirect3D11.hpp"
 #include "RenderTarget2DDirect3D11.hpp"
 #include "SamplerStateDirect3D11.hpp"

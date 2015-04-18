@@ -355,8 +355,6 @@
       '../src/RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp',
       '../src/RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.cpp',
       '../src/RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.hpp',
-      '../src/RenderSystem.Direct3D11/InputLayoutDirect3D11.cpp',
-      '../src/RenderSystem.Direct3D11/InputLayoutDirect3D11.hpp',
       '../src/RenderSystem.Direct3D11/PipelineStateDirect3D11.cpp',
       '../src/RenderSystem.Direct3D11/PipelineStateDirect3D11.hpp',
       '../src/RenderSystem.Direct3D11/PrerequisitesDirect3D11.hpp',
