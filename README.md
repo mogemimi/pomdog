@@ -9,6 +9,7 @@ It's open source and distributed under the [MIT license](http://opensource.org/l
 * [Homepage](http://enginetrouble.net/pomdog)
 * [GitHub](https://github.com/mogemimi/pomdog)
 * [Wiki](https://github.com/mogemimi/pomdog/wiki)
+* [Trello](https://trello.com/b/lqd3nwrK/pomdog-game-engine)
 
 ## Requirements
 
