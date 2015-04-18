@@ -33,11 +33,11 @@ public:
         DepthFormat depthStencilFormat,
         std::int32_t multiSampleCount);
 
-    ID3D11RenderTargetView* RenderTargetView() const;
+    ID3D11RenderTargetView* GetRenderTargetView() const;
 
-    ID3D11DepthStencilView* DepthStencilView() const;
+    ID3D11DepthStencilView* GetDepthStencilView() const;
 
-    ID3D11ShaderResourceView* ShaderResourceView() const;
+    ID3D11ShaderResourceView* GetShaderResourceView() const;
 
     void ResetBackBuffer(
         ID3D11Device* device,
@@ -49,10 +49,10 @@ public:
     void ResetBackBuffer();
 
 private:
-    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> renderTexture;
-    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2D;
     Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureResourceView;
 };
 

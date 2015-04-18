@@ -183,9 +183,10 @@ void GraphicsContextDirect3D11::Clear(Color const& color)
     for (auto & renderTarget: boundRenderTargets)
     {
         POMDOG_ASSERT(renderTarget);
-        deviceContext->ClearRenderTargetView(renderTarget->RenderTargetView(), fillColor.Data());
+        deviceContext->ClearRenderTargetView(
+            renderTarget->GetRenderTargetView(), fillColor.Data());
 
-        if (auto depthStencilView = renderTarget->DepthStencilView())
+        if (auto depthStencilView = renderTarget->GetDepthStencilView())
         {
             deviceContext->ClearDepthStencilView(depthStencilView,
                 D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -214,10 +215,11 @@ void GraphicsContextDirect3D11::Clear(ClearOptions options, Color const& color, 
         POMDOG_ASSERT(renderTarget);
 
         if ((options | ClearOptions::RenderTarget) == options) {
-            deviceContext->ClearRenderTargetView(renderTarget->RenderTargetView(), fillColor.Data());
+            deviceContext->ClearRenderTargetView(
+                renderTarget->GetRenderTargetView(), fillColor.Data());
         }
 
-        if (auto depthStencilView = renderTarget->DepthStencilView())
+        if (auto depthStencilView = renderTarget->GetDepthStencilView())
         {
             deviceContext->ClearDepthStencilView(depthStencilView,
                 mask, depth, static_cast<UINT8>(stencil));
@@ -439,7 +441,7 @@ void GraphicsContextDirect3D11::SetTexture(int index, Texture2D & textureIn)
     POMDOG_ASSERT(texture != nullptr);
     POMDOG_ASSERT(texture == dynamic_cast<Texture2DDirect3D11*>(textureIn.NativeTexture2D()));
 
-    boundTextureViews[index] = texture->ShaderResourceView();
+    boundTextureViews[index] = texture->GetShaderResourceView();
 
     POMDOG_ASSERT(deviceContext);
     deviceContext->PSSetShaderResources(0, 1, &boundTextureViews[index]);
@@ -457,7 +459,7 @@ void GraphicsContextDirect3D11::SetTexture(int index, RenderTarget2D & textureIn
     POMDOG_ASSERT(texture != nullptr);
     POMDOG_ASSERT(texture == dynamic_cast<RenderTarget2DDirect3D11*>(textureIn.NativeRenderTarget2D()));
 
-    boundTextureViews[index] = texture->ShaderResourceView();
+    boundTextureViews[index] = texture->GetShaderResourceView();
 
     POMDOG_ASSERT(deviceContext);
     deviceContext->PSSetShaderResources(0, 1, &boundTextureViews[index]);
@@ -468,10 +470,13 @@ void GraphicsContextDirect3D11::SetRenderTarget()
     boundRenderTargets.clear();
     boundRenderTargets.push_back(backBuffer);
 
-    std::array<ID3D11RenderTargetView*, 1> renderTargetViews = { backBuffer->RenderTargetView() };
+    std::array<ID3D11RenderTargetView*, 1> renderTargetViews = {
+        backBuffer->GetRenderTargetView() };
 
-    deviceContext->OMSetRenderTargets(renderTargetViews.size(), renderTargetViews.data(),
-        boundRenderTargets.front()->DepthStencilView());
+    deviceContext->OMSetRenderTargets(
+        renderTargetViews.size(),
+        renderTargetViews.data(),
+        boundRenderTargets.front()->GetDepthStencilView());
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets)
@@ -493,13 +498,15 @@ void GraphicsContextDirect3D11::SetRenderTargets(std::vector<std::shared_ptr<Ren
         auto nativeRenderTarget = static_cast<RenderTarget2DDirect3D11*>(renderTargets[i]->NativeRenderTarget2D());
         boundRenderTargets.emplace_back(renderTargets[i], nativeRenderTarget);
 
-        renderTargetViews[i] = nativeRenderTarget->RenderTargetView();
+        renderTargetViews[i] = nativeRenderTarget->GetRenderTargetView();
     }
 
     POMDOG_ASSERT(renderTargetViews.size() <= D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
 
-    deviceContext->OMSetRenderTargets(renderTargetViews.size(), renderTargetViews.data(),
-        boundRenderTargets.front()->DepthStencilView());
+    deviceContext->OMSetRenderTargets(
+        renderTargetViews.size(),
+        renderTargetViews.data(),
+        boundRenderTargets.front()->GetDepthStencilView());
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineStateIn)

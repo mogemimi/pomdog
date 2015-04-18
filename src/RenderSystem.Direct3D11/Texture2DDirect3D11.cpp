@@ -16,24 +16,23 @@ namespace Direct3D11 {
 
 using DXGI::DXGIFormatHelper;
 //-----------------------------------------------------------------------
-Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* nativeDevice,
+Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* device,
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContextIn,
     std::int32_t pixelWidth, std::int32_t pixelHeight,
     std::int32_t levelCount, SurfaceFormat format)
     : deviceContext(deviceContextIn)
 {
-    POMDOG_ASSERT(nativeDevice != nullptr);
+    POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
     POMDOG_ASSERT(levelCount >= 1);
 
     D3D11_TEXTURE2D_DESC textureDesc;
-    ZeroMemory(&textureDesc, sizeof(textureDesc));
+    textureDesc.Format = DXGIFormatHelper::ToDXGIFormat(format);
     textureDesc.Width = pixelWidth;
     textureDesc.Height = pixelHeight;
-    textureDesc.MipLevels = levelCount;
     textureDesc.ArraySize = 1;
-    textureDesc.Format = DXGIFormatHelper::ToDXGIFormat(format);
+    textureDesc.MipLevels = levelCount;
     textureDesc.SampleDesc.Count = 1;
     textureDesc.SampleDesc.Quality = 0;
     textureDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -43,26 +42,27 @@ Texture2DDirect3D11::Texture2DDirect3D11(ID3D11Device* nativeDevice,
     //textureDesc.CPUAccessFlags = 0;
     textureDesc.MiscFlags = 0;
 
-    auto hr = nativeDevice->CreateTexture2D(&textureDesc, nullptr, &texture2D);
-    if (FAILED(hr))
-    {
-        ///@error FUS RO DAH!
+    auto hr = device->CreateTexture2D(&textureDesc, nullptr, &texture2D);
+
+    if (FAILED(hr)) {
+        // FUS RO DAH!
         POMDOG_THROW_EXCEPTION(std::runtime_error,
             "Failed to create D3D11Texture2D");
     }
 
-    D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
-    shaderResourceViewDesc.Format = textureDesc.Format;
-    shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-    shaderResourceViewDesc.Texture2D.MipLevels = textureDesc.MipLevels;
+    // Create the shader resource view (SRV)
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    ZeroMemory(&srvDesc, sizeof(srvDesc));
+    srvDesc.Format = textureDesc.Format;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+    srvDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 
-    // Create the shader resource view.
-    hr = nativeDevice->CreateShaderResourceView(texture2D.Get(),
-        &shaderResourceViewDesc, &shaderResourceView);
-    if (FAILED(hr))
-    {
-        ///@error FUS RO DAH!
+    hr = device->CreateShaderResourceView(
+        texture2D.Get(), &srvDesc, &shaderResourceView);
+
+    if (FAILED(hr)) {
+        // FUS RO DAH!
         POMDOG_THROW_EXCEPTION(std::runtime_error,
             "Failed to create the shader resource view");
     }
@@ -78,13 +78,12 @@ void Texture2DDirect3D11::SetData(std::int32_t pixelWidth, std::int32_t pixelHei
         pixelWidth, pixelHeight, levelCount, format);
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    auto hr = deviceContext->Map(texture2D.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    auto hr = deviceContext->Map(texture2D.Get(), 0,
+        D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
-    if (FAILED(hr))
-    {
-        ///@error FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to map buffer");
+    if (FAILED(hr)) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to map buffer");
     }
 
     POMDOG_ASSERT(pixelData);
@@ -94,7 +93,7 @@ void Texture2DDirect3D11::SetData(std::int32_t pixelWidth, std::int32_t pixelHei
     deviceContext->Unmap(texture2D.Get(), 0);
 }
 //-----------------------------------------------------------------------
-ID3D11ShaderResourceView* Texture2DDirect3D11::ShaderResourceView() const
+ID3D11ShaderResourceView* Texture2DDirect3D11::GetShaderResourceView() const
 {
     POMDOG_ASSERT(shaderResourceView);
     return shaderResourceView.Get();

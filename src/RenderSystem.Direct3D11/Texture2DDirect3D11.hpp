@@ -31,7 +31,7 @@ public:
         SurfaceFormat format,
         void const* pixelData) override;
 
-    ID3D11ShaderResourceView* ShaderResourceView() const;
+    ID3D11ShaderResourceView* GetShaderResourceView() const;
 
 private:
     Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2D;
