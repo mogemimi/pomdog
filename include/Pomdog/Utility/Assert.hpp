@@ -7,8 +7,8 @@
 #include "Pomdog/Basic/Platform.hpp"
 #include <cassert>
 
-#ifdef POMDOG_COMPILER_MSVC
-#    include <xutility>
+#if defined(_MSC_VER)
+#include <xutility>
 #endif
 
 namespace Pomdog {
@@ -33,16 +33,14 @@ inline constexpr bool ConstexprAssert(bool condition,
     return condition ? true: (RuntimeAssertion(expression, filename, line), false);
 }
 
-}// namespace Assertion
+} // namespace Assertion
 
-// @code
-// //how to use:
+// How to use:
 // POMDOG_ASSERT(expr);
 // POMDOG_ASSERT_MESSAGE(expr, "message");
-// @endcode
 
 #if defined(DEBUG) && defined(__APPLE_CC__)
-#    // Debug mode for Xcode 5
+#    // Debug mode under Xcode
 #    define POMDOG_ASSERT(expression) POMDOG_ASSERT_MESSAGE(expression, "POMDOG_ASSERT")
 #    define POMDOG_ASSERT_MESSAGE(expression, message) \
         do {\
@@ -80,14 +78,14 @@ inline constexpr bool ConstexprAssert(bool condition,
                 POMDOG_DEBUGBREAK(); \
             }\
         } while(false)
-#else //!defined(DEBUG) || defined(NDEBUG)
+#else
 #    // Release mode
 #    define POMDOG_ASSERT(expression)
 #    define POMDOG_ASSERT_MESSAGE(expression, message)
 #    define POMDOG_CONSTEXPR_ASSERT(expression) static_cast<void const>(0)
 #endif
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_ASSERT_7D111D58_HPP
