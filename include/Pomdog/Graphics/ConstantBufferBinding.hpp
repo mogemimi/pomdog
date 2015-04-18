@@ -34,9 +34,9 @@ public:
     ConstantBufferBinding & operator=(ConstantBufferBinding const&) = delete;
     ConstantBufferBinding & operator=(ConstantBufferBinding &&) = default;
 
-    std::shared_ptr<ConstantBuffer> const& Find(std::string const& parameterName) const;
+    std::shared_ptr<ConstantBuffer> Find(std::string const& name) const;
 
-    ConstantBufferCollection const& Find() const;
+    ConstantBufferCollection const& GetConstantBuffers() const;
 
 public:
     Detail::RenderSystem::NativeConstantLayout* NativeConstantLayout();

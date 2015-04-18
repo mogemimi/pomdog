@@ -15,11 +15,6 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace {
-
-static auto dummyParameter = std::make_shared<ConstantBuffer>();
-
-} // unnamed namespace
 //-----------------------------------------------------------------------
 ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
     PipelineStateDescription const& pipelineStateDescription,
@@ -29,7 +24,7 @@ ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
 
     auto nativePipelineState = pipelineState.NativePipelineState();
 
-    // Create effect reflection:
+    // Get effect reflection
     POMDOG_ASSERT(nativePipelineState);
     auto effectReflection = nativeDevice->CreateEffectReflection(
         pipelineStateDescription,
@@ -38,26 +33,26 @@ ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
     POMDOG_ASSERT(effectReflection);
     auto constants = effectReflection->GetConstantBuffers();
 
-    // Create constant buffers:
+    // Create constant buffers
     for (auto & desc: constants)
     {
         auto constantBuffer = std::make_shared<ConstantBuffer>(
             graphicsDevice, desc.ByteSize, BufferUsage::Dynamic);
+
         constantBuffers[desc.Name] = std::move(constantBuffer);
     }
 
     nativeConstantLayout = nativePipelineState->CreateConstantLayout();
 
-    // Bind constant buffers:
-    for (auto & parameter: constantBuffers)
+    // Bind constant buffers
+    for (auto & pair: constantBuffers)
     {
-        using Detail::RenderSystem::NativeBuffer;
-        std::shared_ptr<NativeBuffer> nativeConstantBuffer(
-            parameter.second, parameter.second->NativeConstantBuffer());
+        auto & name = pair.first;
+        std::shared_ptr<Detail::RenderSystem::NativeBuffer> constantBuffer(
+            pair.second, pair.second->NativeConstantBuffer());
 
         POMDOG_ASSERT(nativeConstantLayout);
-        nativeConstantLayout->SetConstantBuffer(
-            parameter.first, nativeConstantBuffer);
+        nativeConstantLayout->SetConstantBuffer(name, constantBuffer);
     }
 }
 //-----------------------------------------------------------------------
@@ -74,20 +69,20 @@ ConstantBufferBinding::ConstantBufferBinding(
 //-----------------------------------------------------------------------
 ConstantBufferBinding::~ConstantBufferBinding() = default;
 //-----------------------------------------------------------------------
-std::shared_ptr<ConstantBuffer> const& ConstantBufferBinding::Find(
-    std::string const& parameterName) const
+std::shared_ptr<ConstantBuffer> ConstantBufferBinding::Find(
+    std::string const& name) const
 {
-    POMDOG_ASSERT(!parameterName.empty());
+    POMDOG_ASSERT(!name.empty());
     POMDOG_ASSERT(!constantBuffers.empty());
 
-    auto iter = constantBuffers.find(parameterName);
+    auto iter = constantBuffers.find(name);
     if (iter != std::end(constantBuffers)) {
         return iter->second;
     }
-    return dummyParameter;
+    return {};
 }
 //-----------------------------------------------------------------------
-ConstantBufferCollection const& ConstantBufferBinding::Find() const
+ConstantBufferCollection const& ConstantBufferBinding::GetConstantBuffers() const
 {
     return constantBuffers;
 }
