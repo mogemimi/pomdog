@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "ShaderDirect3D11.hpp"
-#include "ShaderCompiling.hpp"
+#include "../RenderSystem.Direct3D/HLSLCompiling.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "../RenderSystem/ShaderCompileOptions.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -44,7 +44,8 @@ ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(ID3D11Device* device,
     }
     else
     {
-        auto compiledShaderBlob = ShaderCompiling::CompileShader(shaderBytecode, compileOptions);
+        auto compiledShaderBlob = Direct3D::HLSLCompiling::CompileShader(
+            shaderBytecode, compileOptions);
         POMDOG_ASSERT(compiledShaderBlob.Get() != nullptr);
 
         codeBlob.resize(compiledShaderBlob->GetBufferSize());

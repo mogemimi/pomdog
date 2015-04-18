@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "ShaderCompiling.hpp"
+#include "HLSLCompiling.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "../RenderSystem/ShaderCompileOptions.hpp"
 #include "../Utility/PathHelper.hpp"
@@ -18,7 +18,7 @@
 namespace Pomdog {
 namespace Detail {
 namespace RenderSystem {
-namespace Direct3D11 {
+namespace Direct3D {
 namespace {
 
 static std::string ToString(ShaderProfile const& profile)
@@ -67,7 +67,7 @@ static std::vector<std::uint8_t> ReadBinaryFile(std::ifstream && streamIn)
     return std::move(result);
 }
 //-----------------------------------------------------------------------
-class HLSLCodeInclude : public ID3D10Include {
+class HLSLCodeInclude : public ID3DInclude {
 private:
     std::string currentDirectory;
     std::vector<std::uint8_t> outputSource;
@@ -77,7 +77,7 @@ public:
         : currentDirectory(curentDirectoryIn)
     {}
 
-    HRESULT __stdcall Open(D3D10_INCLUDE_TYPE includeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
+    HRESULT __stdcall Open(D3D_INCLUDE_TYPE includeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
     {
         UNREFERENCED_PARAMETER(pParentData);
 
@@ -86,23 +86,23 @@ public:
         //}
 
         std::string includePath;
-        if (D3D10_INCLUDE_LOCAL == includeType) {
+        if (D3D_INCLUDE_LOCAL == includeType) {
             includePath = PathHelper::Join(currentDirectory, pFileName);
         }
         else {
             includePath = pFileName;
         }
 
-        if (D3D10_INCLUDE_LOCAL != includeType
-            && D3D10_INCLUDE_SYSTEM != includeType) {
+        if (D3D_INCLUDE_LOCAL != includeType
+            && D3D_INCLUDE_SYSTEM != includeType) {
             return E_FAIL;
         }
 
 #if defined(DEBUG) && !defined(NDEBUG)
-        if (D3D10_INCLUDE_LOCAL == includeType) {
+        if (D3D_INCLUDE_LOCAL == includeType) {
             Log::Internal("ShaderInclude: Local");
         }
-        else if (D3D10_INCLUDE_SYSTEM == includeType) {
+        else if (D3D_INCLUDE_SYSTEM == includeType) {
             Log::Internal("ShaderInclude: System");
         }
         Log::Internal(StringFormat("include shader file : %s", includePath.c_str()));
@@ -170,7 +170,7 @@ static void CompileFromShaderFile(ShaderBytecode const& shaderBytecode,
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-Microsoft::WRL::ComPtr<ID3DBlob> ShaderCompiling::CompileShader(
+Microsoft::WRL::ComPtr<ID3DBlob> HLSLCompiling::CompileShader(
     ShaderBytecode const& shaderBytecode,
     ShaderCompileOptions const& compileOptions)
 {
@@ -211,7 +211,7 @@ Microsoft::WRL::ComPtr<ID3DBlob> ShaderCompiling::CompileShader(
     return std::move(codeBlob);
 }
 
-} // namespace Direct3D11
+} // namespace Direct3D
 } // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

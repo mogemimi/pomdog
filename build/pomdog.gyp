@@ -340,6 +340,10 @@
       '../src/RenderSystem.DXGI/DXGIFormatHelper.cpp',
       '../src/RenderSystem.DXGI/DXGIFormatHelper.hpp',
     ],
+    'pomdog_library_direct3d_sources': [
+      '../src/RenderSystem.Direct3D/HLSLCompiling.cpp',
+      '../src/RenderSystem.Direct3D/HLSLCompiling.hpp',
+    ],
     'pomdog_library_direct3d11_sources': [
       '../src/RenderSystem.Direct3D11/BufferDirect3D11.cpp',
       '../src/RenderSystem.Direct3D11/BufferDirect3D11.hpp',
@@ -360,8 +364,6 @@
       '../src/RenderSystem.Direct3D11/RenderTarget2DDirect3D11.hpp',
       '../src/RenderSystem.Direct3D11/SamplerStateDirect3D11.cpp',
       '../src/RenderSystem.Direct3D11/SamplerStateDirect3D11.hpp',
-      '../src/RenderSystem.Direct3D11/ShaderCompiling.cpp',
-      '../src/RenderSystem.Direct3D11/ShaderCompiling.hpp',
       '../src/RenderSystem.Direct3D11/ShaderDirect3D11.cpp',
       '../src/RenderSystem.Direct3D11/ShaderDirect3D11.hpp',
       '../src/RenderSystem.Direct3D11/Texture2DDirect3D11.cpp',
@@ -467,6 +469,7 @@
         'defines': ['POMDOG_ENABLE_DIRECT3D11'],
         'sources': [
           '<@(pomdog_library_dxgi_sources)',
+          '<@(pomdog_library_direct3d_sources)',
           '<@(pomdog_library_direct3d11_sources)',
         ],
         'link_settings': {
