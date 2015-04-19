@@ -3,11 +3,11 @@
 
 #include "EffectReflectionDirect3D11.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
+#include "../RenderSystem.Direct3D/PrerequisitesDirect3D.hpp"
 #include "Pomdog/Graphics/EffectConstantDescription.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include <d3dcompiler.h>
 #include <algorithm>
 #include <utility>
 

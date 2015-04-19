@@ -4,13 +4,8 @@
 #ifndef POMDOG_SHADERCOMPILING_C56F5C9E_HPP
 #define POMDOG_SHADERCOMPILING_C56F5C9E_HPP
 
+#include "PrerequisitesDirect3D.hpp"
 #include <wrl/client.h>
-#if defined(_XBOX_ONE) && defined(_TITLE)
-#include <d3dcompiler_x.h>
-#else
-#include <d3dcompiler.h>
-#include <d3dcommon.h>
-#endif
 #include <cstdint>
 
 namespace Pomdog {

@@ -343,6 +343,7 @@
     'pomdog_library_direct3d_sources': [
       '../src/RenderSystem.Direct3D/HLSLCompiling.cpp',
       '../src/RenderSystem.Direct3D/HLSLCompiling.hpp',
+      '../src/RenderSystem.Direct3D/PrerequisitesDirect3D.hpp',
     ],
     'pomdog_library_direct3d11_sources': [
       '../src/RenderSystem.Direct3D11/BufferDirect3D11.cpp',

@@ -6,12 +6,12 @@
 #include "GraphicsDeviceDirect3D11.hpp"
 #include "ShaderDirect3D11.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
+#include "../RenderSystem.Direct3D/PrerequisitesDirect3D.hpp"
 #include "../RenderSystem.DXGI/DXGIFormatHelper.hpp"
 #include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include <d3dcompiler.h>
 #include <algorithm>
 #include <utility>
 
