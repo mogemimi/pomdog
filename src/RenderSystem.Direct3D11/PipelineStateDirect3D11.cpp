@@ -245,9 +245,10 @@ static void ReflectShaderBytecode(
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection> & shaderReflector,
     D3D11_SHADER_DESC & shaderDesc)
 {
-    HRESULT hr = D3DReflect(shaderBytecode.Code, shaderBytecode.ByteLength,
-        IID_ID3D11ShaderReflection,
-        reinterpret_cast<void**>(shaderReflector.GetAddressOf()));
+    HRESULT hr = D3DReflect(
+        shaderBytecode.Code,
+        shaderBytecode.ByteLength,
+        IID_PPV_ARGS(&shaderReflector));
 
     if (FAILED(hr)) {
         // FUS RO DAH!

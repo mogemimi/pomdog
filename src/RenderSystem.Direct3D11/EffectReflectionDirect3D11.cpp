@@ -17,22 +17,6 @@ namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
 
-static ID3D11ShaderReflection* ReflectShaderBytecode(ShaderBytecode const& shaderBytecode)
-{
-    ID3D11ShaderReflection* shaderReflector = nullptr;
-
-    HRESULT hr = D3DReflect(shaderBytecode.Code, shaderBytecode.ByteLength,
-        IID_ID3D11ShaderReflection, reinterpret_cast<void**>(&shaderReflector));
-
-    if (FAILED(hr)) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to D3DReflect");
-    }
-
-    return std::move(shaderReflector);
-}
-//-----------------------------------------------------------------------
 static EffectVariableType ToEffectVariableType(D3D_SHADER_VARIABLE_TYPE variableType)
 {
     switch (variableType) {
@@ -180,8 +164,23 @@ EffectReflectionDirect3D11::EffectReflectionDirect3D11(
     ShaderBytecode const& vertexShaderBytecode,
     ShaderBytecode const& pixelShaderBytecode)
 {
-    vertexShaderReflector = ReflectShaderBytecode(vertexShaderBytecode);
-    pixelShaderReflector = ReflectShaderBytecode(pixelShaderBytecode);
+    HRESULT hr = D3DReflect(
+        vertexShaderBytecode.Code,
+        vertexShaderBytecode.ByteLength,
+        IID_PPV_ARGS(&vertexShaderReflector));
+
+    if (FAILED(hr)) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to D3DReflect");
+    }
+
+    hr = D3DReflect(
+        pixelShaderBytecode.Code,
+        pixelShaderBytecode.ByteLength,
+        IID_PPV_ARGS(&pixelShaderReflector));
+
+    if (FAILED(hr)) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to D3DReflect");
+    }
 }
 //-----------------------------------------------------------------------
 std::vector<EffectConstantDescription> EffectReflectionDirect3D11::GetConstantBuffers() const

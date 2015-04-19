@@ -110,7 +110,7 @@ static ID3D11InfoQueue* BuildInfoQueue(ID3D11Device* nativeDevice)
     POMDOG_ASSERT(nativeDevice);
 
     ID3D11InfoQueue* infoQueue = nullptr;
-    HRESULT hr = nativeDevice->QueryInterface(__uuidof(ID3D11InfoQueue), reinterpret_cast<void**>(&infoQueue));
+    HRESULT hr = nativeDevice->QueryInterface(IID_PPV_ARGS(&infoQueue));
 
     POMDOG_ASSERT(SUCCEEDED(hr));
 
