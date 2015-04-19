@@ -19,7 +19,8 @@ namespace Direct3D11 {
 
 class EffectReflectionDirect3D11 final: public NativeEffectReflection {
 public:
-    EffectReflectionDirect3D11(ShaderBytecode const& vertexShaderBytecode,
+    EffectReflectionDirect3D11(
+        ShaderBytecode const& vertexShaderBytecode,
         ShaderBytecode const& pixelShaderBytecode);
 
     std::vector<EffectConstantDescription> GetConstantBuffers() const override;

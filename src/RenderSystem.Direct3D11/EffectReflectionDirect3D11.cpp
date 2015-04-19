@@ -3,6 +3,7 @@
 
 #include "EffectReflectionDirect3D11.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
+#include "../RenderSystem.Direct3D/HLSLReflectionHelper.hpp"
 #include "../RenderSystem.Direct3D/PrerequisitesDirect3D.hpp"
 #include "Pomdog/Graphics/EffectConstantDescription.hpp"
 #include "Pomdog/Logging/Log.hpp"
@@ -17,41 +18,12 @@ namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
 
-static EffectVariableType ToEffectVariableType(D3D_SHADER_VARIABLE_TYPE variableType)
-{
-    switch (variableType) {
-    case D3D10_SVT_FLOAT: return EffectVariableType::Float;
-    case D3D10_SVT_INT: return EffectVariableType::Int32;
-    case D3D10_SVT_BOOL: return EffectVariableType::Bool;
-    case D3D10_SVT_VOID: return EffectVariableType::Void;
-    case D3D10_SVT_TEXTURE2D: return EffectVariableType::Texture2D;
-    case D3D10_SVT_TEXTURECUBE: return EffectVariableType::TextureCube;
-    case D3D10_SVT_STRING: return EffectVariableType::String;
-    default:
-        break;
-    }
-    return EffectVariableType::Float;
-}
-//-----------------------------------------------------------------------
-static EffectVariableClass ToEffectVariableClass(D3D_SHADER_VARIABLE_CLASS variableClass)
-{
-    switch (variableClass) {
-    case D3D10_SVC_SCALAR: return EffectVariableClass::Scalar;
-    case D3D10_SVC_VECTOR: return EffectVariableClass::Vector;
-    case D3D10_SVC_MATRIX_ROWS: return EffectVariableClass::Matrix;
-    case D3D10_SVC_MATRIX_COLUMNS: return EffectVariableClass::Matrix;
-    case D3D10_SVC_OBJECT: return EffectVariableClass::Object;
-    case D3D10_SVC_STRUCT: return EffectVariableClass::Struct;
-    default:
-        break;
-    }
-    return EffectVariableClass::Scalar;
-}
-//-----------------------------------------------------------------------
+using Direct3D::HLSLReflectionHelper;
+
 static std::vector<EffectVariable> EnumerateEffectVariables(
     ID3D11ShaderReflectionConstantBuffer* constantBufferReflector)
 {
-    POMDOG_ASSERT(constantBufferReflector);
+    POMDOG_ASSERT(constantBufferReflector != nullptr);
 
     D3D11_SHADER_BUFFER_DESC constantBufferDesc;
     HRESULT hr = constantBufferReflector->GetDesc(&constantBufferDesc);
@@ -94,8 +66,8 @@ static std::vector<EffectVariable> EnumerateEffectVariables(
         }
 
         EffectAnnotation annotation;
-        annotation.VariableClass = ToEffectVariableClass(shaderVariableTypeDesc.Class);
-        annotation.VariableType = ToEffectVariableType(shaderVariableTypeDesc.Type);
+        annotation.VariableClass = HLSLReflectionHelper::ToEffectVariableClass(shaderVariableTypeDesc.Class);
+        annotation.VariableType = HLSLReflectionHelper::ToEffectVariableType(shaderVariableTypeDesc.Type);
         annotation.ColumnCount = static_cast<uint8_t>(shaderVariableTypeDesc.Columns);
         annotation.RowCount = static_cast<uint8_t>(shaderVariableTypeDesc.Rows);
         annotation.Elements = static_cast<uint8_t>(shaderVariableTypeDesc.Elements);
