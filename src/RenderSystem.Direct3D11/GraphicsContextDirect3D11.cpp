@@ -308,8 +308,8 @@ GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetViewport(Viewport const& viewportIn)
 {
-    POMDOG_ASSERT(0.0f <= viewportIn.Width());
-    POMDOG_ASSERT(0.0f <= viewportIn.Height());
+    POMDOG_ASSERT(0 < viewportIn.Width());
+    POMDOG_ASSERT(0 < viewportIn.Height());
     POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftX() + viewportIn.Width());
     POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftY() + viewportIn.Height());
 

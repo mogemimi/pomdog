@@ -210,7 +210,7 @@ private:
 //-----------------------------------------------------------------------
 GraphicsDeviceDirect3D11::Impl::Impl()
     : driverType(D3D_DRIVER_TYPE_NULL)
-    , featureLevel(D3D_FEATURE_LEVEL_11_0)
+    , featureLevel(D3D_FEATURE_LEVEL_11_1)
 {
     adapters.EnumAdapters();
     BuildDevice();
@@ -392,18 +392,10 @@ GraphicsDeviceDirect3D11::CreatePipelineState(PipelineStateDescription const& de
 std::unique_ptr<NativeEffectReflection>
 GraphicsDeviceDirect3D11::CreateEffectReflection(
     PipelineStateDescription const& description,
-    NativePipelineState & pipelineStateIn)
+    NativePipelineState &)
 {
-    auto pipelineState = dynamic_cast<PipelineStateDirect3D11*>(&pipelineStateIn);
-    POMDOG_ASSERT(pipelineState != nullptr);
-
-    if (pipelineState == nullptr) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::domain_error,
-            "Failed to cast pipeline state to PipelineStateDirect3D11");
-    }
-
-    auto vertexShader = std::dynamic_pointer_cast<VertexShaderDirect3D11>(description.VertexShader);
+    auto vertexShader = std::dynamic_pointer_cast<VertexShaderDirect3D11>(
+        description.VertexShader);
 
     if (!vertexShader) {
         // FUS RO DAH!
@@ -411,7 +403,8 @@ GraphicsDeviceDirect3D11::CreateEffectReflection(
             "Failed to cast to vertex shader");
     }
 
-    auto pixelShader = std::dynamic_pointer_cast<PixelShaderDirect3D11>(description.PixelShader);
+    auto pixelShader = std::dynamic_pointer_cast<PixelShaderDirect3D11>(
+        description.PixelShader);
 
     if (!pixelShader) {
         // FUS RO DAH!
