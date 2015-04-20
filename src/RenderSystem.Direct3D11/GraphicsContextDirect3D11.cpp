@@ -166,10 +166,13 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
     }
 
     SetRenderTarget();
+
+    textureResourceViews.fill(nullptr);
 }
 //-----------------------------------------------------------------------
 GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
 {
+    textureResourceViews.fill(nullptr);
     renderTargets.clear();
     backBuffer.reset();
     swapChain.Reset();
@@ -422,19 +425,19 @@ void GraphicsContextDirect3D11::SetTexture(int index)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-    POMDOG_ASSERT(index < static_cast<int>(boundTextureViews.size()));
+    POMDOG_ASSERT(index < static_cast<int>(textureResourceViews.size()));
 
-    boundTextureViews[index] = nullptr;
+    textureResourceViews[index] = nullptr;
 
     POMDOG_ASSERT(deviceContext);
-    deviceContext->PSSetShaderResources(index, 1, &boundTextureViews[index]);
+    deviceContext->PSSetShaderResources(index, 1, &textureResourceViews[index]);
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetTexture(int index, Texture2D & textureIn)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-    POMDOG_ASSERT(index < static_cast<int>(boundTextureViews.size()));
+    POMDOG_ASSERT(index < static_cast<int>(textureResourceViews.size()));
     POMDOG_ASSERT(textureIn.NativeTexture2D() != nullptr);
 
     auto texture = static_cast<Texture2DDirect3D11*>(textureIn.NativeTexture2D());
@@ -442,17 +445,17 @@ void GraphicsContextDirect3D11::SetTexture(int index, Texture2D & textureIn)
     POMDOG_ASSERT(texture != nullptr);
     POMDOG_ASSERT(texture == dynamic_cast<Texture2DDirect3D11*>(textureIn.NativeTexture2D()));
 
-    boundTextureViews[index] = texture->GetShaderResourceView();
+    textureResourceViews[index] = texture->GetShaderResourceView();
 
     POMDOG_ASSERT(deviceContext);
-    deviceContext->PSSetShaderResources(0, 1, &boundTextureViews[index]);
+    deviceContext->PSSetShaderResources(0, 1, &textureResourceViews[index]);
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetTexture(int index, RenderTarget2D & textureIn)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-    POMDOG_ASSERT(index < static_cast<int>(boundTextureViews.size()));
+    POMDOG_ASSERT(index < static_cast<int>(textureResourceViews.size()));
     POMDOG_ASSERT(textureIn.NativeRenderTarget2D() != nullptr);
 
     auto texture = static_cast<RenderTarget2DDirect3D11*>(textureIn.NativeRenderTarget2D());
@@ -460,10 +463,10 @@ void GraphicsContextDirect3D11::SetTexture(int index, RenderTarget2D & textureIn
     POMDOG_ASSERT(texture != nullptr);
     POMDOG_ASSERT(texture == dynamic_cast<RenderTarget2DDirect3D11*>(textureIn.NativeRenderTarget2D()));
 
-    boundTextureViews[index] = texture->GetShaderResourceView();
+    textureResourceViews[index] = texture->GetShaderResourceView();
 
     POMDOG_ASSERT(deviceContext);
-    deviceContext->PSSetShaderResources(0, 1, &boundTextureViews[index]);
+    deviceContext->PSSetShaderResources(0, 1, &textureResourceViews[index]);
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetRenderTarget()

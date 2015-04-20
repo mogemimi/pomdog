@@ -100,7 +100,7 @@ private:
     Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
     std::vector<std::shared_ptr<RenderTarget2DDirect3D11>> renderTargets;
     static constexpr std::size_t MaxTextureCount = 8;
-    std::array<ID3D11ShaderResourceView*, MaxTextureCount> boundTextureViews;
+    std::array<ID3D11ShaderResourceView*, MaxTextureCount> textureResourceViews;
     std::shared_ptr<RenderTarget2DDirect3D11> backBuffer;
     std::shared_ptr<PipelineStateDirect3D11> pipelineState;
     std::array<FLOAT, 4> blendFactor;
