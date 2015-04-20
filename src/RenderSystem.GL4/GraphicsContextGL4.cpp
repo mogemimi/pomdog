@@ -634,8 +634,10 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
     for (auto const& renderTarget: renderTargetsIn)
     {
         POMDOG_ASSERT(renderTarget);
-        POMDOG_ASSERT(renderTarget->NativeRenderTarget2D());
-        auto const nativeRenderTarget = dynamic_cast<RenderTarget2DGL4*>(renderTarget->NativeRenderTarget2D());
+
+        auto const nativeRenderTarget = static_cast<RenderTarget2DGL4*>(renderTarget->NativeRenderTarget2D());
+        POMDOG_ASSERT(nativeRenderTarget != nullptr);
+        POMDOG_ASSERT(nativeRenderTarget == dynamic_cast<RenderTarget2DGL4*>(renderTarget->NativeRenderTarget2D()));
 
         POMDOG_ASSERT(nativeRenderTarget);
         nativeRenderTarget->BindToFramebuffer(ToColorAttachment(index));

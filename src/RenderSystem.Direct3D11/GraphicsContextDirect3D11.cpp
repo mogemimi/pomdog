@@ -161,8 +161,8 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
             backBufferDepthFormat,
             multiSampleCount);
 
-        boundRenderTargets.reserve(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
-        boundRenderTargets.push_back(backBuffer);
+        renderTargets.reserve(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
+        renderTargets.push_back(backBuffer);
     }
 
     SetRenderTarget();
@@ -170,7 +170,7 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
 //-----------------------------------------------------------------------
 GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
 {
-    boundRenderTargets.clear();
+    renderTargets.clear();
     backBuffer.reset();
     swapChain.Reset();
     deviceContext.Reset();
@@ -180,7 +180,7 @@ void GraphicsContextDirect3D11::Clear(Color const& color)
 {
     auto const fillColor = color.ToVector4();
 
-    for (auto & renderTarget: boundRenderTargets)
+    for (auto & renderTarget: renderTargets)
     {
         POMDOG_ASSERT(renderTarget);
         deviceContext->ClearRenderTargetView(
@@ -210,7 +210,7 @@ void GraphicsContextDirect3D11::Clear(ClearOptions options, Color const& color, 
         mask |= D3D11_CLEAR_STENCIL;
     }
 
-    for (auto & renderTarget : boundRenderTargets)
+    for (auto & renderTarget : renderTargets)
     {
         POMDOG_ASSERT(renderTarget);
 
@@ -332,7 +332,7 @@ void GraphicsContextDirect3D11::SetScissorRectangle(Rectangle const& rectangle)
     POMDOG_ASSERT(deviceContext);
 
     std::vector<D3D11_RECT> rects;
-    rects.resize(std::max<std::size_t>(1, boundRenderTargets.size()));
+    rects.resize(std::max<std::size_t>(1, renderTargets.size()));
 
     D3D11_RECT rect;
     rect.bottom = rectangle.Bottom();
@@ -467,8 +467,8 @@ void GraphicsContextDirect3D11::SetTexture(int index, RenderTarget2D & textureIn
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetRenderTarget()
 {
-    boundRenderTargets.clear();
-    boundRenderTargets.push_back(backBuffer);
+    renderTargets.clear();
+    renderTargets.push_back(backBuffer);
 
     std::array<ID3D11RenderTargetView*, 1> renderTargetViews = {
         backBuffer->GetRenderTargetView() };
@@ -476,37 +476,41 @@ void GraphicsContextDirect3D11::SetRenderTarget()
     deviceContext->OMSetRenderTargets(
         renderTargetViews.size(),
         renderTargetViews.data(),
-        boundRenderTargets.front()->GetDepthStencilView());
+        renderTargets.front()->GetDepthStencilView());
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets)
+void GraphicsContextDirect3D11::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargetsIn)
 {
-    POMDOG_ASSERT(!renderTargets.empty());
-    POMDOG_ASSERT(renderTargets.size() <= D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
+    POMDOG_ASSERT(!renderTargetsIn.empty());
+    POMDOG_ASSERT(renderTargetsIn.size() <= D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
+    POMDOG_ASSERT(renderTargetsIn.size() <= renderTargets.capacity());
 
-    boundRenderTargets.clear();
+    renderTargets.clear();
 
-    std::array<ID3D11RenderTargetView*, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT> renderTargetViews;
-    std::fill(std::begin(renderTargetViews), std::end(renderTargetViews), nullptr);
-
-    for (std::size_t i = 0; i < renderTargets.size(); ++i)
-    {
-        POMDOG_ASSERT(renderTargets[i]);
-        POMDOG_ASSERT(renderTargets[i]->NativeRenderTarget2D());
-        POMDOG_ASSERT(dynamic_cast<RenderTarget2DDirect3D11*>(renderTargets[i]->NativeRenderTarget2D()));
-
-        auto nativeRenderTarget = static_cast<RenderTarget2DDirect3D11*>(renderTargets[i]->NativeRenderTarget2D());
-        boundRenderTargets.emplace_back(renderTargets[i], nativeRenderTarget);
-
-        renderTargetViews[i] = nativeRenderTarget->GetRenderTargetView();
-    }
+    std::array<ID3D11RenderTargetView*,
+        D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT> renderTargetViews;
 
     POMDOG_ASSERT(renderTargetViews.size() <= D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
+    POMDOG_ASSERT(renderTargetViews.size() >= renderTargetsIn.size());
+
+    for (std::size_t i = 0; i < renderTargetsIn.size(); ++i)
+    {
+        POMDOG_ASSERT(renderTargetsIn[i]);
+
+        auto renderTarget = static_cast<RenderTarget2DDirect3D11*>(renderTargetsIn[i]->NativeRenderTarget2D());
+        POMDOG_ASSERT(renderTarget != nullptr);
+        POMDOG_ASSERT(renderTarget == dynamic_cast<RenderTarget2DDirect3D11*>(renderTargetsIn[i]->NativeRenderTarget2D()));
+
+        renderTargets.emplace_back(renderTargetsIn[i], renderTarget);
+
+        renderTargetViews[i] = renderTarget->GetRenderTargetView();
+        POMDOG_ASSERT(renderTargetViews[i] != nullptr);
+    }
 
     deviceContext->OMSetRenderTargets(
-        renderTargetViews.size(),
+        renderTargetsIn.size(),
         renderTargetViews.data(),
-        boundRenderTargets.front()->GetDepthStencilView());
+        renderTargets.front()->GetDepthStencilView());
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineStateIn)
@@ -545,8 +549,8 @@ void GraphicsContextDirect3D11::ResizeBackBuffers(ID3D11Device* device,
 
     bool isBackBufferActive = false;
 
-    if (!boundRenderTargets.empty()) {
-        isBackBufferActive = (backBuffer == boundRenderTargets.front());
+    if (!renderTargets.empty()) {
+        isBackBufferActive = (backBuffer == renderTargets.front());
     }
 
     POMDOG_ASSERT(backBuffer);
