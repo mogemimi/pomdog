@@ -115,7 +115,7 @@ static void EnumerateConstantBuffer(ID3D11ShaderReflection* shaderReflector,
                 "Failed to get shader buffer description");
         }
 
-        //if (D3D11_CT_CBUFFER != constantBufferDesc.Type)
+        //if (D3D_CT_CBUFFER != constantBufferDesc.Type)
         //{
         //    ///@todo Not implemented
         //    //tbuffer

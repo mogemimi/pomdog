@@ -272,12 +272,12 @@ static void EnumerateConstantBuffers(
 {
     POMDOG_ASSERT(shaderBytecode.Code);
 
+    ComPtr<ID3D11ShaderReflection> shaderReflector;
     D3D11_SHADER_DESC shaderDesc;
-    Microsoft::WRL::ComPtr<ID3D11ShaderReflection> shaderReflector;
 
     ReflectShaderBytecode(shaderBytecode, shaderReflector, shaderDesc);
 
-    for (std::size_t i = 0; i < shaderDesc.ConstantBuffers; ++i)
+    for (UINT i = 0; i < shaderDesc.ConstantBuffers; ++i)
     {
         POMDOG_ASSERT(shaderReflector);
         auto constantBufferReflector = shaderReflector->GetConstantBufferByIndex(i);
@@ -292,7 +292,7 @@ static void EnumerateConstantBuffers(
             continue;
         }
 
-        //if (D3D11_CT_CBUFFER != constantBufferDesc.Type)
+        //if (D3D_CT_CBUFFER != bufferDesc.Type)
         //{
         //    ///@todo Not implemented
         //    //tbuffer
@@ -484,9 +484,6 @@ PipelineStateDirect3D11::PipelineStateDirect3D11(ID3D11Device* device,
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeConstantLayout> PipelineStateDirect3D11::CreateConstantLayout()
 {
-    POMDOG_ASSERT(vertexShader);
-    POMDOG_ASSERT(pixelShader);
-
     std::vector<ConstantBufferBindingDirect3D11> bindings;
     bindings.reserve(constantBufferBinds.size());
 
@@ -496,9 +493,7 @@ std::unique_ptr<NativeConstantLayout> PipelineStateDirect3D11::CreateConstantLay
         binding.SlotIndex = desc.BindPoint;
         bindings.push_back(std::move(binding));
     }
-
-    auto constantLayout = std::make_unique<ConstantLayoutDirect3D11>(std::move(bindings));
-    return std::move(constantLayout);
+    return std::make_unique<ConstantLayoutDirect3D11>(std::move(bindings));
 }
 //-----------------------------------------------------------------------
 void PipelineStateDirect3D11::Apply(ID3D11DeviceContext * deviceContext,

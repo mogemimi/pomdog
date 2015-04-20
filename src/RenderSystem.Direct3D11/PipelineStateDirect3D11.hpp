@@ -9,6 +9,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <wrl/client.h>
 #include <vector>
+#include <string>
 
 namespace Pomdog {
 namespace Detail {
