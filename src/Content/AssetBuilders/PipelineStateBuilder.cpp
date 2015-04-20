@@ -21,13 +21,23 @@ public:
     PipelineStateDescription description;
     Detail::AssetLoaderContext loaderContext;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
-    bool hasBlendState = false;
-    bool hasRasterizerState = false;
-    bool hasDepthStencilState = false;
+    bool hasBlendState;
+    bool hasRasterizerState;
+    bool hasDepthStencilState;
+
+    Impl();
 
 public:
     std::shared_ptr<PipelineState> Load();
 };
+//-----------------------------------------------------------------------
+Builder<PipelineState>::Impl::Impl()
+{
+    description.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
+    hasBlendState = false;
+    hasRasterizerState = false;
+    hasDepthStencilState = false;
+}
 //-----------------------------------------------------------------------
 std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
 {

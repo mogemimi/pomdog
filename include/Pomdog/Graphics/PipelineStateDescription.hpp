@@ -21,6 +21,7 @@ struct PipelineStateDescription {
     BlendDescription BlendState;
     RasterizerDescription RasterizerState;
     DepthStencilDescription DepthStencilState;
+    std::uint32_t MultiSampleMask;
 };
 
 } // namespace Pomdog

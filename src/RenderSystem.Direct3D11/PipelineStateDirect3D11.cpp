@@ -445,7 +445,7 @@ PipelineStateDirect3D11::PipelineStateDirect3D11(ID3D11Device* device,
 {
     POMDOG_ASSERT(device);
 
-    sampleMask = static_cast<UINT>(description.BlendState.MultiSampleMask);
+    sampleMask = description.MultiSampleMask;
 
     blendState = CreateBlendState(device, description.BlendState);
     depthStencilState = CreateDepthStencilState(device, description.DepthStencilState);

@@ -7,7 +7,6 @@
 #include "RenderTargetBlendDescription.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
-#include <limits>
 #include <array>
 #include <utility>
 
@@ -15,7 +14,6 @@ namespace Pomdog {
 
 struct POMDOG_EXPORT BlendDescription {
     std::array<RenderTargetBlendDescription, 8> RenderTargets;
-    std::uint32_t MultiSampleMask;
     bool AlphaToCoverageEnable;
     bool IndependentBlendEnable;
 
@@ -27,7 +25,6 @@ struct POMDOG_EXPORT BlendDescription {
     static BlendDescription CreateAdditive()
     {
         BlendDescription desc;
-        desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
         desc.AlphaToCoverageEnable = false;
         desc.IndependentBlendEnable = false;
         for (auto & renderTarget: desc.RenderTargets) {
@@ -39,7 +36,6 @@ struct POMDOG_EXPORT BlendDescription {
     static BlendDescription CreateAlphaBlend()
     {
         BlendDescription desc;
-        desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
         desc.AlphaToCoverageEnable = false;
         desc.IndependentBlendEnable = false;
         for (auto & renderTarget : desc.RenderTargets) {
@@ -51,7 +47,6 @@ struct POMDOG_EXPORT BlendDescription {
     static BlendDescription CreateNonPremultiplied()
     {
         BlendDescription desc;
-        desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
         desc.AlphaToCoverageEnable = false;
         desc.IndependentBlendEnable = false;
         for (auto & renderTarget : desc.RenderTargets) {
@@ -63,7 +58,6 @@ struct POMDOG_EXPORT BlendDescription {
     static BlendDescription CreateOpaque()
     {
         BlendDescription desc;
-        desc.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
         desc.AlphaToCoverageEnable = false;
         desc.IndependentBlendEnable = false;
         for (auto & renderTarget : desc.RenderTargets) {
