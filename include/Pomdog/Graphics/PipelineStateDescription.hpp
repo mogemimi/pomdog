@@ -4,9 +4,11 @@
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
+#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Graphics/RasterizerDescription.hpp"
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include <memory>
 #include <vector>
 #include <string>
@@ -24,6 +26,8 @@ struct PipelineStateDescription {
     BlendDescription BlendState;
     RasterizerDescription RasterizerState;
     DepthStencilDescription DepthStencilState;
+    std::vector<SurfaceFormat> RenderTargetViewFormats;
+    DepthFormat DepthStencilViewFormat;
     std::uint32_t MultiSampleMask;
 };
 
