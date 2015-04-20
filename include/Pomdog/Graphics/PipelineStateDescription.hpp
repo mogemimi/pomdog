@@ -6,9 +6,11 @@
 
 #include "detail/ForwardDeclarations.hpp"
 #include "BlendDescription.hpp"
+#include "DepthFormat.hpp"
 #include "DepthStencilDescription.hpp"
 #include "InputLayoutDescription.hpp"
 #include "RasterizerDescription.hpp"
+#include "SurfaceFormat.hpp"
 #include <memory>
 #include <vector>
 
@@ -21,6 +23,8 @@ struct PipelineStateDescription {
     BlendDescription BlendState;
     RasterizerDescription RasterizerState;
     DepthStencilDescription DepthStencilState;
+    std::vector<SurfaceFormat> RenderTargetViewFormats;
+    DepthFormat DepthStencilViewFormat;
     std::uint32_t MultiSampleMask;
 };
 

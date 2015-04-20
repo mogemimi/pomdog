@@ -11,6 +11,7 @@
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Logging/Log.hpp"
 #include <utility>
 
 namespace Pomdog {
@@ -24,6 +25,8 @@ public:
     bool hasBlendState;
     bool hasRasterizerState;
     bool hasDepthStencilState;
+    bool hasRenderTargetViewFormats;
+    bool hasDepthStencilViewFormat;
 
     Impl();
 
@@ -37,6 +40,8 @@ Builder<PipelineState>::Impl::Impl()
     hasBlendState = false;
     hasRasterizerState = false;
     hasDepthStencilState = false;
+    hasRenderTargetViewFormats = false;
+    hasDepthStencilViewFormat = false;
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
@@ -56,6 +61,22 @@ std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
     if (!hasDepthStencilState) {
         description.DepthStencilState = DepthStencilDescription::CreateDefault();
         hasDepthStencilState = true;
+    }
+
+    if (!hasRenderTargetViewFormats) {
+#ifdef DEBUG
+        Log::Warning("Pomdog", "** Warning ** Please add Builder<PipelineState>::SetRenderTargetViewFormats() to your code.");
+#endif
+        description.RenderTargetViewFormats = { SurfaceFormat::R8G8B8A8_UNorm };
+        hasRenderTargetViewFormats = true;
+    }
+
+    if (!hasDepthStencilViewFormat) {
+#ifdef DEBUG
+        Log::Warning("Pomdog", "** Warning ** Please add Builder<PipelineState>::SetDepthStencilViewFormat() to your code.");
+#endif
+        description.DepthStencilViewFormat = DepthFormat::None;
+        hasDepthStencilViewFormat = true;
     }
 
     auto pipelineState = std::make_shared<PipelineState>(graphicsDevice, description);
