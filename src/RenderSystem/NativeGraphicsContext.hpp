@@ -25,7 +25,7 @@ public:
 
     virtual void Clear(Color const& color) = 0;
 
-    virtual void Clear(ClearOptions options, Color const& color, float depth, std::int32_t stencil) = 0;
+    virtual void Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil) = 0;
 
     virtual void Present() = 0;
 

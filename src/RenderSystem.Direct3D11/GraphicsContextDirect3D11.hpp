@@ -39,7 +39,7 @@ public:
 
     void Clear(Color const& color) override;
 
-    void Clear(ClearOptions options, Color const& color, float depth, std::int32_t stencil) override;
+    void Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil) override;
 
     void Present() override;
 

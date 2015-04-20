@@ -28,7 +28,7 @@ public:
 
     void Clear(Color const& color);
 
-    void Clear(ClearOptions options, Color const& color, float depth, std::int32_t stencil);
+    void Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil);
 
     void Present();
 

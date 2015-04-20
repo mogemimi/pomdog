@@ -186,15 +186,16 @@ void GraphicsContextDirect3D11::Clear(Color const& color)
         deviceContext->ClearRenderTargetView(
             renderTarget->GetRenderTargetView(), fillColor.Data());
 
-        if (auto depthStencilView = renderTarget->GetDepthStencilView())
-        {
-            deviceContext->ClearDepthStencilView(depthStencilView,
-                D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+        auto depthStencilView = renderTarget->GetDepthStencilView();
+        if (depthStencilView != nullptr) {
+            constexpr UINT mask = D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL;
+            deviceContext->ClearDepthStencilView(
+                depthStencilView, mask, 1.0f, 0);
         }
     }
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::Clear(ClearOptions options, Color const& color, float depth, std::int32_t stencil)
+void GraphicsContextDirect3D11::Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil)
 {
     POMDOG_ASSERT(stencil <= std::numeric_limits<UINT8>::max());
     POMDOG_ASSERT(stencil >= 0);
@@ -219,10 +220,10 @@ void GraphicsContextDirect3D11::Clear(ClearOptions options, Color const& color, 
                 renderTarget->GetRenderTargetView(), fillColor.Data());
         }
 
-        if (auto depthStencilView = renderTarget->GetDepthStencilView())
-        {
-            deviceContext->ClearDepthStencilView(depthStencilView,
-                mask, depth, static_cast<UINT8>(stencil));
+        auto depthStencilView = renderTarget->GetDepthStencilView();
+        if (depthStencilView != nullptr) {
+            deviceContext->ClearDepthStencilView(
+                depthStencilView, mask, depth, stencil);
         }
     }
 }

@@ -292,7 +292,7 @@ void GraphicsContext::Clear(Color const& color)
     impl->nativeContext->Clear(color);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Clear(ClearOptions options, Color const& color, float depth, std::int32_t stencil)
+void GraphicsContext::Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeContext);

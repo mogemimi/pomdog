@@ -214,7 +214,7 @@ void GraphicsContextGL4::Clear(Color const& color)
     POMDOG_CHECK_ERROR_GL4("glClear");
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float depth, std::int32_t stencil)
+void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil)
 {
     GLbitfield mask = 0;
 
