@@ -62,14 +62,14 @@ void QuickStartGame::Initialize()
             .SetGLSLFromFile("SimpleEffect_PS.glsl")
             .SetHLSLFromFile("SimpleEffect_PS.hlsl", "SimpleEffectPS");
 
-        pipelineState = assets->CreateBuilder<PipelineState>()
+        auto builder = assets->CreateBuilder<PipelineState>();
+        pipelineState = builder
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .Build();
 
-        constantBuffers = std::make_shared<ConstantBufferBinding>(
-            graphicsDevice, *pipelineState);
+        constantBuffers = builder.CreateConstantBuffers(pipelineState);
 
         constantBuffer = constantBuffers->Find("MyConstants");
     }
