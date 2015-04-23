@@ -135,9 +135,11 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
         swapChainDesc.BufferDesc.Format = backBufferFormat;
         swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
         swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+        swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+        swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
         swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
         swapChainDesc.OutputWindow = windowHandle;
-        swapChainDesc.Windowed = TRUE;
+        swapChainDesc.Windowed = (!presentationParameters.IsFullScreen ? TRUE : FALSE);
         swapChainDesc.SampleDesc.Count = sampleDesc.Count;
         swapChainDesc.SampleDesc.Quality = sampleDesc.Quality;
 

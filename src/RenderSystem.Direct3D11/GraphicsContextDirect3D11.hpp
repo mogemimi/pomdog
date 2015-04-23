@@ -87,9 +87,8 @@ public:
 
     void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayout) override;
 
-    void ResizeBackBuffers(ID3D11Device* nativeDevice, int backBufferWidth, int backBufferHeight);
+    void ResizeBackBuffers(ID3D11Device* device, int backBufferWidth, int backBufferHeight);
 
-public:
     ID3D11DeviceContext* GetDeviceContext();
 
 private:

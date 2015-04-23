@@ -56,7 +56,6 @@ public:
         DepthFormat depthStencilFormat,
         std::int32_t multiSampleCount) override;
 
-public:
     Microsoft::WRL::ComPtr<ID3D11Device> GetDevice() const;
 
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetDeviceContext() const;
