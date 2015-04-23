@@ -13,6 +13,10 @@
 #include "../RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp"
 #include "../RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.hpp"
 #endif
+#if !defined(POMDOG_DISABLE_DIRECT3D12)
+#include "../RenderSystem.Direct3D12/GraphicsContextDirect3D12.hpp"
+#include "../RenderSystem.Direct3D12/GraphicsDeviceDirect3D12.hpp"
+#endif
 #if !defined(POMDOG_DISABLE_DIRECT3D11) || !defined(POMDOG_DISABLE_GL4)
 #include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
 #include "../RenderSystem/GraphicsContext.hpp"
@@ -52,6 +56,12 @@ void MessagePump()
         ::DispatchMessage(&msg);
     }
 }
+
+enum class GraphicsAPIName {
+    OpenGL4,
+    Direct3D11,
+    Direct3D12,
+};
 
 struct GraphicsBridgeWin32 {
     virtual ~GraphicsBridgeWin32() = default;
@@ -242,6 +252,7 @@ private:
     std::shared_ptr<MouseWin32> mouse;
 
     Duration presentationInterval;
+    GraphicsAPIName graphicsAPIName;
     bool exitRequest;
     bool surfaceResizeRequest;
 };
@@ -256,12 +267,13 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
     , inputDeviceFactory(std::move(inputDeviceFactoryIn))
     , exitRequest(false)
     , surfaceResizeRequest(false)
+    , graphicsAPIName(useOpenGLIn ? GraphicsAPIName::OpenGL4: GraphicsAPIName::Direct3D11)
 {
     POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
     presentationInterval = Duration(1.0) / presentationParameters.PresentationInterval;
 
 #if !defined(POMDOG_DISABLE_GL4)
-    if (useOpenGL) {
+    if (graphicsAPIName == GraphicsAPIName::OpenGL4) {
         auto result = CreateGraphicsDeviceGL4(window, presentationParameters);
         graphicsDevice = std::move(std::get<0>(result));
         graphicsCommandQueue = std::move(std::get<1>(result));
@@ -269,11 +281,31 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
     }
 #endif
 #if !defined(POMDOG_DISABLE_DIRECT3D11)
-    if (!useOpenGL) {
+    if (graphicsAPIName == GraphicsAPIName::Direct3D11) {
         auto result = CreateGraphicsDeviceDirect3D11(window, presentationParameters);
         graphicsDevice = std::move(std::get<0>(result));
         graphicsCommandQueue = std::move(std::get<1>(result));
         graphicsBridge = std::move(std::get<2>(result));
+    }
+#endif
+#if !defined(POMDOG_DISABLE_DIRECT3D12)
+    if (graphicsAPIName == GraphicsAPIName::Direct3D12) {
+        using Detail::Direct3D12::GraphicsDeviceDirect3D12;
+        using Detail::Direct3D12::GraphicsContextDirect3D12;
+
+        auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceDirect3D12>();
+        auto device = nativeGraphicsDevice->GetDevice();
+
+        graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(
+            std::move(nativeGraphicsDevice));
+
+        graphicsContext = std::make_shared<Pomdog::GraphicsContext>(
+            std::make_unique<GraphicsContextDirect3D12>(
+            device,
+            window->NativeWindowHandle(),
+            presentationParameters),
+            presentationParameters,
+            graphicsDevice);
     }
 #endif
 
@@ -350,6 +382,19 @@ void GameHostWin32::Impl::RenderFrame(Game & game)
         return;
     }
 
+#if !defined(POMDOG_DISABLE_DIRECT3D12)
+    ///@todo The following lines is not cool
+    if (graphicsAPIName == GraphicsAPIName::Direct3D12)
+    {
+        using Detail::Direct3D12::GraphicsContextDirect3D12;
+        auto nativeGraphicsContext = dynamic_cast<GraphicsContextDirect3D12*>(graphicsContext->NativeGraphicsContext());
+
+        POMDOG_ASSERT(nativeGraphicsContext != nullptr);
+
+        nativeGraphicsContext->BackBufferBarrier();
+    }
+#endif
+
     game.Draw();
 }
 //-----------------------------------------------------------------------
@@ -387,6 +432,26 @@ void GameHostWin32::Impl::ClientSizeChanged()
 
     POMDOG_ASSERT(graphicsBridge);
     graphicsBridge->OnClientSizeChanged(bounds.Width, bounds.Height);
+
+#if defined(POMDOG_DISABLE_DIRECT3D12)
+    if (graphicsAPIName == GraphicsAPIName::Direct3D12)
+    {
+        using Detail::Direct3D12::GraphicsDeviceDirect3D12;
+        using Detail::Direct3D12::GraphicsContextDirect3D12;
+
+        auto nativeGraphicsDevice = dynamic_cast<GraphicsDeviceDirect3D12*>(graphicsDevice->NativeGraphicsDevice());
+        auto nativeGraphicsContext = dynamic_cast<GraphicsContextDirect3D12*>(graphicsContext->NativeGraphicsContext());
+
+        POMDOG_ASSERT(nativeGraphicsDevice != nullptr);
+        POMDOG_ASSERT(nativeGraphicsContext != nullptr);
+
+        auto device = nativeGraphicsDevice->GetDevice();
+
+        nativeGraphicsContext->ResizeBackBuffers(
+            device.Get(), bounds.Width, bounds.Height);
+    }
+#endif
+
     window->ClientSizeChanged(bounds.Width, bounds.Height);
 }
 //-----------------------------------------------------------------------
