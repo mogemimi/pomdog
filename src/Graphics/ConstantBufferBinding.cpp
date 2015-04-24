@@ -48,7 +48,7 @@ ConstantBufferBinding::ConstantBufferBinding(GraphicsDevice & graphicsDevice,
     for (auto & pair: constantBuffers)
     {
         auto & name = pair.first;
-        std::shared_ptr<Detail::RenderSystem::NativeBuffer> constantBuffer(
+        std::shared_ptr<Detail::NativeBuffer> constantBuffer(
             pair.second, pair.second->NativeConstantBuffer());
 
         POMDOG_ASSERT(nativeConstantLayout);
@@ -87,7 +87,7 @@ ConstantBufferCollection const& ConstantBufferBinding::GetConstantBuffers() cons
     return constantBuffers;
 }
 //-----------------------------------------------------------------------
-Detail::RenderSystem::NativeConstantLayout* ConstantBufferBinding::NativeConstantLayout()
+Detail::NativeConstantLayout* ConstantBufferBinding::NativeConstantLayout()
 {
     return nativeConstantLayout.get();
 }

@@ -11,7 +11,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 namespace {
 
@@ -182,6 +181,5 @@ template class BufferGL4<IndexBuffer>;
 template class BufferGL4<VertexBuffer>;
 //-----------------------------------------------------------------------
 } // namespace GL4
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

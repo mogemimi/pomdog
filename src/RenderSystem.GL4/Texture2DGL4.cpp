@@ -12,7 +12,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 namespace {
 
@@ -312,6 +311,5 @@ Texture2DObjectGL4 const& Texture2DGL4::GetTextureHandle() const
 }
 //-----------------------------------------------------------------------
 } // namespace GL4
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

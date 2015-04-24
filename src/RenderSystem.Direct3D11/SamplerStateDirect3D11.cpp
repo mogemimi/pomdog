@@ -9,7 +9,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
 
@@ -82,6 +81,5 @@ ID3D11SamplerState* SamplerStateDirect3D11::GetSamplerState() const
 }
 //-----------------------------------------------------------------------
 } // namespace Direct3D11
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

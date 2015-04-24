@@ -18,7 +18,6 @@ namespace Win32 {
 class GameWindowWin32;
 
 } // namespace Win32
-namespace RenderSystem {
 namespace Direct3D11 {
 
 class PipelineStateDirect3D11;
@@ -112,7 +111,6 @@ private:
 };
 
 } // namespace Direct3D11
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

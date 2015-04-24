@@ -13,7 +13,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class GraphicsCapabilities;
 class NativeConstantLayout;
@@ -75,7 +74,6 @@ public:
     virtual void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayout) = 0;
 };
 
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

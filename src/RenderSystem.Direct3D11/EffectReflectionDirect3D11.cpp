@@ -14,7 +14,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
 
@@ -195,6 +194,5 @@ std::vector<EffectConstantDescription> EffectReflectionDirect3D11::GetConstantBu
 }
 //-----------------------------------------------------------------------
 } // namespace Direct3D11
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

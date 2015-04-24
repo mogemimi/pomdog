@@ -56,10 +56,10 @@ public:
         void const* source, std::size_t elementCount);
 
 public:
-    Detail::RenderSystem::NativeBuffer* NativeIndexBuffer();
+    Detail::NativeBuffer* NativeIndexBuffer();
 
 private:
-    std::unique_ptr<Detail::RenderSystem::NativeBuffer> nativeIndexBuffer;
+    std::unique_ptr<Detail::NativeBuffer> nativeIndexBuffer;
     std::uint32_t indexCount;
     IndexElementSize elementSize;
     Pomdog::BufferUsage bufferUsage;

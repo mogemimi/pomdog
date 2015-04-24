@@ -9,7 +9,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 namespace {
 
@@ -143,6 +142,5 @@ void BlendStateGL4::Apply()
 }
 //-----------------------------------------------------------------------
 }// namespace GL4
-}// namespace RenderSystem
 }// namespace Detail
 }// namespace Pomdog

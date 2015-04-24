@@ -13,7 +13,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 namespace {
 
@@ -123,6 +122,5 @@ template class ShaderGL4<GL_FRAGMENT_SHADER>;
 //template class ShaderGL4<GL_COMPUTE_SHADER>;
 //-----------------------------------------------------------------------
 } // namespace GL4
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

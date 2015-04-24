@@ -31,10 +31,10 @@ public:
     std::vector<EffectConstantDescription> GetConstantBuffers() const;
 
 public:
-    Detail::RenderSystem::NativeEffectReflection* NativeEffectReflection();
+    Detail::NativeEffectReflection* NativeEffectReflection();
 
 private:
-    std::unique_ptr<Detail::RenderSystem::NativeEffectReflection> nativeEffectReflection;
+    std::unique_ptr<Detail::NativeEffectReflection> nativeEffectReflection;
 };
 
 } // namespace Pomdog

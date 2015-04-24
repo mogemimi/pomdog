@@ -40,7 +40,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
 namespace {
@@ -671,6 +670,5 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
 }
 //-----------------------------------------------------------------------
 } // namespace GL4
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

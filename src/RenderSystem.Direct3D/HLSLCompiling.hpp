@@ -10,7 +10,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class ShaderBytecode;
 class ShaderCompileOptions;
@@ -24,7 +23,6 @@ struct HLSLCompiling {
 };
 
 } // namespace Direct3D
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

@@ -11,7 +11,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class NativeBuffer;
 class NativeEffectReflection;
@@ -79,7 +78,6 @@ public:
         std::int32_t multiSampleCount) = 0;
 };
 
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

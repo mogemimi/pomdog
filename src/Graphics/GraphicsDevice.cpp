@@ -11,17 +11,17 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 class GraphicsDevice::Impl {
 public:
-    explicit Impl(std::unique_ptr<Detail::RenderSystem::NativeGraphicsDevice> && device);
+    explicit Impl(std::unique_ptr<Detail::NativeGraphicsDevice> && device);
 
 public:
-    std::unique_ptr<Detail::RenderSystem::NativeGraphicsDevice> nativeGraphicsDevice;
+    std::unique_ptr<Detail::NativeGraphicsDevice> nativeGraphicsDevice;
 };
 //-----------------------------------------------------------------------
-GraphicsDevice::Impl::Impl(std::unique_ptr<Detail::RenderSystem::NativeGraphicsDevice> && device)
+GraphicsDevice::Impl::Impl(std::unique_ptr<Detail::NativeGraphicsDevice> && device)
     : nativeGraphicsDevice(std::move(device))
 {}
 //-----------------------------------------------------------------------
-GraphicsDevice::GraphicsDevice(std::unique_ptr<Detail::RenderSystem::NativeGraphicsDevice> && device)
+GraphicsDevice::GraphicsDevice(std::unique_ptr<Detail::NativeGraphicsDevice> && device)
     : impl(std::make_unique<Impl>(std::move(device)))
 {}
 //-----------------------------------------------------------------------
@@ -34,7 +34,7 @@ ShaderLanguage GraphicsDevice::GetSupportedLanguage() const
     return impl->nativeGraphicsDevice->GetSupportedLanguage();
 }
 //-----------------------------------------------------------------------
-Detail::RenderSystem::NativeGraphicsDevice* GraphicsDevice::NativeGraphicsDevice()
+Detail::NativeGraphicsDevice* GraphicsDevice::NativeGraphicsDevice()
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeGraphicsDevice);

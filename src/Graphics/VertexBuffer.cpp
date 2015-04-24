@@ -28,7 +28,7 @@ VertexBuffer::VertexBuffer(GraphicsDevice & graphicsDevice,
     auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
 
     POMDOG_ASSERT(nativeDevice != nullptr);
-    using Detail::RenderSystem::BufferBindMode;
+    using Detail::BufferBindMode;
 
     nativeVertexBuffer = nativeDevice->CreateBuffer(
         vertices, sizeInBytes, bufferUsage, BufferBindMode::VertexBuffer);
@@ -52,7 +52,7 @@ VertexBuffer::VertexBuffer(GraphicsDevice & graphicsDevice,
     auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
 
     POMDOG_ASSERT(nativeDevice != nullptr);
-    using Detail::RenderSystem::BufferBindMode;
+    using Detail::BufferBindMode;
 
     nativeVertexBuffer = nativeDevice->CreateBuffer(
         sizeInBytes, bufferUsage, BufferBindMode::VertexBuffer);
@@ -121,7 +121,7 @@ void VertexBuffer::SetData(std::size_t offsetInBytes, void const* source,
         elementCount * strideInBytesIn);
 }
 //-----------------------------------------------------------------------
-Detail::RenderSystem::NativeBuffer* VertexBuffer::NativeVertexBuffer()
+Detail::NativeBuffer* VertexBuffer::NativeVertexBuffer()
 {
     POMDOG_ASSERT(nativeVertexBuffer);
     return nativeVertexBuffer.get();

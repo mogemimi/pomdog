@@ -16,7 +16,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
 ShaderLanguage GraphicsDeviceGL4::GetSupportedLanguage() const
@@ -124,6 +123,5 @@ GraphicsDeviceGL4::CreateRenderTarget2D(
 }
 //-----------------------------------------------------------------------
 } // namespace GL4
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

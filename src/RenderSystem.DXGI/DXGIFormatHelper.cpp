@@ -10,7 +10,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace DXGI {
 //-----------------------------------------------------------------------
 DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(DepthFormat format) noexcept
@@ -72,6 +71,5 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(InputElementFormat format) noexcept
 }
 //-----------------------------------------------------------------------
 } // namespace DXGI
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

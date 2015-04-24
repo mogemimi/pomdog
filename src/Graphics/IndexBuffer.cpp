@@ -40,7 +40,7 @@ IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
     auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
 
     POMDOG_ASSERT(nativeDevice != nullptr);
-    using Detail::RenderSystem::BufferBindMode;
+    using Detail::BufferBindMode;
 
     nativeIndexBuffer = nativeDevice->CreateBuffer(
         indices, sizeInBytes, bufferUsage, BufferBindMode::IndexBuffer);
@@ -63,7 +63,7 @@ IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
     auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
 
     POMDOG_ASSERT(nativeDevice != nullptr);
-    using Detail::RenderSystem::BufferBindMode;
+    using Detail::BufferBindMode;
 
     nativeIndexBuffer = nativeDevice->CreateBuffer(
         sizeInBytes, bufferUsage, BufferBindMode::IndexBuffer);
@@ -133,7 +133,7 @@ void IndexBuffer::SetData(std::size_t offsetInBytes,
         ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
 //-----------------------------------------------------------------------
-Detail::RenderSystem::NativeBuffer* IndexBuffer::NativeIndexBuffer()
+Detail::NativeBuffer* IndexBuffer::NativeIndexBuffer()
 {
     POMDOG_ASSERT(nativeIndexBuffer);
     return nativeIndexBuffer.get();

@@ -13,7 +13,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 
 using RenderBuffer2DGL4 = Tagged<GLuint, RenderTarget2D>;
@@ -45,7 +44,6 @@ private:
 };
 
 } // namespace GL4
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

@@ -22,7 +22,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
 
@@ -464,6 +463,5 @@ Microsoft::WRL::ComPtr<IDXGIFactory1> GraphicsDeviceDirect3D11::GetDXGIFactory()
 }
 //-----------------------------------------------------------------------
 } // namespace Direct3D11
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

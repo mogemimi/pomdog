@@ -19,7 +19,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 
 class InputLayoutGL4;
@@ -59,7 +58,6 @@ private:
 };
 
 } // namespace GL4
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

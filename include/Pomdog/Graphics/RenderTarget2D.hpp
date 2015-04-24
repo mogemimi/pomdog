@@ -53,10 +53,10 @@ public:
     Rectangle Bounds() const;
 
 public:
-    Detail::RenderSystem::NativeRenderTarget2D* NativeRenderTarget2D();
+    Detail::NativeRenderTarget2D* NativeRenderTarget2D();
 
 private:
-    std::unique_ptr<Detail::RenderSystem::NativeRenderTarget2D> nativeRenderTarget2D;
+    std::unique_ptr<Detail::NativeRenderTarget2D> nativeRenderTarget2D;
     std::int32_t pixelWidth;
     std::int32_t pixelHeight;
     std::int32_t levelCount;

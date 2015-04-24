@@ -11,7 +11,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace Direct3D11 {
 namespace {
 
@@ -88,6 +87,5 @@ template class ShaderDirect3D11<ID3D11PixelShader>;
 //template class ShaderDirect3D11<ID3D11ComputeShader>;
 //-----------------------------------------------------------------------
 } // namespace Direct3D11
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

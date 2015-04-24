@@ -19,7 +19,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 namespace {
 
@@ -188,6 +187,5 @@ InputLayoutGL4* PipelineStateGL4::GetInputLayout() const
 }
 //-----------------------------------------------------------------------
 } // namespace GL4
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

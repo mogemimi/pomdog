@@ -16,14 +16,14 @@ public:
     GraphicsDevice(GraphicsDevice const&) = delete;
     GraphicsDevice & operator=(GraphicsDevice const&) = delete;
 
-    explicit GraphicsDevice(std::unique_ptr<Detail::RenderSystem::NativeGraphicsDevice> && nativeDevice);
+    explicit GraphicsDevice(std::unique_ptr<Detail::NativeGraphicsDevice> && nativeDevice);
 
     ~GraphicsDevice();
 
     ShaderLanguage GetSupportedLanguage() const;
 
 public:
-    Detail::RenderSystem::NativeGraphicsDevice* NativeGraphicsDevice();
+    Detail::NativeGraphicsDevice* NativeGraphicsDevice();
 
 private:
     class Impl;

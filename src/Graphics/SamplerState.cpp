@@ -19,7 +19,7 @@ SamplerState::SamplerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice
 //-----------------------------------------------------------------------
 SamplerState::~SamplerState() = default;
 //-----------------------------------------------------------------------
-Detail::RenderSystem::NativeSamplerState* SamplerState::NativeSamplerState()
+Detail::NativeSamplerState* SamplerState::NativeSamplerState()
 {
     return nativeSamplerState.get();
 }

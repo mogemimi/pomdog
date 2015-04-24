@@ -9,7 +9,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class NativeEffectReflection {
 public:
@@ -22,7 +21,6 @@ public:
     virtual std::vector<EffectConstantDescription> GetConstantBuffers() const = 0;
 };
 
-}// namespace RenderSystem
 }// namespace Detail
 }// namespace Pomdog
 

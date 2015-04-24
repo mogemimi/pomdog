@@ -11,7 +11,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace Direct3D11 {
 
 using DXGI::DXGIFormatHelper;
@@ -100,6 +99,5 @@ ID3D11ShaderResourceView* Texture2DDirect3D11::GetShaderResourceView() const
 }
 //-----------------------------------------------------------------------
 } // namespace Direct3D11
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

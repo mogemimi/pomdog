@@ -9,7 +9,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace Direct3D {
 
 struct HLSLReflectionHelper {
@@ -21,7 +20,6 @@ struct HLSLReflectionHelper {
 };
 
 } // namespace Direct3D
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

@@ -18,7 +18,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 namespace {
 
@@ -642,6 +641,5 @@ void InputLayoutGL4::Apply(std::vector<std::shared_ptr<VertexBuffer>> const& ver
 }
 //-----------------------------------------------------------------------
 } // namespace GL4
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

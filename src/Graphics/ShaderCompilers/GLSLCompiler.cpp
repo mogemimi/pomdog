@@ -13,16 +13,16 @@
 namespace Pomdog {
 namespace ShaderCompilers {
 
-using Detail::RenderSystem::ShaderBytecode;
-using Detail::RenderSystem::ShaderCompileOptions;
-using Detail::RenderSystem::ShaderPipelineStage;
+using Detail::ShaderBytecode;
+using Detail::ShaderCompileOptions;
+using Detail::ShaderPipelineStage;
 
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> GLSLCompiler::CreateShader(
     GraphicsDevice & graphicsDevice,
     void const* shaderSource,
     std::size_t byteLength,
-    Detail::RenderSystem::ShaderPipelineStage pipelineStage)
+    Detail::ShaderPipelineStage pipelineStage)
 {
     POMDOG_ASSERT(shaderSource != nullptr);
     POMDOG_ASSERT(byteLength > 0);

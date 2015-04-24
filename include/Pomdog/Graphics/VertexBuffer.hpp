@@ -53,10 +53,10 @@ public:
         std::size_t elementCount, std::size_t strideInBytes);
 
 public:
-    Detail::RenderSystem::NativeBuffer* NativeVertexBuffer();
+    Detail::NativeBuffer* NativeVertexBuffer();
 
 private:
-    std::unique_ptr<Detail::RenderSystem::NativeBuffer> nativeVertexBuffer;
+    std::unique_ptr<Detail::NativeBuffer> nativeVertexBuffer;
     std::uint32_t vertexCount;
     std::uint32_t strideInBytes;
     Pomdog::BufferUsage bufferUsage;

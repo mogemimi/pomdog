@@ -41,10 +41,10 @@ public:
     void SetData(void const* pixelData);
 
 public:
-    Detail::RenderSystem::NativeTexture2D* NativeTexture2D();
+    Detail::NativeTexture2D* NativeTexture2D();
 
 private:
-    std::unique_ptr<Detail::RenderSystem::NativeTexture2D> nativeTexture2D;
+    std::unique_ptr<Detail::NativeTexture2D> nativeTexture2D;
     std::int32_t pixelWidth;
     std::int32_t pixelHeight;
     std::int32_t levelCount;

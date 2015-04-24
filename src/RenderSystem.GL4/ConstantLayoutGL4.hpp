@@ -11,7 +11,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 
 struct ConstantBufferBindingGL4 {
@@ -38,7 +37,6 @@ private:
 };
 
 } // namespace GL4
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

@@ -8,7 +8,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class ShaderBytecode {
 public:
@@ -16,7 +15,6 @@ public:
     std::size_t ByteLength;
 };
 
-}// namespace RenderSystem
 }// namespace Detail
 }// namespace Pomdog
 

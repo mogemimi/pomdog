@@ -9,7 +9,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class NativeTexture2D {
 public:
@@ -23,7 +22,6 @@ public:
         std::int32_t levelCount, SurfaceFormat format, void const* pixelData) = 0;
 };
 
-}// namespace RenderSystem
 }// namespace Detail
 }// namespace Pomdog
 

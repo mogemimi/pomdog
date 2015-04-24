@@ -11,13 +11,11 @@ namespace Pomdog {
 enum class SurfaceFormat : std::uint8_t;
 
 namespace Detail {
-namespace RenderSystem {
 
 struct SurfaceFormatHelper final {
     static int ToBytesPerBlock(SurfaceFormat format);
 };
 
-}// namespace RenderSystem
 }// namespace Detail
 }// namespace Pomdog
 

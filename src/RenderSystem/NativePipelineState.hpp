@@ -9,7 +9,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class NativeConstantLayout;
 class NativeGraphicsDevice;
@@ -25,7 +24,6 @@ public:
     virtual std::unique_ptr<NativeConstantLayout> CreateConstantLayout() = 0;
 };
 
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

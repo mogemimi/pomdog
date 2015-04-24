@@ -8,7 +8,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class NativeBuffer;
 class NativeConstantLayout;
@@ -20,7 +19,6 @@ class NativeRenderTarget2D;
 class NativeSamplerState;
 class NativeTexture2D;
 
-} // namespace RenderSystem
 } // namespace Detail
 
 // Classes

@@ -11,7 +11,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace Direct3D11 {
 
 class RenderTarget2DDirect3D11 final: public NativeRenderTarget2D {
@@ -57,7 +56,6 @@ private:
 };
 
 } // namespace Direct3D11
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

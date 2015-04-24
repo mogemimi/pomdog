@@ -6,7 +6,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class NativeSamplerState {
 public:
@@ -17,7 +16,6 @@ public:
     virtual ~NativeSamplerState() = default;
 };
 
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

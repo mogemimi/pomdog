@@ -9,7 +9,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace Direct3D11 {
 //-----------------------------------------------------------------------
 ConstantLayoutDirect3D11::ConstantLayoutDirect3D11(
@@ -62,6 +61,5 @@ void ConstantLayoutDirect3D11::Apply(ID3D11DeviceContext * deviceContext)
 }
 //-----------------------------------------------------------------------
 } // namespace Direct3D11
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

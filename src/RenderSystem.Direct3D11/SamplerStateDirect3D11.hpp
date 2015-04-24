@@ -11,7 +11,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace Direct3D11 {
 
 class SamplerStateDirect3D11 final: public NativeSamplerState {
@@ -27,7 +26,6 @@ private:
 };
 
 } // namespace Direct3D11
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

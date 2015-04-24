@@ -15,7 +15,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Win32 {
 
-class OpenGLContextWin32 final : public RenderSystem::GL4::OpenGLContext {
+class OpenGLContextWin32 final : public GL4::OpenGLContext {
 public:
     OpenGLContextWin32() = delete;
 

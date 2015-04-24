@@ -17,7 +17,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace Direct3D {
 namespace {
 
@@ -212,6 +211,5 @@ Microsoft::WRL::ComPtr<ID3DBlob> HLSLCompiling::CompileShader(
 }
 
 } // namespace Direct3D
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

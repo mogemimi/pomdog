@@ -9,7 +9,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class NativeBuffer;
 
@@ -27,7 +26,6 @@ public:
     virtual void SetConstantBuffer(std::string const& constantName) = 0;
 };
 
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

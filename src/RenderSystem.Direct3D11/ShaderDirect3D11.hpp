@@ -12,7 +12,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class ShaderBytecode;
 class ShaderCompileOptions;
@@ -40,7 +39,6 @@ using VertexShaderDirect3D11 = ShaderDirect3D11<ID3D11VertexShader>;
 using PixelShaderDirect3D11 = ShaderDirect3D11<ID3D11PixelShader>;
 
 } // namespace Direct3D11
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

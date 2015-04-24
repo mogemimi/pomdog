@@ -23,10 +23,10 @@ public:
     ~SamplerState();
 
 public:
-    Detail::RenderSystem::NativeSamplerState* NativeSamplerState();
+    Detail::NativeSamplerState* NativeSamplerState();
 
 private:
-    std::unique_ptr<Detail::RenderSystem::NativeSamplerState> nativeSamplerState;
+    std::unique_ptr<Detail::NativeSamplerState> nativeSamplerState;
 };
 
 } // namespace Pomdog

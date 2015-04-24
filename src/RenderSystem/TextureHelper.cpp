@@ -48,7 +48,6 @@ std::int32_t TextureHelper::ComputeTextureSizeInBytes(
     POMDOG_ASSERT(pixelHeight > 0);
     POMDOG_ASSERT(levelCount >= 1);
 
-    using RenderSystem::SurfaceFormatHelper;
     auto const bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format);
 
     std::int32_t sizeInBytes = 0;

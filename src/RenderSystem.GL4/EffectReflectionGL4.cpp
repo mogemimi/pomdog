@@ -13,7 +13,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 namespace {
 //-----------------------------------------------------------------------
@@ -686,6 +685,5 @@ std::vector<EffectConstantDescription> EffectReflectionGL4::GetConstantBuffers()
 }
 
 } // namespace GL4
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

@@ -9,7 +9,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace DXGI {
 
 struct DXGIFormatHelper final {
@@ -20,7 +19,6 @@ struct DXGIFormatHelper final {
 };
 
 } // namespace DXGI
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

@@ -49,7 +49,7 @@ static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 {
     POMDOG_ASSERT(openGLContext);
     POMDOG_ASSERT(!gameWindow.expired());
-    using RenderSystem::GL4::GraphicsContextGL4;
+    using GL4::GraphicsContextGL4;
 
     auto nativeContext = std::make_unique<GraphicsContextGL4>(openGLContext, std::move(gameWindow));
     return std::make_shared<GraphicsContext>(std::move(nativeContext), presentationParameters, graphicsDevice);
@@ -163,7 +163,7 @@ GameHostCocoa::Impl::Impl(PomdogOpenGLView* openGLViewIn,
     openGLContext->SetView(openGLView);
     openGLContext->MakeCurrent();
 
-    using Detail::RenderSystem::GL4::GraphicsDeviceGL4;
+    using Detail::GL4::GraphicsDeviceGL4;
     graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::make_unique<GraphicsDeviceGL4>());
 
     graphicsContext = CreateGraphicsContext(openGLContext, window, presentationParameters, graphicsDevice);

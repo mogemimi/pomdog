@@ -10,7 +10,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class ShaderBytecode;
 
@@ -50,7 +49,6 @@ using VertexShaderGL4 = ShaderGL4<GL_VERTEX_SHADER>;
 using PixelShaderGL4 = ShaderGL4<GL_FRAGMENT_SHADER>;
 
 } // namespace GL4
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

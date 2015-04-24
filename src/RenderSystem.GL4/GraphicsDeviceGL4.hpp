@@ -9,7 +9,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 
 class GraphicsDeviceGL4 final: public NativeGraphicsDevice {
@@ -51,7 +50,6 @@ public:
 };
 
 } // namespace GL4
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

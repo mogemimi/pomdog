@@ -11,7 +11,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace Direct3D11 {
 
 class BufferDirect3D11 final : public NativeBuffer {
@@ -49,7 +48,6 @@ private:
 };
 
 } // namespace Direct3D11
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

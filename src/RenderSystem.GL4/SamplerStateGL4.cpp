@@ -10,7 +10,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
 namespace {
@@ -131,6 +130,5 @@ void SamplerStateGL4::Apply(int index)
 }
 //-----------------------------------------------------------------------
 } // namespace GL4
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

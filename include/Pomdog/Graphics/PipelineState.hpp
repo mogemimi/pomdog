@@ -28,10 +28,10 @@ public:
     PipelineState & operator=(PipelineState &&) = default;
 
 public:
-    Detail::RenderSystem::NativePipelineState* NativePipelineState();
+    Detail::NativePipelineState* NativePipelineState();
 
 private:
-    std::unique_ptr<Detail::RenderSystem::NativePipelineState> nativePipelineState;
+    std::unique_ptr<Detail::NativePipelineState> nativePipelineState;
 };
 
 } // namespace Pomdog

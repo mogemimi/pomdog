@@ -6,7 +6,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 //-----------------------------------------------------------------------
 int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format)
 {
@@ -38,6 +37,5 @@ int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format)
 #endif
 }
 //-----------------------------------------------------------------------
-}// namespace RenderSystem
 }// namespace Detail
 }// namespace Pomdog

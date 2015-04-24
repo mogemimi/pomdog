@@ -7,7 +7,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace Direct3D {
 
 EffectVariableType HLSLReflectionHelper::ToEffectVariableType(
@@ -44,6 +43,5 @@ EffectVariableClass HLSLReflectionHelper::ToEffectVariableClass(
 }
 
 } // namespace Direct3D
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog

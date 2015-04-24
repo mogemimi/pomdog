@@ -8,7 +8,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 //-----------------------------------------------------------------------
 namespace {
@@ -169,6 +168,5 @@ void DepthStencilStateGL4::Apply()
 }
 
 }// namespace GL4
-}// namespace RenderSystem
 }// namespace Detail
 }// namespace Pomdog

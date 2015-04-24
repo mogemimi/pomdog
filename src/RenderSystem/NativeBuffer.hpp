@@ -8,7 +8,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class NativeBuffer {
 public:
@@ -25,7 +24,6 @@ public:
         void const* source, std::size_t sizeInBytes) = 0;
 };
 
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

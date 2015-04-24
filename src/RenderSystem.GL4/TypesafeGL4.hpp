@@ -9,7 +9,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 
 namespace Tags {
@@ -21,7 +20,6 @@ class ShaderProgramTag;
 using ShaderProgramGL4 = Tagged<GLuint, Tags::ShaderProgramTag>;
 
 }// namespace GL4
-}// namespace RenderSystem
 }// namespace Detail
 }// namespace Pomdog
 

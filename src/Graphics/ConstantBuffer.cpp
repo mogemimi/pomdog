@@ -22,7 +22,7 @@ ConstantBuffer::ConstantBuffer(
     auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
 
     POMDOG_ASSERT(nativeDevice != nullptr);
-    using Detail::RenderSystem::BufferBindMode;
+    using Detail::BufferBindMode;
 
     nativeConstantBuffer = nativeDevice->CreateBuffer(
         sizeInBytes, bufferUsage, BufferBindMode::ConstantBuffer);
@@ -43,7 +43,7 @@ ConstantBuffer::ConstantBuffer(
     auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
 
     POMDOG_ASSERT(nativeDevice != nullptr);
-    using Detail::RenderSystem::BufferBindMode;
+    using Detail::BufferBindMode;
 
     nativeConstantBuffer = nativeDevice->CreateBuffer(
         sourceData, sizeInBytes, bufferUsage, BufferBindMode::ConstantBuffer);
@@ -96,7 +96,7 @@ BufferUsage ConstantBuffer::BufferUsage() const noexcept
     return bufferUsage;
 }
 //-----------------------------------------------------------------------
-Detail::RenderSystem::NativeBuffer* ConstantBuffer::NativeConstantBuffer()
+Detail::NativeBuffer* ConstantBuffer::NativeConstantBuffer()
 {
     POMDOG_ASSERT(nativeConstantBuffer);
     return nativeConstantBuffer.get();

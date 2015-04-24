@@ -20,7 +20,7 @@ public:
     GraphicsContext(GraphicsContext const&) = delete;
     GraphicsContext & operator=(GraphicsContext const&) = delete;
 
-    GraphicsContext(std::unique_ptr<Detail::RenderSystem::NativeGraphicsContext> && nativeContext,
+    GraphicsContext(std::unique_ptr<Detail::NativeGraphicsContext> && nativeContext,
         PresentationParameters const& presentationParameters,
         std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
@@ -90,7 +90,7 @@ public:
     void SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
 
 public:
-    Detail::RenderSystem::NativeGraphicsContext* NativeGraphicsContext();
+    Detail::NativeGraphicsContext* NativeGraphicsContext();
 
 private:
     class Impl;

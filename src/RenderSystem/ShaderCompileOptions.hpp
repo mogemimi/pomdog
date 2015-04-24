@@ -11,7 +11,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 using ShaderCompilers::ShaderPipelineStage;
 
@@ -42,7 +41,6 @@ public:
     bool Precompiled;
 };
 
-}// namespace RenderSystem
 }// namespace Detail
 }// namespace Pomdog
 

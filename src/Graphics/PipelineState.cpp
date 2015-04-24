@@ -27,7 +27,7 @@ PipelineState::PipelineState(
 //-----------------------------------------------------------------------
 PipelineState::~PipelineState() = default;
 //-----------------------------------------------------------------------
-Detail::RenderSystem::NativePipelineState* PipelineState::NativePipelineState()
+Detail::NativePipelineState* PipelineState::NativePipelineState()
 {
     return nativePipelineState.get();
 }

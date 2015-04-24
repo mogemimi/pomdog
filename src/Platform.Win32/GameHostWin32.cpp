@@ -136,8 +136,8 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
 
 #if defined(POMDOG_ENABLE_GL4)
     if (useOpenGL) {
-        using Detail::RenderSystem::GL4::GraphicsDeviceGL4;
-        using Detail::RenderSystem::GL4::GraphicsContextGL4;
+        using Detail::GL4::GraphicsDeviceGL4;
+        using Detail::GL4::GraphicsContextGL4;
 
         auto openGLContext = std::make_shared<Win32::OpenGLContextWin32>(
             window->NativeWindowHandle(), presentationParameters);
@@ -160,8 +160,8 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
 #endif
 #if defined(POMDOG_ENABLE_DIRECT3D11)
     if (!useOpenGL) {
-        using Detail::RenderSystem::Direct3D11::GraphicsDeviceDirect3D11;
-        using Detail::RenderSystem::Direct3D11::GraphicsContextDirect3D11;
+        using Detail::Direct3D11::GraphicsDeviceDirect3D11;
+        using Detail::Direct3D11::GraphicsContextDirect3D11;
 
         auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceDirect3D11>();
         auto device = nativeGraphicsDevice->GetDevice();
@@ -277,8 +277,8 @@ void GameHostWin32::Impl::ClientSizeChanged()
 #if defined(POMDOG_ENABLE_DIRECT3D11)
     if (!useOpenGL)
     {
-        using Detail::RenderSystem::Direct3D11::GraphicsDeviceDirect3D11;
-        using Detail::RenderSystem::Direct3D11::GraphicsContextDirect3D11;
+        using Detail::Direct3D11::GraphicsDeviceDirect3D11;
+        using Detail::Direct3D11::GraphicsContextDirect3D11;
 
         auto nativeGraphicsDevice = dynamic_cast<GraphicsDeviceDirect3D11*>(graphicsDevice->NativeGraphicsDevice());
         auto nativeGraphicsContext = dynamic_cast<GraphicsContextDirect3D11*>(graphicsContext->NativeGraphicsContext());

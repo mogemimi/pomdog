@@ -19,7 +19,7 @@ struct CocoaOpenGLHelper {
         PresentationParameters const& presentationParameters);
 };
 
-class OpenGLContextCocoa final: public RenderSystem::GL4::OpenGLContext {
+class OpenGLContextCocoa final: public GL4::OpenGLContext {
 public:
     OpenGLContextCocoa() = delete;
 

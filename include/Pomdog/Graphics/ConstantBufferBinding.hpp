@@ -39,11 +39,11 @@ public:
     ConstantBufferCollection const& GetConstantBuffers() const;
 
 public:
-    Detail::RenderSystem::NativeConstantLayout* NativeConstantLayout();
+    Detail::NativeConstantLayout* NativeConstantLayout();
 
 private:
     ConstantBufferCollection constantBuffers;
-    std::unique_ptr<Detail::RenderSystem::NativeConstantLayout> nativeConstantLayout;
+    std::unique_ptr<Detail::NativeConstantLayout> nativeConstantLayout;
 };
 
 } // namespace Pomdog

@@ -12,7 +12,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 namespace GL4 {
 
 using BlendGL4 = Tagged<GLenum, Blend>;
@@ -42,7 +41,6 @@ private:
 };
 
 }// namespace GL4
-}// namespace RenderSystem
 }// namespace Detail
 }// namespace Pomdog
 

@@ -8,14 +8,12 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class GraphicsCapabilities {
 public:
     std::size_t SamplerSlotCount;
 };
 
-}// namespace RenderSystems
 }// namespace Detail
 }// namespace Pomdog
 

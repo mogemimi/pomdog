@@ -6,7 +6,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace RenderSystem {
 
 class NativeRenderTarget2D {
 public:
@@ -17,7 +16,6 @@ public:
     virtual ~NativeRenderTarget2D() = default;
 };
 
-} // namespace RenderSystem
 } // namespace Detail
 } // namespace Pomdog
 

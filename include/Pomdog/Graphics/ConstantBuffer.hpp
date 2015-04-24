@@ -73,10 +73,10 @@ public:
     Pomdog::BufferUsage BufferUsage() const noexcept;
 
 public:
-    Detail::RenderSystem::NativeBuffer* NativeConstantBuffer();
+    Detail::NativeBuffer* NativeConstantBuffer();
 
 private:
-    std::unique_ptr<Detail::RenderSystem::NativeBuffer> nativeConstantBuffer;
+    std::unique_ptr<Detail::NativeBuffer> nativeConstantBuffer;
     std::uint32_t sizeInBytes;
     Pomdog::BufferUsage bufferUsage;
 };
