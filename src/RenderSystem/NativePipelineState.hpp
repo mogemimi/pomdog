@@ -11,7 +11,6 @@ namespace Pomdog {
 namespace Detail {
 
 class NativeConstantLayout;
-class NativeGraphicsDevice;
 
 class NativePipelineState {
 public:

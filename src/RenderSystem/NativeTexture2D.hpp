@@ -22,7 +22,7 @@ public:
         std::int32_t levelCount, SurfaceFormat format, void const* pixelData) = 0;
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_NATIVETEXTURE2D_309E0647_HPP

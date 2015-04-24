@@ -141,6 +141,6 @@ void BlendStateGL4::Apply()
     //}
 }
 //-----------------------------------------------------------------------
-}// namespace GL4
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace Detail
+} // namespace Pomdog

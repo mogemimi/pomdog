@@ -167,6 +167,6 @@ void DepthStencilStateGL4::Apply()
     ApplyStencilTest();
 }
 
-}// namespace GL4
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace Detail
+} // namespace Pomdog

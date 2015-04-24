@@ -4,19 +4,16 @@
 #ifndef POMDOG_SURFACEFORMATHELPER_BDAD06C9_HPP
 #define POMDOG_SURFACEFORMATHELPER_BDAD06C9_HPP
 
-#include <cstdint>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 
 namespace Pomdog {
-
-enum class SurfaceFormat : std::uint8_t;
-
 namespace Detail {
 
 struct SurfaceFormatHelper final {
     static int ToBytesPerBlock(SurfaceFormat format);
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SURFACEFORMATHELPER_BDAD06C9_HPP

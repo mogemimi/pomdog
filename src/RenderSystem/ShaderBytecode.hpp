@@ -15,7 +15,7 @@ public:
     std::size_t ByteLength;
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SHADERBYTECODE_02AC7B6D_HPP

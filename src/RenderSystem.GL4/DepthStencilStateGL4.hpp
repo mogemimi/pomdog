@@ -47,8 +47,8 @@ private:
     bool depthBufferEnable;
 };
 
-}// namespace GL4
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_DEPTHSTENCILSTATEGL4_B1C75682_HPP

@@ -19,8 +19,8 @@ class ShaderProgramTag;
 
 using ShaderProgramGL4 = Tagged<GLuint, Tags::ShaderProgramTag>;
 
-}// namespace GL4
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_TYPESAFEGL4_B23282F8_HPP

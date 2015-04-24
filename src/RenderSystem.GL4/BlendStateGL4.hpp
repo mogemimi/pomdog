@@ -40,8 +40,8 @@ private:
     bool independentBlendEnable;
 };
 
-}// namespace GL4
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_BLENDSTATEGL4_5A1F407F_HPP

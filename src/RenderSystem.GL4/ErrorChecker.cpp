@@ -62,6 +62,6 @@ void ErrorChecker::CheckError(char const* command, char const* filename, int lin
     }
 }
 //-----------------------------------------------------------------------
-}// namespace GL4
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace Detail
+} // namespace Pomdog

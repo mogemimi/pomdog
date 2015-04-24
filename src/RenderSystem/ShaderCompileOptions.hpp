@@ -41,7 +41,7 @@ public:
     bool Precompiled;
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SHADERCOMPILEOPTIONS_11A9FF1A_HPP

@@ -20,8 +20,8 @@ void CheckError(char const* command, char const* filename, int line);
 #define POMDOG_CHECK_ERROR_GL4(name)
 #endif
 
-}// namespace GL4
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_ERRORCHECKER_52C9764D_HPP

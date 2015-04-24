@@ -37,5 +37,5 @@ int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format)
 #endif
 }
 //-----------------------------------------------------------------------
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

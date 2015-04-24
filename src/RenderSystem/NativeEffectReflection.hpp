@@ -21,7 +21,7 @@ public:
     virtual std::vector<EffectConstantDescription> GetConstantBuffers() const = 0;
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_NATIVEEFFECTREFLECTION_F923B192_HPP

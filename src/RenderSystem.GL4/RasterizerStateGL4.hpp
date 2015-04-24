@@ -31,8 +31,8 @@ private:
     bool scissorTestEnable;
 };
 
-}// namespace GL4
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_RASTERIZERSTATEGL4_CD96D51A_HPP

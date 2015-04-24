@@ -21,8 +21,8 @@ public:
     virtual void SwapBuffers() = 0;
 };
 
-}// namespace GL4
-}// namespace Detail
-}// namespace Pomdog
+} // namespace GL4
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_OPENGLCONTEXT_62674DFD_HPP

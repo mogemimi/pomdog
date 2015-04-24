@@ -14,7 +14,7 @@ public:
     std::size_t SamplerSlotCount;
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_GRAPHICSCAPABILITIES_17FEAA5D_HPP
