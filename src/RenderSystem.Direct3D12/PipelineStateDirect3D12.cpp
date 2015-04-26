@@ -148,6 +148,16 @@ static DXGI_FORMAT ToDSVFormat(DepthFormat format) noexcept
     return DXGIFormatHelper::ToDXGIFormat(format);
 }
 //-----------------------------------------------------------------------
+static D3D12_PRIMITIVE_TOPOLOGY_TYPE ToPrimitiveTopologyType(
+    PrimitiveTopologyType primitiveTopology) noexcept
+{
+    switch (primitiveTopology) {
+    case PrimitiveTopologyType::Triangle: return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    case PrimitiveTopologyType::Line: return D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+    }
+    return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+}
+//-----------------------------------------------------------------------
 static void ToBlendState(
     BlendDescription const& desc,
     D3D12_BLEND_DESC & output) noexcept
@@ -570,6 +580,7 @@ PipelineStateDirect3D12::PipelineStateDirect3D12(ID3D12Device* device,
     ToRTVFormats(description.RenderTargetViewFormats, pipelineStateDesc);
     pipelineStateDesc.DSVFormat = ToDSVFormat(description.DepthStencilViewFormat);
     pipelineStateDesc.SampleMask = description.MultiSampleMask;
+    pipelineStateDesc.PrimitiveTopologyType = ToPrimitiveTopologyType(description.PrimitiveTopologyType);
 
     auto signatureParameters = EnumerateSignatureParameters(vertexShaderBytecode);
     auto inputElements = ToInputElements(description.InputLayout, signatureParameters);
@@ -585,9 +596,6 @@ PipelineStateDirect3D12::PipelineStateDirect3D12(ID3D12Device* device,
     ///@todo MSAA is not implemented
     pipelineStateDesc.SampleDesc.Count = 1;
     pipelineStateDesc.SampleDesc.Quality = 0;
-
-    ///@todo FIXME
-    pipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
     hr = device->CreateGraphicsPipelineState(
         &pipelineStateDesc, IID_PPV_ARGS(&pipelineState));
