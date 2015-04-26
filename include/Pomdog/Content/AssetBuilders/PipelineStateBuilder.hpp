@@ -46,6 +46,8 @@ public:
 
     Builder & SetConstantBufferBindSlot(std::string const& name, int slotIndex);
 
+    Builder & SetPrimitiveTopologyType(PrimitiveTopologyType primitiveTopologyType);
+
     std::shared_ptr<PipelineState> Build();
 
     std::shared_ptr<EffectReflection> CreateEffectReflection(

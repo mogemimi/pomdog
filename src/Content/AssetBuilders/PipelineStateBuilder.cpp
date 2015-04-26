@@ -35,6 +35,7 @@ public:
 Builder<PipelineState>::Impl::Impl()
 {
     description.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
+    description.PrimitiveTopologyType = PrimitiveTopologyType::Triangle;
     hasBlendState = false;
     hasRasterizerState = false;
     hasDepthStencilState = false;
@@ -192,6 +193,14 @@ Builder<PipelineState> & Builder<PipelineState>::SetConstantBufferBindSlot(
 #endif
 
     impl->description.ConstantBufferBindSlots.emplace(name, slotIndex);
+    return *this;
+}
+//-----------------------------------------------------------------------
+Builder<PipelineState> & Builder<PipelineState>::SetPrimitiveTopologyType(
+    PrimitiveTopologyType primitiveTopologyType)
+{
+    POMDOG_ASSERT(impl);
+    impl->description.PrimitiveTopologyType = primitiveTopologyType;
     return *this;
 }
 //-----------------------------------------------------------------------
