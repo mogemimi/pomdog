@@ -16,6 +16,12 @@
 
 namespace Pomdog {
 
+///@todo this is draft
+enum class PrimitiveTopologyType : std::uint8_t {
+    Triangle,
+    Line,
+};
+
 struct PipelineStateDescription {
     std::shared_ptr<Shader> VertexShader;
     std::shared_ptr<Shader> PixelShader;
@@ -26,6 +32,7 @@ struct PipelineStateDescription {
     std::vector<SurfaceFormat> RenderTargetViewFormats;
     DepthFormat DepthStencilViewFormat;
     std::uint32_t MultiSampleMask;
+    PrimitiveTopologyType PrimitiveTopologyType;
 };
 
 } // namespace Pomdog

@@ -42,6 +42,8 @@ public:
 
     Builder & SetDepthStencilState(DepthStencilDescription const& depthStencilState);
 
+    Builder & SetPrimitiveTopologyType(PrimitiveTopologyType primitiveTopologyType);
+
     std::shared_ptr<PipelineState> Build();
 
     std::shared_ptr<ConstantBufferBinding> CreateConstantBuffers(
