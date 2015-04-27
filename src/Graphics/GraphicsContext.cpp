@@ -118,12 +118,13 @@ GraphicsContext::Impl::Impl(std::unique_ptr<Detail::NativeGraphicsContext> nativ
 
     viewport.Bounds.X = 0;
     viewport.Bounds.Y = 0;
-    viewport.Width(presentationParameters.BackBufferWidth);
-    viewport.Height(presentationParameters.BackBufferHeight);
+    viewport.Bounds.Width = presentationParameters.BackBufferWidth;
+    viewport.Bounds.Height = presentationParameters.BackBufferHeight;
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     SetViewport(viewport);
 
+    nativeContext->SetScissorRectangle(viewport.Bounds);
     nativeContext->SetBlendFactor(Color::White);
 }
 //-----------------------------------------------------------------------
