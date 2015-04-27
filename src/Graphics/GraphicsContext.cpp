@@ -5,6 +5,7 @@
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include "../RenderSystem/NativeSamplerState.hpp"
+#include "Pomdog/Graphics/ClearOptions.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
@@ -31,6 +32,20 @@ static void CheckUnbindingRenderTargetsError(std::vector<std::shared_ptr<RenderT
     }
 }
 #endif
+//-----------------------------------------------------------------------
+static ClearOptions ToClearOptions(DepthFormat depthFormat) noexcept
+{
+    switch (depthFormat) {
+    case DepthFormat::Depth24Stencil8:
+        return ClearOptions::DepthBuffer | ClearOptions::Stencil;
+    case DepthFormat::Depth32:
+    case DepthFormat::Depth16:
+        return ClearOptions::DepthBuffer;
+    default:
+        break;
+    }
+    return ClearOptions::RenderTarget;
+}
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
@@ -83,11 +98,13 @@ public:
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
 
     std::unique_ptr<Detail::NativeGraphicsContext> nativeContext;
+    DepthFormat depthStencilFormat;
 };
 //-----------------------------------------------------------------------
 GraphicsContext::Impl::Impl(std::unique_ptr<Detail::NativeGraphicsContext> nativeGraphicsContext,
     PresentationParameters const& presentationParameters)
     : nativeContext(std::move(nativeGraphicsContext))
+    , depthStencilFormat(presentationParameters.DepthStencilFormat)
 {
     POMDOG_ASSERT(nativeContext);
     auto graphicsCapbilities = nativeContext->GetCapabilities();
@@ -289,7 +306,17 @@ void GraphicsContext::Clear(Color const& color)
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeContext);
 
-    impl->nativeContext->Clear(color);
+    ClearOptions options = ClearOptions::RenderTarget;
+
+    if (!impl->renderTargets.empty()) {
+        auto & renderTarget = impl->renderTargets.front();
+        options |= ToClearOptions(renderTarget->DepthStencilFormat());
+    }
+    else {
+        options |= ToClearOptions(impl->depthStencilFormat);
+    }
+
+    impl->nativeContext->Clear(options, color, 1.0f, 0);
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil)

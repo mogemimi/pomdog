@@ -40,8 +40,6 @@ public:
 
     ~GraphicsContextGL4();
 
-    void Clear(Color const& color) override;
-
     void Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil) override;
 
     void Present() override;

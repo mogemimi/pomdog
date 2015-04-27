@@ -205,14 +205,6 @@ GraphicsContextGL4::~GraphicsContextGL4()
     gameWindow.reset();
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::Clear(Color const& color)
-{
-    auto colorVector = color.ToVector4();
-    glClearColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    POMDOG_CHECK_ERROR_GL4("glClear");
-}
-//-----------------------------------------------------------------------
 void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil)
 {
     GLbitfield mask = 0;

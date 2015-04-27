@@ -22,8 +22,6 @@ class NativeGraphicsContext: Noncopyable {
 public:
     virtual ~NativeGraphicsContext() = default;
 
-    virtual void Clear(Color const& color) = 0;
-
     virtual void Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil) = 0;
 
     virtual void Present() = 0;

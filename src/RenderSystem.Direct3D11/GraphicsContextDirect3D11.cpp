@@ -180,25 +180,6 @@ GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
     deviceContext.Reset();
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::Clear(Color const& color)
-{
-    auto const fillColor = color.ToVector4();
-
-    for (auto & renderTarget: renderTargets)
-    {
-        POMDOG_ASSERT(renderTarget);
-        deviceContext->ClearRenderTargetView(
-            renderTarget->GetRenderTargetView(), fillColor.Data());
-
-        auto depthStencilView = renderTarget->GetDepthStencilView();
-        if (depthStencilView != nullptr) {
-            constexpr UINT mask = D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL;
-            deviceContext->ClearDepthStencilView(
-                depthStencilView, mask, 1.0f, 0);
-        }
-    }
-}
-//-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil)
 {
     POMDOG_ASSERT(stencil <= std::numeric_limits<UINT8>::max());
