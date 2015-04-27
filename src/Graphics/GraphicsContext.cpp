@@ -393,8 +393,6 @@ void GraphicsContext::DrawIndexedInstanced(
 Viewport GraphicsContext::GetViewport() const
 {
     POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
     return impl->viewport;
 }
 //-----------------------------------------------------------------------

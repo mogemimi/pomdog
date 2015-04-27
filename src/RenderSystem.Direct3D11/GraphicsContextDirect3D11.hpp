@@ -13,11 +13,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace Win32 {
-
-class GameWindowWin32;
-
-} // namespace Win32
 namespace Direct3D11 {
 
 class PipelineStateDirect3D11;
