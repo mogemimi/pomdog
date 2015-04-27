@@ -406,22 +406,6 @@ void GraphicsContextGL4::SetViewport(Viewport const& viewport)
     POMDOG_CHECK_ERROR_GL4("glDepthRangef");
 }
 //-----------------------------------------------------------------------
-Rectangle GraphicsContextGL4::GetScissorRectangle() const
-{
-    std::array<GLint, 4> scissorBox;
-    glGetIntegerv(GL_SCISSOR_BOX, scissorBox.data());
-
-    Rectangle rect {scissorBox[0], scissorBox[1], scissorBox[2], scissorBox[3]};
-
-    if (renderTargets.empty()) {
-        if (auto window = gameWindow.lock()) {
-            rect.Y = window->ClientBounds().Height - (rect.Y + rect.Height);
-        }
-    }
-
-    return std::move(rect);
-}
-//-----------------------------------------------------------------------
 void GraphicsContextGL4::SetScissorRectangle(Rectangle const& rectangle)
 {
     POMDOG_ASSERT(rectangle.Width > 0);

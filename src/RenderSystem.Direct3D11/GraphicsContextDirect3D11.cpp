@@ -307,12 +307,6 @@ void GraphicsContextDirect3D11::SetViewport(Viewport const& viewportIn)
     deviceContext->RSSetViewports(1, &viewport);
 }
 //-----------------------------------------------------------------------
-Rectangle GraphicsContextDirect3D11::GetScissorRectangle() const
-{
-    ///@todo Not implemented
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-}
-//-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetScissorRectangle(Rectangle const& rectangle)
 {
     POMDOG_ASSERT(deviceContext);

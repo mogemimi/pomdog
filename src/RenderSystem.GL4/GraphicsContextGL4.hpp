@@ -60,8 +60,6 @@ public:
 
     void SetViewport(Viewport const& viewport) override;
 
-    Rectangle GetScissorRectangle() const override;
-
     void SetScissorRectangle(Rectangle const& rectangle) override;
 
     void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) override;

@@ -43,8 +43,6 @@ public:
 
     virtual void SetViewport(Viewport const& viewport) = 0;
 
-    virtual Rectangle GetScissorRectangle() const = 0;
-
     virtual void SetScissorRectangle(Rectangle const& rectangle) = 0;
 
     virtual void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) = 0;

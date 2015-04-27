@@ -90,6 +90,7 @@ public:
 
 public:
     Viewport viewport;
+    Rectangle scissorRectangle;
     std::vector<std::shared_ptr<VertexBuffer>> vertexBuffers;
     std::vector<std::shared_ptr<SamplerState>> samplerStates;
     std::vector<std::shared_ptr<Texture>> textures;
@@ -406,14 +407,14 @@ void GraphicsContext::SetViewport(Pomdog::Viewport const& viewport)
 Rectangle GraphicsContext::GetScissorRectangle() const
 {
     POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-    return impl->nativeContext->GetScissorRectangle();
+    return impl->scissorRectangle;
 }
 //-----------------------------------------------------------------------
 void GraphicsContext::SetScissorRectangle(Pomdog::Rectangle const& rectangle)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeContext);
+    impl->scissorRectangle = rectangle;
     impl->nativeContext->SetScissorRectangle(rectangle);
 }
 //-----------------------------------------------------------------------
