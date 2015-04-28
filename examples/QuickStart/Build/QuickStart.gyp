@@ -1,18 +1,12 @@
 {
   'includes': ['common.gypi'],
+  'variables': {
+    '%pomdog_dir': '../Pomdog',
+  },
   'target_defaults': {
-    'configurations': {
-      'Debug': {
-        'msvs_settings': {
-          'VCLinkerTool': {
-            'GenerateDebugInformation': 'true', # /DEBUG
-          },
-        },
-      }, # Debug
-    },
-    'msvs_settings':{
-      'VCCLCompilerTool': {
-        'WarningLevel': '4',   # /W4
+    'msbuild_settings': {
+      'ClCompile': {
+        'WarningLevel': 'Level4', # /W4
       },
     },
     'xcode_settings': {
@@ -22,19 +16,19 @@
       'CLANG_CXX_LIBRARY': 'libc++',
     },
     'include_dirs': [
-      '../Pomdog/include',
+      '<@(pomdog_dir)/include',
     ],
     'conditions': [
       ['component == "shared_library"', {
         'dependencies': [
-          '../Pomdog/build/pomdog.gyp:pomdog-shared',
+          '<@(pomdog_dir)/build/pomdog.gyp:pomdog-shared',
         ],
         'defines': [
           'POMDOG_USING_LIBRARY_EXPORTS=1',
         ],
       }, {
         'dependencies': [
-          '../Pomdog/build/pomdog.gyp:pomdog-static',
+          '<@(pomdog_dir)/build/pomdog.gyp:pomdog-static',
         ],
       }],
       ['OS == "mac"', {
@@ -43,7 +37,7 @@
             '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
           ],
         },
-      }], # OS == "mac"
+      }],
     ],
   },
   'targets': [
@@ -63,7 +57,7 @@
             '../Platform.Win32/Resource.hpp',
             '../Platform.Win32/game.rc',
           ],
-        }], # OS == "win"
+        }],
         ['OS == "mac"', {
           'sources': [
             '../Platform.Cocoa/main.mm',
@@ -74,16 +68,7 @@
             '../Platform.Cocoa/GameViewController.h',
             '../Platform.Cocoa/GameViewController.mm',
           ],
-          'actions': [
-            {
-              'action_name': 'XcodeResourcesUpdater',
-              'description': 'Always update resources on Xcode',
-              'inputs': [],
-              'outputs': [],
-              'action': ['./update-bundle-resources.sh', '${SOURCE_ROOT}/../Content/.'],
-            },
-          ],
-        }], # OS == "mac"
+        }],
       ],
       'mac_bundle_resources': [
         '../Platform.Cocoa/Base.lproj/MainMenu.xib',

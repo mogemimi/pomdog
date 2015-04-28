@@ -8,11 +8,11 @@
       #'OutputDirectory': '$(SolutionDir)$(ConfigurationName)',
       'IntermediateDirectory': '$(SolutionDir)..\\out\\obj\\$(ConfigurationName)\\$(ProjectName)',
     },
-    'msvs_settings': {
-      'VCCLCompilerTool': {
-        'WarningLevel': '4',   # /W4
+    'msbuild_settings': {
+      'ClCompile': {
+        'WarningLevel': 'Level4', # /W4
         'PreprocessorDefinitions': [
-          '_WIN32_WINNT=0x0601', # Windows 7 or later
+          '_WIN32_WINNT=0x0602', # Windows 8 or later
           'WIN32_LEAN_AND_MEAN',
           'NOMINMAX',
         ],
@@ -21,13 +21,9 @@
     'xcode_settings': {
       'ONLY_ACTIVE_ARCH': 'YES',
     },
-    'default_configuration': 'Release',#'Debug',
+    'default_configuration': 'Release',
     'configurations': {
-      'Common': {
-        'abstract': 1,
-      }, # Common
       'Debug': {
-        'inherit_from': ['Common'],
         'defines': ['DEBUG=1'],
         'cflags': ['-g', '-O0'],
         'msbuild_settings': {
@@ -43,6 +39,7 @@
           },
           'Link': {
             #'LinkIncremental': 'true', # /INCREMENTAL
+            'GenerateDebugInformation': 'true', # /DEBUG
           },
         },
         'xcode_settings': {
@@ -51,7 +48,6 @@
         },
       }, # Debug
       'Release': {
-        'inherit_from': ['Common'],
         'defines': ['NDEBUG=1'],
         'cflags': ['-O3'],
         'msbuild_settings': {
