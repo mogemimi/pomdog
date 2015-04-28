@@ -4,53 +4,57 @@
 
 namespace QuickStart {
 //-----------------------------------------------------------------------
-QuickStartGame::QuickStartGame(std::shared_ptr<GameHost> const& gameHostIn)
+QuickStartGame::QuickStartGame(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsContext(gameHostIn->GraphicsContext())
+    , window(gameHostIn->Window())
+    , graphicsDevice(gameHostIn->GraphicsDevice())
+    , assets(gameHostIn->AssetManager())
+    , clock(gameHostIn->Clock())
 {
 }
 //-----------------------------------------------------------------------
 void QuickStartGame::Initialize()
 {
-    auto window = gameHost->Window();
-    window->Title("QuickStart");
-    window->AllowPlayerResizing(false);
-
-    auto graphicsDevice = gameHost->GraphicsDevice();
-    auto assets = gameHost->AssetManager();
-
     {
+        // Set window name
+        window->Title("QuickStart");
+    }
+    {
+        // Create vertex buffer
         struct VertexCombined {
             Vector3 Position;
             Vector2 TextureCoord;
         };
 
-        std::array<VertexCombined, 4> const verticesCombo = {
+        std::array<VertexCombined, 4> verticesCombo = {
             Vector3(-0.8f, -0.8f, 0.0f), Vector2(0.0f, 1.0f),
             Vector3(-0.8f,  0.8f, 0.0f), Vector2(0.0f, 0.0f),
             Vector3( 0.8f,  0.8f, 0.0f), Vector2(1.0f, 0.0f),
             Vector3( 0.8f, -0.8f, 0.0f), Vector2(1.0f, 1.0f),
         };
 
-        // Create vertex buffer
-        vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
-            verticesCombo.data(), verticesCombo.size(),
-            sizeof(VertexCombined), BufferUsage::Immutable);
+        vertexBuffer = std::make_shared<VertexBuffer>(
+            graphicsDevice,
+            verticesCombo.data(),
+            verticesCombo.size(),
+            sizeof(VertexCombined),
+            BufferUsage::Immutable);
     }
     {
-        std::array<std::uint16_t, 6> const indices = {
-            0, 1, 2,
-            2, 3, 0
-        };
-
         // Create index buffer
+        std::array<std::uint16_t, 6> indices = {0, 1, 2, 2, 3, 0};
+
         indexBuffer = std::make_shared<IndexBuffer>(graphicsDevice,
             IndexElementSize::SixteenBits,
-            indices.data(), indices.size(), BufferUsage::Immutable);
+            indices.data(),
+            indices.size(),
+            BufferUsage::Immutable);
     }
     {
+        // For details, see 'struct VertexCombined' members
         auto inputLayout = InputLayoutHelper{}
-            .Float3().Float2();
+            .Float3()
+            .Float2();
 
         auto vertexShader = assets->CreateBuilder<Shader>()
             .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
@@ -63,32 +67,32 @@ void QuickStartGame::Initialize()
             .SetHLSLFromFile("SimpleEffect_PS.hlsl", "SimpleEffectPS");
 
         auto builder = assets->CreateBuilder<PipelineState>();
+
+        // Create pipeline state
         pipelineState = builder
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .Build();
 
+        // Create constant buffers
         constantBuffers = builder.CreateConstantBuffers(pipelineState);
 
+        // Get constant buffer
         constantBuffer = constantBuffers->Find("MyConstants");
     }
     {
+        // Create sampler state
         sampler = std::make_shared<SamplerState>(graphicsDevice,
             SamplerDescription::CreatePointClamp());
 
         // Load a PNG as texture
         texture = assets->Load<Texture2D>("pomdog.png");
     }
-    {
-        renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
-            window->ClientBounds().Width, window->ClientBounds().Height);
-    }
 }
 //-----------------------------------------------------------------------
 void QuickStartGame::Update()
 {
-    auto clock = gameHost->Clock();
     auto totalTime = static_cast<float>(clock->TotalGameTime().count());
 
     struct MyConstants {
@@ -105,8 +109,15 @@ void QuickStartGame::Update()
 //-----------------------------------------------------------------------
 void QuickStartGame::Draw()
 {
-    graphicsContext->Clear(Color::CornflowerBlue);
+    auto graphicsContext = gameHost->GraphicsContext();
+    auto bounds = window->ClientBounds();
 
+    Viewport viewport = {0, 0, bounds.Width, bounds.Height};
+
+    graphicsContext->SetRenderTarget();
+    graphicsContext->SetViewport(viewport);
+    graphicsContext->SetScissorRectangle(viewport.Bounds);
+    graphicsContext->Clear(Color::CornflowerBlue);
     graphicsContext->SetSamplerState(0, sampler);
     graphicsContext->SetTexture(0, texture);
     graphicsContext->SetVertexBuffer(vertexBuffer);
