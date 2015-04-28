@@ -2,7 +2,6 @@
 # clang-format > 3.7
 BasedOnStyle: LLVM
 IndentWidth: 4
-TabWidth: 4
 UseTab: Never
 Language: Cpp
 Standard: Cpp11
@@ -11,6 +10,7 @@ AccessModifierOffset: -4
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakTemplateDeclarations: true
+BreakConstructorInitializersBeforeComma: true
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None
 PointerAlignment: Left
