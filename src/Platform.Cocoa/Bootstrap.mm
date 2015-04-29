@@ -42,7 +42,11 @@ void Bootstrap::OnError(std::function<void(std::exception const&)> onErrorIn)
 void Bootstrap::OnCompleted(std::function<void()> onCompletedIn)
 {
     POMDOG_ASSERT(onCompletedIn);
-    onCompleted = onCompletedIn;
+    onCompleted = [=] {
+        this->game.reset();
+        this->gameHost.reset();
+        onCompletedIn();
+    };
 }
 //-----------------------------------------------------------------------
 void Bootstrap::Run(std::function<std::unique_ptr<Game>(

@@ -196,7 +196,7 @@ GameHostCocoa::Impl::Impl(PomdogOpenGLView* openGLViewIn,
 //-----------------------------------------------------------------------
 GameHostCocoa::Impl::~Impl()
 {
-    if (displayLink == nullptr) {
+    if (displayLink != nullptr) {
         CVDisplayLinkRelease(displayLink);
         displayLink = nullptr;
     }
@@ -317,6 +317,10 @@ void GameHostCocoa::Impl::GameLoop()
 
     clock.Tick();
     DoEvents();
+
+    if (exitRequest) {
+        return;
+    }
 
     openGLContext->Lock();
     openGLContext->SetView(openGLView);
