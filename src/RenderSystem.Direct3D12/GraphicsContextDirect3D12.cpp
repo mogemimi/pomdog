@@ -48,20 +48,20 @@ static D3D_PRIMITIVE_TOPOLOGY ToPrimitiveTopology(PrimitiveTopology primitiveTop
     return D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 }
 //-----------------------------------------------------------------------
-static D3D12_RESOURCE_BARRIER_DESC CreateResourceBarrierDesc(
+static D3D12_RESOURCE_BARRIER CreateResourceBarrier(
     ID3D12Resource* resource,
-    D3D12_RESOURCE_USAGE stateBefore,
-    D3D12_RESOURCE_USAGE stateAfter) noexcept
+    D3D12_RESOURCE_STATES stateBefore,
+    D3D12_RESOURCE_STATES stateAfter) noexcept
 {
     POMDOG_ASSERT(resource);
-    D3D12_RESOURCE_BARRIER_DESC desc;
-    desc.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    desc.Transition.pResource = resource;
-    desc.Transition.StateBefore = stateBefore;
-    desc.Transition.StateAfter = stateAfter;
-    desc.Transition.Flags = D3D12_RESOURCE_TRANSITION_BARRIER_NONE;
-    desc.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    return std::move(desc);
+    D3D12_RESOURCE_BARRIER barrrier;
+    barrrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrrier.Transition.pResource = resource;
+    barrrier.Transition.StateBefore = stateBefore;
+    barrrier.Transition.StateAfter = stateAfter;
+    barrrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    return std::move(barrrier);
 }
 
 } // unnamed namespace
@@ -171,7 +171,7 @@ GraphicsContextDirect3D12::GraphicsContextDirect3D12(
             "Failed to create graphics command list");
     }
 
-    hr = device->CreateFence(0, D3D12_FENCE_MISC_NONE, IID_PPV_ARGS(&fence));
+    hr = device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 
     if (FAILED(hr)) {
         // FUS RO DAH!
@@ -227,10 +227,10 @@ GraphicsCapabilities GraphicsContextDirect3D12::GetCapabilities() const
 void GraphicsContextDirect3D12::BackBufferBarrier()
 {
     POMDOG_ASSERT(backBuffer);
-    auto barrierDesc = CreateResourceBarrierDesc(
+    auto barrierDesc = CreateResourceBarrier(
         backBuffer->GetTexture2D(),
-        D3D12_RESOURCE_USAGE_PRESENT,
-        D3D12_RESOURCE_USAGE_RENDER_TARGET);
+        D3D12_RESOURCE_STATE_PRESENT,
+        D3D12_RESOURCE_STATE_RENDER_TARGET);
 
     POMDOG_ASSERT(commandList);
     commandList->ResourceBarrier(1, &barrierDesc);
@@ -246,13 +246,13 @@ void GraphicsContextDirect3D12::Clear(ClearOptions options,
 
     auto const fillColor = color.ToVector4();
 
-    D3D12_CLEAR_FLAG clearFlags = static_cast<D3D12_CLEAR_FLAG>(0);
+    D3D12_CLEAR_FLAGS clearFlags = static_cast<D3D12_CLEAR_FLAGS>(0);
 
     if ((options | ClearOptions::DepthBuffer) == options) {
-        clearFlags |= D3D12_CLEAR_DEPTH;
+        clearFlags |= D3D12_CLEAR_FLAG_DEPTH;
     }
     if ((options | ClearOptions::Stencil) == options) {
-        clearFlags |= D3D12_CLEAR_STENCIL;
+        clearFlags |= D3D12_CLEAR_FLAG_STENCIL;
     }
 
     bool const clearRTVEnabled = (options | ClearOptions::RenderTarget) == options;
@@ -262,11 +262,14 @@ void GraphicsContextDirect3D12::Clear(ClearOptions options,
     {
         POMDOG_ASSERT(renderTarget);
 
+        constexpr D3D12_RECT* rects = nullptr;
+        constexpr UINT rectCount = 0;
+
         if (clearRTVEnabled) {
             auto renderTargetView = renderTarget->GetRenderTargetDescriptorHeap();
             commandList->ClearRenderTargetView(
                 renderTargetView->GetCPUDescriptorHandleForHeapStart(),
-                fillColor.Data(), nullptr, 0);
+                fillColor.Data(), rectCount, rects);
         }
 
         auto depthStencilView = renderTarget->GetDepthStencilDescriptorHeap();
@@ -274,7 +277,7 @@ void GraphicsContextDirect3D12::Clear(ClearOptions options,
             commandList->ClearDepthStencilView(
                 depthStencilView->GetCPUDescriptorHandleForHeapStart(),
                 clearFlags, depth, stencil,
-                nullptr, 0);
+                rectCount, rects);
         }
     }
 }
@@ -289,10 +292,10 @@ void GraphicsContextDirect3D12::Present()
     POMDOG_ASSERT(fence);
 
     ///@note Chuck Norris can break resource barrier in the DirectX 12.
-    auto barrierDesc = CreateResourceBarrierDesc(
+    auto barrierDesc = CreateResourceBarrier(
         backBuffer->GetTexture2D(),
-        D3D12_RESOURCE_USAGE_RENDER_TARGET,
-        D3D12_RESOURCE_USAGE_PRESENT);
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_PRESENT);
 
     commandList->ResourceBarrier(1, &barrierDesc);
 
@@ -374,10 +377,10 @@ void GraphicsContextDirect3D12::BeginDraw()
     }
 
     if (!descriptorHeaps.empty()) {
-        commandList->SetDescriptorHeaps(descriptorHeaps.data(), descriptorHeaps.size());
+        commandList->SetDescriptorHeaps(descriptorHeaps.size(), descriptorHeaps.data());
     }
     else {
-        commandList->SetDescriptorHeaps(nullptr, 0);
+        commandList->SetDescriptorHeaps(0, nullptr);
     }
 
     // Set root parameters
@@ -566,7 +569,7 @@ void GraphicsContextDirect3D12::SetVertexBuffers(
     }
 
     POMDOG_ASSERT(commandList);
-    commandList->SetVertexBuffers(0, vertexBufferViews.data(), vertexBufferViews.size());
+    commandList->IASetVertexBuffers(0, vertexBufferViews.size(), vertexBufferViews.data());
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D12::SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBufferIn)
@@ -586,7 +589,7 @@ void GraphicsContextDirect3D12::SetIndexBuffer(std::shared_ptr<IndexBuffer> cons
     indexBufferView.SizeInBytes = indexBufferIn->SizeInBytes();
 
     POMDOG_ASSERT(commandList);
-    commandList->SetIndexBuffer(&indexBufferView);
+    commandList->IASetIndexBuffer(&indexBufferView);
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D12::SetSampler(int index, NativeSamplerState* samplerIn)
@@ -670,10 +673,12 @@ void GraphicsContextDirect3D12::SetRenderTarget()
 
     POMDOG_ASSERT(commandList);
 
-    commandList->SetRenderTargets(
-        renderTargetViews.data(),
-        FALSE,
+    constexpr BOOL isSingleHandleToDescriptorRange = FALSE;
+
+    commandList->OMSetRenderTargets(
         renderTargetViews.size(),
+        renderTargetViews.data(),
+        isSingleHandleToDescriptorRange,
         (depthStencilViewHeap != nullptr ? &depthStencilView : nullptr));
 }
 //-----------------------------------------------------------------------
@@ -716,10 +721,12 @@ void GraphicsContextDirect3D12::SetRenderTargets(
 
     POMDOG_ASSERT(commandList);
 
-    commandList->SetRenderTargets(
-        renderTargetViews.data(),
-        FALSE,
+    constexpr BOOL isSingleHandleToDescriptorRange = FALSE;
+
+    commandList->OMSetRenderTargets(
         renderTargetsIn.size(),
+        renderTargetViews.data(),
+        isSingleHandleToDescriptorRange,
         (depthStencilViewHeap != nullptr ? &depthStencilView : nullptr));
 }
 //-----------------------------------------------------------------------

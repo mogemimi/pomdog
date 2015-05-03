@@ -9,6 +9,7 @@
 #include <d3d12.h>
 #include <wrl/client.h>
 #include <memory>
+#include <vector>
 
 namespace Pomdog {
 namespace Detail {
@@ -58,6 +59,8 @@ public:
     Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() const;
 
 private:
+    std::vector<Microsoft::WRL::ComPtr<IDXGIAdapter1>> adapters;
+    Microsoft::WRL::ComPtr<IDXGIAdapter1> activeAdapter;
     Microsoft::WRL::ComPtr<ID3D12Device> device;
 };
 

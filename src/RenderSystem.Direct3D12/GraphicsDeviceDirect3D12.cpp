@@ -17,6 +17,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Logging/Log.hpp"
+#include <dxgi1_4.h>
 
 namespace Pomdog {
 namespace Detail {
@@ -25,22 +26,64 @@ namespace {
 
 using Microsoft::WRL::ComPtr;
 
+static void EnumerateAdapters(std::vector<ComPtr<IDXGIAdapter1>> & adapters)
+{
+    // Create DXGI factory
+    ComPtr<IDXGIFactory3> dxgiFactory;
+    HRESULT hr = CreateDXGIFactory2(0, IID_PPV_ARGS(&dxgiFactory));
+
+    if (FAILED(hr)) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to create IDXGIFactory3");
+    }
+
+    // Enumerate adapters
+    UINT index = 0;
+    ComPtr<IDXGIAdapter1> newAdapter;
+    while ((hr = dxgiFactory->EnumAdapters1(index, &newAdapter)) != DXGI_ERROR_NOT_FOUND)
+    {
+        if (FAILED(hr)) {
+            // FUS RO DAH!
+            POMDOG_THROW_EXCEPTION(std::runtime_error,
+                "Failed to enumerate adapters");
+        }
+
+        adapters.push_back(newAdapter);
+        newAdapter.Reset();
+        ++index;
+    }
+}
+
 } // unnamed namespace
 //-----------------------------------------------------------------------
 GraphicsDeviceDirect3D12::GraphicsDeviceDirect3D12()
 {
-    D3D12_CREATE_DEVICE_FLAG createDeviceFlags = D3D12_CREATE_DEVICE_NONE;
-#if defined(DEBUG) && !defined(NDEBUG)
-    createDeviceFlags |= D3D12_CREATE_DEVICE_DEBUG;
-#endif
+    EnumerateAdapters(adapters);
 
-    constexpr D3D_DRIVER_TYPE driverTypes[] = {
-        D3D_DRIVER_TYPE_HARDWARE,
-        D3D_DRIVER_TYPE_WARP,
-        D3D_DRIVER_TYPE_REFERENCE,
-    };
+    if (adapters.empty()) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "List of DXGI adapters is empty");
+    }
+
+    POMDOG_ASSERT(!adapters.empty());
+    activeAdapter = adapters.front();
+
+//    D3D12_CREATE_DEVICE_FLAG createDeviceFlags = D3D12_CREATE_DEVICE_NONE;
+//#if defined(DEBUG) && !defined(NDEBUG)
+//    createDeviceFlags |= D3D12_CREATE_DEVICE_DEBUG;
+//#endif
+
+    //constexpr D3D_DRIVER_TYPE driverTypes[] = {
+    //    D3D_DRIVER_TYPE_HARDWARE,
+    //    D3D_DRIVER_TYPE_WARP,
+    //    D3D_DRIVER_TYPE_REFERENCE,
+    //};
 
     constexpr D3D_FEATURE_LEVEL featureLevels[] = {
+        D3D_FEATURE_LEVEL_12_1,
+        D3D_FEATURE_LEVEL_12_0,
         D3D_FEATURE_LEVEL_11_1,
         D3D_FEATURE_LEVEL_11_0,
         D3D_FEATURE_LEVEL_10_1,
@@ -53,18 +96,13 @@ GraphicsDeviceDirect3D12::GraphicsDeviceDirect3D12()
     HRESULT hr = S_OK;
 
     for (auto featureLevel: featureLevels) {
-        for (auto driverType : driverTypes) {
-            hr = D3D12CreateDevice(
-                nullptr,
-                driverType,
-                createDeviceFlags,
-                featureLevel,
-                D3D12_SDK_VERSION,
-                IID_PPV_ARGS(&device));
+        hr = D3D12CreateDevice(
+            activeAdapter.Get(),
+            featureLevel,
+            IID_PPV_ARGS(&device));
 
-            if (SUCCEEDED(hr)) {
-                break;
-            }
+        if (SUCCEEDED(hr)) {
+            break;
         }
     }
 
@@ -86,7 +124,12 @@ GraphicsDeviceDirect3D12::GraphicsDeviceDirect3D12()
     }
 }
 //-----------------------------------------------------------------------
-GraphicsDeviceDirect3D12::~GraphicsDeviceDirect3D12() = default;
+GraphicsDeviceDirect3D12::~GraphicsDeviceDirect3D12()
+{
+    device.Reset();
+    activeAdapter.Reset();
+    adapters.clear();
+}
 //-----------------------------------------------------------------------
 ShaderLanguage GraphicsDeviceDirect3D12::GetSupportedLanguage() const
 {

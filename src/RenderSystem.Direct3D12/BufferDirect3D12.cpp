@@ -26,9 +26,9 @@ BufferDirect3D12::BufferDirect3D12(
 
     HRESULT hr = device->CreateCommittedResource(
         &heapProps,
-        D3D12_HEAP_MISC_NONE,
+        D3D12_HEAP_FLAG_NONE,
         &desc,
-        D3D12_RESOURCE_USAGE_GENERIC_READ,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
         IID_PPV_ARGS(&buffer));
 
@@ -58,9 +58,9 @@ BufferDirect3D12::BufferDirect3D12(
 
     HRESULT hr = device->CreateCommittedResource(
         &heapProps,
-        D3D12_HEAP_MISC_NONE,
+        D3D12_HEAP_FLAG_NONE,
         &desc,
-        D3D12_RESOURCE_USAGE_GENERIC_READ,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
         IID_PPV_ARGS(&buffer));
 
