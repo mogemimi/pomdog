@@ -38,14 +38,14 @@ Texture2DDirect3D12::Texture2DDirect3D12(
     D3D12_RESOURCE_DESC resourceDesc = CD3D12_RESOURCE_DESC::Tex2D(
         dxgiFormat,
         pixelWidth, pixelHeight, 1, mipLevels, sampleCount, sampleQuality,
-        D3D12_RESOURCE_MISC_NONE,
+        D3D12_RESOURCE_FLAG_NONE,
         D3D12_TEXTURE_LAYOUT_UNKNOWN);
 
     HRESULT hr = device->CreateCommittedResource(
         &heapProps,
-        D3D12_HEAP_MISC_NONE,
+        D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
-        D3D12_RESOURCE_USAGE_GENERIC_READ,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
         IID_PPV_ARGS(&texture2D));
 
@@ -61,10 +61,10 @@ Texture2DDirect3D12::Texture2DDirect3D12(
 
     // Create descriptor heap
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
-    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_SHADER_VISIBLE;
+    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     heapDesc.NodeMask = 0;
     heapDesc.NumDescriptors = 1;
-    heapDesc.Type = D3D12_CBV_SRV_UAV_DESCRIPTOR_HEAP;
+    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 
     hr = device->CreateDescriptorHeap(
         &heapDesc, IID_PPV_ARGS(&shaderResourceViewHeap));

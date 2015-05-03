@@ -30,11 +30,11 @@ static D3D12_FILTER ToFilter(TextureFilter textureFilter) noexcept
 static D3D12_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) noexcept
 {
     switch (addressMode) {
-    case TextureAddressMode::Wrap: return D3D12_TEXTURE_ADDRESS_WRAP;
-    case TextureAddressMode::Clamp: return D3D12_TEXTURE_ADDRESS_CLAMP;
-    case TextureAddressMode::Mirror: return D3D12_TEXTURE_ADDRESS_MIRROR;
+    case TextureAddressMode::Wrap: return D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    case TextureAddressMode::Clamp: return D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+    case TextureAddressMode::Mirror: return D3D12_TEXTURE_ADDRESS_MODE_MIRROR;
     }
-    return D3D12_TEXTURE_ADDRESS_WRAP;
+    return D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 }
 
 } // unnamed namespace
@@ -46,10 +46,10 @@ SamplerStateDirect3D12::SamplerStateDirect3D12(
     POMDOG_ASSERT(device != nullptr);
 
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
-    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_SHADER_VISIBLE;
+    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     heapDesc.NodeMask = 0;
     heapDesc.NumDescriptors = 1;
-    heapDesc.Type = D3D12_SAMPLER_DESCRIPTOR_HEAP;
+    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
 
     HRESULT hr = device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&samplerHeap));
     if (FAILED(hr)) {
@@ -69,7 +69,7 @@ SamplerStateDirect3D12::SamplerStateDirect3D12(
     samplerDesc.MaxAnisotropy = description.MaxAnisotropy;
 
     ///@todo Add support for the following options in SamplerDescription
-    samplerDesc.ComparisonFunc = D3D12_COMPARISON_NEVER;
+    samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
     samplerDesc.BorderColor[0] = 0.0f;
     samplerDesc.BorderColor[1] = 0.0f;
     samplerDesc.BorderColor[2] = 0.0f;

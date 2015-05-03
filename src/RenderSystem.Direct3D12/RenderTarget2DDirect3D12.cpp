@@ -34,15 +34,15 @@ static void CreateDepthStencilBuffer(
     D3D12_RESOURCE_DESC resourceDesc = CD3D12_RESOURCE_DESC::Tex2D(
         format,
         pixelWidth, pixelHeight, 1, mipLevels, sampleCount, sampleQuality,
-        D3D12_RESOURCE_MISC_ALLOW_DEPTH_STENCIL, D3D12_TEXTURE_LAYOUT_UNKNOWN);
+        D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL, D3D12_TEXTURE_LAYOUT_UNKNOWN);
     D3D12_CLEAR_VALUE clearValue = CD3D12_CLEAR_VALUE(format, 1.0f, 0);
 
     // Create depth stencil buffer
     HRESULT hr = device->CreateCommittedResource(
         &heapProps,
-        D3D12_HEAP_MISC_NONE,
+        D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
-        D3D12_RESOURCE_USAGE_DEPTH,
+        D3D12_RESOURCE_STATE_DEPTH_READ | D3D12_RESOURCE_STATE_DEPTH_WRITE,
         &clearValue,
         IID_PPV_ARGS(&depthBuffer));
 
@@ -53,16 +53,16 @@ static void CreateDepthStencilBuffer(
     }
 }
 //-----------------------------------------------------------------------
-static D3D12_DSV_FLAG ToDSVFlag(DepthFormat format) noexcept
+static D3D12_DSV_FLAGS ToDSVFlags(DepthFormat format) noexcept
 {
     switch (format) {
     case DepthFormat::Depth16:
     case DepthFormat::Depth32:
-        return D3D12_DSV_READ_ONLY_DEPTH;
+        return D3D12_DSV_FLAG_READ_ONLY_DEPTH;
     default:
         break;
     }
-    return D3D12_DSV_NONE;
+    return D3D12_DSV_FLAG_NONE;
 }
 //-----------------------------------------------------------------------
 static void CreateDepthStencilView(
@@ -77,10 +77,10 @@ static void CreateDepthStencilView(
 
     // Create descriptor heap
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
-    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_NONE;
+    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     heapDesc.NodeMask = 0;
     heapDesc.NumDescriptors = 1;
-    heapDesc.Type = D3D12_DSV_DESCRIPTOR_HEAP;
+    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 
     HRESULT hr = device->CreateDescriptorHeap(
         &heapDesc, IID_PPV_ARGS(&depthStencilViewHeap));
@@ -94,7 +94,7 @@ static void CreateDepthStencilView(
     // Create depth stencil view (DSV)
     D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
     ZeroMemory(&dsvDesc, sizeof(dsvDesc));
-    dsvDesc.Flags = ToDSVFlag(depthStencilFormat);
+    dsvDesc.Flags = ToDSVFlags(depthStencilFormat);
     dsvDesc.Format = DXGIFormatHelper::ToDXGIFormat(depthStencilFormat);
     dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
     dsvDesc.Texture2D.MipSlice = 0;
@@ -123,10 +123,10 @@ static void CreateShaderResourceView(
 
     // Create descriptor heap
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
-    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_SHADER_VISIBLE;
+    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     heapDesc.NodeMask = 0;
     heapDesc.NumDescriptors = 1;
-    heapDesc.Type = D3D12_CBV_SRV_UAV_DESCRIPTOR_HEAP;
+    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 
     HRESULT hr = device->CreateDescriptorHeap(
         &heapDesc, IID_PPV_ARGS(&shaderResourceViewHeap));
@@ -192,7 +192,7 @@ RenderTarget2DDirect3D12::RenderTarget2DDirect3D12(
         D3D12_RESOURCE_DESC resourceDesc = CD3D12_RESOURCE_DESC::Tex2D(
             dxgiFormat,
             pixelWidth, pixelHeight, 1, mipLevels, sampleCount, sampleQuality,
-            D3D12_RESOURCE_MISC_ALLOW_RENDER_TARGET, D3D12_TEXTURE_LAYOUT_UNKNOWN);
+            D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, D3D12_TEXTURE_LAYOUT_UNKNOWN);
 
         const FLOAT clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 
@@ -201,9 +201,9 @@ RenderTarget2DDirect3D12::RenderTarget2DDirect3D12(
         // Create texture2D
         HRESULT hr = device->CreateCommittedResource(
             &heapProps,
-            D3D12_HEAP_MISC_NONE,
+            D3D12_HEAP_FLAG_NONE,
             &resourceDesc,
-            D3D12_RESOURCE_USAGE_RENDER_TARGET,
+            D3D12_RESOURCE_STATE_RENDER_TARGET,
             &clearValue,
             IID_PPV_ARGS(&texture2D));
 
@@ -219,10 +219,10 @@ RenderTarget2DDirect3D12::RenderTarget2DDirect3D12(
 
         // Create descriptor heap
         D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
-        heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_NONE;
+        heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
         heapDesc.NodeMask = 0;
         heapDesc.NumDescriptors = 1;
-        heapDesc.Type = D3D12_RTV_DESCRIPTOR_HEAP;
+        heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 
         hr = device->CreateDescriptorHeap(
             &heapDesc, IID_PPV_ARGS(&renderTargetViewHeap));
@@ -297,10 +297,10 @@ RenderTarget2DDirect3D12::RenderTarget2DDirect3D12(
     {
         // Create descriptor heap
         D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
-        heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_NONE;
+        heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
         heapDesc.NodeMask = 0;
         heapDesc.NumDescriptors = 1;
-        heapDesc.Type = D3D12_RTV_DESCRIPTOR_HEAP;
+        heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 
         hr = device->CreateDescriptorHeap(
             &heapDesc, IID_PPV_ARGS(&renderTargetViewHeap));
@@ -393,10 +393,10 @@ void RenderTarget2DDirect3D12::ResetBackBuffer(
     {
         // Create descriptor heap
         D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
-        heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_NONE;
+        heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
         heapDesc.NodeMask = 0;
         heapDesc.NumDescriptors = 1;
-        heapDesc.Type = D3D12_RTV_DESCRIPTOR_HEAP;
+        heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 
         hr = device->CreateDescriptorHeap(
             &heapDesc, IID_PPV_ARGS(&renderTargetViewHeap));

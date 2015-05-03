@@ -83,20 +83,20 @@ static void ToD3D12Desc(
 static D3D12_CULL_MODE ToCullMode(CullMode cullMode) noexcept
 {
     switch (cullMode) {
-    case CullMode::ClockwiseFace: return D3D12_CULL_FRONT;
-    case CullMode::CounterClockwiseFace: return D3D12_CULL_BACK;
-    case CullMode::None: return D3D12_CULL_NONE;
+    case CullMode::ClockwiseFace: return D3D12_CULL_MODE_FRONT;
+    case CullMode::CounterClockwiseFace: return D3D12_CULL_MODE_BACK;
+    case CullMode::None: return D3D12_CULL_MODE_NONE;
     }
-    return D3D12_CULL_BACK;
+    return D3D12_CULL_MODE_BACK;
 }
 //-----------------------------------------------------------------------
 static D3D12_FILL_MODE ToFillMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
-    case FillMode::WireFrame: return D3D12_FILL_WIREFRAME;
-    case FillMode::Solid: return D3D12_FILL_SOLID;
+    case FillMode::WireFrame: return D3D12_FILL_MODE_WIREFRAME;
+    case FillMode::Solid: return D3D12_FILL_MODE_SOLID;
     }
-    return D3D12_FILL_SOLID;
+    return D3D12_FILL_MODE_SOLID;
 }
 //-----------------------------------------------------------------------
 static D3D12_STENCIL_OP ToStencilOperation(StencilOperation operation) noexcept
@@ -118,26 +118,26 @@ static D3D12_COMPARISON_FUNC ToComparisonFunction(
     ComparisonFunction compareFunction) noexcept
 {
     switch (compareFunction) {
-    case ComparisonFunction::Never: return D3D12_COMPARISON_NEVER;
-    case ComparisonFunction::Less: return D3D12_COMPARISON_LESS;
-    case ComparisonFunction::Equal: return D3D12_COMPARISON_EQUAL;
-    case ComparisonFunction::LessEqual: return D3D12_COMPARISON_LESS_EQUAL;
-    case ComparisonFunction::Greater: return D3D12_COMPARISON_GREATER;
-    case ComparisonFunction::NotEqual: return D3D12_COMPARISON_NOT_EQUAL;
-    case ComparisonFunction::GreaterEqual: return D3D12_COMPARISON_GREATER_EQUAL;
-    case ComparisonFunction::Always: return D3D12_COMPARISON_ALWAYS;
+    case ComparisonFunction::Never: return D3D12_COMPARISON_FUNC_NEVER;
+    case ComparisonFunction::Less: return D3D12_COMPARISON_FUNC_LESS;
+    case ComparisonFunction::Equal: return D3D12_COMPARISON_FUNC_EQUAL;
+    case ComparisonFunction::LessEqual: return D3D12_COMPARISON_FUNC_LESS_EQUAL;
+    case ComparisonFunction::Greater: return D3D12_COMPARISON_FUNC_GREATER;
+    case ComparisonFunction::NotEqual: return D3D12_COMPARISON_FUNC_NOT_EQUAL;
+    case ComparisonFunction::GreaterEqual: return D3D12_COMPARISON_FUNC_GREATER_EQUAL;
+    case ComparisonFunction::Always: return D3D12_COMPARISON_FUNC_ALWAYS;
     }
-    return D3D12_COMPARISON_LESS_EQUAL;
+    return D3D12_COMPARISON_FUNC_LESS_EQUAL;
 }
 //-----------------------------------------------------------------------
 static D3D12_INPUT_CLASSIFICATION ToInputClassification(
     InputClassification slotClass) noexcept
 {
     switch (slotClass) {
-    case InputClassification::InputPerVertex: return D3D12_INPUT_PER_VERTEX_DATA;
-    case InputClassification::InputPerInstance: return D3D12_INPUT_PER_INSTANCE_DATA;
+    case InputClassification::InputPerVertex: return D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+    case InputClassification::InputPerInstance: return D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA;
     }
-    return D3D12_INPUT_PER_VERTEX_DATA;
+    return D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
 }
 //-----------------------------------------------------------------------
 static DXGI_FORMAT ToDSVFormat(DepthFormat format) noexcept
@@ -433,6 +433,30 @@ static std::vector<ConstantBufferBindDesc> CreateConstantBufferBindDescs(
 
     return std::move(bindings);
 }
+//-----------------------------------------------------------------------
+static void InitAsDescriptorTable(
+    D3D12_ROOT_PARAMETER & rootParameter,
+    UINT numDescriptorRanges,
+    const D3D12_DESCRIPTOR_RANGE* pDescriptorRanges,
+    D3D12_SHADER_VISIBILITY visibility = D3D12_SHADER_VISIBILITY_ALL) noexcept
+{
+    rootParameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+    rootParameter.ShaderVisibility = visibility;
+    rootParameter.DescriptorTable.NumDescriptorRanges = numDescriptorRanges;
+    rootParameter.DescriptorTable.pDescriptorRanges = pDescriptorRanges;
+}
+//-----------------------------------------------------------------------
+static void InitAsConstantBufferView(
+    D3D12_ROOT_PARAMETER & rootParameter,
+    UINT shaderRegister,
+    UINT registerSpace = 0,
+    D3D12_SHADER_VISIBILITY visibility = D3D12_SHADER_VISIBILITY_ALL) noexcept
+{
+    rootParameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+    rootParameter.ShaderVisibility = visibility;
+    rootParameter.Descriptor.ShaderRegister = shaderRegister;
+    rootParameter.Descriptor.RegisterSpace = registerSpace;
+}
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
@@ -488,7 +512,7 @@ PipelineStateDirect3D12::PipelineStateDirect3D12(ID3D12Device* device,
             POMDOG_ASSERT(i < constantBufferBinds.size());
             UINT shaderRegisterIndex = constantBufferBinds[i].BindPoint;
             POMDOG_ASSERT(rootParameter != std::end(rootParameters));
-            rootParameter->InitAsConstantBufferView(shaderRegisterIndex);
+            InitAsConstantBufferView(*rootParameter, shaderRegisterIndex);
             ++rootParameter;
         }
 
@@ -500,11 +524,15 @@ PipelineStateDirect3D12::PipelineStateDirect3D12(ID3D12Device* device,
                 UINT shaderRegisterIndex = textureBinds[i].BindPoint;
                 POMDOG_ASSERT(i < srvDesciptorRanges.size());
                 auto & range = srvDesciptorRanges[i];
-                range.Init(D3D12_DESCRIPTOR_RANGE_SRV, 1, shaderRegisterIndex);
+                range.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+                range.NumDescriptors = 1;
+                range.BaseShaderRegister = shaderRegisterIndex;
+                range.RegisterSpace = 0;
+                range.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
             }
 
             POMDOG_ASSERT(rootParameter != std::end(rootParameters));
-            rootParameter->InitAsDescriptorTable(srvDesciptorRanges.size(), srvDesciptorRanges.data());
+            InitAsDescriptorTable(*rootParameter, srvDesciptorRanges.size(), srvDesciptorRanges.data());
             ++rootParameter;
         }
 
@@ -516,20 +544,24 @@ PipelineStateDirect3D12::PipelineStateDirect3D12(ID3D12Device* device,
                 UINT shaderRegisterIndex = samplerBinds[i].BindPoint;
                 POMDOG_ASSERT(i < samplerDesciptorRanges.size());
                 auto & range = samplerDesciptorRanges[i];
-                range.Init(D3D12_DESCRIPTOR_RANGE_SAMPLER, 1, shaderRegisterIndex);
+                range.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER;
+                range.NumDescriptors = 1;
+                range.BaseShaderRegister = shaderRegisterIndex;
+                range.RegisterSpace = 0;
+                range.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
             }
 
             POMDOG_ASSERT(rootParameter != std::end(rootParameters));
-            rootParameter->InitAsDescriptorTable(samplerDesciptorRanges.size(), samplerDesciptorRanges.data());
+            InitAsDescriptorTable(*rootParameter, samplerDesciptorRanges.size(), samplerDesciptorRanges.data());
             ++rootParameter;
         }
     }
 
     // Create RootSignature
-    D3D12_ROOT_SIGNATURE rootSignatureDesc;
+    D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc;
     rootSignatureDesc.pStaticSamplers = nullptr;
     rootSignatureDesc.NumStaticSamplers = 0;
-    rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+    rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
     if (!rootParameters.empty()) {
         rootSignatureDesc.pParameters = rootParameters.data();
@@ -545,7 +577,7 @@ PipelineStateDirect3D12::PipelineStateDirect3D12(ID3D12Device* device,
 
     HRESULT hr = D3D12SerializeRootSignature(
         &rootSignatureDesc,
-        D3D_ROOT_SIGNATURE_V1,
+        D3D_ROOT_SIGNATURE_VERSION_1,
         &rootSignatureBlob,
         &errorBlob);
 
