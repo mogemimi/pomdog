@@ -20,6 +20,8 @@
 /build.makefiles
 /build.xcodefiles
 /build.msvs
+/examples/QuickStart/build
+/test/TestApp/build
 /third-party
 /third-party/libpng/build
 /third-party/lua/build
