@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Resource.hpp"
-#include "../TestAppGame.hpp"
+#include "../Source/TestAppGame.hpp"
 #include "Pomdog/Platform/Win32/Bootstrap.hpp"
 #include "Pomdog/Pomdog.hpp"
 

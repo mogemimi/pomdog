@@ -1,5 +1,8 @@
 {
-  'includes': ['common.gypi'],
+  'variables': {
+    'pomdog_dir%': '../..',
+  },
+  'includes': ['../../build/common.gypi'],
   'make_global_settings': [
     ['CXX','/usr/bin/clang++'],
     ['LINK','/usr/bin/clang++'],
@@ -60,87 +63,78 @@
       'type': 'executable',
       'mac_bundle': 1,
       'dependencies': [
-        'experimental.gyp:pomdog_experimental',
+        '<@(pomdog_dir)/build/experimental.gyp:pomdog_experimental',
       ],
       'include_dirs': [
-        '../include',
-        '../experimental',
+        '<@(pomdog_dir)/include',
+        '<@(pomdog_dir)/experimental',
       ],
       'sources': [
-        '../test/TestApp/Utilities/LogSkeletalInfo.cpp',
-        '../test/TestApp/Utilities/LogSkeletalInfo.hpp',
-        '../test/TestApp/Utilities/SandboxHelper.hpp',
-        '../test/TestApp/Levels/GunShootingLevel.cpp',
-        '../test/TestApp/Levels/GunShootingLevel.hpp',
-        '../test/TestApp/GrassBlendingGame.cpp',
-        '../test/TestApp/GrassBlendingGame.hpp',
-        '../test/TestApp/LightningTestGame.cpp',
-        '../test/TestApp/LightningTestGame.hpp',
-        '../test/TestApp/MaidBeamGame.cpp',
-        '../test/TestApp/MaidBeamGame.hpp',
-        '../test/TestApp/MaidChanGame.cpp',
-        '../test/TestApp/MaidChanGame.hpp',
-        '../test/TestApp/ParticleTestGame.cpp',
-        '../test/TestApp/ParticleTestGame.hpp',
-        '../test/TestApp/TestAppGame.cpp',
-        '../test/TestApp/TestAppGame.hpp',
+        'Source/Utilities/LogSkeletalInfo.cpp',
+        'Source/Utilities/LogSkeletalInfo.hpp',
+        'Source/Utilities/SandboxHelper.hpp',
+        'Source/Levels/GunShootingLevel.cpp',
+        'Source/Levels/GunShootingLevel.hpp',
+        'Source/GrassBlendingGame.cpp',
+        'Source/GrassBlendingGame.hpp',
+        'Source/LightningTestGame.cpp',
+        'Source/LightningTestGame.hpp',
+        'Source/MaidBeamGame.cpp',
+        'Source/MaidBeamGame.hpp',
+        'Source/MaidChanGame.cpp',
+        'Source/MaidChanGame.hpp',
+        'Source/ParticleTestGame.cpp',
+        'Source/ParticleTestGame.hpp',
+        'Source/TestAppGame.cpp',
+        'Source/TestAppGame.hpp',
       ],
       'conditions': [
         ['component == "shared_library"', {
           'dependencies': [
-            'pomdog.gyp:pomdog-shared',
+            '<@(pomdog_dir)/build/pomdog.gyp:pomdog-shared',
           ],
           'defines': [
             'POMDOG_USING_LIBRARY_EXPORTS=1',
           ],
         }, {
           'dependencies': [
-            'pomdog.gyp:pomdog-static',
+            '<@(pomdog_dir)/build/pomdog.gyp:pomdog-static',
           ],
         }],
         ['OS == "win"', {
           'sources': [
-            '../test/TestApp/Platform.Win32/main.cpp',
-            '../test/TestApp/Platform.Win32/Resource.hpp',
-            '../test/TestApp/Platform.Win32/game.rc',
+            'Platform.Win32/main.cpp',
+            'Platform.Win32/Resource.hpp',
+            'Platform.Win32/game.rc',
           ],
-        }], # OS == "win"
+        }],
         ['OS == "mac"', {
           'sources': [
-            '../test/TestApp/Platform.Cocoa/main.mm',
-            '../test/TestApp/Platform.Cocoa/AppDelegate.h',
-            '../test/TestApp/Platform.Cocoa/AppDelegate.mm',
-            '../test/TestApp/Platform.Cocoa/GameView.h',
-            '../test/TestApp/Platform.Cocoa/GameView.mm',
-            '../test/TestApp/Platform.Cocoa/GameViewController.h',
-            '../test/TestApp/Platform.Cocoa/GameViewController.mm',
+            'Platform.Cocoa/main.mm',
+            'Platform.Cocoa/AppDelegate.h',
+            'Platform.Cocoa/AppDelegate.mm',
+            'Platform.Cocoa/GameView.h',
+            'Platform.Cocoa/GameView.mm',
+            'Platform.Cocoa/GameViewController.h',
+            'Platform.Cocoa/GameViewController.mm',
           ],
           'link_settings': {
             'libraries': [
               '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
             ],
           },
-          'actions': [
-            {
-              'action_name': 'XcodeResourcesUpdater',
-              'description': 'Always update resources on Xcode',
-              'inputs': [],
-              'outputs': [],
-              'action': ['./update-bundle-resources.sh', '${SOURCE_ROOT}/../test/TestApp/Content/.'],
-            },
-          ],
-        }], # OS == "mac"
+        }],
       ],
       'mac_bundle_resources': [
-        '../test/TestApp/Content/',
-        '../test/TestApp/Platform.Cocoa/Base.lproj/MainMenu.xib',
-        '../test/TestApp/Platform.Cocoa/English.lproj/InfoPlist.strings',
-        '../test/TestApp/Platform.Cocoa/Images.xcassets/',
+        'Content/',
+        'Platform.Cocoa/Base.lproj/MainMenu.xib',
+        'Platform.Cocoa/English.lproj/InfoPlist.strings',
+        'Platform.Cocoa/Images.xcassets/',
       ],
       'xcode_settings': {
-        'INFOPLIST_FILE': '../test/TestApp/Platform.Cocoa/Info.plist',
+        'INFOPLIST_FILE': 'Platform.Cocoa/Info.plist',
         'CLANG_ENABLE_OBJC_ARC': 'YES',
       },
     },
-  ],# "targets"
+  ],
 }

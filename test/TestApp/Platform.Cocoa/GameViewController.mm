@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #import "GameViewController.h"
-#include "../TestAppGame.hpp"
+#include "../Source/TestAppGame.hpp"
 #include "Pomdog/Platform/Cocoa/Bootstrap.hpp"
 #include "Pomdog/Pomdog.hpp"
 #ifdef DEBUG
