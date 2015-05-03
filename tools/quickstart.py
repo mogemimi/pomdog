@@ -36,12 +36,13 @@ def ParsingCommandLineAraguments():
 def CopyTemplates(template_directory, project_root):
     templates_list = [
         "Content",
-        "Source",
         "Platform.Cocoa",
         "Platform.Win32",
-        "Build",
-        "README.md",
+        "Source",
         ".gitignore",
+        "common.gypi",
+        "QuickStart.gyp",
+        "README.md",
     ]
 
     for path in templates_list:
@@ -142,7 +143,7 @@ def CreateNewProject(config):
     CopyFrameworkFiles(framework_root, project_root)
     RenameContentByUrl(project_root, project_url, 'Platform.Cocoa/Info.plist')
     RenameSourceContent(project_root, identifier, 'README.md')
-    RenameSourceContent(project_root, identifier, 'Build/QuickStart.gyp')
+    RenameSourceContent(project_root, identifier, 'QuickStart.gyp')
     RenameSourceContent(project_root, identifier, 'Source/QuickStartGame.cpp')
     RenameSourceContent(project_root, identifier, 'Source/QuickStartGame.hpp')
     RenameSourceContent(project_root, identifier, 'Platform.Cocoa/AppDelegate.mm')
@@ -150,7 +151,7 @@ def CreateNewProject(config):
     RenameSourceContent(project_root, identifier, 'Platform.Cocoa/Info.plist')
     RenameSourceContent(project_root, identifier, 'Platform.Cocoa/Base.lproj/MainMenu.xib')
     RenameSourceContent(project_root, identifier, 'Platform.Win32/main.cpp')
-    RenameFilename(project_root, identifier, 'Build/QuickStart.gyp')
+    RenameFilename(project_root, identifier, 'QuickStart.gyp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.cpp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.hpp')
 
