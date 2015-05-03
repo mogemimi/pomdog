@@ -14,6 +14,7 @@ out vec4 FragColor;
 
 void main()
 {
-	FragColor = (vec4(In.TextureCoord.xy, Rotation.y, 1.0) * Rotation.x) * 0.5 +
-		0.5 * texture(DiffuseTexture, In.TextureCoord.xy);
+    vec4 rotationColor = vec4(In.TextureCoord.xy, Rotation.y, 1.0) * Rotation.x;
+    vec4 textureColor = texture(DiffuseTexture, In.TextureCoord.xy);
+	FragColor = mix(rotationColor, textureColor, 0.5);
 }

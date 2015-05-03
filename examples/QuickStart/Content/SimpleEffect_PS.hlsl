@@ -13,6 +13,7 @@ SamplerState      TextureSampler: register(s0);
 
 float4 SimpleEffectPS(VS_OUTPUT input) : SV_Target
 {
-	return (float4(input.TextureCoord.xy, Rotation.y, 1.0) * Rotation.x) * 0.5 +
-		0.5 * DiffuseTexture.Sample(TextureSampler, input.TextureCoord.xy);
+    float4 rotationColor = float4(input.TextureCoord.xy, Rotation.y, 1.0) * Rotation.x;
+    float4 textureColor = DiffuseTexture.Sample(TextureSampler, input.TextureCoord.xy);
+	return lerp(rotationColor, textureColor, 0.5);
 }
