@@ -4,6 +4,7 @@
 #ifndef POMDOG_DEGREE_8B079286_HPP
 #define POMDOG_DEGREE_8B079286_HPP
 
+#include "detail/ForwardDeclarations.hpp"
 #include "detail/TaggedArithmetic.hpp"
 
 namespace Pomdog {
@@ -14,10 +15,6 @@ struct DegreeTag {};
 
 }// namespace Tags
 }// namespace Detail
-
-template <typename T>
-using Degree = Detail::TaggedArithmetic<T, Detail::Tags::DegreeTag>;
-
 }// namespace Pomdog
 
 #endif // POMDOG_DEGREE_8B079286_HPP

@@ -4,6 +4,7 @@
 #ifndef POMDOG_RADIAN_671670CD_HPP
 #define POMDOG_RADIAN_671670CD_HPP
 
+#include "detail/ForwardDeclarations.hpp"
 #include "detail/TaggedArithmetic.hpp"
 
 namespace Pomdog {
@@ -14,10 +15,6 @@ struct RadianTag {};
 
 }// namespace Tags
 }// namespace Detail
-
-template <typename T>
-using Radian = Detail::TaggedArithmetic<T, Detail::Tags::RadianTag>;
-
 }// namespace Pomdog
 
 #endif // POMDOG_RADIAN_671670CD_HPP

@@ -47,11 +47,11 @@ class TaggedArithmetic;
 
 namespace Tags {
 
+struct DegreeTag;
 struct RadianTag;
 
-}// namespace Tags
-
-}// namespace Detail
+} // namespace Tags
+} // namespace Detail
 
 using Matrix2x2 = Detail::FloatingPointMatrix2x2<float>;
 using Matrix3x2 = Detail::FloatingPointMatrix3x2<float>;
@@ -65,9 +65,11 @@ using Vector3 = Detail::FloatingPointVector3<float>;
 using Vector4 = Detail::FloatingPointVector4<float>;
 
 template <typename T>
+using Degree = Detail::TaggedArithmetic<T, Detail::Tags::DegreeTag>;
+
+template <typename T>
 using Radian = Detail::TaggedArithmetic<T, Detail::Tags::RadianTag>;
 
-// Structures:
 class Color;
 class Rectangle;
 
