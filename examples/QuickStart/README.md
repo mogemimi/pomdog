@@ -27,13 +27,13 @@ git clone https://chromium.googlesource.com/external/gyp.git Tools/gyp
 **1. Generating the Xcode project file**
 
 ```shell
-Tools/gyp/gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
+python Tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
 ```
 
-You can also use `gyp` instead of `Tools/gyp/gyp`:
+You can also use `gyp` instead of `python Tools/gyp/gyp_main.py`:
 
 ```shell
-gyp Build/QuickStart.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
+gyp QuickStart.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
 ```
 
 For information on how to install gyp, see [How to Install GYP](https://github.com/mogemimi/pomdog/wiki/How-to-Install-GYP) on the wiki.
@@ -41,19 +41,19 @@ For information on how to install gyp, see [How to Install GYP](https://github.c
 **2. Building (Release/Debug)**
 
 ```shell
-xcodebuild -project Build.xcodefiles/Build/QuickStart.xcodeproj
+xcodebuild -project Build.xcodefiles/QuickStart.xcodeproj
 ```
 
 To build in release mode, use `-configuration` option:
 
 ```shell
-xcodebuild -project Build.xcodefiles/Build/QuickStart.xcodeproj -configuration Release
+xcodebuild -project Build.xcodefiles/QuickStart.xcodeproj -configuration Release
 ```
 
 **3. Running app**
 
 ```shell
-open Build/build/Release/QuickStart.app
+open build/Release/QuickStart.app
 ```
 
 ### Building under Win32 and Visual Studio
@@ -61,14 +61,15 @@ open Build/build/Release/QuickStart.app
 Generate the Visual Studio project file:
 
 ```shell
-Tools/gyp/gyp Build/QuickStart.gyp --depth=. -f msvs \
+Tools/gyp/gyp QuickStart.gyp --depth=. -f msvs \
   -G msvs_version=2015 \
   --generator-output=Build.msvs \
   -Dcomponent=static_library
 ```
 
-Open `Build.msvs/Build/QuickStart.sln` in Visual Studio and build your app.
+Open `Build.msvs/QuickStart.sln` in Visual Studio and build your app.
 To run your app, change QuickStart project property to the following
 at `Configuration Properties > Debugging > Working Directory` in Visual Studio:
 
+|:----|:----|
 |Working Directory|`$(ProjectDir)..\..`|

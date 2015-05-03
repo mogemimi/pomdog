@@ -1,7 +1,7 @@
 {
   'includes': ['common.gypi'],
   'variables': {
-    '%pomdog_dir': '../Pomdog',
+    'pomdog_dir%': 'Pomdog',
   },
   'target_defaults': {
     'msbuild_settings': {
@@ -47,8 +47,8 @@
       'type': 'executable',
       'mac_bundle': 1,
       'sources': [
-        '../Source/QuickStartGame.cpp',
-        '../Source/QuickStartGame.hpp',
+        'Source/QuickStartGame.cpp',
+        'Source/QuickStartGame.hpp',
       ],
       'conditions': [
         ['OS == "win"', {
@@ -60,24 +60,24 @@
         }],
         ['OS == "mac"', {
           'sources': [
-            '../Platform.Cocoa/main.mm',
-            '../Platform.Cocoa/AppDelegate.h',
-            '../Platform.Cocoa/AppDelegate.mm',
-            '../Platform.Cocoa/GameView.h',
-            '../Platform.Cocoa/GameView.mm',
-            '../Platform.Cocoa/GameViewController.h',
-            '../Platform.Cocoa/GameViewController.mm',
+            'Platform.Cocoa/main.mm',
+            'Platform.Cocoa/AppDelegate.h',
+            'Platform.Cocoa/AppDelegate.mm',
+            'Platform.Cocoa/GameView.h',
+            'Platform.Cocoa/GameView.mm',
+            'Platform.Cocoa/GameViewController.h',
+            'Platform.Cocoa/GameViewController.mm',
           ],
         }],
       ],
       'mac_bundle_resources': [
-        '../Platform.Cocoa/Base.lproj/MainMenu.xib',
-        '../Platform.Cocoa/English.lproj/InfoPlist.strings',
-        '../Platform.Cocoa/Images.xcassets/',
-        '../Content/',
+        'Platform.Cocoa/Base.lproj/MainMenu.xib',
+        'Platform.Cocoa/English.lproj/InfoPlist.strings',
+        'Platform.Cocoa/Images.xcassets/',
+        'Content/',
       ],
       'xcode_settings': {
-        'INFOPLIST_FILE': '../Platform.Cocoa/Info.plist',
+        'INFOPLIST_FILE': 'Platform.Cocoa/Info.plist',
         'CLANG_ENABLE_OBJC_ARC': 'YES',
       },
     },
