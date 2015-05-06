@@ -11,6 +11,8 @@ namespace TestApp {
 //-----------------------------------------------------------------------
 MaidBeamGame::MaidBeamGame(std::shared_ptr<GameHost> const& gameHostIn)
     : gameHost(gameHostIn)
+    , window(gameHostIn->Window())
+    , graphicsDevice(gameHostIn->GraphicsDevice())
     , graphicsContext(gameHostIn->GraphicsContext())
     , sandboxMode(false)
 {}
@@ -19,11 +21,9 @@ MaidBeamGame::~MaidBeamGame() = default;
 //-----------------------------------------------------------------------
 void MaidBeamGame::Initialize()
 {
-    auto window = gameHost->Window();
     window->Title("MaidBeamGame - Enjoy Game Dev, Have Fun.");
     window->AllowPlayerResizing(true);
 
-    auto graphicsDevice = gameHost->GraphicsDevice();
     auto assets = gameHost->AssetManager();
 
     {
@@ -96,7 +96,7 @@ void MaidBeamGame::Initialize()
             toggleSwitch2->IsOn(sandboxMode);
             toggleSwitch2->OnContent("Sandbox On");
             toggleSwitch2->OffContent("Sandbox Off");
-            cameraChangedConnection = toggleSwitch2->Toggled.Connect([this](bool isOn) {
+            connections.Connect(toggleSwitch2->Toggled, [this](bool isOn) {
                 sandboxMode = isOn;
                 scenePanel->IsEnabled(sandboxMode);
             });
@@ -105,12 +105,14 @@ void MaidBeamGame::Initialize()
         }
     }
 
-    clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
-        graphicsContext->SetViewport(Viewport{0, 0, width, height});
-        graphicsContext->SetScissorRectangle(Rectangle{0, 0, width, height});
+    auto clientBounds = window->ClientBounds();
+    clientViewport = Viewport{0, 0, clientBounds.Width, clientBounds.Height};
+
+    connections.Connect(window->ClientSizeChanged, [this](int width, int height) {
+        clientViewport = Viewport{0, 0, width, height};
 
         renderTarget = std::make_shared<RenderTarget2D>(
-            gameHost->GraphicsDevice(), width, height,
+            graphicsDevice, width, height,
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 
         fxaa->SetViewport(width, height);
@@ -150,7 +152,7 @@ void MaidBeamGame::Update()
 //-----------------------------------------------------------------------
 void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camera)
 {
-    auto clientBounds = gameHost->Window()->ClientBounds();
+    auto clientBounds = window->ClientBounds();
 
     Viewport viewport(
         clientBounds.Width * camera.NormalizedViewportX,
@@ -200,7 +202,10 @@ void MaidBeamGame::Draw()
     constexpr bool enableFxaa = true;
 
     if (enableFxaa) {
+        auto bounds = renderTarget->Bounds();
         graphicsContext->SetRenderTarget(renderTarget);
+        graphicsContext->SetViewport(Viewport{bounds});
+        graphicsContext->SetScissorRectangle(bounds);
     }
 
     {
@@ -244,6 +249,8 @@ void MaidBeamGame::Draw()
 
     if (enableFxaa) {
         graphicsContext->SetRenderTarget();
+        graphicsContext->SetViewport(clientViewport);
+        graphicsContext->SetScissorRectangle(clientViewport.Bounds);
         graphicsContext->Clear(Color::CornflowerBlue);
         fxaa->SetTexture(renderTarget);
         fxaa->Apply(*graphicsContext);

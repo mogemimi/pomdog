@@ -26,6 +26,8 @@ public:
 
 private:
     std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<GameWindow> window;
+    std::shared_ptr<GraphicsDevice> graphicsDevice;
     std::shared_ptr<GraphicsContext> graphicsContext;
 
     std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
@@ -43,7 +45,7 @@ private:
     std::unique_ptr<FXAA> fxaa;
     std::unique_ptr<ScreenQuad> screenQuad;
 
-    ScopedConnection sceneTouchConnection;
+    Viewport clientViewport;
     Vector2 touchPoint;
 };
 

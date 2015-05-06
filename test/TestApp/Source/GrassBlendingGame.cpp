@@ -10,6 +10,8 @@ namespace TestApp {
 //-----------------------------------------------------------------------
 GrassBlendingGame::GrassBlendingGame(std::shared_ptr<GameHost> const& gameHostIn)
     : gameHost(gameHostIn)
+    , window(gameHostIn->Window())
+    , graphicsDevice(gameHostIn->GraphicsDevice())
     , graphicsContext(gameHostIn->GraphicsContext())
 {}
 //-----------------------------------------------------------------------
@@ -17,11 +19,9 @@ GrassBlendingGame::~GrassBlendingGame() = default;
 //-----------------------------------------------------------------------
 void GrassBlendingGame::Initialize()
 {
-    auto window = gameHost->Window();
     window->Title("TestApp - Enjoy Game Dev, Have Fun.");
     window->AllowPlayerResizing(true);
 
-    auto graphicsDevice = gameHost->GraphicsDevice();
     auto assets = gameHost->AssetManager();
 
     {
@@ -134,12 +134,14 @@ void GrassBlendingGame::Initialize()
         }
     }
 
-    clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
-        graphicsContext->SetViewport(Viewport{0, 0, width, height});
-        graphicsContext->SetScissorRectangle(Rectangle{0, 0, width, height});
+    auto clientBounds = window->ClientBounds();
+    clientViewport = Viewport{0, 0, clientBounds.Width, clientBounds.Height};
+
+    connections.Connect(window->ClientSizeChanged, [this](int width, int height) {
+        clientViewport = Viewport{0, 0, width, height};
 
         renderTarget = std::make_shared<RenderTarget2D>(
-            gameHost->GraphicsDevice(), width, height,
+            graphicsDevice, width, height,
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 
         fxaa->SetViewport(width, height);
@@ -199,7 +201,7 @@ void GrassBlendingGame::DrawSprites()
     POMDOG_ASSERT(transform && camera);
     auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        gameHost->Window()->ClientBounds().Width, gameHost->Window()->ClientBounds().Height, 0.1f, 1000.0f);
+        window->ClientBounds().Width, window->ClientBounds().Height, 0.1f, 1000.0f);
 
     POMDOG_ASSERT(polygonBatch);
     polygonBatch->Begin(viewMatrix * projectionMatrix);
@@ -284,7 +286,10 @@ void GrassBlendingGame::Draw()
     constexpr bool enableFxaa = true;
 
     if (enableFxaa) {
+        auto bounds = renderTarget->Bounds();
         graphicsContext->SetRenderTarget(renderTarget);
+        graphicsContext->SetViewport(Viewport{bounds});
+        graphicsContext->SetScissorRectangle(bounds);
     }
 
     graphicsContext->Clear(Color::CornflowerBlue);
@@ -308,6 +313,8 @@ void GrassBlendingGame::Draw()
 
     if (enableFxaa) {
         graphicsContext->SetRenderTarget();
+        graphicsContext->SetViewport(clientViewport);
+        graphicsContext->SetScissorRectangle(clientViewport.Bounds);
         graphicsContext->Clear(Color::CornflowerBlue);
         fxaa->SetTexture(renderTarget);
         fxaa->Apply(*graphicsContext);

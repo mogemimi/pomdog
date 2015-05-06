@@ -10,6 +10,8 @@ namespace TestApp {
 //-----------------------------------------------------------------------
 MaidChanGame::MaidChanGame(std::shared_ptr<GameHost> const& gameHostIn)
     : gameHost(gameHostIn)
+    , window(gameHostIn->Window())
+    , graphicsDevice(gameHostIn->GraphicsDevice())
     , graphicsContext(gameHostIn->GraphicsContext())
 {}
 //-----------------------------------------------------------------------
@@ -17,11 +19,9 @@ MaidChanGame::~MaidChanGame() = default;
 //-----------------------------------------------------------------------
 void MaidChanGame::Initialize()
 {
-    auto window = gameHost->Window();
     window->Title("TestApp - Enjoy Game Dev, Have Fun.");
     window->AllowPlayerResizing(true);
 
-    auto graphicsDevice = gameHost->GraphicsDevice();
     auto assets = gameHost->AssetManager();
 
     {
@@ -123,12 +123,14 @@ void MaidChanGame::Initialize()
         }
     }
 
-    clientSizeChangedConnection = window->ClientSizeChanged.Connect([this](int width, int height) {
-        graphicsContext->SetViewport(Viewport{0, 0, width, height});
-        graphicsContext->SetScissorRectangle(Rectangle{0, 0, width, height});
+    auto clientBounds = window->ClientBounds();
+    clientViewport = Viewport{0, 0, clientBounds.Width, clientBounds.Height};
+
+    connections.Connect(window->ClientSizeChanged, [this](int width, int height) {
+        clientViewport = Viewport{0, 0, width, height};
 
         renderTarget = std::make_shared<RenderTarget2D>(
-            gameHost->GraphicsDevice(), width, height,
+            graphicsDevice, width, height,
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
 
         fxaa->SetViewport(width, height);
@@ -231,7 +233,10 @@ void MaidChanGame::Draw()
     constexpr bool enableFxaa = true;
 
     if (enableFxaa) {
+        auto bounds = renderTarget->Bounds();
         graphicsContext->SetRenderTarget(renderTarget);
+        graphicsContext->SetViewport(Viewport{bounds});
+        graphicsContext->SetScissorRectangle(bounds);
     }
 
     SceneEditor::EditorColorScheme colorScheme;
@@ -244,6 +249,8 @@ void MaidChanGame::Draw()
 
     if (enableFxaa) {
         graphicsContext->SetRenderTarget();
+        graphicsContext->SetViewport(clientViewport);
+        graphicsContext->SetScissorRectangle(clientViewport.Bounds);
         graphicsContext->Clear(Color::CornflowerBlue);
         fxaa->SetTexture(renderTarget);
         fxaa->Apply(*graphicsContext);

@@ -35,7 +35,10 @@ private:
 
 private:
     std::shared_ptr<GameHost> gameHost;
+    std::shared_ptr<GameWindow> window;
+    std::shared_ptr<GraphicsDevice> graphicsDevice;
     std::shared_ptr<GraphicsContext> graphicsContext;
+
 
     std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
     std::unique_ptr<SceneEditor::EditorBackground> editorBackground;
@@ -58,8 +61,8 @@ private:
     std::unique_ptr<ScreenQuad> screenQuad;
     std::vector<SpriteRenderable> cameraSprites;
 
-    ScopedConnection clientSizeChangedConnection;
-    ScopedConnection cameraChangedConnection;
+    ConnectionList connections;
+    Viewport clientViewport;
 };
 
 }// namespace TestApp

@@ -9,6 +9,8 @@ namespace TestApp {
 //-----------------------------------------------------------------------
 ParticleTestGame::ParticleTestGame(std::shared_ptr<GameHost> const& gameHostIn)
     : gameHost(gameHostIn)
+    , window(gameHostIn->Window())
+    , graphicsDevice(gameHostIn->GraphicsDevice())
     , graphicsContext(gameHostIn->GraphicsContext())
 {}
 //-----------------------------------------------------------------------
@@ -16,11 +18,9 @@ ParticleTestGame::~ParticleTestGame() = default;
 //-----------------------------------------------------------------------
 void ParticleTestGame::Initialize()
 {
-    auto window = gameHost->Window();
     window->Title("ParticleTestGame - Enjoy Game Dev, Have Fun.");
     window->AllowPlayerResizing(false);
 
-    auto graphicsDevice = gameHost->GraphicsDevice();
     auto assets = gameHost->AssetManager();
 
     {
@@ -94,6 +94,9 @@ void ParticleTestGame::Initialize()
             touchPoint = Vector2{position.X, position.Y};
         });
     }
+
+    auto clientBounds = window->ClientBounds();
+    clientViewport = Viewport{0, 0, clientBounds.Width, clientBounds.Height};
 }
 //-----------------------------------------------------------------------
 void ParticleTestGame::Update()
@@ -138,7 +141,7 @@ void ParticleTestGame::Draw()
         POMDOG_ASSERT(transform && camera);
         auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
         auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-            gameHost->Window()->ClientBounds().Width, gameHost->Window()->ClientBounds().Height, camera->Near, camera->Far);
+            window->ClientBounds().Width, window->ClientBounds().Height, camera->Near, camera->Far);
 
         editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
     }
@@ -152,7 +155,10 @@ void ParticleTestGame::Draw()
     constexpr bool enableFxaa = true;
 
     if (enableFxaa) {
+        auto bounds = renderTarget->Bounds();
         graphicsContext->SetRenderTarget(renderTarget);
+        graphicsContext->SetViewport(Viewport{bounds});
+        graphicsContext->SetScissorRectangle(bounds);
     }
 
     graphicsContext->Clear(Color::CornflowerBlue);
@@ -161,6 +167,8 @@ void ParticleTestGame::Draw()
 
     if (enableFxaa) {
         graphicsContext->SetRenderTarget();
+        graphicsContext->SetViewport(clientViewport);
+        graphicsContext->SetScissorRectangle(clientViewport.Bounds);
         graphicsContext->Clear(Color::CornflowerBlue);
         fxaa->SetTexture(renderTarget);
         fxaa->Apply(*graphicsContext);
