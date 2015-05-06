@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "KeyboardCocoa.hpp"
+#include "Pomdog/Input/KeyState.hpp"
 
 namespace Pomdog {
 namespace Detail {
@@ -16,9 +17,24 @@ KeyboardState KeyboardCocoa::GetState() const
 //-----------------------------------------------------------------------
 void KeyboardCocoa::SetKey(Keys key, KeyState keyState)
 {
+    bool isKeyDown = state.IsKeyDown(key);
+
     state.SetKey(key, keyState);
+
+    switch (keyState) {
+    case KeyState::Down:
+        if (!isKeyDown) {
+            Keyboard::KeyDown(key);
+        }
+        break;
+    case KeyState::Up:
+        if (isKeyDown) {
+            Keyboard::KeyUp(key);
+        }
+        break;
+    }
 }
 
-}// namespace Cocoa
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Cocoa
+} // namespace Detail
+} // namespace Pomdog

@@ -8,6 +8,7 @@
 #include "Pomdog/Input/KeyState.hpp"
 #include "Pomdog/Input/Keys.hpp"
 #include "Pomdog/Math/Point2D.hpp"
+#include <string>
 
 namespace Pomdog {
 namespace Detail {
@@ -19,9 +20,9 @@ struct ViewNeedsUpdateSurfaceEvent {};
 struct ViewWillStartLiveResizeEvent {};
 struct ViewDidEndLiveResizeEvent {};
 
-//struct InputCharacterEvent {
-//    std::uint16_t Character;
-//};
+struct InputTextEvent {
+    std::string text;
+};
 
 struct InputKeyEvent {
     KeyState State;

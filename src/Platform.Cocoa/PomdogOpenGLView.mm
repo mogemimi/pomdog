@@ -532,14 +532,9 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
         eventQueue->Enqueue<InputKeyEvent>(KeyState::Down, key);
     }
 
-//    using Pomdog::Detail::InputCharacterEvent;
-//    auto length = [[theEvent characters] length];
-//
-//    for (size_t i = 0; i < length; ++i)
-//    {
-//        auto character = [[theEvent characters] characterAtIndex:i];
-//        eventQueue->Enqueue<InputCharacterEvent>(character);
-//    }
+    using Pomdog::Detail::InputTextEvent;
+    std::string text = [[theEvent characters] UTF8String];
+    eventQueue->Enqueue<InputTextEvent>(text);
 }
 //-----------------------------------------------------------------------
 - (void)keyUp:(NSEvent *)theEvent
@@ -549,14 +544,9 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
         eventQueue->Enqueue<InputKeyEvent>(KeyState::Up, key);
     }
 
-//    using Pomdog::Detail::InputCharacterEvent;
-//    auto length = [[theEvent characters] length];
-//
-//    for (size_t i = 0; i < length; ++i)
-//    {
-//        std::uint16_t character = [[theEvent characters] characterAtIndex:i];
-//        eventQueue->Enqueue<InputCharacterEvent>(character);
-//    }
+    using Pomdog::Detail::InputTextEvent;
+    std::string text = [[theEvent characters] UTF8String];
+    eventQueue->Enqueue<InputTextEvent>(text);
 }
 
 @end

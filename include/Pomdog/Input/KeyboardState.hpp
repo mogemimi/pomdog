@@ -28,6 +28,6 @@ private:
     std::bitset<128> keyset;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_KEYBOARDSTATE_8518E1F7_HPP

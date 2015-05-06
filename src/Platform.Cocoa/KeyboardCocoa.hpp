@@ -11,11 +11,10 @@ namespace Pomdog {
 namespace Detail {
 namespace Cocoa {
 
-class KeyboardCocoa final: public Keyboard {
+class KeyboardCocoa final : public Keyboard {
 public:
     KeyboardCocoa();
 
-    ///@copydoc Pomdog::Mouse
     KeyboardState GetState() const override;
 
     void SetKey(Keys key, KeyState keyState);
@@ -24,8 +23,8 @@ private:
     KeyboardState state;
 };
 
-}// namespace Cocoa
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Cocoa
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_KEYBOARDCOCOA_E0980F30_HPP

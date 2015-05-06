@@ -402,6 +402,11 @@ void GameHostCocoa::Impl::ProcessSystemEvents(Event const& event)
         POMDOG_ASSERT(keyboard);
         keyboard->SetKey(keyEvent->Key, keyEvent->State);
     }
+    else if (auto inputTextEvent = event.As<InputTextEvent>())
+    {
+        POMDOG_ASSERT(keyboard);
+        keyboard->Keyboard::TextInput(inputTextEvent->text);
+    }
     else if (auto mousePositionEvent = event.As<MousePositionEvent>())
     {
         POMDOG_ASSERT(mouse);
