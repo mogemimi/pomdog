@@ -115,6 +115,7 @@
 #include "Input/TouchLocationState.hpp"
 
 #include "Signals/Connection.hpp"
+#include "Signals/ConnectionList.hpp"
 #include "Signals/Event.hpp"
 #include "Signals/EventQueue.hpp"
 #include "Signals/ScopedConnection.hpp"

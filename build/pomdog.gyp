@@ -165,6 +165,7 @@
       '../include/Pomdog/Math/detail/ForwardDeclarations.hpp',
       '../include/Pomdog/Math/detail/TaggedArithmetic.hpp',
       '../include/Pomdog/Signals/Connection.hpp',
+      '../include/Pomdog/Signals/ConnectionList.hpp',
       '../include/Pomdog/Signals/Event.hpp',
       '../include/Pomdog/Signals/EventQueue.hpp',
       '../include/Pomdog/Signals/ScopedConnection.hpp',

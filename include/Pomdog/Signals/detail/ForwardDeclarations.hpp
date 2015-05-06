@@ -25,6 +25,8 @@ class EventQueue;
 class Connection;
 class ScopedConnection;
 
+class ConnectionList;
+
 template <typename Function>
 class Signal;
 
