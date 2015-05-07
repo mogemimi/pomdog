@@ -71,8 +71,9 @@
         '../test/FrameworkTest/Signals/EventTest.cpp',
         '../test/FrameworkTest/Signals/ScopedConnectionTest.cpp',
         '../test/FrameworkTest/Signals/SignalTest.cpp',
-        '../test/FrameworkTest/Utility/StringFormatTest.cpp',
         '../test/FrameworkTest/Utility/AnyTest.cpp',
+        '../test/FrameworkTest/Utility/OptionalTest.cpp',
+        '../test/FrameworkTest/Utility/StringFormatTest.cpp',
       ],
       'xcode_settings': {
       },
