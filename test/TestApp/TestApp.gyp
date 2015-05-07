@@ -23,7 +23,7 @@
     'msbuild_settings':{
       'ClCompile': {
         'WarningLevel': 'Level4', # /W4
-        'TreatWarningAsError': 'true', # /WX
+        #'TreatWarningAsError': 'true', # /WX
       },
     },
     'xcode_settings': {
