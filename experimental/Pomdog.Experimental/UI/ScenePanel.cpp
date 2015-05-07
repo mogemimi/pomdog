@@ -183,8 +183,8 @@ void ScenePanel::OnPointerMoved(PointerPoint const& pointerPoint)
 //-----------------------------------------------------------------------
 void ScenePanel::OnPointerReleased(PointerPoint const& pointerPoint)
 {
-    tumbleStartPosition = OptionalType::NullOptional;
-    trackStartPosition = OptionalType::NullOptional;
+    tumbleStartPosition = Pomdog::NullOpt;
+    trackStartPosition = Pomdog::NullOpt;
 }
 //-----------------------------------------------------------------------
 void ScenePanel::OnMouseLeftButtonPressed(PointerPoint const& pointerPoint)

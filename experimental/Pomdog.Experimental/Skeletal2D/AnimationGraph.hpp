@@ -39,7 +39,7 @@ public:
             POMDOG_ASSERT(d <= std::numeric_limits<std::uint16_t>::max());
             return static_cast<std::uint16_t>(d);
         }
-        return OptionalType::NullOptional;
+        return Pomdog::NullOpt;
     }
 };
 

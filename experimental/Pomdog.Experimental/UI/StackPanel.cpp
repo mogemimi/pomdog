@@ -95,7 +95,7 @@ void StackPanel::OnPointerReleased(PointerPoint const& pointerPoint)
         return;
     }
 
-    startTouchPoint = OptionalType::NullOptional;
+    startTouchPoint = Pomdog::NullOpt;
 }
 //-----------------------------------------------------------------------
 void StackPanel::OnRenderSizeChanged(std::uint32_t widthIn, std::uint32_t heightIn)

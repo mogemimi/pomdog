@@ -51,7 +51,7 @@ static Optional<ShaderProgramGL4> LinkShaders(
 #endif // defined(DEBUG)
 
         glDeleteProgram(program.value);
-        return OptionalType::NullOptional;
+        return Pomdog::NullOpt;
     }
 
     return program;

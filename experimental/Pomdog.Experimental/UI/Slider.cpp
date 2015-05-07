@@ -164,7 +164,7 @@ void Slider::UpdateAnimation(Duration const& frameDuration)
         colorAnimation->time / colorAnimation->duration);
 
     if (colorAnimation->time >= colorAnimation->duration) {
-        colorAnimation = OptionalType::NullOptional;
+        colorAnimation = Pomdog::NullOpt;
     }
 }
 //-----------------------------------------------------------------------

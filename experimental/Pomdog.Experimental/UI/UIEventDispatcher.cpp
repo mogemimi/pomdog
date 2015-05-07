@@ -244,7 +244,7 @@ Optional<UI::PointerMouseEvent> UIEventDispatcher::FindPointerMouseEvent(MouseSt
     else if (mouseState.XButton2 == ButtonState::Pressed) {
         return PointerMouseEvent::XButton2Pressed;
     }
-    return OptionalType::NullOptional;
+    return Pomdog::NullOpt;
 }
 //-----------------------------------------------------------------------
 ButtonState UIEventDispatcher::CheckMouseButton(MouseState const& mouseState, UI::PointerMouseEvent const& pointerMouseEvent) const

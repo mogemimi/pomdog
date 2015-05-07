@@ -160,7 +160,7 @@ static Optional<Keys> ToKeys(::UINT directInputKeycode)
         break;
     }
 
-    return OptionalType::NullOptional;
+    return Pomdog::NullOpt;
 }
 
 }// unnamed namespace

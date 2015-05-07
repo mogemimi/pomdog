@@ -126,7 +126,7 @@ static Optional<FrameBufferGL4> CreateFrameBuffer()
 
     if (GL_FRAMEBUFFER_UNSUPPORTED == status)
     {
-        return OptionalType::NullOptional;
+        return Pomdog::NullOpt;
     }
 
     return std::move(frameBuffer);
@@ -198,7 +198,7 @@ GraphicsContextGL4::~GraphicsContextGL4()
     if (frameBuffer) {
         glDeleteFramebuffers(1, frameBuffer->Data());
         POMDOG_CHECK_ERROR_GL4("glDeleteFramebuffers");
-        frameBuffer = OptionalType::NullOptional;
+        frameBuffer = Pomdog::NullOpt;
     }
 
     nativeContext.reset();
@@ -497,7 +497,7 @@ void GraphicsContextGL4::SetTexture(int textureUnit)
         POMDOG_CHECK_ERROR_GL4("glBindTexture");
     }
 
-    textures[textureUnit] = OptionalType::NullOptional;
+    textures[textureUnit] = Pomdog::NullOpt;
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetTexture(int textureUnit, Texture2D & textureIn)

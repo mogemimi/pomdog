@@ -102,7 +102,7 @@ void UIView::SetCursor(MouseCursor cursorIn)
 //-----------------------------------------------------------------------
 void UIView::ResetCursor()
 {
-    cursor = OptionalType::NullOptional;
+    cursor = Pomdog::NullOpt;
 }
 //-----------------------------------------------------------------------
 Optional<MouseCursor> UIView::CurrentCursor() const

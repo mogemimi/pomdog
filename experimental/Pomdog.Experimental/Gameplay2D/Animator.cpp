@@ -194,7 +194,7 @@ void Animator::Impl::Update(Duration const& frameDuration)
                 currentAnimation.Name = nextAnimation->Name;
                 nextAnimation->Node.reset();
                 nextAnimation->Name.clear();
-                nextAnimation = OptionalType::NullOptional;
+                nextAnimation = Pomdog::NullOpt;
 
                 time = WrapTime(time, currentAnimation.Node->Length());
                 POMDOG_ASSERT(time >= AnimationTimeInterval::zero());

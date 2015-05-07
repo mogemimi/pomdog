@@ -46,7 +46,7 @@ static Optional<GLuint> CompileShader(ShaderBytecode const& source, GLenum pipel
 
     if (result.value() == 0) {
         // error
-        return OptionalType::NullOptional;
+        return Pomdog::NullOpt;
     }
 
     std::array<GLchar const*, 1> shaderSource = {{
@@ -77,7 +77,7 @@ static Optional<GLuint> CompileShader(ShaderBytecode const& source, GLenum pipel
 #endif // defined(DEBUG)
 
         glDeleteShader(result.value());
-        return OptionalType::NullOptional;
+        return Pomdog::NullOpt;
     }
 
     return result;
@@ -102,7 +102,7 @@ ShaderGL4<PipelineStage>::~ShaderGL4()
 {
     if (shader) {
         glDeleteShader(*shader);
-        shader = OptionalType::NullOptional;
+        shader = Pomdog::NullOpt;
     }
 }
 //-----------------------------------------------------------------------
