@@ -19,23 +19,21 @@ public:
     static_assert(std::is_unsigned<T>::value, "T is unsigned integer type.");
     T Data;
 
-    // Constructors:
-    constexpr OptionalUnsigned()
+    constexpr OptionalUnsigned() noexcept
         : Data(std::numeric_limits<T>::max())
     {}
 
-    constexpr OptionalUnsigned(T v)
+    constexpr OptionalUnsigned(T v) noexcept
         : Data(v)
     {}
 
-    // Binary operators:
-    constexpr bool operator==(OptionalUnsigned const& v) const
+    constexpr bool operator==(OptionalUnsigned const& v) const noexcept
     {
         return POMDOG_CONSTEXPR_ASSERT(Data != std::numeric_limits<T>::max()),
             Data == v.Data;
     }
 
-    constexpr bool operator!=(OptionalUnsigned const& v) const
+    constexpr bool operator!=(OptionalUnsigned const& v) const noexcept
     {
         return POMDOG_CONSTEXPR_ASSERT(Data != std::numeric_limits<T>::max()),
             Data != v.Data;
@@ -59,11 +57,11 @@ public:
     }
 };
 
-}// namespace SkeletalAnimation2D
-}// namespace Detail
+} // namespace SkeletalAnimation2D
+} // namespace Detail
 
 using JointIndex = Detail::SkeletalAnimation2D::OptionalUnsigned<std::uint8_t>;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_JOINTINDEX_F35DB555_HPP
