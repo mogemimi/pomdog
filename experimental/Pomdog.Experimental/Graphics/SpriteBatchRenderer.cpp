@@ -237,7 +237,6 @@ void SpriteBatchRenderer::Impl::DrawInstance(std::vector<SpriteInfo> const& spri
 {
     POMDOG_ASSERT(!textures.empty());
     POMDOG_ASSERT(textures.size() <= MaxTextureCount);
-    POMDOG_ASSERT(textures.size() <= std::numeric_limits<int>::max());
     POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
 
     auto parameter = constantBuffers->Find("TextureConstants");

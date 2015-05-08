@@ -202,11 +202,12 @@ void MaidChanGame::DrawSprites()
 
     if (toggleSwitch2->IsOn())
     {
-        for (auto & slot: maidSkin.Slots())
-        {
+        const auto slotCount = static_cast<int>(maidSkin.Slots().size());
+        for (auto & slot: maidSkin.Slots()) {
+            auto layerDepth = static_cast<float>(slotCount - slot.DrawOrder) / slotCount;
             spriteRenderer->Draw(maidTexture, globalPoses[*slot.JointIndex], slot.Translate, slot.Subrect,
                 slot.Color, (slot.TextureRotate ? slot.Rotation - MathConstants<float>::PiOver2(): slot.Rotation),
-                slot.Origin, slot.Scale, (maidSkin.Slots().size() - slot.DrawOrder) / maidSkin.Slots().size());
+                slot.Origin, slot.Scale, layerDepth);
         }
     }
 
@@ -216,12 +217,13 @@ void MaidChanGame::DrawSprites()
     {
         spriteRenderer->Begin(SpriteSortMode::BackToFront, viewMatrix);
 
-        for (auto & slot: maidSkin.Slots())
-        {
+        const auto slotCount = static_cast<int>(maidSkin.Slots().size());
+        for (auto & slot: maidSkin.Slots()) {
+            auto layerDepth = static_cast<float>(slotCount - slot.DrawOrder) / slotCount;
             spriteRenderer->Draw(texture, globalPoses[*slot.JointIndex], slot.Translate, slot.Subrect,
                 {0, 0, 0, 40},
                 (slot.TextureRotate ? slot.Rotation - MathConstants<float>::PiOver2(): slot.Rotation),
-                slot.Origin, slot.Scale, (maidSkin.Slots().size() - slot.DrawOrder) / maidSkin.Slots().size());
+                slot.Origin, slot.Scale, layerDepth);
         }
 
         spriteRenderer->End();

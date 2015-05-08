@@ -13,7 +13,7 @@ namespace Pomdog {
 namespace TexturePacker {
 namespace {
 
-enum class ParserState: int {
+enum class ParserState {
     PageName,
     PageProperties,
     RegionName,
@@ -21,7 +21,7 @@ enum class ParserState: int {
     ParsingError,
 };
 
-static TextureAtlasRegion CreateAtlasRegion(std::string const& line, std::uint32_t pageIndex)
+static TextureAtlasRegion CreateAtlasRegion(std::string const& line, std::int16_t pageIndex)
 {
     TextureAtlasRegion region;
     region.Name = line;
@@ -44,7 +44,7 @@ TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string co
     std::ifstream stream = assets.OpenStream(assetName);
 
     TextureAtlas result;
-    std::uint32_t pageIndex = 0;
+    std::int16_t pageIndex = 0;
 
     ParserState state = ParserState::PageName;
 
@@ -62,7 +62,7 @@ TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string co
             TextureAtlasPage page;
             page.Name = line;
             result.pages.push_back(page);
-            POMDOG_ASSERT((pageIndex + 1) == result.pages.size());
+            POMDOG_ASSERT((pageIndex + 1) == static_cast<int>(result.pages.size()));
 
             state = ParserState::PageProperties;
             break;

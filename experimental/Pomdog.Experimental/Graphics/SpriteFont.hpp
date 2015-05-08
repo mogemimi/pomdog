@@ -22,10 +22,11 @@ struct Glyph {
 
     ///@note UTF-32
     std::uint32_t Character;
+
     std::int16_t XOffset;
     std::int16_t YOffset;
     std::int16_t XAdvance;
-    std::uint8_t TexturePage;
+    std::int16_t TexturePage;
 };
 
 }// namespace SpriteFonts

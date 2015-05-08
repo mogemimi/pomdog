@@ -20,7 +20,7 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
     std::vector<RigidSlot> slots;
     slots.reserve(slotDescs.size());
 
-    std::uint16_t drawOrder = 0;
+    std::int16_t drawOrder = 0;
 
     for (auto & slotDesc: slotDescs)
     {

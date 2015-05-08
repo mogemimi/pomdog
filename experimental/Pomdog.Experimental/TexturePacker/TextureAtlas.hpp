@@ -20,7 +20,7 @@ struct TextureAtlasPage {
 struct TextureAtlasRegion {
     std::string Name;
     TextureRegion Region;
-    std::uint16_t TexturePage;
+    std::int16_t TexturePage;
 };
 
 class TextureAtlas {

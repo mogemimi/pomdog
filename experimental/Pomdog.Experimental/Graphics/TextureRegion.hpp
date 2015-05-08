@@ -12,13 +12,13 @@ namespace Pomdog {
 class TextureRegion {
 public:
     Rectangle Subrect;
-    std::uint16_t XOffset;
-    std::uint16_t YOffset;
-    std::uint16_t Width;
-    std::uint16_t Height;
+    std::int16_t XOffset;
+    std::int16_t YOffset;
+    std::int16_t Width;
+    std::int16_t Height;
     bool Rotate;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_TEXTUREREGION_9F020F68_HPP

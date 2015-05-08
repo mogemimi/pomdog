@@ -126,7 +126,8 @@ void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
 
         if (glyph.Subrect.Width > 0 && glyph.Subrect.Height > 0)
         {
-            POMDOG_ASSERT(glyph.TexturePage < textures.size());
+            POMDOG_ASSERT(glyph.TexturePage >= 0);
+            POMDOG_ASSERT(glyph.TexturePage < static_cast<int>(textures.size()));
 
             spriteBatch.Draw(textures[glyph.TexturePage],
                 currentPosition + Vector2(glyph.XOffset, glyph.YOffset),
@@ -177,7 +178,8 @@ void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
 
         if (glyph.Subrect.Width > 0 && glyph.Subrect.Height > 0)
         {
-            POMDOG_ASSERT(glyph.TexturePage < textures.size());
+            POMDOG_ASSERT(glyph.TexturePage >= 0);
+            POMDOG_ASSERT(glyph.TexturePage < static_cast<int>(textures.size()));
 
             spriteBatch.Draw(textures[glyph.TexturePage],
                 currentPosition + Vector2(glyph.XOffset, glyph.YOffset),

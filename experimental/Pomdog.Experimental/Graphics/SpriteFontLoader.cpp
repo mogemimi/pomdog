@@ -248,7 +248,7 @@ Detail::SpriteFonts::Glyph ParseGlyph(std::istream & stream)
                 ss >> result.Character;
             }
             else if (name == "page") {
-                result.TexturePage = std::stoul(arguments);
+                result.TexturePage = std::stoi(arguments);
             }
             else if (name == "x") {
                 result.Subrect.X = std::stoi(arguments);

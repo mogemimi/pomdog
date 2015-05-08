@@ -46,8 +46,9 @@ void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string co
     size.Y = model.Y;
     size.Z = model.Z;
 
-    POMDOG_ASSERT(model.Voxels.size() <= std::numeric_limits<std::int32_t>::max());
     std::int32_t const voxelCount = static_cast<std::int32_t>(model.Voxels.size());
+    POMDOG_ASSERT(voxelCount >= 0);
+
     std::vector<MagicaVoxel::Voxel> voxels = model.Voxels;
 
     std::array<Color, 256> colors = model.ColorPalette;
@@ -69,10 +70,11 @@ void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string co
 
     VoxChunkHeader xyziChunk;
     xyziChunk.ID = IdXYZI;
-    auto const xyziChunkContentSize = sizeof(voxelCount) + (sizeof(MagicaVoxel::Voxel) * voxels.size());
-    POMDOG_ASSERT(xyziChunkContentSize <= std::numeric_limits<std::int32_t>::max());
+    const auto xyziChunkContentSize = sizeof(voxelCount) + (sizeof(MagicaVoxel::Voxel) * voxels.size());
     xyziChunk.ContentSize = static_cast<std::int32_t>(xyziChunkContentSize);
     xyziChunk.ChildrenSize = 0;
+
+    POMDOG_ASSERT(xyziChunk.ContentSize > 0);
 
     VoxChunkHeader rgbaChunk;
     rgbaChunk.ID = IdRGBA;

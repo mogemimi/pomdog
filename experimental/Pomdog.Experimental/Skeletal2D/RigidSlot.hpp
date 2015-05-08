@@ -23,11 +23,11 @@ public:
     Vector2 Origin;
     JointIndex JointIndex;
     std::uint32_t HashId;
-    std::uint16_t DrawOrder;
-    std::uint16_t TexturePage;
+    std::int16_t DrawOrder;
+    std::int16_t TexturePage;
     bool TextureRotate;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_RIGIDSLOT_4C507F41_HPP

@@ -21,7 +21,7 @@ public:
     Rectangle Subrect;
     Vector2 Origin;
     AnimationTimeInterval Time;
-    std::uint16_t TexturePage;
+    std::int16_t TexturePage;
     bool TextureRotate;
 };
 
