@@ -1,6 +1,16 @@
 {
   'variables': {
-    'component%': 'shared_library', # static_library or shared_library
+    'conditions': [
+      ['OS == "win"', {
+        'component%': 'static_library',
+      }],
+      ['OS == "mac"', {
+        'component%': 'shared_library',
+      }],
+      ['OS != "win" and OS != "mac"', {
+        'component%': 'shared_library',
+      }],
+    ],
   },
   'target_defaults': {
     'msvs_configuration_attributes': {
