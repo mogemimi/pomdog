@@ -48,9 +48,6 @@ inline constexpr bool ConstexprAssert(bool condition,
                 assert(message && expression);\
             }\
         } while(false)
-#    define POMDOG_CONSTEXPR_ASSERT(expression) \
-        static_cast<void>(Pomdog::Detail::Assertion::ConstexprAssert(\
-            static_cast<bool>(expression), #expression, __FILE__, __LINE__))
 #elif defined(DEBUG) && defined(_MSC_VER)
 #    // Debug mode under Visual Studio
 #    define POMDOG_ASSERT(expression) \
@@ -82,7 +79,16 @@ inline constexpr bool ConstexprAssert(bool condition,
 #    // Release mode
 #    define POMDOG_ASSERT(expression)
 #    define POMDOG_ASSERT_MESSAGE(expression, message)
-#    define POMDOG_CONSTEXPR_ASSERT(expression) static_cast<void const>(0)
+#endif
+
+#if defined(DEBUG)
+#   // Debug mode
+#   define POMDOG_CONSTEXPR_ASSERT(expression) \
+        static_cast<void>(Pomdog::Detail::Assertion::ConstexprAssert(\
+            static_cast<bool>(expression), #expression, __FILE__, __LINE__))
+#else
+#   // Release mode
+#   define POMDOG_CONSTEXPR_ASSERT(expression) static_cast<void const>(0)
 #endif
 
 } // namespace Detail
