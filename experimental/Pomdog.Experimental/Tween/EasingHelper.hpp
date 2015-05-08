@@ -6,6 +6,7 @@
 
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog.Experimental/MSVCSupport.hpp"
 #include <type_traits>
 #include <cmath>
 
@@ -192,6 +193,7 @@ using EaseSine = Ease<T, Sine<T>>;
 
 namespace Easings {
 
+#ifndef POMDOG_MSVC2015_SUPPORT
 using EaseBack = Detail::Easings::EaseBack<float>;
 using EaseBounce = Detail::Easings::EaseBounce<float>;
 using EaseCircle = Detail::Easings::EaseCircle<float>;
@@ -202,6 +204,7 @@ using EaseQuadratic = Detail::Easings::EaseQuadratic<float>;
 using EaseQuartic = Detail::Easings::EaseQuartic<float>;
 using EaseQuintic = Detail::Easings::EaseQuintic<float>;
 using EaseSine = Detail::Easings::EaseSine<float>;
+#endif
 
 }// namespace Easings
 }// namespace Pomdog

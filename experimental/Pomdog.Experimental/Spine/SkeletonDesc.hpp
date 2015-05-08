@@ -11,6 +11,7 @@
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Math/Color.hpp"
+#include "Pomdog.Experimental/MSVCSupport.hpp"
 #include <cstdint>
 #include <vector>
 #include <array>
@@ -87,10 +88,12 @@ public:
     Detail::Skeletal2D::CompressedFloat<std::int16_t, 7> TranslateY;
     KeyframeCurve Curve;
 
+#ifndef POMDOG_MSVC2015_SUPPORT
     static_assert(decltype(TranslateX)::Max() > 1024.0f, "");
     static_assert(decltype(TranslateX)::Min() < -1024.0f, "");
     static_assert(decltype(TranslateY)::Max() > 1024.0f, "");
     static_assert(decltype(TranslateY)::Min() < -1024.0f, "");
+#endif
 };
 
 class AnimationSamplePointRotate {
@@ -99,8 +102,10 @@ public:
     Detail::Skeletal2D::CompressedFloat<std::int16_t, 4500> Rotation;
     KeyframeCurve Curve;
 
+#ifndef POMDOG_MSVC2015_SUPPORT
     static_assert(decltype(Rotation)::Max() > 3.1416f*2.0f, "");
     static_assert(decltype(Rotation)::Min() < -3.1416f*2.0f, "");
+#endif
 };
 
 class AnimationSamplePointScale {
@@ -109,8 +114,10 @@ public:
     Detail::Skeletal2D::CompressedFloat<std::int16_t, 1500> Scale;
     KeyframeCurve Curve;
 
+#ifndef POMDOG_MSVC2015_SUPPORT
     static_assert(decltype(Scale)::Max() > 20.0f, "");
     static_assert(decltype(Scale)::Min() < -20.0f, "");
+#endif
 };
 
 class BoneAnimationTrackDesc {

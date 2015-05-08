@@ -6,6 +6,7 @@
 #include "Pomdog/Math/Matrix4x4.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog.Experimental/MSVCSupport.hpp"
 #include <unordered_map>
 #include <codecvt>
 #include <locale>
@@ -209,6 +210,7 @@ Vector2 SpriteFont::MeasureString(char const* text) const
 {
     POMDOG_ASSERT(text != nullptr);
 
+#ifndef POMDOG_MSVC2015_SUPPORT
     std::string utf8String(text);
 
     std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> utf8ToUtf32Conv;
@@ -218,6 +220,7 @@ Vector2 SpriteFont::MeasureString(char const* text) const
     }
     catch (std::exception const&) {
     }
+#endif
     return Vector2::Zero;
 }
 //-----------------------------------------------------------------------
@@ -260,6 +263,7 @@ void SpriteFont::Begin(Matrix4x4 const& transformMatrix)
 //-----------------------------------------------------------------------
 void SpriteFont::Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color)
 {
+#ifndef POMDOG_MSVC2015_SUPPORT
     std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> utf8ToUtf32Conv;
     try {
         std::u32string utf32String = utf8ToUtf32Conv.from_bytes(text);
@@ -267,6 +271,7 @@ void SpriteFont::Draw(SpriteBatch & spriteBatch, std::string const& text, Vector
     }
     catch (std::exception const&) {
     }
+#endif
 }
 //-----------------------------------------------------------------------
 void SpriteFont::Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color,
@@ -282,6 +287,7 @@ void SpriteFont::Draw(SpriteBatch & spriteBatch, std::string const& text, Vector
 
     ///@todo Not implemented
 
+#ifndef POMDOG_MSVC2015_SUPPORT
     std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> utf8ToUtf32Conv;
     try {
         std::u32string utf32String = utf8ToUtf32Conv.from_bytes(text);
@@ -290,6 +296,7 @@ void SpriteFont::Draw(SpriteBatch & spriteBatch, std::string const& text, Vector
     }
     catch (std::exception const&) {
     }
+#endif
 }
 //-----------------------------------------------------------------------
 void SpriteFont::End()

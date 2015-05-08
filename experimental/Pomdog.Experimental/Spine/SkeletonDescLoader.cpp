@@ -7,6 +7,7 @@
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog.Experimental/MSVCSupport.hpp"
 #include <rapidjson/document.h>
 #include <utility>
 #include <fstream>
@@ -363,11 +364,15 @@ static std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
         auto boneCount = std::min(vertex.Joints.size(), localVertices.size());
         for (std::uint8_t index = 0; index < boneCount; ++index)
         {
+#ifndef POMDOG_MSVC2015_SUPPORT
             static_assert(vertex.Joints.size() == 4, "");
+#endif
             POMDOG_ASSERT(index < vertex.Joints.size());
             vertex.Joints[index] = localVertices[index].JointIndex;
 
+#ifndef POMDOG_MSVC2015_SUPPORT
             static_assert(vertex.Weights.size() == 3, "");
+#endif
             if (index < vertex.Weights.size()) {
                 vertex.Weights[index] = localVertices[index].Weight;
             }
