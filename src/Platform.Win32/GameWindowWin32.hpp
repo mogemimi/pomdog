@@ -25,31 +25,22 @@ public:
 
     ~GameWindowWin32();
 
-    ///@copydoc GameWindow
     bool AllowPlayerResizing() const override;
 
-    ///@copydoc GameWindow
     void AllowPlayerResizing(bool allowResizing) override;
 
-    ///@copydoc GameWindow
     std::string Title() const override;
 
-    ///@copydoc GameWindow
     void Title(std::string const& title) override;
 
-    ///@copydoc GameWindow
     Rectangle ClientBounds() const override;
 
-    ///@copydoc GameWindow
     void ClientBounds(Rectangle const& clientBounds) override;
 
-    ///@copydoc GameWindow
     bool IsMouseCursorVisible() const override;
 
-    ///@copydoc GameWindow
     void IsMouseCursorVisible(bool visible) override;
 
-    ///@copydoc GameWindow
     void SetMouseCursor(MouseCursor cursor) override;
 
     ///@return true if the window is minimized, false otherwise.
@@ -64,8 +55,8 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-}// namespace Win32
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Win32
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_GAMEWINDOWWIN32_2EC902FC_HPP

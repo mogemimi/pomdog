@@ -40,7 +40,7 @@ IDirectInput8* DeviceContextDirectInput::GetDirectInput() const
     return directInput.Get();
 }
 //-----------------------------------------------------------------------
-}// namespace DirectInput
-}// namespace InputSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace DirectInput
+} // namespace InputSystem
+} // namespace Detail
+} // namespace Pomdog

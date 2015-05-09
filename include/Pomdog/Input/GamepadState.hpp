@@ -18,6 +18,6 @@ public:
     bool IsConnected = false;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GAMEPADSTATE_02293326_HPP

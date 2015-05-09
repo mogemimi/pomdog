@@ -24,6 +24,6 @@ public:
     bool HasRightYThumbStick = false;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GAMEPADCAPABILITIES_869064F7_HPP

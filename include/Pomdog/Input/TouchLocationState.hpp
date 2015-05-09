@@ -15,6 +15,6 @@ enum class TouchLocationState: std::uint8_t {
     Released,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_TOUCHLOCATIONSTATE_C896CADD_HPP

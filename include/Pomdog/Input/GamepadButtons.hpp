@@ -22,6 +22,6 @@ public:
     ButtonState RightStick = ButtonState::Released;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GAMEPADBUTTONS_7EF60FA0_HPP

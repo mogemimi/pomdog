@@ -18,6 +18,6 @@ public:
     TouchLocationState State = TouchLocationState::Invalid;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_TOUCHLOCATION_F1E1CEB0_HPP

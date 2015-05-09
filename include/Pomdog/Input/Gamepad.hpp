@@ -20,6 +20,6 @@ public:
     virtual GamepadState GetState() const = 0;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GAMEPAD_5B4AD0B0_HPP

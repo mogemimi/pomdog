@@ -21,6 +21,6 @@ public:
     virtual MouseState GetState() const = 0;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_MOUSE_8BFC478A_HPP

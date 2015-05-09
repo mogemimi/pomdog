@@ -14,6 +14,6 @@ public:
     Vector2 Right = Vector2::Zero;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GAMEPADTHUMBSTICKS_444752C9_HPP

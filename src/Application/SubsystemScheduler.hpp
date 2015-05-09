@@ -15,7 +15,7 @@ public:
     Signal<void()> OnUpdate;
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SUBSYSTEMSCHEDULER_15398B34_HPP

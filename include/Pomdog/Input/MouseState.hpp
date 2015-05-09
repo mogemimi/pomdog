@@ -34,6 +34,6 @@ public:
     ButtonState XButton2 = ButtonState::Released;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_MOUSESTATE_0CEDE70B_HPP

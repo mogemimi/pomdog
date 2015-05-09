@@ -16,6 +16,6 @@ public:
     ButtonState Right = ButtonState::Released;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GAMEPADDPAD_986E4F79_HPP

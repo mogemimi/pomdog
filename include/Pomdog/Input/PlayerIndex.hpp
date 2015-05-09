@@ -15,6 +15,6 @@ enum class PlayerIndex: std::uint8_t {
     Four = 4,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_PLAYERINDEX_FD3F134D_HPP

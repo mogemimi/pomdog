@@ -14,7 +14,7 @@ namespace Detail {
 namespace InputSystem {
 namespace DirectInput {
 
-class DeviceContextDirectInput final: Noncopyable {
+class DeviceContextDirectInput final : Noncopyable {
 public:
     DeviceContextDirectInput(HINSTANCE hInstance, HWND windowHandle);
 
@@ -29,9 +29,9 @@ private:
     Microsoft::WRL::ComPtr<IDirectInput8> directInput;
 };
 
-}// namespace DirectInput
-}// namespace InputSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace DirectInput
+} // namespace InputSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_DEVICECONTEXTDIRECTINPUT_A3771E91_HPP

@@ -19,6 +19,6 @@ enum class GamepadType: std::uint8_t {
     XboxOnePad,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GAMEPADTYPE_7A74879B_HPP

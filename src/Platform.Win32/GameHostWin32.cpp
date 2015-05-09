@@ -49,8 +49,7 @@ namespace {
 static void MessagePump()
 {
     MSG msg;
-    while (0 != ::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-    {
+    while (0 != ::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
         ::TranslateMessage(&msg);
         ::DispatchMessage(&msg);
     }
@@ -258,13 +257,11 @@ void GameHostWin32::Impl::DoEvents()
 //-----------------------------------------------------------------------
 void GameHostWin32::Impl::ProcessSystemEvents(Event const& event)
 {
-    if (event.Is<WindowShouldCloseEvent>())
-    {
+    if (event.Is<WindowShouldCloseEvent>()) {
         Log::Internal("WindowShouldCloseEvent");
         this->Exit();
     }
-    else if (event.Is<ViewDidEndLiveResizeEvent>())
-    {
+    else if (event.Is<ViewDidEndLiveResizeEvent>()) {
         surfaceResizeRequest = true;
     }
 }

@@ -58,4 +58,4 @@ void KeyboardState::ClearAllKeys()
     POMDOG_ASSERT(keyset.none());
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

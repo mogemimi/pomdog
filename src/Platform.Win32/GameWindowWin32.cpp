@@ -25,7 +25,7 @@ static LPSTR MakeIntegerResource(T && resource)
 #pragma warning(pop)
 }
 //-----------------------------------------------------------------------
-static LPCTSTR ToStandardCursorID(MouseCursor cursor)
+static LPCTSTR ToStandardCursorID(MouseCursor cursor) noexcept
 {
     switch (cursor) {
     case MouseCursor::Arrow: return IDC_ARROW;
@@ -37,9 +37,9 @@ static LPCTSTR ToStandardCursorID(MouseCursor cursor)
     return IDC_ARROW;
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
-class GameWindowWin32::Impl {
+class GameWindowWin32::Impl final {
 public:
     Impl(HINSTANCE hInstance, int nCmdShow,
         HICON icon, HICON iconSmall, bool useOpenGL,
@@ -268,7 +268,7 @@ void GameWindowWin32::Impl::SetClientBounds(Rectangle const& clientBoundsIn)
 
     DWORD const dwStyle = static_cast<DWORD>(::GetWindowLong(windowHandle, GWL_STYLE));
 
-    RECT windowRect = { 0, 0, static_cast<LONG>(clientBoundsIn.Width), static_cast<LONG>(clientBoundsIn.Height) };
+    RECT windowRect = { 0, 0, clientBoundsIn.Width, clientBoundsIn.Height };
 
     AdjustWindowRect(&windowRect, dwStyle, FALSE);
 
@@ -312,7 +312,8 @@ void GameWindowWin32::Impl::SetMouseCursor(MouseCursor cursorIn)
     }
 }
 //-----------------------------------------------------------------------
-LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
+    HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     auto window = reinterpret_cast<GameWindowWin32::Impl*>(::GetWindowLong(hWnd, GWL_USERDATA));
 
@@ -479,6 +480,6 @@ HWND GameWindowWin32::NativeWindowHandle() const
     return impl->windowHandle;
 }
 //-----------------------------------------------------------------------
-}// namespace Win32
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Win32
+} // namespace Detail
+} // namespace Pomdog

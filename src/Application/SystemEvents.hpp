@@ -64,7 +64,7 @@ struct ScrollWheelEvent {
     double ScrollingDeltaY;
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SYSTEMEVENTS_7D649F10_HPP

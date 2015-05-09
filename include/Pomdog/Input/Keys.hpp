@@ -403,6 +403,6 @@ enum class Keys: std::uint8_t {
     CloseBracket = 124,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_KEYS_13ECB5F8_HPP
