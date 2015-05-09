@@ -10,6 +10,7 @@
 #include "Pomdog/Utility/Optional.hpp"
 #include <objbase.h>
 #include <string>
+#include <array>
 
 namespace Pomdog {
 namespace Detail {
@@ -35,6 +36,40 @@ static LPCTSTR ToStandardCursorID(MouseCursor cursor) noexcept
     case MouseCursor::ResizeVertical: return IDC_SIZENS;
     }
     return IDC_ARROW;
+}
+//-----------------------------------------------------------------------
+static void RegisterInputDevices(HWND windowHandle)
+{
+#ifndef HID_USAGE_PAGE_GENERIC
+#define HID_USAGE_PAGE_GENERIC ((USHORT) 0x01)
+#endif
+#ifndef HID_USAGE_GENERIC_MOUSE
+#define HID_USAGE_GENERIC_MOUSE ((USHORT) 0x02)
+#endif
+#ifndef HID_USAGE_GENERIC_KEYBOARD
+#define HID_USAGE_GENERIC_KEYBOARD ((USHORT) 0x06)
+#endif
+
+    std::array<RAWINPUTDEVICE, 2> inputDevices;
+
+    auto & mouse = inputDevices[0];
+    mouse.usUsagePage = HID_USAGE_PAGE_GENERIC;
+    mouse.usUsage = HID_USAGE_GENERIC_MOUSE;
+    mouse.dwFlags = 0;
+    mouse.hwndTarget = windowHandle;
+
+    auto & keyboard = inputDevices[1];
+    keyboard.usUsagePage = HID_USAGE_PAGE_GENERIC;
+    keyboard.usUsage = HID_USAGE_GENERIC_KEYBOARD;
+    keyboard.dwFlags = 0;
+    keyboard.hwndTarget = windowHandle;
+
+    BOOL success = RegisterRawInputDevices(
+        inputDevices.data(), inputDevices.size(), sizeof(inputDevices[0]));
+
+    if (success == FALSE) {
+        ///@todo throw exception
+    }
 }
 
 } // unnamed namespace
@@ -194,6 +229,8 @@ GameWindowWin32::Impl::Impl(HINSTANCE hInstance, int nCmdShow,
     }
 
     ::SetWindowLong(windowHandle, GWL_USERDATA, reinterpret_cast<LONG_PTR>(this));
+
+    RegisterInputDevices(windowHandle);
 }
 //-----------------------------------------------------------------------
 GameWindowWin32::Impl::~Impl()
@@ -387,6 +424,23 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
         if (hitTest == HTCLIENT && window->gameCursor) {
             SetCursor(*window->gameCursor);
             return FALSE;
+        }
+        break;
+    }
+    case WM_INPUT: {
+        if (window) {
+            static RAWINPUT raw;
+            UINT size = sizeof(raw);
+
+            GetRawInputData((HRAWINPUT)lParam, RID_INPUT,
+                &raw, &size, sizeof(RAWINPUTHEADER));
+
+            if (raw.header.dwType == RIM_TYPEMOUSE) {
+                window->eventQueue->Enqueue<RAWMOUSE>(raw.data.mouse);
+            }
+            else if (raw.header.dwType == RIM_TYPEKEYBOARD) {
+                window->eventQueue->Enqueue<RAWKEYBOARD>(raw.data.keyboard);
+            }
         }
         break;
     }

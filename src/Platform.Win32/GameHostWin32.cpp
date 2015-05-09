@@ -3,6 +3,8 @@
 
 #include "GameHostWin32.hpp"
 #include "GameWindowWin32.hpp"
+#include "KeyboardWin32.hpp"
+#include "MouseWin32.hpp"
 #include "../Application/SystemEvents.hpp"
 #include "../InputSystem/InputDeviceFactory.hpp"
 
@@ -108,8 +110,8 @@ private:
     std::shared_ptr<Pomdog::AudioEngine> audioEngine;
 
     std::unique_ptr<InputSystem::InputDeviceFactory> inputDeviceFactory;
-    std::shared_ptr<Pomdog::Keyboard> keyboard;
-    std::shared_ptr<Pomdog::Mouse> mouse;
+    std::shared_ptr<KeyboardWin32> keyboard;
+    std::shared_ptr<MouseWin32> mouse;
 
     Duration presentationInterval;
 
@@ -190,8 +192,8 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
     audioEngine = std::make_shared<Pomdog::AudioEngine>();
 
     POMDOG_ASSERT(inputDeviceFactory);
-    keyboard = inputDeviceFactory->CreateKeyboard(subsystemScheduler);
-    mouse = inputDeviceFactory->CreateMouse(subsystemScheduler);
+    keyboard = std::make_shared<KeyboardWin32>();
+    mouse = std::make_shared<MouseWin32>(window->NativeWindowHandle());
 
     {
         std::string rootDirectory = "Content";
@@ -263,6 +265,12 @@ void GameHostWin32::Impl::ProcessSystemEvents(Event const& event)
     }
     else if (event.Is<ViewDidEndLiveResizeEvent>()) {
         surfaceResizeRequest = true;
+    }
+    else if (auto keyboardEvent = event.As<RAWKEYBOARD>()) {
+        keyboard->HandleMessage(*keyboardEvent);
+    }
+    else if (auto mouseEvent = event.As<RAWMOUSE>()) {
+        mouse->HandleMessage(*mouseEvent);
     }
 }
 //-----------------------------------------------------------------------
