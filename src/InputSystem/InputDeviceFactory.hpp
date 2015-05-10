@@ -4,8 +4,6 @@
 #ifndef POMDOG_INPUTDEVICEFACTORY_60E2AEA5_HPP
 #define POMDOG_INPUTDEVICEFACTORY_60E2AEA5_HPP
 
-#include "KeyboardCreator.hpp"
-#include "MouseCreator.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include <memory>
 
@@ -23,17 +21,7 @@ public:
 
     //std::shared_ptr<Gamepad> CreateGamepad(SubsystemScheduler & scheduler);
 
-    std::shared_ptr<Keyboard> CreateKeyboard(SubsystemScheduler & scheduler);
-
-    std::shared_ptr<Mouse> CreateMouse(SubsystemScheduler & scheduler);
-
-    void AddCreator(std::unique_ptr<KeyboardCreator> && creator);
-
-    void AddCreator(std::unique_ptr<MouseCreator> && creator);
-
 private:
-    std::unique_ptr<KeyboardCreator> keyboardCreator;
-    std::unique_ptr<MouseCreator> mouseCreator;
 };
 
 }// namespace InputSystem

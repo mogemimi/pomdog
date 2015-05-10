@@ -5,8 +5,6 @@
 #include "GameHostWin32.hpp"
 #include "GameWindowWin32.hpp"
 #include "../InputSystem.DirectInput/DeviceContextDirectInput.hpp"
-#include "../InputSystem.DirectInput/KeyboardCreatorDirectInput.hpp"
-#include "../InputSystem.DirectInput/MouseCreatorDirectInput.hpp"
 #include "../InputSystem/InputDeviceFactory.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameHost.hpp"
@@ -99,17 +97,14 @@ void Bootstrap::Run(std::function<std::unique_ptr<Game>(
 
     auto inputDeviceFactory = std::make_unique<Detail::InputSystem::InputDeviceFactory>();
 
-    {
-        using namespace Detail::InputSystem::DirectInput;
-        auto deviceContext = std::make_shared<DeviceContextDirectInput>(
-            hInstance, gameWindow->NativeWindowHandle());
-
-        auto keyboardCreator = std::make_unique<KeyboardCreatorDirectInput>(deviceContext);
-        inputDeviceFactory->AddCreator(std::move(keyboardCreator));
-
-        auto mouseCreator = std::make_unique<MouseCreatorDirectInput>(deviceContext);
-        inputDeviceFactory->AddCreator(std::move(mouseCreator));
-    }
+    //{
+    //    using namespace Detail::InputSystem::DirectInput;
+    //    auto deviceContext = std::make_shared<DeviceContextDirectInput>(
+    //        hInstance, gameWindow->NativeWindowHandle());
+    //
+    //    auto gamepadCreator = std::make_unique<GamepadCreatorDirectInput>(deviceContext);
+    //    inputDeviceFactory->AddCreator(std::move(gamepadCreator));
+    //}
 
     auto gameHost = std::make_shared<GameHostWin32>(gameWindow,
         eventQueue, presentationParameters, std::move(inputDeviceFactory), useOpenGL);
