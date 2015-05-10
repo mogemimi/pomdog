@@ -21,6 +21,7 @@
 /build.xcodefiles
 /build.msvs
 /examples/QuickStart/build
+/test/FrameworkTest/build
 /test/TestApp/build
 /third-party
 /third-party/libpng/build

@@ -9,10 +9,10 @@ install:
   - git clone --depth=1 https://github.com/srz-zumix/iutest.git third-party/iutest
 
 script:
-  - tools/gyp/gyp build/unittest.gyp --depth=. -f xcode --generator-output=build.xcodefiles
-  - xcodebuild -project build.xcodefiles/build/unittest.xcodeproj clean
-  - xcodebuild -project build.xcodefiles/build/unittest.xcodeproj
-  - build/build/Release/unittest
+  - tools/gyp/gyp test/FrameworkTest/unittest.gyp --depth=. -f xcode --generator-output=build.xcodefiles
+  - xcodebuild -project build.xcodefiles/test/FrameworkTest/unittest.xcodeproj clean
+  - xcodebuild -project build.xcodefiles/test/FrameworkTest/unittest.xcodeproj
+  - test/FrameworkTest/build/Release/unittest
 
 notifications:
   email: false
