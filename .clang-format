@@ -13,5 +13,6 @@ AlwaysBreakTemplateDeclarations: true
 BreakConstructorInitializersBeforeComma: true
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None
+DerivePointerAlignment: true
 PointerAlignment: Left
 ...
