@@ -19,7 +19,7 @@
       },
     },
     'xcode_settings': {
-      'ONLY_ACTIVE_ARCH': 'YES',
+      'COMBINE_HIDPI_IMAGES': 'YES',
     },
     'default_configuration': 'Release',
     'configurations': {
@@ -45,6 +45,7 @@
         'xcode_settings': {
           'OTHER_CFLAGS': ['-g'],
           'GCC_OPTIMIZATION_LEVEL': '0', # -O0
+          'ONLY_ACTIVE_ARCH': 'YES',
         },
       }, # Debug
       'Release': {

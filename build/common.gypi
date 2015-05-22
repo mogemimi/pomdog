@@ -28,6 +28,9 @@
         ],
       },
     },
+    'xcode_settings': {
+      'COMBINE_HIDPI_IMAGES': 'YES',
+    },
     'default_configuration': 'Release',
     'configurations': {
       'Debug': {
