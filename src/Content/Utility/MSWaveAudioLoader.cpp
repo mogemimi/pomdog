@@ -13,8 +13,8 @@
 #include <AudioToolbox/AudioConverter.h>
 #include <vector>
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-#include "MakeFourCC.hpp"
 #include "../../SoundSystem.XAudio2/AudioClipXAudio2.hpp"
+#include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include <mmsystem.h>
 #endif

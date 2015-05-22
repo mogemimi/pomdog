@@ -2,9 +2,9 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "DDSTextureReader.hpp"
-#include "MakeFourCC.hpp"
-#include "BinaryReader.hpp"
 #include "Pomdog/Basic/Platform.hpp"
+#include "Pomdog/Content/Utility/BinaryReader.hpp"
+#include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
