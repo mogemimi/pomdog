@@ -18,6 +18,7 @@ std::vector<Detail::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack
     char const* name)
 {
     using namespace Detail::Skeletal2D;
+    using Detail::CRC32;
 
     auto iter = std::find_if(std::begin(desc.AnimationClips), std::end(desc.AnimationClips),
         [name](AnimationClipDesc const& clip){ return clip.Name == name; });
@@ -36,7 +37,7 @@ std::vector<Detail::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack
 
     for (auto & animationTrack: animationClip.SlotTracks)
     {
-        auto slotIndex = Hashing::CRC32::BlockChecksum(animationTrack.SlotName.data(), animationTrack.SlotName.size());
+        auto slotIndex = CRC32::ComputeCRC32(animationTrack.SlotName);
 
         if (!animationTrack.AttachmentSamples.empty())
         {

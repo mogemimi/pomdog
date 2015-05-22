@@ -16,6 +16,7 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
 {
     using TexturePacker::TextureAtlas;
     using TexturePacker::TextureAtlasRegion;
+    using Detail::CRC32;
 
     std::vector<RigidSlot> slots;
     slots.reserve(slotDescs.size());
@@ -94,7 +95,7 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
 
         POMDOG_ASSERT(slotDesc.Joint);
         slot.JointIndex = slotDesc.Joint;
-        slot.HashId = Hashing::CRC32::BlockChecksum(slotDesc.Name.data(), slotDesc.Name.size());
+        slot.HashId = CRC32::ComputeCRC32(slotDesc.Name);
 
         slot.Color = Color::White;
         slot.DrawOrder = drawOrder;
