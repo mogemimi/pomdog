@@ -3,15 +3,13 @@
 
 #include "VoxModelLoader.hpp"
 #include "detail/VoxChunkHeader.hpp"
+#include "Pomdog/Content/Utility/BinaryReader.hpp"
+#include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <fstream>
 #include <algorithm>
 #include <utility>
-
-///@todo badcode
-#include <Pomdog/../../src/Content/Utility/MakeFourCC.hpp>
-#include <Pomdog/../../src/Content/Utility/BinaryReader.hpp>
 
 namespace Pomdog {
 namespace MagicaVoxel {

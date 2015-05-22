@@ -2,11 +2,11 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Content/detail/AssetLoaders/Texture2DLoader.hpp"
-#include "../Utility/MakeFourCC.hpp"
-#include "../Utility/BinaryReader.hpp"
 #include "../Utility/DDSTextureReader.hpp"
 #include "../Utility/PNGTextureReader.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
+#include "Pomdog/Content/Utility/BinaryReader.hpp"
+#include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <fstream>

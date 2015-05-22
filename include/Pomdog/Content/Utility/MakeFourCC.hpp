@@ -11,7 +11,7 @@ namespace Pomdog {
 namespace Detail {
 
 template <typename Character>
-constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Character c3)
+constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Character c3) noexcept
 {
     static_assert(std::is_integral<Character>::value, "");
     static_assert(sizeof(Character) == 1, "");
@@ -23,7 +23,7 @@ constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Cha
         | (static_cast<std::uint32_t>(c3) << 24);
 }
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_MAKEFOURCC_ED6FB253_HPP

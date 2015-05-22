@@ -4,14 +4,12 @@
 #include "VoxModelExporter.hpp"
 #include "detail/VoxChunkHeader.hpp"
 #include "VoxModel.hpp"
+#include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <fstream>
 #include <algorithm>
 #include <utility>
-
-///@todo badcode
-#include <Pomdog/../../src/Content/Utility/MakeFourCC.hpp>
 
 namespace Pomdog {
 namespace MagicaVoxel {

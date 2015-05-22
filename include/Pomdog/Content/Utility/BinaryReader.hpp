@@ -72,7 +72,7 @@ struct POMDOG_EXPORT BinaryReader {
     }
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_BINARYREADER_80B251B8_HPP
