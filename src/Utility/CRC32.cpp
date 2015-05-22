@@ -6,8 +6,7 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Hashing {
-namespace CRC32 {
+namespace Detail {
 namespace {
 
 //
@@ -18,7 +17,7 @@ namespace {
 #if defined(POMDOG_CRC32_CREATE_CRC_TABLE)
 
 // if you need to make crc32 table:
-static std::array<std::uint32_t, 256U> MakeCRCTable()
+std::array<std::uint32_t, 256U> MakeCRCTable() noexcept
 {
 #if defined(POMDOG_CRC32_MAKE_XOR_PATTERN_FROM_POLYNOMIAL)
     constexpr std::array<std::uint8_t, 14> p = {{
@@ -31,7 +30,7 @@ static std::array<std::uint32_t, 256U> MakeCRCTable()
     }
 #else
     constexpr std::uint32_t poly = 0xedb88320L;
-#endif // defined(POMDOG_CRC32_MAKE_XOR_PATTERN_FROM_POLYNOMIAL)
+#endif // POMDOG_CRC32_MAKE_XOR_PATTERN_FROM_POLYNOMIAL
 
     std::array<std::uint32_t, 256U> crctable;
 
@@ -49,7 +48,7 @@ static std::array<std::uint32_t, 256U> MakeCRCTable()
 
 static const std::array<std::uint32_t, 256U> crctable = MakeCRCTable();
 
-#else // !defined(POMDOG_CRC32_CREATE_CRC_TABLE)
+#else // POMDOG_CRC32_CREATE_CRC_TABLE
 
 static constexpr std::array<std::uint32_t, 256U> crctable =
 {{
@@ -118,36 +117,41 @@ static constexpr std::array<std::uint32_t, 256U> crctable =
     0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94,
     0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
 }};
-#endif // !defined(POMDOG_CRC32_CREATE_CRC_TABLE)
+#endif // POMDOG_CRC32_CREATE_CRC_TABLE
 
 static constexpr std::uint32_t InitValueCRC32 = 0xffffffffUL;
 static constexpr std::uint32_t XorValueCRC32 = 0xffffffffUL;
 
-static void UpdateChecksum(std::uint32_t & crcvalue, std::uint8_t const* data, std::size_t length)
+void UpdateChecksum(std::uint32_t & crcvalue, std::uint8_t const* data, std::size_t length) noexcept
 {
     std::uint32_t crc = crcvalue;
-    while (length--)
-    {
+    while (length--) {
         crc = crctable[(crc ^ (*data++)) & 0xff] ^ (crc >> 8);
     }
     crcvalue = crc;
 }
 
-static void FinishChecksum(std::uint32_t & crcvalue)
+void FinishChecksum(std::uint32_t & crcvalue) noexcept
 {
     crcvalue ^= XorValueCRC32;
 }
 
-}// unnamed namespace
-
-std::uint32_t BlockChecksum(void const* data, std::size_t length)
+std::uint32_t BlockChecksum(void const* data, std::size_t length, std::uint32_t crc) noexcept
 {
-    std::uint32_t crc = InitValueCRC32;
+    if (data == nullptr || length <= 0) {
+        return crc;
+    }
     UpdateChecksum(crc, reinterpret_cast<std::uint8_t const*>(data), length);
     FinishChecksum(crc);
     return crc;
 }
 
-}// namespace CRC32
-}// namespace Hashing
-}// namespace Pomdog
+} // unnamed namespace
+
+std::uint32_t CRC32::ComputeCRC32(void const* data, std::size_t length) noexcept
+{
+    return BlockChecksum(data, length, InitValueCRC32);
+}
+
+} // namespace Detail
+} // namespace Pomdog

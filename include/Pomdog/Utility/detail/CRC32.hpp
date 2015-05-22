@@ -5,18 +5,27 @@
 #define POMDOG_CRC32_7EBEE5EE_HPP
 
 #include "Pomdog/Basic/Export.hpp"
+#include <string>
 #include <cstdint>
 #include <cstddef>
+#include <type_traits>
 
 namespace Pomdog {
-namespace Hashing {
+namespace Detail {
 
 // CRC-32 (Cyclic Redundancy Check for 32bit)
-namespace CRC32 {
-    std::uint32_t POMDOG_EXPORT BlockChecksum(void const* data, std::size_t length);
-}
+struct POMDOG_EXPORT CRC32 {
+    static std::uint32_t ComputeCRC32(void const* data, std::size_t length) noexcept;
 
-}// namespace Hashing
-}// namespace Pomdof
+    template <typename CharT>
+    static std::uint32_t ComputeCRC32(std::basic_string<CharT> const& data) noexcept
+    {
+        static_assert(std::is_integral<CharT>::value, "You can only use integral types");
+        return ComputeCRC32(data.data(), data.length() * sizeof(CharT));
+    }
+};
+
+} // namespace Detail
+} // namespace Pomdof
 
 #endif // POMDOG_CRC32_7EBEE5EE_HPP

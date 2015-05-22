@@ -75,6 +75,7 @@
         'Signals/ScopedConnectionTest.cpp',
         'Signals/SignalTest.cpp',
         'Utility/AnyTest.cpp',
+        'Utility/CRC32Test.cpp',
         'Utility/OptionalTest.cpp',
         'Utility/StringFormatTest.cpp',
       ],
