@@ -4,11 +4,8 @@
 #ifndef POMDOG_VERSION_805A8424_HPP
 #define POMDOG_VERSION_805A8424_HPP
 
-namespace Pomdog {
-
-///@brief yyyy mm dd (year, month and day)
-#define POMDOG_INTERNAL_VERSION 20150401L
-
-} // namespace Pomdog
+#define POMDOG_MAJOR_VERSION 0
+#define POMDOG_MINOR_VERSION 0
+#define POMDOG_PATCH_VERSION 1
 
 #endif // POMDOG_VERSION_805A8424_HPP
