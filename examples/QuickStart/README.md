@@ -62,15 +62,22 @@ xcodebuild -project Build.xcodefiles/QuickStart.xcodeproj -configuration Release
 open build/Release/QuickStart.app
 ```
 
-### Building under Win32 and Visual Studio
+### Building under Visual Studio 2015
 
-Generate the Visual Studio project file:
+Generate the Visual Studio project files:
+
+**PowerShell**
+
+```powershell
+python Pomdog/tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f msvs `
+    -G msvs_version=2015 --generator-output=Build.msvs
+```
+
+**Git Bash (MinGW)**
 
 ```shell
 python Pomdog/tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f msvs \
-  -G msvs_version=2015 \
-  --generator-output=Build.msvs \
-  -Dcomponent=static_library
+    -G msvs_version=2015 --generator-output=Build.msvs
 ```
 
 Open `Build.msvs/QuickStart.sln` in Visual Studio and build your app.
@@ -79,4 +86,4 @@ at `Configuration Properties > Debugging > Working Directory` in Visual Studio:
 
 |||
 |:----|:----|
-|Working Directory|`$(ProjectDir)..\..`|
+|Working Directory|`$(ProjectDir)..`|

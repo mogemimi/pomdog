@@ -3,6 +3,7 @@
 
 import sys
 import os
+import platform
 import argparse
 import subprocess
 import uuid
@@ -21,6 +22,12 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+
+def ConsoleColorText(color, text):
+    if platform.system() == 'Windows':
+        return text
+    return color + text + bcolors.ENDC
 
 
 def CreateProjectDirectory(path):
@@ -76,10 +83,14 @@ def CopyFrameworkFiles(framework_root, project_root):
         "third-party/glew",
         "third-party/zlib",
         "third-party/libpng",
-        "tools/gyp",
         "LICENSE.md",
         "README.md",
         ".gitignore",
+        "tools/gyp/pylib",
+        "tools/gyp/gyp",
+        "tools/gyp/gyp.bat",
+        "tools/gyp/gyp_main.py",
+        "tools/gyp/setup.py",
     ]
 
     for path in framework_list:
@@ -142,7 +153,7 @@ def RenameFilename(project_root, identifier, source):
 
 def GitCloneRepository(url, dest):
     command = ' '.join(["git clone --depth=1", url, dest])
-    print(bcolors.OKBLUE + command + bcolors.ENDC)
+    print(ConsoleColorText(bcolors.OKBLUE, command))
     process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
     message = process.communicate()[0]
     return message
@@ -197,11 +208,9 @@ def CreateNewProject(config):
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.cpp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.hpp')
 
-    print(bcolors.OKGREEN + 'Create a new project at \'' + bcolors.ENDC
-        + bcolors.BOLD + project_root + bcolors.ENDC
-        + bcolors.OKGREEN
-        + '\'.'
-        + bcolors.ENDC)
+    print(ConsoleColorText(bcolors.OKGREEN, 'Create a new project at \'')
+        + ConsoleColorText(bcolors.BOLD, project_root)
+        + ConsoleColorText(bcolors.OKGREEN, '\'.'))
 
 
 def ReadInput(prompt):
@@ -212,7 +221,7 @@ def ReadInput(prompt):
 
 def Ask(question, default=None):
     result = ''
-    question = bcolors.OKGREEN + question + bcolors.ENDC
+    question = ConsoleColorText(bcolors.OKGREEN, question)
     while True:
         if default:
             result = ReadInput('> {0} [{1}] '.format(question, default))
@@ -226,7 +235,7 @@ def Ask(question, default=None):
                 result = default
                 break
             else:
-                print(bcolors.WARNING + 'You must enter something' + bcolors.ENDC)
+                print(ConsoleColorText(bcolors.WARNING, 'You must enter something'))
         else:
             break
     return result
@@ -253,7 +262,7 @@ def main():
     config['url'] = Ask('What is your project URL?', config['url'])
 
     CreateNewProject(config)
-    print(bcolors.OKGREEN + 'Done.' + bcolors.ENDC)
+    print(ConsoleColorText(bcolors.OKGREEN, 'Done.'))
 
 
 if __name__ == '__main__':
