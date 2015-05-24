@@ -1,42 +1,48 @@
 # QuickStart
 
-## Requirements
+## Prerequisites
 
-* Mac OS X 10.9+ and Windows 8+
-* Xcode 6.0+ (Apple LLVM 6.0/Clang 3.5)
-* Visual Studio 2015 (CTP6 and later)
-* OpenGL 4, Direct3D 11 or Direct3D 12
-* Python 2.7+
+#### Runtime requirements
 
-## How to build
+* Mac OS X 10.9+
+* Windows 8+
+* OpenGL 4, DirectX 11 or DirectX 12
 
-### Pulling all dependencies using Git
+#### Build requirements
+
+* Python 2.7
+* Xcode 6.3 and later
+* Visual Studio 2015 and later
+
+#### Pulling all dependencies using Git
 
 Make sure git is installed.
 From the root of your project directory, run:
 
 ```shell
 cd QuickStart
-git clone https://github.com/mogemimi/pomdog.git Pomdog
-git clone https://github.com/mogemimi/pomdog-third-party.git Pomdog/third-party
-git clone https://chromium.googlesource.com/external/gyp.git Tools/gyp
+git clone --depth=1 https://github.com/mogemimi/pomdog.git Pomdog
+git clone --depth=1 https://github.com/mogemimi/pomdog-third-party.git Pomdog/third-party
+git clone --depth=1 https://chromium.googlesource.com/external/gyp.git Pomdog/tools/gyp
 ```
+
+## How to build
 
 ### Building under Mac OS X and Xcode
 
 **1. Generating the Xcode project file**
 
 ```shell
-python Tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
+python Pomdog/tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
 ```
 
-You can also use `gyp` instead of `python Tools/gyp/gyp_main.py`:
+You can also use `gyp` instead of `python Pomdog/tools/gyp/gyp_main.py`:
 
 ```shell
 gyp QuickStart.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
 ```
 
-For information on how to install gyp, see [How to Install GYP](https://github.com/mogemimi/pomdog/wiki/How-to-Install-GYP) on the wiki.
+For information on how to install gyp, please see [How to Install GYP](https://github.com/mogemimi/pomdog/wiki/How-to-Install-GYP) on the GitHub wiki.
 
 **2. Building (Release/Debug)**
 
@@ -61,7 +67,7 @@ open build/Release/QuickStart.app
 Generate the Visual Studio project file:
 
 ```shell
-Tools/gyp/gyp QuickStart.gyp --depth=. -f msvs \
+python Pomdog/tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f msvs \
   -G msvs_version=2015 \
   --generator-output=Build.msvs \
   -Dcomponent=static_library
@@ -71,5 +77,6 @@ Open `Build.msvs/QuickStart.sln` in Visual Studio and build your app.
 To run your app, change QuickStart project property to the following
 at `Configuration Properties > Debugging > Working Directory` in Visual Studio:
 
+|||
 |:----|:----|
 |Working Directory|`$(ProjectDir)..\..`|

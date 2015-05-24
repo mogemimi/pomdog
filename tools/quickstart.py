@@ -12,6 +12,17 @@ import shutil
 from string import Template
 
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 def CreateProjectDirectory(path):
     if os.path.exists(path):
         print("Error: {0} is exists".format(path))
@@ -65,6 +76,7 @@ def CopyFrameworkFiles(framework_root, project_root):
         "third-party/glew",
         "third-party/zlib",
         "third-party/libpng",
+        "tools/gyp",
         "LICENSE.md",
         "README.md",
         ".gitignore",
@@ -128,16 +140,46 @@ def RenameFilename(project_root, identifier, source):
     if source != dest:
         os.rename(path, dest)
 
+def GitCloneRepository(url, dest):
+    command = ' '.join(["git clone --depth=1", url, dest])
+    print(bcolors.OKBLUE + command + bcolors.ENDC)
+    process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+    message = process.communicate()[0]
+    return message
+
+
+def NormalizePath(path):
+    return os.path.normpath(path)
+
 
 def CreateNewProject(config):
     identifier = os.path.basename(config['name'])
-    project_root = os.path.join(config['path'], identifier)
+    project_root = NormalizePath(os.path.join(config['path'], identifier))
     CreateProjectDirectory(project_root)
     project_url = config['url']
 
-    framework_root = os.path.join(os.path.dirname(__file__), "..")
-    templates_directory = os.path.join(framework_root,
-      'examples/QuickStart')
+    framework_root = NormalizePath(os.path.join(os.path.dirname(__file__), ".."))
+    templates_directory = NormalizePath(
+        os.path.join(framework_root, 'examples/QuickStart'))
+
+    thirdPartyPath = NormalizePath(os.path.join(framework_root, 'third-party'))
+    gypPath = NormalizePath(os.path.join(framework_root, 'tools/gyp'))
+
+    if not os.path.exists(thirdPartyPath):
+        repositoryUrl = "https://github.com/mogemimi/pomdog-third-party.git"
+        GitCloneRepository(repositoryUrl, thirdPartyPath)
+
+    if not os.path.isdir(thirdPartyPath):
+        print("Error: {0} is not directory".format(thirdPartyPath))
+        return
+
+    if not os.path.exists(gypPath):
+        repositoryUrl = "https://chromium.googlesource.com/external/gyp.git"
+        GitCloneRepository(repositoryUrl, gypPath)
+
+    if not os.path.isdir(gypPath):
+        print("Error: {0} is not directory".format(gypPath))
+        return
 
     CopyTemplates(templates_directory, project_root)
     CopyFrameworkFiles(framework_root, project_root)
@@ -155,6 +197,12 @@ def CreateNewProject(config):
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.cpp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.hpp')
 
+    print(bcolors.OKGREEN + 'Create a new project at \'' + bcolors.ENDC
+        + bcolors.BOLD + project_root + bcolors.ENDC
+        + bcolors.OKGREEN
+        + '\'.'
+        + bcolors.ENDC)
+
 
 def ReadInput(prompt):
     #if six.PY3:
@@ -164,6 +212,7 @@ def ReadInput(prompt):
 
 def Ask(question, default=None):
     result = ''
+    question = bcolors.OKGREEN + question + bcolors.ENDC
     while True:
         if default:
             result = ReadInput('> {0} [{1}] '.format(question, default))
@@ -177,7 +226,7 @@ def Ask(question, default=None):
                 result = default
                 break
             else:
-                print('You must enter something')
+                print(bcolors.WARNING + 'You must enter something' + bcolors.ENDC)
         else:
             break
     return result
@@ -196,7 +245,7 @@ def main():
     config['path'] = Ask('Where do you want to create your new gamedev project?',
         config['path'])
 
-    config['name'] = Ask('What is your project name? (ex. MyGame)')
+    config['name'] = Ask('What is your project name? (e.g. MyGame)')
 
     config['name'] = os.path.basename(config['name'])
     config['url'] = config['url'].replace('QuickStart', config['name'])
@@ -204,7 +253,7 @@ def main():
     config['url'] = Ask('What is your project URL?', config['url'])
 
     CreateNewProject(config)
-    print('Done.')
+    print(bcolors.OKGREEN + 'Done.' + bcolors.ENDC)
 
 
 if __name__ == '__main__':
