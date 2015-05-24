@@ -1,4 +1,4 @@
-Pomdog is made available under the MIT license:
+Pomdog is made available under the [MIT License](http://opensource.org/licenses/MIT):
 
 ```
 Copyright (c) 2013-2015 mogemimi (mogemimi at enginetrouble.net)
