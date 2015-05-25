@@ -1,7 +1,7 @@
 {
   'includes': ['common.gypi'],
   'variables': {
-    'pomdog_dir%': 'Pomdog',
+    'pomdog_dir%': 'ThirdParty/pomdog',
   },
   'target_defaults': {
     'msbuild_settings': {

@@ -51,8 +51,21 @@ def ParsingCommandLineAraguments():
     return args
 
 
-def CopyTemplates(template_directory, project_root):
-    templates_list = [
+def CopySourceFiles(sourceRoot, destRoot, filePaths):
+    for path in filePaths:
+        sourcePath = os.path.join(sourceRoot, path)
+        destPath = os.path.join(destRoot, path)
+
+        if os.path.isdir(sourcePath):
+            shutil.copytree(sourcePath, destPath)
+        elif os.path.exists(sourcePath):
+            shutil.copy(sourcePath, destPath)
+        else:
+            print("Error: Cannot find file {0}".format(sourcePath))
+
+
+def CopyTemplates(templateDirectory, projectRoot):
+    templateFiles = [
         "Content",
         "Platform.Cocoa",
         "Platform.Win32",
@@ -62,47 +75,42 @@ def CopyTemplates(template_directory, project_root):
         "QuickStart.gyp",
         "README.md",
     ]
-
-    for path in templates_list:
-        source_path = os.path.join(template_directory, path)
-        dest_path = os.path.join(project_root, path)
-
-        if os.path.isdir(source_path):
-            shutil.copytree(source_path, dest_path)
-        elif os.path.exists(source_path):
-            shutil.copy(source_path, dest_path)
-        else:
-            print("Error: Cannot find file {0}".format(source_path))
+    CopySourceFiles(templateDirectory, projectRoot, templateFiles)
 
 
-def CopyFrameworkFiles(framework_root, project_root):
-    framework_list = [
+def CopyFrameworkFiles(frameworkRoot, projectRoot):
+    sourceFiles = [
         "build",
         "include",
         "src",
-        "third-party/glew",
-        "third-party/zlib",
-        "third-party/libpng",
         "LICENSE.md",
         "README.md",
         ".gitignore",
-        "tools/gyp/pylib",
-        "tools/gyp/gyp",
-        "tools/gyp/gyp.bat",
-        "tools/gyp/gyp_main.py",
-        "tools/gyp/setup.py",
     ]
-
-    for path in framework_list:
-        source_path = os.path.join(framework_root, path)
-        dest_path = os.path.join(project_root, "Pomdog/" + path)
-
-        if os.path.isdir(source_path):
-            shutil.copytree(source_path, dest_path)
-        elif os.path.exists(source_path):
-            shutil.copy(source_path, dest_path)
-        else:
-            print("Error: Cannot find file {0}".format(source_path))
+    thirdPartyFiles = [
+        "glew",
+        "zlib",
+        "libpng",
+    ]
+    minimumGypFiles = [
+        "pylib",
+        "gyp",
+        "gyp.bat",
+        "gyp_main.py",
+        "setup.py",
+    ]
+    CopySourceFiles(
+        frameworkRoot,
+        os.path.join(projectRoot, "ThirdParty/pomdog"),
+        sourceFiles)
+    CopySourceFiles(
+        os.path.join(frameworkRoot, "third-party"),
+        os.path.join(projectRoot, "ThirdParty/pomdog/third-party"),
+        thirdPartyFiles)
+    CopySourceFiles(
+        os.path.join(frameworkRoot, "tools/gyp"),
+        os.path.join(projectRoot, "Tools/gyp"),
+        minimumGypFiles)
 
 
 def RenameSourceContent(project_root, identifier, source):
@@ -150,6 +158,7 @@ def RenameFilename(project_root, identifier, source):
     dest = os.path.join(project_root, source.replace('QuickStart', identifier))
     if source != dest:
         os.rename(path, dest)
+
 
 def GitCloneRepository(url, dest):
     command = ' '.join(["git clone --depth=1", url, dest])

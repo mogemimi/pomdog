@@ -21,9 +21,9 @@ From the root of your project directory, run:
 
 ```shell
 cd QuickStart
-git clone --depth=1 https://github.com/mogemimi/pomdog.git Pomdog
-git clone --depth=1 https://github.com/mogemimi/pomdog-third-party.git Pomdog/third-party
-git clone --depth=1 https://chromium.googlesource.com/external/gyp.git Pomdog/tools/gyp
+git clone --depth=1 https://github.com/mogemimi/pomdog.git ThirdParty/pomdog
+git clone --depth=1 https://github.com/mogemimi/pomdog-third-party.git ThirdParty/pomdog/third-party
+git clone --depth=1 https://chromium.googlesource.com/external/gyp.git Tools/gyp
 ```
 
 ## How to build
@@ -33,10 +33,10 @@ git clone --depth=1 https://chromium.googlesource.com/external/gyp.git Pomdog/to
 **1. Generating the Xcode project file**
 
 ```shell
-python Pomdog/tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
+python Tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
 ```
 
-You can also use `gyp` instead of `python Pomdog/tools/gyp/gyp_main.py`:
+You can also use `gyp` instead of `python Tools/gyp/gyp_main.py`:
 
 ```shell
 gyp QuickStart.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
@@ -69,14 +69,14 @@ Generate the Visual Studio project files:
 **PowerShell**
 
 ```powershell
-python Pomdog/tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f msvs `
+python Tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f msvs `
     -G msvs_version=2015 --generator-output=Build.msvs
 ```
 
 **Git Bash (MinGW)**
 
 ```shell
-python Pomdog/tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f msvs \
+python Tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f msvs \
     -G msvs_version=2015 --generator-output=Build.msvs
 ```
 

@@ -20,6 +20,6 @@
 /Build/Release
 /Build.xcodefiles
 /Build.msvs
+/ThirdParty/pomdog
 /Tools/gyp
 /Tools/python
-/Pomdog
