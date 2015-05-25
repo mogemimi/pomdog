@@ -1,6 +1,7 @@
 {
   'includes': ['common.gypi'],
   'variables': {
+    'pomdog_third_party_dir%': '../third-party',
     'pomdog_expr_dir': '../experimental/Pomdog.Experimental',
     'pomdog_experimental_sources': [
       '<@(pomdog_expr_dir)/Experimental.hpp',
@@ -315,13 +316,13 @@
       'product_name': 'pomdog_experimental',
       'type': 'static_library',
       'dependencies': [
-        '../third-party/lua/lua.gyp:lua_static',
+        '<@(pomdog_third_party_dir)/lua/lua.gyp:lua_static',
       ],
       'include_dirs': [
         '../experimental',
         '../include',
-        '../third-party/rapidjson/include',
-        '../third-party/lua/src',
+        '<@(pomdog_third_party_dir)/rapidjson/include',
+        '<@(pomdog_third_party_dir)/lua/src',
       ],
       'sources': [
         '<@(pomdog_experimental_sources)',

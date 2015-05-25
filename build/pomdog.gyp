@@ -31,6 +31,7 @@
     }],
   ],
   'variables': {
+    'pomdog_third_party_dir%': '../third-party',
     'pomdog_library_core_sources': [
       '../include/Pomdog/Application/Duration.hpp',
       '../include/Pomdog/Application/Game.hpp',
@@ -410,11 +411,11 @@
   },
   'target_defaults': {
     'dependencies': [
-      '../third-party/libpng/libpng.gyp:libpng_static',
+      '<@(pomdog_third_party_dir)/libpng/libpng.gyp:libpng_static',
     ],
     'include_dirs': [
       '../include',
-      '../third-party/libpng',
+      '<@(pomdog_third_party_dir)/libpng',
     ],
     'sources': [
       '<@(pomdog_library_core_sources)',
@@ -491,10 +492,10 @@
           'GLEW_STATIC',
         ],
         'dependencies': [
-          '../third-party/glew/glew.gyp:glew_static',
+          '<@(pomdog_third_party_dir)/glew/glew.gyp:glew_static',
         ],
         'include_dirs': [
-          '../third-party/glew/include',
+          '<@(pomdog_third_party_dir)/glew/include',
         ],
         'link_settings': {
           'libraries': [
