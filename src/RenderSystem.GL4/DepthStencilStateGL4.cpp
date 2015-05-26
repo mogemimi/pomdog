@@ -73,7 +73,7 @@ static void ToDepthStencilFaceOperationGL4(DepthStencilOperation const& face,
     result.stencilPass = ToStencilOperationGL4(face.StencilPass);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 DepthStencilStateGL4::DepthStencilStateGL4(DepthStencilDescription const& description)
     : depthFunction(ToComparisonFunctionGL4(description.DepthBufferFunction))

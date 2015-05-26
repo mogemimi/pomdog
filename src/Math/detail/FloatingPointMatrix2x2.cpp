@@ -221,5 +221,5 @@ template class FloatingPointMatrix2x2<long double>;
 template FloatingPointMatrix2x2<long double> operator*<long double>(long double, FloatingPointMatrix2x2<long double> const&);
 #endif
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

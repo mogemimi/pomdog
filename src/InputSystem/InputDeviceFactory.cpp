@@ -12,6 +12,6 @@ namespace InputSystem {
 //-----------------------------------------------------------------------
 InputDeviceFactory::~InputDeviceFactory() = default;
 //-----------------------------------------------------------------------
-}// namespace InputSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace InputSystem
+} // namespace Detail
+} // namespace Pomdog

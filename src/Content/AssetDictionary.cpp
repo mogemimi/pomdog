@@ -15,5 +15,5 @@ void AssetDictionary::Unload()
     assets.clear();
 }
 //-----------------------------------------------------------------------
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

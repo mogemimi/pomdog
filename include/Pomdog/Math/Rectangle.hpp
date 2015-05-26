@@ -68,6 +68,6 @@ public:
     bool Intersects(Rectangle const& rectangle) const;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_RECTANGLE_4B874E7C_HPP

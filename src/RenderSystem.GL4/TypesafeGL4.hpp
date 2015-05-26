@@ -15,7 +15,7 @@ namespace Tags {
 
 class ShaderProgramTag;
 
-}// namespace Tags
+} // namespace Tags
 
 using ShaderProgramGL4 = Tagged<GLuint, Tags::ShaderProgramTag>;
 

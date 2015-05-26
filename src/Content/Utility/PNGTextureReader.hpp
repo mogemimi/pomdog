@@ -18,7 +18,7 @@ struct PNGTextureReader {
         std::uint8_t const* data, std::size_t byteLength);
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_PNGTEXTUREREADER_C00C0E02_HPP

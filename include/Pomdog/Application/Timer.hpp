@@ -44,6 +44,6 @@ private:
     bool  enabled;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_TIMER_CAC74AF2_HPP

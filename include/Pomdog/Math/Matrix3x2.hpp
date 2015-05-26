@@ -10,6 +10,6 @@ namespace Pomdog {
 
 using Matrix3x2 = Detail::FloatingPointMatrix3x2<float>;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_MATRIX3X2_BFBB8214_HPP

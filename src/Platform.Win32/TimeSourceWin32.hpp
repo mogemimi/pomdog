@@ -20,8 +20,8 @@ private:
     double secondsPerTick;
 };
 
-}// namespace Win32
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Win32
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_TIMESOURCEWIN32_A31ECBBA_HPP

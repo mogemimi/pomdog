@@ -32,8 +32,8 @@ private:
     double scrollWheel;
 };
 
-}// namespace Cocoa
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Cocoa
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_MOUSECOCOA_E737D799_HPP

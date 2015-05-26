@@ -11,6 +11,6 @@ namespace Pomdog {
 ///@brief vector in three-dimensional space.
 using Vector3 = Detail::FloatingPointVector3<float>;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_VECTOR3_7F01F272_HPP

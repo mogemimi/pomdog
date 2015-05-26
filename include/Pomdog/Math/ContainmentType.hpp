@@ -16,6 +16,6 @@ enum class ContainmentType: std::uint8_t {
     Intersects
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_CONTAINMENTTYPE_21BFFFDA_HPP

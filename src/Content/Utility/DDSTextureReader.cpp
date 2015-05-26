@@ -82,7 +82,7 @@ static constexpr std::uint32_t Alpha       = 0x00000002; // DDPF_ALPHA
 static constexpr std::uint32_t RGB         = 0x00000040; // DDPF_RGB
 static constexpr std::uint32_t Luminance   = 0x00020000; // DDPF_LUMINANCE
 
-}// namespace DirectDrawPixelFormat
+} // namespace DirectDrawPixelFormat
 //-----------------------------------------------------------------------
 static SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(DDSPixelFormat const& pixelFormat)
 {
@@ -203,7 +203,7 @@ std::size_t ComputePixelDataByteLength(DDSHeader const& ddsHeader)
     return result;
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 std::shared_ptr<Texture2D> DDSTextureReader::Read(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     std::uint8_t const* data, std::size_t byteLength)
@@ -265,5 +265,5 @@ std::shared_ptr<Texture2D> DDSTextureReader::Read(std::shared_ptr<GraphicsDevice
     return std::move(texture);
 }
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

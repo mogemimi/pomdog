@@ -360,7 +360,7 @@ static std::unique_ptr<AudioClip> LoadMSWave_Win32(std::string const& filePath)
     }
 }
 #endif
-}// unnamed namespace
+} // unnamed namespace
  //-----------------------------------------------------------------------
 std::unique_ptr<AudioClip> MSWaveAudioLoader::Load(std::string const& filePath)
 {
@@ -373,5 +373,5 @@ std::unique_ptr<AudioClip> MSWaveAudioLoader::Load(std::string const& filePath)
 #endif
 }
 //-----------------------------------------------------------------------
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

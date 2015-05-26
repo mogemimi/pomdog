@@ -210,7 +210,7 @@ public:
     }
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_TAGGEDARITHMETIC_4493CED1_HPP

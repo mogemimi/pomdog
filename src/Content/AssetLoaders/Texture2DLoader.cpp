@@ -37,7 +37,7 @@ static bool IsDDSFormat(std::array<std::uint8_t, 8> const& signature)
     return (MakeFourCC(signature[0], signature[1], signature[2], signature[3]) == fourCC);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(
     AssetLoaderContext const& loaderContext, std::string const& assetName)
@@ -90,5 +90,5 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid/unsupported texture format.");
 }
 //-----------------------------------------------------------------------
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

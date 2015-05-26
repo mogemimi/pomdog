@@ -12,6 +12,6 @@ namespace Pomdog {
 class GameClock;
 using TimePoint = std::chrono::time_point<GameClock, Duration>;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_TIMEPOINT_CEF9FF84_HPP

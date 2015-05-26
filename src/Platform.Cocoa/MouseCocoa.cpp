@@ -55,6 +55,6 @@ void MouseCocoa::XButton2(ButtonState buttonState)
     state.XButton2 = buttonState;
 }
 //-----------------------------------------------------------------------
-}// namespace Cocoa
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Cocoa
+} // namespace Detail
+} // namespace Pomdog

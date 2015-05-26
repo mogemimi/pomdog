@@ -103,7 +103,7 @@ template <typename T>
 FloatingPointVector2<T> POMDOG_EXPORT
 operator*(T scaleFactor, FloatingPointVector2<T> const& vector);
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_FLOATINGPOINTVECTOR2_714DEF9F_HPP

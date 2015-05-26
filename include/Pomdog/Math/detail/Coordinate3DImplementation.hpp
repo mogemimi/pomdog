@@ -135,7 +135,7 @@ Coordinate3D<T> operator/(T scaleFactor, Coordinate3D<T> const& coordinate)
         scaleFactor / coordinate.Z);
 }
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_COORDINATE3DIMPLEMENTATION_4B7428C8_HPP

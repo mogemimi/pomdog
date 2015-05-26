@@ -656,5 +656,5 @@ template class FloatingPointMatrix3x3<long double>;
 template FloatingPointMatrix3x3<long double> operator*<long double>(long double, FloatingPointMatrix3x3<long double> const&);
 #endif
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

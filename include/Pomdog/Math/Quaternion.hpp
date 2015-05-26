@@ -10,6 +10,6 @@ namespace Pomdog {
 
 using Quaternion = Detail::FloatingPointQuaternion<float>;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_QUATERNION_601F9EDC_HPP

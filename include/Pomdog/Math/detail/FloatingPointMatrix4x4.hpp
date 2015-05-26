@@ -246,7 +246,7 @@ template <typename T>
 FloatingPointMatrix4x4<T> POMDOG_EXPORT
 operator*(T scaleFactor, FloatingPointMatrix4x4<T> const& matrix);
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_FLOATINGPOINTMATRIX4X4_DE77F1B1_HPP

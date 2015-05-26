@@ -22,6 +22,6 @@ TimePoint TimeSourceLinux::Now() const
         + Duration(static_cast<double>(now.tv_nsec) * nanoScale)));
 }
 
-}// namespace Linux
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Linux
+} // namespace Detail
+} // namespace Pomdog

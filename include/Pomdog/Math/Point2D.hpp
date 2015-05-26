@@ -11,6 +11,6 @@ namespace Pomdog {
 
 using Point2D = Detail::Coordinate2D<std::int32_t>;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_POINT2D_278F3036_HPP

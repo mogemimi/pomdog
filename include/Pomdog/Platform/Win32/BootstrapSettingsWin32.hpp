@@ -21,8 +21,8 @@ struct BootstrapSettingsWin32 {
     bool OpenGLEnabled = false;
 };
 
-}// namespace Win32
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Win32
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_BOOTSTRAPSETTINGSWIN32_F058A6BA_HPP

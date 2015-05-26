@@ -186,4 +186,4 @@ Duration GameClock::ElapsedTime() const
     return impl->ElapsedTime();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

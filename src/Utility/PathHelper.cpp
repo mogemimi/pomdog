@@ -21,5 +21,5 @@ std::string PathHelper::Join(std::string const& path1, std::string const& path2)
     return std::move(result);
 }
 //-----------------------------------------------------------------------
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

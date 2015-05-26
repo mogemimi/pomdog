@@ -92,7 +92,7 @@ public:
     }
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_ANY_2C2DCE41_HPP

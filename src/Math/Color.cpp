@@ -45,7 +45,7 @@ static std::uint32_t ColorPackFromFloat(float red, float green, float blue, floa
     return ColorPackUint(r, g, b, a);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 
 const Color Color::White{255, 255, 255, 255};
 const Color Color::Black{0, 0, 0, 255};
@@ -159,4 +159,4 @@ Color Color::SmoothStep(Color const& source1, Color const& source2, float amount
     return std::move(color);
 }
 
-}// namespace Pomdog
+} // namespace Pomdog

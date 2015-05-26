@@ -1271,5 +1271,5 @@ template class FloatingPointMatrix4x4<long double>;
 template FloatingPointMatrix4x4<long double> operator*<long double>(long double, FloatingPointMatrix4x4<long double> const&);
 #endif
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

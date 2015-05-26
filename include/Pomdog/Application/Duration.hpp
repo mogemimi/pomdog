@@ -10,6 +10,6 @@ namespace Pomdog {
 
 using Duration = std::chrono::duration<double>;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_DURATION_5FF1F824_HPP

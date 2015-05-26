@@ -18,7 +18,7 @@ namespace InputSystem {
 
 class InputDeviceFactory;
 
-}// namespace InputSystem
+} // namespace InputSystem
 namespace Win32 {
 
 class GameWindowWin32;

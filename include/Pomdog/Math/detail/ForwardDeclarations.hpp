@@ -76,6 +76,6 @@ class Rectangle;
 // Enumerations:
 enum class ContainmentType: std::uint8_t;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_FORWARDDECLARATIONS_2B34361D_HPP

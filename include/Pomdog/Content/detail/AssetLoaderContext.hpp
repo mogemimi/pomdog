@@ -23,7 +23,7 @@ public:
     std::ifstream OpenStream(std::string const& assetName) const;
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_ASSETLOADERCONTEXT_E4996CA2_HPP

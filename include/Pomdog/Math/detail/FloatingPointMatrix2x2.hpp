@@ -78,7 +78,7 @@ template <typename T>
 FloatingPointMatrix2x2<T> POMDOG_EXPORT
 operator*(T scaleFactor, FloatingPointMatrix2x2<T> const& matrix);
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_FLOATINGPOINTMATRIX2X2_D1549734_HPP

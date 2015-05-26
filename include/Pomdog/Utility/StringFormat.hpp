@@ -20,6 +20,6 @@ __attribute__((__format__(printf, 1, 2)));
 ;
 #endif
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_STRINGFORMAT_FF9D5A44_HPP

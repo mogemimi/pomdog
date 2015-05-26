@@ -24,7 +24,7 @@ struct POMDOG_EXPORT AssetLoader<AudioClip> final {
         std::string const& assetName);
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_AUDIOCLIPLOADER_18B28F6C_HPP

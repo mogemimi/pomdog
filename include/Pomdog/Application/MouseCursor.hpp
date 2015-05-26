@@ -16,6 +16,6 @@ enum class MouseCursor: std::uint8_t {
     ResizeHorizontal,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_MOUSECURSOR_D7B37AAC_HPP

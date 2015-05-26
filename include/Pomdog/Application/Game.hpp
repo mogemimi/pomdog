@@ -23,6 +23,6 @@ public:
     virtual void Draw() = 0;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GAME_8B7C90B7_HPP

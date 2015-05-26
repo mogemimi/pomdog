@@ -161,7 +161,7 @@ static Texture2DParsingData ReadPNG(std::uint8_t const* data, std::size_t byteLe
     return std::move(parsingData);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 std::shared_ptr<Texture2D> PNGTextureReader::Read(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     std::uint8_t const* data, std::size_t byteLength)
@@ -183,5 +183,5 @@ std::shared_ptr<Texture2D> PNGTextureReader::Read(std::shared_ptr<GraphicsDevice
     return std::move(texture);
 }
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

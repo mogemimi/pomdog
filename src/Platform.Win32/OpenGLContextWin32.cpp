@@ -72,7 +72,7 @@ static PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
     return std::move(descriptor);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 OpenGLContextWin32::OpenGLContextWin32(HWND windowHandleIn,
     PresentationParameters const& presentationParameters)
@@ -160,6 +160,6 @@ void OpenGLContextWin32::SwapBuffers()
     ::SwapBuffers(hdc.get());
 }
 //-----------------------------------------------------------------------
-}// namespace Win32
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Win32
+} // namespace Detail
+} // namespace Pomdog

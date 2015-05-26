@@ -13,7 +13,7 @@ struct PathHelper {
     static std::string Join(std::string const& path1, std::string const& path2);
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_PATHHELPER_BDBB516A_HPP

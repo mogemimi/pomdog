@@ -45,6 +45,6 @@ public:
     virtual std::shared_ptr<Mouse> Mouse() = 0;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GAMEHOST_FDAA974D_HPP

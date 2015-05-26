@@ -15,5 +15,5 @@ std::ifstream AssetLoaderContext::OpenStream(std::string const& assetName) const
     return std::move(stream);
 }
 //-----------------------------------------------------------------------
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

@@ -63,7 +63,7 @@ public:
     void Unload();
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_ASSETDICTIONARY_8088231B_HPP

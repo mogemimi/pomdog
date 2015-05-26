@@ -24,7 +24,7 @@ struct POMDOG_EXPORT AssetLoader<Texture2D> final {
         std::string const& assetName);
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_TEXTURE2DLOADER_84BCFDDA_HPP

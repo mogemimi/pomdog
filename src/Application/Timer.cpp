@@ -65,4 +65,4 @@ float Timer::Scale() const
     return this->scale;
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

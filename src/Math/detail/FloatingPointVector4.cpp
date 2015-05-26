@@ -247,5 +247,5 @@ template class FloatingPointVector4<long double>;
 template FloatingPointVector4<long double> operator*<long double>(long double, FloatingPointVector4<long double> const&);
 #endif
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

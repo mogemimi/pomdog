@@ -47,7 +47,7 @@ static std::string UnsafeToFormatString(char const* format, std::va_list arg)
     return std::move(result);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 std::string StringFormat(char const* format, ...)
 {
@@ -58,4 +58,4 @@ std::string StringFormat(char const* format, ...)
     return std::move(result);
 }
 
-}// namespace Pomdog
+} // namespace Pomdog

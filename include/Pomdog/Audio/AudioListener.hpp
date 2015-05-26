@@ -16,6 +16,6 @@ public:
     Vector3 Velocity;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_AUDIOLISTENER_C5B766B1_HPP

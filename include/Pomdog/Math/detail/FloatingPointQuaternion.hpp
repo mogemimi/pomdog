@@ -115,7 +115,7 @@ template <typename T>
 FloatingPointQuaternion<T> POMDOG_EXPORT
 operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion);
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_FLOATINGPOINTQUATERNION_5F875CA6_HPP

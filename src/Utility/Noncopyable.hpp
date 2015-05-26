@@ -14,7 +14,7 @@ public:
     Noncopyable & operator=(Noncopyable const&) = delete;
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_NONCOPYABLE_C87EECF3_HPP

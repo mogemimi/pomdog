@@ -23,7 +23,7 @@ static FillModeGL4 ToFillModeGL4(FillMode const& fillMode)
 #endif
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 RasterizerStateGL4::RasterizerStateGL4(RasterizerDescription const& description)
     : fillMode(ToFillModeGL4(description.FillMode))

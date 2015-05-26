@@ -13,7 +13,7 @@ namespace Detail {
 template <typename T>
 struct AssetLoader;
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_ASSETLOADER_99766070_HPP

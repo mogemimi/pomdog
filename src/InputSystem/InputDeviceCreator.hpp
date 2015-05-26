@@ -21,8 +21,8 @@ public:
     virtual std::shared_ptr<T> Create(SubsystemScheduler & scheduler) = 0;
 };
 
-}// namespace InputSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace InputSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_INPUTDEVICECREATOR_D5540F16_HPP

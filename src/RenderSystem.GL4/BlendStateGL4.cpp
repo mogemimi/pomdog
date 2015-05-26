@@ -74,7 +74,7 @@ static void ToRenderTargetBlendGL4(RenderTargetBlendDescription const& desc,
     result.BlendEnable = desc.BlendEnable;
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 BlendStateGL4::BlendStateGL4(BlendDescription const& description)
     : independentBlendEnable(description.IndependentBlendEnable)

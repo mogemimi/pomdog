@@ -26,5 +26,5 @@ std::shared_ptr<AudioClip> AssetLoader<AudioClip>::operator()(
     return std::move(audioClip);
 }
 //-----------------------------------------------------------------------
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

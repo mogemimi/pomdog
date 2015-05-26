@@ -141,4 +141,4 @@ bool Rectangle::Intersects(Rectangle const& rect) const
         || Bottom() < rect.Top();
 }
 
-}// namespace Pomdog
+} // namespace Pomdog

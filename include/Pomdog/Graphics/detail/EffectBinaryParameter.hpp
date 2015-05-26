@@ -55,8 +55,8 @@ void Set(ConstantBuffer & constantBuffer, T const& value)
     constantBuffer.SetValue(static_cast<void const*>(&value), sizeof(value));
 }
 
-}// namespace EffectBinaryParameter
-}// namespace Detail
-}// namespace Pomdog
+} // namespace EffectBinaryParameter
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_EFFECTBINARYPARAMETER_F5EA7DB2_HPP

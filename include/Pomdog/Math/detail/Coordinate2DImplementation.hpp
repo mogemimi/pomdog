@@ -121,7 +121,7 @@ Coordinate2D<T> operator/(T scaleFactor, Coordinate2D<T> const& coordinate)
     return Coordinate2D<T>(scaleFactor / coordinate.X, scaleFactor / coordinate.Y);
 }
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_COORDINATE2DIMPLEMENTATION_3BBB93C4_HPP

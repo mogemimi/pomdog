@@ -24,8 +24,8 @@ public:
 private:
 };
 
-}// namespace InputSystem
-}// namespace Detail
-}// namespace Pomdog
+} // namespace InputSystem
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_INPUTDEVICEFACTORY_60E2AEA5_HPP

@@ -45,8 +45,8 @@ T CreateException(std::string const& description, std::string const& source, cha
     return T(ss.str());
 }
 
-}// namespace ExceptionInternal
-}// namespace Detail
+} // namespace ExceptionInternal
+} // namespace Detail
 
 #if !defined(POMDOG_THROW_EXCEPTION)
 
@@ -56,6 +56,6 @@ T CreateException(std::string const& description, std::string const& source, cha
 
 #endif // !defined(POMDOG_THROW_EXCEPTION)
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_EXCEPTION_46DED4E6_HPP

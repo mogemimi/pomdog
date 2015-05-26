@@ -69,6 +69,6 @@ public:
     static const Color TransparentBlack;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_COLOR_E8ABB31A_HPP

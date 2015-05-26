@@ -13,8 +13,8 @@ namespace Tags {
 
 struct RadianTag {};
 
-}// namespace Tags
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Tags
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_RADIAN_671670CD_HPP

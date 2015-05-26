@@ -94,7 +94,7 @@ Degree<T> ToDegrees(Radian<T> const& radians)
     return Degree<T>(radians.value * scaleFactor);
 }
 
-}// namespace MathHelper
-}// namespace Pomdog
+} // namespace MathHelper
+} // namespace Pomdog
 
 #endif // POMDOG_MATHHELPER_F07877B3_HPP

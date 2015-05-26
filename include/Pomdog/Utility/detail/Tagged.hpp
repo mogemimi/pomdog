@@ -64,8 +64,8 @@ Tagged<T, Tag> MakeTagged(Arguments &&... arguments)
     return Tagged<T, Tag>(std::forward<T>(arguments)...);
 }
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 namespace std {
 
@@ -77,6 +77,6 @@ struct hash<Pomdog::Detail::Tagged<T, U>> {
     }
 };
 
-}// namespace std
+} // namespace std
 
 #endif // POMDOG_TAGGED_1B3449F5_HPP

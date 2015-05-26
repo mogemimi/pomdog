@@ -35,7 +35,7 @@ static std::string ToString(ErrorCodeGL4 const& errorCode)
     return ss.str();
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 void ErrorChecker::CheckError(char const* command, char const* filename, int line)
 {

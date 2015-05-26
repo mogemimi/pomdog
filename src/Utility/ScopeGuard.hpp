@@ -38,7 +38,7 @@ private:
     std::function<void()> func;
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SCOPEGUARD_1F749886_HPP

@@ -17,8 +17,8 @@ public:
     TimePoint Now() const;
 };
 
-}// namespace Linux
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Linux
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_TIMESOURCELINUX_60ECC32A_HPP

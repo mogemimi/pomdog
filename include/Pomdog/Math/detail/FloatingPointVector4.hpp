@@ -79,7 +79,7 @@ template <typename T>
 FloatingPointVector4<T> POMDOG_EXPORT
 operator*(T scaleFactor, FloatingPointVector4<T> const& vector);
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_FLOATINGPOINTVECTOR4_46E21CD7_HPP

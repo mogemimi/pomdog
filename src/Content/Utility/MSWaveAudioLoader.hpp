@@ -20,7 +20,7 @@ struct MSWaveAudioLoader {
     static std::unique_ptr<AudioClip> Load(std::string const& filePath);
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_MSWAVEAUDIOLOADER_8808FBBE_HPP

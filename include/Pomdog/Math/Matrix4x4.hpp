@@ -10,6 +10,6 @@ namespace Pomdog {
 
 using Matrix4x4 = Detail::FloatingPointMatrix4x4<float>;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_MATRIX4X4_DC5BAB37_HPP

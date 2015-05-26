@@ -44,6 +44,6 @@ public:
     Signal<void(int width, int height)> ClientSizeChanged;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GAMEWINDOW_22D747BC_HPP

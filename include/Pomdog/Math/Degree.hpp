@@ -13,8 +13,8 @@ namespace Tags {
 
 struct DegreeTag {};
 
-}// namespace Tags
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Tags
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_DEGREE_8B079286_HPP

@@ -28,6 +28,6 @@ TimePoint TimeSourceWin32::Now() const
     return TimePoint(Duration(currentSeconds));
 }
 
-}// namespace Win32
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Win32
+} // namespace Detail
+} // namespace Pomdog

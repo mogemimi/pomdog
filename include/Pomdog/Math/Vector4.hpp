@@ -11,6 +11,6 @@ namespace Pomdog {
 ///@brief vector in four-dimensional space.
 using Vector4 = Detail::FloatingPointVector4<float>;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_VECTOR4_142CAE48_HPP
