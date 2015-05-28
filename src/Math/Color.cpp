@@ -6,43 +6,37 @@
 #include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Basic/Platform.hpp"
 #include <cmath>
 #include <utility>
 
 namespace Pomdog {
 namespace {
 
-static std::uint32_t PackUnsignedNormal(float value)
+static std::uint8_t PackUint8(float value)
 {
     POMDOG_ASSERT(value <= 255.0f);
     POMDOG_ASSERT(value >= 0);
     POMDOG_ASSERT(!std::isnan(value));
     POMDOG_ASSERT(!std::isinf(value));
-    return static_cast<std::uint32_t>(value);
+    return static_cast<std::uint8_t>(std::round(value));
 }
 
-static std::uint32_t ColorPackUint(std::uint32_t red, std::uint32_t green, std::uint32_t blue, std::uint32_t alpha)
+static std::uint8_t PackFromNormal(float value)
+{
+    POMDOG_ASSERT(value <= 1.0f);
+    POMDOG_ASSERT(value >= 0);
+    POMDOG_ASSERT(!std::isnan(value));
+    POMDOG_ASSERT(!std::isinf(value));
+    constexpr float scale = 255.0f;
+    return PackUint8(value * scale);
+}
+
+static std::uint32_t ColorPackUint(
+    std::uint32_t red, std::uint32_t green,
+    std::uint32_t blue, std::uint32_t alpha) noexcept
 {
     return (((red | (green << 8)) | (blue << 16)) | (alpha << 24));
-}
-
-static std::uint32_t ColorPackFromNormal(float red, float green, float blue, float alpha)
-{
-    constexpr float scale = 255.0f;
-    const auto r = PackUnsignedNormal(scale * red);
-    const auto g = PackUnsignedNormal(scale * green);
-    const auto b = PackUnsignedNormal(scale * blue);
-    const auto a = PackUnsignedNormal(scale * alpha);
-    return ColorPackUint(r, g, b, a);
-}
-
-static std::uint32_t ColorPackFromFloat(float red, float green, float blue, float alpha)
-{
-    const auto r = PackUnsignedNormal(red);
-    const auto g = PackUnsignedNormal(green);
-    const auto b = PackUnsignedNormal(blue);
-    const auto a = PackUnsignedNormal(alpha);
-    return ColorPackUint(r, g, b, a);
 }
 
 } // unnamed namespace
@@ -56,12 +50,16 @@ const Color Color::Yellow{255, 255, 0, 255};
 const Color Color::CornflowerBlue{100, 149 ,237, 255};
 const Color Color::TransparentBlack{0, 0, 0, 0};
 //-----------------------------------------------------------------------
-Color::Color(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha)
-    : PackedValue{ ColorPackUint(red, green, blue, alpha) }
+Color::Color(
+    std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) noexcept
+    : R(r), G(g), B(b), A(a)
 {}
 //-----------------------------------------------------------------------
 Color::Color(Vector3 const& vector)
-    : PackedValue{ ColorPackFromNormal(vector.X, vector.Y, vector.Z, 1.0f) }
+    : R(PackFromNormal(vector.X))
+    , G(PackFromNormal(vector.Y))
+    , B(PackFromNormal(vector.Z))
+    , A(255)
 {
     POMDOG_ASSERT(vector.X >= 0.0f && vector.X <= 1.0f);
     POMDOG_ASSERT(vector.Y >= 0.0f && vector.Y <= 1.0f);
@@ -69,7 +67,10 @@ Color::Color(Vector3 const& vector)
 }
 //-----------------------------------------------------------------------
 Color::Color(Vector4 const& vector)
-    : PackedValue{ ColorPackFromNormal(vector.X, vector.Y, vector.Z, vector.W) }
+    : R(PackFromNormal(vector.X))
+    , G(PackFromNormal(vector.Y))
+    , B(PackFromNormal(vector.Z))
+    , A(PackFromNormal(vector.W))
 {
     POMDOG_ASSERT(vector.X >= 0.0f && vector.X <= 1.0f);
     POMDOG_ASSERT(vector.Y >= 0.0f && vector.Y <= 1.0f);
@@ -77,86 +78,86 @@ Color::Color(Vector4 const& vector)
     POMDOG_ASSERT(vector.W >= 0.0f && vector.W <= 1.0f);
 }
 //-----------------------------------------------------------------------
-bool Color::operator==(Color const& color) const
+bool Color::operator==(Color const& color) const noexcept
 {
-    return this->PackedValue == color.PackedValue;
+    return R == color.R && G == color.G && B == color.B && A == color.A;
 }
 //-----------------------------------------------------------------------
-bool Color::operator!=(Color const& color) const
+bool Color::operator!=(Color const& color) const noexcept
 {
-    return this->PackedValue != color.PackedValue;
+    return R == color.R || G == color.G || B == color.B || A == color.A;
 }
 //-----------------------------------------------------------------------
-std::uint8_t Color::R() const
+Vector3 Color::ToVector3() const noexcept
 {
-    return static_cast<std::uint8_t>(PackedValue);
+    return {R/255.0f, G/255.0f, B/255.0f};
 }
 //-----------------------------------------------------------------------
-std::uint8_t Color::G() const
+Vector4 Color::ToVector4() const noexcept
 {
-    return static_cast<std::uint8_t>(PackedValue >> 8);
+    return {R/255.0f, G/255.0f, B/255.0f, A/255.0f};
 }
 //-----------------------------------------------------------------------
-std::uint8_t Color::B() const
+std::uint32_t Color::ToPackedValue() const noexcept
 {
-    return static_cast<std::uint8_t>(PackedValue >> 16);
+    return ColorPackUint(R, G, B, A);
 }
 //-----------------------------------------------------------------------
-std::uint8_t Color::A() const
+Color Color::FromPackedValue(std::uint32_t packedValue)
 {
-    return static_cast<std::uint8_t>(PackedValue >> 24);
-}
-//-----------------------------------------------------------------------
-void Color::R(std::uint8_t value)
-{
-    PackedValue = ((PackedValue & 0xffffff00) | value);
-}
-//-----------------------------------------------------------------------
-void Color::G(std::uint8_t value)
-{
-    PackedValue = ((PackedValue & 0xffff00ff) | (static_cast<std::uint32_t>(value) << 8));
-}
-//-----------------------------------------------------------------------
-void Color::B(std::uint8_t value)
-{
-    PackedValue = ((PackedValue & 0xff00ffff) | (static_cast<std::uint32_t>(value) << 16));
-}
-//-----------------------------------------------------------------------
-void Color::A(std::uint8_t value)
-{
-    PackedValue = ((PackedValue & 0x00ffffff) | (static_cast<std::uint32_t>(value) << 24));
-}
-//-----------------------------------------------------------------------
-Vector3 Color::ToVector3() const
-{
-    return {R()/255.0f, G()/255.0f, B()/255.0f};
-}
-//-----------------------------------------------------------------------
-Vector4 Color::ToVector4() const
-{
-    return {R()/255.0f, G()/255.0f, B()/255.0f, A()/255.0f};
+    Color color;
+#if defined(POMDOG_BYTEORDER_BIG_ENDIAN)
+    color.R = static_cast<std::uint8_t>(packedValue);
+    color.G = static_cast<std::uint8_t>(packedValue >> 8);
+    color.B = static_cast<std::uint8_t>(packedValue >> 16);
+    color.A = static_cast<std::uint8_t>(packedValue >> 24);
+#else
+    color.R = static_cast<std::uint8_t>(packedValue >> 24);
+    color.G = static_cast<std::uint8_t>(packedValue >> 16);
+    color.B = static_cast<std::uint8_t>(packedValue >> 8);
+    color.A = static_cast<std::uint8_t>(packedValue);
+#endif
+    return std::move(color);
 }
 //-----------------------------------------------------------------------
 Color Color::Lerp(Color const& source1, Color const& source2, float amount)
 {
     Color color;
-    color.PackedValue = ColorPackFromFloat(
-        source1.R() + amount * (source2.R() - source1.R()),
-        source1.G() + amount * (source2.G() - source1.G()),
-        source1.B() + amount * (source2.B() - source1.B()),
-        source1.A() + amount * (source2.A() - source1.A()));
+    color.R = PackUint8(source1.R + amount * (source2.R - source1.R));
+    color.G = PackUint8(source1.G + amount * (source2.G - source1.G));
+    color.B = PackUint8(source1.B + amount * (source2.B - source1.B));
+    color.A = PackUint8(source1.A + amount * (source2.A - source1.A));
     return std::move(color);
 }
 //-----------------------------------------------------------------------
 Color Color::SmoothStep(Color const& source1, Color const& source2, float amount)
 {
     Color color;
-    color.PackedValue = ColorPackFromFloat(
-        MathHelper::SmoothStep<float>(source1.R(), source2.R(), amount),
-        MathHelper::SmoothStep<float>(source1.G(), source2.G(), amount),
-        MathHelper::SmoothStep<float>(source1.B(), source2.B(), amount),
-        MathHelper::SmoothStep<float>(source1.A(), source2.A(), amount));
+    color.R = PackUint8(MathHelper::SmoothStep<float>(source1.R, source2.R, amount));
+    color.G = PackUint8(MathHelper::SmoothStep<float>(source1.G, source2.G, amount));
+    color.B = PackUint8(MathHelper::SmoothStep<float>(source1.B, source2.B, amount));
+    color.A = PackUint8(MathHelper::SmoothStep<float>(source1.A, source2.A, amount));
     return std::move(color);
+}
+//-----------------------------------------------------------------------
+Color Color::Multiply(Color const& color, float scale)
+{
+    Color result;
+    result.R = PackUint8(MathHelper::Clamp(color.R * scale, 0.0f, 255.0f));
+    result.G = PackUint8(MathHelper::Clamp(color.G * scale, 0.0f, 255.0f));
+    result.B = PackUint8(MathHelper::Clamp(color.B * scale, 0.0f, 255.0f));
+    result.A = PackUint8(MathHelper::Clamp(color.A * scale, 0.0f, 255.0f));
+    return std::move(result);
+}
+//-----------------------------------------------------------------------
+Color Color::Multiply(Color const& color1, Color const& color2)
+{
+    Color result;
+    result.R = PackUint8(MathHelper::Clamp((color1.R / 255.0f) * color2.R, 0.0f, 255.0f));
+    result.G = PackUint8(MathHelper::Clamp((color1.G / 255.0f) * color2.G, 0.0f, 255.0f));
+    result.B = PackUint8(MathHelper::Clamp((color1.B / 255.0f) * color2.B, 0.0f, 255.0f));
+    result.A = PackUint8(MathHelper::Clamp((color1.A / 255.0f) * color2.A, 0.0f, 255.0f));
+    return std::move(result);
 }
 
 } // namespace Pomdog
