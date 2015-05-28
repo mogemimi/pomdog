@@ -101,12 +101,12 @@ public:
     }
 
     // Unary operators:
-    TaggedArithmetic operator+() const
+    TaggedArithmetic operator+() const noexcept
     {
         return {+value};
     }
 
-    TaggedArithmetic operator-() const
+    TaggedArithmetic operator-() const noexcept
     {
         return {-value};
     }
@@ -169,42 +169,42 @@ public:
         return value != scalar;
     }
 
-    bool operator<(TaggedArithmetic const& v) const
+    bool operator<(TaggedArithmetic const& v) const noexcept
     {
         return value < v.value;
     }
 
-    bool operator>(TaggedArithmetic const& v) const
+    bool operator>(TaggedArithmetic const& v) const noexcept
     {
         return value > v.value;
     }
 
-    bool operator<=(TaggedArithmetic const& v) const
+    bool operator<=(TaggedArithmetic const& v) const noexcept
     {
         return value <= v.value;
     }
 
-    bool operator>=(TaggedArithmetic const& v) const
+    bool operator>=(TaggedArithmetic const& v) const noexcept
     {
         return value >= v.value;
     }
 
-    bool operator<(T const& scalar) const
+    bool operator<(T const& scalar) const noexcept
     {
         return value < scalar;
     }
 
-    bool operator>(T const& scalar) const
+    bool operator>(T const& scalar) const noexcept
     {
         return value > scalar;
     }
 
-    bool operator<=(T const& scalar) const
+    bool operator<=(T const& scalar) const noexcept
     {
         return value <= scalar;
     }
 
-    bool operator>=(T const& scalar) const
+    bool operator>=(T const& scalar) const noexcept
     {
         return value >= scalar;
     }

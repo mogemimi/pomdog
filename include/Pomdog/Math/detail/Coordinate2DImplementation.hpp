@@ -5,6 +5,7 @@
 #define POMDOG_COORDINATE2DIMPLEMENTATION_3BBB93C4_HPP
 
 //#include "../Coordinate2D.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Detail {
@@ -18,7 +19,7 @@ Coordinate2D<T>::Coordinate2D(T x, T y) noexcept
 {}
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> & Coordinate2D<T>::operator+=(Coordinate2D const& other)
+Coordinate2D<T> & Coordinate2D<T>::operator+=(Coordinate2D const& other) noexcept
 {
     X += other.X;
     Y += other.Y;
@@ -26,7 +27,7 @@ Coordinate2D<T> & Coordinate2D<T>::operator+=(Coordinate2D const& other)
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> & Coordinate2D<T>::operator-=(Coordinate2D const& other)
+Coordinate2D<T> & Coordinate2D<T>::operator-=(Coordinate2D const& other) noexcept
 {
     X -= other.X;
     Y -= other.Y;
@@ -34,7 +35,7 @@ Coordinate2D<T> & Coordinate2D<T>::operator-=(Coordinate2D const& other)
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> & Coordinate2D<T>::operator*=(T scaleFactor)
+Coordinate2D<T> & Coordinate2D<T>::operator*=(T scaleFactor) noexcept
 {
     X *= scaleFactor;
     Y *= scaleFactor;
@@ -44,67 +45,69 @@ Coordinate2D<T> & Coordinate2D<T>::operator*=(T scaleFactor)
 template <typename T> inline
 Coordinate2D<T> & Coordinate2D<T>::operator/=(T scaleFactor)
 {
+    POMDOG_ASSERT(scaleFactor != 0);
     X /= scaleFactor;
     Y /= scaleFactor;
     return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> Coordinate2D<T>::operator+() const
+Coordinate2D<T> Coordinate2D<T>::operator+() const noexcept
 {
     return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> Coordinate2D<T>::operator-() const
+Coordinate2D<T> Coordinate2D<T>::operator-() const noexcept
 {
-    return Coordinate2D(-X, -Y);
+    return {-X, -Y};
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> Coordinate2D<T>::operator+(Coordinate2D const& other) const
+Coordinate2D<T> Coordinate2D<T>::operator+(Coordinate2D const& other) const noexcept
 {
-    return Coordinate2D(X + other.X, Y + other.Y);
+    return {X + other.X, Y + other.Y};
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> Coordinate2D<T>::operator-(Coordinate2D const& other) const
+Coordinate2D<T> Coordinate2D<T>::operator-(Coordinate2D const& other) const noexcept
 {
-    return Coordinate2D(X - other.X, Y - other.Y);
+    return {X - other.X, Y - other.Y};
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> Coordinate2D<T>::operator*(Coordinate2D const& other) const
+Coordinate2D<T> Coordinate2D<T>::operator*(Coordinate2D const& other) const noexcept
 {
-    return Coordinate2D(X * other.X, Y * other.Y);
+    return {X * other.X, Y * other.Y};
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> Coordinate2D<T>::operator/(Coordinate2D const& other) const
 {
-    return Coordinate2D(X / other.X, Y / other.Y);
+    return {X / other.X, Y / other.Y};
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-Coordinate2D<T> Coordinate2D<T>::operator*(T scaleFactor) const
+Coordinate2D<T> Coordinate2D<T>::operator*(T scaleFactor) const noexcept
 {
-    return Coordinate2D(X * scaleFactor, Y * scaleFactor);
+    return {X * scaleFactor, Y * scaleFactor};
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> Coordinate2D<T>::operator/(T scaleFactor) const
 {
-    return Coordinate2D(X / scaleFactor, Y / scaleFactor);
+    POMDOG_ASSERT(scaleFactor != 0);
+    return {X / scaleFactor, Y / scaleFactor};
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-bool Coordinate2D<T>::operator==(Coordinate2D const& other) const
+bool Coordinate2D<T>::operator==(Coordinate2D const& other) const noexcept
 {
     return (X == other.X && Y == other.Y);
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
-bool Coordinate2D<T>::operator!=(Coordinate2D const& other) const
+bool Coordinate2D<T>::operator!=(Coordinate2D const& other) const noexcept
 {
     return (X != other.X || Y != other.Y);
 }
@@ -112,13 +115,15 @@ bool Coordinate2D<T>::operator!=(Coordinate2D const& other) const
 template <typename T> inline
 Coordinate2D<T> operator*(T scaleFactor, Coordinate2D<T> const& coordinate)
 {
-    return Coordinate2D<T>(scaleFactor * coordinate.X, scaleFactor * coordinate.Y);
+    return {scaleFactor * coordinate.X, scaleFactor * coordinate.Y};
 }
 //-----------------------------------------------------------------------
 template <typename T> inline
 Coordinate2D<T> operator/(T scaleFactor, Coordinate2D<T> const& coordinate)
 {
-    return Coordinate2D<T>(scaleFactor / coordinate.X, scaleFactor / coordinate.Y);
+    POMDOG_ASSERT(coordinate.X != 0);
+    POMDOG_ASSERT(coordinate.Y != 0);
+    return {scaleFactor / coordinate.X, scaleFactor / coordinate.Y};
 }
 
 } // namespace Detail
