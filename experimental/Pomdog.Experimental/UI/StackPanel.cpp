@@ -53,7 +53,7 @@ void StackPanel::OnPointerPressed(PointerPoint const& pointerPoint)
     Rectangle captionBar{0, 0, Width(), barHeight + padding.Top};
 
     auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
-    if (!captionBar.Intersects(pointInView)) {
+    if (!captionBar.Contains(pointInView)) {
         return;
     }
 

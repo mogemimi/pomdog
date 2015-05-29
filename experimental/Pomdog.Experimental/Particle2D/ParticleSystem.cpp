@@ -140,17 +140,8 @@ void ParticleSystem::Simulate(GameObject & gameObject, Duration const& duration)
 
             float normalizedTime = 1.0f - particle.TimeToLive / emitter.StartLifetime;
 
-            // Color
-            auto MultiplyColors = [](Color const& a, Color const& b)->Color {
-                return {
-                    static_cast<uint8_t>(MathHelper::Clamp((a.R()/255.0f) * b.R(), 0.0f, 255.0f)),
-                    static_cast<uint8_t>(MathHelper::Clamp((a.G()/255.0f) * b.G(), 0.0f, 255.0f)),
-                    static_cast<uint8_t>(MathHelper::Clamp((a.B()/255.0f) * b.B(), 0.0f, 255.0f)),
-                    static_cast<uint8_t>(MathHelper::Clamp((a.A()/255.0f) * b.A(), 0.0f, 255.0f))};
-            };
-
             POMDOG_ASSERT(clip->ColorOverLifetime);
-            particle.Color = MultiplyColors(particle.StartColor,
+            particle.Color = Color::Multiply(particle.StartColor,
                 clip->ColorOverLifetime->Compute(normalizedTime, particle.ColorVariance));
 
             // Rotation

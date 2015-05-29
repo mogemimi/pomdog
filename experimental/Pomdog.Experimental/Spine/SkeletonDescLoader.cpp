@@ -151,14 +151,11 @@ static void ReadJsonMember(rapidjson::Value const& object, char const* memberNam
 
     auto & memberObject = object[memberName];
     if (memberObject.IsString()) {
-        auto hexColor = std::stoul(memberObject.GetString(), 0, 16);
-        output.R(hexColor >> 24);
-        output.G(hexColor >> 16);
-        output.B(hexColor >> 8);
-        output.A(hexColor);
+        auto hexColor = static_cast<std::uint32_t>(
+            std::stoul(memberObject.GetString(), 0, 16));
+        output = Color::FromPackedValue(hexColor);
     }
 }
-
 //-----------------------------------------------------------------------
 static std::vector<BoneDesc> ReadBones(rapidjson::Value const& bonesDOM)
 {

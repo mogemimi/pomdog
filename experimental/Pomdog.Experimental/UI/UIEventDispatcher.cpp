@@ -14,7 +14,7 @@ bool Intersects(Point2D const& position, UIElement & element)
 {
     auto bounds = element.BoundingBox();
     auto positionInChild = UIHelper::ConvertToChildSpace(position, element.GlobalTransform());
-    return bounds.Intersects(positionInChild);
+    return bounds.Contains(positionInChild);
 }
 
 }// unnamed namespace

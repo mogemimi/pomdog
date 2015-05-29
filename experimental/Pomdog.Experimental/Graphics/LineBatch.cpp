@@ -284,10 +284,10 @@ void LineBatch::DrawRectangle(Rectangle const& sourceRect,
     }
 
     std::array<Vector2, 4> rectVertices = {
-        Vector2(sourceRect.Left(), sourceRect.Y - sourceRect.Height),
-        Vector2(sourceRect.Left(), sourceRect.Y),
-        Vector2(sourceRect.Right(), sourceRect.Y),
-        Vector2(sourceRect.Right(), sourceRect.Y - sourceRect.Height),
+        Vector2(sourceRect.GetLeft(), sourceRect.Y - sourceRect.Height),
+        Vector2(sourceRect.GetLeft(), sourceRect.Y),
+        Vector2(sourceRect.GetRight(), sourceRect.Y),
+        Vector2(sourceRect.GetRight(), sourceRect.Y - sourceRect.Height),
     };
 
     auto colorVector1 = color1.ToVector4();
@@ -311,10 +311,10 @@ void LineBatch::DrawRectangle(Matrix3x2 const& matrix,
     }
 
     std::array<Vector2, 4> rectVertices = {
-        Vector2(sourceRect.Left(), sourceRect.Y - sourceRect.Height),
-        Vector2(sourceRect.Left(), sourceRect.Y),
-        Vector2(sourceRect.Right(), sourceRect.Y),
-        Vector2(sourceRect.Right(), sourceRect.Y - sourceRect.Height),
+        Vector2(sourceRect.GetLeft(), sourceRect.Y - sourceRect.Height),
+        Vector2(sourceRect.GetLeft(), sourceRect.Y),
+        Vector2(sourceRect.GetRight(), sourceRect.Y),
+        Vector2(sourceRect.GetRight(), sourceRect.Y - sourceRect.Height),
     };
 
     for (auto & vertex: rectVertices) {
