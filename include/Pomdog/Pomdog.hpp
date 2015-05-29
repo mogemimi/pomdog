@@ -25,6 +25,8 @@
 #include "Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Content/AssetBuilders/ShaderBuilder.hpp"
 
+#include "Math/BoundingBox.hpp"
+#include "Math/BoundingSphere.hpp"
 #include "Math/Color.hpp"
 #include "Math/ContainmentType.hpp"
 #include "Math/Degree.hpp"

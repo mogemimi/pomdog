@@ -70,6 +70,8 @@ using Degree = Detail::TaggedArithmetic<T, Detail::Tags::DegreeTag>;
 template <typename T>
 using Radian = Detail::TaggedArithmetic<T, Detail::Tags::RadianTag>;
 
+class BoundingBox;
+class BoundingSphere;
 class Color;
 class Rectangle;
 

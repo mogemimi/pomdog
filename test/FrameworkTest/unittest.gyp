@@ -57,6 +57,8 @@
         'Logging/LogChannelTest.cpp',
         'Logging/LogStreamTest.cpp',
         'Logging/LogTest.cpp',
+        'Math/BoundingBoxTest.cpp',
+        'Math/BoundingSphereTest.cpp',
         'Math/ColorTest.cpp',
         'Math/MathHelperTest.cpp',
         'Math/Matrix2x2Test.cpp',
