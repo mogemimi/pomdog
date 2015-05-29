@@ -10,8 +10,6 @@
 
 namespace Pomdog {
 
-enum class ContainmentType: std::uint8_t;
-
 ///@code
 ///            width
 ///   _______________________
@@ -30,40 +28,42 @@ public:
     std::int32_t Width, Height;
 
 public:
-    // Constructors:
     Rectangle() noexcept = default;
 
-    Rectangle(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height) noexcept;
+    Rectangle(std::int32_t x, std::int32_t y,
+        std::int32_t width, std::int32_t height) noexcept;
 
-    Rectangle(Point2D const& position, std::int32_t width, std::int32_t height);
+    Rectangle(Point2D const& position,
+        std::int32_t width, std::int32_t height) noexcept;
 
-    // Binary operators:
-    bool operator==(Rectangle const&) const;
-    bool operator!=(Rectangle const&) const;
+    bool operator==(Rectangle const&) const noexcept;
+    bool operator!=(Rectangle const&) const noexcept;
 
-    std::int32_t Bottom() const;
+    std::int32_t GetBottom() const noexcept;
 
-    std::int32_t Right() const;
+    std::int32_t GetRight() const noexcept;
 
-    std::int32_t Top() const;
+    std::int32_t GetTop() const noexcept;
 
-    std::int32_t Left() const;
+    std::int32_t GetLeft() const noexcept;
 
-    Point2D Center() const;
+    Point2D GetCenter() const;
 
-    Point2D Location() const;
+    Point2D GetLocation() const;
 
-    void Location(Point2D const& position);
+    void SetLocation(Point2D const& position);
+
+    void Inflate(std::int32_t horizontalAmount, std::int32_t verticalAmount);
 
     void Offset(std::int32_t offsetX, std::int32_t offsetY);
 
     void Offset(Point2D const& offset);
 
-    ContainmentType Contains(Point2D const& point) const;
+    bool Contains(int x, int y) const noexcept;
 
-    ContainmentType Contains(Rectangle const& rectangle) const;
+    bool Contains(Point2D const& point) const noexcept;
 
-    bool Intersects(Point2D const& point) const;
+    bool Contains(Rectangle const& rectangle) const;
 
     bool Intersects(Rectangle const& rectangle) const;
 };

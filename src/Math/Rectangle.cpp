@@ -2,71 +2,80 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Math/ContainmentType.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 
-Rectangle::Rectangle(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height) noexcept
+Rectangle::Rectangle(std::int32_t x, std::int32_t y,
+    std::int32_t width, std::int32_t height) noexcept
     : X(x)
     , Y(y)
     , Width(width)
     , Height(height)
 {}
 //-----------------------------------------------------------------------
-Rectangle::Rectangle(Point2D const& position, std::int32_t width, std::int32_t height)
+Rectangle::Rectangle(Point2D const& position,
+    std::int32_t width, std::int32_t height) noexcept
     : X(position.X)
     , Y(position.Y)
     , Width(width)
     , Height(height)
 {}
 //-----------------------------------------------------------------------
-bool Rectangle::operator==(Rectangle const& other) const
+bool Rectangle::operator==(Rectangle const& other) const noexcept
 {
-    return (X == other.X && Y == other.Y &&
-        Width  == other.Width && Height == other.Height);
+    return (X == other.X && Y == other.Y
+        && Width == other.Width && Height == other.Height);
 }
 //-----------------------------------------------------------------------
-bool Rectangle::operator!=(Rectangle const& other) const
+bool Rectangle::operator!=(Rectangle const& other) const noexcept
 {
-    return (X != other.X || Y != other.Y ||
-        Width  != other.Width || Height != other.Height);
+    return (X != other.X || Y != other.Y
+        || Width != other.Width || Height != other.Height);
 }
 //-----------------------------------------------------------------------
-std::int32_t Rectangle::Bottom() const
+std::int32_t Rectangle::GetBottom() const noexcept
 {
     return Y + Height;
 }
 //-----------------------------------------------------------------------
-std::int32_t Rectangle::Right() const
+std::int32_t Rectangle::GetRight() const noexcept
 {
     return X + Width;
 }
 //-----------------------------------------------------------------------
-std::int32_t Rectangle::Top() const
+std::int32_t Rectangle::GetTop() const noexcept
 {
     return Y;
 }
 //-----------------------------------------------------------------------
-std::int32_t Rectangle::Left() const
+std::int32_t Rectangle::GetLeft() const noexcept
 {
     return X;
 }
 //-----------------------------------------------------------------------
-Point2D Rectangle::Center() const
+Point2D Rectangle::GetCenter() const
 {
-    return Point2D(X + Width / 2, Y + Height / 2);
+    return {X + Width / 2, Y + Height / 2};
 }
 //-----------------------------------------------------------------------
-Point2D Rectangle::Location() const
+Point2D Rectangle::GetLocation() const
 {
     return {X, Y};
 }
 //-----------------------------------------------------------------------
-void Rectangle::Location(Point2D const& position)
+void Rectangle::SetLocation(Point2D const& position)
 {
     this->X = position.X;
     this->Y = position.Y;
+}
+//-----------------------------------------------------------------------
+void Rectangle::Inflate(std::int32_t horizontalAmount, std::int32_t verticalAmount)
+{
+    this->X -= horizontalAmount;
+    this->Y -= verticalAmount;
+    this->Width += horizontalAmount * 2;
+    this->Height += verticalAmount * 2;
 }
 //-----------------------------------------------------------------------
 void Rectangle::Offset(std::int32_t offsetX, std::int32_t offsetY)
@@ -81,64 +90,35 @@ void Rectangle::Offset(Point2D const& offset)
     Y += offset.Y;
 }
 //-----------------------------------------------------------------------
-ContainmentType Rectangle::Contains(Point2D const& point) const
+bool Rectangle::Contains(int pointX, int pointY) const noexcept
 {
-    if (point.X < Left()
-        || point.Y < Top()
-        || point.X > Right()
-        || point.Y < Bottom())
-    {
-        return ContainmentType::Disjoint;
-    }
-
-    if (point.X == Left()
-        || point.Y == Top()
-        || point.X == Right()
-        || point.Y == Bottom())
-    {
-        return ContainmentType::Intersects;
-    }
-
-    return ContainmentType::Contains;
+    return pointX >= X && pointX <= (X + Width)
+        && pointY >= Y && pointY <= (Y + Height);
 }
 //-----------------------------------------------------------------------
-ContainmentType Rectangle::Contains(Rectangle const& rect) const
+bool Rectangle::Contains(Point2D const& point) const noexcept
 {
-    if (rect.Right() < Left()
-        || rect.Left() > Right()
-        || rect.Bottom() < Top()
-        || rect.Top() > Bottom())
-    {
-        return ContainmentType::Disjoint;
-    }
-
-    if (rect.Left() >= Left()
-        && rect.Right() <= Right()
-        && rect.Top() >= Top()
-        && rect.Bottom() <= Bottom())
-    {
-        return ContainmentType::Contains;
-    }
-
-    return ContainmentType::Intersects;
+    return this->Contains(point.X, point.Y);
 }
 //-----------------------------------------------------------------------
-bool Rectangle::Intersects(Point2D const& point) const
+bool Rectangle::Contains(Rectangle const& rect) const
 {
-    return point.X >= X && point.X <= (X + Width)
-        && point.Y >= Y && point.Y <= (Y + Height);
+    return (rect.GetLeft() >= GetLeft()
+        && rect.GetRight() <= GetRight()
+        && rect.GetTop() >= GetTop()
+        && rect.GetBottom() <= GetBottom());
 }
 //-----------------------------------------------------------------------
 bool Rectangle::Intersects(Rectangle const& rect) const
 {
-    POMDOG_ASSERT(Left() <= Right());
-    POMDOG_ASSERT(Top() <= Bottom());
-    POMDOG_ASSERT(rect.Left() <= rect.Right());
+    POMDOG_ASSERT(GetLeft() <= GetRight());
+    POMDOG_ASSERT(GetTop() <= GetBottom());
+    POMDOG_ASSERT(rect.GetLeft() <= rect.GetRight());
 
-    return Left() > rect.Right()
-        || Right() < rect.Left()
-        || Top() > rect.Bottom()
-        || Bottom() < rect.Top();
+    return (GetLeft() < rect.GetRight()
+        && GetRight() > rect.GetLeft()
+        && GetTop() < rect.GetBottom()
+        && GetBottom() > rect.GetTop());
 }
 
 } // namespace Pomdog

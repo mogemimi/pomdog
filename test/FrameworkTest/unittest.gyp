@@ -70,6 +70,7 @@
         'Math/Point2DTest.cpp',
         'Math/Point3DTest.cpp',
         'Math/QuaternionTest.cpp',
+        'Math/RectangleTest.cpp',
         'Math/Vector2Test.cpp',
         'Math/Vector3Test.cpp',
         'Math/Vector4Test.cpp',
