@@ -12,8 +12,8 @@ namespace Pomdog {
 
 class POMDOG_EXPORT BoundingCircle {
 public:
-	Vector2 Center;
-	float Radius;
+    Vector2 Center;
+    float Radius;
 
 public:
     BoundingCircle() noexcept = default;

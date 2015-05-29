@@ -167,4 +167,3 @@ TEST(Rectangle, Intersects_Rectangle)
     EXPECT_TRUE(rect.Intersects({32, 24, 64 + 1, 48}));
     EXPECT_TRUE(rect.Intersects({32, 24, 64, 48 + 1}));
 }
-

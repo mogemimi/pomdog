@@ -110,4 +110,3 @@ TEST(Color, Multiply)
     EXPECT_EQ(Color(0, 0, 0, 0), Color::Multiply(Color::TransparentBlack, 1.0f));
     EXPECT_EQ(Color(0, 0, 0, 0), Color::Multiply(Color::TransparentBlack, 0.0f));
 }
-

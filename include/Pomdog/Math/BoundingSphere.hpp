@@ -12,8 +12,8 @@ namespace Pomdog {
 
 class POMDOG_EXPORT BoundingSphere {
 public:
-	Vector3 Center;
-	float Radius;
+    Vector3 Center;
+    float Radius;
 
 public:
     BoundingSphere() noexcept = default;
