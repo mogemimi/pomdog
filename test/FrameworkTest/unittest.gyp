@@ -58,6 +58,8 @@
         'Logging/LogStreamTest.cpp',
         'Logging/LogTest.cpp',
         'Math/BoundingBoxTest.cpp',
+        'Math/BoundingBox2DTest.cpp',
+        'Math/BoundingCircleTest.cpp',
         'Math/BoundingSphereTest.cpp',
         'Math/ColorTest.cpp',
         'Math/MathHelperTest.cpp',

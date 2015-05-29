@@ -26,6 +26,8 @@
 #include "Content/AssetBuilders/ShaderBuilder.hpp"
 
 #include "Math/BoundingBox.hpp"
+#include "Math/BoundingBox2D.hpp"
+#include "Math/BoundingCircle.hpp"
 #include "Math/BoundingSphere.hpp"
 #include "Math/Color.hpp"
 #include "Math/ContainmentType.hpp"
