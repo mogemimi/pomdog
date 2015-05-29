@@ -21,7 +21,7 @@ static Radian<float> SampleTumbleGesture(Vector2 const& position, Vector2 & star
 
     if (threshold < distance)
     {
-        auto const centerPoint = viewportSize.Center();
+        auto const centerPoint = viewportSize.GetCenter();
         Vector2 const screenOffset(centerPoint.X, centerPoint.Y);
 
         auto vecInScreen1 = (startPosition - screenOffset);

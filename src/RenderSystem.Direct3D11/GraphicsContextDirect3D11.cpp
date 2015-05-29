@@ -315,10 +315,10 @@ void GraphicsContextDirect3D11::SetScissorRectangle(Rectangle const& rectangle)
     rects.resize(std::max<std::size_t>(1, renderTargets.size()));
 
     D3D11_RECT rect;
-    rect.bottom = rectangle.Bottom();
-    rect.left = rectangle.Left();
-    rect.right = rectangle.Right();
-    rect.top = rectangle.Top();
+    rect.bottom = rectangle.GetBottom();
+    rect.left = rectangle.GetLeft();
+    rect.right = rectangle.GetRight();
+    rect.top = rectangle.GetTop();
 
     std::fill(std::begin(rects), std::end(rects), rect);
 
