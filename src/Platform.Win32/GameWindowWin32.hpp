@@ -25,21 +25,21 @@ public:
 
     ~GameWindowWin32();
 
-    bool AllowPlayerResizing() const override;
+    bool GetAllowUserResizing() const override;
 
-    void AllowPlayerResizing(bool allowResizing) override;
+    void SetAllowUserResizing(bool allowResizing) override;
 
-    std::string Title() const override;
+    std::string GetTitle() const override;
 
-    void Title(std::string const& title) override;
+    void SetTitle(std::string const& title) override;
 
-    Rectangle ClientBounds() const override;
+    Rectangle GetClientBounds() const override;
 
-    void ClientBounds(Rectangle const& clientBounds) override;
+    void SetClientBounds(Rectangle const& clientBounds) override;
 
     bool IsMouseCursorVisible() const override;
 
-    void IsMouseCursorVisible(bool visible) override;
+    void SetMouseCursorVisible(bool visible) override;
 
     void SetMouseCursor(MouseCursor cursor) override;
 

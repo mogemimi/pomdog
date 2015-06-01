@@ -83,7 +83,7 @@ public:
 
     ~Impl();
 
-    void SetAllowPlayerResizing(bool allowResizing);
+    void SetAllowUserResizing(bool allowResizing);
 
     void SetTitle(std::string const& caption);
 
@@ -103,7 +103,7 @@ public:
     Optional<HCURSOR> gameCursor;
     HINSTANCE instanceHandle;
     HWND windowHandle;
-    bool allowPlayerResizing;
+    bool allowUserResizing;
     bool isFullScreen;
     bool isMouseCursorVisible;
 };
@@ -117,7 +117,7 @@ GameWindowWin32::Impl::Impl(HINSTANCE hInstance, int nCmdShow,
     , clientBounds(0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight)
     , instanceHandle(hInstance)
     , windowHandle(nullptr)
-    , allowPlayerResizing(false)
+    , allowUserResizing(false)
     , isFullScreen(presentationParameters.IsFullScreen)
     , isMouseCursorVisible(true)
 {
@@ -247,7 +247,7 @@ GameWindowWin32::Impl::~Impl()
     instanceHandle = nullptr;
 }
 //-----------------------------------------------------------------------
-void GameWindowWin32::Impl::SetAllowPlayerResizing(bool allowResizingIn)
+void GameWindowWin32::Impl::SetAllowUserResizing(bool allowResizingIn)
 {
     POMDOG_ASSERT(nullptr != windowHandle);
 
@@ -280,7 +280,7 @@ void GameWindowWin32::Impl::SetAllowPlayerResizing(bool allowResizingIn)
         return;
     }
 
-    allowPlayerResizing = allowResizingIn;
+    allowUserResizing = allowResizingIn;
 }
 //-----------------------------------------------------------------------
 void GameWindowWin32::Impl::SetTitle(std::string const& titleIn)
@@ -462,37 +462,37 @@ GameWindowWin32::GameWindowWin32(HINSTANCE hInstance, int nCmdShow,
 //-----------------------------------------------------------------------
 GameWindowWin32::~GameWindowWin32() = default;
 //-----------------------------------------------------------------------
-bool GameWindowWin32::AllowPlayerResizing() const
+bool GameWindowWin32::GetAllowUserResizing() const
 {
     POMDOG_ASSERT(impl);
-    return impl->allowPlayerResizing;
+    return impl->allowUserResizing;
 }
 //-----------------------------------------------------------------------
-void GameWindowWin32::AllowPlayerResizing(bool allowResizing)
+void GameWindowWin32::SetAllowUserResizing(bool allowResizing)
 {
     POMDOG_ASSERT(impl);
-    impl->SetAllowPlayerResizing(allowResizing);
+    impl->SetAllowUserResizing(allowResizing);
 }
 //-----------------------------------------------------------------------
-std::string GameWindowWin32::Title() const
+std::string GameWindowWin32::GetTitle() const
 {
     POMDOG_ASSERT(impl);
     return impl->title;
 }
 //-----------------------------------------------------------------------
-void GameWindowWin32::Title(std::string const& title)
+void GameWindowWin32::SetTitle(std::string const& title)
 {
     POMDOG_ASSERT(impl);
     impl->SetTitle(title);
 }
 //-----------------------------------------------------------------------
-Rectangle GameWindowWin32::ClientBounds() const
+Rectangle GameWindowWin32::GetClientBounds() const
 {
     POMDOG_ASSERT(impl);
     return impl->clientBounds;
 }
 //-----------------------------------------------------------------------
-void GameWindowWin32::ClientBounds(Rectangle const& clientBounds)
+void GameWindowWin32::SetClientBounds(Rectangle const& clientBounds)
 {
     POMDOG_ASSERT(impl);
     impl->SetClientBounds(clientBounds);
@@ -504,7 +504,7 @@ bool GameWindowWin32::IsMouseCursorVisible() const
     return impl->isMouseCursorVisible;
 }
 //-----------------------------------------------------------------------
-void GameWindowWin32::IsMouseCursorVisible(bool visible)
+void GameWindowWin32::SetMouseCursorVisible(bool visible)
 {
     POMDOG_ASSERT(impl);
     impl->SetMouseCursorVisible(visible);

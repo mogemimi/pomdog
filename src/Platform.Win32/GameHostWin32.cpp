@@ -277,7 +277,7 @@ void GameHostWin32::Impl::ProcessSystemEvents(Event const& event)
 void GameHostWin32::Impl::ClientSizeChanged()
 {
     POMDOG_ASSERT(window);
-    auto bounds = window->ClientBounds();
+    auto bounds = window->GetClientBounds();
 
 #if defined(POMDOG_ENABLE_DIRECT3D11)
     if (!useOpenGL)
