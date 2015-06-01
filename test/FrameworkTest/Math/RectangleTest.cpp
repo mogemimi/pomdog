@@ -5,12 +5,12 @@
 #include <Pomdog/Math/Point2D.hpp>
 #include <gtest/iutest_switch.hpp>
 
-using namespace Pomdog;
+using Pomdog::Rectangle;
+using Pomdog::Point2D;
 
 TEST(Rectangle, TrivialCase)
 {
     using Pomdog::Rectangle;
-
     Rectangle rect = {320, 240, 640, 480};
     EXPECT_EQ(320, rect.X);
     EXPECT_EQ(240, rect.Y);
@@ -27,7 +27,6 @@ TEST(Rectangle, TrivialCase)
 TEST(Rectangle, Location)
 {
     using Pomdog::Rectangle;
-
     Rectangle rect = {320, 240, 640, 480};
     ASSERT_EQ(320, rect.X);
     ASSERT_EQ(240, rect.Y);
@@ -50,7 +49,6 @@ TEST(Rectangle, Location)
 TEST(Rectangle, Inflate)
 {
     using Pomdog::Rectangle;
-
     Rectangle rect = {320, 240, 640, 480};
     rect.Inflate(96, 42);
     EXPECT_EQ(320 - 96, rect.X);
@@ -65,6 +63,7 @@ TEST(Rectangle, Inflate)
 
 TEST(Rectangle, Offset)
 {
+    using Pomdog::Rectangle;
     Rectangle rect = {320, 240, 640, 480};
     rect.Offset(96, 42);
     EXPECT_EQ(320 + 96, rect.X);
@@ -79,6 +78,7 @@ TEST(Rectangle, Offset)
 
 TEST(Rectangle, Contains_Point2D)
 {
+    using Pomdog::Rectangle;
     Rectangle rect = {32, 24, 64, 48};
     const int left = rect.GetLeft();
     const int right = rect.GetRight();
@@ -118,6 +118,7 @@ TEST(Rectangle, Contains_Point2D)
 
 TEST(Rectangle, Intersects_Point2D)
 {
+    using Pomdog::Rectangle;
     Rectangle rect = {32, 24, 64, 48};
     const int left = rect.GetLeft();
     const int right = rect.GetRight();
@@ -153,6 +154,7 @@ TEST(Rectangle, Intersects_Point2D)
 
 TEST(Rectangle, Contains_Rectangle)
 {
+    using Pomdog::Rectangle;
     Rectangle rect = {32, 24, 64, 48};
 
     EXPECT_TRUE(rect.Contains(rect));
@@ -165,6 +167,7 @@ TEST(Rectangle, Contains_Rectangle)
 
 TEST(Rectangle, Intersects_Rectangle)
 {
+    using Pomdog::Rectangle;
     Rectangle rect = {32, 24, 64, 48};
 
     EXPECT_TRUE(rect.Intersects({32, 24, 64, 48}));
