@@ -36,13 +36,13 @@ GameWindowCocoa::~GameWindowCocoa()
     nativeWindow = nil;
 }
 //-----------------------------------------------------------------------
-bool GameWindowCocoa::AllowPlayerResizing() const
+bool GameWindowCocoa::GetAllowUserResizing() const
 {
     NSUInteger styleMask = [nativeWindow styleMask];
     return (styleMask & NSResizableWindowMask) == NSResizableWindowMask;
 }
 //-----------------------------------------------------------------------
-void GameWindowCocoa::AllowPlayerResizing(bool allowResizing)
+void GameWindowCocoa::SetAllowUserResizing(bool allowResizing)
 {
     POMDOG_ASSERT(nativeWindow != nil);
 
@@ -62,20 +62,20 @@ void GameWindowCocoa::AllowPlayerResizing(bool allowResizing)
     });
 }
 //-----------------------------------------------------------------------
-std::string GameWindowCocoa::Title() const
+std::string GameWindowCocoa::GetTitle() const
 {
     std::string title = [[nativeWindow title] UTF8String];
     return std::move(title);
 }
 //-----------------------------------------------------------------------
-void GameWindowCocoa::Title(std::string const& title)
+void GameWindowCocoa::SetTitle(std::string const& title)
 {
     dispatch_async(dispatch_get_main_queue(), [=] {
         [nativeWindow setTitle:[NSString stringWithUTF8String:title.c_str()]];
     });
 }
 //-----------------------------------------------------------------------
-Rectangle GameWindowCocoa::ClientBounds() const
+Rectangle GameWindowCocoa::GetClientBounds() const
 {
     POMDOG_ASSERT([nativeWindow contentView] != nil);
     NSRect bounds = [[nativeWindow contentView] bounds];
@@ -96,7 +96,7 @@ Rectangle GameWindowCocoa::ClientBounds() const
         bounds.size.height);
 }
 //-----------------------------------------------------------------------
-void GameWindowCocoa::ClientBounds(Rectangle const& clientBounds)
+void GameWindowCocoa::SetClientBounds(Rectangle const& clientBounds)
 {
     auto bounds = NSMakeSize(clientBounds.Width, clientBounds.Height);
     [nativeWindow setContentSize:bounds];
@@ -124,7 +124,7 @@ bool GameWindowCocoa::IsMouseCursorVisible() const
     return isMouseCursorVisible;
 }
 //-----------------------------------------------------------------------
-void GameWindowCocoa::IsMouseCursorVisible(bool visibleIn)
+void GameWindowCocoa::SetMouseCursorVisible(bool visibleIn)
 {
     isMouseCursorVisible = visibleIn;
 

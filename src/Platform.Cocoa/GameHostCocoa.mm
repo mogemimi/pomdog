@@ -387,13 +387,13 @@ void GameHostCocoa::Impl::ProcessSystemEvents(Event const& event)
     }
     else if (event.Is<ViewWillStartLiveResizeEvent>())
     {
-        auto rect = window->ClientBounds();
+        auto rect = window->GetClientBounds();
         Log::Internal(StringFormat("ViewWillStartLiveResizeEvent: {w: %d, h: %d}",
             rect.Width, rect.Height));
     }
     else if (event.Is<ViewDidEndLiveResizeEvent>())
     {
-        auto rect = window->ClientBounds();
+        auto rect = window->GetClientBounds();
         Log::Internal(StringFormat("ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
             rect.Width, rect.Height));
     }
@@ -457,7 +457,7 @@ void GameHostCocoa::Impl::ClientSizeChanged()
         POMDOG_ASSERT(openGLContext->NativeOpenGLContext() != nil);
         [openGLContext->NativeOpenGLContext() update];
 
-        auto bounds = window->ClientBounds();
+        auto bounds = window->GetClientBounds();
         window->ClientSizeChanged(bounds.Width, bounds.Height);
     }
     openGLContext->Unlock();

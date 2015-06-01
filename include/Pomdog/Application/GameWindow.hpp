@@ -22,22 +22,22 @@ public:
 
     virtual ~GameWindow() = default;
 
-    virtual bool AllowPlayerResizing() const = 0;
+    virtual bool GetAllowUserResizing() const = 0;
 
-    virtual void AllowPlayerResizing(bool allowResizing) = 0;
+    virtual void SetAllowUserResizing(bool allowResizing) = 0;
 
-    virtual std::string Title() const = 0;
+    virtual std::string GetTitle() const = 0;
 
-    virtual void Title(std::string const& title) = 0;
+    virtual void SetTitle(std::string const& title) = 0;
 
-    virtual Rectangle ClientBounds() const = 0;
+    virtual Rectangle GetClientBounds() const = 0;
 
-    virtual void ClientBounds(Rectangle const& clientBounds) = 0;
+    virtual void SetClientBounds(Rectangle const& clientBounds) = 0;
 
     ///@brief Return true if the mouse cursor is visible, false otherwise.
     virtual bool IsMouseCursorVisible() const = 0;
 
-    virtual void IsMouseCursorVisible(bool visible) = 0;
+    virtual void SetMouseCursorVisible(bool visible) = 0;
 
     virtual void SetMouseCursor(MouseCursor cursor) = 0;
 

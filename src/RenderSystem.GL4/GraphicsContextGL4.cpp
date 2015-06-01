@@ -386,7 +386,7 @@ void GraphicsContextGL4::SetViewport(Viewport const& viewport)
 
     if (renderTargets.empty()) {
         if (auto window = gameWindow.lock()) {
-            viewportY = window->ClientBounds().Height - (viewport.GetY() + viewport.GetHeight());
+            viewportY = window->GetClientBounds().Height - (viewport.GetY() + viewport.GetHeight());
         }
     }
 
@@ -415,7 +415,7 @@ void GraphicsContextGL4::SetScissorRectangle(Rectangle const& rectangle)
 
     if (renderTargets.empty()) {
         if (auto window = gameWindow.lock()) {
-            lowerLeftCornerY = window->ClientBounds().Height - (rectangle.Y + rectangle.Height);
+            lowerLeftCornerY = window->GetClientBounds().Height - (rectangle.Y + rectangle.Height);
         }
     }
 
