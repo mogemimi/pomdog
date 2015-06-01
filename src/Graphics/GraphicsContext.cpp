@@ -14,6 +14,7 @@
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <utility>
@@ -116,15 +117,15 @@ GraphicsContext::Impl::Impl(std::unique_ptr<Detail::NativeGraphicsContext> nativ
     textures.clear();
     textures.resize(graphicsCapbilities.SamplerSlotCount);
 
-    viewport.Bounds.X = 0;
-    viewport.Bounds.Y = 0;
-    viewport.Bounds.Width = presentationParameters.BackBufferWidth;
-    viewport.Bounds.Height = presentationParameters.BackBufferHeight;
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.Width = presentationParameters.BackBufferWidth;
+    viewport.Height = presentationParameters.BackBufferHeight;
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     SetViewport(viewport);
 
-    nativeContext->SetScissorRectangle(viewport.Bounds);
+    nativeContext->SetScissorRectangle(viewport.GetBounds());
     nativeContext->SetBlendFactor(Color::White);
 }
 //-----------------------------------------------------------------------
@@ -162,8 +163,8 @@ void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const
 void GraphicsContext::Impl::SetViewport(Pomdog::Viewport const& viewportIn)
 {
     POMDOG_ASSERT(nativeContext);
-    POMDOG_ASSERT(viewportIn.GetWidth() > 0);
-    POMDOG_ASSERT(viewportIn.GetHeight() > 0);
+    POMDOG_ASSERT(viewportIn.Width > 0);
+    POMDOG_ASSERT(viewportIn.Height > 0);
     POMDOG_ASSERT(nativeContext);
 
     this->viewport = viewportIn;

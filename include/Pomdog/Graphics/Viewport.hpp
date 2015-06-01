@@ -4,15 +4,17 @@
 #ifndef POMDOG_VIEWPORT_AA637108_HPP
 #define POMDOG_VIEWPORT_AA637108_HPP
 
-#include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <cstdint>
 
 namespace Pomdog {
 
 class POMDOG_EXPORT Viewport {
 public:
-    Rectangle Bounds;
+    int TopLeftX;
+    int TopLeftY;
+    int Width;
+    int Height;
     float MinDepth;
     float MaxDepth;
 
@@ -21,28 +23,12 @@ public:
 
     explicit Viewport(Rectangle const& bounds) noexcept;
 
-    Viewport(std::int32_t x, std::int32_t y,
-        std::int32_t width, std::int32_t height) noexcept;
+    Viewport(int x, int y, int width, int height) noexcept;
 
-    Viewport(std::int32_t x, std::int32_t y,
-        std::int32_t width, std::int32_t height,
+    Viewport(int x, int y, int width, int height,
         float minDepth, float maxDepth) noexcept;
 
-    std::int32_t GetX() const noexcept;
-
-    void SetX(std::int32_t x) noexcept;
-
-    std::int32_t GetY() const noexcept;
-
-    void SetY(std::int32_t y) noexcept;
-
-    std::int32_t GetWidth() const noexcept;
-
-    void SetWidth(std::int32_t width) noexcept;
-
-    std::int32_t GetHeight() const noexcept;
-
-    void SetHeight(std::int32_t height) noexcept;
+    Rectangle GetBounds() const noexcept;
 
     float GetAspectRatio() const;
 };

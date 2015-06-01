@@ -290,18 +290,18 @@ GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetViewport(Viewport const& viewportIn)
 {
-    POMDOG_ASSERT(0 < viewportIn.Width());
-    POMDOG_ASSERT(0 < viewportIn.Height());
-    POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftX() + viewportIn.Width());
-    POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftY() + viewportIn.Height());
+    POMDOG_ASSERT(0 < viewportIn.Width);
+    POMDOG_ASSERT(0 < viewportIn.Height);
+    POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftX + viewportIn.Width);
+    POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftY + viewportIn.Height);
 
     D3D11_VIEWPORT viewport;
-    viewport.Width = static_cast<FLOAT>(viewportIn.Width());
-    viewport.Height = static_cast<FLOAT>(viewportIn.Height());
+    viewport.Width = static_cast<FLOAT>(viewportIn.Width);
+    viewport.Height = static_cast<FLOAT>(viewportIn.Height);
     viewport.MinDepth = viewportIn.MinDepth;
     viewport.MaxDepth = viewportIn.MaxDepth;
-    viewport.TopLeftX = static_cast<FLOAT>(viewportIn.TopLeftX());
-    viewport.TopLeftY = static_cast<FLOAT>(viewportIn.TopLeftY());
+    viewport.TopLeftX = static_cast<FLOAT>(viewportIn.TopLeftX);
+    viewport.TopLeftY = static_cast<FLOAT>(viewportIn.TopLeftY);
 
     POMDOG_ASSERT(deviceContext);
     deviceContext->RSSetViewports(1, &viewport);

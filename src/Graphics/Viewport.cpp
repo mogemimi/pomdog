@@ -2,78 +2,49 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Graphics/Viewport.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-Viewport::Viewport(Rectangle const& boundsIn) noexcept
-    : Bounds(boundsIn)
+Viewport::Viewport(Rectangle const& bounds) noexcept
+    : TopLeftX(bounds.X)
+    , TopLeftY(bounds.Y)
+    , Width(bounds.Width)
+    , Height(bounds.Height)
     , MinDepth(0.0f)
     , MaxDepth(1.0f)
 {}
 //-----------------------------------------------------------------------
-Viewport::Viewport(std::int32_t xIn, std::int32_t yIn,
-    std::int32_t widthIn, std::int32_t heightIn) noexcept
-    : Bounds(xIn, yIn, widthIn, heightIn)
+Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn) noexcept
+    : TopLeftX(xIn)
+    , TopLeftY(yIn)
+    , Width(widthIn)
+    , Height(heightIn)
     , MinDepth(0.0f)
     , MaxDepth(1.0f)
 {}
 //-----------------------------------------------------------------------
-Viewport::Viewport(std::int32_t x, std::int32_t y,
-    std::int32_t width, std::int32_t height,
+Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn,
     float minDepthIn, float maxDepthIn) noexcept
-    : Bounds(x, y, width, height)
+    : TopLeftX(xIn)
+    , TopLeftY(yIn)
+    , Width(widthIn)
+    , Height(heightIn)
     , MinDepth(minDepthIn)
     , MaxDepth(maxDepthIn)
 {}
 //-----------------------------------------------------------------------
-std::int32_t Viewport::GetX() const noexcept
+Rectangle Viewport::GetBounds() const noexcept
 {
-    POMDOG_ASSERT(Bounds.X == Bounds.GetLeft());
-    return Bounds.X;
-}
-//-----------------------------------------------------------------------
-void Viewport::SetX(std::int32_t xIn) noexcept
-{
-    Bounds.X = xIn;
-}
-//-----------------------------------------------------------------------
-std::int32_t Viewport::GetY() const noexcept
-{
-    POMDOG_ASSERT(Bounds.Y == Bounds.GetTop());
-    return Bounds.Y;
-}
-//-----------------------------------------------------------------------
-void Viewport::SetY(std::int32_t yIn) noexcept
-{
-    Bounds.Y = yIn;
-}
-//-----------------------------------------------------------------------
-std::int32_t Viewport::GetWidth() const noexcept
-{
-    return Bounds.Width;
-}
-//-----------------------------------------------------------------------
-void Viewport::SetWidth(std::int32_t widthIn) noexcept
-{
-    Bounds.Width = widthIn;
-}
-//-----------------------------------------------------------------------
-std::int32_t Viewport::GetHeight() const noexcept
-{
-    return Bounds.Height;
-}
-//-----------------------------------------------------------------------
-void Viewport::SetHeight(std::int32_t heightIn) noexcept
-{
-    Bounds.Height = heightIn;
+    return Rectangle{TopLeftX, TopLeftY, Width, Height};
 }
 //-----------------------------------------------------------------------
 float Viewport::GetAspectRatio() const
 {
-    POMDOG_ASSERT(Bounds.Height != 0);
-    if (Bounds.Height != 0) {
-        return static_cast<float>(Bounds.Width) / Bounds.Height;
+    POMDOG_ASSERT(this->Height != 0);
+    if (this->Height != 0) {
+        return static_cast<float>(this->Width) / this->Height;
     }
     return 0.0f;
 }

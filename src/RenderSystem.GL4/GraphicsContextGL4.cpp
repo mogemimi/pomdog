@@ -379,18 +379,18 @@ GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetViewport(Viewport const& viewport)
 {
-    POMDOG_ASSERT(viewport.GetWidth() > 0);
-    POMDOG_ASSERT(viewport.GetHeight() > 0);
+    POMDOG_ASSERT(viewport.Width > 0);
+    POMDOG_ASSERT(viewport.Height > 0);
 
-    GLint viewportY = viewport.GetY();
+    GLint viewportY = viewport.TopLeftY;
 
     if (renderTargets.empty()) {
         if (auto window = gameWindow.lock()) {
-            viewportY = window->GetClientBounds().Height - (viewport.GetY() + viewport.GetHeight());
+            viewportY = window->GetClientBounds().Height - (viewport.TopLeftY + viewport.Height);
         }
     }
 
-    glViewport(viewport.GetX(), viewportY, viewport.GetWidth(), viewport.GetHeight());
+    glViewport(viewport.TopLeftX, viewportY, viewport.Width, viewport.Height);
     POMDOG_CHECK_ERROR_GL4("glViewport");
 
     static_assert(std::is_same<GLfloat, decltype(viewport.MinDepth)>::value
