@@ -19,10 +19,11 @@ MaidChanGame::~MaidChanGame() = default;
 //-----------------------------------------------------------------------
 void MaidChanGame::Initialize()
 {
-    window->Title("TestApp - Enjoy Game Dev, Have Fun.");
-    window->AllowPlayerResizing(true);
+    window->SetTitle("TestApp - Enjoy Game Dev, Have Fun.");
+    window->SetAllowUserResizing(true);
 
     auto assets = gameHost->AssetManager();
+    auto clientBounds = window->GetClientBounds();
 
     {
         samplerPoint = std::make_shared<SamplerState>(graphicsDevice,
@@ -35,14 +36,13 @@ void MaidChanGame::Initialize()
     }
     {
         renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
-            window->ClientBounds().Width, window->ClientBounds().Height,
+            clientBounds.Width, clientBounds.Height,
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
     }
     {
         spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
         fxaa = std::make_unique<FXAA>(graphicsDevice, *assets);
-        auto bounds = window->ClientBounds();
-        fxaa->SetViewport(bounds.Width, bounds.Height);
+        fxaa->SetViewport(clientBounds.Width, clientBounds.Height);
         screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
     }
     {
@@ -78,7 +78,7 @@ void MaidChanGame::Initialize()
     }
 
     {
-        scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
+        scenePanel = std::make_shared<UI::ScenePanel>(clientBounds.Width, clientBounds.Height);
         scenePanel->cameraObject = mainCamera;
         gameEditor->AddView(scenePanel);
     }
@@ -123,7 +123,6 @@ void MaidChanGame::Initialize()
         }
     }
 
-    auto clientBounds = window->ClientBounds();
     clientViewport = Viewport{0, 0, clientBounds.Width, clientBounds.Height};
 
     connections.Connect(window->ClientSizeChanged, [this](int width, int height) {
@@ -177,7 +176,7 @@ void MaidChanGame::DrawSprites()
     auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
     auto viewport = graphicsContext->GetViewport();
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        viewport.Width(), viewport.Height(), 0.1f, 1000.0f);
+        viewport.GetWidth(), viewport.GetHeight(), 0.1f, 1000.0f);
 
     editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 

@@ -21,20 +21,20 @@ MaidBeamGame::~MaidBeamGame() = default;
 //-----------------------------------------------------------------------
 void MaidBeamGame::Initialize()
 {
-    window->Title("MaidBeamGame - Enjoy Game Dev, Have Fun.");
-    window->AllowPlayerResizing(true);
+    window->SetTitle("MaidBeamGame - Enjoy Game Dev, Have Fun.");
+    window->SetAllowUserResizing(true);
 
     auto assets = gameHost->AssetManager();
+    auto clientBounds = window->GetClientBounds();
 
     {
         renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
-            window->ClientBounds().Width, window->ClientBounds().Height,
+            clientBounds.Width, clientBounds.Height,
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
     }
     {
         fxaa = std::make_unique<FXAA>(graphicsDevice, *assets);
-        auto bounds = window->ClientBounds();
-        fxaa->SetViewport(bounds.Width, bounds.Height);
+        fxaa->SetViewport(clientBounds.Width, clientBounds.Height);
         screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
     }
     {
@@ -56,7 +56,7 @@ void MaidBeamGame::Initialize()
         editorBackground = std::make_unique<SceneEditor::EditorBackground>(gameHost);
     }
     {
-        scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
+        scenePanel = std::make_shared<UI::ScenePanel>(clientBounds.Width, clientBounds.Height);
         scenePanel->cameraObject = editorCamera;
         gameEditor->AddView(scenePanel);
     }
@@ -105,7 +105,6 @@ void MaidBeamGame::Initialize()
         }
     }
 
-    auto clientBounds = window->ClientBounds();
     clientViewport = Viewport{0, 0, clientBounds.Width, clientBounds.Height};
 
     connections.Connect(window->ClientSizeChanged, [this](int width, int height) {
@@ -152,7 +151,7 @@ void MaidBeamGame::Update()
 //-----------------------------------------------------------------------
 void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camera)
 {
-    auto clientBounds = window->ClientBounds();
+    auto clientBounds = window->GetClientBounds();
 
     Viewport viewport(
         clientBounds.Width * camera.NormalizedViewportX,
@@ -162,7 +161,7 @@ void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camer
 
     auto viewMatrix = SandboxHelper::CreateViewMatrix(transform, camera);
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        viewport.Width(), viewport.Height(), camera.Near, camera.Far);
+        viewport.GetWidth(), viewport.GetHeight(), camera.Near, camera.Far);
 
     editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
     renderer.ViewMatrix(viewMatrix);

@@ -34,7 +34,8 @@ void TestAppGame::Initialize()
 void TestAppGame::Update()
 {
     if (!game) {
-        gameHost->Window()->Title(StringFormat(
+        auto window = gameHost->Window();
+        window->SetTitle(StringFormat(
             "%3.0f fps, FrameNumber = %6d",
             std::round(gameHost->Clock()->FrameRate()),
             gameHost->Clock()->FrameNumber()));

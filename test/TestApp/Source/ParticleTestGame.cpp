@@ -18,19 +18,19 @@ ParticleTestGame::~ParticleTestGame() = default;
 //-----------------------------------------------------------------------
 void ParticleTestGame::Initialize()
 {
-    window->Title("ParticleTestGame - Enjoy Game Dev, Have Fun.");
-    window->AllowPlayerResizing(false);
+    window->SetTitle("ParticleTestGame - Enjoy Game Dev, Have Fun.");
+    window->SetAllowUserResizing(false);
 
     auto assets = gameHost->AssetManager();
 
     {
         renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
-            window->ClientBounds().Width, window->ClientBounds().Height,
+            window->GetClientBounds().Width, window->GetClientBounds().Height,
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
     }
     {
         fxaa = std::make_unique<FXAA>(graphicsDevice, *assets);
-        auto bounds = window->ClientBounds();
+        auto bounds = window->GetClientBounds();
         fxaa->SetViewport(bounds.Width, bounds.Height);
         screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
     }
@@ -52,7 +52,8 @@ void ParticleTestGame::Initialize()
     }
 
     {
-        scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
+        auto clientBounds = window->GetClientBounds();
+        scenePanel = std::make_shared<UI::ScenePanel>(clientBounds.Width, clientBounds.Height);
         scenePanel->cameraObject = mainCamera;
         gameEditor->AddView(scenePanel);
     }
@@ -87,15 +88,15 @@ void ParticleTestGame::Initialize()
             auto viewport = graphicsContext->GetViewport();
 
             auto position = Vector3::Transform(Vector3(
-                positionInView.X - viewport.Width() / 2,
-                positionInView.Y - viewport.Height() / 2,
+                positionInView.X - viewport.GetWidth() / 2,
+                positionInView.Y - viewport.GetHeight() / 2,
                 0), inverseViewMatrix3D);
 
             touchPoint = Vector2{position.X, position.Y};
         });
     }
 
-    auto clientBounds = window->ClientBounds();
+    auto clientBounds = window->GetClientBounds();
     clientViewport = Viewport{0, 0, clientBounds.Width, clientBounds.Height};
 }
 //-----------------------------------------------------------------------
@@ -139,9 +140,10 @@ void ParticleTestGame::Draw()
         auto camera = mainCamera.Component<Camera2D>();
 
         POMDOG_ASSERT(transform && camera);
+        auto clientBounds = window->GetClientBounds();
         auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
         auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-            window->ClientBounds().Width, window->ClientBounds().Height, camera->Near, camera->Far);
+            clientBounds.Width, clientBounds.Height, camera->Near, camera->Far);
 
         editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
     }

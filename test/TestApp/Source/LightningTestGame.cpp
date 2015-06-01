@@ -18,10 +18,11 @@ LightningTestGame::~LightningTestGame() = default;
 //-----------------------------------------------------------------------
 void LightningTestGame::Initialize()
 {
-    window->Title("TestApp - Enjoy Game Dev, Have Fun.");
-    window->AllowPlayerResizing(true);
+    window->SetTitle("TestApp - Enjoy Game Dev, Have Fun.");
+    window->SetAllowUserResizing(true);
 
     auto assets = gameHost->AssetManager();
+    auto clientBounds = window->GetClientBounds();
 
     {
         gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
@@ -35,15 +36,14 @@ void LightningTestGame::Initialize()
     }
     {
         renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
-            window->ClientBounds().Width, window->ClientBounds().Height,
+            clientBounds.Width, clientBounds.Height,
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
     }
     {
         spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
         spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
         fxaa = std::make_unique<FXAA>(graphicsDevice, *assets);
-        auto bounds = window->ClientBounds();
-        fxaa->SetViewport(bounds.Width, bounds.Height);
+        fxaa->SetViewport(clientBounds.Width, clientBounds.Height);
         screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
     }
     {
@@ -90,7 +90,7 @@ void LightningTestGame::Initialize()
     touchPoint = {0, -300};
 
     {
-        scenePanel = std::make_shared<UI::ScenePanel>(window->ClientBounds().Width, window->ClientBounds().Height);
+        scenePanel = std::make_shared<UI::ScenePanel>(clientBounds.Width, clientBounds.Height);
         scenePanel->cameraObject = mainCamera;
         gameEditor->AddView(scenePanel);
     }
@@ -140,15 +140,14 @@ void LightningTestGame::Initialize()
             auto viewport = graphicsContext->GetViewport();
 
             auto position = Vector3::Transform(Vector3(
-                positionInView.X - viewport.Width() / 2,
-                positionInView.Y - viewport.Height() / 2,
+                positionInView.X - viewport.GetWidth() / 2,
+                positionInView.Y - viewport.GetHeight() / 2,
                 0), inverseViewMatrix3D);
 
             touchPoint = Vector2{position.X, position.Y};
         });
     }
 
-    auto clientBounds = window->ClientBounds();
     clientViewport = Viewport{0, 0, clientBounds.Width, clientBounds.Height};
 
     connections.Connect(window->ClientSizeChanged, [this](int width, int height) {
@@ -194,7 +193,7 @@ void LightningTestGame::DrawSprites()
     auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
     auto viewport = graphicsContext->GetViewport();
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        viewport.Width(), viewport.Height(), 0.1f, 1000.0f);
+        viewport.GetWidth(), viewport.GetHeight(), 0.1f, 1000.0f);
 
     editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 
