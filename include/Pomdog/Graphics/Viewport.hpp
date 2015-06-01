@@ -17,30 +17,34 @@ public:
     float MaxDepth;
 
 public:
-    Viewport() = default;
+    Viewport() noexcept = default;
 
-    explicit Viewport(Rectangle const& bounds);
+    explicit Viewport(Rectangle const& bounds) noexcept;
 
     Viewport(std::int32_t x, std::int32_t y,
-        std::int32_t width, std::int32_t height);
+        std::int32_t width, std::int32_t height) noexcept;
 
     Viewport(std::int32_t x, std::int32_t y,
         std::int32_t width, std::int32_t height,
-        float minDepth, float maxDepth);
+        float minDepth, float maxDepth) noexcept;
 
-    void Width(std::int32_t width) noexcept;
+    std::int32_t GetX() const noexcept;
 
-    std::int32_t Width() const noexcept;
+    void SetX(std::int32_t x) noexcept;
 
-    void Height(std::int32_t height) noexcept;
+    std::int32_t GetY() const noexcept;
 
-    std::int32_t Height() const noexcept;
+    void SetY(std::int32_t y) noexcept;
 
-    std::int32_t TopLeftX() const noexcept;
+    std::int32_t GetWidth() const noexcept;
 
-    std::int32_t TopLeftY() const noexcept;
+    void SetWidth(std::int32_t width) noexcept;
 
-    float AspectRatio() const;
+    std::int32_t GetHeight() const noexcept;
+
+    void SetHeight(std::int32_t height) noexcept;
+
+    float GetAspectRatio() const;
 };
 
 } // namespace Pomdog

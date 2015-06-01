@@ -159,14 +159,14 @@ void GraphicsContext::Impl::BuildResources(std::shared_ptr<GraphicsDevice> const
     }
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetViewport(Pomdog::Viewport const& newViewport)
+void GraphicsContext::Impl::SetViewport(Pomdog::Viewport const& viewportIn)
 {
     POMDOG_ASSERT(nativeContext);
-    POMDOG_ASSERT(newViewport.Width() > 0);
-    POMDOG_ASSERT(newViewport.Height() > 0);
+    POMDOG_ASSERT(viewportIn.GetWidth() > 0);
+    POMDOG_ASSERT(viewportIn.GetHeight() > 0);
     POMDOG_ASSERT(nativeContext);
 
-    this->viewport = newViewport;
+    this->viewport = viewportIn;
     nativeContext->SetViewport(this->viewport);
 }
 //-----------------------------------------------------------------------
