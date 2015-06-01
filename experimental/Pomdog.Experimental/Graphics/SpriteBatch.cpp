@@ -165,16 +165,16 @@ void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn)
 
     auto viewport = graphicsContext->GetViewport();
 
-    POMDOG_ASSERT(viewport.GetWidth() > 0);
-    POMDOG_ASSERT(viewport.GetHeight() > 0);
+    POMDOG_ASSERT(viewport.Width > 0);
+    POMDOG_ASSERT(viewport.Height > 0);
 
 #ifdef POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
     transposedTransformProjectionMatrix = Matrix4x4::Transpose(
-        Matrix4x4::CreateTranslation(Vector3(-viewport.GetWidth() / 2, -viewport.GetHeight() / 2, 1)) *
-        Matrix4x4::CreateOrthographicLH(viewport.GetWidth(), -viewport.GetHeight(), 0.1f, 100.0f));
+        Matrix4x4::CreateTranslation(Vector3(-viewport.Width / 2, -viewport.Height / 2, 1)) *
+        Matrix4x4::CreateOrthographicLH(viewport.Width, -viewport.Height, 0.1f, 100.0f));
 #else
     transposedTransformProjectionMatrix = Matrix4x4::Transpose(
-        Matrix4x4::CreateOrthographicLH(viewport.Width(), viewport.Height(), 0.1f, 100.0f));
+        Matrix4x4::CreateOrthographicLH(viewport.Width, viewport.Height, 0.1f, 100.0f));
 #endif
 }
 //-----------------------------------------------------------------------
@@ -184,13 +184,13 @@ void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn, Matrix4x4 const& transf
 
     auto viewport = graphicsContext->GetViewport();
 
-    POMDOG_ASSERT(viewport.GetWidth() > 0);
-    POMDOG_ASSERT(viewport.GetHeight() > 0);
+    POMDOG_ASSERT(viewport.Width > 0);
+    POMDOG_ASSERT(viewport.Height > 0);
 
 #ifdef POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
     transposedTransformProjectionMatrix = Matrix4x4::Transpose(transformMatrix
-        * Matrix4x4::CreateTranslation(Vector3(-viewport.GetWidth() / 2, -viewport.GetHeight() / 2, 1))
-        * Matrix4x4::CreateOrthographicLH(viewport.GetWidth(), -viewport.GetHeight(), 0.1f, 100.0f));
+        * Matrix4x4::CreateTranslation(Vector3(-viewport.Width / 2, -viewport.Height / 2, 1))
+        * Matrix4x4::CreateOrthographicLH(viewport.Width, -viewport.Height, 0.1f, 100.0f));
 #else
     transposedTransformProjectionMatrix = Matrix4x4::Transpose(transformMatrix
         * Matrix4x4::CreateOrthographicLH(viewport.Width(), viewport.Height(), 0.1f, 100.0f));

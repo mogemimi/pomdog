@@ -140,8 +140,8 @@ void LightningTestGame::Initialize()
             auto viewport = graphicsContext->GetViewport();
 
             auto position = Vector3::Transform(Vector3(
-                positionInView.X - viewport.GetWidth() / 2,
-                positionInView.Y - viewport.GetHeight() / 2,
+                positionInView.X - viewport.Width / 2,
+                positionInView.Y - viewport.Height / 2,
                 0), inverseViewMatrix3D);
 
             touchPoint = Vector2{position.X, position.Y};
@@ -193,7 +193,7 @@ void LightningTestGame::DrawSprites()
     auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
     auto viewport = graphicsContext->GetViewport();
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        viewport.GetWidth(), viewport.GetHeight(), 0.1f, 1000.0f);
+        viewport.Width, viewport.Height, 0.1f, 1000.0f);
 
     editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 
@@ -252,7 +252,7 @@ void LightningTestGame::Draw()
     if (enableFxaa) {
         graphicsContext->SetRenderTarget();
         graphicsContext->SetViewport(clientViewport);
-        graphicsContext->SetScissorRectangle(clientViewport.Bounds);
+        graphicsContext->SetScissorRectangle(clientViewport.GetBounds());
         graphicsContext->Clear(Color::CornflowerBlue);
         fxaa->SetTexture(renderTarget);
         fxaa->Apply(*graphicsContext);

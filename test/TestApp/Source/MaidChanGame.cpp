@@ -176,7 +176,7 @@ void MaidChanGame::DrawSprites()
     auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
     auto viewport = graphicsContext->GetViewport();
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        viewport.GetWidth(), viewport.GetHeight(), 0.1f, 1000.0f);
+        viewport.Width, viewport.Height, 0.1f, 1000.0f);
 
     editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 
@@ -251,7 +251,7 @@ void MaidChanGame::Draw()
     if (enableFxaa) {
         graphicsContext->SetRenderTarget();
         graphicsContext->SetViewport(clientViewport);
-        graphicsContext->SetScissorRectangle(clientViewport.Bounds);
+        graphicsContext->SetScissorRectangle(clientViewport.GetBounds());
         graphicsContext->Clear(Color::CornflowerBlue);
         fxaa->SetTexture(renderTarget);
         fxaa->Apply(*graphicsContext);

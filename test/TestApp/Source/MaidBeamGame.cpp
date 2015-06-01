@@ -161,7 +161,7 @@ void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camer
 
     auto viewMatrix = SandboxHelper::CreateViewMatrix(transform, camera);
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        viewport.GetWidth(), viewport.GetHeight(), camera.Near, camera.Far);
+        viewport.Width, viewport.Height, camera.Near, camera.Far);
 
     editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
     renderer.ViewMatrix(viewMatrix);
@@ -249,7 +249,7 @@ void MaidBeamGame::Draw()
     if (enableFxaa) {
         graphicsContext->SetRenderTarget();
         graphicsContext->SetViewport(clientViewport);
-        graphicsContext->SetScissorRectangle(clientViewport.Bounds);
+        graphicsContext->SetScissorRectangle(clientViewport.GetBounds());
         graphicsContext->Clear(Color::CornflowerBlue);
         fxaa->SetTexture(renderTarget);
         fxaa->Apply(*graphicsContext);
