@@ -9,6 +9,8 @@ using namespace Pomdog;
 
 TEST(Rectangle, TrivialCase)
 {
+    using Pomdog::Rectangle;
+
     Rectangle rect = {320, 240, 640, 480};
     EXPECT_EQ(320, rect.X);
     EXPECT_EQ(240, rect.Y);
@@ -24,6 +26,8 @@ TEST(Rectangle, TrivialCase)
 
 TEST(Rectangle, Location)
 {
+    using Pomdog::Rectangle;
+
     Rectangle rect = {320, 240, 640, 480};
     ASSERT_EQ(320, rect.X);
     ASSERT_EQ(240, rect.Y);
@@ -45,6 +49,8 @@ TEST(Rectangle, Location)
 
 TEST(Rectangle, Inflate)
 {
+    using Pomdog::Rectangle;
+
     Rectangle rect = {320, 240, 640, 480};
     rect.Inflate(96, 42);
     EXPECT_EQ(320 - 96, rect.X);
