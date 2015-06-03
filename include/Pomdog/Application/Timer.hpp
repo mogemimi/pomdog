@@ -4,17 +4,22 @@
 #ifndef POMDOG_TIMER_CAC74AF2_HPP
 #define POMDOG_TIMER_CAC74AF2_HPP
 
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
+#include "Pomdog/Signals/Signal.hpp"
+#include "Pomdog/Utility/Optional.hpp"
 #include <memory>
 
 namespace Pomdog {
 
 class GameClock;
 
-class Timer {
+class POMDOG_EXPORT Timer {
 public:
     explicit Timer(GameClock & clock);
+
+    explicit Timer(std::shared_ptr<GameClock> const& clock);
 
     Timer() = delete;
     Timer(Timer const&) = delete;
@@ -28,20 +33,36 @@ public:
     void Stop();
     void Reset();
 
-    bool Enabled() const;
+    bool IsEnabled() const;
 
-    Duration TotalTime() const;
-    Duration FrameDuration() const;
+    Duration GetTotalTime() const;
 
-    void Scale(float scale);
-    float Scale() const;
+    Duration GetFrameDuration() const;
+
+    bool IsSingleShot() const;
+
+    void SetSingleShot(bool isSingleShot);
+
+    double GetScale() const;
+
+    void SetScale(double scale);
+
+    Optional<Duration> GetInterval() const;
+
+    void SetInterval(Duration const& interval);
+
+    void SetInterval(Optional<Duration> const& interval);
+
+    Signal<void()> Elapsed;
 
 private:
     ScopedConnection connection;
+    Optional<Duration> interval;
     Duration totalTime;
     Duration frameDuration;
-    float scale;
-    bool  enabled;
+    double scale;
+    bool enabled;
+    bool isSingleShot;
 };
 
 } // namespace Pomdog

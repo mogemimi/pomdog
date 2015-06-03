@@ -47,6 +47,7 @@
       ],
       'sources': [
         'main.cpp',
+        'Application/TimerTest.cpp',
         #'Gameplay/GameObjectIDTest.cpp',
         #'Gameplay/GameObjectTest.cpp',
         #'Gameplay/GameWorldTest.cpp',

@@ -14,7 +14,7 @@
 namespace Pomdog {
 namespace Detail {
 
-class GraphicsCapabilities;
+struct GraphicsCapabilities;
 class NativeConstantLayout;
 class NativePipelineState;
 

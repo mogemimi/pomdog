@@ -9,8 +9,7 @@
 namespace Pomdog {
 namespace Detail {
 
-class GraphicsCapabilities {
-public:
+struct GraphicsCapabilities {
     std::size_t SamplerSlotCount;
 };
 
