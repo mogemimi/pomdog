@@ -4,6 +4,7 @@
 #ifndef POMDOG_ANY_2C2DCE41_HPP
 #define POMDOG_ANY_2C2DCE41_HPP
 
+#include "Pomdog/Utility/detail/CRC32.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <typeindex>
@@ -14,6 +15,18 @@
 
 namespace Pomdog {
 namespace Detail {
+
+// TypeIdHashing provides typeid/type_info comparison across shared library boundaries.
+template <class T>
+struct POMDOG_EXPORT TypeIdHashing final {
+    static const std::uint32_t hashCode;
+};
+
+template <class T>
+const std::uint32_t TypeIdHashing<T>::hashCode
+    = Detail::CRC32::ComputeCRC32<char>(typeid(T).name());
+
+} // namespace Detail
 
 class POMDOG_EXPORT Any final {
 private:
@@ -35,6 +48,7 @@ private:
 
     std::unique_ptr<HolderBase> data;
     std::type_index typeIndex;
+    std::uint32_t hashCode;
 
 public:
     Any() = delete;
@@ -48,18 +62,21 @@ public:
     Any(T && value)
         : data(std::make_unique<Holder<typename std::remove_reference<T>::type>>(std::forward<T>(value)))
         , typeIndex(typeid(T))
+        , hashCode(Detail::TypeIdHashing<T>::hashCode)
     {}
 
     template <typename T>
     bool Is() const
     {
-        return typeIndex == typeid(T);
+        return typeIndex == typeid(T)
+            || hashCode == Detail::TypeIdHashing<T>::hashCode;
     }
 
     template <typename T>
     T const& As() const
     {
-        POMDOG_ASSERT(typeIndex == typeid(T));
+        POMDOG_ASSERT(typeIndex == typeid(T)
+            || hashCode == Detail::TypeIdHashing<T>::hashCode);
 
         if (!Is<T>()) {
             //throw BadAnyCast;
@@ -74,7 +91,8 @@ public:
     template <typename T>
     T & As()
     {
-        POMDOG_ASSERT(typeIndex == typeid(T));
+        POMDOG_ASSERT(typeIndex == typeid(T)
+            || hashCode == Detail::TypeIdHashing<T>::hashCode);
 
         if (!Is<T>()) {
             //throw BadAnyCast;
@@ -92,7 +110,6 @@ public:
     }
 };
 
-} // namespace Detail
 } // namespace Pomdog
 
 #endif // POMDOG_ANY_2C2DCE41_HPP
