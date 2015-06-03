@@ -125,6 +125,7 @@
 #include "Signals/ScopedConnection.hpp"
 #include "Signals/Signal.hpp"
 
+#include "Utility/Any.hpp"
 #include "Utility/Assert.hpp"
 #include "Utility/Exception.hpp"
 #include "Utility/StringFormat.hpp"

@@ -1,11 +1,11 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include <Pomdog/Utility/detail/Any.hpp>
+#include <Pomdog/Utility/Any.hpp>
 #include <gtest/iutest_switch.hpp>
 #include <memory>
 
-using Pomdog::Detail::Any;
+using Pomdog::Any;
 
 TEST(Any, FirstCase)
 {

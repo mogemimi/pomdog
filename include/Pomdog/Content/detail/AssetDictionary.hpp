@@ -6,7 +6,7 @@
 
 #include "AssetLoaders/AudioClipLoader.hpp"
 #include "AssetLoaders/Texture2DLoader.hpp"
-#include "Pomdog/Utility/detail/Any.hpp"
+#include "Pomdog/Utility/Any.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <unordered_map>
 #include <typeindex>
