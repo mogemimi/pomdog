@@ -15,10 +15,17 @@ QuickStartGame::QuickStartGame(const std::shared_ptr<GameHost>& gameHostIn)
 //-----------------------------------------------------------------------
 void QuickStartGame::Initialize()
 {
-    {
-        // Set window name
-        window->Title("QuickStart");
-    }
+    // Set window name
+    window->SetTitle("QuickStart");
+
+    // Load a PNG as texture
+    texture = assets->Load<Texture2D>("pomdog.png");
+
+    // Create sampler state
+    sampler = std::make_shared<SamplerState>(
+        graphicsDevice,
+        SamplerDescription::CreatePointClamp());
+
     {
         // Create vertex buffer
         struct VertexCombined {
@@ -81,14 +88,6 @@ void QuickStartGame::Initialize()
         // Get constant buffer
         constantBuffer = constantBuffers->Find("MyConstants");
     }
-    {
-        // Create sampler state
-        sampler = std::make_shared<SamplerState>(graphicsDevice,
-            SamplerDescription::CreatePointClamp());
-
-        // Load a PNG as texture
-        texture = assets->Load<Texture2D>("pomdog.png");
-    }
 }
 //-----------------------------------------------------------------------
 void QuickStartGame::Update()
@@ -110,13 +109,13 @@ void QuickStartGame::Update()
 void QuickStartGame::Draw()
 {
     auto graphicsContext = gameHost->GraphicsContext();
-    auto bounds = window->ClientBounds();
+    auto bounds = window->GetClientBounds();
 
     Viewport viewport = {0, 0, bounds.Width, bounds.Height};
 
     graphicsContext->SetRenderTarget();
     graphicsContext->SetViewport(viewport);
-    graphicsContext->SetScissorRectangle(viewport.Bounds);
+    graphicsContext->SetScissorRectangle(viewport.GetBounds());
     graphicsContext->Clear(Color::CornflowerBlue);
     graphicsContext->SetSamplerState(0, sampler);
     graphicsContext->SetTexture(0, texture);
