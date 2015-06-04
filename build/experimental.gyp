@@ -323,6 +323,7 @@
         '../include',
         '<@(pomdog_third_party_dir)/rapidjson/include',
         '<@(pomdog_third_party_dir)/lua/src',
+        '<@(pomdog_third_party_dir)',
       ],
       'sources': [
         '<@(pomdog_experimental_sources)',

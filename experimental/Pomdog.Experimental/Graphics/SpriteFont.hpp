@@ -44,9 +44,7 @@ public:
 
     ~SpriteFont();
 
-    Vector2 MeasureString(char const* text) const;
-
-    //Vector2 MeasureString(std::string const& text) const;
+    Vector2 MeasureString(std::string const& text) const;
 
     std::uint32_t DefaultCharacter() const;
 
@@ -60,13 +58,16 @@ public:
 
     void Begin(Matrix4x4 const& transformMatrix);
 
-    void Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color);
+    void Draw(SpriteBatch & spriteBatch, std::string const& text,
+        Vector2 const& position, Color const& color);
 
-    void Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color,
-        Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth);
+    void Draw(SpriteBatch & spriteBatch, std::string const& text,
+        Vector2 const& position, Color const& color,
+        Radian<float> const& rotation, float scale, float layerDepth);
 
-    void Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color,
-        Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
+    void Draw(SpriteBatch & spriteBatch, std::string const& text,
+        Vector2 const& position, Color const& color,
+        Radian<float> const& rotation, Vector2 const& scale, float layerDepth);
 
     void End();
 

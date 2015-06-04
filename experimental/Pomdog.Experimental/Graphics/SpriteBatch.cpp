@@ -118,7 +118,7 @@ SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextI
     , sortMode(SpriteSortMode::BackToFront)
 {
     {
-        using PositionTextureCoord = std::tuple<Vector4>;
+        using PositionTextureCoord = Vector4;
 
         std::array<PositionTextureCoord, 4> const verticesCombo = {
         #ifdef POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D

@@ -103,7 +103,7 @@ void SpriteDrawingContext::DrawString(Matrix3x2 const& transform, Color const& c
 
         spriteFont.Begin(Matrix4x4::Identity);
         spriteFont.Draw(spriteFontBatch, text, position, color,
-            0.0f, {0.0f, 0.0f}, fontScale, 0.0f);
+            0.0f, fontScale, 0.0f);
         spriteFont.End();
     }
 }

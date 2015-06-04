@@ -125,7 +125,7 @@ SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsConte
         projectionMatrix = Matrix4x4::CreateOrthographicLH(viewport.Width, viewport.Height, 0.1f, 100.0f);
     }
     {
-        using PositionTextureCoord = std::tuple<Vector4>;
+        using PositionTextureCoord = Vector4;
         std::array<PositionTextureCoord, 4> const verticesCombo = {
             Vector4(0.0f, 0.0f, 0.0f, 1.0f),
             Vector4(0.0f, 1.0f, 0.0f, 0.0f),

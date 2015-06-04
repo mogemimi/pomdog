@@ -6,10 +6,8 @@
 #include "Pomdog/Math/Matrix4x4.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog.Experimental/MSVCSupport.hpp"
+#include <utf8cpp/utf8.h>
 #include <unordered_map>
-#include <codecvt>
-#include <locale>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
@@ -26,19 +24,30 @@ public:
     Matrix4x4 transformMatrix;
 
     std::uint32_t defaultCharacter;
-    std::uint16_t lineSpacing;
+    float lineSpacing;
     std::uint16_t spacing;
 
     Impl(std::vector<std::shared_ptr<Texture2D>> && textures,
         std::vector<Detail::SpriteFonts::Glyph> const& glyphs,
         std::uint32_t defaultCharacter, std::int16_t spacing, std::int16_t lineSpacing);
 
-    Vector2 MeasureString(std::u32string const& text) const;
+    Vector2 MeasureString(std::string const& text) const;
 
-    void Draw(SpriteBatch & spriteBatch, std::u32string const& text, Vector2 const& position, Color const& color);
+    void Draw(
+        SpriteBatch & spriteBatch,
+        std::string const& text,
+        Vector2 const& position,
+        Color const& color);
 
-    void Draw(SpriteBatch & spriteBatch, std::u32string const& text, Vector2 const& position, Color const& color,
-        Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
+    void Draw(
+        SpriteBatch & spriteBatch,
+        std::string const& text,
+        Vector2 const& position,
+        Color const& color,
+        Radian<float> const& rotation,
+        //Vector2 const& originPivot,
+        Vector2 const& scale,
+        float layerDepth);
 
 private:
     std::vector<std::shared_ptr<Texture2D>> textures;
@@ -58,18 +67,23 @@ SpriteFont::Impl::Impl(std::vector<std::shared_ptr<Texture2D>> && texturesIn,
     }
 }
 //-----------------------------------------------------------------------
-Vector2 SpriteFont::Impl::MeasureString(std::u32string const& text) const
+Vector2 SpriteFont::Impl::MeasureString(std::string const& text) const
 {
-    POMDOG_ASSERT(!textures.empty());
+    POMDOG_ASSERT(!text.empty());
 
     Vector2 result = Vector2::Zero;
     Vector2 currentPosition = Vector2::Zero;
 
-    for (auto & character: text)
+    auto textIter = std::begin(text);
+    auto textIterEnd = std::end(text);
+
+    while (textIter != textIterEnd)
     {
+        const auto character = utf8::next(textIter, textIterEnd);
+
         if (character == U'\n')
         {
-            currentPosition.X = 0.0f;
+            currentPosition.X = 0;
             currentPosition.Y += lineSpacing;
             continue;
         }
@@ -94,20 +108,27 @@ Vector2 SpriteFont::Impl::MeasureString(std::u32string const& text) const
 }
 //-----------------------------------------------------------------------
 void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
-    std::u32string const& text, Vector2 const& position, Color const& color)
+    std::string const& text, Vector2 const& position, Color const& color)
 {
     if (text.empty()) {
         return;
     }
 
-    POMDOG_ASSERT(!textures.empty());
+    if (textures.empty()) {
+        return;
+    }
 
     spriteBatch.Begin(SpriteSortMode::Deferred, transformMatrix);
 
     Vector2 currentPosition = position;
 
-    for (auto & character: text)
+    auto textIter = std::begin(text);
+    auto textIterEnd = std::end(text);
+
+    while (textIter != textIterEnd)
     {
+        const auto character = utf8::next(textIter, textIterEnd);
+
         if (character == U'\n')
         {
             currentPosition.X = position.X;
@@ -142,14 +163,21 @@ void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
 }
 //-----------------------------------------------------------------------
 void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
-    std::u32string const& text, Vector2 const& position, Color const& color,
-    Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
+    std::string const& text,
+    Vector2 const& position,
+    Color const& color,
+    Radian<float> const& rotation,
+    //Vector2 const& originPivot,
+    Vector2 const& scale,
+    float layerDepth)
 {
     if (text.empty()) {
         return;
     }
 
-    POMDOG_ASSERT(!textures.empty());
+    if (textures.empty()) {
+        return;
+    }
 
     spriteBatch.Begin(SpriteSortMode::Deferred, Matrix4x4::CreateRotationZ(rotation)
         * Matrix4x4::CreateScale({scale, 1.0f})
@@ -158,8 +186,13 @@ void SpriteFont::Impl::Draw(SpriteBatch & spriteBatch,
 
     Vector2 currentPosition = Vector2::Zero;
 
-    for (auto & character: text)
+    auto textIter = std::begin(text);
+    auto textIterEnd = std::end(text);
+
+    while (textIter != textIterEnd)
     {
+        const auto character = utf8::next(textIter, textIterEnd);
+
         if (character == U'\n')
         {
             currentPosition.X = 0.0f;
@@ -206,22 +239,12 @@ SpriteFont::SpriteFont(std::vector<std::shared_ptr<Texture2D>> && textures,
 //-----------------------------------------------------------------------
 SpriteFont::~SpriteFont() = default;
 //-----------------------------------------------------------------------
-Vector2 SpriteFont::MeasureString(char const* text) const
+Vector2 SpriteFont::MeasureString(std::string const& utf8String) const
 {
-    POMDOG_ASSERT(text != nullptr);
-
-#ifndef POMDOG_MSVC2015_SUPPORT
-    std::string utf8String(text);
-
-    std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> utf8ToUtf32Conv;
-    try {
-        std::u32string utf32String = utf8ToUtf32Conv.from_bytes(utf8String);
-        return impl->MeasureString(utf32String);
+    if (utf8String.empty()) {
+        return Vector2::Zero;
     }
-    catch (std::exception const&) {
-    }
-#endif
-    return Vector2::Zero;
+    return impl->MeasureString(utf8String);
 }
 //-----------------------------------------------------------------------
 std::uint32_t SpriteFont::DefaultCharacter() const
@@ -263,44 +286,39 @@ void SpriteFont::Begin(Matrix4x4 const& transformMatrix)
 //-----------------------------------------------------------------------
 void SpriteFont::Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color)
 {
-#ifndef POMDOG_MSVC2015_SUPPORT
-    std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> utf8ToUtf32Conv;
-    try {
-        std::u32string utf32String = utf8ToUtf32Conv.from_bytes(text);
-        impl->Draw(spriteBatch, utf32String, position, color);
-    }
-    catch (std::exception const&) {
-    }
-#endif
+    impl->Draw(spriteBatch, text, position, color);
 }
 //-----------------------------------------------------------------------
-void SpriteFont::Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color,
-    Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth)
+void SpriteFont::Draw(SpriteBatch & spriteBatch, std::string const& text,
+    Vector2 const& position,
+    Color const& color,
+    Radian<float> const& rotation,
+    //Vector2 const& originPivot,
+    float scale,
+    float layerDepth)
 {
-    this->Draw(spriteBatch, text, position, color, rotation, originPivot, Vector2{scale, scale}, layerDepth);
+    this->Draw(spriteBatch, text, position, color,
+        rotation, Vector2{scale, scale}, layerDepth);
 }
 //-----------------------------------------------------------------------
-void SpriteFont::Draw(SpriteBatch & spriteBatch, std::string const& text, Vector2 const& position, Color const& color,
-    Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
+void SpriteFont::Draw(SpriteBatch & spriteBatch, std::string const& text,
+    Vector2 const& position,
+    Color const& color,
+    Radian<float> const& rotation,
+    //Vector2 const& originPivot,
+    Vector2 const& scale,
+    float layerDepth)
 {
-    //POMDOG_ASSERT_MESSAGE(text.empty(), "Not implemented");
-
-    ///@todo Not implemented
-
-#ifndef POMDOG_MSVC2015_SUPPORT
-    std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> utf8ToUtf32Conv;
-    try {
-        std::u32string utf32String = utf8ToUtf32Conv.from_bytes(text);
-        impl->Draw(spriteBatch, utf32String, position, color,
-            rotation, originPivot, scale, layerDepth);
+    if (text.empty()) {
+        return;
     }
-    catch (std::exception const&) {
-    }
-#endif
+
+    impl->Draw(spriteBatch, text, position, color,
+        rotation, scale, layerDepth);
 }
 //-----------------------------------------------------------------------
 void SpriteFont::End()
 {
 }
 
-}// namespace Pomdog
+} // namespace Pomdog

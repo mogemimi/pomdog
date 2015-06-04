@@ -131,7 +131,7 @@ SpriteBatchRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphics
         projectionMatrix = Matrix4x4::CreateOrthographicLH(viewport.Width, viewport.Height, 0.1f, 100.0f);
     }
     {
-        using PositionTextureCoord = std::tuple<Vector4>;
+        using PositionTextureCoord = Vector4;
 
         std::array<PositionTextureCoord, 4> const verticesCombo = {
             Vector4(0.0f, 0.0f, 0.0f, 1.0f),
