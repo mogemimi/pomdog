@@ -6,7 +6,16 @@
 #include "Pomdog/Math/Matrix4x4.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+#ifndef _MSC_VER
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshadow"
+#endif
 #include <utf8cpp/utf8.h>
+#ifndef _MSC_VER
+#pragma clang diagnostic pop
+#endif
+
 #include <unordered_map>
 
 namespace Pomdog {
