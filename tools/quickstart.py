@@ -11,6 +11,7 @@ import shutil
 
 
 from string import Template
+from download_dependencies import DownloadDependencies
 
 
 class bcolors:
@@ -78,7 +79,7 @@ def CopyTemplates(templateDirectory, projectRoot):
     CopySourceFiles(templateDirectory, projectRoot, templateFiles)
 
 
-def CopyFrameworkFiles(frameworkRoot, projectRoot):
+def CopyFrameworkFiles(pomdogPath, projectRoot):
     sourceFiles = [
         "build",
         "include",
@@ -100,15 +101,15 @@ def CopyFrameworkFiles(frameworkRoot, projectRoot):
         "setup.py",
     ]
     CopySourceFiles(
-        frameworkRoot,
+        pomdogPath,
         os.path.join(projectRoot, "ThirdParty/pomdog"),
         sourceFiles)
     CopySourceFiles(
-        os.path.join(frameworkRoot, "third-party"),
+        os.path.join(pomdogPath, "third-party"),
         os.path.join(projectRoot, "ThirdParty/pomdog/third-party"),
         thirdPartyFiles)
     CopySourceFiles(
-        os.path.join(frameworkRoot, "tools/gyp"),
+        os.path.join(pomdogPath, "tools/gyp"),
         os.path.join(projectRoot, "Tools/gyp"),
         minimumGypFiles)
 
@@ -160,14 +161,6 @@ def RenameFilename(project_root, identifier, source):
         os.rename(path, dest)
 
 
-def GitCloneRepository(url, dest):
-    command = ' '.join(["git clone --depth=1", url, dest])
-    print(ConsoleColorText(bcolors.OKBLUE, command))
-    process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
-    message = process.communicate()[0]
-    return message
-
-
 def NormalizePath(path):
     return os.path.normpath(path)
 
@@ -178,31 +171,17 @@ def CreateNewProject(config):
     CreateProjectDirectory(project_root)
     project_url = config['url']
 
-    framework_root = NormalizePath(os.path.join(os.path.dirname(__file__), ".."))
+    pomdogPath = NormalizePath(
+        os.path.join(os.path.dirname(__file__), ".."))
     templates_directory = NormalizePath(
-        os.path.join(framework_root, 'examples/QuickStart'))
+        os.path.join(pomdogPath, 'examples/QuickStart'))
 
-    thirdPartyPath = NormalizePath(os.path.join(framework_root, 'third-party'))
-    gypPath = NormalizePath(os.path.join(framework_root, 'tools/gyp'))
-
-    if not os.path.exists(thirdPartyPath):
-        repositoryUrl = "https://github.com/mogemimi/pomdog-third-party.git"
-        GitCloneRepository(repositoryUrl, thirdPartyPath)
-
-    if not os.path.isdir(thirdPartyPath):
-        print("Error: {0} is not directory".format(thirdPartyPath))
-        return
-
-    if not os.path.exists(gypPath):
-        repositoryUrl = "https://chromium.googlesource.com/external/gyp.git"
-        GitCloneRepository(repositoryUrl, gypPath)
-
-    if not os.path.isdir(gypPath):
-        print("Error: {0} is not directory".format(gypPath))
+    if not DownloadDependencies(pomdogPath):
+        print("Error: Can't download project dependencies.")
         return
 
     CopyTemplates(templates_directory, project_root)
-    CopyFrameworkFiles(framework_root, project_root)
+    CopyFrameworkFiles(pomdogPath, project_root)
     RenameContentByUrl(project_root, project_url, 'Platform.Cocoa/Info.plist')
     RenameSourceContent(project_root, identifier, 'README.md')
     RenameSourceContent(project_root, identifier, 'QuickStart.gyp')
