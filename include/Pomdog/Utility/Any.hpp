@@ -35,7 +35,7 @@ private:
     };
 
     template <typename T>
-    struct Holder final: public HolderBase {
+    struct Holder final : public HolderBase {
         T Value;
 
         template <typename U>

@@ -18,7 +18,7 @@ class GraphicsDevice;
 class Keyboard;
 class Mouse;
 
-class POMDOG_EXPORT GameHost: public std::enable_shared_from_this<GameHost> {
+class POMDOG_EXPORT GameHost : public std::enable_shared_from_this<GameHost> {
 public:
     GameHost() = default;
     GameHost(GameHost const&) = delete;

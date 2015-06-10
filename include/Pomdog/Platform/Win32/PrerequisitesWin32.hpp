@@ -5,13 +5,13 @@
 #define POMDOG_PREREQUISITESWIN32_ABB52E43_HPP
 
 #ifndef STRICT
-#    define STRICT
+#   define STRICT
 #endif
-#ifndef    WIN32_LEAN_AND_MEAN
-#    define WIN32_LEAN_AND_MEAN
+#ifndef WIN32_LEAN_AND_MEAN
+#   define WIN32_LEAN_AND_MEAN
 #endif
 #if !defined(NOMINMAX) && defined(_MSC_VER)
-#    define NOMINMAX
+#   define NOMINMAX
 #endif
 
 #include <tchar.h>

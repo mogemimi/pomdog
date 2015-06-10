@@ -29,8 +29,8 @@ public:
 
     void Enqueue(Event && event);
 
-    template <typename T, typename...Arguments>
-    void Enqueue(Arguments && ...arguments)
+    template <typename T, typename... Arguments>
+    void Enqueue(Arguments &&... arguments)
     {
         Enqueue(Event{T{std::forward<Arguments>(arguments)...}});
     }

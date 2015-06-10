@@ -12,7 +12,7 @@
 namespace Pomdog {
 
 class Rectangle;
-enum class MouseCursor: std::uint8_t;
+enum class MouseCursor : std::uint8_t;
 
 class POMDOG_EXPORT GameWindow {
 public:
