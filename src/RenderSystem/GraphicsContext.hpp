@@ -79,8 +79,12 @@ public:
     Detail::NativeGraphicsContext* GetNativeGraphicsContext();
 
 private:
-    class Impl;
-    std::unique_ptr<Impl> impl;
+    std::shared_ptr<Detail::NativeConstantLayout> constantBuffers;
+    std::vector<std::shared_ptr<Detail::NativeSamplerState>> samplerStates;
+    std::vector<std::shared_ptr<Texture>> textures;
+    std::vector<std::shared_ptr<RenderTarget2D>> renderTargets;
+    std::unique_ptr<Detail::NativeGraphicsContext> nativeContext;
+    DepthFormat depthStencilFormat;
 };
 
 } // namespace Detail

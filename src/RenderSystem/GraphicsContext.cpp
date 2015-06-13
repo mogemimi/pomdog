@@ -4,7 +4,6 @@
 #include "GraphicsContext.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
-#include "../RenderSystem/NativeSamplerState.hpp"
 #include "Pomdog/Graphics/ClearOptions.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
@@ -48,48 +47,10 @@ static ClearOptions ToClearOptions(DepthFormat depthFormat) noexcept
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - GraphicsContext::Impl class
-#endif
-//-----------------------------------------------------------------------
-class GraphicsContext::Impl final {
-public:
-    Impl() = delete;
-    Impl(Impl const&) = delete;
-    Impl(Impl &&) = default;
-
-    Impl(std::unique_ptr<Detail::NativeGraphicsContext> nativeContext,
-        PresentationParameters const& presentationParameters);
-
-    ~Impl();
-
-    void SetSampler(int samplerSlot, std::shared_ptr<Detail::NativeSamplerState> const& sampler);
-
-    void SetTexture(int textureSlot);
-
-    void SetTexture(int textureSlot, std::shared_ptr<Texture2D> const& texture);
-
-    void SetTexture(int textureSlot, std::shared_ptr<RenderTarget2D> const& texture);
-
-    void SetRenderTarget();
-
-    void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets);
-
-    void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets);
-
-public:
-    std::shared_ptr<Detail::NativePipelineState> pipelineState;
-    std::shared_ptr<Detail::NativeConstantLayout> constantBuffers;
-    std::vector<std::shared_ptr<Detail::NativeSamplerState>> samplerStates;
-    std::vector<std::shared_ptr<Texture>> textures;
-    std::vector<std::shared_ptr<RenderTarget2D>> renderTargets;
-    std::unique_ptr<Detail::NativeGraphicsContext> nativeContext;
-    DepthFormat depthStencilFormat;
-};
-//-----------------------------------------------------------------------
-GraphicsContext::Impl::Impl(std::unique_ptr<Detail::NativeGraphicsContext> nativeGraphicsContext,
+GraphicsContext::GraphicsContext(
+    std::unique_ptr<Detail::NativeGraphicsContext> && nativeContextIn,
     PresentationParameters const& presentationParameters)
-    : nativeContext(std::move(nativeGraphicsContext))
+    : nativeContext(std::move(nativeContextIn))
     , depthStencilFormat(presentationParameters.DepthStencilFormat)
 {
     POMDOG_ASSERT(nativeContext);
@@ -114,10 +75,9 @@ GraphicsContext::Impl::Impl(std::unique_ptr<Detail::NativeGraphicsContext> nativ
     nativeContext->SetBlendFactor(Color::White);
 }
 //-----------------------------------------------------------------------
-GraphicsContext::Impl::~Impl()
+GraphicsContext::~GraphicsContext()
 {
     constantBuffers.reset();
-    pipelineState.reset();
     samplerStates.clear();
     textures.clear();
     renderTargets.clear();
@@ -125,316 +85,216 @@ GraphicsContext::Impl::~Impl()
     nativeContext.reset();
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetSampler(int samplerSlot, std::shared_ptr<Detail::NativeSamplerState> const& samplerIn)
+void GraphicsContext::Clear(Color const& color)
 {
-    POMDOG_ASSERT(samplerIn);
+    ClearOptions options = ClearOptions::RenderTarget;
+
+    if (!renderTargets.empty()) {
+        auto & renderTarget = renderTargets.front();
+        options |= ToClearOptions(renderTarget->DepthStencilFormat());
+    }
+    else {
+        options |= ToClearOptions(depthStencilFormat);
+    }
+
+    POMDOG_ASSERT(nativeContext);
+    nativeContext->Clear(options, color, 1.0f, 0);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil)
+{
+    POMDOG_ASSERT(nativeContext);
+    nativeContext->Clear(options, color, depth, stencil);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::Present()
+{
+    POMDOG_ASSERT(nativeContext);
+    nativeContext->Present();
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::Draw(std::size_t vertexCount)
+{
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(renderTargets, textures);
+#endif
+
+    POMDOG_ASSERT(nativeContext);
+    nativeContext->Draw(vertexCount);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::DrawIndexed(std::size_t indexCount)
+{
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(renderTargets, textures);
+#endif
+
+    POMDOG_ASSERT(nativeContext);
+    nativeContext->DrawIndexed(indexCount);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::DrawInstanced(
+    std::size_t vertexCount, std::size_t instanceCount)
+{
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(renderTargets, textures);
+#endif
+
+    POMDOG_ASSERT(nativeContext);
+    nativeContext->DrawInstanced(vertexCount, instanceCount);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::DrawIndexedInstanced(
+    std::size_t indexCount, std::size_t instanceCount)
+{
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(renderTargets, textures);
+#endif
+
+    POMDOG_ASSERT(nativeContext);
+    nativeContext->DrawIndexedInstanced(indexCount, instanceCount);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetViewport(Pomdog::Viewport const& viewport)
+{
+    POMDOG_ASSERT(nativeContext);
+    POMDOG_ASSERT(viewport.Width > 0);
+    POMDOG_ASSERT(viewport.Height > 0);
+    nativeContext->SetViewport(viewport);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetScissorRectangle(Pomdog::Rectangle const& rectangle)
+{
+    POMDOG_ASSERT(nativeContext);
+    nativeContext->SetScissorRectangle(rectangle);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
+{
+    POMDOG_ASSERT(nativeContext);
+    nativeContext->SetPrimitiveTopology(primitiveTopology);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetBlendFactor(Color const& blendFactor)
+{
+    POMDOG_ASSERT(nativeContext);
+    nativeContext->SetBlendFactor(blendFactor);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers)
+{
+    POMDOG_ASSERT(nativeContext);
+    POMDOG_ASSERT(!vertexBuffers.empty());
+    nativeContext->SetVertexBuffers(vertexBuffers);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer)
+{
+    POMDOG_ASSERT(nativeContext);
+    POMDOG_ASSERT(indexBuffer);
+
+    nativeContext->SetIndexBuffer(indexBuffer);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetPipelineState(std::shared_ptr<Detail::NativePipelineState> const& pipelineState)
+{
+    POMDOG_ASSERT(nativeContext);
+    POMDOG_ASSERT(pipelineState);
+
+    nativeContext->SetPipelineState(pipelineState);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetConstantBuffers(std::shared_ptr<Detail::NativeConstantLayout> const& constantBuffersIn)
+{
+    POMDOG_ASSERT(nativeContext);
+    POMDOG_ASSERT(constantBuffersIn);
+
+    constantBuffers = constantBuffersIn;
+    nativeContext->SetConstantBuffers(constantBuffers);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetSampler(int index, std::shared_ptr<Detail::NativeSamplerState> const& sampler)
+{
+    POMDOG_ASSERT(nativeContext);
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < static_cast<int>(samplerStates.size()));
+    POMDOG_ASSERT(sampler);
     POMDOG_ASSERT(!samplerStates.empty());
 
-    POMDOG_ASSERT(samplerSlot >= 0);
-    POMDOG_ASSERT(samplerSlot < static_cast<int>(samplerStates.size()));
-
-    if (samplerSlot < static_cast<int>(samplerStates.size()))
-    {
-        samplerStates[samplerSlot] = samplerIn;
-
-        POMDOG_ASSERT(nativeContext);
-        nativeContext->SetSampler(samplerSlot, samplerIn.get());
+    if (index < static_cast<int>(samplerStates.size())) {
+        samplerStates[index] = sampler;
+        nativeContext->SetSampler(index, sampler.get());
     }
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetTexture(int textureSlot)
+void GraphicsContext::SetTexture(int index)
 {
-    POMDOG_ASSERT(!textures.empty());
-    POMDOG_ASSERT(textureSlot >= 0);
-    POMDOG_ASSERT(textureSlot < static_cast<int>(textures.size()));
     POMDOG_ASSERT(nativeContext);
+    POMDOG_ASSERT(!textures.empty());
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < static_cast<int>(textures.size()));
 
-    if (textureSlot < static_cast<int>(textures.size()))
-    {
-        nativeContext->SetTexture(textureSlot);
-        textures[textureSlot].reset();
+    if (index < static_cast<int>(textures.size())) {
+        nativeContext->SetTexture(index);
+        textures[index].reset();
     }
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetTexture(int textureSlot, std::shared_ptr<Texture2D> const& textureIn)
+void GraphicsContext::SetTexture(int index, std::shared_ptr<Texture2D> const& textureIn)
 {
+    POMDOG_ASSERT(nativeContext);
     POMDOG_ASSERT(textureIn);
     POMDOG_ASSERT(!textures.empty());
-    POMDOG_ASSERT(textureSlot >= 0);
-    POMDOG_ASSERT(textureSlot < static_cast<int>(textures.size()));
-    POMDOG_ASSERT(nativeContext);
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < static_cast<int>(textures.size()));
 
-    if (textureSlot < static_cast<int>(textures.size()))
-    {
-        textures[textureSlot] = textureIn;
-        nativeContext->SetTexture(textureSlot, *textureIn);
+    if (index < static_cast<int>(textures.size())) {
+        textures[index] = textureIn;
+        nativeContext->SetTexture(index, *textureIn);
     }
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetTexture(int textureSlot, std::shared_ptr<RenderTarget2D> const& textureIn)
+void GraphicsContext::SetTexture(int index, std::shared_ptr<RenderTarget2D> const& textureIn)
 {
+    POMDOG_ASSERT(nativeContext);
     POMDOG_ASSERT(textureIn);
     POMDOG_ASSERT(!textures.empty());
-    POMDOG_ASSERT(textureSlot >= 0);
-    POMDOG_ASSERT(textureSlot < static_cast<int>(textures.size()));
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < static_cast<int>(textures.size()));
 
-    if (textureSlot < static_cast<int>(textures.size()))
-    {
-        textures[textureSlot] = textureIn;
-        nativeContext->SetTexture(textureSlot, *textureIn);
+    if (index < static_cast<int>(textures.size())) {
+        textures[index] = textureIn;
+        nativeContext->SetTexture(index, *textureIn);
     }
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetRenderTarget()
+void GraphicsContext::SetRenderTarget()
 {
     POMDOG_ASSERT(nativeContext);
     nativeContext->SetRenderTarget();
     renderTargets.clear();
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargetsIn)
+void GraphicsContext::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargetsIn)
 {
-    POMDOG_ASSERT(!renderTargetsIn.empty());
     POMDOG_ASSERT(nativeContext);
+    POMDOG_ASSERT(!renderTargetsIn.empty());
     renderTargets = renderTargetsIn;
     nativeContext->SetRenderTargets(renderTargets);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::Impl::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargetsIn)
+void GraphicsContext::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargetsIn)
 {
-    POMDOG_ASSERT(!renderTargetsIn.empty());
     POMDOG_ASSERT(nativeContext);
+    POMDOG_ASSERT(!renderTargetsIn.empty());
     renderTargets = std::move(renderTargetsIn);
     nativeContext->SetRenderTargets(renderTargets);
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - GraphicsContext class
-#endif
-//-----------------------------------------------------------------------
-GraphicsContext::GraphicsContext(
-    std::unique_ptr<Detail::NativeGraphicsContext> && nativeContext,
-    PresentationParameters const& presentationParameters)
-    : impl(std::make_unique<Impl>(std::move(nativeContext), presentationParameters))
-{
-}
-//-----------------------------------------------------------------------
-GraphicsContext::~GraphicsContext() = default;
-//-----------------------------------------------------------------------
-void GraphicsContext::Clear(Color const& color)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
-    ClearOptions options = ClearOptions::RenderTarget;
-
-    if (!impl->renderTargets.empty()) {
-        auto & renderTarget = impl->renderTargets.front();
-        options |= ToClearOptions(renderTarget->DepthStencilFormat());
-    }
-    else {
-        options |= ToClearOptions(impl->depthStencilFormat);
-    }
-
-    impl->nativeContext->Clear(options, color, 1.0f, 0);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
-    impl->nativeContext->Clear(options, color, depth, stencil);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::Present()
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
-    impl->nativeContext->Present();
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::Draw(std::size_t vertexCount)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
-#if defined(DEBUG) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(impl->renderTargets, impl->textures);
-#endif
-
-    impl->nativeContext->Draw(vertexCount);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::DrawIndexed(std::size_t indexCount)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
-#if defined(DEBUG) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(impl->renderTargets, impl->textures);
-#endif
-
-    impl->nativeContext->DrawIndexed(indexCount);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::DrawInstanced(
-    std::size_t vertexCount, std::size_t instanceCount)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
-#if defined(DEBUG) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(impl->renderTargets, impl->textures);
-#endif
-
-    impl->nativeContext->DrawInstanced(vertexCount, instanceCount);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::DrawIndexedInstanced(
-    std::size_t indexCount, std::size_t instanceCount)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
-#if defined(DEBUG) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(impl->renderTargets, impl->textures);
-#endif
-
-    impl->nativeContext->DrawIndexedInstanced(indexCount, instanceCount);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetViewport(Pomdog::Viewport const& viewport)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-    POMDOG_ASSERT(viewport.Width > 0);
-    POMDOG_ASSERT(viewport.Height > 0);
-    impl->nativeContext->SetViewport(viewport);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetScissorRectangle(Pomdog::Rectangle const& rectangle)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-    impl->nativeContext->SetScissorRectangle(rectangle);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-    impl->nativeContext->SetPrimitiveTopology(primitiveTopology);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetBlendFactor(Color const& blendFactor)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-    impl->nativeContext->SetBlendFactor(blendFactor);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-    POMDOG_ASSERT(!vertexBuffers.empty());
-    impl->nativeContext->SetVertexBuffers(vertexBuffers);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-    POMDOG_ASSERT(indexBuffer);
-
-    impl->nativeContext->SetIndexBuffer(indexBuffer);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetPipelineState(std::shared_ptr<Detail::NativePipelineState> const& pipelineState)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-    POMDOG_ASSERT(pipelineState);
-
-    impl->nativeContext->SetPipelineState(pipelineState);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetConstantBuffers(std::shared_ptr<Detail::NativeConstantLayout> const& constantBuffers)
-{
-    POMDOG_ASSERT(constantBuffers);
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
-    impl->nativeContext->SetConstantBuffers(constantBuffers);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetSampler(int index, std::shared_ptr<Detail::NativeSamplerState> const& sampler)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(sampler);
-
-    impl->SetSampler(index, sampler);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetTexture(int index)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
-    impl->SetTexture(index);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetTexture(int index, std::shared_ptr<Texture2D> const& texture)
-{
-    POMDOG_ASSERT(texture);
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
-    impl->SetTexture(index, texture);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetTexture(int index, std::shared_ptr<RenderTarget2D> const& texture)
-{
-    POMDOG_ASSERT(texture);
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
-    impl->SetTexture(index, texture);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetRenderTarget()
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
-    impl->SetRenderTarget();
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets)
-{
-    POMDOG_ASSERT(!renderTargets.empty());
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
-    impl->SetRenderTargets(renderTargets);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets)
-{
-    POMDOG_ASSERT(!renderTargets.empty());
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-
-    impl->SetRenderTargets(std::move(renderTargets));
-}
-//-----------------------------------------------------------------------
 Detail::NativeGraphicsContext* GraphicsContext::GetNativeGraphicsContext()
 {
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->nativeContext);
-    return impl->nativeContext.get();
+    POMDOG_ASSERT(nativeContext);
+    return nativeContext.get();
 }
 //-----------------------------------------------------------------------
 } // namespace Detail
