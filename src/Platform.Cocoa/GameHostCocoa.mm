@@ -6,6 +6,8 @@
 #include "OpenGLContextCocoa.hpp"
 #include "KeyboardCocoa.hpp"
 #include "MouseCocoa.hpp"
+#include "../RenderSystem/GraphicsContext.hpp"
+#include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 #include "../Application/SystemEvents.hpp"
@@ -16,7 +18,7 @@
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
-#include "Pomdog/Graphics/GraphicsContext.hpp"
+#include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
@@ -52,7 +54,7 @@ static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
     using GL4::GraphicsContextGL4;
 
     auto nativeContext = std::make_unique<GraphicsContextGL4>(openGLContext, std::move(gameWindow));
-    return std::make_shared<GraphicsContext>(std::move(nativeContext), presentationParameters, graphicsDevice);
+    return std::make_shared<GraphicsContext>(std::move(nativeContext), presentationParameters);
 }
 
 } // unnamed namespace
@@ -77,9 +79,9 @@ public:
 
     std::shared_ptr<Pomdog::GameClock> GetClock(std::shared_ptr<GameHost> && gameHost);
 
-    std::shared_ptr<Pomdog::GraphicsContext> GetGraphicsContext();
-
     std::shared_ptr<Pomdog::GraphicsDevice> GetGraphicsDevice();
+
+    std::shared_ptr<Pomdog::GraphicsCommandQueue> GetGraphicsCommandQueue();
 
     std::shared_ptr<Pomdog::AssetManager> GetAssetManager(std::shared_ptr<GameHost> && gameHost);
 
@@ -123,7 +125,8 @@ private:
     std::shared_ptr<GameWindowCocoa> window;
     std::shared_ptr<OpenGLContextCocoa> openGLContext;
     std::shared_ptr<Pomdog::GraphicsDevice> graphicsDevice;
-    std::shared_ptr<Pomdog::GraphicsContext> graphicsContext;
+    std::shared_ptr<Detail::GraphicsContext> graphicsContext;
+    std::shared_ptr<Pomdog::GraphicsCommandQueue> graphicsCommandQueue;
     std::shared_ptr<Pomdog::AudioEngine> audioEngine;
     std::unique_ptr<Pomdog::AssetManager> assetManager;
     std::shared_ptr<KeyboardCocoa> keyboard;
@@ -167,6 +170,8 @@ GameHostCocoa::Impl::Impl(PomdogOpenGLView* openGLViewIn,
     graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::make_unique<GraphicsDeviceGL4>());
 
     graphicsContext = CreateGraphicsContext(openGLContext, window, presentationParameters, graphicsDevice);
+    graphicsCommandQueue = std::make_shared<Pomdog::GraphicsCommandQueue>(
+        std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
     openGLContext->Unlock();
 
     // Create subsystems
@@ -210,6 +215,7 @@ GameHostCocoa::Impl::~Impl()
     keyboard.reset();
     mouse.reset();
     audioEngine.reset();
+    graphicsCommandQueue.reset();
     graphicsContext.reset();
     graphicsDevice.reset();
     openGLContext.reset();
@@ -474,14 +480,14 @@ std::shared_ptr<Pomdog::GameClock> GameHostCocoa::Impl::GetClock(std::shared_ptr
     return std::move(sharedClock);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GraphicsContext> GameHostCocoa::Impl::GetGraphicsContext()
-{
-    return graphicsContext;
-}
-//-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GraphicsDevice> GameHostCocoa::Impl::GetGraphicsDevice()
 {
     return graphicsDevice;
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<Pomdog::GraphicsCommandQueue> GameHostCocoa::Impl::GetGraphicsCommandQueue()
+{
+    return graphicsCommandQueue;
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::AudioEngine> GameHostCocoa::Impl::GetAudioEngine()
@@ -542,16 +548,16 @@ std::shared_ptr<Pomdog::GameClock> GameHostCocoa::Clock()
     return impl->GetClock(shared_from_this());
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GraphicsContext> GameHostCocoa::GraphicsContext()
-{
-    POMDOG_ASSERT(impl);
-    return impl->GetGraphicsContext();
-}
-//-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GraphicsDevice> GameHostCocoa::GraphicsDevice()
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsDevice();
+}
+//-----------------------------------------------------------------------
+std::shared_ptr<GraphicsCommandQueue> GameHostCocoa::GraphicsCommandQueue()
+{
+    POMDOG_ASSERT(impl);
+    return impl->GetGraphicsCommandQueue();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::AudioEngine> GameHostCocoa::AudioEngine()

@@ -9,6 +9,7 @@
 #include "ShaderGL4.hpp"
 #include "RenderTarget2DGL4.hpp"
 #include "Texture2DGL4.hpp"
+#include "../RenderSystem/GraphicsCommandListImmediate.hpp"
 #include "../RenderSystem/ShaderCompileOptions.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -21,6 +22,12 @@ namespace GL4 {
 ShaderLanguage GraphicsDeviceGL4::GetSupportedLanguage() const
 {
     return ShaderLanguage::GLSL;
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeGraphicsCommandList>
+GraphicsDeviceGL4::CreateGraphicsCommandList()
+{
+    return std::make_unique<GraphicsCommandListImmediate>();
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader>
