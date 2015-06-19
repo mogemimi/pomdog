@@ -70,6 +70,8 @@
 #include "Graphics/EffectVariableType.hpp"
 #include "Graphics/EffectVariable.hpp"
 #include "Graphics/FillMode.hpp"
+#include "Graphics/GraphicsCommandList.hpp"
+#include "Graphics/GraphicsCommandQueue.hpp"
 #include "Graphics/GraphicsContext.hpp"
 #include "Graphics/GraphicsDevice.hpp"
 #include "Graphics/IndexBuffer.hpp"

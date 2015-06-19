@@ -25,6 +25,8 @@ class NativeTexture2D;
 class ConstantBuffer;
 class ConstantBufferBinding;
 class EffectReflection;
+class GraphicsCommandList;
+class GraphicsCommandQueue;
 class GraphicsContext;
 class GraphicsDevice;
 class IndexBuffer;
