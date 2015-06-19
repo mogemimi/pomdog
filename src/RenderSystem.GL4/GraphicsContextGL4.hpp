@@ -40,9 +40,11 @@ public:
 
     ~GraphicsContextGL4();
 
-    void Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil) override;
+    GraphicsCapabilities GetCapabilities() const override;
 
     void Present() override;
+
+    void Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil) override;
 
     void Draw(std::size_t vertexCount) override;
 
@@ -56,8 +58,6 @@ public:
         std::size_t indexCount,
         std::size_t instanceCount) override;
 
-    GraphicsCapabilities GetCapabilities() const override;
-
     void SetViewport(Viewport const& viewport) override;
 
     void SetScissorRectangle(Rectangle const& rectangle) override;
@@ -70,6 +70,10 @@ public:
 
     void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer) override;
 
+    void SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState) override;
+
+    void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayout) override;
+
     void SetSampler(int index, NativeSamplerState* sampler) override;
 
     void SetTexture(int index) override;
@@ -81,10 +85,6 @@ public:
     void SetRenderTarget() override;
 
     void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets) override;
-
-    void SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState) override;
-
-    void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayout) override;
 
 private:
     void ApplyPipelineState();

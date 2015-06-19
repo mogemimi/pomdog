@@ -180,6 +180,12 @@ GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
     deviceContext.Reset();
 }
 //-----------------------------------------------------------------------
+void GraphicsContextDirect3D11::Present()
+{
+    POMDOG_ASSERT(swapChain);
+    swapChain->Present(0, 0);
+}
+//-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil)
 {
     POMDOG_ASSERT(stencil <= std::numeric_limits<UINT8>::max());
@@ -213,12 +219,6 @@ void GraphicsContextDirect3D11::Clear(ClearOptions options, Color const& color, 
     }
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::Present()
-{
-    POMDOG_ASSERT(swapChain);
-    swapChain->Present(0, 0);
-}
-//-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::ApplyPipelineState()
 {
     POMDOG_ASSERT(pipelineState);
@@ -229,7 +229,7 @@ void GraphicsContextDirect3D11::ApplyPipelineState()
     }
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::Draw(std::uint32_t vertexCount)
+void GraphicsContextDirect3D11::Draw(std::size_t vertexCount)
 {
     POMDOG_ASSERT(deviceContext);
 
@@ -238,7 +238,7 @@ void GraphicsContextDirect3D11::Draw(std::uint32_t vertexCount)
     deviceContext->Draw(vertexCount, 0);
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::DrawIndexed(std::uint32_t indexCount)
+void GraphicsContextDirect3D11::DrawIndexed(std::size_t indexCount)
 {
     POMDOG_ASSERT(deviceContext);
 
@@ -247,7 +247,8 @@ void GraphicsContextDirect3D11::DrawIndexed(std::uint32_t indexCount)
     deviceContext->DrawIndexed(indexCount, 0, 0);
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::DrawInstanced(std::uint32_t vertexCount, std::uint32_t instanceCount)
+void GraphicsContextDirect3D11::DrawInstanced(
+    std::size_t vertexCount, std::size_t instanceCount)
 {
     POMDOG_ASSERT(deviceContext);
 
@@ -257,7 +258,7 @@ void GraphicsContextDirect3D11::DrawInstanced(std::uint32_t vertexCount, std::ui
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::DrawIndexedInstanced(
-    std::uint32_t indexCount, std::uint32_t instanceCount)
+    std::size_t indexCount, std::size_t instanceCount)
 {
     POMDOG_ASSERT(deviceContext);
 
@@ -378,6 +379,30 @@ void GraphicsContextDirect3D11::SetVertexBuffers(std::vector<std::shared_ptr<Ver
         strides.data(), offsets.data());
 }
 //-----------------------------------------------------------------------
+void GraphicsContextDirect3D11::SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineStateIn)
+{
+    POMDOG_ASSERT(deviceContext);
+    POMDOG_ASSERT(pipelineStateIn);
+
+    if (pipelineState != pipelineStateIn) {
+        pipelineState = std::dynamic_pointer_cast<PipelineStateDirect3D11>(pipelineStateIn);
+        POMDOG_ASSERT(pipelineState);
+
+        needToApplyPipelineState = true;
+    }
+}
+//-----------------------------------------------------------------------
+void GraphicsContextDirect3D11::SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayoutIn)
+{
+    POMDOG_ASSERT(deviceContext);
+
+    POMDOG_ASSERT(constantLayoutIn);
+    POMDOG_ASSERT(dynamic_cast<ConstantLayoutDirect3D11*>(constantLayoutIn.get()));
+
+    auto & constantLayout = static_cast<ConstantLayoutDirect3D11&>(*constantLayoutIn);
+    constantLayout.Apply(deviceContext.Get());
+}
+//-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetSampler(int index, NativeSamplerState* samplerIn)
 {
     POMDOG_ASSERT(index >= 0);
@@ -491,30 +516,6 @@ void GraphicsContextDirect3D11::SetRenderTargets(std::vector<std::shared_ptr<Ren
         renderTargetsIn.size(),
         renderTargetViews.data(),
         renderTargets.front()->GetDepthStencilView());
-}
-//-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineStateIn)
-{
-    POMDOG_ASSERT(deviceContext);
-    POMDOG_ASSERT(pipelineStateIn);
-
-    if (pipelineState != pipelineStateIn) {
-        pipelineState = std::dynamic_pointer_cast<PipelineStateDirect3D11>(pipelineStateIn);
-        POMDOG_ASSERT(pipelineState);
-
-        needToApplyPipelineState = true;
-    }
-}
-//-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayoutIn)
-{
-    POMDOG_ASSERT(deviceContext);
-
-    POMDOG_ASSERT(constantLayoutIn);
-    POMDOG_ASSERT(dynamic_cast<ConstantLayoutDirect3D11*>(constantLayoutIn.get()));
-
-    auto & constantLayout = static_cast<ConstantLayoutDirect3D11&>(*constantLayoutIn);
-    constantLayout.Apply(deviceContext.Get());
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::ResizeBackBuffers(ID3D11Device* device,

@@ -31,23 +31,23 @@ public:
 
     ~GraphicsContextDirect3D11();
 
-    void Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil) override;
+    GraphicsCapabilities GetCapabilities() const override;
 
     void Present() override;
 
-    void Draw(std::uint32_t vertexCount) override;
+    void Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil) override;
 
-    void DrawIndexed(std::uint32_t indexCount) override;
+    void Draw(std::size_t vertexCount) override;
+
+    void DrawIndexed(std::size_t indexCount) override;
 
     void DrawInstanced(
-        std::uint32_t vertexCount,
-        std::uint32_t instanceCount) override;
+        std::size_t vertexCount,
+        std::size_t instanceCount) override;
 
     void DrawIndexedInstanced(
-        std::uint32_t indexCount,
-        std::uint32_t instanceCount) override;
-
-    GraphicsCapabilities GetCapabilities() const override;
+        std::size_t indexCount,
+        std::size_t instanceCount) override;
 
     void SetViewport(Viewport const& viewport) override;
 
@@ -61,6 +61,10 @@ public:
 
     void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer) override;
 
+    void SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState) override;
+
+    void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayout) override;
+
     void SetSampler(int index, NativeSamplerState* sampler) override;
 
     void SetTexture(int index) override;
@@ -72,10 +76,6 @@ public:
     void SetRenderTarget() override;
 
     void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets) override;
-
-    void SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState) override;
-
-    void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayout) override;
 
     void ResizeBackBuffers(ID3D11Device* device, int backBufferWidth, int backBufferHeight);
 
