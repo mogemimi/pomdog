@@ -12,7 +12,6 @@ namespace Detail {
 class NativeBuffer;
 class NativeConstantLayout;
 class NativeEffectReflection;
-class NativeGraphicsContext;
 class NativeGraphicsCommandList;
 class NativeGraphicsCommandQueue;
 class NativeGraphicsDevice;
@@ -29,7 +28,6 @@ class ConstantBufferBinding;
 class EffectReflection;
 class GraphicsCommandList;
 class GraphicsCommandQueue;
-class GraphicsContext;
 class GraphicsDevice;
 class IndexBuffer;
 class PipelineState;

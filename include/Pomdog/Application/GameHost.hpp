@@ -13,7 +13,7 @@ class AssetManager;
 class AudioEngine;
 class GameClock;
 class GameWindow;
-class GraphicsContext;
+class GraphicsCommandQueue;
 class GraphicsDevice;
 class Keyboard;
 class Mouse;
@@ -32,9 +32,9 @@ public:
 
     virtual std::shared_ptr<GameClock> Clock() = 0;
 
-    virtual std::shared_ptr<GraphicsContext> GraphicsContext() = 0;
-
     virtual std::shared_ptr<GraphicsDevice> GraphicsDevice() = 0;
+
+    virtual std::shared_ptr<GraphicsCommandQueue> GraphicsCommandQueue() = 0;
 
     virtual std::shared_ptr<AudioEngine> AudioEngine() = 0;
 

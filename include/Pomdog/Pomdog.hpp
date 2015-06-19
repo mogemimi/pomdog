@@ -72,7 +72,6 @@
 #include "Graphics/FillMode.hpp"
 #include "Graphics/GraphicsCommandList.hpp"
 #include "Graphics/GraphicsCommandQueue.hpp"
-#include "Graphics/GraphicsContext.hpp"
 #include "Graphics/GraphicsDevice.hpp"
 #include "Graphics/IndexBuffer.hpp"
 #include "Graphics/IndexElementSize.hpp"
