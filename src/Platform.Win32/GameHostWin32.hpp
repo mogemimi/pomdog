@@ -41,7 +41,7 @@ public:
 
     std::shared_ptr<Pomdog::GameClock> Clock() override;
 
-    std::shared_ptr<Pomdog::GraphicsContext> GraphicsContext() override;
+    std::shared_ptr<Pomdog::GraphicsCommandQueue> GraphicsCommandQueue() override;
 
     std::shared_ptr<Pomdog::GraphicsDevice> GraphicsDevice() override;
 

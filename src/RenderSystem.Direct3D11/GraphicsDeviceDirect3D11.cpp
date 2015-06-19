@@ -9,6 +9,7 @@
 #include "SamplerStateDirect3D11.hpp"
 #include "ShaderDirect3D11.hpp"
 #include "Texture2DDirect3D11.hpp"
+#include "../RenderSystem/GraphicsCommandListImmediate.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "../RenderSystem/ShaderCompileOptions.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
@@ -300,6 +301,12 @@ GraphicsDeviceDirect3D11::~GraphicsDeviceDirect3D11() = default;
 ShaderLanguage GraphicsDeviceDirect3D11::GetSupportedLanguage() const
 {
     return ShaderLanguage::HLSL;
+}
+//-----------------------------------------------------------------------
+std::unique_ptr<NativeGraphicsCommandList>
+GraphicsDeviceDirect3D11::CreateGraphicsCommandList()
+{
+    return std::make_unique<GraphicsCommandListImmediate>();
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader>

@@ -22,6 +22,9 @@ public:
 
     ShaderLanguage GetSupportedLanguage() const override;
 
+    std::unique_ptr<NativeGraphicsCommandList>
+    CreateGraphicsCommandList() override;
+
     std::unique_ptr<Shader>
     CreateShader(ShaderBytecode const& shaderBytecode,
         ShaderCompileOptions const& compileOptions) override;

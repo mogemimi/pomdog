@@ -5,8 +5,12 @@
 #include "GameWindowWin32.hpp"
 #include "KeyboardWin32.hpp"
 #include "MouseWin32.hpp"
+#include "../Application/SubsystemScheduler.hpp"
 #include "../Application/SystemEvents.hpp"
 #include "../InputSystem/InputDeviceFactory.hpp"
+#include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
+#include "../RenderSystem/GraphicsContext.hpp"
+#include "../SoundSystem.XAudio2/AudioEngineXAudio2.hpp"
 
 #if defined(POMDOG_ENABLE_DIRECT3D11)
 #elif defined(POMDOG_ENABLE_GL4)
@@ -24,13 +28,11 @@
 #include "../RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.hpp"
 #endif
 
-#include "../SoundSystem.XAudio2/AudioEngineXAudio2.hpp"
-#include "../Application/SubsystemScheduler.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
-#include "Pomdog/Graphics/GraphicsContext.hpp"
+#include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
@@ -75,7 +77,7 @@ public:
 
     std::shared_ptr<Pomdog::GameClock> GetClock(std::shared_ptr<GameHost> && gameHost);
 
-    std::shared_ptr<Pomdog::GraphicsContext> GetGraphicsContext();
+    std::shared_ptr<Pomdog::GraphicsCommandQueue> GetGraphicsCommandQueue();
 
     std::shared_ptr<Pomdog::GraphicsDevice> GetGraphicsDevice();
 
@@ -104,8 +106,9 @@ private:
     std::shared_ptr<EventQueue> eventQueue;
     std::shared_ptr<GameWindowWin32> window;
 
-    std::shared_ptr<Pomdog::GraphicsContext> graphicsContext;
     std::shared_ptr<Pomdog::GraphicsDevice> graphicsDevice;
+    std::shared_ptr<Detail::GraphicsContext> graphicsContext;
+    std::shared_ptr<Pomdog::GraphicsCommandQueue> graphicsCommandQueue;
     std::unique_ptr<Pomdog::AssetManager> assetManager;
     std::shared_ptr<Pomdog::AudioEngine> audioEngine;
 
@@ -153,10 +156,12 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
         auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceGL4>();
         graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::move(nativeGraphicsDevice));
 
-        graphicsContext = std::make_shared<Pomdog::GraphicsContext>(
+        graphicsContext = std::make_shared<Detail::GraphicsContext>(
             std::make_unique<GraphicsContextGL4>(openGLContext, window),
-            presentationParameters,
-            graphicsDevice);
+            presentationParameters);
+
+        graphicsCommandQueue = std::make_shared<Pomdog::GraphicsCommandQueue>(
+            std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
     }
 #endif
 #if defined(POMDOG_ENABLE_DIRECT3D11)
@@ -172,15 +177,17 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
         graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(
             std::move(nativeGraphicsDevice));
 
-        graphicsContext = std::make_shared<Pomdog::GraphicsContext>(
+        graphicsContext = std::make_shared<Detail::GraphicsContext>(
             std::make_unique<GraphicsContextDirect3D11>(
                 window->NativeWindowHandle(),
                 dxgiFactory,
                 device,
                 deviceContext,
                 presentationParameters),
-            presentationParameters,
-            graphicsDevice);
+            presentationParameters);
+
+        graphicsCommandQueue = std::make_shared<Pomdog::GraphicsCommandQueue>(
+            std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
     }
 #endif
 
@@ -286,7 +293,7 @@ void GameHostWin32::Impl::ClientSizeChanged()
         using Detail::Direct3D11::GraphicsContextDirect3D11;
 
         auto nativeGraphicsDevice = dynamic_cast<GraphicsDeviceDirect3D11*>(graphicsDevice->NativeGraphicsDevice());
-        auto nativeGraphicsContext = dynamic_cast<GraphicsContextDirect3D11*>(graphicsContext->NativeGraphicsContext());
+        auto nativeGraphicsContext = dynamic_cast<GraphicsContextDirect3D11*>(graphicsContext->GetNativeGraphicsContext());
 
         POMDOG_ASSERT(nativeGraphicsDevice != nullptr);
         POMDOG_ASSERT(nativeGraphicsContext != nullptr);
@@ -313,10 +320,10 @@ std::shared_ptr<Pomdog::GameClock> GameHostWin32::Impl::GetClock(
     return std::move(sharedClock);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GraphicsContext> GameHostWin32::Impl::GetGraphicsContext()
+std::shared_ptr<Pomdog::GraphicsCommandQueue> GameHostWin32::Impl::GetGraphicsCommandQueue()
 {
-    POMDOG_ASSERT(graphicsContext);
-    return graphicsContext;
+    POMDOG_ASSERT(graphicsCommandQueue);
+    return graphicsCommandQueue;
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GraphicsDevice> GameHostWin32::Impl::GetGraphicsDevice()
@@ -386,10 +393,10 @@ std::shared_ptr<Pomdog::GameClock> GameHostWin32::Clock()
     return impl->GetClock(shared_from_this());
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GraphicsContext> GameHostWin32::GraphicsContext()
+std::shared_ptr<Pomdog::GraphicsCommandQueue> GameHostWin32::GraphicsCommandQueue()
 {
     POMDOG_ASSERT(impl);
-    return impl->GetGraphicsContext();
+    return impl->GetGraphicsCommandQueue();
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Pomdog::GraphicsDevice> GameHostWin32::GraphicsDevice()
