@@ -32,7 +32,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
         OutputDebugString(entry.Message.c_str());
         OutputDebugString("\n");
     });
-    Log::SetLevel(Pomdog::LogLevel::Internal);
+    Log::SetLevel(Pomdog::LogLevel::Verbose);
 #endif
 
     Win32::Bootstrap bootstrap;

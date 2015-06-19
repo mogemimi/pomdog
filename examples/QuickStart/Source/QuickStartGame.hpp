@@ -30,6 +30,10 @@ private:
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
     std::shared_ptr<ConstantBuffer> constantBuffer;
     std::shared_ptr<Texture2D> texture;
+    std::shared_ptr<GraphicsCommandQueue> commandQueue;
+    std::shared_ptr<GraphicsCommandList> commandList;
+    std::unique_ptr<Timer> timer;
+    ConnectionList connect;
 };
 
 } // namespace QuickStart

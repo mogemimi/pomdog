@@ -8,6 +8,7 @@ QuickStartGame::QuickStartGame(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , window(gameHostIn->Window())
     , graphicsDevice(gameHostIn->GraphicsDevice())
+    , commandQueue(gameHostIn->GraphicsCommandQueue())
     , assets(gameHostIn->AssetManager())
     , clock(gameHostIn->Clock())
 {
@@ -15,6 +16,9 @@ QuickStartGame::QuickStartGame(const std::shared_ptr<GameHost>& gameHostIn)
 //-----------------------------------------------------------------------
 void QuickStartGame::Initialize()
 {
+    // Display message in log console
+    Log::Verbose("Hello, QuickStart.");
+
     // Set window name
     window->SetTitle("QuickStart");
 
@@ -73,20 +77,64 @@ void QuickStartGame::Initialize()
             .SetGLSLFromFile("SimpleEffect_PS.glsl")
             .SetHLSLFromFile("SimpleEffect_PS.hlsl", "SimpleEffectPS");
 
-        auto builder = assets->CreateBuilder<PipelineState>();
+        auto pipelineBuilder = assets->CreateBuilder<PipelineState>();
 
         // Create pipeline state
-        pipelineState = builder
+        pipelineState = pipelineBuilder
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .Build();
 
         // Create constant buffers
-        constantBuffers = builder.CreateConstantBuffers(pipelineState);
+        constantBuffers = pipelineBuilder.CreateConstantBuffers(pipelineState);
 
         // Get constant buffer
-        constantBuffer = constantBuffers->Find("MyConstants");
+        constantBuffer = constantBuffers->FindConstantBuffer("MyConstants");
+    }
+    {
+        // Create graphics command list
+        commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+
+        auto createGraphicsCommands = [this](int width, int height) {
+            Viewport viewport = {0, 0, width, height};
+            commandList->Reset();
+            commandList->SetRenderTarget();
+            commandList->SetViewport(viewport);
+            commandList->SetScissorRectangle(viewport.GetBounds());
+            commandList->Clear(Color::CornflowerBlue);
+            commandList->SetSamplerState(0, sampler);
+            commandList->SetTexture(0, texture);
+            commandList->SetVertexBuffer(vertexBuffer);
+            commandList->SetPipelineState(pipelineState);
+            commandList->SetConstantBuffers(constantBuffers);
+            commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
+            commandList->DrawIndexed(indexBuffer, indexBuffer->IndexCount());
+            commandList->Close();
+        };
+
+        auto bounds = window->GetClientBounds();
+        createGraphicsCommands(bounds.Width, bounds.Height);
+
+        // Window resize event
+        connect(window->ClientSizeChanged, createGraphicsCommands);
+    }
+    {
+        // Create timer
+        timer = std::make_unique<Timer>(clock);
+        timer->SetInterval(std::chrono::milliseconds(500));
+
+        // Timer event
+        connect(timer->Elapsed, [this] {
+            // String formatting using Pomdog::StringFormat
+            auto title = StringFormat(
+                "QuickStart %3.0f fps, %d frames",
+                std::round(clock->FrameRate()),
+                clock->FrameNumber());
+
+            // Set window title
+            window->SetTitle(title);
+        });
     }
 }
 //-----------------------------------------------------------------------
@@ -108,24 +156,10 @@ void QuickStartGame::Update()
 //-----------------------------------------------------------------------
 void QuickStartGame::Draw()
 {
-    auto graphicsContext = gameHost->GraphicsContext();
-    auto bounds = window->GetClientBounds();
-
-    Viewport viewport = {0, 0, bounds.Width, bounds.Height};
-
-    graphicsContext->SetRenderTarget();
-    graphicsContext->SetViewport(viewport);
-    graphicsContext->SetScissorRectangle(viewport.GetBounds());
-    graphicsContext->Clear(Color::CornflowerBlue);
-    graphicsContext->SetSamplerState(0, sampler);
-    graphicsContext->SetTexture(0, texture);
-    graphicsContext->SetVertexBuffer(vertexBuffer);
-    graphicsContext->SetPipelineState(pipelineState);
-    graphicsContext->SetConstantBuffers(constantBuffers);
-    graphicsContext->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
-    graphicsContext->DrawIndexed(indexBuffer, indexBuffer->IndexCount());
-
-    graphicsContext->Present();
+    commandQueue->Reset();
+    commandQueue->PushbackCommandList(commandList);
+    commandQueue->ExecuteCommandLists();
+    commandQueue->Present();
 }
 //-----------------------------------------------------------------------
 } // namespace QuickStart
