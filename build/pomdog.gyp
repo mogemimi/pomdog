@@ -255,6 +255,8 @@
       '../src/RenderSystem/NativeBuffer.hpp',
       '../src/RenderSystem/NativeConstantLayout.hpp',
       '../src/RenderSystem/NativeEffectReflection.hpp',
+      '../src/RenderSystem/NativeGraphicsCommandList.hpp',
+      '../src/RenderSystem/NativeGraphicsCommandQueue.hpp',
       '../src/RenderSystem/NativeGraphicsContext.hpp',
       '../src/RenderSystem/NativeGraphicsDevice.hpp',
       '../src/RenderSystem/NativePipelineState.hpp',

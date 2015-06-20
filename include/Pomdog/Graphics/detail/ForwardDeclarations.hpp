@@ -13,6 +13,8 @@ class NativeBuffer;
 class NativeConstantLayout;
 class NativeEffectReflection;
 class NativeGraphicsContext;
+class NativeGraphicsCommandList;
+class NativeGraphicsCommandQueue;
 class NativeGraphicsDevice;
 class NativePipelineState;
 class NativeRenderTarget2D;
