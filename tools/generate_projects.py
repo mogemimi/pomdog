@@ -27,6 +27,7 @@ def GenerateXcodeProjects(gypfile, option=None):
     xcodeOptions = [
         '-f xcode',
         '--generator-output=build.xcodefiles',
+        '-Dcomponent=shared_library',
     ]
 
     if platform.system() == 'Windows':
