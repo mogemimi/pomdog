@@ -264,6 +264,7 @@
       '../src/RenderSystem/TextureHelper.cpp',
       '../src/RenderSystem/TextureHelper.hpp',
       '../src/Signals/Connection.cpp',
+      '../src/Signals/ConnectionList.cpp',
       '../src/Signals/EventQueue.cpp',
       '../src/Signals/ScopedConnection.cpp',
       '../src/Utility/CRC32.cpp',

@@ -12,9 +12,22 @@
 namespace Pomdog {
 
 class POMDOG_EXPORT ConnectionList {
+private:
     std::vector<ScopedConnection> connections;
 
 public:
+    ConnectionList() = default;
+    ConnectionList(ConnectionList const&) = delete;
+    ConnectionList & operator=(ConnectionList const&) = delete;
+    ConnectionList(ConnectionList &&) = default;
+    ConnectionList & operator=(ConnectionList &&) = default;
+
+    template <typename...Args, typename Func>
+    void operator()(Signal<void(Args...)> & signal, Func && func)
+    {
+        Connect(signal, std::forward<Func>(func));
+    }
+
     template <typename...Args, typename Func>
     void Connect(Signal<void(Args...)> & signal, Func && func)
     {
@@ -22,10 +35,7 @@ public:
         connections.push_back(std::move(connection));
     }
 
-    void Disconnect()
-    {
-        connections.clear();
-    }
+    void Disconnect();
 };
 
 } // namespace Pomdog
