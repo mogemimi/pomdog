@@ -33,6 +33,9 @@ public:
 
     virtual ShaderLanguage GetSupportedLanguage() const = 0;
 
+    virtual std::unique_ptr<NativeGraphicsCommandList>
+    CreateGraphicsCommandList() = 0;
+
     virtual std::unique_ptr<Shader>
     CreateShader(ShaderBytecode const& shaderBytecode,
         ShaderCompileOptions const& compileOptions) = 0;
