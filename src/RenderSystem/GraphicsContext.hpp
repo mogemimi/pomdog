@@ -4,7 +4,7 @@
 #ifndef POMDOG_GRAPHICSCONTEXT_F873DD34_HPP
 #define POMDOG_GRAPHICSCONTEXT_F873DD34_HPP
 
-#include "detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>

@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "Pomdog/Graphics/GraphicsContext.hpp"
+#include "GraphicsContext.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include "../RenderSystem/NativeSamplerState.hpp"
