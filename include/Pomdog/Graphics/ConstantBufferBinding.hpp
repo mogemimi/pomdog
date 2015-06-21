@@ -20,21 +20,27 @@ public:
     ConstantBufferBinding() = delete;
     ConstantBufferBinding(ConstantBufferBinding const&) = delete;
     ConstantBufferBinding(ConstantBufferBinding &&) = default;
+    ConstantBufferBinding & operator=(ConstantBufferBinding const&) = delete;
+    ConstantBufferBinding & operator=(ConstantBufferBinding &&) = default;
 
-    ConstantBufferBinding(GraphicsDevice & graphicsDevice,
+    ConstantBufferBinding(
+        GraphicsDevice & graphicsDevice,
         PipelineStateDescription const& pipelineStateDescription,
         PipelineState & pipelineState);
 
-    ConstantBufferBinding(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    ConstantBufferBinding(
+        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         PipelineStateDescription const& pipelineStateDescription,
         PipelineState & pipelineState);
 
     ~ConstantBufferBinding();
 
-    ConstantBufferBinding & operator=(ConstantBufferBinding const&) = delete;
-    ConstantBufferBinding & operator=(ConstantBufferBinding &&) = default;
+    std::shared_ptr<ConstantBuffer>
+    FindConstantBuffer(std::string const& name) const;
 
-    std::shared_ptr<ConstantBuffer> Find(std::string const& name) const;
+    void SetConstantBuffer(
+        std::string const& name,
+        std::shared_ptr<ConstantBuffer> const& constantBuffer);
 
     ConstantBufferCollection const& GetConstantBuffers() const;
 

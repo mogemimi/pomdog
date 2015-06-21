@@ -69,7 +69,7 @@ ConstantBufferBinding::ConstantBufferBinding(
 //-----------------------------------------------------------------------
 ConstantBufferBinding::~ConstantBufferBinding() = default;
 //-----------------------------------------------------------------------
-std::shared_ptr<ConstantBuffer> ConstantBufferBinding::Find(
+std::shared_ptr<ConstantBuffer> ConstantBufferBinding::FindConstantBuffer(
     std::string const& name) const
 {
     POMDOG_ASSERT(!name.empty());
@@ -80,6 +80,29 @@ std::shared_ptr<ConstantBuffer> ConstantBufferBinding::Find(
         return iter->second;
     }
     return {};
+}
+//-----------------------------------------------------------------------
+void ConstantBufferBinding::SetConstantBuffer(
+    std::string const& name,
+    std::shared_ptr<ConstantBuffer> const& constantBuffer)
+{
+    POMDOG_ASSERT(!name.empty());
+    POMDOG_ASSERT(!constantBuffers.empty());
+
+    auto iter = constantBuffers.find(name);
+    POMDOG_ASSERT(iter != std::end(constantBuffers));
+    if (iter == std::end(constantBuffers)) {
+        return;
+    }
+
+    iter->second = constantBuffer;
+
+    POMDOG_ASSERT(constantBuffer->NativeConstantBuffer() != nullptr);
+    std::shared_ptr<Detail::NativeBuffer> nativeBuffer(
+        constantBuffer, constantBuffer->NativeConstantBuffer());
+
+    POMDOG_ASSERT(nativeBuffer);
+    nativeConstantLayout->SetConstantBuffer(name, nativeBuffer);
 }
 //-----------------------------------------------------------------------
 ConstantBufferCollection const& ConstantBufferBinding::GetConstantBuffers() const
