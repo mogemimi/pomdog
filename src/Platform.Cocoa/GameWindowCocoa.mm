@@ -78,45 +78,32 @@ void GameWindowCocoa::SetTitle(std::string const& title)
 Rectangle GameWindowCocoa::GetClientBounds() const
 {
     POMDOG_ASSERT([nativeWindow contentView] != nil);
+
     NSRect bounds = [[nativeWindow contentView] bounds];
-    NSPoint origin = [nativeWindow frame].origin;
 
     if (gameView != nil) {
         bounds = [gameView bounds];
-        origin = [gameView frame].origin;
     }
-
-    NSSize windowSize = [nativeWindow frame].size;
-    NSSize screenSize = [[nativeWindow screen] visibleFrame].size;
+    NSRect rect = [nativeWindow convertRectToScreen:bounds];
 
     return Rectangle(
-        origin.x,
-        screenSize.height - windowSize.height - origin.y,
+        rect.origin.x,
+        rect.origin.y,
         bounds.size.width,
         bounds.size.height);
 }
 //-----------------------------------------------------------------------
 void GameWindowCocoa::SetClientBounds(Rectangle const& clientBounds)
 {
-    auto bounds = NSMakeSize(clientBounds.Width, clientBounds.Height);
-    [nativeWindow setContentSize:bounds];
-
-    NSSize windowSize = [nativeWindow frame].size;
-    NSSize screenSize = [[nativeWindow screen] visibleFrame].size;
-
-    auto origin = NSMakePoint(clientBounds.X,
-        screenSize.height - (clientBounds.Y + windowSize.height));
+    NSRect bounds = NSMakeRect(
+        clientBounds.X,
+        clientBounds.Y,
+        clientBounds.Width,
+        clientBounds.Height);
 
     dispatch_async(dispatch_get_main_queue(), [=] {
-        [nativeWindow setFrameOrigin:origin];
+        [nativeWindow setFrame:bounds display:YES animate:NO];
     });
-
-    //NSRect bounds;
-    //bounds.origin.x = clientBounds.X;
-    //bounds.origin.y = clientBounds.Y;
-    //bounds.size.width = clientBounds.Width;
-    //bounds.size.height = clientBounds.Height;
-    //[nativeWindow setFrame:bounds display:YES animate:YES];
 }
 //-----------------------------------------------------------------------
 bool GameWindowCocoa::IsMouseCursorVisible() const
