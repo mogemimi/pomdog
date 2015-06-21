@@ -86,6 +86,8 @@
       '<@(pomdog_expr_dir)/ImageEffects/ImageEffectBase.hpp',
       '<@(pomdog_expr_dir)/ImageEffects/PostProcessCompositor.cpp',
       '<@(pomdog_expr_dir)/ImageEffects/PostProcessCompositor.hpp',
+      '<@(pomdog_expr_dir)/ImageEffects/RetroCrtEffect.cpp',
+      '<@(pomdog_expr_dir)/ImageEffects/RetroCrtEffect.hpp',
       '<@(pomdog_expr_dir)/ImageEffects/SepiaToneEffect.cpp',
       '<@(pomdog_expr_dir)/ImageEffects/SepiaToneEffect.hpp',
       '<@(pomdog_expr_dir)/ImageEffects/VignetteEffect.cpp',
