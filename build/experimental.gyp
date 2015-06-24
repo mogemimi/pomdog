@@ -76,6 +76,8 @@
       '<@(pomdog_expr_dir)/Graphics/SpriteRenderer.cpp',
       '<@(pomdog_expr_dir)/Graphics/SpriteRenderer.hpp',
       '<@(pomdog_expr_dir)/Graphics/TextureRegion.hpp',
+      '<@(pomdog_expr_dir)/Graphics/TrueTypeFont.cpp',
+      '<@(pomdog_expr_dir)/Graphics/TrueTypeFont.hpp',
 
       '<@(pomdog_expr_dir)/ImageEffects/ChromaticAberration.cpp',
       '<@(pomdog_expr_dir)/ImageEffects/ChromaticAberration.hpp',
@@ -330,6 +332,7 @@
         '../include',
         '<@(pomdog_third_party_dir)/rapidjson/include',
         '<@(pomdog_third_party_dir)/lua/src',
+        '<@(pomdog_third_party_dir)/stb',
         '<@(pomdog_third_party_dir)',
       ],
       'sources': [
