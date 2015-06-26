@@ -320,6 +320,9 @@ void GameWindowWin32::Impl::SetClientBounds(Rectangle const& clientBoundsIn)
 
     clientBounds.Width = clientBoundsIn.Width;
     clientBounds.Height = clientBoundsIn.Height;
+
+    eventQueue->Enqueue<ViewWillStartLiveResizeEvent>();
+    eventQueue->Enqueue<ViewDidEndLiveResizeEvent>();
 }
 //-----------------------------------------------------------------------
 void GameWindowWin32::Impl::SetMouseCursorVisible(bool visibleIn)
