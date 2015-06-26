@@ -23,6 +23,8 @@ namespace {
 // Built-in shaders
 #include "Shaders/GLSL.Embedded/ScreenQuad_VS.inc.hpp"
 #include "Shaders/GLSL.Embedded/Vignette_PS.inc.hpp"
+#include "Shaders/HLSL.Embedded/ScreenQuad_VS.inc.hpp"
+#include "Shaders/HLSL.Embedded/Vignette_PS.inc.hpp"
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
@@ -38,11 +40,13 @@ VignetteEffect::VignetteEffect(
 
     auto vertexShader = assets.CreateBuilder<Shader>()
         .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
-        .SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS));
+        .SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
+        .SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS));
 
     auto pixelShader = assets.CreateBuilder<Shader>()
         .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
-        .SetGLSL(Builtin_GLSL_Vignette_PS, std::strlen(Builtin_GLSL_Vignette_PS));
+        .SetGLSL(Builtin_GLSL_Vignette_PS, std::strlen(Builtin_GLSL_Vignette_PS))
+        .SetHLSLPrecompiled(BuiltinHLSL_Vignette_PS, sizeof(BuiltinHLSL_Vignette_PS));
 
     auto builder = assets.CreateBuilder<PipelineState>();
     pipelineState = builder

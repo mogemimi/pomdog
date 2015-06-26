@@ -24,6 +24,8 @@ namespace {
 // Built-in shaders
 #include "Shaders/GLSL.Embedded/ScreenQuad_VS.inc.hpp"
 #include "Shaders/GLSL.Embedded/FishEye_PS.inc.hpp"
+#include "Shaders/HLSL.Embedded/ScreenQuad_VS.inc.hpp"
+#include "Shaders/HLSL.Embedded/FishEye_PS.inc.hpp"
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
@@ -39,11 +41,13 @@ FishEyeEffect::FishEyeEffect(
 
     auto vertexShader = assets.CreateBuilder<Shader>()
         .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
-        .SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS));
+        .SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
+        .SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS));
 
     auto pixelShader = assets.CreateBuilder<Shader>()
         .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
-        .SetGLSL(Builtin_GLSL_FishEye_PS, std::strlen(Builtin_GLSL_FishEye_PS));
+        .SetGLSL(Builtin_GLSL_FishEye_PS, std::strlen(Builtin_GLSL_FishEye_PS))
+        .SetHLSLPrecompiled(BuiltinHLSL_FishEye_PS, sizeof(BuiltinHLSL_FishEye_PS));
 
     auto builder = assets.CreateBuilder<PipelineState>();
     pipelineState = builder

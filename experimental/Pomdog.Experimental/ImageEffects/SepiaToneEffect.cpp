@@ -23,6 +23,8 @@ namespace {
 // Built-in shaders
 #include "Shaders/GLSL.Embedded/ScreenQuad_VS.inc.hpp"
 #include "Shaders/GLSL.Embedded/SepiaTone_PS.inc.hpp"
+#include "Shaders/HLSL.Embedded/ScreenQuad_VS.inc.hpp"
+#include "Shaders/HLSL.Embedded/SepiaTone_PS.inc.hpp"
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
@@ -38,11 +40,13 @@ SepiaToneEffect::SepiaToneEffect(
 
     auto vertexShader = assets.CreateBuilder<Shader>()
         .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
-        .SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS));
+        .SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
+        .SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS));
 
     auto pixelShader = assets.CreateBuilder<Shader>()
         .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
-        .SetGLSL(Builtin_GLSL_SepiaTone_PS, std::strlen(Builtin_GLSL_SepiaTone_PS));
+        .SetGLSL(Builtin_GLSL_SepiaTone_PS, std::strlen(Builtin_GLSL_SepiaTone_PS))
+        .SetHLSLPrecompiled(BuiltinHLSL_SepiaTone_PS, sizeof(BuiltinHLSL_SepiaTone_PS));
 
     auto builder = assets.CreateBuilder<PipelineState>();
     pipelineState = builder

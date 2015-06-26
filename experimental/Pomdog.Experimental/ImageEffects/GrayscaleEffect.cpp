@@ -23,6 +23,8 @@ namespace {
 // Built-in shaders
 #include "Shaders/GLSL.Embedded/ScreenQuad_VS.inc.hpp"
 #include "Shaders/GLSL.Embedded/Grayscale_PS.inc.hpp"
+#include "Shaders/HLSL.Embedded/ScreenQuad_VS.inc.hpp"
+#include "Shaders/HLSL.Embedded/Grayscale_PS.inc.hpp"
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
@@ -38,11 +40,13 @@ GrayscaleEffect::GrayscaleEffect(
 
     auto vertexShader = assets.CreateBuilder<Shader>()
         .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
-        .SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS));
+        .SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
+        .SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS));
 
     auto pixelShader = assets.CreateBuilder<Shader>()
         .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
-        .SetGLSL(Builtin_GLSL_Grayscale_PS, std::strlen(Builtin_GLSL_Grayscale_PS));
+        .SetGLSL(Builtin_GLSL_Grayscale_PS, std::strlen(Builtin_GLSL_Grayscale_PS))
+        .SetHLSLPrecompiled(BuiltinHLSL_Grayscale_PS, sizeof(BuiltinHLSL_Grayscale_PS));
 
     auto builder = assets.CreateBuilder<PipelineState>();
     pipelineState = builder
@@ -69,7 +73,7 @@ void GrayscaleEffect::Apply(GraphicsCommandList & commandList,
     commandList.SetSamplerState(0, samplerLinear);
     commandList.SetTexture(0, source);
     commandList.SetPipelineState(pipelineState);
-    commandList.SetConstantBuffers(constantBuffers);  
+    commandList.SetConstantBuffers(constantBuffers);
 }
 //-----------------------------------------------------------------------
 } // namespace Pomdog
