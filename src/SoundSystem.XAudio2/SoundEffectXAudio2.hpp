@@ -45,6 +45,7 @@ public:
 private:
     std::shared_ptr<AudioClipXAudio2> audioClip;
     IXAudio2SourceVoice* sourceVoice;
+    bool isLooped;
 };
 
 } // namespace XAudio2

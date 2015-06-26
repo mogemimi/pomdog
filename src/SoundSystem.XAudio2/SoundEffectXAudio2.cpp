@@ -13,11 +13,33 @@ namespace Pomdog {
 namespace Detail {
 namespace SoundSystem {
 namespace XAudio2 {
+namespace {
+
+static void BuildXAudioBuffer(AudioClipXAudio2 const& audioClip,
+    bool isLooped, XAUDIO2_BUFFER & bufferDesc)
+{
+    bufferDesc.Flags = XAUDIO2_END_OF_STREAM;
+    bufferDesc.AudioBytes = audioClip.SizeInBytes();
+    bufferDesc.pAudioData = audioClip.Data();
+    bufferDesc.PlayBegin = 0;
+    bufferDesc.PlayLength = 0;
+    bufferDesc.LoopBegin = 0;
+    bufferDesc.LoopLength = 0;
+    bufferDesc.LoopCount = 0;
+    bufferDesc.pContext = nullptr;
+
+    if (isLooped) {
+        bufferDesc.LoopCount = XAUDIO2_LOOP_INFINITE;
+    }
+}
+
+} // unnamed namespace
 //-----------------------------------------------------------------------
 SoundEffectXAudio2::SoundEffectXAudio2(AudioEngineXAudio2 & audioEngine,
-    std::shared_ptr<AudioClipXAudio2> const& audioClipIn, bool isLooped)
+    std::shared_ptr<AudioClipXAudio2> const& audioClipIn, bool isLoopedIn)
     : audioClip(audioClipIn)
     , sourceVoice(nullptr)
+    , isLooped(isLoopedIn)
 {
     auto xAudio2 = audioEngine.XAudio2Engine();
 
@@ -32,19 +54,7 @@ SoundEffectXAudio2::SoundEffectXAudio2(AudioEngineXAudio2 & audioEngine,
     }
 
     XAUDIO2_BUFFER bufferDesc;
-    bufferDesc.Flags = XAUDIO2_END_OF_STREAM;
-    bufferDesc.AudioBytes = audioClip->SizeInBytes();
-    bufferDesc.pAudioData = audioClip->Data();
-    bufferDesc.PlayBegin = 0;
-    bufferDesc.PlayLength = 0;
-    bufferDesc.LoopBegin = 0;
-    bufferDesc.LoopLength = 0;
-    bufferDesc.LoopCount = 0;
-    bufferDesc.pContext = nullptr;
-
-    if (isLooped) {
-        bufferDesc.LoopCount = XAUDIO2_LOOP_INFINITE;
-    }
+    BuildXAudioBuffer(*audioClip, isLooped, bufferDesc);
 
     hr = sourceVoice->SubmitSourceBuffer(&bufferDesc);
     if (FAILED(hr)) {
@@ -91,6 +101,11 @@ void SoundEffectXAudio2::Stop()
     POMDOG_ASSERT(sourceVoice);
     sourceVoice->Stop();
     sourceVoice->FlushSourceBuffers();
+
+    XAUDIO2_BUFFER bufferDesc;
+    BuildXAudioBuffer(*audioClip, isLooped, bufferDesc);
+
+    sourceVoice->SubmitSourceBuffer(&bufferDesc);
 }
 //-----------------------------------------------------------------------
 void SoundEffectXAudio2::Apply3D(AudioListener const& listener, AudioEmitter const& emitter)
