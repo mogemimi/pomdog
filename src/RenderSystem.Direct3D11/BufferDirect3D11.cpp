@@ -135,9 +135,12 @@ void BufferDirect3D11::SetData(std::size_t offsetInBytes,
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
 
+    //constexpr D3D11_MAP mapType = D3D11_MAP_WRITE_DISCARD;
+    constexpr D3D11_MAP mapType = D3D11_MAP_WRITE_NO_OVERWRITE;
+
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     auto hr = deviceContext->Map(buffer.Get(), 0,
-        D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+        mapType, 0, &mappedResource);
 
     if (FAILED(hr)) {
         // FUS RO DAH!
