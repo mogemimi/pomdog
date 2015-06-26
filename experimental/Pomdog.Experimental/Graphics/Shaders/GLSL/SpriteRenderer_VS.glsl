@@ -23,43 +23,43 @@ layout(location = 4) in vec4 OriginScale;
 layout(location = 5) in vec4 Color;
 
 out VertexData {
-	vec2 TextureCoord;
-	vec4 Color;
+    vec2 TextureCoord;
+    vec4 Color;
 } Out;
 
 uniform Matrices {
-	mat4x4 ViewProjection;
+    mat4x4 ViewProjection;
 };
 
 uniform TextureConstants {
-	vec2 InverseTextureWidth;
+    vec2 InverseTextureWidth;
 };
 
 void main()
 {
-	mat2x2 scaling = mat2x2(
-		vec2(OriginScale.z * SourceRect.z, 0.0),
-		vec2(0.0, OriginScale.w * SourceRect.w));
+    mat2x2 scaling = mat2x2(
+        vec2(OriginScale.z * SourceRect.z, 0.0),
+        vec2(0.0, OriginScale.w * SourceRect.w));
 
-	float cosRotation = cos(TransformMatrix2.w);
-	float sinRotation = sin(TransformMatrix2.w);
-	mat2x2 rotate = mat2x2(
-		vec2(cosRotation, -sinRotation),
-		vec2(sinRotation, cosRotation));
+    float cosRotation = cos(TransformMatrix2.w);
+    float sinRotation = sin(TransformMatrix2.w);
+    mat2x2 rotate = mat2x2(
+        vec2(cosRotation, -sinRotation),
+        vec2(sinRotation, cosRotation));
 
-	mat2x2 localTransform = (scaling * rotate);
-	vec2 position = (PositionTextureCoord.xy - OriginScale.xy).xy * localTransform;
-	
-	mat3x2 worldMatrix = mat3x2(
-		vec2(TransformMatrix1.xy),
-		vec2(TransformMatrix1.zw),
-		vec2(TransformMatrix2.xy));
-	position = (worldMatrix * vec3(position, 1.0)).xy;
+    mat2x2 localTransform = (scaling * rotate);
+    vec2 position = (PositionTextureCoord.xy - OriginScale.xy).xy * localTransform;
 
-	gl_Position = vec4(position.xy, 0.0, 1.0) * ViewProjection;
+    mat3x2 worldMatrix = mat3x2(
+        vec2(TransformMatrix1.xy),
+        vec2(TransformMatrix1.zw),
+        vec2(TransformMatrix2.xy));
+    position = (worldMatrix * vec3(position, 1.0)).xy;
 
-	Out.TextureCoord = (PositionTextureCoord.zw * SourceRect.zw + SourceRect.xy) * InverseTextureWidth.xy;
-	Out.Color = Color;
+    gl_Position = vec4(position.xy, 0.0, 1.0) * ViewProjection;
 
-	//Out.TextureCoord = PositionTextureCoord.zw;
+    Out.TextureCoord = (PositionTextureCoord.zw * SourceRect.zw + SourceRect.xy) * InverseTextureWidth.xy;
+    Out.Color = Color;
+
+    //Out.TextureCoord = PositionTextureCoord.zw;
 }

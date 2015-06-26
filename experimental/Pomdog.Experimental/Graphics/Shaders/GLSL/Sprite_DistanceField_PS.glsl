@@ -1,8 +1,8 @@
 #version 330
 
 in VertexData {
-	vec2 TextureCoord;
-	vec4 Color;
+    vec2 TextureCoord;
+    vec4 Color;
 } In;
 
 uniform sampler2D AlbedoTexture;
@@ -18,13 +18,13 @@ out vec4 FragColor;
 //const float Weight = 0.4; // 700 // bold
 
 uniform DistanceFieldConstants {
-	float Smoothing;
-	float Weight;
+    float Smoothing;
+    float Weight;
 };
 
 void main()
 {
-	float distance = texture(AlbedoTexture, In.TextureCoord.xy).a;
-	float alpha = smoothstep(Weight - Smoothing, Weight + Smoothing, distance);
-	FragColor = vec4(In.Color.xyz, In.Color.w * alpha);
+    float distance = texture(AlbedoTexture, In.TextureCoord.xy).a;
+    float alpha = smoothstep(Weight - Smoothing, Weight + Smoothing, distance);
+    FragColor = vec4(In.Color.xyz, In.Color.w * alpha);
 }
