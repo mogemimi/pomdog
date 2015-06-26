@@ -4,10 +4,9 @@
 #ifndef POMDOG_SPRITEFONT_1C2133CC_HPP
 #define POMDOG_SPRITEFONT_1C2133CC_HPP
 
-#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Math/Vector2.hpp"
-#include "Pomdog/Graphics/Texture2D.hpp"
 #include <cstdint>
 #include <memory>
 #include <vector>
@@ -29,10 +28,11 @@ struct Glyph {
     std::int16_t TexturePage;
 };
 
-}// namespace SpriteFonts
-}// namespace Detail
+} // namespace SpriteFonts
+} // namespace Detail
 
-class SpriteBatch;
+class SpriteBatchRenderer;
+class TrueTypeFont;
 
 class SpriteFont final {
 public:
@@ -42,40 +42,59 @@ public:
         std::int16_t spacing,
         std::int16_t lineSpacing);
 
+    SpriteFont(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        std::shared_ptr<TrueTypeFont> const& font,
+        std::uint32_t defaultCharacter,
+        std::int16_t lineSpacing);
+
     ~SpriteFont();
 
     Vector2 MeasureString(std::string const& text) const;
 
-    std::uint32_t DefaultCharacter() const;
+    std::uint32_t GetDefaultCharacter() const;
 
-    void DefaultCharacter(std::uint32_t character);
+    void SetDefaultCharacter(std::uint32_t character);
 
-    float LineSpacing() const;
+    float GetLineSpacing() const;
 
-    void LineSpacing(float lineSpacing);
+    void SetLineSpacing(float lineSpacing);
 
     bool ContainsCharacter(std::uint32_t character) const;
 
-    void Begin(Matrix4x4 const& transformMatrix);
+    void Begin(
+        std::shared_ptr<GraphicsCommandList> const& commandList,
+        SpriteBatchRenderer & spriteBatch,
+        Matrix4x4 const& transformMatrix);
 
-    void Draw(SpriteBatch & spriteBatch, std::string const& text,
-        Vector2 const& position, Color const& color);
+    void Draw(
+        SpriteBatchRenderer & spriteBatch,
+        std::string const& text,
+        Vector2 const& position,
+        Color const& color);
 
-    void Draw(SpriteBatch & spriteBatch, std::string const& text,
-        Vector2 const& position, Color const& color,
-        Radian<float> const& rotation, float scale, float layerDepth);
+    void Draw(
+        SpriteBatchRenderer & spriteBatch,
+        std::string const& text,
+        Vector2 const& position,
+        Color const& color,
+        Radian<float> const& rotation,
+        float scale);
 
-    void Draw(SpriteBatch & spriteBatch, std::string const& text,
-        Vector2 const& position, Color const& color,
-        Radian<float> const& rotation, Vector2 const& scale, float layerDepth);
+    void Draw(
+        SpriteBatchRenderer & spriteBatch,
+        std::string const& text,
+        Vector2 const& position,
+        Color const& color,
+        Radian<float> const& rotation,
+        Vector2 const& scale);
 
-    void End();
+    void End(SpriteBatchRenderer & spriteBatch);
 
 private:
     class Impl;
     std::unique_ptr<Impl> impl;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SPRITEFONT_1C2133CC_HPP
