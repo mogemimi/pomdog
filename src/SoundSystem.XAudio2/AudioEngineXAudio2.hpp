@@ -20,9 +20,9 @@ public:
 
     IXAudio2* XAudio2Engine() const;
 
-    float MasterVolume() const;
+    float GetMasterVolume() const;
 
-    void MasterVolume(float volume);
+    void SetMasterVolume(float volume);
 
 private:
     Microsoft::WRL::ComPtr<IXAudio2> xAudio2;

@@ -18,9 +18,9 @@ public:
     AudioEngineAL();
     ~AudioEngineAL();
 
-    float MasterVolume() const;
+    float GetMasterVolume() const;
 
-    void MasterVolume(float volume);
+    void SetMasterVolume(float volume);
 
 private:
     ContextOpenAL context;

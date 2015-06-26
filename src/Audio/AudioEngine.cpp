@@ -20,17 +20,17 @@ AudioEngine::AudioEngine()
 //-----------------------------------------------------------------------
 AudioEngine::~AudioEngine() = default;
 //-----------------------------------------------------------------------
-float AudioEngine::MasterVolume() const
+float AudioEngine::GetMasterVolume() const
 {
     POMDOG_ASSERT(nativeAudioEngine);
-    return nativeAudioEngine->MasterVolume();
+    return nativeAudioEngine->GetMasterVolume();
 }
 //-----------------------------------------------------------------------
-void AudioEngine::MasterVolume(float volume)
+void AudioEngine::SetMasterVolume(float volume)
 {
-    POMDOG_ASSERT(volume >= 0.0f);
+    POMDOG_ASSERT(volume >= 0);
     POMDOG_ASSERT(nativeAudioEngine);
-    nativeAudioEngine->MasterVolume(volume);
+    nativeAudioEngine->SetMasterVolume(volume);
 }
 //-----------------------------------------------------------------------
 Detail::SoundSystem::NativeAudioEngine* AudioEngine::NativeAudioEngine()

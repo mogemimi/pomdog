@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "AudioEngineXAudio2.hpp"
+#include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
@@ -264,19 +265,20 @@ AudioEngineXAudio2::~AudioEngineXAudio2()
     }
 }
 //-----------------------------------------------------------------------
-float AudioEngineXAudio2::MasterVolume() const
+float AudioEngineXAudio2::GetMasterVolume() const
 {
-    // Error: FUS RO DAH!
-    ///@todo Not implemented
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    float volume = 0;
+    if (xAudio2 && masteringVoice != nullptr) {
+        masteringVoice->GetVolume(&volume);
+    }
+    return volume;
 }
 //-----------------------------------------------------------------------
-void AudioEngineXAudio2::MasterVolume(float volumeIn)
+void AudioEngineXAudio2::SetMasterVolume(float volumeIn)
 {
-    // Error: FUS RO DAH!
-    ///@todo Not implemented
-    UNREFERENCED_PARAMETER(volumeIn);
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    if (xAudio2 && masteringVoice != nullptr) {
+        masteringVoice->SetVolume(MathHelper::Saturate(volumeIn), XAUDIO2_COMMIT_NOW);
+    }
 }
 //-----------------------------------------------------------------------
 IXAudio2* AudioEngineXAudio2::XAudio2Engine() const

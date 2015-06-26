@@ -20,9 +20,9 @@ public:
     AudioEngine(AudioEngine &&) = default;
     AudioEngine & operator=(AudioEngine &&) = default;
 
-    float MasterVolume() const;
+    float GetMasterVolume() const;
 
-    void MasterVolume(float volume);
+    void SetMasterVolume(float volume);
 
     Detail::SoundSystem::NativeAudioEngine* NativeAudioEngine();
 
