@@ -8,14 +8,13 @@
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
-#include "Pomdog/Graphics/GraphicsContext.hpp"
+#include "Pomdog/Graphics/GraphicsCommandList.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
-#include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
@@ -25,7 +24,7 @@ namespace {
 #include "Shaders/GLSL.Embedded/ScreenQuad_VS.inc.hpp"
 #include "Shaders/GLSL.Embedded/SepiaTone_PS.inc.hpp"
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 SepiaToneEffect::SepiaToneEffect(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
@@ -57,26 +56,20 @@ SepiaToneEffect::SepiaToneEffect(
     constantBuffers = builder.CreateConstantBuffers(pipelineState);
 }
 //-----------------------------------------------------------------------
-void SepiaToneEffect::SetViewport(float width, float height)
+void SepiaToneEffect::BindConstantBuffer(std::shared_ptr<ConstantBuffer> const& constantBuffer)
 {
-    Vector2 renderTargetSize(width, height);
-    constantBuffers->Find("Constants")->SetValue(renderTargetSize);
+    POMDOG_ASSERT(constantBuffer);
+    constantBuffers->SetConstantBuffer("ImageEffectConstants", constantBuffer);
 }
 //-----------------------------------------------------------------------
-void SepiaToneEffect::SetTexture(std::shared_ptr<RenderTarget2D> const& textureIn)
+void SepiaToneEffect::Apply(GraphicsCommandList & commandList,
+    std::shared_ptr<RenderTarget2D> const& source)
 {
-    POMDOG_ASSERT(textureIn);
-    texture = textureIn;
+    POMDOG_ASSERT(source);
+    commandList.SetSamplerState(0, samplerLinear);
+    commandList.SetTexture(0, source);
+    commandList.SetPipelineState(pipelineState);
+    commandList.SetConstantBuffers(constantBuffers);
 }
 //-----------------------------------------------------------------------
-void SepiaToneEffect::Apply(GraphicsContext & graphicsContext)
-{
-    POMDOG_ASSERT(texture);
-
-    graphicsContext.SetSamplerState(0, samplerLinear);
-    graphicsContext.SetTexture(0, texture);
-    graphicsContext.SetPipelineState(pipelineState);
-    graphicsContext.SetConstantBuffers(constantBuffers);
-}
-//-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

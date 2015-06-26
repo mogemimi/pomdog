@@ -1,47 +1,46 @@
 #version 330
 
 in QuadVertexShaderOutput {
-	vec2 TextureCoord;
+    vec2 TextureCoord;
 } In;
 
-uniform Constants {
-	vec2 RenderTargetPixelSize;
+uniform ImageEffectConstants {
+    vec2 RenderTargetPixelSize;
+    vec2 RcpFrame;
 };
 
 uniform sampler2D AlbedoSampler;
 
 out vec4 FragColor;
 
-float CircleVignette(in vec2 textureCoord, in float radius, in float softness)
+float CircleVignette(in vec2 texCoord, in float radius, in float softness)
 {
-	// NOTE:
-	// [0, 1] => [-0.5, +0.5]
-	vec2 position = In.TextureCoord.xy - vec2(0.5);
-	float len = length(position);
-	float vignette = smoothstep(radius, radius - softness, len);
-	return vignette;
+    // NOTE: [0, 1] => [-0.5, +0.5]
+    vec2 position = texCoord.xy - vec2(0.5);
+    float len = length(position);
+    float vignette = smoothstep(radius, radius - softness, len);
+    return vignette;
 }
 
 vec3 ChromaticAberration(in vec2 texCoord, in vec2 red, in vec2 green, in vec2 blue)
 {
-	const float radius = 0.998;
-	const float softness = 0.95;
-	
-	float amount = 1.0 - CircleVignette(texCoord, radius, softness);
-	float r = texture(AlbedoSampler, texCoord + red * amount).r;
-	float g = texture(AlbedoSampler, texCoord + green * amount).g;
-	float b = texture(AlbedoSampler, texCoord + blue * amount).b;
-	return vec3(r, g, b);
+    const float radius = 0.998;
+    const float softness = 0.95;
+
+    float amount = 1.0 - CircleVignette(texCoord, radius, softness);
+    float r = texture(AlbedoSampler, texCoord + red * amount).r;
+    float g = texture(AlbedoSampler, texCoord + green * amount).g;
+    float b = texture(AlbedoSampler, texCoord + blue * amount).b;
+    return vec3(r, g, b);
 }
 
 void main()
 {
-	vec2 inverseScreenSize = 1.0 / RenderTargetPixelSize;
-	vec2 red = vec2(-3.0, -3.0) * inverseScreenSize;
-	vec2 green = vec2(0.0, 0.0) * inverseScreenSize;
-	vec2 blue = vec2(3.0, 3.0) * inverseScreenSize;
-	
-	vec3 color = ChromaticAberration(In.TextureCoord.xy, red, green, blue);
-	//color = texture(AlbedoSampler, In.TextureCoord.xy).xyz;
-	FragColor = vec4(color.xyz, 1.0);
+    vec2 inverseScreenSize = RcpFrame;
+    vec2 red = vec2(-3.0, -3.0) * inverseScreenSize;
+    vec2 green = vec2(0.0, 0.0) * inverseScreenSize;
+    vec2 blue = vec2(3.0, 3.0) * inverseScreenSize;
+
+    vec3 color = ChromaticAberration(In.TextureCoord.xy, red, green, blue);
+    FragColor = vec4(color.xyz, 1.0);
 }

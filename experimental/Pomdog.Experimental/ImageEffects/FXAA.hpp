@@ -4,29 +4,32 @@
 #ifndef POMDOG_FXAA_FAC6D173_HPP
 #define POMDOG_FXAA_FAC6D173_HPP
 
+#include "ImageEffectBase.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 
 namespace Pomdog {
 
-class FXAA {
+class FXAA final: public ImageEffectBase {
 public:
-    explicit FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    FXAA(
+        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         AssetManager & assets);
 
-    void SetViewport(float width, float height);
-    void SetTexture(std::shared_ptr<RenderTarget2D> const& texture);
+    void BindConstantBuffer(
+        std::shared_ptr<ConstantBuffer> const& constantBuffer) override;
 
-    void Apply(GraphicsContext & graphicsContext);
+    void Apply(
+        GraphicsCommandList & commandList,
+        std::shared_ptr<RenderTarget2D> const& source) override;
 
 private:
-    std::shared_ptr<RenderTarget2D> texture;
     std::shared_ptr<SamplerState> samplerLinear;
     std::shared_ptr<PipelineState> pipelineState;
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_FXAA_FAC6D173_HPP
