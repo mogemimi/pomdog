@@ -30,6 +30,8 @@ def IsSourceFile(path):
       or ext == '.m'
       or ext == '.h'
       or ext == '.c'
+      or ext == '.glsl'
+      or ext == '.hlsl'
       or ext == '.inc')
 
 
