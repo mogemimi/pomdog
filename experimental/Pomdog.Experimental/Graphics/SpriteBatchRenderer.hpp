@@ -5,24 +5,16 @@
 #define POMDOG_SPRITEBATCHRENDERER_FAFB0E53_HPP
 
 #include "Pomdog/Content/AssetManager.hpp"
-#include "Pomdog/Graphics/GraphicsContext.hpp"
-#include "Pomdog/Graphics/GraphicsDevice.hpp"
-#include "Pomdog/Graphics/Texture2D.hpp"
-#include "Pomdog/Math/Color.hpp"
-#include "Pomdog/Math/Matrix3x2.hpp"
-#include "Pomdog/Math/Matrix4x4.hpp"
-#include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <cstdint>
 #include <memory>
 
 namespace Pomdog {
-namespace Detail {
-namespace Rendering {
 
 class SpriteBatchRenderer {
 public:
-    SpriteBatchRenderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
+    SpriteBatchRenderer(
         std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         AssetManager & assets);
 
@@ -30,25 +22,66 @@ public:
 
     void SetProjectionMatrix(Matrix4x4 const& projectionMatrix);
 
-    void Begin(Matrix4x4 const& transformMatrix);
+    void Begin(
+        std::shared_ptr<GraphicsCommandList> const& commandList,
+        Matrix4x4 const& transformMatrix);
 
-    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-        Color const& color, Vector2 const& originPivot);
+    void Draw(
+        std::shared_ptr<Texture2D> const& texture,
+        Matrix3x2 const& worldMatrix,
+        Color const& color,
+        Vector2 const& originPivot);
 
-    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-        Rectangle const& sourceRect, Color const& color, Vector2 const& originPivot);
+    void Draw(
+        std::shared_ptr<Texture2D> const& texture,
+        Matrix3x2 const& worldMatrix,
+        Rectangle const& sourceRect,
+        Color const& color,
+        Vector2 const& originPivot);
+
+    void Draw(
+        std::shared_ptr<Texture2D> const& texture,
+        Rectangle const& sourceRect,
+        Color const& color);
+
+    void Draw(
+        std::shared_ptr<Texture2D> const& texture,
+        Vector2 const& position,
+        Color const& color);
+
+    void Draw(
+        std::shared_ptr<Texture2D> const& texture,
+        Vector2 const& position,
+        Rectangle const& sourceRect,
+        Color const& color);
+
+    void Draw(
+        std::shared_ptr<Texture2D> const& texture,
+        Vector2 const& position,
+        Rectangle const& sourceRect,
+        Color const& color,
+        Radian<float> const& rotation,
+        Vector2 const& originPivot,
+        float scale);
+
+    void Draw(
+        std::shared_ptr<Texture2D> const& texture,
+        Vector2 const& position,
+        Rectangle const& sourceRect,
+        Color const& color,
+        Radian<float> const& rotation,
+        Vector2 const& originPivot,
+        Vector2 const& scale);
 
     void End();
 
-    std::uint32_t DrawCallCount() const;
+    std::uint32_t GetDrawCallCount() const;
 
 private:
     class Impl;
     std::unique_ptr<Impl> impl;
 };
 
-}// namespace Rendering
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SPRITEBATCHRENDERER_FAFB0E53_HPP

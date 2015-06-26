@@ -37,8 +37,8 @@ char const* Builtin_GLSL_SpriteBatchRenderer_VS =
 "vec2(TransformMatrix2Origin.xy));\n"
 "position=(worldMatrix*vec3(position,1.0)).xy;\n"
 "gl_Position=vec4(position.xy,0.0,1.0)*ViewProjection;\n"
-"Out.TextureIndex=TextureIndex.x;\n"
-"int textureIndex=clamp(int(Out.TextureIndex),0,3);\n"
+"int textureIndex=clamp(int(TextureIndex.x),0,3);\n"
 "vec2 inverseTextureWidth=GetInverseTextureWidth(textureIndex);\n"
 "Out.TextureCoord=(PositionTextureCoord.zw*SourceRect.zw+SourceRect.xy)*inverseTextureWidth;\n"
-"Out.Color=Color;}\n";
+"Out.Color=Color;\n"
+"Out.TextureIndex=textureIndex;}\n";

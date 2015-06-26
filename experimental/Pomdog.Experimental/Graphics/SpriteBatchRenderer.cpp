@@ -7,29 +7,37 @@
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
-#include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
+#include "Pomdog/Graphics/GraphicsCommandList.hpp"
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/IndexElementSize.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
+#include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
+#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Matrix3x2.hpp"
+#include "Pomdog/Math/Matrix4x4.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include <tuple>
 
 namespace Pomdog {
-namespace Detail {
-namespace Rendering {
 namespace {
 
 // Built-in shaders
 #include "Shaders/GLSL.Embedded/SpriteBatchRenderer_VS.inc.hpp"
 #include "Shaders/GLSL.Embedded/SpriteBatchRenderer_PS.inc.hpp"
+#include "Shaders/HLSL.Embedded/SpriteBatchRenderer_VS.inc.hpp"
+#include "Shaders/HLSL.Embedded/SpriteBatchRenderer_PS.inc.hpp"
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - SpriteBatchRenderer::Impl
@@ -40,6 +48,7 @@ private:
     static constexpr std::size_t MaxBatchSize = 2048;
     static constexpr std::size_t MinBatchSize = 128;
     static constexpr std::size_t MaxTextureCount = 4;
+    static constexpr std::size_t MaxDrawCallCount = 16;
 
     static_assert(MaxBatchSize >= MinBatchSize, "");
 
@@ -77,7 +86,7 @@ private:
     };
 
 private:
-    std::shared_ptr<GraphicsContext> graphicsContext;
+    std::shared_ptr<GraphicsCommandList> commandList;
 
     std::vector<SpriteInfo> spriteQueue;
     std::vector<std::shared_ptr<Texture2D>> textures;
@@ -87,28 +96,38 @@ private:
     std::shared_ptr<VertexBuffer> instanceVertices;
 
     std::shared_ptr<PipelineState> pipelineState;
-    std::shared_ptr<ConstantBufferBinding> constantBuffers;
+    std::shared_ptr<ConstantBuffer> constantBufferMatrices;
+    std::vector<std::shared_ptr<ConstantBuffer>> constantBuffers;
 
     Matrix4x4 projectionMatrix;
     TextureConstant textureConstant;
+    std::size_t currentVertexOffset;
 
 public:
     std::uint32_t drawCallCount;
 
 public:
-    Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    Impl(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         AssetManager & assets);
 
-    void ResetProjectionMatrix(Matrix4x4 const& projectionMatrix);
+    void ResetProjectionMatrix(Matrix4x4 const& projectionMatrixIn);
 
-    void Begin(Matrix4x4 const& transformMatrix);
+    void Begin(
+        std::shared_ptr<GraphicsCommandList> const& commandListIn,
+        Matrix4x4 const& transformMatrix);
 
-    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-        Color const& color, Vector2 const& originPivot);
+    void Draw(
+        std::shared_ptr<Texture2D> const& texture,
+        Matrix3x2 const& worldMatrix,
+        Color const& color,
+        Vector2 const& originPivot);
 
-    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-        Rectangle const& sourceRect, Color const& color, Vector2 const& originPivot);
+    void Draw(
+        std::shared_ptr<Texture2D> const& texture,
+        Matrix3x2 const& worldMatrix,
+        Rectangle const& sourceRect,
+        Color const& color,
+        Vector2 const& originPivot);
 
     void End();
 
@@ -118,17 +137,17 @@ private:
     std::size_t CheckTextureIndex(std::shared_ptr<Texture2D> const& texture);
 };
 //-----------------------------------------------------------------------
-SpriteBatchRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
+SpriteBatchRenderer::Impl::Impl(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
-    : graphicsContext(graphicsContextIn)
-    , drawCallCount(0)
+    : drawCallCount(0)
+    , currentVertexOffset(0)
 {
     {
-        auto viewport = graphicsContext->GetViewport();
-        POMDOG_ASSERT(viewport.Width > 0);
-        POMDOG_ASSERT(viewport.Height > 0);
-        projectionMatrix = Matrix4x4::CreateOrthographicLH(viewport.Width, viewport.Height, 0.1f, 100.0f);
+        constexpr float width = 800.0f;
+        constexpr float height = 480.0f;
+        projectionMatrix = Matrix4x4::CreateOrthographicLH(
+            width, height, 0.1f, 100.0f);
     }
     {
         using PositionTextureCoord = Vector4;
@@ -160,6 +179,16 @@ SpriteBatchRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphics
             maxBatchSize, sizeof(SpriteInfo), BufferUsage::Dynamic);
     }
     {
+        constantBufferMatrices = std::make_shared<ConstantBuffer>(
+            graphicsDevice, sizeof(Matrix4x4), BufferUsage::Dynamic);
+
+        for (std::size_t i = 0; i < MaxDrawCallCount; ++i) {
+            auto textureConstants = std::make_shared<ConstantBuffer>(
+                graphicsDevice, sizeof(TextureConstant), BufferUsage::Dynamic);
+            constantBuffers.push_back(std::move(textureConstants));
+        }
+    }
+    {
         auto inputLayout = InputLayoutHelper{}
             .AddInputSlot()
             .Float4()
@@ -168,22 +197,23 @@ SpriteBatchRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphics
 
         auto vertexShader = assets.CreateBuilder<Shader>()
             .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
-            .SetGLSL(Builtin_GLSL_SpriteBatchRenderer_VS, std::strlen(Builtin_GLSL_SpriteBatchRenderer_VS));
+            .SetGLSL(Builtin_GLSL_SpriteBatchRenderer_VS, std::strlen(Builtin_GLSL_SpriteBatchRenderer_VS))
+            .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatchRenderer_VS, sizeof(BuiltinHLSL_SpriteBatchRenderer_VS));
 
         auto pixelShader = assets.CreateBuilder<Shader>()
             .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
-            .SetGLSL(Builtin_GLSL_SpriteBatchRenderer_PS, std::strlen(Builtin_GLSL_SpriteBatchRenderer_PS));
+            .SetGLSL(Builtin_GLSL_SpriteBatchRenderer_PS, std::strlen(Builtin_GLSL_SpriteBatchRenderer_PS))
+            .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatchRenderer_PS, sizeof(BuiltinHLSL_SpriteBatchRenderer_PS));
 
-        auto builder = assets.CreateBuilder<PipelineState>();
-        pipelineState = builder
+        pipelineState = assets.CreateBuilder<PipelineState>()
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
             .SetDepthStencilState(DepthStencilDescription::CreateNone())
+            .SetConstantBufferBindSlot("Matrices", 0)
+            .SetConstantBufferBindSlot("TextureConstants", 1)
             .Build();
-
-        constantBuffers = builder.CreateConstantBuffers(pipelineState);
     }
     {
         spriteQueue.reserve(MinBatchSize);
@@ -196,24 +226,32 @@ void SpriteBatchRenderer::Impl::ResetProjectionMatrix(Matrix4x4 const& projectio
     this->projectionMatrix = projectionMatrixIn;
 }
 //-----------------------------------------------------------------------
-void SpriteBatchRenderer::Impl::Begin(Matrix4x4 const& transformMatrix)
+void SpriteBatchRenderer::Impl::Begin(
+    std::shared_ptr<GraphicsCommandList> const& commandListIn,
+    Matrix4x4 const& transformMatrix)
 {
+    POMDOG_ASSERT(commandListIn);
+    this->commandList = commandListIn;
+
     alignas(16) Matrix4x4 projection = Matrix4x4::Transpose(
         transformMatrix * projectionMatrix);
 
-    auto parameter = constantBuffers->Find("Matrices");
-    parameter->SetValue(projection);
+    constantBufferMatrices->SetValue(projection);
 
     drawCallCount = 0;
+    currentVertexOffset = 0;
 }
 //-----------------------------------------------------------------------
 void SpriteBatchRenderer::Impl::End()
 {
     Flush();
 
-    for (std::uint32_t index = 0; index < textures.size(); ++index) {
-        graphicsContext->SetTexture(index);
+    if (drawCallCount > 0) {
+        for (std::uint32_t index = 0; index < textures.size(); ++index) {
+            commandList->SetTexture(index);
+        }
     }
+    commandList.reset();
 }
 //-----------------------------------------------------------------------
 void SpriteBatchRenderer::Impl::Flush()
@@ -238,29 +276,49 @@ void SpriteBatchRenderer::Impl::DrawInstance(std::vector<SpriteInfo> const& spri
     POMDOG_ASSERT(!textures.empty());
     POMDOG_ASSERT(textures.size() <= MaxTextureCount);
     POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
+    POMDOG_ASSERT(commandList);
 
-    auto parameter = constantBuffers->Find("TextureConstants");
-    parameter->SetValue(textureConstant);
+    POMDOG_ASSERT(drawCallCount < constantBuffers.size());
+    if (drawCallCount >= constantBuffers.size()) {
+        // FUS RO DAH
+        ///@todo throw exception
+        return;
+    }
+
+    POMDOG_ASSERT(drawCallCount < constantBuffers.size());
+    auto constantBuffer = constantBuffers[drawCallCount];
+
+    POMDOG_ASSERT(constantBuffer);
+    constantBuffer->SetValue(textureConstant);
 
     POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
-    instanceVertices->SetData(sprites.data(), sprites.size());
+    auto vertexOffset = sizeof(SpriteInfo) * currentVertexOffset;
+    instanceVertices->SetData(
+        vertexOffset,
+        sprites.data(),
+        sprites.size(),
+        sizeof(SpriteInfo));
 
     for (int index = 0; index < static_cast<int>(textures.size()); ++index) {
-        graphicsContext->SetTexture(index, textures[index]);
+        commandList->SetTexture(index, textures[index]);
     }
 
     for (int index = static_cast<int>(textures.size()); index < static_cast<int>(MaxTextureCount); ++index) {
         ///@note Set the dummy texture to texture unit:
-        graphicsContext->SetTexture(index, textures.front());
+        commandList->SetTexture(index, textures.front());
     }
 
-    graphicsContext->SetVertexBuffers({planeVertices, instanceVertices});
-    graphicsContext->SetPipelineState(pipelineState);
-    graphicsContext->SetConstantBuffers(constantBuffers);
-    graphicsContext->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
-    graphicsContext->DrawIndexedInstanced(
+    commandList->SetVertexBuffers({
+        VertexBufferBinding{planeVertices},
+        VertexBufferBinding{instanceVertices, vertexOffset}});
+    commandList->SetPipelineState(pipelineState);
+    commandList->SetConstantBuffer(0, constantBufferMatrices);
+    commandList->SetConstantBuffer(1, constantBuffer);
+    commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
+    commandList->DrawIndexedInstanced(
         planeIndices, planeIndices->IndexCount(), sprites.size());
 
+    currentVertexOffset += sprites.size();
     ++drawCallCount;
 }
 //-----------------------------------------------------------------------
@@ -293,13 +351,11 @@ std::size_t SpriteBatchRenderer::Impl::CheckTextureIndex(std::shared_ptr<Texture
             POMDOG_ASSERT(!textures.empty());
             textureIndex = textures.size() - 1;
 
-            if (textureIndex % 2 == 0)
-            {
+            if (textureIndex % 2 == 0) {
                 textureConstant.InverseTextureWidths[textureIndex/2].X = inverseTextureWidth.X;
                 textureConstant.InverseTextureWidths[textureIndex/2].Y = inverseTextureWidth.Y;
             }
-            else
-            {
+            else {
                 textureConstant.InverseTextureWidths[textureIndex/2].Z = inverseTextureWidth.X;
                 textureConstant.InverseTextureWidths[textureIndex/2].W = inverseTextureWidth.Y;
             }
@@ -314,18 +370,21 @@ std::size_t SpriteBatchRenderer::Impl::CheckTextureIndex(std::shared_ptr<Texture
     return textureIndex;
 }
 //-----------------------------------------------------------------------
-void SpriteBatchRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& transform,
-    Color const& color, Vector2 const& originPivot)
+void SpriteBatchRenderer::Impl::Draw(
+    std::shared_ptr<Texture2D> const& texture,
+    Matrix3x2 const& transform,
+    Color const& color,
+    Vector2 const& originPivot)
 {
     POMDOG_ASSERT(texture);
     POMDOG_ASSERT(texture->Width() > 0);
     POMDOG_ASSERT(texture->Height() > 0);
 
-    if (spriteQueue.size() >= MaxBatchSize)
-    {
-        Flush();
-        POMDOG_ASSERT(spriteQueue.empty());
-        POMDOG_ASSERT(textures.empty());
+    if (spriteQueue.size() >= MaxBatchSize) {
+        return;
+        //Flush();
+        //POMDOG_ASSERT(spriteQueue.empty());
+        //POMDOG_ASSERT(textures.empty());
     }
 
     auto textureIndex = CheckTextureIndex(texture);
@@ -341,8 +400,12 @@ void SpriteBatchRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, 
     POMDOG_ASSERT(spriteQueue.size() <= MaxBatchSize);
 }
 //-----------------------------------------------------------------------
-void SpriteBatchRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& transform,
-    Rectangle const& sourceRect, Color const& color, Vector2 const& originPivot)
+void SpriteBatchRenderer::Impl::Draw(
+    std::shared_ptr<Texture2D> const& texture,
+    Matrix3x2 const& transform,
+    Rectangle const& sourceRect,
+    Color const& color,
+    Vector2 const& originPivot)
 {
     if (sourceRect.Width <= 0 || sourceRect.Height <= 0) {
         return;
@@ -352,11 +415,11 @@ void SpriteBatchRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, 
     POMDOG_ASSERT(texture->Width() > 0);
     POMDOG_ASSERT(texture->Height() > 0);
 
-    if (spriteQueue.size() >= MaxBatchSize)
-    {
-        Flush();
-        POMDOG_ASSERT(spriteQueue.empty());
-        POMDOG_ASSERT(textures.empty());
+    if (spriteQueue.size() >= MaxBatchSize) {
+        return;
+        //Flush();
+        //POMDOG_ASSERT(spriteQueue.empty());
+        //POMDOG_ASSERT(textures.empty());
     }
 
     auto textureIndex = CheckTextureIndex(texture);
@@ -376,10 +439,10 @@ void SpriteBatchRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, 
 #pragma mark - SpriteBatchRenderer
 #endif
 //-----------------------------------------------------------------------
-SpriteBatchRenderer::SpriteBatchRenderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
+SpriteBatchRenderer::SpriteBatchRenderer(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
-    : impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))
+    : impl(std::make_unique<Impl>(graphicsDevice, assets))
 {}
 //-----------------------------------------------------------------------
 SpriteBatchRenderer::~SpriteBatchRenderer() = default;
@@ -390,10 +453,12 @@ void SpriteBatchRenderer::SetProjectionMatrix(Matrix4x4 const& projectionMatrix)
     impl->ResetProjectionMatrix(projectionMatrix);
 }
 //-----------------------------------------------------------------------
-void SpriteBatchRenderer::Begin(Matrix4x4 const& transformMatrixIn)
+void SpriteBatchRenderer::Begin(
+    std::shared_ptr<GraphicsCommandList> const& commandList,
+    Matrix4x4 const& transformMatrixIn)
 {
     POMDOG_ASSERT(impl);
-    impl->Begin(transformMatrixIn);
+    impl->Begin(commandList, transformMatrixIn);
 }
 //-----------------------------------------------------------------------
 void SpriteBatchRenderer::End()
@@ -402,26 +467,93 @@ void SpriteBatchRenderer::End()
     impl->End();
 }
 //-----------------------------------------------------------------------
-void SpriteBatchRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-    Color const& color, Vector2 const& originPivot)
+void SpriteBatchRenderer::Draw(
+    std::shared_ptr<Texture2D> const& texture,
+    Matrix3x2 const& worldMatrix,
+    Color const& color,
+    Vector2 const& originPivot)
 {
     POMDOG_ASSERT(impl);
     impl->Draw(texture, worldMatrix, color, originPivot);
 }
 //-----------------------------------------------------------------------
-void SpriteBatchRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-    Rectangle const& sourceRect, Color const& color, Vector2 const& originPivot)
+void SpriteBatchRenderer::Draw(
+    std::shared_ptr<Texture2D> const& texture,
+    Matrix3x2 const& worldMatrix,
+    Rectangle const& sourceRect,
+    Color const& color,
+    Vector2 const& originPivot)
 {
     POMDOG_ASSERT(impl);
     impl->Draw(texture, worldMatrix, sourceRect, color, originPivot);
 }
 //-----------------------------------------------------------------------
-std::uint32_t SpriteBatchRenderer::DrawCallCount() const
+void SpriteBatchRenderer::Draw(
+    std::shared_ptr<Texture2D> const& texture,
+    Rectangle const& sourceRect,
+    Color const& color)
+{
+    POMDOG_ASSERT(impl);
+    impl->Draw(texture, Matrix3x2::Identity, sourceRect, color, Vector2{0.5f, 0.5f});
+}
+//-----------------------------------------------------------------------
+void SpriteBatchRenderer::Draw(
+    std::shared_ptr<Texture2D> const& texture,
+    Vector2 const& position,
+    Color const& color)
+{
+    POMDOG_ASSERT(impl);
+    impl->Draw(texture, Matrix3x2::CreateTranslation(position), color, Vector2{0.5f, 0.5f});
+}
+//-----------------------------------------------------------------------
+void SpriteBatchRenderer::Draw(
+    std::shared_ptr<Texture2D> const& texture,
+    Vector2 const& position,
+    Rectangle const& sourceRect,
+    Color const& color)
+{
+    POMDOG_ASSERT(impl);
+    impl->Draw(texture, Matrix3x2::CreateTranslation(position), sourceRect, color, Vector2{0.5f, 0.5f});
+}
+//-----------------------------------------------------------------------
+void SpriteBatchRenderer::Draw(
+    std::shared_ptr<Texture2D> const& texture,
+    Vector2 const& position,
+    Rectangle const& sourceRect,
+    Color const& color,
+    Radian<float> const& rotation,
+    Vector2 const& originPivot,
+    float scale)
+{
+    POMDOG_ASSERT(impl);
+    impl->Draw(texture,
+        Matrix3x2::CreateScale(scale)
+        * Matrix3x2::CreateRotation(rotation)
+        * Matrix3x2::CreateTranslation(position),
+        sourceRect, color, originPivot);
+}
+//-----------------------------------------------------------------------
+void SpriteBatchRenderer::Draw(
+    std::shared_ptr<Texture2D> const& texture,
+    Vector2 const& position,
+    Rectangle const& sourceRect,
+    Color const& color,
+    Radian<float> const& rotation,
+    Vector2 const& originPivot,
+    Vector2 const& scale)
+{
+    POMDOG_ASSERT(impl);
+    impl->Draw(texture,
+        Matrix3x2::CreateScale(scale)
+        * Matrix3x2::CreateRotation(rotation)
+        * Matrix3x2::CreateTranslation(position),
+        sourceRect, color, originPivot);
+}
+//-----------------------------------------------------------------------
+std::uint32_t SpriteBatchRenderer::GetDrawCallCount() const
 {
     POMDOG_ASSERT(impl);
     return impl->drawCallCount;
 }
 //-----------------------------------------------------------------------
-}// namespace Rendering
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Pomdog

@@ -29,4 +29,5 @@ char const* Builtin_GLSL_SpriteBatchRenderer_PS =
 "return texture(Texture3,uv);}\n"
 "void main(){\n"
 "int textureIndex=clamp(int(In.TextureIndex),0,3);\n"
-"FragColor=FindTextureColor(textureIndex,In.TextureCoord.xy).xyzw*In.Color.xyzw;}\n";
+"vec4 color=FindTextureColor(textureIndex,In.TextureCoord.xy).rgba;\n"
+"FragColor=color*In.Color.rgba;}\n";
