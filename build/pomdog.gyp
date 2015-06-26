@@ -110,6 +110,7 @@
       '../include/Pomdog/Graphics/TextureAddressMode.hpp',
       '../include/Pomdog/Graphics/TextureFilter.hpp',
       '../include/Pomdog/Graphics/VertexBuffer.hpp',
+      '../include/Pomdog/Graphics/VertexBufferBinding.hpp',
       '../include/Pomdog/Graphics/Viewport.hpp',
       '../include/Pomdog/Graphics/detail/ForwardDeclarations.hpp',
       '../include/Pomdog/Graphics/detail/EffectBinaryParameter.hpp',

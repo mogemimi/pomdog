@@ -53,6 +53,7 @@ struct PresentationParameters;
 struct RasterizerDescription;
 struct RenderTargetBlendDescription;
 struct SamplerDescription;
+struct VertexBufferBinding;
 
 // Enumerations
 enum class Blend: std::uint8_t;
