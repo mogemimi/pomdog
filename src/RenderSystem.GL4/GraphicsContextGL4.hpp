@@ -6,6 +6,7 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
+#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Utility/detail/Tagged.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <vector>
@@ -66,7 +67,7 @@ public:
 
     void SetBlendFactor(Color const& blendFactor) override;
 
-    void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) override;
+    void SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers) override;
 
     void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer) override;
 
@@ -90,7 +91,7 @@ private:
     void ApplyPipelineState();
 
 private:
-    std::vector<std::shared_ptr<VertexBuffer>> vertexBuffers;
+    std::vector<VertexBufferBinding> vertexBuffers;
     std::shared_ptr<OpenGLContext> nativeContext;
     std::shared_ptr<PipelineStateGL4> pipelineState;
     std::shared_ptr<ConstantLayoutGL4> constantLayout;

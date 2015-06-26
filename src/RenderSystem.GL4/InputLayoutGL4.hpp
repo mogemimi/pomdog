@@ -58,7 +58,7 @@ public:
 
     ~InputLayoutGL4();
 
-    void Apply(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers);
+    void Apply(std::vector<VertexBufferBinding> const& vertexBuffers);
 
 private:
     std::vector<InputElementGL4> inputElements;

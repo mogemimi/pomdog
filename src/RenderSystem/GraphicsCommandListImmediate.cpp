@@ -7,6 +7,7 @@
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Graphics/ClearOptions.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
@@ -104,7 +105,7 @@ struct SetBlendFactorCommand final: public GraphicsCommand {
 };
 
 struct SetVertexBuffersCommand final: public GraphicsCommand {
-    std::vector<std::shared_ptr<VertexBuffer>> vertexBuffers;
+    std::vector<VertexBufferBinding> vertexBuffers;
 
     void Execute(GraphicsContext & graphicsContext) override
     {
@@ -300,7 +301,7 @@ void GraphicsCommandListImmediate::SetBlendFactor(Color const& blendFactor)
     commands.push_back(std::move(command));
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandListImmediate::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers)
+void GraphicsCommandListImmediate::SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers)
 {
     POMDOG_ASSERT(!vertexBuffers.empty());
     auto command = std::make_unique<Commands::SetVertexBuffersCommand>();
@@ -308,7 +309,7 @@ void GraphicsCommandListImmediate::SetVertexBuffers(std::vector<std::shared_ptr<
     commands.push_back(std::move(command));
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandListImmediate::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> && vertexBuffers)
+void GraphicsCommandListImmediate::SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers)
 {
     POMDOG_ASSERT(!vertexBuffers.empty());
     auto command = std::make_unique<Commands::SetVertexBuffersCommand>();

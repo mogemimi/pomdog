@@ -59,9 +59,13 @@ public:
 
     void SetVertexBuffer(std::shared_ptr<VertexBuffer> const& vertexBuffer);
 
-    void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers);
+    void SetVertexBuffer(
+        std::shared_ptr<VertexBuffer> const& vertexBuffer,
+        std::size_t offset);
 
-    void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> && vertexBuffers);
+    void SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers);
+
+    void SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers);
 
     void SetPipelineState(std::shared_ptr<PipelineState> const& pipelineState);
 

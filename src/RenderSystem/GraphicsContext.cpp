@@ -181,7 +181,7 @@ void GraphicsContext::SetBlendFactor(Color const& blendFactor)
     nativeContext->SetBlendFactor(blendFactor);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers)
+void GraphicsContext::SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers)
 {
     POMDOG_ASSERT(nativeContext);
     POMDOG_ASSERT(!vertexBuffers.empty());

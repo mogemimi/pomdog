@@ -49,9 +49,9 @@ public:
 
     virtual void SetBlendFactor(Color const& blendFactor) = 0;
 
-    virtual void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) = 0;
+    virtual void SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers) = 0;
 
-    virtual void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> && vertexBuffers) = 0;
+    virtual void SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers) = 0;
 
     virtual void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer) = 0;
 

@@ -20,6 +20,7 @@
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
+#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -344,7 +345,8 @@ void GraphicsContextDirect3D11::SetBlendFactor(Color const& blendFactorIn)
     needToApplyPipelineState = true;
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffersIn)
+void GraphicsContextDirect3D11::SetVertexBuffers(
+    std::vector<VertexBufferBinding> const& vertexBuffersIn)
 {
     POMDOG_ASSERT(!vertexBuffersIn.empty());
 
@@ -357,8 +359,10 @@ void GraphicsContextDirect3D11::SetVertexBuffers(std::vector<std::shared_ptr<Ver
     std::vector<ID3D11Buffer*> vertexBuffers;
     vertexBuffers.reserve(vertexBuffersIn.size());
 
-    for (auto & vertexBuffer: vertexBuffersIn)
+    for (auto & binding: vertexBuffersIn)
     {
+        auto & vertexBuffer = binding.VertexBuffer;
+
         POMDOG_ASSERT(vertexBuffer);
         POMDOG_ASSERT(vertexBuffer->NativeVertexBuffer());
 
@@ -371,7 +375,7 @@ void GraphicsContextDirect3D11::SetVertexBuffers(std::vector<std::shared_ptr<Ver
 
         vertexBuffers.push_back(nativeVertexBuffer->GetBuffer());
         strides.push_back(vertexBuffer->StrideBytes());
-        offsets.push_back(0);
+        offsets.push_back(binding.VertexOffset);
     }
 
     POMDOG_ASSERT(deviceContext);

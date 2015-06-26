@@ -54,7 +54,7 @@ public:
 
     void SetBlendFactor(Color const& blendFactor);
 
-    void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers);
+    void SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers);
 
     void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer);
 

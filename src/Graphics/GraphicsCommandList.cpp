@@ -11,6 +11,7 @@
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
+#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
@@ -131,17 +132,27 @@ void GraphicsCommandList::SetVertexBuffer(std::shared_ptr<VertexBuffer> const& v
 {
     POMDOG_ASSERT(vertexBuffer);
     POMDOG_ASSERT(nativeCommandList);
-    nativeCommandList->SetVertexBuffers({vertexBuffer});
+
+    nativeCommandList->SetVertexBuffers({
+        VertexBufferBinding{vertexBuffer, 0}});
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandList::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers)
+void GraphicsCommandList::SetVertexBuffer(std::shared_ptr<VertexBuffer> const& vertexBuffer, std::size_t offset)
+{
+    POMDOG_ASSERT(vertexBuffer);
+    POMDOG_ASSERT(nativeCommandList);
+    nativeCommandList->SetVertexBuffers({
+        VertexBufferBinding{vertexBuffer, offset}});
+}
+//-----------------------------------------------------------------------
+void GraphicsCommandList::SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers)
 {
     POMDOG_ASSERT(!vertexBuffers.empty());
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->SetVertexBuffers(vertexBuffers);
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandList::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> && vertexBuffers)
+void GraphicsCommandList::SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers)
 {
     POMDOG_ASSERT(!vertexBuffers.empty());
     POMDOG_ASSERT(nativeCommandList);

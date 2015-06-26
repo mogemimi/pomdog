@@ -271,9 +271,9 @@ void GraphicsContextGL4::Draw(std::size_t vertexCount)
 
     // Draw
     POMDOG_ASSERT(!vertexBuffers.empty());
-    POMDOG_ASSERT(vertexBuffers.front());
+    POMDOG_ASSERT(vertexBuffers.front().VertexBuffer);
     POMDOG_ASSERT(vertexCount > 0);
-    POMDOG_ASSERT(vertexCount <= vertexBuffers.front()->VertexCount());
+    POMDOG_ASSERT(vertexCount <= vertexBuffers.front().VertexBuffer->VertexCount());
 
     glDrawArrays(
         primitiveTopology.value,
@@ -320,9 +320,9 @@ void GraphicsContextGL4::DrawInstanced(
 
     // Draw
     POMDOG_ASSERT(!vertexBuffers.empty());
-    POMDOG_ASSERT(vertexBuffers.front());
+    POMDOG_ASSERT(vertexBuffers.front().VertexBuffer);
     POMDOG_ASSERT(vertexCount > 0);
-    POMDOG_ASSERT(vertexCount <= vertexBuffers.front()->VertexCount());
+    POMDOG_ASSERT(vertexCount <= vertexBuffers.front().VertexBuffer->VertexCount());
     POMDOG_ASSERT(instanceCount > 0);
     POMDOG_ASSERT(instanceCount <= static_cast<decltype(instanceCount)>(std::numeric_limits<GLsizei>::max()));
 
@@ -435,7 +435,7 @@ void GraphicsContextGL4::SetBlendFactor(Color const& blendFactor)
     POMDOG_CHECK_ERROR_GL4("glBlendColor");
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffersIn)
+void GraphicsContextGL4::SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffersIn)
 {
     POMDOG_ASSERT(!vertexBuffersIn.empty());
     this->vertexBuffers = vertexBuffersIn;

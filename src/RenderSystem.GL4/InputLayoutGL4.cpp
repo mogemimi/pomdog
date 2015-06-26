@@ -8,6 +8,7 @@
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
+#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogStream.hpp"
 #include "Pomdog/Logging/LogLevel.hpp"
@@ -512,30 +513,35 @@ GLubyte const* ComputeBufferOffset(T const offsetBytes)
 static void ApplyInputElements(
     std::vector<InputElementGL4> const& inputElements,
     std::vector<VertexDeclarationGL4> const& vertexDeclarations,
-    std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers)
+    std::vector<VertexBufferBinding> const& vertexBuffers)
 {
     POMDOG_ASSERT(!inputElements.empty());
     POMDOG_ASSERT(!vertexDeclarations.empty());
     POMDOG_ASSERT(!vertexBuffers.empty());
     POMDOG_ASSERT(vertexDeclarations.size() == vertexBuffers.size());
 
-    auto vertexBuffer = std::begin(vertexBuffers);
+    auto vertexBufferIter = std::begin(vertexBuffers);
     auto inputElement = std::begin(inputElements);
 
     for (auto & vertexDeclaration: vertexDeclarations)
     {
         POMDOG_ASSERT(inputElement != std::end(inputElements));
-        POMDOG_ASSERT(vertexBuffer != std::end(vertexBuffers));
+        POMDOG_ASSERT(vertexBufferIter != std::end(vertexBuffers));
 
-        auto nativeVertexBuffer = dynamic_cast<VertexBufferGL4*>((*vertexBuffer)->NativeVertexBuffer());
+        auto & vertexBuffer = vertexBufferIter->VertexBuffer;
+        const auto vertexOffset = vertexBufferIter->VertexOffset;
+
+        POMDOG_ASSERT(vertexBuffer);
+
+        auto nativeVertexBuffer = dynamic_cast<VertexBufferGL4*>(vertexBuffer->NativeVertexBuffer());
         POMDOG_ASSERT(nativeVertexBuffer);
 
         // NOTE: The following code is the same as
         // `glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer)`.
         nativeVertexBuffer->BindBuffer();
 
-        POMDOG_ASSERT((*vertexBuffer)->StrideBytes() > 0);
-        POMDOG_ASSERT((*vertexBuffer)->StrideBytes() <= static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()));
+        POMDOG_ASSERT(vertexBuffer->StrideBytes() > 0);
+        POMDOG_ASSERT(vertexBuffer->StrideBytes() <= static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()));
 
         const auto currentInputSlot = inputElement->InputSlot;
 
@@ -554,7 +560,7 @@ static void ApplyInputElements(
                     inputElement->Components,
                     inputElement->ScalarType.value,
                     vertexDeclaration.StrideBytes,
-                    ComputeBufferOffset(inputElement->ByteOffset));
+                    ComputeBufferOffset(inputElement->ByteOffset + vertexOffset));
                 POMDOG_CHECK_ERROR_GL4("glVertexAttribIPointer");
             }
             else
@@ -565,7 +571,7 @@ static void ApplyInputElements(
                     inputElement->ScalarType.value,
                     GL_FALSE,
                     vertexDeclaration.StrideBytes,
-                    ComputeBufferOffset(inputElement->ByteOffset));
+                    ComputeBufferOffset(inputElement->ByteOffset + vertexOffset));
                 POMDOG_CHECK_ERROR_GL4("glVertexAttribPointer");
             }
 
@@ -573,11 +579,11 @@ static void ApplyInputElements(
             POMDOG_CHECK_ERROR_GL4("glVertexAttribDivisor");
         }
 
-        ++vertexBuffer;
+        ++vertexBufferIter;
     }
 
     POMDOG_ASSERT(inputElement == std::end(inputElements));
-    POMDOG_ASSERT(vertexBuffer == std::end(vertexBuffers));
+    POMDOG_ASSERT(vertexBufferIter == std::end(vertexBuffers));
 }
 
 } // unnamed namespace
@@ -631,7 +637,7 @@ InputLayoutGL4::~InputLayoutGL4()
     }
 }
 //-----------------------------------------------------------------------
-void InputLayoutGL4::Apply(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers)
+void InputLayoutGL4::Apply(std::vector<VertexBufferBinding> const& vertexBuffers)
 {
     POMDOG_ASSERT(inputLayout);
     glBindVertexArray(inputLayout->value);

@@ -57,7 +57,7 @@ public:
 
     void SetBlendFactor(Color const& blendFactor) override;
 
-    void SetVertexBuffers(std::vector<std::shared_ptr<VertexBuffer>> const& vertexBuffers) override;
+    void SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers) override;
 
     void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer) override;
 
