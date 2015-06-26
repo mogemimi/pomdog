@@ -28,12 +28,22 @@ Please refer to [Architecture](https://github.com/mogemimi/pomdog/wiki/Architect
 
 To create a new project with Pomdog, run `tools/quickstart.py`:
 
-```
+```shell
 git clone https://github.com/mogemimi/pomdog.git
 python pomdog/tools/quickstart.py
 ```
 
 ## How to build
+
+To automagically generate all project files (.xcodeproj or .vcxproj), run `tools/generate_projects.py`:
+
+```shell
+cd path/to/pomdog
+python tools/generate_projects.py
+```
+
+After generating, open the .xcodeproj or .vcxproj in Xcode/Visual Studio.
+For more infomation about building manually, please see:
 
 * [Developing on Mac OS X](https://github.com/mogemimi/pomdog/wiki/Developing-on-Mac-OS-X)
 * [Developing on Windows (Visual Studio 2015)](https://github.com/mogemimi/pomdog/wiki/Developing-on-Windows-(Visual-Studio-2015))
