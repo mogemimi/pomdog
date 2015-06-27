@@ -5,6 +5,7 @@
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Logging/Log.hpp"
 #include <utility>
 
 namespace Pomdog {
@@ -23,14 +24,22 @@ static ID3D11Buffer* CreateNativeBuffer(
         || bindFlag == D3D11_BIND_INDEX_BUFFER
         || bindFlag == D3D11_BIND_VERTEX_BUFFER);
 
-#if defined(DEBUG) && !defined(NDEBUG)
     if (bindFlag == D3D11_BIND_CONSTANT_BUFFER) {
-        POMDOG_ASSERT_MESSAGE(sizeInBytes % 16 == 0,
-            "You must set the sizeInBytes value in multiples of 16.");
         POMDOG_ASSERT_MESSAGE(sizeInBytes <= D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT,
-            "You must set the sizeInBytes value less than or equal to D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT.");
-    }
+            "You must set the sizeInBytes value less than or"
+            " equal to D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT.");
+
+        if (sizeInBytes % 16 != 0) {
+#if defined(DEBUG) && !defined(NDEBUG)
+            Log::Warning("Pomdog",
+                "You must set the sizeInBytes value in multiples of 16.\n"
+                "ConstantBuffer size also needs to be a multiples of 16.");
 #endif
+            auto offset = sizeInBytes % 16;
+            POMDOG_ASSERT(offset < 16);
+            sizeInBytes += (16 - offset);
+        }
+    }
 
     D3D11_BUFFER_DESC bufferDesc;
     bufferDesc.ByteWidth = static_cast<::UINT>(sizeInBytes);
