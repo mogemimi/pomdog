@@ -287,8 +287,6 @@
       '../src/RenderSystem.GL4/BlendStateGL4.hpp',
       '../src/RenderSystem.GL4/BufferGL4.cpp',
       '../src/RenderSystem.GL4/BufferGL4.hpp',
-      '../src/RenderSystem.GL4/ConstantLayoutGL4.cpp',
-      '../src/RenderSystem.GL4/ConstantLayoutGL4.hpp',
       '../src/RenderSystem.GL4/DepthStencilStateGL4.cpp',
       '../src/RenderSystem.GL4/DepthStencilStateGL4.hpp',
       '../src/RenderSystem.GL4/EffectReflectionGL4.cpp',

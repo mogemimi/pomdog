@@ -29,7 +29,6 @@ using FrameBufferGL4 = Tagged<GLuint, Tags::FrameBufferTag>;
 using PrimitiveTopologyGL4 = Tagged<GLenum, PrimitiveTopology>;
 
 class OpenGLContext;
-class ConstantLayoutGL4;
 class PipelineStateGL4;
 class RenderTarget2DGL4;
 
@@ -73,7 +72,7 @@ public:
 
     void SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState) override;
 
-    void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayout) override;
+    void SetConstantBuffer(int index, std::shared_ptr<NativeBuffer> const& constantBuffer) override;
 
     void SetSampler(int index, NativeSamplerState* sampler) override;
 
@@ -94,7 +93,6 @@ private:
     std::vector<VertexBufferBinding> vertexBuffers;
     std::shared_ptr<OpenGLContext> nativeContext;
     std::shared_ptr<PipelineStateGL4> pipelineState;
-    std::shared_ptr<ConstantLayoutGL4> constantLayout;
     std::shared_ptr<IndexBuffer> indexBuffer;
     std::weak_ptr<GameWindow> gameWindow;
     std::vector<Optional<GLenum>> textures;

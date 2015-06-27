@@ -28,18 +28,11 @@ struct TextureBindingGL4 {
     std::uint16_t SlotIndex;
 };
 
-struct UniformBlockBindingGL4 {
-    std::string Name;
-    std::uint16_t SlotIndex;
-};
-
 class PipelineStateGL4 final : public NativePipelineState {
 public:
     explicit PipelineStateGL4(PipelineStateDescription const& description);
 
     ~PipelineStateGL4();
-
-    std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
 
     void ApplyShaders();
 
@@ -49,7 +42,6 @@ public:
 
 private:
     std::vector<TextureBindingGL4> textureBindings;
-    std::vector<UniformBlockBindingGL4> uniformBlockBindings;
     BlendStateGL4 blendState;
     RasterizerStateGL4 rasterizerState;
     DepthStencilStateGL4 depthStencilState;

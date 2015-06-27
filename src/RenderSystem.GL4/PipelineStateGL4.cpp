@@ -4,7 +4,6 @@
 #include "PipelineStateGL4.hpp"
 #include "EffectReflectionGL4.hpp"
 #include "ErrorChecker.hpp"
-#include "ConstantLayoutGL4.hpp"
 #include "InputLayoutGL4.hpp"
 #include "ShaderGL4.hpp"
 #include "../Utility/ScopeGuard.hpp"
@@ -15,12 +14,16 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <type_traits>
+#include <unordered_set>
 #include <array>
 
 namespace Pomdog {
 namespace Detail {
 namespace GL4 {
 namespace {
+
+// [NOTE] Please refer to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT.
+static constexpr std::size_t ConstantBufferSlotCount = 14;
 
 static Optional<ShaderProgramGL4> LinkShaders(
     VertexShaderGL4 const& vertexShader, PixelShaderGL4 const& pixelShader)
@@ -89,11 +92,33 @@ PipelineStateGL4::PipelineStateGL4(PipelineStateDescription const& description)
     {
         auto uniformBlocks = shaderReflection.GetNativeUniformBlocks();
 
-        std::uint16_t slotIndex = 0;
-        for (auto & uniformBlock: uniformBlocks)
-        {
+        std::unordered_set<int> reservedSlots;
+        std::unordered_set<int> reservedBlocks;
+
+        auto & bindSlots = description.ConstantBufferBindSlots;
+
+        for (auto & uniformBlock : uniformBlocks) {
+            auto binding = bindSlots.find(uniformBlock.Name);
+            if (binding != std::end(bindSlots)) {
+                auto slotIndex = binding->second;
+                glUniformBlockBinding(shaderProgram->value, uniformBlock.BlockIndex, slotIndex);
+                reservedSlots.insert(slotIndex);
+                reservedBlocks.insert(uniformBlock.BlockIndex);
+            }
+        }
+
+        GLuint slotIndex = 0;
+        for (auto & uniformBlock : uniformBlocks) {
+            if (reservedBlocks.find(uniformBlock.BlockIndex) != std::end(reservedBlocks)) {
+                continue;
+            }
+            while (reservedSlots.find(slotIndex) != std::end(reservedSlots)) {
+                if (slotIndex >= ConstantBufferSlotCount) {
+                    break;
+                }
+                ++slotIndex;
+            }
             glUniformBlockBinding(shaderProgram->value, uniformBlock.BlockIndex, slotIndex);
-            uniformBlockBindings.push_back({uniformBlock.Name, slotIndex});
             ++slotIndex;
         }
     }
@@ -141,21 +166,6 @@ PipelineStateGL4::~PipelineStateGL4()
         glDeleteProgram(shaderProgram->value);
         POMDOG_CHECK_ERROR_GL4("glDeleteProgram");
     }
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeConstantLayout> PipelineStateGL4::CreateConstantLayout()
-{
-    std::vector<ConstantBufferBindingGL4> bindings;
-
-    for (auto & uniformBlock: uniformBlockBindings)
-    {
-        ConstantBufferBindingGL4 binding;
-        binding.Name = uniformBlock.Name;
-        binding.SlotIndex = uniformBlock.SlotIndex;
-        bindings.push_back(std::move(binding));
-    }
-
-    return std::make_unique<ConstantLayoutGL4>(std::move(bindings));
 }
 //-----------------------------------------------------------------------
 void PipelineStateGL4::ApplyShaders()

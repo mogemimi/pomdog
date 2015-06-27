@@ -3,7 +3,6 @@
 
 #include "GraphicsContextGL4.hpp"
 #include "BufferGL4.hpp"
-#include "ConstantLayoutGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "InputLayoutGL4.hpp"
 #include "OpenGLContext.hpp"
@@ -132,7 +131,7 @@ static Optional<FrameBufferGL4> CreateFrameBuffer()
     return std::move(frameBuffer);
 }
 //-----------------------------------------------------------------------
-static void SetTextureAsShaderResource(int index, Texture2DObjectGL4 const& textureObject)
+static void ApplyTexture2D(int index, Texture2DObjectGL4 const& textureObject)
 {
     #if defined(DEBUG) && !defined(NDEBUG)
     {
@@ -150,6 +149,13 @@ static void SetTextureAsShaderResource(int index, Texture2DObjectGL4 const& text
 
     glBindTexture(GL_TEXTURE_2D, textureObject.value);
     POMDOG_CHECK_ERROR_GL4("glBindTexture");
+}
+//-----------------------------------------------------------------------
+static void ApplyConstantBuffer(int slotIndex, ConstantBufferGL4 const& buffer)
+{
+    POMDOG_ASSERT(slotIndex >= 0);
+    glBindBufferBase(GL_UNIFORM_BUFFER, slotIndex, buffer.GetBuffer());
+    POMDOG_CHECK_ERROR_GL4("glBindBufferBase");
 }
 
 } // unnamed namespace
@@ -174,8 +180,7 @@ GraphicsContextGL4::GraphicsContextGL4(
     Log::Stream(LogLevel::Internal) << "OpenGL Version: " << version;
 
     auto capabilities = GetCapabilities();
-    if (capabilities.SamplerSlotCount > 0)
-    {
+    if (capabilities.SamplerSlotCount > 0) {
         textures.resize(capabilities.SamplerSlotCount);
     }
 
@@ -188,7 +193,6 @@ GraphicsContextGL4::GraphicsContextGL4(
 //-----------------------------------------------------------------------
 GraphicsContextGL4::~GraphicsContextGL4()
 {
-    constantLayout.reset();
     pipelineState.reset();
     vertexBuffers.clear();
     indexBuffer.reset();
@@ -265,10 +269,6 @@ void GraphicsContextGL4::Draw(std::size_t vertexCount)
 {
     ApplyPipelineState();
 
-    // Apply constant layout
-    POMDOG_ASSERT(constantLayout);
-    constantLayout->Apply();
-
     // Draw
     POMDOG_ASSERT(!vertexBuffers.empty());
     POMDOG_ASSERT(vertexBuffers.front().VertexBuffer);
@@ -285,10 +285,6 @@ void GraphicsContextGL4::Draw(std::size_t vertexCount)
 void GraphicsContextGL4::DrawIndexed(std::size_t indexCount)
 {
     ApplyPipelineState();
-
-    // Apply constant layout
-    POMDOG_ASSERT(constantLayout);
-    constantLayout->Apply();
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer);
@@ -314,10 +310,6 @@ void GraphicsContextGL4::DrawInstanced(
 {
     ApplyPipelineState();
 
-    // Apply constant layout
-    POMDOG_ASSERT(constantLayout);
-    constantLayout->Apply();
-
     // Draw
     POMDOG_ASSERT(!vertexBuffers.empty());
     POMDOG_ASSERT(vertexBuffers.front().VertexBuffer);
@@ -339,10 +331,6 @@ void GraphicsContextGL4::DrawIndexedInstanced(
     std::size_t instanceCount)
 {
     ApplyPipelineState();
-
-    // Apply constant layout
-    POMDOG_ASSERT(constantLayout);
-    constantLayout->Apply();
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer);
@@ -373,7 +361,16 @@ GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
     POMDOG_ASSERT(maxTextureUnits > 0);
 
+    GLint maxVertexUniformBlocks = 0;
+    glGetIntegerv(GL_MAX_VERTEX_UNIFORM_BLOCKS, &maxVertexUniformBlocks);
+    POMDOG_ASSERT(maxVertexUniformBlocks > 0);
+
+    GLint maxFragmentUniformBlocks = 0;
+    glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_BLOCKS, &maxFragmentUniformBlocks);
+    POMDOG_ASSERT(maxFragmentUniformBlocks > 0);
+
     capabilities.SamplerSlotCount = maxTextureUnits;
+    capabilities.ConstantBufferSlotCount = std::min(maxVertexUniformBlocks, maxFragmentUniformBlocks);
     return capabilities;
 }
 //-----------------------------------------------------------------------
@@ -460,19 +457,31 @@ void GraphicsContextGL4::SetPipelineState(std::shared_ptr<NativePipelineState> c
     }
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayoutIn)
+void GraphicsContextGL4::SetConstantBuffer(int index, std::shared_ptr<NativeBuffer> const& constantBufferIn)
 {
-    POMDOG_ASSERT(constantLayoutIn);
-    auto nativeConstantLayout = std::dynamic_pointer_cast<ConstantLayoutGL4>(constantLayoutIn);
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(constantBufferIn);
 
-    POMDOG_ASSERT(nativeConstantLayout);
-    this->constantLayout = nativeConstantLayout;
+#if defined(DEBUG) && !defined(NDEBUG)
+    static const auto capabilities = GetCapabilities();
+    POMDOG_ASSERT(index < static_cast<int>(capabilities.ConstantBufferSlotCount));
+#endif
+
+    auto constantBuffer = std::dynamic_pointer_cast<ConstantBufferGL4>(constantBufferIn);
+
+    POMDOG_ASSERT(constantBuffer);
+    ApplyConstantBuffer(index, *constantBuffer);
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetSampler(int index, NativeSamplerState* sampler)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(sampler != nullptr);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    static const auto capabilities = GetCapabilities();
+    POMDOG_ASSERT(index < static_cast<int>(capabilities.SamplerSlotCount));
+#endif
 
     auto samplerStateGL = static_cast<SamplerStateGL4*>(sampler);
 
@@ -508,8 +517,7 @@ void GraphicsContextGL4::SetTexture(int textureUnit, Texture2D & textureIn)
 
     constexpr GLenum textureType = GL_TEXTURE_2D;
 
-    if (textures[textureUnit] && *textures[textureUnit] != textureType)
-    {
+    if (textures[textureUnit] && *textures[textureUnit] != textureType) {
         // Unbind texture
         SetTexture(textureUnit);
     }
@@ -520,7 +528,7 @@ void GraphicsContextGL4::SetTexture(int textureUnit, Texture2D & textureIn)
     auto textureGL4 = dynamic_cast<Texture2DGL4*>(textureIn.NativeTexture2D());
 
     POMDOG_ASSERT(textureGL4 != nullptr);
-    SetTextureAsShaderResource(textureUnit, textureGL4->GetTextureHandle());
+    ApplyTexture2D(textureUnit, textureGL4->GetTextureHandle());
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetTexture(int textureUnit, RenderTarget2D & textureIn)
@@ -531,8 +539,7 @@ void GraphicsContextGL4::SetTexture(int textureUnit, RenderTarget2D & textureIn)
 
     constexpr GLenum textureType = GL_TEXTURE_2D;
 
-    if (textures[textureUnit] && *textures[textureUnit] != textureType)
-    {
+    if (textures[textureUnit] && *textures[textureUnit] != textureType) {
         // Unbind texture
         SetTexture(textureUnit);
     }
@@ -543,7 +550,7 @@ void GraphicsContextGL4::SetTexture(int textureUnit, RenderTarget2D & textureIn)
     auto renderTargetGL4 = dynamic_cast<RenderTarget2DGL4*>(textureIn.NativeRenderTarget2D());
 
     POMDOG_ASSERT(renderTargetGL4 != nullptr);
-    SetTextureAsShaderResource(textureUnit, renderTargetGL4->GetTextureHandle());
+    ApplyTexture2D(textureUnit, renderTargetGL4->GetTextureHandle());
 }
 //-----------------------------------------------------------------------
 void GraphicsContextGL4::SetRenderTarget()
