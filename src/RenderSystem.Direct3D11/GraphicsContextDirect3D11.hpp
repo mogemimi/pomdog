@@ -63,7 +63,7 @@ public:
 
     void SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState) override;
 
-    void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayout) override;
+    void SetConstantBuffer(int index, std::shared_ptr<NativeBuffer> const& constantBuffer) override;
 
     void SetSampler(int index, NativeSamplerState* sampler) override;
 

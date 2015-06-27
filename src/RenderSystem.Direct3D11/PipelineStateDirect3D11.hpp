@@ -8,29 +8,19 @@
 #include "../RenderSystem/NativePipelineState.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <wrl/client.h>
-#include <vector>
-#include <string>
 
 namespace Pomdog {
 namespace Detail {
 namespace Direct3D11 {
-
-struct ConstantBufferBindDesc {
-    std::string Name;
-    UINT BindPoint;
-};
 
 class PipelineStateDirect3D11 final : public NativePipelineState {
 public:
     PipelineStateDirect3D11(ID3D11Device* device,
         PipelineStateDescription const& description);
 
-    std::unique_ptr<NativeConstantLayout> CreateConstantLayout() override;
-
     void Apply(ID3D11DeviceContext * deviceContext, FLOAT const blendFactor[4]);
 
 private:
-    std::vector<ConstantBufferBindDesc> constantBufferBinds;
     Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
     Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;

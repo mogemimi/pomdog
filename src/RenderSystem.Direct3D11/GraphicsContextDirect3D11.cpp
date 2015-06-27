@@ -3,7 +3,6 @@
 
 #include "GraphicsContextDirect3D11.hpp"
 #include "BufferDirect3D11.hpp"
-#include "ConstantLayoutDirect3D11.hpp"
 #include "PipelineStateDirect3D11.hpp"
 #include "RenderTarget2DDirect3D11.hpp"
 #include "SamplerStateDirect3D11.hpp"
@@ -287,6 +286,7 @@ GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const
 {
     GraphicsCapabilities caps;
     caps.SamplerSlotCount = D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT;
+    caps.ConstantBufferSlotCount = D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
     return std::move(caps);
 }
 //-----------------------------------------------------------------------
@@ -396,15 +396,20 @@ void GraphicsContextDirect3D11::SetPipelineState(std::shared_ptr<NativePipelineS
     }
 }
 //-----------------------------------------------------------------------
-void GraphicsContextDirect3D11::SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayoutIn)
+void GraphicsContextDirect3D11::SetConstantBuffer(
+    int index, std::shared_ptr<NativeBuffer> const& constantBufferIn)
 {
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
+    POMDOG_ASSERT(dynamic_cast<BufferDirect3D11*>(constantBufferIn.get()));
+
+    auto & constantBuffer = static_cast<BufferDirect3D11&>(*constantBufferIn);
+    auto buffer = constantBuffer.GetBuffer();
+    POMDOG_ASSERT(buffer != nullptr);
+
     POMDOG_ASSERT(deviceContext);
-
-    POMDOG_ASSERT(constantLayoutIn);
-    POMDOG_ASSERT(dynamic_cast<ConstantLayoutDirect3D11*>(constantLayoutIn.get()));
-
-    auto & constantLayout = static_cast<ConstantLayoutDirect3D11&>(*constantLayoutIn);
-    constantLayout.Apply(deviceContext.Get());
+    deviceContext->VSSetConstantBuffers(index, 1, &buffer);
+    deviceContext->PSSetConstantBuffers(index, 1, &buffer);
 }
 //-----------------------------------------------------------------------
 void GraphicsContextDirect3D11::SetSampler(int index, NativeSamplerState* samplerIn)

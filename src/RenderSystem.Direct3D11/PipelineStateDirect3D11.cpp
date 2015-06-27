@@ -2,7 +2,6 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "PipelineStateDirect3D11.hpp"
-#include "ConstantLayoutDirect3D11.hpp"
 #include "GraphicsDeviceDirect3D11.hpp"
 #include "ShaderDirect3D11.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
@@ -265,72 +264,77 @@ static void ReflectShaderBytecode(
     }
 }
 //-----------------------------------------------------------------------
-static void EnumerateConstantBuffers(
-    ShaderBytecode const& shaderBytecode,
-    std::vector<ConstantBufferBindDesc> & output)
-{
-    POMDOG_ASSERT(shaderBytecode.Code);
-
-    ComPtr<ID3D11ShaderReflection> shaderReflector;
-    D3D11_SHADER_DESC shaderDesc;
-
-    ReflectShaderBytecode(shaderBytecode, shaderReflector, shaderDesc);
-
-    for (UINT i = 0; i < shaderDesc.ConstantBuffers; ++i)
-    {
-        POMDOG_ASSERT(shaderReflector);
-        auto constantBufferReflector = shaderReflector->GetConstantBufferByIndex(i);
-
-        D3D11_SHADER_BUFFER_DESC bufferDesc;
-        HRESULT hr = constantBufferReflector->GetDesc(&bufferDesc);
-
-        if (FAILED(hr))
-        {
-            // FUS RO DAH!!
-            ///@todo throw exception
-            continue;
-        }
-
-        //if (D3D_CT_CBUFFER != bufferDesc.Type)
-        //{
-        //    ///@todo Not implemented
-        //    //tbuffer
-        //    //continue;
-        //}
-
-        D3D11_SHADER_INPUT_BIND_DESC shaderInputBindDesc;
-        shaderReflector->GetResourceBindingDescByName(bufferDesc.Name, &shaderInputBindDesc);
-
-        ConstantBufferBindDesc desc;
-        desc.Name = bufferDesc.Name;
-        desc.BindPoint = shaderInputBindDesc.BindPoint;
-
-        POMDOG_ASSERT(shaderInputBindDesc.BindPoint
-            <= D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
-        output.push_back(std::move(desc));
-    }
-}
+//struct ConstantBufferBindDesc {
+//    std::string Name;
+//    UINT BindPoint;
+//};
+//
+//static void EnumerateConstantBuffers(
+//    ShaderBytecode const& shaderBytecode,
+//    std::vector<ConstantBufferBindDesc> & output)
+//{
+//    POMDOG_ASSERT(shaderBytecode.Code);
+//
+//    ComPtr<ID3D11ShaderReflection> shaderReflector;
+//    D3D11_SHADER_DESC shaderDesc;
+//
+//    ReflectShaderBytecode(shaderBytecode, shaderReflector, shaderDesc);
+//
+//    for (UINT i = 0; i < shaderDesc.ConstantBuffers; ++i)
+//    {
+//        POMDOG_ASSERT(shaderReflector);
+//        auto constantBufferReflector = shaderReflector->GetConstantBufferByIndex(i);
+//
+//        D3D11_SHADER_BUFFER_DESC bufferDesc;
+//        HRESULT hr = constantBufferReflector->GetDesc(&bufferDesc);
+//
+//        if (FAILED(hr))
+//        {
+//            // FUS RO DAH!!
+//            ///@todo throw exception
+//            continue;
+//        }
+//
+//        //if (D3D_CT_CBUFFER != bufferDesc.Type)
+//        //{
+//        //    ///@todo Not implemented
+//        //    //tbuffer
+//        //    //continue;
+//        //}
+//
+//        D3D11_SHADER_INPUT_BIND_DESC shaderInputBindDesc;
+//        shaderReflector->GetResourceBindingDescByName(bufferDesc.Name, &shaderInputBindDesc);
+//
+//        ConstantBufferBindDesc desc;
+//        desc.Name = bufferDesc.Name;
+//        desc.BindPoint = shaderInputBindDesc.BindPoint;
+//
+//        POMDOG_ASSERT(shaderInputBindDesc.BindPoint
+//            <= D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
+//        output.push_back(std::move(desc));
+//    }
+//}
 //-----------------------------------------------------------------------
-static std::vector<ConstantBufferBindDesc> CreateConstantBufferBindDescs(
-    ShaderBytecode const& vertexShaderBytecode,
-    ShaderBytecode const& pixelShaderBytecode)
-{
-    using Desc = ConstantBufferBindDesc;
-
-    std::vector<Desc> bindings;
-    EnumerateConstantBuffers(vertexShaderBytecode, bindings);
-    EnumerateConstantBuffers(pixelShaderBytecode, bindings);
-
-    std::sort(std::begin(bindings), std::end(bindings),
-        [](Desc const& a, Desc const& b) { return a.Name < b.Name; });
-
-    bindings.erase(std::unique(std::begin(bindings), std::end(bindings),
-        [](Desc const& a, Desc const& b) { return a.Name == b.Name; }), std::end(bindings));
-
-    bindings.shrink_to_fit();
-
-    return std::move(bindings);
-}
+//static std::vector<ConstantBufferBindDesc> CreateConstantBufferBindDescs(
+//    ShaderBytecode const& vertexShaderBytecode,
+//    ShaderBytecode const& pixelShaderBytecode)
+//{
+//    using Desc = ConstantBufferBindDesc;
+//
+//    std::vector<Desc> bindings;
+//    EnumerateConstantBuffers(vertexShaderBytecode, bindings);
+//    EnumerateConstantBuffers(pixelShaderBytecode, bindings);
+//
+//    std::sort(std::begin(bindings), std::end(bindings),
+//        [](Desc const& a, Desc const& b) { return a.Name < b.Name; });
+//
+//    bindings.erase(std::unique(std::begin(bindings), std::end(bindings),
+//        [](Desc const& a, Desc const& b) { return a.Name == b.Name; }), std::end(bindings));
+//
+//    bindings.shrink_to_fit();
+//
+//    return std::move(bindings);
+//}
 //-----------------------------------------------------------------------
 static std::vector<D3D11_INPUT_ELEMENT_DESC> BuildInputElements(
     std::vector<D3D11_SIGNATURE_PARAMETER_DESC> const& signatureParameters,
@@ -472,27 +476,6 @@ PipelineStateDirect3D11::PipelineStateDirect3D11(ID3D11Device* device,
 
     inputLayout = CreateInputLayout(device,
         vertexShaderD3D->GetShaderBytecode(), description.InputLayout);
-
-    POMDOG_ASSERT(vertexShaderD3D);
-    POMDOG_ASSERT(pixelShaderD3D);
-
-    constantBufferBinds = CreateConstantBufferBindDescs(
-        vertexShaderD3D->GetShaderBytecode(),
-        pixelShaderD3D->GetShaderBytecode());
-}
-//-----------------------------------------------------------------------
-std::unique_ptr<NativeConstantLayout> PipelineStateDirect3D11::CreateConstantLayout()
-{
-    std::vector<ConstantBufferBindingDirect3D11> bindings;
-    bindings.reserve(constantBufferBinds.size());
-
-    for (auto & desc: constantBufferBinds) {
-        ConstantBufferBindingDirect3D11 binding;
-        binding.Name = desc.Name;
-        binding.SlotIndex = desc.BindPoint;
-        bindings.push_back(std::move(binding));
-    }
-    return std::make_unique<ConstantLayoutDirect3D11>(std::move(bindings));
 }
 //-----------------------------------------------------------------------
 void PipelineStateDirect3D11::Apply(ID3D11DeviceContext * deviceContext,
