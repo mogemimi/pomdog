@@ -10,8 +10,6 @@
 namespace Pomdog {
 namespace Detail {
 
-class NativeConstantLayout;
-
 class NativePipelineState {
 public:
     NativePipelineState() = default;
@@ -19,8 +17,6 @@ public:
     NativePipelineState & operator=(NativePipelineState const&) = delete;
 
     virtual ~NativePipelineState() = default;
-
-    virtual std::unique_ptr<NativeConstantLayout> CreateConstantLayout() = 0;
 };
 
 } // namespace Detail

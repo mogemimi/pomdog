@@ -6,8 +6,8 @@
 #include "../RenderSystem/NativeGraphicsCommandList.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/ClearOptions.hpp"
+#include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
@@ -171,16 +171,16 @@ void GraphicsCommandList::SetPipelineState(std::shared_ptr<PipelineState> const&
     nativeCommandList->SetPipelineState(nativePipelineState);
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandList::SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> const& constantBuffers)
+void GraphicsCommandList::SetConstantBuffer(int index, std::shared_ptr<ConstantBuffer> const& constantBuffer)
 {
-    POMDOG_ASSERT(constantBuffers);
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(constantBuffer);
     POMDOG_ASSERT(nativeCommandList);
 
-    using Detail::NativeConstantLayout;
-    std::shared_ptr<NativeConstantLayout> nativeConstantLayout(
-        constantBuffers, constantBuffers->NativeConstantLayout());
+    std::shared_ptr<Detail::NativeBuffer> nativeConstantBuffer(
+        constantBuffer, constantBuffer->NativeConstantBuffer());
 
-    nativeCommandList->SetConstantBuffers(nativeConstantLayout);
+    nativeCommandList->SetConstantBuffer(index, nativeConstantBuffer);
 }
 //-----------------------------------------------------------------------
 void GraphicsCommandList::SetTexture(int index)

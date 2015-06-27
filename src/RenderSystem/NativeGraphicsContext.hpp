@@ -15,8 +15,6 @@ namespace Pomdog {
 namespace Detail {
 
 struct GraphicsCapabilities;
-class NativeConstantLayout;
-class NativePipelineState;
 
 class NativeGraphicsContext: Noncopyable {
 public:
@@ -55,7 +53,7 @@ public:
 
     virtual void SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState) = 0;
 
-    virtual void SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantLayout) = 0;
+    virtual void SetConstantBuffer(int index, std::shared_ptr<NativeBuffer> const& constantBuffer) = 0;
 
     virtual void SetSampler(int index, NativeSamplerState* sampler) = 0;
 

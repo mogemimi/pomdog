@@ -44,9 +44,6 @@ public:
 
     std::shared_ptr<PipelineState> Build();
 
-    std::shared_ptr<ConstantBufferBinding> CreateConstantBuffers(
-        std::shared_ptr<PipelineState> const& pipelineState);
-
     std::shared_ptr<EffectReflection> CreateEffectReflection(
         std::shared_ptr<PipelineState> const& pipelineState);
 

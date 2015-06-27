@@ -10,6 +10,7 @@ namespace Pomdog {
 namespace Detail {
 
 struct GraphicsCapabilities {
+    std::size_t ConstantBufferSlotCount;
     std::size_t SamplerSlotCount;
 };
 

@@ -10,7 +10,6 @@ namespace Pomdog {
 namespace Detail {
 
 class NativeBuffer;
-class NativeConstantLayout;
 class NativeEffectReflection;
 class NativeGraphicsCommandList;
 class NativeGraphicsCommandQueue;
@@ -24,7 +23,6 @@ class NativeTexture2D;
 
 // Classes
 class ConstantBuffer;
-class ConstantBufferBinding;
 class EffectReflection;
 class GraphicsCommandList;
 class GraphicsCommandQueue;

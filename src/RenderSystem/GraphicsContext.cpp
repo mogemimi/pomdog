@@ -20,7 +20,8 @@ namespace Detail {
 namespace {
 
 #if defined(DEBUG) && !defined(NDEBUG)
-static void CheckUnbindingRenderTargetsError(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets,
+static void CheckUnbindingRenderTargetsError(
+    std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets,
     std::vector<std::shared_ptr<Texture>> const& textures)
 {
     for (auto & renderTarget: renderTargets) {
@@ -57,8 +58,6 @@ GraphicsContext::GraphicsContext(
     auto graphicsCapbilities = nativeContext->GetCapabilities();
 
     POMDOG_ASSERT(graphicsCapbilities.SamplerSlotCount > 0);
-    samplerStates.clear();
-    samplerStates.resize(graphicsCapbilities.SamplerSlotCount);
     textures.clear();
     textures.resize(graphicsCapbilities.SamplerSlotCount);
 
@@ -77,8 +76,6 @@ GraphicsContext::GraphicsContext(
 //-----------------------------------------------------------------------
 GraphicsContext::~GraphicsContext()
 {
-    constantBuffers.reset();
-    samplerStates.clear();
     textures.clear();
     renderTargets.clear();
 
@@ -196,7 +193,7 @@ void GraphicsContext::SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBu
     nativeContext->SetIndexBuffer(indexBuffer);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::SetPipelineState(std::shared_ptr<Detail::NativePipelineState> const& pipelineState)
+void GraphicsContext::SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState)
 {
     POMDOG_ASSERT(nativeContext);
     POMDOG_ASSERT(pipelineState);
@@ -204,25 +201,23 @@ void GraphicsContext::SetPipelineState(std::shared_ptr<Detail::NativePipelineSta
     nativeContext->SetPipelineState(pipelineState);
 }
 //-----------------------------------------------------------------------
-void GraphicsContext::SetConstantBuffers(std::shared_ptr<Detail::NativeConstantLayout> const& constantBuffersIn)
-{
-    POMDOG_ASSERT(nativeContext);
-    POMDOG_ASSERT(constantBuffersIn);
-
-    constantBuffers = constantBuffersIn;
-    nativeContext->SetConstantBuffers(constantBuffers);
-}
-//-----------------------------------------------------------------------
-void GraphicsContext::SetSampler(int index, std::shared_ptr<Detail::NativeSamplerState> const& sampler)
+void GraphicsContext::SetConstantBuffer(int index, std::shared_ptr<NativeBuffer> const& constantBuffer)
 {
     POMDOG_ASSERT(nativeContext);
     POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(index < static_cast<int>(samplerStates.size()));
-    POMDOG_ASSERT(sampler);
-    POMDOG_ASSERT(!samplerStates.empty());
+    POMDOG_ASSERT(constantBuffer);
 
-    if (index < static_cast<int>(samplerStates.size())) {
-        samplerStates[index] = sampler;
+    nativeContext->SetConstantBuffer(index, constantBuffer);
+}
+//-----------------------------------------------------------------------
+void GraphicsContext::SetSampler(int index, std::shared_ptr<NativeSamplerState> const& sampler)
+{
+    POMDOG_ASSERT(nativeContext);
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < static_cast<int>(textures.size()));
+    POMDOG_ASSERT(sampler);
+
+    if (index < static_cast<int>(textures.size())) {
         nativeContext->SetSampler(index, sampler.get());
     }
 }

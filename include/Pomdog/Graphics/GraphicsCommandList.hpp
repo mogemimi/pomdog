@@ -69,7 +69,7 @@ public:
 
     void SetPipelineState(std::shared_ptr<PipelineState> const& pipelineState);
 
-    void SetConstantBuffers(std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
+    void SetConstantBuffer(int index, std::shared_ptr<ConstantBuffer> const& constantBuffer);
 
     void SetTexture(int index);
 

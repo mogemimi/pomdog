@@ -132,13 +132,15 @@ struct SetPipelineStateCommand final: public GraphicsCommand {
     }
 };
 
-struct SetConstantBuffersCommand final: public GraphicsCommand {
-    std::shared_ptr<NativeConstantLayout> constantBuffers;
+struct SetConstantBufferCommand final: public GraphicsCommand {
+    std::shared_ptr<NativeBuffer> constantBuffer;
+    int slotIndex;
 
     void Execute(GraphicsContext & graphicsContext) override
     {
-        POMDOG_ASSERT(constantBuffers);
-        graphicsContext.SetConstantBuffers(constantBuffers);
+        POMDOG_ASSERT(constantBuffer);
+        POMDOG_ASSERT(slotIndex >= 0);
+        graphicsContext.SetConstantBuffer(slotIndex, constantBuffer);
     }
 };
 
@@ -333,16 +335,19 @@ void GraphicsCommandListImmediate::SetPipelineState(std::shared_ptr<NativePipeli
     commands.push_back(std::move(command));
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandListImmediate::SetConstantBuffers(std::shared_ptr<NativeConstantLayout> const& constantBuffers)
+void GraphicsCommandListImmediate::SetConstantBuffer(int index, std::shared_ptr<NativeBuffer> const& constantBuffer)
 {
-    POMDOG_ASSERT(constantBuffers);
-    auto command = std::make_unique<Commands::SetConstantBuffersCommand>();
-    command->constantBuffers = constantBuffers;
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(constantBuffer);
+    auto command = std::make_unique<Commands::SetConstantBufferCommand>();
+    command->constantBuffer = constantBuffer;
+    command->slotIndex = index;
     commands.push_back(std::move(command));
 }
 //-----------------------------------------------------------------------
 void GraphicsCommandListImmediate::SetSampler(int index, std::shared_ptr<NativeSamplerState> && sampler)
 {
+    POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(sampler);
     auto command = std::make_unique<Commands::SetSamplerStateCommand>();
     command->slotIndex = index;
@@ -352,6 +357,7 @@ void GraphicsCommandListImmediate::SetSampler(int index, std::shared_ptr<NativeS
 //-----------------------------------------------------------------------
 void GraphicsCommandListImmediate::SetTexture(int index)
 {
+    POMDOG_ASSERT(index >= 0);
     auto command = std::make_unique<Commands::SetTextureCommand>();
     command->slotIndex = index;
     commands.push_back(std::move(command));
@@ -359,6 +365,7 @@ void GraphicsCommandListImmediate::SetTexture(int index)
 //-----------------------------------------------------------------------
 void GraphicsCommandListImmediate::SetTexture(int index, std::shared_ptr<Texture2D> const& texture)
 {
+    POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(texture);
     auto command = std::make_unique<Commands::SetTextureCommand>();
     command->slotIndex = index;
@@ -368,6 +375,7 @@ void GraphicsCommandListImmediate::SetTexture(int index, std::shared_ptr<Texture
 //-----------------------------------------------------------------------
 void GraphicsCommandListImmediate::SetTexture(int index, std::shared_ptr<RenderTarget2D> const& texture)
 {
+    POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(texture);
     auto command = std::make_unique<Commands::SetTextureRenderTarget2DCommand>();
     command->slotIndex = index;

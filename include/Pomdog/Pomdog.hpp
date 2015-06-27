@@ -59,7 +59,6 @@
 #include "Graphics/ClearOptions.hpp"
 #include "Graphics/ComparisonFunction.hpp"
 #include "Graphics/ConstantBuffer.hpp"
-#include "Graphics/ConstantBufferBinding.hpp"
 #include "Graphics/CullMode.hpp"
 #include "Graphics/DepthStencilDescription.hpp"
 #include "Graphics/DepthStencilOperation.hpp"

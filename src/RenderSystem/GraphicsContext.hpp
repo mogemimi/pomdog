@@ -58,11 +58,11 @@ public:
 
     void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer);
 
-    void SetPipelineState(std::shared_ptr<Detail::NativePipelineState> const& pipelineState);
+    void SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState);
 
-    void SetConstantBuffers(std::shared_ptr<Detail::NativeConstantLayout> const& constantBuffers);
+    void SetConstantBuffer(int index, std::shared_ptr<NativeBuffer> const& constantBuffer);
 
-    void SetSampler(int index, std::shared_ptr<Detail::NativeSamplerState> const& sampler);
+    void SetSampler(int index, std::shared_ptr<NativeSamplerState> const& sampler);
 
     void SetTexture(int index);
 
@@ -79,8 +79,6 @@ public:
     Detail::NativeGraphicsContext* GetNativeGraphicsContext();
 
 private:
-    std::shared_ptr<Detail::NativeConstantLayout> constantBuffers;
-    std::vector<std::shared_ptr<Detail::NativeSamplerState>> samplerStates;
     std::vector<std::shared_ptr<Texture>> textures;
     std::vector<std::shared_ptr<RenderTarget2D>> renderTargets;
     std::unique_ptr<Detail::NativeGraphicsContext> nativeContext;
