@@ -7,6 +7,11 @@ namespace QuickStart {
 
 using namespace Pomdog;
 
+struct alignas(16) MyShaderConstants {
+    Matrix4x4 Model;
+    Matrix4x4 ViewProjection;
+};
+
 class QuickStartGame : public Game {
 public:
     explicit QuickStartGame(const std::shared_ptr<GameHost>& gameHost);
@@ -27,12 +32,12 @@ private:
     std::shared_ptr<IndexBuffer> indexBuffer;
     std::shared_ptr<PipelineState> pipelineState;
     std::shared_ptr<SamplerState> sampler;
-    std::shared_ptr<ConstantBufferBinding> constantBuffers;
     std::shared_ptr<ConstantBuffer> constantBuffer;
     std::shared_ptr<Texture2D> texture;
     std::shared_ptr<GraphicsCommandQueue> commandQueue;
     std::shared_ptr<GraphicsCommandList> commandList;
     std::unique_ptr<Timer> timer;
+    MyShaderConstants myShaderConstants;
     ConnectionList connect;
 };
 

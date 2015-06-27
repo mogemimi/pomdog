@@ -38,10 +38,10 @@ void QuickStartGame::Initialize()
         };
 
         std::array<VertexCombined, 4> verticesCombo = {
-            Vector3(-0.8f, -0.8f, 0.0f), Vector2(0.0f, 1.0f),
-            Vector3(-0.8f,  0.8f, 0.0f), Vector2(0.0f, 0.0f),
-            Vector3( 0.8f,  0.8f, 0.0f), Vector2(1.0f, 0.0f),
-            Vector3( 0.8f, -0.8f, 0.0f), Vector2(1.0f, 1.0f),
+            Vector3(-1.0f, -1.0f, 0.0f), Vector2(0.0f, 1.0f),
+            Vector3(-1.0f,  1.0f, 0.0f), Vector2(0.0f, 0.0f),
+            Vector3( 1.0f,  1.0f, 0.0f), Vector2(1.0f, 0.0f),
+            Vector3( 1.0f, -1.0f, 0.0f), Vector2(1.0f, 1.0f),
         };
 
         vertexBuffer = std::make_shared<VertexBuffer>(
@@ -55,11 +55,19 @@ void QuickStartGame::Initialize()
         // Create index buffer
         std::array<std::uint16_t, 6> indices = {0, 1, 2, 2, 3, 0};
 
-        indexBuffer = std::make_shared<IndexBuffer>(graphicsDevice,
+        indexBuffer = std::make_shared<IndexBuffer>(
+            graphicsDevice,
             IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
             BufferUsage::Immutable);
+    }
+    {
+        // Create constant buffer
+        constantBuffer = std::make_shared<ConstantBuffer>(
+            graphicsDevice,
+            sizeof(MyShaderConstants),
+            BufferUsage::Dynamic);
     }
     {
         // For details, see 'struct VertexCombined' members
@@ -77,24 +85,23 @@ void QuickStartGame::Initialize()
             .SetGLSLFromFile("SimpleEffect_PS.glsl")
             .SetHLSLFromFile("SimpleEffect_PS.hlsl", "SimpleEffectPS");
 
-        auto pipelineBuilder = assets->CreateBuilder<PipelineState>();
-
         // Create pipeline state
-        pipelineState = pipelineBuilder
+        pipelineState = assets->CreateBuilder<PipelineState>()
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
+            .SetConstantBufferBindSlot("MyShaderConstants", 0)
             .Build();
-
-        // Create constant buffers
-        constantBuffers = pipelineBuilder.CreateConstantBuffers(pipelineState);
-
-        // Get constant buffer
-        constantBuffer = constantBuffers->FindConstantBuffer("MyConstants");
     }
     {
         // Create graphics command list
         commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+
+        auto updateShaderConstants = [this](int width, int height) {
+            auto view = Matrix4x4::Identity;
+            auto projection = Matrix4x4::CreateOrthographicLH(width, height, 0, 100);
+            myShaderConstants.ViewProjection = Matrix4x4::Transpose(view * projection);
+        };
 
         auto createGraphicsCommands = [this](int width, int height) {
             Viewport viewport = {0, 0, width, height};
@@ -103,20 +110,23 @@ void QuickStartGame::Initialize()
             commandList->SetViewport(viewport);
             commandList->SetScissorRectangle(viewport.GetBounds());
             commandList->Clear(Color::CornflowerBlue);
+            commandList->SetConstantBuffer(0, constantBuffer);
             commandList->SetSamplerState(0, sampler);
             commandList->SetTexture(0, texture);
             commandList->SetVertexBuffer(vertexBuffer);
             commandList->SetPipelineState(pipelineState);
-            commandList->SetConstantBuffers(constantBuffers);
             commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
             commandList->DrawIndexed(indexBuffer, indexBuffer->IndexCount());
             commandList->Close();
         };
 
+        // Initialize shader resources
         auto bounds = window->GetClientBounds();
+        updateShaderConstants(bounds.Width, bounds.Height);
         createGraphicsCommands(bounds.Width, bounds.Height);
 
-        // Window resize event
+        // Connect to window resize event notification
+        connect(window->ClientSizeChanged, updateShaderConstants);
         connect(window->ClientSizeChanged, createGraphicsCommands);
     }
     {
@@ -142,15 +152,11 @@ void QuickStartGame::Update()
 {
     auto totalTime = static_cast<float>(clock->TotalGameTime().count());
 
-    struct MyConstants {
-        Vector2 Rotation;
-    };
+    auto rotate = Matrix4x4::CreateRotationZ(std::cos(totalTime));
+    auto scale = Matrix4x4::CreateScale(Vector3(texture->Width(), texture->Height(), 1.0f));
+    auto model = scale * rotate;
 
-    MyConstants myShaderConstants;
-    myShaderConstants.Rotation = Vector2{
-        std::cos(totalTime) * 0.5f + 0.5f,
-        std::sin(totalTime) * 0.5f + 0.5f};
-
+    myShaderConstants.Model = Matrix4x4::Transpose(model);
     constantBuffer->SetValue(myShaderConstants);
 }
 //-----------------------------------------------------------------------
