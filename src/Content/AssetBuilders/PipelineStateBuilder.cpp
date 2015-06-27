@@ -140,6 +140,23 @@ Builder<PipelineState> & Builder<PipelineState>::SetDepthStencilState(
     return *this;
 }
 //-----------------------------------------------------------------------
+Builder<PipelineState> & Builder<PipelineState>::SetConstantBufferBindSlot(
+    std::string const& name, int slotIndex)
+{
+    POMDOG_ASSERT(impl);
+    POMDOG_ASSERT(!name.empty());
+    POMDOG_ASSERT(slotIndex >= 0);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    for (auto & pair : impl->description.ConstantBufferBindSlots) {
+        POMDOG_ASSERT(slotIndex != pair.second);
+    }
+#endif
+
+    impl->description.ConstantBufferBindSlots.emplace(name, slotIndex);
+    return *this;
+}
+//-----------------------------------------------------------------------
 std::shared_ptr<PipelineState> Builder<PipelineState>::Build()
 {
     POMDOG_ASSERT(impl);

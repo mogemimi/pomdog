@@ -42,6 +42,8 @@ public:
 
     Builder & SetDepthStencilState(DepthStencilDescription const& depthStencilState);
 
+    Builder & SetConstantBufferBindSlot(std::string const& name, int slotIndex);
+
     std::shared_ptr<PipelineState> Build();
 
     std::shared_ptr<EffectReflection> CreateEffectReflection(

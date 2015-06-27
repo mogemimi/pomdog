@@ -11,10 +11,15 @@
 #include "RasterizerDescription.hpp"
 #include <memory>
 #include <vector>
+#include <string>
+#include <unordered_map>
 
 namespace Pomdog {
 
+using ConstantBufferBindSlotCollection = std::unordered_map<std::string, int>;
+
 struct PipelineStateDescription {
+    ConstantBufferBindSlotCollection ConstantBufferBindSlots;
     std::shared_ptr<Shader> VertexShader;
     std::shared_ptr<Shader> PixelShader;
     InputLayoutDescription InputLayout;
