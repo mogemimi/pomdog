@@ -7,14 +7,20 @@
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
-#include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
+#include "Pomdog/Graphics/GraphicsCommandList.hpp"
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
+#include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Matrix3x2.hpp"
+#include "Pomdog/Math/Matrix4x4.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 
@@ -27,7 +33,7 @@ namespace {
 #include "Shaders/HLSL.Embedded/LineBatch_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/LineBatch_PS.inc.hpp"
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - LineBatch::Impl
@@ -49,25 +55,29 @@ public:
     std::vector<Vertex> vertices;
 
 private:
-    std::shared_ptr<GraphicsContext> graphicsContext;
+    std::shared_ptr<GraphicsCommandList> commandList;
     std::shared_ptr<VertexBuffer> vertexBuffer;
     std::shared_ptr<PipelineState> pipelineState;
-    std::shared_ptr<ConstantBufferBinding> constantBuffers;
+    std::shared_ptr<ConstantBuffer> constantBuffer;
 
 public:
-    Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    Impl(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         AssetManager & assets);
 
-    void Begin(Matrix4x4 const& transformMatrix);
+    void Begin(
+        std::shared_ptr<GraphicsCommandList> const& commandListIn,
+        Matrix4x4 const& transformMatrix);
 
-    void DrawLine(Vector2 const& point1, Vector2 const& point2,
+    void DrawLine(
+        Vector2 const& point1, Vector2 const& point2,
         Vector4 const& color1, Vector4 const& color2);
 
-    void DrawLine(Vector3 const& point1, Vector3 const& point2,
+    void DrawLine(
+        Vector3 const& point1, Vector3 const& point2,
         Vector4 const& color1, Vector4 const& color2);
 
-    void DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
+    void DrawTriangle(
+        Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
         Vector4 const& color1, Vector4 const& color2, Vector4 const& color3);
 
     void End();
@@ -75,10 +85,9 @@ public:
     void Flush();
 };
 //-----------------------------------------------------------------------
-LineBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
+LineBatch::Impl::Impl(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
-    : graphicsContext(graphicsContextIn)
 {
     vertices.reserve(MinVertexCount);
     {
@@ -100,25 +109,29 @@ LineBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
             .SetGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS));
 
-        auto builder = assets.CreateBuilder<PipelineState>();
-        pipelineState = builder
+        pipelineState = assets.CreateBuilder<PipelineState>()
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
             .SetDepthStencilState(DepthStencilDescription::CreateNone())
+            .SetConstantBufferBindSlot("TransformMatrix", 0)
             .Build();
-
-        constantBuffers = builder.CreateConstantBuffers(pipelineState);
     }
+
+    constantBuffer = std::make_shared<ConstantBuffer>(
+        graphicsDevice, sizeof(Matrix4x4), BufferUsage::Dynamic);
 }
 //-----------------------------------------------------------------------
-void LineBatch::Impl::Begin(Matrix4x4 const& transformMatrix)
+void LineBatch::Impl::Begin(
+    std::shared_ptr<GraphicsCommandList> const& commandListIn,
+    Matrix4x4 const& transformMatrix)
 {
-    alignas(16) Matrix4x4 transposedMatrix = Matrix4x4::Transpose(transformMatrix);
+    POMDOG_ASSERT(commandListIn);
+    commandList = commandListIn;
 
-    auto parameter = constantBuffers->Find("TransformMatrix");
-    parameter->SetValue(transposedMatrix);
+    alignas(16) Matrix4x4 transposedMatrix = Matrix4x4::Transpose(transformMatrix);
+    constantBuffer->SetValue(transposedMatrix);
 }
 //-----------------------------------------------------------------------
 void LineBatch::Impl::End()
@@ -136,11 +149,11 @@ void LineBatch::Impl::Flush()
     POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
     vertexBuffer->SetData(vertices.data(), vertices.size());
 
-    graphicsContext->SetVertexBuffer(vertexBuffer);
-    graphicsContext->SetPipelineState(pipelineState);
-    graphicsContext->SetConstantBuffers(constantBuffers);
-    graphicsContext->SetPrimitiveTopology(PrimitiveTopology::LineList);
-    graphicsContext->Draw(vertices.size());
+    commandList->SetVertexBuffer(vertexBuffer);
+    commandList->SetPipelineState(pipelineState);
+    commandList->SetConstantBuffer(0, constantBuffer);
+    commandList->SetPrimitiveTopology(PrimitiveTopology::LineList);
+    commandList->Draw(vertices.size());
 
     vertices.clear();
 }
@@ -189,18 +202,20 @@ void LineBatch::Impl::DrawTriangle(Vector2 const& point1, Vector2 const& point2,
 #pragma mark - LineBatch
 #endif
 //-----------------------------------------------------------------------
-LineBatch::LineBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
+LineBatch::LineBatch(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
-    : impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))
+    : impl(std::make_unique<Impl>(graphicsDevice, assets))
 {}
 //-----------------------------------------------------------------------
 LineBatch::~LineBatch() = default;
 //-----------------------------------------------------------------------
-void LineBatch::Begin(Matrix4x4 const& transformMatrixIn)
+void LineBatch::Begin(
+    std::shared_ptr<GraphicsCommandList> const& commandListIn,
+    Matrix4x4 const& transformMatrixIn)
 {
     POMDOG_ASSERT(impl);
-    impl->Begin(transformMatrixIn);
+    impl->Begin(commandListIn, transformMatrixIn);
 }
 //-----------------------------------------------------------------------
 void LineBatch::End()
@@ -336,7 +351,8 @@ void LineBatch::DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vecto
     impl->DrawTriangle(point1, point2, point3, colorVector, colorVector, colorVector);
 }
 //-----------------------------------------------------------------------
-void LineBatch::DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
+void LineBatch::DrawTriangle(
+    Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
     Color const& color1, Color const& color2, Color const& color3)
 {
     POMDOG_ASSERT(impl);
@@ -346,4 +362,4 @@ void LineBatch::DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vecto
     impl->DrawTriangle(point1, point2, point3, colorVector1, colorVector2, colorVector3);
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

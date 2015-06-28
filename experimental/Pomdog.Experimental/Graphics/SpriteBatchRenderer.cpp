@@ -99,7 +99,6 @@ private:
     std::shared_ptr<ConstantBuffer> constantBufferMatrices;
     std::vector<std::shared_ptr<ConstantBuffer>> constantBuffers;
 
-    Matrix4x4 projectionMatrix;
     TextureConstant textureConstant;
     std::size_t currentVertexOffset;
 
@@ -109,8 +108,6 @@ public:
 public:
     Impl(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         AssetManager & assets);
-
-    void ResetProjectionMatrix(Matrix4x4 const& projectionMatrixIn);
 
     void Begin(
         std::shared_ptr<GraphicsCommandList> const& commandListIn,
@@ -143,12 +140,6 @@ SpriteBatchRenderer::Impl::Impl(
     : drawCallCount(0)
     , currentVertexOffset(0)
 {
-    {
-        constexpr float width = 800.0f;
-        constexpr float height = 480.0f;
-        projectionMatrix = Matrix4x4::CreateOrthographicLH(
-            width, height, 0.1f, 100.0f);
-    }
     {
         using PositionTextureCoord = Vector4;
 
@@ -221,11 +212,6 @@ SpriteBatchRenderer::Impl::Impl(
     }
 }
 //-----------------------------------------------------------------------
-void SpriteBatchRenderer::Impl::ResetProjectionMatrix(Matrix4x4 const& projectionMatrixIn)
-{
-    this->projectionMatrix = projectionMatrixIn;
-}
-//-----------------------------------------------------------------------
 void SpriteBatchRenderer::Impl::Begin(
     std::shared_ptr<GraphicsCommandList> const& commandListIn,
     Matrix4x4 const& transformMatrix)
@@ -233,10 +219,8 @@ void SpriteBatchRenderer::Impl::Begin(
     POMDOG_ASSERT(commandListIn);
     this->commandList = commandListIn;
 
-    alignas(16) Matrix4x4 projection = Matrix4x4::Transpose(
-        transformMatrix * projectionMatrix);
-
-    constantBufferMatrices->SetValue(projection);
+    alignas(16) Matrix4x4 transposed = Matrix4x4::Transpose(transformMatrix);
+    constantBufferMatrices->SetValue(transposed);
 
     drawCallCount = 0;
     currentVertexOffset = 0;
@@ -446,12 +430,6 @@ SpriteBatchRenderer::SpriteBatchRenderer(
 {}
 //-----------------------------------------------------------------------
 SpriteBatchRenderer::~SpriteBatchRenderer() = default;
-//-----------------------------------------------------------------------
-void SpriteBatchRenderer::SetProjectionMatrix(Matrix4x4 const& projectionMatrix)
-{
-    POMDOG_ASSERT(impl);
-    impl->ResetProjectionMatrix(projectionMatrix);
-}
 //-----------------------------------------------------------------------
 void SpriteBatchRenderer::Begin(
     std::shared_ptr<GraphicsCommandList> const& commandList,

@@ -20,8 +20,6 @@ public:
 
     ~SpriteBatchRenderer();
 
-    void SetProjectionMatrix(Matrix4x4 const& projectionMatrix);
-
     void Begin(
         std::shared_ptr<GraphicsCommandList> const& commandList,
         Matrix4x4 const& transformMatrix);

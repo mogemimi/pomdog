@@ -5,46 +5,85 @@
 #define POMDOG_POLYGONBATCH_4158F6A1_HPP
 
 #include "Pomdog/Content/AssetManager.hpp"
-#include "Pomdog/Graphics/GraphicsContext.hpp"
-#include "Pomdog/Graphics/GraphicsDevice.hpp"
-#include "Pomdog/Math/Color.hpp"
-#include "Pomdog/Math/Matrix3x2.hpp"
-#include "Pomdog/Math/Matrix4x4.hpp"
-#include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <cstdint>
+#include <vector>
 #include <memory>
 
 namespace Pomdog {
 
 class PolygonBatch {
 public:
-    PolygonBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
+    PolygonBatch(
         std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         AssetManager & assets);
 
     ~PolygonBatch();
 
-    void Begin(Matrix4x4 const& transformMatrix);
+    void Begin(
+        std::shared_ptr<GraphicsCommandList> const& commandList,
+        Matrix4x4 const& transformMatrix);
 
-    //void DrawArc(Vector2 const& position, float radius, Radian<float> const& startAngle, Radian<float> const& arcAngle, Color const& color);
+    void DrawArc(
+        Vector2 const& position,
+        float radius,
+        Radian<float> const& startAngle,
+        Radian<float> const& arcAngle,
+        std::size_t segments,
+        Color const& color);
 
-    void DrawCircle(Vector2 const& position, float radius, Color const& color, std::size_t segments);
+    void DrawCircle(
+        Vector2 const& position,
+        float radius,
+        std::size_t segments,
+        Color const& color);
+
+    void DrawCircle(
+        Vector3 const& position,
+        float radius,
+        std::size_t segments,
+        Color const& color);
 
     //void DrawEllipse();
 
-    //void DrawLine(Vector2 const& start, Vector2 const& end, Color const& color);
+    void DrawLine(
+        Vector2 const& start,
+        Vector2 const& end,
+        Color const& color,
+        float weight);
 
-    //void DrawLine(Vector2 const& start, Vector2 const& end, Color const& startColor, Color const& endColor);
+    void DrawLine(
+        Vector2 const& start,
+        Vector2 const& end,
+        Color const& startColor,
+        Color const& endColor,
+        float weight);
 
-    //void DrawPolyline(std::vector<Vector2> const& points, float thickness, Color const& color);
+    void DrawPolyline(
+        std::vector<Vector2> const& points,
+        float thickness,
+        Color const& color);
 
-    void DrawRectangle(Rectangle const& sourceRect, Color const& color);
+    //void DrawPolygon(
+    //    std::vector<PolygonBatchVertex> const& vertices,
+    //    Color const& color);
 
-    void DrawRectangle(Rectangle const& sourceRect,
-        Color const& color1, Color const& color2, Color const& color3, Color const& color4);
+    void DrawRectangle(
+        Rectangle const& sourceRect,
+        Color const& color);
 
-    void DrawRectangle(Matrix3x2 const& matrix, Rectangle const& sourceRect, Color const& color);
+    void DrawRectangle(
+        Rectangle const& sourceRect,
+        Color const& color1,
+        Color const& color2,
+        Color const& color3,
+        Color const& color4);
+
+    void DrawRectangle(
+        Matrix3x2 const& matrix,
+        Rectangle const& sourceRect,
+        Color const& color);
 
     ///@note
     /// Y
@@ -56,25 +95,62 @@ public:
     /// |
     /// +-----------------> X
     ///
-    void DrawRectangle(Matrix3x2 const& matrix, Rectangle const& sourceRect,
-        Color const& color1, Color const& color2, Color const& color3, Color const& color4);
+    void DrawRectangle(
+        Matrix3x2 const& matrix,
+        Rectangle const& sourceRect,
+        Color const& color1,
+        Color const& color2,
+        Color const& color3,
+        Color const& color4);
 
-    void DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3, Color const& color);
+    void DrawRectangle(
+        Vector2 const& position,
+        float width,
+        float height,
+        Vector2 const& originPivot,
+        Color const& color);
 
-    void DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
-        Color const& color1, Color const& color2, Color const& color3);
+    void DrawTriangle(
+        Vector2 const& point1,
+        Vector2 const& point2,
+        Vector2 const& point3,
+        Color const& color);
 
-    //void DrawPolygon(std::vector<Vertex> const& vertices, Color const& color);
+    void DrawTriangle(
+        Vector2 const& point1,
+        Vector2 const& point2,
+        Vector2 const& point3,
+        Color const& color1,
+        Color const& color2,
+        Color const& color3);
+
+    void DrawTriangle(
+        Vector3 const& point1,
+        Vector3 const& point2,
+        Vector3 const& point3,
+        Color const& color1,
+        Color const& color2,
+        Color const& color3);
+
+    void DrawTriangle(
+        Vector3 const& point1,
+        Vector3 const& point2,
+        Vector3 const& point3,
+        Vector4 const& color1,
+        Vector4 const& color2,
+        Vector4 const& color3);
 
     void End();
 
-    std::uint32_t DrawCallCount() const;
+    std::size_t GetMaxVertexCount() const noexcept;
+
+    std::uint32_t GetDrawCallCount() const;
 
 private:
     class Impl;
     std::unique_ptr<Impl> impl;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_POLYGONBATCH_4158F6A1_HPP
