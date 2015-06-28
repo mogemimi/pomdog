@@ -16,7 +16,7 @@
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Utility/StringFormat.hpp"
+#include "Pomdog/Utility/StringHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <array>

@@ -7,7 +7,7 @@
 #include "../Utility/PathHelper.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Utility/StringFormat.hpp"
+#include "Pomdog/Utility/StringHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <utility>
@@ -104,13 +104,13 @@ public:
         else if (D3D_INCLUDE_SYSTEM == includeType) {
             Log::Internal("ShaderInclude: System");
         }
-        Log::Internal(StringFormat("include shader file : %s", includePath.c_str()));
+        Log::Internal(StringHelper::Format("include shader file : %s", includePath.c_str()));
 #endif
 
         std::ifstream stream(includePath);
 
         if (stream) {
-            Log::Internal(StringFormat("Could not find a shader source file %s", includePath.c_str()));
+            Log::Internal(StringHelper::Format("Could not find a shader source file %s", includePath.c_str()));
             return E_FAIL;
         }
 
@@ -153,7 +153,7 @@ static void CompileFromShaderFile(ShaderBytecode const& shaderBytecode,
     if (FAILED(hr))
     {
         if (errorBlob) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error, StringFormat(
+            POMDOG_THROW_EXCEPTION(std::runtime_error, StringHelper::Format(
                 "Failed to compile shader.\n"
                 "error: %s",
                 reinterpret_cast<LPCSTR>(errorBlob->GetBufferPointer())));
@@ -162,7 +162,7 @@ static void CompileFromShaderFile(ShaderBytecode const& shaderBytecode,
     }
 
     if (errorBlob) {
-        Log::Internal(StringFormat("warning (compile shader): %s",
+        Log::Internal(StringHelper::Format("warning (compile shader): %s",
             reinterpret_cast<LPCSTR>(errorBlob->GetBufferPointer())));
     }
 }

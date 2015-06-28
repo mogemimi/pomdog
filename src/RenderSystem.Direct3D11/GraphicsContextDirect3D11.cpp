@@ -24,7 +24,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Utility/StringFormat.hpp"
+#include "Pomdog/Utility/StringHelper.hpp"
 #include <algorithm>
 
 namespace Pomdog {
@@ -109,7 +109,7 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
     }
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    Log::Internal(StringFormat(
+    Log::Internal(StringHelper::Format(
         "DXGI_SAMPLE_DESC.Count  : %d\n"
         "DXGI_SAMPLE_DESC.Quality: %d",
         sampleDesc.Count,

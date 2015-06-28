@@ -83,7 +83,7 @@
         'Utility/AnyTest.cpp',
         'Utility/CRC32Test.cpp',
         'Utility/OptionalTest.cpp',
-        'Utility/StringFormatTest.cpp',
+        'Utility/StringHelperTest.cpp',
       ],
     },
   ],

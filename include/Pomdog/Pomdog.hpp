@@ -129,7 +129,7 @@
 #include "Utility/Any.hpp"
 #include "Utility/Assert.hpp"
 #include "Utility/Exception.hpp"
-#include "Utility/StringFormat.hpp"
+#include "Utility/StringHelper.hpp"
 
 #include "Basic/Export.hpp"
 #include "Basic/Platform.hpp"

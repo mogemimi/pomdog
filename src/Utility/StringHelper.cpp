@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "Pomdog/Utility/StringFormat.hpp"
+#include "Pomdog/Utility/StringHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstdarg>
 
@@ -49,7 +49,7 @@ static std::string UnsafeToFormatString(char const* format, std::va_list arg)
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-std::string StringFormat(char const* format, ...)
+std::string StringHelper::Format(char const* format, ...)
 {
     std::va_list arg;
     va_start(arg, format);

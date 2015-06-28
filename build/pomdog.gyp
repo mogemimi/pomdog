@@ -185,7 +185,7 @@
       '../include/Pomdog/Utility/Assert.hpp',
       '../include/Pomdog/Utility/Exception.hpp',
       '../include/Pomdog/Utility/Optional.hpp',
-      '../include/Pomdog/Utility/StringFormat.hpp',
+      '../include/Pomdog/Utility/StringHelper.hpp',
       '../include/Pomdog/Utility/detail/CRC32.hpp',
       '../include/Pomdog/Utility/detail/Tagged.hpp',
       '../src/Application/GameClock.cpp',
@@ -280,7 +280,7 @@
       '../src/Utility/PathHelper.cpp',
       '../src/Utility/PathHelper.hpp',
       '../src/Utility/ScopeGuard.hpp',
-      '../src/Utility/StringFormat.cpp',
+      '../src/Utility/StringHelper.cpp',
     ],
     'pomdog_library_opengl4_sources': [
       '../src/RenderSystem.GL4/BlendStateGL4.cpp',

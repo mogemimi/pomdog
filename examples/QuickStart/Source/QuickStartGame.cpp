@@ -137,7 +137,7 @@ void QuickStartGame::Initialize()
         // Timer event
         connect(timer->Elapsed, [this] {
             // String formatting using Pomdog::StringFormat
-            auto title = StringFormat(
+            auto title = StringHelper::Format(
                 "QuickStart %3.0f fps, %d frames",
                 std::round(clock->FrameRate()),
                 clock->FrameNumber());

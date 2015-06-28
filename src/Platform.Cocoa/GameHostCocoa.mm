@@ -25,7 +25,7 @@
 #include "Pomdog/Input/KeyState.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/StringFormat.hpp"
+#include "Pomdog/Utility/StringHelper.hpp"
 #include <utility>
 #include <vector>
 #include <mutex>
@@ -394,13 +394,15 @@ void GameHostCocoa::Impl::ProcessSystemEvents(Event const& event)
     else if (event.Is<ViewWillStartLiveResizeEvent>())
     {
         auto rect = window->GetClientBounds();
-        Log::Internal(StringFormat("ViewWillStartLiveResizeEvent: {w: %d, h: %d}",
+        Log::Internal(StringHelper::Format(
+            "ViewWillStartLiveResizeEvent: {w: %d, h: %d}",
             rect.Width, rect.Height));
     }
     else if (event.Is<ViewDidEndLiveResizeEvent>())
     {
         auto rect = window->GetClientBounds();
-        Log::Internal(StringFormat("ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
+        Log::Internal(StringHelper::Format(
+            "ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
             rect.Width, rect.Height));
     }
     else if (auto keyEvent = event.As<InputKeyEvent>())
