@@ -13,12 +13,12 @@ class ScreenQuad {
 public:
     explicit ScreenQuad(std::shared_ptr<GraphicsDevice> const& graphicsDevice);
 
-    void DrawQuad(GraphicsContext & graphicsContext);
+    void DrawQuad(GraphicsCommandList & commandList);
 
 private:
     std::shared_ptr<VertexBuffer> vertexBuffer;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SCREENQUAD_8AD72196_HPP

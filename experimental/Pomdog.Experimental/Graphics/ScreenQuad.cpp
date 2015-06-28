@@ -2,8 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "ScreenQuad.hpp"
-#include "Pomdog/Graphics/ConstantBufferBinding.hpp"
-#include "Pomdog/Graphics/GraphicsContext.hpp"
+#include "Pomdog/Graphics/GraphicsCommandList.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
@@ -43,14 +42,15 @@ ScreenQuad::ScreenQuad(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
     };
 
     vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
-        vertices.data(), vertices.size(), sizeof(ScreenQuadVertex), BufferUsage::Immutable);
+        vertices.data(), vertices.size(),
+        sizeof(ScreenQuadVertex), BufferUsage::Immutable);
 }
 //-----------------------------------------------------------------------
-void ScreenQuad::DrawQuad(GraphicsContext & graphicsContext)
+void ScreenQuad::DrawQuad(GraphicsCommandList & commandList)
 {
-    graphicsContext.SetVertexBuffer(vertexBuffer);
-    graphicsContext.SetPrimitiveTopology(PrimitiveTopology::TriangleList);
-    graphicsContext.Draw(vertexBuffer->VertexCount());
+    commandList.SetVertexBuffer(vertexBuffer);
+    commandList.SetPrimitiveTopology(PrimitiveTopology::TriangleList);
+    commandList.Draw(vertexBuffer->VertexCount());
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog
