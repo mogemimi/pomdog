@@ -76,8 +76,10 @@ def main():
     pomdogPath = os.path.normpath(pomdogPath)
     DownloadDependencies(pomdogPath)
 
+    GenerateXcodeProjects('test/FrameworkTest/unittest.gyp')
     GenerateXcodeProjects('test/TestApp/TestApp.gyp')
     GenerateXcodeProjects('examples/QuickStart/QuickStart.gyp', '-D pomdog_dir=../../')
+    GenerateXcodeProjects('examples/Pong/Pong.gyp', '-D pomdog_dir=../../')
 
     CreateNewMSVSUserFile(
       'test/TestApp/TestApp.vcxproj.user',
@@ -85,6 +87,9 @@ def main():
     CreateNewMSVSUserFile(
       'examples/QuickStart/QuickStart.vcxproj.user',
       '..\\..\\..\\examples\\QuickStart')
+    CreateNewMSVSUserFile(
+      'examples/Pong/Pong.vcxproj.user',
+      '..\\..\\..\\examples\\Pong')
 
 
 if __name__ == '__main__':
