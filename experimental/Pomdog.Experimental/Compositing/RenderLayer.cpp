@@ -15,4 +15,4 @@ void RenderLayer::DrawOrder(std::int32_t drawOrderIn)
     this->drawOrder = drawOrderIn;
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

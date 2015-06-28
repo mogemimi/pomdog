@@ -4,13 +4,13 @@
 #ifndef POMDOG_RENDERLAYERCOMPOSITOR_2AC2E2AD_HPP
 #define POMDOG_RENDERLAYERCOMPOSITOR_2AC2E2AD_HPP
 
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstdint>
 #include <vector>
 #include <memory>
 
 namespace Pomdog {
 
-class GraphicsContext;
 class RenderLayer;
 class Renderer;
 
@@ -26,9 +26,9 @@ public:
 
 private:
     std::vector<std::shared_ptr<RenderLayer>> layers;
-    bool needSort;
+    bool needToSort;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_RENDERLAYERCOMPOSITOR_2AC2E2AD_HPP

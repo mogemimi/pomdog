@@ -30,6 +30,6 @@ private:
     std::vector<std::reference_wrapper<RenderCommand>> zeroCommands;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_RENDERQUEUE_32005F81_HPP

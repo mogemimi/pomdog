@@ -4,11 +4,11 @@
 #ifndef POMDOG_RENDERLAYER_925B26B2_HPP
 #define POMDOG_RENDERLAYER_925B26B2_HPP
 
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstdint>
 
 namespace Pomdog {
 
-class GraphicsContext;
 class Renderer;
 
 class RenderLayer {
@@ -25,6 +25,6 @@ private:
     std::int32_t drawOrder = 0;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_RENDERLAYER_925B26B2_HPP

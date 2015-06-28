@@ -286,7 +286,7 @@ namespace FilePathHelper {
     }
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     AssetManager & assets, std::string const& assetName)
@@ -371,4 +371,4 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     return std::move(spriteFont);
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

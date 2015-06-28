@@ -24,13 +24,11 @@ HierarchyNode::~HierarchyNode()
             auto prevSibling = parent->firstChild;
             POMDOG_ASSERT(prevSibling);
 
-            while (prevSibling->sibling.get() != this)
-            {
+            while (prevSibling->sibling.get() != this) {
                 prevSibling = prevSibling->sibling;
             }
 
-            if (prevSibling->sibling.get() == this)
-            {
+            if (prevSibling->sibling.get() == this) {
                 prevSibling->sibling = sibling;
             }
         }
@@ -130,4 +128,4 @@ std::weak_ptr<HierarchyNode> HierarchyNode::WeakParent() const
     return weakParent;
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

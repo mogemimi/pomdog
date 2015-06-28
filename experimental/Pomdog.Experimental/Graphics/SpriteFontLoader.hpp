@@ -18,6 +18,6 @@ public:
         AssetManager & assets, std::string const& assetName);
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SPRITEFONTLOADER_30D6FB29_HPP

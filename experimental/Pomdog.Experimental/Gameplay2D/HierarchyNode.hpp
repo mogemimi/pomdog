@@ -42,6 +42,6 @@ private:
     std::shared_ptr<HierarchyNode> sibling;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_HIERARCHYNODE_65A32766_HPP

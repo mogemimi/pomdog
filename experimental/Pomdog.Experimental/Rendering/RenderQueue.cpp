@@ -15,7 +15,7 @@ bool CompareRenderCommands(RenderCommand const& a, RenderCommand const& b)
     return a.DrawOrder() < b.DrawOrder();
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 void RenderQueue::PushBack(std::reference_wrapper<RenderCommand> && command)
 {
@@ -63,4 +63,4 @@ void RenderQueue::Enumerate(std::function<void(RenderCommand&)> const& callback)
     }
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

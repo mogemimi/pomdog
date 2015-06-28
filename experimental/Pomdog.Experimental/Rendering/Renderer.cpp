@@ -170,4 +170,4 @@ void Renderer::AddProcessor(std::type_index const& index, std::unique_ptr<Render
     impl->AddProcessor(index, std::move(processor));
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

@@ -9,8 +9,6 @@
 
 namespace Pomdog {
 
-class GraphicsContext;
-
 class RenderCommand {
 public:
     virtual ~RenderCommand() = default;
@@ -20,6 +18,6 @@ public:
     virtual float DrawOrder() const = 0;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_RENDERCOMMAND_B320B370_HPP

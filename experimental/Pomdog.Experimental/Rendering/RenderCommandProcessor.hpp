@@ -5,7 +5,7 @@
 #define POMDOG_RENDERCOMMANDPROCESSOR_98635350_HPP
 
 #include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
-#include "Pomdog/Graphics/GraphicsContext.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
 
 namespace Pomdog {
@@ -25,6 +25,6 @@ public:
     virtual int DrawCallCount() const = 0;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_RENDERCOMMANDPROCESSOR_98635350_HPP

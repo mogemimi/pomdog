@@ -4,8 +4,8 @@
 #ifndef POMDOG_RENDERER_1196526B_HPP
 #define POMDOG_RENDERER_1196526B_HPP
 
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
-#include "Pomdog/Graphics/GraphicsContext.hpp"
 #include <cstdint>
 #include <typeindex>
 #include <memory>
@@ -40,6 +40,6 @@ public:
     std::unique_ptr<Impl> impl;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_RENDERER_1196526B_HPP

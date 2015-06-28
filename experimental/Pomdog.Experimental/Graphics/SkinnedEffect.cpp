@@ -15,7 +15,7 @@ namespace {
 #include "Shaders/GLSL.Embedded/SkinnedEffect_VS.inc.hpp"
 #include "Shaders/GLSL.Embedded/SkinnedEffect_PS.inc.hpp"
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - SkinnedEffect::Impl
@@ -139,4 +139,4 @@ void SkinnedEffect::Apply(GraphicsContext & graphicsContext)
     impl->Apply(graphicsContext);
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog
