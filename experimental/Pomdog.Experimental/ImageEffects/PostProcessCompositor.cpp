@@ -97,11 +97,6 @@ void PostProcessCompositor::Composite(std::vector<std::shared_ptr<ImageEffectBas
 {
     POMDOG_ASSERT(!imageEffectsIn.empty());
     imageEffects = std::move(imageEffectsIn);
-
-    for (auto & effect : imageEffects) {
-        POMDOG_ASSERT(effect);
-        effect->BindConstantBuffer(constantBuffer);
-    }
 }
 //-----------------------------------------------------------------------
 void PostProcessCompositor::Draw(
@@ -112,6 +107,7 @@ void PostProcessCompositor::Draw(
         return;
     }
 
+    POMDOG_ASSERT(constantBuffer);
     POMDOG_ASSERT(!renderTargets.empty());
     POMDOG_ASSERT(renderTargets.front());
     POMDOG_ASSERT(renderTargets.back());
@@ -139,7 +135,7 @@ void PostProcessCompositor::Draw(
         }
 
         auto & effect = imageEffects[index];
-        effect->Apply(commandList, currentSource);
+        effect->Apply(commandList, currentSource, constantBuffer);
 
         screenQuad.DrawQuad(commandList);
         std::swap(readTarget, writeTarget);

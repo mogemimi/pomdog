@@ -13,12 +13,10 @@ class ImageEffectBase {
 public:
     virtual ~ImageEffectBase() = default;
 
-    virtual void BindConstantBuffer(
-        std::shared_ptr<ConstantBuffer> const& constantBuffer) = 0;
-
     virtual void Apply(
         GraphicsCommandList & commandList,
-        std::shared_ptr<RenderTarget2D> const& source) = 0;
+        std::shared_ptr<RenderTarget2D> const& source,
+        std::shared_ptr<ConstantBuffer> const& constantBuffer) = 0;
 };
 
 } // namespace Pomdog

@@ -6,7 +6,6 @@
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
-#include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Graphics/GraphicsCommandList.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -48,32 +47,26 @@ RetroCrtEffect::RetroCrtEffect(
         .SetGLSL(Builtin_GLSL_RetroCrtEffect_PS, std::strlen(Builtin_GLSL_RetroCrtEffect_PS))
         .SetHLSLPrecompiled(BuiltinHLSL_RetroCrtEffect_PS, sizeof(BuiltinHLSL_RetroCrtEffect_PS));
 
-    auto builder = assets.CreateBuilder<PipelineState>();
-    pipelineState = builder
+    pipelineState = assets.CreateBuilder<PipelineState>()
         .SetVertexShader(vertexShader.Build())
         .SetPixelShader(pixelShader.Build())
         .SetInputLayout(inputLayout.CreateInputLayout())
         .SetBlendState(BlendDescription::CreateNonPremultiplied())
         .SetDepthStencilState(DepthStencilDescription::CreateNone())
+        .SetConstantBufferBindSlot("ImageEffectConstants", 0)
         .Build();
-
-    constantBuffers = builder.CreateConstantBuffers(pipelineState);
-}
-//-----------------------------------------------------------------------
-void RetroCrtEffect::BindConstantBuffer(std::shared_ptr<ConstantBuffer> const& constantBuffer)
-{
-    POMDOG_ASSERT(constantBuffer);
-    constantBuffers->SetConstantBuffer("ImageEffectConstants", constantBuffer);
 }
 //-----------------------------------------------------------------------
 void RetroCrtEffect::Apply(GraphicsCommandList & commandList,
-    std::shared_ptr<RenderTarget2D> const& source)
+    std::shared_ptr<RenderTarget2D> const& source,
+    std::shared_ptr<ConstantBuffer> const& constantBuffer)
 {
     POMDOG_ASSERT(source);
+    POMDOG_ASSERT(constantBuffer);
+    commandList.SetConstantBuffer(0, constantBuffer);
     commandList.SetSamplerState(0, samplerState);
     commandList.SetTexture(0, source);
     commandList.SetPipelineState(pipelineState);
-    commandList.SetConstantBuffers(constantBuffers);
 }
 //-----------------------------------------------------------------------
 } // namespace Pomdog

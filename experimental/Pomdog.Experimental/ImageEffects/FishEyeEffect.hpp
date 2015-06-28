@@ -19,17 +19,15 @@ public:
 
     void SetStrength(float strength);
 
-    void BindConstantBuffer(
-        std::shared_ptr<ConstantBuffer> const& constantBuffer) override;
-
     void Apply(
         GraphicsCommandList & commandList,
-        std::shared_ptr<RenderTarget2D> const& source) override;
+        std::shared_ptr<RenderTarget2D> const& source,
+        std::shared_ptr<ConstantBuffer> const& constantBuffer) override;
 
 private:
     std::shared_ptr<SamplerState> samplerLinear;
     std::shared_ptr<PipelineState> pipelineState;
-    std::shared_ptr<ConstantBufferBinding> constantBuffers;
+    std::shared_ptr<ConstantBuffer> constantBufferFishEye;
 };
 
 } // namespace Pomdog

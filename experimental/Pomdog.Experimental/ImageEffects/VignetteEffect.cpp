@@ -5,8 +5,8 @@
 #include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
+#include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
-#include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Graphics/GraphicsCommandList.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -25,6 +25,10 @@ namespace {
 #include "Shaders/GLSL.Embedded/Vignette_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/ScreenQuad_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/Vignette_PS.inc.hpp"
+
+struct VignetteBlock {
+    float Intensity;
+};
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
@@ -48,47 +52,41 @@ VignetteEffect::VignetteEffect(
         .SetGLSL(Builtin_GLSL_Vignette_PS, std::strlen(Builtin_GLSL_Vignette_PS))
         .SetHLSLPrecompiled(BuiltinHLSL_Vignette_PS, sizeof(BuiltinHLSL_Vignette_PS));
 
-    auto builder = assets.CreateBuilder<PipelineState>();
-    pipelineState = builder
+    pipelineState = assets.CreateBuilder<PipelineState>()
         .SetVertexShader(vertexShader.Build())
         .SetPixelShader(pixelShader.Build())
         .SetInputLayout(inputLayout.CreateInputLayout())
         .SetBlendState(BlendDescription::CreateNonPremultiplied())
         .SetDepthStencilState(DepthStencilDescription::CreateNone())
+        .SetConstantBufferBindSlot("ImageEffectConstants", 0)
+        .SetConstantBufferBindSlot("VignetteBlock", 1)
         .Build();
 
-    constantBuffers = builder.CreateConstantBuffers(pipelineState);
+    constantBufferVignette = std::make_shared<ConstantBuffer>(
+        graphicsDevice, sizeof(VignetteBlock), BufferUsage::Dynamic);
 
     SetIntensity(0.5f);
 }
 //-----------------------------------------------------------------------
 void VignetteEffect::SetIntensity(float intensity)
 {
-    struct VignetteBlock {
-        float Intensity;
-    };
-
     VignetteBlock block;
     block.Intensity = intensity;
 
-    auto constantBuffer = constantBuffers->FindConstantBuffer("VignetteBlock");
-    constantBuffer->SetValue(std::move(block));
-}
-//-----------------------------------------------------------------------
-void VignetteEffect::BindConstantBuffer(std::shared_ptr<ConstantBuffer> const& /*constantBuffer*/)
-{
-    //POMDOG_ASSERT(constantBuffer);
-    //constantBuffers->SetConstantBuffer("ImageEffectConstants", constantBuffer);
+    constantBufferVignette->SetValue(std::move(block));
 }
 //-----------------------------------------------------------------------
 void VignetteEffect::Apply(GraphicsCommandList & commandList,
-    std::shared_ptr<RenderTarget2D> const& source)
+    std::shared_ptr<RenderTarget2D> const& source,
+    std::shared_ptr<ConstantBuffer> const& constantBuffer)
 {
     POMDOG_ASSERT(source);
+    POMDOG_ASSERT(constantBuffer);
+    commandList.SetConstantBuffer(0, constantBuffer);
+    commandList.SetConstantBuffer(1, constantBufferVignette);
     commandList.SetSamplerState(0, samplerLinear);
     commandList.SetTexture(0, source);
     commandList.SetPipelineState(pipelineState);
-    commandList.SetConstantBuffers(constantBuffers);
 }
 //-----------------------------------------------------------------------
 } // namespace Pomdog

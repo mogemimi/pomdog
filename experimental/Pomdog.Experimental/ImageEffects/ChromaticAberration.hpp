@@ -17,17 +17,14 @@ public:
         std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         AssetManager & assets);
 
-    void BindConstantBuffer(
-        std::shared_ptr<ConstantBuffer> const& constantBuffer) override;
-
     void Apply(
         GraphicsCommandList & commandList,
-        std::shared_ptr<RenderTarget2D> const& source) override;
+        std::shared_ptr<RenderTarget2D> const& source,
+        std::shared_ptr<ConstantBuffer> const& constantBuffer) override;
 
 private:
     std::shared_ptr<SamplerState> samplerState;
     std::shared_ptr<PipelineState> pipelineState;
-    std::shared_ptr<ConstantBufferBinding> constantBuffers;
 };
 
 } // namespace Pomdog
