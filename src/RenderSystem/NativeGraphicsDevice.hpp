@@ -19,7 +19,7 @@ class NativeRenderTarget2D;
 class NativeSamplerState;
 class NativeTexture2D;
 class ShaderBytecode;
-class ShaderCompileOptions;
+struct ShaderCompileOptions;
 
 enum class BufferBindMode {
     ConstantBuffer,

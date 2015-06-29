@@ -14,26 +14,22 @@ namespace Detail {
 
 using ShaderCompilers::ShaderPipelineStage;
 
-class ShaderModel {
-public:
+struct ShaderModel {
     std::uint8_t Major;
     std::uint8_t Minor;
 };
 
-class ShaderProfile {
-public:
+struct ShaderProfile {
     ShaderModel ShaderModel;
     ShaderPipelineStage PipelineStage;
 };
 
-class ShaderMacro {
-public:
+struct ShaderMacro {
     std::string Name;
     std::string Definition;
 };
 
-class ShaderCompileOptions {
-public:
+struct ShaderCompileOptions {
     std::string EntryPoint;
     std::string CurrentDirectory;
     std::vector<ShaderMacro> PreprocessorMacros;

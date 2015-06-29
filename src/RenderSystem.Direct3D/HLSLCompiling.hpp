@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#ifndef POMDOG_SHADERCOMPILING_C56F5C9E_HPP
-#define POMDOG_SHADERCOMPILING_C56F5C9E_HPP
+#ifndef POMDOG_HLSLCOMPILING_C56F5C9E_HPP
+#define POMDOG_HLSLCOMPILING_C56F5C9E_HPP
 
 #include "PrerequisitesDirect3D.hpp"
 #include <wrl/client.h>
@@ -26,4 +26,4 @@ struct HLSLCompiling {
 } // namespace Detail
 } // namespace Pomdog
 
-#endif // POMDOG_SHADERCOMPILING_C56F5C9E_HPP
+#endif // POMDOG_HLSLCOMPILING_C56F5C9E_HPP
