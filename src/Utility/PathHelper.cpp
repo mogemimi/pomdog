@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "PathHelper.hpp"
+#include "Pomdog/Content/Utility/PathHelper.hpp"
 #include <utility>
 
 namespace Pomdog {
@@ -18,6 +18,23 @@ std::string PathHelper::Join(std::string const& path1, std::string const& path2)
     }
 
     result += path2;
+    return std::move(result);
+}
+//-----------------------------------------------------------------------
+BinaryFileStream PathHelper::OpenStream(std::string const& path)
+{
+    std::ifstream stream(path, std::ios::ate | std::ios::binary);
+    std::size_t fileSize = 0;
+
+    if (stream.is_open()) {
+        fileSize = stream.tellg();
+        stream.clear();
+        stream.seekg(0, stream.beg);
+    }
+
+    BinaryFileStream result;
+    result.Stream = std::move(stream);
+    result.SizeInBytes = fileSize;
     return std::move(result);
 }
 //-----------------------------------------------------------------------

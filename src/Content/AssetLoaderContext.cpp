@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
-#include "../Utility/PathHelper.hpp"
+#include "Pomdog/Content/Utility/PathHelper.hpp"
 #include <utility>
 
 namespace Pomdog {
