@@ -4,7 +4,6 @@
 #include "HLSLCompiling.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "../RenderSystem/ShaderCompileOptions.hpp"
-#include "../Utility/PathHelper.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"

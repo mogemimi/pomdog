@@ -27,7 +27,10 @@ BinaryFileStream PathHelper::OpenStream(std::string const& path)
     std::size_t fileSize = 0;
 
     if (stream.is_open()) {
-        fileSize = stream.tellg();
+        const auto pos = stream.tellg();
+        if (pos > 0) {
+            fileSize = static_cast<std::size_t>(pos);
+        }
         stream.clear();
         stream.seekg(0, stream.beg);
     }

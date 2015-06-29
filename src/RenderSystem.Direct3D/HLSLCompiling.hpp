@@ -12,7 +12,7 @@ namespace Pomdog {
 namespace Detail {
 
 class ShaderBytecode;
-class ShaderCompileOptions;
+struct ShaderCompileOptions;
 
 namespace Direct3D {
 
