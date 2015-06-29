@@ -11,6 +11,9 @@
 #include "detail/ParticleParameterRandom.hpp"
 #include "detail/ParticleParameterRandomCurves.hpp"
 #include "ParticleClip.hpp"
+#include "Pomdog/Content/Utility/BinaryReader.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include <rapidjson/document.h>
 #include <utility>
 #include <fstream>
@@ -19,19 +22,6 @@
 namespace Pomdog {
 namespace Detail {
 namespace {
-//-----------------------------------------------------------------------
-static std::vector<char> ReadBinaryFile(std::string const& path)
-{
-    std::ifstream stream(path, std::ios::in | std::ios::binary);
-
-    stream.seekg(0, stream.end);
-    auto const length = static_cast<std::size_t>(stream.tellg());
-    stream.seekg(0, stream.beg);
-
-    std::vector<char> result(length + 1, '\0');
-    stream.read(result.data(), length);
-    return std::move(result);
-}
 //-----------------------------------------------------------------------
 //static ParticleClip CreateEmitterFireBlock()
 //{
@@ -289,39 +279,44 @@ static ParticleClip ReadParticleClip(rapidjson::Value const& object)
     return std::move(clip);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 
 ParticleClip ParticleLoader::LoadFromJson(AssetManager & assets, std::string const& assetName)
 {
     POMDOG_ASSERT(!assetName.empty());
 
-    auto path = assets.RootDirectory() + "/" + assetName;
-    auto json = ReadBinaryFile(path);
+    using Detail::BinaryReader;
 
+    auto binaryFile = assets.OpenStream(assetName);
+
+    if (!binaryFile.Stream) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file");
+    }
+
+    if (binaryFile.SizeInBytes <= 0) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+    }
+
+    auto json = BinaryReader::ReadString<char>(binaryFile.Stream, binaryFile.SizeInBytes);
     POMDOG_ASSERT(!json.empty());
 
     if (json.empty()) {
-        ///@todo Not implemented
-        // Error
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
     }
 
     rapidjson::Document doc;
     doc.Parse(json.data());
 
-    if (doc.HasParseError() || !doc.IsObject() || doc.MemberBegin() == doc.MemberEnd())
-    {
-        ///@todo Not implemented
-        // Error
-        POMDOG_ASSERT(false);
+    if (doc.HasParseError() || !doc.IsObject() || doc.MemberBegin() == doc.MemberEnd()) {
+        // FUS RO DAH
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to parse JSON");
     }
 
     auto member = doc.MemberBegin();
 
-    if (!member->name.IsString() || !member->value.IsObject())
-    {
-        ///@todo Not implemented
-        // Error
-        POMDOG_ASSERT(false);
+    if (!member->name.IsString() || !member->value.IsObject()) {
+        // FUS RO DAH
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid file format");
     }
 
     POMDOG_ASSERT(member->name.IsString());
@@ -336,5 +331,5 @@ ParticleClip ParticleLoader::Load(AssetManager & assets, std::string const& asse
     return LoadFromJson(assets, assetName);
 }
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

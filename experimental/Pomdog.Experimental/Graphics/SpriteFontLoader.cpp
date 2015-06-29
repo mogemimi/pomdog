@@ -3,6 +3,7 @@
 
 #include "SpriteFontLoader.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include <utility>
 #include <fstream>
 #include <algorithm>
@@ -291,9 +292,15 @@ namespace FilePathHelper {
 std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     AssetManager & assets, std::string const& assetName)
 {
-    std::ifstream stream = assets.OpenStream(assetName);
+    auto binaryFile = assets.OpenStream(assetName);
 
-    POMDOG_ASSERT(stream.is_open());
+    if (!binaryFile.Stream) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file");
+    }
+
+    if (binaryFile.SizeInBytes <= 0) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+    }
 
     std::vector<BitmapFontPage> pages;
     std::vector<Detail::SpriteFonts::Glyph> glyphs;
@@ -303,7 +310,7 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     BitmapFontCommon common;
 
     std::string line;
-    while (std::getline(stream, line))
+    while (std::getline(binaryFile.Stream, line))
     {
         if (line.empty()) {
             continue;
@@ -333,8 +340,8 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     }
 
     if (pages.empty()) {
-        ///@todo Error
-        /// Throw exception
+        // FUS RO DAH
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid file format");
     }
     POMDOG_ASSERT(!pages.empty());
 
@@ -344,8 +351,8 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
 
     std::sort(std::begin(pages), std::end(pages), pageLess);
     if (std::unique(std::begin(pages), std::end(pages), pageLess) != std::end(pages)) {
-        ///@todo Error
-        /// Throw exception
+        // FUS RO DAH
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid file format");
     }
     POMDOG_ASSERT(std::unique(std::begin(pages), std::end(pages), pageLess) == std::end(pages));
 

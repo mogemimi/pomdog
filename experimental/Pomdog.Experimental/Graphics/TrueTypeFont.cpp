@@ -2,9 +2,10 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "TrueTypeFont.hpp"
-#include <Pomdog/Content/Utility/BinaryReader.hpp>
-#include <Pomdog/Math/Point2D.hpp>
-#include <Pomdog/Utility/Assert.hpp>
+#include "Pomdog/Content/Utility/BinaryReader.hpp"
+#include "Pomdog/Math/Point2D.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #define STB_TRUETYPE_IMPLEMENTATION
 #include <stb_truetype.h>
 #include <utility>
@@ -35,22 +36,27 @@ void TrueTypeFont::Impl::Reset()
 //-----------------------------------------------------------------------
 void TrueTypeFont::Impl::LoadFont(AssetManager const& assets, std::string const& fontPath)
 {
-    auto stream = assets.OpenStream(fontPath);
-    if (!stream) {
-        // error
-        return;
+    auto binaryFile = assets.OpenStream(fontPath);
+    if (!binaryFile.Stream) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file");
+    }
+
+    if (binaryFile.SizeInBytes <= 0) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
     }
 
     Reset();
 
     using Pomdog::Detail::BinaryReader;
-    auto size = BinaryReader::GetBinarySize(stream);
-    ttfBinary = BinaryReader::ReadArray<std::uint8_t>(stream, size);
+    ttfBinary = BinaryReader::ReadArray<std::uint8_t>(binaryFile.Stream, binaryFile.SizeInBytes);
 
     const auto offset = stbtt_GetFontOffsetForIndex(ttfBinary.data(), 0);
     if (!stbtt_InitFont(&fontInfo, ttfBinary.data(), offset)) {
-        // error: failed to initialize font
         ttfBinary.clear();
+
+        // FUS RO DAH
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to initialize truetype font");
     }
 }
 //-----------------------------------------------------------------------

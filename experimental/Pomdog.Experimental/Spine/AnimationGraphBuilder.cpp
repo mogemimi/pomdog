@@ -7,6 +7,9 @@
 #include "Pomdog.Experimental/Skeletal2D/detail/AnimationClipNode.hpp"
 #include "Pomdog.Experimental/Skeletal2D/detail/AnimationLerpNode.hpp"
 #include "Pomdog.Experimental/Skeletal2D/AnimationClip.hpp"
+#include "Pomdog/Content/Utility/BinaryReader.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include <rapidjson/document.h>
 #include <fstream>
 #include <vector>
@@ -15,18 +18,7 @@ namespace Pomdog {
 namespace Spine {
 namespace {
 
-static std::vector<char> ReadBinaryFile(std::string const& filename)
-{
-    std::ifstream stream(filename, std::ios::in | std::ios::binary);
-
-    stream.seekg(0, stream.end);
-    auto const length = static_cast<std::size_t>(stream.tellg());
-    stream.seekg(0, stream.beg);
-
-    std::vector<char> result(length + 1, '\0');
-    stream.read(result.data(), length);
-    return std::move(result);
-}
+using Detail::BinaryReader;
 
 enum class AnimationNodeType: std::uint8_t {
     Clip,
@@ -85,30 +77,35 @@ static std::unique_ptr<AnimationNode> CreateAnimationNode(
     }
 }
 
-}// unnamed namespace
+} // unnamed namespace
 
 std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonDesc,
     AssetManager const& assets, std::string const& assetName)
 {
-    auto filename = assets.RootDirectory() + "/" + assetName;
-    auto json = ReadBinaryFile(filename);
+    auto binaryFile = assets.OpenStream(assetName);
 
+    if (!binaryFile.Stream) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file");
+    }
+
+    if (binaryFile.SizeInBytes <= 0) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+    }
+
+    auto json = BinaryReader::ReadString<char>(binaryFile.Stream, binaryFile.SizeInBytes);
     POMDOG_ASSERT(!json.empty());
 
     rapidjson::Document doc;
     doc.Parse(json.data());
 
-    if (doc.HasParseError())
-    {
-        ///@todo Not implemented
-        // Error
-        POMDOG_ASSERT(false);
+    if (doc.HasParseError()) {
+        // FUS RO DAH
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to parse JSON");
     }
 
     if (!doc.IsObject()) {
-        ///@todo Not implemented
-        // Error
-        POMDOG_ASSERT(false);
+        // FUS RO DAH
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid file format");
     }
 
     std::vector<AnimationNodeDesc> nodes;
@@ -197,5 +194,5 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
     return std::move(animationGraph);
 }
 
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog

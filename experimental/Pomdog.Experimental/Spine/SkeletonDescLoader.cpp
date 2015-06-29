@@ -3,6 +3,7 @@
 
 #include "SkeletonDescLoader.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Math/Degree.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -18,19 +19,6 @@ namespace Pomdog {
 namespace Spine {
 namespace {
 
-static std::vector<char> ReadBinaryFile(std::ifstream && streamIn)
-{
-    std::ifstream stream = std::move(streamIn);
-
-    stream.seekg(0, stream.end);
-    auto const length = static_cast<std::size_t>(stream.tellg());
-    stream.seekg(0, stream.beg);
-
-    std::vector<char> result(length + 1, '\0');
-    stream.read(result.data(), length);
-    return std::move(result);
-}
-//-----------------------------------------------------------------------
 static void ReadJsonMember(rapidjson::Value const& object, char const* memberName, std::string & output)
 {
     if (!object.HasMember(memberName)) {
@@ -789,22 +777,31 @@ static std::vector<AnimationClipDesc> ReadAnimationClips(rapidjson::Value const&
     return std::move(animations);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 SkeletonDesc SkeletonDescLoader::Load(AssetManager const& assets, std::string const& assetName)
 {
-    auto json = ReadBinaryFile(assets.OpenStream(assetName));
+    using Detail::BinaryReader;
 
+    auto binaryFile = assets.OpenStream(assetName);
+
+    if (!binaryFile.Stream) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file");
+    }
+
+    if (binaryFile.SizeInBytes <= 0) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+    }
+
+    auto json = BinaryReader::ReadString<char>(binaryFile.Stream, binaryFile.SizeInBytes);
     POMDOG_ASSERT(!json.empty());
 
     rapidjson::Document doc;
     doc.Parse(json.data());
 
-    if (doc.HasParseError() || !doc.IsObject())
-    {
-        ///@todo Not implemented
-        // Error
-        POMDOG_ASSERT(false);
+    if (doc.HasParseError() || !doc.IsObject()) {
+        // FUS RO DAH
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to parse JSON");
     }
 
     Spine::SkeletonDesc skeleton;
@@ -825,5 +822,5 @@ SkeletonDesc SkeletonDescLoader::Load(AssetManager const& assets, std::string co
     return std::move(skeleton);
 }
 //-----------------------------------------------------------------------
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog

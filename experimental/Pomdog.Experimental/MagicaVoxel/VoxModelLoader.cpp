@@ -6,6 +6,7 @@
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <fstream>
 #include <algorithm>
@@ -44,7 +45,8 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
     constexpr auto IdXYZI = MakeFourCC('X', 'Y', 'Z', 'I');
     constexpr auto IdRGBA = MakeFourCC('R', 'G', 'B', 'A');
 
-    std::ifstream stream = assets.OpenStream(assetName);
+    auto binaryFile = assets.OpenStream(assetName);
+    auto & stream = binaryFile.Stream;
 
     if (stream.fail()) {
         POMDOG_THROW_EXCEPTION(std::invalid_argument,

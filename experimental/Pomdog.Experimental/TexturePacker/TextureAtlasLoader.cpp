@@ -4,6 +4,7 @@
 #include "TextureAtlasLoader.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include <utility>
 #include <fstream>
 #include <algorithm>
@@ -37,11 +38,15 @@ static TextureAtlasRegion CreateAtlasRegion(std::string const& line, std::int16_
     return std::move(region);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string const& assetName)
 {
-    std::ifstream stream = assets.OpenStream(assetName);
+    auto binaryFile = assets.OpenStream(assetName);
+
+    if (!binaryFile.Stream) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file");
+    }
 
     TextureAtlas result;
     std::int16_t pageIndex = 0;
@@ -49,7 +54,7 @@ TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string co
     ParserState state = ParserState::PageName;
 
     std::string line;
-    while (std::getline(stream, line)) {
+    while (std::getline(binaryFile.Stream, line)) {
         switch (state) {
         case ParserState::ParsingError: {
             break;
@@ -157,7 +162,7 @@ TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string co
             }
             break;
         }
-        }// switch (state)
+        } // switch (state)
 
         if (state == ParserState::ParsingError) {
             break;
@@ -172,5 +177,5 @@ TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string co
     return std::move(result);
 }
 //-----------------------------------------------------------------------
-}// namespace TexturePacker
-}// namespace Pomdog
+} // namespace TexturePacker
+} // namespace Pomdog
