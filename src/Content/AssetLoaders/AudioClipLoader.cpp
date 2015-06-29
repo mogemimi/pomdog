@@ -2,9 +2,9 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Content/detail/AssetLoaders/AudioClipLoader.hpp"
-#include "../../Utility/PathHelper.hpp"
 #include "../Utility/MSWaveAudioLoader.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
+#include "Pomdog/Content/Utility/PathHelper.hpp"
 #include "Pomdog/Audio/AudioClip.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"

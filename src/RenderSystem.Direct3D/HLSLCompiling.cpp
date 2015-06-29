@@ -7,6 +7,8 @@
 #include "../Utility/PathHelper.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Content/Utility/BinaryReader.hpp"
+#include "Pomdog/Content/Utility/PathHelper.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -52,20 +54,6 @@ static std::string ToString(ShaderProfile const& profile)
     return std::move(output);
 }
 //-----------------------------------------------------------------------
-static std::vector<std::uint8_t> ReadBinaryFile(std::ifstream && streamIn)
-{
-    std::ifstream stream = std::move(streamIn);
-    POMDOG_ASSERT(stream);
-
-    stream.seekg(0, stream.end);
-    auto const length = static_cast<std::size_t>(stream.tellg());
-    stream.seekg(0, stream.beg);
-
-    std::vector<std::uint8_t> result(length + 1, 0);
-    stream.read(reinterpret_cast<char*>(result.data()), result.size());
-    return std::move(result);
-}
-//-----------------------------------------------------------------------
 class HLSLCodeInclude : public ID3DInclude {
 private:
     std::string currentDirectory;
@@ -107,14 +95,20 @@ public:
         Log::Internal(StringHelper::Format("include shader file : %s", includePath.c_str()));
 #endif
 
-        std::ifstream stream(includePath);
+        auto binaryFile = PathHelper::OpenStream(includePath);
 
-        if (stream) {
+        if (!binaryFile.Stream) {
             Log::Internal(StringHelper::Format("Could not find a shader source file %s", includePath.c_str()));
             return E_FAIL;
         }
 
-        outputSource = ReadBinaryFile(std::move(stream));
+        if (binaryFile.SizeInBytes <= 0) {
+            Log::Internal(StringHelper::Format("The file is too small %s", includePath.c_str()));
+            return E_FAIL;
+        }
+
+        outputSource = BinaryReader::ReadString<std::uint8_t>(
+            binaryFile.Stream, binaryFile.SizeInBytes);
 
         *ppData = outputSource.data();
         *pBytes = static_cast<UINT>(outputSource.size());

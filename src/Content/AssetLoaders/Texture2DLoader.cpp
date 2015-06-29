@@ -42,14 +42,14 @@ static bool IsDDSFormat(std::array<std::uint8_t, 8> const& signature)
 std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(
     AssetLoaderContext const& loaderContext, std::string const& assetName)
 {
-    std::ifstream stream = loaderContext.OpenStream(assetName);
+    auto binaryFile = loaderContext.OpenStream(assetName);
+    auto & stream = binaryFile.Stream;
 
     if (stream.fail()) {
         POMDOG_THROW_EXCEPTION(std::invalid_argument, "Cannot open file: " + assetName);
     }
 
-    auto const fileSize = BinaryReader::GetBinarySize(stream);
-    if (fileSize < (sizeof(std::uint8_t) * 8)) {
+    if (binaryFile.SizeInBytes < (sizeof(std::uint8_t) * 8)) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
     }
 
@@ -64,7 +64,7 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(
 
         POMDOG_ASSERT(stream.tellg() == std::streampos(SignatureLength));
 
-        std::vector<std::uint8_t> binaryWithoutSignature(fileSize - SignatureLength);
+        std::vector<std::uint8_t> binaryWithoutSignature(binaryFile.SizeInBytes - SignatureLength);
         stream.read(reinterpret_cast<char*>(binaryWithoutSignature.data()), binaryWithoutSignature.size());
 
         auto graphicsDevice = loaderContext.GraphicsDevice.lock();
@@ -78,7 +78,7 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(
 
         stream.seekg(FourCCLength, stream.beg);
 
-        std::vector<std::uint8_t> binaryWithoutFourCC(fileSize - FourCCLength);
+        std::vector<std::uint8_t> binaryWithoutFourCC(binaryFile.SizeInBytes - FourCCLength);
         stream.read(reinterpret_cast<char*>(binaryWithoutFourCC.data()), binaryWithoutFourCC.size());
 
         auto graphicsDevice = loaderContext.GraphicsDevice.lock();

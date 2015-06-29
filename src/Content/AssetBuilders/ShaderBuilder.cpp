@@ -2,8 +2,8 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
-#include "../../Utility/PathHelper.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
+#include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/GLSLCompiler.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/HLSLCompiler.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/ShaderPipelineStage.hpp"
@@ -18,30 +18,12 @@
 
 namespace Pomdog {
 namespace AssetBuilders {
-namespace {
 
+using Detail::BinaryReader;
 using ShaderCompilers::GLSLCompiler;
 using ShaderCompilers::HLSLCompiler;
 using ShaderCompilers::ShaderPipelineStage;
 
-static std::vector<std::uint8_t> ReadBinaryFile(std::ifstream && streamIn)
-{
-    std::ifstream stream = std::move(streamIn);
-
-    if (!stream) {
-        return {};
-    }
-
-    stream.seekg(0, stream.end);
-    auto const length = static_cast<std::size_t>(stream.tellg());
-    stream.seekg(0, stream.beg);
-
-    std::vector<std::uint8_t> result(length + 1, 0);
-    stream.read(reinterpret_cast<char*>(result.data()), result.size());
-    return std::move(result);
-}
-
-} // unnamed namespace
 //-----------------------------------------------------------------------
 // explicit instantiations
 template class Builder<Shader>;
@@ -58,6 +40,11 @@ public:
 
 public:
     explicit Impl(Detail::AssetLoaderContext const& context);
+
+    std::shared_ptr<GraphicsDevice> GetDevice()
+    {
+        return loaderContext.get().GraphicsDevice.lock();
+    }
 };
 //-----------------------------------------------------------------------
 Builder<Shader>::Impl::Impl(Detail::AssetLoaderContext const& contextIn)
@@ -90,7 +77,7 @@ Builder<Shader> & Builder<Shader>::SetGLSL(
     POMDOG_ASSERT(shaderSourceIn != nullptr);
     POMDOG_ASSERT(byteLengthIn > 0);
 
-    auto graphicsDevice = impl->loaderContext.get().GraphicsDevice.lock();
+    auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL)
@@ -102,19 +89,30 @@ Builder<Shader> & Builder<Shader>::SetGLSL(
     return *this;
 }
 //-----------------------------------------------------------------------
-Builder<Shader> & Builder<Shader>::SetGLSLFromFile(std::string const& filePath)
+Builder<Shader> & Builder<Shader>::SetGLSLFromFile(std::string const& assetName)
 {
-    POMDOG_ASSERT(!filePath.empty());
+    POMDOG_ASSERT(!assetName.empty());
 
-    auto graphicsDevice = impl->loaderContext.get().GraphicsDevice.lock();
+    auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL)
     {
-        impl->shaderBlob = ReadBinaryFile(impl->loaderContext.get().OpenStream(filePath));
+        auto binaryFile = impl->loaderContext.get().OpenStream(assetName);
+
+        if (!binaryFile.Stream) {
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
+        }
+
+        if (binaryFile.SizeInBytes <= 0) {
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+        }
+
+        impl->shaderBlob = BinaryReader::ReadString<std::uint8_t>(
+            binaryFile.Stream, binaryFile.SizeInBytes);
+
         if (impl->shaderBlob.empty()) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error,
-                "Failed to open file.");
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
         }
 
         impl->shaderSource = impl->shaderBlob.data();
@@ -131,7 +129,7 @@ Builder<Shader> & Builder<Shader>::SetHLSL(
     POMDOG_ASSERT(byteLengthIn > 0);
     POMDOG_ASSERT(!entryPointIn.empty());
 
-    auto graphicsDevice = impl->loaderContext.get().GraphicsDevice.lock();
+    auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL)
@@ -150,7 +148,7 @@ Builder<Shader> & Builder<Shader>::SetHLSLPrecompiled(
     POMDOG_ASSERT(shaderSourceIn != nullptr);
     POMDOG_ASSERT(byteLengthIn > 0);
 
-    auto graphicsDevice = impl->loaderContext.get().GraphicsDevice.lock();
+    auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL)
@@ -163,20 +161,31 @@ Builder<Shader> & Builder<Shader>::SetHLSLPrecompiled(
 }
 //-----------------------------------------------------------------------
 Builder<Shader> & Builder<Shader>::SetHLSLFromFile(
-    std::string const& filePath, std::string const& entryPointIn)
+    std::string const& assetName, std::string const& entryPointIn)
 {
-    POMDOG_ASSERT(!filePath.empty());
+    POMDOG_ASSERT(!assetName.empty());
     POMDOG_ASSERT(!entryPointIn.empty());
 
-    auto graphicsDevice = impl->loaderContext.get().GraphicsDevice.lock();
+    auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL)
     {
-        impl->shaderBlob = ReadBinaryFile(impl->loaderContext.get().OpenStream(filePath));
+        auto binaryFile = impl->loaderContext.get().OpenStream(assetName);
+
+        if (!binaryFile.Stream) {
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
+        }
+
+        if (binaryFile.SizeInBytes <= 0) {
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+        }
+
+        impl->shaderBlob = BinaryReader::ReadString<std::uint8_t>(
+            binaryFile.Stream, binaryFile.SizeInBytes);
+
         if (impl->shaderBlob.empty()) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error,
-                "Failed to open file.");
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
         }
 
         impl->shaderSource = impl->shaderBlob.data();
@@ -189,7 +198,7 @@ Builder<Shader> & Builder<Shader>::SetHLSLFromFile(
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> Builder<Shader>::Build()
 {
-    auto graphicsDevice = impl->loaderContext.get().GraphicsDevice.lock();
+    auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
     POMDOG_ASSERT(impl->shaderSource != nullptr);

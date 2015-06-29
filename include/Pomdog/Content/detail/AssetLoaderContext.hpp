@@ -5,14 +5,12 @@
 #define POMDOG_ASSETLOADERCONTEXT_E4996CA2_HPP
 
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Content/Utility/BinaryFileStream.hpp"
 #include <memory>
 #include <string>
-#include <fstream>
 
 namespace Pomdog {
-
-class GraphicsDevice;
-
 namespace Detail {
 
 class POMDOG_EXPORT AssetLoaderContext {
@@ -20,7 +18,7 @@ public:
     std::string RootDirectory;
     std::weak_ptr<Pomdog::GraphicsDevice> GraphicsDevice;
 
-    std::ifstream OpenStream(std::string const& assetName) const;
+    BinaryFileStream OpenStream(std::string const& assetName) const;
 };
 
 } // namespace Detail

@@ -8,11 +8,10 @@
 namespace Pomdog {
 namespace Detail {
 //-----------------------------------------------------------------------
-std::ifstream AssetLoaderContext::OpenStream(std::string const& assetName) const
+BinaryFileStream AssetLoaderContext::OpenStream(std::string const& assetName) const
 {
-    auto path = PathHelper::Join(RootDirectory, assetName);
-    std::ifstream stream(path, std::ios::in | std::ios::binary);
-    return std::move(stream);
+    auto filePath = PathHelper::Join(RootDirectory, assetName);
+    return PathHelper::OpenStream(filePath);
 }
 //-----------------------------------------------------------------------
 } // namespace Detail

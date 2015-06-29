@@ -16,24 +16,17 @@ namespace Pomdog {
 namespace Detail {
 
 struct POMDOG_EXPORT BinaryReader {
-    template <class Stream>
-    static std::size_t GetBinarySize(Stream & stream)
-    {
-        ///@todo This code is NOT secure.
-        stream.seekg(0, stream.end);
-        auto const byteLength = static_cast<std::size_t>(stream.tellg());
-        stream.seekg(0, stream.beg);
-        return byteLength;
-    }
-
     template <typename T, class Stream>
     static std::vector<T> ReadArray(Stream & stream, std::size_t elementCount)
     {
         static_assert(std::is_pod<T>::value, "You can only use POD types.");
 
+        POMDOG_ASSERT(stream);
         POMDOG_ASSERT(elementCount > 0);
 
-        std::vector<T> result(elementCount);
+        std::vector<T> result;
+        result.reserve(elementCount + 1);
+        result.resize(elementCount);
         stream.read(reinterpret_cast<char*>(result.data()), sizeof(T) * result.size());
         return std::move(result);
     }
@@ -42,6 +35,7 @@ struct POMDOG_EXPORT BinaryReader {
     static std::array<T, ElementCount> ReadArray(Stream & stream)
     {
         static_assert(std::is_pod<T>::value, "You can only use POD types.");
+        POMDOG_ASSERT(stream);
 
         std::array<T, ElementCount> result;
         stream.read(reinterpret_cast<char*>(result.data()), sizeof(T) * result.size());
@@ -51,8 +45,20 @@ struct POMDOG_EXPORT BinaryReader {
     template <typename T, class Stream>
     static T Read(Stream & stream)
     {
+        POMDOG_ASSERT(stream);
         static_assert(std::is_pod<T>::value, "You can only use POD types.");
         return std::move(ReadArray<T, 1>(stream)[0]);
+    }
+
+    template <typename T, class Stream>
+    static std::vector<T> ReadString(Stream & stream, std::size_t elementCount)
+    {
+        static_assert(std::is_integral<T>::value, "You can only use POD types.");
+        auto result = ReadArray<T>(stream, elementCount);
+
+        // Insert null at the end of a charater array
+        result.push_back(0);
+        return std::move(result);
     }
 
     template <typename T>

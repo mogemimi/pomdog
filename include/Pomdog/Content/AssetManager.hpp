@@ -33,7 +33,7 @@ public:
 
     std::string RootDirectory() const;
 
-    std::ifstream OpenStream(std::string const& assetName) const;
+    Detail::BinaryFileStream OpenStream(std::string const& assetName) const;
 
 private:
     Detail::AssetLoaderContext loaderContext;
