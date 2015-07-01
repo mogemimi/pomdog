@@ -7,16 +7,14 @@
 #include <cstdint>
 
 namespace Pomdog {
-namespace ShaderCompilers {
 
-enum class ShaderPipelineStage: std::uint8_t {
+enum class ShaderPipelineStage : std::uint8_t {
     VertexShader,
     PixelShader,
     //GeometryShader,
     //ComputeShader,
 };
 
-} // namespace ShaderCompilers
 } // namespace Pomdog
 
 #endif // POMDOG_SHADERPIPELINESTAGE_DCDFCEA1_HPP

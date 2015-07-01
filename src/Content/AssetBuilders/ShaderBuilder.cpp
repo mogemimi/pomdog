@@ -6,10 +6,10 @@
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/GLSLCompiler.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/HLSLCompiler.hpp"
-#include "Pomdog/Graphics/ShaderCompilers/ShaderPipelineStage.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
+#include "Pomdog/Graphics/ShaderPipelineStage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <fstream>
@@ -22,7 +22,6 @@ namespace AssetBuilders {
 using Detail::BinaryReader;
 using ShaderCompilers::GLSLCompiler;
 using ShaderCompilers::HLSLCompiler;
-using ShaderCompilers::ShaderPipelineStage;
 
 //-----------------------------------------------------------------------
 // explicit instantiations
@@ -32,7 +31,7 @@ class Builder<Shader>::Impl {
 public:
     std::reference_wrapper<Detail::AssetLoaderContext const> loaderContext;
     std::vector<std::uint8_t> shaderBlob;
-    ShaderCompilers::ShaderPipelineStage pipelineStage;
+    ShaderPipelineStage pipelineStage;
     void const* shaderSource;
     std::size_t byteLength;
     std::string entryPoint;

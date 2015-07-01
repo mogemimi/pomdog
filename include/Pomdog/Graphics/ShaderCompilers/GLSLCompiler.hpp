@@ -4,7 +4,7 @@
 #ifndef POMDOG_GLSLCOMPILER_9FED2927_HPP
 #define POMDOG_GLSLCOMPILER_9FED2927_HPP
 
-#include "ShaderPipelineStage.hpp"
+#include "Pomdog/Graphics/ShaderPipelineStage.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <cstddef>

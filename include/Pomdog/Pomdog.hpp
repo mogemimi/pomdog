@@ -89,6 +89,7 @@
 #include "Graphics/SamplerState.hpp"
 #include "Graphics/Shader.hpp"
 #include "Graphics/ShaderLanguage.hpp"
+#include "Graphics/ShaderPipelineStage.hpp"
 #include "Graphics/StencilOperation.hpp"
 #include "Graphics/SurfaceFormat.hpp"
 #include "Graphics/Texture.hpp"
@@ -98,8 +99,6 @@
 #include "Graphics/VertexBuffer.hpp"
 #include "Graphics/VertexBufferBinding.hpp"
 #include "Graphics/Viewport.hpp"
-#include "Graphics/ShaderCompilers/GLSLCompiler.hpp"
-#include "Graphics/ShaderCompilers/HLSLCompiler.hpp"
 
 #include "Input/ButtonState.hpp"
 #include "Input/Gamepad.hpp"

@@ -4,15 +4,13 @@
 #ifndef POMDOG_SHADERCOMPILEOPTIONS_11A9FF1A_HPP
 #define POMDOG_SHADERCOMPILEOPTIONS_11A9FF1A_HPP
 
-#include "Pomdog/Graphics/ShaderCompilers/ShaderPipelineStage.hpp"
+#include "Pomdog/Graphics/ShaderPipelineStage.hpp"
 #include <cstdint>
 #include <vector>
 #include <string>
 
 namespace Pomdog {
 namespace Detail {
-
-using ShaderCompilers::ShaderPipelineStage;
 
 struct ShaderModel {
     std::uint8_t Major;

@@ -4,7 +4,7 @@
 #ifndef POMDOG_HLSLCOMPILER_223CB751_HPP
 #define POMDOG_HLSLCOMPILER_223CB751_HPP
 
-#include "ShaderPipelineStage.hpp"
+#include "Pomdog/Graphics/ShaderPipelineStage.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <cstddef>
