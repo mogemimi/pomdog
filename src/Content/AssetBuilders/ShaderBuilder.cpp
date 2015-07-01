@@ -55,19 +55,16 @@ Builder<Shader>::Impl::Impl(Detail::AssetLoaderContext const& contextIn)
 {
 }
 //-----------------------------------------------------------------------
-Builder<Shader>::Builder(Detail::AssetLoaderContext const& contextIn)
+Builder<Shader>::Builder(
+    Detail::AssetLoaderContext const& contextIn,
+    ShaderPipelineStage pipelineStageIn)
     : impl(std::make_shared<Impl>(contextIn))
-{}
-//-----------------------------------------------------------------------
-Builder<Shader>::~Builder() = default;
-//-----------------------------------------------------------------------
-Builder<Shader> & Builder<Shader>::SetPipelineStage(
-    ShaderCompilers::ShaderPipelineStage pipelineStageIn)
 {
     POMDOG_ASSERT(impl);
     impl->pipelineStage = pipelineStageIn;
-    return *this;
 }
+//-----------------------------------------------------------------------
+Builder<Shader>::~Builder() = default;
 //-----------------------------------------------------------------------
 Builder<Shader> & Builder<Shader>::SetGLSL(
     void const* shaderSourceIn, std::size_t byteLengthIn)

@@ -86,13 +86,11 @@ PolygonBatch::Impl::Impl(
         auto inputLayout = InputLayoutHelper{}
             .Float3().Float4();
 
-        auto vertexShader = assets.CreateBuilder<Shader>()
-            .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
+        auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
             .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_VS, sizeof(BuiltinHLSL_LineBatch_VS));
 
-        auto pixelShader = assets.CreateBuilder<Shader>()
-            .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
+        auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS));
 

@@ -43,13 +43,11 @@ FishEyeEffect::FishEyeEffect(
     auto inputLayout = InputLayoutHelper{}
         .Float3().Float2();
 
-    auto vertexShader = assets.CreateBuilder<Shader>()
-        .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
+    auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
         .SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
         .SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS));
 
-    auto pixelShader = assets.CreateBuilder<Shader>()
-        .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
+    auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
         .SetGLSL(Builtin_GLSL_FishEye_PS, std::strlen(Builtin_GLSL_FishEye_PS))
         .SetHLSLPrecompiled(BuiltinHLSL_FishEye_PS, sizeof(BuiltinHLSL_FishEye_PS));
 

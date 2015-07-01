@@ -75,13 +75,11 @@ void QuickStartGame::Initialize()
             .Float3()
             .Float2();
 
-        auto vertexShader = assets->CreateBuilder<Shader>()
-            .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
+        auto vertexShader = assets->CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSLFromFile("SimpleEffect_VS.glsl")
             .SetHLSLFromFile("SimpleEffect_VS.hlsl", "SimpleEffectVS");
 
-        auto pixelShader = assets->CreateBuilder<Shader>()
-            .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
+        auto pixelShader = assets->CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSLFromFile("SimpleEffect_PS.glsl")
             .SetHLSLFromFile("SimpleEffect_PS.hlsl", "SimpleEffectPS");
 

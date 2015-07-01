@@ -24,7 +24,9 @@ namespace AssetBuilders {
 template <>
 class POMDOG_EXPORT Builder<Shader> {
 public:
-    explicit Builder(Detail::AssetLoaderContext const& loaderContext);
+    Builder(
+        Detail::AssetLoaderContext const& loaderContext,
+        ShaderPipelineStage pipelineStage);
 
     Builder(Builder &&) = default;
     Builder(Builder const&) = default;
@@ -32,8 +34,6 @@ public:
     Builder & operator=(Builder const&) = default;
 
     ~Builder();
-
-    Builder & SetPipelineStage(ShaderCompilers::ShaderPipelineStage pipelineStage);
 
     Builder & SetGLSL(void const* shaderSource, std::size_t byteLength);
 

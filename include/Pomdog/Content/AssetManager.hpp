@@ -22,10 +22,11 @@ public:
         return assets.Load<T>(loaderContext, assetName);
     }
 
-    template <typename T>
-    AssetBuilders::Builder<T> CreateBuilder()
+    template <typename T, typename ...Arguments>
+    AssetBuilders::Builder<T> CreateBuilder(Arguments && ...arguments)
     {
-        AssetBuilders::Builder<T> builder(loaderContext);
+        AssetBuilders::Builder<T> builder(loaderContext,
+            std::forward<Arguments>(arguments)...);
         return std::move(builder);
     }
 

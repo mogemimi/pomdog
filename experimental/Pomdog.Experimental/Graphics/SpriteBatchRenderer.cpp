@@ -186,13 +186,11 @@ SpriteBatchRenderer::Impl::Impl(
             .AddInputSlot(InputClassification::InputPerInstance, 1)
             .Float4().Float4().Float4().Float4().Float4();
 
-        auto vertexShader = assets.CreateBuilder<Shader>()
-            .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
+        auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_SpriteBatchRenderer_VS, std::strlen(Builtin_GLSL_SpriteBatchRenderer_VS))
             .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatchRenderer_VS, sizeof(BuiltinHLSL_SpriteBatchRenderer_VS));
 
-        auto pixelShader = assets.CreateBuilder<Shader>()
-            .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
+        auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_SpriteBatchRenderer_PS, std::strlen(Builtin_GLSL_SpriteBatchRenderer_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatchRenderer_PS, sizeof(BuiltinHLSL_SpriteBatchRenderer_PS));
 

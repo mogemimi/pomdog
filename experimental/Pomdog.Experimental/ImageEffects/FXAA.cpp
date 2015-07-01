@@ -36,13 +36,11 @@ FXAA::FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     auto inputLayout = InputLayoutHelper{}
         .Float3().Float2();
 
-    auto vertexShader = assets.CreateBuilder<Shader>()
-        .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::VertexShader)
+    auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
         .SetGLSL(Builtin_GLSL_FXAA_VS, std::strlen(Builtin_GLSL_FXAA_VS))
         .SetHLSLPrecompiled(BuiltinHLSL_FXAA_VS, sizeof(BuiltinHLSL_FXAA_VS));
 
-    auto pixelShader = assets.CreateBuilder<Shader>()
-        .SetPipelineStage(ShaderCompilers::ShaderPipelineStage::PixelShader)
+    auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
         .SetGLSL(Builtin_GLSL_FXAA_PS, std::strlen(Builtin_GLSL_FXAA_PS))
         .SetHLSLPrecompiled(BuiltinHLSL_FXAA_PS, sizeof(BuiltinHLSL_FXAA_PS));
 
