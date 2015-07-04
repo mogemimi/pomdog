@@ -69,6 +69,11 @@
             'Platform.Cocoa/GameViewController.mm',
           ],
         }],
+        ['OS == "linux"', {
+          'sources': [
+            'Platform.X11/main.cpp',
+          ],
+        }],
       ],
       'mac_bundle_resources': [
         'Platform.Cocoa/Base.lproj/MainMenu.xib',
