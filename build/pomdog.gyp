@@ -1,9 +1,5 @@
 {
   'includes': ['common.gypi'],
-  'make_global_settings': [
-    ['CXX','/usr/bin/clang++'],
-    ['LINK','/usr/bin/clang++'],
-  ],
   'conditions': [
     ['OS == "win"', {
       'variables': {

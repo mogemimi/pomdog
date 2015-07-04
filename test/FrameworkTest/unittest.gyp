@@ -3,10 +3,6 @@
     'pomdog_dir%': '../..',
   },
   'includes': ['../../build/common.gypi'],
-  'make_global_settings': [
-    ['CXX','/usr/bin/clang++'],
-    ['LINK','/usr/bin/clang++'],
-  ],
   'target_defaults': {
     'include_dirs': [
       '<@(pomdog_dir)/include',
