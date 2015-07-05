@@ -10,7 +10,8 @@
 #include <OpenAL/al.h>
 #include <OpenAL/alc.h>
 #elif defined(POMDOG_PLATFORM_LINUX)
-#// TODO
+#include <AL/al.h>
+#include <AL/alc.h>
 #endif
 
 #endif // POMDOG_PREREQUISITESOPENAL_0DE392F4_HPP

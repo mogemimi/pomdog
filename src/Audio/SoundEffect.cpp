@@ -5,6 +5,8 @@
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
 #include "../SoundSystem.OpenAL/SoundEffectAL.hpp"
+#elif defined(POMDOG_PLATFORM_LINUX)
+#include "../SoundSystem.OpenAL/SoundEffectAL.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "../SoundSystem.XAudio2/SoundEffectXAudio2.hpp"
 #endif

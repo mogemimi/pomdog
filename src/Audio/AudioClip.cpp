@@ -5,6 +5,8 @@
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
 #include "../SoundSystem.OpenAL/AudioClipAL.hpp"
+#elif defined(POMDOG_PLATFORM_LINUX)
+#include "../SoundSystem.OpenAL/AudioClipAL.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "../SoundSystem.XAudio2/AudioClipXAudio2.hpp"
 #endif

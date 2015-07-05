@@ -10,7 +10,9 @@ namespace Pomdog {
 namespace Detail {
 namespace SoundSystem {
 
-#if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
+#if defined(POMDOG_PLATFORM_MACOSX) \
+    || defined(POMDOG_PLATFORM_APPLE_IOS) \
+    || defined(POMDOG_PLATFORM_LINUX)
 
 namespace OpenAL {
 

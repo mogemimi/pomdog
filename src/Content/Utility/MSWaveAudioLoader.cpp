@@ -40,6 +40,7 @@ static AudioChannels ToAudioChannels(std::uint32_t channels)
     }
     return AudioChannels::Mono;
 }
+//-----------------------------------------------------------------------
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
 //-----------------------------------------------------------------------
 static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
@@ -157,6 +158,7 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 
     return std::move(audioClip);
 }
+//-----------------------------------------------------------------------
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 //-----------------------------------------------------------------------
 static MMCKINFO ReadRiffChunk(HMMIO ioHandle)
@@ -359,6 +361,15 @@ static std::unique_ptr<AudioClip> LoadMSWave_Win32(std::string const& filePath)
         throw e;
     }
 }
+//-----------------------------------------------------------------------
+#elif defined(POMDOG_PLATFORM_LINUX)
+//-----------------------------------------------------------------------
+static std::unique_ptr<AudioClip> LoadMSWave_Linux(std::string const& filePath)
+{
+    // FUS RO DAH!
+    ///@todo Please implement!
+    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+}
 #endif
 } // unnamed namespace
  //-----------------------------------------------------------------------
@@ -368,6 +379,8 @@ std::unique_ptr<AudioClip> MSWaveAudioLoader::Load(std::string const& filePath)
     return LoadMSWave_Apple(filePath);
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
     return LoadMSWave_Win32(filePath);
+#elif defined(POMDOG_PLATFORM_LINUX)
+    return LoadMSWave_Linux(filePath);
 #else
 #error "TODO: Not implemented"
 #endif
