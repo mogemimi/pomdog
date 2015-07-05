@@ -10,6 +10,9 @@
 #if defined(_MSC_VER)
 #include <xutility>
 #endif
+#if defined(linux) || defined(__linux) || defined(__linux__)
+#include <csignal>
+#endif
 
 namespace Pomdog {
 namespace Detail {
@@ -71,7 +74,7 @@ inline constexpr bool ConstexprAssert(bool condition,
 #    define POMDOG_ASSERT_MESSAGE(expression, message) \
         do {\
             if (!(expression)) {\
-                assert(message && expression) \
+                assert(message && expression); \
                 POMDOG_DEBUGBREAK(); \
             }\
         } while(false)
