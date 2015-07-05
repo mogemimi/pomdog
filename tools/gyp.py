@@ -119,9 +119,16 @@ def CreateVcxprojUserFile(outputDirectory, gypFile):
 
 
 def GenerateProjects(gypFile, format, options = None, verbose = False):
+    if not os.path.exists(gypFile):
+        print('[Error] File does not exist: ' + gypFile)
+        return
+    if os.path.isdir(gypFile):
+        print('[Error] \'' + gypFile + '\' is directory.')
+        return
+
     head, tail = os.path.split(os.path.normpath(os.path.dirname(gypFile)))
     if head == 'examples':
-        pathOption = ' -Dpomdog_dir=../../'
+        pathOption = ' -Dpomdog_dir=../..'
         options = options + pathOption if options else pathOption
 
     gypCommand = CreateGYPCommands(gypFile, format, options)

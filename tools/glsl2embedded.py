@@ -116,8 +116,7 @@ def CreateEmbeddedCode(identifier, content):
 
 
 def ParsingCommandLineAraguments():
-    parser = argparse.ArgumentParser(prog='skeleton_generator',
-                                     description='Convert GLSL to embedded C++ code.')
+    parser = argparse.ArgumentParser(description='Convert GLSL to embedded C++ code.')
     parser.add_argument('identifier', default='def')
     parser.add_argument('-v', '--version', action='version', version='%(prog)s version 0.1.0')
     args = parser.parse_args()
