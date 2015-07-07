@@ -23,8 +23,8 @@ public:
 
     BoundingBox2D(Vector2 const& min, Vector2 const& max);
 
-    bool operator==(BoundingBox2D const&) const;
-    bool operator!=(BoundingBox2D const&) const;
+    bool operator==(BoundingBox2D const&) const noexcept;
+    bool operator!=(BoundingBox2D const&) const noexcept;
 
     ContainmentType Contains(Vector2 const& point) const;
 

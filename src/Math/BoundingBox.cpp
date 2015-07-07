@@ -15,13 +15,13 @@ BoundingBox::BoundingBox(Vector3 const& minIn, Vector3 const& maxIn)
     : Min(minIn), Max(maxIn)
 {}
 //-----------------------------------------------------------------------
-bool BoundingBox::operator==(BoundingBox const& box) const
+bool BoundingBox::operator==(BoundingBox const& box) const noexcept
 {
     return this->Max == box.Max
         && this->Min == box.Min;
 }
 //-----------------------------------------------------------------------
-bool BoundingBox::operator!=(BoundingBox const& box) const
+bool BoundingBox::operator!=(BoundingBox const& box) const noexcept
 {
     return this->Max != box.Max
         || this->Min != box.Min;

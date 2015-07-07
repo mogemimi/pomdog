@@ -16,13 +16,13 @@ BoundingSphere::BoundingSphere(Vector3 const& center, float radius)
     POMDOG_ASSERT(radius >= 0);
 }
 //-----------------------------------------------------------------------
-bool BoundingSphere::operator==(BoundingSphere const& sphere) const
+bool BoundingSphere::operator==(BoundingSphere const& sphere) const noexcept
 {
     return this->Radius == sphere.Radius
         && this->Center == sphere.Center;
 }
 //-----------------------------------------------------------------------
-bool BoundingSphere::operator!=(BoundingSphere const& sphere) const
+bool BoundingSphere::operator!=(BoundingSphere const& sphere) const noexcept
 {
     return this->Radius != sphere.Radius
         || this->Center != sphere.Center;

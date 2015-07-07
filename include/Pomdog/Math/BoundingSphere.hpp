@@ -21,8 +21,8 @@ public:
 
     BoundingSphere(Vector3 const& center, float radius);
 
-    bool operator==(BoundingSphere const&) const;
-    bool operator!=(BoundingSphere const&) const;
+    bool operator==(BoundingSphere const&) const noexcept;
+    bool operator!=(BoundingSphere const&) const noexcept;
 
     ContainmentType Contains(Vector3 const& point) const;
 

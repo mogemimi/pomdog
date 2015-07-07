@@ -14,13 +14,13 @@ BoundingBox2D::BoundingBox2D(Vector2 const& minIn, Vector2 const& maxIn)
     : Min(minIn), Max(maxIn)
 {}
 //-----------------------------------------------------------------------
-bool BoundingBox2D::operator==(BoundingBox2D const& box) const
+bool BoundingBox2D::operator==(BoundingBox2D const& box) const noexcept
 {
     return this->Max == box.Max
         && this->Min == box.Min;
 }
 //-----------------------------------------------------------------------
-bool BoundingBox2D::operator!=(BoundingBox2D const& box) const
+bool BoundingBox2D::operator!=(BoundingBox2D const& box) const noexcept
 {
     return this->Max != box.Max
         || this->Min != box.Min;

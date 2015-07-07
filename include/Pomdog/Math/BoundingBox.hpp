@@ -24,8 +24,8 @@ public:
 
     BoundingBox(Vector3 const& min, Vector3 const& max);
 
-    bool operator==(BoundingBox const&) const;
-    bool operator!=(BoundingBox const&) const;
+    bool operator==(BoundingBox const&) const noexcept;
+    bool operator!=(BoundingBox const&) const noexcept;
 
     ContainmentType Contains(Vector3 const& point) const;
 

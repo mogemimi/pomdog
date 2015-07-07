@@ -15,13 +15,13 @@ BoundingCircle::BoundingCircle(Vector2 const& center, float radius)
     POMDOG_ASSERT(radius >= 0);
 }
 //-----------------------------------------------------------------------
-bool BoundingCircle::operator==(BoundingCircle const& circle) const
+bool BoundingCircle::operator==(BoundingCircle const& circle) const noexcept
 {
     return this->Radius == circle.Radius
         && this->Center == circle.Center;
 }
 //-----------------------------------------------------------------------
-bool BoundingCircle::operator!=(BoundingCircle const& circle) const
+bool BoundingCircle::operator!=(BoundingCircle const& circle) const noexcept
 {
     return this->Radius != circle.Radius
         || this->Center != circle.Center;

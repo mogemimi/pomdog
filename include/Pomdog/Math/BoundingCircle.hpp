@@ -20,8 +20,8 @@ public:
 
     BoundingCircle(Vector2 const& center, float radius);
 
-    bool operator==(BoundingCircle const&) const;
-    bool operator!=(BoundingCircle const&) const;
+    bool operator==(BoundingCircle const&) const noexcept;
+    bool operator!=(BoundingCircle const&) const noexcept;
 
     ContainmentType Contains(Vector2 const& box) const;
 
