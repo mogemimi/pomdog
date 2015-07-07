@@ -4,20 +4,15 @@
 #ifndef POMDOG_MSWAVEAUDIOLOADER_8808FBBE_HPP
 #define POMDOG_MSWAVEAUDIOLOADER_8808FBBE_HPP
 
-#include "Pomdog/Audio/AudioChannels.hpp"
-#include "Pomdog/Application/Duration.hpp"
-#include <cstdint>
+#include "Pomdog/Audio/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Content/Utility/BinaryFileStream.hpp"
 #include <memory>
-#include <string>
 
 namespace Pomdog {
-
-class AudioClip;
-
 namespace Detail {
 
 struct MSWaveAudioLoader {
-    static std::unique_ptr<AudioClip> Load(std::string const& filePath);
+    static std::unique_ptr<AudioClip> Load(BinaryFileStream && binaryFile);
 };
 
 } // namespace Detail

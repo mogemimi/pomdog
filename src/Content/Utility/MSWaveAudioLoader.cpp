@@ -3,21 +3,36 @@
 
 #include "MSWaveAudioLoader.hpp"
 
-#include "Pomdog/Audio/AudioClip.hpp"
-#include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Basic/Platform.hpp"
-#if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
+#if defined(POMDOG_PLATFORM_MACOSX) \
+    || defined(POMDOG_PLATFORM_APPLE_IOS) \
+    || defined(POMDOG_PLATFORM_LINUX)
 #include "../../SoundSystem.OpenAL/AudioClipAL.hpp"
-#include <AudioToolbox/AudioFile.h>
-#include <AudioToolbox/AudioConverter.h>
-#include <vector>
-#elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
+#elif defined(POMDOG_PLATFORM_WIN32) \
+    || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "../../SoundSystem.XAudio2/AudioClipXAudio2.hpp"
-#include "Pomdog/Content/Utility/MakeFourCC.hpp"
-#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
-#include <mmsystem.h>
 #endif
+
+#include "Pomdog/Audio/AudioClip.hpp"
+#include "Pomdog/Content/Utility/BinaryReader.hpp"
+#include "Pomdog/Content/Utility/MakeFourCC.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Logging/Log.hpp"
+
+//#if defined(POMDOG_PLATFORM_MACOSX) \
+//    || defined(POMDOG_PLATFORM_APPLE_IOS) \
+//    || defined(POMDOG_PLATFORM_LINUX)
+//#include <AudioToolbox/AudioFile.h>
+//#include <AudioToolbox/AudioConverter.h>
+//#elif defined(POMDOG_PLATFORM_WIN32) \
+//    || defined(POMDOG_PLATFORM_XBOX_ONE)
+//#include "Pomdog/Content/Utility/MakeFourCC.hpp"
+//#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
+//#include <mmsystem.h>
+//#endif
+
+#include <vector>
 #include <memory>
 #include <utility>
 
@@ -31,15 +46,14 @@ static AudioChannels ToAudioChannels(std::uint32_t channels)
     POMDOG_ASSERT(channels <= 2);
 
     switch (channels) {
-    case 1:
-        return AudioChannels::Mono;
-    case 2:
-        return AudioChannels::Stereo;
+    case 1: return AudioChannels::Mono;
+    case 2: return AudioChannels::Stereo;
     default:
         break;
     }
     return AudioChannels::Mono;
 }
+#if 0
 //-----------------------------------------------------------------------
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
 //-----------------------------------------------------------------------
@@ -361,29 +375,226 @@ static std::unique_ptr<AudioClip> LoadMSWave_Win32(std::string const& filePath)
         throw e;
     }
 }
-//-----------------------------------------------------------------------
-#elif defined(POMDOG_PLATFORM_LINUX)
-//-----------------------------------------------------------------------
-static std::unique_ptr<AudioClip> LoadMSWave_Linux(std::string const& filePath)
-{
-    // FUS RO DAH!
-    ///@todo Please implement!
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-}
 #endif
+#endif
+
+struct RiffChunk {
+    std::uint32_t ChunkId;
+    std::uint32_t ChunkSize;
+    std::uint32_t FourCCType;
+};
+
+struct SubChunkHeader {
+    std::uint32_t ChunkId;
+    std::uint32_t ChunkSize;
+};
+
+struct PcmWaveFormat {
+    std::uint16_t FormatTag;
+    std::uint16_t Channels;
+    std::uint32_t SamplesPerSec;
+    std::uint32_t AvgBytesPerSec;
+    std::uint16_t BlockAlign;
+    std::uint16_t BitsPerSample;
+};
+
+struct WaveFormat {
+    PcmWaveFormat PcmWaveFormat;
+    std::uint16_t ExtraBytes;
+    std::vector<std::uint8_t> ExtraData;
+};
+
+namespace WaveFormatTags {
+    // WAVE_FORMAT_PCM
+    static constexpr std::uint16_t PCM = 0x0001;
+}
+
+static RiffChunk ReadRiffChunk(std::ifstream & stream)
+{
+    POMDOG_ASSERT(stream);
+    auto riffChunk = BinaryReader::Read<RiffChunk>(stream);
+
+    if (stream.fail()) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Cannot read 'RIFF' chunk descriptor form wave file");
+    }
+    if (MakeFourCC('R', 'I', 'F', 'F') != riffChunk.ChunkId) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Cannot read wave file. this file is a invalid wave file");
+    }
+    if (MakeFourCC('W', 'A', 'V', 'E') != riffChunk.FourCCType) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Cannot read wave file. this file is a invalid wave file");
+    }
+    return std::move(riffChunk);
+}
+//-----------------------------------------------------------------------
+static WaveFormat ReadWaveFormat(std::ifstream & stream)
+{
+    POMDOG_ASSERT(stream);
+
+    const auto fmtChunkHeader = BinaryReader::Read<SubChunkHeader>(stream);
+
+    if (stream.fail()) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Cannot read 'fmt ' chunk header form wave file");
+    }
+    if (MakeFourCC('f', 'm', 't', ' ') != fmtChunkHeader.ChunkId) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to search the wave file for the 'fmt ' chunk");
+    }
+    if (fmtChunkHeader.ChunkSize < sizeof(PcmWaveFormat)) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "The 'fmt ' chunk size is too small: " + std::to_string(fmtChunkHeader.ChunkSize));
+    }
+
+    WaveFormat waveFormat;
+    waveFormat.PcmWaveFormat = BinaryReader::Read<PcmWaveFormat>(stream);
+
+    if (stream.fail()) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to Read the 'fmt ' chunk into pcmWaveFormat");
+    }
+
+    if (WaveFormatTags::PCM == waveFormat.PcmWaveFormat.FormatTag) {
+        waveFormat.ExtraBytes = 0;
+        waveFormat.ExtraData.clear();
+    }
+    else {
+        waveFormat.ExtraBytes = BinaryReader::Read<std::uint16_t>(stream);
+        if (stream.fail()) {
+            POMDOG_THROW_EXCEPTION(std::runtime_error,
+                "Failed to Read the extraBytes");
+        }
+
+        waveFormat.ExtraData.resize(waveFormat.ExtraBytes);
+        stream.read(reinterpret_cast<char*>(waveFormat.ExtraData.data()), waveFormat.ExtraBytes);
+
+        if (stream.fail()) {
+            POMDOG_THROW_EXCEPTION(std::runtime_error,
+                "Failed to read the extra data");
+        }
+    }
+
+    return std::move(waveFormat);
+}
+//-----------------------------------------------------------------------
+static std::vector<std::uint8_t> ReadWaveAudioData(std::ifstream & stream)
+{
+    POMDOG_ASSERT(stream);
+
+    const auto chunkHeader = BinaryReader::Read<SubChunkHeader>(stream);
+
+    if (stream.fail()) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Cannot read 'data' chunk header form wave file");
+    }
+    if (MakeFourCC('d', 'a', 't', 'a') != chunkHeader.ChunkId) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to search the wave file for the 'data' chunk");
+    }
+    if (chunkHeader.ChunkSize <= 0) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Data chunk is empty");
+    }
+
+    std::vector<std::uint8_t> audioData;
+    audioData.resize(chunkHeader.ChunkSize);
+
+    for (auto & dest : audioData) {
+        dest = BinaryReader::Read<std::uint8_t>(stream);
+        if (stream.fail()) {
+            break;
+        }
+    }
+
+    if (!stream) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to read wave data");
+    }
+    return std::move(audioData);
+}
+
 } // unnamed namespace
  //-----------------------------------------------------------------------
-std::unique_ptr<AudioClip> MSWaveAudioLoader::Load(std::string const& filePath)
+std::unique_ptr<AudioClip> MSWaveAudioLoader::Load(BinaryFileStream && binaryFile)
 {
-#if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
-    return LoadMSWave_Apple(filePath);
-#elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-    return LoadMSWave_Win32(filePath);
-#elif defined(POMDOG_PLATFORM_LINUX)
-    return LoadMSWave_Linux(filePath);
-#else
-#error "TODO: Not implemented"
+    POMDOG_ASSERT(binaryFile.Stream);
+    POMDOG_ASSERT(binaryFile.SizeInBytes > 8);
+
+    constexpr auto MinimumWaveFormatSizeInBytes = 4 * 11;
+    if (binaryFile.SizeInBytes < MinimumWaveFormatSizeInBytes) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "This wave file is too small.");
+    }
+
+    auto & stream = binaryFile.Stream;
+
+    stream.clear();
+    stream.seekg(0, std::ios_base::beg);
+
+    POMDOG_ASSERT(stream);
+
+    try {
+        ReadRiffChunk(stream);
+        auto waveFormat = ReadWaveFormat(stream);
+        auto audioData = ReadWaveAudioData(stream);
+
+        auto channels = ToAudioChannels(waveFormat.PcmWaveFormat.Channels);
+
+#if defined(POMDOG_PLATFORM_MACOSX) \
+    || defined(POMDOG_PLATFORM_APPLE_IOS) \
+    || defined(POMDOG_PLATFORM_LINUX)
+        using Detail::SoundSystem::OpenAL::AudioClipAL;
+        auto nativeAudioClip = std::make_unique<AudioClipAL>(
+            audioData.data(),
+            audioData.size(),
+            waveFormat.PcmWaveFormat.SamplesPerSec,
+            waveFormat.PcmWaveFormat.BitsPerSample,
+            channels);
+
+        auto audioClip = std::make_unique<AudioClip>(
+            std::move(nativeAudioClip),
+            waveFormat.PcmWaveFormat.SamplesPerSec,
+            waveFormat.PcmWaveFormat.BitsPerSample,
+            channels);
+
+        return std::move(audioClip);
+
+#elif defined(POMDOG_PLATFORM_WIN32) \
+    || defined(POMDOG_PLATFORM_XBOX_ONE)
+        std::vector<std::uint8_t> waveFormatData;
+        waveFormatData.resize(sizeof(waveFormat.PcmWaveFormat)
+            + sizeof(waveFormat.ExtraBytes)
+            + waveFormat.ExtraBytes);
+
+        auto offset = sizeof(waveFormat.PcmWaveFormat) + sizeof(waveFormat.ExtraBytes);
+        std::memcpy(waveFormatData.data(), &waveFormat, offset);
+        std::memcpy(waveFormatData.data() + offset, waveFormat.ExtraData.data(), waveFormat.ExtraBytes);
+
+        using Detail::SoundSystem::XAudio2::AudioClipXAudio2;
+        auto nativeAudioClip = std::make_unique<AudioClipXAudio2>(
+            std::move(audioData),
+            std::move(waveFormatData));
+
+        auto audioClip = std::make_unique<AudioClip>(
+            std::move(nativeAudioClip),
+            waveFormat.PcmWaveFormat.SamplesPerSec,
+            waveFormat.PcmWaveFormat.BitsPerSample,
+            channels);
+
+        return std::move(audioClip);
 #endif
+    }
+    catch (std::exception const& e) {
+        if (stream.is_open()) {
+            stream.close();
+        }
+#if defined(DEBUG) && !defined(NDEBUG)
+        Log::Warning("Failed to read audio file.\n", e.what());
+#endif
+        throw e;
+    }
 }
 //-----------------------------------------------------------------------
 } // namespace Detail

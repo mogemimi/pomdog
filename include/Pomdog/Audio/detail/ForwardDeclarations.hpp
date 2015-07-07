@@ -5,6 +5,7 @@
 #define POMDOG_FORWARDDECLARATIONS_0BAC0396_HPP
 
 #include "Pomdog/Basic/Platform.hpp"
+#include <cstdint>
 
 namespace Pomdog {
 namespace Detail {
@@ -44,6 +45,16 @@ using NativeSoundEffect = XAudio2::SoundEffectXAudio2;
 
 } // namespace SoundSystem
 } // namespace Detail
+
+class AudioClip;
+class AudioEmitter;
+class AudioEngine;
+class AudioListener;
+class SoundEffect;
+
+enum class AudioChannel : std::uint8_t;
+enum class SoundState : std::uint8_t;
+
 } // namespace Pomdog
 
 #endif // POMDOG_FORWARDDECLARATIONS_0BAC0396_HPP

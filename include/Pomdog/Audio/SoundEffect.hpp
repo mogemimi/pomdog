@@ -12,12 +12,6 @@
 
 namespace Pomdog {
 
-class AudioClip;
-class AudioEmitter;
-class AudioListener;
-class AudioEngine;
-enum class SoundState: std::uint8_t;
-
 class POMDOG_EXPORT SoundEffect {
 public:
     SoundEffect(AudioEngine & audioEngine,
