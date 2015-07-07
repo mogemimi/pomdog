@@ -41,6 +41,7 @@
 #include "Math/Point3D.hpp"
 #include "Math/Quaternion.hpp"
 #include "Math/Radian.hpp"
+#include "Math/Ray.hpp"
 #include "Math/Rectangle.hpp"
 #include "Math/Vector2.hpp"
 #include "Math/Vector3.hpp"

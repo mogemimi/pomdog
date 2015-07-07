@@ -6,6 +6,7 @@
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Vector3.hpp"
+#include "Pomdog/Utility/Optional.hpp"
 #include "Pomdog/Basic/Export.hpp"
 
 namespace Pomdog {
@@ -32,6 +33,8 @@ public:
     bool Intersects(BoundingBox const& box) const;
 
     bool Intersects(BoundingSphere const& sphere) const;
+
+    Optional<float> Intersects(Ray const& ray) const;
 };
 
 } // namespace Pomdog

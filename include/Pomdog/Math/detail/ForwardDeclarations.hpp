@@ -75,6 +75,7 @@ class BoundingBox2D;
 class BoundingCircle;
 class BoundingSphere;
 class Color;
+class Ray;
 class Rectangle;
 
 // Enumerations:
