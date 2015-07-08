@@ -13,7 +13,8 @@
 #include <crtdbg.h>
 #endif
 
-int APIENTRY _tWinMain(HINSTANCE hInstance,
+int APIENTRY _tWinMain(
+    HINSTANCE hInstance,
     HINSTANCE hPrevInstance,
     LPTSTR    lpCmdLine,
     int       nCmdShow)

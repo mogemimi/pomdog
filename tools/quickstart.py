@@ -70,6 +70,7 @@ def CopyTemplates(templateDirectory, projectRoot):
         "Content",
         "Platform.Cocoa",
         "Platform.Win32",
+        "Platform.X11",
         "Source",
         ".gitignore",
         "common.gypi",
@@ -192,6 +193,7 @@ def CreateNewProject(config):
     RenameSourceContent(project_root, identifier, 'Platform.Cocoa/Info.plist')
     RenameSourceContent(project_root, identifier, 'Platform.Cocoa/Base.lproj/MainMenu.xib')
     RenameSourceContent(project_root, identifier, 'Platform.Win32/main.cpp')
+    RenameSourceContent(project_root, identifier, 'Platform.X11/main.cpp')
     RenameFilename(project_root, identifier, 'QuickStart.gyp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.cpp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.hpp')

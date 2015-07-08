@@ -1,4 +1,4 @@
-#include "../Source/QuickStartGame.hpp"
+#include "../Source/PongGame.hpp"
 #include <Pomdog/Platform/X11/Bootstrap.hpp>
 #include <Pomdog/Pomdog.hpp>
 
@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     });
 
     bootstrap.Run([](std::shared_ptr<GameHost> const& gameHost) {
-        return std::make_unique<QuickStart::QuickStartGame>(gameHost);
+        return std::make_unique<Pong::PongGame>(gameHost);
     });
 
     return 0;
