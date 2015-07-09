@@ -23,6 +23,8 @@
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Vector4.hpp"
+#include <algorithm>
+#include <cmath>
 
 namespace Pomdog {
 namespace {
@@ -156,7 +158,8 @@ void LineBatch::Impl::Flush()
     vertices.clear();
 }
 //-----------------------------------------------------------------------
-void LineBatch::Impl::DrawLine(Vector2 const& point1, Vector2 const& point2,
+void LineBatch::Impl::DrawLine(
+    Vector2 const& point1, Vector2 const& point2,
     Vector4 const& color1, Vector4 const& color2)
 {
     if (vertices.size() + 2 > MaxVertexCount) {
@@ -168,7 +171,8 @@ void LineBatch::Impl::DrawLine(Vector2 const& point1, Vector2 const& point2,
     vertices.push_back(Vertex{Vector3(point2, 0.0f), color2});
 }
 //-----------------------------------------------------------------------
-void LineBatch::Impl::DrawLine(Vector3 const& point1, Vector3 const& point2,
+void LineBatch::Impl::DrawLine(
+    Vector3 const& point1, Vector3 const& point2,
     Vector4 const& color1, Vector4 const& color2)
 {
     if (vertices.size() + 2 > MaxVertexCount) {
@@ -180,7 +184,8 @@ void LineBatch::Impl::DrawLine(Vector3 const& point1, Vector3 const& point2,
     vertices.push_back(Vertex{point2, color2});
 }
 //-----------------------------------------------------------------------
-void LineBatch::Impl::DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
+void LineBatch::Impl::DrawTriangle(
+    Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
     Vector4 const& color1, Vector4 const& color2, Vector4 const& color3)
 {
     if (vertices.size() + 6 > MaxVertexCount) {
@@ -220,6 +225,60 @@ void LineBatch::End()
 {
     POMDOG_ASSERT(impl);
     impl->End();
+}
+//-----------------------------------------------------------------------
+void LineBatch::DrawBox(
+    Vector3 const& position,
+    Vector3 const& scale,
+    Color const& color)
+{
+    this->DrawBox(position, scale, Vector3::Zero, color);
+}
+//-----------------------------------------------------------------------
+void LineBatch::DrawBox(
+    Vector3 const& position,
+    Vector3 const& scale,
+    Vector3 const& originPivot,
+    Color const& color)
+{
+    POMDOG_ASSERT(impl);
+
+    Vector3 boxVertices[] = {
+        Vector3{0.0f, 0.0f, 0.0f},
+        Vector3{0.0f, 0.0f, 1.0f},
+        Vector3{0.0f, 1.0f, 0.0f},
+        Vector3{0.0f, 1.0f, 1.0f},
+        Vector3{1.0f, 0.0f, 0.0f},
+        Vector3{1.0f, 0.0f, 1.0f},
+        Vector3{1.0f, 1.0f, 0.0f},
+        Vector3{1.0f, 1.0f, 1.0f},
+    };
+
+    for (auto & v : boxVertices) {
+        v = (v - originPivot) * scale;
+    }
+
+    const auto colorVector = color.ToVector4();
+    auto draw = [&](int a, int b) {
+        impl->DrawLine(
+            boxVertices[a],
+            boxVertices[b],
+            colorVector,
+            colorVector);
+    };
+
+    draw(0, 1);
+    draw(0, 2);
+    draw(2, 3);
+    draw(3, 1);
+    draw(4, 5);
+    draw(4, 6);
+    draw(6, 7);
+    draw(7, 5);
+    draw(0, 4);
+    draw(2, 6);
+    draw(3, 7);
+    draw(1, 5);
 }
 //-----------------------------------------------------------------------
 void LineBatch::DrawCircle(Vector2 const& position, float radius, Color const& color, std::size_t segments)
@@ -340,6 +399,84 @@ void LineBatch::DrawRectangle(Matrix3x2 const& matrix,
     impl->DrawLine(rectVertices[1], rectVertices[2], colorVector, colorVector);
     impl->DrawLine(rectVertices[2], rectVertices[3], colorVector, colorVector);
     impl->DrawLine(rectVertices[3], rectVertices[0], colorVector, colorVector);
+}
+//-----------------------------------------------------------------------
+void LineBatch::DrawSphere(
+    Vector3 const& position,
+    float radius,
+    Color const& color,
+    std::size_t segments)
+{
+    POMDOG_ASSERT(impl);
+    POMDOG_ASSERT(segments > 0);
+
+    const auto rings = std::max(static_cast<int>(segments), 4);
+    const auto sectors = std::max(static_cast<int>(segments), 4);
+
+    POMDOG_ASSERT(sectors > 0);
+    POMDOG_ASSERT(rings > 0);
+
+    std::vector<Vector3> sphereVertices;
+    sphereVertices.reserve(sectors * (rings - 1) + 2);
+
+    const auto R = 1.0f / static_cast<float>(rings - 1);
+    const auto S = 1.0f / static_cast<float>(sectors - 1);
+
+    // Create sphere vertices
+    sphereVertices.push_back(Vector3{0.0f, 1.0f, 0.0f});
+    for (int ring = 1; ring < rings; ++ring) {
+        const auto latitude = MathConstants<float>::Pi() * ring * R;
+        const auto y = std::cos(latitude);
+        const auto r = std::sin(latitude);
+        for (int s = 0; s < sectors; ++s) {
+            auto longitude = MathConstants<float>::TwoPi() * s * S;
+            auto x = r * std::cos(longitude);
+            auto z = r * std::sin(longitude);
+            sphereVertices.push_back(Vector3{x, y, z});
+        }
+    }
+    sphereVertices.push_back(Vector3{0.0f, -1.0f, 0.0f});
+
+    // Scaling and translation
+    for (auto & v : sphereVertices) {
+        v = v * radius + position;
+    }
+
+    const auto colorVector = color.ToVector4();
+    const auto drawIndices = [&](std::size_t a, std::size_t b) {
+        POMDOG_ASSERT(a < sphereVertices.size());
+        POMDOG_ASSERT(b < sphereVertices.size());
+        auto const& start = sphereVertices[a];
+        auto const& end = sphereVertices[b];
+        impl->DrawLine(start, end, colorVector, colorVector);
+    };
+
+    for (int s = 1; s < sectors; ++s) {
+        drawIndices(0, s);
+    }
+
+    int count = 1;
+    for (int s = 2; s < sectors; ++s) {
+        for (int ring = 1; ring < rings; ++ring) {
+            drawIndices(count, count + 1);
+            drawIndices(count, count + sectors);
+            ++count;
+        }
+        POMDOG_ASSERT(count + 1 >= sectors);
+        drawIndices(count, (count + 1) - sectors);
+        drawIndices(count, count + sectors);
+        ++count;
+    }
+
+    for (int s = 1; s < sectors; ++s) {
+        drawIndices(count, count + 1);
+        drawIndices(count, sphereVertices.size() - 1);
+        ++count;
+    }
+
+    POMDOG_ASSERT(count + 1 >= sectors);
+    drawIndices(count, (count + 1) - sectors);
+    drawIndices(count, sphereVertices.size() - 1);
 }
 //-----------------------------------------------------------------------
 void LineBatch::DrawTriangle(Vector2 const& point1, Vector2 const& point2, Vector2 const& point3, Color const& color)

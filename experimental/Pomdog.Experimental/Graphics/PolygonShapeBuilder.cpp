@@ -79,6 +79,87 @@ void PolygonShapeBuilder::DrawArc(
     }
 }
 //-----------------------------------------------------------------------
+void PolygonShapeBuilder::DrawBox(
+    Vector3 const& position,
+    Vector3 const& scale,
+    Color const& color)
+{
+    DrawBox(position, scale, Vector3{0.0f, 0.0f, 0.0f}, color);
+}
+//-----------------------------------------------------------------------
+void PolygonShapeBuilder::DrawBox(
+    Vector3 const& position,
+    Vector3 const& scale,
+    Vector3 const& originPivot,
+    Color const& color)
+{
+    Vector3 boxVertices[] = {
+        // top
+        Vector3(0.0f, 1.0f, 0.0f),
+        Vector3(1.0f, 1.0f, 0.0f),
+        Vector3(1.0f, 1.0f, 1.0f),
+        Vector3(0.0f, 1.0f, 1.0f),
+
+        // bottom
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(1.0f, 0.0f, 0.0f),
+        Vector3(1.0f, 0.0f, 1.0f),
+        Vector3(0.0f, 0.0f, 1.0f),
+
+        // left
+        Vector3(0.0f, 0.0f, 1.0f),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(0.0f, 1.0f, 0.0f),
+        Vector3(0.0f, 1.0f, 1.0f),
+
+        // right
+        Vector3(1.0f, 0.0f, 1.0f),
+        Vector3(1.0f, 0.0f, 0.0f),
+        Vector3(1.0f, 1.0f, 0.0f),
+        Vector3(1.0f, 1.0f, 1.0f),
+
+        // front
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(1.0f, 0.0f, 0.0f),
+        Vector3(1.0f, 1.0f, 0.0f),
+        Vector3(0.0f, 1.0f, 0.0f),
+
+        // back
+        Vector3(0.0f, 0.0f, 1.0f),
+        Vector3(1.0f, 0.0f, 1.0f),
+        Vector3(1.0f, 1.0f, 1.0f),
+        Vector3(0.0f, 1.0f, 1.0f),
+    };
+
+    for (auto & v : boxVertices) {
+        v = (v - originPivot) * scale;
+    }
+
+    const auto colorVector = color.ToVector4();
+    auto draw = [&](int a, int b, int c) {
+        DrawTriangle(
+            boxVertices[a],
+            boxVertices[b],
+            boxVertices[c],
+            colorVector,
+            colorVector,
+            colorVector);
+    };
+
+    draw(3, 1, 0);
+    draw(2, 1, 3);
+    draw(6, 4, 5);
+    draw(7, 4, 6);
+    draw(11, 9, 8);
+    draw(10, 9, 11);
+    draw(14, 12, 13);
+    draw(15, 12, 14);
+    draw(19, 17, 16);
+    draw(18, 17, 19);
+    draw(22, 20, 21);
+    draw(23, 20, 22);
+}
+//-----------------------------------------------------------------------
 void PolygonShapeBuilder::DrawCircle(
     Vector2 const& position,
     float radius,
@@ -317,6 +398,68 @@ void PolygonShapeBuilder::DrawRectangle(
     DrawTriangle(
         rectVertices[2], rectVertices[3], rectVertices[0],
         colorVector, colorVector, colorVector);
+}
+//-----------------------------------------------------------------------
+void PolygonShapeBuilder::DrawSphere(
+    Vector3 const& position,
+    float radius,
+    Color const& color,
+    std::size_t segments)
+{
+    POMDOG_ASSERT(segments >= 3);
+
+    const auto rings = std::max(static_cast<int>(segments), 3);
+    const auto sectors = std::max(static_cast<int>(segments), 3);
+
+    std::vector<Vector3> sphereVertices;
+    sphereVertices.reserve(rings * sectors);
+
+    const auto R = 1.0f / static_cast<float>(rings - 1);
+    const auto S = 1.0f / static_cast<float>(sectors - 1);
+
+    for (int ring = 0; ring < rings; ++ring) {
+        const auto latitude = MathConstants<float>::Pi() * ring * R;
+        const auto y = std::cos(latitude);
+        const auto r = std::sin(latitude);
+        for (int s = 0; s < sectors; ++s) {
+            const auto longitude = MathConstants<float>::TwoPi() * s * S;
+            const auto x = r * std::cos(longitude);
+            const auto z = r * std::sin(longitude);
+            sphereVertices.push_back(Vector3{x, y, z} * radius + position);
+        }
+    }
+
+    const auto colorVector = color.ToVector4();
+    const auto drawIndices = [&](std::size_t a, std::size_t b, std::size_t c, std::size_t d) {
+        POMDOG_ASSERT(a < sphereVertices.size());
+        POMDOG_ASSERT(b < sphereVertices.size());
+        POMDOG_ASSERT(c < sphereVertices.size());
+        POMDOG_ASSERT(d < sphereVertices.size());
+        DrawTriangle(
+            sphereVertices[a],
+            sphereVertices[b],
+            sphereVertices[c],
+            colorVector,
+            colorVector,
+            colorVector);
+        DrawTriangle(
+            sphereVertices[c],
+            sphereVertices[d],
+            sphereVertices[a],
+            colorVector,
+            colorVector,
+            colorVector);
+    };
+
+    for (int r = 0; r < rings - 1; ++r) {
+        for (int s = 0; s < sectors - 1; ++s) {
+            drawIndices(
+                r * sectors + s,
+                (r + 1) * sectors + s,
+                (r + 1) * sectors + (s + 1),
+                r * sectors + (s + 1));
+        }
+    }
 }
 //-----------------------------------------------------------------------
 void PolygonShapeBuilder::DrawTriangle(

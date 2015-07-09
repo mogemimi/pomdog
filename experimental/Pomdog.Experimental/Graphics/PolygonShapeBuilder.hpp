@@ -59,6 +59,17 @@ public:
         std::size_t segments,
         Color const& color);
 
+    void DrawBox(
+        Vector3 const& position,
+        Vector3 const& scale,
+        Color const& color);
+
+    void DrawBox(
+        Vector3 const& position,
+        Vector3 const& scale,
+        Vector3 const& originPivot,
+        Color const& color);
+
     void DrawCircle(
         Vector2 const& position,
         float radius,
@@ -135,6 +146,12 @@ public:
         float height,
         Vector2 const& originPivot,
         Color const& color);
+
+    void DrawSphere(
+        Vector3 const& position,
+        float radius,
+        Color const& color,
+        std::size_t segments);
 
     void DrawTriangle(
         Vector2 const& point1,

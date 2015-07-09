@@ -188,6 +188,25 @@ void PolygonBatch::DrawArc(
         position, radius, startAngle, arcAngle, segments, color);
 }
 //-----------------------------------------------------------------------
+void PolygonBatch::DrawBox(
+    Vector3 const& position,
+    Vector3 const& scale,
+    Color const& color)
+{
+    POMDOG_ASSERT(impl);
+    impl->polygonShapes.DrawBox(position, scale, color);
+}
+//-----------------------------------------------------------------------
+void PolygonBatch::DrawBox(
+    Vector3 const& position,
+    Vector3 const& scale,
+    Vector3 const& originPivot,
+    Color const& color)
+{
+    POMDOG_ASSERT(impl);
+    impl->polygonShapes.DrawBox(position, scale, originPivot, color);
+}
+//-----------------------------------------------------------------------
 void PolygonBatch::DrawCircle(
     Vector2 const& position,
     float radius,
@@ -290,6 +309,17 @@ void PolygonBatch::DrawRectangle(
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawRectangle(
         position, width, height, originPivot, color);
+}
+//-----------------------------------------------------------------------
+void PolygonBatch::DrawSphere(
+    Vector3 const& position,
+    float radius,
+    Color const& color,
+    std::size_t segments)
+{
+    POMDOG_ASSERT(impl);
+    impl->polygonShapes.DrawSphere(
+        position, radius, color, segments);
 }
 //-----------------------------------------------------------------------
 void PolygonBatch::DrawTriangle(
