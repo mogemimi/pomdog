@@ -11,6 +11,17 @@
 #include <type_traits>
 
 namespace Pomdog {
+namespace Detail {
+
+template <class Tp>
+struct IsTaggedFloatingPoint
+: public std::integral_constant<bool, false> {};
+
+template <class T, class Tag>
+struct IsTaggedFloatingPoint<TaggedArithmetic<T, Tag>>
+: public std::integral_constant<bool, std::is_floating_point<T>::value> {};
+
+} // namespace Detail
 
 template <typename T>
 struct MathConstants;
@@ -42,7 +53,8 @@ namespace MathHelper {
 template <typename T>
 T Clamp(T const& x, T const& min, T const& max)
 {
-    static_assert(std::is_arithmetic<T>::value, "");
+    static_assert(std::is_arithmetic<T>::value
+        || Detail::IsTaggedFloatingPoint<T>::value, "");
     POMDOG_ASSERT_MESSAGE(min < max, "In Clamp, maxval is out of range");
     if (x < min) {
         return min;
@@ -56,21 +68,27 @@ T Clamp(T const& x, T const& min, T const& max)
 template <typename T>
 T Saturate(T const& x)
 {
-    static_assert(std::is_floating_point<T>::value, "T is floaing point number");
+    static_assert(std::is_floating_point<T>::value ||
+        Detail::IsTaggedFloatingPoint<T>::value,
+        "T is floaing point number");
     return Clamp(x, T{0}, T{1});
 }
 //-------------------------------------------------------------------
 template <typename T>
 T Lerp(T const& source1, T const& source2, T const& amount)
 {
-    static_assert(std::is_floating_point<T>::value, "T is floaing point number");
+    static_assert(std::is_floating_point<T>::value ||
+        Detail::IsTaggedFloatingPoint<T>::value,
+        "T is floaing point number");
     return source1 + amount * (source2 - source1);
 }
 //-------------------------------------------------------------------
 template <typename T>
 T SmoothStep(T const& min, T const& max, T const& amount)
 {
-    static_assert(std::is_floating_point<T>::value, "T is floaing point number");
+    static_assert(std::is_floating_point<T>::value ||
+        Detail::IsTaggedFloatingPoint<T>::value,
+        "T is floaing point number");
     //POMDOG_ASSERT(amount >= 0);
     //POMDOG_ASSERT(amount <= 1);
     auto x = Saturate(amount);
