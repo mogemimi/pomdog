@@ -34,7 +34,7 @@ git clone --depth=1 https://chromium.googlesource.com/external/gyp.git Tools/gyp
 **1. Generating Makefiles**
 
 ```sh
-python tools/gyp/gyp_main.py examples/QuickStart/QuickStart.gyp --depth=. \
+python Tools/gyp/gyp_main.py examples/QuickStart/QuickStart.gyp --depth=. \
   -f make --generator-output=build.makefiles -Dcomponent=static_library
 ```
 
