@@ -406,10 +406,15 @@ void PolygonShapeBuilder::DrawSphere(
     Color const& color,
     std::size_t segments)
 {
-    POMDOG_ASSERT(segments >= 3);
+    POMDOG_ASSERT(segments >= 4);
+    POMDOG_ASSERT(radius >= 0);
 
-    const auto rings = std::max(static_cast<int>(segments), 3);
-    const auto sectors = std::max(static_cast<int>(segments), 3);
+    if (radius <= 0) {
+        return;
+    }
+
+    const auto rings = std::max(static_cast<int>(segments), 4);
+    const auto sectors = std::max(static_cast<int>(segments), 4);
 
     std::vector<Vector3> sphereVertices;
     sphereVertices.reserve(rings * sectors);
@@ -437,15 +442,15 @@ void PolygonShapeBuilder::DrawSphere(
         POMDOG_ASSERT(d < sphereVertices.size());
         DrawTriangle(
             sphereVertices[a],
-            sphereVertices[b],
             sphereVertices[c],
+            sphereVertices[b],
             colorVector,
             colorVector,
             colorVector);
         DrawTriangle(
             sphereVertices[c],
-            sphereVertices[d],
             sphereVertices[a],
+            sphereVertices[d],
             colorVector,
             colorVector,
             colorVector);

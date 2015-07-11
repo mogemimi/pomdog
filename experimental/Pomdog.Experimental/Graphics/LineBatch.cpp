@@ -408,7 +408,12 @@ void LineBatch::DrawSphere(
     std::size_t segments)
 {
     POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(segments > 0);
+    POMDOG_ASSERT(segments >= 4);
+    POMDOG_ASSERT(radius >= 0);
+
+    if (radius <= 0) {
+        return;
+    }
 
     const auto rings = std::max(static_cast<int>(segments), 4);
     const auto sectors = std::max(static_cast<int>(segments), 4);
