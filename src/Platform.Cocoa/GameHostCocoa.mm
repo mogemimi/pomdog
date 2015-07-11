@@ -16,6 +16,7 @@
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Content/Utility/PathHelper.hpp"
 #include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
@@ -26,6 +27,7 @@
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
+#include "Pomdog/Utility/detail/FileSystem.hpp"
 #include <utility>
 #include <vector>
 #include <mutex>
@@ -184,13 +186,10 @@ GameHostCocoa::Impl::Impl(PomdogOpenGLView* openGLViewIn,
     systemEventConnection = eventQueue->Connect(
         [this](Event const& event) { ProcessSystemEvents(event); });
 
-    {
-        NSString* path = [[NSBundle mainBundle] resourcePath];
-        std::string rootDirectory = [[path stringByAppendingPathComponent: @"Content"] UTF8String];
-        Detail::AssetLoaderContext loaderContext{rootDirectory, graphicsDevice};
-
-        assetManager = std::make_unique<Pomdog::AssetManager>(std::move(loaderContext));
-    }
+    Detail::AssetLoaderContext loaderContext;
+    loaderContext.RootDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
+    loaderContext.GraphicsDevice = graphicsDevice;
+    assetManager = std::make_unique<Pomdog::AssetManager>(std::move(loaderContext));
 
     POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
     presentationInterval = Duration(1) / presentationParameters.PresentationInterval;

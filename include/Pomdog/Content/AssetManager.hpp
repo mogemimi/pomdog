@@ -14,7 +14,7 @@ namespace Pomdog {
 
 class POMDOG_EXPORT AssetManager {
 public:
-    AssetManager(Detail::AssetLoaderContext && loaderContext);
+    explicit AssetManager(Detail::AssetLoaderContext && loaderContext);
 
     template <typename T>
     std::shared_ptr<T> Load(std::string const& assetName)
