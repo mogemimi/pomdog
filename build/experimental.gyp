@@ -267,6 +267,9 @@
     #   '<@(pomdog_expr_dir)/UI/VerticalAlignment.hpp',
     #   '<@(pomdog_expr_dir)/UI/detail/SubscribeRequestDispatcher.hpp',
     #   '<@(pomdog_expr_dir)/UI/detail/UIEventConnection.hpp',
+
+      '<@(pomdog_expr_dir)/Utility/UserPreferences.cpp',
+      '<@(pomdog_expr_dir)/Utility/UserPreferences.hpp',
     ],
   },
   'target_defaults': {
