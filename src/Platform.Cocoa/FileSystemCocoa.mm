@@ -57,6 +57,11 @@ bool FileSystem::IsDirectory(std::string const& path)
     return (exists == YES) && (isDirectory == YES);
 }
 //-----------------------------------------------------------------------
+std::string FileSystem::GetLocalAppDataDirectoryPath()
+{
+	return GetAppDataDirectoryPath();
+}
+//-----------------------------------------------------------------------
 std::string FileSystem::GetAppDataDirectoryPath()
 {
     NSFileManager* fileManager = [NSFileManager defaultManager];

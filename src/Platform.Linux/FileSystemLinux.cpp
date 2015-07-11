@@ -32,6 +32,12 @@ bool FileSystem::IsDirectory(std::string const& path)
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
+std::string FileSystem::GetLocalAppDataDirectoryPath()
+{
+    ///@todo Not implemented
+    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+}
+//-----------------------------------------------------------------------
 std::string FileSystem::GetAppDataDirectoryPath()
 {
     ///@todo Not implemented

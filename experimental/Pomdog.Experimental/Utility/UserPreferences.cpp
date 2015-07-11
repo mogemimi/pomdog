@@ -51,8 +51,6 @@ static Optional<T> GetJsonValue(std::string const& jsonData, std::string const& 
     }
 
     auto & v = doc[key.c_str()];
-
-    POMDOG_ASSERT(func);
     return func(v);
 }
 //-----------------------------------------------------------------------
@@ -91,7 +89,7 @@ UserPreferences::UserPreferences()
     using Detail::FileSystem;
     using Detail::BinaryReader;
 
-    const auto directory = FileSystem::GetAppDataDirectoryPath();
+    const auto directory = FileSystem::GetLocalAppDataDirectoryPath();
     filePath = PathHelper::Join(directory, "UserPreferences.json");
 
     if (!FileSystem::IsDirectory(directory)) {

@@ -640,7 +640,7 @@
             #'-lwinspool.lib',
             #'-lcomdlg32.lib',
             #'-ladvapi32.lib',
-            #'-lshell32.lib',
+            '-lshell32.lib',
             #'-loleaut32.lib',
             #'-luuid.lib',
             #'-lodbc32.lib',
