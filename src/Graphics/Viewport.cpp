@@ -2,8 +2,12 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Graphics/Viewport.hpp"
+#include "Pomdog/Math/Matrix4x4.hpp"
+#include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <cmath>
+#include <limits>
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
@@ -34,6 +38,48 @@ Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn,
     , MinDepth(minDepthIn)
     , MaxDepth(maxDepthIn)
 {}
+//-----------------------------------------------------------------------
+Vector3 Viewport::Project(
+    Vector3 const& source,
+    Matrix4x4 const& worldViewProjection)
+{
+    auto result = Vector3::Transform(source, worldViewProjection);
+    auto divisor = source.X * worldViewProjection(0, 3)
+        + source.Y * worldViewProjection(1, 3)
+        + source.Z * worldViewProjection(2, 3)
+        + worldViewProjection(3, 3);
+
+    if (std::abs(divisor) > std::numeric_limits<float>::epsilon()) {
+        result = result / divisor;
+    }
+
+    result.X = (result.X + 1.0f) * 0.5f * static_cast<float>(Width) + static_cast<float>(TopLeftX);
+    result.Y = (-result.Y + 1.0f) * 0.5f * static_cast<float>(Height) + static_cast<float>(TopLeftY);
+    result.Z = result.Z * (MaxDepth - MinDepth) + MinDepth;
+    return std::move(result);
+}
+//-----------------------------------------------------------------------
+Vector3 Viewport::Unproject(
+    Vector3 const& source,
+    Matrix4x4 const& worldViewProjection)
+{
+    Vector3 vec;
+    vec.X = ((source.X - static_cast<float>(TopLeftX)) / static_cast<float>(Width) * 2.0f) - 1.0f;
+    vec.Y = -(((source.Y - static_cast<float>(TopLeftY)) / static_cast<float>(Height) * 2.0f) - 1.0f);
+    vec.Z = (source.Z - MinDepth) / (MaxDepth - MinDepth);
+
+    Matrix4x4 invertWVP = Matrix4x4::Invert(worldViewProjection);
+    auto result = Vector3::Transform(vec, invertWVP);
+    auto divisor = vec.X * invertWVP(0, 3)
+        + vec.Y * invertWVP(1, 3)
+        + vec.Z * invertWVP(2, 3)
+        + invertWVP(3, 3);
+
+    if (std::abs(divisor) > std::numeric_limits<float>::epsilon()) {
+        result = result / divisor;
+    }
+    return std::move(result);
+}
 //-----------------------------------------------------------------------
 Rectangle Viewport::GetBounds() const noexcept
 {

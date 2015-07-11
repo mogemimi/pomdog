@@ -28,6 +28,14 @@ public:
     Viewport(int x, int y, int width, int height,
         float minDepth, float maxDepth) noexcept;
 
+    Vector3 Project(
+        Vector3 const& source,
+        Matrix4x4 const& worldViewProjection);
+
+    Vector3 Unproject(
+        Vector3 const& source,
+        Matrix4x4 const& worldViewProjection);
+
     Rectangle GetBounds() const noexcept;
 
     float GetAspectRatio() const;
