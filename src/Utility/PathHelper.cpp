@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Content/Utility/PathHelper.hpp"
+#include "Pomdog/Basic/Platform.hpp"
 #include <utility>
 
 namespace Pomdog {
@@ -11,7 +12,14 @@ std::string PathHelper::Join(std::string const& path1, std::string const& path2)
 {
     std::string result = path1;
 
-    if (!path1.empty() && '/' != path1.back()) {
+#if defined(POMDOG_PLATFORM_WIN32)
+    if (!result.empty() && '\\' == result.back()) {
+        result.erase(std::prev(std::end(result)));
+        result += '/';
+    }
+#endif
+
+    if (!result.empty() && '/' != result.back()) {
         if (!path2.empty() && '/' != path2.front()) {
             result += '/';
         }
