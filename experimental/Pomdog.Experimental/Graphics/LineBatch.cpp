@@ -15,6 +15,7 @@
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
+#include "Pomdog/Math/BoundingBox.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
@@ -227,6 +228,11 @@ void LineBatch::End()
     impl->End();
 }
 //-----------------------------------------------------------------------
+void LineBatch::DrawBox(BoundingBox const& box, Color const& color)
+{
+    this->DrawBox(box.Min, box.Max - box.Min, Vector3::Zero, color);
+}
+//-----------------------------------------------------------------------
 void LineBatch::DrawBox(
     Vector3 const& position,
     Vector3 const& scale,
@@ -255,7 +261,7 @@ void LineBatch::DrawBox(
     };
 
     for (auto & v : boxVertices) {
-        v = (v - originPivot) * scale;
+        v = ((v - originPivot) * scale) + position;
     }
 
     const auto colorVector = color.ToVector4();

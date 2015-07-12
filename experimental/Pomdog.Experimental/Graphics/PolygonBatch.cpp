@@ -16,6 +16,7 @@
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
+#include "Pomdog/Math/BoundingBox.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
@@ -186,6 +187,14 @@ void PolygonBatch::DrawArc(
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawArc(
         position, radius, startAngle, arcAngle, segments, color);
+}
+//-----------------------------------------------------------------------
+void PolygonBatch::DrawBox(
+    BoundingBox const& box,
+    Color const& color)
+{
+    POMDOG_ASSERT(impl);
+    impl->polygonShapes.DrawBox(box.Min, box.Max - box.Min, color);
 }
 //-----------------------------------------------------------------------
 void PolygonBatch::DrawBox(

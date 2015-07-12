@@ -34,6 +34,10 @@ public:
         Color const& color);
 
     void DrawBox(
+        BoundingBox const& box,
+        Color const& color);
+
+    void DrawBox(
         Vector3 const& position,
         Vector3 const& scale,
         Color const& color);

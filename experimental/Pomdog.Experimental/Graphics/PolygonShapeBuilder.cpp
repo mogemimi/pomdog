@@ -132,7 +132,7 @@ void PolygonShapeBuilder::DrawBox(
     };
 
     for (auto & v : boxVertices) {
-        v = (v - originPivot) * scale;
+        v = ((v - originPivot) * scale) + position;
     }
 
     const auto colorVector = color.ToVector4();
