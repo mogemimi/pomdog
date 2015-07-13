@@ -73,6 +73,7 @@
         'Math/Vector3Test.cpp',
         'Math/Vector4Test.cpp',
         'Signals/ConnectionTest.cpp',
+        'Signals/ConnectionListTest.cpp',
         'Signals/EventQueueTest.cpp',
         'Signals/EventTest.cpp',
         'Signals/ScopedConnectionTest.cpp',

@@ -55,10 +55,10 @@ public:
             return;
         }
 
-        auto locked_slot = weakSlot.lock();
+        auto lockedSlot = weakSlot.lock();
 
-        if (auto locked_signal = weakSignal.lock()) {
-            locked_signal->Disconnect(locked_slot.get());
+        if (auto lockedSignal = weakSignal.lock()) {
+            lockedSignal->Disconnect(lockedSlot.get());
             weakSignal.reset();
         }
 
@@ -199,7 +199,7 @@ void SignalBody<void(Arguments...)>::operator()(Arguments &&... arguments)
         PushBackAddedListeners();
     }
 
-    if (nestedMethodCallCount >= std::numeric_limits<std::uint16_t>::max()) {
+    if (nestedMethodCallCount >= std::numeric_limits<std::int16_t>::max()) {
         return;
     }
 

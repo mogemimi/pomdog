@@ -22,14 +22,10 @@ public:
     ConnectionList(ConnectionList &&) = default;
     ConnectionList & operator=(ConnectionList &&) = default;
 
-    template <typename...Args, typename Func>
-    void operator()(Signal<void(Args...)> & signal, Func && func)
-    {
-        Connect(signal, std::forward<Func>(func));
-    }
+    void operator+=(Connection && connection);
 
     template <typename...Args, typename Func>
-    void Connect(Signal<void(Args...)> & signal, Func && func)
+    void operator()(Signal<void(Args...)> & signal, Func && func)
     {
         auto connection = signal.Connect(std::forward<Func>(func));
         connections.push_back(std::move(connection));

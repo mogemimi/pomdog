@@ -67,7 +67,9 @@ public:
         keyDown = keyDownIn;
 
         connections.Disconnect();
-        connections.Connect(keyboard->KeyUp, [this](Keys key) {
+        auto & connect = connections;
+
+        connect(keyboard->KeyUp, [this](Keys key) {
             POMDOG_ASSERT(keyUp != keyDown);
             if (key == keyUp) {
                 up = ButtonState::Released;
@@ -77,7 +79,7 @@ public:
             }
         });
 
-        connections.Connect(keyboard->KeyDown, [this](Keys key) {
+        connect(keyboard->KeyDown, [this](Keys key) {
             POMDOG_ASSERT(keyUp != keyDown);
             if (key == keyUp) {
                 up = ButtonState::Pressed;
