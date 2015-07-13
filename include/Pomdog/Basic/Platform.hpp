@@ -81,6 +81,9 @@
 #elif defined(__hpux)
 #   // Hewlett-Packard UNIX
 #   define POMDOG_PLATFORM_HPUX
+#elif defined(__ghs__)
+#   // Wii U
+#   define POMDOG_PLATFORM_WIIU
 #else
 #   error "Sorry, this platform is not supported."
 #endif
