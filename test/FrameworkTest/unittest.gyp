@@ -45,6 +45,8 @@
         'main.cpp',
         'Application/GameClockTest.cpp',
         'Application/TimerTest.cpp',
+        'Async/SchedulerTest.cpp',
+        'Async/TaskTest.cpp',
         #'Gameplay/GameObjectIDTest.cpp',
         #'Gameplay/GameObjectTest.cpp',
         #'Gameplay/GameWorldTest.cpp',
