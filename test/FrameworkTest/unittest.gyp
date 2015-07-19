@@ -43,6 +43,7 @@
       ],
       'sources': [
         'main.cpp',
+        'Application/GameClockTest.cpp',
         'Application/TimerTest.cpp',
         #'Gameplay/GameObjectIDTest.cpp',
         #'Gameplay/GameObjectTest.cpp',

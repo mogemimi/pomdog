@@ -15,6 +15,9 @@ namespace Pomdog {
 class POMDOG_EXPORT GameClock {
 public:
     GameClock();
+
+    explicit GameClock(int framesPerSecond);
+
     GameClock(GameClock const&) = delete;
     GameClock(GameClock &&) = default;
 
@@ -25,15 +28,15 @@ public:
 
     void Tick();
 
-    Duration TotalGameTime() const;
+    Duration TotalGameTime() const noexcept;
 
-    std::uint32_t FrameNumber() const;
+    std::uint32_t FrameNumber() const noexcept;
 
-    Duration FrameDuration() const;
+    Duration FrameDuration() const noexcept;
 
-    float FrameRate() const;
+    float FrameRate() const noexcept;
 
-    Duration ElapsedTime() const;
+    Duration ElapsedTime() const noexcept;
 
     Signal<void(Duration const& frameDuration)> OnTick;
 
