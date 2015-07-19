@@ -10,6 +10,26 @@
 #include <chrono>
 
 namespace Pomdog {
+namespace {
+
+template <typename T>
+class CompensatedSumAccumulator {
+private:
+    T compensation = T::zero();
+
+public:
+    void operator()(T & sum, T const& num)
+    {
+        // Kahan summation algorithm
+        // NOTE: "Velvel" means "wolf" in Yiddish.
+        auto tmp = num - compensation;
+        auto velvel = sum + tmp;
+        compensation = (velvel - sum) - tmp;
+        sum = velvel;
+    }
+};
+
+} // unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - GameClock::Impl
@@ -46,12 +66,13 @@ public:
 
     Duration predictedFrameTime;
     Duration accumulatedCurrentTime;
+    CompensatedSumAccumulator<Duration> accumlator;
     std::uint32_t frameNumber;
 };
 //-----------------------------------------------------------------------
 GameClock::Impl::Impl()
-    : predictedFrameTime(0)
-    , accumulatedCurrentTime(0)
+    : predictedFrameTime(Duration::zero())
+    , accumulatedCurrentTime(Duration::zero())
     , frameNumber(0)
 {
     constexpr int framePerSecond = 30;
@@ -73,8 +94,7 @@ Duration GameClock::Impl::GetExactLastFrameDuration()
 {
     auto now = timeSource.Now();
     auto frameDuration = now - sourceLastTime;
-    if (0.200 < frameDuration.count())
-    {
+    if (0.200 < frameDuration.count()) {
         frameDuration = frameDurationHistory.back();
     }
     sourceLastTime = now;
@@ -86,8 +106,7 @@ void GameClock::Impl::AddToFrameHistory(Duration const& exactFrameDuration)
     constexpr std::size_t MaxFrameHistorySize = 20;
 
     frameDurationHistory.push_back(exactFrameDuration);
-    if (frameDurationHistory.size() > MaxFrameHistorySize)
-    {
+    if (frameDurationHistory.size() > MaxFrameHistorySize) {
         frameDurationHistory.pop_front();
     }
 }
@@ -97,7 +116,9 @@ Duration GameClock::Impl::PredictFrameDuration() const
     POMDOG_ASSERT(!frameDurationHistory.empty());
 
     auto totalFrameTime = std::accumulate(
-        std::begin(frameDurationHistory), std::end(frameDurationHistory), Duration::zero());
+        std::begin(frameDurationHistory),
+        std::end(frameDurationHistory),
+        Duration::zero());
     return totalFrameTime / frameDurationHistory.size();
 }
 //-----------------------------------------------------------------------
@@ -107,8 +128,9 @@ void GameClock::Impl::Tick()
     AddToFrameHistory(exactLastFrameDuration);
 
     predictedFrameTime = PredictFrameDuration();
+    POMDOG_ASSERT(predictedFrameTime.count() > 0);
 
-    accumulatedCurrentTime += predictedFrameTime;
+    accumlator(accumulatedCurrentTime, predictedFrameTime);
     ++frameNumber;
 }
 //-----------------------------------------------------------------------
@@ -130,7 +152,7 @@ Duration GameClock::Impl::FrameDuration() const
 float GameClock::Impl::FrameRate() const
 {
     POMDOG_ASSERT(predictedFrameTime.count() != 0);
-    return 1 / static_cast<float>(predictedFrameTime.count());
+    return 1.0f / static_cast<float>(predictedFrameTime.count());
 }
 //-----------------------------------------------------------------------
 Duration GameClock::Impl::ElapsedTime() const
