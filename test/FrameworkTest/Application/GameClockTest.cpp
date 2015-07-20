@@ -79,11 +79,9 @@ TEST(GameClock, ElapsedTime)
     std::this_thread::sleep_for(sleepTime);
     nextElapsedTime = clock.ElapsedTime();
     EXPECT_LT(prevElapsedTime, nextElapsedTime);
-    EXPECT_NEAR(0.016, (nextElapsedTime - prevElapsedTime).count(), 0.007);
     std::swap(prevElapsedTime, nextElapsedTime);
 
     std::this_thread::sleep_for(sleepTime);
     nextElapsedTime = clock.ElapsedTime();
     EXPECT_LT(prevElapsedTime, nextElapsedTime);
-    EXPECT_NEAR(0.016, (nextElapsedTime - prevElapsedTime).count(), 0.007);
 }

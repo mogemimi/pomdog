@@ -59,7 +59,7 @@ bool FileSystem::IsDirectory(std::string const& path)
 //-----------------------------------------------------------------------
 std::string FileSystem::GetLocalAppDataDirectoryPath()
 {
-	return GetAppDataDirectoryPath();
+    return GetAppDataDirectoryPath();
 }
 //-----------------------------------------------------------------------
 std::string FileSystem::GetAppDataDirectoryPath()

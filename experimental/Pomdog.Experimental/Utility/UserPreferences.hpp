@@ -37,6 +37,7 @@ public:
 private:
     std::string filePath;
     std::string jsonData;
+    bool needToSave;
 };
 
 } // namespace Pomdog

@@ -84,6 +84,7 @@ static void SetJsonValue(std::string & jsonData, std::string const& key, T const
 } // unnamed namespace
 //-----------------------------------------------------------------------
 UserPreferences::UserPreferences()
+    : needToSave(false)
 {
     using Detail::PathHelper;
     using Detail::FileSystem;
@@ -202,29 +203,37 @@ void UserPreferences::SetBool(std::string const& key, bool value)
 {
     POMDOG_ASSERT(!key.empty());
     SetJsonValue(jsonData, key, value);
+    needToSave = true;
 }
 //-----------------------------------------------------------------------
 void UserPreferences::SetFloat(std::string const& key, float value)
 {
     POMDOG_ASSERT(!key.empty());
     SetJsonValue(jsonData, key, value);
+    needToSave = true;
 }
 //-----------------------------------------------------------------------
 void UserPreferences::SetInt(std::string const& key, int value)
 {
     POMDOG_ASSERT(!key.empty());
     SetJsonValue(jsonData, key, value);
+    needToSave = true;
 }
 //-----------------------------------------------------------------------
 void UserPreferences::SetString(std::string const& key, std::string const& value)
 {
     POMDOG_ASSERT(!key.empty());
     SetJsonValue(jsonData, key, value);
+    needToSave = true;
 }
 //-----------------------------------------------------------------------
 void UserPreferences::Save()
 {
     POMDOG_ASSERT(!filePath.empty());
+
+    if (!needToSave) {
+        return;
+    }
 
     if (jsonData.empty()) {
         return;
@@ -239,6 +248,7 @@ void UserPreferences::Save()
     }
 
     stream << jsonData;
+    needToSave = false;
 }
 //-----------------------------------------------------------------------
 } // namespace Pomdog
