@@ -15,11 +15,7 @@ struct NullOptionalType final {
     constexpr explicit NullOptionalType(init) noexcept {}
 };
 
-#if defined(_MSC_VER) && _MSC_VER <= 1900
-const NullOptionalType NullOpt{ NullOptionalType::init{} };
-#else
 constexpr NullOptionalType NullOpt{ NullOptionalType::init{} };
-#endif
 
 template <typename T>
 class Optional final {
@@ -28,39 +24,19 @@ private:
     bool valid;
 
 public:
-
-#if defined(_MSC_VER) && _MSC_VER <= 1900
-    Optional()
-        : valid(false)
-    {}
-
-    Optional(NullOptionalType const&)
-        : valid(false)
-    {}
-#else
     constexpr Optional()
-        : valid(false)
+        : data()
+        , valid(false)
     {}
 
     constexpr Optional(NullOptionalType const&)
-        : valid(false)
+        : data()
+        , valid(false)
     {}
-#endif
 
     Optional(Optional const&) = default;
     Optional(Optional &&) = default;
 
-#if defined(_MSC_VER) && _MSC_VER <= 1900
-    Optional(T const& v)
-        : data(v)
-        , valid(true)
-    {}
-
-    Optional(T && v)
-        : data(std::move(v))
-        , valid(true)
-    {}
-#else
     constexpr Optional(T const& v)
         : data(v)
         , valid(true)
@@ -70,7 +46,6 @@ public:
         : data(std::move(v))
         , valid(true)
     {}
-#endif
 
     Optional & operator=(NullOptionalType const&)
     {
@@ -96,17 +71,10 @@ public:
         return *this;
     }
 
-#if defined(_MSC_VER) && _MSC_VER <= 1900
-    T const* operator->() const noexcept
-    {
-        return &data;
-    }
-#else
     constexpr T const* operator->() const noexcept
     {
         return POMDOG_CONSTEXPR_ASSERT(valid), &data;
     }
-#endif
 
     T* operator->() noexcept
     {
@@ -114,17 +82,10 @@ public:
         return &data;
     }
 
-#if defined(_MSC_VER) && _MSC_VER <= 1900
-    T const& operator*() const
-    {
-        return data;
-    }
-#else
     constexpr T const& operator*() const
     {
         return POMDOG_CONSTEXPR_ASSERT(valid), data;
     }
-#endif
 
     T & operator*()
     {
@@ -132,29 +93,15 @@ public:
         return data;
     }
 
-#if defined(_MSC_VER) && _MSC_VER <= 1900
-    explicit operator bool() const noexcept
-    {
-        return valid;
-    }
-#else
     constexpr explicit operator bool() const noexcept
     {
         return valid;
     }
-#endif
 
-#if defined(_MSC_VER) && _MSC_VER <= 1900
-    T const& value() const
-    {
-        return data;
-    }
-#else
     constexpr T const& value() const
     {
         return POMDOG_CONSTEXPR_ASSERT(valid), data;
     }
-#endif
 
     T & value()
     {
@@ -163,19 +110,11 @@ public:
     }
 };
 
-#if defined(_MSC_VER) && _MSC_VER <= 1900
-template <typename T>
-inline Optional<T> MakeOptional(T v)
-{
-    return Optional<T>(v);
-}
-#else
 template <typename T>
 inline constexpr Optional<T> MakeOptional(T v)
 {
     return Optional<T>(v);
 }
-#endif
 
 } // namespace Pomdog
 

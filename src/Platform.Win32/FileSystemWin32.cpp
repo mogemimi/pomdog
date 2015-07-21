@@ -23,13 +23,7 @@ bool FileSystem::CreateDirectory(std::string const& path)
 } // namespace Pomdog
 
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
-
-// Bug on Visual Studio 2015 RC.
-// Please see https://connect.microsoft.com/VisualStudio/feedback/details/976983
-#pragma warning(push)
-#pragma warning(disable : 4091)
 #include <Shlobj.h>
-#pragma warning(pop)
 
 namespace Pomdog {
 namespace Detail {
