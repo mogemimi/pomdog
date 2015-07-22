@@ -175,6 +175,7 @@
       '../include/Pomdog/Signals/ConnectionList.hpp',
       '../include/Pomdog/Signals/Event.hpp',
       '../include/Pomdog/Signals/EventQueue.hpp',
+      '../include/Pomdog/Signals/Helpers.hpp',
       '../include/Pomdog/Signals/ScopedConnection.hpp',
       '../include/Pomdog/Signals/Signal.hpp',
       '../include/Pomdog/Signals/detail/EventBody.hpp',

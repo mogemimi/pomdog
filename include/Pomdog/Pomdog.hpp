@@ -123,6 +123,7 @@
 #include "Signals/ConnectionList.hpp"
 #include "Signals/Event.hpp"
 #include "Signals/EventQueue.hpp"
+#include "Signals/Helpers.hpp"
 #include "Signals/ScopedConnection.hpp"
 #include "Signals/Signal.hpp"
 

@@ -77,6 +77,7 @@
         'Signals/ConnectionListTest.cpp',
         'Signals/EventQueueTest.cpp',
         'Signals/EventTest.cpp',
+        'Signals/HelpersTest.cpp',
         'Signals/ScopedConnectionTest.cpp',
         'Signals/SignalTest.cpp',
         'Utility/AnyTest.cpp',
