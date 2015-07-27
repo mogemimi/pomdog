@@ -3,6 +3,7 @@
 
 #include "Pomdog/Async/Task.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <atomic>
 
 namespace Pomdog {
 namespace Concurrency {

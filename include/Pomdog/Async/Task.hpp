@@ -36,6 +36,8 @@ struct TaskResult {
 template <>
 struct TaskResult<void> {};
 
+struct TaskImpl;
+
 template <typename TResult>
 class POMDOG_EXPORT TaskBody final
     : public std::enable_shared_from_this<TaskBody<TResult>> {
@@ -49,6 +51,7 @@ public:
 
     friend class TaskCompletionSource<TResult>;
     friend class TaskFactory;
+    friend struct TaskImpl;
 
 public:
     TaskBody() = delete;
@@ -97,6 +100,18 @@ using ArgumentOf = std::remove_const_t<std::remove_reference_t<
     decltype(FunctionTypeTraitsImpl::GetArg(
     std::declval<std::remove_pointer_t<TFunction>*>()))>>;
 
+template <typename T, typename U, bool B>
+using EnableIf = std::enable_if_t<std::is_same<T, U>::value == B, std::nullptr_t>;
+
+template <typename TResult>
+struct TaskTypeTraits {
+    typedef TResult ResultType;
+};
+template <typename TResult>
+struct TaskTypeTraits<Task<TResult>> {
+    typedef TResult ResultType;
+};
+
 } // namespace Detail
 
 template <typename TResult>
@@ -107,6 +122,7 @@ private:
 
     friend class TaskCompletionSource<TResult>;
     friend class TaskFactory;
+    friend struct Detail::TaskImpl;
 
 public:
     Task() = delete;
@@ -117,13 +133,13 @@ public:
 
     template <typename TFunction>
     auto Then(TFunction const& continuation)
-        -> Task<Detail::ResultOf<TFunction>>;
+        -> Task<typename Detail::TaskTypeTraits<Detail::ResultOf<TFunction>>::ResultType>;
 
     template <typename TFunction>
     auto Then(
         TFunction const& continuation,
         std::shared_ptr<Scheduler> const& scheduler)
-        -> Task<Detail::ResultOf<TFunction>>;
+        -> Task<typename Detail::TaskTypeTraits<Detail::ResultOf<TFunction>>::ResultType>;
 
     template <typename TFunction>
     Task<TResult> Catch(TFunction const& func);
@@ -249,43 +265,108 @@ void POMDOG_EXPORT InnerInvoke(
     tcs->SetResult();
 }
 
-template <typename TFunction, typename TResult, typename TContinuationResult>
-void POMDOG_EXPORT InnerInvokeContinuation(
-    TFunction const& continuation,
-    std::shared_ptr<TaskCompletionSource<TContinuationResult>> const& tcs,
-    Detail::TaskResult<TResult> const& result)
-{
-    tcs->SetResult(continuation(result.value));
-}
-
 template <typename TFunction, typename TResult>
-void POMDOG_EXPORT InnerInvokeContinuation(
+auto POMDOG_EXPORT InnerInvokeGetTask(
     TFunction const& continuation,
-    std::shared_ptr<TaskCompletionSource<void>> const& tcs,
-    Detail::TaskResult<TResult> const& result)
+    Detail::TaskResult<TResult> const& result) -> ResultOf<TFunction>
 {
-    continuation(result.value);
-    tcs->SetResult();
-}
-
-template <typename TFunction, typename TContinuationResult>
-void POMDOG_EXPORT InnerInvokeContinuation(
-    TFunction const& continuation,
-    std::shared_ptr<TaskCompletionSource<TContinuationResult>> const& tcs,
-    Detail::TaskResult<void> const&)
-{
-    tcs->SetResult(continuation());
+    return continuation(result.value);
 }
 
 template <typename TFunction>
-void POMDOG_EXPORT InnerInvokeContinuation(
+auto POMDOG_EXPORT InnerInvokeGetTask(
     TFunction const& continuation,
-    std::shared_ptr<TaskCompletionSource<void>> const& tcs,
-    Detail::TaskResult<void> const&)
+    Detail::TaskResult<void> const&) -> ResultOf<TFunction>
 {
-    continuation();
-    tcs->SetResult();
+    return continuation();
 }
+
+struct TaskImpl {
+    template <typename TResult>
+    static void InnerInvokeSetResult(
+        TaskCompletionSource<TResult> & tcs,
+        Detail::TaskResult<TResult> const& result)
+    {
+        tcs.SetResult(result.value);
+    }
+
+    static void InnerInvokeSetResult(
+        TaskCompletionSource<void> & tcs,
+        Detail::TaskResult<void> const&)
+    {
+        tcs.SetResult();
+    }
+
+    template <typename TFunction, typename TResult, typename TContinuationResult>
+    static void POMDOG_EXPORT InnerInvokeContinuation(
+        TFunction const& continuation,
+        std::shared_ptr<TaskCompletionSource<TContinuationResult>> const& tcs,
+        Detail::TaskResult<TResult> const& result,
+        EnableIf<ResultOf<TFunction>, Task<TContinuationResult>, false> = nullptr)
+    {
+        tcs->SetResult(continuation(result.value));
+    }
+
+    template <typename TFunction, typename TResult>
+    static void POMDOG_EXPORT InnerInvokeContinuation(
+        TFunction const& continuation,
+        std::shared_ptr<TaskCompletionSource<void>> const& tcs,
+        Detail::TaskResult<TResult> const& result,
+        EnableIf<ResultOf<TFunction>, Task<void>, false> = nullptr)
+    {
+        continuation(result.value);
+        tcs->SetResult();
+    }
+
+    template <typename TFunction, typename TContinuationResult>
+    static void POMDOG_EXPORT InnerInvokeContinuation(
+        TFunction const& continuation,
+        std::shared_ptr<TaskCompletionSource<TContinuationResult>> const& tcs,
+        Detail::TaskResult<void> const&,
+        EnableIf<ResultOf<TFunction>, Task<TContinuationResult>, false> = nullptr)
+    {
+        tcs->SetResult(continuation());
+    }
+
+    template <typename TFunction>
+    static void POMDOG_EXPORT InnerInvokeContinuation(
+        TFunction const& continuation,
+        std::shared_ptr<TaskCompletionSource<void>> const& tcs,
+        Detail::TaskResult<void> const&,
+        EnableIf<ResultOf<TFunction>, Task<void>, false> = nullptr)
+    {
+        continuation();
+        tcs->SetResult();
+    }
+
+    template <typename TFunction, typename TResult, typename TContinuationResult>
+    static void POMDOG_EXPORT InnerInvokeContinuation(
+        TFunction const& continuation,
+        std::shared_ptr<TaskCompletionSource<TContinuationResult>> const& tcs,
+        Detail::TaskResult<TResult> const& result,
+        EnableIf<ResultOf<TFunction>, Task<TContinuationResult>, true> = nullptr)
+    {
+        auto task = InnerInvokeGetTask(continuation, result);
+        auto scheduler = task.GetScheduler();
+        auto runContinuation = [antecedent = task.body, tcs] {
+            if (antecedent->exceptionPointer) {
+                tcs->SetException(antecedent->exceptionPointer);
+                return;
+            }
+            InnerInvokeSetResult(*tcs, antecedent->result);
+        };
+
+        const bool completed = task.IsDone();
+        if (completed) {
+            POMDOG_ASSERT(scheduler);
+            scheduler->Schedule(std::move(runContinuation));
+        }
+        else {
+            std::lock_guard<std::mutex> lock(task.body->mutex);
+            task.body->continuations.push_back(std::move(runContinuation));
+        }
+    }
+};
 
 template <typename TException>
 struct POMDOG_EXPORT InnerHandleException {
@@ -389,7 +470,7 @@ Task<TResult>::Task(std::shared_ptr<TaskBody> const& taskBodyIn)
 template <typename TResult>
 template <typename TFunction>
 auto Task<TResult>::Then(TFunction const& continuation)
-    -> Task<Detail::ResultOf<TFunction>>
+    -> Task<typename Detail::TaskTypeTraits<Detail::ResultOf<TFunction>>::ResultType>
 {
     POMDOG_ASSERT(body);
     auto scheduler = body->scheduler.lock();
@@ -402,12 +483,12 @@ template <typename TFunction>
 auto Task<TResult>::Then(
     TFunction const& continuation,
     std::shared_ptr<Scheduler> const& scheduler)
-    -> Task<Detail::ResultOf<TFunction>>
+    -> Task<typename Detail::TaskTypeTraits<Detail::ResultOf<TFunction>>::ResultType>
 {
     POMDOG_ASSERT(scheduler);
     POMDOG_ASSERT(body);
 
-    using TContinuationResult = Detail::ResultOf<TFunction>;
+    using TContinuationResult = typename Detail::TaskTypeTraits<Detail::ResultOf<TFunction>>::ResultType;
     auto tcs = std::make_shared<TaskCompletionSource<TContinuationResult>>(scheduler);
 
     auto runContinuation = [antecedent = body, continuation, tcs] {
@@ -418,7 +499,7 @@ auto Task<TResult>::Then(
             return;
         }
         try {
-            Detail::InnerInvokeContinuation(continuation, tcs, antecedent->result);
+            Detail::TaskImpl::InnerInvokeContinuation(continuation, tcs, antecedent->result);
         }
         catch (...) {
             tcs->SetException(std::current_exception());

@@ -42,8 +42,6 @@ TEST_F(TaskTest, Delay)
     wait(std::chrono::milliseconds(30));
     EXPECT_TRUE(task.IsDone());
     EXPECT_FALSE(task.IsRejected());
-
-    auto promise = concurrency;
 }
 
 TEST_F(TaskTest, StartNew)
@@ -197,6 +195,53 @@ TEST_F(TaskTest, Then_MethodChaining)
     EXPECT_TRUE(task.IsDone());
     EXPECT_FALSE(task.IsRejected());
     EXPECT_EQ("42", result);
+}
+
+TEST_F(TaskTest, Then_ReturnTask)
+{
+    std::vector<std::string> result;
+
+    auto task1 = concurrency.FromResult();
+    auto task2 = task1.Then([&] {
+        result.push_back("Delay");
+        return concurrency.Delay(std::chrono::milliseconds(40));
+    });
+    auto task3 = task2.Then([&] {
+        result.push_back("FromResult");
+        return concurrency.FromResult(42);
+    });
+    auto task4 = task3.Then([&](int x) {
+        result.push_back(std::to_string(x));
+    });
+
+    EXPECT_TRUE(task1.IsDone());
+    EXPECT_FALSE(task2.IsDone());
+
+    wait(std::chrono::nanoseconds(1));
+    ASSERT_EQ(1, result.size());
+    EXPECT_EQ("Delay", result.back());
+    EXPECT_FALSE(task2.IsDone());
+
+    wait(std::chrono::milliseconds(60));
+    EXPECT_FALSE(task2.IsDone());
+
+    wait(std::chrono::nanoseconds(1));
+    EXPECT_TRUE(task2.IsDone());
+    EXPECT_FALSE(task3.IsDone());
+
+    wait(std::chrono::nanoseconds(1));
+    ASSERT_EQ(2, result.size());
+    EXPECT_EQ("FromResult", result.back());
+    EXPECT_FALSE(task3.IsDone());
+
+    wait(std::chrono::nanoseconds(1));
+    EXPECT_TRUE(task3.IsDone());
+    EXPECT_FALSE(task4.IsDone());
+
+    wait(std::chrono::nanoseconds(1));
+    EXPECT_TRUE(task4.IsDone());
+    ASSERT_EQ(3, result.size());
+    EXPECT_EQ("42", result.back());
 }
 
 TEST_F(TaskTest, Catch_ExceptionPtr)
@@ -363,9 +408,9 @@ TEST_F(TaskTest, Catch_WhenAny)
 
 TEST_F(TaskTest, WhenAny)
 {
-    auto task1 = concurrency.Delay(std::chrono::milliseconds(20));
-    auto task2 = concurrency.Delay(std::chrono::milliseconds(40));
-    auto task3 = concurrency.Delay(std::chrono::milliseconds(60));
+    auto task1 = concurrency.Delay(std::chrono::milliseconds(50));
+    auto task2 = concurrency.Delay(std::chrono::milliseconds(100));
+    auto task3 = concurrency.Delay(std::chrono::milliseconds(150));
 
     auto whenAny = concurrency.WhenAny({task1, task2, task3});
 
@@ -377,18 +422,18 @@ TEST_F(TaskTest, WhenAny)
     ASSERT_FALSE(task2.IsDone());
     ASSERT_FALSE(task3.IsDone());
     EXPECT_FALSE(whenAny.IsDone());
-    wait(std::chrono::milliseconds(20));
+    wait(std::chrono::milliseconds(50));
     ASSERT_TRUE(task1.IsDone());
     ASSERT_FALSE(task2.IsDone());
     ASSERT_FALSE(task3.IsDone());
     EXPECT_FALSE(whenAny.IsDone());
-    wait(std::chrono::milliseconds(20));
+    wait(std::chrono::milliseconds(50));
     ASSERT_TRUE(task1.IsDone());
     ASSERT_TRUE(task2.IsDone());
     ASSERT_FALSE(task3.IsDone());
     EXPECT_TRUE(whenAny.IsDone());
     EXPECT_FALSE(whenAny.IsRejected());
-    wait(std::chrono::milliseconds(20));
+    wait(std::chrono::milliseconds(50));
     ASSERT_TRUE(task1.IsDone());
     ASSERT_TRUE(task2.IsDone());
     ASSERT_TRUE(task3.IsDone());
@@ -590,4 +635,30 @@ TEST(Task, ChainingSuchAsPromise_2)
     EXPECT_EQ("task A", result[1]);
     EXPECT_EQ("throw error at Task A", result[2]);
     EXPECT_EQ("task C", result[3]);
+}
+
+TEST(Task, ChainingSuchAsPromise_3)
+{
+    auto scheduler = std::make_shared<ImmediateExecutor>();
+    TaskFactory concurrency{ scheduler };
+    std::vector<std::string> result;
+
+    auto task = concurrency.CreateTask([&] { result.push_back("start"); });
+    task.Then([&] {
+        result.push_back("Delay");
+        return concurrency.Delay(std::chrono::milliseconds(10));
+    })
+    .Then([&] {
+        result.push_back("FromResult");
+        return concurrency.FromResult(42);
+    })
+    .Then([&](int x) {
+        result.push_back(std::to_string(x));
+    });
+
+    ASSERT_EQ(4, result.size());
+    EXPECT_EQ("start", result[0]);
+    EXPECT_EQ("Delay", result[1]);
+    EXPECT_EQ("FromResult", result[2]);
+    EXPECT_EQ("42", result[3]);
 }
