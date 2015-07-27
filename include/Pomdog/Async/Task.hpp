@@ -100,8 +100,8 @@ using ArgumentOf = std::remove_const_t<std::remove_reference_t<
     decltype(FunctionTypeTraitsImpl::GetArg(
     std::declval<std::remove_pointer_t<TFunction>*>()))>>;
 
-template <typename T, typename U, bool B>
-using EnableIf = std::enable_if_t<std::is_same<T, U>::value == B, std::nullptr_t>;
+template <typename T, typename U>
+using IsSame = typename std::enable_if<std::is_same<T, U>::value, std::nullptr_t>::type;
 
 template <typename TResult>
 struct TaskTypeTraits {
@@ -302,7 +302,7 @@ struct TaskImpl {
         TFunction const& continuation,
         std::shared_ptr<TaskCompletionSource<TContinuationResult>> const& tcs,
         Detail::TaskResult<TResult> const& result,
-        EnableIf<ResultOf<TFunction>, Task<TContinuationResult>, false> = nullptr)
+        IsSame<ResultOf<TFunction>, TContinuationResult> = nullptr)
     {
         tcs->SetResult(continuation(result.value));
     }
@@ -312,7 +312,7 @@ struct TaskImpl {
         TFunction const& continuation,
         std::shared_ptr<TaskCompletionSource<void>> const& tcs,
         Detail::TaskResult<TResult> const& result,
-        EnableIf<ResultOf<TFunction>, Task<void>, false> = nullptr)
+        IsSame<ResultOf<TFunction>, void> = nullptr)
     {
         continuation(result.value);
         tcs->SetResult();
@@ -323,7 +323,7 @@ struct TaskImpl {
         TFunction const& continuation,
         std::shared_ptr<TaskCompletionSource<TContinuationResult>> const& tcs,
         Detail::TaskResult<void> const&,
-        EnableIf<ResultOf<TFunction>, Task<TContinuationResult>, false> = nullptr)
+        IsSame<ResultOf<TFunction>, TContinuationResult> = nullptr)
     {
         tcs->SetResult(continuation());
     }
@@ -333,7 +333,7 @@ struct TaskImpl {
         TFunction const& continuation,
         std::shared_ptr<TaskCompletionSource<void>> const& tcs,
         Detail::TaskResult<void> const&,
-        EnableIf<ResultOf<TFunction>, Task<void>, false> = nullptr)
+        IsSame<ResultOf<TFunction>, void> = nullptr)
     {
         continuation();
         tcs->SetResult();
@@ -344,7 +344,7 @@ struct TaskImpl {
         TFunction const& continuation,
         std::shared_ptr<TaskCompletionSource<TContinuationResult>> const& tcs,
         Detail::TaskResult<TResult> const& result,
-        EnableIf<ResultOf<TFunction>, Task<TContinuationResult>, true> = nullptr)
+        IsSame<ResultOf<TFunction>, Task<TContinuationResult>> = nullptr)
     {
         auto task = InnerInvokeGetTask(continuation, result);
         auto scheduler = task.GetScheduler();
