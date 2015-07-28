@@ -464,9 +464,9 @@ TEST_F(TaskTest, WhenAll)
 
 TEST_F(TaskTest, WhenAll_WithDelay)
 {
-    auto task1 = concurrency.Delay(std::chrono::milliseconds(20));
-    auto task2 = concurrency.Delay(std::chrono::milliseconds(40));
-    auto task3 = concurrency.Delay(std::chrono::milliseconds(60));
+    auto task1 = concurrency.Delay(std::chrono::milliseconds(50));
+    auto task2 = concurrency.Delay(std::chrono::milliseconds(100));
+    auto task3 = concurrency.Delay(std::chrono::milliseconds(150));
 
     auto whenAll = concurrency.WhenAll({task1, task2, task3});
 
@@ -475,17 +475,17 @@ TEST_F(TaskTest, WhenAll_WithDelay)
     ASSERT_FALSE(task2.IsDone());
     ASSERT_FALSE(task3.IsDone());
     EXPECT_FALSE(whenAll.IsDone());
-    wait(std::chrono::milliseconds(20));
+    wait(std::chrono::milliseconds(50));
     ASSERT_TRUE(task1.IsDone());
     ASSERT_FALSE(task2.IsDone());
     ASSERT_FALSE(task3.IsDone());
     EXPECT_FALSE(whenAll.IsDone());
-    wait(std::chrono::milliseconds(20));
+    wait(std::chrono::milliseconds(50));
     ASSERT_TRUE(task1.IsDone());
     ASSERT_TRUE(task2.IsDone());
     ASSERT_FALSE(task3.IsDone());
     EXPECT_FALSE(whenAll.IsDone());
-    wait(std::chrono::milliseconds(20));
+    wait(std::chrono::milliseconds(50));
     ASSERT_TRUE(task1.IsDone());
     ASSERT_TRUE(task2.IsDone());
     ASSERT_TRUE(task3.IsDone());
