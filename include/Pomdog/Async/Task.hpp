@@ -380,30 +380,30 @@ struct POMDOG_EXPORT TaskImpl {
         tcs.SetResult();
     }
 
-    template <typename TFunction, typename TResult,
-        IsSame<ResultOf<TFunction>, TResult> = nullptr>
+    template <typename TFunction, typename TResult>
     static void InnerInvoke(
         const TFunction& func,
-        const TaskCompletionSource<TResult>& tcs)
+        const TaskCompletionSource<TResult>& tcs,
+        IsSame<ResultOf<TFunction>, TResult> = nullptr)
     {
         tcs.SetResult(func());
     }
 
-    template <typename TFunction,
-        IsSame<ResultOf<TFunction>, void> = nullptr>
+    template <typename TFunction>
     static void InnerInvoke(
         const TFunction& func,
-        const TaskCompletionSource<void>& tcs)
+        const TaskCompletionSource<void>& tcs,
+        IsSame<ResultOf<TFunction>, void> = nullptr)
     {
         func();
         tcs.SetResult();
     }
 
-    template <typename TFunction, typename TResult,
-        IsSame<ResultOf<TFunction>, Task<TResult>> = nullptr>
+    template <typename TFunction, typename TResult>
     static void InnerInvoke(
         const TFunction& func,
-        const TaskCompletionSource<TResult>& tcs)
+        const TaskCompletionSource<TResult>& tcs,
+        IsSame<ResultOf<TFunction>, Task<TResult>> = nullptr)
     {
         auto task = func();
         auto scheduler = task.GetScheduler();
@@ -418,54 +418,54 @@ struct POMDOG_EXPORT TaskImpl {
         });
     }
 
-    template <typename TFunction, typename TResult, typename TContinuationResult,
-        IsSame<ResultOf<TFunction>, TContinuationResult> = nullptr>
+    template <typename TFunction, typename TResult, typename TContinuationResult>
     static void InnerInvokeContinuation(
         const TFunction& continuation,
         const TaskCompletionSource<TContinuationResult>& tcs,
-        const TaskResult<TResult>& result)
+        const TaskResult<TResult>& result,
+        IsSame<ResultOf<TFunction>, TContinuationResult> = nullptr)
     {
         tcs.SetResult(continuation(result.value));
     }
 
-    template <typename TFunction, typename TResult,
-        IsSame<ResultOf<TFunction>, void> = nullptr>
+    template <typename TFunction, typename TResult>
     static void InnerInvokeContinuation(
         const TFunction& continuation,
         const TaskCompletionSource<void>& tcs,
-        const TaskResult<TResult>& result)
+        const TaskResult<TResult>& result,
+        IsSame<ResultOf<TFunction>, void> = nullptr)
     {
         continuation(result.value);
         tcs.SetResult();
     }
 
-    template <typename TFunction, typename TContinuationResult,
-        IsSame<ResultOf<TFunction>, TContinuationResult> = nullptr>
+    template <typename TFunction, typename TContinuationResult>
     static void InnerInvokeContinuation(
         const TFunction& continuation,
         const TaskCompletionSource<TContinuationResult>& tcs,
-        const TaskResult<void>&)
+        const TaskResult<void>&,
+        IsSame<ResultOf<TFunction>, TContinuationResult> = nullptr)
     {
         tcs.SetResult(continuation());
     }
 
-    template <typename TFunction,
-        IsSame<ResultOf<TFunction>, void> = nullptr>
+    template <typename TFunction>
     static void InnerInvokeContinuation(
         const TFunction& continuation,
         const TaskCompletionSource<void>& tcs,
-        const TaskResult<void>&)
+        const TaskResult<void>&,
+        IsSame<ResultOf<TFunction>, void> = nullptr)
     {
         continuation();
         tcs.SetResult();
     }
 
-    template <typename TFunction, typename TResult, typename TContinuationResult,
-        IsSame<ResultOf<TFunction>, Task<TContinuationResult>> = nullptr>
+    template <typename TFunction, typename TResult, typename TContinuationResult>
     static void InnerInvokeContinuation(
         const TFunction& continuation,
         const TaskCompletionSource<TContinuationResult>& tcs,
-        const TaskResult<TResult>& result)
+        const TaskResult<TResult>& result,
+        IsSame<ResultOf<TFunction>, Task<TContinuationResult>> = nullptr)
     {
         auto task = InnerGetTask(continuation, result);
         auto scheduler = task.GetScheduler();
@@ -480,22 +480,22 @@ struct POMDOG_EXPORT TaskImpl {
         });
     }
 
-    template <typename TFunction, typename TResult, typename TContinuationResult,
-        IsSame<ResultOf<TFunction>, TContinuationResult> = nullptr>
+    template <typename TFunction, typename TResult, typename TContinuationResult>
     static void InnerInvokeContinuationWithTask(
         const TFunction& continuation,
         const TaskCompletionSource<TContinuationResult>& tcs,
-        const TaskBody<TResult>& task)
+        const TaskBody<TResult>& task,
+        IsSame<ResultOf<TFunction>, TContinuationResult> = nullptr)
     {
         tcs.SetResult(continuation(task));
     }
 
-    template <typename TFunction, typename TResult,
-        IsSame<ResultOf<TFunction>, void> = nullptr>
+    template <typename TFunction, typename TResult>
     static void InnerInvokeContinuationWithTask(
         const TFunction& continuation,
         const TaskCompletionSource<void>& tcs,
-        const Task<TResult>& task)
+        const Task<TResult>& task,
+        IsSame<ResultOf<TFunction>, void> = nullptr)
     {
         continuation(task);
         tcs.SetResult();
