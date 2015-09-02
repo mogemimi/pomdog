@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "ImmediateScheduler.hpp"
+#include "Pomdog/Async/ImmediateScheduler.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <thread>
 

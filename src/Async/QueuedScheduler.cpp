@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2015 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "QueuedScheduler.hpp"
+#include "Pomdog/Async/QueuedScheduler.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 
