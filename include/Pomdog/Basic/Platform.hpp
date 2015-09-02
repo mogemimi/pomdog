@@ -99,6 +99,8 @@
 #   define POMDOG_ARCHITECTURE_AMD64
 #elif defined(_M_ARM) || defined(__arm__) || defined(_ARM_)
 #   define POMDOG_ARCHITECTURE_ARM
+#elif defined(__arm64__)
+#   define POMDOG_ARCHITECTURE_ARM64
 #elif defined(__powerpc64__)
 #   define POMDOG_ARCHITECTURE_POWERPC64
 #elif defined(__ppc__) || defined(__powerpc__)
