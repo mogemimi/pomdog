@@ -22,11 +22,11 @@ auto FromSingleShotSignal(
 {
     POMDOG_ASSERT(scheduler);
     using TResult = std::remove_const_t<std::remove_reference_t<Argument>>;
-    auto tcs = std::make_shared<TaskCompletionSource<TResult>>(scheduler);
+    TaskCompletionSource<TResult> tcs(scheduler);
     Signals::ConnectSingleShot(signal, [tcs](TResult const& arg) {
-        tcs->SetResult(arg);
+        tcs.SetResult(arg);
     });
-    return tcs->GetTask();
+    return Concurrency::CreateTask(tcs);
 }
 
 } // namespace Concurrency
