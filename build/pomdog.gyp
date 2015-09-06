@@ -331,6 +331,28 @@
       '../src/RenderSystem.GL4/TypesafeGL4.hpp',
       '../src/RenderSystem.GL4/TypesafeHelperGL4.hpp',
     ],
+    'pomdog_library_metal_sources': [
+      '../src/RenderSystem.Metal/BufferMetal.hpp',
+      '../src/RenderSystem.Metal/BufferMetal.mm',
+      '../src/RenderSystem.Metal/EffectReflectionMetal.hpp',
+      '../src/RenderSystem.Metal/EffectReflectionMetal.mm',
+      '../src/RenderSystem.Metal/GraphicsContextMetal.hpp',
+      '../src/RenderSystem.Metal/GraphicsContextMetal.mm',
+      '../src/RenderSystem.Metal/GraphicsDeviceMetal.hpp',
+      '../src/RenderSystem.Metal/GraphicsDeviceMetal.mm',
+      '../src/RenderSystem.Metal/MetalFormatHelper.hpp',
+      '../src/RenderSystem.Metal/MetalFormatHelper.mm',
+      '../src/RenderSystem.Metal/PipelineStateMetal.hpp',
+      '../src/RenderSystem.Metal/PipelineStateMetal.mm',
+      '../src/RenderSystem.Metal/RenderTarget2DMetal.hpp',
+      '../src/RenderSystem.Metal/RenderTarget2DMetal.mm',
+      '../src/RenderSystem.Metal/SamplerStateMetal.hpp',
+      '../src/RenderSystem.Metal/SamplerStateMetal.mm',
+      '../src/RenderSystem.Metal/ShaderMetal.hpp',
+      '../src/RenderSystem.Metal/ShaderMetal.mm',
+      '../src/RenderSystem.Metal/Texture2DMetal.hpp',
+      '../src/RenderSystem.Metal/Texture2DMetal.mm',
+    ],
     'pomdog_library_openal_sources': [
       '../src/SoundSystem.OpenAL/AudioClipAL.cpp',
       '../src/SoundSystem.OpenAL/AudioClipAL.hpp',
@@ -561,6 +583,11 @@
             '-lopengl32.lib',
           ],
         },
+      }],
+      ['"Metal" in renderers', {
+        'sources': [
+          '<@(pomdog_library_metal_sources)',
+        ],
       }],
       ['"Metal" in renderers and OS == "mac"', {
         'link_settings': {
