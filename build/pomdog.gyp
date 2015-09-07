@@ -17,6 +17,14 @@
         'input_devices%': [],
       },
     }],
+    ['OS == "ios"', {
+      'variables': {
+        'application_platform%': 'CocoaTouch',
+        'renderers%': ['Metal'],
+        'audio%': 'OpenAL',
+        'input_devices%': [],
+      },
+    }],
     ['OS == "linux" or OS == "freebsd" or OS == "openbsd"', {
       'variables': {
         'application_platform%': 'X11',
@@ -545,12 +553,36 @@
           ],
         },
       }],
+      ['"Metal" in renderers and OS == "mac"', {
+        'link_settings': {
+          'libraries': [
+            '$(SDKROOT)/System/Library/Frameworks/Metal.framework',
+          ],
+        },
+      }],
+      ['"Metal" in renderers and OS == "ios"', {
+        'link_settings': {
+          'libraries': [
+            '$(SDKROOT)/System/Library/Frameworks/Metal.framework',
+            '$(SDKROOT)/System/Library/Frameworks/MetalKit.framework',
+            '$(SDKROOT)/System/Library/Frameworks/ModelIO.framework',
+          ],
+        },
+      }],
       ['audio == "OpenAL"', {
         'sources': [
           '<@(pomdog_library_openal_sources)',
         ],
       }],
       ['audio == "OpenAL" and OS == "mac"', {
+        'link_settings': {
+          'libraries': [
+            '$(SDKROOT)/System/Library/Frameworks/AudioToolBox.framework',
+            '$(SDKROOT)/System/Library/Frameworks/OpenAL.framework',
+          ],
+        },
+      }],
+      ['audio == "OpenAL" and OS == "ios"', {
         'link_settings': {
           'libraries': [
             '$(SDKROOT)/System/Library/Frameworks/AudioToolBox.framework',
@@ -632,6 +664,18 @@
       ['OS == "mac"', {
         'xcode_settings': {
           'MACOSX_DEPLOYMENT_TARGET': '10.9',
+        },
+      }],
+      ['OS == "ios"', {
+        'xcode_settings': {
+          'IPHONEOS_DEPLOYMENT_TARGET': '9.0',
+          'SDKROOT': 'iphoneos',
+        },
+        'link_settings': {
+          'libraries': [
+            '$(SDKROOT)/System/Library/Frameworks/Foundation.framework',
+            '$(SDKROOT)/System/Library/Frameworks/UIKit.framework',
+          ],
         },
       }],
       ['OS == "win"', {

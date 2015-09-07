@@ -291,7 +291,6 @@
     'xcode_settings': {
       'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
       'CLANG_CXX_LANGUAGE_STANDARD': 'c++14',
-      'MACOSX_DEPLOYMENT_TARGET': '10.9', # OS X Deployment Target: 10.9
       'CLANG_CXX_LIBRARY': 'libc++', # libc++ requires OS X 10.7 or later
       #'SKIP_INSTALL': 'NO',
       # Warnings:
@@ -321,6 +320,19 @@
       'GCC_INLINES_ARE_PRIVATE_EXTERN': 'YES', # '-fvisibility-inlines-hidden'
       'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES', # '-fvisibility=hidden'
     },
+    'conditions': [
+      ['OS == "mac"', {
+        'xcode_settings': {
+          'MACOSX_DEPLOYMENT_TARGET': '10.9',
+        },
+      }],
+      ['OS == "ios"', {
+        'xcode_settings': {
+          'IPHONEOS_DEPLOYMENT_TARGET': '8.3',
+          'SDKROOT': 'iphoneos',
+        },
+      }],
+    ],
   },
   'targets': [
     {
