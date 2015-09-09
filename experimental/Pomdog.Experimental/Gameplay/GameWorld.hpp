@@ -55,7 +55,6 @@ private:
     std::vector<GameObjectID> objects;
 };
 
-
 template <typename T, typename...Components>
 std::vector<GameObject> GameWorld::QueryComponents()
 {
@@ -98,6 +97,6 @@ bool GameWorld::HasComponent(GameObjectID const& id) const
     return context->HasComponent<T>(id);
 }
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GAMEWORLD_FE6556F6_HPP

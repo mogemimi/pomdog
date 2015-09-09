@@ -60,8 +60,6 @@ private:
     GameObjectID id;
 };
 
-
-
 template <class T>
 class Component;
 
@@ -121,6 +119,6 @@ void GameObject::RemoveComponent()
     context->RemoveComponent<T>(id);
 }
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GAMEOBJECT_D9B3B0C3_HPP

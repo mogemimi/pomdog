@@ -27,31 +27,24 @@ GameObject::GameObject(std::shared_ptr<GameObjectContext> && contextIn, GameObje
 //-----------------------------------------------------------------------
 GameObject::operator bool() const
 {
-    POMDOG_ASSERT(context);
-    return context->Valid(id);
+    return context && context->Valid(id);
 }
 //-----------------------------------------------------------------------
 bool GameObject::operator==(GameObject const& gameObject) const
 {
-    POMDOG_ASSERT(context);
-    POMDOG_ASSERT(context == gameObject.context);
-    return id == gameObject.id;
+    POMDOG_ASSERT((!context || !gameObject.context) || context == gameObject.context);
+    return (context && gameObject.context) && (id == gameObject.id);
 }
 //-----------------------------------------------------------------------
 bool GameObject::operator!=(GameObject const& gameObject) const
 {
-    POMDOG_ASSERT(context);
-    POMDOG_ASSERT(context == gameObject.context);
-    return id != gameObject.id;
+    POMDOG_ASSERT((!context || !gameObject.context) || context == gameObject.context);
+    return (!context || !gameObject.context) || (id != gameObject.id);
 }
 //-----------------------------------------------------------------------
 void GameObject::Destroy()
 {
-    POMDOG_ASSERT(context);
-    POMDOG_ASSERT(context->Valid(id));
-
-    if (context->Valid(id))
-    {
+    if (context && context->Valid(id)) {
         context->Destroy(id);
     }
 }
@@ -73,4 +66,4 @@ GameObjectID GameObject::ID() const
     return id;
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

@@ -63,10 +63,12 @@ public:
     bool HasComponents(GameObjectID const& id) const;
 
     template <typename Type>
-    auto Component(GameObjectID const& id)-> typename std::enable_if<std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>::type;
+    auto Component(GameObjectID const& id)
+        -> std::enable_if_t<std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>;
 
     template <typename Type>
-    auto Component(GameObjectID const& id)-> typename std::enable_if<!std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>::type;
+    auto Component(GameObjectID const& id)
+        -> std::enable_if_t<!std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>;
 
 private:
     void DestroyComponents(std::uint32_t index);
@@ -78,7 +80,6 @@ private:
     std::list<GameObjectID> destroyedObjects;
     std::size_t entityCount;
 };
-
 
 template <std::uint8_t MaxComponentCapacity>
 EntityContext<MaxComponentCapacity>::EntityContext()
@@ -350,7 +351,7 @@ std::bitset<MaxComponentCapacity> ComponentMask()
     return std::move(mask);
 }
 
-}// namespace Helper
+} // namespace Helper
 
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type, typename...Components>
@@ -368,7 +369,7 @@ bool EntityContext<MaxComponentCapacity>::HasComponents(GameObjectID const& id) 
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type>
 auto EntityContext<MaxComponentCapacity>::Component(GameObjectID const& id)
-    -> typename std::enable_if<std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>::type
+    -> std::enable_if_t<std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>
 {
     static_assert(std::is_base_of<GameComponent, Type>::value, "");
     static_assert(std::is_base_of<Pomdog::Component<Type>, Type>::value, "");
@@ -401,7 +402,7 @@ auto EntityContext<MaxComponentCapacity>::Component(GameObjectID const& id)
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type>
 auto EntityContext<MaxComponentCapacity>::Component(GameObjectID const& id)
-    -> typename std::enable_if<!std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>::type
+    -> std::enable_if_t<!std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>
 {
     static_assert(std::is_base_of<GameComponent, Type>::value, "");
     static_assert(!std::is_base_of<Pomdog::Component<Type>, Type>::value, "");
@@ -430,11 +431,11 @@ auto EntityContext<MaxComponentCapacity>::Component(GameObjectID const& id)
     return nullptr;
 }
 
-}// namespace Gameplay
-}// namespace Detail
+} // namespace Gameplay
+} // namespace Detail
 
 using GameObjectContext = Detail::Gameplay::EntityContext<64>;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GAMEOBJECTCONTEXT_DFD4E6A6_HPP

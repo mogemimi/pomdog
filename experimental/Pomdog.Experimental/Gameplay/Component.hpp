@@ -25,6 +25,6 @@ public:
     }
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_COMPONENT_0CB8A002_HPP

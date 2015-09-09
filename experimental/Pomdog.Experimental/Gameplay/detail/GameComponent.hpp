@@ -13,8 +13,8 @@ public:
     virtual ~GameComponent() = default;
 };
 
-}// namespace Gameplay
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Gameplay
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_GAMECOMPONENT_68E8B2BF_HPP

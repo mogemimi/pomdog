@@ -45,7 +45,7 @@ private:
     std::uint64_t id;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 namespace std {
 
@@ -57,6 +57,6 @@ struct std::hash<Pomdog::GameObjectID> {
     }
 };
 
-}// namespace std
+} // namespace std
 
 #endif // POMDOG_GAMEOBJECTID_F68B7FC0_HPP

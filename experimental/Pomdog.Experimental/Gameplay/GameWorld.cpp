@@ -30,7 +30,8 @@ void GameWorld::Refresh()
     context->Refresh();
 
     objects.erase(std::remove_if(std::begin(objects), std::end(objects),
-        [this](GameObjectID const& id){ return !context->Valid(id); }), std::end(objects));
+        [this](GameObjectID const& id){ return !context->Valid(id); }),
+        std::end(objects));
 }
 //-----------------------------------------------------------------------
 std::size_t GameWorld::Count() const
@@ -51,4 +52,4 @@ void GameWorld::Clear()
     context->Clear();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

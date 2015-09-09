@@ -42,8 +42,8 @@ private:
 template <typename BaseComponentType, typename IndexType>
 IndexType ComponentTypeIndex<BaseComponentType, IndexType>::count = 0;
 
-}// namespace Gameplay
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Gameplay
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_COMPONENTTYPEINDEX_7EECA00A_HPP
