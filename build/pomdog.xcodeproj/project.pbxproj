@@ -148,6 +148,8 @@
 		A992AF031C2B1168003170C9 /* Coordinate2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A992AF001C2B1168003170C9 /* Coordinate2D.cpp */; };
 		A992AF041C2B1168003170C9 /* Coordinate3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A992AF011C2B1168003170C9 /* Coordinate3D.cpp */; };
 		A992AF051C2B1168003170C9 /* Coordinate3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A992AF011C2B1168003170C9 /* Coordinate3D.cpp */; };
+		A9D18E8D1CA427270011A6CE /* MetalCompiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */; };
+		A9D18E8E1CA427270011A6CE /* MetalCompiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */; };
 		A9D641861C342F59006E14E0 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFBE06E0DEEBFD77A7D8BBB0 /* libpng.a */; };
 		A9D641871C342F5F006E14E0 /* libzlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63DEC4E495A2A3E49BFD61E5 /* libzlib.a */; };
 		A9D641911C343012006E14E0 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D641901C343012006E14E0 /* AudioToolbox.framework */; };
@@ -469,6 +471,8 @@
 		A992AF001C2B1168003170C9 /* Coordinate2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate2D.cpp; sourceTree = "<group>"; };
 		A992AF011C2B1168003170C9 /* Coordinate3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate3D.cpp; sourceTree = "<group>"; };
 		A9AE680DD0E3FCEA11AF8F48 /* FloatingPointVector4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FloatingPointVector4.cpp; sourceTree = "<group>"; };
+		A9D18E8B1CA426FA0011A6CE /* MetalCompiler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MetalCompiler.hpp; sourceTree = "<group>"; };
+		A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalCompiler.cpp; sourceTree = "<group>"; };
 		A9D641901C343012006E14E0 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		AA4220AFBD6F377F07163A1E /* EffectAnnotation.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = EffectAnnotation.hpp; sourceTree = "<group>"; };
 		AAF6F831C87CDE6EB35B140C /* AudioToolBox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolBox.framework; path = System/Library/Frameworks/AudioToolBox.framework; sourceTree = SDKROOT; };
@@ -708,6 +712,7 @@
 			children = (
 				DF6B97894802CD7445E0EC10 /* GLSLCompiler.cpp */,
 				F976B8B50141FE39C87B699D /* HLSLCompiler.cpp */,
+				A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */,
 			);
 			path = ShaderCompilers;
 			sourceTree = "<group>";
@@ -1070,6 +1075,7 @@
 			children = (
 				B9E85E3EB9950C51EB67989B /* GLSLCompiler.hpp */,
 				E319F46437C93E0093E7D174 /* HLSLCompiler.hpp */,
+				A9D18E8B1CA426FA0011A6CE /* MetalCompiler.hpp */,
 			);
 			path = ShaderCompilers;
 			sourceTree = "<group>";
@@ -1496,6 +1502,7 @@
 				C3A63B50AA37BB77F4224857 /* FloatingPointMatrix2x2.cpp in Sources */,
 				FFDFEBC545EB6A4B2D810F99 /* FloatingPointMatrix3x2.cpp in Sources */,
 				51184430EB95428FD308DC8F /* FloatingPointMatrix3x3.cpp in Sources */,
+				A9D18E8D1CA427270011A6CE /* MetalCompiler.cpp in Sources */,
 				7BFC36E8777C887934E3F02B /* FloatingPointMatrix4x4.cpp in Sources */,
 				1A671762A001893355AC4247 /* FloatingPointQuaternion.cpp in Sources */,
 				722648A22471D9FC50128061 /* FloatingPointVector2.cpp in Sources */,
@@ -1598,6 +1605,7 @@
 				E971CF40D05A93F09E489D10 /* FloatingPointMatrix2x2.cpp in Sources */,
 				2A792456A91A1FCD600F40C7 /* FloatingPointMatrix3x2.cpp in Sources */,
 				D8E9871132965BADBA4BE734 /* FloatingPointMatrix3x3.cpp in Sources */,
+				A9D18E8E1CA427270011A6CE /* MetalCompiler.cpp in Sources */,
 				B64D84284045847B155F4CD3 /* FloatingPointMatrix4x4.cpp in Sources */,
 				043C1238BFC3C906AEAEEA09 /* FloatingPointQuaternion.cpp in Sources */,
 				D147245447821976039CCCC2 /* FloatingPointVector2.cpp in Sources */,

@@ -6,6 +6,7 @@
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/GLSLCompiler.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/HLSLCompiler.hpp"
+#include "Pomdog/Graphics/ShaderCompilers/MetalCompiler.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
@@ -20,6 +21,7 @@ using Pomdog::Detail::BinaryReader;
 using Pomdog::Detail::ShaderBytecode;
 using Pomdog::ShaderCompilers::GLSLCompiler;
 using Pomdog::ShaderCompilers::HLSLCompiler;
+using Pomdog::ShaderCompilers::MetalCompiler;
 
 namespace Pomdog {
 namespace AssetBuilders {
@@ -214,6 +216,15 @@ std::shared_ptr<Shader> Builder<Shader>::Build()
         }
         POMDOG_ASSERT(!impl->entryPoint.empty());
         return HLSLCompiler::CreateShaderFromSource(
+            *graphicsDevice,
+            impl->shaderBytecode.Code,
+            impl->shaderBytecode.ByteLength,
+            impl->entryPoint,
+            impl->pipelineStage);
+    }
+    if (shaderLanguage == ShaderLanguage::Metal) {
+        POMDOG_ASSERT(!impl->entryPoint.empty());
+        return MetalCompiler::CreateShaderFromSource(
             *graphicsDevice,
             impl->shaderBytecode.Code,
             impl->shaderBytecode.ByteLength,
