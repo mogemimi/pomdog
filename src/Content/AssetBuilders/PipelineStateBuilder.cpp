@@ -9,6 +9,7 @@
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Logging/Log.hpp"
 #include <utility>
 
 namespace Pomdog {
@@ -22,6 +23,8 @@ public:
     bool hasBlendState;
     bool hasRasterizerState;
     bool hasDepthStencilState;
+    bool hasRenderTargetViewFormats;
+    bool hasDepthStencilViewFormat;
 
     Impl();
 
@@ -35,6 +38,8 @@ Builder<PipelineState>::Impl::Impl()
     hasBlendState = false;
     hasRasterizerState = false;
     hasDepthStencilState = false;
+    hasRenderTargetViewFormats = false;
+    hasDepthStencilViewFormat = false;
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
@@ -54,6 +59,26 @@ std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
     if (!hasDepthStencilState) {
         description.DepthStencilState = DepthStencilDescription::CreateDefault();
         hasDepthStencilState = true;
+    }
+
+    if (!hasRenderTargetViewFormats) {
+#if defined(DEBUG) && !defined(NDEBUG)
+        Log::Warning(
+            "Pomdog",
+            "[Warning] Please call Builder<PipelineState>::SetRenderTargetViewFormats() in your code.");
+#endif
+        description.RenderTargetViewFormats = { SurfaceFormat::R8G8B8A8_UNorm };
+        hasRenderTargetViewFormats = true;
+    }
+
+    if (!hasDepthStencilViewFormat) {
+#if defined(DEBUG) && !defined(NDEBUG)
+        Log::Warning(
+            "Pomdog",
+            "[Warning] Please call Builder<PipelineState>::SetDepthStencilViewFormat() in your code.");
+#endif
+        description.DepthStencilViewFormat = DepthFormat::None;
+        hasDepthStencilViewFormat = true;
     }
 
     auto pipelineState = std::make_shared<PipelineState>(graphicsDevice, description);
@@ -171,6 +196,33 @@ Builder<PipelineState> & Builder<PipelineState>::SetConstantBufferBindSlot(
 #endif
 
     impl->description.ConstantBufferBindSlots.emplace(name, slotIndex);
+    return *this;
+}
+//-----------------------------------------------------------------------
+Builder<PipelineState> & Builder<PipelineState>::SetRenderTargetViewFormats(
+    std::vector<SurfaceFormat> const& renderTargetViewFormats)
+{
+    POMDOG_ASSERT(impl);
+    impl->description.RenderTargetViewFormats = renderTargetViewFormats;
+    impl->hasRenderTargetViewFormats = true;
+    return *this;
+}
+//-----------------------------------------------------------------------
+Builder<PipelineState> & Builder<PipelineState>::SetRenderTargetViewFormats(
+    std::vector<SurfaceFormat> && renderTargetViewFormats)
+{
+    POMDOG_ASSERT(impl);
+    impl->description.RenderTargetViewFormats = std::move(renderTargetViewFormats);
+    impl->hasRenderTargetViewFormats = true;
+    return *this;
+}
+//-----------------------------------------------------------------------
+Builder<PipelineState> & Builder<PipelineState>::SetDepthStencilViewFormat(
+    DepthFormat depthStencilViewFormat)
+{
+    POMDOG_ASSERT(impl);
+    impl->description.DepthStencilViewFormat = depthStencilViewFormat;
+    impl->hasDepthStencilViewFormat = true;
     return *this;
 }
 //-----------------------------------------------------------------------

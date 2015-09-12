@@ -7,6 +7,7 @@
 #include "Pomdog/Basic/Export.hpp"
 #include <string>
 #include <memory>
+#include <vector>
 
 namespace Pomdog {
 namespace Detail {
@@ -45,6 +46,12 @@ public:
     Builder & SetDepthStencilState(DepthStencilDescription const& depthStencilState);
 
     Builder & SetConstantBufferBindSlot(std::string const& name, int slotIndex);
+
+    Builder & SetRenderTargetViewFormats(std::vector<SurfaceFormat> const& renderTargetViewFormats);
+
+    Builder & SetRenderTargetViewFormats(std::vector<SurfaceFormat> && renderTargetViewFormats);
+
+    Builder & SetDepthStencilViewFormat(DepthFormat depthStencilViewFormat);
 
     std::shared_ptr<PipelineState> Build();
 
