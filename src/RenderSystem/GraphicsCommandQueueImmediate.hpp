@@ -18,11 +18,13 @@ public:
     GraphicsCommandQueueImmediate(GraphicsCommandQueueImmediate const&) = delete;
     GraphicsCommandQueueImmediate & operator=(GraphicsCommandQueueImmediate const&) = delete;
 
-    explicit GraphicsCommandQueueImmediate(std::shared_ptr<GraphicsContext> const& graphicsContext);
+    explicit GraphicsCommandQueueImmediate(
+        std::shared_ptr<GraphicsContext> const& graphicsContext);
 
     void Reset() override;
 
-    void PushbackCommandList(std::shared_ptr<GraphicsCommandList> const& commandList) override;
+    void PushbackCommandList(
+        std::shared_ptr<GraphicsCommandList> const& commandList) override;
 
     void ExecuteCommandLists() override;
 

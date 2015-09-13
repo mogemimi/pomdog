@@ -9,7 +9,8 @@
 namespace Pomdog {
 namespace Detail {
 //-----------------------------------------------------------------------
-GraphicsCommandQueueImmediate::GraphicsCommandQueueImmediate(std::shared_ptr<Detail::GraphicsContext> const& graphicsContextIn)
+GraphicsCommandQueueImmediate::GraphicsCommandQueueImmediate(
+    std::shared_ptr<Detail::GraphicsContext> const& graphicsContextIn)
     : graphicsContext(graphicsContextIn)
 {
 }
@@ -35,7 +36,9 @@ void GraphicsCommandQueueImmediate::ExecuteCommandLists()
         POMDOG_ASSERT(commandList);
 
         ///@todo badcode
-        auto commandListImmediate = dynamic_cast<Detail::GraphicsCommandListImmediate*>(commandList->GetNativeGraphicsCommandList());
+        auto commandListImmediate = dynamic_cast<GraphicsCommandListImmediate*>(
+            commandList->GetNativeGraphicsCommandList());
+
         if (commandListImmediate) {
             commandListImmediate->ExecuteImmediate(*graphicsContext);
         }
