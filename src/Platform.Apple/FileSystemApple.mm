@@ -11,7 +11,7 @@ namespace Pomdog {
 namespace Detail {
 namespace {
 
-static NSString* ToNSString(std::string const& s)
+NSString* ToNSString(std::string const& s)
 {
     return [NSString stringWithUTF8String:s.c_str()];
 }

@@ -347,6 +347,7 @@
       '../src/SoundSystem.OpenAL/SoundEffectAL.hpp',
     ],
     'pomdog_library_apple_sources': [
+      '../src/Platform.Apple/FileSystemApple.mm',
       '../src/Platform.Apple/TimeSourceApple.cpp',
       '../src/Platform.Apple/TimeSourceApple.hpp',
     ],
@@ -360,7 +361,6 @@
       '../src/Platform.Cocoa/GameHostCocoa.mm',
       '../src/Platform.Cocoa/GameWindowCocoa.hpp',
       '../src/Platform.Cocoa/GameWindowCocoa.mm',
-      '../src/Platform.Cocoa/FileSystemCocoa.mm',
       '../src/Platform.Cocoa/KeyboardCocoa.hpp',
       '../src/Platform.Cocoa/KeyboardCocoa.cpp',
       '../src/Platform.Cocoa/MouseCocoa.hpp',
