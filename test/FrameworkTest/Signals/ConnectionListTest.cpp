@@ -136,3 +136,26 @@ TEST(ConnectionList, QtStyleConnect)
     EXPECT_EQ(43, integers[4]);
     EXPECT_EQ(43, integers[5]);
 }
+
+TEST(ConnectionList, QtStyleConnect_ReturnConnection)
+{
+    Signal<void(int)> valueChanged;
+    std::vector<int> integers;
+    Pomdog::Connection connection;
+    {
+        ConnectionList connect;
+        auto slot = [&](int n){ integers.push_back(n); };
+        connection = connect(valueChanged, slot);
+
+        ASSERT_TRUE(connection);
+        valueChanged(42);
+        valueChanged(43);
+        EXPECT_TRUE(connection);
+    }
+    EXPECT_FALSE(connection);
+    valueChanged(44);
+
+    ASSERT_EQ(2, integers.size());
+    EXPECT_EQ(42, integers[0]);
+    EXPECT_EQ(43, integers[1]);
+}

@@ -6,8 +6,18 @@
 
 namespace Pomdog {
 
+ConnectionList::~ConnectionList()
+{
+    for (auto & connection : connections) {
+        connection.Disconnect();
+    }
+}
+//-----------------------------------------------------------------------
 void ConnectionList::Disconnect()
 {
+    for (auto & connection : connections) {
+        connection.Disconnect();
+    }
     connections.clear();
 }
 //-----------------------------------------------------------------------
