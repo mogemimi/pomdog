@@ -23,7 +23,7 @@ class OpenGLContextCocoa;
 
 POMDOG_EXPORT @interface PomdogOpenGLView : NSView
 
-- (id)initWithFrame:(NSRect)frameRect;
+- (instancetype)initWithFrame:(NSRect)frameRect;
 
 - (void)setEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueue;
 

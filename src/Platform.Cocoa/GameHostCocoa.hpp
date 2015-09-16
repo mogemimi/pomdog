@@ -30,7 +30,8 @@ public:
 
     ~GameHostCocoa();
 
-    void Run(std::weak_ptr<Game> const& game,
+    void Run(
+        std::weak_ptr<Game> const& game,
         std::function<void()> const& onCompleted);
 
     void Exit() override;

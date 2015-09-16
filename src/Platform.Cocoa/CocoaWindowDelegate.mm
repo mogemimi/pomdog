@@ -11,7 +11,7 @@
     std::shared_ptr<Pomdog::EventQueue> eventQueue;
 }
 //-----------------------------------------------------------------------
-- (id)initWithEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueueIn
+- (instancetype)initWithEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueueIn
 {
     self = [super init];
     if (self) {

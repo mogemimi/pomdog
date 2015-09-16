@@ -10,7 +10,7 @@
 
 @interface CocoaWindowDelegate : NSObject <NSWindowDelegate>
 
-- (id)initWithEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueue;
+- (instancetype)initWithEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueue;
 
 @end
 

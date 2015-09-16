@@ -19,7 +19,8 @@ namespace Cocoa {
 
 class GameWindowCocoa final: public GameWindow {
 public:
-    GameWindowCocoa(NSWindow* nativeWindow,
+    GameWindowCocoa(
+        NSWindow* nativeWindow,
         std::shared_ptr<EventQueue> const& eventQueue);
 
     ~GameWindowCocoa();
