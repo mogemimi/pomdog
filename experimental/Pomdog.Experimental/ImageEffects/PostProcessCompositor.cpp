@@ -126,6 +126,11 @@ void PostProcessCompositor::Draw(
             currentSource = readTarget;
         }
 
+        auto & effect = imageEffects[index];
+        effect->PreRender(commandList, constantBuffer, [&] {
+            screenQuad.DrawQuad(commandList);
+        });
+
         bool isLast = (index + 1) >= imageEffects.size();
         if (isLast) {
             commandList.SetRenderTarget();
@@ -134,7 +139,6 @@ void PostProcessCompositor::Draw(
             commandList.SetRenderTarget(writeTarget);
         }
 
-        auto & effect = imageEffects[index];
         effect->Apply(commandList, currentSource, constantBuffer);
 
         screenQuad.DrawQuad(commandList);
