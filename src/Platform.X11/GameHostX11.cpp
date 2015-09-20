@@ -9,10 +9,13 @@
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Content/Utility/PathHelper.hpp"
 #include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/detail/FileSystem.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include <string>
 #include <vector>
@@ -244,8 +247,9 @@ GameHostX11::Impl::Impl(PresentationParameters const& presentationParameters)
 
     keyboard = std::make_unique<KeyboardX11>(x11Context->Display);
 
-    std::string rootDirectory = "Content";
-    Detail::AssetLoaderContext loaderContext{ rootDirectory, graphicsDevice };
+    Detail::AssetLoaderContext loaderContext;
+    loaderContext.RootDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
+    loaderContext.GraphicsDevice = graphicsDevice;
     assetManager = std::make_unique<Pomdog::AssetManager>(std::move(loaderContext));
 }
 //-----------------------------------------------------------------------
