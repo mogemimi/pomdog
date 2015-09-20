@@ -49,5 +49,55 @@ BinaryFileStream PathHelper::OpenStream(std::string const& path)
     return std::move(result);
 }
 //-----------------------------------------------------------------------
+std::string PathHelper::GetBaseName(std::string const& path)
+{
+    const auto lastIndex = path.find_last_of('/');
+    if (std::string::npos != lastIndex) {
+        return path.substr(0, lastIndex + 1);
+    }
+    return path;
+}
+//-----------------------------------------------------------------------
+std::string PathHelper::GetDirectoryName(std::string const& path)
+{
+    if (!path.empty() && path.back() == '/') {
+        return path;
+    }
+
+    const auto lastIndex = path.find_last_of('/');
+    if (std::string::npos != lastIndex) {
+        return path.substr(0, lastIndex);
+    }
+    return "";
+}
+//-----------------------------------------------------------------------
+std::tuple<std::string, std::string> PathHelper::Split(std::string const& path)
+{
+    std::tuple<std::string, std::string> result;
+    auto lastIndex = path.find_last_of('/');
+    if (std::string::npos != lastIndex) {
+        std::get<0>(result) = path.substr(0, lastIndex);
+        std::get<1>(result) = path.substr(lastIndex + 1);
+    }
+    else {
+        std::get<0>(result) = path;
+    }
+    return std::move(result);
+}
+//-----------------------------------------------------------------------
+std::tuple<std::string, std::string> PathHelper::SplitExtension(std::string const& path)
+{
+    std::tuple<std::string, std::string> result;
+    auto lastIndex = path.find_last_of('.');
+    if (std::string::npos != lastIndex) {
+        std::get<0>(result) = path.substr(0, lastIndex);
+        std::get<1>(result) = path.substr(lastIndex + 1);
+    }
+    else {
+        std::get<0>(result) = path;
+    }
+    return std::move(result);
+}
+//-----------------------------------------------------------------------
 } // namespace Detail
 } // namespace Pomdog
