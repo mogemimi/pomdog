@@ -53,7 +53,7 @@ std::string PathHelper::GetBaseName(std::string const& path)
 {
     const auto lastIndex = path.find_last_of('/');
     if (std::string::npos != lastIndex) {
-        return path.substr(0, lastIndex + 1);
+        return path.substr(lastIndex + 1);
     }
     return path;
 }
@@ -80,7 +80,7 @@ std::tuple<std::string, std::string> PathHelper::Split(std::string const& path)
         std::get<1>(result) = path.substr(lastIndex + 1);
     }
     else {
-        std::get<0>(result) = path;
+        std::get<1>(result) = path;
     }
     return std::move(result);
 }

@@ -45,6 +45,7 @@
         'main.cpp',
         'Application/GameClockTest.cpp',
         'Application/TimerTest.cpp',
+        'Content/PathHelperTest.cpp',
         # 'Async/SchedulerTest.cpp',
         # 'Async/TaskTest.cpp',
         #'Gameplay/GameObjectIDTest.cpp',
