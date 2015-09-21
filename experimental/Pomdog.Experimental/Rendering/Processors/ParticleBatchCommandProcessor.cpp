@@ -16,22 +16,20 @@ static Matrix3x2 CreateTransformMatrix(Particle const& particle)
 } // unnamed namespace
 //-----------------------------------------------------------------------
 ParticleBatchCommandProcessor::ParticleBatchCommandProcessor(
-    std::shared_ptr<GraphicsContext> const& graphicsContext,
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
-    : spriteBatch(graphicsContext, graphicsDevice, assets)
+    : spriteBatch(graphicsDevice, assets)
     , drawCallCount(0)
 {
 }
 //-----------------------------------------------------------------------
-void ParticleBatchCommandProcessor::Begin(GraphicsContext & graphicsContext)
+void ParticleBatchCommandProcessor::Begin(GraphicsCommandQueue &)
 {
     drawCallCount = 0;
-
     spriteBatch.Begin(Matrix4x4::Identity);
 }
 //-----------------------------------------------------------------------
-void ParticleBatchCommandProcessor::Draw(GraphicsContext & graphicsContext, RenderCommand & command)
+void ParticleBatchCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, RenderCommand & command)
 {
     using Detail::Rendering::ParticleBatchCommand;
 
@@ -39,12 +37,16 @@ void ParticleBatchCommandProcessor::Draw(GraphicsContext & graphicsContext, Rend
     for (auto & particle: *particleCommand.particles)
     {
         auto transform = CreateTransformMatrix(particle);
-        spriteBatch.Draw(particleCommand.texture, transform,
-            particleCommand.textureRegion.Subrect, particle.Color, {0.5f, 0.5f});
+        spriteBatch.Draw(
+            particleCommand.texture,
+            transform,
+            particleCommand.textureRegion.Subrect,
+            particle.Color,
+            {0.5f, 0.5f});
     }
 }
 //-----------------------------------------------------------------------
-void ParticleBatchCommandProcessor::End(GraphicsContext & graphicsContext)
+void ParticleBatchCommandProcessor::End(GraphicsCommandQueue & commandQueue)
 {
     spriteBatch.End();
 

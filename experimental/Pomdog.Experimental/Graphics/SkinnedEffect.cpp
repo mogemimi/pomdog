@@ -5,6 +5,7 @@
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
+#include "Pomdog/Graphics/GraphicsCommandList.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 
@@ -22,7 +23,7 @@ class SkinnedEffect::Impl {
 public:
     explicit Impl(GraphicsDevice & graphicsDevice, AssetManager & assets);
 
-    void Apply(GraphicsContext & graphicsContext);
+    void Apply(GraphicsCommandQueue & commandQueue);
 
 public:
     std::array<std::array<Vector4, 2>, SkinnedEffect::MaxBones> bones;
@@ -60,7 +61,7 @@ SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice,
     constantBuffers = builder.CreateConstantBuffers(pipelineState);
 }
 //-----------------------------------------------------------------------
-void SkinnedEffect::Impl::Apply(GraphicsContext & graphicsContext)
+void SkinnedEffect::Impl::Apply(GraphicsCommandQueue & commandQueue)
 {
     struct alignas(16) Constants {
         Matrix4x4 WorldViewProjection;
@@ -128,7 +129,7 @@ void SkinnedEffect::SetBoneTransforms(Matrix3x2 const* boneTransforms, std::size
     }
 }
 //-----------------------------------------------------------------------
-void SkinnedEffect::Apply(GraphicsContext & graphicsContext)
+void SkinnedEffect::Apply(GraphicsCommandQueue & commandQueue)
 {
     POMDOG_ASSERT(impl);
     impl->Apply(graphicsContext);

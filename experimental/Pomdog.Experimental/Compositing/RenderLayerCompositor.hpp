@@ -20,7 +20,7 @@ public:
 
     void RemoveLayer(std::shared_ptr<RenderLayer> const& layer);
 
-    void Draw(GraphicsContext & graphicsContext, Renderer & renderer);
+    void Draw(GraphicsCommandQueue & commandQueue, Renderer & renderer);
 
 private:
     std::vector<std::shared_ptr<RenderLayer>> layers;

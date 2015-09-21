@@ -64,12 +64,12 @@ SkinnedMeshCommandProcessor::SkinnedMeshCommandProcessor(
 {
 }
 //-----------------------------------------------------------------------
-void SkinnedMeshCommandProcessor::Begin(GraphicsContext & graphicsContext)
+void SkinnedMeshCommandProcessor::Begin(GraphicsCommandQueue &)
 {
     drawCallCount = 0;
 }
 //-----------------------------------------------------------------------
-void SkinnedMeshCommandProcessor::Draw(GraphicsContext & graphicsContext, RenderCommand & command)
+void SkinnedMeshCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, RenderCommand & command)
 {
     using Detail::Rendering::SkinnedMeshCommand;
 
@@ -116,7 +116,7 @@ void SkinnedMeshCommandProcessor::Draw(GraphicsContext & graphicsContext, Render
 //    }
 }
 //-----------------------------------------------------------------------
-void SkinnedMeshCommandProcessor::End(GraphicsContext & graphicsContext)
+void SkinnedMeshCommandProcessor::End(GraphicsCommandQueue &)
 {
 }
 //-----------------------------------------------------------------------

@@ -4,7 +4,6 @@
 
 #include "SpriteSortMode.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
-#include "Pomdog/Graphics/GraphicsContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Math/Color.hpp"
@@ -19,7 +18,7 @@ namespace Pomdog {
 
 class SpriteRenderer {
 public:
-    SpriteRenderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
+    SpriteRenderer(
         std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         AssetManager & assets);
 

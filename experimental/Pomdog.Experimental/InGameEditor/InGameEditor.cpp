@@ -27,13 +27,12 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
     : hierarchy(gameHostIn->Window())
     , gameHost(gameHostIn)
 {
-    auto graphicsContext = gameHost->GraphicsContext();
     auto graphicsDevice = gameHost->GraphicsDevice();
     auto assets = gameHost->AssetManager();
     auto window = gameHost->Window();
 
     {
-        spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
+        spriteBatch = std::make_unique<SpriteBatch>(graphicsDevice, *assets);
         //spriteFont = SpriteFontLoader::Load(*assets, "BitmapFonts/UbuntuMono-Regular.fnt");
         spriteFont = SpriteFontLoader::Load(*assets, "BitmapFonts/Ubuntu-Regular.fnt");
 

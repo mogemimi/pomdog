@@ -18,7 +18,7 @@ public:
 
     void AddProcessor(std::type_index const& index, std::unique_ptr<RenderCommandProcessor> && processor);
 
-    void Render(GraphicsContext & graphicsContext);
+    void Render(GraphicsCommandQueue & commandQueue);
 
     void Clear();
 
@@ -43,7 +43,7 @@ void Renderer::Impl::AddProcessor(std::type_index const& index, std::unique_ptr<
     processors.emplace(index, std::move(processor));
 }
 //-----------------------------------------------------------------------
-void Renderer::Impl::Render(GraphicsContext & graphicsContext)
+void Renderer::Impl::Render(GraphicsCommandQueue & commandQueue)
 {
     drawCallCount = 0;
 
@@ -123,10 +123,10 @@ Renderer::Renderer()
 //-----------------------------------------------------------------------
 Renderer::~Renderer() = default;
 //-----------------------------------------------------------------------
-void Renderer::Render(GraphicsContext & graphicsContext)
+void Renderer::Render(GraphicsCommandQueue & commandQueue)
 {
     POMDOG_ASSERT(impl);
-    impl->Render(graphicsContext);
+    impl->Render(commandQueue);
 }
 //-----------------------------------------------------------------------
 void Renderer::PushCommand(std::reference_wrapper<RenderCommand> && command)
@@ -135,13 +135,13 @@ void Renderer::PushCommand(std::reference_wrapper<RenderCommand> && command)
     impl->renderQueue.PushBack(std::move(command));
 }
 //-----------------------------------------------------------------------
-void Renderer::ViewMatrix(Matrix4x4 const& viewMatrixIn)
+void Renderer::SetViewMatrix(Matrix4x4 const& viewMatrixIn)
 {
     POMDOG_ASSERT(impl);
     impl->viewMatrix = viewMatrixIn;
 }
 //-----------------------------------------------------------------------
-void Renderer::ProjectionMatrix(Matrix4x4 const& projectionMatrixIn)
+void Renderer::SetProjectionMatrix(Matrix4x4 const& projectionMatrixIn)
 {
     POMDOG_ASSERT(impl);
     impl->projectionMatrix = projectionMatrixIn;

@@ -25,7 +25,7 @@ void RenderLayerCompositor::RemoveLayer(std::shared_ptr<RenderLayer> const& laye
     layers.erase(std::remove(std::begin(layers), std::end(layers), layer), std::end(layers));
 }
 //-----------------------------------------------------------------------
-void RenderLayerCompositor::Draw(GraphicsContext & graphicsContext, Renderer & renderer)
+void RenderLayerCompositor::Draw(GraphicsCommandQueue & commandQueue, Renderer & renderer)
 {
     if (needToSort) {
         std::sort(std::begin(layers), std::end(layers),
@@ -38,7 +38,7 @@ void RenderLayerCompositor::Draw(GraphicsContext & graphicsContext, Renderer & r
 
     for (auto & layer: layers) {
         POMDOG_ASSERT(layer);
-        layer->Draw(graphicsContext, renderer);
+        layer->Draw(commandQueue, renderer);
     }
 }
 //-----------------------------------------------------------------------

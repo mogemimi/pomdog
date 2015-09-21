@@ -6,8 +6,8 @@
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
-#include "Pomdog/Graphics/ConstantBufferBinding.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
+#include "Pomdog/Graphics/GraphicsCommandList.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/IndexElementSize.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
@@ -84,7 +84,7 @@ private:
     SpriteSortMode sortMode;
 
 public:
-    Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
+    Impl(
         std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         AssetManager & assets);
 
@@ -109,7 +109,7 @@ private:
     void DrawInstance(std::shared_ptr<Texture2D> const& texture, std::vector<SpriteInfo> const& sprites);
 };
 //-----------------------------------------------------------------------
-SpriteRenderer::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
+SpriteRenderer::Impl::Impl(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
     : graphicsContext(graphicsContextIn)
@@ -200,8 +200,8 @@ void SpriteRenderer::Impl::Begin(SpriteSortMode sortModeIn, Matrix4x4 const& tra
     alignas(16) Matrix4x4 projection = Matrix4x4::Transpose(
         transformMatrix * projectionMatrix);
 
-    auto parameter = constantBuffers->Find("Matrices");
-    parameter->SetValue(projection);
+    auto contantBuffer = constantBuffers->Find("Matrices");
+    contantBuffer->SetValue(projection);
 }
 //-----------------------------------------------------------------------
 void SpriteRenderer::Impl::End()
@@ -351,7 +351,7 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
 //-----------------------------------------------------------------------
 // MARK: - SpriteRenderer
 //-----------------------------------------------------------------------
-SpriteRenderer::SpriteRenderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
+SpriteRenderer::SpriteRenderer(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
     : impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))

@@ -6,33 +6,34 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 PrimitiveCommandProcessor::PrimitiveCommandProcessor(
-    std::shared_ptr<GraphicsContext> const& graphicsContext,
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
-    : primitiveBatch(graphicsContext, graphicsDevice, assets)
+    : primitiveBatch(graphicsDevice, assets)
     , drawCallCount(0)
 {
 }
 //-----------------------------------------------------------------------
-void PrimitiveCommandProcessor::Begin(GraphicsContext & graphicsContext)
+void PrimitiveCommandProcessor::Begin(GraphicsCommandQueue & commandQueue)
 {
     drawCallCount = 0;
-
     primitiveBatch.Begin(viewProjection);
 }
 //-----------------------------------------------------------------------
-void PrimitiveCommandProcessor::Draw(GraphicsContext & graphicsContext, RenderCommand & command)
+void PrimitiveCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, RenderCommand & command)
 {
     using Detail::Rendering::PrimitiveCommand;
 
     auto & primitiveCommand = static_cast<PrimitiveCommand &>(command);
-    primitiveBatch.DrawRectangle(primitiveCommand.transform,
+    primitiveBatch.DrawRectangle(
+        primitiveCommand.transform,
         primitiveCommand.rectangle,
-        primitiveCommand.leftBottomColor, primitiveCommand.rightBottomColor,
-        primitiveCommand.rightTopColor, primitiveCommand.leftTopColor);
+        primitiveCommand.leftBottomColor,
+        primitiveCommand.rightBottomColor,
+        primitiveCommand.rightTopColor,
+        primitiveCommand.leftTopColor);
 }
 //-----------------------------------------------------------------------
-void PrimitiveCommandProcessor::End(GraphicsContext & graphicsContext)
+void PrimitiveCommandProcessor::End(GraphicsCommandQueue & commandQueue)
 {
     primitiveBatch.End();
 

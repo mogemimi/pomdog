@@ -19,11 +19,11 @@ public:
 
     ~Renderer();
 
-    void ViewMatrix(Matrix4x4 const& viewMatrix);
+    void SetViewMatrix(Matrix4x4 const& viewMatrix);
 
-    void ProjectionMatrix(Matrix4x4 const& projectionMatrix);
+    void SetProjectionMatrix(Matrix4x4 const& projectionMatrix);
 
-    void Render(GraphicsContext & graphicsContext);
+    void Render(GraphicsCommandQueue & commandQueue);
 
     void PushCommand(std::reference_wrapper<RenderCommand> && command);
 

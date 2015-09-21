@@ -6,22 +6,20 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 SpriteCommandProcessor::SpriteCommandProcessor(
-    std::shared_ptr<GraphicsContext> const& graphicsContext,
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
-    : spriteBatch(graphicsContext, graphicsDevice, assets)
+    : spriteBatch(graphicsDevice, assets)
     , drawCallCount(0)
 {
 }
 //-----------------------------------------------------------------------
-void SpriteCommandProcessor::Begin(GraphicsContext & graphicsContext)
+void SpriteCommandProcessor::Begin(GraphicsCommandQueue &)
 {
     drawCallCount = 0;
-
     spriteBatch.Begin(Matrix4x4::Identity);
 }
 //-----------------------------------------------------------------------
-void SpriteCommandProcessor::Draw(GraphicsContext & graphicsContext, RenderCommand & command)
+void SpriteCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, RenderCommand & command)
 {
     using Detail::Rendering::SpriteCommand;
 
@@ -30,7 +28,7 @@ void SpriteCommandProcessor::Draw(GraphicsContext & graphicsContext, RenderComma
         spriteCommand.textureRegion.Subrect, spriteCommand.color, spriteCommand.originPivot);
 }
 //-----------------------------------------------------------------------
-void SpriteCommandProcessor::End(GraphicsContext & graphicsContext)
+void SpriteCommandProcessor::End(GraphicsCommandQueue & commandQueue)
 {
     spriteBatch.End();
     drawCallCount += spriteBatch.DrawCallCount();

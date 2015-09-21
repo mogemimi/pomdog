@@ -7,6 +7,7 @@
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
+#include "Pomdog/Graphics/GraphicsCommandList.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/IndexElementSize.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
@@ -64,7 +65,7 @@ private:
     };
 
 private:
-    std::shared_ptr<GraphicsContext> graphicsContext;
+    std::shared_ptr<GraphicsCommandList> commandList;
 
     std::vector<std::vector<SpriteInfo>> spriteQueues;
     std::vector<std::shared_ptr<Texture2D>> textures;
@@ -80,7 +81,7 @@ private:
     SpriteSortMode sortMode;
 
 public:
-    Impl(std::shared_ptr<GraphicsContext> const& graphicsContext,
+    Impl(
         std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         std::shared_ptr<PipelineState> const& pipelineState,
         std::shared_ptr<ConstantBufferBinding> const& constantBuffers);
@@ -104,7 +105,7 @@ private:
     void DrawInstance(std::shared_ptr<Texture2D> const& texture, std::vector<SpriteInfo> const& sprites);
 };
 //-----------------------------------------------------------------------
-SpriteBatch::Impl::Impl(std::shared_ptr<GraphicsContext> const& graphicsContextIn,
+SpriteBatch::Impl::Impl(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     std::shared_ptr<PipelineState> const& pipelineStateIn,
     std::shared_ptr<ConstantBufferBinding> const& constantBuffersIn)
@@ -260,8 +261,8 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
             inverseTextureSize,
         };
 
-        auto parameter = constantBuffers->Find("SpriteBatchConstants");
-        parameter->SetValue(info);
+        auto contantBuffer = constantBuffers->Find("SpriteBatchConstants");
+        contantBuffer->SetValue(info);
     }
 
     POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
@@ -359,7 +360,7 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
 //-----------------------------------------------------------------------
 // MARK: - SpriteBatch
 //-----------------------------------------------------------------------
-SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
+SpriteBatch::SpriteBatch(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
 {
@@ -393,7 +394,7 @@ SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext
     impl = std::make_unique<Impl>(graphicsContext, graphicsDevice, pipelineState, constantBuffers);
 }
 //-----------------------------------------------------------------------
-SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
+SpriteBatch::SpriteBatch(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     std::shared_ptr<PipelineState> const& pipelineState,
     std::shared_ptr<ConstantBufferBinding> const& constantBuffers)

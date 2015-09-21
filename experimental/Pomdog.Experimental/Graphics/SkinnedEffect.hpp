@@ -24,7 +24,7 @@ public:
 
     void SetBoneTransforms(Matrix3x2 const* boneTransforms, std::size_t count);
 
-    void Apply(GraphicsContext & graphicsContext);
+    void Apply(GraphicsCommandQueue & commandQueue);
 
     static constexpr size_t MaxBones = 96;
 
