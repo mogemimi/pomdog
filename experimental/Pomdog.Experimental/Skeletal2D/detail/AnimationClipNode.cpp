@@ -27,6 +27,6 @@ void AnimationClipNode::Calculate(AnimationTimeInterval const& time,
     clip->Apply(time, skeleton, skeletonPose);
 }
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog

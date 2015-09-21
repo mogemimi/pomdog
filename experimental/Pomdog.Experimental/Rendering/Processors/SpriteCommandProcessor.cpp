@@ -48,4 +48,4 @@ void SpriteCommandProcessor::SetViewProjection(Matrix4x4 const& view, Matrix4x4 
     spriteBatch.SetProjectionMatrix(viewProjection);
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

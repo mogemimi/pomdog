@@ -20,6 +20,6 @@ public:
     std::uint8_t MaxBranches = 0;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_BEAMBRANCHING_1888F4E0_HPP

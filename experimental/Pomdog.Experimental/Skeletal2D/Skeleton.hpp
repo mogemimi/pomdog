@@ -37,6 +37,6 @@ private:
     std::vector<Joint> joints;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SKELETON_015B5D6C_HPP

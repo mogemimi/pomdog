@@ -78,6 +78,6 @@ public:
     }
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SEQUENCEACTION_63378BE5_HPP

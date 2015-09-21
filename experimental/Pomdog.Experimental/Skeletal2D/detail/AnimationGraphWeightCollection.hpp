@@ -32,8 +32,8 @@ private:
     std::vector<AnimationGraphWeight> parameters;
 };
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONGRAPHWEIGHTCOLLECTION_5506C893_HPP

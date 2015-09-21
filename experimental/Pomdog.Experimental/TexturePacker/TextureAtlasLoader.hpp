@@ -19,7 +19,7 @@ public:
         std::string const& assetName);
 };
 
-}// namespace TexturePacker
-}// namespace Pomdog
+} // namespace TexturePacker
+} // namespace Pomdog
 
 #endif // POMDOG_TEXTUREATLASLOADER_642E468B_HPP

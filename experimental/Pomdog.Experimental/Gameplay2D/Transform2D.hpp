@@ -18,6 +18,6 @@ public:
     Radian<float> Rotation {0};
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_TRANSFORM2D_9973161D_HPP

@@ -188,8 +188,8 @@ using EaseQuintic = Ease<T, Quintic<T>>;
 template <typename T>
 using EaseSine = Ease<T, Sine<T>>;
 
-}// namespace Easings
-}// namespace Detail
+} // namespace Easings
+} // namespace Detail
 
 namespace Easings {
 
@@ -206,7 +206,7 @@ using EaseQuintic = Detail::Easings::EaseQuintic<float>;
 using EaseSine = Detail::Easings::EaseSine<float>;
 #endif
 
-}// namespace Easings
-}// namespace Pomdog
+} // namespace Easings
+} // namespace Pomdog
 
 #endif // POMDOG_EASINGHELPER_2D00DDAA_HPP

@@ -28,8 +28,8 @@ private:
     AnimationBlendInputType type;
 };
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONGRAPHWEIGHT_2B7D7365_HPP

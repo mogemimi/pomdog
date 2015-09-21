@@ -19,6 +19,6 @@ public:
     std::vector<SkinnedMeshPart> MeshParts;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SKINNEDMESH_4A54231B_HPP

@@ -58,6 +58,6 @@ void AnimationLerpNode::Calculate(AnimationTimeInterval const& time,
     WeightBlendingHelper::Lerp(sourcePose1.JointPoses, sourcePose2.JointPoses, weight, skeletonPose.JointPoses);
 }
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog

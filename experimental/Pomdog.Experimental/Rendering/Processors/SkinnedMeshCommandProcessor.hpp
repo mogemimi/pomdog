@@ -32,6 +32,6 @@ public:
     std::uint32_t drawCallCount;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SKINNEDMESHCOMMANDPROCESSOR_40F7E4BF_HPP

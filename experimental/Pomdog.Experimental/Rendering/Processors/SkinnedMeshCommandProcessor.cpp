@@ -55,7 +55,7 @@ static void SetMatrixPalette(SkinnedEffect & skinnedEffect, Skeleton const& skel
 //    polygonBatch->End();
 //}
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 SkinnedMeshCommandProcessor::SkinnedMeshCommandProcessor(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
@@ -131,4 +131,4 @@ void SkinnedMeshCommandProcessor::SetViewProjection(Matrix4x4 const& view, Matri
     viewProjection = view * projection;
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

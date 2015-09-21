@@ -128,7 +128,7 @@ static std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescripti
     return std::move(joints);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 Skeleton CreateSkeleton(std::vector<Spine::BoneDesc> const& bones)
 {
@@ -146,5 +146,5 @@ Skeleton CreateSkeleton(std::vector<Spine::BoneDesc> const& bones)
     return std::move(skeleton);
 }
 
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog

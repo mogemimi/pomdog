@@ -82,4 +82,4 @@ void AnimationState::Loop(bool loopIn)
     this->loop = loopIn;
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

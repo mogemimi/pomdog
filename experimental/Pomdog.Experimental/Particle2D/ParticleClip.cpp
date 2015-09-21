@@ -7,5 +7,5 @@ namespace Pomdog {
 namespace Detail {
 
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog

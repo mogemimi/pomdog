@@ -67,4 +67,4 @@ std::vector<Matrix3x2> SkeletonHelper::ToGlobalPose(Skeleton const& skeleton,
     return std::move(globalPose);
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

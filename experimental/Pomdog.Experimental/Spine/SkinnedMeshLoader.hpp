@@ -26,7 +26,7 @@ SkinnedMesh CreateSkinnedMesh(
     Vector2 const& textureSize,
     std::string const& skinName);
 
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog
 
 #endif // POMDOG_SKINNEDMESHLOADER_0D066D10_HPP

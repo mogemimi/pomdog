@@ -31,8 +31,8 @@ public:
     float drawOrder;
 };
 
-}// namespace Rendering
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Rendering
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SPRITECOMMAND_8EB48EFB_HPP

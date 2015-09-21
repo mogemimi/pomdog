@@ -14,7 +14,7 @@ static Matrix3x2 CreateTransformMatrix(Particle const& particle)
         * Matrix3x2::CreateTranslation(particle.Position);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 ParticleBatchCommandProcessor::ParticleBatchCommandProcessor(
     std::shared_ptr<GraphicsContext> const& graphicsContext,
@@ -63,4 +63,4 @@ void ParticleBatchCommandProcessor::SetViewProjection(Matrix4x4 const& view, Mat
     spriteBatch.SetProjectionMatrix(viewProjection);
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

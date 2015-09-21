@@ -43,8 +43,8 @@ private:
     JointIndex jointIndex;
 };
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_TRANSLATIONTRACK_6A0FA1BF_HPP

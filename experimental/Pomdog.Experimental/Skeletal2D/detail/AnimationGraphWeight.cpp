@@ -44,6 +44,6 @@ bool AnimationGraphWeight::GetBool() const
     return weight != 0.0f;
 }
 //-----------------------------------------------------------------------
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog

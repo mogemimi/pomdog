@@ -36,6 +36,6 @@ private:
     std::mt19937 random;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_BEAMSYSTEM_616FE7EE_HPP

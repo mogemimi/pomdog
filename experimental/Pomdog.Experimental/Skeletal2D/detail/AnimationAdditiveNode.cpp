@@ -25,7 +25,7 @@ static SkeletonPose CreateEmptyPose(Skeleton const& skeleton)
     return std::move(skeletonPose);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 AnimationAdditiveNode::AnimationAdditiveNode(std::unique_ptr<AnimationNode> && blendNode1In,
     std::unique_ptr<AnimationNode> && blendNode2In)
@@ -97,6 +97,6 @@ void AnimationAdditiveNode::Calculate(AnimationTimeInterval const& time,
     }
 }
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog

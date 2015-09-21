@@ -29,6 +29,6 @@ private:
     AnimationTimeInterval length;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONCLIP_5D3DFD31_HPP

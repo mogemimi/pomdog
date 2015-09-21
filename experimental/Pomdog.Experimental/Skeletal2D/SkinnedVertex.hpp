@@ -21,6 +21,6 @@ public:
     std::array<std::int32_t, 4> Joints;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SKINNEDVERTEX_181A0BE4_HPP

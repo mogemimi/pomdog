@@ -20,8 +20,8 @@ public:
         float weight, std::vector<JointPose> & output);
 };
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_WEIGHTBLENDINGHELPER_EC5A3515_HPP

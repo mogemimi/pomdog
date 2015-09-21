@@ -97,13 +97,13 @@ public:
         WeightBlendingHelper::Lerp(sourcePose1.JointPoses, sourcePose2.JointPoses, weight, skeletonPose.JointPoses);
     }
 
-    AnimationTimeInterval Length() const
+    AnimationTimeInterval Length() const override
     {
         return transitionDuration;
     }
 };
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - Animator::Impl class
@@ -354,4 +354,4 @@ std::string Animator::GetCurrentStateName() const
     return impl->GetCurrentStateName();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

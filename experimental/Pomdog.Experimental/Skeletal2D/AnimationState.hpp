@@ -43,6 +43,6 @@ private:
     bool loop;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONSTATE_35B967B3_HPP

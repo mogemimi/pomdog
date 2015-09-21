@@ -16,6 +16,6 @@ public:
     std::vector<Matrix3x2> GlobalPose;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SKELETONTRANSFORM_B5648A89_HPP

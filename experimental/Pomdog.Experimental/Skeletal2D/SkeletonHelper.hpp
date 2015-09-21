@@ -28,6 +28,6 @@ namespace SkeletonHelper {
     std::vector<Matrix3x2> ToGlobalPose(Skeleton const& skeleton, SkeletonPose const& skeletonPose);
 }
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SKELETONHELPER_16AC5743_HPP

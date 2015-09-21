@@ -31,6 +31,6 @@ public:
     std::uint32_t drawCallCount;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_PARTICLEBATCHCOMMANDPROCESSOR_29CECBB2_HPP

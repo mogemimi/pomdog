@@ -14,6 +14,6 @@ std::type_index ParticleBatchCommand::TypeIndex() const
     return index;
 }
 //-----------------------------------------------------------------------
-}// namespace Rendering
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Rendering
+} // namespace Detail
+} // namespace Pomdog

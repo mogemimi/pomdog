@@ -16,6 +16,6 @@ public:
     float Scale;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_JOINTPOSE_160B1EF6_HPP

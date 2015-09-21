@@ -25,6 +25,6 @@ public:
     float NormalizedViewportHeight = 1.0f;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_CAMERA2D_6E6D82E9_HPP

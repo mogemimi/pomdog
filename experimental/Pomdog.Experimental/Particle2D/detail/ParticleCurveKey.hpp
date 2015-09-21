@@ -15,8 +15,8 @@ struct ParticleCurveKey {
     T Value;
 };
 
-}// namespace Particles
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Particles
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_PARTICLECURVEKEY_6EBF4743_HPP

@@ -30,7 +30,7 @@ std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIte
     return std::make_pair(std::prev(it), it);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 SpriteAnimationTrack::SpriteAnimationTrack(std::vector<SpriteKeyframe> && keysIn, std::uint32_t slotHashIdIn)
     : keys(std::move(keysIn))
@@ -69,6 +69,6 @@ AnimationTimeInterval SpriteAnimationTrack::Length() const
     return keys.back().Time;
 }
 //-----------------------------------------------------------------------
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog

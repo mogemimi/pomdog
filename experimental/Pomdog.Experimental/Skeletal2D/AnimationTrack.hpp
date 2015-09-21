@@ -21,6 +21,6 @@ public:
     virtual AnimationTimeInterval Length() const = 0;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONTRACK_70C41AD9_HPP

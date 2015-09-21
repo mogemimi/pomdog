@@ -13,8 +13,8 @@ namespace Skeletal2D {
 
 class SpriteAnimationTrack;
 
-}// namespace Skeletal2D
-}// namespace Detail
+} // namespace Skeletal2D
+} // namespace Detail
 namespace Spine {
 
 class SkeletonDesc;
@@ -24,7 +24,7 @@ std::vector<Detail::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack
     TexturePacker::TextureAtlas const& textureAtlas,
     char const* name);
 
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog
 
 #endif // POMDOG_SPRITEANIMATIONLOADER_C360BEBA_HPP

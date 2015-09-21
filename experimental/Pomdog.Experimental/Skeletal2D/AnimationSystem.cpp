@@ -23,7 +23,7 @@ public:
     std::shared_ptr<SkeletonPose> SkeletonPose;
 };
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - AnimationSystem::Impl class
@@ -108,4 +108,4 @@ void AnimationSystem::Remove(std::shared_ptr<AnimationState> const& state)
     impl->Remove(state);
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

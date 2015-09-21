@@ -36,6 +36,6 @@ public:
     }
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_REMOVEACTORACTION_4E4B9484_HPP

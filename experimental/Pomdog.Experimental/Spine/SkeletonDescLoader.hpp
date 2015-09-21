@@ -17,7 +17,7 @@ public:
     static SkeletonDesc Load(AssetManager const& assets, std::string const& assetName);
 };
 
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog
 
 #endif // POMDOG_SKELETON2DLOADER_24651167_HPP

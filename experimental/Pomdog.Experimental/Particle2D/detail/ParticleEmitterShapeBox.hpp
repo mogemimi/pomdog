@@ -34,8 +34,8 @@ public:
     }
 };
 
-}// namespace Particles
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Particles
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_PARTICLEEMITTERSHAPEBOX_21E87DCC_HPP

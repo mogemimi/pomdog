@@ -29,7 +29,7 @@ public:
     std::vector<TextureAtlasRegion> regions;
 };
 
-}// namespace TexturePacker
-}// namespace Pomdog
+} // namespace TexturePacker
+} // namespace Pomdog
 
 #endif // POMDOG_TEXTUREATLAS_DDCCEF0C_HPP

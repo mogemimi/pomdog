@@ -28,7 +28,7 @@ static JointIndex FindJoint(std::vector<BoneDesc> const& bones, std::string cons
     return {};
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
 {
@@ -113,5 +113,5 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
     return AnimationClip(std::move(tracks));
 }
 
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog

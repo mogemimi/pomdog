@@ -43,6 +43,6 @@ public:
     }
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONGRAPH_CFF1C0A9_HPP

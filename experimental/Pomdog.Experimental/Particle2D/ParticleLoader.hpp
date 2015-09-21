@@ -18,7 +18,7 @@ struct ParticleLoader {
     static ParticleClip Load(AssetManager & assets, std::string const& assetName);
 };
 
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_PARTICLELOADER_D0266408_HPP

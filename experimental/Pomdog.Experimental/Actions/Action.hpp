@@ -19,6 +19,6 @@ public:
     virtual bool IsCompleted() const = 0;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_ACTION_F54B5D22_HPP

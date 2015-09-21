@@ -50,4 +50,4 @@ void PrimitiveCommandProcessor::SetViewProjection(Matrix4x4 const& view, Matrix4
     viewProjection = view * projection;
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

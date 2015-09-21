@@ -27,6 +27,6 @@ private:
     std::vector<RigidSlot> slots;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SKIN_8B9C736F_HPP

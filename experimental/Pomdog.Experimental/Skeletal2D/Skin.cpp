@@ -47,4 +47,4 @@ RigidSlot & Skin::SlotByIndex(std::uint16_t slotIndex)
     return slots[slotIndex];
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

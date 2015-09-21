@@ -26,4 +26,4 @@ void SpriteLine::Draw(SpriteBatch & spriteBatch, Vector2 const& point1, Vector2 
         color, rotation, {0.0f, 0.5f}, thicknessScale, layerDepth);
 }
 
-}// namespace Pomdog
+} // namespace Pomdog

@@ -122,7 +122,7 @@ static std::vector<Vector2> CreateBranch(BeamEmitter const& emitter,
     return CreateJaggedLine(emitter, emitter.InterpolationPoints * scale, start, end, random);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 BeamSystem::BeamSystem()
     : erapsedTime(0)
@@ -245,4 +245,4 @@ Vector2 BeamSystem::CreateTarget(Transform2D const& emitterTransform, float dist
     return targetPosition;
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

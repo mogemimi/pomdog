@@ -33,8 +33,8 @@ public:
     float drawOrder;
 };
 
-}// namespace Rendering
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Rendering
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_PRIMITIVECOMMAND_4CCAFA9C_HPP

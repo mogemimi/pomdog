@@ -19,8 +19,8 @@ public:
     virtual void Compute(std::mt19937 & random, Vector2 & emitPosition, Radian<float> & emitAngle) const = 0;
 };
 
-}// namespace Particles
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Particles
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_PARTICLEEMITTERSHAPE_DCE4AD88_HPP

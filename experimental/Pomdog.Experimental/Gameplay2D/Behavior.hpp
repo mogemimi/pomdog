@@ -21,6 +21,6 @@ public:
     virtual void Update(GameObject & gameObject, Duration const& frameDuration) = 0;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_BEHAVIOR_00BB3FAF_HPP

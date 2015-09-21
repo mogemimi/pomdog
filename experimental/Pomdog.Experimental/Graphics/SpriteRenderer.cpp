@@ -425,4 +425,4 @@ void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 c
     impl->Draw(texture, worldMatrix, position, sourceRect, color, rotation, originPivot, scale, layerDepth);
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

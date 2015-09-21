@@ -40,8 +40,8 @@ private:
     Optional<std::uint16_t> slotIndex;
 };
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SPRITEANIMATIONTRACK_FC96976A_HPP

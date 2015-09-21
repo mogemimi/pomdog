@@ -14,7 +14,7 @@ class SkeletonDesc;
 
 AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name);
 
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONLOADER_F321C327_HPP

@@ -85,5 +85,5 @@ std::vector<Detail::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack
     return tracks;
 }
 
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog

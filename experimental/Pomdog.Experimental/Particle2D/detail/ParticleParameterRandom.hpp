@@ -51,8 +51,8 @@ public:
     }
 };
 
-}// namespace Particles
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Particles
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_PARTICLEPARAMETERRANDOM_03DC4686_HPP

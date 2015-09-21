@@ -100,8 +100,8 @@ public:
     }
 };
 
-}// namespace Particles
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Particles
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_PARTICLEPARAMETERCURVE_75DE11C7_HPP

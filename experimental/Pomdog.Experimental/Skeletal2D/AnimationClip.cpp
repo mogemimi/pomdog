@@ -26,7 +26,7 @@ static AnimationTimeInterval ComputeLength(std::vector<std::unique_ptr<Animation
     return maxLength;
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 AnimationClip::AnimationClip(std::vector<std::unique_ptr<AnimationTrack>> && tracksIn)
     : tracks(std::move(tracksIn))
@@ -48,4 +48,4 @@ AnimationTimeInterval AnimationClip::Length() const
     return length;
 }
 
-}// namespace Pomdog
+} // namespace Pomdog

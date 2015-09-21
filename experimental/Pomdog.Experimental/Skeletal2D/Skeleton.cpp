@@ -54,4 +54,4 @@ Skeleton::iterator Skeleton::end()
     return std::end(joints);
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

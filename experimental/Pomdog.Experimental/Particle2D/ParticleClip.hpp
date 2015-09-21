@@ -39,6 +39,6 @@ public:
     Pomdog::Duration Duration = std::chrono::seconds(5);
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_PARTICLECLIP_CC5B71B4_HPP

@@ -79,8 +79,8 @@ public:
     }
 };
 
-}// namespace Actions
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Actions
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_TEMPORALACTION_DD16B93C_HPP

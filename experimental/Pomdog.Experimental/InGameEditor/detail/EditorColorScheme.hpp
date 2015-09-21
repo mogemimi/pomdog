@@ -21,7 +21,7 @@ struct EditorColorScheme {
     Color GuideLine {183, 182, 181, 102};
 };
 
-}// namespace SceneEditor
-}// namespace Pomdog
+} // namespace SceneEditor
+} // namespace Pomdog
 
 #endif // POMDOG_EDITORCOLORSCHEME_EFD082F5_HPP

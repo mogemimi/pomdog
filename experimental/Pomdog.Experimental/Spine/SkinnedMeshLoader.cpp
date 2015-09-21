@@ -285,7 +285,7 @@ CreateVertices(std::vector<SlotDesc> const& slots, SkinDesc const& skin,
     return std::move(result);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 SkinnedMesh CreateSkinnedMesh(
     GraphicsDevice & graphicsDevice,
@@ -327,5 +327,5 @@ SkinnedMesh CreateSkinnedMesh(
     return std::move(skinnedMesh);
 }
 
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog

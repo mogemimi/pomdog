@@ -12,6 +12,6 @@ using AnimationTimeInterval = std::chrono::duration<float, std::ratio<1>>;
 
 static_assert(sizeof(AnimationTimeInterval) == sizeof(float), "");
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONTIMEINTERVAL_DEA1AD60_HPP

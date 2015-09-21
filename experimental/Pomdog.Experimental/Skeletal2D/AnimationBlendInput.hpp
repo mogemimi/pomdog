@@ -17,6 +17,6 @@ public:
     AnimationBlendInputType Type;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONBLENDINPUT_304DF276_HPP

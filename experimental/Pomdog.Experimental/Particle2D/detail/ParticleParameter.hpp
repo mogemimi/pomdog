@@ -22,8 +22,8 @@ public:
     virtual float GenerateVariance(std::mt19937 & random) const = 0;
 };
 
-}// namespace Particles
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Particles
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_PARTICLEPARAMETER_FCCEE8BC_HPP

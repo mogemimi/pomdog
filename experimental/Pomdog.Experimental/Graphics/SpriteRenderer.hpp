@@ -57,6 +57,6 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SPRITERENDERER_8ACAC405_HPP

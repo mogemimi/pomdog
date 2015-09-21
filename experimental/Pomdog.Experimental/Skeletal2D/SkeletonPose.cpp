@@ -17,4 +17,4 @@ SkeletonPose SkeletonPose::CreateBindPose(Skeleton const& skeleton)
     return std::move(skeletonPose);
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

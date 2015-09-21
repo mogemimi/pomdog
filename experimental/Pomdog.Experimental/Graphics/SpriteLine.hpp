@@ -51,6 +51,6 @@ public:
     }
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SPRITELINE_9221505C_HPP

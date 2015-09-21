@@ -36,8 +36,8 @@ private:
     float weight;
 };
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONADDITIVENODE_48896792_HPP

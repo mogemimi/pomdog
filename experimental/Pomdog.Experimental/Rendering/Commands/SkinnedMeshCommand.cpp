@@ -14,6 +14,6 @@ std::type_index SkinnedMeshCommand::TypeIndex() const
     return index;
 }
 //-----------------------------------------------------------------------
-}// namespace Rendering
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Rendering
+} // namespace Detail
+} // namespace Pomdog

@@ -54,6 +54,6 @@ std::uint16_t AnimationGraphWeightCollection::Count() const
     return parameters.size();
 }
 //-----------------------------------------------------------------------
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog

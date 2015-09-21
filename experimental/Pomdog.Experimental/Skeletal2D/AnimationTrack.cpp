@@ -34,7 +34,7 @@ std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIte
     return std::make_pair(std::prev(it), it);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - RotationTrack
@@ -215,6 +215,6 @@ AnimationTimeInterval TranslationTrack::Length() const
     return keys.back().Time;
 }
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog

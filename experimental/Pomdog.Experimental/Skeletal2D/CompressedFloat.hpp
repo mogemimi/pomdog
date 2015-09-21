@@ -60,8 +60,8 @@ public:
     }
 };
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_COMPRESSEDFLOAT_727406C1_HPP

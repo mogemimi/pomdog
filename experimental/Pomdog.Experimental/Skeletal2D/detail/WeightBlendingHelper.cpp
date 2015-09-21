@@ -33,6 +33,6 @@ void WeightBlendingHelper::Lerp(std::vector<JointPose> const& sourcePoses1,
     }
 }
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog

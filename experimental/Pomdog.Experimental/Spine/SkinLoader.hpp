@@ -19,7 +19,7 @@ Skin CreateSkin(SkeletonDesc const& skeletonDesc,
     TexturePacker::TextureAtlas const& textureAtlas,
     std::string const& skinName);
 
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog
 
 #endif // POMDOG_SKINLOADER_E56D7A0C_HPP

@@ -19,6 +19,6 @@ public:
     std::uint16_t StartIndex;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SKINNEDMESHPART_DAE847CA_HPP

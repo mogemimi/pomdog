@@ -46,6 +46,6 @@ bool AnimationTimer::IsPlaying() const
     return isPlaying;
 }
 //-----------------------------------------------------------------------
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog

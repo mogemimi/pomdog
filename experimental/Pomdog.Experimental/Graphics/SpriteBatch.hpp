@@ -61,6 +61,6 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SPRITEBATCH_B4DEBA3B_HPP

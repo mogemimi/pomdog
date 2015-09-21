@@ -27,8 +27,8 @@ private:
     bool isPlaying;
 };
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONTIMER_A9EAE898_HPP

@@ -12,8 +12,8 @@ namespace Skeletal2D {
 
 class AnimationGraphWeightCollection;
 
-}// namespace Skeletal2D
-}// namespace Detail
+} // namespace Skeletal2D
+} // namespace Detail
 
 class Skeleton;
 class SkeletonPose;
@@ -30,6 +30,6 @@ public:
     virtual AnimationTimeInterval Length() const = 0;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONNODE_DEEDC3FD_HPP

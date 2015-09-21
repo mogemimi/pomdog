@@ -19,6 +19,6 @@ public:
     static SkeletonPose CreateBindPose(Skeleton const& skeleton);
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SKELETONPOSE_A5B94631_HPP

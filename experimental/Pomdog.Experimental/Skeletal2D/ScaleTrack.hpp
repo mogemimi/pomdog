@@ -40,8 +40,8 @@ private:
     JointIndex jointIndex;
 };
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SCALETRACK_D087D656_HPP

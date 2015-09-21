@@ -44,11 +44,11 @@ public:
     }
 };
 
-}// namespace Actions
-}// namespace Detail
+} // namespace Actions
+} // namespace Detail
 
 using TintToAction = Detail::Actions::TemporalAction<Detail::Actions::TintTo>;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_TINTTOACTION_EC615DAE_HPP

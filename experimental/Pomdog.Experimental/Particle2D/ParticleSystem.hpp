@@ -56,6 +56,6 @@ private:
     bool enableEmission;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_PARTICLESYSTEM_2AEA7BC5_HPP

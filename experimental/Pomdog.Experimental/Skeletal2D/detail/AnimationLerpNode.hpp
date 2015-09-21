@@ -33,8 +33,8 @@ private:
     std::uint16_t weightIndex;
 };
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONLERPNODE_22AAFE06_HPP

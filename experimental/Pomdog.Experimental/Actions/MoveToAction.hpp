@@ -43,11 +43,11 @@ public:
     }
 };
 
-}// namespace Actions
-}// namespace Detail
+} // namespace Actions
+} // namespace Detail
 
 using MoveToAction = Detail::Actions::TemporalAction<Detail::Actions::MoveTo>;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_MOVETOACTION_69978A4F_HPP

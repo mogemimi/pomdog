@@ -31,6 +31,6 @@ public:
     std::uint32_t drawCallCount;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SPRITECOMMANDPROCESSOR_1D9B87F7_HPP

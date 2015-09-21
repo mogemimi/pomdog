@@ -36,8 +36,8 @@ struct ParticleCurveLerp<Color> {
     }
 };
 
-}// namespace Particles
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Particles
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_PARTICLECURVELERP_7AA431A6_HPP

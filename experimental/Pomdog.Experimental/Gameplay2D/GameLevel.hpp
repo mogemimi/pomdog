@@ -21,6 +21,6 @@ public:
     virtual void Update(GameHost & gameHost, GameWorld & world) = 0;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_GAMELEVEL_20FE69E2_HPP

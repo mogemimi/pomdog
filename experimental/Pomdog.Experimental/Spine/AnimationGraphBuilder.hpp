@@ -17,7 +17,7 @@ class SkeletonDesc;
 std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonDesc,
     AssetManager const& assets, std::string const& assetName);
 
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONGRAPHBUILDER_F4A6BA28_HPP

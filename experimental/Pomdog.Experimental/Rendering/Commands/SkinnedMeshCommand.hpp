@@ -34,8 +34,8 @@ public:
     float drawOrder;
 };
 
-}// namespace Rendering
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Rendering
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_SKINNEDMESHCOMMAND_E70DE762_HPP

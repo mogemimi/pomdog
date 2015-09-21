@@ -16,7 +16,7 @@ class BoneDesc;
 
 Skeleton CreateSkeleton(std::vector<BoneDesc> const& bones);
 
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog
 
 #endif // POMDOG_SKELETONLOADER_20525A17_HPP

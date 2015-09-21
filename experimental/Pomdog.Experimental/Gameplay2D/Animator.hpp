@@ -42,6 +42,6 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATOR_0CFC0E37_HPP

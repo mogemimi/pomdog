@@ -14,6 +14,6 @@ std::type_index SpriteCommand::TypeIndex() const
     return index;
 }
 //-----------------------------------------------------------------------
-}// namespace Rendering
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Rendering
+} // namespace Detail
+} // namespace Pomdog

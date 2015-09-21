@@ -13,6 +13,6 @@ enum class AnimationBlendInputType: std::uint8_t {
     Bool,
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_ANIMATIONBLENDINPUTTYPE_FF16CE72_HPP

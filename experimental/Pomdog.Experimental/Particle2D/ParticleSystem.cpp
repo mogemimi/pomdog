@@ -68,7 +68,7 @@ static Particle CreateParticle(RandomGenerator & random, ParticleClip const& cli
     return std::move(particle);
 }
 //-----------------------------------------------------------------------
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 ParticleSystem::ParticleSystem(std::shared_ptr<ParticleClip const> const& clipIn)
     : clip(clipIn)
@@ -183,4 +183,4 @@ bool ParticleSystem::IsAlive() const
         || !particles.empty();
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

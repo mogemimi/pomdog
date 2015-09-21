@@ -22,6 +22,6 @@ private:
     //sel::State state;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_SCRIPTBEHAVIOR_BBF00E47_HPP

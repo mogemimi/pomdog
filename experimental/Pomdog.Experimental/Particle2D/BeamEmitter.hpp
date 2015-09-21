@@ -38,6 +38,6 @@ public:
     std::uint16_t EmissionRate = 4;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_BEAMEMITTER_89CB54AB_HPP

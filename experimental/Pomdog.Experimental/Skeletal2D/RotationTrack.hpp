@@ -40,8 +40,8 @@ private:
     JointIndex jointIndex;
 };
 
-}// namespace Skeletal2D
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Skeletal2D
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_ROTATIONTRACK_96A9D69A_HPP

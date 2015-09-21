@@ -18,6 +18,6 @@ public:
     float TimeToLive;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_BEAM_463AA6E5_HPP

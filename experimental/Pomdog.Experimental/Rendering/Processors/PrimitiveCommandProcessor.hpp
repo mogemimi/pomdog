@@ -33,6 +33,6 @@ public:
     std::uint32_t drawCallCount;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_PRIMITIVECOMMANDPROCESSOR_78CC3F16_HPP

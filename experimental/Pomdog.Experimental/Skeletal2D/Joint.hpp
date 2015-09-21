@@ -20,6 +20,6 @@ public:
     JointIndex Sibling;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_JOINT_0CE2C1D3_HPP

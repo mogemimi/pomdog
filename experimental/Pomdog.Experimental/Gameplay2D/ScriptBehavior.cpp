@@ -31,4 +31,4 @@ void ScriptBehavior::Update(GameObject & gameObject, Duration const& frameDurati
 //    transform->Rotation = static_cast<double>(state["Transform"]["Rotation"]);
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

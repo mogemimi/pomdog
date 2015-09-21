@@ -125,7 +125,7 @@ static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs
     return std::move(slots);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 Skin CreateSkin(SkeletonDesc const& skeletonDesc,
     TexturePacker::TextureAtlas const& textureAtlas,
@@ -154,5 +154,5 @@ Skin CreateSkin(SkeletonDesc const& skeletonDesc,
     return std::move(skin);
 }
 
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog

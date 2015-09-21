@@ -155,7 +155,7 @@ public:
     std::vector<AnimationClipDesc> AnimationClips;
 };
 
-}// namespace Spine
-}// namespace Pomdog
+} // namespace Spine
+} // namespace Pomdog
 
 #endif // POMDOG_SKELETONDESC_BCCD55FC_HPP

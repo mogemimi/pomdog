@@ -30,6 +30,6 @@ public:
     float TimeToLive = 2;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_PARTICLE_3943827E_HPP

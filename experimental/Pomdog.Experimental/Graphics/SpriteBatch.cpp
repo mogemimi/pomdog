@@ -34,7 +34,7 @@ namespace {
 
 #define POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
 
-}// unnamed namespace
+} // unnamed namespace
 //-----------------------------------------------------------------------
 #if defined(POMDOG_COMPILER_CLANG)
 #pragma mark - SpriteBatch::Impl
@@ -462,4 +462,4 @@ void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
     impl->Draw(texture, position, sourceRect, color, rotation, originPivot, scale, layerDepth);
 }
 //-----------------------------------------------------------------------
-}// namespace Pomdog
+} // namespace Pomdog

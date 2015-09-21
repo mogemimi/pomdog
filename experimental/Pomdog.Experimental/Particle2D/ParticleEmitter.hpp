@@ -29,6 +29,6 @@ public:
     //bool Prewarm = false;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 #endif // POMDOG_PARTICLEEMITTER_69E1B461_HPP

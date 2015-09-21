@@ -40,8 +40,8 @@ public:
     }
 };
 
-}// namespace Particles
-}// namespace Detail
-}// namespace Pomdog
+} // namespace Particles
+} // namespace Detail
+} // namespace Pomdog
 
 #endif // POMDOG_PARTICLEPARAMETERCONSTANT_0CA7D811_HPP
