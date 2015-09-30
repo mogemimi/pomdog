@@ -339,14 +339,10 @@
       'target_name': 'pomdog_experimental',
       'product_name': 'pomdog_experimental',
       'type': 'static_library',
-      'dependencies': [
-        '<@(pomdog_third_party_dir)/lua/lua.gyp:lua_static',
-      ],
       'include_dirs': [
         '../experimental',
         '../include',
         '<@(pomdog_third_party_dir)/rapidjson/include',
-        '<@(pomdog_third_party_dir)/lua/src',
         '<@(pomdog_third_party_dir)/stb',
         '<@(pomdog_third_party_dir)',
       ],
