@@ -88,6 +88,10 @@
       'xcode_settings': {
         'INFOPLIST_FILE': 'Platform.Cocoa/Info.plist',
         'CLANG_ENABLE_OBJC_ARC': 'YES',
+        'LD_RUNPATH_SEARCH_PATHS': [
+          '$(inherited)',
+          '@executable_path/../Frameworks',
+        ],
       },
     },
   ],
