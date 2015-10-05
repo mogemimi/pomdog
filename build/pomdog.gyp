@@ -525,7 +525,6 @@
     },
     'conditions': [
       ['"Direct3D11" in renderers', {
-        'defines': ['POMDOG_ENABLE_DIRECT3D11'],
         'sources': [
           '<@(pomdog_library_dxgi_sources)',
           '<@(pomdog_library_direct3d_sources)',
@@ -541,7 +540,6 @@
         },
       }],
       ['"GL4" in renderers', {
-        'defines': ['POMDOG_ENABLE_GL4'],
         'sources': [
           '<@(pomdog_library_opengl4_sources)',
         ],
