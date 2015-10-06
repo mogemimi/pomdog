@@ -25,7 +25,8 @@ class GameWindowWin32;
 
 class GameHostWin32 final: public GameHost {
 public:
-    GameHostWin32(std::shared_ptr<GameWindowWin32> const& window,
+    GameHostWin32(
+        std::shared_ptr<GameWindowWin32> const& window,
         std::shared_ptr<EventQueue> const& eventQueue,
         PresentationParameters const& presentationParameters,
         std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory,
