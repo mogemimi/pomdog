@@ -18,6 +18,7 @@
 #include <vector>
 #include <string>
 #include <utility>
+#include <algorithm>
 
 namespace Pomdog {
 namespace Detail {
@@ -31,9 +32,12 @@ static std::string GetErrorDesc(HRESULT hr, std::string const& desc)
 }
 //-----------------------------------------------------------------------
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
+
 struct AudioDeviceDetails {
     std::wstring DeviceID;
     std::wstring DisplayName;
+    bool IsDefault = false;
+    bool IsEnabled = false;
 };
 //-----------------------------------------------------------------------
 static std::vector<AudioDeviceDetails> EnumerateAudioDevices()
@@ -143,9 +147,30 @@ static std::vector<AudioDeviceDetails> EnumerateAudioDevices()
         AudioDeviceDetails deviceDetails;
         deviceDetails.DeviceID = id.GetRawBuffer(nullptr);
         deviceDetails.DisplayName = name.GetRawBuffer(nullptr);
+        deviceDetails.IsDefault = false;
+        deviceDetails.IsEnabled = false;
+
+        {
+            ::boolean isDefault;
+            if (SUCCEEDED(deviceInfo->get_IsDefault(&isDefault))) {
+                deviceDetails.IsDefault = (isDefault == TRUE);
+            }
+        }
+        {
+            ::boolean isEnabled;
+            if (SUCCEEDED(deviceInfo->get_IsEnabled(&isEnabled))) {
+                deviceDetails.IsEnabled = (isEnabled == TRUE);
+            }
+        }
 
         result.push_back(std::move(deviceDetails));
     }
+
+    std::sort(std::begin(result), std::end(result), [](const auto& a, const auto& b) {
+        int priorityA = (a.IsEnabled ? 0b01 : 0) + (a.IsDefault ? 0b10 : 0);
+        int priorityB = (b.IsEnabled ? 0b01 : 0) + (b.IsDefault ? 0b10 : 0);
+        return priorityA > priorityB;
+    });
 
     return std::move(result);
 #endif
