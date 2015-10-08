@@ -10,7 +10,7 @@ namespace Detail {
 namespace Win32 {
 namespace {
 
-static Optional<Keys> ToKeys(USHORT keyCode) noexcept
+Optional<Keys> ToKeys(USHORT keyCode) noexcept
 {
     switch (keyCode) {
     // Function keys

@@ -44,7 +44,7 @@ namespace Detail {
 namespace Win32 {
 namespace {
 
-static void MessagePump()
+void MessagePump()
 {
     MSG msg;
     while (0 != ::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
@@ -398,7 +398,7 @@ std::shared_ptr<Pomdog::GameWindow> GameHostWin32::Impl::GetWindow()
 std::shared_ptr<Pomdog::GameClock> GameHostWin32::Impl::GetClock(
     std::shared_ptr<GameHost> && gameHost)
 {
-    std::shared_ptr<Pomdog::GameClock> sharedClock(gameHost, &clock);
+    std::shared_ptr<Pomdog::GameClock> sharedClock(std::move(gameHost), &clock);
     return std::move(sharedClock);
 }
 //-----------------------------------------------------------------------
@@ -424,7 +424,7 @@ std::shared_ptr<Pomdog::AssetManager> GameHostWin32::Impl::GetAssetManager(
     std::shared_ptr<GameHost> && gameHost)
 {
     POMDOG_ASSERT(assetManager);
-    std::shared_ptr<Pomdog::AssetManager> sharedAssetManager(gameHost, assetManager.get());
+    std::shared_ptr<Pomdog::AssetManager> sharedAssetManager(std::move(gameHost), assetManager.get());
     return std::move(sharedAssetManager);
 }
 //-----------------------------------------------------------------------

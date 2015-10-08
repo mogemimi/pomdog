@@ -14,7 +14,7 @@ namespace Detail {
 namespace Win32 {
 namespace {
 
-static PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
+PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
     PresentationParameters const& presentationParameters)
 {
     PIXELFORMATDESCRIPTOR descriptor =

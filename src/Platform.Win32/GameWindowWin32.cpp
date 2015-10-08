@@ -17,7 +17,7 @@ namespace Win32 {
 namespace {
 
 template <typename T>
-static LPSTR MakeIntegerResource(T && resource)
+LPSTR MakeIntegerResource(T && resource) noexcept
 {
 #pragma warning(push)
 #pragma warning(disable:4302)
@@ -25,7 +25,7 @@ static LPSTR MakeIntegerResource(T && resource)
 #pragma warning(pop)
 }
 //-----------------------------------------------------------------------
-static LPCTSTR ToStandardCursorID(MouseCursor cursor) noexcept
+LPCTSTR ToStandardCursorID(MouseCursor cursor) noexcept
 {
     switch (cursor) {
     case MouseCursor::Arrow: return IDC_ARROW;
@@ -37,7 +37,7 @@ static LPCTSTR ToStandardCursorID(MouseCursor cursor) noexcept
     return IDC_ARROW;
 }
 //-----------------------------------------------------------------------
-static void RegisterInputDevices(HWND windowHandle)
+void RegisterInputDevices(HWND windowHandle)
 {
 #ifndef HID_USAGE_PAGE_GENERIC
 #define HID_USAGE_PAGE_GENERIC ((USHORT) 0x01)
