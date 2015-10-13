@@ -6,10 +6,11 @@
 #include "Pomdog/Graphics/EffectConstantDescription.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogLevel.hpp"
-#include "Pomdog/Logging/LogStream.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/StringHelper.hpp"
 #include <utility>
 #include <algorithm>
+#include <sstream>
 
 namespace Pomdog {
 namespace Detail {
@@ -348,8 +349,9 @@ static EffectVariableType ToEffectVariableType(GLenum uniformType)
     }
 
 #ifdef DEBUG
-    Log::Stream("Pomdog.RenderSystem", LogLevel::Internal)
-        << "Failed to find effect parameter type '"  << uniformType << "'.";
+    Log::Internal(StringHelper::Format(
+        "Failed to find effect parameter type '%d'.",
+        uniformType));
 #endif
     return EffectVariableType::Float;
 }
@@ -441,8 +443,8 @@ static EffectVariableClass ToEffectVariableClass(GLenum uniformType)
     }
 
 #ifdef DEBUG
-    Log::Stream("Pomdog.RenderSystem", LogLevel::Internal)
-        << "Failed to find effect parameter class '"  << uniformType << "'.";
+    Log::Internal(StringHelper::Format(
+        "Failed to find effect parameter class '%d'.", uniformType));
 #endif
     return EffectVariableClass::Struct;
 }
@@ -556,8 +558,8 @@ static void ToComponents(GLenum uniformType, std::uint8_t & RowCount, std::uint8
     }
 
 #ifdef DEBUG
-    Log::Stream("Pomdog.RenderSystem", LogLevel::Internal)
-        << "Failed to find uniform type '"  << uniformType << "'.";
+    Log::Internal(StringHelper::Format(
+        "Failed to find uniform type '%d'.", uniformType));
 #endif
 }
 //-----------------------------------------------------------------------
@@ -592,7 +594,7 @@ static std::vector<EffectVariable> GetEffectVariables(std::vector<UniformVariabl
 #if defined(DEBUG) && !defined(NDEBUG)
 static void DebugLogUniformBlocks(std::vector<UniformBlockGL4> const& uniformBlocks)
 {
-    auto stream = Log::Stream("Pomdog.RenderSystem", LogLevel::Internal);
+    std::stringstream stream;
 
     for (auto const& uniformBlock: uniformBlocks)
     {
@@ -617,14 +619,13 @@ static void DebugLogUniformBlocks(std::vector<UniformBlockGL4> const& uniformBlo
     }
 
     stream << "--------------------\n";
+    Log::Internal(stream.str());
 }
 //-----------------------------------------------------------------------
 static void DebugLogUniforms(std::vector<UniformGL4> const& uniforms)
 {
-    auto stream = Log::Stream("Pomdog.RenderSystem", LogLevel::Internal);
-
-    for (auto const& uniform: uniforms)
-    {
+    std::stringstream stream;
+    for (auto const& uniform: uniforms) {
         stream
         << "-[Uniform]-------------------\n"
         << "      Name: " << uniform.Name << "\n"
@@ -634,6 +635,7 @@ static void DebugLogUniforms(std::vector<UniformGL4> const& uniforms)
     }
 
     stream << "--------------------\n";
+    Log::Internal(stream.str());
 }
 #endif
 

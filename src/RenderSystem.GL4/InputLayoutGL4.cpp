@@ -10,9 +10,9 @@
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Logging/LogStream.hpp"
 #include "Pomdog/Logging/LogLevel.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/StringHelper.hpp"
 #include <utility>
 #include <algorithm>
 #include <limits>
@@ -85,8 +85,8 @@ static ScalarTypeGL4 ToScalarType(GLenum attributeClass)
     POMDOG_ASSERT(attributeClass != GL_FIXED);
 
 #ifdef DEBUG
-    Log::Stream(LogLevel::Internal)
-        << "Failed to find scalar type '"  << attributeClass << "'.";
+    Log::Internal(StringHelper::Format(
+        "Failed to find scalar type '%d'.", attributeClass));
 #endif
     return ScalarTypeGL4(GL_FLOAT);
 }
@@ -111,8 +111,8 @@ static bool IsIntegerType(ScalarTypeGL4 const& scalarType)
     POMDOG_ASSERT(scalarType.value != GL_FIXED);
 
 #ifdef DEBUG
-    Log::Stream(LogLevel::Internal)
-        << "Failed to find scalar type '"  << scalarType.value << "'.";
+    Log::Internal(StringHelper::Format(
+        "Failed to find scalar type '%d'.", scalarType.value));
 #endif
     return false;
 }
@@ -214,8 +214,8 @@ static InputElementSize ToInputElementSize(GLenum attributeClass)
     POMDOG_ASSERT(attributeClass != GL_FIXED);
 
 #ifdef DEBUG
-    Log::Stream(LogLevel::Critical)
-        << "Failed to find class '" << attributeClass << "'.";
+    Log::Internal(StringHelper::Format(
+        "Failed to find class '%d'.", attributeClass));
 #endif // defined(DEBUG)
     return { 1, 1 };
 }
@@ -237,10 +237,10 @@ std::uint8_t ToByteWithFromScalarTypeGL4(ScalarTypeGL4 scalarType)
     POMDOG_ASSERT(scalarType.value != GL_HALF_FLOAT);
     POMDOG_ASSERT(scalarType.value != GL_FIXED);
 
-    #ifdef DEBUG
-    Log::Stream(LogLevel::Internal)
-        << "Failed to find scalar type '" << scalarType.value << "'.";
-    #endif
+#ifdef DEBUG
+    Log::Internal(StringHelper::Format(
+        "Failed to find scalar type '%d'.", scalarType.value));
+#endif
     return sizeof(float);
 }
 //-----------------------------------------------------------------------

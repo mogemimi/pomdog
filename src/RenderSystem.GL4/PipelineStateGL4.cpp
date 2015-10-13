@@ -10,9 +10,9 @@
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogLevel.hpp"
-#include "Pomdog/Logging/LogStream.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/StringHelper.hpp"
 #include <type_traits>
 #include <unordered_set>
 #include <array>
@@ -49,8 +49,8 @@ static Optional<ShaderProgramGL4> LinkShaders(
         glGetProgramInfoLog(program.value, messageBuffer.size(), 0, messageBuffer.data());
         std::string const message = messageBuffer.data();
 
-        Log::Stream(LogLevel::Critical)
-            << "Failed to link shaders.\nerror: " << message.c_str();
+        Log::Critical("Pomdog.RenderSystem", StringHelper::Format(
+            "Failed to link shaders.\nerror: %s", message.c_str()));
 #endif // defined(DEBUG)
 
         glDeleteProgram(program.value);

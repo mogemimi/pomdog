@@ -30,7 +30,7 @@
 
 // logging
 #include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Logging/LogStream.hpp"
+#include "Pomdog/Utility/StringHelper.hpp"
 
 #include <limits>
 #include <cmath>
@@ -177,7 +177,7 @@ GraphicsContextGL4::GraphicsContextGL4(
     , needToApplyPipelineState(true)
 {
     auto version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
-    Log::Stream(LogLevel::Internal) << "OpenGL Version: " << version;
+    Log::Internal(StringHelper::Format("OpenGL Version: %s", version));
 
     auto capabilities = GetCapabilities();
     if (capabilities.SamplerSlotCount > 0) {

@@ -5,7 +5,6 @@
 #include "OpenGLPrerequisites.hpp"
 #include "Pomdog/Utility/detail/Tagged.hpp"
 #include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Logging/LogStream.hpp"
 #include <sstream>
 
 namespace Pomdog {
@@ -50,12 +49,15 @@ void ErrorChecker::CheckError(char const* command, char const* filename, int lin
     static std::size_t lines = 0;
     if (lines < maxLine)
     {
-        Log::Stream("Pomdog.RenderSystem", LogLevel::Warning)
-            << ">>> File " << filename << ", line " << line << ", in " << command << "\n"
+        std::stringstream stream;
+        stream << ">>> File " << filename
+            << ", line " << line
+            << ", in " << command << "\n"
             << "OpenGL Error: " << ToString(errorCode);
 
-        if (lines == (maxLine - 1U))
-        {
+        Log::Warning("Pomdog.RenderSystem", stream.str());
+
+        if (lines == (maxLine - 1U)) {
             Log::Warning("Pomdog.RenderSystem", "OpenGL Error: More...");
         }
         ++lines;

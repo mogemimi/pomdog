@@ -6,9 +6,9 @@
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogLevel.hpp"
-#include "Pomdog/Logging/LogStream.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/StringHelper.hpp"
 #include <array>
 
 namespace Pomdog {
@@ -72,8 +72,8 @@ static Optional<GLuint> CompileShader(ShaderBytecode const& source, GLenum pipel
         glGetShaderInfoLog(result.value(), messageBuffer.size(), 0, messageBuffer.data());
         std::string const message = messageBuffer.data();
 
-        Log::Stream(LogLevel::Critical)
-            << "Failed to compile shader.\nerror: " << message;
+        Log::Critical("Pomdog.RenderSystem", StringHelper::Format(
+            "Failed to compile shader.\nerror: %s", message.c_str()));
 #endif // defined(DEBUG)
 
         glDeleteShader(result.value());
