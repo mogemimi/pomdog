@@ -51,7 +51,6 @@
 #include "Logging/LogChannel.hpp"
 #include "Logging/LogEntry.hpp"
 #include "Logging/LogLevel.hpp"
-#include "Logging/LogStream.hpp"
 
 #include "Graphics/Blend.hpp"
 #include "Graphics/BlendDescription.hpp"

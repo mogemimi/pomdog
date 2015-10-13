@@ -3,7 +3,6 @@
 
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogEntry.hpp"
-#include "Pomdog/Logging/LogStream.hpp"
 #include "Pomdog/Logging/LogChannel.hpp"
 #include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
@@ -40,10 +39,6 @@ public:
     void Log(std::string const& message, LogLevel verbosity);
 
     void Log(LogEntry const& entry);
-
-    LogStream Stream(LogLevel verbosity);
-
-    LogStream Stream(std::string const& channelName, LogLevel verbosity);
 
 private:
     LogChannel defaultChannel;
@@ -180,22 +175,6 @@ void Logger::Log(LogEntry const& entry)
     }
 }
 //-----------------------------------------------------------------------
-LogStream Logger::Stream(LogLevel verbosity)
-{
-    return LogStream(defaultChannel, verbosity);
-}
-//-----------------------------------------------------------------------
-LogStream Logger::Stream(std::string const& channelName, LogLevel verbosity)
-{
-    auto iter = FindChannnel(channelName, channels);
-
-    if (std::end(channels) != iter) {
-        return LogStream(iter->channel, verbosity);
-    }
-
-    return LogStream(defaultChannel, channelName, verbosity);
-}
-//-----------------------------------------------------------------------
 static Logger & GetLoggerInstance()
 {
     static Logger logger;
@@ -232,18 +211,6 @@ Connection Log::Connect(std::string const& channelName,
 {
     auto & logger = GetLoggerInstance();
     return logger.Connect(channelName, std::move(slot));
-}
-//-----------------------------------------------------------------------
-LogStream Log::Stream(LogLevel verbosity)
-{
-    auto & logger = GetLoggerInstance();
-    return logger.Stream(verbosity);
-}
-//-----------------------------------------------------------------------
-LogStream Log::Stream(std::string const& channelName, LogLevel verbosity)
-{
-    auto & logger = GetLoggerInstance();
-    return logger.Stream(channelName, verbosity);
 }
 //-----------------------------------------------------------------------
 LogLevel Log::GetLevel()

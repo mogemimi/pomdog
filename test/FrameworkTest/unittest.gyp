@@ -56,7 +56,6 @@
         'Input/KeysTest.cpp',
         'Input/MouseStateTest.cpp',
         'Logging/LogChannelTest.cpp',
-        'Logging/LogStreamTest.cpp',
         'Logging/LogTest.cpp',
         'Math/BoundingBoxTest.cpp',
         'Math/BoundingBox2DTest.cpp',

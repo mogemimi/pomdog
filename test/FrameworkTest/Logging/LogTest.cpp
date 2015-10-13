@@ -4,7 +4,6 @@
 #include <Pomdog/Logging/Log.hpp>
 #include <Pomdog/Logging/LogChannel.hpp>
 #include <Pomdog/Logging/LogEntry.hpp>
-#include <Pomdog/Logging/LogStream.hpp>
 #include <Pomdog/Signals/Event.hpp>
 #include <Pomdog/Signals/ScopedConnection.hpp>
 #include <gtest/iutest_switch.hpp>
@@ -14,7 +13,6 @@ using Pomdog::Log;
 using Pomdog::LogChannel;
 using Pomdog::LogEntry;
 using Pomdog::LogLevel;
-using Pomdog::LogStream;
 using Pomdog::ScopedConnection;
 
 struct LogTest: public ::testing::Test
@@ -46,28 +44,6 @@ TEST_F(LogTest, FirstCase)
     ASSERT_EQ(2, messages.size());
     EXPECT_EQ("Hello", messages[0]);
     EXPECT_EQ("Hi", messages[1]);
-    ASSERT_EQ(2, tags.size());
-    EXPECT_TRUE(tags[0].empty());
-    EXPECT_TRUE(tags[1].empty());
-}
-
-TEST_F(LogTest, StreamWithDefaultChannel)
-{
-    ScopedConnection connection = Log::Connect([&](LogEntry const& entry) {
-        messages.push_back(entry.Message);
-        tags.push_back(entry.Tag);
-        levels.push_back(entry.Verbosity);
-    });
-
-    Log::Stream() << "Why is the answer to everything " << 42 << '?';
-    {
-        auto stream = Log::Stream();
-        stream << "Nyan" << "Nyan" << "Nyan";
-    }
-
-    ASSERT_EQ(2, messages.size());
-    EXPECT_EQ("Why is the answer to everything 42?", messages[0]);
-    EXPECT_EQ("NyanNyanNyan", messages[1]);
     ASSERT_EQ(2, tags.size());
     EXPECT_TRUE(tags[0].empty());
     EXPECT_TRUE(tags[1].empty());
@@ -138,36 +114,6 @@ TEST_F(LogTest, ConnectToDefaultChannel)
     Log::Info("Nyan1");
     Log::Info("#Dog", "Nyan2");
     Log::Info("#Cat", "Nyan3");
-
-    ASSERT_EQ(4, messages.size());
-    EXPECT_EQ("Nyan1", messages[0]);
-    EXPECT_EQ("Nyan2", messages[1]);
-    EXPECT_EQ("Nyan3", messages[2]);
-    EXPECT_EQ("Nyan3(in Cat)", messages[3]);
-    ASSERT_EQ(4, tags.size());
-    EXPECT_TRUE(tags[0].empty());
-    EXPECT_EQ("#Dog", tags[1]);
-    EXPECT_EQ("#Cat", tags[2]);
-    EXPECT_EQ("#Cat(in Cat)", tags[3]);
-}
-
-TEST_F(LogTest, ConnectToDefaultChannelAndStream)
-{
-    ScopedConnection connection = Log::Connect([&](LogEntry const& entry) {
-        messages.push_back(entry.Message);
-        tags.push_back(entry.Tag);
-        levels.push_back(entry.Verbosity);
-    });
-
-    ScopedConnection connectionCat = Log::Connect("#Cat", [&](LogEntry const& entry) {
-        messages.push_back(entry.Message + "(in Cat)");
-        tags.push_back(entry.Tag + "(in Cat)");
-        levels.push_back(entry.Verbosity);
-    });
-
-    Log::Stream() << "Nyan1";
-    Log::Stream("#Dog") << "Nyan2";
-    Log::Stream("#Cat") << "Nyan3";
 
     ASSERT_EQ(4, messages.size());
     EXPECT_EQ("Nyan1", messages[0]);

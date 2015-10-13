@@ -13,7 +13,6 @@ namespace Pomdog {
 
 class Connection;
 class LogEntry;
-class LogStream;
 
 class POMDOG_EXPORT Log {
 public:
@@ -34,11 +33,6 @@ public:
     static LogLevel GetLevel(std::string const& channelName);
 
     static void SetLevel(std::string const& channelName, LogLevel verbosity);
-
-    static LogStream Stream(LogLevel verbosity = LogLevel::Verbose);
-
-    static LogStream Stream(std::string const& channelName,
-        LogLevel verbosity = LogLevel::Verbose);
 
     static void Critical(std::string const& channel, std::string const& message);
 
