@@ -15,13 +15,13 @@ namespace Spine {
 std::vector<Detail::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack(
     SkeletonDesc const& desc,
     TexturePacker::TextureAtlas const& textureAtlas,
-    char const* name)
+    std::string const& name)
 {
     using namespace Detail::Skeletal2D;
     using Detail::CRC32;
 
     auto iter = std::find_if(std::begin(desc.AnimationClips), std::end(desc.AnimationClips),
-        [name](AnimationClipDesc const& clip){ return clip.Name == name; });
+        [&name](AnimationClipDesc const& clip){ return clip.Name == name; });
 
     POMDOG_ASSERT(std::end(desc.AnimationClips) != iter);
 

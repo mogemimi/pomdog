@@ -6,6 +6,7 @@
 
 #include "Pomdog.Experimental/TexturePacker/TextureAtlas.hpp"
 #include <vector>
+#include <string>
 
 namespace Pomdog {
 namespace Detail {
@@ -22,7 +23,7 @@ class SkeletonDesc;
 std::vector<Detail::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack(
     SkeletonDesc const& desc,
     TexturePacker::TextureAtlas const& textureAtlas,
-    char const* name);
+    std::string const& name);
 
 } // namespace Spine
 } // namespace Pomdog

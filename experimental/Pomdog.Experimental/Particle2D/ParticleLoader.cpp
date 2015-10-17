@@ -104,11 +104,12 @@ namespace {
 //}
 //-----------------------------------------------------------------------
 template <typename T>
-static T GetMemberAs(rapidjson::Value const& object, char const* name)
+static T GetMemberAs(rapidjson::Value const& object, std::string const& name)
 {
-    POMDOG_ASSERT(object.HasMember(name));
+    POMDOG_ASSERT(!name.empty());
+    POMDOG_ASSERT(object.HasMember(name.c_str()));
 
-    auto const& value = object[name];
+    auto const& value = object[name.c_str()];
     POMDOG_ASSERT(value.IsNumber());
 
     if (value.IsInt()) {

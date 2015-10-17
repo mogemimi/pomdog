@@ -30,10 +30,10 @@ static JointIndex FindJoint(std::vector<BoneDesc> const& bones, std::string cons
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name)
+AnimationClip CreateAnimationClip(SkeletonDesc const& desc, std::string const& name)
 {
     auto iter = std::find_if(std::begin(desc.AnimationClips), std::end(desc.AnimationClips),
-        [name](AnimationClipDesc const& clip){ return clip.Name == name; });
+        [&name](AnimationClipDesc const& clip){ return clip.Name == name; });
 
     POMDOG_ASSERT(std::end(desc.AnimationClips) != iter);
 

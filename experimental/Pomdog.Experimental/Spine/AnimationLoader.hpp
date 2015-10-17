@@ -4,6 +4,8 @@
 #ifndef POMDOG_ANIMATIONLOADER_F321C327_HPP
 #define POMDOG_ANIMATIONLOADER_F321C327_HPP
 
+#include <string>
+
 namespace Pomdog {
 
 class AnimationClip;
@@ -12,7 +14,7 @@ namespace Spine {
 
 class SkeletonDesc;
 
-AnimationClip CreateAnimationClip(SkeletonDesc const& desc, char const* name);
+AnimationClip CreateAnimationClip(SkeletonDesc const& desc, std::string const& name);
 
 } // namespace Spine
 } // namespace Pomdog
