@@ -68,9 +68,7 @@ namespace Assertion {
 
 inline constexpr bool ConstexprAssert(
     bool condition,
-    char const* expression,
-    char const* filename,
-    int line)
+    char const* expression)
 {
     return (assert(condition), condition);
 }
@@ -80,8 +78,8 @@ inline constexpr bool ConstexprAssert(
 #if defined(DEBUG)
 #   // Debug mode
 #   define POMDOG_CONSTEXPR_ASSERT(expression) \
-        static_cast<void>(Pomdog::Detail::Assertion::ConstexprAssert(\
-            static_cast<bool>(expression), #expression, __FILE__, __LINE__))
+        static_cast<void>(Pomdog::Detail::Assertion::ConstexprAssert( \
+            static_cast<bool>(expression), #expression))
 #else
 #   // Release mode
 #   define POMDOG_CONSTEXPR_ASSERT(expression) static_cast<void const>(0)
