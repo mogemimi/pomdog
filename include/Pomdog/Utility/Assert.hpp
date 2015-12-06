@@ -16,27 +16,6 @@
 
 namespace Pomdog {
 namespace Detail {
-namespace Assertion {
-
-//inline void ReportAssertionFailure(char const* expression,
-//    char const* filename, int line, char const* function){
-//    // notes: std::cerr in <iostream>
-//    std::cerr << "Assertion failed: " << expression << ", function "
-//        << function << ", file " << filename << ", line " << line << ".\n";
-//}
-
-inline void RuntimeAssertion(char const* /*expression*/, char const* /*filename*/, int /*line*/)
-{
-    //ReportAssertionFailure(expression, filename, line, "(unknown)");
-    assert(false);
-}
-
-inline constexpr bool ConstexprAssert(bool condition,
-    char const* expression, char const* filename, int line) {
-    return condition ? true: (RuntimeAssertion(expression, filename, line), false);
-}
-
-} // namespace Assertion
 
 // How to use:
 // POMDOG_ASSERT(expr);
@@ -44,7 +23,7 @@ inline constexpr bool ConstexprAssert(bool condition,
 
 #if defined(DEBUG) && defined(__APPLE_CC__)
 #    // Debug mode under Xcode
-#    define POMDOG_ASSERT(expression) POMDOG_ASSERT_MESSAGE(expression, "POMDOG_ASSERT")
+#    define POMDOG_ASSERT(expression) assert(expression)
 #    define POMDOG_ASSERT_MESSAGE(expression, message) \
         do {\
             if (!(expression)) {\
@@ -54,7 +33,8 @@ inline constexpr bool ConstexprAssert(bool condition,
 #elif defined(DEBUG) && defined(_MSC_VER)
 #    // Debug mode under Visual Studio
 #    define POMDOG_ASSERT(expression) \
-        static_cast<void>((!!(expression)) || (_CrtDbgBreak(), _ASSERT(expression), false))
+        static_cast<void>((!!(expression)) \
+            || (_CrtDbgBreak(), _ASSERT(expression), false))
 #    define POMDOG_ASSERT_MESSAGE(expression, message) \
         static_cast<void>((!!(expression)) \
             || (1 != _CrtDbgReportW(_CRT_ASSERT, _CRT_WIDE(__FILE__), __LINE__, nullptr, L"%s", message)) \
@@ -70,7 +50,7 @@ inline constexpr bool ConstexprAssert(bool condition,
 #    else
 #        define POMDOG_DEBUGBREAK() __asm { int 3 } // MS-style inline assembly
 #    endif
-#    define POMDOG_ASSERT(expression) POMDOG_ASSERT_MESSAGE(expression, "POMDOG_ASSERT")
+#    define POMDOG_ASSERT(expression) assert(expression)
 #    define POMDOG_ASSERT_MESSAGE(expression, message) \
         do {\
             if (!(expression)) {\
@@ -83,6 +63,19 @@ inline constexpr bool ConstexprAssert(bool condition,
 #    define POMDOG_ASSERT(expression)
 #    define POMDOG_ASSERT_MESSAGE(expression, message)
 #endif
+
+namespace Assertion {
+
+inline constexpr bool ConstexprAssert(
+    bool condition,
+    char const* expression,
+    char const* filename,
+    int line)
+{
+    return (assert(condition), condition);
+}
+
+} // namespace Assertion
 
 #if defined(DEBUG)
 #   // Debug mode
