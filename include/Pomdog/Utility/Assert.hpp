@@ -64,22 +64,19 @@ namespace Detail {
 #    define POMDOG_ASSERT_MESSAGE(expression, message)
 #endif
 
+#if defined(DEBUG)
 namespace Assertion {
 
-inline constexpr bool ConstexprAssert(
-    bool condition,
-    char const* expression)
+inline constexpr bool ConstexprAssert(bool condition)
 {
     return (assert(condition), condition);
 }
 
 } // namespace Assertion
-
-#if defined(DEBUG)
 #   // Debug mode
 #   define POMDOG_CONSTEXPR_ASSERT(expression) \
         static_cast<void>(Pomdog::Detail::Assertion::ConstexprAssert( \
-            static_cast<bool>(expression), #expression))
+            static_cast<bool>(expression)))
 #else
 #   // Release mode
 #   define POMDOG_CONSTEXPR_ASSERT(expression) static_cast<void const>(0)
