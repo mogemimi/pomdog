@@ -189,7 +189,7 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
 {
     POMDOG_ASSERT(levelCount > 0);
 
-    ///@todo MSAA is not implemnted yet
+    ///@todo MSAA is not implemented yet
     UNREFERENCED_PARAMETER(multiSampleCount);
 
     BuildRenderTarget(device, format, pixelWidth, pixelHeight, levelCount,
@@ -207,7 +207,7 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
     DepthFormat depthStencilFormat,
     std::int32_t multiSampleCount)
 {
-    ///@todo MSAA is not implemnted yet
+    ///@todo MSAA is not implemented yet
     UNREFERENCED_PARAMETER(multiSampleCount);
 
     constexpr std::int32_t backBufferMipLevels = 1;
