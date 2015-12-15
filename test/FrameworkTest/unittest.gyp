@@ -75,7 +75,7 @@
       ],
       'include_dirs': [
         '<@(pomdog_dir)/include',
-        '<@(pomdog_dir)/third-party/iutest/include',
+        '<@(pomdog_dir)/dependencies/iutest/include',
       ],
       'sources': [
         'main.cpp',

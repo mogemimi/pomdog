@@ -342,9 +342,9 @@
       'include_dirs': [
         '../experimental',
         '../include',
-        '<@(pomdog_third_party_dir)/rapidjson/include',
-        '<@(pomdog_third_party_dir)/stb',
-        '<@(pomdog_third_party_dir)',
+        '../dependencies/rapidjson/include',
+        '../dependencies/stb',
+        '../dependencies',
       ],
       'sources': [
         '<@(pomdog_experimental_sources)',

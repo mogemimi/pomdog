@@ -35,7 +35,6 @@
     }],
   ],
   'variables': {
-    'pomdog_third_party_dir%': '../third-party',
     'pomdog_library_core_sources': [
       '../include/Pomdog/Application/Duration.hpp',
       '../include/Pomdog/Application/Game.hpp',
@@ -459,11 +458,12 @@
   },
   'target_defaults': {
     'dependencies': [
-      '<@(pomdog_third_party_dir)/libpng/libpng.gyp:libpng_static',
+      'dependencies/libpng.gyp:libpng_static',
     ],
     'include_dirs': [
       '../include',
-      '<@(pomdog_third_party_dir)/libpng',
+      '../dependencies/libpng',
+      '../dependencies/vendor/libpng',
     ],
     'sources': [
       '<@(pomdog_library_core_sources)',
@@ -550,10 +550,10 @@
           'GLEW_STATIC',
         ],
         'dependencies': [
-          '<@(pomdog_third_party_dir)/glew/glew.gyp:glew_static',
+          'dependencies/glew.gyp:glew_static',
         ],
         'include_dirs': [
-          '<@(pomdog_third_party_dir)/glew/include',
+          '../dependencies/vendor/glew/include',
         ],
         'link_settings': {
           'libraries': [
@@ -636,11 +636,11 @@
           'GLEW_STATIC',
         ],
         'dependencies': [
-          '<@(pomdog_third_party_dir)/glew/glew.gyp:glew_static',
+          'dependencies/glew.gyp:glew_static',
         ],
         'include_dirs': [
           '/usr/X11R6/include',
-          '<@(pomdog_third_party_dir)/glew/include',
+          '../dependencies/vendor/glew/include',
         ],
         'library_dirs': [
           '/usr/X11R6/lib',
