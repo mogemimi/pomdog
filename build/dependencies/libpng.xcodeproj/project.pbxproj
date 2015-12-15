@@ -1,0 +1,268 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 47;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0DFB3CB44E26A330D2DCFE47 /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = A6C018D0D01B22F26E2DEBDC /* pngerror.c */; };
+		32B6A9429AD3BFD883082B2B /* pngwutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 974690A7B20836047E35EFD0 /* pngwutil.c */; };
+		39A332B5DF0D1DE2B1627AE6 /* pngwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D018FEC05ACCF37026807B4 /* pngwrite.c */; };
+		46F1BDA48BB02202240C3BE8 /* pngrutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 0F7705699F21D0FBFDC7DD8D /* pngrutil.c */; };
+		4E95A3D5F5D40C8605ECC749 /* pngtrans.c in Sources */ = {isa = PBXBuildFile; fileRef = C4A5CB70F6E6BFF27954946C /* pngtrans.c */; };
+		4F913756E58318E0E2B75639 /* pngmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 557146A01EF19D10715864CC /* pngmem.c */; };
+		54CE4966799FA303E116673A /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = 45F41344BE0991488DEC96B7 /* pngpread.c */; };
+		55590EF28CD51340A59265F4 /* pngrio.c in Sources */ = {isa = PBXBuildFile; fileRef = 23B296C700174D938DD11890 /* pngrio.c */; };
+		6BE6C0F4F3C8B93D855E63BC /* pngwio.c in Sources */ = {isa = PBXBuildFile; fileRef = 843AC1B7646D1E2FC7E8B627 /* pngwio.c */; };
+		752793DCE3950022483F9972 /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = B5344C8B96FF27E0B221A334 /* png.c */; };
+		B030213CFD0733D7F2464175 /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = F478DC49D5DBE44091F5BFE4 /* pngread.c */; };
+		BE5D9DA3FC05C83235834ED1 /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 1FB300999C161610792D1F93 /* pngwtran.c */; };
+		E2C267C79EDED17A7AFD759A /* pngset.c in Sources */ = {isa = PBXBuildFile; fileRef = 68BD82FE111CCDFA763B19F2 /* pngset.c */; };
+		F2D4D8BC7C25E01E003C2C5D /* pngrtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 743D042E7906E38F853E1476 /* pngrtran.c */; };
+		F391BAF3875A81312DF93E56 /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = D0DA77AB28AA3E7BDD9CADA2 /* pngget.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		00ED2A2C76FC7859B0AAC922 /* pngstruct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pngstruct.h; sourceTree = "<group>"; };
+		0F7705699F21D0FBFDC7DD8D /* pngrutil.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngrutil.c; sourceTree = "<group>"; };
+		1FB300999C161610792D1F93 /* pngwtran.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngwtran.c; sourceTree = "<group>"; };
+		23B296C700174D938DD11890 /* pngrio.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngrio.c; sourceTree = "<group>"; };
+		3B7E435F983D52B6F38F2BED /* pngdebug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pngdebug.h; sourceTree = "<group>"; };
+		41BD8A5AFE196BFC91B6F041 /* libpng.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpng.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		45F41344BE0991488DEC96B7 /* pngpread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngpread.c; sourceTree = "<group>"; };
+		51469E067A16A2581BE6B5B4 /* png.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = png.h; sourceTree = "<group>"; };
+		51889009D8C8BBE0CAD78D23 /* pngconf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pngconf.h; sourceTree = "<group>"; };
+		557146A01EF19D10715864CC /* pngmem.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngmem.c; sourceTree = "<group>"; };
+		68BD82FE111CCDFA763B19F2 /* pngset.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngset.c; sourceTree = "<group>"; };
+		743D042E7906E38F853E1476 /* pngrtran.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngrtran.c; sourceTree = "<group>"; };
+		843AC1B7646D1E2FC7E8B627 /* pngwio.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngwio.c; sourceTree = "<group>"; };
+		88146A605186E281CDF1B4CB /* pnglibconf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pnglibconf.h; sourceTree = "<group>"; };
+		974690A7B20836047E35EFD0 /* pngwutil.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngwutil.c; sourceTree = "<group>"; };
+		99E6D9B418A1C1A42562F408 /* pnginfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pnginfo.h; sourceTree = "<group>"; };
+		9D018FEC05ACCF37026807B4 /* pngwrite.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngwrite.c; sourceTree = "<group>"; };
+		A285183E9A7CA91BEDA58F02 /* pngpriv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pngpriv.h; sourceTree = "<group>"; };
+		A6C018D0D01B22F26E2DEBDC /* pngerror.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngerror.c; sourceTree = "<group>"; };
+		B5344C8B96FF27E0B221A334 /* png.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = png.c; sourceTree = "<group>"; };
+		C4A5CB70F6E6BFF27954946C /* pngtrans.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngtrans.c; sourceTree = "<group>"; };
+		D0DA77AB28AA3E7BDD9CADA2 /* pngget.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngget.c; sourceTree = "<group>"; };
+		F478DC49D5DBE44091F5BFE4 /* pngread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pngread.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		61D297EADF5666BF32EF33DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0D01BDF94441FB9BB09547A7 /* libpng */ = {
+			isa = PBXGroup;
+			children = (
+				B5344C8B96FF27E0B221A334 /* png.c */,
+				51469E067A16A2581BE6B5B4 /* png.h */,
+				51889009D8C8BBE0CAD78D23 /* pngconf.h */,
+				3B7E435F983D52B6F38F2BED /* pngdebug.h */,
+				A6C018D0D01B22F26E2DEBDC /* pngerror.c */,
+				D0DA77AB28AA3E7BDD9CADA2 /* pngget.c */,
+				99E6D9B418A1C1A42562F408 /* pnginfo.h */,
+				557146A01EF19D10715864CC /* pngmem.c */,
+				45F41344BE0991488DEC96B7 /* pngpread.c */,
+				A285183E9A7CA91BEDA58F02 /* pngpriv.h */,
+				F478DC49D5DBE44091F5BFE4 /* pngread.c */,
+				23B296C700174D938DD11890 /* pngrio.c */,
+				743D042E7906E38F853E1476 /* pngrtran.c */,
+				0F7705699F21D0FBFDC7DD8D /* pngrutil.c */,
+				68BD82FE111CCDFA763B19F2 /* pngset.c */,
+				00ED2A2C76FC7859B0AAC922 /* pngstruct.h */,
+				C4A5CB70F6E6BFF27954946C /* pngtrans.c */,
+				843AC1B7646D1E2FC7E8B627 /* pngwio.c */,
+				9D018FEC05ACCF37026807B4 /* pngwrite.c */,
+				1FB300999C161610792D1F93 /* pngwtran.c */,
+				974690A7B20836047E35EFD0 /* pngwutil.c */,
+			);
+			path = libpng;
+			sourceTree = "<group>";
+		};
+		8432013128BC6DF705B4359F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				41BD8A5AFE196BFC91B6F041 /* libpng.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		860189621EECEC9203955D4E /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				0D01BDF94441FB9BB09547A7 /* libpng */,
+				AD3871A4E471B04D8BA96132 /* vendor/libpng */,
+			);
+			name = Source;
+			path = ../../dependencies;
+			sourceTree = "<group>";
+		};
+		AD3871A4E471B04D8BA96132 /* vendor/libpng */ = {
+			isa = PBXGroup;
+			children = (
+				88146A605186E281CDF1B4CB /* pnglibconf.h */,
+			);
+			path = vendor/libpng;
+			sourceTree = "<group>";
+		};
+		B91F4710F1DD41762E468FFE = {
+			isa = PBXGroup;
+			children = (
+				860189621EECEC9203955D4E /* Source */,
+				8432013128BC6DF705B4359F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8ED0FBBBD08C4B5967CE24C3 /* libpng_static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D1F92A5A6A92E2CD3F1A0D3F /* Build configuration list for PBXNativeTarget "libpng_static" */;
+			buildPhases = (
+				C51A293A670406F2F0E84F4C /* Sources */,
+				61D297EADF5666BF32EF33DA /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = libpng_static;
+			productName = png;
+			productReference = 41BD8A5AFE196BFC91B6F041 /* libpng.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EE1EA893C320976E179B0FC9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 0720;
+			};
+			buildConfigurationList = 0B5A92A1164BF4A488741493 /* Build configuration list for PBXProject "libpng" */;
+			compatibilityVersion = "Xcode 6.3";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+			);
+			mainGroup = B91F4710F1DD41762E468FFE;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8ED0FBBBD08C4B5967CE24C3 /* libpng_static */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C51A293A670406F2F0E84F4C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				752793DCE3950022483F9972 /* png.c in Sources */,
+				0DFB3CB44E26A330D2DCFE47 /* pngerror.c in Sources */,
+				F391BAF3875A81312DF93E56 /* pngget.c in Sources */,
+				4F913756E58318E0E2B75639 /* pngmem.c in Sources */,
+				54CE4966799FA303E116673A /* pngpread.c in Sources */,
+				B030213CFD0733D7F2464175 /* pngread.c in Sources */,
+				55590EF28CD51340A59265F4 /* pngrio.c in Sources */,
+				F2D4D8BC7C25E01E003C2C5D /* pngrtran.c in Sources */,
+				46F1BDA48BB02202240C3BE8 /* pngrutil.c in Sources */,
+				E2C267C79EDED17A7AFD759A /* pngset.c in Sources */,
+				4E95A3D5F5D40C8605ECC749 /* pngtrans.c in Sources */,
+				6BE6C0F4F3C8B93D855E63BC /* pngwio.c in Sources */,
+				39A332B5DF0D1DE2B1627AE6 /* pngwrite.c in Sources */,
+				BE5D9DA3FC05C83235834ED1 /* pngwtran.c in Sources */,
+				32B6A9429AD3BFD883082B2B /* pngwutil.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1CFC833B563E90792ABA2654 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		9CA31177090F64882F03A3FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
+				HEADER_SEARCH_PATHS = (
+					../../dependencies/libpng,
+					../../dependencies/vendor/libpng,
+					../../dependencies/zlib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = png;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		EE6632AECA61278AA7638E2A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
+				HEADER_SEARCH_PATHS = (
+					../../dependencies/libpng,
+					../../dependencies/vendor/libpng,
+					../../dependencies/zlib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = png;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		F36F1CF6916632071E92E195 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0B5A92A1164BF4A488741493 /* Build configuration list for PBXProject "libpng" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F36F1CF6916632071E92E195 /* Release */,
+				1CFC833B563E90792ABA2654 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Release;
+		};
+		D1F92A5A6A92E2CD3F1A0D3F /* Build configuration list for PBXNativeTarget "libpng_static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9CA31177090F64882F03A3FB /* Release */,
+				EE6632AECA61278AA7638E2A /* Debug */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EE1EA893C320976E179B0FC9 /* Project object */;
+}
