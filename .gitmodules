@@ -1,0 +1,24 @@
+[submodule "dependencies/glew"]
+	path = dependencies/glew
+	url = https://github.com/nigels-com/glew
+[submodule "dependencies/iutest"]
+	path = dependencies/iutest
+	url = https://github.com/srz-zumix/iutest
+[submodule "dependencies/libpng"]
+	path = dependencies/libpng
+	url = https://github.com/glennrp/libpng
+[submodule "dependencies/rapidjson"]
+	path = dependencies/rapidjson
+	url = https://github.com/miloyip/rapidjson
+[submodule "dependencies/stb"]
+	path = dependencies/stb
+	url = https://github.com/nothings/stb
+[submodule "dependencies/utfcpp"]
+	path = dependencies/utfcpp
+	url = https://github.com/nemtrif/utfcpp
+[submodule "dependencies/zlib"]
+	path = dependencies/zlib
+	url = https://github.com/madler/zlib
+[submodule "dependencies/vendor"]
+	path = dependencies/vendor
+	url = https://github.com/mogemimi/pomdog-third-party
