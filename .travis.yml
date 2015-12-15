@@ -4,9 +4,8 @@ compiler:
   - clang
 
 install:
-  - git clone --depth=1 https://github.com/mogemimi/pomdog-third-party.git third-party
+  - git submodule update --init --depth 1
   - git clone --depth=1 https://chromium.googlesource.com/external/gyp.git tools/gyp
-  - git clone --depth=1 https://github.com/srz-zumix/iutest.git third-party/iutest
 
 script:
   - tools/gyp/gyp test/FrameworkTest/unittest.gyp --depth=. -f xcode --generator-output=build.xcodefiles
