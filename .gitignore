@@ -23,17 +23,17 @@
 /examples/QuickStart/build
 /test/FrameworkTest/build
 /test/TestApp/build
+/tools/gyp
+/tools/python
+
+## Third Party (Backwards compatibility)
 /third-party
 /third-party/libpng/build
 /third-party/lua/build
 /third-party/zlib/build
-/tools/gyp
-/tools/python
 
-# Python
+## Python
 tools/*.pyc
 
-# PyCharm
+## IntelliJ IDEA
 .idea/
-build/.idea/
-tools/.idea/
