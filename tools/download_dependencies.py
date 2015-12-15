@@ -12,16 +12,8 @@ import shutil
 
 pomdogDependencies = [
     {
-        'dest': 'third-party',
-        'repository': 'https://github.com/mogemimi/pomdog-third-party.git',
-    },
-    {
         'dest': 'tools/gyp',
         'repository': 'https://chromium.googlesource.com/external/gyp.git',
-    },
-    {
-        'dest': 'third-party/iutest',
-        'repository': 'https://github.com/srz-zumix/iutest.git',
     },
 ]
 
