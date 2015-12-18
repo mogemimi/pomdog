@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_RENDERCOMMANDPROCESSOR_98635350_HPP
-#define POMDOG_RENDERCOMMANDPROCESSOR_98635350_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -25,5 +24,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_RENDERCOMMANDPROCESSOR_98635350_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_COMPONENTTYPEINDEX_7EECA00A_HPP
-#define POMDOG_COMPONENTTYPEINDEX_7EECA00A_HPP
+#pragma once
 
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstdint>
@@ -44,5 +43,3 @@ IndexType ComponentTypeIndex<BaseComponentType, IndexType>::count = 0;
 } // namespace Gameplay
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_COMPONENTTYPEINDEX_7EECA00A_HPP

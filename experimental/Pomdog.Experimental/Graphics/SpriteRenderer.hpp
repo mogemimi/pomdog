@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SPRITERENDERER_8ACAC405_HPP
-#define POMDOG_SPRITERENDERER_8ACAC405_HPP
+#pragma once
 
 #include "SpriteSortMode.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
@@ -57,5 +56,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SPRITERENDERER_8ACAC405_HPP

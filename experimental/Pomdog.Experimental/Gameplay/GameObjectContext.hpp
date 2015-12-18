@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEOBJECTCONTEXT_DFD4E6A6_HPP
-#define POMDOG_GAMEOBJECTCONTEXT_DFD4E6A6_HPP
+#pragma once
 
 #include "Component.hpp"
 #include "GameObjectID.hpp"
@@ -436,5 +435,3 @@ auto EntityContext<MaxComponentCapacity>::Component(GameObjectID const& id)
 using GameObjectContext = Detail::Gameplay::EntityContext<64>;
 
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEOBJECTCONTEXT_DFD4E6A6_HPP

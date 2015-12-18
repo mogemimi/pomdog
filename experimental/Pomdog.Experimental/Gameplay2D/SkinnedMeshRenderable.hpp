@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SKINNEDMESHRENDERABLE_6584A6D1_HPP
-#define POMDOG_SKINNEDMESHRENDERABLE_6584A6D1_HPP
+#pragma once
 
 #include "Renderable.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/SkinnedMeshCommand.hpp"
@@ -26,5 +25,3 @@ private:
 };
 
 }// namespace Pomdog
-
-#endif // POMDOG_SKINNEDMESHRENDERABLE_6584A6D1_HPP

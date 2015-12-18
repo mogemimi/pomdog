@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_DEBUGNAVIGATOR_9FDE3D88_HPP
-#define POMDOG_DEBUGNAVIGATOR_9FDE3D88_HPP
+#pragma once
 
 #include "Control.hpp"
 #include "Pomdog/Utility/Optional.hpp"
@@ -26,5 +25,3 @@ private:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_DEBUGNAVIGATOR_9FDE3D88_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLEPARAMETER_FCCEE8BC_HPP
-#define POMDOG_PARTICLEPARAMETER_FCCEE8BC_HPP
+#pragma once
 
 #include <random>
 
@@ -24,5 +23,3 @@ public:
 } // namespace Particles
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PARTICLEPARAMETER_FCCEE8BC_HPP

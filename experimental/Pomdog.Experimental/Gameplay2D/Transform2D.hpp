@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TRANSFORM2D_9973161D_HPP
-#define POMDOG_TRANSFORM2D_9973161D_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -18,5 +17,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_TRANSFORM2D_9973161D_HPP

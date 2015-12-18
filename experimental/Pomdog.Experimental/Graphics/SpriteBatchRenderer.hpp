@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SPRITEBATCHRENDERER_FAFB0E53_HPP
-#define POMDOG_SPRITEBATCHRENDERER_FAFB0E53_HPP
+#pragma once
 
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -80,5 +79,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SPRITEBATCHRENDERER_FAFB0E53_HPP

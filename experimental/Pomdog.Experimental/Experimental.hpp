@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_EXPERIMENTAL_113A86BE_HPP
-#define POMDOG_EXPERIMENTAL_113A86BE_HPP
+#pragma once
 
 #include "Actions/Action.hpp"
 #include "Actions/MoveToAction.hpp"
@@ -130,5 +129,3 @@
 //#include "UI/UIHelper.hpp"
 //#include "UI/UIView.hpp"
 //#include "UI/VerticalAlignment.hpp"
-
-#endif // POMDOG_EXPERIMENTAL_113A86BE_HPP

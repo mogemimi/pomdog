@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_RENDERLAYER_925B26B2_HPP
-#define POMDOG_RENDERLAYER_925B26B2_HPP
+#pragma once
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstdint>
@@ -25,5 +24,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_RENDERLAYER_925B26B2_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_RENDERQUEUE_32005F81_HPP
-#define POMDOG_RENDERQUEUE_32005F81_HPP
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -30,5 +29,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_RENDERQUEUE_32005F81_HPP

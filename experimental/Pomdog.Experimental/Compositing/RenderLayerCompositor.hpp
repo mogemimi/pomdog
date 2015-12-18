@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_RENDERLAYERCOMPOSITOR_2AC2E2AD_HPP
-#define POMDOG_RENDERLAYERCOMPOSITOR_2AC2E2AD_HPP
+#pragma once
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstdint>
@@ -29,5 +28,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_RENDERLAYERCOMPOSITOR_2AC2E2AD_HPP

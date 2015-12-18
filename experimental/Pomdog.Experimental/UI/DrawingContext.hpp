@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_DRAWINGCONTEXT_693D88E1_HPP
-#define POMDOG_DRAWINGCONTEXT_693D88E1_HPP
+#pragma once
 
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
@@ -44,5 +43,3 @@ public:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_DRAWINGCONTEXT_693D88E1_HPP

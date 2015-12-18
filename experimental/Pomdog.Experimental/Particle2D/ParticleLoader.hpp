@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLELOADER_D0266408_HPP
-#define POMDOG_PARTICLELOADER_D0266408_HPP
+#pragma once
 
 #include <Pomdog/Pomdog.hpp>
 
@@ -19,5 +18,3 @@ struct ParticleLoader {
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PARTICLELOADER_D0266408_HPP

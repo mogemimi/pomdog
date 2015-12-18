@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PANEL_C95AA33F_HPP
-#define POMDOG_PANEL_C95AA33F_HPP
+#pragma once
 
 #include "UIView.hpp"
 #include <Pomdog/Pomdog.hpp>
@@ -30,5 +29,3 @@ public:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_PANEL_C95AA33F_HPP

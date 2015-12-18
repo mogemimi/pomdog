@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SPRITECOMMAND_8EB48EFB_HPP
-#define POMDOG_SPRITECOMMAND_8EB48EFB_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
 #include "Pomdog.Experimental/Graphics/TextureRegion.hpp"
@@ -33,5 +32,3 @@ public:
 } // namespace Rendering
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SPRITECOMMAND_8EB48EFB_HPP

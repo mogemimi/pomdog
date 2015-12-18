@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_POLYGONBATCH_4158F6A1_HPP
-#define POMDOG_POLYGONBATCH_4158F6A1_HPP
+#pragma once
 
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -172,5 +171,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_POLYGONBATCH_4158F6A1_HPP

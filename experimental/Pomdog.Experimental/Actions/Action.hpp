@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ACTION_F54B5D22_HPP
-#define POMDOG_ACTION_F54B5D22_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Skeletal2D/AnimationTimeInterval.hpp"
 
@@ -19,5 +18,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_ACTION_F54B5D22_HPP

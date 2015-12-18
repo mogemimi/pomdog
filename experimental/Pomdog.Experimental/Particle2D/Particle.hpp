@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLE_3943827E_HPP
-#define POMDOG_PARTICLE_3943827E_HPP
+#pragma once
 
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Color.hpp"
@@ -30,5 +29,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_PARTICLE_3943827E_HPP

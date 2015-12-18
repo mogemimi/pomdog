@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLEBATCHCOMMANDPROCESSOR_29CECBB2_HPP
-#define POMDOG_PARTICLEBATCHCOMMANDPROCESSOR_29CECBB2_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Graphics/SpriteBatchRenderer.hpp"
 #include "Pomdog.Experimental/Rendering/RenderCommandProcessor.hpp"
@@ -31,5 +30,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_PARTICLEBATCHCOMMANDPROCESSOR_29CECBB2_HPP

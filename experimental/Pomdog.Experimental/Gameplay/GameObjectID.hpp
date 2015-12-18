@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEOBJECTID_F68B7FC0_HPP
-#define POMDOG_GAMEOBJECTID_F68B7FC0_HPP
+#pragma once
 
 #include <cstdint>
 #include <functional>
@@ -57,5 +56,3 @@ struct std::hash<Pomdog::GameObjectID> {
 };
 
 } // namespace std
-
-#endif // POMDOG_GAMEOBJECTID_F68B7FC0_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_THICKNESS_291572C7_HPP
-#define POMDOG_THICKNESS_291572C7_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -18,5 +17,3 @@ public:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_THICKNESS_291572C7_HPP

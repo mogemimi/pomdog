@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_RIGIDSLOT_4C507F41_HPP
-#define POMDOG_RIGIDSLOT_4C507F41_HPP
+#pragma once
 
 #include "JointIndex.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
@@ -28,5 +27,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_RIGIDSLOT_4C507F41_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLEPARAMETERCONSTANT_0CA7D811_HPP
-#define POMDOG_PARTICLEPARAMETERCONSTANT_0CA7D811_HPP
+#pragma once
 
 #include "ParticleParameter.hpp"
 #include <utility>
@@ -42,5 +41,3 @@ public:
 } // namespace Particles
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PARTICLEPARAMETERCONSTANT_0CA7D811_HPP

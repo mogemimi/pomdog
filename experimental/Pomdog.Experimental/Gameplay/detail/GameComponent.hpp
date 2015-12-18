@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMECOMPONENT_68E8B2BF_HPP
-#define POMDOG_GAMECOMPONENT_68E8B2BF_HPP
+#pragma once
 
 namespace Pomdog {
 namespace Detail {
@@ -15,5 +14,3 @@ public:
 } // namespace Gameplay
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_GAMECOMPONENT_68E8B2BF_HPP

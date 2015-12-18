@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEWORLD_FE6556F6_HPP
-#define POMDOG_GAMEWORLD_FE6556F6_HPP
+#pragma once
 
 #include "GameObject.hpp"
 #include <cstdint>
@@ -97,5 +96,3 @@ bool GameWorld::HasComponent(GameObjectID const& id) const
 }
 
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEWORLD_FE6556F6_HPP

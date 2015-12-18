@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BEAMBRANCHING_1888F4E0_HPP
-#define POMDOG_BEAMBRANCHING_1888F4E0_HPP
+#pragma once
 
 #include <cstdint>
 #include <random>
@@ -20,5 +19,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_BEAMBRANCHING_1888F4E0_HPP

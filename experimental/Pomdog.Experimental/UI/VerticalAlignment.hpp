@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_VERTICALALIGNMENT_07A78998_HPP
-#define POMDOG_VERTICALALIGNMENT_07A78998_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -17,5 +16,3 @@ enum class VerticalAlignment: std::uint8_t {
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_VERTICALALIGNMENT_07A78998_HPP

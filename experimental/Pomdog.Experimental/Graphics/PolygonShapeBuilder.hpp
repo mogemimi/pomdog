@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_POLYGONSHAPEBUILDER_E6B8BC2B_HPP
-#define POMDOG_POLYGONSHAPEBUILDER_E6B8BC2B_HPP
+#pragma once
 
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
@@ -184,5 +183,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_POLYGONSHAPEBUILDER_E6B8BC2B_HPP

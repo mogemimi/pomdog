@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_POSTPROCESSCOMPOSITOR_CF09DF9E_HPP
-#define POMDOG_POSTPROCESSCOMPOSITOR_CF09DF9E_HPP
+#pragma once
 
 #include "ImageEffectBase.hpp"
 #include "../Graphics/ScreenQuad.hpp"
@@ -51,5 +50,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_POSTPROCESSCOMPOSITOR_CF09DF9E_HPP

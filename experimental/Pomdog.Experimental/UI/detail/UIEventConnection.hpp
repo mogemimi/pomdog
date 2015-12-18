@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_UIEVENTCONNECTION_EBC5870C_HPP
-#define POMDOG_UIEVENTCONNECTION_EBC5870C_HPP
+#pragma once
 
 #include "SubscribeRequestDispatcher.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -82,5 +81,3 @@ private:
 }// namespace Detail
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_UIEVENTCONNECTION_EBC5870C_HPP

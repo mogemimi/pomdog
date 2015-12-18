@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLEEMITTERSHAPE_DCE4AD88_HPP
-#define POMDOG_PARTICLEEMITTERSHAPE_DCE4AD88_HPP
+#pragma once
 
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Radian.hpp"
@@ -21,5 +20,3 @@ public:
 } // namespace Particles
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PARTICLEEMITTERSHAPE_DCE4AD88_HPP

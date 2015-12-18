@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLERENDERABLE_1729BB9F_HPP
-#define POMDOG_PARTICLERENDERABLE_1729BB9F_HPP
+#pragma once
 
 #include "Renderable.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/ParticleBatchCommand.hpp"
@@ -22,5 +21,3 @@ private:
 };
 
 }// namespace Pomdog
-
-#endif // POMDOG_PARTICLERENDERABLE_1729BB9F_HPP

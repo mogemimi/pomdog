@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SPRITELINE_9221505C_HPP
-#define POMDOG_SPRITELINE_9221505C_HPP
+#pragma once
 
 #include "SpriteBatch.hpp"
 #include "Pomdog/Math/Color.hpp"
@@ -51,5 +50,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SPRITELINE_9221505C_HPP

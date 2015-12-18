@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_HORIZONTALALIGNMENT_9170DFBF_HPP
-#define POMDOG_HORIZONTALALIGNMENT_9170DFBF_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -17,5 +16,3 @@ enum class HorizontalAlignment: std::uint8_t {
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_HORIZONTALALIGNMENT_9170DFBF_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SPRITECOMMANDPROCESSOR_1D9B87F7_HPP
-#define POMDOG_SPRITECOMMANDPROCESSOR_1D9B87F7_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Graphics/SpriteBatchRenderer.hpp"
 #include "Pomdog.Experimental/Rendering/RenderCommandProcessor.hpp"
@@ -31,5 +30,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SPRITECOMMANDPROCESSOR_1D9B87F7_HPP

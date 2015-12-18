@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_IMAGEEFFECTBASE_AE89AE0A_HPP
-#define POMDOG_IMAGEEFFECTBASE_AE89AE0A_HPP
+#pragma once
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
@@ -26,5 +25,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_IMAGEEFFECTBASE_AE89AE0A_HPP

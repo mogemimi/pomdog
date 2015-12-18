@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BEAMEMITTER_89CB54AB_HPP
-#define POMDOG_BEAMEMITTER_89CB54AB_HPP
+#pragma once
 
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Math/Color.hpp"
@@ -38,5 +37,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_BEAMEMITTER_89CB54AB_HPP

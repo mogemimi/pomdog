@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SPRITERENDERABLE_552FA480_HPP
-#define POMDOG_SPRITERENDERABLE_552FA480_HPP
+#pragma once
 
 #include "Renderable.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/SpriteCommand.hpp"
@@ -36,5 +35,3 @@ private:
 };
 
 }// namespace Pomdog
-
-#endif // POMDOG_SPRITERENDERABLE_552FA480_HPP

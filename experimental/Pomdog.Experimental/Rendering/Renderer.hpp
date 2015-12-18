@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_RENDERER_1196526B_HPP
-#define POMDOG_RENDERER_1196526B_HPP
+#pragma once
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
@@ -40,5 +39,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_RENDERER_1196526B_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLECURVEKEY_6EBF4743_HPP
-#define POMDOG_PARTICLECURVEKEY_6EBF4743_HPP
+#pragma once
 
 namespace Pomdog {
 namespace Detail {
@@ -17,5 +16,3 @@ struct ParticleCurveKey {
 } // namespace Particles
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PARTICLECURVEKEY_6EBF4743_HPP

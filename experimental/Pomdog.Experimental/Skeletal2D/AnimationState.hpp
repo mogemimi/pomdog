@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ANIMATIONSTATE_35B967B3_HPP
-#define POMDOG_ANIMATIONSTATE_35B967B3_HPP
+#pragma once
 
 #include "AnimationTimeInterval.hpp"
 #include <memory>
@@ -43,5 +42,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_ANIMATIONSTATE_35B967B3_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_UIEVENTLISTENER_6C74CE34_HPP
-#define POMDOG_UIEVENTLISTENER_6C74CE34_HPP
+#pragma once
 
 namespace Pomdog {
 namespace UI {
@@ -31,5 +30,3 @@ public:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_UIEVENTLISTENER_6C74CE34_HPP

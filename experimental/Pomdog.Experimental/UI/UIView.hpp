@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_UIVIEW_6665F0EE_HPP
-#define POMDOG_UIVIEW_6665F0EE_HPP
+#pragma once
 
 #include "UIElement.hpp"
 #include "UIEventListener.hpp"
@@ -104,5 +103,3 @@ private:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_UIVIEW_6665F0EE_HPP

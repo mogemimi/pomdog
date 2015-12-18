@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_EDITORCOLORSCHEME_EFD082F5_HPP
-#define POMDOG_EDITORCOLORSCHEME_EFD082F5_HPP
+#pragma once
 
 #include "Pomdog/Math/Color.hpp"
 
@@ -22,5 +21,3 @@ struct EditorColorScheme {
 
 } // namespace SceneEditor
 } // namespace Pomdog
-
-#endif // POMDOG_EDITORCOLORSCHEME_EFD082F5_HPP

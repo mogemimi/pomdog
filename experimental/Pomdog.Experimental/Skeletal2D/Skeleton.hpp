@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SKELETON_015B5D6C_HPP
-#define POMDOG_SKELETON_015B5D6C_HPP
+#pragma once
 
 #include "Joint.hpp"
 #include "JointPose.hpp"
@@ -37,5 +36,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SKELETON_015B5D6C_HPP

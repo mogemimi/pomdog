@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SPRITEFONTLOADER_30D6FB29_HPP
-#define POMDOG_SPRITEFONTLOADER_30D6FB29_HPP
+#pragma once
 
 #include "SpriteFont.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
@@ -18,5 +17,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SPRITEFONTLOADER_30D6FB29_HPP

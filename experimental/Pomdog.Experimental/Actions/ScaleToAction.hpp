@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SCALETOACTION_5EB92B4C_HPP
-#define POMDOG_SCALETOACTION_5EB92B4C_HPP
+#pragma once
 
 #include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
@@ -48,5 +47,3 @@ public:
 using ScaleToAction = Detail::Actions::TemporalAction<Detail::Actions::ScaleTo>;
 
 } // namespace Pomdog
-
-#endif // POMDOG_SCALETOACTION_5EB92B4C_HPP

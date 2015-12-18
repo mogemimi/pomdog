@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SCRIPTBEHAVIOR_BBF00E47_HPP
-#define POMDOG_SCRIPTBEHAVIOR_BBF00E47_HPP
+#pragma once
 
 #include "Behavior.hpp"
 //#include <selene.h>
@@ -22,5 +21,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SCRIPTBEHAVIOR_BBF00E47_HPP

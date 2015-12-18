@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLECURVELERP_7AA431A6_HPP
-#define POMDOG_PARTICLECURVELERP_7AA431A6_HPP
+#pragma once
 
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Color.hpp"
@@ -38,5 +37,3 @@ struct ParticleCurveLerp<Color> {
 } // namespace Particles
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PARTICLECURVELERP_7AA431A6_HPP

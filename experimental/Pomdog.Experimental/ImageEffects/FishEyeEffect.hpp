@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_FISHEYEEFFECT_62F772C0_HPP
-#define POMDOG_FISHEYEEFFECT_62F772C0_HPP
+#pragma once
 
 #include "ImageEffectBase.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
@@ -30,5 +29,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_FISHEYEEFFECT_62F772C0_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ANIMATIONNODE_DEEDC3FD_HPP
-#define POMDOG_ANIMATIONNODE_DEEDC3FD_HPP
+#pragma once
 
 #include "AnimationTimeInterval.hpp"
 
@@ -30,5 +29,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_ANIMATIONNODE_DEEDC3FD_HPP

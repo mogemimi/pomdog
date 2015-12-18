@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_VIGNETTEEFFECT_395F49A8_HPP
-#define POMDOG_VIGNETTEEFFECT_395F49A8_HPP
+#pragma once
 
 #include "ImageEffectBase.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
@@ -30,5 +29,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_VIGNETTEEFFECT_395F49A8_HPP

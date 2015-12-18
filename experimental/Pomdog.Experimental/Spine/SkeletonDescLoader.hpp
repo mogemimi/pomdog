@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SKELETON2DLOADER_24651167_HPP
-#define POMDOG_SKELETON2DLOADER_24651167_HPP
+#pragma once
 
 #include "SkeletonDesc.hpp"
 
@@ -18,5 +17,3 @@ public:
 
 } // namespace Spine
 } // namespace Pomdog
-
-#endif // POMDOG_SKELETON2DLOADER_24651167_HPP

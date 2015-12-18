@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLEEMITTERSHAPESECTOR_020ABE98_HPP
-#define POMDOG_PARTICLEEMITTERSHAPESECTOR_020ABE98_HPP
+#pragma once
 
 #include "ParticleEmitterShape.hpp"
 #include <random>
@@ -32,5 +31,3 @@ public:
 } // namespace Particles
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PARTICLEEMITTERSHAPESECTOR_020ABE98_HPP

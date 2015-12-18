@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLEBATCHCOMMAND_BBF33260_HPP
-#define POMDOG_PARTICLEBATCHCOMMAND_BBF33260_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
 #include "Pomdog.Experimental/Graphics/TextureRegion.hpp"
@@ -36,5 +35,3 @@ public:
 } // namespace Rendering
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PARTICLEBATCHCOMMAND_BBF33260_HPP

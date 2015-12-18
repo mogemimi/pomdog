@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_FXAA_FAC6D173_HPP
-#define POMDOG_FXAA_FAC6D173_HPP
+#pragma once
 
 #include "ImageEffectBase.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
@@ -27,5 +26,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_FXAA_FAC6D173_HPP

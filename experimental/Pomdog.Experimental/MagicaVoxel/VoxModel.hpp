@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_VOXMODEL_536F1B05_HPP
-#define POMDOG_VOXMODEL_536F1B05_HPP
+#pragma once
 
 #include "Pomdog/Math/Color.hpp"
 #include <vector>
@@ -29,5 +28,3 @@ public:
 
 } // namespace MagicaVoxel
 } // namespace Pomdog
-
-#endif // POMDOG_VOXMODEL_536F1B05_HPP

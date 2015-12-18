@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SKELETONTRANSFORM_B5648A89_HPP
-#define POMDOG_SKELETONTRANSFORM_B5648A89_HPP
+#pragma once
 
 #include "SkeletonPose.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
@@ -16,5 +15,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SKELETONTRANSFORM_B5648A89_HPP

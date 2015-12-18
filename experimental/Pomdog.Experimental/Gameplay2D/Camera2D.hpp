@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_CAMERA2D_6E6D82E9_HPP
-#define POMDOG_CAMERA2D_6E6D82E9_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -25,5 +24,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_CAMERA2D_6E6D82E9_HPP

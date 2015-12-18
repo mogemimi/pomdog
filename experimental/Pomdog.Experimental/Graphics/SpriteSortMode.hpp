@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SPRITESORTMODE_670C0FC1_HPP
-#define POMDOG_SPRITESORTMODE_670C0FC1_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -14,5 +13,3 @@ enum class SpriteSortMode : std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SPRITESORTMODE_670C0FC1_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TRANSLATIONTRACK_6A0FA1BF_HPP
-#define POMDOG_TRANSLATIONTRACK_6A0FA1BF_HPP
+#pragma once
 
 #include "AnimationTrack.hpp"
 #include "AnimationTimeInterval.hpp"
@@ -45,5 +44,3 @@ private:
 } // namespace Skeletal2D
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_TRANSLATIONTRACK_6A0FA1BF_HPP

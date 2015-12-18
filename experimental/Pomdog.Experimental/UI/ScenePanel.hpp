@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SCENEPANEL_F59B1210_HPP
-#define POMDOG_SCENEPANEL_F59B1210_HPP
+#pragma once
 
 #include "Panel.hpp"
 #include "detail/UIEventConnection.hpp"
@@ -104,5 +103,3 @@ private:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_SCENEPANEL_F59B1210_HPP

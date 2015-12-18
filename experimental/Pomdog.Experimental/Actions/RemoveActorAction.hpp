@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_REMOVEACTORACTION_4E4B9484_HPP
-#define POMDOG_REMOVEACTORACTION_4E4B9484_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Actions/Action.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
@@ -36,5 +35,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_REMOVEACTORACTION_4E4B9484_HPP

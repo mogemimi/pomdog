@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TEXTBLOCK_0351BBF2_HPP
-#define POMDOG_TEXTBLOCK_0351BBF2_HPP
+#pragma once
 
 #include "UIView.hpp"
 #include "detail/UIEventConnection.hpp"
@@ -29,5 +28,3 @@ private:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_TEXTBLOCK_0351BBF2_HPP

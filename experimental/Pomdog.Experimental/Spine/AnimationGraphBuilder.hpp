@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ANIMATIONGRAPHBUILDER_F4A6BA28_HPP
-#define POMDOG_ANIMATIONGRAPHBUILDER_F4A6BA28_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Skeletal2D/AnimationGraph.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
@@ -18,5 +17,3 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
 
 } // namespace Spine
 } // namespace Pomdog
-
-#endif // POMDOG_ANIMATIONGRAPHBUILDER_F4A6BA28_HPP

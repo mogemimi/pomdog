@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_UIEVENTDISPATCHER_83873A91_HPP
-#define POMDOG_UIEVENTDISPATCHER_83873A91_HPP
+#pragma once
 
 #include "UIView.hpp"
 #include "PointerPoint.hpp"
@@ -69,5 +68,3 @@ private:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_UIEVENTDISPATCHER_83873A91_HPP

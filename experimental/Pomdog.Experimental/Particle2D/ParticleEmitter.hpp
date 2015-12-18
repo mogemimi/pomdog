@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLEEMITTER_69E1B461_HPP
-#define POMDOG_PARTICLEEMITTER_69E1B461_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -29,5 +28,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_PARTICLEEMITTER_69E1B461_HPP

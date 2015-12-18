@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SKINNEDEFFECT_3BADC686_HPP
-#define POMDOG_SKINNEDEFFECT_3BADC686_HPP
+#pragma once
 
 #include <Pomdog/Pomdog.hpp>
 #include <cstdint>
@@ -35,5 +34,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SKINNEDEFFECT_3BADC686_HPP

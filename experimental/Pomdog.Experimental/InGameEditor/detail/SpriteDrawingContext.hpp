@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SPRITEDRAWINGCONTEXT_4AC87153_HPP
-#define POMDOG_SPRITEDRAWINGCONTEXT_4AC87153_HPP
+#pragma once
 
 #include "Pomdog.Experimental/UI/DrawingContext.hpp"
 #include "Pomdog.Experimental/Graphics/SpriteBatch.hpp"
@@ -44,5 +43,3 @@ public:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_SPRITEDRAWINGCONTEXT_4AC87153_HPP

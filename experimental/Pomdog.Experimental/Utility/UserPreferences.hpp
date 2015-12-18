@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_USERPREFERENCES_13E71C4A_HPP
-#define POMDOG_USERPREFERENCES_13E71C4A_HPP
+#pragma once
 
 #include "Pomdog/Utility/Optional.hpp"
 #include <vector>
@@ -40,5 +39,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_USERPREFERENCES_13E71C4A_HPP

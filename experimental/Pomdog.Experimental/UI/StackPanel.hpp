@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_STACKPANEL_1285AAF5_HPP
-#define POMDOG_STACKPANEL_1285AAF5_HPP
+#pragma once
 
 #include "Panel.hpp"
 #include "Thickness.hpp"
@@ -62,5 +61,3 @@ private:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_STACKPANEL_1285AAF5_HPP

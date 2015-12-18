@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_WEIGHTBLENDINGHELPER_EC5A3515_HPP
-#define POMDOG_WEIGHTBLENDINGHELPER_EC5A3515_HPP
+#pragma once
 
 #include <vector>
 
@@ -22,5 +21,3 @@ public:
 } // namespace Skeletal2D
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_WEIGHTBLENDINGHELPER_EC5A3515_HPP

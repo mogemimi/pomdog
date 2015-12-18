@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SKINNEDMESH_4A54231B_HPP
-#define POMDOG_SKINNEDMESH_4A54231B_HPP
+#pragma once
 
 #include "SkinnedMeshPart.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
@@ -19,5 +18,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SKINNEDMESH_4A54231B_HPP

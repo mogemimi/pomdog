@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ANIMATIONGRAPHWEIGHTCOLLECTION_5506C893_HPP
-#define POMDOG_ANIMATIONGRAPHWEIGHTCOLLECTION_5506C893_HPP
+#pragma once
 
 #include "AnimationGraphWeight.hpp"
 #include <cstdint>
@@ -34,5 +33,3 @@ private:
 } // namespace Skeletal2D
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_ANIMATIONGRAPHWEIGHTCOLLECTION_5506C893_HPP

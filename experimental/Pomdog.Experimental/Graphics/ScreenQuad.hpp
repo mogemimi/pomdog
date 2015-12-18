@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SCREENQUAD_8AD72196_HPP
-#define POMDOG_SCREENQUAD_8AD72196_HPP
+#pragma once
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
@@ -19,5 +18,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SCREENQUAD_8AD72196_HPP

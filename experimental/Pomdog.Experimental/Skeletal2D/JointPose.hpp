@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_JOINTPOSE_160B1EF6_HPP
-#define POMDOG_JOINTPOSE_160B1EF6_HPP
+#pragma once
 
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Radian.hpp"
@@ -16,5 +15,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_JOINTPOSE_160B1EF6_HPP

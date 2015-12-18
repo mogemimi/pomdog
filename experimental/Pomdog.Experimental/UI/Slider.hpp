@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SLIDER_8DA97A75_HPP
-#define POMDOG_SLIDER_8DA97A75_HPP
+#pragma once
 
 #include "Control.hpp"
 #include "UIView.hpp"
@@ -86,5 +85,3 @@ public:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_SLIDER_8DA97A75_HPP

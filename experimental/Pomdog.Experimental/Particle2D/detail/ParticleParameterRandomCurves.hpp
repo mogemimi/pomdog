@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLEPARAMETERRANDOMCURVES_BD1EDD05_HPP
-#define POMDOG_PARTICLEPARAMETERRANDOMCURVES_BD1EDD05_HPP
+#pragma once
 
 #include "ParticleParameter.hpp"
 #include "ParticleCurveLerp.hpp"
@@ -50,5 +49,3 @@ public:
 } // namespace Particles
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PARTICLEPARAMETERRANDOMCURVES_BD1EDD05_HPP

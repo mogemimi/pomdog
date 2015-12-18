@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_POINTERPOINT_DAEC8B7F_HPP
-#define POMDOG_POINTERPOINT_DAEC8B7F_HPP
+#pragma once
 
 #include "PointerEventType.hpp"
 #include "Pomdog/Utility/Optional.hpp"
@@ -30,5 +29,3 @@ public:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_POINTERPOINT_DAEC8B7F_HPP

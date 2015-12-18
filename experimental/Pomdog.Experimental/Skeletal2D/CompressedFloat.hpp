@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_COMPRESSEDFLOAT_727406C1_HPP
-#define POMDOG_COMPRESSEDFLOAT_727406C1_HPP
+#pragma once
 
 #include "Pomdog/Utility/Assert.hpp"
 #include <type_traits>
@@ -62,5 +61,3 @@ public:
 } // namespace Skeletal2D
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_COMPRESSEDFLOAT_727406C1_HPP

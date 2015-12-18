@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TEXTUREATLASLOADER_642E468B_HPP
-#define POMDOG_TEXTUREATLASLOADER_642E468B_HPP
+#pragma once
 
 #include "TextureAtlas.hpp"
 #include <string>
@@ -20,5 +19,3 @@ public:
 
 } // namespace TexturePacker
 } // namespace Pomdog
-
-#endif // POMDOG_TEXTUREATLASLOADER_642E468B_HPP

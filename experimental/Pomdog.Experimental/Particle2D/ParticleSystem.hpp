@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLESYSTEM_2AEA7BC5_HPP
-#define POMDOG_PARTICLESYSTEM_2AEA7BC5_HPP
+#pragma once
 
 #include "Particle.hpp"
 #include "ParticleEmitter.hpp"
@@ -56,5 +55,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_PARTICLESYSTEM_2AEA7BC5_HPP

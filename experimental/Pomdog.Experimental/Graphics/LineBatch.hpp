@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_LINEBATCH_EA425637_HPP
-#define POMDOG_LINEBATCH_EA425637_HPP
+#pragma once
 
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -118,5 +117,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_LINEBATCH_EA425637_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ANIMATIONLOADER_F321C327_HPP
-#define POMDOG_ANIMATIONLOADER_F321C327_HPP
+#pragma once
 
 #include <string>
 
@@ -17,5 +16,3 @@ AnimationClip CreateAnimationClip(SkeletonDesc const& desc, std::string const& n
 
 } // namespace Spine
 } // namespace Pomdog
-
-#endif // POMDOG_ANIMATIONLOADER_F321C327_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TINTTOACTION_EC615DAE_HPP
-#define POMDOG_TINTTOACTION_EC615DAE_HPP
+#pragma once
 
 #include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
@@ -49,5 +48,3 @@ public:
 using TintToAction = Detail::Actions::TemporalAction<Detail::Actions::TintTo>;
 
 } // namespace Pomdog
-
-#endif // POMDOG_TINTTOACTION_EC615DAE_HPP

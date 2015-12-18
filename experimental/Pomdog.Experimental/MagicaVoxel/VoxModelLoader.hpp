@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_VOXMODELLOADER_37B4E86A_HPP
-#define POMDOG_VOXMODELLOADER_37B4E86A_HPP
+#pragma once
 
 #include "VoxModel.hpp"
 
@@ -19,5 +18,3 @@ struct VoxModelLoader {
 
 } // namespace MagicaVoxel
 } // namespace Pomdog
-
-#endif // POMDOG_VOXMODELLOADER_37B4E86A_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SUBSCRIBEREQUESTDISPATCHER_B5E9A001_HPP
-#define POMDOG_SUBSCRIBEREQUESTDISPATCHER_B5E9A001_HPP
+#pragma once
 
 #include "Pomdog/Utility/Assert.hpp"
 #include <memory>
@@ -38,5 +37,3 @@ public:
 }// namespace Detail
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_SUBSCRIBEREQUESTDISPATCHER_B5E9A001_HPP

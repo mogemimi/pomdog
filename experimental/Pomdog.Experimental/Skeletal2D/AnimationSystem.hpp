@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ANIMATIONSYSTEM_6CB5A5C9_HPP
-#define POMDOG_ANIMATIONSYSTEM_6CB5A5C9_HPP
+#pragma once
 
 #include "Pomdog/Application/GameClock.hpp"
 #include <memory>
@@ -31,5 +30,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_ANIMATIONSYSTEM_6CB5A5C9_HPP

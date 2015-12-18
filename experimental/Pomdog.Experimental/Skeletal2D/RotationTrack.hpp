@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ROTATIONTRACK_96A9D69A_HPP
-#define POMDOG_ROTATIONTRACK_96A9D69A_HPP
+#pragma once
 
 #include "AnimationTrack.hpp"
 #include "AnimationTimeInterval.hpp"
@@ -42,5 +41,3 @@ private:
 } // namespace Skeletal2D
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_ROTATIONTRACK_96A9D69A_HPP

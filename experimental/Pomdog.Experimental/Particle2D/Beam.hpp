@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BEAM_463AA6E5_HPP
-#define POMDOG_BEAM_463AA6E5_HPP
+#pragma once
 
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Color.hpp"
@@ -18,5 +17,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_BEAM_463AA6E5_HPP

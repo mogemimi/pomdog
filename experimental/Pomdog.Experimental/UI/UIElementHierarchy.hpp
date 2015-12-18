@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_UIELEMENTHIERARCHY_ECF3A74B_HPP
-#define POMDOG_UIELEMENTHIERARCHY_ECF3A74B_HPP
+#pragma once
 
 #include "UIElement.hpp"
 #include "UIEventDispatcher.hpp"
@@ -42,5 +41,3 @@ private:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_UIELEMENTHIERARCHY_ECF3A74B_HPP

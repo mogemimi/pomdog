@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_UIELEMENT_92B47634_HPP
-#define POMDOG_UIELEMENT_92B47634_HPP
+#pragma once
 
 #include "HorizontalAlignment.hpp"
 #include "VerticalAlignment.hpp"
@@ -72,5 +71,3 @@ public:
 
 }// namespace UI
 }// namespace Pomdog
-
-#endif // POMDOG_UIELEMENT_92B47634_HPP

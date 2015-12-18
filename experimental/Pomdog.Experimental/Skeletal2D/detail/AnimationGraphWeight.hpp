@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ANIMATIONGRAPHWEIGHT_2B7D7365_HPP
-#define POMDOG_ANIMATIONGRAPHWEIGHT_2B7D7365_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Skeletal2D/AnimationBlendInputType.hpp"
 #include <cstdint>
@@ -30,5 +29,3 @@ private:
 } // namespace Skeletal2D
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_ANIMATIONGRAPHWEIGHT_2B7D7365_HPP

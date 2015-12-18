@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BEAMRENDERABLE_5F289224_HPP
-#define POMDOG_BEAMRENDERABLE_5F289224_HPP
+#pragma once
 
 #include "Renderable.hpp"
 #include "Pomdog.Experimental/Particle2D/BeamSystem.hpp"
@@ -30,5 +29,3 @@ private:
 };
 
 }// namespace Pomdog
-
-#endif // POMDOG_BEAMRENDERABLE_5F289224_HPP

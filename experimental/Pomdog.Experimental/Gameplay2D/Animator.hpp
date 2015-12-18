@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ANIMATOR_0CFC0E37_HPP
-#define POMDOG_ANIMATOR_0CFC0E37_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog/Application/Duration.hpp"
@@ -42,5 +41,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_ANIMATOR_0CFC0E37_HPP

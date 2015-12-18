@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_MOVETOACTION_69978A4F_HPP
-#define POMDOG_MOVETOACTION_69978A4F_HPP
+#pragma once
 
 #include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
@@ -48,5 +47,3 @@ public:
 using MoveToAction = Detail::Actions::TemporalAction<Detail::Actions::MoveTo>;
 
 } // namespace Pomdog
-
-#endif // POMDOG_MOVETOACTION_69978A4F_HPP

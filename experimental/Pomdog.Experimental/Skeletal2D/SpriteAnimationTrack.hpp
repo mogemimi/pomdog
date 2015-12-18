@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SPRITEANIMATIONTRACK_FC96976A_HPP
-#define POMDOG_SPRITEANIMATIONTRACK_FC96976A_HPP
+#pragma once
 
 #include "AnimationTimeInterval.hpp"
 #include "Skin.hpp"
@@ -42,5 +41,3 @@ private:
 } // namespace Skeletal2D
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SPRITEANIMATIONTRACK_FC96976A_HPP

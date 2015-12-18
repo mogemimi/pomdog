@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_COMPONENT_0CB8A002_HPP
-#define POMDOG_COMPONENT_0CB8A002_HPP
+#pragma once
 
 #include "detail/ComponentTypeIndex.hpp"
 #include "detail/GameComponent.hpp"
@@ -25,5 +24,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_COMPONENT_0CB8A002_HPP

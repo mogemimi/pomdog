@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEOBJECT_D9B3B0C3_HPP
-#define POMDOG_GAMEOBJECT_D9B3B0C3_HPP
+#pragma once
 
 #include "detail/GameComponent.hpp"
 #include "GameObjectID.hpp"
@@ -119,5 +118,3 @@ void GameObject::RemoveComponent()
 }
 
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEOBJECT_D9B3B0C3_HPP

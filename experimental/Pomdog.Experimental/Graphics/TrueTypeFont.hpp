@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TRUETYPEFONT_B40F01F8_HPP
-#define POMDOG_TRUETYPEFONT_B40F01F8_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Graphics/SpriteFont.hpp"
 #include <Pomdog/Content/AssetManager.hpp>
@@ -30,5 +29,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_TRUETYPEFONT_B40F01F8_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ANIMATIONGRAPH_CFF1C0A9_HPP
-#define POMDOG_ANIMATIONGRAPH_CFF1C0A9_HPP
+#pragma once
 
 #include "AnimationBlendInput.hpp"
 #include "AnimationNode.hpp"
@@ -43,5 +42,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_ANIMATIONGRAPH_CFF1C0A9_HPP

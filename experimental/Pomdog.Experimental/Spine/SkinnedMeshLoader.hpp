@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SKINNEDMESHLOADER_0D066D10_HPP
-#define POMDOG_SKINNEDMESHLOADER_0D066D10_HPP
+#pragma once
 
 #include "Pomdog.Experimental/TexturePacker/TextureAtlas.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -27,5 +26,3 @@ SkinnedMesh CreateSkinnedMesh(
 
 } // namespace Spine
 } // namespace Pomdog
-
-#endif // POMDOG_SKINNEDMESHLOADER_0D066D10_HPP

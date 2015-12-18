@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_JOINT_0CE2C1D3_HPP
-#define POMDOG_JOINT_0CE2C1D3_HPP
+#pragma once
 
 #include "JointIndex.hpp"
 #include "JointPose.hpp"
@@ -20,5 +19,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_JOINT_0CE2C1D3_HPP

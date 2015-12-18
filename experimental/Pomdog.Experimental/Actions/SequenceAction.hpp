@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SEQUENCEACTION_63378BE5_HPP
-#define POMDOG_SEQUENCEACTION_63378BE5_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Actions/Action.hpp"
 #include "Pomdog.Experimental/Gameplay/GameObject.hpp"
@@ -78,5 +77,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SEQUENCEACTION_63378BE5_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_INGAMEEDITOR_9210CCAC_HPP
-#define POMDOG_INGAMEEDITOR_9210CCAC_HPP
+#pragma once
 
 #include "detail/EditorColorScheme.hpp"
 #include "Pomdog.Experimental/UI/UIElementHierarchy.hpp"
@@ -47,5 +46,3 @@ private:
 
 }// namespace SceneEditor
 }// namespace Pomdog
-
-#endif // POMDOG_INGAMEEDITOR_9210CCAC_HPP

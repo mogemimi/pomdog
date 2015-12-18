@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SKELETONHELPER_16AC5743_HPP
-#define POMDOG_SKELETONHELPER_16AC5743_HPP
+#pragma once
 
 #include "JointIndex.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
@@ -28,5 +27,3 @@ namespace SkeletonHelper {
 }
 
 } // namespace Pomdog
-
-#endif // POMDOG_SKELETONHELPER_16AC5743_HPP

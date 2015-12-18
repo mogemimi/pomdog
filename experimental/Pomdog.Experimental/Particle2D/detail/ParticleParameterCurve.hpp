@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLEPARAMETERCURVE_75DE11C7_HPP
-#define POMDOG_PARTICLEPARAMETERCURVE_75DE11C7_HPP
+#pragma once
 
 #include "ParticleParameter.hpp"
 #include "ParticleCurveKey.hpp"
@@ -102,5 +101,3 @@ public:
 } // namespace Particles
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PARTICLEPARAMETERCURVE_75DE11C7_HPP

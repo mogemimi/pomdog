@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BEAMSYSTEM_616FE7EE_HPP
-#define POMDOG_BEAMSYSTEM_616FE7EE_HPP
+#pragma once
 
 #include "Beam.hpp"
 #include "BeamBranching.hpp"
@@ -36,5 +35,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_BEAMSYSTEM_616FE7EE_HPP

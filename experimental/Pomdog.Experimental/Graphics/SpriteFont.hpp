@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SPRITEFONT_1C2133CC_HPP
-#define POMDOG_SPRITEFONT_1C2133CC_HPP
+#pragma once
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
@@ -95,5 +94,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SPRITEFONT_1C2133CC_HPP

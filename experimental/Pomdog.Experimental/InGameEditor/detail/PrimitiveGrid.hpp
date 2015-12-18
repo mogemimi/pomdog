@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PRIMITIVEGRID_8E899444_HPP
-#define POMDOG_PRIMITIVEGRID_8E899444_HPP
+#pragma once
 
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Color.hpp"
@@ -31,5 +30,3 @@ private:
 
 }// namespace SceneEditor
 }// namespace Pomdog
-
-#endif // POMDOG_PRIMITIVEGRID_8E899444_HPP

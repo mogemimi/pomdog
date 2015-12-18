@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ANIMATIONBLENDINPUT_304DF276_HPP
-#define POMDOG_ANIMATIONBLENDINPUT_304DF276_HPP
+#pragma once
 
 #include "AnimationBlendInputType.hpp"
 #include <string>
@@ -17,5 +16,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_ANIMATIONBLENDINPUT_304DF276_HPP

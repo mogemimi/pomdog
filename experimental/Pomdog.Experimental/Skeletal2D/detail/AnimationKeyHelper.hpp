@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ANIMATIONKEYHELPER_1AC67582_HPP
-#define POMDOG_ANIMATIONKEYHELPER_1AC67582_HPP
+#pragma once
 
 namespace Pomdog {
 namespace Detail {
@@ -18,5 +17,3 @@ namespace AnimationKeyHelper {
 } // namespace Skeletal2D
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_ANIMATIONKEYHELPER_1AC67582_HPP

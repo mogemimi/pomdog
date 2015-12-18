@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SKELETONDESC_BCCD55FC_HPP
-#define POMDOG_SKELETONDESC_BCCD55FC_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Skeletal2D/AnimationTimeInterval.hpp"
 #include "Pomdog.Experimental/Skeletal2D/CompressedFloat.hpp"
@@ -156,5 +155,3 @@ public:
 
 } // namespace Spine
 } // namespace Pomdog
-
-#endif // POMDOG_SKELETONDESC_BCCD55FC_HPP

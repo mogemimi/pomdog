@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TEMPORALACTION_DD16B93C_HPP
-#define POMDOG_TEMPORALACTION_DD16B93C_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Actions/Action.hpp"
 
@@ -81,5 +80,3 @@ public:
 } // namespace Actions
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_TEMPORALACTION_DD16B93C_HPP

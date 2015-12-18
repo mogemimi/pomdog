@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_JOINTINDEX_F35DB555_HPP
-#define POMDOG_JOINTINDEX_F35DB555_HPP
+#pragma once
 
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstdint>
@@ -62,5 +61,3 @@ public:
 using JointIndex = Detail::SkeletalAnimation2D::OptionalUnsigned<std::uint8_t>;
 
 } // namespace Pomdog
-
-#endif // POMDOG_JOINTINDEX_F35DB555_HPP

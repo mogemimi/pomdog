@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PRIMITIVEAXES_B7717D29_HPP
-#define POMDOG_PRIMITIVEAXES_B7717D29_HPP
+#pragma once
 
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector3.hpp"
@@ -33,5 +32,3 @@ private:
 
 }// namespace SceneEditor
 }// namespace Pomdog
-
-#endif // POMDOG_PRIMITIVEAXES_B7717D29_HPP

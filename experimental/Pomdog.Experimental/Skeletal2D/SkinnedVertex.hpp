@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SKINNEDVERTEX_181A0BE4_HPP
-#define POMDOG_SKINNEDVERTEX_181A0BE4_HPP
+#pragma once
 
 #include "Pomdog/Math/Vector4.hpp"
 #include <cstdint>
@@ -21,5 +20,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SKINNEDVERTEX_181A0BE4_HPP

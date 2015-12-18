@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ANIMATIONTRACK_70C41AD9_HPP
-#define POMDOG_ANIMATIONTRACK_70C41AD9_HPP
+#pragma once
 
 #include "AnimationTimeInterval.hpp"
 
@@ -21,5 +20,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_ANIMATIONTRACK_70C41AD9_HPP

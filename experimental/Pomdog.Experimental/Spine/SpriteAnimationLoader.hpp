@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SPRITEANIMATIONLOADER_C360BEBA_HPP
-#define POMDOG_SPRITEANIMATIONLOADER_C360BEBA_HPP
+#pragma once
 
 #include "Pomdog.Experimental/TexturePacker/TextureAtlas.hpp"
 #include <vector>
@@ -26,5 +25,3 @@ std::vector<Detail::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack
 
 } // namespace Spine
 } // namespace Pomdog
-
-#endif // POMDOG_SPRITEANIMATIONLOADER_C360BEBA_HPP

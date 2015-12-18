@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PRIMITIVECOMMANDPROCESSOR_78CC3F16_HPP
-#define POMDOG_PRIMITIVECOMMANDPROCESSOR_78CC3F16_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Graphics/PolygonBatch.hpp"
 #include "Pomdog.Experimental/Rendering/RenderCommandProcessor.hpp"
@@ -33,5 +32,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_PRIMITIVECOMMANDPROCESSOR_78CC3F16_HPP

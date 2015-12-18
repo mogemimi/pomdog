@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SPRITEBATCH_B4DEBA3B_HPP
-#define POMDOG_SPRITEBATCH_B4DEBA3B_HPP
+#pragma once
 
 #include "SpriteSortMode.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
@@ -61,5 +60,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SPRITEBATCH_B4DEBA3B_HPP
