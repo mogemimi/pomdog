@@ -1,5 +1,4 @@
-#ifndef QUICKSTARTGAME_HPP
-#define QUICKSTARTGAME_HPP
+#pragma once
 
 #include <Pomdog/Pomdog.hpp>
 
@@ -42,5 +41,3 @@ private:
 };
 
 } // namespace QuickStart
-
-#endif // QUICKSTARTGAME_HPP

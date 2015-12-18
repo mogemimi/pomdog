@@ -1,5 +1,4 @@
-#ifndef PONGGAME_HPP
-#define PONGGAME_HPP
+#pragma once
 
 #include <Pomdog.Experimental/Graphics/PolygonBatch.hpp>
 #include <Pomdog.Experimental/Graphics/SpriteBatchRenderer.hpp>
@@ -225,5 +224,3 @@ private:
 };
 
 } // namespace Pong
-
-#endif // PONGGAME_HPP
