@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_RENDERCOMMAND_B320B370_HPP
 #define POMDOG_RENDERCOMMAND_B320B370_HPP

@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_VOXMODELEXPORTER_F3E3A4F5_HPP
 #define POMDOG_VOXMODELEXPORTER_F3E3A4F5_HPP

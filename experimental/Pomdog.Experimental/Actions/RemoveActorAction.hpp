@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_REMOVEACTORACTION_4E4B9484_HPP
 #define POMDOG_REMOVEACTORACTION_4E4B9484_HPP

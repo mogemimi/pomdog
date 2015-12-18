@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_POINTERPOINT_DAEC8B7F_HPP
 #define POMDOG_POINTERPOINT_DAEC8B7F_HPP

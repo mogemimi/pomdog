@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_BEAMBRANCHING_1888F4E0_HPP
 #define POMDOG_BEAMBRANCHING_1888F4E0_HPP
