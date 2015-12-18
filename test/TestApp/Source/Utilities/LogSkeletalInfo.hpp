@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_LOGSKELETALINFO_7178CCE1_HPP
-#define POMDOG_LOGSKELETALINFO_7178CCE1_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Spine/SkeletonDesc.hpp"
 #include "Pomdog.Experimental/TexturePacker/TextureAtlasLoader.hpp"
@@ -15,5 +14,3 @@ void LogTexturePackerInfo(TexturePacker::TextureAtlas const& textureAtlas);
 void LogSkeletalInfo(Spine::SkeletonDesc const& skeletonDesc);
 
 }// namespace TestApp
-
-#endif // POMDOG_LOGSKELETALINFO_7178CCE1_HPP

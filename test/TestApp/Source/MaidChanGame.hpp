@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_MAIDCHANGAME_FB2D5E96_HPP
-#define POMDOG_MAIDCHANGAME_FB2D5E96_HPP
+#pragma once
 
 #include <Pomdog.Experimental/InGameEditor/detail/EditorBackground.hpp>
 #include <Pomdog.Experimental/Skeletal2D/detail/AnimationTimer.hpp>
@@ -76,5 +75,3 @@ private:
 };
 
 }// namespace TestApp
-
-#endif // POMDOG_MAIDCHANGAME_FB2D5E96_HPP

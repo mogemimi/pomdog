@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GRASSBLENDINGGAME_544D7F2A_HPP
-#define POMDOG_GRASSBLENDINGGAME_544D7F2A_HPP
+#pragma once
 
 #include <Pomdog.Experimental/InGameEditor/detail/EditorBackground.hpp>
 #include <Pomdog.Experimental/Skeletal2D/detail/AnimationTimer.hpp>
@@ -83,5 +82,3 @@ private:
 };
 
 }// namespace TestApp
-
-#endif // POMDOG_GRASSBLENDINGGAME_544D7F2A_HPP

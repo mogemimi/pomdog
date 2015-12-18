@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_COCOATESTGAME_HPP
-#define POMDOG_COCOATESTGAME_HPP
+#pragma once
 
 #include <Pomdog/Pomdog.hpp>
 
@@ -27,5 +26,3 @@ private:
 };
 
 } // namespace TestApp
-
-#endif // POMDOG_COCOATESTGAME_HPP

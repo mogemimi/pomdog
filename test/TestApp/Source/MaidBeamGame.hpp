@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_MAIDBEAMGAME_EC7DAEEE_HPP
-#define POMDOG_MAIDBEAMGAME_EC7DAEEE_HPP
+#pragma once
 
 #include <Pomdog.Experimental/InGameEditor/detail/EditorBackground.hpp>
 #include <Pomdog.Experimental/Experimental.hpp>
@@ -65,5 +64,3 @@ private:
 };
 
 }// namespace TestApp
-
-#endif // POMDOG_MAIDBEAMGAME_EC7DAEEE_HPP

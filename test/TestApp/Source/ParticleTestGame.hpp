@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PARTICLETESTGAME_CB0334A7_HPP
-#define POMDOG_PARTICLETESTGAME_CB0334A7_HPP
+#pragma once
 
 #include <Pomdog.Experimental/InGameEditor/detail/EditorBackground.hpp>
 #include <Pomdog.Experimental/Experimental.hpp>
@@ -49,5 +48,3 @@ private:
 };
 
 }// namespace TestApp
-
-#endif // POMDOG_PARTICLETESTGAME_CB0334A7_HPP

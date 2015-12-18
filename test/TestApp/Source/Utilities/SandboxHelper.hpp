@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SANDBOXHELPER_254CE54A_HPP
-#define POMDOG_SANDBOXHELPER_254CE54A_HPP
+#pragma once
 
 #include "Pomdog.Experimental/Gameplay2D/Camera2D.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
@@ -29,5 +28,3 @@ struct SandboxHelper {
 };
 
 }// namespace TestApp
-
-#endif // POMDOG_SANDBOXHELPER_254CE54A_HPP
