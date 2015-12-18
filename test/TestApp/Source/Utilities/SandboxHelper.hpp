@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_SANDBOXHELPER_254CE54A_HPP
 #define POMDOG_SANDBOXHELPER_254CE54A_HPP
