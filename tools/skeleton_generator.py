@@ -1,5 +1,4 @@
-# Copyright (c) 2013-2015 mogemimi.
-# Distributed under the MIT license. See LICENSE.md file for details.
+# Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 # Help:
 # >>> python skeleton_generator.py -h
@@ -119,8 +118,7 @@ def GetGitUserName():
 
 
 def CreateHeader(copyright_holder):
-    return Template("""// Copyright (c) $year $copyright_holder.
-// Distributed under the MIT license. See LICENSE.md file for details.
+    return Template("""// Copyright (c) $year $copyright_holder. Distributed under the MIT license.
 """).substitute(year="2013-2015", copyright_holder=copyright_holder)
 
 
