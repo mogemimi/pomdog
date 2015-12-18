@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BUFFERUSAGE_E289E712_HPP
-#define POMDOG_BUFFERUSAGE_E289E712_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -13,5 +12,3 @@ enum class BufferUsage: std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_BUFFERUSAGE_E289E712_HPP

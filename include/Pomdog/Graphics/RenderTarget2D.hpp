@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_RENDERTARGET2D_65AA5E90_HPP
-#define POMDOG_RENDERTARGET2D_65AA5E90_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Texture.hpp"
@@ -64,5 +63,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_RENDERTARGET2D_65AA5E90_HPP

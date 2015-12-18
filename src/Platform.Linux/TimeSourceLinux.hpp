@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TIMESOURCELINUX_60ECC32A_HPP
-#define POMDOG_TIMESOURCELINUX_60ECC32A_HPP
+#pragma once
 
 #include "Pomdog/Application/TimePoint.hpp"
 
@@ -19,5 +18,3 @@ public:
 } // namespace Linux
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_TIMESOURCELINUX_60ECC32A_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GRAPHICSCONTEXTDIRECT3D11_596CF1CC_HPP
-#define POMDOG_GRAPHICSCONTEXTDIRECT3D11_596CF1CC_HPP
+#pragma once
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
@@ -103,5 +102,3 @@ private:
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_GRAPHICSCONTEXTDIRECT3D11_596CF1CC_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMECLOCK_06D5BC45_HPP
-#define POMDOG_GAMECLOCK_06D5BC45_HPP
+#pragma once
 
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -45,5 +44,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_GAMECLOCK_06D5BC45_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TEXTURE2DGL4_ACA56E6B_HPP
-#define POMDOG_TEXTURE2DGL4_ACA56E6B_HPP
+#pragma once
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeTexture2D.hpp"
@@ -43,5 +42,3 @@ private:
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_TEXTURE2DGL4_ACA56E6B_HPP

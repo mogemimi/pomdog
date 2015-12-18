@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEWINDOWX11_71851075_HPP
-#define POMDOG_GAMEWINDOWX11_71851075_HPP
+#pragma once
 
 #include "Pomdog/Application/GameWindow.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
@@ -67,5 +66,3 @@ private:
 } // namespace X11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEWINDOWX11_71851075_HPP

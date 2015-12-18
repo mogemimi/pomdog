@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP
-#define POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP
+#pragma once
 
 #include "Application/Duration.hpp"
 #include "Application/Game.hpp"
@@ -133,5 +132,3 @@
 #include "Basic/Export.hpp"
 #include "Basic/Platform.hpp"
 #include "Basic/Version.hpp"
-
-#endif // POMDOG_89D6FE57_7B46_4032_92AE_EA4D52643E23_HPP

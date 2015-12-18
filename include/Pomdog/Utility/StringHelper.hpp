@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_STRINGHELPER_F86C26CD_HPP
-#define POMDOG_STRINGHELPER_F86C26CD_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include <string>
@@ -22,5 +21,3 @@ struct POMDOG_EXPORT StringHelper {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_STRINGHELPER_F86C26CD_HPP

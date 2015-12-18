@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BLENDDESCRIPTION_0C296679_HPP
-#define POMDOG_BLENDDESCRIPTION_0C296679_HPP
+#pragma once
 
 #include "RenderTargetBlendDescription.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -67,5 +66,3 @@ struct POMDOG_EXPORT BlendDescription {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_BLENDDESCRIPTION_0C296679_HPP

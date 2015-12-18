@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_INPUTELEMENTFORMAT_9DA1879C_HPP
-#define POMDOG_INPUTELEMENTFORMAT_9DA1879C_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -39,5 +38,3 @@ enum class InputElementFormat : std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_INPUTELEMENTFORMAT_9DA1879C_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_OPENGLCONTEXTWIN32_A7C60FF2_HPP
-#define POMDOG_OPENGLCONTEXTWIN32_A7C60FF2_HPP
+#pragma once
 
 #include "../RenderSystem.GL4/OpenGLContext.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -46,5 +45,3 @@ private:
 } // namespace Win32
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_OPENGLCONTEXTWIN32_A7C60FF2_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TOUCHLOCATION_F1E1CEB0_HPP
-#define POMDOG_TOUCHLOCATION_F1E1CEB0_HPP
+#pragma once
 
 #include "TouchLocationState.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -18,5 +17,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_TOUCHLOCATION_F1E1CEB0_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SAMPLERDESCRIPTION_CA2C90E4_HPP
-#define POMDOG_SAMPLERDESCRIPTION_CA2C90E4_HPP
+#pragma once
 
 #include "TextureAddressMode.hpp"
 #include "TextureFilter.hpp"
@@ -114,5 +113,3 @@ struct POMDOG_EXPORT SamplerDescription {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SAMPLERDESCRIPTION_CA2C90E4_HPP

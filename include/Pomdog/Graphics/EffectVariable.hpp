@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_EFFECTVARIABLE_B6867EDF_HPP
-#define POMDOG_EFFECTVARIABLE_B6867EDF_HPP
+#pragma once
 
 #include "EffectAnnotation.hpp"
 #include <cstdint>
@@ -16,5 +15,3 @@ struct EffectVariable {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_EFFECTVARIABLE_B6867EDF_HPP

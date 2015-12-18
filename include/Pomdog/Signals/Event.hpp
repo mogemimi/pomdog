@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_EVENT_56ECB270_HPP
-#define POMDOG_EVENT_56ECB270_HPP
+#pragma once
 
 #include "detail/EventBody.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -81,5 +80,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_EVENT_56ECB270_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_KEYBOARDSTATE_8518E1F7_HPP
-#define POMDOG_KEYBOARDSTATE_8518E1F7_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include <bitset>
@@ -28,5 +27,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_KEYBOARDSTATE_8518E1F7_HPP

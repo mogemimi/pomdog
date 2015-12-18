@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEPADBUTTONS_7EF60FA0_HPP
-#define POMDOG_GAMEPADBUTTONS_7EF60FA0_HPP
+#pragma once
 
 #include "ButtonState.hpp"
 #include <cstdint>
@@ -22,5 +21,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEPADBUTTONS_7EF60FA0_HPP

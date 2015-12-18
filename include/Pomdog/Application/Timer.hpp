@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TIMER_CAC74AF2_HPP
-#define POMDOG_TIMER_CAC74AF2_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Application/Duration.hpp"
@@ -65,5 +64,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_TIMER_CAC74AF2_HPP

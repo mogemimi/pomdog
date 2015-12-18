@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PIPELINESTATEGL4_5C5F046F_HPP
-#define POMDOG_PIPELINESTATEGL4_5C5F046F_HPP
+#pragma once
 
 #include "OpenGLPrerequisites.hpp"
 #include "BlendStateGL4.hpp"
@@ -51,5 +50,3 @@ private:
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PIPELINESTATEGL4_5C5F046F_HPP

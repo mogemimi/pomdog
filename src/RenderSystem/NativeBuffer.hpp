@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_NATIVEBUFFER_B658AF8C_HPP
-#define POMDOG_NATIVEBUFFER_B658AF8C_HPP
+#pragma once
 
 #include <cstddef>
 
@@ -25,5 +24,3 @@ public:
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_NATIVEBUFFER_B658AF8C_HPP

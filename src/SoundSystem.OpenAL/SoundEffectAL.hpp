@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SOUNDEFFECTAL_4A967601_HPP
-#define POMDOG_SOUNDEFFECTAL_4A967601_HPP
+#pragma once
 
 #include "PrerequisitesOpenAL.hpp"
 #include "../Utility/Noncopyable.hpp"
@@ -55,5 +54,3 @@ public:
 } // namespace SoundSystem
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SOUNDEFFECTAL_4A967601_HPP

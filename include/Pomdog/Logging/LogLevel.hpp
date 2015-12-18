@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_LOGLEVEL_5E5C0F27_HPP
-#define POMDOG_LOGLEVEL_5E5C0F27_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -16,5 +15,3 @@ enum class LogLevel : std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_LOGLEVEL_5E5C0F27_HPP

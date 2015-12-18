@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TYPESAFEHELPERGL4_8C888821_HPP
-#define POMDOG_TYPESAFEHELPERGL4_8C888821_HPP
+#pragma once
 
 #include "OpenGLPrerequisites.hpp"
 #include <type_traits>
@@ -44,5 +43,3 @@ void BindTexture(Tagged const& texture)
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_TYPESAFEHELPERGL4_8C888821_HPP

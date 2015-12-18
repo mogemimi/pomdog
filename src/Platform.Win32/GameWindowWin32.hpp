@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEWINDOWWIN32_2EC902FC_HPP
-#define POMDOG_GAMEWINDOWWIN32_2EC902FC_HPP
+#pragma once
 
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Application/GameWindow.hpp"
@@ -57,5 +56,3 @@ private:
 } // namespace Win32
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEWINDOWWIN32_2EC902FC_HPP

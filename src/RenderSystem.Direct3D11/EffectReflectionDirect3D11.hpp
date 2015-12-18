@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_EFFECTREFLECTIONDIRECT3D11_10267AA4_HPP
-#define POMDOG_EFFECTREFLECTIONDIRECT3D11_10267AA4_HPP
+#pragma once
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeEffectReflection.hpp"
@@ -31,5 +30,3 @@ private:
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_EFFECTREFLECTIONDIRECT3D11_10267AA4_HPP

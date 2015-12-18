@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PLAYERINDEX_FD3F134D_HPP
-#define POMDOG_PLAYERINDEX_FD3F134D_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -15,5 +14,3 @@ enum class PlayerIndex: std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_PLAYERINDEX_FD3F134D_HPP

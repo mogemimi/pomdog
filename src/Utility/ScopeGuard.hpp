@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SCOPEGUARD_1F749886_HPP
-#define POMDOG_SCOPEGUARD_1F749886_HPP
+#pragma once
 
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>
@@ -39,5 +38,3 @@ private:
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SCOPEGUARD_1F749886_HPP

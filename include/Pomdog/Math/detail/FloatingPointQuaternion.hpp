@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_FLOATINGPOINTQUATERNION_5F875CA6_HPP
-#define POMDOG_FLOATINGPOINTQUATERNION_5F875CA6_HPP
+#pragma once
 
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -116,5 +115,3 @@ operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion);
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_FLOATINGPOINTQUATERNION_5F875CA6_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_AUDIOCLIPXAUDIO2_26CA9C69_HPP
-#define POMDOG_AUDIOCLIPXAUDIO2_26CA9C69_HPP
+#pragma once
 
 #include "PrerequisitesXAudio2.hpp"
 #include "../Utility/Noncopyable.hpp"
@@ -37,5 +36,3 @@ private:
 } // namespace SoundSystem
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_AUDIOCLIPXAUDIO2_26CA9C69_HPP

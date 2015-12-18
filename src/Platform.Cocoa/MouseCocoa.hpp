@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_MOUSECOCOA_E737D799_HPP
-#define POMDOG_MOUSECOCOA_E737D799_HPP
+#pragma once
 
 #include "Pomdog/Input/Mouse.hpp"
 #include "Pomdog/Input/MouseState.hpp"
@@ -34,5 +33,3 @@ private:
 } // namespace Cocoa
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_MOUSECOCOA_E737D799_HPP

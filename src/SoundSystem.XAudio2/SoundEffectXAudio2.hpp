@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SOUNDEFFECTXAUDIO2_ED1F6835_HPP
-#define POMDOG_SOUNDEFFECTXAUDIO2_ED1F6835_HPP
+#pragma once
 
 #include "PrerequisitesXAudio2.hpp"
 #include "../Utility/Noncopyable.hpp"
@@ -51,5 +50,3 @@ private:
 } // namespace SoundSystem
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SOUNDEFFECTXAUDIO2_ED1F6835_HPP

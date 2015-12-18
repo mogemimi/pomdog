@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEPAD_5B4AD0B0_HPP
-#define POMDOG_GAMEPAD_5B4AD0B0_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 
@@ -20,5 +19,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEPAD_5B4AD0B0_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEPADTHUMBSTICKS_444752C9_HPP
-#define POMDOG_GAMEPADTHUMBSTICKS_444752C9_HPP
+#pragma once
 
 #include "Pomdog/Math/Vector2.hpp"
 
@@ -14,5 +13,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEPADTHUMBSTICKS_444752C9_HPP

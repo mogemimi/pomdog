@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEWINDOWCOCOA_BA8D88CA_HPP
-#define POMDOG_GAMEWINDOWCOCOA_BA8D88CA_HPP
+#pragma once
 
 #include "Pomdog/Application/GameWindow.hpp"
 #include "Pomdog/Signals/EventQueue.hpp"
@@ -58,5 +57,3 @@ private:
 } // namespace Cocoa
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEWINDOWCOCOA_BA8D88CA_HPP

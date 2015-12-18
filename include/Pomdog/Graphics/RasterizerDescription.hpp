@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_RASTERIZERDESCRIPTION_AD753EE4_HPP
-#define POMDOG_RASTERIZERDESCRIPTION_AD753EE4_HPP
+#pragma once
 
 #include "CullMode.hpp"
 #include "FillMode.hpp"
@@ -61,5 +60,3 @@ struct POMDOG_EXPORT RasterizerDescription {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_RASTERIZERDESCRIPTION_AD753EE4_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_FORWARDDECLARATIONS_2B34361D_HPP
-#define POMDOG_FORWARDDECLARATIONS_2B34361D_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
@@ -81,5 +80,3 @@ class Rectangle;
 enum class ContainmentType: std::uint8_t;
 
 } // namespace Pomdog
-
-#endif // POMDOG_FORWARDDECLARATIONS_2B34361D_HPP

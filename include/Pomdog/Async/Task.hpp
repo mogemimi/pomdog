@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TASK_9C530CDA_HPP
-#define POMDOG_TASK_9C530CDA_HPP
+#pragma once
 
 #include "Pomdog/Async/Scheduler.hpp"
 #include "Pomdog/Application/Duration.hpp"
@@ -868,5 +867,3 @@ auto WhenAll(
 
 } // namespace Concurrency
 } // namespace Pomdog
-
-#endif // POMDOG_TASK_9C530CDA_HPP

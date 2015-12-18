@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_INDEXELEMENTSIZE_0E367BDB_HPP
-#define POMDOG_INDEXELEMENTSIZE_0E367BDB_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -16,5 +15,3 @@ enum class IndexElementSize: std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_INDEXELEMENTSIZE_0E367BDB_HPP

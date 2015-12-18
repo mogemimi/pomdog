@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ASSETLOADERCONTEXT_E4996CA2_HPP
-#define POMDOG_ASSETLOADERCONTEXT_E4996CA2_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -22,5 +21,3 @@ public:
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_ASSETLOADERCONTEXT_E4996CA2_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BOOTSTRAPSETTINGSWIN32_F058A6BA_HPP
-#define POMDOG_BOOTSTRAPSETTINGSWIN32_F058A6BA_HPP
+#pragma once
 
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 
@@ -23,5 +22,3 @@ struct BootstrapSettingsWin32 {
 } // namespace Win32
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_BOOTSTRAPSETTINGSWIN32_F058A6BA_HPP

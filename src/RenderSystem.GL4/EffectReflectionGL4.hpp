@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_EFFECTREFLECTIONGL4_98947466_HPP
-#define POMDOG_EFFECTREFLECTIONGL4_98947466_HPP
+#pragma once
 
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
@@ -57,5 +56,3 @@ private:
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_EFFECTREFLECTIONGL4_98947466_HPP

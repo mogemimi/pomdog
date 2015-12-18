@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SHADERDIRECT3D11_F7D61E35_HPP
-#define POMDOG_SHADERDIRECT3D11_F7D61E35_HPP
+#pragma once
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
@@ -40,5 +39,3 @@ using PixelShaderDirect3D11 = ShaderDirect3D11<ID3D11PixelShader>;
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SHADERDIRECT3D11_F7D61E35_HPP

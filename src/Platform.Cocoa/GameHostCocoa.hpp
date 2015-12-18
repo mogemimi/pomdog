@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEHOSTCOCOA_29C3B75B_HPP
-#define POMDOG_GAMEHOSTCOCOA_29C3B75B_HPP
+#pragma once
 
 #include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Application/GameHost.hpp"
@@ -59,5 +58,3 @@ private:
 } // namespace Cocoa
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEHOSTCOCOA_29C3B75B_HPP

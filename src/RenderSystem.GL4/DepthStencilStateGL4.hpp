@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_DEPTHSTENCILSTATEGL4_B1C75682_HPP
-#define POMDOG_DEPTHSTENCILSTATEGL4_B1C75682_HPP
+#pragma once
 
 #include "OpenGLPrerequisites.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -49,5 +48,3 @@ private:
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_DEPTHSTENCILSTATEGL4_B1C75682_HPP

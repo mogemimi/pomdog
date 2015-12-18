@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GRAPHICSCOMMANDQUEUE_88D9047E_HPP
-#define POMDOG_GRAPHICSCOMMANDQUEUE_88D9047E_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -36,5 +35,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_GRAPHICSCOMMANDQUEUE_88D9047E_HPP

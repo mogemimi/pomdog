@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEHOSTWIN32_F8172FE6_HPP
-#define POMDOG_GAMEHOSTWIN32_F8172FE6_HPP
+#pragma once
 
 #include "Pomdog/Application/GameHost.hpp"
 #include <memory>
@@ -61,5 +60,3 @@ private:
 } // namespace Win32
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEHOSTWIN32_F8172FE6_HPP

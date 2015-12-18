@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_NATIVEGRAPHICSCONTEXT_D292A72E_HPP
-#define POMDOG_NATIVEGRAPHICSCONTEXT_D292A72E_HPP
+#pragma once
 
 #include "../Utility/Noncopyable.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -69,5 +68,3 @@ public:
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_NATIVEGRAPHICSCONTEXT_D292A72E_HPP

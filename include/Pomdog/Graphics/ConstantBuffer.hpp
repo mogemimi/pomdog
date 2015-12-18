@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_CONSTANTBUFFER_6D116595_HPP
-#define POMDOG_CONSTANTBUFFER_6D116595_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "detail/EffectBinaryParameter.hpp"
@@ -81,5 +80,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_CONSTANTBUFFER_6D116595_HPP

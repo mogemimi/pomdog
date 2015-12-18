@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SAMPLERSTATEDIRECT3D11_7E21EF86_HPP
-#define POMDOG_SAMPLERSTATEDIRECT3D11_7E21EF86_HPP
+#pragma once
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeSamplerState.hpp"
@@ -27,5 +26,3 @@ private:
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SAMPLERSTATEDIRECT3D11_7E21EF86_HPP

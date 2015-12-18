@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TEXTURE2D_F041ED3F_HPP
-#define POMDOG_TEXTURE2D_F041ED3F_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Texture.hpp"
@@ -51,5 +50,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_TEXTURE2D_F041ED3F_HPP

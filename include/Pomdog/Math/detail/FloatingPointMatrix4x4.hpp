@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_FLOATINGPOINTMATRIX4X4_DE77F1B1_HPP
-#define POMDOG_FLOATINGPOINTMATRIX4X4_DE77F1B1_HPP
+#pragma once
 
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -247,5 +246,3 @@ operator*(T scaleFactor, FloatingPointMatrix4x4<T> const& matrix);
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_FLOATINGPOINTMATRIX4X4_DE77F1B1_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ASSETLOADER_99766070_HPP
-#define POMDOG_ASSETLOADER_99766070_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
@@ -14,5 +13,3 @@ struct AssetLoader;
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_ASSETLOADER_99766070_HPP

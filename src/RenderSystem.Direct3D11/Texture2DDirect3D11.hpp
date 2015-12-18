@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TEXTURE2DDIRECT3D11_BA251B9A_HPP
-#define POMDOG_TEXTURE2DDIRECT3D11_BA251B9A_HPP
+#pragma once
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeTexture2D.hpp"
@@ -40,5 +39,3 @@ private:
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_TEXTURE2DDIRECT3D11_BA251B9A_HPP

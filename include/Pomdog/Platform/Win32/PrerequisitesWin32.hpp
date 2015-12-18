@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PREREQUISITESWIN32_ABB52E43_HPP
-#define POMDOG_PREREQUISITESWIN32_ABB52E43_HPP
+#pragma once
 
 #ifndef STRICT
 #   define STRICT
@@ -15,5 +14,3 @@
 
 #include <tchar.h>
 #include <Windows.h>
-
-#endif // POMDOG_PREREQUISITESWIN32_ABB52E43_HPP

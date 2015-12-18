@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_AUDIOLISTENER_C5B766B1_HPP
-#define POMDOG_AUDIOLISTENER_C5B766B1_HPP
+#pragma once
 
 #include "Pomdog/Math/Vector3.hpp"
 
@@ -16,5 +15,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_AUDIOLISTENER_C5B766B1_HPP

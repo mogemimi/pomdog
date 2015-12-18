@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_EVENTQUEUE_4A197647_HPP
-#define POMDOG_EVENTQUEUE_4A197647_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Event.hpp"
@@ -44,5 +43,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_EVENTQUEUE_4A197647_HPP

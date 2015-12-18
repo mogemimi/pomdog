@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_OPENGLPREREQUISITES_70C95DBA_HPP
-#define POMDOG_OPENGLPREREQUISITES_70C95DBA_HPP
+#pragma once
 
 #include "Pomdog/Basic/Platform.hpp"
 
@@ -17,5 +16,3 @@
 #elif defined(POMDOG_PLATFORM_LINUX)
 #include <GL/glew.h>
 #endif
-
-#endif // POMDOG_OPENGLPREREQUISITES_70C95DBA_HPP

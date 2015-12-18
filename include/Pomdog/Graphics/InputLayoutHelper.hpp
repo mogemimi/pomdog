@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_INPUTLAYOUTHELPER_A6C6ACE6_HPP
-#define POMDOG_INPUTLAYOUTHELPER_A6C6ACE6_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "InputElementFormat.hpp"
@@ -44,5 +43,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_INPUTLAYOUTHELPER_A6C6ACE6_HPP

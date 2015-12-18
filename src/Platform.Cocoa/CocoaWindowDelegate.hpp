@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_COCOAWINDOWDELEGATE_56FEB6D8_HPP
-#define POMDOG_COCOAWINDOWDELEGATE_56FEB6D8_HPP
+#pragma once
 
 #include "Pomdog/Signals/EventQueue.hpp"
 #import <Cocoa/Cocoa.h>
@@ -12,5 +11,3 @@
 - (instancetype)initWithEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueue;
 
 @end
-
-#endif // POMDOG_COCOAWINDOWDELEGATE_56FEB6D8_HPP

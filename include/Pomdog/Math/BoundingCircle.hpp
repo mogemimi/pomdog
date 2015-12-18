@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BOUNDINGCIRCLE_00F66014_HPP
-#define POMDOG_BOUNDINGCIRCLE_00F66014_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Vector2.hpp"
@@ -34,5 +33,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_BOUNDINGCIRCLE_00F66014_HPP

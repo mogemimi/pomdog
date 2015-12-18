@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_MOUSESTATE_0CEDE70B_HPP
-#define POMDOG_MOUSESTATE_0CEDE70B_HPP
+#pragma once
 
 #include "ButtonState.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -34,5 +33,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_MOUSESTATE_0CEDE70B_HPP

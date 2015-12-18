@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TIMESOURCE_C4211975_HPP
-#define POMDOG_TIMESOURCE_C4211975_HPP
+#pragma once
 
 #include "Pomdog/Basic/Platform.hpp"
 
@@ -30,5 +29,3 @@ using TimeSource = Detail::Linux::TimeSourceLinux;
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_TIMESOURCE_C4211975_HPP

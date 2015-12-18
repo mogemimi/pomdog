@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BUTTONSTATE_092E7B2B_HPP
-#define POMDOG_BUTTONSTATE_092E7B2B_HPP
+#pragma once
 
 namespace Pomdog {
 
@@ -11,5 +10,3 @@ enum class ButtonState : bool {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_BUTTONSTATE_092E7B2B_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BUFFERGL4_522993A7_HPP
-#define POMDOG_BUFFERGL4_522993A7_HPP
+#pragma once
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeBuffer.hpp"
@@ -56,5 +55,3 @@ using VertexBufferGL4 = BufferGL4<VertexBuffer>;
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_BUFFERGL4_522993A7_HPP

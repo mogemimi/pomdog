@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SIGNALBODY_F551D1BA_HPP
-#define POMDOG_SIGNALBODY_F551D1BA_HPP
+#pragma once
 
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -234,5 +233,3 @@ std::size_t SignalBody<void(Arguments...)>::InvocationCount() const
 } // namespace Signals
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SIGNALBODY_F551D1BA_HPP

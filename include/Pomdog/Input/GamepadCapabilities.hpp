@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEPADCAPABILITIES_869064F7_HPP
-#define POMDOG_GAMEPADCAPABILITIES_869064F7_HPP
+#pragma once
 
 #include "GamepadType.hpp"
 #include <cstdint>
@@ -24,5 +23,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEPADCAPABILITIES_869064F7_HPP

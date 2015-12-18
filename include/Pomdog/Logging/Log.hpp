@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_LOG_B5157F87_HPP
-#define POMDOG_LOG_B5157F87_HPP
+#pragma once
 
 #include "LogLevel.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -51,5 +50,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_LOG_B5157F87_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SHADERCOMPILEOPTIONS_11A9FF1A_HPP
-#define POMDOG_SHADERCOMPILEOPTIONS_11A9FF1A_HPP
+#pragma once
 
 #include "Pomdog/Graphics/ShaderPipelineStage.hpp"
 #include <cstdint>
@@ -36,5 +35,3 @@ struct ShaderCompileOptions {
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SHADERCOMPILEOPTIONS_11A9FF1A_HPP

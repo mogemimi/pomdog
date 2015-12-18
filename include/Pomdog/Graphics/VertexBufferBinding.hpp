@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_VERTEXBUFFERBINDING_AFF786A6_HPP
-#define POMDOG_VERTEXBUFFERBINDING_AFF786A6_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -45,5 +44,3 @@ struct POMDOG_EXPORT VertexBufferBinding {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_VERTEXBUFFERBINDING_AFF786A6_HPP

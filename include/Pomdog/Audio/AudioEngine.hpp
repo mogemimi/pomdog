@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_AUDIOENGINE_0BAB9209_HPP
-#define POMDOG_AUDIOENGINE_0BAB9209_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -30,5 +29,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_AUDIOENGINE_0BAB9209_HPP

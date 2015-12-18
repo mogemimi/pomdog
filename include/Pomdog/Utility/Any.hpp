@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ANY_2C2DCE41_HPP
-#define POMDOG_ANY_2C2DCE41_HPP
+#pragma once
 
 #include "Pomdog/Utility/detail/CRC32.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -110,5 +109,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_ANY_2C2DCE41_HPP

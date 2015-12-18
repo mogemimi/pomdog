@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_KEYBOARDX11_68B433F3_HPP
-#define POMDOG_KEYBOARDX11_68B433F3_HPP
+#pragma once
 
 #include "Pomdog/Input/Keyboard.hpp"
 #include "Pomdog/Input/KeyboardState.hpp"
@@ -28,5 +27,3 @@ private:
 } // namespace X11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_KEYBOARDX11_68B433F3_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_EFFECTCONSTANTDESCRIPTION_5EBD0C28_HPP
-#define POMDOG_EFFECTCONSTANTDESCRIPTION_5EBD0C28_HPP
+#pragma once
 
 #include "EffectVariable.hpp"
 #include <cstdint>
@@ -17,5 +16,3 @@ struct EffectConstantDescription {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_EFFECTCONSTANTDESCRIPTION_5EBD0C28_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PIPELINESTATEDIRECT3D11_0A0A09ED_HPP
-#define POMDOG_PIPELINESTATEDIRECT3D11_0A0A09ED_HPP
+#pragma once
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativePipelineState.hpp"
@@ -32,5 +31,3 @@ private:
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PIPELINESTATEDIRECT3D11_0A0A09ED_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEWINDOW_22D747BC_HPP
-#define POMDOG_GAMEWINDOW_22D747BC_HPP
+#pragma once
 
 #include "Pomdog/Signals/Signal.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -44,5 +43,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEWINDOW_22D747BC_HPP

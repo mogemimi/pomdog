@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_KEYSTATE_0C5E11FF_HPP
-#define POMDOG_KEYSTATE_0C5E11FF_HPP
+#pragma once
 
 namespace Pomdog {
 
@@ -11,5 +10,3 @@ enum class KeyState : bool {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_KEYSTATE_0C5E11FF_HPP

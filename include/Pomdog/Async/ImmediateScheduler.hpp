@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_IMMEDIATESCHEDULER_6ABB0F4A_HPP
-#define POMDOG_IMMEDIATESCHEDULER_6ABB0F4A_HPP
+#pragma once
 
 #include "Pomdog/Async/Scheduler.hpp"
 
@@ -17,5 +16,3 @@ public:
 
 } // namespace Concurrency
 } // namespace Pomdog
-
-#endif // POMDOG_IMMEDIATESCHEDULER_6ABB0F4A_HPP

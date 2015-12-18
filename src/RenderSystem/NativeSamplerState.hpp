@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_NATIVESAMPLERSTATE_4A6E443C_HPP
-#define POMDOG_NATIVESAMPLERSTATE_4A6E443C_HPP
+#pragma once
 
 namespace Pomdog {
 namespace Detail {
@@ -17,5 +16,3 @@ public:
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_NATIVESAMPLERSTATE_4A6E443C_HPP

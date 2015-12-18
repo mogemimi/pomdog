@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEHOSTX11_DE540DBE_HPP
-#define POMDOG_GAMEHOSTX11_DE540DBE_HPP
+#pragma once
 
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "OpenGLContextX11.hpp"
@@ -61,5 +60,3 @@ private:
 } // namespace X11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEHOSTX11_DE540DBE_HPP

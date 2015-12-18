@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SCHEDULER_32A1C2D2_HPP
-#define POMDOG_SCHEDULER_32A1C2D2_HPP
+#pragma once
 
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -21,5 +20,3 @@ public:
 
 } // namespace Concurrency
 } // namespace Pomdog
-
-#endif // POMDOG_SCHEDULER_32A1C2D2_HPP

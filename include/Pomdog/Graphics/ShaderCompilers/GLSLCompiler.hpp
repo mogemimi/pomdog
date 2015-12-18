@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GLSLCOMPILER_9FED2927_HPP
-#define POMDOG_GLSLCOMPILER_9FED2927_HPP
+#pragma once
 
 #include "Pomdog/Graphics/ShaderPipelineStage.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -25,5 +24,3 @@ struct POMDOG_EXPORT GLSLCompiler final {
 
 } // namespace ShaderCompilers
 } // namespace Pomdog
-
-#endif // POMDOG_GLSLCOMPILER_9FED2927_HPP

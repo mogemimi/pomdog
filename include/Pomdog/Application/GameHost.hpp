@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEHOST_FDAA974D_HPP
-#define POMDOG_GAMEHOST_FDAA974D_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
@@ -45,5 +44,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEHOST_FDAA974D_HPP

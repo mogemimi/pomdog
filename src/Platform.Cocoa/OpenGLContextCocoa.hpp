@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_OPENGLCONTEXTCOCOA_306ECA78_HPP
-#define POMDOG_OPENGLCONTEXTCOCOA_306ECA78_HPP
+#pragma once
 
 #include "../RenderSystem.GL4/OpenGLContext.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -49,5 +48,3 @@ private:
 } // namespace Cocoa
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_OPENGLCONTEXTCOCOA_306ECA78_HPP

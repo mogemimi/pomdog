@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_NATIVEGRAPHICSCOMMANDQUEUE_A41D671F_HPP
-#define POMDOG_NATIVEGRAPHICSCOMMANDQUEUE_A41D671F_HPP
+#pragma once
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
@@ -31,5 +30,3 @@ public:
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_NATIVEGRAPHICSCOMMANDQUEUE_A41D671F_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_FORWARDDECLARATIONS_7CF2D9B3_HPP
-#define POMDOG_FORWARDDECLARATIONS_7CF2D9B3_HPP
+#pragma once
 
 #include <functional>
 
@@ -30,5 +29,3 @@ template <typename Function>
 class Signal;
 
 } // namespace Pomdog
-
-#endif // POMDOG_FORWARDDECLARATIONS_7CF2D9B3_HPP

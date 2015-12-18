@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TEXTURE2DLOADER_84BCFDDA_HPP
-#define POMDOG_TEXTURE2DLOADER_84BCFDDA_HPP
+#pragma once
 
 #include "Pomdog/Content/detail/AssetLoader.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -25,5 +24,3 @@ struct POMDOG_EXPORT AssetLoader<Texture2D> final {
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_TEXTURE2DLOADER_84BCFDDA_HPP

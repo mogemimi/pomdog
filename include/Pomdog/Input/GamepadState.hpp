@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEPADSTATE_02293326_HPP
-#define POMDOG_GAMEPADSTATE_02293326_HPP
+#pragma once
 
 #include "GamepadButtons.hpp"
 #include "GamepadDPad.hpp"
@@ -18,5 +17,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEPADSTATE_02293326_HPP

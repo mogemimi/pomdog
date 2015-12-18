@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TEXTUREADDRESSMODE_256FCFEC_HPP
-#define POMDOG_TEXTUREADDRESSMODE_256FCFEC_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -14,5 +13,3 @@ enum class TextureAddressMode: std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_TEXTUREADDRESSMODE_256FCFEC_HPP

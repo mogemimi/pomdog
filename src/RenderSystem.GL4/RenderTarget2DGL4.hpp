@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_RENDERTARGET2DGL4_0C6A48A1_HPP
-#define POMDOG_RENDERTARGET2DGL4_0C6A48A1_HPP
+#pragma once
 
 #include "OpenGLPrerequisites.hpp"
 #include "Texture2DGL4.hpp"
@@ -45,5 +44,3 @@ private:
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_RENDERTARGET2DGL4_0C6A48A1_HPP

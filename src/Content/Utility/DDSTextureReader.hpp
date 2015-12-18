@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_DDSTEXTUREREADER_0C8072DF_HPP
-#define POMDOG_DDSTEXTUREREADER_0C8072DF_HPP
+#pragma once
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstdint>
@@ -20,5 +19,3 @@ std::shared_ptr<Texture2D> Read(std::shared_ptr<GraphicsDevice> const& graphicsD
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_DDSTEXTUREREADER_0C8072DF_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_EFFECTBINARYPARAMETER_F5EA7DB2_HPP
-#define POMDOG_EFFECTBINARYPARAMETER_F5EA7DB2_HPP
+#pragma once
 
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -57,5 +56,3 @@ void Set(ConstantBuffer & constantBuffer, T const& value)
 } // namespace EffectBinaryParameter
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_EFFECTBINARYPARAMETER_F5EA7DB2_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TIMESOURCEWIN32_A31ECBBA_HPP
-#define POMDOG_TIMESOURCEWIN32_A31ECBBA_HPP
+#pragma once
 
 #include "Pomdog/Application/TimePoint.hpp"
 
@@ -22,5 +21,3 @@ private:
 } // namespace Win32
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_TIMESOURCEWIN32_A31ECBBA_HPP

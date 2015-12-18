@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_COLOR_E8ABB31A_HPP
-#define POMDOG_COLOR_E8ABB31A_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -66,5 +65,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_COLOR_E8ABB31A_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_FORWARDDECLARATIONS_0BAC0396_HPP
-#define POMDOG_FORWARDDECLARATIONS_0BAC0396_HPP
+#pragma once
 
 #include "Pomdog/Basic/Platform.hpp"
 #include <cstdint>
@@ -55,5 +54,3 @@ enum class AudioChannel : std::uint8_t;
 enum class SoundState : std::uint8_t;
 
 } // namespace Pomdog
-
-#endif // POMDOG_FORWARDDECLARATIONS_0BAC0396_HPP

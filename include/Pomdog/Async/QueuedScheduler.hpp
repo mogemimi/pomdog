@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_QUEUEDSCHEDULER_9A5E6E33_HPP
-#define POMDOG_QUEUEDSCHEDULER_9A5E6E33_HPP
+#pragma once
 
 #include "Pomdog/Async/Scheduler.hpp"
 #include <vector>
@@ -45,5 +44,3 @@ private:
 
 } // namespace Concurrency
 } // namespace Pomdog
-
-#endif // POMDOG_QUEUEDSCHEDULER_9A5E6E33_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_FORWARDDECLARATIONS_1D9B55F8_HPP
-#define POMDOG_FORWARDDECLARATIONS_1D9B55F8_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -74,5 +73,3 @@ enum class TextureAddressMode: std::uint8_t;
 enum class TextureFilter: std::uint8_t;
 
 } // namespace Pomdog
-
-#endif // POMDOG_FORWARDDECLARATIONS_1D9B55F8_HPP

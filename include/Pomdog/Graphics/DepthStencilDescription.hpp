@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_DEPTHSTENCILDESCRIPTION_E14C5D77_HPP
-#define POMDOG_DEPTHSTENCILDESCRIPTION_E14C5D77_HPP
+#pragma once
 
 #include "ComparisonFunction.hpp"
 #include "DepthStencilOperation.hpp"
@@ -86,5 +85,3 @@ struct POMDOG_EXPORT DepthStencilDescription {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_DEPTHSTENCILDESCRIPTION_E14C5D77_HPP

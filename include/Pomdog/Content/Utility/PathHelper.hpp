@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PATHHELPER_BDBB516A_HPP
-#define POMDOG_PATHHELPER_BDBB516A_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include "BinaryFileStream.hpp"
@@ -27,5 +26,3 @@ struct POMDOG_EXPORT PathHelper {
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PATHHELPER_BDBB516A_HPP

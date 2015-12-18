@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_OPTIONAL_D43800AB_HPP
-#define POMDOG_OPTIONAL_D43800AB_HPP
+#pragma once
 
 #include "Pomdog/Utility/Assert.hpp"
 #include <type_traits>
@@ -116,5 +115,3 @@ inline constexpr Optional<T> MakeOptional(T v)
 }
 
 } // namespace Pomdog
-
-#endif // POMDOG_OPTIONAL_D43800AB_HPP

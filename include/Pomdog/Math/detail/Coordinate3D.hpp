@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_COORDINATE3D_6062BA6C_HPP
-#define POMDOG_COORDINATE3D_6062BA6C_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include <type_traits>
@@ -57,5 +56,3 @@ operator*(T scaleFactor, Coordinate3D<T> const& coordinate) noexcept;
 } // namespace Pomdog
 
 #include "Coordinate3DImplementation.hpp"
-
-#endif // POMDOG_COORDINATE3D_6062BA6C_HPP

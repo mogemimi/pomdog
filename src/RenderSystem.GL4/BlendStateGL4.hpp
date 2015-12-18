@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BLENDSTATEGL4_5A1F407F_HPP
-#define POMDOG_BLENDSTATEGL4_5A1F407F_HPP
+#pragma once
 
 #include "OpenGLPrerequisites.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -42,5 +41,3 @@ private:
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_BLENDSTATEGL4_5A1F407F_HPP

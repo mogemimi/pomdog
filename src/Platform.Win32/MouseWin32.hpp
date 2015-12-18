@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_MOUSEWIN32_0AE8AABE_HPP
-#define POMDOG_MOUSEWIN32_0AE8AABE_HPP
+#pragma once
 
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Input/Mouse.hpp"
@@ -28,5 +27,3 @@ private:
 } // namespace Win32
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_MOUSEWIN32_0AE8AABE_HPP

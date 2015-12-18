@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BOUNDINGSPHERE_4FA29CAA_HPP
-#define POMDOG_BOUNDINGSPHERE_4FA29CAA_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Vector3.hpp"
@@ -37,5 +36,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_BOUNDINGSPHERE_4FA29CAA_HPP

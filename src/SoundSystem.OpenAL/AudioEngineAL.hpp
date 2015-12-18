@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_AUDIOENGINEAL_4B9A3A11_HPP
-#define POMDOG_AUDIOENGINEAL_4B9A3A11_HPP
+#pragma once
 
 #include "PrerequisitesOpenAL.hpp"
 #include "ContextOpenAL.hpp"
@@ -29,5 +28,3 @@ private:
 } // namespace SoundSystem
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_AUDIOENGINEAL_4B9A3A11_HPP

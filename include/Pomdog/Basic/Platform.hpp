@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PLATFORM_C59B59BE_HPP
-#define POMDOG_PLATFORM_C59B59BE_HPP
+#pragma once
 
 //----------------------------
 // Compiler detection
@@ -189,5 +188,3 @@
 #if defined(DEBUG) && defined(NDEBUG)
 #error "Both DEBUG and NDEBUG are defined."
 #endif
-
-#endif // POMDOG_PLATFORM_C59B59BE_HPP

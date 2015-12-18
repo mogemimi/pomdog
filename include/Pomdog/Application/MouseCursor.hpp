@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_MOUSECURSOR_D7B37AAC_HPP
-#define POMDOG_MOUSECURSOR_D7B37AAC_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -16,5 +15,3 @@ enum class MouseCursor : std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_MOUSECURSOR_D7B37AAC_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_MAKEFOURCC_ED6FB253_HPP
-#define POMDOG_MAKEFOURCC_ED6FB253_HPP
+#pragma once
 
 #include <cstdint>
 #include <type_traits>
@@ -24,5 +23,3 @@ constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Cha
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_MAKEFOURCC_ED6FB253_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_INPUTCLASSIFICATION_478EFF1D_HPP
-#define POMDOG_INPUTCLASSIFICATION_478EFF1D_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -13,5 +12,3 @@ enum class InputClassification : std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_INPUTCLASSIFICATION_478EFF1D_HPP

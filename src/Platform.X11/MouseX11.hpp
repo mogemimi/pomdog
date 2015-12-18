@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_MOUSEX11_9FA99050_HPP
-#define POMDOG_MOUSEX11_9FA99050_HPP
+#pragma once
 
 #include "Pomdog/Input/Mouse.hpp"
 #include "Pomdog/Input/MouseState.hpp"
@@ -24,5 +23,3 @@ private:
 } // namespace X11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_MOUSEX11_9FA99050_HPP

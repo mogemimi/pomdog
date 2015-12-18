@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BOOTSTRAPPERCOCOA_13B44EFA_HPP
-#define POMDOG_BOOTSTRAPPERCOCOA_13B44EFA_HPP
+#pragma once
 
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
@@ -55,5 +54,3 @@ private:
 
 } // namespace Cocoa
 } // namespace Pomdog
-
-#endif // POMDOG_BOOTSTRAPPERCOCOA_13B44EFA_HPP

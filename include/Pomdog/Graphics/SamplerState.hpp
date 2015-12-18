@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SAMPLERSTATE_87568CD5_HPP
-#define POMDOG_SAMPLERSTATE_87568CD5_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "SamplerDescription.hpp"
@@ -29,5 +28,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SAMPLERSTATE_87568CD5_HPP

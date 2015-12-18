@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ASSETDICTIONARY_8088231B_HPP
-#define POMDOG_ASSETDICTIONARY_8088231B_HPP
+#pragma once
 
 #include "AssetLoaders/AudioClipLoader.hpp"
 #include "AssetLoaders/Texture2DLoader.hpp"
@@ -64,5 +63,3 @@ public:
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_ASSETDICTIONARY_8088231B_HPP

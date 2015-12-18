@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PRESENTATIONPARAMETERS_2A860062_HPP
-#define POMDOG_PRESENTATIONPARAMETERS_2A860062_HPP
+#pragma once
 
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
@@ -20,5 +19,3 @@ struct PresentationParameters {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_PRESENTATIONPARAMETERS_2A860062_HPP

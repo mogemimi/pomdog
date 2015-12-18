@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TAGGEDARITHMETIC_4493CED1_HPP
-#define POMDOG_TAGGEDARITHMETIC_4493CED1_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -211,5 +210,3 @@ public:
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_TAGGEDARITHMETIC_4493CED1_HPP

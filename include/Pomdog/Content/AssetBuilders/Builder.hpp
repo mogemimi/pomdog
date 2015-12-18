@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ASSETBUILDER_764146C1_HPP
-#define POMDOG_ASSETBUILDER_764146C1_HPP
+#pragma once
 
 namespace Pomdog {
 namespace AssetBuilders {
@@ -11,5 +10,3 @@ class Builder;
 
 } // namespace AssetBuilders
 } // namespace Pomdog
-
-#endif // POMDOG_ASSETBUILDER_764146C1_HPP

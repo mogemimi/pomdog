@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_INPUTDEVICECREATOR_D5540F16_HPP
-#define POMDOG_INPUTDEVICECREATOR_D5540F16_HPP
+#pragma once
 
 #include <memory>
 
@@ -23,5 +22,3 @@ public:
 } // namespace InputSystem
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_INPUTDEVICECREATOR_D5540F16_HPP

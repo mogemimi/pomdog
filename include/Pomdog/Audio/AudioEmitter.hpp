@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_AUDIOEMITTER_AC108A5B_HPP
-#define POMDOG_AUDIOEMITTER_AC108A5B_HPP
+#pragma once
 
 #include "Pomdog/Math/Vector3.hpp"
 
@@ -17,5 +16,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_AUDIOEMITTER_AC108A5B_HPP

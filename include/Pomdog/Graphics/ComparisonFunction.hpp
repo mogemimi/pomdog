@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_COMPARISONFUNCTION_01201CF2_HPP
-#define POMDOG_COMPARISONFUNCTION_01201CF2_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -19,5 +18,3 @@ enum class ComparisonFunction: std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_COMPARISONFUNCTION_01201CF2_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_RAY_520ED2DA_HPP
-#define POMDOG_RAY_520ED2DA_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Vector3.hpp"
@@ -29,5 +28,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_RAY_520ED2DA_HPP

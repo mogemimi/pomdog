@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BUFFERDIRECT3D11_58714643_HPP
-#define POMDOG_BUFFERDIRECT3D11_58714643_HPP
+#pragma once
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeBuffer.hpp"
@@ -49,5 +48,3 @@ private:
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_BUFFERDIRECT3D11_58714643_HPP

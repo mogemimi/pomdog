@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_HLSLCOMPILER_223CB751_HPP
-#define POMDOG_HLSLCOMPILER_223CB751_HPP
+#pragma once
 
 #include "Pomdog/Graphics/ShaderPipelineStage.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -33,5 +32,3 @@ struct POMDOG_EXPORT HLSLCompiler final {
 
 } // namespace ShaderCompilers
 } // namespace Pomdog
-
-#endif // POMDOG_HLSLCOMPILER_223CB751_HPP

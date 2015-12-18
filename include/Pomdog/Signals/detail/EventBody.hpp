@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_EVENTBODY_9EA2B1CE_HPP
-#define POMDOG_EVENTBODY_9EA2B1CE_HPP
+#pragma once
 
 #include <typeinfo>
 #include <type_traits>
@@ -57,5 +56,3 @@ public:
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_EVENTBODY_9EA2B1CE_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BOOTSTRAP_717FD802_HPP
-#define POMDOG_BOOTSTRAP_717FD802_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
@@ -47,5 +46,3 @@ private:
 
 } // namespace X11
 } // namespace Pomdog
-
-#endif // POMDOG_BOOTSTRAP_717FD802_HPP

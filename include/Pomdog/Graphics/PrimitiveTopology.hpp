@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PRIMITIVETOPOLOGY_46F3C71C_HPP
-#define POMDOG_PRIMITIVETOPOLOGY_46F3C71C_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -22,5 +21,3 @@ enum class PrimitiveTopology: std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_PRIMITIVETOPOLOGY_46F3C71C_HPP

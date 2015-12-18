@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SUBSYSTEMSCHEDULER_15398B34_HPP
-#define POMDOG_SUBSYSTEMSCHEDULER_15398B34_HPP
+#pragma once
 
 #include "../Utility/Noncopyable.hpp"
 #include "Pomdog/Signals/Signal.hpp"
@@ -16,5 +15,3 @@ public:
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SUBSYSTEMSCHEDULER_15398B34_HPP

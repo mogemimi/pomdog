@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SYSTEMEVENTS_7D649F10_HPP
-#define POMDOG_SYSTEMEVENTS_7D649F10_HPP
+#pragma once
 
 #include "Pomdog/Input/ButtonState.hpp"
 #include "Pomdog/Input/KeyState.hpp"
@@ -65,5 +64,3 @@ struct ScrollWheelEvent {
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SYSTEMEVENTS_7D649F10_HPP

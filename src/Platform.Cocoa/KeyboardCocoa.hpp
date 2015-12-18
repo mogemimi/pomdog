@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_KEYBOARDCOCOA_E0980F30_HPP
-#define POMDOG_KEYBOARDCOCOA_E0980F30_HPP
+#pragma once
 
 #include "Pomdog/Input/Keyboard.hpp"
 #include "Pomdog/Input/KeyboardState.hpp"
@@ -25,5 +24,3 @@ private:
 } // namespace Cocoa
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_KEYBOARDCOCOA_E0980F30_HPP

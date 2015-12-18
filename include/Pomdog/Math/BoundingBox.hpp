@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BOUNDINGBOX_07DD34BE_HPP
-#define POMDOG_BOUNDINGBOX_07DD34BE_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Vector3.hpp"
@@ -42,5 +41,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_BOUNDINGBOX_07DD34BE_HPP

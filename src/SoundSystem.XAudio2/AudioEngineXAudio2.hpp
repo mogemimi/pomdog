@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_AUDIOENGINEXAUDIO2_349E822E_HPP
-#define POMDOG_AUDIOENGINEXAUDIO2_349E822E_HPP
+#pragma once
 
 #include "PrerequisitesXAudio2.hpp"
 #include <wrl/client.h>
@@ -32,5 +31,3 @@ private:
 } // namespace SoundSystem
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_AUDIOENGINEXAUDIO2_349E822E_HPP

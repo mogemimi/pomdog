@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PREREQUISITESDIRECT3D11_EED05C73_HPP
-#define POMDOG_PREREQUISITESDIRECT3D11_EED05C73_HPP
+#pragma once
 
 #if defined(_XBOX_ONE) && defined(_TITLE)
 #include <d3d11_x.h>
@@ -12,5 +11,3 @@
 #include <d3d11.h>
 #include <d3d11shader.h>
 #endif
-
-#endif // POMDOG_PREREQUISITESDIRECT3D11_EED05C73_HPP

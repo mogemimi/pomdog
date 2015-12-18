@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_OPENGLVIEW_5390FBCF_HPP
-#define POMDOG_OPENGLVIEW_5390FBCF_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
@@ -34,5 +33,3 @@ POMDOG_EXPORT @interface PomdogOpenGLView : NSView
 - (void)setResizingCallback:(std::function<void(bool)>)callback;
 
 @end
-
-#endif // POMDOG_OPENGLVIEW_5390FBCF_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PNGTEXTUREREADER_C00C0E02_HPP
-#define POMDOG_PNGTEXTUREREADER_C00C0E02_HPP
+#pragma once
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstdint>
@@ -19,5 +18,3 @@ struct PNGTextureReader {
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PNGTEXTUREREADER_C00C0E02_HPP

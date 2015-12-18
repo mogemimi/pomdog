@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BLENDFUNCTION_5A8D5F85_HPP
-#define POMDOG_BLENDFUNCTION_5A8D5F85_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -16,5 +15,3 @@ enum class BlendFunction: std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_BLENDFUNCTION_5A8D5F85_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_FLOATINGPOINTMATRIX2X2_D1549734_HPP
-#define POMDOG_FLOATINGPOINTMATRIX2X2_D1549734_HPP
+#pragma once
 
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -79,5 +78,3 @@ operator*(T scaleFactor, FloatingPointMatrix2x2<T> const& matrix);
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_FLOATINGPOINTMATRIX2X2_D1549734_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_RENDERTARGETBLENDDESCRIPTION_75AADD8A_HPP
-#define POMDOG_RENDERTARGETBLENDDESCRIPTION_75AADD8A_HPP
+#pragma once
 
 #include "Blend.hpp"
 #include "BlendFunction.hpp"
@@ -73,5 +72,3 @@ struct POMDOG_EXPORT RenderTargetBlendDescription {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_RENDERTARGETBLENDDESCRIPTION_75AADD8A_HPP

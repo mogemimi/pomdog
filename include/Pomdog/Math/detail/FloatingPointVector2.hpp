@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_FLOATINGPOINTVECTOR2_714DEF9F_HPP
-#define POMDOG_FLOATINGPOINTVECTOR2_714DEF9F_HPP
+#pragma once
 
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -104,5 +103,3 @@ operator*(T scaleFactor, FloatingPointVector2<T> const& vector);
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_FLOATINGPOINTVECTOR2_714DEF9F_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_KEYBOARDWIN32_4403DC3F_HPP
-#define POMDOG_KEYBOARDWIN32_4403DC3F_HPP
+#pragma once
 
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Input/Keyboard.hpp"
@@ -24,5 +23,3 @@ private:
 } // namespace Win32
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_KEYBOARDWIN32_4403DC3F_HPP

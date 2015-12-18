@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_RECTANGLE_4B874E7C_HPP
-#define POMDOG_RECTANGLE_4B874E7C_HPP
+#pragma once
 
 #include "Point2D.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -68,5 +67,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_RECTANGLE_4B874E7C_HPP

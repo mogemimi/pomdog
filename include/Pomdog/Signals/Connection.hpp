@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_CONNECTION_8E4EC7A9_HPP
-#define POMDOG_CONNECTION_8E4EC7A9_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "detail/SignalBody.hpp"
@@ -33,5 +32,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_CONNECTION_8E4EC7A9_HPP

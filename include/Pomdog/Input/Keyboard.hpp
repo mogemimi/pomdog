@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_KEYBOARD_B6F4D4B4_HPP
-#define POMDOG_KEYBOARD_B6F4D4B4_HPP
+#pragma once
 
 #include "Pomdog/Signals/Signal.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -31,5 +30,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_KEYBOARD_B6F4D4B4_HPP

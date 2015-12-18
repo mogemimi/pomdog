@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_MATRIX3X3_C6CCE300_HPP
-#define POMDOG_MATRIX3X3_C6CCE300_HPP
+#pragma once
 
 #include "detail/FloatingPointMatrix3x3.hpp"
 
@@ -10,5 +9,3 @@ namespace Pomdog {
 using Matrix3x3 = Detail::FloatingPointMatrix3x3<float>;
 
 } // namespace Pomdog
-
-#endif // POMDOG_MATRIX3X3_C6CCE300_HPP

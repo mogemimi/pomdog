@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_INPUTDEVICEFACTORY_60E2AEA5_HPP
-#define POMDOG_INPUTDEVICEFACTORY_60E2AEA5_HPP
+#pragma once
 
 #include "../Utility/Noncopyable.hpp"
 #include <memory>
@@ -26,5 +25,3 @@ private:
 } // namespace InputSystem
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_INPUTDEVICEFACTORY_60E2AEA5_HPP

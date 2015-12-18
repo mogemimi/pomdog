@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PIPELINESTATEBUILDER_0DAFFCC3_HPP
-#define POMDOG_PIPELINESTATEBUILDER_0DAFFCC3_HPP
+#pragma once
 
 #include "Pomdog/Content/AssetBuilders/Builder.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -57,5 +56,3 @@ private:
 
 } // namespace AssetBuilders
 } // namespace Pomdogs
-
-#endif // POMDOG_PIPELINESTATEBUILDER_0DAFFCC3_HPP

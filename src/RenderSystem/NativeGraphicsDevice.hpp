@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_NATIVEGRAPHICSDEVICE_B06DA321_HPP
-#define POMDOG_NATIVEGRAPHICSDEVICE_B06DA321_HPP
+#pragma once
 
 #include "../Utility/Noncopyable.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -82,5 +81,3 @@ public:
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_NATIVEGRAPHICSDEVICE_B06DA321_HPP

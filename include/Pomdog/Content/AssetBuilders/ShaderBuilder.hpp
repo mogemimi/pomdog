@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SHADERBUILDER_DF696479_HPP
-#define POMDOG_SHADERBUILDER_DF696479_HPP
+#pragma once
 
 #include "Pomdog/Content/AssetBuilders/Builder.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -56,5 +55,3 @@ private:
 
 } // namespace AssetBuilders
 } // namespace Pomdog
-
-#endif // POMDOG_SHADERBUILDER_DF696479_HPP

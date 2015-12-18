@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_AUDIOCLIPLOADER_18B28F6C_HPP
-#define POMDOG_AUDIOCLIPLOADER_18B28F6C_HPP
+#pragma once
 
 #include "Pomdog/Content/detail/AssetLoader.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -25,5 +24,3 @@ struct POMDOG_EXPORT AssetLoader<AudioClip> final {
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_AUDIOCLIPLOADER_18B28F6C_HPP

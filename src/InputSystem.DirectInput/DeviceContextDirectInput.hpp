@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_DEVICECONTEXTDIRECTINPUT_A3771E91_HPP
-#define POMDOG_DEVICECONTEXTDIRECTINPUT_A3771E91_HPP
+#pragma once
 
 #include "PrerequisitesDirectInput.hpp"
 #include "../Utility/Noncopyable.hpp"
@@ -32,5 +31,3 @@ private:
 } // namespace InputSystem
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_DEVICECONTEXTDIRECTINPUT_A3771E91_HPP

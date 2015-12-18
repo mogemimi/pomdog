@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SURFACEFORMATHELPER_BDAD06C9_HPP
-#define POMDOG_SURFACEFORMATHELPER_BDAD06C9_HPP
+#pragma once
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 
@@ -14,5 +13,3 @@ struct SurfaceFormatHelper final {
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SURFACEFORMATHELPER_BDAD06C9_HPP

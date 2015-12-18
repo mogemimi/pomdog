@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_EFFECTVARIABLECLASS_0B44E0FB_HPP
-#define POMDOG_EFFECTVARIABLECLASS_0B44E0FB_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -16,5 +15,3 @@ enum class EffectVariableClass: std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_EFFECTVARIABLECLASS_0B44E0FB_HPP

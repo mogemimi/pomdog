@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_DEGREE_8B079286_HPP
-#define POMDOG_DEGREE_8B079286_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "detail/TaggedArithmetic.hpp"
@@ -15,5 +14,3 @@ struct DegreeTag {};
 } // namespace Tags
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_DEGREE_8B079286_HPP

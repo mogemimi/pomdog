@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PREREQUISITESOPENAL_0DE392F4_HPP
-#define POMDOG_PREREQUISITESOPENAL_0DE392F4_HPP
+#pragma once
 
 #include "Pomdog/Basic/Platform.hpp"
 
@@ -12,5 +11,3 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 #endif
-
-#endif // POMDOG_PREREQUISITESOPENAL_0DE392F4_HPP

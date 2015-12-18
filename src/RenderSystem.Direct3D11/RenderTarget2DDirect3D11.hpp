@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_RENDERTARGET2DDIRECT3D11_75264088_HPP
-#define POMDOG_RENDERTARGET2DDIRECT3D11_75264088_HPP
+#pragma once
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
@@ -57,5 +56,3 @@ private:
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_RENDERTARGET2DDIRECT3D11_75264088_HPP

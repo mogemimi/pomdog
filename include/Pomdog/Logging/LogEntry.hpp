@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_LOGENTRY_F0B169C2_HPP
-#define POMDOG_LOGENTRY_F0B169C2_HPP
+#pragma once
 
 #include "LogLevel.hpp"
 #include <string>
@@ -16,5 +15,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_LOGENTRY_F0B169C2_HPP

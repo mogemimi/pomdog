@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TEXTUREHELPER_FDC1E68E_HPP
-#define POMDOG_TEXTUREHELPER_FDC1E68E_HPP
+#pragma once
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstdint>
@@ -23,5 +22,3 @@ struct TextureHelper final {
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_TEXTUREHELPER_FDC1E68E_HPP

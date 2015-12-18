@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SIGNAL_51888AFF_HPP
-#define POMDOG_SIGNAL_51888AFF_HPP
+#pragma once
 
 #include "detail/SignalBody.hpp"
 #include "Connection.hpp"
@@ -72,5 +71,3 @@ std::size_t Signal<void(Arguments...)>::InvocationCount() const
 }
 
 } // namespace Pomdog
-
-#endif // POMDOG_SIGNAL_51888AFF_HPP

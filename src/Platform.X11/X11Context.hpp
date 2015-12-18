@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_X11CONTEXT_9A6DB993_HPP
-#define POMDOG_X11CONTEXT_9A6DB993_HPP
+#pragma once
 
 #include "X11AtomCache.hpp"
 #include <X11/Xlib.h>
@@ -22,5 +21,3 @@ public:
 } // namespace X11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_X11CONTEXT_9A6DB993_HPP

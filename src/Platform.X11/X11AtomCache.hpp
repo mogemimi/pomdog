@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_X11ATOMCACHE_77EB19E3_HPP
-#define POMDOG_X11ATOMCACHE_77EB19E3_HPP
+#pragma once
 
 #include <X11/X.h>
 
@@ -19,5 +18,3 @@ struct X11AtomCache {
 } // namespace X11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_X11ATOMCACHE_77EB19E3_HPP

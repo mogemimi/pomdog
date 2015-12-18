@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GRAPHICSCOMMANDLISTIMMEDIATE_DADAF84E_HPP
-#define POMDOG_GRAPHICSCOMMANDLISTIMMEDIATE_DADAF84E_HPP
+#pragma once
 
 #include "NativeGraphicsCommandList.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -89,5 +88,3 @@ private:
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_GRAPHICSCOMMANDLISTIMMEDIATE_DADAF84E_HPP

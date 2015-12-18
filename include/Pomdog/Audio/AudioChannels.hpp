@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_AUDIOCHANNELS_026C7FB5_HPP
-#define POMDOG_AUDIOCHANNELS_026C7FB5_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -13,5 +12,3 @@ enum class AudioChannels: std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_AUDIOCHANNELS_026C7FB5_HPP

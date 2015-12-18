@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_COORDINATE3DIMPLEMENTATION_4B7428C8_HPP
-#define POMDOG_COORDINATE3DIMPLEMENTATION_4B7428C8_HPP
+#pragma once
 
 //#include "../Coordinate3D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -142,5 +141,3 @@ Coordinate3D<T> operator/(T scaleFactor, Coordinate3D<T> const& coordinate)
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_COORDINATE3DIMPLEMENTATION_4B7428C8_HPP

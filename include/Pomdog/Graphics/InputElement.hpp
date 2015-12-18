@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_INPUTELEMENT_E9D07191_HPP
-#define POMDOG_INPUTELEMENT_E9D07191_HPP
+#pragma once
 
 #include "InputClassification.hpp"
 #include "InputElementFormat.hpp"
@@ -18,5 +17,3 @@ struct InputElement {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_INPUTELEMENT_E9D07191_HPP

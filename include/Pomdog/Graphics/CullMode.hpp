@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_CULLMODE_DBEE9F5F_HPP
-#define POMDOG_CULLMODE_DBEE9F5F_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -14,5 +13,3 @@ enum class CullMode: std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_CULLMODE_DBEE9F5F_HPP

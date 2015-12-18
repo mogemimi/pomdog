@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BINARYFILESTREAM_828A8EEF_HPP
-#define POMDOG_BINARYFILESTREAM_828A8EEF_HPP
+#pragma once
 
 #include <fstream>
 #include <cstddef>
@@ -16,5 +15,3 @@ struct BinaryFileStream {
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_BINARYFILESTREAM_828A8EEF_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_CRC32_7EBEE5EE_HPP
-#define POMDOG_CRC32_7EBEE5EE_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include <string>
@@ -26,5 +25,3 @@ struct POMDOG_EXPORT CRC32 {
 
 } // namespace Detail
 } // namespace Pomdof
-
-#endif // POMDOG_CRC32_7EBEE5EE_HPP

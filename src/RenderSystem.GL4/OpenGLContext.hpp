@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_OPENGLCONTEXT_62674DFD_HPP
-#define POMDOG_OPENGLCONTEXT_62674DFD_HPP
+#pragma once
 
 #include "../Utility/Noncopyable.hpp"
 
@@ -23,5 +22,3 @@ public:
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_OPENGLCONTEXT_62674DFD_HPP

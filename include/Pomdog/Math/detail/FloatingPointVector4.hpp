@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_FLOATINGPOINTVECTOR4_46E21CD7_HPP
-#define POMDOG_FLOATINGPOINTVECTOR4_46E21CD7_HPP
+#pragma once
 
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -80,5 +79,3 @@ operator*(T scaleFactor, FloatingPointVector4<T> const& vector);
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_FLOATINGPOINTVECTOR4_46E21CD7_HPP

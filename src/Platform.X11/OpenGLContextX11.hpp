@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_OPENGLCONTEXTX11_7F7BD17E_HPP
-#define POMDOG_OPENGLCONTEXTX11_7F7BD17E_HPP
+#pragma once
 
 #include "../RenderSystem.GL4/OpenGLContext.hpp"
 #include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
@@ -41,5 +40,3 @@ private:
 } // namespace X11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_OPENGLCONTEXTX11_7F7BD17E_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PIPELINESTATE_3FA791E9_HPP
-#define POMDOG_PIPELINESTATE_3FA791E9_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -34,5 +33,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_PIPELINESTATE_3FA791E9_HPP

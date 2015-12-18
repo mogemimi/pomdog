@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PIPELINESTATEDESCRIPTION_E706BE44_HPP
-#define POMDOG_PIPELINESTATEDESCRIPTION_E706BE44_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "BlendDescription.hpp"
@@ -29,5 +28,3 @@ struct PipelineStateDescription {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_PIPELINESTATEDESCRIPTION_E706BE44_HPP

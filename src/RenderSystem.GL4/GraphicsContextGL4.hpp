@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GRAPHICSCONTEXTGL4_1FF90EA8_HPP
-#define POMDOG_GRAPHICSCONTEXTGL4_1FF90EA8_HPP
+#pragma once
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
@@ -105,5 +104,3 @@ private:
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_GRAPHICSCONTEXTGL4_1FF90EA8_HPP

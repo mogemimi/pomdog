@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_HELPERS_2E7D41AA_HPP
-#define POMDOG_HELPERS_2E7D41AA_HPP
+#pragma once
 
 #include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Signals/Signal.hpp"
@@ -30,5 +29,3 @@ Connection ConnectSingleShot(Signal<void(Arguments...)> & signal, Func && func)
 
 } // namespace Signals
 } // namespace Pomdog
-
-#endif // POMDOG_HELPERS_2E7D41AA_HPP

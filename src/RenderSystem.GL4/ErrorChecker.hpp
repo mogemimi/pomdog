@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ERRORCHECKER_52C9764D_HPP
-#define POMDOG_ERRORCHECKER_52C9764D_HPP
+#pragma once
 
 namespace Pomdog {
 namespace Detail {
@@ -22,5 +21,3 @@ void CheckError(char const* command, char const* filename, int line);
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_ERRORCHECKER_52C9764D_HPP

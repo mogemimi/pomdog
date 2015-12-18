@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_ERRORCHECKERAL_CD663609_HPP
-#define POMDOG_ERRORCHECKERAL_CD663609_HPP
+#pragma once
 
 namespace Pomdog {
 namespace Detail {
@@ -17,5 +16,3 @@ public:
 } // namespace SoundSystem
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_ERRORCHECKERAL_CD663609_HPP

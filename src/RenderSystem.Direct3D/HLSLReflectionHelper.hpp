@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_HLSLREFLECTIONHELPER_28AF968C_HPP
-#define POMDOG_HLSLREFLECTIONHELPER_28AF968C_HPP
+#pragma once
 
 #include "PrerequisitesDirect3D.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -21,5 +20,3 @@ struct HLSLReflectionHelper {
 } // namespace Direct3D
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_HLSLREFLECTIONHELPER_28AF968C_HPP

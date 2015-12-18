@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TAGGED_1B3449F5_HPP
-#define POMDOG_TAGGED_1B3449F5_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include <type_traits>
@@ -77,5 +76,3 @@ struct hash<Pomdog::Detail::Tagged<T, U>> {
 };
 
 } // namespace std
-
-#endif // POMDOG_TAGGED_1B3449F5_HPP

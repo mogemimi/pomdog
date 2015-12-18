@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_STENCILOPERATION_6EB1EB6D_HPP
-#define POMDOG_STENCILOPERATION_6EB1EB6D_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -19,5 +18,3 @@ enum class StencilOperation: std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_STENCILOPERATION_6EB1EB6D_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GAMEPADTYPE_7A74879B_HPP
-#define POMDOG_GAMEPADTYPE_7A74879B_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -19,5 +18,3 @@ enum class GamepadType: std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_GAMEPADTYPE_7A74879B_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_AUDIOCLIP_C1887233_HPP
-#define POMDOG_AUDIOCLIP_C1887233_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "AudioChannels.hpp"
@@ -40,5 +39,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_AUDIOCLIP_C1887233_HPP

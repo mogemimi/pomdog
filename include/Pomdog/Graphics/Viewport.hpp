@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_VIEWPORT_AA637108_HPP
-#define POMDOG_VIEWPORT_AA637108_HPP
+#pragma once
 
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -41,5 +40,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_VIEWPORT_AA637108_HPP

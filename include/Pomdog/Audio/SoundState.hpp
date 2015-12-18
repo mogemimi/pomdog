@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SOUNDSTATE_C171B07A_HPP
-#define POMDOG_SOUNDSTATE_C171B07A_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -14,5 +13,3 @@ enum class SoundState: std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SOUNDSTATE_C171B07A_HPP

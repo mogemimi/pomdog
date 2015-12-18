@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GRAPHICSCOMMANDLIST_B36BA83E_HPP
-#define POMDOG_GRAPHICSCOMMANDLIST_B36BA83E_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
@@ -93,5 +92,3 @@ private:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_GRAPHICSCOMMANDLIST_B36BA83E_HPP

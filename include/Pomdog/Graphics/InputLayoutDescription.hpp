@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_INPUTLAYOUTDESCRIPTION_DBCB4EF9_HPP
-#define POMDOG_INPUTLAYOUTDESCRIPTION_DBCB4EF9_HPP
+#pragma once
 
 #include "InputElement.hpp"
 #include <vector>
@@ -13,5 +12,3 @@ struct InputLayoutDescription {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_INPUTLAYOUTDESCRIPTION_DBCB4EF9_HPP

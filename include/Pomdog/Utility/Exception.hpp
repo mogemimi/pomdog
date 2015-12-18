@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_EXCEPTION_46DED4E6_HPP
-#define POMDOG_EXCEPTION_46DED4E6_HPP
+#pragma once
 
 #include <stdexcept>
 #include <string>
@@ -56,5 +55,3 @@ T CreateException(std::string const& description, std::string const& source, cha
 #endif // !defined(POMDOG_THROW_EXCEPTION)
 
 } // namespace Pomdog
-
-#endif // POMDOG_EXCEPTION_46DED4E6_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SCOPEDCONNECTION_009320AB_HPP
-#define POMDOG_SCOPEDCONNECTION_009320AB_HPP
+#pragma once
 
 #include "detail/ForwardDeclarations.hpp"
 #include "Connection.hpp"
@@ -33,5 +32,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SCOPEDCONNECTION_009320AB_HPP

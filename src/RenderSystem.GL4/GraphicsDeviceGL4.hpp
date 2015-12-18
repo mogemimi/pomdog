@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GRAPHICSDEVICEGL4_74F5BC81_HPP
-#define POMDOG_GRAPHICSDEVICEGL4_74F5BC81_HPP
+#pragma once
 
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include <memory>
@@ -54,5 +53,3 @@ public:
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_GRAPHICSDEVICEGL4_74F5BC81_HPP

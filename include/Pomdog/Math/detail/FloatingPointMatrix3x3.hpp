@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_FLOATINGPOINTMATRIX3X3_69EBDB78_HPP
-#define POMDOG_FLOATINGPOINTMATRIX3X3_69EBDB78_HPP
+#pragma once
 
 #include "ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -159,5 +158,3 @@ operator*(T scaleFactor, FloatingPointMatrix3x3<T> const& matrix);
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_FLOATINGPOINTMATRIX3X3_69EBDB78_HPP

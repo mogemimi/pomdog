@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PREREQUISITESDIRECTINPUT_98459263_HPP
-#define POMDOG_PREREQUISITESDIRECTINPUT_98459263_HPP
+#pragma once
 
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 
@@ -13,5 +12,3 @@
 #    endif
 #endif
 #include <dinput.h>
-
-#endif // POMDOG_PREREQUISITESDIRECTINPUT_98459263_HPP

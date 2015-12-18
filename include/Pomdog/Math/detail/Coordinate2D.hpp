@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_COORDINATE2D_9F61E901_HPP
-#define POMDOG_COORDINATE2D_9F61E901_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include <type_traits>
@@ -57,5 +56,3 @@ operator*(T scaleFactor, Coordinate2D<T> const& coordinate);
 } // namespace Pomdog
 
 #include "Coordinate2DImplementation.hpp"
-
-#endif // POMDOG_COORDINATE2D_9F61E901_HPP

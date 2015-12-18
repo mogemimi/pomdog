@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_FILESYSTEM_414C6D96_HPP
-#define POMDOG_FILESYSTEM_414C6D96_HPP
+#pragma once
 
 #include "Pomdog/Basic/Export.hpp"
 #include <string>
@@ -39,5 +38,3 @@ struct POMDOG_EXPORT FileSystem {
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_FILESYSTEM_414C6D96_HPP

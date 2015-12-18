@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PREREQUISITESXAUDIO2_89DAE035_HPP
-#define POMDOG_PREREQUISITESXAUDIO2_89DAE035_HPP
+#pragma once
 
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 
@@ -15,5 +14,3 @@
 #    endif
 #    include <XAudio2.h>
 #endif
-
-#endif // POMDOG_PREREQUISITESXAUDIO2_89DAE035_HPP

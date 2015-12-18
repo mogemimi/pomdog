@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_RASTERIZERSTATEGL4_CD96D51A_HPP
-#define POMDOG_RASTERIZERSTATEGL4_CD96D51A_HPP
+#pragma once
 
 #include "OpenGLPrerequisites.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -33,5 +32,3 @@ private:
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_RASTERIZERSTATEGL4_CD96D51A_HPP

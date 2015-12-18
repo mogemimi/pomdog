@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_AUDIOCLIPAL_88AB8594_HPP
-#define POMDOG_AUDIOCLIPAL_88AB8594_HPP
+#pragma once
 
 #include "PrerequisitesOpenAL.hpp"
 #include "../Utility/Noncopyable.hpp"
@@ -38,5 +37,3 @@ private:
 } // namespace SoundSystem
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_AUDIOCLIPAL_88AB8594_HPP

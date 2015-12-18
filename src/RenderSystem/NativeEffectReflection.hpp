@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_NATIVEEFFECTREFLECTION_F923B192_HPP
-#define POMDOG_NATIVEEFFECTREFLECTION_F923B192_HPP
+#pragma once
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <vector>
@@ -22,5 +21,3 @@ public:
 
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_NATIVEEFFECTREFLECTION_F923B192_HPP

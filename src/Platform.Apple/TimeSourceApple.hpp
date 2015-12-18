@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TIMESOURCEAPPLE_3820AACF_HPP
-#define POMDOG_TIMESOURCEAPPLE_3820AACF_HPP
+#pragma once
 
 #include "Pomdog/Application/TimePoint.hpp"
 
@@ -22,5 +21,3 @@ private:
 } // namespace Apple
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_TIMESOURCEAPPLE_3820AACF_HPP

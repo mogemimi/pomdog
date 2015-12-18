@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_CONNECTIONLIST_EF8910DE_HPP
-#define POMDOG_CONNECTIONLIST_EF8910DE_HPP
+#pragma once
 
 #include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Basic/Export.hpp"
@@ -37,5 +36,3 @@ public:
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_CONNECTIONLIST_EF8910DE_HPP

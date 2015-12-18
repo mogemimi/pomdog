@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SURFACEFORMAT_D6D95081_HPP
-#define POMDOG_SURFACEFORMAT_D6D95081_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -46,5 +45,3 @@ enum class SurfaceFormat: std::uint8_t {
 };
 
 } // namespace Pomdog
-
-#endif // POMDOG_SURFACEFORMAT_D6D95081_HPP

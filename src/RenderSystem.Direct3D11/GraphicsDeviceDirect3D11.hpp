@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GRAPHICSDEVICEDIRECT3D11_F96A4B97_HPP
-#define POMDOG_GRAPHICSDEVICEDIRECT3D11_F96A4B97_HPP
+#pragma once
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
@@ -71,5 +70,3 @@ private:
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_GRAPHICSDEVICEDIRECT3D11_F96A4B97_HPP

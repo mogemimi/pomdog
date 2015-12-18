@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SAMPLERSTATEGL4_B8072910_HPP
-#define POMDOG_SAMPLERSTATEGL4_B8072910_HPP
+#pragma once
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeSamplerState.hpp"
@@ -30,5 +29,3 @@ private:
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SAMPLERSTATEGL4_B8072910_HPP
