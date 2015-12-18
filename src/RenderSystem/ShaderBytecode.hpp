@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_SHADERBYTECODE_02AC7B6D_HPP
 #define POMDOG_SHADERBYTECODE_02AC7B6D_HPP

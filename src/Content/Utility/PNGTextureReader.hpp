@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_PNGTEXTUREREADER_C00C0E02_HPP
 #define POMDOG_PNGTEXTUREREADER_C00C0E02_HPP

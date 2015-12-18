@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_PREREQUISITESDIRECTINPUT_98459263_HPP
 #define POMDOG_PREREQUISITESDIRECTINPUT_98459263_HPP

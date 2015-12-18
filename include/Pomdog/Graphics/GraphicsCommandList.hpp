@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_GRAPHICSCOMMANDLIST_B36BA83E_HPP
 #define POMDOG_GRAPHICSCOMMANDLIST_B36BA83E_HPP

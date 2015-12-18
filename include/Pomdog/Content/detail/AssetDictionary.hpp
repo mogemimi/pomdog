@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_ASSETDICTIONARY_8088231B_HPP
 #define POMDOG_ASSETDICTIONARY_8088231B_HPP

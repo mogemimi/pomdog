@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #include "TimeSourceWin32.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"

@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_CULLMODE_DBEE9F5F_HPP
 #define POMDOG_CULLMODE_DBEE9F5F_HPP

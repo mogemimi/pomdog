@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_AUDIOENGINEXAUDIO2_349E822E_HPP
 #define POMDOG_AUDIOENGINEXAUDIO2_349E822E_HPP

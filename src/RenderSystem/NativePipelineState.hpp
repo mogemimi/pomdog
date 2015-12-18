@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_NATIVEPIPELINESTATE_F0C96CAC_HPP
 #define POMDOG_NATIVEPIPELINESTATE_F0C96CAC_HPP

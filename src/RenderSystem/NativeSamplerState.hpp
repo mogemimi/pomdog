@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #ifndef POMDOG_NATIVESAMPLERSTATE_4A6E443C_HPP
 #define POMDOG_NATIVESAMPLERSTATE_4A6E443C_HPP
