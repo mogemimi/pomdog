@@ -128,22 +128,10 @@ $content
 } // namespace $name""").substitute(name=name, content=content)
 
 
-def CreateIncludeGuardUUID(identifier):
-    prefix_ = "POMDOG_"
-    suffix_ = "_HPP"
-    uuid_ = GenerateHash()
-    include_guard = prefix_ + str(identifier).upper() + '_' + uuid_ + suffix_
-    return include_guard
+def CreateIncludeGuardSection(content=""):
+    return Template("""#pragma once
 
-
-def CreateIncludeGuardSection(identifier, content=""):
-    return Template("""#ifndef $include_guard
-#define $include_guard
-
-$content
-#endif // $include_guard""").substitute(
-        include_guard=CreateIncludeGuardUUID(identifier),
-        content=content)
+$content""").substitute(content=content)
 
 
 def CreateIncludeHeader(identifier):
@@ -155,9 +143,7 @@ def CreateClassHeader(identifier_without_directory):
     return CreateHeader(GetGitUserName()) +\
            return_code +\
            CreateIncludeGuardSection(
-               identifier_without_directory,
-               CreateNamespace("Pomdog", CreateNamespace("Detail")) + return_code) +\
-           return_code
+               CreateNamespace("Pomdog", CreateNamespace("Detail")) + return_code)
 
 
 def CreateImplement(identifier_without_directory):
