@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class PrimitiveTopology: std::uint8_t {
+enum class PrimitiveTopology : std::uint8_t {
     ///@brief A triangle list.
     TriangleList,
 

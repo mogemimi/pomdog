@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class TextureFilter: std::uint8_t {
+enum class TextureFilter : std::uint8_t {
     Linear,
 
     Point,

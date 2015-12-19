@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class CullMode: std::uint8_t {
+enum class CullMode : std::uint8_t {
     None,
     ClockwiseFace,
     CounterClockwiseFace,

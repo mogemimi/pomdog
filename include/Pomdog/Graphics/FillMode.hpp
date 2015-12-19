@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class FillMode: std::uint8_t {
+enum class FillMode : std::uint8_t {
     WireFrame,
     Solid,
 };

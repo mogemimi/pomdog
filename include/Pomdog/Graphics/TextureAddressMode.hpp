@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class TextureAddressMode: std::uint8_t {
+enum class TextureAddressMode : std::uint8_t {
     Wrap,
     Mirror,
     Clamp,

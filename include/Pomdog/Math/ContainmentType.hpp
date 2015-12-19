@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class ContainmentType: std::uint8_t {
+enum class ContainmentType : std::uint8_t {
     Contains,
 
     Disjoint,

@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class EffectVariableType: std::uint8_t {
+enum class EffectVariableType : std::uint8_t {
     Bool,
 
     ///@brief 32-bit signed integer.

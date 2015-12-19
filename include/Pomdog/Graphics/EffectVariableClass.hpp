@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class EffectVariableClass: std::uint8_t {
+enum class EffectVariableClass : std::uint8_t {
     Scalar,
     Vector,
     Matrix,

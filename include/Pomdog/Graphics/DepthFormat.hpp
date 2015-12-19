@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class DepthFormat: std::uint8_t {
+enum class DepthFormat : std::uint8_t {
     ///@brief 16-bit buffer format. 16 bits for depth.
     Depth16,
 

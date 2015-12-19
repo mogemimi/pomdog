@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class PlayerIndex: std::uint8_t {
+enum class PlayerIndex : std::uint8_t {
     One = 1,
     Two = 2,
     Three = 3,

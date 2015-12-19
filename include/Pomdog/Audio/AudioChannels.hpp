@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class AudioChannels: std::uint8_t {
+enum class AudioChannels : std::uint8_t {
     Mono = 1,
     Stereo = 2,
 };

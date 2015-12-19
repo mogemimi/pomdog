@@ -9,7 +9,7 @@
 
 namespace Pomdog {
 
-enum class Keys: std::uint8_t;
+enum class Keys : std::uint8_t;
 class KeyboardState;
 
 class POMDOG_EXPORT Keyboard {

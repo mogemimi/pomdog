@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class SurfaceFormat: std::uint8_t {
+enum class SurfaceFormat : std::uint8_t {
     ///@brief 8-bit alpha only.
     A8_UNorm,
 

@@ -77,6 +77,6 @@ class Ray;
 class Rectangle;
 
 // Enumerations:
-enum class ContainmentType: std::uint8_t;
+enum class ContainmentType : std::uint8_t;
 
 } // namespace Pomdog

@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class ComparisonFunction: std::uint8_t {
+enum class ComparisonFunction : std::uint8_t {
     Never,
     Less,
     Equal,

@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class Blend: std::uint8_t {
+enum class Blend : std::uint8_t {
     Zero,
     One,
     SourceColor,

@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class BufferUsage: std::uint8_t {
+enum class BufferUsage : std::uint8_t {
     Immutable,
     Dynamic,
 };

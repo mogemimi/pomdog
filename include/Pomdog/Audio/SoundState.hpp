@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class SoundState: std::uint8_t {
+enum class SoundState : std::uint8_t {
     Paused,
     Playing,
     Stopped,

@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class StencilOperation: std::uint8_t {
+enum class StencilOperation : std::uint8_t {
     Keep,
     Zero,
     Replace,

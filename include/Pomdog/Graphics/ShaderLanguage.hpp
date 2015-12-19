@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class ShaderLanguage: std::uint8_t {
+enum class ShaderLanguage : std::uint8_t {
     ///@brief The OpenGL shading language (GLSL)
     GLSL,
 

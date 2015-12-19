@@ -7,8 +7,8 @@
 
 namespace Pomdog {
 
-enum class KeyState: bool;
-enum class Keys: std::uint8_t;
+enum class KeyState : bool;
+enum class Keys : std::uint8_t;
 
 class POMDOG_EXPORT KeyboardState {
 public:

@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class GamepadType: std::uint8_t {
+enum class GamepadType : std::uint8_t {
     Unknown,
     Gamepad,
     ArcadeStick,

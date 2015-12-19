@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-enum class BlendFunction: std::uint8_t {
+enum class BlendFunction : std::uint8_t {
     Add,
     Subtract,
     ReverseSubtract,

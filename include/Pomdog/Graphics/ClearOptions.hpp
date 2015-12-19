@@ -7,7 +7,7 @@
 
 namespace Pomdog {
 
-enum class ClearOptions: std::uint8_t {
+enum class ClearOptions : std::uint8_t {
     ///@brief Clear the depth buffer.
     DepthBuffer = 0b001,
 
