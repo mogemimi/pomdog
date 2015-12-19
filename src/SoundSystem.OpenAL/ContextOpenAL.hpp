@@ -10,7 +10,7 @@ namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
 
-class ContextOpenAL final: Noncopyable {
+class ContextOpenAL final : Noncopyable {
 private:
     ALCdevice* device;
     ALCcontext* context;

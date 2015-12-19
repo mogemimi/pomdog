@@ -13,7 +13,7 @@ class Mouse;
 namespace Detail {
 namespace InputSystem {
 
-class InputDeviceFactory final: Noncopyable {
+class InputDeviceFactory final : Noncopyable {
 public:
     ~InputDeviceFactory();
 

@@ -9,7 +9,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Cocoa {
 
-class MouseCocoa final: public Mouse {
+class MouseCocoa final : public Mouse {
 public:
     MouseCocoa();
 

@@ -11,7 +11,7 @@ namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
 
-class AudioEngineAL final: Noncopyable {
+class AudioEngineAL final : Noncopyable {
 public:
     AudioEngineAL();
     ~AudioEngineAL();

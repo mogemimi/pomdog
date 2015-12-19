@@ -11,7 +11,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Direct3D11 {
 
-class SamplerStateDirect3D11 final: public NativeSamplerState {
+class SamplerStateDirect3D11 final : public NativeSamplerState {
 public:
     SamplerStateDirect3D11(
         ID3D11Device* device,

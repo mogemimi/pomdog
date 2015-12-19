@@ -11,7 +11,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Direct3D11 {
 
-class Texture2DDirect3D11 final: public NativeTexture2D {
+class Texture2DDirect3D11 final : public NativeTexture2D {
 public:
     Texture2DDirect3D11(
         ID3D11Device* nativeDevice,

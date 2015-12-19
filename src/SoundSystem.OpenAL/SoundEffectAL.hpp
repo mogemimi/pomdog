@@ -24,7 +24,7 @@ using AudioSourceAL = Tagged<ALuint, AudioSourceALTag>;
 class AudioClipAL;
 class AudioEngineAL;
 
-class SoundEffectAL final: Noncopyable {
+class SoundEffectAL final : Noncopyable {
 private:
     std::shared_ptr<AudioClipAL> audioClip;
     Optional<AudioSourceAL> source;

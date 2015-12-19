@@ -19,7 +19,7 @@ namespace XAudio2 {
 class AudioClipXAudio2;
 class AudioEngineXAudio2;
 
-class SoundEffectXAudio2 final: Noncopyable {
+class SoundEffectXAudio2 final : Noncopyable {
 public:
     SoundEffectXAudio2(AudioEngineXAudio2 & audioEngine,
         std::shared_ptr<AudioClipXAudio2> const& audioClip, bool isLooped);

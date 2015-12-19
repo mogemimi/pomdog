@@ -30,7 +30,7 @@ class OpenGLContext;
 class PipelineStateGL4;
 class RenderTarget2DGL4;
 
-class GraphicsContextGL4 final: public NativeGraphicsContext {
+class GraphicsContextGL4 final : public NativeGraphicsContext {
 public:
     GraphicsContextGL4() = delete;
 

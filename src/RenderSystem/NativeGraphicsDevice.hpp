@@ -25,7 +25,7 @@ enum class BufferBindMode {
     VertexBuffer,
 };
 
-class NativeGraphicsDevice: Noncopyable {
+class NativeGraphicsDevice : Noncopyable {
 public:
     virtual ~NativeGraphicsDevice() = default;
 

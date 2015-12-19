@@ -11,7 +11,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Direct3D11 {
 
-class RenderTarget2DDirect3D11 final: public NativeRenderTarget2D {
+class RenderTarget2DDirect3D11 final : public NativeRenderTarget2D {
 public:
     RenderTarget2DDirect3D11(
         ID3D11Device* device,

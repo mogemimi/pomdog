@@ -16,7 +16,7 @@ namespace Detail {
 namespace SoundSystem {
 namespace XAudio2 {
 
-class AudioClipXAudio2 final: Noncopyable {
+class AudioClipXAudio2 final : Noncopyable {
 public:
     AudioClipXAudio2(std::vector<std::uint8_t> && audioData,
         std::vector<std::uint8_t> && waveFormat);

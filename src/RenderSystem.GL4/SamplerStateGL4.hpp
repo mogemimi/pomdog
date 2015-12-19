@@ -14,7 +14,7 @@ namespace GL4 {
 
 using SamplerObjectGL4 = Tagged<GLuint, SamplerState>;
 
-class SamplerStateGL4 final: public NativeSamplerState {
+class SamplerStateGL4 final : public NativeSamplerState {
 public:
     explicit SamplerStateGL4(SamplerDescription const& description);
 

@@ -14,7 +14,7 @@ struct PresentationParameters;
 namespace Detail {
 namespace Win32 {
 
-class GameWindowWin32 final: public GameWindow {
+class GameWindowWin32 final : public GameWindow {
 public:
     GameWindowWin32(HINSTANCE hInstance, int nCmdShow,
         HICON icon, HICON iconSmall, bool useOpenGL,

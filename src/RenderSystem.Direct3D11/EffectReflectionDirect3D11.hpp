@@ -14,7 +14,7 @@ class ShaderBytecode;
 
 namespace Direct3D11 {
 
-class EffectReflectionDirect3D11 final: public NativeEffectReflection {
+class EffectReflectionDirect3D11 final : public NativeEffectReflection {
 public:
     EffectReflectionDirect3D11(
         ShaderBytecode const& vertexShaderBytecode,

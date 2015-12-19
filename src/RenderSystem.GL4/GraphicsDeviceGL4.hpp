@@ -9,7 +9,7 @@ namespace Pomdog {
 namespace Detail {
 namespace GL4 {
 
-class GraphicsDeviceGL4 final: public NativeGraphicsDevice {
+class GraphicsDeviceGL4 final : public NativeGraphicsDevice {
 public:
     ShaderLanguage GetSupportedLanguage() const override;
 

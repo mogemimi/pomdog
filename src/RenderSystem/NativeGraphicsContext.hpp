@@ -14,7 +14,7 @@ namespace Detail {
 
 struct GraphicsCapabilities;
 
-class NativeGraphicsContext: Noncopyable {
+class NativeGraphicsContext : Noncopyable {
 public:
     virtual ~NativeGraphicsContext() = default;
 

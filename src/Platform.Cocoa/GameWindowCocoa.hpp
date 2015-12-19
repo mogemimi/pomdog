@@ -15,7 +15,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Cocoa {
 
-class GameWindowCocoa final: public GameWindow {
+class GameWindowCocoa final : public GameWindow {
 public:
     GameWindowCocoa(
         NSWindow* nativeWindow,

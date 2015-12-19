@@ -18,7 +18,7 @@ namespace Cocoa {
 
 class GameWindowCocoa;
 
-class GameHostCocoa final: public GameHost {
+class GameHostCocoa final : public GameHost {
 public:
     GameHostCocoa(
         PomdogOpenGLView* openGLView,

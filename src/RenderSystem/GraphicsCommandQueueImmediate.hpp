@@ -12,7 +12,7 @@ namespace Detail {
 
 class GraphicsContext;
 
-class GraphicsCommandQueueImmediate final: public NativeGraphicsCommandQueue {
+class GraphicsCommandQueueImmediate final : public NativeGraphicsCommandQueue {
 public:
     GraphicsCommandQueueImmediate() = delete;
     GraphicsCommandQueueImmediate(GraphicsCommandQueueImmediate const&) = delete;

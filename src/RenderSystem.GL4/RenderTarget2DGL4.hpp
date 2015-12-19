@@ -15,7 +15,7 @@ namespace GL4 {
 
 using RenderBuffer2DGL4 = Tagged<GLuint, RenderTarget2D>;
 
-class RenderTarget2DGL4 final: public NativeRenderTarget2D {
+class RenderTarget2DGL4 final : public NativeRenderTarget2D {
 public:
     RenderTarget2DGL4(
         std::int32_t pixelWidth,

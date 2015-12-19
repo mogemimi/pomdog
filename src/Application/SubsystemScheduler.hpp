@@ -8,7 +8,7 @@
 namespace Pomdog {
 namespace Detail {
 
-class SubsystemScheduler: Noncopyable {
+class SubsystemScheduler : Noncopyable {
 public:
     Signal<void()> OnUpdate;
 };

@@ -21,7 +21,7 @@ namespace Win32 {
 
 class GameWindowWin32;
 
-class GameHostWin32 final: public GameHost {
+class GameHostWin32 final : public GameHost {
 public:
     GameHostWin32(
         std::shared_ptr<GameWindowWin32> const& window,

@@ -8,7 +8,7 @@ namespace Pomdog {
 namespace Detail {
 namespace GL4 {
 
-class OpenGLContext: Noncopyable {
+class OpenGLContext : Noncopyable {
 public:
     virtual ~OpenGLContext() = default;
 
