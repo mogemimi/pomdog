@@ -6,13 +6,11 @@ compiler:
 
 install:
   - git submodule update --init --depth 1
-  - git clone --depth=1 https://chromium.googlesource.com/external/gyp.git tools/gyp
 
 script:
-  - tools/gyp/gyp test/FrameworkTest/unittest.gyp --depth=. -f xcode --generator-output=build.xcodefiles
-  - xcodebuild -project build.xcodefiles/test/FrameworkTest/unittest.xcodeproj clean
-  - xcodebuild -project build.xcodefiles/test/FrameworkTest/unittest.xcodeproj
-  - test/FrameworkTest/build/Release/unittest
+  - xcodebuild -project build/PomdogTest.xcodeproj clean
+  - xcodebuild -project build/PomdogTest.xcodeproj
+  - build/build/Release/PomdogUnitTest
 
 notifications:
   email: false
