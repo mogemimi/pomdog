@@ -15,7 +15,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wshadow"
 #endif
-#include <utf8cpp/utf8.h>
+#include <utfcpp/source/utf8.h>
 #ifndef _MSC_VER
 #pragma clang diagnostic pop
 #endif
