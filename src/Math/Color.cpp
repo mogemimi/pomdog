@@ -1,11 +1,11 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Math/Color.hpp"
+#include "../Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Basic/Platform.hpp"
 #include <cmath>
 #include <utility>
 

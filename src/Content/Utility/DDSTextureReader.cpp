@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #include "DDSTextureReader.hpp"
-#include "Pomdog/Basic/Platform.hpp"
+#include "../../Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Utility/Assert.hpp"
