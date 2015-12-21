@@ -9,15 +9,15 @@ namespace Pomdog {
 
 struct POMDOG_EXPORT StringHelper {
     static std::string Format(char const* format, ...)
-    #if defined(__has_attribute)
-    #if __has_attribute(format)
+#if defined(__has_attribute)
+#if __has_attribute(format)
     __attribute__((__format__(printf, 1, 2)));
-    #endif
-    #elif __GNUC__ >= 4
+#endif
+#elif __GNUC__ >= 4
     __attribute__((__format__(printf, 1, 2)));
-    #else
+#else
     ;
-    #endif
+#endif
 };
 
 } // namespace Pomdog
