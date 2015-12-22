@@ -12,7 +12,7 @@ static std::string UnsafeToFormatString(char const* format, std::va_list arg)
     std::va_list copiedArguments;
     va_copy(copiedArguments, arg);
 
-#ifdef POMDOG_COMPILER_MSVC
+#if defined(_MSC_VER)
     char buffer[2048];
     std::memset(buffer, 0, sizeof(buffer));
 

@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Pomdog/Basic/Platform.hpp"
 #include <cassert>
 
 #if defined(_MSC_VER)
@@ -43,7 +42,7 @@ namespace Detail {
 #        define POMDOG_DEBUGBREAK() __debugbreak()
 #    elif defined(linux) || defined(__linux) || defined(__linux__)
 #        define POMDOG_DEBUGBREAK() raise(SIGTRAP)
-#    elif defined(POMDOG_ARCHITECTURE_POWERPC)
+#    elif defined(__ppc__) || defined(__powerpc__)
 #        define POMDOG_DEBUGBREAK() asm {trap}
 #    else
 #        define POMDOG_DEBUGBREAK() __asm { int 3 } // MS-style inline assembly
