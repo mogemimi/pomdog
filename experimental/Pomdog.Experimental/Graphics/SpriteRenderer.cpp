@@ -31,9 +31,7 @@ namespace {
 
 }// unnamed namespace
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - SpriteRenderer::Impl
-#endif
+// MARK: - SpriteRenderer::Impl
 //-----------------------------------------------------------------------
 class SpriteRenderer::Impl {
 private:
@@ -351,9 +349,7 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
     POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - SpriteRenderer
-#endif
+// MARK: - SpriteRenderer
 //-----------------------------------------------------------------------
 SpriteRenderer::SpriteRenderer(std::shared_ptr<GraphicsContext> const& graphicsContext,
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,

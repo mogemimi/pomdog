@@ -104,9 +104,7 @@ public:
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Animator::Impl class
-#endif
+// MARK: - Animator::Impl class
 //-----------------------------------------------------------------------
 class Animator::Impl final {
 public:
@@ -293,9 +291,7 @@ std::string Animator::Impl::GetCurrentStateName() const
     return currentAnimation.Name;
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Animator class
-#endif
+// MARK: - Animator class
 //-----------------------------------------------------------------------
 Animator::Animator(std::shared_ptr<Skeleton> const& skeleton,
     std::shared_ptr<SkeletonTransform> const& skeletonTransform,

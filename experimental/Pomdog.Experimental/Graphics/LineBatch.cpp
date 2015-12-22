@@ -37,9 +37,7 @@ namespace {
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - LineBatch::Impl
-#endif
+// MARK: - LineBatch::Impl
 //-----------------------------------------------------------------------
 class LineBatch::Impl {
 public:
@@ -201,9 +199,7 @@ void LineBatch::Impl::DrawTriangle(
     vertices.push_back(Vertex{Vector3(point1, 0.0f), color1});
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - LineBatch
-#endif
+// MARK: - LineBatch
 //-----------------------------------------------------------------------
 LineBatch::LineBatch(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,

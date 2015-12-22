@@ -35,9 +35,7 @@ namespace {
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - SpriteBatch::Impl
-#endif
+// MARK: - SpriteBatch::Impl
 //-----------------------------------------------------------------------
 class SpriteBatch::Impl {
 private:
@@ -359,9 +357,7 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
     POMDOG_ASSERT(spriteQueues.back().size() <= MaxBatchSize);
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - SpriteBatch
-#endif
+// MARK: - SpriteBatch
 //-----------------------------------------------------------------------
 SpriteBatch::SpriteBatch(std::shared_ptr<GraphicsContext> const& graphicsContext,
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,

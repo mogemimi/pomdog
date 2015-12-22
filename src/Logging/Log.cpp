@@ -182,9 +182,7 @@ static Logger & GetLoggerInstance()
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Log class
-#endif
+// MARK: - Log class
 //-----------------------------------------------------------------------
 Connection Log::Connect(std::function<void(LogEntry const&)> const& slot)
 {

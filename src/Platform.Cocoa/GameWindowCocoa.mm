@@ -142,7 +142,7 @@ void GameWindowCocoa::SetMouseCursor(MouseCursor cursor)
     [nativeCursor set];
 }
 //-----------------------------------------------------------------------
-#pragma mark - Low-Level API for GameHostCocoa
+// MARK: - Low-Level API for GameHostCocoa
 //-----------------------------------------------------------------------
 bool GameWindowCocoa::IsMinimized() const noexcept
 {

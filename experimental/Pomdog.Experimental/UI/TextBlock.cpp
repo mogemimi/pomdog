@@ -14,9 +14,7 @@ TextBlock::TextBlock()
     , text()
 {}
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Properties
-#endif
+// MARK: - Properties
 //-----------------------------------------------------------------------
 std::string TextBlock::Text() const
 { return this->text; }
@@ -24,9 +22,7 @@ std::string TextBlock::Text() const
 void TextBlock::Text(std::string const& textIn)
 { this->text = textIn; }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Events
-#endif
+// MARK: - Events
 //-----------------------------------------------------------------------
 void TextBlock::OnRenderSizeChanged(std::uint32_t widthIn, std::uint32_t heightIn)
 {

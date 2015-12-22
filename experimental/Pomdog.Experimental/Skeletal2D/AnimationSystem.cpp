@@ -24,9 +24,7 @@ public:
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - AnimationSystem::Impl class
-#endif
+// MARK: - AnimationSystem::Impl class
 //-----------------------------------------------------------------------
 class AnimationSystem::Impl {
 public:
@@ -76,9 +74,7 @@ void AnimationSystem::Impl::Update(GameClock const& clock)
     }
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - AnimationSystem class
-#endif
+// MARK: - AnimationSystem class
 //-----------------------------------------------------------------------
 AnimationSystem::AnimationSystem()
     : impl(std::make_unique<Impl>())

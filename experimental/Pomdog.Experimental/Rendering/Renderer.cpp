@@ -10,9 +10,7 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Renderer::Impl
-#endif
+// MARK: - Renderer::Impl
 //-----------------------------------------------------------------------
 class Renderer::Impl {
 public:
@@ -117,9 +115,7 @@ void Renderer::Impl::Clear()
     renderQueue.Clear();
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Renderer
-#endif
+// MARK: - Renderer
 //-----------------------------------------------------------------------
 Renderer::Renderer()
     : impl(std::make_unique<Impl>())

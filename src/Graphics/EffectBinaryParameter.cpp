@@ -34,9 +34,7 @@ void* BinaryCast(T * data)
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Fundamental types(Scalars)
-#endif
+// MARK: - Fundamental types(Scalars)
 //-----------------------------------------------------------------------
 void Get(ConstantBuffer & constantBuffer, bool & value)
 {
@@ -91,9 +89,7 @@ void Set(ConstantBuffer & constantBuffer, double value)
     constantBuffer.SetValue(BinaryCast(&value), sizeof(value));
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Arrays
-#endif
+// MARK: - Arrays
 //-----------------------------------------------------------------------
 void Set(ConstantBuffer & constantBuffer, std::int32_t const* data, std::uint32_t count)
 {
@@ -131,9 +127,7 @@ void Set(ConstantBuffer & constantBuffer, double const* data, std::uint32_t coun
     constantBuffer.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Vectors and Matrices
-#endif
+// MARK: - Vectors and Matrices
 //-----------------------------------------------------------------------
 template <typename T> void
 Set(ConstantBuffer & constantBuffer, FloatingPointVector2<T> const& value)
@@ -184,9 +178,7 @@ Set(ConstantBuffer & constantBuffer, FloatingPointQuaternion<T> const& value)
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Explicit instantiations
-#endif
+// MARK: - Explicit instantiations
 //-----------------------------------------------------------------------
 template void Set<float>(ConstantBuffer &, FloatingPointVector2<float> const&);
 template void Set<float>(ConstantBuffer &, FloatingPointVector3<float> const&);

@@ -37,9 +37,7 @@ namespace {
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - PolygonBatch::Impl
-#endif
+// MARK: - PolygonBatch::Impl
 //-----------------------------------------------------------------------
 class PolygonBatch::Impl {
 public:
@@ -149,9 +147,7 @@ void PolygonBatch::Impl::Flush()
     polygonShapes.Reset();
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - PolygonBatch
-#endif
+// MARK: - PolygonBatch
 //-----------------------------------------------------------------------
 PolygonBatch::PolygonBatch(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,

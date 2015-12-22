@@ -60,7 +60,7 @@ static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#pragma mark - GameHostCocoa::Impl
+// MARK: - GameHostCocoa::Impl
 //-----------------------------------------------------------------------
 class GameHostCocoa::Impl final {
 public:
@@ -511,7 +511,7 @@ std::shared_ptr<Pomdog::Mouse> GameHostCocoa::Impl::GetMouse()
     return mouse;
 }
 //-----------------------------------------------------------------------
-#pragma mark - GameHostCocoa
+// MARK: - GameHostCocoa
 //-----------------------------------------------------------------------
 GameHostCocoa::GameHostCocoa(
     PomdogOpenGLView* openGLView,

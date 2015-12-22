@@ -35,9 +35,7 @@ std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIte
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - RotationTrack
-#endif
+// MARK: - RotationTrack
 //-----------------------------------------------------------------------
 RotationTrack::RotationTrack(std::vector<RotationKeyframe> && keysIn, JointIndex && jointIndexIn)
     : keys(std::move(keysIn))
@@ -100,9 +98,7 @@ AnimationTimeInterval RotationTrack::Length() const
     return keys.back().Time;
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - ScaleTrack
-#endif
+// MARK: - ScaleTrack
 //-----------------------------------------------------------------------
 ScaleTrack::ScaleTrack(std::vector<ScaleKeyframe> && keysIn, JointIndex && jointIndexIn)
     : keys(std::move(keysIn))
@@ -156,9 +152,7 @@ AnimationTimeInterval ScaleTrack::Length() const
     return keys.back().Time;
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - TranslationTrack
-#endif
+// MARK: - TranslationTrack
 //-----------------------------------------------------------------------
 TranslationTrack::TranslationTrack(std::vector<TranslationKeyframe> && keysIn, JointIndex && jointIndexIn)
     : keys(std::move(keysIn))

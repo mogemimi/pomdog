@@ -73,9 +73,7 @@ ScenePanel::ScenePanel(std::uint32_t widthIn, std::uint32_t heightIn)
     DrawOrder(10000);
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Properties
-#endif
+// MARK: - Properties
 //-----------------------------------------------------------------------
 bool ScenePanel::IsEnabled() const
 { return isEnabled; }
@@ -83,9 +81,7 @@ bool ScenePanel::IsEnabled() const
 void ScenePanel::IsEnabled(bool isEnabledIn)
 { this->isEnabled = isEnabledIn; }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Member Functions
-#endif
+// MARK: - Member Functions
 //-----------------------------------------------------------------------
 Vector2 ScenePanel::ConvertToPanelSpace(Point2D const& point) const
 {

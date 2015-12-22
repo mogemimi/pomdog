@@ -41,9 +41,7 @@ static std::vector<std::uint8_t> ConvertTextureDataByteToByte4(std::uint8_t cons
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - SpriteFont::Impl
-#endif
+// MARK: - SpriteFont::Impl
 //-----------------------------------------------------------------------
 class SpriteFont::Impl {
 public:
@@ -350,9 +348,7 @@ void SpriteFont::Impl::Draw(SpriteBatchRenderer & spriteBatch,
     }
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - SpriteFont
-#endif
+// MARK: - SpriteFont
 //-----------------------------------------------------------------------
 SpriteFont::SpriteFont(
     std::vector<std::shared_ptr<Texture2D>> && textures,

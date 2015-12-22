@@ -16,9 +16,7 @@ namespace {
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - SkinnedEffect::Impl
-#endif
+// MARK: - SkinnedEffect::Impl
 //-----------------------------------------------------------------------
 class SkinnedEffect::Impl {
 public:
@@ -81,9 +79,7 @@ void SkinnedEffect::Impl::Apply(GraphicsContext & graphicsContext)
     graphicsContext.SetConstantBuffers(constantBuffers);
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - SkinnedEffect
-#endif
+// MARK: - SkinnedEffect
 //-----------------------------------------------------------------------
 SkinnedEffect::SkinnedEffect(GraphicsDevice & graphicsDevice,
     AssetManager & assets)

@@ -38,9 +38,7 @@ namespace {
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - SpriteBatchRenderer::Impl
-#endif
+// MARK: - SpriteBatchRenderer::Impl
 //-----------------------------------------------------------------------
 class SpriteBatchRenderer::Impl {
 private:
@@ -416,9 +414,7 @@ void SpriteBatchRenderer::Impl::Draw(
     POMDOG_ASSERT(spriteQueue.size() <= MaxBatchSize);
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - SpriteBatchRenderer
-#endif
+// MARK: - SpriteBatchRenderer
 //-----------------------------------------------------------------------
 SpriteBatchRenderer::SpriteBatchRenderer(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,

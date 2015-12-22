@@ -30,9 +30,7 @@ public:
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - GameClock::Impl
-#endif
+// MARK: - GameClock::Impl
 //-----------------------------------------------------------------------
 class GameClock::Impl final {
 public:
@@ -163,9 +161,7 @@ Duration GameClock::Impl::GetElapsedTime() const noexcept
     return timeSource.Now() - sourceLastTime;
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - GameClock
-#endif
+// MARK: - GameClock
 //-----------------------------------------------------------------------
 GameClock::GameClock()
     : impl(std::make_unique<Impl>())

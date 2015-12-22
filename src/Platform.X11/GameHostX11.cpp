@@ -161,9 +161,7 @@ static GLXFBConfig ChooseFramebufferConfig(
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-#ifdef POMDOG_COMPILER_CLANG
-#pragma mark - GameHostX11
-#endif
+// MARK: - GameHostX11
 //-----------------------------------------------------------------------
 class GameHostX11::Impl {
 public:
@@ -351,9 +349,7 @@ void GameHostX11::Impl::RenderFrame(Game & game)
     game.Draw();
 }
 //-----------------------------------------------------------------------
-#ifdef POMDOG_COMPILER_CLANG
-#pragma mark - GameHostX11
-#endif
+// MARK: - GameHostX11
 //-----------------------------------------------------------------------
 GameHostX11::GameHostX11(PresentationParameters const& presentationParameters)
     : impl(std::make_unique<Impl>(presentationParameters))

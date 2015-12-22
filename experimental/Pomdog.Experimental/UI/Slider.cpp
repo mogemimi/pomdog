@@ -32,9 +32,7 @@ Slider::Slider(SliderColorScheme const& colorSchemeIn, double minimumIn, double 
     SetCursor(MouseCursor::PointingHand);
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Properties
-#endif
+// MARK: - Properties
 //-----------------------------------------------------------------------
 void Slider::Value(double valueIn)
 { this->value = valueIn; }
@@ -62,9 +60,7 @@ void Slider::IsEnabled(bool isEnabledIn)
     }
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Events
-#endif
+// MARK: - Events
 //-----------------------------------------------------------------------
 void Slider::OnParentChanged()
 {

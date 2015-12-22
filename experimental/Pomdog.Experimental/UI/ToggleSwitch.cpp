@@ -20,9 +20,7 @@ ToggleSwitch::ToggleSwitch()
     SetCursor(MouseCursor::PointingHand);
 }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Properties
-#endif
+// MARK: - Properties
 //-----------------------------------------------------------------------
 bool ToggleSwitch::IsOn() const
 { return isOn; }
@@ -58,9 +56,7 @@ std::string ToggleSwitch::OffContent() const
 void ToggleSwitch::OffContent(std::string const& offContentIn)
 { this->offContent = offContentIn; }
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - Events
-#endif
+// MARK: - Events
 //-----------------------------------------------------------------------
 void ToggleSwitch::OnParentChanged()
 {

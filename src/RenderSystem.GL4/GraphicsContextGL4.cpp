@@ -163,9 +163,7 @@ template<> struct TypesafeHelperGL4::Traits<FrameBufferGL4> {
     constexpr static GLenum BufferBinding = GL_FRAMEBUFFER_BINDING;
 };
 //-----------------------------------------------------------------------
-#if defined(POMDOG_COMPILER_CLANG)
-#pragma mark - GraphicsContextGL4
-#endif
+// MARK: - GraphicsContextGL4
 //-----------------------------------------------------------------------
 GraphicsContextGL4::GraphicsContextGL4(
     std::shared_ptr<OpenGLContext> const& openGLContextIn,

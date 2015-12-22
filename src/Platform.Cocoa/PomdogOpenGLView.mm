@@ -227,7 +227,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     openGLContext->Unlock();
 }
 //-----------------------------------------------------------------------
-#pragma mark - View Event Handling
+// MARK: - View Event Handling
 //-----------------------------------------------------------------------
 - (void)viewWillStartLiveResize
 {
@@ -273,7 +273,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     }
 }
 //-----------------------------------------------------------------------
-#pragma mark - Mouse-Tracking and Cursor
+// MARK: - Mouse-Tracking and Cursor
 //-----------------------------------------------------------------------
 - (void)setFrame:(NSRect)frame
 {
@@ -289,7 +289,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
 }
 //-----------------------------------------------------------------------
-#pragma mark - Getter/Setter
+// MARK: - Getter/Setter
 //-----------------------------------------------------------------------
 - (void)setEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueueIn
 {
@@ -312,14 +312,14 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     resizingCallback = callback;
 }
 //-----------------------------------------------------------------------
-#pragma mark - Settings
+// MARK: - Settings
 //-----------------------------------------------------------------------
 - (BOOL)isFlipped
 {
     return TRUE;
 }
 //-----------------------------------------------------------------------
-#pragma mark - Mouse Event Handling
+// MARK: - Mouse Event Handling
 //-----------------------------------------------------------------------
 - (void)mouseEntered:(NSEvent *)theEvent
 {
@@ -522,7 +522,7 @@ static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     eventQueue->Enqueue(Event{std::move(event)});
 }
 //-----------------------------------------------------------------------
-#pragma mark - Keyboard Event Handling
+// MARK: - Keyboard Event Handling
 //-----------------------------------------------------------------------
 - (void)keyDown:(NSEvent *)theEvent
 {
