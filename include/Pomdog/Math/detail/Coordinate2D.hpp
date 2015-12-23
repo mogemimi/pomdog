@@ -50,9 +50,11 @@ public:
 
 template <typename T>
 Coordinate2D<T> POMDOG_EXPORT
-operator*(T scaleFactor, Coordinate2D<T> const& coordinate);
+operator*(T scaleFactor, Coordinate2D<T> const& coordinate) noexcept;
+
+template <typename T>
+Coordinate2D<T> POMDOG_EXPORT
+operator/(T scaleFactor, Coordinate2D<T> const& coordinate);
 
 } // namespace Detail
 } // namespace Pomdog
-
-#include "Coordinate2DImplementation.hpp"

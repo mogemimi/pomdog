@@ -52,7 +52,9 @@ template <typename T>
 Coordinate3D<T> POMDOG_EXPORT
 operator*(T scaleFactor, Coordinate3D<T> const& coordinate) noexcept;
 
+template <typename T>
+Coordinate3D<T> POMDOG_EXPORT
+operator/(T scaleFactor, Coordinate3D<T> const& coordinate);
+
 } // namespace Detail
 } // namespace Pomdog
-
-#include "Coordinate3DImplementation.hpp"
