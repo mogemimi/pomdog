@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "InputClassification.hpp"
-#include "InputElementFormat.hpp"
+#include "Pomdog/Graphics/InputClassification.hpp"
+#include "Pomdog/Graphics/InputElementFormat.hpp"
 #include <cstdint>
 
 namespace Pomdog {

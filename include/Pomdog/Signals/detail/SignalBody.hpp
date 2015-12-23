@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ForwardDeclarations.hpp"
+#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <algorithm>

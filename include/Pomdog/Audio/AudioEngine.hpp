@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "detail/ForwardDeclarations.hpp"
+#include "Pomdog/Audio/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 

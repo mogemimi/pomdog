@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "TouchLocationState.hpp"
+#include "Pomdog/Input/TouchLocationState.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include <cstdint>

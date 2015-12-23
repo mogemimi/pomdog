@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Blend.hpp"
-#include "BlendFunction.hpp"
+#include "Pomdog/Graphics/Blend.hpp"
+#include "Pomdog/Graphics/BlendFunction.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <utility>
 

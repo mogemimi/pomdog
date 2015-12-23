@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "GamepadType.hpp"
+#include "Pomdog/Input/GamepadType.hpp"
 #include <cstdint>
 
 namespace Pomdog {

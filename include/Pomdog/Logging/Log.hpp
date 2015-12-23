@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "LogLevel.hpp"
+#include "Pomdog/Logging/LogLevel.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <string>
 #include <functional>

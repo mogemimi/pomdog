@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "detail/ForwardDeclarations.hpp"
+#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Basic/Export.hpp"
 

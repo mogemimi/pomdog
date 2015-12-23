@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "AssetLoaders/AudioClipLoader.hpp"
+#include "Pomdog/Content/detail/AssetLoaders/AudioClipLoader.hpp"
 #include "AssetLoaders/Texture2DLoader.hpp"
 #include "Pomdog/Utility/Any.hpp"
 #include "Pomdog/Utility/Assert.hpp"

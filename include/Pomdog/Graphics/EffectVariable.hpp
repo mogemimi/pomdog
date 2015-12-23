@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "EffectAnnotation.hpp"
+#include "Pomdog/Graphics/EffectAnnotation.hpp"
 #include <cstdint>
 #include <string>
 

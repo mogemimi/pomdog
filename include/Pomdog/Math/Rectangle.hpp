@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Point2D.hpp"
+#include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 

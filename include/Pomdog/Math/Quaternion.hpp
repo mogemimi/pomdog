@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "detail/FloatingPointQuaternion.hpp"
+#include "Pomdog/Math/detail/FloatingPointQuaternion.hpp"
 
 namespace Pomdog {
 

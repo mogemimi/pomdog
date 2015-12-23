@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "BinaryFileStream.hpp"
+#include "Pomdog/Content/Utility/BinaryFileStream.hpp"
 #include <string>
 #include <tuple>
 

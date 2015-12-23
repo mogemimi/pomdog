@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "detail/ForwardDeclarations.hpp"
-#include "AudioChannels.hpp"
+#include "Pomdog/Audio/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Audio/AudioChannels.hpp"
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>

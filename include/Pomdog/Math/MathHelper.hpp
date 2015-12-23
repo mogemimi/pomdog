@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Degree.hpp"
-#include "Radian.hpp"
+#include "Pomdog/Math/Degree.hpp"
+#include "Pomdog/Math/Radian.hpp"
 #include <cstdint>
 #include <cfloat>
 #include <type_traits>

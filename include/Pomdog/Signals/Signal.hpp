@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "detail/SignalBody.hpp"
-#include "Connection.hpp"
+#include "Pomdog/Signals/detail/SignalBody.hpp"
+#include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <functional>

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "RenderTargetBlendDescription.hpp"
+#include "Pomdog/Graphics/RenderTargetBlendDescription.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <array>

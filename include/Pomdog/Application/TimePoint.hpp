@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Duration.hpp"
+#include "Pomdog/Application/Duration.hpp"
 #include <chrono>
 
 namespace Pomdog {

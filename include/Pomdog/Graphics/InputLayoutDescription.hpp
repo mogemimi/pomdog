@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "InputElement.hpp"
+#include "Pomdog/Graphics/InputElement.hpp"
 #include <vector>
 
 namespace Pomdog {

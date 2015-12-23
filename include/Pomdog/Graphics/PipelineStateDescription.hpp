@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "detail/ForwardDeclarations.hpp"
-#include "BlendDescription.hpp"
-#include "DepthStencilDescription.hpp"
-#include "InputLayoutDescription.hpp"
-#include "RasterizerDescription.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/BlendDescription.hpp"
+#include "Pomdog/Graphics/DepthStencilDescription.hpp"
+#include "Pomdog/Graphics/InputLayoutDescription.hpp"
+#include "Pomdog/Graphics/RasterizerDescription.hpp"
 #include <memory>
 #include <vector>
 #include <string>

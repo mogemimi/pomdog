@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "detail/FloatingPointVector2.hpp"
+#include "Pomdog/Math/detail/FloatingPointVector2.hpp"
 
 namespace Pomdog {
 

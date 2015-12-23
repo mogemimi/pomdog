@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "detail/EventBody.hpp"
+#include "Pomdog/Signals/detail/EventBody.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <type_traits>

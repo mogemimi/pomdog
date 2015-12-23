@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "CullMode.hpp"
-#include "FillMode.hpp"
+#include "Pomdog/Graphics/CullMode.hpp"
+#include "Pomdog/Graphics/FillMode.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 

@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "GamepadButtons.hpp"
-#include "GamepadDPad.hpp"
-#include "GamepadThumbSticks.hpp"
+#include "Pomdog/Input/GamepadButtons.hpp"
+#include "Pomdog/Input/GamepadDPad.hpp"
+#include "Pomdog/Input/GamepadThumbSticks.hpp"
 
 namespace Pomdog {
 

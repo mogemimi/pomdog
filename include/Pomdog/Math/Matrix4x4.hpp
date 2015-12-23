@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "detail/FloatingPointMatrix4x4.hpp"
+#include "Pomdog/Math/detail/FloatingPointMatrix4x4.hpp"
 
 namespace Pomdog {
 

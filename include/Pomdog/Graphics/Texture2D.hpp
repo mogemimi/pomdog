@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "detail/ForwardDeclarations.hpp"
-#include "Texture.hpp"
-#include "SurfaceFormat.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/Texture.hpp"
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <memory>

@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "detail/ForwardDeclarations.hpp"
-#include "detail/SignalBody.hpp"
+#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Signals/detail/SignalBody.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <utility>

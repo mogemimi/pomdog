@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "detail/ForwardDeclarations.hpp"
-#include "SamplerDescription.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 

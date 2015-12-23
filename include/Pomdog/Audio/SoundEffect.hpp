@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "detail/ForwardDeclarations.hpp"
-#include "SoundState.hpp"
+#include "Pomdog/Audio/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Audio/SoundState.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <cstdint>

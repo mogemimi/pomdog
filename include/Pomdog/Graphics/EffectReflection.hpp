@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "detail/ForwardDeclarations.hpp"
-#include "EffectConstantDescription.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/EffectConstantDescription.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 #include <vector>

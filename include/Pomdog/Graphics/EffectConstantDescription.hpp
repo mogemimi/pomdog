@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "EffectVariable.hpp"
+#include "Pomdog/Graphics/EffectVariable.hpp"
 #include <cstdint>
 #include <string>
 #include <vector>
