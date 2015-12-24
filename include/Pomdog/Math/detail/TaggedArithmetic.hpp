@@ -35,37 +35,37 @@ public:
     {}
 
     // Assignment operators:
-    TaggedArithmetic & operator+=(TaggedArithmetic const& v)
+    TaggedArithmetic & operator+=(TaggedArithmetic const& v) noexcept
     {
         value += v.value;
         return *this;
     }
 
-    TaggedArithmetic & operator+=(TaggedArithmetic && v)
+    TaggedArithmetic & operator+=(TaggedArithmetic && v) noexcept
     {
         value += std::move(v.value);
         return *this;
     }
 
-    TaggedArithmetic & operator-=(TaggedArithmetic const& v)
+    TaggedArithmetic & operator-=(TaggedArithmetic const& v) noexcept
     {
         value -= v.value;
         return *this;
     }
 
-    TaggedArithmetic & operator-=(TaggedArithmetic && v)
+    TaggedArithmetic & operator-=(TaggedArithmetic && v) noexcept
     {
         value -= std::move(v.value);
         return *this;
     }
 
-    TaggedArithmetic & operator*=(TaggedArithmetic const& v)
+    TaggedArithmetic & operator*=(TaggedArithmetic const& v) noexcept
     {
         value *= v.value;
         return *this;
     }
 
-    TaggedArithmetic & operator*=(TaggedArithmetic && v)
+    TaggedArithmetic & operator*=(TaggedArithmetic && v) noexcept
     {
         value *= std::move(v.value);
         return *this;
@@ -85,7 +85,7 @@ public:
         return *this;
     }
 
-    TaggedArithmetic & operator*=(T const& scale)
+    TaggedArithmetic & operator*=(T const& scale) noexcept
     {
         value *= scale;
         return *this;
@@ -110,17 +110,17 @@ public:
     }
 
     // Binary operators:
-    TaggedArithmetic operator+(TaggedArithmetic const& v) const
+    TaggedArithmetic operator+(TaggedArithmetic const& v) const noexcept
     {
         return {value + v.value};
     }
 
-    TaggedArithmetic operator-(TaggedArithmetic const& v) const
+    TaggedArithmetic operator-(TaggedArithmetic const& v) const noexcept
     {
         return {value - v.value};
     }
 
-    TaggedArithmetic operator*(TaggedArithmetic const& v) const
+    TaggedArithmetic operator*(TaggedArithmetic const& v) const noexcept
     {
         return {value * v.value};
     }
@@ -131,7 +131,7 @@ public:
         return {value / v.value};
     }
 
-    TaggedArithmetic operator*(T scale) const
+    TaggedArithmetic operator*(T scale) const noexcept
     {
         return {value * scale};
     }
@@ -142,7 +142,7 @@ public:
         return {value / scale};
     }
 
-    friend TaggedArithmetic operator*(T const& scale, TaggedArithmetic const& v)
+    friend TaggedArithmetic operator*(T const& scale, TaggedArithmetic const& v) noexcept
     {
         return {scale * v.value};
     }

@@ -73,7 +73,7 @@ T Saturate(T const& x)
 }
 //-------------------------------------------------------------------
 template <typename T>
-T Lerp(T const& source1, T const& source2, T const& amount)
+T Lerp(T const& source1, T const& source2, T const& amount) noexcept
 {
     static_assert(std::is_floating_point<T>::value ||
         Detail::IsTaggedFloatingPoint<T>::value,
@@ -95,7 +95,7 @@ T SmoothStep(T const& min, T const& max, T const& amount)
 }
 //-------------------------------------------------------------------
 template <typename T>
-Radian<T> ToRadians(Degree<T> const& degrees)
+Radian<T> ToRadians(Degree<T> const& degrees) noexcept
 {
     static_assert(std::is_floating_point<T>::value, "");
     constexpr auto scaleFactor = MathConstants<T>::Pi() * (T{1} / T{180});
@@ -103,7 +103,7 @@ Radian<T> ToRadians(Degree<T> const& degrees)
 }
 //-------------------------------------------------------------------
 template <typename T>
-Degree<T> ToDegrees(Radian<T> const& radians)
+Degree<T> ToDegrees(Radian<T> const& radians) noexcept
 {
     static_assert(std::is_floating_point<T>::value, "");
     constexpr auto scaleFactor = T{180} * (T{1} / MathConstants<T>::Pi());
