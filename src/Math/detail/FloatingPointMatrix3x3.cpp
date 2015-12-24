@@ -560,7 +560,7 @@ FloatingPointMatrix3x3<T>::CreateFromQuaternion(FloatingPointQuaternion<T> const
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix3x3<T>::CreateLerp(FloatingPointMatrix3x3 const& source1,
+FloatingPointMatrix3x3<T>::Lerp(FloatingPointMatrix3x3 const& source1,
     FloatingPointMatrix3x3 const& source2, T amount, FloatingPointMatrix3x3 & result) noexcept
 {
     result.m[0][0] = source1.m[0][0] + ((source2.m[0][0] - source1.m[0][0]) * amount);
@@ -576,11 +576,11 @@ FloatingPointMatrix3x3<T>::CreateLerp(FloatingPointMatrix3x3 const& source1,
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T>
-FloatingPointMatrix3x3<T>::CreateLerp(FloatingPointMatrix3x3 const& source1,
+FloatingPointMatrix3x3<T>::Lerp(FloatingPointMatrix3x3 const& source1,
     FloatingPointMatrix3x3 const& source2, T amount) noexcept
 {
     FloatingPointMatrix3x3 result;
-    CreateLerp(source1, source2, amount, result);
+    Lerp(source1, source2, amount, result);
     return std::move(result);
 }
 //-----------------------------------------------------------------------

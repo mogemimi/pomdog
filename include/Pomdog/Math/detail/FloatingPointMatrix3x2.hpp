@@ -73,6 +73,14 @@ public:
     Invert(FloatingPointMatrix3x2 const& matrix);
 
     static void
+    Lerp(FloatingPointMatrix3x2 const& source1, FloatingPointMatrix3x2 const& source2,
+        T amount, FloatingPointMatrix3x2 & result) noexcept;
+
+    static FloatingPointMatrix3x2
+    Lerp(FloatingPointMatrix3x2 const& source1, FloatingPointMatrix3x2 const& source2,
+        T amount) noexcept;
+
+    static void
     CreateTranslation(FloatingPointVector2<T> const& position, FloatingPointMatrix3x2 & result) noexcept;
 
     static FloatingPointMatrix3x2
@@ -101,14 +109,6 @@ public:
 
     static FloatingPointMatrix3x2
     CreateSkew(FloatingPointVector2<T> const& skew);
-
-    static void
-    CreateLerp(FloatingPointMatrix3x2 const& source1, FloatingPointMatrix3x2 const& source2,
-        T amount, FloatingPointMatrix3x2 & result) noexcept;
-
-    static FloatingPointMatrix3x2
-    CreateLerp(FloatingPointMatrix3x2 const& source1, FloatingPointMatrix3x2 const& source2,
-        T amount) noexcept;
 
     ///@brief Returns pointer to the first element.
     T const* Data() const noexcept;

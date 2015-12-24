@@ -88,6 +88,14 @@ public:
     Invert(FloatingPointMatrix3x3 const& matrix);
 
     static void
+    Lerp(FloatingPointMatrix3x3 const& source1, FloatingPointMatrix3x3 const& source2,
+        T amount, FloatingPointMatrix3x3 & result) noexcept;
+
+    static FloatingPointMatrix3x3
+    Lerp(FloatingPointMatrix3x3 const& source1, FloatingPointMatrix3x3 const& source2,
+        T amount) noexcept;
+
+    static void
     CreateTranslation(FloatingPointVector2<T> const& position, FloatingPointMatrix3x3 & result) noexcept;
 
     static FloatingPointMatrix3x3
@@ -128,14 +136,6 @@ public:
 
     static FloatingPointMatrix3x3
     CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion);
-
-    static void
-    CreateLerp(FloatingPointMatrix3x3 const& source1, FloatingPointMatrix3x3 const& source2,
-        T amount, FloatingPointMatrix3x3 & result) noexcept;
-
-    static FloatingPointMatrix3x3
-    CreateLerp(FloatingPointMatrix3x3 const& source1, FloatingPointMatrix3x3 const& source2,
-        T amount) noexcept;
 
     static void
     CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle, FloatingPointMatrix3x3 & result);

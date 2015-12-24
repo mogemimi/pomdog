@@ -356,7 +356,7 @@ FloatingPointMatrix3x2<T>::CreateSkew(FloatingPointVector2<T> const& skew)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix3x2<T>::CreateLerp(FloatingPointMatrix3x2 const& source1,
+FloatingPointMatrix3x2<T>::Lerp(FloatingPointMatrix3x2 const& source1,
     FloatingPointMatrix3x2 const& source2, T amount, FloatingPointMatrix3x2 & result) noexcept
 {
     result.m[0][0] = source1.m[0][0] + ((source2.m[0][0] - source1.m[0][0]) * amount);
@@ -369,11 +369,11 @@ FloatingPointMatrix3x2<T>::CreateLerp(FloatingPointMatrix3x2 const& source1,
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x2<T>
-FloatingPointMatrix3x2<T>::CreateLerp(FloatingPointMatrix3x2 const& source1,
+FloatingPointMatrix3x2<T>::Lerp(FloatingPointMatrix3x2 const& source1,
     FloatingPointMatrix3x2 const& source2, T amount) noexcept
 {
     FloatingPointMatrix3x2 result;
-    CreateLerp(source1, source2, amount, result);
+    Lerp(source1, source2, amount, result);
     return std::move(result);
 }
 //-----------------------------------------------------------------------
