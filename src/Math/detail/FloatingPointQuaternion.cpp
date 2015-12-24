@@ -23,7 +23,7 @@ FloatingPointQuaternion<T>::FloatingPointQuaternion(T x, T y, T z, T w) noexcept
 {}
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator+=(FloatingPointQuaternion const& other)
+FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator+=(FloatingPointQuaternion const& other) noexcept
 {
     X += other.X;
     Y += other.Y;
@@ -33,7 +33,7 @@ FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator+=(FloatingPoin
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator-=(FloatingPointQuaternion const& other)
+FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator-=(FloatingPointQuaternion const& other) noexcept
 {
     X -= other.X;
     Y -= other.Y;
@@ -43,13 +43,13 @@ FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator-=(FloatingPoin
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator*=(FloatingPointQuaternion const& other)
+FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator*=(FloatingPointQuaternion const& other) noexcept
 {
     return (*this) = (*this) * other;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator*=(T scaleFactor)
+FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator*=(T scaleFactor) noexcept
 {
     X *= scaleFactor;
     Y *= scaleFactor;
@@ -70,19 +70,19 @@ FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator/=(T scaleFacto
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator+() const
+FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator+() const noexcept
 {
     return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator-() const
+FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator-() const noexcept
 {
     return FloatingPointQuaternion(-X, -Y, -Z, -W);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator+(FloatingPointQuaternion const& other) const
+FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator+(FloatingPointQuaternion const& other) const noexcept
 {
     return FloatingPointQuaternion(
         X + other.X,
@@ -92,7 +92,7 @@ FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator+(FloatingPointQu
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator-(FloatingPointQuaternion const& other) const
+FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator-(FloatingPointQuaternion const& other) const noexcept
 {
     return FloatingPointQuaternion(
         X - other.X,
@@ -102,7 +102,7 @@ FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator-(FloatingPointQu
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator*(FloatingPointQuaternion const& other) const
+FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator*(FloatingPointQuaternion const& other) const noexcept
 {
     // Quaternion(
     //     w * other.Xyz + xyz * other.W + Vector3::Cross(this->xyz, other.Xyz),
@@ -115,7 +115,7 @@ FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator*(FloatingPointQu
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator*(T scaleFactor) const
+FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator*(T scaleFactor) const noexcept
 {
     return FloatingPointQuaternion(
         X * scaleFactor,
@@ -136,7 +136,7 @@ FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator/(T scaleFactor) 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointQuaternion<T>::operator==(FloatingPointQuaternion const& other) const
+bool FloatingPointQuaternion<T>::operator==(FloatingPointQuaternion const& other) const noexcept
 {
     return X == other.X
         && Y == other.Y
@@ -145,7 +145,7 @@ bool FloatingPointQuaternion<T>::operator==(FloatingPointQuaternion const& other
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointQuaternion<T>::operator!=(FloatingPointQuaternion const& other) const
+bool FloatingPointQuaternion<T>::operator!=(FloatingPointQuaternion const& other) const noexcept
 {
     return X != other.X
         || Y != other.Y
@@ -154,33 +154,33 @@ bool FloatingPointQuaternion<T>::operator!=(FloatingPointQuaternion const& other
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointQuaternion<T>::Length() const
+T FloatingPointQuaternion<T>::Length() const noexcept
 {
     return std::sqrt(X * X + Y * Y + Z * Z + W * W);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointQuaternion<T>::LengthSquared() const
+T FloatingPointQuaternion<T>::LengthSquared() const noexcept
 {
     return X * X + Y * Y + Z * Z + W * W;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointQuaternion<T>::Dot(FloatingPointQuaternion const& a, FloatingPointQuaternion const& b)
+T FloatingPointQuaternion<T>::Dot(FloatingPointQuaternion const& a, FloatingPointQuaternion const& b) noexcept
 {
     return a.X * b.X + a.Y * b.Y + a.Z * b.Z + a.W * b.W;
 }
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointQuaternion<T>::Normalize()
+FloatingPointQuaternion<T>::Normalize() noexcept
 {
     *this = Normalize(*this);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointQuaternion<T>::Normalize(FloatingPointQuaternion const& source, FloatingPointQuaternion & result)
+FloatingPointQuaternion<T>::Normalize(FloatingPointQuaternion const& source, FloatingPointQuaternion & result) noexcept
 {
     auto const length = source.Length();
 
@@ -196,7 +196,7 @@ FloatingPointQuaternion<T>::Normalize(FloatingPointQuaternion const& source, Flo
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T>
-FloatingPointQuaternion<T>::Normalize(FloatingPointQuaternion const& source)
+FloatingPointQuaternion<T>::Normalize(FloatingPointQuaternion const& source) noexcept
 {
     FloatingPointQuaternion result;
     Normalize(source, result);
@@ -413,7 +413,7 @@ T* FloatingPointQuaternion<T>::Data() noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion)
+FloatingPointQuaternion<T> operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion) noexcept
 {
     return FloatingPointQuaternion<T>(
         scaleFactor * quaternion.X,
@@ -424,16 +424,22 @@ FloatingPointQuaternion<T> operator*(T scaleFactor, FloatingPointQuaternion<T> c
 //-----------------------------------------------------------------------
 // explicit instantiations
 template class FloatingPointQuaternion<float>;
-template FloatingPointQuaternion<float> operator*<float>(float, FloatingPointQuaternion<float> const&);
+
+template FloatingPointQuaternion<float>
+operator*<float>(float, FloatingPointQuaternion<float> const&) noexcept;
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointQuaternion<double>;
-template FloatingPointQuaternion<double> operator*<double>(double, FloatingPointQuaternion<double> const&);
+
+template FloatingPointQuaternion<double>
+operator*<double>(double, FloatingPointQuaternion<double> const&) noexcept;
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointQuaternion<long double>;
-template FloatingPointQuaternion<long double> operator*<long double>(long double, FloatingPointQuaternion<long double> const&);
+
+template FloatingPointQuaternion<long double>
+operator*<long double>(long double, FloatingPointQuaternion<long double> const&) noexcept;
 #endif
 
 } // namespace Detail

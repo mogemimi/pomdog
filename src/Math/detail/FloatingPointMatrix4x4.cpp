@@ -77,13 +77,13 @@ T & FloatingPointMatrix4x4<T>::operator()(std::size_t row, std::size_t column)
 //}
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator*=(FloatingPointMatrix4x4 const& other)
+FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator*=(FloatingPointMatrix4x4 const& other) noexcept
 {
     return *this = this->Concatenate(other);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator+=(FloatingPointMatrix4x4 const& other)
+FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator+=(FloatingPointMatrix4x4 const& other) noexcept
 {
     m[0][0] += other.m[0][0];
     m[0][1] += other.m[0][1];
@@ -105,7 +105,7 @@ FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator+=(FloatingPointM
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator-=(FloatingPointMatrix4x4 const& other)
+FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator-=(FloatingPointMatrix4x4 const& other) noexcept
 {
     m[0][0] -= other.m[0][0];
     m[0][1] -= other.m[0][1];
@@ -127,7 +127,7 @@ FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator-=(FloatingPointM
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator*=(T scaleFactor)
+FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator*=(T scaleFactor) noexcept
 {
     return *this = this->Concatenate(scaleFactor);
 }
@@ -157,19 +157,19 @@ FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator/=(T scaleFactor)
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator+() const
+FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator+() const noexcept
 {
     return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-() const
+FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-() const noexcept
 {
     return this->Concatenate(-1);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator+(FloatingPointMatrix4x4 const& other) const
+FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator+(FloatingPointMatrix4x4 const& other) const noexcept
 {
     return {
         m[0][0] + other.m[0][0],
@@ -191,7 +191,7 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator+(FloatingPointMatr
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-(FloatingPointMatrix4x4 const& other) const
+FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-(FloatingPointMatrix4x4 const& other) const noexcept
 {
     return {
         m[0][0] - other.m[0][0],
@@ -213,13 +213,13 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-(FloatingPointMatr
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator*(FloatingPointMatrix4x4 const& other) const
+FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator*(FloatingPointMatrix4x4 const& other) const noexcept
 {
     return this->Concatenate(other);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator*(T scaleFactor) const
+FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator*(T scaleFactor) const noexcept
 {
     return this->Concatenate(scaleFactor);
 }
@@ -249,7 +249,7 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator/(T scaleFactor) co
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointMatrix4x4<T>::operator==(FloatingPointMatrix4x4 const& other) const
+bool FloatingPointMatrix4x4<T>::operator==(FloatingPointMatrix4x4 const& other) const noexcept
 {
     return m[0][0] == other.m[0][0] && m[0][1] == other.m[0][1] && m[0][2] == other.m[0][2] && m[0][3] == other.m[0][3]
         && m[1][0] == other.m[1][0] && m[1][1] == other.m[1][1] && m[1][2] == other.m[1][2] && m[1][3] == other.m[1][3]
@@ -258,7 +258,7 @@ bool FloatingPointMatrix4x4<T>::operator==(FloatingPointMatrix4x4 const& other) 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointMatrix4x4<T>::operator!=(FloatingPointMatrix4x4 const& other) const
+bool FloatingPointMatrix4x4<T>::operator!=(FloatingPointMatrix4x4 const& other) const noexcept
 {
     return m[0][0] != other.m[0][0] || m[0][1] != other.m[0][1] || m[0][2] != other.m[0][2] || m[0][3] != other.m[0][3]
         || m[1][0] != other.m[1][0] || m[1][1] != other.m[1][1] || m[1][2] != other.m[1][2] || m[1][3] != other.m[1][3]
@@ -267,7 +267,7 @@ bool FloatingPointMatrix4x4<T>::operator!=(FloatingPointMatrix4x4 const& other) 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Concatenate(FloatingPointMatrix4x4 const& rhs) const
+FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Concatenate(FloatingPointMatrix4x4 const& rhs) const noexcept
 {
     FloatingPointMatrix4x4 const& lhs(*this);
     return {
@@ -293,7 +293,7 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Concatenate(FloatingPointMa
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Concatenate(T scaleFactor) const
+FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Concatenate(T scaleFactor) const noexcept
 {
     return {
         m[0][0] * scaleFactor,
@@ -315,7 +315,7 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Concatenate(T scaleFactor) 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-void FloatingPointMatrix4x4<T>::SetTranslation(FloatingPointVector3<T> const& position)
+void FloatingPointMatrix4x4<T>::SetTranslation(FloatingPointVector3<T> const& position) noexcept
 {
     m[3][0] = position.X;
     m[3][1] = position.Y;
@@ -323,13 +323,13 @@ void FloatingPointMatrix4x4<T>::SetTranslation(FloatingPointVector3<T> const& po
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> FloatingPointMatrix4x4<T>::GetTranslation() const
+FloatingPointVector3<T> FloatingPointMatrix4x4<T>::GetTranslation() const noexcept
 {
     return {m[3][0], m[3][1], m[3][2]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
-void FloatingPointMatrix4x4<T>::SetScale(FloatingPointVector3<T> const& scale)
+void FloatingPointMatrix4x4<T>::SetScale(FloatingPointVector3<T> const& scale) noexcept
 {
     m[0][0] = scale.X;
     m[1][1] = scale.Y;
@@ -337,13 +337,13 @@ void FloatingPointMatrix4x4<T>::SetScale(FloatingPointVector3<T> const& scale)
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> FloatingPointMatrix4x4<T>::GetScale() const
+FloatingPointVector3<T> FloatingPointMatrix4x4<T>::GetScale() const noexcept
 {
     return {m[0][0], m[1][1], m[2][2]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointMatrix4x4<T>::Determinant() const
+T FloatingPointMatrix4x4<T>::Determinant() const noexcept
 {
     // TODO: Replace with simple process using cofactors to compute a determinant
     // please see: FloatingPointMatrix3x3::Determinant implementation
@@ -417,7 +417,7 @@ FloatingPointMatrix4x4<T>::Adjoint(FloatingPointMatrix4x4 const& matrix)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::Transpose(FloatingPointMatrix4x4 const& matrix, FloatingPointMatrix4x4 & result)
+FloatingPointMatrix4x4<T>::Transpose(FloatingPointMatrix4x4 const& matrix, FloatingPointMatrix4x4 & result) noexcept
 {
     result = {
         matrix.m[0][0], matrix.m[1][0], matrix.m[2][0], matrix.m[3][0],
@@ -428,7 +428,7 @@ FloatingPointMatrix4x4<T>::Transpose(FloatingPointMatrix4x4 const& matrix, Float
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::Transpose(FloatingPointMatrix4x4 const& matrix)
+FloatingPointMatrix4x4<T>::Transpose(FloatingPointMatrix4x4 const& matrix) noexcept
 {
     return {
         matrix.m[0][0], matrix.m[1][0], matrix.m[2][0], matrix.m[3][0],
@@ -458,7 +458,7 @@ FloatingPointMatrix4x4<T>::Invert(FloatingPointMatrix4x4 const& matrix)
 template <typename T>
 void
 FloatingPointMatrix4x4<T>::Lerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2,
-    T amount, FloatingPointMatrix4x4 & result)
+    T amount, FloatingPointMatrix4x4 & result) noexcept
 {
     result.m[0][0] = source1.m[0][0] + ((source2.m[0][0] - source1.m[0][0]) * amount);
     result.m[0][1] = source1.m[0][1] + ((source2.m[0][1] - source1.m[0][1]) * amount);
@@ -481,7 +481,7 @@ FloatingPointMatrix4x4<T>::Lerp(FloatingPointMatrix4x4 const& source1, FloatingP
 template <typename T>
 FloatingPointMatrix4x4<T>
 FloatingPointMatrix4x4<T>::Lerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2,
-    T amount)
+    T amount) noexcept
 {
     FloatingPointMatrix4x4 result;
     Lerp(source1, source2, amount, result);
@@ -490,7 +490,7 @@ FloatingPointMatrix4x4<T>::Lerp(FloatingPointMatrix4x4 const& source1, FloatingP
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::CreateTranslation(FloatingPointVector3<T> const& position, FloatingPointMatrix4x4 & result)
+FloatingPointMatrix4x4<T>::CreateTranslation(FloatingPointVector3<T> const& position, FloatingPointMatrix4x4 & result) noexcept
 {
     result = Identity;
     result.m[3][0] = position.X;
@@ -500,7 +500,7 @@ FloatingPointMatrix4x4<T>::CreateTranslation(FloatingPointVector3<T> const& posi
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateTranslation(FloatingPointVector3<T> const& position)
+FloatingPointMatrix4x4<T>::CreateTranslation(FloatingPointVector3<T> const& position) noexcept
 {
     FloatingPointMatrix4x4 result;
     CreateTranslation(position, result);
@@ -509,7 +509,7 @@ FloatingPointMatrix4x4<T>::CreateTranslation(FloatingPointVector3<T> const& posi
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::CreateScale(T scale, FloatingPointMatrix4x4 & result)
+FloatingPointMatrix4x4<T>::CreateScale(T scale, FloatingPointMatrix4x4 & result) noexcept
 {
     result = Identity;
     result.m[0][0] = scale;
@@ -519,7 +519,7 @@ FloatingPointMatrix4x4<T>::CreateScale(T scale, FloatingPointMatrix4x4 & result)
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateScale(T scale)
+FloatingPointMatrix4x4<T>::CreateScale(T scale) noexcept
 {
     FloatingPointMatrix4x4 result;
     CreateScale(scale, result);
@@ -528,7 +528,7 @@ FloatingPointMatrix4x4<T>::CreateScale(T scale)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix4x4 & result)
+FloatingPointMatrix4x4<T>::CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix4x4 & result) noexcept
 {
     result = Identity;
     result.m[0][0] = scale.X;
@@ -538,7 +538,7 @@ FloatingPointMatrix4x4<T>::CreateScale(FloatingPointVector3<T> const& scale, Flo
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateScale(FloatingPointVector3<T> const& scale)
+FloatingPointMatrix4x4<T>::CreateScale(FloatingPointVector3<T> const& scale) noexcept
 {
     FloatingPointMatrix4x4 result;
     CreateScale(scale, result);
@@ -1251,23 +1251,29 @@ T* FloatingPointMatrix4x4<T>::Data() noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> operator*(T scaleFactor, FloatingPointMatrix4x4<T> const& matrix)
+FloatingPointMatrix4x4<T> operator*(T scaleFactor, FloatingPointMatrix4x4<T> const& matrix) noexcept
 {
     return matrix.Concatenate(scaleFactor);
 }
 //-----------------------------------------------------------------------
 // explicit instantiations
 template class FloatingPointMatrix4x4<float>;
-template FloatingPointMatrix4x4<float> operator*<float>(float, FloatingPointMatrix4x4<float> const&);
+
+template FloatingPointMatrix4x4<float>
+operator*<float>(float, FloatingPointMatrix4x4<float> const&) noexcept;
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointMatrix4x4<double>;
-template FloatingPointMatrix4x4<double> operator*<double>(double, FloatingPointMatrix4x4<double> const&);
+
+template FloatingPointMatrix4x4<double>
+operator*<double>(double, FloatingPointMatrix4x4<double> const&) noexcept;
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointMatrix4x4<long double>;
-template FloatingPointMatrix4x4<long double> operator*<long double>(long double, FloatingPointMatrix4x4<long double> const&);
+
+template FloatingPointMatrix4x4<long double>
+operator*<long double>(long double, FloatingPointMatrix4x4<long double> const&) noexcept;
 #endif
 
 } // namespace Detail

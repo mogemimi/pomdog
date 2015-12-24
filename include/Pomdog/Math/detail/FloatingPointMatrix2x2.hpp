@@ -33,35 +33,35 @@ public:
     FloatingPointMatrix2x2(T m00, T m01, T m10, T m11) noexcept;
 
     // Assignment operators:
-    FloatingPointMatrix2x2 & operator*=(FloatingPointMatrix2x2 const& other);
-    FloatingPointMatrix2x2 & operator+=(FloatingPointMatrix2x2 const& other);
-    FloatingPointMatrix2x2 & operator-= (FloatingPointMatrix2x2 const& other);
-    FloatingPointMatrix2x2 & operator*=(T scaleFactor);
+    FloatingPointMatrix2x2 & operator*=(FloatingPointMatrix2x2 const& other) noexcept;
+    FloatingPointMatrix2x2 & operator+=(FloatingPointMatrix2x2 const& other) noexcept;
+    FloatingPointMatrix2x2 & operator-= (FloatingPointMatrix2x2 const& other) noexcept;
+    FloatingPointMatrix2x2 & operator*=(T scaleFactor) noexcept;
     FloatingPointMatrix2x2 & operator/=(T scaleFactor);
 
     // Unary operators:
-    FloatingPointMatrix2x2 operator+() const;
-    FloatingPointMatrix2x2 operator-() const;
+    FloatingPointMatrix2x2 operator+() const noexcept;
+    FloatingPointMatrix2x2 operator-() const noexcept;
 
     // Binary operators:
-    FloatingPointMatrix2x2 operator+(FloatingPointMatrix2x2 const& other) const;
-    FloatingPointMatrix2x2 operator-(FloatingPointMatrix2x2 const& other) const;
-    FloatingPointMatrix2x2 operator*(FloatingPointMatrix2x2 const& other) const;
-    FloatingPointMatrix2x2 operator*(T scaleFactor) const;
+    FloatingPointMatrix2x2 operator+(FloatingPointMatrix2x2 const& other) const noexcept;
+    FloatingPointMatrix2x2 operator-(FloatingPointMatrix2x2 const& other) const noexcept;
+    FloatingPointMatrix2x2 operator*(FloatingPointMatrix2x2 const& other) const noexcept;
+    FloatingPointMatrix2x2 operator*(T scaleFactor) const noexcept;
     FloatingPointMatrix2x2 operator/(T scaleFactor) const;
 
-    bool operator==(FloatingPointMatrix2x2 const& other) const;
-    bool operator!=(FloatingPointMatrix2x2 const& other) const;
+    bool operator==(FloatingPointMatrix2x2 const& other) const noexcept;
+    bool operator!=(FloatingPointMatrix2x2 const& other) const noexcept;
 
     // Function-call operators:
     T const& operator()(std::size_t row, std::size_t column) const;
     T & operator()(std::size_t row, std::size_t column);
 
-    FloatingPointMatrix2x2 Concatenate(FloatingPointMatrix2x2 const& other) const;
+    FloatingPointMatrix2x2 Concatenate(FloatingPointMatrix2x2 const& other) const noexcept;
 
-    FloatingPointMatrix2x2 Concatenate(T scaleFactor) const;
+    FloatingPointMatrix2x2 Concatenate(T scaleFactor) const noexcept;
 
-    T Determinant() const;
+    T Determinant() const noexcept;
 
     ///@brief Returns pointer to the first element.
     T const* Data() const noexcept;
@@ -74,7 +74,7 @@ public:
 
 template <typename T>
 FloatingPointMatrix2x2<T> POMDOG_EXPORT
-operator*(T scaleFactor, FloatingPointMatrix2x2<T> const& matrix);
+operator*(T scaleFactor, FloatingPointMatrix2x2<T> const& matrix) noexcept;
 
 } // namespace Detail
 } // namespace Pomdog

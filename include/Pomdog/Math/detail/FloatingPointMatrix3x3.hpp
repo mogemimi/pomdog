@@ -36,39 +36,39 @@ public:
         T m20, T m21, T m22) noexcept;
 
     // Assignment operators:
-    FloatingPointMatrix3x3 & operator*=(FloatingPointMatrix3x3 const& other);
-    FloatingPointMatrix3x3 & operator+=(FloatingPointMatrix3x3 const& other);
-    FloatingPointMatrix3x3 & operator-=(FloatingPointMatrix3x3 const& other);
-    FloatingPointMatrix3x3 & operator*=(T scaleFactor);
+    FloatingPointMatrix3x3 & operator*=(FloatingPointMatrix3x3 const& other) noexcept;
+    FloatingPointMatrix3x3 & operator+=(FloatingPointMatrix3x3 const& other) noexcept;
+    FloatingPointMatrix3x3 & operator-=(FloatingPointMatrix3x3 const& other) noexcept;
+    FloatingPointMatrix3x3 & operator*=(T scaleFactor) noexcept;
     FloatingPointMatrix3x3 & operator/=(T scaleFactor);
 
     // Unary operators:
-    FloatingPointMatrix3x3 operator+() const;
-    FloatingPointMatrix3x3 operator-() const;
+    FloatingPointMatrix3x3 operator+() const noexcept;
+    FloatingPointMatrix3x3 operator-() const noexcept;
 
     // Binary operators:
-    FloatingPointMatrix3x3 operator+(FloatingPointMatrix3x3 const& other) const;
-    FloatingPointMatrix3x3 operator-(FloatingPointMatrix3x3 const& other) const;
-    FloatingPointMatrix3x3 operator*(FloatingPointMatrix3x3 const& other) const;
-    FloatingPointMatrix3x3 operator*(T scaleFactor) const;
+    FloatingPointMatrix3x3 operator+(FloatingPointMatrix3x3 const& other) const noexcept;
+    FloatingPointMatrix3x3 operator-(FloatingPointMatrix3x3 const& other) const noexcept;
+    FloatingPointMatrix3x3 operator*(FloatingPointMatrix3x3 const& other) const noexcept;
+    FloatingPointMatrix3x3 operator*(T scaleFactor) const noexcept;
     FloatingPointMatrix3x3 operator/(T scaleFactor) const;
 
-    bool operator==(FloatingPointMatrix3x3 const& other) const;
-    bool operator!=(FloatingPointMatrix3x3 const& other) const;
+    bool operator==(FloatingPointMatrix3x3 const& other) const noexcept;
+    bool operator!=(FloatingPointMatrix3x3 const& other) const noexcept;
 
     // Function-call operators:
     T const& operator()(std::size_t row, std::size_t column) const;
     T & operator()(std::size_t row, std::size_t column);
 
-    void SetScale(FloatingPointVector3<T> const& scale);
+    void SetScale(FloatingPointVector3<T> const& scale) noexcept;
 
-    FloatingPointVector3<T> GetScale() const;
+    FloatingPointVector3<T> GetScale() const noexcept;
 
-    T Determinant() const;
+    T Determinant() const noexcept;
 
-    FloatingPointMatrix3x3 Concatenate(FloatingPointMatrix3x3 const& other) const;
+    FloatingPointMatrix3x3 Concatenate(FloatingPointMatrix3x3 const& other) const noexcept;
 
-    FloatingPointMatrix3x3 Concatenate(T scaleFactor) const;
+    FloatingPointMatrix3x3 Concatenate(T scaleFactor) const noexcept;
 
     FloatingPointMatrix2x2<T> Minor2x2(std::size_t row, std::size_t column) const;
 
@@ -76,10 +76,10 @@ public:
     Adjoint(FloatingPointMatrix3x3 const& matrix);
 
     static void
-    Transpose(FloatingPointMatrix3x3 const& matrix, FloatingPointMatrix3x3 & result);
+    Transpose(FloatingPointMatrix3x3 const& matrix, FloatingPointMatrix3x3 & result) noexcept;
 
     static FloatingPointMatrix3x3
-    Transpose(FloatingPointMatrix3x3 const& matrix);
+    Transpose(FloatingPointMatrix3x3 const& matrix) noexcept;
 
     static void
     Invert(FloatingPointMatrix3x3 const& matrix, FloatingPointMatrix3x3 & result);
@@ -88,22 +88,22 @@ public:
     Invert(FloatingPointMatrix3x3 const& matrix);
 
     static void
-    CreateTranslation(FloatingPointVector2<T> const& position, FloatingPointMatrix3x3 & result);
+    CreateTranslation(FloatingPointVector2<T> const& position, FloatingPointMatrix3x3 & result) noexcept;
 
     static FloatingPointMatrix3x3
-    CreateTranslation(FloatingPointVector2<T> const& position);
+    CreateTranslation(FloatingPointVector2<T> const& position) noexcept;
 
     static void
-    CreateScale(T scale, FloatingPointMatrix3x3 & result);
+    CreateScale(T scale, FloatingPointMatrix3x3 & result) noexcept;
 
     static FloatingPointMatrix3x3
-    CreateScale(T scale);
+    CreateScale(T scale) noexcept;
 
     static void
-    CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix3x3 & result);
+    CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix3x3 & result) noexcept;
 
     static FloatingPointMatrix3x3
-    CreateScale(FloatingPointVector3<T> const& scale);
+    CreateScale(FloatingPointVector3<T> const& scale) noexcept;
 
     static void
     CreateRotationX(Radian<T> const& angle, FloatingPointMatrix3x3 & result);
@@ -131,11 +131,11 @@ public:
 
     static void
     CreateLerp(FloatingPointMatrix3x3 const& source1, FloatingPointMatrix3x3 const& source2,
-        T amount, FloatingPointMatrix3x3 & result);
+        T amount, FloatingPointMatrix3x3 & result) noexcept;
 
     static FloatingPointMatrix3x3
     CreateLerp(FloatingPointMatrix3x3 const& source1, FloatingPointMatrix3x3 const& source2,
-        T amount);
+        T amount) noexcept;
 
     static void
     CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle, FloatingPointMatrix3x3 & result);
@@ -154,7 +154,7 @@ public:
 
 template <typename T>
 FloatingPointMatrix3x3<T> POMDOG_EXPORT
-operator*(T scaleFactor, FloatingPointMatrix3x3<T> const& matrix);
+operator*(T scaleFactor, FloatingPointMatrix3x3<T> const& matrix) noexcept;
 
 } // namespace Detail
 } // namespace Pomdog

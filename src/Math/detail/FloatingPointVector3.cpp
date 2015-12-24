@@ -30,12 +30,12 @@ FloatingPointVector3<T>::FloatingPointVector3(T x, T y, T z) noexcept
 {}
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T>::FloatingPointVector3(FloatingPointVector2<T> const& vec, T z)
+FloatingPointVector3<T>::FloatingPointVector3(FloatingPointVector2<T> const& vec, T z) noexcept
     : X(vec.X), Y(vec.Y), Z(z)
 {}
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> & FloatingPointVector3<T>::operator+=(FloatingPointVector3 const& vec)
+FloatingPointVector3<T> & FloatingPointVector3<T>::operator+=(FloatingPointVector3 const& vec) noexcept
 {
     X += vec.X;
     Y += vec.Y;
@@ -44,7 +44,7 @@ FloatingPointVector3<T> & FloatingPointVector3<T>::operator+=(FloatingPointVecto
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> & FloatingPointVector3<T>::operator-=(FloatingPointVector3 const& vec)
+FloatingPointVector3<T> & FloatingPointVector3<T>::operator-=(FloatingPointVector3 const& vec) noexcept
 {
     X -= vec.X;
     Y -= vec.Y;
@@ -53,7 +53,7 @@ FloatingPointVector3<T> & FloatingPointVector3<T>::operator-=(FloatingPointVecto
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> & FloatingPointVector3<T>::operator*=(T scaleFactor)
+FloatingPointVector3<T> & FloatingPointVector3<T>::operator*=(T scaleFactor) noexcept
 {
     X *= scaleFactor;
     Y *= scaleFactor;
@@ -71,19 +71,19 @@ FloatingPointVector3<T> & FloatingPointVector3<T>::operator/=(T scaleFactor)
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> FloatingPointVector3<T>::operator+() const
+FloatingPointVector3<T> FloatingPointVector3<T>::operator+() const noexcept
 {
     return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> FloatingPointVector3<T>::operator-() const
+FloatingPointVector3<T> FloatingPointVector3<T>::operator-() const noexcept
 {
     return FloatingPointVector3(-X, -Y, -Z);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> FloatingPointVector3<T>::operator+(FloatingPointVector3 const& other) const
+FloatingPointVector3<T> FloatingPointVector3<T>::operator+(FloatingPointVector3 const& other) const noexcept
 {
     return FloatingPointVector3(
         X + other.X,
@@ -92,7 +92,7 @@ FloatingPointVector3<T> FloatingPointVector3<T>::operator+(FloatingPointVector3 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> FloatingPointVector3<T>::operator-(FloatingPointVector3 const& other) const
+FloatingPointVector3<T> FloatingPointVector3<T>::operator-(FloatingPointVector3 const& other) const noexcept
 {
     return FloatingPointVector3(
         X - other.X,
@@ -101,7 +101,7 @@ FloatingPointVector3<T> FloatingPointVector3<T>::operator-(FloatingPointVector3 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> FloatingPointVector3<T>::operator*(FloatingPointVector3 const& other) const
+FloatingPointVector3<T> FloatingPointVector3<T>::operator*(FloatingPointVector3 const& other) const noexcept
 {
     return FloatingPointVector3(
         X * other.X,
@@ -123,7 +123,7 @@ FloatingPointVector3<T> FloatingPointVector3<T>::operator/(FloatingPointVector3 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> FloatingPointVector3<T>::operator*(T scaleFactor) const
+FloatingPointVector3<T> FloatingPointVector3<T>::operator*(T scaleFactor) const noexcept
 {
     return FloatingPointVector3(
         X * scaleFactor,
@@ -144,50 +144,50 @@ FloatingPointVector3<T> FloatingPointVector3<T>::operator/(T scaleFactor) const
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointVector3<T>::operator==(FloatingPointVector3 const& other) const
+bool FloatingPointVector3<T>::operator==(FloatingPointVector3 const& other) const noexcept
 {
     return X == other.X && Y == other.Y && Z == other.Z;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointVector3<T>::operator!=(FloatingPointVector3 const& other) const
+bool FloatingPointVector3<T>::operator!=(FloatingPointVector3 const& other) const noexcept
 {
     return X != other.X || Y != other.Y || Z != other.Z;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointVector3<T>::Length() const
+T FloatingPointVector3<T>::Length() const noexcept
 {
     return std::sqrt(X * X + Y * Y + Z * Z);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointVector3<T>::LengthSquared() const
+T FloatingPointVector3<T>::LengthSquared() const noexcept
 {
     return X * X + Y * Y + Z * Z;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointVector3<T>::Distance(FloatingPointVector3 const& a, FloatingPointVector3 const& b)
+T FloatingPointVector3<T>::Distance(FloatingPointVector3 const& a, FloatingPointVector3 const& b) noexcept
 {
     return (a - b).Length();
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointVector3<T>::DistanceSquared(FloatingPointVector3 const& a, FloatingPointVector3 const& b)
+T FloatingPointVector3<T>::DistanceSquared(FloatingPointVector3 const& a, FloatingPointVector3 const& b) noexcept
 {
     return (a - b).LengthSquared();
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointVector3<T>::Dot(FloatingPointVector3 const& a, FloatingPointVector3 const& b)
+T FloatingPointVector3<T>::Dot(FloatingPointVector3 const& a, FloatingPointVector3 const& b) noexcept
 {
     return a.X * b.X + a.Y * b.Y + a.Z * b.Z;
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector3<T>
-FloatingPointVector3<T>::Cross(FloatingPointVector3 const& a, FloatingPointVector3 const& b)
+FloatingPointVector3<T>::Cross(FloatingPointVector3 const& a, FloatingPointVector3 const& b) noexcept
 {
     return FloatingPointVector3(
         a.Y * b.Z - a.Z * b.Y,
@@ -197,7 +197,7 @@ FloatingPointVector3<T>::Cross(FloatingPointVector3 const& a, FloatingPointVecto
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector3<T>
-FloatingPointVector3<T>::Min(FloatingPointVector3 const& a, FloatingPointVector3 const& b)
+FloatingPointVector3<T>::Min(FloatingPointVector3 const& a, FloatingPointVector3 const& b) noexcept
 {
     return FloatingPointVector3(
         std::min(a.X, b.X),
@@ -207,7 +207,7 @@ FloatingPointVector3<T>::Min(FloatingPointVector3 const& a, FloatingPointVector3
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector3<T>
-FloatingPointVector3<T>::Max(FloatingPointVector3 const& a, FloatingPointVector3 const& b)
+FloatingPointVector3<T>::Max(FloatingPointVector3 const& a, FloatingPointVector3 const& b) noexcept
 {
     return FloatingPointVector3(
         std::max(a.X, b.X),
@@ -217,7 +217,7 @@ FloatingPointVector3<T>::Max(FloatingPointVector3 const& a, FloatingPointVector3
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector3<T>
-FloatingPointVector3<T>::Clamp(FloatingPointVector3 const& source, FloatingPointVector3 const& min, FloatingPointVector3 const& max)
+FloatingPointVector3<T>::Clamp(FloatingPointVector3 const& source, FloatingPointVector3 const& min, FloatingPointVector3 const& max) noexcept
 {
     return FloatingPointVector3(
         MathHelper::Clamp(source.X, min.X, max.X),
@@ -247,14 +247,14 @@ FloatingPointVector3<T>::SmoothStep(FloatingPointVector3 const& source1, Floatin
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointVector3<T>::Normalize()
+FloatingPointVector3<T>::Normalize() noexcept
 {
     *this = Normalize(*this);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector3<T>
-FloatingPointVector3<T>::Normalize(FloatingPointVector3 const& source)
+FloatingPointVector3<T>::Normalize(FloatingPointVector3 const& source) noexcept
 {
     FloatingPointVector3 result;
     Normalize(source, result);
@@ -263,7 +263,7 @@ FloatingPointVector3<T>::Normalize(FloatingPointVector3 const& source)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointVector3<T>::Normalize(FloatingPointVector3 const& source, FloatingPointVector3 & result)
+FloatingPointVector3<T>::Normalize(FloatingPointVector3 const& source, FloatingPointVector3 & result) noexcept
 {
     auto const length = source.Length();
 
@@ -279,7 +279,7 @@ FloatingPointVector3<T>::Normalize(FloatingPointVector3 const& source, FloatingP
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector3<T>
-FloatingPointVector3<T>::Transform(FloatingPointVector3 const& position, FloatingPointMatrix4x4<T> const& matrix)
+FloatingPointVector3<T>::Transform(FloatingPointVector3 const& position, FloatingPointMatrix4x4<T> const& matrix) noexcept
 {
     return FloatingPointVector3(
         (position.X * matrix.m[0][0]) + (position.Y * matrix.m[1][0]) + (position.Z * matrix.m[2][0]) + matrix.m[3][0],
@@ -289,7 +289,7 @@ FloatingPointVector3<T>::Transform(FloatingPointVector3 const& position, Floatin
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector3<T>
-FloatingPointVector3<T>::TransformNormal(FloatingPointVector3 const& normal, FloatingPointMatrix4x4<T> const& matrix)
+FloatingPointVector3<T>::TransformNormal(FloatingPointVector3 const& normal, FloatingPointMatrix4x4<T> const& matrix) noexcept
 {
     return FloatingPointVector3(
         (normal.X * matrix.m[0][0]) + (normal.Y * matrix.m[1][0]) + (normal.Z * matrix.m[2][0]),
@@ -312,7 +312,7 @@ T* FloatingPointVector3<T>::Data() noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector3<T> operator*(T scaleFactor, FloatingPointVector3<T> const& vector)
+FloatingPointVector3<T> operator*(T scaleFactor, FloatingPointVector3<T> const& vector) noexcept
 {
     return FloatingPointVector3<T>(
         scaleFactor * vector.X,
@@ -322,16 +322,22 @@ FloatingPointVector3<T> operator*(T scaleFactor, FloatingPointVector3<T> const& 
 //-----------------------------------------------------------------------
 // explicit instantiations
 template class FloatingPointVector3<float>;
-template FloatingPointVector3<float> operator*<float>(float, FloatingPointVector3<float> const&);
+
+template FloatingPointVector3<float>
+operator*<float>(float, FloatingPointVector3<float> const&) noexcept;
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointVector3<double>;
-template FloatingPointVector3<double> operator*<double>(double, FloatingPointVector3<double> const&);
+
+template FloatingPointVector3<double>
+operator*<double>(double, FloatingPointVector3<double> const&) noexcept;
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointVector3<long double>;
-template FloatingPointVector3<long double> operator*<long double>(long double, FloatingPointVector3<long double> const&);
+
+template FloatingPointVector3<long double>
+operator*<long double>(long double, FloatingPointVector3<long double> const&) noexcept;
 #endif
 
 } // namespace Detail

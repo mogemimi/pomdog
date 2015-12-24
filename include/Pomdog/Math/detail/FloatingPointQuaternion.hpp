@@ -28,37 +28,37 @@ public:
     FloatingPointQuaternion(T x, T y, T z, T w) noexcept;
 
     // Assignment operators:
-    FloatingPointQuaternion & operator+=(FloatingPointQuaternion const&);
-    FloatingPointQuaternion & operator-=(FloatingPointQuaternion const&);
-    FloatingPointQuaternion & operator*=(FloatingPointQuaternion const&);
-    FloatingPointQuaternion & operator*=(T scaleFactor);
+    FloatingPointQuaternion & operator+=(FloatingPointQuaternion const&) noexcept;
+    FloatingPointQuaternion & operator-=(FloatingPointQuaternion const&) noexcept;
+    FloatingPointQuaternion & operator*=(FloatingPointQuaternion const&) noexcept;
+    FloatingPointQuaternion & operator*=(T scaleFactor) noexcept;
     FloatingPointQuaternion & operator/=(T scaleFactor);
 
     // Unary operators:
-    FloatingPointQuaternion operator+() const;
-    FloatingPointQuaternion operator-() const;
+    FloatingPointQuaternion operator+() const noexcept;
+    FloatingPointQuaternion operator-() const noexcept;
 
     // Binary operators:
-    FloatingPointQuaternion operator+(FloatingPointQuaternion const&) const;
-    FloatingPointQuaternion operator-(FloatingPointQuaternion const&) const;
-    FloatingPointQuaternion operator*(FloatingPointQuaternion const&) const;
-    FloatingPointQuaternion operator*(T scaleFactor) const;
+    FloatingPointQuaternion operator+(FloatingPointQuaternion const&) const noexcept;
+    FloatingPointQuaternion operator-(FloatingPointQuaternion const&) const noexcept;
+    FloatingPointQuaternion operator*(FloatingPointQuaternion const&) const noexcept;
+    FloatingPointQuaternion operator*(T scaleFactor) const noexcept;
     FloatingPointQuaternion operator/(T scaleFactor) const;
 
-    bool operator==(FloatingPointQuaternion const&) const;
-    bool operator!=(FloatingPointQuaternion const&) const;
+    bool operator==(FloatingPointQuaternion const&) const noexcept;
+    bool operator!=(FloatingPointQuaternion const&) const noexcept;
 
-    T Length() const;
+    T Length() const noexcept;
 
-    T LengthSquared() const;
+    T LengthSquared() const noexcept;
 
-    static T Dot(FloatingPointQuaternion const& a, FloatingPointQuaternion const& b);
+    static T Dot(FloatingPointQuaternion const& a, FloatingPointQuaternion const& b) noexcept;
 
-    void Normalize();
+    void Normalize() noexcept;
 
-    static FloatingPointQuaternion Normalize(FloatingPointQuaternion const& quaternion);
+    static FloatingPointQuaternion Normalize(FloatingPointQuaternion const& quaternion) noexcept;
 
-    static void Normalize(FloatingPointQuaternion const& quaternion, FloatingPointQuaternion & result);
+    static void Normalize(FloatingPointQuaternion const& quaternion, FloatingPointQuaternion & result) noexcept;
 
     static void
     Slerp(FloatingPointQuaternion const& begin, FloatingPointQuaternion const& end, T amount, FloatingPointQuaternion & result);
@@ -111,7 +111,7 @@ public:
 
 template <typename T>
 FloatingPointQuaternion<T> POMDOG_EXPORT
-operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion);
+operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion) noexcept;
 
 } // namespace Detail
 } // namespace Pomdog
