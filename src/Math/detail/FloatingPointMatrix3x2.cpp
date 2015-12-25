@@ -5,6 +5,7 @@
 #include "Pomdog/Math/detail/FloatingPointQuaternion.hpp"
 #include "Pomdog/Math/detail/FloatingPointVector2.hpp"
 #include "Pomdog/Math/detail/FloatingPointVector3.hpp"
+#include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cmath>
@@ -359,12 +360,12 @@ void
 FloatingPointMatrix3x2<T>::Lerp(FloatingPointMatrix3x2 const& source1,
     FloatingPointMatrix3x2 const& source2, T amount, FloatingPointMatrix3x2 & result) noexcept
 {
-    result.m[0][0] = source1.m[0][0] + ((source2.m[0][0] - source1.m[0][0]) * amount);
-    result.m[0][1] = source1.m[0][1] + ((source2.m[0][1] - source1.m[0][1]) * amount);
-    result.m[1][0] = source1.m[1][0] + ((source2.m[1][0] - source1.m[1][0]) * amount);
-    result.m[1][1] = source1.m[1][1] + ((source2.m[1][1] - source1.m[1][1]) * amount);
-    result.m[2][0] = source1.m[2][0] + ((source2.m[2][0] - source1.m[2][0]) * amount);
-    result.m[2][1] = source1.m[2][1] + ((source2.m[2][1] - source1.m[2][1]) * amount);
+    result.m[0][0] = MathHelper::Lerp(source1.m[0][0], source2.m[0][0], amount);
+    result.m[0][1] = MathHelper::Lerp(source1.m[0][1], source2.m[0][1], amount);
+    result.m[1][0] = MathHelper::Lerp(source1.m[1][0], source2.m[1][0], amount);
+    result.m[1][1] = MathHelper::Lerp(source1.m[1][1], source2.m[1][1], amount);
+    result.m[2][0] = MathHelper::Lerp(source1.m[2][0], source2.m[2][0], amount);
+    result.m[2][1] = MathHelper::Lerp(source1.m[2][1], source2.m[2][1], amount);
 }
 //-----------------------------------------------------------------------
 template <typename T>
