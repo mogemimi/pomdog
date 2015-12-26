@@ -1,0 +1,21 @@
+box: mogemimi/ubuntu-gamedev-wercker
+
+build:
+  steps:
+    - script:
+      name: clone dependencies
+      code: |
+        git submodule update --init
+        git clone --depth=1 https://chromium.googlesource.com/external/gyp.git tools/gyp
+
+    - script:
+      name: unittest
+      code: |
+        python tools/gyp.py test/FrameworkTest/unittest.gyp -f make
+        export CC=clang-3.7
+        export CXX=clang++-3.7
+        export LINK=clang++-3.7
+        export CXXFLAGS="-std=c++14 -stdlib=libc++"
+        export LDFLAGS="-stdlib=libc++"
+        make -C build.makefiles
+        ./build.makefiles/out/Release/unittest
