@@ -91,5 +91,16 @@ std::string FileSystem::GetTempDirectoryPath()
     return path.string();
 }
 //-----------------------------------------------------------------------
+std::string FileSystem::GetCurrentWorkingDirectory()
+{
+    TCHAR directory[MAX_PATH + 1];
+    const auto length = ::GetCurrentDirectory(MAX_PATH, directory);
+    if (length > 0) {
+        std::string result(directory, length);
+        return std::move(result);
+    }
+    return {};
+}
+//-----------------------------------------------------------------------
 } // namespace Detail
 } // namespace Pomdog

@@ -34,6 +34,8 @@ struct POMDOG_EXPORT FileSystem {
     // Windows:
     // - "C:\Users\<user name>\AppData\Local\Temp"
     static std::string GetTempDirectoryPath();
+
+    static std::string GetCurrentWorkingDirectory();
 };
 
 } // namespace Detail

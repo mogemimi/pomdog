@@ -95,5 +95,14 @@ std::string FileSystem::GetTempDirectoryPath()
     return P_tmpdir;
 }
 //-----------------------------------------------------------------------
+std::string FileSystem::GetCurrentWorkingDirectory()
+{
+    char directory[PATH_MAX];
+    if (::getcwd(directory, sizeof(directory)) != nullptr) {
+        return directory;
+    }
+    return {};
+}
+//-----------------------------------------------------------------------
 } // namespace Detail
 } // namespace Pomdog

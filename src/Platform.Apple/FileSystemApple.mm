@@ -4,6 +4,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <Foundation/Foundation.h>
+#include <unistd.h>
 #include <utility>
 
 namespace Pomdog {
@@ -105,6 +106,15 @@ std::string FileSystem::GetTempDirectoryPath()
 {
     std::string tempDirectory = [NSTemporaryDirectory() UTF8String];
     return std::move(tempDirectory);
+}
+//-----------------------------------------------------------------------
+std::string FileSystem::GetCurrentWorkingDirectory()
+{
+    char directory[PATH_MAX];
+    if (::getcwd(directory, sizeof(directory)) != nullptr) {
+        return directory;
+    }
+    return {};
 }
 //-----------------------------------------------------------------------
 } // namespace Detail
