@@ -22,6 +22,10 @@ struct POMDOG_EXPORT PathHelper {
     static std::tuple<std::string, std::string> Split(std::string const& path);
 
     static std::tuple<std::string, std::string> SplitExtension(std::string const& path);
+
+    static std::string Normalize(const std::string& path);
+
+    static std::string Relative(const std::string& path, const std::string& start);
 };
 
 } // namespace Detail
