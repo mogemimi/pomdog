@@ -1,23 +1,12 @@
 *.a
-*.exe
-*.filters
 *.lib
-*.pdb
-*.props
-*.sdf
-*.sln
 *.so
-*.suo
-*.user
-*.vcproj
-*.vcxproj
 .DS_Store
 /out/
 /build/build
 /build/Debug
 /build/Release
 /build.makefiles
-/build.msvs
 /examples/QuickStart/build
 /test/FrameworkTest/build
 /test/TestApp/build
@@ -30,8 +19,23 @@
 /third-party/lua/build
 /third-party/zlib/build
 
+## Visual Studio (Backwards compatibility)
+/build.msvs
+
 ## Xcode (Backwards compatibility)
 /build.xcodefiles
+
+## Visual Studio
+*.opendb
+*.opensdf
+*.pdb
+*.sdf
+*.sln.docstates
+*.suo
+*.user
+*.userosscache
+.vs/
+ipch/
 
 ## Xcode
 *.pbxuser
