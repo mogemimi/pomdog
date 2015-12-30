@@ -10,17 +10,20 @@ namespace Detail {
 std::string PathHelper::Join(std::string const& path1, std::string const& path2)
 {
     std::string result = path1;
-
-#if defined(POMDOG_PLATFORM_WIN32)
+#if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
     if (!result.empty() && '\\' == result.back()) {
         result.erase(std::prev(std::end(result)));
-        result += '/';
+        result += '\\';
     }
 #endif
 
     if (!result.empty() && '/' != result.back()) {
         if (!path2.empty() && '/' != path2.front()) {
+#if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
+            result += '\\';
+#else
             result += '/';
+#endif
         }
     }
 

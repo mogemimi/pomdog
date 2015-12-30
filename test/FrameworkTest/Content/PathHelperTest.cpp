@@ -1,6 +1,8 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
 #include <Pomdog/Content/Utility/PathHelper.hpp>
+#include <Pomdog/Utility/detail/FileSystem.hpp>
+#include <Pomdog/Basic/Platform.hpp>
 #include <gtest/iutest_switch.hpp>
 
 using namespace Pomdog::Detail;
@@ -9,12 +11,21 @@ using Pomdog::Detail::PathHelper;
 TEST(PathHelper, Join)
 {
     EXPECT_EQ("", PathHelper::Join("", ""));
+#if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
+    EXPECT_EQ("Chirico\\Cuvie", PathHelper::Join("Chirico", "Cuvie"));
+    EXPECT_EQ("Cuvie", PathHelper::Join("", "Cuvie"));
+    EXPECT_EQ("Chirico", PathHelper::Join("Chirico", ""));
+    EXPECT_EQ("PS/Chirico\\Cuvie", PathHelper::Join("PS/Chirico", "Cuvie"));
+    EXPECT_EQ("Chirico\\Cuvie/AT", PathHelper::Join("Chirico", "Cuvie/AT"));
+    EXPECT_EQ("PS/Chirico\\Cuvie/AT", PathHelper::Join("PS/Chirico", "Cuvie/AT"));
+#else
     EXPECT_EQ("Chirico/Cuvie", PathHelper::Join("Chirico", "Cuvie"));
     EXPECT_EQ("Cuvie", PathHelper::Join("", "Cuvie"));
     EXPECT_EQ("Chirico", PathHelper::Join("Chirico", ""));
     EXPECT_EQ("PS/Chirico/Cuvie", PathHelper::Join("PS/Chirico", "Cuvie"));
     EXPECT_EQ("Chirico/Cuvie/AT", PathHelper::Join("Chirico", "Cuvie/AT"));
     EXPECT_EQ("PS/Chirico/Cuvie/AT", PathHelper::Join("PS/Chirico", "Cuvie/AT"));
+#endif
 }
 
 TEST(PathHelper, GetBaseName)
