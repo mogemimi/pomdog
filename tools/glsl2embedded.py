@@ -1,4 +1,4 @@
-# Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
+# Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 
 import sys
@@ -98,7 +98,7 @@ def ConvertGLSL2EmbeddedCode(source):
 
 
 def GetSourceHeader():
-    return """// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
+    return """// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 """
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "AudioEngineXAudio2.hpp"
 #include "Pomdog/Math/MathHelper.hpp"

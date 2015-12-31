@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #define IDI_POMDOG_ICON       107
 #define IDI_POMDOG_ICON_SMALL 108

@@ -1,4 +1,4 @@
-# Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
+# Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 # Compile HLSL shader from source file:
 # >>> python tools/hlsl2embedded.py \

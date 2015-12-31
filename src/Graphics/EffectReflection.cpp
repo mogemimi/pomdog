@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Graphics/EffectReflection.hpp"
 #include "../RenderSystem/NativeEffectReflection.hpp"
