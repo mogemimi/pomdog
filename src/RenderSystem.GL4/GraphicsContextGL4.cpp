@@ -270,7 +270,7 @@ void GraphicsContextGL4::Draw(std::size_t vertexCount)
     POMDOG_ASSERT(!vertexBuffers.empty());
     POMDOG_ASSERT(vertexBuffers.front().VertexBuffer);
     POMDOG_ASSERT(vertexCount > 0);
-    POMDOG_ASSERT(vertexCount <= vertexBuffers.front().VertexBuffer->VertexCount());
+    POMDOG_ASSERT(vertexCount <= vertexBuffers.front().VertexBuffer->GetVertexCount());
 
     glDrawArrays(
         primitiveTopology.value,
@@ -292,12 +292,12 @@ void GraphicsContextGL4::DrawIndexed(std::size_t indexCount)
     // Draw
     POMDOG_ASSERT(indexBuffer);
     POMDOG_ASSERT(indexCount > 0);
-    POMDOG_ASSERT(indexCount <= indexBuffer->IndexCount());
+    POMDOG_ASSERT(indexCount <= indexBuffer->GetIndexCount());
 
     glDrawElements(
         primitiveTopology.value,
         static_cast<GLsizei>(indexCount),
-        ToIndexElementType(indexBuffer->ElementSize()),
+        ToIndexElementType(indexBuffer->GetElementSize()),
         nullptr);
     POMDOG_CHECK_ERROR_GL4("glDrawElements");
 }
@@ -311,7 +311,7 @@ void GraphicsContextGL4::DrawInstanced(
     POMDOG_ASSERT(!vertexBuffers.empty());
     POMDOG_ASSERT(vertexBuffers.front().VertexBuffer);
     POMDOG_ASSERT(vertexCount > 0);
-    POMDOG_ASSERT(vertexCount <= vertexBuffers.front().VertexBuffer->VertexCount());
+    POMDOG_ASSERT(vertexCount <= vertexBuffers.front().VertexBuffer->GetVertexCount());
     POMDOG_ASSERT(instanceCount > 0);
     POMDOG_ASSERT(instanceCount <= static_cast<decltype(instanceCount)>(std::numeric_limits<GLsizei>::max()));
 
@@ -337,14 +337,14 @@ void GraphicsContextGL4::DrawIndexedInstanced(
 
     // Draw
     POMDOG_ASSERT(indexCount > 0);
-    POMDOG_ASSERT(indexCount <= indexBuffer->IndexCount());
+    POMDOG_ASSERT(indexCount <= indexBuffer->GetIndexCount());
     POMDOG_ASSERT(instanceCount > 0);
     POMDOG_ASSERT(instanceCount < static_cast<decltype(instanceCount)>(std::numeric_limits<GLsizei>::max()));
 
     glDrawElementsInstanced(
         primitiveTopology.value,
         static_cast<GLsizei>(indexCount),
-        ToIndexElementType(indexBuffer->ElementSize()),
+        ToIndexElementType(indexBuffer->GetElementSize()),
         nullptr,
         static_cast<GLsizei>(instanceCount));
     POMDOG_CHECK_ERROR_GL4("glDrawElementsInstanced");
@@ -521,8 +521,8 @@ void GraphicsContextGL4::SetTexture(int textureUnit, Texture2D & textureIn)
 
     textures[textureUnit] = textureType;
 
-    POMDOG_ASSERT(textureIn.NativeTexture2D());
-    auto textureGL4 = dynamic_cast<Texture2DGL4*>(textureIn.NativeTexture2D());
+    POMDOG_ASSERT(textureIn.GetNativeTexture2D());
+    auto textureGL4 = dynamic_cast<Texture2DGL4*>(textureIn.GetNativeTexture2D());
 
     POMDOG_ASSERT(textureGL4 != nullptr);
     ApplyTexture2D(textureUnit, textureGL4->GetTextureHandle());
@@ -543,8 +543,8 @@ void GraphicsContextGL4::SetTexture(int textureUnit, RenderTarget2D & textureIn)
 
     textures[textureUnit] = textureType;
 
-    POMDOG_ASSERT(textureIn.NativeRenderTarget2D());
-    auto renderTargetGL4 = dynamic_cast<RenderTarget2DGL4*>(textureIn.NativeRenderTarget2D());
+    POMDOG_ASSERT(textureIn.GetNativeRenderTarget2D());
+    auto renderTargetGL4 = dynamic_cast<RenderTarget2DGL4*>(textureIn.GetNativeRenderTarget2D());
 
     POMDOG_ASSERT(renderTargetGL4 != nullptr);
     ApplyTexture2D(textureUnit, renderTargetGL4->GetTextureHandle());
@@ -614,9 +614,9 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
     {
         POMDOG_ASSERT(renderTarget);
 
-        auto const nativeRenderTarget = static_cast<RenderTarget2DGL4*>(renderTarget->NativeRenderTarget2D());
+        auto const nativeRenderTarget = static_cast<RenderTarget2DGL4*>(renderTarget->GetNativeRenderTarget2D());
         POMDOG_ASSERT(nativeRenderTarget != nullptr);
-        POMDOG_ASSERT(nativeRenderTarget == dynamic_cast<RenderTarget2DGL4*>(renderTarget->NativeRenderTarget2D()));
+        POMDOG_ASSERT(nativeRenderTarget == dynamic_cast<RenderTarget2DGL4*>(renderTarget->GetNativeRenderTarget2D()));
 
         POMDOG_ASSERT(nativeRenderTarget);
         nativeRenderTarget->BindToFramebuffer(ToColorAttachment(index));

@@ -18,46 +18,45 @@ public:
 
     VertexBuffer(GraphicsDevice & graphicsDevice,
         void const* vertices, std::size_t vertexCount,
-        std::size_t strideInBytes, Pomdog::BufferUsage bufferUsage);
+        std::size_t strideInBytes, BufferUsage bufferUsage);
 
     VertexBuffer(GraphicsDevice & graphicsDevice,
         std::size_t vertexCount, std::size_t strideInBytes,
-        Pomdog::BufferUsage bufferUsage);
+        BufferUsage bufferUsage);
 
     VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         void const* vertices, std::size_t vertexCount,
-        std::size_t strideBytes, Pomdog::BufferUsage bufferUsage);
+        std::size_t strideBytes, BufferUsage bufferUsage);
 
     VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         std::size_t vertexCount, std::size_t strideBytes,
-        Pomdog::BufferUsage bufferUsage);
+        BufferUsage bufferUsage);
 
     ~VertexBuffer();
 
     VertexBuffer & operator=(VertexBuffer const&) = delete;
     VertexBuffer & operator=(VertexBuffer &&) = default;
 
-    std::size_t VertexCount() const noexcept;
+    std::size_t GetVertexCount() const noexcept;
 
-    std::size_t StrideBytes() const noexcept;
+    std::size_t GetStrideBytes() const noexcept;
 
-    std::size_t SizeInBytes() const noexcept;
+    std::size_t GetSizeInBytes() const noexcept;
 
-    Pomdog::BufferUsage BufferUsage() const noexcept;
+    BufferUsage GetBufferUsage() const noexcept;
 
     void SetData(void const* source, std::size_t elementCount);
 
     void SetData(std::size_t offsetInBytes, void const* source,
         std::size_t elementCount, std::size_t strideInBytes);
 
-public:
-    Detail::NativeBuffer* NativeVertexBuffer();
+    Detail::NativeBuffer* GetNativeVertexBuffer();
 
 private:
     std::unique_ptr<Detail::NativeBuffer> nativeVertexBuffer;
     std::uint32_t vertexCount;
     std::uint32_t strideInBytes;
-    Pomdog::BufferUsage bufferUsage;
+    BufferUsage bufferUsage;
 };
 
 } // namespace Pomdog

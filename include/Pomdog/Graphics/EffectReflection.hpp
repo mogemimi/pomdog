@@ -28,8 +28,7 @@ public:
 
     std::vector<EffectConstantDescription> GetConstantBuffers() const;
 
-public:
-    Detail::NativeEffectReflection* NativeEffectReflection();
+    Detail::NativeEffectReflection* GetNativeEffectReflection();
 
 private:
     std::unique_ptr<Detail::NativeEffectReflection> nativeEffectReflection;

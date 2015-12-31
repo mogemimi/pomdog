@@ -27,28 +27,28 @@ Texture2D::Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
     POMDOG_ASSERT(levelCount >= 1);
-    nativeTexture2D = graphicsDevice->NativeGraphicsDevice()->CreateTexture2D(
+    nativeTexture2D = graphicsDevice->GetNativeGraphicsDevice()->CreateTexture2D(
         pixelWidthIn, pixelHeightIn, levelCount, formatIn);
 }
 //-----------------------------------------------------------------------
 Texture2D::~Texture2D() = default;
 //-----------------------------------------------------------------------
-std::int32_t Texture2D::Width() const
+std::int32_t Texture2D::GetWidth() const
 {
     return pixelWidth;
 }
 //-----------------------------------------------------------------------
-std::int32_t Texture2D::Height() const
+std::int32_t Texture2D::GetHeight() const
 {
     return pixelHeight;
 }
 //-----------------------------------------------------------------------
-std::int32_t Texture2D::LevelCount() const
+std::int32_t Texture2D::GetLevelCount() const
 {
     return levelCount;
 }
 //-----------------------------------------------------------------------
-SurfaceFormat Texture2D::Format() const
+SurfaceFormat Texture2D::GetFormat() const
 {
     return format;
 }
@@ -63,7 +63,7 @@ void Texture2D::SetData(void const* pixelData)
     nativeTexture2D->SetData(pixelWidth, pixelHeight, levelCount, format, pixelData);
 }
 //-----------------------------------------------------------------------
-Detail::NativeTexture2D* Texture2D::NativeTexture2D()
+Detail::NativeTexture2D* Texture2D::GetNativeTexture2D()
 {
     return nativeTexture2D.get();
 }

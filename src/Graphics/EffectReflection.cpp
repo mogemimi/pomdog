@@ -14,15 +14,15 @@ EffectReflection::EffectReflection(
     PipelineStateDescription const& pipelineStateDescription,
     std::shared_ptr<PipelineState> const& pipelineState)
 {
-    auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+    auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
 
     POMDOG_ASSERT(nativeDevice != nullptr);
     POMDOG_ASSERT(pipelineState);
-    POMDOG_ASSERT(pipelineState->NativePipelineState() != nullptr);
+    POMDOG_ASSERT(pipelineState->GetNativePipelineState() != nullptr);
 
     nativeEffectReflection = nativeDevice->CreateEffectReflection(
         pipelineStateDescription,
-        *pipelineState->NativePipelineState());
+        *pipelineState->GetNativePipelineState());
 }
 //-----------------------------------------------------------------------
 EffectReflection::EffectReflection(

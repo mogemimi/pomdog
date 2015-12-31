@@ -30,7 +30,7 @@ RenderTarget2D::RenderTarget2D(GraphicsDevice & graphicsDevice,
     POMDOG_ASSERT(pixelHeight > 0);
     POMDOG_ASSERT(levelCount >= 1);
 
-    auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+    auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
     POMDOG_ASSERT(nativeDevice != nullptr);
 
     ///@todo MSAA is not implemented yet
@@ -56,37 +56,37 @@ RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDe
 //-----------------------------------------------------------------------
 RenderTarget2D::~RenderTarget2D() = default;
 //-----------------------------------------------------------------------
-std::int32_t RenderTarget2D::Width() const
+std::int32_t RenderTarget2D::GetWidth() const
 {
     return pixelWidth;
 }
 //-----------------------------------------------------------------------
-std::int32_t RenderTarget2D::Height() const
+std::int32_t RenderTarget2D::GetHeight() const
 {
     return pixelHeight;
 }
 //-----------------------------------------------------------------------
-std::int32_t RenderTarget2D::LevelCount() const
+std::int32_t RenderTarget2D::GetLevelCount() const
 {
     return levelCount;
 }
 //-----------------------------------------------------------------------
-SurfaceFormat RenderTarget2D::Format() const
+SurfaceFormat RenderTarget2D::GetFormat() const
 {
     return format;
 }
 //-----------------------------------------------------------------------
-DepthFormat RenderTarget2D::DepthStencilFormat() const
+DepthFormat RenderTarget2D::GetDepthStencilFormat() const
 {
     return depthStencilFormat;
 }
 //-----------------------------------------------------------------------
-Rectangle RenderTarget2D::Bounds() const
+Rectangle RenderTarget2D::GetBounds() const
 {
     return Rectangle{0, 0, pixelWidth, pixelHeight};
 }
 //-----------------------------------------------------------------------
-Detail::NativeRenderTarget2D* RenderTarget2D::NativeRenderTarget2D()
+Detail::NativeRenderTarget2D* RenderTarget2D::GetNativeRenderTarget2D()
 {
     return nativeRenderTarget2D.get();
 }

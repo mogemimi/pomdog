@@ -33,7 +33,7 @@ ShaderLanguage GraphicsDevice::GetSupportedLanguage() const
     return impl->nativeGraphicsDevice->GetSupportedLanguage();
 }
 //-----------------------------------------------------------------------
-Detail::NativeGraphicsDevice* GraphicsDevice::NativeGraphicsDevice()
+Detail::NativeGraphicsDevice* GraphicsDevice::GetNativeGraphicsDevice()
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->nativeGraphicsDevice);

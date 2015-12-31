@@ -26,7 +26,7 @@ std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromBinary(
     POMDOG_ASSERT(byteLength > 0);
     POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::HLSL);
 
-    auto nativeGraphicsDevice = graphicsDevice.NativeGraphicsDevice();
+    auto nativeGraphicsDevice = graphicsDevice.GetNativeGraphicsDevice();
 
     ShaderBytecode shaderBytecode;
     shaderBytecode.Code = shaderSource;
@@ -50,7 +50,7 @@ std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromSource(
     POMDOG_ASSERT(byteLength > 0);
     POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::HLSL);
 
-    auto nativeGraphicsDevice = graphicsDevice.NativeGraphicsDevice();
+    auto nativeGraphicsDevice = graphicsDevice.GetNativeGraphicsDevice();
 
     ShaderBytecode shaderBytecode;
     shaderBytecode.Code = shaderSource;

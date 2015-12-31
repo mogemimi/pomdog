@@ -26,7 +26,7 @@ std::unique_ptr<Shader> GLSLCompiler::CreateShader(
     POMDOG_ASSERT(byteLength > 0);
     POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::GLSL);
 
-    auto nativeGraphicsDevice = graphicsDevice.NativeGraphicsDevice();
+    auto nativeGraphicsDevice = graphicsDevice.GetNativeGraphicsDevice();
 
     ShaderBytecode shaderBytecode;
     shaderBytecode.Code = shaderSource;

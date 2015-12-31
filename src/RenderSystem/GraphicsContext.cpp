@@ -87,7 +87,7 @@ void GraphicsContext::Clear(Color const& color)
 
     if (!renderTargets.empty()) {
         auto & renderTarget = renderTargets.front();
-        options |= ToClearOptions(renderTarget->DepthStencilFormat());
+        options |= ToClearOptions(renderTarget->GetDepthStencilFormat());
     }
     else {
         options |= ToClearOptions(depthStencilFormat);

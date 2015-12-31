@@ -278,7 +278,7 @@ void GraphicsContextDirect3D11::SetIndexBuffer(std::shared_ptr<IndexBuffer> cons
         indexBuffer->NativeIndexBuffer()));
 
     deviceContext->IASetIndexBuffer(nativeIndexBuffer->GetBuffer(),
-        DXGIFormatHelper::ToDXGIFormat(indexBuffer->ElementSize()), 0);
+        DXGIFormatHelper::ToDXGIFormat(indexBuffer->GetElementSize()), 0);
 }
 //-----------------------------------------------------------------------
 GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const
@@ -363,17 +363,17 @@ void GraphicsContextDirect3D11::SetVertexBuffers(
         auto & vertexBuffer = binding.VertexBuffer;
 
         POMDOG_ASSERT(vertexBuffer);
-        POMDOG_ASSERT(vertexBuffer->NativeVertexBuffer());
+        POMDOG_ASSERT(vertexBuffer->GetNativeVertexBuffer());
 
         auto nativeVertexBuffer = static_cast<BufferDirect3D11*>(
-            vertexBuffer->NativeVertexBuffer());
+            vertexBuffer->GetNativeVertexBuffer());
 
         POMDOG_ASSERT(nativeVertexBuffer != nullptr);
         POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<BufferDirect3D11*>(
-            vertexBuffer->NativeVertexBuffer()));
+            vertexBuffer->GetNativeVertexBuffer()));
 
         vertexBuffers.push_back(nativeVertexBuffer->GetBuffer());
-        strides.push_back(vertexBuffer->StrideBytes());
+        strides.push_back(vertexBuffer->GetStrideBytes());
         offsets.push_back(binding.VertexOffset);
     }
 
@@ -447,12 +447,12 @@ void GraphicsContextDirect3D11::SetTexture(int index, Texture2D & textureIn)
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
     POMDOG_ASSERT(index < static_cast<int>(textureResourceViews.size()));
-    POMDOG_ASSERT(textureIn.NativeTexture2D() != nullptr);
+    POMDOG_ASSERT(textureIn.GetNativeTexture2D() != nullptr);
 
-    auto texture = static_cast<Texture2DDirect3D11*>(textureIn.NativeTexture2D());
+    auto texture = static_cast<Texture2DDirect3D11*>(textureIn.GetNativeTexture2D());
 
     POMDOG_ASSERT(texture != nullptr);
-    POMDOG_ASSERT(texture == dynamic_cast<Texture2DDirect3D11*>(textureIn.NativeTexture2D()));
+    POMDOG_ASSERT(texture == dynamic_cast<Texture2DDirect3D11*>(textureIn.GetNativeTexture2D()));
 
     textureResourceViews[index] = texture->GetShaderResourceView();
 
@@ -465,12 +465,12 @@ void GraphicsContextDirect3D11::SetTexture(int index, RenderTarget2D & textureIn
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
     POMDOG_ASSERT(index < static_cast<int>(textureResourceViews.size()));
-    POMDOG_ASSERT(textureIn.NativeRenderTarget2D() != nullptr);
+    POMDOG_ASSERT(textureIn.GetNativeRenderTarget2D() != nullptr);
 
-    auto texture = static_cast<RenderTarget2DDirect3D11*>(textureIn.NativeRenderTarget2D());
+    auto texture = static_cast<RenderTarget2DDirect3D11*>(textureIn.GetNativeRenderTarget2D());
 
     POMDOG_ASSERT(texture != nullptr);
-    POMDOG_ASSERT(texture == dynamic_cast<RenderTarget2DDirect3D11*>(textureIn.NativeRenderTarget2D()));
+    POMDOG_ASSERT(texture == dynamic_cast<RenderTarget2DDirect3D11*>(textureIn.GetNativeRenderTarget2D()));
 
     textureResourceViews[index] = texture->GetShaderResourceView();
 
@@ -510,9 +510,9 @@ void GraphicsContextDirect3D11::SetRenderTargets(std::vector<std::shared_ptr<Ren
     {
         POMDOG_ASSERT(renderTargetsIn[i]);
 
-        auto renderTarget = static_cast<RenderTarget2DDirect3D11*>(renderTargetsIn[i]->NativeRenderTarget2D());
+        auto renderTarget = static_cast<RenderTarget2DDirect3D11*>(renderTargetsIn[i]->GetNativeRenderTarget2D());
         POMDOG_ASSERT(renderTarget != nullptr);
-        POMDOG_ASSERT(renderTarget == dynamic_cast<RenderTarget2DDirect3D11*>(renderTargetsIn[i]->NativeRenderTarget2D()));
+        POMDOG_ASSERT(renderTarget == dynamic_cast<RenderTarget2DDirect3D11*>(renderTargetsIn[i]->GetNativeRenderTarget2D()));
 
         renderTargets.emplace_back(renderTargetsIn[i], renderTarget);
 

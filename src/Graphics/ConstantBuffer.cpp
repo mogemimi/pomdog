@@ -12,13 +12,13 @@ namespace Pomdog {
 ConstantBuffer::ConstantBuffer(
     GraphicsDevice & graphicsDevice,
     std::size_t sizeInBytesIn,
-    Pomdog::BufferUsage bufferUsageIn)
+    BufferUsage bufferUsageIn)
     : sizeInBytes(static_cast<decltype(sizeInBytes)>(sizeInBytesIn))
     , bufferUsage(bufferUsageIn)
 {
     POMDOG_ASSERT(sizeInBytes > 0);
 
-    auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+    auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
 
     POMDOG_ASSERT(nativeDevice != nullptr);
     using Detail::BufferBindMode;
@@ -33,13 +33,13 @@ ConstantBuffer::ConstantBuffer(
     GraphicsDevice & graphicsDevice,
     void const* sourceData,
     std::size_t sizeInBytesIn,
-    Pomdog::BufferUsage bufferUsageIn)
+    BufferUsage bufferUsageIn)
     : sizeInBytes(static_cast<decltype(sizeInBytes)>(sizeInBytesIn))
     , bufferUsage(bufferUsageIn)
 {
     POMDOG_ASSERT(sizeInBytes > 0);
 
-    auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+    auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
 
     POMDOG_ASSERT(nativeDevice != nullptr);
     using Detail::BufferBindMode;
@@ -53,7 +53,7 @@ ConstantBuffer::ConstantBuffer(
 ConstantBuffer::ConstantBuffer(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     std::size_t sizeInBytesIn,
-    Pomdog::BufferUsage bufferUsageIn)
+    BufferUsage bufferUsageIn)
     : ConstantBuffer(*graphicsDevice, sizeInBytesIn, bufferUsageIn)
 {}
 //-----------------------------------------------------------------------
@@ -61,7 +61,7 @@ ConstantBuffer::ConstantBuffer(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     void const* sourceData,
     std::size_t sizeInBytesIn,
-    Pomdog::BufferUsage bufferUsageIn)
+    BufferUsage bufferUsageIn)
     : ConstantBuffer(*graphicsDevice, sourceData, sizeInBytesIn, bufferUsageIn)
 {}
 //-----------------------------------------------------------------------
@@ -85,17 +85,17 @@ void ConstantBuffer::SetValue(void const* data, std::size_t sizeInBytesIn)
     return nativeConstantBuffer->SetData(0, data, sizeInBytesIn);
 }
 //-----------------------------------------------------------------------
-std::size_t ConstantBuffer::SizeInBytes() const noexcept
+std::size_t ConstantBuffer::GetSizeInBytes() const noexcept
 {
     return sizeInBytes;
 }
 //-----------------------------------------------------------------------
-BufferUsage ConstantBuffer::BufferUsage() const noexcept
+BufferUsage ConstantBuffer::GetBufferUsage() const noexcept
 {
     return bufferUsage;
 }
 //-----------------------------------------------------------------------
-Detail::NativeBuffer* ConstantBuffer::NativeConstantBuffer()
+Detail::NativeBuffer* ConstantBuffer::GetNativeConstantBuffer()
 {
     POMDOG_ASSERT(nativeConstantBuffer);
     return nativeConstantBuffer.get();

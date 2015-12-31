@@ -38,20 +38,19 @@ public:
     RenderTarget2D & operator=(RenderTarget2D const&) = delete;
     RenderTarget2D & operator=(RenderTarget2D &&) = default;
 
-    std::int32_t Width() const;
+    std::int32_t GetWidth() const;
 
-    std::int32_t Height() const;
+    std::int32_t GetHeight() const;
 
-    std::int32_t LevelCount() const;
+    std::int32_t GetLevelCount() const;
 
-    SurfaceFormat Format() const;
+    SurfaceFormat GetFormat() const;
 
-    DepthFormat DepthStencilFormat() const;
+    DepthFormat GetDepthStencilFormat() const;
 
-    Rectangle Bounds() const;
+    Rectangle GetBounds() const;
 
-public:
-    Detail::NativeRenderTarget2D* NativeRenderTarget2D();
+    Detail::NativeRenderTarget2D* GetNativeRenderTarget2D();
 
 private:
     std::unique_ptr<Detail::NativeRenderTarget2D> nativeRenderTarget2D;

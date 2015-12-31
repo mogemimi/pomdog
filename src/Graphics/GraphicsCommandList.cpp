@@ -18,7 +18,7 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 GraphicsCommandList::GraphicsCommandList(GraphicsDevice & graphicsDevice)
 {
-    auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+    auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
     POMDOG_ASSERT(nativeDevice != nullptr);
 
     nativeCommandList = nativeDevice->CreateGraphicsCommandList();
@@ -165,7 +165,7 @@ void GraphicsCommandList::SetPipelineState(std::shared_ptr<PipelineState> const&
 
     using Detail::NativePipelineState;
     std::shared_ptr<NativePipelineState> nativePipelineState(
-        pipelineState, pipelineState->NativePipelineState());
+        pipelineState, pipelineState->GetNativePipelineState());
 
     nativeCommandList->SetPipelineState(nativePipelineState);
 }
@@ -177,7 +177,7 @@ void GraphicsCommandList::SetConstantBuffer(int index, std::shared_ptr<ConstantB
     POMDOG_ASSERT(nativeCommandList);
 
     std::shared_ptr<Detail::NativeBuffer> nativeConstantBuffer(
-        constantBuffer, constantBuffer->NativeConstantBuffer());
+        constantBuffer, constantBuffer->GetNativeConstantBuffer());
 
     nativeCommandList->SetConstantBuffer(index, nativeConstantBuffer);
 }
@@ -209,11 +209,11 @@ void GraphicsCommandList::SetSamplerState(int index, std::shared_ptr<SamplerStat
 {
     POMDOG_ASSERT(samplerState);
     POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(samplerState->NativeSamplerState());
+    POMDOG_ASSERT(samplerState->GetNativeSamplerState());
     POMDOG_ASSERT(nativeCommandList);
 
     std::shared_ptr<Detail::NativeSamplerState> nativeSamplerState(
-        samplerState, samplerState->NativeSamplerState());
+        samplerState, samplerState->GetNativeSamplerState());
 
     nativeCommandList->SetSampler(index, std::move(nativeSamplerState));
 }

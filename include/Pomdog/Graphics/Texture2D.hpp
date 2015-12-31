@@ -28,18 +28,17 @@ public:
     Texture2D & operator=(Texture2D const&) = delete;
     Texture2D & operator=(Texture2D &&) = default;
 
-    std::int32_t Width() const;
+    std::int32_t GetWidth() const;
 
-    std::int32_t Height() const;
+    std::int32_t GetHeight() const;
 
-    std::int32_t LevelCount() const;
+    std::int32_t GetLevelCount() const;
 
-    SurfaceFormat Format() const;
+    SurfaceFormat GetFormat() const;
 
     void SetData(void const* pixelData);
 
-public:
-    Detail::NativeTexture2D* NativeTexture2D();
+    Detail::NativeTexture2D* GetNativeTexture2D();
 
 private:
     std::unique_ptr<Detail::NativeTexture2D> nativeTexture2D;

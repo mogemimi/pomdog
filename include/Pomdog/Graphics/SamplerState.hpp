@@ -20,8 +20,7 @@ public:
 
     ~SamplerState();
 
-public:
-    Detail::NativeSamplerState* NativeSamplerState();
+    Detail::NativeSamplerState* GetNativeSamplerState();
 
 private:
     std::unique_ptr<Detail::NativeSamplerState> nativeSamplerState;

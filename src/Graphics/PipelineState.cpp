@@ -12,7 +12,7 @@ namespace Pomdog {
 PipelineState::PipelineState(GraphicsDevice & graphicsDevice,
     PipelineStateDescription const& description)
 {
-    auto nativeDevice = graphicsDevice.NativeGraphicsDevice();
+    auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
 
     POMDOG_ASSERT(nativeDevice);
     nativePipelineState = nativeDevice->CreatePipelineState(description);
@@ -26,7 +26,7 @@ PipelineState::PipelineState(
 //-----------------------------------------------------------------------
 PipelineState::~PipelineState() = default;
 //-----------------------------------------------------------------------
-Detail::NativePipelineState* PipelineState::NativePipelineState()
+Detail::NativePipelineState* PipelineState::GetNativePipelineState()
 {
     return nativePipelineState.get();
 }

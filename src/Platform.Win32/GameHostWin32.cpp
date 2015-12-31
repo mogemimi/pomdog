@@ -162,7 +162,7 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceDirect3D11(
 
     auto sharedNativeDevice = std::shared_ptr<GraphicsDeviceDirect3D11>(
         graphicsDevice,
-        dynamic_cast<GraphicsDeviceDirect3D11*>(graphicsDevice->NativeGraphicsDevice()));
+        dynamic_cast<GraphicsDeviceDirect3D11*>(graphicsDevice->GetNativeGraphicsDevice()));
 
     auto sharedNativeContext = std::shared_ptr<GraphicsContextDirect3D11>(
         graphicsContext,

@@ -20,8 +20,7 @@ public:
 
     ShaderLanguage GetSupportedLanguage() const;
 
-public:
-    Detail::NativeGraphicsDevice* NativeGraphicsDevice();
+    Detail::NativeGraphicsDevice* GetNativeGraphicsDevice();
 
 private:
     class Impl;

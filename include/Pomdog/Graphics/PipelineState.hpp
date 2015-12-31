@@ -25,8 +25,7 @@ public:
     PipelineState & operator=(PipelineState const&) = delete;
     PipelineState & operator=(PipelineState &&) = default;
 
-public:
-    Detail::NativePipelineState* NativePipelineState();
+    Detail::NativePipelineState* GetNativePipelineState();
 
 private:
     std::unique_ptr<Detail::NativePipelineState> nativePipelineState;

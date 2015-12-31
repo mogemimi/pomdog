@@ -532,15 +532,15 @@ static void ApplyInputElements(
 
         POMDOG_ASSERT(vertexBuffer);
 
-        auto nativeVertexBuffer = dynamic_cast<VertexBufferGL4*>(vertexBuffer->NativeVertexBuffer());
+        auto nativeVertexBuffer = dynamic_cast<VertexBufferGL4*>(vertexBuffer->GetNativeVertexBuffer());
         POMDOG_ASSERT(nativeVertexBuffer);
 
         // NOTE: The following code is the same as
         // `glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer)`.
         nativeVertexBuffer->BindBuffer();
 
-        POMDOG_ASSERT(vertexBuffer->StrideBytes() > 0);
-        POMDOG_ASSERT(vertexBuffer->StrideBytes() <= static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()));
+        POMDOG_ASSERT(vertexBuffer->GetStrideBytes() > 0);
+        POMDOG_ASSERT(vertexBuffer->GetStrideBytes() <= static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()));
 
         const auto currentInputSlot = inputElement->InputSlot;
 
