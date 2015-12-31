@@ -9,8 +9,7 @@
 
 namespace Pomdog {
 
-class TouchLocation {
-public:
+struct TouchLocation {
     Point2D Position;
     std::uint16_t Id;
     TouchLocationState State = TouchLocationState::Invalid;

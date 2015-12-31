@@ -6,8 +6,8 @@
 
 namespace Pomdog {
 
-class GamepadState;
-class GamepadCapabilities;
+struct GamepadState;
+struct GamepadCapabilities;
 
 class POMDOG_EXPORT Gamepad {
 public:

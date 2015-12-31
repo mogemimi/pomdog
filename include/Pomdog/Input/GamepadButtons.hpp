@@ -7,8 +7,7 @@
 
 namespace Pomdog {
 
-class GamepadButtons {
-public:
+struct GamepadButtons {
     ButtonState A = ButtonState::Released;
     ButtonState B = ButtonState::Released;
     ButtonState X = ButtonState::Released;

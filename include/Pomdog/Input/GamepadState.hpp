@@ -8,8 +8,7 @@
 
 namespace Pomdog {
 
-class GamepadState {
-public:
+struct GamepadState {
     GamepadButtons Buttons;
     GamepadThumbSticks ThumbSticks;
     GamepadDPad DPad;
