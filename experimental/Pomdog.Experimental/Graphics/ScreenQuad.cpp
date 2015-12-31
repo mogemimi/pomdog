@@ -49,7 +49,7 @@ void ScreenQuad::DrawQuad(GraphicsCommandList & commandList)
 {
     commandList.SetVertexBuffer(vertexBuffer);
     commandList.SetPrimitiveTopology(PrimitiveTopology::TriangleList);
-    commandList.Draw(vertexBuffer->VertexCount());
+    commandList.Draw(vertexBuffer->GetVertexCount());
 }
 //-----------------------------------------------------------------------
 } // namespace Pomdog

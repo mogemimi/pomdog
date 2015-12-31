@@ -60,7 +60,7 @@ void PostProcessCompositor::SetViewportSize(
 
     BuildRenderTargets(graphicsDevice,
         viewport.Width, viewport.Height,
-        renderTargets.front()->Format());
+        renderTargets.front()->GetFormat());
     UpdateConstantBuffer();
 }
 //-----------------------------------------------------------------------

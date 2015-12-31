@@ -92,7 +92,7 @@ void SkinnedMeshCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, Rend
         graphicsContext.SetPrimitiveTopology(PrimitiveTopology::TriangleList);
         graphicsContext.DrawIndexed(
             skinnedMeshCommand.mesh->IndexBuffer,
-            skinnedMeshCommand.mesh->IndexBuffer->IndexCount());
+            skinnedMeshCommand.mesh->IndexBuffer->GetIndexCount());
 
         ++drawCallCount;
     }
@@ -110,7 +110,7 @@ void SkinnedMeshCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, Rend
 //        graphicsContext->SetVertexBuffer(mesh->VertexBuffer);
 //        skinningEffect->Apply();
 //        graphicsContext->DrawIndexed(PrimitiveTopology::TriangleList,
-//                                     mesh->IndexBuffer, mesh->IndexBuffer->IndexCount());
+//                                     mesh->IndexBuffer, mesh->IndexBuffer->GetIndexCount());
 //
 //        graphicsContext->SetRasterizerState(rasterizerStateOld);
 //    }

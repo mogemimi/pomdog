@@ -114,7 +114,7 @@ void QuickStartGame::Initialize()
             commandList->SetVertexBuffer(vertexBuffer);
             commandList->SetPipelineState(pipelineState);
             commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
-            commandList->DrawIndexed(indexBuffer, indexBuffer->IndexCount());
+            commandList->DrawIndexed(indexBuffer, indexBuffer->GetIndexCount());
             commandList->Close();
         };
 
@@ -151,7 +151,7 @@ void QuickStartGame::Update()
     auto totalTime = static_cast<float>(clock->GetTotalGameTime().count());
 
     auto rotate = Matrix4x4::CreateRotationZ(std::cos(totalTime));
-    auto scale = Matrix4x4::CreateScale(Vector3(texture->Width(), texture->Height(), 1.0f));
+    auto scale = Matrix4x4::CreateScale(Vector3(texture->GetWidth(), texture->GetHeight(), 1.0f));
     auto model = scale * rotate;
 
     myShaderConstants.Model = Matrix4x4::Transpose(model);

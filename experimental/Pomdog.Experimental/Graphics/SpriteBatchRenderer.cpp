@@ -295,7 +295,7 @@ void SpriteBatchRenderer::Impl::DrawInstance(std::vector<SpriteInfo> const& spri
     commandList->SetConstantBuffer(1, constantBuffer);
     commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     commandList->DrawIndexedInstanced(
-        planeIndices, planeIndices->IndexCount(), sprites.size());
+        planeIndices, planeIndices->GetIndexCount(), sprites.size());
 
     currentVertexOffset += sprites.size();
     ++drawCallCount;
@@ -315,16 +315,16 @@ std::size_t SpriteBatchRenderer::Impl::CheckTextureIndex(std::shared_ptr<Texture
             POMDOG_ASSERT(textures.empty());
         }
 
-        POMDOG_ASSERT(texture->Width() > 0);
-        POMDOG_ASSERT(texture->Height() > 0);
+        POMDOG_ASSERT(texture->GetWidth() > 0);
+        POMDOG_ASSERT(texture->GetHeight() > 0);
         textures.push_back(texture);
         {
-            POMDOG_ASSERT(texture->Width() > 0);
-            POMDOG_ASSERT(texture->Height() > 0);
+            POMDOG_ASSERT(texture->GetWidth() > 0);
+            POMDOG_ASSERT(texture->GetHeight() > 0);
 
             Vector2 inverseTextureWidth {
-                (texture->Width() > 0) ? (1.0f / static_cast<float>(texture->Width())): 0.0f,
-                (texture->Height() > 0) ? (1.0f / static_cast<float>(texture->Height())): 0.0f
+                (texture->GetWidth() > 0) ? (1.0f / static_cast<float>(texture->GetWidth())): 0.0f,
+                (texture->GetHeight() > 0) ? (1.0f / static_cast<float>(texture->GetHeight())): 0.0f
             };
 
             POMDOG_ASSERT(!textures.empty());
@@ -356,8 +356,8 @@ void SpriteBatchRenderer::Impl::Draw(
     Vector2 const& originPivot)
 {
     POMDOG_ASSERT(texture);
-    POMDOG_ASSERT(texture->Width() > 0);
-    POMDOG_ASSERT(texture->Height() > 0);
+    POMDOG_ASSERT(texture->GetWidth() > 0);
+    POMDOG_ASSERT(texture->GetHeight() > 0);
 
     if (spriteQueue.size() >= MaxBatchSize) {
         return;
@@ -371,7 +371,7 @@ void SpriteBatchRenderer::Impl::Draw(
     SpriteInfo info;
     info.TransformMatrix1 = {transform(0, 0), transform(0, 1), transform(1, 0), transform(1, 1)};
     info.TransformMatrix2Origin = {transform(2, 0), transform(2, 1), originPivot.X, originPivot.Y};
-    info.SourceRect = Vector4(0, 0, texture->Width(), texture->Height());
+    info.SourceRect = Vector4(0, 0, texture->GetWidth(), texture->GetHeight());
     info.Color = color.ToVector4();
     info.TextureIndex.X = textureIndex;
 
@@ -391,8 +391,8 @@ void SpriteBatchRenderer::Impl::Draw(
     }
 
     POMDOG_ASSERT(texture);
-    POMDOG_ASSERT(texture->Width() > 0);
-    POMDOG_ASSERT(texture->Height() > 0);
+    POMDOG_ASSERT(texture->GetWidth() > 0);
+    POMDOG_ASSERT(texture->GetHeight() > 0);
 
     if (spriteQueue.size() >= MaxBatchSize) {
         return;

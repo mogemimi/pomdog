@@ -273,7 +273,7 @@ void SpriteRenderer::Impl::DrawInstance(std::shared_ptr<Texture2D> const& textur
     graphicsContext->SetConstantBuffers(constantBuffers);
     graphicsContext->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     graphicsContext->DrawIndexedInstanced(
-        planeIndices, planeIndices->IndexCount(), sprites.size());
+        planeIndices, planeIndices->GetIndexCount(), sprites.size());
 }
 //-----------------------------------------------------------------------
 void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
