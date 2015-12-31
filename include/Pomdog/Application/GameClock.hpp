@@ -26,15 +26,15 @@ public:
 
     void Tick();
 
-    Duration TotalGameTime() const noexcept;
+    Duration GetTotalGameTime() const noexcept;
 
-    std::uint32_t FrameNumber() const noexcept;
+    std::uint32_t GetFrameNumber() const noexcept;
 
-    Duration FrameDuration() const noexcept;
+    Duration GetFrameDuration() const noexcept;
 
-    float FrameRate() const noexcept;
+    float GetFrameRate() const noexcept;
 
-    Duration ElapsedTime() const noexcept;
+    Duration GetElapsedTime() const noexcept;
 
     Signal<void(Duration const& frameDuration)> OnTick;
 

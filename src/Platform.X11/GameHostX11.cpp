@@ -325,7 +325,7 @@ void GameHostX11::Impl::Run(Game & game)
         game.Update();
         RenderFrame(game);
 
-        auto elapsedTime = clock.ElapsedTime();
+        auto elapsedTime = clock.GetElapsedTime();
 
         if (elapsedTime < presentationInterval) {
             auto sleepTime = (presentationInterval - elapsedTime);

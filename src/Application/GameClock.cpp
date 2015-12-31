@@ -183,31 +183,31 @@ void GameClock::Tick()
     OnTick(impl->GetFrameDuration());
 }
 //-----------------------------------------------------------------------
-Duration GameClock::TotalGameTime() const noexcept
+Duration GameClock::GetTotalGameTime() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetTotalGameTime();
 }
 //-----------------------------------------------------------------------
-std::uint32_t GameClock::FrameNumber() const noexcept
+std::uint32_t GameClock::GetFrameNumber() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetFrameNumber();
 }
 //-----------------------------------------------------------------------
-Duration GameClock::FrameDuration() const noexcept
+Duration GameClock::GetFrameDuration() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetFrameDuration();
 }
 //-----------------------------------------------------------------------
-float GameClock::FrameRate() const noexcept
+float GameClock::GetFrameRate() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetFrameRate();
 }
 //-----------------------------------------------------------------------
-Duration GameClock::ElapsedTime() const noexcept
+Duration GameClock::GetElapsedTime() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetElapsedTime();

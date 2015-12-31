@@ -337,7 +337,7 @@ void GameHostCocoa::Impl::GameLoop()
     }
 
     if (!displayLinkEnabled) {
-        auto elapsedTime = clock.ElapsedTime();
+        auto elapsedTime = clock.GetElapsedTime();
 
         if (elapsedTime < presentationInterval) {
             lock.~lock_guard();
