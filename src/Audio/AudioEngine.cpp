@@ -34,7 +34,7 @@ void AudioEngine::SetMasterVolume(float volume)
     nativeAudioEngine->SetMasterVolume(volume);
 }
 //-----------------------------------------------------------------------
-Detail::SoundSystem::NativeAudioEngine* AudioEngine::NativeAudioEngine()
+Detail::SoundSystem::NativeAudioEngine* AudioEngine::GetNativeAudioEngine()
 {
     POMDOG_ASSERT(nativeAudioEngine);
     return nativeAudioEngine.get();

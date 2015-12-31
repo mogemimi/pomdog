@@ -45,9 +45,9 @@ public:
 
     void ExitLoop();
 
-    void Pitch(float pitch);
+    void SetPitch(float pitch);
 
-    void Volume(float volume);
+    void SetVolume(float volume);
 };
 
 } // namespace OpenAL

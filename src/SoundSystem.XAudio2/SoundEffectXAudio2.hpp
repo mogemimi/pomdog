@@ -36,9 +36,9 @@ public:
 
     void Apply3D(AudioListener const& listener, AudioEmitter const& emitter);
 
-    void Pitch(float pitch);
+    void SetPitch(float pitch);
 
-    void Volume(float volume);
+    void SetVolume(float volume);
 
 private:
     std::shared_ptr<AudioClipXAudio2> audioClip;

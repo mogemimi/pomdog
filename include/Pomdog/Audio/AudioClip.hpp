@@ -21,15 +21,15 @@ public:
 
     ~AudioClip();
 
-    Duration Length() const;
+    Duration GetLength() const;
 
-    int SampleRate() const;
+    int GetSampleRate() const;
 
-    int BitsPerSample() const;
+    int GetBitsPerSample() const;
 
-    AudioChannels Channels() const;
+    AudioChannels GetChannels() const;
 
-    Detail::SoundSystem::NativeAudioClip* NativeAudioClip();
+    Detail::SoundSystem::NativeAudioClip* GetNativeAudioClip();
 
 private:
     std::unique_ptr<Detail::SoundSystem::NativeAudioClip> nativeAudioClip;

@@ -59,7 +59,7 @@ AudioClip::AudioClip(std::unique_ptr<Detail::SoundSystem::NativeAudioClip> && na
 //-----------------------------------------------------------------------
 AudioClip::~AudioClip() = default;
 //-----------------------------------------------------------------------
-Duration AudioClip::Length() const
+Duration AudioClip::GetLength() const
 {
     POMDOG_ASSERT(nativeAudioClip);
     auto samples = GetSamples(nativeAudioClip->SizeInBytes(), bitsPerSample, channels);
@@ -67,22 +67,22 @@ Duration AudioClip::Length() const
     return std::move(sampleDuration);
 }
 //-----------------------------------------------------------------------
-int AudioClip::SampleRate() const
+int AudioClip::GetSampleRate() const
 {
     return sampleRate;
 }
 //-----------------------------------------------------------------------
-int AudioClip::BitsPerSample() const
+int AudioClip::GetBitsPerSample() const
 {
     return bitsPerSample;
 }
 //-----------------------------------------------------------------------
-AudioChannels AudioClip::Channels() const
+AudioChannels AudioClip::GetChannels() const
 {
     return channels;
 }
 //-----------------------------------------------------------------------
-Detail::SoundSystem::NativeAudioClip* AudioClip::NativeAudioClip()
+Detail::SoundSystem::NativeAudioClip* AudioClip::GetNativeAudioClip()
 {
     POMDOG_ASSERT(nativeAudioClip);
     return nativeAudioClip.get();

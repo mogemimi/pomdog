@@ -22,7 +22,7 @@ public:
 
     void SetMasterVolume(float volume);
 
-    Detail::SoundSystem::NativeAudioEngine* NativeAudioEngine();
+    Detail::SoundSystem::NativeAudioEngine* GetNativeAudioEngine();
 
 private:
     std::unique_ptr<Detail::SoundSystem::NativeAudioEngine> nativeAudioEngine;

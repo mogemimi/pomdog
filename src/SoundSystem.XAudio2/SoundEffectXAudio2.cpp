@@ -116,7 +116,7 @@ void SoundEffectXAudio2::Apply3D(AudioListener const& listener, AudioEmitter con
     POMDOG_ASSERT(false);
 }
 //-----------------------------------------------------------------------
-void SoundEffectXAudio2::Pitch(float pitch)
+void SoundEffectXAudio2::SetPitch(float pitch)
 {
     POMDOG_ASSERT(sourceVoice);
     POMDOG_ASSERT(!std::isnan(pitch));
@@ -133,7 +133,7 @@ void SoundEffectXAudio2::Pitch(float pitch)
     sourceVoice->SetFrequencyRatio(nativePitch);
 }
 //-----------------------------------------------------------------------
-void SoundEffectXAudio2::Volume(float volume)
+void SoundEffectXAudio2::SetVolume(float volume)
 {
     POMDOG_ASSERT(sourceVoice);
     POMDOG_ASSERT(volume <= 1.0f);

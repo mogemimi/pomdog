@@ -34,19 +34,19 @@ public:
 
     void ExitLoop();
 
-    SoundState State() const;
+    SoundState GetState() const;
 
-    float Pan() const;
+    float GetPan() const;
 
-    void Pan(float panpot);
+    void SetPan(float panpot);
 
-    float Pitch() const;
+    float GetPitch() const;
 
-    void Pitch(float pitch);
+    void SetPitch(float pitch);
 
-    float Volume() const;
+    float GetVolume() const;
 
-    void Volume(float volume);
+    void SetVolume(float volume);
 
 private:
     std::unique_ptr<Detail::SoundSystem::NativeSoundEffect> nativeSoundEffect;

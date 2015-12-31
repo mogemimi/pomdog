@@ -130,7 +130,7 @@ void SoundEffectAL::ExitLoop()
     #endif
 }
 //-----------------------------------------------------------------------
-void SoundEffectAL::Pitch(float pitch)
+void SoundEffectAL::SetPitch(float pitch)
 {
     // pitch --> nativePitch
     //  0.0f --> 1.0f
@@ -147,7 +147,7 @@ void SoundEffectAL::Pitch(float pitch)
     #endif
 }
 //-----------------------------------------------------------------------
-void SoundEffectAL::Volume(float volume)
+void SoundEffectAL::SetVolume(float volume)
 {
     POMDOG_ASSERT(source);
     POMDOG_ASSERT(volume >= 0.0f);

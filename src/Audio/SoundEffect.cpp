@@ -21,7 +21,7 @@ namespace {
 static std::shared_ptr<Detail::SoundSystem::NativeAudioClip> GetNativeBuffer(std::shared_ptr<AudioClip> const& audioClip)
 {
     std::shared_ptr<Detail::SoundSystem::NativeAudioClip> nativeAudioClip(
-        audioClip, audioClip->NativeAudioClip());
+        audioClip, audioClip->GetNativeAudioClip());
     return std::move(nativeAudioClip);
 }
 
@@ -34,7 +34,7 @@ SoundEffect::SoundEffect(AudioEngine & audioEngine,
     , state(SoundState::Stopped)
     , isLooped(isLoopedIn)
 {
-    auto nativeAudioEngine = audioEngine.NativeAudioEngine();
+    auto nativeAudioEngine = audioEngine.GetNativeAudioEngine();
     POMDOG_ASSERT(nativeAudioEngine);
 
     nativeSoundEffect = std::make_unique<Detail::SoundSystem::NativeSoundEffect>(
@@ -98,47 +98,47 @@ void SoundEffect::ExitLoop()
     isLooped = false;
 }
 //-----------------------------------------------------------------------
-SoundState SoundEffect::State() const
+SoundState SoundEffect::GetState() const
 {
     return state;
 }
 //-----------------------------------------------------------------------
-//float SoundEffect::Pan() const
+//float SoundEffect::GetPan() const
 //{
 //}
 //-----------------------------------------------------------------------
-//void SoundEffect::Pan(float panpot)
+//void SoundEffect::SetPan(float panpot)
 //{
 //    //POMDOG_ASSERT(nativeSoundEffect);
 //    //nativeSoundEffect->Pan(panpot);
 //}
 //-----------------------------------------------------------------------
-float SoundEffect::Pitch() const
+float SoundEffect::GetPitch() const
 {
     return pitch;
 }
 //-----------------------------------------------------------------------
-void SoundEffect::Pitch(float pitchIn)
+void SoundEffect::SetPitch(float pitchIn)
 {
     POMDOG_ASSERT(pitchIn >= -1.0f);
     POMDOG_ASSERT(pitchIn <= 1.0f);
     POMDOG_ASSERT(nativeSoundEffect);
     this->pitch = pitchIn;
-    nativeSoundEffect->Pitch(pitchIn);
+    nativeSoundEffect->SetPitch(pitchIn);
 }
 //-----------------------------------------------------------------------
-float SoundEffect::Volume() const
+float SoundEffect::GetVolume() const
 {
     return volume;
 }
 //-----------------------------------------------------------------------
-void SoundEffect::Volume(float volumeIn)
+void SoundEffect::SetVolume(float volumeIn)
 {
     POMDOG_ASSERT(volumeIn >= 0.0f);
     POMDOG_ASSERT(volumeIn <= 1.0f);
     POMDOG_ASSERT(nativeSoundEffect);
     this->volume = volumeIn;
-    nativeSoundEffect->Volume(volume);
+    nativeSoundEffect->SetVolume(volume);
 }
 //-----------------------------------------------------------------------
 } // namespace Pomdog
