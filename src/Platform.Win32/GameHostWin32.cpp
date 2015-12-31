@@ -25,7 +25,6 @@
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
-#include "Pomdog/Content/Utility/PathHelper.hpp"
 #include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
@@ -33,7 +32,8 @@
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Utility/detail/FileSystem.hpp"
+#include "Pomdog/Utility/FileSystem.hpp"
+#include "Pomdog/Utility/PathHelper.hpp"
 #include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include <thread>

@@ -6,10 +6,10 @@
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
-#include "Pomdog/Content/Utility/PathHelper.hpp"
-#include "Pomdog/Utility/StringHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/PathHelper.hpp"
+#include "Pomdog/Utility/StringHelper.hpp"
 #include <utility>
 #include <vector>
 #include <string>

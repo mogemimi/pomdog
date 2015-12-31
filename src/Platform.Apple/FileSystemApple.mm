@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Utility/detail/FileSystem.hpp"
+#include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <Foundation/Foundation.h>

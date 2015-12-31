@@ -3,10 +3,10 @@
 #include "UserPreferences.hpp"
 #include "Pomdog/Content/Utility/BinaryFileStream.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
-#include "Pomdog/Content/Utility/PathHelper.hpp"
-#include "Pomdog/Utility/detail/FileSystem.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/FileSystem.hpp"
+#include "Pomdog/Utility/PathHelper.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>

@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2015 mogemimi. Distributed under the MIT license.
 
-#include <Pomdog/Content/Utility/PathHelper.hpp>
-#include <Pomdog/Utility/detail/FileSystem.hpp>
+#include <Pomdog/Utility/PathHelper.hpp>
+#include <Pomdog/Utility/FileSystem.hpp>
 #include <Pomdog/Basic/Platform.hpp>
 #include <gtest/iutest_switch.hpp>
 

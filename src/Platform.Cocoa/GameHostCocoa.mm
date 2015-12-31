@@ -15,7 +15,6 @@
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
-#include "Pomdog/Content/Utility/PathHelper.hpp"
 #include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
@@ -25,8 +24,9 @@
 #include "Pomdog/Input/KeyState.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/FileSystem.hpp"
+#include "Pomdog/Utility/PathHelper.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
-#include "Pomdog/Utility/detail/FileSystem.hpp"
 #include <utility>
 #include <vector>
 #include <mutex>
