@@ -60,7 +60,7 @@ void AnimationSystem::Impl::Update(GameClock const& clock)
     {
         // (1) Update time:
         auto & state = *animationContext.AnimationState;
-        state.Update(clock.FrameDuration());
+        state.Update(clock.GetFrameDuration());
 
         // (2) Pose extraction:
         auto & clip = state.Clip();

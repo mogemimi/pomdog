@@ -13,12 +13,12 @@ namespace Pong {
 //-----------------------------------------------------------------------
 PongGame::PongGame(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , window(gameHostIn->Window())
-    , graphicsDevice(gameHostIn->GraphicsDevice())
-    , commandQueue(gameHostIn->GraphicsCommandQueue())
-    , assets(gameHostIn->AssetManager())
-    , clock(gameHostIn->Clock())
-    , audioEngine(gameHostIn->AudioEngine())
+    , window(gameHostIn->GetWindow())
+    , graphicsDevice(gameHostIn->GetGraphicsDevice())
+    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , assets(gameHostIn->GetAssetManager())
+    , clock(gameHostIn->GetClock())
+    , audioEngine(gameHostIn->GetAudioEngine())
     , spriteBatch(graphicsDevice, *assets)
     , polygonBatch(graphicsDevice, *assets)
     , postProcessCompositor(graphicsDevice,
@@ -63,14 +63,14 @@ void PongGame::Initialize()
         player1.Score = 0;
         player2.Score = 0;
 
-        auto keyboard = gameHost->Keyboard();
+        auto keyboard = gameHost->GetKeyboard();
 
         input1.Reset(Keys::UpArrow, Keys::DownArrow, keyboard);
         input2.Reset(Keys::W, Keys::S, keyboard);
 
         connect(input1.Up, [this] {
             paddle1.PositionOld = paddle1.Position;
-            paddle1.Position.Y += paddle1.Speed * clock->FrameDuration().count();
+            paddle1.Position.Y += paddle1.Speed * clock->GetFrameDuration().count();
 
             if (paddle1.Position.Y > (gameFieldSize.Height / 2 - paddle1.Height / 2)) {
                 paddle1.Position.Y = (gameFieldSize.Height / 2 - paddle1.Height / 2);
@@ -78,7 +78,7 @@ void PongGame::Initialize()
         });
         connect(input1.Down, [this] {
             paddle1.PositionOld = paddle1.Position;
-            paddle1.Position.Y -= paddle1.Speed * clock->FrameDuration().count();
+            paddle1.Position.Y -= paddle1.Speed * clock->GetFrameDuration().count();
 
             if (paddle1.Position.Y < -(gameFieldSize.Height / 2 - paddle1.Height / 2)) {
                 paddle1.Position.Y = -(gameFieldSize.Height / 2 - paddle1.Height / 2);
@@ -86,7 +86,7 @@ void PongGame::Initialize()
         });
         connect(input2.Up, [this] {
             paddle2.PositionOld = paddle2.Position;
-            paddle2.Position.Y += paddle2.Speed * clock->FrameDuration().count();
+            paddle2.Position.Y += paddle2.Speed * clock->GetFrameDuration().count();
 
             if (paddle2.Position.Y > (gameFieldSize.Height / 2 - paddle2.Height / 2)) {
                 paddle2.Position.Y = (gameFieldSize.Height / 2 - paddle2.Height / 2);
@@ -94,7 +94,7 @@ void PongGame::Initialize()
         });
         connect(input2.Down, [this] {
             paddle2.PositionOld = paddle2.Position;
-            paddle2.Position.Y -= paddle2.Speed * clock->FrameDuration().count();
+            paddle2.Position.Y -= paddle2.Speed * clock->GetFrameDuration().count();
 
             if (paddle2.Position.Y < -(gameFieldSize.Height / 2 - paddle2.Height / 2)) {
                 paddle2.Position.Y = -(gameFieldSize.Height / 2 - paddle2.Height / 2);
@@ -105,8 +105,8 @@ void PongGame::Initialize()
         connect(textTimer.Elapsed, [this] {
             headerText = StringHelper::Format(
                 "%.0lf sec\n%.0f fps   SCORE %d - %d",
-                clock->TotalGameTime().count(),
-                std::round(clock->FrameRate()),
+                clock->GetTotalGameTime().count(),
+                std::round(clock->GetFrameRate()),
                 player1.Score,
                 player2.Score);
         });
@@ -119,7 +119,7 @@ void PongGame::Initialize()
             ball.PositionOld = Vector2::Zero;
             ball.Velocity = Vector2::Zero;
 
-            auto keyboard = gameHost->Keyboard();
+            auto keyboard = gameHost->GetKeyboard();
             pressedStartConnection = keyboard->KeyDown.Connect([this](Keys key) {
                 if (key == Keys::Space) {
                     pressedStartConnection.Disconnect();
@@ -152,7 +152,7 @@ void PongGame::Initialize()
             input2.Emit();
 
             ball.PositionOld = ball.Position;
-            ball.Position += ball.Velocity * clock->FrameDuration().count();
+            ball.Position += ball.Velocity * clock->GetFrameDuration().count();
 
             bool collision = false;
 

@@ -23,9 +23,9 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
     constexpr std::uint16_t maxHistories = 20;
 
     {
-        if (clock->TotalGameTime() - duration > Duration(0.2))
+        if (clock->GetTotalGameTime() - duration > Duration(0.2))
         {
-            auto frameRate = clock->FrameRate();
+            auto frameRate = clock->GetFrameRate();
             frameRateString = StringHelper::Format("%4.2f fps", frameRate);
             frameRates.push_back(std::round(MathHelper::Clamp(frameRate, minFramerate, maxFramerate)));
 
@@ -33,7 +33,7 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
             {
                 frameRates.pop_front();
             }
-            duration = clock->TotalGameTime();
+            duration = clock->GetTotalGameTime();
         }
     }
 

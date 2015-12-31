@@ -6,11 +6,11 @@ namespace QuickStart {
 //-----------------------------------------------------------------------
 QuickStartGame::QuickStartGame(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , window(gameHostIn->Window())
-    , graphicsDevice(gameHostIn->GraphicsDevice())
-    , commandQueue(gameHostIn->GraphicsCommandQueue())
-    , assets(gameHostIn->AssetManager())
-    , clock(gameHostIn->Clock())
+    , window(gameHostIn->GetWindow())
+    , graphicsDevice(gameHostIn->GetGraphicsDevice())
+    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , assets(gameHostIn->GetAssetManager())
+    , clock(gameHostIn->GetClock())
 {
 }
 //-----------------------------------------------------------------------
@@ -137,8 +137,8 @@ void QuickStartGame::Initialize()
             // String formatting using Pomdog::StringFormat
             auto title = StringHelper::Format(
                 "QuickStart %3.0f fps, %d frames",
-                std::round(clock->FrameRate()),
-                clock->FrameNumber());
+                std::round(clock->GetFrameRate()),
+                clock->GetFrameNumber());
 
             // Set window title
             window->SetTitle(title);
@@ -148,7 +148,7 @@ void QuickStartGame::Initialize()
 //-----------------------------------------------------------------------
 void QuickStartGame::Update()
 {
-    auto totalTime = static_cast<float>(clock->TotalGameTime().count());
+    auto totalTime = static_cast<float>(clock->GetTotalGameTime().count());
 
     auto rotate = Matrix4x4::CreateRotationZ(std::cos(totalTime));
     auto scale = Matrix4x4::CreateScale(Vector3(texture->Width(), texture->Height(), 1.0f));
