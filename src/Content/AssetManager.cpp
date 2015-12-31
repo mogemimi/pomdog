@@ -14,7 +14,7 @@ void AssetManager::Unload()
     assets.Unload();
 }
 //-----------------------------------------------------------------------
-std::string AssetManager::RootDirectory() const
+std::string AssetManager::GetRootDirectory() const
 {
     return loaderContext.RootDirectory;
 }

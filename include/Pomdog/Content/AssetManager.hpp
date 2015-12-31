@@ -30,7 +30,7 @@ public:
 
     void Unload();
 
-    std::string RootDirectory() const;
+    std::string GetRootDirectory() const;
 
     Detail::BinaryFileStream OpenStream(std::string const& assetName) const;
 
