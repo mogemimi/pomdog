@@ -36,21 +36,21 @@ public:
 
     void Exit() override;
 
-    std::shared_ptr<Pomdog::GameWindow> Window() override;
+    std::shared_ptr<GameWindow> GetWindow() override;
 
-    std::shared_ptr<Pomdog::GameClock> Clock() override;
+    std::shared_ptr<GameClock> GetClock() override;
 
-    std::shared_ptr<Pomdog::GraphicsDevice> GraphicsDevice() override;
+    std::shared_ptr<GraphicsDevice> GetGraphicsDevice() override;
 
-    std::shared_ptr<Pomdog::GraphicsCommandQueue> GraphicsCommandQueue() override;
+    std::shared_ptr<GraphicsCommandQueue> GetGraphicsCommandQueue() override;
 
-    std::shared_ptr<Pomdog::AudioEngine> AudioEngine() override;
+    std::shared_ptr<AudioEngine> GetAudioEngine() override;
 
-    std::shared_ptr<Pomdog::AssetManager> AssetManager() override;
+    std::shared_ptr<AssetManager> GetAssetManager() override;
 
-    std::shared_ptr<Pomdog::Keyboard> Keyboard() override;
+    std::shared_ptr<Keyboard> GetKeyboard() override;
 
-    std::shared_ptr<Pomdog::Mouse> Mouse() override;
+    std::shared_ptr<Mouse> GetMouse() override;
 
 private:
     class Impl;

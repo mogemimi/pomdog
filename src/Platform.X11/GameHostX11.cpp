@@ -184,10 +184,10 @@ public:
     std::shared_ptr<X11Context> x11Context;
     std::shared_ptr<GameWindowX11> window;
     std::shared_ptr<OpenGLContextX11> openGLContext;
-    std::shared_ptr<Pomdog::GraphicsDevice> graphicsDevice;
-    std::shared_ptr<Pomdog::Detail::GraphicsContext> graphicsContext;
-    std::shared_ptr<Pomdog::GraphicsCommandQueue> graphicsCommandQueue;
-    std::shared_ptr<Pomdog::AudioEngine> audioEngine;
+    std::shared_ptr<GraphicsDevice> graphicsDevice;
+    std::shared_ptr<Detail::GraphicsContext> graphicsContext;
+    std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
+    std::shared_ptr<AudioEngine> audioEngine;
     std::unique_ptr<Pomdog::AssetManager> assetManager;
     std::unique_ptr<KeyboardX11> keyboard;
     MouseX11 mouse;
@@ -370,63 +370,63 @@ void GameHostX11::Exit()
     impl->Exit();
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GameWindow> GameHostX11::Window()
+std::shared_ptr<GameWindow> GameHostX11::GetWindow()
 {
     POMDOG_ASSERT(impl);
     return impl->window;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GameClock> GameHostX11::Clock()
+std::shared_ptr<GameClock> GameHostX11::GetClock()
 {
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
-    std::shared_ptr<Pomdog::GameClock> sharedClock(gameHost, &impl->clock);
+    std::shared_ptr<GameClock> sharedClock(gameHost, &impl->clock);
     return std::move(sharedClock);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GraphicsDevice> GameHostX11::GraphicsDevice()
+std::shared_ptr<GraphicsDevice> GameHostX11::GetGraphicsDevice()
 {
     POMDOG_ASSERT(impl);
     return impl->graphicsDevice;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GraphicsCommandQueue> GameHostX11::GraphicsCommandQueue()
+std::shared_ptr<GraphicsCommandQueue> GameHostX11::GetGraphicsCommandQueue()
 {
     POMDOG_ASSERT(impl);
     return impl->graphicsCommandQueue;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::AudioEngine> GameHostX11::AudioEngine()
+std::shared_ptr<AudioEngine> GameHostX11::GetAudioEngine()
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->audioEngine);
     return impl->audioEngine;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::AssetManager> GameHostX11::AssetManager()
+std::shared_ptr<AssetManager> GameHostX11::GetAssetManager()
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->assetManager);
     auto gameHost = shared_from_this();
-    std::shared_ptr<Pomdog::AssetManager> sharedAssetManager(
+    std::shared_ptr<AssetManager> sharedAssetManager(
         gameHost, impl->assetManager.get());
     return std::move(sharedAssetManager);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::Keyboard> GameHostX11::Keyboard()
+std::shared_ptr<Keyboard> GameHostX11::GetKeyboard()
 {
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
-    std::shared_ptr<Pomdog::Keyboard> sharedKeyboard(
+    std::shared_ptr<Keyboard> sharedKeyboard(
         gameHost, impl->keyboard.get());
     return std::move(sharedKeyboard);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::Mouse> GameHostX11::Mouse()
+std::shared_ptr<Mouse> GameHostX11::GetMouse()
 {
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
-    std::shared_ptr<Pomdog::Mouse> sharedMouse(gameHost, &impl->mouse);
+    std::shared_ptr<Mouse> sharedMouse(gameHost, &impl->mouse);
     return std::move(sharedMouse);
 }
 //-----------------------------------------------------------------------

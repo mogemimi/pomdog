@@ -76,21 +76,21 @@ public:
 
     void Exit();
 
-    std::shared_ptr<Pomdog::GameWindow> GetWindow();
+    std::shared_ptr<GameWindow> GetWindow();
 
-    std::shared_ptr<Pomdog::GameClock> GetClock(std::shared_ptr<GameHost> && gameHost);
+    std::shared_ptr<GameClock> GetClock(std::shared_ptr<GameHost> && gameHost);
 
-    std::shared_ptr<Pomdog::GraphicsDevice> GetGraphicsDevice();
+    std::shared_ptr<GraphicsDevice> GetGraphicsDevice();
 
-    std::shared_ptr<Pomdog::GraphicsCommandQueue> GetGraphicsCommandQueue();
+    std::shared_ptr<GraphicsCommandQueue> GetGraphicsCommandQueue();
 
-    std::shared_ptr<Pomdog::AssetManager> GetAssetManager(std::shared_ptr<GameHost> && gameHost);
+    std::shared_ptr<AssetManager> GetAssetManager(std::shared_ptr<GameHost> && gameHost);
 
-    std::shared_ptr<Pomdog::AudioEngine> GetAudioEngine();
+    std::shared_ptr<AudioEngine> GetAudioEngine();
 
-    std::shared_ptr<Pomdog::Keyboard> GetKeyboard();
+    std::shared_ptr<Keyboard> GetKeyboard();
 
-    std::shared_ptr<Pomdog::Mouse> GetMouse();
+    std::shared_ptr<Mouse> GetMouse();
 
 private:
     void GameLoop();
@@ -125,10 +125,10 @@ private:
     std::shared_ptr<EventQueue> eventQueue;
     std::shared_ptr<GameWindowCocoa> window;
     std::shared_ptr<OpenGLContextCocoa> openGLContext;
-    std::shared_ptr<Pomdog::GraphicsDevice> graphicsDevice;
+    std::shared_ptr<GraphicsDevice> graphicsDevice;
     std::shared_ptr<Detail::GraphicsContext> graphicsContext;
-    std::shared_ptr<Pomdog::GraphicsCommandQueue> graphicsCommandQueue;
-    std::shared_ptr<Pomdog::AudioEngine> audioEngine;
+    std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
+    std::shared_ptr<AudioEngine> audioEngine;
     std::unique_ptr<Pomdog::AssetManager> assetManager;
     std::shared_ptr<KeyboardCocoa> keyboard;
     std::shared_ptr<MouseCocoa> mouse;
@@ -469,44 +469,44 @@ void GameHostCocoa::Impl::ClientSizeChanged()
     openGLContext->Unlock();
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GameWindow> GameHostCocoa::Impl::GetWindow()
+std::shared_ptr<GameWindow> GameHostCocoa::Impl::GetWindow()
 {
     return window;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GameClock> GameHostCocoa::Impl::GetClock(std::shared_ptr<GameHost> && gameHost)
+std::shared_ptr<GameClock> GameHostCocoa::Impl::GetClock(std::shared_ptr<GameHost> && gameHost)
 {
-    std::shared_ptr<Pomdog::GameClock> sharedClock(gameHost, &clock);
+    std::shared_ptr<GameClock> sharedClock(gameHost, &clock);
     return std::move(sharedClock);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GraphicsDevice> GameHostCocoa::Impl::GetGraphicsDevice()
+std::shared_ptr<GraphicsDevice> GameHostCocoa::Impl::GetGraphicsDevice()
 {
     return graphicsDevice;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GraphicsCommandQueue> GameHostCocoa::Impl::GetGraphicsCommandQueue()
+std::shared_ptr<GraphicsCommandQueue> GameHostCocoa::Impl::GetGraphicsCommandQueue()
 {
     return graphicsCommandQueue;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::AudioEngine> GameHostCocoa::Impl::GetAudioEngine()
+std::shared_ptr<AudioEngine> GameHostCocoa::Impl::GetAudioEngine()
 {
     return audioEngine;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::AssetManager> GameHostCocoa::Impl::GetAssetManager(std::shared_ptr<GameHost> && gameHost)
+std::shared_ptr<AssetManager> GameHostCocoa::Impl::GetAssetManager(std::shared_ptr<GameHost> && gameHost)
 {
-    std::shared_ptr<Pomdog::AssetManager> sharedAssetManager(gameHost, assetManager.get());
+    std::shared_ptr<AssetManager> sharedAssetManager(gameHost, assetManager.get());
     return std::move(sharedAssetManager);
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::Keyboard> GameHostCocoa::Impl::GetKeyboard()
+std::shared_ptr<Keyboard> GameHostCocoa::Impl::GetKeyboard()
 {
     return keyboard;
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::Mouse> GameHostCocoa::Impl::GetMouse()
+std::shared_ptr<Mouse> GameHostCocoa::Impl::GetMouse()
 {
     return mouse;
 }
@@ -536,49 +536,49 @@ void GameHostCocoa::Exit()
     impl->Exit();
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GameWindow> GameHostCocoa::Window()
+std::shared_ptr<GameWindow> GameHostCocoa::GetWindow()
 {
     POMDOG_ASSERT(impl);
     return impl->GetWindow();
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GameClock> GameHostCocoa::Clock()
+std::shared_ptr<GameClock> GameHostCocoa::GetClock()
 {
     POMDOG_ASSERT(impl);
     return impl->GetClock(shared_from_this());
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::GraphicsDevice> GameHostCocoa::GraphicsDevice()
+std::shared_ptr<GraphicsDevice> GameHostCocoa::GetGraphicsDevice()
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsDevice();
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<GraphicsCommandQueue> GameHostCocoa::GraphicsCommandQueue()
+std::shared_ptr<GraphicsCommandQueue> GameHostCocoa::GetGraphicsCommandQueue()
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsCommandQueue();
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::AudioEngine> GameHostCocoa::AudioEngine()
+std::shared_ptr<AudioEngine> GameHostCocoa::GetAudioEngine()
 {
     POMDOG_ASSERT(impl);
     return impl->GetAudioEngine();
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::AssetManager> GameHostCocoa::AssetManager()
+std::shared_ptr<AssetManager> GameHostCocoa::GetAssetManager()
 {
     POMDOG_ASSERT(impl);
     return impl->GetAssetManager(shared_from_this());
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::Keyboard> GameHostCocoa::Keyboard()
+std::shared_ptr<Keyboard> GameHostCocoa::GetKeyboard()
 {
     POMDOG_ASSERT(impl);
     return impl->GetKeyboard();
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<Pomdog::Mouse> GameHostCocoa::Mouse()
+std::shared_ptr<Mouse> GameHostCocoa::GetMouse()
 {
     POMDOG_ASSERT(impl);
     return impl->GetMouse();
