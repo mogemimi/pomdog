@@ -8,15 +8,15 @@
 
 namespace Pomdog {
 
-class GameObject;
+class Entity;
 
 class Behavior: public Component<Behavior> {
 public:
     virtual ~Behavior() = default;
 
-    virtual void Start(GameObject & gameObject) = 0;
+    virtual void Start(Entity & entity) = 0;
 
-    virtual void Update(GameObject & gameObject, Duration const& frameDuration) = 0;
+    virtual void Update(Entity & entity, Duration const& frameDuration) = 0;
 };
 
 } // namespace Pomdog

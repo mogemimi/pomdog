@@ -11,7 +11,7 @@
 namespace Pomdog {
 
 template <class T>
-class Component: public Detail::Gameplay::GameComponent {
+class Component : public Detail::Gameplay::GameComponent {
 public:
     static_assert(std::is_class<T>::value, "T is class");
 

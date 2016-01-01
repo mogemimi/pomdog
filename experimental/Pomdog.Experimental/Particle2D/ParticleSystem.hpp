@@ -5,7 +5,7 @@
 #include "Particle.hpp"
 #include "ParticleEmitter.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
-#include "Pomdog.Experimental/Gameplay/GameObject.hpp"
+#include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include "Pomdog/Application/Duration.hpp"
 #include <cstdint>
 #include <vector>
@@ -23,7 +23,7 @@ public:
     void Pause();
     void Stop();
 
-    void Simulate(GameObject & gameObject, Duration const& duration);
+    void Simulate(Entity & entity, Duration const& duration);
 
     bool IsAlive() const;
 

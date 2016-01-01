@@ -1,51 +1,51 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog.Experimental/Gameplay/GameWorld.hpp"
-#include "Pomdog.Experimental/Gameplay/GameObject.hpp"
+#include "Pomdog.Experimental/Gameplay/EntityManager.hpp"
+#include "Pomdog.Experimental/Gameplay/Entity.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-GameWorld::GameWorld()
-    : context(std::make_shared<GameObjectContext>())
+EntityManager::EntityManager()
+    : context(std::make_shared<EntityContext>())
 {}
 //-----------------------------------------------------------------------
-GameObject GameWorld::CreateObject()
+Entity EntityManager::CreateObject()
 {
     POMDOG_ASSERT(context);
-    GameObject gameObject {context};
-    objects.push_back(gameObject.ID());
-    return std::move(gameObject);
+    Entity entity {context};
+    objects.push_back(entity.ID());
+    return std::move(entity);
 }
 //-----------------------------------------------------------------------
-bool GameWorld::Valid(GameObjectID const& objectID) const
+bool EntityManager::Valid(EntityID const& objectID) const
 {
     POMDOG_ASSERT(context);
     return context->Valid(objectID);
 }
 //-----------------------------------------------------------------------
-void GameWorld::Refresh()
+void EntityManager::Refresh()
 {
     POMDOG_ASSERT(context);
     context->Refresh();
 
     objects.erase(std::remove_if(std::begin(objects), std::end(objects),
-        [this](GameObjectID const& id){ return !context->Valid(id); }),
+        [this](EntityID const& id){ return !context->Valid(id); }),
         std::end(objects));
 }
 //-----------------------------------------------------------------------
-std::size_t GameWorld::Count() const
+std::size_t EntityManager::Count() const
 {
     POMDOG_ASSERT(context);
     return context->Count();
 }
 //-----------------------------------------------------------------------
-std::size_t GameWorld::Capacity() const
+std::size_t EntityManager::Capacity() const
 {
     POMDOG_ASSERT(context);
     return context->Capacity();
 }
 //-----------------------------------------------------------------------
-void GameWorld::Clear()
+void EntityManager::Clear()
 {
     POMDOG_ASSERT(context);
     context->Clear();

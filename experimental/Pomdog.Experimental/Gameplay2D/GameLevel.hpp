@@ -16,7 +16,7 @@ public:
 
     virtual ~GameLevel() = default;
 
-    virtual void Update(GameHost & gameHost, GameWorld & world) = 0;
+    virtual void Update(GameHost & gameHost, EntityManager & manager) = 0;
 };
 
 } // namespace Pomdog

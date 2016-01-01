@@ -82,14 +82,14 @@ ParticleSystem::ParticleSystem(std::shared_ptr<ParticleClip const> const& clipIn
     particles.reserve(emitter.MaxParticles);
 }
 //-----------------------------------------------------------------------
-void ParticleSystem::Simulate(GameObject & gameObject, Duration const& duration)
+void ParticleSystem::Simulate(Entity & entity, Duration const& duration)
 {
     if (state != ParticleSystemState::Playing) {
         return;
     }
 
     Transform2D emitterTransform;
-    if (auto transform = gameObject.Component<Transform2D>()) {
+    if (auto transform = entity.Component<Transform2D>()) {
         emitterTransform = *transform;
     }
 

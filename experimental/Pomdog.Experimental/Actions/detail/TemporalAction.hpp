@@ -37,14 +37,14 @@ public:
         , internalAction(std::forward<Args>(args)...)
     {}
 
-    void Act(GameObject & gameObject, AnimationTimeInterval const& frameDuration) override
+    void Act(Entity & entity, AnimationTimeInterval const& frameDuration) override
     {
         if (isCompleted) {
             return;
         }
 
         if (!began) {
-            internalAction.Begin(gameObject);
+            internalAction.Begin(entity);
             began = true;
         }
 
@@ -58,7 +58,7 @@ public:
             normalizedTime = interpolation.Apply(normalizedTime);
         }
 
-        internalAction.Update(gameObject, normalizedTime);
+        internalAction.Update(entity, normalizedTime);
     }
 
     bool IsCompleted() const override

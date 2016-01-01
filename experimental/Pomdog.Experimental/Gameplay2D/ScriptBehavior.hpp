@@ -12,9 +12,9 @@ class ScriptBehavior: public Behavior {
 public:
     ScriptBehavior(AssetManager const& assets, std::string const& filePath);
 
-    void Start(GameObject & gameObject) override;
+    void Start(Entity & entity) override;
 
-    void Update(GameObject & gameObject, Duration const& frameDuration) override;
+    void Update(Entity & entity, Duration const& frameDuration) override;
 
 private:
     //sel::State state;

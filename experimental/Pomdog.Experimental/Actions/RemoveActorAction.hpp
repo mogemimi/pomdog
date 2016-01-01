@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog.Experimental/Actions/Action.hpp"
-#include "Pomdog.Experimental/Gameplay/GameObject.hpp"
+#include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
@@ -13,16 +13,16 @@ private:
     bool isCompleted = false;
 
 public:
-    void Act(GameObject & gameObject, AnimationTimeInterval const&) override
+    void Act(Entity & entity, AnimationTimeInterval const&) override
     {
         if (isCompleted) {
             return;
         }
 
-        POMDOG_ASSERT(gameObject);
+        POMDOG_ASSERT(entity);
 
-        if (gameObject) {
-            gameObject.Destroy();
+        if (entity) {
+            entity.Destroy();
         }
 
         isCompleted = true;

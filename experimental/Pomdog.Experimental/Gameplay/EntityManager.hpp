@@ -2,43 +2,43 @@
 
 #pragma once
 
-#include "GameObject.hpp"
+#include "Entity.hpp"
 #include <cstdint>
 #include <memory>
 #include <vector>
 
 namespace Pomdog {
 
-class GameObject;
+class Entity;
 
-class GameWorld {
+class EntityManager {
 public:
-    GameWorld();
+    EntityManager();
 
-    GameWorld(GameWorld const&) = delete;
-    GameWorld(GameWorld &&) = default;
+    EntityManager(EntityManager const&) = delete;
+    EntityManager(EntityManager &&) = default;
 
-    GameWorld & operator=(GameWorld const&) = delete;
-    GameWorld & operator=(GameWorld &&) = default;
+    EntityManager & operator=(EntityManager const&) = delete;
+    EntityManager & operator=(EntityManager &&) = default;
 
-    GameObject CreateObject();
+    Entity CreateObject();
 
     //template <typename T, typename...Components>
     //std::vector<T> QueryComponent();
 
     template <typename T, typename...Components>
-    std::vector<GameObject> QueryComponents();
+    std::vector<Entity> QueryComponents();
 
     template <typename T>
-    T const* Component(GameObjectID const& id) const;
+    T const* Component(EntityID const& id) const;
 
     template <typename T>
-    T* Component(GameObjectID const& id);
+    T* Component(EntityID const& id);
 
     template <typename T>
-    bool HasComponent(GameObjectID const& id) const;
+    bool HasComponent(EntityID const& id) const;
 
-    bool Valid(GameObjectID const& id) const;
+    bool Valid(EntityID const& id) const;
 
     void Refresh();
 
@@ -49,16 +49,16 @@ public:
     std::size_t Capacity() const;
 
 private:
-    std::shared_ptr<GameObjectContext> context;
-    std::vector<GameObjectID> objects;
+    std::shared_ptr<EntityContext> context;
+    std::vector<EntityID> objects;
 };
 
 template <typename T, typename...Components>
-std::vector<GameObject> GameWorld::QueryComponents()
+std::vector<Entity> EntityManager::QueryComponents()
 {
     static_assert(std::is_object<T>::value, "");
 
-    std::vector<GameObject> result;
+    std::vector<Entity> result;
 
     for (auto & id: objects)
     {
@@ -72,7 +72,7 @@ std::vector<GameObject> GameWorld::QueryComponents()
 }
 
 template <typename T>
-T const* GameWorld::Component(GameObjectID const& id) const
+T const* EntityManager::Component(EntityID const& id) const
 {
     static_assert(std::is_object<T>::value, "");
     POMDOG_ASSERT(context);
@@ -80,7 +80,7 @@ T const* GameWorld::Component(GameObjectID const& id) const
 }
 
 template <typename T>
-T* GameWorld::Component(GameObjectID const& id)
+T* EntityManager::Component(EntityID const& id)
 {
     static_assert(std::is_object<T>::value, "");
     POMDOG_ASSERT(context);
@@ -88,7 +88,7 @@ T* GameWorld::Component(GameObjectID const& id)
 }
 
 template <typename T>
-bool GameWorld::HasComponent(GameObjectID const& id) const
+bool EntityManager::HasComponent(EntityID const& id) const
 {
     static_assert(std::is_object<T>::value, "");
     POMDOG_ASSERT(context);

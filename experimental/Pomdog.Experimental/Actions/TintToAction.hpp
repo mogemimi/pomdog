@@ -3,7 +3,7 @@
 #pragma once
 
 #include "detail/TemporalAction.hpp"
-#include "Pomdog.Experimental/Gameplay/GameObject.hpp"
+#include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Renderable.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -22,21 +22,21 @@ public:
         : endColor(colorIn)
     {}
 
-    void Begin(GameObject const& gameObject)
+    void Begin(Entity const& entity)
     {
-        POMDOG_ASSERT(gameObject);
-        POMDOG_ASSERT(gameObject.HasComponent<Renderable>());
+        POMDOG_ASSERT(entity);
+        POMDOG_ASSERT(entity.HasComponent<Renderable>());
 
-        auto renderable = gameObject.Component<Renderable>();
+        auto renderable = entity.Component<Renderable>();
         startColor = renderable->Material.Color;
     }
 
-    void Update(GameObject & gameObject, float normalizedTime)
+    void Update(Entity & entity, float normalizedTime)
     {
-        POMDOG_ASSERT(gameObject);
-        POMDOG_ASSERT(gameObject.HasComponent<Renderable>());
+        POMDOG_ASSERT(entity);
+        POMDOG_ASSERT(entity.HasComponent<Renderable>());
 
-        auto renderable = gameObject.Component<Renderable>();
+        auto renderable = entity.Component<Renderable>();
         auto color = Color::Lerp(startColor, endColor, normalizedTime);
         renderable->Material.Color = color;
     }

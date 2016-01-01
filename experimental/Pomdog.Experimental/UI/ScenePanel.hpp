@@ -4,7 +4,7 @@
 
 #include "UIElement.hpp"
 #include "detail/UIEventConnection.hpp"
-#include "Pomdog.Experimental/Gameplay/GameObject.hpp"
+#include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 

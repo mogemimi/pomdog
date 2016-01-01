@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog.Experimental/Actions/Action.hpp"
-#include "Pomdog.Experimental/Gameplay/GameObject.hpp"
+#include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <array>
 #include <cstdint>
@@ -46,7 +46,7 @@ public:
         , isCompleted(false)
     {}
 
-    void Act(GameObject & gameObject, AnimationTimeInterval const& frameDuration) override
+    void Act(Entity & entity, AnimationTimeInterval const& frameDuration) override
     {
         if (isCompleted) {
             return;
@@ -58,7 +58,7 @@ public:
         auto & action = actions[index];
 
         POMDOG_ASSERT(action);
-        action->Act(gameObject, frameDuration);
+        action->Act(entity, frameDuration);
 
         if (action->IsCompleted()) {
             POMDOG_ASSERT(index < actionCount);

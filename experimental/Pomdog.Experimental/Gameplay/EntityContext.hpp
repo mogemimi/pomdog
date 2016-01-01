@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Component.hpp"
-#include "GameObjectID.hpp"
+#include "EntityID.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstdint>
 #include <type_traits>
@@ -29,7 +29,7 @@ class EntityContext {
 public:
     EntityContext();
 
-    GameObjectID Create();
+    EntityID Create();
 
     std::size_t Count() const;
 
@@ -39,33 +39,33 @@ public:
 
     void Refresh();
 
-    void Destroy(GameObjectID const& id);
+    void Destroy(EntityID const& id);
 
-    void DestroyImmediate(GameObjectID const& id);
+    void DestroyImmediate(EntityID const& id);
 
-    bool Valid(GameObjectID const& id) const;
+    bool Valid(EntityID const& id) const;
 
     template <typename Type, typename...Arguments>
-    Type & AddComponent(GameObjectID const& id, Arguments &&...arguments);
+    Type & AddComponent(EntityID const& id, Arguments &&...arguments);
 
     template <typename Type>
-    Type & AddComponent(GameObjectID const& id, std::unique_ptr<Type> && component);
+    Type & AddComponent(EntityID const& id, std::unique_ptr<Type> && component);
 
     template <typename Type>
-    void RemoveComponent(GameObjectID const& id);
+    void RemoveComponent(EntityID const& id);
 
     template <typename Type>
-    bool HasComponent(GameObjectID const& id) const;
+    bool HasComponent(EntityID const& id) const;
 
     template <typename T, typename...Components>
-    bool HasComponents(GameObjectID const& id) const;
+    bool HasComponents(EntityID const& id) const;
 
     template <typename Type>
-    auto Component(GameObjectID const& id)
+    auto Component(EntityID const& id)
         -> std::enable_if_t<std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>;
 
     template <typename Type>
-    auto Component(GameObjectID const& id)
+    auto Component(EntityID const& id)
         -> std::enable_if_t<!std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>;
 
 private:
@@ -75,7 +75,7 @@ private:
     std::vector<std::vector<std::unique_ptr<GameComponent>>> components;
     std::vector<EntityDescription<MaxComponentCapacity>> descriptions;
     std::list<std::uint32_t> deletedIndices;
-    std::list<GameObjectID> destroyedObjects;
+    std::list<EntityID> destroyedObjects;
     std::size_t entityCount;
 };
 
@@ -88,7 +88,7 @@ EntityContext<MaxComponentCapacity>::EntityContext()
 }
 
 template <std::uint8_t MaxComponentCapacity>
-GameObjectID EntityContext<MaxComponentCapacity>::Create()
+EntityID EntityContext<MaxComponentCapacity>::Create()
 {
     std::uint32_t index = 0;
     if (deletedIndices.empty())
@@ -186,7 +186,7 @@ void EntityContext<MaxComponentCapacity>::Refresh()
 }
 
 template <std::uint8_t MaxComponentCapacity>
-void EntityContext<MaxComponentCapacity>::Destroy(GameObjectID const& id)
+void EntityContext<MaxComponentCapacity>::Destroy(EntityID const& id)
 {
     POMDOG_ASSERT(Valid(id));
 
@@ -206,7 +206,7 @@ void EntityContext<MaxComponentCapacity>::Destroy(GameObjectID const& id)
 }
 
 template <std::uint8_t MaxComponentCapacity>
-void EntityContext<MaxComponentCapacity>::DestroyImmediate(GameObjectID const& id)
+void EntityContext<MaxComponentCapacity>::DestroyImmediate(EntityID const& id)
 {
     POMDOG_ASSERT(Valid(id));
 
@@ -227,7 +227,7 @@ void EntityContext<MaxComponentCapacity>::DestroyImmediate(GameObjectID const& i
 }
 
 template <std::uint8_t MaxComponentCapacity>
-bool EntityContext<MaxComponentCapacity>::Valid(GameObjectID const& id) const
+bool EntityContext<MaxComponentCapacity>::Valid(EntityID const& id) const
 {
     return (id.Index() < descriptions.size())
         && (descriptions[id.Index()].IncremantalCounter == id.SequenceNumber());
@@ -235,7 +235,7 @@ bool EntityContext<MaxComponentCapacity>::Valid(GameObjectID const& id) const
 
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type, typename...Arguments>
-Type & EntityContext<MaxComponentCapacity>::AddComponent(GameObjectID const& id, Arguments &&...arguments)
+Type & EntityContext<MaxComponentCapacity>::AddComponent(EntityID const& id, Arguments &&...arguments)
 {
     static_assert(std::is_base_of<GameComponent, Type>::value, "");
     POMDOG_ASSERT(Type::TypeIndex() < MaxComponentCapacity);
@@ -246,7 +246,7 @@ Type & EntityContext<MaxComponentCapacity>::AddComponent(GameObjectID const& id,
 
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type>
-Type & EntityContext<MaxComponentCapacity>::AddComponent(GameObjectID const& id, std::unique_ptr<Type> && component)
+Type & EntityContext<MaxComponentCapacity>::AddComponent(EntityID const& id, std::unique_ptr<Type> && component)
 {
     static_assert(std::is_base_of<GameComponent, Type>::value, "");
 
@@ -293,7 +293,7 @@ Type & EntityContext<MaxComponentCapacity>::AddComponent(GameObjectID const& id,
 
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type>
-void EntityContext<MaxComponentCapacity>::RemoveComponent(GameObjectID const& id)
+void EntityContext<MaxComponentCapacity>::RemoveComponent(EntityID const& id)
 {
     static_assert(std::is_base_of<GameComponent, Type>::value, "");
 
@@ -320,7 +320,7 @@ void EntityContext<MaxComponentCapacity>::RemoveComponent(GameObjectID const& id
 
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type>
-bool EntityContext<MaxComponentCapacity>::HasComponent(GameObjectID const& id) const
+bool EntityContext<MaxComponentCapacity>::HasComponent(EntityID const& id) const
 {
     static_assert(std::is_base_of<GameComponent, Type>::value, "");
     static_assert(std::is_base_of<Pomdog::Component<Type>, Type>::value, "TOOD: Not implemented");
@@ -353,7 +353,7 @@ std::bitset<MaxComponentCapacity> ComponentMask()
 
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type, typename...Components>
-bool EntityContext<MaxComponentCapacity>::HasComponents(GameObjectID const& id) const
+bool EntityContext<MaxComponentCapacity>::HasComponents(EntityID const& id) const
 {
     static_assert(std::is_base_of<GameComponent, Type>::value, "");
     static_assert(std::is_base_of<Pomdog::Component<Type>, Type>::value, "TOOD: Not implemented");
@@ -366,7 +366,7 @@ bool EntityContext<MaxComponentCapacity>::HasComponents(GameObjectID const& id) 
 
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type>
-auto EntityContext<MaxComponentCapacity>::Component(GameObjectID const& id)
+auto EntityContext<MaxComponentCapacity>::Component(EntityID const& id)
     -> std::enable_if_t<std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>
 {
     static_assert(std::is_base_of<GameComponent, Type>::value, "");
@@ -399,7 +399,7 @@ auto EntityContext<MaxComponentCapacity>::Component(GameObjectID const& id)
 
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type>
-auto EntityContext<MaxComponentCapacity>::Component(GameObjectID const& id)
+auto EntityContext<MaxComponentCapacity>::Component(EntityID const& id)
     -> std::enable_if_t<!std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>
 {
     static_assert(std::is_base_of<GameComponent, Type>::value, "");
@@ -432,6 +432,6 @@ auto EntityContext<MaxComponentCapacity>::Component(GameObjectID const& id)
 } // namespace Gameplay
 } // namespace Detail
 
-using GameObjectContext = Detail::Gameplay::EntityContext<64>;
+using EntityContext = Detail::Gameplay::EntityContext<64>;
 
 } // namespace Pomdog

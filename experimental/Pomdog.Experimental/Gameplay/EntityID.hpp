@@ -7,11 +7,11 @@
 
 namespace Pomdog {
 
-class GameObjectID {
+class EntityID {
 public:
-    GameObjectID(): id(0x0) {}
+    EntityID() : id(0x0) {}
 
-    GameObjectID(std::uint32_t sequenceNumber, std::uint32_t index)
+    EntityID(std::uint32_t sequenceNumber, std::uint32_t index)
         : id((static_cast<uint64_t>(sequenceNumber) << 32) | (index & 0xffffffffUL))
     {}
 
@@ -27,15 +27,15 @@ public:
         return id;
     }
 
-    bool operator==(GameObjectID const& other) const {
+    bool operator==(EntityID const& other) const {
         return id == other.id;
     }
 
-    bool operator!=(GameObjectID const& other) const {
+    bool operator!=(EntityID const& other) const {
         return id != other.id;
     }
 
-    bool operator<(GameObjectID const& other) const {
+    bool operator<(EntityID const& other) const {
         return id < other.id;
     }
 
@@ -48,8 +48,8 @@ private:
 namespace std {
 
 template<>
-struct std::hash<Pomdog::GameObjectID> {
-    std::size_t operator()(Pomdog::GameObjectID const& key)
+struct std::hash<Pomdog::EntityID> {
+    std::size_t operator()(Pomdog::EntityID const& key)
     {
         return std::hash<std::uint64_t>()(key.Value());
     }

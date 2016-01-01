@@ -3,7 +3,7 @@
 #pragma once
 
 #include "detail/TemporalAction.hpp"
-#include "Pomdog.Experimental/Gameplay/GameObject.hpp"
+#include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -22,21 +22,21 @@ public:
         : endScale(scaleIn)
     {}
 
-    void Begin(GameObject const& gameObject)
+    void Begin(Entity const& entity)
     {
-        POMDOG_ASSERT(gameObject);
-        POMDOG_ASSERT(gameObject.HasComponent<Transform2D>());
+        POMDOG_ASSERT(entity);
+        POMDOG_ASSERT(entity.HasComponent<Transform2D>());
 
-        auto transform = gameObject.Component<Transform2D>();
+        auto transform = entity.Component<Transform2D>();
         startScale = transform->Scale;
     }
 
-    void Update(GameObject & gameObject, float normalizedTime)
+    void Update(Entity & entity, float normalizedTime)
     {
-        POMDOG_ASSERT(gameObject);
-        POMDOG_ASSERT(gameObject.HasComponent<Transform2D>());
+        POMDOG_ASSERT(entity);
+        POMDOG_ASSERT(entity.HasComponent<Transform2D>());
 
-        auto transform = gameObject.Component<Transform2D>();
+        auto transform = entity.Component<Transform2D>();
         transform->Scale = Vector2::Lerp(startScale, endScale, normalizedTime);
     }
 };

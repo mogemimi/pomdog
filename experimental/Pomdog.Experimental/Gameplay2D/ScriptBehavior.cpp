@@ -10,13 +10,13 @@ ScriptBehavior::ScriptBehavior(AssetManager const& assets, std::string const& fi
     //state.Load(assets.RootDirectory() + "/" + filePath);
 }
 //-----------------------------------------------------------------------
-void ScriptBehavior::Start(GameObject & gameObject)
+void ScriptBehavior::Start(Entity & entity)
 {
 }
 //-----------------------------------------------------------------------
-void ScriptBehavior::Update(GameObject & gameObject, Duration const& frameDuration)
+void ScriptBehavior::Update(Entity & entity, Duration const& frameDuration)
 {
-//    auto transform = gameObject.Component<Transform2D>();
+//    auto transform = entity.Component<Transform2D>();
 //
 //    state["Transform"]["Position"]["X"] = static_cast<double>(transform->Position.X);
 //    state["Transform"]["Position"]["Y"] = static_cast<double>(transform->Position.Y);

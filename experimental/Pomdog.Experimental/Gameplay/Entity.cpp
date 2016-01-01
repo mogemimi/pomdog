@@ -1,54 +1,54 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog.Experimental/Gameplay/GameObject.hpp"
+#include "Pomdog.Experimental/Gameplay/Entity.hpp"
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-GameObject::GameObject(std::shared_ptr<GameObjectContext> const& contextIn)
+Entity::Entity(std::shared_ptr<EntityContext> const& contextIn)
     : context(contextIn)
     , id(context->Create())
 {}
 //-----------------------------------------------------------------------
-GameObject::GameObject(std::shared_ptr<GameObjectContext> && contextIn)
+Entity::Entity(std::shared_ptr<EntityContext> && contextIn)
     : context(std::move(contextIn))
     , id(context->Create())
 {}
 //-----------------------------------------------------------------------
-GameObject::GameObject(std::shared_ptr<GameObjectContext> const& contextIn, GameObjectID const& idIn)
+Entity::Entity(std::shared_ptr<EntityContext> const& contextIn, EntityID const& idIn)
     : context(contextIn)
     , id(idIn)
 {}
 //-----------------------------------------------------------------------
-GameObject::GameObject(std::shared_ptr<GameObjectContext> && contextIn, GameObjectID const& idIn)
+Entity::Entity(std::shared_ptr<EntityContext> && contextIn, EntityID const& idIn)
     : context(std::move(contextIn))
     , id(idIn)
 {}
 //-----------------------------------------------------------------------
-GameObject::operator bool() const
+Entity::operator bool() const
 {
     return context && context->Valid(id);
 }
 //-----------------------------------------------------------------------
-bool GameObject::operator==(GameObject const& gameObject) const
+bool Entity::operator==(Entity const& entity) const
 {
-    POMDOG_ASSERT((!context || !gameObject.context) || context == gameObject.context);
-    return (context && gameObject.context) && (id == gameObject.id);
+    POMDOG_ASSERT((!context || !entity.context) || context == entity.context);
+    return (context && entity.context) && (id == entity.id);
 }
 //-----------------------------------------------------------------------
-bool GameObject::operator!=(GameObject const& gameObject) const
+bool Entity::operator!=(Entity const& entity) const
 {
-    POMDOG_ASSERT((!context || !gameObject.context) || context == gameObject.context);
-    return (!context || !gameObject.context) || (id != gameObject.id);
+    POMDOG_ASSERT((!context || !entity.context) || context == entity.context);
+    return (!context || !entity.context) || (id != entity.id);
 }
 //-----------------------------------------------------------------------
-void GameObject::Destroy()
+void Entity::Destroy()
 {
     if (context && context->Valid(id)) {
         context->Destroy(id);
     }
 }
 //-----------------------------------------------------------------------
-void GameObject::DestroyImmediate()
+void Entity::DestroyImmediate()
 {
     POMDOG_ASSERT(context);
     POMDOG_ASSERT(context->Valid(id));
@@ -59,7 +59,7 @@ void GameObject::DestroyImmediate()
     }
 }
 //-----------------------------------------------------------------------
-GameObjectID GameObject::ID() const
+EntityID Entity::ID() const
 {
     POMDOG_ASSERT(context && context->Valid(id));
     return id;

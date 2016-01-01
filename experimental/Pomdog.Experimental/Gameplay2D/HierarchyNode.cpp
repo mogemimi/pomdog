@@ -4,7 +4,7 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-HierarchyNode::HierarchyNode(std::shared_ptr<GameObject> const& objectIn)
+HierarchyNode::HierarchyNode(std::shared_ptr<Entity> const& objectIn)
     : Object(objectIn)
 {}
 //-----------------------------------------------------------------------

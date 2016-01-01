@@ -3,8 +3,8 @@
 #pragma once
 
 #include "detail/GameComponent.hpp"
-#include "GameObjectID.hpp"
-#include "GameObjectContext.hpp"
+#include "EntityID.hpp"
+#include "EntityContext.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstdint>
 #include <type_traits>
@@ -14,22 +14,22 @@
 
 namespace Pomdog {
 
-class GameObject {
+class Entity {
 public:
-    GameObject() = default;
+    Entity() = default;
 
-    explicit GameObject(std::shared_ptr<GameObjectContext> const& context);
-    explicit GameObject(std::shared_ptr<GameObjectContext> && context);
+    explicit Entity(std::shared_ptr<EntityContext> const& context);
+    explicit Entity(std::shared_ptr<EntityContext> && context);
 
-    GameObject(std::shared_ptr<GameObjectContext> const& context, GameObjectID const& id);
-    GameObject(std::shared_ptr<GameObjectContext> && context, GameObjectID const& id);
+    Entity(std::shared_ptr<EntityContext> const& context, EntityID const& id);
+    Entity(std::shared_ptr<EntityContext> && context, EntityID const& id);
 
     explicit operator bool() const;
 
-    bool operator==(GameObject const& gameObject) const;
-    bool operator!=(GameObject const& gameObject) const;
+    bool operator==(Entity const& entity) const;
+    bool operator!=(Entity const& entity) const;
 
-    GameObjectID ID() const;
+    EntityID ID() const;
 
     template <typename T>
     T const* Component() const;
@@ -54,15 +54,15 @@ public:
     void DestroyImmediate();
 
 private:
-    std::shared_ptr<GameObjectContext> context;
-    GameObjectID id;
+    std::shared_ptr<EntityContext> context;
+    EntityID id;
 };
 
 template <class T>
 class Component;
 
 template <typename T>
-T const* GameObject::Component() const
+T const* Entity::Component() const
 {
     static_assert(std::is_base_of<Detail::Gameplay::GameComponent, T>::value, "");
     static_assert(std::is_base_of<Pomdog::Component<T>, T>::value, "TOOD: Not implemented");
@@ -72,7 +72,7 @@ T const* GameObject::Component() const
 }
 
 template <typename T>
-T* GameObject::Component()
+T* Entity::Component()
 {
     static_assert(std::is_base_of<Detail::Gameplay::GameComponent, T>::value, "");
     POMDOG_ASSERT(context);
@@ -81,7 +81,7 @@ T* GameObject::Component()
 }
 
 template <typename T>
-bool GameObject::HasComponent() const
+bool Entity::HasComponent() const
 {
     static_assert(std::is_base_of<Detail::Gameplay::GameComponent, T>::value, "");
     static_assert(std::is_base_of<Pomdog::Component<T>, T>::value, "TOOD: Not implemented");
@@ -91,7 +91,7 @@ bool GameObject::HasComponent() const
 }
 
 template <typename T>
-T & GameObject::AddComponent(std::unique_ptr<T> && component)
+T & Entity::AddComponent(std::unique_ptr<T> && component)
 {
     static_assert(std::is_base_of<Detail::Gameplay::GameComponent, T>::value, "");
     POMDOG_ASSERT(context);
@@ -100,7 +100,7 @@ T & GameObject::AddComponent(std::unique_ptr<T> && component)
 }
 
 template <typename T, typename...Arguments>
-T & GameObject::AddComponent(Arguments && ...arguments)
+T & Entity::AddComponent(Arguments && ...arguments)
 {
     static_assert(std::is_base_of<Detail::Gameplay::GameComponent, T>::value, "");
     POMDOG_ASSERT(context);
@@ -109,7 +109,7 @@ T & GameObject::AddComponent(Arguments && ...arguments)
 }
 
 template <typename T>
-void GameObject::RemoveComponent()
+void Entity::RemoveComponent()
 {
     static_assert(std::is_base_of<Detail::Gameplay::GameComponent, T>::value, "");
     POMDOG_ASSERT(context);

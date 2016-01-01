@@ -20,12 +20,12 @@
     #   '<@(pomdog_expr_dir)/Compositing/RenderLayerCompositor.hpp',
 
       '<@(pomdog_expr_dir)/Gameplay/Component.hpp',
-      '<@(pomdog_expr_dir)/Gameplay/GameObject.cpp',
-      '<@(pomdog_expr_dir)/Gameplay/GameObject.hpp',
-      '<@(pomdog_expr_dir)/Gameplay/GameObjectContext.hpp',
-      '<@(pomdog_expr_dir)/Gameplay/GameObjectID.hpp',
-      '<@(pomdog_expr_dir)/Gameplay/GameWorld.cpp',
-      '<@(pomdog_expr_dir)/Gameplay/GameWorld.hpp',
+      '<@(pomdog_expr_dir)/Gameplay/Entity.cpp',
+      '<@(pomdog_expr_dir)/Gameplay/Entity.hpp',
+      '<@(pomdog_expr_dir)/Gameplay/EntityContext.hpp',
+      '<@(pomdog_expr_dir)/Gameplay/EntityID.hpp',
+      '<@(pomdog_expr_dir)/Gameplay/EntityManager.cpp',
+      '<@(pomdog_expr_dir)/Gameplay/EntityManager.hpp',
       '<@(pomdog_expr_dir)/Gameplay/detail/ComponentTypeIndex.hpp',
       '<@(pomdog_expr_dir)/Gameplay/detail/GameComponent.hpp',
 
