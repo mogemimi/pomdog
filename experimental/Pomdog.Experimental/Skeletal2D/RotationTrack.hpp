@@ -6,7 +6,6 @@
 #include "AnimationTimeInterval.hpp"
 #include "CompressedFloat.hpp"
 #include "JointIndex.hpp"
-#include "Pomdog.Experimental/MSVCSupport.hpp"
 #include <vector>
 
 namespace Pomdog {
@@ -18,10 +17,8 @@ public:
     AnimationTimeInterval Time;
     CompressedFloat<std::int16_t, 4500> Rotation;
 
-#ifndef POMDOG_MSVC2015_SUPPORT
     static_assert(decltype(Rotation)::Max() > 3.1416f*2.0f, "");
     static_assert(decltype(Rotation)::Min() < -3.1416f*2.0f, "");
-#endif
 };
 
 class RotationTrack final: public AnimationTrack {

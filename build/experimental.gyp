@@ -5,7 +5,6 @@
     'pomdog_expr_dir': '../experimental/Pomdog.Experimental',
     'pomdog_experimental_sources': [
       '<@(pomdog_expr_dir)/Experimental.hpp',
-      '<@(pomdog_expr_dir)/MSVCSupport.hpp',
 
       '<@(pomdog_expr_dir)/Actions/Action.hpp',
       '<@(pomdog_expr_dir)/Actions/MoveToAction.hpp',

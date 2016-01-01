@@ -6,7 +6,6 @@
 #include "AnimationTimeInterval.hpp"
 #include "CompressedFloat.hpp"
 #include "JointIndex.hpp"
-#include "Pomdog.Experimental/MSVCSupport.hpp"
 #include <vector>
 
 namespace Pomdog {
@@ -18,10 +17,8 @@ public:
     AnimationTimeInterval Time;
     CompressedFloat<std::int16_t, 1500> Scale;
 
-#ifndef POMDOG_MSVC2015_SUPPORT
     static_assert(decltype(Scale)::Max() > 20.0f, "");
     static_assert(decltype(Scale)::Min() < -20.0f, "");
-#endif
 };
 
 class ScaleTrack final: public AnimationTrack {
