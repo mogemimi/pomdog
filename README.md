@@ -21,7 +21,7 @@ Pomdog is available and supported on the following platforms:
 
 * Mac OS X 10.9 and later [![Build Status](https://travis-ci.org/mogemimi/pomdog.svg?branch=master)](https://travis-ci.org/mogemimi/pomdog)
 * Windows 8 and later [![Build Status](https://ci.appveyor.com/api/projects/status/hywx5fmkrk7gpdpl/branch/master?svg=true)](https://ci.appveyor.com/project/mogemimi/pomdog/branch/master)
-* Linux (Ubuntu) [![wercker status](https://app.wercker.com/status/e7bab185762fa586284d832580e89561/s "wercker status")](https://app.wercker.com/project/bykey/e7bab185762fa586284d832580e89561)
+* Linux (Ubuntu) [![wercker status](https://app.wercker.com/status/e7bab185762fa586284d832580e89561/s/master "wercker status")](https://app.wercker.com/project/bykey/e7bab185762fa586284d832580e89561)
 
 Please refer to [Architecture](https://github.com/mogemimi/pomdog/wiki/Architecture) in the wiki for more details about the supported platforms and backends such as OpenGL, DirectX 11 and 12.
 
