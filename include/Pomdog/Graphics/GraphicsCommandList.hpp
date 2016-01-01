@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT GraphicsCommandList {
+class POMDOG_EXPORT GraphicsCommandList final {
 public:
     GraphicsCommandList() = delete;
     GraphicsCommandList(GraphicsCommandList const&) = delete;

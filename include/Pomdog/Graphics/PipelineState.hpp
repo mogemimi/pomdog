@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT PipelineState {
+class POMDOG_EXPORT PipelineState final {
 public:
     PipelineState() = delete;
     PipelineState(PipelineState const&) = delete;

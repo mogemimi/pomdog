@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT GraphicsDevice {
+class POMDOG_EXPORT GraphicsDevice final {
 public:
     GraphicsDevice() = delete;
     GraphicsDevice(GraphicsDevice const&) = delete;

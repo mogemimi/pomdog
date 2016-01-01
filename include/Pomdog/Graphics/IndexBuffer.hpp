@@ -11,7 +11,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT IndexBuffer {
+class POMDOG_EXPORT IndexBuffer final {
 public:
     IndexBuffer() = delete;
     IndexBuffer(IndexBuffer const&) = delete;

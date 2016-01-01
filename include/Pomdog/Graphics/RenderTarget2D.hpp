@@ -13,7 +13,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT RenderTarget2D : public Texture {
+class POMDOG_EXPORT RenderTarget2D final : public Texture {
 public:
     RenderTarget2D() = delete;
     RenderTarget2D(RenderTarget2D const&) = delete;

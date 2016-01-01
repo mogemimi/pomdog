@@ -13,7 +13,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT ConstantBuffer {
+class POMDOG_EXPORT ConstantBuffer final {
 public:
     ConstantBuffer() = delete;
     ConstantBuffer(ConstantBuffer const&) = delete;

@@ -11,7 +11,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT Texture2D : public Texture {
+class POMDOG_EXPORT Texture2D final : public Texture {
 public:
     Texture2D() = delete;
     Texture2D(Texture2D const&) = delete;

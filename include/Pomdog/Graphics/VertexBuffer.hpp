@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT VertexBuffer {
+class POMDOG_EXPORT VertexBuffer final {
 public:
     VertexBuffer() = delete;
     VertexBuffer(VertexBuffer const&) = delete;

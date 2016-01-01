@@ -9,7 +9,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT SamplerState {
+class POMDOG_EXPORT SamplerState final {
 public:
     SamplerState() = delete;
     SamplerState(SamplerState const&) = delete;

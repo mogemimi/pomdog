@@ -11,7 +11,7 @@ namespace Pomdog {
 
 class GraphicsCommandList;
 
-class POMDOG_EXPORT GraphicsCommandQueue {
+class POMDOG_EXPORT GraphicsCommandQueue final {
 public:
     GraphicsCommandQueue() = delete;
     GraphicsCommandQueue(GraphicsCommandQueue const&) = delete;
