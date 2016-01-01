@@ -11,7 +11,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT Event {
+class POMDOG_EXPORT Event final {
 public:
     Event() = delete;
     Event(Event const&) = delete;

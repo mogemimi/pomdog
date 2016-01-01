@@ -9,7 +9,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT ConnectionList {
+class POMDOG_EXPORT ConnectionList final {
 private:
     std::vector<Connection> connections;
 

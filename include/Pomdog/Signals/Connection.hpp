@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT Connection {
+class POMDOG_EXPORT Connection final {
 private:
     typedef Detail::Signals::ConnectionBody ConnectionBody;
     std::unique_ptr<ConnectionBody> body;

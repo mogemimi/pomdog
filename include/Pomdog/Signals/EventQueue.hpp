@@ -13,7 +13,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT EventQueue {
+class POMDOG_EXPORT EventQueue final {
 public:
     EventQueue();
     EventQueue(EventQueue const&) = delete;

@@ -12,7 +12,7 @@
 namespace Pomdog {
 
 template <typename...Arguments>
-class POMDOG_EXPORT Signal<void(Arguments...)> {
+class POMDOG_EXPORT Signal<void(Arguments...)> final {
 public:
     Signal();
     Signal(Signal const&) = delete;
