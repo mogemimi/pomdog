@@ -16,8 +16,8 @@
 namespace Pomdog {
 namespace {
 
-static std::size_t GetSamples(std::size_t sizeInBytes,
-    int bitsPerSample, AudioChannels channels)
+std::size_t GetSamples(
+    std::size_t sizeInBytes, int bitsPerSample, AudioChannels channels)
 {
     POMDOG_ASSERT(bitsPerSample >= 8);
     POMDOG_ASSERT(bitsPerSample == 8
@@ -38,7 +38,7 @@ static std::size_t GetSamples(std::size_t sizeInBytes,
     return sizeInBytes / divisior;
 }
 //-----------------------------------------------------------------------
-static Duration GetSampleDuration(std::size_t samples, int sampleRate)
+Duration GetSampleDuration(std::size_t samples, int sampleRate)
 {
     POMDOG_ASSERT(sampleRate > 0);
     POMDOG_ASSERT(sampleRate >= 8000);

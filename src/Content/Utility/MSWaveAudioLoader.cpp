@@ -39,7 +39,7 @@ namespace Pomdog {
 namespace Detail {
 namespace {
 //-----------------------------------------------------------------------
-static AudioChannels ToAudioChannels(std::uint32_t channels)
+AudioChannels ToAudioChannels(std::uint32_t channels) noexcept
 {
     POMDOG_ASSERT(channels > 0);
     POMDOG_ASSERT(channels <= 2);
@@ -56,7 +56,7 @@ static AudioChannels ToAudioChannels(std::uint32_t channels)
 //-----------------------------------------------------------------------
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
 //-----------------------------------------------------------------------
-static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
+std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 {
     CFStringRef filename = CFStringCreateWithCString(nullptr, filePath.c_str(), kCFStringEncodingUTF8);
     CFURLRef url = CFURLCreateWithFileSystemPath(nullptr, filename, kCFURLPOSIXPathStyle, false);
@@ -174,7 +174,7 @@ static std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
 //-----------------------------------------------------------------------
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 //-----------------------------------------------------------------------
-static MMCKINFO ReadRiffChunk(HMMIO ioHandle)
+MMCKINFO ReadRiffChunk(HMMIO ioHandle)
 {
     POMDOG_ASSERT(ioHandle);
 
@@ -270,7 +270,7 @@ static std::vector<std::uint8_t> ReadWaveFormat(HMMIO ioHandle, MMCKINFO const& 
     return std::move(waveFormat);
 }
 //-----------------------------------------------------------------------
-static MMCKINFO SeekDataChunk(HMMIO ioHandle, MMCKINFO const& riffChunk)
+MMCKINFO SeekDataChunk(HMMIO ioHandle, MMCKINFO const& riffChunk)
 {
     POMDOG_ASSERT(ioHandle);
 
@@ -290,7 +290,7 @@ static MMCKINFO SeekDataChunk(HMMIO ioHandle, MMCKINFO const& riffChunk)
     return std::move(dataChunk);
 }
 //-----------------------------------------------------------------------
-static std::vector<std::uint8_t> ReadWaveAudioData(HMMIO ioHandle, MMCKINFO const& dataChunk)
+std::vector<std::uint8_t> ReadWaveAudioData(HMMIO ioHandle, MMCKINFO const& dataChunk)
 {
     POMDOG_ASSERT(ioHandle);
 
@@ -336,7 +336,7 @@ static std::vector<std::uint8_t> ReadWaveAudioData(HMMIO ioHandle, MMCKINFO cons
     return std::move(result);
 }
 //-----------------------------------------------------------------------
-static std::unique_ptr<AudioClip> LoadMSWave_Win32(std::string const& filePath)
+std::unique_ptr<AudioClip> LoadMSWave_Win32(std::string const& filePath)
 {
     HMMIO ioHandle = ::mmioOpen(const_cast<LPSTR>(filePath.c_str()), nullptr, MMIO_ALLOCBUF | MMIO_READ);
 
@@ -408,7 +408,7 @@ namespace WaveFormatTags {
     static constexpr std::uint16_t PCM = 0x0001;
 }
 
-static RiffChunk ReadRiffChunk(std::ifstream & stream)
+RiffChunk ReadRiffChunk(std::ifstream & stream)
 {
     POMDOG_ASSERT(stream);
     auto riffChunk = BinaryReader::Read<RiffChunk>(stream);
@@ -428,7 +428,7 @@ static RiffChunk ReadRiffChunk(std::ifstream & stream)
     return std::move(riffChunk);
 }
 //-----------------------------------------------------------------------
-static WaveFormat ReadWaveFormat(std::ifstream & stream)
+WaveFormat ReadWaveFormat(std::ifstream & stream)
 {
     POMDOG_ASSERT(stream);
 
@@ -478,7 +478,7 @@ static WaveFormat ReadWaveFormat(std::ifstream & stream)
     return std::move(waveFormat);
 }
 //-----------------------------------------------------------------------
-static std::vector<std::uint8_t> ReadWaveAudioData(std::ifstream & stream)
+std::vector<std::uint8_t> ReadWaveAudioData(std::ifstream & stream)
 {
     POMDOG_ASSERT(stream);
 

@@ -11,7 +11,7 @@ namespace SoundSystem {
 namespace OpenAL {
 namespace {
 
-static ALenum ToFormat(AudioChannels channel, std::uint16_t bitPerSample)
+ALenum ToFormat(AudioChannels channel, std::uint16_t bitPerSample)
 {
     switch (channel) {
     case AudioChannels::Mono:

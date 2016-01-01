@@ -7,7 +7,7 @@
 namespace Pomdog {
 namespace {
 
-static std::string UnsafeToFormatString(char const* format, std::va_list arg)
+std::string UnsafeToFormatString(char const* format, std::va_list arg)
 {
     std::va_list copiedArguments;
     va_copy(copiedArguments, arg);

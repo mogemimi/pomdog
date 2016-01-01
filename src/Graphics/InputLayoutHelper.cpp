@@ -7,7 +7,7 @@
 namespace Pomdog {
 namespace {
 
-static std::uint8_t ToByteSize(InputElementFormat format)
+std::uint8_t ToByteSize(InputElementFormat format) noexcept
 {
     static_assert(sizeof(float) == 4, "FUS RO DAH");
     switch (format) {

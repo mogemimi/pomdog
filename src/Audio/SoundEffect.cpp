@@ -18,7 +18,8 @@
 namespace Pomdog {
 namespace {
 
-static std::shared_ptr<Detail::SoundSystem::NativeAudioClip> GetNativeBuffer(std::shared_ptr<AudioClip> const& audioClip)
+std::shared_ptr<Detail::SoundSystem::NativeAudioClip>
+GetNativeBuffer(std::shared_ptr<AudioClip> const& audioClip)
 {
     std::shared_ptr<Detail::SoundSystem::NativeAudioClip> nativeAudioClip(
         audioClip, audioClip->GetNativeAudioClip());

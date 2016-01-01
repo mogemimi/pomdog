@@ -16,7 +16,7 @@ namespace {
 struct ErrorCodeTag;
 using ErrorCodeAL = Tagged<ALenum, ErrorCodeTag>;
 
-static std::string ToString(ErrorCodeAL const& errorCode)
+std::string ToString(ErrorCodeAL const& errorCode)
 {
     switch (errorCode.value) {
     case AL_NO_ERROR: return "AL_NO_ERROR";

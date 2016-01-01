@@ -20,7 +20,7 @@ namespace Pomdog {
 namespace Detail {
 namespace {
 //-----------------------------------------------------------------------
-static bool IsPNGFormat(std::array<std::uint8_t, 8> const& signature)
+bool IsPNGFormat(std::array<std::uint8_t, 8> const& signature)
 {
     std::array<std::uint8_t, 8> const pngSignature {{
         0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A}};
@@ -29,7 +29,7 @@ static bool IsPNGFormat(std::array<std::uint8_t, 8> const& signature)
         std::begin(pngSignature));
 }
 //-----------------------------------------------------------------------
-static bool IsDDSFormat(std::array<std::uint8_t, 8> const& signature)
+bool IsDDSFormat(std::array<std::uint8_t, 8> const& signature)
 {
     constexpr auto fourCC = MakeFourCC('D','D','S',' ');
     static_assert(fourCC == 0x20534444, "The four character code value is 'DDS '");

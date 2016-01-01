@@ -83,7 +83,7 @@ static constexpr std::uint32_t Luminance   = 0x00020000; // DDPF_LUMINANCE
 
 } // namespace DirectDrawPixelFormat
 //-----------------------------------------------------------------------
-static SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(DDSPixelFormat const& pixelFormat)
+SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(DDSPixelFormat const& pixelFormat)
 {
     constexpr std::uint32_t FourCC_A32B32G32R32_Float = 0x00000074;
 

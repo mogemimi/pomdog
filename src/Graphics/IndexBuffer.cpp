@@ -9,8 +9,7 @@
 namespace Pomdog {
 namespace {
 
-static std::uint32_t ToIndexElementOffsetBytes(
-    IndexElementSize elementSize) noexcept
+std::uint32_t ToIndexElementOffsetBytes(IndexElementSize elementSize) noexcept
 {
     switch (elementSize) {
     case IndexElementSize::ThirtyTwoBits: return 4;
