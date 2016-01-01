@@ -9,7 +9,6 @@
 namespace fs = std::experimental::filesystem;
 
 namespace Pomdog {
-namespace Detail {
 //-----------------------------------------------------------------------
 bool FileSystem::CreateDirectory(std::string const& path)
 {
@@ -18,14 +17,12 @@ bool FileSystem::CreateDirectory(std::string const& path)
     return fs::create_directory(path);
 }
 //-----------------------------------------------------------------------
-} // namespace Detail
 } // namespace Pomdog
 
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include <Shlobj.h>
 
 namespace Pomdog {
-namespace Detail {
 //-----------------------------------------------------------------------
 bool FileSystem::CreateDirectories(std::string const& path)
 {
@@ -102,5 +99,4 @@ std::string FileSystem::GetCurrentWorkingDirectory()
     return {};
 }
 //-----------------------------------------------------------------------
-} // namespace Detail
 } // namespace Pomdog

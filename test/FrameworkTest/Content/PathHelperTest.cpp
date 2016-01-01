@@ -5,9 +5,8 @@
 #include <Pomdog/Basic/Platform.hpp>
 #include <gtest/iutest_switch.hpp>
 
-using namespace Pomdog::Detail;
-using Pomdog::Detail::PathHelper;
-using Pomdog::Detail::FileSystem;
+using Pomdog::PathHelper;
+using Pomdog::FileSystem;
 
 TEST(PathHelper, Join)
 {

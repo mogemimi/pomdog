@@ -6,7 +6,6 @@
 #include <string>
 
 namespace Pomdog {
-namespace Detail {
 
 struct POMDOG_EXPORT FileSystem {
     static bool CreateDirectory(std::string const& path);
@@ -38,5 +37,4 @@ struct POMDOG_EXPORT FileSystem {
     static std::string GetCurrentWorkingDirectory();
 };
 
-} // namespace Detail
 } // namespace Pomdog

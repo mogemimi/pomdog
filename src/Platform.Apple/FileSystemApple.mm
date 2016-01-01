@@ -8,7 +8,6 @@
 #include <utility>
 
 namespace Pomdog {
-namespace Detail {
 namespace {
 
 NSString* ToNSString(std::string const& s)
@@ -117,5 +116,4 @@ std::string FileSystem::GetCurrentWorkingDirectory()
     return {};
 }
 //-----------------------------------------------------------------------
-} // namespace Detail
 } // namespace Pomdog

@@ -10,7 +10,6 @@
 #include <vector>
 
 namespace Pomdog {
-namespace Detail {
 namespace {
 
 std::string::size_type findFirstOfSlash(
@@ -289,7 +288,7 @@ std::string PathHelper::Join(std::string const& path1, std::string const& path2)
     return std::move(result);
 }
 //-----------------------------------------------------------------------
-BinaryFileStream PathHelper::OpenStream(std::string const& path)
+Detail::BinaryFileStream PathHelper::OpenStream(std::string const& path)
 {
     std::ifstream stream(path, std::ios::ate | std::ios::binary);
     std::size_t fileSize = 0;
@@ -303,7 +302,7 @@ BinaryFileStream PathHelper::OpenStream(std::string const& path)
         stream.seekg(0, stream.beg);
     }
 
-    BinaryFileStream result;
+    Detail::BinaryFileStream result;
     result.Stream = std::move(stream);
     result.SizeInBytes = fileSize;
     return std::move(result);
@@ -446,5 +445,4 @@ PathHelper::Relative(const std::string& path, const std::string& start)
     return std::move(result);
 }
 //-----------------------------------------------------------------------
-} // namespace Detail
 } // namespace Pomdog

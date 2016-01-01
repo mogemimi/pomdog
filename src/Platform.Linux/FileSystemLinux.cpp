@@ -12,7 +12,6 @@
 #include <unistd.h>
 
 namespace Pomdog {
-namespace Detail {
 //-----------------------------------------------------------------------
 bool FileSystem::CreateDirectory(std::string const& path)
 {
@@ -104,5 +103,4 @@ std::string FileSystem::GetCurrentWorkingDirectory()
     return {};
 }
 //-----------------------------------------------------------------------
-} // namespace Detail
 } // namespace Pomdog
