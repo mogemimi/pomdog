@@ -12,8 +12,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Skeletal2D {
 
-class ScaleKeyframe {
-public:
+struct ScaleKeyframe {
     AnimationTimeInterval Time;
     CompressedFloat<std::int16_t, 1500> Scale;
 
@@ -25,7 +24,9 @@ class ScaleTrack final: public AnimationTrack {
 public:
     ScaleTrack(std::vector<ScaleKeyframe> && keys, JointIndex && jointIndex);
 
-    void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton,
+    void Apply(
+        AnimationTimeInterval const& time,
+        Skeleton const& skeleton,
         SkeletonPose & skeletonPose) override;
 
     AnimationTimeInterval Length() const override;

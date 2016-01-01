@@ -7,8 +7,7 @@
 
 namespace Pomdog {
 
-class JointPose {
-public:
+struct JointPose {
     Vector2 Translate;
     Radian<float> Rotation;
     float Scale;

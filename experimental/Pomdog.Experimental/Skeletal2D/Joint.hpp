@@ -8,8 +8,7 @@
 
 namespace Pomdog {
 
-class Joint {
-public:
+struct Joint {
     Matrix3x2 InverseBindPose;
     JointPose BindPose;
     JointIndex Index;

@@ -12,8 +12,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Skeletal2D {
 
-class TranslationKeyframe {
-public:
+struct TranslationKeyframe {
     AnimationTimeInterval Time;
     CompressedFloat<std::int16_t, 7> TranslateX;
     CompressedFloat<std::int16_t, 7> TranslateY;
@@ -26,9 +25,12 @@ public:
 
 class TranslationTrack final: public AnimationTrack {
 public:
-    TranslationTrack(std::vector<TranslationKeyframe> && keys, JointIndex && jointIndex);
+    TranslationTrack(
+        std::vector<TranslationKeyframe> && keys, JointIndex && jointIndex);
 
-    void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton,
+    void Apply(
+        AnimationTimeInterval const& time,
+        Skeleton const& skeleton,
         SkeletonPose & skeletonPose) override;
 
     AnimationTimeInterval Length() const override;

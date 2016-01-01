@@ -12,8 +12,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Skeletal2D {
 
-class RotationKeyframe {
-public:
+struct RotationKeyframe {
     AnimationTimeInterval Time;
     CompressedFloat<std::int16_t, 4500> Rotation;
 
@@ -25,7 +24,9 @@ class RotationTrack final: public AnimationTrack {
 public:
     RotationTrack(std::vector<RotationKeyframe> && keys, JointIndex && jointIndex);
 
-    void Apply(AnimationTimeInterval const& time, Skeleton const& skeleton,
+    void Apply(
+        AnimationTimeInterval const& time,
+        Skeleton const& skeleton,
         SkeletonPose & skeletonPose) override;
 
     AnimationTimeInterval Length() const override;

@@ -14,8 +14,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Skeletal2D {
 
-class SpriteKeyframe {
-public:
+struct SpriteKeyframe {
     Rectangle Subrect;
     Vector2 Origin;
     AnimationTimeInterval Time;
