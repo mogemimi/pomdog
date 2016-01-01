@@ -236,7 +236,7 @@ template <std::uint8_t MaxComponentCapacity>
 template <typename Type, typename...Arguments>
 Type & EntityContext<MaxComponentCapacity>::AddComponent(EntityID const& id, Arguments &&...arguments)
 {
-    static_assert(std::is_base_of<GameComponent, Type>::value, "");
+    static_assert(std::is_base_of<ComponentBase, Type>::value, "");
     POMDOG_ASSERT(Type::TypeIndex() < MaxComponentCapacity);
 
     auto component = std::make_unique<Type>(std::forward<Arguments>(arguments)...);
@@ -247,7 +247,7 @@ template <std::uint8_t MaxComponentCapacity>
 template <typename Type>
 Type & EntityContext<MaxComponentCapacity>::AddComponent(EntityID const& id, std::unique_ptr<Type> && component)
 {
-    static_assert(std::is_base_of<GameComponent, Type>::value, "");
+    static_assert(std::is_base_of<ComponentBase, Type>::value, "");
 
     auto const typeIndex = Type::TypeIndex();
     POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
@@ -291,7 +291,7 @@ template <std::uint8_t MaxComponentCapacity>
 template <typename Type>
 void EntityContext<MaxComponentCapacity>::RemoveComponent(EntityID const& id)
 {
-    static_assert(std::is_base_of<GameComponent, Type>::value, "");
+    static_assert(std::is_base_of<ComponentBase, Type>::value, "");
 
     auto const typeIndex = Type::TypeIndex();
     POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
@@ -318,7 +318,7 @@ template <std::uint8_t MaxComponentCapacity>
 template <typename Type>
 bool EntityContext<MaxComponentCapacity>::HasComponent(EntityID const& id) const
 {
-    static_assert(std::is_base_of<GameComponent, Type>::value, "");
+    static_assert(std::is_base_of<ComponentBase, Type>::value, "");
     static_assert(std::is_base_of<Pomdog::Component<Type>, Type>::value, "TOOD: Not implemented");
 
     POMDOG_ASSERT(Type::TypeIndex() < MaxComponentCapacity);
@@ -337,7 +337,7 @@ std::bitset<MaxComponentCapacity> ComponentMask()
 template <std::uint8_t MaxComponentCapacity, typename Type, typename...Components>
 std::bitset<MaxComponentCapacity> ComponentMask()
 {
-    static_assert(std::is_base_of<GameComponent, Type>::value, "");
+    static_assert(std::is_base_of<ComponentBase, Type>::value, "");
     static_assert(std::is_base_of<Component<Type>, Type>::value, "TOOD: Not implemented");
     auto mask = ComponentMask<MaxComponentCapacity, Components...>();
     POMDOG_ASSERT(Type::TypeIndex() < MaxComponentCapacity);
@@ -351,7 +351,7 @@ template <std::uint8_t MaxComponentCapacity>
 template <typename Type, typename...Components>
 bool EntityContext<MaxComponentCapacity>::HasComponents(EntityID const& id) const
 {
-    static_assert(std::is_base_of<GameComponent, Type>::value, "");
+    static_assert(std::is_base_of<ComponentBase, Type>::value, "");
     static_assert(std::is_base_of<Pomdog::Component<Type>, Type>::value, "TOOD: Not implemented");
 
     POMDOG_ASSERT(Type::TypeIndex() < MaxComponentCapacity);
@@ -365,7 +365,7 @@ template <typename Type>
 auto EntityContext<MaxComponentCapacity>::Component(EntityID const& id)
     -> std::enable_if_t<std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>
 {
-    static_assert(std::is_base_of<GameComponent, Type>::value, "");
+    static_assert(std::is_base_of<ComponentBase, Type>::value, "");
     static_assert(std::is_base_of<Pomdog::Component<Type>, Type>::value, "");
 
     auto const typeIndex = Type::TypeIndex();
@@ -397,7 +397,7 @@ template <typename Type>
 auto EntityContext<MaxComponentCapacity>::Component(EntityID const& id)
     -> std::enable_if_t<!std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>
 {
-    static_assert(std::is_base_of<GameComponent, Type>::value, "");
+    static_assert(std::is_base_of<ComponentBase, Type>::value, "");
     static_assert(!std::is_base_of<Pomdog::Component<Type>, Type>::value, "");
 
     auto const typeIndex = Type::TypeIndex();

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "detail/GameComponent.hpp"
+#include "detail/ComponentBase.hpp"
 #include "EntityID.hpp"
 #include "EntityContext.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -64,7 +64,7 @@ class Component;
 template <typename T>
 T const* Entity::Component() const
 {
-    static_assert(std::is_base_of<Detail::Gameplay::GameComponent, T>::value, "");
+    static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
     static_assert(std::is_base_of<Pomdog::Component<T>, T>::value, "TOOD: Not implemented");
     POMDOG_ASSERT(context);
     POMDOG_ASSERT(context->Valid(id));
@@ -74,7 +74,7 @@ T const* Entity::Component() const
 template <typename T>
 T* Entity::Component()
 {
-    static_assert(std::is_base_of<Detail::Gameplay::GameComponent, T>::value, "");
+    static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
     POMDOG_ASSERT(context);
     POMDOG_ASSERT(context->Valid(id));
     return context->Component<T>(id);
@@ -83,7 +83,7 @@ T* Entity::Component()
 template <typename T>
 bool Entity::HasComponent() const
 {
-    static_assert(std::is_base_of<Detail::Gameplay::GameComponent, T>::value, "");
+    static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
     static_assert(std::is_base_of<Pomdog::Component<T>, T>::value, "TOOD: Not implemented");
     POMDOG_ASSERT(context);
     POMDOG_ASSERT(context->Valid(id));
@@ -93,7 +93,7 @@ bool Entity::HasComponent() const
 template <typename T>
 T & Entity::AddComponent(std::unique_ptr<T> && component)
 {
-    static_assert(std::is_base_of<Detail::Gameplay::GameComponent, T>::value, "");
+    static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
     POMDOG_ASSERT(context);
     POMDOG_ASSERT(context->Valid(id));
     return context->AddComponent<T>(id, std::move(component));
@@ -102,7 +102,7 @@ T & Entity::AddComponent(std::unique_ptr<T> && component)
 template <typename T, typename...Arguments>
 T & Entity::AddComponent(Arguments && ...arguments)
 {
-    static_assert(std::is_base_of<Detail::Gameplay::GameComponent, T>::value, "");
+    static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
     POMDOG_ASSERT(context);
     POMDOG_ASSERT(context->Valid(id));
     return context->AddComponent<T>(id, std::forward<Arguments>(arguments)...);
@@ -111,7 +111,7 @@ T & Entity::AddComponent(Arguments && ...arguments)
 template <typename T>
 void Entity::RemoveComponent()
 {
-    static_assert(std::is_base_of<Detail::Gameplay::GameComponent, T>::value, "");
+    static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
     POMDOG_ASSERT(context);
     POMDOG_ASSERT(context->Valid(id));
     context->RemoveComponent<T>(id);

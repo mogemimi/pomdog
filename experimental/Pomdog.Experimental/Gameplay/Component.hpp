@@ -3,7 +3,7 @@
 #pragma once
 
 #include "detail/ComponentTypeIndex.hpp"
-#include "detail/GameComponent.hpp"
+#include "detail/ComponentBase.hpp"
 #include <cstdint>
 #include <type_traits>
 #include <utility>
@@ -11,7 +11,7 @@
 namespace Pomdog {
 
 template <class T>
-class Component : public Detail::Gameplay::GameComponent {
+class Component : public Detail::Gameplay::ComponentBase {
 public:
     static_assert(std::is_class<T>::value, "T is class");
 
@@ -19,7 +19,7 @@ public:
 
     static std::uint8_t TypeIndex()
     {
-        return Detail::Gameplay::ComponentTypeIndex<GameComponent, std::uint8_t>::Index<T>();
+        return Detail::Gameplay::ComponentTypeIndex<ComponentBase, std::uint8_t>::Index<T>();
     }
 };
 

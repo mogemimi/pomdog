@@ -6,9 +6,9 @@ namespace Pomdog {
 namespace Detail {
 namespace Gameplay {
 
-class GameComponent {
+class ComponentBase {
 public:
-    virtual ~GameComponent() = default;
+    virtual ~ComponentBase() = default;
 };
 
 } // namespace Gameplay

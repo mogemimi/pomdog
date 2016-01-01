@@ -27,7 +27,7 @@
       '<@(pomdog_expr_dir)/Gameplay/EntityManager.cpp',
       '<@(pomdog_expr_dir)/Gameplay/EntityManager.hpp',
       '<@(pomdog_expr_dir)/Gameplay/detail/ComponentTypeIndex.hpp',
-      '<@(pomdog_expr_dir)/Gameplay/detail/GameComponent.hpp',
+      '<@(pomdog_expr_dir)/Gameplay/detail/ComponentBase.hpp',
 
       '<@(pomdog_expr_dir)/Gameplay2D/Animator.cpp',
       '<@(pomdog_expr_dir)/Gameplay2D/Animator.hpp',
