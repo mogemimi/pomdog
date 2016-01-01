@@ -3,6 +3,7 @@
 #include "SpriteFontLoader.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/PathHelper.hpp"
 #include <utility>
 #include <fstream>
 #include <algorithm>
@@ -277,15 +278,6 @@ Detail::SpriteFonts::Glyph ParseGlyph(std::istream & stream)
     return std::move(result);
 }
 
-namespace FilePathHelper {
-    static std::string Directory(std::string const& path)
-    {
-        std::string::size_type index(path.rfind("/"));
-        return (std::string::npos != index) ?
-            path.substr(0, ++index) : "";
-    }
-}
-
 } // unnamed namespace
 //-----------------------------------------------------------------------
 std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
@@ -360,7 +352,7 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
 
     std::vector<std::shared_ptr<Texture2D>> textures;
     {
-        auto directoryName = FilePathHelper::Directory(assetName);
+        auto directoryName = std::get<0>(PathHelper::Split(assetName));
 
         for (auto & page: pages)
         {

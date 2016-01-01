@@ -85,8 +85,6 @@ void SetJsonValue(std::string & jsonData, std::string const& key, T const& value
 UserPreferences::UserPreferences()
     : needToSave(false)
 {
-    using Detail::PathHelper;
-    using Detail::FileSystem;
     using Detail::BinaryReader;
 
     const auto directory = FileSystem::GetLocalAppDataDirectoryPath();
