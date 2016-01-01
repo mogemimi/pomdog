@@ -4,9 +4,6 @@
   },
   'includes': ['../../build/common.gypi'],
   'target_defaults': {
-    'include_dirs': [
-      '<@(pomdog_dir)/include',
-    ],
     'configurations': {
       'Debug': {
         'msbuild_settings': {
@@ -71,10 +68,12 @@
       'product_name': 'unittest',
       'type': 'executable',
       'dependencies': [
-        '<@(pomdog_dir)/build/pomdog.gyp:pomdog-static',
+        #'<@(pomdog_dir)/build/pomdog.gyp:pomdog-static',
+        '<@(pomdog_dir)/build/experimental.gyp:pomdog_experimental',
       ],
       'include_dirs': [
         '<@(pomdog_dir)/include',
+        '<@(pomdog_dir)/experimental',
         '<@(pomdog_dir)/dependencies/iutest/include',
       ],
       'sources': [
@@ -84,9 +83,9 @@
         'Content/PathHelperTest.cpp',
         # 'Async/SchedulerTest.cpp',
         # 'Async/TaskTest.cpp',
-        #'Gameplay/GameObjectIDTest.cpp',
-        #'Gameplay/GameObjectTest.cpp',
-        #'Gameplay/GameWorldTest.cpp',
+        'Experimental/Gameplay/GameObjectIDTest.cpp',
+        'Experimental/Gameplay/GameObjectTest.cpp',
+        'Experimental/Gameplay/GameWorldTest.cpp',
         'Graphics/InputLayoutHelperTest.cpp',
         'Input/KeyboardStateTest.cpp',
         'Input/KeysTest.cpp',

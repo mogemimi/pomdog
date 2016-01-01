@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#include <Pomdog/Gameplay/GameObjectID.hpp>
+#include <Pomdog.Experimental/Gameplay/GameObjectID.hpp>
 #include <gtest/iutest_switch.hpp>
 #include <cstdint>
 
