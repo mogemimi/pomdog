@@ -65,8 +65,8 @@ TEST(Entity, AddComponentWithoutArguments)
     EXPECT_TRUE(entity.HasComponent<TransformComponent>());
     EXPECT_TRUE(entity.HasComponent<PhysicsComponent>());
 
-    EXPECT_NE(nullptr, entity.Component<TransformComponent>());
-    EXPECT_NE(nullptr, entity.Component<PhysicsComponent>());
+    EXPECT_NE(nullptr, entity.GetComponent<TransformComponent>());
+    EXPECT_NE(nullptr, entity.GetComponent<PhysicsComponent>());
 }
 
 TEST(Entity, AddComponentWithArguments)
@@ -79,33 +79,33 @@ TEST(Entity, AddComponentWithArguments)
     EXPECT_TRUE(entity.HasComponent<TransformComponent>());
     EXPECT_TRUE(entity.HasComponent<PhysicsComponent>());
 
-    ASSERT_NE(nullptr, entity.Component<TransformComponent>());
-    ASSERT_NE(nullptr, entity.Component<PhysicsComponent>());
+    ASSERT_NE(nullptr, entity.GetComponent<TransformComponent>());
+    ASSERT_NE(nullptr, entity.GetComponent<PhysicsComponent>());
 
-    EXPECT_EQ(3, entity.Component<TransformComponent>()->x);
-    EXPECT_EQ(4, entity.Component<TransformComponent>()->y);
-    EXPECT_EQ(5, entity.Component<TransformComponent>()->z);
-    EXPECT_EQ(42, entity.Component<PhysicsComponent>()->v);
+    EXPECT_EQ(3, entity.GetComponent<TransformComponent>()->x);
+    EXPECT_EQ(4, entity.GetComponent<TransformComponent>()->y);
+    EXPECT_EQ(5, entity.GetComponent<TransformComponent>()->z);
+    EXPECT_EQ(42, entity.GetComponent<PhysicsComponent>()->v);
 }
 
 TEST(Entity, AddComponentWithInheritance)
 {
     auto objectContext = std::make_shared<EntityContext>();
     Entity entity{objectContext};
-    MeshRendererComponent & meshRenderer = entity.AddComponent<MeshRendererComponent>(std::make_unique<MeshRendererComponent>());
-    meshRenderer.SetZOrder(42);
+    auto meshRenderer = entity.AddComponent<MeshRendererComponent>(std::make_shared<MeshRendererComponent>());
+    meshRenderer->SetZOrder(42);
 
     //EXPECT_TRUE(entity.HasComponent<MeshRendererComponent>());
-    ASSERT_NE(nullptr, entity.Component<MeshRendererComponent>());
-    EXPECT_EQ(42, entity.Component<MeshRendererComponent>()->GetZOrder());
+    ASSERT_NE(nullptr, entity.GetComponent<MeshRendererComponent>());
+    EXPECT_EQ(42, entity.GetComponent<MeshRendererComponent>()->GetZOrder());
 
     EXPECT_TRUE(entity.HasComponent<RendererComponent>());
-    ASSERT_NE(nullptr, entity.Component<RendererComponent>());
-    auto renderer = entity.Component<RendererComponent>();
+    ASSERT_NE(nullptr, entity.GetComponent<RendererComponent>());
+    auto renderer = entity.GetComponent<RendererComponent>();
     renderer->SetZOrder(72);
 
-    EXPECT_EQ(72, entity.Component<RendererComponent>()->GetZOrder());
-    EXPECT_EQ(72, entity.Component<MeshRendererComponent>()->GetZOrder());
+    EXPECT_EQ(72, entity.GetComponent<RendererComponent>()->GetZOrder());
+    EXPECT_EQ(72, entity.GetComponent<MeshRendererComponent>()->GetZOrder());
 }
 
 TEST(Entity, RemoveComponent)
@@ -118,7 +118,7 @@ TEST(Entity, RemoveComponent)
 
         entity.RemoveComponent<TransformComponent>();
         EXPECT_FALSE(entity.HasComponent<TransformComponent>());
-        EXPECT_EQ(nullptr, entity.Component<TransformComponent>());
+        EXPECT_EQ(nullptr, entity.GetComponent<TransformComponent>());
     }
     {
         auto objectContext = std::make_shared<EntityContext>();
@@ -129,16 +129,16 @@ TEST(Entity, RemoveComponent)
         EXPECT_TRUE(entity.HasComponent<TransformComponent>());
         EXPECT_TRUE(entity.HasComponent<PhysicsComponent>());
 
-        ASSERT_NE(nullptr, entity.Component<TransformComponent>());
-        ASSERT_NE(nullptr, entity.Component<PhysicsComponent>());
+        ASSERT_NE(nullptr, entity.GetComponent<TransformComponent>());
+        ASSERT_NE(nullptr, entity.GetComponent<PhysicsComponent>());
 
         entity.RemoveComponent<TransformComponent>();
         EXPECT_FALSE(entity.HasComponent<TransformComponent>());
-        EXPECT_EQ(nullptr, entity.Component<TransformComponent>());
+        EXPECT_EQ(nullptr, entity.GetComponent<TransformComponent>());
 
         entity.RemoveComponent<PhysicsComponent>();
         EXPECT_FALSE(entity.HasComponent<PhysicsComponent>());
-        EXPECT_EQ(nullptr, entity.Component<PhysicsComponent>());
+        EXPECT_EQ(nullptr, entity.GetComponent<PhysicsComponent>());
     }
 }
 
@@ -147,33 +147,33 @@ TEST(Entity, RemoveComponentWithInheritance)
     auto objectContext = std::make_shared<EntityContext>();
     {
         Entity entity{objectContext};
-        entity.AddComponent<MeshRendererComponent>(std::make_unique<MeshRendererComponent>());
+        entity.AddComponent<MeshRendererComponent>(std::make_shared<MeshRendererComponent>());
 
         //EXPECT_TRUE(entity.HasComponent<MeshRendererComponent>());
-        EXPECT_NE(nullptr, entity.Component<MeshRendererComponent>());
+        EXPECT_NE(nullptr, entity.GetComponent<MeshRendererComponent>());
         EXPECT_TRUE(entity.HasComponent<RendererComponent>());
-        EXPECT_NE(nullptr, entity.Component<RendererComponent>());
+        EXPECT_NE(nullptr, entity.GetComponent<RendererComponent>());
 
         entity.RemoveComponent<MeshRendererComponent>();
         //EXPECT_FALSE(entity.HasComponent<MeshRendererComponent>());
-        EXPECT_EQ(nullptr, entity.Component<MeshRendererComponent>());
+        EXPECT_EQ(nullptr, entity.GetComponent<MeshRendererComponent>());
         EXPECT_FALSE(entity.HasComponent<RendererComponent>());
-        EXPECT_EQ(nullptr, entity.Component<RendererComponent>());
+        EXPECT_EQ(nullptr, entity.GetComponent<RendererComponent>());
     }
     {
         Entity entity{objectContext};
-        entity.AddComponent<MeshRendererComponent>(std::make_unique<MeshRendererComponent>());
+        entity.AddComponent<MeshRendererComponent>(std::make_shared<MeshRendererComponent>());
 
         //EXPECT_TRUE(entity.HasComponent<MeshRendererComponent>());
-        EXPECT_NE(nullptr, entity.Component<MeshRendererComponent>());
+        EXPECT_NE(nullptr, entity.GetComponent<MeshRendererComponent>());
         EXPECT_TRUE(entity.HasComponent<RendererComponent>());
-        EXPECT_NE(nullptr, entity.Component<RendererComponent>());
+        EXPECT_NE(nullptr, entity.GetComponent<RendererComponent>());
 
         entity.RemoveComponent<RendererComponent>();
         //EXPECT_FALSE(entity.HasComponent<MeshRendererComponent>());
-        EXPECT_EQ(nullptr, entity.Component<MeshRendererComponent>());
+        EXPECT_EQ(nullptr, entity.GetComponent<MeshRendererComponent>());
         EXPECT_FALSE(entity.HasComponent<RendererComponent>());
-        EXPECT_EQ(nullptr, entity.Component<RendererComponent>());
+        EXPECT_EQ(nullptr, entity.GetComponent<RendererComponent>());
     }
 }
 
@@ -183,19 +183,19 @@ TEST(Entity, Component_Const)
     auto entity = std::make_shared<Entity>(objectContext);
 
     EXPECT_FALSE(entity->HasComponent<PhysicsComponent>());
-    EXPECT_EQ(nullptr, entity->Component<PhysicsComponent>());
+    EXPECT_EQ(nullptr, entity->GetComponent<PhysicsComponent>());
 
     entity->AddComponent<PhysicsComponent>(42);
 
     EXPECT_TRUE(entity->HasComponent<PhysicsComponent>());
-    ASSERT_NE(nullptr, entity->Component<PhysicsComponent>());
-    EXPECT_EQ(42, entity->Component<PhysicsComponent>()->v);
+    ASSERT_NE(nullptr, entity->GetComponent<PhysicsComponent>());
+    EXPECT_EQ(42, entity->GetComponent<PhysicsComponent>()->v);
 
     {
         std::shared_ptr<Entity const> entityConstRef = entity;
         EXPECT_TRUE(entityConstRef->HasComponent<PhysicsComponent>());
-        ASSERT_NE(nullptr, entityConstRef->Component<PhysicsComponent>());
-        EXPECT_EQ(42, entityConstRef->Component<PhysicsComponent>()->v);
+        ASSERT_NE(nullptr, entityConstRef->GetComponent<PhysicsComponent>());
+        EXPECT_EQ(42, entityConstRef->GetComponent<PhysicsComponent>()->v);
     }
 }
 
@@ -264,18 +264,21 @@ TEST(Entity, DestroyImmediate)
     {
         auto objectContext = std::make_shared<EntityContext>();
         Entity entity {objectContext};
-        auto & behavior = entity.AddComponent<Behavior>();
-        std::weak_ptr<int> weak = behavior.ptr;
+        auto behavior = entity.AddComponent<Behavior>();
+        std::weak_ptr<int> weak = behavior->ptr;
 
         EXPECT_TRUE(entity);
         EXPECT_TRUE(entity.HasComponent<Behavior>());
-        EXPECT_EQ(&behavior, entity.Component<Behavior>());
+        EXPECT_EQ(behavior, entity.GetComponent<Behavior>());
         EXPECT_FALSE(weak.expired());
         EXPECT_EQ(1, objectContext->Count());
-        behavior.Do(entity);
+        behavior->Do(entity);
         EXPECT_FALSE(entity);
         //EXPECT_FALSE(entity.HasComponent<Behavior>());
-        //EXPECT_EQ(nullptr, entity.Component<Behavior>());
+        //EXPECT_FALSE(entity.GetComponent<Behavior>());
+        EXPECT_TRUE(behavior);
+        EXPECT_FALSE(weak.expired());
+        behavior.reset();
         EXPECT_TRUE(weak.expired());
         EXPECT_EQ(0, objectContext->Count());
     }
@@ -357,24 +360,27 @@ TEST(Entity, Destroy)
     {
         auto objectContext = std::make_shared<EntityContext>();
         Entity entity {objectContext};
-        auto & behavior = entity.AddComponent<Behavior>();
-        std::weak_ptr<int> weak = behavior.ptr;
+        auto behavior = entity.AddComponent<Behavior>();
+        std::weak_ptr<int> weak = behavior->ptr;
 
         EXPECT_TRUE(entity);
         EXPECT_TRUE(entity.HasComponent<Behavior>());
-        EXPECT_EQ(&behavior, entity.Component<Behavior>());
+        EXPECT_EQ(behavior, entity.GetComponent<Behavior>());
         EXPECT_FALSE(weak.expired());
         EXPECT_EQ(1, objectContext->Count());
-        behavior.Do(entity);
+        behavior->Do(entity);
         EXPECT_FALSE(entity);
         //EXPECT_FALSE(entity.HasComponent<Behavior>());
-        //EXPECT_EQ(nullptr, entity.Component<Behavior>());
+        //EXPECT_EQ(nullptr, entity.GetComponent<Behavior>());
         EXPECT_FALSE(weak.expired());
         EXPECT_EQ(0, objectContext->Count());
         objectContext->Refresh();
         EXPECT_FALSE(entity);
         //EXPECT_FALSE(entity.HasComponent<Behavior>());
-        //EXPECT_EQ(nullptr, entity.Component<Behavior>());
+        //EXPECT_FALSE(entity.GetComponent<Behavior>());
+        EXPECT_FALSE(weak.expired());
+        EXPECT_TRUE(behavior);
+        behavior.reset();
         EXPECT_TRUE(weak.expired());
         EXPECT_EQ(0, objectContext->Count());
     }
@@ -446,16 +452,19 @@ TEST(Entity, Clear)
     {
         auto objectContext = std::make_shared<EntityContext>();
         Entity entity {objectContext};
-        auto & behavior = entity.AddComponent<Behavior>();
-        std::weak_ptr<int> weak = behavior.ptr;
+        auto behavior = entity.AddComponent<Behavior>();
+        std::weak_ptr<int> weak = behavior->ptr;
 
         EXPECT_TRUE(entity);
         EXPECT_TRUE(entity.HasComponent<Behavior>());
-        EXPECT_EQ(&behavior, entity.Component<Behavior>());
+        EXPECT_EQ(behavior, entity.GetComponent<Behavior>());
         EXPECT_FALSE(weak.expired());
         EXPECT_EQ(1, objectContext->Count());
         objectContext->Clear();
         EXPECT_FALSE(entity);
+        EXPECT_TRUE(behavior);
+        EXPECT_FALSE(weak.expired());
+        behavior.reset();
         EXPECT_TRUE(weak.expired());
         EXPECT_EQ(0, objectContext->Count());
     }
@@ -463,8 +472,8 @@ TEST(Entity, Clear)
         auto objectContext = std::make_shared<EntityContext>();
         Entity entity1 {objectContext};
         Entity entity2 {objectContext};
-        auto & behavior = entity1.AddComponent<Behavior>();
-        std::weak_ptr<int> weak = behavior.ptr;
+        auto behavior = entity1.AddComponent<Behavior>();
+        std::weak_ptr<int> weak = behavior->ptr;
 
         auto oldId1 = entity1.ID();
         auto oldId2 = entity2.ID();

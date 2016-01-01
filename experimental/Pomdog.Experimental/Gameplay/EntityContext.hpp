@@ -46,10 +46,12 @@ public:
     bool Valid(EntityID const& id) const;
 
     template <typename Type, typename...Arguments>
-    Type & AddComponent(EntityID const& id, Arguments &&...arguments);
+    std::shared_ptr<Type> AddComponent(
+        EntityID const& id, Arguments &&...arguments);
 
     template <typename Type>
-    Type & AddComponent(EntityID const& id, std::unique_ptr<Type> && component);
+    std::shared_ptr<Type> AddComponent(
+        EntityID const& id, std::shared_ptr<Type> && component);
 
     template <typename Type>
     void RemoveComponent(EntityID const& id);
@@ -61,18 +63,22 @@ public:
     bool HasComponents(EntityID const& id) const;
 
     template <typename Type>
-    auto Component(EntityID const& id)
-        -> std::enable_if_t<std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>;
+    auto GetComponent(EntityID const& id)
+        -> std::enable_if_t<
+            std::is_base_of<Pomdog::Component<Type>, Type>::value,
+            std::shared_ptr<Type>>;
 
     template <typename Type>
-    auto Component(EntityID const& id)
-        -> std::enable_if_t<!std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>;
+    auto GetComponent(EntityID const& id)
+        -> std::enable_if_t<
+            !std::is_base_of<Pomdog::Component<Type>, Type>::value,
+            std::shared_ptr<Type>>;
 
 private:
     void DestroyComponents(std::uint32_t index);
 
 private:
-    std::vector<std::vector<std::unique_ptr<GameComponent>>> components;
+    std::vector<std::vector<std::shared_ptr<ComponentBase>>> components;
     std::vector<EntityDescription<MaxComponentCapacity>> descriptions;
     std::list<std::uint32_t> deletedIndices;
     std::list<EntityID> destroyedObjects;
@@ -234,18 +240,22 @@ bool EntityContext<MaxComponentCapacity>::Valid(EntityID const& id) const
 
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type, typename...Arguments>
-Type & EntityContext<MaxComponentCapacity>::AddComponent(EntityID const& id, Arguments &&...arguments)
+std::shared_ptr<Type>
+EntityContext<MaxComponentCapacity>::AddComponent(
+    EntityID const& id, Arguments &&...arguments)
 {
     static_assert(std::is_base_of<ComponentBase, Type>::value, "");
     POMDOG_ASSERT(Type::TypeIndex() < MaxComponentCapacity);
 
-    auto component = std::make_unique<Type>(std::forward<Arguments>(arguments)...);
+    auto component = std::make_shared<Type>(std::forward<Arguments>(arguments)...);
     return AddComponent<Type>(id, std::move(component));
 }
 
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type>
-Type & EntityContext<MaxComponentCapacity>::AddComponent(EntityID const& id, std::unique_ptr<Type> && component)
+std::shared_ptr<Type>
+EntityContext<MaxComponentCapacity>::AddComponent(
+    EntityID const& id, std::shared_ptr<Type> && component)
 {
     static_assert(std::is_base_of<ComponentBase, Type>::value, "");
 
@@ -271,7 +281,7 @@ Type & EntityContext<MaxComponentCapacity>::AddComponent(EntityID const& id, std
 
     POMDOG_ASSERT(component);
     POMDOG_ASSERT(id.Index() < entities.size());
-    entities[id.Index()] = std::move(component);
+    entities[id.Index()] = component;
 
     POMDOG_ASSERT(id.Index() < descriptions.size());
     auto & desc = descriptions[id.Index()];
@@ -284,7 +294,8 @@ Type & EntityContext<MaxComponentCapacity>::AddComponent(EntityID const& id, std
     POMDOG_ASSERT(entities[id.Index()]);
     POMDOG_ASSERT(entities[id.Index()].get() != nullptr);
     POMDOG_ASSERT(dynamic_cast<Type*>(entities[id.Index()].get()) == static_cast<Type*>(entities[id.Index()].get()));
-    return *static_cast<Type*>(entities[id.Index()].get());
+    POMDOG_ASSERT(component);
+    return component;
 }
 
 template <std::uint8_t MaxComponentCapacity>
@@ -362,8 +373,10 @@ bool EntityContext<MaxComponentCapacity>::HasComponents(EntityID const& id) cons
 
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type>
-auto EntityContext<MaxComponentCapacity>::Component(EntityID const& id)
-    -> std::enable_if_t<std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>
+auto EntityContext<MaxComponentCapacity>::GetComponent(EntityID const& id)
+    -> std::enable_if_t<
+        std::is_base_of<Pomdog::Component<Type>, Type>::value,
+        std::shared_ptr<Type>>
 {
     static_assert(std::is_base_of<ComponentBase, Type>::value, "");
     static_assert(std::is_base_of<Pomdog::Component<Type>, Type>::value, "");
@@ -387,15 +400,17 @@ auto EntityContext<MaxComponentCapacity>::Component(EntityID const& id)
         POMDOG_ASSERT(id.Index() < descriptions.size());
         POMDOG_ASSERT(descriptions[id.Index()].ComponentBitMask[typeIndex]);
         POMDOG_ASSERT(dynamic_cast<Type*>(entities[id.Index()].get()) == static_cast<Type*>(entities[id.Index()].get()));
-        return static_cast<Type*>(entities[id.Index()].get());
+        return std::static_pointer_cast<Type>(entities[id.Index()]);
     }
     return nullptr;
 }
 
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type>
-auto EntityContext<MaxComponentCapacity>::Component(EntityID const& id)
-    -> std::enable_if_t<!std::is_base_of<Pomdog::Component<Type>, Type>::value, Type*>
+auto EntityContext<MaxComponentCapacity>::GetComponent(EntityID const& id)
+    -> std::enable_if_t<
+        !std::is_base_of<Pomdog::Component<Type>, Type>::value,
+        std::shared_ptr<Type>>
 {
     static_assert(std::is_base_of<ComponentBase, Type>::value, "");
     static_assert(!std::is_base_of<Pomdog::Component<Type>, Type>::value, "");
@@ -418,7 +433,7 @@ auto EntityContext<MaxComponentCapacity>::Component(EntityID const& id)
     if (entities[id.Index()]) {
         POMDOG_ASSERT(id.Index() < descriptions.size());
         POMDOG_ASSERT(descriptions[id.Index()].ComponentBitMask[typeIndex]);
-        return dynamic_cast<Type*>(entities[id.Index()].get());
+        return std::dynamic_pointer_cast<Type>(entities[id.Index()]);
     }
     return nullptr;
 }

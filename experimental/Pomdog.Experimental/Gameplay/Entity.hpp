@@ -32,19 +32,19 @@ public:
     EntityID ID() const;
 
     template <typename T>
-    T const* Component() const;
+    std::shared_ptr<T const> GetComponent() const;
 
     template <typename T>
-    T* Component();
+    std::shared_ptr<T> GetComponent();
 
     template <typename T>
     bool HasComponent() const;
 
     template <typename T>
-    T & AddComponent(std::unique_ptr<T> && component);
+    std::shared_ptr<T> AddComponent(std::shared_ptr<T> && component);
 
     template <typename T, typename...Arguments>
-    T & AddComponent(Arguments && ...arguments);
+    std::shared_ptr<T> AddComponent(Arguments && ...arguments);
 
     template <typename T>
     void RemoveComponent();
@@ -62,22 +62,22 @@ template <class T>
 class Component;
 
 template <typename T>
-T const* Entity::Component() const
+std::shared_ptr<T const> Entity::GetComponent() const
 {
     static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
     static_assert(std::is_base_of<Pomdog::Component<T>, T>::value, "TOOD: Not implemented");
     POMDOG_ASSERT(context);
     POMDOG_ASSERT(context->Valid(id));
-    return context->Component<T>(id);
+    return context->GetComponent<T>(id);
 }
 
 template <typename T>
-T* Entity::Component()
+std::shared_ptr<T> Entity::GetComponent()
 {
     static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
     POMDOG_ASSERT(context);
     POMDOG_ASSERT(context->Valid(id));
-    return context->Component<T>(id);
+    return context->GetComponent<T>(id);
 }
 
 template <typename T>
@@ -91,7 +91,7 @@ bool Entity::HasComponent() const
 }
 
 template <typename T>
-T & Entity::AddComponent(std::unique_ptr<T> && component)
+std::shared_ptr<T> Entity::AddComponent(std::shared_ptr<T> && component)
 {
     static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
     POMDOG_ASSERT(context);
@@ -100,7 +100,7 @@ T & Entity::AddComponent(std::unique_ptr<T> && component)
 }
 
 template <typename T, typename...Arguments>
-T & Entity::AddComponent(Arguments && ...arguments)
+std::shared_ptr<T> Entity::AddComponent(Arguments && ...arguments)
 {
     static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
     POMDOG_ASSERT(context);

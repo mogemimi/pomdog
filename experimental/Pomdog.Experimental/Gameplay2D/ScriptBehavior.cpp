@@ -16,7 +16,7 @@ void ScriptBehavior::Start(Entity & entity)
 //-----------------------------------------------------------------------
 void ScriptBehavior::Update(Entity & entity, Duration const& frameDuration)
 {
-//    auto transform = entity.Component<Transform2D>();
+//    auto transform = entity.GetComponent<Transform2D>();
 //
 //    state["Transform"]["Position"]["X"] = static_cast<double>(transform->Position.X);
 //    state["Transform"]["Position"]["Y"] = static_cast<double>(transform->Position.Y);

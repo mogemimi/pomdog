@@ -27,7 +27,7 @@ public:
         POMDOG_ASSERT(entity);
         POMDOG_ASSERT(entity.HasComponent<Transform2D>());
 
-        auto transform = entity.Component<Transform2D>();
+        auto transform = entity.GetComponent<Transform2D>();
         startPosition = transform->Position;
     }
 
@@ -36,7 +36,7 @@ public:
         POMDOG_ASSERT(entity);
         POMDOG_ASSERT(entity.HasComponent<Transform2D>());
 
-        auto transform = entity.Component<Transform2D>();
+        auto transform = entity.GetComponent<Transform2D>();
         transform->Position = Vector2::Lerp(startPosition, endPosition, normalizedTime);
     }
 };

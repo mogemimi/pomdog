@@ -27,7 +27,7 @@ public:
         POMDOG_ASSERT(entity);
         POMDOG_ASSERT(entity.HasComponent<Renderable>());
 
-        auto renderable = entity.Component<Renderable>();
+        auto renderable = entity.GetComponent<Renderable>();
         startColor = renderable->Material.Color;
     }
 
@@ -36,7 +36,7 @@ public:
         POMDOG_ASSERT(entity);
         POMDOG_ASSERT(entity.HasComponent<Renderable>());
 
-        auto renderable = entity.Component<Renderable>();
+        auto renderable = entity.GetComponent<Renderable>();
         auto color = Color::Lerp(startColor, endColor, normalizedTime);
         renderable->Material.Color = color;
     }

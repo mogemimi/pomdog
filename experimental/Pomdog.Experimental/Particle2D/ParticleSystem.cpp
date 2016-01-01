@@ -89,7 +89,7 @@ void ParticleSystem::Simulate(Entity & entity, Duration const& duration)
     }
 
     Transform2D emitterTransform;
-    if (auto transform = entity.Component<Transform2D>()) {
+    if (auto transform = entity.GetComponent<Transform2D>()) {
         emitterTransform = *transform;
     }
 

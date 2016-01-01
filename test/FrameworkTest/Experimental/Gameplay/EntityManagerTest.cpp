@@ -136,8 +136,8 @@ TEST(EntityManager, CreateObject)
 //
 //    for (auto entity: objects)
 //    {
-//        auto transform = entity->Component<Transform>();
-//        auto collider = entity->Component<Collider>();
+//        auto transform = entity->GetComponent<Transform>();
+//        auto collider = entity->GetComponent<Collider>();
 //
 //        ASSERT_NE(nullptr, transform);
 //        transform->x = 480;
@@ -147,12 +147,12 @@ TEST(EntityManager, CreateObject)
 //        collider->radius = 50;
 //    }
 //
-//    ASSERT_NE(nullptr, entity->Component<Transform>());
-//    EXPECT_EQ(480, entity->Component<Transform>()->x);
-//    EXPECT_EQ(320, entity->Component<Transform>()->y);
+//    ASSERT_NE(nullptr, entity->GetComponent<Transform>());
+//    EXPECT_EQ(480, entity->GetComponent<Transform>()->x);
+//    EXPECT_EQ(320, entity->GetComponent<Transform>()->y);
 //
-//    ASSERT_NE(nullptr, entity->Component<Collider>());
-//    EXPECT_EQ(50, entity->Component<Collider>()->radius);
+//    ASSERT_NE(nullptr, entity->GetComponent<Collider>());
+//    EXPECT_EQ(50, entity->GetComponent<Collider>()->radius);
 //}
 //
 //
@@ -181,10 +181,10 @@ TEST(EntityManager, CreateObject)
 //
 //    for (auto entity: objects)
 //    {
-//        EXPECT_NE(nullptr, entity->Component<Transform>());
+//        EXPECT_NE(nullptr, entity->GetComponent<Transform>());
 //        EXPECT_TRUE(entity->HasComponent<Transform>());
 //
-//        EXPECT_EQ(nullptr, entity->Component<Collider>());
+//        EXPECT_EQ(nullptr, entity->GetComponent<Collider>());
 //        EXPECT_FALSE(entity->HasComponent<Collider>());
 //    }
 //}

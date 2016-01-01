@@ -30,10 +30,10 @@ public:
     std::vector<Entity> QueryComponents();
 
     template <typename T>
-    T const* Component(EntityID const& id) const;
+    std::shared_ptr<T const> GetComponent(EntityID const& id) const;
 
     template <typename T>
-    T* Component(EntityID const& id);
+    std::shared_ptr<T> GetComponent(EntityID const& id);
 
     template <typename T>
     bool HasComponent(EntityID const& id) const;
@@ -72,19 +72,19 @@ std::vector<Entity> EntityManager::QueryComponents()
 }
 
 template <typename T>
-T const* EntityManager::Component(EntityID const& id) const
+std::shared_ptr<T const> EntityManager::GetComponent(EntityID const& id) const
 {
     static_assert(std::is_object<T>::value, "");
     POMDOG_ASSERT(context);
-    return context->Component<T>(id);
+    return context->GetComponent<T>(id);
 }
 
 template <typename T>
-T* EntityManager::Component(EntityID const& id)
+std::shared_ptr<T> EntityManager::GetComponent(EntityID const& id)
 {
     static_assert(std::is_object<T>::value, "");
     POMDOG_ASSERT(context);
-    return context->Component<T>(id);
+    return context->GetComponent<T>(id);
 }
 
 template <typename T>
