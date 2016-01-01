@@ -28,4 +28,4 @@ private:
     std::shared_ptr<Texture2D> texture;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog

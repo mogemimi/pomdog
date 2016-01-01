@@ -35,4 +35,4 @@ private:
     std::uint32_t dirtyFlags;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog

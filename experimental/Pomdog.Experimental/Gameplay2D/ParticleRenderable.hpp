@@ -20,4 +20,4 @@ private:
     Detail::Rendering::ParticleBatchCommand command;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog

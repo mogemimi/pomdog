@@ -29,7 +29,9 @@ public:
 
     void Clear();
 
-    void AddProcessor(std::type_index const& index, std::unique_ptr<RenderCommandProcessor> && processor);
+    void AddProcessor(
+        std::type_index const& index,
+        std::unique_ptr<RenderCommandProcessor> && processor);
 
     std::uint32_t DrawCallCount() const;
 

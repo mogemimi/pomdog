@@ -163,7 +163,7 @@ public:
 
     std::size_t GetMaxVertexCount() const noexcept;
 
-    std::uint32_t GetDrawCallCount() const;
+    int GetDrawCallCount() const noexcept;
 
 private:
     class Impl;

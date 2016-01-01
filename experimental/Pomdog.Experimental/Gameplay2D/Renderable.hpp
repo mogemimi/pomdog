@@ -26,4 +26,4 @@ public:
     bool IsVisible = true;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog

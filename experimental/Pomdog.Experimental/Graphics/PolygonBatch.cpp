@@ -51,7 +51,7 @@ private:
 
 public:
     PolygonShapeBuilder polygonShapes;
-    std::uint32_t drawCallCount;
+    int drawCallCount;
 
 public:
     Impl(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
@@ -380,7 +380,7 @@ std::size_t PolygonBatch::GetMaxVertexCount() const noexcept
     return PolygonShapeBuilder::GetMaxVertexCount();
 }
 //-----------------------------------------------------------------------
-std::uint32_t PolygonBatch::GetDrawCallCount() const
+int PolygonBatch::GetDrawCallCount() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->drawCallCount;

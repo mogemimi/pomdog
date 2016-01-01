@@ -24,4 +24,4 @@ private:
     Detail::Rendering::SkinnedMeshCommand command;
 };
 
-}// namespace Pomdog
+} // namespace Pomdog

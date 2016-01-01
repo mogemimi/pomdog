@@ -100,7 +100,7 @@ private:
     std::size_t currentVertexOffset;
 
 public:
-    std::uint32_t drawCallCount;
+    int drawCallCount;
 
 public:
     Impl(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
@@ -521,7 +521,7 @@ void SpriteBatchRenderer::Draw(
         sourceRect, color, originPivot);
 }
 //-----------------------------------------------------------------------
-std::uint32_t SpriteBatchRenderer::GetDrawCallCount() const
+int SpriteBatchRenderer::GetDrawCallCount() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->drawCallCount;

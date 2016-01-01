@@ -71,7 +71,7 @@ public:
 
     void End();
 
-    std::uint32_t GetDrawCallCount() const;
+    int GetDrawCallCount() const noexcept;
 
 private:
     class Impl;
