@@ -15,27 +15,27 @@ public:
         : id((static_cast<std::uint64_t>(sequenceNumber) << 32) | (index & 0xffffffffUL))
     {}
 
-    std::uint32_t SequenceNumber() const {
+    std::uint32_t SequenceNumber() const noexcept {
         return id >> 32;
     }
 
-    std::uint32_t Index() const {
+    std::uint32_t Index() const noexcept {
         return id & 0xffffffffUL;
     }
 
-    std::uint64_t Value() const {
+    std::uint64_t Value() const noexcept {
         return id;
     }
 
-    bool operator==(EntityID const& other) const {
+    bool operator==(EntityID const& other) const noexcept {
         return id == other.id;
     }
 
-    bool operator!=(EntityID const& other) const {
+    bool operator!=(EntityID const& other) const noexcept {
         return id != other.id;
     }
 
-    bool operator<(EntityID const& other) const {
+    bool operator<(EntityID const& other) const noexcept {
         return id < other.id;
     }
 

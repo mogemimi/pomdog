@@ -58,7 +58,7 @@ void Entity::DestroyImmediate()
     }
 }
 //-----------------------------------------------------------------------
-EntityID Entity::ID() const
+EntityID Entity::GetEntityID() const noexcept
 {
     POMDOG_ASSERT(context && context->Valid(id));
     return id;

@@ -29,7 +29,7 @@ public:
     bool operator==(Entity const& entity) const;
     bool operator!=(Entity const& entity) const;
 
-    EntityID ID() const;
+    EntityID GetEntityID() const noexcept;
 
     template <typename T>
     std::shared_ptr<T const> GetComponent() const;

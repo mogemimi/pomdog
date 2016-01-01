@@ -31,9 +31,9 @@ public:
 
     EntityID Create();
 
-    std::size_t Count() const;
+    std::size_t GetCount() const noexcept;
 
-    std::size_t Capacity() const;
+    std::size_t GetCapacity() const noexcept;
 
     void Clear();
 
@@ -129,13 +129,13 @@ EntityID EntityContext<MaxComponentCapacity>::Create()
 }
 
 template <std::uint8_t MaxComponentCapacity>
-std::size_t EntityContext<MaxComponentCapacity>::Count() const
+std::size_t EntityContext<MaxComponentCapacity>::GetCount() const noexcept
 {
     return entityCount;
 }
 
 template <std::uint8_t MaxComponentCapacity>
-std::size_t EntityContext<MaxComponentCapacity>::Capacity() const
+std::size_t EntityContext<MaxComponentCapacity>::GetCapacity() const noexcept
 {
     return descriptions.capacity();
 }

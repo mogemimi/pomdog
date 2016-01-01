@@ -13,7 +13,7 @@ Entity EntityManager::CreateObject()
 {
     POMDOG_ASSERT(context);
     Entity entity {context};
-    objects.push_back(entity.ID());
+    objects.push_back(entity.GetEntityID());
     return std::move(entity);
 }
 //-----------------------------------------------------------------------
@@ -33,16 +33,16 @@ void EntityManager::Refresh()
         std::end(objects));
 }
 //-----------------------------------------------------------------------
-std::size_t EntityManager::Count() const
+std::size_t EntityManager::GetCount() const noexcept
 {
     POMDOG_ASSERT(context);
-    return context->Count();
+    return context->GetCount();
 }
 //-----------------------------------------------------------------------
-std::size_t EntityManager::Capacity() const
+std::size_t EntityManager::GetCapacity() const noexcept
 {
     POMDOG_ASSERT(context);
-    return context->Capacity();
+    return context->GetCapacity();
 }
 //-----------------------------------------------------------------------
 void EntityManager::Clear()

@@ -206,20 +206,20 @@ TEST(Entity, DestroyImmediate)
         Entity entity {objectContext};
 
         EXPECT_TRUE(entity);
-        EXPECT_EQ(1, objectContext->Count());
+        EXPECT_EQ(1, objectContext->GetCount());
         entity.DestroyImmediate();
         EXPECT_FALSE(entity);
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
     }
     {
         auto objectContext = std::make_shared<EntityContext>();
         Entity entity {objectContext};
 
         EXPECT_TRUE(entity);
-        EXPECT_EQ(1, objectContext->Count());
-        objectContext->DestroyImmediate(entity.ID());
+        EXPECT_EQ(1, objectContext->GetCount());
+        objectContext->DestroyImmediate(entity.GetEntityID());
         EXPECT_FALSE(entity);
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
     }
     {
         auto objectContext = std::make_shared<EntityContext>();
@@ -230,22 +230,22 @@ TEST(Entity, DestroyImmediate)
         EXPECT_TRUE(entity1);
         EXPECT_TRUE(entity2);
         EXPECT_TRUE(entity3);
-        EXPECT_EQ(3, objectContext->Count());
+        EXPECT_EQ(3, objectContext->GetCount());
         entity1.DestroyImmediate();
         EXPECT_FALSE(entity1);
         EXPECT_TRUE(entity2);
         EXPECT_TRUE(entity3);
-        EXPECT_EQ(2, objectContext->Count());
+        EXPECT_EQ(2, objectContext->GetCount());
         entity3.DestroyImmediate();
         EXPECT_FALSE(entity1);
         EXPECT_TRUE(entity2);
         EXPECT_FALSE(entity3);
-        EXPECT_EQ(1, objectContext->Count());
+        EXPECT_EQ(1, objectContext->GetCount());
         entity2.DestroyImmediate();
         EXPECT_FALSE(entity1);
         EXPECT_FALSE(entity2);
         EXPECT_FALSE(entity3);
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
     }
 
     struct Behavior: public Pomdog::Component<Behavior> {
@@ -271,7 +271,7 @@ TEST(Entity, DestroyImmediate)
         EXPECT_TRUE(entity.HasComponent<Behavior>());
         EXPECT_EQ(behavior, entity.GetComponent<Behavior>());
         EXPECT_FALSE(weak.expired());
-        EXPECT_EQ(1, objectContext->Count());
+        EXPECT_EQ(1, objectContext->GetCount());
         behavior->Do(entity);
         EXPECT_FALSE(entity);
         //EXPECT_FALSE(entity.HasComponent<Behavior>());
@@ -280,7 +280,7 @@ TEST(Entity, DestroyImmediate)
         EXPECT_FALSE(weak.expired());
         behavior.reset();
         EXPECT_TRUE(weak.expired());
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
     }
 }
 
@@ -291,26 +291,26 @@ TEST(Entity, Destroy)
         Entity entity {objectContext};
 
         EXPECT_TRUE(entity);
-        EXPECT_EQ(1, objectContext->Count());
+        EXPECT_EQ(1, objectContext->GetCount());
         entity.Destroy();
         EXPECT_FALSE(entity);
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
         objectContext->Refresh();
         EXPECT_FALSE(entity);
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
     }
     {
         auto objectContext = std::make_shared<EntityContext>();
         Entity entity {objectContext};
 
         EXPECT_TRUE(entity);
-        EXPECT_EQ(1, objectContext->Count());
-        objectContext->Destroy(entity.ID());
+        EXPECT_EQ(1, objectContext->GetCount());
+        objectContext->Destroy(entity.GetEntityID());
         EXPECT_FALSE(entity);
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
         objectContext->Refresh();
         EXPECT_FALSE(entity);
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
     }
     {
         auto objectContext = std::make_shared<EntityContext>();
@@ -321,27 +321,27 @@ TEST(Entity, Destroy)
         EXPECT_TRUE(entity1);
         EXPECT_TRUE(entity2);
         EXPECT_TRUE(entity3);
-        EXPECT_EQ(3, objectContext->Count());
+        EXPECT_EQ(3, objectContext->GetCount());
         entity1.Destroy();
         EXPECT_FALSE(entity1);
         EXPECT_TRUE(entity2);
         EXPECT_TRUE(entity3);
-        EXPECT_EQ(2, objectContext->Count());
+        EXPECT_EQ(2, objectContext->GetCount());
         entity3.Destroy();
         EXPECT_FALSE(entity1);
         EXPECT_TRUE(entity2);
         EXPECT_FALSE(entity3);
-        EXPECT_EQ(1, objectContext->Count());
+        EXPECT_EQ(1, objectContext->GetCount());
         entity2.Destroy();
         EXPECT_FALSE(entity1);
         EXPECT_FALSE(entity2);
         EXPECT_FALSE(entity3);
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
         objectContext->Refresh();
         EXPECT_FALSE(entity1);
         EXPECT_FALSE(entity2);
         EXPECT_FALSE(entity3);
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
     }
 
     struct Behavior: public Pomdog::Component<Behavior> {
@@ -367,13 +367,13 @@ TEST(Entity, Destroy)
         EXPECT_TRUE(entity.HasComponent<Behavior>());
         EXPECT_EQ(behavior, entity.GetComponent<Behavior>());
         EXPECT_FALSE(weak.expired());
-        EXPECT_EQ(1, objectContext->Count());
+        EXPECT_EQ(1, objectContext->GetCount());
         behavior->Do(entity);
         EXPECT_FALSE(entity);
         //EXPECT_FALSE(entity.HasComponent<Behavior>());
         //EXPECT_EQ(nullptr, entity.GetComponent<Behavior>());
         EXPECT_FALSE(weak.expired());
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
         objectContext->Refresh();
         EXPECT_FALSE(entity);
         //EXPECT_FALSE(entity.HasComponent<Behavior>());
@@ -382,7 +382,7 @@ TEST(Entity, Destroy)
         EXPECT_TRUE(behavior);
         behavior.reset();
         EXPECT_TRUE(weak.expired());
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
     }
 }
 
@@ -397,12 +397,12 @@ TEST(Entity, Clear)
         EXPECT_TRUE(entity1);
         EXPECT_TRUE(entity2);
         EXPECT_TRUE(entity3);
-        EXPECT_EQ(3, objectContext->Count());
+        EXPECT_EQ(3, objectContext->GetCount());
         objectContext->Clear();
         EXPECT_FALSE(entity1);
         EXPECT_FALSE(entity2);
         EXPECT_FALSE(entity3);
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
     }
     {
         auto objectContext = std::make_shared<EntityContext>();
@@ -418,28 +418,28 @@ TEST(Entity, Clear)
         EXPECT_TRUE(entity1);
         EXPECT_TRUE(entity2);
         EXPECT_TRUE(entity3);
-        EXPECT_NE(entity1.ID(), entity2.ID());
-        EXPECT_NE(entity2.ID(), entity3.ID());
-        EXPECT_EQ(3, objectContext->Count());
+        EXPECT_NE(entity1.GetEntityID(), entity2.GetEntityID());
+        EXPECT_NE(entity2.GetEntityID(), entity3.GetEntityID());
+        EXPECT_EQ(3, objectContext->GetCount());
         objectContext->Clear();
         EXPECT_FALSE(entity1);
         EXPECT_FALSE(entity2);
         EXPECT_FALSE(entity3);
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
     }
     {
         auto objectContext = std::make_shared<EntityContext>();
         Entity entity {objectContext};
-        auto oldId = entity.ID();
+        auto oldId = entity.GetEntityID();
 
         EXPECT_TRUE(entity);
-        EXPECT_EQ(1, objectContext->Count());
+        EXPECT_EQ(1, objectContext->GetCount());
         objectContext->Clear();
         EXPECT_FALSE(entity);
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
 
         entity = Entity{objectContext};
-        auto newId = entity.ID();
+        auto newId = entity.GetEntityID();
         EXPECT_NE(oldId, newId);
         EXPECT_NE(oldId.SequenceNumber(), newId.SequenceNumber());
         EXPECT_EQ(oldId.Index(), newId.Index());
@@ -459,14 +459,14 @@ TEST(Entity, Clear)
         EXPECT_TRUE(entity.HasComponent<Behavior>());
         EXPECT_EQ(behavior, entity.GetComponent<Behavior>());
         EXPECT_FALSE(weak.expired());
-        EXPECT_EQ(1, objectContext->Count());
+        EXPECT_EQ(1, objectContext->GetCount());
         objectContext->Clear();
         EXPECT_FALSE(entity);
         EXPECT_TRUE(behavior);
         EXPECT_FALSE(weak.expired());
         behavior.reset();
         EXPECT_TRUE(weak.expired());
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
     }
     {
         auto objectContext = std::make_shared<EntityContext>();
@@ -475,27 +475,27 @@ TEST(Entity, Clear)
         auto behavior = entity1.AddComponent<Behavior>();
         std::weak_ptr<int> weak = behavior->ptr;
 
-        auto oldId1 = entity1.ID();
-        auto oldId2 = entity2.ID();
+        auto oldId1 = entity1.GetEntityID();
+        auto oldId2 = entity2.GetEntityID();
 
         EXPECT_TRUE(entity1);
         EXPECT_TRUE(entity2);
-        EXPECT_EQ(2, objectContext->Count());
+        EXPECT_EQ(2, objectContext->GetCount());
         objectContext->Clear();
         EXPECT_FALSE(entity1);
         EXPECT_FALSE(entity2);
-        EXPECT_EQ(0, objectContext->Count());
+        EXPECT_EQ(0, objectContext->GetCount());
 
         entity1 = Entity{objectContext};
         entity2 = Entity{objectContext};
 
         EXPECT_NE(oldId1, oldId2);
-        EXPECT_NE(oldId1, entity1.ID());
-        EXPECT_NE(oldId2, entity2.ID());
-        EXPECT_NE(oldId1.SequenceNumber(), entity1.ID().SequenceNumber());
-        EXPECT_NE(oldId2.SequenceNumber(), entity2.ID().SequenceNumber());
-        EXPECT_EQ(oldId1.Index(), entity1.ID().Index());
-        EXPECT_EQ(oldId2.Index(), entity2.ID().Index());
+        EXPECT_NE(oldId1, entity1.GetEntityID());
+        EXPECT_NE(oldId2, entity2.GetEntityID());
+        EXPECT_NE(oldId1.SequenceNumber(), entity1.GetEntityID().SequenceNumber());
+        EXPECT_NE(oldId2.SequenceNumber(), entity2.GetEntityID().SequenceNumber());
+        EXPECT_EQ(oldId1.Index(), entity1.GetEntityID().Index());
+        EXPECT_EQ(oldId2.Index(), entity2.GetEntityID().Index());
     }
 }
 
@@ -504,16 +504,16 @@ TEST(Entity, EntityID)
     auto objectContext = std::make_shared<EntityContext>();
     Entity entity {objectContext};
 
-    auto id = entity.ID();
-    EXPECT_EQ(id, entity.ID());
+    auto id = entity.GetEntityID();
+    EXPECT_EQ(id, entity.GetEntityID());
 
     Entity entity2 {objectContext};
 
-    EXPECT_NE(entity.ID(), entity2.ID());
-    EXPECT_EQ(0, entity.ID().Index());
-    EXPECT_EQ(1, entity2.ID().Index());
-    EXPECT_EQ(1, entity.ID().SequenceNumber());
-    EXPECT_EQ(1, entity2.ID().SequenceNumber());
+    EXPECT_NE(entity.GetEntityID(), entity2.GetEntityID());
+    EXPECT_EQ(0, entity.GetEntityID().Index());
+    EXPECT_EQ(1, entity2.GetEntityID().Index());
+    EXPECT_EQ(1, entity.GetEntityID().SequenceNumber());
+    EXPECT_EQ(1, entity2.GetEntityID().SequenceNumber());
 }
 
 TEST(Entity, EntityID_Sequence)
@@ -521,46 +521,46 @@ TEST(Entity, EntityID_Sequence)
     auto objectContext = std::make_shared<EntityContext>();
     {
         Entity entity {objectContext};
-        EXPECT_EQ(0U, entity.ID().Index());
-        EXPECT_NE(0U, entity.ID().SequenceNumber());
-        EXPECT_EQ(1U, entity.ID().SequenceNumber());
+        EXPECT_EQ(0U, entity.GetEntityID().Index());
+        EXPECT_NE(0U, entity.GetEntityID().SequenceNumber());
+        EXPECT_EQ(1U, entity.GetEntityID().SequenceNumber());
     }
     {
         Entity entity {objectContext};
-        EXPECT_EQ(1U, entity.ID().Index());
-        EXPECT_NE(0U, entity.ID().SequenceNumber());
-        EXPECT_EQ(1U, entity.ID().SequenceNumber());
+        EXPECT_EQ(1U, entity.GetEntityID().Index());
+        EXPECT_NE(0U, entity.GetEntityID().SequenceNumber());
+        EXPECT_EQ(1U, entity.GetEntityID().SequenceNumber());
         entity.DestroyImmediate();
     }
     {
         Entity entity {objectContext};
-        EXPECT_EQ(1U, entity.ID().Index());
-        EXPECT_NE(0U, entity.ID().SequenceNumber());
-        EXPECT_EQ(2U, entity.ID().SequenceNumber());
+        EXPECT_EQ(1U, entity.GetEntityID().Index());
+        EXPECT_NE(0U, entity.GetEntityID().SequenceNumber());
+        EXPECT_EQ(2U, entity.GetEntityID().SequenceNumber());
         entity.DestroyImmediate();
     }
     {
         Entity entity {objectContext};
-        EXPECT_EQ(1U, entity.ID().Index());
-        EXPECT_NE(0U, entity.ID().SequenceNumber());
-        EXPECT_EQ(3U, entity.ID().SequenceNumber());
+        EXPECT_EQ(1U, entity.GetEntityID().Index());
+        EXPECT_NE(0U, entity.GetEntityID().SequenceNumber());
+        EXPECT_EQ(3U, entity.GetEntityID().SequenceNumber());
         entity.DestroyImmediate();
     }
     {
         Entity entity1 {objectContext};
-        EXPECT_EQ(1U, entity1.ID().Index());
-        EXPECT_NE(0U, entity1.ID().SequenceNumber());
-        EXPECT_EQ(4U, entity1.ID().SequenceNumber());
+        EXPECT_EQ(1U, entity1.GetEntityID().Index());
+        EXPECT_NE(0U, entity1.GetEntityID().SequenceNumber());
+        EXPECT_EQ(4U, entity1.GetEntityID().SequenceNumber());
 
         Entity entity2 {objectContext};
-        EXPECT_EQ(2U, entity2.ID().Index());
-        EXPECT_NE(0U, entity2.ID().SequenceNumber());
-        EXPECT_EQ(1U, entity2.ID().SequenceNumber());
+        EXPECT_EQ(2U, entity2.GetEntityID().Index());
+        EXPECT_NE(0U, entity2.GetEntityID().SequenceNumber());
+        EXPECT_EQ(1U, entity2.GetEntityID().SequenceNumber());
 
         Entity entity3 {objectContext};
-        EXPECT_EQ(3U, entity3.ID().Index());
-        EXPECT_NE(0U, entity3.ID().SequenceNumber());
-        EXPECT_EQ(1U, entity3.ID().SequenceNumber());
+        EXPECT_EQ(3U, entity3.GetEntityID().Index());
+        EXPECT_NE(0U, entity3.GetEntityID().SequenceNumber());
+        EXPECT_EQ(1U, entity3.GetEntityID().SequenceNumber());
 
         entity1.DestroyImmediate();
         entity2.DestroyImmediate();
@@ -612,11 +612,11 @@ TEST(Entity, Cast_Bool)
 TEST(Entity, EntityID_Unique)
 {
     std::vector<Entity> objects;
-    std::vector<std::uint64_t> uniqueIdents;
+    std::vector<EntityID> uniqueIdents;
 
     auto objectContext = std::make_shared<EntityContext>();
 
-    std::mt19937 random;
+    std::mt19937 random(10000);
 
     std::uint32_t maxSequenceNumber = 0;
     std::uint32_t maxIndex = 0;
@@ -627,20 +627,19 @@ TEST(Entity, EntityID_Unique)
         {
             Entity entity{objectContext};
             objects.push_back(entity);
-            uniqueIdents.push_back(entity.ID().Value());
+            uniqueIdents.push_back(entity.GetEntityID());
 
             //printf("### Create Object: %llu(%u, %u) \n",
-            //    entity->ID().Value(),
-            //    entity->ID().SequenceNumber(),
-            //    entity->ID().Index());
+            //    entity.GetEntityID().Value(),
+            //    entity.GetEntityID().SequenceNumber(),
+            //    entity.GetEntityID().Index());
 
-            maxSequenceNumber = std::max(maxSequenceNumber, entity.ID().SequenceNumber());
-            maxIndex = std::max(maxIndex, entity.ID().Index());
+            maxSequenceNumber = std::max(maxSequenceNumber, entity.GetEntityID().SequenceNumber());
+            maxIndex = std::max(maxIndex, entity.GetEntityID().Index());
         }
         if (count % 11 == 8)
         {
-            if (!objects.empty())
-            {
+            if (!objects.empty()) {
                 ASSERT_TRUE(objects.front());
                 objects.front().DestroyImmediate();
                 objects.erase(objects.begin());
@@ -654,10 +653,9 @@ TEST(Entity, EntityID_Unique)
                 std::uniform_int_distribution<std::uint32_t> distribution(1, 13);
                 auto const randomNumber = distribution(random);
 
-                for (auto & object: objects)
-                {
+                for (auto & object: objects) {
                     ASSERT_TRUE(object);
-                    if (object.ID().Value() % randomNumber == 0) {
+                    if (object.GetEntityID().Value() % randomNumber == 0) {
                         object.DestroyImmediate();
                     }
                 }
@@ -675,6 +673,9 @@ TEST(Entity, EntityID_Unique)
 
     std::sort(std::begin(uniqueIdents), std::end(uniqueIdents));
     auto iter = std::adjacent_find(std::begin(uniqueIdents), std::end(uniqueIdents));
-
+#ifdef _MSC_VER
+    EXPECT_TRUE(std::end(uniqueIdents) == iter);
+#else
     EXPECT_EQ(std::end(uniqueIdents), iter);
+#endif
 }

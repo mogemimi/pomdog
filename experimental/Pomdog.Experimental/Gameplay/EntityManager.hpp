@@ -44,9 +44,9 @@ public:
 
     void Clear();
 
-    std::size_t Count() const;
+    std::size_t GetCount() const noexcept;
 
-    std::size_t Capacity() const;
+    std::size_t GetCapacity() const noexcept;
 
 private:
     std::shared_ptr<EntityContext> context;
