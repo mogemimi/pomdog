@@ -107,7 +107,7 @@ EntityID EntityContext<MaxComponentCapacity>::Create()
     POMDOG_ASSERT(desc.ComponentBitMask.none());
     POMDOG_ASSERT(desc.IncremantalCounter > 0);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     {
         for (auto & entities: components)
         {
@@ -116,7 +116,7 @@ EntityID EntityContext<MaxComponentCapacity>::Create()
             }
         }
     }
-    #endif
+#endif
 
     ++entityCount;
     return {desc.IncremantalCounter, index};
@@ -137,8 +137,7 @@ std::size_t EntityContext<MaxComponentCapacity>::Capacity() const
 template <std::uint8_t MaxComponentCapacity>
 void EntityContext<MaxComponentCapacity>::Clear()
 {
-    for (std::uint32_t index = 0; index < descriptions.size(); ++index)
-    {
+    for (std::uint32_t index = 0; index < descriptions.size(); ++index) {
         auto & desc = descriptions[index];
 
         if (desc.ComponentBitMask.any()) {
@@ -148,10 +147,10 @@ void EntityContext<MaxComponentCapacity>::Clear()
 
         desc.ComponentBitMask.reset();
         ++desc.IncremantalCounter;
-    #ifdef DEBUG
+#ifdef DEBUG
         POMDOG_ASSERT(entityCount > 0);
         --entityCount;
-    #endif
+#endif
     }
 #ifdef DEBUG
     POMDOG_ASSERT(entityCount == 0);
@@ -252,13 +251,11 @@ Type & EntityContext<MaxComponentCapacity>::AddComponent(EntityID const& id, std
 
     auto const typeIndex = Type::TypeIndex();
     POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
-    if (typeIndex >= components.size())
-    {
+    if (typeIndex >= components.size()) {
         components.resize(typeIndex + 1U);
 
         POMDOG_ASSERT(components.size() <= MaxComponentCapacity);
-        if (components.capacity() > MaxComponentCapacity)
-        {
+        if (components.capacity() > MaxComponentCapacity) {
             components.shrink_to_fit();
             POMDOG_ASSERT(components.capacity() == MaxComponentCapacity);
         }
@@ -267,8 +264,7 @@ Type & EntityContext<MaxComponentCapacity>::AddComponent(EntityID const& id, std
     POMDOG_ASSERT(typeIndex < components.size());
     auto & entities = components[typeIndex];
 
-    if (id.Index() >= entities.size())
-    {
+    if (id.Index() >= entities.size()) {
         static_assert(std::is_unsigned<decltype(id.Index())>::value, "" );
         entities.resize(id.Index() + 1U);
     }
@@ -387,8 +383,7 @@ auto EntityContext<MaxComponentCapacity>::Component(EntityID const& id)
 
     POMDOG_ASSERT(id.Index() < entities.size());
 
-    if (entities[id.Index()])
-    {
+    if (entities[id.Index()]) {
         POMDOG_ASSERT(id.Index() < descriptions.size());
         POMDOG_ASSERT(descriptions[id.Index()].ComponentBitMask[typeIndex]);
         POMDOG_ASSERT(dynamic_cast<Type*>(entities[id.Index()].get()) == static_cast<Type*>(entities[id.Index()].get()));
@@ -420,8 +415,7 @@ auto EntityContext<MaxComponentCapacity>::Component(EntityID const& id)
 
     POMDOG_ASSERT(id.Index() < entities.size());
 
-    if (entities[id.Index()])
-    {
+    if (entities[id.Index()]) {
         POMDOG_ASSERT(id.Index() < descriptions.size());
         POMDOG_ASSERT(descriptions[id.Index()].ComponentBitMask[typeIndex]);
         return dynamic_cast<Type*>(entities[id.Index()].get());

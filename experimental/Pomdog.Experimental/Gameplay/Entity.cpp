@@ -53,8 +53,7 @@ void Entity::DestroyImmediate()
     POMDOG_ASSERT(context);
     POMDOG_ASSERT(context->Valid(id));
 
-    if (context->Valid(id))
-    {
+    if (context->Valid(id)) {
         context->DestroyImmediate(id);
     }
 }

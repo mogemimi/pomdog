@@ -12,7 +12,7 @@ public:
     EntityID() : id(0x0) {}
 
     EntityID(std::uint32_t sequenceNumber, std::uint32_t index)
-        : id((static_cast<uint64_t>(sequenceNumber) << 32) | (index & 0xffffffffUL))
+        : id((static_cast<std::uint64_t>(sequenceNumber) << 32) | (index & 0xffffffffUL))
     {}
 
     std::uint32_t SequenceNumber() const {
@@ -47,7 +47,7 @@ private:
 
 namespace std {
 
-template<>
+template <>
 struct std::hash<Pomdog::EntityID> {
     std::size_t operator()(Pomdog::EntityID const& key)
     {

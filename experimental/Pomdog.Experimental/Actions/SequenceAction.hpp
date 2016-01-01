@@ -25,21 +25,30 @@ public:
         , isCompleted(false)
     {}
 
-    SequenceAction(std::unique_ptr<Action> && action1, std::unique_ptr<Action> && action2)
+    SequenceAction(
+        std::unique_ptr<Action> && action1,
+        std::unique_ptr<Action> && action2)
         : actions({std::move(action1), std::move(action2)})
         , actionCount(2)
         , index(0)
         , isCompleted(false)
     {}
 
-    SequenceAction(std::unique_ptr<Action> && action1, std::unique_ptr<Action> && action2, std::unique_ptr<Action> && action3)
+    SequenceAction(
+        std::unique_ptr<Action> && action1,
+        std::unique_ptr<Action> && action2,
+        std::unique_ptr<Action> && action3)
         : actions({std::move(action1), std::move(action2), std::move(action3)})
         , actionCount(3)
         , index(0)
         , isCompleted(false)
     {}
 
-    SequenceAction(std::unique_ptr<Action> && action1, std::unique_ptr<Action> && action2, std::unique_ptr<Action> && action3, std::unique_ptr<Action> && action4)
+    SequenceAction(
+        std::unique_ptr<Action> && action1,
+        std::unique_ptr<Action> && action2,
+        std::unique_ptr<Action> && action3,
+        std::unique_ptr<Action> && action4)
         : actions({std::move(action1), std::move(action2), std::move(action3), std::move(action4)})
         , actionCount(4)
         , index(0)
