@@ -7,7 +7,7 @@
 namespace Pomdog {
 namespace {
 //-----------------------------------------------------------------------
-static std::vector<Vector2> CreateJaggedLine(
+std::vector<Vector2> CreateJaggedLine(
     BeamEmitter const& emitter,
     std::uint32_t interpolationPoints,
     Vector2 const& start, Vector2 const& end, std::mt19937 & random)
@@ -78,7 +78,7 @@ static std::vector<Vector2> CreateJaggedLine(
     return std::move(points);
 }
 //-----------------------------------------------------------------------
-static std::vector<Vector2> CreateBranch(BeamEmitter const& emitter,
+std::vector<Vector2> CreateBranch(BeamEmitter const& emitter,
     BeamBranching const& branching,
     Vector2 const& sourceStart, Vector2 const& sourceEnd, Beam const& parentBeam, std::mt19937 & random)
 {

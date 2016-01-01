@@ -14,7 +14,7 @@ namespace Pomdog {
 namespace MagicaVoxel {
 namespace {
 
-static std::string Error(std::string const& assetName, std::string const& description)
+std::string Error(std::string const& assetName, std::string const& description)
 {
     return description + (": " + assetName);
 }

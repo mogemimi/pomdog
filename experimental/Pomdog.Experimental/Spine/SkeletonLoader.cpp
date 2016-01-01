@@ -12,10 +12,9 @@
 
 namespace Pomdog {
 namespace Spine {
-//-----------------------------------------------------------------------
 namespace {
 
-static auto FindBoneParent(std::string const& parentName,
+auto FindBoneParent(std::string const& parentName,
     std::vector<Joint> const& bones, std::vector<BoneDesc> const& boneDescs)-> decltype(Joint::Index)
 {
     auto iter = std::find_if(std::begin(boneDescs), std::end(boneDescs),
@@ -32,7 +31,7 @@ static auto FindBoneParent(std::string const& parentName,
     return jointIndex;
 }
 //-----------------------------------------------------------------------
-static std::vector<Matrix3x2> CreateInverseBindPoseByJoints(Skeleton const& skeleton)
+std::vector<Matrix3x2> CreateInverseBindPoseByJoints(Skeleton const& skeleton)
 {
     POMDOG_ASSERT(skeleton.JointCount() > 0);
     POMDOG_ASSERT(skeleton.Root().Index);
@@ -64,7 +63,7 @@ static std::vector<Matrix3x2> CreateInverseBindPoseByJoints(Skeleton const& skel
     return std::move(bindPose);
 }
 //-----------------------------------------------------------------------
-static std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescriptions)
+std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescriptions)
 {
     std::vector<Joint> joints;
     joints.reserve(boneDescriptions.size());

@@ -11,7 +11,7 @@ namespace Pomdog {
 namespace {
 //-----------------------------------------------------------------------
 template <typename RandomGenerator>
-static Particle CreateParticle(RandomGenerator & random, ParticleClip const& clip,
+Particle CreateParticle(RandomGenerator & random, ParticleClip const& clip,
     ParticleEmitter const& emitter, float normalizedTime, Transform2D const& transform)
 {
     Particle particle;

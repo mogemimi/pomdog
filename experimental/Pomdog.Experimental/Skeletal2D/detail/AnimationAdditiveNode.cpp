@@ -13,7 +13,7 @@ namespace Detail {
 namespace Skeletal2D {
 namespace {
 
-static SkeletonPose CreateEmptyPose(Skeleton const& skeleton)
+SkeletonPose CreateEmptyPose(Skeleton const& skeleton)
 {
     SkeletonPose skeletonPose;
     JointPose jointPose;

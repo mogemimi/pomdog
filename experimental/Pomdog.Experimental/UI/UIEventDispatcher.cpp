@@ -9,14 +9,14 @@ namespace Pomdog {
 namespace UI {
 namespace {
 
-static bool Intersects(Point2D const& position, UIElement & element)
+bool Intersects(Point2D const& position, UIElement & element)
 {
     auto bounds = element.Bounds();
     auto positionInChild = UIHelper::ConvertToChildSpace(position, element.GlobalTransform());
     return bounds.Contains(positionInChild);
 }
 //-----------------------------------------------------------------------
-static std::shared_ptr<UIElement> Find(Point2D const& position,
+std::shared_ptr<UIElement> Find(Point2D const& position,
     std::vector<std::weak_ptr<UIElement>> const& children)
 {
     for (auto & weakChild: children)

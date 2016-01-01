@@ -15,12 +15,12 @@ namespace Pomdog {
 namespace MagicaVoxel {
 namespace {
 
-static std::string Error(std::string const& assetName, std::string const& description)
+std::string Error(std::string const& assetName, std::string const& description)
 {
     return description + (": " + assetName);
 }
 //-----------------------------------------------------------------------
-static std::ifstream::pos_type ChunkSize(std::ifstream & stream, MagicaVoxel::VoxChunkHeader const& chunk)
+std::ifstream::pos_type ChunkSize(std::ifstream & stream, MagicaVoxel::VoxChunkHeader const& chunk)
 {
     POMDOG_ASSERT(chunk.ContentSize >= 0);
     POMDOG_ASSERT(chunk.ChildrenSize >= 0);

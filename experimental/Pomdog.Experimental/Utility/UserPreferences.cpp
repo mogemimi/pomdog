@@ -16,13 +16,13 @@ namespace Pomdog {
 namespace {
 
 template <typename T>
-static rapidjson::Value ToJsonValue(T const& v)
+rapidjson::Value ToJsonValue(T const& v)
 {
     auto value = rapidjson::Value(v);
     return std::move(value);
 }
 //-----------------------------------------------------------------------
-static rapidjson::Value ToJsonValue(std::string const& s)
+rapidjson::Value ToJsonValue(std::string const& s)
 {
     auto value = rapidjson::Value(
         s.c_str(),
@@ -31,7 +31,7 @@ static rapidjson::Value ToJsonValue(std::string const& s)
 }
 //-----------------------------------------------------------------------
 template <typename T, typename Func>
-static Optional<T> GetJsonValue(std::string const& jsonData, std::string const& key, Func const& func)
+Optional<T> GetJsonValue(std::string const& jsonData, std::string const& key, Func const& func)
 {
     POMDOG_ASSERT(!key.empty());
 
@@ -54,7 +54,7 @@ static Optional<T> GetJsonValue(std::string const& jsonData, std::string const& 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-static void SetJsonValue(std::string & jsonData, std::string const& key, T const& value)
+void SetJsonValue(std::string & jsonData, std::string const& key, T const& value)
 {
     POMDOG_ASSERT(!key.empty());
 

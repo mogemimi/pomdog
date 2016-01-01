@@ -22,7 +22,7 @@ namespace Pomdog {
 namespace Detail {
 namespace {
 //-----------------------------------------------------------------------
-//static ParticleClip CreateEmitterFireBlock()
+//ParticleClip CreateEmitterFireBlock()
 //{
 //    using Particles::ParticleCurveKey;
 //    using Particles::ParticleEmitterShapeBox;
@@ -103,7 +103,7 @@ namespace {
 //}
 //-----------------------------------------------------------------------
 template <typename T>
-static T GetMemberAs(rapidjson::Value const& object, std::string const& name)
+T GetMemberAs(rapidjson::Value const& object, std::string const& name)
 {
     POMDOG_ASSERT(!name.empty());
     POMDOG_ASSERT(object.HasMember(name.c_str()));
@@ -121,7 +121,7 @@ static T GetMemberAs(rapidjson::Value const& object, std::string const& name)
     return value.GetDouble();
 }
 //-----------------------------------------------------------------------
-static ParticleClip ReadParticleClip(rapidjson::Value const& object)
+ParticleClip ReadParticleClip(rapidjson::Value const& object)
 {
     ParticleClip clip;
     auto & emitter = clip.Emitter;

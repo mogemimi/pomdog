@@ -8,7 +8,7 @@
 namespace Pomdog {
 namespace {
 
-static AnimationTimeInterval ComputeLength(std::vector<std::unique_ptr<AnimationTrack>> const& tracks)
+AnimationTimeInterval ComputeLength(std::vector<std::unique_ptr<AnimationTrack>> const& tracks)
 {
     AnimationTimeInterval maxLength = AnimationTimeInterval::zero();
 

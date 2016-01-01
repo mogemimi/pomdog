@@ -8,8 +8,8 @@
 namespace Pomdog {
 namespace Spine {
 namespace {
-//-----------------------------------------------------------------------
-static std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs,
+
+std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs,
     std::vector<SkinSlotDesc> const& skinSlotDescs,
     TexturePacker::TextureAtlas const& textureAtlas)
 {

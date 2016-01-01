@@ -19,7 +19,7 @@ struct SkeletonAnimationState {
     std::string Name;
 };
 
-static auto FindState(std::vector<AnimationGraphState> const& states, std::string const& stateName)
+auto FindState(std::vector<AnimationGraphState> const& states, std::string const& stateName)
     ->decltype(states.begin())
 {
     return std::find_if(std::begin(states), std::end(states),
@@ -28,7 +28,7 @@ static auto FindState(std::vector<AnimationGraphState> const& states, std::strin
         });
 }
 
-static AnimationTimeInterval WrapTime(AnimationTimeInterval const& source, AnimationTimeInterval const& max)
+AnimationTimeInterval WrapTime(AnimationTimeInterval const& source, AnimationTimeInterval const& max)
 {
     auto time = source;
     while (time > max) {

@@ -33,7 +33,7 @@ struct AnimationNodeDesc {
     AnimationNodeType Type;
 };
 
-static std::unique_ptr<AnimationNode> CreateAnimationNode(
+std::unique_ptr<AnimationNode> CreateAnimationNode(
     AnimationNodeDesc const& desc, std::vector<AnimationBlendInput> & inputs,
         std::vector<AnimationNodeDesc> const& nodes, SkeletonDesc const& skeletonDesc)
 {

@@ -21,7 +21,7 @@ enum class ParserState {
     ParsingError,
 };
 
-static TextureAtlasRegion CreateAtlasRegion(std::string const& line, std::int16_t pageIndex)
+TextureAtlasRegion CreateAtlasRegion(std::string const& line, std::int16_t pageIndex)
 {
     TextureAtlasRegion region;
     region.Name = line;

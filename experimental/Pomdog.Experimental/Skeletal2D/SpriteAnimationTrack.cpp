@@ -12,7 +12,6 @@ namespace Skeletal2D {
 namespace {
 
 template <typename ForwardIterator, typename T>
-static
 std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIterator first, ForwardIterator last, T const& value)
 {
     static_assert(std::is_same<typename std::remove_reference<decltype(*first)>::type, T>::value, "");

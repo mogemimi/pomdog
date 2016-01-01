@@ -25,7 +25,7 @@
 namespace Pomdog {
 namespace {
 
-static std::vector<std::uint8_t> ConvertTextureDataByteToByte4(std::uint8_t const* source, size_t size)
+std::vector<std::uint8_t> ConvertTextureDataByteToByte4(std::uint8_t const* source, size_t size)
 {
     std::vector<std::uint8_t> output;
     output.reserve(size * 4);

@@ -10,7 +10,7 @@ namespace Pomdog {
 namespace UI {
 namespace {
 ////-----------------------------------------------------------------------
-//static Radian<float> SampleTumbleGesture(Vector2 const& position, Vector2 & startPosition, Rectangle const& viewportSize)
+//Radian<float> SampleTumbleGesture(Vector2 const& position, Vector2 & startPosition, Rectangle const& viewportSize)
 //{
 //    constexpr float threshold = 1.0f;
 //
@@ -44,7 +44,7 @@ namespace {
 //    return delta;
 //}
 ////-----------------------------------------------------------------------
-//static Vector2 SampleTrackGesture(Vector2 const& position, Vector2 & startPosition)
+//Vector2 SampleTrackGesture(Vector2 const& position, Vector2 & startPosition)
 //{
 //    constexpr float threshold = 2.0f;
 //
