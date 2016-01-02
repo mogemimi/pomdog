@@ -73,21 +73,24 @@ void QuickStartGame::Initialize()
         // For details, see 'struct VertexCombined' members
         auto inputLayout = InputLayoutHelper{}
             .Float3()
-            .Float2();
+            .Float2()
+            .CreateInputLayout();
 
         auto vertexShader = assets->CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSLFromFile("SimpleEffect_VS.glsl")
-            .SetHLSLFromFile("SimpleEffect_VS.hlsl", "SimpleEffectVS");
+            .SetHLSLFromFile("SimpleEffect_VS.hlsl", "SimpleEffectVS")
+            .Build();
 
         auto pixelShader = assets->CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSLFromFile("SimpleEffect_PS.glsl")
-            .SetHLSLFromFile("SimpleEffect_PS.hlsl", "SimpleEffectPS");
+            .SetHLSLFromFile("SimpleEffect_PS.hlsl", "SimpleEffectPS")
+            .Build();
 
         // Create pipeline state
         pipelineState = assets->CreateBuilder<PipelineState>()
-            .SetInputLayout(inputLayout.CreateInputLayout())
-            .SetVertexShader(vertexShader.Build())
-            .SetPixelShader(pixelShader.Build())
+            .SetInputLayout(inputLayout)
+            .SetVertexShader(std::move(vertexShader))
+            .SetPixelShader(std::move(pixelShader))
             .SetConstantBufferBindSlot("MyShaderConstants", 0)
             .Build();
     }

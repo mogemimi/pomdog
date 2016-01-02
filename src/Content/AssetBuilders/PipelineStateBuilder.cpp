@@ -77,7 +77,16 @@ Builder<PipelineState> & Builder<PipelineState>::operator=(Builder<PipelineState
 Builder<PipelineState>::~Builder() = default;
 //-----------------------------------------------------------------------
 Builder<PipelineState> & Builder<PipelineState>::SetVertexShader(
-    std::unique_ptr<Shader> && vertexShader)
+    std::shared_ptr<Shader> const& vertexShader)
+{
+    POMDOG_ASSERT(impl);
+    POMDOG_ASSERT(vertexShader);
+    impl->description.VertexShader = vertexShader;
+    return *this;
+}
+//-----------------------------------------------------------------------
+Builder<PipelineState> & Builder<PipelineState>::SetVertexShader(
+    std::shared_ptr<Shader> && vertexShader)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(vertexShader);
@@ -86,7 +95,16 @@ Builder<PipelineState> & Builder<PipelineState>::SetVertexShader(
 }
 //-----------------------------------------------------------------------
 Builder<PipelineState> & Builder<PipelineState>::SetPixelShader(
-    std::unique_ptr<Shader> && pixelShader)
+    std::shared_ptr<Shader> const& pixelShader)
+{
+    POMDOG_ASSERT(impl);
+    POMDOG_ASSERT(pixelShader);
+    impl->description.PixelShader = pixelShader;
+    return *this;
+}
+//-----------------------------------------------------------------------
+Builder<PipelineState> & Builder<PipelineState>::SetPixelShader(
+    std::shared_ptr<Shader> && pixelShader)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(pixelShader);

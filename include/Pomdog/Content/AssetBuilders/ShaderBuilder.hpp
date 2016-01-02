@@ -46,7 +46,7 @@ public:
     Builder & SetHLSLFromFile(std::string const& filePath,
         std::string const& entryPoint);
 
-    std::unique_ptr<Shader> Build();
+    std::shared_ptr<Shader> Build();
 
 private:
     class Impl;

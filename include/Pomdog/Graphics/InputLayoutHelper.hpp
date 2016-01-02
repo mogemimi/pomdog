@@ -29,7 +29,8 @@ public:
 
     InputLayoutHelper & AddInputSlot();
 
-    InputLayoutHelper & AddInputSlot(InputClassification slotClass,
+    InputLayoutHelper & AddInputSlot(
+        InputClassification slotClass,
         std::uint16_t instanceStepRate);
 
     InputLayoutDescription CreateInputLayout();

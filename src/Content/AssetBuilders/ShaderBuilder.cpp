@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
+#include "../../RenderSystem/ShaderBytecode.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/GLSLCompiler.hpp"
@@ -15,12 +16,13 @@
 #include <vector>
 #include <utility>
 
+using Pomdog::Detail::BinaryReader;
+using Pomdog::Detail::ShaderBytecode;
+using Pomdog::ShaderCompilers::GLSLCompiler;
+using Pomdog::ShaderCompilers::HLSLCompiler;
+
 namespace Pomdog {
 namespace AssetBuilders {
-
-using Detail::BinaryReader;
-using ShaderCompilers::GLSLCompiler;
-using ShaderCompilers::HLSLCompiler;
 
 //-----------------------------------------------------------------------
 // explicit instantiations
@@ -31,8 +33,7 @@ public:
     std::reference_wrapper<Detail::AssetLoaderContext const> loaderContext;
     std::vector<std::uint8_t> shaderBlob;
     ShaderPipelineStage pipelineStage;
-    void const* shaderSource;
-    std::size_t byteLength;
+    ShaderBytecode shaderBytecode;
     std::string entryPoint;
     bool precompiled;
 
@@ -48,8 +49,6 @@ public:
 Builder<Shader>::Impl::Impl(Detail::AssetLoaderContext const& contextIn)
     : loaderContext(contextIn)
     , pipelineStage(ShaderPipelineStage::VertexShader)
-    , shaderSource(nullptr)
-    , byteLength(0)
     , precompiled(false)
 {
 }
@@ -75,10 +74,9 @@ Builder<Shader> & Builder<Shader>::SetGLSL(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL)
-    {
-        impl->shaderSource = shaderSourceIn;
-        impl->byteLength = byteLengthIn;
+    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL) {
+        impl->shaderBytecode.Code = shaderSourceIn;
+        impl->shaderBytecode.ByteLength = byteLengthIn;
         impl->precompiled = false;
     }
     return *this;
@@ -110,8 +108,8 @@ Builder<Shader> & Builder<Shader>::SetGLSLFromFile(std::string const& assetName)
             POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
         }
 
-        impl->shaderSource = impl->shaderBlob.data();
-        impl->byteLength = impl->shaderBlob.size();
+        impl->shaderBytecode.Code = impl->shaderBlob.data();
+        impl->shaderBytecode.ByteLength = impl->shaderBlob.size();
     }
     return *this;
 }
@@ -127,10 +125,9 @@ Builder<Shader> & Builder<Shader>::SetHLSL(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL)
-    {
-        impl->shaderSource = shaderSourceIn;
-        impl->byteLength = byteLengthIn;
+    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL) {
+        impl->shaderBytecode.Code = shaderSourceIn;
+        impl->shaderBytecode.ByteLength = byteLengthIn;
         impl->entryPoint = entryPointIn;
         impl->precompiled = false;
     }
@@ -146,10 +143,9 @@ Builder<Shader> & Builder<Shader>::SetHLSLPrecompiled(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL)
-    {
-        impl->shaderSource = shaderSourceIn;
-        impl->byteLength = byteLengthIn;
+    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL) {
+        impl->shaderBytecode.Code = shaderSourceIn;
+        impl->shaderBytecode.ByteLength = byteLengthIn;
         impl->precompiled = true;
     }
     return *this;
@@ -183,39 +179,46 @@ Builder<Shader> & Builder<Shader>::SetHLSLFromFile(
             POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
         }
 
-        impl->shaderSource = impl->shaderBlob.data();
-        impl->byteLength = impl->shaderBlob.size();
+        impl->shaderBytecode.Code = impl->shaderBlob.data();
+        impl->shaderBytecode.ByteLength = impl->shaderBlob.size();
         impl->entryPoint = entryPointIn;
         impl->precompiled = false;
     }
     return *this;
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<Shader> Builder<Shader>::Build()
+std::shared_ptr<Shader> Builder<Shader>::Build()
 {
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    POMDOG_ASSERT(impl->shaderSource != nullptr);
-    POMDOG_ASSERT(impl->byteLength > 0);
+    POMDOG_ASSERT(impl->shaderBytecode.Code != nullptr);
+    POMDOG_ASSERT(impl->shaderBytecode.ByteLength > 0);
 
     const auto shaderLanguage = graphicsDevice->GetSupportedLanguage();
 
-    if (shaderLanguage == ShaderLanguage::GLSL)
-    {
-        return GLSLCompiler::CreateShader(*graphicsDevice,
-            impl->shaderSource, impl->byteLength, impl->pipelineStage);
+    if (shaderLanguage == ShaderLanguage::GLSL) {
+        return GLSLCompiler::CreateShader(
+            *graphicsDevice,
+            impl->shaderBytecode.Code,
+            impl->shaderBytecode.ByteLength,
+            impl->pipelineStage);
     }
-    else if (shaderLanguage == ShaderLanguage::HLSL)
-    {
+    if (shaderLanguage == ShaderLanguage::HLSL) {
         if (impl->precompiled) {
-            return HLSLCompiler::CreateShaderFromBinary(*graphicsDevice,
-                impl->shaderSource, impl->byteLength, impl->pipelineStage);
+            return HLSLCompiler::CreateShaderFromBinary(
+                *graphicsDevice,
+                impl->shaderBytecode.Code,
+                impl->shaderBytecode.ByteLength,
+                impl->pipelineStage);
         }
-
         POMDOG_ASSERT(!impl->entryPoint.empty());
-        return HLSLCompiler::CreateShaderFromSource(*graphicsDevice,
-            impl->shaderSource, impl->byteLength, impl->entryPoint, impl->pipelineStage);
+        return HLSLCompiler::CreateShaderFromSource(
+            *graphicsDevice,
+            impl->shaderBytecode.Code,
+            impl->shaderBytecode.ByteLength,
+            impl->entryPoint,
+            impl->pipelineStage);
     }
 
     // error: FUS RO DAH!

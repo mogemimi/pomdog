@@ -26,9 +26,13 @@ public:
 
     ~Builder();
 
-    Builder & SetVertexShader(std::unique_ptr<Shader> && vertexShader);
+    Builder & SetVertexShader(std::shared_ptr<Shader> const& vertexShader);
 
-    Builder & SetPixelShader(std::unique_ptr<Shader> && pixelShader);
+    Builder & SetVertexShader(std::shared_ptr<Shader> && vertexShader);
+
+    Builder & SetPixelShader(std::shared_ptr<Shader> const& pixelShader);
+
+    Builder & SetPixelShader(std::shared_ptr<Shader> && pixelShader);
 
     Builder & SetInputLayout(InputLayoutDescription const& inputLayout);
 
