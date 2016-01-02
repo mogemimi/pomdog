@@ -20,7 +20,7 @@ public:
 
     virtual void End(GraphicsCommandQueue & commandQueue) = 0;
 
-    virtual int DrawCallCount() const = 0;
+    virtual int GetDrawCallCount() const noexcept = 0;
 };
 
 } // namespace Pomdog

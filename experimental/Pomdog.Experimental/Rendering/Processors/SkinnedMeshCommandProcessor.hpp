@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 
-class SkinnedMeshCommandProcessor final: public RenderCommandProcessor {
+class SkinnedMeshCommandProcessor final : public RenderCommandProcessor {
 public:
     SkinnedMeshCommandProcessor(
         std::shared_ptr<GraphicsDevice> const& graphicsDevice,
@@ -20,7 +20,7 @@ public:
 
     void End(GraphicsCommandQueue & commandQueue) override;
 
-    int DrawCallCount() const override;
+    int GetDrawCallCount() const noexcept override;
 
     void SetViewProjection(Matrix4x4 const& view, Matrix4x4 const& projection) override;
 

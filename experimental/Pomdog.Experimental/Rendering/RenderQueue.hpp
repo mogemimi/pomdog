@@ -10,13 +10,13 @@ namespace Pomdog {
 
 class RenderCommand;
 
-class RenderQueue {
+class RenderQueue final {
 public:
     void PushBack(std::reference_wrapper<RenderCommand> && command);
 
     void Sort();
 
-    std::size_t Count() const;
+    std::size_t GetCount() const noexcept;
 
     void Clear();
 

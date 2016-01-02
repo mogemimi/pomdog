@@ -34,7 +34,7 @@ void SpriteCommandProcessor::End(GraphicsCommandQueue & commandQueue)
     drawCallCount += spriteBatch.DrawCallCount();
 }
 //-----------------------------------------------------------------------
-int SpriteCommandProcessor::DrawCallCount() const
+int SpriteCommandProcessor::GetDrawCallCount() const noexcept
 {
     return drawCallCount;
 }

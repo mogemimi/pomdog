@@ -6,7 +6,7 @@
 namespace Pomdog {
 namespace {
 
-static void SetMatrixPalette(SkinnedEffect & skinnedEffect, Skeleton const& skeleton, SkeletonTransform const& skeletonTransform)
+void SetMatrixPalette(SkinnedEffect & skinnedEffect, Skeleton const& skeleton, SkeletonTransform const& skeletonTransform)
 {
     std::array<Matrix3x2, 64> matrices;
 
@@ -120,7 +120,7 @@ void SkinnedMeshCommandProcessor::End(GraphicsCommandQueue &)
 {
 }
 //-----------------------------------------------------------------------
-int SkinnedMeshCommandProcessor::DrawCallCount() const
+int SkinnedMeshCommandProcessor::GetDrawCallCount() const noexcept
 {
     return drawCallCount;
 }

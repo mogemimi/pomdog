@@ -13,7 +13,7 @@ namespace Pomdog {
 class RenderCommand;
 class RenderCommandProcessor;
 
-class Renderer {
+class Renderer final {
 public:
     Renderer();
 
@@ -33,7 +33,7 @@ public:
         std::type_index const& index,
         std::unique_ptr<RenderCommandProcessor> && processor);
 
-    std::uint32_t DrawCallCount() const;
+    int GetDrawCallCount() const noexcept;
 
 public:
     class Impl;

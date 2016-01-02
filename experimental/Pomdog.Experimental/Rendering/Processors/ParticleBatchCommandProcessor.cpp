@@ -6,7 +6,7 @@
 namespace Pomdog {
 namespace {
 
-static Matrix3x2 CreateTransformMatrix(Particle const& particle)
+Matrix3x2 CreateTransformMatrix(Particle const& particle)
 {
     return Matrix3x2::CreateScale(particle.Size)
         * Matrix3x2::CreateRotation(particle.Rotation)
@@ -53,7 +53,7 @@ void ParticleBatchCommandProcessor::End(GraphicsCommandQueue & commandQueue)
     drawCallCount += spriteBatch.DrawCallCount();
 }
 //-----------------------------------------------------------------------
-int ParticleBatchCommandProcessor::DrawCallCount() const
+int ParticleBatchCommandProcessor::GetDrawCallCount() const noexcept
 {
     return drawCallCount;
 }

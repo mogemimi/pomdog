@@ -16,28 +16,33 @@ class Renderer::Impl {
 public:
     Impl();
 
-    void AddProcessor(std::type_index const& index, std::unique_ptr<RenderCommandProcessor> && processor);
+    void AddProcessor(
+        std::type_index const& index,
+        std::unique_ptr<RenderCommandProcessor> && processor);
 
     void Render(GraphicsCommandQueue & commandQueue);
 
     void Clear();
 
 public:
-    std::unordered_map<std::type_index, std::unique_ptr<RenderCommandProcessor>> processors;
+    std::unordered_map<
+        std::type_index, std::unique_ptr<RenderCommandProcessor>> processors;
     RenderQueue renderQueue;
     Matrix4x4 viewMatrix;
     Matrix4x4 projectionMatrix;
-    std::uint32_t drawCallCount;
+    int drawCallCount;
 };
 //-----------------------------------------------------------------------
 Renderer::Impl::Impl()
-    : viewMatrix{Matrix4x4::Identity}
-    , projectionMatrix{Matrix4x4::Identity}
-    , drawCallCount{0}
+    : viewMatrix(Matrix4x4::Identity)
+    , projectionMatrix(Matrix4x4::Identity)
+    , drawCallCount(0)
 {
 }
 //-----------------------------------------------------------------------
-void Renderer::Impl::AddProcessor(std::type_index const& index, std::unique_ptr<RenderCommandProcessor> && processor)
+void Renderer::Impl::AddProcessor(
+    std::type_index const& index,
+    std::unique_ptr<RenderCommandProcessor> && processor)
 {
     POMDOG_ASSERT(processor);
     processors.emplace(index, std::move(processor));
@@ -60,25 +65,20 @@ void Renderer::Impl::Render(GraphicsCommandQueue & commandQueue)
     {
         auto iter = processors.find(command.TypeIndex());
 
-        if (prevIter != iter)
-        {
-            if (prevIter != std::end(processors))
-            {
+        if (prevIter != iter) {
+            if (prevIter != std::end(processors)) {
                 auto & processor = prevIter->second;
-
                 POMDOG_ASSERT(processor);
-                processor->End(graphicsContext);
+                processor->End(commandQueue);
 
-                POMDOG_ASSERT(processor->DrawCallCount() >= 0);
-                drawCallCount += processor->DrawCallCount();
+                POMDOG_ASSERT(processor->GetDrawCallCount() >= 0);
+                drawCallCount += processor->GetDrawCallCount();
             }
 
-            if (iter != std::end(processors))
-            {
+            if (iter != std::end(processors)) {
                 auto & processor = iter->second;
-
                 POMDOG_ASSERT(processor);
-                processor->Begin(graphicsContext);
+                processor->Begin(commandQueue);
             }
 
             prevIter = iter;
@@ -96,17 +96,16 @@ void Renderer::Impl::Render(GraphicsCommandQueue & commandQueue)
 
         auto & processor = iter->second;
 
-        processor->Draw(graphicsContext, command);
+        processor->Draw(commandQueue, command);
     });
 
-    if (std::end(processors) != prevIter)
-    {
+    if (std::end(processors) != prevIter) {
         POMDOG_ASSERT(prevIter->second);
         auto & processor = prevIter->second;
-        processor->End(graphicsContext);
+        processor->End(commandQueue);
 
-        POMDOG_ASSERT(processor->DrawCallCount() >= 0);
-        drawCallCount += processor->DrawCallCount();
+        POMDOG_ASSERT(processor->GetDrawCallCount() >= 0);
+        drawCallCount += processor->GetDrawCallCount();
     }
 }
 //-----------------------------------------------------------------------
@@ -147,7 +146,7 @@ void Renderer::SetProjectionMatrix(Matrix4x4 const& projectionMatrixIn)
     impl->projectionMatrix = projectionMatrixIn;
 }
 //-----------------------------------------------------------------------
-std::uint32_t Renderer::DrawCallCount() const
+int Renderer::GetDrawCallCount() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->drawCallCount;
@@ -159,7 +158,9 @@ void Renderer::Clear()
     impl->Clear();
 }
 //-----------------------------------------------------------------------
-void Renderer::AddProcessor(std::type_index const& index, std::unique_ptr<RenderCommandProcessor> && processor)
+void Renderer::AddProcessor(
+    std::type_index const& index,
+    std::unique_ptr<RenderCommandProcessor> && processor)
 {
     POMDOG_ASSERT(impl);
     impl->AddProcessor(index, std::move(processor));

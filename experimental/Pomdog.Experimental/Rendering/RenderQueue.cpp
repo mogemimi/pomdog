@@ -35,9 +35,11 @@ void RenderQueue::Sort()
     std::sort(std::begin(negativeCommands), std::end(negativeCommands), CompareRenderCommands);
 }
 //-----------------------------------------------------------------------
-std::size_t RenderQueue::Count() const
+std::size_t RenderQueue::GetCount() const noexcept
 {
-    return positiveCommands.size() + zeroCommands.size() + negativeCommands.size();
+    return positiveCommands.size()
+        + zeroCommands.size()
+        + negativeCommands.size();
 }
 //-----------------------------------------------------------------------
 void RenderQueue::Clear()

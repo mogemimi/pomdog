@@ -19,7 +19,8 @@ void PrimitiveCommandProcessor::Begin(GraphicsCommandQueue & commandQueue)
     primitiveBatch.Begin(viewProjection);
 }
 //-----------------------------------------------------------------------
-void PrimitiveCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, RenderCommand & command)
+void PrimitiveCommandProcessor::Draw(
+    GraphicsCommandQueue & commandQueue, RenderCommand & command)
 {
     using Detail::Rendering::PrimitiveCommand;
 
@@ -37,15 +38,16 @@ void PrimitiveCommandProcessor::End(GraphicsCommandQueue & commandQueue)
 {
     primitiveBatch.End();
 
-    drawCallCount += primitiveBatch.DrawCallCount();
+    drawCallCount += primitiveBatch.GetDrawCallCount();
 }
 //-----------------------------------------------------------------------
-int PrimitiveCommandProcessor::DrawCallCount() const
+int PrimitiveCommandProcessor::GetDrawCallCount() const noexcept
 {
     return drawCallCount;
 }
 //-----------------------------------------------------------------------
-void PrimitiveCommandProcessor::SetViewProjection(Matrix4x4 const& view, Matrix4x4 const& projection)
+void PrimitiveCommandProcessor::SetViewProjection(
+    Matrix4x4 const& view, Matrix4x4 const& projection)
 {
     viewProjection = view * projection;
 }
