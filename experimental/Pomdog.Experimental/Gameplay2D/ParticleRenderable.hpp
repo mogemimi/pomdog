@@ -14,7 +14,7 @@ public:
     ParticleRenderable(std::shared_ptr<Texture2D> const& texture);
     //ParticleRenderable(std::shared_ptr<Texture2D> const& texture, TextureRegion const& textureRegion);
 
-    void Visit(GameObject & gameObject, Renderer & renderer) override;
+    void Visit(Entity & entity, Renderer & renderer) override;
 
 private:
     Detail::Rendering::ParticleBatchCommand command;

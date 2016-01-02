@@ -9,11 +9,11 @@ EntityManager::EntityManager()
     : context(std::make_shared<EntityContext>())
 {}
 //-----------------------------------------------------------------------
-Entity EntityManager::CreateObject()
+Entity EntityManager::CreateEntity()
 {
     POMDOG_ASSERT(context);
     Entity entity {context};
-    objects.push_back(entity.GetEntityID());
+    entities.push_back(entity.GetEntityID());
     return std::move(entity);
 }
 //-----------------------------------------------------------------------
@@ -28,9 +28,9 @@ void EntityManager::Refresh()
     POMDOG_ASSERT(context);
     context->Refresh();
 
-    objects.erase(std::remove_if(std::begin(objects), std::end(objects),
+    entities.erase(std::remove_if(std::begin(entities), std::end(entities),
         [this](EntityID const& id){ return !context->Valid(id); }),
-        std::end(objects));
+        std::end(entities));
 }
 //-----------------------------------------------------------------------
 std::size_t EntityManager::GetCount() const noexcept

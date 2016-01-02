@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
-#include "Pomdog.Experimental/Gameplay/GameObject.hpp"
+#include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
 
@@ -19,7 +19,7 @@ class Renderable: public Component<Renderable> {
 public:
     virtual ~Renderable() = default;
 
-    virtual void Visit(GameObject & gameObject, Renderer & renderer) = 0;
+    virtual void Visit(Entity & entity, Renderer & renderer) = 0;
 
     Material Material;
     float DrawOrder = 0.0f;

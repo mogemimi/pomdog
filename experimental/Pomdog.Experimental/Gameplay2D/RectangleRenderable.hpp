@@ -15,7 +15,7 @@ class RectangleRenderable: public Renderable {
 public:
     RectangleRenderable();
 
-    void Visit(GameObject & gameObject, Renderer & renderer) override;
+    void Visit(Entity & entity, Renderer & renderer) override;
 
     void LeftTopColor(Pomdog::Color const& color);
     void RightTopColor(Pomdog::Color const& color);

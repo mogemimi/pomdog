@@ -52,25 +52,25 @@ private:
 
 }// unnamed namespace
 
-TEST(EntityManager, CreateObject)
+TEST(EntityManager, CreateEntity)
 {
     EntityManager manager;
     {
-        auto entity = manager.CreateObject();
+        auto entity = manager.CreateEntity();
         entity.AddComponent<TransformComponent>();
         entity.AddComponent<PhysicsComponent>();
     }
     {
-        auto entity = manager.CreateObject();
+        auto entity = manager.CreateEntity();
         entity.AddComponent<TransformComponent>();
         entity.AddComponent<PhysicsComponent>();
     }
     {
-        auto entity = manager.CreateObject();
+        auto entity = manager.CreateEntity();
         entity.AddComponent<PhysicsComponent>();
     }
     {
-        auto entity = manager.CreateObject();
+        auto entity = manager.CreateEntity();
     }
     {
         auto entitys = manager.QueryComponents<TransformComponent, PhysicsComponent>();
@@ -113,22 +113,22 @@ TEST(EntityManager, CreateObject)
 //{
 //    EntityManager manager;
 //
-//    auto entity = manager.CreateObject();
+//    auto entity = manager.CreateEntity();
 //    entity.AddComponent<TransformComponent>();
 //    entity.AddComponent<PhysicsComponent>();
 //
 //    EXPECT_FALSE(entity->HasComponent<Texture3D>());
 //
 //    {
-//        auto entity2 = manager.CreateObject();
+//        auto entity2 = manager.CreateEntity();
 //        entity2->AddComponent<Transform>();
 //    }
 //    {
-//        auto entity3 = manager.CreateObject();
+//        auto entity3 = manager.CreateEntity();
 //        entity3->AddComponent<Collider>();
 //    }
 //    {
-//        auto entity4 = manager.CreateObject();
+//        auto entity4 = manager.CreateEntity();
 //    }
 //
 //    auto objects = manager.QueryComponents<Transform, Collider>();
@@ -160,20 +160,20 @@ TEST(EntityManager, CreateObject)
 //{
 //    EntityManager manager;
 //    {
-//        auto entity = manager.CreateObject();
+//        auto entity = manager.CreateEntity();
 //        entity->AddComponent<Transform>(Transform{0, 0});
 //        entity->AddComponent<Collider>();
 //    }
 //    {
-//        auto entity = manager.CreateObject();
+//        auto entity = manager.CreateEntity();
 //        entity->AddComponent<Transform>();
 //    }
 //    {
-//        auto entity = manager.CreateObject();
+//        auto entity = manager.CreateEntity();
 //        entity->AddComponent<Collider>();
 //    }
 //    {
-//        auto entity = manager.CreateObject();
+//        auto entity = manager.CreateEntity();
 //    }
 //
 //    auto objects = manager.QueryComponents<Transform, ComponentQuery::Not<Collider>>();

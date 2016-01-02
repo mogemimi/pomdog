@@ -16,7 +16,7 @@ class BeamRenderable: public Renderable {
 public:
     BeamRenderable();
 
-    void Visit(GameObject & gameObject, Renderer & renderer) override;
+    void Visit(Entity & entity, Renderer & renderer) override;
 
     void Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice, std::shared_ptr<AssetManager> const& assets);
     void Update(GameClock const& clock);

@@ -21,7 +21,7 @@ public:
     EntityManager & operator=(EntityManager const&) = delete;
     EntityManager & operator=(EntityManager &&) = default;
 
-    Entity CreateObject();
+    Entity CreateEntity();
 
     //template <typename T, typename...Components>
     //std::vector<T> QueryComponent();
@@ -50,18 +50,15 @@ public:
 
 private:
     std::shared_ptr<EntityContext> context;
-    std::vector<EntityID> objects;
+    std::vector<EntityID> entities;
 };
 
 template <typename T, typename...Components>
 std::vector<Entity> EntityManager::QueryComponents()
 {
     static_assert(std::is_object<T>::value, "");
-
     std::vector<Entity> result;
-
-    for (auto & id: objects)
-    {
+    for (auto & id : entities) {
         if (context->Valid(id)) {
             if (context->HasComponents<T, Components...>(id)) {
                 result.emplace_back(context, id);
