@@ -257,14 +257,15 @@ void SpriteBatchRenderer::Impl::DrawInstance(std::vector<SpriteInfo> const& spri
     POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
     POMDOG_ASSERT(commandList);
 
-    POMDOG_ASSERT(drawCallCount < constantBuffers.size());
-    if (drawCallCount >= constantBuffers.size()) {
+    POMDOG_ASSERT(drawCallCount >= 0);
+    POMDOG_ASSERT(drawCallCount < static_cast<int>(constantBuffers.size()));
+    if (drawCallCount >= static_cast<int>(constantBuffers.size())) {
         // FUS RO DAH
         ///@todo throw exception
         return;
     }
 
-    POMDOG_ASSERT(drawCallCount < constantBuffers.size());
+    POMDOG_ASSERT(drawCallCount < static_cast<int>(constantBuffers.size()));
     auto constantBuffer = constantBuffers[drawCallCount];
 
     POMDOG_ASSERT(constantBuffer);
@@ -308,8 +309,7 @@ std::size_t SpriteBatchRenderer::Impl::CheckTextureIndex(std::shared_ptr<Texture
     auto textureIter = std::find(std::begin(textures), std::end(textures), texture);
     if (textureIter == std::end(textures))
     {
-        if (textures.size() >= MaxTextureCount)
-        {
+        if (textures.size() >= MaxTextureCount) {
             Flush();
             POMDOG_ASSERT(spriteQueue.empty());
             POMDOG_ASSERT(textures.empty());
@@ -369,8 +369,10 @@ void SpriteBatchRenderer::Impl::Draw(
     auto textureIndex = CheckTextureIndex(texture);
 
     SpriteInfo info;
-    info.TransformMatrix1 = {transform(0, 0), transform(0, 1), transform(1, 0), transform(1, 1)};
-    info.TransformMatrix2Origin = {transform(2, 0), transform(2, 1), originPivot.X, originPivot.Y};
+    info.TransformMatrix1 = {
+        transform(0, 0), transform(0, 1), transform(1, 0), transform(1, 1)};
+    info.TransformMatrix2Origin = {
+        transform(2, 0), transform(2, 1), originPivot.X, originPivot.Y};
     info.SourceRect = Vector4(0, 0, texture->GetWidth(), texture->GetHeight());
     info.Color = color.ToVector4();
     info.TextureIndex.X = textureIndex;
@@ -404,9 +406,12 @@ void SpriteBatchRenderer::Impl::Draw(
     auto textureIndex = CheckTextureIndex(texture);
 
     SpriteInfo info;
-    info.TransformMatrix1 = {transform(0, 0), transform(0, 1), transform(1, 0), transform(1, 1)};
-    info.TransformMatrix2Origin = {transform(2, 0), transform(2, 1), originPivot.X, originPivot.Y};
-    info.SourceRect = Vector4(sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
+    info.TransformMatrix1 = {
+        transform(0, 0), transform(0, 1), transform(1, 0), transform(1, 1)};
+    info.TransformMatrix2Origin = {
+        transform(2, 0), transform(2, 1), originPivot.X, originPivot.Y};
+    info.SourceRect = Vector4(
+        sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
     info.Color = color.ToVector4();
     info.TextureIndex.X = textureIndex;
 
@@ -465,7 +470,12 @@ void SpriteBatchRenderer::Draw(
     Color const& color)
 {
     POMDOG_ASSERT(impl);
-    impl->Draw(texture, Matrix3x2::Identity, sourceRect, color, Vector2{0.5f, 0.5f});
+    impl->Draw(
+        texture,
+        Matrix3x2::Identity,
+        sourceRect,
+        color,
+        Vector2{0.5f, 0.5f});
 }
 //-----------------------------------------------------------------------
 void SpriteBatchRenderer::Draw(
@@ -474,7 +484,11 @@ void SpriteBatchRenderer::Draw(
     Color const& color)
 {
     POMDOG_ASSERT(impl);
-    impl->Draw(texture, Matrix3x2::CreateTranslation(position), color, Vector2{0.5f, 0.5f});
+    impl->Draw(
+        texture,
+        Matrix3x2::CreateTranslation(position),
+        color,
+        Vector2{0.5f, 0.5f});
 }
 //-----------------------------------------------------------------------
 void SpriteBatchRenderer::Draw(
@@ -484,7 +498,12 @@ void SpriteBatchRenderer::Draw(
     Color const& color)
 {
     POMDOG_ASSERT(impl);
-    impl->Draw(texture, Matrix3x2::CreateTranslation(position), sourceRect, color, Vector2{0.5f, 0.5f});
+    impl->Draw(
+        texture,
+        Matrix3x2::CreateTranslation(position),
+        sourceRect,
+        color,
+        Vector2{0.5f, 0.5f});
 }
 //-----------------------------------------------------------------------
 void SpriteBatchRenderer::Draw(
@@ -497,10 +516,11 @@ void SpriteBatchRenderer::Draw(
     float scale)
 {
     POMDOG_ASSERT(impl);
-    impl->Draw(texture,
+    impl->Draw(
+        texture,
         Matrix3x2::CreateScale(scale)
-        * Matrix3x2::CreateRotation(rotation)
-        * Matrix3x2::CreateTranslation(position),
+            * Matrix3x2::CreateRotation(rotation)
+            * Matrix3x2::CreateTranslation(position),
         sourceRect, color, originPivot);
 }
 //-----------------------------------------------------------------------
@@ -514,7 +534,8 @@ void SpriteBatchRenderer::Draw(
     Vector2 const& scale)
 {
     POMDOG_ASSERT(impl);
-    impl->Draw(texture,
+    impl->Draw(
+        texture,
         Matrix3x2::CreateScale(scale)
         * Matrix3x2::CreateRotation(rotation)
         * Matrix3x2::CreateTranslation(position),
