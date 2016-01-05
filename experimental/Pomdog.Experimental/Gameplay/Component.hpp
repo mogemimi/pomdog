@@ -19,7 +19,8 @@ public:
 
     static std::uint8_t TypeIndex()
     {
-        return Detail::Gameplay::ComponentTypeIndex<ComponentBase, std::uint8_t>::Index<T>();
+        using Detail::Gameplay::ComponentTypeIndex;
+        return ComponentTypeIndex<ComponentBase, std::uint8_t>::Index<T>();
     }
 };
 

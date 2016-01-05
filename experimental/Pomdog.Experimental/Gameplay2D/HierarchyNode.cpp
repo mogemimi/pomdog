@@ -4,22 +4,15 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-HierarchyNode::HierarchyNode(std::shared_ptr<Entity> const& objectIn)
-    : Object(objectIn)
-{}
-//-----------------------------------------------------------------------
 HierarchyNode::~HierarchyNode()
 {
     RemoveChildren();
 
-    if (auto parent = weakParent.lock())
-    {
-        if (parent->firstChild.get() == this)
-        {
+    if (auto parent = weakParent.lock()) {
+        if (parent->firstChild.get() == this) {
             parent->firstChild = sibling;
         }
-        else if (parent->firstChild)
-        {
+        else if (parent->firstChild) {
             auto prevSibling = parent->firstChild;
             POMDOG_ASSERT(prevSibling);
 
@@ -47,8 +40,7 @@ void HierarchyNode::AddChild(std::shared_ptr<HierarchyNode> const& child)
     auto prevSibling = firstChild;
     POMDOG_ASSERT(prevSibling);
 
-    while (prevSibling->sibling)
-    {
+    while (prevSibling->sibling) {
         prevSibling = prevSibling->sibling;
     }
 
@@ -66,8 +58,7 @@ void HierarchyNode::RemoveChild(std::shared_ptr<HierarchyNode> const& child)
         return;
     }
 
-    if (firstChild == child)
-    {
+    if (firstChild == child) {
         child->weakParent.reset();
         firstChild = child->sibling;
         POMDOG_ASSERT(child->weakParent.expired());
@@ -76,17 +67,14 @@ void HierarchyNode::RemoveChild(std::shared_ptr<HierarchyNode> const& child)
     }
 
     auto prevSibling = firstChild;
-    while (prevSibling->sibling)
-    {
-        if (prevSibling->sibling == child)
-        {
+    while (prevSibling->sibling) {
+        if (prevSibling->sibling == child) {
             child->weakParent.reset();
             prevSibling->sibling = child->sibling;
             POMDOG_ASSERT(child->weakParent.expired());
             POMDOG_ASSERT(child->sibling == this->firstChild);
             return;
         }
-
         prevSibling = prevSibling->sibling;
     }
 }
@@ -94,20 +82,26 @@ void HierarchyNode::RemoveChild(std::shared_ptr<HierarchyNode> const& child)
 void HierarchyNode::RemoveChildren()
 {
     auto child = firstChild;
-    while (child)
-    {
+    while (child) {
         child->weakParent.reset();
         child = child->sibling;
     }
-
     firstChild.reset();
 }
 //-----------------------------------------------------------------------
-void HierarchyNode::EnumerateChildren(std::function<void(std::shared_ptr<HierarchyNode> const& child)> const& callback)
+void HierarchyNode::RemoveFromParent()
+{
+    if (auto parent = weakParent.lock()) {
+        parent->RemoveChild(shared_from_this());
+    }
+    weakParent.reset();
+}
+//-----------------------------------------------------------------------
+void HierarchyNode::EnumerateChildren(
+    std::function<void(std::shared_ptr<HierarchyNode> const& child)> const& callback)
 {
     auto child = firstChild;
-    while (child)
-    {
+    while (child) {
         POMDOG_ASSERT(!child->weakParent.expired());
         POMDOG_ASSERT(child->weakParent.lock() == shared_from_this());
 
@@ -117,12 +111,12 @@ void HierarchyNode::EnumerateChildren(std::function<void(std::shared_ptr<Hierarc
     }
 }
 //-----------------------------------------------------------------------
-std::shared_ptr<HierarchyNode> HierarchyNode::Parent() const
+std::shared_ptr<HierarchyNode> HierarchyNode::GetParent() const noexcept
 {
     return weakParent.lock();
 }
 //-----------------------------------------------------------------------
-std::weak_ptr<HierarchyNode> HierarchyNode::WeakParent() const
+std::weak_ptr<HierarchyNode> HierarchyNode::GetWeakParent() const noexcept
 {
     return weakParent;
 }

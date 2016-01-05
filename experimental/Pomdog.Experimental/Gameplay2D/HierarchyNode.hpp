@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
@@ -12,13 +13,13 @@ namespace Pomdog {
 class Entity;
 class EntityManager;
 
-class POMDOG_EXPORT HierarchyNode: public std::enable_shared_from_this<HierarchyNode> {
+class POMDOG_EXPORT HierarchyNode final
+    : public Component<HierarchyNode>
+    , public std::enable_shared_from_this<HierarchyNode> {
 public:
     HierarchyNode() = default;
 
-    explicit HierarchyNode(std::shared_ptr<Entity> const& object);
-
-    virtual ~HierarchyNode();
+    ~HierarchyNode() final;
 
     void AddChild(std::shared_ptr<HierarchyNode> const& child);
 
@@ -26,13 +27,13 @@ public:
 
     void RemoveChildren();
 
+    void RemoveFromParent();
+
     void EnumerateChildren(std::function<void(std::shared_ptr<HierarchyNode> const& child)> const& callback);
 
-    std::shared_ptr<HierarchyNode> Parent() const;
+    std::shared_ptr<HierarchyNode> GetParent() const noexcept;
 
-    std::weak_ptr<HierarchyNode> WeakParent() const;
-
-    std::shared_ptr<Entity> Object;
+    std::weak_ptr<HierarchyNode> GetWeakParent() const noexcept;
 
 private:
     std::weak_ptr<HierarchyNode> weakParent;

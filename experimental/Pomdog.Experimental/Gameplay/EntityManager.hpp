@@ -11,7 +11,7 @@ namespace Pomdog {
 
 class Entity;
 
-class EntityManager {
+class EntityManager final {
 public:
     EntityManager();
 
@@ -22,9 +22,6 @@ public:
     EntityManager & operator=(EntityManager &&) = default;
 
     Entity CreateEntity();
-
-    //template <typename T, typename...Components>
-    //std::vector<T> QueryComponent();
 
     template <typename T, typename...Components>
     std::vector<Entity> QueryComponents();

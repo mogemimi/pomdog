@@ -41,7 +41,7 @@ AnimationTimeInterval WrapTime(AnimationTimeInterval const& source, AnimationTim
     return std::move(time);
 }
 
-class AnimationCrossFadeNode final: public AnimationNode {
+class AnimationCrossFadeNode final : public AnimationNode {
 private:
     SkeletonAnimationState currentAnimation;
     SkeletonAnimationState nextAnimation;
@@ -108,7 +108,8 @@ public:
 //-----------------------------------------------------------------------
 class Animator::Impl final {
 public:
-    Impl(std::shared_ptr<Skeleton> const& skeleton,
+    Impl(
+        std::shared_ptr<Skeleton> const& skeleton,
         std::shared_ptr<SkeletonTransform> const& skeletonTransform,
         std::shared_ptr<AnimationGraph> const& animationGraph);
 
@@ -118,17 +119,11 @@ public:
 
     void Play(std::string const& stateName);
 
-    float PlaybackRate() const;
-
-    void PlaybackRate(float playbackRate);
-
     void SetFloat(std::string const& name, float value);
 
     void SetBool(std::string const& name, bool value);
 
-    std::string GetCurrentStateName() const;
-
-private:
+public:
     Detail::Skeletal2D::AnimationGraphWeightCollection graphWeights;
     std::shared_ptr<Skeleton> skeleton;
     std::shared_ptr<SkeletonTransform> skeletonTransform;
@@ -259,16 +254,6 @@ void Animator::Impl::Play(std::string const& stateName)
     time = AnimationTimeInterval::zero();
 }
 //-----------------------------------------------------------------------
-float Animator::Impl::PlaybackRate() const
-{
-    return playbackRate;
-}
-//-----------------------------------------------------------------------
-void Animator::Impl::PlaybackRate(float playbackRateIn)
-{
-    this->playbackRate = playbackRateIn;
-}
-//-----------------------------------------------------------------------
 void Animator::Impl::SetFloat(std::string const& name, float value)
 {
     POMDOG_ASSERT(!std::isnan(value));
@@ -284,11 +269,6 @@ void Animator::Impl::SetBool(std::string const& name, bool value)
     if (auto index = animationGraph->FindParameter(name)) {
         graphWeights.SetValue(*index, value);
     }
-}
-//-----------------------------------------------------------------------
-std::string Animator::Impl::GetCurrentStateName() const
-{
-    return currentAnimation.Name;
 }
 //-----------------------------------------------------------------------
 // MARK: - Animator class
@@ -319,16 +299,16 @@ void Animator::Play(std::string const& state)
     impl->Play(state);
 }
 //-----------------------------------------------------------------------
-float Animator::PlaybackRate() const
+float Animator::GetPlaybackRate() const noexcept
 {
     POMDOG_ASSERT(impl);
-    return impl->PlaybackRate();
+    return impl->playbackRate;
 }
 //-----------------------------------------------------------------------
-void Animator::PlaybackRate(float playbackRate)
+void Animator::SetPlaybackRate(float playbackRateIn) noexcept
 {
     POMDOG_ASSERT(impl);
-    impl->PlaybackRate(playbackRate);
+    impl->playbackRate = playbackRateIn;
 }
 //-----------------------------------------------------------------------
 void Animator::SetFloat(std::string const& name, float value)
@@ -343,10 +323,10 @@ void Animator::SetBool(std::string const& name, bool value)
     impl->SetBool(name, value);
 }
 //-----------------------------------------------------------------------
-std::string Animator::GetCurrentStateName() const
+std::string Animator::GetCurrentStateName() const noexcept
 {
     POMDOG_ASSERT(impl);
-    return impl->GetCurrentStateName();
+    return impl->currentAnimation.Name;
 }
 //-----------------------------------------------------------------------
 } // namespace Pomdog

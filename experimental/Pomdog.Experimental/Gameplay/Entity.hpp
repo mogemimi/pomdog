@@ -14,7 +14,7 @@
 
 namespace Pomdog {
 
-class Entity {
+class Entity final {
 public:
     Entity() = default;
 

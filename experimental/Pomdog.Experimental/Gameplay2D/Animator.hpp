@@ -13,9 +13,10 @@ class Skeleton;
 class SkeletonTransform;
 class AnimationGraph;
 
-class Animator: public Component<Animator> {
+class Animator final : public Component<Animator> {
 public:
-    Animator(std::shared_ptr<Skeleton> const& skeleton,
+    Animator(
+        std::shared_ptr<Skeleton> const& skeleton,
         std::shared_ptr<SkeletonTransform> const& skeletonTransform,
         std::shared_ptr<AnimationGraph> const& animationGraph);
 
@@ -27,13 +28,15 @@ public:
 
     void Play(std::string const& state);
 
-    float PlaybackRate() const;
-    void PlaybackRate(float playbackRate);
+    float GetPlaybackRate() const noexcept;
+
+    void SetPlaybackRate(float playbackRate) noexcept;
 
     void SetFloat(std::string const& name, float value);
+
     void SetBool(std::string const& name, bool value);
 
-    std::string GetCurrentStateName() const;
+    std::string GetCurrentStateName() const noexcept;
 
 private:
     class Impl;
