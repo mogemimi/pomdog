@@ -365,27 +365,27 @@ void
 FloatingPointQuaternion<T>::CreateFromYawPitchRoll(
     Radian<T> const& yaw, Radian<T> const& pitch, Radian<T> const& roll, FloatingPointQuaternion & result)
 {
-    auto const halfYaw = yaw.value / 2;
-    auto const cosYaw = std::cos(halfYaw);
-    auto const sinYaw = std::sin(halfYaw);
+    const auto halfYaw = yaw.value / 2;
+    const auto cosYaw = std::cos(halfYaw);
+    const auto sinYaw = std::sin(halfYaw);
 
-    auto const halfPitch = pitch.value / 2;
-    auto const cosPitch = std::cos(halfPitch);
-    auto const sinPitch = std::sin(halfPitch);
+    const auto halfPitch = pitch.value / 2;
+    const auto cosPitch = std::cos(halfPitch);
+    const auto sinPitch = std::sin(halfPitch);
 
-    auto const halfRoll = roll.value / 2;
-    auto const cosRoll = std::cos(halfRoll);
-    auto const sinRoll = std::sin(halfRoll);
+    const auto halfRoll = roll.value / 2;
+    const auto cosRoll = std::cos(halfRoll);
+    const auto sinRoll = std::sin(halfRoll);
 
-    auto const sinRollCosPitch = sinRoll * cosPitch;
-    auto const cosRollSinPitch = cosRoll * sinPitch;
-    auto const cosRollCosPitch = cosRoll * cosPitch;
-    auto const sinRollSinPitch = sinRoll * sinPitch;
+    const auto cosPitchSinRoll = cosPitch * sinRoll;
+    const auto sinPitchCosRoll = sinPitch * cosRoll;
+    const auto cosPitchCosRoll = cosPitch * cosRoll;
+    const auto sinPitchSinRoll = sinPitch * sinRoll;
 
-    result.X = (sinRollCosPitch * cosYaw) - (cosRollSinPitch * sinYaw);
-    result.Y = (cosRollSinPitch * cosYaw) + (sinRollCosPitch * sinYaw);
-    result.Z = (cosRollCosPitch * sinYaw) - (sinRollSinPitch * cosYaw);
-    result.W = (cosRollCosPitch * cosYaw) + (sinRollSinPitch * sinYaw);
+    result.X = (cosYaw * sinPitchCosRoll) + (sinYaw * cosPitchSinRoll);
+    result.Y = (sinYaw * cosPitchCosRoll) - (cosYaw * sinPitchSinRoll);
+    result.Z = (cosYaw * cosPitchSinRoll) - (sinYaw * sinPitchCosRoll);
+    result.W = (cosYaw * cosPitchCosRoll) + (sinYaw * sinPitchSinRoll);
 }
 //-----------------------------------------------------------------------
 template <typename T>
