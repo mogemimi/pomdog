@@ -84,6 +84,8 @@ public:
 
     static FloatingPointVector3 TransformNormal(FloatingPointVector3 const& normal, FloatingPointMatrix4x4<T> const& matrix) noexcept;
 
+    static FloatingPointVector3 ToEulerAngles(FloatingPointQuaternion<T> const& quaternion);
+
     ///@brief Returns pointer to the first element.
     T const* Data() const noexcept;
 

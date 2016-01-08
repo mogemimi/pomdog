@@ -2,6 +2,7 @@
 
 #include "Pomdog/Math/detail/FloatingPointVector3.hpp"
 #include "Pomdog/Math/detail/FloatingPointMatrix4x4.hpp"
+#include "Pomdog/Math/detail/FloatingPointQuaternion.hpp"
 #include "Pomdog/Math/detail/FloatingPointVector2.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -295,6 +296,21 @@ FloatingPointVector3<T>::TransformNormal(FloatingPointVector3 const& normal, Flo
         (normal.X * matrix.m[0][0]) + (normal.Y * matrix.m[1][0]) + (normal.Z * matrix.m[2][0]),
         (normal.X * matrix.m[0][1]) + (normal.Y * matrix.m[1][1]) + (normal.Z * matrix.m[2][1]),
         (normal.X * matrix.m[0][2]) + (normal.Y * matrix.m[1][2]) + (normal.Z * matrix.m[2][2]));
+}
+//-----------------------------------------------------------------------
+template <typename T>
+FloatingPointVector3<T>
+FloatingPointVector3<T>::ToEulerAngles(FloatingPointQuaternion<T> const& q)
+{
+    constexpr T Two = 2;
+    const auto xx = q.X * q.X;
+    const auto yy = q.Y * q.Y;
+    const auto zz = q.Z * q.Z;
+    const auto ww = q.W * q.W;
+    auto roll = std::atan2(Two * (q.W * q.Z + q.X * q.Y), ww + xx - yy - zz);
+    auto yaw = std::asin(Two * (q.W * q.Y - q.Z * q.X));
+    auto pitch = std::atan2(Two * (q.W * q.X + q.Y * q.Z), ww - xx - yy + zz);
+    return FloatingPointVector3(pitch, yaw, roll);
 }
 //-----------------------------------------------------------------------
 template <typename T>
