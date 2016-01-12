@@ -13,7 +13,7 @@ namespace Detail {
 namespace GL4 {
 namespace {
 
-static GLenum ToBufferUsage(BufferUsage bufferUsage) noexcept
+GLenum ToBufferUsage(BufferUsage bufferUsage) noexcept
 {
     switch (bufferUsage) {
     case BufferUsage::Dynamic: return GL_DYNAMIC_DRAW;

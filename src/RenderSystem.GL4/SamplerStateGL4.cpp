@@ -10,10 +10,9 @@
 namespace Pomdog {
 namespace Detail {
 namespace GL4 {
-//-----------------------------------------------------------------------
 namespace {
 
-static GLenum ToTextureAddressMode(TextureAddressMode address) noexcept
+GLenum ToTextureAddressMode(TextureAddressMode address) noexcept
 {
     switch (address) {
     case TextureAddressMode::Clamp: return GL_CLAMP_TO_EDGE;

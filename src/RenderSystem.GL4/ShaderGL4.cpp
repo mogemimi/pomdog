@@ -15,7 +15,7 @@ namespace Detail {
 namespace GL4 {
 namespace {
 
-static Optional<GLuint> CompileShader(ShaderBytecode const& source, GLenum pipelineStage)
+Optional<GLuint> CompileShader(ShaderBytecode const& source, GLenum pipelineStage)
 {
 #if defined(DEBUG)
     {

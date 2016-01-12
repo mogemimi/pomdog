@@ -8,10 +8,9 @@
 namespace Pomdog {
 namespace Detail {
 namespace GL4 {
-//-----------------------------------------------------------------------
 namespace {
 
-static FillModeGL4 ToFillModeGL4(FillMode const& fillMode)
+FillModeGL4 ToFillModeGL4(FillMode const& fillMode) noexcept
 {
     switch (fillMode) {
     case FillMode::Solid: return FillModeGL4{ GL_FILL };

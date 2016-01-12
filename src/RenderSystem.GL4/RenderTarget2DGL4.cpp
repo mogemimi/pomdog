@@ -9,7 +9,7 @@ namespace Detail {
 namespace GL4 {
 namespace {
 
-static GLenum ToDepthStencilFormat(DepthFormat depthFormat) noexcept
+GLenum ToDepthStencilFormat(DepthFormat depthFormat) noexcept
 {
     POMDOG_ASSERT(depthFormat != DepthFormat::None);
     switch (depthFormat) {

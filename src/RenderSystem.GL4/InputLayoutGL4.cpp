@@ -21,7 +21,7 @@ namespace Detail {
 namespace GL4 {
 namespace {
 
-static ScalarTypeGL4 ToScalarType(GLenum attributeClass)
+ScalarTypeGL4 ToScalarType(GLenum attributeClass)
 {
     switch (attributeClass) {
     case GL_FLOAT:
@@ -90,7 +90,7 @@ static ScalarTypeGL4 ToScalarType(GLenum attributeClass)
     return ScalarTypeGL4(GL_FLOAT);
 }
 //-----------------------------------------------------------------------
-static bool IsIntegerType(ScalarTypeGL4 const& scalarType)
+bool IsIntegerType(ScalarTypeGL4 const& scalarType)
 {
     switch (scalarType.value) {
     case GL_FLOAT:
@@ -138,7 +138,7 @@ struct InputElementSize {
     std::uint8_t ComponentCount;
 };
 //-----------------------------------------------------------------------
-static InputElementSize ToInputElementSize(GLenum attributeClass)
+InputElementSize ToInputElementSize(GLenum attributeClass)
 {
     switch (attributeClass) {
     case GL_FLOAT:
@@ -243,7 +243,7 @@ std::uint8_t ToByteWithFromScalarTypeGL4(ScalarTypeGL4 scalarType)
     return sizeof(float);
 }
 //-----------------------------------------------------------------------
-static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shaderProgram)
+std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shaderProgram)
 {
     std::vector<InputElementGL4> attributes;
 
@@ -334,7 +334,7 @@ static std::vector<InputElementGL4> BuildAttributes(ShaderProgramGL4 const& shad
     return std::move(attributes);
 }
 //-----------------------------------------------------------------------
-static void EnableAttributes(std::vector<InputElementGL4> const& inputElements)
+void EnableAttributes(std::vector<InputElementGL4> const& inputElements)
 {
     for (auto& inputElement: inputElements) {
         glEnableVertexAttribArray(inputElement.AttributeLocation);
@@ -342,7 +342,7 @@ static void EnableAttributes(std::vector<InputElementGL4> const& inputElements)
     }
 }
 //-----------------------------------------------------------------------
-static std::uint32_t CalculateByteOffset(InputElementGL4 const& inputElement)
+std::uint32_t CalculateByteOffset(InputElementGL4 const& inputElement)
 {
     POMDOG_ASSERT(inputElement.Components >= 1);
     POMDOG_ASSERT(inputElement.Components <= 4);
@@ -351,7 +351,7 @@ static std::uint32_t CalculateByteOffset(InputElementGL4 const& inputElement)
         inputElement.Components;
 }
 //-----------------------------------------------------------------------
-static std::vector<InputElementGL4> BuildInputElements(
+std::vector<InputElementGL4> BuildInputElements(
     std::vector<InputElementGL4> && inputElements,
     std::vector<VertexDeclarationGL4> & vertexDeclarations)
 {
@@ -378,7 +378,7 @@ static std::vector<InputElementGL4> BuildInputElements(
 }
 //-----------------------------------------------------------------------
 #if defined(DEBUG) && !defined(NDEBUG)
-static ScalarTypeGL4 ToScalarTypeGL4(InputElementFormat format)
+ScalarTypeGL4 ToScalarTypeGL4(InputElementFormat format)
 {
     switch (format) {
     case InputElementFormat::Byte4:
@@ -399,7 +399,7 @@ static ScalarTypeGL4 ToScalarTypeGL4(InputElementFormat format)
 #endif
 }
 //-----------------------------------------------------------------------
-static std::int8_t ToComponentsGL4(InputElementFormat format)
+std::int8_t ToComponentsGL4(InputElementFormat format)
 {
     switch (format) {
     case InputElementFormat::Float:
@@ -420,7 +420,7 @@ static std::int8_t ToComponentsGL4(InputElementFormat format)
 #endif
 }
 //-----------------------------------------------------------------------
-static GLuint GetMaxAttributeCount()
+GLuint GetMaxAttributeCount()
 {
     static const GLuint maxAttributeCount = ([] {
         GLint maxCount = 0;
@@ -431,7 +431,7 @@ static GLuint GetMaxAttributeCount()
 }
 #endif // defined(DEBUG) && !defined(NDEBUG)
 //-----------------------------------------------------------------------
-static std::vector<InputElementGL4> BuildInputElements(
+std::vector<InputElementGL4> BuildInputElements(
     InputLayoutDescription const& description,
     std::vector<InputElementGL4> && attributes,
     std::vector<VertexDeclarationGL4> & vertexDeclarations)
@@ -502,14 +502,14 @@ static std::vector<InputElementGL4> BuildInputElements(
     return std::move(inputElements);
 }
 //-----------------------------------------------------------------------
-template <typename T> static
+template <typename T>
 GLubyte const* ComputeBufferOffset(T const offsetBytes)
 {
     static_assert(std::is_unsigned<T>::value, "T is unsigned type.");
     return reinterpret_cast<GLubyte const*>(0) + offsetBytes;
 }
 //-----------------------------------------------------------------------
-static void ApplyInputElements(
+void ApplyInputElements(
     std::vector<InputElementGL4> const& inputElements,
     std::vector<VertexDeclarationGL4> const& vertexDeclarations,
     std::vector<VertexBufferBinding> const& vertexBuffers)

@@ -39,10 +39,9 @@
 namespace Pomdog {
 namespace Detail {
 namespace GL4 {
-//-----------------------------------------------------------------------
 namespace {
 
-static GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
+GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
     case PrimitiveTopology::TriangleList: return GL_TRIANGLES;
@@ -55,7 +54,7 @@ static GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
 #endif
 }
 //-----------------------------------------------------------------------
-static GLenum ToIndexElementType(IndexElementSize indexElementSize)
+GLenum ToIndexElementType(IndexElementSize indexElementSize) noexcept
 {
     static_assert(sizeof(GLushort) == 2, "GLushort is not SixteenBits.");
     static_assert(sizeof(GLuint) == 4, "GLuint is not ThirtyTwoBits.");
@@ -70,7 +69,7 @@ static GLenum ToIndexElementType(IndexElementSize indexElementSize)
 }
 //-----------------------------------------------------------------------
 template <typename T>
-static GLenum ToTextureUnitIndexGL4(T index)
+GLenum ToTextureUnitIndexGL4(T index) noexcept
 {
     static_assert(std::is_integral<T>::value, "T is an integral type.");
     static_assert(GL_TEXTURE0 == (GL_TEXTURE0 + 0), "");
@@ -89,7 +88,7 @@ static GLenum ToTextureUnitIndexGL4(T index)
 }
 //-----------------------------------------------------------------------
 template <typename T>
-static GLenum ToColorAttachment(T index)
+GLenum ToColorAttachment(T index) noexcept
 {
     static_assert(std::is_integral<T>::value, "T is an integral type.");
     static_assert(GL_COLOR_ATTACHMENT0 == (GL_COLOR_ATTACHMENT0 + 0), "");
@@ -106,7 +105,7 @@ static GLenum ToColorAttachment(T index)
     return static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + index);
 }
 //-----------------------------------------------------------------------
-static Optional<FrameBufferGL4> CreateFrameBuffer()
+Optional<FrameBufferGL4> CreateFrameBuffer()
 {
     auto const prevFrameBuffer = TypesafeHelperGL4::Get<FrameBufferGL4>();
     ScopeGuard scope([&prevFrameBuffer] {
@@ -130,7 +129,7 @@ static Optional<FrameBufferGL4> CreateFrameBuffer()
     return std::move(frameBuffer);
 }
 //-----------------------------------------------------------------------
-static void ApplyTexture2D(int index, Texture2DObjectGL4 const& textureObject)
+void ApplyTexture2D(int index, Texture2DObjectGL4 const& textureObject)
 {
     #if defined(DEBUG) && !defined(NDEBUG)
     {
@@ -150,7 +149,7 @@ static void ApplyTexture2D(int index, Texture2DObjectGL4 const& textureObject)
     POMDOG_CHECK_ERROR_GL4("glBindTexture");
 }
 //-----------------------------------------------------------------------
-static void ApplyConstantBuffer(int slotIndex, ConstantBufferGL4 const& buffer)
+void ApplyConstantBuffer(int slotIndex, ConstantBufferGL4 const& buffer)
 {
     POMDOG_ASSERT(slotIndex >= 0);
     glBindBufferBase(GL_UNIFORM_BUFFER, slotIndex, buffer.GetBuffer());

@@ -11,7 +11,7 @@ namespace Detail {
 namespace GL4 {
 namespace {
 
-static GLenum ToBlendGL4NonTypesafe(Blend blend) noexcept
+GLenum ToBlendGL4NonTypesafe(Blend blend) noexcept
 {
     switch (blend) {
     case Blend::Zero: return GL_ZERO;
@@ -37,7 +37,7 @@ static GLenum ToBlendGL4NonTypesafe(Blend blend) noexcept
 #endif
 }
 //-----------------------------------------------------------------------
-static GLenum ToBlendFunctionGL4NonTypesafe(BlendFunction func) noexcept
+GLenum ToBlendFunctionGL4NonTypesafe(BlendFunction func) noexcept
 {
     switch (func) {
     case BlendFunction::Add: return GL_FUNC_ADD;
@@ -51,18 +51,19 @@ static GLenum ToBlendFunctionGL4NonTypesafe(BlendFunction func) noexcept
 #endif
 }
 //-----------------------------------------------------------------------
-static BlendGL4 ToBlendGL4(Blend blend)
+BlendGL4 ToBlendGL4(Blend blend) noexcept
 {
     return BlendGL4{ToBlendGL4NonTypesafe(blend)};
 }
 //-----------------------------------------------------------------------
-static BlendFunctionGL4 ToBlendFunctionGL4(BlendFunction func)
+BlendFunctionGL4 ToBlendFunctionGL4(BlendFunction func) noexcept
 {
     return BlendFunctionGL4{ToBlendFunctionGL4NonTypesafe(func)};
 }
 //-----------------------------------------------------------------------
-static void ToRenderTargetBlendGL4(RenderTargetBlendDescription const& desc,
-    RenderTargetBlendDescGL4 & result)
+void ToRenderTargetBlendGL4(
+    RenderTargetBlendDescription const& desc,
+    RenderTargetBlendDescGL4 & result) noexcept
 {
     result.ColorSource = ToBlendGL4(desc.ColorSourceBlend);
     result.ColorDestination = ToBlendGL4(desc.ColorDestinationBlend);

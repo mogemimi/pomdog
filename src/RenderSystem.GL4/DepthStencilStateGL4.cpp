@@ -11,8 +11,7 @@ namespace GL4 {
 //-----------------------------------------------------------------------
 namespace {
 
-static GLenum ToComparisonFunctionGL4NonTypesafe(
-    ComparisonFunction const& comparison) noexcept
+GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction comparison) noexcept
 {
     switch (comparison) {
     case ComparisonFunction::Always: return GL_ALWAYS;
@@ -29,8 +28,7 @@ static GLenum ToComparisonFunctionGL4NonTypesafe(
 #endif
 }
 //-----------------------------------------------------------------------
-static GLenum ToStencilOperationGL4NonTypesafe(
-    StencilOperation const& operation) noexcept
+GLenum ToStencilOperationGL4NonTypesafe(StencilOperation operation) noexcept
 {
     // **NOTE**
     // `GL_DECR` clamps to 0.
@@ -51,20 +49,23 @@ static GLenum ToStencilOperationGL4NonTypesafe(
 #endif
 }
 //-----------------------------------------------------------------------
-static ComparisonFunctionGL4 ToComparisonFunctionGL4(ComparisonFunction const& comparison)
+ComparisonFunctionGL4
+ToComparisonFunctionGL4(ComparisonFunction const& comparison) noexcept
 {
     return ComparisonFunctionGL4{
         ToComparisonFunctionGL4NonTypesafe(comparison)};
 }
 //-----------------------------------------------------------------------
-static StencilOperationGL4 ToStencilOperationGL4(StencilOperation const& operation)
+StencilOperationGL4
+ToStencilOperationGL4(StencilOperation const& operation) noexcept
 {
     return StencilOperationGL4{
         ToStencilOperationGL4NonTypesafe(operation)};
 }
 //-----------------------------------------------------------------------
-static void ToDepthStencilFaceOperationGL4(DepthStencilOperation const& face,
-    DepthStencilFaceOperationGL4 & result)
+void ToDepthStencilFaceOperationGL4(
+    DepthStencilOperation const& face,
+    DepthStencilFaceOperationGL4 & result) noexcept
 {
     result.stencilFunction = ToComparisonFunctionGL4(face.StencilFunction);
     result.stencilDepthBufferFail = ToStencilOperationGL4(face.StencilDepthBufferFail);

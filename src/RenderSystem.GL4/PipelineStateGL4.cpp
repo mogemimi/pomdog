@@ -24,7 +24,7 @@ namespace {
 // [NOTE] Please refer to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT.
 static constexpr std::size_t ConstantBufferSlotCount = 14;
 
-static Optional<ShaderProgramGL4> LinkShaders(
+Optional<ShaderProgramGL4> LinkShaders(
     VertexShaderGL4 const& vertexShader, PixelShaderGL4 const& pixelShader)
 {
     ShaderProgramGL4 const program {

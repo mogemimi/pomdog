@@ -14,7 +14,7 @@ namespace Detail {
 namespace GL4 {
 namespace {
 
-static GLenum ToInternalFormatGL4(SurfaceFormat format) noexcept
+GLenum ToInternalFormatGL4(SurfaceFormat format) noexcept
 {
     switch (format) {
     case SurfaceFormat::BlockComp1_UNorm:
@@ -51,7 +51,7 @@ static GLenum ToInternalFormatGL4(SurfaceFormat format) noexcept
 #endif
 }
 //-----------------------------------------------------------------------
-static GLenum ToFormatComponents(SurfaceFormat format) noexcept
+GLenum ToFormatComponents(SurfaceFormat format) noexcept
 {
     switch (format) {
     case SurfaceFormat::R8G8B8A8_UNorm:
@@ -82,7 +82,7 @@ static GLenum ToFormatComponents(SurfaceFormat format) noexcept
 #endif
 }
 //-----------------------------------------------------------------------
-static GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
+GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
 {
     switch (format) {
     case SurfaceFormat::A8_UNorm:
@@ -113,7 +113,7 @@ static GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
 #endif
 }
 //-----------------------------------------------------------------------
-static GLsizei MipmapImageDataBytes(
+GLsizei MipmapImageDataBytes(
     GLsizei width,
     GLsizei height,
     GLsizei bytesPerBlock) noexcept
@@ -121,7 +121,7 @@ static GLsizei MipmapImageDataBytes(
     return width * height * bytesPerBlock;
 }
 //-----------------------------------------------------------------------
-static void SetPixelDataTexture2DCompressedGL4(
+void SetPixelDataTexture2DCompressedGL4(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t levelCount,
@@ -167,7 +167,7 @@ static void SetPixelDataTexture2DCompressedGL4(
     }
 }
 //-----------------------------------------------------------------------
-static void SetPixelDataTexture2DGL4(
+void SetPixelDataTexture2DGL4(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t levelCount,
