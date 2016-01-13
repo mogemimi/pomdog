@@ -763,7 +763,7 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveLH(T width, T height, T zNear, T zFa
 {
     POMDOG_ASSERT_MESSAGE(width > 0,   "width: out of range");
     POMDOG_ASSERT_MESSAGE(height > 0,  "height: out of range");
-    POMDOG_ASSERT_MESSAGE(zNear >= 0,  "zNear: out of range");
+    POMDOG_ASSERT_MESSAGE(zNear > 0,  "zNear: out of range");
     POMDOG_ASSERT_MESSAGE(zFar > 0,    "zFar: out of range");
     POMDOG_ASSERT_MESSAGE(zNear < zFar,"zNear: out of range");
 
@@ -804,7 +804,7 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveRH(T width, T height, T zNear, T zFa
 {
     POMDOG_ASSERT_MESSAGE(width > 0,  "width: out of range");
     POMDOG_ASSERT_MESSAGE(height > 0, "height: out of range");
-    POMDOG_ASSERT_MESSAGE(zNear >= 0, "zNear: out of range");
+    POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
     POMDOG_ASSERT_MESSAGE(zFar > 0,     "zFar: out of range");
     POMDOG_ASSERT_MESSAGE(zNear < zFar, "zNear: out of range");
 
@@ -846,42 +846,40 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy,
 {
     POMDOG_ASSERT_MESSAGE(fovy > 0, "fovy: out of range");
     POMDOG_ASSERT_MESSAGE(aspect > 0, "aspect: out of range");
-    POMDOG_ASSERT_MESSAGE(zNear >= 0,  "zNear: out of range");
+    POMDOG_ASSERT_MESSAGE(zNear > 0,  "zNear: out of range");
     POMDOG_ASSERT_MESSAGE(zFar > 0,  "zFar: out of range");
     POMDOG_ASSERT_MESSAGE(zNear < zFar, "zNear: out of range");
 
-    // h = cot(fovY/2): The height in view space
-    // w = h / Aspect : The width in view space
-    // cot(fovY/2) = 1/tan(fovY/2)
+    // NOTE:
+    // f = cotangent(fovY/2)
+    // cotangent(fovY/2) = 1/tan(fovY/2)
     //
-    // w   0   0              0
-    // 0   h   0              0
-    // 0   0   zf/(zf-zn)     1
-    // 0   0   zn*zf/(zn-zf)  0
+    // The generated matrix is:
+    // (f/Aspect)  0   0               0
+    // 0           f   0               0
+    // 0           0   zf/(zf-zn)      1
+    // 0           0   -zn*zf/(zf-zn)  0
 
-    T const h = 1 / std::tan(fovy.value/2);
-    T const w = h / aspect;
-    T const c = zFar / (zFar - zNear);// RH: c = zFar / (zNear - zFar);
-    T const d = (zNear * zFar) / (zNear - zFar);
+    T const f = T{1} / std::tan(fovy.value / 2);
 
-    result.m[0][0] = w;
+    result.m[0][0] = f / aspect;
     result.m[0][1] = 0;
     result.m[0][2] = 0;
     result.m[0][3] = 0;
 
     result.m[1][0] = 0;
-    result.m[1][1] = h;
+    result.m[1][1] = f;
     result.m[1][2] = 0;
     result.m[1][3] = 0;
 
     result.m[2][0] = 0;
     result.m[2][1] = 0;
-    result.m[2][2] = c;
-    result.m[2][3] = 1;// RH: -1
+    result.m[2][2] = zFar / (zFar - zNear);
+    result.m[2][3] = 1;
 
     result.m[3][0] = 0;
     result.m[3][1] = 0;
-    result.m[3][2] = d;
+    result.m[3][2] = -(zNear * zFar) / (zFar - zNear);
     result.m[3][3] = 0;
 }
 //-----------------------------------------------------------------------
@@ -901,42 +899,40 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(Radian<T> const& fovy,
 {
     POMDOG_ASSERT_MESSAGE(fovy > 0, "fovy: out of range");
     POMDOG_ASSERT_MESSAGE(aspect > 0, "aspect: out of range");
-    POMDOG_ASSERT_MESSAGE(zNear >= 0,  "zNear: out of range");
+    POMDOG_ASSERT_MESSAGE(zNear > 0,  "zNear: out of range");
     POMDOG_ASSERT_MESSAGE(zFar > 0,    "zFar: out of range");
     POMDOG_ASSERT_MESSAGE(zNear < zFar, "zNear: out of range");
 
-    // h = cot(fovY/2): The height in view space
-    // w = h / Aspect : The width in view space
-    // cot(fovY/2) == 1/tan(fovY/2)
+    // NOTE:
+    // f = cotangent(fovY/2)
+    // cotangent(fovY/2) = 1/tan(fovY/2)
     //
-    // w   0   0              0
-    // 0   h   0              0
-    // 0   0   zf/(zn-zf)    -1
-    // 0   0   zn*zf/(zn-zf)  0
+    // The generated matrix is:
+    // (f/Aspect)  0   0               0
+    // 0           f   0               0
+    // 0           0   zf/(zn-zf)     -1
+    // 0           0   zn*zf/(zn-zf)   0
 
-    T const h = 1 / std::tan(fovy.value/2);
-    T const w = h / aspect;
-    T const c = zFar / (zNear - zFar);// LH: c = zFar / (zFar - zNear);
-    T const d = (zNear * zFar) / (zNear - zFar);
+    T const f = 1 / std::tan(fovy.value / 2);
 
-    result.m[0][0] = w;
+    result.m[0][0] = f / aspect;
     result.m[0][1] = 0;
     result.m[0][2] = 0;
     result.m[0][3] = 0;
 
     result.m[1][0] = 0;
-    result.m[1][1] = h;
+    result.m[1][1] = f;
     result.m[1][2] = 0;
     result.m[1][3] = 0;
 
     result.m[2][0] = 0;
     result.m[2][1] = 0;
-    result.m[2][2] = c;
-    result.m[2][3] = -1;// LH: +1
+    result.m[2][2] = zFar / (zNear - zFar);
+    result.m[2][3] = -1;
 
     result.m[3][0] = 0;
     result.m[3][1] = 0;
-    result.m[3][2] = d;
+    result.m[3][2] = (zNear * zFar) / (zNear - zFar);
     result.m[3][3] = 0;
 }
 //-----------------------------------------------------------------------
@@ -954,7 +950,7 @@ void
 FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterLH(T left, T right, T bottom, T top, T zNear, T zFar,
     FloatingPointMatrix4x4 & result)
 {
-    POMDOG_ASSERT_MESSAGE(zNear >= 0, "zNear: out of range");
+    POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
     POMDOG_ASSERT_MESSAGE(zFar > 0, "zFar: out of range");
     POMDOG_ASSERT_MESSAGE(zNear < zFar, "zNear: out of range");
 
@@ -1005,7 +1001,7 @@ void
 FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterRH(T left, T right, T bottom, T top, T zNear, T zFar,
     FloatingPointMatrix4x4 & result)
 {
-    POMDOG_ASSERT_MESSAGE(zNear >= 0, "zNear: out of range");
+    POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
     POMDOG_ASSERT_MESSAGE(zFar > 0, "zFar: out of range");
     POMDOG_ASSERT_MESSAGE(zNear < zFar, "zNear: out of range");
 
@@ -1060,6 +1056,7 @@ FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterLH(T left, T right, T bott
     POMDOG_ASSERT((top - bottom) != 0);
     POMDOG_ASSERT(zNearPlane < zFarPlane);
 
+    // NOTE:
     // 2/(r-l)      0            0           0
     // 0            2/(t-b)      0           0
     // 0            0            1/(zf-zn)   0
@@ -1067,33 +1064,26 @@ FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterLH(T left, T right, T bott
 
     T const inverseRightLeft = 1 / (right - left);
     T const inverseTopBottom = 1 / (top - bottom);
-    T const inverseFarNear   = 1 / (zFarPlane - zNearPlane);// RH: 1 / (zNearPlane - zFarPlane)
+    T const inverseFarNear   = 1 / (zFarPlane - zNearPlane);
 
-    T const x = 2 * inverseRightLeft;
-    T const y = 2 * inverseTopBottom;
-    T const z = inverseFarNear;
-    T const a = (left + right) * (-inverseRightLeft);
-    T const b = (top + bottom) * (-inverseTopBottom);
-    T const c = zNearPlane * (-inverseFarNear);//RH: zNearPlane * inverseFarNear
-
-    result.m[0][0] = x;
+    result.m[0][0] = 2 * inverseRightLeft;
     result.m[0][1] = 0;
     result.m[0][2] = 0;
     result.m[0][3] = 0;
 
     result.m[1][0] = 0;
-    result.m[1][1] = y;
+    result.m[1][1] = 2 * inverseTopBottom;
     result.m[1][2] = 0;
     result.m[1][3] = 0;
 
     result.m[2][0] = 0;
     result.m[2][1] = 0;
-    result.m[2][2] = z;
+    result.m[2][2] = inverseFarNear;
     result.m[2][3] = 0;
 
-    result.m[3][0] = a;
-    result.m[3][1] = b;
-    result.m[3][2] = c;
+    result.m[3][0] = (left + right) * (-inverseRightLeft);
+    result.m[3][1] = (top + bottom) * (-inverseTopBottom);
+    result.m[3][2] = zNearPlane * (-inverseFarNear);
     result.m[3][3] = 1;
 }
 //-----------------------------------------------------------------------
@@ -1115,6 +1105,7 @@ FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterRH(T left, T right, T bott
     POMDOG_ASSERT((top - bottom) != 0);
     POMDOG_ASSERT(zNearPlane < zFarPlane);
 
+    // NOTE:
     // 2/(r-l)      0            0           0
     // 0            2/(t-b)      0           0
     // 0            0            1/(zn-zf)   0
@@ -1122,33 +1113,26 @@ FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterRH(T left, T right, T bott
 
     T const inverseRightLeft = 1 / (right - left);
     T const inverseTopBottom = 1 / (top - bottom);
-    T const inverseFarNear   = 1 / (zNearPlane - zFarPlane);// LH: 1 / (zFarPlane - zNearPlane)
+    T const inverseFarNear   = 1 / (zNearPlane - zFarPlane);
 
-    T const x = 2 * inverseRightLeft;
-    T const y = 2 * inverseTopBottom;
-    T const z = inverseFarNear;
-    T const a = (left + right) * (-inverseRightLeft);
-    T const b = (top + bottom) * (-inverseTopBottom);
-    T const c = zNearPlane * inverseFarNear;// LH: zNearPlane * (-inverseFarNear)
-
-    result.m[0][0] = x;
+    result.m[0][0] = 2 * inverseRightLeft;
     result.m[0][1] = 0;
     result.m[0][2] = 0;
     result.m[0][3] = 0;
 
     result.m[1][0] = 0;
-    result.m[1][1] = y;
+    result.m[1][1] = 2 * inverseTopBottom;
     result.m[1][2] = 0;
     result.m[1][3] = 0;
 
     result.m[2][0] = 0;
     result.m[2][1] = 0;
-    result.m[2][2] = z;
+    result.m[2][2] = inverseFarNear;
     result.m[2][3] = 0;
 
-    result.m[3][0] = a;
-    result.m[3][1] = b;
-    result.m[3][2] = c;
+    result.m[3][0] = (left + right) * (-inverseRightLeft);
+    result.m[3][1] = (top + bottom) * (-inverseTopBottom);
+    result.m[3][2] = zNearPlane * inverseFarNear;
     result.m[3][3] = 1;
 }
 //-----------------------------------------------------------------------
