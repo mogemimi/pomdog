@@ -4,8 +4,6 @@
 
 #include "Pomdog/Math/Degree.hpp"
 #include "Pomdog/Math/Radian.hpp"
-#include <cstdint>
-#include <cfloat>
 #include <type_traits>
 
 namespace Pomdog {
@@ -95,7 +93,7 @@ T SmoothStep(T const& min, T const& max, T const& amount)
 }
 //-------------------------------------------------------------------
 template <typename T>
-Radian<T> ToRadians(Degree<T> const& degrees) noexcept
+Radian<T> ToRadians(const Degree<T>& degrees) noexcept
 {
     static_assert(std::is_floating_point<T>::value, "");
     constexpr auto scaleFactor = MathConstants<T>::Pi() * (T{1} / T{180});
@@ -103,11 +101,27 @@ Radian<T> ToRadians(Degree<T> const& degrees) noexcept
 }
 //-------------------------------------------------------------------
 template <typename T>
-Degree<T> ToDegrees(Radian<T> const& radians) noexcept
+Radian<T> ToRadians(const T& degrees) noexcept
+{
+    static_assert(std::is_floating_point<T>::value, "");
+    constexpr auto scaleFactor = MathConstants<T>::Pi() * (T{1} / T{180});
+    return Radian<T>(degrees * scaleFactor);
+}
+//-------------------------------------------------------------------
+template <typename T>
+Degree<T> ToDegrees(const Radian<T>& radians) noexcept
 {
     static_assert(std::is_floating_point<T>::value, "");
     constexpr auto scaleFactor = T{180} * (T{1} / MathConstants<T>::Pi());
     return Degree<T>(radians.value * scaleFactor);
+}
+//-------------------------------------------------------------------
+template <typename T>
+Degree<T> ToDegrees(const T& radians) noexcept
+{
+    static_assert(std::is_floating_point<T>::value, "");
+    constexpr auto scaleFactor = T{180} * (T{1} / MathConstants<T>::Pi());
+    return Degree<T>(radians * scaleFactor);
 }
 
 } // namespace MathHelper

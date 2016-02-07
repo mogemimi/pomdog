@@ -4,6 +4,8 @@
 #include <gtest/iutest_switch.hpp>
 
 namespace MathHelper = Pomdog::MathHelper;
+using Pomdog::Degree;
+using Pomdog::Radian;
 
 TEST(MathHelper, Clamp)
 {
@@ -109,4 +111,36 @@ TEST(MathHelper, SmoothStep)
     EXPECT_LT(MathHelper::SmoothStep(0.0f, 1.0f, 0.7f), MathHelper::SmoothStep(0.0f, 1.0f, 0.8f));
     EXPECT_LT(MathHelper::SmoothStep(0.0f, 1.0f, 0.8f), MathHelper::SmoothStep(0.0f, 1.0f, 0.9f));
     EXPECT_LT(MathHelper::SmoothStep(0.0f, 1.0f, 0.9f), MathHelper::SmoothStep(0.0f, 1.0f, 1.0f));
+}
+
+TEST(MathHelper, ToDegrees)
+{
+    constexpr auto epsilon = 0.0000001f;
+    EXPECT_NEAR(0.0f, MathHelper::ToDegrees(0.0f).value, epsilon);
+    EXPECT_NEAR(45.0f, MathHelper::ToDegrees(0.7853981633f).value, epsilon);
+    EXPECT_NEAR(90.0f, MathHelper::ToDegrees(1.5707963267f).value, epsilon);
+    EXPECT_NEAR(180.0f, MathHelper::ToDegrees(3.1415926535f).value, epsilon);
+    EXPECT_NEAR(360.0f, MathHelper::ToDegrees(6.2831853071f).value, epsilon);
+
+    EXPECT_NEAR(0.0f, MathHelper::ToDegrees(Radian<float>(0.0f)).value, epsilon);
+    EXPECT_NEAR(45.0f, MathHelper::ToDegrees(Radian<float>(0.7853981633f)).value, epsilon);
+    EXPECT_NEAR(90.0f, MathHelper::ToDegrees(Radian<float>(1.5707963267f)).value, epsilon);
+    EXPECT_NEAR(180.0f, MathHelper::ToDegrees(Radian<float>(3.1415926535f)).value, epsilon);
+    EXPECT_NEAR(360.0f, MathHelper::ToDegrees(Radian<float>(6.2831853071f)).value, epsilon);
+}
+
+TEST(MathHelper, ToRadians)
+{
+    constexpr auto epsilon = 0.0000005f;
+    EXPECT_NEAR(0.0f, MathHelper::ToRadians(0.0f).value, epsilon);
+    EXPECT_NEAR(0.7853981633f, MathHelper::ToRadians(45.0f).value, epsilon);
+    EXPECT_NEAR(1.5707963267f, MathHelper::ToRadians(90.0f).value, epsilon);
+    EXPECT_NEAR(3.1415926535f, MathHelper::ToRadians(180.0f).value, epsilon);
+    EXPECT_NEAR(6.2831853071f, MathHelper::ToRadians(360.0f).value, epsilon);
+
+    EXPECT_NEAR(0.0f, MathHelper::ToRadians(Degree<float>(0.0f)).value, epsilon);
+    EXPECT_NEAR(0.7853981633f, MathHelper::ToRadians(Degree<float>(45.0f)).value, epsilon);
+    EXPECT_NEAR(1.5707963267f, MathHelper::ToRadians(Degree<float>(90.0f)).value, epsilon);
+    EXPECT_NEAR(3.1415926535f, MathHelper::ToRadians(Degree<float>(180.0f)).value, epsilon);
+    EXPECT_NEAR(6.2831853071f, MathHelper::ToRadians(Degree<float>(360.0f)).value, epsilon);
 }
