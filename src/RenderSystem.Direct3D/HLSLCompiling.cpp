@@ -20,7 +20,7 @@ namespace Detail {
 namespace Direct3D {
 namespace {
 
-static std::string ToString(ShaderProfile const& profile)
+std::string ToString(ShaderProfile const& profile)
 {
     std::string output;
 
@@ -122,9 +122,12 @@ public:
     }
 };
 //-----------------------------------------------------------------------
-static void CompileFromShaderFile(ShaderBytecode const& shaderBytecode,
-    std::string const& entrypoint, std::string const& shaderProfile,
-    std::string const& currentDirectory, D3D_SHADER_MACRO const* preprocessorMacros,
+void CompileFromShaderFile(
+    ShaderBytecode const& shaderBytecode,
+    std::string const& entrypoint,
+    std::string const& shaderProfile,
+    std::string const& currentDirectory,
+    D3D_SHADER_MACRO const* preprocessorMacros,
     ID3DBlob** ppBlobOut)
 {
     POMDOG_ASSERT(shaderBytecode.Code != nullptr);

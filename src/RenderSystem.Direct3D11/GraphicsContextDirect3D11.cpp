@@ -33,7 +33,8 @@ namespace {
 
 using DXGI::DXGIFormatHelper;
 
-static D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
+D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(
+    PrimitiveTopology primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
     case PrimitiveTopology::TriangleStrip: return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
@@ -44,7 +45,7 @@ static D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(PrimitiveTopology primi
     return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 }
 //-----------------------------------------------------------------------
-static void ChooseMultiSampleSetting(
+void ChooseMultiSampleSetting(
     ID3D11Device* device,
     DXGI_FORMAT backBufferFormat,
     int preferredMultiSampleCount,

@@ -11,7 +11,7 @@ namespace Detail {
 namespace Direct3D11 {
 namespace {
 
-static D3D11_FILTER ToFilter(TextureFilter textureFilter) noexcept
+D3D11_FILTER ToFilter(TextureFilter textureFilter) noexcept
 {
     switch (textureFilter) {
     case TextureFilter::Anisotropic:    return D3D11_FILTER_ANISOTROPIC;
@@ -27,7 +27,7 @@ static D3D11_FILTER ToFilter(TextureFilter textureFilter) noexcept
     return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 }
 //-----------------------------------------------------------------------
-static D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) noexcept
+D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) noexcept
 {
     switch (addressMode) {
     case TextureAddressMode::Wrap: return D3D11_TEXTURE_ADDRESS_WRAP;

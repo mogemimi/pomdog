@@ -13,14 +13,20 @@ namespace Detail {
 namespace Direct3D11 {
 namespace {
 
-static HRESULT CreateShader(ID3D11Device* device, void const* shaderByteCode,
-    std::size_t bytecodeLength, ID3D11VertexShader** vertexShader)
+HRESULT CreateShader(
+    ID3D11Device* device,
+    void const* shaderByteCode,
+    std::size_t bytecodeLength,
+    ID3D11VertexShader** vertexShader)
 {
     return device->CreateVertexShader(shaderByteCode, bytecodeLength, nullptr, vertexShader);
 }
 //-----------------------------------------------------------------------
-static HRESULT CreateShader(ID3D11Device* device, void const* shaderByteCode,
-    std::size_t bytecodeLength, ID3D11PixelShader** pixelShader)
+HRESULT CreateShader(
+    ID3D11Device* device,
+    void const* shaderByteCode,
+    std::size_t bytecodeLength,
+    ID3D11PixelShader** pixelShader)
 {
     return device->CreatePixelShader(shaderByteCode, bytecodeLength, nullptr, pixelShader);
 }
@@ -28,7 +34,8 @@ static HRESULT CreateShader(ID3D11Device* device, void const* shaderByteCode,
 } // unnamed namespace
 //-----------------------------------------------------------------------
 template <class NativeShaderType>
-ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(ID3D11Device* device,
+ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(
+    ID3D11Device* device,
     ShaderBytecode const& shaderBytecode,
     ShaderCompileOptions const& compileOptions)
 {

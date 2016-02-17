@@ -12,7 +12,7 @@ namespace Detail {
 namespace Direct3D11 {
 namespace {
 
-static ID3D11Buffer* CreateNativeBuffer(
+ID3D11Buffer* CreateNativeBuffer(
     ID3D11Device* device,
     std::size_t sizeInBytes,
     void const* data,

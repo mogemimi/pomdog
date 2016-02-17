@@ -14,7 +14,7 @@ namespace {
 using Microsoft::WRL::ComPtr;
 using DXGI::DXGIFormatHelper;
 
-static void BuildRenderTarget(
+void BuildRenderTarget(
     ID3D11Device* device,
     SurfaceFormat format,
     std::int32_t pixelWidth,
@@ -89,7 +89,7 @@ static void BuildRenderTarget(
     }
 }
 //-----------------------------------------------------------------------
-static void BuildDepthBuffer(
+void BuildDepthBuffer(
     ID3D11Device* device,
     DepthFormat depthStencilFormat,
     std::int32_t pixelWidth,
@@ -146,7 +146,7 @@ static void BuildDepthBuffer(
     }
 }
 //-----------------------------------------------------------------------
-static void BuildBackBufferBySwapChain(
+void BuildBackBufferBySwapChain(
     ID3D11Device* device,
     IDXGISwapChain* swapChain,
     ComPtr<ID3D11Texture2D> & texture2D,

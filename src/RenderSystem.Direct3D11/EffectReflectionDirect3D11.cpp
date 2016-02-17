@@ -18,7 +18,7 @@ namespace {
 
 using Direct3D::HLSLReflectionHelper;
 
-static std::vector<EffectVariable> EnumerateEffectVariables(
+std::vector<EffectVariable> EnumerateEffectVariables(
     ID3D11ShaderReflectionConstantBuffer* constantBufferReflector)
 {
     POMDOG_ASSERT(constantBufferReflector != nullptr);
@@ -85,7 +85,8 @@ static std::vector<EffectVariable> EnumerateEffectVariables(
     return std::move(variables);
 }
 //-----------------------------------------------------------------------
-static void EnumerateConstantBuffer(ID3D11ShaderReflection* shaderReflector,
+void EnumerateConstantBuffer(
+    ID3D11ShaderReflection* shaderReflector,
     std::vector<EffectConstantDescription> & output)
 {
     POMDOG_ASSERT(shaderReflector);

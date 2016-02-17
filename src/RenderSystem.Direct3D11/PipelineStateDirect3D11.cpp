@@ -20,7 +20,7 @@ namespace {
 
 using Microsoft::WRL::ComPtr;
 
-static D3D11_BLEND_OP ToBlendFunction(BlendFunction blendOperation) noexcept
+D3D11_BLEND_OP ToBlendFunction(BlendFunction blendOperation) noexcept
 {
     switch (blendOperation) {
     case BlendFunction::Add: return D3D11_BLEND_OP_ADD;
@@ -32,7 +32,7 @@ static D3D11_BLEND_OP ToBlendFunction(BlendFunction blendOperation) noexcept
     return D3D11_BLEND_OP_ADD;
 }
 //-----------------------------------------------------------------------
-static D3D11_BLEND ToBlend(Blend blend) noexcept
+D3D11_BLEND ToBlend(Blend blend) noexcept
 {
     switch (blend) {
     case Blend::Zero: return D3D11_BLEND_ZERO;
@@ -56,7 +56,7 @@ static D3D11_BLEND ToBlend(Blend blend) noexcept
     return D3D11_BLEND_ONE;
 }
 //-----------------------------------------------------------------------
-static D3D11_STENCIL_OP ToStencilOperation(StencilOperation operation) noexcept
+D3D11_STENCIL_OP ToStencilOperation(StencilOperation operation) noexcept
 {
     switch (operation) {
     case StencilOperation::Keep: return D3D11_STENCIL_OP_KEEP;
@@ -71,7 +71,7 @@ static D3D11_STENCIL_OP ToStencilOperation(StencilOperation operation) noexcept
     return D3D11_STENCIL_OP_KEEP;
 }
 //-----------------------------------------------------------------------
-static D3D11_COMPARISON_FUNC ToComparisonFunction(ComparisonFunction compareFunction) noexcept
+D3D11_COMPARISON_FUNC ToComparisonFunction(ComparisonFunction compareFunction) noexcept
 {
     switch (compareFunction) {
     case ComparisonFunction::Never: return D3D11_COMPARISON_NEVER;
@@ -86,7 +86,7 @@ static D3D11_COMPARISON_FUNC ToComparisonFunction(ComparisonFunction compareFunc
     return D3D11_COMPARISON_LESS_EQUAL;
 }
 //-----------------------------------------------------------------------
-static D3D11_CULL_MODE ToCullMode(CullMode cullMode) noexcept
+D3D11_CULL_MODE ToCullMode(CullMode cullMode) noexcept
 {
     switch (cullMode) {
     case CullMode::ClockwiseFace: return D3D11_CULL_FRONT;
@@ -96,7 +96,7 @@ static D3D11_CULL_MODE ToCullMode(CullMode cullMode) noexcept
     return D3D11_CULL_BACK;
 }
 //-----------------------------------------------------------------------
-static D3D11_FILL_MODE ToFillMode(FillMode fillMode) noexcept
+D3D11_FILL_MODE ToFillMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
     case FillMode::WireFrame: return D3D11_FILL_WIREFRAME;
@@ -105,7 +105,7 @@ static D3D11_FILL_MODE ToFillMode(FillMode fillMode) noexcept
     return D3D11_FILL_SOLID;
 }
 //-----------------------------------------------------------------------
-static D3D11_INPUT_CLASSIFICATION ToD3D11InputClassification(
+D3D11_INPUT_CLASSIFICATION ToD3D11InputClassification(
     InputClassification slotClass) noexcept
 {
     switch (slotClass) {
@@ -115,12 +115,12 @@ static D3D11_INPUT_CLASSIFICATION ToD3D11InputClassification(
     return D3D11_INPUT_PER_VERTEX_DATA;
 }
 //-----------------------------------------------------------------------
-static inline BOOL ToD3D11Boolean(bool is) noexcept
+inline BOOL ToD3D11Boolean(bool is) noexcept
 {
     return is ? TRUE : FALSE;
 }
 //-----------------------------------------------------------------------
-static void ToD3D11Desc(RenderTargetBlendDescription const& desc,
+void ToD3D11Desc(RenderTargetBlendDescription const& desc,
     D3D11_RENDER_TARGET_BLEND_DESC & result) noexcept
 {
     result.BlendEnable = ToD3D11Boolean(desc.BlendEnable);
@@ -133,7 +133,7 @@ static void ToD3D11Desc(RenderTargetBlendDescription const& desc,
     result.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 }
 //-----------------------------------------------------------------------
-static ComPtr<ID3D11BlendState> CreateBlendState(ID3D11Device* nativeDevice,
+ComPtr<ID3D11BlendState> CreateBlendState(ID3D11Device* nativeDevice,
     BlendDescription const& description)
 {
     D3D11_BLEND_DESC blendDesc;
@@ -237,7 +237,7 @@ ComPtr<ID3D11RasterizerState> CreateRasterizerState(ID3D11Device* nativeDevice,
     return std::move(rasterizerState);
 }
 //-----------------------------------------------------------------------
-static void ReflectShaderBytecode(
+void ReflectShaderBytecode(
     ShaderBytecode const& shaderBytecode,
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection> & shaderReflector,
     D3D11_SHADER_DESC & shaderDesc)
@@ -268,7 +268,7 @@ static void ReflectShaderBytecode(
 //    UINT BindPoint;
 //};
 //
-//static void EnumerateConstantBuffers(
+//void EnumerateConstantBuffers(
 //    ShaderBytecode const& shaderBytecode,
 //    std::vector<ConstantBufferBindDesc> & output)
 //{
@@ -314,7 +314,7 @@ static void ReflectShaderBytecode(
 //    }
 //}
 //-----------------------------------------------------------------------
-//static std::vector<ConstantBufferBindDesc> CreateConstantBufferBindDescs(
+//std::vector<ConstantBufferBindDesc> CreateConstantBufferBindDescs(
 //    ShaderBytecode const& vertexShaderBytecode,
 //    ShaderBytecode const& pixelShaderBytecode)
 //{
@@ -335,7 +335,7 @@ static void ReflectShaderBytecode(
 //    return std::move(bindings);
 //}
 //-----------------------------------------------------------------------
-static std::vector<D3D11_INPUT_ELEMENT_DESC> BuildInputElements(
+std::vector<D3D11_INPUT_ELEMENT_DESC> BuildInputElements(
     std::vector<D3D11_SIGNATURE_PARAMETER_DESC> const& signatureParameters,
     InputLayoutDescription const& description)
 {
@@ -383,7 +383,7 @@ static std::vector<D3D11_INPUT_ELEMENT_DESC> BuildInputElements(
     return std::move(inputElements);
 }
 //-----------------------------------------------------------------------
-static std::vector<D3D11_SIGNATURE_PARAMETER_DESC>
+std::vector<D3D11_SIGNATURE_PARAMETER_DESC>
 EnumerateSignatureParameters(
     ID3D11ShaderReflection* shaderReflector,
     D3D11_SHADER_DESC const& shaderDesc)
@@ -408,7 +408,7 @@ EnumerateSignatureParameters(
     return std::move(signatureParameters);
 }
 //-----------------------------------------------------------------------
-static Microsoft::WRL::ComPtr<ID3D11InputLayout> CreateInputLayout(
+Microsoft::WRL::ComPtr<ID3D11InputLayout> CreateInputLayout(
     ID3D11Device* device,
     ShaderBytecode const& vertexShaderBytecode,
     InputLayoutDescription const& description)
