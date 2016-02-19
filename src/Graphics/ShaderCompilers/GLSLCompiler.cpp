@@ -9,12 +9,11 @@
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
+using Pomdog::Detail::ShaderBytecode;
+using Pomdog::Detail::ShaderCompileOptions;
+
 namespace Pomdog {
 namespace ShaderCompilers {
-
-using Detail::ShaderBytecode;
-using Detail::ShaderCompileOptions;
-
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> GLSLCompiler::CreateShader(
     GraphicsDevice & graphicsDevice,
