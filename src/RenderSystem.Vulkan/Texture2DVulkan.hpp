@@ -30,6 +30,7 @@ public:
         const void* pixelData) override;
 
 private:
+//    ::VkImageLayout imageLayout;
     ::VkDevice device;
     ::VkImage image;
     ::VkDeviceMemory deviceMemory;

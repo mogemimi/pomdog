@@ -63,11 +63,45 @@ Texture2DVulkan::Texture2DVulkan(
     imageCreateInfo.pQueueFamilyIndices = nullptr;
     imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
+    VkImage mappableImage = nullptr;
+    VkDeviceMemory mappableMemory = nullptr;
+    VkMemoryRequirements memoryRequirements;
+
+    VkResult result = vkCreateImage(device, &imageCreateInfo, nullptr, &mappableImage);
+    if (result != VK_SUCCESS) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to create VkImage");
+    }
+
+    vkGetImageMemoryRequirements(device, mappableImage, &memoryRequirements);
+
+    VkMemoryAllocateInfo allocInfo;
+    allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocInfo.pNext = nullptr;
+    allocInfo.allocationSize = memoryRequirements.size;
+    allocInfo.memoryTypeIndex = 0;
+
+    result = vkAllocateMemory(device, &allocInfo, nullptr, &mappableMemory);
+    if (result != VK_SUCCESS) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to call vkAllocateMemory()");
+    }
+
+    result = vkBindImageMemory(device, mappableImage, mappableMemory, 0);
+    if (result != VK_SUCCESS) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to call vkBindImageMemory()");
+    }
 
     // FUS RO DAH!
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 
     ///@todo Not implemented
+    //image = mappableImage
+    //deviceMemory = mappableMemory;
 }
 
 Texture2DVulkan::~Texture2DVulkan()
