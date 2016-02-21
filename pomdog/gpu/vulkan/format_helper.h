@@ -12,6 +12,6 @@ enum class ComparisonFunction : u8;
 namespace pomdog::gpu::detail::vulkan {
 
 [[nodiscard]] VkCompareOp
-ToComparisonFunction(ComparisonFunction compareFunction) noexcept;
+toComparisonFunction(ComparisonFunction compareFunction) noexcept;
 
 } // namespace pomdog::gpu::detail::vulkan

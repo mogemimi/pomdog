@@ -1,45 +1,46 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/vulkan/shader_vulkan.h"
-#include "pomdog/gpu/backends/shader_bytecode.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::gpu::detail::vulkan {
 
-ShaderVulkan::ShaderVulkan(
+std::unique_ptr<Error>
+ShaderVulkan::initialize(
     ::VkDevice deviceIn,
-    const ShaderBytecode& shaderBytecode,
-    const ShaderCompileOptions& compileOptions)
-    : device(deviceIn)
-    , shaderModule(nullptr)
+    std::span<const u8> shaderBytecode,
+    [[maybe_unused]] const ShaderCompileOptions& compileOptions) noexcept
 {
-    VkShaderModuleCreateInfo createInfo;
-    createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-    createInfo.pNext = nullptr;
-    createInfo.flags = 0;
-    createInfo.codeSize = shaderBytecode.ByteLength / sizeof(std::uint32_t);
-    createInfo.pCode = reinterpret_cast<const std::uint32_t*>(shaderBytecode.Code);
+    POMDOG_ASSERT(deviceIn != nullptr);
 
-    auto result = vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule);
+    device_ = deviceIn;
+    shaderModule_ = nullptr;
+
+    VkShaderModuleCreateInfo createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    createInfo.codeSize = shaderBytecode.size();
+    createInfo.pCode = reinterpret_cast<const u32*>(shaderBytecode.data());
+
+    auto result = vkCreateShaderModule(device_, &createInfo, nullptr, &shaderModule_);
     if (result != VK_SUCCESS) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create VkShaderModule");
+        return errors::make("failed to create VkShaderModule");
     }
+
+    return nullptr;
 }
 
 ShaderVulkan::~ShaderVulkan()
 {
-    if (shaderModule != nullptr) {
-        POMDOG_ASSERT(device != nullptr);
-        vkDestroyShaderModule(device, shaderModule, nullptr);
+    if (shaderModule_ != nullptr) {
+        POMDOG_ASSERT(device_ != nullptr);
+        vkDestroyShaderModule(device_, shaderModule_, nullptr);
     }
 }
 
 ::VkShaderModule
 ShaderVulkan::getShaderModule() const noexcept
 {
-    return shaderModule;
+    return shaderModule_;
 }
 
 } // namespace pomdog::gpu::detail::vulkan

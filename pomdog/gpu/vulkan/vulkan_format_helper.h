@@ -12,6 +12,12 @@ enum class PixelFormat : u8;
 namespace pomdog::gpu::detail::vulkan {
 
 [[nodiscard]] VkFormat
-ToSurfaceFormat(PixelFormat format) noexcept;
+toSurfaceFormat(PixelFormat format) noexcept;
+
+/// Chooses a supported depth/stencil VkFormat for the given PixelFormat.
+/// Falls back (e.g. D24S8 → D32_SFLOAT_S8_UINT) when the GPU does not
+/// support the default mapping.
+[[nodiscard]] VkFormat
+chooseDepthStencilFormat(VkPhysicalDevice physicalDevice, PixelFormat format) noexcept;
 
 } // namespace pomdog::gpu::detail::vulkan

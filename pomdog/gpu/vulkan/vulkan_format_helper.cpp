@@ -4,10 +4,14 @@
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/utility/assert.h"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <array>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
 namespace pomdog::gpu::detail::vulkan {
 
-VkFormat
-ToSurfaceFormat(PixelFormat format) noexcept
+[[nodiscard]] VkFormat
+toSurfaceFormat(PixelFormat format) noexcept
 {
     switch (format) {
     case PixelFormat::Invalid:
@@ -50,6 +54,51 @@ ToSurfaceFormat(PixelFormat format) noexcept
         return VK_FORMAT_D32_SFLOAT_S8_UINT;
     }
     return VK_FORMAT_UNDEFINED;
+}
+
+[[nodiscard]] VkFormat
+chooseDepthStencilFormat(VkPhysicalDevice physicalDevice, PixelFormat format) noexcept
+{
+    const auto desired = toSurfaceFormat(format);
+
+    // NOTE: Check if the desired format supports depth/stencil attachment
+    VkFormatProperties props;
+    vkGetPhysicalDeviceFormatProperties(physicalDevice, desired, &props);
+    if (props.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) {
+        return desired;
+    }
+
+    // NOTE: Build fallback list depending on the requested format
+    std::array<VkFormat, 2> fallbacks = {};
+    std::size_t fallbackCount = 0;
+
+    switch (format) {
+    case PixelFormat::Depth24Stencil8:
+        // NOTE: D24S8 is often unsupported on NVIDIA; try D32F_S8
+        fallbacks[fallbackCount++] = VK_FORMAT_D32_SFLOAT_S8_UINT;
+        break;
+    case PixelFormat::Depth16:
+        fallbacks[fallbackCount++] = VK_FORMAT_D32_SFLOAT;
+        break;
+    case PixelFormat::Depth32:
+        fallbacks[fallbackCount++] = VK_FORMAT_D32_SFLOAT;
+        break;
+    case PixelFormat::Depth32_Float_Stencil8_Uint:
+        fallbacks[fallbackCount++] = VK_FORMAT_D24_UNORM_S8_UINT;
+        break;
+    default:
+        break;
+    }
+
+    for (std::size_t i = 0; i < fallbackCount; ++i) {
+        vkGetPhysicalDeviceFormatProperties(physicalDevice, fallbacks[i], &props);
+        if (props.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) {
+            return fallbacks[i];
+        }
+    }
+
+    // NOTE: Last resort
+    return desired;
 }
 
 } // namespace pomdog::gpu::detail::vulkan

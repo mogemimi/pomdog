@@ -2,9 +2,8 @@
 
 #include "pomdog/gpu/vulkan/pipeline_state_vulkan.h"
 #include "pomdog/gpu/backends/buffer_helper.h"
-#include "pomdog/gpu/backends/shader_bytecode.h"
-#include "pomdog/gpu/input_layout_descriptor.h"
-#include "pomdog/gpu/pipeline_descriptor.h"
+#include "pomdog/gpu/input_layout_desc.h"
+#include "pomdog/gpu/pipeline_desc.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/gpu/vulkan/format_helper.h"
 #include "pomdog/gpu/vulkan/shader_vulkan.h"
@@ -18,8 +17,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::vulkan {
 namespace {
 
-VkPrimitiveTopology
-ToVkPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
+[[nodiscard]] VkPrimitiveTopology
+toVkPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
     case PrimitiveTopology::TriangleStrip:
@@ -34,7 +33,8 @@ ToVkPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
     return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 }
 
-VkVertexInputRate ToVkVertexInputRate(InputClassification classification) noexcept
+[[nodiscard]] VkVertexInputRate
+toVkVertexInputRate(InputClassification classification) noexcept
 {
     switch (classification) {
     case InputClassification::InputPerVertex:
@@ -42,9 +42,11 @@ VkVertexInputRate ToVkVertexInputRate(InputClassification classification) noexce
     case InputClassification::InputPerInstance:
         return VK_VERTEX_INPUT_RATE_INSTANCE;
     }
+    return VK_VERTEX_INPUT_RATE_VERTEX;
 }
 
-VkFormat ToVkFormat(InputElementFormat format) noexcept
+[[nodiscard]] VkFormat
+toVkFormat(InputElementFormat format) noexcept
 {
     switch (format) {
     case InputElementFormat::Float:
@@ -64,9 +66,11 @@ VkFormat ToVkFormat(InputElementFormat format) noexcept
     case InputElementFormat::HalfFloat4:
         return VK_FORMAT_R16G16B16A16_SFLOAT;
     }
+    return VK_FORMAT_R32G32B32A32_SFLOAT;
 }
 
-VkBlendOp ToVkBlendOp(BlendOperation blendOperation) noexcept
+[[nodiscard]] VkBlendOp
+toVkBlendOp(BlendOperation blendOperation) noexcept
 {
     switch (blendOperation) {
     case BlendOperation::Add:
@@ -80,9 +84,11 @@ VkBlendOp ToVkBlendOp(BlendOperation blendOperation) noexcept
     case BlendOperation::Max:
         return VK_BLEND_OP_MAX;
     }
+    return VK_BLEND_OP_ADD;
 }
 
-VkBlendFactor ToVkBlendFactor(BlendFactor blend) noexcept
+[[nodiscard]] VkBlendFactor
+toVkBlendFactor(BlendFactor blend) noexcept
 {
     switch (blend) {
     case BlendFactor::Zero:
@@ -110,11 +116,11 @@ VkBlendFactor ToVkBlendFactor(BlendFactor blend) noexcept
     case BlendFactor::Source1Color:
         return VK_BLEND_FACTOR_SRC1_COLOR;
     case BlendFactor::InverseSource1Color:
-        return VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
+        return VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR;
     case BlendFactor::Source1Alpha:
         return VK_BLEND_FACTOR_SRC1_ALPHA;
     case BlendFactor::InverseSource1Alpha:
-        return VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR;
+        return VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
     case BlendFactor::BlendFactor:
         return VK_BLEND_FACTOR_CONSTANT_COLOR;
     case BlendFactor::InvereseBlendFactor:
@@ -123,7 +129,8 @@ VkBlendFactor ToVkBlendFactor(BlendFactor blend) noexcept
     return VK_BLEND_FACTOR_ONE;
 }
 
-VkStencilOp ToStencilOperation(StencilOperation operation) noexcept
+[[nodiscard]] VkStencilOp
+toStencilOperation(StencilOperation operation) noexcept
 {
     switch (operation) {
     case StencilOperation::Keep:
@@ -146,7 +153,8 @@ VkStencilOp ToStencilOperation(StencilOperation operation) noexcept
     return VK_STENCIL_OP_KEEP;
 }
 
-VkCullModeFlags ToVkCullModeFlags(CullMode cullMode) noexcept
+[[nodiscard]] VkCullModeFlags
+toVkCullModeFlags(CullMode cullMode) noexcept
 {
     switch (cullMode) {
     case CullMode::ClockwiseFace:
@@ -159,7 +167,8 @@ VkCullModeFlags ToVkCullModeFlags(CullMode cullMode) noexcept
     return VK_CULL_MODE_BACK_BIT;
 }
 
-VkPolygonMode ToVkPolygonMode(FillMode fillMode) noexcept
+[[nodiscard]] VkPolygonMode
+toVkPolygonMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
     case FillMode::Solid:
@@ -170,21 +179,23 @@ VkPolygonMode ToVkPolygonMode(FillMode fillMode) noexcept
     return VK_POLYGON_MODE_FILL;
 }
 
-VkBool32 ToVkBool32(bool is) noexcept
+[[nodiscard]] VkBool32
+toVkBool32(bool is) noexcept
 {
     return is ? VK_TRUE : VK_FALSE;
 }
 
-VkPipelineColorBlendAttachmentState ToColorBlendAttachmentState(const RenderTargetBlendDescriptor& desc) noexcept
+[[nodiscard]] VkPipelineColorBlendAttachmentState
+toColorBlendAttachmentState(const RenderTargetBlendDesc& desc) noexcept
 {
     VkPipelineColorBlendAttachmentState state;
-    state.blendEnable = ToVkBool32(desc.BlendEnable);
-    state.srcColorBlendFactor = ToVkBlendFactor(desc.ColorSourceBlend);
-    state.dstColorBlendFactor = ToVkBlendFactor(desc.ColorDestinationBlend);
-    state.colorBlendOp = ToVkBlendOp(desc.ColorBlendOperation);
-    state.srcAlphaBlendFactor = ToVkBlendFactor(desc.AlphaSourceBlend);
-    state.dstAlphaBlendFactor = ToVkBlendFactor(desc.AlphaDestinationBlend);
-    state.alphaBlendOp = ToVkBlendOp(desc.AlphaBlendOperation);
+    state.blendEnable = toVkBool32(desc.blendEnable);
+    state.srcColorBlendFactor = toVkBlendFactor(desc.colorSourceBlend);
+    state.dstColorBlendFactor = toVkBlendFactor(desc.colorDestinationBlend);
+    state.colorBlendOp = toVkBlendOp(desc.colorBlendOperation);
+    state.srcAlphaBlendFactor = toVkBlendFactor(desc.alphaSourceBlend);
+    state.dstAlphaBlendFactor = toVkBlendFactor(desc.alphaDestinationBlend);
+    state.alphaBlendOp = toVkBlendOp(desc.alphaBlendOperation);
     state.colorWriteMask =
         VK_COLOR_COMPONENT_R_BIT |
         VK_COLOR_COMPONENT_G_BIT |
@@ -193,8 +204,8 @@ VkPipelineColorBlendAttachmentState ToColorBlendAttachmentState(const RenderTarg
     return state;
 }
 
-void ToBlendState(
-    const BlendDescriptor& desc,
+void toBlendState(
+    [[maybe_unused]] const BlendDesc& desc,
     const std::vector<VkPipelineColorBlendAttachmentState>& blendAttachments,
     VkPipelineColorBlendStateCreateInfo& state) noexcept
 {
@@ -203,7 +214,7 @@ void ToBlendState(
     state.flags = 0;
     state.logicOpEnable = VK_FALSE;
     state.logicOp = VK_LOGIC_OP_COPY;
-    state.attachmentCount = static_cast<uint32_t>(blendAttachments.size());
+    state.attachmentCount = static_cast<u32>(blendAttachments.size());
     state.pAttachments = blendAttachments.data();
     state.blendConstants[0] = 0.0f;
     state.blendConstants[1] = 0.0f;
@@ -211,44 +222,45 @@ void ToBlendState(
     state.blendConstants[3] = 0.0f;
 }
 
-void ToDepthStencilOperation(
+void toDepthStencilOperation(
     const DepthStencilOperation& operation,
-    const DepthStencilDescriptor& descriptor,
+    const DepthStencilDesc& descriptor,
     VkStencilOpState& state) noexcept
 {
-    state.failOp = ToStencilOperation(operation.StencilFail);
-    state.passOp = ToStencilOperation(operation.StencilPass);
-    state.depthFailOp = ToStencilOperation(operation.StencilDepthBufferFail);
-    state.compareOp = ToComparisonFunction(operation.StencilFunction);
-    state.compareMask = descriptor.StencilMask;
-    state.writeMask = descriptor.StencilWriteMask;
+    state.failOp = toStencilOperation(operation.stencilFail);
+    state.passOp = toStencilOperation(operation.stencilPass);
+    state.depthFailOp = toStencilOperation(operation.stencilDepthBufferFail);
+    state.compareOp = toComparisonFunction(operation.stencilFunction);
+    state.compareMask = descriptor.stencilMask;
+    state.writeMask = descriptor.stencilWriteMask;
     state.reference = 0;
 }
 
-void ToDepthStencilState(
-    const DepthStencilDescriptor& desc,
+void toDepthStencilState(
+    const DepthStencilDesc& desc,
     VkPipelineDepthStencilStateCreateInfo& info) noexcept
 {
     info.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
     info.pNext = nullptr;
     info.flags = 0;
-    info.depthTestEnable = ToVkBool32(desc.DepthBufferEnable);
-    info.depthWriteEnable = ToVkBool32(desc.DepthBufferWriteEnable);
-    info.depthCompareOp = desc.DepthBufferEnable
-                              ? ToComparisonFunction(desc.DepthBufferFunction)
+    info.depthTestEnable = toVkBool32(desc.depthBufferEnable);
+    info.depthWriteEnable = toVkBool32(desc.depthBufferWriteEnable);
+    info.depthCompareOp = desc.depthBufferEnable
+                              ? toComparisonFunction(desc.depthBufferFunction)
                               : VK_COMPARE_OP_ALWAYS;
-    info.stencilTestEnable = ToVkBool32(desc.StencilEnable);
-    ToDepthStencilOperation(desc.ClockwiseFace, desc, info.front);
-    ToDepthStencilOperation(desc.CounterClockwiseFace, desc, info.back);
+    info.stencilTestEnable = toVkBool32(desc.stencilEnable);
+    toDepthStencilOperation(desc.clockwiseFace, desc, info.front);
+    toDepthStencilOperation(desc.counterClockwiseFace, desc, info.back);
 
-    // TODO: Not implemented
+    // NOTE: Depth bounds test is disabled because DepthStencilDesc does not expose
+    // depthBoundsEnable/minDepthBounds/maxDepthBounds fields yet.
     info.depthBoundsTestEnable = VK_FALSE;
     info.minDepthBounds = 0.0f;
     info.maxDepthBounds = 1.0f;
 }
 
-void ToRasterizationState(
-    const RasterizerDescriptor& desc,
+void toRasterizationState(
+    const RasterizerDesc& desc,
     VkPipelineRasterizationStateCreateInfo& info) noexcept
 {
     info.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
@@ -256,28 +268,28 @@ void ToRasterizationState(
     info.flags = 0;
     info.depthClampEnable = VK_FALSE;
     info.rasterizerDiscardEnable = VK_FALSE;
-    info.polygonMode = ToVkPolygonMode(desc.FillMode);
-    info.cullMode = ToVkCullModeFlags(desc.CullMode);
+    info.polygonMode = toVkPolygonMode(desc.fillMode);
+    info.cullMode = toVkCullModeFlags(desc.cullMode);
     info.frontFace = VK_FRONT_FACE_CLOCKWISE;
     info.depthBiasEnable = VK_FALSE;
     info.depthBiasConstantFactor = 0;
     info.depthBiasClamp = 0;
-    info.depthBiasSlopeFactor = desc.SlopeScaledDepthBias;
+    info.depthBiasSlopeFactor = desc.slopeScaledDepthBias;
     info.lineWidth = 1.0f;
 }
 
-std::tuple<std::vector<VkVertexInputBindingDescription>, std::vector<VkVertexInputAttributeDescription>>
-ToVertexBindingsAndAttributes(const InputLayoutDescriptor& inputLayout)
+[[nodiscard]] std::tuple<std::vector<VkVertexInputBindingDescription>, std::vector<VkVertexInputAttributeDescription>>
+toVertexBindingsAndAttributes(const InputLayoutDesc& inputLayout)
 {
     std::vector<VkVertexInputBindingDescription> bindings;
     std::vector<VkVertexInputAttributeDescription> attributes;
 
-    VkVertexInputBindingDescription bindingDesc;
+    VkVertexInputBindingDescription bindingDesc = {};
     bindingDesc.stride = 0;
     bool hasInputBinding = false;
 
-    for (auto& element : inputLayout.InputElements) {
-        if (hasInputBinding && (bindingDesc.binding != element.InputSlot)) {
+    for (auto& element : inputLayout.inputElements) {
+        if (hasInputBinding && (bindingDesc.binding != element.inputSlot)) {
             // NOTE: Flush
             bindings.push_back(std::move(bindingDesc));
 
@@ -285,17 +297,17 @@ ToVertexBindingsAndAttributes(const InputLayoutDescriptor& inputLayout)
             hasInputBinding = false;
         }
 
-        const auto stride = static_cast<std::uint32_t>(element.ByteOffset) + BufferHelper::ToByteSize(element.Format);
-        bindingDesc.binding = element.InputSlot;
+        const auto stride = static_cast<u32>(element.byteOffset) + BufferHelper::ToByteSize(element.format);
+        bindingDesc.binding = element.inputSlot;
         bindingDesc.stride = std::max(bindingDesc.stride, stride);
-        bindingDesc.inputRate = ToVkVertexInputRate(element.InputSlotClass);
+        bindingDesc.inputRate = toVkVertexInputRate(element.inputSlotClass);
         hasInputBinding = true;
 
         VkVertexInputAttributeDescription attributeDesc;
-        attributeDesc.binding = element.InputSlot;
-        attributeDesc.location = static_cast<std::uint32_t>(attributes.size());
-        attributeDesc.format = ToVkFormat(element.Format);
-        attributeDesc.offset = element.ByteOffset;
+        attributeDesc.binding = element.inputSlot;
+        attributeDesc.location = static_cast<u32>(attributes.size());
+        attributeDesc.format = toVkFormat(element.format);
+        attributeDesc.offset = element.byteOffset;
         attributes.push_back(std::move(attributeDesc));
     }
 
@@ -306,105 +318,142 @@ ToVertexBindingsAndAttributes(const InputLayoutDescriptor& inputLayout)
     return std::make_tuple(std::move(bindings), std::move(attributes));
 }
 
-void ToVertexInputState(
-    const InputLayoutDescriptor& inputLayout,
+void toVertexInputState(
+    [[maybe_unused]] const InputLayoutDesc& inputLayout,
     const std::vector<VkVertexInputBindingDescription>& vertexBindings,
-    const std::vector<VkVertexInputAttributeDescription> vertexAttributes,
+    const std::vector<VkVertexInputAttributeDescription>& vertexAttributes,
     VkPipelineVertexInputStateCreateInfo& info) noexcept
 {
     info.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     info.pNext = nullptr;
     info.flags = 0;
-    info.vertexBindingDescriptionCount = static_cast<uint32_t>(vertexBindings.size());
+    info.vertexBindingDescriptionCount = static_cast<u32>(vertexBindings.size());
     info.pVertexBindingDescriptions = vertexBindings.data();
-    info.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexAttributes.size());
+    info.vertexAttributeDescriptionCount = static_cast<u32>(vertexAttributes.size());
     info.pVertexAttributeDescriptions = vertexAttributes.data();
 }
 
-void CreateDescriptorSetLayout(
+[[nodiscard]] std::unique_ptr<Error>
+createDescriptorSetLayouts(
     VkDevice device,
-    const PipelineDescriptor& descriptor,
-    VkDescriptorSetLayout& descriptorSetLayout)
+    [[maybe_unused]] const PipelineDesc& descriptor,
+    std::array<VkDescriptorSetLayout, PipelineStateVulkan::kDescriptorSetCount>& descriptorSetLayouts) noexcept
 {
-    std::vector<VkDescriptorSetLayoutBinding> layoutBindings;
-    layoutBindings.reserve(descriptor.ConstantBufferBindSlots.size());
+    // NOTE: Set [0]: Uniform buffer bindings (constant buffers)
+    {
+        std::array<VkDescriptorSetLayoutBinding, PipelineStateVulkan::kMaxConstantBufferSlots> bindings;
+        std::array<VkDescriptorBindingFlags, PipelineStateVulkan::kMaxConstantBufferSlots> bindingFlags;
+        for (u32 i = 0; i < PipelineStateVulkan::kMaxConstantBufferSlots; ++i) {
+            auto& b = bindings[i];
+            b = {};
+            b.binding = i;
+            b.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            b.descriptorCount = 1;
+            b.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+            b.pImmutableSamplers = nullptr;
+            bindingFlags[i] = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT;
+        }
 
-    for (const auto& slot : descriptor.ConstantBufferBindSlots) {
-        VkDescriptorSetLayoutBinding layoutBinding;
-        layoutBinding.binding = static_cast<std::uint32_t>(slot.second);
+        VkDescriptorSetLayoutBindingFlagsCreateInfo flagsInfo = {};
+        flagsInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
+        flagsInfo.bindingCount = static_cast<u32>(bindingFlags.size());
+        flagsInfo.pBindingFlags = bindingFlags.data();
 
-        // FIXME:
-        // layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        // layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-        layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+        VkDescriptorSetLayoutCreateInfo createInfo = {};
+        createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        createInfo.pNext = &flagsInfo;
+        createInfo.bindingCount = static_cast<u32>(bindings.size());
+        createInfo.pBindings = bindings.data();
 
-        layoutBinding.descriptorCount = 1;
-        layoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-        layoutBinding.pImmutableSamplers = nullptr;
+        auto result = vkCreateDescriptorSetLayout(device, &createInfo, nullptr, &descriptorSetLayouts[0]);
+        if (result != VK_SUCCESS) {
+            return errors::make("failed to create UBO descriptor set layout");
+        }
     }
 
-    std::stable_sort(
-        std::begin(layoutBindings),
-        std::end(layoutBindings),
-        [](const auto& a, const auto& b) -> bool { return a.binding < b.binding; });
+    // NOTE: Set [1]: Combined image sampler bindings (textures + samplers)
+    {
+        std::array<VkDescriptorSetLayoutBinding, PipelineStateVulkan::kMaxTextureSlots> bindings;
+        std::array<VkDescriptorBindingFlags, PipelineStateVulkan::kMaxTextureSlots> bindingFlags;
+        for (u32 i = 0; i < PipelineStateVulkan::kMaxTextureSlots; ++i) {
+            auto& b = bindings[i];
+            b = {};
+            b.binding = i;
+            b.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            b.descriptorCount = 1;
+            b.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+            b.pImmutableSamplers = nullptr;
+            bindingFlags[i] = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT;
+        }
 
-    VkDescriptorSetLayoutCreateInfo createInfo;
-    createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    createInfo.pNext = nullptr;
-    createInfo.flags = 0;
-    createInfo.bindingCount = static_cast<std::uint32_t>(layoutBindings.size());
-    createInfo.pBindings = layoutBindings.data();
+        VkDescriptorSetLayoutBindingFlagsCreateInfo flagsInfo = {};
+        flagsInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
+        flagsInfo.bindingCount = static_cast<u32>(bindingFlags.size());
+        flagsInfo.pBindingFlags = bindingFlags.data();
 
-    auto result = vkCreateDescriptorSetLayout(device, &createInfo, nullptr, &descriptorSetLayout);
-    if (result != VK_SUCCESS) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create descriptor set layout");
+        VkDescriptorSetLayoutCreateInfo createInfo = {};
+        createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        createInfo.pNext = &flagsInfo;
+        createInfo.bindingCount = static_cast<u32>(bindings.size());
+        createInfo.pBindings = bindings.data();
+
+        auto result = vkCreateDescriptorSetLayout(device, &createInfo, nullptr, &descriptorSetLayouts[1]);
+        if (result != VK_SUCCESS) {
+            vkDestroyDescriptorSetLayout(device, descriptorSetLayouts[0], nullptr);
+            descriptorSetLayouts[0] = nullptr;
+            return errors::make("failed to create sampler descriptor set layout");
+        }
     }
+
+    return nullptr;
 }
 
-void CreateRenderPass(
+[[nodiscard]] std::unique_ptr<Error>
+createRenderPass(
     VkDevice device,
-    const PipelineDescriptor& descriptor,
-    VkRenderPass& renderPass)
+    VkPhysicalDevice physicalDevice,
+    const PipelineDesc& descriptor,
+    VkRenderPass& renderPass) noexcept
 {
     std::array<VkAttachmentDescription, 9> colorAttachments;
     std::array<VkAttachmentReference, 9> colorAttachmentRefs;
     VkAttachmentReference* depthAttachmentRef = nullptr;
 
-    POMDOG_ASSERT(colorAttachments.size() >= descriptor.RenderTargetViewFormats.size());
-    POMDOG_ASSERT(colorAttachmentRefs.size() >= descriptor.RenderTargetViewFormats.size());
+    POMDOG_ASSERT(colorAttachments.size() >= descriptor.renderTargetViewFormats.size());
+    POMDOG_ASSERT(colorAttachmentRefs.size() >= descriptor.renderTargetViewFormats.size());
 
-    std::uint32_t attachmentIndex = 0;
+    u32 attachmentIndex = 0;
 
-    for (const auto& surfaceFormat : descriptor.RenderTargetViewFormats) {
+    for (const auto& surfaceFormat : descriptor.renderTargetViewFormats) {
         POMDOG_ASSERT(attachmentIndex < colorAttachments.size());
         POMDOG_ASSERT(attachmentIndex < colorAttachmentRefs.size());
 
         auto& colorAttachment = colorAttachments[attachmentIndex];
         colorAttachment.flags = 0;
-        colorAttachment.format = ToSurfaceFormat(surfaceFormat);
+        colorAttachment.format = toSurfaceFormat(surfaceFormat);
         colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
         colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
         colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-        auto colorAttachmentRef = colorAttachmentRefs[attachmentIndex];
+        auto& colorAttachmentRef = colorAttachmentRefs[attachmentIndex];
         colorAttachmentRef.attachment = attachmentIndex;
         colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
         ++attachmentIndex;
     }
-    const auto colorAttachemntCount = attachmentIndex;
+    const auto colorAttachmentCount = attachmentIndex;
 
-    if (descriptor.DepthStencilViewFormat != PixelFormat::Invalid) {
+    if (descriptor.depthStencilViewFormat != PixelFormat::Invalid) {
         POMDOG_ASSERT(attachmentIndex < colorAttachments.size());
         POMDOG_ASSERT(attachmentIndex < colorAttachmentRefs.size());
 
         auto& depthAttachment = colorAttachments[attachmentIndex];
         depthAttachment.flags = 0;
-        depthAttachment.format = ToSurfaceFormat(descriptor.DepthStencilViewFormat);
+        depthAttachment.format = chooseDepthStencilFormat(physicalDevice, descriptor.depthStencilViewFormat);
         depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -425,11 +474,11 @@ void CreateRenderPass(
     subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpass.inputAttachmentCount = 0;
     subpass.pInputAttachments = nullptr;
-    subpass.colorAttachmentCount = colorAttachemntCount;
+    subpass.colorAttachmentCount = colorAttachmentCount;
     subpass.pColorAttachments = colorAttachmentRefs.data();
     subpass.pResolveAttachments = nullptr;
     subpass.pDepthStencilAttachment = depthAttachmentRef;
-    subpass.preserveAttachmentCount = 1;
+    subpass.preserveAttachmentCount = 0;
     subpass.pPreserveAttachments = nullptr;
 
     VkSubpassDependency dependency;
@@ -438,14 +487,22 @@ void CreateRenderPass(
     dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     dependency.srcAccessMask = 0;
-    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     dependency.dependencyFlags = 0;
+
+    if (depthAttachmentRef != nullptr) {
+        dependency.srcStageMask |= VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+        dependency.dstStageMask |= VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+        dependency.dstAccessMask |= VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+    }
+
+    const auto totalAttachmentCount = colorAttachmentCount + (depthAttachmentRef != nullptr ? 1 : 0);
 
     VkRenderPassCreateInfo createInfo;
     createInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     createInfo.pNext = nullptr;
     createInfo.flags = 0;
-    createInfo.attachmentCount = static_cast<std::uint32_t>(colorAttachments.size());
+    createInfo.attachmentCount = totalAttachmentCount;
     createInfo.pAttachments = colorAttachments.data();
     createInfo.subpassCount = 1;
     createInfo.pSubpasses = &subpass;
@@ -454,38 +511,44 @@ void CreateRenderPass(
 
     auto result = vkCreateRenderPass(device, &createInfo, nullptr, &renderPass);
     if (result != VK_SUCCESS) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create render pass");
+        return errors::make("failed to create render pass");
     }
+
+    return nullptr;
 }
 
 } // namespace
 
-PipelineStateVulkan::PipelineStateVulkan(
+std::unique_ptr<Error>
+PipelineStateVulkan::initialize(
     VkDevice deviceIn,
-    const PipelineDescriptor& descriptor)
-    : device(deviceIn)
-    , pipeline(nullptr)
-    , renderPass(nullptr)
-    , descriptorSetLayout(nullptr)
+    VkPhysicalDevice physicalDevice,
+    const PipelineDesc& descriptor) noexcept
 {
-    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(deviceIn != nullptr);
 
-    auto vertexShaderVulkan = std::dynamic_pointer_cast<ShaderVulkan>(descriptor.VertexShader);
+    device_ = deviceIn;
+    pipeline_ = nullptr;
+    pipelineLayout_ = nullptr;
+    renderPass_ = nullptr;
+    descriptorSetLayouts_ = {};
+
+    auto vertexShaderVulkan = std::dynamic_pointer_cast<ShaderVulkan>(descriptor.vertexShader);
     if (!vertexShaderVulkan) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid vertex shader.");
+        return errors::make("invalid vertex shader");
     }
-    auto pixelShaderVulkan = std::dynamic_pointer_cast<ShaderVulkan>(descriptor.PixelShader);
+    auto pixelShaderVulkan = std::dynamic_pointer_cast<ShaderVulkan>(descriptor.pixelShader);
     if (!pixelShaderVulkan) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid pixel shader.");
+        return errors::make("invalid pixel shader");
     }
 
-    auto vertexShaderModule = vertexShaderVulkan->GetShaderModule();
+    auto vertexShaderModule = vertexShaderVulkan->getShaderModule();
     if (!vertexShaderModule) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "The vertex shader is null");
+        return errors::make("the vertex shader module is null");
     }
-    auto pixelShaderModule = pixelShaderVulkan->GetShaderModule();
+    auto pixelShaderModule = pixelShaderVulkan->getShaderModule();
     if (!pixelShaderModule) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "The pixel shader is null");
+        return errors::make("the pixel shader module is null");
     }
 
     VkPipelineShaderStageCreateInfo vertexShaderStageInfo;
@@ -511,36 +574,38 @@ PipelineStateVulkan::PipelineStateVulkan(
         pixelShaderStageInfo,
     }};
 
-    const auto [vertexBindings, vertexAttributes] = ToVertexBindingsAndAttributes(descriptor.InputLayout);
+    const auto [vertexBindings, vertexAttributes] = toVertexBindingsAndAttributes(descriptor.inputLayout);
 
     VkPipelineVertexInputStateCreateInfo vertexInputState;
-    ToVertexInputState(descriptor.InputLayout, vertexBindings, vertexAttributes, vertexInputState);
+    toVertexInputState(descriptor.inputLayout, vertexBindings, vertexAttributes, vertexInputState);
 
     VkPipelineInputAssemblyStateCreateInfo inputAssemblyState;
     inputAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    inputAssemblyState.topology = ToVkPrimitiveTopology(descriptor.PrimitiveTopology);
+    inputAssemblyState.pNext = nullptr;
+    inputAssemblyState.flags = 0;
+    inputAssemblyState.topology = toVkPrimitiveTopology(descriptor.primitiveTopology);
     inputAssemblyState.primitiveRestartEnable = VK_FALSE;
 
     VkPipelineDepthStencilStateCreateInfo depthStencilState;
-    ToDepthStencilState(descriptor.DepthStencilState, depthStencilState);
+    toDepthStencilState(descriptor.depthStencilState, depthStencilState);
 
     VkPipelineRasterizationStateCreateInfo rasterizationState;
-    ToRasterizationState(descriptor.RasterizerState, rasterizationState);
+    toRasterizationState(descriptor.rasterizerState, rasterizationState);
 
     std::vector<VkPipelineColorBlendAttachmentState> blendAttachments;
     {
         std::size_t index = 0;
-        for (auto& renderTarget : descriptor.BlendState.RenderTargets) {
-            if (index >= descriptor.RenderTargetViewFormats.size()) {
+        for (auto& renderTarget : descriptor.blendState.renderTargets) {
+            if (index >= descriptor.renderTargetViewFormats.size()) {
                 break;
             }
-            blendAttachments.push_back(ToColorBlendAttachmentState(renderTarget));
+            blendAttachments.push_back(toColorBlendAttachmentState(renderTarget));
             ++index;
         }
     }
 
     VkPipelineColorBlendStateCreateInfo blendState;
-    ToBlendState(descriptor.BlendState, blendAttachments, blendState);
+    toBlendState(descriptor.blendState, blendAttachments, blendState);
 
     VkPipelineMultisampleStateCreateInfo multisampleState;
     multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
@@ -550,24 +615,25 @@ PipelineStateVulkan::PipelineStateVulkan(
     multisampleState.sampleShadingEnable = VK_FALSE;
     multisampleState.minSampleShading = 0.0f;
     multisampleState.pSampleMask = nullptr;
-    multisampleState.alphaToCoverageEnable = ToVkBool32(descriptor.BlendState.AlphaToCoverageEnable);
+    multisampleState.alphaToCoverageEnable = toVkBool32(descriptor.blendState.alphaToCoverageEnable);
     multisampleState.alphaToOneEnable = VK_FALSE;
 
-    CreateDescriptorSetLayout(device, descriptor, descriptorSetLayout);
+    if (auto err = createDescriptorSetLayouts(device_, descriptor, descriptorSetLayouts_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create descriptor set layouts");
+    }
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo;
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.pNext = nullptr;
     pipelineLayoutInfo.flags = 0;
-    pipelineLayoutInfo.setLayoutCount = 1;
-    pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
+    pipelineLayoutInfo.setLayoutCount = static_cast<u32>(descriptorSetLayouts_.size());
+    pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts_.data();
     pipelineLayoutInfo.pushConstantRangeCount = 0;
     pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
-    VkPipelineLayout pipelineLayout = nullptr;
-    auto result = vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout);
+    auto result = vkCreatePipelineLayout(device_, &pipelineLayoutInfo, nullptr, &pipelineLayout_);
     if (result != VK_SUCCESS) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create pipeline layout");
+        return errors::make("failed to create pipeline layout");
     }
 
     VkViewport viewport;
@@ -593,7 +659,9 @@ PipelineStateVulkan::PipelineStateVulkan(
     viewportState.scissorCount = 1;
     viewportState.pScissors = &scissor;
 
-    CreateRenderPass(device, descriptor, renderPass);
+    if (auto err = createRenderPass(device_, physicalDevice, descriptor, renderPass_); err != nullptr) {
+        return errors::wrap(std::move(err), "failed to create render pass");
+    }
 
     std::array<VkDynamicState, 3> const dynamicStates = {{
         VK_DYNAMIC_STATE_BLEND_CONSTANTS,
@@ -605,14 +673,14 @@ PipelineStateVulkan::PipelineStateVulkan(
     dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
     dynamicState.pNext = nullptr;
     dynamicState.flags = 0;
-    dynamicState.dynamicStateCount = static_cast<std::uint32_t>(dynamicStates.size());
+    dynamicState.dynamicStateCount = static_cast<u32>(dynamicStates.size());
     dynamicState.pDynamicStates = dynamicStates.data();
 
     VkGraphicsPipelineCreateInfo pipelineInfo;
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     pipelineInfo.pNext = nullptr;
     pipelineInfo.flags = 0;
-    pipelineInfo.stageCount = static_cast<std::uint32_t>(shaderStages.size());
+    pipelineInfo.stageCount = static_cast<u32>(shaderStages.size());
     pipelineInfo.pStages = shaderStages.data();
     pipelineInfo.pVertexInputState = &vertexInputState;
     pipelineInfo.pInputAssemblyState = &inputAssemblyState;
@@ -623,32 +691,64 @@ PipelineStateVulkan::PipelineStateVulkan(
     pipelineInfo.pDepthStencilState = &depthStencilState;
     pipelineInfo.pColorBlendState = &blendState;
     pipelineInfo.pDynamicState = &dynamicState;
-    pipelineInfo.layout = pipelineLayout;
-    pipelineInfo.renderPass = renderPass;
+    pipelineInfo.layout = pipelineLayout_;
+    pipelineInfo.renderPass = renderPass_;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
     pipelineInfo.basePipelineIndex = 0;
 
-    result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipeline);
+    result = vkCreateGraphicsPipelines(device_, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipeline_);
     if (result != VK_SUCCESS) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create pipeline state");
+        return errors::make("failed to create graphics pipeline");
     }
+
+    return nullptr;
 }
 
 PipelineStateVulkan::~PipelineStateVulkan()
 {
-    if (pipeline != nullptr) {
-        POMDOG_ASSERT(device != nullptr);
-        vkDestroyPipeline(device, pipeline, nullptr);
+    if (pipeline_ != nullptr) {
+        POMDOG_ASSERT(device_ != nullptr);
+        vkDestroyPipeline(device_, pipeline_, nullptr);
     }
-    if (descriptorSetLayout != nullptr) {
-        POMDOG_ASSERT(device != nullptr);
-        vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
+    if (pipelineLayout_ != nullptr) {
+        POMDOG_ASSERT(device_ != nullptr);
+        vkDestroyPipelineLayout(device_, pipelineLayout_, nullptr);
     }
-    if (renderPass != nullptr) {
-        POMDOG_ASSERT(device != nullptr);
-        vkDestroyRenderPass(device, renderPass, nullptr);
+    for (auto& layout : descriptorSetLayouts_) {
+        if (layout != nullptr) {
+            POMDOG_ASSERT(device_ != nullptr);
+            vkDestroyDescriptorSetLayout(device_, layout, nullptr);
+        }
     }
+    if (renderPass_ != nullptr) {
+        POMDOG_ASSERT(device_ != nullptr);
+        vkDestroyRenderPass(device_, renderPass_, nullptr);
+    }
+}
+
+VkPipeline
+PipelineStateVulkan::getPipeline() const noexcept
+{
+    return pipeline_;
+}
+
+VkRenderPass
+PipelineStateVulkan::getRenderPass() const noexcept
+{
+    return renderPass_;
+}
+
+VkPipelineLayout
+PipelineStateVulkan::getPipelineLayout() const noexcept
+{
+    return pipelineLayout_;
+}
+
+const std::array<VkDescriptorSetLayout, PipelineStateVulkan::kDescriptorSetCount>&
+PipelineStateVulkan::getDescriptorSetLayouts() const noexcept
+{
+    return descriptorSetLayouts_;
 }
 
 } // namespace pomdog::gpu::detail::vulkan

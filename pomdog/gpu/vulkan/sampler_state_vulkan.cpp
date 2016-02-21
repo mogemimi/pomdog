@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/vulkan/sampler_state_vulkan.h"
-#include "pomdog/gpu/sampler_descriptor.h"
+#include "pomdog/gpu/sampler_desc.h"
 #include "pomdog/gpu/vulkan/format_helper.h"
 #include "pomdog/utility/assert.h"
 
@@ -12,7 +12,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::vulkan {
 namespace {
 
-VkSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexcept
+[[nodiscard]] VkSamplerAddressMode
+toSamplerAddressMode(TextureAddressMode addressMode) noexcept
 {
     switch (addressMode) {
     case TextureAddressMode::Wrap:
@@ -27,8 +28,8 @@ VkSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexce
     return VK_SAMPLER_ADDRESS_MODE_REPEAT;
 }
 
-std::tuple<VkFilter, VkFilter, VkSamplerMipmapMode>
-ToTextureFilter(TextureFilter filter)
+[[nodiscard]] std::tuple<VkFilter, VkFilter, VkSamplerMipmapMode>
+toTextureFilter(TextureFilter filter)
 {
     switch (filter) {
     case TextureFilter::Anisotropic:
@@ -85,63 +86,63 @@ ToTextureFilter(TextureFilter filter)
 
 } // namespace
 
-SamplerStateVulkan::SamplerStateVulkan(
+std::unique_ptr<Error>
+SamplerStateVulkan::initialize(
     ::VkDevice deviceIn,
-    const SamplerDescriptor& descriptor)
-    : device(deviceIn)
-    , sampler(nullptr)
+    const SamplerDesc& descriptor) noexcept
 {
-    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(deviceIn != nullptr);
 
-    VkSamplerCreateInfo createInfo;
+    device_ = deviceIn;
+    sampler_ = nullptr;
+
+    VkSamplerCreateInfo createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-    createInfo.pNext = nullptr;
-    createInfo.flags = 0;
     std::tie(
         createInfo.minFilter,
         createInfo.magFilter,
-        createInfo.mipmapMode) = ToTextureFilter(descriptor.Filter);
-    createInfo.addressModeU = ToSamplerAddressMode(descriptor.AddressU);
-    createInfo.addressModeV = ToSamplerAddressMode(descriptor.AddressV);
-    createInfo.addressModeW = ToSamplerAddressMode(descriptor.AddressW);
+        createInfo.mipmapMode) = toTextureFilter(descriptor.filter);
+    createInfo.addressModeU = toSamplerAddressMode(descriptor.addressU);
+    createInfo.addressModeV = toSamplerAddressMode(descriptor.addressV);
+    createInfo.addressModeW = toSamplerAddressMode(descriptor.addressW);
     createInfo.mipLodBias = 0.0f;
     createInfo.anisotropyEnable = VK_FALSE;
 
-    if (descriptor.ComparisonFunction == ComparisonFunction::Never) {
+    if (descriptor.comparisonFunction == ComparisonFunction::Never) {
         createInfo.compareEnable = VK_FALSE;
         createInfo.compareOp = VK_COMPARE_OP_NEVER;
     }
     else {
         createInfo.compareEnable = VK_TRUE;
-        createInfo.compareOp = ToComparisonFunction(descriptor.ComparisonFunction);
+        createInfo.compareOp = toComparisonFunction(descriptor.comparisonFunction);
     }
 
-    createInfo.minLod = descriptor.MinMipLevel;
-    createInfo.maxLod = descriptor.MaxMipLevel;
-    createInfo.maxAnisotropy = descriptor.MaxAnisotropy;
+    createInfo.minLod = descriptor.minMipLevel;
+    createInfo.maxLod = descriptor.maxMipLevel;
+    createInfo.maxAnisotropy = static_cast<f32>(descriptor.maxAnisotropy);
     createInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
     createInfo.unnormalizedCoordinates = VK_FALSE;
 
-    auto result = vkCreateSampler(device, &createInfo, nullptr, &sampler);
+    auto result = vkCreateSampler(device_, &createInfo, nullptr, &sampler_);
     if (result != VK_SUCCESS) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create VkSampler");
+        return errors::make("failed to create VkSampler");
     }
+
+    return nullptr;
 }
 
 SamplerStateVulkan::~SamplerStateVulkan()
 {
-    if (sampler != nullptr) {
-        POMDOG_ASSERT(device != nullptr);
-        vkDestroySampler(device, sampler, nullptr);
+    if (sampler_ != nullptr) {
+        POMDOG_ASSERT(device_ != nullptr);
+        vkDestroySampler(device_, sampler_, nullptr);
     }
 }
 
 ::VkSampler
-SamplerStateVulkan::getSamplerState() const
+SamplerStateVulkan::getSamplerState() const noexcept
 {
-    return sampler;
+    return sampler_;
 }
 
 } // namespace pomdog::gpu::detail::vulkan
