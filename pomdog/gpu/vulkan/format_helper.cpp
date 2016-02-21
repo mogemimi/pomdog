@@ -6,7 +6,7 @@
 namespace pomdog::gpu::detail::vulkan {
 
 [[nodiscard]] VkCompareOp
-ToComparisonFunction(ComparisonFunction compareFunction) noexcept
+toComparisonFunction(ComparisonFunction compareFunction) noexcept
 {
     switch (compareFunction) {
     case ComparisonFunction::Never:

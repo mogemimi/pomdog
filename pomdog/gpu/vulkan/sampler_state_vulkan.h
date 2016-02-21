@@ -12,25 +12,26 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
-struct SamplerDescriptor;
+struct SamplerDesc;
 } // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::vulkan {
 
 class SamplerStateVulkan final : public SamplerState {
+private:
+    ::VkDevice device_ = nullptr;
+    ::VkSampler sampler_ = nullptr;
+
 public:
-    SamplerStateVulkan(
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
         ::VkDevice device,
-        const SamplerDescriptor& descriptor);
+        const SamplerDesc& descriptor) noexcept;
 
     ~SamplerStateVulkan();
 
     [[nodiscard]] ::VkSampler
-    getSamplerState() const;
-
-private:
-    ::VkDevice device;
-    ::VkSampler sampler;
+    getSamplerState() const noexcept;
 };
 
 } // namespace pomdog::gpu::detail::vulkan

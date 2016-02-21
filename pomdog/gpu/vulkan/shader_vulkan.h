@@ -9,30 +9,31 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <span>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail {
-class ShaderBytecode;
 struct ShaderCompileOptions;
 } // namespace pomdog::gpu::detail
 
 namespace pomdog::gpu::detail::vulkan {
 
 class ShaderVulkan final : public Shader {
+private:
+    ::VkDevice device_ = nullptr;
+    ::VkShaderModule shaderModule_ = nullptr;
+
 public:
-    ShaderVulkan(
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
         ::VkDevice device,
-        const ShaderBytecode& shaderBytecode,
-        const ShaderCompileOptions& compileOptions);
+        std::span<const u8> shaderBytecode,
+        const ShaderCompileOptions& compileOptions) noexcept;
 
     ~ShaderVulkan();
 
     [[nodiscard]] ::VkShaderModule
     getShaderModule() const noexcept;
-
-private:
-    ::VkDevice device;
-    ::VkShaderModule shaderModule;
 };
 
 } // namespace pomdog::gpu::detail::vulkan

@@ -17,6 +17,12 @@
 #include "pomdog/gpu/direct3d11/graphics_context_direct3d11.h"
 #include "pomdog/gpu/direct3d11/graphics_device_direct3d11.h"
 #endif
+#if defined(POMDOG_USE_VULKAN)
+#include "pomdog/gpu/vulkan/command_queue_vulkan.h"
+#include "pomdog/gpu/vulkan/graphics_device_vulkan.h"
+#include "pomdog/gpu/vulkan/swap_chain_vulkan.h"
+#include <vulkan/vulkan_win32.h>
+#endif
 #include "pomdog/application/game.h"
 #include "pomdog/application/subsystem_scheduler.h"
 #include "pomdog/application/system_events.h"
@@ -52,6 +58,11 @@ using pomdog::gpu::detail::gl4::GraphicsDeviceGL4;
 #if defined(POMDOG_USE_DIRECT3D11)
 using pomdog::gpu::detail::direct3d11::GraphicsContextDirect3D11;
 using pomdog::gpu::detail::direct3d11::GraphicsDeviceDirect3D11;
+#endif
+#if defined(POMDOG_USE_VULKAN)
+using pomdog::gpu::detail::vulkan::CommandQueueVulkan;
+using pomdog::gpu::detail::vulkan::GraphicsDeviceVulkan;
+using pomdog::gpu::detail::vulkan::SwapChainVulkan;
 #endif
 
 namespace pomdog::detail::win32 {
@@ -269,6 +280,141 @@ CreateGraphicsDeviceDirect3D11(
 }
 #endif
 
+#if defined(POMDOG_USE_VULKAN)
+
+class GraphicsBridgeWin32Vulkan final : public GraphicsBridgeWin32 {
+private:
+    std::shared_ptr<GraphicsDeviceVulkan> graphicsDevice_;
+    std::shared_ptr<CommandQueueVulkan> commandQueue_;
+    std::unique_ptr<SwapChainVulkan> swapChain_;
+
+public:
+    GraphicsBridgeWin32Vulkan(
+        const std::shared_ptr<GraphicsDeviceVulkan>& graphicsDeviceIn,
+        const std::shared_ptr<CommandQueueVulkan>& commandQueueIn,
+        std::unique_ptr<SwapChainVulkan>&& swapChainIn)
+        : graphicsDevice_(graphicsDeviceIn)
+        , commandQueue_(commandQueueIn)
+        , swapChain_(std::move(swapChainIn))
+    {
+    }
+
+    void onClientSizeChanged(int width, int height) override
+    {
+        if (swapChain_ != nullptr) {
+            if (auto err = swapChain_->recreate(width, height); err != nullptr) {
+                Log::Critical("pomdog", "error: SwapChain recreate failed: " + err->toString());
+            }
+        }
+        if (graphicsDevice_ != nullptr) {
+            auto params = graphicsDevice_->getPresentationParameters();
+            params.backBufferWidth = width;
+            params.backBufferHeight = height;
+            graphicsDevice_->setPresentationParameters(params);
+        }
+    }
+
+    void shutdown() override
+    {
+        if (commandQueue_ != nullptr) {
+            commandQueue_->reset();
+        }
+
+        if (swapChain_ != nullptr) {
+            swapChain_->shutdown();
+        }
+
+        commandQueue_.reset();
+        swapChain_.reset();
+        graphicsDevice_.reset();
+    }
+};
+
+[[nodiscard]] CreateGraphicsDeviceResult
+CreateGraphicsDeviceVulkan(
+    const std::shared_ptr<GameWindowWin32>& window,
+    const gpu::PresentationParameters& presentationParameters)
+{
+    auto [graphicsDevice, deviceErr] = GraphicsDeviceVulkan::create();
+    if (deviceErr != nullptr) {
+        return std::make_tuple(
+            nullptr, nullptr, nullptr,
+            errors::wrap(std::move(deviceErr), "failed to create GraphicsDeviceVulkan"));
+    }
+
+    // Store presentation parameters
+    graphicsDevice->setPresentationParameters(presentationParameters);
+
+    // Create Win32 Vulkan surface
+    VkWin32SurfaceCreateInfoKHR surfaceInfo = {};
+    surfaceInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+    surfaceInfo.hwnd = window->getNativeWindowHandle();
+    surfaceInfo.hinstance = ::GetModuleHandle(nullptr);
+
+    VkSurfaceKHR surface = nullptr;
+    auto result = vkCreateWin32SurfaceKHR(
+        graphicsDevice->getInstance(), &surfaceInfo, nullptr, &surface);
+    if (result != VK_SUCCESS) {
+        return std::make_tuple(
+            nullptr, nullptr, nullptr,
+            errors::make("failed to create Win32 Vulkan surface"));
+    }
+
+    // Create swap chain
+    auto swapChain = std::make_unique<SwapChainVulkan>();
+    if (auto err = swapChain->initialize(
+            graphicsDevice->getInstance(),
+            graphicsDevice->getPhysicalDevice(),
+            graphicsDevice->getDevice(),
+            graphicsDevice->getGraphicsQueueFamilyIndex(),
+            surface,
+            presentationParameters.backBufferWidth,
+            presentationParameters.backBufferHeight,
+            presentationParameters.depthStencilFormat);
+        err != nullptr) {
+        // Surface ownership is not transferred yet, clean up
+        vkDestroySurfaceKHR(graphicsDevice->getInstance(), surface, nullptr);
+        return std::make_tuple(
+            nullptr, nullptr, nullptr,
+            errors::wrap(std::move(err), "failed to initialize SwapChainVulkan"));
+    }
+
+    // Set swap chain on graphics device so createCommandList() can inject it
+    graphicsDevice->setSwapChain(swapChain.get());
+
+    // Update presentation parameters to match actual swap chain format
+    {
+        auto params = graphicsDevice->getPresentationParameters();
+        auto vkFormat = swapChain->getSurfaceFormat();
+        if (vkFormat == VK_FORMAT_B8G8R8A8_UNORM) {
+            params.backBufferFormat = gpu::PixelFormat::B8G8R8A8_UNorm;
+        }
+        else if (vkFormat == VK_FORMAT_R8G8B8A8_UNORM) {
+            params.backBufferFormat = gpu::PixelFormat::R8G8B8A8_UNorm;
+        }
+        // NOTE: Keep the default depth/stencil format from bootstrap
+        // (typically Depth24Stencil8) now that DepthStencilBufferVulkan is implemented.
+        graphicsDevice->setPresentationParameters(params);
+    }
+
+    auto commandQueue = std::make_shared<CommandQueueVulkan>(
+        graphicsDevice->getDevice(),
+        graphicsDevice->getGraphicsQueue());
+    commandQueue->setSwapChain(swapChain.get());
+
+    auto bridge = std::make_unique<GraphicsBridgeWin32Vulkan>(
+        graphicsDevice,
+        commandQueue,
+        std::move(swapChain));
+
+    return std::make_tuple(
+        std::move(graphicsDevice),
+        std::move(commandQueue),
+        std::move(bridge),
+        nullptr);
+}
+#endif
+
 } // namespace
 
 class GameHostWin32::Impl final {
@@ -401,6 +547,18 @@ GameHostWin32::Impl::initialize(
 
         if (auto deviceErr = std::move(std::get<3>(result)); deviceErr != nullptr) {
             return errors::wrap(std::move(deviceErr), "CreateGraphicsDeviceDirect3D11() failed");
+        }
+    }
+#endif
+#if defined(POMDOG_USE_VULKAN)
+    if (graphicsBackend == gpu::GraphicsBackend::Vulkan) {
+        auto result = CreateGraphicsDeviceVulkan(window, presentationParameters);
+        graphicsDevice = std::move(std::get<0>(result));
+        graphicsCommandQueue = std::move(std::get<1>(result));
+        graphicsBridge = std::move(std::get<2>(result));
+
+        if (auto deviceErr = std::move(std::get<3>(result)); deviceErr != nullptr) {
+            return errors::wrap(std::move(deviceErr), "CreateGraphicsDeviceVulkan() failed");
         }
     }
 #endif

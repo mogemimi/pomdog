@@ -5,63 +5,54 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/basic/types.h"
-#include "pomdog/gpu/backends/buffer_bind_mode.h"
 #include "pomdog/gpu/buffer.h"
-#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/vulkan/prerequisites_vulkan.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+#include <span>
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+
+namespace pomdog::gpu {
+enum class MemoryUsage : u8;
+struct BufferDesc;
+} // namespace pomdog::gpu
 
 namespace pomdog::gpu::detail::vulkan {
 
 class BufferVulkan final : public Buffer {
-public:
-    BufferVulkan(
-        ::VkDevice device,
-        ::VkPhysicalDevice physicalDevice,
-        std::size_t sizeInBytes,
-        BufferUsage bufferUsage,
-        BufferBindMode bindMode);
+private:
+    ::VkDevice device_ = nullptr;
+    ::VkBuffer nativeBuffer_ = nullptr;
+    ::VkDeviceMemory nativeBufferMemory_ = nullptr;
 
-    BufferVulkan(
+public:
+    [[nodiscard]] std::unique_ptr<Error>
+    initialize(
         ::VkDevice device,
         ::VkPhysicalDevice physicalDevice,
-        const void* sourceData,
-        std::size_t sizeInBytes,
-        BufferUsage bufferUsage,
-        BufferBindMode bindMode);
+        const BufferDesc& desc,
+        std::span<const u8> initialData) noexcept;
 
     ~BufferVulkan();
 
     void getData(
-        std::size_t offsetInBytes,
-        void* destination,
-        std::size_t sizeInBytes) const override;
+        u32 offsetInBytes,
+        std::span<u8> destination) const override;
 
     void setData(
-        std::size_t offsetInBytes,
-        const void* source,
-        std::size_t sizeInBytes) override;
+        u32 offsetInBytes,
+        std::span<const u8> source) override;
+
+    [[nodiscard]] std::span<u8>
+    map(u32 offsetInBytes, u32 sizeInBytes) override;
+
+    void unmap() override;
 
     [[nodiscard]] VkBuffer
-    getBuffer() const;
-
-private:
-    ::VkDevice device;
-    ::VkBuffer nativeBuffer;
-    ::VkDeviceMemory nativeBufferMemory;
+    getBuffer() const noexcept;
 };
-
-std::tuple<VkBuffer, VkDeviceMemory>
-createBuffer(
-    ::VkDevice device,
-    ::VkPhysicalDevice physicalDevice,
-    std::size_t sizeInBytes,
-    VkBufferUsageFlags usageFlags,
-    VkMemoryPropertyFlags propertyFlags);
 
 } // namespace pomdog::gpu::detail::vulkan

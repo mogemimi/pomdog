@@ -220,6 +220,8 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/gpu/vulkan/command_list_vulkan.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/command_queue_vulkan.cpp
         ${POMDOG_SRC_DIR}/gpu/vulkan/command_queue_vulkan.h
+        ${POMDOG_SRC_DIR}/gpu/vulkan/depth_stencil_buffer_vulkan.cpp
+        ${POMDOG_SRC_DIR}/gpu/vulkan/depth_stencil_buffer_vulkan.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/format_helper.cpp
         ${POMDOG_SRC_DIR}/gpu/vulkan/format_helper.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/graphics_device_vulkan.cpp
@@ -233,6 +235,8 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/gpu/vulkan/sampler_state_vulkan.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/shader_vulkan.cpp
         ${POMDOG_SRC_DIR}/gpu/vulkan/shader_vulkan.h
+        ${POMDOG_SRC_DIR}/gpu/vulkan/swap_chain_vulkan.cpp
+        ${POMDOG_SRC_DIR}/gpu/vulkan/swap_chain_vulkan.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/texture2d_vulkan.cpp
         ${POMDOG_SRC_DIR}/gpu/vulkan/texture2d_vulkan.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/vulkan_format_helper.cpp

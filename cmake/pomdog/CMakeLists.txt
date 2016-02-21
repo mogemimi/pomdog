@@ -87,6 +87,9 @@ endif()
 if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
     add_subdirectory(${POMDOG_DIR}/cmake/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
 endif()
+if(POMDOG_USE_VULKAN)
+    find_package(Vulkan REQUIRED)
+endif()
 
 target_include_directories(pomdog_static PRIVATE
     ${POMDOG_DIR}
@@ -103,6 +106,9 @@ target_include_directories(pomdog_static PRIVATE
 
     $<$<AND:$<PLATFORM_ID:Windows,Linux>,$<BOOL:${POMDOG_USE_GL4}>>:
         ${POMDOG_DIR}/thirdparty/vendor/glew/include
+    >
+    $<$<BOOL:${POMDOG_USE_VULKAN}>:
+        ${Vulkan_INCLUDE_DIRS}
     >
 )
 
@@ -157,6 +163,10 @@ target_link_libraries(pomdog_static INTERFACE
         # NOTE: GLEW for Windows and Linux
         glew_static
     >
+    $<$<BOOL:${POMDOG_USE_VULKAN}>:
+        # NOTE: Vulkan
+        Vulkan::Vulkan
+    >
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # NOTE: MbedTLS for Windows, Linux and macOS
         mbedtls
@@ -201,6 +211,9 @@ target_compile_definitions(pomdog_static PRIVATE
     >
     $<$<BOOL:${POMDOG_USE_DIRECT3D11}>:
         POMDOG_USE_DIRECT3D11
+    >
+    $<$<BOOL:${POMDOG_USE_VULKAN}>:
+        POMDOG_USE_VULKAN
     >
     $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_GL4}>>:
         GL_SILENCE_DEPRECATION # For silencing OpenGL warnings on macOS >= 10.14.
