@@ -355,6 +355,30 @@
       '../src/RenderSystem.Metal/Texture2DMetal.hpp',
       '../src/RenderSystem.Metal/Texture2DMetal.mm',
     ],
+    'pomdog_library_vulkan_sources': [
+      '../src/RenderSystem.Vulkan/BufferVulkan.cpp',
+      '../src/RenderSystem.Vulkan/BufferVulkan.hpp',
+      '../src/RenderSystem.Vulkan/EffectReflectionVulkan.cpp',
+      '../src/RenderSystem.Vulkan/EffectReflectionVulkan.hpp',
+      '../src/RenderSystem.Vulkan/GraphicsCommandListVulkan.cpp',
+      '../src/RenderSystem.Vulkan/GraphicsCommandListVulkan.hpp',
+      '../src/RenderSystem.Vulkan/GraphicsCommandQueueVulkan.cpp',
+      '../src/RenderSystem.Vulkan/GraphicsCommandQueueVulkan.hpp',
+      '../src/RenderSystem.Vulkan/GraphicsDeviceVulkan.cpp',
+      '../src/RenderSystem.Vulkan/GraphicsDeviceVulkan.hpp',
+      '../src/RenderSystem.Vulkan/PipelineStateVulkan.cpp',
+      '../src/RenderSystem.Vulkan/PipelineStateVulkan.hpp',
+      '../src/RenderSystem.Vulkan/RenderTexture2DVulkan.cpp',
+      '../src/RenderSystem.Vulkan/RenderTexture2DVulkan.hpp',
+      '../src/RenderSystem.Vulkan/SamplerStateVulkan.cpp',
+      '../src/RenderSystem.Vulkan/SamplerStateVulkan.hpp',
+      '../src/RenderSystem.Vulkan/ShaderVulkan.cpp',
+      '../src/RenderSystem.Vulkan/ShaderVulkan.hpp',
+      '../src/RenderSystem.Vulkan/Texture2DVulkan.cpp',
+      '../src/RenderSystem.Vulkan/Texture2DVulkan.hpp',
+      '../src/RenderSystem.Vulkan/VulkanFormatHelper.cpp',
+      '../src/RenderSystem.Vulkan/VulkanFormatHelper.hpp',
+    ],
     'pomdog_library_openal_sources': [
       '../src/SoundSystem.OpenAL/AudioClipAL.cpp',
       '../src/SoundSystem.OpenAL/AudioClipAL.hpp',
@@ -606,6 +630,11 @@
             '$(SDKROOT)/System/Library/Frameworks/ModelIO.framework',
           ],
         },
+      }],
+      ['"Vulkan" in renderers', {
+        'sources': [
+          '<@(pomdog_library_vulkan_sources)',
+        ],
       }],
       ['audio == "OpenAL"', {
         'sources': [
