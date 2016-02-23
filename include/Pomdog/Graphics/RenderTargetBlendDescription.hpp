@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog/Graphics/Blend.hpp"
-#include "Pomdog/Graphics/BlendFunction.hpp"
+#include "Pomdog/Graphics/BlendOperation.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <utility>
 
@@ -12,18 +12,18 @@ namespace Pomdog {
 struct POMDOG_EXPORT RenderTargetBlendDescription {
     Blend ColorSourceBlend;
     Blend ColorDestinationBlend;
-    BlendFunction ColorBlendFunction;
+    BlendOperation ColorBlendOperation;
     Blend AlphaSourceBlend;
     Blend AlphaDestinationBlend;
-    BlendFunction AlphaBlendFunction;
+    BlendOperation AlphaBlendOperation;
     bool BlendEnable;
 
     static RenderTargetBlendDescription CreateAdditive()
     {
         RenderTargetBlendDescription desc;
         desc.BlendEnable = true;
-        desc.ColorBlendFunction = BlendFunction::Add;
-        desc.AlphaBlendFunction = BlendFunction::Add;
+        desc.ColorBlendOperation = BlendOperation::Add;
+        desc.AlphaBlendOperation = BlendOperation::Add;
         desc.ColorSourceBlend = Blend::SourceAlpha;
         desc.AlphaSourceBlend = Blend::SourceAlpha;
         desc.ColorDestinationBlend = Blend::One;
@@ -35,8 +35,8 @@ struct POMDOG_EXPORT RenderTargetBlendDescription {
     {
         RenderTargetBlendDescription desc;
         desc.BlendEnable = true;
-        desc.ColorBlendFunction = BlendFunction::Add;
-        desc.AlphaBlendFunction = BlendFunction::Add;
+        desc.ColorBlendOperation = BlendOperation::Add;
+        desc.AlphaBlendOperation = BlendOperation::Add;
         desc.ColorSourceBlend = Blend::One;
         desc.AlphaSourceBlend = Blend::One;
         desc.ColorDestinationBlend = Blend::InverseSourceAlpha;
@@ -48,8 +48,8 @@ struct POMDOG_EXPORT RenderTargetBlendDescription {
     {
         RenderTargetBlendDescription desc;
         desc.BlendEnable = true;
-        desc.ColorBlendFunction = BlendFunction::Add;
-        desc.AlphaBlendFunction = BlendFunction::Add;
+        desc.ColorBlendOperation = BlendOperation::Add;
+        desc.AlphaBlendOperation = BlendOperation::Add;
         desc.ColorSourceBlend = Blend::SourceAlpha;
         desc.AlphaSourceBlend = Blend::SourceAlpha;
         desc.ColorDestinationBlend = Blend::InverseSourceAlpha;
@@ -61,8 +61,8 @@ struct POMDOG_EXPORT RenderTargetBlendDescription {
     {
         RenderTargetBlendDescription desc;
         desc.BlendEnable = false;
-        desc.ColorBlendFunction = BlendFunction::Add;
-        desc.AlphaBlendFunction = BlendFunction::Add;
+        desc.ColorBlendOperation = BlendOperation::Add;
+        desc.AlphaBlendOperation = BlendOperation::Add;
         desc.ColorSourceBlend = Blend::One;
         desc.AlphaSourceBlend = Blend::One;
         desc.ColorDestinationBlend = Blend::Zero;

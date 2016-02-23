@@ -74,7 +74,7 @@
       '../include/Pomdog/Content/detail/AssetLoaders/Texture2DLoader.hpp',
       '../include/Pomdog/Graphics/Blend.hpp',
       '../include/Pomdog/Graphics/BlendDescription.hpp',
-      '../include/Pomdog/Graphics/BlendFunction.hpp',
+      '../include/Pomdog/Graphics/BlendOperation.hpp',
       '../include/Pomdog/Graphics/BufferUsage.hpp',
       '../include/Pomdog/Graphics/ClearOptions.hpp',
       '../include/Pomdog/Graphics/ComparisonFunction.hpp',

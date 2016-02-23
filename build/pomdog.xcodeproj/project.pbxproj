@@ -481,7 +481,7 @@
 		B03814288BA60EEFD7C81CD9 /* Ray.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Ray.hpp; sourceTree = "<group>"; };
 		B05E645B511E87C352B765C8 /* OpenGLContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = OpenGLContext.hpp; sourceTree = "<group>"; };
 		B1F6554C1209D0012E57D3F4 /* Texture2D.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Texture2D.hpp; sourceTree = "<group>"; };
-		B207BED06908AA1A2817BCDA /* BlendFunction.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = BlendFunction.hpp; sourceTree = "<group>"; };
+		B207BED06908AA1A2817BCDA /* BlendOperation.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = BlendOperation.hpp; sourceTree = "<group>"; };
 		B287AAFFF99539C6D6462CD8 /* FileSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FileSystem.hpp; sourceTree = "<group>"; };
 		B2AEB843C0EAE82FED23106B /* ConnectionList.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ConnectionList.cpp; sourceTree = "<group>"; };
 		B5B53A56551DA75B254A8BF5 /* Version.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Version.hpp; sourceTree = "<group>"; };
@@ -1168,7 +1168,7 @@
 				7F797CB4F7636F0DCAA0A0D4 /* detail */,
 				8DAFC75DE55FD2BB8F10DEFC /* Blend.hpp */,
 				B9B61FF78819BA1E5B2CBFE8 /* BlendDescription.hpp */,
-				B207BED06908AA1A2817BCDA /* BlendFunction.hpp */,
+				B207BED06908AA1A2817BCDA /* BlendOperation.hpp */,
 				7EB3E2D0F4843945044F30DC /* BufferUsage.hpp */,
 				A591EE21F527F40F1CC2939D /* ClearOptions.hpp */,
 				DF3D37BF7E4F7494B861CC82 /* ComparisonFunction.hpp */,

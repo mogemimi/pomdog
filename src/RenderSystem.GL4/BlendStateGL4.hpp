@@ -13,15 +13,15 @@ namespace Detail {
 namespace GL4 {
 
 using BlendGL4 = Tagged<GLenum, Blend>;
-using BlendFunctionGL4 = Tagged<GLenum, BlendFunction>;
+using BlendOperationGL4 = Tagged<GLenum, BlendOperation>;
 
 struct RenderTargetBlendDescGL4 final {
     BlendGL4 ColorSource;
     BlendGL4 ColorDestination;
-    BlendFunctionGL4 ColorFunction;
+    BlendOperationGL4 ColorOperation;
     BlendGL4 AlphaSource;
     BlendGL4 AlphaDestination;
-    BlendFunctionGL4 AlphaFunction;
+    BlendOperationGL4 AlphaOperation;
     bool BlendEnable;
 };
 

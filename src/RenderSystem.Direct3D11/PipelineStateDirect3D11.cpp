@@ -20,14 +20,14 @@ namespace {
 
 using Microsoft::WRL::ComPtr;
 
-D3D11_BLEND_OP ToBlendFunction(BlendFunction blendOperation) noexcept
+D3D11_BLEND_OP ToBlendOperation(BlendOperation blendOperation) noexcept
 {
     switch (blendOperation) {
-    case BlendFunction::Add: return D3D11_BLEND_OP_ADD;
-    case BlendFunction::Subtract: return D3D11_BLEND_OP_SUBTRACT;
-    case BlendFunction::ReverseSubtract: return D3D11_BLEND_OP_REV_SUBTRACT;
-    case BlendFunction::Min: return D3D11_BLEND_OP_MIN;
-    case BlendFunction::Max: return D3D11_BLEND_OP_MAX;
+    case BlendOperation::Add: return D3D11_BLEND_OP_ADD;
+    case BlendOperation::Subtract: return D3D11_BLEND_OP_SUBTRACT;
+    case BlendOperation::ReverseSubtract: return D3D11_BLEND_OP_REV_SUBTRACT;
+    case BlendOperation::Min: return D3D11_BLEND_OP_MIN;
+    case BlendOperation::Max: return D3D11_BLEND_OP_MAX;
     }
     return D3D11_BLEND_OP_ADD;
 }
@@ -124,8 +124,8 @@ void ToD3D11Desc(RenderTargetBlendDescription const& desc,
     D3D11_RENDER_TARGET_BLEND_DESC & result) noexcept
 {
     result.BlendEnable = ToD3D11Boolean(desc.BlendEnable);
-    result.BlendOp = ToBlendFunction(desc.ColorBlendFunction);
-    result.BlendOpAlpha = ToBlendFunction(desc.AlphaBlendFunction);
+    result.BlendOp = ToBlendOperation(desc.ColorBlendOperation);
+    result.BlendOpAlpha = ToBlendOperation(desc.AlphaBlendOperation);
     result.DestBlend = ToBlend(desc.ColorDestinationBlend);
     result.DestBlendAlpha = ToBlend(desc.AlphaDestinationBlend);
     result.SrcBlend = ToBlend(desc.ColorSourceBlend);

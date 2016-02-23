@@ -37,14 +37,14 @@ GLenum ToBlendGL4NonTypesafe(Blend blend) noexcept
 #endif
 }
 //-----------------------------------------------------------------------
-GLenum ToBlendFunctionGL4NonTypesafe(BlendFunction func) noexcept
+GLenum ToBlendOperationGL4NonTypesafe(BlendOperation operation) noexcept
 {
-    switch (func) {
-    case BlendFunction::Add: return GL_FUNC_ADD;
-    case BlendFunction::Subtract: return GL_FUNC_SUBTRACT;
-    case BlendFunction::ReverseSubtract: return GL_FUNC_REVERSE_SUBTRACT;
-    case BlendFunction::Min: return GL_MIN;
-    case BlendFunction::Max: return GL_MAX;
+    switch (operation) {
+    case BlendOperation::Add: return GL_FUNC_ADD;
+    case BlendOperation::Subtract: return GL_FUNC_SUBTRACT;
+    case BlendOperation::ReverseSubtract: return GL_FUNC_REVERSE_SUBTRACT;
+    case BlendOperation::Min: return GL_MIN;
+    case BlendOperation::Max: return GL_MAX;
     }
 #ifdef _MSC_VER
     return GL_FUNC_ADD;
@@ -56,9 +56,9 @@ BlendGL4 ToBlendGL4(Blend blend) noexcept
     return BlendGL4{ToBlendGL4NonTypesafe(blend)};
 }
 //-----------------------------------------------------------------------
-BlendFunctionGL4 ToBlendFunctionGL4(BlendFunction func) noexcept
+BlendOperationGL4 ToBlendOperationGL4(BlendOperation operation) noexcept
 {
-    return BlendFunctionGL4{ToBlendFunctionGL4NonTypesafe(func)};
+    return BlendOperationGL4{ToBlendOperationGL4NonTypesafe(operation)};
 }
 //-----------------------------------------------------------------------
 void ToRenderTargetBlendGL4(
@@ -67,10 +67,10 @@ void ToRenderTargetBlendGL4(
 {
     result.ColorSource = ToBlendGL4(desc.ColorSourceBlend);
     result.ColorDestination = ToBlendGL4(desc.ColorDestinationBlend);
-    result.ColorFunction = ToBlendFunctionGL4(desc.ColorBlendFunction);
+    result.ColorOperation = ToBlendOperationGL4(desc.ColorBlendOperation);
     result.AlphaSource = ToBlendGL4(desc.AlphaSourceBlend);
     result.AlphaDestination = ToBlendGL4(desc.AlphaDestinationBlend);
-    result.AlphaFunction = ToBlendFunctionGL4(desc.AlphaBlendFunction);
+    result.AlphaOperation = ToBlendOperationGL4(desc.AlphaBlendOperation);
     result.BlendEnable = desc.BlendEnable;
 }
 
@@ -107,8 +107,8 @@ void BlendStateGL4::Apply()
             POMDOG_CHECK_ERROR_GL4("glBlendFuncSeparatei");
             glBlendEquationSeparatei(
                 index,
-                renderTarget.ColorFunction.value,
-                renderTarget.AlphaFunction.value);
+                renderTarget.ColorOperation.value,
+                renderTarget.AlphaOperation.value);
             POMDOG_CHECK_ERROR_GL4("glBlendEquationSeparatei");
             ++index;
         }
@@ -122,8 +122,8 @@ void BlendStateGL4::Apply()
             glDisable(GL_BLEND);
         }
         glBlendEquationSeparate(
-            renderTarget.ColorFunction.value,
-            renderTarget.AlphaFunction.value);
+            renderTarget.ColorOperation.value,
+            renderTarget.AlphaOperation.value);
         POMDOG_CHECK_ERROR_GL4("glBlendEquationSeparate");
         glBlendFuncSeparate(
             renderTarget.ColorSource.value,
