@@ -9,7 +9,7 @@ namespace Pomdog {
 namespace Detail {
 namespace {
 
-static std::int32_t MipmapImageDataBytes(
+std::int32_t MipmapImageDataBytes(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t bytesPerBlock) noexcept

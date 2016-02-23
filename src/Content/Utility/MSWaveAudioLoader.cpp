@@ -199,7 +199,7 @@ MMCKINFO ReadRiffChunk(HMMIO ioHandle)
     return std::move(riffChunk);
 }
 //-----------------------------------------------------------------------
-static std::vector<std::uint8_t> ReadWaveFormat(HMMIO ioHandle, MMCKINFO const& riffChunk)
+std::vector<std::uint8_t> ReadWaveFormat(HMMIO ioHandle, MMCKINFO const& riffChunk)
 {
     POMDOG_ASSERT(ioHandle);
 

@@ -12,7 +12,7 @@
 namespace Pomdog {
 namespace {
 
-static std::uint8_t PackUint8(float value)
+std::uint8_t PackUint8(float value)
 {
     POMDOG_ASSERT(value <= 255.0f);
     POMDOG_ASSERT(value >= 0);
@@ -21,7 +21,7 @@ static std::uint8_t PackUint8(float value)
     return static_cast<std::uint8_t>(std::round(value));
 }
 
-static std::uint8_t PackFromNormal(float value)
+std::uint8_t PackFromNormal(float value)
 {
     POMDOG_ASSERT(value <= 1.0f);
     POMDOG_ASSERT(value >= 0);
@@ -31,7 +31,7 @@ static std::uint8_t PackFromNormal(float value)
     return PackUint8(value * scale);
 }
 
-static std::uint32_t ColorPackUint(
+std::uint32_t ColorPackUint(
     std::uint32_t red, std::uint32_t green,
     std::uint32_t blue, std::uint32_t alpha) noexcept
 {

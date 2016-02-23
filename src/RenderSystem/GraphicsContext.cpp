@@ -19,7 +19,7 @@ namespace Detail {
 namespace {
 
 #if defined(DEBUG) && !defined(NDEBUG)
-static void CheckUnbindingRenderTargetsError(
+void CheckUnbindingRenderTargetsError(
     std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets,
     std::vector<std::shared_ptr<Texture>> const& textures)
 {
@@ -31,7 +31,7 @@ static void CheckUnbindingRenderTargetsError(
 }
 #endif
 //-----------------------------------------------------------------------
-static ClearOptions ToClearOptions(DepthFormat depthFormat) noexcept
+ClearOptions ToClearOptions(DepthFormat depthFormat) noexcept
 {
     switch (depthFormat) {
     case DepthFormat::Depth24Stencil8:

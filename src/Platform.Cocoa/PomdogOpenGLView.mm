@@ -26,14 +26,14 @@ using Pomdog::Detail::InputKeyEvent;
 
 namespace {
 
-static Pomdog::Point2D ToPoint2D(NSPoint const& point)
+Pomdog::Point2D ToPoint2D(NSPoint const& point)
 {
     ///@todo FIXME
     return Pomdog::Point2D(point.x - 2, point.y - 2);
     //return Pomdog::Point2D(point.x, point.y);
 }
 //-----------------------------------------------------------------------
-static Pomdog::Keys TranslateKey(std::uint16_t keyCode)
+Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 {
     using Pomdog::Keys;
 

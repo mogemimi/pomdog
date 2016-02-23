@@ -60,7 +60,7 @@ Connection Logger::Connect(std::function<void(LogEntry const&)> && slot)
 }
 //-----------------------------------------------------------------------
 template <typename T>
-static auto FindChannnel(std::string const& channelName, T & channels)
+auto FindChannnel(std::string const& channelName, T & channels)
     ->decltype(channels.begin())
 {
     return std::find_if(std::begin(channels), std::end(channels),
@@ -174,7 +174,7 @@ void Logger::Log(LogEntry const& entry)
     }
 }
 //-----------------------------------------------------------------------
-static Logger & GetLoggerInstance()
+Logger & GetLoggerInstance()
 {
     static Logger logger;
     return logger;
