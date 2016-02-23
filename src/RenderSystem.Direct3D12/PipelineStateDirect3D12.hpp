@@ -1,8 +1,6 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_PIPELINESTATEDIRECT3D12_13A223AC_HPP
-#define POMDOG_PIPELINESTATEDIRECT3D12_13A223AC_HPP
+#pragma once
 
 #include "../RenderSystem/NativePipelineState.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -49,5 +47,3 @@ private:
 } // namespace Direct3D12
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_PIPELINESTATEDIRECT3D12_13A223AC_HPP

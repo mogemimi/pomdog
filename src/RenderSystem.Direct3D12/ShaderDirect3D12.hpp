@@ -1,8 +1,6 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SHADERDIRECT3D12_E47B4982_HPP
-#define POMDOG_SHADERDIRECT3D12_E47B4982_HPP
+#pragma once
 
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
@@ -30,5 +28,3 @@ public:
 } // namespace Direct3D12
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SHADERDIRECT3D12_E47B4982_HPP

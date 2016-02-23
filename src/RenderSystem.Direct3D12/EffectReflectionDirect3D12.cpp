@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "EffectReflectionDirect3D12.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
@@ -19,7 +18,7 @@ namespace {
 
 using Direct3D::HLSLReflectionHelper;
 
-static std::vector<EffectVariable> EnumerateEffectVariables(
+std::vector<EffectVariable> EnumerateEffectVariables(
     ID3D12ShaderReflectionConstantBuffer* constantBufferReflector)
 {
     POMDOG_ASSERT(constantBufferReflector);
@@ -86,7 +85,7 @@ static std::vector<EffectVariable> EnumerateEffectVariables(
     return std::move(variables);
 }
 //-----------------------------------------------------------------------
-static void EnumerateConstantBuffer(
+void EnumerateConstantBuffer(
     ID3D12ShaderReflection* shaderReflector,
     std::vector<EffectConstantDescription> & output)
 {

@@ -1,8 +1,6 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_BUFFERDIRECT3D12_7C9C6EF0_HPP
-#define POMDOG_BUFFERDIRECT3D12_7C9C6EF0_HPP
+#pragma once
 
 #include "../RenderSystem/NativeBuffer.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -43,5 +41,3 @@ private:
 } // namespace Direct3D12
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_BUFFERDIRECT3D12_7C9C6EF0_HPP

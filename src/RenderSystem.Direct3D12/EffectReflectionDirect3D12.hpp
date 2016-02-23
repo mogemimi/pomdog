@@ -1,8 +1,6 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_EFFECTREFLECTIONDIRECT3D12_87A4D3AB_HPP
-#define POMDOG_EFFECTREFLECTIONDIRECT3D12_87A4D3AB_HPP
+#pragma once
 
 #include "../RenderSystem/NativeEffectReflection.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -33,5 +31,3 @@ private:
 } // namespace Direct3D12
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_EFFECTREFLECTIONDIRECT3D12_87A4D3AB_HPP

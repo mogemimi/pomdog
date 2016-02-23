@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "PipelineStateDirect3D12.hpp"
 #include "ConstantLayoutDirect3D12.hpp"
@@ -23,24 +22,24 @@ namespace {
 using Microsoft::WRL::ComPtr;
 using DXGI::DXGIFormatHelper;
 
-static inline BOOL ToD3D12Boolean(bool is) noexcept
+BOOL ToD3D12Boolean(bool is) noexcept
 {
     return is ? TRUE : FALSE;
 }
 //-----------------------------------------------------------------------
-static D3D12_BLEND_OP ToBlendFunction(BlendFunction blendOperation) noexcept
+D3D12_BLEND_OP ToBlendOperation(BlendOperation blendOperation) noexcept
 {
     switch (blendOperation) {
-    case BlendFunction::Add: return D3D12_BLEND_OP_ADD;
-    case BlendFunction::Subtract: return D3D12_BLEND_OP_SUBTRACT;
-    case BlendFunction::ReverseSubtract: return D3D12_BLEND_OP_REV_SUBTRACT;
-    case BlendFunction::Min: return D3D12_BLEND_OP_MIN;
-    case BlendFunction::Max: return D3D12_BLEND_OP_MAX;
+    case BlendOperation::Add: return D3D12_BLEND_OP_ADD;
+    case BlendOperation::Subtract: return D3D12_BLEND_OP_SUBTRACT;
+    case BlendOperation::ReverseSubtract: return D3D12_BLEND_OP_REV_SUBTRACT;
+    case BlendOperation::Min: return D3D12_BLEND_OP_MIN;
+    case BlendOperation::Max: return D3D12_BLEND_OP_MAX;
     }
     return D3D12_BLEND_OP_ADD;
 }
 //-----------------------------------------------------------------------
-static D3D12_BLEND ToBlend(Blend blend) noexcept
+D3D12_BLEND ToBlend(Blend blend) noexcept
 {
     switch (blend) {
     case Blend::Zero: return D3D12_BLEND_ZERO;
@@ -64,13 +63,13 @@ static D3D12_BLEND ToBlend(Blend blend) noexcept
     return D3D12_BLEND_ONE;
 }
 //-----------------------------------------------------------------------
-static void ToD3D12Desc(
+void ToD3D12Desc(
     RenderTargetBlendDescription const& desc,
     D3D12_RENDER_TARGET_BLEND_DESC & result) noexcept
 {
     result.BlendEnable = ToD3D12Boolean(desc.BlendEnable);
-    result.BlendOp = ToBlendFunction(desc.ColorBlendFunction);
-    result.BlendOpAlpha = ToBlendFunction(desc.AlphaBlendFunction);
+    result.BlendOp = ToBlendOperation(desc.ColorBlendOperation);
+    result.BlendOpAlpha = ToBlendOperation(desc.AlphaBlendOperation);
     result.DestBlend = ToBlend(desc.ColorDestinationBlend);
     result.DestBlendAlpha = ToBlend(desc.AlphaDestinationBlend);
     result.SrcBlend = ToBlend(desc.ColorSourceBlend);
@@ -80,7 +79,7 @@ static void ToD3D12Desc(
     result.LogicOpEnable = FALSE;
 }
 //-----------------------------------------------------------------------
-static D3D12_CULL_MODE ToCullMode(CullMode cullMode) noexcept
+D3D12_CULL_MODE ToCullMode(CullMode cullMode) noexcept
 {
     switch (cullMode) {
     case CullMode::ClockwiseFace: return D3D12_CULL_MODE_FRONT;
@@ -90,7 +89,7 @@ static D3D12_CULL_MODE ToCullMode(CullMode cullMode) noexcept
     return D3D12_CULL_MODE_BACK;
 }
 //-----------------------------------------------------------------------
-static D3D12_FILL_MODE ToFillMode(FillMode fillMode) noexcept
+D3D12_FILL_MODE ToFillMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
     case FillMode::WireFrame: return D3D12_FILL_MODE_WIREFRAME;
@@ -99,7 +98,7 @@ static D3D12_FILL_MODE ToFillMode(FillMode fillMode) noexcept
     return D3D12_FILL_MODE_SOLID;
 }
 //-----------------------------------------------------------------------
-static D3D12_STENCIL_OP ToStencilOperation(StencilOperation operation) noexcept
+D3D12_STENCIL_OP ToStencilOperation(StencilOperation operation) noexcept
 {
     switch (operation) {
     case StencilOperation::Keep: return D3D12_STENCIL_OP_KEEP;
@@ -114,7 +113,7 @@ static D3D12_STENCIL_OP ToStencilOperation(StencilOperation operation) noexcept
     return D3D12_STENCIL_OP_KEEP;
 }
 //-----------------------------------------------------------------------
-static D3D12_COMPARISON_FUNC ToComparisonFunction(
+D3D12_COMPARISON_FUNC ToComparisonFunction(
     ComparisonFunction compareFunction) noexcept
 {
     switch (compareFunction) {
@@ -130,7 +129,7 @@ static D3D12_COMPARISON_FUNC ToComparisonFunction(
     return D3D12_COMPARISON_FUNC_LESS_EQUAL;
 }
 //-----------------------------------------------------------------------
-static D3D12_INPUT_CLASSIFICATION ToInputClassification(
+D3D12_INPUT_CLASSIFICATION ToInputClassification(
     InputClassification slotClass) noexcept
 {
     switch (slotClass) {
@@ -140,7 +139,7 @@ static D3D12_INPUT_CLASSIFICATION ToInputClassification(
     return D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
 }
 //-----------------------------------------------------------------------
-static DXGI_FORMAT ToDSVFormat(DepthFormat format) noexcept
+DXGI_FORMAT ToDSVFormat(DepthFormat format) noexcept
 {
     if (format == DepthFormat::None) {
         return DXGI_FORMAT_UNKNOWN;
@@ -148,7 +147,7 @@ static DXGI_FORMAT ToDSVFormat(DepthFormat format) noexcept
     return DXGIFormatHelper::ToDXGIFormat(format);
 }
 //-----------------------------------------------------------------------
-static D3D12_PRIMITIVE_TOPOLOGY_TYPE ToPrimitiveTopologyType(
+D3D12_PRIMITIVE_TOPOLOGY_TYPE ToPrimitiveTopologyType(
     PrimitiveTopologyType primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
@@ -158,7 +157,7 @@ static D3D12_PRIMITIVE_TOPOLOGY_TYPE ToPrimitiveTopologyType(
     return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 }
 //-----------------------------------------------------------------------
-static void ToBlendState(
+void ToBlendState(
     BlendDescription const& desc,
     D3D12_BLEND_DESC & output) noexcept
 {
@@ -174,7 +173,7 @@ static void ToBlendState(
     }
 }
 //-----------------------------------------------------------------------
-static void ToRasterizerState(
+void ToRasterizerState(
     RasterizerDescription const& desc,
     D3D12_RASTERIZER_DESC & output)
 {
@@ -201,7 +200,7 @@ static void ToRasterizerState(
         || (output.AntialiasedLineEnable && !output.MultisampleEnable));
 }
 //-----------------------------------------------------------------------
-static void ToDepthStencilState(
+void ToDepthStencilState(
     DepthStencilDescription const& desc,
     D3D12_DEPTH_STENCIL_DESC & output)
 {
@@ -226,7 +225,7 @@ static void ToDepthStencilState(
     output.FrontFace.StencilFunc = ToComparisonFunction(desc.ClockwiseFace.StencilFunction);
 }
 //-----------------------------------------------------------------------
-static std::vector<D3D12_INPUT_ELEMENT_DESC> ToInputElements(
+std::vector<D3D12_INPUT_ELEMENT_DESC> ToInputElements(
     InputLayoutDescription const& desc,
     std::vector<D3D12_SIGNATURE_PARAMETER_DESC> const& signatureParameters)
 {
@@ -276,7 +275,7 @@ static std::vector<D3D12_INPUT_ELEMENT_DESC> ToInputElements(
     return std::move(elements);
 }
 //-----------------------------------------------------------------------
-static void ToRTVFormats(
+void ToRTVFormats(
     std::vector<SurfaceFormat> const& renderTargetViewFormats,
     D3D12_GRAPHICS_PIPELINE_STATE_DESC & pipelineStateDesc)
 {
@@ -293,7 +292,7 @@ static void ToRTVFormats(
     }
 }
 //-----------------------------------------------------------------------
-static D3D12_SHADER_BYTECODE ToShaderBytecode(ShaderDirect3D12 const& shader)
+D3D12_SHADER_BYTECODE ToShaderBytecode(ShaderDirect3D12 const& shader)
 {
     POMDOG_ASSERT(!shader.CodeBlob.empty());
 
@@ -303,7 +302,7 @@ static D3D12_SHADER_BYTECODE ToShaderBytecode(ShaderDirect3D12 const& shader)
     return std::move(shaderBytecode);
 }
 //-----------------------------------------------------------------------
-static void ReflectShaderBytecode(
+void ReflectShaderBytecode(
     D3D12_SHADER_BYTECODE const& shaderBytecode,
     Microsoft::WRL::ComPtr<ID3D12ShaderReflection> & shaderReflector,
     D3D12_SHADER_DESC & shaderDesc)
@@ -329,7 +328,7 @@ static void ReflectShaderBytecode(
     }
 }
 //-----------------------------------------------------------------------
-static std::vector<D3D12_SIGNATURE_PARAMETER_DESC>
+std::vector<D3D12_SIGNATURE_PARAMETER_DESC>
 EnumerateSignatureParameters(D3D12_SHADER_BYTECODE const& shaderBytecode)
 {
     ComPtr<ID3D12ShaderReflection> shaderReflector;
@@ -357,7 +356,7 @@ EnumerateSignatureParameters(D3D12_SHADER_BYTECODE const& shaderBytecode)
     return std::move(signatureParameters);
 }
 //-----------------------------------------------------------------------
-static void EnumerateConstantBuffers(
+void EnumerateConstantBuffers(
     D3D12_SHADER_BYTECODE const& shaderBytecode,
     std::vector<ConstantBufferBindDesc> & constantBufferBinds,
     std::vector<D3D12_SHADER_INPUT_BIND_DESC> & textureBinds,
@@ -401,7 +400,7 @@ static void EnumerateConstantBuffers(
     }
 }
 //-----------------------------------------------------------------------
-static std::vector<ConstantBufferBindDesc> CreateConstantBufferBindDescs(
+std::vector<ConstantBufferBindDesc> CreateConstantBufferBindDescs(
     D3D12_SHADER_BYTECODE const& vertexShaderBytecode,
     D3D12_SHADER_BYTECODE const& pixelShaderBytecode,
     std::vector<D3D12_SHADER_INPUT_BIND_DESC> & textureBinds,
@@ -434,7 +433,7 @@ static std::vector<ConstantBufferBindDesc> CreateConstantBufferBindDescs(
     return std::move(bindings);
 }
 //-----------------------------------------------------------------------
-static void InitAsDescriptorTable(
+void InitAsDescriptorTable(
     D3D12_ROOT_PARAMETER & rootParameter,
     UINT numDescriptorRanges,
     const D3D12_DESCRIPTOR_RANGE* pDescriptorRanges,
@@ -446,7 +445,7 @@ static void InitAsDescriptorTable(
     rootParameter.DescriptorTable.pDescriptorRanges = pDescriptorRanges;
 }
 //-----------------------------------------------------------------------
-static void InitAsConstantBufferView(
+void InitAsConstantBufferView(
     D3D12_ROOT_PARAMETER & rootParameter,
     UINT shaderRegister,
     UINT registerSpace = 0,

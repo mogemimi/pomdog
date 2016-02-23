@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "GraphicsDeviceDirect3D12.hpp"
 #include "BufferDirect3D12.hpp"
@@ -26,7 +25,7 @@ namespace {
 
 using Microsoft::WRL::ComPtr;
 
-static void EnumerateAdapters(std::vector<ComPtr<IDXGIAdapter1>> & adapters)
+void EnumerateAdapters(std::vector<ComPtr<IDXGIAdapter1>> & adapters)
 {
     // Create DXGI factory
     ComPtr<IDXGIFactory3> dxgiFactory;

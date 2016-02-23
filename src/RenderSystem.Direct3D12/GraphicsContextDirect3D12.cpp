@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "GraphicsContextDirect3D12.hpp"
 #include "BufferDirect3D12.hpp"
@@ -37,7 +36,7 @@ namespace {
 using Microsoft::WRL::ComPtr;
 using DXGI::DXGIFormatHelper;
 
-static D3D_PRIMITIVE_TOPOLOGY ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
+D3D_PRIMITIVE_TOPOLOGY ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
     case PrimitiveTopology::TriangleStrip: return D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
@@ -48,7 +47,7 @@ static D3D_PRIMITIVE_TOPOLOGY ToPrimitiveTopology(PrimitiveTopology primitiveTop
     return D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 }
 //-----------------------------------------------------------------------
-static D3D12_RESOURCE_BARRIER CreateResourceBarrier(
+D3D12_RESOURCE_BARRIER CreateResourceBarrier(
     ID3D12Resource* resource,
     D3D12_RESOURCE_STATES stateBefore,
     D3D12_RESOURCE_STATES stateAfter) noexcept

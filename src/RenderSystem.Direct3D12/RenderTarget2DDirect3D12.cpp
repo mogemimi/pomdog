@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "RenderTarget2DDirect3D12.hpp"
 #include "../RenderSystem.DXGI/DXGIFormatHelper.hpp"
@@ -18,7 +17,7 @@ namespace {
 
 using DXGI::DXGIFormatHelper;
 
-static void CreateDepthStencilBuffer(
+void CreateDepthStencilBuffer(
     ID3D12Device* device,
     DepthFormat depthStencilFormat,
     std::int32_t pixelWidth,
@@ -53,7 +52,7 @@ static void CreateDepthStencilBuffer(
     }
 }
 //-----------------------------------------------------------------------
-static D3D12_DSV_FLAGS ToDSVFlags(DepthFormat format) noexcept
+D3D12_DSV_FLAGS ToDSVFlags(DepthFormat format) noexcept
 {
     switch (format) {
     case DepthFormat::Depth16:
@@ -65,7 +64,7 @@ static D3D12_DSV_FLAGS ToDSVFlags(DepthFormat format) noexcept
     return D3D12_DSV_FLAG_NONE;
 }
 //-----------------------------------------------------------------------
-static void CreateDepthStencilView(
+void CreateDepthStencilView(
     ID3D12Device* device,
     DepthFormat depthStencilFormat,
     Microsoft::WRL::ComPtr<ID3D12Resource> const& depthBuffer,
@@ -111,7 +110,7 @@ static void CreateDepthStencilView(
 #endif
 }
 //-----------------------------------------------------------------------
-static void CreateShaderResourceView(
+void CreateShaderResourceView(
     ID3D12Device* device,
     DXGI_FORMAT dxgiFormat,
     UINT16 mipLevels,

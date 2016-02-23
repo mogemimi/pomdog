@@ -1,8 +1,6 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_TEXTURE2DDIRECT3D12_C5552A17_HPP
-#define POMDOG_TEXTURE2DDIRECT3D12_C5552A17_HPP
+#pragma once
 
 #include "../RenderSystem/NativeTexture2D.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -39,5 +37,3 @@ private:
 } // namespace Direct3D12
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_TEXTURE2DDIRECT3D12_C5552A17_HPP

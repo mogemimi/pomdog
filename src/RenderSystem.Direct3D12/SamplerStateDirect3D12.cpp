@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "SamplerStateDirect3D12.hpp"
 #include "Pomdog/Graphics/SamplerDescription.hpp"
@@ -11,7 +10,7 @@ namespace Detail {
 namespace Direct3D12 {
 namespace {
 
-static D3D12_FILTER ToFilter(TextureFilter textureFilter) noexcept
+D3D12_FILTER ToFilter(TextureFilter textureFilter) noexcept
 {
     switch (textureFilter) {
     case TextureFilter::Anisotropic:    return D3D12_FILTER_ANISOTROPIC;
@@ -27,7 +26,7 @@ static D3D12_FILTER ToFilter(TextureFilter textureFilter) noexcept
     return D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 }
 //-----------------------------------------------------------------------
-static D3D12_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) noexcept
+D3D12_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) noexcept
 {
     switch (addressMode) {
     case TextureAddressMode::Wrap: return D3D12_TEXTURE_ADDRESS_MODE_WRAP;

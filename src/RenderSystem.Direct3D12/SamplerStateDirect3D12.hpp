@@ -1,8 +1,6 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_SAMPLERSTATEDIRECT3D12_28639E1F_HPP
-#define POMDOG_SAMPLERSTATEDIRECT3D12_28639E1F_HPP
+#pragma once
 
 #include "../RenderSystem/NativeSamplerState.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -28,5 +26,3 @@ private:
 } // namespace Direct3D12
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_SAMPLERSTATEDIRECT3D12_28639E1F_HPP

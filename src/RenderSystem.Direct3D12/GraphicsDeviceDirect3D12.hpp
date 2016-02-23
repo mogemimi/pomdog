@@ -1,8 +1,6 @@
-// Copyright (c) 2013-2015 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#ifndef POMDOG_GRAPHICSDEVICEDIRECT3D12_7793CEB5_HPP
-#define POMDOG_GRAPHICSDEVICEDIRECT3D12_7793CEB5_HPP
+#pragma once
 
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
@@ -67,5 +65,3 @@ private:
 } // namespace Direct3D12
 } // namespace Detail
 } // namespace Pomdog
-
-#endif // POMDOG_GRAPHICSDEVICEDIRECT3D12_7793CEB5_HPP
