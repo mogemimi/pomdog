@@ -17,7 +17,7 @@ namespace Win32 {
 namespace {
 
 template <typename T>
-LPSTR MakeIntegerResource(T && resource) noexcept
+LPTSTR MakeIntegerResource(T && resource) noexcept
 {
 #pragma warning(push)
 #pragma warning(disable:4302)
