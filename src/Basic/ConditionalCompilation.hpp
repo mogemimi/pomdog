@@ -36,19 +36,19 @@
 //----------------------------
 // CPU architecture detection
 //----------------------------
-#if defined(_M_IX86) || defined(__i386__) || defined(_X86_)
+#if defined(_M_IX86) || defined(__i386__)
 #   define POMDOG_ARCHITECTURE_X86
-#elif defined(_M_IA64) || defined(__ia64__) || defined(_IA64)
+#elif defined(_M_IA64) || defined(__ia64__)
 #   define POMDOG_ARCHITECTURE_IA64
-#elif defined(_M_X64) || defined(__x86_64__) || defined(_AMD64_)
+#elif defined(_M_AMD64) || defined(__amd64__)
 #   define POMDOG_ARCHITECTURE_AMD64
-#elif defined(_M_ARM) || defined(__arm__) || defined(_ARM_)
+#elif defined(_M_ARM) || defined(__arm__)
 #   define POMDOG_ARCHITECTURE_ARM
-#elif defined(__arm64__)
+#elif defined(__aarch64__) || defined(__arm64__)
 #   define POMDOG_ARCHITECTURE_ARM64
 #elif defined(__powerpc64__)
 #   define POMDOG_ARCHITECTURE_POWERPC64
-#elif defined(__ppc__) || defined(__powerpc__)
+#elif defined(_M_PPC) || defined(__ppc__)
 #   define POMDOG_ARCHITECTURE_POWERPC
 #elif defined(_POWER) || defined(_ARCH_PWR) || defined(_ARCH_COM)
 #   define POMDOG_ARCHITECTURE_POWER
