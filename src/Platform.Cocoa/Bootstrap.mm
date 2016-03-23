@@ -8,7 +8,7 @@
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Logging/Log.hpp"
-#import "PomdogOpenGLView.hpp"
+#import "Pomdog/Platform/Cocoa/PomdogOpenGLView.hpp"
 
 using Pomdog::Detail::Cocoa::GameHostCocoa;
 using Pomdog::Detail::Cocoa::GameWindowCocoa;
