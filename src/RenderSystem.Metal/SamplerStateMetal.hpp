@@ -16,7 +16,7 @@ public:
         id<MTLDevice> device,
         SamplerDescription const& description);
 
-    id<MTLSamplerState> GetSamplerState() const;
+    id<MTLSamplerState> GetSamplerState() const noexcept;
 
 private:
     id<MTLSamplerState> samplerState;

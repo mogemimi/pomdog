@@ -21,6 +21,8 @@ public:
         DepthFormat depthStencilFormat,
         std::int32_t multiSampleCount);
 
+    id<MTLTexture> GetTexture() const noexcept;
+
 private:
     id<MTLTexture> texture;
     id<MTLTexture> depthStencilTexture;

@@ -1,12 +1,17 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "GraphicsContextMetal.hpp"
-#include "BufferMetal.hpp"
-#include "PipelineStateMetal.hpp"
+#include "../RenderSystem.Metal/BufferMetal.hpp"
+#include "../RenderSystem.Metal/PipelineStateMetal.hpp"
+#include "../RenderSystem.Metal/RenderTarget2DMetal.hpp"
+#include "../RenderSystem.Metal/SamplerStateMetal.hpp"
+#include "../RenderSystem.Metal/Texture2DMetal.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
+#include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
-#include "Pomdog/Graphics/IndexBuffer.hpp"
+#include "Pomdog/Graphics/RenderTarget2D.hpp"
+#include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
@@ -261,7 +266,7 @@ void GraphicsContextMetal::SetIndexBuffer(std::shared_ptr<IndexBuffer> const& in
 //-----------------------------------------------------------------------
 void GraphicsContextMetal::SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState)
 {
-    POMDOG_ASSERT(pipelineState);
+    POMDOG_ASSERT(pipelineState != nullptr);
 
     auto nativePipelineState = static_cast<PipelineStateMetal*>(pipelineState.get());
 
@@ -279,22 +284,56 @@ void GraphicsContextMetal::SetConstantBuffer(int index, std::shared_ptr<NativeBu
 //-----------------------------------------------------------------------
 void GraphicsContextMetal::SetSampler(int index, NativeSamplerState* sampler)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    POMDOG_ASSERT(sampler != nullptr);
+    POMDOG_ASSERT(index >= 0);
+
+    auto samplerStateMetal = static_cast<SamplerStateMetal*>(sampler);
+
+    POMDOG_ASSERT(samplerStateMetal != nullptr);
+    POMDOG_ASSERT(samplerStateMetal != dynamic_cast<SamplerStateMetal*>(sampler));
+    POMDOG_ASSERT(samplerStateMetal->GetSamplerState() != nil);
+
+    POMDOG_ASSERT(commandEncoder != nil);
+    [commandEncoder setVertexSamplerState:samplerStateMetal->GetSamplerState() atIndex:index];
+    [commandEncoder setFragmentSamplerState:samplerStateMetal->GetSamplerState() atIndex:index];
 }
 //-----------------------------------------------------------------------
 void GraphicsContextMetal::SetTexture(int index)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(commandEncoder != nil);
+    [commandEncoder setVertexTexture:nil atIndex:index];
+    [commandEncoder setFragmentTexture:nil atIndex:index];
 }
 //-----------------------------------------------------------------------
 void GraphicsContextMetal::SetTexture(int index, Texture2D & texture)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    POMDOG_ASSERT(index >= 0);
+
+    auto textureMetal = static_cast<Texture2DMetal*>(texture.GetNativeTexture2D());
+
+    POMDOG_ASSERT(textureMetal != nullptr);
+    POMDOG_ASSERT(textureMetal != dynamic_cast<Texture2DMetal*>(texture.GetNativeTexture2D()));
+    POMDOG_ASSERT(textureMetal->GetTexture() != nil);
+
+    POMDOG_ASSERT(commandEncoder != nil);
+    [commandEncoder setVertexTexture:textureMetal->GetTexture() atIndex:index];
+    [commandEncoder setFragmentTexture:textureMetal->GetTexture() atIndex:index];
 }
 //-----------------------------------------------------------------------
-void GraphicsContextMetal::SetTexture(int index, RenderTarget2D & texture)
+void GraphicsContextMetal::SetTexture(int index, RenderTarget2D & renderTarget)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    POMDOG_ASSERT(index >= 0);
+
+    auto renderTargetMetal = static_cast<RenderTarget2DMetal*>(renderTarget.GetNativeRenderTarget2D());
+
+    POMDOG_ASSERT(renderTargetMetal != nullptr);
+    POMDOG_ASSERT(renderTargetMetal != dynamic_cast<RenderTarget2DMetal*>(renderTarget.GetNativeTexture2D()));
+    POMDOG_ASSERT(renderTargetMetal->GetTexture() != nil);
+
+    POMDOG_ASSERT(commandEncoder != nil);
+    [commandEncoder setVertexTexture:renderTargetMetal->GetTexture() atIndex:index];
+    [commandEncoder setFragmentTexture:renderTargetMetal->GetTexture() atIndex:index];
 }
 //-----------------------------------------------------------------------
 void GraphicsContextMetal::SetRenderTarget()

@@ -97,6 +97,11 @@ void Texture2DMetal::SetData(
     }
 }
 //-----------------------------------------------------------------------
+id<MTLTexture> Texture2DMetal::GetTexture() const noexcept
+{
+    return texture;
+}
+//-----------------------------------------------------------------------
 } // namespace Metal
 } // namespace Detail
 } // namespace Pomdog

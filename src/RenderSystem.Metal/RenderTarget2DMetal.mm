@@ -85,6 +85,11 @@ RenderTarget2DMetal::RenderTarget2DMetal(
         }
     }
 }
+//-----------------------------------------------------------------------
+id<MTLTexture> Texture2DMetal::GetTexture() const noexcept
+{
+    return texture;
+}
 
 } // namespace Metal
 } // namespace Detail

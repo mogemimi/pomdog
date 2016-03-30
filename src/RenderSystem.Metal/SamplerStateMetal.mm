@@ -92,7 +92,7 @@ SamplerStateMetal::SamplerStateMetal(id<MTLDevice> device, SamplerDescription co
     }
 }
 //-----------------------------------------------------------------------
-id<MTLSamplerState> SamplerStateMetal::GetSamplerState() const
+id<MTLSamplerState> SamplerStateMetal::GetSamplerState() const noexcept
 {
     return samplerState;
 }

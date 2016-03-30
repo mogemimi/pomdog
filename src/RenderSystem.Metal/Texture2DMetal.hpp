@@ -26,6 +26,8 @@ public:
         SurfaceFormat format,
         void const* pixelData) override;
 
+    id<MTLTexture> GetTexture() const noexcept;
+
 private:
     id<MTLTexture> texture;
 };
