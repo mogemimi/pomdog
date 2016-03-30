@@ -636,7 +636,7 @@
 					../dependencies/iutest/include,
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/System/Library/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-g";
 				PRODUCT_NAME = PomdogUnitTest;
@@ -656,7 +656,7 @@
 					../dependencies/iutest/include,
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/System/Library/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = PomdogUnitTest;
 			};
 			name = Release;
@@ -751,7 +751,7 @@
 					../dependencies/iutest/include,
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/System/Library/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -770,7 +770,7 @@
 					../dependencies/iutest/include,
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/System/Library/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-g";
 				PRODUCT_NAME = "$(TARGET_NAME)";

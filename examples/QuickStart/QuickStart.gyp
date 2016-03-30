@@ -33,7 +33,7 @@
       }],
       ['OS == "mac"', {
         'xcode_settings': {
-          'MACOSX_DEPLOYMENT_TARGET': '10.9',
+          'MACOSX_DEPLOYMENT_TARGET': '10.11',
         },
         'link_settings': {
           'libraries': [
