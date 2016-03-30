@@ -12,8 +12,8 @@
     'xcode_settings': {
       'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
       'CLANG_CXX_LANGUAGE_STANDARD': 'c++14',
-      'MACOSX_DEPLOYMENT_TARGET': '10.9',
       'CLANG_CXX_LIBRARY': 'libc++',
+      'CLANG_ENABLE_OBJC_ARC': 'YES',
     },
     'include_dirs': [
       '<@(pomdog_dir)/include',
@@ -32,6 +32,9 @@
         ],
       }],
       ['OS == "mac"', {
+        'xcode_settings': {
+          'MACOSX_DEPLOYMENT_TARGET': '10.9',
+        },
         'link_settings': {
           'libraries': [
             '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
@@ -68,6 +71,18 @@
             'Platform.Cocoa/GameViewController.h',
             'Platform.Cocoa/GameViewController.mm',
           ],
+          'xcode_settings': {
+            'INFOPLIST_FILE': 'Platform.Cocoa/Info.plist',
+            'LD_RUNPATH_SEARCH_PATHS': [
+              '$(inherited)',
+              '@executable_path/../Frameworks',
+            ],
+          },
+          'mac_bundle_resources': [
+            'Platform.Cocoa/Base.lproj/MainMenu.xib',
+            'Platform.Cocoa/English.lproj/InfoPlist.strings',
+            'Platform.Cocoa/Images.xcassets/',
+          ],
         }],
         ['OS == "linux"', {
           'sources': [
@@ -76,19 +91,8 @@
         }],
       ],
       'mac_bundle_resources': [
-        'Platform.Cocoa/Base.lproj/MainMenu.xib',
-        'Platform.Cocoa/English.lproj/InfoPlist.strings',
-        'Platform.Cocoa/Images.xcassets/',
         'Content/',
       ],
-      'xcode_settings': {
-        'INFOPLIST_FILE': 'Platform.Cocoa/Info.plist',
-        'CLANG_ENABLE_OBJC_ARC': 'YES',
-        'LD_RUNPATH_SEARCH_PATHS': [
-          '$(inherited)',
-          '@executable_path/../Frameworks',
-        ],
-      },
     },
   ],
 }
