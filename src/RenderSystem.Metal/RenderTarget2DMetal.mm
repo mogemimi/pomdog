@@ -86,7 +86,7 @@ RenderTarget2DMetal::RenderTarget2DMetal(
     }
 }
 //-----------------------------------------------------------------------
-id<MTLTexture> Texture2DMetal::GetTexture() const noexcept
+id<MTLTexture> RenderTarget2DMetal::GetTexture() const noexcept
 {
     return texture;
 }

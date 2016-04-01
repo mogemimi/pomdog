@@ -328,7 +328,7 @@ void GraphicsContextMetal::SetTexture(int index, RenderTarget2D & renderTarget)
     auto renderTargetMetal = static_cast<RenderTarget2DMetal*>(renderTarget.GetNativeRenderTarget2D());
 
     POMDOG_ASSERT(renderTargetMetal != nullptr);
-    POMDOG_ASSERT(renderTargetMetal != dynamic_cast<RenderTarget2DMetal*>(renderTarget.GetNativeTexture2D()));
+    POMDOG_ASSERT(renderTargetMetal != dynamic_cast<RenderTarget2DMetal*>(renderTarget.GetNativeRenderTarget2D()));
     POMDOG_ASSERT(renderTargetMetal->GetTexture() != nil);
 
     POMDOG_ASSERT(commandEncoder != nil);
