@@ -9,7 +9,7 @@ build:
         git clone --depth=1 https://chromium.googlesource.com/external/gyp.git tools/gyp
 
     - script:
-      name: unittest
+      name: unittest-gyp
       code: |
         python tools/gyp.py test/FrameworkTest/unittest.gyp -f make
         export CC=clang
@@ -19,3 +19,18 @@ build:
         export LDFLAGS="-stdlib=libc++"
         make -C build.makefiles
         ./build.makefiles/out/Release/unittest
+
+    - script:
+      name: unittest-cmake
+      code: |
+        export CC=clang
+        export CXX=clang++
+        export LINK=clang++
+        export CXXFLAGS="-std=c++17 -stdlib=libc++"
+        export LDFLAGS="-stdlib=libc++"
+        mkdir build.cmake
+        cd build.cmake
+        cmake ..
+        make
+        cd ..
+        ./build.cmake/build/PomdogTest/PomdogTest
