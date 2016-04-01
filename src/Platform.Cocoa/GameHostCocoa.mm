@@ -37,14 +37,14 @@ namespace Detail {
 namespace Cocoa {
 namespace {
 
-static std::shared_ptr<OpenGLContextCocoa> CreateOpenGLContext(
+std::shared_ptr<OpenGLContextCocoa> CreateOpenGLContext(
     PresentationParameters const& presentationParameters)
 {
     auto pixelFormat = CocoaOpenGLHelper::CreatePixelFormat(presentationParameters);
     return std::make_shared<OpenGLContextCocoa>(pixelFormat);
 }
 //-----------------------------------------------------------------------
-static std::shared_ptr<GraphicsContext> CreateGraphicsContext(
+std::shared_ptr<GraphicsContext> CreateGraphicsContext(
     std::shared_ptr<OpenGLContextCocoa> const& openGLContext,
     std::weak_ptr<GameWindow> && gameWindow,
     PresentationParameters const& presentationParameters,
