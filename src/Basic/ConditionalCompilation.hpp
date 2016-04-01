@@ -115,9 +115,9 @@
 #elif defined(_MSC_VER) && (_MSC_VER >= 1900)
 // C++14 support in MSVC
 // See https://msdn.microsoft.com/en-us/library/hh567368.aspx
-#elif defined(__GNUC__) && (__cplusplus >= 201411L)
+#elif defined(__GNUC__) && (__cplusplus >= 201402L)
 // C++14 support in GCC
-// See https://gcc.gnu.org/projects/cxx1z.html
+// See https://gcc.gnu.org/projects/cxx-status.html#cxx14
 #else
 #error "C++14 is not supported."
 #endif
