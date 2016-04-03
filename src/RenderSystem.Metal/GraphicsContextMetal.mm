@@ -15,6 +15,7 @@
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -199,14 +200,32 @@ void GraphicsContextMetal::DrawIndexedInstanced(
         instanceCount:instanceCount];
 }
 //-----------------------------------------------------------------------
-void GraphicsContextMetal::SetViewport(Viewport const& viewport)
+void GraphicsContextMetal::SetViewport(Viewport const& viewportIn)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    POMDOG_ASSERT(viewportIn.Width > 0);
+    POMDOG_ASSERT(viewportIn.Height > 0);
+
+    MTLViewport viewport;
+    viewport.originX = viewportIn.TopLeftX;
+    viewport.originY = viewportIn.TopLeftY;
+    viewport.width = viewportIn.Width;
+    viewport.height = viewportIn.Height;
+    viewport.znear = viewportIn.MinDepth;
+    viewport.zfar = viewportIn.MaxDepth;
+    [commandEncoder setViewport:viewport];
 }
 //-----------------------------------------------------------------------
 void GraphicsContextMetal::SetScissorRectangle(Rectangle const& rectangle)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    POMDOG_ASSERT(rectangle.Width > 0);
+    POMDOG_ASSERT(rectangle.Height > 0);
+
+    MTLScissorRect rect;
+    rect.x = rectangle.X;
+    rect.y = rectangle.Y;
+    rect.width = rectangle.Width;
+    rect.height = rectangle.Height;
+    [commandEncoder setScissorRect:rect];
 }
 //-----------------------------------------------------------------------
 void GraphicsContextMetal::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
