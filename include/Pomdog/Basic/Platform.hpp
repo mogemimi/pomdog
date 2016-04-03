@@ -2,55 +2,53 @@
 
 #pragma once
 
-//----------------------------
-// Platform detection
-//----------------------------
 #ifdef __APPLE_CC__
-#include <Availability.h>
+#include <TargetConditionals.h>
 #endif
 
+// NOTE: Platform detection
 #if defined(linux) || defined(__linux) || defined(__linux__)
-#   // Linux
-#   define POMDOG_PLATFORM_LINUX
+    // Linux
+    #define POMDOG_PLATFORM_LINUX
 #elif defined(__PS4__) && defined(__FreeBSD__)
-#   // PlayStation 4
-#   define POMDOG_PLATFORM_PLAYSTATION4
+    // PlayStation 4
+    #define POMDOG_PLATFORM_PLAYSTATION4
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
-#   // BSD
-#   define POMDOG_PLATFORM_BSD
+    // BSD
+    #define POMDOG_PLATFORM_BSD
 #elif defined(_XBOX_ONE) && defined(_TITLE)
-#   // Xbox One
-#   define POMDOG_PLATFORM_XBOX_ONE
+    // Xbox One
+    #define POMDOG_PLATFORM_XBOX_ONE
 #elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-#   // Windows
-#   define POMDOG_PLATFORM_WIN32
+    // Windows
+    #define POMDOG_PLATFORM_WIN32
 #elif defined(ANDROID) || defined(__ANDROID__)
-#   // Android OS
-#   define POMDOG_PLATFORM_ANDROID
-#elif defined(__APPLE_CC__) && (__IPHONE_OS_VERSION_MIN_REQUIRED >= 80000)
-#   // Apple iOS 8.0 and later
-#   define POMDOG_PLATFORM_APPLE_IOS
-#elif defined(__APPLE_CC__) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9)
-#   // Mac OS X 10.9 and later
-#   define POMDOG_PLATFORM_MACOSX
+    // Android OS
+    #define POMDOG_PLATFORM_ANDROID
+#elif defined(__APPLE_CC__) && defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+    // Apple iOS
+    #define POMDOG_PLATFORM_APPLE_IOS
+#elif defined(__APPLE_CC__) && defined(TARGET_OS_MAC) && TARGET_OS_MAC
+    // Mac OS X
+    #define POMDOG_PLATFORM_MACOSX
 #elif defined(__QNXNTO__)
-#   // QNX Neutrino
-#   define POMDOG_PLATFORM_QNXNTO
+    // QNX Neutrino
+    #define POMDOG_PLATFORM_QNXNTO
 #elif defined(__native_client__)
-#   // Google Native Client (NaCl)
-#   define POMDOG_PLATFORM_NACL
+    // Google Native Client (NaCl)
+    #define POMDOG_PLATFORM_NACL
 #elif defined(__CYGWIN__)
-#   // Cygwin
-#   define POMDOG_PLATFORM_CYGWIN
+    // Cygwin
+    #define POMDOG_PLATFORM_CYGWIN
 #elif defined(sun) || defined(__sun)
-#   // Solaris
-#   define POMDOG_PLATFORM_SOLARIS
+    // Solaris
+    #define POMDOG_PLATFORM_SOLARIS
 #elif defined(__hpux)
-#   // Hewlett-Packard UNIX
-#   define POMDOG_PLATFORM_HPUX
+    // Hewlett-Packard UNIX
+    #define POMDOG_PLATFORM_HPUX
 #elif defined(__ghs__)
-#   // Wii U
-#   define POMDOG_PLATFORM_WIIU
+    // Wii U
+    #define POMDOG_PLATFORM_WIIU
 #else
-#   error "Sorry, this platform is not supported."
+    #error "Sorry, this platform is not supported."
 #endif

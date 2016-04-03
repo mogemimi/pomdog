@@ -97,6 +97,28 @@
 #   error "Byte order undefined or not supported."
 #endif
 
+//-------------------------------------------------------------
+// Check the minimum version of the target platform required.
+//-------------------------------------------------------------
+#ifdef __APPLE_CC__
+#include <AvailabilityMacros.h>
+#include <TargetConditionals.h>
+#endif
+
+// Specify the minimum supported iOS version
+#if defined(__APPLE_CC__) && defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+    #if (__IPHONE_OS_VERSION_MIN_REQUIRED < 90300)
+        #error "Minimum required OS X version: Apple iOS 9.3 or later"
+    #endif
+#endif
+
+// Specify the minimum supported OS X version
+#if defined(__APPLE_CC__) && defined(TARGET_OS_MAC) && TARGET_OS_MAC
+    #if (MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_11)
+        #error "Minimum required OS X version: Mac OS X 10.11 or later"
+    #endif
+#endif
+
 //----------------------------------
 // Support for C++14 features
 //----------------------------------
