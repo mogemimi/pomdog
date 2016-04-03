@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT AudioEngine {
+class POMDOG_EXPORT AudioEngine final {
 public:
     AudioEngine();
     ~AudioEngine();

@@ -11,7 +11,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT AudioClip {
+class POMDOG_EXPORT AudioClip final {
 public:
     AudioClip(std::unique_ptr<Detail::SoundSystem::NativeAudioClip> && nativeAudioClip,
         int sampleRate, int bitsPerSample, AudioChannels channels);

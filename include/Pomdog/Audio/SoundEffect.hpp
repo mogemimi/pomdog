@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT SoundEffect {
+class POMDOG_EXPORT SoundEffect final {
 public:
     SoundEffect(AudioEngine & audioEngine,
         std::shared_ptr<AudioClip> const& audioClip, bool isLooped);
