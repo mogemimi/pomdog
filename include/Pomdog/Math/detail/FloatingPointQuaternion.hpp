@@ -72,9 +72,11 @@ public:
     static FloatingPointQuaternion
     Inverse(FloatingPointQuaternion const& source);
 
+    ///@param axis The normalized axis of the rotation.
     static void
     CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle, FloatingPointQuaternion & result);
 
+    ///@param axis The normalized axis of the rotation.
     static FloatingPointQuaternion
     CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle);
 

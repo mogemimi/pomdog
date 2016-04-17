@@ -262,7 +262,7 @@ void
 FloatingPointQuaternion<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle,
     FloatingPointQuaternion & result)
 {
-    auto const halfAngle(angle.value/2);
+    auto const halfAngle(angle.value / 2);
     auto const sinAngle(std::sin(halfAngle));
     auto const cosAngle(std::cos(halfAngle));
 
