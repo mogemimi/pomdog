@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "GameWindowCocoa.hpp"
-#include "OpenGLContextCocoa.hpp"
 #include "CocoaWindowDelegate.hpp"
 #include "Pomdog/Application/MouseCursor.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -11,7 +10,8 @@ namespace Pomdog {
 namespace Detail {
 namespace Cocoa {
 //-----------------------------------------------------------------------
-GameWindowCocoa::GameWindowCocoa(NSWindow* nativeWindowIn,
+GameWindowCocoa::GameWindowCocoa(
+    NSWindow* nativeWindowIn,
     std::shared_ptr<EventQueue> const& eventQueueIn)
     : eventQueue(eventQueueIn)
     , nativeWindow(nativeWindowIn)

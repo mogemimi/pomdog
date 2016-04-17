@@ -25,8 +25,8 @@ POMDOG_EXPORT @interface PomdogOpenGLView : NSView
 
 - (void)setEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueue;
 
-- (void)setOpenGLContext:(std::shared_ptr<
-    Pomdog::Detail::Cocoa::OpenGLContextCocoa>)openGLContext;
+- (void)setOpenGLContext:(
+    std::shared_ptr<Pomdog::Detail::Cocoa::OpenGLContextCocoa>)openGLContext;
 
 - (void)setRenderCallback:(std::function<void()>)callback;
 
