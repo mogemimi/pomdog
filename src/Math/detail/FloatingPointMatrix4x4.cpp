@@ -860,26 +860,28 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy,
     // 0           0   zf/(zf-zn)      1
     // 0           0   -zn*zf/(zf-zn)  0
 
-    T const f = T{1} / std::tan(fovy.value / 2);
+    T const yScale = T{1} / std::tan(fovy.value / 2);
+    T const xScale = yScale / aspect;
+    T const p = zFar / (zFar - zNear);
 
-    result.m[0][0] = f / aspect;
+    result.m[0][0] = xScale;
     result.m[0][1] = 0;
     result.m[0][2] = 0;
     result.m[0][3] = 0;
 
     result.m[1][0] = 0;
-    result.m[1][1] = f;
+    result.m[1][1] = yScale;
     result.m[1][2] = 0;
     result.m[1][3] = 0;
 
     result.m[2][0] = 0;
     result.m[2][1] = 0;
-    result.m[2][2] = zFar / (zFar - zNear);
+    result.m[2][2] = p;
     result.m[2][3] = 1;
 
     result.m[3][0] = 0;
     result.m[3][1] = 0;
-    result.m[3][2] = -(zNear * zFar) / (zFar - zNear);
+    result.m[3][2] = -zNear * p;
     result.m[3][3] = 0;
 }
 //-----------------------------------------------------------------------
@@ -913,26 +915,28 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(Radian<T> const& fovy,
     // 0           0   zf/(zn-zf)     -1
     // 0           0   zn*zf/(zn-zf)   0
 
-    T const f = 1 / std::tan(fovy.value / 2);
+    T const yScale = 1 / std::tan(fovy.value / 2);
+    T const xScale = yScale / aspect;
+    T const p = zFar / (zNear - zFar);
 
-    result.m[0][0] = f / aspect;
+    result.m[0][0] = xScale;
     result.m[0][1] = 0;
     result.m[0][2] = 0;
     result.m[0][3] = 0;
 
     result.m[1][0] = 0;
-    result.m[1][1] = f;
+    result.m[1][1] = yScale;
     result.m[1][2] = 0;
     result.m[1][3] = 0;
 
     result.m[2][0] = 0;
     result.m[2][1] = 0;
-    result.m[2][2] = zFar / (zNear - zFar);
+    result.m[2][2] = p;
     result.m[2][3] = -1;
 
     result.m[3][0] = 0;
     result.m[3][1] = 0;
-    result.m[3][2] = (zNear * zFar) / (zNear - zFar);
+    result.m[3][2] = zNear * p;
     result.m[3][3] = 0;
 }
 //-----------------------------------------------------------------------
