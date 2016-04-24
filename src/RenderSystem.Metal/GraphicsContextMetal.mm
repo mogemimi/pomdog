@@ -54,21 +54,29 @@ MTLClearColor ToClearColor(const Color& color) noexcept
 } // unnamed namespace
 //-----------------------------------------------------------------------
 GraphicsContextMetal::GraphicsContextMetal(
-    PresentationParameters const& presentationParameters)
+    id<MTLDevice> nativeDevice)
     : commandQueue(nil)
     , commandBuffer(nil)
     , commandEncoder(nil)
     , indexBuffer(nil)
     , needToUpdateRenderPass(true)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    POMDOG_ASSERT(nativeDevice != nil);
+
+    // NOTE: Create a new command queue
+    commandQueue = [nativeDevice newCommandQueue];
 }
 //-----------------------------------------------------------------------
 GraphicsContextMetal::~GraphicsContextMetal() = default;
 //-----------------------------------------------------------------------
 GraphicsCapabilities GraphicsContextMetal::GetCapabilities() const
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    // NOTE: For more information, please see:
+    // https://developer.apple.com/library/ios/documentation/Miscellaneous/Conceptual/MetalProgrammingGuide/MetalFeatureSetTables/MetalFeatureSetTables.html
+    GraphicsCapabilities caps;
+    caps.ConstantBufferSlotCount = 31;
+    caps.SamplerSlotCount = 16;
+    return std::move(caps);
 }
 //-----------------------------------------------------------------------
 void GraphicsContextMetal::Present()
@@ -204,6 +212,7 @@ void GraphicsContextMetal::SetViewport(Viewport const& viewportIn)
 {
     POMDOG_ASSERT(viewportIn.Width > 0);
     POMDOG_ASSERT(viewportIn.Height > 0);
+    POMDOG_ASSERT(commandEncoder != nil);
 
     MTLViewport viewport;
     viewport.originX = viewportIn.TopLeftX;
@@ -219,6 +228,7 @@ void GraphicsContextMetal::SetScissorRectangle(Rectangle const& rectangle)
 {
     POMDOG_ASSERT(rectangle.Width > 0);
     POMDOG_ASSERT(rectangle.Height > 0);
+    POMDOG_ASSERT(commandEncoder != nil);
 
     MTLScissorRect rect;
     rect.x = rectangle.X;

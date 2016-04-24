@@ -25,8 +25,7 @@ class GraphicsContextMetal final : public NativeGraphicsContext {
 public:
     GraphicsContextMetal() = delete;
 
-    explicit GraphicsContextMetal(
-        PresentationParameters const& presentationParameters);
+    explicit GraphicsContextMetal(id<MTLDevice> nativeDevice);
 
     ~GraphicsContextMetal();
 

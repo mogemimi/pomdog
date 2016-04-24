@@ -7,6 +7,7 @@
 #include "SamplerStateMetal.hpp"
 #include "ShaderMetal.hpp"
 #include "Texture2DMetal.hpp"
+#include "../RenderSystem/GraphicsCommandListImmediate.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -45,7 +46,7 @@ ShaderLanguage GraphicsDeviceMetal::GetSupportedLanguage() const
 std::unique_ptr<NativeGraphicsCommandList>
 GraphicsDeviceMetal::CreateGraphicsCommandList()
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    return std::make_unique<GraphicsCommandListImmediate>();
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader>
