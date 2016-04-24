@@ -72,6 +72,12 @@ NSOpenGLPixelFormat* CocoaOpenGLHelper::CreatePixelFormat(
         attributes.push_back(NSOpenGLPFADepthSize);
         attributes.push_back(32);
         break;
+    case DepthFormat::Depth32_Float_Stencil8_Uint:
+        attributes.push_back(NSOpenGLPFADepthSize);
+        attributes.push_back(32);
+        attributes.push_back(NSOpenGLPFAStencilSize);
+        attributes.push_back(8);
+        break;
     case DepthFormat::None:
         break;
     }

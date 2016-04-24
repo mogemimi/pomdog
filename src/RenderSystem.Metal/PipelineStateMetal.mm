@@ -173,6 +173,7 @@ MTLPixelFormat ToDepthPixelFormat(DepthFormat depthFormat) noexcept
 #else
     case DepthFormat::Depth24Stencil8: return MTLPixelFormatDepth32Float_Stencil8;
 #endif
+    case DepthFormat::Depth32_Float_Stencil8_Uint: return MTLPixelFormatDepth32Float_Stencil8;
     case DepthFormat::None: return MTLPixelFormatInvalid;
     }
     return MTLPixelFormatDepth32Float;
@@ -182,6 +183,7 @@ MTLPixelFormat ToStencilPixelFormat(DepthFormat depthFormat) noexcept
 {
     switch (depthFormat) {
     case DepthFormat::Depth24Stencil8: return MTLPixelFormatStencil8;
+    case DepthFormat::Depth32_Float_Stencil8_Uint: return MTLPixelFormatStencil8;
     case DepthFormat::Depth32: return MTLPixelFormatInvalid;
     case DepthFormat::Depth16: return MTLPixelFormatInvalid;
     case DepthFormat::None: return MTLPixelFormatInvalid;

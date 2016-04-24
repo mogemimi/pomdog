@@ -110,6 +110,12 @@ static GLXFBConfig ChooseFramebufferConfig(
         visualAttributes.push_back(GLX_DEPTH_SIZE);
         visualAttributes.push_back(32);
         break;
+    case DepthFormat::Depth32_Float_Stencil8_Uint:
+        visualAttributes.push_back(GLX_DEPTH_SIZE);
+        visualAttributes.push_back(32);
+        visualAttributes.push_back(GLX_STENCIL_SIZE);
+        visualAttributes.push_back(8);
+        break;
     default:
         break;
     }

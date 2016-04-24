@@ -62,6 +62,10 @@ PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
         descriptor.cDepthBits = 32;
         descriptor.cStencilBits = 0;
         break;
+    case DepthFormat::Depth32_Float_Stencil8_Uint:
+        descriptor.cDepthBits = 32;
+        descriptor.cStencilBits = 8;
+        break;
     case DepthFormat::None:
         descriptor.cDepthBits = 0;
         descriptor.cStencilBits = 0;

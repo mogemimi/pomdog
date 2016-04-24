@@ -18,6 +18,7 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(DepthFormat format) noexcept
     case DepthFormat::Depth16: return DXGI_FORMAT_D16_UNORM;
     case DepthFormat::Depth32: return DXGI_FORMAT_D32_FLOAT;
     case DepthFormat::Depth24Stencil8: return DXGI_FORMAT_D24_UNORM_S8_UINT;
+    case DepthFormat::Depth32_Float_Stencil8_Uint: return DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
     case DepthFormat::None:
         break;
     }

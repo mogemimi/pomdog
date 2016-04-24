@@ -26,6 +26,7 @@ MTLPixelFormat ToMTLPixelFormat(DepthFormat depthFormat)
 #else
     case DepthFormat::Depth24Stencil8: return MTLPixelFormatDepth32Float_Stencil8;
 #endif
+    case DepthFormat::Depth32_Float_Stencil8_Uint: return MTLPixelFormatDepth32Float_Stencil8;
     case DepthFormat::None: return MTLPixelFormatInvalid;
     }
     return MTLPixelFormatDepth32Float;

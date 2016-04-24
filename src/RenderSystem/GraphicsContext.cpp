@@ -35,6 +35,7 @@ ClearOptions ToClearOptions(DepthFormat depthFormat) noexcept
 {
     switch (depthFormat) {
     case DepthFormat::Depth24Stencil8:
+    case DepthFormat::Depth32_Float_Stencil8_Uint:
         return ClearOptions::DepthBuffer | ClearOptions::Stencil;
     case DepthFormat::Depth32:
     case DepthFormat::Depth16:
