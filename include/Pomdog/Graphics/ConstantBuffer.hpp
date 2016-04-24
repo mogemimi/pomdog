@@ -4,6 +4,7 @@
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/detail/EffectBinaryParameter.hpp"
+#include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstddef>
 #include <memory>
