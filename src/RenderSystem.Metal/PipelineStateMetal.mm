@@ -178,18 +178,6 @@ MTLPixelFormat ToDepthPixelFormat(DepthFormat depthFormat) noexcept
     }
     return MTLPixelFormatDepth32Float;
 }
-//-----------------------------------------------------------------------
-MTLPixelFormat ToStencilPixelFormat(DepthFormat depthFormat) noexcept
-{
-    switch (depthFormat) {
-    case DepthFormat::Depth24Stencil8: return MTLPixelFormatStencil8;
-    case DepthFormat::Depth32_Float_Stencil8_Uint: return MTLPixelFormatStencil8;
-    case DepthFormat::Depth32: return MTLPixelFormatInvalid;
-    case DepthFormat::Depth16: return MTLPixelFormatInvalid;
-    case DepthFormat::None: return MTLPixelFormatInvalid;
-    }
-    return MTLPixelFormatInvalid;
-}
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
@@ -230,14 +218,16 @@ PipelineStateMetal::PipelineStateMetal(
     ///@todo MSAA is not implemented yet
     constexpr int multiSampleCount = 1;
 
+    const auto depthStencilFormat = ToDepthPixelFormat(description.DepthStencilViewFormat);
+
     MTLRenderPipelineDescriptor* descriptor = [[MTLRenderPipelineDescriptor alloc] init];
     descriptor.label = @"Pomdog.RenderPipeline";
     descriptor.vertexFunction = vertexShader;
     descriptor.fragmentFunction = pixelShader;
     descriptor.vertexDescriptor = ToVertexDescriptor(description.InputLayout);
     descriptor.sampleCount = multiSampleCount;
-    descriptor.depthAttachmentPixelFormat = ToDepthPixelFormat(description.DepthStencilViewFormat);
-    descriptor.stencilAttachmentPixelFormat = ToStencilPixelFormat(description.DepthStencilViewFormat);
+    descriptor.depthAttachmentPixelFormat = depthStencilFormat;
+    descriptor.stencilAttachmentPixelFormat = depthStencilFormat;
 
     std::size_t index = 0;
     for (auto & renderTarget : description.BlendState.RenderTargets) {
@@ -250,7 +240,6 @@ PipelineStateMetal::PipelineStateMetal(
         colorAttachment.destinationAlphaBlendFactor = ToBlendFactor(renderTarget.AlphaDestinationBlend);
         colorAttachment.blendingEnabled = renderTarget.BlendEnable;
 
-        POMDOG_ASSERT(index < description.RenderTargetViewFormats.size());
         if (index < description.RenderTargetViewFormats.size()) {
             auto pixelFormat = MetalFormatHelper::ToMTLPixelFormat(description.RenderTargetViewFormats[index]);
             POMDOG_ASSERT(pixelFormat);
