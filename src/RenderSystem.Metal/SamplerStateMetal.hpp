@@ -14,7 +14,7 @@ class SamplerStateMetal final : public NativeSamplerState {
 public:
     SamplerStateMetal(
         id<MTLDevice> device,
-        SamplerDescription const& description);
+        const SamplerDescription& description);
 
     id<MTLSamplerState> GetSamplerState() const noexcept;
 

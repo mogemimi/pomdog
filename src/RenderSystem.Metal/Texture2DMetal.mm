@@ -59,7 +59,7 @@ void Texture2DMetal::SetData(
     std::int32_t pixelHeight,
     std::int32_t levelCount,
     SurfaceFormat format,
-    void const* pixelData)
+    const void* pixelData)
 {
     POMDOG_ASSERT(texture != nil);
     POMDOG_ASSERT(pixelWidth > 0);
@@ -85,7 +85,7 @@ void Texture2DMetal::SetData(
 
         [texture replaceRegion:region
             mipmapLevel:mipmapLevel
-            withBytes:reinterpret_cast<std::uint8_t const*>(pixelData) + startOffset
+            withBytes:reinterpret_cast<const std::uint8_t*>(pixelData) + startOffset
             bytesPerRow:bytesPerRow];
 
         const auto strideBytesPerMipmap = MipmapImageDataBytes(

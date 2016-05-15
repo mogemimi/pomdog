@@ -51,7 +51,7 @@ BufferMetal::BufferMetal(
 //-----------------------------------------------------------------------
 BufferMetal::BufferMetal(
     id<MTLDevice> device,
-    void const* vertices,
+    const void* vertices,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage)
     : nativeBuffer(nil)
@@ -70,16 +70,20 @@ BufferMetal::BufferMetal(
     SetData(0, vertices, sizeInBytes);
 }
 //-----------------------------------------------------------------------
-void BufferMetal::GetData(std::size_t offsetInBytes,
-    void* destination, std::size_t sizeInBytes) const
+void BufferMetal::GetData(
+    std::size_t offsetInBytes,
+    void* destination,
+    std::size_t sizeInBytes) const
 {
     POMDOG_ASSERT(nativeBuffer != nil);
     auto source = [nativeBuffer contents];
     std::memcpy(destination, source, sizeInBytes);
 }
 //-----------------------------------------------------------------------
-void BufferMetal::SetData(std::size_t offsetInBytes,
-    void const* source, std::size_t sizeInBytes)
+void BufferMetal::SetData(
+    std::size_t offsetInBytes,
+    const void* source,
+    std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(nativeBuffer != nil);
     POMDOG_ASSERT([nativeBuffer length] <= sizeInBytes);

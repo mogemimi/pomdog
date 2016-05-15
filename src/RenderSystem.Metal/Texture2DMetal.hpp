@@ -24,7 +24,7 @@ public:
         std::int32_t pixelHeight,
         std::int32_t levelCount,
         SurfaceFormat format,
-        void const* pixelData) override;
+        const void* pixelData) override;
 
     id<MTLTexture> GetTexture() const noexcept;
 

@@ -19,15 +19,19 @@ public:
 
     BufferMetal(
         id<MTLDevice> device,
-        void const* vertices,
+        const void* vertices,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage);
 
-    void GetData(std::size_t offsetInBytes,
-        void* destination, std::size_t sizeInBytes) const override;
+    void GetData(
+        std::size_t offsetInBytes,
+        void* destination,
+        std::size_t sizeInBytes) const override;
 
-    void SetData(std::size_t offsetInBytes,
-        void const* source, std::size_t sizeInBytes) override;
+    void SetData(
+        std::size_t offsetInBytes,
+        const void* source,
+        std::size_t sizeInBytes) override;
 
     id<MTLBuffer> GetBuffer() const;
 

@@ -23,7 +23,7 @@ class PipelineStateMetal final : public NativePipelineState {
 public:
     PipelineStateMetal(
         id<MTLDevice> device,
-        PipelineStateDescription const& description);
+        const PipelineStateDescription& description);
 
     void Apply(id<MTLRenderCommandEncoder> commandEncoder);
 

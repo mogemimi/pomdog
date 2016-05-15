@@ -14,8 +14,8 @@ namespace Metal {
 //-----------------------------------------------------------------------
 ShaderMetal::ShaderMetal(
     id<MTLDevice> device,
-    ShaderBytecode const& shaderBytecode,
-    ShaderCompileOptions const& compileOptions)
+    const ShaderBytecode& shaderBytecode,
+    const ShaderCompileOptions& compileOptions)
 {
     POMDOG_ASSERT(device != nil);
     POMDOG_ASSERT(shaderBytecode.Code != nullptr);

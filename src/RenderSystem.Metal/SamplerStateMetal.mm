@@ -22,7 +22,7 @@ MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexc
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-SamplerStateMetal::SamplerStateMetal(id<MTLDevice> device, SamplerDescription const& description)
+SamplerStateMetal::SamplerStateMetal(id<MTLDevice> device, const SamplerDescription& description)
     : samplerState(nil)
 {
     POMDOG_ASSERT(device != nil);

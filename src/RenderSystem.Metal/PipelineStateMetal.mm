@@ -183,7 +183,7 @@ MTLPixelFormat ToDepthPixelFormat(DepthFormat depthFormat) noexcept
 //-----------------------------------------------------------------------
 PipelineStateMetal::PipelineStateMetal(
     id<MTLDevice> device,
-    PipelineStateDescription const& description)
+    const PipelineStateDescription& description)
     : pipelineState(nil)
     , depthStencilState(nil)
     , reflection(nil)

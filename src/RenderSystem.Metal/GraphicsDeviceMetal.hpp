@@ -21,33 +21,45 @@ public:
     CreateGraphicsCommandList() override;
 
     std::unique_ptr<Shader>
-    CreateShader(ShaderBytecode const& shaderBytecode,
-        ShaderCompileOptions const& compileOptions) override;
+    CreateShader(
+        const ShaderBytecode& shaderBytecode,
+        const ShaderCompileOptions& compileOptions) override;
 
     std::unique_ptr<NativeBuffer>
-    CreateBuffer(std::size_t sizeInBytes,
-        BufferUsage bufferUsage, BufferBindMode bindMode) override;
+    CreateBuffer(
+        std::size_t sizeInBytes,
+        BufferUsage bufferUsage,
+        BufferBindMode bindMode) override;
 
     std::unique_ptr<NativeBuffer>
-    CreateBuffer(void const* sourceData,  std::size_t sizeInBytes,
-        BufferUsage bufferUsage, BufferBindMode bindMode) override;
+    CreateBuffer(
+        const void* sourceData,
+        std::size_t sizeInBytes,
+        BufferUsage bufferUsage,
+        BufferBindMode bindMode) override;
 
     std::unique_ptr<NativeSamplerState>
-    CreateSamplerState(SamplerDescription const& description) override;
+    CreateSamplerState(const SamplerDescription& description) override;
 
     std::unique_ptr<NativePipelineState>
-    CreatePipelineState(PipelineStateDescription const& description) override;
+    CreatePipelineState(const PipelineStateDescription& description) override;
 
     std::unique_ptr<NativeEffectReflection>
-    CreateEffectReflection(PipelineStateDescription const& description,
+    CreateEffectReflection(
+        const PipelineStateDescription& description,
         NativePipelineState & pipelineState) override;
 
     std::unique_ptr<NativeTexture2D>
-    CreateTexture2D(std::int32_t width, std::int32_t height,
-        std::int32_t mipmapLevels, SurfaceFormat format) override;
+    CreateTexture2D(
+        std::int32_t width,
+        std::int32_t height,
+        std::int32_t mipmapLevels,
+        SurfaceFormat format) override;
 
     std::unique_ptr<NativeRenderTarget2D>
-    CreateRenderTarget2D(std::int32_t width, std::int32_t height,
+    CreateRenderTarget2D(
+        std::int32_t width,
+        std::int32_t height,
         std::int32_t mipmapLevels,
         SurfaceFormat format,
         DepthFormat depthStencilFormat,

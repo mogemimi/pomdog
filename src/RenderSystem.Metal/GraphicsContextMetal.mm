@@ -84,7 +84,7 @@ void GraphicsContextMetal::Present()
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
-void GraphicsContextMetal::Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil)
+void GraphicsContextMetal::Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
 {
     ClearCommandMetal command;
     command.color = color;
@@ -208,7 +208,7 @@ void GraphicsContextMetal::DrawIndexedInstanced(
         instanceCount:instanceCount];
 }
 //-----------------------------------------------------------------------
-void GraphicsContextMetal::SetViewport(Viewport const& viewportIn)
+void GraphicsContextMetal::SetViewport(const Viewport& viewportIn)
 {
     POMDOG_ASSERT(viewportIn.Width > 0);
     POMDOG_ASSERT(viewportIn.Height > 0);
@@ -224,7 +224,7 @@ void GraphicsContextMetal::SetViewport(Viewport const& viewportIn)
     [commandEncoder setViewport:viewport];
 }
 //-----------------------------------------------------------------------
-void GraphicsContextMetal::SetScissorRectangle(Rectangle const& rectangle)
+void GraphicsContextMetal::SetScissorRectangle(const Rectangle& rectangle)
 {
     POMDOG_ASSERT(rectangle.Width > 0);
     POMDOG_ASSERT(rectangle.Height > 0);
@@ -243,14 +243,14 @@ void GraphicsContextMetal::SetPrimitiveTopology(PrimitiveTopology primitiveTopol
     this->primitiveType = ToPrimitiveType(primitiveTopology);
 }
 //-----------------------------------------------------------------------
-void GraphicsContextMetal::SetBlendFactor(Color const& blendFactor)
+void GraphicsContextMetal::SetBlendFactor(const Color& blendFactor)
 {
     POMDOG_ASSERT(commandEncoder != nil);
     auto vec = blendFactor.ToVector4();
     [commandEncoder setBlendColorRed:vec.X green:vec.Y blue:vec.Z alpha:vec.W];
 }
 //-----------------------------------------------------------------------
-void GraphicsContextMetal::SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers)
+void GraphicsContextMetal::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers)
 {
     POMDOG_ASSERT(!vertexBuffers.empty());
 
@@ -278,7 +278,7 @@ void GraphicsContextMetal::SetVertexBuffers(std::vector<VertexBufferBinding> con
     }
 }
 //-----------------------------------------------------------------------
-void GraphicsContextMetal::SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBufferIn)
+void GraphicsContextMetal::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBufferIn)
 {
     POMDOG_ASSERT(indexBuffer);
 
@@ -293,7 +293,7 @@ void GraphicsContextMetal::SetIndexBuffer(std::shared_ptr<IndexBuffer> const& in
     this->indexBuffer = nativeIndexBuffer->GetBuffer();
 }
 //-----------------------------------------------------------------------
-void GraphicsContextMetal::SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState)
+void GraphicsContextMetal::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState)
 {
     POMDOG_ASSERT(pipelineState != nullptr);
 
@@ -306,7 +306,7 @@ void GraphicsContextMetal::SetPipelineState(std::shared_ptr<NativePipelineState>
     nativePipelineState->Apply(commandEncoder);
 }
 //-----------------------------------------------------------------------
-void GraphicsContextMetal::SetConstantBuffer(int index, std::shared_ptr<NativeBuffer> const& constantBuffer)
+void GraphicsContextMetal::SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
@@ -370,7 +370,7 @@ void GraphicsContextMetal::SetRenderTarget()
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
-void GraphicsContextMetal::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets)
+void GraphicsContextMetal::SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }

@@ -50,8 +50,9 @@ GraphicsDeviceMetal::CreateGraphicsCommandList()
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader>
-GraphicsDeviceMetal::CreateShader(ShaderBytecode const& shaderBytecode,
-    ShaderCompileOptions const& compileOptions)
+GraphicsDeviceMetal::CreateShader(
+    const ShaderBytecode& shaderBytecode,
+    const ShaderCompileOptions& compileOptions)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nil);
@@ -60,8 +61,8 @@ GraphicsDeviceMetal::CreateShader(ShaderBytecode const& shaderBytecode,
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBuffer>
-GraphicsDeviceMetal::CreateBuffer(std::size_t sizeInBytes,
-    BufferUsage bufferUsage, BufferBindMode)
+GraphicsDeviceMetal::CreateBuffer(
+    std::size_t sizeInBytes, BufferUsage bufferUsage, BufferBindMode)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nil);
@@ -70,8 +71,11 @@ GraphicsDeviceMetal::CreateBuffer(std::size_t sizeInBytes,
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBuffer>
-GraphicsDeviceMetal::CreateBuffer(void const* sourceData,  std::size_t sizeInBytes,
-    BufferUsage bufferUsage, BufferBindMode)
+GraphicsDeviceMetal::CreateBuffer(
+    const void* sourceData,
+    std::size_t sizeInBytes,
+    BufferUsage bufferUsage,
+    BufferBindMode)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nil);
@@ -80,7 +84,7 @@ GraphicsDeviceMetal::CreateBuffer(void const* sourceData,  std::size_t sizeInByt
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeSamplerState>
-GraphicsDeviceMetal::CreateSamplerState(SamplerDescription const& description)
+GraphicsDeviceMetal::CreateSamplerState(const SamplerDescription& description)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nil);
@@ -88,7 +92,7 @@ GraphicsDeviceMetal::CreateSamplerState(SamplerDescription const& description)
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativePipelineState>
-GraphicsDeviceMetal::CreatePipelineState(PipelineStateDescription const& description)
+GraphicsDeviceMetal::CreatePipelineState(const PipelineStateDescription& description)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nil);
@@ -96,15 +100,19 @@ GraphicsDeviceMetal::CreatePipelineState(PipelineStateDescription const& descrip
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectReflection>
-GraphicsDeviceMetal::CreateEffectReflection(PipelineStateDescription const& description,
+GraphicsDeviceMetal::CreateEffectReflection(
+    const PipelineStateDescription& description,
     NativePipelineState & pipelineState)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeTexture2D>
-GraphicsDeviceMetal::CreateTexture2D(std::int32_t width, std::int32_t height,
-    std::int32_t mipmapLevels, SurfaceFormat format)
+GraphicsDeviceMetal::CreateTexture2D(
+    std::int32_t width,
+    std::int32_t height,
+    std::int32_t mipmapLevels,
+    SurfaceFormat format)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nil);
@@ -113,7 +121,9 @@ GraphicsDeviceMetal::CreateTexture2D(std::int32_t width, std::int32_t height,
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeRenderTarget2D>
-GraphicsDeviceMetal::CreateRenderTarget2D(std::int32_t width, std::int32_t height,
+GraphicsDeviceMetal::CreateRenderTarget2D(
+    std::int32_t width,
+    std::int32_t height,
     std::int32_t mipmapLevels,
     SurfaceFormat format,
     DepthFormat depthStencilFormat,

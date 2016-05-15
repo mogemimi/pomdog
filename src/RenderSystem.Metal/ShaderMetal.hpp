@@ -18,8 +18,8 @@ class ShaderMetal final : public Shader {
 public:
     ShaderMetal(
         id<MTLDevice> device,
-        ShaderBytecode const& shaderBytecode,
-        ShaderCompileOptions const& compileOptions);
+        const ShaderBytecode& shaderBytecode,
+        const ShaderCompileOptions& compileOptions);
 
     id<MTLFunction> GetShader() const;
 
