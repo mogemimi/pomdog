@@ -18,12 +18,13 @@ namespace XAudio2 {
 
 class AudioClipXAudio2 final : Noncopyable {
 public:
-    AudioClipXAudio2(std::vector<std::uint8_t> && audioData,
+    AudioClipXAudio2(
+        std::vector<std::uint8_t> && audioData,
         std::vector<std::uint8_t> && waveFormat);
 
-    WAVEFORMATEX const* WaveFormat() const;
+    const WAVEFORMATEX* WaveFormat() const;
 
-    std::uint8_t const* Data() const;
+    const std::uint8_t* Data() const;
 
     std::size_t SizeInBytes() const;
 

@@ -13,8 +13,10 @@ namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
 //-----------------------------------------------------------------------
-SoundEffectAL::SoundEffectAL(AudioEngineAL &,
-    std::shared_ptr<AudioClipAL> const& audioClipIn, bool isLooped)
+SoundEffectAL::SoundEffectAL(
+    AudioEngineAL &,
+    const std::shared_ptr<AudioClipAL>& audioClipIn,
+    bool isLooped)
     : audioClip(audioClipIn)
 {
     source = ([] {
@@ -86,7 +88,7 @@ void SoundEffectAL::Stop()
     #endif
 }
 //-----------------------------------------------------------------------
-void SoundEffectAL::Apply3D(AudioListener const& listener, AudioEmitter const& emitter)
+void SoundEffectAL::Apply3D(const AudioListener& listener, const AudioEmitter& emitter)
 {
     {
         POMDOG_ASSERT(source);

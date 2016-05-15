@@ -16,7 +16,7 @@ namespace {
 struct ErrorCodeTag;
 using ErrorCodeAL = Tagged<ALenum, ErrorCodeTag>;
 
-std::string ToString(ErrorCodeAL const& errorCode)
+std::string ToString(const ErrorCodeAL& errorCode)
 {
     switch (errorCode.value) {
     case AL_NO_ERROR: return "AL_NO_ERROR";
@@ -26,13 +26,13 @@ std::string ToString(ErrorCodeAL const& errorCode)
     case AL_OUT_OF_MEMORY: return "AL_OUT_OF_MEMORY";
     }
     std::stringstream ss;
-    ss << "ErrorCode '" << reinterpret_cast<void const*>(errorCode.value) << "'";
+    ss << "ErrorCode '" << reinterpret_cast<const void*>(errorCode.value) << "'";
     return ss.str();
 }
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-void ErrorCheckerAL::CheckError(char const* command, char const* filename, int line)
+void ErrorCheckerAL::CheckError(const char* command, const char* filename, int line)
 {
     ErrorCodeAL const errorCode{alGetError()};
 

@@ -38,8 +38,12 @@ ALenum ToFormat(AudioChannels channel, std::uint16_t bitPerSample)
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-AudioClipAL::AudioClipAL(void const* data, std::size_t size,
-    int sampleRate, int bitsPerSample, AudioChannels channel)
+AudioClipAL::AudioClipAL(
+    const void* data,
+    std::size_t size,
+    int sampleRate,
+    int bitsPerSample,
+    AudioChannels channel)
     : sizeInBytes(size)
 {
     POMDOG_ASSERT(bitsPerSample == 8 || bitsPerSample == 16);

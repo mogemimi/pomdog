@@ -13,11 +13,14 @@ namespace Pomdog {
 
 class POMDOG_EXPORT AudioClip final {
 public:
-    AudioClip(std::unique_ptr<Detail::SoundSystem::NativeAudioClip> && nativeAudioClip,
-        int sampleRate, int bitsPerSample, AudioChannels channels);
+    AudioClip(
+        std::unique_ptr<Detail::SoundSystem::NativeAudioClip> && nativeAudioClip,
+        int sampleRate,
+        int bitsPerSample,
+        AudioChannels channels);
 
-    AudioClip(AudioClip const&) = delete;
-    AudioClip & operator=(AudioClip const&) = delete;
+    AudioClip(const AudioClip&) = delete;
+    AudioClip & operator=(const AudioClip&) = delete;
 
     ~AudioClip();
 

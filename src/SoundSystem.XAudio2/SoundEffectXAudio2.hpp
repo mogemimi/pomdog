@@ -21,8 +21,10 @@ class AudioEngineXAudio2;
 
 class SoundEffectXAudio2 final : Noncopyable {
 public:
-    SoundEffectXAudio2(AudioEngineXAudio2 & audioEngine,
-        std::shared_ptr<AudioClipXAudio2> const& audioClip, bool isLooped);
+    SoundEffectXAudio2(
+        AudioEngineXAudio2 & audioEngine,
+        const std::shared_ptr<AudioClipXAudio2>& audioClip,
+        bool isLooped);
 
     ~SoundEffectXAudio2();
 
@@ -34,7 +36,7 @@ public:
 
     void Stop();
 
-    void Apply3D(AudioListener const& listener, AudioEmitter const& emitter);
+    void Apply3D(const AudioListener& listener, const AudioEmitter& emitter);
 
     void SetPitch(float pitch);
 

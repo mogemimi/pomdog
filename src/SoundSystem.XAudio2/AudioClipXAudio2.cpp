@@ -9,7 +9,8 @@ namespace Detail {
 namespace SoundSystem {
 namespace XAudio2 {
 //-----------------------------------------------------------------------
-AudioClipXAudio2::AudioClipXAudio2(std::vector<std::uint8_t> && audioDataIn,
+AudioClipXAudio2::AudioClipXAudio2(
+    std::vector<std::uint8_t> && audioDataIn,
     std::vector<std::uint8_t> && waveFormatIn)
     : audioData(std::move(audioDataIn))
     , waveFormat(std::move(waveFormatIn))
@@ -18,14 +19,14 @@ AudioClipXAudio2::AudioClipXAudio2(std::vector<std::uint8_t> && audioDataIn,
     POMDOG_ASSERT(!waveFormat.empty());
 }
 //-----------------------------------------------------------------------
-WAVEFORMATEX const* AudioClipXAudio2::WaveFormat() const
+const WAVEFORMATEX* AudioClipXAudio2::WaveFormat() const
 {
     POMDOG_ASSERT(!waveFormat.empty());
     POMDOG_ASSERT(waveFormat.size() >= sizeof(WAVEFORMATEX));
-    return reinterpret_cast<WAVEFORMATEX const*>(waveFormat.data());
+    return reinterpret_cast<const WAVEFORMATEX*>(waveFormat.data());
 }
 //-----------------------------------------------------------------------
-std::uint8_t const* AudioClipXAudio2::Data() const
+const std::uint8_t* AudioClipXAudio2::Data() const
 {
     POMDOG_ASSERT(!audioData.empty());
     return audioData.data();

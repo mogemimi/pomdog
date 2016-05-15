@@ -18,8 +18,11 @@ namespace OpenAL {
 
 class AudioClipAL final : Noncopyable {
 public:
-    AudioClipAL(void const* data, std::size_t size,
-        int sampleRate, int bitsPerSample,
+    AudioClipAL(
+        const void* data,
+        std::size_t size,
+        int sampleRate,
+        int bitsPerSample,
         AudioChannels channel);
 
     ~AudioClipAL();

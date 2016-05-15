@@ -9,7 +9,7 @@ namespace OpenAL {
 
 class ErrorCheckerAL {
 public:
-    static void CheckError(char const* command, char const* filename, int line);
+    static void CheckError(const char* command, const char* filename, int line);
 };
 
 } // namespace OpenAL

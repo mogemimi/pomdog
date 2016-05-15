@@ -19,7 +19,7 @@ namespace Pomdog {
 namespace {
 
 std::shared_ptr<Detail::SoundSystem::NativeAudioClip>
-GetNativeBuffer(std::shared_ptr<AudioClip> const& audioClip)
+GetNativeBuffer(const std::shared_ptr<AudioClip>& audioClip)
 {
     std::shared_ptr<Detail::SoundSystem::NativeAudioClip> nativeAudioClip(
         audioClip, audioClip->GetNativeAudioClip());
@@ -28,8 +28,10 @@ GetNativeBuffer(std::shared_ptr<AudioClip> const& audioClip)
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-SoundEffect::SoundEffect(AudioEngine & audioEngine,
-    std::shared_ptr<AudioClip> const& audioClip, bool isLoopedIn)
+SoundEffect::SoundEffect(
+    AudioEngine & audioEngine,
+    const std::shared_ptr<AudioClip>& audioClip,
+    bool isLoopedIn)
     : pitch(0.0f)
     , volume(1.0f)
     , state(SoundState::Stopped)
@@ -77,7 +79,7 @@ void SoundEffect::Stop()
     state = SoundState::Stopped;
 }
 //-----------------------------------------------------------------------
-void SoundEffect::Apply3D(AudioListener const& listener, AudioEmitter const& emitter)
+void SoundEffect::Apply3D(const AudioListener& listener, const AudioEmitter& emitter)
 {
     POMDOG_ASSERT(nativeSoundEffect);
     nativeSoundEffect->Apply3D(listener, emitter);

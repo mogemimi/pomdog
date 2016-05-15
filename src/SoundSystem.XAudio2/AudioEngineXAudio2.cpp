@@ -25,7 +25,7 @@ namespace SoundSystem {
 namespace XAudio2 {
 namespace {
 
-static std::string GetErrorDesc(HRESULT hr, std::string const& desc)
+std::string GetErrorDesc(HRESULT hr, const std::string& desc)
 {
     return "Failed to call " + desc + ", HRESULT=" + std::to_string(hr);
 }
@@ -39,7 +39,7 @@ struct AudioDeviceDetails {
     bool IsEnabled = false;
 };
 //-----------------------------------------------------------------------
-static std::vector<AudioDeviceDetails> EnumerateAudioDevices()
+std::vector<AudioDeviceDetails> EnumerateAudioDevices()
 {
 #if defined(_XBOX_ONE)
     ///@todo Not implemented
@@ -218,7 +218,7 @@ AudioEngineXAudio2::AudioEngineXAudio2()
     try {
         audioDevices = EnumerateAudioDevices();
     }
-    catch (std::exception const& e) {
+    catch (const std::exception& e) {
         xAudio2.Reset();
         ::CoUninitialize();
         throw e;

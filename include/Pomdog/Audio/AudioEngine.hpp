@@ -13,8 +13,8 @@ public:
     AudioEngine();
     ~AudioEngine();
 
-    AudioEngine(AudioEngine const&) = delete;
-    AudioEngine & operator=(AudioEngine const&) = delete;
+    AudioEngine(const AudioEngine&) = delete;
+    AudioEngine & operator=(const AudioEngine&) = delete;
     AudioEngine(AudioEngine &&) = default;
     AudioEngine & operator=(AudioEngine &&) = default;
 

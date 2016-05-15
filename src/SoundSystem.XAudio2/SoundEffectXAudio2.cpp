@@ -14,8 +14,10 @@ namespace SoundSystem {
 namespace XAudio2 {
 namespace {
 
-static void BuildXAudioBuffer(AudioClipXAudio2 const& audioClip,
-    bool isLooped, XAUDIO2_BUFFER & bufferDesc)
+void BuildXAudioBuffer(
+    const AudioClipXAudio2& audioClip,
+    bool isLooped,
+    XAUDIO2_BUFFER & bufferDesc)
 {
     bufferDesc.Flags = XAUDIO2_END_OF_STREAM;
     bufferDesc.AudioBytes = audioClip.SizeInBytes();
@@ -34,8 +36,10 @@ static void BuildXAudioBuffer(AudioClipXAudio2 const& audioClip,
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-SoundEffectXAudio2::SoundEffectXAudio2(AudioEngineXAudio2 & audioEngine,
-    std::shared_ptr<AudioClipXAudio2> const& audioClipIn, bool isLoopedIn)
+SoundEffectXAudio2::SoundEffectXAudio2(
+    AudioEngineXAudio2 & audioEngine,
+    const std::shared_ptr<AudioClipXAudio2>& audioClipIn,
+    bool isLoopedIn)
     : audioClip(audioClipIn)
     , sourceVoice(nullptr)
     , isLooped(isLoopedIn)
@@ -107,7 +111,7 @@ void SoundEffectXAudio2::Stop()
     sourceVoice->SubmitSourceBuffer(&bufferDesc);
 }
 //-----------------------------------------------------------------------
-void SoundEffectXAudio2::Apply3D(AudioListener const& listener, AudioEmitter const& emitter)
+void SoundEffectXAudio2::Apply3D(const AudioListener& listener, const AudioEmitter& emitter)
 {
     ///@todo Not implemented
     UNREFERENCED_PARAMETER(listener);
