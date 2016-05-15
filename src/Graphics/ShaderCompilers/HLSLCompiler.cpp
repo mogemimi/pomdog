@@ -17,7 +17,7 @@ namespace ShaderCompilers {
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromBinary(
     GraphicsDevice & graphicsDevice,
-    void const* shaderSource,
+    const void* shaderSource,
     std::size_t byteLength,
     ShaderPipelineStage pipelineStage)
 {
@@ -40,9 +40,9 @@ std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromBinary(
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromSource(
     GraphicsDevice & graphicsDevice,
-    void const* shaderSource,
+    const void* shaderSource,
     std::size_t byteLength,
-    std::string const& entryPoint,
+    const std::string& entryPoint,
     ShaderPipelineStage pipelineStage)
 {
     POMDOG_ASSERT(shaderSource != nullptr);

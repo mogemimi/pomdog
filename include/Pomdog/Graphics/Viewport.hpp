@@ -19,7 +19,7 @@ public:
 public:
     Viewport() noexcept = default;
 
-    explicit Viewport(Rectangle const& bounds) noexcept;
+    explicit Viewport(const Rectangle& bounds) noexcept;
 
     Viewport(int x, int y, int width, int height) noexcept;
 
@@ -27,12 +27,12 @@ public:
         float minDepth, float maxDepth) noexcept;
 
     Vector3 Project(
-        Vector3 const& source,
-        Matrix4x4 const& worldViewProjection);
+        const Vector3& source,
+        const Matrix4x4& worldViewProjection);
 
     Vector3 Unproject(
-        Vector3 const& source,
-        Matrix4x4 const& worldViewProjection);
+        const Vector3& source,
+        const Matrix4x4& worldViewProjection);
 
     Rectangle GetBounds() const noexcept;
 

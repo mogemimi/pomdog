@@ -19,10 +19,10 @@ namespace EffectBinaryParameter {
 namespace {
 
 template <typename T> static
-void const* BinaryCast(T const* data)
+const void* BinaryCast(const T* data)
 {
     static_assert(!std::is_pointer<T>::value, "T is not pointer.");
-    return static_cast<void const*>(data);
+    return static_cast<const void*>(data);
 }
 
 template <typename T> static
@@ -91,7 +91,7 @@ void Set(ConstantBuffer & constantBuffer, double value)
 //-----------------------------------------------------------------------
 // MARK: - Arrays
 //-----------------------------------------------------------------------
-void Set(ConstantBuffer & constantBuffer, std::int32_t const* data, std::uint32_t count)
+void Set(ConstantBuffer & constantBuffer, const std::int32_t* data, std::uint32_t count)
 {
     using type = std::remove_pointer<decltype(data)>::type;
     static_assert(std::is_same<type, std::int32_t const>::value, "");
@@ -100,7 +100,7 @@ void Set(ConstantBuffer & constantBuffer, std::int32_t const* data, std::uint32_
     constantBuffer.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
-void Set(ConstantBuffer & constantBuffer, std::uint32_t const* data, std::uint32_t count)
+void Set(ConstantBuffer & constantBuffer, const std::uint32_t* data, std::uint32_t count)
 {
     using type = std::remove_pointer<decltype(data)>::type;
     static_assert(std::is_same<type, std::uint32_t const>::value, "");
@@ -109,7 +109,7 @@ void Set(ConstantBuffer & constantBuffer, std::uint32_t const* data, std::uint32
     constantBuffer.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
-void Set(ConstantBuffer & constantBuffer, float const* data, std::uint32_t count)
+void Set(ConstantBuffer & constantBuffer, const float* data, std::uint32_t count)
 {
     using type = std::remove_pointer<decltype(data)>::type;
     static_assert(std::is_same<type, float const>::value, "");
@@ -118,7 +118,7 @@ void Set(ConstantBuffer & constantBuffer, float const* data, std::uint32_t count
     constantBuffer.SetValue(BinaryCast(data), sizeof(type) * count);
 }
 //-----------------------------------------------------------------------
-void Set(ConstantBuffer & constantBuffer, double const* data, std::uint32_t count)
+void Set(ConstantBuffer & constantBuffer, const double* data, std::uint32_t count)
 {
     using type = std::remove_pointer<decltype(data)>::type;
     static_assert(std::is_same<type, double const>::value, "");
@@ -130,49 +130,49 @@ void Set(ConstantBuffer & constantBuffer, double const* data, std::uint32_t coun
 // MARK: - Vectors and Matrices
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(ConstantBuffer & constantBuffer, FloatingPointVector2<T> const& value)
+Set(ConstantBuffer & constantBuffer, const FloatingPointVector2<T>& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(ConstantBuffer & constantBuffer, FloatingPointVector3<T> const& value)
+Set(ConstantBuffer & constantBuffer, const FloatingPointVector3<T>& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(ConstantBuffer & constantBuffer, FloatingPointVector4<T> const& value)
+Set(ConstantBuffer & constantBuffer, const FloatingPointVector4<T>& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(ConstantBuffer & constantBuffer, FloatingPointMatrix2x2<T> const& value)
+Set(ConstantBuffer & constantBuffer, const FloatingPointMatrix2x2<T>& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(ConstantBuffer & constantBuffer, FloatingPointMatrix3x3<T> const& value)
+Set(ConstantBuffer & constantBuffer, const FloatingPointMatrix3x3<T>& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(ConstantBuffer & constantBuffer, FloatingPointMatrix4x4<T> const& value)
+Set(ConstantBuffer & constantBuffer, const FloatingPointMatrix4x4<T>& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
 //-----------------------------------------------------------------------
 template <typename T> void
-Set(ConstantBuffer & constantBuffer, FloatingPointQuaternion<T> const& value)
+Set(ConstantBuffer & constantBuffer, const FloatingPointQuaternion<T>& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
@@ -180,22 +180,22 @@ Set(ConstantBuffer & constantBuffer, FloatingPointQuaternion<T> const& value)
 //-----------------------------------------------------------------------
 // MARK: - Explicit instantiations
 //-----------------------------------------------------------------------
-template void Set<float>(ConstantBuffer &, FloatingPointVector2<float> const&);
-template void Set<float>(ConstantBuffer &, FloatingPointVector3<float> const&);
-template void Set<float>(ConstantBuffer &, FloatingPointVector4<float> const&);
-template void Set<float>(ConstantBuffer &, FloatingPointMatrix2x2<float> const&);
-template void Set<float>(ConstantBuffer &, FloatingPointMatrix3x3<float> const&);
-template void Set<float>(ConstantBuffer &, FloatingPointMatrix4x4<float> const&);
-template void Set<float>(ConstantBuffer &, FloatingPointQuaternion<float> const&);
+template void Set<float>(ConstantBuffer &, const FloatingPointVector2<float>&);
+template void Set<float>(ConstantBuffer &, const FloatingPointVector3<float>&);
+template void Set<float>(ConstantBuffer &, const FloatingPointVector4<float>&);
+template void Set<float>(ConstantBuffer &, const FloatingPointMatrix2x2<float>&);
+template void Set<float>(ConstantBuffer &, const FloatingPointMatrix3x3<float>&);
+template void Set<float>(ConstantBuffer &, const FloatingPointMatrix4x4<float>&);
+template void Set<float>(ConstantBuffer &, const FloatingPointQuaternion<float>&);
 
 #if defined(DBL_MANT_DIG)
-template void Set<double>(ConstantBuffer &, FloatingPointVector2<double> const&);
-template void Set<double>(ConstantBuffer &, FloatingPointVector3<double> const&);
-template void Set<double>(ConstantBuffer &, FloatingPointVector4<double> const&);
-template void Set<double>(ConstantBuffer &, FloatingPointMatrix2x2<double> const&);
-template void Set<double>(ConstantBuffer &, FloatingPointMatrix3x3<double> const&);
-template void Set<double>(ConstantBuffer &, FloatingPointMatrix4x4<double> const&);
-template void Set<double>(ConstantBuffer &, FloatingPointQuaternion<double> const&);
+template void Set<double>(ConstantBuffer &, const FloatingPointVector2<double>&);
+template void Set<double>(ConstantBuffer &, const FloatingPointVector3<double>&);
+template void Set<double>(ConstantBuffer &, const FloatingPointVector4<double>&);
+template void Set<double>(ConstantBuffer &, const FloatingPointMatrix2x2<double>&);
+template void Set<double>(ConstantBuffer &, const FloatingPointMatrix3x3<double>&);
+template void Set<double>(ConstantBuffer &, const FloatingPointMatrix4x4<double>&);
+template void Set<double>(ConstantBuffer &, const FloatingPointQuaternion<double>&);
 #endif
 //-----------------------------------------------------------------------
 } // namespace EffectBinaryParameter

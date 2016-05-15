@@ -8,8 +8,9 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-SamplerState::SamplerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    SamplerDescription const& description)
+SamplerState::SamplerState(
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const SamplerDescription& description)
     : nativeSamplerState(graphicsDevice->GetNativeGraphicsDevice()
         ->CreateSamplerState(description))
 {

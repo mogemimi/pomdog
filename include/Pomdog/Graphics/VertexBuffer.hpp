@@ -13,28 +13,38 @@ namespace Pomdog {
 class POMDOG_EXPORT VertexBuffer final {
 public:
     VertexBuffer() = delete;
-    VertexBuffer(VertexBuffer const&) = delete;
+    VertexBuffer(const VertexBuffer&) = delete;
     VertexBuffer(VertexBuffer &&) = default;
 
-    VertexBuffer(GraphicsDevice & graphicsDevice,
-        void const* vertices, std::size_t vertexCount,
-        std::size_t strideInBytes, BufferUsage bufferUsage);
-
-    VertexBuffer(GraphicsDevice & graphicsDevice,
-        std::size_t vertexCount, std::size_t strideInBytes,
+    VertexBuffer(
+        GraphicsDevice & graphicsDevice,
+        const void* vertices,
+        std::size_t vertexCount,
+        std::size_t strideInBytes,
         BufferUsage bufferUsage);
 
-    VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        void const* vertices, std::size_t vertexCount,
-        std::size_t strideBytes, BufferUsage bufferUsage);
+    VertexBuffer(
+        GraphicsDevice & graphicsDevice,
+        std::size_t vertexCount,
+        std::size_t strideInBytes,
+        BufferUsage bufferUsage);
 
-    VertexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        std::size_t vertexCount, std::size_t strideBytes,
+    VertexBuffer(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const void* vertices,
+        std::size_t vertexCount,
+        std::size_t strideBytes,
+        BufferUsage bufferUsage);
+
+    VertexBuffer(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        std::size_t vertexCount,
+        std::size_t strideBytes,
         BufferUsage bufferUsage);
 
     ~VertexBuffer();
 
-    VertexBuffer & operator=(VertexBuffer const&) = delete;
+    VertexBuffer & operator=(const VertexBuffer&) = delete;
     VertexBuffer & operator=(VertexBuffer &&) = default;
 
     std::size_t GetVertexCount() const noexcept;
@@ -45,10 +55,13 @@ public:
 
     BufferUsage GetBufferUsage() const noexcept;
 
-    void SetData(void const* source, std::size_t elementCount);
+    void SetData(const void* source, std::size_t elementCount);
 
-    void SetData(std::size_t offsetInBytes, void const* source,
-        std::size_t elementCount, std::size_t strideInBytes);
+    void SetData(
+        std::size_t offsetInBytes,
+        const void* source,
+        std::size_t elementCount,
+        std::size_t strideInBytes);
 
     Detail::NativeBuffer* GetNativeVertexBuffer();
 

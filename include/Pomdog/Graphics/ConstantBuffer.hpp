@@ -17,24 +17,28 @@ namespace Pomdog {
 class POMDOG_EXPORT ConstantBuffer final {
 public:
     ConstantBuffer() = delete;
-    ConstantBuffer(ConstantBuffer const&) = delete;
-    ConstantBuffer & operator=(ConstantBuffer const&) = delete;
+    ConstantBuffer(const ConstantBuffer&) = delete;
+    ConstantBuffer & operator=(const ConstantBuffer&) = delete;
 
-    ConstantBuffer(GraphicsDevice & graphicsDevice,
+    ConstantBuffer(
+        GraphicsDevice & graphicsDevice,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage);
 
-    ConstantBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    ConstantBuffer(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage);
 
-    ConstantBuffer(GraphicsDevice & graphicsDevice,
-        void const* sourceData,
+    ConstantBuffer(
+        GraphicsDevice & graphicsDevice,
+        const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage);
 
-    ConstantBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        void const* sourceData,
+    ConstantBuffer(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage);
 
@@ -52,20 +56,20 @@ public:
     void GetValue(std::size_t sizeInBytes, void* result) const;
 
     template <typename T>
-    void SetValue(T const& value)
+    void SetValue(const T& value)
     {
         static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
         Detail::EffectBinaryParameter::Set(*this, value);
     }
 
     template <typename T>
-    void SetValue(T const* data, std::size_t count)
+    void SetValue(const T* data, std::size_t count)
     {
         static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
         Detail::EffectBinaryParameter::Set(*this, data, count);
     }
 
-    void SetValue(void const* data, std::size_t sizeInBytes);
+    void SetValue(const void* data, std::size_t sizeInBytes);
 
     std::size_t GetSizeInBytes() const noexcept;
 

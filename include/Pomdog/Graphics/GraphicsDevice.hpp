@@ -11,8 +11,8 @@ namespace Pomdog {
 class POMDOG_EXPORT GraphicsDevice final {
 public:
     GraphicsDevice() = delete;
-    GraphicsDevice(GraphicsDevice const&) = delete;
-    GraphicsDevice & operator=(GraphicsDevice const&) = delete;
+    GraphicsDevice(const GraphicsDevice&) = delete;
+    GraphicsDevice & operator=(const GraphicsDevice&) = delete;
 
     explicit GraphicsDevice(std::unique_ptr<Detail::NativeGraphicsDevice> && nativeDevice);
 

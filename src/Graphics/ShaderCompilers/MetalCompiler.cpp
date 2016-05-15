@@ -17,9 +17,9 @@ namespace ShaderCompilers {
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> MetalCompiler::CreateShaderFromSource(
     GraphicsDevice & graphicsDevice,
-    void const* shaderSource,
+    const void* shaderSource,
     std::size_t byteLength,
-    std::string const& entryPoint,
+    const std::string& entryPoint,
     ShaderPipelineStage pipelineStage)
 {
     POMDOG_ASSERT(shaderSource != nullptr);

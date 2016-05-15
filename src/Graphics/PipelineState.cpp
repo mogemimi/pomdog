@@ -9,8 +9,9 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-PipelineState::PipelineState(GraphicsDevice & graphicsDevice,
-    PipelineStateDescription const& description)
+PipelineState::PipelineState(
+    GraphicsDevice & graphicsDevice,
+    const PipelineStateDescription& description)
 {
     auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
 
@@ -19,8 +20,8 @@ PipelineState::PipelineState(GraphicsDevice & graphicsDevice,
 }
 //-----------------------------------------------------------------------
 PipelineState::PipelineState(
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    PipelineStateDescription const& description)
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const PipelineStateDescription& description)
     : PipelineState(*graphicsDevice, description)
 {}
 //-----------------------------------------------------------------------

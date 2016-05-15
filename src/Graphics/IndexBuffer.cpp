@@ -23,9 +23,10 @@ std::uint32_t ToIndexElementOffsetBytes(IndexElementSize elementSize) noexcept
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
+IndexBuffer::IndexBuffer(
+    GraphicsDevice & graphicsDevice,
     IndexElementSize elementSizeIn,
-    void const* indices,
+    const void* indices,
     std::size_t indexCountIn,
     BufferUsage bufferUsageIn)
     : indexCount(static_cast<decltype(indexCount)>(indexCountIn))
@@ -46,7 +47,8 @@ IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
     POMDOG_ASSERT(nativeIndexBuffer);
 }
 //-----------------------------------------------------------------------
-IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
+IndexBuffer::IndexBuffer(
+    GraphicsDevice & graphicsDevice,
     IndexElementSize elementSizeIn,
     std::size_t indexCountIn,
     BufferUsage bufferUsageIn)
@@ -69,16 +71,21 @@ IndexBuffer::IndexBuffer(GraphicsDevice & graphicsDevice,
     POMDOG_ASSERT(nativeIndexBuffer);
 }
 //-----------------------------------------------------------------------
-IndexBuffer::IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    IndexElementSize elementSizeIn, void const* indices, std::size_t indexCountIn,
+IndexBuffer::IndexBuffer(
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    IndexElementSize elementSizeIn,
+    const void* indices,
+    std::size_t indexCountIn,
     BufferUsage bufferUsageIn)
     : IndexBuffer(*graphicsDevice, elementSizeIn, indices, indexCountIn, bufferUsageIn)
 {
     POMDOG_ASSERT(nativeIndexBuffer);
 }
 //-----------------------------------------------------------------------
-IndexBuffer::IndexBuffer(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    IndexElementSize elementSizeIn, std::size_t indexCountIn,
+IndexBuffer::IndexBuffer(
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    IndexElementSize elementSizeIn,
+    std::size_t indexCountIn,
     BufferUsage bufferUsageIn)
     : IndexBuffer(*graphicsDevice, elementSizeIn, indexCountIn, bufferUsageIn)
 {
@@ -108,7 +115,7 @@ BufferUsage IndexBuffer::GetBufferUsage() const noexcept
     return bufferUsage;
 }
 //-----------------------------------------------------------------------
-void IndexBuffer::SetData(void const* source, std::size_t elementCountIn)
+void IndexBuffer::SetData(const void* source, std::size_t elementCountIn)
 {
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(elementCountIn > 0);
@@ -119,8 +126,10 @@ void IndexBuffer::SetData(void const* source, std::size_t elementCountIn)
         ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
 //-----------------------------------------------------------------------
-void IndexBuffer::SetData(std::size_t offsetInBytes,
-    void const* source, std::size_t elementCountIn)
+void IndexBuffer::SetData(
+    std::size_t offsetInBytes,
+    const void* source,
+    std::size_t elementCountIn)
 {
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(elementCountIn > 0);

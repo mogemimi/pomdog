@@ -11,8 +11,8 @@ namespace Pomdog {
 //-----------------------------------------------------------------------
 EffectReflection::EffectReflection(
     GraphicsDevice & graphicsDevice,
-    PipelineStateDescription const& pipelineStateDescription,
-    std::shared_ptr<PipelineState> const& pipelineState)
+    const PipelineStateDescription& pipelineStateDescription,
+    const std::shared_ptr<PipelineState>& pipelineState)
 {
     auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
 
@@ -26,9 +26,9 @@ EffectReflection::EffectReflection(
 }
 //-----------------------------------------------------------------------
 EffectReflection::EffectReflection(
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    PipelineStateDescription const& pipelineStateDescription,
-    std::shared_ptr<PipelineState> const& pipelineState)
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const PipelineStateDescription& pipelineStateDescription,
+    const std::shared_ptr<PipelineState>& pipelineState)
     : EffectReflection(
         *graphicsDevice,
         pipelineStateDescription,

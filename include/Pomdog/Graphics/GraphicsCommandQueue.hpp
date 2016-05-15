@@ -14,8 +14,8 @@ class GraphicsCommandList;
 class POMDOG_EXPORT GraphicsCommandQueue final {
 public:
     GraphicsCommandQueue() = delete;
-    GraphicsCommandQueue(GraphicsCommandQueue const&) = delete;
-    GraphicsCommandQueue & operator=(GraphicsCommandQueue const&) = delete;
+    GraphicsCommandQueue(const GraphicsCommandQueue&) = delete;
+    GraphicsCommandQueue & operator=(const GraphicsCommandQueue&) = delete;
 
     explicit GraphicsCommandQueue(
         std::unique_ptr<Detail::NativeGraphicsCommandQueue> && nativeCommandQueue);
@@ -24,7 +24,7 @@ public:
 
     void Reset();
 
-    void PushbackCommandList(std::shared_ptr<GraphicsCommandList> const& commandList);
+    void PushbackCommandList(const std::shared_ptr<GraphicsCommandList>& commandList);
 
     void ExecuteCommandLists();
 

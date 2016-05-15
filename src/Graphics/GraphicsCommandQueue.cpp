@@ -20,7 +20,7 @@ void GraphicsCommandQueue::Reset()
 }
 //-----------------------------------------------------------------------
 void GraphicsCommandQueue::PushbackCommandList(
-    std::shared_ptr<GraphicsCommandList> const& commandList)
+    const std::shared_ptr<GraphicsCommandList>& commandList)
 {
     POMDOG_ASSERT(nativeCommandQueue);
     POMDOG_ASSERT(commandList);

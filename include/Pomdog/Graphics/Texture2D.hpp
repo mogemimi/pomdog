@@ -14,18 +14,24 @@ namespace Pomdog {
 class POMDOG_EXPORT Texture2D final : public Texture {
 public:
     Texture2D() = delete;
-    Texture2D(Texture2D const&) = delete;
+    Texture2D(const Texture2D&) = delete;
     Texture2D(Texture2D &&) = default;
 
-    Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        std::int32_t width, std::int32_t height);
+    Texture2D(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        std::int32_t width,
+        std::int32_t height);
 
-    Texture2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        std::int32_t width, std::int32_t height, bool mipMap, SurfaceFormat format);
+    Texture2D(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        std::int32_t width,
+        std::int32_t height,
+        bool mipMap,
+        SurfaceFormat format);
 
     ~Texture2D();
 
-    Texture2D & operator=(Texture2D const&) = delete;
+    Texture2D & operator=(const Texture2D&) = delete;
     Texture2D & operator=(Texture2D &&) = default;
 
     std::int32_t GetWidth() const;
@@ -36,7 +42,7 @@ public:
 
     SurfaceFormat GetFormat() const;
 
-    void SetData(void const* pixelData);
+    void SetData(const void* pixelData);
 
     Detail::NativeTexture2D* GetNativeTexture2D();
 

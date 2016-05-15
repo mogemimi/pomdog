@@ -11,15 +11,26 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-RenderTarget2D::RenderTarget2D(GraphicsDevice & graphicsDevice,
-    std::int32_t pixelWidthIn, std::int32_t pixelHeightIn)
-    : RenderTarget2D(graphicsDevice, pixelWidthIn, pixelHeightIn,
-        false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None)
+RenderTarget2D::RenderTarget2D(
+    GraphicsDevice & graphicsDevice,
+    std::int32_t pixelWidthIn,
+    std::int32_t pixelHeightIn)
+    : RenderTarget2D(
+        graphicsDevice,
+        pixelWidthIn,
+        pixelHeightIn,
+        false,
+        SurfaceFormat::R8G8B8A8_UNorm,
+        DepthFormat::None)
 {}
 //-----------------------------------------------------------------------
-RenderTarget2D::RenderTarget2D(GraphicsDevice & graphicsDevice,
-    std::int32_t pixelWidthIn, std::int32_t pixelHeightIn,
-    bool generateMipmap, SurfaceFormat formatIn, DepthFormat depthStencilFormatIn)
+RenderTarget2D::RenderTarget2D(
+    GraphicsDevice & graphicsDevice,
+    std::int32_t pixelWidthIn,
+    std::int32_t pixelHeightIn,
+    bool generateMipmap,
+    SurfaceFormat formatIn,
+    DepthFormat depthStencilFormatIn)
     : pixelWidth(pixelWidthIn)
     , pixelHeight(pixelHeightIn)
     , levelCount(generateMipmap ? Detail::TextureHelper::ComputeMipmapLevelCount(pixelWidthIn, pixelHeightIn): 1)
@@ -41,17 +52,33 @@ RenderTarget2D::RenderTarget2D(GraphicsDevice & graphicsDevice,
         multiSampleCount);
 }
 //-----------------------------------------------------------------------
-RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    std::int32_t pixelWidthIn, std::int32_t pixelHeightIn)
-    : RenderTarget2D(*graphicsDevice, pixelWidthIn, pixelHeightIn,
-        false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None)
+RenderTarget2D::RenderTarget2D(
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    std::int32_t pixelWidthIn,
+    std::int32_t pixelHeightIn)
+    : RenderTarget2D(
+        *graphicsDevice,
+        pixelWidthIn,
+        pixelHeightIn,
+        false,
+        SurfaceFormat::R8G8B8A8_UNorm,
+        DepthFormat::None)
 {}
 //-----------------------------------------------------------------------
-RenderTarget2D::RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    std::int32_t pixelWidthIn, std::int32_t pixelHeightIn,
-    bool generateMipmap, SurfaceFormat formatIn, DepthFormat depthStencilFormatIn)
-    : RenderTarget2D(*graphicsDevice, pixelWidthIn, pixelHeightIn,
-        generateMipmap, formatIn, depthStencilFormatIn)
+RenderTarget2D::RenderTarget2D(
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    std::int32_t pixelWidthIn,
+    std::int32_t pixelHeightIn,
+    bool generateMipmap,
+    SurfaceFormat formatIn,
+    DepthFormat depthStencilFormatIn)
+    : RenderTarget2D(
+        *graphicsDevice,
+        pixelWidthIn,
+        pixelHeightIn,
+        generateMipmap,
+        formatIn,
+        depthStencilFormatIn)
 {}
 //-----------------------------------------------------------------------
 RenderTarget2D::~RenderTarget2D() = default;

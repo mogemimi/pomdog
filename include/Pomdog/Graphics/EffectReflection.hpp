@@ -13,16 +13,18 @@ namespace Pomdog {
 class POMDOG_EXPORT EffectReflection {
 public:
     EffectReflection() = delete;
-    EffectReflection(EffectReflection const&) = delete;
+    EffectReflection(const EffectReflection&) = delete;
     EffectReflection(EffectReflection &&) = default;
 
-    EffectReflection(GraphicsDevice & graphicsDevice,
-        PipelineStateDescription const& pipelineStateDescription,
-        std::shared_ptr<PipelineState> const& pipelineState);
+    EffectReflection(
+        GraphicsDevice & graphicsDevice,
+        const PipelineStateDescription& pipelineStateDescription,
+        const std::shared_ptr<PipelineState>& pipelineState);
 
-    EffectReflection(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        PipelineStateDescription const& pipelineStateDescription,
-        std::shared_ptr<PipelineState> const& pipelineState);
+    EffectReflection(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const PipelineStateDescription& pipelineStateDescription,
+        const std::shared_ptr<PipelineState>& pipelineState);
 
     ~EffectReflection();
 

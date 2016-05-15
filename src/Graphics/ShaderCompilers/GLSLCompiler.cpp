@@ -17,7 +17,7 @@ namespace ShaderCompilers {
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader> GLSLCompiler::CreateShader(
     GraphicsDevice & graphicsDevice,
-    void const* shaderSource,
+    const void* shaderSource,
     std::size_t byteLength,
     ShaderPipelineStage pipelineStage)
 {

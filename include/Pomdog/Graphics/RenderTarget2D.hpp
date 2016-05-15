@@ -16,26 +16,38 @@ namespace Pomdog {
 class POMDOG_EXPORT RenderTarget2D final : public Texture {
 public:
     RenderTarget2D() = delete;
-    RenderTarget2D(RenderTarget2D const&) = delete;
+    RenderTarget2D(const RenderTarget2D&) = delete;
     RenderTarget2D(RenderTarget2D &&) = default;
 
-    RenderTarget2D(GraphicsDevice & graphicsDevice,
-        std::int32_t width, std::int32_t height);
+    RenderTarget2D(
+        GraphicsDevice & graphicsDevice,
+        std::int32_t width,
+        std::int32_t height);
 
-    RenderTarget2D(GraphicsDevice & graphicsDevice,
-        std::int32_t width, std::int32_t height, bool generateMipmap,
-        SurfaceFormat format, DepthFormat depthStencilFormat);
+    RenderTarget2D(
+        GraphicsDevice & graphicsDevice,
+        std::int32_t width,
+        std::int32_t height,
+        bool generateMipmap,
+        SurfaceFormat format,
+        DepthFormat depthStencilFormat);
 
-    RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        std::int32_t width, std::int32_t height);
+    RenderTarget2D(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        std::int32_t width,
+        std::int32_t height);
 
-    RenderTarget2D(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        std::int32_t width, std::int32_t height, bool generateMipmap,
-        SurfaceFormat format, DepthFormat depthStencilFormat);
+    RenderTarget2D(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        std::int32_t width,
+        std::int32_t height,
+        bool generateMipmap,
+        SurfaceFormat format,
+        DepthFormat depthStencilFormat);
 
     ~RenderTarget2D();
 
-    RenderTarget2D & operator=(RenderTarget2D const&) = delete;
+    RenderTarget2D & operator=(const RenderTarget2D&) = delete;
     RenderTarget2D & operator=(RenderTarget2D &&) = default;
 
     std::int32_t GetWidth() const;

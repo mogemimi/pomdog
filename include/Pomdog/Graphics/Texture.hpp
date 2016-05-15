@@ -9,10 +9,10 @@ namespace Pomdog {
 class POMDOG_EXPORT Texture {
 public:
     Texture() = default;
-    Texture(Texture const&) = delete;
+    Texture(const Texture&) = delete;
     Texture(Texture &&) = default;
 
-    Texture & operator=(Texture const&) = delete;
+    Texture & operator=(const Texture&) = delete;
     Texture & operator=(Texture &&) = default;
 
     virtual ~Texture() = default;

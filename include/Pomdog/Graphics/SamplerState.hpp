@@ -12,11 +12,12 @@ namespace Pomdog {
 class POMDOG_EXPORT SamplerState final {
 public:
     SamplerState() = delete;
-    SamplerState(SamplerState const&) = delete;
-    SamplerState & operator=(SamplerState const&) = delete;
+    SamplerState(const SamplerState&) = delete;
+    SamplerState & operator=(const SamplerState&) = delete;
 
-    SamplerState(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        SamplerDescription const& description);
+    SamplerState(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const SamplerDescription& description);
 
     ~SamplerState();
 

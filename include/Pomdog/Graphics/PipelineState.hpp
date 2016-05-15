@@ -11,18 +11,20 @@ namespace Pomdog {
 class POMDOG_EXPORT PipelineState final {
 public:
     PipelineState() = delete;
-    PipelineState(PipelineState const&) = delete;
+    PipelineState(const PipelineState&) = delete;
     PipelineState(PipelineState &&) = default;
 
-    PipelineState(GraphicsDevice & graphicsDevice,
-        PipelineStateDescription const& description);
+    PipelineState(
+        GraphicsDevice & graphicsDevice,
+        const PipelineStateDescription& description);
 
-    PipelineState(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        PipelineStateDescription const& description);
+    PipelineState(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const PipelineStateDescription& description);
 
     ~PipelineState();
 
-    PipelineState & operator=(PipelineState const&) = delete;
+    PipelineState & operator=(const PipelineState&) = delete;
     PipelineState & operator=(PipelineState &&) = default;
 
     Detail::NativePipelineState* GetNativePipelineState();

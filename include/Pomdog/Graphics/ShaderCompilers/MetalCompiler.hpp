@@ -18,9 +18,9 @@ namespace ShaderCompilers {
 struct POMDOG_EXPORT MetalCompiler final {
     static std::unique_ptr<Shader> CreateShaderFromSource(
         GraphicsDevice & graphicsDevice,
-        void const* shaderSource,
+        const void* shaderSource,
         std::size_t byteLength,
-        std::string const& entryPoint,
+        const std::string& entryPoint,
         ShaderPipelineStage pipelineStage);
 };
 

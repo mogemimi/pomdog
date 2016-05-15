@@ -31,7 +31,7 @@ ConstantBuffer::ConstantBuffer(
 //-----------------------------------------------------------------------
 ConstantBuffer::ConstantBuffer(
     GraphicsDevice & graphicsDevice,
-    void const* sourceData,
+    const void* sourceData,
     std::size_t sizeInBytesIn,
     BufferUsage bufferUsageIn)
     : sizeInBytes(static_cast<decltype(sizeInBytes)>(sizeInBytesIn))
@@ -51,15 +51,15 @@ ConstantBuffer::ConstantBuffer(
 }
 //-----------------------------------------------------------------------
 ConstantBuffer::ConstantBuffer(
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     std::size_t sizeInBytesIn,
     BufferUsage bufferUsageIn)
     : ConstantBuffer(*graphicsDevice, sizeInBytesIn, bufferUsageIn)
 {}
 //-----------------------------------------------------------------------
 ConstantBuffer::ConstantBuffer(
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    void const* sourceData,
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const void* sourceData,
     std::size_t sizeInBytesIn,
     BufferUsage bufferUsageIn)
     : ConstantBuffer(*graphicsDevice, sourceData, sizeInBytesIn, bufferUsageIn)
@@ -76,7 +76,7 @@ void ConstantBuffer::GetValue(std::size_t sizeInBytesIn, void* result) const
     nativeConstantBuffer->GetData(0, result, sizeInBytesIn);
 }
 //-----------------------------------------------------------------------
-void ConstantBuffer::SetValue(void const* data, std::size_t sizeInBytesIn)
+void ConstantBuffer::SetValue(const void* data, std::size_t sizeInBytesIn)
 {
     POMDOG_ASSERT(data != nullptr);
     POMDOG_ASSERT(sizeInBytesIn > 0);

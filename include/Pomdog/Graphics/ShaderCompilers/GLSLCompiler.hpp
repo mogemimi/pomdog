@@ -17,7 +17,7 @@ namespace ShaderCompilers {
 struct POMDOG_EXPORT GLSLCompiler final {
     static std::unique_ptr<Shader> CreateShader(
         GraphicsDevice & graphicsDevice,
-        void const* shaderSource,
+        const void* shaderSource,
         std::size_t byteLength,
         ShaderPipelineStage pipelineStage);
 };
