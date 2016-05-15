@@ -41,7 +41,7 @@ class EffectReflectionGL4 final : public NativeEffectReflection {
 public:
     EffectReflectionGL4() = delete;
 
-    explicit EffectReflectionGL4(ShaderProgramGL4 const& shaderProgram);
+    explicit EffectReflectionGL4(const ShaderProgramGL4& shaderProgram);
 
     std::vector<EffectConstantDescription> GetConstantBuffers() const override;
 

@@ -50,21 +50,21 @@ GLenum ToStencilOperationGL4NonTypesafe(StencilOperation operation) noexcept
 }
 //-----------------------------------------------------------------------
 ComparisonFunctionGL4
-ToComparisonFunctionGL4(ComparisonFunction const& comparison) noexcept
+ToComparisonFunctionGL4(const ComparisonFunction& comparison) noexcept
 {
     return ComparisonFunctionGL4{
         ToComparisonFunctionGL4NonTypesafe(comparison)};
 }
 //-----------------------------------------------------------------------
 StencilOperationGL4
-ToStencilOperationGL4(StencilOperation const& operation) noexcept
+ToStencilOperationGL4(const StencilOperation& operation) noexcept
 {
     return StencilOperationGL4{
         ToStencilOperationGL4NonTypesafe(operation)};
 }
 //-----------------------------------------------------------------------
 void ToDepthStencilFaceOperationGL4(
-    DepthStencilOperation const& face,
+    const DepthStencilOperation& face,
     DepthStencilFaceOperationGL4 & result) noexcept
 {
     result.stencilFunction = ToComparisonFunctionGL4(face.StencilFunction);
@@ -75,7 +75,7 @@ void ToDepthStencilFaceOperationGL4(
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-DepthStencilStateGL4::DepthStencilStateGL4(DepthStencilDescription const& description)
+DepthStencilStateGL4::DepthStencilStateGL4(const DepthStencilDescription& description)
     : depthFunction(ToComparisonFunctionGL4(description.DepthBufferFunction))
     , referenceStencil(description.ReferenceStencil)
     , stencilMask(description.StencilMask)

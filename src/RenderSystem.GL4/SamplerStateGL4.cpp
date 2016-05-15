@@ -26,7 +26,7 @@ GLenum ToTextureAddressMode(TextureAddressMode address) noexcept
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-SamplerStateGL4::SamplerStateGL4(SamplerDescription const& description)
+SamplerStateGL4::SamplerStateGL4(const SamplerDescription& description)
 {
     samplerObject = ([] {
         SamplerObjectGL4 sampler;

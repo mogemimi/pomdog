@@ -109,7 +109,7 @@ void RenderTarget2DGL4::BindDepthStencilBuffer()
     }
 }
 //-----------------------------------------------------------------------
-Texture2DObjectGL4 const& RenderTarget2DGL4::GetTextureHandle() const
+const Texture2DObjectGL4& RenderTarget2DGL4::GetTextureHandle() const
 {
     return texture.GetTextureHandle();
 }

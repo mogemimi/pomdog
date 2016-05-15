@@ -24,7 +24,7 @@ class DepthStencilStateGL4 final {
 public:
     DepthStencilStateGL4() = delete;
 
-    explicit DepthStencilStateGL4(DepthStencilDescription const& description);
+    explicit DepthStencilStateGL4(const DepthStencilDescription& description);
 
     void Apply();
 

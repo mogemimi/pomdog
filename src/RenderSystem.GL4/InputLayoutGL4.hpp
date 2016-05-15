@@ -49,14 +49,15 @@ struct VertexDeclarationGL4 {
 
 class InputLayoutGL4 final {
 public:
-    explicit InputLayoutGL4(ShaderProgramGL4 const& shaderProgram);
+    explicit InputLayoutGL4(const ShaderProgramGL4& shaderProgram);
 
-    InputLayoutGL4(ShaderProgramGL4 const& shaderProgram,
-        InputLayoutDescription const& description);
+    InputLayoutGL4(
+        const ShaderProgramGL4& shaderProgram,
+        const InputLayoutDescription& description);
 
     ~InputLayoutGL4();
 
-    void Apply(std::vector<VertexBufferBinding> const& vertexBuffers);
+    void Apply(const std::vector<VertexBufferBinding>& vertexBuffers);
 
 private:
     std::vector<InputElementGL4> inputElements;

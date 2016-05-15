@@ -23,7 +23,7 @@ public:
         BufferUsage bufferUsage);
 
     BufferGL4(
-        void const* sourceData,
+        const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage);
 
@@ -36,7 +36,7 @@ public:
 
     void SetData(
         std::size_t offsetInBytes,
-        void const* source,
+        const void* source,
         std::size_t sizeInBytes) override;
 
     void BindBuffer();

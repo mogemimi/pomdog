@@ -7,7 +7,7 @@ namespace Detail {
 namespace GL4 {
 
 namespace ErrorChecker {
-void CheckError(char const* command, char const* filename, int line);
+void CheckError(const char* command, const char* filename, int line);
 }
 
 #if defined(DEBUG) && !defined(NDEBUG)

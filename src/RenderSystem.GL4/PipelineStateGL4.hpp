@@ -28,7 +28,7 @@ struct TextureBindingGL4 {
 
 class PipelineStateGL4 final : public NativePipelineState {
 public:
-    explicit PipelineStateGL4(PipelineStateDescription const& description);
+    explicit PipelineStateGL4(const PipelineStateDescription& description);
 
     ~PipelineStateGL4();
 

@@ -29,7 +29,7 @@ class BlendStateGL4 final {
 public:
     BlendStateGL4() = delete;
 
-    explicit BlendStateGL4(BlendDescription const& description);
+    explicit BlendStateGL4(const BlendDescription& description);
 
     void Apply();
 

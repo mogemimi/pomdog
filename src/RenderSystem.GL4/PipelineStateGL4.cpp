@@ -25,7 +25,7 @@ namespace {
 static constexpr std::size_t ConstantBufferSlotCount = 14;
 
 Optional<ShaderProgramGL4> LinkShaders(
-    VertexShaderGL4 const& vertexShader, PixelShaderGL4 const& pixelShader)
+    const VertexShaderGL4& vertexShader, const PixelShaderGL4& pixelShader)
 {
     ShaderProgramGL4 const program {
         glCreateProgram()
@@ -61,7 +61,7 @@ Optional<ShaderProgramGL4> LinkShaders(
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-PipelineStateGL4::PipelineStateGL4(PipelineStateDescription const& description)
+PipelineStateGL4::PipelineStateGL4(const PipelineStateDescription& description)
     : blendState(description.BlendState)
     , rasterizerState(description.RasterizerState)
     , depthStencilState(description.DepthStencilState)

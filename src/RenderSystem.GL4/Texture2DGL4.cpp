@@ -126,7 +126,7 @@ void SetPixelDataTexture2DCompressedGL4(
     std::int32_t pixelHeight,
     std::int32_t levelCount,
     SurfaceFormat format,
-    void const* pixelData)
+    const void* pixelData)
 {
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
@@ -157,7 +157,7 @@ void SetPixelDataTexture2DCompressedGL4(
             mipMapPixelHeight,
             internalFormat,
             strideBytesPerMipmap,
-            reinterpret_cast<std::uint8_t const*>(pixelData) + startOffset);
+            reinterpret_cast<const std::uint8_t*>(pixelData) + startOffset);
         POMDOG_CHECK_ERROR_GL4("glCompressedTexSubImage2D");
 
         startOffset += strideBytesPerMipmap;
@@ -172,7 +172,7 @@ void SetPixelDataTexture2DGL4(
     std::int32_t pixelHeight,
     std::int32_t levelCount,
     SurfaceFormat format,
-    void const* pixelData)
+    const void* pixelData)
 {
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
@@ -202,7 +202,7 @@ void SetPixelDataTexture2DGL4(
             mipMapPixelHeight,
             formatComponents,
             pixelFundamentalType,
-            reinterpret_cast<std::uint8_t const*>(pixelData) + startOffset);
+            reinterpret_cast<const std::uint8_t*>(pixelData) + startOffset);
         POMDOG_CHECK_ERROR_GL4("glTexSubImage2D");
 
         startOffset += strideBytesPerMipmap;
@@ -262,7 +262,7 @@ Texture2DGL4::~Texture2DGL4()
 }
 //-----------------------------------------------------------------------
 void Texture2DGL4::SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
-    std::int32_t levelCount, SurfaceFormat format, void const* pixelData)
+    std::int32_t levelCount, SurfaceFormat format, const void* pixelData)
 {
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
@@ -303,7 +303,7 @@ void Texture2DGL4::GenerateMipmap()
     POMDOG_CHECK_ERROR_GL4("glGenerateMipmap");
 }
 //-----------------------------------------------------------------------
-Texture2DObjectGL4 const& Texture2DGL4::GetTextureHandle() const
+const Texture2DObjectGL4& Texture2DGL4::GetTextureHandle() const
 {
     POMDOG_ASSERT(textureObject);
     return textureObject.value();

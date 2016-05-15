@@ -17,7 +17,7 @@ namespace GL4 {
 namespace {
 //-----------------------------------------------------------------------
 GLint GetActiveUniformBlockIntValue(
-    ShaderProgramGL4 const& shaderProgram, GLuint uniformBlockIndex, GLenum parameterName)
+    const ShaderProgramGL4& shaderProgram, GLuint uniformBlockIndex, GLenum parameterName)
 {
     GLint result = 0;
     glGetActiveUniformBlockiv(shaderProgram.value, uniformBlockIndex, parameterName, &result);
@@ -27,7 +27,7 @@ GLint GetActiveUniformBlockIntValue(
 }
 //-----------------------------------------------------------------------
 std::string GetActiveUniformBlockName(
-    ShaderProgramGL4 const& shaderProgram, GLuint uniformBlockIndex)
+    const ShaderProgramGL4& shaderProgram, GLuint uniformBlockIndex)
 {
     std::string result;
 
@@ -45,7 +45,7 @@ std::string GetActiveUniformBlockName(
 }
 //-----------------------------------------------------------------------
 std::vector<GLuint> GetActiveUniformBlockIndices(
-    ShaderProgramGL4 const& shaderProgram, GLuint uniformBlockIndex)
+    const ShaderProgramGL4& shaderProgram, GLuint uniformBlockIndex)
 {
     auto const uniformCount = GetActiveUniformBlockIntValue(
         shaderProgram, uniformBlockIndex, GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS);
@@ -60,8 +60,11 @@ std::vector<GLuint> GetActiveUniformBlockIndices(
 }
 //-----------------------------------------------------------------------
 template <typename Func>
-void GetActiveUniformsIntValue(ShaderProgramGL4 const& shaderProgram,
-    std::vector<GLuint> const& uniformIndices, GLenum parameter, Func func)
+void GetActiveUniformsIntValue(
+    const ShaderProgramGL4& shaderProgram,
+    const std::vector<GLuint>& uniformIndices,
+    GLenum parameter,
+    Func func)
 {
     auto const uniformCount = static_cast<GLsizei>(uniformIndices.size());
 
@@ -77,7 +80,7 @@ void GetActiveUniformsIntValue(ShaderProgramGL4 const& shaderProgram,
 }
 //-----------------------------------------------------------------------
 std::vector<UniformVariableGL4> EnumerateUniformVariables(
-    ShaderProgramGL4 const& shaderProgram, GLuint uniformBlockIndex)
+    const ShaderProgramGL4& shaderProgram, GLuint uniformBlockIndex)
 {
     auto const uniformIndices = GetActiveUniformBlockIndices(shaderProgram, uniformBlockIndex);
 
@@ -113,7 +116,7 @@ std::vector<UniformVariableGL4> EnumerateUniformVariables(
 }
 //-----------------------------------------------------------------------
 std::vector<UniformBlockGL4>
-EnumerateUniformBlocks(ShaderProgramGL4 const& shaderProgram)
+EnumerateUniformBlocks(const ShaderProgramGL4& shaderProgram)
 {
     GLint uniformBlockCount = 0;
     glGetProgramiv(shaderProgram.value, GL_ACTIVE_UNIFORM_BLOCKS, &uniformBlockCount);
@@ -147,7 +150,7 @@ EnumerateUniformBlocks(ShaderProgramGL4 const& shaderProgram)
     return std::move(uniformBlocks);
 }
 //-----------------------------------------------------------------------
-std::vector<UniformGL4> EnumerateUniforms(ShaderProgramGL4 const& shaderProgram)
+std::vector<UniformGL4> EnumerateUniforms(const ShaderProgramGL4& shaderProgram)
 {
     GLint uniformCount = 0;
     glGetProgramiv(shaderProgram.value, GL_ACTIVE_UNIFORMS, &uniformCount);
@@ -239,7 +242,7 @@ std::vector<UniformGL4> EnumerateUniforms(ShaderProgramGL4 const& shaderProgram)
 
     ///@todo Replace the following code by GL_ARB_shading_language_420pack on OpenGL 4.2+:
     std::sort(std::begin(uniformVariables), std::end(uniformVariables),
-        [](UniformGL4 const& a, UniformGL4 const& b){ return a.Name < b.Name; });
+        [](const UniformGL4& a, const UniformGL4& b){ return a.Name < b.Name; });
 
     return std::move(uniformVariables);
 }
@@ -561,7 +564,7 @@ void ToComponents(GLenum uniformType, std::uint8_t & RowCount, std::uint8_t & Co
 #endif
 }
 //-----------------------------------------------------------------------
-EffectAnnotation ToEffectAnnotation(UniformVariableGL4 const& uniform)
+EffectAnnotation ToEffectAnnotation(const UniformVariableGL4& uniform)
 {
     EffectAnnotation annotation;
 
@@ -573,7 +576,7 @@ EffectAnnotation ToEffectAnnotation(UniformVariableGL4 const& uniform)
     return std::move(annotation);
 }
 //-----------------------------------------------------------------------
-std::vector<EffectVariable> GetEffectVariables(std::vector<UniformVariableGL4> const& uniforms)
+std::vector<EffectVariable> GetEffectVariables(const std::vector<UniformVariableGL4>& uniforms)
 {
     std::vector<EffectVariable> result;
     result.reserve(uniforms.size());
@@ -590,11 +593,11 @@ std::vector<EffectVariable> GetEffectVariables(std::vector<UniformVariableGL4> c
 }
 //-----------------------------------------------------------------------
 #if defined(DEBUG) && !defined(NDEBUG)
-void DebugLogUniformBlocks(std::vector<UniformBlockGL4> const& uniformBlocks)
+void DebugLogUniformBlocks(const std::vector<UniformBlockGL4>& uniformBlocks)
 {
     std::stringstream stream;
 
-    for (auto const& uniformBlock: uniformBlocks)
+    for (const auto& uniformBlock: uniformBlocks)
     {
         stream
         << "-[UniformBlock]-------------------\n"
@@ -603,7 +606,7 @@ void DebugLogUniformBlocks(std::vector<UniformBlockGL4> const& uniformBlocks)
         << "     ByteSize: " << uniformBlock.ByteSize << "\n"
         << "Uniforms.size: " << uniformBlock.Uniforms.size() << "\n";
 
-        for (auto const& uniform: uniformBlock.Uniforms) {
+        for (const auto& uniform: uniformBlock.Uniforms) {
             stream
             << ":- - - - - - - - - - - - - -\n"
             << "         Name: " << uniform.Name << "\n"
@@ -620,10 +623,10 @@ void DebugLogUniformBlocks(std::vector<UniformBlockGL4> const& uniformBlocks)
     Log::Internal(stream.str());
 }
 //-----------------------------------------------------------------------
-void DebugLogUniforms(std::vector<UniformGL4> const& uniforms)
+void DebugLogUniforms(const std::vector<UniformGL4>& uniforms)
 {
     std::stringstream stream;
-    for (auto const& uniform: uniforms) {
+    for (const auto& uniform: uniforms) {
         stream
         << "-[Uniform]-------------------\n"
         << "      Name: " << uniform.Name << "\n"
@@ -639,7 +642,7 @@ void DebugLogUniforms(std::vector<UniformGL4> const& uniforms)
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-EffectReflectionGL4::EffectReflectionGL4(ShaderProgramGL4 const& shaderProgramIn)
+EffectReflectionGL4::EffectReflectionGL4(const ShaderProgramGL4& shaderProgramIn)
     : shaderProgram(shaderProgramIn)
 {
 }

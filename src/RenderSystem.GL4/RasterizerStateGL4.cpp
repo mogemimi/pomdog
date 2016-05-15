@@ -10,7 +10,7 @@ namespace Detail {
 namespace GL4 {
 namespace {
 
-FillModeGL4 ToFillModeGL4(FillMode const& fillMode) noexcept
+FillModeGL4 ToFillModeGL4(const FillMode& fillMode) noexcept
 {
     switch (fillMode) {
     case FillMode::Solid: return FillModeGL4{ GL_FILL };
@@ -23,7 +23,7 @@ FillModeGL4 ToFillModeGL4(FillMode const& fillMode) noexcept
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-RasterizerStateGL4::RasterizerStateGL4(RasterizerDescription const& description)
+RasterizerStateGL4::RasterizerStateGL4(const RasterizerDescription& description)
     : fillMode(ToFillModeGL4(description.FillMode))
     , cullMode(description.CullMode)
     , depthBias(static_cast<decltype(depthBias)>(description.DepthBias))

@@ -62,7 +62,7 @@ BlendOperationGL4 ToBlendOperationGL4(BlendOperation operation) noexcept
 }
 //-----------------------------------------------------------------------
 void ToRenderTargetBlendGL4(
-    RenderTargetBlendDescription const& desc,
+    const RenderTargetBlendDescription& desc,
     RenderTargetBlendDescGL4 & result) noexcept
 {
     result.ColorSource = ToBlendGL4(desc.ColorSourceBlend);
@@ -76,7 +76,7 @@ void ToRenderTargetBlendGL4(
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-BlendStateGL4::BlendStateGL4(BlendDescription const& description)
+BlendStateGL4::BlendStateGL4(const BlendDescription& description)
     : independentBlendEnable(description.IndependentBlendEnable)
 {
     for (std::size_t i = 0; i < description.RenderTargets.size(); ++i) {

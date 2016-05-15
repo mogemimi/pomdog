@@ -32,7 +32,7 @@ public:
 
     void BindDepthStencilBuffer();
 
-    Texture2DObjectGL4 const& GetTextureHandle() const;
+    const Texture2DObjectGL4& GetTextureHandle() const;
 
 private:
     Texture2DGL4 texture;

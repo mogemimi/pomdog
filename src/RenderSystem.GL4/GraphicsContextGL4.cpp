@@ -129,7 +129,7 @@ Optional<FrameBufferGL4> CreateFrameBuffer()
     return std::move(frameBuffer);
 }
 //-----------------------------------------------------------------------
-void ApplyTexture2D(int index, Texture2DObjectGL4 const& textureObject)
+void ApplyTexture2D(int index, const Texture2DObjectGL4& textureObject)
 {
     #if defined(DEBUG) && !defined(NDEBUG)
     {
@@ -149,7 +149,7 @@ void ApplyTexture2D(int index, Texture2DObjectGL4 const& textureObject)
     POMDOG_CHECK_ERROR_GL4("glBindTexture");
 }
 //-----------------------------------------------------------------------
-void ApplyConstantBuffer(int slotIndex, ConstantBufferGL4 const& buffer)
+void ApplyConstantBuffer(int slotIndex, const ConstantBufferGL4& buffer)
 {
     POMDOG_ASSERT(slotIndex >= 0);
     glBindBufferBase(GL_UNIFORM_BUFFER, slotIndex, buffer.GetBuffer());
@@ -165,14 +165,14 @@ template<> struct TypesafeHelperGL4::Traits<FrameBufferGL4> {
 // MARK: - GraphicsContextGL4
 //-----------------------------------------------------------------------
 GraphicsContextGL4::GraphicsContextGL4(
-    std::shared_ptr<OpenGLContext> const& openGLContextIn,
+    const std::shared_ptr<OpenGLContext>& openGLContextIn,
     std::weak_ptr<GameWindow> windowIn)
     : nativeContext(openGLContextIn)
     , gameWindow(std::move(windowIn))
     , needToApplyInputLayout(true)
     , needToApplyPipelineState(true)
 {
-    auto version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
+    auto version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
     Log::Internal(StringHelper::Format("OpenGL Version: %s", version));
 
     auto capabilities = GetCapabilities();
@@ -205,7 +205,7 @@ GraphicsContextGL4::~GraphicsContextGL4()
     gameWindow.reset();
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil)
+void GraphicsContextGL4::Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
 {
     GLbitfield mask = 0;
 
@@ -370,7 +370,7 @@ GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const
     return capabilities;
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetViewport(Viewport const& viewport)
+void GraphicsContextGL4::SetViewport(const Viewport& viewport)
 {
     POMDOG_ASSERT(viewport.Width > 0);
     POMDOG_ASSERT(viewport.Height > 0);
@@ -399,7 +399,7 @@ void GraphicsContextGL4::SetViewport(Viewport const& viewport)
     POMDOG_CHECK_ERROR_GL4("glDepthRangef");
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetScissorRectangle(Rectangle const& rectangle)
+void GraphicsContextGL4::SetScissorRectangle(const Rectangle& rectangle)
 {
     POMDOG_ASSERT(rectangle.Width > 0);
     POMDOG_ASSERT(rectangle.Height > 0);
@@ -421,27 +421,27 @@ void GraphicsContextGL4::SetPrimitiveTopology(PrimitiveTopology primitiveTopolog
     primitiveTopology = ToPrimitiveTopology(primitiveTopologyIn);
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetBlendFactor(Color const& blendFactor)
+void GraphicsContextGL4::SetBlendFactor(const Color& blendFactor)
 {
     auto colorVector = blendFactor.ToVector4();
     glBlendColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
     POMDOG_CHECK_ERROR_GL4("glBlendColor");
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffersIn)
+void GraphicsContextGL4::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffersIn)
 {
     POMDOG_ASSERT(!vertexBuffersIn.empty());
     this->vertexBuffers = vertexBuffersIn;
     needToApplyInputLayout = true;
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBufferIn)
+void GraphicsContextGL4::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBufferIn)
 {
     POMDOG_ASSERT(indexBufferIn);
     indexBuffer = indexBufferIn;
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineStateIn)
+void GraphicsContextGL4::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineStateIn)
 {
     POMDOG_ASSERT(pipelineStateIn);
     if (pipelineState != pipelineStateIn) {
@@ -453,7 +453,7 @@ void GraphicsContextGL4::SetPipelineState(std::shared_ptr<NativePipelineState> c
     }
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetConstantBuffer(int index, std::shared_ptr<NativeBuffer> const& constantBufferIn)
+void GraphicsContextGL4::SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBufferIn)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(constantBufferIn);
@@ -560,7 +560,7 @@ void GraphicsContextGL4::SetRenderTarget()
     // Unbind render targets
     {
         std::size_t index = 0;
-        for (auto const& renderTarget: renderTargets)
+        for (const auto& renderTarget: renderTargets)
         {
             POMDOG_ASSERT(renderTarget);
             renderTarget->UnbindFromFramebuffer(ToColorAttachment(index));
@@ -578,7 +578,7 @@ void GraphicsContextGL4::SetRenderTarget()
     POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
 }
 //-----------------------------------------------------------------------
-void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargetsIn)
+void GraphicsContextGL4::SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargetsIn)
 {
     POMDOG_ASSERT(!renderTargetsIn.empty());
     POMDOG_ASSERT(frameBuffer);
@@ -590,7 +590,7 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
     // Unbind render targets
     {
         std::size_t index = 0;
-        for (auto const& renderTarget: renderTargets)
+        for (const auto& renderTarget: renderTargets)
         {
             POMDOG_ASSERT(renderTarget);
             renderTarget->UnbindFromFramebuffer(ToColorAttachment(index));
@@ -609,7 +609,7 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
 
     // Attach textures
     std::uint32_t index = 0;
-    for (auto const& renderTarget: renderTargetsIn)
+    for (const auto& renderTarget: renderTargetsIn)
     {
         POMDOG_ASSERT(renderTarget);
 
@@ -629,7 +629,7 @@ void GraphicsContextGL4::SetRenderTargets(std::vector<std::shared_ptr<RenderTarg
     // Attach depth stencil buffer
     {
         POMDOG_ASSERT(renderTargets.front());
-        auto const& renderTarget = renderTargets.front();
+        const auto& renderTarget = renderTargets.front();
 
         POMDOG_ASSERT(renderTarget);
         renderTarget->BindDepthStencilBuffer();

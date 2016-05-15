@@ -30,8 +30,9 @@ GraphicsDeviceGL4::CreateGraphicsCommandList()
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader>
-GraphicsDeviceGL4::CreateShader(ShaderBytecode const& shaderBytecode,
-    ShaderCompileOptions const& compileOptions)
+GraphicsDeviceGL4::CreateShader(
+    const ShaderBytecode& shaderBytecode,
+    const ShaderCompileOptions& compileOptions)
 {
     switch (compileOptions.Profile.PipelineStage) {
     case ShaderPipelineStage::VertexShader: {
@@ -64,8 +65,10 @@ GraphicsDeviceGL4::CreateBuffer(
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBuffer>
 GraphicsDeviceGL4::CreateBuffer(
-    void const* sourceData, std::size_t sizeInBytes,
-    BufferUsage bufferUsage, BufferBindMode bindMode)
+    const void* sourceData,
+    std::size_t sizeInBytes,
+    BufferUsage bufferUsage,
+    BufferBindMode bindMode)
 {
     switch (bindMode) {
     case BufferBindMode::ConstantBuffer:
@@ -85,20 +88,20 @@ GraphicsDeviceGL4::CreateBuffer(
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeSamplerState>
-GraphicsDeviceGL4::CreateSamplerState(SamplerDescription const& description)
+GraphicsDeviceGL4::CreateSamplerState(const SamplerDescription& description)
 {
     return std::make_unique<SamplerStateGL4>(description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativePipelineState>
-GraphicsDeviceGL4::CreatePipelineState(PipelineStateDescription const& description)
+GraphicsDeviceGL4::CreatePipelineState(const PipelineStateDescription& description)
 {
     return std::make_unique<PipelineStateGL4>(description);
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectReflection>
 GraphicsDeviceGL4::CreateEffectReflection(
-    PipelineStateDescription const&,
+    const PipelineStateDescription&,
     NativePipelineState & pipelineState)
 {
     auto const pipelineStateGL4 = dynamic_cast<PipelineStateGL4*>(&pipelineState);
@@ -109,8 +112,11 @@ GraphicsDeviceGL4::CreateEffectReflection(
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeTexture2D>
-GraphicsDeviceGL4::CreateTexture2D(std::int32_t width, std::int32_t height,
-    std::int32_t mipmapLevels, SurfaceFormat format)
+GraphicsDeviceGL4::CreateTexture2D(
+    std::int32_t width,
+    std::int32_t height,
+    std::int32_t mipmapLevels,
+    SurfaceFormat format)
 {
     return std::make_unique<Texture2DGL4>(width, height, mipmapLevels, format);
 }

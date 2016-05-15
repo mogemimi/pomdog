@@ -14,7 +14,7 @@ namespace {
 struct ErrorCodeTag;
 using ErrorCodeGL4 = Tagged<GLenum, ErrorCodeTag>;
 
-std::string ToString(ErrorCodeGL4 const& errorCode)
+std::string ToString(const ErrorCodeGL4& errorCode)
 {
     switch (errorCode.value) {
     case GL_NO_ERROR: return "GL_NO_ERROR";
@@ -29,13 +29,13 @@ std::string ToString(ErrorCodeGL4 const& errorCode)
 #endif
     }
     std::stringstream ss;
-    ss << "ErrorCode '" << reinterpret_cast<void const*>(errorCode.value) << "'";
+    ss << "ErrorCode '" << reinterpret_cast<const void*>(errorCode.value) << "'";
     return ss.str();
 }
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-void ErrorChecker::CheckError(char const* command, char const* filename, int line)
+void ErrorChecker::CheckError(const char* command, const char* filename, int line)
 {
     ErrorCodeGL4 const errorCode{ glGetError() };
 

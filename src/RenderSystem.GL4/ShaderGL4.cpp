@@ -15,7 +15,7 @@ namespace Detail {
 namespace GL4 {
 namespace {
 
-Optional<GLuint> CompileShader(ShaderBytecode const& source, GLenum pipelineStage)
+Optional<GLuint> CompileShader(const ShaderBytecode& source, GLenum pipelineStage)
 {
 #if defined(DEBUG)
     {
@@ -48,8 +48,8 @@ Optional<GLuint> CompileShader(ShaderBytecode const& source, GLenum pipelineStag
         return Pomdog::NullOpt;
     }
 
-    std::array<GLchar const*, 1> shaderSource = {{
-        reinterpret_cast<GLchar const*>(source.Code)
+    std::array<const GLchar*, 1> shaderSource = {{
+        reinterpret_cast<const GLchar*>(source.Code)
     }};
 
     POMDOG_ASSERT(source.ByteLength < static_cast<decltype(source.ByteLength)>(std::numeric_limits<GLint>::max()));
@@ -88,7 +88,7 @@ template <GLenum PipelineStage>
 constexpr GLenum ShaderGL4<PipelineStage>::pipelineStage;
 //-----------------------------------------------------------------------
 template <GLenum PipelineStage>
-ShaderGL4<PipelineStage>::ShaderGL4(ShaderBytecode const& source)
+ShaderGL4<PipelineStage>::ShaderGL4(const ShaderBytecode& source)
 {
     shader = CompileShader(source, pipelineStage);
     if (!shader) {

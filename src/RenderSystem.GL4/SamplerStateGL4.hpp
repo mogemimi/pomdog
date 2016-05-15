@@ -16,7 +16,7 @@ using SamplerObjectGL4 = Tagged<GLuint, SamplerState>;
 
 class SamplerStateGL4 final : public NativeSamplerState {
 public:
-    explicit SamplerStateGL4(SamplerDescription const& description);
+    explicit SamplerStateGL4(const SamplerDescription& description);
 
     ~SamplerStateGL4() override;
 

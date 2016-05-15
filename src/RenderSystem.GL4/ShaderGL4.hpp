@@ -16,7 +16,7 @@ namespace GL4 {
 template <GLenum PipelineStage>
 class ShaderGL4 final : public Shader {
 public:
-    explicit ShaderGL4(ShaderBytecode const& source);
+    explicit ShaderGL4(const ShaderBytecode& source);
 
     ~ShaderGL4();
 

@@ -16,7 +16,7 @@ class RasterizerStateGL4 final {
 public:
     RasterizerStateGL4() = delete;
 
-    explicit RasterizerStateGL4(RasterizerDescription const& description);
+    explicit RasterizerStateGL4(const RasterizerDescription& description);
 
     void Apply();
 

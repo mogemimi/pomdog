@@ -27,13 +27,13 @@ Tagged Get(Traits<Tagged>* = nullptr)
 }
 
 template <class Tagged>
-void BindBuffer(Tagged const& buffer)
+void BindBuffer(const Tagged& buffer)
 {
     glBindBuffer(Traits<Tagged>::BufferTarget, buffer.value);
 }
 
 template <class Tagged>
-void BindTexture(Tagged const& texture)
+void BindTexture(const Tagged& texture)
 {
     glBindTexture(Traits<Tagged>::TextureTarget, texture.value);
 }

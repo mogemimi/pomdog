@@ -64,7 +64,9 @@ BufferGL4<Tag>::BufferGL4(std::size_t sizeInBytes, BufferUsage bufferUsage)
 }
 //-----------------------------------------------------------------------
 template <class Tag>
-BufferGL4<Tag>::BufferGL4(void const* sourceData, std::size_t sizeInBytes,
+BufferGL4<Tag>::BufferGL4(
+    const void* sourceData,
+    std::size_t sizeInBytes,
     BufferUsage bufferUsage)
 {
     POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable
@@ -103,8 +105,10 @@ BufferGL4<Tag>::~BufferGL4()
 }
 //-----------------------------------------------------------------------
 template <class Tag>
-void BufferGL4<Tag>::GetData(std::size_t offsetInBytes,
-    void* destination, std::size_t sizeInBytes) const
+void BufferGL4<Tag>::GetData(
+    std::size_t offsetInBytes,
+    void* destination,
+    std::size_t sizeInBytes) const
 {
     POMDOG_ASSERT(destination != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
@@ -132,8 +136,10 @@ void BufferGL4<Tag>::GetData(std::size_t offsetInBytes,
 }
 //-----------------------------------------------------------------------
 template <class Tag>
-void BufferGL4<Tag>::SetData(std::size_t offsetInBytes,
-    void const* source, std::size_t sizeInBytes)
+void BufferGL4<Tag>::SetData(
+    std::size_t offsetInBytes,
+    const void* source,
+    std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(source != nullptr);
 
