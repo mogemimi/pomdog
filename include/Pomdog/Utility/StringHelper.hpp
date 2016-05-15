@@ -8,7 +8,7 @@
 namespace Pomdog {
 
 struct POMDOG_EXPORT StringHelper {
-    static std::string Format(char const* format, ...)
+    static std::string Format(const char* format, ...)
 #if defined(__has_attribute)
 #if __has_attribute(format)
     __attribute__((__format__(printf, 1, 2)));

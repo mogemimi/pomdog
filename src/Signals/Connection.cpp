@@ -8,14 +8,14 @@ Connection::Connection(std::unique_ptr<ConnectionBody> && bodyIn)
     : body(std::forward<std::unique_ptr<ConnectionBody>>(bodyIn))
 {}
 //-----------------------------------------------------------------------
-Connection::Connection(Connection const& connection)
+Connection::Connection(const Connection& connection)
 {
     if (connection.body) {
         body = connection.body->DeepCopy();
     }
 }
 //-----------------------------------------------------------------------
-Connection & Connection::operator=(Connection const& connection)
+Connection & Connection::operator=(const Connection& connection)
 {
     if (connection.body) {
         body = connection.body->DeepCopy();

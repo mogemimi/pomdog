@@ -11,8 +11,8 @@ class MouseState;
 class POMDOG_EXPORT Mouse {
 public:
     Mouse() = default;
-    Mouse(Mouse const&) = delete;
-    Mouse & operator=(Mouse const&) = delete;
+    Mouse(const Mouse&) = delete;
+    Mouse & operator=(const Mouse&) = delete;
 
     virtual ~Mouse() = default;
 

@@ -14,18 +14,18 @@ private:
 
 public:
     ScopedConnection() = default;
-    ScopedConnection(ScopedConnection const&) = delete;
+    ScopedConnection(const ScopedConnection&) = delete;
     ScopedConnection(ScopedConnection &&) = default;
 
-    ScopedConnection(Connection const& connection);
+    ScopedConnection(const Connection& connection);
     ScopedConnection(Connection && connection);
 
     ~ScopedConnection();
 
-    ScopedConnection & operator=(ScopedConnection const&) = delete;
+    ScopedConnection & operator=(const ScopedConnection&) = delete;
     ScopedConnection & operator=(ScopedConnection &&) = default;
 
-    ScopedConnection & operator=(Connection const& c);
+    ScopedConnection & operator=(const Connection& c);
     ScopedConnection & operator=(Connection && c);
 
     void Disconnect();

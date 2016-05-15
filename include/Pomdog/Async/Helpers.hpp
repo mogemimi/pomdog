@@ -15,13 +15,13 @@ namespace Concurrency {
 template <typename Argument> POMDOG_EXPORT
 auto FromSingleShotSignal(
     Signal<void(Argument)> & signal,
-    std::shared_ptr<Scheduler> const& scheduler)
+    const std::shared_ptr<Scheduler>& scheduler)
     -> Task<std::remove_const_t<std::remove_reference_t<Argument>>>
 {
     POMDOG_ASSERT(scheduler);
     using TResult = std::remove_const_t<std::remove_reference_t<Argument>>;
     TaskCompletionSource<TResult> tcs(scheduler);
-    Signals::ConnectSingleShot(signal, [tcs](TResult const& arg) {
+    Signals::ConnectSingleShot(signal, [tcs](const TResult& arg) {
         tcs.SetResult(arg);
     });
     return Concurrency::CreateTask(tcs);

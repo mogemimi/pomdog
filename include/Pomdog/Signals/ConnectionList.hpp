@@ -15,8 +15,8 @@ private:
 
 public:
     ConnectionList() = default;
-    ConnectionList(ConnectionList const&) = delete;
-    ConnectionList & operator=(ConnectionList const&) = delete;
+    ConnectionList(const ConnectionList&) = delete;
+    ConnectionList & operator=(const ConnectionList&) = delete;
     ConnectionList(ConnectionList &&) = default;
     ConnectionList & operator=(ConnectionList &&) = default;
 

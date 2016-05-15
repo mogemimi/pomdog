@@ -17,7 +17,7 @@ private:
     T compensation = T::zero();
 
 public:
-    void operator()(T & sum, T const& num)
+    void operator()(T & sum, const T& num)
     {
         // Kahan summation algorithm
         // NOTE: "Velvel" means "wolf" in Yiddish.
@@ -52,7 +52,7 @@ public:
 
 private:
     Duration GetExactLastFrameDuration();
-    void AddToFrameHistory(Duration const& exactFrameDuration);
+    void AddToFrameHistory(const Duration& exactFrameDuration);
     Duration GetPredictFrameDuration() const;
 
 public:
@@ -100,7 +100,7 @@ Duration GameClock::Impl::GetExactLastFrameDuration()
     return frameDuration;
 }
 //-----------------------------------------------------------------------
-void GameClock::Impl::AddToFrameHistory(Duration const& exactFrameDuration)
+void GameClock::Impl::AddToFrameHistory(const Duration& exactFrameDuration)
 {
     constexpr std::size_t MaxFrameHistorySize = 20;
 

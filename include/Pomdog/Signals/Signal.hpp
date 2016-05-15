@@ -15,12 +15,12 @@ template <typename...Arguments>
 class POMDOG_EXPORT Signal<void(Arguments...)> final {
 public:
     Signal();
-    Signal(Signal const&) = delete;
+    Signal(const Signal&) = delete;
     Signal(Signal &&) = default;
-    Signal & operator=(Signal const&) = delete;
+    Signal & operator=(const Signal&) = delete;
     Signal & operator=(Signal &&) = default;
 
-    Connection Connect(std::function<void(Arguments...)> const& slot);
+    Connection Connect(const std::function<void(Arguments...)>& slot);
 
     Connection Connect(std::function<void(Arguments...)> && slot);
 
@@ -41,7 +41,7 @@ Signal<void(Arguments...)>::Signal()
 //-----------------------------------------------------------------------
 template <typename...Arguments>
 Connection Signal<void(Arguments...)>::Connect(
-    std::function<void(Arguments...)> const& slot)
+    const std::function<void(Arguments...)>& slot)
 {
     POMDOG_ASSERT(slot);
     POMDOG_ASSERT(body);

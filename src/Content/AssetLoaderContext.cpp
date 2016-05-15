@@ -7,7 +7,7 @@
 namespace Pomdog {
 namespace Detail {
 //-----------------------------------------------------------------------
-BinaryFileStream AssetLoaderContext::OpenStream(std::string const& assetName) const
+BinaryFileStream AssetLoaderContext::OpenStream(const std::string& assetName) const
 {
     auto filePath = PathHelper::Join(RootDirectory, assetName);
     return PathHelper::OpenStream(filePath);

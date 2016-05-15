@@ -88,7 +88,7 @@ std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
 // explicit instantiations
 template class Builder<PipelineState>;
 //-----------------------------------------------------------------------
-Builder<PipelineState>::Builder(Detail::AssetLoaderContext const& contextIn)
+Builder<PipelineState>::Builder(const Detail::AssetLoaderContext& contextIn)
     : impl(std::make_unique<Impl>())
 {
     POMDOG_ASSERT(impl);
@@ -102,7 +102,7 @@ Builder<PipelineState> & Builder<PipelineState>::operator=(Builder<PipelineState
 Builder<PipelineState>::~Builder() = default;
 //-----------------------------------------------------------------------
 Builder<PipelineState> & Builder<PipelineState>::SetVertexShader(
-    std::shared_ptr<Shader> const& vertexShader)
+    const std::shared_ptr<Shader>& vertexShader)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(vertexShader);
@@ -120,7 +120,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetVertexShader(
 }
 //-----------------------------------------------------------------------
 Builder<PipelineState> & Builder<PipelineState>::SetPixelShader(
-    std::shared_ptr<Shader> const& pixelShader)
+    const std::shared_ptr<Shader>& pixelShader)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(pixelShader);
@@ -138,7 +138,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetPixelShader(
 }
 //-----------------------------------------------------------------------
 Builder<PipelineState> & Builder<PipelineState>::SetInputLayout(
-    InputLayoutDescription const& inputLayout)
+    const InputLayoutDescription& inputLayout)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!inputLayout.InputElements.empty());
@@ -156,7 +156,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetInputLayout(
 }
 //-----------------------------------------------------------------------
 Builder<PipelineState> & Builder<PipelineState>::SetBlendState(
-    BlendDescription const& blendState)
+    const BlendDescription& blendState)
 {
     POMDOG_ASSERT(impl);
     impl->description.BlendState = blendState;
@@ -165,7 +165,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetBlendState(
 }
 //-----------------------------------------------------------------------
 Builder<PipelineState> & Builder<PipelineState>::SetRasterizerState(
-    RasterizerDescription const& rasterizerState)
+    const RasterizerDescription& rasterizerState)
 {
     POMDOG_ASSERT(impl);
     impl->description.RasterizerState = rasterizerState;
@@ -174,7 +174,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetRasterizerState(
 }
 //-----------------------------------------------------------------------
 Builder<PipelineState> & Builder<PipelineState>::SetDepthStencilState(
-    DepthStencilDescription const& depthStencilState)
+    const DepthStencilDescription& depthStencilState)
 {
     POMDOG_ASSERT(impl);
     impl->description.DepthStencilState = depthStencilState;
@@ -183,7 +183,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetDepthStencilState(
 }
 //-----------------------------------------------------------------------
 Builder<PipelineState> & Builder<PipelineState>::SetConstantBufferBindSlot(
-    std::string const& name, int slotIndex)
+    const std::string& name, int slotIndex)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!name.empty());
@@ -200,7 +200,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetConstantBufferBindSlot(
 }
 //-----------------------------------------------------------------------
 Builder<PipelineState> & Builder<PipelineState>::SetRenderTargetViewFormats(
-    std::vector<SurfaceFormat> const& renderTargetViewFormats)
+    const std::vector<SurfaceFormat>& renderTargetViewFormats)
 {
     POMDOG_ASSERT(impl);
     impl->description.RenderTargetViewFormats = renderTargetViewFormats;
@@ -233,7 +233,7 @@ std::shared_ptr<PipelineState> Builder<PipelineState>::Build()
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<EffectReflection> Builder<PipelineState>::CreateEffectReflection(
-    std::shared_ptr<PipelineState> const& pipelineState)
+    const std::shared_ptr<PipelineState>& pipelineState)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(pipelineState);
@@ -245,7 +245,7 @@ std::shared_ptr<EffectReflection> Builder<PipelineState>::CreateEffectReflection
     return std::move(effectReflection);
 }
 //-----------------------------------------------------------------------
-PipelineStateDescription const& Builder<PipelineState>::GetDescription() const
+const PipelineStateDescription& Builder<PipelineState>::GetDescription() const
 {
     POMDOG_ASSERT(impl);
     return impl->description;

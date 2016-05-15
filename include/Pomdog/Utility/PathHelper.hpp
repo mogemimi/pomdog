@@ -10,17 +10,17 @@
 namespace Pomdog {
 
 struct POMDOG_EXPORT PathHelper {
-    static std::string Join(std::string const& path1, std::string const& path2);
+    static std::string Join(const std::string& path1, const std::string& path2);
 
-    static Detail::BinaryFileStream OpenStream(std::string const& path);
+    static Detail::BinaryFileStream OpenStream(const std::string& path);
 
-    static std::string GetBaseName(std::string const& path);
+    static std::string GetBaseName(const std::string& path);
 
-    static std::string GetDirectoryName(std::string const& path);
+    static std::string GetDirectoryName(const std::string& path);
 
-    static std::tuple<std::string, std::string> Split(std::string const& path);
+    static std::tuple<std::string, std::string> Split(const std::string& path);
 
-    static std::tuple<std::string, std::string> SplitExtension(std::string const& path);
+    static std::tuple<std::string, std::string> SplitExtension(const std::string& path);
 
     static std::string Normalize(const std::string& path);
 

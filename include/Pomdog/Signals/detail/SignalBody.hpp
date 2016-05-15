@@ -42,7 +42,7 @@ public:
         , weakSlot(std::forward<WeakSlot>(weakSlotIn))
     {}
 
-    ConnectionBodyOverride(WeakSignal const& weakSignalIn, WeakSlot const& weakSlotIn)
+    ConnectionBodyOverride(const WeakSignal& weakSignalIn, const WeakSlot& weakSlotIn)
         : weakSignal(weakSignalIn)
         , weakSlot(weakSlotIn)
     {}
@@ -84,8 +84,8 @@ private:
 public:
     SignalBody() = default;
 
-    SignalBody(SignalBody const&) = delete;
-    SignalBody & operator=(SignalBody const&) = delete;
+    SignalBody(const SignalBody&) = delete;
+    SignalBody & operator=(const SignalBody&) = delete;
 
     SignalBody(SignalBody &&) = delete;///@todo
     SignalBody & operator=(SignalBody &&) = delete;///@todo
@@ -93,7 +93,7 @@ public:
     template <typename Function>
     std::unique_ptr<ConnectionBodyType> Connect(Function && slot);
 
-    void Disconnect(SlotType const* observer);
+    void Disconnect(const SlotType* observer);
 
     void operator()(Arguments &&... arguments);
 
@@ -135,21 +135,21 @@ auto SignalBody<void(Arguments...)>::Connect(Function && slot)
 }
 //-----------------------------------------------------------------------
 template <typename...Arguments>
-void SignalBody<void(Arguments...)>::Disconnect(SlotType const* observer)
+void SignalBody<void(Arguments...)>::Disconnect(const SlotType* observer)
 {
     POMDOG_ASSERT(observer);
     {
         std::lock_guard<std::recursive_mutex> lock(addingProtection);
 
         addedObservers.erase(std::remove_if(std::begin(addedObservers), std::end(addedObservers),
-            [observer](std::shared_ptr<SlotType> const& p) {
+            [observer](const std::shared_ptr<SlotType>& p) {
                 return p.get() == observer;
             }),
             std::end(addedObservers));
     }
 
     auto const iter = std::find_if(std::begin(observers), std::end(observers),
-        [observer](std::shared_ptr<SlotType> const& p) {
+        [observer](const std::shared_ptr<SlotType>& p) {
             return p.get() == observer;
         });
 
@@ -186,7 +186,7 @@ void SignalBody<void(Arguments...)>::EraseRemovedListeners()
     std::lock_guard<std::recursive_mutex> lock(slotsProtection);
 
     observers.erase(std::remove_if(std::begin(observers), std::end(observers),
-        [](std::shared_ptr<SlotType> const& slot){ return !slot; }),
+        [](const std::shared_ptr<SlotType>& slot){ return !slot; }),
         std::end(observers));
 }
 //-----------------------------------------------------------------------
@@ -211,7 +211,7 @@ void SignalBody<void(Arguments...)>::operator()(Arguments &&... arguments)
             }
         }
     }
-    catch (std::exception const& e) {
+    catch (const std::exception& e) {
         --nestedMethodCallCount;
         throw e;
     }

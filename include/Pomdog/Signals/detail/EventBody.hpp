@@ -18,13 +18,13 @@ struct EventHashCode final {
 };
 
 template <class T>
-const std::size_t EventHashCode<T>::value = typeid(T const*).hash_code();
+const std::size_t EventHashCode<T>::value = typeid(const T*).hash_code();
 
 class EventBody {
 public:
     EventBody() = default;
-    EventBody(EventBody const&) = delete;
-    EventBody & operator=(EventBody const&) = delete;
+    EventBody(const EventBody&) = delete;
+    EventBody & operator=(const EventBody&) = delete;
 
     virtual ~EventBody() = default;
 

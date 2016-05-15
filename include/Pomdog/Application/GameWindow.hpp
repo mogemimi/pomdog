@@ -15,8 +15,8 @@ enum class MouseCursor : std::uint8_t;
 class POMDOG_EXPORT GameWindow {
 public:
     GameWindow() = default;
-    GameWindow(GameWindow const&) = delete;
-    GameWindow & operator=(GameWindow const&) = delete;
+    GameWindow(const GameWindow&) = delete;
+    GameWindow & operator=(const GameWindow&) = delete;
 
     virtual ~GameWindow() = default;
 
@@ -26,11 +26,11 @@ public:
 
     virtual std::string GetTitle() const = 0;
 
-    virtual void SetTitle(std::string const& title) = 0;
+    virtual void SetTitle(const std::string& title) = 0;
 
     virtual Rectangle GetClientBounds() const = 0;
 
-    virtual void SetClientBounds(Rectangle const& clientBounds) = 0;
+    virtual void SetClientBounds(const Rectangle& clientBounds) = 0;
 
     ///@brief Return true if the mouse cursor is visible, false otherwise.
     virtual bool IsMouseCursorVisible() const = 0;

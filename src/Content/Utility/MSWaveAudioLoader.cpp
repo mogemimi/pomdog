@@ -56,7 +56,7 @@ AudioChannels ToAudioChannels(std::uint32_t channels) noexcept
 //-----------------------------------------------------------------------
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
 //-----------------------------------------------------------------------
-std::unique_ptr<AudioClip> LoadMSWave_Apple(std::string const& filePath)
+std::unique_ptr<AudioClip> LoadMSWave_Apple(const std::string& filePath)
 {
     CFStringRef filename = CFStringCreateWithCString(nullptr, filePath.c_str(), kCFStringEncodingUTF8);
     CFURLRef url = CFURLCreateWithFileSystemPath(nullptr, filename, kCFURLPOSIXPathStyle, false);
@@ -199,7 +199,7 @@ MMCKINFO ReadRiffChunk(HMMIO ioHandle)
     return std::move(riffChunk);
 }
 //-----------------------------------------------------------------------
-std::vector<std::uint8_t> ReadWaveFormat(HMMIO ioHandle, MMCKINFO const& riffChunk)
+std::vector<std::uint8_t> ReadWaveFormat(HMMIO ioHandle, const MMCKINFO& riffChunk)
 {
     POMDOG_ASSERT(ioHandle);
 
@@ -270,7 +270,7 @@ std::vector<std::uint8_t> ReadWaveFormat(HMMIO ioHandle, MMCKINFO const& riffChu
     return std::move(waveFormat);
 }
 //-----------------------------------------------------------------------
-MMCKINFO SeekDataChunk(HMMIO ioHandle, MMCKINFO const& riffChunk)
+MMCKINFO SeekDataChunk(HMMIO ioHandle, const MMCKINFO& riffChunk)
 {
     POMDOG_ASSERT(ioHandle);
 
@@ -290,7 +290,7 @@ MMCKINFO SeekDataChunk(HMMIO ioHandle, MMCKINFO const& riffChunk)
     return std::move(dataChunk);
 }
 //-----------------------------------------------------------------------
-std::vector<std::uint8_t> ReadWaveAudioData(HMMIO ioHandle, MMCKINFO const& dataChunk)
+std::vector<std::uint8_t> ReadWaveAudioData(HMMIO ioHandle, const MMCKINFO& dataChunk)
 {
     POMDOG_ASSERT(ioHandle);
 
@@ -336,7 +336,7 @@ std::vector<std::uint8_t> ReadWaveAudioData(HMMIO ioHandle, MMCKINFO const& data
     return std::move(result);
 }
 //-----------------------------------------------------------------------
-std::unique_ptr<AudioClip> LoadMSWave_Win32(std::string const& filePath)
+std::unique_ptr<AudioClip> LoadMSWave_Win32(const std::string& filePath)
 {
     HMMIO ioHandle = ::mmioOpen(const_cast<LPSTR>(filePath.c_str()), nullptr, MMIO_ALLOCBUF | MMIO_READ);
 
@@ -366,7 +366,7 @@ std::unique_ptr<AudioClip> LoadMSWave_Win32(std::string const& filePath)
 
         return std::move(audioClip);
     }
-    catch (std::exception const& e) {
+    catch (const std::exception& e) {
         if (ioHandle) {
             ::mmioClose(ioHandle, 0);
             ioHandle = nullptr;
@@ -585,7 +585,7 @@ std::unique_ptr<AudioClip> MSWaveAudioLoader::Load(BinaryFileStream && binaryFil
         return std::move(audioClip);
 #endif
     }
-    catch (std::exception const& e) {
+    catch (const std::exception& e) {
         if (stream.is_open()) {
             stream.close();
         }

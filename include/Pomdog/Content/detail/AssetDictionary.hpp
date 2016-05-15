@@ -27,7 +27,7 @@ public:
     ~AssetDictionary();
 
     template <typename T>
-    std::shared_ptr<T> Load(AssetLoaderContext const& loaderContext, std::string const& assetName)
+    std::shared_ptr<T> Load(const AssetLoaderContext& loaderContext, const std::string& assetName)
     {
         static_assert(std::is_object<T>::value, "");
 

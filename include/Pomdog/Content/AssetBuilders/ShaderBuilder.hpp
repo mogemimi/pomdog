@@ -23,28 +23,32 @@ template <>
 class POMDOG_EXPORT Builder<Shader> {
 public:
     Builder(
-        Detail::AssetLoaderContext const& loaderContext,
+        const Detail::AssetLoaderContext& loaderContext,
         ShaderPipelineStage pipelineStage);
 
     Builder(Builder &&) = default;
-    Builder(Builder const&) = default;
+    Builder(const Builder&) = default;
     Builder & operator=(Builder &&) = default;
-    Builder & operator=(Builder const&) = default;
+    Builder & operator=(const Builder&) = default;
 
     ~Builder();
 
-    Builder & SetGLSL(void const* shaderSource, std::size_t byteLength);
+    Builder & SetGLSL(const void* shaderSource, std::size_t byteLength);
 
-    Builder & SetGLSLFromFile(std::string const& filePath);
+    Builder & SetGLSLFromFile(const std::string& filePath);
 
-    Builder & SetHLSL(void const* shaderSource, std::size_t byteLength,
-        std::string const& entryPoint);
+    Builder & SetHLSL(
+        const void* shaderSource,
+        std::size_t byteLength,
+        const std::string& entryPoint);
 
-    Builder & SetHLSLPrecompiled(void const* shaderSource,
+    Builder & SetHLSLPrecompiled(
+        const void* shaderSource,
         std::size_t byteLength);
 
-    Builder & SetHLSLFromFile(std::string const& filePath,
-        std::string const& entryPoint);
+    Builder & SetHLSLFromFile(
+        const std::string& filePath,
+        const std::string& entryPoint);
 
     std::shared_ptr<Shader> Build();
 

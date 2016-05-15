@@ -266,7 +266,7 @@ TEST(PathIterator, Case_08)
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-std::string PathHelper::Join(std::string const& path1, std::string const& path2)
+std::string PathHelper::Join(const std::string& path1, const std::string& path2)
 {
     std::string result = path1;
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
@@ -288,7 +288,7 @@ std::string PathHelper::Join(std::string const& path1, std::string const& path2)
     return std::move(result);
 }
 //-----------------------------------------------------------------------
-Detail::BinaryFileStream PathHelper::OpenStream(std::string const& path)
+Detail::BinaryFileStream PathHelper::OpenStream(const std::string& path)
 {
     std::ifstream stream(path, std::ios::ate | std::ios::binary);
     std::size_t fileSize = 0;
@@ -308,7 +308,7 @@ Detail::BinaryFileStream PathHelper::OpenStream(std::string const& path)
     return std::move(result);
 }
 //-----------------------------------------------------------------------
-std::string PathHelper::GetBaseName(std::string const& path)
+std::string PathHelper::GetBaseName(const std::string& path)
 {
     const auto lastIndex = path.find_last_of('/');
     if (std::string::npos != lastIndex) {
@@ -317,7 +317,7 @@ std::string PathHelper::GetBaseName(std::string const& path)
     return path;
 }
 //-----------------------------------------------------------------------
-std::string PathHelper::GetDirectoryName(std::string const& path)
+std::string PathHelper::GetDirectoryName(const std::string& path)
 {
     if (!path.empty() && path.back() == '/') {
         return path;
@@ -329,7 +329,7 @@ std::string PathHelper::GetDirectoryName(std::string const& path)
     return {};
 }
 //-----------------------------------------------------------------------
-std::tuple<std::string, std::string> PathHelper::Split(std::string const& path)
+std::tuple<std::string, std::string> PathHelper::Split(const std::string& path)
 {
     std::tuple<std::string, std::string> result;
     auto lastIndex = path.find_last_of('/');
@@ -343,7 +343,7 @@ std::tuple<std::string, std::string> PathHelper::Split(std::string const& path)
     return std::move(result);
 }
 //-----------------------------------------------------------------------
-std::tuple<std::string, std::string> PathHelper::SplitExtension(std::string const& path)
+std::tuple<std::string, std::string> PathHelper::SplitExtension(const std::string& path)
 {
     std::tuple<std::string, std::string> result;
     auto lastIndex = path.find_last_of('.');

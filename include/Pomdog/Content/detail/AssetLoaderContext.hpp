@@ -16,7 +16,7 @@ public:
     std::string RootDirectory;
     std::weak_ptr<Pomdog::GraphicsDevice> GraphicsDevice;
 
-    BinaryFileStream OpenStream(std::string const& assetName) const;
+    BinaryFileStream OpenStream(const std::string& assetName) const;
 };
 
 } // namespace Detail

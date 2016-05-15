@@ -40,7 +40,7 @@ public:
     bool precompiled;
 
 public:
-    explicit Impl(Detail::AssetLoaderContext const& context);
+    explicit Impl(const Detail::AssetLoaderContext& context);
 
     std::shared_ptr<GraphicsDevice> GetDevice()
     {
@@ -48,7 +48,7 @@ public:
     }
 };
 //-----------------------------------------------------------------------
-Builder<Shader>::Impl::Impl(Detail::AssetLoaderContext const& contextIn)
+Builder<Shader>::Impl::Impl(const Detail::AssetLoaderContext& contextIn)
     : loaderContext(contextIn)
     , pipelineStage(ShaderPipelineStage::VertexShader)
     , precompiled(false)
@@ -56,7 +56,7 @@ Builder<Shader>::Impl::Impl(Detail::AssetLoaderContext const& contextIn)
 }
 //-----------------------------------------------------------------------
 Builder<Shader>::Builder(
-    Detail::AssetLoaderContext const& contextIn,
+    const Detail::AssetLoaderContext& contextIn,
     ShaderPipelineStage pipelineStageIn)
     : impl(std::make_shared<Impl>(contextIn))
 {
@@ -67,7 +67,7 @@ Builder<Shader>::Builder(
 Builder<Shader>::~Builder() = default;
 //-----------------------------------------------------------------------
 Builder<Shader> & Builder<Shader>::SetGLSL(
-    void const* shaderSourceIn, std::size_t byteLengthIn)
+    const void* shaderSourceIn, std::size_t byteLengthIn)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(shaderSourceIn != nullptr);
@@ -84,7 +84,7 @@ Builder<Shader> & Builder<Shader>::SetGLSL(
     return *this;
 }
 //-----------------------------------------------------------------------
-Builder<Shader> & Builder<Shader>::SetGLSLFromFile(std::string const& assetName)
+Builder<Shader> & Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
 {
     POMDOG_ASSERT(!assetName.empty());
 
@@ -117,8 +117,9 @@ Builder<Shader> & Builder<Shader>::SetGLSLFromFile(std::string const& assetName)
 }
 //-----------------------------------------------------------------------
 Builder<Shader> & Builder<Shader>::SetHLSL(
-    void const* shaderSourceIn, std::size_t byteLengthIn,
-    std::string const& entryPointIn)
+    const void* shaderSourceIn,
+    std::size_t byteLengthIn,
+    const std::string& entryPointIn)
 {
     POMDOG_ASSERT(shaderSourceIn != nullptr);
     POMDOG_ASSERT(byteLengthIn > 0);
@@ -137,7 +138,7 @@ Builder<Shader> & Builder<Shader>::SetHLSL(
 }
 //-----------------------------------------------------------------------
 Builder<Shader> & Builder<Shader>::SetHLSLPrecompiled(
-    void const* shaderSourceIn, std::size_t byteLengthIn)
+    const void* shaderSourceIn, std::size_t byteLengthIn)
 {
     POMDOG_ASSERT(shaderSourceIn != nullptr);
     POMDOG_ASSERT(byteLengthIn > 0);
@@ -154,7 +155,7 @@ Builder<Shader> & Builder<Shader>::SetHLSLPrecompiled(
 }
 //-----------------------------------------------------------------------
 Builder<Shader> & Builder<Shader>::SetHLSLFromFile(
-    std::string const& assetName, std::string const& entryPointIn)
+    const std::string& assetName, const std::string& entryPointIn)
 {
     POMDOG_ASSERT(!assetName.empty());
     POMDOG_ASSERT(!entryPointIn.empty());

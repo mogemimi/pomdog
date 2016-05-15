@@ -9,8 +9,8 @@ namespace Pomdog {
 class POMDOG_EXPORT Game {
 public:
     Game() = default;
-    Game(Game const&) = delete;
-    Game & operator=(Game const&) = delete;
+    Game(const Game&) = delete;
+    Game & operator=(const Game&) = delete;
 
     virtual ~Game() = default;
 

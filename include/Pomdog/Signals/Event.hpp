@@ -14,10 +14,10 @@ namespace Pomdog {
 class POMDOG_EXPORT Event final {
 public:
     Event() = delete;
-    Event(Event const&) = delete;
+    Event(const Event&) = delete;
     Event(Event &&) = default;
 
-    Event& operator=(Event const&) = delete;
+    Event& operator=(const Event&) = delete;
     Event& operator=(Event &&) = default;
 
     template <typename T>
@@ -53,7 +53,7 @@ public:
     }
 
     template <typename T>
-    T const* As() const
+    const T* As() const
     {
         typedef Detail::EventBodyOverride<T> containerType;
 
@@ -68,7 +68,7 @@ public:
 
         POMDOG_ASSERT(body);
 
-        if (auto p = dynamic_cast<containerType const*>(body.get())) {
+        if (auto p = dynamic_cast<const containerType*>(body.get())) {
             POMDOG_ASSERT(Is<T>());
             return &p->data;
         }

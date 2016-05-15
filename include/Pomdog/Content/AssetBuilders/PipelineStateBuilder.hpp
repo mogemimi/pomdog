@@ -19,7 +19,7 @@ namespace AssetBuilders {
 template <>
 class POMDOG_EXPORT Builder<PipelineState> {
 public:
-    explicit Builder(Detail::AssetLoaderContext const& loaderContext);
+    explicit Builder(const Detail::AssetLoaderContext& loaderContext);
 
     Builder(Builder &&);
 
@@ -27,27 +27,27 @@ public:
 
     ~Builder();
 
-    Builder & SetVertexShader(std::shared_ptr<Shader> const& vertexShader);
+    Builder & SetVertexShader(const std::shared_ptr<Shader>& vertexShader);
 
     Builder & SetVertexShader(std::shared_ptr<Shader> && vertexShader);
 
-    Builder & SetPixelShader(std::shared_ptr<Shader> const& pixelShader);
+    Builder & SetPixelShader(const std::shared_ptr<Shader>& pixelShader);
 
     Builder & SetPixelShader(std::shared_ptr<Shader> && pixelShader);
 
-    Builder & SetInputLayout(InputLayoutDescription const& inputLayout);
+    Builder & SetInputLayout(const InputLayoutDescription& inputLayout);
 
     Builder & SetInputLayout(InputLayoutDescription && inputLayout);
 
-    Builder & SetBlendState(BlendDescription const& blendState);
+    Builder & SetBlendState(const BlendDescription& blendState);
 
-    Builder & SetRasterizerState(RasterizerDescription const& rasterizerState);
+    Builder & SetRasterizerState(const RasterizerDescription& rasterizerState);
 
-    Builder & SetDepthStencilState(DepthStencilDescription const& depthStencilState);
+    Builder & SetDepthStencilState(const DepthStencilDescription& depthStencilState);
 
-    Builder & SetConstantBufferBindSlot(std::string const& name, int slotIndex);
+    Builder & SetConstantBufferBindSlot(const std::string& name, int slotIndex);
 
-    Builder & SetRenderTargetViewFormats(std::vector<SurfaceFormat> const& renderTargetViewFormats);
+    Builder & SetRenderTargetViewFormats(const std::vector<SurfaceFormat>& renderTargetViewFormats);
 
     Builder & SetRenderTargetViewFormats(std::vector<SurfaceFormat> && renderTargetViewFormats);
 
@@ -56,9 +56,9 @@ public:
     std::shared_ptr<PipelineState> Build();
 
     std::shared_ptr<EffectReflection> CreateEffectReflection(
-        std::shared_ptr<PipelineState> const& pipelineState);
+        const std::shared_ptr<PipelineState>& pipelineState);
 
-    PipelineStateDescription const& GetDescription() const;
+    const PipelineStateDescription& GetDescription() const;
 
 private:
     class Impl;

@@ -7,38 +7,38 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-LogChannel::LogChannel(std::string const& channnelName)
+LogChannel::LogChannel(const std::string& channnelName)
     : name(channnelName)
     , level(LogLevel::Verbose)
 {}
 //-----------------------------------------------------------------------
-void LogChannel::Log(std::string const& message, LogLevel verbosity)
+void LogChannel::Log(const std::string& message, LogLevel verbosity)
 {
     if (verbosity <= this->level) {
         signal(LogEntry{message, name, verbosity});
     }
 }
 //-----------------------------------------------------------------------
-void LogChannel::Log(LogEntry const& logEntry)
+void LogChannel::Log(const LogEntry& logEntry)
 {
     if (logEntry.Verbosity <= this->level) {
         signal(logEntry);
     }
 }
 //-----------------------------------------------------------------------
-Connection LogChannel::Connect(std::function<void(LogEntry const&)> const& slot)
+Connection LogChannel::Connect(const std::function<void(const LogEntry&)>& slot)
 {
     POMDOG_ASSERT(slot);
     return signal.Connect(slot);
 }
 //-----------------------------------------------------------------------
-Connection LogChannel::Connect(std::function<void(LogEntry const&)> && slot)
+Connection LogChannel::Connect(std::function<void(const LogEntry&)> && slot)
 {
     POMDOG_ASSERT(slot);
     return signal.Connect(std::move(slot));
 }
 //-----------------------------------------------------------------------
-std::string const& LogChannel::Name() const
+const std::string& LogChannel::Name() const
 {
     return name;
 }

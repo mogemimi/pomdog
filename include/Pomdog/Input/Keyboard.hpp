@@ -15,8 +15,8 @@ class KeyboardState;
 class POMDOG_EXPORT Keyboard {
 public:
     Keyboard() = default;
-    Keyboard(Keyboard const&) = delete;
-    Keyboard & operator=(Keyboard const&) = delete;
+    Keyboard(const Keyboard&) = delete;
+    Keyboard & operator=(const Keyboard&) = delete;
 
     virtual ~Keyboard() = default;
 
@@ -26,7 +26,7 @@ public:
 
     Signal<void(Keys key)> KeyUp;
 
-    Signal<void(std::string const& text)> TextInput;
+    Signal<void(const std::string& text)> TextInput;
 };
 
 } // namespace Pomdog

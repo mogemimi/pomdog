@@ -12,14 +12,14 @@ EventQueue::EventQueue()
     : signalBody(std::move(std::make_shared<SignalBody>()))
 {}
 //-----------------------------------------------------------------------
-Connection EventQueue::Connect(std::function<void(Event const&)> const& slot)
+Connection EventQueue::Connect(const std::function<void(const Event&)>& slot)
 {
     POMDOG_ASSERT(slot);
     POMDOG_ASSERT(this->signalBody);
     return Connection{signalBody->Connect(slot)};
 }
 //-----------------------------------------------------------------------
-Connection EventQueue::Connect(std::function<void(Event const&)> && slot)
+Connection EventQueue::Connect(std::function<void(const Event&)> && slot)
 {
     POMDOG_ASSERT(slot);
     POMDOG_ASSERT(this->signalBody);

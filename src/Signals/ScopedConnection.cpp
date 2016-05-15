@@ -5,7 +5,7 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-ScopedConnection::ScopedConnection(Connection const& c)
+ScopedConnection::ScopedConnection(const Connection& c)
     : connection(c)
 {}
 //-----------------------------------------------------------------------
@@ -18,7 +18,7 @@ ScopedConnection::~ScopedConnection()
     connection.Disconnect();
 }
 //-----------------------------------------------------------------------
-ScopedConnection & ScopedConnection::operator=(Connection const& c)
+ScopedConnection & ScopedConnection::operator=(const Connection& c)
 {
     connection.Disconnect();
     connection = c;

@@ -20,10 +20,10 @@ public:
 
     explicit Connection(std::unique_ptr<ConnectionBody> && body);
 
-    Connection(Connection const& connection);
+    Connection(const Connection& connection);
     Connection(Connection && connection) = default;
 
-    Connection & operator=(Connection const& connection);
+    Connection & operator=(const Connection& connection);
     Connection & operator=(Connection && connection) = default;
 
     operator bool() const noexcept;

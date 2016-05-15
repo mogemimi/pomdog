@@ -12,8 +12,10 @@ namespace Detail {
 
 namespace DDSTextureReader {
 
-std::shared_ptr<Texture2D> Read(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    std::uint8_t const* data, std::size_t byteLength);
+std::shared_ptr<Texture2D> Read(
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::uint8_t* data,
+    std::size_t byteLength);
 
 } // namespace DDSTextureReader
 

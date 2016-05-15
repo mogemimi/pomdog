@@ -14,7 +14,7 @@ Timer::Timer(GameClock & clock)
     , enabled(true)
     , isSingleShot(false)
 {
-    auto onTick = [this](Duration const& frameDurationIn) {
+    auto onTick = [this](const Duration& frameDurationIn) {
         if (!enabled) {
             return;
         }
@@ -36,7 +36,7 @@ Timer::Timer(GameClock & clock)
     connection = clock.OnTick.Connect(std::move(onTick));
 }
 //-----------------------------------------------------------------------
-Timer::Timer(std::shared_ptr<GameClock> const& clock)
+Timer::Timer(const std::shared_ptr<GameClock>& clock)
     : Timer(*clock)
 {
     POMDOG_ASSERT(clock);
@@ -99,12 +99,12 @@ Optional<Duration> Timer::GetInterval() const
     return this->interval;
 }
 //-----------------------------------------------------------------------
-void Timer::SetInterval(Duration const& intervalIn)
+void Timer::SetInterval(const Duration& intervalIn)
 {
     this->interval = intervalIn;
 }
 //-----------------------------------------------------------------------
-void Timer::SetInterval(Optional<Duration> const& intervalIn)
+void Timer::SetInterval(const Optional<Duration>& intervalIn)
 {
     this->interval = intervalIn;
 }

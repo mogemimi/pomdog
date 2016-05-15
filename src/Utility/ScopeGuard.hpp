@@ -12,10 +12,10 @@ namespace Detail {
 class ScopeGuard final {
 public:
     ScopeGuard() = delete;
-    ScopeGuard(ScopeGuard const&) = delete;
+    ScopeGuard(const ScopeGuard&) = delete;
     ScopeGuard(ScopeGuard &&) = default;
 
-    explicit ScopeGuard(std::function<void()> const& f)
+    explicit ScopeGuard(const std::function<void()>& f)
         : func(f)
     {}
 
@@ -29,7 +29,7 @@ public:
         func();
     }
 
-    ScopeGuard & operator=(ScopeGuard const&) = delete;
+    ScopeGuard & operator=(const ScopeGuard&) = delete;
     ScopeGuard & operator=(ScopeGuard &&) = default;
 
 private:

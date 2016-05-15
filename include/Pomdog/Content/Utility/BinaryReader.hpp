@@ -67,7 +67,7 @@ struct POMDOG_EXPORT BinaryReader {
     }
 
     template <typename T>
-    static T Read(std::uint8_t const* data)
+    static T Read(const std::uint8_t* data)
     {
         POMDOG_ASSERT(data);
         static_assert(std::is_pod<T>::value, "You can only use POD types.");

@@ -8,13 +8,13 @@
 namespace Pomdog {
 
 struct POMDOG_EXPORT FileSystem {
-    static bool CreateDirectory(std::string const& path);
+    static bool CreateDirectory(const std::string& path);
 
-    static bool CreateDirectories(std::string const& path);
+    static bool CreateDirectories(const std::string& path);
 
-    static bool Exists(std::string const& path);
+    static bool Exists(const std::string& path);
 
-    static bool IsDirectory(std::string const& path);
+    static bool IsDirectory(const std::string& path);
 
     // Windows:
     // - "<user name>\Local Settings\Applicaiton Data\Pomdog"

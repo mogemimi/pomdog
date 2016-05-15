@@ -22,19 +22,19 @@ public:
 
 public:
     Tagged() = default;
-    Tagged(Tagged const&) = default;
+    Tagged(const Tagged&) = default;
     Tagged(Tagged &&) = default;
 
-    Tagged & operator=(Tagged const&) = default;
+    Tagged & operator=(const Tagged&) = default;
     Tagged & operator=(Tagged &&) = default;
 
-    Tagged(value_type const& v)
+    Tagged(const value_type& v)
         : value(v) {}
 
     Tagged(value_type && v)
         : value(std::move(v)) {}
 
-    constexpr T const* Data() const noexcept
+    constexpr const T* Data() const noexcept
     {
         return &value;
     }
@@ -44,12 +44,12 @@ public:
         return &value;
     }
 
-    constexpr bool operator==(Tagged const& v) const
+    constexpr bool operator==(const Tagged& v) const
     {
         return value == v.value;
     }
 
-    constexpr bool operator!=(Tagged const& v) const
+    constexpr bool operator!=(const Tagged& v) const
     {
         return value != v.value;
     }
@@ -69,7 +69,7 @@ namespace std {
 
 template <typename T, class U>
 struct hash<Pomdog::Detail::Tagged<T, U>> {
-    std::size_t operator()(Pomdog::Detail::Tagged<T, U> const& key)
+    std::size_t operator()(const Pomdog::Detail::Tagged<T, U>& key)
     {
         return std::hash<T>()(key.value);
     }

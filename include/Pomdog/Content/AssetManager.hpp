@@ -15,7 +15,7 @@ public:
     explicit AssetManager(Detail::AssetLoaderContext && loaderContext);
 
     template <typename T>
-    std::shared_ptr<T> Load(std::string const& assetName)
+    std::shared_ptr<T> Load(const std::string& assetName)
     {
         return assets.Load<T>(loaderContext, assetName);
     }
@@ -32,7 +32,7 @@ public:
 
     std::string GetRootDirectory() const;
 
-    Detail::BinaryFileStream OpenStream(std::string const& assetName) const;
+    Detail::BinaryFileStream OpenStream(const std::string& assetName) const;
 
 private:
     Detail::AssetLoaderContext loaderContext;

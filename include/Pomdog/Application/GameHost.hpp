@@ -19,8 +19,8 @@ class Mouse;
 class POMDOG_EXPORT GameHost : public std::enable_shared_from_this<GameHost> {
 public:
     GameHost() = default;
-    GameHost(GameHost const&) = delete;
-    GameHost & operator=(GameHost const&) = delete;
+    GameHost(const GameHost&) = delete;
+    GameHost & operator=(const GameHost&) = delete;
 
     virtual ~GameHost() = default;
 

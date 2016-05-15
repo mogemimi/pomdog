@@ -121,7 +121,7 @@ static constexpr std::array<std::uint32_t, 256U> crctable =
 static constexpr std::uint32_t InitValueCRC32 = 0xffffffffUL;
 static constexpr std::uint32_t XorValueCRC32 = 0xffffffffUL;
 
-void UpdateChecksum(std::uint32_t & crcvalue, std::uint8_t const* data, std::size_t length) noexcept
+void UpdateChecksum(std::uint32_t & crcvalue, const std::uint8_t* data, std::size_t length) noexcept
 {
     std::uint32_t crc = crcvalue;
     while (length--) {
@@ -135,19 +135,19 @@ void FinishChecksum(std::uint32_t & crcvalue) noexcept
     crcvalue ^= XorValueCRC32;
 }
 
-std::uint32_t BlockChecksum(void const* data, std::size_t length, std::uint32_t crc) noexcept
+std::uint32_t BlockChecksum(const void* data, std::size_t length, std::uint32_t crc) noexcept
 {
     if (data == nullptr || length <= 0) {
         return crc;
     }
-    UpdateChecksum(crc, reinterpret_cast<std::uint8_t const*>(data), length);
+    UpdateChecksum(crc, reinterpret_cast<const std::uint8_t*>(data), length);
     FinishChecksum(crc);
     return crc;
 }
 
 } // unnamed namespace
 
-std::uint32_t CRC32::ComputeCRC32(void const* data, std::size_t length) noexcept
+std::uint32_t CRC32::ComputeCRC32(const void* data, std::size_t length) noexcept
 {
     return BlockChecksum(data, length, InitValueCRC32);
 }

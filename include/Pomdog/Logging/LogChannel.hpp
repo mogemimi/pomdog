@@ -14,23 +14,23 @@ class LogEntry;
 
 class POMDOG_EXPORT LogChannel {
 public:
-    explicit LogChannel(std::string const& name);
+    explicit LogChannel(const std::string& name);
 
     LogChannel() = default;
-    LogChannel(LogChannel const&) = delete;
+    LogChannel(const LogChannel&) = delete;
     LogChannel(LogChannel &&) = default;
-    LogChannel & operator=(LogChannel const&) = delete;
+    LogChannel & operator=(const LogChannel&) = delete;
     LogChannel & operator=(LogChannel &&) = default;
 
-    void Log(std::string const& message, LogLevel verbosity);
+    void Log(const std::string& message, LogLevel verbosity);
 
-    void Log(LogEntry const& logEntry);
+    void Log(const LogEntry& logEntry);
 
-    Connection Connect(std::function<void(LogEntry const&)> const& slot);
+    Connection Connect(const std::function<void(const LogEntry&)>& slot);
 
-    Connection Connect(std::function<void(LogEntry const&)> && slot);
+    Connection Connect(std::function<void(const LogEntry&)> && slot);
 
-    std::string const& Name() const;
+    const std::string& Name() const;
 
     LogLevel Level() const;
 
@@ -39,7 +39,7 @@ public:
     std::size_t ConnectionCount() const;
 
 private:
-    Signal<void(LogEntry const&)> signal;
+    Signal<void(const LogEntry&)> signal;
     std::string name;
     LogLevel level;
 };

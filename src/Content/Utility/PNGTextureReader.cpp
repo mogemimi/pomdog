@@ -16,7 +16,7 @@ namespace Detail {
 namespace {
 
 struct PNGBinaryContext {
-    std::uint8_t const* Data;
+    const std::uint8_t* Data;
     std::size_t ByteLength;
     std::size_t Offset;
 };
@@ -41,7 +41,7 @@ void ReadPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_size_t l
     }
 }
 //-----------------------------------------------------------------------
-Texture2DParsingData ReadPNG(std::uint8_t const* data, std::size_t byteLength)
+Texture2DParsingData ReadPNG(const std::uint8_t* data, std::size_t byteLength)
 {
     auto pngPtr = ::png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
     if (nullptr == pngPtr) {
@@ -162,8 +162,10 @@ Texture2DParsingData ReadPNG(std::uint8_t const* data, std::size_t byteLength)
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-std::shared_ptr<Texture2D> PNGTextureReader::Read(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    std::uint8_t const* data, std::size_t byteLength)
+std::shared_ptr<Texture2D> PNGTextureReader::Read(
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::uint8_t* data,
+    std::size_t byteLength)
 {
     POMDOG_ASSERT(graphicsDevice);
     POMDOG_ASSERT(data != nullptr);

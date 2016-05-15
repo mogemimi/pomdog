@@ -18,8 +18,8 @@ class AssetLoaderContext;
 template <>
 struct POMDOG_EXPORT AssetLoader<AudioClip> final {
     std::shared_ptr<AudioClip> operator()(
-        AssetLoaderContext const& loaderContext,
-        std::string const& assetName);
+        const AssetLoaderContext& loaderContext,
+        const std::string& assetName);
 };
 
 } // namespace Detail

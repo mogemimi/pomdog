@@ -7,7 +7,7 @@
 namespace Pomdog {
 namespace {
 
-std::string UnsafeToFormatString(char const* format, std::va_list arg)
+std::string UnsafeToFormatString(const char* format, std::va_list arg)
 {
     std::va_list copiedArguments;
     va_copy(copiedArguments, arg);
@@ -16,7 +16,7 @@ std::string UnsafeToFormatString(char const* format, std::va_list arg)
     char buffer[2048];
     std::memset(buffer, 0, sizeof(buffer));
 
-    auto const length = vsnprintf_s(buffer, _countof(buffer), format, copiedArguments);
+    const auto length = vsnprintf_s(buffer, _countof(buffer), format, copiedArguments);
     static_assert(std::is_signed<decltype(length)>::value, "");
 
     va_end(copiedArguments);
@@ -29,7 +29,7 @@ std::string UnsafeToFormatString(char const* format, std::va_list arg)
 #if __cplusplus >= 201103L
     using std::vsnprintf;
 #endif
-    auto const length = vsnprintf(nullptr, 0, format, copiedArguments);
+    const auto length = vsnprintf(nullptr, 0, format, copiedArguments);
     static_assert(std::is_signed<decltype(length)>::value, "");
 
     va_end(copiedArguments);
@@ -48,7 +48,7 @@ std::string UnsafeToFormatString(char const* format, std::va_list arg)
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-std::string StringHelper::Format(char const* format, ...)
+std::string StringHelper::Format(const char* format, ...)
 {
     std::va_list arg;
     va_start(arg, format);

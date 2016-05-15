@@ -18,7 +18,7 @@ namespace Pomdog {
 namespace Detail {
 //-----------------------------------------------------------------------
 std::shared_ptr<AudioClip> AssetLoader<AudioClip>::operator()(
-    AssetLoaderContext const& loaderContext, std::string const& assetName)
+    const AssetLoaderContext& loaderContext, const std::string& assetName)
 {
     auto binaryStream = loaderContext.OpenStream(assetName);
 

@@ -16,14 +16,14 @@ namespace Pomdog {
 class POMDOG_EXPORT EventQueue final {
 public:
     EventQueue();
-    EventQueue(EventQueue const&) = delete;
+    EventQueue(const EventQueue&) = delete;
     EventQueue(EventQueue &&) = delete;
-    EventQueue & operator=(EventQueue const&) = delete;
+    EventQueue & operator=(const EventQueue&) = delete;
     EventQueue & operator=(EventQueue &&) = delete;
 
-    Connection Connect(std::function<void(Event const&)> const& slot);
+    Connection Connect(const std::function<void(const Event&)>& slot);
 
-    Connection Connect(std::function<void(Event const&)> && slot);
+    Connection Connect(std::function<void(const Event&)> && slot);
 
     void Enqueue(Event && event);
 
@@ -36,7 +36,7 @@ public:
     void Emit();
 
 private:
-    typedef Detail::Signals::SignalBody<void(Event const&)> SignalBody;
+    using SignalBody = Detail::Signals::SignalBody<void(const Event&)>;
     std::vector<Event> events;
     std::shared_ptr<SignalBody> signalBody;
     std::recursive_mutex notificationProtection;

@@ -19,7 +19,7 @@ std::string AssetManager::GetRootDirectory() const
     return loaderContext.RootDirectory;
 }
 //-----------------------------------------------------------------------
-Detail::BinaryFileStream AssetManager::OpenStream(std::string const& assetName) const
+Detail::BinaryFileStream AssetManager::OpenStream(const std::string& assetName) const
 {
     return loaderContext.OpenStream(assetName);
 }

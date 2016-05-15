@@ -15,15 +15,17 @@ namespace {
 
 class Logger {
 public:
-    Connection Connect(std::function<void(LogEntry const&)> const& slot);
+    Connection Connect(const std::function<void(const LogEntry&)>& slot);
 
-    Connection Connect(std::function<void(LogEntry const&)> && slot);
+    Connection Connect(std::function<void(const LogEntry&)> && slot);
 
-    Connection Connect(std::string const& channelName,
-        std::function<void(LogEntry const&)> const& slot);
+    Connection Connect(
+        const std::string& channelName,
+        const std::function<void(const LogEntry&)>& slot);
 
-    Connection Connect(std::string const& channelName,
-        std::function<void(LogEntry const&)> && slot);
+    Connection Connect(
+        const std::string& channelName,
+        std::function<void(const LogEntry&)> && slot);
 
     void RemoveUnusedChannel();
 
@@ -31,13 +33,13 @@ public:
 
     void SetLevel(LogLevel verbosity);
 
-    LogLevel GetLevel(std::string const& channelName) const;
+    LogLevel GetLevel(const std::string& channelName) const;
 
-    void SetLevel(std::string const& channelName, LogLevel verbosity);
+    void SetLevel(const std::string& channelName, LogLevel verbosity);
 
-    void Log(std::string const& message, LogLevel verbosity);
+    void Log(const std::string& message, LogLevel verbosity);
 
-    void Log(LogEntry const& entry);
+    void Log(const LogEntry& entry);
 
 private:
     LogChannel defaultChannel;
@@ -49,28 +51,29 @@ private:
     std::recursive_mutex channelsProtection;
 };
 //-----------------------------------------------------------------------
-Connection Logger::Connect(std::function<void(LogEntry const&)> const& slot)
+Connection Logger::Connect(const std::function<void(const LogEntry&)>& slot)
 {
     return defaultChannel.Connect(slot);
 }
 //-----------------------------------------------------------------------
-Connection Logger::Connect(std::function<void(LogEntry const&)> && slot)
+Connection Logger::Connect(std::function<void(const LogEntry&)> && slot)
 {
     return defaultChannel.Connect(std::move(slot));
 }
 //-----------------------------------------------------------------------
 template <typename T>
-auto FindChannnel(std::string const& channelName, T & channels)
+auto FindChannnel(const std::string& channelName, T & channels)
     ->decltype(channels.begin())
 {
     return std::find_if(std::begin(channels), std::end(channels),
-        [&channelName](decltype(channels.front()) const& tuple) {
+        [&channelName](const decltype(channels.front())& tuple) {
             return channelName == tuple.channel.Name();
         });
 }
 //-----------------------------------------------------------------------
-Connection Logger::Connect(std::string const& channelName,
-    std::function<void(LogEntry const&)> const& slot)
+Connection Logger::Connect(
+    const std::string& channelName,
+    const std::function<void(const LogEntry&)>& slot)
 {
     auto iter = FindChannnel(channelName, channels);
     if (std::end(channels) == iter)
@@ -89,14 +92,15 @@ Connection Logger::Connect(std::string const& channelName,
     auto & channel = iter->channel;
     auto & connection = iter->connection;
 
-    connection = channel.Connect([this](LogEntry const& entry) {
+    connection = channel.Connect([this](const LogEntry& entry) {
         defaultChannel.Log(entry);
     });
     return channel.Connect(slot);
 }
 //-----------------------------------------------------------------------
-Connection Logger::Connect(std::string const& channelName,
-    std::function<void(LogEntry const&)> && slot)
+Connection Logger::Connect(
+    const std::string& channelName,
+    std::function<void(const LogEntry&)> && slot)
 {
     auto iter = FindChannnel(channelName, channels);
     if (std::end(channels) == iter)
@@ -115,7 +119,7 @@ Connection Logger::Connect(std::string const& channelName,
     auto & channel = iter->channel;
     auto & connection = iter->connection;
 
-    connection = channel.Connect([this](LogEntry const& entry) {
+    connection = channel.Connect([this](const LogEntry& entry) {
         defaultChannel.Log(entry);
     });
     return channel.Connect(std::move(slot));
@@ -126,7 +130,7 @@ void Logger::RemoveUnusedChannel()
     std::lock_guard<std::recursive_mutex> lock(channelsProtection);
 
     channels.erase(std::remove_if(std::begin(channels), std::end(channels),
-        [](ChannelTuple const& tuple) {
+        [](const ChannelTuple& tuple) {
             return tuple.channel.ConnectionCount() <= 0;
         }), std::end(channels));
 }
@@ -141,7 +145,7 @@ void Logger::SetLevel(LogLevel level)
     defaultChannel.Level(level);
 }
 //-----------------------------------------------------------------------
-LogLevel Logger::GetLevel(std::string const& channelName) const
+LogLevel Logger::GetLevel(const std::string& channelName) const
 {
     auto iter = FindChannnel(channelName, channels);
     if (iter != std::end(channels)) {
@@ -150,7 +154,7 @@ LogLevel Logger::GetLevel(std::string const& channelName) const
     return defaultChannel.Level();
 }
 //-----------------------------------------------------------------------
-void Logger::SetLevel(std::string const& channelName, LogLevel level)
+void Logger::SetLevel(const std::string& channelName, LogLevel level)
 {
     auto iter = FindChannnel(channelName, channels);
     if (iter != std::end(channels)) {
@@ -158,12 +162,12 @@ void Logger::SetLevel(std::string const& channelName, LogLevel level)
     }
 }
 //-----------------------------------------------------------------------
-void Logger::Log(std::string const& message, LogLevel verbosity)
+void Logger::Log(const std::string& message, LogLevel verbosity)
 {
     defaultChannel.Log(message, verbosity);
 }
 //-----------------------------------------------------------------------
-void Logger::Log(LogEntry const& entry)
+void Logger::Log(const LogEntry& entry)
 {
     auto iter = FindChannnel(entry.Tag, channels);
     if (std::end(channels) != iter) {
@@ -184,27 +188,27 @@ Logger & GetLoggerInstance()
 //-----------------------------------------------------------------------
 // MARK: - Log class
 //-----------------------------------------------------------------------
-Connection Log::Connect(std::function<void(LogEntry const&)> const& slot)
+Connection Log::Connect(const std::function<void(const LogEntry&)>& slot)
 {
     auto & logger = GetLoggerInstance();
     return logger.Connect(slot);
 }
 //-----------------------------------------------------------------------
-Connection Log::Connect(std::function<void(LogEntry const&)> && slot)
+Connection Log::Connect(std::function<void(const LogEntry&)> && slot)
 {
     auto & logger = GetLoggerInstance();
     return logger.Connect(std::move(slot));
 }
 //-----------------------------------------------------------------------
-Connection Log::Connect(std::string const& channelName,
-    std::function<void(LogEntry const&)> const& slot)
+Connection Log::Connect(const std::string& channelName,
+    const std::function<void(const LogEntry&)>& slot)
 {
     auto & logger = GetLoggerInstance();
     return logger.Connect(channelName, slot);
 }
 //-----------------------------------------------------------------------
-Connection Log::Connect(std::string const& channelName,
-    std::function<void(LogEntry const&)> && slot)
+Connection Log::Connect(const std::string& channelName,
+    std::function<void(const LogEntry&)> && slot)
 {
     auto & logger = GetLoggerInstance();
     return logger.Connect(channelName, std::move(slot));
@@ -222,61 +226,61 @@ void Log::SetLevel(LogLevel verbosity)
     return logger.SetLevel(verbosity);
 }
 //-----------------------------------------------------------------------
-LogLevel Log::GetLevel(std::string const& channelName)
+LogLevel Log::GetLevel(const std::string& channelName)
 {
     auto & logger = GetLoggerInstance();
     return logger.GetLevel(channelName);
 }
 //-----------------------------------------------------------------------
-void Log::SetLevel(std::string const& channelName, LogLevel verbosity)
+void Log::SetLevel(const std::string& channelName, LogLevel verbosity)
 {
     auto & logger = GetLoggerInstance();
     return logger.SetLevel(channelName, verbosity);
 }
 //-----------------------------------------------------------------------
-void Log::Critical(std::string const& channel, std::string const& message)
+void Log::Critical(const std::string& channel, const std::string& message)
 {
     auto & logger = GetLoggerInstance();
     logger.Log(LogEntry{message, channel, LogLevel::Critical});
 }
 //-----------------------------------------------------------------------
-void Log::Warning(std::string const& channel, std::string const& message)
+void Log::Warning(const std::string& channel, const std::string& message)
 {
     auto & logger = GetLoggerInstance();
     logger.Log(LogEntry{message, channel, LogLevel::Warning});
 }
 //-----------------------------------------------------------------------
-void Log::Info(std::string const& message)
+void Log::Info(const std::string& message)
 {
     auto & logger = GetLoggerInstance();
     logger.Log(message, LogLevel::Info);
 }
 //-----------------------------------------------------------------------
-void Log::Info(std::string const& channel, std::string const& message)
+void Log::Info(const std::string& channel, const std::string& message)
 {
     auto & logger = GetLoggerInstance();
     logger.Log(LogEntry{message, channel, LogLevel::Info});
 }
 //-----------------------------------------------------------------------
-void Log::Verbose(std::string const& message)
+void Log::Verbose(const std::string& message)
 {
     auto & logger = GetLoggerInstance();
     logger.Log(message, LogLevel::Verbose);
 }
 //-----------------------------------------------------------------------
-void Log::Verbose(std::string const& channel, std::string const& message)
+void Log::Verbose(const std::string& channel, const std::string& message)
 {
     auto & logger = GetLoggerInstance();
     logger.Log(LogEntry{message, channel, LogLevel::Verbose});
 }
 //-----------------------------------------------------------------------
-void Log::Internal(std::string const& message)
+void Log::Internal(const std::string& message)
 {
     auto & logger = GetLoggerInstance();
     logger.Log(message, LogLevel::Internal);
 }
 //-----------------------------------------------------------------------
-void Log::Internal(std::string const& channel, std::string const& message)
+void Log::Internal(const std::string& channel, const std::string& message)
 {
     auto & logger = GetLoggerInstance();
     logger.Log(LogEntry{message, channel, LogLevel::Internal});

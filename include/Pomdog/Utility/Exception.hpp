@@ -11,23 +11,23 @@ namespace Detail {
 namespace ExceptionInternal {
 
 template <typename T> constexpr
-char const* ToString() { return "Exception"; }
+const char* ToString() { return "Exception"; }
 
 // Logic errors
-template<> constexpr char const* ToString<std::logic_error>(){ return "Logic error exception"; }
-template<> constexpr char const* ToString<std::domain_error>(){ return "Domain error exception"; }
-template<> constexpr char const* ToString<std::invalid_argument>(){ return "Invalid argument exception"; }
-template<> constexpr char const* ToString<std::length_error>(){ return "Length error exception"; }
-template<> constexpr char const* ToString<std::out_of_range>(){ return "Out of range exception"; }
+template<> constexpr const char* ToString<std::logic_error>(){ return "Logic error exception"; }
+template<> constexpr const char* ToString<std::domain_error>(){ return "Domain error exception"; }
+template<> constexpr const char* ToString<std::invalid_argument>(){ return "Invalid argument exception"; }
+template<> constexpr const char* ToString<std::length_error>(){ return "Length error exception"; }
+template<> constexpr const char* ToString<std::out_of_range>(){ return "Out of range exception"; }
 
 // Runtime errors
-template<> constexpr char const* ToString<std::runtime_error>(){ return "Runtime error exception"; }
-template<> constexpr char const* ToString<std::range_error>(){ return "Range error exception"; }
-template<> constexpr char const* ToString<std::overflow_error>(){ return "Overflow error exception"; }
-template<> constexpr char const* ToString<std::underflow_error>(){ return "Underflow error exception"; }
+template<> constexpr const char* ToString<std::runtime_error>(){ return "Runtime error exception"; }
+template<> constexpr const char* ToString<std::range_error>(){ return "Range error exception"; }
+template<> constexpr const char* ToString<std::overflow_error>(){ return "Overflow error exception"; }
+template<> constexpr const char* ToString<std::underflow_error>(){ return "Underflow error exception"; }
 
 template <typename T>
-T CreateException(std::string const& description, std::string const& source, char const* filename, int line)
+T CreateException(const std::string& description, const std::string& source, const char* filename, int line)
 {
     static_assert(std::is_base_of<std::exception, T>::value, "T is base of std::exception");
 

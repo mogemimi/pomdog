@@ -16,10 +16,10 @@ public:
 
     explicit GameClock(int framesPerSecond);
 
-    GameClock(GameClock const&) = delete;
+    GameClock(const GameClock&) = delete;
     GameClock(GameClock &&) = default;
 
-    GameClock & operator=(GameClock const&) = delete;
+    GameClock & operator=(const GameClock&) = delete;
     GameClock & operator=(GameClock &&) = default;
 
     ~GameClock();
@@ -36,7 +36,7 @@ public:
 
     Duration GetElapsedTime() const noexcept;
 
-    Signal<void(Duration const& frameDuration)> OnTick;
+    Signal<void(const Duration& frameDuration)> OnTick;
 
 private:
     class Impl;

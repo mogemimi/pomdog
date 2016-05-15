@@ -8,8 +8,8 @@ namespace Detail {
 class Noncopyable {
 public:
     Noncopyable() = default;
-    Noncopyable(Noncopyable const&) = delete;
-    Noncopyable & operator=(Noncopyable const&) = delete;
+    Noncopyable(const Noncopyable&) = delete;
+    Noncopyable & operator=(const Noncopyable&) = delete;
 };
 
 } // namespace Detail

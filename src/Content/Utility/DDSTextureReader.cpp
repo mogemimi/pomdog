@@ -83,7 +83,7 @@ static constexpr std::uint32_t Luminance   = 0x00020000; // DDPF_LUMINANCE
 
 } // namespace DirectDrawPixelFormat
 //-----------------------------------------------------------------------
-SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(DDSPixelFormat const& pixelFormat)
+SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(const DDSPixelFormat& pixelFormat)
 {
     constexpr std::uint32_t FourCC_A32B32G32R32_Float = 0x00000074;
 
@@ -181,7 +181,7 @@ SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(DDSPixelFormat const& pixelForma
         "Cannot find the surface format. Undefined or not supported");
 }
 //-----------------------------------------------------------------------
-std::size_t ComputePixelDataByteLength(DDSHeader const& ddsHeader)
+std::size_t ComputePixelDataByteLength(const DDSHeader& ddsHeader)
 {
     auto const bytesPerBlock = ddsHeader.PixelFormat.RgbBitCount;
     auto const levelCount = (ddsHeader.MipMapCount > 0) ? ddsHeader.MipMapCount: 1;
@@ -204,8 +204,10 @@ std::size_t ComputePixelDataByteLength(DDSHeader const& ddsHeader)
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-std::shared_ptr<Texture2D> DDSTextureReader::Read(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    std::uint8_t const* data, std::size_t byteLength)
+std::shared_ptr<Texture2D> DDSTextureReader::Read(
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::uint8_t* data,
+    std::size_t byteLength)
 {
     POMDOG_ASSERT(graphicsDevice);
     POMDOG_ASSERT(data != nullptr);

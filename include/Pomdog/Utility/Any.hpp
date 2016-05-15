@@ -50,10 +50,10 @@ private:
 
 public:
     Any() = delete;
-    Any(Any const&) = delete;
+    Any(const Any&) = delete;
     Any(Any &&) = default;
 
-    Any& operator=(Any const&) = delete;
+    Any& operator=(const Any&) = delete;
     Any& operator=(Any &&) = default;
 
     template <typename T>
@@ -71,7 +71,7 @@ public:
     }
 
     template <typename T>
-    T const& As() const
+    const T& As() const
     {
         POMDOG_ASSERT(typeIndex == typeid(T)
             || hashCode == Detail::TypeIdHashing<T>::hashCode);

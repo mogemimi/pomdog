@@ -14,39 +14,41 @@ class LogEntry;
 
 class POMDOG_EXPORT Log {
 public:
-    static Connection Connect(std::function<void(LogEntry const&)> const& slot);
+    static Connection Connect(const std::function<void(const LogEntry&)>& slot);
 
-    static Connection Connect(std::function<void(LogEntry const&)> && slot);
+    static Connection Connect(std::function<void(const LogEntry&)> && slot);
 
-    static Connection Connect(std::string const& channelName,
-        std::function<void(LogEntry const&)> const& slot);
+    static Connection Connect(
+        const std::string& channelName,
+        const std::function<void(const LogEntry&)>& slot);
 
-    static Connection Connect(std::string const& channelName,
-        std::function<void(LogEntry const&)> && slot);
+    static Connection Connect(
+        const std::string& channelName,
+        std::function<void(const LogEntry&)> && slot);
 
     static LogLevel GetLevel();
 
     static void SetLevel(LogLevel verbosity);
 
-    static LogLevel GetLevel(std::string const& channelName);
+    static LogLevel GetLevel(const std::string& channelName);
 
-    static void SetLevel(std::string const& channelName, LogLevel verbosity);
+    static void SetLevel(const std::string& channelName, LogLevel verbosity);
 
-    static void Critical(std::string const& channel, std::string const& message);
+    static void Critical(const std::string& channel, const std::string& message);
 
-    static void Warning(std::string const& channel, std::string const& message);
+    static void Warning(const std::string& channel, const std::string& message);
 
-    static void Info(std::string const& message);
+    static void Info(const std::string& message);
 
-    static void Info(std::string const& channel, std::string const& message);
+    static void Info(const std::string& channel, const std::string& message);
 
-    static void Verbose(std::string const& message);
+    static void Verbose(const std::string& message);
 
-    static void Verbose(std::string const& channel, std::string const& message);
+    static void Verbose(const std::string& channel, const std::string& message);
 
-    static void Internal(std::string const& message);
+    static void Internal(const std::string& message);
 
-    static void Internal(std::string const& channel, std::string const& message);
+    static void Internal(const std::string& channel, const std::string& message);
 };
 
 } // namespace Pomdog

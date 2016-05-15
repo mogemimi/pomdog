@@ -27,15 +27,15 @@ public:
         , valid(false)
     {}
 
-    constexpr Optional(NullOptionalType const&)
+    constexpr Optional(const NullOptionalType&)
         : data()
         , valid(false)
     {}
 
-    Optional(Optional const&) = default;
+    Optional(const Optional&) = default;
     Optional(Optional &&) = default;
 
-    constexpr Optional(T const& v)
+    constexpr Optional(const T& v)
         : data(v)
         , valid(true)
     {}
@@ -45,17 +45,17 @@ public:
         , valid(true)
     {}
 
-    Optional & operator=(NullOptionalType const&)
+    Optional & operator=(const NullOptionalType&)
     {
         valid = false;
         data.~T();
         return *this;
     }
 
-    Optional & operator=(Optional const&) = default;
+    Optional & operator=(const Optional&) = default;
     Optional & operator=(Optional &&) = default;
 
-    Optional & operator=(T const& v)
+    Optional & operator=(const T& v)
     {
         this->valid = true;
         this->data = v;
@@ -69,7 +69,7 @@ public:
         return *this;
     }
 
-    constexpr T const* operator->() const noexcept
+    constexpr const T* operator->() const noexcept
     {
         return POMDOG_CONSTEXPR_ASSERT(valid), &data;
     }
@@ -80,7 +80,7 @@ public:
         return &data;
     }
 
-    constexpr T const& operator*() const
+    constexpr const T& operator*() const
     {
         return POMDOG_CONSTEXPR_ASSERT(valid), data;
     }
@@ -96,7 +96,7 @@ public:
         return valid;
     }
 
-    constexpr T const& value() const
+    constexpr const T& value() const
     {
         return POMDOG_CONSTEXPR_ASSERT(valid), data;
     }

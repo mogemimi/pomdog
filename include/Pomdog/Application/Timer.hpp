@@ -17,12 +17,12 @@ class POMDOG_EXPORT Timer {
 public:
     explicit Timer(GameClock & clock);
 
-    explicit Timer(std::shared_ptr<GameClock> const& clock);
+    explicit Timer(const std::shared_ptr<GameClock>& clock);
 
     Timer() = delete;
-    Timer(Timer const&) = delete;
+    Timer(const Timer&) = delete;
     Timer(Timer &&) = default;
-    Timer & operator=(Timer const&) = delete;
+    Timer & operator=(const Timer&) = delete;
     Timer & operator=(Timer &&) = default;
 
     ~Timer();
@@ -47,9 +47,9 @@ public:
 
     Optional<Duration> GetInterval() const;
 
-    void SetInterval(Duration const& interval);
+    void SetInterval(const Duration& interval);
 
-    void SetInterval(Optional<Duration> const& interval);
+    void SetInterval(const Optional<Duration>& interval);
 
     Signal<void()> Elapsed;
 
