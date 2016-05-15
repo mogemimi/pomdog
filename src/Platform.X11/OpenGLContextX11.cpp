@@ -35,7 +35,7 @@ public:
 
 bool GLContextErrorHelper::contextErrorOccurred = false;
 //-----------------------------------------------------------------------
-static bool IsExtensionSupported(char const* extensionList, char const* extension)
+static bool IsExtensionSupported(const char* extensionList, const char* extension)
 {
     POMDOG_ASSERT(extensionList != nullptr);
     POMDOG_ASSERT(extension != nullptr);
@@ -67,8 +67,8 @@ static bool IsExtensionSupported(char const* extensionList, char const* extensio
 } // unnamed namespace
 //-----------------------------------------------------------------------
 OpenGLContextX11::OpenGLContextX11(
-    std::shared_ptr<GameWindowX11> const& windowIn,
-    GLXFBConfig const& framebufferConfig)
+    const std::shared_ptr<GameWindowX11>& windowIn,
+    const GLXFBConfig& framebufferConfig)
     : window(windowIn)
     , glxContext(0)
     , isOpenGL3Supported(false)

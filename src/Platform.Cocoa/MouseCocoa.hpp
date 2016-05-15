@@ -16,7 +16,7 @@ public:
     ///@copydoc Pomdog::Mouse
     MouseState GetState() const override;
 
-    void Position(Point2D const& position);
+    void Position(const Point2D& position);
     void LeftButton(ButtonState buttonState);
     void RightButton(ButtonState buttonState);
     void MiddleButton(ButtonState buttonState);

@@ -19,7 +19,7 @@ class GameWindowCocoa final : public GameWindow {
 public:
     GameWindowCocoa(
         NSWindow* nativeWindow,
-        std::shared_ptr<EventQueue> const& eventQueue);
+        const std::shared_ptr<EventQueue>& eventQueue);
 
     ~GameWindowCocoa();
 
@@ -29,11 +29,11 @@ public:
 
     std::string GetTitle() const override;
 
-    void SetTitle(std::string const& title) override;
+    void SetTitle(const std::string& title) override;
 
     Rectangle GetClientBounds() const override;
 
-    void SetClientBounds(Rectangle const& clientBounds) override;
+    void SetClientBounds(const Rectangle& clientBounds) override;
 
     bool IsMouseCursorVisible() const override;
 

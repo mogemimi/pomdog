@@ -16,7 +16,7 @@ MouseState MouseCocoa::GetState() const
     return state;
 }
 //-----------------------------------------------------------------------
-void MouseCocoa::Position(Point2D const& position)
+void MouseCocoa::Position(const Point2D& position)
 {
     state.Position = position;
 }

@@ -10,14 +10,14 @@
 namespace Pomdog {
 namespace {
 
-NSString* ToNSString(std::string const& s)
+NSString* ToNSString(const std::string& s)
 {
     return [NSString stringWithUTF8String:s.c_str()];
 }
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-bool FileSystem::CreateDirectory(std::string const& path)
+bool FileSystem::CreateDirectory(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     BOOL result = [[NSFileManager defaultManager]
@@ -28,7 +28,7 @@ bool FileSystem::CreateDirectory(std::string const& path)
     return (result == YES);
 }
 //-----------------------------------------------------------------------
-bool FileSystem::CreateDirectories(std::string const& path)
+bool FileSystem::CreateDirectories(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     BOOL result = [[NSFileManager defaultManager]
@@ -39,7 +39,7 @@ bool FileSystem::CreateDirectories(std::string const& path)
     return (result == YES);
 }
 //-----------------------------------------------------------------------
-bool FileSystem::Exists(std::string const& path)
+bool FileSystem::Exists(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     BOOL exists = [[NSFileManager defaultManager]
@@ -47,7 +47,7 @@ bool FileSystem::Exists(std::string const& path)
     return (exists == YES);
 }
 //-----------------------------------------------------------------------
-bool FileSystem::IsDirectory(std::string const& path)
+bool FileSystem::IsDirectory(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     BOOL isDirectory = NO;

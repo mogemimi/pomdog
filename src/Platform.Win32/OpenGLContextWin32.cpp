@@ -15,7 +15,7 @@ namespace Win32 {
 namespace {
 
 PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
-    PresentationParameters const& presentationParameters)
+    const PresentationParameters& presentationParameters)
 {
     PIXELFORMATDESCRIPTOR descriptor =
     {
@@ -77,8 +77,9 @@ PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-OpenGLContextWin32::OpenGLContextWin32(HWND windowHandleIn,
-    PresentationParameters const& presentationParameters)
+OpenGLContextWin32::OpenGLContextWin32(
+    HWND windowHandleIn,
+    const PresentationParameters& presentationParameters)
     : windowHandle(windowHandleIn)
     , hdc(nullptr, [this](HDC hdcIn) {
         ReleaseDC(windowHandle, hdcIn);

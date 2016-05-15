@@ -32,7 +32,7 @@ void Bootstrap::SetDepthFormat(DepthFormat depthFormatIn)
     depthFormat = depthFormatIn;
 }
 //-----------------------------------------------------------------------
-void Bootstrap::OnError(std::function<void(std::exception const&)> onErrorIn)
+void Bootstrap::OnError(std::function<void(const std::exception&)> onErrorIn)
 {
     POMDOG_ASSERT(onErrorIn);
     onError = onErrorIn;
@@ -48,8 +48,8 @@ void Bootstrap::OnCompleted(std::function<void()> onCompletedIn)
     };
 }
 //-----------------------------------------------------------------------
-void Bootstrap::Run(std::function<std::unique_ptr<Game>(
-    std::shared_ptr<GameHost> const&)> const& createApp)
+void Bootstrap::Run(
+    const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp)
 {
     POMDOG_ASSERT(openGLView != nil);
     POMDOG_ASSERT(createApp);
@@ -80,7 +80,7 @@ void Bootstrap::Run(std::function<std::unique_ptr<Game>(
         game = createApp(gameHost);
         gameHost->Run(game, onCompleted);
     }
-    catch (std::exception const& e) {
+    catch (const std::exception& e) {
         if (onError) {
             onError(e);
         }

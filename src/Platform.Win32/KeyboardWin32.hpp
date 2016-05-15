@@ -14,7 +14,7 @@ class KeyboardWin32 final : public Keyboard {
 public:
     KeyboardState GetState() const override;
 
-    void HandleMessage(RAWKEYBOARD const& keyboard);
+    void HandleMessage(const RAWKEYBOARD& keyboard);
 
 private:
     KeyboardState keyboardState;

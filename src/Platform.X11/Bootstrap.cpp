@@ -37,13 +37,13 @@ void Bootstrap::SetFullScreen(bool isFullScreenIn) noexcept
     isFullScreen = isFullScreenIn;
 }
 //-----------------------------------------------------------------------
-void Bootstrap::OnError(std::function<void(std::exception const&)> onErrorIn)
+void Bootstrap::OnError(std::function<void(const std::exception&)> onErrorIn)
 {
     onError = onErrorIn;
 }
 //-----------------------------------------------------------------------
-void Bootstrap::Run(std::function<std::unique_ptr<Game>(
-    std::shared_ptr<GameHost> const&)> const& createApp)
+void Bootstrap::Run(
+    const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp)
 {
     using Pomdog::Detail::X11::GameHostX11;
 
@@ -65,7 +65,7 @@ void Bootstrap::Run(std::function<std::unique_ptr<Game>(
         POMDOG_ASSERT(createApp);
         game = createApp(gameHost);
     }
-    catch (std::exception const& e) {
+    catch (const std::exception& e) {
         if (onError) {
             onError(e);
         }

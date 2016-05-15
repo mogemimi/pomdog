@@ -12,7 +12,7 @@ namespace Cocoa {
 //-----------------------------------------------------------------------
 GameWindowCocoa::GameWindowCocoa(
     NSWindow* nativeWindowIn,
-    std::shared_ptr<EventQueue> const& eventQueueIn)
+    const std::shared_ptr<EventQueue>& eventQueueIn)
     : eventQueue(eventQueueIn)
     , nativeWindow(nativeWindowIn)
     , gameView(nil)
@@ -67,7 +67,7 @@ std::string GameWindowCocoa::GetTitle() const
     return std::move(title);
 }
 //-----------------------------------------------------------------------
-void GameWindowCocoa::SetTitle(std::string const& title)
+void GameWindowCocoa::SetTitle(const std::string& title)
 {
     dispatch_async(dispatch_get_main_queue(), [=] {
         [nativeWindow setTitle:[NSString stringWithUTF8String:title.c_str()]];
@@ -92,7 +92,7 @@ Rectangle GameWindowCocoa::GetClientBounds() const
         bounds.size.height);
 }
 //-----------------------------------------------------------------------
-void GameWindowCocoa::SetClientBounds(Rectangle const& clientBounds)
+void GameWindowCocoa::SetClientBounds(const Rectangle& clientBounds)
 {
     NSRect bounds = NSMakeRect(
         clientBounds.X,

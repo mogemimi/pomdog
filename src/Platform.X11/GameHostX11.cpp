@@ -40,7 +40,7 @@ static bool CheckFrameBufferConfigSupport(::Display* display)
 //-----------------------------------------------------------------------
 static GLXFBConfig ChooseFramebufferConfig(
     Display* display,
-    PresentationParameters const& presentationParameters)
+    const PresentationParameters& presentationParameters)
 {
     if (!CheckFrameBufferConfigSupport(display)) {
         POMDOG_THROW_EXCEPTION(std::runtime_error,
@@ -171,7 +171,7 @@ static GLXFBConfig ChooseFramebufferConfig(
 //-----------------------------------------------------------------------
 class GameHostX11::Impl {
 public:
-    explicit Impl(PresentationParameters const& presentationParameters);
+    explicit Impl(const PresentationParameters& presentationParameters);
 
     ~Impl();
 
@@ -201,7 +201,7 @@ public:
     bool exitRequest;
 };
 //-----------------------------------------------------------------------
-GameHostX11::Impl::Impl(PresentationParameters const& presentationParameters)
+GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
     : exitRequest(false)
 {
     POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
@@ -229,7 +229,7 @@ GameHostX11::Impl::Impl(PresentationParameters const& presentationParameters)
 
     auto const errorCode = glewInit();
     if (GLEW_OK != errorCode) {
-        auto description = reinterpret_cast<char const*>(glewGetErrorString(errorCode));
+        auto description = reinterpret_cast<const char*>(glewGetErrorString(errorCode));
         POMDOG_THROW_EXCEPTION(std::runtime_error, description);
     }
 
@@ -292,7 +292,7 @@ void GameHostX11::Impl::ProcessEvent(::XEvent & event)
 
     switch (event.type) {
     case ClientMessage: {
-        auto const& atoms = x11Context->Atoms;
+        const auto& atoms = x11Context->Atoms;
         if (static_cast<Atom>(event.xclient.data.l[0]) == atoms.WmDeleteWindow) {
             Log::Internal("X11: wmDeleteMessage");
             exitRequest = true;
@@ -357,7 +357,7 @@ void GameHostX11::Impl::RenderFrame(Game & game)
 //-----------------------------------------------------------------------
 // MARK: - GameHostX11
 //-----------------------------------------------------------------------
-GameHostX11::GameHostX11(PresentationParameters const& presentationParameters)
+GameHostX11::GameHostX11(const PresentationParameters& presentationParameters)
     : impl(std::make_unique<Impl>(presentationParameters))
 {
 }

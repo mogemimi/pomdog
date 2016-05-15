@@ -35,16 +35,16 @@ public:
 
     void SetDepthFormat(DepthFormat depthFormat);
 
-    void OnError(std::function<void(std::exception const&)> onError);
+    void OnError(std::function<void(const std::exception&)> onError);
 
     void OnCompleted(std::function<void()> onCompleted);
 
-    void Run(std::function<std::unique_ptr<Game>(
-        std::shared_ptr<GameHost> const&)> const& createApp);
+    void Run(
+        const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp);
 
 private:
     std::function<void()> onCompleted;
-    std::function<void(std::exception const&)> onError;
+    std::function<void(const std::exception&)> onError;
     std::shared_ptr<Pomdog::Detail::Cocoa::GameHostCocoa> gameHost;
     std::shared_ptr<Game> game;
     __weak PomdogOpenGLView* openGLView = nil;

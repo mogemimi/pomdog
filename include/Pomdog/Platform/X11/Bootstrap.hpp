@@ -29,13 +29,13 @@ public:
 
     void SetOpenGLEnabled(bool openGLEnabled) noexcept;
 
-    void OnError(std::function<void(std::exception const&)> onError);
+    void OnError(std::function<void(const std::exception&)> onError);
 
-    void Run(std::function<std::unique_ptr<Game>(
-        std::shared_ptr<GameHost> const&)> const& createApp);
+    void Run(
+        const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp);
 
 private:
-    std::function<void(std::exception const&)> onError;
+    std::function<void(const std::exception&)> onError;
     int presentationInterval = 60;
     int backBufferWidth = 800;
     int backBufferHeight = 480;

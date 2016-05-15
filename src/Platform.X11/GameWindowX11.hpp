@@ -18,7 +18,7 @@ class X11Context;
 class GameWindowX11 final : public GameWindow {
 public:
     GameWindowX11(
-        std::shared_ptr<X11Context const> const& x11Context,
+        const std::shared_ptr<X11Context const>& x11Context,
         GLXFBConfig framebufferConfig,
         int width,
         int height);
@@ -31,11 +31,11 @@ public:
 
     std::string GetTitle() const override;
 
-    void SetTitle(std::string const& title) override;
+    void SetTitle(const std::string& title) override;
 
     Rectangle GetClientBounds() const override;
 
-    void SetClientBounds(Rectangle const& clientBounds) override;
+    void SetClientBounds(const Rectangle& clientBounds) override;
 
     bool IsMouseCursorVisible() const override;
 

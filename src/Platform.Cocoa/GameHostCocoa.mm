@@ -38,17 +38,17 @@ namespace Cocoa {
 namespace {
 
 std::shared_ptr<OpenGLContextCocoa> CreateOpenGLContext(
-    PresentationParameters const& presentationParameters)
+    const PresentationParameters& presentationParameters)
 {
     auto pixelFormat = CocoaOpenGLHelper::CreatePixelFormat(presentationParameters);
     return std::make_shared<OpenGLContextCocoa>(pixelFormat);
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<GraphicsContext> CreateGraphicsContext(
-    std::shared_ptr<OpenGLContextCocoa> const& openGLContext,
+    const std::shared_ptr<OpenGLContextCocoa>& openGLContext,
     std::weak_ptr<GameWindow> && gameWindow,
-    PresentationParameters const& presentationParameters,
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+    const PresentationParameters& presentationParameters,
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice)
 {
     POMDOG_ASSERT(openGLContext);
     POMDOG_ASSERT(!gameWindow.expired());
@@ -65,14 +65,14 @@ std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 class GameHostCocoa::Impl final {
 public:
     Impl(PomdogOpenGLView* openGLView,
-        std::shared_ptr<GameWindowCocoa> const& window,
-        std::shared_ptr<EventQueue> const& eventQueue,
-        PresentationParameters const& presentationParameters);
+        const std::shared_ptr<GameWindowCocoa>& window,
+        const std::shared_ptr<EventQueue>& eventQueue,
+        const PresentationParameters& presentationParameters);
 
     ~Impl();
 
-    void Run(std::weak_ptr<Game> const& game,
-        std::function<void()> const& onCompleted);
+    void Run(const std::weak_ptr<Game>& game,
+        const std::function<void()>& onCompleted);
 
     void Exit();
 
@@ -99,7 +99,7 @@ private:
 
     void DoEvents();
 
-    void ProcessSystemEvents(Event const& event);
+    void ProcessSystemEvents(const Event& event);
 
     void ClientSizeChanged();
 
@@ -107,8 +107,8 @@ private:
 
     static CVReturn DisplayLinkCallback(
         CVDisplayLinkRef displayLink,
-        CVTimeStamp const* now,
-        CVTimeStamp const* outputTime,
+        const CVTimeStamp* now,
+        const CVTimeStamp* outputTime,
         CVOptionFlags flagsIn,
         CVOptionFlags* flagsOut,
         void* displayLinkContext);
@@ -139,10 +139,11 @@ private:
     bool displayLinkEnabled;
 };
 //-----------------------------------------------------------------------
-GameHostCocoa::Impl::Impl(PomdogOpenGLView* openGLViewIn,
-    std::shared_ptr<GameWindowCocoa> const& windowIn,
-    std::shared_ptr<EventQueue> const& eventQueueIn,
-    PresentationParameters const& presentationParameters)
+GameHostCocoa::Impl::Impl(
+    PomdogOpenGLView* openGLViewIn,
+    const std::shared_ptr<GameWindowCocoa>& windowIn,
+    const std::shared_ptr<EventQueue>& eventQueueIn,
+    const PresentationParameters& presentationParameters)
     : viewLiveResizing(false)
     , displayLink(nullptr)
     , eventQueue(eventQueueIn)
@@ -183,7 +184,7 @@ GameHostCocoa::Impl::Impl(PomdogOpenGLView* openGLViewIn,
     // Connect to system event signal
     POMDOG_ASSERT(eventQueue);
     systemEventConnection = eventQueue->Connect(
-        [this](Event const& event) { ProcessSystemEvents(event); });
+        [this](const Event& event) { ProcessSystemEvents(event); });
 
     Detail::AssetLoaderContext loaderContext;
     loaderContext.RootDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
@@ -222,8 +223,9 @@ GameHostCocoa::Impl::~Impl()
     openGLView = nil;
 }
 //-----------------------------------------------------------------------
-void GameHostCocoa::Impl::Run(std::weak_ptr<Game> const& weakGameIn,
-    std::function<void()> const& onCompletedIn)
+void GameHostCocoa::Impl::Run(
+    const std::weak_ptr<Game>& weakGameIn,
+    const std::function<void()>& onCompletedIn)
 {
     POMDOG_ASSERT(!weakGameIn.expired());
     POMDOG_ASSERT(onCompletedIn);
@@ -297,8 +299,8 @@ void GameHostCocoa::Impl::Exit()
 //-----------------------------------------------------------------------
 CVReturn GameHostCocoa::Impl::DisplayLinkCallback(
     CVDisplayLinkRef displayLink,
-    CVTimeStamp const* now,
-    CVTimeStamp const* outputTime,
+    const CVTimeStamp* now,
+    const CVTimeStamp* outputTime,
     CVOptionFlags flagsIn,
     CVOptionFlags* flagsOut,
     void* displayLinkContext)
@@ -378,7 +380,7 @@ void GameHostCocoa::Impl::DoEvents()
     eventQueue->Emit();
 }
 //-----------------------------------------------------------------------
-void GameHostCocoa::Impl::ProcessSystemEvents(Event const& event)
+void GameHostCocoa::Impl::ProcessSystemEvents(const Event& event)
 {
     if (event.Is<WindowShouldCloseEvent>())
     {
@@ -515,16 +517,17 @@ std::shared_ptr<Mouse> GameHostCocoa::Impl::GetMouse()
 //-----------------------------------------------------------------------
 GameHostCocoa::GameHostCocoa(
     PomdogOpenGLView* openGLView,
-    std::shared_ptr<GameWindowCocoa> const& window,
-    std::shared_ptr<EventQueue> const& eventQueue,
-    PresentationParameters const& presentationParameters)
+    const std::shared_ptr<GameWindowCocoa>& window,
+    const std::shared_ptr<EventQueue>& eventQueue,
+    const PresentationParameters& presentationParameters)
     : impl(std::make_unique<Impl>(openGLView, window, eventQueue, presentationParameters))
 {}
 //-----------------------------------------------------------------------
 GameHostCocoa::~GameHostCocoa() = default;
 //-----------------------------------------------------------------------
-void GameHostCocoa::Run(std::weak_ptr<Game> const& game,
-    std::function<void()> const& onCompleted)
+void GameHostCocoa::Run(
+    const std::weak_ptr<Game>& game,
+    const std::function<void()>& onCompleted)
 {
     POMDOG_ASSERT(impl);
     impl->Run(game, onCompleted);

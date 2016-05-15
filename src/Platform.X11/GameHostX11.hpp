@@ -28,7 +28,7 @@ class GameHostX11 final : public GameHost {
 public:
     GameHostX11() = delete;
 
-    explicit GameHostX11(PresentationParameters const& presentationParameters);
+    explicit GameHostX11(const PresentationParameters& presentationParameters);
 
     ~GameHostX11();
 

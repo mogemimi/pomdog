@@ -26,7 +26,7 @@ using Pomdog::Detail::InputKeyEvent;
 
 namespace {
 
-Pomdog::Point2D ToPoint2D(NSPoint const& point)
+Pomdog::Point2D ToPoint2D(const NSPoint& point)
 {
     ///@todo FIXME
     return Pomdog::Point2D(point.x - 2, point.y - 2);

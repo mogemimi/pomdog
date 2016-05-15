@@ -39,6 +39,12 @@
 #include <thread>
 #include <chrono>
 
+using Pomdog::Detail::Win32::GameWindowWin32;
+#if !defined(POMDOG_DISABLE_DIRECT3D11)
+using Pomdog::Detail::Direct3D11::GraphicsContextDirect3D11;
+using Pomdog::Detail::Direct3D11::GraphicsDeviceDirect3D11;
+#endif
+
 namespace Pomdog {
 namespace Detail {
 namespace Win32 {
@@ -73,8 +79,8 @@ public:
 };
 //-----------------------------------------------------------------------
 CreateGraphicsDeviceResult CreateGraphicsDeviceGL4(
-    std::shared_ptr<Detail::Win32::GameWindowWin32> const& window,
-    PresentationParameters const& presentationParameters)
+    const std::shared_ptr<GameWindowWin32>& window,
+    const PresentationParameters& presentationParameters)
 {
     using Pomdog::Detail::GL4::GraphicsDeviceGL4;
     using Pomdog::Detail::GL4::GraphicsContextGL4;
@@ -111,13 +117,13 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceGL4(
 
 class GraphicsBridgeWin32Direct3D11 final : public GraphicsBridgeWin32 {
 private:
-    std::shared_ptr<Detail::Direct3D11::GraphicsDeviceDirect3D11> graphicsDevice;
-    std::shared_ptr<Detail::Direct3D11::GraphicsContextDirect3D11> graphicsContext;
+    std::shared_ptr<GraphicsDeviceDirect3D11> graphicsDevice;
+    std::shared_ptr<GraphicsContextDirect3D11> graphicsContext;
 
 public:
     GraphicsBridgeWin32Direct3D11(
-        std::shared_ptr<Detail::Direct3D11::GraphicsDeviceDirect3D11> const& graphicsDeviceIn,
-        std::shared_ptr<Detail::Direct3D11::GraphicsContextDirect3D11> const& graphicsContextIn)
+        const std::shared_ptr<GraphicsDeviceDirect3D11>& graphicsDeviceIn,
+        const std::shared_ptr<GraphicsContextDirect3D11>& graphicsContextIn)
         : graphicsDevice(graphicsDeviceIn)
         , graphicsContext(graphicsContextIn)
     {}
@@ -130,12 +136,9 @@ public:
 };
 //-----------------------------------------------------------------------
 CreateGraphicsDeviceResult CreateGraphicsDeviceDirect3D11(
-    std::shared_ptr<Detail::Win32::GameWindowWin32> const& window,
-    PresentationParameters const& presentationParameters)
+    const std::shared_ptr<GameWindowWin32>& window,
+    const PresentationParameters& presentationParameters)
 {
-    using Pomdog::Detail::Direct3D11::GraphicsDeviceDirect3D11;
-    using Pomdog::Detail::Direct3D11::GraphicsContextDirect3D11;
-
     auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceDirect3D11>();
     auto device = nativeGraphicsDevice->GetDevice();
     auto deviceContext = nativeGraphicsDevice->GetDeviceContext();
@@ -186,9 +189,9 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceDirect3D11(
 class GameHostWin32::Impl final {
 public:
     Impl(
-        std::shared_ptr<GameWindowWin32> const& window,
-        std::shared_ptr<EventQueue> const& eventQueue,
-        PresentationParameters const& presentationParameters,
+        const std::shared_ptr<GameWindowWin32>& window,
+        const std::shared_ptr<EventQueue>& eventQueue,
+        const PresentationParameters& presentationParameters,
         std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory,
         bool useOpenGL);
 
@@ -219,7 +222,7 @@ private:
 
     void DoEvents();
 
-    void ProcessSystemEvents(Event const& event);
+    void ProcessSystemEvents(const Event& event);
 
     void ClientSizeChanged();
 
@@ -246,9 +249,10 @@ private:
     bool surfaceResizeRequest;
 };
 //-----------------------------------------------------------------------
-GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
-    std::shared_ptr<EventQueue> const& eventQueueIn,
-    PresentationParameters const& presentationParameters,
+GameHostWin32::Impl::Impl(
+    const std::shared_ptr<GameWindowWin32>& windowIn,
+    const std::shared_ptr<EventQueue>& eventQueueIn,
+    const PresentationParameters& presentationParameters,
     std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactoryIn,
     bool useOpenGL)
     : eventQueue(eventQueueIn)
@@ -278,7 +282,7 @@ GameHostWin32::Impl::Impl(std::shared_ptr<GameWindowWin32> const& windowIn,
 #endif
 
     POMDOG_ASSERT(eventQueue);
-    systemEventConnection = eventQueue->Connect([this](Event const& event) {
+    systemEventConnection = eventQueue->Connect([this](const Event& event) {
         ProcessSystemEvents(event);
     });
 
@@ -363,7 +367,7 @@ void GameHostWin32::Impl::DoEvents()
     }
 }
 //-----------------------------------------------------------------------
-void GameHostWin32::Impl::ProcessSystemEvents(Event const& event)
+void GameHostWin32::Impl::ProcessSystemEvents(const Event& event)
 {
     if (event.Is<WindowShouldCloseEvent>()) {
         Log::Internal("WindowShouldCloseEvent");
@@ -441,9 +445,9 @@ std::shared_ptr<Mouse> GameHostWin32::Impl::GetMouse()
 }
 //-----------------------------------------------------------------------
 GameHostWin32::GameHostWin32(
-    std::shared_ptr<GameWindowWin32> const& window,
-    std::shared_ptr<EventQueue> const& eventQueue,
-    PresentationParameters const& presentationParameters,
+    const std::shared_ptr<GameWindowWin32>& window,
+    const std::shared_ptr<EventQueue>& eventQueue,
+    const PresentationParameters& presentationParameters,
     std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory,
     bool useOpenGL)
     : impl(std::make_unique<Impl>(

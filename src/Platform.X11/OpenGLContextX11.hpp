@@ -18,8 +18,8 @@ public:
     OpenGLContextX11() = delete;
 
     OpenGLContextX11(
-        std::shared_ptr<GameWindowX11> const& window,
-        GLXFBConfig const& framebufferConfig);
+        const std::shared_ptr<GameWindowX11>& window,
+        const GLXFBConfig& framebufferConfig);
 
     ~OpenGLContextX11();
 

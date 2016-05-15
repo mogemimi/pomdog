@@ -17,8 +17,9 @@ class OpenGLContextWin32 final : public GL4::OpenGLContext {
 public:
     OpenGLContextWin32() = delete;
 
-    OpenGLContextWin32(HWND windowHandle,
-        PresentationParameters const& presentationParameters);
+    OpenGLContextWin32(
+        HWND windowHandle,
+        const PresentationParameters& presentationParameters);
 
     ~OpenGLContextWin32();
 

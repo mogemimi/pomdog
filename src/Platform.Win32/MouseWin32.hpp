@@ -16,7 +16,7 @@ public:
 
     MouseState GetState() const override;
 
-    void HandleMessage(RAWMOUSE const& mouse);
+    void HandleMessage(const RAWMOUSE& mouse);
 
 private:
     HWND windowHandle;

@@ -10,7 +10,7 @@ namespace fs = std::experimental::filesystem;
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-bool FileSystem::CreateDirectory(std::string const& path)
+bool FileSystem::CreateDirectory(const std::string& path)
 {
     // 'CreateDirectory' means 'CreateDirectoryA' in Win32.
     POMDOG_ASSERT(!path.empty());
@@ -24,19 +24,19 @@ bool FileSystem::CreateDirectory(std::string const& path)
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-bool FileSystem::CreateDirectories(std::string const& path)
+bool FileSystem::CreateDirectories(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     return fs::create_directories(path);
 }
 //-----------------------------------------------------------------------
-bool FileSystem::Exists(std::string const& path)
+bool FileSystem::Exists(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     return fs::exists(path);
 }
 //-----------------------------------------------------------------------
-bool FileSystem::IsDirectory(std::string const& path)
+bool FileSystem::IsDirectory(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     return fs::is_directory(path);

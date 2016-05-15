@@ -14,7 +14,7 @@ namespace Cocoa {
 
 struct CocoaOpenGLHelper {
     static NSOpenGLPixelFormat* CreatePixelFormat(
-        PresentationParameters const& presentationParameters);
+        const PresentationParameters& presentationParameters);
 };
 
 class OpenGLContextCocoa final: public GL4::OpenGLContext {

@@ -18,7 +18,7 @@ MouseWin32::MouseWin32(HWND windowHandleIn)
     state.Position = Point2D{ cursorPos.x, cursorPos.y };
 }
 //-----------------------------------------------------------------------
-void MouseWin32::HandleMessage(RAWMOUSE const& mouse)
+void MouseWin32::HandleMessage(const RAWMOUSE& mouse)
 {
     if (mouse.usFlags == MOUSE_MOVE_RELATIVE) {
         previousState.Position = state.Position;

@@ -27,8 +27,11 @@ static Rectangle GetWindowClientBounds(::Display* display, ::Window window)
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-GameWindowX11::GameWindowX11(std::shared_ptr<X11Context const> const& x11ContextIn,
-    GLXFBConfig framebufferConfig, int width, int height)
+GameWindowX11::GameWindowX11(
+    const std::shared_ptr<X11Context const>& x11ContextIn,
+    GLXFBConfig framebufferConfig,
+    int width,
+    int height)
     : x11Context(x11ContextIn)
     , framebufferConfigID(0)
     , colormap(0)
@@ -86,7 +89,7 @@ GameWindowX11::GameWindowX11(std::shared_ptr<X11Context const> const& x11Context
     std::string windowName = "X11";
     ::XStoreName(display, window, windowName.c_str());
 
-    auto const& atoms = x11Context->Atoms;
+    const auto& atoms = x11Context->Atoms;
     auto wmDeleteWindow = atoms.WmDeleteWindow;
     XSetWMProtocols(display, window, &wmDeleteWindow, 1);
 
@@ -134,7 +137,7 @@ std::string GameWindowX11::GetTitle() const
     return this->title;
 }
 //-----------------------------------------------------------------------
-void GameWindowX11::SetTitle(std::string const& titleIn)
+void GameWindowX11::SetTitle(const std::string& titleIn)
 {
     this->title = titleIn;
 
@@ -149,7 +152,7 @@ void GameWindowX11::SetTitle(std::string const& titleIn)
         nullptr, 0, nullptr, nullptr, nullptr);
 #endif
 
-    auto const& atoms = x11Context->Atoms;
+    const auto& atoms = x11Context->Atoms;
 
     if (atoms.NetWmName != None)
     {
@@ -175,7 +178,7 @@ Rectangle GameWindowX11::GetClientBounds() const
     return clientBounds;
 }
 //-----------------------------------------------------------------------
-void GameWindowX11::SetClientBounds(Rectangle const& clientBoundsIn)
+void GameWindowX11::SetClientBounds(const Rectangle& clientBoundsIn)
 {
     clientBounds = clientBoundsIn;
 

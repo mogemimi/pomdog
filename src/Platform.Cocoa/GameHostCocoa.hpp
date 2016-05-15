@@ -22,15 +22,15 @@ class GameHostCocoa final : public GameHost {
 public:
     GameHostCocoa(
         PomdogOpenGLView* openGLView,
-        std::shared_ptr<GameWindowCocoa> const& window,
-        std::shared_ptr<EventQueue> const& eventQueue,
-        PresentationParameters const& presentationParameters);
+        const std::shared_ptr<GameWindowCocoa>& window,
+        const std::shared_ptr<EventQueue>& eventQueue,
+        const PresentationParameters& presentationParameters);
 
     ~GameHostCocoa();
 
     void Run(
-        std::weak_ptr<Game> const& game,
-        std::function<void()> const& onCompleted);
+        const std::weak_ptr<Game>& game,
+        const std::function<void()>& onCompleted);
 
     void Exit() override;
 

@@ -66,13 +66,13 @@ void Bootstrap::SetOpenGLEnabled(bool openGLEnabledIn) noexcept
     openGLEnabled = openGLEnabledIn;
 }
 //-----------------------------------------------------------------------
-void Bootstrap::OnError(std::function<void(std::exception const&)> onErrorIn)
+void Bootstrap::OnError(std::function<void(const std::exception&)> onErrorIn)
 {
     onError = onErrorIn;
 }
 //-----------------------------------------------------------------------
-void Bootstrap::Run(std::function<std::unique_ptr<Game>(
-    std::shared_ptr<GameHost> const&)> const& createApp)
+void Bootstrap::Run(
+    const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp)
 {
     using Pomdog::Detail::Win32::GameHostWin32;
     using Pomdog::Detail::Win32::GameWindowWin32;

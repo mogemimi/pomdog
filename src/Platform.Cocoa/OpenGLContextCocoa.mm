@@ -11,7 +11,7 @@ namespace Detail {
 namespace Cocoa {
 //-----------------------------------------------------------------------
 NSOpenGLPixelFormat* CocoaOpenGLHelper::CreatePixelFormat(
-    PresentationParameters const& presentationParameters)
+    const PresentationParameters& presentationParameters)
 {
     std::vector<NSOpenGLPixelFormatAttribute> attributes =
     {

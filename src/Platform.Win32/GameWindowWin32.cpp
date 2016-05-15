@@ -75,18 +75,22 @@ void RegisterInputDevices(HWND windowHandle)
 //-----------------------------------------------------------------------
 class GameWindowWin32::Impl final {
 public:
-    Impl(HINSTANCE hInstance, int nCmdShow,
-        HICON icon, HICON iconSmall, bool useOpenGL,
-        std::shared_ptr<EventQueue> const& eventQueue,
-        PresentationParameters const& presentationParameters);
+    Impl(
+        HINSTANCE hInstance,
+        int nCmdShow,
+        HICON icon,
+        HICON iconSmall,
+        bool useOpenGL,
+        const std::shared_ptr<EventQueue>& eventQueue,
+        const PresentationParameters& presentationParameters);
 
     ~Impl();
 
     void SetAllowUserResizing(bool allowResizing);
 
-    void SetTitle(std::string const& caption);
+    void SetTitle(const std::string& caption);
 
-    void SetClientBounds(Rectangle const& clientBounds);
+    void SetClientBounds(const Rectangle& clientBounds);
 
     void SetMouseCursorVisible(bool visible);
 
@@ -107,10 +111,14 @@ public:
     bool isMouseCursorVisible;
 };
 //-----------------------------------------------------------------------
-GameWindowWin32::Impl::Impl(HINSTANCE hInstance, int nCmdShow,
-    HICON icon, HICON iconSmall, bool useOpenGL,
-    std::shared_ptr<EventQueue> const& eventQueueIn,
-    PresentationParameters const& presentationParameters)
+GameWindowWin32::Impl::Impl(
+    HINSTANCE hInstance,
+    int nCmdShow,
+    HICON icon,
+    HICON iconSmall,
+    bool useOpenGL,
+    const std::shared_ptr<EventQueue>& eventQueueIn,
+    const PresentationParameters& presentationParameters)
     : eventQueue(eventQueueIn)
     , title("Game")
     , clientBounds(0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight)
@@ -282,7 +290,7 @@ void GameWindowWin32::Impl::SetAllowUserResizing(bool allowResizingIn)
     allowUserResizing = allowResizingIn;
 }
 //-----------------------------------------------------------------------
-void GameWindowWin32::Impl::SetTitle(std::string const& titleIn)
+void GameWindowWin32::Impl::SetTitle(const std::string& titleIn)
 {
     POMDOG_ASSERT(nullptr != windowHandle);
 
@@ -294,7 +302,7 @@ void GameWindowWin32::Impl::SetTitle(std::string const& titleIn)
     this->title = titleIn;
 }
 //-----------------------------------------------------------------------
-void GameWindowWin32::Impl::SetClientBounds(Rectangle const& clientBoundsIn)
+void GameWindowWin32::Impl::SetClientBounds(const Rectangle& clientBoundsIn)
 {
     POMDOG_ASSERT(nullptr != windowHandle);
 
@@ -453,12 +461,22 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 //-----------------------------------------------------------------------
-GameWindowWin32::GameWindowWin32(HINSTANCE hInstance, int nCmdShow,
-    HICON icon, HICON iconSmall, bool useOpenGL,
-    std::shared_ptr<EventQueue> const& eventQueue,
-    PresentationParameters const& presentationParameters)
-    : impl(std::make_unique<Impl>(hInstance, nCmdShow, icon, iconSmall,
-        useOpenGL, eventQueue, presentationParameters))
+GameWindowWin32::GameWindowWin32(
+    HINSTANCE hInstance,
+    int nCmdShow,
+    HICON icon,
+    HICON iconSmall,
+    bool useOpenGL,
+    const std::shared_ptr<EventQueue>& eventQueue,
+    const PresentationParameters& presentationParameters)
+    : impl(std::make_unique<Impl>(
+        hInstance,
+        nCmdShow,
+        icon,
+        iconSmall,
+        useOpenGL,
+        eventQueue,
+        presentationParameters))
 {
 }
 //-----------------------------------------------------------------------
@@ -482,7 +500,7 @@ std::string GameWindowWin32::GetTitle() const
     return impl->title;
 }
 //-----------------------------------------------------------------------
-void GameWindowWin32::SetTitle(std::string const& title)
+void GameWindowWin32::SetTitle(const std::string& title)
 {
     POMDOG_ASSERT(impl);
     impl->SetTitle(title);
@@ -494,7 +512,7 @@ Rectangle GameWindowWin32::GetClientBounds() const
     return impl->clientBounds;
 }
 //-----------------------------------------------------------------------
-void GameWindowWin32::SetClientBounds(Rectangle const& clientBounds)
+void GameWindowWin32::SetClientBounds(const Rectangle& clientBounds)
 {
     POMDOG_ASSERT(impl);
     impl->SetClientBounds(clientBounds);

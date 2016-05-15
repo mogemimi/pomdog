@@ -155,7 +155,7 @@ Optional<Keys> ToKeys(USHORT keyCode) noexcept
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-void KeyboardWin32::HandleMessage(RAWKEYBOARD const& keyboard)
+void KeyboardWin32::HandleMessage(const RAWKEYBOARD& keyboard)
 {
     const auto key = ToKeys(keyboard.VKey);
     const auto keyState = (keyboard.Flags & RI_KEY_BREAK ? KeyState::Up : KeyState::Down);

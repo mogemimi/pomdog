@@ -24,9 +24,9 @@ class GameWindowWin32;
 class GameHostWin32 final : public GameHost {
 public:
     GameHostWin32(
-        std::shared_ptr<GameWindowWin32> const& window,
-        std::shared_ptr<EventQueue> const& eventQueue,
-        PresentationParameters const& presentationParameters,
+        const std::shared_ptr<GameWindowWin32>& window,
+        const std::shared_ptr<EventQueue>& eventQueue,
+        const PresentationParameters& presentationParameters,
         std::unique_ptr<InputSystem::InputDeviceFactory> && inputDeviceFactory,
         bool useOpenGL);
 

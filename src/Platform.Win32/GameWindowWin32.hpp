@@ -16,10 +16,14 @@ namespace Win32 {
 
 class GameWindowWin32 final : public GameWindow {
 public:
-    GameWindowWin32(HINSTANCE hInstance, int nCmdShow,
-        HICON icon, HICON iconSmall, bool useOpenGL,
-        std::shared_ptr<EventQueue> const& eventQueue,
-        PresentationParameters const& presentationParameters);
+    GameWindowWin32(
+        HINSTANCE hInstance,
+        int nCmdShow,
+        HICON icon,
+        HICON iconSmall,
+        bool useOpenGL,
+        const std::shared_ptr<EventQueue>& eventQueue,
+        const PresentationParameters& presentationParameters);
 
     ~GameWindowWin32();
 
@@ -29,11 +33,11 @@ public:
 
     std::string GetTitle() const override;
 
-    void SetTitle(std::string const& title) override;
+    void SetTitle(const std::string& title) override;
 
     Rectangle GetClientBounds() const override;
 
-    void SetClientBounds(Rectangle const& clientBounds) override;
+    void SetClientBounds(const Rectangle& clientBounds) override;
 
     bool IsMouseCursorVisible() const override;
 

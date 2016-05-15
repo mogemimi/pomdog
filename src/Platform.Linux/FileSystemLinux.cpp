@@ -13,7 +13,7 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-bool FileSystem::CreateDirectory(std::string const& path)
+bool FileSystem::CreateDirectory(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     struct stat st;
@@ -24,7 +24,7 @@ bool FileSystem::CreateDirectory(std::string const& path)
     return ::mkdir(path.c_str(), S_IRWXU) == 0;
 }
 //-----------------------------------------------------------------------
-bool FileSystem::CreateDirectories(std::string const& path)
+bool FileSystem::CreateDirectories(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     if (path.empty()) {
@@ -51,13 +51,13 @@ bool FileSystem::CreateDirectories(std::string const& path)
     return ::mkdir(tmp.c_str(), S_IRWXU) == 0;
 }
 //-----------------------------------------------------------------------
-bool FileSystem::Exists(std::string const& path)
+bool FileSystem::Exists(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     return ::access(path.c_str(), F_OK) != -1;
 }
 //-----------------------------------------------------------------------
-bool FileSystem::IsDirectory(std::string const& path)
+bool FileSystem::IsDirectory(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     struct stat st;

@@ -260,7 +260,7 @@ static void BuildKeyMap(Display* display, std::array<Keys, 256> & keys)
     }
 }
 //-----------------------------------------------------------------------
-static Keys ToKeys(std::array<Keys, 256> const& keys, unsigned int keyCode)
+static Keys ToKeys(const std::array<Keys, 256>& keys, unsigned int keyCode)
 {
     if (keyCode < 8 || keyCode > keys.size()) {
         return Keys_None;
