@@ -21,8 +21,8 @@ class ShaderDirect3D11 final : public Shader {
 public:
     ShaderDirect3D11(
         ID3D11Device* device,
-        ShaderBytecode const& shaderBytecode,
-        ShaderCompileOptions const& compileOptions);
+        const ShaderBytecode& shaderBytecode,
+        const ShaderCompileOptions& compileOptions);
 
     Microsoft::WRL::ComPtr<NativeShaderType> GetShader() const;
 

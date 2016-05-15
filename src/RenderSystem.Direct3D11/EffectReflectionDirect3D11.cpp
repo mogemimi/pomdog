@@ -132,8 +132,8 @@ void EnumerateConstantBuffer(
 } // unnamed namespace
 //-----------------------------------------------------------------------
 EffectReflectionDirect3D11::EffectReflectionDirect3D11(
-    ShaderBytecode const& vertexShaderBytecode,
-    ShaderBytecode const& pixelShaderBytecode)
+    const ShaderBytecode& vertexShaderBytecode,
+    const ShaderBytecode& pixelShaderBytecode)
 {
     HRESULT hr = D3DReflect(
         vertexShaderBytecode.Code,
@@ -162,11 +162,11 @@ std::vector<EffectConstantDescription> EffectReflectionDirect3D11::GetConstantBu
     EnumerateConstantBuffer(pixelShaderReflector.Get(), result);
 
     std::sort(std::begin(result), std::end(result),
-        [](EffectConstantDescription const& a, EffectConstantDescription const& b) {
+        [](const EffectConstantDescription& a, const EffectConstantDescription& b) {
             return a.Name < b.Name;
         });
 
-    auto equal = [](EffectConstantDescription const& a, EffectConstantDescription const& b) {
+    auto equal = [](const EffectConstantDescription& a, const EffectConstantDescription& b) {
     #if defined(DEBUG) && !defined(NDEBUG)
         if (a.Name == b.Name)
         {

@@ -309,8 +309,9 @@ GraphicsDeviceDirect3D11::CreateGraphicsCommandList()
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader>
-GraphicsDeviceDirect3D11::CreateShader(ShaderBytecode const& shaderBytecode,
-    ShaderCompileOptions const& compileOptions)
+GraphicsDeviceDirect3D11::CreateShader(
+    const ShaderBytecode& shaderBytecode,
+    const ShaderCompileOptions& compileOptions)
 {
     switch (compileOptions.Profile.PipelineStage) {
     case ShaderPipelineStage::VertexShader: {
@@ -342,7 +343,7 @@ GraphicsDeviceDirect3D11::CreateBuffer(std::size_t sizeInBytes,
             bufferUsage,
             ToBindFlag(bindMode));
     }
-    catch (std::exception const& e) {
+    catch (const std::exception& e) {
 #if defined(DEBUG) && !defined(NDEBUG)
         CheckError(impl->infoQueue.Get());
 #endif
@@ -352,7 +353,7 @@ GraphicsDeviceDirect3D11::CreateBuffer(std::size_t sizeInBytes,
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBuffer>
 GraphicsDeviceDirect3D11::CreateBuffer(
-    void const* sourceData, std::size_t sizeInBytes,
+    const void* sourceData, std::size_t sizeInBytes,
     BufferUsage bufferUsage, BufferBindMode bindMode)
 {
     POMDOG_ASSERT(impl);
@@ -368,7 +369,7 @@ GraphicsDeviceDirect3D11::CreateBuffer(
             bufferUsage,
             ToBindFlag(bindMode));
     }
-    catch (std::exception const& e) {
+    catch (const std::exception& e) {
 #if defined(DEBUG) && !defined(NDEBUG)
         CheckError(impl->infoQueue.Get());
 #endif
@@ -377,7 +378,7 @@ GraphicsDeviceDirect3D11::CreateBuffer(
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeSamplerState>
-GraphicsDeviceDirect3D11::CreateSamplerState(SamplerDescription const& description)
+GraphicsDeviceDirect3D11::CreateSamplerState(const SamplerDescription& description)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device);
@@ -386,7 +387,7 @@ GraphicsDeviceDirect3D11::CreateSamplerState(SamplerDescription const& descripti
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativePipelineState>
-GraphicsDeviceDirect3D11::CreatePipelineState(PipelineStateDescription const& description)
+GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineStateDescription& description)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device);
@@ -396,7 +397,7 @@ GraphicsDeviceDirect3D11::CreatePipelineState(PipelineStateDescription const& de
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectReflection>
 GraphicsDeviceDirect3D11::CreateEffectReflection(
-    PipelineStateDescription const& description,
+    const PipelineStateDescription& description,
     NativePipelineState &)
 {
     auto vertexShader = std::dynamic_pointer_cast<VertexShaderDirect3D11>(

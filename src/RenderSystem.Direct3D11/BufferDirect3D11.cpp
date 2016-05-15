@@ -15,7 +15,7 @@ namespace {
 ID3D11Buffer* CreateNativeBuffer(
     ID3D11Device* device,
     std::size_t sizeInBytes,
-    void const* data,
+    const void* data,
     BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag)
 {
@@ -88,7 +88,7 @@ ID3D11Buffer* CreateNativeBuffer(
 //-----------------------------------------------------------------------
 BufferDirect3D11::BufferDirect3D11(
     ID3D11Device* device,
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContextIn,
+    const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContextIn,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag)
@@ -100,8 +100,8 @@ BufferDirect3D11::BufferDirect3D11(
 //-----------------------------------------------------------------------
 BufferDirect3D11::BufferDirect3D11(
     ID3D11Device* device,
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContextIn,
-    void const* sourceData,
+    const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContextIn,
+    const void* sourceData,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag)
@@ -111,8 +111,10 @@ BufferDirect3D11::BufferDirect3D11(
         sourceData, bufferUsage, bindFlag);
 }
 //-----------------------------------------------------------------------
-void BufferDirect3D11::GetData(std::size_t offsetInBytes,
-    void* destination, std::size_t sizeInBytes) const
+void BufferDirect3D11::GetData(
+    std::size_t offsetInBytes,
+    void* destination,
+    std::size_t sizeInBytes) const
 {
     POMDOG_ASSERT(buffer);
     POMDOG_ASSERT(deviceContext);
@@ -135,8 +137,10 @@ void BufferDirect3D11::GetData(std::size_t offsetInBytes,
     deviceContext->Unmap(buffer.Get(), 0);
 }
 //-----------------------------------------------------------------------
-void BufferDirect3D11::SetData(std::size_t offsetInBytes,
-    void const* source, std::size_t sizeInBytes)
+void BufferDirect3D11::SetData(
+    std::size_t offsetInBytes,
+    const void* source,
+    std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(buffer);
     POMDOG_ASSERT(deviceContext);

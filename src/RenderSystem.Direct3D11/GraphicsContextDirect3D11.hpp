@@ -22,10 +22,10 @@ public:
 
     GraphicsContextDirect3D11(
         HWND windowHandle,
-        Microsoft::WRL::ComPtr<IDXGIFactory1> const& dxgiFactory,
-        Microsoft::WRL::ComPtr<ID3D11Device> const& nativeDevice,
-        Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
-        PresentationParameters const& presentationParameters);
+        const Microsoft::WRL::ComPtr<IDXGIFactory1>& dxgiFactory,
+        const Microsoft::WRL::ComPtr<ID3D11Device>& nativeDevice,
+        const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext,
+        const PresentationParameters& presentationParameters);
 
     ~GraphicsContextDirect3D11();
 
@@ -33,7 +33,7 @@ public:
 
     void Present() override;
 
-    void Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil) override;
+    void Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil) override;
 
     void Draw(std::size_t vertexCount) override;
 
@@ -47,21 +47,21 @@ public:
         std::size_t indexCount,
         std::size_t instanceCount) override;
 
-    void SetViewport(Viewport const& viewport) override;
+    void SetViewport(const Viewport& viewport) override;
 
-    void SetScissorRectangle(Rectangle const& rectangle) override;
+    void SetScissorRectangle(const Rectangle& rectangle) override;
 
     void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) override;
 
-    void SetBlendFactor(Color const& blendFactor) override;
+    void SetBlendFactor(const Color& blendFactor) override;
 
-    void SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers) override;
+    void SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers) override;
 
-    void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer) override;
+    void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
 
-    void SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState) override;
+    void SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState) override;
 
-    void SetConstantBuffer(int index, std::shared_ptr<NativeBuffer> const& constantBuffer) override;
+    void SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer) override;
 
     void SetSampler(int index, NativeSamplerState* sampler) override;
 
@@ -73,7 +73,7 @@ public:
 
     void SetRenderTarget() override;
 
-    void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets) override;
+    void SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets) override;
 
     void ResizeBackBuffers(ID3D11Device* device, int backBufferWidth, int backBufferHeight);
 

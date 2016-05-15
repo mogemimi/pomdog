@@ -15,7 +15,7 @@ class Texture2DDirect3D11 final : public NativeTexture2D {
 public:
     Texture2DDirect3D11(
         ID3D11Device* nativeDevice,
-        Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
+        const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
@@ -26,7 +26,7 @@ public:
         std::int32_t pixelHeight,
         std::int32_t levelCount,
         SurfaceFormat format,
-        void const* pixelData) override;
+        const void* pixelData) override;
 
     ID3D11ShaderResourceView* GetShaderResourceView() const;
 

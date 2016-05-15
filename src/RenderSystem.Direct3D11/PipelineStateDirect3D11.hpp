@@ -13,8 +13,9 @@ namespace Direct3D11 {
 
 class PipelineStateDirect3D11 final : public NativePipelineState {
 public:
-    PipelineStateDirect3D11(ID3D11Device* device,
-        PipelineStateDescription const& description);
+    PipelineStateDirect3D11(
+        ID3D11Device* device,
+        const PipelineStateDescription& description);
 
     void Apply(ID3D11DeviceContext * deviceContext, FLOAT const blendFactor[4]);
 

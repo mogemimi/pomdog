@@ -39,8 +39,9 @@ D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) 
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-SamplerStateDirect3D11::SamplerStateDirect3D11(ID3D11Device* device,
-    SamplerDescription const& description)
+SamplerStateDirect3D11::SamplerStateDirect3D11(
+    ID3D11Device* device,
+    const SamplerDescription& description)
 {
     D3D11_SAMPLER_DESC samplerDesc;
     ZeroMemory(&samplerDesc, sizeof(samplerDesc));

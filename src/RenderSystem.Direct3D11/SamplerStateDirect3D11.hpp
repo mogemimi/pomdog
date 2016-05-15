@@ -15,7 +15,7 @@ class SamplerStateDirect3D11 final : public NativeSamplerState {
 public:
     SamplerStateDirect3D11(
         ID3D11Device* device,
-        SamplerDescription const& description);
+        const SamplerDescription& description);
 
     ID3D11SamplerState* GetSamplerState() const;
 

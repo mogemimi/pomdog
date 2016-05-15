@@ -16,8 +16,8 @@ namespace Direct3D {
 
 struct HLSLCompiling {
     static Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(
-        ShaderBytecode const& shaderBytecode,
-        ShaderCompileOptions const& compileOptions);
+        const ShaderBytecode& shaderBytecode,
+        const ShaderCompileOptions& compileOptions);
 };
 
 } // namespace Direct3D

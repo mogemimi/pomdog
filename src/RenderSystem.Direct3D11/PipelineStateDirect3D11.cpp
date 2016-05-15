@@ -120,7 +120,8 @@ inline BOOL ToD3D11Boolean(bool is) noexcept
     return is ? TRUE : FALSE;
 }
 //-----------------------------------------------------------------------
-void ToD3D11Desc(RenderTargetBlendDescription const& desc,
+void ToD3D11Desc(
+    const RenderTargetBlendDescription& desc,
     D3D11_RENDER_TARGET_BLEND_DESC & result) noexcept
 {
     result.BlendEnable = ToD3D11Boolean(desc.BlendEnable);
@@ -133,8 +134,9 @@ void ToD3D11Desc(RenderTargetBlendDescription const& desc,
     result.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 }
 //-----------------------------------------------------------------------
-ComPtr<ID3D11BlendState> CreateBlendState(ID3D11Device* nativeDevice,
-    BlendDescription const& description)
+ComPtr<ID3D11BlendState> CreateBlendState(
+    ID3D11Device* nativeDevice,
+    const BlendDescription& description)
 {
     D3D11_BLEND_DESC blendDesc;
     ::ZeroMemory(&blendDesc, sizeof(blendDesc));
@@ -163,8 +165,9 @@ ComPtr<ID3D11BlendState> CreateBlendState(ID3D11Device* nativeDevice,
     return std::move(blendState);
 }
 //-----------------------------------------------------------------------
-ComPtr<ID3D11DepthStencilState> CreateDepthStencilState(ID3D11Device* nativeDevice,
-    DepthStencilDescription const& description)
+ComPtr<ID3D11DepthStencilState> CreateDepthStencilState(
+    ID3D11Device* nativeDevice,
+    const DepthStencilDescription& description)
 {
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
     ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
@@ -203,8 +206,9 @@ ComPtr<ID3D11DepthStencilState> CreateDepthStencilState(ID3D11Device* nativeDevi
     return std::move(depthStencilState);
 }
 //-----------------------------------------------------------------------
-ComPtr<ID3D11RasterizerState> CreateRasterizerState(ID3D11Device* nativeDevice,
-    RasterizerDescription const& description)
+ComPtr<ID3D11RasterizerState> CreateRasterizerState(
+    ID3D11Device* nativeDevice,
+    const RasterizerDescription& description)
 {
     D3D11_RASTERIZER_DESC rasterizerDesc;
     ZeroMemory(&rasterizerDesc, sizeof(rasterizerDesc));
@@ -238,7 +242,7 @@ ComPtr<ID3D11RasterizerState> CreateRasterizerState(ID3D11Device* nativeDevice,
 }
 //-----------------------------------------------------------------------
 void ReflectShaderBytecode(
-    ShaderBytecode const& shaderBytecode,
+    const ShaderBytecode& shaderBytecode,
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection> & shaderReflector,
     D3D11_SHADER_DESC & shaderDesc)
 {
@@ -269,7 +273,7 @@ void ReflectShaderBytecode(
 //};
 //
 //void EnumerateConstantBuffers(
-//    ShaderBytecode const& shaderBytecode,
+//    const ShaderBytecode& shaderBytecode,
 //    std::vector<ConstantBufferBindDesc> & output)
 //{
 //    POMDOG_ASSERT(shaderBytecode.Code);
@@ -315,8 +319,8 @@ void ReflectShaderBytecode(
 //}
 //-----------------------------------------------------------------------
 //std::vector<ConstantBufferBindDesc> CreateConstantBufferBindDescs(
-//    ShaderBytecode const& vertexShaderBytecode,
-//    ShaderBytecode const& pixelShaderBytecode)
+//    const ShaderBytecode& vertexShaderBytecode,
+//    const ShaderBytecode& pixelShaderBytecode)
 //{
 //    using Desc = ConstantBufferBindDesc;
 //
@@ -325,10 +329,10 @@ void ReflectShaderBytecode(
 //    EnumerateConstantBuffers(pixelShaderBytecode, bindings);
 //
 //    std::sort(std::begin(bindings), std::end(bindings),
-//        [](Desc const& a, Desc const& b) { return a.Name < b.Name; });
+//        [](const Desc& a, const Desc& b) { return a.Name < b.Name; });
 //
 //    bindings.erase(std::unique(std::begin(bindings), std::end(bindings),
-//        [](Desc const& a, Desc const& b) { return a.Name == b.Name; }), std::end(bindings));
+//        [](const Desc& a, const Desc& b) { return a.Name == b.Name; }), std::end(bindings));
 //
 //    bindings.shrink_to_fit();
 //
@@ -336,8 +340,8 @@ void ReflectShaderBytecode(
 //}
 //-----------------------------------------------------------------------
 std::vector<D3D11_INPUT_ELEMENT_DESC> BuildInputElements(
-    std::vector<D3D11_SIGNATURE_PARAMETER_DESC> const& signatureParameters,
-    InputLayoutDescription const& description)
+    const std::vector<D3D11_SIGNATURE_PARAMETER_DESC>& signatureParameters,
+    const InputLayoutDescription& description)
 {
     POMDOG_ASSERT(!signatureParameters.empty());
     POMDOG_ASSERT(!description.InputElements.empty());
@@ -386,7 +390,7 @@ std::vector<D3D11_INPUT_ELEMENT_DESC> BuildInputElements(
 std::vector<D3D11_SIGNATURE_PARAMETER_DESC>
 EnumerateSignatureParameters(
     ID3D11ShaderReflection* shaderReflector,
-    D3D11_SHADER_DESC const& shaderDesc)
+    const D3D11_SHADER_DESC& shaderDesc)
 {
     POMDOG_ASSERT(shaderReflector);
 
@@ -410,8 +414,8 @@ EnumerateSignatureParameters(
 //-----------------------------------------------------------------------
 Microsoft::WRL::ComPtr<ID3D11InputLayout> CreateInputLayout(
     ID3D11Device* device,
-    ShaderBytecode const& vertexShaderBytecode,
-    InputLayoutDescription const& description)
+    const ShaderBytecode& vertexShaderBytecode,
+    const InputLayoutDescription& description)
 {
     POMDOG_ASSERT(device);
     POMDOG_ASSERT(vertexShaderBytecode.Code);
@@ -442,8 +446,9 @@ Microsoft::WRL::ComPtr<ID3D11InputLayout> CreateInputLayout(
 
 } // unnamed namespace
 //-----------------------------------------------------------------------
-PipelineStateDirect3D11::PipelineStateDirect3D11(ID3D11Device* device,
-    PipelineStateDescription const& description)
+PipelineStateDirect3D11::PipelineStateDirect3D11(
+    ID3D11Device* device,
+    const PipelineStateDescription& description)
 {
     POMDOG_ASSERT(device);
 
@@ -477,7 +482,8 @@ PipelineStateDirect3D11::PipelineStateDirect3D11(ID3D11Device* device,
         vertexShaderD3D->GetShaderBytecode(), description.InputLayout);
 }
 //-----------------------------------------------------------------------
-void PipelineStateDirect3D11::Apply(ID3D11DeviceContext * deviceContext,
+void PipelineStateDirect3D11::Apply(
+    ID3D11DeviceContext * deviceContext,
     FLOAT const blendFactor[4])
 {
     POMDOG_ASSERT(deviceContext);

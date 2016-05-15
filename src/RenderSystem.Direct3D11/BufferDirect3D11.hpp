@@ -15,15 +15,15 @@ class BufferDirect3D11 final : public NativeBuffer {
 public:
     BufferDirect3D11(
         ID3D11Device* device,
-        Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
+        const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
         D3D11_BIND_FLAG bindFlag);
 
     BufferDirect3D11(
         ID3D11Device* devuce,
-        Microsoft::WRL::ComPtr<ID3D11DeviceContext> const& deviceContext,
-        void const* sourceData,
+        const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext,
+        const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
         D3D11_BIND_FLAG bindFlag);
@@ -35,7 +35,7 @@ public:
 
     void SetData(
         std::size_t offsetInBytes,
-        void const* sourceData,
+        const void* sourceData,
         std::size_t sizeInBytes) override;
 
     ID3D11Buffer* GetBuffer() const;

@@ -20,7 +20,7 @@ namespace Detail {
 namespace Direct3D {
 namespace {
 
-std::string ToString(ShaderProfile const& profile)
+std::string ToString(const ShaderProfile& profile)
 {
     std::string output;
 
@@ -58,7 +58,7 @@ private:
     std::vector<std::uint8_t> outputSource;
 
 public:
-    explicit HLSLCodeInclude(std::string const& curentDirectoryIn)
+    explicit HLSLCodeInclude(const std::string& curentDirectoryIn)
         : currentDirectory(curentDirectoryIn)
     {}
 
@@ -123,11 +123,11 @@ public:
 };
 //-----------------------------------------------------------------------
 void CompileFromShaderFile(
-    ShaderBytecode const& shaderBytecode,
-    std::string const& entrypoint,
-    std::string const& shaderProfile,
-    std::string const& currentDirectory,
-    D3D_SHADER_MACRO const* preprocessorMacros,
+    const ShaderBytecode& shaderBytecode,
+    const std::string& entrypoint,
+    const std::string& shaderProfile,
+    const std::string& currentDirectory,
+    const D3D_SHADER_MACRO* preprocessorMacros,
     ID3DBlob** ppBlobOut)
 {
     POMDOG_ASSERT(shaderBytecode.Code != nullptr);
@@ -165,8 +165,8 @@ void CompileFromShaderFile(
 } // unnamed namespace
 //-----------------------------------------------------------------------
 Microsoft::WRL::ComPtr<ID3DBlob> HLSLCompiling::CompileShader(
-    ShaderBytecode const& shaderBytecode,
-    ShaderCompileOptions const& compileOptions)
+    const ShaderBytecode& shaderBytecode,
+    const ShaderCompileOptions& compileOptions)
 {
     const auto target = ToString(compileOptions.Profile);
     POMDOG_ASSERT(!target.empty());

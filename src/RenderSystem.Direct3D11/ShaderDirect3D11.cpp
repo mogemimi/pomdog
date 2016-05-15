@@ -15,7 +15,7 @@ namespace {
 
 HRESULT CreateShader(
     ID3D11Device* device,
-    void const* shaderByteCode,
+    const void* shaderByteCode,
     std::size_t bytecodeLength,
     ID3D11VertexShader** vertexShader)
 {
@@ -24,7 +24,7 @@ HRESULT CreateShader(
 //-----------------------------------------------------------------------
 HRESULT CreateShader(
     ID3D11Device* device,
-    void const* shaderByteCode,
+    const void* shaderByteCode,
     std::size_t bytecodeLength,
     ID3D11PixelShader** pixelShader)
 {
@@ -36,8 +36,8 @@ HRESULT CreateShader(
 template <class NativeShaderType>
 ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(
     ID3D11Device* device,
-    ShaderBytecode const& shaderBytecode,
-    ShaderCompileOptions const& compileOptions)
+    const ShaderBytecode& shaderBytecode,
+    const ShaderCompileOptions& compileOptions)
 {
     POMDOG_ASSERT(shaderBytecode.Code != nullptr);
     POMDOG_ASSERT(shaderBytecode.ByteLength > 0);
