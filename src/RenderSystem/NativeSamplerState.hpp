@@ -8,8 +8,8 @@ namespace Detail {
 class NativeSamplerState {
 public:
     NativeSamplerState() = default;
-    NativeSamplerState(NativeSamplerState const&) = delete;
-    NativeSamplerState & operator=(NativeSamplerState const&) = delete;
+    NativeSamplerState(const NativeSamplerState&) = delete;
+    NativeSamplerState & operator=(const NativeSamplerState&) = delete;
 
     virtual ~NativeSamplerState() = default;
 };

@@ -35,8 +35,9 @@ public:
     CreateGraphicsCommandList() = 0;
 
     virtual std::unique_ptr<Shader>
-    CreateShader(ShaderBytecode const& shaderBytecode,
-        ShaderCompileOptions const& compileOptions) = 0;
+    CreateShader(
+        const ShaderBytecode& shaderBytecode,
+        const ShaderCompileOptions& compileOptions) = 0;
 
     virtual std::unique_ptr<NativeBuffer>
     CreateBuffer(
@@ -46,20 +47,20 @@ public:
 
     virtual std::unique_ptr<NativeBuffer>
     CreateBuffer(
-        void const* sourceData,
+        const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
         BufferBindMode bindMode) = 0;
 
     virtual std::unique_ptr<NativeSamplerState>
-    CreateSamplerState(SamplerDescription const& description) = 0;
+    CreateSamplerState(const SamplerDescription& description) = 0;
 
     virtual std::unique_ptr<NativePipelineState>
-    CreatePipelineState(PipelineStateDescription const& description) = 0;
+    CreatePipelineState(const PipelineStateDescription& description) = 0;
 
     virtual std::unique_ptr<NativeEffectReflection>
     CreateEffectReflection(
-        PipelineStateDescription const& description,
+        const PipelineStateDescription& description,
         NativePipelineState & pipelineState) = 0;
 
     virtual std::unique_ptr<NativeTexture2D>

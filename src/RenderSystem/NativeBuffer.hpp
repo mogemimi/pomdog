@@ -10,16 +10,20 @@ namespace Detail {
 class NativeBuffer {
 public:
     NativeBuffer() = default;
-    NativeBuffer(NativeBuffer const&) = delete;
-    NativeBuffer & operator=(NativeBuffer const&) = delete;
+    NativeBuffer(const NativeBuffer&) = delete;
+    NativeBuffer & operator=(const NativeBuffer&) = delete;
 
     virtual ~NativeBuffer() = default;
 
-    virtual void GetData(std::size_t offsetInBytes,
-        void* destination, std::size_t sizeInBytes) const = 0;
+    virtual void GetData(
+        std::size_t offsetInBytes,
+        void* destination,
+        std::size_t sizeInBytes) const = 0;
 
-    virtual void SetData(std::size_t offsetInBytes,
-        void const* source, std::size_t sizeInBytes) = 0;
+    virtual void SetData(
+        std::size_t offsetInBytes,
+        const void* source,
+        std::size_t sizeInBytes) = 0;
 };
 
 } // namespace Detail

@@ -12,14 +12,14 @@ namespace Detail {
 class NativeGraphicsCommandQueue {
 public:
     NativeGraphicsCommandQueue() = default;
-    NativeGraphicsCommandQueue(NativeGraphicsCommandQueue const&) = delete;
-    NativeGraphicsCommandQueue & operator=(NativeGraphicsCommandQueue const&) = delete;
+    NativeGraphicsCommandQueue(const NativeGraphicsCommandQueue&) = delete;
+    NativeGraphicsCommandQueue & operator=(const NativeGraphicsCommandQueue&) = delete;
 
     virtual ~NativeGraphicsCommandQueue() = default;
 
     virtual void Reset() = 0;
 
-    virtual void PushbackCommandList(std::shared_ptr<GraphicsCommandList> const& commandList) = 0;
+    virtual void PushbackCommandList(const std::shared_ptr<GraphicsCommandList>& commandList) = 0;
 
     virtual void ExecuteCommandLists() = 0;
 

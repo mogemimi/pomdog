@@ -11,8 +11,8 @@ namespace Detail {
 class NativeEffectReflection {
 public:
     NativeEffectReflection() = default;
-    NativeEffectReflection(NativeEffectReflection const&) = delete;
-    NativeEffectReflection & operator=(NativeEffectReflection const&) = delete;
+    NativeEffectReflection(const NativeEffectReflection&) = delete;
+    NativeEffectReflection & operator=(const NativeEffectReflection&) = delete;
 
     virtual ~NativeEffectReflection() = default;
 

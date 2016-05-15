@@ -14,8 +14,8 @@ namespace Detail {
 class NativeGraphicsCommandList {
 public:
     NativeGraphicsCommandList() = default;
-    NativeGraphicsCommandList(NativeGraphicsCommandList const&) = delete;
-    NativeGraphicsCommandList & operator=(NativeGraphicsCommandList const&) = delete;
+    NativeGraphicsCommandList(const NativeGraphicsCommandList&) = delete;
+    NativeGraphicsCommandList & operator=(const NativeGraphicsCommandList&) = delete;
 
     virtual ~NativeGraphicsCommandList() = default;
 
@@ -25,7 +25,7 @@ public:
 
     virtual std::size_t GetCount() const noexcept = 0;
 
-    virtual void Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil) = 0;
+    virtual void Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil) = 0;
 
     virtual void Draw(std::size_t vertexCount) = 0;
 
@@ -39,35 +39,35 @@ public:
         std::size_t indexCount,
         std::size_t instanceCount) = 0;
 
-    virtual void SetViewport(Viewport const& viewport) = 0;
+    virtual void SetViewport(const Viewport& viewport) = 0;
 
-    virtual void SetScissorRectangle(Rectangle const& rectangle) = 0;
+    virtual void SetScissorRectangle(const Rectangle& rectangle) = 0;
 
     virtual void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) = 0;
 
-    virtual void SetBlendFactor(Color const& blendFactor) = 0;
+    virtual void SetBlendFactor(const Color& blendFactor) = 0;
 
-    virtual void SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers) = 0;
+    virtual void SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers) = 0;
 
     virtual void SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers) = 0;
 
-    virtual void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer) = 0;
+    virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) = 0;
 
-    virtual void SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState) = 0;
+    virtual void SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState) = 0;
 
-    virtual void SetConstantBuffer(int index, std::shared_ptr<NativeBuffer> const& constantBuffer) = 0;
+    virtual void SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer) = 0;
 
     virtual void SetSampler(int index, std::shared_ptr<NativeSamplerState> && sampler) = 0;
 
     virtual void SetTexture(int index) = 0;
 
-    virtual void SetTexture(int index, std::shared_ptr<Texture2D> const& texture) = 0;
+    virtual void SetTexture(int index, const std::shared_ptr<Texture2D>& texture) = 0;
 
-    virtual void SetTexture(int index, std::shared_ptr<RenderTarget2D> const& texture) = 0;
+    virtual void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) = 0;
 
     virtual void SetRenderTarget() = 0;
 
-    virtual void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets) = 0;
+    virtual void SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets) = 0;
 
     virtual void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets) = 0;
 };

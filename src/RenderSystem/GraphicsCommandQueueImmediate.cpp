@@ -10,7 +10,7 @@ namespace Pomdog {
 namespace Detail {
 //-----------------------------------------------------------------------
 GraphicsCommandQueueImmediate::GraphicsCommandQueueImmediate(
-    std::shared_ptr<Detail::GraphicsContext> const& graphicsContextIn)
+    const std::shared_ptr<Detail::GraphicsContext>& graphicsContextIn)
     : graphicsContext(graphicsContextIn)
 {
 }
@@ -21,7 +21,7 @@ void GraphicsCommandQueueImmediate::Reset()
 }
 //-----------------------------------------------------------------------
 void GraphicsCommandQueueImmediate::PushbackCommandList(
-    std::shared_ptr<GraphicsCommandList> const& commandList)
+    const std::shared_ptr<GraphicsCommandList>& commandList)
 {
     POMDOG_ASSERT(commandList);
     if (commandList) {

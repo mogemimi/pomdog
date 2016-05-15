@@ -8,8 +8,8 @@ namespace Detail {
 class NativeRenderTarget2D {
 public:
     NativeRenderTarget2D() = default;
-    NativeRenderTarget2D(NativeRenderTarget2D const&) = delete;
-    NativeRenderTarget2D & operator=(NativeRenderTarget2D const&) = delete;
+    NativeRenderTarget2D(const NativeRenderTarget2D&) = delete;
+    NativeRenderTarget2D & operator=(const NativeRenderTarget2D&) = delete;
 
     virtual ~NativeRenderTarget2D() = default;
 };

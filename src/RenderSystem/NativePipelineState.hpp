@@ -11,8 +11,8 @@ namespace Detail {
 class NativePipelineState {
 public:
     NativePipelineState() = default;
-    NativePipelineState(NativePipelineState const&) = delete;
-    NativePipelineState & operator=(NativePipelineState const&) = delete;
+    NativePipelineState(const NativePipelineState&) = delete;
+    NativePipelineState & operator=(const NativePipelineState&) = delete;
 
     virtual ~NativePipelineState() = default;
 };

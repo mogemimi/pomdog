@@ -17,18 +17,18 @@ class NativeGraphicsContext;
 class GraphicsContext {
 public:
     GraphicsContext() = delete;
-    GraphicsContext(GraphicsContext const&) = delete;
-    GraphicsContext & operator=(GraphicsContext const&) = delete;
+    GraphicsContext(const GraphicsContext&) = delete;
+    GraphicsContext & operator=(const GraphicsContext&) = delete;
 
     GraphicsContext(
         std::unique_ptr<Detail::NativeGraphicsContext> && nativeContext,
-        PresentationParameters const& presentationParameters);
+        const PresentationParameters& presentationParameters);
 
     ~GraphicsContext();
 
-    void Clear(Color const& color);
+    void Clear(const Color& color);
 
-    void Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil);
+    void Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil);
 
     void Present();
 
@@ -44,33 +44,33 @@ public:
         std::size_t indexCount,
         std::size_t instanceCount);
 
-    void SetViewport(Viewport const& viewport);
+    void SetViewport(const Viewport& viewport);
 
-    void SetScissorRectangle(Rectangle const& rectangle);
+    void SetScissorRectangle(const Rectangle& rectangle);
 
     void SetPrimitiveTopology(PrimitiveTopology primitiveTopology);
 
-    void SetBlendFactor(Color const& blendFactor);
+    void SetBlendFactor(const Color& blendFactor);
 
-    void SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers);
+    void SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers);
 
-    void SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer);
+    void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer);
 
-    void SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState);
+    void SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState);
 
-    void SetConstantBuffer(int index, std::shared_ptr<NativeBuffer> const& constantBuffer);
+    void SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer);
 
-    void SetSampler(int index, std::shared_ptr<NativeSamplerState> const& sampler);
+    void SetSampler(int index, const std::shared_ptr<NativeSamplerState>& sampler);
 
     void SetTexture(int index);
 
-    void SetTexture(int index, std::shared_ptr<Texture2D> const& texture);
+    void SetTexture(int index, const std::shared_ptr<Texture2D>& texture);
 
-    void SetTexture(int index, std::shared_ptr<RenderTarget2D> const& texture);
+    void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture);
 
     void SetRenderTarget();
 
-    void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets);
+    void SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets);
 
     void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets);
 

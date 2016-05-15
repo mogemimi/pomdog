@@ -23,8 +23,8 @@ public:
 class GraphicsCommandListImmediate final: public NativeGraphicsCommandList {
 public:
     GraphicsCommandListImmediate() = default;
-    GraphicsCommandListImmediate(GraphicsCommandListImmediate const&) = delete;
-    GraphicsCommandListImmediate & operator=(GraphicsCommandListImmediate const&) = delete;
+    GraphicsCommandListImmediate(const GraphicsCommandListImmediate&) = delete;
+    GraphicsCommandListImmediate & operator=(const GraphicsCommandListImmediate&) = delete;
 
     ~GraphicsCommandListImmediate();
 
@@ -36,7 +36,7 @@ public:
 
     void Clear(
         ClearOptions options,
-        Color const& color,
+        const Color& color,
         float depth,
         std::uint8_t stencil) override;
 
@@ -52,28 +52,28 @@ public:
         std::size_t indexCount,
         std::size_t instanceCount) override;
 
-    void SetViewport(Viewport const& viewport) override;
+    void SetViewport(const Viewport& viewport) override;
 
-    void SetScissorRectangle(Rectangle const& rectangle) override;
+    void SetScissorRectangle(const Rectangle& rectangle) override;
 
     void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) override;
 
-    void SetBlendFactor(Color const& blendFactor) override;
+    void SetBlendFactor(const Color& blendFactor) override;
 
     void SetVertexBuffers(
-        std::vector<VertexBufferBinding> const& vertexBuffers) override;
+        const std::vector<VertexBufferBinding>& vertexBuffers) override;
 
     void SetVertexBuffers(
         std::vector<VertexBufferBinding> && vertexBuffers) override;
 
     void SetIndexBuffer(
-        std::shared_ptr<IndexBuffer> const& indexBuffer) override;
+        const std::shared_ptr<IndexBuffer>& indexBuffer) override;
 
     void SetPipelineState(
-        std::shared_ptr<NativePipelineState> const& pipelineState) override;
+        const std::shared_ptr<NativePipelineState>& pipelineState) override;
 
     void SetConstantBuffer(
-        int index, std::shared_ptr<NativeBuffer> const& constantBuffer) override;
+        int index, const std::shared_ptr<NativeBuffer>& constantBuffer) override;
 
     void SetSampler(
         int index, std::shared_ptr<NativeSamplerState> && sampler) override;
@@ -81,15 +81,15 @@ public:
     void SetTexture(int index) override;
 
     void SetTexture(
-        int index, std::shared_ptr<Texture2D> const& texture) override;
+        int index, const std::shared_ptr<Texture2D>& texture) override;
 
     void SetTexture(
-        int index, std::shared_ptr<RenderTarget2D> const& texture) override;
+        int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
     void SetRenderTarget() override;
 
     void SetRenderTargets(
-        std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets) override;
+        const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets) override;
 
     void SetRenderTargets(
         std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets) override;

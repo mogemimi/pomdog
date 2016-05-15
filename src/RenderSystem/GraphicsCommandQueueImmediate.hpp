@@ -15,16 +15,16 @@ class GraphicsContext;
 class GraphicsCommandQueueImmediate final : public NativeGraphicsCommandQueue {
 public:
     GraphicsCommandQueueImmediate() = delete;
-    GraphicsCommandQueueImmediate(GraphicsCommandQueueImmediate const&) = delete;
-    GraphicsCommandQueueImmediate & operator=(GraphicsCommandQueueImmediate const&) = delete;
+    GraphicsCommandQueueImmediate(const GraphicsCommandQueueImmediate&) = delete;
+    GraphicsCommandQueueImmediate & operator=(const GraphicsCommandQueueImmediate&) = delete;
 
     explicit GraphicsCommandQueueImmediate(
-        std::shared_ptr<GraphicsContext> const& graphicsContext);
+        const std::shared_ptr<GraphicsContext>& graphicsContext);
 
     void Reset() override;
 
     void PushbackCommandList(
-        std::shared_ptr<GraphicsCommandList> const& commandList) override;
+        const std::shared_ptr<GraphicsCommandList>& commandList) override;
 
     void ExecuteCommandLists() override;
 

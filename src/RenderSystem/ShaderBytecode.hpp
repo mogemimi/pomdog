@@ -9,7 +9,7 @@ namespace Detail {
 
 class ShaderBytecode {
 public:
-    void const* Code = nullptr;
+    const void* Code = nullptr;
     std::size_t ByteLength = 0;
 };
 
