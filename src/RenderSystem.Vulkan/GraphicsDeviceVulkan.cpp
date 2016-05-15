@@ -232,8 +232,8 @@ GraphicsDeviceVulkan::CreateGraphicsCommandList()
 //-----------------------------------------------------------------------
 std::unique_ptr<Shader>
 GraphicsDeviceVulkan::CreateShader(
-    ShaderBytecode const& shaderBytecode,
-    ShaderCompileOptions const& compileOptions)
+    const ShaderBytecode& shaderBytecode,
+    const ShaderCompileOptions& compileOptions)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nullptr);
@@ -253,7 +253,10 @@ GraphicsDeviceVulkan::CreateBuffer(
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeBuffer>
 GraphicsDeviceVulkan::CreateBuffer(
-    void const* sourceData,  std::size_t sizeInBytes, BufferUsage bufferUsage, BufferBindMode)
+    const void* sourceData,
+    std::size_t sizeInBytes,
+    BufferUsage bufferUsage,
+    BufferBindMode)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nullptr);
@@ -262,7 +265,7 @@ GraphicsDeviceVulkan::CreateBuffer(
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeSamplerState>
-GraphicsDeviceVulkan::CreateSamplerState(SamplerDescription const& description)
+GraphicsDeviceVulkan::CreateSamplerState(const SamplerDescription& description)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nullptr);
@@ -270,7 +273,7 @@ GraphicsDeviceVulkan::CreateSamplerState(SamplerDescription const& description)
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativePipelineState>
-GraphicsDeviceVulkan::CreatePipelineState(PipelineStateDescription const& description)
+GraphicsDeviceVulkan::CreatePipelineState(const PipelineStateDescription& description)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nullptr);
@@ -278,15 +281,19 @@ GraphicsDeviceVulkan::CreatePipelineState(PipelineStateDescription const& descri
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeEffectReflection>
-GraphicsDeviceVulkan::CreateEffectReflection(PipelineStateDescription const& description,
+GraphicsDeviceVulkan::CreateEffectReflection(
+    const PipelineStateDescription& description,
     NativePipelineState & pipelineState)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeTexture2D>
-GraphicsDeviceVulkan::CreateTexture2D(std::int32_t width, std::int32_t height,
-    std::int32_t mipmapLevels, SurfaceFormat format)
+GraphicsDeviceVulkan::CreateTexture2D(
+    std::int32_t width,
+    std::int32_t height,
+    std::int32_t mipmapLevels,
+    SurfaceFormat format)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nullptr);
@@ -295,7 +302,9 @@ GraphicsDeviceVulkan::CreateTexture2D(std::int32_t width, std::int32_t height,
 }
 //-----------------------------------------------------------------------
 std::unique_ptr<NativeRenderTarget2D>
-GraphicsDeviceVulkan::CreateRenderTarget2D(std::int32_t width, std::int32_t height,
+GraphicsDeviceVulkan::CreateRenderTarget2D(
+    std::int32_t width,
+    std::int32_t height,
     std::int32_t mipmapLevels,
     SurfaceFormat format,
     DepthFormat depthStencilFormat,

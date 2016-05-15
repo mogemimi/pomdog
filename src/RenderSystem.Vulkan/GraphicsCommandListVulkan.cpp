@@ -60,7 +60,7 @@ std::size_t GraphicsCommandListVulkan::GetCount() const noexcept
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandListVulkan::Clear(ClearOptions options, Color const& color, float depth, std::uint8_t stencil)
+void GraphicsCommandListVulkan::Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
@@ -89,12 +89,12 @@ void GraphicsCommandListVulkan::DrawIndexedInstanced(
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandListVulkan::SetViewport(Viewport const& viewport)
+void GraphicsCommandListVulkan::SetViewport(const Viewport& viewport)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandListVulkan::SetScissorRectangle(Rectangle const& rectangle)
+void GraphicsCommandListVulkan::SetScissorRectangle(const Rectangle& rectangle)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
@@ -104,12 +104,12 @@ void GraphicsCommandListVulkan::SetPrimitiveTopology(PrimitiveTopology primitive
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandListVulkan::SetBlendFactor(Color const& blendFactor)
+void GraphicsCommandListVulkan::SetBlendFactor(const Color& blendFactor)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandListVulkan::SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers)
+void GraphicsCommandListVulkan::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
@@ -119,17 +119,17 @@ void GraphicsCommandListVulkan::SetVertexBuffers(std::vector<VertexBufferBinding
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandListVulkan::SetIndexBuffer(std::shared_ptr<IndexBuffer> const& indexBuffer)
+void GraphicsCommandListVulkan::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandListVulkan::SetPipelineState(std::shared_ptr<NativePipelineState> const& pipelineState)
+void GraphicsCommandListVulkan::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandListVulkan::SetConstantBuffer(int index, std::shared_ptr<NativeBuffer> const& constantBuffer)
+void GraphicsCommandListVulkan::SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
@@ -144,12 +144,12 @@ void GraphicsCommandListVulkan::SetTexture(int index)
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandListVulkan::SetTexture(int index, std::shared_ptr<Texture2D> const& texture)
+void GraphicsCommandListVulkan::SetTexture(int index, const std::shared_ptr<Texture2D>& texture)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandListVulkan::SetTexture(int index, std::shared_ptr<RenderTarget2D> const& texture)
+void GraphicsCommandListVulkan::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
@@ -159,7 +159,7 @@ void GraphicsCommandListVulkan::SetRenderTarget()
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandListVulkan::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> const& renderTargets)
+void GraphicsCommandListVulkan::SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }

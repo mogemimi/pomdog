@@ -20,7 +20,7 @@ public:
 
     BufferVulkan(
         ::VkDevice device,
-        void const* sourceData,
+        const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
         VkBufferUsageFlags usageFlags);
@@ -34,7 +34,7 @@ public:
 
     void SetData(
         std::size_t offsetInBytes,
-        void const* source,
+        const void* source,
         std::size_t sizeInBytes) override;
 
     VkBuffer GetBuffer() const;

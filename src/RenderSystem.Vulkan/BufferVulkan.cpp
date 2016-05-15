@@ -65,7 +65,7 @@ BufferVulkan::BufferVulkan(
 //-----------------------------------------------------------------------
 BufferVulkan::BufferVulkan(
     ::VkDevice deviceIn,
-    void const* sourceData,
+    const void* sourceData,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
     VkBufferUsageFlags usageFlags)
@@ -146,7 +146,7 @@ void BufferVulkan::GetData(
 }
 //-----------------------------------------------------------------------
 void BufferVulkan::SetData(
-    std::size_t offsetInBytes, void const* source, std::size_t sizeInBytes)
+    std::size_t offsetInBytes, const void* source, std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(nativeBuffer != nullptr);
 

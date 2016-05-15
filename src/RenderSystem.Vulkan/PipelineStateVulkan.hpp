@@ -14,7 +14,7 @@ class PipelineStateVulkan final : public NativePipelineState {
 public:
     PipelineStateVulkan(
         VkDevice device,
-        PipelineStateDescription const& description);
+        const PipelineStateDescription& description);
 
 private:
 };

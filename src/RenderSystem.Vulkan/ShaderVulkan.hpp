@@ -19,8 +19,8 @@ class ShaderVulkan final : public Shader {
 public:
     ShaderVulkan(
         ::VkDevice device,
-        ShaderBytecode const& shaderBytecode,
-        ShaderCompileOptions const& compileOptions);
+        const ShaderBytecode& shaderBytecode,
+        const ShaderCompileOptions& compileOptions);
 
     ~ShaderVulkan();
 

@@ -11,8 +11,8 @@ namespace Vulkan {
 //-----------------------------------------------------------------------
 ShaderVulkan::ShaderVulkan(
     ::VkDevice deviceIn,
-    ShaderBytecode const& shaderBytecode,
-    ShaderCompileOptions const& compileOptions)
+    const ShaderBytecode& shaderBytecode,
+    const ShaderCompileOptions& compileOptions)
     : device(deviceIn)
     , shaderModule(nullptr)
 {

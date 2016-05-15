@@ -14,7 +14,7 @@ class SamplerStateVulkan final : public NativeSamplerState {
 public:
     SamplerStateVulkan(
         ::VkDevice device,
-        SamplerDescription const& description);
+        const SamplerDescription& description);
 
     ~SamplerStateVulkan();
 

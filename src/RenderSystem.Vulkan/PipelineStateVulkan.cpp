@@ -112,7 +112,7 @@ VkPolygonMode ToVkPolygonMode(FillMode fillMode) noexcept
 //-----------------------------------------------------------------------
 PipelineStateVulkan::PipelineStateVulkan(
     VkDevice device,
-    PipelineStateDescription const& description)
+    const PipelineStateDescription& description)
 {
     POMDOG_ASSERT(device != nullptr);
 

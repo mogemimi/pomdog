@@ -81,7 +81,7 @@ ToTextureFilter(TextureFilter filter)
 //-----------------------------------------------------------------------
 SamplerStateVulkan::SamplerStateVulkan(
     ::VkDevice deviceIn,
-    SamplerDescription const& description)
+    const SamplerDescription& description)
     : device(deviceIn)
     , sampler(nullptr)
 {

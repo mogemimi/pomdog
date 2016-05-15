@@ -14,7 +14,7 @@ class GraphicsCommandQueueVulkan final : public NativeGraphicsCommandQueue {
 public:
     void Reset();
 
-    void PushbackCommandList(std::shared_ptr<GraphicsCommandList> const& commandList);
+    void PushbackCommandList(const std::shared_ptr<GraphicsCommandList>& commandList);
 
     void ExecuteCommandLists();
 

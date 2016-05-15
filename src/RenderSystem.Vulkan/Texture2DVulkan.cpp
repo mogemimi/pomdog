@@ -91,7 +91,7 @@ void Texture2DVulkan::SetData(
     std::int32_t pixelHeight,
     std::int32_t levelCount,
     SurfaceFormat format,
-    void const* pixelData)
+    const void* pixelData)
 {
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);

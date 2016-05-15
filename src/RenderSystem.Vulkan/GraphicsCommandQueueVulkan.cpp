@@ -13,7 +13,7 @@ void GraphicsCommandQueueVulkan::Reset()
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 //-----------------------------------------------------------------------
-void GraphicsCommandQueueVulkan::PushbackCommandList(std::shared_ptr<GraphicsCommandList> const& commandList)
+void GraphicsCommandQueueVulkan::PushbackCommandList(const std::shared_ptr<GraphicsCommandList>& commandList)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
