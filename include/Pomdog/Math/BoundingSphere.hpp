@@ -17,22 +17,22 @@ public:
 public:
     BoundingSphere() noexcept = default;
 
-    BoundingSphere(Vector3 const& center, float radius);
+    BoundingSphere(const Vector3& center, float radius);
 
-    bool operator==(BoundingSphere const&) const noexcept;
-    bool operator!=(BoundingSphere const&) const noexcept;
+    bool operator==(const BoundingSphere&) const noexcept;
+    bool operator!=(const BoundingSphere&) const noexcept;
 
-    ContainmentType Contains(Vector3 const& point) const;
+    ContainmentType Contains(const Vector3& point) const;
 
-    ContainmentType Contains(BoundingBox const& box) const;
+    ContainmentType Contains(const BoundingBox& box) const;
 
-    ContainmentType Contains(BoundingSphere const& sphere) const;
+    ContainmentType Contains(const BoundingSphere& sphere) const;
 
-    bool Intersects(BoundingBox const& box) const;
+    bool Intersects(const BoundingBox& box) const;
 
-    bool Intersects(BoundingSphere const& sphere) const;
+    bool Intersects(const BoundingSphere& sphere) const;
 
-    Optional<float> Intersects(Ray const& ray) const;
+    Optional<float> Intersects(const Ray& ray) const;
 };
 
 } // namespace Pomdog

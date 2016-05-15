@@ -47,7 +47,7 @@ struct MathConstants<double>
 namespace MathHelper {
 //-------------------------------------------------------------------
 template <typename T>
-T Clamp(T const& x, T const& min, T const& max)
+T Clamp(const T& x, const T& min, const T& max)
 {
     static_assert(std::is_arithmetic<T>::value
         || Detail::IsTaggedFloatingPoint<T>::value, "");
@@ -62,7 +62,7 @@ T Clamp(T const& x, T const& min, T const& max)
 }
 //-------------------------------------------------------------------
 template <typename T>
-T Saturate(T const& x)
+T Saturate(const T& x)
 {
     static_assert(std::is_floating_point<T>::value ||
         Detail::IsTaggedFloatingPoint<T>::value,
@@ -71,7 +71,7 @@ T Saturate(T const& x)
 }
 //-------------------------------------------------------------------
 template <typename T>
-T Lerp(T const& source1, T const& source2, T const& amount) noexcept
+T Lerp(const T& source1, const T& source2, const T& amount) noexcept
 {
     static_assert(std::is_floating_point<T>::value ||
         Detail::IsTaggedFloatingPoint<T>::value,
@@ -80,7 +80,7 @@ T Lerp(T const& source1, T const& source2, T const& amount) noexcept
 }
 //-------------------------------------------------------------------
 template <typename T>
-T SmoothStep(T const& min, T const& max, T const& amount)
+T SmoothStep(const T& min, const T& max, const T& amount)
 {
     static_assert(std::is_floating_point<T>::value ||
         Detail::IsTaggedFloatingPoint<T>::value,

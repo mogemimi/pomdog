@@ -3,6 +3,7 @@
 #include "Pomdog/Math/detail/FloatingPointVector4.hpp"
 #include "Pomdog/Math/detail/FloatingPointVector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <cfloat>
 #include <cmath>
 #include <limits>
 #include <utility>
@@ -11,7 +12,7 @@ namespace Pomdog {
 namespace Detail {
 
 template <typename T>
-FloatingPointVector4<T>::FloatingPointVector4(FloatingPointVector3<T> const& xyz, T w) noexcept
+FloatingPointVector4<T>::FloatingPointVector4(const FloatingPointVector3<T>& xyz, T w) noexcept
     : X(xyz.X), Y(xyz.Y), Z(xyz.Z), W(w)
 {}
 //-----------------------------------------------------------------------
@@ -21,7 +22,7 @@ FloatingPointVector4<T>::FloatingPointVector4(T x, T y, T z, T w) noexcept
 {}
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector4<T> & FloatingPointVector4<T>::operator+=(FloatingPointVector4 const& other) noexcept
+FloatingPointVector4<T> & FloatingPointVector4<T>::operator+=(const FloatingPointVector4& other) noexcept
 {
     X += other.X;
     Y += other.Y;
@@ -31,7 +32,7 @@ FloatingPointVector4<T> & FloatingPointVector4<T>::operator+=(FloatingPointVecto
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector4<T> & FloatingPointVector4<T>::operator-=(FloatingPointVector4 const& other) noexcept
+FloatingPointVector4<T> & FloatingPointVector4<T>::operator-=(const FloatingPointVector4& other) noexcept
 {
     X -= other.X;
     Y -= other.Y;
@@ -73,7 +74,7 @@ FloatingPointVector4<T> FloatingPointVector4<T>::operator-() const noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector4<T> FloatingPointVector4<T>::operator+(FloatingPointVector4 const& other) const noexcept
+FloatingPointVector4<T> FloatingPointVector4<T>::operator+(const FloatingPointVector4& other) const noexcept
 {
     return FloatingPointVector4(
         X + other.X,
@@ -83,7 +84,7 @@ FloatingPointVector4<T> FloatingPointVector4<T>::operator+(FloatingPointVector4 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector4<T> FloatingPointVector4<T>::operator-(FloatingPointVector4 const& other) const noexcept
+FloatingPointVector4<T> FloatingPointVector4<T>::operator-(const FloatingPointVector4& other) const noexcept
 {
     return FloatingPointVector4(
         X - other.X,
@@ -93,7 +94,7 @@ FloatingPointVector4<T> FloatingPointVector4<T>::operator-(FloatingPointVector4 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector4<T> FloatingPointVector4<T>::operator*(FloatingPointVector4 const& other) const noexcept
+FloatingPointVector4<T> FloatingPointVector4<T>::operator*(const FloatingPointVector4& other) const noexcept
 {
     return FloatingPointVector4(
         X * other.X,
@@ -103,7 +104,7 @@ FloatingPointVector4<T> FloatingPointVector4<T>::operator*(FloatingPointVector4 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector4<T> FloatingPointVector4<T>::operator/(FloatingPointVector4 const& other) const
+FloatingPointVector4<T> FloatingPointVector4<T>::operator/(const FloatingPointVector4& other) const
 {
     POMDOG_ASSERT(other != FloatingPointVector4<T>(0, 0, 0, 0));
     return FloatingPointVector4(
@@ -137,13 +138,13 @@ FloatingPointVector4<T> FloatingPointVector4<T>::operator/(T scaleFactor) const
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointVector4<T>::operator==(FloatingPointVector4 const& other) const noexcept
+bool FloatingPointVector4<T>::operator==(const FloatingPointVector4& other) const noexcept
 {
     return X == other.X && Y == other.Y && Z == other.Z && W == other.W;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointVector4<T>::operator!=(FloatingPointVector4 const& other) const noexcept
+bool FloatingPointVector4<T>::operator!=(const FloatingPointVector4& other) const noexcept
 {
     return X != other.X || Y != other.Y || Z != other.Z || W != other.W;
 }
@@ -161,19 +162,19 @@ T FloatingPointVector4<T>::LengthSquared() const noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointVector4<T>::Distance(FloatingPointVector4 const& a, FloatingPointVector4 const& b) noexcept
+T FloatingPointVector4<T>::Distance(const FloatingPointVector4& a, const FloatingPointVector4& b) noexcept
 {
     return (a - b).Length();
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointVector4<T>::DistanceSquared(FloatingPointVector4 const& a, FloatingPointVector4 const& b) noexcept
+T FloatingPointVector4<T>::DistanceSquared(const FloatingPointVector4& a, const FloatingPointVector4& b) noexcept
 {
     return (a - b).LengthSquared();
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointVector4<T>::Dot(FloatingPointVector4 const& a, FloatingPointVector4 const& b) noexcept
+T FloatingPointVector4<T>::Dot(const FloatingPointVector4& a, const FloatingPointVector4& b) noexcept
 {
     return a.X * b.X + a.Y * b.Y + a.Z * b.Z + a.W * b.W;
 }
@@ -186,7 +187,7 @@ void FloatingPointVector4<T>::Normalize() noexcept
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector4<T>
-FloatingPointVector4<T>::Normalize(FloatingPointVector4 const& source) noexcept
+FloatingPointVector4<T>::Normalize(const FloatingPointVector4& source) noexcept
 {
     FloatingPointVector4 result;
     Normalize(source, result);
@@ -194,7 +195,7 @@ FloatingPointVector4<T>::Normalize(FloatingPointVector4 const& source) noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-void FloatingPointVector4<T>::Normalize(FloatingPointVector4 const& source, FloatingPointVector4 & result) noexcept
+void FloatingPointVector4<T>::Normalize(const FloatingPointVector4& source, FloatingPointVector4 & result) noexcept
 {
     auto const length = source.Length();
 
@@ -210,7 +211,7 @@ void FloatingPointVector4<T>::Normalize(FloatingPointVector4 const& source, Floa
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T const* FloatingPointVector4<T>::Data() const noexcept
+const T* FloatingPointVector4<T>::Data() const noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return &X;
@@ -224,7 +225,7 @@ T* FloatingPointVector4<T>::Data() noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector4<T> operator*(T scaleFactor, FloatingPointVector4<T> const& vector) noexcept
+FloatingPointVector4<T> operator*(T scaleFactor, const FloatingPointVector4<T>& vector) noexcept
 {
     return FloatingPointVector4<T>(
         scaleFactor * vector.X,
@@ -237,19 +238,19 @@ FloatingPointVector4<T> operator*(T scaleFactor, FloatingPointVector4<T> const& 
 template class FloatingPointVector4<float>;
 
 template FloatingPointVector4<float>
-operator*<float>(float, FloatingPointVector4<float> const&) noexcept;
+operator*<float>(float, const FloatingPointVector4<float>&) noexcept;
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointVector4<double>;
 
 template FloatingPointVector4<double>
-operator*<double>(double, FloatingPointVector4<double> const&) noexcept;
+operator*<double>(double, const FloatingPointVector4<double>&) noexcept;
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointVector4<long double>;
 template FloatingPointVector4<long double>
-operator*<long double>(long double, FloatingPointVector4<long double> const&) noexcept;
+operator*<long double>(long double, const FloatingPointVector4<long double>&) noexcept;
 #endif
 
 } // namespace Detail

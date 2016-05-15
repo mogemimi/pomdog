@@ -54,7 +54,7 @@ Color::Color(
     : R(r), G(g), B(b), A(a)
 {}
 //-----------------------------------------------------------------------
-Color::Color(Vector3 const& vector)
+Color::Color(const Vector3& vector)
     : R(PackFromNormal(vector.X))
     , G(PackFromNormal(vector.Y))
     , B(PackFromNormal(vector.Z))
@@ -65,7 +65,7 @@ Color::Color(Vector3 const& vector)
     POMDOG_ASSERT(vector.Z >= 0.0f && vector.Z <= 1.0f);
 }
 //-----------------------------------------------------------------------
-Color::Color(Vector4 const& vector)
+Color::Color(const Vector4& vector)
     : R(PackFromNormal(vector.X))
     , G(PackFromNormal(vector.Y))
     , B(PackFromNormal(vector.Z))
@@ -77,12 +77,12 @@ Color::Color(Vector4 const& vector)
     POMDOG_ASSERT(vector.W >= 0.0f && vector.W <= 1.0f);
 }
 //-----------------------------------------------------------------------
-bool Color::operator==(Color const& color) const noexcept
+bool Color::operator==(const Color& color) const noexcept
 {
     return R == color.R && G == color.G && B == color.B && A == color.A;
 }
 //-----------------------------------------------------------------------
-bool Color::operator!=(Color const& color) const noexcept
+bool Color::operator!=(const Color& color) const noexcept
 {
     return R == color.R || G == color.G || B == color.B || A == color.A;
 }
@@ -119,7 +119,7 @@ Color Color::FromPackedValue(std::uint32_t packedValue)
     return std::move(color);
 }
 //-----------------------------------------------------------------------
-Color Color::Lerp(Color const& source1, Color const& source2, float amount)
+Color Color::Lerp(const Color& source1, const Color& source2, float amount)
 {
     Color color;
     color.R = PackUint8(source1.R + amount * (source2.R - source1.R));
@@ -129,7 +129,7 @@ Color Color::Lerp(Color const& source1, Color const& source2, float amount)
     return std::move(color);
 }
 //-----------------------------------------------------------------------
-Color Color::SmoothStep(Color const& source1, Color const& source2, float amount)
+Color Color::SmoothStep(const Color& source1, const Color& source2, float amount)
 {
     Color color;
     color.R = PackUint8(MathHelper::SmoothStep<float>(source1.R, source2.R, amount));
@@ -139,7 +139,7 @@ Color Color::SmoothStep(Color const& source1, Color const& source2, float amount
     return std::move(color);
 }
 //-----------------------------------------------------------------------
-Color Color::Multiply(Color const& color, float scale)
+Color Color::Multiply(const Color& color, float scale)
 {
     Color result;
     result.R = PackUint8(MathHelper::Clamp(color.R * scale, 0.0f, 255.0f));
@@ -149,7 +149,7 @@ Color Color::Multiply(Color const& color, float scale)
     return std::move(result);
 }
 //-----------------------------------------------------------------------
-Color Color::Multiply(Color const& color1, Color const& color2)
+Color Color::Multiply(const Color& color1, const Color& color2)
 {
     Color result;
     result.R = PackUint8(MathHelper::Clamp((color1.R / 255.0f) * color2.R, 0.0f, 255.0f));

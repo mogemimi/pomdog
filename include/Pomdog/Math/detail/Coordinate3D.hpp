@@ -25,8 +25,8 @@ public:
     Coordinate3D(T x, T y, T z) noexcept;
 
     // Assignment operators:
-    Coordinate3D & operator+=(Coordinate3D const&) noexcept;
-    Coordinate3D & operator-=(Coordinate3D const&) noexcept;
+    Coordinate3D & operator+=(const Coordinate3D&) noexcept;
+    Coordinate3D & operator-=(const Coordinate3D&) noexcept;
     Coordinate3D & operator*=(T scaleFactor) noexcept;
     Coordinate3D & operator/=(T scaleFactor);
 
@@ -35,26 +35,26 @@ public:
     Coordinate3D operator-() const noexcept;
 
     // Binary operators:
-    Coordinate3D operator+(Coordinate3D const&) const noexcept;
-    Coordinate3D operator-(Coordinate3D const&) const noexcept;
-    Coordinate3D operator*(Coordinate3D const&) const noexcept;
-    Coordinate3D operator/(Coordinate3D const&) const;
+    Coordinate3D operator+(const Coordinate3D&) const noexcept;
+    Coordinate3D operator-(const Coordinate3D&) const noexcept;
+    Coordinate3D operator*(const Coordinate3D&) const noexcept;
+    Coordinate3D operator/(const Coordinate3D&) const;
     Coordinate3D operator*(T scaleFactor) const noexcept;
     Coordinate3D operator/(T scaleFactor) const;
 
-    bool operator==(Coordinate3D const&) const noexcept;
-    bool operator!=(Coordinate3D const&) const noexcept;
+    bool operator==(const Coordinate3D&) const noexcept;
+    bool operator!=(const Coordinate3D&) const noexcept;
 
     static Coordinate3D const Zero;
 };
 
 template <typename T>
 Coordinate3D<T> POMDOG_EXPORT
-operator*(T scaleFactor, Coordinate3D<T> const& coordinate) noexcept;
+operator*(T scaleFactor, const Coordinate3D<T>& coordinate) noexcept;
 
 template <typename T>
 Coordinate3D<T> POMDOG_EXPORT
-operator/(T scaleFactor, Coordinate3D<T> const& coordinate);
+operator/(T scaleFactor, const Coordinate3D<T>& coordinate);
 
 } // namespace Detail
 } // namespace Pomdog

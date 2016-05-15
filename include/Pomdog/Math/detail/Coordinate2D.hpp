@@ -25,8 +25,8 @@ public:
     Coordinate2D(T x, T y) noexcept;
 
     // Assignment operators:
-    Coordinate2D & operator+=(Coordinate2D const&) noexcept;
-    Coordinate2D & operator-=(Coordinate2D const&) noexcept;
+    Coordinate2D & operator+=(const Coordinate2D&) noexcept;
+    Coordinate2D & operator-=(const Coordinate2D&) noexcept;
     Coordinate2D & operator*=(T scaleFactor) noexcept;
     Coordinate2D & operator/=(T scaleFactor);
 
@@ -35,26 +35,26 @@ public:
     Coordinate2D operator-() const noexcept;
 
     // Binary operators:
-    Coordinate2D operator+(Coordinate2D const&) const noexcept;
-    Coordinate2D operator-(Coordinate2D const&) const noexcept;
-    Coordinate2D operator*(Coordinate2D const&) const noexcept;
-    Coordinate2D operator/(Coordinate2D const&) const;
+    Coordinate2D operator+(const Coordinate2D&) const noexcept;
+    Coordinate2D operator-(const Coordinate2D&) const noexcept;
+    Coordinate2D operator*(const Coordinate2D&) const noexcept;
+    Coordinate2D operator/(const Coordinate2D&) const;
     Coordinate2D operator*(T scaleFactor) const noexcept;
     Coordinate2D operator/(T scaleFactor) const;
 
-    bool operator==(Coordinate2D const&) const noexcept;
-    bool operator!=(Coordinate2D const&) const noexcept;
+    bool operator==(const Coordinate2D&) const noexcept;
+    bool operator!=(const Coordinate2D&) const noexcept;
 
     static Coordinate2D const Zero;
 };
 
 template <typename T>
 Coordinate2D<T> POMDOG_EXPORT
-operator*(T scaleFactor, Coordinate2D<T> const& coordinate) noexcept;
+operator*(T scaleFactor, const Coordinate2D<T>& coordinate) noexcept;
 
 template <typename T>
 Coordinate2D<T> POMDOG_EXPORT
-operator/(T scaleFactor, Coordinate2D<T> const& coordinate);
+operator/(T scaleFactor, const Coordinate2D<T>& coordinate);
 
 } // namespace Detail
 } // namespace Pomdog

@@ -6,7 +6,6 @@
 #include "Pomdog/Basic/Export.hpp"
 #include <cstddef>
 #include <cstdint>
-#include <cfloat>
 #include <type_traits>
 
 namespace Pomdog {
@@ -28,11 +27,11 @@ public:
     ///@brief Construct from floating-point values.
     FloatingPointVector3(T x, T y, T z) noexcept;
 
-    FloatingPointVector3(FloatingPointVector2<T> const& vec, T z) noexcept;
+    FloatingPointVector3(const FloatingPointVector2<T>& vec, T z) noexcept;
 
     // Assignment operators:
-    FloatingPointVector3 & operator+=(FloatingPointVector3 const&) noexcept;
-    FloatingPointVector3 & operator-=(FloatingPointVector3 const&) noexcept;
+    FloatingPointVector3 & operator+=(const FloatingPointVector3&) noexcept;
+    FloatingPointVector3 & operator-=(const FloatingPointVector3&) noexcept;
     FloatingPointVector3 & operator*=(T) noexcept;
     FloatingPointVector3 & operator/=(T);
 
@@ -41,53 +40,65 @@ public:
     FloatingPointVector3 operator-() const noexcept;
 
     // Binary operators:
-    FloatingPointVector3 operator+(FloatingPointVector3 const&) const noexcept;
-    FloatingPointVector3 operator-(FloatingPointVector3 const&) const noexcept;
-    FloatingPointVector3 operator*(FloatingPointVector3 const&) const noexcept;
-    FloatingPointVector3 operator/(FloatingPointVector3 const&) const;
+    FloatingPointVector3 operator+(const FloatingPointVector3&) const noexcept;
+    FloatingPointVector3 operator-(const FloatingPointVector3&) const noexcept;
+    FloatingPointVector3 operator*(const FloatingPointVector3&) const noexcept;
+    FloatingPointVector3 operator/(const FloatingPointVector3&) const;
     FloatingPointVector3 operator*(T scaleFactor) const noexcept;
     FloatingPointVector3 operator/(T scaleFactor) const;
 
-    bool operator==(FloatingPointVector3 const& other) const noexcept;
-    bool operator!=(FloatingPointVector3 const& other) const noexcept;
+    bool operator==(const FloatingPointVector3& other) const noexcept;
+    bool operator!=(const FloatingPointVector3& other) const noexcept;
 
     T Length() const noexcept;
 
     T LengthSquared() const noexcept;
 
-    static T Distance(FloatingPointVector3 const& a, FloatingPointVector3 const& b) noexcept;
+    static T Distance(const FloatingPointVector3& a, const FloatingPointVector3& b) noexcept;
 
-    static T DistanceSquared(FloatingPointVector3 const& a, FloatingPointVector3 const& b) noexcept;
+    static T DistanceSquared(const FloatingPointVector3& a, const FloatingPointVector3& b) noexcept;
 
-    static T Dot(FloatingPointVector3 const& a, FloatingPointVector3 const& b) noexcept;
+    static T Dot(const FloatingPointVector3& a, const FloatingPointVector3& b) noexcept;
 
-    static FloatingPointVector3 Cross(FloatingPointVector3 const& a, FloatingPointVector3 const& b) noexcept;
+    static FloatingPointVector3 Cross(const FloatingPointVector3& a, const FloatingPointVector3& b) noexcept;
 
-    static FloatingPointVector3 Min(FloatingPointVector3 const& a, FloatingPointVector3 const& b) noexcept;
+    static FloatingPointVector3 Min(const FloatingPointVector3& a, const FloatingPointVector3& b) noexcept;
 
-    static FloatingPointVector3 Max(FloatingPointVector3 const& a, FloatingPointVector3 const& b) noexcept;
+    static FloatingPointVector3 Max(const FloatingPointVector3& a, const FloatingPointVector3& b) noexcept;
 
-    static FloatingPointVector3 Clamp(FloatingPointVector3 const& source,
-        FloatingPointVector3 const& min, FloatingPointVector3 const& max) noexcept;
+    static FloatingPointVector3 Clamp(
+        const FloatingPointVector3& source,
+        const FloatingPointVector3& min,
+        const FloatingPointVector3& max) noexcept;
 
-    static FloatingPointVector3 Lerp(FloatingPointVector3 const& source1, FloatingPointVector3 const& source2, T amount);
+    static FloatingPointVector3 Lerp(
+        const FloatingPointVector3& source1,
+        const FloatingPointVector3& source2,
+        T amount);
 
-    static FloatingPointVector3 SmoothStep(FloatingPointVector3 const& source1, FloatingPointVector3 const& source2, T amount);
+    static FloatingPointVector3 SmoothStep(
+        const FloatingPointVector3& source1,
+        const FloatingPointVector3& source2,
+        T amount);
 
     void Normalize() noexcept;
 
-    static FloatingPointVector3 Normalize(FloatingPointVector3 const& source) noexcept;
+    static FloatingPointVector3 Normalize(const FloatingPointVector3& source) noexcept;
 
-    static void Normalize(FloatingPointVector3 const&, FloatingPointVector3 & result) noexcept;
+    static void Normalize(const FloatingPointVector3&, FloatingPointVector3 & result) noexcept;
 
-    static FloatingPointVector3 Transform(FloatingPointVector3 const& position, FloatingPointMatrix4x4<T> const& matrix) noexcept;
+    static FloatingPointVector3 Transform(
+        const FloatingPointVector3& position,
+        const FloatingPointMatrix4x4<T>& matrix) noexcept;
 
-    static FloatingPointVector3 TransformNormal(FloatingPointVector3 const& normal, FloatingPointMatrix4x4<T> const& matrix) noexcept;
+    static FloatingPointVector3 TransformNormal(
+        const FloatingPointVector3& normal,
+        const FloatingPointMatrix4x4<T>& matrix) noexcept;
 
-    static FloatingPointVector3 ToEulerAngles(FloatingPointQuaternion<T> const& quaternion);
+    static FloatingPointVector3 ToEulerAngles(const FloatingPointQuaternion<T>& quaternion);
 
     ///@brief Returns pointer to the first element.
-    T const* Data() const noexcept;
+    const T* Data() const noexcept;
 
     ///@brief Returns pointer to the first element.
     T* Data() noexcept;
@@ -107,7 +118,7 @@ public:
 
 template <typename T>
 FloatingPointVector3<T> POMDOG_EXPORT
-operator*(T scaleFactor, FloatingPointVector3<T> const& vector) noexcept;
+operator*(T scaleFactor, const FloatingPointVector3<T>& vector) noexcept;
 
 } // namespace Detail
 } // namespace Pomdog

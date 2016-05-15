@@ -8,26 +8,26 @@
 
 namespace Pomdog {
 
-BoundingSphere::BoundingSphere(Vector3 const& center, float radius)
+BoundingSphere::BoundingSphere(const Vector3& center, float radius)
     : Center(center)
     , Radius(radius)
 {
     POMDOG_ASSERT(radius >= 0);
 }
 //-----------------------------------------------------------------------
-bool BoundingSphere::operator==(BoundingSphere const& sphere) const noexcept
+bool BoundingSphere::operator==(const BoundingSphere& sphere) const noexcept
 {
     return this->Radius == sphere.Radius
         && this->Center == sphere.Center;
 }
 //-----------------------------------------------------------------------
-bool BoundingSphere::operator!=(BoundingSphere const& sphere) const noexcept
+bool BoundingSphere::operator!=(const BoundingSphere& sphere) const noexcept
 {
     return this->Radius != sphere.Radius
         || this->Center != sphere.Center;
 }
 //-----------------------------------------------------------------------
-ContainmentType BoundingSphere::Contains(Vector3 const& point) const
+ContainmentType BoundingSphere::Contains(const Vector3& point) const
 {
     auto distanceSquared = Vector3::DistanceSquared(point, Center);
     auto radiusSquared = Radius * Radius;
@@ -40,7 +40,7 @@ ContainmentType BoundingSphere::Contains(Vector3 const& point) const
     return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------
-ContainmentType BoundingSphere::Contains(BoundingBox const& box) const
+ContainmentType BoundingSphere::Contains(const BoundingBox& box) const
 {
     bool inside = true;
     for (auto & corner : box.GetCorners()) {
@@ -58,7 +58,7 @@ ContainmentType BoundingSphere::Contains(BoundingBox const& box) const
     return ContainmentType::Disjoint;
 }
 //-----------------------------------------------------------------------
-ContainmentType BoundingSphere::Contains(BoundingSphere const& sphere) const
+ContainmentType BoundingSphere::Contains(const BoundingSphere& sphere) const
 {
     auto distance = Vector3::Distance(this->Center, sphere.Center);
     if (distance > this->Radius + sphere.Radius) {
@@ -70,18 +70,18 @@ ContainmentType BoundingSphere::Contains(BoundingSphere const& sphere) const
     return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------
-bool BoundingSphere::Intersects(BoundingBox const& box) const
+bool BoundingSphere::Intersects(const BoundingBox& box) const
 {
     return box.Intersects(*this);
 }
 //-----------------------------------------------------------------------
-bool BoundingSphere::Intersects(BoundingSphere const& sphere) const
+bool BoundingSphere::Intersects(const BoundingSphere& sphere) const
 {
     auto distance = Vector3::Distance(this->Center, sphere.Center);
     return distance <= this->Radius + sphere.Radius;
 }
 //-----------------------------------------------------------------------
-Optional<float> BoundingSphere::Intersects(Ray const& ray) const
+Optional<float> BoundingSphere::Intersects(const Ray& ray) const
 {
     return ray.Intersects(*this);
 }

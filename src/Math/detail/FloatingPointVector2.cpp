@@ -6,6 +6,7 @@
 #include "Pomdog/Math/detail/FloatingPointQuaternion.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <cfloat>
 #include <cmath>
 #include <limits>
 
@@ -21,7 +22,7 @@ FloatingPointVector2<T>::FloatingPointVector2(T x, T y) noexcept
 {}
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector2<T>& FloatingPointVector2<T>::operator+=(FloatingPointVector2 const& other) noexcept
+FloatingPointVector2<T>& FloatingPointVector2<T>::operator+=(const FloatingPointVector2& other) noexcept
 {
     this->X += other.X;
     this->Y += other.Y;
@@ -29,7 +30,7 @@ FloatingPointVector2<T>& FloatingPointVector2<T>::operator+=(FloatingPointVector
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector2<T>& FloatingPointVector2<T>::operator-=(FloatingPointVector2 const& other) noexcept
+FloatingPointVector2<T>& FloatingPointVector2<T>::operator-=(const FloatingPointVector2& other) noexcept
 {
     this->X -= other.X;
     this->Y -= other.Y;
@@ -80,37 +81,37 @@ FloatingPointVector2<T> FloatingPointVector2<T>::operator/(T scaleFactor) const
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector2<T> FloatingPointVector2<T>::operator+(FloatingPointVector2 const& other) const noexcept
+FloatingPointVector2<T> FloatingPointVector2<T>::operator+(const FloatingPointVector2& other) const noexcept
 {
     return FloatingPointVector2(X + other.X, Y + other.Y);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector2<T> FloatingPointVector2<T>::operator-(FloatingPointVector2 const& other) const noexcept
+FloatingPointVector2<T> FloatingPointVector2<T>::operator-(const FloatingPointVector2& other) const noexcept
 {
     return FloatingPointVector2(X - other.X, Y - other.Y);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector2<T> FloatingPointVector2<T>::operator*(FloatingPointVector2 const& other) const noexcept
+FloatingPointVector2<T> FloatingPointVector2<T>::operator*(const FloatingPointVector2& other) const noexcept
 {
     return FloatingPointVector2(X * other.X, Y * other.Y);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector2<T> FloatingPointVector2<T>::operator/(FloatingPointVector2 const& other) const
+FloatingPointVector2<T> FloatingPointVector2<T>::operator/(const FloatingPointVector2& other) const
 {
     return FloatingPointVector2(X / other.X, Y / other.Y);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointVector2<T>::operator==(FloatingPointVector2 const& other) const noexcept
+bool FloatingPointVector2<T>::operator==(const FloatingPointVector2& other) const noexcept
 {
     return X == other.X && Y == other.Y;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointVector2<T>::operator!=(FloatingPointVector2 const& other) const noexcept
+bool FloatingPointVector2<T>::operator!=(const FloatingPointVector2& other) const noexcept
 {
     return X != other.X || Y != other.Y;
 }
@@ -128,46 +129,46 @@ T FloatingPointVector2<T>::LengthSquared() const noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointVector2<T>::Distance(FloatingPointVector2 const& a, FloatingPointVector2 const& b) noexcept
+T FloatingPointVector2<T>::Distance(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept
 {
     return (a - b).Length();
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointVector2<T>::DistanceSquared(FloatingPointVector2 const& a, FloatingPointVector2 const& b) noexcept
+T FloatingPointVector2<T>::DistanceSquared(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept
 {
     return (a - b).LengthSquared();
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointVector2<T>::Dot(FloatingPointVector2 const& a, FloatingPointVector2 const& b) noexcept
+T FloatingPointVector2<T>::Dot(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept
 {
     return a.X * b.X + a.Y * b.Y;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointVector2<T>::Cross(FloatingPointVector2 const& a, FloatingPointVector2 const& b) noexcept
+T FloatingPointVector2<T>::Cross(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept
 {
     return a.X * b.Y - a.Y * b.X;
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>
-FloatingPointVector2<T>::Min(FloatingPointVector2 const& a, FloatingPointVector2 const& b) noexcept
+FloatingPointVector2<T>::Min(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept
 {
     return FloatingPointVector2{std::min(a.X, b.X), std::min(a.Y, b.Y)};
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>
-FloatingPointVector2<T>::Max(FloatingPointVector2 const& a, FloatingPointVector2 const& b) noexcept
+FloatingPointVector2<T>::Max(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept
 {
     return FloatingPointVector2{std::max(a.X, b.X), std::max(a.Y, b.Y)};
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>
-FloatingPointVector2<T>::Clamp(FloatingPointVector2 const& source, FloatingPointVector2 const& min, FloatingPointVector2 const& max) noexcept
+FloatingPointVector2<T>::Clamp(const FloatingPointVector2& source, const FloatingPointVector2& min, const FloatingPointVector2& max) noexcept
 {
     return FloatingPointVector2{
         MathHelper::Clamp(source.X, min.X, max.X),
@@ -176,7 +177,7 @@ FloatingPointVector2<T>::Clamp(FloatingPointVector2 const& source, FloatingPoint
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>
-FloatingPointVector2<T>::Lerp(FloatingPointVector2 const& source1, FloatingPointVector2 const& source2, T amount)
+FloatingPointVector2<T>::Lerp(const FloatingPointVector2& source1, const FloatingPointVector2& source2, T amount)
 {
     return FloatingPointVector2(
         MathHelper::Lerp(source1.X, source2.X, amount),
@@ -185,7 +186,7 @@ FloatingPointVector2<T>::Lerp(FloatingPointVector2 const& source1, FloatingPoint
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>
-FloatingPointVector2<T>::SmoothStep(FloatingPointVector2 const& source1, FloatingPointVector2 const& source2, T amount)
+FloatingPointVector2<T>::SmoothStep(const FloatingPointVector2& source1, const FloatingPointVector2& source2, T amount)
 {
     return FloatingPointVector2(
         MathHelper::SmoothStep(source1.X, source2.X, amount),
@@ -200,7 +201,7 @@ void FloatingPointVector2<T>::Normalize() noexcept
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>
-FloatingPointVector2<T>::Normalize(FloatingPointVector2 const& source) noexcept
+FloatingPointVector2<T>::Normalize(const FloatingPointVector2& source) noexcept
 {
     FloatingPointVector2 result;
     Normalize(source, result);
@@ -209,7 +210,7 @@ FloatingPointVector2<T>::Normalize(FloatingPointVector2 const& source) noexcept
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointVector2<T>::Normalize(FloatingPointVector2 const& source, FloatingPointVector2 & result) noexcept
+FloatingPointVector2<T>::Normalize(const FloatingPointVector2& source, FloatingPointVector2 & result) noexcept
 {
     auto const length = source.Length();
 
@@ -225,7 +226,7 @@ FloatingPointVector2<T>::Normalize(FloatingPointVector2 const& source, FloatingP
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>
-FloatingPointVector2<T>::Transform(FloatingPointVector2 const& position, FloatingPointMatrix3x2<T> const& matrix) noexcept
+FloatingPointVector2<T>::Transform(const FloatingPointVector2& position, const FloatingPointMatrix3x2<T>& matrix) noexcept
 {
     return FloatingPointVector2(
         (position.X * matrix.m[0][0]) + (position.Y * matrix.m[1][0]) + matrix.m[2][0],
@@ -234,7 +235,7 @@ FloatingPointVector2<T>::Transform(FloatingPointVector2 const& position, Floatin
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>
-FloatingPointVector2<T>::Transform(FloatingPointVector2 const& position, FloatingPointMatrix4x4<T> const& matrix) noexcept
+FloatingPointVector2<T>::Transform(const FloatingPointVector2& position, const FloatingPointMatrix4x4<T>& matrix) noexcept
 {
     return FloatingPointVector2(
         (position.X * matrix.m[0][0]) + (position.Y * matrix.m[1][0]) + matrix.m[3][0],
@@ -243,7 +244,7 @@ FloatingPointVector2<T>::Transform(FloatingPointVector2 const& position, Floatin
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>
-FloatingPointVector2<T>::Transform(FloatingPointVector2 const& position, FloatingPointQuaternion<T> const& rotation) noexcept
+FloatingPointVector2<T>::Transform(const FloatingPointVector2& position, const FloatingPointQuaternion<T>& rotation) noexcept
 {
     auto const x = 2 * (position.Y * -rotation.Z);
     auto const y = 2 * (position.X * rotation.Z);
@@ -256,7 +257,7 @@ FloatingPointVector2<T>::Transform(FloatingPointVector2 const& position, Floatin
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointVector2<T>
-FloatingPointVector2<T>::TransformNormal(FloatingPointVector2 const& normal, FloatingPointMatrix4x4<T> const& matrix) noexcept
+FloatingPointVector2<T>::TransformNormal(const FloatingPointVector2& normal, const FloatingPointMatrix4x4<T>& matrix) noexcept
 {
     return FloatingPointVector2(
         (normal.X * matrix.m[0][0]) + (normal.Y * matrix.m[1][0]),
@@ -264,7 +265,7 @@ FloatingPointVector2<T>::TransformNormal(FloatingPointVector2 const& normal, Flo
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T const* FloatingPointVector2<T>::Data() const noexcept
+const T* FloatingPointVector2<T>::Data() const noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return &X;
@@ -278,7 +279,7 @@ T* FloatingPointVector2<T>::Data() noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointVector2<T> operator*(T scaleFactor, FloatingPointVector2<T> const& vector) noexcept
+FloatingPointVector2<T> operator*(T scaleFactor, const FloatingPointVector2<T>& vector) noexcept
 {
     return FloatingPointVector2<T>(scaleFactor * vector.X, scaleFactor * vector.Y);
 }
@@ -287,20 +288,20 @@ FloatingPointVector2<T> operator*(T scaleFactor, FloatingPointVector2<T> const& 
 template class FloatingPointVector2<float>;
 
 template FloatingPointVector2<float>
-operator*<float>(float, FloatingPointVector2<float> const&) noexcept;
+operator*<float>(float, const FloatingPointVector2<float>&) noexcept;
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointVector2<double>;
 
 template FloatingPointVector2<double>
-operator*<double>(double, FloatingPointVector2<double> const&) noexcept;
+operator*<double>(double, const FloatingPointVector2<double>&) noexcept;
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointVector2<long double>;
 
 template FloatingPointVector2<long double>
-operator*<long double>(long double, FloatingPointVector2<long double> const&) noexcept;
+operator*<long double>(long double, const FloatingPointVector2<long double>&) noexcept;
 #endif
 
 } // namespace Detail

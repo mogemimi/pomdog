@@ -6,7 +6,6 @@
 #include "Pomdog/Basic/Export.hpp"
 #include <cstddef>
 #include <cstdint>
-#include <cfloat>
 #include <type_traits>
 
 namespace Pomdog {
@@ -28,9 +27,9 @@ public:
     FloatingPointQuaternion(T x, T y, T z, T w) noexcept;
 
     // Assignment operators:
-    FloatingPointQuaternion & operator+=(FloatingPointQuaternion const&) noexcept;
-    FloatingPointQuaternion & operator-=(FloatingPointQuaternion const&) noexcept;
-    FloatingPointQuaternion & operator*=(FloatingPointQuaternion const&) noexcept;
+    FloatingPointQuaternion & operator+=(const FloatingPointQuaternion&) noexcept;
+    FloatingPointQuaternion & operator-=(const FloatingPointQuaternion&) noexcept;
+    FloatingPointQuaternion & operator*=(const FloatingPointQuaternion&) noexcept;
     FloatingPointQuaternion & operator*=(T scaleFactor) noexcept;
     FloatingPointQuaternion & operator/=(T scaleFactor);
 
@@ -39,77 +38,77 @@ public:
     FloatingPointQuaternion operator-() const noexcept;
 
     // Binary operators:
-    FloatingPointQuaternion operator+(FloatingPointQuaternion const&) const noexcept;
-    FloatingPointQuaternion operator-(FloatingPointQuaternion const&) const noexcept;
-    FloatingPointQuaternion operator*(FloatingPointQuaternion const&) const noexcept;
+    FloatingPointQuaternion operator+(const FloatingPointQuaternion&) const noexcept;
+    FloatingPointQuaternion operator-(const FloatingPointQuaternion&) const noexcept;
+    FloatingPointQuaternion operator*(const FloatingPointQuaternion&) const noexcept;
     FloatingPointQuaternion operator*(T scaleFactor) const noexcept;
     FloatingPointQuaternion operator/(T scaleFactor) const;
 
-    bool operator==(FloatingPointQuaternion const&) const noexcept;
-    bool operator!=(FloatingPointQuaternion const&) const noexcept;
+    bool operator==(const FloatingPointQuaternion&) const noexcept;
+    bool operator!=(const FloatingPointQuaternion&) const noexcept;
 
     T Length() const noexcept;
 
     T LengthSquared() const noexcept;
 
-    static T Dot(FloatingPointQuaternion const& a, FloatingPointQuaternion const& b) noexcept;
+    static T Dot(const FloatingPointQuaternion& a, const FloatingPointQuaternion& b) noexcept;
 
     void Normalize() noexcept;
 
-    static FloatingPointQuaternion Normalize(FloatingPointQuaternion const& quaternion) noexcept;
+    static FloatingPointQuaternion Normalize(const FloatingPointQuaternion& quaternion) noexcept;
 
-    static void Normalize(FloatingPointQuaternion const& quaternion, FloatingPointQuaternion & result) noexcept;
-
-    static void
-    Slerp(FloatingPointQuaternion const& begin, FloatingPointQuaternion const& end, T amount, FloatingPointQuaternion & result);
-
-    static FloatingPointQuaternion
-    Slerp(FloatingPointQuaternion const& begin, FloatingPointQuaternion const& end, T amount);
+    static void Normalize(const FloatingPointQuaternion& quaternion, FloatingPointQuaternion & result) noexcept;
 
     static void
-    Inverse(FloatingPointQuaternion const& source, FloatingPointQuaternion & result);
+    Slerp(const FloatingPointQuaternion& begin, const FloatingPointQuaternion& end, T amount, FloatingPointQuaternion & result);
 
     static FloatingPointQuaternion
-    Inverse(FloatingPointQuaternion const& source);
+    Slerp(const FloatingPointQuaternion& begin, const FloatingPointQuaternion& end, T amount);
+
+    static void
+    Inverse(const FloatingPointQuaternion& source, FloatingPointQuaternion & result);
+
+    static FloatingPointQuaternion
+    Inverse(const FloatingPointQuaternion& source);
 
     ///@param axis The normalized axis of the rotation.
     static void
-    CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle, FloatingPointQuaternion & result);
+    CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle, FloatingPointQuaternion & result);
 
     ///@param axis The normalized axis of the rotation.
     static FloatingPointQuaternion
-    CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle);
+    CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle);
 
     ///@brief Convert rotation matrix to quaternion.
     static void
-    CreateFromRotationMatrix(FloatingPointMatrix4x4<T> const& rotation, FloatingPointQuaternion & result);
+    CreateFromRotationMatrix(const FloatingPointMatrix4x4<T>& rotation, FloatingPointQuaternion & result);
 
     ///@brief Convert rotation matrix to quaternion.
     static FloatingPointQuaternion
-    CreateFromRotationMatrix(FloatingPointMatrix4x4<T> const& rotation);
+    CreateFromRotationMatrix(const FloatingPointMatrix4x4<T>& rotation);
 
     ///@brief Convert rotation matrix to quaternion.
     static void
-    CreateFromRotationMatrix(FloatingPointMatrix3x3<T> const& rotation, FloatingPointQuaternion & result);
+    CreateFromRotationMatrix(const FloatingPointMatrix3x3<T>& rotation, FloatingPointQuaternion & result);
 
     ///@brief Convert rotation matrix to quaternion.
     static FloatingPointQuaternion
-    CreateFromRotationMatrix(FloatingPointMatrix3x3<T> const& rotation);
+    CreateFromRotationMatrix(const FloatingPointMatrix3x3<T>& rotation);
 
     ///@param yaw The rotation around the y-axis in radians.
     ///@param pitch The rotation around the x-axis in radians.
     ///@param roll The rotation around the z-axis in radians.
     static void
-    CreateFromYawPitchRoll(Radian<T> const& yaw, Radian<T> const& pitch, Radian<T> const& roll, FloatingPointQuaternion & result);
+    CreateFromYawPitchRoll(const Radian<T>& yaw, const Radian<T>& pitch, const Radian<T>& roll, FloatingPointQuaternion & result);
 
     ///@param yaw The rotation around the y-axis in radians.
     ///@param pitch The rotation around the x-axis in radians.
     ///@param roll The rotation around the z-axis in radians.
     static FloatingPointQuaternion
-    CreateFromYawPitchRoll(Radian<T> const& yaw, Radian<T> const& pitch, Radian<T> const& roll);
+    CreateFromYawPitchRoll(const Radian<T>& yaw, const Radian<T>& pitch, const Radian<T>& roll);
 
     ///@brief Returns pointer to the first element.
-    T const* Data() const noexcept;
+    const T* Data() const noexcept;
 
     ///@brief Returns pointer to the first element.
     T* Data() noexcept;
@@ -119,7 +118,7 @@ public:
 
 template <typename T>
 FloatingPointQuaternion<T> POMDOG_EXPORT
-operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion) noexcept;
+operator*(T scaleFactor, const FloatingPointQuaternion<T>& quaternion) noexcept;
 
 } // namespace Detail
 } // namespace Pomdog

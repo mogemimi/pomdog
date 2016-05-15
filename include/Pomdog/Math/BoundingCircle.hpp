@@ -16,20 +16,20 @@ public:
 public:
     BoundingCircle() noexcept = default;
 
-    BoundingCircle(Vector2 const& center, float radius);
+    BoundingCircle(const Vector2& center, float radius);
 
-    bool operator==(BoundingCircle const&) const noexcept;
-    bool operator!=(BoundingCircle const&) const noexcept;
+    bool operator==(const BoundingCircle&) const noexcept;
+    bool operator!=(const BoundingCircle&) const noexcept;
 
-    ContainmentType Contains(Vector2 const& box) const;
+    ContainmentType Contains(const Vector2& box) const;
 
-    ContainmentType Contains(BoundingBox2D const& box) const;
+    ContainmentType Contains(const BoundingBox2D& box) const;
 
-    ContainmentType Contains(BoundingCircle const& circle) const;
+    ContainmentType Contains(const BoundingCircle& circle) const;
 
-    bool Intersects(BoundingBox2D const& box) const;
+    bool Intersects(const BoundingBox2D& box) const;
 
-    bool Intersects(BoundingCircle const& circle) const;
+    bool Intersects(const BoundingCircle& circle) const;
 };
 
 } // namespace Pomdog

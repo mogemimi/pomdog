@@ -6,7 +6,6 @@
 #include "Pomdog/Basic/Export.hpp"
 #include <cstddef>
 #include <cstdint>
-#include <cfloat>
 #include <type_traits>
 #include <array>
 
@@ -43,9 +42,9 @@ public:
         T m30, T m31, T m32, T m33) noexcept;
 
     // Assignment operators:
-    FloatingPointMatrix4x4 & operator*=(FloatingPointMatrix4x4 const&) noexcept;
-    FloatingPointMatrix4x4 & operator+=(FloatingPointMatrix4x4 const&) noexcept;
-    FloatingPointMatrix4x4 & operator-=(FloatingPointMatrix4x4 const&) noexcept;
+    FloatingPointMatrix4x4 & operator*=(const FloatingPointMatrix4x4&) noexcept;
+    FloatingPointMatrix4x4 & operator+=(const FloatingPointMatrix4x4&) noexcept;
+    FloatingPointMatrix4x4 & operator-=(const FloatingPointMatrix4x4&) noexcept;
     FloatingPointMatrix4x4 & operator*=(T scaleFactor) noexcept;
     FloatingPointMatrix4x4 & operator/=(T scaleFactor);
 
@@ -54,24 +53,24 @@ public:
     FloatingPointMatrix4x4 operator-() const noexcept;
 
     // Binary operators:
-    FloatingPointMatrix4x4 operator+(FloatingPointMatrix4x4 const&) const noexcept;
-    FloatingPointMatrix4x4 operator-(FloatingPointMatrix4x4 const&) const noexcept;
-    FloatingPointMatrix4x4 operator*(FloatingPointMatrix4x4 const&) const noexcept;
+    FloatingPointMatrix4x4 operator+(const FloatingPointMatrix4x4&) const noexcept;
+    FloatingPointMatrix4x4 operator-(const FloatingPointMatrix4x4&) const noexcept;
+    FloatingPointMatrix4x4 operator*(const FloatingPointMatrix4x4&) const noexcept;
     FloatingPointMatrix4x4 operator*(T scaleFactor) const noexcept;
     FloatingPointMatrix4x4 operator/(T scaleFactor) const;
 
-    bool operator==(FloatingPointMatrix4x4 const&) const noexcept;
-    bool operator!=(FloatingPointMatrix4x4 const&) const noexcept;
+    bool operator==(const FloatingPointMatrix4x4&) const noexcept;
+    bool operator!=(const FloatingPointMatrix4x4&) const noexcept;
 
     // Function-call operators:
-    T const& operator()(std::size_t row, std::size_t column) const;
+    const T& operator()(std::size_t row, std::size_t column) const;
     T & operator()(std::size_t row, std::size_t column);
 
-    void SetTranslation(FloatingPointVector3<T> const&) noexcept;
+    void SetTranslation(const FloatingPointVector3<T>&) noexcept;
 
     FloatingPointVector3<T> GetTranslation() const noexcept;
 
-    void SetScale(FloatingPointVector3<T> const&) noexcept;
+    void SetScale(const FloatingPointVector3<T>&) noexcept;
 
     FloatingPointVector3<T> GetScale() const noexcept;
 
@@ -86,32 +85,32 @@ public:
     Multiply(const FloatingPointMatrix4x4& matrix1, T scaleFactor) noexcept;
 
     static FloatingPointMatrix4x4
-    Adjoint(FloatingPointMatrix4x4 const& matrix);
+    Adjoint(const FloatingPointMatrix4x4& matrix);
 
     static void
-    Transpose(FloatingPointMatrix4x4 const& matrix, FloatingPointMatrix4x4 & result) noexcept;
+    Transpose(const FloatingPointMatrix4x4& matrix, FloatingPointMatrix4x4 & result) noexcept;
 
     static FloatingPointMatrix4x4
-    Transpose(FloatingPointMatrix4x4 const& matrix) noexcept;
+    Transpose(const FloatingPointMatrix4x4& matrix) noexcept;
 
     static void
-    Invert(FloatingPointMatrix4x4 const& matrix, FloatingPointMatrix4x4 & result);
+    Invert(const FloatingPointMatrix4x4& matrix, FloatingPointMatrix4x4 & result);
 
     static FloatingPointMatrix4x4
-    Invert(FloatingPointMatrix4x4 const& matrix);
+    Invert(const FloatingPointMatrix4x4& matrix);
 
     static void
-    Lerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2, T amount,
+    Lerp(const FloatingPointMatrix4x4& source1, const FloatingPointMatrix4x4& source2, T amount,
         FloatingPointMatrix4x4 & result) noexcept;
 
     static FloatingPointMatrix4x4
-    Lerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2, T amount) noexcept;
+    Lerp(const FloatingPointMatrix4x4& source1, const FloatingPointMatrix4x4& source2, T amount) noexcept;
 
     static void
-    CreateTranslation(FloatingPointVector3<T> const& position, FloatingPointMatrix4x4 & result) noexcept;
+    CreateTranslation(const FloatingPointVector3<T>& position, FloatingPointMatrix4x4 & result) noexcept;
 
     static FloatingPointMatrix4x4
-    CreateTranslation(FloatingPointVector3<T> const& position) noexcept;
+    CreateTranslation(const FloatingPointVector3<T>& position) noexcept;
 
     static void
     CreateScale(T scale, FloatingPointMatrix4x4 & result) noexcept;
@@ -120,50 +119,50 @@ public:
     CreateScale(T scale) noexcept;
 
     static void
-    CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix4x4 & result) noexcept;
+    CreateScale(const FloatingPointVector3<T>& scale, FloatingPointMatrix4x4 & result) noexcept;
 
     static FloatingPointMatrix4x4
-    CreateScale(FloatingPointVector3<T> const& scale) noexcept;
+    CreateScale(const FloatingPointVector3<T>& scale) noexcept;
 
     static void
-    CreateRotationX(Radian<T> const& angle, FloatingPointMatrix4x4 & result);
+    CreateRotationX(const Radian<T>& angle, FloatingPointMatrix4x4 & result);
 
     static FloatingPointMatrix4x4
-    CreateRotationX(Radian<T> const& angle);
+    CreateRotationX(const Radian<T>& angle);
 
     static void
-    CreateRotationY(Radian<T> const& angle, FloatingPointMatrix4x4 & result);
+    CreateRotationY(const Radian<T>& angle, FloatingPointMatrix4x4 & result);
 
     static FloatingPointMatrix4x4
-    CreateRotationY(Radian<T> const& angle);
+    CreateRotationY(const Radian<T>& angle);
 
     static void
-    CreateRotationZ(Radian<T> const& angle, FloatingPointMatrix4x4 & result);
+    CreateRotationZ(const Radian<T>& angle, FloatingPointMatrix4x4 & result);
 
     static FloatingPointMatrix4x4
-    CreateRotationZ(Radian<T> const& angle);
+    CreateRotationZ(const Radian<T>& angle);
 
     static void
-    CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion, FloatingPointMatrix4x4 & result);
+    CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion, FloatingPointMatrix4x4 & result);
 
     static FloatingPointMatrix4x4
-    CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion);
+    CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion);
 
     static void
-    CreateLookAtLH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
-        FloatingPointVector3<T> const& up, FloatingPointMatrix4x4 & result);
+    CreateLookAtLH(const FloatingPointVector3<T>& eye, const FloatingPointVector3<T>& at,
+        const FloatingPointVector3<T>& up, FloatingPointMatrix4x4 & result);
 
     static FloatingPointMatrix4x4
-    CreateLookAtLH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
-        FloatingPointVector3<T> const& up);
+    CreateLookAtLH(const FloatingPointVector3<T>& eye, const FloatingPointVector3<T>& at,
+        const FloatingPointVector3<T>& up);
 
     static void
-    CreateLookAtRH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
-        FloatingPointVector3<T> const& up, FloatingPointMatrix4x4 & result);
+    CreateLookAtRH(const FloatingPointVector3<T>& eye, const FloatingPointVector3<T>& at,
+        const FloatingPointVector3<T>& up, FloatingPointMatrix4x4 & result);
 
     static FloatingPointMatrix4x4
-    CreateLookAtRH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
-        FloatingPointVector3<T> const& up);
+    CreateLookAtRH(const FloatingPointVector3<T>& eye, const FloatingPointVector3<T>& at,
+        const FloatingPointVector3<T>& up);
 
     static void
     CreatePerspectiveLH(T width, T height, T zNear, T zFar, FloatingPointMatrix4x4 & result);
@@ -172,18 +171,18 @@ public:
     CreatePerspectiveRH(T width, T height, T zNear, T zFar, FloatingPointMatrix4x4 & result);
 
     static void
-    CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy, T aspect, T zNear, T zFar,
+    CreatePerspectiveFieldOfViewLH(const Radian<T>& fovy, T aspect, T zNear, T zFar,
         FloatingPointMatrix4x4 & result);
 
     static FloatingPointMatrix4x4
-    CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy, T aspect, T zNear, T zFar);
+    CreatePerspectiveFieldOfViewLH(const Radian<T>& fovy, T aspect, T zNear, T zFar);
 
     static void
-    CreatePerspectiveFieldOfViewRH(Radian<T> const& fovy, T aspect, T zNear, T zFar,
+    CreatePerspectiveFieldOfViewRH(const Radian<T>& fovy, T aspect, T zNear, T zFar,
         FloatingPointMatrix4x4 & result);
 
     static FloatingPointMatrix4x4
-    CreatePerspectiveFieldOfViewRH(Radian<T> const& fovy, T aspect, T zNear, T zFar);
+    CreatePerspectiveFieldOfViewRH(const Radian<T>& fovy, T aspect, T zNear, T zFar);
 
     static void
     CreatePerspectiveOffCenterLH(T left, T right, T bottom, T top, T zNear, T zFar,
@@ -228,13 +227,13 @@ public:
     CreateOrthographicOffCenterRH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane);
 
     static void
-    CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle, FloatingPointMatrix4x4 & result);
+    CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle, FloatingPointMatrix4x4 & result);
 
     static FloatingPointMatrix4x4
-    CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle);
+    CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle);
 
     ///@brief Returns pointer to the first element.
-    T const* Data() const noexcept;
+    const T* Data() const noexcept;
 
     ///@brief Returns pointer to the first element.
     T* Data() noexcept;
@@ -244,7 +243,7 @@ public:
 
 template <typename T>
 FloatingPointMatrix4x4<T> POMDOG_EXPORT
-operator*(T scaleFactor, FloatingPointMatrix4x4<T> const& matrix) noexcept;
+operator*(T scaleFactor, const FloatingPointMatrix4x4<T>& matrix) noexcept;
 
 } // namespace Detail
 } // namespace Pomdog

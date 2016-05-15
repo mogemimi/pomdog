@@ -10,23 +10,23 @@ namespace Pomdog {
 
 constexpr int BoundingBox::CornerCount;
 
-BoundingBox::BoundingBox(Vector3 const& minIn, Vector3 const& maxIn)
+BoundingBox::BoundingBox(const Vector3& minIn, const Vector3& maxIn)
     : Min(minIn), Max(maxIn)
 {}
 //-----------------------------------------------------------------------
-bool BoundingBox::operator==(BoundingBox const& box) const noexcept
+bool BoundingBox::operator==(const BoundingBox& box) const noexcept
 {
     return this->Max == box.Max
         && this->Min == box.Min;
 }
 //-----------------------------------------------------------------------
-bool BoundingBox::operator!=(BoundingBox const& box) const noexcept
+bool BoundingBox::operator!=(const BoundingBox& box) const noexcept
 {
     return this->Max != box.Max
         || this->Min != box.Min;
 }
 //-----------------------------------------------------------------------
-ContainmentType BoundingBox::Contains(Vector3 const& point) const
+ContainmentType BoundingBox::Contains(const Vector3& point) const
 {
     if (point.X < this->Min.X ||
         point.Y < this->Min.Y ||
@@ -47,7 +47,7 @@ ContainmentType BoundingBox::Contains(Vector3 const& point) const
     return ContainmentType::Contains;
 }
 //-----------------------------------------------------------------------
-ContainmentType BoundingBox::Contains(BoundingBox const& box) const
+ContainmentType BoundingBox::Contains(const BoundingBox& box) const
 {
     if ((this->Min.X > box.Max.X || this->Max.X < box.Min.X) ||
         (this->Min.Y > box.Max.Y || this->Max.Y < box.Min.Y) ||
@@ -62,7 +62,7 @@ ContainmentType BoundingBox::Contains(BoundingBox const& box) const
     return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------
-ContainmentType BoundingBox::Contains(BoundingSphere const& sphere) const
+ContainmentType BoundingBox::Contains(const BoundingSphere& sphere) const
 {
     auto clamped = Vector3::Clamp(sphere.Center, this->Min, this->Max);
     auto distanceSquared = Vector3::DistanceSquared(sphere.Center, clamped);
@@ -81,21 +81,21 @@ ContainmentType BoundingBox::Contains(BoundingSphere const& sphere) const
     return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------
-bool BoundingBox::Intersects(BoundingBox const& box) const
+bool BoundingBox::Intersects(const BoundingBox& box) const
 {
     return (this->Max.X >= box.Min.X && this->Min.X <= box.Max.X)
         && (this->Max.Y >= box.Min.Y && this->Min.Y <= box.Max.Y)
         && (this->Max.Z >= box.Min.Z && this->Min.Z <= box.Max.Z);
 }
 //-----------------------------------------------------------------------
-bool BoundingBox::Intersects(BoundingSphere const& sphere) const
+bool BoundingBox::Intersects(const BoundingSphere& sphere) const
 {
     auto clamped = Vector3::Clamp(sphere.Center, this->Min, this->Max);
     auto distanceSquared = Vector3::DistanceSquared(sphere.Center, clamped);
     return distanceSquared <= sphere.Radius * sphere.Radius;
 }
 //-----------------------------------------------------------------------
-Optional<float> BoundingBox::Intersects(Ray const& ray) const
+Optional<float> BoundingBox::Intersects(const Ray& ray) const
 {
     return ray.Intersects(*this);
 }

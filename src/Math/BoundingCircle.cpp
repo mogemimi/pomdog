@@ -7,26 +7,26 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-BoundingCircle::BoundingCircle(Vector2 const& center, float radius)
+BoundingCircle::BoundingCircle(const Vector2& center, float radius)
     : Center(center)
     , Radius(radius)
 {
     POMDOG_ASSERT(radius >= 0);
 }
 //-----------------------------------------------------------------------
-bool BoundingCircle::operator==(BoundingCircle const& circle) const noexcept
+bool BoundingCircle::operator==(const BoundingCircle& circle) const noexcept
 {
     return this->Radius == circle.Radius
         && this->Center == circle.Center;
 }
 //-----------------------------------------------------------------------
-bool BoundingCircle::operator!=(BoundingCircle const& circle) const noexcept
+bool BoundingCircle::operator!=(const BoundingCircle& circle) const noexcept
 {
     return this->Radius != circle.Radius
         || this->Center != circle.Center;
 }
 //-----------------------------------------------------------------------
-ContainmentType BoundingCircle::Contains(Vector2 const& point) const
+ContainmentType BoundingCircle::Contains(const Vector2& point) const
 {
     auto distanceSquared = Vector2::DistanceSquared(point, Center);
     auto radiusSquared = Radius * Radius;
@@ -39,7 +39,7 @@ ContainmentType BoundingCircle::Contains(Vector2 const& point) const
     return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------
-ContainmentType BoundingCircle::Contains(BoundingBox2D const& box) const
+ContainmentType BoundingCircle::Contains(const BoundingBox2D& box) const
 {
     bool inside = true;
     for (auto & corner : box.GetCorners()) {
@@ -57,7 +57,7 @@ ContainmentType BoundingCircle::Contains(BoundingBox2D const& box) const
     return ContainmentType::Disjoint;
 }
 //-----------------------------------------------------------------------
-ContainmentType BoundingCircle::Contains(BoundingCircle const& circle) const
+ContainmentType BoundingCircle::Contains(const BoundingCircle& circle) const
 {
     auto distance = Vector2::Distance(this->Center, circle.Center);
     if (distance > this->Radius + circle.Radius) {
@@ -69,12 +69,12 @@ ContainmentType BoundingCircle::Contains(BoundingCircle const& circle) const
     return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------
-bool BoundingCircle::Intersects(BoundingBox2D const& box) const
+bool BoundingCircle::Intersects(const BoundingBox2D& box) const
 {
     return box.Intersects(*this);
 }
 //-----------------------------------------------------------------------
-bool BoundingCircle::Intersects(BoundingCircle const& circle) const
+bool BoundingCircle::Intersects(const BoundingCircle& circle) const
 {
     auto distance = Vector2::Distance(this->Center, circle.Center);
     return distance <= this->Radius + circle.Radius;

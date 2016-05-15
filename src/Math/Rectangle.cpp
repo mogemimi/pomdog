@@ -13,7 +13,7 @@ Rectangle::Rectangle(std::int32_t x, std::int32_t y,
     , Height(height)
 {}
 //-----------------------------------------------------------------------
-Rectangle::Rectangle(Point2D const& position,
+Rectangle::Rectangle(const Point2D& position,
     std::int32_t width, std::int32_t height) noexcept
     : X(position.X)
     , Y(position.Y)
@@ -21,13 +21,13 @@ Rectangle::Rectangle(Point2D const& position,
     , Height(height)
 {}
 //-----------------------------------------------------------------------
-bool Rectangle::operator==(Rectangle const& other) const noexcept
+bool Rectangle::operator==(const Rectangle& other) const noexcept
 {
     return (X == other.X && Y == other.Y
         && Width == other.Width && Height == other.Height);
 }
 //-----------------------------------------------------------------------
-bool Rectangle::operator!=(Rectangle const& other) const noexcept
+bool Rectangle::operator!=(const Rectangle& other) const noexcept
 {
     return (X != other.X || Y != other.Y
         || Width != other.Width || Height != other.Height);
@@ -63,7 +63,7 @@ Point2D Rectangle::GetLocation() const
     return {X, Y};
 }
 //-----------------------------------------------------------------------
-void Rectangle::SetLocation(Point2D const& position)
+void Rectangle::SetLocation(const Point2D& position)
 {
     this->X = position.X;
     this->Y = position.Y;
@@ -83,7 +83,7 @@ void Rectangle::Offset(std::int32_t offsetX, std::int32_t offsetY)
     this->Y += offsetY;
 }
 //-----------------------------------------------------------------------
-void Rectangle::Offset(Point2D const& offset)
+void Rectangle::Offset(const Point2D& offset)
 {
     X += offset.X;
     Y += offset.Y;
@@ -95,12 +95,12 @@ bool Rectangle::Contains(int pointX, int pointY) const noexcept
         && pointY >= Y && pointY <= (Y + Height);
 }
 //-----------------------------------------------------------------------
-bool Rectangle::Contains(Point2D const& point) const noexcept
+bool Rectangle::Contains(const Point2D& point) const noexcept
 {
     return this->Contains(point.X, point.Y);
 }
 //-----------------------------------------------------------------------
-bool Rectangle::Contains(Rectangle const& rect) const
+bool Rectangle::Contains(const Rectangle& rect) const
 {
     return (rect.GetLeft() >= GetLeft()
         && rect.GetRight() <= GetRight()
@@ -108,7 +108,7 @@ bool Rectangle::Contains(Rectangle const& rect) const
         && rect.GetBottom() <= GetBottom());
 }
 //-----------------------------------------------------------------------
-bool Rectangle::Intersects(Rectangle const& rect) const
+bool Rectangle::Intersects(const Rectangle& rect) const
 {
     POMDOG_ASSERT(GetLeft() <= GetRight());
     POMDOG_ASSERT(GetTop() <= GetBottom());

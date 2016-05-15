@@ -9,23 +9,23 @@ namespace Pomdog {
 
 constexpr int BoundingBox2D::CornerCount;
 
-BoundingBox2D::BoundingBox2D(Vector2 const& minIn, Vector2 const& maxIn)
+BoundingBox2D::BoundingBox2D(const Vector2& minIn, const Vector2& maxIn)
     : Min(minIn), Max(maxIn)
 {}
 //-----------------------------------------------------------------------
-bool BoundingBox2D::operator==(BoundingBox2D const& box) const noexcept
+bool BoundingBox2D::operator==(const BoundingBox2D& box) const noexcept
 {
     return this->Max == box.Max
         && this->Min == box.Min;
 }
 //-----------------------------------------------------------------------
-bool BoundingBox2D::operator!=(BoundingBox2D const& box) const noexcept
+bool BoundingBox2D::operator!=(const BoundingBox2D& box) const noexcept
 {
     return this->Max != box.Max
         || this->Min != box.Min;
 }
 //-----------------------------------------------------------------------
-ContainmentType BoundingBox2D::Contains(Vector2 const& point) const
+ContainmentType BoundingBox2D::Contains(const Vector2& point) const
 {
     if (point.X < this->Min.X ||
         point.Y < this->Min.Y ||
@@ -42,7 +42,7 @@ ContainmentType BoundingBox2D::Contains(Vector2 const& point) const
     return ContainmentType::Contains;
 }
 //-----------------------------------------------------------------------
-ContainmentType BoundingBox2D::Contains(BoundingBox2D const& box) const
+ContainmentType BoundingBox2D::Contains(const BoundingBox2D& box) const
 {
     if ((this->Min.X > box.Max.X || this->Max.X < box.Min.X) ||
         (this->Min.Y > box.Max.Y || this->Max.Y < box.Min.Y)) {
@@ -55,7 +55,7 @@ ContainmentType BoundingBox2D::Contains(BoundingBox2D const& box) const
     return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------
-ContainmentType BoundingBox2D::Contains(BoundingCircle const& circle) const
+ContainmentType BoundingBox2D::Contains(const BoundingCircle& circle) const
 {
     auto clamped = Vector2::Clamp(circle.Center, this->Min, this->Max);
     auto distanceSquared = Vector2::DistanceSquared(circle.Center, clamped);
@@ -72,13 +72,13 @@ ContainmentType BoundingBox2D::Contains(BoundingCircle const& circle) const
     return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------
-bool BoundingBox2D::Intersects(BoundingBox2D const& box) const
+bool BoundingBox2D::Intersects(const BoundingBox2D& box) const
 {
     return (this->Max.X >= box.Min.X && this->Min.X <= box.Max.X)
         && (this->Max.Y >= box.Min.Y && this->Min.Y <= box.Max.Y);
 }
 //-----------------------------------------------------------------------
-bool BoundingBox2D::Intersects(BoundingCircle const& circle) const
+bool BoundingBox2D::Intersects(const BoundingCircle& circle) const
 {
     auto clamped = Vector2::Clamp(circle.Center, this->Min, this->Max);
     auto distanceSquared = Vector2::DistanceSquared(circle.Center, clamped);

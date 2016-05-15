@@ -16,7 +16,7 @@ Coordinate3D<T>::Coordinate3D(T x, T y, T z) noexcept
 {}
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate3D<T> & Coordinate3D<T>::operator+=(Coordinate3D const& other) noexcept
+Coordinate3D<T> & Coordinate3D<T>::operator+=(const Coordinate3D& other) noexcept
 {
     X += other.X;
     Y += other.Y;
@@ -25,7 +25,7 @@ Coordinate3D<T> & Coordinate3D<T>::operator+=(Coordinate3D const& other) noexcep
 }
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate3D<T> & Coordinate3D<T>::operator-=(Coordinate3D const& other) noexcept
+Coordinate3D<T> & Coordinate3D<T>::operator-=(const Coordinate3D& other) noexcept
 {
     X -= other.X;
     Y -= other.Y;
@@ -65,25 +65,25 @@ Coordinate3D<T> Coordinate3D<T>::operator-() const noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate3D<T> Coordinate3D<T>::operator+(Coordinate3D const& other) const noexcept
+Coordinate3D<T> Coordinate3D<T>::operator+(const Coordinate3D& other) const noexcept
 {
     return {X + other.X, Y + other.Y, Z + other.Z};
 }
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate3D<T> Coordinate3D<T>::operator-(Coordinate3D const& other) const noexcept
+Coordinate3D<T> Coordinate3D<T>::operator-(const Coordinate3D& other) const noexcept
 {
     return {X - other.X, Y - other.Y, Z - other.Z};
 }
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate3D<T> Coordinate3D<T>::operator*(Coordinate3D const& other) const noexcept
+Coordinate3D<T> Coordinate3D<T>::operator*(const Coordinate3D& other) const noexcept
 {
     return {X * other.X, Y * other.Y, Z * other.Z};
 }
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate3D<T> Coordinate3D<T>::operator/(Coordinate3D const& other) const
+Coordinate3D<T> Coordinate3D<T>::operator/(const Coordinate3D& other) const
 {
     POMDOG_ASSERT(other.X != 0);
     POMDOG_ASSERT(other.Y != 0);
@@ -105,19 +105,19 @@ Coordinate3D<T> Coordinate3D<T>::operator/(T scaleFactor) const
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool Coordinate3D<T>::operator==(Coordinate3D const& other) const noexcept
+bool Coordinate3D<T>::operator==(const Coordinate3D& other) const noexcept
 {
     return (X == other.X && Y == other.Y && Z == other.Z);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool Coordinate3D<T>::operator!=(Coordinate3D const& other) const noexcept
+bool Coordinate3D<T>::operator!=(const Coordinate3D& other) const noexcept
 {
     return (X != other.X || Y != other.Y || Z != other.Z);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate3D<T> operator*(T scaleFactor, Coordinate3D<T> const& coordinate) noexcept
+Coordinate3D<T> operator*(T scaleFactor, const Coordinate3D<T>& coordinate) noexcept
 {
     return Coordinate3D<T>{
         scaleFactor * coordinate.X,
@@ -126,7 +126,7 @@ Coordinate3D<T> operator*(T scaleFactor, Coordinate3D<T> const& coordinate) noex
 }
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate3D<T> operator/(T scaleFactor, Coordinate3D<T> const& coordinate)
+Coordinate3D<T> operator/(T scaleFactor, const Coordinate3D<T>& coordinate)
 {
     POMDOG_ASSERT(coordinate.X != 0);
     POMDOG_ASSERT(coordinate.Y != 0);
@@ -142,10 +142,10 @@ Coordinate3D<T> operator/(T scaleFactor, Coordinate3D<T> const& coordinate)
 template class Coordinate3D<std::int32_t>;
 
 template Coordinate3D<std::int32_t>
-operator*<std::int32_t>(std::int32_t, Coordinate3D<std::int32_t> const&) noexcept;
+operator*<std::int32_t>(std::int32_t, const Coordinate3D<std::int32_t>&) noexcept;
 
 template Coordinate3D<std::int32_t>
-operator/<std::int32_t>(std::int32_t, Coordinate3D<std::int32_t> const&);
+operator/<std::int32_t>(std::int32_t, const Coordinate3D<std::int32_t>&);
 
 } // namespace Detail
 } // namespace Pomdog

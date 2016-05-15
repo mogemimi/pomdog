@@ -19,20 +19,20 @@ public:
 public:
     BoundingBox2D() noexcept = default;
 
-    BoundingBox2D(Vector2 const& min, Vector2 const& max);
+    BoundingBox2D(const Vector2& min, const Vector2& max);
 
-    bool operator==(BoundingBox2D const&) const noexcept;
-    bool operator!=(BoundingBox2D const&) const noexcept;
+    bool operator==(const BoundingBox2D&) const noexcept;
+    bool operator!=(const BoundingBox2D&) const noexcept;
 
-    ContainmentType Contains(Vector2 const& point) const;
+    ContainmentType Contains(const Vector2& point) const;
 
-    ContainmentType Contains(BoundingBox2D const& box) const;
+    ContainmentType Contains(const BoundingBox2D& box) const;
 
-    ContainmentType Contains(BoundingCircle const& circle) const;
+    ContainmentType Contains(const BoundingCircle& circle) const;
 
-    bool Intersects(BoundingBox2D const& box) const;
+    bool Intersects(const BoundingBox2D& box) const;
 
-    bool Intersects(BoundingCircle const& circle) const;
+    bool Intersects(const BoundingCircle& circle) const;
 
     std::array<Vector2, CornerCount> GetCorners() const noexcept;
 };

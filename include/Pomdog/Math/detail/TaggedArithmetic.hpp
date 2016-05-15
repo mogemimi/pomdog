@@ -35,7 +35,7 @@ public:
     {}
 
     // Assignment operators:
-    TaggedArithmetic & operator+=(TaggedArithmetic const& v) noexcept
+    TaggedArithmetic & operator+=(const TaggedArithmetic& v) noexcept
     {
         value += v.value;
         return *this;
@@ -47,7 +47,7 @@ public:
         return *this;
     }
 
-    TaggedArithmetic & operator-=(TaggedArithmetic const& v) noexcept
+    TaggedArithmetic & operator-=(const TaggedArithmetic& v) noexcept
     {
         value -= v.value;
         return *this;
@@ -59,7 +59,7 @@ public:
         return *this;
     }
 
-    TaggedArithmetic & operator*=(TaggedArithmetic const& v) noexcept
+    TaggedArithmetic & operator*=(const TaggedArithmetic& v) noexcept
     {
         value *= v.value;
         return *this;
@@ -71,7 +71,7 @@ public:
         return *this;
     }
 
-    TaggedArithmetic & operator/=(TaggedArithmetic const& v)
+    TaggedArithmetic & operator/=(const TaggedArithmetic& v)
     {
         POMDOG_ASSERT(v.value != 0);
         value /= v.value;
@@ -85,13 +85,13 @@ public:
         return *this;
     }
 
-    TaggedArithmetic & operator*=(T const& scale) noexcept
+    TaggedArithmetic & operator*=(const T& scale) noexcept
     {
         value *= scale;
         return *this;
     }
 
-    TaggedArithmetic & operator/=(T const& scale)
+    TaggedArithmetic & operator/=(const T& scale)
     {
         POMDOG_ASSERT(scale != 0);
         value /= scale;
@@ -110,22 +110,22 @@ public:
     }
 
     // Binary operators:
-    TaggedArithmetic operator+(TaggedArithmetic const& v) const noexcept
+    TaggedArithmetic operator+(const TaggedArithmetic& v) const noexcept
     {
         return {value + v.value};
     }
 
-    TaggedArithmetic operator-(TaggedArithmetic const& v) const noexcept
+    TaggedArithmetic operator-(const TaggedArithmetic& v) const noexcept
     {
         return {value - v.value};
     }
 
-    TaggedArithmetic operator*(TaggedArithmetic const& v) const noexcept
+    TaggedArithmetic operator*(const TaggedArithmetic& v) const noexcept
     {
         return {value * v.value};
     }
 
-    TaggedArithmetic operator/(TaggedArithmetic const& v) const
+    TaggedArithmetic operator/(const TaggedArithmetic& v) const
     {
         POMDOG_ASSERT(v.value != T{0});
         return {value / v.value};
@@ -142,67 +142,67 @@ public:
         return {value / scale};
     }
 
-    friend TaggedArithmetic operator*(T const& scale, TaggedArithmetic const& v) noexcept
+    friend TaggedArithmetic operator*(const T& scale, const TaggedArithmetic& v) noexcept
     {
         return {scale * v.value};
     }
 
-    bool operator==(TaggedArithmetic const& v) const noexcept
+    bool operator==(const TaggedArithmetic& v) const noexcept
     {
         return value == v.value;
     }
 
-    bool operator!=(TaggedArithmetic const& v) const noexcept
+    bool operator!=(const TaggedArithmetic& v) const noexcept
     {
         return value != v.value;
     }
 
-    bool operator==(T const& scalar) const noexcept
+    bool operator==(const T& scalar) const noexcept
     {
         return value == scalar;
     }
 
-    bool operator!=(T const& scalar) const noexcept
+    bool operator!=(const T& scalar) const noexcept
     {
         return value != scalar;
     }
 
-    bool operator<(TaggedArithmetic const& v) const noexcept
+    bool operator<(const TaggedArithmetic& v) const noexcept
     {
         return value < v.value;
     }
 
-    bool operator>(TaggedArithmetic const& v) const noexcept
+    bool operator>(const TaggedArithmetic& v) const noexcept
     {
         return value > v.value;
     }
 
-    bool operator<=(TaggedArithmetic const& v) const noexcept
+    bool operator<=(const TaggedArithmetic& v) const noexcept
     {
         return value <= v.value;
     }
 
-    bool operator>=(TaggedArithmetic const& v) const noexcept
+    bool operator>=(const TaggedArithmetic& v) const noexcept
     {
         return value >= v.value;
     }
 
-    bool operator<(T const& scalar) const noexcept
+    bool operator<(const T& scalar) const noexcept
     {
         return value < scalar;
     }
 
-    bool operator>(T const& scalar) const noexcept
+    bool operator>(const T& scalar) const noexcept
     {
         return value > scalar;
     }
 
-    bool operator<=(T const& scalar) const noexcept
+    bool operator<=(const T& scalar) const noexcept
     {
         return value <= scalar;
     }
 
-    bool operator>=(T const& scalar) const noexcept
+    bool operator>=(const T& scalar) const noexcept
     {
         return value >= scalar;
     }

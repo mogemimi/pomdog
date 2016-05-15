@@ -16,7 +16,7 @@ Coordinate2D<T>::Coordinate2D(T x, T y) noexcept
 {}
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate2D<T> & Coordinate2D<T>::operator+=(Coordinate2D const& other) noexcept
+Coordinate2D<T> & Coordinate2D<T>::operator+=(const Coordinate2D& other) noexcept
 {
     X += other.X;
     Y += other.Y;
@@ -24,7 +24,7 @@ Coordinate2D<T> & Coordinate2D<T>::operator+=(Coordinate2D const& other) noexcep
 }
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate2D<T> & Coordinate2D<T>::operator-=(Coordinate2D const& other) noexcept
+Coordinate2D<T> & Coordinate2D<T>::operator-=(const Coordinate2D& other) noexcept
 {
     X -= other.X;
     Y -= other.Y;
@@ -61,25 +61,25 @@ Coordinate2D<T> Coordinate2D<T>::operator-() const noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate2D<T> Coordinate2D<T>::operator+(Coordinate2D const& other) const noexcept
+Coordinate2D<T> Coordinate2D<T>::operator+(const Coordinate2D& other) const noexcept
 {
     return {X + other.X, Y + other.Y};
 }
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate2D<T> Coordinate2D<T>::operator-(Coordinate2D const& other) const noexcept
+Coordinate2D<T> Coordinate2D<T>::operator-(const Coordinate2D& other) const noexcept
 {
     return {X - other.X, Y - other.Y};
 }
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate2D<T> Coordinate2D<T>::operator*(Coordinate2D const& other) const noexcept
+Coordinate2D<T> Coordinate2D<T>::operator*(const Coordinate2D& other) const noexcept
 {
     return {X * other.X, Y * other.Y};
 }
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate2D<T> Coordinate2D<T>::operator/(Coordinate2D const& other) const
+Coordinate2D<T> Coordinate2D<T>::operator/(const Coordinate2D& other) const
 {
     return {X / other.X, Y / other.Y};
 }
@@ -98,25 +98,25 @@ Coordinate2D<T> Coordinate2D<T>::operator/(T scaleFactor) const
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool Coordinate2D<T>::operator==(Coordinate2D const& other) const noexcept
+bool Coordinate2D<T>::operator==(const Coordinate2D& other) const noexcept
 {
     return (X == other.X && Y == other.Y);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool Coordinate2D<T>::operator!=(Coordinate2D const& other) const noexcept
+bool Coordinate2D<T>::operator!=(const Coordinate2D& other) const noexcept
 {
     return (X != other.X || Y != other.Y);
 }
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate2D<T> operator*(T scaleFactor, Coordinate2D<T> const& coordinate) noexcept
+Coordinate2D<T> operator*(T scaleFactor, const Coordinate2D<T>& coordinate) noexcept
 {
     return {scaleFactor * coordinate.X, scaleFactor * coordinate.Y};
 }
 //-----------------------------------------------------------------------
 template <typename T>
-Coordinate2D<T> operator/(T scaleFactor, Coordinate2D<T> const& coordinate)
+Coordinate2D<T> operator/(T scaleFactor, const Coordinate2D<T>& coordinate)
 {
     POMDOG_ASSERT(coordinate.X != 0);
     POMDOG_ASSERT(coordinate.Y != 0);
@@ -127,10 +127,10 @@ Coordinate2D<T> operator/(T scaleFactor, Coordinate2D<T> const& coordinate)
 template class Coordinate2D<std::int32_t>;
 
 template Coordinate2D<std::int32_t>
-operator*<std::int32_t>(std::int32_t, Coordinate2D<std::int32_t> const&) noexcept;
+operator*<std::int32_t>(std::int32_t, const Coordinate2D<std::int32_t>&) noexcept;
 
 template Coordinate2D<std::int32_t>
-operator/<std::int32_t>(std::int32_t, Coordinate2D<std::int32_t> const&);
+operator/<std::int32_t>(std::int32_t, const Coordinate2D<std::int32_t>&);
 
 } // namespace Detail
 } // namespace Pomdog

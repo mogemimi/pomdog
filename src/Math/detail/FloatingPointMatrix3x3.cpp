@@ -8,6 +8,7 @@
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <cfloat>
 #include <cmath>
 #include <limits>
 #include <utility>
@@ -39,14 +40,14 @@ FloatingPointMatrix3x3<T>::FloatingPointMatrix3x3(
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator*=(FloatingPointMatrix3x3 const& other) noexcept
+FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator*=(const FloatingPointMatrix3x3& other) noexcept
 {
     *this = Multiply(*this, other);
     return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator+=(FloatingPointMatrix3x3 const& other) noexcept
+FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator+=(const FloatingPointMatrix3x3& other) noexcept
 {
     m[0][0] += other.m[0][0];
     m[0][1] += other.m[0][1];
@@ -61,7 +62,7 @@ FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator+=(FloatingPointM
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator-=(FloatingPointMatrix3x3 const& other) noexcept
+FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator-=(const FloatingPointMatrix3x3& other) noexcept
 {
     m[0][0] -= other.m[0][0];
     m[0][1] -= other.m[0][1];
@@ -120,7 +121,7 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator-() const noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator+(FloatingPointMatrix3x3 const& other) const noexcept
+FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator+(const FloatingPointMatrix3x3& other) const noexcept
 {
     return {
         m[0][0] + other.m[0][0],
@@ -135,7 +136,7 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator+(FloatingPointMatr
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator-(FloatingPointMatrix3x3 const& other) const noexcept
+FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator-(const FloatingPointMatrix3x3& other) const noexcept
 {
     return {
         m[0][0] - other.m[0][0],
@@ -150,7 +151,7 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator-(FloatingPointMatr
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator*(FloatingPointMatrix3x3 const& other) const noexcept
+FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator*(const FloatingPointMatrix3x3& other) const noexcept
 {
     return Multiply(*this, other);
 }
@@ -179,7 +180,7 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator/(T scaleFactor) co
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointMatrix3x3<T>::operator==(FloatingPointMatrix3x3 const& other) const noexcept
+bool FloatingPointMatrix3x3<T>::operator==(const FloatingPointMatrix3x3& other) const noexcept
 {
     return m[0][0] == other.m[0][0] && m[0][1] == other.m[0][1] && m[0][2] == other.m[0][2]
         && m[1][0] == other.m[1][0] && m[1][1] == other.m[1][1] && m[1][2] == other.m[1][2]
@@ -187,7 +188,7 @@ bool FloatingPointMatrix3x3<T>::operator==(FloatingPointMatrix3x3 const& other) 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointMatrix3x3<T>::operator!=(FloatingPointMatrix3x3 const& other) const noexcept
+bool FloatingPointMatrix3x3<T>::operator!=(const FloatingPointMatrix3x3& other) const noexcept
 {
     return m[0][0] != other.m[0][0] || m[0][1] != other.m[0][1] || m[0][2] != other.m[0][2]
         || m[1][0] != other.m[1][0] || m[1][1] != other.m[1][1] || m[1][2] != other.m[1][2]
@@ -203,7 +204,7 @@ T & FloatingPointMatrix3x3<T>::operator()(std::size_t row, std::size_t column)
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T const& FloatingPointMatrix3x3<T>::operator()(std::size_t row, std::size_t column) const
+const T& FloatingPointMatrix3x3<T>::operator()(std::size_t row, std::size_t column) const
 {
     POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
@@ -211,7 +212,7 @@ T const& FloatingPointMatrix3x3<T>::operator()(std::size_t row, std::size_t colu
 }
 //-----------------------------------------------------------------------
 //template <typename T>
-//std::array<T, 3> const& FloatingPointMatrix3x3<T>::operator[](std::size_t row) const
+//const std::array<T, 3>& FloatingPointMatrix3x3<T>::operator[](std::size_t row) const
 //{
 //    POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix3x3, subscript out of range");
 //    return m[row];
@@ -225,7 +226,7 @@ T const& FloatingPointMatrix3x3<T>::operator()(std::size_t row, std::size_t colu
 //}
 //-----------------------------------------------------------------------
 template <typename T>
-void FloatingPointMatrix3x3<T>::SetScale(FloatingPointVector3<T> const& scale) noexcept
+void FloatingPointMatrix3x3<T>::SetScale(const FloatingPointVector3<T>& scale) noexcept
 {
     m[0][0] = scale.X;
     m[1][1] = scale.Y;
@@ -258,7 +259,7 @@ T FloatingPointMatrix3x3<T>::Determinant() const noexcept
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T>
-FloatingPointMatrix3x3<T>::Adjoint(FloatingPointMatrix3x3 const& matrix)
+FloatingPointMatrix3x3<T>::Adjoint(const FloatingPointMatrix3x3& matrix)
 {
     return {
          matrix.Minor2x2(0, 0).Determinant(),
@@ -274,8 +275,8 @@ FloatingPointMatrix3x3<T>::Adjoint(FloatingPointMatrix3x3 const& matrix)
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::Multiply(
-    FloatingPointMatrix3x3 const& matrix1,
-    FloatingPointMatrix3x3 const& matrix2) noexcept
+    const FloatingPointMatrix3x3& matrix1,
+    const FloatingPointMatrix3x3& matrix2) noexcept
 {
     return {
         matrix1.m[0][0] * matrix2.m[0][0] + matrix1.m[0][1] * matrix2.m[1][0] + matrix1.m[0][2] * matrix2.m[2][0],
@@ -291,7 +292,7 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::Multiply(
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::Multiply(
-    FloatingPointMatrix3x3 const& matrix1, T scaleFactor) noexcept
+    const FloatingPointMatrix3x3& matrix1, T scaleFactor) noexcept
 {
     return {
         matrix1.m[0][0] * scaleFactor,
@@ -339,7 +340,7 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix3x3<T>::Transpose(FloatingPointMatrix3x3 const& matrix, FloatingPointMatrix3x3 & result) noexcept
+FloatingPointMatrix3x3<T>::Transpose(const FloatingPointMatrix3x3& matrix, FloatingPointMatrix3x3 & result) noexcept
 {
     result = {
         matrix.m[0][0], matrix.m[1][0], matrix.m[2][0],
@@ -349,7 +350,7 @@ FloatingPointMatrix3x3<T>::Transpose(FloatingPointMatrix3x3 const& matrix, Float
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T>
-FloatingPointMatrix3x3<T>::Transpose(FloatingPointMatrix3x3 const& matrix) noexcept
+FloatingPointMatrix3x3<T>::Transpose(const FloatingPointMatrix3x3& matrix) noexcept
 {
     return {
         matrix.m[0][0], matrix.m[1][0], matrix.m[2][0],
@@ -359,14 +360,14 @@ FloatingPointMatrix3x3<T>::Transpose(FloatingPointMatrix3x3 const& matrix) noexc
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix3x3<T>::Invert(FloatingPointMatrix3x3 const& matrix, FloatingPointMatrix3x3 & result)
+FloatingPointMatrix3x3<T>::Invert(const FloatingPointMatrix3x3& matrix, FloatingPointMatrix3x3 & result)
 {
     result = Invert(matrix);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T>
-FloatingPointMatrix3x3<T>::Invert(FloatingPointMatrix3x3 const& matrix)
+FloatingPointMatrix3x3<T>::Invert(const FloatingPointMatrix3x3& matrix)
 {
     auto const determinant = matrix.Determinant();
     static_assert(std::is_same<decltype(matrix.Determinant()), T>::value, "determinant is T");
@@ -377,7 +378,7 @@ FloatingPointMatrix3x3<T>::Invert(FloatingPointMatrix3x3 const& matrix)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix3x3<T>::CreateTranslation(FloatingPointVector2<T> const& position, FloatingPointMatrix3x3 & result) noexcept
+FloatingPointMatrix3x3<T>::CreateTranslation(const FloatingPointVector2<T>& position, FloatingPointMatrix3x3 & result) noexcept
 {
     result = Identity;
     result(2, 0) = position.X;
@@ -386,7 +387,7 @@ FloatingPointMatrix3x3<T>::CreateTranslation(FloatingPointVector2<T> const& posi
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T>
-FloatingPointMatrix3x3<T>::CreateTranslation(FloatingPointVector2<T> const& position) noexcept
+FloatingPointMatrix3x3<T>::CreateTranslation(const FloatingPointVector2<T>& position) noexcept
 {
     FloatingPointMatrix3x3 result;
     CreateTranslation(position, result);
@@ -419,7 +420,7 @@ FloatingPointMatrix3x3<T>::CreateScale(T scale) noexcept
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix3x3<T>::CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix3x3 & result) noexcept
+FloatingPointMatrix3x3<T>::CreateScale(const FloatingPointVector3<T>& scale, FloatingPointMatrix3x3 & result) noexcept
 {
     static_assert(std::is_same<T, decltype(scale.X)>::value, "scale is T");
     static_assert(std::is_same<T, decltype(scale.Y)>::value, "scale is T");
@@ -438,7 +439,7 @@ FloatingPointMatrix3x3<T>::CreateScale(FloatingPointVector3<T> const& scale, Flo
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T>
-FloatingPointMatrix3x3<T>::CreateScale(FloatingPointVector3<T> const& scale) noexcept
+FloatingPointMatrix3x3<T>::CreateScale(const FloatingPointVector3<T>& scale) noexcept
 {
     FloatingPointMatrix3x3 result;
     CreateScale(scale, result);
@@ -447,7 +448,7 @@ FloatingPointMatrix3x3<T>::CreateScale(FloatingPointVector3<T> const& scale) noe
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix3x3<T>::CreateRotationX(Radian<T> const& angle, FloatingPointMatrix3x3 & result)
+FloatingPointMatrix3x3<T>::CreateRotationX(const Radian<T>& angle, FloatingPointMatrix3x3 & result)
 {
     static_assert(std::is_same<T, decltype(angle.value)>::value, "The angle value is T");
     auto const sinAngle = std::sin(angle.value);
@@ -466,7 +467,7 @@ FloatingPointMatrix3x3<T>::CreateRotationX(Radian<T> const& angle, FloatingPoint
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T>
-FloatingPointMatrix3x3<T>::CreateRotationX(Radian<T> const& angle)
+FloatingPointMatrix3x3<T>::CreateRotationX(const Radian<T>& angle)
 {
     FloatingPointMatrix3x3 result;
     CreateRotationX(angle, result);
@@ -475,7 +476,7 @@ FloatingPointMatrix3x3<T>::CreateRotationX(Radian<T> const& angle)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix3x3<T>::CreateRotationY(Radian<T> const& angle, FloatingPointMatrix3x3 & result)
+FloatingPointMatrix3x3<T>::CreateRotationY(const Radian<T>& angle, FloatingPointMatrix3x3 & result)
 {
     static_assert(std::is_same<T, decltype(angle.value)>::value, "The angle value is T");
     auto const sinAngle = std::sin(angle.value);
@@ -494,7 +495,7 @@ FloatingPointMatrix3x3<T>::CreateRotationY(Radian<T> const& angle, FloatingPoint
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T>
-FloatingPointMatrix3x3<T>::CreateRotationY(Radian<T> const& angle)
+FloatingPointMatrix3x3<T>::CreateRotationY(const Radian<T>& angle)
 {
     FloatingPointMatrix3x3 result;
     CreateRotationY(angle, result);
@@ -503,7 +504,7 @@ FloatingPointMatrix3x3<T>::CreateRotationY(Radian<T> const& angle)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix3x3<T>::CreateRotationZ(Radian<T> const& angle, FloatingPointMatrix3x3 & result)
+FloatingPointMatrix3x3<T>::CreateRotationZ(const Radian<T>& angle, FloatingPointMatrix3x3 & result)
 {
     static_assert(std::is_same<T, decltype(angle.value)>::value, "angle is T");
     auto const sinAngle = std::sin(angle.value);
@@ -522,7 +523,7 @@ FloatingPointMatrix3x3<T>::CreateRotationZ(Radian<T> const& angle, FloatingPoint
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T>
-FloatingPointMatrix3x3<T>::CreateRotationZ(Radian<T> const& angle)
+FloatingPointMatrix3x3<T>::CreateRotationZ(const Radian<T>& angle)
 {
     FloatingPointMatrix3x3 result;
     CreateRotationZ(angle, result);
@@ -531,7 +532,7 @@ FloatingPointMatrix3x3<T>::CreateRotationZ(Radian<T> const& angle)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix3x3<T>::CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion, FloatingPointMatrix3x3 & result)
+FloatingPointMatrix3x3<T>::CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion, FloatingPointMatrix3x3 & result)
 {
     auto const xx = quaternion.X * quaternion.X;
     auto const yy = quaternion.Y * quaternion.Y;
@@ -556,7 +557,7 @@ FloatingPointMatrix3x3<T>::CreateFromQuaternion(FloatingPointQuaternion<T> const
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T>
-FloatingPointMatrix3x3<T>::CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion)
+FloatingPointMatrix3x3<T>::CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion)
 {
     FloatingPointMatrix3x3 result;
     CreateFromQuaternion(quaternion, result);
@@ -565,8 +566,8 @@ FloatingPointMatrix3x3<T>::CreateFromQuaternion(FloatingPointQuaternion<T> const
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix3x3<T>::Lerp(FloatingPointMatrix3x3 const& source1,
-    FloatingPointMatrix3x3 const& source2, T amount, FloatingPointMatrix3x3 & result) noexcept
+FloatingPointMatrix3x3<T>::Lerp(const FloatingPointMatrix3x3& source1,
+    const FloatingPointMatrix3x3& source2, T amount, FloatingPointMatrix3x3 & result) noexcept
 {
     result.m[0][0] = MathHelper::Lerp(source1.m[0][0], source2.m[0][0], amount);
     result.m[0][1] = MathHelper::Lerp(source1.m[0][1], source2.m[0][1], amount);
@@ -581,8 +582,8 @@ FloatingPointMatrix3x3<T>::Lerp(FloatingPointMatrix3x3 const& source1,
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T>
-FloatingPointMatrix3x3<T>::Lerp(FloatingPointMatrix3x3 const& source1,
-    FloatingPointMatrix3x3 const& source2, T amount) noexcept
+FloatingPointMatrix3x3<T>::Lerp(const FloatingPointMatrix3x3& source1,
+    const FloatingPointMatrix3x3& source2, T amount) noexcept
 {
     FloatingPointMatrix3x3 result;
     Lerp(source1, source2, amount, result);
@@ -591,8 +592,8 @@ FloatingPointMatrix3x3<T>::Lerp(FloatingPointMatrix3x3 const& source1,
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix3x3<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& axis,
-    Radian<T> const& angle, FloatingPointMatrix3x3 & result)
+FloatingPointMatrix3x3<T>::CreateFromAxisAngle(const FloatingPointVector3<T>& axis,
+    const Radian<T>& angle, FloatingPointMatrix3x3 & result)
 {
     auto const sinAngle = std::sin(angle.value);
     auto const cosAngle = std::cos(angle.value);
@@ -620,7 +621,7 @@ FloatingPointMatrix3x3<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& ax
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix3x3<T>
-FloatingPointMatrix3x3<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle)
+FloatingPointMatrix3x3<T>::CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle)
 {
     FloatingPointMatrix3x3 result;
     CreateFromAxisAngle(axis, angle, result);
@@ -628,7 +629,7 @@ FloatingPointMatrix3x3<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& ax
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T const* FloatingPointMatrix3x3<T>::Data() const noexcept
+const T* FloatingPointMatrix3x3<T>::Data() const noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return m[0].data();
@@ -642,7 +643,7 @@ T* FloatingPointMatrix3x3<T>::Data() noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix3x3<T> operator*(T scaleFactor, FloatingPointMatrix3x3<T> const& matrix) noexcept
+FloatingPointMatrix3x3<T> operator*(T scaleFactor, const FloatingPointMatrix3x3<T>& matrix) noexcept
 {
     return FloatingPointMatrix3x3<T>::Multiply(matrix, scaleFactor);
 }
@@ -651,20 +652,20 @@ FloatingPointMatrix3x3<T> operator*(T scaleFactor, FloatingPointMatrix3x3<T> con
 template class FloatingPointMatrix3x3<float>;
 
 template FloatingPointMatrix3x3<float>
-operator*<float>(float, FloatingPointMatrix3x3<float> const&) noexcept;
+operator*<float>(float, const FloatingPointMatrix3x3<float>&) noexcept;
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointMatrix3x3<double>;
 
 template FloatingPointMatrix3x3<double>
-operator*<double>(double, FloatingPointMatrix3x3<double> const&) noexcept;
+operator*<double>(double, const FloatingPointMatrix3x3<double>&) noexcept;
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointMatrix3x3<long double>;
 
 template FloatingPointMatrix3x3<long double>
-operator*<long double>(long double, FloatingPointMatrix3x3<long double> const&) noexcept;
+operator*<long double>(long double, const FloatingPointMatrix3x3<long double>&) noexcept;
 #endif
 
 } // namespace Detail

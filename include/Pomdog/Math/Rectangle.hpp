@@ -28,14 +28,19 @@ public:
 public:
     Rectangle() noexcept = default;
 
-    Rectangle(std::int32_t x, std::int32_t y,
-        std::int32_t width, std::int32_t height) noexcept;
+    Rectangle(
+        std::int32_t x,
+        std::int32_t y,
+        std::int32_t width,
+        std::int32_t height) noexcept;
 
-    Rectangle(Point2D const& position,
-        std::int32_t width, std::int32_t height) noexcept;
+    Rectangle(
+        const Point2D& position,
+        std::int32_t width,
+        std::int32_t height) noexcept;
 
-    bool operator==(Rectangle const&) const noexcept;
-    bool operator!=(Rectangle const&) const noexcept;
+    bool operator==(const Rectangle&) const noexcept;
+    bool operator!=(const Rectangle&) const noexcept;
 
     std::int32_t GetBottom() const noexcept;
 
@@ -49,21 +54,21 @@ public:
 
     Point2D GetLocation() const;
 
-    void SetLocation(Point2D const& position);
+    void SetLocation(const Point2D& position);
 
     void Inflate(std::int32_t horizontalAmount, std::int32_t verticalAmount);
 
     void Offset(std::int32_t offsetX, std::int32_t offsetY);
 
-    void Offset(Point2D const& offset);
+    void Offset(const Point2D& offset);
 
     bool Contains(int x, int y) const noexcept;
 
-    bool Contains(Point2D const& point) const noexcept;
+    bool Contains(const Point2D& point) const noexcept;
 
-    bool Contains(Rectangle const& rectangle) const;
+    bool Contains(const Rectangle& rectangle) const;
 
-    bool Intersects(Rectangle const& rectangle) const;
+    bool Intersects(const Rectangle& rectangle) const;
 };
 
 } // namespace Pomdog

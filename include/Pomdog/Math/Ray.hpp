@@ -17,14 +17,14 @@ public:
 public:
     Ray() = default;
 
-    Ray(Vector3 const& position, Vector3 const& direction);
+    Ray(const Vector3& position, const Vector3& direction);
 
-    bool operator==(Ray const&) const noexcept;
-    bool operator!=(Ray const&) const noexcept;
+    bool operator==(const Ray&) const noexcept;
+    bool operator!=(const Ray&) const noexcept;
 
-    Optional<float> Intersects(BoundingBox const& box) const;
+    Optional<float> Intersects(const BoundingBox& box) const;
 
-    Optional<float> Intersects(BoundingSphere const& sphere) const;
+    Optional<float> Intersects(const BoundingSphere& sphere) const;
 };
 
 } // namespace Pomdog

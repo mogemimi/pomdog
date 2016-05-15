@@ -20,22 +20,22 @@ public:
 public:
     BoundingBox() noexcept = default;
 
-    BoundingBox(Vector3 const& min, Vector3 const& max);
+    BoundingBox(const Vector3& min, const Vector3& max);
 
-    bool operator==(BoundingBox const&) const noexcept;
-    bool operator!=(BoundingBox const&) const noexcept;
+    bool operator==(const BoundingBox&) const noexcept;
+    bool operator!=(const BoundingBox&) const noexcept;
 
-    ContainmentType Contains(Vector3 const& point) const;
+    ContainmentType Contains(const Vector3& point) const;
 
-    ContainmentType Contains(BoundingBox const& box) const;
+    ContainmentType Contains(const BoundingBox& box) const;
 
-    ContainmentType Contains(BoundingSphere const& sphere) const;
+    ContainmentType Contains(const BoundingSphere& sphere) const;
 
-    bool Intersects(BoundingBox const& box) const;
+    bool Intersects(const BoundingBox& box) const;
 
-    bool Intersects(BoundingSphere const& sphere) const;
+    bool Intersects(const BoundingSphere& sphere) const;
 
-    Optional<float> Intersects(Ray const& ray) const;
+    Optional<float> Intersects(const Ray& ray) const;
 
     std::array<Vector3, CornerCount> GetCorners() const noexcept;
 };

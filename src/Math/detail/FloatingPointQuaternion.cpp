@@ -6,6 +6,7 @@
 #include "Pomdog/Math/detail/FloatingPointVector3.hpp"
 #include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <cfloat>
 #include <cmath>
 #include <limits>
 #include <array>
@@ -23,7 +24,7 @@ FloatingPointQuaternion<T>::FloatingPointQuaternion(T x, T y, T z, T w) noexcept
 {}
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator+=(FloatingPointQuaternion const& other) noexcept
+FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator+=(const FloatingPointQuaternion& other) noexcept
 {
     X += other.X;
     Y += other.Y;
@@ -33,7 +34,7 @@ FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator+=(FloatingPoin
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator-=(FloatingPointQuaternion const& other) noexcept
+FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator-=(const FloatingPointQuaternion& other) noexcept
 {
     X -= other.X;
     Y -= other.Y;
@@ -43,7 +44,7 @@ FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator-=(FloatingPoin
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator*=(FloatingPointQuaternion const& other) noexcept
+FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator*=(const FloatingPointQuaternion& other) noexcept
 {
     return (*this) = (*this) * other;
 }
@@ -82,7 +83,7 @@ FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator-() const noexcep
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator+(FloatingPointQuaternion const& other) const noexcept
+FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator+(const FloatingPointQuaternion& other) const noexcept
 {
     return FloatingPointQuaternion(
         X + other.X,
@@ -92,7 +93,7 @@ FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator+(FloatingPointQu
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator-(FloatingPointQuaternion const& other) const noexcept
+FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator-(const FloatingPointQuaternion& other) const noexcept
 {
     return FloatingPointQuaternion(
         X - other.X,
@@ -102,7 +103,7 @@ FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator-(FloatingPointQu
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator*(FloatingPointQuaternion const& other) const noexcept
+FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator*(const FloatingPointQuaternion& other) const noexcept
 {
     // Quaternion(
     //     w * other.Xyz + xyz * other.W + Vector3::Cross(this->xyz, other.Xyz),
@@ -136,7 +137,7 @@ FloatingPointQuaternion<T> FloatingPointQuaternion<T>::operator/(T scaleFactor) 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointQuaternion<T>::operator==(FloatingPointQuaternion const& other) const noexcept
+bool FloatingPointQuaternion<T>::operator==(const FloatingPointQuaternion& other) const noexcept
 {
     return X == other.X
         && Y == other.Y
@@ -145,7 +146,7 @@ bool FloatingPointQuaternion<T>::operator==(FloatingPointQuaternion const& other
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointQuaternion<T>::operator!=(FloatingPointQuaternion const& other) const noexcept
+bool FloatingPointQuaternion<T>::operator!=(const FloatingPointQuaternion& other) const noexcept
 {
     return X != other.X
         || Y != other.Y
@@ -166,7 +167,7 @@ T FloatingPointQuaternion<T>::LengthSquared() const noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T FloatingPointQuaternion<T>::Dot(FloatingPointQuaternion const& a, FloatingPointQuaternion const& b) noexcept
+T FloatingPointQuaternion<T>::Dot(const FloatingPointQuaternion& a, const FloatingPointQuaternion& b) noexcept
 {
     return a.X * b.X + a.Y * b.Y + a.Z * b.Z + a.W * b.W;
 }
@@ -180,7 +181,7 @@ FloatingPointQuaternion<T>::Normalize() noexcept
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointQuaternion<T>::Normalize(FloatingPointQuaternion const& source, FloatingPointQuaternion & result) noexcept
+FloatingPointQuaternion<T>::Normalize(const FloatingPointQuaternion& source, FloatingPointQuaternion & result) noexcept
 {
     auto const length = source.Length();
 
@@ -196,7 +197,7 @@ FloatingPointQuaternion<T>::Normalize(FloatingPointQuaternion const& source, Flo
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T>
-FloatingPointQuaternion<T>::Normalize(FloatingPointQuaternion const& source) noexcept
+FloatingPointQuaternion<T>::Normalize(const FloatingPointQuaternion& source) noexcept
 {
     FloatingPointQuaternion result;
     Normalize(source, result);
@@ -205,7 +206,7 @@ FloatingPointQuaternion<T>::Normalize(FloatingPointQuaternion const& source) noe
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointQuaternion<T>::Slerp(FloatingPointQuaternion const& begin, FloatingPointQuaternion const& end, T amount,
+FloatingPointQuaternion<T>::Slerp(const FloatingPointQuaternion& begin, const FloatingPointQuaternion& end, T amount,
     FloatingPointQuaternion & result)
 {
     auto cosAngle = FloatingPointQuaternion::Dot(begin, end);
@@ -224,7 +225,7 @@ FloatingPointQuaternion<T>::Slerp(FloatingPointQuaternion const& begin, Floating
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T>
-FloatingPointQuaternion<T>::Slerp(FloatingPointQuaternion const& begin, FloatingPointQuaternion const& end, T amount)
+FloatingPointQuaternion<T>::Slerp(const FloatingPointQuaternion& begin, const FloatingPointQuaternion& end, T amount)
 {
     FloatingPointQuaternion result;
     Slerp(begin, end, amount, result);
@@ -233,7 +234,7 @@ FloatingPointQuaternion<T>::Slerp(FloatingPointQuaternion const& begin, Floating
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointQuaternion<T>::Inverse(FloatingPointQuaternion const& source, FloatingPointQuaternion & result)
+FloatingPointQuaternion<T>::Inverse(const FloatingPointQuaternion& source, FloatingPointQuaternion & result)
 {
     auto const lengthSquared = source.LengthSquared();
     if (0 < lengthSquared)
@@ -250,7 +251,7 @@ FloatingPointQuaternion<T>::Inverse(FloatingPointQuaternion const& source, Float
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T>
-FloatingPointQuaternion<T>::Inverse(FloatingPointQuaternion const& source)
+FloatingPointQuaternion<T>::Inverse(const FloatingPointQuaternion& source)
 {
     FloatingPointQuaternion result;
     Inverse(source, result);
@@ -259,7 +260,7 @@ FloatingPointQuaternion<T>::Inverse(FloatingPointQuaternion const& source)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointQuaternion<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle,
+FloatingPointQuaternion<T>::CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle,
     FloatingPointQuaternion & result)
 {
     auto const halfAngle(angle.value / 2);
@@ -274,7 +275,7 @@ FloatingPointQuaternion<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& a
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T>
-FloatingPointQuaternion<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle)
+FloatingPointQuaternion<T>::CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle)
 {
     FloatingPointQuaternion result;
     CreateFromAxisAngle(axis, angle, result);
@@ -282,12 +283,12 @@ FloatingPointQuaternion<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& a
 }
 //-----------------------------------------------------------------------
 template <class MatrixClass, typename T> static
-void CreateFromRotationMatrixImplementation(MatrixClass const& rotation, FloatingPointQuaternion<T> & result)
+void CreateFromRotationMatrixImplementation(const MatrixClass& rotation, FloatingPointQuaternion<T> & result)
 {
     // Algorithm from the article "Quaternion Calculus and Fast Animation"
     // by Ken Shoemake, SIGGRAPH 1987 Course Notes.
 
-    static_assert(std::is_same<decltype(rotation(0, 0)), T const&>::value ||
+    static_assert(std::is_same<decltype(rotation(0, 0)), const T&>::value ||
         std::is_same<decltype(rotation(0, 0)), T>::value, "");
 
     auto const trace = rotation(0, 0) + rotation(1, 1) + rotation(2, 2);
@@ -330,14 +331,14 @@ void CreateFromRotationMatrixImplementation(MatrixClass const& rotation, Floatin
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointQuaternion<T>::CreateFromRotationMatrix(FloatingPointMatrix4x4<T> const& rotation, FloatingPointQuaternion & result)
+FloatingPointQuaternion<T>::CreateFromRotationMatrix(const FloatingPointMatrix4x4<T>& rotation, FloatingPointQuaternion & result)
 {
     CreateFromRotationMatrixImplementation(rotation, result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T>
-FloatingPointQuaternion<T>::CreateFromRotationMatrix(FloatingPointMatrix4x4<T> const& rotation)
+FloatingPointQuaternion<T>::CreateFromRotationMatrix(const FloatingPointMatrix4x4<T>& rotation)
 {
     FloatingPointQuaternion result;
     CreateFromRotationMatrix(rotation, result);
@@ -346,14 +347,14 @@ FloatingPointQuaternion<T>::CreateFromRotationMatrix(FloatingPointMatrix4x4<T> c
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointQuaternion<T>::CreateFromRotationMatrix(FloatingPointMatrix3x3<T> const& rotation, FloatingPointQuaternion & result)
+FloatingPointQuaternion<T>::CreateFromRotationMatrix(const FloatingPointMatrix3x3<T>& rotation, FloatingPointQuaternion & result)
 {
     CreateFromRotationMatrixImplementation(rotation, result);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointQuaternion<T>
-FloatingPointQuaternion<T>::CreateFromRotationMatrix(FloatingPointMatrix3x3<T> const& rotation)
+FloatingPointQuaternion<T>::CreateFromRotationMatrix(const FloatingPointMatrix3x3<T>& rotation)
 {
     FloatingPointQuaternion result;
     CreateFromRotationMatrix(rotation, result);
@@ -363,7 +364,7 @@ FloatingPointQuaternion<T>::CreateFromRotationMatrix(FloatingPointMatrix3x3<T> c
 template <typename T>
 void
 FloatingPointQuaternion<T>::CreateFromYawPitchRoll(
-    Radian<T> const& yaw, Radian<T> const& pitch, Radian<T> const& roll, FloatingPointQuaternion & result)
+    const Radian<T>& yaw, const Radian<T>& pitch, const Radian<T>& roll, FloatingPointQuaternion & result)
 {
     const auto halfYaw = yaw.value / 2;
     const auto cosYaw = std::cos(halfYaw);
@@ -391,7 +392,7 @@ FloatingPointQuaternion<T>::CreateFromYawPitchRoll(
 template <typename T>
 FloatingPointQuaternion<T>
 FloatingPointQuaternion<T>::CreateFromYawPitchRoll(
-    Radian<T> const& yaw, Radian<T> const& pitch, Radian<T> const& roll)
+    const Radian<T>& yaw, const Radian<T>& pitch, const Radian<T>& roll)
 {
     FloatingPointQuaternion result;
     CreateFromYawPitchRoll(yaw, pitch, roll, result);
@@ -399,7 +400,7 @@ FloatingPointQuaternion<T>::CreateFromYawPitchRoll(
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T const* FloatingPointQuaternion<T>::Data() const noexcept
+const T* FloatingPointQuaternion<T>::Data() const noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return &X;
@@ -413,7 +414,7 @@ T* FloatingPointQuaternion<T>::Data() noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointQuaternion<T> operator*(T scaleFactor, FloatingPointQuaternion<T> const& quaternion) noexcept
+FloatingPointQuaternion<T> operator*(T scaleFactor, const FloatingPointQuaternion<T>& quaternion) noexcept
 {
     return FloatingPointQuaternion<T>(
         scaleFactor * quaternion.X,
@@ -426,20 +427,20 @@ FloatingPointQuaternion<T> operator*(T scaleFactor, FloatingPointQuaternion<T> c
 template class FloatingPointQuaternion<float>;
 
 template FloatingPointQuaternion<float>
-operator*<float>(float, FloatingPointQuaternion<float> const&) noexcept;
+operator*<float>(float, const FloatingPointQuaternion<float>&) noexcept;
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointQuaternion<double>;
 
 template FloatingPointQuaternion<double>
-operator*<double>(double, FloatingPointQuaternion<double> const&) noexcept;
+operator*<double>(double, const FloatingPointQuaternion<double>&) noexcept;
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointQuaternion<long double>;
 
 template FloatingPointQuaternion<long double>
-operator*<long double>(long double, FloatingPointQuaternion<long double> const&) noexcept;
+operator*<long double>(long double, const FloatingPointQuaternion<long double>&) noexcept;
 #endif
 
 } // namespace Detail

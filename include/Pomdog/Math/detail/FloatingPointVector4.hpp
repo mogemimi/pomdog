@@ -6,7 +6,6 @@
 #include "Pomdog/Basic/Export.hpp"
 #include <cstddef>
 #include <cstdint>
-#include <cfloat>
 #include <type_traits>
 
 namespace Pomdog {
@@ -27,11 +26,11 @@ public:
 
     ///@brief Construct from floating-point values.
     FloatingPointVector4(T x, T y, T z, T w) noexcept;
-    FloatingPointVector4(FloatingPointVector3<T> const& xyz, T w) noexcept;
+    FloatingPointVector4(const FloatingPointVector3<T>& xyz, T w) noexcept;
 
     // Assignment operators:
-    FloatingPointVector4 & operator+=(FloatingPointVector4 const& other) noexcept;
-    FloatingPointVector4 & operator-=(FloatingPointVector4 const& other) noexcept;
+    FloatingPointVector4 & operator+=(const FloatingPointVector4& other) noexcept;
+    FloatingPointVector4 & operator-=(const FloatingPointVector4& other) noexcept;
     FloatingPointVector4 & operator*=(T scaleFactor) noexcept;
     FloatingPointVector4 & operator/=(T scaleFactor);
 
@@ -40,34 +39,34 @@ public:
     FloatingPointVector4 operator-() const noexcept;
 
     // Binary operators:
-    FloatingPointVector4 operator+(FloatingPointVector4 const& other) const noexcept;
-    FloatingPointVector4 operator-(FloatingPointVector4 const& other) const noexcept;
-    FloatingPointVector4 operator*(FloatingPointVector4 const& other) const noexcept;
-    FloatingPointVector4 operator/(FloatingPointVector4 const& other) const;
+    FloatingPointVector4 operator+(const FloatingPointVector4& other) const noexcept;
+    FloatingPointVector4 operator-(const FloatingPointVector4& other) const noexcept;
+    FloatingPointVector4 operator*(const FloatingPointVector4& other) const noexcept;
+    FloatingPointVector4 operator/(const FloatingPointVector4& other) const;
     FloatingPointVector4 operator*(T scaleFactor) const noexcept;
     FloatingPointVector4 operator/(T scaleFactor) const;
 
-    bool operator==(FloatingPointVector4 const& other) const noexcept;
-    bool operator!=(FloatingPointVector4 const& other) const noexcept;
+    bool operator==(const FloatingPointVector4& other) const noexcept;
+    bool operator!=(const FloatingPointVector4& other) const noexcept;
 
     T Length() const noexcept;
 
     T LengthSquared() const noexcept;
 
-    static T Distance(FloatingPointVector4 const& a, FloatingPointVector4 const& b) noexcept;
+    static T Distance(const FloatingPointVector4& a, const FloatingPointVector4& b) noexcept;
 
-    static T DistanceSquared(FloatingPointVector4 const& a, FloatingPointVector4 const& b) noexcept;
+    static T DistanceSquared(const FloatingPointVector4& a, const FloatingPointVector4& b) noexcept;
 
-    static T Dot(FloatingPointVector4 const& a, FloatingPointVector4 const& b) noexcept;
+    static T Dot(const FloatingPointVector4& a, const FloatingPointVector4& b) noexcept;
 
     void Normalize() noexcept;
 
-    static FloatingPointVector4 Normalize(FloatingPointVector4 const& source) noexcept;
+    static FloatingPointVector4 Normalize(const FloatingPointVector4& source) noexcept;
 
-    static void Normalize(FloatingPointVector4 const& source, FloatingPointVector4 & result) noexcept;
+    static void Normalize(const FloatingPointVector4& source, FloatingPointVector4 & result) noexcept;
 
     ///@brief Returns pointer to the first element.
-    T const* Data() const noexcept;
+    const T* Data() const noexcept;
 
     ///@brief Returns pointer to the first element.
     T* Data() noexcept;
@@ -75,7 +74,7 @@ public:
 
 template <typename T>
 FloatingPointVector4<T> POMDOG_EXPORT
-operator*(T scaleFactor, FloatingPointVector4<T> const& vector) noexcept;
+operator*(T scaleFactor, const FloatingPointVector4<T>& vector) noexcept;
 
 } // namespace Detail
 } // namespace Pomdog

@@ -18,11 +18,11 @@ public:
     ///@brief Construct from unsigned integer values.
     Color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) noexcept;
 
-    explicit Color(Vector3 const& vector);
-    explicit Color(Vector4 const& vector);
+    explicit Color(const Vector3& vector);
+    explicit Color(const Vector4& vector);
 
-    bool operator==(Color const&) const noexcept;
-    bool operator!=(Color const&) const noexcept;
+    bool operator==(const Color&) const noexcept;
+    bool operator!=(const Color&) const noexcept;
 
     Vector3 ToVector3() const noexcept;
     Vector4 ToVector4() const noexcept;
@@ -31,13 +31,13 @@ public:
 
     static Color FromPackedValue(std::uint32_t packedValue);
 
-    static Color Lerp(Color const& source1, Color const& source2, float amount);
+    static Color Lerp(const Color& source1, const Color& source2, float amount);
 
-    static Color SmoothStep(Color const& source1, Color const& source2, float amount);
+    static Color SmoothStep(const Color& source1, const Color& source2, float amount);
 
-    static Color Multiply(Color const& color, float scale);
+    static Color Multiply(const Color& color, float scale);
 
-    static Color Multiply(Color const& source1, Color const& source2);
+    static Color Multiply(const Color& source1, const Color& source2);
 
     ///@note (R, G, B, A) = (255, 255, 255, 255)
     static const Color White;

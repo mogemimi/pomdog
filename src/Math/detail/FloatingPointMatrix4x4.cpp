@@ -7,6 +7,7 @@
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <cfloat>
 #include <cmath>
 #include <limits>
 #include <utility>
@@ -48,7 +49,7 @@ FloatingPointMatrix4x4<T>::FloatingPointMatrix4x4(
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T const& FloatingPointMatrix4x4<T>::operator()(std::size_t row, std::size_t column) const
+const T& FloatingPointMatrix4x4<T>::operator()(std::size_t row, std::size_t column) const
 {
     POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
@@ -64,7 +65,7 @@ T & FloatingPointMatrix4x4<T>::operator()(std::size_t row, std::size_t column)
 }
 //-----------------------------------------------------------------------
 //template <typename T>
-//std::array<T, 4> const& FloatingPointMatrix4x4<T>::operator[](std::size_t row) const
+//const std::array<T, 4>& FloatingPointMatrix4x4<T>::operator[](std::size_t row) const
 //{
 //    POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix4x4, subscript out of range");
 //    return m[row];
@@ -78,14 +79,14 @@ T & FloatingPointMatrix4x4<T>::operator()(std::size_t row, std::size_t column)
 //}
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator*=(FloatingPointMatrix4x4 const& other) noexcept
+FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator*=(const FloatingPointMatrix4x4& other) noexcept
 {
     *this = Multiply(*this, other);
     return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator+=(FloatingPointMatrix4x4 const& other) noexcept
+FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator+=(const FloatingPointMatrix4x4& other) noexcept
 {
     m[0][0] += other.m[0][0];
     m[0][1] += other.m[0][1];
@@ -107,7 +108,7 @@ FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator+=(FloatingPointM
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator-=(FloatingPointMatrix4x4 const& other) noexcept
+FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator-=(const FloatingPointMatrix4x4& other) noexcept
 {
     m[0][0] -= other.m[0][0];
     m[0][1] -= other.m[0][1];
@@ -172,7 +173,7 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-() const noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator+(FloatingPointMatrix4x4 const& other) const noexcept
+FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator+(const FloatingPointMatrix4x4& other) const noexcept
 {
     return {
         m[0][0] + other.m[0][0],
@@ -194,7 +195,7 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator+(FloatingPointMatr
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-(FloatingPointMatrix4x4 const& other) const noexcept
+FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-(const FloatingPointMatrix4x4& other) const noexcept
 {
     return {
         m[0][0] - other.m[0][0],
@@ -216,7 +217,7 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-(FloatingPointMatr
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator*(FloatingPointMatrix4x4 const& other) const noexcept
+FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator*(const FloatingPointMatrix4x4& other) const noexcept
 {
     return Multiply(*this, other);
 }
@@ -252,7 +253,7 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator/(T scaleFactor) co
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointMatrix4x4<T>::operator==(FloatingPointMatrix4x4 const& other) const noexcept
+bool FloatingPointMatrix4x4<T>::operator==(const FloatingPointMatrix4x4& other) const noexcept
 {
     return m[0][0] == other.m[0][0] && m[0][1] == other.m[0][1] && m[0][2] == other.m[0][2] && m[0][3] == other.m[0][3]
         && m[1][0] == other.m[1][0] && m[1][1] == other.m[1][1] && m[1][2] == other.m[1][2] && m[1][3] == other.m[1][3]
@@ -261,7 +262,7 @@ bool FloatingPointMatrix4x4<T>::operator==(FloatingPointMatrix4x4 const& other) 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-bool FloatingPointMatrix4x4<T>::operator!=(FloatingPointMatrix4x4 const& other) const noexcept
+bool FloatingPointMatrix4x4<T>::operator!=(const FloatingPointMatrix4x4& other) const noexcept
 {
     return m[0][0] != other.m[0][0] || m[0][1] != other.m[0][1] || m[0][2] != other.m[0][2] || m[0][3] != other.m[0][3]
         || m[1][0] != other.m[1][0] || m[1][1] != other.m[1][1] || m[1][2] != other.m[1][2] || m[1][3] != other.m[1][3]
@@ -271,8 +272,8 @@ bool FloatingPointMatrix4x4<T>::operator!=(FloatingPointMatrix4x4 const& other) 
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Multiply(
-    FloatingPointMatrix4x4 const& matrix1,
-    FloatingPointMatrix4x4 const& matrix2) noexcept
+    const FloatingPointMatrix4x4& matrix1,
+    const FloatingPointMatrix4x4& matrix2) noexcept
 {
     const auto& a = matrix1;
     const auto& b = matrix2;
@@ -300,7 +301,7 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Multiply(
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Multiply(
-    FloatingPointMatrix4x4 const& matrix1, T scaleFactor) noexcept
+    const FloatingPointMatrix4x4& matrix1, T scaleFactor) noexcept
 {
     return {
         matrix1.m[0][0] * scaleFactor,
@@ -322,7 +323,7 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Multiply(
 }
 //-----------------------------------------------------------------------
 template <typename T>
-void FloatingPointMatrix4x4<T>::SetTranslation(FloatingPointVector3<T> const& position) noexcept
+void FloatingPointMatrix4x4<T>::SetTranslation(const FloatingPointVector3<T>& position) noexcept
 {
     m[3][0] = position.X;
     m[3][1] = position.Y;
@@ -336,7 +337,7 @@ FloatingPointVector3<T> FloatingPointMatrix4x4<T>::GetTranslation() const noexce
 }
 //-----------------------------------------------------------------------
 template <typename T>
-void FloatingPointMatrix4x4<T>::SetScale(FloatingPointVector3<T> const& scale) noexcept
+void FloatingPointMatrix4x4<T>::SetScale(const FloatingPointVector3<T>& scale) noexcept
 {
     m[0][0] = scale.X;
     m[1][1] = scale.Y;
@@ -401,7 +402,7 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix4x4<T>::Minor3x3(std::size_t row, s
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::Adjoint(FloatingPointMatrix4x4 const& matrix)
+FloatingPointMatrix4x4<T>::Adjoint(const FloatingPointMatrix4x4& matrix)
 {
     return {
          matrix.Minor3x3(0, 0).Determinant(),
@@ -424,7 +425,7 @@ FloatingPointMatrix4x4<T>::Adjoint(FloatingPointMatrix4x4 const& matrix)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::Transpose(FloatingPointMatrix4x4 const& matrix, FloatingPointMatrix4x4 & result) noexcept
+FloatingPointMatrix4x4<T>::Transpose(const FloatingPointMatrix4x4& matrix, FloatingPointMatrix4x4 & result) noexcept
 {
     result = {
         matrix.m[0][0], matrix.m[1][0], matrix.m[2][0], matrix.m[3][0],
@@ -435,7 +436,7 @@ FloatingPointMatrix4x4<T>::Transpose(FloatingPointMatrix4x4 const& matrix, Float
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::Transpose(FloatingPointMatrix4x4 const& matrix) noexcept
+FloatingPointMatrix4x4<T>::Transpose(const FloatingPointMatrix4x4& matrix) noexcept
 {
     return {
         matrix.m[0][0], matrix.m[1][0], matrix.m[2][0], matrix.m[3][0],
@@ -446,7 +447,7 @@ FloatingPointMatrix4x4<T>::Transpose(FloatingPointMatrix4x4 const& matrix) noexc
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::Invert(FloatingPointMatrix4x4 const& matrix, FloatingPointMatrix4x4 & result)
+FloatingPointMatrix4x4<T>::Invert(const FloatingPointMatrix4x4& matrix, FloatingPointMatrix4x4 & result)
 {
     auto const determinant = matrix.Determinant();
     POMDOG_ASSERT_MESSAGE(0 != determinant, "This is singular matrix");
@@ -455,7 +456,7 @@ FloatingPointMatrix4x4<T>::Invert(FloatingPointMatrix4x4 const& matrix, Floating
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::Invert(FloatingPointMatrix4x4 const& matrix)
+FloatingPointMatrix4x4<T>::Invert(const FloatingPointMatrix4x4& matrix)
 {
     FloatingPointMatrix4x4 result;
     Invert(matrix, result);
@@ -464,7 +465,7 @@ FloatingPointMatrix4x4<T>::Invert(FloatingPointMatrix4x4 const& matrix)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::Lerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2,
+FloatingPointMatrix4x4<T>::Lerp(const FloatingPointMatrix4x4& source1, const FloatingPointMatrix4x4& source2,
     T amount, FloatingPointMatrix4x4 & result) noexcept
 {
     result.m[0][0] = MathHelper::Lerp(source1.m[0][0], source2.m[0][0], amount);
@@ -487,7 +488,7 @@ FloatingPointMatrix4x4<T>::Lerp(FloatingPointMatrix4x4 const& source1, FloatingP
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::Lerp(FloatingPointMatrix4x4 const& source1, FloatingPointMatrix4x4 const& source2,
+FloatingPointMatrix4x4<T>::Lerp(const FloatingPointMatrix4x4& source1, const FloatingPointMatrix4x4& source2,
     T amount) noexcept
 {
     FloatingPointMatrix4x4 result;
@@ -497,7 +498,7 @@ FloatingPointMatrix4x4<T>::Lerp(FloatingPointMatrix4x4 const& source1, FloatingP
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::CreateTranslation(FloatingPointVector3<T> const& position, FloatingPointMatrix4x4 & result) noexcept
+FloatingPointMatrix4x4<T>::CreateTranslation(const FloatingPointVector3<T>& position, FloatingPointMatrix4x4 & result) noexcept
 {
     result = Identity;
     result.m[3][0] = position.X;
@@ -507,7 +508,7 @@ FloatingPointMatrix4x4<T>::CreateTranslation(FloatingPointVector3<T> const& posi
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateTranslation(FloatingPointVector3<T> const& position) noexcept
+FloatingPointMatrix4x4<T>::CreateTranslation(const FloatingPointVector3<T>& position) noexcept
 {
     FloatingPointMatrix4x4 result;
     CreateTranslation(position, result);
@@ -535,7 +536,7 @@ FloatingPointMatrix4x4<T>::CreateScale(T scale) noexcept
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::CreateScale(FloatingPointVector3<T> const& scale, FloatingPointMatrix4x4 & result) noexcept
+FloatingPointMatrix4x4<T>::CreateScale(const FloatingPointVector3<T>& scale, FloatingPointMatrix4x4 & result) noexcept
 {
     result = Identity;
     result.m[0][0] = scale.X;
@@ -545,7 +546,7 @@ FloatingPointMatrix4x4<T>::CreateScale(FloatingPointVector3<T> const& scale, Flo
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateScale(FloatingPointVector3<T> const& scale) noexcept
+FloatingPointMatrix4x4<T>::CreateScale(const FloatingPointVector3<T>& scale) noexcept
 {
     FloatingPointMatrix4x4 result;
     CreateScale(scale, result);
@@ -554,7 +555,7 @@ FloatingPointMatrix4x4<T>::CreateScale(FloatingPointVector3<T> const& scale) noe
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::CreateRotationX(Radian<T> const& angle, FloatingPointMatrix4x4 & result)
+FloatingPointMatrix4x4<T>::CreateRotationX(const Radian<T>& angle, FloatingPointMatrix4x4 & result)
 {
     result = Identity;
     auto const sinAngle = std::sin(angle.value);
@@ -568,7 +569,7 @@ FloatingPointMatrix4x4<T>::CreateRotationX(Radian<T> const& angle, FloatingPoint
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateRotationX(Radian<T> const& angle)
+FloatingPointMatrix4x4<T>::CreateRotationX(const Radian<T>& angle)
 {
     FloatingPointMatrix4x4 result;
     CreateRotationX(angle, result);
@@ -577,7 +578,7 @@ FloatingPointMatrix4x4<T>::CreateRotationX(Radian<T> const& angle)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::CreateRotationY(Radian<T> const& angle, FloatingPointMatrix4x4 & result)
+FloatingPointMatrix4x4<T>::CreateRotationY(const Radian<T>& angle, FloatingPointMatrix4x4 & result)
 {
     result = Identity;
     auto const sinAngle = std::sin(angle.value);
@@ -591,7 +592,7 @@ FloatingPointMatrix4x4<T>::CreateRotationY(Radian<T> const& angle, FloatingPoint
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateRotationY(Radian<T> const& angle)
+FloatingPointMatrix4x4<T>::CreateRotationY(const Radian<T>& angle)
 {
     FloatingPointMatrix4x4 result;
     CreateRotationY(angle, result);
@@ -600,7 +601,7 @@ FloatingPointMatrix4x4<T>::CreateRotationY(Radian<T> const& angle)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::CreateRotationZ(Radian<T> const& angle, FloatingPointMatrix4x4 & result)
+FloatingPointMatrix4x4<T>::CreateRotationZ(const Radian<T>& angle, FloatingPointMatrix4x4 & result)
 {
     result = Identity;
     auto const sinAngle = std::sin(angle.value);
@@ -614,7 +615,7 @@ FloatingPointMatrix4x4<T>::CreateRotationZ(Radian<T> const& angle, FloatingPoint
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateRotationZ(Radian<T> const& angle)
+FloatingPointMatrix4x4<T>::CreateRotationZ(const Radian<T>& angle)
 {
     FloatingPointMatrix4x4 result;
     CreateRotationZ(angle, result);
@@ -623,7 +624,7 @@ FloatingPointMatrix4x4<T>::CreateRotationZ(Radian<T> const& angle)
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion, FloatingPointMatrix4x4 & result)
+FloatingPointMatrix4x4<T>::CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion, FloatingPointMatrix4x4 & result)
 {
     auto const xx = quaternion.X * quaternion.X;
     auto const yy = quaternion.Y * quaternion.Y;
@@ -658,7 +659,7 @@ FloatingPointMatrix4x4<T>::CreateFromQuaternion(FloatingPointQuaternion<T> const
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateFromQuaternion(FloatingPointQuaternion<T> const& quaternion)
+FloatingPointMatrix4x4<T>::CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion)
 {
     FloatingPointMatrix4x4 result;
     CreateFromQuaternion(quaternion, result);
@@ -667,8 +668,11 @@ FloatingPointMatrix4x4<T>::CreateFromQuaternion(FloatingPointQuaternion<T> const
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::CreateLookAtLH(FloatingPointVector3<T> const & eye, FloatingPointVector3<T> const & at,
-    FloatingPointVector3<T> const & up, FloatingPointMatrix4x4 & result)
+FloatingPointMatrix4x4<T>::CreateLookAtLH(
+    const FloatingPointVector3<T>& eye,
+    const FloatingPointVector3<T>& at,
+    const FloatingPointVector3<T>& up,
+    FloatingPointMatrix4x4 & result)
 {
     // zaxis = normal(At - Eye)
     // xaxis = normal(cross(Up, zaxis))
@@ -706,8 +710,8 @@ FloatingPointMatrix4x4<T>::CreateLookAtLH(FloatingPointVector3<T> const & eye, F
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateLookAtLH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
-    FloatingPointVector3<T> const& up)
+FloatingPointMatrix4x4<T>::CreateLookAtLH(const FloatingPointVector3<T>& eye, const FloatingPointVector3<T>& at,
+    const FloatingPointVector3<T>& up)
 {// Left-handed Cartesian Coordinates
     FloatingPointMatrix4x4 result;
     CreateLookAtLH(eye, at, up, result);
@@ -716,8 +720,8 @@ FloatingPointMatrix4x4<T>::CreateLookAtLH(FloatingPointVector3<T> const& eye, Fl
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::CreateLookAtRH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
-    FloatingPointVector3<T> const& up, FloatingPointMatrix4x4 & result)
+FloatingPointMatrix4x4<T>::CreateLookAtRH(const FloatingPointVector3<T>& eye, const FloatingPointVector3<T>& at,
+    const FloatingPointVector3<T>& up, FloatingPointMatrix4x4 & result)
 {
     // zaxis = normal(Eye - At)
     // xaxis = normal(cross(Up, zaxis))
@@ -755,8 +759,8 @@ FloatingPointMatrix4x4<T>::CreateLookAtRH(FloatingPointVector3<T> const& eye, Fl
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateLookAtRH(FloatingPointVector3<T> const& eye, FloatingPointVector3<T> const& at,
-    FloatingPointVector3<T> const& up)
+FloatingPointMatrix4x4<T>::CreateLookAtRH(const FloatingPointVector3<T>& eye, const FloatingPointVector3<T>& at,
+    const FloatingPointVector3<T>& up)
 {// Right-handed Cartesian Coordinates
     FloatingPointMatrix4x4 result;
     FloatingPointMatrix4x4::CreateLookAtRH(eye, at, up, result);
@@ -847,7 +851,7 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveRH(T width, T height, T zNear, T zFa
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy, T aspect, T zNear, T zFar,
+FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(const Radian<T>& fovy, T aspect, T zNear, T zFar,
     FloatingPointMatrix4x4 & result)
 {
     POMDOG_ASSERT_MESSAGE(fovy > 0, "fovy: out of range");
@@ -893,7 +897,7 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy,
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy, T aspect, T zNear, T zFar)
+FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(const Radian<T>& fovy, T aspect, T zNear, T zFar)
 {// Left-handed Cartesian Coordinates
     FloatingPointMatrix4x4 result;
     CreatePerspectiveFieldOfViewLH(fovy, aspect, zNear, zFar, result);
@@ -902,7 +906,7 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(Radian<T> const& fovy,
 //-----------------------------------------------------------------------
 template <typename T>
 void
-FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(Radian<T> const& fovy, T aspect, T zNear, T zFar,
+FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(const Radian<T>& fovy, T aspect, T zNear, T zFar,
     FloatingPointMatrix4x4 & result)
 {
     POMDOG_ASSERT_MESSAGE(fovy > 0, "fovy: out of range");
@@ -948,7 +952,7 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(Radian<T> const& fovy,
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(Radian<T> const& fovy, T aspect, T zNear, T zFar)
+FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(const Radian<T>& fovy, T aspect, T zNear, T zFar)
 {// Right-handed Cartesian Coordinates
     FloatingPointMatrix4x4 result;
     CreatePerspectiveFieldOfViewRH(fovy, aspect, zNear, zFar, result);
@@ -1192,7 +1196,7 @@ FloatingPointMatrix4x4<T>::CreateOrthographicRH(T width, T height, T zNearPlane,
 template <typename T>
 void
 FloatingPointMatrix4x4<T>::CreateFromAxisAngle(
-    FloatingPointVector3<T> const& axis, Radian<T> const& angle, FloatingPointMatrix4x4 & result)
+    const FloatingPointVector3<T>& axis, const Radian<T>& angle, FloatingPointMatrix4x4 & result)
 {
     auto const sinAngle = std::sin(angle.value);
     auto const cosAngle = std::cos(angle.value);
@@ -1224,7 +1228,7 @@ FloatingPointMatrix4x4<T>::CreateFromAxisAngle(
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& axis, Radian<T> const& angle)
+FloatingPointMatrix4x4<T>::CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle)
 {
     FloatingPointMatrix4x4 result;
     CreateFromAxisAngle(axis, angle, result);
@@ -1232,7 +1236,7 @@ FloatingPointMatrix4x4<T>::CreateFromAxisAngle(FloatingPointVector3<T> const& ax
 }
 //-----------------------------------------------------------------------
 template <typename T>
-T const* FloatingPointMatrix4x4<T>::Data() const noexcept
+const T* FloatingPointMatrix4x4<T>::Data() const noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return m[0].data();
@@ -1246,7 +1250,7 @@ T* FloatingPointMatrix4x4<T>::Data() noexcept
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> operator*(T scaleFactor, FloatingPointMatrix4x4<T> const& matrix) noexcept
+FloatingPointMatrix4x4<T> operator*(T scaleFactor, const FloatingPointMatrix4x4<T>& matrix) noexcept
 {
     return FloatingPointMatrix4x4<T>::Multiply(matrix, scaleFactor);
 }
@@ -1255,20 +1259,20 @@ FloatingPointMatrix4x4<T> operator*(T scaleFactor, FloatingPointMatrix4x4<T> con
 template class FloatingPointMatrix4x4<float>;
 
 template FloatingPointMatrix4x4<float>
-operator*<float>(float, FloatingPointMatrix4x4<float> const&) noexcept;
+operator*<float>(float, const FloatingPointMatrix4x4<float>&) noexcept;
 
 #if defined(DBL_MANT_DIG)
 template class FloatingPointMatrix4x4<double>;
 
 template FloatingPointMatrix4x4<double>
-operator*<double>(double, FloatingPointMatrix4x4<double> const&) noexcept;
+operator*<double>(double, const FloatingPointMatrix4x4<double>&) noexcept;
 #endif
 
 #if defined(LDBL_MANT_DIG)
 template class FloatingPointMatrix4x4<long double>;
 
 template FloatingPointMatrix4x4<long double>
-operator*<long double>(long double, FloatingPointMatrix4x4<long double> const&) noexcept;
+operator*<long double>(long double, const FloatingPointMatrix4x4<long double>&) noexcept;
 #endif
 
 } // namespace Detail

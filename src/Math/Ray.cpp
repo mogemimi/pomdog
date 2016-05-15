@@ -8,25 +8,25 @@
 
 namespace Pomdog {
 //-----------------------------------------------------------------------
-Ray::Ray(Vector3 const& positionIn, Vector3 const& directionIn)
+Ray::Ray(const Vector3& positionIn, const Vector3& directionIn)
     : Position(positionIn)
     , Direction(directionIn)
 {
 }
 //-----------------------------------------------------------------------
-bool Ray::operator==(Ray const& ray) const noexcept
+bool Ray::operator==(const Ray& ray) const noexcept
 {
     return this->Position == ray.Position
         && this->Direction == ray.Direction;
 }
 //-----------------------------------------------------------------------
-bool Ray::operator!=(Ray const& ray) const noexcept
+bool Ray::operator!=(const Ray& ray) const noexcept
 {
     return this->Position != ray.Position
         || this->Direction != ray.Direction;
 }
 //-----------------------------------------------------------------------
-Optional<float> Ray::Intersects(BoundingBox const& box) const
+Optional<float> Ray::Intersects(const BoundingBox& box) const
 {
     typedef float T;
 
@@ -115,7 +115,7 @@ Optional<float> Ray::Intersects(BoundingBox const& box) const
     return tFar;
 }
 //-----------------------------------------------------------------------
-Optional<float> Ray::Intersects(BoundingSphere const& sphere) const
+Optional<float> Ray::Intersects(const BoundingSphere& sphere) const
 {
     const auto toSphere = sphere.Center - this->Position;
     const auto toSphereLengthSquared = toSphere.LengthSquared();
