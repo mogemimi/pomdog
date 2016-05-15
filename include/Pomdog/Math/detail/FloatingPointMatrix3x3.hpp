@@ -66,11 +66,13 @@ public:
 
     T Determinant() const noexcept;
 
-    FloatingPointMatrix3x3 Concatenate(FloatingPointMatrix3x3 const& other) const noexcept;
-
-    FloatingPointMatrix3x3 Concatenate(T scaleFactor) const noexcept;
-
     FloatingPointMatrix2x2<T> Minor2x2(std::size_t row, std::size_t column) const;
+
+    static FloatingPointMatrix3x3
+    Multiply(const FloatingPointMatrix3x3& matrix1, const FloatingPointMatrix3x3& matrix2) noexcept;
+
+    static FloatingPointMatrix3x3
+    Multiply(const FloatingPointMatrix3x3& matrix1, T scaleFactor) noexcept;
 
     static FloatingPointMatrix3x3
     Adjoint(FloatingPointMatrix3x3 const& matrix);

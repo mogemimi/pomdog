@@ -57,11 +57,13 @@ public:
     T const& operator()(std::size_t row, std::size_t column) const;
     T & operator()(std::size_t row, std::size_t column);
 
-    FloatingPointMatrix2x2 Concatenate(FloatingPointMatrix2x2 const& other) const noexcept;
-
-    FloatingPointMatrix2x2 Concatenate(T scaleFactor) const noexcept;
-
     T Determinant() const noexcept;
+
+    static FloatingPointMatrix2x2
+    Multiply(const FloatingPointMatrix2x2& matrix1, const FloatingPointMatrix2x2& matrix2) noexcept;
+
+    static FloatingPointMatrix2x2
+    Multiply(const FloatingPointMatrix2x2& matrix1, T scaleFactor) noexcept;
 
     ///@brief Returns pointer to the first element.
     T const* Data() const noexcept;

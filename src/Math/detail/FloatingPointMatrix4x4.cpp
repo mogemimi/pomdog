@@ -80,7 +80,8 @@ T & FloatingPointMatrix4x4<T>::operator()(std::size_t row, std::size_t column)
 template <typename T>
 FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator*=(FloatingPointMatrix4x4 const& other) noexcept
 {
-    return *this = this->Concatenate(other);
+    *this = Multiply(*this, other);
+    return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -130,7 +131,8 @@ FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator-=(FloatingPointM
 template <typename T>
 FloatingPointMatrix4x4<T> & FloatingPointMatrix4x4<T>::operator*=(T scaleFactor) noexcept
 {
-    return *this = this->Concatenate(scaleFactor);
+    *this = Multiply(*this, scaleFactor);
+    return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -166,7 +168,7 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator+() const noexcept
 template <typename T>
 FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-() const noexcept
 {
-    return this->Concatenate(-1);
+    return Multiply(*this, -1);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -216,13 +218,13 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-(FloatingPointMatr
 template <typename T>
 FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator*(FloatingPointMatrix4x4 const& other) const noexcept
 {
-    return this->Concatenate(other);
+    return Multiply(*this, other);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator*(T scaleFactor) const noexcept
 {
-    return this->Concatenate(scaleFactor);
+    return Multiply(*this, scaleFactor);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -268,51 +270,55 @@ bool FloatingPointMatrix4x4<T>::operator!=(FloatingPointMatrix4x4 const& other) 
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Concatenate(FloatingPointMatrix4x4 const& rhs) const noexcept
+FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Multiply(
+    FloatingPointMatrix4x4 const& matrix1,
+    FloatingPointMatrix4x4 const& matrix2) noexcept
 {
-    FloatingPointMatrix4x4 const& lhs(*this);
+    const auto& a = matrix1;
+    const auto& b = matrix2;
     return {
-        lhs.m[0][0] * rhs.m[0][0] + lhs.m[0][1] * rhs.m[1][0] + lhs.m[0][2] * rhs.m[2][0] + lhs.m[0][3] * rhs.m[3][0],
-        lhs.m[0][0] * rhs.m[0][1] + lhs.m[0][1] * rhs.m[1][1] + lhs.m[0][2] * rhs.m[2][1] + lhs.m[0][3] * rhs.m[3][1],
-        lhs.m[0][0] * rhs.m[0][2] + lhs.m[0][1] * rhs.m[1][2] + lhs.m[0][2] * rhs.m[2][2] + lhs.m[0][3] * rhs.m[3][2],
-        lhs.m[0][0] * rhs.m[0][3] + lhs.m[0][1] * rhs.m[1][3] + lhs.m[0][2] * rhs.m[2][3] + lhs.m[0][3] * rhs.m[3][3],
+        a.m[0][0] * b.m[0][0] + a.m[0][1] * b.m[1][0] + a.m[0][2] * b.m[2][0] + a.m[0][3] * b.m[3][0],
+        a.m[0][0] * b.m[0][1] + a.m[0][1] * b.m[1][1] + a.m[0][2] * b.m[2][1] + a.m[0][3] * b.m[3][1],
+        a.m[0][0] * b.m[0][2] + a.m[0][1] * b.m[1][2] + a.m[0][2] * b.m[2][2] + a.m[0][3] * b.m[3][2],
+        a.m[0][0] * b.m[0][3] + a.m[0][1] * b.m[1][3] + a.m[0][2] * b.m[2][3] + a.m[0][3] * b.m[3][3],
 
-        lhs.m[1][0] * rhs.m[0][0] + lhs.m[1][1] * rhs.m[1][0] + lhs.m[1][2] * rhs.m[2][0] + lhs.m[1][3] * rhs.m[3][0],
-        lhs.m[1][0] * rhs.m[0][1] + lhs.m[1][1] * rhs.m[1][1] + lhs.m[1][2] * rhs.m[2][1] + lhs.m[1][3] * rhs.m[3][1],
-        lhs.m[1][0] * rhs.m[0][2] + lhs.m[1][1] * rhs.m[1][2] + lhs.m[1][2] * rhs.m[2][2] + lhs.m[1][3] * rhs.m[3][2],
-        lhs.m[1][0] * rhs.m[0][3] + lhs.m[1][1] * rhs.m[1][3] + lhs.m[1][2] * rhs.m[2][3] + lhs.m[1][3] * rhs.m[3][3],
+        a.m[1][0] * b.m[0][0] + a.m[1][1] * b.m[1][0] + a.m[1][2] * b.m[2][0] + a.m[1][3] * b.m[3][0],
+        a.m[1][0] * b.m[0][1] + a.m[1][1] * b.m[1][1] + a.m[1][2] * b.m[2][1] + a.m[1][3] * b.m[3][1],
+        a.m[1][0] * b.m[0][2] + a.m[1][1] * b.m[1][2] + a.m[1][2] * b.m[2][2] + a.m[1][3] * b.m[3][2],
+        a.m[1][0] * b.m[0][3] + a.m[1][1] * b.m[1][3] + a.m[1][2] * b.m[2][3] + a.m[1][3] * b.m[3][3],
 
-        lhs.m[2][0] * rhs.m[0][0] + lhs.m[2][1] * rhs.m[1][0] + lhs.m[2][2] * rhs.m[2][0] + lhs.m[2][3] * rhs.m[3][0],
-        lhs.m[2][0] * rhs.m[0][1] + lhs.m[2][1] * rhs.m[1][1] + lhs.m[2][2] * rhs.m[2][1] + lhs.m[2][3] * rhs.m[3][1],
-        lhs.m[2][0] * rhs.m[0][2] + lhs.m[2][1] * rhs.m[1][2] + lhs.m[2][2] * rhs.m[2][2] + lhs.m[2][3] * rhs.m[3][2],
-        lhs.m[2][0] * rhs.m[0][3] + lhs.m[2][1] * rhs.m[1][3] + lhs.m[2][2] * rhs.m[2][3] + lhs.m[2][3] * rhs.m[3][3],
+        a.m[2][0] * b.m[0][0] + a.m[2][1] * b.m[1][0] + a.m[2][2] * b.m[2][0] + a.m[2][3] * b.m[3][0],
+        a.m[2][0] * b.m[0][1] + a.m[2][1] * b.m[1][1] + a.m[2][2] * b.m[2][1] + a.m[2][3] * b.m[3][1],
+        a.m[2][0] * b.m[0][2] + a.m[2][1] * b.m[1][2] + a.m[2][2] * b.m[2][2] + a.m[2][3] * b.m[3][2],
+        a.m[2][0] * b.m[0][3] + a.m[2][1] * b.m[1][3] + a.m[2][2] * b.m[2][3] + a.m[2][3] * b.m[3][3],
 
-        lhs.m[3][0] * rhs.m[0][0] + lhs.m[3][1] * rhs.m[1][0] + lhs.m[3][2] * rhs.m[2][0] + lhs.m[3][3] * rhs.m[3][0],
-        lhs.m[3][0] * rhs.m[0][1] + lhs.m[3][1] * rhs.m[1][1] + lhs.m[3][2] * rhs.m[2][1] + lhs.m[3][3] * rhs.m[3][1],
-        lhs.m[3][0] * rhs.m[0][2] + lhs.m[3][1] * rhs.m[1][2] + lhs.m[3][2] * rhs.m[2][2] + lhs.m[3][3] * rhs.m[3][2],
-        lhs.m[3][0] * rhs.m[0][3] + lhs.m[3][1] * rhs.m[1][3] + lhs.m[3][2] * rhs.m[2][3] + lhs.m[3][3] * rhs.m[3][3]};
+        a.m[3][0] * b.m[0][0] + a.m[3][1] * b.m[1][0] + a.m[3][2] * b.m[2][0] + a.m[3][3] * b.m[3][0],
+        a.m[3][0] * b.m[0][1] + a.m[3][1] * b.m[1][1] + a.m[3][2] * b.m[2][1] + a.m[3][3] * b.m[3][1],
+        a.m[3][0] * b.m[0][2] + a.m[3][1] * b.m[1][2] + a.m[3][2] * b.m[2][2] + a.m[3][3] * b.m[3][2],
+        a.m[3][0] * b.m[0][3] + a.m[3][1] * b.m[1][3] + a.m[3][2] * b.m[2][3] + a.m[3][3] * b.m[3][3]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Concatenate(T scaleFactor) const noexcept
+FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Multiply(
+    FloatingPointMatrix4x4 const& matrix1, T scaleFactor) noexcept
 {
     return {
-        m[0][0] * scaleFactor,
-        m[0][1] * scaleFactor,
-        m[0][2] * scaleFactor,
-        m[0][3] * scaleFactor,
-        m[1][0] * scaleFactor,
-        m[1][1] * scaleFactor,
-        m[1][2] * scaleFactor,
-        m[1][3] * scaleFactor,
-        m[2][0] * scaleFactor,
-        m[2][1] * scaleFactor,
-        m[2][2] * scaleFactor,
-        m[2][3] * scaleFactor,
-        m[3][0] * scaleFactor,
-        m[3][1] * scaleFactor,
-        m[3][2] * scaleFactor,
-        m[3][3] * scaleFactor};
+        matrix1.m[0][0] * scaleFactor,
+        matrix1.m[0][1] * scaleFactor,
+        matrix1.m[0][2] * scaleFactor,
+        matrix1.m[0][3] * scaleFactor,
+        matrix1.m[1][0] * scaleFactor,
+        matrix1.m[1][1] * scaleFactor,
+        matrix1.m[1][2] * scaleFactor,
+        matrix1.m[1][3] * scaleFactor,
+        matrix1.m[2][0] * scaleFactor,
+        matrix1.m[2][1] * scaleFactor,
+        matrix1.m[2][2] * scaleFactor,
+        matrix1.m[2][3] * scaleFactor,
+        matrix1.m[3][0] * scaleFactor,
+        matrix1.m[3][1] * scaleFactor,
+        matrix1.m[3][2] * scaleFactor,
+        matrix1.m[3][3] * scaleFactor};
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -1242,7 +1248,7 @@ T* FloatingPointMatrix4x4<T>::Data() noexcept
 template <typename T>
 FloatingPointMatrix4x4<T> operator*(T scaleFactor, FloatingPointMatrix4x4<T> const& matrix) noexcept
 {
-    return matrix.Concatenate(scaleFactor);
+    return FloatingPointMatrix4x4<T>::Multiply(matrix, scaleFactor);
 }
 //-----------------------------------------------------------------------
 // explicit instantiations

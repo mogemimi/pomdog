@@ -26,7 +26,8 @@ template <typename T>
 FloatingPointMatrix2x2<T> &
 FloatingPointMatrix2x2<T>::operator*=(FloatingPointMatrix2x2 const& other) noexcept
 {
-    return *this = this->Concatenate(other);
+    *this = Multiply(*this, other);
+    return *this;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -110,13 +111,13 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator-(FloatingPointMatr
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator*(FloatingPointMatrix2x2 const& other) const noexcept
 {
-    return this->Concatenate(other);
+    return Multiply(*this, other);
 }
 //-----------------------------------------------------------------------
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator*(T scaleFactor) const noexcept
 {
-    return this->Concatenate(scaleFactor);
+    return Multiply(*this, scaleFactor);
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -162,23 +163,26 @@ T const& FloatingPointMatrix2x2<T>::operator()(std::size_t row, std::size_t colu
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::Concatenate(FloatingPointMatrix2x2 const& other) const noexcept
+FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::Multiply(
+    FloatingPointMatrix2x2 const& matrix1,
+    FloatingPointMatrix2x2 const& matrix2) noexcept
 {
     return {
-        m[0][0] * other.m[0][0] + m[0][1] * other.m[1][0],
-        m[0][0] * other.m[0][1] + m[0][1] * other.m[1][1],
-        m[1][0] * other.m[0][0] + m[1][1] * other.m[1][0],
-        m[1][0] * other.m[0][1] + m[1][1] * other.m[1][1]};
+        matrix1.m[0][0] * matrix2.m[0][0] + matrix1.m[0][1] * matrix2.m[1][0],
+        matrix1.m[0][0] * matrix2.m[0][1] + matrix1.m[0][1] * matrix2.m[1][1],
+        matrix1.m[1][0] * matrix2.m[0][0] + matrix1.m[1][1] * matrix2.m[1][0],
+        matrix1.m[1][0] * matrix2.m[0][1] + matrix1.m[1][1] * matrix2.m[1][1]};
 }
 //-----------------------------------------------------------------------
 template <typename T>
-FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::Concatenate(T scaleFactor) const noexcept
+FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::Multiply(
+    FloatingPointMatrix2x2 const& matrix1, T scaleFactor) noexcept
 {
     return {
-        m[0][0] * scaleFactor,
-        m[0][1] * scaleFactor,
-        m[1][0] * scaleFactor,
-        m[1][1] * scaleFactor};
+        matrix1.m[0][0] * scaleFactor,
+        matrix1.m[0][1] * scaleFactor,
+        matrix1.m[1][0] * scaleFactor,
+        matrix1.m[1][1] * scaleFactor};
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -204,7 +208,7 @@ T* FloatingPointMatrix2x2<T>::Data() noexcept
 template <typename T>
 FloatingPointMatrix2x2<T> operator*(T scaleFactor, FloatingPointMatrix2x2<T> const& matrix) noexcept
 {
-    return matrix.Concatenate(scaleFactor);
+    return FloatingPointMatrix2x2<T>::Multiply(matrix, scaleFactor);
 }
 //-----------------------------------------------------------------------
 // explicit instantiations

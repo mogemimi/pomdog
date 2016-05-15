@@ -73,6 +73,73 @@ TEST(Matrix3x3, Identity)
     EXPECT_EQ(1.0f, matrix(2, 2));
 }
 
+TEST(Matrix3x3, Multiply_Scalar)
+{
+    EXPECT_EQ(
+        Matrix3x3(
+            0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f),
+        Matrix3x3::Multiply(Matrix3x3::Identity, 0.0f));
+    EXPECT_EQ(
+        Matrix3x3::Identity,
+        Matrix3x3::Multiply(Matrix3x3::Identity, 1.0f));
+    EXPECT_EQ(
+        Matrix3x3(
+            4.0f, 0.0f, 0.0f,
+            0.0f, 4.0f, 0.0f,
+            0.0f, 0.0f, 4.0f),
+        Matrix3x3::Multiply(Matrix3x3::Identity, 4.0f));
+}
+
+TEST(Matrix3x3, Multiply_Matrix)
+{
+    EXPECT_EQ(
+        Matrix3x3::Identity,
+        Matrix3x3::Multiply(
+            Matrix3x3::Identity,
+            Matrix3x3::Identity));
+
+    EXPECT_EQ(
+        Matrix3x3(
+            0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f),
+        Matrix3x3::Multiply(
+            Matrix3x3::Identity,
+            Matrix3x3(
+                0.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 0.0f)));
+
+    EXPECT_EQ(
+        Matrix3x3(
+            0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f),
+        Matrix3x3::Multiply(
+            Matrix3x3(
+                0.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 0.0f),
+            Matrix3x3::Identity));
+
+    EXPECT_EQ(
+        Matrix3x3(
+            90.0f, 107.0f, 203.0f,
+            114.0f, 113.0f, 200.0f,
+            64.0f, 154.0f, 289.0f),
+        Matrix3x3::Multiply(
+            Matrix3x3(
+                3.0f, 4.0f, 11.0f,
+                8.0f, 9.0f, 2.0f,
+                17.0f, 1.0f, 5.0f),
+            Matrix3x3(
+                2.0f, 7.0f, 13.0f,
+                10.0f, 5.0f, 8.0f,
+                4.0f, 6.0f, 12.0f)));
+}
+
 TEST(Matrix3x3, CreateTranslation)
 {
     auto matrix = Matrix3x3::CreateTranslation({3.0f, 4.0f});

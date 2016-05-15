@@ -101,6 +101,66 @@ TEST(Matrix4x4, Identity)
     EXPECT_EQ(1.0f, matrix(3, 3));
 }
 
+TEST(Matrix4x4, Multiply_Scalar)
+{
+    EXPECT_EQ(
+        Matrix4x4(
+            0.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 0.0f),
+        Matrix4x4::Multiply(Matrix4x4::Identity, 0.0f));
+    EXPECT_EQ(
+        Matrix4x4::Identity,
+        Matrix4x4::Multiply(Matrix4x4::Identity, 1.0f));
+    EXPECT_EQ(
+        Matrix4x4(
+            4.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 4.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 4.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 4.0f),
+        Matrix4x4::Multiply(Matrix4x4::Identity, 4.0f));
+}
+
+TEST(Matrix4x4, Multiply_Matrix)
+{
+    EXPECT_EQ(
+        Matrix4x4(
+            0.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 0.0f),
+        Matrix4x4::Multiply(
+            Matrix4x4::Identity,
+            Matrix4x4(
+                0.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 0.0f)));
+
+    EXPECT_EQ(
+        Matrix4x4::Identity,
+        Matrix4x4::Multiply(Matrix4x4::Identity, Matrix4x4::Identity));
+
+    EXPECT_EQ(
+        Matrix4x4(
+            84.0f, 134.0f, 324.0f, 139.0f,
+            268.0f, 317.0f, 593.0f, 188.0f,
+            222.0f, 301.0f, 649.0f, 276.0f,
+            97.0f, 95.0f, 933.0f, 65.0f),
+        Matrix4x4::Multiply(
+            Matrix4x4(
+                3.0f, 9.0f, 4.0f, 2.0f,
+                2.0f, 7.0f, 19.0f, 6.0f,
+                14.0f, 5.0f, 11.0f, 8.0f,
+                2.0f, 1.0f, 3.0f, 17.0f),
+            Matrix4x4(
+                4.0f, 8.0f, 4.0f, 12.0f,
+                2.0f, 6.0f, 20.0f, 9.0f,
+                12.0f, 13.0f, 7.0f, 5.0f,
+                3.0f, 2.0f, 52.0f, 1.0f)));
+}
+
 TEST(Matrix4x4, CreateTranslation)
 {
     auto matrix = Matrix4x4::CreateTranslation({3.0f, 4.0, 5.0f});

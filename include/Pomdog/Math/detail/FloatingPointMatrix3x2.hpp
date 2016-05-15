@@ -62,9 +62,11 @@ public:
 
     T Determinant() const noexcept;
 
-    FloatingPointMatrix3x2 Concatenate(FloatingPointMatrix3x2 const& other) const noexcept;
+    static FloatingPointMatrix3x2
+    Multiply(const FloatingPointMatrix3x2& matrix1, const FloatingPointMatrix3x2& matrix2) noexcept;
 
-    FloatingPointMatrix3x2 Concatenate(T scaleFactor) const noexcept;
+    static FloatingPointMatrix3x2
+    Multiply(const FloatingPointMatrix3x2& matrix1, T scaleFactor) noexcept;
 
     static void
     Invert(FloatingPointMatrix3x2 const& matrix, FloatingPointMatrix3x2 & result);
