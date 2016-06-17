@@ -38,7 +38,7 @@ struct POMDOG_EXPORT SamplerDescription {
         desc.MaxAnisotropy = 0;
         desc.MinMipLevel = 0;
         desc.MaxMipLevel = 1000;
-        return std::move(desc);
+        return desc;
     }
 
     static SamplerDescription CreateAnisotropicWrap()
@@ -52,7 +52,7 @@ struct POMDOG_EXPORT SamplerDescription {
         desc.MaxAnisotropy = 0;
         desc.MinMipLevel = 0;
         desc.MaxMipLevel = 1000;
-        return std::move(desc);
+        return desc;
     }
 
     static SamplerDescription CreateLinearClamp()
@@ -66,7 +66,7 @@ struct POMDOG_EXPORT SamplerDescription {
         desc.MaxAnisotropy = 0;
         desc.MinMipLevel = 0;
         desc.MaxMipLevel = std::numeric_limits<float>::max();
-        return std::move(desc);
+        return desc;
     }
 
     static SamplerDescription CreateLinearWrap()
@@ -80,7 +80,7 @@ struct POMDOG_EXPORT SamplerDescription {
         desc.MaxAnisotropy = 0;
         desc.MinMipLevel = 0;
         desc.MaxMipLevel = std::numeric_limits<float>::max();
-        return std::move(desc);
+        return desc;
     }
 
     static SamplerDescription CreatePointClamp()
@@ -94,7 +94,7 @@ struct POMDOG_EXPORT SamplerDescription {
         desc.MaxAnisotropy = 0;
         desc.MinMipLevel = 0;
         desc.MaxMipLevel = std::numeric_limits<float>::max();
-        return std::move(desc);
+        return desc;
     }
 
     static SamplerDescription CreatePointWrap()
@@ -108,7 +108,7 @@ struct POMDOG_EXPORT SamplerDescription {
         desc.MaxAnisotropy = 0;
         desc.MinMipLevel = 0;
         desc.MaxMipLevel = std::numeric_limits<float>::max();
-        return std::move(desc);
+        return desc;
     }
 };
 

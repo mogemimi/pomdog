@@ -173,7 +173,7 @@ std::vector<EffectConstantDescription> EffectReflectionMetal::GetConstantBuffers
     POMDOG_ASSERT(false);
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 
-    return std::move(constants);
+    return constants;
 }
 
 } // namespace Metal

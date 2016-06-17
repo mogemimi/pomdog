@@ -425,7 +425,7 @@ RiffChunk ReadRiffChunk(std::ifstream & stream)
         POMDOG_THROW_EXCEPTION(std::runtime_error,
             "Cannot read wave file. this file is a invalid wave file");
     }
-    return std::move(riffChunk);
+    return riffChunk;
 }
 //-----------------------------------------------------------------------
 WaveFormat ReadWaveFormat(std::ifstream & stream)
@@ -475,7 +475,7 @@ WaveFormat ReadWaveFormat(std::ifstream & stream)
         }
     }
 
-    return std::move(waveFormat);
+    return waveFormat;
 }
 //-----------------------------------------------------------------------
 std::vector<std::uint8_t> ReadWaveAudioData(std::ifstream & stream)
@@ -511,7 +511,7 @@ std::vector<std::uint8_t> ReadWaveAudioData(std::ifstream & stream)
         POMDOG_THROW_EXCEPTION(std::runtime_error,
             "Failed to read wave data");
     }
-    return std::move(audioData);
+    return audioData;
 }
 
 } // unnamed namespace
@@ -558,7 +558,7 @@ std::unique_ptr<AudioClip> MSWaveAudioLoader::Load(BinaryFileStream && binaryFil
             waveFormat.PcmWaveFormat.BitsPerSample,
             channels);
 
-        return std::move(audioClip);
+        return audioClip;
 
 #elif defined(POMDOG_PLATFORM_WIN32) \
     || defined(POMDOG_PLATFORM_XBOX_ONE)

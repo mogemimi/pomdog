@@ -82,7 +82,7 @@ std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
     }
 
     auto pipelineState = std::make_shared<PipelineState>(graphicsDevice, description);
-    return std::move(pipelineState);
+    return pipelineState;
 }
 //-----------------------------------------------------------------------
 // explicit instantiations
@@ -242,7 +242,7 @@ std::shared_ptr<EffectReflection> Builder<PipelineState>::CreateEffectReflection
         impl->graphicsDevice,
         impl->description,
         pipelineState);
-    return std::move(effectReflection);
+    return effectReflection;
 }
 //-----------------------------------------------------------------------
 const PipelineStateDescription& Builder<PipelineState>::GetDescription() const

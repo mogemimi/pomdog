@@ -42,7 +42,7 @@ RenderTarget2DGL4::RenderTarget2DGL4(
         renderBuffer = ([] {
             RenderBuffer2DGL4 nativeBuffer;
             glGenRenderbuffers(1, nativeBuffer.Data());
-            return std::move(nativeBuffer);
+            return nativeBuffer;
         })();
 
         POMDOG_ASSERT(renderBuffer);

@@ -28,7 +28,7 @@ struct POMDOG_EXPORT RenderTargetBlendDescription {
         desc.AlphaSourceBlend = Blend::SourceAlpha;
         desc.ColorDestinationBlend = Blend::One;
         desc.AlphaDestinationBlend = Blend::One;
-        return std::move(desc);
+        return desc;
     }
 
     static RenderTargetBlendDescription CreateAlphaBlend()
@@ -41,7 +41,7 @@ struct POMDOG_EXPORT RenderTargetBlendDescription {
         desc.AlphaSourceBlend = Blend::One;
         desc.ColorDestinationBlend = Blend::InverseSourceAlpha;
         desc.AlphaDestinationBlend = Blend::InverseSourceAlpha;
-        return std::move(desc);
+        return desc;
     }
 
     static RenderTargetBlendDescription CreateNonPremultiplied()
@@ -54,7 +54,7 @@ struct POMDOG_EXPORT RenderTargetBlendDescription {
         desc.AlphaSourceBlend = Blend::SourceAlpha;
         desc.ColorDestinationBlend = Blend::InverseSourceAlpha;
         desc.AlphaDestinationBlend = Blend::InverseSourceAlpha;
-        return std::move(desc);
+        return desc;
     }
 
     static RenderTargetBlendDescription CreateOpaque()
@@ -67,7 +67,7 @@ struct POMDOG_EXPORT RenderTargetBlendDescription {
         desc.AlphaSourceBlend = Blend::One;
         desc.ColorDestinationBlend = Blend::Zero;
         desc.AlphaDestinationBlend = Blend::Zero;
-        return std::move(desc);
+        return desc;
     }
 };
 

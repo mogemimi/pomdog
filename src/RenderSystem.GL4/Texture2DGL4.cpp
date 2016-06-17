@@ -226,7 +226,7 @@ Texture2DGL4::Texture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
     textureObject = ([]{
         Texture2DObjectGL4 nativeTexture;
         glGenTextures(1, nativeTexture.Data());
-        return std::move(nativeTexture);
+        return nativeTexture;
     })();
 
     auto const prevTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();

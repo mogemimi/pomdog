@@ -263,7 +263,7 @@ std::shared_ptr<Texture2D> DDSTextureReader::Read(
         texture->SetData(data + offsetBytes);
     }
 
-    return std::move(texture);
+    return texture;
 }
 
 } // namespace Detail

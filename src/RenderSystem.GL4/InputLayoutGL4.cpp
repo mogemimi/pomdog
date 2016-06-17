@@ -331,7 +331,7 @@ std::vector<InputElementGL4> BuildAttributes(const ShaderProgramGL4& shaderProgr
     //};
     //#endif // defined(DEBUG)
 
-    return std::move(attributes);
+    return attributes;
 }
 //-----------------------------------------------------------------------
 void EnableAttributes(const std::vector<InputElementGL4>& inputElements)
@@ -499,7 +499,7 @@ std::vector<InputElementGL4> BuildInputElements(
     declaration.StrideBytes = offsetBytes;
     vertexDeclarations.push_back(std::move(declaration));
 
-    return std::move(inputElements);
+    return inputElements;
 }
 //-----------------------------------------------------------------------
 template <typename T>
@@ -603,7 +603,7 @@ InputLayoutGL4::InputLayoutGL4(
     inputLayout = ([] {
         VertexArrayGL4 vertexArray;
         glGenVertexArrays(1, vertexArray.Data());
-        return std::move(vertexArray);
+        return vertexArray;
     })();
 
     auto const oldInputLayout = TypesafeHelperGL4::Get<VertexArrayGL4>();

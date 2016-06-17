@@ -55,7 +55,7 @@ Vector3 Viewport::Project(
     result.X = (result.X + 1.0f) * 0.5f * static_cast<float>(Width) + static_cast<float>(TopLeftX);
     result.Y = (-result.Y + 1.0f) * 0.5f * static_cast<float>(Height) + static_cast<float>(TopLeftY);
     result.Z = result.Z * (MaxDepth - MinDepth) + MinDepth;
-    return std::move(result);
+    return result;
 }
 //-----------------------------------------------------------------------
 Vector3 Viewport::Unproject(
@@ -77,7 +77,7 @@ Vector3 Viewport::Unproject(
     if (std::abs(divisor) > std::numeric_limits<float>::epsilon()) {
         result = result / divisor;
     }
-    return std::move(result);
+    return result;
 }
 //-----------------------------------------------------------------------
 Rectangle Viewport::GetBounds() const noexcept

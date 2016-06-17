@@ -43,7 +43,7 @@ std::string UnsafeToFormatString(const char* format, std::va_list arg)
     result.resize(length);
 #endif
 
-    return std::move(result);
+    return result;
 }
 
 } // unnamed namespace
@@ -54,7 +54,7 @@ std::string StringHelper::Format(const char* format, ...)
     va_start(arg, format);
     auto result = UnsafeToFormatString(format, arg);
     va_end(arg);
-    return std::move(result);
+    return result;
 }
 
 } // namespace Pomdog

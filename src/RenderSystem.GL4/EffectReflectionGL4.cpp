@@ -41,7 +41,7 @@ std::string GetActiveUniformBlockName(
 
     result.assign(uniformBlockName.data(), uniformBlockNameLength);
 
-    return std::move(result);
+    return result;
 }
 //-----------------------------------------------------------------------
 std::vector<GLuint> GetActiveUniformBlockIndices(
@@ -56,7 +56,7 @@ std::vector<GLuint> GetActiveUniformBlockIndices(
     POMDOG_CHECK_ERROR_GL4("glGetActiveUniformBlockiv");
 
     std::vector<GLuint> result(uniformIndices.begin(), uniformIndices.end());
-    return std::move(result);
+    return result;
 }
 //-----------------------------------------------------------------------
 template <typename Func>
@@ -112,7 +112,7 @@ std::vector<UniformVariableGL4> EnumerateUniformVariables(
         uniforms[index].Name.assign(uniformName.data(), uniformNameLength);
     });
 
-    return std::move(uniforms);
+    return uniforms;
 }
 //-----------------------------------------------------------------------
 std::vector<UniformBlockGL4>
@@ -147,7 +147,7 @@ EnumerateUniformBlocks(const ShaderProgramGL4& shaderProgram)
         uniformBlocks.push_back(std::move(uniformBlock));
     }
 
-    return std::move(uniformBlocks);
+    return uniformBlocks;
 }
 //-----------------------------------------------------------------------
 std::vector<UniformGL4> EnumerateUniforms(const ShaderProgramGL4& shaderProgram)
@@ -244,7 +244,7 @@ std::vector<UniformGL4> EnumerateUniforms(const ShaderProgramGL4& shaderProgram)
     std::sort(std::begin(uniformVariables), std::end(uniformVariables),
         [](const UniformGL4& a, const UniformGL4& b){ return a.Name < b.Name; });
 
-    return std::move(uniformVariables);
+    return uniformVariables;
 }
 //-----------------------------------------------------------------------
 EffectVariableType ToEffectVariableType(GLenum uniformType)
@@ -573,7 +573,7 @@ EffectAnnotation ToEffectAnnotation(const UniformVariableGL4& uniform)
     ToComponents(uniform.Type, annotation.RowCount, annotation.ColumnCount);
     annotation.Elements = (uniform.Elements > 1) ? static_cast<decltype(annotation.Elements)>(uniform.Elements): 0;
     POMDOG_ASSERT(annotation.Elements != 1);
-    return std::move(annotation);
+    return annotation;
 }
 //-----------------------------------------------------------------------
 std::vector<EffectVariable> GetEffectVariables(const std::vector<UniformVariableGL4>& uniforms)
@@ -589,7 +589,7 @@ std::vector<EffectVariable> GetEffectVariables(const std::vector<UniformVariable
         effectVariable.Annotation = ToEffectAnnotation(uniform);
         result.push_back(std::move(effectVariable));
     }
-    return std::move(result);
+    return result;
 }
 //-----------------------------------------------------------------------
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -655,7 +655,7 @@ std::vector<UniformBlockGL4> EffectReflectionGL4::GetNativeUniformBlocks()
     DebugLogUniformBlocks(uniformBlocks);
     #endif
 
-    return std::move(uniformBlocks);
+    return uniformBlocks;
 }
 //-----------------------------------------------------------------------
 std::vector<UniformGL4> EffectReflectionGL4::GetNativeUniforms()
@@ -666,7 +666,7 @@ std::vector<UniformGL4> EffectReflectionGL4::GetNativeUniforms()
     DebugLogUniforms(uniforms);
     #endif
 
-    return std::move(uniforms);
+    return uniforms;
 }
 //-----------------------------------------------------------------------
 std::vector<EffectConstantDescription> EffectReflectionGL4::GetConstantBuffers() const
@@ -684,7 +684,7 @@ std::vector<EffectConstantDescription> EffectReflectionGL4::GetConstantBuffers()
         result.push_back(std::move(description));
     }
 
-    return std::move(result);
+    return result;
 }
 
 } // namespace GL4

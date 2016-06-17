@@ -28,7 +28,7 @@ struct POMDOG_EXPORT BlendDescription {
         for (auto & renderTarget: desc.RenderTargets) {
             renderTarget = RenderTargetBlendDescription::CreateAdditive();
         }
-        return std::move(desc);
+        return desc;
     }
 
     static BlendDescription CreateAlphaBlend()
@@ -39,7 +39,7 @@ struct POMDOG_EXPORT BlendDescription {
         for (auto & renderTarget : desc.RenderTargets) {
             renderTarget = RenderTargetBlendDescription::CreateAlphaBlend();
         }
-        return std::move(desc);
+        return desc;
     }
 
     static BlendDescription CreateNonPremultiplied()
@@ -50,7 +50,7 @@ struct POMDOG_EXPORT BlendDescription {
         for (auto & renderTarget : desc.RenderTargets) {
             renderTarget = RenderTargetBlendDescription::CreateNonPremultiplied();
         }
-        return std::move(desc);
+        return desc;
     }
 
     static BlendDescription CreateOpaque()
@@ -61,7 +61,7 @@ struct POMDOG_EXPORT BlendDescription {
         for (auto & renderTarget : desc.RenderTargets) {
             renderTarget = RenderTargetBlendDescription::CreateOpaque();
         }
-        return std::move(desc);
+        return desc;
     }
 };
 

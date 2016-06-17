@@ -9,7 +9,7 @@
 namespace Pomdog {
 //-----------------------------------------------------------------------
 EventQueue::EventQueue()
-    : signalBody(std::move(std::make_shared<SignalBody>()))
+    : signalBody(std::make_shared<SignalBody>())
 {}
 //-----------------------------------------------------------------------
 Connection EventQueue::Connect(const std::function<void(const Event&)>& slot)

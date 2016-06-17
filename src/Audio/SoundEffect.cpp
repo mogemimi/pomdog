@@ -23,7 +23,7 @@ GetNativeBuffer(const std::shared_ptr<AudioClip>& audioClip)
 {
     std::shared_ptr<Detail::SoundSystem::NativeAudioClip> nativeAudioClip(
         audioClip, audioClip->GetNativeAudioClip());
-    return std::move(nativeAudioClip);
+    return nativeAudioClip;
 }
 
 } // unnamed namespace

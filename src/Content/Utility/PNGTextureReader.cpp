@@ -157,7 +157,7 @@ Texture2DParsingData ReadPNG(const std::uint8_t* data, std::size_t byteLength)
 
     parsingData.Binary = std::move(rowData);
 
-    return std::move(parsingData);
+    return parsingData;
 }
 
 } // unnamed namespace
@@ -181,7 +181,7 @@ std::shared_ptr<Texture2D> PNGTextureReader::Read(
 
     POMDOG_ASSERT(!parsingData.Binary.empty());
     texture->SetData(parsingData.Binary.data());
-    return std::move(texture);
+    return texture;
 }
 
 } // namespace Detail

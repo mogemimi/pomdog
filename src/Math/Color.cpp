@@ -116,7 +116,7 @@ Color Color::FromPackedValue(std::uint32_t packedValue)
     color.B = static_cast<std::uint8_t>(packedValue >> 8);
     color.A = static_cast<std::uint8_t>(packedValue);
 #endif
-    return std::move(color);
+    return color;
 }
 //-----------------------------------------------------------------------
 Color Color::Lerp(const Color& source1, const Color& source2, float amount)
@@ -126,7 +126,7 @@ Color Color::Lerp(const Color& source1, const Color& source2, float amount)
     color.G = PackUint8(source1.G + amount * (source2.G - source1.G));
     color.B = PackUint8(source1.B + amount * (source2.B - source1.B));
     color.A = PackUint8(source1.A + amount * (source2.A - source1.A));
-    return std::move(color);
+    return color;
 }
 //-----------------------------------------------------------------------
 Color Color::SmoothStep(const Color& source1, const Color& source2, float amount)
@@ -136,7 +136,7 @@ Color Color::SmoothStep(const Color& source1, const Color& source2, float amount
     color.G = PackUint8(MathHelper::SmoothStep<float>(source1.G, source2.G, amount));
     color.B = PackUint8(MathHelper::SmoothStep<float>(source1.B, source2.B, amount));
     color.A = PackUint8(MathHelper::SmoothStep<float>(source1.A, source2.A, amount));
-    return std::move(color);
+    return color;
 }
 //-----------------------------------------------------------------------
 Color Color::Multiply(const Color& color, float scale)
@@ -146,7 +146,7 @@ Color Color::Multiply(const Color& color, float scale)
     result.G = PackUint8(MathHelper::Clamp(color.G * scale, 0.0f, 255.0f));
     result.B = PackUint8(MathHelper::Clamp(color.B * scale, 0.0f, 255.0f));
     result.A = PackUint8(MathHelper::Clamp(color.A * scale, 0.0f, 255.0f));
-    return std::move(result);
+    return result;
 }
 //-----------------------------------------------------------------------
 Color Color::Multiply(const Color& color1, const Color& color2)
@@ -156,7 +156,7 @@ Color Color::Multiply(const Color& color1, const Color& color2)
     result.G = PackUint8(MathHelper::Clamp((color1.G / 255.0f) * color2.G, 0.0f, 255.0f));
     result.B = PackUint8(MathHelper::Clamp((color1.B / 255.0f) * color2.B, 0.0f, 255.0f));
     result.A = PackUint8(MathHelper::Clamp((color1.A / 255.0f) * color2.A, 0.0f, 255.0f));
-    return std::move(result);
+    return result;
 }
 
 } // namespace Pomdog

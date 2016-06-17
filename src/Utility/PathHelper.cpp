@@ -285,7 +285,7 @@ std::string PathHelper::Join(const std::string& path1, const std::string& path2)
         }
     }
     result += path2;
-    return std::move(result);
+    return result;
 }
 //-----------------------------------------------------------------------
 Detail::BinaryFileStream PathHelper::OpenStream(const std::string& path)
@@ -305,7 +305,7 @@ Detail::BinaryFileStream PathHelper::OpenStream(const std::string& path)
     Detail::BinaryFileStream result;
     result.Stream = std::move(stream);
     result.SizeInBytes = fileSize;
-    return std::move(result);
+    return result;
 }
 //-----------------------------------------------------------------------
 std::string PathHelper::GetBaseName(const std::string& path)
@@ -340,7 +340,7 @@ std::tuple<std::string, std::string> PathHelper::Split(const std::string& path)
     else {
         std::get<1>(result) = path;
     }
-    return std::move(result);
+    return result;
 }
 //-----------------------------------------------------------------------
 std::tuple<std::string, std::string> PathHelper::SplitExtension(const std::string& path)
@@ -354,7 +354,7 @@ std::tuple<std::string, std::string> PathHelper::SplitExtension(const std::strin
     else {
         std::get<0>(result) = path;
     }
-    return std::move(result);
+    return result;
 }
 //-----------------------------------------------------------------------
 std::string PathHelper::Normalize(const std::string& path)
@@ -410,7 +410,7 @@ std::string PathHelper::Normalize(const std::string& path)
         }
         fullPath = PathHelper::Join(fullPath, current);
     }
-    return std::move(fullPath);
+    return fullPath;
 }
 //-----------------------------------------------------------------------
 std::string
@@ -442,7 +442,7 @@ PathHelper::Relative(const std::string& path, const std::string& start)
     if (result.empty()) {
         result = '.';
     }
-    return std::move(result);
+    return result;
 }
 //-----------------------------------------------------------------------
 } // namespace Pomdog

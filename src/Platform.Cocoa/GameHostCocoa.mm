@@ -479,7 +479,7 @@ std::shared_ptr<GameWindow> GameHostCocoa::Impl::GetWindow()
 std::shared_ptr<GameClock> GameHostCocoa::Impl::GetClock(std::shared_ptr<GameHost> && gameHost)
 {
     std::shared_ptr<GameClock> sharedClock(gameHost, &clock);
-    return std::move(sharedClock);
+    return sharedClock;
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<GraphicsDevice> GameHostCocoa::Impl::GetGraphicsDevice()
@@ -500,7 +500,7 @@ std::shared_ptr<AudioEngine> GameHostCocoa::Impl::GetAudioEngine()
 std::shared_ptr<AssetManager> GameHostCocoa::Impl::GetAssetManager(std::shared_ptr<GameHost> && gameHost)
 {
     std::shared_ptr<AssetManager> sharedAssetManager(gameHost, assetManager.get());
-    return std::move(sharedAssetManager);
+    return sharedAssetManager;
 }
 //-----------------------------------------------------------------------
 std::shared_ptr<Keyboard> GameHostCocoa::Impl::GetKeyboard()

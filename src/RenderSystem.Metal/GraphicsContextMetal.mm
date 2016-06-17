@@ -76,7 +76,7 @@ GraphicsCapabilities GraphicsContextMetal::GetCapabilities() const
     GraphicsCapabilities caps;
     caps.ConstantBufferSlotCount = 31;
     caps.SamplerSlotCount = 16;
-    return std::move(caps);
+    return caps;
 }
 //-----------------------------------------------------------------------
 void GraphicsContextMetal::Present()

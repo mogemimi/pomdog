@@ -92,19 +92,19 @@ std::string FileSystem::GetAppDataDirectoryPath()
             "App direcotry does not exists: " + appDataDirecotry);
     }
 
-    return std::move(appDataDirecotry);
+    return appDataDirecotry;
 }
 //-----------------------------------------------------------------------
 std::string FileSystem::GetResourceDirectoryPath()
 {
     std::string resourceDirectory = [[[NSBundle mainBundle] resourcePath] UTF8String];
-    return std::move(resourceDirectory);
+    return resourceDirectory;
 }
 //-----------------------------------------------------------------------
 std::string FileSystem::GetTempDirectoryPath()
 {
     std::string tempDirectory = [NSTemporaryDirectory() UTF8String];
-    return std::move(tempDirectory);
+    return tempDirectory;
 }
 //-----------------------------------------------------------------------
 std::string FileSystem::GetCurrentWorkingDirectory()

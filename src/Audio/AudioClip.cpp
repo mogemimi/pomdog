@@ -64,7 +64,7 @@ Duration AudioClip::GetLength() const
     POMDOG_ASSERT(nativeAudioClip);
     auto samples = GetSamples(nativeAudioClip->SizeInBytes(), bitsPerSample, channels);
     auto sampleDuration = GetSampleDuration(samples, sampleRate);
-    return std::move(sampleDuration);
+    return sampleDuration;
 }
 //-----------------------------------------------------------------------
 int AudioClip::GetSampleRate() const

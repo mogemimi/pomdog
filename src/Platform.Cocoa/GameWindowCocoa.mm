@@ -64,7 +64,7 @@ void GameWindowCocoa::SetAllowUserResizing(bool allowResizing)
 std::string GameWindowCocoa::GetTitle() const
 {
     std::string title = [[nativeWindow title] UTF8String];
-    return std::move(title);
+    return title;
 }
 //-----------------------------------------------------------------------
 void GameWindowCocoa::SetTitle(const std::string& title)

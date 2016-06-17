@@ -32,7 +32,7 @@ SamplerStateGL4::SamplerStateGL4(const SamplerDescription& description)
         SamplerObjectGL4 sampler;
         glGenSamplers(1, sampler.Data());
         POMDOG_CHECK_ERROR_GL4("glGenSamplers");
-        return std::move(sampler);
+        return sampler;
     })();
 
     glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_S, ToTextureAddressMode(description.AddressU));
