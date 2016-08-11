@@ -17,7 +17,7 @@ static Matrix3x2 CreateTransformMatrix3x2(Transform2D const& transform)
 }
 
 }// namespace SpriteRenderableDirtyFlags
-//-----------------------------------------------------------------------
+
 RectangleRenderable::RectangleRenderable()
     : originPivot{0.5f, 0.5f}
     , dirtyFlags{std::numeric_limits<std::uint32_t>::max()}
@@ -29,7 +29,7 @@ RectangleRenderable::RectangleRenderable()
     command.rightBottomColor = Color::White;
     command.drawOrder = 0;
 }
-//-----------------------------------------------------------------------
+
 void RectangleRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 {
     if (!IsVisible) {
@@ -58,45 +58,45 @@ void RectangleRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 
     renderer.PushCommand(command);
 }
-//-----------------------------------------------------------------------
+
 void RectangleRenderable::LeftTopColor(Pomdog::Color const& color)
 {
     command.leftTopColor = color;
 }
-//-----------------------------------------------------------------------
+
 void RectangleRenderable::RightTopColor(Pomdog::Color const& color)
 {
     command.rightTopColor = color;
 }
-//-----------------------------------------------------------------------
+
 void RectangleRenderable::LeftBottomColor(Pomdog::Color const& color)
 {
     command.leftBottomColor = color;
 }
-//-----------------------------------------------------------------------
+
 void RectangleRenderable::RightBottomColor(Pomdog::Color const& color)
 {
     command.rightBottomColor = color;
 }
-//-----------------------------------------------------------------------
+
 void RectangleRenderable::OriginPivot(Vector2 const& originPivotIn)
 {
     this->originPivot = originPivotIn;
 }
-//-----------------------------------------------------------------------
+
 Vector2 RectangleRenderable::OriginPivot() const
 {
     return originPivot;
 }
-//-----------------------------------------------------------------------
+
 void RectangleRenderable::BoundingBox(Rectangle const& rectangle)
 {
     command.rectangle = rectangle;
 }
-//-----------------------------------------------------------------------
+
 Rectangle RectangleRenderable::BoundingBox() const
 {
     return command.rectangle;
 }
-//-----------------------------------------------------------------------
+
 }// namespace Pomdog

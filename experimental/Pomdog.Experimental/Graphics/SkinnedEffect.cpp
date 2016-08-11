@@ -16,9 +16,9 @@ namespace {
 #include "Shaders/GLSL.Embedded/SkinnedEffect_PS.inc.hpp"
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 // MARK: - SkinnedEffect::Impl
-//-----------------------------------------------------------------------
+
 class SkinnedEffect::Impl {
 public:
     explicit Impl(GraphicsDevice & graphicsDevice, AssetManager & assets);
@@ -33,7 +33,7 @@ public:
     std::shared_ptr<ConstantBufferBinding> constantBuffers;
     Color color;
 };
-//-----------------------------------------------------------------------
+
 SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice,
     AssetManager & assets)
     : color(Color::White)
@@ -60,7 +60,7 @@ SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice,
 
     constantBuffers = builder.CreateConstantBuffers(pipelineState);
 }
-//-----------------------------------------------------------------------
+
 void SkinnedEffect::Impl::Apply(GraphicsCommandQueue & commandQueue)
 {
     struct alignas(16) Constants {
@@ -79,34 +79,34 @@ void SkinnedEffect::Impl::Apply(GraphicsCommandQueue & commandQueue)
     graphicsContext.SetPipelineState(pipelineState);
     graphicsContext.SetConstantBuffers(constantBuffers);
 }
-//-----------------------------------------------------------------------
+
 // MARK: - SkinnedEffect
-//-----------------------------------------------------------------------
+
 SkinnedEffect::SkinnedEffect(GraphicsDevice & graphicsDevice,
     AssetManager & assets)
     : impl(std::make_unique<Impl>(graphicsDevice, assets))
 {}
-//-----------------------------------------------------------------------
+
 SkinnedEffect::~SkinnedEffect() = default;
-//-----------------------------------------------------------------------
+
 void SkinnedEffect::SetWorldViewProjection(Matrix4x4 const& worldViewProjectionIn)
 {
     POMDOG_ASSERT(impl);
     impl->worldViewProjection = worldViewProjectionIn;
 }
-//-----------------------------------------------------------------------
+
 void SkinnedEffect::SetTexture(std::shared_ptr<Texture2D> const& textureIn)
 {
     POMDOG_ASSERT(impl);
     impl->texture = textureIn;
 }
-//-----------------------------------------------------------------------
+
 void SkinnedEffect::SetColor(Color const& colorIn)
 {
     POMDOG_ASSERT(impl);
     impl->color = colorIn;
 }
-//-----------------------------------------------------------------------
+
 void SkinnedEffect::SetBoneTransforms(Matrix3x2 const* boneTransforms, std::size_t count)
 {
     POMDOG_ASSERT(impl);
@@ -128,11 +128,11 @@ void SkinnedEffect::SetBoneTransforms(Matrix3x2 const* boneTransforms, std::size
         bones[i][1].Y = boneTransforms[i](2, 1);
     }
 }
-//-----------------------------------------------------------------------
+
 void SkinnedEffect::Apply(GraphicsCommandQueue & commandQueue)
 {
     POMDOG_ASSERT(impl);
     impl->Apply(graphicsContext);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

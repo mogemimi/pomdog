@@ -8,7 +8,7 @@
 #include "Pomdog/Math/Matrix4x4.hpp"
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 void SkeletonHelper::Traverse(Skeleton const& skeleton, JointIndex const& jointIndex,
     std::function<void(Joint const&)> const& traverser)
 {
@@ -23,7 +23,7 @@ void SkeletonHelper::Traverse(Skeleton const& skeleton, JointIndex const& jointI
         Traverse(skeleton, joint.Sibling, traverser);
     }
 }
-//-----------------------------------------------------------------------
+
 void SkeletonHelper::Traverse(Skeleton const& skeleton,
     std::function<void(Joint const&)> const& traverser)
 {
@@ -31,7 +31,7 @@ void SkeletonHelper::Traverse(Skeleton const& skeleton,
     POMDOG_ASSERT(skeleton.Root().Index);
     Traverse(skeleton, skeleton.Root().Index, traverser);
 }
-//-----------------------------------------------------------------------
+
 void SkeletonHelper::ToGlobalPose(Skeleton const& skeleton,
     SkeletonPose const& skeletonPose, std::vector<Matrix3x2> & globalPose)
 {
@@ -57,7 +57,7 @@ void SkeletonHelper::ToGlobalPose(Skeleton const& skeleton,
         globalPose[*bone.Index] = std::move(matrix);
     });
 }
-//-----------------------------------------------------------------------
+
 std::vector<Matrix3x2> SkeletonHelper::ToGlobalPose(Skeleton const& skeleton,
     SkeletonPose const& skeletonPose)
 {
@@ -65,5 +65,5 @@ std::vector<Matrix3x2> SkeletonHelper::ToGlobalPose(Skeleton const& skeleton,
     SkeletonHelper::ToGlobalPose(skeleton, skeletonPose, globalPose);
     return std::move(globalPose);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

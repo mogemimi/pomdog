@@ -4,7 +4,7 @@
 #include "Skeleton.hpp"
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 SkeletonPose SkeletonPose::CreateBindPose(Skeleton const& skeleton)
 {
     SkeletonPose skeletonPose;
@@ -15,5 +15,5 @@ SkeletonPose SkeletonPose::CreateBindPose(Skeleton const& skeleton)
 
     return std::move(skeletonPose);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

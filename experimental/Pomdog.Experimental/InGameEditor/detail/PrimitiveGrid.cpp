@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 namespace SceneEditor {
-//-----------------------------------------------------------------------
+
 PrimitiveGrid::PrimitiveGrid(Color const& primaryColor, Color const& secondaryColor)
 {
     constexpr std::uint32_t gridCount = 30;
@@ -28,7 +28,7 @@ PrimitiveGrid::PrimitiveGrid(Color const& primaryColor, Color const& secondaryCo
         lines.push_back({Vector2{offset, -lineLength}, Vector2{offset, +lineLength}, color});
     }
 }
-//-----------------------------------------------------------------------
+
 void PrimitiveGrid::Draw(LineBatch & lineBatch)
 {
     for (auto & line: lines)

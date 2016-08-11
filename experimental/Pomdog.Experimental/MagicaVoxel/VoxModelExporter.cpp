@@ -20,7 +20,7 @@ std::string Error(std::string const& assetName, std::string const& description)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string const& filePath)
 {
     using Detail::MakeFourCC;
@@ -113,6 +113,6 @@ void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string co
     stream.write(reinterpret_cast<char const*>(&rgbaChunk), sizeof(rgbaChunk));
     stream.write(reinterpret_cast<char const*>(colors.data()), sizeof(colors.front()) * colors.size());
 }
-//-----------------------------------------------------------------------
+
 } // namespace MagicaVoxel
 } // namespace Pomdog

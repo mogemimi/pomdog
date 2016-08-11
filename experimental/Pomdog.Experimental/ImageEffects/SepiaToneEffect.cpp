@@ -25,7 +25,7 @@ namespace {
 #include "Shaders/HLSL.Embedded/SepiaTone_PS.inc.hpp"
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 SepiaToneEffect::SepiaToneEffect(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
@@ -53,7 +53,7 @@ SepiaToneEffect::SepiaToneEffect(
         .SetConstantBufferBindSlot("ImageEffectConstants", 0)
         .Build();
 }
-//-----------------------------------------------------------------------
+
 void SepiaToneEffect::Apply(GraphicsCommandList & commandList,
     std::shared_ptr<RenderTarget2D> const& source,
     std::shared_ptr<ConstantBuffer> const& constantBuffer)
@@ -65,5 +65,5 @@ void SepiaToneEffect::Apply(GraphicsCommandList & commandList,
     commandList.SetTexture(0, source);
     commandList.SetPipelineState(pipelineState);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

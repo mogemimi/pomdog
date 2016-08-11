@@ -21,7 +21,7 @@
 namespace Pomdog {
 namespace Detail {
 namespace {
-//-----------------------------------------------------------------------
+
 //ParticleClip CreateEmitterFireBlock()
 //{
 //    using Particles::ParticleCurveKey;
@@ -101,7 +101,7 @@ namespace {
 //
 //    return std::move(clip);
 //}
-//-----------------------------------------------------------------------
+
 template <typename T>
 T GetMemberAs(rapidjson::Value const& object, std::string const& name)
 {
@@ -120,7 +120,7 @@ T GetMemberAs(rapidjson::Value const& object, std::string const& name)
     static_assert(std::is_convertible<decltype(value.GetDouble()), T>::value, "");
     return value.GetDouble();
 }
-//-----------------------------------------------------------------------
+
 ParticleClip ReadParticleClip(rapidjson::Value const& object)
 {
     ParticleClip clip;
@@ -324,7 +324,7 @@ ParticleClip ParticleLoader::LoadFromJson(AssetManager & assets, std::string con
 
     return ReadParticleClip(member->value);
 }
-//-----------------------------------------------------------------------
+
 ParticleClip ParticleLoader::Load(AssetManager & assets, std::string const& assetName)
 {
     POMDOG_ASSERT(!assetName.empty());

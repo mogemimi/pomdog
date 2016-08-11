@@ -11,7 +11,7 @@
 #include <regex>
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 namespace {
 
 struct BitmapFontInfo {
@@ -156,7 +156,7 @@ BitmapFontInfo ParseInfo(std::istream & stream)
 
     return std::move(info);
 }
-//-----------------------------------------------------------------------
+
 BitmapFontCommon ParseCommon(std::istream & stream)
 {
     BitmapFontCommon result;
@@ -195,7 +195,7 @@ BitmapFontCommon ParseCommon(std::istream & stream)
 
     return std::move(result);
 }
-//-----------------------------------------------------------------------
+
 BitmapFontPage ParsePage(std::istream & stream)
 {
     BitmapFontPage result;
@@ -228,7 +228,7 @@ BitmapFontPage ParsePage(std::istream & stream)
 
     return std::move(result);
 }
-//-----------------------------------------------------------------------
+
 Detail::SpriteFonts::Glyph ParseGlyph(std::istream & stream)
 {
     Detail::SpriteFonts::Glyph result;
@@ -279,7 +279,7 @@ Detail::SpriteFonts::Glyph ParseGlyph(std::istream & stream)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     AssetManager & assets, std::string const& assetName)
 {
@@ -368,5 +368,5 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
         defaultCharacter, info.PaddingLeft + info.PaddingRight, common.LineHeight);
     return std::move(spriteFont);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

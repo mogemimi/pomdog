@@ -14,7 +14,7 @@ static Matrix3x2 CreateTransformMatrix3x2(Transform2D const& transform)
         * Matrix3x2::CreateRotation(transform.Rotation)
         * Matrix3x2::CreateTranslation(transform.Position);
 }
-//-----------------------------------------------------------------------
+
 static TextureRegion CreateTextureRegionFromTexture(std::shared_ptr<Texture2D> const& texture)
 {
     POMDOG_ASSERT(texture);
@@ -39,11 +39,11 @@ static constexpr std::uint32_t Region = 0x2;
 }// namespace SpriteRenderableDirtyFlags
 
 }// unnamed namespace
-//-----------------------------------------------------------------------
+
 SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& texture)
     : SpriteRenderable(texture, CreateTextureRegionFromTexture(texture))
 {}
-//-----------------------------------------------------------------------
+
 SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& textureIn, TextureRegion const& textureRegionIn)
     : originPivot{0.5f, 0.5f}
     , dirtyFlags{std::numeric_limits<std::uint32_t>::max()}
@@ -56,7 +56,7 @@ SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& textureIn, 
     command.originPivot = {0.5f, 0.5f};
     command.drawOrder = 0;
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 {
     if (!IsVisible) {
@@ -98,32 +98,32 @@ void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 
     renderer.PushCommand(command);
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderable::OriginPivot(Vector2 const& originPivotIn)
 {
     originPivot = originPivotIn;
     dirtyFlags |= SpriteRenderableDirtyFlags::OriginPivot;
 }
-//-----------------------------------------------------------------------
+
 Vector2 SpriteRenderable::OriginPivot() const
 {
     return originPivot;
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderable::Region(TextureRegion const& regionIn)
 {
     command.textureRegion = regionIn;
     dirtyFlags |= SpriteRenderableDirtyFlags::Region;
 }
-//-----------------------------------------------------------------------
+
 TextureRegion const& SpriteRenderable::Region() const
 {
     return command.textureRegion;
 }
-//-----------------------------------------------------------------------
+
 Rectangle SpriteRenderable::BoundingBox() const
 {
     return {0, 0, command.textureRegion.Width, command.textureRegion.Height};
 }
-//-----------------------------------------------------------------------
+
 }// namespace Pomdog

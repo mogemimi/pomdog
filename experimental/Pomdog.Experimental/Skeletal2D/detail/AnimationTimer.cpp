@@ -5,13 +5,13 @@
 namespace Pomdog {
 namespace Detail {
 namespace Skeletal2D {
-//-----------------------------------------------------------------------
+
 AnimationTimer::AnimationTimer()
     : time(AnimationTimeInterval::zero())
     , isPlaying(true)
 {
 }
-//-----------------------------------------------------------------------
+
 void AnimationTimer::Update(AnimationTimeInterval const& timeIn)
 {
     if (isPlaying)
@@ -19,32 +19,32 @@ void AnimationTimer::Update(AnimationTimeInterval const& timeIn)
         time += timeIn;
     }
 }
-//-----------------------------------------------------------------------
+
 void AnimationTimer::Reset()
 {
     time = AnimationTimeInterval::zero();
 }
-//-----------------------------------------------------------------------
+
 void AnimationTimer::Pause()
 {
     isPlaying = false;
 }
-//-----------------------------------------------------------------------
+
 void AnimationTimer::Resume()
 {
     isPlaying = true;
 }
-//-----------------------------------------------------------------------
+
 AnimationTimeInterval AnimationTimer::Time() const
 {
     return time;
 }
-//-----------------------------------------------------------------------
+
 bool AnimationTimer::IsPlaying() const
 {
     return isPlaying;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Skeletal2D
 } // namespace Detail
 } // namespace Pomdog

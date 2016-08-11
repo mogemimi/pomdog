@@ -21,7 +21,7 @@ rapidjson::Value ToJsonValue(T const& v)
     auto value = rapidjson::Value(v);
     return std::move(value);
 }
-//-----------------------------------------------------------------------
+
 rapidjson::Value ToJsonValue(std::string const& s)
 {
     auto value = rapidjson::Value(
@@ -29,7 +29,7 @@ rapidjson::Value ToJsonValue(std::string const& s)
         static_cast<rapidjson::SizeType>(s.size()));
     return std::move(value);
 }
-//-----------------------------------------------------------------------
+
 template <typename T, typename Func>
 Optional<T> GetJsonValue(std::string const& jsonData, std::string const& key, Func const& func)
 {
@@ -52,7 +52,7 @@ Optional<T> GetJsonValue(std::string const& jsonData, std::string const& key, Fu
     auto & v = doc[key.c_str()];
     return func(v);
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 void SetJsonValue(std::string & jsonData, std::string const& key, T const& value)
 {
@@ -81,7 +81,7 @@ void SetJsonValue(std::string & jsonData, std::string const& key, T const& value
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 UserPreferences::UserPreferences()
     : needToSave(false)
 {
@@ -126,7 +126,7 @@ UserPreferences::UserPreferences()
 
     Log::Internal("UserPreferences path: " + filePath);
 }
-//-----------------------------------------------------------------------
+
 Optional<bool> UserPreferences::GetBool(std::string const& key) const
 {
     POMDOG_ASSERT(!key.empty());
@@ -139,7 +139,7 @@ Optional<bool> UserPreferences::GetBool(std::string const& key) const
             return NullOpt;
         });
 }
-//-----------------------------------------------------------------------
+
 Optional<float> UserPreferences::GetFloat(std::string const& key) const
 {
     POMDOG_ASSERT(!key.empty());
@@ -152,7 +152,7 @@ Optional<float> UserPreferences::GetFloat(std::string const& key) const
             return NullOpt;
         });
 }
-//-----------------------------------------------------------------------
+
 Optional<int> UserPreferences::GetInt(std::string const& key) const
 {
     return GetJsonValue<int>(jsonData, key,
@@ -166,7 +166,7 @@ Optional<int> UserPreferences::GetInt(std::string const& key) const
             return NullOpt;
         });
 }
-//-----------------------------------------------------------------------
+
 Optional<std::string> UserPreferences::GetString(std::string const& key) const
 {
     return GetJsonValue<std::string>(jsonData, key,
@@ -178,7 +178,7 @@ Optional<std::string> UserPreferences::GetString(std::string const& key) const
             return NullOpt;
         });
 }
-//-----------------------------------------------------------------------
+
 bool UserPreferences::HasKey(std::string const& key)
 {
     POMDOG_ASSERT(!key.empty());
@@ -195,35 +195,35 @@ bool UserPreferences::HasKey(std::string const& key)
 
     return doc.HasMember(key.c_str());
 }
-//-----------------------------------------------------------------------
+
 void UserPreferences::SetBool(std::string const& key, bool value)
 {
     POMDOG_ASSERT(!key.empty());
     SetJsonValue(jsonData, key, value);
     needToSave = true;
 }
-//-----------------------------------------------------------------------
+
 void UserPreferences::SetFloat(std::string const& key, float value)
 {
     POMDOG_ASSERT(!key.empty());
     SetJsonValue(jsonData, key, value);
     needToSave = true;
 }
-//-----------------------------------------------------------------------
+
 void UserPreferences::SetInt(std::string const& key, int value)
 {
     POMDOG_ASSERT(!key.empty());
     SetJsonValue(jsonData, key, value);
     needToSave = true;
 }
-//-----------------------------------------------------------------------
+
 void UserPreferences::SetString(std::string const& key, std::string const& value)
 {
     POMDOG_ASSERT(!key.empty());
     SetJsonValue(jsonData, key, value);
     needToSave = true;
 }
-//-----------------------------------------------------------------------
+
 void UserPreferences::Save()
 {
     POMDOG_ASSERT(!filePath.empty());
@@ -247,5 +247,5 @@ void UserPreferences::Save()
     stream << jsonData;
     needToSave = false;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

@@ -4,9 +4,9 @@
 #include <Pomdog/Pomdog.hpp>
 
 namespace TestApp {
-//-----------------------------------------------------------------------
+
 using namespace Pomdog;
-//-----------------------------------------------------------------------
+
 void LogTexturePackerInfo(TexturePacker::TextureAtlas const& textureAtlas)
 {
     Log::Info(StringFormat("TextureAtlas.Pages = %ld", textureAtlas.pages.size()));
@@ -30,7 +30,7 @@ void LogTexturePackerInfo(TexturePacker::TextureAtlas const& textureAtlas)
 
     Log::Info("-------------------------");
 }
-//-----------------------------------------------------------------------
+
 void LogSkeletalInfo(Spine::SkeletonDesc const& skeletonDesc)
 {
     int boneIndex = 0;
@@ -82,5 +82,5 @@ void LogSkeletalInfo(Spine::SkeletonDesc const& skeletonDesc)
         }
     }
 }
-//-----------------------------------------------------------------------
+
 }// namespace TestApp

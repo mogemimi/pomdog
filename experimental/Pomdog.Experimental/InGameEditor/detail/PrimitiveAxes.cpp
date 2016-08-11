@@ -5,7 +5,7 @@
 
 namespace Pomdog {
 namespace SceneEditor {
-//-----------------------------------------------------------------------
+
 PrimitiveAxes::PrimitiveAxes(Color const& xAxisColor, Color const& yAxisColor, Color const& zAxisColor)
 {
     constexpr float axesPixelLength = 4096.0f;
@@ -25,7 +25,7 @@ PrimitiveAxes::PrimitiveAxes(Color const& xAxisColor, Color const& yAxisColor, C
         line.Point2 *= axesPixelLength;
     }
 }
-//-----------------------------------------------------------------------
+
 void PrimitiveAxes::Draw(LineBatch & lineBatch)
 {
     for (auto & line: lines)

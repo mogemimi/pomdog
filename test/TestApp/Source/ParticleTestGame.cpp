@@ -5,16 +5,16 @@
 #include <utility>
 
 namespace TestApp {
-//-----------------------------------------------------------------------
+
 ParticleTestGame::ParticleTestGame(std::shared_ptr<GameHost> const& gameHostIn)
     : gameHost(gameHostIn)
     , window(gameHostIn->Window())
     , graphicsDevice(gameHostIn->GraphicsDevice())
     , graphicsContext(gameHostIn->GraphicsContext())
 {}
-//-----------------------------------------------------------------------
+
 ParticleTestGame::~ParticleTestGame() = default;
-//-----------------------------------------------------------------------
+
 void ParticleTestGame::Initialize()
 {
     window->SetTitle("ParticleTestGame - Enjoy Game Dev, Have Fun.");
@@ -98,7 +98,7 @@ void ParticleTestGame::Initialize()
     auto clientBounds = window->GetClientBounds();
     clientViewport = Viewport{0, 0, clientBounds.Width, clientBounds.Height};
 }
-//-----------------------------------------------------------------------
+
 void ParticleTestGame::Update()
 {
     auto clock = gameHost->Clock();
@@ -131,7 +131,7 @@ void ParticleTestGame::Update()
 //        particleRenderable->Update(particleObject, *clock);
 //    }
 }
-//-----------------------------------------------------------------------
+
 void ParticleTestGame::Draw()
 {
     {
@@ -179,5 +179,5 @@ void ParticleTestGame::Draw()
     gameEditor->DrawGUI(*graphicsContext);
     graphicsContext->Present();
 }
-//-----------------------------------------------------------------------
+
 }// namespace TestApp

@@ -28,7 +28,7 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName, std:
         output.assign(memberObject.GetString(), memberObject.GetStringLength());
     }
 }
-//-----------------------------------------------------------------------
+
 void ReadJsonMember(rapidjson::Value const& object, char const* memberName, float & output)
 {
     if (!object.HasMember(memberName)) {
@@ -40,7 +40,7 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName, floa
         output = memberObject.GetDouble();
     }
 }
-//-----------------------------------------------------------------------
+
 void ReadJsonMember(rapidjson::Value const& object, char const* memberName, AnimationTimeInterval & output)
 {
     if (!object.HasMember(memberName)) {
@@ -52,7 +52,7 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName, Anim
         output = AnimationTimeInterval(memberObject.GetDouble());
     }
 }
-//-----------------------------------------------------------------------
+
 void ReadJsonMember(rapidjson::Value const& object, char const* memberName, Radian<float> & output)
 {
     if (!object.HasMember(memberName)) {
@@ -71,7 +71,7 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName, Radi
         output = MathHelper::ToRadians(degreeAngle).value;
     }
 }
-//-----------------------------------------------------------------------
+
 void ReadJsonMember(rapidjson::Value const& object, char const* memberName, Degree<double> & output)
 {
     if (!object.HasMember(memberName)) {
@@ -83,7 +83,7 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName, Degr
         output.value = memberObject.GetDouble();
     }
 }
-//-----------------------------------------------------------------------
+
 template <typename T, T Denom>
 void ReadJsonMember(rapidjson::Value const& object, char const* memberName,
     Detail::Skeletal2D::CompressedFloat<T, Denom> & output)
@@ -97,7 +97,7 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName,
         output = memberObject.GetDouble();
     }
 }
-//-----------------------------------------------------------------------
+
 void ReadJsonMember(rapidjson::Value const& object, char const* memberName, KeyframeCurve & output)
 {
     output = KeyframeCurve::Liener;
@@ -116,7 +116,7 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName, Keyf
         output = KeyframeCurve::Bezier;
     }
 }
-//-----------------------------------------------------------------------
+
 void ReadJsonMember(rapidjson::Value const& object, char const* memberName, std::uint16_t & output)
 {
     if (!object.HasMember(memberName)) {
@@ -128,7 +128,7 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName, std:
         output = memberObject.GetUint();
     }
 }
-//-----------------------------------------------------------------------
+
 void ReadJsonMember(rapidjson::Value const& object, char const* memberName, Color & output)
 {
     if (!object.HasMember(memberName)) {
@@ -142,7 +142,7 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName, Colo
         output = Color::FromPackedValue(hexColor);
     }
 }
-//-----------------------------------------------------------------------
+
 std::vector<BoneDesc> ReadBones(rapidjson::Value const& bonesDOM)
 {
     if (!bonesDOM.IsArray() || bonesDOM.Empty()) {
@@ -193,7 +193,7 @@ std::vector<BoneDesc> ReadBones(rapidjson::Value const& bonesDOM)
     }
     return std::move(bones);
 }
-//-----------------------------------------------------------------------
+
 JointIndex FindJointIndex(char const* boneName, std::vector<BoneDesc> const& bones)
 {
     auto iter = std::find_if(std::begin(bones), std::end(bones), [&boneName](BoneDesc const& boneDesc) {
@@ -208,7 +208,7 @@ JointIndex FindJointIndex(char const* boneName, std::vector<BoneDesc> const& bon
     }
     return std::distance(std::begin(bones), iter);
 }
-//-----------------------------------------------------------------------
+
 std::vector<SlotDesc> ReadSlots(rapidjson::Value const& slotsDOM, std::vector<BoneDesc> const& bones)
 {
     if (!slotsDOM.IsArray()) {
@@ -256,7 +256,7 @@ std::vector<SlotDesc> ReadSlots(rapidjson::Value const& slotsDOM, std::vector<Bo
 
     return std::move(slots);
 }
-//-----------------------------------------------------------------------
+
 std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
     rapidjson::Value const& verticesArray, rapidjson::Value const& uvsArray)
 {
@@ -370,7 +370,7 @@ std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
 
     return std::move(vertices);
 }
-//-----------------------------------------------------------------------
+
 std::vector<std::uint16_t> ReadSkinnedMeshIndices(rapidjson::Value const& indicesArray)
 {
     POMDOG_ASSERT(indicesArray.IsArray());
@@ -386,7 +386,7 @@ std::vector<std::uint16_t> ReadSkinnedMeshIndices(rapidjson::Value const& indice
 
     return std::move(indices);
 }
-//-----------------------------------------------------------------------
+
 AttachmentDesc ReadAttachment(rapidjson::Value::ConstMemberIterator const& iter)
 {
     POMDOG_ASSERT(iter->name.IsString());
@@ -412,7 +412,7 @@ AttachmentDesc ReadAttachment(rapidjson::Value::ConstMemberIterator const& iter)
 
     return std::move(attachmentDesc);
 }
-//-----------------------------------------------------------------------
+
 SkinnedMeshAttachmentDesc ReadSkinnedMeshAttachment(rapidjson::Value::ConstMemberIterator const& iter)
 {
     POMDOG_ASSERT(iter->name.IsString());
@@ -455,7 +455,7 @@ SkinnedMeshAttachmentDesc ReadSkinnedMeshAttachment(rapidjson::Value::ConstMembe
 
     return std::move(desc);
 }
-//-----------------------------------------------------------------------
+
 std::vector<SkinSlotDesc> ReadSkinSlots(rapidjson::Value const& slotsDOM)
 {
     POMDOG_ASSERT(slotsDOM.IsObject());
@@ -502,7 +502,7 @@ std::vector<SkinSlotDesc> ReadSkinSlots(rapidjson::Value const& slotsDOM)
 
     return std::move(slots);
 }
-//-----------------------------------------------------------------------
+
 std::vector<SkinDesc> ReadSkins(rapidjson::Value const& skinsDOM)
 {
     if (!skinsDOM.IsObject()) {
@@ -529,7 +529,7 @@ std::vector<SkinDesc> ReadSkins(rapidjson::Value const& skinsDOM)
 
     return std::move(skins);
 }
-//-----------------------------------------------------------------------
+
 std::vector<AnimationSamplePointTranslate> ReadAnimationTranslateSamples(rapidjson::Value const& sampleDOM)
 {
     if (!sampleDOM.IsArray()) {
@@ -564,7 +564,7 @@ std::vector<AnimationSamplePointTranslate> ReadAnimationTranslateSamples(rapidjs
 
     return std::move(samplePoints);
 }
-//-----------------------------------------------------------------------
+
 std::vector<AnimationSamplePointRotate> ReadAnimationRotateSamples(rapidjson::Value const& sampleDOM)
 {
     if (!sampleDOM.IsArray()) {
@@ -605,7 +605,7 @@ std::vector<AnimationSamplePointRotate> ReadAnimationRotateSamples(rapidjson::Va
 
     return std::move(samplePoints);
 }
-//-----------------------------------------------------------------------
+
 std::vector<AnimationSamplePointScale> ReadAnimationScaleSamples(rapidjson::Value const& sampleDOM)
 {
     if (!sampleDOM.IsArray()) {
@@ -639,7 +639,7 @@ std::vector<AnimationSamplePointScale> ReadAnimationScaleSamples(rapidjson::Valu
 
     return std::move(samplePoints);
 }
-//-----------------------------------------------------------------------
+
 std::vector<AnimationSamplePointAttachment> ReadAnimationAttachmentSamples(rapidjson::Value const& sampleDOM)
 {
     if (!sampleDOM.IsArray()) {
@@ -674,7 +674,7 @@ std::vector<AnimationSamplePointAttachment> ReadAnimationAttachmentSamples(rapid
 
     return std::move(samplePoints);
 }
-//-----------------------------------------------------------------------
+
 std::vector<BoneAnimationTrackDesc> ReadBoneAnimationSamples(rapidjson::Value const& document)
 {
     if (!document.IsObject()) {
@@ -709,7 +709,7 @@ std::vector<BoneAnimationTrackDesc> ReadBoneAnimationSamples(rapidjson::Value co
 
     return std::move(animationSamples);
 }
-//-----------------------------------------------------------------------
+
 std::vector<SlotAnimationTrackDesc> ReadSlotAnimationSamples(rapidjson::Value const& document)
 {
     if (!document.IsObject()) {
@@ -738,7 +738,7 @@ std::vector<SlotAnimationTrackDesc> ReadSlotAnimationSamples(rapidjson::Value co
 
     return std::move(animationSamples);
 }
-//-----------------------------------------------------------------------
+
 std::vector<AnimationClipDesc> ReadAnimationClips(rapidjson::Value const& document)
 {
     if (!document.IsObject()) {
@@ -772,7 +772,7 @@ std::vector<AnimationClipDesc> ReadAnimationClips(rapidjson::Value const& docume
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 SkeletonDesc SkeletonDescLoader::Load(AssetManager const& assets, std::string const& assetName)
 {
     using Detail::BinaryReader;
@@ -815,6 +815,6 @@ SkeletonDesc SkeletonDescLoader::Load(AssetManager const& assets, std::string co
 
     return std::move(skeleton);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Spine
 } // namespace Pomdog

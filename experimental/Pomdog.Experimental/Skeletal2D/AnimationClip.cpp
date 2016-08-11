@@ -26,13 +26,13 @@ AnimationTimeInterval ComputeLength(std::vector<std::unique_ptr<AnimationTrack>>
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 AnimationClip::AnimationClip(std::vector<std::unique_ptr<AnimationTrack>> && tracksIn)
     : tracks(std::move(tracksIn))
 {
     length = ComputeLength(tracks);
 }
-//-----------------------------------------------------------------------
+
 void AnimationClip::Apply(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
     for (auto & track: tracks)
@@ -41,7 +41,7 @@ void AnimationClip::Apply(AnimationTimeInterval const& time, Skeleton const& ske
         track->Apply(time, skeleton, skeletonPose);
     }
 }
-//-----------------------------------------------------------------------
+
 AnimationTimeInterval AnimationClip::Length() const
 {
     return length;

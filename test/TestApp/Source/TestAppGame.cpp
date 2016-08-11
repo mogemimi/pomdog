@@ -10,13 +10,13 @@
 #include <utility>
 
 namespace TestApp {
-//-----------------------------------------------------------------------
+
 TestAppGame::TestAppGame(std::shared_ptr<GameHost> const& gameHostIn)
     : gameHost(gameHostIn)
 {}
-//-----------------------------------------------------------------------
+
 TestAppGame::~TestAppGame() = default;
-//-----------------------------------------------------------------------
+
 void TestAppGame::Initialize()
 {
     //this->game = std::make_unique<LightningTestGame>(gameHost);
@@ -29,7 +29,7 @@ void TestAppGame::Initialize()
         game->Initialize();
     }
 }
-//-----------------------------------------------------------------------
+
 void TestAppGame::Update()
 {
     if (!game) {
@@ -43,7 +43,7 @@ void TestAppGame::Update()
 
     game->Update();
 }
-//-----------------------------------------------------------------------
+
 void TestAppGame::Draw()
 {
     if (!game) {
@@ -55,5 +55,5 @@ void TestAppGame::Draw()
 
     game->Draw();
 }
-//-----------------------------------------------------------------------
+
 } // namespace TestApp

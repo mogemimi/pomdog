@@ -7,7 +7,7 @@
 #include <random>
 
 namespace TestApp {
-//-----------------------------------------------------------------------
+
 MaidBeamGame::MaidBeamGame(std::shared_ptr<GameHost> const& gameHostIn)
     : gameHost(gameHostIn)
     , window(gameHostIn->Window())
@@ -15,9 +15,9 @@ MaidBeamGame::MaidBeamGame(std::shared_ptr<GameHost> const& gameHostIn)
     , graphicsContext(gameHostIn->GraphicsContext())
     , sandboxMode(false)
 {}
-//-----------------------------------------------------------------------
+
 MaidBeamGame::~MaidBeamGame() = default;
-//-----------------------------------------------------------------------
+
 void MaidBeamGame::Initialize()
 {
     window->SetTitle("MaidBeamGame - Enjoy Game Dev, Have Fun.");
@@ -117,7 +117,7 @@ void MaidBeamGame::Initialize()
         Log::Info("ClientSizeChanged!");
     });
 }
-//-----------------------------------------------------------------------
+
 void MaidBeamGame::Update()
 {
     auto clock = gameHost->Clock();
@@ -147,7 +147,7 @@ void MaidBeamGame::Update()
         textBlock1->Text(StringFormat("Draw Calls: %d", renderer.DrawCallCount()));
     }
 }
-//-----------------------------------------------------------------------
+
 void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camera)
 {
     auto clientBounds = window->GetClientBounds();
@@ -194,7 +194,7 @@ void MaidBeamGame::DrawScene(Transform2D const& transform, Camera2D const& camer
 
     renderer.Render(*graphicsContext);
 }
-//-----------------------------------------------------------------------
+
 void MaidBeamGame::Draw()
 {
     constexpr bool enableFxaa = true;
@@ -258,5 +258,5 @@ void MaidBeamGame::Draw()
     gameEditor->DrawGUI(*graphicsContext);
     graphicsContext->Present();
 }
-//-----------------------------------------------------------------------
+
 }// namespace TestApp

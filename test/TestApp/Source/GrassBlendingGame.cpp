@@ -6,16 +6,16 @@
 #include <utility>
 
 namespace TestApp {
-//-----------------------------------------------------------------------
+
 GrassBlendingGame::GrassBlendingGame(std::shared_ptr<GameHost> const& gameHostIn)
     : gameHost(gameHostIn)
     , window(gameHostIn->Window())
     , graphicsDevice(gameHostIn->GraphicsDevice())
     , graphicsContext(gameHostIn->GraphicsContext())
 {}
-//-----------------------------------------------------------------------
+
 GrassBlendingGame::~GrassBlendingGame() = default;
-//-----------------------------------------------------------------------
+
 void GrassBlendingGame::Initialize()
 {
     window->SetTitle("TestApp - Enjoy Game Dev, Have Fun.");
@@ -146,7 +146,7 @@ void GrassBlendingGame::Initialize()
         spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(width, height, 1.0f, 100.0f));
     });
 }
-//-----------------------------------------------------------------------
+
 void GrassBlendingGame::Update()
 {
     auto clock = gameHost->Clock();
@@ -190,7 +190,7 @@ void GrassBlendingGame::Update()
         }
     }
 }
-//-----------------------------------------------------------------------
+
 void GrassBlendingGame::DrawSprites()
 {
     auto transform = mainCamera.Component<Transform2D>();
@@ -231,7 +231,7 @@ void GrassBlendingGame::DrawSprites()
 
     polygonBatch->End();
 }
-//-----------------------------------------------------------------------
+
 void GrassBlendingGame::DrawSkinnedMesh()
 {
     {
@@ -279,7 +279,7 @@ void GrassBlendingGame::DrawSkinnedMesh()
             maidSkinnedMesh.IndexBuffer->IndexCount());
     }
 }
-//-----------------------------------------------------------------------
+
 void GrassBlendingGame::Draw()
 {
     constexpr bool enableFxaa = true;
@@ -323,5 +323,5 @@ void GrassBlendingGame::Draw()
     gameEditor->DrawGUI(*graphicsContext);
     graphicsContext->Present();
 }
-//-----------------------------------------------------------------------
+
 }// namespace TestApp

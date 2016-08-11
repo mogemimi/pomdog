@@ -33,16 +33,16 @@ std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIte
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 // MARK: - RotationTrack
-//-----------------------------------------------------------------------
+
 RotationTrack::RotationTrack(std::vector<RotationKeyframe> && keysIn, JointIndex && jointIndexIn)
     : keys(std::move(keysIn))
     , jointIndex(std::move(jointIndexIn))
 {
     POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<RotationKeyframe>));
 }
-//-----------------------------------------------------------------------
+
 void RotationTrack::Apply(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
     RotationKeyframe point;
@@ -88,7 +88,7 @@ void RotationTrack::Apply(AnimationTimeInterval const& time, Skeleton const& ske
 
     pose.Rotation = bindPose.Rotation + MathHelper::Lerp(rotation1, rotation2, amount);
 }
-//-----------------------------------------------------------------------
+
 AnimationTimeInterval RotationTrack::Length() const
 {
     POMDOG_ASSERT(!keys.empty());
@@ -96,16 +96,16 @@ AnimationTimeInterval RotationTrack::Length() const
     POMDOG_ASSERT(keys.front().Time <= keys.back().Time);
     return keys.back().Time;
 }
-//-----------------------------------------------------------------------
+
 // MARK: - ScaleTrack
-//-----------------------------------------------------------------------
+
 ScaleTrack::ScaleTrack(std::vector<ScaleKeyframe> && keysIn, JointIndex && jointIndexIn)
     : keys(std::move(keysIn))
     , jointIndex(std::move(jointIndexIn))
 {
     POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<ScaleKeyframe>));
 }
-//-----------------------------------------------------------------------
+
 void ScaleTrack::Apply(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
     ScaleKeyframe point;
@@ -142,7 +142,7 @@ void ScaleTrack::Apply(AnimationTimeInterval const& time, Skeleton const& skelet
     float scale2 = pointPair.second->Scale.ToFloat();
     pose.Scale = bindPose.Scale * MathHelper::Lerp(scale1, scale2, amount);
 }
-//-----------------------------------------------------------------------
+
 AnimationTimeInterval ScaleTrack::Length() const
 {
     POMDOG_ASSERT(!keys.empty());
@@ -150,16 +150,16 @@ AnimationTimeInterval ScaleTrack::Length() const
     POMDOG_ASSERT(keys.front().Time <= keys.back().Time);
     return keys.back().Time;
 }
-//-----------------------------------------------------------------------
+
 // MARK: - TranslationTrack
-//-----------------------------------------------------------------------
+
 TranslationTrack::TranslationTrack(std::vector<TranslationKeyframe> && keysIn, JointIndex && jointIndexIn)
     : keys(std::move(keysIn))
     , jointIndex(std::move(jointIndexIn))
 {
     POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<TranslationKeyframe>));
 }
-//-----------------------------------------------------------------------
+
 void TranslationTrack::Apply(AnimationTimeInterval const& time, Skeleton const& skeleton, SkeletonPose & skeletonPose)
 {
     TranslationKeyframe point;
@@ -198,7 +198,7 @@ void TranslationTrack::Apply(AnimationTimeInterval const& time, Skeleton const& 
 
     pose.Translate = bindPose.Translate + Vector2::Lerp(translate1, translate2, amount);
 }
-//-----------------------------------------------------------------------
+
 AnimationTimeInterval TranslationTrack::Length() const
 {
     POMDOG_ASSERT(!keys.empty());

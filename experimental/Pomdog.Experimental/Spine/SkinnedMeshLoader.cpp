@@ -29,7 +29,7 @@ struct SkinnedMeshData {
 
 using TexturePacker::TextureAtlas;
 using TexturePacker::TextureAtlasRegion;
-//-----------------------------------------------------------------------
+
 SkinnedMeshSlot CreateSkinnedMeshSlot(SlotDesc const& slotDesc,
     AttachmentDesc const& attachment, TextureRegion const& textureRegion,
     Vector2 const& textureSize, std::vector<Matrix3x2> const& bindPosesInGlobal)
@@ -100,7 +100,7 @@ SkinnedMeshSlot CreateSkinnedMeshSlot(SlotDesc const& slotDesc,
 
     return std::move(slot);
 }
-//-----------------------------------------------------------------------
+
 SkinnedMeshSlot CreateSkinnedMeshSlot(
     SkinnedMeshAttachmentDesc const& attachment, TextureRegion const& textureRegion,
     Vector2 const& textureSize, std::vector<Matrix3x2> const& bindPosesInGlobal)
@@ -148,7 +148,7 @@ SkinnedMeshSlot CreateSkinnedMeshSlot(
     meshSlot.Indices = attachment.Indices;
     return std::move(meshSlot);
 }
-//-----------------------------------------------------------------------
+
 SkinnedMeshData
 CreateVertices(std::vector<SlotDesc> const& slots, SkinDesc const& skin,
     TextureAtlas const& textureAtlas, Vector2 const& textureSize,
@@ -285,7 +285,7 @@ CreateVertices(std::vector<SlotDesc> const& slots, SkinDesc const& skin,
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 SkinnedMesh CreateSkinnedMesh(
     GraphicsDevice & graphicsDevice,
     std::vector<Matrix3x2> const& bindPosesInGlobal,

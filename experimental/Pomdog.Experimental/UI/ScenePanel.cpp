@@ -9,7 +9,7 @@
 namespace Pomdog {
 namespace UI {
 namespace {
-////-----------------------------------------------------------------------
+//
 //Radian<float> SampleTumbleGesture(Vector2 const& position, Vector2 & startPosition, Rectangle const& viewportSize)
 //{
 //    constexpr float threshold = 1.0f;
@@ -43,7 +43,7 @@ namespace {
 //
 //    return delta;
 //}
-////-----------------------------------------------------------------------
+//
 //Vector2 SampleTrackGesture(Vector2 const& position, Vector2 & startPosition)
 //{
 //    constexpr float threshold = 2.0f;
@@ -61,7 +61,7 @@ namespace {
 static const auto ZoomAnimationInterval = std::chrono::milliseconds(400);
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 ScenePanel::ScenePanel(
     std::shared_ptr<UIEventDispatcher> const& dispatcher,
     int widthIn,
@@ -77,37 +77,37 @@ ScenePanel::ScenePanel(
     SetSize(widthIn, heightIn);
     DrawOrder(10000);
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Properties
-//-----------------------------------------------------------------------
+
 bool ScenePanel::IsEnabled() const
 {
     return isEnabled;
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::IsEnabled(bool isEnabledIn)
 {
     this->isEnabled = isEnabledIn;
 }
-//-----------------------------------------------------------------------
+
 bool ScenePanel::IsFocused() const
 {
     return this->isFocused;
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Member Functions
-//-----------------------------------------------------------------------
+
 Vector2 ScenePanel::ConvertToPanelSpace(Point2D const& point) const
 {
     return Vector2(point.X, Height() - point.Y);
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::OnEnter()
 {
     auto dispatcher = Dispatcher();
     connection = dispatcher->Connect(shared_from_this());
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::OnPointerWheelChanged(PointerPoint const& pointerPoint)
 {
     scrollWheelSampler.AddWheelDelta(pointerPoint.MouseWheelDelta);
@@ -134,17 +134,17 @@ void ScenePanel::OnPointerWheelChanged(PointerPoint const& pointerPoint)
         }
     }
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::OnPointerEntered(PointerPoint const& pointerPoint)
 {
     isFocused = true;
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::OnPointerExited(PointerPoint const& pointerPoint)
 {
     isFocused = false;
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::OnPointerPressed(PointerPoint const& pointerPoint)
 {
     POMDOG_ASSERT(pointerPoint.MouseEvent);
@@ -163,7 +163,7 @@ void ScenePanel::OnPointerPressed(PointerPoint const& pointerPoint)
         break;
     }
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::OnPointerMoved(PointerPoint const& pointerPoint)
 {
     POMDOG_ASSERT(pointerPoint.MouseEvent);
@@ -182,20 +182,20 @@ void ScenePanel::OnPointerMoved(PointerPoint const& pointerPoint)
         break;
     }
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::OnPointerReleased(PointerPoint const& pointerPoint)
 {
     tumbleStartPosition = Pomdog::NullOpt;
     trackStartPosition = Pomdog::NullOpt;
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::OnMouseLeftButtonPressed(PointerPoint const& pointerPoint)
 {
     if (!tumbleStartPosition) {
         tumbleStartPosition = ConvertToPanelSpace(pointerPoint.Position);
     }
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::OnMouseLeftButtonMoved(PointerPoint const& pointerPoint)
 {
     if (!isEnabled) {
@@ -228,12 +228,12 @@ void ScenePanel::OnMouseLeftButtonMoved(PointerPoint const& pointerPoint)
 //        POMDOG_ASSERT(transform->Rotation != std::numeric_limits<float>::infinity());
 //    }
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::OnMouseMiddleButtonPressed(PointerPoint const& pointerPoint)
 {
     trackStartPosition = ConvertToPanelSpace(pointerPoint.Position);
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::OnMouseMiddleButtonMoved(PointerPoint const& pointerPoint)
 {
     if (!isEnabled) {
@@ -262,17 +262,17 @@ void ScenePanel::OnMouseMiddleButtonMoved(PointerPoint const& pointerPoint)
 //
 //    transform->Position -= {matrix(2, 0), matrix(2, 1)};
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::OnMouseRightButtonPressed(PointerPoint const& pointerPoint)
 {
     SceneTouch(ConvertToPanelSpace(pointerPoint.Position));
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::OnMouseRightButtonMoved(PointerPoint const& pointerPoint)
 {
     SceneTouch(ConvertToPanelSpace(pointerPoint.Position));
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::UpdateAnimation(Duration const& frameDuration)
 {
     timer = std::max(timer - frameDuration, Duration::zero());
@@ -291,20 +291,20 @@ void ScenePanel::UpdateAnimation(Duration const& frameDuration)
     POMDOG_ASSERT(cameraZoom > 0);
     cameraZoom = MathHelper::Saturate(cameraZoom + (cameraZoom * scroll * 1000));
 }
-//-----------------------------------------------------------------------
+
 double ScenePanel::GetScrollWheel() const
 {
     return cameraZoom;
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::OnRenderSizeChanged(int widthIn, int heightIn)
 {
     SetSize(widthIn, heightIn);
 }
-//-----------------------------------------------------------------------
+
 void ScenePanel::Draw(DrawingContext &)
 {
 }
-//-----------------------------------------------------------------------
+
 } // namespace UI
 } // namespace Pomdog

@@ -5,12 +5,12 @@
 #include <cmath>
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 PolygonShapeBuilder::PolygonShapeBuilder()
 {
     vertices.reserve(MinVertexCount);
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::Reset()
 {
     if (vertices.capacity() > MaxVertexCount) {
@@ -20,22 +20,22 @@ void PolygonShapeBuilder::Reset()
     }
     vertices.clear();
 }
-//-----------------------------------------------------------------------
+
 PolygonBatchVertex const* PolygonShapeBuilder::GetData() const noexcept
 {
     return vertices.data();
 }
-//-----------------------------------------------------------------------
+
 std::size_t PolygonShapeBuilder::GetVertexCount() const noexcept
 {
     return vertices.size();
 }
-//-----------------------------------------------------------------------
+
 bool PolygonShapeBuilder::IsEmpty() const noexcept
 {
     return vertices.empty();
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawArc(
     Vector2 const& position,
     float radius,
@@ -77,7 +77,7 @@ void PolygonShapeBuilder::DrawArc(
         prevPoint = nextPoint;
     }
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawBox(
     Vector3 const& position,
     Vector3 const& scale,
@@ -85,7 +85,7 @@ void PolygonShapeBuilder::DrawBox(
 {
     DrawBox(position, scale, Vector3{0.0f, 0.0f, 0.0f}, color);
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawBox(
     Vector3 const& position,
     Vector3 const& scale,
@@ -158,7 +158,7 @@ void PolygonShapeBuilder::DrawBox(
     draw(22, 20, 21);
     draw(23, 20, 22);
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawCircle(
     Vector2 const& position,
     float radius,
@@ -170,7 +170,7 @@ void PolygonShapeBuilder::DrawCircle(
 
     DrawCircle(Vector3{position, 0.0f}, radius, segments, color);
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawCircle(
     Vector3 const& position,
     float radius,
@@ -206,7 +206,7 @@ void PolygonShapeBuilder::DrawCircle(
         prevPoint = nextPoint;
     }
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawLine(
     Vector2 const& start,
     Vector2 const& end,
@@ -215,7 +215,7 @@ void PolygonShapeBuilder::DrawLine(
 {
     DrawLine(start, end, color, color, weight);
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawLine(
     Vector2 const& start,
     Vector2 const& end,
@@ -243,7 +243,7 @@ void PolygonShapeBuilder::DrawLine(
     DrawTriangle(p1, p2, p3, startColor, startColor, endColor);
     DrawTriangle(p3, p4, p1, endColor, endColor, startColor);
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawPolyline(
     std::vector<Vector2> const& points,
     float thickness,
@@ -280,14 +280,14 @@ void PolygonShapeBuilder::DrawPolyline(
         DrawTriangle(p3, p4, p1, color, color, color);
     }
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawRectangle(
     Rectangle const& sourceRect,
     Color const& color)
 {
     DrawRectangle(sourceRect, color, color, color, color);
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawRectangle(
     Rectangle const& sourceRect,
     Color const& color1,
@@ -318,7 +318,7 @@ void PolygonShapeBuilder::DrawRectangle(
         rectVertices[2], rectVertices[3], rectVertices[0],
         colorVector3, colorVector2, colorVector1);
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawRectangle(
     Matrix3x2 const& matrix,
     Rectangle const& sourceRect,
@@ -326,7 +326,7 @@ void PolygonShapeBuilder::DrawRectangle(
 {
     DrawRectangle(matrix, sourceRect, color, color, color, color);
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawRectangle(
         Matrix3x2 const& matrix,
         Rectangle const& sourceRect,
@@ -364,7 +364,7 @@ void PolygonShapeBuilder::DrawRectangle(
         rectVertices[2], rectVertices[3], rectVertices[0],
         colorVector3, colorVector2, colorVector1);
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawRectangle(
     Vector2 const& position,
     float width,
@@ -398,7 +398,7 @@ void PolygonShapeBuilder::DrawRectangle(
         rectVertices[2], rectVertices[3], rectVertices[0],
         colorVector, colorVector, colorVector);
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawSphere(
     Vector3 const& position,
     float radius,
@@ -465,7 +465,7 @@ void PolygonShapeBuilder::DrawSphere(
         }
     }
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawTriangle(
     Vector2 const& point1,
     Vector2 const& point2,
@@ -479,7 +479,7 @@ void PolygonShapeBuilder::DrawTriangle(
         Vector3{point3, 0.0f},
         colorVector, colorVector, colorVector);
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawTriangle(
     Vector2 const& point1,
     Vector2 const& point2,
@@ -496,7 +496,7 @@ void PolygonShapeBuilder::DrawTriangle(
         color2.ToVector4(),
         color3.ToVector4());
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawTriangle(
     Vector3 const& point1,
     Vector3 const& point2,
@@ -508,7 +508,7 @@ void PolygonShapeBuilder::DrawTriangle(
     DrawTriangle(point1, point2, point3,
         color1.ToVector4(), color2.ToVector4(), color3.ToVector4());
 }
-//-----------------------------------------------------------------------
+
 void PolygonShapeBuilder::DrawTriangle(
     Vector3 const& point1,
     Vector3 const& point2,
@@ -528,5 +528,5 @@ void PolygonShapeBuilder::DrawTriangle(
     vertices.push_back(Vertex{point2, color2});
     vertices.push_back(Vertex{point3, color3});
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

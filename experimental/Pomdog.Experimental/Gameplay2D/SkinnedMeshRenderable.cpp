@@ -24,7 +24,7 @@ static Matrix4x4 CreateTransformMatrix4x4(Transform2D const& transform)
 }
 
 }// unnamed namespace
-//-----------------------------------------------------------------------
+
 SkinnedMeshRenderable::SkinnedMeshRenderable(
     std::shared_ptr<Skeleton> const& skeletonIn,
     std::shared_ptr<SkeletonTransform> const& skeletonTransformIn,
@@ -40,7 +40,7 @@ SkinnedMeshRenderable::SkinnedMeshRenderable(
     POMDOG_ASSERT(command.mesh);
     POMDOG_ASSERT(command.texture);
 }
-//-----------------------------------------------------------------------
+
 void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 {
     if (!IsVisible) {
@@ -60,5 +60,5 @@ void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 
     renderer.PushCommand(command);
 }
-//-----------------------------------------------------------------------
+
 }// namespace Pomdog

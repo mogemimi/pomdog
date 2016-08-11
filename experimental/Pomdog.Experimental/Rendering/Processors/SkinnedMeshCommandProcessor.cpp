@@ -22,7 +22,7 @@ void SetMatrixPalette(SkinnedEffect & skinnedEffect, Skeleton const& skeleton, S
     skinnedEffect.SetBoneTransforms(matrices.data(), minMatrixCount);
 }
 
-////-----------------------------------------------------------------------
+//
 //static void DrawSkeleton(std::unique_ptr<PolygonBatch> const& polygonBatch,
 //    Matrix4x4 const& modelViewProjection)
 //{
@@ -55,7 +55,7 @@ void SetMatrixPalette(SkinnedEffect & skinnedEffect, Skeleton const& skeleton, S
 //}
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 SkinnedMeshCommandProcessor::SkinnedMeshCommandProcessor(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
@@ -63,12 +63,12 @@ SkinnedMeshCommandProcessor::SkinnedMeshCommandProcessor(
     , drawCallCount(0)
 {
 }
-//-----------------------------------------------------------------------
+
 void SkinnedMeshCommandProcessor::Begin(GraphicsCommandQueue &)
 {
     drawCallCount = 0;
 }
-//-----------------------------------------------------------------------
+
 void SkinnedMeshCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, RenderCommand & command)
 {
     using Detail::Rendering::SkinnedMeshCommand;
@@ -115,19 +115,19 @@ void SkinnedMeshCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, Rend
 //        graphicsContext->SetRasterizerState(rasterizerStateOld);
 //    }
 }
-//-----------------------------------------------------------------------
+
 void SkinnedMeshCommandProcessor::End(GraphicsCommandQueue &)
 {
 }
-//-----------------------------------------------------------------------
+
 int SkinnedMeshCommandProcessor::GetDrawCallCount() const noexcept
 {
     return drawCallCount;
 }
-//-----------------------------------------------------------------------
+
 void SkinnedMeshCommandProcessor::SetViewProjection(Matrix4x4 const& view, Matrix4x4 const& projection)
 {
     viewProjection = view * projection;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

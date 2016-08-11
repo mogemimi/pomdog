@@ -25,7 +25,7 @@ SkeletonPose CreateEmptyPose(Skeleton const& skeleton)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 AnimationAdditiveNode::AnimationAdditiveNode(std::unique_ptr<AnimationNode> && blendNode1In,
     std::unique_ptr<AnimationNode> && blendNode2In)
     : base(std::move(blendNode1In))
@@ -36,22 +36,22 @@ AnimationAdditiveNode::AnimationAdditiveNode(std::unique_ptr<AnimationNode> && b
     POMDOG_ASSERT(additive);
     length = std::max(base->Length(), additive->Length());
 }
-//-----------------------------------------------------------------------
+
 float AnimationAdditiveNode::Weight() const
 {
     return this->weight;
 }
-//-----------------------------------------------------------------------
+
 void AnimationAdditiveNode::Weight(float weightIn)
 {
     this->weight = weightIn;
 }
-//-----------------------------------------------------------------------
+
 AnimationTimeInterval AnimationAdditiveNode::Length() const
 {
     return length;
 }
-//-----------------------------------------------------------------------
+
 void AnimationAdditiveNode::Calculate(AnimationTimeInterval const& time,
     Detail::Skeletal2D::AnimationGraphWeightCollection const& weights,
     Skeleton const& skeleton, SkeletonPose & skeletonPose) const

@@ -30,7 +30,7 @@ struct VignetteBlock {
 };
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 VignetteEffect::VignetteEffect(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
@@ -64,7 +64,7 @@ VignetteEffect::VignetteEffect(
 
     SetIntensity(0.5f);
 }
-//-----------------------------------------------------------------------
+
 void VignetteEffect::SetIntensity(float intensity)
 {
     VignetteBlock block;
@@ -72,7 +72,7 @@ void VignetteEffect::SetIntensity(float intensity)
 
     constantBufferVignette->SetValue(std::move(block));
 }
-//-----------------------------------------------------------------------
+
 void VignetteEffect::Apply(GraphicsCommandList & commandList,
     std::shared_ptr<RenderTarget2D> const& source,
     std::shared_ptr<ConstantBuffer> const& constantBuffer)
@@ -85,5 +85,5 @@ void VignetteEffect::Apply(GraphicsCommandList & commandList,
     commandList.SetTexture(0, source);
     commandList.SetPipelineState(pipelineState);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

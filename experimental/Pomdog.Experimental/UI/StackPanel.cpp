@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 namespace UI {
-//-----------------------------------------------------------------------
+
 StackPanel::StackPanel(
     std::shared_ptr<UIEventDispatcher> const& dispatcher,
     std::uint32_t widthIn,
@@ -19,13 +19,13 @@ StackPanel::StackPanel(
 {
     SetSize(widthIn, heightIn);
 }
-//-----------------------------------------------------------------------
+
 void StackPanel::OnEnter()
 {
     auto dispatcher = Dispatcher();
     connection = dispatcher->Connect(shared_from_this());
 }
-//-----------------------------------------------------------------------
+
 void StackPanel::OnPointerPressed(PointerPoint const& pointerPoint)
 {
     Rectangle captionBar{0, 0, Width(), barHeight + padding.Top};
@@ -37,7 +37,7 @@ void StackPanel::OnPointerPressed(PointerPoint const& pointerPoint)
 
     startTouchPoint = Vector2(pointInView.X, pointInView.Y);
 }
-//-----------------------------------------------------------------------
+
 void StackPanel::OnPointerMoved(PointerPoint const& pointerPoint)
 {
     if (!startTouchPoint) {
@@ -66,7 +66,7 @@ void StackPanel::OnPointerMoved(PointerPoint const& pointerPoint)
         }
     }
 }
-//-----------------------------------------------------------------------
+
 void StackPanel::OnPointerReleased(PointerPoint const& pointerPoint)
 {
     if (!startTouchPoint) {
@@ -75,12 +75,12 @@ void StackPanel::OnPointerReleased(PointerPoint const& pointerPoint)
 
     startTouchPoint = Pomdog::NullOpt;
 }
-//-----------------------------------------------------------------------
+
 void StackPanel::OnRenderSizeChanged(int widthIn, int heightIn)
 {
     SetSize(widthIn, heightIn);
 }
-//-----------------------------------------------------------------------
+
 void StackPanel::AddChild(std::shared_ptr<UIElement> const& element)
 {
     POMDOG_ASSERT(!element->Parent());
@@ -122,7 +122,7 @@ void StackPanel::AddChild(std::shared_ptr<UIElement> const& element)
         SetSize(Width(), position.Y);
     }
 }
-//-----------------------------------------------------------------------
+
 void StackPanel::Draw(DrawingContext & drawingContext)
 {
     auto transform = Transform() * drawingContext.Top();
@@ -150,11 +150,11 @@ void StackPanel::Draw(DrawingContext & drawingContext)
 
     drawingContext.Pop();
 }
-//-----------------------------------------------------------------------
+
 void StackPanel::UpdateAnimation(Duration const& frameDuration)
 {
 }
-//-----------------------------------------------------------------------
+
 void StackPanel::UpdateTransform()
 {
     UIElement::UpdateTransform();
@@ -165,6 +165,6 @@ void StackPanel::UpdateTransform()
         child->UpdateTransform();
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace UI
 } // namespace Pomdog

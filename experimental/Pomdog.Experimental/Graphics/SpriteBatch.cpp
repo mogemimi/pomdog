@@ -35,9 +35,9 @@ namespace {
 #define POMDOG_SPRITEBATCH_COORDINATESYSTEM_DIRECT2D
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 // MARK: - SpriteBatch::Impl
-//-----------------------------------------------------------------------
+
 class SpriteBatch::Impl {
 private:
     static constexpr std::size_t MaxBatchSize = 2048;
@@ -104,7 +104,7 @@ private:
     void Flush();
     void DrawInstance(std::shared_ptr<Texture2D> const& texture, std::vector<SpriteInfo> const& sprites);
 };
-//-----------------------------------------------------------------------
+
 SpriteBatch::Impl::Impl(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     std::shared_ptr<PipelineState> const& pipelineStateIn,
@@ -156,7 +156,7 @@ SpriteBatch::Impl::Impl(
             maxBatchSize, sizeof(SpriteInfo), BufferUsage::Dynamic);
     }
 }
-//-----------------------------------------------------------------------
+
 void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn)
 {
     this->sortMode = sortModeIn;
@@ -175,7 +175,7 @@ void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn)
         Matrix4x4::CreateOrthographicLH(viewport.Width, viewport.Height, 0.1f, 100.0f));
 #endif
 }
-//-----------------------------------------------------------------------
+
 void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn, Matrix4x4 const& transformMatrix)
 {
     this->sortMode = sortModeIn;
@@ -194,12 +194,12 @@ void SpriteBatch::Impl::Begin(SpriteSortMode sortModeIn, Matrix4x4 const& transf
         * Matrix4x4::CreateOrthographicLH(viewport.Width(), viewport.Height(), 0.1f, 100.0f));
 #endif
 }
-//-----------------------------------------------------------------------
+
 void SpriteBatch::Impl::End()
 {
     Flush();
 }
-//-----------------------------------------------------------------------
+
 void SpriteBatch::Impl::Flush()
 {
     if (textures.empty()) {
@@ -236,7 +236,7 @@ void SpriteBatch::Impl::Flush()
     textures.clear();
     spriteQueues.clear();
 }
-//-----------------------------------------------------------------------
+
 void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, std::vector<SpriteInfo> const& sprites)
 {
     POMDOG_ASSERT(texture);
@@ -276,7 +276,7 @@ void SpriteBatch::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, 
     graphicsContext->DrawIndexedInstanced(
         planeIndices, planeIndices->GetIndexCount(), sprites.size());
 }
-//-----------------------------------------------------------------------
+
 void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
     Vector2 const& position, Color const& color,
     Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
@@ -316,7 +316,7 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
     spriteQueues.back().push_back(std::move(info));
     POMDOG_ASSERT(spriteQueues.back().size() <= MaxBatchSize);
 }
-//-----------------------------------------------------------------------
+
 void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
     Vector2 const& position, Rectangle const& sourceRect, Color const& color,
     Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
@@ -357,9 +357,9 @@ void SpriteBatch::Impl::Draw(std::shared_ptr<Texture2D> const& texture,
     spriteQueues.back().push_back(std::move(info));
     POMDOG_ASSERT(spriteQueues.back().size() <= MaxBatchSize);
 }
-//-----------------------------------------------------------------------
+
 // MARK: - SpriteBatch
-//-----------------------------------------------------------------------
+
 SpriteBatch::SpriteBatch(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
@@ -393,55 +393,55 @@ SpriteBatch::SpriteBatch(
 
     impl = std::make_unique<Impl>(graphicsContext, graphicsDevice, pipelineState, constantBuffers);
 }
-//-----------------------------------------------------------------------
+
 SpriteBatch::SpriteBatch(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     std::shared_ptr<PipelineState> const& pipelineState,
     std::shared_ptr<ConstantBufferBinding> const& constantBuffers)
     : impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, pipelineState, constantBuffers))
 {}
-//-----------------------------------------------------------------------
+
 SpriteBatch::~SpriteBatch() = default;
-//-----------------------------------------------------------------------
+
 void SpriteBatch::Begin(SpriteSortMode sortMode)
 {
     POMDOG_ASSERT(impl);
     impl->Begin(sortMode);
 }
-//-----------------------------------------------------------------------
+
 void SpriteBatch::Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrixIn)
 {
     POMDOG_ASSERT(impl);
     impl->Begin(sortMode, transformMatrixIn);
 }
-//-----------------------------------------------------------------------
+
 void SpriteBatch::End()
 {
     POMDOG_ASSERT(impl);
     impl->End();
 }
-//-----------------------------------------------------------------------
+
 void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
     Rectangle const& sourceRect, Color const& color)
 {
     POMDOG_ASSERT(impl);
     impl->Draw(texture, {0, 0}, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
-//-----------------------------------------------------------------------
+
 void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
     Vector2 const& position, Color const& color)
 {
     POMDOG_ASSERT(impl);
     impl->Draw(texture, position, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
-//-----------------------------------------------------------------------
+
 void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
     Vector2 const& position, Rectangle const& sourceRect, Color const& color)
 {
     POMDOG_ASSERT(impl);
     impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
-//-----------------------------------------------------------------------
+
 void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
     Vector2 const& position, Rectangle const& sourceRect, Color const& color,
     Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth)
@@ -449,7 +449,7 @@ void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
     POMDOG_ASSERT(impl);
     impl->Draw(texture, position, sourceRect, color, rotation, originPivot, {scale, scale}, layerDepth);
 }
-//-----------------------------------------------------------------------
+
 void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
     Vector2 const& position, Rectangle const& sourceRect, Color const& color,
     Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
@@ -457,5 +457,5 @@ void SpriteBatch::Draw(std::shared_ptr<Texture2D> const& texture,
     POMDOG_ASSERT(impl);
     impl->Draw(texture, position, sourceRect, color, rotation, originPivot, scale, layerDepth);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

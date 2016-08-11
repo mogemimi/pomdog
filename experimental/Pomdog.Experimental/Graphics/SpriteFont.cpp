@@ -40,9 +40,9 @@ std::vector<std::uint8_t> ConvertTextureDataByteToByte4(std::uint8_t const* sour
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 // MARK: - SpriteFont::Impl
-//-----------------------------------------------------------------------
+
 class SpriteFont::Impl {
 public:
     typedef Detail::SpriteFonts::Glyph Glyph;
@@ -96,7 +96,7 @@ private:
 };
 constexpr int SpriteFont::Impl::TextureWidth;
 constexpr int SpriteFont::Impl::TextureHeight;
-//-----------------------------------------------------------------------
+
 SpriteFont::Impl::Impl(std::vector<std::shared_ptr<Texture2D>> && texturesIn,
     std::vector<Detail::SpriteFonts::Glyph> const& glyphsIn,
     std::uint32_t defaultCharacterIn, std::int16_t spacingIn, std::int16_t lineSpacingIn)
@@ -109,7 +109,7 @@ SpriteFont::Impl::Impl(std::vector<std::shared_ptr<Texture2D>> && texturesIn,
         spriteFontMap.emplace(glyph.Character, glyph);
     }
 }
-//-----------------------------------------------------------------------
+
 SpriteFont::Impl::Impl(std::shared_ptr<GraphicsDevice> const& graphicsDeviceIn,
     std::shared_ptr<TrueTypeFont> const& fontIn,
     std::uint32_t defaultCharacterIn,
@@ -130,7 +130,7 @@ SpriteFont::Impl::Impl(std::shared_ptr<GraphicsDevice> const& graphicsDeviceIn,
         TextureWidth, TextureHeight, false, SurfaceFormat::R8G8B8A8_UNorm);
     textures.push_back(texture);
 }
-//-----------------------------------------------------------------------
+
 void SpriteFont::Impl::PrepareFonts(std::string const& text)
 {
     POMDOG_ASSERT(!text.empty());
@@ -202,7 +202,7 @@ void SpriteFont::Impl::PrepareFonts(std::string const& text)
 
     fetchTextureData();
 }
-//-----------------------------------------------------------------------
+
 Vector2 SpriteFont::Impl::MeasureString(std::string const& text) const
 {
     POMDOG_ASSERT(!text.empty());
@@ -240,7 +240,7 @@ Vector2 SpriteFont::Impl::MeasureString(std::string const& text) const
 
     return std::move(result);
 }
-//-----------------------------------------------------------------------
+
 void SpriteFont::Impl::Draw(SpriteBatchRenderer & spriteBatch,
     std::string const& text, Vector2 const& position, Color const& color)
 {
@@ -291,7 +291,7 @@ void SpriteFont::Impl::Draw(SpriteBatchRenderer & spriteBatch,
         currentPosition.X += (glyph.XAdvance - spacing);
     }
 }
-//-----------------------------------------------------------------------
+
 void SpriteFont::Impl::Draw(SpriteBatchRenderer & spriteBatch,
     std::string const& text,
     Vector2 const& position,
@@ -347,9 +347,9 @@ void SpriteFont::Impl::Draw(SpriteBatchRenderer & spriteBatch,
         currentPosition.X += (glyph.XAdvance - spacing) * scale.X;
     }
 }
-//-----------------------------------------------------------------------
+
 // MARK: - SpriteFont
-//-----------------------------------------------------------------------
+
 SpriteFont::SpriteFont(
     std::vector<std::shared_ptr<Texture2D>> && textures,
     std::vector<Detail::SpriteFonts::Glyph> const& glyphs,
@@ -359,7 +359,7 @@ SpriteFont::SpriteFont(
     : impl(std::make_unique<Impl>(std::move(textures), glyphs, defaultCharacter, spacing, lineSpacing))
 {
 }
-//-----------------------------------------------------------------------
+
 SpriteFont::SpriteFont(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     std::shared_ptr<TrueTypeFont> const& font,
@@ -368,9 +368,9 @@ SpriteFont::SpriteFont(
     : impl(std::make_unique<Impl>(graphicsDevice, font, defaultCharacter, lineSpacing))
 {
 }
-//-----------------------------------------------------------------------
+
 SpriteFont::~SpriteFont() = default;
-//-----------------------------------------------------------------------
+
 Vector2 SpriteFont::MeasureString(std::string const& utf8String) const
 {
     if (utf8String.empty()) {
@@ -378,38 +378,38 @@ Vector2 SpriteFont::MeasureString(std::string const& utf8String) const
     }
     return impl->MeasureString(utf8String);
 }
-//-----------------------------------------------------------------------
+
 std::uint32_t SpriteFont::GetDefaultCharacter() const
 {
     POMDOG_ASSERT(impl);
     return impl->defaultCharacter;
 }
-//-----------------------------------------------------------------------
+
 void SpriteFont::SetDefaultCharacter(std::uint32_t character)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(ContainsCharacter(character));
     impl->defaultCharacter = character;
 }
-//-----------------------------------------------------------------------
+
 float SpriteFont::GetLineSpacing() const
 {
     POMDOG_ASSERT(impl);
     return impl->lineSpacing;
 }
-//-----------------------------------------------------------------------
+
 void SpriteFont::SetLineSpacing(float lineSpacingIn)
 {
     POMDOG_ASSERT(impl);
     impl->lineSpacing = lineSpacingIn;
 }
-//-----------------------------------------------------------------------
+
 bool SpriteFont::ContainsCharacter(std::uint32_t character) const
 {
     POMDOG_ASSERT(impl);
     return impl->spriteFontMap.find(character) != std::end(impl->spriteFontMap);
 }
-//-----------------------------------------------------------------------
+
 void SpriteFont::Begin(
     std::shared_ptr<GraphicsCommandList> const& commandList,
     SpriteBatchRenderer & spriteBatch,
@@ -425,7 +425,7 @@ void SpriteFont::Begin(
 //        * Matrix4x4::CreateTranslation({position, 0.0f})
 //        * transformMatrix);
 }
-//-----------------------------------------------------------------------
+
 void SpriteFont::Draw(SpriteBatchRenderer & spriteBatch,
     std::string const& text, Vector2 const& position, Color const& color)
 {
@@ -436,7 +436,7 @@ void SpriteFont::Draw(SpriteBatchRenderer & spriteBatch,
     impl->PrepareFonts(text);
     impl->Draw(spriteBatch, text, position, color);
 }
-//-----------------------------------------------------------------------
+
 void SpriteFont::Draw(
     SpriteBatchRenderer & spriteBatch,
     std::string const& text,
@@ -449,7 +449,7 @@ void SpriteFont::Draw(
     this->Draw(spriteBatch, text, position, color,
         rotation, Vector2{scale, scale});
 }
-//-----------------------------------------------------------------------
+
 void SpriteFont::Draw(
     SpriteBatchRenderer & spriteBatch,
     std::string const& text,
@@ -467,10 +467,10 @@ void SpriteFont::Draw(
     impl->Draw(spriteBatch, text, position, color,
         rotation, scale);
 }
-//-----------------------------------------------------------------------
+
 void SpriteFont::End(SpriteBatchRenderer & spriteBatch)
 {
     spriteBatch.End();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

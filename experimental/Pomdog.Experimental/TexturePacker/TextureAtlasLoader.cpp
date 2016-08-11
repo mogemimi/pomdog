@@ -38,7 +38,7 @@ TextureAtlasRegion CreateAtlasRegion(std::string const& line, std::int16_t pageI
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string const& assetName)
 {
     auto binaryFile = assets.OpenStream(assetName);
@@ -175,6 +175,6 @@ TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string co
 
     return std::move(result);
 }
-//-----------------------------------------------------------------------
+
 } // namespace TexturePacker
 } // namespace Pomdog

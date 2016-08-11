@@ -10,7 +10,7 @@
 #include <random>
 
 namespace Pong {
-//-----------------------------------------------------------------------
+
 PongGame::PongGame(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , window(gameHostIn->GetWindow())
@@ -36,7 +36,7 @@ PongGame::PongGame(const std::shared_ptr<GameHost>& gameHostIn)
     postProcessCompositor.SetViewportSize(*graphicsDevice,
         clientBounds.Width, clientBounds.Height);
 }
-//-----------------------------------------------------------------------
+
 void PongGame::Initialize()
 {
     // Set window name
@@ -258,12 +258,12 @@ void PongGame::Initialize()
         connect(window->ClientSizeChanged, onViewportChanged);
     }
 }
-//-----------------------------------------------------------------------
+
 void PongGame::Update()
 {
     scheduler.Update();
 }
-//-----------------------------------------------------------------------
+
 void PongGame::Draw()
 {
     // Reset graphics commands
@@ -342,5 +342,5 @@ void PongGame::Draw()
 
     commandQueue->Present();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pong

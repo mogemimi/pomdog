@@ -25,7 +25,7 @@ namespace {
 #include "Shaders/HLSL.Embedded/ChromaticAberration_PS.inc.hpp"
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 ChromaticAberration::ChromaticAberration(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
@@ -53,7 +53,7 @@ ChromaticAberration::ChromaticAberration(
         .SetConstantBufferBindSlot("ImageEffectConstants", 0)
         .Build();
 }
-//-----------------------------------------------------------------------
+
 void ChromaticAberration::Apply(GraphicsCommandList & commandList,
     std::shared_ptr<RenderTarget2D> const& source,
     std::shared_ptr<ConstantBuffer> const& constantBuffer)
@@ -65,5 +65,5 @@ void ChromaticAberration::Apply(GraphicsCommandList & commandList,
     commandList.SetTexture(0, source);
     commandList.SetPipelineState(pipelineState);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

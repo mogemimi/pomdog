@@ -6,16 +6,16 @@
 #include <utility>
 
 namespace TestApp {
-//-----------------------------------------------------------------------
+
 MaidChanGame::MaidChanGame(std::shared_ptr<GameHost> const& gameHostIn)
     : gameHost(gameHostIn)
     , window(gameHostIn->Window())
     , graphicsDevice(gameHostIn->GraphicsDevice())
     , graphicsContext(gameHostIn->GraphicsContext())
 {}
-//-----------------------------------------------------------------------
+
 MaidChanGame::~MaidChanGame() = default;
-//-----------------------------------------------------------------------
+
 void MaidChanGame::Initialize()
 {
     window->SetTitle("TestApp - Enjoy Game Dev, Have Fun.");
@@ -135,7 +135,7 @@ void MaidChanGame::Initialize()
         spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(width, height, 1.0f, 100.0f));
     });
 }
-//-----------------------------------------------------------------------
+
 void MaidChanGame::Update()
 {
     auto clock = gameHost->Clock();
@@ -165,7 +165,7 @@ void MaidChanGame::Update()
         }
     }
 }
-//-----------------------------------------------------------------------
+
 void MaidChanGame::DrawSprites()
 {
     auto transform = mainCamera.Component<Transform2D>();
@@ -227,7 +227,7 @@ void MaidChanGame::DrawSprites()
         spriteRenderer->End();
     }
 }
-//-----------------------------------------------------------------------
+
 void MaidChanGame::Draw()
 {
     constexpr bool enableFxaa = true;
@@ -260,5 +260,5 @@ void MaidChanGame::Draw()
     gameEditor->DrawGUI(*graphicsContext);
     graphicsContext->Present();
 }
-//-----------------------------------------------------------------------
+
 }// namespace TestApp

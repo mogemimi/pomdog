@@ -31,7 +31,7 @@ struct FishEyeBlock {
 };
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 FishEyeEffect::FishEyeEffect(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
@@ -65,7 +65,7 @@ FishEyeEffect::FishEyeEffect(
 
     SetStrength(0.04f);
 }
-//-----------------------------------------------------------------------
+
 void FishEyeEffect::SetStrength(float strength)
 {
     FishEyeBlock block;
@@ -74,7 +74,7 @@ void FishEyeEffect::SetStrength(float strength)
     POMDOG_ASSERT(constantBufferFishEye);
     constantBufferFishEye->SetValue(std::move(block));
 }
-//-----------------------------------------------------------------------
+
 void FishEyeEffect::Apply(GraphicsCommandList & commandList,
     std::shared_ptr<RenderTarget2D> const& source,
     std::shared_ptr<ConstantBuffer> const& constantBuffer)
@@ -87,5 +87,5 @@ void FishEyeEffect::Apply(GraphicsCommandList & commandList,
     commandList.SetTexture(0, source);
     commandList.SetPipelineState(pipelineState);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

@@ -15,7 +15,7 @@ bool CompareRenderCommands(RenderCommand const& a, RenderCommand const& b)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 void RenderQueue::PushBack(std::reference_wrapper<RenderCommand> && command)
 {
     if (command.get().DrawOrder() > 0.0f) {
@@ -28,27 +28,27 @@ void RenderQueue::PushBack(std::reference_wrapper<RenderCommand> && command)
         negativeCommands.push_back(std::move(command));
     }
 }
-//-----------------------------------------------------------------------
+
 void RenderQueue::Sort()
 {
     std::sort(std::begin(positiveCommands), std::end(positiveCommands), CompareRenderCommands);
     std::sort(std::begin(negativeCommands), std::end(negativeCommands), CompareRenderCommands);
 }
-//-----------------------------------------------------------------------
+
 std::size_t RenderQueue::GetCount() const noexcept
 {
     return positiveCommands.size()
         + zeroCommands.size()
         + negativeCommands.size();
 }
-//-----------------------------------------------------------------------
+
 void RenderQueue::Clear()
 {
     positiveCommands.clear();
     zeroCommands.clear();
     negativeCommands.clear();
 }
-//-----------------------------------------------------------------------
+
 void RenderQueue::Enumerate(std::function<void(RenderCommand&)> const& callback) const
 {
     POMDOG_ASSERT(callback);
@@ -63,5 +63,5 @@ void RenderQueue::Enumerate(std::function<void(RenderCommand&)> const& callback)
         callback(command);
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

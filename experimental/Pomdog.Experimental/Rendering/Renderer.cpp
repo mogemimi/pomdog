@@ -9,9 +9,9 @@
 #include <typeindex>
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 // MARK: - Renderer::Impl
-//-----------------------------------------------------------------------
+
 class Renderer::Impl {
 public:
     Impl();
@@ -32,14 +32,14 @@ public:
     Matrix4x4 projectionMatrix;
     int drawCallCount;
 };
-//-----------------------------------------------------------------------
+
 Renderer::Impl::Impl()
     : viewMatrix(Matrix4x4::Identity)
     , projectionMatrix(Matrix4x4::Identity)
     , drawCallCount(0)
 {
 }
-//-----------------------------------------------------------------------
+
 void Renderer::Impl::AddProcessor(
     std::type_index const& index,
     std::unique_ptr<RenderCommandProcessor> && processor)
@@ -47,7 +47,7 @@ void Renderer::Impl::AddProcessor(
     POMDOG_ASSERT(processor);
     processors.emplace(index, std::move(processor));
 }
-//-----------------------------------------------------------------------
+
 void Renderer::Impl::Render(GraphicsCommandQueue & commandQueue)
 {
     drawCallCount = 0;
@@ -108,56 +108,56 @@ void Renderer::Impl::Render(GraphicsCommandQueue & commandQueue)
         drawCallCount += processor->GetDrawCallCount();
     }
 }
-//-----------------------------------------------------------------------
+
 void Renderer::Impl::Clear()
 {
     renderQueue.Clear();
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Renderer
-//-----------------------------------------------------------------------
+
 Renderer::Renderer()
     : impl(std::make_unique<Impl>())
 {}
-//-----------------------------------------------------------------------
+
 Renderer::~Renderer() = default;
-//-----------------------------------------------------------------------
+
 void Renderer::Render(GraphicsCommandQueue & commandQueue)
 {
     POMDOG_ASSERT(impl);
     impl->Render(commandQueue);
 }
-//-----------------------------------------------------------------------
+
 void Renderer::PushCommand(std::reference_wrapper<RenderCommand> && command)
 {
     POMDOG_ASSERT(impl);
     impl->renderQueue.PushBack(std::move(command));
 }
-//-----------------------------------------------------------------------
+
 void Renderer::SetViewMatrix(Matrix4x4 const& viewMatrixIn)
 {
     POMDOG_ASSERT(impl);
     impl->viewMatrix = viewMatrixIn;
 }
-//-----------------------------------------------------------------------
+
 void Renderer::SetProjectionMatrix(Matrix4x4 const& projectionMatrixIn)
 {
     POMDOG_ASSERT(impl);
     impl->projectionMatrix = projectionMatrixIn;
 }
-//-----------------------------------------------------------------------
+
 int Renderer::GetDrawCallCount() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->drawCallCount;
 }
-//-----------------------------------------------------------------------
+
 void Renderer::Clear()
 {
     POMDOG_ASSERT(impl);
     impl->Clear();
 }
-//-----------------------------------------------------------------------
+
 void Renderer::AddProcessor(
     std::type_index const& index,
     std::unique_ptr<RenderCommandProcessor> && processor)
@@ -165,5 +165,5 @@ void Renderer::AddProcessor(
     POMDOG_ASSERT(impl);
     impl->AddProcessor(index, std::move(processor));
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

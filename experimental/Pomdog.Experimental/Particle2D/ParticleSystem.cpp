@@ -9,7 +9,7 @@
 
 namespace Pomdog {
 namespace {
-//-----------------------------------------------------------------------
+
 template <typename RandomGenerator>
 Particle CreateParticle(RandomGenerator & random, ParticleClip const& clip,
     ParticleEmitter const& emitter, float normalizedTime, Transform2D const& transform)
@@ -66,9 +66,9 @@ Particle CreateParticle(RandomGenerator & random, ParticleClip const& clip,
     }
     return std::move(particle);
 }
-//-----------------------------------------------------------------------
+
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 ParticleSystem::ParticleSystem(std::shared_ptr<ParticleClip const> const& clipIn)
     : clip(clipIn)
     , erapsedTime(0)
@@ -81,7 +81,7 @@ ParticleSystem::ParticleSystem(std::shared_ptr<ParticleClip const> const& clipIn
     emitter = clip->Emitter;
     particles.reserve(emitter.MaxParticles);
 }
-//-----------------------------------------------------------------------
+
 void ParticleSystem::Simulate(Entity & entity, Duration const& duration)
 {
     if (state != ParticleSystemState::Playing) {
@@ -157,29 +157,29 @@ void ParticleSystem::Simulate(Entity & entity, Duration const& duration)
             [](Particle const& p){ return p.TimeToLive <= 0; }), std::end(particles));
     }
 }
-//-----------------------------------------------------------------------
+
 void ParticleSystem::Play()
 {
     state = ParticleSystemState::Playing;
 }
-//-----------------------------------------------------------------------
+
 void ParticleSystem::Pause()
 {
     state = ParticleSystemState::Paused;
 }
-//-----------------------------------------------------------------------
+
 void ParticleSystem::Stop()
 {
     state = ParticleSystemState::Stopped;
     erapsedTime = Duration::zero();
     particles.clear();
 }
-//-----------------------------------------------------------------------
+
 bool ParticleSystem::IsAlive() const
 {
     return emitter.Looping
         || (erapsedTime < clip->Duration)
         || !particles.empty();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

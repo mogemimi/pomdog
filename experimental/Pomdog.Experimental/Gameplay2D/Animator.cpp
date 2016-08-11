@@ -103,9 +103,9 @@ public:
 };
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 // MARK: - Animator::Impl class
-//-----------------------------------------------------------------------
+
 class Animator::Impl final {
 public:
     Impl(
@@ -133,7 +133,7 @@ public:
     AnimationTimeInterval time;
     float playbackRate;
 };
-//-----------------------------------------------------------------------
+
 Animator::Impl::Impl(std::shared_ptr<Skeleton> const& skeletonIn,
     std::shared_ptr<SkeletonTransform> const& skeletonTransformIn,
     std::shared_ptr<AnimationGraph> const& animationGraphIn)
@@ -168,7 +168,7 @@ Animator::Impl::Impl(std::shared_ptr<Skeleton> const& skeletonIn,
     currentAnimation.Node = std::shared_ptr<AnimationNode>(animationGraph,
         animationGraph->States.front().Tree.get());
 }
-//-----------------------------------------------------------------------
+
 void Animator::Impl::Update(Duration const& frameDuration)
 {
     // (1) Update time:
@@ -206,7 +206,7 @@ void Animator::Impl::Update(Duration const& frameDuration)
     // (4) Global pose generation:
     SkeletonHelper::ToGlobalPose(*skeleton, skeletonTransform->Pose, skeletonTransform->GlobalPose);
 }
-//-----------------------------------------------------------------------
+
 void Animator::Impl::CrossFade(std::string const& stateName, Duration const& transitionDuration)
 {
     if (nextAnimation) {
@@ -234,7 +234,7 @@ void Animator::Impl::CrossFade(std::string const& stateName, Duration const& tra
     currentAnimation.Node = crossFade;
     time = AnimationTimeInterval::zero();
 }
-//-----------------------------------------------------------------------
+
 void Animator::Impl::Play(std::string const& stateName)
 {
     POMDOG_ASSERT(animationGraph);
@@ -253,7 +253,7 @@ void Animator::Impl::Play(std::string const& stateName)
     currentAnimation.Name = stateName;
     time = AnimationTimeInterval::zero();
 }
-//-----------------------------------------------------------------------
+
 void Animator::Impl::SetFloat(std::string const& name, float value)
 {
     POMDOG_ASSERT(!std::isnan(value));
@@ -262,7 +262,7 @@ void Animator::Impl::SetFloat(std::string const& name, float value)
         graphWeights.SetValue(*index, value);
     }
 }
-//-----------------------------------------------------------------------
+
 void Animator::Impl::SetBool(std::string const& name, bool value)
 {
     POMDOG_ASSERT(animationGraph);
@@ -270,63 +270,63 @@ void Animator::Impl::SetBool(std::string const& name, bool value)
         graphWeights.SetValue(*index, value);
     }
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Animator class
-//-----------------------------------------------------------------------
+
 Animator::Animator(std::shared_ptr<Skeleton> const& skeleton,
     std::shared_ptr<SkeletonTransform> const& skeletonTransform,
     std::shared_ptr<AnimationGraph> const& animationGraph)
     : impl(std::make_unique<Impl>(skeleton, skeletonTransform, animationGraph))
 {}
-//-----------------------------------------------------------------------
+
 Animator::~Animator() = default;
-//-----------------------------------------------------------------------
+
 void Animator::Update(Duration const& frameDuration)
 {
     POMDOG_ASSERT(impl);
     impl->Update(frameDuration);
 }
-//-----------------------------------------------------------------------
+
 void Animator::CrossFade(std::string const& state, Duration const& transitionDuration)
 {
     POMDOG_ASSERT(impl);
     impl->CrossFade(state, transitionDuration);
 }
-//-----------------------------------------------------------------------
+
 void Animator::Play(std::string const& state)
 {
     POMDOG_ASSERT(impl);
     impl->Play(state);
 }
-//-----------------------------------------------------------------------
+
 float Animator::GetPlaybackRate() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->playbackRate;
 }
-//-----------------------------------------------------------------------
+
 void Animator::SetPlaybackRate(float playbackRateIn) noexcept
 {
     POMDOG_ASSERT(impl);
     impl->playbackRate = playbackRateIn;
 }
-//-----------------------------------------------------------------------
+
 void Animator::SetFloat(std::string const& name, float value)
 {
     POMDOG_ASSERT(impl);
     impl->SetFloat(name, value);
 }
-//-----------------------------------------------------------------------
+
 void Animator::SetBool(std::string const& name, bool value)
 {
     POMDOG_ASSERT(impl);
     impl->SetBool(name, value);
 }
-//-----------------------------------------------------------------------
+
 std::string Animator::GetCurrentStateName() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->currentAnimation.Name;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

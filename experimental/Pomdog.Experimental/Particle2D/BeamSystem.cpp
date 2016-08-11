@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 namespace {
-//-----------------------------------------------------------------------
+
 std::vector<Vector2> CreateJaggedLine(
     BeamEmitter const& emitter,
     std::uint32_t interpolationPoints,
@@ -77,7 +77,7 @@ std::vector<Vector2> CreateJaggedLine(
     POMDOG_ASSERT(points.size() >= 2);
     return std::move(points);
 }
-//-----------------------------------------------------------------------
+
 std::vector<Vector2> CreateBranch(BeamEmitter const& emitter,
     BeamBranching const& branching,
     Vector2 const& sourceStart, Vector2 const& sourceEnd, Beam const& parentBeam, std::mt19937 & random)
@@ -122,7 +122,7 @@ std::vector<Vector2> CreateBranch(BeamEmitter const& emitter,
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 BeamSystem::BeamSystem()
     : erapsedTime(0)
     , emissionTimer(0)
@@ -146,7 +146,7 @@ BeamSystem::BeamSystem()
 
     beams.reserve(emitter.MaxBeams);
 }
-//-----------------------------------------------------------------------
+
 void BeamSystem::Update(Duration const& frameDuration, Transform2D const& emitterTransform, Vector2 const& target)
 {
     erapsedTime += frameDuration;
@@ -234,7 +234,7 @@ void BeamSystem::Update(Duration const& frameDuration, Transform2D const& emitte
             [](Beam const& beam){ return beam.TimeToLive <= 0; }), std::end(beams));
     }
 }
-//-----------------------------------------------------------------------
+
 Vector2 BeamSystem::CreateTarget(Transform2D const& emitterTransform, float distance)
 {
     Vector2 tangent {
@@ -243,5 +243,5 @@ Vector2 BeamSystem::CreateTarget(Transform2D const& emitterTransform, float dist
     auto targetPosition = emitterTransform.Position + tangent;
     return targetPosition;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

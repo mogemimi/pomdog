@@ -25,7 +25,7 @@ namespace {
 #include "Shaders/HLSL.Embedded/FXAA_PS.inc.hpp"
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 FXAA::FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
 {
@@ -52,7 +52,7 @@ FXAA::FXAA(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         .SetConstantBufferBindSlot("ImageEffectConstants", 0)
         .Build();
 }
-//-----------------------------------------------------------------------
+
 void FXAA::Apply(GraphicsCommandList & commandList,
     std::shared_ptr<RenderTarget2D> const& source,
     std::shared_ptr<ConstantBuffer> const& constantBuffer)
@@ -64,5 +64,5 @@ void FXAA::Apply(GraphicsCommandList & commandList,
     commandList.SetTexture(0, source);
     commandList.SetPipelineState(pipelineState);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

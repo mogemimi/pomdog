@@ -30,9 +30,9 @@ namespace {
 #include "Shaders/HLSL.Embedded/SpriteRenderer_PS.inc.hpp"
 
 }// unnamed namespace
-//-----------------------------------------------------------------------
+
 // MARK: - SpriteRenderer::Impl
-//-----------------------------------------------------------------------
+
 class SpriteRenderer::Impl {
 private:
     static constexpr std::size_t MaxBatchSize = 2048;
@@ -108,7 +108,7 @@ private:
     void Flush();
     void DrawInstance(std::shared_ptr<Texture2D> const& texture, std::vector<SpriteInfo> const& sprites);
 };
-//-----------------------------------------------------------------------
+
 SpriteRenderer::Impl::Impl(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
@@ -177,12 +177,12 @@ SpriteRenderer::Impl::Impl(
         constantBuffers = builder.CreateConstantBuffers(pipelineState);
     }
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Impl::ResetProjectionMatrix(Matrix4x4 const& projectionMatrixIn)
 {
     this->projectionMatrix = projectionMatrixIn;
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Impl::Begin(SpriteSortMode sortModeIn)
 {
     this->sortMode = sortModeIn;
@@ -192,7 +192,7 @@ void SpriteRenderer::Impl::Begin(SpriteSortMode sortModeIn)
     auto parameter = constantBuffers->Find("Matrices");
     parameter->SetValue(projection);
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Impl::Begin(SpriteSortMode sortModeIn, Matrix4x4 const& transformMatrix)
 {
     this->sortMode = sortModeIn;
@@ -203,12 +203,12 @@ void SpriteRenderer::Impl::Begin(SpriteSortMode sortModeIn, Matrix4x4 const& tra
     auto contantBuffer = constantBuffers->Find("Matrices");
     contantBuffer->SetValue(projection);
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Impl::End()
 {
     Flush();
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Impl::Flush()
 {
     if (textures.empty()) {
@@ -245,7 +245,7 @@ void SpriteRenderer::Impl::Flush()
     textures.clear();
     spriteQueues.clear();
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, std::vector<SpriteInfo> const& sprites)
 {
     POMDOG_ASSERT(texture);
@@ -275,7 +275,7 @@ void SpriteRenderer::Impl::DrawInstance(std::shared_ptr<Texture2D> const& textur
     graphicsContext->DrawIndexedInstanced(
         planeIndices, planeIndices->GetIndexCount(), sprites.size());
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
     Vector2 const& position, Color const& color,
     Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
@@ -310,7 +310,7 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
     spriteQueues.back().push_back(std::move(info));
     POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
     Vector2 const& position, Rectangle const& sourceRect, Color const& color,
     Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
@@ -348,62 +348,62 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
     spriteQueues.back().push_back(std::move(info));
     POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
 }
-//-----------------------------------------------------------------------
+
 // MARK: - SpriteRenderer
-//-----------------------------------------------------------------------
+
 SpriteRenderer::SpriteRenderer(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
     : impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))
 {}
-//-----------------------------------------------------------------------
+
 SpriteRenderer::~SpriteRenderer() = default;
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::SetProjectionMatrix(Matrix4x4 const& projectionMatrix)
 {
     POMDOG_ASSERT(impl);
     impl->ResetProjectionMatrix(projectionMatrix);
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Begin(SpriteSortMode sortMode)
 {
     POMDOG_ASSERT(impl);
     impl->Begin(sortMode);
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrixIn)
 {
     POMDOG_ASSERT(impl);
     impl->Begin(sortMode, transformMatrixIn);
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::End()
 {
     POMDOG_ASSERT(impl);
     impl->End();
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
     Rectangle const& sourceRect, Color const& color)
 {
     POMDOG_ASSERT(impl);
     impl->Draw(texture, worldMatrix, {0, 0}, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
     Vector2 const& position, Color const& color)
 {
     POMDOG_ASSERT(impl);
     impl->Draw(texture, worldMatrix, position, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
     Vector2 const& position, Rectangle const& sourceRect, Color const& color)
 {
     POMDOG_ASSERT(impl);
     impl->Draw(texture, worldMatrix, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
     Vector2 const& position, Rectangle const& sourceRect, Color const& color,
     Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth)
@@ -411,7 +411,7 @@ void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 c
     POMDOG_ASSERT(impl);
     impl->Draw(texture, worldMatrix, position, sourceRect, color, rotation, originPivot, {scale, scale}, layerDepth);
 }
-//-----------------------------------------------------------------------
+
 void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
     Vector2 const& position, Rectangle const& sourceRect, Color const& color,
     Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
@@ -419,5 +419,5 @@ void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 c
     POMDOG_ASSERT(impl);
     impl->Draw(texture, worldMatrix, position, sourceRect, color, rotation, originPivot, scale, layerDepth);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

@@ -3,7 +3,7 @@
 #include "HierarchyNode.hpp"
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 HierarchyNode::~HierarchyNode()
 {
     RemoveChildren();
@@ -26,7 +26,7 @@ HierarchyNode::~HierarchyNode()
         }
     }
 }
-//-----------------------------------------------------------------------
+
 void HierarchyNode::AddChild(std::shared_ptr<HierarchyNode> const& child)
 {
     POMDOG_ASSERT(child);
@@ -48,7 +48,7 @@ void HierarchyNode::AddChild(std::shared_ptr<HierarchyNode> const& child)
     POMDOG_ASSERT(!prevSibling->sibling);
     prevSibling->sibling = child;
 }
-//-----------------------------------------------------------------------
+
 void HierarchyNode::RemoveChild(std::shared_ptr<HierarchyNode> const& child)
 {
     POMDOG_ASSERT(child);
@@ -78,7 +78,7 @@ void HierarchyNode::RemoveChild(std::shared_ptr<HierarchyNode> const& child)
         prevSibling = prevSibling->sibling;
     }
 }
-//-----------------------------------------------------------------------
+
 void HierarchyNode::RemoveChildren()
 {
     auto child = firstChild;
@@ -88,7 +88,7 @@ void HierarchyNode::RemoveChildren()
     }
     firstChild.reset();
 }
-//-----------------------------------------------------------------------
+
 void HierarchyNode::RemoveFromParent()
 {
     if (auto parent = weakParent.lock()) {
@@ -96,7 +96,7 @@ void HierarchyNode::RemoveFromParent()
     }
     weakParent.reset();
 }
-//-----------------------------------------------------------------------
+
 void HierarchyNode::EnumerateChildren(
     std::function<void(std::shared_ptr<HierarchyNode> const& child)> const& callback)
 {
@@ -110,15 +110,15 @@ void HierarchyNode::EnumerateChildren(
         child = child->sibling;
     }
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<HierarchyNode> HierarchyNode::GetParent() const noexcept
 {
     return weakParent.lock();
 }
-//-----------------------------------------------------------------------
+
 std::weak_ptr<HierarchyNode> HierarchyNode::GetWeakParent() const noexcept
 {
     return weakParent;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

@@ -16,7 +16,7 @@ static Matrix3x2 CreateTransformMatrix3x2(Transform2D const& transform)
 }
 
 }// unnamed namespace
-//-----------------------------------------------------------------------
+
 ParticleRenderable::ParticleRenderable(std::shared_ptr<Texture2D> const& texture)
 {
     command.texture = texture;
@@ -29,7 +29,7 @@ ParticleRenderable::ParticleRenderable(std::shared_ptr<Texture2D> const& texture
     command.transform = Matrix3x2::Identity;
     command.particles = nullptr;
 }
-//-----------------------------------------------------------------------
+
 void ParticleRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 {
     if (!IsVisible) {
@@ -58,5 +58,5 @@ void ParticleRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 
     renderer.PushCommand(command);
 }
-//-----------------------------------------------------------------------
+
 }// namespace Pomdog

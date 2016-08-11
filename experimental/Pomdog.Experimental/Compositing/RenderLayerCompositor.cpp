@@ -6,11 +6,11 @@
 #include <algorithm>
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 RenderLayerCompositor::RenderLayerCompositor()
     : needToSort(true)
 {}
-//-----------------------------------------------------------------------
+
 void RenderLayerCompositor::AddLayer(std::shared_ptr<RenderLayer> const& layer)
 {
     POMDOG_ASSERT(layer);
@@ -18,13 +18,13 @@ void RenderLayerCompositor::AddLayer(std::shared_ptr<RenderLayer> const& layer)
     layers.push_back(layer);
     needToSort = true;
 }
-//-----------------------------------------------------------------------
+
 void RenderLayerCompositor::RemoveLayer(std::shared_ptr<RenderLayer> const& layer)
 {
     POMDOG_ASSERT(layer);
     layers.erase(std::remove(std::begin(layers), std::end(layers), layer), std::end(layers));
 }
-//-----------------------------------------------------------------------
+
 void RenderLayerCompositor::Draw(GraphicsCommandQueue & commandQueue, Renderer & renderer)
 {
     if (needToSort) {
@@ -41,5 +41,5 @@ void RenderLayerCompositor::Draw(GraphicsCommandQueue & commandQueue, Renderer &
         layer->Draw(commandQueue, renderer);
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

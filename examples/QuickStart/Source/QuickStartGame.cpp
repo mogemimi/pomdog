@@ -3,7 +3,7 @@
 #include <cmath>
 
 namespace QuickStart {
-//-----------------------------------------------------------------------
+
 QuickStartGame::QuickStartGame(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , window(gameHostIn->GetWindow())
@@ -13,7 +13,7 @@ QuickStartGame::QuickStartGame(const std::shared_ptr<GameHost>& gameHostIn)
     , clock(gameHostIn->GetClock())
 {
 }
-//-----------------------------------------------------------------------
+
 void QuickStartGame::Initialize()
 {
     // Display message in log console
@@ -148,7 +148,7 @@ void QuickStartGame::Initialize()
         });
     }
 }
-//-----------------------------------------------------------------------
+
 void QuickStartGame::Update()
 {
     auto totalTime = static_cast<float>(clock->GetTotalGameTime().count());
@@ -160,7 +160,7 @@ void QuickStartGame::Update()
     myShaderConstants.Model = Matrix4x4::Transpose(model);
     constantBuffer->SetValue(myShaderConstants);
 }
-//-----------------------------------------------------------------------
+
 void QuickStartGame::Draw()
 {
     commandQueue->Reset();
@@ -168,5 +168,5 @@ void QuickStartGame::Draw()
     commandQueue->ExecuteCommandLists();
     commandQueue->Present();
 }
-//-----------------------------------------------------------------------
+
 } // namespace QuickStart

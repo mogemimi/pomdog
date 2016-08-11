@@ -8,12 +8,12 @@
 
 namespace Pomdog {
 namespace UI {
-//-----------------------------------------------------------------------
+
 Slider::Slider(std::shared_ptr<UIEventDispatcher> const& dispatcher,
     double minimumIn, double maximumIn)
     : Slider(dispatcher, SliderColorScheme{}, minimumIn, maximumIn)
 {}
-//-----------------------------------------------------------------------
+
 Slider::Slider(std::shared_ptr<UIEventDispatcher> const& dispatcher,
     SliderColorScheme const& colorSchemeIn, double minimumIn, double maximumIn)
     : UIElement(dispatcher)
@@ -34,9 +34,9 @@ Slider::Slider(std::shared_ptr<UIEventDispatcher> const& dispatcher,
     SetSize(120, 12);
     SetCursor(MouseCursor::PointingHand);
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Properties
-//-----------------------------------------------------------------------
+
 void Slider::Value(double valueIn)
 {
     if (value == valueIn) {
@@ -45,19 +45,19 @@ void Slider::Value(double valueIn)
     this->value = valueIn;
     ValueChanged(this->value);
 }
-//-----------------------------------------------------------------------
+
 double Slider::Value() const
 { return value; }
-//-----------------------------------------------------------------------
+
 double Slider::Minimum() const
 { return minimum; }
-//-----------------------------------------------------------------------
+
 double Slider::Maximum() const
 { return maximum; }
-//-----------------------------------------------------------------------
+
 bool Slider::IsEnabled() const
 { return isEnabled; }
-//-----------------------------------------------------------------------
+
 void Slider::IsEnabled(bool isEnabledIn)
 {
     this->isEnabled = isEnabledIn;
@@ -68,15 +68,15 @@ void Slider::IsEnabled(bool isEnabledIn)
         fillColor = colorScheme.DisabledFillColor;
     }
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Events
-//-----------------------------------------------------------------------
+
 void Slider::OnEnter()
 {
     auto dispatcher = Dispatcher();
     connection = dispatcher->Connect(shared_from_this());
 }
-//-----------------------------------------------------------------------
+
 void Slider::OnPointerEntered(PointerPoint const& pointerPoint)
 {
     if (!isEnabled) {
@@ -90,7 +90,7 @@ void Slider::OnPointerEntered(PointerPoint const& pointerPoint)
 
     colorAnimation = animation;
 }
-//-----------------------------------------------------------------------
+
 void Slider::OnPointerExited(PointerPoint const& pointerPoint)
 {
     ColorAnimation animation;
@@ -101,7 +101,7 @@ void Slider::OnPointerExited(PointerPoint const& pointerPoint)
 
     colorAnimation = animation;
 }
-//-----------------------------------------------------------------------
+
 void Slider::OnPointerPressed(PointerPoint const& pointerPoint)
 {
     if (pointerPoint.MouseEvent && *pointerPoint.MouseEvent != UI::PointerMouseEvent::LeftButtonPressed) {
@@ -122,7 +122,7 @@ void Slider::OnPointerPressed(PointerPoint const& pointerPoint)
     Value(MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
     isDragging = true;
 }
-//-----------------------------------------------------------------------
+
 void Slider::OnPointerMoved(PointerPoint const& pointerPoint)
 {
     if (pointerPoint.MouseEvent && *pointerPoint.MouseEvent != UI::PointerMouseEvent::LeftButtonPressed) {
@@ -142,12 +142,12 @@ void Slider::OnPointerMoved(PointerPoint const& pointerPoint)
     auto amount = (pointInView.X - thumbOffset / 2) / (Width() - 2 * thumbOffset);
     Value(MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
 }
-//-----------------------------------------------------------------------
+
 void Slider::OnPointerReleased(PointerPoint const& pointerPoint)
 {
     isDragging = false;
 }
-//-----------------------------------------------------------------------
+
 void Slider::UpdateAnimation(Duration const& frameDuration)
 {
     if (!colorAnimation) {
@@ -164,12 +164,12 @@ void Slider::UpdateAnimation(Duration const& frameDuration)
         colorAnimation = Pomdog::NullOpt;
     }
 }
-//-----------------------------------------------------------------------
+
 void Slider::OnRenderSizeChanged(int widthIn, int heightIn)
 {
     SetSize(widthIn, heightIn);
 }
-//-----------------------------------------------------------------------
+
 void Slider::Draw(DrawingContext & drawingContext)
 {
     //MathHelper::Clamp(value, minimum, maximum);
@@ -205,6 +205,6 @@ void Slider::Draw(DrawingContext & drawingContext)
             Rectangle(pos.X, pos.Y, Height(), Height()));
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace UI
 } // namespace Pomdog

@@ -21,7 +21,7 @@ struct PostProcessInfo {
 };
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 PostProcessCompositor::PostProcessCompositor(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     int width, int height, SurfaceFormat surfaceFormat)
@@ -43,7 +43,7 @@ PostProcessCompositor::PostProcessCompositor(
     BuildRenderTargets(*graphicsDevice, width, height, surfaceFormat);
     UpdateConstantBuffer();
 }
-//-----------------------------------------------------------------------
+
 void PostProcessCompositor::SetViewportSize(
     GraphicsDevice & graphicsDevice, int width, int height)
 {
@@ -63,7 +63,7 @@ void PostProcessCompositor::SetViewportSize(
         renderTargets.front()->GetFormat());
     UpdateConstantBuffer();
 }
-//-----------------------------------------------------------------------
+
 void PostProcessCompositor::BuildRenderTargets(
     GraphicsDevice & graphicsDevice,
     int width, int height, SurfaceFormat surfaceFormat)
@@ -77,7 +77,7 @@ void PostProcessCompositor::BuildRenderTargets(
             width, height, false, surfaceFormat, DepthFormat::None);
     }
 }
-//-----------------------------------------------------------------------
+
 void PostProcessCompositor::UpdateConstantBuffer()
 {
     POMDOG_ASSERT(viewport.Width > 0);
@@ -91,13 +91,13 @@ void PostProcessCompositor::UpdateConstantBuffer()
     POMDOG_ASSERT(constantBuffer);
     constantBuffer->SetValue(info);
 }
-//-----------------------------------------------------------------------
+
 void PostProcessCompositor::Composite(std::vector<std::shared_ptr<ImageEffectBase>> && imageEffectsIn)
 {
     POMDOG_ASSERT(!imageEffectsIn.empty());
     imageEffects = std::move(imageEffectsIn);
 }
-//-----------------------------------------------------------------------
+
 void PostProcessCompositor::Draw(
     GraphicsCommandList & commandList,
     std::shared_ptr<RenderTarget2D> const& source)
@@ -147,5 +147,5 @@ void PostProcessCompositor::Draw(
     // Unbind texture
     commandList.SetTexture(0);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

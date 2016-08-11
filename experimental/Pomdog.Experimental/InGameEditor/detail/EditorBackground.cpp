@@ -4,18 +4,18 @@
 
 namespace Pomdog {
 namespace SceneEditor {
-//-----------------------------------------------------------------------
+
 EditorBackground::EditorBackground(std::shared_ptr<GameHost> const& gameHost)
     : lineBatch(gameHost->GraphicsContext(), gameHost->GraphicsDevice(), *gameHost->AssetManager())
     , primitiveAxes(editorColorScheme.CenterAxisX, editorColorScheme.CenterAxisY, editorColorScheme.CenterAxisZ)
     , primitiveGrid(editorColorScheme.GuideLine, editorColorScheme.Grid)
 {}
-//-----------------------------------------------------------------------
+
 void EditorBackground::SetViewProjection(Matrix4x4 const& viewProjectionIn)
 {
     viewProjectionMatrix = viewProjectionIn;
 }
-//-----------------------------------------------------------------------
+
 void EditorBackground::Draw(GraphicsContext & graphicsContext)
 {
     lineBatch.Begin(viewProjectionMatrix);
@@ -25,6 +25,6 @@ void EditorBackground::Draw(GraphicsContext & graphicsContext)
     }
     lineBatch.End();
 }
-//-----------------------------------------------------------------------
+
 }// namespace SceneEditor
 }// namespace Pomdog

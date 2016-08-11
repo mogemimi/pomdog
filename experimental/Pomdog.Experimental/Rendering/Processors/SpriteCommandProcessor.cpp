@@ -4,7 +4,7 @@
 #include "Pomdog.Experimental/Rendering/Commands/SpriteCommand.hpp"
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 SpriteCommandProcessor::SpriteCommandProcessor(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
@@ -12,13 +12,13 @@ SpriteCommandProcessor::SpriteCommandProcessor(
     , drawCallCount(0)
 {
 }
-//-----------------------------------------------------------------------
+
 void SpriteCommandProcessor::Begin(GraphicsCommandQueue &)
 {
     drawCallCount = 0;
     spriteBatch.Begin(Matrix4x4::Identity);
 }
-//-----------------------------------------------------------------------
+
 void SpriteCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, RenderCommand & command)
 {
     using Detail::Rendering::SpriteCommand;
@@ -27,22 +27,22 @@ void SpriteCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, RenderCom
     spriteBatch.Draw(spriteCommand.texture, spriteCommand.transform,
         spriteCommand.textureRegion.Subrect, spriteCommand.color, spriteCommand.originPivot);
 }
-//-----------------------------------------------------------------------
+
 void SpriteCommandProcessor::End(GraphicsCommandQueue & commandQueue)
 {
     spriteBatch.End();
     drawCallCount += spriteBatch.DrawCallCount();
 }
-//-----------------------------------------------------------------------
+
 int SpriteCommandProcessor::GetDrawCallCount() const noexcept
 {
     return drawCallCount;
 }
-//-----------------------------------------------------------------------
+
 void SpriteCommandProcessor::SetViewProjection(Matrix4x4 const& view, Matrix4x4 const& projection)
 {
     auto viewProjection = view * projection;
     spriteBatch.SetProjectionMatrix(viewProjection);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

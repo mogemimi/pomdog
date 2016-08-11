@@ -125,7 +125,7 @@ std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs,
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 Skin CreateSkin(SkeletonDesc const& skeletonDesc,
     TexturePacker::TextureAtlas const& textureAtlas,
     std::string const& skinName)

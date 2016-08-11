@@ -14,7 +14,7 @@ Matrix3x2 CreateTransformMatrix(Particle const& particle)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 ParticleBatchCommandProcessor::ParticleBatchCommandProcessor(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
@@ -22,13 +22,13 @@ ParticleBatchCommandProcessor::ParticleBatchCommandProcessor(
     , drawCallCount(0)
 {
 }
-//-----------------------------------------------------------------------
+
 void ParticleBatchCommandProcessor::Begin(GraphicsCommandQueue &)
 {
     drawCallCount = 0;
     spriteBatch.Begin(Matrix4x4::Identity);
 }
-//-----------------------------------------------------------------------
+
 void ParticleBatchCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, RenderCommand & command)
 {
     using Detail::Rendering::ParticleBatchCommand;
@@ -45,23 +45,23 @@ void ParticleBatchCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, Re
             {0.5f, 0.5f});
     }
 }
-//-----------------------------------------------------------------------
+
 void ParticleBatchCommandProcessor::End(GraphicsCommandQueue & commandQueue)
 {
     spriteBatch.End();
 
     drawCallCount += spriteBatch.DrawCallCount();
 }
-//-----------------------------------------------------------------------
+
 int ParticleBatchCommandProcessor::GetDrawCallCount() const noexcept
 {
     return drawCallCount;
 }
-//-----------------------------------------------------------------------
+
 void ParticleBatchCommandProcessor::SetViewProjection(Matrix4x4 const& view, Matrix4x4 const& projection)
 {
     auto viewProjection = view * projection;
     spriteBatch.SetProjectionMatrix(viewProjection);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

@@ -4,10 +4,10 @@
 #include "Pomdog/Math/Matrix3x2.hpp"
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 BeamRenderable::BeamRenderable()
 {}
-//-----------------------------------------------------------------------
+
 void BeamRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 {
     ///@todo Not implemented
@@ -20,13 +20,13 @@ void BeamRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 //
 //    graphicsContext->SetBlendState(blendState);
 }
-//-----------------------------------------------------------------------
+
 void BeamRenderable::Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     std::shared_ptr<AssetManager> const& assets)
 {
     texture = assets->Load<Texture2D>("Particles/lightning.png");
 }
-//-----------------------------------------------------------------------
+
 void BeamRenderable::Update(GameClock const& clock)
 {
     {
@@ -57,7 +57,7 @@ void BeamRenderable::Update(GameClock const& clock)
         beamSystem.Update(clock.FrameDuration(), transform, target);
     }
 }
-//-----------------------------------------------------------------------
+
 void BeamRenderable::DrawBeam()
 {
 //    auto transform = mainCamera->Component<Transform2D>();
@@ -122,5 +122,5 @@ void BeamRenderable::DrawBeam()
 //    }
 //    spriteRenderer->End();
 }
-//-----------------------------------------------------------------------
+
 }// namespace Pomdog

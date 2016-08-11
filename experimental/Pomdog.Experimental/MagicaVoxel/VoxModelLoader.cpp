@@ -19,7 +19,7 @@ std::string Error(std::string const& assetName, std::string const& description)
 {
     return description + (": " + assetName);
 }
-//-----------------------------------------------------------------------
+
 std::ifstream::pos_type ChunkSize(std::ifstream & stream, MagicaVoxel::VoxChunkHeader const& chunk)
 {
     POMDOG_ASSERT(chunk.ContentSize >= 0);
@@ -30,7 +30,7 @@ std::ifstream::pos_type ChunkSize(std::ifstream & stream, MagicaVoxel::VoxChunkH
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& assetName)
 {
     using MagicaVoxel::VoxChunkHeader;
@@ -122,6 +122,6 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
 
     return std::move(model);
 }
-//-----------------------------------------------------------------------
+
 } // namespace MagicaVoxel
 } // namespace Pomdog

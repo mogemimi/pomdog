@@ -5,16 +5,16 @@
 #include <utility>
 
 namespace TestApp {
-//-----------------------------------------------------------------------
+
 LightningTestGame::LightningTestGame(std::shared_ptr<GameHost> const& gameHostIn)
     : gameHost(gameHostIn)
     , window(gameHostIn->Window())
     , graphicsDevice(gameHostIn->GraphicsDevice())
     , graphicsContext(gameHostIn->GraphicsContext())
 {}
-//-----------------------------------------------------------------------
+
 LightningTestGame::~LightningTestGame() = default;
-//-----------------------------------------------------------------------
+
 void LightningTestGame::Initialize()
 {
     window->SetTitle("TestApp - Enjoy Game Dev, Have Fun.");
@@ -160,7 +160,7 @@ void LightningTestGame::Initialize()
         spriteRenderer->SetProjectionMatrix(Matrix4x4::CreateOrthographicLH(width, height, 1.0f, 100.0f));
     });
 }
-//-----------------------------------------------------------------------
+
 void LightningTestGame::Update()
 {
     auto clock = gameHost->Clock();
@@ -182,7 +182,7 @@ void LightningTestGame::Update()
         beamSystem.Update(clock->FrameDuration(), transform, touchPoint);
     }
 }
-//-----------------------------------------------------------------------
+
 void LightningTestGame::DrawSprites()
 {
     auto transform = mainCamera.Component<Transform2D>();
@@ -228,7 +228,7 @@ void LightningTestGame::DrawSprites()
     }
     spriteRenderer->End();
 }
-//-----------------------------------------------------------------------
+
 void LightningTestGame::Draw()
 {
     constexpr bool enableFxaa = true;
@@ -261,5 +261,5 @@ void LightningTestGame::Draw()
     gameEditor->DrawGUI(*graphicsContext);
     graphicsContext->Present();
 }
-//-----------------------------------------------------------------------
+
 }// namespace TestApp

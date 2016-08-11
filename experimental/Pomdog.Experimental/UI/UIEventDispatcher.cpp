@@ -15,7 +15,7 @@ bool Intersects(Point2D const& position, UIElement & element)
     auto positionInChild = UIHelper::ConvertToChildSpace(position, element.GlobalTransform());
     return bounds.Contains(positionInChild);
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<UIElement> Find(Point2D const& position,
     std::vector<std::weak_ptr<UIElement>> const& children)
 {
@@ -30,11 +30,11 @@ std::shared_ptr<UIElement> Find(Point2D const& position,
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 UIEventDispatcher::UIEventDispatcher(std::shared_ptr<GameWindow> const& windowIn)
     : window(windowIn)
 {}
-//-----------------------------------------------------------------------
+
 void UIEventDispatcher::UpdateChildren()
 {
     if (!subscribeRequests.Added.empty())
@@ -68,7 +68,7 @@ void UIEventDispatcher::UpdateChildren()
     POMDOG_ASSERT(std::end(children) == std::unique(std::begin(children), std::end(children),
         [](std::weak_ptr<UIElement> const& a, std::weak_ptr<UIElement> const& b){ return a.lock() == b.lock(); }));
 }
-//-----------------------------------------------------------------------
+
 void UIEventDispatcher::Touch(MouseState const& mouseState)
 {
     auto const position = mouseState.Position;
@@ -147,7 +147,7 @@ void UIEventDispatcher::Touch(MouseState const& mouseState)
         }
     }
 }
-//-----------------------------------------------------------------------
+
 void UIEventDispatcher::PointerEntered(Point2D const& position,
     MouseState const& mouseState, std::shared_ptr<UIElement> const& node)
 {
@@ -170,7 +170,7 @@ void UIEventDispatcher::PointerEntered(Point2D const& position,
 
     pointerState->focusedElement = node;
 }
-//-----------------------------------------------------------------------
+
 void UIEventDispatcher::PointerExited(Point2D const& position)
 {
     POMDOG_ASSERT(pointerState);
@@ -189,7 +189,7 @@ void UIEventDispatcher::PointerExited(Point2D const& position)
 
     window->SetMouseCursor(MouseCursor::Arrow);
 }
-//-----------------------------------------------------------------------
+
 void UIEventDispatcher::PointerPressed(Point2D const& position)
 {
     POMDOG_ASSERT(pointerState);
@@ -206,7 +206,7 @@ void UIEventDispatcher::PointerPressed(Point2D const& position)
     auto focusedElement = pointerState->focusedElement.lock();
     focusedElement->OnPointerPressed(pointerState->pointerPoint);
 }
-//-----------------------------------------------------------------------
+
 void UIEventDispatcher::PointerMoved(Point2D const& position)
 {
     POMDOG_ASSERT(pointerState);
@@ -222,7 +222,7 @@ void UIEventDispatcher::PointerMoved(Point2D const& position)
     auto focusedElement = pointerState->focusedElement.lock();
     focusedElement->OnPointerMoved(pointerState->pointerPoint);
 }
-//-----------------------------------------------------------------------
+
 void UIEventDispatcher::PointerReleased(Point2D const& position)
 {
     POMDOG_ASSERT(pointerState);
@@ -238,7 +238,7 @@ void UIEventDispatcher::PointerReleased(Point2D const& position)
     auto focusedElement = pointerState->focusedElement.lock();
     focusedElement->OnPointerReleased(pointerState->pointerPoint);
 }
-//-----------------------------------------------------------------------
+
 Detail::UIEventConnection UIEventDispatcher::Connect(std::weak_ptr<UIElement> const& child)
 {
     std::shared_ptr<SubscribeRequestDispatcherType> sharedDispatcher(
@@ -249,7 +249,7 @@ Detail::UIEventConnection UIEventDispatcher::Connect(std::weak_ptr<UIElement> co
 
     return std::move(connection);
 }
-//-----------------------------------------------------------------------
+
 void UIEventDispatcher::UpdateAnimation(Duration const& frameDuration)
 {
     for (auto & weakChild: children)
@@ -259,7 +259,7 @@ void UIEventDispatcher::UpdateAnimation(Duration const& frameDuration)
         }
     }
 }
-//-----------------------------------------------------------------------
+
 Optional<UI::PointerMouseEvent> UIEventDispatcher::FindPointerMouseEvent(
     MouseState const& mouseState) const
 {
@@ -281,7 +281,7 @@ Optional<UI::PointerMouseEvent> UIEventDispatcher::FindPointerMouseEvent(
     }
     return Pomdog::NullOpt;
 }
-//-----------------------------------------------------------------------
+
 ButtonState UIEventDispatcher::CheckMouseButton(MouseState const& mouseState,
     UI::PointerMouseEvent const& pointerMouseEvent) const
 {
@@ -303,7 +303,7 @@ ButtonState UIEventDispatcher::CheckMouseButton(MouseState const& mouseState,
     }
     return ButtonState::Released;
 }
-//-----------------------------------------------------------------------
+
 void UIEventDispatcher::Sort()
 {
     children.erase(std::remove_if(std::begin(children), std::end(children),
@@ -323,6 +323,6 @@ void UIEventDispatcher::Sort()
             return sharedA->GlobalDrawOrder() < sharedB->GlobalDrawOrder();
         });
 }
-//-----------------------------------------------------------------------
+
 } // namespace UI
 } // namespace Pomdog

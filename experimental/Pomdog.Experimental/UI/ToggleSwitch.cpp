@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 namespace UI {
-//-----------------------------------------------------------------------
+
 ToggleSwitch::ToggleSwitch(std::shared_ptr<UIEventDispatcher> const& dispatcher)
     : UIElement(dispatcher)
     , button(50, 18)
@@ -20,20 +20,20 @@ ToggleSwitch::ToggleSwitch(std::shared_ptr<UIEventDispatcher> const& dispatcher)
     SetSize(50, 18);
     SetCursor(MouseCursor::PointingHand);
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Properties
-//-----------------------------------------------------------------------
+
 bool ToggleSwitch::IsOn() const
 { return isOn; }
-//-----------------------------------------------------------------------
+
 void ToggleSwitch::IsOn(bool isOnIn)
 { this->isOn = isOnIn; }
-//-----------------------------------------------------------------------
+
 bool ToggleSwitch::IsEnabled() const
 {
     return isEnabled;
 }
-//-----------------------------------------------------------------------
+
 void ToggleSwitch::IsEnabled(bool isEnabledIn)
 {
     this->isEnabled = isEnabledIn;
@@ -44,31 +44,31 @@ void ToggleSwitch::IsEnabled(bool isEnabledIn)
         ResetCursor();
     }
 }
-//-----------------------------------------------------------------------
+
 std::string ToggleSwitch::OnContent() const
 { return this->onContent; }
-//-----------------------------------------------------------------------
+
 void ToggleSwitch::OnContent(std::string const& onContentIn)
 { this->onContent = onContentIn; }
-//-----------------------------------------------------------------------
+
 std::string ToggleSwitch::OffContent() const
 { return this->offContent; }
-//-----------------------------------------------------------------------
+
 void ToggleSwitch::OffContent(std::string const& offContentIn)
 { this->offContent = offContentIn; }
-//-----------------------------------------------------------------------
+
 // MARK: - Events
-//-----------------------------------------------------------------------
+
 void ToggleSwitch::OnEnter()
 {
     auto dispatcher = Dispatcher();
     connection = dispatcher->Connect(shared_from_this());
 }
-//-----------------------------------------------------------------------
+
 void ToggleSwitch::OnPointerPressed(PointerPoint const& pointerPoint)
 {
 }
-//-----------------------------------------------------------------------
+
 void ToggleSwitch::OnPointerReleased(PointerPoint const& pointerPoint)
 {
     if (!isEnabled) {
@@ -77,12 +77,12 @@ void ToggleSwitch::OnPointerReleased(PointerPoint const& pointerPoint)
     isOn = !isOn;
     Toggled(isOn);
 }
-//-----------------------------------------------------------------------
+
 void ToggleSwitch::OnRenderSizeChanged(int widthIn, int heightIn)
 {
     SetSize(widthIn, heightIn);
 }
-//-----------------------------------------------------------------------
+
 void ToggleSwitch::Draw(DrawingContext & drawingContext)
 {
     auto transform = Transform() * drawingContext.Top();
@@ -100,13 +100,13 @@ void ToggleSwitch::Draw(DrawingContext & drawingContext)
             {181,181,181,255}, FontWeight::Bold, FontSize::Medium, offContent);
     }
 }
-//-----------------------------------------------------------------------
+
 ToggleSwitch::ToggleSwitchButton::ToggleSwitchButton(std::uint16_t widthIn, std::uint16_t heightIn)
     : Width(widthIn)
     , Height(heightIn)
 {
 }
-//-----------------------------------------------------------------------
+
 void ToggleSwitch::ToggleSwitchButton::Draw(DrawingContext & drawingContext, bool isOnIn, bool isEnabledIn)
 {
     auto transform = drawingContext.Top();
@@ -150,6 +150,6 @@ void ToggleSwitch::ToggleSwitchButton::Draw(DrawingContext & drawingContext, boo
         drawingContext.DrawRectangle(transform, thumbColor, Rectangle(0, 0, thumbWidth, Height));
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace UI
 } // namespace Pomdog

@@ -12,7 +12,7 @@
 namespace Pomdog {
 namespace Detail {
 namespace Skeletal2D {
-//-----------------------------------------------------------------------
+
 AnimationLerpNode::AnimationLerpNode(std::unique_ptr<AnimationNode> && blendNode1In,
     std::unique_ptr<AnimationNode> && blendNode2In, std::uint16_t weightIndexIn)
     : nodeA(std::move(blendNode1In))
@@ -23,22 +23,22 @@ AnimationLerpNode::AnimationLerpNode(std::unique_ptr<AnimationNode> && blendNode
     POMDOG_ASSERT(nodeB);
     length = std::max(nodeA->Length(), nodeB->Length());
 }
-//-----------------------------------------------------------------------
+
 AnimationTimeInterval AnimationLerpNode::Length() const
 {
     return length;
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<AnimationNode> const& AnimationLerpNode::A() const
 {
     return nodeA;
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<AnimationNode> const& AnimationLerpNode::B() const
 {
     return nodeB;
 }
-//-----------------------------------------------------------------------
+
 void AnimationLerpNode::Calculate(AnimationTimeInterval const& time,
     Detail::Skeletal2D::AnimationGraphWeightCollection const& weights,
     Skeleton const& skeleton, SkeletonPose & skeletonPose) const

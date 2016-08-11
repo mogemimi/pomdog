@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 namespace Spine {
-//-----------------------------------------------------------------------
+
 std::vector<Detail::Skeletal2D::SpriteAnimationTrack> CreateSpriteAnimationTrack(
     SkeletonDesc const& desc,
     TexturePacker::TextureAtlas const& textureAtlas,

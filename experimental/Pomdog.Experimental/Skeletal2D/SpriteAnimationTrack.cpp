@@ -29,14 +29,14 @@ std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIte
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 SpriteAnimationTrack::SpriteAnimationTrack(std::vector<SpriteKeyframe> && keysIn, std::uint32_t slotHashIdIn)
     : keys(std::move(keysIn))
     , slotHashId(slotHashIdIn)
 {
     POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys), AnimationKeyHelper::Less<SpriteKeyframe>));
 }
-//-----------------------------------------------------------------------
+
 void SpriteAnimationTrack::Apply(Skin & skin, AnimationTimeInterval const& time)
 {
     SpriteKeyframe point;
@@ -58,7 +58,7 @@ void SpriteAnimationTrack::Apply(Skin & skin, AnimationTimeInterval const& time)
     slot.TexturePage = pointPair.first->TexturePage;
     slot.TextureRotate = pointPair.first->TextureRotate;
 }
-//-----------------------------------------------------------------------
+
 AnimationTimeInterval SpriteAnimationTrack::Length() const
 {
     POMDOG_ASSERT(!keys.empty());
@@ -66,7 +66,7 @@ AnimationTimeInterval SpriteAnimationTrack::Length() const
     POMDOG_ASSERT(keys.front().Time <= keys.back().Time);
     return keys.back().Time;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Skeletal2D
 } // namespace Detail
 } // namespace Pomdog

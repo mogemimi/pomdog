@@ -25,7 +25,7 @@ namespace {
 #include "Shaders/HLSL.Embedded/RetroCrtEffect_PS.inc.hpp"
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 RetroCrtEffect::RetroCrtEffect(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets)
@@ -53,7 +53,7 @@ RetroCrtEffect::RetroCrtEffect(
         .SetConstantBufferBindSlot("ImageEffectConstants", 0)
         .Build();
 }
-//-----------------------------------------------------------------------
+
 void RetroCrtEffect::Apply(GraphicsCommandList & commandList,
     std::shared_ptr<RenderTarget2D> const& source,
     std::shared_ptr<ConstantBuffer> const& constantBuffer)
@@ -65,5 +65,5 @@ void RetroCrtEffect::Apply(GraphicsCommandList & commandList,
     commandList.SetTexture(0, source);
     commandList.SetPipelineState(pipelineState);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

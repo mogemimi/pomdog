@@ -30,7 +30,7 @@ auto FindBoneParent(std::string const& parentName,
         decltype(*decltype(Joint::Index)())>::type>::max());
     return jointIndex;
 }
-//-----------------------------------------------------------------------
+
 std::vector<Matrix3x2> CreateInverseBindPoseByJoints(Skeleton const& skeleton)
 {
     POMDOG_ASSERT(skeleton.JointCount() > 0);
@@ -62,7 +62,7 @@ std::vector<Matrix3x2> CreateInverseBindPoseByJoints(Skeleton const& skeleton)
     }
     return std::move(bindPose);
 }
-//-----------------------------------------------------------------------
+
 std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescriptions)
 {
     std::vector<Joint> joints;
@@ -127,7 +127,7 @@ std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescriptions)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 Skeleton CreateSkeleton(std::vector<Spine::BoneDesc> const& bones)
 {
     POMDOG_ASSERT(!bones.empty());

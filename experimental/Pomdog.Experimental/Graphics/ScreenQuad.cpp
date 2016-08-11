@@ -12,7 +12,7 @@
 #include <array>
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 ScreenQuad::ScreenQuad(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
 {
     struct ScreenQuadVertex {
@@ -44,12 +44,12 @@ ScreenQuad::ScreenQuad(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
         vertices.data(), vertices.size(),
         sizeof(ScreenQuadVertex), BufferUsage::Immutable);
 }
-//-----------------------------------------------------------------------
+
 void ScreenQuad::DrawQuad(GraphicsCommandList & commandList)
 {
     commandList.SetVertexBuffer(vertexBuffer);
     commandList.SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     commandList.Draw(vertexBuffer->GetVertexCount());
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

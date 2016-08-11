@@ -44,7 +44,7 @@ void LoadAnimator(GameObject & gameObject, std::shared_ptr<GraphicsDevice> const
 }
 
 }// unnamed namespace
-//-----------------------------------------------------------------------
+
 GunShootingLevel::GunShootingLevel(GameHost & gameHost, GameWorld & world)
     : spawnTime(Duration::zero())
 {
@@ -99,7 +99,7 @@ GunShootingLevel::GunShootingLevel(GameHost & gameHost, GameWorld & world)
         }
     }
 }
-//-----------------------------------------------------------------------
+
 void GunShootingLevel::Update(GameHost & gameHost, GameWorld & world)
 {
     auto clock = gameHost.Clock();
@@ -193,5 +193,5 @@ void GunShootingLevel::Update(GameHost & gameHost, GameWorld & world)
 ////        }
 //    }
 }
-//-----------------------------------------------------------------------
+
 }// namespace TestApp

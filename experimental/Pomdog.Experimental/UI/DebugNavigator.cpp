@@ -5,7 +5,7 @@
 
 namespace Pomdog {
 namespace UI {
-//-----------------------------------------------------------------------
+
 DebugNavigator::DebugNavigator(std::shared_ptr<UIEventDispatcher> const& dispatcher,
     std::shared_ptr<GameClock> const& clockIn)
     : UIElement(dispatcher)
@@ -15,7 +15,7 @@ DebugNavigator::DebugNavigator(std::shared_ptr<UIEventDispatcher> const& dispatc
 {
     SetSize(150, 40);
 }
-//-----------------------------------------------------------------------
+
 void DebugNavigator::Draw(DrawingContext & drawingContext)
 {
     constexpr float minFramerate = 10.0f;
@@ -62,6 +62,6 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
     drawingContext.DrawString(transform * Matrix3x2::CreateTranslation({0.5f, -2.5f}),
         Color::White, FontWeight::Bold, FontSize::Medium, frameRateString);
 }
-//-----------------------------------------------------------------------
+
 } // namespace UI
 } // namespace Pomdog

@@ -25,14 +25,14 @@ public:
 
     void LoadFont(AssetManager const& assets, std::string const& fontPath);
 };
-//-----------------------------------------------------------------------
+
 void TrueTypeFont::Impl::Reset()
 {
     if (!ttfBinary.empty()) {
         ttfBinary.clear();
     }
 }
-//-----------------------------------------------------------------------
+
 void TrueTypeFont::Impl::LoadFont(AssetManager const& assets, std::string const& fontPath)
 {
     auto binaryFile = assets.OpenStream(fontPath);
@@ -58,20 +58,20 @@ void TrueTypeFont::Impl::LoadFont(AssetManager const& assets, std::string const&
             "Failed to initialize truetype font");
     }
 }
-//-----------------------------------------------------------------------
+
 TrueTypeFont::TrueTypeFont(AssetManager const& assets, std::string const& fontPath)
     : impl(std::make_unique<Impl>())
 {
     POMDOG_ASSERT(impl);
     impl->LoadFont(assets, fontPath);
 }
-//-----------------------------------------------------------------------
+
 TrueTypeFont::~TrueTypeFont()
 {
     POMDOG_ASSERT(impl);
     impl->Reset();
 }
-//-----------------------------------------------------------------------
+
 Optional<Detail::SpriteFonts::Glyph>
 TrueTypeFont::RasterizeGlyph(std::uint32_t codePoint,
     float pixelHeight, int textureWidth,
@@ -130,7 +130,7 @@ TrueTypeFont::RasterizeGlyph(std::uint32_t codePoint,
     glyph.Character = codePoint;
     return std::move(glyph);
 }
-//-----------------------------------------------------------------------
+
 //int TrueTypeFont::GetBaseline(float fontSize) const
 //{
 //    POMDOG_ASSERT(!impl->ttfBinary.empty());
@@ -148,7 +148,7 @@ TrueTypeFont::RasterizeGlyph(std::uint32_t codePoint,
 //    int baseline = ascent * scale;
 //    return baseline;
 //}
-//-----------------------------------------------------------------------
+
 //std::vector<Glyph> TrueTypeFont::BakeFontBitmap(float fontSize, int width, int height, std::uint8_t* output)
 //{
 //    POMDOG_ASSERT(!impl->ttfBinary.empty());
@@ -183,5 +183,5 @@ TrueTypeFont::RasterizeGlyph(std::uint32_t codePoint,
 //    }
 //    return std::move(glyphs);
 //}
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

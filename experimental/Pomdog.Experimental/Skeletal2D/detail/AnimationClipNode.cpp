@@ -11,13 +11,13 @@ namespace Skeletal2D {
 AnimationClipNode::AnimationClipNode(std::shared_ptr<AnimationClip> const& animationClipIn)
     : clip(animationClipIn)
 {}
-//-----------------------------------------------------------------------
+
 AnimationTimeInterval AnimationClipNode::Length() const
 {
     POMDOG_ASSERT(clip);
     return clip->Length();
 }
-//-----------------------------------------------------------------------
+
 void AnimationClipNode::Calculate(AnimationTimeInterval const& time,
     Detail::Skeletal2D::AnimationGraphWeightCollection const&,
     Skeleton const& skeleton, SkeletonPose & skeletonPose) const

@@ -4,7 +4,7 @@
 
 namespace Pomdog {
 namespace UI {
-//-----------------------------------------------------------------------
+
 SpriteDrawingContext::SpriteDrawingContext(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     AssetManager & assets,
@@ -14,24 +14,24 @@ SpriteDrawingContext::SpriteDrawingContext(
     , spriteFont(spriteFontIn)
     , texture(textureIn)
 {}
-//-----------------------------------------------------------------------
+
 Matrix3x2 SpriteDrawingContext::Top() const
 {
     POMDOG_ASSERT(!matrixStack.empty());
     return matrixStack.back();
 }
-//-----------------------------------------------------------------------
+
 void SpriteDrawingContext::Push(Matrix3x2 const& matrix)
 {
     matrixStack.push_back(matrix);
 }
-//-----------------------------------------------------------------------
+
 void SpriteDrawingContext::Pop()
 {
     POMDOG_ASSERT(!matrixStack.empty());
     matrixStack.pop_back();
 }
-//-----------------------------------------------------------------------
+
 void SpriteDrawingContext::Begin(
     std::shared_ptr<GraphicsCommandList> const& commandList,
     Matrix4x4 const& matrix,
@@ -41,12 +41,12 @@ void SpriteDrawingContext::Begin(
     this->viewportHeight = viewportHeightIn;
     spriteBatch.Begin(commandList, matrix);
 }
-//-----------------------------------------------------------------------
+
 void SpriteDrawingContext::End()
 {
     spriteBatch.End();
 }
-//-----------------------------------------------------------------------
+
 void SpriteDrawingContext::DrawRectangle(
     Matrix3x2 const& transform,
     Color const& color,
@@ -64,7 +64,7 @@ void SpriteDrawingContext::DrawRectangle(
         {0.0f, 1.0f},
         Vector2(rectangle.Width, rectangle.Height));
 }
-//-----------------------------------------------------------------------
+
 void SpriteDrawingContext::DrawLine(
     Matrix3x2 const& transform,
     Color const& color,
@@ -91,7 +91,7 @@ void SpriteDrawingContext::DrawLine(
         {0.0f, 0.5f},
         Vector2{lineLength + 0.5f, thicknessScale});
 }
-//-----------------------------------------------------------------------
+
 void SpriteDrawingContext::DrawString(
     Matrix3x2 const& transform,
     Color const& color,
