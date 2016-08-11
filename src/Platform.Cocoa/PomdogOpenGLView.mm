@@ -32,7 +32,7 @@ Pomdog::Point2D ToPoint2D(const NSPoint& point)
     return Pomdog::Point2D(point.x - 2, point.y - 2);
     //return Pomdog::Point2D(point.x, point.y);
 }
-//-----------------------------------------------------------------------
+
 Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 {
     using Pomdog::Keys;
@@ -184,7 +184,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     NSTrackingRectTag trackingRect;
     BOOL wasAcceptingMouseEvents;
 }
-//-----------------------------------------------------------------------
+
 - (instancetype)initWithFrame:(NSRect)frameRect
 {
     self = [super initWithFrame:frameRect];
@@ -193,7 +193,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     }
     return self;
 }
-//-----------------------------------------------------------------------
+
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
@@ -202,7 +202,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     }
     return self;
 }
-//-----------------------------------------------------------------------
+
 - (void)drawRect:(NSRect)dirtyRect
 {
     [super drawRect:dirtyRect];
@@ -210,7 +210,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
         renderCallback();
     }
 }
-//-----------------------------------------------------------------------
+
 - (void)lockFocus
 {
     [super lockFocus];
@@ -226,9 +226,9 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     openGLContext->MakeCurrent();
     openGLContext->Unlock();
 }
-//-----------------------------------------------------------------------
+
 // MARK: - View Event Handling
-//-----------------------------------------------------------------------
+
 - (void)viewWillStartLiveResize
 {
     using Pomdog::Detail::ViewWillStartLiveResizeEvent;
@@ -240,7 +240,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
         resizingCallback(true);
     }
 }
-//-----------------------------------------------------------------------
+
 - (void)viewDidEndLiveResize
 {
     using Pomdog::Detail::ViewDidEndLiveResizeEvent;
@@ -252,7 +252,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
         resizingCallback(false);
     }
 }
-//-----------------------------------------------------------------------
+
 -(void)viewDidMoveToWindow
 {
     [super viewDidMoveToWindow];
@@ -263,7 +263,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 
     trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
 }
-//-----------------------------------------------------------------------
+
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow
 {
     [super viewWillMoveToWindow:newWindow];
@@ -272,55 +272,55 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
         [self removeTrackingRect:trackingRect];
     }
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Mouse-Tracking and Cursor
-//-----------------------------------------------------------------------
+
 - (void)setFrame:(NSRect)frame
 {
     [super setFrame:frame];
     [self removeTrackingRect:trackingRect];
     trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
 }
-//-----------------------------------------------------------------------
+
 - (void)setBounds:(NSRect)bounds
 {
     [super setBounds:bounds];
     [self removeTrackingRect:trackingRect];
     trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Getter/Setter
-//-----------------------------------------------------------------------
+
 - (void)setEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueueIn
 {
     eventQueue = eventQueueIn;
 }
-//-----------------------------------------------------------------------
+
 - (void)setOpenGLContext:(std::shared_ptr<
     Pomdog::Detail::Cocoa::OpenGLContextCocoa>)openGLContextIn
 {
     openGLContext = openGLContextIn;
 }
-//-----------------------------------------------------------------------
+
 - (void)setRenderCallback:(std::function<void()>)callback
 {
     renderCallback = callback;
 }
-//-----------------------------------------------------------------------
+
 - (void)setResizingCallback:(std::function<void(bool)>)callback
 {
     resizingCallback = callback;
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Settings
-//-----------------------------------------------------------------------
+
 - (BOOL)isFlipped
 {
     return TRUE;
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Mouse Event Handling
-//-----------------------------------------------------------------------
+
 - (void)mouseEntered:(NSEvent *)theEvent
 {
     if (!eventQueue) {
@@ -336,7 +336,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
         ToPoint2D(locationInView),
         MouseEventType::Entered);
 }
-//-----------------------------------------------------------------------
+
 -(void)mouseMoved:(NSEvent *)theEvent
 {
     if (eventQueue) {
@@ -346,7 +346,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
             MouseEventType::Moved);
     }
 }
-//-----------------------------------------------------------------------
+
 - (void)mouseExited:(NSEvent *)theEvent
 {
     [[self window] setAcceptsMouseMovedEvents:wasAcceptingMouseEvents];
@@ -358,7 +358,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
             MouseEventType::Exited);
     }
 }
-//-----------------------------------------------------------------------
+
 - (void)mouseDown:(NSEvent *)theEvent
 {
     if (eventQueue) {
@@ -369,7 +369,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
             MouseButtonState::Down);
     }
 }
-//-----------------------------------------------------------------------
+
 - (void)mouseDragged:(NSEvent *)theEvent
 {
     if (eventQueue) {
@@ -380,7 +380,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
             MouseButtonState::Dragged);
     }
 }
-//-----------------------------------------------------------------------
+
 - (void)mouseUp:(NSEvent *)theEvent
 {
     if (eventQueue) {
@@ -391,7 +391,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
             MouseButtonState::Up);
     }
 }
-//-----------------------------------------------------------------------
+
 - (void)rightMouseDown:(NSEvent *)theEvent
 {
     if (eventQueue) {
@@ -402,7 +402,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
             MouseButtonState::Down);
     }
 }
-//-----------------------------------------------------------------------
+
 - (void)rightMouseDragged:(NSEvent *)theEvent
 {
     if (eventQueue) {
@@ -413,7 +413,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
             MouseButtonState::Dragged);
     }
 }
-//-----------------------------------------------------------------------
+
 - (void)rightMouseUp:(NSEvent *)theEvent
 {
     if (eventQueue) {
@@ -424,7 +424,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
             MouseButtonState::Up);
     }
 }
-//-----------------------------------------------------------------------
+
 - (void)otherMouseDown:(NSEvent *)theEvent
 {
     if (!eventQueue) {
@@ -450,7 +450,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     event.Position = ToPoint2D(locationInView);
     eventQueue->Enqueue(Event{std::move(event)});
 }
-//-----------------------------------------------------------------------
+
 - (void)otherMouseDragged:(NSEvent *)theEvent
 {
     if (!eventQueue) {
@@ -476,7 +476,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     event.Position = ToPoint2D(locationInView);
     eventQueue->Enqueue(Event{std::move(event)});
 }
-//-----------------------------------------------------------------------
+
 - (void)otherMouseUp:(NSEvent *)theEvent
 {
     if (!eventQueue) {
@@ -502,7 +502,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     event.Position = ToPoint2D(locationInView);
     eventQueue->Enqueue(Event{std::move(event)});
 }
-//-----------------------------------------------------------------------
+
 - (void)scrollWheel:(NSEvent *)theEvent
 {
     if (!eventQueue) {
@@ -521,9 +521,9 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 
     eventQueue->Enqueue(Event{std::move(event)});
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Keyboard Event Handling
-//-----------------------------------------------------------------------
+
 - (void)keyDown:(NSEvent *)theEvent
 {
     auto key = TranslateKey([theEvent keyCode]);
@@ -535,7 +535,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     std::string text = [[theEvent characters] UTF8String];
     eventQueue->Enqueue<InputTextEvent>(text);
 }
-//-----------------------------------------------------------------------
+
 - (void)keyUp:(NSEvent *)theEvent
 {
     auto key = TranslateKey([theEvent keyCode]);

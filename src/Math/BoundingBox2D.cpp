@@ -12,19 +12,19 @@ constexpr int BoundingBox2D::CornerCount;
 BoundingBox2D::BoundingBox2D(const Vector2& minIn, const Vector2& maxIn)
     : Min(minIn), Max(maxIn)
 {}
-//-----------------------------------------------------------------------
+
 bool BoundingBox2D::operator==(const BoundingBox2D& box) const noexcept
 {
     return this->Max == box.Max
         && this->Min == box.Min;
 }
-//-----------------------------------------------------------------------
+
 bool BoundingBox2D::operator!=(const BoundingBox2D& box) const noexcept
 {
     return this->Max != box.Max
         || this->Min != box.Min;
 }
-//-----------------------------------------------------------------------
+
 ContainmentType BoundingBox2D::Contains(const Vector2& point) const
 {
     if (point.X < this->Min.X ||
@@ -41,7 +41,7 @@ ContainmentType BoundingBox2D::Contains(const Vector2& point) const
     }
     return ContainmentType::Contains;
 }
-//-----------------------------------------------------------------------
+
 ContainmentType BoundingBox2D::Contains(const BoundingBox2D& box) const
 {
     if ((this->Min.X > box.Max.X || this->Max.X < box.Min.X) ||
@@ -54,7 +54,7 @@ ContainmentType BoundingBox2D::Contains(const BoundingBox2D& box) const
     }
     return ContainmentType::Intersects;
 }
-//-----------------------------------------------------------------------
+
 ContainmentType BoundingBox2D::Contains(const BoundingCircle& circle) const
 {
     auto clamped = Vector2::Clamp(circle.Center, this->Min, this->Max);
@@ -71,20 +71,20 @@ ContainmentType BoundingBox2D::Contains(const BoundingCircle& circle) const
     }
     return ContainmentType::Intersects;
 }
-//-----------------------------------------------------------------------
+
 bool BoundingBox2D::Intersects(const BoundingBox2D& box) const
 {
     return (this->Max.X >= box.Min.X && this->Min.X <= box.Max.X)
         && (this->Max.Y >= box.Min.Y && this->Min.Y <= box.Max.Y);
 }
-//-----------------------------------------------------------------------
+
 bool BoundingBox2D::Intersects(const BoundingCircle& circle) const
 {
     auto clamped = Vector2::Clamp(circle.Center, this->Min, this->Max);
     auto distanceSquared = Vector2::DistanceSquared(circle.Center, clamped);
     return distanceSquared <= circle.Radius * circle.Radius;
 }
-//-----------------------------------------------------------------------
+
 std::array<Vector2, BoundingBox2D::CornerCount> BoundingBox2D::GetCorners() const noexcept
 {
     return std::array<Vector2, BoundingBox2D::CornerCount> {{

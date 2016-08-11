@@ -26,10 +26,10 @@ using Pomdog::ShaderCompilers::MetalCompiler;
 namespace Pomdog {
 namespace AssetBuilders {
 
-//-----------------------------------------------------------------------
+
 // explicit instantiations
 template class Builder<Shader>;
-//-----------------------------------------------------------------------
+
 class Builder<Shader>::Impl {
 public:
     std::reference_wrapper<Detail::AssetLoaderContext const> loaderContext;
@@ -47,14 +47,14 @@ public:
         return loaderContext.get().GraphicsDevice.lock();
     }
 };
-//-----------------------------------------------------------------------
+
 Builder<Shader>::Impl::Impl(const Detail::AssetLoaderContext& contextIn)
     : loaderContext(contextIn)
     , pipelineStage(ShaderPipelineStage::VertexShader)
     , precompiled(false)
 {
 }
-//-----------------------------------------------------------------------
+
 Builder<Shader>::Builder(
     const Detail::AssetLoaderContext& contextIn,
     ShaderPipelineStage pipelineStageIn)
@@ -63,9 +63,9 @@ Builder<Shader>::Builder(
     POMDOG_ASSERT(impl);
     impl->pipelineStage = pipelineStageIn;
 }
-//-----------------------------------------------------------------------
+
 Builder<Shader>::~Builder() = default;
-//-----------------------------------------------------------------------
+
 Builder<Shader> & Builder<Shader>::SetGLSL(
     const void* shaderSourceIn, std::size_t byteLengthIn)
 {
@@ -83,7 +83,7 @@ Builder<Shader> & Builder<Shader>::SetGLSL(
     }
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<Shader> & Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
 {
     POMDOG_ASSERT(!assetName.empty());
@@ -115,7 +115,7 @@ Builder<Shader> & Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
     }
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<Shader> & Builder<Shader>::SetHLSL(
     const void* shaderSourceIn,
     std::size_t byteLengthIn,
@@ -136,7 +136,7 @@ Builder<Shader> & Builder<Shader>::SetHLSL(
     }
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<Shader> & Builder<Shader>::SetHLSLPrecompiled(
     const void* shaderSourceIn, std::size_t byteLengthIn)
 {
@@ -153,7 +153,7 @@ Builder<Shader> & Builder<Shader>::SetHLSLPrecompiled(
     }
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<Shader> & Builder<Shader>::SetHLSLFromFile(
     const std::string& assetName, const std::string& entryPointIn)
 {
@@ -189,7 +189,7 @@ Builder<Shader> & Builder<Shader>::SetHLSLFromFile(
     }
     return *this;
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<Shader> Builder<Shader>::Build()
 {
     auto graphicsDevice = impl->GetDevice();
@@ -237,6 +237,6 @@ std::shared_ptr<Shader> Builder<Shader>::Build()
     POMDOG_THROW_EXCEPTION(std::domain_error,
         "This shading language is not supported");
 }
-//-----------------------------------------------------------------------
+
 } // namespace AssetBuilders
 } // namespace Pomdog

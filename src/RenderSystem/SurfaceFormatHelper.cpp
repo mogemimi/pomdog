@@ -5,7 +5,7 @@
 
 namespace Pomdog {
 namespace Detail {
-//-----------------------------------------------------------------------
+
 int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format)
 {
     switch (format) {
@@ -35,6 +35,6 @@ int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format)
     return 1;
 #endif
 }
-//-----------------------------------------------------------------------
+
 } // namespace Detail
 } // namespace Pomdog

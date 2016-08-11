@@ -33,7 +33,7 @@ VkPrimitiveTopology ToVkPrimitiveTopology(
     }
     return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 }
-//-----------------------------------------------------------------------
+
 VkIndexType ToVkIndexType(IndexElementSize elementSize) noexcept
 {
     switch (elementSize) {
@@ -44,131 +44,131 @@ VkIndexType ToVkIndexType(IndexElementSize elementSize) noexcept
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::Close()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::Reset()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 std::size_t GraphicsCommandListVulkan::GetCount() const noexcept
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::Draw(std::size_t vertexCount)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::DrawIndexed(std::size_t indexCount)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::DrawInstanced(
     std::size_t vertexCount,
     std::size_t instanceCount)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::DrawIndexedInstanced(
     std::size_t indexCount,
     std::size_t instanceCount)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetViewport(const Viewport& viewport)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetScissorRectangle(const Rectangle& rectangle)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetBlendFactor(const Color& blendFactor)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetSampler(int index, std::shared_ptr<NativeSamplerState> && sampler)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetTexture(int index)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetTexture(int index, const std::shared_ptr<Texture2D>& texture)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetRenderTarget()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandListVulkan::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 } // namespace Vulkan
 } // namespace Detail
 } // namespace Pomdog

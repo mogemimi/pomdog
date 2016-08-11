@@ -37,7 +37,7 @@ static bool CheckFrameBufferConfigSupport(::Display* display)
 
     return (((major == 1) && (minor >= 3)) || (major >= 2));
 }
-//-----------------------------------------------------------------------
+
 static GLXFBConfig ChooseFramebufferConfig(
     Display* display,
     const PresentationParameters& presentationParameters)
@@ -166,9 +166,9 @@ static GLXFBConfig ChooseFramebufferConfig(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 // MARK: - GameHostX11
-//-----------------------------------------------------------------------
+
 class GameHostX11::Impl {
 public:
     explicit Impl(const PresentationParameters& presentationParameters);
@@ -200,7 +200,7 @@ public:
     Duration presentationInterval;
     bool exitRequest;
 };
-//-----------------------------------------------------------------------
+
 GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
     : exitRequest(false)
 {
@@ -255,7 +255,7 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
     loaderContext.GraphicsDevice = graphicsDevice;
     assetManager = std::make_unique<Pomdog::AssetManager>(std::move(loaderContext));
 }
-//-----------------------------------------------------------------------
+
 GameHostX11::Impl::~Impl()
 {
     keyboard.reset();
@@ -267,7 +267,7 @@ GameHostX11::Impl::~Impl()
     openGLContext.reset();
     window.reset();
 }
-//-----------------------------------------------------------------------
+
 void GameHostX11::Impl::MessagePump()
 {
     ::XLockDisplay(x11Context->Display);
@@ -283,7 +283,7 @@ void GameHostX11::Impl::MessagePump()
         ProcessEvent(event);
     }
 }
-//-----------------------------------------------------------------------
+
 void GameHostX11::Impl::ProcessEvent(::XEvent & event)
 {
     if (event.xany.window != window->NativeWindow()) {
@@ -318,7 +318,7 @@ void GameHostX11::Impl::ProcessEvent(::XEvent & event)
 
     window->ProcessEvent(event);
 }
-//-----------------------------------------------------------------------
+
 void GameHostX11::Impl::Run(Game & game)
 {
     game.Initialize();
@@ -339,12 +339,12 @@ void GameHostX11::Impl::Run(Game & game)
         }
     }
 }
-//-----------------------------------------------------------------------
+
 void GameHostX11::Impl::Exit()
 {
     exitRequest = true;
 }
-//-----------------------------------------------------------------------
+
 void GameHostX11::Impl::RenderFrame(Game & game)
 {
     if (!window || window->IsMinimized()) {
@@ -354,34 +354,34 @@ void GameHostX11::Impl::RenderFrame(Game & game)
 
     game.Draw();
 }
-//-----------------------------------------------------------------------
+
 // MARK: - GameHostX11
-//-----------------------------------------------------------------------
+
 GameHostX11::GameHostX11(const PresentationParameters& presentationParameters)
     : impl(std::make_unique<Impl>(presentationParameters))
 {
 }
-//-----------------------------------------------------------------------
+
 GameHostX11::~GameHostX11() = default;
-//-----------------------------------------------------------------------
+
 void GameHostX11::Run(Game & game)
 {
     POMDOG_ASSERT(impl);
     impl->Run(game);
 }
-//-----------------------------------------------------------------------
+
 void GameHostX11::Exit()
 {
     POMDOG_ASSERT(impl);
     impl->Exit();
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<GameWindow> GameHostX11::GetWindow()
 {
     POMDOG_ASSERT(impl);
     return impl->window;
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<GameClock> GameHostX11::GetClock()
 {
     POMDOG_ASSERT(impl);
@@ -389,26 +389,26 @@ std::shared_ptr<GameClock> GameHostX11::GetClock()
     std::shared_ptr<GameClock> sharedClock(gameHost, &impl->clock);
     return std::move(sharedClock);
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<GraphicsDevice> GameHostX11::GetGraphicsDevice()
 {
     POMDOG_ASSERT(impl);
     return impl->graphicsDevice;
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<GraphicsCommandQueue> GameHostX11::GetGraphicsCommandQueue()
 {
     POMDOG_ASSERT(impl);
     return impl->graphicsCommandQueue;
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<AudioEngine> GameHostX11::GetAudioEngine()
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->audioEngine);
     return impl->audioEngine;
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<AssetManager> GameHostX11::GetAssetManager()
 {
     POMDOG_ASSERT(impl);
@@ -418,7 +418,7 @@ std::shared_ptr<AssetManager> GameHostX11::GetAssetManager()
         gameHost, impl->assetManager.get());
     return std::move(sharedAssetManager);
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<Keyboard> GameHostX11::GetKeyboard()
 {
     POMDOG_ASSERT(impl);
@@ -427,7 +427,7 @@ std::shared_ptr<Keyboard> GameHostX11::GetKeyboard()
         gameHost, impl->keyboard.get());
     return std::move(sharedKeyboard);
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<Mouse> GameHostX11::GetMouse()
 {
     POMDOG_ASSERT(impl);
@@ -435,7 +435,7 @@ std::shared_ptr<Mouse> GameHostX11::GetMouse()
     std::shared_ptr<Mouse> sharedMouse(gameHost, &impl->mouse);
     return std::move(sharedMouse);
 }
-//-----------------------------------------------------------------------
+
 } // namespace X11
 } // namespace Detail
 } // namespace Pomdog

@@ -18,7 +18,7 @@ std::int32_t MipmapImageDataBytes(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 std::int32_t TextureHelper::ComputeMipmapLevelCount(std::int32_t width, std::int32_t height)
 {
     POMDOG_ASSERT(width >= 0);
@@ -36,7 +36,7 @@ std::int32_t TextureHelper::ComputeMipmapLevelCount(std::int32_t width, std::int
     }
     return levelCount;
 }
-//-----------------------------------------------------------------------
+
 std::int32_t TextureHelper::ComputeTextureSizeInBytes(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
@@ -64,6 +64,6 @@ std::int32_t TextureHelper::ComputeTextureSizeInBytes(
 
     return sizeInBytes;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Detail
 } // namespace Pomdog

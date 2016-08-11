@@ -8,9 +8,9 @@
 namespace Pomdog {
 namespace Detail {
 namespace InputSystem {
-//-----------------------------------------------------------------------
+
 InputDeviceFactory::~InputDeviceFactory() = default;
-//-----------------------------------------------------------------------
+
 } // namespace InputSystem
 } // namespace Detail
 } // namespace Pomdog

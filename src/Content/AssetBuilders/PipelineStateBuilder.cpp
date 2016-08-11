@@ -14,7 +14,7 @@
 
 namespace Pomdog {
 namespace AssetBuilders {
-//-----------------------------------------------------------------------
+
 class Builder<PipelineState>::Impl final {
 public:
     PipelineStateDescription description;
@@ -31,7 +31,7 @@ public:
 public:
     std::shared_ptr<PipelineState> Load();
 };
-//-----------------------------------------------------------------------
+
 Builder<PipelineState>::Impl::Impl()
 {
     description.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
@@ -41,7 +41,7 @@ Builder<PipelineState>::Impl::Impl()
     hasRenderTargetViewFormats = false;
     hasDepthStencilViewFormat = false;
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
 {
     POMDOG_ASSERT(!description.InputLayout.InputElements.empty());
@@ -84,10 +84,10 @@ std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
     auto pipelineState = std::make_shared<PipelineState>(graphicsDevice, description);
     return pipelineState;
 }
-//-----------------------------------------------------------------------
+
 // explicit instantiations
 template class Builder<PipelineState>;
-//-----------------------------------------------------------------------
+
 Builder<PipelineState>::Builder(const Detail::AssetLoaderContext& contextIn)
     : impl(std::make_unique<Impl>())
 {
@@ -96,11 +96,11 @@ Builder<PipelineState>::Builder(const Detail::AssetLoaderContext& contextIn)
     impl->graphicsDevice = contextIn.GraphicsDevice.lock();
     POMDOG_ASSERT(impl->graphicsDevice);
 }
-//-----------------------------------------------------------------------
+
 Builder<PipelineState>::Builder(Builder<PipelineState> &&) = default;
 Builder<PipelineState> & Builder<PipelineState>::operator=(Builder<PipelineState> &&) = default;
 Builder<PipelineState>::~Builder() = default;
-//-----------------------------------------------------------------------
+
 Builder<PipelineState> & Builder<PipelineState>::SetVertexShader(
     const std::shared_ptr<Shader>& vertexShader)
 {
@@ -109,7 +109,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetVertexShader(
     impl->description.VertexShader = vertexShader;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<PipelineState> & Builder<PipelineState>::SetVertexShader(
     std::shared_ptr<Shader> && vertexShader)
 {
@@ -118,7 +118,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetVertexShader(
     impl->description.VertexShader = std::move(vertexShader);
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<PipelineState> & Builder<PipelineState>::SetPixelShader(
     const std::shared_ptr<Shader>& pixelShader)
 {
@@ -127,7 +127,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetPixelShader(
     impl->description.PixelShader = pixelShader;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<PipelineState> & Builder<PipelineState>::SetPixelShader(
     std::shared_ptr<Shader> && pixelShader)
 {
@@ -136,7 +136,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetPixelShader(
     impl->description.PixelShader = std::move(pixelShader);
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<PipelineState> & Builder<PipelineState>::SetInputLayout(
     const InputLayoutDescription& inputLayout)
 {
@@ -145,7 +145,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetInputLayout(
     impl->description.InputLayout = inputLayout;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<PipelineState> & Builder<PipelineState>::SetInputLayout(
     InputLayoutDescription && inputLayout)
 {
@@ -154,7 +154,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetInputLayout(
     impl->description.InputLayout = std::move(inputLayout);
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<PipelineState> & Builder<PipelineState>::SetBlendState(
     const BlendDescription& blendState)
 {
@@ -163,7 +163,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetBlendState(
     impl->hasBlendState = true;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<PipelineState> & Builder<PipelineState>::SetRasterizerState(
     const RasterizerDescription& rasterizerState)
 {
@@ -172,7 +172,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetRasterizerState(
     impl->hasRasterizerState = true;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<PipelineState> & Builder<PipelineState>::SetDepthStencilState(
     const DepthStencilDescription& depthStencilState)
 {
@@ -181,7 +181,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetDepthStencilState(
     impl->hasDepthStencilState = true;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<PipelineState> & Builder<PipelineState>::SetConstantBufferBindSlot(
     const std::string& name, int slotIndex)
 {
@@ -198,7 +198,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetConstantBufferBindSlot(
     impl->description.ConstantBufferBindSlots.emplace(name, slotIndex);
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<PipelineState> & Builder<PipelineState>::SetRenderTargetViewFormats(
     const std::vector<SurfaceFormat>& renderTargetViewFormats)
 {
@@ -207,7 +207,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetRenderTargetViewFormats(
     impl->hasRenderTargetViewFormats = true;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<PipelineState> & Builder<PipelineState>::SetRenderTargetViewFormats(
     std::vector<SurfaceFormat> && renderTargetViewFormats)
 {
@@ -216,7 +216,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetRenderTargetViewFormats(
     impl->hasRenderTargetViewFormats = true;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 Builder<PipelineState> & Builder<PipelineState>::SetDepthStencilViewFormat(
     DepthFormat depthStencilViewFormat)
 {
@@ -225,13 +225,13 @@ Builder<PipelineState> & Builder<PipelineState>::SetDepthStencilViewFormat(
     impl->hasDepthStencilViewFormat = true;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<PipelineState> Builder<PipelineState>::Build()
 {
     POMDOG_ASSERT(impl);
     return impl->Load();
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<EffectReflection> Builder<PipelineState>::CreateEffectReflection(
     const std::shared_ptr<PipelineState>& pipelineState)
 {
@@ -244,12 +244,12 @@ std::shared_ptr<EffectReflection> Builder<PipelineState>::CreateEffectReflection
         pipelineState);
     return effectReflection;
 }
-//-----------------------------------------------------------------------
+
 const PipelineStateDescription& Builder<PipelineState>::GetDescription() const
 {
     POMDOG_ASSERT(impl);
     return impl->description;
 }
-//-----------------------------------------------------------------------
+
 } // namespace AssetBuilders
 } // namespace Pomdog

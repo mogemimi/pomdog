@@ -45,7 +45,7 @@ struct MathConstants<double>
 };
 
 namespace MathHelper {
-//-------------------------------------------------------------------
+
 template <typename T>
 T Clamp(const T& x, const T& min, const T& max)
 {
@@ -60,7 +60,7 @@ T Clamp(const T& x, const T& min, const T& max)
     }
     return x;
 }
-//-------------------------------------------------------------------
+
 template <typename T>
 T Saturate(const T& x)
 {
@@ -69,7 +69,7 @@ T Saturate(const T& x)
         "T is floaing point number");
     return Clamp(x, T{0}, T{1});
 }
-//-------------------------------------------------------------------
+
 template <typename T>
 T Lerp(const T& source1, const T& source2, const T& amount) noexcept
 {
@@ -78,7 +78,7 @@ T Lerp(const T& source1, const T& source2, const T& amount) noexcept
         "T is floaing point number");
     return source1 + amount * (source2 - source1);
 }
-//-------------------------------------------------------------------
+
 template <typename T>
 T SmoothStep(const T& min, const T& max, const T& amount)
 {
@@ -91,7 +91,7 @@ T SmoothStep(const T& min, const T& max, const T& amount)
     auto scale = x * x * (T{3} - T{2} * x);
     return min + scale * (max - min);
 }
-//-------------------------------------------------------------------
+
 template <typename T>
 Radian<T> ToRadians(const Degree<T>& degrees) noexcept
 {
@@ -99,7 +99,7 @@ Radian<T> ToRadians(const Degree<T>& degrees) noexcept
     constexpr auto scaleFactor = MathConstants<T>::Pi() * (T{1} / T{180});
     return Radian<T>(degrees.value * scaleFactor);
 }
-//-------------------------------------------------------------------
+
 template <typename T>
 Radian<T> ToRadians(const T& degrees) noexcept
 {
@@ -107,7 +107,7 @@ Radian<T> ToRadians(const T& degrees) noexcept
     constexpr auto scaleFactor = MathConstants<T>::Pi() * (T{1} / T{180});
     return Radian<T>(degrees * scaleFactor);
 }
-//-------------------------------------------------------------------
+
 template <typename T>
 Degree<T> ToDegrees(const Radian<T>& radians) noexcept
 {
@@ -115,7 +115,7 @@ Degree<T> ToDegrees(const Radian<T>& radians) noexcept
     constexpr auto scaleFactor = T{180} * (T{1} / MathConstants<T>::Pi());
     return Degree<T>(radians.value * scaleFactor);
 }
-//-------------------------------------------------------------------
+
 template <typename T>
 Degree<T> ToDegrees(const T& radians) noexcept
 {

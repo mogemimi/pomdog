@@ -35,7 +35,7 @@ static constexpr std::uint16_t MaxInputSlotCount = 16;
 #endif
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 InputLayoutHelper & InputLayoutHelper::PushBack(InputElementFormat format)
 {
     InputElement element;
@@ -50,43 +50,43 @@ InputLayoutHelper & InputLayoutHelper::PushBack(InputElementFormat format)
 
     return *this;
 }
-//-----------------------------------------------------------------------
+
 InputLayoutHelper & InputLayoutHelper::Byte4()
 {
     PushBack(InputElementFormat::Byte4);
     return *this;
 }
-//-----------------------------------------------------------------------
+
 InputLayoutHelper & InputLayoutHelper::Float()
 {
     PushBack(InputElementFormat::Float);
     return *this;
 }
-//-----------------------------------------------------------------------
+
 InputLayoutHelper & InputLayoutHelper::Float2()
 {
     PushBack(InputElementFormat::Float2);
     return *this;
 }
-//-----------------------------------------------------------------------
+
 InputLayoutHelper & InputLayoutHelper::Float3()
 {
     PushBack(InputElementFormat::Float3);
     return *this;
 }
-//-----------------------------------------------------------------------
+
 InputLayoutHelper & InputLayoutHelper::Float4()
 {
     PushBack(InputElementFormat::Float4);
     return *this;
 }
-//-----------------------------------------------------------------------
+
 InputLayoutHelper & InputLayoutHelper::Int4()
 {
     PushBack(InputElementFormat::Int4);
     return *this;
 }
-//-----------------------------------------------------------------------
+
 InputLayoutHelper & InputLayoutHelper::AddInputSlot()
 {
     if (!elements.empty()) {
@@ -101,7 +101,7 @@ InputLayoutHelper & InputLayoutHelper::AddInputSlot()
     byteOffset = 0;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 InputLayoutHelper & InputLayoutHelper::AddInputSlot(
     InputClassification slotClassIn, std::uint16_t instanceStepRateIn)
 {
@@ -121,10 +121,10 @@ InputLayoutHelper & InputLayoutHelper::AddInputSlot(
     byteOffset = 0;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 InputLayoutDescription InputLayoutHelper::CreateInputLayout()
 {
     return InputLayoutDescription{elements};
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

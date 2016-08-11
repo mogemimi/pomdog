@@ -16,7 +16,7 @@ NSString* ToNSString(const std::string& s)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 bool FileSystem::CreateDirectory(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
@@ -27,7 +27,7 @@ bool FileSystem::CreateDirectory(const std::string& path)
         error:nil];
     return (result == YES);
 }
-//-----------------------------------------------------------------------
+
 bool FileSystem::CreateDirectories(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
@@ -38,7 +38,7 @@ bool FileSystem::CreateDirectories(const std::string& path)
         error:nil];
     return (result == YES);
 }
-//-----------------------------------------------------------------------
+
 bool FileSystem::Exists(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
@@ -46,7 +46,7 @@ bool FileSystem::Exists(const std::string& path)
         fileExistsAtPath: ToNSString(path)];
     return (exists == YES);
 }
-//-----------------------------------------------------------------------
+
 bool FileSystem::IsDirectory(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
@@ -55,12 +55,12 @@ bool FileSystem::IsDirectory(const std::string& path)
         fileExistsAtPath: ToNSString(path) isDirectory:&isDirectory];
     return (exists == YES) && (isDirectory == YES);
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetLocalAppDataDirectoryPath()
 {
     return GetAppDataDirectoryPath();
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetAppDataDirectoryPath()
 {
     NSFileManager* fileManager = [NSFileManager defaultManager];
@@ -94,19 +94,19 @@ std::string FileSystem::GetAppDataDirectoryPath()
 
     return appDataDirecotry;
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetResourceDirectoryPath()
 {
     std::string resourceDirectory = [[[NSBundle mainBundle] resourcePath] UTF8String];
     return resourceDirectory;
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetTempDirectoryPath()
 {
     std::string tempDirectory = [NSTemporaryDirectory() UTF8String];
     return tempDirectory;
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetCurrentWorkingDirectory()
 {
     char directory[PATH_MAX];
@@ -115,5 +115,5 @@ std::string FileSystem::GetCurrentWorkingDirectory()
     }
     return {};
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

@@ -34,7 +34,7 @@ public:
 };
 
 bool GLContextErrorHelper::contextErrorOccurred = false;
-//-----------------------------------------------------------------------
+
 static bool IsExtensionSupported(const char* extensionList, const char* extension)
 {
     POMDOG_ASSERT(extensionList != nullptr);
@@ -65,7 +65,7 @@ static bool IsExtensionSupported(const char* extensionList, const char* extensio
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 OpenGLContextX11::OpenGLContextX11(
     const std::shared_ptr<GameWindowX11>& windowIn,
     const GLXFBConfig& framebufferConfig)
@@ -142,7 +142,7 @@ OpenGLContextX11::OpenGLContextX11(
             "Error: glXCreateContext");
     }
 }
-//-----------------------------------------------------------------------
+
 OpenGLContextX11::~OpenGLContextX11()
 {
     if (glxContext != nullptr) {
@@ -155,7 +155,7 @@ OpenGLContextX11::~OpenGLContextX11()
         glXDestroyContext(display, glxContext);
     }
 }
-//-----------------------------------------------------------------------
+
 void OpenGLContextX11::MakeCurrent()
 {
     if (glXGetCurrentContext() == glxContext) {
@@ -165,24 +165,24 @@ void OpenGLContextX11::MakeCurrent()
     POMDOG_ASSERT(window);
     glXMakeCurrent(window->NativeDisplay(), window->NativeWindow(), glxContext);
 }
-//-----------------------------------------------------------------------
+
 void OpenGLContextX11::ClearCurrent()
 {
     POMDOG_ASSERT(window);
     glXMakeCurrent(window->NativeDisplay(), None, nullptr);
 }
-//-----------------------------------------------------------------------
+
 void OpenGLContextX11::SwapBuffers()
 {
     POMDOG_ASSERT(window);
     glXSwapBuffers(window->NativeDisplay(), window->NativeWindow());
 }
-//-----------------------------------------------------------------------
+
 bool OpenGLContextX11::IsOpenGL3Supported() const noexcept
 {
     return isOpenGL3Supported;
 }
-//-----------------------------------------------------------------------
+
 } // namespace X11
 } // namespace Detail
 } // namespace Pomdog

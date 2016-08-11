@@ -60,7 +60,7 @@ Optional<ShaderProgramGL4> LinkShaders(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 PipelineStateGL4::PipelineStateGL4(const PipelineStateDescription& description)
     : blendState(description.BlendState)
     , rasterizerState(description.RasterizerState)
@@ -158,7 +158,7 @@ PipelineStateGL4::PipelineStateGL4(const PipelineStateDescription& description)
         }
     }
 }
-//-----------------------------------------------------------------------
+
 PipelineStateGL4::~PipelineStateGL4()
 {
     if (shaderProgram) {
@@ -166,7 +166,7 @@ PipelineStateGL4::~PipelineStateGL4()
         POMDOG_CHECK_ERROR_GL4("glDeleteProgram");
     }
 }
-//-----------------------------------------------------------------------
+
 void PipelineStateGL4::ApplyShaders()
 {
     blendState.Apply();
@@ -182,19 +182,19 @@ void PipelineStateGL4::ApplyShaders()
         POMDOG_CHECK_ERROR_GL4("glUniform1i");
     }
 }
-//-----------------------------------------------------------------------
+
 ShaderProgramGL4 PipelineStateGL4::GetShaderProgram() const
 {
     POMDOG_ASSERT(shaderProgram);
     return shaderProgram.value();
 }
-//-----------------------------------------------------------------------
+
 InputLayoutGL4* PipelineStateGL4::GetInputLayout() const
 {
     POMDOG_ASSERT(inputLayout);
     return inputLayout.get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog

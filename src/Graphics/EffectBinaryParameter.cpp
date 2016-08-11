@@ -33,64 +33,64 @@ void* BinaryCast(T * data)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 // MARK: - Fundamental types(Scalars)
-//-----------------------------------------------------------------------
+
 void Get(ConstantBuffer & constantBuffer, bool & value)
 {
     std::uint32_t unsignedValue = 0;
     constantBuffer.GetValue(sizeof(unsignedValue), BinaryCast(&unsignedValue));
     value = (unsignedValue != 0);
 }
-//-----------------------------------------------------------------------
+
 void Get(ConstantBuffer & constantBuffer, std::int32_t & value)
 {
     constantBuffer.GetValue(sizeof(value), BinaryCast(&value));
 }
-//-----------------------------------------------------------------------
+
 void Get(ConstantBuffer & constantBuffer, std::uint32_t & value)
 {
     constantBuffer.GetValue(sizeof(value), BinaryCast(&value));
 }
-//-----------------------------------------------------------------------
+
 void Get(ConstantBuffer & constantBuffer, float & value)
 {
     constantBuffer.GetValue(sizeof(value), BinaryCast(&value));
 }
-//-----------------------------------------------------------------------
+
 void Get(ConstantBuffer & constantBuffer, double & value)
 {
     constantBuffer.GetValue(sizeof(value), BinaryCast(&value));
 }
-//-----------------------------------------------------------------------
+
 void Set(ConstantBuffer & constantBuffer, bool value)
 {
     std::uint32_t const unsignedValue = value ? 1: 0;
     constantBuffer.SetValue(BinaryCast(&unsignedValue), sizeof(unsignedValue));
 }
-//-----------------------------------------------------------------------
+
 void Set(ConstantBuffer & constantBuffer, std::int32_t value)
 {
     constantBuffer.SetValue(BinaryCast(&value), sizeof(value));
 }
-//-----------------------------------------------------------------------
+
 void Set(ConstantBuffer & constantBuffer, std::uint32_t value)
 {
     constantBuffer.SetValue(BinaryCast(&value), sizeof(value));
 }
-//-----------------------------------------------------------------------
+
 void Set(ConstantBuffer & constantBuffer, float value)
 {
     constantBuffer.SetValue(BinaryCast(&value), sizeof(value));
 }
-//-----------------------------------------------------------------------
+
 void Set(ConstantBuffer & constantBuffer, double value)
 {
     constantBuffer.SetValue(BinaryCast(&value), sizeof(value));
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Arrays
-//-----------------------------------------------------------------------
+
 void Set(ConstantBuffer & constantBuffer, const std::int32_t* data, std::uint32_t count)
 {
     using type = std::remove_pointer<decltype(data)>::type;
@@ -99,7 +99,7 @@ void Set(ConstantBuffer & constantBuffer, const std::int32_t* data, std::uint32_
     POMDOG_ASSERT(count > 0);
     constantBuffer.SetValue(BinaryCast(data), sizeof(type) * count);
 }
-//-----------------------------------------------------------------------
+
 void Set(ConstantBuffer & constantBuffer, const std::uint32_t* data, std::uint32_t count)
 {
     using type = std::remove_pointer<decltype(data)>::type;
@@ -108,7 +108,7 @@ void Set(ConstantBuffer & constantBuffer, const std::uint32_t* data, std::uint32
     POMDOG_ASSERT(count > 0);
     constantBuffer.SetValue(BinaryCast(data), sizeof(type) * count);
 }
-//-----------------------------------------------------------------------
+
 void Set(ConstantBuffer & constantBuffer, const float* data, std::uint32_t count)
 {
     using type = std::remove_pointer<decltype(data)>::type;
@@ -117,7 +117,7 @@ void Set(ConstantBuffer & constantBuffer, const float* data, std::uint32_t count
     POMDOG_ASSERT(count > 0);
     constantBuffer.SetValue(BinaryCast(data), sizeof(type) * count);
 }
-//-----------------------------------------------------------------------
+
 void Set(ConstantBuffer & constantBuffer, const double* data, std::uint32_t count)
 {
     using type = std::remove_pointer<decltype(data)>::type;
@@ -126,60 +126,60 @@ void Set(ConstantBuffer & constantBuffer, const double* data, std::uint32_t coun
     POMDOG_ASSERT(count > 0);
     constantBuffer.SetValue(BinaryCast(data), sizeof(type) * count);
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Vectors and Matrices
-//-----------------------------------------------------------------------
+
 template <typename T> void
 Set(ConstantBuffer & constantBuffer, const FloatingPointVector2<T>& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
-//-----------------------------------------------------------------------
+
 template <typename T> void
 Set(ConstantBuffer & constantBuffer, const FloatingPointVector3<T>& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
-//-----------------------------------------------------------------------
+
 template <typename T> void
 Set(ConstantBuffer & constantBuffer, const FloatingPointVector4<T>& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
-//-----------------------------------------------------------------------
+
 template <typename T> void
 Set(ConstantBuffer & constantBuffer, const FloatingPointMatrix2x2<T>& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
-//-----------------------------------------------------------------------
+
 template <typename T> void
 Set(ConstantBuffer & constantBuffer, const FloatingPointMatrix3x3<T>& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
-//-----------------------------------------------------------------------
+
 template <typename T> void
 Set(ConstantBuffer & constantBuffer, const FloatingPointMatrix4x4<T>& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
-//-----------------------------------------------------------------------
+
 template <typename T> void
 Set(ConstantBuffer & constantBuffer, const FloatingPointQuaternion<T>& value)
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number.");
     constantBuffer.SetValue(BinaryCast(value.Data()), sizeof(value));
 }
-//-----------------------------------------------------------------------
+
 // MARK: - Explicit instantiations
-//-----------------------------------------------------------------------
+
 template void Set<float>(ConstantBuffer &, const FloatingPointVector2<float>&);
 template void Set<float>(ConstantBuffer &, const FloatingPointVector3<float>&);
 template void Set<float>(ConstantBuffer &, const FloatingPointVector4<float>&);
@@ -197,7 +197,7 @@ template void Set<double>(ConstantBuffer &, const FloatingPointMatrix3x3<double>
 template void Set<double>(ConstantBuffer &, const FloatingPointMatrix4x4<double>&);
 template void Set<double>(ConstantBuffer &, const FloatingPointQuaternion<double>&);
 #endif
-//-----------------------------------------------------------------------
+
 } // namespace EffectBinaryParameter
 } // namespace Detail
 } // namespace Pomdog

@@ -37,7 +37,7 @@ ALenum ToFormat(AudioChannels channel, std::uint16_t bitPerSample)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 AudioClipAL::AudioClipAL(
     const void* data,
     std::size_t size,
@@ -70,25 +70,25 @@ AudioClipAL::AudioClipAL(
     ErrorCheckerAL::CheckError("alBufferData", __FILE__, __LINE__);
     #endif
 }
-//-----------------------------------------------------------------------
+
 AudioClipAL::~AudioClipAL()
 {
     if (buffer) {
         alDeleteBuffers(1, &(*buffer));
     }
 }
-//-----------------------------------------------------------------------
+
 std::size_t AudioClipAL::SizeInBytes() const
 {
     return sizeInBytes;
 }
-//-----------------------------------------------------------------------
+
 ALuint AudioClipAL::NativeBuffer() const
 {
     POMDOG_ASSERT(buffer);
     return *buffer;
 }
-//-----------------------------------------------------------------------
+
 } // namespace OpenAL
 } // namespace SoundSystem
 } // namespace Detail

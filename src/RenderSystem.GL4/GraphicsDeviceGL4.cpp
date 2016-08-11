@@ -17,18 +17,18 @@
 namespace Pomdog {
 namespace Detail {
 namespace GL4 {
-//-----------------------------------------------------------------------
+
 ShaderLanguage GraphicsDeviceGL4::GetSupportedLanguage() const
 {
     return ShaderLanguage::GLSL;
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeGraphicsCommandList>
 GraphicsDeviceGL4::CreateGraphicsCommandList()
 {
     return std::make_unique<GraphicsCommandListImmediate>();
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<Shader>
 GraphicsDeviceGL4::CreateShader(
     const ShaderBytecode& shaderBytecode,
@@ -45,7 +45,7 @@ GraphicsDeviceGL4::CreateShader(
 
     POMDOG_THROW_EXCEPTION(std::domain_error, "Failed to create shader");
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeBuffer>
 GraphicsDeviceGL4::CreateBuffer(
     std::size_t sizeInBytes, BufferUsage bufferUsage, BufferBindMode bindMode)
@@ -62,7 +62,7 @@ GraphicsDeviceGL4::CreateBuffer(
     }
     return std::make_unique<VertexBufferGL4>(sizeInBytes, bufferUsage);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeBuffer>
 GraphicsDeviceGL4::CreateBuffer(
     const void* sourceData,
@@ -86,19 +86,19 @@ GraphicsDeviceGL4::CreateBuffer(
     return std::make_unique<VertexBufferGL4>(
         sourceData, sizeInBytes, bufferUsage);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeSamplerState>
 GraphicsDeviceGL4::CreateSamplerState(const SamplerDescription& description)
 {
     return std::make_unique<SamplerStateGL4>(description);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativePipelineState>
 GraphicsDeviceGL4::CreatePipelineState(const PipelineStateDescription& description)
 {
     return std::make_unique<PipelineStateGL4>(description);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeEffectReflection>
 GraphicsDeviceGL4::CreateEffectReflection(
     const PipelineStateDescription&,
@@ -110,7 +110,7 @@ GraphicsDeviceGL4::CreateEffectReflection(
     return std::make_unique<EffectReflectionGL4>(
         pipelineStateGL4->GetShaderProgram());
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeTexture2D>
 GraphicsDeviceGL4::CreateTexture2D(
     std::int32_t width,
@@ -120,7 +120,7 @@ GraphicsDeviceGL4::CreateTexture2D(
 {
     return std::make_unique<Texture2DGL4>(width, height, mipmapLevels, format);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeRenderTarget2D>
 GraphicsDeviceGL4::CreateRenderTarget2D(
     std::int32_t width,
@@ -133,7 +133,7 @@ GraphicsDeviceGL4::CreateRenderTarget2D(
     return std::make_unique<RenderTarget2DGL4>(width, height, mipmapLevels,
         format, depthStencilFormat, multiSampleCount);
 }
-//-----------------------------------------------------------------------
+
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog

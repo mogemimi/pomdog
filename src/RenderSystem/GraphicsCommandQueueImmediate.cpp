@@ -8,18 +8,18 @@
 
 namespace Pomdog {
 namespace Detail {
-//-----------------------------------------------------------------------
+
 GraphicsCommandQueueImmediate::GraphicsCommandQueueImmediate(
     const std::shared_ptr<Detail::GraphicsContext>& graphicsContextIn)
     : graphicsContext(graphicsContextIn)
 {
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandQueueImmediate::Reset()
 {
     commandLists.clear();
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandQueueImmediate::PushbackCommandList(
     const std::shared_ptr<GraphicsCommandList>& commandList)
 {
@@ -28,7 +28,7 @@ void GraphicsCommandQueueImmediate::PushbackCommandList(
         commandLists.push_back(commandList);
     }
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandQueueImmediate::ExecuteCommandLists()
 {
     for (auto & commandList : commandLists) {
@@ -44,13 +44,13 @@ void GraphicsCommandQueueImmediate::ExecuteCommandLists()
         }
     }
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandQueueImmediate::Present()
 {
     POMDOG_ASSERT(graphicsContext);
     graphicsContext->Present();
 }
-//-----------------------------------------------------------------------
+
 std::size_t GraphicsCommandQueueImmediate::GetCommandCount() const noexcept
 {
     std::size_t count = 0;
@@ -60,6 +60,6 @@ std::size_t GraphicsCommandQueueImmediate::GetCommandCount() const noexcept
     }
     return count;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Detail
 } // namespace Pomdog

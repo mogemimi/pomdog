@@ -113,7 +113,7 @@ private:
     std::int32_t nestedMethodCallCount = 0;
 };
 
-//-----------------------------------------------------------------------
+
 template <typename...Arguments>
 template <typename Function>
 auto SignalBody<void(Arguments...)>::Connect(Function && slot)
@@ -133,7 +133,7 @@ auto SignalBody<void(Arguments...)>::Connect(Function && slot)
     POMDOG_ASSERT(!weakSignal.expired());
     return std::make_unique<ConnectionBodyType>(std::move(weakSignal), observer);
 }
-//-----------------------------------------------------------------------
+
 template <typename...Arguments>
 void SignalBody<void(Arguments...)>::Disconnect(const SlotType* observer)
 {
@@ -160,7 +160,7 @@ void SignalBody<void(Arguments...)>::Disconnect(const SlotType* observer)
 
     iter->reset();
 }
-//-----------------------------------------------------------------------
+
 template <typename...Arguments>
 void SignalBody<void(Arguments...)>::PushBackAddedListeners()
 {
@@ -179,7 +179,7 @@ void SignalBody<void(Arguments...)>::PushBackAddedListeners()
         }
     }
 }
-//-----------------------------------------------------------------------
+
 template <typename...Arguments>
 void SignalBody<void(Arguments...)>::EraseRemovedListeners()
 {
@@ -189,7 +189,7 @@ void SignalBody<void(Arguments...)>::EraseRemovedListeners()
         [](const std::shared_ptr<SlotType>& slot){ return !slot; }),
         std::end(observers));
 }
-//-----------------------------------------------------------------------
+
 template <typename...Arguments>
 void SignalBody<void(Arguments...)>::operator()(Arguments &&... arguments)
 {
@@ -223,7 +223,7 @@ void SignalBody<void(Arguments...)>::operator()(Arguments &&... arguments)
         EraseRemovedListeners();
     }
 }
-//-----------------------------------------------------------------------
+
 template <typename...Arguments>
 std::size_t SignalBody<void(Arguments...)>::InvocationCount() const
 {

@@ -13,31 +13,31 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 AudioEngine::AudioEngine()
     : nativeAudioEngine(std::make_unique<Detail::SoundSystem::NativeAudioEngine>())
 {
 }
-//-----------------------------------------------------------------------
+
 AudioEngine::~AudioEngine() = default;
-//-----------------------------------------------------------------------
+
 float AudioEngine::GetMasterVolume() const
 {
     POMDOG_ASSERT(nativeAudioEngine);
     return nativeAudioEngine->GetMasterVolume();
 }
-//-----------------------------------------------------------------------
+
 void AudioEngine::SetMasterVolume(float volume)
 {
     POMDOG_ASSERT(volume >= 0);
     POMDOG_ASSERT(nativeAudioEngine);
     nativeAudioEngine->SetMasterVolume(volume);
 }
-//-----------------------------------------------------------------------
+
 Detail::SoundSystem::NativeAudioEngine* AudioEngine::GetNativeAudioEngine()
 {
     POMDOG_ASSERT(nativeAudioEngine);
     return nativeAudioEngine.get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

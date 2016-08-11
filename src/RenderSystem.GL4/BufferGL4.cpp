@@ -23,7 +23,7 @@ GLenum ToBufferUsage(BufferUsage bufferUsage) noexcept
     return GL_STATIC_DRAW;
 #endif
 }
-//-----------------------------------------------------------------------
+
 template <class Tag>
 struct BufferTraits;
 
@@ -40,29 +40,29 @@ template <> struct BufferTraits<VertexBuffer> {
 };
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 template<> struct TypesafeHelperGL4::Traits<BufferObjectGL4<ConstantBuffer>> {
     constexpr static GLenum BufferBinding = GL_UNIFORM_BUFFER_BINDING;
     constexpr static GLenum BufferTarget = BufferTraits<ConstantBuffer>::Buffer;
 };
-//-----------------------------------------------------------------------
+
 template<> struct TypesafeHelperGL4::Traits<BufferObjectGL4<IndexBuffer>> {
     constexpr static GLenum BufferBinding = GL_ELEMENT_ARRAY_BUFFER_BINDING;
     constexpr static GLenum BufferTarget = BufferTraits<IndexBuffer>::Buffer;
 };
-//-----------------------------------------------------------------------
+
 template<> struct TypesafeHelperGL4::Traits<BufferObjectGL4<VertexBuffer>> {
     constexpr static GLenum BufferBinding = GL_ARRAY_BUFFER_BINDING;
     constexpr static GLenum BufferTarget = BufferTraits<VertexBuffer>::Buffer;
 };
-//-----------------------------------------------------------------------
+
 template <class Tag>
 BufferGL4<Tag>::BufferGL4(std::size_t sizeInBytes, BufferUsage bufferUsage)
     : BufferGL4(nullptr, sizeInBytes, bufferUsage)
 {
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
 }
-//-----------------------------------------------------------------------
+
 template <class Tag>
 BufferGL4<Tag>::BufferGL4(
     const void* sourceData,
@@ -94,7 +94,7 @@ BufferGL4<Tag>::BufferGL4(
         ToBufferUsage(bufferUsage));
     POMDOG_CHECK_ERROR_GL4("glBufferData");
 }
-//-----------------------------------------------------------------------
+
 template <class Tag>
 BufferGL4<Tag>::~BufferGL4()
 {
@@ -103,7 +103,7 @@ BufferGL4<Tag>::~BufferGL4()
         POMDOG_CHECK_ERROR_GL4("glDeleteBuffers");
     }
 }
-//-----------------------------------------------------------------------
+
 template <class Tag>
 void BufferGL4<Tag>::GetData(
     std::size_t offsetInBytes,
@@ -134,7 +134,7 @@ void BufferGL4<Tag>::GetData(
         offsetInBytes, sizeInBytes, destination);
     POMDOG_CHECK_ERROR_GL4("glGetBufferSubData");
 }
-//-----------------------------------------------------------------------
+
 template <class Tag>
 void BufferGL4<Tag>::SetData(
     std::size_t offsetInBytes,
@@ -164,7 +164,7 @@ void BufferGL4<Tag>::SetData(
         offsetInBytes, sizeInBytes, source);
     POMDOG_CHECK_ERROR_GL4("glBufferSubData");
 }
-//-----------------------------------------------------------------------
+
 template <class Tag>
 void BufferGL4<Tag>::BindBuffer()
 {
@@ -172,19 +172,19 @@ void BufferGL4<Tag>::BindBuffer()
     TypesafeHelperGL4::BindBuffer(*bufferObject);
     POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 }
-//-----------------------------------------------------------------------
+
 template <class Tag>
 GLuint BufferGL4<Tag>::GetBuffer() const
 {
     POMDOG_ASSERT(bufferObject);
     return bufferObject->value;
 }
-//-----------------------------------------------------------------------
+
 // explicit instantiations
 template class BufferGL4<ConstantBuffer>;
 template class BufferGL4<IndexBuffer>;
 template class BufferGL4<VertexBuffer>;
-//-----------------------------------------------------------------------
+
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog

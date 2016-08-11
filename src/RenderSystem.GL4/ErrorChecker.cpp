@@ -34,7 +34,7 @@ std::string ToString(const ErrorCodeGL4& errorCode)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 void ErrorChecker::CheckError(const char* command, const char* filename, int line)
 {
     ErrorCodeGL4 const errorCode{ glGetError() };
@@ -62,7 +62,7 @@ void ErrorChecker::CheckError(const char* command, const char* filename, int lin
         ++lines;
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog

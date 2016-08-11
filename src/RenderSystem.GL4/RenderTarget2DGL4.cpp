@@ -25,7 +25,7 @@ GLenum ToDepthStencilFormat(DepthFormat depthFormat) noexcept
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 RenderTarget2DGL4::RenderTarget2DGL4(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
@@ -62,7 +62,7 @@ RenderTarget2DGL4::RenderTarget2DGL4(
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
     }
 }
-//-----------------------------------------------------------------------
+
 RenderTarget2DGL4::~RenderTarget2DGL4()
 {
     if (renderBuffer) {
@@ -70,7 +70,7 @@ RenderTarget2DGL4::~RenderTarget2DGL4()
         POMDOG_CHECK_ERROR_GL4("glDeleteRenderbuffers");
     }
 }
-//-----------------------------------------------------------------------
+
 void RenderTarget2DGL4::BindToFramebuffer(GLenum attachmentPoint)
 {
     GLenum textureTarget = (multiSampleEnabled
@@ -81,7 +81,7 @@ void RenderTarget2DGL4::BindToFramebuffer(GLenum attachmentPoint)
         texture.GetTextureHandle().value, 0);
     POMDOG_CHECK_ERROR_GL4("glFramebufferTexture2D");
 }
-//-----------------------------------------------------------------------
+
 void RenderTarget2DGL4::UnbindFromFramebuffer(GLenum attachmentPoint)
 {
     GLenum textureTarget = (multiSampleEnabled
@@ -96,7 +96,7 @@ void RenderTarget2DGL4::UnbindFromFramebuffer(GLenum attachmentPoint)
         texture.GenerateMipmap();
     }
 }
-//-----------------------------------------------------------------------
+
 void RenderTarget2DGL4::BindDepthStencilBuffer()
 {
     if (renderBuffer) {
@@ -108,12 +108,12 @@ void RenderTarget2DGL4::BindDepthStencilBuffer()
         POMDOG_CHECK_ERROR_GL4("glFramebufferRenderbuffer");
     }
 }
-//-----------------------------------------------------------------------
+
 const Texture2DObjectGL4& RenderTarget2DGL4::GetTextureHandle() const
 {
     return texture.GetTextureHandle();
 }
-//-----------------------------------------------------------------------
+
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog

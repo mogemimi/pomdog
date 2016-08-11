@@ -37,7 +37,7 @@ std::size_t GetSamples(
 
     return sizeInBytes / divisior;
 }
-//-----------------------------------------------------------------------
+
 Duration GetSampleDuration(std::size_t samples, int sampleRate)
 {
     POMDOG_ASSERT(sampleRate > 0);
@@ -47,7 +47,7 @@ Duration GetSampleDuration(std::size_t samples, int sampleRate)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 AudioClip::AudioClip(std::unique_ptr<Detail::SoundSystem::NativeAudioClip> && nativeAudioClipIn,
     int sampleRateIn, int bitsPerSampleIn, AudioChannels channelsIn)
     : nativeAudioClip(std::move(nativeAudioClipIn))
@@ -56,9 +56,9 @@ AudioClip::AudioClip(std::unique_ptr<Detail::SoundSystem::NativeAudioClip> && na
     , channels(channelsIn)
 {
 }
-//-----------------------------------------------------------------------
+
 AudioClip::~AudioClip() = default;
-//-----------------------------------------------------------------------
+
 Duration AudioClip::GetLength() const
 {
     POMDOG_ASSERT(nativeAudioClip);
@@ -66,26 +66,26 @@ Duration AudioClip::GetLength() const
     auto sampleDuration = GetSampleDuration(samples, sampleRate);
     return sampleDuration;
 }
-//-----------------------------------------------------------------------
+
 int AudioClip::GetSampleRate() const
 {
     return sampleRate;
 }
-//-----------------------------------------------------------------------
+
 int AudioClip::GetBitsPerSample() const
 {
     return bitsPerSample;
 }
-//-----------------------------------------------------------------------
+
 AudioChannels AudioClip::GetChannels() const
 {
     return channels;
 }
-//-----------------------------------------------------------------------
+
 Detail::SoundSystem::NativeAudioClip* AudioClip::GetNativeAudioClip()
 {
     POMDOG_ASSERT(nativeAudioClip);
     return nativeAudioClip.get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

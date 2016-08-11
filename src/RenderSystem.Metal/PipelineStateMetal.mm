@@ -24,7 +24,7 @@ MTLVertexStepFunction ToVertexStepFunction(InputClassification classification) n
         return MTLVertexStepFunctionPerInstance;
     }
 }
-//-----------------------------------------------------------------------
+
 MTLVertexFormat ToVertexFormat(InputElementFormat format) noexcept
 {
     switch (format) {
@@ -38,7 +38,7 @@ MTLVertexFormat ToVertexFormat(InputElementFormat format) noexcept
     case InputElementFormat::HalfFloat4: return MTLVertexFormatHalf4;
     }
 }
-//-----------------------------------------------------------------------
+
 MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDescription& inputLayout)
 {
     MTLVertexDescriptor* vertexDescriptor = [MTLVertexDescriptor new];
@@ -59,7 +59,7 @@ MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDescription& inputLayou
 
     return vertexDescriptor;
 }
-//-----------------------------------------------------------------------
+
 MTLBlendOperation ToBlendOperation(BlendOperation blendOperation) noexcept
 {
     switch (blendOperation) {
@@ -70,7 +70,7 @@ MTLBlendOperation ToBlendOperation(BlendOperation blendOperation) noexcept
     case BlendOperation::Max: return MTLBlendOperationMax;
     }
 }
-//-----------------------------------------------------------------------
+
 MTLBlendFactor ToBlendFactor(Blend blend)
 {
     switch (blend) {
@@ -98,7 +98,7 @@ MTLBlendFactor ToBlendFactor(Blend blend)
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid blend factor");
     return MTLBlendFactorOne;
 }
-//-----------------------------------------------------------------------
+
 MTLStencilOperation ToStencilOperation(StencilOperation operation) noexcept
 {
     switch (operation) {
@@ -113,7 +113,7 @@ MTLStencilOperation ToStencilOperation(StencilOperation operation) noexcept
     }
     return MTLStencilOperationKeep;
 }
-//-----------------------------------------------------------------------
+
 MTLCompareFunction ToComparisonFunction(ComparisonFunction compareFunction) noexcept
 {
     switch (compareFunction) {
@@ -128,7 +128,7 @@ MTLCompareFunction ToComparisonFunction(ComparisonFunction compareFunction) noex
     }
     return MTLCompareFunctionLessEqual;
 }
-//-----------------------------------------------------------------------
+
 void ToDepthStencilOperation(MTLStencilDescriptor* desc, const DepthStencilOperation& description)
 {
     desc.stencilCompareFunction = ToComparisonFunction(description.StencilFunction);
@@ -140,7 +140,7 @@ void ToDepthStencilOperation(MTLStencilDescriptor* desc, const DepthStencilOpera
     //desc.readMask = 0xff;
     //desc.writeMask = 0xff;
 }
-//-----------------------------------------------------------------------
+
 MTLCullMode ToCullMode(CullMode cullMode) noexcept
 {
     switch (cullMode) {
@@ -150,7 +150,7 @@ MTLCullMode ToCullMode(CullMode cullMode) noexcept
     }
     return MTLCullModeBack;
 }
-//-----------------------------------------------------------------------
+
 MTLTriangleFillMode ToFillMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
@@ -159,7 +159,7 @@ MTLTriangleFillMode ToFillMode(FillMode fillMode) noexcept
     }
     return MTLTriangleFillModeFill;
 }
-//-----------------------------------------------------------------------
+
 MTLPixelFormat ToDepthPixelFormat(DepthFormat depthFormat) noexcept
 {
     // Not supported:
@@ -180,7 +180,7 @@ MTLPixelFormat ToDepthPixelFormat(DepthFormat depthFormat) noexcept
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 PipelineStateMetal::PipelineStateMetal(
     id<MTLDevice> device,
     const PipelineStateDescription& description)
@@ -293,7 +293,7 @@ PipelineStateMetal::PipelineStateMetal(
             "Failed to create depth stencil state for Metal");
     }
 }
-//-----------------------------------------------------------------------
+
 void PipelineStateMetal::Apply(id<MTLRenderCommandEncoder> commandEncoder)
 {
     POMDOG_ASSERT(commandEncoder != nil);
@@ -306,7 +306,7 @@ void PipelineStateMetal::Apply(id<MTLRenderCommandEncoder> commandEncoder)
         slopeScale:rasterizerState.slopeScaledDepthBias
         clamp:0.0f];
 }
-//-----------------------------------------------------------------------
+
 } // namespace Metal
 } // namespace Detail
 } // namespace Pomdog

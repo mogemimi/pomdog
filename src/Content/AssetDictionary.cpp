@@ -4,15 +4,15 @@
 
 namespace Pomdog {
 namespace Detail {
-//-----------------------------------------------------------------------
+
 AssetDictionary::AssetDictionary() = default;
-//-----------------------------------------------------------------------
+
 AssetDictionary::~AssetDictionary() = default;
-//-----------------------------------------------------------------------
+
 void AssetDictionary::Unload()
 {
     assets.clear();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Detail
 } // namespace Pomdog

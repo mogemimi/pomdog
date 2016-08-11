@@ -14,19 +14,19 @@ BoundingSphere::BoundingSphere(const Vector3& center, float radius)
 {
     POMDOG_ASSERT(radius >= 0);
 }
-//-----------------------------------------------------------------------
+
 bool BoundingSphere::operator==(const BoundingSphere& sphere) const noexcept
 {
     return this->Radius == sphere.Radius
         && this->Center == sphere.Center;
 }
-//-----------------------------------------------------------------------
+
 bool BoundingSphere::operator!=(const BoundingSphere& sphere) const noexcept
 {
     return this->Radius != sphere.Radius
         || this->Center != sphere.Center;
 }
-//-----------------------------------------------------------------------
+
 ContainmentType BoundingSphere::Contains(const Vector3& point) const
 {
     auto distanceSquared = Vector3::DistanceSquared(point, Center);
@@ -39,7 +39,7 @@ ContainmentType BoundingSphere::Contains(const Vector3& point) const
     }
     return ContainmentType::Intersects;
 }
-//-----------------------------------------------------------------------
+
 ContainmentType BoundingSphere::Contains(const BoundingBox& box) const
 {
     bool inside = true;
@@ -57,7 +57,7 @@ ContainmentType BoundingSphere::Contains(const BoundingBox& box) const
     }
     return ContainmentType::Disjoint;
 }
-//-----------------------------------------------------------------------
+
 ContainmentType BoundingSphere::Contains(const BoundingSphere& sphere) const
 {
     auto distance = Vector3::Distance(this->Center, sphere.Center);
@@ -69,18 +69,18 @@ ContainmentType BoundingSphere::Contains(const BoundingSphere& sphere) const
     }
     return ContainmentType::Intersects;
 }
-//-----------------------------------------------------------------------
+
 bool BoundingSphere::Intersects(const BoundingBox& box) const
 {
     return box.Intersects(*this);
 }
-//-----------------------------------------------------------------------
+
 bool BoundingSphere::Intersects(const BoundingSphere& sphere) const
 {
     auto distance = Vector3::Distance(this->Center, sphere.Center);
     return distance <= this->Radius + sphere.Radius;
 }
-//-----------------------------------------------------------------------
+
 Optional<float> BoundingSphere::Intersects(const Ray& ray) const
 {
     return ray.Intersects(*this);

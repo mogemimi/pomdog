@@ -31,7 +31,7 @@ D3D11_BLEND_OP ToBlendOperation(BlendOperation blendOperation) noexcept
     }
     return D3D11_BLEND_OP_ADD;
 }
-//-----------------------------------------------------------------------
+
 D3D11_BLEND ToBlend(Blend blend) noexcept
 {
     switch (blend) {
@@ -55,7 +55,7 @@ D3D11_BLEND ToBlend(Blend blend) noexcept
     }
     return D3D11_BLEND_ONE;
 }
-//-----------------------------------------------------------------------
+
 D3D11_STENCIL_OP ToStencilOperation(StencilOperation operation) noexcept
 {
     switch (operation) {
@@ -70,7 +70,7 @@ D3D11_STENCIL_OP ToStencilOperation(StencilOperation operation) noexcept
     }
     return D3D11_STENCIL_OP_KEEP;
 }
-//-----------------------------------------------------------------------
+
 D3D11_COMPARISON_FUNC ToComparisonFunction(ComparisonFunction compareFunction) noexcept
 {
     switch (compareFunction) {
@@ -85,7 +85,7 @@ D3D11_COMPARISON_FUNC ToComparisonFunction(ComparisonFunction compareFunction) n
     }
     return D3D11_COMPARISON_LESS_EQUAL;
 }
-//-----------------------------------------------------------------------
+
 D3D11_CULL_MODE ToCullMode(CullMode cullMode) noexcept
 {
     switch (cullMode) {
@@ -95,7 +95,7 @@ D3D11_CULL_MODE ToCullMode(CullMode cullMode) noexcept
     }
     return D3D11_CULL_BACK;
 }
-//-----------------------------------------------------------------------
+
 D3D11_FILL_MODE ToFillMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
@@ -104,7 +104,7 @@ D3D11_FILL_MODE ToFillMode(FillMode fillMode) noexcept
     }
     return D3D11_FILL_SOLID;
 }
-//-----------------------------------------------------------------------
+
 D3D11_INPUT_CLASSIFICATION ToD3D11InputClassification(
     InputClassification slotClass) noexcept
 {
@@ -114,12 +114,12 @@ D3D11_INPUT_CLASSIFICATION ToD3D11InputClassification(
     }
     return D3D11_INPUT_PER_VERTEX_DATA;
 }
-//-----------------------------------------------------------------------
+
 inline BOOL ToD3D11Boolean(bool is) noexcept
 {
     return is ? TRUE : FALSE;
 }
-//-----------------------------------------------------------------------
+
 void ToD3D11Desc(
     const RenderTargetBlendDescription& desc,
     D3D11_RENDER_TARGET_BLEND_DESC & result) noexcept
@@ -133,7 +133,7 @@ void ToD3D11Desc(
     result.SrcBlendAlpha = ToBlend(desc.AlphaSourceBlend);
     result.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 }
-//-----------------------------------------------------------------------
+
 ComPtr<ID3D11BlendState> CreateBlendState(
     ID3D11Device* nativeDevice,
     const BlendDescription& description)
@@ -164,7 +164,7 @@ ComPtr<ID3D11BlendState> CreateBlendState(
 
     return std::move(blendState);
 }
-//-----------------------------------------------------------------------
+
 ComPtr<ID3D11DepthStencilState> CreateDepthStencilState(
     ID3D11Device* nativeDevice,
     const DepthStencilDescription& description)
@@ -205,7 +205,7 @@ ComPtr<ID3D11DepthStencilState> CreateDepthStencilState(
 
     return std::move(depthStencilState);
 }
-//-----------------------------------------------------------------------
+
 ComPtr<ID3D11RasterizerState> CreateRasterizerState(
     ID3D11Device* nativeDevice,
     const RasterizerDescription& description)
@@ -240,7 +240,7 @@ ComPtr<ID3D11RasterizerState> CreateRasterizerState(
 
     return std::move(rasterizerState);
 }
-//-----------------------------------------------------------------------
+
 void ReflectShaderBytecode(
     const ShaderBytecode& shaderBytecode,
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection> & shaderReflector,
@@ -266,7 +266,7 @@ void ReflectShaderBytecode(
             "Failed to get shader description");
     }
 }
-//-----------------------------------------------------------------------
+
 //struct ConstantBufferBindDesc {
 //    std::string Name;
 //    UINT BindPoint;
@@ -317,7 +317,7 @@ void ReflectShaderBytecode(
 //        output.push_back(std::move(desc));
 //    }
 //}
-//-----------------------------------------------------------------------
+
 //std::vector<ConstantBufferBindDesc> CreateConstantBufferBindDescs(
 //    const ShaderBytecode& vertexShaderBytecode,
 //    const ShaderBytecode& pixelShaderBytecode)
@@ -338,7 +338,7 @@ void ReflectShaderBytecode(
 //
 //    return std::move(bindings);
 //}
-//-----------------------------------------------------------------------
+
 std::vector<D3D11_INPUT_ELEMENT_DESC> BuildInputElements(
     const std::vector<D3D11_SIGNATURE_PARAMETER_DESC>& signatureParameters,
     const InputLayoutDescription& description)
@@ -386,7 +386,7 @@ std::vector<D3D11_INPUT_ELEMENT_DESC> BuildInputElements(
 
     return std::move(inputElements);
 }
-//-----------------------------------------------------------------------
+
 std::vector<D3D11_SIGNATURE_PARAMETER_DESC>
 EnumerateSignatureParameters(
     ID3D11ShaderReflection* shaderReflector,
@@ -411,7 +411,7 @@ EnumerateSignatureParameters(
     }
     return std::move(signatureParameters);
 }
-//-----------------------------------------------------------------------
+
 Microsoft::WRL::ComPtr<ID3D11InputLayout> CreateInputLayout(
     ID3D11Device* device,
     const ShaderBytecode& vertexShaderBytecode,
@@ -445,7 +445,7 @@ Microsoft::WRL::ComPtr<ID3D11InputLayout> CreateInputLayout(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 PipelineStateDirect3D11::PipelineStateDirect3D11(
     ID3D11Device* device,
     const PipelineStateDescription& description)
@@ -481,7 +481,7 @@ PipelineStateDirect3D11::PipelineStateDirect3D11(
     inputLayout = CreateInputLayout(device,
         vertexShaderD3D->GetShaderBytecode(), description.InputLayout);
 }
-//-----------------------------------------------------------------------
+
 void PipelineStateDirect3D11::Apply(
     ID3D11DeviceContext * deviceContext,
     FLOAT const blendFactor[4])
@@ -501,7 +501,7 @@ void PipelineStateDirect3D11::Apply(
     deviceContext->OMSetDepthStencilState(depthStencilState.Get(), 0);
     deviceContext->RSSetState(rasterizerState.Get());
 }
-//-----------------------------------------------------------------------
+
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog

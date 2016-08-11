@@ -25,7 +25,7 @@ GLenum ToTextureAddressMode(TextureAddressMode address) noexcept
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 SamplerStateGL4::SamplerStateGL4(const SamplerDescription& description)
 {
     samplerObject = ([] {
@@ -107,7 +107,7 @@ SamplerStateGL4::SamplerStateGL4(const SamplerDescription& description)
         POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
     }
 }
-//-----------------------------------------------------------------------
+
 SamplerStateGL4::~SamplerStateGL4()
 {
     if (samplerObject) {
@@ -115,7 +115,7 @@ SamplerStateGL4::~SamplerStateGL4()
         POMDOG_CHECK_ERROR_GL4("glDeleteSamplers");
     }
 }
-//-----------------------------------------------------------------------
+
 void SamplerStateGL4::Apply(int index)
 {
     static_assert(GL_TEXTURE19 == (GL_TEXTURE0 + 19), "");
@@ -126,7 +126,7 @@ void SamplerStateGL4::Apply(int index)
     glBindSampler(index, samplerObject->value);
     POMDOG_CHECK_ERROR_GL4("glBindSampler");
 }
-//-----------------------------------------------------------------------
+
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog

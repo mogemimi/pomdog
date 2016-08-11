@@ -83,10 +83,10 @@ Optional<GLuint> CompileShader(const ShaderBytecode& source, GLenum pipelineStag
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 template <GLenum PipelineStage>
 constexpr GLenum ShaderGL4<PipelineStage>::pipelineStage;
-//-----------------------------------------------------------------------
+
 template <GLenum PipelineStage>
 ShaderGL4<PipelineStage>::ShaderGL4(const ShaderBytecode& source)
 {
@@ -95,7 +95,7 @@ ShaderGL4<PipelineStage>::ShaderGL4(const ShaderBytecode& source)
         POMDOG_THROW_EXCEPTION(std::domain_error, "Failed to compile shader");
     }
 }
-//-----------------------------------------------------------------------
+
 template <GLenum PipelineStage>
 ShaderGL4<PipelineStage>::~ShaderGL4()
 {
@@ -104,14 +104,14 @@ ShaderGL4<PipelineStage>::~ShaderGL4()
         shader = Pomdog::NullOpt;
     }
 }
-//-----------------------------------------------------------------------
+
 template <GLenum PipelineStage>
 GLuint ShaderGL4<PipelineStage>::GetShader() const
 {
     POMDOG_ASSERT(shader);
     return *shader;
 }
-//-----------------------------------------------------------------------
+
 // explicit instantiations
 template class ShaderGL4<GL_VERTEX_SHADER>;
 template class ShaderGL4<GL_FRAGMENT_SHADER>;
@@ -119,7 +119,7 @@ template class ShaderGL4<GL_FRAGMENT_SHADER>;
 //template class ShaderGL4<GL_TESS_CONTROL_SHADER>;
 //template class ShaderGL4<GL_TESS_EVALUATION_SHADER>;
 //template class ShaderGL4<GL_COMPUTE_SHADER>;
-//-----------------------------------------------------------------------
+
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog

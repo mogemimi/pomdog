@@ -24,7 +24,7 @@ LPTSTR MakeIntegerResource(T && resource) noexcept
     return MAKEINTRESOURCE(std::forward<T>(resource));
 #pragma warning(pop)
 }
-//-----------------------------------------------------------------------
+
 LPCTSTR ToStandardCursorID(MouseCursor cursor) noexcept
 {
     switch (cursor) {
@@ -36,7 +36,7 @@ LPCTSTR ToStandardCursorID(MouseCursor cursor) noexcept
     }
     return IDC_ARROW;
 }
-//-----------------------------------------------------------------------
+
 void RegisterInputDevices(HWND windowHandle)
 {
 #ifndef HID_USAGE_PAGE_GENERIC
@@ -72,7 +72,7 @@ void RegisterInputDevices(HWND windowHandle)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 class GameWindowWin32::Impl final {
 public:
     Impl(
@@ -110,7 +110,7 @@ public:
     bool isFullScreen;
     bool isMouseCursorVisible;
 };
-//-----------------------------------------------------------------------
+
 GameWindowWin32::Impl::Impl(
     HINSTANCE hInstance,
     int nCmdShow,
@@ -239,7 +239,7 @@ GameWindowWin32::Impl::Impl(
 
     RegisterInputDevices(windowHandle);
 }
-//-----------------------------------------------------------------------
+
 GameWindowWin32::Impl::~Impl()
 {
     if (nullptr != windowHandle)
@@ -253,7 +253,7 @@ GameWindowWin32::Impl::~Impl()
 
     instanceHandle = nullptr;
 }
-//-----------------------------------------------------------------------
+
 void GameWindowWin32::Impl::SetAllowUserResizing(bool allowResizingIn)
 {
     POMDOG_ASSERT(nullptr != windowHandle);
@@ -289,7 +289,7 @@ void GameWindowWin32::Impl::SetAllowUserResizing(bool allowResizingIn)
 
     allowUserResizing = allowResizingIn;
 }
-//-----------------------------------------------------------------------
+
 void GameWindowWin32::Impl::SetTitle(const std::string& titleIn)
 {
     POMDOG_ASSERT(nullptr != windowHandle);
@@ -301,7 +301,7 @@ void GameWindowWin32::Impl::SetTitle(const std::string& titleIn)
 
     this->title = titleIn;
 }
-//-----------------------------------------------------------------------
+
 void GameWindowWin32::Impl::SetClientBounds(const Rectangle& clientBoundsIn)
 {
     POMDOG_ASSERT(nullptr != windowHandle);
@@ -331,7 +331,7 @@ void GameWindowWin32::Impl::SetClientBounds(const Rectangle& clientBoundsIn)
     eventQueue->Enqueue<ViewWillStartLiveResizeEvent>();
     eventQueue->Enqueue<ViewDidEndLiveResizeEvent>();
 }
-//-----------------------------------------------------------------------
+
 void GameWindowWin32::Impl::SetMouseCursorVisible(bool visibleIn)
 {
     isMouseCursorVisible = visibleIn;
@@ -349,7 +349,7 @@ void GameWindowWin32::Impl::SetMouseCursorVisible(bool visibleIn)
         ::SetCursor(nullptr);
     }
 }
-//-----------------------------------------------------------------------
+
 void GameWindowWin32::Impl::SetMouseCursor(MouseCursor cursorIn)
 {
     gameCursor = LoadCursor(nullptr, ToStandardCursorID(cursorIn));
@@ -358,7 +358,7 @@ void GameWindowWin32::Impl::SetMouseCursor(MouseCursor cursorIn)
         ::SetCursor(*gameCursor);
     }
 }
-//-----------------------------------------------------------------------
+
 LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
     HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -460,7 +460,7 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
 
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
-//-----------------------------------------------------------------------
+
 GameWindowWin32::GameWindowWin32(
     HINSTANCE hInstance,
     int nCmdShow,
@@ -479,81 +479,81 @@ GameWindowWin32::GameWindowWin32(
         presentationParameters))
 {
 }
-//-----------------------------------------------------------------------
+
 GameWindowWin32::~GameWindowWin32() = default;
-//-----------------------------------------------------------------------
+
 bool GameWindowWin32::GetAllowUserResizing() const
 {
     POMDOG_ASSERT(impl);
     return impl->allowUserResizing;
 }
-//-----------------------------------------------------------------------
+
 void GameWindowWin32::SetAllowUserResizing(bool allowResizing)
 {
     POMDOG_ASSERT(impl);
     impl->SetAllowUserResizing(allowResizing);
 }
-//-----------------------------------------------------------------------
+
 std::string GameWindowWin32::GetTitle() const
 {
     POMDOG_ASSERT(impl);
     return impl->title;
 }
-//-----------------------------------------------------------------------
+
 void GameWindowWin32::SetTitle(const std::string& title)
 {
     POMDOG_ASSERT(impl);
     impl->SetTitle(title);
 }
-//-----------------------------------------------------------------------
+
 Rectangle GameWindowWin32::GetClientBounds() const
 {
     POMDOG_ASSERT(impl);
     return impl->clientBounds;
 }
-//-----------------------------------------------------------------------
+
 void GameWindowWin32::SetClientBounds(const Rectangle& clientBounds)
 {
     POMDOG_ASSERT(impl);
     impl->SetClientBounds(clientBounds);
 }
-//-----------------------------------------------------------------------
+
 bool GameWindowWin32::IsMouseCursorVisible() const
 {
     POMDOG_ASSERT(impl);
     return impl->isMouseCursorVisible;
 }
-//-----------------------------------------------------------------------
+
 void GameWindowWin32::SetMouseCursorVisible(bool visible)
 {
     POMDOG_ASSERT(impl);
     impl->SetMouseCursorVisible(visible);
 }
-//-----------------------------------------------------------------------
+
 void GameWindowWin32::SetMouseCursor(MouseCursor cursor)
 {
     POMDOG_ASSERT(impl);
     impl->SetMouseCursor(cursor);
 }
-//-----------------------------------------------------------------------
+
 bool GameWindowWin32::IsMinimized() const
 {
     POMDOG_ASSERT(impl);
     return (IsIconic(impl->windowHandle) == TRUE);
 }
-//-----------------------------------------------------------------------
+
 void GameWindowWin32::Close()
 {
     POMDOG_ASSERT(impl);
     CloseWindow(impl->windowHandle);
 }
-//-----------------------------------------------------------------------
+
 HWND GameWindowWin32::NativeWindowHandle() const
 {
     POMDOG_ASSERT(impl);
     return impl->windowHandle;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Win32
 } // namespace Detail
 } // namespace Pomdog

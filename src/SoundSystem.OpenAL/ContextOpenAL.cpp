@@ -8,7 +8,7 @@ namespace Pomdog {
 namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
-//-----------------------------------------------------------------------
+
 ContextOpenAL::ContextOpenAL()
     : device(nullptr)
     , context(nullptr)
@@ -27,7 +27,7 @@ ContextOpenAL::ContextOpenAL()
     ErrorCheckerAL::CheckError("alcMakeContextCurrent", __FILE__, __LINE__);
     #endif
 }
-//-----------------------------------------------------------------------
+
 ContextOpenAL::~ContextOpenAL()
 {
     auto currentContext = alcGetCurrentContext();
@@ -43,7 +43,7 @@ ContextOpenAL::~ContextOpenAL()
         alcCloseDevice(device);
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace OpenAL
 } // namespace SoundSystem
 } // namespace Detail

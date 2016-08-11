@@ -9,7 +9,7 @@
 #include <limits>
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 Viewport::Viewport(const Rectangle& bounds) noexcept
     : TopLeftX(bounds.X)
     , TopLeftY(bounds.Y)
@@ -18,7 +18,7 @@ Viewport::Viewport(const Rectangle& bounds) noexcept
     , MinDepth(0.0f)
     , MaxDepth(1.0f)
 {}
-//-----------------------------------------------------------------------
+
 Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn) noexcept
     : TopLeftX(xIn)
     , TopLeftY(yIn)
@@ -27,7 +27,7 @@ Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn) noexcept
     , MinDepth(0.0f)
     , MaxDepth(1.0f)
 {}
-//-----------------------------------------------------------------------
+
 Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn,
     float minDepthIn, float maxDepthIn) noexcept
     : TopLeftX(xIn)
@@ -37,7 +37,7 @@ Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn,
     , MinDepth(minDepthIn)
     , MaxDepth(maxDepthIn)
 {}
-//-----------------------------------------------------------------------
+
 Vector3 Viewport::Project(
     const Vector3& source,
     const Matrix4x4& worldViewProjection)
@@ -57,7 +57,7 @@ Vector3 Viewport::Project(
     result.Z = result.Z * (MaxDepth - MinDepth) + MinDepth;
     return result;
 }
-//-----------------------------------------------------------------------
+
 Vector3 Viewport::Unproject(
     const Vector3& source,
     const Matrix4x4& worldViewProjection)
@@ -79,12 +79,12 @@ Vector3 Viewport::Unproject(
     }
     return result;
 }
-//-----------------------------------------------------------------------
+
 Rectangle Viewport::GetBounds() const noexcept
 {
     return Rectangle{TopLeftX, TopLeftY, Width, Height};
 }
-//-----------------------------------------------------------------------
+
 float Viewport::GetAspectRatio() const
 {
     POMDOG_ASSERT(this->Height != 0);
@@ -93,5 +93,5 @@ float Viewport::GetAspectRatio() const
     }
     return 0.0f;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

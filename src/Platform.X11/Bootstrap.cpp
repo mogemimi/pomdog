@@ -8,22 +8,22 @@
 
 namespace Pomdog {
 namespace X11 {
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetSurfaceFormat(SurfaceFormat surfaceFormatIn) noexcept
 {
     surfaceFormat = surfaceFormatIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetDepthFormat(DepthFormat depthFormatIn) noexcept
 {
     depthFormat = depthFormatIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetPresentationInterval(int presentationIntervalIn) noexcept
 {
     presentationInterval = presentationIntervalIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetBackBufferSize(int width, int height) noexcept
 {
     POMDOG_ASSERT(width >= 0);
@@ -31,17 +31,17 @@ void Bootstrap::SetBackBufferSize(int width, int height) noexcept
     backBufferWidth = width;
     backBufferHeight = height;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetFullScreen(bool isFullScreenIn) noexcept
 {
     isFullScreen = isFullScreenIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::OnError(std::function<void(const std::exception&)> onErrorIn)
 {
     onError = onErrorIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::Run(
     const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp)
 {
@@ -80,6 +80,6 @@ void Bootstrap::Run(
     game.reset();
     gameHost.reset();
 }
-//-----------------------------------------------------------------------
+
 } // namespace X11
 } // namespace Pomdog

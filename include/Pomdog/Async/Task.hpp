@@ -668,7 +668,7 @@ auto Get(const Task<TResult>& task) -> TResult
 POMDOG_EXPORT
 void Get(const Task<void>& task);
 
-//-----------------------------------------------------------------------
+
 template <typename TResult>
 POMDOG_EXPORT
 auto CreateTask(const TaskCompletionSource<TResult>& tcs) -> Task<TResult>
@@ -676,7 +676,7 @@ auto CreateTask(const TaskCompletionSource<TResult>& tcs) -> Task<TResult>
     Task<TResult> task(tcs);
     return std::move(task);
 }
-//-----------------------------------------------------------------------
+
 template <typename TFunction>
 POMDOG_EXPORT
 auto CreateTask(
@@ -698,12 +698,12 @@ auto CreateTask(
     });
     return CreateTask(tcs);
 }
-//-----------------------------------------------------------------------
+
 POMDOG_EXPORT
 Task<void> Delay(
     const Duration& dueTime,
     const std::shared_ptr<Scheduler>& scheduler = GetAmbientScheduler());
-//-----------------------------------------------------------------------
+
 template <typename TResult, Detail::IsTaskResult<TResult> = nullptr>
 POMDOG_EXPORT
 Task<TResult> FromResult(
@@ -717,7 +717,7 @@ Task<TResult> FromResult(
     tcs.SetResult(std::forward<TResult>(result));
     return CreateTask(tcs);
 }
-//-----------------------------------------------------------------------
+
 POMDOG_EXPORT
 Task<void> FromResult(
     const std::shared_ptr<Scheduler>& scheduler = GetAmbientScheduler());

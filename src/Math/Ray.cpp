@@ -7,25 +7,25 @@
 #include <algorithm>
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 Ray::Ray(const Vector3& positionIn, const Vector3& directionIn)
     : Position(positionIn)
     , Direction(directionIn)
 {
 }
-//-----------------------------------------------------------------------
+
 bool Ray::operator==(const Ray& ray) const noexcept
 {
     return this->Position == ray.Position
         && this->Direction == ray.Direction;
 }
-//-----------------------------------------------------------------------
+
 bool Ray::operator!=(const Ray& ray) const noexcept
 {
     return this->Position != ray.Position
         || this->Direction != ray.Direction;
 }
-//-----------------------------------------------------------------------
+
 Optional<float> Ray::Intersects(const BoundingBox& box) const
 {
     typedef float T;
@@ -114,7 +114,7 @@ Optional<float> Ray::Intersects(const BoundingBox& box) const
     POMDOG_ASSERT(tNear <= tFar && tFar >= 0);
     return tFar;
 }
-//-----------------------------------------------------------------------
+
 Optional<float> Ray::Intersects(const BoundingSphere& sphere) const
 {
     const auto toSphere = sphere.Center - this->Position;
@@ -136,5 +136,5 @@ Optional<float> Ray::Intersects(const BoundingSphere& sphere) const
     }
     return std::max(distance - std::sqrt(discriminant), 0.0f);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

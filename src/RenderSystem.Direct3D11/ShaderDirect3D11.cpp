@@ -21,7 +21,7 @@ HRESULT CreateShader(
 {
     return device->CreateVertexShader(shaderByteCode, bytecodeLength, nullptr, vertexShader);
 }
-//-----------------------------------------------------------------------
+
 HRESULT CreateShader(
     ID3D11Device* device,
     const void* shaderByteCode,
@@ -32,7 +32,7 @@ HRESULT CreateShader(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 template <class NativeShaderType>
 ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(
     ID3D11Device* device,
@@ -66,14 +66,14 @@ ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create shader");
     }
 }
-//-----------------------------------------------------------------------
+
 template <class NativeShaderType>
 Microsoft::WRL::ComPtr<NativeShaderType> ShaderDirect3D11<NativeShaderType>::GetShader() const
 {
     POMDOG_ASSERT(shader);
     return shader;
 }
-//-----------------------------------------------------------------------
+
 template <class NativeShaderType>
 ShaderBytecode ShaderDirect3D11<NativeShaderType>::GetShaderBytecode() const
 {
@@ -83,7 +83,7 @@ ShaderBytecode ShaderDirect3D11<NativeShaderType>::GetShaderBytecode() const
     shaderBytecode.ByteLength = codeBlob.size();
     return std::move(shaderBytecode);
 }
-//-----------------------------------------------------------------------
+
 // explicit instantiations
 template class ShaderDirect3D11<ID3D11VertexShader>;
 template class ShaderDirect3D11<ID3D11PixelShader>;
@@ -91,7 +91,7 @@ template class ShaderDirect3D11<ID3D11PixelShader>;
 //template class ShaderDirect3D11<ID3D11DomainShader>;
 //template class ShaderDirect3D11<ID3D11HullShader>;
 //template class ShaderDirect3D11<ID3D11ComputeShader>;
-//-----------------------------------------------------------------------
+
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog

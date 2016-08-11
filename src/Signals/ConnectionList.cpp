@@ -11,7 +11,7 @@ ConnectionList::~ConnectionList()
         connection.Disconnect();
     }
 }
-//-----------------------------------------------------------------------
+
 void ConnectionList::Disconnect()
 {
     for (auto & connection : connections) {
@@ -19,7 +19,7 @@ void ConnectionList::Disconnect()
     }
     connections.clear();
 }
-//-----------------------------------------------------------------------
+
 void ConnectionList::operator+=(Connection && connection)
 {
     connections.push_back(std::move(connection));

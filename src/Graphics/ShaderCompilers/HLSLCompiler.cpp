@@ -14,7 +14,7 @@ using Pomdog::Detail::ShaderCompileOptions;
 
 namespace Pomdog {
 namespace ShaderCompilers {
-//-----------------------------------------------------------------------
+
 std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromBinary(
     GraphicsDevice & graphicsDevice,
     const void* shaderSource,
@@ -37,7 +37,7 @@ std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromBinary(
 
     return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromSource(
     GraphicsDevice & graphicsDevice,
     const void* shaderSource,
@@ -64,6 +64,6 @@ std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromSource(
 
     return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
 }
-//-----------------------------------------------------------------------
+
 } // namespace ShaderCompilers
 } // namespace Pomdog

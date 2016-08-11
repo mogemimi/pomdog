@@ -20,12 +20,12 @@ static ButtonState* ToMouseButton(MouseState & mouseState, unsigned int buttonIn
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 MouseState MouseX11::GetState() const
 {
     return mouseState;
 }
-//-----------------------------------------------------------------------
+
 void MouseX11::HandleEvent(XEvent & event)
 {
     switch (event.type) {
@@ -66,7 +66,7 @@ void MouseX11::HandleEvent(XEvent & event)
     }
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace X11
 } // namespace Detail
 } // namespace Pomdog

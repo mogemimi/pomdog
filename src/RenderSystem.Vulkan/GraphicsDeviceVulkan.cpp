@@ -29,7 +29,7 @@ constexpr std::uint32_t GetUint32EngineVersion() noexcept
         + POMDOG_MINOR_VERSION * 100
         + POMDOG_PATCH_VERSION;
 }
-//-----------------------------------------------------------------------
+
 std::tuple<VkInstance, VkResult> CreateVulkanInstance() noexcept
 {
     std::vector<const char*> layerNames;
@@ -67,7 +67,7 @@ std::tuple<VkInstance, VkResult> CreateVulkanInstance() noexcept
     auto result = vkCreateInstance(&instanceCreateInfo, nullptr, &instance);
     return std::make_tuple(instance, result);
 }
-//-----------------------------------------------------------------------
+
 std::vector<VkQueueFamilyProperties>
 GetPhysicalDeviceQueueFamilyProperties(VkPhysicalDevice device) noexcept
 {
@@ -80,7 +80,7 @@ GetPhysicalDeviceQueueFamilyProperties(VkPhysicalDevice device) noexcept
     queueFamilyProps.resize(queueCount);
     return std::move(queueFamilyProps);
 }
-//-----------------------------------------------------------------------
+
 //void GetPhysicalDeviceProperties(VkPhysicalDevice device) noexcept
 //{
 //    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueCount, queueFamilyProps.data());
@@ -92,7 +92,7 @@ GetPhysicalDeviceQueueFamilyProperties(VkPhysicalDevice device) noexcept
 //    VkPhysicalDeviceProperties deviceProps;
 //    vkGetPhysicalDeviceProperties(device, &deviceProps);
 //}
-//-----------------------------------------------------------------------
+
 std::tuple<std::vector<VkPhysicalDevice>, VkResult> EnumerateDevices(VkInstance instance) noexcept
 {
     POMDOG_ASSERT(instance != nullptr);
@@ -133,7 +133,7 @@ public:
 
     ~Impl();
 };
-//-----------------------------------------------------------------------
+
 GraphicsDeviceVulkan::Impl::Impl()
     : instance(nullptr)
     , physicalDevice(nullptr)
@@ -201,7 +201,7 @@ GraphicsDeviceVulkan::Impl::Impl()
             "Failed to create Vulkan device.");
     }
 }
-//-----------------------------------------------------------------------
+
 GraphicsDeviceVulkan::Impl::~Impl()
 {
     if (device != nullptr) {
@@ -211,25 +211,25 @@ GraphicsDeviceVulkan::Impl::~Impl()
         vkDestroyInstance(instance, nullptr);
     }
 }
-//-----------------------------------------------------------------------
+
 GraphicsDeviceVulkan::GraphicsDeviceVulkan()
     : impl(std::make_unique<Impl>())
 {
 }
-//-----------------------------------------------------------------------
+
 GraphicsDeviceVulkan::~GraphicsDeviceVulkan() = default;
-//-----------------------------------------------------------------------
+
 ShaderLanguage GraphicsDeviceVulkan::GetSupportedLanguage() const
 {
     return ShaderLanguage::GLSL;
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeGraphicsCommandList>
 GraphicsDeviceVulkan::CreateGraphicsCommandList()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<Shader>
 GraphicsDeviceVulkan::CreateShader(
     const ShaderBytecode& shaderBytecode,
@@ -240,7 +240,7 @@ GraphicsDeviceVulkan::CreateShader(
     return std::make_unique<ShaderVulkan>(
         impl->device, shaderBytecode, compileOptions);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeBuffer>
 GraphicsDeviceVulkan::CreateBuffer(
     std::size_t sizeInBytes, BufferUsage bufferUsage, BufferBindMode)
@@ -250,7 +250,7 @@ GraphicsDeviceVulkan::CreateBuffer(
     return std::make_unique<BufferVulkan>(
         impl->device, sizeInBytes, bufferUsage);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeBuffer>
 GraphicsDeviceVulkan::CreateBuffer(
     const void* sourceData,
@@ -263,7 +263,7 @@ GraphicsDeviceVulkan::CreateBuffer(
     return std::make_unique<BufferVulkan>(
         impl->device, sourceData, sizeInBytes, bufferUsage);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeSamplerState>
 GraphicsDeviceVulkan::CreateSamplerState(const SamplerDescription& description)
 {
@@ -271,7 +271,7 @@ GraphicsDeviceVulkan::CreateSamplerState(const SamplerDescription& description)
     POMDOG_ASSERT(impl->device != nullptr);
     return std::make_unique<SamplerStateVulkan>(impl->device, description);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativePipelineState>
 GraphicsDeviceVulkan::CreatePipelineState(const PipelineStateDescription& description)
 {
@@ -279,7 +279,7 @@ GraphicsDeviceVulkan::CreatePipelineState(const PipelineStateDescription& descri
     POMDOG_ASSERT(impl->device != nullptr);
     return std::make_unique<PipelineStateVulkan>(impl->device, description);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeEffectReflection>
 GraphicsDeviceVulkan::CreateEffectReflection(
     const PipelineStateDescription& description,
@@ -287,7 +287,7 @@ GraphicsDeviceVulkan::CreateEffectReflection(
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeTexture2D>
 GraphicsDeviceVulkan::CreateTexture2D(
     std::int32_t width,
@@ -300,7 +300,7 @@ GraphicsDeviceVulkan::CreateTexture2D(
     return std::make_unique<Texture2DVulkan>(
         impl->device, width, height, mipmapLevels, format);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeRenderTarget2D>
 GraphicsDeviceVulkan::CreateRenderTarget2D(
     std::int32_t width,
@@ -316,7 +316,7 @@ GraphicsDeviceVulkan::CreateRenderTarget2D(
         impl->device, width, height, mipmapLevels,
         format, depthStencilFormat, multiSampleCount);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Vulkan
 } // namespace Detail
 } // namespace Pomdog

@@ -29,7 +29,7 @@ std::string GetErrorDesc(HRESULT hr, const std::string& desc)
 {
     return "Failed to call " + desc + ", HRESULT=" + std::to_string(hr);
 }
-//-----------------------------------------------------------------------
+
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
 
 struct AudioDeviceDetails {
@@ -38,7 +38,7 @@ struct AudioDeviceDetails {
     bool IsDefault = false;
     bool IsEnabled = false;
 };
-//-----------------------------------------------------------------------
+
 std::vector<AudioDeviceDetails> EnumerateAudioDevices()
 {
 #if defined(_XBOX_ONE)
@@ -177,7 +177,7 @@ std::vector<AudioDeviceDetails> EnumerateAudioDevices()
 #endif
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 AudioEngineXAudio2::AudioEngineXAudio2()
     : masteringVoice(nullptr)
 {
@@ -275,7 +275,7 @@ AudioEngineXAudio2::AudioEngineXAudio2()
         POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "CreateMasteringVoice"));
     }
 }
-//-----------------------------------------------------------------------
+
 AudioEngineXAudio2::~AudioEngineXAudio2()
 {
     if (masteringVoice) {
@@ -288,7 +288,7 @@ AudioEngineXAudio2::~AudioEngineXAudio2()
         ::CoUninitialize();
     }
 }
-//-----------------------------------------------------------------------
+
 float AudioEngineXAudio2::GetMasterVolume() const
 {
     float volume = 0;
@@ -297,20 +297,20 @@ float AudioEngineXAudio2::GetMasterVolume() const
     }
     return volume;
 }
-//-----------------------------------------------------------------------
+
 void AudioEngineXAudio2::SetMasterVolume(float volumeIn)
 {
     if (xAudio2 && masteringVoice != nullptr) {
         masteringVoice->SetVolume(MathHelper::Saturate(volumeIn), XAUDIO2_COMMIT_NOW);
     }
 }
-//-----------------------------------------------------------------------
+
 IXAudio2* AudioEngineXAudio2::XAudio2Engine() const
 {
     POMDOG_ASSERT(xAudio2);
     return xAudio2.Get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace XAudio2
 } // namespace SoundSystem
 } // namespace Detail

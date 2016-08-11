@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 namespace Concurrency {
-//-----------------------------------------------------------------------
+
 void ImmediateScheduler::Schedule(
     std::function<void()> && task,
     const Duration& delayTime)
@@ -18,6 +18,6 @@ void ImmediateScheduler::Schedule(
     }
     task();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Concurrency
 } // namespace Pomdog

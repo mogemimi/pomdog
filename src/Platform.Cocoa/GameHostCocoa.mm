@@ -43,7 +43,7 @@ std::shared_ptr<OpenGLContextCocoa> CreateOpenGLContext(
     auto pixelFormat = CocoaOpenGLHelper::CreatePixelFormat(presentationParameters);
     return std::make_shared<OpenGLContextCocoa>(pixelFormat);
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<GraphicsContext> CreateGraphicsContext(
     const std::shared_ptr<OpenGLContextCocoa>& openGLContext,
     std::weak_ptr<GameWindow> && gameWindow,
@@ -59,9 +59,9 @@ std::shared_ptr<GraphicsContext> CreateGraphicsContext(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 // MARK: - GameHostCocoa::Impl
-//-----------------------------------------------------------------------
+
 class GameHostCocoa::Impl final {
 public:
     Impl(PomdogOpenGLView* openGLView,
@@ -138,7 +138,7 @@ private:
     bool exitRequest;
     bool displayLinkEnabled;
 };
-//-----------------------------------------------------------------------
+
 GameHostCocoa::Impl::Impl(
     PomdogOpenGLView* openGLViewIn,
     const std::shared_ptr<GameWindowCocoa>& windowIn,
@@ -197,7 +197,7 @@ GameHostCocoa::Impl::Impl(
     CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
     CVDisplayLinkSetOutputCallback(displayLink, &DisplayLinkCallback, this);
 }
-//-----------------------------------------------------------------------
+
 GameHostCocoa::Impl::~Impl()
 {
     if (displayLink != nullptr) {
@@ -222,7 +222,7 @@ GameHostCocoa::Impl::~Impl()
     eventQueue.reset();
     openGLView = nil;
 }
-//-----------------------------------------------------------------------
+
 void GameHostCocoa::Impl::Run(
     const std::weak_ptr<Game>& weakGameIn,
     const std::function<void()>& onCompletedIn)
@@ -267,7 +267,7 @@ void GameHostCocoa::Impl::Run(
         displayLink, cglContext, cglPixelFormat);
     CVDisplayLinkStart(displayLink);
 }
-//-----------------------------------------------------------------------
+
 void GameHostCocoa::Impl::GameWillExit()
 {
     if (openGLView != nil) {
@@ -284,7 +284,7 @@ void GameHostCocoa::Impl::GameWillExit()
         });
     }
 }
-//-----------------------------------------------------------------------
+
 void GameHostCocoa::Impl::Exit()
 {
     exitRequest = true;
@@ -296,7 +296,7 @@ void GameHostCocoa::Impl::Exit()
         GameWillExit();
     }
 }
-//-----------------------------------------------------------------------
+
 CVReturn GameHostCocoa::Impl::DisplayLinkCallback(
     CVDisplayLinkRef displayLink,
     const CVTimeStamp* now,
@@ -310,7 +310,7 @@ CVReturn GameHostCocoa::Impl::DisplayLinkCallback(
     gameHost->GameLoop();
     return kCVReturnSuccess;
 }
-//-----------------------------------------------------------------------
+
 void GameHostCocoa::Impl::GameLoop()
 {
     POMDOG_ASSERT(!exitRequest);
@@ -348,7 +348,7 @@ void GameHostCocoa::Impl::GameLoop()
         }
     }
 }
-//-----------------------------------------------------------------------
+
 void GameHostCocoa::Impl::RenderFrame()
 {
     POMDOG_ASSERT(window);
@@ -374,12 +374,12 @@ void GameHostCocoa::Impl::RenderFrame()
 
     openGLContext->Unlock();
 }
-//-----------------------------------------------------------------------
+
 void GameHostCocoa::Impl::DoEvents()
 {
     eventQueue->Emit();
 }
-//-----------------------------------------------------------------------
+
 void GameHostCocoa::Impl::ProcessSystemEvents(const Event& event)
 {
     if (event.Is<WindowShouldCloseEvent>())
@@ -456,7 +456,7 @@ void GameHostCocoa::Impl::ProcessSystemEvents(const Event& event)
         mouse->WheelDelta(scrollWheelEvent->ScrollingDeltaY);
     }
 }
-//-----------------------------------------------------------------------
+
 void GameHostCocoa::Impl::ClientSizeChanged()
 {
     openGLContext->Lock();
@@ -470,51 +470,51 @@ void GameHostCocoa::Impl::ClientSizeChanged()
     }
     openGLContext->Unlock();
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<GameWindow> GameHostCocoa::Impl::GetWindow()
 {
     return window;
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<GameClock> GameHostCocoa::Impl::GetClock(std::shared_ptr<GameHost> && gameHost)
 {
     std::shared_ptr<GameClock> sharedClock(gameHost, &clock);
     return sharedClock;
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<GraphicsDevice> GameHostCocoa::Impl::GetGraphicsDevice()
 {
     return graphicsDevice;
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<GraphicsCommandQueue> GameHostCocoa::Impl::GetGraphicsCommandQueue()
 {
     return graphicsCommandQueue;
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<AudioEngine> GameHostCocoa::Impl::GetAudioEngine()
 {
     return audioEngine;
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<AssetManager> GameHostCocoa::Impl::GetAssetManager(std::shared_ptr<GameHost> && gameHost)
 {
     std::shared_ptr<AssetManager> sharedAssetManager(gameHost, assetManager.get());
     return sharedAssetManager;
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<Keyboard> GameHostCocoa::Impl::GetKeyboard()
 {
     return keyboard;
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<Mouse> GameHostCocoa::Impl::GetMouse()
 {
     return mouse;
 }
-//-----------------------------------------------------------------------
+
 // MARK: - GameHostCocoa
-//-----------------------------------------------------------------------
+
 GameHostCocoa::GameHostCocoa(
     PomdogOpenGLView* openGLView,
     const std::shared_ptr<GameWindowCocoa>& window,
@@ -522,9 +522,9 @@ GameHostCocoa::GameHostCocoa(
     const PresentationParameters& presentationParameters)
     : impl(std::make_unique<Impl>(openGLView, window, eventQueue, presentationParameters))
 {}
-//-----------------------------------------------------------------------
+
 GameHostCocoa::~GameHostCocoa() = default;
-//-----------------------------------------------------------------------
+
 void GameHostCocoa::Run(
     const std::weak_ptr<Game>& game,
     const std::function<void()>& onCompleted)
@@ -532,61 +532,61 @@ void GameHostCocoa::Run(
     POMDOG_ASSERT(impl);
     impl->Run(game, onCompleted);
 }
-//-----------------------------------------------------------------------
+
 void GameHostCocoa::Exit()
 {
     POMDOG_ASSERT(impl);
     impl->Exit();
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<GameWindow> GameHostCocoa::GetWindow()
 {
     POMDOG_ASSERT(impl);
     return impl->GetWindow();
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<GameClock> GameHostCocoa::GetClock()
 {
     POMDOG_ASSERT(impl);
     return impl->GetClock(shared_from_this());
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<GraphicsDevice> GameHostCocoa::GetGraphicsDevice()
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsDevice();
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<GraphicsCommandQueue> GameHostCocoa::GetGraphicsCommandQueue()
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsCommandQueue();
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<AudioEngine> GameHostCocoa::GetAudioEngine()
 {
     POMDOG_ASSERT(impl);
     return impl->GetAudioEngine();
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<AssetManager> GameHostCocoa::GetAssetManager()
 {
     POMDOG_ASSERT(impl);
     return impl->GetAssetManager(shared_from_this());
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<Keyboard> GameHostCocoa::GetKeyboard()
 {
     POMDOG_ASSERT(impl);
     return impl->GetKeyboard();
 }
-//-----------------------------------------------------------------------
+
 std::shared_ptr<Mouse> GameHostCocoa::GetMouse()
 {
     POMDOG_ASSERT(impl);
     return impl->GetMouse();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Cocoa
 } // namespace Detail
 } // namespace Pomdog

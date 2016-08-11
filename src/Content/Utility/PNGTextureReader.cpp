@@ -27,7 +27,7 @@ struct Texture2DParsingData {
     std::uint32_t Width;
     SurfaceFormat Format;
 };
-//-----------------------------------------------------------------------
+
 void ReadPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_size_t length)
 {
     auto context = static_cast<PNGBinaryContext*>(::png_get_io_ptr(png_ptr));
@@ -40,7 +40,7 @@ void ReadPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_size_t l
         ::png_error(png_ptr, "ReadPngCallback failed.");
     }
 }
-//-----------------------------------------------------------------------
+
 Texture2DParsingData ReadPNG(const std::uint8_t* data, std::size_t byteLength)
 {
     auto pngPtr = ::png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -161,7 +161,7 @@ Texture2DParsingData ReadPNG(const std::uint8_t* data, std::size_t byteLength)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 std::shared_ptr<Texture2D> PNGTextureReader::Read(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     const std::uint8_t* data,

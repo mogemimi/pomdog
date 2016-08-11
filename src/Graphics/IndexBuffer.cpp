@@ -22,7 +22,7 @@ std::uint32_t ToIndexElementOffsetBytes(IndexElementSize elementSize) noexcept
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 IndexBuffer::IndexBuffer(
     GraphicsDevice & graphicsDevice,
     IndexElementSize elementSizeIn,
@@ -46,7 +46,7 @@ IndexBuffer::IndexBuffer(
 
     POMDOG_ASSERT(nativeIndexBuffer);
 }
-//-----------------------------------------------------------------------
+
 IndexBuffer::IndexBuffer(
     GraphicsDevice & graphicsDevice,
     IndexElementSize elementSizeIn,
@@ -70,7 +70,7 @@ IndexBuffer::IndexBuffer(
 
     POMDOG_ASSERT(nativeIndexBuffer);
 }
-//-----------------------------------------------------------------------
+
 IndexBuffer::IndexBuffer(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     IndexElementSize elementSizeIn,
@@ -81,7 +81,7 @@ IndexBuffer::IndexBuffer(
 {
     POMDOG_ASSERT(nativeIndexBuffer);
 }
-//-----------------------------------------------------------------------
+
 IndexBuffer::IndexBuffer(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     IndexElementSize elementSizeIn,
@@ -91,30 +91,30 @@ IndexBuffer::IndexBuffer(
 {
     POMDOG_ASSERT(nativeIndexBuffer);
 }
-//-----------------------------------------------------------------------
+
 IndexBuffer::~IndexBuffer() = default;
-//-----------------------------------------------------------------------
+
 std::size_t IndexBuffer::GetIndexCount() const noexcept
 {
     return indexCount;
 }
-//-----------------------------------------------------------------------
+
 IndexElementSize IndexBuffer::GetElementSize() const noexcept
 {
     return elementSize;
 }
-//-----------------------------------------------------------------------
+
 std::size_t IndexBuffer::GetSizeInBytes() const noexcept
 {
     POMDOG_ASSERT(indexCount > 0);
     return indexCount * ToIndexElementOffsetBytes(elementSize);
 }
-//-----------------------------------------------------------------------
+
 BufferUsage IndexBuffer::GetBufferUsage() const noexcept
 {
     return bufferUsage;
 }
-//-----------------------------------------------------------------------
+
 void IndexBuffer::SetData(const void* source, std::size_t elementCountIn)
 {
     POMDOG_ASSERT(source != nullptr);
@@ -125,7 +125,7 @@ void IndexBuffer::SetData(const void* source, std::size_t elementCountIn)
     nativeIndexBuffer->SetData(0, source,
         ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
-//-----------------------------------------------------------------------
+
 void IndexBuffer::SetData(
     std::size_t offsetInBytes,
     const void* source,
@@ -139,11 +139,11 @@ void IndexBuffer::SetData(
     nativeIndexBuffer->SetData(offsetInBytes, source,
         ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
-//-----------------------------------------------------------------------
+
 Detail::NativeBuffer* IndexBuffer::NativeIndexBuffer()
 {
     POMDOG_ASSERT(nativeIndexBuffer);
     return nativeIndexBuffer.get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

@@ -10,7 +10,7 @@
 #include <algorithm>
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 RenderTarget2D::RenderTarget2D(
     GraphicsDevice & graphicsDevice,
     std::int32_t pixelWidthIn,
@@ -23,7 +23,7 @@ RenderTarget2D::RenderTarget2D(
         SurfaceFormat::R8G8B8A8_UNorm,
         DepthFormat::None)
 {}
-//-----------------------------------------------------------------------
+
 RenderTarget2D::RenderTarget2D(
     GraphicsDevice & graphicsDevice,
     std::int32_t pixelWidthIn,
@@ -51,7 +51,7 @@ RenderTarget2D::RenderTarget2D(
         pixelWidth, pixelHeight, levelCount, format, depthStencilFormat,
         multiSampleCount);
 }
-//-----------------------------------------------------------------------
+
 RenderTarget2D::RenderTarget2D(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     std::int32_t pixelWidthIn,
@@ -64,7 +64,7 @@ RenderTarget2D::RenderTarget2D(
         SurfaceFormat::R8G8B8A8_UNorm,
         DepthFormat::None)
 {}
-//-----------------------------------------------------------------------
+
 RenderTarget2D::RenderTarget2D(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     std::int32_t pixelWidthIn,
@@ -80,42 +80,42 @@ RenderTarget2D::RenderTarget2D(
         formatIn,
         depthStencilFormatIn)
 {}
-//-----------------------------------------------------------------------
+
 RenderTarget2D::~RenderTarget2D() = default;
-//-----------------------------------------------------------------------
+
 std::int32_t RenderTarget2D::GetWidth() const
 {
     return pixelWidth;
 }
-//-----------------------------------------------------------------------
+
 std::int32_t RenderTarget2D::GetHeight() const
 {
     return pixelHeight;
 }
-//-----------------------------------------------------------------------
+
 std::int32_t RenderTarget2D::GetLevelCount() const
 {
     return levelCount;
 }
-//-----------------------------------------------------------------------
+
 SurfaceFormat RenderTarget2D::GetFormat() const
 {
     return format;
 }
-//-----------------------------------------------------------------------
+
 DepthFormat RenderTarget2D::GetDepthStencilFormat() const
 {
     return depthStencilFormat;
 }
-//-----------------------------------------------------------------------
+
 Rectangle RenderTarget2D::GetBounds() const
 {
     return Rectangle{0, 0, pixelWidth, pixelHeight};
 }
-//-----------------------------------------------------------------------
+
 Detail::NativeRenderTarget2D* RenderTarget2D::GetNativeRenderTarget2D()
 {
     return nativeRenderTarget2D.get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

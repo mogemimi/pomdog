@@ -8,7 +8,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 PipelineState::PipelineState(
     GraphicsDevice & graphicsDevice,
     const PipelineStateDescription& description)
@@ -18,18 +18,18 @@ PipelineState::PipelineState(
     POMDOG_ASSERT(nativeDevice);
     nativePipelineState = nativeDevice->CreatePipelineState(description);
 }
-//-----------------------------------------------------------------------
+
 PipelineState::PipelineState(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     const PipelineStateDescription& description)
     : PipelineState(*graphicsDevice, description)
 {}
-//-----------------------------------------------------------------------
+
 PipelineState::~PipelineState() = default;
-//-----------------------------------------------------------------------
+
 Detail::NativePipelineState* PipelineState::GetNativePipelineState()
 {
     return nativePipelineState.get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

@@ -24,31 +24,31 @@ public:
 public:
     Impl();
 };
-//-----------------------------------------------------------------------
+
 GraphicsDeviceMetal::Impl::Impl()
     : device(nil)
 {
     device = MTLCreateSystemDefaultDevice();
 }
-//-----------------------------------------------------------------------
+
 GraphicsDeviceMetal::GraphicsDeviceMetal()
     : impl(std::make_unique<Impl>())
 {
 }
-//-----------------------------------------------------------------------
+
 GraphicsDeviceMetal::~GraphicsDeviceMetal() = default;
-//-----------------------------------------------------------------------
+
 ShaderLanguage GraphicsDeviceMetal::GetSupportedLanguage() const
 {
     return ShaderLanguage::Metal;
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeGraphicsCommandList>
 GraphicsDeviceMetal::CreateGraphicsCommandList()
 {
     return std::make_unique<GraphicsCommandListImmediate>();
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<Shader>
 GraphicsDeviceMetal::CreateShader(
     const ShaderBytecode& shaderBytecode,
@@ -59,7 +59,7 @@ GraphicsDeviceMetal::CreateShader(
     return std::make_unique<ShaderMetal>(
         impl->device, shaderBytecode, compileOptions);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeBuffer>
 GraphicsDeviceMetal::CreateBuffer(
     std::size_t sizeInBytes, BufferUsage bufferUsage, BufferBindMode)
@@ -69,7 +69,7 @@ GraphicsDeviceMetal::CreateBuffer(
     return std::make_unique<BufferMetal>(
         impl->device, sizeInBytes, bufferUsage);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeBuffer>
 GraphicsDeviceMetal::CreateBuffer(
     const void* sourceData,
@@ -82,7 +82,7 @@ GraphicsDeviceMetal::CreateBuffer(
     return std::make_unique<BufferMetal>(
         impl->device, sourceData, sizeInBytes, bufferUsage);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeSamplerState>
 GraphicsDeviceMetal::CreateSamplerState(const SamplerDescription& description)
 {
@@ -90,7 +90,7 @@ GraphicsDeviceMetal::CreateSamplerState(const SamplerDescription& description)
     POMDOG_ASSERT(impl->device != nil);
     return std::make_unique<SamplerStateMetal>(impl->device, description);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativePipelineState>
 GraphicsDeviceMetal::CreatePipelineState(const PipelineStateDescription& description)
 {
@@ -98,7 +98,7 @@ GraphicsDeviceMetal::CreatePipelineState(const PipelineStateDescription& descrip
     POMDOG_ASSERT(impl->device != nil);
     return std::make_unique<PipelineStateMetal>(impl->device, description);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeEffectReflection>
 GraphicsDeviceMetal::CreateEffectReflection(
     const PipelineStateDescription& description,
@@ -106,7 +106,7 @@ GraphicsDeviceMetal::CreateEffectReflection(
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeTexture2D>
 GraphicsDeviceMetal::CreateTexture2D(
     std::int32_t width,
@@ -119,7 +119,7 @@ GraphicsDeviceMetal::CreateTexture2D(
     return std::make_unique<Texture2DMetal>(
         impl->device, width, height, mipmapLevels, format);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<NativeRenderTarget2D>
 GraphicsDeviceMetal::CreateRenderTarget2D(
     std::int32_t width,
@@ -135,7 +135,7 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
         impl->device, width, height, mipmapLevels,
         format, depthStencilFormat, multiSampleCount);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Metal
 } // namespace Detail
 } // namespace Pomdog

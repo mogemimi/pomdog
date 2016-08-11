@@ -29,9 +29,9 @@ public:
 };
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 // MARK: - GameClock::Impl
-//-----------------------------------------------------------------------
+
 class GameClock::Impl final {
 public:
     explicit Impl(int framesPerSecond = 30);
@@ -66,7 +66,7 @@ public:
     CompensatedSumAccumulator<Duration> accumulator;
     std::uint32_t frameNumber;
 };
-//-----------------------------------------------------------------------
+
 GameClock::Impl::Impl(int framesPerSecond)
     : predictedFrameTime(Duration::zero())
     , accumulatedCurrentTime(Duration::zero())
@@ -82,13 +82,13 @@ GameClock::Impl::Impl(int framesPerSecond)
 
     Restart();
 }
-//-----------------------------------------------------------------------
+
 void GameClock::Impl::Restart()
 {
     sourceStartTime = timeSource.Now();
     sourceLastTime = sourceStartTime;
 }
-//-----------------------------------------------------------------------
+
 Duration GameClock::Impl::GetExactLastFrameDuration()
 {
     auto now = timeSource.Now();
@@ -99,7 +99,7 @@ Duration GameClock::Impl::GetExactLastFrameDuration()
     sourceLastTime = now;
     return frameDuration;
 }
-//-----------------------------------------------------------------------
+
 void GameClock::Impl::AddToFrameHistory(const Duration& exactFrameDuration)
 {
     constexpr std::size_t MaxFrameHistorySize = 20;
@@ -109,7 +109,7 @@ void GameClock::Impl::AddToFrameHistory(const Duration& exactFrameDuration)
         frameDurationHistory.pop_front();
     }
 }
-//-----------------------------------------------------------------------
+
 Duration GameClock::Impl::GetPredictFrameDuration() const
 {
     POMDOG_ASSERT(!frameDurationHistory.empty());
@@ -121,7 +121,7 @@ Duration GameClock::Impl::GetPredictFrameDuration() const
         Duration::zero());
     return totalFrameTime / frameDurationHistory.size();
 }
-//-----------------------------------------------------------------------
+
 void GameClock::Impl::Tick()
 {
     auto exactLastFrameDuration = GetExactLastFrameDuration();
@@ -133,48 +133,48 @@ void GameClock::Impl::Tick()
     accumulator(accumulatedCurrentTime, predictedFrameTime);
     ++frameNumber;
 }
-//-----------------------------------------------------------------------
+
 Duration GameClock::Impl::GetTotalGameTime() const noexcept
 {
     return accumulatedCurrentTime;
 }
-//-----------------------------------------------------------------------
+
 std::uint32_t GameClock::Impl::GetFrameNumber() const noexcept
 {
     return frameNumber;
 }
-//-----------------------------------------------------------------------
+
 Duration GameClock::Impl::GetFrameDuration() const noexcept
 {
     return predictedFrameTime;
 }
-//-----------------------------------------------------------------------
+
 float GameClock::Impl::GetFrameRate() const noexcept
 {
     POMDOG_ASSERT(!frameDurationHistory.empty());
     POMDOG_ASSERT(predictedFrameTime.count() > 0);
     return static_cast<float>(1.0 / predictedFrameTime.count());
 }
-//-----------------------------------------------------------------------
+
 Duration GameClock::Impl::GetElapsedTime() const noexcept
 {
     return timeSource.Now() - sourceLastTime;
 }
-//-----------------------------------------------------------------------
+
 // MARK: - GameClock
-//-----------------------------------------------------------------------
+
 GameClock::GameClock()
     : impl(std::make_unique<Impl>())
 {}
-//-----------------------------------------------------------------------
+
 GameClock::GameClock(int framesPerSecond)
     : impl(std::make_unique<Impl>(framesPerSecond))
 {
     POMDOG_ASSERT(framesPerSecond > 0);
 }
-//-----------------------------------------------------------------------
+
 GameClock::~GameClock() = default;
-//-----------------------------------------------------------------------
+
 void GameClock::Tick()
 {
     POMDOG_ASSERT(impl);
@@ -182,35 +182,35 @@ void GameClock::Tick()
 
     OnTick(impl->GetFrameDuration());
 }
-//-----------------------------------------------------------------------
+
 Duration GameClock::GetTotalGameTime() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetTotalGameTime();
 }
-//-----------------------------------------------------------------------
+
 std::uint32_t GameClock::GetFrameNumber() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetFrameNumber();
 }
-//-----------------------------------------------------------------------
+
 Duration GameClock::GetFrameDuration() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetFrameDuration();
 }
-//-----------------------------------------------------------------------
+
 float GameClock::GetFrameRate() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetFrameRate();
 }
-//-----------------------------------------------------------------------
+
 Duration GameClock::GetElapsedTime() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetElapsedTime();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

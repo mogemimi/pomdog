@@ -44,7 +44,7 @@ EffectVariableType ToEffectVariableType(MTLDataType variableType) noexcept
     }
     return EffectVariableType::Float;
 }
-//-----------------------------------------------------------------------
+
 EffectVariableClass ToEffectVariableClass(MTLDataType variableClass) noexcept
 {
     switch (variableClass) {
@@ -118,13 +118,13 @@ EffectVariableClass ToEffectVariableClass(MTLDataType variableClass) noexcept
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 EffectReflectionMetal::EffectReflectionMetal(MTLRenderPipelineReflection* reflectionIn)
     : reflection(reflectionIn)
 {
     POMDOG_ASSERT(reflection != nil);
 }
-//-----------------------------------------------------------------------
+
 std::vector<EffectConstantDescription> EffectReflectionMetal::GetConstantBuffers() const
 {
     NSArray<MTLArgument*>* arguments = reflection.vertexArguments;

@@ -76,7 +76,7 @@ PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 OpenGLContextWin32::OpenGLContextWin32(
     HWND windowHandleIn,
     const PresentationParameters& presentationParameters)
@@ -136,25 +136,25 @@ OpenGLContextWin32::OpenGLContextWin32(
         POMDOG_THROW_EXCEPTION(std::runtime_error, ss.str());
     }
 }
-//-----------------------------------------------------------------------
+
 OpenGLContextWin32::~OpenGLContextWin32()
 {
     glrc.reset();
     hdc.reset();
 }
-//-----------------------------------------------------------------------
+
 void OpenGLContextWin32::MakeCurrent()
 {
     POMDOG_ASSERT(hdc);
     POMDOG_ASSERT(glrc);
     wglMakeCurrent(hdc.get(), glrc.get());
 }
-//-----------------------------------------------------------------------
+
 void OpenGLContextWin32::ClearCurrent()
 {
     wglMakeCurrent(nullptr, nullptr);
 }
-//-----------------------------------------------------------------------
+
 void OpenGLContextWin32::SwapBuffers()
 {
     glFlush();
@@ -163,7 +163,7 @@ void OpenGLContextWin32::SwapBuffers()
     POMDOG_ASSERT(hdc);
     ::SwapBuffers(hdc.get());
 }
-//-----------------------------------------------------------------------
+
 } // namespace Win32
 } // namespace Detail
 } // namespace Pomdog

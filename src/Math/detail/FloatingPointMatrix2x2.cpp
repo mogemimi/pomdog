@@ -13,7 +13,7 @@ template <typename T>
 FloatingPointMatrix2x2<T> const FloatingPointMatrix2x2<T>::Identity = {
     1, 0,
     0, 1};
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T>::FloatingPointMatrix2x2(T m00, T m01, T m10, T m11) noexcept
 {
@@ -22,7 +22,7 @@ FloatingPointMatrix2x2<T>::FloatingPointMatrix2x2(T m00, T m01, T m10, T m11) no
     m[1][0] = m10;
     m[1][1] = m11;
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> &
 FloatingPointMatrix2x2<T>::operator*=(const FloatingPointMatrix2x2& other) noexcept
@@ -30,7 +30,7 @@ FloatingPointMatrix2x2<T>::operator*=(const FloatingPointMatrix2x2& other) noexc
     *this = Multiply(*this, other);
     return *this;
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> &
 FloatingPointMatrix2x2<T>::operator+=(const FloatingPointMatrix2x2& other) noexcept
@@ -41,7 +41,7 @@ FloatingPointMatrix2x2<T>::operator+=(const FloatingPointMatrix2x2& other) noexc
     m[1][1] += other.m[1][1];
     return *this;
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> &
 FloatingPointMatrix2x2<T>::operator-=(const FloatingPointMatrix2x2& other) noexcept
@@ -52,7 +52,7 @@ FloatingPointMatrix2x2<T>::operator-=(const FloatingPointMatrix2x2& other) noexc
     m[1][1] -= other.m[1][1];
     return *this;
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> &
 FloatingPointMatrix2x2<T>::operator*=(T scaleFactor) noexcept
@@ -63,7 +63,7 @@ FloatingPointMatrix2x2<T>::operator*=(T scaleFactor) noexcept
     m[1][1] *= scaleFactor;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> &
 FloatingPointMatrix2x2<T>::operator/=(T scaleFactor)
@@ -76,19 +76,19 @@ FloatingPointMatrix2x2<T>::operator/=(T scaleFactor)
     m[1][1] *= inverseDivider;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator+() const noexcept
 {
     return *this;
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator-() const noexcept
 {
     return {-m[0][0], -m[0][1], -m[1][0], -m[1][1]};
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator+(const FloatingPointMatrix2x2& other) const noexcept
 {
@@ -98,7 +98,7 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator+(const FloatingPoi
         m[1][0] + other.m[1][0],
         m[1][1] + other.m[1][1]};
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator-(const FloatingPointMatrix2x2& other) const noexcept
 {
@@ -108,19 +108,19 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator-(const FloatingPoi
         m[1][0] - other.m[1][0],
         m[1][1] - other.m[1][1]};
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator*(const FloatingPointMatrix2x2& other) const noexcept
 {
     return Multiply(*this, other);
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator*(T scaleFactor) const noexcept
 {
     return Multiply(*this, scaleFactor);
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator/(T scaleFactor) const
 {
@@ -132,21 +132,21 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator/(T scaleFactor) co
         m[1][0] * inverseDivider,
         m[1][1] * inverseDivider};
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 bool FloatingPointMatrix2x2<T>::operator==(const FloatingPointMatrix2x2& other) const noexcept
 {
     return m[0][0] == other.m[0][0] && m[0][1] == other.m[0][1]
         && m[1][0] == other.m[1][0] && m[1][1] == other.m[1][1];
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 bool FloatingPointMatrix2x2<T>::operator!=(const FloatingPointMatrix2x2& other) const noexcept
 {
     return m[0][0] != other.m[0][0] || m[0][1] != other.m[0][1]
         || m[1][0] != other.m[1][0] || m[1][1] != other.m[1][1];
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 T & FloatingPointMatrix2x2<T>::operator()(std::size_t row, std::size_t column)
 {
@@ -154,7 +154,7 @@ T & FloatingPointMatrix2x2<T>::operator()(std::size_t row, std::size_t column)
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
     return m[row][column];
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 const T& FloatingPointMatrix2x2<T>::operator()(std::size_t row, std::size_t column) const
 {
@@ -162,7 +162,7 @@ const T& FloatingPointMatrix2x2<T>::operator()(std::size_t row, std::size_t colu
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
     return m[row][column];
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::Multiply(
     const FloatingPointMatrix2x2& matrix1,
@@ -174,7 +174,7 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::Multiply(
         matrix1.m[1][0] * matrix2.m[0][0] + matrix1.m[1][1] * matrix2.m[1][0],
         matrix1.m[1][0] * matrix2.m[0][1] + matrix1.m[1][1] * matrix2.m[1][1]};
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::Multiply(
     const FloatingPointMatrix2x2& matrix1, T scaleFactor) noexcept
@@ -185,33 +185,33 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::Multiply(
         matrix1.m[1][0] * scaleFactor,
         matrix1.m[1][1] * scaleFactor};
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 T FloatingPointMatrix2x2<T>::Determinant() const noexcept
 {
     return m[0][0] * m[1][1] - m[0][1] * m[1][0];
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 const T* FloatingPointMatrix2x2<T>::Data() const noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return m[0].data();
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 T* FloatingPointMatrix2x2<T>::Data() noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return m[0].data();
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 FloatingPointMatrix2x2<T> operator*(T scaleFactor, const FloatingPointMatrix2x2<T>& matrix) noexcept
 {
     return FloatingPointMatrix2x2<T>::Multiply(matrix, scaleFactor);
 }
-//-----------------------------------------------------------------------
+
 // explicit instantiations
 template class FloatingPointMatrix2x2<float>;
 

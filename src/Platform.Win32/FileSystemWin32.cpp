@@ -9,39 +9,39 @@
 namespace fs = std::experimental::filesystem;
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 bool FileSystem::CreateDirectory(const std::string& path)
 {
     // 'CreateDirectory' means 'CreateDirectoryA' in Win32.
     POMDOG_ASSERT(!path.empty());
     return fs::create_directory(path);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog
 
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include <Shlobj.h>
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 bool FileSystem::CreateDirectories(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     return fs::create_directories(path);
 }
-//-----------------------------------------------------------------------
+
 bool FileSystem::Exists(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     return fs::exists(path);
 }
-//-----------------------------------------------------------------------
+
 bool FileSystem::IsDirectory(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     return fs::is_directory(path);
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetLocalAppDataDirectoryPath()
 {
     TCHAR directoryName[MAX_PATH];
@@ -58,7 +58,7 @@ std::string FileSystem::GetLocalAppDataDirectoryPath()
     std::string localAppData(directoryName);
     return PathHelper::Join(localAppData, productName);
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetAppDataDirectoryPath()
 {
     TCHAR directoryName[MAX_PATH];
@@ -75,19 +75,19 @@ std::string FileSystem::GetAppDataDirectoryPath()
     std::string appData(directoryName);
     return PathHelper::Join(appData, productName);
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetResourceDirectoryPath()
 {
     auto currentDirectory = fs::current_path();
     return currentDirectory.string();
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetTempDirectoryPath()
 {
     auto path = fs::temp_directory_path();
     return path.string();
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetCurrentWorkingDirectory()
 {
     TCHAR directory[MAX_PATH + 1];
@@ -98,5 +98,5 @@ std::string FileSystem::GetCurrentWorkingDirectory()
     }
     return {};
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

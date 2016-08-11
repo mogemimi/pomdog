@@ -13,7 +13,7 @@ namespace Detail {
 namespace Direct3D11 {
 
 using DXGI::DXGIFormatHelper;
-//-----------------------------------------------------------------------
+
 Texture2DDirect3D11::Texture2DDirect3D11(
     ID3D11Device* device,
     const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContextIn,
@@ -68,7 +68,7 @@ Texture2DDirect3D11::Texture2DDirect3D11(
             "Failed to create the shader resource view");
     }
 }
-//-----------------------------------------------------------------------
+
 void Texture2DDirect3D11::SetData(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
@@ -97,13 +97,13 @@ void Texture2DDirect3D11::SetData(
 
     deviceContext->Unmap(texture2D.Get(), 0);
 }
-//-----------------------------------------------------------------------
+
 ID3D11ShaderResourceView* Texture2DDirect3D11::GetShaderResourceView() const
 {
     POMDOG_ASSERT(shaderResourceView);
     return shaderResourceView.Get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog

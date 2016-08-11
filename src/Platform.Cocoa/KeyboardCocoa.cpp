@@ -8,12 +8,12 @@ namespace Detail {
 namespace Cocoa {
 
 KeyboardCocoa::KeyboardCocoa() = default;
-//-----------------------------------------------------------------------
+
 KeyboardState KeyboardCocoa::GetState() const
 {
     return state;
 }
-//-----------------------------------------------------------------------
+
 void KeyboardCocoa::SetKey(Keys key, KeyState keyState)
 {
     bool isKeyDown = state.IsKeyDown(key);

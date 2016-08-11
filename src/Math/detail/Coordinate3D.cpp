@@ -9,12 +9,12 @@ namespace Detail {
 
 template <typename T>
 Coordinate3D<T> const Coordinate3D<T>::Zero(0, 0, 0);
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T>::Coordinate3D(T x, T y, T z) noexcept
     : X(x), Y(y), Z(z)
 {}
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T> & Coordinate3D<T>::operator+=(const Coordinate3D& other) noexcept
 {
@@ -23,7 +23,7 @@ Coordinate3D<T> & Coordinate3D<T>::operator+=(const Coordinate3D& other) noexcep
     Z += other.Z;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T> & Coordinate3D<T>::operator-=(const Coordinate3D& other) noexcept
 {
@@ -32,7 +32,7 @@ Coordinate3D<T> & Coordinate3D<T>::operator-=(const Coordinate3D& other) noexcep
     Z -= other.Z;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T> & Coordinate3D<T>::operator*=(T scaleFactor) noexcept
 {
@@ -41,7 +41,7 @@ Coordinate3D<T> & Coordinate3D<T>::operator*=(T scaleFactor) noexcept
     Z *= scaleFactor;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T> & Coordinate3D<T>::operator/=(T scaleFactor)
 {
@@ -51,37 +51,37 @@ Coordinate3D<T> & Coordinate3D<T>::operator/=(T scaleFactor)
     Z /= scaleFactor;
     return *this;
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T> Coordinate3D<T>::operator+() const noexcept
 {
     return *this;
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T> Coordinate3D<T>::operator-() const noexcept
 {
     return {-X, -Y, -Z};
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T> Coordinate3D<T>::operator+(const Coordinate3D& other) const noexcept
 {
     return {X + other.X, Y + other.Y, Z + other.Z};
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T> Coordinate3D<T>::operator-(const Coordinate3D& other) const noexcept
 {
     return {X - other.X, Y - other.Y, Z - other.Z};
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T> Coordinate3D<T>::operator*(const Coordinate3D& other) const noexcept
 {
     return {X * other.X, Y * other.Y, Z * other.Z};
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T> Coordinate3D<T>::operator/(const Coordinate3D& other) const
 {
@@ -90,32 +90,32 @@ Coordinate3D<T> Coordinate3D<T>::operator/(const Coordinate3D& other) const
     POMDOG_ASSERT(other.Z != 0);
     return {X / other.X, Y / other.Y, Z / other.Z};
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T> Coordinate3D<T>::operator*(T scaleFactor) const noexcept
 {
     return {X * scaleFactor, Y * scaleFactor, Z * scaleFactor};
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T> Coordinate3D<T>::operator/(T scaleFactor) const
 {
     POMDOG_ASSERT(scaleFactor != 0);
     return {X / scaleFactor, Y / scaleFactor, Z / scaleFactor};
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 bool Coordinate3D<T>::operator==(const Coordinate3D& other) const noexcept
 {
     return (X == other.X && Y == other.Y && Z == other.Z);
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 bool Coordinate3D<T>::operator!=(const Coordinate3D& other) const noexcept
 {
     return (X != other.X || Y != other.Y || Z != other.Z);
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T> operator*(T scaleFactor, const Coordinate3D<T>& coordinate) noexcept
 {
@@ -124,7 +124,7 @@ Coordinate3D<T> operator*(T scaleFactor, const Coordinate3D<T>& coordinate) noex
         scaleFactor * coordinate.Y,
         scaleFactor * coordinate.Z};
 }
-//-----------------------------------------------------------------------
+
 template <typename T>
 Coordinate3D<T> operator/(T scaleFactor, const Coordinate3D<T>& coordinate)
 {
@@ -137,7 +137,7 @@ Coordinate3D<T> operator/(T scaleFactor, const Coordinate3D<T>& coordinate)
         scaleFactor / coordinate.Y,
         scaleFactor / coordinate.Z};
 }
-//-----------------------------------------------------------------------
+
 // explicit instantiations
 template class Coordinate3D<std::int32_t>;
 

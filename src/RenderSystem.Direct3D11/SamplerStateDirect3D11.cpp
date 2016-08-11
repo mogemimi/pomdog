@@ -26,7 +26,7 @@ D3D11_FILTER ToFilter(TextureFilter textureFilter) noexcept
     }
     return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 }
-//-----------------------------------------------------------------------
+
 D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) noexcept
 {
     switch (addressMode) {
@@ -38,7 +38,7 @@ D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) 
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 SamplerStateDirect3D11::SamplerStateDirect3D11(
     ID3D11Device* device,
     const SamplerDescription& description)
@@ -73,13 +73,13 @@ SamplerStateDirect3D11::SamplerStateDirect3D11(
             "Failed to create ID3D11SamplerState.");
     }
 }
-//-----------------------------------------------------------------------
+
 ID3D11SamplerState* SamplerStateDirect3D11::GetSamplerState() const
 {
     POMDOG_ASSERT(samplerState);
     return samplerState.Get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog

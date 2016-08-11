@@ -84,7 +84,7 @@ std::vector<EffectVariable> EnumerateEffectVariables(
 
     return std::move(variables);
 }
-//-----------------------------------------------------------------------
+
 void EnumerateConstantBuffer(
     ID3D11ShaderReflection* shaderReflector,
     std::vector<EffectConstantDescription> & output)
@@ -130,7 +130,7 @@ void EnumerateConstantBuffer(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 EffectReflectionDirect3D11::EffectReflectionDirect3D11(
     const ShaderBytecode& vertexShaderBytecode,
     const ShaderBytecode& pixelShaderBytecode)
@@ -153,7 +153,7 @@ EffectReflectionDirect3D11::EffectReflectionDirect3D11(
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to D3DReflect");
     }
 }
-//-----------------------------------------------------------------------
+
 std::vector<EffectConstantDescription> EffectReflectionDirect3D11::GetConstantBuffers() const
 {
     std::vector<EffectConstantDescription> result;
@@ -192,7 +192,7 @@ std::vector<EffectConstantDescription> EffectReflectionDirect3D11::GetConstantBu
 
     return std::move(result);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog

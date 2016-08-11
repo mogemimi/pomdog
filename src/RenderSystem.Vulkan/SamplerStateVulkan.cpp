@@ -20,7 +20,7 @@ VkSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexce
     }
     return VK_SAMPLER_ADDRESS_MODE_REPEAT;
 }
-//-----------------------------------------------------------------------
+
 std::tuple<VkFilter, VkFilter, VkSamplerMipmapMode>
 ToTextureFilter(TextureFilter filter)
 {
@@ -78,7 +78,7 @@ ToTextureFilter(TextureFilter filter)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 SamplerStateVulkan::SamplerStateVulkan(
     ::VkDevice deviceIn,
     const SamplerDescription& description)
@@ -120,7 +120,7 @@ SamplerStateVulkan::SamplerStateVulkan(
     // FUS RO DAH!
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 SamplerStateVulkan::~SamplerStateVulkan()
 {
     if (sampler != nullptr) {
@@ -128,12 +128,12 @@ SamplerStateVulkan::~SamplerStateVulkan()
         vkDestroySampler(device, sampler, nullptr);
     }
 }
-//-----------------------------------------------------------------------
+
 ::VkSampler SamplerStateVulkan::GetSamplerState() const
 {
     return sampler;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Vulkan
 } // namespace Detail
 } // namespace Pomdog

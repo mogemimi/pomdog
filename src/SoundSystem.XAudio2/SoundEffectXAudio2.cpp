@@ -35,7 +35,7 @@ void BuildXAudioBuffer(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 SoundEffectXAudio2::SoundEffectXAudio2(
     AudioEngineXAudio2 & audioEngine,
     const std::shared_ptr<AudioClipXAudio2>& audioClipIn,
@@ -68,7 +68,7 @@ SoundEffectXAudio2::SoundEffectXAudio2(
         ///@todo Not implemented
     }
 }
-//-----------------------------------------------------------------------
+
 SoundEffectXAudio2::~SoundEffectXAudio2()
 {
     if (sourceVoice)
@@ -80,25 +80,25 @@ SoundEffectXAudio2::~SoundEffectXAudio2()
 
     audioClip.reset();
 }
-//-----------------------------------------------------------------------
+
 void SoundEffectXAudio2::ExitLoop()
 {
     POMDOG_ASSERT(sourceVoice);
     sourceVoice->ExitLoop();
 }
-//-----------------------------------------------------------------------
+
 void SoundEffectXAudio2::Pause()
 {
     POMDOG_ASSERT(sourceVoice);
     sourceVoice->Stop();
 }
-//-----------------------------------------------------------------------
+
 void SoundEffectXAudio2::Play()
 {
     POMDOG_ASSERT(sourceVoice);
     sourceVoice->Start();
 }
-//-----------------------------------------------------------------------
+
 void SoundEffectXAudio2::Stop()
 {
     POMDOG_ASSERT(sourceVoice);
@@ -110,7 +110,7 @@ void SoundEffectXAudio2::Stop()
 
     sourceVoice->SubmitSourceBuffer(&bufferDesc);
 }
-//-----------------------------------------------------------------------
+
 void SoundEffectXAudio2::Apply3D(const AudioListener& listener, const AudioEmitter& emitter)
 {
     ///@todo Not implemented
@@ -119,7 +119,7 @@ void SoundEffectXAudio2::Apply3D(const AudioListener& listener, const AudioEmitt
 
     POMDOG_ASSERT(false);
 }
-//-----------------------------------------------------------------------
+
 void SoundEffectXAudio2::SetPitch(float pitch)
 {
     POMDOG_ASSERT(sourceVoice);
@@ -136,7 +136,7 @@ void SoundEffectXAudio2::SetPitch(float pitch)
 
     sourceVoice->SetFrequencyRatio(nativePitch);
 }
-//-----------------------------------------------------------------------
+
 void SoundEffectXAudio2::SetVolume(float volume)
 {
     POMDOG_ASSERT(sourceVoice);
@@ -145,7 +145,7 @@ void SoundEffectXAudio2::SetVolume(float volume)
 
     sourceVoice->SetVolume(volume);
 }
-//-----------------------------------------------------------------------
+
 } // namespace XAudio2
 } // namespace SoundSystem
 } // namespace Detail

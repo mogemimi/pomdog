@@ -6,7 +6,7 @@
 namespace Pomdog {
 namespace Detail {
 namespace Win32 {
-//-----------------------------------------------------------------------
+
 MouseWin32::MouseWin32(HWND windowHandleIn)
     : windowHandle(windowHandleIn)
 {
@@ -17,7 +17,7 @@ MouseWin32::MouseWin32(HWND windowHandleIn)
     ScreenToClient(windowHandle, &cursorPos);
     state.Position = Point2D{ cursorPos.x, cursorPos.y };
 }
-//-----------------------------------------------------------------------
+
 void MouseWin32::HandleMessage(const RAWMOUSE& mouse)
 {
     if (mouse.usFlags == MOUSE_MOVE_RELATIVE) {
@@ -94,12 +94,12 @@ void MouseWin32::HandleMessage(const RAWMOUSE& mouse)
         state.XButton2 = ButtonState::Released;
     }
 }
-//-----------------------------------------------------------------------
+
 MouseState MouseWin32::GetState() const
 {
     return state;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Win32
 } // namespace Detail
 } // namespace Pomdog

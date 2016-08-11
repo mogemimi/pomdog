@@ -27,7 +27,7 @@ GetNativeBuffer(const std::shared_ptr<AudioClip>& audioClip)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 SoundEffect::SoundEffect(
     AudioEngine & audioEngine,
     const std::shared_ptr<AudioClip>& audioClip,
@@ -43,9 +43,9 @@ SoundEffect::SoundEffect(
     nativeSoundEffect = std::make_unique<Detail::SoundSystem::NativeSoundEffect>(
         *nativeAudioEngine, GetNativeBuffer(audioClip), isLooped);
 }
-//-----------------------------------------------------------------------
+
 SoundEffect::~SoundEffect() = default;
-//-----------------------------------------------------------------------
+
 void SoundEffect::Pause()
 {
     if (state == SoundState::Paused) {
@@ -56,7 +56,7 @@ void SoundEffect::Pause()
     nativeSoundEffect->Pause();
     state = SoundState::Paused;
 }
-//-----------------------------------------------------------------------
+
 void SoundEffect::Play()
 {
     if (state == SoundState::Playing) {
@@ -67,7 +67,7 @@ void SoundEffect::Play()
     nativeSoundEffect->Play();
     state = SoundState::Playing;
 }
-//-----------------------------------------------------------------------
+
 void SoundEffect::Stop()
 {
     if (state == SoundState::Stopped) {
@@ -78,18 +78,18 @@ void SoundEffect::Stop()
     nativeSoundEffect->Stop();
     state = SoundState::Stopped;
 }
-//-----------------------------------------------------------------------
+
 void SoundEffect::Apply3D(const AudioListener& listener, const AudioEmitter& emitter)
 {
     POMDOG_ASSERT(nativeSoundEffect);
     nativeSoundEffect->Apply3D(listener, emitter);
 }
-//-----------------------------------------------------------------------
+
 bool SoundEffect::IsLooped() const
 {
     return isLooped;
 }
-//-----------------------------------------------------------------------
+
 void SoundEffect::ExitLoop()
 {
     if (!isLooped) {
@@ -100,27 +100,27 @@ void SoundEffect::ExitLoop()
     nativeSoundEffect->ExitLoop();
     isLooped = false;
 }
-//-----------------------------------------------------------------------
+
 SoundState SoundEffect::GetState() const
 {
     return state;
 }
-//-----------------------------------------------------------------------
+
 //float SoundEffect::GetPan() const
 //{
 //}
-//-----------------------------------------------------------------------
+
 //void SoundEffect::SetPan(float panpot)
 //{
 //    //POMDOG_ASSERT(nativeSoundEffect);
 //    //nativeSoundEffect->Pan(panpot);
 //}
-//-----------------------------------------------------------------------
+
 float SoundEffect::GetPitch() const
 {
     return pitch;
 }
-//-----------------------------------------------------------------------
+
 void SoundEffect::SetPitch(float pitchIn)
 {
     POMDOG_ASSERT(pitchIn >= -1.0f);
@@ -129,12 +129,12 @@ void SoundEffect::SetPitch(float pitchIn)
     this->pitch = pitchIn;
     nativeSoundEffect->SetPitch(pitchIn);
 }
-//-----------------------------------------------------------------------
+
 float SoundEffect::GetVolume() const
 {
     return volume;
 }
-//-----------------------------------------------------------------------
+
 void SoundEffect::SetVolume(float volumeIn)
 {
     POMDOG_ASSERT(volumeIn >= 0.0f);
@@ -143,5 +143,5 @@ void SoundEffect::SetVolume(float volumeIn)
     this->volume = volumeIn;
     nativeSoundEffect->SetVolume(volume);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

@@ -19,7 +19,7 @@ TimeSourceApple::TimeSourceApple()
     constexpr double nanoScale = (1.0 / 1000000000LL);
     secondsPerTick = nanoScale * nanoSeconds;
 }
-//-----------------------------------------------------------------------
+
 TimePoint TimeSourceApple::Now() const
 {
     auto currentSeconds = mach_absolute_time() * secondsPerTick;

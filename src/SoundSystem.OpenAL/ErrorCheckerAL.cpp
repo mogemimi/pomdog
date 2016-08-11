@@ -31,7 +31,7 @@ std::string ToString(const ErrorCodeAL& errorCode)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 void ErrorCheckerAL::CheckError(const char* command, const char* filename, int line)
 {
     ErrorCodeAL const errorCode{alGetError()};
@@ -59,7 +59,7 @@ void ErrorCheckerAL::CheckError(const char* command, const char* filename, int l
         ++lines;
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace OpenAL
 } // namespace SoundSystem
 } // namespace Detail

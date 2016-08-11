@@ -10,17 +10,17 @@ namespace Vulkan {
 namespace {
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 EffectReflectionVulkan::EffectReflectionVulkan()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 std::vector<EffectConstantDescription> EffectReflectionVulkan::GetConstantBuffers() const
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 } // namespace Vulkan
 } // namespace Detail
 } // namespace Pomdog

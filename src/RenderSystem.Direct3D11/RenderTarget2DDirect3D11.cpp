@@ -88,7 +88,7 @@ void BuildRenderTarget(
             "Failed to create shader resource view");
     }
 }
-//-----------------------------------------------------------------------
+
 void BuildDepthBuffer(
     ID3D11Device* device,
     DepthFormat depthStencilFormat,
@@ -145,7 +145,7 @@ void BuildDepthBuffer(
             "Failed to create DepthStencilView");
     }
 }
-//-----------------------------------------------------------------------
+
 void BuildBackBufferBySwapChain(
     ID3D11Device* device,
     IDXGISwapChain* swapChain,
@@ -176,7 +176,7 @@ void BuildBackBufferBySwapChain(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
     ID3D11Device* device,
     std::int32_t pixelWidth,
@@ -197,7 +197,7 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
     BuildDepthBuffer(device, depthStencilFormat, pixelWidth, pixelHeight,
         levelCount, depthStencil, depthStencilView);
 }
-//-----------------------------------------------------------------------
+
 RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
     ID3D11Device* device,
     IDXGISwapChain* swapChain,
@@ -217,24 +217,24 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
     BuildDepthBuffer(device, depthStencilFormat, pixelWidth, pixelHeight,
         backBufferMipLevels, depthStencil, depthStencilView);
 }
-//-----------------------------------------------------------------------
+
 ID3D11RenderTargetView* RenderTarget2DDirect3D11::GetRenderTargetView() const
 {
     POMDOG_ASSERT(renderTargetView);
     return renderTargetView.Get();
 }
-//-----------------------------------------------------------------------
+
 ID3D11DepthStencilView* RenderTarget2DDirect3D11::GetDepthStencilView() const
 {
     return depthStencilView.Get();
 }
-//-----------------------------------------------------------------------
+
 ID3D11ShaderResourceView* RenderTarget2DDirect3D11::GetShaderResourceView() const
 {
     POMDOG_ASSERT(textureResourceView);
     return textureResourceView.Get();
 }
-//-----------------------------------------------------------------------
+
 void RenderTarget2DDirect3D11::ResetBackBuffer(
     ID3D11Device* device, IDXGISwapChain* swapChain,
     std::int32_t pixelWidth, std::int32_t pixelHeight,
@@ -256,13 +256,13 @@ void RenderTarget2DDirect3D11::ResetBackBuffer(
     BuildDepthBuffer(device, depthStencilFormat, pixelWidth, pixelHeight,
         backBufferMipLevels, depthStencil, depthStencilView);
 }
-//-----------------------------------------------------------------------
+
 void RenderTarget2DDirect3D11::ResetBackBuffer()
 {
     renderTargetView.Reset();
     texture2D.Reset();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog

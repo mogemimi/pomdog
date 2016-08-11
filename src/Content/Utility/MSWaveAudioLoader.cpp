@@ -38,7 +38,7 @@
 namespace Pomdog {
 namespace Detail {
 namespace {
-//-----------------------------------------------------------------------
+
 AudioChannels ToAudioChannels(std::uint32_t channels) noexcept
 {
     POMDOG_ASSERT(channels > 0);
@@ -53,9 +53,8 @@ AudioChannels ToAudioChannels(std::uint32_t channels) noexcept
     return AudioChannels::Mono;
 }
 #if 0
-//-----------------------------------------------------------------------
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
-//-----------------------------------------------------------------------
+
 std::unique_ptr<AudioClip> LoadMSWave_Apple(const std::string& filePath)
 {
     CFStringRef filename = CFStringCreateWithCString(nullptr, filePath.c_str(), kCFStringEncodingUTF8);
@@ -171,9 +170,9 @@ std::unique_ptr<AudioClip> LoadMSWave_Apple(const std::string& filePath)
 
     return std::move(audioClip);
 }
-//-----------------------------------------------------------------------
+
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-//-----------------------------------------------------------------------
+
 MMCKINFO ReadRiffChunk(HMMIO ioHandle)
 {
     POMDOG_ASSERT(ioHandle);
@@ -198,7 +197,7 @@ MMCKINFO ReadRiffChunk(HMMIO ioHandle)
 
     return std::move(riffChunk);
 }
-//-----------------------------------------------------------------------
+
 std::vector<std::uint8_t> ReadWaveFormat(HMMIO ioHandle, const MMCKINFO& riffChunk)
 {
     POMDOG_ASSERT(ioHandle);
@@ -269,7 +268,7 @@ std::vector<std::uint8_t> ReadWaveFormat(HMMIO ioHandle, const MMCKINFO& riffChu
 
     return std::move(waveFormat);
 }
-//-----------------------------------------------------------------------
+
 MMCKINFO SeekDataChunk(HMMIO ioHandle, const MMCKINFO& riffChunk)
 {
     POMDOG_ASSERT(ioHandle);
@@ -289,7 +288,7 @@ MMCKINFO SeekDataChunk(HMMIO ioHandle, const MMCKINFO& riffChunk)
     }
     return std::move(dataChunk);
 }
-//-----------------------------------------------------------------------
+
 std::vector<std::uint8_t> ReadWaveAudioData(HMMIO ioHandle, const MMCKINFO& dataChunk)
 {
     POMDOG_ASSERT(ioHandle);
@@ -335,7 +334,7 @@ std::vector<std::uint8_t> ReadWaveAudioData(HMMIO ioHandle, const MMCKINFO& data
 
     return std::move(result);
 }
-//-----------------------------------------------------------------------
+
 std::unique_ptr<AudioClip> LoadMSWave_Win32(const std::string& filePath)
 {
     HMMIO ioHandle = ::mmioOpen(const_cast<LPSTR>(filePath.c_str()), nullptr, MMIO_ALLOCBUF | MMIO_READ);
@@ -427,7 +426,7 @@ RiffChunk ReadRiffChunk(std::ifstream & stream)
     }
     return riffChunk;
 }
-//-----------------------------------------------------------------------
+
 WaveFormat ReadWaveFormat(std::ifstream & stream)
 {
     POMDOG_ASSERT(stream);
@@ -477,7 +476,7 @@ WaveFormat ReadWaveFormat(std::ifstream & stream)
 
     return waveFormat;
 }
-//-----------------------------------------------------------------------
+
 std::vector<std::uint8_t> ReadWaveAudioData(std::ifstream & stream)
 {
     POMDOG_ASSERT(stream);
@@ -515,7 +514,7 @@ std::vector<std::uint8_t> ReadWaveAudioData(std::ifstream & stream)
 }
 
 } // unnamed namespace
- //-----------------------------------------------------------------------
+
 std::unique_ptr<AudioClip> MSWaveAudioLoader::Load(BinaryFileStream && binaryFile)
 {
     POMDOG_ASSERT(binaryFile.Stream);
@@ -595,6 +594,6 @@ std::unique_ptr<AudioClip> MSWaveAudioLoader::Load(BinaryFileStream && binaryFil
         throw e;
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace Detail
 } // namespace Pomdog

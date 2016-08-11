@@ -15,7 +15,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 GraphicsCommandList::GraphicsCommandList(GraphicsDevice & graphicsDevice)
 {
     auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
@@ -23,31 +23,31 @@ GraphicsCommandList::GraphicsCommandList(GraphicsDevice & graphicsDevice)
 
     nativeCommandList = nativeDevice->CreateGraphicsCommandList();
 }
-//-----------------------------------------------------------------------
+
 GraphicsCommandList::GraphicsCommandList(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
     : GraphicsCommandList(*graphicsDevice)
 {}
-//-----------------------------------------------------------------------
+
 GraphicsCommandList::~GraphicsCommandList() = default;
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::Close()
 {
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->Close();
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::Reset()
 {
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->Reset();
 }
-//-----------------------------------------------------------------------
+
 std::size_t GraphicsCommandList::GetCount() const noexcept
 {
     POMDOG_ASSERT(nativeCommandList);
     return nativeCommandList->GetCount();
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::Clear(const Color& color)
 {
     ///@todo badcode
@@ -58,19 +58,19 @@ void GraphicsCommandList::Clear(const Color& color)
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->Clear(options, color, 1.f, 0);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
 {
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->Clear(options, color, depth, stencil);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::Draw(std::size_t vertexCount)
 {
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->Draw(vertexCount);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::DrawIndexed(
     const std::shared_ptr<IndexBuffer>& indexBuffer,
     std::size_t indexCount)
@@ -80,7 +80,7 @@ void GraphicsCommandList::DrawIndexed(
     nativeCommandList->SetIndexBuffer(indexBuffer);
     nativeCommandList->DrawIndexed(indexCount);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::DrawInstanced(
     std::size_t vertexCount,
     std::size_t instanceCount)
@@ -88,7 +88,7 @@ void GraphicsCommandList::DrawInstanced(
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->DrawInstanced(vertexCount, instanceCount);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::DrawIndexedInstanced(
     const std::shared_ptr<IndexBuffer>& indexBuffer,
     std::size_t indexCount,
@@ -99,7 +99,7 @@ void GraphicsCommandList::DrawIndexedInstanced(
     nativeCommandList->SetIndexBuffer(indexBuffer);
     nativeCommandList->DrawIndexedInstanced(indexCount, instanceCount);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetViewport(const Viewport& viewport)
 {
     POMDOG_ASSERT(nativeCommandList);
@@ -108,25 +108,25 @@ void GraphicsCommandList::SetViewport(const Viewport& viewport)
 
     nativeCommandList->SetViewport(viewport);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetScissorRectangle(const Rectangle& rectangle)
 {
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->SetScissorRectangle(rectangle);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
 {
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->SetPrimitiveTopology(primitiveTopology);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetBlendFactor(const Color& blendFactor)
 {
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->SetBlendFactor(blendFactor);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
 {
     POMDOG_ASSERT(vertexBuffer);
@@ -135,7 +135,7 @@ void GraphicsCommandList::SetVertexBuffer(const std::shared_ptr<VertexBuffer>& v
     nativeCommandList->SetVertexBuffers({
         VertexBufferBinding{vertexBuffer, 0}});
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer, std::size_t offset)
 {
     POMDOG_ASSERT(vertexBuffer);
@@ -143,21 +143,21 @@ void GraphicsCommandList::SetVertexBuffer(const std::shared_ptr<VertexBuffer>& v
     nativeCommandList->SetVertexBuffers({
         VertexBufferBinding{vertexBuffer, offset}});
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers)
 {
     POMDOG_ASSERT(!vertexBuffers.empty());
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->SetVertexBuffers(vertexBuffers);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers)
 {
     POMDOG_ASSERT(!vertexBuffers.empty());
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->SetVertexBuffers(std::move(vertexBuffers));
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState)
 {
     POMDOG_ASSERT(pipelineState);
@@ -169,7 +169,7 @@ void GraphicsCommandList::SetPipelineState(const std::shared_ptr<PipelineState>&
 
     nativeCommandList->SetPipelineState(nativePipelineState);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetConstantBuffer(int index, const std::shared_ptr<ConstantBuffer>& constantBuffer)
 {
     POMDOG_ASSERT(index >= 0);
@@ -181,14 +181,14 @@ void GraphicsCommandList::SetConstantBuffer(int index, const std::shared_ptr<Con
 
     nativeCommandList->SetConstantBuffer(index, nativeConstantBuffer);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetTexture(int index)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->SetTexture(index);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetTexture(int index, const std::shared_ptr<Texture2D>& texture)
 {
     POMDOG_ASSERT(texture);
@@ -196,7 +196,7 @@ void GraphicsCommandList::SetTexture(int index, const std::shared_ptr<Texture2D>
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->SetTexture(index, texture);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture)
 {
     POMDOG_ASSERT(texture);
@@ -204,7 +204,7 @@ void GraphicsCommandList::SetTexture(int index, const std::shared_ptr<RenderTarg
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->SetTexture(index, texture);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetSamplerState(int index, const std::shared_ptr<SamplerState>& samplerState)
 {
     POMDOG_ASSERT(samplerState);
@@ -217,20 +217,20 @@ void GraphicsCommandList::SetSamplerState(int index, const std::shared_ptr<Sampl
 
     nativeCommandList->SetSampler(index, std::move(nativeSamplerState));
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetRenderTarget()
 {
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->SetRenderTarget();
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetRenderTarget(const std::shared_ptr<RenderTarget2D>& renderTarget)
 {
     POMDOG_ASSERT(renderTarget);
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->SetRenderTargets({renderTarget});
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets)
 {
     POMDOG_ASSERT(!renderTargets.empty());
@@ -243,7 +243,7 @@ void GraphicsCommandList::SetRenderTargets(const std::vector<std::shared_ptr<Ren
 
     nativeCommandList->SetRenderTargets(renderTargets);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsCommandList::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets)
 {
     POMDOG_ASSERT(!renderTargets.empty());
@@ -256,11 +256,11 @@ void GraphicsCommandList::SetRenderTargets(std::vector<std::shared_ptr<RenderTar
 
     nativeCommandList->SetRenderTargets(std::move(renderTargets));
 }
-//-----------------------------------------------------------------------
+
 Detail::NativeGraphicsCommandList* GraphicsCommandList::GetNativeGraphicsCommandList()
 {
     POMDOG_ASSERT(nativeCommandList);
     return nativeCommandList.get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

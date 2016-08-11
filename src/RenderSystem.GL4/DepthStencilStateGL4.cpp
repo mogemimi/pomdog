@@ -8,7 +8,7 @@
 namespace Pomdog {
 namespace Detail {
 namespace GL4 {
-//-----------------------------------------------------------------------
+
 namespace {
 
 GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction comparison) noexcept
@@ -27,7 +27,7 @@ GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction comparison) noexcep
     return GL_LEQUAL;
 #endif
 }
-//-----------------------------------------------------------------------
+
 GLenum ToStencilOperationGL4NonTypesafe(StencilOperation operation) noexcept
 {
     // **NOTE**
@@ -48,21 +48,21 @@ GLenum ToStencilOperationGL4NonTypesafe(StencilOperation operation) noexcept
     return GL_KEEP;
 #endif
 }
-//-----------------------------------------------------------------------
+
 ComparisonFunctionGL4
 ToComparisonFunctionGL4(const ComparisonFunction& comparison) noexcept
 {
     return ComparisonFunctionGL4{
         ToComparisonFunctionGL4NonTypesafe(comparison)};
 }
-//-----------------------------------------------------------------------
+
 StencilOperationGL4
 ToStencilOperationGL4(const StencilOperation& operation) noexcept
 {
     return StencilOperationGL4{
         ToStencilOperationGL4NonTypesafe(operation)};
 }
-//-----------------------------------------------------------------------
+
 void ToDepthStencilFaceOperationGL4(
     const DepthStencilOperation& face,
     DepthStencilFaceOperationGL4 & result) noexcept
@@ -74,7 +74,7 @@ void ToDepthStencilFaceOperationGL4(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 DepthStencilStateGL4::DepthStencilStateGL4(const DepthStencilDescription& description)
     : depthFunction(ToComparisonFunctionGL4(description.DepthBufferFunction))
     , referenceStencil(description.ReferenceStencil)
@@ -90,7 +90,7 @@ DepthStencilStateGL4::DepthStencilStateGL4(const DepthStencilDescription& descri
     ToDepthStencilFaceOperationGL4(description.ClockwiseFace, clockwiseFace);
     ToDepthStencilFaceOperationGL4(description.CounterClockwiseFace, counterClockwiseFace);
 }
-//-----------------------------------------------------------------------
+
 void DepthStencilStateGL4::ApplyDepthTest()
 {
     if (!depthBufferEnable) {
@@ -117,7 +117,7 @@ void DepthStencilStateGL4::ApplyDepthTest()
     glDepthFunc(depthFunction.value);
     POMDOG_CHECK_ERROR_GL4("glDepthFunc");
 }
-//-----------------------------------------------------------------------
+
 void DepthStencilStateGL4::ApplyStencilTest()
 {
     if (!stencilEnable) {
@@ -160,7 +160,7 @@ void DepthStencilStateGL4::ApplyStencilTest()
     glStencilMask(stencilWriteMask);
     POMDOG_CHECK_ERROR_GL4("glStencilMask");
 }
-//-----------------------------------------------------------------------
+
 void DepthStencilStateGL4::Apply()
 {
     ApplyDepthTest();

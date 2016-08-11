@@ -21,7 +21,7 @@ float MipmapImageDataBytes(float width, float height, float bytesPerPixel)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 Texture2DMetal::Texture2DMetal(
     id<MTLDevice> device,
     std::int32_t pixelWidth,
@@ -53,7 +53,7 @@ Texture2DMetal::Texture2DMetal(
             "Failed to create MTLTexture");
     }
 }
-//-----------------------------------------------------------------------
+
 void Texture2DMetal::SetData(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
@@ -96,12 +96,12 @@ void Texture2DMetal::SetData(
         mipMapPixelHeight = std::max((mipMapPixelHeight >> 1), 1);
     }
 }
-//-----------------------------------------------------------------------
+
 id<MTLTexture> Texture2DMetal::GetTexture() const noexcept
 {
     return texture;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Metal
 } // namespace Detail
 } // namespace Pomdog

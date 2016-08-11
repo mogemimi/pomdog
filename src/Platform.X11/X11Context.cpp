@@ -33,7 +33,7 @@ static void InitializeAtoms(::Display* display, X11AtomCache & atoms)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 X11Context::X11Context()
     : Display(nullptr)
 {
@@ -49,7 +49,7 @@ X11Context::X11Context()
 
     InitializeAtoms(Display, Atoms);
 }
-//-----------------------------------------------------------------------
+
 X11Context::~X11Context()
 {
     if (Display != nullptr) {
@@ -57,7 +57,7 @@ X11Context::~X11Context()
         Display = nullptr;
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace X11
 } // namespace Detail
 } // namespace Pomdog

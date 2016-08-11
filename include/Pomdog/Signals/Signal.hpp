@@ -33,12 +33,12 @@ private:
     std::shared_ptr<SignalBody> body;
 };
 
-//-----------------------------------------------------------------------
+
 template <typename...Arguments>
 Signal<void(Arguments...)>::Signal()
     : body(std::make_shared<SignalBody>())
 {}
-//-----------------------------------------------------------------------
+
 template <typename...Arguments>
 Connection Signal<void(Arguments...)>::Connect(
     const std::function<void(Arguments...)>& slot)
@@ -47,7 +47,7 @@ Connection Signal<void(Arguments...)>::Connect(
     POMDOG_ASSERT(body);
     return Connection{body->Connect(slot)};
 }
-//-----------------------------------------------------------------------
+
 template <typename...Arguments>
 Connection Signal<void(Arguments...)>::Connect(
     std::function<void(Arguments...)> && slot)
@@ -56,14 +56,14 @@ Connection Signal<void(Arguments...)>::Connect(
     POMDOG_ASSERT(body);
     return Connection{body->Connect(std::move(slot))};
 }
-//-----------------------------------------------------------------------
+
 template <typename...Arguments>
 void Signal<void(Arguments...)>::operator()(Arguments... arguments)
 {
     POMDOG_ASSERT(body);
     body->operator()(std::forward<Arguments>(arguments)...);
 }
-//-----------------------------------------------------------------------
+
 template <typename...Arguments>
 std::size_t Signal<void(Arguments...)>::InvocationCount() const
 {

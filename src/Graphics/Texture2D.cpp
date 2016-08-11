@@ -10,14 +10,14 @@
 #include <algorithm>
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 Texture2D::Texture2D(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn)
     : Texture2D(graphicsDevice, pixelWidthIn, pixelHeightIn, false, SurfaceFormat::R8G8B8A8_UNorm)
 {}
-//-----------------------------------------------------------------------
+
 Texture2D::Texture2D(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     std::int32_t pixelWidthIn,
@@ -35,29 +35,29 @@ Texture2D::Texture2D(
     nativeTexture2D = graphicsDevice->GetNativeGraphicsDevice()->CreateTexture2D(
         pixelWidthIn, pixelHeightIn, levelCount, formatIn);
 }
-//-----------------------------------------------------------------------
+
 Texture2D::~Texture2D() = default;
-//-----------------------------------------------------------------------
+
 std::int32_t Texture2D::GetWidth() const
 {
     return pixelWidth;
 }
-//-----------------------------------------------------------------------
+
 std::int32_t Texture2D::GetHeight() const
 {
     return pixelHeight;
 }
-//-----------------------------------------------------------------------
+
 std::int32_t Texture2D::GetLevelCount() const
 {
     return levelCount;
 }
-//-----------------------------------------------------------------------
+
 SurfaceFormat Texture2D::GetFormat() const
 {
     return format;
 }
-//-----------------------------------------------------------------------
+
 void Texture2D::SetData(const void* pixelData)
 {
     POMDOG_ASSERT(nativeTexture2D);
@@ -67,10 +67,10 @@ void Texture2D::SetData(const void* pixelData)
     POMDOG_ASSERT(levelCount >= 1);
     nativeTexture2D->SetData(pixelWidth, pixelHeight, levelCount, format, pixelData);
 }
-//-----------------------------------------------------------------------
+
 Detail::NativeTexture2D* Texture2D::GetNativeTexture2D()
 {
     return nativeTexture2D.get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

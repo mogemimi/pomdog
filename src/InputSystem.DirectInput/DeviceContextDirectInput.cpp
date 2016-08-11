@@ -9,7 +9,7 @@ namespace Pomdog {
 namespace Detail {
 namespace InputSystem {
 namespace DirectInput {
-//-----------------------------------------------------------------------
+
 DeviceContextDirectInput::DeviceContextDirectInput(HINSTANCE hInstance, HWND windowHandleIn)
     : windowHandle(windowHandleIn)
 {
@@ -24,21 +24,21 @@ DeviceContextDirectInput::DeviceContextDirectInput(HINSTANCE hInstance, HWND win
         ///@todo Not implemented
     }
 }
-//-----------------------------------------------------------------------
+
 DeviceContextDirectInput::~DeviceContextDirectInput() = default;
-//-----------------------------------------------------------------------
+
 HWND DeviceContextDirectInput::WindowHandle() const
 {
     POMDOG_ASSERT(windowHandle);
     return windowHandle;
 }
-//-----------------------------------------------------------------------
+
 IDirectInput8* DeviceContextDirectInput::GetDirectInput() const
 {
     POMDOG_ASSERT(directInput);
     return directInput.Get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace DirectInput
 } // namespace InputSystem
 } // namespace Detail

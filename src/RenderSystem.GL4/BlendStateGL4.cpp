@@ -36,7 +36,7 @@ GLenum ToBlendGL4NonTypesafe(Blend blend) noexcept
     return GL_ZERO;
 #endif
 }
-//-----------------------------------------------------------------------
+
 GLenum ToBlendOperationGL4NonTypesafe(BlendOperation operation) noexcept
 {
     switch (operation) {
@@ -50,17 +50,17 @@ GLenum ToBlendOperationGL4NonTypesafe(BlendOperation operation) noexcept
     return GL_FUNC_ADD;
 #endif
 }
-//-----------------------------------------------------------------------
+
 BlendGL4 ToBlendGL4(Blend blend) noexcept
 {
     return BlendGL4{ToBlendGL4NonTypesafe(blend)};
 }
-//-----------------------------------------------------------------------
+
 BlendOperationGL4 ToBlendOperationGL4(BlendOperation operation) noexcept
 {
     return BlendOperationGL4{ToBlendOperationGL4NonTypesafe(operation)};
 }
-//-----------------------------------------------------------------------
+
 void ToRenderTargetBlendGL4(
     const RenderTargetBlendDescription& desc,
     RenderTargetBlendDescGL4 & result) noexcept
@@ -75,7 +75,7 @@ void ToRenderTargetBlendGL4(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 BlendStateGL4::BlendStateGL4(const BlendDescription& description)
     : independentBlendEnable(description.IndependentBlendEnable)
 {
@@ -84,7 +84,7 @@ BlendStateGL4::BlendStateGL4(const BlendDescription& description)
         ToRenderTargetBlendGL4(description.RenderTargets[i], renderTargets[i]);
     }
 }
-//-----------------------------------------------------------------------
+
 void BlendStateGL4::Apply()
 {
     if (independentBlendEnable) {
@@ -140,7 +140,7 @@ void BlendStateGL4::Apply()
     //    glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
     //}
 }
-//-----------------------------------------------------------------------
+
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog

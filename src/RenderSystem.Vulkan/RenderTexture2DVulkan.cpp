@@ -25,7 +25,7 @@ VkFormat ToDepthStencilFormat(DepthFormat depthFormat) noexcept
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 RenderTarget2DVulkan::RenderTarget2DVulkan(
     VkDevice device,
     std::int32_t pixelWidth,
@@ -38,7 +38,7 @@ RenderTarget2DVulkan::RenderTarget2DVulkan(
     POMDOG_ASSERT(device != nullptr);
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 } // namespace Vulkan
 } // namespace Detail
 } // namespace Pomdog

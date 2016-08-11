@@ -9,7 +9,7 @@
 {
     std::shared_ptr<Pomdog::EventQueue> eventQueue;
 }
-//-----------------------------------------------------------------------
+
 - (instancetype)initWithEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueueIn
 {
     self = [super init];
@@ -19,18 +19,18 @@
     }
     return self;
 }
-//-----------------------------------------------------------------------
+
 - (BOOL)windowShouldClose:(id)sender
 {
     using Pomdog::Detail::WindowShouldCloseEvent;
     eventQueue->Enqueue<WindowShouldCloseEvent>();
     return NO;
 }
-//-----------------------------------------------------------------------
+
 - (void)windowWillClose:(NSNotification *)notification
 {
     using Pomdog::Detail::WindowWillCloseEvent;
     eventQueue->Enqueue<WindowWillCloseEvent>();
 }
-//-----------------------------------------------------------------------
+
 @end

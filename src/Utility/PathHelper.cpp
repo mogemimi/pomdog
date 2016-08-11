@@ -265,7 +265,7 @@ TEST(PathIterator, Case_08)
 #endif
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 std::string PathHelper::Join(const std::string& path1, const std::string& path2)
 {
     std::string result = path1;
@@ -287,7 +287,7 @@ std::string PathHelper::Join(const std::string& path1, const std::string& path2)
     result += path2;
     return result;
 }
-//-----------------------------------------------------------------------
+
 Detail::BinaryFileStream PathHelper::OpenStream(const std::string& path)
 {
     std::ifstream stream(path, std::ios::ate | std::ios::binary);
@@ -307,7 +307,7 @@ Detail::BinaryFileStream PathHelper::OpenStream(const std::string& path)
     result.SizeInBytes = fileSize;
     return result;
 }
-//-----------------------------------------------------------------------
+
 std::string PathHelper::GetBaseName(const std::string& path)
 {
     const auto lastIndex = path.find_last_of('/');
@@ -316,7 +316,7 @@ std::string PathHelper::GetBaseName(const std::string& path)
     }
     return path;
 }
-//-----------------------------------------------------------------------
+
 std::string PathHelper::GetDirectoryName(const std::string& path)
 {
     if (!path.empty() && path.back() == '/') {
@@ -328,7 +328,7 @@ std::string PathHelper::GetDirectoryName(const std::string& path)
     }
     return {};
 }
-//-----------------------------------------------------------------------
+
 std::tuple<std::string, std::string> PathHelper::Split(const std::string& path)
 {
     std::tuple<std::string, std::string> result;
@@ -342,7 +342,7 @@ std::tuple<std::string, std::string> PathHelper::Split(const std::string& path)
     }
     return result;
 }
-//-----------------------------------------------------------------------
+
 std::tuple<std::string, std::string> PathHelper::SplitExtension(const std::string& path)
 {
     std::tuple<std::string, std::string> result;
@@ -356,7 +356,7 @@ std::tuple<std::string, std::string> PathHelper::SplitExtension(const std::strin
     }
     return result;
 }
-//-----------------------------------------------------------------------
+
 std::string PathHelper::Normalize(const std::string& path)
 {
     const auto isFullPath = [&path]() -> bool {
@@ -412,7 +412,7 @@ std::string PathHelper::Normalize(const std::string& path)
     }
     return fullPath;
 }
-//-----------------------------------------------------------------------
+
 std::string
 PathHelper::Relative(const std::string& path, const std::string& start)
 {
@@ -444,5 +444,5 @@ PathHelper::Relative(const std::string& path, const std::string& start)
     }
     return result;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

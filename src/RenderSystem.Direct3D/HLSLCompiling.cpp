@@ -51,7 +51,7 @@ std::string ToString(const ShaderProfile& profile)
 
     return std::move(output);
 }
-//-----------------------------------------------------------------------
+
 class HLSLCodeInclude : public ID3DInclude {
 private:
     std::string currentDirectory;
@@ -121,7 +121,7 @@ public:
         return S_OK;
     }
 };
-//-----------------------------------------------------------------------
+
 void CompileFromShaderFile(
     const ShaderBytecode& shaderBytecode,
     const std::string& entrypoint,
@@ -163,7 +163,7 @@ void CompileFromShaderFile(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 Microsoft::WRL::ComPtr<ID3DBlob> HLSLCompiling::CompileShader(
     const ShaderBytecode& shaderBytecode,
     const ShaderCompileOptions& compileOptions)

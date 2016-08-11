@@ -22,7 +22,7 @@ FillModeGL4 ToFillModeGL4(const FillMode& fillMode) noexcept
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 RasterizerStateGL4::RasterizerStateGL4(const RasterizerDescription& description)
     : fillMode(ToFillModeGL4(description.FillMode))
     , cullMode(description.CullMode)
@@ -32,7 +32,7 @@ RasterizerStateGL4::RasterizerStateGL4(const RasterizerDescription& description)
     , scissorTestEnable(description.ScissorTestEnable)
 {
 }
-//-----------------------------------------------------------------------
+
 void RasterizerStateGL4::Apply()
 {
     #if defined(DEBUG) && !defined(NDEBUG)
@@ -88,7 +88,7 @@ void RasterizerStateGL4::Apply()
         glDisable(GL_MULTISAMPLE);
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog

@@ -15,29 +15,29 @@ using Pomdog::Detail::Cocoa::GameWindowCocoa;
 
 namespace Pomdog {
 namespace Cocoa {
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetView(PomdogOpenGLView* openGLViewIn)
 {
     POMDOG_ASSERT(openGLViewIn != nil);
     openGLView = openGLViewIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetSurfaceFormat(SurfaceFormat surfaceFormatIn)
 {
     surfaceFormat = surfaceFormatIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetDepthFormat(DepthFormat depthFormatIn)
 {
     depthFormat = depthFormatIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::OnError(std::function<void(const std::exception&)> onErrorIn)
 {
     POMDOG_ASSERT(onErrorIn);
     onError = onErrorIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::OnCompleted(std::function<void()> onCompletedIn)
 {
     POMDOG_ASSERT(onCompletedIn);
@@ -47,7 +47,7 @@ void Bootstrap::OnCompleted(std::function<void()> onCompletedIn)
         onCompletedIn();
     };
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::Run(
     const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp)
 {
@@ -92,6 +92,6 @@ void Bootstrap::Run(
         }
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace Cocoa
 } // namespace Pomdog

@@ -21,7 +21,7 @@ MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexc
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 SamplerStateMetal::SamplerStateMetal(id<MTLDevice> device, const SamplerDescription& description)
     : samplerState(nil)
 {
@@ -91,12 +91,12 @@ SamplerStateMetal::SamplerStateMetal(id<MTLDevice> device, const SamplerDescript
             "Failed to create MTLSamplerState.");
     }
 }
-//-----------------------------------------------------------------------
+
 id<MTLSamplerState> SamplerStateMetal::GetSamplerState() const noexcept
 {
     return samplerState;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Metal
 } // namespace Detail
 } // namespace Pomdog

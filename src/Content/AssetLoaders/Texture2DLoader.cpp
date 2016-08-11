@@ -19,7 +19,7 @@
 namespace Pomdog {
 namespace Detail {
 namespace {
-//-----------------------------------------------------------------------
+
 bool IsPNGFormat(const std::array<std::uint8_t, 8>& signature)
 {
     std::array<std::uint8_t, 8> const pngSignature {{
@@ -28,7 +28,7 @@ bool IsPNGFormat(const std::array<std::uint8_t, 8>& signature)
     return std::equal(std::begin(signature), std::end(signature),
         std::begin(pngSignature));
 }
-//-----------------------------------------------------------------------
+
 bool IsDDSFormat(const std::array<std::uint8_t, 8>& signature)
 {
     constexpr auto fourCC = MakeFourCC('D','D','S',' ');
@@ -37,7 +37,7 @@ bool IsDDSFormat(const std::array<std::uint8_t, 8>& signature)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(
     const AssetLoaderContext& loaderContext, const std::string& assetName)
 {
@@ -88,6 +88,6 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(
 
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid/unsupported texture format.");
 }
-//-----------------------------------------------------------------------
+
 } // namespace Detail
 } // namespace Pomdog

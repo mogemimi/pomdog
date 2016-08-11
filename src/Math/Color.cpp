@@ -48,12 +48,12 @@ const Color Color::Blue{0, 0, 255, 255};
 const Color Color::Yellow{255, 255, 0, 255};
 const Color Color::CornflowerBlue{100, 149 ,237, 255};
 const Color Color::TransparentBlack{0, 0, 0, 0};
-//-----------------------------------------------------------------------
+
 Color::Color(
     std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) noexcept
     : R(r), G(g), B(b), A(a)
 {}
-//-----------------------------------------------------------------------
+
 Color::Color(const Vector3& vector)
     : R(PackFromNormal(vector.X))
     , G(PackFromNormal(vector.Y))
@@ -64,7 +64,7 @@ Color::Color(const Vector3& vector)
     POMDOG_ASSERT(vector.Y >= 0.0f && vector.Y <= 1.0f);
     POMDOG_ASSERT(vector.Z >= 0.0f && vector.Z <= 1.0f);
 }
-//-----------------------------------------------------------------------
+
 Color::Color(const Vector4& vector)
     : R(PackFromNormal(vector.X))
     , G(PackFromNormal(vector.Y))
@@ -76,32 +76,32 @@ Color::Color(const Vector4& vector)
     POMDOG_ASSERT(vector.Z >= 0.0f && vector.Z <= 1.0f);
     POMDOG_ASSERT(vector.W >= 0.0f && vector.W <= 1.0f);
 }
-//-----------------------------------------------------------------------
+
 bool Color::operator==(const Color& color) const noexcept
 {
     return R == color.R && G == color.G && B == color.B && A == color.A;
 }
-//-----------------------------------------------------------------------
+
 bool Color::operator!=(const Color& color) const noexcept
 {
     return R == color.R || G == color.G || B == color.B || A == color.A;
 }
-//-----------------------------------------------------------------------
+
 Vector3 Color::ToVector3() const noexcept
 {
     return {R/255.0f, G/255.0f, B/255.0f};
 }
-//-----------------------------------------------------------------------
+
 Vector4 Color::ToVector4() const noexcept
 {
     return {R/255.0f, G/255.0f, B/255.0f, A/255.0f};
 }
-//-----------------------------------------------------------------------
+
 std::uint32_t Color::ToPackedValue() const noexcept
 {
     return ColorPackUint(R, G, B, A);
 }
-//-----------------------------------------------------------------------
+
 Color Color::FromPackedValue(std::uint32_t packedValue)
 {
     Color color;
@@ -118,7 +118,7 @@ Color Color::FromPackedValue(std::uint32_t packedValue)
 #endif
     return color;
 }
-//-----------------------------------------------------------------------
+
 Color Color::Lerp(const Color& source1, const Color& source2, float amount)
 {
     Color color;
@@ -128,7 +128,7 @@ Color Color::Lerp(const Color& source1, const Color& source2, float amount)
     color.A = PackUint8(source1.A + amount * (source2.A - source1.A));
     return color;
 }
-//-----------------------------------------------------------------------
+
 Color Color::SmoothStep(const Color& source1, const Color& source2, float amount)
 {
     Color color;
@@ -138,7 +138,7 @@ Color Color::SmoothStep(const Color& source1, const Color& source2, float amount
     color.A = PackUint8(MathHelper::SmoothStep<float>(source1.A, source2.A, amount));
     return color;
 }
-//-----------------------------------------------------------------------
+
 Color Color::Multiply(const Color& color, float scale)
 {
     Color result;
@@ -148,7 +148,7 @@ Color Color::Multiply(const Color& color, float scale)
     result.A = PackUint8(MathHelper::Clamp(color.A * scale, 0.0f, 255.0f));
     return result;
 }
-//-----------------------------------------------------------------------
+
 Color Color::Multiply(const Color& color1, const Color& color2)
 {
     Color result;

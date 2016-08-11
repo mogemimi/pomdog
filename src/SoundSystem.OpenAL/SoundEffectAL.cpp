@@ -12,7 +12,7 @@ namespace Pomdog {
 namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
-//-----------------------------------------------------------------------
+
 SoundEffectAL::SoundEffectAL(
     AudioEngineAL &,
     const std::shared_ptr<AudioClipAL>& audioClipIn,
@@ -43,14 +43,14 @@ SoundEffectAL::SoundEffectAL(
     ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
     #endif
 }
-//-----------------------------------------------------------------------
+
 SoundEffectAL::~SoundEffectAL()
 {
     if (source) {
         alDeleteSources(1, source->Data());
     }
 }
-//-----------------------------------------------------------------------
+
 void SoundEffectAL::Pause()
 {
     POMDOG_ASSERT(source);
@@ -60,7 +60,7 @@ void SoundEffectAL::Pause()
     ErrorCheckerAL::CheckError("alSourcePause", __FILE__, __LINE__);
     #endif
 }
-//-----------------------------------------------------------------------
+
 void SoundEffectAL::Play()
 {
     POMDOG_ASSERT(source);
@@ -70,7 +70,7 @@ void SoundEffectAL::Play()
     ErrorCheckerAL::CheckError("alSourcePlay", __FILE__, __LINE__);
     #endif
 }
-//-----------------------------------------------------------------------
+
 void SoundEffectAL::Stop()
 {
     POMDOG_ASSERT(source);
@@ -87,7 +87,7 @@ void SoundEffectAL::Stop()
     ErrorCheckerAL::CheckError("alSourceRewind", __FILE__, __LINE__);
     #endif
 }
-//-----------------------------------------------------------------------
+
 void SoundEffectAL::Apply3D(const AudioListener& listener, const AudioEmitter& emitter)
 {
     {
@@ -121,7 +121,7 @@ void SoundEffectAL::Apply3D(const AudioListener& listener, const AudioEmitter& e
         #endif
     }
 }
-//-----------------------------------------------------------------------
+
 void SoundEffectAL::ExitLoop()
 {
     POMDOG_ASSERT(source);
@@ -131,7 +131,7 @@ void SoundEffectAL::ExitLoop()
     ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
     #endif
 }
-//-----------------------------------------------------------------------
+
 void SoundEffectAL::SetPitch(float pitch)
 {
     // pitch --> nativePitch
@@ -148,7 +148,7 @@ void SoundEffectAL::SetPitch(float pitch)
     ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
     #endif
 }
-//-----------------------------------------------------------------------
+
 void SoundEffectAL::SetVolume(float volume)
 {
     POMDOG_ASSERT(source);
@@ -159,7 +159,7 @@ void SoundEffectAL::SetVolume(float volume)
     ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
     #endif
 }
-//-----------------------------------------------------------------------
+
 } // namespace OpenAL
 } // namespace SoundSystem
 } // namespace Detail

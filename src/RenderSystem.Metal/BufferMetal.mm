@@ -30,7 +30,7 @@ MTLResourceOptions ToResourceOptions(BufferUsage bufferUsage)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 BufferMetal::BufferMetal(
     id<MTLDevice> device,
     std::size_t sizeInBytes,
@@ -48,7 +48,7 @@ BufferMetal::BufferMetal(
 
     nativeBuffer.label = @"Pomdog.BufferMetal";
 }
-//-----------------------------------------------------------------------
+
 BufferMetal::BufferMetal(
     id<MTLDevice> device,
     const void* vertices,
@@ -69,7 +69,7 @@ BufferMetal::BufferMetal(
 
     SetData(0, vertices, sizeInBytes);
 }
-//-----------------------------------------------------------------------
+
 void BufferMetal::GetData(
     std::size_t offsetInBytes,
     void* destination,
@@ -79,7 +79,7 @@ void BufferMetal::GetData(
     auto source = [nativeBuffer contents];
     std::memcpy(destination, source, sizeInBytes);
 }
-//-----------------------------------------------------------------------
+
 void BufferMetal::SetData(
     std::size_t offsetInBytes,
     const void* source,
@@ -90,12 +90,12 @@ void BufferMetal::SetData(
     auto destination = reinterpret_cast<std::uint8_t*>([nativeBuffer contents]);
     std::memcpy(destination + offsetInBytes, source, sizeInBytes);
 }
-//-----------------------------------------------------------------------
+
 id<MTLBuffer> BufferMetal::GetBuffer() const
 {
     return nativeBuffer;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Metal
 } // namespace Detail
 } // namespace Pomdog

@@ -50,7 +50,7 @@ GLenum ToInternalFormatGL4(SurfaceFormat format) noexcept
     return GL_R8;
 #endif
 }
-//-----------------------------------------------------------------------
+
 GLenum ToFormatComponents(SurfaceFormat format) noexcept
 {
     switch (format) {
@@ -81,7 +81,7 @@ GLenum ToFormatComponents(SurfaceFormat format) noexcept
     return GL_RED;
 #endif
 }
-//-----------------------------------------------------------------------
+
 GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
 {
     switch (format) {
@@ -112,7 +112,7 @@ GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
     return GL_UNSIGNED_BYTE;
 #endif
 }
-//-----------------------------------------------------------------------
+
 GLsizei MipmapImageDataBytes(
     GLsizei width,
     GLsizei height,
@@ -120,7 +120,7 @@ GLsizei MipmapImageDataBytes(
 {
     return width * height * bytesPerBlock;
 }
-//-----------------------------------------------------------------------
+
 void SetPixelDataTexture2DCompressedGL4(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
@@ -166,7 +166,7 @@ void SetPixelDataTexture2DCompressedGL4(
         mipMapPixelHeight = std::max((mipMapPixelHeight >> 1), 1);
     }
 }
-//-----------------------------------------------------------------------
+
 void SetPixelDataTexture2DGL4(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
@@ -213,12 +213,12 @@ void SetPixelDataTexture2DGL4(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 template<> struct TypesafeHelperGL4::Traits<Texture2DObjectGL4> {
     constexpr static GLenum BufferBinding = GL_TEXTURE_BINDING_2D;
     constexpr static GLenum TextureTarget = GL_TEXTURE_2D;
 };
-//-----------------------------------------------------------------------
+
 Texture2DGL4::Texture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
     std::int32_t levelCount, SurfaceFormat format)
 {
@@ -252,7 +252,7 @@ Texture2DGL4::Texture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, levelCount - 1);
 }
-//-----------------------------------------------------------------------
+
 Texture2DGL4::~Texture2DGL4()
 {
     if (textureObject) {
@@ -260,7 +260,7 @@ Texture2DGL4::~Texture2DGL4()
         POMDOG_CHECK_ERROR_GL4("glDeleteTextures");
     }
 }
-//-----------------------------------------------------------------------
+
 void Texture2DGL4::SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
     std::int32_t levelCount, SurfaceFormat format, const void* pixelData)
 {
@@ -289,7 +289,7 @@ void Texture2DGL4::SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
         break;
     }
 }
-//-----------------------------------------------------------------------
+
 void Texture2DGL4::GenerateMipmap()
 {
     POMDOG_ASSERT(textureObject);
@@ -302,13 +302,13 @@ void Texture2DGL4::GenerateMipmap()
     glGenerateMipmap(GL_TEXTURE_2D);
     POMDOG_CHECK_ERROR_GL4("glGenerateMipmap");
 }
-//-----------------------------------------------------------------------
+
 const Texture2DObjectGL4& Texture2DGL4::GetTextureHandle() const
 {
     POMDOG_ASSERT(textureObject);
     return textureObject.value();
 }
-//-----------------------------------------------------------------------
+
 } // namespace GL4
 } // namespace Detail
 } // namespace Pomdog

@@ -21,7 +21,7 @@ VkVertexInputRate ToVertexStepFunction(InputClassification classification) noexc
         return VK_VERTEX_INPUT_RATE_INSTANCE;
     }
 }
-//-----------------------------------------------------------------------
+
 VkBlendOp ToVkBlendOp(BlendOperation blendOperation) noexcept
 {
     switch (blendOperation) {
@@ -32,7 +32,7 @@ VkBlendOp ToVkBlendOp(BlendOperation blendOperation) noexcept
     case BlendOperation::Max: return VK_BLEND_OP_MAX;
     }
 }
-//-----------------------------------------------------------------------
+
 VkBlendFactor ToVkBlendFactor(Blend blend) noexcept
 {
     switch (blend) {
@@ -56,7 +56,7 @@ VkBlendFactor ToVkBlendFactor(Blend blend) noexcept
     }
     return VK_BLEND_FACTOR_ONE;
 }
-//-----------------------------------------------------------------------
+
 VkStencilOp ToStencilOperation(StencilOperation operation) noexcept
 {
     switch (operation) {
@@ -71,7 +71,7 @@ VkStencilOp ToStencilOperation(StencilOperation operation) noexcept
     }
     return VK_STENCIL_OP_KEEP;
 }
-//-----------------------------------------------------------------------
+
 VkCompareOp ToComparisonFunction(ComparisonFunction compareFunction) noexcept
 {
     switch (compareFunction) {
@@ -86,7 +86,7 @@ VkCompareOp ToComparisonFunction(ComparisonFunction compareFunction) noexcept
     }
     return VK_COMPARE_OP_LESS_OR_EQUAL;
 }
-//-----------------------------------------------------------------------
+
 VkFrontFace ToCullMode(CullMode cullMode) noexcept
 {
     switch (cullMode) {
@@ -98,7 +98,7 @@ VkFrontFace ToCullMode(CullMode cullMode) noexcept
     }
     return VK_FRONT_FACE_COUNTER_CLOCKWISE;
 }
-//-----------------------------------------------------------------------
+
 VkPolygonMode ToVkPolygonMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
@@ -109,7 +109,7 @@ VkPolygonMode ToVkPolygonMode(FillMode fillMode) noexcept
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 PipelineStateVulkan::PipelineStateVulkan(
     VkDevice device,
     const PipelineStateDescription& description)
@@ -140,7 +140,7 @@ PipelineStateVulkan::PipelineStateVulkan(
 
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 } // namespace Vulkan
 } // namespace Detail
 } // namespace Pomdog

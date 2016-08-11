@@ -35,7 +35,7 @@ MTLPrimitiveType ToPrimitiveType(PrimitiveTopology primitiveTopology) noexcept
     }
     return MTLPrimitiveTypePoint;
 }
-//-----------------------------------------------------------------------
+
 MTLIndexType ToIndexType(IndexElementSize elementSize) noexcept
 {
     switch (elementSize) {
@@ -44,7 +44,7 @@ MTLIndexType ToIndexType(IndexElementSize elementSize) noexcept
     }
     return MTLIndexTypeUInt16;
 }
-//-----------------------------------------------------------------------
+
 MTLClearColor ToClearColor(const Color& color) noexcept
 {
     auto vec = color.ToVector4();
@@ -52,7 +52,7 @@ MTLClearColor ToClearColor(const Color& color) noexcept
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 GraphicsContextMetal::GraphicsContextMetal(
     id<MTLDevice> nativeDevice)
     : commandQueue(nil)
@@ -66,9 +66,9 @@ GraphicsContextMetal::GraphicsContextMetal(
     // NOTE: Create a new command queue
     commandQueue = [nativeDevice newCommandQueue];
 }
-//-----------------------------------------------------------------------
+
 GraphicsContextMetal::~GraphicsContextMetal() = default;
-//-----------------------------------------------------------------------
+
 GraphicsCapabilities GraphicsContextMetal::GetCapabilities() const
 {
     // NOTE: For more information, please see:
@@ -78,12 +78,12 @@ GraphicsCapabilities GraphicsContextMetal::GetCapabilities() const
     caps.SamplerSlotCount = 16;
     return caps;
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::Present()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
 {
     ClearCommandMetal command;
@@ -95,7 +95,7 @@ void GraphicsContextMetal::Clear(ClearOptions options, const Color& color, float
 
     needToUpdateRenderPass = true;
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::BeginDraw()
 {
     POMDOG_ASSERT(commandQueue != nil);
@@ -147,7 +147,7 @@ void GraphicsContextMetal::BeginDraw()
 
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::Draw(std::size_t vertexCount)
 {
     POMDOG_ASSERT(commandEncoder != nil);
@@ -159,7 +159,7 @@ void GraphicsContextMetal::Draw(std::size_t vertexCount)
         vertexStart:0
         vertexCount:vertexCount];
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::DrawIndexed(std::size_t indexCount)
 {
     POMDOG_ASSERT(commandEncoder != nil);
@@ -173,7 +173,7 @@ void GraphicsContextMetal::DrawIndexed(std::size_t indexCount)
         indexBuffer:indexBuffer
         indexBufferOffset:0];
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::DrawInstanced(
     std::size_t vertexCount,
     std::size_t instanceCount)
@@ -189,7 +189,7 @@ void GraphicsContextMetal::DrawInstanced(
         vertexCount:vertexCount
         instanceCount:instanceCount];
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::DrawIndexedInstanced(
     std::size_t indexCount,
     std::size_t instanceCount)
@@ -207,7 +207,7 @@ void GraphicsContextMetal::DrawIndexedInstanced(
         indexBufferOffset:0
         instanceCount:instanceCount];
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::SetViewport(const Viewport& viewportIn)
 {
     POMDOG_ASSERT(viewportIn.Width > 0);
@@ -223,7 +223,7 @@ void GraphicsContextMetal::SetViewport(const Viewport& viewportIn)
     viewport.zfar = viewportIn.MaxDepth;
     [commandEncoder setViewport:viewport];
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::SetScissorRectangle(const Rectangle& rectangle)
 {
     POMDOG_ASSERT(rectangle.Width > 0);
@@ -237,19 +237,19 @@ void GraphicsContextMetal::SetScissorRectangle(const Rectangle& rectangle)
     rect.height = rectangle.Height;
     [commandEncoder setScissorRect:rect];
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
 {
     this->primitiveType = ToPrimitiveType(primitiveTopology);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::SetBlendFactor(const Color& blendFactor)
 {
     POMDOG_ASSERT(commandEncoder != nil);
     auto vec = blendFactor.ToVector4();
     [commandEncoder setBlendColorRed:vec.X green:vec.Y blue:vec.Z alpha:vec.W];
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers)
 {
     POMDOG_ASSERT(!vertexBuffers.empty());
@@ -277,7 +277,7 @@ void GraphicsContextMetal::SetVertexBuffers(const std::vector<VertexBufferBindin
         ++atIndex;
     }
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBufferIn)
 {
     POMDOG_ASSERT(indexBuffer);
@@ -292,7 +292,7 @@ void GraphicsContextMetal::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& in
     this->indexType = ToIndexType(indexBufferIn->GetElementSize());
     this->indexBuffer = nativeIndexBuffer->GetBuffer();
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState)
 {
     POMDOG_ASSERT(pipelineState != nullptr);
@@ -305,12 +305,12 @@ void GraphicsContextMetal::SetPipelineState(const std::shared_ptr<NativePipeline
     POMDOG_ASSERT(commandEncoder != nil);
     nativePipelineState->Apply(commandEncoder);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::SetSampler(int index, NativeSamplerState* sampler)
 {
     POMDOG_ASSERT(sampler != nullptr);
@@ -326,7 +326,7 @@ void GraphicsContextMetal::SetSampler(int index, NativeSamplerState* sampler)
     [commandEncoder setVertexSamplerState:samplerStateMetal->GetSamplerState() atIndex:index];
     [commandEncoder setFragmentSamplerState:samplerStateMetal->GetSamplerState() atIndex:index];
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::SetTexture(int index)
 {
     POMDOG_ASSERT(index >= 0);
@@ -334,7 +334,7 @@ void GraphicsContextMetal::SetTexture(int index)
     [commandEncoder setVertexTexture:nil atIndex:index];
     [commandEncoder setFragmentTexture:nil atIndex:index];
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::SetTexture(int index, Texture2D & texture)
 {
     POMDOG_ASSERT(index >= 0);
@@ -349,7 +349,7 @@ void GraphicsContextMetal::SetTexture(int index, Texture2D & texture)
     [commandEncoder setVertexTexture:textureMetal->GetTexture() atIndex:index];
     [commandEncoder setFragmentTexture:textureMetal->GetTexture() atIndex:index];
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::SetTexture(int index, RenderTarget2D & renderTarget)
 {
     POMDOG_ASSERT(index >= 0);
@@ -364,17 +364,17 @@ void GraphicsContextMetal::SetTexture(int index, RenderTarget2D & renderTarget)
     [commandEncoder setVertexTexture:renderTargetMetal->GetTexture() atIndex:index];
     [commandEncoder setFragmentTexture:renderTargetMetal->GetTexture() atIndex:index];
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::SetRenderTarget()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextMetal::SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 } // namespace Metal
 } // namespace Detail
 } // namespace Pomdog

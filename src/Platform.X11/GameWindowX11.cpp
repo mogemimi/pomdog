@@ -26,7 +26,7 @@ static Rectangle GetWindowClientBounds(::Display* display, ::Window window)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 GameWindowX11::GameWindowX11(
     const std::shared_ptr<X11Context const>& x11ContextIn,
     GLXFBConfig framebufferConfig,
@@ -97,7 +97,7 @@ GameWindowX11::GameWindowX11(
 
     clientBounds = GetWindowClientBounds(x11Context->Display, window);
 }
-//-----------------------------------------------------------------------
+
 GameWindowX11::~GameWindowX11()
 {
     POMDOG_ASSERT(x11Context);
@@ -118,25 +118,25 @@ GameWindowX11::~GameWindowX11()
 
     XFlush(display);
 }
-//-----------------------------------------------------------------------
+
 bool GameWindowX11::GetAllowUserResizing() const
 {
     ///@todo Not implemented
     //POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
     return true;
 }
-//-----------------------------------------------------------------------
+
 void GameWindowX11::SetAllowUserResizing(bool /*allowResizing*/)
 {
     ///@todo Not implemented
     //POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 std::string GameWindowX11::GetTitle() const
 {
     return this->title;
 }
-//-----------------------------------------------------------------------
+
 void GameWindowX11::SetTitle(const std::string& titleIn)
 {
     this->title = titleIn;
@@ -172,12 +172,12 @@ void GameWindowX11::SetTitle(const std::string& titleIn)
 
     XFlush(x11Context->Display);
 }
-//-----------------------------------------------------------------------
+
 Rectangle GameWindowX11::GetClientBounds() const
 {
     return clientBounds;
 }
-//-----------------------------------------------------------------------
+
 void GameWindowX11::SetClientBounds(const Rectangle& clientBoundsIn)
 {
     clientBounds = clientBoundsIn;
@@ -187,38 +187,38 @@ void GameWindowX11::SetClientBounds(const Rectangle& clientBoundsIn)
 
     XFlush(x11Context->Display);
 }
-//-----------------------------------------------------------------------
+
 bool GameWindowX11::IsMouseCursorVisible() const
 {
     ///@todo Not implemented
     //POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
     return true;
 }
-//-----------------------------------------------------------------------
+
 void GameWindowX11::SetMouseCursorVisible(bool /*visible*/)
 {
     ///@todo Not implemented
     //POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void GameWindowX11::SetMouseCursor(MouseCursor /*cursor*/)
 {
     ///@todo Not implemented
     //POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 ::Display* GameWindowX11::NativeDisplay() const
 {
     POMDOG_ASSERT(x11Context);
     auto display = x11Context->Display;
     return display;
 }
-//-----------------------------------------------------------------------
+
 ::Window GameWindowX11::NativeWindow() const
 {
     return window;
 }
-//-----------------------------------------------------------------------
+
 GLXFBConfig GameWindowX11::GetFramebufferConfig() const
 {
     int framebufferConfigAttributes[] = {
@@ -241,12 +241,12 @@ GLXFBConfig GameWindowX11::GetFramebufferConfig() const
 
     return framebufferConfig;
 }
-//-----------------------------------------------------------------------
+
 bool GameWindowX11::IsMinimized() const
 {
     return isMinimized;
 }
-//-----------------------------------------------------------------------
+
 void GameWindowX11::ProcessEvent(::XEvent & event)
 {
     bool clientSizeChanged = false;
@@ -299,7 +299,7 @@ void GameWindowX11::ProcessEvent(::XEvent & event)
         this->ClientSizeChanged(clientBounds.Width, clientBounds.Height);
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace X11
 } // namespace Detail
 } // namespace Pomdog

@@ -167,7 +167,7 @@ static Keys TranslateKey(Display* display, unsigned int keyCode)
 
     return Keys_None;
 }
-//-----------------------------------------------------------------------
+
 static void BuildKeyMap(Display* display, std::array<Keys, 256> & keys)
 {
     std::fill(std::begin(keys), std::end(keys), Keys_None);
@@ -259,7 +259,7 @@ static void BuildKeyMap(Display* display, std::array<Keys, 256> & keys)
         }
     }
 }
-//-----------------------------------------------------------------------
+
 static Keys ToKeys(const std::array<Keys, 256>& keys, unsigned int keyCode)
 {
     if (keyCode < 8 || keyCode > keys.size()) {
@@ -271,18 +271,18 @@ static Keys ToKeys(const std::array<Keys, 256>& keys, unsigned int keyCode)
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 KeyboardX11::KeyboardX11(::Display* display)
 {
     POMDOG_ASSERT(display != nullptr);
     BuildKeyMap(display, mappedKeys);
 }
-//-----------------------------------------------------------------------
+
 KeyboardState KeyboardX11::GetState() const
 {
     return keyboardState;
 }
-//-----------------------------------------------------------------------
+
 void KeyboardX11::HandleEvent(XEvent & event)
 {
     if (event.type != KeyPress && event.type != KeyRelease) {
@@ -321,7 +321,7 @@ void KeyboardX11::HandleEvent(XEvent & event)
         + (": key = " + std::to_string(static_cast<int>(key))));
 #endif
 }
-//-----------------------------------------------------------------------
+
 } // namespace X11
 } // namespace Detail
 } // namespace Pomdog

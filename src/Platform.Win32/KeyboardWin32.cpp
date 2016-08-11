@@ -154,7 +154,7 @@ Optional<Keys> ToKeys(USHORT keyCode) noexcept
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 void KeyboardWin32::HandleMessage(const RAWKEYBOARD& keyboard)
 {
     const auto key = ToKeys(keyboard.VKey);
@@ -180,12 +180,12 @@ void KeyboardWin32::HandleMessage(const RAWKEYBOARD& keyboard)
         break;
     }
 }
-//-----------------------------------------------------------------------
+
 KeyboardState KeyboardWin32::GetState() const
 {
     return keyboardState;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Win32
 } // namespace Detail
 } // namespace Pomdog

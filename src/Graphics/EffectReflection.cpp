@@ -8,7 +8,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 EffectReflection::EffectReflection(
     GraphicsDevice & graphicsDevice,
     const PipelineStateDescription& pipelineStateDescription,
@@ -24,7 +24,7 @@ EffectReflection::EffectReflection(
         pipelineStateDescription,
         *pipelineState->GetNativePipelineState());
 }
-//-----------------------------------------------------------------------
+
 EffectReflection::EffectReflection(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     const PipelineStateDescription& pipelineStateDescription,
@@ -34,13 +34,13 @@ EffectReflection::EffectReflection(
         pipelineStateDescription,
         pipelineState)
 {}
-//-----------------------------------------------------------------------
+
 EffectReflection::~EffectReflection() = default;
-//-----------------------------------------------------------------------
+
 std::vector<EffectConstantDescription> EffectReflection::GetConstantBuffers() const
 {
     POMDOG_ASSERT(nativeEffectReflection);
     return nativeEffectReflection->GetConstantBuffers();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

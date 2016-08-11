@@ -11,7 +11,7 @@
 namespace Pomdog {
 namespace Detail {
 namespace Metal {
-//-----------------------------------------------------------------------
+
 ShaderMetal::ShaderMetal(
     id<MTLDevice> device,
     const ShaderBytecode& shaderBytecode,
@@ -46,12 +46,12 @@ ShaderMetal::ShaderMetal(
     this->shader = [library newFunctionWithName:
         [NSString stringWithUTF8String:compileOptions.EntryPoint.c_str()]];
 }
-//-----------------------------------------------------------------------
+
 id<MTLFunction> ShaderMetal::GetShader() const
 {
     return shader;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Metal
 } // namespace Detail
 } // namespace Pomdog

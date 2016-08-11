@@ -10,7 +10,7 @@
 namespace Pomdog {
 namespace Detail {
 namespace DXGI {
-//-----------------------------------------------------------------------
+
 DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(DepthFormat format) noexcept
 {
     POMDOG_ASSERT(format != DepthFormat::None);
@@ -24,7 +24,7 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(DepthFormat format) noexcept
     }
     return DXGI_FORMAT_UNKNOWN;
 }
-//-----------------------------------------------------------------------
+
 DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(SurfaceFormat format) noexcept
 {
     switch (format) {
@@ -45,7 +45,7 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(SurfaceFormat format) noexcept
     }
     return DXGI_FORMAT_UNKNOWN;
 }
-//-----------------------------------------------------------------------
+
 DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(IndexElementSize elementSize) noexcept
 {
     switch (elementSize) {
@@ -54,7 +54,7 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(IndexElementSize elementSize) noexcep
     }
     return DXGI_FORMAT_UNKNOWN;
 }
-//-----------------------------------------------------------------------
+
 DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(InputElementFormat format) noexcept
 {
     switch (format) {
@@ -69,7 +69,7 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(InputElementFormat format) noexcept
     }
     return DXGI_FORMAT_R32_FLOAT;
 }
-//-----------------------------------------------------------------------
+
 } // namespace DXGI
 } // namespace Detail
 } // namespace Pomdog

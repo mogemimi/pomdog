@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 namespace Concurrency {
-//-----------------------------------------------------------------------
+
 void QueuedScheduler::Schedule(
     std::function<void()> && task,
     const Duration& delayTime)
@@ -24,7 +24,7 @@ void QueuedScheduler::Schedule(
         addedDeferredTasks.push_back(std::move(deferred));
     }
 }
-//-----------------------------------------------------------------------
+
 void QueuedScheduler::Update()
 {
     MergeTasks();
@@ -53,7 +53,7 @@ void QueuedScheduler::Update()
         tasks.erase(std::begin(tasks), completedTask);
     }
 }
-//-----------------------------------------------------------------------
+
 bool QueuedScheduler::Empty() noexcept
 {
     {
@@ -65,7 +65,7 @@ bool QueuedScheduler::Empty() noexcept
     std::lock_guard<std::recursive_mutex> lock(tasksProtection);
     return tasks.empty();
 }
-//-----------------------------------------------------------------------
+
 void QueuedScheduler::MergeTasks()
 {
     decltype(addedDeferredTasks) temporaryTasks;
@@ -90,6 +90,6 @@ void QueuedScheduler::MergeTasks()
 
     POMDOG_ASSERT(std::is_sorted(std::begin(tasks), std::end(tasks)));
 }
-//-----------------------------------------------------------------------
+
 } // namespace Concurrency
 } // namespace Pomdog

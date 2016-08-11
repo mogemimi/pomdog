@@ -18,7 +18,7 @@ TimeSourceWin32::TimeSourceWin32()
 
     secondsPerTick = 1.0 / frequency.QuadPart;
 }
-//-----------------------------------------------------------------------
+
 TimePoint TimeSourceWin32::Now() const
 {
     LARGE_INTEGER time;

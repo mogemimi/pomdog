@@ -30,7 +30,7 @@ void CheckUnbindingRenderTargetsError(
     }
 }
 #endif
-//-----------------------------------------------------------------------
+
 ClearOptions ToClearOptions(DepthFormat depthFormat) noexcept
 {
     switch (depthFormat) {
@@ -47,7 +47,7 @@ ClearOptions ToClearOptions(DepthFormat depthFormat) noexcept
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 GraphicsContext::GraphicsContext(
     std::unique_ptr<Detail::NativeGraphicsContext> && nativeContextIn,
     const PresentationParameters& presentationParameters)
@@ -73,7 +73,7 @@ GraphicsContext::GraphicsContext(
     nativeContext->SetScissorRectangle(viewport.GetBounds());
     nativeContext->SetBlendFactor(Color::White);
 }
-//-----------------------------------------------------------------------
+
 GraphicsContext::~GraphicsContext()
 {
     textures.clear();
@@ -81,7 +81,7 @@ GraphicsContext::~GraphicsContext()
 
     nativeContext.reset();
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::Clear(const Color& color)
 {
     ClearOptions options = ClearOptions::RenderTarget;
@@ -97,19 +97,19 @@ void GraphicsContext::Clear(const Color& color)
     POMDOG_ASSERT(nativeContext);
     nativeContext->Clear(options, color, 1.0f, 0);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
 {
     POMDOG_ASSERT(nativeContext);
     nativeContext->Clear(options, color, depth, stencil);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::Present()
 {
     POMDOG_ASSERT(nativeContext);
     nativeContext->Present();
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::Draw(std::size_t vertexCount)
 {
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -119,7 +119,7 @@ void GraphicsContext::Draw(std::size_t vertexCount)
     POMDOG_ASSERT(nativeContext);
     nativeContext->Draw(vertexCount);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::DrawIndexed(std::size_t indexCount)
 {
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -129,7 +129,7 @@ void GraphicsContext::DrawIndexed(std::size_t indexCount)
     POMDOG_ASSERT(nativeContext);
     nativeContext->DrawIndexed(indexCount);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::DrawInstanced(
     std::size_t vertexCount, std::size_t instanceCount)
 {
@@ -140,7 +140,7 @@ void GraphicsContext::DrawInstanced(
     POMDOG_ASSERT(nativeContext);
     nativeContext->DrawInstanced(vertexCount, instanceCount);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::DrawIndexedInstanced(
     std::size_t indexCount, std::size_t instanceCount)
 {
@@ -151,7 +151,7 @@ void GraphicsContext::DrawIndexedInstanced(
     POMDOG_ASSERT(nativeContext);
     nativeContext->DrawIndexedInstanced(indexCount, instanceCount);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetViewport(const Pomdog::Viewport& viewport)
 {
     POMDOG_ASSERT(nativeContext);
@@ -159,32 +159,32 @@ void GraphicsContext::SetViewport(const Pomdog::Viewport& viewport)
     POMDOG_ASSERT(viewport.Height > 0);
     nativeContext->SetViewport(viewport);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetScissorRectangle(const Pomdog::Rectangle& rectangle)
 {
     POMDOG_ASSERT(nativeContext);
     nativeContext->SetScissorRectangle(rectangle);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
 {
     POMDOG_ASSERT(nativeContext);
     nativeContext->SetPrimitiveTopology(primitiveTopology);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetBlendFactor(const Color& blendFactor)
 {
     POMDOG_ASSERT(nativeContext);
     nativeContext->SetBlendFactor(blendFactor);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers)
 {
     POMDOG_ASSERT(nativeContext);
     POMDOG_ASSERT(!vertexBuffers.empty());
     nativeContext->SetVertexBuffers(vertexBuffers);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
 {
     POMDOG_ASSERT(nativeContext);
@@ -192,7 +192,7 @@ void GraphicsContext::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBu
 
     nativeContext->SetIndexBuffer(indexBuffer);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState)
 {
     POMDOG_ASSERT(nativeContext);
@@ -200,7 +200,7 @@ void GraphicsContext::SetPipelineState(const std::shared_ptr<NativePipelineState
 
     nativeContext->SetPipelineState(pipelineState);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer)
 {
     POMDOG_ASSERT(nativeContext);
@@ -209,7 +209,7 @@ void GraphicsContext::SetConstantBuffer(int index, const std::shared_ptr<NativeB
 
     nativeContext->SetConstantBuffer(index, constantBuffer);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetSampler(int index, const std::shared_ptr<NativeSamplerState>& sampler)
 {
     POMDOG_ASSERT(nativeContext);
@@ -221,7 +221,7 @@ void GraphicsContext::SetSampler(int index, const std::shared_ptr<NativeSamplerS
         nativeContext->SetSampler(index, sampler.get());
     }
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetTexture(int index)
 {
     POMDOG_ASSERT(nativeContext);
@@ -234,7 +234,7 @@ void GraphicsContext::SetTexture(int index)
         textures[index].reset();
     }
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetTexture(int index, const std::shared_ptr<Texture2D>& textureIn)
 {
     POMDOG_ASSERT(nativeContext);
@@ -248,7 +248,7 @@ void GraphicsContext::SetTexture(int index, const std::shared_ptr<Texture2D>& te
         nativeContext->SetTexture(index, *textureIn);
     }
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& textureIn)
 {
     POMDOG_ASSERT(nativeContext);
@@ -262,14 +262,14 @@ void GraphicsContext::SetTexture(int index, const std::shared_ptr<RenderTarget2D
         nativeContext->SetTexture(index, *textureIn);
     }
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetRenderTarget()
 {
     POMDOG_ASSERT(nativeContext);
     nativeContext->SetRenderTarget();
     renderTargets.clear();
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargetsIn)
 {
     POMDOG_ASSERT(nativeContext);
@@ -277,7 +277,7 @@ void GraphicsContext::SetRenderTargets(const std::vector<std::shared_ptr<RenderT
     renderTargets = renderTargetsIn;
     nativeContext->SetRenderTargets(renderTargets);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContext::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargetsIn)
 {
     POMDOG_ASSERT(nativeContext);
@@ -285,12 +285,12 @@ void GraphicsContext::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2
     renderTargets = std::move(renderTargetsIn);
     nativeContext->SetRenderTargets(renderTargets);
 }
-//-----------------------------------------------------------------------
+
 Detail::NativeGraphicsContext* GraphicsContext::GetNativeGraphicsContext()
 {
     POMDOG_ASSERT(nativeContext);
     return nativeContext.get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Detail
 } // namespace Pomdog

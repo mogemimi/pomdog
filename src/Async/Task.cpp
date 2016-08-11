@@ -13,17 +13,17 @@ static std::shared_ptr<Scheduler> ambientScheduler =
     std::make_shared<ImmediateScheduler>();
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 std::shared_ptr<Scheduler> GetAmbientScheduler()
 {
     return ambientScheduler;
 }
-//-----------------------------------------------------------------------
+
 void SetAmbientScheduler(const std::shared_ptr<Scheduler>& scheduler)
 {
     ambientScheduler = scheduler;
 }
-//-----------------------------------------------------------------------
+
 void Get(const Task<void>& task)
 {
     task.Wait();
@@ -31,7 +31,7 @@ void Get(const Task<void>& task)
         std::rethrow_exception(execption);
     }
 }
-//-----------------------------------------------------------------------
+
 Task<void> Delay(
     const Duration& dueTime,
     const std::shared_ptr<Scheduler>& scheduler)
@@ -41,7 +41,7 @@ Task<void> Delay(
     scheduler->Schedule([tcs] { tcs.SetResult(); }, dueTime);
     return CreateTask(tcs);
 }
-//-----------------------------------------------------------------------
+
 Task<void> FromResult(
     const std::shared_ptr<Scheduler>& scheduler)
 {
@@ -50,7 +50,7 @@ Task<void> FromResult(
     tcs.SetResult();
     return CreateTask(tcs);
 }
-//-----------------------------------------------------------------------
+
 namespace Detail {
 
 Task<void> WhenAllImpl(
@@ -92,6 +92,6 @@ Task<void> WhenAllImpl(
 }
 
 } // namespace Detail
-//-----------------------------------------------------------------------
+
 } // namespace Concurrency
 } // namespace Pomdog

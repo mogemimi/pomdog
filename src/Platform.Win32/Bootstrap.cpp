@@ -12,42 +12,42 @@
 
 namespace Pomdog {
 namespace Win32 {
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetInstance(HINSTANCE hInstanceIn) noexcept
 {
     hInstance = hInstanceIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetCommandShow(int cmdShowIn) noexcept
 {
     cmdShow = cmdShowIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetIcon(HICON iconIn) noexcept
 {
     icon = iconIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetIconSmall(HICON iconSmallIn) noexcept
 {
     iconSmall = iconSmallIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetSurfaceFormat(SurfaceFormat surfaceFormatIn) noexcept
 {
     surfaceFormat = surfaceFormatIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetDepthFormat(DepthFormat depthFormatIn) noexcept
 {
     depthFormat = depthFormatIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetPresentationInterval(int presentationIntervalIn) noexcept
 {
     presentationInterval = presentationIntervalIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetBackBufferSize(int width, int height) noexcept
 {
     POMDOG_ASSERT(width >= 0);
@@ -55,22 +55,22 @@ void Bootstrap::SetBackBufferSize(int width, int height) noexcept
     backBufferWidth = width;
     backBufferHeight = height;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetFullScreen(bool isFullScreenIn) noexcept
 {
     isFullScreen = isFullScreenIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::SetOpenGLEnabled(bool openGLEnabledIn) noexcept
 {
     openGLEnabled = openGLEnabledIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::OnError(std::function<void(const std::exception&)> onErrorIn)
 {
     onError = onErrorIn;
 }
-//-----------------------------------------------------------------------
+
 void Bootstrap::Run(
     const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp)
 {
@@ -119,6 +119,6 @@ void Bootstrap::Run(
     gameHost.reset();
     gameWindow.reset();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Win32
 } // namespace Pomdog

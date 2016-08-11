@@ -44,7 +44,7 @@ D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(
     }
     return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 }
-//-----------------------------------------------------------------------
+
 void ChooseMultiSampleSetting(
     ID3D11Device* device,
     DXGI_FORMAT backBufferFormat,
@@ -75,7 +75,7 @@ void ChooseMultiSampleSetting(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 GraphicsContextDirect3D11::GraphicsContextDirect3D11(
     HWND windowHandle,
     const Microsoft::WRL::ComPtr<IDXGIFactory1>& dxgiFactory,
@@ -170,7 +170,7 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
 
     textureResourceViews.fill(nullptr);
 }
-//-----------------------------------------------------------------------
+
 GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
 {
     textureResourceViews.fill(nullptr);
@@ -179,13 +179,13 @@ GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
     swapChain.Reset();
     deviceContext.Reset();
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::Present()
 {
     POMDOG_ASSERT(swapChain);
     swapChain->Present(0, 0);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::Clear(
     ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
 {
@@ -219,7 +219,7 @@ void GraphicsContextDirect3D11::Clear(
         }
     }
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::ApplyPipelineState()
 {
     POMDOG_ASSERT(pipelineState);
@@ -229,7 +229,7 @@ void GraphicsContextDirect3D11::ApplyPipelineState()
         needToApplyPipelineState = false;
     }
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::Draw(std::size_t vertexCount)
 {
     POMDOG_ASSERT(deviceContext);
@@ -238,7 +238,7 @@ void GraphicsContextDirect3D11::Draw(std::size_t vertexCount)
 
     deviceContext->Draw(vertexCount, 0);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::DrawIndexed(std::size_t indexCount)
 {
     POMDOG_ASSERT(deviceContext);
@@ -247,7 +247,7 @@ void GraphicsContextDirect3D11::DrawIndexed(std::size_t indexCount)
 
     deviceContext->DrawIndexed(indexCount, 0, 0);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::DrawInstanced(
     std::size_t vertexCount, std::size_t instanceCount)
 {
@@ -257,7 +257,7 @@ void GraphicsContextDirect3D11::DrawInstanced(
 
     deviceContext->DrawInstanced(vertexCount, instanceCount, 0, 0);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::DrawIndexedInstanced(
     std::size_t indexCount, std::size_t instanceCount)
 {
@@ -267,7 +267,7 @@ void GraphicsContextDirect3D11::DrawIndexedInstanced(
 
     deviceContext->DrawIndexedInstanced(indexCount, instanceCount, 0, 0, 0);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
 {
     POMDOG_ASSERT(indexBuffer);
@@ -282,7 +282,7 @@ void GraphicsContextDirect3D11::SetIndexBuffer(const std::shared_ptr<IndexBuffer
     deviceContext->IASetIndexBuffer(nativeIndexBuffer->GetBuffer(),
         DXGIFormatHelper::ToDXGIFormat(indexBuffer->GetElementSize()), 0);
 }
-//-----------------------------------------------------------------------
+
 GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const
 {
     GraphicsCapabilities caps;
@@ -290,7 +290,7 @@ GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const
     caps.ConstantBufferSlotCount = D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
     return std::move(caps);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::SetViewport(const Viewport& viewportIn)
 {
     POMDOG_ASSERT(0 < viewportIn.Width);
@@ -309,7 +309,7 @@ void GraphicsContextDirect3D11::SetViewport(const Viewport& viewportIn)
     POMDOG_ASSERT(deviceContext);
     deviceContext->RSSetViewports(1, &viewport);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::SetScissorRectangle(const Rectangle& rectangle)
 {
     POMDOG_ASSERT(deviceContext);
@@ -329,13 +329,13 @@ void GraphicsContextDirect3D11::SetScissorRectangle(const Rectangle& rectangle)
 
     deviceContext->RSSetScissorRects(rects.size(), rects.data());
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
 {
     deviceContext->IASetPrimitiveTopology(
         ToD3D11PrimitiveTopology(primitiveTopology));
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::SetBlendFactor(const Color& blendFactorIn)
 {
     auto vec = blendFactorIn.ToVector4();
@@ -345,7 +345,7 @@ void GraphicsContextDirect3D11::SetBlendFactor(const Color& blendFactorIn)
     blendFactor[3] = vec.W;
     needToApplyPipelineState = true;
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::SetVertexBuffers(
     const std::vector<VertexBufferBinding>& vertexBuffersIn)
 {
@@ -383,7 +383,7 @@ void GraphicsContextDirect3D11::SetVertexBuffers(
     deviceContext->IASetVertexBuffers(0, vertexBuffers.size(), vertexBuffers.data(),
         strides.data(), offsets.data());
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineStateIn)
 {
     POMDOG_ASSERT(deviceContext);
@@ -396,7 +396,7 @@ void GraphicsContextDirect3D11::SetPipelineState(const std::shared_ptr<NativePip
         needToApplyPipelineState = true;
     }
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::SetConstantBuffer(
     int index, const std::shared_ptr<NativeBuffer>& constantBufferIn)
 {
@@ -412,7 +412,7 @@ void GraphicsContextDirect3D11::SetConstantBuffer(
     deviceContext->VSSetConstantBuffers(index, 1, &buffer);
     deviceContext->PSSetConstantBuffers(index, 1, &buffer);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::SetSampler(int index, NativeSamplerState* samplerIn)
 {
     POMDOG_ASSERT(index >= 0);
@@ -431,7 +431,7 @@ void GraphicsContextDirect3D11::SetSampler(int index, NativeSamplerState* sample
     POMDOG_ASSERT(deviceContext);
     deviceContext->PSSetSamplers(index, states.size(), states.data());
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::SetTexture(int index)
 {
     POMDOG_ASSERT(index >= 0);
@@ -443,7 +443,7 @@ void GraphicsContextDirect3D11::SetTexture(int index)
     POMDOG_ASSERT(deviceContext);
     deviceContext->PSSetShaderResources(index, 1, &textureResourceViews[index]);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::SetTexture(int index, Texture2D & textureIn)
 {
     POMDOG_ASSERT(index >= 0);
@@ -461,7 +461,7 @@ void GraphicsContextDirect3D11::SetTexture(int index, Texture2D & textureIn)
     POMDOG_ASSERT(deviceContext);
     deviceContext->PSSetShaderResources(0, 1, &textureResourceViews[index]);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::SetTexture(int index, RenderTarget2D & textureIn)
 {
     POMDOG_ASSERT(index >= 0);
@@ -479,7 +479,7 @@ void GraphicsContextDirect3D11::SetTexture(int index, RenderTarget2D & textureIn
     POMDOG_ASSERT(deviceContext);
     deviceContext->PSSetShaderResources(0, 1, &textureResourceViews[index]);
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::SetRenderTarget()
 {
     renderTargets.clear();
@@ -493,7 +493,7 @@ void GraphicsContextDirect3D11::SetRenderTarget()
         renderTargetViews.data(),
         renderTargets.front()->GetDepthStencilView());
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::SetRenderTargets(
     const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargetsIn)
 {
@@ -528,7 +528,7 @@ void GraphicsContextDirect3D11::SetRenderTargets(
         renderTargetViews.data(),
         renderTargets.front()->GetDepthStencilView());
 }
-//-----------------------------------------------------------------------
+
 void GraphicsContextDirect3D11::ResizeBackBuffers(
     ID3D11Device* device, int backBufferWidthIn, int backBufferHeightIn)
 {
@@ -572,13 +572,13 @@ void GraphicsContextDirect3D11::ResizeBackBuffers(
         SetRenderTarget();
     }
 }
-//-----------------------------------------------------------------------
+
 ID3D11DeviceContext* GraphicsContextDirect3D11::GetDeviceContext()
 {
     POMDOG_ASSERT(deviceContext);
     return deviceContext.Get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog

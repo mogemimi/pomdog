@@ -24,7 +24,7 @@ EffectVariableType HLSLReflectionHelper::ToEffectVariableType(
     }
     return EffectVariableType::Float;
 }
-//-----------------------------------------------------------------------
+
 EffectVariableClass HLSLReflectionHelper::ToEffectVariableClass(
     D3D_SHADER_VARIABLE_CLASS variableClass) noexcept
 {

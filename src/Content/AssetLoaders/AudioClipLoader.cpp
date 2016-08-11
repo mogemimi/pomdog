@@ -16,7 +16,7 @@
 
 namespace Pomdog {
 namespace Detail {
-//-----------------------------------------------------------------------
+
 std::shared_ptr<AudioClip> AssetLoader<AudioClip>::operator()(
     const AssetLoaderContext& loaderContext, const std::string& assetName)
 {
@@ -58,6 +58,6 @@ std::shared_ptr<AudioClip> AssetLoader<AudioClip>::operator()(
 
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
 }
-//-----------------------------------------------------------------------
+
 } // namespace Detail
 } // namespace Pomdog

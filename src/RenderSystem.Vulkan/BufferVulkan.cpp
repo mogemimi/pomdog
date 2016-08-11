@@ -39,7 +39,7 @@ VkBufferCreateInfo ToVkBufferCreateInfo(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 BufferVulkan::BufferVulkan(
     ::VkDevice deviceIn,
     std::size_t sizeInBytes,
@@ -62,7 +62,7 @@ BufferVulkan::BufferVulkan(
             "Failed to create VkBuffer");
     }
 }
-//-----------------------------------------------------------------------
+
 BufferVulkan::BufferVulkan(
     ::VkDevice deviceIn,
     const void* sourceData,
@@ -123,7 +123,7 @@ BufferVulkan::BufferVulkan(
             "Failed to call vkBindBufferMemory()");
     }
 }
-//-----------------------------------------------------------------------
+
 BufferVulkan::~BufferVulkan()
 {
     if (nativeBuffer != nullptr) {
@@ -135,7 +135,7 @@ BufferVulkan::~BufferVulkan()
         vkFreeMemory(device, deviceMemory, nullptr);
     }
 }
-//-----------------------------------------------------------------------
+
 void BufferVulkan::GetData(
     std::size_t offsetInBytes, void* destination, std::size_t sizeInBytes) const
 {
@@ -144,7 +144,7 @@ void BufferVulkan::GetData(
     // FUS RO DAH!
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 void BufferVulkan::SetData(
     std::size_t offsetInBytes, const void* source, std::size_t sizeInBytes)
 {
@@ -153,12 +153,12 @@ void BufferVulkan::SetData(
     // FUS RO DAH!
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 VkBuffer BufferVulkan::GetBuffer() const
 {
     return nativeBuffer;
 }
-//-----------------------------------------------------------------------
+
 } // namespace Vulkan
 } // namespace Detail
 } // namespace Pomdog

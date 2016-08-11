@@ -7,7 +7,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 SamplerState::SamplerState(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     const SamplerDescription& description)
@@ -16,12 +16,12 @@ SamplerState::SamplerState(
 {
     POMDOG_ASSERT(nativeSamplerState);
 }
-//-----------------------------------------------------------------------
+
 SamplerState::~SamplerState() = default;
-//-----------------------------------------------------------------------
+
 Detail::NativeSamplerState* SamplerState::GetNativeSamplerState()
 {
     return nativeSamplerState.get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

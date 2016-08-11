@@ -12,7 +12,7 @@
 #include <unistd.h>
 
 namespace Pomdog {
-//-----------------------------------------------------------------------
+
 bool FileSystem::CreateDirectory(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
@@ -23,7 +23,7 @@ bool FileSystem::CreateDirectory(const std::string& path)
     }
     return ::mkdir(path.c_str(), S_IRWXU) == 0;
 }
-//-----------------------------------------------------------------------
+
 bool FileSystem::CreateDirectories(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
@@ -50,13 +50,13 @@ bool FileSystem::CreateDirectories(const std::string& path)
     }
     return ::mkdir(tmp.c_str(), S_IRWXU) == 0;
 }
-//-----------------------------------------------------------------------
+
 bool FileSystem::Exists(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
     return ::access(path.c_str(), F_OK) != -1;
 }
-//-----------------------------------------------------------------------
+
 bool FileSystem::IsDirectory(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
@@ -66,19 +66,19 @@ bool FileSystem::IsDirectory(const std::string& path)
     }
     return S_ISDIR(st.st_mode);
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetLocalAppDataDirectoryPath()
 {
     ///@todo Not implemented
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetAppDataDirectoryPath()
 {
     ///@todo Not implemented
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetResourceDirectoryPath()
 {
     std::array<char, PATH_MAX + 1> buf;
@@ -88,12 +88,12 @@ std::string FileSystem::GetResourceDirectoryPath()
     std::string executablePath = buf.data();
     return PathHelper::GetDirectoryName(executablePath);
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetTempDirectoryPath()
 {
     return P_tmpdir;
 }
-//-----------------------------------------------------------------------
+
 std::string FileSystem::GetCurrentWorkingDirectory()
 {
     char directory[PATH_MAX];
@@ -102,5 +102,5 @@ std::string FileSystem::GetCurrentWorkingDirectory()
     }
     return {};
 }
-//-----------------------------------------------------------------------
+
 } // namespace Pomdog

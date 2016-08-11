@@ -8,7 +8,7 @@
 namespace Pomdog {
 namespace Detail {
 namespace Vulkan {
-//-----------------------------------------------------------------------
+
 ShaderVulkan::ShaderVulkan(
     ::VkDevice deviceIn,
     const ShaderBytecode& shaderBytecode,
@@ -35,7 +35,7 @@ ShaderVulkan::ShaderVulkan(
     // FUS RO DAH!
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
-//-----------------------------------------------------------------------
+
 ShaderVulkan::~ShaderVulkan()
 {
     if (shaderModule != nullptr) {
@@ -43,7 +43,7 @@ ShaderVulkan::~ShaderVulkan()
         vkDestroyShaderModule(device, shaderModule, nullptr);
     }
 }
-//-----------------------------------------------------------------------
+
 } // namespace Vulkan
 } // namespace Detail
 } // namespace Pomdog

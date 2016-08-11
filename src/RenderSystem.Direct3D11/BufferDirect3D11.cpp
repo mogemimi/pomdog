@@ -85,7 +85,7 @@ ID3D11Buffer* CreateNativeBuffer(
 }
 
 } // unnamed namespace
-//-----------------------------------------------------------------------
+
 BufferDirect3D11::BufferDirect3D11(
     ID3D11Device* device,
     const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContextIn,
@@ -97,7 +97,7 @@ BufferDirect3D11::BufferDirect3D11(
     buffer = CreateNativeBuffer(device, sizeInBytes,
         nullptr, bufferUsage, bindFlag);
 }
-//-----------------------------------------------------------------------
+
 BufferDirect3D11::BufferDirect3D11(
     ID3D11Device* device,
     const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContextIn,
@@ -110,7 +110,7 @@ BufferDirect3D11::BufferDirect3D11(
     buffer = CreateNativeBuffer(device, sizeInBytes,
         sourceData, bufferUsage, bindFlag);
 }
-//-----------------------------------------------------------------------
+
 void BufferDirect3D11::GetData(
     std::size_t offsetInBytes,
     void* destination,
@@ -136,7 +136,7 @@ void BufferDirect3D11::GetData(
 
     deviceContext->Unmap(buffer.Get(), 0);
 }
-//-----------------------------------------------------------------------
+
 void BufferDirect3D11::SetData(
     std::size_t offsetInBytes,
     const void* source,
@@ -165,13 +165,13 @@ void BufferDirect3D11::SetData(
 
     deviceContext->Unmap(buffer.Get(), 0);
 }
-//-----------------------------------------------------------------------
+
 ID3D11Buffer* BufferDirect3D11::GetBuffer() const
 {
     POMDOG_ASSERT(buffer);
     return buffer.Get();
 }
-//-----------------------------------------------------------------------
+
 } // namespace Direct3D11
 } // namespace Detail
 } // namespace Pomdog

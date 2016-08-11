@@ -10,7 +10,7 @@
 namespace Pomdog {
 namespace Detail {
 namespace Vulkan {
-//-----------------------------------------------------------------------
+
 Texture2DVulkan::Texture2DVulkan(
     ::VkDevice deviceIn,
     ::VkPhysicalDevice physicalDevice,
@@ -69,7 +69,7 @@ Texture2DVulkan::Texture2DVulkan(
 
     ///@todo Not implemented
 }
-//-----------------------------------------------------------------------
+
 Texture2DVulkan::~Texture2DVulkan()
 {
     if (image != nullptr) {
@@ -85,7 +85,7 @@ Texture2DVulkan::~Texture2DVulkan()
         vkDestroyImageView(device, view, nullptr);
     }
 }
-//-----------------------------------------------------------------------
+
 void Texture2DVulkan::SetData(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
@@ -98,7 +98,7 @@ void Texture2DVulkan::SetData(
     POMDOG_ASSERT(levelCount >= 1);
     POMDOG_ASSERT(pixelData != nullptr);
 }
-//-----------------------------------------------------------------------
+
 } // namespace Vulkan
 } // namespace Detail
 } // namespace Pomdog

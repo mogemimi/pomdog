@@ -14,7 +14,7 @@ using Pomdog::Detail::ShaderCompileOptions;
 
 namespace Pomdog {
 namespace ShaderCompilers {
-//-----------------------------------------------------------------------
+
 std::unique_ptr<Shader> MetalCompiler::CreateShaderFromSource(
     GraphicsDevice & graphicsDevice,
     const void* shaderSource,
@@ -39,6 +39,6 @@ std::unique_ptr<Shader> MetalCompiler::CreateShaderFromSource(
 
     return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
 }
-//-----------------------------------------------------------------------
+
 } // namespace ShaderCompilers
 } // namespace Pomdog
