@@ -592,6 +592,7 @@
 		E1DC212862AB3EB2911EFB99 /* SoundState.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = SoundState.hpp; sourceTree = "<group>"; };
 		E1F15A5217D38E950360A6A5 /* AudioClipAL.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AudioClipAL.cpp; sourceTree = "<group>"; };
 		E319F46437C93E0093E7D174 /* HLSLCompiler.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = HLSLCompiler.hpp; sourceTree = "<group>"; };
+		E33E79381D5D952400E085B9 /* RenderPass.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RenderPass.hpp; sourceTree = "<group>"; };
 		E43B03089D96A37A61792253 /* ShaderBuilder.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = ShaderBuilder.hpp; sourceTree = "<group>"; };
 		E49E415B7CFEC3E4A2E76613 /* Color.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Color.hpp; sourceTree = "<group>"; };
 		E5337A376FA0A6EBD3ABCC3E /* Matrix3x3.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Matrix3x3.hpp; sourceTree = "<group>"; };
@@ -1277,6 +1278,7 @@
 				809FE1055F6679E0BE944E96 /* PresentationParameters.hpp */,
 				5C3FB6BD555F60F16A871F09 /* PrimitiveTopology.hpp */,
 				5BAD61E9B15DE074D45C7121 /* RasterizerDescription.hpp */,
+				E33E79381D5D952400E085B9 /* RenderPass.hpp */,
 				BC2F086E30EFAF7E911FD22B /* RenderTarget2D.hpp */,
 				048A8F875B31409BC58DA7AA /* RenderTargetBlendDescription.hpp */,
 				0FF4EBDDE25E2F9D886F0810 /* SamplerDescription.hpp */,

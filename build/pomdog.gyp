@@ -105,6 +105,7 @@
       '../include/Pomdog/Graphics/PresentationParameters.hpp',
       '../include/Pomdog/Graphics/PrimitiveTopology.hpp',
       '../include/Pomdog/Graphics/RasterizerDescription.hpp',
+      '../include/Pomdog/Graphics/RenderPass.hpp',
       '../include/Pomdog/Graphics/RenderTarget2D.hpp',
       '../include/Pomdog/Graphics/RenderTargetBlendDescription.hpp',
       '../include/Pomdog/Graphics/SamplerDescription.hpp',

@@ -47,6 +47,7 @@ struct InputLayoutDescription;
 struct PipelineStateDescription;
 struct PresentationParameters;
 struct RasterizerDescription;
+struct RenderPass;
 struct RenderTargetBlendDescription;
 struct SamplerDescription;
 struct VertexBufferBinding;
