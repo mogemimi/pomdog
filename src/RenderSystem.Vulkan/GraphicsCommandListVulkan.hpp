@@ -12,51 +12,51 @@ namespace Vulkan {
 
 class GraphicsCommandListVulkan final : public NativeGraphicsCommandList {
 public:
-    void Close();
+    void Close() override;
 
-    void Reset();
+    void Reset() override;
 
-    std::size_t GetCount() const noexcept;
+    std::size_t GetCount() const noexcept override;
 
-    void Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil);
+    void Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil) override;
 
-    void Draw(std::size_t vertexCount);
+    void Draw(std::size_t vertexCount) override;
 
-    void DrawIndexed(std::size_t indexCount);
+    void DrawIndexed(std::size_t indexCount) override;
 
     void DrawInstanced(
         std::size_t vertexCount,
-        std::size_t instanceCount);
+        std::size_t instanceCount) override;
 
     void DrawIndexedInstanced(
         std::size_t indexCount,
-        std::size_t instanceCount);
+        std::size_t instanceCount) override;
 
     void SetViewport(const Viewport& viewport);
 
     void SetScissorRectangle(const Rectangle& rectangle);
 
-    void SetPrimitiveTopology(PrimitiveTopology primitiveTopology);
+    void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) override;
 
-    void SetBlendFactor(const Color& blendFactor);
+    void SetBlendFactor(const Color& blendFactor) override;
 
-    void SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers);
+    void SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers) override;
 
-    void SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers);
+    void SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers) override;
 
-    void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer);
+    void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
 
-    void SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState);
+    void SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState) override;
 
-    void SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer);
+    void SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer) override;
 
-    void SetSampler(int index, std::shared_ptr<NativeSamplerState> && sampler);
+    void SetSampler(int index, std::shared_ptr<NativeSamplerState> && sampler) override;
 
-    void SetTexture(int index);
+    void SetTexture(int index) override;
 
-    void SetTexture(int index, const std::shared_ptr<Texture2D>& texture);
+    void SetTexture(int index, const std::shared_ptr<Texture2D>& texture) override;
 
-    void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture);
+    void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
     void SetRenderTarget();
 
