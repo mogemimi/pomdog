@@ -48,7 +48,6 @@
 		2A792456A91A1FCD600F40C7 /* FloatingPointMatrix3x2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54A52D4906919EB149099EE8 /* FloatingPointMatrix3x2.cpp */; };
 		2C6A8330B306F09980C8EFE0 /* KeyboardState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7D5A98E477FB0CDE2089FBD /* KeyboardState.cpp */; };
 		30E3441F3697C393B219D621 /* EffectBinaryParameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8EB459D4407794972524D9B2 /* EffectBinaryParameter.cpp */; };
-		3494D7F64C6276ED4165B389 /* ClearOptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0D412B71767371317FA2E734 /* ClearOptions.cpp */; };
 		3731B1EE2512BA451CA8E5D7 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB039FAE65C607A60DDBB49C /* OpenGL.framework */; };
 		373CF27D2193F65F489FA975 /* RasterizerStateGL4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6AB8FF0EE7B469693B84F20E /* RasterizerStateGL4.cpp */; };
 		378F438407DEF79BEA69E81C /* GraphicsCommandListImmediate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13DFD59376FA25B8994E3399 /* GraphicsCommandListImmediate.cpp */; };
@@ -65,7 +64,6 @@
 		48657AD97E278FA04C4994B4 /* ConnectionList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2AEB843C0EAE82FED23106B /* ConnectionList.cpp */; };
 		4B6482395A34745225470B08 /* ErrorCheckerAL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66802D7806B0E296795BD9D4 /* ErrorCheckerAL.cpp */; };
 		4D3F6C1E105B1A1149475635 /* libzlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63DEC4E495A2A3E49BFD61E5 /* libzlib.a */; };
-		4D5D41B4D7BBC7A9DDB69F20 /* ClearOptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0D412B71767371317FA2E734 /* ClearOptions.cpp */; };
 		4EE6EBE03E9AD9C3BEF652F2 /* AudioClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DDD1FD28A2F24D79778915D7 /* AudioClip.cpp */; };
 		510B6B7437308E914269F263 /* GraphicsCommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37D0464D1E5DE9AC99F9A5E4 /* GraphicsCommandQueue.cpp */; };
 		51184430EB95428FD308DC8F /* FloatingPointMatrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 029A2B232511421D3FDB9FAC /* FloatingPointMatrix3x3.cpp */; };
@@ -298,7 +296,6 @@
 		0BC63689E81783E3D1C96733 /* Duration.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Duration.hpp; sourceTree = "<group>"; };
 		0BCA87AFE51C8126772E2361 /* Keys.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Keys.hpp; sourceTree = "<group>"; };
 		0C0775DB85DA444CD6FEA34E /* Helpers.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Helpers.hpp; sourceTree = "<group>"; };
-		0D412B71767371317FA2E734 /* ClearOptions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ClearOptions.cpp; sourceTree = "<group>"; };
 		0D65BAAD32CB4C04CE07F14B /* Rectangle.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Rectangle.hpp; sourceTree = "<group>"; };
 		0EEE1584DE8DFC5F422E85CC /* zlib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = zlib.xcodeproj; path = dependencies/zlib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		0FF4EBDDE25E2F9D886F0810 /* SamplerDescription.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = SamplerDescription.hpp; sourceTree = "<group>"; };
@@ -483,7 +480,6 @@
 		A34A919151E1722E4199C9C6 /* Export.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Export.hpp; sourceTree = "<group>"; };
 		A3C8D192AA170BACB3933E3A /* Connection.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Connection.hpp; sourceTree = "<group>"; };
 		A4CAD3D235945C6E9A3B3D53 /* Quaternion.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Quaternion.hpp; sourceTree = "<group>"; };
-		A591EE21F527F40F1CC2939D /* ClearOptions.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = ClearOptions.hpp; sourceTree = "<group>"; };
 		A651CE22C9DE13920AB99E12 /* Viewport.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Viewport.cpp; sourceTree = "<group>"; };
 		A6992141FF0635255A2A7757 /* Point2D.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Point2D.hpp; sourceTree = "<group>"; };
 		A82762A5077C6D85775D0E02 /* GraphicsCommandList.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GraphicsCommandList.hpp; sourceTree = "<group>"; };
@@ -1203,7 +1199,6 @@
 			isa = PBXGroup;
 			children = (
 				1DB41113717C230101DB829E /* ShaderCompilers */,
-				0D412B71767371317FA2E734 /* ClearOptions.cpp */,
 				C7B6B9ADFEE35269D5B261C8 /* ConstantBuffer.cpp */,
 				8EB459D4407794972524D9B2 /* EffectBinaryParameter.cpp */,
 				5AEBA2A679E40483918C924A /* EffectReflection.cpp */,
@@ -1249,7 +1244,6 @@
 				B9B61FF78819BA1E5B2CBFE8 /* BlendDescription.hpp */,
 				B207BED06908AA1A2817BCDA /* BlendOperation.hpp */,
 				7EB3E2D0F4843945044F30DC /* BufferUsage.hpp */,
-				A591EE21F527F40F1CC2939D /* ClearOptions.hpp */,
 				DF3D37BF7E4F7494B861CC82 /* ComparisonFunction.hpp */,
 				9AB649441250ACD876E6EFA4 /* ConstantBuffer.hpp */,
 				DFEBBEDBA04DC0C2BE9FF69C /* CullMode.hpp */,
@@ -1546,7 +1540,6 @@
 				5A778C274019DF20B4A89035 /* DDSTextureReader.cpp in Sources */,
 				6AF7B562E9CA059894EB5359 /* MSWaveAudioLoader.cpp in Sources */,
 				0B000E134EE1FB9B23D549AA /* PNGTextureReader.cpp in Sources */,
-				4D5D41B4D7BBC7A9DDB69F20 /* ClearOptions.cpp in Sources */,
 				56943E805DA5A66B2B412B6E /* ConstantBuffer.cpp in Sources */,
 				30E3441F3697C393B219D621 /* EffectBinaryParameter.cpp in Sources */,
 				B6BD5FE552C47288CCEB50D4 /* EffectReflection.cpp in Sources */,
@@ -1659,7 +1652,6 @@
 				97D9BB458E1CCD768983FA5F /* DDSTextureReader.cpp in Sources */,
 				7EA811ADD537C1D53C100DDC /* MSWaveAudioLoader.cpp in Sources */,
 				46937FE2B1FC98BBA39A1C3D /* PNGTextureReader.cpp in Sources */,
-				3494D7F64C6276ED4165B389 /* ClearOptions.cpp in Sources */,
 				712667FE9F33A8F7581022FC /* ConstantBuffer.cpp in Sources */,
 				FB449C29F6AE9D0C12E0B224 /* EffectBinaryParameter.cpp in Sources */,
 				054132B7E4436F540059F098 /* EffectReflection.cpp in Sources */,

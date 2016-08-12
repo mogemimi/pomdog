@@ -56,7 +56,6 @@ struct VertexBufferBinding;
 enum class Blend : std::uint8_t;
 enum class BlendOperation : std::uint8_t;
 enum class BufferUsage : std::uint8_t;
-enum class ClearOptions : std::uint8_t;
 enum class ComparisonFunction : std::uint8_t;
 enum class CullMode : std::uint8_t;
 enum class DepthFormat : std::uint8_t;

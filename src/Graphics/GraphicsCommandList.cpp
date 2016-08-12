@@ -5,7 +5,6 @@
 #include "../RenderSystem/NativeGraphicsCommandList.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Graphics/ClearOptions.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"

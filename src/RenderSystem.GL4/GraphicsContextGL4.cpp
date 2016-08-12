@@ -13,7 +13,6 @@
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include "../RenderSystem/NativeTexture2D.hpp"
 #include "../Utility/ScopeGuard.hpp"
-#include "Pomdog/Graphics/ClearOptions.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"

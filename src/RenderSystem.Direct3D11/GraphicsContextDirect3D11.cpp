@@ -11,7 +11,6 @@
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Graphics/ClearOptions.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"

@@ -4,7 +4,6 @@
 
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Graphics/ClearOptions.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <memory>

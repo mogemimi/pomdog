@@ -54,7 +54,6 @@
 #include "Graphics/BlendDescription.hpp"
 #include "Graphics/BlendOperation.hpp"
 #include "Graphics/BufferUsage.hpp"
-#include "Graphics/ClearOptions.hpp"
 #include "Graphics/ComparisonFunction.hpp"
 #include "Graphics/ConstantBuffer.hpp"
 #include "Graphics/CullMode.hpp"

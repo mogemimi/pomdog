@@ -4,7 +4,6 @@
 #include "GraphicsContext.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Graphics/ClearOptions.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"

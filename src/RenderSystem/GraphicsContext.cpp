@@ -3,7 +3,6 @@
 #include "GraphicsContext.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
-#include "Pomdog/Graphics/ClearOptions.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
