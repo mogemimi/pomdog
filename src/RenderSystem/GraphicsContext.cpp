@@ -4,6 +4,7 @@
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
+#include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
@@ -24,26 +25,11 @@ void CheckUnbindingRenderTargetsError(
 {
     for (auto & renderTarget: renderTargets) {
         for (auto & texture: textures) {
-            POMDOG_ASSERT(renderTarget != texture);
+            POMDOG_ASSERT((renderTarget == nullptr) || (renderTarget != texture));
         }
     }
 }
 #endif
-
-ClearOptions ToClearOptions(DepthFormat depthFormat) noexcept
-{
-    switch (depthFormat) {
-    case DepthFormat::Depth24Stencil8:
-    case DepthFormat::Depth32_Float_Stencil8_Uint:
-        return ClearOptions::DepthBuffer | ClearOptions::Stencil;
-    case DepthFormat::Depth32:
-    case DepthFormat::Depth16:
-        return ClearOptions::DepthBuffer;
-    default:
-        break;
-    }
-    return ClearOptions::RenderTarget;
-}
 
 } // unnamed namespace
 
@@ -76,31 +62,11 @@ GraphicsContext::GraphicsContext(
 GraphicsContext::~GraphicsContext()
 {
     textures.clear();
+#if defined(DEBUG) && !defined(NDEBUG)
     renderTargets.clear();
+#endif
 
     nativeContext.reset();
-}
-
-void GraphicsContext::Clear(const Color& color)
-{
-    ClearOptions options = ClearOptions::RenderTarget;
-
-    if (!renderTargets.empty()) {
-        auto & renderTarget = renderTargets.front();
-        options |= ToClearOptions(renderTarget->GetDepthStencilFormat());
-    }
-    else {
-        options |= ToClearOptions(depthStencilFormat);
-    }
-
-    POMDOG_ASSERT(nativeContext);
-    nativeContext->Clear(options, color, 1.0f, 0);
-}
-
-void GraphicsContext::Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
-{
-    POMDOG_ASSERT(nativeContext);
-    nativeContext->Clear(options, color, depth, stencil);
 }
 
 void GraphicsContext::Present()
@@ -151,18 +117,17 @@ void GraphicsContext::DrawIndexedInstanced(
     nativeContext->DrawIndexedInstanced(indexCount, instanceCount);
 }
 
-void GraphicsContext::SetViewport(const Pomdog::Viewport& viewport)
+void GraphicsContext::SetRenderPass(const RenderPass& renderPass)
 {
     POMDOG_ASSERT(nativeContext);
-    POMDOG_ASSERT(viewport.Width > 0);
-    POMDOG_ASSERT(viewport.Height > 0);
-    nativeContext->SetViewport(viewport);
-}
 
-void GraphicsContext::SetScissorRectangle(const Pomdog::Rectangle& rectangle)
-{
-    POMDOG_ASSERT(nativeContext);
-    nativeContext->SetScissorRectangle(rectangle);
+#if defined(DEBUG) && !defined(NDEBUG)
+    renderTargets.clear();
+    for (auto& renderTarget : renderPass.RenderTargets) {
+        renderTargets.push_back(std::get<0>(renderTarget));
+    }
+#endif
+    nativeContext->SetRenderPass(renderPass);
 }
 
 void GraphicsContext::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
@@ -260,29 +225,6 @@ void GraphicsContext::SetTexture(int index, const std::shared_ptr<RenderTarget2D
         textures[index] = textureIn;
         nativeContext->SetTexture(index, *textureIn);
     }
-}
-
-void GraphicsContext::SetRenderTarget()
-{
-    POMDOG_ASSERT(nativeContext);
-    nativeContext->SetRenderTarget();
-    renderTargets.clear();
-}
-
-void GraphicsContext::SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargetsIn)
-{
-    POMDOG_ASSERT(nativeContext);
-    POMDOG_ASSERT(!renderTargetsIn.empty());
-    renderTargets = renderTargetsIn;
-    nativeContext->SetRenderTargets(renderTargets);
-}
-
-void GraphicsContext::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargetsIn)
-{
-    POMDOG_ASSERT(nativeContext);
-    POMDOG_ASSERT(!renderTargetsIn.empty());
-    renderTargets = std::move(renderTargetsIn);
-    nativeContext->SetRenderTargets(renderTargets);
 }
 
 Detail::NativeGraphicsContext* GraphicsContext::GetNativeGraphicsContext()

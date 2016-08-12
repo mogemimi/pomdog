@@ -28,10 +28,6 @@ public:
 
     std::size_t GetCount() const noexcept;
 
-    void Clear(const Color& color);
-
-    void Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil);
-
     void Draw(std::size_t vertexCount);
 
     void DrawIndexed(
@@ -47,9 +43,7 @@ public:
         std::size_t indexCount,
         std::size_t instanceCount);
 
-    void SetViewport(const Viewport& viewport);
-
-    void SetScissorRectangle(const Rectangle& rectangle);
+    void SetRenderPass(RenderPass && renderPass);
 
     void SetPrimitiveTopology(PrimitiveTopology primitiveTopology);
 
@@ -76,14 +70,6 @@ public:
     void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture);
 
     void SetSamplerState(int index, const std::shared_ptr<SamplerState>& samplerState);
-
-    void SetRenderTarget();
-
-    void SetRenderTarget(const std::shared_ptr<RenderTarget2D>& renderTarget);
-
-    void SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets);
-
-    void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets);
 
     Detail::NativeGraphicsCommandList* GetNativeGraphicsCommandList();
 

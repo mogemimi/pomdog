@@ -5,6 +5,7 @@
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -12,21 +13,8 @@
 namespace Pomdog {
 namespace Detail {
 namespace {
-namespace Commands {
 
 using Detail::GraphicsCommand;
-
-struct ClearCommand final: public GraphicsCommand {
-    Color color;
-    float depth;
-    std::uint8_t stencil;
-    ClearOptions options;
-
-    void Execute(GraphicsContext & graphicsContext) override
-    {
-        graphicsContext.Clear(options, color, depth, stencil);
-    }
-};
 
 struct DrawCommand final: public GraphicsCommand {
     std::size_t vertexCount;
@@ -63,24 +51,6 @@ struct DrawIndexedInstancedCommand final: public GraphicsCommand {
     void Execute(GraphicsContext & graphicsContext) override
     {
         graphicsContext.DrawIndexedInstanced(indexCount, instanceCount);
-    }
-};
-
-struct SetViewportCommand final: public GraphicsCommand {
-    Pomdog::Viewport viewport;
-
-    void Execute(GraphicsContext & graphicsContext) override
-    {
-        graphicsContext.SetViewport(viewport);
-    }
-};
-
-struct SetScissorRectangleCommand final: public GraphicsCommand {
-    Pomdog::Rectangle rectangle;
-
-    void Execute(GraphicsContext & graphicsContext) override
-    {
-        graphicsContext.SetScissorRectangle(rectangle);
     }
 };
 
@@ -187,24 +157,15 @@ struct SetTextureRenderTarget2DCommand final: public GraphicsCommand {
     }
 };
 
-struct SetBackBufferAsRenderTargetCommand final: public GraphicsCommand {
-    void Execute(GraphicsContext & graphicsContext) override
-    {
-        graphicsContext.SetRenderTarget();
-    }
-};
-
-struct SetRenderTargetsCommand final: public GraphicsCommand {
-    std::vector<std::shared_ptr<RenderTarget2D>> renderTargets;
+struct SetRenderPassCommand final : public GraphicsCommand {
+    RenderPass renderPass;
 
     void Execute(GraphicsContext & graphicsContext) override
     {
-        POMDOG_ASSERT(!renderTargets.empty());
-        graphicsContext.SetRenderTargets(renderTargets);
+        graphicsContext.SetRenderPass(renderPass);
     }
 };
 
-} // namespace Commands
 } // unnamed namespace
 
 GraphicsCommandListImmediate::~GraphicsCommandListImmediate() = default;
@@ -224,20 +185,10 @@ std::size_t GraphicsCommandListImmediate::GetCount() const noexcept
     return commands.size();
 }
 
-void GraphicsCommandListImmediate::Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
-{
-    auto command = std::make_unique<Commands::ClearCommand>();
-    command->options = options;
-    command->color = color;
-    command->depth = depth;
-    command->stencil = stencil;
-    commands.push_back(std::move(command));
-}
-
 void GraphicsCommandListImmediate::Draw(std::size_t vertexCount)
 {
     POMDOG_ASSERT(vertexCount >= 1);
-    auto command = std::make_unique<Commands::DrawCommand>();
+    auto command = std::make_unique<DrawCommand>();
     command->vertexCount = vertexCount;
     commands.push_back(std::move(command));
 }
@@ -246,7 +197,7 @@ void GraphicsCommandListImmediate::DrawIndexed(
     std::size_t indexCount)
 {
     POMDOG_ASSERT(indexCount >= 1);
-    auto command = std::make_unique<Commands::DrawIndexedCommand>();
+    auto command = std::make_unique<DrawIndexedCommand>();
     command->indexCount = indexCount;
     commands.push_back(std::move(command));
 }
@@ -256,7 +207,7 @@ void GraphicsCommandListImmediate::DrawInstanced(
     std::size_t instanceCount)
 {
     POMDOG_ASSERT(vertexCount >= 1);
-    auto command = std::make_unique<Commands::DrawInstancedCommand>();
+    auto command = std::make_unique<DrawInstancedCommand>();
     command->vertexCount = vertexCount;
     command->instanceCount = instanceCount;
     commands.push_back(std::move(command));
@@ -267,36 +218,33 @@ void GraphicsCommandListImmediate::DrawIndexedInstanced(
     std::size_t instanceCount)
 {
     POMDOG_ASSERT(indexCount >= 1);
-    auto command = std::make_unique<Commands::DrawIndexedInstancedCommand>();
+    auto command = std::make_unique<DrawIndexedInstancedCommand>();
     command->indexCount = indexCount;
     command->instanceCount = instanceCount;
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetViewport(const Viewport& viewport)
+void GraphicsCommandListImmediate::SetRenderPass(RenderPass && renderPass)
 {
-    auto command = std::make_unique<Commands::SetViewportCommand>();
-    command->viewport = viewport;
-    commands.push_back(std::move(command));
-}
+    auto command = std::make_unique<SetRenderPassCommand>();
+    command->renderPass = std::move(renderPass);
 
-void GraphicsCommandListImmediate::SetScissorRectangle(const Rectangle& rectangle)
-{
-    auto command = std::make_unique<Commands::SetScissorRectangleCommand>();
-    command->rectangle = rectangle;
+    if (command->renderPass.RenderTargets.empty()) {
+        command->renderPass.RenderTargets.emplace_back(nullptr, Pomdog::NullOpt);
+    }
     commands.push_back(std::move(command));
 }
 
 void GraphicsCommandListImmediate::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
 {
-    auto command = std::make_unique<Commands::SetPrimitiveTopologyCommand>();
+    auto command = std::make_unique<SetPrimitiveTopologyCommand>();
     command->primitiveTopology = primitiveTopology;
     commands.push_back(std::move(command));
 }
 
 void GraphicsCommandListImmediate::SetBlendFactor(const Color& blendFactor)
 {
-    auto command = std::make_unique<Commands::SetBlendFactorCommand>();
+    auto command = std::make_unique<SetBlendFactorCommand>();
     command->blendFactor = blendFactor;
     commands.push_back(std::move(command));
 }
@@ -304,7 +252,7 @@ void GraphicsCommandListImmediate::SetBlendFactor(const Color& blendFactor)
 void GraphicsCommandListImmediate::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers)
 {
     POMDOG_ASSERT(!vertexBuffers.empty());
-    auto command = std::make_unique<Commands::SetVertexBuffersCommand>();
+    auto command = std::make_unique<SetVertexBuffersCommand>();
     command->vertexBuffers = vertexBuffers;
     commands.push_back(std::move(command));
 }
@@ -312,7 +260,7 @@ void GraphicsCommandListImmediate::SetVertexBuffers(const std::vector<VertexBuff
 void GraphicsCommandListImmediate::SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers)
 {
     POMDOG_ASSERT(!vertexBuffers.empty());
-    auto command = std::make_unique<Commands::SetVertexBuffersCommand>();
+    auto command = std::make_unique<SetVertexBuffersCommand>();
     command->vertexBuffers = std::move(vertexBuffers);
     commands.push_back(std::move(command));
 }
@@ -320,7 +268,7 @@ void GraphicsCommandListImmediate::SetVertexBuffers(std::vector<VertexBufferBind
 void GraphicsCommandListImmediate::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
 {
     POMDOG_ASSERT(indexBuffer);
-    auto command = std::make_unique<Commands::SetIndexBufferCommand>();
+    auto command = std::make_unique<SetIndexBufferCommand>();
     command->indexBuffer = indexBuffer;
     commands.push_back(std::move(command));
 }
@@ -328,7 +276,7 @@ void GraphicsCommandListImmediate::SetIndexBuffer(const std::shared_ptr<IndexBuf
 void GraphicsCommandListImmediate::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState)
 {
     POMDOG_ASSERT(pipelineState);
-    auto command = std::make_unique<Commands::SetPipelineStateCommand>();
+    auto command = std::make_unique<SetPipelineStateCommand>();
     command->pipelineState = pipelineState;
     commands.push_back(std::move(command));
 }
@@ -337,7 +285,7 @@ void GraphicsCommandListImmediate::SetConstantBuffer(int index, const std::share
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(constantBuffer);
-    auto command = std::make_unique<Commands::SetConstantBufferCommand>();
+    auto command = std::make_unique<SetConstantBufferCommand>();
     command->constantBuffer = constantBuffer;
     command->slotIndex = index;
     commands.push_back(std::move(command));
@@ -347,7 +295,7 @@ void GraphicsCommandListImmediate::SetSampler(int index, std::shared_ptr<NativeS
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(sampler);
-    auto command = std::make_unique<Commands::SetSamplerStateCommand>();
+    auto command = std::make_unique<SetSamplerStateCommand>();
     command->slotIndex = index;
     command->sampler = std::move(sampler);
     commands.push_back(std::move(command));
@@ -356,7 +304,7 @@ void GraphicsCommandListImmediate::SetSampler(int index, std::shared_ptr<NativeS
 void GraphicsCommandListImmediate::SetTexture(int index)
 {
     POMDOG_ASSERT(index >= 0);
-    auto command = std::make_unique<Commands::SetTextureCommand>();
+    auto command = std::make_unique<SetTextureCommand>();
     command->slotIndex = index;
     commands.push_back(std::move(command));
 }
@@ -365,7 +313,7 @@ void GraphicsCommandListImmediate::SetTexture(int index, const std::shared_ptr<T
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(texture);
-    auto command = std::make_unique<Commands::SetTextureCommand>();
+    auto command = std::make_unique<SetTextureCommand>();
     command->slotIndex = index;
     command->texture = texture;
     commands.push_back(std::move(command));
@@ -375,31 +323,9 @@ void GraphicsCommandListImmediate::SetTexture(int index, const std::shared_ptr<R
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(texture);
-    auto command = std::make_unique<Commands::SetTextureRenderTarget2DCommand>();
+    auto command = std::make_unique<SetTextureRenderTarget2DCommand>();
     command->slotIndex = index;
     command->texture = texture;
-    commands.push_back(std::move(command));
-}
-
-void GraphicsCommandListImmediate::SetRenderTarget()
-{
-    auto command = std::make_unique<Commands::SetBackBufferAsRenderTargetCommand>();
-    commands.push_back(std::move(command));
-}
-
-void GraphicsCommandListImmediate::SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets)
-{
-    POMDOG_ASSERT(!renderTargets.empty());
-    auto command = std::make_unique<Commands::SetRenderTargetsCommand>();
-    command->renderTargets = renderTargets;
-    commands.push_back(std::move(command));
-}
-
-void GraphicsCommandListImmediate::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets)
-{
-    POMDOG_ASSERT(!renderTargets.empty());
-    auto command = std::make_unique<Commands::SetRenderTargetsCommand>();
-    command->renderTargets = std::move(renderTargets);
     commands.push_back(std::move(command));
 }
 

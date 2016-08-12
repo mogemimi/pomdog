@@ -26,10 +26,6 @@ public:
 
     ~GraphicsContext();
 
-    void Clear(const Color& color);
-
-    void Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil);
-
     void Present();
 
     void Draw(std::size_t vertexCount);
@@ -44,9 +40,7 @@ public:
         std::size_t indexCount,
         std::size_t instanceCount);
 
-    void SetViewport(const Viewport& viewport);
-
-    void SetScissorRectangle(const Rectangle& rectangle);
+    void SetRenderPass(const RenderPass& renderPass);
 
     void SetPrimitiveTopology(PrimitiveTopology primitiveTopology);
 
@@ -68,19 +62,14 @@ public:
 
     void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture);
 
-    void SetRenderTarget();
-
-    void SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets);
-
-    void SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets);
-
     Detail::NativeGraphicsContext* GetNativeGraphicsContext();
 
 private:
     std::vector<std::shared_ptr<Texture>> textures;
-    std::vector<std::shared_ptr<RenderTarget2D>> renderTargets;
     std::unique_ptr<Detail::NativeGraphicsContext> nativeContext;
-    DepthFormat depthStencilFormat;
+#if defined(DEBUG) && !defined(NDEBUG)
+    std::vector<std::shared_ptr<RenderTarget2D>> renderTargets;
+#endif
 };
 
 } // namespace Detail

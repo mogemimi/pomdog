@@ -23,8 +23,6 @@ public:
 
     virtual void Present() = 0;
 
-    virtual void Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil) = 0;
-
     virtual void Draw(std::size_t vertexCount) = 0;
 
     virtual void DrawIndexed(std::size_t indexCount) = 0;
@@ -37,9 +35,7 @@ public:
         std::size_t indexCount,
         std::size_t instanceCount) = 0;
 
-    virtual void SetViewport(const Viewport& viewport) = 0;
-
-    virtual void SetScissorRectangle(const Rectangle& rectangle) = 0;
+    virtual void SetRenderPass(const RenderPass& renderPass) = 0;
 
     virtual void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) = 0;
 
@@ -60,10 +56,6 @@ public:
     virtual void SetTexture(int index, Texture2D & texture) = 0;
 
     virtual void SetTexture(int index, RenderTarget2D & texture) = 0;
-
-    virtual void SetRenderTarget() = 0;
-
-    virtual void SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets) = 0;
 };
 
 } // namespace Detail

@@ -34,12 +34,6 @@ public:
 
     std::size_t GetCount() const noexcept override;
 
-    void Clear(
-        ClearOptions options,
-        const Color& color,
-        float depth,
-        std::uint8_t stencil) override;
-
     void Draw(std::size_t vertexCount) override;
 
     void DrawIndexed(std::size_t indexCount) override;
@@ -52,9 +46,7 @@ public:
         std::size_t indexCount,
         std::size_t instanceCount) override;
 
-    void SetViewport(const Viewport& viewport) override;
-
-    void SetScissorRectangle(const Rectangle& rectangle) override;
+    void SetRenderPass(RenderPass && renderPass) override;
 
     void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) override;
 
@@ -85,14 +77,6 @@ public:
 
     void SetTexture(
         int index, const std::shared_ptr<RenderTarget2D>& texture) override;
-
-    void SetRenderTarget() override;
-
-    void SetRenderTargets(
-        const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets) override;
-
-    void SetRenderTargets(
-        std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets) override;
 
     void ExecuteImmediate(GraphicsContext & graphicsContext) const;
 

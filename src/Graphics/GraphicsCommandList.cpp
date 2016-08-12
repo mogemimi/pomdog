@@ -8,6 +8,7 @@
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
+#include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
@@ -47,23 +48,6 @@ std::size_t GraphicsCommandList::GetCount() const noexcept
     return nativeCommandList->GetCount();
 }
 
-void GraphicsCommandList::Clear(const Color& color)
-{
-    ///@todo badcode
-    ClearOptions options = ClearOptions::RenderTarget
-        | ClearOptions::DepthBuffer
-        | ClearOptions::Stencil;
-
-    POMDOG_ASSERT(nativeCommandList);
-    nativeCommandList->Clear(options, color, 1.f, 0);
-}
-
-void GraphicsCommandList::Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
-{
-    POMDOG_ASSERT(nativeCommandList);
-    nativeCommandList->Clear(options, color, depth, stencil);
-}
-
 void GraphicsCommandList::Draw(std::size_t vertexCount)
 {
     POMDOG_ASSERT(nativeCommandList);
@@ -99,19 +83,22 @@ void GraphicsCommandList::DrawIndexedInstanced(
     nativeCommandList->DrawIndexedInstanced(indexCount, instanceCount);
 }
 
-void GraphicsCommandList::SetViewport(const Viewport& viewport)
+void GraphicsCommandList::SetRenderPass(RenderPass && renderPass)
 {
     POMDOG_ASSERT(nativeCommandList);
-    POMDOG_ASSERT(viewport.Width > 0);
-    POMDOG_ASSERT(viewport.Height > 0);
 
-    nativeCommandList->SetViewport(viewport);
-}
+#if defined(DEBUG) && !defined(NDEBUG)
+    if (renderPass.Viewport) {
+        POMDOG_ASSERT(renderPass.Viewport->Width > 0);
+        POMDOG_ASSERT(renderPass.Viewport->Height > 0);
+    }
+    if (renderPass.ScissorRect) {
+        POMDOG_ASSERT(renderPass.Viewport->Width > 0);
+        POMDOG_ASSERT(renderPass.Viewport->Height > 0);
+    }
+#endif
 
-void GraphicsCommandList::SetScissorRectangle(const Rectangle& rectangle)
-{
-    POMDOG_ASSERT(nativeCommandList);
-    nativeCommandList->SetScissorRectangle(rectangle);
+    nativeCommandList->SetRenderPass(std::move(renderPass));
 }
 
 void GraphicsCommandList::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
@@ -215,45 +202,6 @@ void GraphicsCommandList::SetSamplerState(int index, const std::shared_ptr<Sampl
         samplerState, samplerState->GetNativeSamplerState());
 
     nativeCommandList->SetSampler(index, std::move(nativeSamplerState));
-}
-
-void GraphicsCommandList::SetRenderTarget()
-{
-    POMDOG_ASSERT(nativeCommandList);
-    nativeCommandList->SetRenderTarget();
-}
-
-void GraphicsCommandList::SetRenderTarget(const std::shared_ptr<RenderTarget2D>& renderTarget)
-{
-    POMDOG_ASSERT(renderTarget);
-    POMDOG_ASSERT(nativeCommandList);
-    nativeCommandList->SetRenderTargets({renderTarget});
-}
-
-void GraphicsCommandList::SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets)
-{
-    POMDOG_ASSERT(!renderTargets.empty());
-    POMDOG_ASSERT(nativeCommandList);
-
-    if (renderTargets.empty()) {
-        nativeCommandList->SetRenderTarget();
-        return;
-    }
-
-    nativeCommandList->SetRenderTargets(renderTargets);
-}
-
-void GraphicsCommandList::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets)
-{
-    POMDOG_ASSERT(!renderTargets.empty());
-    POMDOG_ASSERT(nativeCommandList);
-
-    if (renderTargets.empty()) {
-        nativeCommandList->SetRenderTarget();
-        return;
-    }
-
-    nativeCommandList->SetRenderTargets(std::move(renderTargets));
 }
 
 Detail::NativeGraphicsCommandList* GraphicsCommandList::GetNativeGraphicsCommandList()
