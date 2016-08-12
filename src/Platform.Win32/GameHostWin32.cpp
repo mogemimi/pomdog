@@ -99,8 +99,7 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceGL4(
     auto graphicsDevice = std::make_shared<GraphicsDevice>(std::move(nativeGraphicsDevice));
 
     auto graphicsContext = std::make_shared<Detail::GraphicsContext>(
-        std::make_unique<GraphicsContextGL4>(openGLContext, window),
-        presentationParameters);
+        std::make_unique<GraphicsContextGL4>(openGLContext, window));
 
     auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
@@ -153,8 +152,7 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceDirect3D11(
             dxgiFactory,
             device,
             deviceContext,
-            presentationParameters),
-        presentationParameters);
+            presentationParameters));
 
     auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));

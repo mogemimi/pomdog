@@ -240,8 +240,7 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
         std::make_unique<GraphicsDeviceGL4>());
 
     graphicsContext = std::make_shared<Detail::GraphicsContext>(
-        std::make_unique<GraphicsContextGL4>(openGLContext, window),
-        presentationParameters);
+        std::make_unique<GraphicsContextGL4>(openGLContext, window));
 
     graphicsCommandQueue = std::make_shared<Pomdog::GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));

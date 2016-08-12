@@ -20,9 +20,8 @@ public:
     GraphicsContext(const GraphicsContext&) = delete;
     GraphicsContext & operator=(const GraphicsContext&) = delete;
 
-    GraphicsContext(
-        std::unique_ptr<Detail::NativeGraphicsContext> && nativeContext,
-        const PresentationParameters& presentationParameters);
+    explicit GraphicsContext(
+        std::unique_ptr<Detail::NativeGraphicsContext> && nativeContext);
 
     ~GraphicsContext();
 

@@ -47,7 +47,6 @@ std::shared_ptr<OpenGLContextCocoa> CreateOpenGLContext(
 std::shared_ptr<GraphicsContext> CreateGraphicsContext(
     const std::shared_ptr<OpenGLContextCocoa>& openGLContext,
     std::weak_ptr<GameWindow> && gameWindow,
-    const PresentationParameters& presentationParameters,
     const std::shared_ptr<GraphicsDevice>& graphicsDevice)
 {
     POMDOG_ASSERT(openGLContext);
@@ -55,7 +54,7 @@ std::shared_ptr<GraphicsContext> CreateGraphicsContext(
     using GL4::GraphicsContextGL4;
 
     auto nativeContext = std::make_unique<GraphicsContextGL4>(openGLContext, std::move(gameWindow));
-    return std::make_shared<GraphicsContext>(std::move(nativeContext), presentationParameters);
+    return std::make_shared<GraphicsContext>(std::move(nativeContext));
 }
 
 } // unnamed namespace
@@ -171,7 +170,7 @@ GameHostCocoa::Impl::Impl(
     using Detail::GL4::GraphicsDeviceGL4;
     graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::make_unique<GraphicsDeviceGL4>());
 
-    graphicsContext = CreateGraphicsContext(openGLContext, window, presentationParameters, graphicsDevice);
+    graphicsContext = CreateGraphicsContext(openGLContext, window, graphicsDevice);
     graphicsCommandQueue = std::make_shared<Pomdog::GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
     openGLContext->Unlock();

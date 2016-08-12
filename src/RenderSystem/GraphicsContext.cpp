@@ -34,10 +34,8 @@ void CheckUnbindingRenderTargetsError(
 } // unnamed namespace
 
 GraphicsContext::GraphicsContext(
-    std::unique_ptr<Detail::NativeGraphicsContext> && nativeContextIn,
-    const PresentationParameters& presentationParameters)
+    std::unique_ptr<Detail::NativeGraphicsContext> && nativeContextIn)
     : nativeContext(std::move(nativeContextIn))
-    , depthStencilFormat(presentationParameters.DepthStencilFormat)
 {
     POMDOG_ASSERT(nativeContext);
     auto graphicsCapbilities = nativeContext->GetCapabilities();
@@ -46,16 +44,6 @@ GraphicsContext::GraphicsContext(
     textures.clear();
     textures.resize(graphicsCapbilities.SamplerSlotCount);
 
-    Viewport viewport;
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    viewport.Width = presentationParameters.BackBufferWidth;
-    viewport.Height = presentationParameters.BackBufferHeight;
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-
-    nativeContext->SetViewport(viewport);
-    nativeContext->SetScissorRectangle(viewport.GetBounds());
     nativeContext->SetBlendFactor(Color::White);
 }
 
