@@ -15,6 +15,7 @@
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
+#include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
@@ -155,6 +156,157 @@ void ApplyConstantBuffer(int slotIndex, const ConstantBufferGL4& buffer)
     POMDOG_CHECK_ERROR_GL4("glBindBufferBase");
 }
 
+void SetViewport(
+    const Viewport& viewport,
+    const std::weak_ptr<GameWindow>& gameWindow,
+    bool useBackBuffer)
+{
+    POMDOG_ASSERT(viewport.Width > 0);
+    POMDOG_ASSERT(viewport.Height > 0);
+
+    GLint viewportY = viewport.TopLeftY;
+
+    if (useBackBuffer) {
+        if (auto window = gameWindow.lock()) {
+            viewportY = window->GetClientBounds().Height - (viewport.TopLeftY + viewport.Height);
+        }
+    }
+
+    glViewport(viewport.TopLeftX, viewportY, viewport.Width, viewport.Height);
+    POMDOG_CHECK_ERROR_GL4("glViewport");
+
+    static_assert(std::is_same<GLfloat, decltype(viewport.MinDepth)>::value
+        && std::is_same<GLfloat, decltype(viewport.MaxDepth)>::value,
+        "NOTE: You can use glDepthRange instead of glDepthRangef");
+
+    POMDOG_ASSERT(!std::isinf(viewport.MinDepth));
+    POMDOG_ASSERT(!std::isinf(viewport.MaxDepth));
+    POMDOG_ASSERT(!std::isnan(viewport.MinDepth));
+    POMDOG_ASSERT(!std::isnan(viewport.MaxDepth));
+
+    glDepthRangef(viewport.MinDepth, viewport.MaxDepth);
+    POMDOG_CHECK_ERROR_GL4("glDepthRangef");
+}
+
+void SetScissorRectangle(
+    const Rectangle& rectangle,
+    const std::weak_ptr<GameWindow>& gameWindow,
+    bool useBackBuffer)
+{
+    POMDOG_ASSERT(rectangle.Width > 0);
+    POMDOG_ASSERT(rectangle.Height > 0);
+
+    GLint lowerLeftCornerY = rectangle.Y;
+
+    if (useBackBuffer) {
+        if (auto window = gameWindow.lock()) {
+            lowerLeftCornerY = window->GetClientBounds().Height - (rectangle.Y + rectangle.Height);
+        }
+    }
+
+    glScissor(rectangle.X, lowerLeftCornerY, rectangle.Width, rectangle.Height);
+    POMDOG_CHECK_ERROR_GL4("glScissor");
+}
+
+void SetRenderTarget(
+    const Optional<FrameBufferGL4>& frameBuffer,
+    std::vector<std::shared_ptr<RenderTarget2DGL4>> & renderTargets)
+{
+    POMDOG_ASSERT(frameBuffer);
+
+    // Bind framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->value);
+    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
+
+    // Unbind render targets
+    int index = 0;
+    for (const auto& renderTarget : renderTargets) {
+        POMDOG_ASSERT(renderTarget);
+        renderTarget->UnbindFromFramebuffer(ToColorAttachment(index));
+        ++index;
+    }
+    renderTargets.clear();
+
+    // Unbind depth stencil buffer
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
+    POMDOG_CHECK_ERROR_GL4("glFramebufferRenderbuffer");
+
+    // Bind default framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
+}
+
+void SetRenderTargets(
+    const Optional<FrameBufferGL4>& frameBuffer,
+    std::vector<std::shared_ptr<RenderTarget2DGL4>> & renderTargets,
+    const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargetViewsIn)
+{
+    POMDOG_ASSERT(!renderTargetViewsIn.empty());
+    POMDOG_ASSERT(frameBuffer);
+
+    // Bind framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->value);
+    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
+
+    // Unbind render targets
+    {
+        int index = 0;
+        for (const auto& renderTarget : renderTargets) {
+            POMDOG_ASSERT(renderTarget);
+            renderTarget->UnbindFromFramebuffer(ToColorAttachment(index));
+            ++index;
+        }
+        renderTargets.clear();
+    }
+
+    // Unbind depth stencil buffer
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
+    POMDOG_CHECK_ERROR_GL4("glFramebufferRenderbuffer");
+
+    std::vector<GLenum> attachments;
+    attachments.reserve(renderTargetViewsIn.size());
+    renderTargets.reserve(renderTargetViewsIn.size());
+
+    // Attach textures
+    int index = 0;
+    for (const auto& renderTarget : renderTargetViewsIn)
+    {
+        POMDOG_ASSERT(renderTarget);
+
+        auto const nativeRenderTarget = static_cast<RenderTarget2DGL4*>(renderTarget->GetNativeRenderTarget2D());
+        POMDOG_ASSERT(nativeRenderTarget != nullptr);
+        POMDOG_ASSERT(nativeRenderTarget == dynamic_cast<RenderTarget2DGL4*>(renderTarget->GetNativeRenderTarget2D()));
+
+        POMDOG_ASSERT(nativeRenderTarget);
+        nativeRenderTarget->BindToFramebuffer(ToColorAttachment(index));
+
+        renderTargets.emplace_back(renderTarget, nativeRenderTarget);
+        attachments.push_back(ToColorAttachment(index));
+        ++index;
+    }
+
+    // Attach depth stencil buffer
+    {
+        POMDOG_ASSERT(renderTargets.front());
+        const auto& renderTarget = renderTargets.front();
+
+        POMDOG_ASSERT(renderTarget);
+        renderTarget->BindDepthStencilBuffer();
+    }
+
+    // Check framebuffer status
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to make complete framebuffer.");
+    }
+
+    POMDOG_ASSERT(!attachments.empty());
+    POMDOG_ASSERT(attachments.size() <= static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()));
+    glDrawBuffers(static_cast<GLsizei>(attachments.size()), attachments.data());
+    POMDOG_CHECK_ERROR_GL4("glDrawBuffers");
+}
+
 } // unnamed namespace
 
 template<> struct TypesafeHelperGL4::Traits<FrameBufferGL4> {
@@ -202,32 +354,6 @@ GraphicsContextGL4::~GraphicsContextGL4()
 
     nativeContext.reset();
     gameWindow.reset();
-}
-
-void GraphicsContextGL4::Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
-{
-    GLbitfield mask = 0;
-
-    if ((options | ClearOptions::DepthBuffer) == options) {
-        mask |= GL_DEPTH_BUFFER_BIT;
-        auto clamped = std::min(std::max(depth, 0.0f), 1.0f);
-        glClearDepthf(clamped);
-        POMDOG_CHECK_ERROR_GL4("glClearDepthf");
-    }
-    if ((options | ClearOptions::Stencil) == options) {
-        mask |= GL_STENCIL_BUFFER_BIT;
-        glClearStencil(stencil);
-        POMDOG_CHECK_ERROR_GL4("glClearStencil");
-    }
-    if ((options | ClearOptions::RenderTarget) == options) {
-        mask |= GL_COLOR_BUFFER_BIT;
-        auto colorVector = color.ToVector4();
-        glClearColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
-        POMDOG_CHECK_ERROR_GL4("glClearColor");
-    }
-
-    glClear(mask);
-    POMDOG_CHECK_ERROR_GL4("glClear");
 }
 
 void GraphicsContextGL4::Present()
@@ -369,52 +495,6 @@ GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const
     return capabilities;
 }
 
-void GraphicsContextGL4::SetViewport(const Viewport& viewport)
-{
-    POMDOG_ASSERT(viewport.Width > 0);
-    POMDOG_ASSERT(viewport.Height > 0);
-
-    GLint viewportY = viewport.TopLeftY;
-
-    if (renderTargets.empty()) {
-        if (auto window = gameWindow.lock()) {
-            viewportY = window->GetClientBounds().Height - (viewport.TopLeftY + viewport.Height);
-        }
-    }
-
-    glViewport(viewport.TopLeftX, viewportY, viewport.Width, viewport.Height);
-    POMDOG_CHECK_ERROR_GL4("glViewport");
-
-    static_assert(std::is_same<GLfloat, decltype(viewport.MinDepth)>::value
-        && std::is_same<GLfloat, decltype(viewport.MaxDepth)>::value,
-        "NOTE: You can use glDepthRange instead of glDepthRangef");
-
-    POMDOG_ASSERT(!std::isinf(viewport.MinDepth));
-    POMDOG_ASSERT(!std::isinf(viewport.MaxDepth));
-    POMDOG_ASSERT(!std::isnan(viewport.MinDepth));
-    POMDOG_ASSERT(!std::isnan(viewport.MaxDepth));
-
-    glDepthRangef(viewport.MinDepth, viewport.MaxDepth);
-    POMDOG_CHECK_ERROR_GL4("glDepthRangef");
-}
-
-void GraphicsContextGL4::SetScissorRectangle(const Rectangle& rectangle)
-{
-    POMDOG_ASSERT(rectangle.Width > 0);
-    POMDOG_ASSERT(rectangle.Height > 0);
-
-    GLint lowerLeftCornerY = rectangle.Y;
-
-    if (renderTargets.empty()) {
-        if (auto window = gameWindow.lock()) {
-            lowerLeftCornerY = window->GetClientBounds().Height - (rectangle.Y + rectangle.Height);
-        }
-    }
-
-    glScissor(rectangle.X, lowerLeftCornerY, rectangle.Width, rectangle.Height);
-    POMDOG_CHECK_ERROR_GL4("glScissor");
-}
-
 void GraphicsContextGL4::SetPrimitiveTopology(PrimitiveTopology primitiveTopologyIn)
 {
     primitiveTopology = ToPrimitiveTopology(primitiveTopologyIn);
@@ -548,103 +628,78 @@ void GraphicsContextGL4::SetTexture(int textureUnit, RenderTarget2D & textureIn)
     ApplyTexture2D(textureUnit, renderTargetGL4->GetTextureHandle());
 }
 
-void GraphicsContextGL4::SetRenderTarget()
+void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
 {
-    POMDOG_ASSERT(frameBuffer);
+    POMDOG_ASSERT(!renderPass.RenderTargets.empty());
+    POMDOG_ASSERT(renderPass.RenderTargets.size() <= 16);
 
-    // Bind framebuffer
-    glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->value);
-    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
+    const bool useBackBuffer = ((renderPass.RenderTargets.size() <= 1)
+        && (!std::get<0>(renderPass.RenderTargets.front())));
 
-    // Unbind render targets
-    {
-        std::size_t index = 0;
-        for (const auto& renderTarget: renderTargets)
-        {
-            POMDOG_ASSERT(renderTarget);
-            renderTarget->UnbindFromFramebuffer(ToColorAttachment(index));
-            ++index;
+    if (renderPass.Viewport) {
+        SetViewport(*renderPass.Viewport, gameWindow, useBackBuffer);
+    }
+    if (renderPass.ScissorRect) {
+        SetScissorRectangle(*renderPass.ScissorRect, gameWindow, useBackBuffer);
+    }
+
+    const auto clearDepthStencilMask = [&]() -> GLbitfield {
+        GLbitfield mask = 0;
+        if (renderPass.ClearDepth) {
+            mask |= GL_DEPTH_BUFFER_BIT;
+            auto clamped = std::min(std::max(*renderPass.ClearDepth, 0.0f), 1.0f);
+            glClearDepthf(clamped);
+            POMDOG_CHECK_ERROR_GL4("glClearDepthf");
+        }
+        if (renderPass.ClearStencil) {
+            mask |= GL_STENCIL_BUFFER_BIT;
+            glClearStencil(*renderPass.ClearStencil);
+            POMDOG_CHECK_ERROR_GL4("glClearStencil");
+        }
+        return mask;
+    }();
+
+    for (const auto& view: renderPass.RenderTargets) {
+        auto & renderTarget = std::get<0>(view);
+        auto & clearColor = std::get<1>(view);
+
+        GLbitfield mask = clearDepthStencilMask;
+
+        if (clearColor) {
+            mask |= GL_COLOR_BUFFER_BIT;
+            auto colorVector = clearColor->ToVector4();
+            glClearColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
+            POMDOG_CHECK_ERROR_GL4("glClearColor");
+        }
+        if (mask != 0) {
+            if (!renderTarget) {
+                SetRenderTarget(frameBuffer, renderTargets);
+            }
+            else {
+                // FIXME: Optimize
+                std::vector<std::shared_ptr<RenderTarget2D>> temporary;
+                temporary.push_back(renderTarget);
+                SetRenderTargets(frameBuffer, renderTargets, temporary);
+            }
+            glClear(mask);
+            POMDOG_CHECK_ERROR_GL4("glClear");
         }
     }
-    renderTargets.clear();
 
-    // Unbind depth stencil buffer
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
-    POMDOG_CHECK_ERROR_GL4("glFramebufferRenderbuffer");
-
-    // Bind default framebuffer
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
-}
-
-void GraphicsContextGL4::SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargetsIn)
-{
-    POMDOG_ASSERT(!renderTargetsIn.empty());
-    POMDOG_ASSERT(frameBuffer);
-
-    // Bind framebuffer
-    glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->value);
-    POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
-
-    // Unbind render targets
-    {
-        std::size_t index = 0;
-        for (const auto& renderTarget: renderTargets)
-        {
-            POMDOG_ASSERT(renderTarget);
-            renderTarget->UnbindFromFramebuffer(ToColorAttachment(index));
-            ++index;
+    if (useBackBuffer) {
+        SetRenderTarget(frameBuffer, renderTargets);
+        POMDOG_ASSERT(renderTargets.empty());
+    }
+    else {
+        // FIXME: Optimize
+        std::vector<std::shared_ptr<RenderTarget2D>> temporary;
+        for (auto & tuple : renderPass.RenderTargets) {
+            auto & renderTarget = std::get<0>(tuple);
+            temporary.push_back(renderTarget);
         }
+        SetRenderTargets(frameBuffer, renderTargets, temporary);
+        POMDOG_ASSERT(!renderTargets.empty());
     }
-    renderTargets.clear();
-
-    // Unbind depth stencil buffer
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
-    POMDOG_CHECK_ERROR_GL4("glFramebufferRenderbuffer");
-
-    std::vector<GLenum> attachments;
-    attachments.reserve(renderTargetsIn.size());
-    renderTargets.reserve(renderTargetsIn.size());
-
-    // Attach textures
-    std::uint32_t index = 0;
-    for (const auto& renderTarget: renderTargetsIn)
-    {
-        POMDOG_ASSERT(renderTarget);
-
-        auto const nativeRenderTarget = static_cast<RenderTarget2DGL4*>(renderTarget->GetNativeRenderTarget2D());
-        POMDOG_ASSERT(nativeRenderTarget != nullptr);
-        POMDOG_ASSERT(nativeRenderTarget == dynamic_cast<RenderTarget2DGL4*>(renderTarget->GetNativeRenderTarget2D()));
-
-        POMDOG_ASSERT(nativeRenderTarget);
-        nativeRenderTarget->BindToFramebuffer(ToColorAttachment(index));
-
-        renderTargets.emplace_back(renderTarget, nativeRenderTarget);
-
-        attachments.push_back(ToColorAttachment(index));
-        ++index;
-    }
-
-    // Attach depth stencil buffer
-    {
-        POMDOG_ASSERT(renderTargets.front());
-        const auto& renderTarget = renderTargets.front();
-
-        POMDOG_ASSERT(renderTarget);
-        renderTarget->BindDepthStencilBuffer();
-    }
-
-    // Check framebuffer status
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to make complete framebuffer.");
-    }
-
-    POMDOG_ASSERT(!attachments.empty());
-    POMDOG_ASSERT(attachments.size() <= static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()));
-    glDrawBuffers(static_cast<GLsizei>(attachments.size()), attachments.data());
-    POMDOG_CHECK_ERROR_GL4("glDrawBuffers");
 }
 
 } // namespace GL4

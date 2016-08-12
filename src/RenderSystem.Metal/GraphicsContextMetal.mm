@@ -10,6 +10,7 @@
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
+#include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
@@ -51,6 +52,38 @@ MTLClearColor ToClearColor(const Color& color) noexcept
     return MTLClearColorMake(vec.X, vec.Y, vec.Z, vec.W);
 }
 
+void SetViewport(
+    id<MTLRenderCommandEncoder> commandEncoder, const Viewport& viewportIn)
+{
+    POMDOG_ASSERT(viewportIn.Width > 0);
+    POMDOG_ASSERT(viewportIn.Height > 0);
+    POMDOG_ASSERT(commandEncoder != nil);
+
+    MTLViewport viewport;
+    viewport.originX = viewportIn.TopLeftX;
+    viewport.originY = viewportIn.TopLeftY;
+    viewport.width = viewportIn.Width;
+    viewport.height = viewportIn.Height;
+    viewport.znear = viewportIn.MinDepth;
+    viewport.zfar = viewportIn.MaxDepth;
+    [commandEncoder setViewport:viewport];
+}
+
+void SetScissorRectangle(
+    id<MTLRenderCommandEncoder> commandEncoder, const Rectangle& rectangle)
+{
+    POMDOG_ASSERT(rectangle.Width > 0);
+    POMDOG_ASSERT(rectangle.Height > 0);
+    POMDOG_ASSERT(commandEncoder != nil);
+
+    MTLScissorRect rect;
+    rect.x = rectangle.X;
+    rect.y = rectangle.Y;
+    rect.width = rectangle.Width;
+    rect.height = rectangle.Height;
+    [commandEncoder setScissorRect:rect];
+}
+
 } // unnamed namespace
 
 GraphicsContextMetal::GraphicsContextMetal(
@@ -59,7 +92,6 @@ GraphicsContextMetal::GraphicsContextMetal(
     , commandBuffer(nil)
     , commandEncoder(nil)
     , indexBuffer(nil)
-    , needToUpdateRenderPass(true)
 {
     POMDOG_ASSERT(nativeDevice != nil);
 
@@ -84,76 +116,10 @@ void GraphicsContextMetal::Present()
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsContextMetal::Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
-{
-    ClearCommandMetal command;
-    command.color = color;
-    command.depth = depth;
-    command.stencil = stencil;
-    command.options = options;
-    clearCommand = std::move(command);
-
-    needToUpdateRenderPass = true;
-}
-
-void GraphicsContextMetal::BeginDraw()
-{
-    POMDOG_ASSERT(commandQueue != nil);
-
-    if (!needToUpdateRenderPass) {
-        return;
-    }
-
-    commandBuffer = [commandQueue commandBuffer];
-
-    // TOOD: Not implemented
-    MTLRenderPassDescriptor* renderPassDescriptor = [[MTLRenderPassDescriptor alloc] init];
-    renderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionDontCare;
-    renderPassDescriptor.depthAttachment.loadAction = MTLLoadActionDontCare;
-    renderPassDescriptor.stencilAttachment.loadAction = MTLLoadActionDontCare;
-//    renderPassDescriptor.colorAttachments[0].texture = [_view.currentDrawable texture];
-//    renderPassDescriptor.depthAttachment.texture = ;
-//    renderPassDescriptor.stencilAttachment.texture = ;
-
-    if (clearCommand) {
-        auto & options = clearCommand->options;
-        if ((options | ClearOptions::RenderTarget) == options) {
-            renderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
-            renderPassDescriptor.colorAttachments[0].clearColor = ToClearColor(clearCommand->color);
-        }
-    }
-
-    if (clearCommand) {
-        auto & options = clearCommand->options;
-        if ((options | ClearOptions::DepthBuffer) == options) {
-            renderPassDescriptor.depthAttachment.loadAction = MTLLoadActionClear;
-            renderPassDescriptor.depthAttachment.clearDepth = clearCommand->depth;
-        }
-        if ((options | ClearOptions::Stencil) == options) {
-            renderPassDescriptor.depthAttachment.loadAction = MTLLoadActionClear;
-            renderPassDescriptor.stencilAttachment.clearStencil = clearCommand->stencil;
-        }
-    }
-
-    clearCommand = Pomdog::NullOpt;
-
-    POMDOG_ASSERT(renderPassDescriptor != nil);
-    commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
-    commandEncoder.label = @"MyRenderEncoder";
-
-    [commandEncoder setFrontFacingWinding:MTLWindingClockwise];
-
-    needToUpdateRenderPass = false;
-
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-}
-
 void GraphicsContextMetal::Draw(std::size_t vertexCount)
 {
     POMDOG_ASSERT(commandEncoder != nil);
     POMDOG_ASSERT(vertexCount > 0);
-
-    BeginDraw();
 
     [commandEncoder drawPrimitives:primitiveType
         vertexStart:0
@@ -164,8 +130,6 @@ void GraphicsContextMetal::DrawIndexed(std::size_t indexCount)
 {
     POMDOG_ASSERT(commandEncoder != nil);
     POMDOG_ASSERT(indexCount > 0);
-
-    BeginDraw();
 
     [commandEncoder drawIndexedPrimitives:primitiveType
         indexCount:indexCount
@@ -182,8 +146,6 @@ void GraphicsContextMetal::DrawInstanced(
     POMDOG_ASSERT(vertexCount > 0);
     POMDOG_ASSERT(instanceCount > 0);
 
-    BeginDraw();
-
     [commandEncoder drawPrimitives:primitiveType
         vertexStart:0
         vertexCount:vertexCount
@@ -198,44 +160,12 @@ void GraphicsContextMetal::DrawIndexedInstanced(
     POMDOG_ASSERT(indexCount > 0);
     POMDOG_ASSERT(instanceCount > 0);
 
-    BeginDraw();
-
     [commandEncoder drawIndexedPrimitives:primitiveType
         indexCount:indexCount
         indexType:indexType
         indexBuffer:indexBuffer
         indexBufferOffset:0
         instanceCount:instanceCount];
-}
-
-void GraphicsContextMetal::SetViewport(const Viewport& viewportIn)
-{
-    POMDOG_ASSERT(viewportIn.Width > 0);
-    POMDOG_ASSERT(viewportIn.Height > 0);
-    POMDOG_ASSERT(commandEncoder != nil);
-
-    MTLViewport viewport;
-    viewport.originX = viewportIn.TopLeftX;
-    viewport.originY = viewportIn.TopLeftY;
-    viewport.width = viewportIn.Width;
-    viewport.height = viewportIn.Height;
-    viewport.znear = viewportIn.MinDepth;
-    viewport.zfar = viewportIn.MaxDepth;
-    [commandEncoder setViewport:viewport];
-}
-
-void GraphicsContextMetal::SetScissorRectangle(const Rectangle& rectangle)
-{
-    POMDOG_ASSERT(rectangle.Width > 0);
-    POMDOG_ASSERT(rectangle.Height > 0);
-    POMDOG_ASSERT(commandEncoder != nil);
-
-    MTLScissorRect rect;
-    rect.x = rectangle.X;
-    rect.y = rectangle.Y;
-    rect.width = rectangle.Width;
-    rect.height = rectangle.Height;
-    [commandEncoder setScissorRect:rect];
 }
 
 void GraphicsContextMetal::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
@@ -365,14 +295,67 @@ void GraphicsContextMetal::SetTexture(int index, RenderTarget2D & renderTarget)
     [commandEncoder setFragmentTexture:renderTargetMetal->GetTexture() atIndex:index];
 }
 
-void GraphicsContextMetal::SetRenderTarget()
+void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-}
+    POMDOG_ASSERT(!renderPass.RenderTargets.empty());
+    POMDOG_ASSERT(renderPass.RenderTargets.size() <= 8);
 
-void GraphicsContextMetal::SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets)
-{
+    MTLRenderPassDescriptor* renderPassDescriptor = [[MTLRenderPassDescriptor alloc] init];
+    POMDOG_ASSERT(renderPassDescriptor != nil);
+
+    renderPassDescriptor.depthAttachment.loadAction = MTLLoadActionDontCare;
+    renderPassDescriptor.stencilAttachment.loadAction = MTLLoadActionDontCare;
+
+    int renderTargetIndex = 0;
+    for (const auto& view: renderPass.RenderTargets) {
+        //auto & renderTarget = std::get<0>(view);
+        auto & clearColor = std::get<1>(view);
+
+        // TODO: Not implemented
+        //if (!renderTarget) {
+        //    renderPassDescriptor.colorAttachments[renderTargetIndex].texture = [_view.currentDrawable texture];
+        //    renderPassDescriptor.depthAttachment.texture = ;
+        //    renderPassDescriptor.stencilAttachment.texture = ;
+        //}
+
+        if (clearColor) {
+            renderPassDescriptor.colorAttachments[renderTargetIndex].loadAction = MTLLoadActionClear;
+            renderPassDescriptor.colorAttachments[renderTargetIndex].clearColor = ToClearColor(*clearColor);
+        }
+        else {
+            // TOOD: Not implemented
+            renderPassDescriptor.colorAttachments[renderTargetIndex].loadAction = MTLLoadActionDontCare;
+        }
+        ++renderTargetIndex;
+    }
+
+    if (renderPass.ClearDepth) {
+        renderPassDescriptor.depthAttachment.loadAction = MTLLoadActionClear;
+        renderPassDescriptor.depthAttachment.clearDepth = *renderPass.ClearDepth;
+    }
+    if (renderPass.ClearStencil) {
+        renderPassDescriptor.depthAttachment.loadAction = MTLLoadActionClear;
+        renderPassDescriptor.stencilAttachment.clearStencil = *renderPass.ClearStencil;
+    }
+
+    POMDOG_ASSERT(commandQueue != nil);
+    commandBuffer = [commandQueue commandBuffer];
+
+    commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
+    commandEncoder.label = @"PomdogRenderEncoder";
+
+    [commandEncoder setFrontFacingWinding:MTLWindingClockwise];
+
+    if (renderPass.Viewport) {
+        SetViewport(commandEncoder, *renderPass.Viewport);
+    }
+    if (renderPass.ScissorRect) {
+        SetScissorRectangle(commandEncoder, *renderPass.ScissorRect);
+    }
+
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+
+    // TODO: set render targets
 }
 
 } // namespace Metal

@@ -59,11 +59,6 @@ std::size_t GraphicsCommandListVulkan::GetCount() const noexcept
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::Clear(ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
-{
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-}
-
 void GraphicsCommandListVulkan::Draw(std::size_t vertexCount)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
@@ -88,12 +83,7 @@ void GraphicsCommandListVulkan::DrawIndexedInstanced(
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::SetViewport(const Viewport& viewport)
-{
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-}
-
-void GraphicsCommandListVulkan::SetScissorRectangle(const Rectangle& rectangle)
+void GraphicsCommandListVulkan::SetRenderPass(RenderPass && renderPass)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
@@ -149,21 +139,6 @@ void GraphicsCommandListVulkan::SetTexture(int index, const std::shared_ptr<Text
 }
 
 void GraphicsCommandListVulkan::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture)
-{
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-}
-
-void GraphicsCommandListVulkan::SetRenderTarget()
-{
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-}
-
-void GraphicsCommandListVulkan::SetRenderTargets(const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargets)
-{
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-}
-
-void GraphicsCommandListVulkan::SetRenderTargets(std::vector<std::shared_ptr<RenderTarget2D>> && renderTargets)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }

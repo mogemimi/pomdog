@@ -14,6 +14,7 @@
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
+#include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
@@ -71,6 +72,26 @@ void ChooseMultiSampleSetting(
             return;
         }
     }
+}
+
+void UseBackBufferAsRenderTarget(
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext> & deviceContext,
+    std::vector<std::shared_ptr<RenderTarget2DDirect3D11>> & renderTargets,
+    std::shared_ptr<RenderTarget2DDirect3D11> & backBuffer)
+{
+    POMDOG_ASSERT(deviceContext);
+    POMDOG_ASSERT(backBuffer);
+
+    renderTargets.clear();
+    renderTargets.push_back(backBuffer);
+
+    std::array<ID3D11RenderTargetView*, 1> renderTargetViews = {
+        backBuffer->GetRenderTargetView() };
+
+    deviceContext->OMSetRenderTargets(
+        renderTargetViews.size(),
+        renderTargetViews.data(),
+        renderTargets.front()->GetDepthStencilView());
 }
 
 } // unnamed namespace
@@ -165,8 +186,6 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
         renderTargets.push_back(backBuffer);
     }
 
-    SetRenderTarget();
-
     textureResourceViews.fill(nullptr);
 }
 
@@ -183,40 +202,6 @@ void GraphicsContextDirect3D11::Present()
 {
     POMDOG_ASSERT(swapChain);
     swapChain->Present(0, 0);
-}
-
-void GraphicsContextDirect3D11::Clear(
-    ClearOptions options, const Color& color, float depth, std::uint8_t stencil)
-{
-    POMDOG_ASSERT(stencil <= std::numeric_limits<UINT8>::max());
-    POMDOG_ASSERT(stencil >= 0);
-
-    auto const fillColor = color.ToVector4();
-
-    UINT mask = 0;
-
-    if ((options | ClearOptions::DepthBuffer) == options) {
-        mask |= D3D11_CLEAR_DEPTH;
-    }
-    if ((options | ClearOptions::Stencil) == options) {
-        mask |= D3D11_CLEAR_STENCIL;
-    }
-
-    for (auto & renderTarget : renderTargets)
-    {
-        POMDOG_ASSERT(renderTarget);
-
-        if ((options | ClearOptions::RenderTarget) == options) {
-            deviceContext->ClearRenderTargetView(
-                renderTarget->GetRenderTargetView(), fillColor.Data());
-        }
-
-        auto depthStencilView = renderTarget->GetDepthStencilView();
-        if (depthStencilView != nullptr) {
-            deviceContext->ClearDepthStencilView(
-                depthStencilView, mask, depth, stencil);
-        }
-    }
 }
 
 void GraphicsContextDirect3D11::ApplyPipelineState()
@@ -288,45 +273,6 @@ GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const
     caps.SamplerSlotCount = D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT;
     caps.ConstantBufferSlotCount = D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
     return std::move(caps);
-}
-
-void GraphicsContextDirect3D11::SetViewport(const Viewport& viewportIn)
-{
-    POMDOG_ASSERT(0 < viewportIn.Width);
-    POMDOG_ASSERT(0 < viewportIn.Height);
-    POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftX + viewportIn.Width);
-    POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftY + viewportIn.Height);
-
-    D3D11_VIEWPORT viewport;
-    viewport.Width = static_cast<FLOAT>(viewportIn.Width);
-    viewport.Height = static_cast<FLOAT>(viewportIn.Height);
-    viewport.MinDepth = viewportIn.MinDepth;
-    viewport.MaxDepth = viewportIn.MaxDepth;
-    viewport.TopLeftX = static_cast<FLOAT>(viewportIn.TopLeftX);
-    viewport.TopLeftY = static_cast<FLOAT>(viewportIn.TopLeftY);
-
-    POMDOG_ASSERT(deviceContext);
-    deviceContext->RSSetViewports(1, &viewport);
-}
-
-void GraphicsContextDirect3D11::SetScissorRectangle(const Rectangle& rectangle)
-{
-    POMDOG_ASSERT(deviceContext);
-
-    std::vector<D3D11_RECT> rects;
-    rects.resize(std::max<std::size_t>(1, renderTargets.size()));
-
-    D3D11_RECT rect;
-    rect.bottom = rectangle.GetBottom();
-    rect.left = rectangle.GetLeft();
-    rect.right = rectangle.GetRight();
-    rect.top = rectangle.GetTop();
-
-    std::fill(std::begin(rects), std::end(rects), rect);
-
-    POMDOG_ASSERT(!rects.empty());
-
-    deviceContext->RSSetScissorRects(rects.size(), rects.data());
 }
 
 void GraphicsContextDirect3D11::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
@@ -479,53 +425,147 @@ void GraphicsContextDirect3D11::SetTexture(int index, RenderTarget2D & textureIn
     deviceContext->PSSetShaderResources(0, 1, &textureResourceViews[index]);
 }
 
-void GraphicsContextDirect3D11::SetRenderTarget()
+void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
 {
-    renderTargets.clear();
-    renderTargets.push_back(backBuffer);
+    POMDOG_ASSERT(!renderPass.RenderTargets.empty());
+    POMDOG_ASSERT(renderPass.RenderTargets.size() <= 16);
 
-    std::array<ID3D11RenderTargetView*, 1> renderTargetViews = {
-        backBuffer->GetRenderTargetView() };
+    const bool useBackBuffer = !std::get<0>(renderPass.RenderTargets.front());
 
-    deviceContext->OMSetRenderTargets(
-        renderTargetViews.size(),
-        renderTargetViews.data(),
-        renderTargets.front()->GetDepthStencilView());
-}
+    if (useBackBuffer) {
+        UseBackBufferAsRenderTarget(deviceContext, renderTargets, backBuffer);
+    }
+    else {
+        auto & renderTargetsIn = renderPass.RenderTargets;
+        POMDOG_ASSERT(!renderTargetsIn.empty());
+        POMDOG_ASSERT(renderTargetsIn.size() <= D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
+        POMDOG_ASSERT(renderTargetsIn.size() <= renderTargets.capacity());
 
-void GraphicsContextDirect3D11::SetRenderTargets(
-    const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargetsIn)
-{
-    POMDOG_ASSERT(!renderTargetsIn.empty());
-    POMDOG_ASSERT(renderTargetsIn.size() <= D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
-    POMDOG_ASSERT(renderTargetsIn.size() <= renderTargets.capacity());
+        renderTargets.clear();
+        std::array<ID3D11RenderTargetView*, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT> renderTargetViews;
 
-    renderTargets.clear();
+        POMDOG_ASSERT(renderTargetViews.size() <= D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
+        POMDOG_ASSERT(renderTargetViews.size() >= renderTargetsIn.size());
 
-    std::array<ID3D11RenderTargetView*,
-        D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT> renderTargetViews;
+        for (std::size_t i = 0; i < renderTargetsIn.size(); ++i) {
+            auto & renderTarget = std::get<0>(renderTargetsIn[i]);
+            POMDOG_ASSERT(renderTarget);
 
-    POMDOG_ASSERT(renderTargetViews.size() <= D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
-    POMDOG_ASSERT(renderTargetViews.size() >= renderTargetsIn.size());
+            auto nativeRenderTarget = renderTarget->GetNativeRenderTarget2D();
+            auto direct3d11RenderTarget = static_cast<RenderTarget2DDirect3D11*>(nativeRenderTarget);
+            POMDOG_ASSERT(direct3d11RenderTarget != nullptr);
+            POMDOG_ASSERT(direct3d11RenderTarget == dynamic_cast<RenderTarget2DDirect3D11*>(nativeRenderTarget));
 
-    for (std::size_t i = 0; i < renderTargetsIn.size(); ++i)
-    {
-        POMDOG_ASSERT(renderTargetsIn[i]);
+            renderTargets.emplace_back(renderTarget, direct3d11RenderTarget);
+            renderTargetViews[i] = direct3d11RenderTarget->GetRenderTargetView();
+            POMDOG_ASSERT(renderTargetViews[i] != nullptr);
+        }
 
-        auto renderTarget = static_cast<RenderTarget2DDirect3D11*>(renderTargetsIn[i]->GetNativeRenderTarget2D());
-        POMDOG_ASSERT(renderTarget != nullptr);
-        POMDOG_ASSERT(renderTarget == dynamic_cast<RenderTarget2DDirect3D11*>(renderTargetsIn[i]->GetNativeRenderTarget2D()));
-
-        renderTargets.emplace_back(renderTargetsIn[i], renderTarget);
-
-        renderTargetViews[i] = renderTarget->GetRenderTargetView();
-        POMDOG_ASSERT(renderTargetViews[i] != nullptr);
+        deviceContext->OMSetRenderTargets(
+            renderTargetsIn.size(),
+            renderTargetViews.data(),
+            renderTargets.front()->GetDepthStencilView());
     }
 
-    deviceContext->OMSetRenderTargets(
-        renderTargetsIn.size(),
-        renderTargetViews.data(),
-        renderTargets.front()->GetDepthStencilView());
+    if (renderPass.Viewport) {
+        auto& viewportIn = *renderPass.Viewport;
+        POMDOG_ASSERT(0 < viewportIn.Width);
+        POMDOG_ASSERT(0 < viewportIn.Height);
+        POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftX + viewportIn.Width);
+        POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftY + viewportIn.Height);
+
+        D3D11_VIEWPORT viewport;
+        viewport.Width = static_cast<FLOAT>(viewportIn.Width);
+        viewport.Height = static_cast<FLOAT>(viewportIn.Height);
+        viewport.MinDepth = viewportIn.MinDepth;
+        viewport.MaxDepth = viewportIn.MaxDepth;
+        viewport.TopLeftX = static_cast<FLOAT>(viewportIn.TopLeftX);
+        viewport.TopLeftY = static_cast<FLOAT>(viewportIn.TopLeftY);
+
+        POMDOG_ASSERT(deviceContext);
+        deviceContext->RSSetViewports(1, &viewport);
+    }
+    else if (useBackBuffer) {
+        POMDOG_ASSERT(!renderPass.Viewport);
+
+        D3D11_VIEWPORT viewport;
+        viewport.Width = static_cast<FLOAT>(preferredBackBufferWidth);
+        viewport.Height = static_cast<FLOAT>(preferredBackBufferHeight);
+        viewport.MinDepth = 0.0f;
+        viewport.MaxDepth = 1.0f;
+        viewport.TopLeftX = 0.0f;
+        viewport.TopLeftY = 0.0f;
+
+        POMDOG_ASSERT(deviceContext);
+        deviceContext->RSSetViewports(1, &viewport);
+    }
+
+    if (renderPass.ScissorRect) {
+        auto& scissorRectIn = *renderPass.ScissorRect;
+
+        D3D11_RECT rect;
+        rect.left = scissorRectIn.GetLeft();
+        rect.top = scissorRectIn.GetTop();
+        rect.right = scissorRectIn.GetRight();
+        rect.bottom = scissorRectIn.GetBottom();
+
+        POMDOG_ASSERT(deviceContext);
+        deviceContext->RSSetScissorRects(1, &rect);
+    }
+    else if (useBackBuffer) {
+        POMDOG_ASSERT(!renderPass.ScissorRect);
+
+        D3D11_RECT rect;
+        rect.left = 0;
+        rect.top = 0;
+        rect.right = preferredBackBufferWidth;
+        rect.bottom = preferredBackBufferHeight;
+
+        POMDOG_ASSERT(deviceContext);
+        deviceContext->RSSetScissorRects(1, &rect);
+    }
+
+    POMDOG_ASSERT(renderTargets.size() == renderPass.RenderTargets.size());
+    for (std::size_t i = 0; i < renderTargets.size(); ++i) {
+        auto & clearColor = std::get<1>(renderPass.RenderTargets[i]);
+        if (clearColor) {
+            auto colorVector = clearColor->ToVector4();
+            auto & renderTarget = renderTargets[i];
+            POMDOG_ASSERT(renderTarget);
+
+            deviceContext->ClearRenderTargetView(
+                renderTarget->GetRenderTargetView(), colorVector.Data());
+        }
+    }
+
+    {
+        FLOAT depth = 1.0f;
+        UINT8 stencil = 0;
+        UINT mask = 0;
+
+        if (renderPass.ClearDepth) {
+            depth = *renderPass.ClearDepth;
+            mask |= D3D11_CLEAR_DEPTH;
+        }
+        if (renderPass.ClearStencil) {
+            stencil = *renderPass.ClearStencil;
+            mask |= D3D11_CLEAR_STENCIL;
+            POMDOG_ASSERT(stencil >= 0);
+            POMDOG_ASSERT(stencil <= std::numeric_limits<UINT8>::max());
+        }
+
+        if (mask != 0) {
+            POMDOG_ASSERT(!renderTargets.empty());
+            POMDOG_ASSERT(renderTargets.size() == renderPass.RenderTargets.size());
+            POMDOG_ASSERT(renderTargets.front());
+
+            auto depthStencilView = renderTargets.front()->GetDepthStencilView();
+            if (depthStencilView != nullptr) {
+                deviceContext->ClearDepthStencilView(
+                    depthStencilView, mask, depth, stencil);
+            }
+        }
+    }
 }
 
 void GraphicsContextDirect3D11::ResizeBackBuffers(
@@ -568,7 +608,7 @@ void GraphicsContextDirect3D11::ResizeBackBuffers(
         backBufferDepthFormat);
 
     if (isBackBufferActive) {
-        SetRenderTarget();
+        UseBackBufferAsRenderTarget(deviceContext, renderTargets, backBuffer);
     }
 }
 
