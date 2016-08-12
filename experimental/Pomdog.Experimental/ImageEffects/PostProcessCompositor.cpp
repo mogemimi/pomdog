@@ -4,6 +4,7 @@
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/GraphicsCommandList.hpp"
+#include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Vector2.hpp"
@@ -111,9 +112,6 @@ void PostProcessCompositor::Draw(
     POMDOG_ASSERT(renderTargets.front());
     POMDOG_ASSERT(renderTargets.back());
 
-    commandList.SetViewport(Viewport{viewport});
-    commandList.SetScissorRectangle(viewport);
-
     auto readTarget = renderTargets.front();
     auto writeTarget = renderTargets.back();
 
@@ -132,10 +130,19 @@ void PostProcessCompositor::Draw(
 
         bool isLast = (index + 1) >= imageEffects.size();
         if (isLast) {
-            commandList.SetRenderTarget();
-        } else {
+            RenderPass renderPass;
+            renderPass.RenderTargets.emplace_back(nullptr, Pomdog::NullOpt);
+            renderPass.Viewport = Viewport{viewport};
+            renderPass.ScissorRect = viewport;
+            commandList.SetRenderPass(std::move(renderPass));
+        }
+        else {
             POMDOG_ASSERT(currentSource != writeTarget);
-            commandList.SetRenderTarget(writeTarget);
+            RenderPass renderPass;
+            renderPass.RenderTargets.emplace_back(writeTarget, Pomdog::NullOpt);
+            renderPass.Viewport = Viewport{viewport};
+            renderPass.ScissorRect = viewport;
+            commandList.SetRenderPass(std::move(renderPass));
         }
 
         effect->Apply(commandList, currentSource, constantBuffer);

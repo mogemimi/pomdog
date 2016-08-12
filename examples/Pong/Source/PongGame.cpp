@@ -269,15 +269,16 @@ void PongGame::Draw()
     // Reset graphics commands
     commandList->Reset();
 
-    // Set the render target
-    commandList->SetRenderTarget(renderTarget);
-    commandList->SetViewport(viewport);
-    commandList->SetScissorRectangle(viewport.GetBounds());
-
-    // Fill background color
-    commandList->Clear(ClearOptions::RenderTarget
-        | ClearOptions::DepthBuffer
-        | ClearOptions::Stencil, Color{32, 31, 30, 255}, 1.0f, 0);
+    // Set the render pass
+    {
+        RenderPass renderPass;
+        renderPass.RenderTargets.emplace_back(renderTarget, Color{32, 31, 30, 255});
+        renderPass.Viewport = viewport;
+        renderPass.ScissorRect = viewport.GetBounds();
+        renderPass.ClearDepth = 1.0f;
+        renderPass.ClearStencil = 0;
+        commandList->SetRenderPass(std::move(renderPass));
+    }
 
     // Drawing polygon shapes
     polygonBatch.Begin(commandList, viewProjection);
@@ -325,10 +326,15 @@ void PongGame::Draw()
     spriteBatch.End();
 
     // Set the back buffer as the target
-    commandList->SetRenderTarget();
-    commandList->SetViewport(viewport);
-    commandList->SetScissorRectangle(viewport.GetBounds());
-    commandList->Clear(Color::CornflowerBlue);
+    {
+        RenderPass renderPass;
+        renderPass.RenderTargets.emplace_back(nullptr, Color::CornflowerBlue);
+        renderPass.Viewport = viewport;
+        renderPass.ScissorRect = viewport.GetBounds();
+        renderPass.ClearDepth = 1.0f;
+        renderPass.ClearStencil = 0;
+        commandList->SetRenderPass(std::move(renderPass));
+    }
 
     // Post processing
     postProcessCompositor.Draw(*commandList, renderTarget);

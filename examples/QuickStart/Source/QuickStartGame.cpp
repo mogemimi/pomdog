@@ -106,11 +106,15 @@ void QuickStartGame::Initialize()
 
         auto createGraphicsCommands = [this](int width, int height) {
             Viewport viewport = {0, 0, width, height};
+            RenderPass pass;
+            pass.RenderTargets.emplace_back(nullptr, Color::CornflowerBlue);
+            pass.ClearDepth = 1.0f;
+            pass.ClearStencil = 0;
+            pass.Viewport = viewport;
+            pass.ScissorRect = viewport.GetBounds();
+
             commandList->Reset();
-            commandList->SetRenderTarget();
-            commandList->SetViewport(viewport);
-            commandList->SetScissorRectangle(viewport.GetBounds());
-            commandList->Clear(Color::CornflowerBlue);
+            commandList->SetRenderPass(std::move(pass));
             commandList->SetConstantBuffer(0, constantBuffer);
             commandList->SetSamplerState(0, sampler);
             commandList->SetTexture(0, texture);
