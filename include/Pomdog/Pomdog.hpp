@@ -83,6 +83,7 @@
 #include "Graphics/PrimitiveTopology.hpp"
 #include "Graphics/RasterizerDescription.hpp"
 #include "Graphics/RenderTarget2D.hpp"
+#include "Graphics/RenderTargetBlendDescription.hpp"
 #include "Graphics/SamplerDescription.hpp"
 #include "Graphics/SamplerState.hpp"
 #include "Graphics/Shader.hpp"
