@@ -4,7 +4,6 @@
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 #include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
-#include "../RenderSystem/GraphicsContext.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
@@ -20,6 +19,9 @@
 #include <vector>
 #include <chrono>
 #include <thread>
+
+using Pomdog::Detail::GL4::GraphicsContextGL4;
+using Pomdog::Detail::GL4::GraphicsDeviceGL4;
 
 namespace Pomdog {
 namespace Detail {
@@ -191,7 +193,7 @@ public:
     std::shared_ptr<GameWindowX11> window;
     std::shared_ptr<OpenGLContextX11> openGLContext;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
-    std::shared_ptr<Detail::GraphicsContext> graphicsContext;
+    std::shared_ptr<GraphicsContextGL4> graphicsContext;
     std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngine> audioEngine;
     std::unique_ptr<Pomdog::AssetManager> assetManager;
@@ -233,14 +235,10 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
         POMDOG_THROW_EXCEPTION(std::runtime_error, description);
     }
 
-    using GL4::GraphicsContextGL4;
-    using GL4::GraphicsDeviceGL4;
-
     graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(
         std::make_unique<GraphicsDeviceGL4>());
 
-    graphicsContext = std::make_shared<Detail::GraphicsContext>(
-        std::make_unique<GraphicsContextGL4>(openGLContext, window));
+    graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, window);
 
     graphicsCommandQueue = std::make_shared<Pomdog::GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));

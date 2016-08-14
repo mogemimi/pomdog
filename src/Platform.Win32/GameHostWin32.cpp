@@ -5,17 +5,15 @@
 #include "KeyboardWin32.hpp"
 #include "MouseWin32.hpp"
 #if !defined(POMDOG_DISABLE_GL4)
+#include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
 #include "../Platform.Win32/OpenGLContextWin32.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 #endif
 #if !defined(POMDOG_DISABLE_DIRECT3D11)
+#include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
 #include "../RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp"
 #include "../RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.hpp"
-#endif
-#if !defined(POMDOG_DISABLE_DIRECT3D11) || !defined(POMDOG_DISABLE_GL4)
-#include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
-#include "../RenderSystem/GraphicsContext.hpp"
 #endif
 #include "../Application/SubsystemScheduler.hpp"
 #include "../Application/SystemEvents.hpp"
@@ -98,8 +96,7 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceGL4(
     auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceGL4>();
     auto graphicsDevice = std::make_shared<GraphicsDevice>(std::move(nativeGraphicsDevice));
 
-    auto graphicsContext = std::make_shared<Detail::GraphicsContext>(
-        std::make_unique<GraphicsContextGL4>(openGLContext, window));
+    auto graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, window);
 
     auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
@@ -146,13 +143,12 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceDirect3D11(
     auto graphicsDevice = std::make_shared<GraphicsDevice>(
         std::move(nativeGraphicsDevice));
 
-    auto graphicsContext = std::make_shared<Detail::GraphicsContext>(
-        std::make_unique<GraphicsContextDirect3D11>(
-            window->NativeWindowHandle(),
-            dxgiFactory,
-            device,
-            deviceContext,
-            presentationParameters));
+    auto graphicsContext = std::make_shared<GraphicsContextDirect3D11>(
+        window->NativeWindowHandle(),
+        dxgiFactory,
+        device,
+        deviceContext,
+        presentationParameters);
 
     auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
@@ -165,19 +161,14 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceDirect3D11(
         graphicsDevice,
         dynamic_cast<GraphicsDeviceDirect3D11*>(graphicsDevice->GetNativeGraphicsDevice()));
 
-    auto sharedNativeContext = std::shared_ptr<GraphicsContextDirect3D11>(
-        graphicsContext,
-        dynamic_cast<GraphicsContextDirect3D11*>(graphicsContext->GetNativeGraphicsContext()));
-
     POMDOG_ASSERT(sharedNativeDevice);
-    POMDOG_ASSERT(sharedNativeContext);
 
     return CreateGraphicsDeviceResult{
         std::move(graphicsDevice),
         std::move(graphicsCommandQueue),
         std::make_unique<GraphicsBridgeWin32Direct3D11>(
             std::move(sharedNativeDevice),
-            std::move(sharedNativeContext)),
+            std::move(graphicsContext)),
     };
 }
 #endif

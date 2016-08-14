@@ -5,7 +5,6 @@
 #include "OpenGLContextCocoa.hpp"
 #include "KeyboardCocoa.hpp"
 #include "MouseCocoa.hpp"
-#include "../RenderSystem/GraphicsContext.hpp"
 #include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
@@ -32,6 +31,9 @@
 #include <mutex>
 #include <thread>
 
+using Pomdog::Detail::GL4::GraphicsDeviceGL4;
+using Pomdog::Detail::GL4::GraphicsContextGL4;
+
 namespace Pomdog {
 namespace Detail {
 namespace Cocoa {
@@ -42,19 +44,6 @@ std::shared_ptr<OpenGLContextCocoa> CreateOpenGLContext(
 {
     auto pixelFormat = CocoaOpenGLHelper::CreatePixelFormat(presentationParameters);
     return std::make_shared<OpenGLContextCocoa>(pixelFormat);
-}
-
-std::shared_ptr<GraphicsContext> CreateGraphicsContext(
-    const std::shared_ptr<OpenGLContextCocoa>& openGLContext,
-    std::weak_ptr<GameWindow> && gameWindow,
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice)
-{
-    POMDOG_ASSERT(openGLContext);
-    POMDOG_ASSERT(!gameWindow.expired());
-    using GL4::GraphicsContextGL4;
-
-    auto nativeContext = std::make_unique<GraphicsContextGL4>(openGLContext, std::move(gameWindow));
-    return std::make_shared<GraphicsContext>(std::move(nativeContext));
 }
 
 } // unnamed namespace
@@ -125,7 +114,7 @@ private:
     std::shared_ptr<GameWindowCocoa> window;
     std::shared_ptr<OpenGLContextCocoa> openGLContext;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
-    std::shared_ptr<Detail::GraphicsContext> graphicsContext;
+    std::shared_ptr<GraphicsContextGL4> graphicsContext;
     std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngine> audioEngine;
     std::unique_ptr<Pomdog::AssetManager> assetManager;
@@ -167,10 +156,9 @@ GameHostCocoa::Impl::Impl(
     openGLContext->SetView(openGLView);
     openGLContext->MakeCurrent();
 
-    using Detail::GL4::GraphicsDeviceGL4;
     graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::make_unique<GraphicsDeviceGL4>());
 
-    graphicsContext = CreateGraphicsContext(openGLContext, window, graphicsDevice);
+    graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, window);
     graphicsCommandQueue = std::make_shared<Pomdog::GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
     openGLContext->Unlock();
