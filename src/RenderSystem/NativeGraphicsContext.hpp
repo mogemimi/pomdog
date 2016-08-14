@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "../Utility/Noncopyable.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <cstddef>
@@ -14,8 +13,12 @@ namespace Detail {
 
 struct GraphicsCapabilities;
 
-class NativeGraphicsContext : Noncopyable {
+class NativeGraphicsContext {
 public:
+    NativeGraphicsContext() = default;
+    NativeGraphicsContext(const NativeGraphicsContext&) = delete;
+    NativeGraphicsContext & operator=(const NativeGraphicsContext&) = delete;
+
     virtual ~NativeGraphicsContext() = default;
 
     ///@brief Retrieves the capabilities of a GraphicsContext

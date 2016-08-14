@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "../Utility/Noncopyable.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 #include <vector>
@@ -25,8 +24,12 @@ enum class BufferBindMode {
     VertexBuffer,
 };
 
-class NativeGraphicsDevice : Noncopyable {
+class NativeGraphicsDevice {
 public:
+    NativeGraphicsDevice() = default;
+    NativeGraphicsDevice(const NativeGraphicsDevice&) = delete;
+    NativeGraphicsDevice & operator=(const NativeGraphicsDevice&) = delete;
+
     virtual ~NativeGraphicsDevice() = default;
 
     virtual ShaderLanguage GetSupportedLanguage() const = 0;
