@@ -187,6 +187,9 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
     }
 
     textureResourceViews.fill(nullptr);
+
+    // NOTE: Set default values for graphics context
+    this->SetBlendFactor(Color::White);
 }
 
 GraphicsContextDirect3D11::~GraphicsContextDirect3D11()

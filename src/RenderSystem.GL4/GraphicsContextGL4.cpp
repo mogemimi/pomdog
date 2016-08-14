@@ -336,6 +336,9 @@ GraphicsContextGL4::GraphicsContextGL4(
 
     frameBuffer = CreateFrameBuffer();
     primitiveTopology = ToPrimitiveTopology(PrimitiveTopology::TriangleList);
+
+    // NOTE: Set default values for graphics context
+    this->SetBlendFactor(Color::White);
 }
 
 GraphicsContextGL4::~GraphicsContextGL4()

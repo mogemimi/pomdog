@@ -97,6 +97,9 @@ GraphicsContextMetal::GraphicsContextMetal(
 
     // NOTE: Create a new command queue
     commandQueue = [nativeDevice newCommandQueue];
+
+    // NOTE: Set default values for graphics context
+    this->SetBlendFactor(Color::White);
 }
 
 GraphicsContextMetal::~GraphicsContextMetal() = default;
